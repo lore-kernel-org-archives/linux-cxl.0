@@ -1,278 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BFA1B4F0A
-	for <linux-cxl@vger.kernel.org>; Sat, 21 Mar 2026 05:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774072154; cv=none; b=kzQ7JSonSMIz1MXW44xPKObQSPqxnniXiQHyCyTBGqieDtqsrGGb0UqTvuEcaQYqAifcKT8ptvzXmwAlbQWTHURozNqOgAQSFtujTLLCHIOm5otAoTvDCgIZCAMEhOrXLEU10+KyTS/pwCqNYzSrlifQyEIkQtdGRFXqZ6hFD0o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774072154; c=relaxed/simple;
-	bh=OEyY7jOphdIjBm0NsnU/chOTWGgXU7ODT8vb0tairYM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=UJlzAfRevuh2fSd0CnRjNil/53YEDOdiYJW4NozW2pqk4CMJBbRF3kBOsFCcm+zh/TAUcKHKrJWGFaNSuKaPb6uX3I2dT60putzNR4oogGdfYlpZ7IPRZ7pTn3PcXLzNr6EHxBvMXD7jJJRA6cuYXux5YcFgf0uN5nMEeC3JPao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hm9NSJdV; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870B821E087;
+	Sat, 21 Mar 2026 06:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774073731; cv=pass; b=tbe95U9K3W0loZWrbacKRDNjFWB6/lPUXhM9R8hSLNgebcEf4/su27sgZFJA2dOZQ57G5efeCsjFnqjznRp0GxoYLqUMN9JqQST35n0x6KMgoMV2n09G2NkcYJAAQPmMO9t+GS6YIcqZDcMgg2ifEs2lNVYWE5jAR99HJkcl+ro=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774073731; c=relaxed/simple;
+	bh=R8hqgzL8gySuZr6XFKWnCcrZ8Q0gd+F1ANKNup3AGF4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M0jPY+UrKevpqUOp2A4jbDhZF2OIaR+/3QZCBq++Hzjfa8iiHSpDZI4FUW2R66zIO7hFs/HStD0v/0UUjus2kDgqa3wL/zJV5zZT2g9VKrsY7D1NoLwvqX530Ql/DxkJ1IrV/dI80h0azV0Fgae/PP/nBtsoeeFSdpsHTnkjgqM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=DXoc6VsP; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hm9NSJdV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774072152; x=1805608152;
-  h=date:from:to:cc:subject:message-id;
-  bh=OEyY7jOphdIjBm0NsnU/chOTWGgXU7ODT8vb0tairYM=;
-  b=hm9NSJdVf+1SsFinAuKrympbg5UibYAIQNmoOXc8DJr+dn4fV/PBnJpF
-   XYDEfoEVl05QImiFcL8Hz3vGTu9L5OrR0YFPVJtmPyvva05JlkxFHnQyF
-   YrvUJ5daYihQzEXZ/HgFxGgSHBqf5b+mbrhpqB81Ug4foQNX7OVoSCt3m
-   ydDUfMXDSQXZaUCzY1zpWVAtzuxqRclKLp+LX2Y0pj3KZmTGJOVtNKZdq
-   z0bXbq37CI9/yrwOr+m+Nw3+Vgu7zTe+EBdpIaT8aeXqSDBw/5iFChQ1E
-   bbhawWDrdf1m5bYMfHMAtSV26wDlCAJ8gVE40txMf5P0uTX4eH9dk4wQh
-   Q==;
-X-CSE-ConnectionGUID: h6lRyacKTXOjzPyUDJ463g==
-X-CSE-MsgGUID: cgFqRFZ3T0Of8rSmpXzLRQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11735"; a="75227042"
-X-IronPort-AV: E=Sophos;i="6.23,132,1770624000"; 
-   d="scan'208";a="75227042"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2026 22:49:11 -0700
-X-CSE-ConnectionGUID: VpqbJpsNRS+N5jRoTfqLsg==
-X-CSE-MsgGUID: fwzZ3KgbTniJKH8M/3u07w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,132,1770624000"; 
-   d="scan'208";a="261400134"
-Received: from lkp-server02.sh.intel.com (HELO d7fefbca0d04) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 20 Mar 2026 22:49:09 -0700
-Received: from kbuild by d7fefbca0d04 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1w3pCi-000000000N3-3rdi;
-	Sat, 21 Mar 2026 05:48:59 +0000
-Date: Sat, 21 Mar 2026 13:47:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- a792fe15f1cb9935e966cf3262103d4b6f263fb9
-Message-ID: <202603211339.xR0BwFNw-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="DXoc6VsP"
+ARC-Seal: i=1; a=rsa-sha256; t=1774073714; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Nu0pb2B12hcogHvX0VmAHlYucMsUKNdjiL0Xz9XGNN1SQWL/AuxtC0TDzlSNn6fNx50x0q6mGix7ZUObibM+QHHE2wKmY0EpTXZVxatY0QQBvnFfGMlSWbDFvPQwOQxDcWcW5kZpOTHuwnVmI7DF8Dkt5xPKFT1AQ9JXADKax44=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1774073714; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=gz0KEVMIV8B2SjI4J8MA/8fYF6PzD08zan+pebU7jGs=; 
+	b=F7EAI/uJZbvnk8gM0ETKEHxRAxfddT7UcgzlJTuXiskTKlyETo8hEnt1JCyiGztLdHIQZR+2++aMksqi0BJg9HIF0wHORhMusbCJeVNwwD5Y6sSw6byJaecLExWIj3L25WoztmQ8TU9DPdft1RJA6bg9JmrsWFGShZCOto58QGs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1774073714;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=gz0KEVMIV8B2SjI4J8MA/8fYF6PzD08zan+pebU7jGs=;
+	b=DXoc6VsPfMHQRundxLTEeDz+YzRBr4KVvIyVAbpy/WL4RdIEo73RbAGZnbx3WjMP
+	Wfe48/GE2PqsAvM2CQqyAbaIL163tN3AJYC22X4OgAXRNfM6Fwo6y4BgohcYuwflY16
+	Yd2n3imz2vAxwLpj6S75G7GTZm9O5p1uveeZL4KA=
+Received: by mx.zohomail.com with SMTPS id 1774073713696906.8987266611789;
+	Fri, 20 Mar 2026 23:15:13 -0700 (PDT)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/1] cxl/hdm: Add support for 32 switch decoders
+Date: Sat, 21 Mar 2026 14:14:59 +0800
+Message-ID: <20260321061459.1910205-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Feedback-ID: rr08011228a41846d621cffd570ff3dd2b00007d26f5ee1df0a8a68b09280a4adb57dcca844681c9b1f7a4c402:zu08011227f218607ce2f145a162a2c5920000d4dcb8b8d0956c0c3004ac73b57011a16c3ff11ab497cf43fd:rf0801122d2f56d9e7a45b7c7cf5593a3c000072ce1e779c8bfeedb88d724e70796c59cd44dd53eeaf4c84fa77a9915dbac2:ZohoMail
+X-ZohoMailClient: External
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: a792fe15f1cb9935e966cf3262103d4b6f263fb9  Merge branch 'for-7.1/cxl-misc' into cxl-for-next
+Per CXL r4.0 section 8.2.4.20.1. CXL host bridge and switch ports can
+support 32 HDM decoders. Current implementation misses some decoders on
+CXL host bridge and switch in the case that the value of Decoder Count
+field in CXL HDM decoder Capability Register is greater than or equal to
+9.
 
-elapsed time: 788m
+Update calculation implementation to ensure the decoder count calculation
+is correct for CXL host bridge/switch ports.
 
-configs tested: 198
-configs skipped: 3
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+Changes from v1:
+- Return -ENXIO if the value violates SPEC. (Dave & Alison)
+---
+ drivers/cxl/core/hdm.c |  2 +-
+ drivers/cxl/cxl.h      | 11 ++++++++++-
+ drivers/cxl/cxlmem.h   |  2 +-
+ 3 files changed, 12 insertions(+), 3 deletions(-)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index c222e98ae736..3930e130d6b6 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -177,7 +177,7 @@ static struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
+ 	}
+ 
+ 	parse_hdm_decoder_caps(cxlhdm);
+-	if (cxlhdm->decoder_count == 0) {
++	if (cxlhdm->decoder_count < 0) {
+ 		dev_err(dev, "Spec violation. Caps invalid\n");
+ 		return ERR_PTR(-ENXIO);
+ 	}
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 9b947286eb9b..0a5301049cf3 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -77,7 +77,16 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
+ {
+ 	int val = FIELD_GET(CXL_HDM_DECODER_COUNT_MASK, cap_hdr);
+ 
+-	return val ? val * 2 : 1;
++	switch (val) {
++	case 0:
++		return 1;
++	case 1 ... 8:
++		return val * 2;
++	case 9 ... 12:
++		return (val - 4) * 4;
++	default:
++		return -ENXIO;
++	}
+ }
+ 
+ /* Encode defined in CXL 2.0 8.2.5.12.7 HDM Decoder Control Register */
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index e21d744d639b..399b150b404c 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -923,7 +923,7 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd);
+  */
+ struct cxl_hdm {
+ 	struct cxl_component_regs regs;
+-	unsigned int decoder_count;
++	int decoder_count;
+ 	unsigned int target_count;
+ 	unsigned int interleave_mask;
+ 	unsigned long iw_cap_mask;
+-- 
+2.43.0
 
-tested configs:
-alpha                             allnoconfig    gcc-15.2.0
-alpha                            allyesconfig    gcc-15.2.0
-alpha                               defconfig    gcc-15.2.0
-arc                              allmodconfig    clang-16
-arc                              allmodconfig    gcc-15.2.0
-arc                               allnoconfig    gcc-15.2.0
-arc                              allyesconfig    gcc-15.2.0
-arc                                 defconfig    gcc-15.2.0
-arc                   randconfig-001-20260321    gcc-14.3.0
-arc                   randconfig-001-20260321    gcc-8.5.0
-arc                   randconfig-002-20260321    gcc-8.5.0
-arm                               allnoconfig    clang-23
-arm                               allnoconfig    gcc-15.2.0
-arm                              allyesconfig    clang-16
-arm                              allyesconfig    gcc-15.2.0
-arm                                 defconfig    clang-23
-arm                           h3600_defconfig    gcc-15.2.0
-arm                   randconfig-001-20260321    gcc-12.5.0
-arm                   randconfig-001-20260321    gcc-8.5.0
-arm                   randconfig-002-20260321    clang-23
-arm                   randconfig-002-20260321    gcc-8.5.0
-arm                   randconfig-003-20260321    clang-23
-arm                   randconfig-003-20260321    gcc-8.5.0
-arm                   randconfig-004-20260321    clang-23
-arm                   randconfig-004-20260321    gcc-8.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.2.0
-arm64                               defconfig    gcc-15.2.0
-arm64                 randconfig-001-20260321    clang-23
-arm64                 randconfig-002-20260321    clang-23
-arm64                 randconfig-003-20260321    gcc-9.5.0
-arm64                 randconfig-004-20260321    clang-23
-csky                             allmodconfig    gcc-15.2.0
-csky                              allnoconfig    gcc-15.2.0
-csky                                defconfig    gcc-15.2.0
-csky                  randconfig-001-20260321    gcc-15.2.0
-csky                  randconfig-002-20260321    gcc-15.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-23
-hexagon                           allnoconfig    gcc-15.2.0
-hexagon                             defconfig    clang-23
-hexagon               randconfig-001-20260321    clang-23
-hexagon               randconfig-001-20260321    gcc-11.5.0
-hexagon               randconfig-002-20260321    clang-23
-hexagon               randconfig-002-20260321    gcc-11.5.0
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                              allnoconfig    gcc-15.2.0
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20260321    clang-20
-i386        buildonly-randconfig-002-20260321    gcc-14
-i386        buildonly-randconfig-003-20260321    gcc-14
-i386        buildonly-randconfig-004-20260321    clang-20
-i386        buildonly-randconfig-005-20260321    clang-20
-i386        buildonly-randconfig-006-20260321    clang-20
-i386                                defconfig    clang-20
-i386                  randconfig-001-20260321    gcc-14
-i386                  randconfig-002-20260321    gcc-14
-i386                  randconfig-003-20260321    clang-20
-i386                  randconfig-003-20260321    gcc-14
-i386                  randconfig-004-20260321    gcc-13
-i386                  randconfig-004-20260321    gcc-14
-i386                  randconfig-005-20260321    clang-20
-i386                  randconfig-005-20260321    gcc-14
-i386                  randconfig-006-20260321    gcc-14
-i386                  randconfig-007-20260321    gcc-14
-i386                  randconfig-011-20260321    gcc-14
-i386                  randconfig-012-20260321    gcc-14
-i386                  randconfig-013-20260321    clang-20
-i386                  randconfig-014-20260321    gcc-14
-i386                  randconfig-015-20260321    clang-20
-i386                  randconfig-016-20260321    gcc-12
-i386                  randconfig-017-20260321    gcc-14
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-23
-loongarch                         allnoconfig    gcc-15.2.0
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20260321    gcc-11.5.0
-loongarch             randconfig-001-20260321    gcc-15.2.0
-loongarch             randconfig-002-20260321    clang-20
-loongarch             randconfig-002-20260321    gcc-11.5.0
-m68k                             allmodconfig    gcc-15.2.0
-m68k                              allnoconfig    gcc-15.2.0
-m68k                             allyesconfig    clang-16
-m68k                             allyesconfig    gcc-15.2.0
-m68k                                defconfig    gcc-15.2.0
-microblaze                        allnoconfig    gcc-15.2.0
-microblaze                       allyesconfig    gcc-15.2.0
-microblaze                          defconfig    gcc-15.2.0
-mips                             allmodconfig    gcc-15.2.0
-mips                              allnoconfig    gcc-15.2.0
-mips                             allyesconfig    gcc-15.2.0
-nios2                            allmodconfig    gcc-11.5.0
-nios2                             allnoconfig    clang-23
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20260321    gcc-11.5.0
-nios2                 randconfig-001-20260321    gcc-8.5.0
-nios2                 randconfig-002-20260321    gcc-11.5.0
-openrisc                         allmodconfig    gcc-15.2.0
-openrisc                          allnoconfig    clang-23
-openrisc                          allnoconfig    gcc-15.2.0
-openrisc                            defconfig    gcc-15.2.0
-parisc                           allmodconfig    gcc-15.2.0
-parisc                            allnoconfig    clang-23
-parisc                            allnoconfig    gcc-15.2.0
-parisc                           allyesconfig    gcc-15.2.0
-parisc                              defconfig    gcc-15.2.0
-parisc                randconfig-001-20260321    gcc-8.5.0
-parisc                randconfig-002-20260321    gcc-9.5.0
-parisc64                            defconfig    gcc-15.2.0
-powerpc                          allmodconfig    gcc-15.2.0
-powerpc                           allnoconfig    clang-23
-powerpc                           allnoconfig    gcc-15.2.0
-powerpc               randconfig-001-20260321    clang-23
-powerpc               randconfig-002-20260321    clang-23
-powerpc64             randconfig-001-20260321    clang-23
-powerpc64             randconfig-002-20260321    clang-23
-riscv                            allmodconfig    clang-23
-riscv                             allnoconfig    clang-23
-riscv                             allnoconfig    gcc-15.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-23
-riscv                 randconfig-001-20260321    gcc-15.2.0
-riscv                 randconfig-002-20260321    clang-18
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-23
-s390                             allyesconfig    gcc-15.2.0
-s390                                defconfig    clang-23
-s390                  randconfig-001-20260321    gcc-15.2.0
-s390                  randconfig-002-20260321    clang-23
-sh                               allmodconfig    gcc-15.2.0
-sh                                allnoconfig    clang-23
-sh                                allnoconfig    gcc-15.2.0
-sh                               allyesconfig    gcc-15.2.0
-sh                                  defconfig    gcc-14
-sh                                  defconfig    gcc-15.2.0
-sh                    randconfig-001-20260321    gcc-15.2.0
-sh                    randconfig-002-20260321    gcc-15.2.0
-sh                           se7705_defconfig    gcc-15.2.0
-sparc                             allnoconfig    clang-23
-sparc                             allnoconfig    gcc-15.2.0
-sparc                               defconfig    gcc-15.2.0
-sparc                 randconfig-001-20260321    gcc-15.2.0
-sparc                 randconfig-002-20260321    gcc-14.3.0
-sparc64                          allmodconfig    clang-23
-sparc64                             defconfig    clang-20
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20260321    clang-23
-sparc64               randconfig-002-20260321    gcc-15.2.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-23
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-23
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260321    gcc-14
-um                    randconfig-002-20260321    clang-23
-um                           x86_64_defconfig    clang-23
-um                           x86_64_defconfig    gcc-14
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                            allnoconfig    clang-23
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20260321    clang-20
-x86_64      buildonly-randconfig-002-20260321    gcc-13
-x86_64      buildonly-randconfig-003-20260321    clang-20
-x86_64      buildonly-randconfig-004-20260321    clang-20
-x86_64      buildonly-randconfig-005-20260321    clang-20
-x86_64      buildonly-randconfig-006-20260321    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20260321    clang-20
-x86_64                randconfig-002-20260321    gcc-14
-x86_64                randconfig-003-20260321    clang-20
-x86_64                randconfig-004-20260321    gcc-14
-x86_64                randconfig-005-20260321    gcc-14
-x86_64                randconfig-006-20260321    clang-20
-x86_64                randconfig-011-20260321    gcc-13
-x86_64                randconfig-012-20260321    gcc-14
-x86_64                randconfig-013-20260321    clang-20
-x86_64                randconfig-014-20260321    gcc-14
-x86_64                randconfig-015-20260321    clang-20
-x86_64                randconfig-016-20260321    clang-20
-x86_64                randconfig-071-20260321    gcc-14
-x86_64                randconfig-072-20260321    clang-20
-x86_64                randconfig-073-20260321    gcc-13
-x86_64                randconfig-074-20260321    gcc-14
-x86_64                randconfig-075-20260321    clang-20
-x86_64                randconfig-076-20260321    gcc-14
-x86_64                               rhel-9.4    clang-20
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    clang-23
-xtensa                            allnoconfig    gcc-15.2.0
-xtensa                randconfig-001-20260321    gcc-8.5.0
-xtensa                randconfig-002-20260321    gcc-9.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
