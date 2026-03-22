@@ -1,148 +1,148 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011067.outbound.protection.outlook.com [40.93.194.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDBC32BF5C
-	for <linux-cxl@vger.kernel.org>; Sun, 22 Mar 2026 13:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774185412; cv=none; b=nrGt58F+Q1tfDfFo+UGvpGZSy3h2FwrjWokV3vSvrYLmVggTAxa2rehEuEBc3/hLAYKGO6u/Y279eCyWS70hrzkI6nTb6ROPNpTQW251qYAgR5VRZ5EWHKwCkM037rHGvkTTtik+aYyReplKQkwGC9a+2/QJRPdTpcMvJgJKH34=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774185412; c=relaxed/simple;
-	bh=zg2VKuwFsN6029euqX1jn+gIisP3yKnPstGsmq0VUEc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hY49948NkIyjia9E11vZGPPqeAORoSSppudgZsXq/XUz+6Ii9OVaFlBFHudbEk3YLx8CJPPJjDUvVRw0LcpL6HZvCd+DQhJPjXAUboVUB+20J2NuC5MORHO4a19O7xGV9LrxnAgaS7nr2Lm4Dv2fTr68o5hb8n3ZXLAK7f87OS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=pI8TsTT7; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED0337DE86;
+	Sun, 22 Mar 2026 19:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774209243; cv=fail; b=ZgJevHXA9LkI4kAuwG8SRpv9SRHs1plknrBiEOOnyWzx1oYg5trgkKmpxt0tUKCxy8X5A+mZETRXSA+Q/s5qqVIOHC1gI/iIrL+S0VdxHV9GMQ1/Ri3qQ81O6el/B/3P4siotG1LMAYcBfofNflAKUIinj0slF5weD1t3ihBafw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774209243; c=relaxed/simple;
+	bh=W4BJWAMnd7sBRJyNRz+Dc3D25teAiNo8J+Dk534+RaA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gDYJ04NTSxSyXx0S+ToKCvXQe5hXGUORTGd6ZHwWfFyX8o7hU+Fde+k46lNU9eTYVXWowPok1JqsQCfavCMTIYuDVUJBX4KNHH512AdtO/rWiGn955brLs5Wm2QA3LRaND9CjVEGfFLA320UwHDr6//UYPewveL/9nEo+TW5q2A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=f9c1FZ23; arc=fail smtp.client-ip=40.93.194.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="pI8TsTT7"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-50b2b289925so29132671cf.2
-        for <linux-cxl@vger.kernel.org>; Sun, 22 Mar 2026 06:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1774185410; x=1774790210; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PihiyqdH9fgSKKz89FjkxG4uYpkRrGrjVrq6arvX1sY=;
-        b=pI8TsTT7S6uJKlTUS/3DbbRnMSffLyOR2T3v1Nl5GR/VapsAUFF2o3qx0rBhuGEZG/
-         3Yb1CHTqWmmgfXgZ/zD8Vdmbi8fyATMQeFtAc6wW7P0UtcqcoJhWIWjIYZrQxkJ+huwi
-         kg11qDnzha+D5WsGpdXBrUA6ePS7sZwmGNWnR8FGL1lZ+ogZ5E9atgTXnupwZrnLAope
-         5jhp13baMgwp4e+XFrkoofvZRHn++xBJ9x9hRVNui1pP3lVwJs+b4Eqsat/svmbNQWA4
-         v2i5Pa7WcbDQZoBItBV5L5nCGY/FA1Czl5JvAcTQ1tJa2GZeMRFvfase8r83scfYiV7m
-         zu/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774185410; x=1774790210;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=PihiyqdH9fgSKKz89FjkxG4uYpkRrGrjVrq6arvX1sY=;
-        b=CCrUonLoHq3j2I8LZgbYouDZ5Row3mltlm+KFXyyJnLERM9tcmHZxejII+yGB7V26y
-         1GJDOTlUJcrbASE/aBBpJhTbeMUsn4wIGoqMNxLmbeTJ2g9er9aqM7olgZvlTyCyYeKI
-         01oiwh44bAclyynRFOHEBRfoqq+LfhQpvUGWqi+p62/NOwXQwg9KVmyS/Ys+XO6TG+D/
-         fXwihHGU1SD7Z6diqlYqpAT8U4oGh6+nrcfRwKv78R6vZGURXdvce/t78fewOu6keR5l
-         8fJC69lPsyl7lU1Pg2PZKLR7+PCmTTMaUXMeGf85Qawbg9RfVE9aG/1QzYjOtmODWTrK
-         2+zQ==
-X-Gm-Message-State: AOJu0YwWCG0ygkrB8jg0zgipc8KXXxo5J6gqEZs4CmmVqtwYLnrrUrS6
-	pHEcxBDVD3Dyz66ulpvnfZ0kQf+B68UNl8285afgguyK6N2eLJ9YcNlSVugl1vldoXxA0InkUWE
-	7IaO6
-X-Gm-Gg: ATEYQzyZ7ji0VppYwbeU2s2kPVk6hyTWU3lmecuulTTex8BjH8Ywf5rm14/sDCasqfE
-	OlMVJB/iuOOSJYkZ/1LlmsG+YhJqCXrteOKmYAqZCXZniFuY69p0pvTTPkQro9SirmTpK5WYwAF
-	0FHbd6uzALxosx4wFpQMnZ593I6+Fxl1+Q4JnsnHbTZsojFcTdBajooBjGw4nwdwCsFIc3i7MOO
-	DSPJAOHq4OXhgR8Ce1qIMmiT9RNzGZJANIBlhLjU4W7dyKTqtzSbv8k9e8JwxjiZPMRi+Za5TEz
-	bE7sfWBK+OH8xp+VufdghRny2/TQH6jIB1GnlTOmZfoJsVMCyOxAiY0Da/aUwLxPCFfHDDM0mcc
-	FIkBDoLg40jU0Msl9J31VlNQvVSOLkYMwJDNW5fpXkwBCHHXIwhk1Tj8E+Ky5suYaySvZd4k4mU
-	cSAlnUfeqiuV+7DSzk6ET8ZM+ztUslFtcR3yZzN4X6Q4raOVb4sY9u6RG773bf8ZQxckfrz3bqT
-	nnaSuWbiyMKqEM=
-X-Received: by 2002:a05:622a:5a0d:b0:509:44c3:5fed with SMTP id d75a77b69052e-50b375a3d3fmr136079121cf.55.1774185409857;
-        Sun, 22 Mar 2026 06:16:49 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50b36e35086sm59688651cf.18.2026.03.22.06.16.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 22 Mar 2026 06:16:49 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Subject: [PATCH v4 3/3] cxl/core: use cleanup.h for devm_cxl_add_dax_region
-Date: Sun, 22 Mar 2026 09:16:38 -0400
-Message-ID: <20260322131638.3636725-4-gourry@gourry.net>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260322131638.3636725-1-gourry@gourry.net>
-References: <20260322131638.3636725-1-gourry@gourry.net>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="f9c1FZ23"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QnasGokszXXzghvMEODGIc1RS0keInh2Gch+rANmv4w4yiC6jVeVNm9jUv0+YBQT/q+VGaK6z0QnkAIu9Gjs4THE63bjJhboqp92qS+FgmQERhv+QANPQsGITP6ej0UBalMDGdxs45jMnr22gOVlyjkl/jczpJViDBFOrnU0QNNgykAxknh0zK8nljTZoVzLbLUM8PZD6Y20uihjVdjlGuUJ5XNAe+1j2s7ZfQUTt76rAq4FC1eYQZ/jj/NzF+zl92R+C3gfaeEKZ8SIubUSGQANaKvkgKe9ZrygHp50FbSTP8D8KuYf4B1Vw3O2x6ZasNJvO5Dm9DzSvpBXQiua8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Nb3/g2QsOoRbAwB7rRbKE0PIaBY7uehA9pSGGP247W0=;
+ b=c1jKX2d0Nl3Be90YAhMLSxn45cz9sgSE1hro00k7izoJ1R+p1z6G7rrS7Vu1pNBM22TDNtTv3NZVuAI6mbLi+arAR1NsQS1McLTDRmGB4fAHM6X13loBV1AU3vIkxIata3SV0O9lbbvQM/giIIfCS8l8xvbNP8YVp9SDYIU1+IS0wJW9pxhm2sCAZHl6yYzsG6E0ff/AiH0zJ9sZ7onGk4v8N0N7KNcPMV9af+FRHvPNShGwIill4WWyKZGTlRrB27sdF/zpNk7mo/iybzAQ52nKVENCuNFt8o0Eb11HRmWgL2OXTfB+UPG6TllKGmA2ApTHratszR67R/zOOqt/DQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Nb3/g2QsOoRbAwB7rRbKE0PIaBY7uehA9pSGGP247W0=;
+ b=f9c1FZ23lH9BfOIapiW18JA2VVFref3WLTEsHS/t6+KKrzkrTNqrL4cy8GpIGtvJo6FQwOalJv/DYOMfWaecJcrGQK8uY4z+s8pClhNFJiV8DkOoB4GhmkxTREu72GfFaxFBWW0ZpEOONB8O+nytA4nBiATwWAgiUqUG8Aerc2w=
+Received: from DS7PR07CA0014.namprd07.prod.outlook.com (2603:10b6:5:3af::17)
+ by BL4PR12MB9536.namprd12.prod.outlook.com (2603:10b6:208:590::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.19; Sun, 22 Mar
+ 2026 19:53:55 +0000
+Received: from DS3PEPF0000C380.namprd04.prod.outlook.com
+ (2603:10b6:5:3af:cafe::22) by DS7PR07CA0014.outlook.office365.com
+ (2603:10b6:5:3af::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9723.25 via Frontend Transport; Sun,
+ 22 Mar 2026 19:53:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ DS3PEPF0000C380.mail.protection.outlook.com (10.167.23.10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9723.19 via Frontend Transport; Sun, 22 Mar 2026 19:53:55 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Sun, 22 Mar
+ 2026 14:53:54 -0500
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>
+CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso
+	<dave@stgolabs.net>, Matthew Wilcox <willy@infradead.org>, Jan Kara
+	<jack@suse.cz>, "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown
+	<len.brown@intel.com>, Pavel Machek <pavel@kernel.org>, Li Ming
+	<ming.li@zohomail.com>, Jeff Johnson <jeff.johnson@oss.qualcomm.com>, "Ying
+ Huang" <huang.ying.caritas@gmail.com>, Yao Xingtao <yaoxt.fnst@fujitsu.com>,
+	Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Nathan Fontenot <nathan.fontenot@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>, Robert Richter <rrichter@amd.com>,
+	Benjamin Cheatham <benjamin.cheatham@amd.com>, Zhijian Li
+	<lizhijian@fujitsu.com>, Borislav Petkov <bp@alien8.de>, Smita Koralahalli
+	<Smita.KoralahalliChannabasappa@amd.com>, Tomasz Wolski
+	<tomasz.wolski@fujitsu.com>
+Subject: [PATCH v8 1/9] dax/bus: Use dax_region_put() in alloc_dax_region() error path
+Date: Sun, 22 Mar 2026 19:53:34 +0000
+Message-ID: <20260322195343.206900-2-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20260322195343.206900-1-Smita.KoralahalliChannabasappa@amd.com>
+References: <20260322195343.206900-1-Smita.KoralahalliChannabasappa@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF0000C380:EE_|BL4PR12MB9536:EE_
+X-MS-Office365-Filtering-Correlation-Id: 848863da-18d1-4662-5205-08de884cc000
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|1800799024|7416014|36860700016|22082099003|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	ozCAcXtg3viERuc4sQJIFDkOZFuQlN7xc0XI1UgcjO8f7QFUBtcyLacRX+91sZPgFT+lnMEJ01icQH5aeOI4g+awGJAVY1A3Z1ziIhFq3qTK+BGUcs0ZvR9mR58M9DKKjTuukMxtj6StxvO7/H2qiTvrd1qx0QRIwLSvKBxx2caaCEilJiaHM4ThP1k6wjL8dM/D9t36DyyWed9rkWgDsmqwZxgaMQjnKSsXKoLO6PsMPTIuWzVOs/7pArsHC4zh0poju2BcrkYVwJ3P13w2ap0VgORmoQyH2x/yZYy+xAIotzvqrHqLVdd6p4xM5iVlZPL4e8n8F1GURgUFrM5fjMfbPVoIxsajQa3z5IQzSw5c5QVP7YWbtPoFD3EML6AhlrO2jMobTz8j5Hnpi3sP3na2v+B61wE553GnJdGWjgPSek5P47D5w7aZGIzskKygWqLBbYnSy75drXqBpxLjm78QNTvDLnwsw8xeJg+dU3aNfYhUHXdSbkHjigvRfgriB7uhH10EfRZm1Tr9kYynoqUWWpOu5yidySdJ2tu75PIBi9UMNYQuEpfj2VmMZoPJ4Pd6yvAXJMUerJkpmKB0R98C6z6v3iEPK6gh8CtbADhR0cwP33pif/NwH7FxA+TOPAs9WTr0m2y2loGSfd3dYSpghucvlvUcUOA8xGI8XC/ry/Lgn10tZ9rAxqx5rekx5G3A6GC5H9IGMEq7U8ij/yx4ad3wN01dEHJ/GkvWUatsH32bxXEjTMAn3BgJFQ8a8h3ujvUdA9FB2y+3DGePPA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(7416014)(36860700016)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	veezwFEtX8TofSVfpHo2v9Iki4dpwRYUm/EXNr7cvnU4oydXTz86DBzqSJPOKKiHiNv7N++cItZ+TQGoabHSsHrB12bH82NSEwcc7EwAcamNYCBmzvhaZtjjliY+Bm4mxvw5yPV/6HAHGFoWHu1p3iN6zdoOFfE4xTb8xtg1chjpAyHK/pxAJvbj1Cfe/PRDuvPmra7kMKZArqEl+c5zeYXI+ddqDGcWnyn7x3zrvgZHz0jtJ+lc9Vur1nV/a9mv6MU3QA/JXBjGrnTeroSi1XaKy2lCXnGXmNkc7qDyMBUyduznicGUdRIzlwtj0RG6RZ1leBUwtl+VlZplmQsg8PoULOAlsFe4r1xeq4J5yl49cFgq0mzkwwbo1AvKfVC+c7turzpu5U5DdSiVHIny2FPc8z2tZdYg18qBkNYe1SkpA+jk+ppjeCkN3r6KnYb1
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Mar 2026 19:53:55.2572
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 848863da-18d1-4662-5205-08de884cc000
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF0000C380.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR12MB9536
 
-Cleanup the gotos in the function.  No functional change.
+alloc_dax_region() calls kref_init() on the dax_region early in the
+function, but the error path for sysfs_create_groups() failure uses
+kfree() directly to free the dax_region. This bypasses the kref lifecycle.
 
-Signed-off-by: Gregory Price <gourry@gourry.net>
+Use dax_region_put() instead to handle kref lifecycle correctly.
+
+Suggested-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 ---
- drivers/cxl/core/region_dax.c | 13 +++++--------
- drivers/cxl/cxl.h             |  1 +
- 2 files changed, 6 insertions(+), 8 deletions(-)
+ drivers/dax/bus.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cxl/core/region_dax.c b/drivers/cxl/core/region_dax.c
-index fe367759ac69..de04f78f6ad8 100644
---- a/drivers/cxl/core/region_dax.c
-+++ b/drivers/cxl/core/region_dax.c
-@@ -81,29 +81,26 @@ static void cxlr_dax_unregister(void *_cxlr_dax)
+diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+index c94c09622516..299134c9b294 100644
+--- a/drivers/dax/bus.c
++++ b/drivers/dax/bus.c
+@@ -668,7 +668,7 @@ struct dax_region *alloc_dax_region(struct device *parent, int region_id,
+ 	};
  
- int devm_cxl_add_dax_region(struct cxl_region *cxlr)
- {
--	struct cxl_dax_region *cxlr_dax;
- 	struct device *dev;
- 	int rc;
+ 	if (sysfs_create_groups(&parent->kobj, dax_region_attribute_groups)) {
+-		kfree(dax_region);
++		dax_region_put(dax_region);
+ 		return NULL;
+ 	}
  
--	cxlr_dax = cxl_dax_region_alloc(cxlr);
-+	struct cxl_dax_region *cxlr_dax __free(put_cxl_dax_region) =
-+		cxl_dax_region_alloc(cxlr);
- 	if (IS_ERR(cxlr_dax))
- 		return PTR_ERR(cxlr_dax);
- 
- 	dev = &cxlr_dax->dev;
- 	rc = dev_set_name(dev, "dax_region%d", cxlr->id);
- 	if (rc)
--		goto err;
-+		return rc;
- 
- 	rc = device_add(dev);
- 	if (rc)
--		goto err;
-+		return rc;
- 
- 	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
- 		dev_name(dev));
- 
- 	return devm_add_action_or_reset(&cxlr->dev, cxlr_dax_unregister,
--					cxlr_dax);
--err:
--	put_device(dev);
--	return rc;
-+					no_free_ptr(cxlr_dax));
- }
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index f08be12e0e53..249a2f5ffc7b 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -712,6 +712,7 @@ DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_device(&_T->port.dev))
- DEFINE_FREE(put_cxl_port, struct cxl_port *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
- DEFINE_FREE(put_cxl_root_decoder, struct cxl_root_decoder *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->cxlsd.cxld.dev))
- DEFINE_FREE(put_cxl_region, struct cxl_region *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
-+DEFINE_FREE(put_cxl_dax_region, struct cxl_dax_region *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
- 
- int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
- void cxl_bus_rescan(void);
 -- 
-2.53.0
+2.17.1
 
