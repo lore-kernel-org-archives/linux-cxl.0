@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD46304BDC;
-	Mon, 23 Mar 2026 08:49:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5C937E308;
+	Mon, 23 Mar 2026 08:52:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774255756; cv=none; b=NACYeAeu52u5KJE7eVtVoM/Tgvqg2YiHisxvnbdHtnXkuiOUyNS88ipqLctBc7LLlhS6aSLmMcuYz9HRuAub/bmnAJbae4v0p8OR4gr7wQqiflF8WNv73T50ckkKDvL18GephjkmddxbGolmaJcrEE9HWV3kdMLvP/Xvkdr0QeI=
+	t=1774255975; cv=none; b=HiCUOjGqUdfK1gSvblHyVwCSXX1PVVK4oBDjBx1qJP+fAY6+tLimQc7R73EdZUWZIOtx+UOX744eQATwzIdTZdK94xtU97eYMGMDoEgKssH97BaRZJ+6ZtdNAdVKC8oO/XaodjFkt0q4IBdQq5S5WcA/4XCKOeITJOCz3g6nd/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774255756; c=relaxed/simple;
-	bh=DZF/jGQWrlgdVsuqiaHeoRfMY53sc41gnfhL+qN9Jjo=;
+	s=arc-20240116; t=1774255975; c=relaxed/simple;
+	bh=18UNDQsNpgLSTLWrKvwWo9FGvRTyO6v+NbBTHbWYc94=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FxwN9nYEpvetXenYbTSzio4kkjNHldffoKluQerdH3SWk5pv7FlfwNzuFTyyuDZ4NpJPz2bETESd+SZ1VKvaUIzNoSQcQqsWpy0CnRe00CbqJxTrPWglMbqWVtR+8iEn5QZVbNf3l6DPksuXwnab5Dl7ykURuiJW44nHmcupdew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QAcTk4zT; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=mJMMqVsv0TuMM2/cA/Vm0QqOnqy+kYFbk18otcsg6JtY3Ck226NiK8bAAMg27CMs/oT3IsGc04DGSbz+J4jfJLaWQv2Su1mt/gsHfH6ofM0ShVI4iPQWw++MSInwwprSSnr/4L46B0nDP8VIGuueg1r9w3k7Y1dgeFsbQ1OfIVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DIpa/29n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QAcTk4zT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61046C4CEF7;
-	Mon, 23 Mar 2026 08:49:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DIpa/29n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2163C4CEF7;
+	Mon, 23 Mar 2026 08:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774255756;
-	bh=DZF/jGQWrlgdVsuqiaHeoRfMY53sc41gnfhL+qN9Jjo=;
+	s=k20201202; t=1774255974;
+	bh=18UNDQsNpgLSTLWrKvwWo9FGvRTyO6v+NbBTHbWYc94=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QAcTk4zTb8b194gajG4acCAncrYK7ufNrmC8eZSvuFkEWYUKm/lkN/1L3B68vW+nX
-	 6vMCwhVFH6BvDWe9HEZWJrXLiOB7V0mUNJRQz6w84Eq/IEUD1RiBLfIM8C6x8z46i/
-	 wUGu1cGmH7Vq8Itfo92SF393/jsvzOMqx+cfLlq/9zDQfuydMjc1XGiCbal7NBOaKg
-	 bv8YSpBs9h+Yf3WNyJaE/61CcybP+Mc8xw8g4/9ojFi3unijlmqWvrf2gY7b6uKvfe
-	 PC9xrL6LmY3h2g/+O3uZwkSGSEcLDercf9YzDUhngS13/8iMVOPUl6o66YW9+z3oP3
-	 tdr+FccQyc6+A==
-Message-ID: <6b04c1a1-74e7-42e8-8523-a40802e5dacc@kernel.org>
-Date: Mon, 23 Mar 2026 09:49:11 +0100
+	b=DIpa/29nm6gKgiX0JR5l1fSr+4WLTLNlV+vp0JOijF7w2QMsywxrRm51PtA71RPdH
+	 iRozO/6diEgBMkm0iSflndMafaIvWelDIHs7fSM9FeMcfq3HDOvWXfjnyYHqu0Zu+H
+	 ezv7jBMdL4v8nFykw/RRnfstkdfs19L05nDIIZUWgU7LzGv3dzGASqFGBVlVNBdLnx
+	 Ag4xTVczGtpHyWfKlLgiv03iEySdUSFwc87wV+5gUEXBwDcjmDnwhzpwG4f94L0dlU
+	 t+pb8klOd65pEeGikxrSQv/kSk7lXSjxoLeHeg94IqYeD5v1irBp7iJcQWRFnTEU1n
+	 gbpe4coF/ovvg==
+Message-ID: <a0dd1a23-1114-4cb1-87b2-c2f2f5195c0d@kernel.org>
+Date: Mon, 23 Mar 2026 09:52:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,20 +35,15 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 13/15] mm/sparse: move sparse_init_one_section() to
- internal.h
-To: linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Oscar Salvador <osalvador@suse.de>, Axel Rasmussen
- <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Sidhartha Kumar <sidhartha.kumar@oracle.com>, linux-mm@kvack.org,
- linux-cxl@vger.kernel.org, linux-riscv@lists.infradead.org
-References: <20260320-sparsemem_cleanups-v2-0-096addc8800d@kernel.org>
- <20260320-sparsemem_cleanups-v2-13-096addc8800d@kernel.org>
+Subject: Re: [PATCH] drivers/base/memory: fix stale reference to
+ memory_block_add_nid()
+To: Kexin Sun <kexinsun@smail.nju.edu.cn>, osalvador@suse.de,
+ gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+ linux-mm@kvack.org, linux-cxl@vger.kernel.org, driver-core@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Cc: julia.lawall@inria.fr, xutong.ma@inria.fr, yunbolyu@smu.edu.sg,
+ ratnadiraw@smu.edu.sg
+References: <20260321105704.6093-1-kexinsun@smail.nju.edu.cn>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -95,98 +90,24 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260320-sparsemem_cleanups-v2-13-096addc8800d@kernel.org>
+In-Reply-To: <20260321105704.6093-1-kexinsun@smail.nju.edu.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/20/26 23:13, David Hildenbrand (Arm) wrote:
-> While at it, convert the BUG_ON to a VM_WARN_ON_ONCE, avoid long lines, and
-> merge sparse_encode_mem_map() into its only caller
-> sparse_init_one_section().
+On 3/21/26 11:57, Kexin Sun wrote:
+> The function memory_block_add_nid() was renamed to
+> memory_block_add_nid_early() by commit 0a947c14e48c
+> ("drivers/base: move memory_block_add_nid() into the
+> caller").  Update the stale reference in add_memory_block().
 > 
-> Clarify the comment a bit, pointing at page_to_pfn().
-> 
-> Reviewed-by: Lorenzo Stoakes (Oracle) <ljs@kernel.org>
-> Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> Assisted-by: unnamed:deepseek-v3.2 coccinelle
+
+I'm sure that patch was impossible to craft without an LLM. ;)
+
+> Signed-off-by: Kexin Sun <kexinsun@smail.nju.edu.cn>
 > ---
->  include/linux/mmzone.h |  2 +-
->  mm/internal.h          | 22 ++++++++++++++++++++++
->  mm/sparse.c            | 24 ------------------------
->  3 files changed, 23 insertions(+), 25 deletions(-)
-> 
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index b694c69dee04..dcbbf36ed88c 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -2008,7 +2008,7 @@ struct mem_section {
->  	/*
->  	 * This is, logically, a pointer to an array of struct
->  	 * pages.  However, it is stored with some other magic.
-> -	 * (see sparse.c::sparse_init_one_section())
-> +	 * (see sparse_init_one_section())
->  	 *
->  	 * Additionally during early boot we encode node id of
->  	 * the location of the section here to guide allocation.
-> diff --git a/mm/internal.h b/mm/internal.h
-> index 5f5c45d80aca..2f188f7702f7 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -965,6 +965,28 @@ void memmap_init_range(unsigned long, int, unsigned long, unsigned long,
->   */
->  #ifdef CONFIG_SPARSEMEM
->  void sparse_init(void);
-> +
-> +static inline void sparse_init_one_section(struct mem_section *ms,
-> +		unsigned long pnum, struct page *mem_map,
-> +		struct mem_section_usage *usage, unsigned long flags)
-> +{
-> +	unsigned long coded_mem_map;
-> +
-> +	BUILD_BUG_ON(SECTION_MAP_LAST_BIT > PFN_SECTION_SHIFT);
-> +
-> +	/*
-> +	 * We encode the start PFN of the section into the mem_map such that
-> +	 * page_to_pfn() on !CONFIG_SPARSEMEM_VMEMMAP can simply subtract it
-> +	 * from the page pointer to obtain the PFN.
-> +	 */
-> +	coded_mem_map = (unsigned long)(mem_map - section_nr_to_pfn(pnum));
-> +	VM_WARN_ON(coded_mem_map & ~SECTION_MAP_MASK);
-> +
-> +	ms->section_mem_map &= ~SECTION_MAP_MASK;
-> +	ms->section_mem_map |= coded_mem_map;
-> +	ms->section_mem_map |= flags | SECTION_HAS_MEM_MAP;
-> +	ms->usage = usage;
 
-The following fixup on top:
-
-From 66ec42c610feb3b84c405222f3f39ba0776549c6 Mon Sep 17 00:00:00 2001
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Date: Mon, 23 Mar 2026 09:48:21 +0100
-Subject: [PATCH] fixup: mm/sparse: move sparse_init_one_section() to
- internal.h
-
-Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
----
- mm/internal.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/internal.h b/mm/internal.h
-index 2f188f7702f7..969e58e5b3db 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -980,7 +980,7 @@ static inline void sparse_init_one_section(struct mem_section *ms,
- 	 * from the page pointer to obtain the PFN.
- 	 */
- 	coded_mem_map = (unsigned long)(mem_map - section_nr_to_pfn(pnum));
--	VM_WARN_ON(coded_mem_map & ~SECTION_MAP_MASK);
-+	VM_WARN_ON_ONCE(coded_mem_map & ~SECTION_MAP_MASK);
- 
- 	ms->section_mem_map &= ~SECTION_MAP_MASK;
- 	ms->section_mem_map |= coded_mem_map;
--- 
-2.43.0
-
+Reviewed-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
