@@ -1,60 +1,42 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E14399003;
-	Mon, 23 Mar 2026 12:12:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC99139DBE7;
+	Mon, 23 Mar 2026 12:17:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774267979; cv=none; b=O8lcD4coagRc2pmq6pk5n3o4QvkcmasHzQnr8f0kI9Tri2sFHLE7597EUIE6SvY0s7WGn2/vPA0s5OKp5wPJ4ucrGXYxdwtwW3IWTt9LpHv3FD3f295/i2FuYqjz+CHgU/iOCbMnt7hJZyl2yYzswWGye3KzecdkGrAaoNGoXro=
+	t=1774268281; cv=none; b=IxsOIh5DayG+kO1zYnBqAfLxmTKO94yGJAHvs9++0hIVpDU/B5dRRShVKwRFUxrRDK5ZqScXyajwTEVIsq7KuyGNlr4M82bS9Q74V1jyVLfO0aeFeWSM0sZ6Q+MMrfDXxK0Av6xI8RI0lj9tr4LmBaiwgVKEMO28ezoV0l4M9kA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774267979; c=relaxed/simple;
-	bh=ES47tFda23W0wI6tAmTREEyFeD9xE76p1S65kGx/oNQ=;
+	s=arc-20240116; t=1774268281; c=relaxed/simple;
+	bh=zZABfV6e88Ar5Zjk6mu9wuKEH66G8RrloPS7ZafFEtA=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j41EPanZwbQEDlMUa9WXPTORV8qfkWf4QHlq0DVXZd/xuT2VvttBWrQc4gMfeANBROwDYTbn92ttdHfq80wqJXrJCfwwIIlRHXg0ddh9Fs2TLgi9DztFr89k0tB8MMg+H/aUED5THZXrmhBspXYAW8QoMHz01+UeY3S0mNcOhTs=
+	 MIME-Version:Content-Type; b=mQv3WI3usnukVkgihYjTVuGxHVUssmDPsIknENVwNwi9D85HqIIH6Ep0rS+pL99CaHCtinG5Wj3d/fbUwCEMBE3K4GlJAF60Wotq73DPgj7wBqicNwIL3Ro7zGymJ1lRYP/8h9J2qvIaU53x/0UraLs0jvwdkx/XArYP3tz1Ogk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.224.150])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4ffX9q6X4NzJ468s;
-	Mon, 23 Mar 2026 20:12:47 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4ffXHd4MZ2zJ46Zf;
+	Mon, 23 Mar 2026 20:17:49 +0800 (CST)
 Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1F4944056B;
-	Mon, 23 Mar 2026 20:12:53 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id CD0BE4056E;
+	Mon, 23 Mar 2026 20:17:54 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
  (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 23 Mar
- 2026 12:12:51 +0000
-Date: Mon, 23 Mar 2026 12:12:50 +0000
+ 2026 12:17:54 +0000
+Date: Mon, 23 Mar 2026 12:17:52 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: John Groves <john@groves.net>
-CC: Miklos Szeredi <miklos@szeredi.hu>, Dan Williams
-	<dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, "Alison
- Schofield" <alison.schofield@intel.com>, John Groves <jgroves@micron.com>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, "Alexander
- Viro" <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>,
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong"
-	<djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Jeff Layton
-	<jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, "Stefan Hajnoczi"
-	<shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, Josef Bacik
-	<josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan
-	<chenlinxuan@uniontech.com>, James Morse <james.morse@arm.com>, Fuad Tabba
-	<tabba@google.com>, Sean Christopherson <seanjc@google.com>, Shivank Garg
-	<shivankg@amd.com>, Ackerley Tng <ackerleytng@google.com>, Gregory Price
-	<gourry@gourry.net>, Aravind Ramesh <arramesh@micron.com>, Ajay Joshi
-	<ajayjoshi@micron.com>, <venkataravis@micron.com>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V8 3/8] dax: add fsdev.c driver for fs-dax on character
- dax
-Message-ID: <20260323121250.00004402@huawei.com>
-In-Reply-To: <ab3nFoKxirEgoS_v@groves.net>
-References: <20260318202737.4344.dax@groves.net>
-	<20260319012837.4443-1-john@groves.net>
-	<20260319122057.00004503@huawei.com>
-	<ab3nFoKxirEgoS_v@groves.net>
+To: Gregory Price <gourry@gourry.net>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kernel-team@meta.com>, <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <dan.j.williams@intel.com>
+Subject: Re: [PATCH v4 3/3] cxl/core: use cleanup.h for
+ devm_cxl_add_dax_region
+Message-ID: <20260323121752.0000302a@huawei.com>
+In-Reply-To: <20260322131638.3636725-4-gourry@gourry.net>
+References: <20260322131638.3636725-1-gourry@gourry.net>
+	<20260322131638.3636725-4-gourry@gourry.net>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -67,31 +49,11 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
  dubpeml500005.china.huawei.com (7.214.145.207)
 
+On Sun, 22 Mar 2026 09:16:38 -0400
+Gregory Price <gourry@gourry.net> wrote:
 
-> > > diff --git a/drivers/dax/Makefile b/drivers/dax/Makefile
-> > > index 5ed5c39857c8..3bae252fd1bf 100644
-> > > --- a/drivers/dax/Makefile
-> > > +++ b/drivers/dax/Makefile
-> > > @@ -5,10 +5,16 @@ obj-$(CONFIG_DEV_DAX_KMEM) += kmem.o
-> > >  obj-$(CONFIG_DEV_DAX_PMEM) += dax_pmem.o
-> > >  obj-$(CONFIG_DEV_DAX_CXL) += dax_cxl.o
-> > >  
-> > > +# fsdev_dax: fs-dax compatible devdax driver (needs DEV_DAX and FS_DAX)
-> > > +ifeq ($(CONFIG_FS_DAX),y)
-> > > +obj-$(CONFIG_DEV_DAX) += fsdev_dax.o
-> > > +endif  
-> > 
-> > Why not throw in a new CONFIG_FSDAX_DEV and handle the dependencies
-> > in Kconfig?    
+> Cleanup the gotos in the function.  No functional change.
 > 
-> At one point I had another config parameter, but I'm trying not to
-> gratuitously add them. The fsdev driver is pretty small, and including it
-> whenever FS_DAX is enabled felt reasonable to me. I'm willing to change it
-> if there's a consensus that way.
+> Signed-off-by: Gregory Price <gourry@gourry.net>
 
-You can make the build do exactly the same thing with a separate Kconfig
-option. Just moves where the dependency tracking is. I'd prefer Kconfig
-because that's generally where I'd look for something like this.
-
-
-Jonathan
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
