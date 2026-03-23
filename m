@@ -1,75 +1,73 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9D3242D7B
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Mar 2026 15:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C7438759C
+	for <linux-cxl@vger.kernel.org>; Mon, 23 Mar 2026 15:55:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774280880; cv=none; b=ToDNxCHKfUTVmvEFKitzgCNfyZw8eSEgEMCaOSKLQDmnKXH8nvXZ52kMeeoY87of8slXXfEmfkqfkG+3r73JK589GIPEv7f3AU5HqYdh5KuhXxASSzYLoz36/po0yn10LXuyHleNQ6SHqIx8ciCbI6HMlXVG65l9bGAXV9oNuhc=
+	t=1774281328; cv=none; b=jodw+8qQdwtxDhajBZGD+i1LsB895Rtm2IxsPwYyEmYmVtol1bpn95xTn/R+NTliIT/g2U0xV4whsUKkMZ3kMDBEttcDDFyti5iamaCSjwEdhTjISJfnpucGktZOwk1DDmH5wPNoSHWf3fzLAaRLOtSlTuS5v0cdrLRaek6+7Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774280880; c=relaxed/simple;
-	bh=dwMid6ZP6PriB1TT0tK20NMNB0nX3hjNyjvX9cZ4wL4=;
+	s=arc-20240116; t=1774281328; c=relaxed/simple;
+	bh=lX+Bjv5gwvpWYyxyzQ+X0tXLMWOc1bEx8TOlU/3PV+U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pctxUhL2LR8KVGe8qrnOMMXfrN/Mg+5oFiV87qcmd0HF1xP60y4ZcyAA3/W2AzyMd3qIiSfbYfEhZdQ1us84zfrqJ2f1W9fyboVs81RBfBbqwqDa5UBobOslW5utTP5UQAelSMWu5Rbak4kAk9YwuT1cul/qlNSB0IMiHzezJrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=lha3xEw8; arc=none smtp.client-ip=209.85.219.46
+	 Content-Type:Content-Disposition:In-Reply-To; b=YrKTMxnxJBSvZlrGMpYZKKU1LMpbyYB0fNO6lZc6XJeWX8d35cic+2sx0SgXe+fOmAa05zxopLric+8MMQS7GOgVJ01/dyot/xLL9Xw5C2+T39Hi83KZWJZKJgAEGRmomS7Q0zWR3x9nPpdFbKRIkXmmkeP9+mGDJJuX55oUGqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=cFSRjZe4; arc=none smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="lha3xEw8"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-89a07f66f4eso50443256d6.1
-        for <linux-cxl@vger.kernel.org>; Mon, 23 Mar 2026 08:47:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="cFSRjZe4"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-50b4001af28so31611571cf.1
+        for <linux-cxl@vger.kernel.org>; Mon, 23 Mar 2026 08:55:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1774280876; x=1774885676; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1774281326; x=1774886126; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3logLKLl3DJkwVNGyAWufMZ0Vki4GuIuYSglYbdEm38=;
-        b=lha3xEw8jHyglePgV1Dm9SbFvj0yLY+WeEhIgAJBImsBD+Wngn3G96lEY5RSDXI8YZ
-         EfELxR1CEuviZNwqmWwa/1ipVZdbC383m5TpOJEMagfDFmqFuZhly5ePIuTkmDXKr7s1
-         ivyI7PVd5jVbS5ZeEa5Kx6fXQwXBmzp6e+gPFNHL0+SChGjUtULVNFogvaMaAQqOaEfv
-         7x9PnwrMHfrYyxoHF1hjmSeB1C9CcnIeHqHepnGTu39LFWw9m64CZRPEpMobvQgOKqyw
-         0v+h8IxVWDa3mRFYPtmx5l9TAPpV8+HMZIEKdZILniAYB2NwjFX8OGUNgwRpUe/4XTkI
-         VYjw==
+        bh=GrhakMb2iyzhEwZiPjId+H2lOD/QCjsAPbzl6n05L1I=;
+        b=cFSRjZe4azpzxKranc9IUqxxq1yw8b0QV/Ovk2acOal6xvEw8QThSzwAE6ApvVY6ur
+         Um7/S4LZgiNJny2BmOctTPZGP07xL2C1LNJcaMBkMoZe7++Cc5uEjSgcPikdxJxvN9hC
+         Tv4yxuWBjSRKBWEC/NAoqPccf9G86ztsIorEnlOlaGaX5Io0pPCRMeJzfdbxRZFu0FM1
+         1gqxmoSsZd7yEqCWE4qOE97TSx0+obcve/e0dKoBIltosXf4gRxtaYsMd2USnTTKLqON
+         2MqF8cDKsCMq+jB1Yf9bPoNqgVUpDA4+uq5Pd5Ln8w+iZWedkOpaNXrDr/L2szpfO05o
+         ecLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774280876; x=1774885676;
+        d=1e100.net; s=20251104; t=1774281326; x=1774886126;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3logLKLl3DJkwVNGyAWufMZ0Vki4GuIuYSglYbdEm38=;
-        b=jTKy+CfYk2F1z4raJ+hUmqpzHLdb4z3pHmD7nwTwjUzEmPSGBdkciBx8IkSTJeAdeh
-         e7NogUcbWKzLJSnHlr7ICVr+2ydM6JWSit3EiHHvUbs9YGewQcP1LvKjqAcpWopKYS0K
-         xvB5jZHcOBqlgMJXdcTg0/4GaWtn5rejCll0foaUBKzN3wdweF9alfczQ5FqWPa4g0Mc
-         Yo6XnsUDYQQkb0AQX8pXCVzlP+WmrgYHsKGDvGqnOVRY+5ToHrro45t0mfWW8WHmfl97
-         nAgQXwj60bTZkXiLFjrcqPFStERX8RbpSfyVUeEdcPZ1hOuspHg499lL+cSlHQgn6698
-         nE4w==
-X-Gm-Message-State: AOJu0YycsqEj+avyD+7HT5KRs//rdRdSictagLta1XEXnh0IMaUAJVtM
-	90ocRTH/x/umzK8aTuIkCBadi6ShZeqrjEBtOChkRujfk7xbqWDs2RgLrSsV7j5kdxQ=
-X-Gm-Gg: ATEYQzwyyOgAfo132gQgmdYqgnhNba9eYjQxQe+pLwoVXVHS//1fMUlQYZFdUvHiSHL
-	NyUWcqfPJURZrWP/JGQYCJ7zE85SIPzpsvwpFh28nA4Zt8aZp102eqRnDEZzLRniu8pGMTk7t0W
-	n6kWMBKXV4RzGmifxk9NguhErc5uEVOmwDtOP4A9vanVjvvLoSmrIbhChGv8Aq27AR8OwWn+g2a
-	hOMBDn3/PP3SvlVvKjmpuBNordIx0dNhUVS5copC8sPdEAqVDAyoDs6j/wIvFkgYsA+H9dYh1Mi
-	4H16fJLD1eixt5PxfLkKAM3N6O7e2jnLLInVcbOGWbMcrM96OdKuxBuF1oaEF7/x5PC15u4o/Yk
-	lKB/pfhwh69c6VRkQ1lREY8e5fbkkG7DKsbAOaEuFYrvMMZD2ZyxfpxrvJlcj/g71mcB/suaBeo
-	RYJo7gB56ukFcKr5puZNg6fietZTgGXlgJSh6LeMQKjuiwMI2O+8kx9iaWJKf+66xEl7jYavnkZ
-	HUj
-X-Received: by 2002:ad4:5ae4:0:b0:89c:5a3f:15a1 with SMTP id 6a1803df08f44-89c85ab28ecmr204408626d6.58.1774280876371;
-        Mon, 23 Mar 2026 08:47:56 -0700 (PDT)
+        bh=GrhakMb2iyzhEwZiPjId+H2lOD/QCjsAPbzl6n05L1I=;
+        b=gT1GKRuXfzWMjgJMFqVHzhL3Zuu5n08AGbPy4kawXsyxQtEWYNfqG4zV12zsLbtLn/
+         SowSRVKDGKMzZHJO8bEX0G0hVlYO/ZEmhXSjHrCWhtnWN7sr454PlsLDvXNTQrxqBeg0
+         2qffv4yyaI+mjb9rb8o3CTkFOfjFkHAylAJ4/UC9TjW/MHetVvOHG61OEJjsJObh9s5g
+         VCDwtz0WH/8LL3XzDTV6EsDFRIDrjqeN+wIt6T1faYHbgxThNsvYQXuWRa3LFBfdrK9c
+         +MXGRc5k9EMRmnfQKdcT7D6DFpDA9leUOUfJaafMMDr6mvOIFuUV4eu7RKTERh57tjxp
+         86ug==
+X-Forwarded-Encrypted: i=1; AJvYcCVsGCejpXOqGUF8L4bUv+RF04DkkvVJsOkgt+22w/k4OoBr6+LfGTS1fsGBapiP0TdFONrEW9bJwMU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yymt14g3Tnia7VmUspmBsyb70Srx+s8h9IEX5AQ0XMEhBqqVMnV
+	Qsta30Uts5Iuiq73t2filnu3VyIePt/QJIvJkGbcv3OyB/JELTFzwPNtjsoj2gp9ZiQ=
+X-Gm-Gg: ATEYQzyDxHDX/rKhfgB3Iak1VH0ccV3j0jyS3gBm4rvPv5Yv8L9ue4DUXW67V0YfVG/
+	7bbYKVaehhnQED5EWmbIeaKho2ZPiWANrLhHG9WrwEx5Ox+72jCdeVY59c51Hsiwxs86rGQ+cm8
+	7tcqrm/h2ZZnTN0sV+Zs4ijAXEILRVoLIVGmsQW+zAzVeS0hSyUp7oXA2hBhW00s/KN79OFnNDE
+	vDyr9QzK5MespI1jnQ6QL5IsOUhaQh4jWtnQIj8XUr+AD0deZnSu+HEF5LX4L/DvnnDURNipXlG
+	FL5HxOq52B6NXhtsb4ClIFBENJRRe0cWy1zVwxcw9Vgo3PuViMvOx0VXP3OrUpbj0nlRY2VyULo
+	Ynwi39GPGkR//M35nT6FCUJ8vOeLlJ7EV5hYYpGBjzI65lwUwsRU/jGoXAK/xBlUlmUO8GfwiTp
+	zSdO1R+QFmq00Hw5StE6Xih3hH1HL7nYWKVuDFSB7AeIiH9eHTBY8hvO4dxo0hQ1yx6MFWmXIU3
+	psH
+X-Received: by 2002:a05:622a:1f08:b0:50b:496c:baba with SMTP id d75a77b69052e-50b496cc8c4mr129862901cf.57.1774281325705;
+        Mon, 23 Mar 2026 08:55:25 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (158-94-182-130.mclarenap.oninferno.net. [158.94.182.130])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89c8521311esm91737436d6.7.2026.03.23.08.47.54
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89c85215615sm91770346d6.10.2026.03.23.08.55.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2026 08:47:55 -0700 (PDT)
-Date: Mon, 23 Mar 2026 10:47:51 -0500
+        Mon, 23 Mar 2026 08:55:24 -0700 (PDT)
+Date: Mon, 23 Mar 2026 10:55:17 -0500
 From: Gregory Price <gourry@gourry.net>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, dave@stgolabs.net, dave.jiang@intel.com,
+To: Li Ming <ming.li@zohomail.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
 	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com
-Subject: Re: [PATCH v4 1/3] cxl/core/region: move pmem region driver logic
- into region_pmem.c
-Message-ID: <acFgpwOgw5glyHsY@gourry-fedora-PF4VCD3F>
-References: <20260322131638.3636725-1-gourry@gourry.net>
- <20260322131638.3636725-2-gourry@gourry.net>
- <20260323150847.00002e6a@huawei.com>
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] cxl/hdm: Add support for 32 switch decoders
+Message-ID: <acFiZehIZXuyBf42@gourry-fedora-PF4VCD3F>
+References: <20260321061459.1910205-1-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -78,26 +76,18 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260323150847.00002e6a@huawei.com>
+In-Reply-To: <20260321061459.1910205-1-ming.li@zohomail.com>
 
-On Mon, Mar 23, 2026 at 03:08:47PM +0000, Jonathan Cameron wrote:
-> On Sun, 22 Mar 2026 09:16:36 -0400
-> Gregory Price <gourry@gourry.net> wrote:
+On Sat, Mar 21, 2026 at 02:14:59PM +0800, Li Ming wrote:
+> Per CXL r4.0 section 8.2.4.20.1. CXL host bridge and switch ports can
+> support 32 HDM decoders. Current implementation misses some decoders on
+> CXL host bridge and switch in the case that the value of Decoder Count
+> field in CXL HDM decoder Capability Register is greater than or equal to
+> 9.
 > 
-> > +	scoped_guard(device, &cxl_nvb->dev) {
-> > +		if (cxl_nvb->dev.driver)
-> > +			rc = devm_add_action_or_reset(&cxl_nvb->dev,
-> > +					cxlr_pmem_unregister,
-> > +					cxlr_pmem);
-> > +		else
-> > +			rc = -ENXIO;
-> As an example. If we happen to take this path... Where is the device_add() undone?
+> Update calculation implementation to ensure the decoder count calculation
+> is correct for CXL host bridge/switch ports.
+> 
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
 
-In many other parts of the code, device_add is not rolled back either
-"for reasons", and - depending on who you talk to - this is
-intentional... for debugging?
-
-I dunno, but the "hanging objects on failure" thing is common throughout
-cxl/ - :shrug:
-
-~Gregory
+Reviewed-by: Gregory Price <gourry@gourry.net>
