@@ -1,216 +1,168 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010038.outbound.protection.outlook.com [52.101.193.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8F2388377
-	for <linux-cxl@vger.kernel.org>; Mon, 23 Mar 2026 09:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774259510; cv=none; b=Uet1lhkkI5+MQfbGWCXf4hzBeIoFuCN84UQmbsPRhEYfMl1khi98/FFqZF/YPMONuUT4+P/IOtqMBg3mFSYwqnzwP9Mv8wLMJDUFUv5k2tOc9Dkdr8V0Ng4qirxWS3S1liBdSsyFnMJfvOtajLaO+SrZRjl4OLE7W8BbJt71wDI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774259510; c=relaxed/simple;
-	bh=uJil7NJbOV+0QadkpFuRqq6cw17EPIQpjcIvweZIiOE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=puuJJqpRH6Rtdi+kXLpGoiL9D/wvjrJANpRqCzpH3pR4D7u1PH63o27Z3UiGWqDOhcR2VjaQ/gTeTZ5DEn/BJW2tWgeD+cErxAj53fBvE26ZlXnKM7QJTk6kymOjkeu5jvC8+fNsJdD8tiiZDeqfSocrLWQAPBBMkX9GctNiGVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4ffT2p1rgTzJ468N;
-	Mon, 23 Mar 2026 17:51:30 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4C69B40589;
-	Mon, 23 Mar 2026 17:51:35 +0800 (CST)
-Received: from localhost (10.203.177.99) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 23 Mar
- 2026 09:51:34 +0000
-Date: Mon, 23 Mar 2026 09:51:31 +0000
-From: Alireza Sanaee <alireza.sanaee@huawei.com>
-To: Li Chen <me@linux.beauty>
-CC: Jonathan Cameron <jonathan.cameron@huawei.com>, Fan Ni
-	<fan.ni@samsung.com>, qemu-devel <qemu-devel@nongnu.org>, linux-cxl
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH 0/3] cxl: avoid KVM internal error for fixed memory
- windows
-Message-ID: <20260323095131.00006fed.alireza.sanaee@huawei.com>
-In-Reply-To: <19d1414db80.826e8bdb1235052.3769762728645896585@linux.beauty>
-References: <20260317033304.3185291-1-me@linux.beauty>
-	<20260317165702.00003c98@huawei.com>
-	<20260318150108.00001a5f.alireza.sanaee@huawei.com>
-	<19d1414db80.826e8bdb1235052.3769762728645896585@linux.beauty>
-Organization: Huawei
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB89387598;
+	Mon, 23 Mar 2026 11:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.38
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774265490; cv=fail; b=p8+sSBbZcU2Ciq6yVB2+J0Wcl1oVwjsQc8q+MehaTuqEGNbxNjK63DCoHpR+WzRwXuy0PXMXvzKTLRL2UeYtn/AUd09R2exlNM7pxdEUmoTrFDMA82ifr0lu8rtB0PQtuHaK/YYOl6ypWeLsqMB74TtTgaGzVCdEJtUaG8ccssE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774265490; c=relaxed/simple;
+	bh=H3kr3zYZGbNj7LlwDZ6QnvSBKtmRplgaCe5wLsHtvGg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=szAS63GhhWMuRistHJRs66ZXrrr/QflTb/vrtmRlbNV41ZZtMavHsHcBHeoNwzKC0Io9dMbQjczOhtrjXRmAwTX9+kXEkRcD9Mq4sr9euTipMmcCTefTS1vGndiV7t4xjsQAtPGAtdih7xnpohxDeNM179vPbiKe1bK6WryX/w8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rZ6YlNi8; arc=fail smtp.client-ip=52.101.193.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rZ6YlNi8"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JsLa9toMlLD0WuHNG0muO+qXhuATrBWxD+tZdsjTUCltPt4HKjOVpGDKfm2QZ6MHJA7a6nXDNDj3PvxwsC+UHWQjjuGH0MkN6Y4k0jQtx2gc/NObTp22rVUJ7pkQfdvTBQs9vaAaZwf9tUpV4JFf4ZbIcn2xK5gIFkhKglpY6lf5N2HmdkpolxUF+hsTacvPGWQUWZeOHb7s6DAOAum6nFjgDKmPLniSIgqvHrTF96ba/RxK9EednC+CRtovlnrLRogWPhotMpr6LYq+o2bhLvpI3EHgrOz75EcGgA7dsKxwfWctUIDj0qvP62ESk1DmoNOw5i/VyLLzxCO0V6nKcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9VNhL4xCMKdNcaT8jVGVciCiK0nq4KMN3YLJLlQiiyc=;
+ b=IeFifSAe1g2qoqKKcVR02kBRgkc1l8mszDCrwI+e1S1x81iUPb5An2cmJbw5vskCr3lwm0TXJaAsaN3mTqDkGr4pbOBXw9XrEU2LxbwGzSS6dOPySwsBt7i1Y5TB5C/tMVirlzgAkR61/Vh38UmoKHb+Jl2X64vbvGheY2eb0FaghixLaG8CfnznfydhKQCTUJH3dEJ93+aBNp/BEjC/0hSl8SupSNSFwH55MF1FRJM27iXcW0YthvT/CxzaAWt03vfKVzL46O12ToIm+n8eL/aa0KkPTj2oCp8Bcv4XOErkIKd7+B8XrEn8cdVhQWcjSfDdrW3xT/uE4F/ArjZu3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9VNhL4xCMKdNcaT8jVGVciCiK0nq4KMN3YLJLlQiiyc=;
+ b=rZ6YlNi8f7yVhD3QP7vMuy7X1GwW0FLueKwdlP5ybd67UqkD7HdxArfaWTSHmjEc5yqQVu58boUEo1IoLSOwN+yB1D0HSEI5VszHk6vFkgNt8LhTYQ1OdAdVHPYTF9LLhF709jSL1ar8nb6sMq8xMO9KxtoajOUeTP9Jyq2+0p0=
+Received: from BYAPR07CA0094.namprd07.prod.outlook.com (2603:10b6:a03:12b::35)
+ by MN0PR12MB5785.namprd12.prod.outlook.com (2603:10b6:208:374::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.9; Mon, 23 Mar
+ 2026 11:31:26 +0000
+Received: from SJ5PEPF000001F0.namprd05.prod.outlook.com
+ (2603:10b6:a03:12b:cafe::5f) by BYAPR07CA0094.outlook.office365.com
+ (2603:10b6:a03:12b::35) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9723.25 via Frontend Transport; Mon,
+ 23 Mar 2026 11:31:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ5PEPF000001F0.mail.protection.outlook.com (10.167.242.68) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9723.19 via Frontend Transport; Mon, 23 Mar 2026 11:31:25 +0000
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 23 Mar
+ 2026 06:31:25 -0500
+Received: from xcbalucerop40x.xilinx.com (10.180.168.240) by
+ satlexmb08.amd.com (10.181.42.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.17 via Frontend Transport; Mon, 23 Mar 2026 06:31:24 -0500
+From: <alejandro.lucero-palau@amd.com>
+To: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<dave.jiang@intel.com>, <dan.j.williams@intel.com>, <edward.cree@amd.com>,
+	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<edumazet@google.com>
+CC: Alejandro Lucero <alucerop@amd.com>
+Subject: [PATCH v24 00/11] Type2 device basic support
+Date: Mon, 23 Mar 2026 11:31:06 +0000
+Message-ID: <20260323113117.2352709-1-alejandro.lucero-palau@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001F0:EE_|MN0PR12MB5785:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7a168039-95c5-4943-a082-08de88cfb801
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700016|376014|1800799024|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	5CNBnoigGUmU4tYE1S2hgqv89H0Vs4LvAO++8RL3ykHFV2fonWZOv5ZXtGK2bXjH/8iyjGeRLDPmJ64LNs+1PH/NChm2l9MiY8tTqYh8aED+4FbfaBLUlD0S8nkDVlu395vg9LVyphkrL1Lao/F94CjI0PmkgG9zTyixGXjDXAHIKCHUjXk5gFeBGzAmezYZsXGKTC3xqD019naz7lTBioV/6AkIomLfkq+Wh/iBv3jhQ4f0hzH/ruowibyphYhwvIBkux48IA3eTdJbGy7IpoPTska4pElC+sagx92nJdYeniOErGdYsi1aDtPLWKWREBJvRCIoLoQ8H1UE64ikuPlh/4b5ivCzH4MRJc2/Lv5dlHveG1wXRHpwPm3w2BRRGjtUMdpgBfitV+/I+93ZjJUeSWhGlbfm9WiOVkbFxWVy9XCbe5trN3VPJC53Lf/Sr96jETMMaRoeutfMaJstdlM8UCI+H25YmQoRCnP3WIGrbJ5Am1PlbPEiSHA5v/P5n0eRaAPsJVVAhl/bBVlw4mCPvWio2GvRfXbNQmh7DZeBgxbqWYOy20NUNXBFZU5yQwi6LWZTz5ho4KUQBFmqXP7WON0W4U7HAui8O+fzvaf12FTi1QnuSZtWKuuX+C9rmXlfnpHf8YmeAVibxcw+cSCBrDHaQWqD0m9KRxfHTJ/jD5vCbsOs9Tt/Xoip6pAGOYKNY18qn7DHK3O92AEyLk5u78MieYUt65IRaE3dk58=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(376014)(1800799024)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	sBm2K5RH0jaEMDHv6j/46v4AuBCG67LJOyaOja/R6f2SO0owljzYeIkyWkIKQ0SoCsOnutzqpNj3WyOmK5HNDnyNdD/3abKkICtD+RYcoN+Ironzg/kMWoFa11EXChK9RHK9XhBbKec6VqWQCkOT7AL4wtdyt+j8NZslQkOWpBqq2lVjOGzV4Nx0ZUMTdI9Sfwu8d+fHF+lg7uACCws8gOoTzJDO4Ru7iGXuaxx1AX6/ZexjxFZfr1211GvI1p+1XYOScR/rIWJjexA0pzTaUal5PGZRbl9NDI1IJFe6ZEdnxIeZd4yKuXzJY3fOl8JQKYWhW6iHRjuMrTD0VTzDeKrqWQdC+0SjOhkQxrbCd7ONUtYlSMx3xg+Q5fBB5NASlo6nKmgEIQG+eZTNeY4rO5JEph5xl9itsZ3i/pjkBp7a/vgZTfZBJcJptJ41nz+7
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2026 11:31:25.8741
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a168039-95c5-4943-a082-08de88cfb801
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001F0.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5785
 
-On Sun, 22 Mar 2026 13:46:44 +0800
-Li Chen <me@linux.beauty> wrote:
+From: Alejandro Lucero <alucerop@amd.com>
 
-Super!
+This patchset should be aplied on the for-7.1/cxl-type2-support branch.
 
-> Hi Alireza,
->=20
->  ---- On Wed, 18 Mar 2026 23:01:08 +0800  Alireza Sanaee <alireza.sanaee@=
-huawei.com> wrote ---=20
->  > On Tue, 17 Mar 2026 16:57:02 +0000
->  > Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
->  >=20
->  > Hi Li,
->  >=20
->  > It looks like what you achieved is quite similar to what I have done i=
-n the patchset Jonathan shared earlier.
->  >=20
->  > You have used memory_region_begin_transaction and memory_region_transa=
-ction_commit calls that I believe they are useful to be there given other e=
-xamples I checked in the qemu code base.
->  >=20
->  > I will be using those calls and will send another version. Also, pleas=
-e let me know if that patchset actually addresses your usecase and fix the =
-bug you have in the cover letter. =20
-> =20
-> Yes, exactly! Your patchset addresses my use case issue perfectly. Thank =
-you very much for your effort!
->=20
-> Regards,
-> Li
->=20
->  > Thanks,
->  > Ali
->  >  =20
->  > > On Tue, 17 Mar 2026 11:33:00 +0800
->  > > Li Chen <me@linux.beauty> wrote:
->  > >  =20
->  > > > CXL fixed memory windows are currently modeled as an I/O MemoryReg=
-ion.
->  > > > When running under KVM, this makes the entire window look like MMI=
-O.
->  > > > If Linux onlines the window as system RAM (e.g. for a CXL Type-3
->  > > > volatile memdev), normal CPU stores into the window trigger KVM
->  > > > instruction emulation. Instructions like XSAVEC are not supported =
-by
->  > > > the emulator and abort the VM with a KVM internal error.
->  > > >=20
->  > > > Repro:
->  > > >   - Boot a guest with a CXL Type-3 volatile memdev and a fixed mem=
-ory window.
->  > > >   - In the guest, create a RAM region and online it as system RAM:
->  > > >       cxl create-region -m -t ram -d decoder0.0 -w 1 -g 4096 mem0
->  > > >   - QEMU exits with a KVM internal error.   =20
->  > >=20
->  > > Hi Li Chen,
->  > >=20
->  > > At least at first look this looks very like:
->  > >=20
->  > > https://lore.kernel.org/qemu-devel/20260306121151.883-1-alireza.sana=
-ee@huawei.com/
->  > >=20
->  > > Which was ready for merge as far as I was concerned, but missed gett=
-ing queued for
->  > > 11.0 (as last PCI pull request had gone) and is currently ready to g=
-o in next cycle.
->  > >=20
->  > > Please see if that works for your case. If there are improvements I'=
-d prefer
->  > > to see them applied on top of that series than reinventing what I th=
-ink
->  > > is the same thing.
->  > >=20
->  > > It's not KVM specific as linear mappings (when valid) bring huge per=
-formance
->  > > benefits on TCG as well as correctness for KVM.
->  > >=20
->  > > Jonathan
->  > >=20
->  > > +CC linux-cxl which is where CXL folk tend to hang out in larger num=
-bers
->  > > than on the qemu list.
->  > >=20
->  > >=20
->  > >  =20
->  > > >=20
->  > > > Serial output excerpt:
->  > > >   KVM internal error. Suberror: 1
->  > > >   extra data[0]: 0x0000000000000001
->  > > >   extra data[1]: 0xc0314061c70f480f
->  > > >   extra data[2]: 0x024080f610478b48
->  > > >   extra data[3]: 0x0000000000000400
->  > > >   extra data[4]: 0x000000010000000f
->  > > >   extra data[5]: 0x00000004a0003140
->  > > >   extra data[6]: 0x0000000000000000
->  > > >   extra data[7]: 0x0000000000000000
->  > > >   emulation failure
->  > > >   RAX=3D0000000000000007 RBX=3Dffff8eace0001a40 RCX=3Dffff8eace000=
-3100 RDX=3D0000000000000000
->  > > >   RSI=3D0000000000000007 RDI=3Dffff8eace00030c0 RBP=3Dffffd48ac174=
-7c08 RSP=3Dffffd48ac1747bc8
->  > > >   R8 =3D0000000000000007 R9 =3D0000000000000007 R10=3D000000000000=
-000d R11=3D0000000000000000
->  > > >   R12=3Dffff8ea945b51a40 R13=3Dffffd48ac166c000 R14=3D000000000000=
-0000 R15=3D0000000001200000
->  > > >   RIP=3Dffffffffaf77a14d RFL=3D00000256 [---ZAP-] CPL=3D0 II=3D0 A=
-20=3D1 SMM=3D0 HLT=3D0
->  > > >   ES =3D0000 0000000000000000 00000000 00000000
->  > > >   CS =3D0010 0000000000000000 ffffffff 00a09b00 DPL=3D0 CS64 [-RA]
->  > > >   SS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS   [-WA]
->  > > >   DS =3D0000 0000000000000000 00000000 00000000
->  > > >   FS =3D0000 00007f997da3fec0 00000000 00000000
->  > > >   GS =3D0000 ffff8eab0535d000 00000000 00000000
->  > > >   LDT=3D0000 fffffe7600000000 00000000 00000000
->  > > >   TR =3D0040 fffffe767cf8f000 00004087 00008b00 DPL=3D0 TSS64-busy
->  > > >   GDT=3D     fffffe767cf8d000 0000007f
->  > > >   IDT=3D     fffffe0000000000 00000fff
->  > > >   CR0=3D80050033 CR2=3D000055fd193a6468 CR3=3D000000010930c000 CR4=
-=3D00350ef0
->  > > >   DR0=3D0000000000000000 DR1=3D0000000000000000 DR2=3D000000000000=
-0000 DR3=3D0000000000000000
->  > > >   DR6=3D00000000ffff0ff0 DR7=3D0000000000000400
->  > > >   EFER=3D0000000000001d01
->  > > >   Code=3D0f 1f 44 00 00 48 8b 4f 10 48 8b 41 08 48 89 c2 48 c1 ea =
-20 <48> 0f c7 61 40 31 c0 48 8b 47 10 f6 80 40 02 00 00 c0 74 1e 48 8b 05 9=
-8 f8 e8 01 48 89 47
->  > > >=20
->  > > > This series keeps the existing MMIO dispatcher, but turns the fixed
->  > > > window into a container and (when the window maps linearly to a Ty=
-pe-3
->  > > > volatile memdev) overlays a RAM alias so KVM can create a memslot =
-for
->  > > > the range. The mapping is updated when HDM decoders are
->  > > > committed/uncommitted by the guest.
->  > > >=20
->  > > > This patchset is based on master branch 559919ce54927d59b215a4665e=
-da7ab6118a48aa
->  > > >=20
->  > > > Local validation on this base confirmed that the issue reproduces
->  > > > without the series and is fixed with the 3 patches below.
->  > > >=20
->  > > > Li Chen (3):
->  > > >   cxl/type3: expose vmem mapping for fixed windows
->  > > >   cxl: alias fixed memory windows to RAM under KVM
->  > > >   cxl: update fixed window mappings on decoder programming
->  > > >=20
->  > > >  hw/cxl/cxl-component-utils.c |   2 +
->  > > >  hw/cxl/cxl-host-stubs.c      |   1 +
->  > > >  hw/cxl/cxl-host.c            | 189 ++++++++++++++++++++++++++++++=
-++++-
->  > > >  hw/mem/cxl_type3.c           |  59 +++++++++++
->  > > >  include/hw/cxl/cxl.h         |   5 +
->  > > >  include/hw/cxl/cxl_device.h  |   3 +
->  > > >  include/hw/cxl/cxl_host.h    |   1 +
->  > > >  7 files changed, 258 insertions(+), 2 deletions(-)
->  > > >    =20
->  > >  =20
->  >=20
->  >  =20
-> Regards,
->=20
-> Li=E2=80=8B
->=20
+For the sake of having the impending Type2 support for known drivers
+needing it (sfc and Jump Trading) this version does only support the
+case of HDM Type2 device committed by the BIOS, keeping the
+decoders untouched when driver is unload, which requires a patch from v6
+Smita's series:
+
+https://lore.kernel.org/linux-cxl/20260210064501.157591-1-Smita.KoralahalliChannabasappa@amd.com/T/#mdad81d3817def8baace77ead9e2e305e775cf51d ?
+
+or a BIOS locking those decoders.
+
+Patches below same than those part of v23 but with only the code dealing
+with the supported case.
+
+
+Alejandro Lucero (11):
+  sfc: add cxl support
+  cxl/sfc: Map cxl regs
+  cxl/sfc: Initialize dpa without a mailbox
+  cxl: Prepare memdev creation for type2
+  sfc: create type2 cxl memdev
+  cxl/hdm: Add support for getting region from committed decoder
+  cxl: Add function for obtaining region range
+  cxl: Export function for unwinding cxl by accelerators
+  sfc: obtain decoder and region if committed by firmware
+  cxl: Avoid dax creation for accelerators
+  sfc: support pio mapping based on cxl
+
+ drivers/cxl/core/core.h               |   2 +
+ drivers/cxl/core/hdm.c                |  39 +++++++++
+ drivers/cxl/core/mbox.c               |  51 +----------
+ drivers/cxl/core/memdev.c             |  81 +++++++++++++++++-
+ drivers/cxl/core/pci.c                |   1 +
+ drivers/cxl/core/port.c               |   1 +
+ drivers/cxl/core/region.c             |  47 ++++++++--
+ drivers/cxl/core/regs.c               |   1 +
+ drivers/cxl/cxlmem.h                  |   6 --
+ drivers/cxl/cxlpci.h                  |  12 ---
+ drivers/cxl/mem.c                     |  45 +++++++---
+ drivers/cxl/pci.c                     |   1 +
+ drivers/net/ethernet/sfc/Kconfig      |   9 ++
+ drivers/net/ethernet/sfc/Makefile     |   1 +
+ drivers/net/ethernet/sfc/ef10.c       |  53 ++++++++++--
+ drivers/net/ethernet/sfc/efx.c        |  15 +++-
+ drivers/net/ethernet/sfc/efx_cxl.c    | 119 ++++++++++++++++++++++++++
+ drivers/net/ethernet/sfc/efx_cxl.h    |  40 +++++++++
+ drivers/net/ethernet/sfc/net_driver.h |  12 +++
+ drivers/net/ethernet/sfc/nic.h        |   3 +
+ include/cxl/cxl.h                     |  14 +++
+ include/cxl/pci.h                     |  21 +++++
+ 22 files changed, 480 insertions(+), 94 deletions(-)
+ create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
+ create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
+ create mode 100644 include/cxl/pci.h
+
+
+base-commit: 64584273dfb8a1e5fc7d78094ba22a93c204b44e
+-- 
+2.34.1
 
