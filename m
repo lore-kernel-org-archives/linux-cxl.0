@@ -1,42 +1,43 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDD1373BF8;
-	Tue, 24 Mar 2026 16:48:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466E23A1685;
+	Tue, 24 Mar 2026 16:51:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774370901; cv=none; b=Z7P9dGyH/njtCy7mM20fqay/B7iOw5UqbDqPp8xNWoQKVlGwmsqQGBCf25I54Uf2Sg3w3bYCtc3sJdipcqz1yUXNPmOaS8fp8Ax/6B1DvRHksJeEkn7alkSD4R+pHbtmPooxQKiwqIQU5AKReCBH9aZ55sftHjE4W7M74yZPpnE=
+	t=1774371064; cv=none; b=MhvfISf8n7hVGgFsQZjRDTMZgQmcyKpyzGB1Tj+ot4s0aUIjsUz9JDwxJi0oD1heYCYjx8hYNnTXPSkypQsBwdu0RCj9ibtrTJcMlbp9rbVcZ4Wrd01EQnf3auY5S4LsmDbFzKgDs4x5mq3SNBjcCHakfx8SJfx9cWF4LRZMgRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774370901; c=relaxed/simple;
-	bh=C7GcttILgCJe0hsy4zaidgG+iFB/1S2SbsquItMtaXI=;
+	s=arc-20240116; t=1774371064; c=relaxed/simple;
+	bh=Rhv1jKbAfD76JauhzUq88SPmUMAlx2Lko0H1YJDIPFo=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mkS0fMtCxZKbjsUVr27GJqvciolIM4yfaLwChxr6CalDnIIhXNEnvXqngCh2RGSLqaRQpvqKoAB27kCrqiVFLb3JONZK7wM8G2nRujBOcbEzxwR979e4TcVxMUGy+/xXW07daGzLbJ4qTF60RcxkV4amKPvKJODqJVA9XqPjUhk=
+	 MIME-Version:Content-Type; b=g0Imj3J1jIvOOrIL9N9D614R3oGGyLoghDQzZB815mVdjUFors1/POc12b5xwPeoPHalqhqshcdnZZOxsrZl2VttPMm4JAU44T//kmOwxMxbRFiJcLemF6KXUYx/uXjw/l2SyG8Bw+QLUcVjlyB96ZJq/7Y/UT9IopyuJdnc+zU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fgGF51C08zJ46BV;
-	Wed, 25 Mar 2026 00:48:09 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fgGHj16YrzHnGj5;
+	Wed, 25 Mar 2026 00:50:25 +0800 (CST)
 Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5547240587;
-	Wed, 25 Mar 2026 00:48:16 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D4DD840584;
+	Wed, 25 Mar 2026 00:50:58 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
  (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Mar
- 2026 16:48:15 +0000
-Date: Tue, 24 Mar 2026 16:48:13 +0000
+ 2026 16:50:58 +0000
+Date: Tue, 24 Mar 2026 16:50:56 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
 To: <alejandro.lucero-palau@amd.com>
 CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
 	<dave.jiang@intel.com>, <dan.j.williams@intel.com>, <edward.cree@amd.com>,
 	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<edumazet@google.com>, Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v24 06/11] cxl/hdm: Add support for getting region from
- committed decoder
-Message-ID: <20260324164813.00003801@huawei.com>
-In-Reply-To: <20260323113117.2352709-7-alejandro.lucero-palau@amd.com>
+	<edumazet@google.com>, Alejandro Lucero <alucerop@amd.com>, Gregory Price
+	<gourry@gourry.net>
+Subject: Re: [PATCH v24 08/11] cxl: Export function for unwinding cxl by
+ accelerators
+Message-ID: <20260324165056.000037b0@huawei.com>
+In-Reply-To: <20260323113117.2352709-9-alejandro.lucero-palau@amd.com>
 References: <20260323113117.2352709-1-alejandro.lucero-palau@amd.com>
-	<20260323113117.2352709-7-alejandro.lucero-palau@amd.com>
+	<20260323113117.2352709-9-alejandro.lucero-palau@amd.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -49,88 +50,88 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
  dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Mon, 23 Mar 2026 11:31:12 +0000
+On Mon, 23 Mar 2026 11:31:14 +0000
 alejandro.lucero-palau@amd.com wrote:
 
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> A Type2 device configured by the BIOS can already have its HDM
-> committed. Add a cxl_get_committed_decoder() function for cheking
-Spell check commit messages. checking if there is one
-
-
-> so after memdev creation. A CXL region should have been created
-> during memdev initialization, therefore a Type2 driver can ask for
-> such a region for working with the HPA. If the HDM is not committed,
-> a Type2 driver will create the region after obtaining proper HPA
-> and DPA space.
+> Add cxl_unregister_region() to the accelerator driver API
+> for a clean exit.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-
-I'm not following the logic below. Perhaps some comments would help
-me understand why the condition is sufficient.
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+For this I'm seeing an outstanding question from Gregory on v23.
 
 > ---
->  drivers/cxl/core/hdm.c | 39 +++++++++++++++++++++++++++++++++++++++
->  include/cxl/cxl.h      |  3 +++
->  2 files changed, 42 insertions(+)
+>  drivers/cxl/core/region.c | 17 ++++++++++++-----
+>  include/cxl/cxl.h         |  1 +
+>  2 files changed, 13 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index c222e98ae736..006be88efaa5 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -686,6 +686,45 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
->  	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 9c3ba911d865..8bb53a095290 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2468,9 +2468,8 @@ static struct cxl_region *to_cxl_region(struct device *dev)
+>  	return container_of(dev, struct cxl_region, dev);
 >  }
 >  
-> +static int find_committed_endpoint_decoder(struct device *dev, const void *data)
+> -static void unregister_region(void *_cxlr)
+> +void cxl_unregister_region(struct cxl_region *cxlr)
+>  {
+> -	struct cxl_region *cxlr = _cxlr;
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	int i;
+>  
+> @@ -2489,6 +2488,14 @@ static void unregister_region(void *_cxlr)
+>  	cxl_region_iomem_release(cxlr);
+>  	put_device(&cxlr->dev);
+>  }
+> +EXPORT_SYMBOL_NS_GPL(cxl_unregister_region, "CXL");
+> +
+> +static void __unregister_region(void *_cxlr)
 > +{
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_port *port;
+> +	struct cxl_region *cxlr = _cxlr;
 > +
-> +	if (!is_endpoint_decoder(dev))
-> +		return 0;
-> +
-> +	cxled = to_cxl_endpoint_decoder(dev);
-> +	port = cxled_to_port(cxled);
-> +
-> +	return cxled->cxld.id == port->hdm_end;
-
-This condition is non obvious enough that to me it maybe needs a comment on
-why it works.
-
+> +	return cxl_unregister_region(cxlr);
 > +}
-> +
-> +struct cxl_endpoint_decoder *cxl_get_committed_decoder(struct cxl_memdev *cxlmd,
-> +						       struct cxl_region **cxlr)
-> +{
-> +	struct cxl_port *endpoint = cxlmd->endpoint;
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct device *cxled_dev;
-> +
-> +	if (!endpoint)
-> +		return NULL;
-> +
-> +	guard(rwsem_read)(&cxl_rwsem.dpa);
-
-	struct device *cxled_dev __free(device) =
-		device_find_child(&...)
-
-or something along those lines to avoid need for manual put below.
-
-> +	cxled_dev = device_find_child(&endpoint->dev, NULL,
-> +				      find_committed_endpoint_decoder);
-> +
-> +	if (!cxled_dev)
-> +		return NULL;
-> +
-> +	cxled = to_cxl_endpoint_decoder(cxled_dev);
-> +	*cxlr = cxled->cxld.region;
-> +
-> +	put_device(cxled_dev);
-
-> +	return cxled;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_get_committed_decoder, "CXL");
-
+>  
+>  static struct lock_class_key cxl_region_key;
+>  
+> @@ -2642,7 +2649,7 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
+>  	if (rc)
+>  		goto err;
+>  
+> -	rc = devm_add_action_or_reset(port->uport_dev, unregister_region, cxlr);
+> +	rc = devm_add_action_or_reset(port->uport_dev, __unregister_region, cxlr);
+>  	if (rc)
+>  		return ERR_PTR(rc);
+>  
+> @@ -2797,7 +2804,7 @@ static ssize_t delete_region_store(struct device *dev,
+>  	if (IS_ERR(cxlr))
+>  		return PTR_ERR(cxlr);
+>  
+> -	devm_release_action(port->uport_dev, unregister_region, cxlr);
+> +	devm_release_action(port->uport_dev, __unregister_region, cxlr);
+>  	put_device(&cxlr->dev);
+>  
+>  	return len;
+> @@ -3963,7 +3970,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>  
+>  	rc = __construct_region(cxlr, ctx);
+>  	if (rc) {
+> -		devm_release_action(port->uport_dev, unregister_region, cxlr);
+> +		devm_release_action(port->uport_dev, __unregister_region, cxlr);
+>  		return ERR_PTR(rc);
+>  	}
+>  
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index 122b3331469d..b8cdc604480a 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -236,4 +236,5 @@ struct cxl_endpoint_decoder *cxl_get_committed_decoder(struct cxl_memdev *cxlmd,
+>  						       struct cxl_region **cxlr);
+>  struct range;
+>  int cxl_get_region_range(struct cxl_region *region, struct range *range);
+> +void cxl_unregister_region(struct cxl_region *cxlr);
+>  #endif /* __CXL_CXL_H__ */
 
