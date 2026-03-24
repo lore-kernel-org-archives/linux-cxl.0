@@ -1,271 +1,285 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA713A3801
-	for <linux-cxl@vger.kernel.org>; Tue, 24 Mar 2026 04:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AD7B2F2607;
+	Tue, 24 Mar 2026 05:35:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774325213; cv=none; b=ZIwRbSEJaH+7LEpo/L1l+Tb3zQYgqp9vVqvnWPK75VKv5xO672SlcKtODtFQD0X5Upzm81I40xY1bLO6tTvnaTmlKkEiL/2Qpws+EJa+cCDfJXvvVgccbhJJBdbfFcizTHQn2u2Sb4OA16u/LnrjjbgX10VY/ExwDsGNkOvTzEY=
+	t=1774330566; cv=none; b=u0mjTJH+rVb2tRlFmStDk0H4XOwGPv7ZV4/me+1eftOJsmgVDUkmyx5F9lySLYEjtxbg6cJ0lDcG8lAp5RplefbJDldroVLNRwCOymn/W9OEyUKLC4VUZ0H5W1axERggMpjqJK3fGvDywSsxfuYIZeyk3rx2rBEN5vS3fKw3ZxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774325213; c=relaxed/simple;
-	bh=1dSI8uPgrOCxTI9OYz4NnxsIAB9AVvMoJAgxM+7icCg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gwrrVBBMGfYvUhZhPs0T5Se3wDfcZ8pm6p4DQMSNdz2ho8DNRZ6jjMF/eFCPqDU/DCXzPBr1B8pwpj/l8R1dg2SG9N1+Oh6ZAay/37Bu14PiRfADvvjyQ8+l28e1zAzgcEr9XY1Geu0v/Re8LyIdHxgpUMjHTG213K31QCAGFOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6694c9c02c5so3711669a12.1
-        for <linux-cxl@vger.kernel.org>; Mon, 23 Mar 2026 21:06:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774325210; x=1774930010;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mKhP91x60A4htrnyv/lYS4eAgaoQcHw+SQIsdql0cwA=;
-        b=TaIvo/2qRNDDYaEfg8cX9FB+UpKuGeFHj3NupDPsikCGz34RSJxoyBi1trykfbQksT
-         TbROzgNuxuvHHKUQEUwx5XcM27qVxAwzYxyI6LYfGltPsDYzaJeHOL1RMHWQOjndbAbx
-         gApS6jyzhVE/fAdKzKuhWWbWHzPEps6fBuwk8gBTwlR6HqQilTW/IOzt89JdBqT8wsl8
-         e6UOicML8XeAfoibDxefA0SU04IVp6l5G7gGy5o5UEKxJUSgcL5yS4UHymb25H/QM32g
-         RyGIn7KOvu0zqgXX+0mBh863KO1INtVV0y+YBZKVULx1bv776sZN+4rURXg90dfx2Cjv
-         BuLA==
-X-Forwarded-Encrypted: i=1; AJvYcCUvjr+m2bJVS/l8BzbcaqZje+l4c69CaFk2iUsUCcHtsDsqxu9xyKzXywtJND4xKkGEJPw9fJXuF+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKRH4zUc2h26EJxGCQH0vkUJcoSYhDYgbV5xTNqcYKb808Kv8I
-	CtQ0kfYkQRgX2FoVkhopgZVIsUfhIE8iUaURRv/65yKAvzHwyu6wURqEDuVlHNFmWYk=
-X-Gm-Gg: ATEYQzxRioyIx9oM16COyjvhHebC7gspVVyx5EoF/HONP0OblcV0ooc/UE+W2QwLG+Y
-	5HbiM7c/OBfjtKmh7B4vYOUvFqIER6Gmhk5dBfmpgv7Q1evSFbS4939+IiRcsEbX0CzG0KZ1V+2
-	xW/+6XZb4ud7dC+NCs4SGI3GnaljWzPkymfJLT/UvmVHllVeg0w77Z9l6X0aWlwoaL/Fdw+l5HJ
-	fyXwRJenCpMmKCi7VG6P09hyUl0AZZB0ZHjhrKdeZERNUW1rFQWF0zIJIb/9Bula60+PWY97juH
-	IwNDturBc5KwKY+tmRpcWnRWCPVye6/S6yABS4zg5i4SSMNquBEmm/GInmIAZmU9tPz8ywaDkNd
-	0lW7qAC/4lrBhRGc8211Oh597+4LDom1nTKN14RMwmIgCs5Si+VVOD11DEMayAQo+MXERWptSh5
-	7fYy+QGY9fHSUMmn1w3d08OcdzgIlyeHIY6E5ACrbaIYm+uepzJfvfXVM=
-X-Received: by 2002:a17:906:33d0:b0:b97:a03c:6f4d with SMTP id a640c23a62f3a-b982f3dbe68mr813236066b.56.1774325209488;
-        Mon, 23 Mar 2026 21:06:49 -0700 (PDT)
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com. [209.85.221.48])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9832f43b5csm588421966b.1.2026.03.23.21.06.49
-        for <linux-cxl@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2026 21:06:49 -0700 (PDT)
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-439af7d77f0so3581330f8f.0
-        for <linux-cxl@vger.kernel.org>; Mon, 23 Mar 2026 21:06:49 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXTbDzlZWZKkwkuR79wHqqMJAtxHeOkg7frS3JiU0AGjf3exriCK2nvCeGFadKxlyHFnCWMEOInYpg=@vger.kernel.org
-X-Received: by 2002:a5d:5f54:0:b0:43b:3d4f:e17a with SMTP id
- ffacd0b85a97d-43b6426d59emr23577137f8f.37.1774325208783; Mon, 23 Mar 2026
- 21:06:48 -0700 (PDT)
+	s=arc-20240116; t=1774330566; c=relaxed/simple;
+	bh=hDqaU7At90QoK6WZY/XHw5eYpKPYYvYADK9OPfUEezQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=E4217HnQ5IWtjPasUd9sAHsVvFiWyN5WwjLaQ3C4DRao1+70e3pfyInfgLKPoS/J9E1u92KW/k0ESDgiDVrLPeo9ychfVLyPY724apjJ9BsgvytFjjME39wMEVOG6qD3D3pcQreLqaVl8Bq9PvfqkmdbXaWg6yU7N6v69AM0wfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-c2dff70000001609-3d-69c222b85e95
+From: Rakie Kim <rakie.kim@sk.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: akpm@linux-foundation.org,
+	gourry@gourry.net,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	byungchul@sk.com,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	david@kernel.org,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	dave@stgolabs.net,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	harry.yoo@oracle.com,
+	lsf-pc@lists.linux-foundation.org,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	Keith Busch <kbusch@kernel.org>,
+	Rakie Kim <rakie.kim@sk.com>
+Subject: Re: [LSF/MM/BPF TOPIC] [RFC PATCH 0/4] mm/mempolicy: introduce socket-aware weighted interleave
+Date: Tue, 24 Mar 2026 14:35:45 +0900
+Message-ID: <20260324053549.324-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.52.0.windows.1
+In-Reply-To: <20260320165605.000024c0@huawei.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260309000810.2632065-2-iam@sung-woo.kim> <68ed44be-9b21-47b7-a833-284aa471fb9b@intel.com>
-In-Reply-To: <68ed44be-9b21-47b7-a833-284aa471fb9b@intel.com>
-From: Sungwoo Kim <iam@sung-woo.kim>
-Date: Tue, 24 Mar 2026 00:06:32 -0400
-X-Gmail-Original-Message-ID: <CAJNyHpK2fxDL7JxfBYGehBT_RP5r5KETsyAB7a+WK1RK-0pxMg@mail.gmail.com>
-X-Gm-Features: AQROBzB8MG1jKaSGNOhXUAz7SG2VG1k0sdIDdFQBtybpKPggsqkOG2P4sJL-m6M
-Message-ID: <CAJNyHpK2fxDL7JxfBYGehBT_RP5r5KETsyAB7a+WK1RK-0pxMg@mail.gmail.com>
-Subject: Re: [PATCH] cxl/hdm: fix a warning in devm_remove_action()
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Ben Widawsky <bwidawsk@kernel.org>, Dave Tian <daveti@purdue.edu>, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYRzGeXfOzjlOR8cleNTIXGRYeJd8pQgJw5eSMPJTCTncqa2cl3nJ
+	BdbEFJpppoi5jVo3L3NqjcZ05GXDa1iJI9PF1C4m3oIZaJZgTRH89uN5nt//y5/CBHbcn5Jm
+	5rHyTFGGkODhvGWvp6EdQps0olUdBbXtBgI6v40S0DKRAutqRwEcmiwmYMukAcA50x8A152D
+	JJxu+IHDntk5HOqfjBNw0PSIhNW2cQDNyhkSflC/xaHdoiXglGGTC4fVzTjsXuzC4GplAJyu
+	jId97WYOrBnTEVBTXAmgo2qAA1sMEqjpnyLjA1Cn2kkinTEflZfZSXSnb5mLnr2Z5yCj/i6B
+	jCvVJBp6+BdHnV/iUM1EI0AVJT8J5Jp14KhWcxu1v/6IoxFdH4l+Gfcn0xd5J8RshrSAlYef
+	TONJ3ttKudmWU4UmrZ5UgpFoFfCgGDqGGdjs5+6w3tlNqABFEbSQGehKdcc+dBSzcK8XqACP
+	wugagqnXPwbuYi8tYaoaNzE34/Qhplq7SLiZT0cztvtl+PbNEKbtlWOLPehIRlmu23IFtBez
+	8LIHbO+9meH671sbjA5kSkwabNutoBhHw+Ft9mOsTRN4Fdij3qWodyk6wNEDgTSzQCaSZsSE
+	SRSZ0sKw9CyZEfx/dUPRxqUOsDJ6wQZoCgi9+GmJVqmAKyrIVchsgKEwoQ8/sK1bKuCLRYqb
+	rDzrsjw/g821gQAKF/ryo1ZviAX0VVEee51ls1n5TsuhPPyVIDL/7JUcS2uy62iOXVzuffyA
+	50bigxfm0M+pDRXozMHU3rqCOIMquKPIcy1h5nRQs3XwXZCvQulMOjalTCsdl2tr5/z2NSVZ
+	1kqE645rvw2tdTmxXzVrsSHB5yMSMDZ6Yan+Vrdfu2vMfM4Vnl5YOBrq+Xz+k8wco0rJj0yw
+	LgnxXIko8ggmzxX9A89/KlfmAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA02RfyyUcRzH+97z3PM8bm49Ls0z/tBOKlpKan1rlFrNd1atNlstVq48czfn
+	R3eYazNnftUpRMJRieXHuSHlZyEXztEwxlBHLZzYVVKsaHKszX+vvV/v9+efD4UJunF7ShIW
+	ycrCRFIhwcN5ubsD9jUIdZID/aXOsKBKS0Dj534CNo34wd4H+QTMye4HsGs0noAVo1oATbV/
+	APxt1JNwomQahwvTcxhsnTLhUPN0mID62sckzNQNA/j2kYEL65UfSdin7sbhYFMBAce1q1xo
+	UJfjsGWuGYOLaQ5wIs0b6oZNXNheVc+BWQOFBMyPTwNwLKOTAyu0YrhcV7YWdYyT3jtQo9pI
+	osKaKJSaPEiixHYzFxW//sJBNZo7BKr5kUmirtxlHDV+OoqyRkoBupfwlUDzU2M4WnyPUPHM
+	dw7Kzo9DVS+H8AuCKzzPIFYqiWZl+48H8sS9uiRuRNOpmNoCDakE7zxUwIpi6EOMxthCqABF
+	EbSQ6WwOsMS29EFm9u4boAI8CqOzCCZP8wRYxDZazGSUrmIWxmlnJrNgjrAwn/ZgdOnJ+MZN
+	F6by+dg6W9HujDK1cH0roK2Z2epWsNG3YQx5k+sdjHZkEmrzsQxgrd6k1JtUIeBogK0kLDpU
+	JJEedpOHiBVhkhi3G+GhNWDtwyWxK/cbwM9BHx2gKSC05gf6tEkEXFG0XBGqAwyFCW35jpUt
+	EgE/SKS4xcrCr8mipKxcBxwoXGjH973EBgroYFEkG8KyEazsv+VQVvZKEPGtr8M17sQZYXZR
+	uioop8z3xVm+U6x4yVztaUj/sNVpsfzqLj/r0w174pZMvor5tmOJen3oSXH2woDZxp8s3r5X
+	W9ozfaRo8qLmWW6dpifyut3DlfGpnSIv+yTkcTNyOWWL+dflV57+pmgvWnretmS8/jZMPxc3
+	GDxTz6YM/XUR4nKxyN0Vk8lF/wB2WScv3QIAAA==
+X-CFilter-Loop: Reflected
 
-Hello,
+On Fri, 20 Mar 2026 16:56:05 +0000 Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
+> 
+> > > > 
+> > > > To make this possible, the system requires a mechanism to understand
+> > > > the physical topology. The existing NUMA distance model provides only
+> > > > relative latency values between nodes and lacks any notion of
+> > > > structural grouping such as socket boundaries. This is especially
+> > > > problematic for CXL memory nodes, which appear without an explicit
+> > > > socket association.  
+> > > 
+> > > So in a general sense, the missing info here is effectively the same
+> > > stuff we are missing from the HMAT presentation (it's there in the
+> > > table and it's there to compute in CXL cases) just because we decided
+> > > not to surface anything other than distances to memory from nearest
+> > > initiator.  I chatted to Joshua and Kieth about filling in that stuff
+> > > at last LSFMM. To me that's just a bit of engineering work that needs
+> > > doing now we have proven use cases for the data. Mostly it's figuring out
+> > > the presentation to userspace and kernel data structures as it's a
+> > > lot of data in a big system (typically at least 32 NUMA nodes).
+> > >   
+> > 
+> > Hearing about the discussion on exposing HMAT data is very welcome news.
+> > Because this detailed topology information is not yet fully exposed to
+> > the kernel and userspace, I used a temporary package-based restriction.
+> > Figuring out how to expose and integrate this data into the kernel data
+> > structures is indeed a crucial engineering task we need to solve.
+> > 
+> > Actually, when I first started this work, I considered fetching the
+> > topology information from HMAT before adopting the current approach.
+> > However, I encountered a firmware issue on my test systems
+> > (Granite Rapids and Sierra Forest).
+> > 
+> > Although each socket has its own locally attached CXL device, the HMAT
+> > only registers node1 (Socket 1) as the initiator for both CXL memory
+> > nodes (node2 and node3). As a result, the sysfs HMAT initiators for
+> > both node2 and node3 only expose node1.
+> 
+> Do you mean the Memory Proximity Domain Attributes Structure has
+> the "Proximity Domain for the Attached Initiator" set wrong?
+> Was this for it's presentation of the full path to CXL mem nodes, or
+> to a PXM with a generic port?  Sounds like you have SRAT covering
+> the CXL mem so ideal would be to have the HMAT data to GP and to
+> the CXL PXMs that BIOS has set up.
+> 
+> Either way having that set at all for CXL memory is fishy as it's about
+> where the 'memory controller' is and on CXL mem that should be at the
+> device end of the link.  My understanding of that is was only meant
+> to be set when you have separate memory only Nodes where the physical
+> controller is in a particular other node (e.g. what you do
+> if you have a CPU with DRAM and HBM).  Maybe we need to make the
+> kernel warn + ignore that if it is set to something odd like yours.
+> 
 
-I'd like to gently follow up on this patch.
-Are there any concerns or issues about the patch that I should address
-before it can be merged?
+Hello Jonathan,
 
-Best,
-Sungwoo.
+Your insight is incredibly accurate. To clarify the situation, here is
+the actual configuration of my system:
 
-On Mon, Mar 9, 2026 at 4:21=E2=80=AFPM Dave Jiang <dave.jiang@intel.com> wr=
-ote:
->
->
->
-> On 3/8/26 5:08 PM, Sungwoo Kim wrote:
-> > In the following race scenario, devm_remove_action() can be called
-> > before devm_add_action(), triggering a warning because there is no
-> > action to remove.
-> >
-> > To fix this, extend a critical section to embrace both
-> > __cxl_dpa_reserve() and devm_add_action().
-> >
-> > task 1:
-> > cxl_dpa_alloc()
-> >   __cxl_dpa_reserve()    ...(1)
-> >   devm_add_action()      ...(4)
-> >
-> > task 2:
-> > cxl_dpa_free()
-> >   guard()
-> >   if (!cxled->dpa_res)   ...(2) pass, due to (1)
-> >     return 0;
-> >   devm_cxl_dpa_release()
-> >     devm_remove_action()  ...(3) warning, no action is added yet
-> >
-> > Warning log:
-> >
-> > WARNING: ./include/linux/device/devres.h:160 at devm_remove_action incl=
-ude/linux/device/devres.h:160 [inline], CPU#0: syz.1.6464/25993
-> > WARNING: ./include/linux/device/devres.h:160 at devm_cxl_dpa_release dr=
-ivers/cxl/core/hdm.c:290 [inline], CPU#0: syz.1.6464/25993
-> > WARNING: ./include/linux/device/devres.h:160 at cxl_dpa_free+0x2a4/0x32=
-0 drivers/cxl/core/hdm.c:572, CPU#0: syz.1.6464/25993
-> > Modules linked in:
-> > CPU: 0 UID: 0 PID: 25993 Comm: syz.1.6464 Not tainted 6.19.0-g15a37b05f=
-387 #10 PREEMPT(lazy)
-> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-g=
-b52ca86e094d-prebuilt.qemu.org 04/01/2014
-> > RIP: 0010:devm_remove_action include/linux/device/devres.h:160 [inline]
-> > RIP: 0010:devm_cxl_dpa_release drivers/cxl/core/hdm.c:290 [inline]
-> > RIP: 0010:cxl_dpa_free+0x2a4/0x320 drivers/cxl/core/hdm.c:572
-> > Code: 01 31 ff 41 89 c4 89 c6 e8 a9 91 1d fe 45 85 e4 0f 85 55 ff ff ff=
- e8 4b 96 1d fe 90 0f 0b 90 e9 47 ff ff ff e8 3d 96 1d fe 90 <0f> 0b 90 e9 =
-63 ff ff ff bb f0 ff ff ff e9 68 ff ff ff 48 c7 c7 f4
-> > RSP: 0018:ffff888129f77bb8 EFLAGS: 00010282
-> > RAX: 00000000000000f3 RBX: ffff888102f64000 RCX: ffffffff837301d3
-> > RDX: 0000000000080000 RSI: ffffc90001c5a000 RDI: 0000000000000005
-> > RBP: 00000000fffffffe R08: 0000000000000001 R09: ffff888123f98000
-> > R10: 00000000fffffffe R11: 0000000000000000 R12: 0000000000000001
-> > R13: ffff888102f64040 R14: dffffc0000000000 R15: ffff888102f64000
-> > FS:  00007fae0488d6c0(0000) GS:ffff88827086d000(0000) knlGS:00000000000=
-00000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000000000 CR3: 000000012f7d6003 CR4: 0000000000770ef0
-> > PKRU: 80000000
-> > Call Trace:
-> >  <TASK>
-> >  dpa_size_store+0xfb/0x230 drivers/cxl/core/port.c:269
-> >  dev_attr_store+0x58/0x80 drivers/base/core.c:2437
-> >  sysfs_kf_write+0xf2/0x150 fs/sysfs/file.c:142
-> >  kernfs_fop_write_iter+0x3d6/0x5d0 fs/kernfs/file.c:352
-> >  new_sync_write fs/read_write.c:595 [inline]
-> >  vfs_write+0x68e/0x1050 fs/read_write.c:688
-> >  ksys_write+0x12a/0x250 fs/read_write.c:740
-> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-> >  do_syscall_64+0xfc/0x670 arch/x86/entry/syscall_64.c:94
-> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> > RIP: 0033:0x7fae0399c669
-> > Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89=
- f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 =
-ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
-> > RSP: 002b:00007fae0488d028 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> > RAX: ffffffffffffffda RBX: 00007fae03c15fa0 RCX: 00007fae0399c669
-> > RDX: 000000000000000a RSI: 00002000000001c0 RDI: 0000000000000009
-> > RBP: 00007fae03a32c71 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> > R13: 00007fae03c16038 R14: 00007fae03c15fa0 R15: 00007ffe53519fb8
-> >  </TASK>
-> > irq event stamp: 1021
-> > hardirqs last  enabled at (1029): [<ffffffffb7d04c4b>] __up_console_sem=
-+0x7b/0x90 kernel/printk/printk.c:347
-> > hardirqs last disabled at (1038): [<ffffffffb7d04c30>] __up_console_sem=
-+0x60/0x90 kernel/printk/printk.c:345
-> > softirqs last  enabled at (1016): [<ffffffffb7b73b93>] __do_softirq ker=
-nel/softirq.c:656 [inline]
-> > softirqs last  enabled at (1016): [<ffffffffb7b73b93>] invoke_softirq k=
-ernel/softirq.c:496 [inline]
-> > softirqs last  enabled at (1016): [<ffffffffb7b73b93>] __irq_exit_rcu+0=
-xb3/0xe0 kernel/softirq.c:723
-> > softirqs last disabled at (1005): [<ffffffffb7b73b93>] __do_softirq ker=
-nel/softirq.c:656 [inline]
-> > softirqs last disabled at (1005): [<ffffffffb7b73b93>] invoke_softirq k=
-ernel/softirq.c:496 [inline]
-> > softirqs last disabled at (1005): [<ffffffffb7b73b93>] __irq_exit_rcu+0=
-xb3/0xe0 kernel/softirq.c:723
-> >
-> > Fixes: cf880423b6a0 ("cxl/hdm: Add support for allocating DPA to an end=
-point decoder")
-> > Fixes: 9c57cde0dcbd ("cxl/hdm: Enumerate allocated DPA")
-> > Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
->
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->
->
-> > ---
-> >  drivers/cxl/core/hdm.c | 34 +++++++++++++++++++++++++++++-----
-> >  1 file changed, 29 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> > index e3f0c39e68124..86239b1790a31 100644
-> > --- a/drivers/cxl/core/hdm.c
-> > +++ b/drivers/cxl/core/hdm.c
-> > @@ -509,13 +509,20 @@ int devm_cxl_dpa_reserve(struct cxl_endpoint_deco=
-der *cxled,
-> >       struct cxl_port *port =3D cxled_to_port(cxled);
-> >       int rc;
-> >
-> > -     scoped_guard(rwsem_write, &cxl_rwsem.dpa)
-> > -             rc =3D __cxl_dpa_reserve(cxled, base, len, skipped);
-> > +     guard(rwsem_write)(&cxl_rwsem.dpa);
-> > +     rc =3D __cxl_dpa_reserve(cxled, base, len, skipped);
-> >
-> >       if (rc)
-> >               return rc;
-> >
-> > -     return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxle=
-d);
-> > +     /* See comments in cxl_dpa_alloc()*/
-> > +     rc =3D devm_add_action(&port->dev, cxl_dpa_release, cxled);
-> > +     if (rc) {
-> > +             __cxl_dpa_release(cxled);
-> > +             return rc;
-> > +     }
-> > +
-> > +     return 0;
-> >  }
-> >  EXPORT_SYMBOL_NS_GPL(devm_cxl_dpa_reserve, "CXL");
-> >
-> > @@ -613,7 +620,7 @@ static int __cxl_dpa_alloc(struct cxl_endpoint_deco=
-der *cxled, u64 size)
-> >       struct resource *p, *last;
-> >       int part;
-> >
-> > -     guard(rwsem_write)(&cxl_rwsem.dpa);
-> > +     lockdep_assert_held_write(&cxl_rwsem.dpa);
-> >       if (cxled->cxld.region) {
-> >               dev_dbg(dev, "decoder attached to %s\n",
-> >                       dev_name(&cxled->cxld.region->dev));
-> > @@ -679,11 +686,28 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cx=
-led, u64 size)
-> >       struct cxl_port *port =3D cxled_to_port(cxled);
-> >       int rc;
-> >
-> > +     guard(rwsem_write)(&cxl_rwsem.dpa);
-> >       rc =3D __cxl_dpa_alloc(cxled, size);
-> >       if (rc)
-> >               return rc;
-> >
-> > -     return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxle=
-d);
-> > +     /*
-> > +      * Add the devres action while still holding cxl_rwsem.dpa to pre=
-vent
-> > +      * a race with cxl_dpa_free(). Without this, a concurrent cxl_dpa=
-_free()
-> > +      * can observe dpa_res set (by __cxl_dpa_reserve()) and attempt
-> > +      * devm_remove_action() before devm_add_action() has been called,
-> > +      * triggering a WARN_ON in devm_remove_action().
-> > +      * Also, devm_add_action_or_reset() cannot be used here because
-> > +      * cxl_dpa_release() tries to hold the dpa lock that is already h=
-eld,
-> > +      * causing a self deadlock.
-> > +      */
-> > +     rc =3D devm_add_action(&port->dev, cxl_dpa_release, cxled);
-> > +     if (rc) {
-> > +             __cxl_dpa_release(cxled);
-> > +             return rc;
-> > +     }
-> > +
-> > +     return 0;
-> >  }
-> >
-> >  static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
->
->
+NODE   Type          PXD
+node0  local memory  0x00
+node1  local memory  0x01
+node2  cxl memory    0x0A
+node3  cxl memory    0x0B
+
+Physically, the node2 CXL is attached to node0 (Socket 0), and the
+node3 CXL is attached to node1 (Socket 1). However, extracting the
+HMAT.dsl reveals the following:
+
+- local memory
+  [028h] Flags: 0001 (Processor Proximity Domain Valid = 1)
+         Attached Initiator Proximity Domain: 0x00
+         Memory Proximity Domain: 0x00
+  [050h] Flags: 0001 (Processor Proximity Domain Valid = 1)
+         Attached Initiator Proximity Domain: 0x01
+         Memory Proximity Domain: 0x01
+
+- cxl memory
+  [078h] Flags: 0000 (Processor Proximity Domain Valid = 0)
+         Attached Initiator Proximity Domain: 0x00
+         Memory Proximity Domain: 0x0A
+  [0A0h] Flags: 0000 (Processor Proximity Domain Valid = 0)
+         Attached Initiator Proximity Domain: 0x00
+         Memory Proximity Domain: 0x0B
+
+As you correctly suspected, the flags for the CXL memory are 0000,
+meaning the Processor Proximity Domain is marked as invalid. But when
+checking the sysfs initiator configurations, it shows a different story:
+
+Node   access0 Initiator  access1 Initiator
+node0  node0              node0
+node1  node1              node1
+node2  node1              node1
+node3  node1              node1
+
+Although the Attached Initiator is set to 0 in HMAT with an invalid
+flag, sysfs strangely registers node1 as the initiator for both CXL
+nodes. Because both HMAT and sysfs are exposing abnormal values, it was
+impossible for me to determine the true socket connections for CXL
+using this data.
+
+> > 
+> > Even though the distance map shows node2 is physically closer to
+> > Socket 0 and node3 to Socket 1, the HMAT incorrectly defines the
+> > routing path strictly through Socket 1. Because the HMAT alone made it
+> > difficult to determine the exact physical socket connections on these
+> > systems, I ended up using the current CXL driver-based approach.
+> 
+> Are the HMAT latencies and bandwidths all there?  Or are some missing
+> and you have to use SLIT (which generally is garbage for historical
+> reasons of tuning SLIT to particular OS behaviour).
+> 
+
+The HMAT latencies and bandwidths are present, but the values seem
+broken. Here is the latency table:
+
+Init->Target | node0 | node1 | node2 | node3
+node0        | 0x38B | 0x89F | 0x9C4 | 0x3AFC
+node1        | 0x89F | 0x38B | 0x3AFC| 0x4268
+
+I used the identical type of DRAM and CXL memory for both sockets.
+However, looking at the table, the local CXL access latency from
+node0->node2 (0x9C4) and node1->node3 (0x4268) shows a massive,
+unjustified difference. This asymmetry proves that the table is
+currently unreliable.
+
+> > 
+> > I wonder if others have experienced similar broken HMAT cases with CXL.
+> > If HMAT information becomes more reliable in the future, we could
+> > build a much more efficient structure.
+> 
+> Given it's being lightly used I suspect there will be many bugs :(
+> I hope we can assume they will get fixed however!
+> 
+> ...
+> 
+
+The most critical issue caused by this broken initiator setting is that
+topology analysis tools like `hwloc` are completely misled. Currently,
+`hwloc` displays both CXL nodes as being attached to Socket 1.
+
+I observed this exact same issue on both Sierra Forest and Granite
+Rapids systems. I believe this broken topology exposure is a severe
+problem that must be addressed, though I am not entirely sure what the
+best fix would be yet. I would love to hear your thoughts on this.
+
+> > 
+> > The complex topology cases you presented, such as multi-NUMA per socket,
+> > shared CXL switches, and IO expanders, are very important points.
+> > I clearly understand that the simple package-level grouping does not fully
+> > reflect the 1:1 relationship in these future hardware architectures.
+> > 
+> > I have also thought about the shared CXL switch scenario you mentioned,
+> > and I know the current design falls short in addressing it properly.
+> > While the current implementation starts with a simple socket-local
+> > restriction, I plan to evolve it into a more flexible node aggregation
+> > model to properly reflect all the diverse topologies you suggested.
+> 
+> If we can ensure it fails cleanly when it finds a topology that it can't
+> cope with (and I guess falls back to current) then I'm fine with a partial
+> solution that evolves.
+> 
+
+I completely agree with ensuring a clean failure. To stabilize this
+partial solution, I am currently considering a few options for the
+next version:
+
+1. Enable this feature only when a strict 1:1 topology is detected.
+2. Provide a sysfs allowing users to enable/disable it.
+3. Allow users to manually override/configure the topology via sysfs.
+4. Implement dynamic fallback behaviors depending on the detected
+   topology shape (needs further thought).
+
+By the way, when I first posted this RFC, I accidentally missed adding
+lsf-pc@lists.linux-foundation.org to the CC list. I am considering
+re-posting it to ensure it reaches the lsf-pc.
+
+Thanks again for your profound insights and time. It is tremendously
+helpful.
+
+Rakie Kim
+
+> 
+> > 
+> > Thanks again for your time and review.
+> 
+> You are welcome.
+> 
+> Thanks
+> 
+> Jonathan
+> 
+> > 
+> > Rakie Kim
+> > 
