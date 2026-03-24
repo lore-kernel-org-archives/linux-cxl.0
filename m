@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA977391E55;
-	Tue, 24 Mar 2026 17:34:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8223A1691;
+	Tue, 24 Mar 2026 17:38:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774373662; cv=none; b=a9saRzkIHbktr4bCuDeI8x+jgv329vrAHyiKPAl3xl9Jy0N4EzFIe59OuIlsa+z1V9FAYSfPb9AsRvwMFF3VqmKiMivZSq2foeZStk4t9Ut4dGrXQrwKGKrLPBOqSZmwJiypfjK4ZUwR2ONjWF9IBUCqD5Zu/kFrLW7ZeALVJ6c=
+	t=1774373898; cv=none; b=TapcCZLwN4K7bo05rykcOvsNFnyrvcxlY7BtG4TYw+RR/uHZret9JdgG0jPdRNztcM6uZ4tY0Qt47JXkgzmnSV3J1aDEVLPNm5IgRK5h0a6Sa2J4XeRkUQZIXXbPqLHMw+gKQ/EKUesQ/nJTUeCSJPCxFiEz2Tr/HBhGZiXfnp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774373662; c=relaxed/simple;
-	bh=TgV0Fr5iTGuuuHI0U1ffgGpIrF+iC19GK5v7y4zz27o=;
+	s=arc-20240116; t=1774373898; c=relaxed/simple;
+	bh=2P+UmFGVOVvOgdhAjhri3JMxsldiOWBJAj1Bv9GFu0Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DIh4Q7ny6W/xItxPZ3YhBF+ThKraKo+rca6xMh77qcUZ5HAZ5nFBQWC1CUD+ZRYkuGxOVeHhmSFKhLkfC7YOJIkHMvoqvLDtjDv4nacugFZmC6yUdSIFLXs9XSuLqYK+CZkFmbvhM00i07CIoea2FIO1SUe1FFukDkXFXLvZbpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i7DQXXaI; arc=none smtp.client-ip=198.175.65.21
+	 In-Reply-To:Content-Type; b=Br9+7aIpfSFrK9KV9nF1xGOci29TpbA0b6Ke7zSXkAQ9pz3h2Wh7YIqzM/pJAcLp6dx5pg9+tbs4XleAymYRxhletDu+KBpEHTGVuwWKYxCXHoEiVVWvHwCBKWAawOnL5rkBUpNjd4Ky/Ser2lcdybZsHvF9d3M7AgIGywQnozU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G392Eml7; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i7DQXXaI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G392Eml7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774373661; x=1805909661;
+  t=1774373897; x=1805909897;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=TgV0Fr5iTGuuuHI0U1ffgGpIrF+iC19GK5v7y4zz27o=;
-  b=i7DQXXaINMErtQ5iF74qo9h+Y/SzuFoaJEPuO9DIDemGVTJHgeTWJzo6
-   2VYMRqSo5DjRDZzjqRMoTgVaMd2T6ovgQxp+bqTc/YGuOyPpOLId5sEsk
-   8VMAuYWW2vugqmIR0JiVmUd+lv0FGdxxv+w/bqzlHvb901f3IOIjldfLl
-   8gsNx5Rnrv0J7jz93sUN7KfXj0efWyq1EctBnv7iJw/harIx1WBA2LKKK
-   Y4xXj0K9nQaEnaK8PEF7tWxKqXpoWxEOPbr2CUuVRh+i/Dhwn97v+1LUQ
-   PjIzyb5DUCeTkEBZzvn07QPAR2cSAAXuijHYMJ6krrNT9MRIkYYoQsf9V
-   g==;
-X-CSE-ConnectionGUID: J14o2xEsRsmjX+PTi0JOxQ==
-X-CSE-MsgGUID: WfjSa487STa3bfq6c+7rZQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="75282587"
+  bh=2P+UmFGVOVvOgdhAjhri3JMxsldiOWBJAj1Bv9GFu0Y=;
+  b=G392Eml7sWXSXWc4X03C/U0HTdtwCx2KKxHE1qVQtXQ0GkRQdNxoqVeQ
+   DsjIeBt3CPlsMNnS7va0lUSX8Rn3R59nWd9u5rWTmEFiMjhReeGgjBESt
+   rPZK/nZ/8cQ5bqGQtuM0a+LPS2hrXR1qA9JxBWFEviZ1EfG/rzuDLyjE1
+   AY7ei2eFYJ9MR/jnoMVbo5Sk7H1QB2JNq55ldGEXjhYFkhhQHid+gdbN3
+   qW62ngP6Cp1wFBe6b7C/Sy7OKnt3BH8ohC4u1Nw3o2iIlDyr0/ARUPdvt
+   0encu0G66NQ+0hbz0ZkqkywUAvx6qlRb2iiG2rSu7a80EOvyFii+iVvoi
+   Q==;
+X-CSE-ConnectionGUID: +2lGm4TIT9awfho2VE8KuA==
+X-CSE-MsgGUID: iAngMTADQwyWf+BGAJXJ4A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="75283267"
 X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="75282587"
+   d="scan'208";a="75283267"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 10:34:21 -0700
-X-CSE-ConnectionGUID: KdwIc/QaRpOthq3D0D4Dew==
-X-CSE-MsgGUID: CVYwKCSgTI2q8Vng8KIUww==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 10:38:17 -0700
+X-CSE-ConnectionGUID: Zaig7Vu9Sxes3oEm5XmVSw==
+X-CSE-MsgGUID: sj6LwwVOQDWXpzPePc90Gg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="247481172"
+   d="scan'208";a="247482158"
 Received: from jdoman-mobl3.amr.corp.intel.com (HELO [10.125.110.6]) ([10.125.110.6])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 10:32:36 -0700
-Message-ID: <e9d16c75-edcc-4c83-8861-223c18c979e5@intel.com>
-Date: Tue, 24 Mar 2026 10:32:35 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 10:38:15 -0700
+Message-ID: <9154b54f-32f9-4963-b25c-be30c4ceb8be@intel.com>
+Date: Tue, 24 Mar 2026 10:38:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,17 +52,17 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v24 06/11] cxl/hdm: Add support for getting region from
- committed decoder
+Subject: Re: [PATCH v24 09/11] sfc: obtain decoder and region if committed by
+ firmware
 To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
  netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
  davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
-Cc: Alejandro Lucero <alucerop@amd.com>
+Cc: Alejandro Lucero <alucerop@amd.com>, Edward Cree <ecree.xilinx@gmail.com>
 References: <20260323113117.2352709-1-alejandro.lucero-palau@amd.com>
- <20260323113117.2352709-7-alejandro.lucero-palau@amd.com>
+ <20260323113117.2352709-10-alejandro.lucero-palau@amd.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260323113117.2352709-7-alejandro.lucero-palau@amd.com>
+In-Reply-To: <20260323113117.2352709-10-alejandro.lucero-palau@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -71,97 +71,70 @@ Content-Transfer-Encoding: 7bit
 On 3/23/26 4:31 AM, alejandro.lucero-palau@amd.com wrote:
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-
-Maybe subject should be "Add helper function to retrieve a committed decoder and its region"?
-
-> A Type2 device configured by the BIOS can already have its HDM
-> committed. Add a cxl_get_committed_decoder() function for cheking
-> so after memdev creation. A CXL region should have been created
-
-Sentence doesn't quite make sense to me.
-
-> during memdev initialization, therefore a Type2 driver can ask for
-> such a region for working with the HPA. If the HDM is not committed,
-> a Type2 driver will create the region after obtaining proper HPA
-> and DPA space.
+> Check if device HDM is already committed during firmware/BIOS
+> initialization.
+> 
+> A CXL region should exist if so after memdev allocation/initialization.
+> Get HPA from region and map it.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> Acked-by: Edward Cree <ecree.xilinx@gmail.com>
 > ---
->  drivers/cxl/core/hdm.c | 39 +++++++++++++++++++++++++++++++++++++++
->  include/cxl/cxl.h      |  3 +++
->  2 files changed, 42 insertions(+)
+>  drivers/net/ethernet/sfc/efx_cxl.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index c222e98ae736..006be88efaa5 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -686,6 +686,45 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
->  	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+> index 22a7d1d95425..78f926300943 100644
+> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+> @@ -19,6 +19,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  	struct efx_nic *efx = &probe_data->efx;
+>  	struct pci_dev *pci_dev = efx->pci_dev;
+>  	struct efx_cxl *cxl;
+> +	struct range range;
+>  	u16 dvsec;
+>  	int rc;
+>  
+> @@ -82,6 +83,24 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  		return PTR_ERR(cxl->cxlmd);
+>  	}
+>  
+> +	cxl->cxled = cxl_get_committed_decoder(cxl->cxlmd, &cxl->efx_region);
+> +	if (!cxl->cxled || !cxl->efx_region)
+> +		return -ENODEV;
+> +
+> +	rc = cxl_get_region_range(cxl->efx_region, &range);
+> +	if (rc) {
+> +		pci_err(pci_dev,
+> +			"CXL getting regions params from a committed decoder failed");
+> +		return rc;
+> +	}
+> +
+> +	cxl->ctpio_cxl = ioremap(range.start, range_len(&range));
+> +	if (!cxl->ctpio_cxl) {
+> +		pci_err(pci_dev, "CXL ioremap region (%pra) failed", &range);
+> +		return -ENOMEM;
+> +	}
+> +
+> +
+>  	probe_data->cxl = cxl;
+>  
+>  	return 0;
+> @@ -89,6 +108,11 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  
+>  void efx_cxl_exit(struct efx_probe_data *probe_data)
+>  {
+> +	if (!probe_data->cxl)
+> +		return;
+> +
+> +	iounmap(probe_data->cxl->ctpio_cxl);
+> +	cxl_unregister_region(probe_data->cxl->efx_region);
+
+Would a device_put() on the region dev be sufficient here? Not sure if everything should be torn down if SFC didn't create the region to begin with and only retrieved it via cxl_get_commited_decoder()?
+
+DJ
+
 >  }
 >  
-> +static int find_committed_endpoint_decoder(struct device *dev, const void *data)
-> +{
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_port *port;
-> +
-> +	if (!is_endpoint_decoder(dev))
-> +		return 0;
-> +
-> +	cxled = to_cxl_endpoint_decoder(dev);
-> +	port = cxled_to_port(cxled);
-> +
-> +	return cxled->cxld.id == port->hdm_end;
-> +}
-> +
-> +struct cxl_endpoint_decoder *cxl_get_committed_decoder(struct cxl_memdev *cxlmd,
-> +						       struct cxl_region **cxlr)
-
-kdoc header for this exported function?
-
-> +{
-> +	struct cxl_port *endpoint = cxlmd->endpoint;
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct device *cxled_dev;
-> +
-> +	if (!endpoint)
-> +		return NULL;
-> +
-> +	guard(rwsem_read)(&cxl_rwsem.dpa);
-> +	cxled_dev = device_find_child(&endpoint->dev, NULL,
-> +				      find_committed_endpoint_decoder);
-> +
-> +	if (!cxled_dev)
-> +		return NULL;
-> +
-> +	cxled = to_cxl_endpoint_decoder(cxled_dev);
-> +	*cxlr = cxled->cxld.region;
-
-Should SFC take a ref on the region device?
-
-> +
-> +	put_device(cxled_dev);
-
-Maybe should let the caller release the reference? I think you will want to hold the reference by SFC until you no longer need the decoder?
-
-DJ 
-
-> +	return cxled;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_get_committed_decoder, "CXL");
-> +
->  static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
->  {
->  	u16 eig;
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 10a9b8fa2f6b..2a61138e2a73 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -231,4 +231,7 @@ struct cxl_dev_state *_devm_cxl_dev_state_create(struct device *dev,
->  int cxl_set_capacity(struct cxl_dev_state *cxlds, u64 capacity);
->  struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds,
->  				       const struct cxl_memdev_attach *attach);
-> +struct cxl_region;
-> +struct cxl_endpoint_decoder *cxl_get_committed_decoder(struct cxl_memdev *cxlmd,
-> +						       struct cxl_region **cxlr);
->  #endif /* __CXL_CXL_H__ */
+>  MODULE_IMPORT_NS("CXL");
 
