@@ -1,105 +1,246 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4FD4035CA
-	for <linux-cxl@vger.kernel.org>; Tue, 24 Mar 2026 15:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD224035B0;
+	Tue, 24 Mar 2026 15:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774365114; cv=none; b=qJkAB9EbyyieGrkb9as/huXS89PfaqKwJ7v5XKbZwS9uIieKzNxcurqIh97u+Z/pftVg6gvam+IwHwIDRZmo/fdg3S9oKXA+WTj1pQ6KrVbTKjlLIvEctgID845Uf2XYJFYb+fwZOkixfH44/Sng3k+eQyQ+r4P8k2+DIqbTssE=
+	t=1774365179; cv=none; b=oUFRPLO4EYJuWXRkEV1/jj026BrUZltTKIjKt3TPcu/L0fcV9pKkgQLN7jrlx/DBVtIwSaMuFm7nGrPbwZnLxu7l60DH0PdlGb9rNj08eNk1H49EhmMghHG2XsT+57mJi7DOx0khCcvfEqLKii6D2zq9nZZ+ZT8VaZ2FtBkX0NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774365114; c=relaxed/simple;
-	bh=NB3LxlkO0x6eSuJGjSSSnX7CXXN3CQ99Ga2SIkCwscc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H5O0P+N+/FVi+dZAfMIbXcFJelc4A6yf+CckpiQpEdmQWsfT6j7Y/59SRHGt08V6EeXAXp0mqlVDdmNPcC9Ggw1coMC+7vpqx9RMBWMy+WKLagJQHtbMG8tncfuIYJ95RAFSdWz1bzIDK3XnjUvXqSWPN2UMGcm09WLqfwKN2uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=l+cgJh/a; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="l+cgJh/a"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-89c7b27ca26so12027926d6.3
-        for <linux-cxl@vger.kernel.org>; Tue, 24 Mar 2026 08:11:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1774365112; x=1774969912; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a7NoNIPWD9aqkM46NTCuFK4LaP9mCKYqQ+pGlGyzPCA=;
-        b=l+cgJh/aT/LWgkBajR16dDlIvZEUlhze5RNjSE5NdkRxRa0H0/BtQJvkkRSJyh5i2e
-         QOiirr1kOZ+9p9E6WCfnNn86iYHOPPdCG2UjF1VKd9whaUF2A0KpPl4SvD6GXb5g0XW3
-         5yqoRcdczrmS872OYSlYT6axsxWediY4eTggmuiaw82lFVWxr+UqjWH732RUc+Yzk4Pc
-         +e5RHFRdszijefk/NeXEAi6T7I/3ArJx5FOXpPv26KXnTjfJw+rFid440PrxRRW3aoDF
-         nw8+EWsHlp2YhQQU0CIRjinc6IyVfGsXQXHz3NHADCKlyW6scW3dyUujXsVYbo1U66Vr
-         cExA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774365112; x=1774969912;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a7NoNIPWD9aqkM46NTCuFK4LaP9mCKYqQ+pGlGyzPCA=;
-        b=hTcPocnfEk9FF1QcHshfgozXUvD65h6kGj4tTNvsThxTuBywEKi0YdB3un22vBDuKe
-         KY0MsA2xjkZ6U8jSxeW/Di2rY6bpcGAnaFGYYbLThFIT25zP3i+mNyES636rfSshwHx2
-         QIkjZyiy4BsGQDEj0gocvWqlPpE2Xt04cqsMdZBt2qg3RR52fjoZKijqs8GKZ/XehSCL
-         E2BcCUpeTDCShtyyUbzL70sPK+Ii1CY3HfT2xxobWz+HxhB5D+L5Z2JfpLPf6oGiczqk
-         9Qa77jasb9KixcUZI16wC/p1OhK0/JbshZjTPjkMd0N5Cv/Fto41euuoQXKkZViHXuHl
-         qvGQ==
-X-Gm-Message-State: AOJu0YwO1DAPUNY+Qp9YCGCnDQmhSgo4mJqMy0Kz4lGlMbLS+SYRlKik
-	Z1M6YnC8IJ/+qhBZYft3oJeEtp5bKKezitHSaUo7VDy9rpFkhJvebRKQc7raGJcKirw=
-X-Gm-Gg: ATEYQzxnplcifCwsenOgC5uwLyv/lA7voYj3ZvtdC+coD87fQxQJ4izdz/s36A0mFm0
-	YQHkrZFPwiPhLWk+dSOb2S3a6dz4Lgwq2pVIwo7m5Wq/tedXuAXlNT7u+cco4FNAysxRmm3baye
-	dENc+d/c74ql6SpOvn60P30Jmov7ibOC5iSnHJjs0cdGHR7PB31vd90JuJ3DU5B7c3ovt+w5fNX
-	hAk9nDzIKNlC+FHr6E/8b0ynr5KJSpH0Q9Kxvt9fwi86VmfiYSeVGaNafp635XHmot5yiPiRTg+
-	oe5MrAnFlATStBibEoC3vlaTb+U8uq3NVjFRE1rjaoDHU0iVjHvEmyiHo0nE1rKNelXgMJB1uOf
-	NkRJeHPW7rtFgGj5cuBlIv0O1pcl4bI7PXk+TtFvG6dMl0hLyXMRfdHmk8NvxFgtzOMGUEBqQ96
-	Q3hNRsJm+mp8wlQgRjtg==
-X-Received: by 2002:ad4:5f0f:0:b0:89a:b0c:7268 with SMTP id 6a1803df08f44-89c85a94778mr290733026d6.54.1774365111531;
-        Tue, 24 Mar 2026 08:11:51 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:500::de62])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-89c852555a8sm120785056d6.18.2026.03.24.08.11.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2026 08:11:50 -0700 (PDT)
-Date: Tue, 24 Mar 2026 10:11:48 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Subject: Re: [PATCH v4 1/3] cxl/core/region: move pmem region driver logic
- into region_pmem.c
-Message-ID: <acKptBsAaDOk0VaW@gourry-fedora-PF4VCD3F>
-References: <20260322131638.3636725-1-gourry@gourry.net>
- <20260322131638.3636725-2-gourry@gourry.net>
- <acCnaN9MIRByjUPd@aschofie-mobl2.lan>
- <acDRrRchRUSRBUbm@gourry-fedora-PF4VCD3F>
- <acIJrkkPD7dM3pBr@aschofie-mobl2.lan>
+	s=arc-20240116; t=1774365179; c=relaxed/simple;
+	bh=o1VBIWE+N6GLi7LTM8CwipxHM7Ni32sdzn0HUs5T0yU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=vGBcM3SOF8nGzUKLr9CFbUps6ACox9KYhbgITjgTQYS66IPGiThycZAe5e8d+nw1GZVN//9U2iHJNG+X84JCOdoS0tyg6gKfiR3oCBb7P59BgHPeABsTkSsCvM861G8ZonbN3k4IqIFfsmvG8rBu5kH7lxak8Frod1RdeRA7OVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fgD6Z2x7qzHnGjS;
+	Tue, 24 Mar 2026 23:12:22 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id EE6FA40569;
+	Tue, 24 Mar 2026 23:12:55 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Mar
+ 2026 15:12:54 +0000
+Date: Tue, 24 Mar 2026 15:12:53 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: John Groves <john@jagalactic.com>
+CC: John Groves <John@Groves.net>, Miklos Szeredi <miklos@szeredi.hu>, "Dan
+ Williams" <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>,
+	Alison Schofield <alison.schofield@intel.com>, John Groves
+	<jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+	<skhan@linuxfoundation.org>, Vishal Verma <vishal.l.verma@intel.com>, "Dave
+ Jiang" <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, "Jan
+ Kara" <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>, "David
+ Hildenbrand" <david@kernel.org>, Christian Brauner <brauner@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, Stefan
+ Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, Josef
+ Bacik <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Chen
+ Linxuan <chenlinxuan@uniontech.com>, "James Morse" <james.morse@arm.com>,
+	Fuad Tabba <tabba@google.com>, "Sean Christopherson" <seanjc@google.com>,
+	Shivank Garg <shivankg@amd.com>, Ackerley Tng <ackerleytng@google.com>,
+	Gregory Price <gourry@gourry.net>, Aravind Ramesh <arramesh@micron.com>, Ajay
+ Joshi <ajayjoshi@micron.com>, "venkataravis@micron.com"
+	<venkataravis@micron.com>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev"
+	<nvdimm@lists.linux.dev>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org"
+	<linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V9 01/10] famfs_fuse: Update macro
+ s/FUSE_IS_DAX/FUSE_IS_VIRTIO_DAX/
+Message-ID: <20260324151253.00006b86@huawei.com>
+In-Reply-To: <0100019d1d494e7b-2f01e83a-ebaa-4d1b-ae35-33b882a7bda4-000000@email.amazonses.com>
+References: <0100019d1d48b7e8-4468329f-b446-43f1-87db-3c7e1ff6f28b-000000@email.amazonses.com>
+	<20260324004026.5170-1-john@jagalactic.com>
+	<0100019d1d494e7b-2f01e83a-ebaa-4d1b-ae35-33b882a7bda4-000000@email.amazonses.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <acIJrkkPD7dM3pBr@aschofie-mobl2.lan>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Mon, Mar 23, 2026 at 08:49:02PM -0700, Alison Schofield wrote:
-> On Mon, Mar 23, 2026 at 01:37:49AM -0400, Gregory Price wrote:
-> > 
-> > The recent pmem/nvdimm Kconfig change does kind of show that we might
-> > have some bloat for some deployments which might not care about pmem -
-> > for example.
+On Tue, 24 Mar 2026 00:40:36 +0000
+John Groves <john@jagalactic.com> wrote:
+
+> From: John Groves <john@groves.net>
 > 
-> I guess my original thought was, what is your long term intent with
-> the move?  And I was thinking you are probably heading to conditionally
-> compiling.  HOWEVER, now the scaredy-cat-me is thinking, shoot, that 
-> would add test config complexity and test misses. ie. Folks make a
-> change in region_dax.c, don't test with CONFIG_CXL_PMEM enabled, and
-> boom.
+> Virtio_fs now needs to determine if an inode is DAX && not famfs.
+FWIW patch bundles broke sashiko
+
+https://sashiko.dev/#/message/0100019d1d46d094-cc0a4b79-3bd2-43e8-a08d-ab8cd21266a6-000000%40email.amazonses.com
+It only reviewed the fuse part.  (I was looking to see what it had found I missed
+in the DAX ones).
+> This relaces the FUSE_IS_DAX() macro with FUSE_IS_VIRTIO_DAX(),
+
+replaces (Sashiko spell checks ;)
+
+> in preparation for famfs in later commits. The dummy
+> fuse_file_famfs() macro will be replaced with a working
+> function.
 > 
-> So, I lean towards keeping them all (working) together, like you have.
->
+> Reviewed-by: Joanne Koong <joannelkoong@gmail.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Signed-off-by: John Groves <john@groves.net>
 
-fwiw i think this is the right take.  It doesn't really cost us anything
-to keep in, and probably prevents adding more Kconfig footguns.
 
-~Gregory
+
+> ---
+>  fs/fuse/dir.c    |  2 +-
+>  fs/fuse/file.c   | 13 ++++++++-----
+>  fs/fuse/fuse_i.h |  9 ++++++++-
+>  fs/fuse/inode.c  |  4 ++--
+>  fs/fuse/iomode.c |  2 +-
+>  5 files changed, 20 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+> index 7ac6b232ef12..c63f097bc697 100644
+> --- a/fs/fuse/dir.c
+> +++ b/fs/fuse/dir.c
+> @@ -2161,7 +2161,7 @@ int fuse_do_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  		is_truncate = true;
+>  	}
+>  
+> -	if (FUSE_IS_DAX(inode) && is_truncate) {
+> +	if (FUSE_IS_VIRTIO_DAX(fi) && is_truncate) {
+>  		filemap_invalidate_lock(mapping);
+>  		fault_blocked = true;
+>  		err = fuse_dax_break_layouts(inode, 0, -1);
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index b1bb7153cb78..4ee5065737d8 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -252,7 +252,7 @@ static int fuse_open(struct inode *inode, struct file *file)
+>  	int err;
+>  	bool is_truncate = (file->f_flags & O_TRUNC) && fc->atomic_o_trunc;
+>  	bool is_wb_truncate = is_truncate && fc->writeback_cache;
+> -	bool dax_truncate = is_truncate && FUSE_IS_DAX(inode);
+> +	bool dax_truncate = is_truncate && FUSE_IS_VIRTIO_DAX(fi);
+>  
+>  	if (fuse_is_bad(inode))
+>  		return -EIO;
+> @@ -1812,11 +1812,12 @@ static ssize_t fuse_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+>  	struct file *file = iocb->ki_filp;
+>  	struct fuse_file *ff = file->private_data;
+>  	struct inode *inode = file_inode(file);
+> +	struct fuse_inode *fi = get_fuse_inode(inode);
+>  
+>  	if (fuse_is_bad(inode))
+>  		return -EIO;
+>  
+> -	if (FUSE_IS_DAX(inode))
+> +	if (FUSE_IS_VIRTIO_DAX(fi))
+>  		return fuse_dax_read_iter(iocb, to);
+>  
+>  	/* FOPEN_DIRECT_IO overrides FOPEN_PASSTHROUGH */
+> @@ -1833,11 +1834,12 @@ static ssize_t fuse_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
+>  	struct file *file = iocb->ki_filp;
+>  	struct fuse_file *ff = file->private_data;
+>  	struct inode *inode = file_inode(file);
+> +	struct fuse_inode *fi = get_fuse_inode(inode);
+>  
+>  	if (fuse_is_bad(inode))
+>  		return -EIO;
+>  
+> -	if (FUSE_IS_DAX(inode))
+> +	if (FUSE_IS_VIRTIO_DAX(fi))
+>  		return fuse_dax_write_iter(iocb, from);
+>  
+>  	/* FOPEN_DIRECT_IO overrides FOPEN_PASSTHROUGH */
+> @@ -2370,10 +2372,11 @@ static int fuse_file_mmap(struct file *file, struct vm_area_struct *vma)
+>  	struct fuse_file *ff = file->private_data;
+>  	struct fuse_conn *fc = ff->fm->fc;
+>  	struct inode *inode = file_inode(file);
+> +	struct fuse_inode *fi = get_fuse_inode(inode);
+>  	int rc;
+>  
+>  	/* DAX mmap is superior to direct_io mmap */
+> -	if (FUSE_IS_DAX(inode))
+> +	if (FUSE_IS_VIRTIO_DAX(fi))
+>  		return fuse_dax_mmap(file, vma);
+>  
+>  	/*
+> @@ -2934,7 +2937,7 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
+>  		.mode = mode
+>  	};
+>  	int err;
+> -	bool block_faults = FUSE_IS_DAX(inode) &&
+> +	bool block_faults = FUSE_IS_VIRTIO_DAX(fi) &&
+>  		(!(mode & FALLOC_FL_KEEP_SIZE) ||
+>  		 (mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_ZERO_RANGE)));
+>  
+> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> index 7f16049387d1..45e108dec771 100644
+> --- a/fs/fuse/fuse_i.h
+> +++ b/fs/fuse/fuse_i.h
+> @@ -1508,7 +1508,14 @@ void fuse_free_conn(struct fuse_conn *fc);
+>  
+>  /* dax.c */
+>  
+> -#define FUSE_IS_DAX(inode) (IS_ENABLED(CONFIG_FUSE_DAX) && IS_DAX(inode))
+> +static inline bool fuse_file_famfs(struct fuse_inode *fuse_inode) /* Will be superseded */
+> +{
+> +	(void)fuse_inode;
+> +	return false;
+> +}
+> +#define FUSE_IS_VIRTIO_DAX(fuse_inode) (IS_ENABLED(CONFIG_FUSE_DAX)	\
+> +					&& IS_DAX(&fuse_inode->inode)  \
+> +					&& !fuse_file_famfs(fuse_inode))
+
+The AI overlord pointed out you should probably have a few more brackets
+just in case someone passes something odd in as fuse_inode. Lets assume
+they don't pass things with side effects in.
+
+#define FUSE_IS_VIRTIO_DAX(fuse_inode) (IS_ENABLED(CONFIG_FUSE_DAX)	\
+					&& IS_DAX(&(fuse_inode)->inode)  \
+					&& !fuse_file_famfs(fuse_inode))
+
+
+>  
+>  ssize_t fuse_dax_read_iter(struct kiocb *iocb, struct iov_iter *to);
+>  ssize_t fuse_dax_write_iter(struct kiocb *iocb, struct iov_iter *from);
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index e57b8af06be9..1333b3ebb18a 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -162,7 +162,7 @@ static void fuse_evict_inode(struct inode *inode)
+>  	/* Will write inode on close/munmap and in all other dirtiers */
+>  	WARN_ON(inode_state_read_once(inode) & I_DIRTY_INODE);
+>  
+> -	if (FUSE_IS_DAX(inode))
+> +	if (FUSE_IS_VIRTIO_DAX(fi))
+>  		dax_break_layout_final(inode);
+>  
+>  	truncate_inode_pages_final(&inode->i_data);
+> @@ -170,7 +170,7 @@ static void fuse_evict_inode(struct inode *inode)
+>  	if (inode->i_sb->s_flags & SB_ACTIVE) {
+>  		struct fuse_conn *fc = get_fuse_conn(inode);
+>  
+> -		if (FUSE_IS_DAX(inode))
+> +		if (FUSE_IS_VIRTIO_DAX(fi))
+>  			fuse_dax_inode_cleanup(inode);
+>  		if (fi->nlookup) {
+>  			fuse_queue_forget(fc, fi->forget, fi->nodeid,
+> diff --git a/fs/fuse/iomode.c b/fs/fuse/iomode.c
+> index 3728933188f3..31ee7f3304c6 100644
+> --- a/fs/fuse/iomode.c
+> +++ b/fs/fuse/iomode.c
+> @@ -203,7 +203,7 @@ int fuse_file_io_open(struct file *file, struct inode *inode)
+>  	 * io modes are not relevant with DAX and with server that does not
+>  	 * implement open.
+>  	 */
+> -	if (FUSE_IS_DAX(inode) || !ff->args)
+> +	if (FUSE_IS_VIRTIO_DAX(fi) || !ff->args)
+>  		return 0;
+>  
+>  	/*
+
