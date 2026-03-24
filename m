@@ -1,121 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8FA23EAB4
-	for <linux-cxl@vger.kernel.org>; Tue, 24 Mar 2026 17:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02CEF37F74A;
+	Tue, 24 Mar 2026 17:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774372288; cv=none; b=u/C5J4YPvz9oV2ENHZ/0wUYTA0m4u0XVOjBY5PTXARQ3MvDu/jySF46GhAifAxHLKgdQWMpzLRqp10FYv3TRGqIq8XNZ7nt/WvLVSd0q1Eo0hYFUsQty4OXiNmLo9rRtH1fTqEy9Zs5yMFQBSCw6JocvtfWwF9RTjJL+pTgaWKY=
+	t=1774373344; cv=none; b=mDlHJ+E/rXqSv+FPtefK/oaOvp0IB6VQyYWV0JC0ckywVVfOQL2Zn1RW2WCwjd9sv2pdNPnitA3LiDnx6yosxYMcLJDj9LXliAF8KjmyUolwbhYmUX1VzO/DGMBEKAVrQYqbC5gm15gQMKSREYcUF3YPYZBImsj9d2yGyTWg5dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774372288; c=relaxed/simple;
-	bh=SyUSoP4E06PFNG5b+76ZABkrdVJyXC/ba3QtbQG1BQs=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=Q6/2tXjwHP68WbqsCVwbBl7Z9a+a7vT2IbML2wvdHLflK2gCqcyTCKCWEE1QlwGE26BRXOgwF7/2ay0G2QjZZ7k1a1pBOkJAOA7ZZH3jhcQS+IK77RT26EAt2yEWw9QvMf/NDprpWdz6C5v75ETWVbqsFkNCIJpU1rlV3Hmwejc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h5IkIs12; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h5IkIs12"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774372287; x=1805908287;
-  h=message-id:date:mime-version:to:cc:from:subject:
-   content-transfer-encoding;
-  bh=SyUSoP4E06PFNG5b+76ZABkrdVJyXC/ba3QtbQG1BQs=;
-  b=h5IkIs12rGDtgX08uWbl41adwLmgz44utlm3gc2xUKyvWvVRqd6APZkM
-   /jPY4VQtdKmRdUoPZ3NE4Jyj6xVQUdCcMVTV40A3kmyn7WGN5RdewAdCw
-   /MvKjVenl1/ERnh+jy+3AsJE11LgQ8RsTqkKDXp5t9aLojgsWc1OCuze8
-   LDexDKuKXMzsz5cK2SAQfopvbzDfWrdqDI1z6268eCa7H4+HViEyy6AjB
-   15TcfFEGNhdGL+xZ3iO0ebk1OTJzJrZsPM3P7XpzC51BBA2uxfiUMSvWA
-   Tm9A26A4cy+YC2PLFPLD/xs/8NT/iR8JNfE0ISNYepQUgm1KPhf4yTtHp
-   A==;
-X-CSE-ConnectionGUID: 2Q4KiiTOSYWF5IladLoCcA==
-X-CSE-MsgGUID: ySgeCWypRO2GnSjZvEXuUA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="75423851"
-X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="75423851"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 10:11:26 -0700
-X-CSE-ConnectionGUID: m5O0pQ4uTu+62bhU2sqPEQ==
-X-CSE-MsgGUID: nRza3yHJQ/OPq72e/GNaDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="223621398"
-Received: from jdoman-mobl3.amr.corp.intel.com (HELO [10.125.110.6]) ([10.125.110.6])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 10:11:25 -0700
-Message-ID: <1b13cc4d-4103-4462-a0c1-590ad2d6725c@intel.com>
-Date: Tue, 24 Mar 2026 10:11:24 -0700
+	s=arc-20240116; t=1774373344; c=relaxed/simple;
+	bh=FzVoLizmej6y/KwQewc+Wa1rPlSnqqxkGLzFV3Tq1GE=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NEQEB13JIg8gwjDHaVikGW0rd9oTe4wv/Gop7cJWrA4QJlwOPG9Jsh/HEvinJEVW5jpNkI9ucGamvnuXds3z6PqRDm0fMnqKLdgCtXqsj5VCLNIyJgzTYykKho1EuSSAqVOUxGsE4KU63/vLqECZsFidI7EvMMyVPL1hZtTd6To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.107])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fgH7X02xyzHnH5b;
+	Wed, 25 Mar 2026 01:28:24 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id BC76F40587;
+	Wed, 25 Mar 2026 01:28:57 +0800 (CST)
+Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Mar
+ 2026 17:28:56 +0000
+Date: Tue, 24 Mar 2026 17:28:55 +0000
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+To: Ahmed Tiba <ahmed.tiba@arm.com>
+CC: <linux-acpi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <Michael.Zhao2@arm.com>, <robh@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <Dmitry.Lamerov@arm.com>,
+	<rafael@kernel.org>, <conor@kernel.org>, <will@kernel.org>, <bp@alien8.de>,
+	<catalin.marinas@arm.com>, <krzk+dt@kernel.org>, <linux-doc@vger.kernel.org>,
+	<mchehab+huawei@kernel.org>, <tony.luck@intel.com>
+Subject: Re: [PATCH v3 01/10] ACPI: APEI: GHES: share macros via a private
+ header
+Message-ID: <20260324172855.000032fb@huawei.com>
+In-Reply-To: <20260318-topics-ahmtib01-ras_ffh_arm_internal_review-v3-1-48e6a1c249ef@arm.com>
+References: <20260318-topics-ahmtib01-ras_ffh_arm_internal_review-v3-0-48e6a1c249ef@arm.com>
+	<20260318-topics-ahmtib01-ras_ffh_arm_internal_review-v3-1-48e6a1c249ef@arm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Alison Schofield <alison.schofield@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Keith Busch <kbusch@kernel.org>
-From: Dave Jiang <dave.jiang@intel.com>
-Subject: [GIT PULL] Compute Express Link (CXL) Fixes for 7.0-rc6
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-Hi Linus, please pull from:
+On Wed, 18 Mar 2026 20:47:58 +0000
+Ahmed Tiba <ahmed.tiba@arm.com> wrote:
 
-git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-7.0-rc6
+> Carve the CPER helper macros out of ghes.c and place them in a private
+> header so they can be shared with upcoming helper files. This is a
+> mechanical include change with no functional differences.
+> 
+> Signed-off-by: Ahmed Tiba <ahmed.tiba@arm.com>
 
-...to receive a small collection of CXL fixes. These all have appeared in -next
-for a few days with no reported issues.
+> diff --git a/include/acpi/ghes_cper.h b/include/acpi/ghes_cper.h
+> new file mode 100644
+> index 000000000000..a38e3440b927
+> --- /dev/null
+> +++ b/include/acpi/ghes_cper.h
+> @@ -0,0 +1,103 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Shared GHES declarations for firmware-first CPER error handling.
+> + *
+> + * This header groups the GHES declarations that are needed by the shared
+> + * CPER handling path.
+shared CPER is unclear.  Start with something broad like:
 
----
+GHES declarations are used both for ACPI APEI handling and xyz.
 
-The following changes since commit 11439c4635edd669ae435eec308f4ab8a0804808:
+I'm not sure I'd put any additional justification here beyond such a
+simple sentence.
 
-  Linux 7.0-rc2 (2026-03-01 15:39:31 -0800)
+> + *
+> + * The split lets GHES and other firmware-first error sources use the same
 
-are available in the Git repository at:
+I would consider rewriting this.  What split?  Not obvious from what you have
+in this header.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-7.0-rc6
+> + * code for reading status blocks, caching records, handling vendor data,
+> + * and reporting errors, so the non-ACPI path follows the same behavior as
+> + * GHES instead of carrying a separate copy.
+> + *
+> + * Derived from the ACPI APEI GHES driver.
+> + *
+> + * Copyright 2010,2011 Intel Corp.
+> + *   Author: Huang Ying <ying.huang@intel.com>
+> + */
+> +
 
-for you to fetch changes up to be5c5280cf2b20e363dc8e2a424dd200a29b1c77:
 
-  cxl: Adjust the startup priority of cxl_pmem to be higher than that of cxl_acpi (2026-03-19 15:12:40 -0700)
-
-----------------------------------------------------------------
-cxl fixes for v7.0-rc6
-
-cxl: Adjust the startup priority of cxl_pmem to be higher than that of cxl_acpi
-cxl/mbox: Use proper endpoint validity check upon sanitize
-cxl/hdm: Avoid incorrect DVSEC fallback when HDM decoders are enabled
-cxl/acpi: Fix CXL_ACPI and CXL_PMEM Kconfig tristate mismatch
-cxl/region: Fix leakage in __construct_region()
-cxl/port: Fix use after free of parent_port in cxl_detach_ep()
-
-----------------------------------------------------------------
-Alison Schofield (1):
-      cxl/port: Fix use after free of parent_port in cxl_detach_ep()
-
-Cui Chao (1):
-      cxl: Adjust the startup priority of cxl_pmem to be higher than that of cxl_acpi
-
-Davidlohr Bueso (2):
-      cxl/region: Fix leakage in __construct_region()
-      cxl/mbox: Use proper endpoint validity check upon sanitize
-
-Keith Busch (1):
-      cxl/acpi: Fix CXL_ACPI and CXL_PMEM Kconfig tristate mismatch
-
-Smita Koralahalli (1):
-      cxl/hdm: Avoid incorrect DVSEC fallback when HDM decoders are enabled
-
- drivers/cxl/Kconfig       |  1 +
- drivers/cxl/core/hdm.c    | 25 +++++++++----------------
- drivers/cxl/core/mbox.c   |  2 +-
- drivers/cxl/core/port.c   |  8 ++++++--
- drivers/cxl/core/region.c |  4 +++-
- drivers/cxl/pmem.c        |  2 +-
- 6 files changed, 21 insertions(+), 21 deletions(-)
