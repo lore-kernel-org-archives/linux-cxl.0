@@ -1,438 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from a8-21.smtp-out.amazonses.com (a8-21.smtp-out.amazonses.com [54.240.8.21])
+	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBAD215B0EC
-	for <linux-cxl@vger.kernel.org>; Tue, 24 Mar 2026 00:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0751A681A;
+	Tue, 24 Mar 2026 00:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.8.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774311682; cv=none; b=Vx5LYX5jVlXmEhi5nQVADoUiPDuL57QHkGmBT/Oodrx59GGUH+ktMACC3GOGFYNIqCgk09NasdDB+8vKnwtXeMA2E8hsjvk0rwaVDwYuwT5UMauI3caR6fFviSt2L75kF4SO98G2Dd+hKS7IYQJ/IbtA5C8eY9U6OtWDmesS+gs=
+	t=1774312599; cv=none; b=Z0GPIBX3sxx+w4qrdG2oBlfYhc3l5y92KiDLXczFtOKdsos47Pa53cZ41MQK0sR4jkSvw3yBV0Wa5KFBdjcXyZbPt5Hi6GBxRcRAArPIX0XDO7Co+QOXz/eaF+caRdPRaSZmkxnDeNOI6JsUAf5/n9zLKyBLClaH/UENZLOdUOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774311682; c=relaxed/simple;
-	bh=cLs6HYKFMIZRCN/4nLo2tz/fa1Qx+to+y6S2x6B8K4E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Au4GL3sU1BgDtgsxSNWH2h8SLarkJT5ez67agVWXCWw6Ok7sTbJhSpInzcYWqKoFR9jK7nbFnlbccxBDzncQhpKNTVcSkpqJv88f+7zq7o2t8GuPhuTMlUasZRQi8KtQicM5i6mIX0zaosy2FYMMNb7CmwfaqjPG3V5A21xux3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a76HSbrt; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1774312599; c=relaxed/simple;
+	bh=tG4vh62NqV1A3sNULhBYd/HpqWGsf8oGTjGFvpAfB8Y=;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:References:
+	 Message-ID; b=iQdmesOB1wAvAUlDmVvBWLEPzwYJ9a7Qj8HQkpO8Z0WKBNyF5aw/tO02m78brXZYKeR1drRFcXxjxctcpmQ6BDTBNutKkS5lYeBIFik4SLNRNSXO5zE8T+aduxt/Z4I7G62JjEBowtD5poccX2i56dg1BQISEE28M4uhEn11sXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=ok/ahvK3; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=FIBFA2vU; arc=none smtp.client-ip=54.240.8.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a76HSbrt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774311680; x=1805847680;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=cLs6HYKFMIZRCN/4nLo2tz/fa1Qx+to+y6S2x6B8K4E=;
-  b=a76HSbrtR3xXYjTNZD+HRqT5cjJP/AkOYD7SVKTQvmIcS2dXbGzj19k9
-   6LMrjdSZip67xWmK/1lg+qf00QR1WjDpbLuw/c/xM2e9veCEt+Ojovdne
-   izbVGlZ9sh669h6eC6G4F2hdUBwOICFgcTpbn9e6oOndfUkBKviNS86lm
-   9I3/A3Ray/36/TuuETHRmkIuoh1/WaxuMPfFkML3rzct6lP00rPxFx9CH
-   M0xGvrF1H85XY9Chzu5tqU1ZDXRjbuPmhW6MgMvy7libLvwAo2Wb7SZIy
-   zAprb6u6PWO/1H3pthObW7MfEWBz9GJpYhbt9FVCVVAzel1p3yyqGkp30
-   w==;
-X-CSE-ConnectionGUID: mHSwr2K7RqahBzvhitGqkg==
-X-CSE-MsgGUID: mve0GLPkQSKoMZ69XTmn1Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11738"; a="85631382"
-X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="85631382"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 17:21:20 -0700
-X-CSE-ConnectionGUID: PskX/rBET6WqkDgYMCYtkA==
-X-CSE-MsgGUID: PJxj+fcMTq2V6u7RcaCE3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="228928319"
-Received: from jdoman-mobl3.amr.corp.intel.com (HELO [10.125.109.216]) ([10.125.109.216])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2026 17:21:18 -0700
-Message-ID: <e9530037-9173-4c78-8a2b-69faae07d2a8@intel.com>
-Date: Mon, 23 Mar 2026 17:21:17 -0700
+	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="ok/ahvK3";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="FIBFA2vU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1774312597;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id;
+	bh=tG4vh62NqV1A3sNULhBYd/HpqWGsf8oGTjGFvpAfB8Y=;
+	b=ok/ahvK3myEmWsKnTDxcrwAx95r2VeEB2HrvPdg9I4+Pb8cPWETIHeuaCntbshfu
+	8PkDNhlzwJccbobvYJX+Nq5sl656m4z6kDAExvdLWZp/O3T6Uu1geZ6IDdgt1L2pO1H
+	GurDNu0IpLL3NAYPcaF/cga9HnUZldNXGNkUlfDg=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1774312597;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id:Feedback-ID;
+	bh=tG4vh62NqV1A3sNULhBYd/HpqWGsf8oGTjGFvpAfB8Y=;
+	b=FIBFA2vUq+S3/XOGODmRNeoNwoDsjP1EYwgso198tMvwax9sEkRzYzEcAX++edmO
+	KyrmbqOR0Eo8xFAidrfsZe2w/uNqYKIvTzn4kJ74xCoWQhwA4C9k/4gw4hMm/kO3lq4
+	LVAOAvnw8CiBzZbY9n2kMZews1VWQ+BT79RmeZEA=
+Subject: [PATCH BUNDLE v9] famfs: Fabric-Attached Memory File System
+From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
+To: =?UTF-8?Q?John_Groves?= <John@Groves.net>, 
+	=?UTF-8?Q?Miklos_Szeredi?= <miklos@szeredi.hu>, 
+	=?UTF-8?Q?Dan_Williams?= <dan.j.williams@intel.com>, 
+	=?UTF-8?Q?Bernd_Schubert?= <bschubert@ddn.com>, 
+	=?UTF-8?Q?Alison_Schofiel?= =?UTF-8?Q?d?= <alison.schofield@intel.com>
+Cc: =?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
+	=?UTF-8?Q?Jonathan_Corbe?= =?UTF-8?Q?t?= <corbet@lwn.net>, 
+	=?UTF-8?Q?Shuah_Khan?= <skhan@linuxfoundation.org>, 
+	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
+	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
+	=?UTF-8?Q?Matthew_Wilcox?= <willy@infradead.org>, 
+	=?UTF-8?Q?Jan_Kara?= <jack@suse.cz>, 
+	=?UTF-8?Q?Alexander_Viro?= <viro@zeniv.linux.org.uk>, 
+	=?UTF-8?Q?David_Hildenbrand?= <david@kernel.org>, 
+	=?UTF-8?Q?Christian_Bra?= =?UTF-8?Q?uner?= <brauner@kernel.org>, 
+	=?UTF-8?Q?Darrick_J_=2E_Wong?= <djwong@kernel.org>, 
+	=?UTF-8?Q?Randy_Dunlap?= <rdunlap@infradead.org>, 
+	=?UTF-8?Q?Jeff_Layton?= <jlayton@kernel.org>, 
+	=?UTF-8?Q?Amir_Goldstein?= <amir73il@gmail.com>, 
+	=?UTF-8?Q?Jonathan_Cameron?= <Jonathan.Cameron@huawei.com>, 
+	=?UTF-8?Q?Stefan_Hajnoczi?= <shajnocz@redhat.com>, 
+	=?UTF-8?Q?Joanne_Koong?= <joannelkoong@gmail.com>, 
+	=?UTF-8?Q?Josef_Bacik?= <josef@toxicpanda.com>, 
+	=?UTF-8?Q?Bagas_Sanjaya?= <bagasdotme@gmail.com>, 
+	=?UTF-8?Q?Chen_Linxuan?= <chenlinxuan@uniontech.com>, 
+	=?UTF-8?Q?James_Morse?= <james.morse@arm.com>, 
+	=?UTF-8?Q?Fuad_Tabba?= <tabba@google.com>, 
+	=?UTF-8?Q?Sean_Christopherson?= <seanjc@google.com>, 
+	=?UTF-8?Q?Shivank_Garg?= <shivankg@amd.com>, 
+	=?UTF-8?Q?Ackerley_Tng?= <ackerleytng@google.com>, 
+	=?UTF-8?Q?Gregory_Pric?= =?UTF-8?Q?e?= <gourry@gourry.net>, 
+	=?UTF-8?Q?Aravind_Ramesh?= <arramesh@micron.com>, 
+	=?UTF-8?Q?Ajay_Joshi?= <ajayjoshi@micron.com>, 
+	=?UTF-8?Q?venkataravis=40micron=2Ecom?= <venkataravis@micron.com>, 
+	=?UTF-8?Q?linux-doc=40vger=2Ekernel=2Eorg?= <linux-doc@vger.kernel.org>, 
+	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?nvdimm=40lists=2Elinux=2Edev?= <nvdimm@lists.linux.dev>, 
+	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
+	=?UTF-8?Q?linux-fsdevel=40vger=2Ekernel=2Eorg?= <linux-fsdevel@vger.kernel.org>
+Date: Tue, 24 Mar 2026 00:36:37 +0000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/6] cxl/pci: Add Back-Invalidate topology enable/disable
-To: Davidlohr Bueso <dave@stgolabs.net>, dan.j.williams@intel.com
-Cc: jonathan.cameron@huawei.com, alison.schofield@intel.com,
- ira.weiny@intel.com, gourry@gourry.net, dongjoo.seo1@samsung.com,
- anisa.su@samsung.com, linux-cxl@vger.kernel.org
-References: <20260315202741.3264295-1-dave@stgolabs.net>
- <20260315202741.3264295-4-dave@stgolabs.net>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260315202741.3264295-4-dave@stgolabs.net>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+References: <20260324003630.4930-1-john@jagalactic.com>
+X-Mailer: Amazon WorkMail
+Thread-Index: AQHcuyZEswjXSG92Tn2kGdN5KULUYA==
+Thread-Topic: [PATCH BUNDLE v9] famfs: Fabric-Attached Memory File System
+X-Wm-Sent-Timestamp: 1774312596
+X-Original-Mailer: git-send-email 2.52.0
+Message-ID: <0100019d1d45a702-37d7aa37-4b46-4c21-86db-bf9bd3d914bb-000000@email.amazonses.com>
+Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
+X-SES-Outgoing: 2026.03.24-54.240.8.21
 
-
-
-On 3/15/26 1:27 PM, Davidlohr Bueso wrote:
-> Implement cxl_bi_setup() and cxl_bi_dealloc() which walk the CXL port
-> topology to enable/disable BI flows on all components in the path.
-> 
-> Upon a successful setup, this enablement does not influence the current
-> HDM decoder setup by enabling the BI bit, and therefore the device is left
-> in a BI capable state, but not making use of it in the decode coherence.
-> Upon a BI-ID removal event, it is expected for the device to be offline.
-> 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
->  drivers/cxl/core/pci.c | 339 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 339 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index d1f487b3d809..5f0226397dfa 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -926,3 +926,342 @@ int cxl_port_get_possible_dports(struct cxl_port *port)
->  
->  	return ctx.count;
->  }
-> +
-> +static bool cxl_is_bi_capable(struct pci_dev *pdev, void __iomem *bi)
-> +{
-> +	if (!cxl_pci_flit_256(pdev))
-> +		return false;
-> +
-> +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_UPSTREAM && !bi) {
-> +		dev_dbg(&pdev->dev, "No BI Decoder registers.\n");
-> +		return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +/* limit any insane timeouts from hw */
-> +#define CXL_BI_COMMIT_MAXTMO_US (5 * USEC_PER_SEC)
-> +
-> +static unsigned long __cxl_bi_get_timeout_us(struct device *dev,
-> +					     int scale, int base)
-> +{
-> +	static const unsigned long scale_tbl[] = {
-> +		1, 10, 100, 1000, 10000, 100000, 1000000, 10000000,
-> +	};
-> +
-> +	if (scale >= ARRAY_SIZE(scale_tbl)) {
-> +		dev_dbg(dev, "Invalid BI commit timeout scale: %d\n", scale);
-> +		return CXL_BI_COMMIT_MAXTMO_US;
-> +	}
-> +
-> +	return scale_tbl[scale] * base;
-> +}
-> +
-> +#define ___cxl_bi_commit(dev, bi, ctype)				\
-> +do {									\
-> +	u32 status, ctrl;						\
-> +	int scale, base;						\
-> +	ktime_t tmo, now, start;					\
-> +	unsigned long poll_us, tmo_us;					\
-> +									\
-> +	ctrl = readl(bi + CXL_BI_##ctype##_CTRL_OFFSET);		\
-> +	writel(ctrl & ~CXL_BI_##ctype##_CTRL_BI_COMMIT,			\
-> +	       (bi) + CXL_BI_##ctype##_CTRL_OFFSET);			\
-> +	writel(ctrl | CXL_BI_##ctype##_CTRL_BI_COMMIT,			\
-> +	       (bi) + CXL_BI_##ctype##_CTRL_OFFSET);			\
-> +									\
-> +	status = readl((bi) + CXL_BI_##ctype##_STATUS_OFFSET);		\
-> +	scale = FIELD_GET(CXL_BI_##ctype##_STATUS_BI_COMMIT_TM_SCALE,	\
-> +			  status);					\
-> +	base = FIELD_GET(CXL_BI_##ctype##_STATUS_BI_COMMIT_TM_BASE,	\
-> +			 status);					\
-> +									\
-> +	/* ... and poll */						\
-> +	tmo_us = min_t(unsigned long, CXL_BI_COMMIT_MAXTMO_US,		\
-> +		       __cxl_bi_get_timeout_us((dev), scale, base));	\
-> +	poll_us = tmo_us / 10; /* arbitrary 10% of timeout */		\
-> +	start = now = ktime_get();					\
-> +	tmo = ktime_add_us(now, tmo_us);				\
-> +	while (!FIELD_GET(CXL_BI_##ctype##_STATUS_BI_COMMITTED, status) && \
-> +	       !FIELD_GET(CXL_BI_##ctype##_STATUS_BI_ERR_NOT_COMMITTED,	\
-> +			  status)) {					\
-> +		if (ktime_after(now, tmo)) {				\
-> +			dev_dbg((dev), "BI-ID commit timed out (%luus)\n", \
-> +				tmo_us);				\
-> +			return -ETIMEDOUT;				\
-> +		}							\
-> +									\
-> +		fsleep(poll_us);					\
-> +		now = ktime_get();					\
-> +		status = readl((bi) + CXL_BI_##ctype##_STATUS_OFFSET);	\
-> +	}								\
-> +									\
-> +	if (FIELD_GET(CXL_BI_##ctype##_STATUS_BI_ERR_NOT_COMMITTED, status)) \
-> +		return -EIO;						\
-> +									\
-> +	dev_dbg((dev), "BI-ID commit wait took %lluus\n",		\
-> +		ktime_to_us(ktime_sub(now, start)));			\
-> +} while (0)
-
-This is pretty ugly. Can you use a macro to do string subst within this function? Maybe something that spits back out the identifier that concats everything together like:
-
-#define CONCAT_CXL_BI(ctype, suffix) CXL_BI_##ctype##_##suffix
-
-DJ
-
-> +
-> +static int __cxl_bi_commit_rt(struct device *dev, void __iomem *bi)
-> +{
-> +	if (!bi)
-> +		return 0;
-> +
-> +	if (FIELD_GET(CXL_BI_RT_CAPS_EXPLICIT_COMMIT_REQ,
-> +		      readl(bi + CXL_BI_RT_CAPS_OFFSET)))
-> +		___cxl_bi_commit(dev, bi, RT);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __cxl_bi_commit(struct device *dev, void __iomem *bi)
-> +{
-> +	if (!bi)
-> +		return -EINVAL;
-> +
-> +	___cxl_bi_commit(dev, bi, DECODER);
-> +	return 0;
-> +}
-> +
-> +/* enable or dealloc BI-ID changes in the given level of the topology */
-> +static int cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable)
-> +{
-> +	u32 ctrl, value;
-> +	void __iomem *bi = dport->regs.bi;
-> +	struct cxl_port *port = dport->port;
-> +	struct pci_dev *pdev = to_pci_dev(dport->dport_dev);
-> +
-> +	guard(device)(&port->dev);
-> +
-> +	if (!bi)
-> +		return -EINVAL;
-> +
-> +	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
-> +
-> +	switch (pci_pcie_type(pdev)) {
-> +	case PCI_EXP_TYPE_ROOT_PORT:
-> +		if (enable) {
-> +			/*
-> +			 * There is no point of failure from here on,
-> +			 * BI will be enabled on the endpoint device.
-> +			 */
-> +			port->nr_bi++;
-> +
-> +			if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_FW, ctrl))
-> +				return 0;
-> +
-> +			value = ctrl | CXL_BI_DECODER_CTRL_BI_FW;
-> +			value &= ~CXL_BI_DECODER_CTRL_BI_ENABLE;
-> +		} else {
-> +			if (WARN_ON_ONCE(port->nr_bi == 0))
-> +				return -EINVAL;
-> +			if (--port->nr_bi > 0)
-> +				return 0;
-> +
-> +			value = ctrl & ~CXL_BI_DECODER_CTRL_BI_FW;
-> +		}
-> +
-> +		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
-> +		return 0;
-> +	case PCI_EXP_TYPE_DOWNSTREAM:
-> +		if (enable) {
-> +			value = ctrl & ~CXL_BI_DECODER_CTRL_BI_FW;
-> +			value |= CXL_BI_DECODER_CTRL_BI_ENABLE;
-> +		} else {
-> +			if (!FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl))
-> +				return 0;
-> +
-> +			value = ctrl & ~CXL_BI_DECODER_CTRL_BI_ENABLE;
-> +		}
-> +
-> +		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
-> +
-> +		if (FIELD_GET(CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ,
-> +			      readl(bi + CXL_BI_DECODER_CAPS_OFFSET))) {
-> +			int rc = __cxl_bi_commit(dport->dport_dev,
-> +						 dport->regs.bi);
-> +			if (rc)
-> +				return rc;
-> +		}
-> +
-> +		return __cxl_bi_commit_rt(&port->dev, port->uport_regs.bi);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int cxl_bi_ctrl_endpoint(struct cxl_dev_state *cxlds, bool enable)
-> +{
-> +	u32 ctrl, val;
-> +	struct cxl_port *endpoint = cxlds->cxlmd->endpoint;
-> +	void __iomem *bi = endpoint->regs.bi;
-> +
-> +	if (!bi)
-> +		return -EINVAL;
-> +
-> +	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
-> +
-> +	if (enable) {
-> +		if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl)) {
-> +			WARN_ON_ONCE(!cxlds->bi);
-> +			return 0;
-> +		}
-> +		val = ctrl | CXL_BI_DECODER_CTRL_BI_ENABLE;
-> +	} else {
-> +		if (!FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl)) {
-> +			WARN_ON_ONCE(cxlds->bi);
-> +			return 0;
-> +		}
-> +		val = ctrl & ~CXL_BI_DECODER_CTRL_BI_ENABLE;
-> +	}
-> +
-> +	writel(val, bi + CXL_BI_DECODER_CTRL_OFFSET);
-> +	cxlds->bi = enable;
-> +
-> +	dev_dbg(cxlds->dev, "device %scapable of issuing BI requests\n",
-> +		enable ? "" : "in");
-> +
-> +	return 0;
-> +}
-> +
-> +int cxl_bi_setup(struct cxl_dev_state *cxlds)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
-> +	struct cxl_port *endpoint = cxlds->cxlmd->endpoint;
-> +	struct cxl_dport *dport, *_dport, *failed;
-> +	struct cxl_port *parent_port, *port;
-> +	int rc;
-> +
-> +	struct cxl_port *_port __free(put_cxl_port) =
-> +		cxl_pci_find_port(pdev, &_dport);
-> +
-> +	if (!_port)
-> +		return -EINVAL;
-> +
-> +	if (!cxl_is_bi_capable(pdev, endpoint->regs.bi))
-> +		return 0;
-> +
-> +	/* walkup the topology twice, first to check, then to enable */
-> +	port = _port;
-> +	dport = _dport;
-> +	while (1) {
-> +		parent_port = to_cxl_port(port->dev.parent);
-> +		/* check rp, dsp */
-> +		if (!cxl_is_bi_capable(to_pci_dev(dport->dport_dev),
-> +				       dport->regs.bi))
-> +			return -EINVAL;
-> +
-> +		/* check usp */
-> +		if (pci_pcie_type(to_pci_dev(dport->dport_dev)) ==
-> +		    PCI_EXP_TYPE_DOWNSTREAM) {
-> +			if (!cxl_is_bi_capable(to_pci_dev(port->uport_dev),
-> +					       port->uport_regs.bi))
-> +				return -EINVAL;
-> +		}
-> +
-> +		if (is_cxl_root(parent_port))
-> +			break;
-> +
-> +		dport = port->parent_dport;
-> +		port = parent_port;
-> +	}
-> +
-> +	port = _port;
-> +	dport = _dport;
-> +	while (1) {
-> +		parent_port = to_cxl_port(port->dev.parent);
-> +
-> +		rc = cxl_bi_ctrl_dport(dport, true);
-> +		if (rc)
-> +			goto err_rollback;
-> +
-> +		if (is_cxl_root(parent_port))
-> +			break;
-> +
-> +		dport = port->parent_dport;
-> +		port = parent_port;
-> +	}
-> +
-> +	/* finally, enable BI on the device */
-> +	cxl_bi_ctrl_endpoint(cxlds, true);
-> +	return 0;
-> +
-> +err_rollback:
-> +	/*
-> +	 * Undo all dports enabled so far by re-walking from the bottom
-> +	 * up to (but not including) the failed dport.
-> +	 */
-> +	failed = dport;
-> +	dport = _dport;
-> +	port = _port;
-> +	while (dport != failed) {
-> +		parent_port = to_cxl_port(port->dev.parent);
-> +
-> +		cxl_bi_ctrl_dport(dport, false);
-> +		if (is_cxl_root(parent_port))
-> +			break;
-> +		dport = port->parent_dport;
-> +		port = parent_port;
-> +	}
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_bi_setup, "CXL");
-> +
-> +int cxl_bi_dealloc(struct cxl_dev_state *cxlds)
-> +{
-> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
-> +	struct cxl_port *endpoint = cxlmd->endpoint;
-> +	struct cxl_port *parent_port, *port;
-> +	struct cxl_dport *dport, *_dport;
-> +
-> +	struct cxl_port *_port __free(put_cxl_port) =
-> +		cxl_pci_find_port(to_pci_dev(cxlds->dev), &_dport);
-> +
-> +	if (!_port)
-> +		return -EINVAL;
-> +
-> +	if (!cxlds->bi)
-> +		return 0;
-> +
-> +	if (endpoint) {
-> +		/* ensure the device is offline and unmapped */
-> +		scoped_guard(rwsem_read, &cxl_rwsem.region) {
-> +			if (cxl_num_decoders_committed(endpoint) > 0)
-> +				return -EBUSY;
-> +		}
-> +
-> +		/* first, disable BI on the device */
-> +		cxl_bi_ctrl_endpoint(cxlds, false);
-> +	} else {
-> +		/*
-> +		 * Teardown path: the endpoint was already removed, which
-> +		 * tears down regions and uncommits decoders. The endpoint
-> +		 * BI registers are no longer mapped so just clear the flag
-> +		 * and walk the dports below.
-> +		 */
-> +		cxlds->bi = false;
-> +	}
-> +
-> +	port = _port;
-> +	dport = _dport;
-> +	while (1) {
-> +		int rc;
-> +
-> +		parent_port = to_cxl_port(port->dev.parent);
-> +
-> +		rc = cxl_bi_ctrl_dport(dport, false);
-> +		if (rc)
-> +			return rc;
-> +
-> +		if (is_cxl_root(parent_port))
-> +			break;
-> +
-> +		dport = port->parent_dport;
-> +		port = parent_port;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_bi_dealloc, "CXL");
-
+This is a coordinated patch submission for famfs (Fabric-Attached Memory=0D=
+=0AFile System) across three repositories:=0D=0A=0D=0A  1. Linux kernel d=
+ax (cover + 7 patches) - dax fsdev driver + fuse/famfs=20=0D=0A     integ=
+ration=0D=0A  2. Linux kernel fs/fuse - famfs support into fuse. Depends =
+on the dax=0D=0A     patches=0D=0A=0D=0ANOTE: the fuse fuse package (seco=
+nd series) depends on the dax patches=0D=0A(first series).=0D=0A=0D=0AThi=
+s bundle does not contain the user space libfuse and ndctl patches;=0D=0A=
+those will be sent separately to the respective projects.=0D=0A=0D=0AEach=
+ series is posted as a reply to this cover message, with individual=0D=0A=
+patches replying to their respective series cover.=0D=0A=0D=0AOverview=0D=
+=0A--------=0D=0AFamfs exposes shared memory as a file system. It consume=
+s shared memory=0D=0Afrom dax devices and provides memory-mappable files =
+that map directly to=0D=0Athe memory with no page cache involvement. Famf=
+s differs from conventional=0D=0Afile systems in fs-dax mode in that it h=
+andles in-memory metadata in a=0D=0Asharable way (which begins with never=
+ caching dirty shared metadata).=0D=0A=0D=0AFamfs started as a standalone=
+ file system [1,2], but the consensus at=0D=0ALSFMM 2024 and 2025 [3,4] w=
+as that it should be ported into fuse.=0D=0A=0D=0AThe key performance req=
+uirement is that famfs must resolve mapping faults=0D=0Awithout upcalls. =
+This is achieved by fully caching the file-to-devdax=0D=0Ametadata for al=
+l active files via two fuse client/server message/response=0D=0Apairs: GE=
+T_FMAP and GET_DAXDEV.=0D=0A=0D=0APatch Series Summary=0D=0A-------------=
+-------=0D=0A=0D=0ALinux Kernel dax (V8, xx patches): New fsdev driver (d=
+rivers/dax/fsdev.c)=0D=0Aproviding a devdax mode compatible with fs-dax. =
+Devices can be switched=0D=0Aamong 'devdax', 'fsdev' and 'system-ram' mod=
+es via daxctl or sysfs.=0D=0A=0D=0A=0D=0ALinux kernel fuse (V8, xx patche=
+s: Famfs integration adding GET_FMAP and=0D=0AGET_DAXDEV messages for cac=
+hing file-to-dax mappings in the kernel.=0D=0A=0D=0ATesting=0D=0A-------=0D=
+=0AThe famfs user space [5] includes comprehensive smoke and unit tests t=
+hat=0D=0Aexercise all three components together. The ndctl series include=
+s a=0D=0Adedicated test for famfs mode transitions.=0D=0A=0D=0AReferences=
+=0D=0A----------=0D=0A[1] https://lore.kernel.org/linux-cxl/cover.1708709=
+155.git.john@groves.net/=0D=0A[2] https://lore.kernel.org/linux-cxl/cover=
+=2E1714409084.git.john@groves.net/=0D=0A[3] https://lwn.net/Articles/9831=
+05/ (LSFMM 2024)=0D=0A[4] https://lwn.net/Articles/1020170/ (LSFMM 2025)=0D=
+=0A[5] https://famfs.org (famfs user space)=0D=0A[6] https://lore.kernel.=
+org/linux-cxl/20250703185032.46568-1-john@groves.net/ (V2)=0D=0A[7] https=
+://lore.kernel.org/linux-fsdevel/20260107153244.64703-1-john@groves.net/T=
+/#m0000d8c00290f48c086b8b176c7525e410f8508c (related ndctl series)=0D=0A-=
+-=0D=0AJohn Groves=0D=0A
