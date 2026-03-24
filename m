@@ -1,140 +1,240 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from shrimp.cherry.relay.mailchannels.net (shrimp.cherry.relay.mailchannels.net [23.83.223.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8223A1691;
-	Tue, 24 Mar 2026 17:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774373898; cv=none; b=TapcCZLwN4K7bo05rykcOvsNFnyrvcxlY7BtG4TYw+RR/uHZret9JdgG0jPdRNztcM6uZ4tY0Qt47JXkgzmnSV3J1aDEVLPNm5IgRK5h0a6Sa2J4XeRkUQZIXXbPqLHMw+gKQ/EKUesQ/nJTUeCSJPCxFiEz2Tr/HBhGZiXfnp0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774373898; c=relaxed/simple;
-	bh=2P+UmFGVOVvOgdhAjhri3JMxsldiOWBJAj1Bv9GFu0Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Br9+7aIpfSFrK9KV9nF1xGOci29TpbA0b6Ke7zSXkAQ9pz3h2Wh7YIqzM/pJAcLp6dx5pg9+tbs4XleAymYRxhletDu+KBpEHTGVuwWKYxCXHoEiVVWvHwCBKWAawOnL5rkBUpNjd4Ky/Ser2lcdybZsHvF9d3M7AgIGywQnozU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G392Eml7; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB7B19343E
+	for <linux-cxl@vger.kernel.org>; Tue, 24 Mar 2026 18:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.164
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774378763; cv=pass; b=L7VVEuWR48MaXZEqttCkts5IlaoxakEz7FnUB+GsGVTPcKLlVoL2odWv7ZI5714bzBJm31YQR9aw4akFv04ZWIdem8qDLUXylreTOa9NFAyfDsJqBnlHNPPf6rDcFHnVWiFI5MUuHFA3MDE82ZRkc0vTlLEscRWi27ffMjCLL2c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774378763; c=relaxed/simple;
+	bh=BxR3G8s4K7CLzE/cYyRcaDPDryD8XdPCmj/vbxOeRLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XqIiVwPCwB2sLWqKkW3fY+cdJ+lYje7CU5fNfnbjt/Th+DsmaulylLeHxqkyeMvx4BOrYibweabhXikjr982auCjCtILc8m9FgwJXrPnF8HtP4DzmS+vV9dpZJp9WOs5pq1Tl8e5/vBGDQOPSyvZ3sAdCzwak4rVu3zUuimdGAQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=XPAYxhOa; arc=pass smtp.client-ip=23.83.223.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G392Eml7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774373897; x=1805909897;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2P+UmFGVOVvOgdhAjhri3JMxsldiOWBJAj1Bv9GFu0Y=;
-  b=G392Eml7sWXSXWc4X03C/U0HTdtwCx2KKxHE1qVQtXQ0GkRQdNxoqVeQ
-   DsjIeBt3CPlsMNnS7va0lUSX8Rn3R59nWd9u5rWTmEFiMjhReeGgjBESt
-   rPZK/nZ/8cQ5bqGQtuM0a+LPS2hrXR1qA9JxBWFEviZ1EfG/rzuDLyjE1
-   AY7ei2eFYJ9MR/jnoMVbo5Sk7H1QB2JNq55ldGEXjhYFkhhQHid+gdbN3
-   qW62ngP6Cp1wFBe6b7C/Sy7OKnt3BH8ohC4u1Nw3o2iIlDyr0/ARUPdvt
-   0encu0G66NQ+0hbz0ZkqkywUAvx6qlRb2iiG2rSu7a80EOvyFii+iVvoi
-   Q==;
-X-CSE-ConnectionGUID: +2lGm4TIT9awfho2VE8KuA==
-X-CSE-MsgGUID: iAngMTADQwyWf+BGAJXJ4A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="75283267"
-X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="75283267"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 10:38:17 -0700
-X-CSE-ConnectionGUID: Zaig7Vu9Sxes3oEm5XmVSw==
-X-CSE-MsgGUID: sj6LwwVOQDWXpzPePc90Gg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,138,1770624000"; 
-   d="scan'208";a="247482158"
-Received: from jdoman-mobl3.amr.corp.intel.com (HELO [10.125.110.6]) ([10.125.110.6])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 10:38:15 -0700
-Message-ID: <9154b54f-32f9-4963-b25c-be30c4ceb8be@intel.com>
-Date: Tue, 24 Mar 2026 10:38:14 -0700
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="XPAYxhOa"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id ABBDD581F63;
+	Tue, 24 Mar 2026 18:40:23 +0000 (UTC)
+Received: from pdx1-sub0-mail-a247.dreamhost.com (trex-green-4.trex.outbound.svc.cluster.local [100.121.5.127])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 4919B581DCC;
+	Tue, 24 Mar 2026 18:40:23 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1774377623;
+	b=7j0lLIoJKR+Y4HQYKs10IzTZZAGweEB7Km4U8ZD+jRc4fcErQhJxJVt6SHczJx7VK/NtXe
+	Ppl80D0fLDd6slSl6hFabpsog1NTt/cLt7asW5NGbaTwkfdB97mVfx2M7aCRtaONaQyMQP
+	ZCH6AfLIFaENaN8XQ1Af2fveTiJSIAqoEPUUqyun9QLpXHT395lmoQJRrVQVVT3lHQyKr1
+	Dq0fWUn5hY8DZSdZ7bzraPtfvGID/FWlk6dbU8zYRT/uZGDNmAJZb/G4doz9So4eMf9mxO
+	oj1h0ICQmpZtg0UQR3S8n+NtwdpDIPNMqYRloQby0xWzcm/t3qnVwcgh3n8h5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1774377623;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=JHFA10TK5RiY5mTofH3mf+WUe9fBHOKJKJJ6iEsiV70=;
+	b=t2V1aJHuI1i81/7EnwaiHGRXtG6oGyG4klOwtE2Cbu9HiCw+0DyRPeIP6za41qDeNvNAYm
+	0zQCg+wpnccGvXTKflK+xbk3iiUDvtvdeKlftk+zke0TjtHfSguENKgIAMnA4NtM2iYTbg
+	WB4p7vBUUXNT0+4B/YHXY8mPPqdaZrZnbpfxt48kR26UJ6/nfZkxIhbOKfiv4ObOA63NAz
+	SUXvYTTIh9rm8PEQDXS3feKz3+6QXW5Z8+X6GgbfiPOvALxyJdbtJbBJ4jrSOKCzkSnJ0F
+	9zmxrtVChdvbofUiCNtKHpBhtIN/0od+A3AO6kJ7iA6QQYq8trMayS2nSeGXzA==
+ARC-Authentication-Results: i=1;
+	rspamd-6d4cb6745-lttx7;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Snatch-Occur: 5841f878167c0ec4_1774377623563_3925734241
+X-MC-Loop-Signature: 1774377623563:338959626
+X-MC-Ingress-Time: 1774377623562
+Received: from pdx1-sub0-mail-a247.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.121.5.127 (trex/7.1.5);
+	Tue, 24 Mar 2026 18:40:23 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a247.dreamhost.com (Postfix) with ESMTPSA id 4fgJkZ4wJ7z103y;
+	Tue, 24 Mar 2026 11:40:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1774377623;
+	bh=JHFA10TK5RiY5mTofH3mf+WUe9fBHOKJKJJ6iEsiV70=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=XPAYxhOaqnTfGjrehTEvCEzcNFYADg9MuMt1CgAsNoNVZUy2TVCTz4tSUGSQ7q2vY
+	 JKO6sxzLXfCo5DTQviVSr2Qi+62EAG7J7U5CT/g6s5eie7xmBW7l6h0ho2jmGJeApE
+	 NCeW6z36KNnDhpCyJQvZXbJujOIHgtcijCv56hNxEZqoCor1ulVuK6sNNsrMQgqg28
+	 ciBmWCaoXkH7MWJLanQIXCNSdm8hm//Seh3clbiCVVyzBUdVlByiShFChlRdsR9pHp
+	 xSJVxPU3Qmw+YP9C+XfMpRXNNs8FzD4YXBoQUmVu9RWzyQqfjr8qioAKJysdaDqCnv
+	 el+loyio4Osig==
+Date: Tue, 24 Mar 2026 11:40:19 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: dave.jiang@intel.com, alison.schofield@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, dongjoo.seo1@samsung.com,
+	anisa.su@samsung.com, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 1/1] cxl/mbox: Support Media Operation
+Message-ID: <20260324184019.5fyobyide6ubtcxf@offworld>
+References: <20260323204013.4010634-1-dave@stgolabs.net>
+ <20260323204013.4010634-2-dave@stgolabs.net>
+ <20260324161832.000043f4@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v24 09/11] sfc: obtain decoder and region if committed by
- firmware
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, dan.j.williams@intel.com, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
-Cc: Alejandro Lucero <alucerop@amd.com>, Edward Cree <ecree.xilinx@gmail.com>
-References: <20260323113117.2352709-1-alejandro.lucero-palau@amd.com>
- <20260323113117.2352709-10-alejandro.lucero-palau@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260323113117.2352709-10-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20260324161832.000043f4@huawei.com>
+User-Agent: NeoMutt/20220429
 
+On Tue, 24 Mar 2026, Jonathan Cameron wrote:
 
+>On Mon, 23 Mar 2026 13:40:13 -0700
+>Davidlohr Bueso <dave@stgolabs.net> wrote:
+>> +What:		/sys/bus/cxl/devices/memX/security/zero
+>> +Date:		March, 2026
+>> +KernelVersion:	v7.1
+>> +Contact:	linux-cxl@vger.kernel.org
+>> +Description:
+>> +		(WO) Write a DPA range as 'start length' in bytes to this
+>> +		attribute to zero a specific region of device media via the
+>> +		Media Operation command. After completion, reads from the
+>> +		specified range will return zero.
+>
+>This is only true if we've flushed any caches on the CPU Side of the link.
+>Will happen anyway I think as part of making the memory available.
 
-On 3/23/26 4:31 AM, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> Check if device HDM is already committed during firmware/BIOS
-> initialization.
-> 
-> A CXL region should exist if so after memdev allocation/initialization.
-> Get HPA from region and map it.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Acked-by: Edward Cree <ecree.xilinx@gmail.com>
-> ---
->  drivers/net/ethernet/sfc/efx_cxl.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-> index 22a7d1d95425..78f926300943 100644
-> --- a/drivers/net/ethernet/sfc/efx_cxl.c
-> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -19,6 +19,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  	struct efx_nic *efx = &probe_data->efx;
->  	struct pci_dev *pci_dev = efx->pci_dev;
->  	struct efx_cxl *cxl;
-> +	struct range range;
->  	u16 dvsec;
->  	int rc;
->  
-> @@ -82,6 +83,24 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  		return PTR_ERR(cxl->cxlmd);
->  	}
->  
-> +	cxl->cxled = cxl_get_committed_decoder(cxl->cxlmd, &cxl->efx_region);
-> +	if (!cxl->cxled || !cxl->efx_region)
-> +		return -ENODEV;
-> +
-> +	rc = cxl_get_region_range(cxl->efx_region, &range);
-> +	if (rc) {
-> +		pci_err(pci_dev,
-> +			"CXL getting regions params from a committed decoder failed");
-> +		return rc;
-> +	}
-> +
-> +	cxl->ctpio_cxl = ioremap(range.start, range_len(&range));
-> +	if (!cxl->ctpio_cxl) {
-> +		pci_err(pci_dev, "CXL ioremap region (%pra) failed", &range);
-> +		return -ENOMEM;
-> +	}
-> +
-> +
->  	probe_data->cxl = cxl;
->  
->  	return 0;
-> @@ -89,6 +108,11 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  
->  void efx_cxl_exit(struct efx_probe_data *probe_data)
->  {
-> +	if (!probe_data->cxl)
-> +		return;
-> +
-> +	iounmap(probe_data->cxl->ctpio_cxl);
-> +	cxl_unregister_region(probe_data->cxl->efx_region);
+Correct, same as for current sanitize/secure erase, described in the sysfs doc.
 
-Would a device_put() on the region dev be sufficient here? Not sure if everything should be torn down if SFC didn't create the region to begin with and only retrieved it via cxl_get_commited_decoder()?
+>Perhaps not worth mentioning that complexity here.
 
-DJ
+Still important, I will mention this in the changelog.
 
->  }
->  
->  MODULE_IMPORT_NS("CXL");
+>
+>> The start address and
+>> +		length must be aligned to the device's media operation
+>> +		granularity. If this file is not present, then the device
+>> +		does not support the Media Operation zero command.
+>> +
+>> +
+>>  What:		/sys/bus/cxl/devices/memX/firmware/
+>>  Date:		April, 2023
+>>  KernelVersion:	v6.5
+>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>> index aaa5c6277ebf..b7047cb9abed 100644
+>> --- a/drivers/cxl/core/mbox.c
+>> +++ b/drivers/cxl/core/mbox.c
+>
+>>
+>> +/**
+>> + * cxl_media_op_discover() - Discover supported media operation
+>> + * @mds: The device data for the operation
+>> + *
+>> + * Discover any available Media Operations.
+>> + *
+>> + * Return: 0 on success or if Media Operation is not supported,
+>> + * negative error code on failure.
+>> + */
+>> +#define CXL_MEDIA_OP_MAX_OPS 2
+>> +
+>> +int cxl_media_op_discover(struct cxl_memdev_state *mds)
+>> +{
+>> +	size_t out_size, in_size;
+>> +	void *payload_in;
+>> +	struct cxl_mbox_cmd mbox_cmd;
+>> +	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+>> +	struct cxl_mbox_media_op_input *payload;
+>> +	struct cxl_mbox_media_op_discovery_args *args;
+>
+>Ah. I'd forgotten this spec oddity of two different types
+>of trailing member, or technically a flex array in the middle
+>but one that is defined to be zero length if the structure
+>after it is present.   Maybe cleanest option is
+>a separate cxl_mbox_media_op_discover_input structure?  Probably
+>with a comment to say there is a zero length array in the middle.
 
+Yeah this is a pita.
+
+...
+
+>> +	mbox_cmd = (struct cxl_mbox_cmd) {
+>> +		.opcode = CXL_MBOX_OP_MEDIA_OPERATION,
+>> +		.payload_in = payload_in,
+>> +		.size_in = in_size,
+>> +		.payload_out = disc_out,
+>> +		.size_out = out_size,
+>> +		.min_out = sizeof(*disc_out),
+>> +		.poll_count = 1,
+>> +		.poll_interval_ms = 1000,
+>> +	};
+>> +
+>> +	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+>> +	if (rc < 0) {
+>> +		dev_dbg(cxl_mbox->host,
+>> +			"Media Operation Discovery failed: %d\n", rc);
+>> +		goto out;
+>> +	}
+>> +
+>> +	mds->media_op.granularity = le64_to_cpu(disc_out->granularity);
+>> +	num_returned = min_t(u16, le16_to_cpu(disc_out->num_returned),
+>> +			     CXL_MEDIA_OP_MAX_OPS);
+>
+>If it claims to have returned more than we asked for, why not error out?
+>I might be missing something.
+
+Made sense at the time, reconsidering I tend to agree.
+
+...
+
+>> +static int __cxl_mem_media_op(struct cxl_memdev_state *mds, u8 class,
+>> +			      u8 subclass, u64 dpa_start, u64 dpa_length)
+>> +{
+>> +	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+>> +	struct cxl_mbox_media_op_input *payload;
+>> +	struct cxl_mbox_cmd mbox_cmd;
+>> +	u64 granularity;
+>> +	size_t size;
+>> +	int rc;
+>> +
+>> +	if (!test_bit(CXL_SEC_ENABLED_MEDIA_OPERATIONS,
+>> +		      mds->security.enabled_cmds))
+>> +		return -EOPNOTSUPP;
+>> +
+>> +	/* ensure the specific operation was reported by Discovery */
+>> +	if (class == CXL_MEDIA_OP_CLASS_SANITIZE &&
+>> +	    subclass == CXL_MEDIA_OP_SUBCLASS_SANITIZE &&
+>> +	    !mds->media_op.sanitize_supported)
+>> +		return -EOPNOTSUPP;
+>> +	if (class == CXL_MEDIA_OP_CLASS_SANITIZE &&
+>> +	    subclass == CXL_MEDIA_OP_SUBCLASS_ZERO &&
+>> +	    !mds->media_op.zero_supported)
+>> +		return -EOPNOTSUPP;
+>
+>Maybe nest multiple ifs.
+>	if (class == CXL_MEDIA_OP_CLASS_SANITIZE) {
+>		if (subclass == CXL_MEDIA_OP_SUBCLASS_SANITIZE &&
+>		    !mds->media_op.sanitize_supported)
+>`			return -EOPNOTSUPP;
+>		if (subclass = CXL_MEDIA_OP_SUBCLASS_ZERO &&
+>		    !mds->media_op.zero_supported)
+>			return -EOPNOTSUPP;
+>	}
+>Doesn't matter much whilst we have only two, but if we get lots it
+>may make them easier to find in the code.
+
+I will use a switch.
+
+... and ack to the rest of the feedback.
+
+Thanks,
+Davidlohr
