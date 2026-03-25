@@ -1,53 +1,62 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99E53D0900;
-	Wed, 25 Mar 2026 12:44:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6858F3D3D07
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Mar 2026 13:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774442654; cv=none; b=Wr10y539rqNUgYuGFO4LO2+aRZVKqpzzO51DWGjv2j5zXZjsOAlVrjwFJM+tDXuhMjmj/TC9EZvaxabJDtyABCjUS27LNGdn6BHT8jqGNHoR0Wx9OxKSr/7URfbyuWsvraVt3e45OFMOKr7z5frRHmnUqCWEMPWUj7hP2q0QmSQ=
+	t=1774446462; cv=none; b=sUf8lfZ8IpXe565BbLOwxDSQlSpxqDKz8OnCTk391rkWAXCEhAVVevD5wC0Li4/vk8JstyCm4OerRaT3KUFW3Hnm07/Nz14s8QdLvC5m9Gym43947HsQeOs620q9WmY0Ef1ogx5gm0cELZChy/zAYEXfYsxysni5OULVHYaMI6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774442654; c=relaxed/simple;
-	bh=bzYdfF1spGMVjwl4NTjaat4YQrXVriJ+IaIcJqcKJlo=;
+	s=arc-20240116; t=1774446462; c=relaxed/simple;
+	bh=V5z01KaJq8+1MYQjF2fqLPNjo41qg5v5E0aGVbdTNOM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m3fqR1q7rXHoAFJevHCZBkHQWr4tD0+wJyH6UdWee3Ek7HfX2x809Zx18NGPGl+7478u3jwGRkAtOgzBjiy/iN/QoRhK356hKYmcgfC3a2GNJQ3PxYZkfUnHwGDH2dOwU01PtKiyRNPin/WJ+qyGjgO+zJKV+sFWIEZmatCTTWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 0D0DC1A082D;
-	Wed, 25 Mar 2026 12:44:07 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf12.hostedemail.com (Postfix) with ESMTPA id EC85817;
-	Wed, 25 Mar 2026 12:43:54 +0000 (UTC)
-Date: Wed, 25 Mar 2026 07:43:53 -0500
-From: John Groves <John@groves.net>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V9 3/8] dax: add fsdev.c driver for fs-dax on character
- dax
-Message-ID: <acPX9T2ZF7xTCHtZ@groves.net>
-References: <0100019d1d463523-617e8165-a084-4d91-aa5e-13778264d5d4-000000@email.amazonses.com>
- <20260324003818.5009-1-john@jagalactic.com>
- <0100019d1d476420-6b0bf60e-3b3a-4868-8f5f-484cd55d4709-000000@email.amazonses.com>
- <20260324143927.000024c3@huawei.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=YD5836sfIX+15gM2GADyZOq0613gtmIogrkH2FzWV1chFE2Y+k25gbSd1nK6UAXW1z+bMZl3XsPkr5Fa5gG5nrPFlzcS2/sploEvkg2LgIbfK/mtojVE3UGAkWfMh9KIrUWLvqpOlzXu533v3y+a3LbbsZc7ULGkQgr8coiC1VM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NiQjqsen; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NiQjqsen"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774446455; x=1805982455;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=V5z01KaJq8+1MYQjF2fqLPNjo41qg5v5E0aGVbdTNOM=;
+  b=NiQjqsenk0682VGH/dB03wZ2l3mImuuyanUctpzf0Ey5quxFyiCNzyZP
+   Uoo8iI8YSbRiIfXpBUqgdmHjlbxijXPvoOp1nS5FYq0auQOcF2ir2p0ob
+   X18e5WXo8Ex092AHCtjQI3woXeK7X48ojYtMV1vacNN6CAikhK0rq3ip/
+   S/EvBToDWc5Rw0jxj0pqiZvRyBDzIgSol99Q8CRqZxe9BChTsGyNiqIDJ
+   ru+88l2O3eiWYsTodXDzsf63jqPFr0U3WfGeqp6mcIsnIALv5dNruAmEi
+   A6i5wfjh5r7mkYAQIs4dkYxhD4XADKL/wf/Vi6gg/LkW8kiNi5BLMUdlU
+   g==;
+X-CSE-ConnectionGUID: GQG2oOJRTCeEDQis8v5Dtw==
+X-CSE-MsgGUID: g35L3JKeTVKt8PiCJKjhiA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="86960034"
+X-IronPort-AV: E=Sophos;i="6.23,140,1770624000"; 
+   d="scan'208";a="86960034"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2026 06:47:33 -0700
+X-CSE-ConnectionGUID: Hrnx+0ijR+qLI9i4z6l3BQ==
+X-CSE-MsgGUID: c+seg8dcQTmuIoqRmnH0ZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,140,1770624000"; 
+   d="scan'208";a="220282040"
+Received: from igk-lkp-server01.igk.intel.com (HELO 9958d990ccf2) ([10.211.93.152])
+  by fmviesa010.fm.intel.com with ESMTP; 25 Mar 2026 06:47:31 -0700
+Received: from kbuild by 9958d990ccf2 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1w5Oa0-00000000761-3lgN;
+	Wed, 25 Mar 2026 13:47:28 +0000
+Date: Wed, 25 Mar 2026 14:47:08 +0100
+From: kernel test robot <lkp@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>, dave.jiang@intel.com
+Cc: oe-kbuild-all@lists.linux.dev, jonathan.cameron@huawei.com,
+	alison.schofield@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, dongjoo.seo1@samsung.com,
+	anisa.su@samsung.com, linux-cxl@vger.kernel.org, dave@stgolabs.net
+Subject: Re: [PATCH 1/1] cxl/mbox: Support Media Operation
+Message-ID: <202603251458.SwLIShRj-lkp@intel.com>
+References: <20260323204013.4010634-2-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -56,96 +65,36 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260324143927.000024c3@huawei.com>
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: EC85817
-X-Stat-Signature: 1qn3h5nx7pwds75jfk33psjwun8sh14w
-X-Session-Marker: 6A6F686E4067726F7665732E6E6574
-X-Session-ID: U2FsdGVkX180+af1YWzvaZ59D8sxBuIZxxdYmwQ05wU=
-X-HE-Tag: 1774442634-3402
-X-HE-Meta: U2FsdGVkX1+N9RTW+cU2f//6uhWp/3cA7dyMyvWeDd14EPQJZCrLvO2FgAJa+U+AGXznyUFgoxwG7AiMQ+J/iWcIVhQQqjxL1Z1RBdHi7SMWGXxvholXJsbRJ7vA1tkB3wxhjoXOxImeBTrsGQt9/7Tpp6hu5bpxC8vUZzPCdhLasDGEzMljNdt9S1isvnb85mEOf8EvVD10dWxj0viJRjlot+qh6PxDSWGpwiqSI4Id/V716hBLFkZU2PJKtkMZEvT+NOPFfaUKwAoYWvS8+akdil0Am4UPyiRJV2Beuw1sRneBBtupIg2CLdv3qvibJFNqftrJyNxX2BKVkUCKsJns4hilBfJx4CQoTuzSNGekZWyMLXDjcsyFUruSvcYbRMlzkimElgnyOZSmJF9cIoj/+qluE3dG3Nf34vqLyfe1vFHoQB6CDD7KNpzs5lQuvRnQGs+7W3q8fuDEKMy21SHulDUoAINg0oNWKAEMAr9chD3y6qNx3cS0nujP4+Mm9yiujzZVF/f0QBeo3IX6fKJ3/QdsWCK/Kz56z3DwuO4=
+In-Reply-To: <20260323204013.4010634-2-dave@stgolabs.net>
 
-On 26/03/24 02:39PM, Jonathan Cameron wrote:
-> On Tue, 24 Mar 2026 00:38:31 +0000
-> John Groves <john@jagalactic.com> wrote:
-> 
-> > From: John Groves <john@groves.net>
-> > 
-> > The new fsdev driver provides pages/folios initialized compatibly with
-> > fsdax - normal rather than devdax-style refcounting, and starting out
-> > with order-0 folios.
-> > 
-> > When fsdev binds to a daxdev, it is usually (always?) switching from the
-> > devdax mode (device.c), which pre-initializes compound folios according
-> > to its alignment. Fsdev uses fsdev_clear_folio_state() to switch the
-> > folios into a fsdax-compatible state.
-> > 
-> > A side effect of this is that raw mmap doesn't (can't?) work on an fsdev
-> > dax instance. Accordingly, The fsdev driver does not provide raw mmap -
-> > devices must be put in 'devdax' mode (drivers/dax/device.c) to get raw
-> > mmap capability.
-> > 
-> > In this commit is just the framework, which remaps pages/folios compatibly
-> > with fsdax.
-> > 
-> > Enabling dax changes:
-> > 
-> > - bus.h: add DAXDRV_FSDEV_TYPE driver type
-> > - bus.c: allow DAXDRV_FSDEV_TYPE drivers to bind to daxdevs
-> > - dax.h: prototype inode_dax(), which fsdev needs
-> > 
-> > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > Suggested-by: Gregory Price <gourry@gourry.net>
-> > Signed-off-by: John Groves <john@groves.net>
-> 
-> I was kind of thinking you'd go with a hidden KCONFIG option with default
-> magic to do the same build condition to you had in the Makefil, but one the
-> user can opt in or out for is also fine.
-> 
-> Comments on that below. Meh, I think this is better anyway :)
-> 
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> 
-> 
-> 
-> > diff --git a/drivers/dax/Kconfig b/drivers/dax/Kconfig
-> > index d656e4c0eb84..7051b70980d5 100644
-> > --- a/drivers/dax/Kconfig
-> > +++ b/drivers/dax/Kconfig
-> > @@ -61,6 +61,17 @@ config DEV_DAX_HMEM_DEVICES
-> >  	depends on DEV_DAX_HMEM && DAX
-> >  	def_bool y
-> >  
-> > +config DEV_DAX_FSDEV
-> > +	tristate "FSDEV DAX: fs-dax compatible devdax driver"
-> > +	depends on DEV_DAX && FS_DAX
-> > +	help
-> > +	  Support fs-dax access to DAX devices via a character device
-> > +	  interface. Unlike device_dax (which pre-initializes compound folios
-> > +	  based on device alignment), this driver leaves folios at order-0 so
-> > +	  that fs-dax filesystems can manage folio order dynamically.
-> > +
-> > +	  Say M if unsure.
-> Fine like this, but if you wanted to hide it in interests of not
-> confusing users...
-> 
-> config DEV_DAX_FSDEV
-> 	tristate
-> 	depends on DEV_DAX && FS_DAX
-> 	default DEV_DAX
+Hi Davidlohr,
 
-I like this better. I see no reason not to default to including fsdev.
-It does nothing other than frustrating famfs users if it's off - since
-building it still has no effect unless you put a daxdev in famfs mode.
+kernel test robot noticed the following build warnings:
 
-Ira, it's kinda in your hands at the moment. Do you feel like making this
-change?
+[auto build test WARNING on cxl/next]
+[also build test WARNING on next-20260324]
+[cannot apply to linus/master cxl/pending v7.0-rc5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> 
-> > +
-> >  config DEV_DAX_KMEM
-> >  	tristate "KMEM DAX: map dax-devices as System-RAM"
-> >  	default DEV_DAX
-> 
-> > +}
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/Davidlohr-Bueso/cxl-mbox-Support-Media-Operation/20260325-172343
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+patch link:    https://lore.kernel.org/r/20260323204013.4010634-2-dave%40stgolabs.net
+patch subject: [PATCH 1/1] cxl/mbox: Support Media Operation
+config: x86_64-rhel-9.4-ltp (https://download.01.org/0day-ci/archive/20260325/202603251458.SwLIShRj-lkp@intel.com/config)
+compiler: gcc-14 (Debian 14.2.0-19) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260325/202603251458.SwLIShRj-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603251458.SwLIShRj-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> Warning: drivers/cxl/core/mbox.c:908 expecting prototype for cxl_media_op_discover(). Prototype was for CXL_MEDIA_OP_MAX_OPS() instead
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
