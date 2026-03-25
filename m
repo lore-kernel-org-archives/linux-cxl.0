@@ -1,100 +1,115 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03AA2066DE;
-	Wed, 25 Mar 2026 01:35:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0A126F476;
+	Wed, 25 Mar 2026 01:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774402503; cv=fail; b=oFXu6D7pjoKk6e0/n3hNzuEL5hfDLIeW8EdvlobVFrKnaZ3ffgX1jobBxCDCNfcCfDP9VDk96f9FGW/95rIOkMnkC704vZiVL+lRMXO4eMXj3D6tWnxM14K+25lxBMxMzfADnuhydMbgBP4os8bltAB+Z0HKK183TSqToI5690o=
+	t=1774403536; cv=fail; b=RWAjQxQbpTut4RaQYq4XWcVNR2CnmQSGGGGLGckAZZ8xYRWNTXJ+pMsIgpU0zvEPupJrsbGYPdG8K5fq7PDEUEuiNXSKiBQ61Wj4igDw+otr4wrvdlfmUbJB+fEBV67jr7wCkEucF6pMQwh6sB9MO4MrDiZcPNHNxPju6Rom5X4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774402503; c=relaxed/simple;
-	bh=DOtgN4o7p/eXtyY9WMJJRs6tnzwbaQap3c9xuPzYIcY=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=Cg+0DN+hjJKehBGzShMgNfsGdO/peAUsvt8yUBdKDPHtAX+5x34YoRR6Gyea8KkGxBTUO8ONaFjjL2l6Czry+M3il+KY+RpCQaCyOvDpbBXem+gYaNfbQ8LmUQFBJYv18Ppyo6Szh8f3pV1Zt8trqrXeFNyb9gWTxdwRG0rdSic=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gKmufixF; arc=fail smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1774403536; c=relaxed/simple;
+	bh=TM1/ltSeMRcY5SmQQCunxUqr9wLUUBlkOT2Kj57Nefc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=empw+QyN6qbAf7jswqqOa/XsGrwg9Wx9i4N63arqL19GRZbBKdJH618wDlmiCX5ykZn9XQ2r/0baWAnzuk97w7Bxl+VlKewwzTps5Fg3593xkIluLVlM7HrebBsSnKqEhRG1MhiS8xY2r8p2K7uCi8Ic7il4toIHyzwRTqZodQI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i7A/GeoP; arc=fail smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gKmufixF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i7A/GeoP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774402502; x=1805938502;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=DOtgN4o7p/eXtyY9WMJJRs6tnzwbaQap3c9xuPzYIcY=;
-  b=gKmufixF97yrp5RiekPlm1kSOms7LjfdQAgus8kCcDlgP2//bw6HSZO8
-   5wlYqZySRNj0xz36cv7P1+nwogJQkqhgoVHnSjKnj/JRz8IDK3J61GB61
-   ROyWLYiXedkztO+jbW8BAerMfgmo4C3VuspUOJqQOi7MtwU4oo0kuPyzS
-   TwEJLoG8XRHRQM31lgCbHQqnX84FU0Af/dvcEkge7RQN7ldqSbmUUx+xb
-   vXKcxe1UqWb/3YF+c76LhFt8V5n/05ACC/jiT3XdBasnIjGRrZIWHxA+B
-   RGboXA1wOzHhUd6C59HStHkHFF+BMNDd9OGP4X2qm9L7fYuJOEjjlcbUt
-   Q==;
-X-CSE-ConnectionGUID: lzTN1oG3QbOXB1hE9D9mgw==
-X-CSE-MsgGUID: 4kH++OCqQY6qPECIjPQnuA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="75319406"
+  t=1774403535; x=1805939535;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=TM1/ltSeMRcY5SmQQCunxUqr9wLUUBlkOT2Kj57Nefc=;
+  b=i7A/GeoPS6GdbGtH/WfVoO9h2cGSPA/1pzIstpkm0aQQZTbnScHVJYeE
+   IfYr+84rt8zDwcF3gHexrbiQyFT3hp6R1umIbazI5tqQ/loGcREMTvu+1
+   +9HonwxUlMEDKrkDCrJr6E7Y7TmhSEsp4hbzwCHmzR6cL4TzQMed0SeHY
+   wH/Z2nDvFx4FkVJDlCXy52BMbTS7oi35mRXWUTt+JAspMo0x0cqkZtHVz
+   nHk996Xp46REr8oSq7u2mUibtvr4qCZpBYUnTgEcD1eIp2UqqXNegu+oq
+   SUUAY0GaOqxFl/3x0C7+Afridv7sEYFExn/eF9stprEQBuTurFLMtQNTM
+   A==;
+X-CSE-ConnectionGUID: P2jJmzt9Sq2boJjBcNZXsA==
+X-CSE-MsgGUID: UJbJAfeCTiaf8LDgJNzxmA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="75320768"
 X-IronPort-AV: E=Sophos;i="6.23,139,1770624000"; 
-   d="scan'208";a="75319406"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 18:35:02 -0700
-X-CSE-ConnectionGUID: oQ34IPdwQQOMyl3/Wpi6dw==
-X-CSE-MsgGUID: 9jSfgC1NQ2WAIiCK4DSG3w==
+   d="scan'208";a="75320768"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 18:52:14 -0700
+X-CSE-ConnectionGUID: ntGExVjpQSi16+np/Y9KEQ==
+X-CSE-MsgGUID: jQBcsWGiQvGVcHdwSQXI1Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,139,1770624000"; 
-   d="scan'208";a="262451181"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 18:35:01 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+   d="scan'208";a="223587839"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 18:52:14 -0700
+Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 24 Mar 2026 18:35:00 -0700
+ 15.2.2562.37; Tue, 24 Mar 2026 18:52:12 -0700
 Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Tue, 24 Mar 2026 18:35:00 -0700
-Received: from BYAPR05CU005.outbound.protection.outlook.com (52.101.85.13) by
+ 15.2.2562.37 via Frontend Transport; Tue, 24 Mar 2026 18:52:12 -0700
+Received: from CO1PR03CU002.outbound.protection.outlook.com (52.101.46.64) by
  edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 24 Mar 2026 18:35:00 -0700
+ 15.2.2562.37; Tue, 24 Mar 2026 18:52:12 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ic/pSGXmLWMBy61tzH+zaKxPplGduHLKUznfm2Vx+dsxaSFX3oogoLvlH4in7QCuaopbJWQvBdteHvWPqNxrue8ZXzAxWQLglMqvPlcbDkdl0WFQQ/fcEZrRnvALbh/RQgdhL/c/9aTb6pAvEt+P2jZsrJtS5KWZ2WJqB1RmfC+1X+OePxwPG1UPcNmeaSP9M27bqZGgqBOQXNx2xW9r4ATaNe/SW7AThWBbKEsZtt5pkvoIIJYLyJ7zs+BXeTJ1Vu+RF3ct0f2nZvL/RG6obL+mEmTe/Rqkhrbndd8oymqRQAJTH0bHpt4uIV3d2XVeMq93Inw0RqprCMHegRn9Lg==
+ b=Eh3IVuaMJjGdg2bm3C8Q4c1ZO0egRWvMTEVBfDr8KktL0a8ZZwmc2S/YZm//zdEJBLJ2ZiVMyJizfVCsh/kG2ojhxB4CB5z5INJBjjfqG77Pw97zIQD20biI76Bhl8ruk90HfFWRHarz75yVautInB8kg5niklNdSge8vVKr7CsEXEVwdEnVxQOajI1kBptZP1fyUhcAjqQGje1ijvo10M5UuzIAqi7CxlzTtHoY4iL9NxEpBuqB8yQN0EvZxBolNGugGi5v1rGxyma24x59HiIo5VpWavLrAAP0eb5QMuPnPkcNQdRCkKr/rbGvtIKt3gwEUK+6dsYDTaAUPJAUNw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WBXU7zLE/EQE0+c80FSnBwmPVMRyjYgH5/z5IwWK7RE=;
- b=M4tJtrzS5Nk9oLnqDuiDJKx1sP1ypBxLdAhzwMJyiHM9nUljWwBijT/UKiStYFmL3ACO0nwAgITouKxtQIp67UXDGf4tvBbmYCiXuVe0/vUk/hxNOF1Ce/B5s1xplnct8FKEjoDG51IIDvzyY+NQciqBCAsxIDMJf+uIYrc1czy9X5+rbaCvUnt3BsxhCdd6E6ZK6bOoqWXgK0utNAtAxZm7qUjJbbuX/LYIcb/W6WJtPupJwvh3SCTqyP9sNQ3TVMKxsZo4PsIRVZEdckNNrCp9Zfibin5nMn6HhBUdK3YQElTEYdw4dKsLYTRsp3SoTpspfqSVtX6r9Tg354Y4Zw==
+ bh=Bl1h2B+PqgyQ+Ba5v6Nx30JpCg1CGdlnkEHNp70m7sk=;
+ b=kg1NI7NQbpHCXohlNK80zKkgU09rzV7TMF2GvN5BRUBiCmv44SMbwya0e1nUi9iaXJfOcR3b8EElczdb4U14sNyixNBCg+cdn+CH7QhoXrj/XQRxcMQqWsqOpe5CP//SMClXemxTJKiqX5vEGLddwgXYORteGr7QvO97c4LgSJuo5UO8SK/3thkhBD41dGQ6iiMozAzIpngm3xvsEjrXUNWsEuksvb7jRSXlucgYnqlZcnmI932Lccn91L4dROZRNyB+xAxJ6dXIDPgI9YO1LuMfwm3YTQaD3lj+LrrTTbbzTqTJ2z+fOMzPbAsY4hwZyFwpj9uI+XpZ4W1mKpgyVw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by IA3PR11MB9109.namprd11.prod.outlook.com (2603:10b6:208:572::18) with
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by PH7PR11MB7001.namprd11.prod.outlook.com (2603:10b6:510:208::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.15; Wed, 25 Mar
- 2026 01:34:58 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff%3]) with mapi id 15.20.9745.019; Wed, 25 Mar 2026
- 01:34:57 +0000
-From: Dan Williams <dan.j.williams@intel.com>
-Date: Tue, 24 Mar 2026 18:34:54 -0700
-To: Sungwoo Kim <iam@sung-woo.kim>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
-	"Vishal Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	"Dan Williams" <dan.j.williams@intel.com>, Ben Widawsky <bwidawsk@kernel.org>
-CC: Dave Tian <daveti@purdue.edu>, Sungwoo Kim <iam@sung-woo.kim>, "Jonathan
- Cameron" <Jonathan.Cameron@huawei.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Message-ID: <69c33bbeae7e5_5162110077@dwillia2-mobl4.notmuch>
-In-Reply-To: <20260309000810.2632065-2-iam@sung-woo.kim>
-References: <20260309000810.2632065-2-iam@sung-woo.kim>
-Subject: Re: [PATCH] cxl/hdm: fix a warning in devm_remove_action()
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR04CA0074.namprd04.prod.outlook.com
- (2603:10b6:303:6b::19) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.23; Wed, 25 Mar
+ 2026 01:52:10 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::fa8a:90e4:57d4:8026]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::fa8a:90e4:57d4:8026%7]) with mapi id 15.20.9745.019; Wed, 25 Mar 2026
+ 01:52:10 +0000
+Date: Tue, 24 Mar 2026 18:51:55 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
+CC: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
+	<linux-pm@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>, Yazen Ghannam <yazen.ghannam@amd.com>, "Dave
+ Jiang" <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, "Matthew
+ Wilcox" <willy@infradead.org>, Jan Kara <jack@suse.cz>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek
+	<pavel@kernel.org>, Li Ming <ming.li@zohomail.com>, Jeff Johnson
+	<jeff.johnson@oss.qualcomm.com>, Ying Huang <huang.ying.caritas@gmail.com>,
+	Yao Xingtao <yaoxt.fnst@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nathan Fontenot
+	<nathan.fontenot@amd.com>, Terry Bowman <terry.bowman@amd.com>, "Robert
+ Richter" <rrichter@amd.com>, Benjamin Cheatham <benjamin.cheatham@amd.com>,
+	Zhijian Li <lizhijian@fujitsu.com>, Borislav Petkov <bp@alien8.de>, "Tomasz
+ Wolski" <tomasz.wolski@fujitsu.com>
+Subject: Re: [PATCH v6 3/9] cxl/region: Skip decoder reset on detach for
+ autodiscovered regions
+Message-ID: <acM_u9aYMtKUXGH3@aschofie-mobl2.lan>
+References: <20260210064501.157591-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20260210064501.157591-4-Smita.KoralahalliChannabasappa@amd.com>
+ <69b1e0aacb9d0_2132100c5@dwillia2-mobl4.notmuch>
+ <absY10LzUqb3vK7A@aschofie-mobl2.lan>
+ <69c2ea1ea24e1_51621100a1@dwillia2-mobl4.notmuch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <69c2ea1ea24e1_51621100a1@dwillia2-mobl4.notmuch>
+X-ClientProxiedBy: SJ0PR13CA0181.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c3::6) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -102,171 +117,279 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|IA3PR11MB9109:EE_
-X-MS-Office365-Filtering-Correlation-Id: e0107d82-25ea-4958-255e-08de8a0eb901
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|PH7PR11MB7001:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2dd47685-cccc-460a-784c-08de8a112085
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|22082099003|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info: OhUdUfTTfA1ICd4bb/L08xxyhlxF0BL4F/+1Onqyo7kwWj9SshTlx89XAe2SBKF5ZaiCaSdsPmFU2NwrlAPwDJkp5kCs+xjnxxluwDNLMpUUd1Vn1K5mTS+2vcVjtgkY+wXcGjDT7H//HVrjrYM9Ohec8mulbpQMovxNFdGvhV3s+aeZA6fb0DrAdAFg+mt2zLsVEuXP9mla6oCI7TftLL0vKuQm51y+BWinEnjUud6B9cE0iV90ImLZs1/l8J14nSglo2HjjG90PVO/gLPIBNPTssv8xev66VCTd3HEBYhbgkINJ9DLUcnN85df+p5u2aLyz1rzCMxPLrdgonOS4OZM63/QuWog9xERxqWCFkO5WZyI2iXEG1o8ORdLEcR2ayCZ16C1TRadWu4WH5lykS1tluXL0fCUknOazmYfPs4BnNgg0tPXago+PZbDu6lKZYG5pIlcaTyFP4s7fQv1emzrCBrbNHsisHeEx7k0/giEUpGbrhzuoZef4Kmfsl09lggWLufrPWnb/vGmpo1I7mA8KF1IpjeLrtA0lE8XTJAiX/ZOESsnwXdKKQWuyBhZ7DIhX1mcxTcGe+56NMO1U9Rj0wYvcfuEma82l7hYAR6pJx9+NHAZzaUVobSdYwdG0jZBtISTFN5Q1bVwnM+wNCyBBfQeQZ6+8zOSVxOtS4zaa1IgNHF4m59N6vNesk7/GQvBmPIh1Wxnx7pWdo0lwVY6nFSTvCiuzO6UTmfFgJY=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014|18002099003|22082099003|56012099003|7053199007;
+X-Microsoft-Antispam-Message-Info: v4Ue0jAs4Gvq7MADx43Jfq0MmpCHcfYE5p9zEzKb9xbv3+KehDjA6ZDYAe4Htu4Zzi6sw3TxTMxCuRSHxljOBRc2zOSZGpPMlLDhe6kVfwdh2LLkMw4M1vTu8ybzeogxFR2RwIHa4rYzEV7G6cSR82h2G5hURsIk2jZRLMvwhzvv6X6ozxIVMeHzkTnFm85MHkAEvrfpB5zB6GcdBIeCMqZdbx4NWnFi6847gZUqbXj4filGnEMRj4vkpkdZb2nGKgqAvZe+/e+HZvIrkU2aD4K8CuLJ5QngA1NwUBXLncRByz4WA2DXrKEvcmw1PQRrWpD9FngpO9C3wsYw4e431cS64C1QmGDqnMbQLA5NJCz6UZtMWcbHClDy7hxyzYYsqc6Ae5U59bmX/ohn/Gvnz87+CUs5gq6lH3wNl0f507R6TLQETyi32bs5biuR4bJTi84S+2BIOKYh1iGGqLm8ssLCcvLgtycE8KENIpd4OjfdWDSxgs/hdxtgmNpT95lGah0V89+Q0qP0zTLNqbgFII1vtlzdqIGuGtCYBVoVYShYMiBPJfwh6sAclU8zjFNmtZBHHLysMPapBfFRm3uFtwAWllrA6rxdMwQFY/9MRhLof0E6A5G8CE/ZVzoHjluc5AQMqeLHOSeveqdIlI77iTSel5aVkP9UCRRN5d6DpGSluzaMb9HWhoAxBtrTVKOMbozTaRDgLcqkU59wRUzzYBu285EBANWJzUjil6GWels=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(18002099003)(22082099003)(56012099003)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SUJEdzZBOWJZUXZKZmx5d2xmckl2ajVTWFdIOUt2QjErVG9YSnlYWFNRV3pG?=
- =?utf-8?B?MVNRbzI0cE1qR29QdVgzNUN1V3dFcHprcmM1V1B1Ny9aVEp4eXJOaDFMYXBr?=
- =?utf-8?B?RzQ4bVNtYUhDN2xmZzZnL1J3M0YyU2MreWVjcXU3T24xQUtnTlBoWVpHbWpO?=
- =?utf-8?B?TENhd0NMR3pVOFN0UWxxeFhqUGwzY091WGxFb1FoM1RISVMxdk9TMmZoNUtJ?=
- =?utf-8?B?cmx4RUdrZ1UrZWQ1WVBHWCtPSmhFRnE5UXBHSlMxeHQ0RWVTUGZSaUM0N0dx?=
- =?utf-8?B?OE52L1JQemU2OEttdWlyNzdPcTBoY3NsYzErVTNqQzFEVmdJNEFlZnBxaW1X?=
- =?utf-8?B?L0JyQlRDUnhUTUEwbFR5ZzdGUlRBbE8wWGJWZzA3ZWdsREFmWDIrVUx3bk1j?=
- =?utf-8?B?SllBcFhWQTFjY2Y1eUl3ZCtYNTZuZlZuUDFEcThURFd0emw4aG9hMTh5Ty9V?=
- =?utf-8?B?WmhOaVZ4Z2lTenFPWVVabUNGbmEvUUZ5dENOVnpmMDhtYXBtYlkzbStKUWtJ?=
- =?utf-8?B?QWZwRHhUaTlPZ1YvRms2NE5URWphODArZVMzaWhYM0lnRmVsWFRxak4rYWRL?=
- =?utf-8?B?RnptV0RwQVg2elpndCtVdVJ2U1V0NnhIeGsvZnVzbzg4aWdGVHdwOEJGaVZF?=
- =?utf-8?B?eTcxdmNraXZsdlpsR0RSSG5UUm0xR0NlazFXSEdBRnFHbnFTK2xqckJSNTAw?=
- =?utf-8?B?N3RITEloOS9SS0ZNY2FibHlVUk5NdFJ3b2czdkpqMnR4UllOYnFBaWQyVkRH?=
- =?utf-8?B?dEh1NS9wUXgvYVhWYlV1SFZjVm53SXRXN3hURXhwZEN6MkIwT1NmOEdMQ2t6?=
- =?utf-8?B?Q2h5WlR2S2Y4L2JacjQyYllreUJnMjFmSFkrTDJub2twNHBmV2NteU9sNDVV?=
- =?utf-8?B?R3lFZGltZG1aM0ZTQlQzVFdMUGN4ZThPdHBITG9kSGZBem16eEh6ODdicDNP?=
- =?utf-8?B?R052RDRpeWl0ZkFEVWN1blE1czFCMDgxOTRINU9UZkxkd0MyeENZWWxENHZI?=
- =?utf-8?B?RkhVNGNLUkI2K2lqbTBiM3lCY0h1Qk5yYUwxS3Fjell5bWN6dzNLcmJyWVNX?=
- =?utf-8?B?dnk2eVpBMkhFZk1jMlRQbm5EdlN4OVoyL2RPRzh3cVgzcVM4N1czemRXWExC?=
- =?utf-8?B?UFFkWFliMkMydnh6SksweGx5b1c1d2N0RGFqU1RYT1pCT1E2dUVvWTR5RFlO?=
- =?utf-8?B?MytKUTdvQ3c0SG8vd3cxWXdYMWU5VkwrWHk3NkFPcFoxN2pWcWtodGFRbW4x?=
- =?utf-8?B?aG5RcFp3OHBUeFhZOXJrZlQ0RUtqeUtENC9sMTg0QWF2UGVaQzJuOEt1c3R3?=
- =?utf-8?B?cjVud1IrRUxrWmpBNUYyMy8zRzdOMEdaQjVmWkxzMitMSkpJR0pyL1FTWWRN?=
- =?utf-8?B?c2FUbDM2L0ljbERBV0pnR1YzY0paK1I5SEk2Z2FacUdBV0dhQzBWSThmazRG?=
- =?utf-8?B?aTZ2cmIvL0MrYjFlZ00yRXNoeTlWcGtaTXh1OEVBUlFKbXE5M1NHUjNMa2w0?=
- =?utf-8?B?WUp2QWIzTERNODgvUzEzL1BGN2hESDd2TXRPekh1ZTFMZ0xybmhoYS9FenBF?=
- =?utf-8?B?RStSNnZ0MEphNkdKbXR5eEhodnhPSUtZYytZMGczdERUbXBxS1JpYnFOeStO?=
- =?utf-8?B?Q1k1Ly9udzl3WTh3anJIbm1qQ2NhRWhrQ0dXOFZBZUEvU1M2VjZzUHlmc3Rx?=
- =?utf-8?B?SVZVSDBnL0pCL1QvblpSTEZtU1hZR3EwZVZWNWI3bWlEd09CVG14bWxuSWdt?=
- =?utf-8?B?WE9JQWdpajBrU2RXZW4ydmhqNnp6UUZBNzBsdzR0SlhnUzM2TTJQbml5N1dU?=
- =?utf-8?B?Q3hRTVZCQk4xV3k5TklVVENnVks0cWp5WGI0SDZzbFk4NDRaRW9scE1yUHRp?=
- =?utf-8?B?bTBNUkxHZDA5cVgxMlVGNThpWDhkZUNMdlRxdWFPT0NtU3IwSkY4QTIrWEJ5?=
- =?utf-8?B?Z1RYZFowL3Bqb0pISnV0b0VPeS93dFQybTRUMXNHaFczaG5sSWFVdmd5Vmcr?=
- =?utf-8?B?ZXZJSVoxbzVXK1Mza1VxNTV1cUJhc29iVjg4QUNUb3hxSXR2RkJGNElkcWRY?=
- =?utf-8?B?amQ3OHJOeHhjTWhlZW1EemdwVmxqZnpGOEI1WU9GMy9zSmd5TTRMOVI1UEdZ?=
- =?utf-8?B?WHZRQ1oyTHFvOWtVZ2pDdGg4cWQwRE10QnR2YkFvT0RSQUd0NWV5dmVwcXhO?=
- =?utf-8?B?anhLZlFpMVhndHphQWVkbmNncmphZStybWNTODIzRHVxTVYxSDRlazhNcUZC?=
- =?utf-8?B?SVMxVytZbUtXT1Q4cTBmeE9EUjBkMlR6c3I0NTFmdUtCa2VJbmZUbGNweWxv?=
- =?utf-8?B?OTY5am5hQjB3OUFQNXYyMnh4M0tUTldjbldYN2NZcGQ0TlhHK3FGcS8vTXY1?=
- =?utf-8?Q?CQoU5aO7wiYAN0HI=3D?=
-X-Exchange-RoutingPolicyChecked: MeGrOGq6j/9gr4jIy+/jL+2N3XlDU4aW6+9CApxNh9o20/mZXqPp0Amynz4/3XIG6GT2MPF7l10tWgwLO/ACuLqWEwbAkEYK9T0ZtQy/LuzKoZ1iozfNjgpo5W5ByJHWW5OXKRaDt1LsEtXNjfZ130/USldW/ATlJwrANdhTBX+8oN9E8Rpp1coibgkABzdiIgDkW6eh5UIifOFV0mTeB7oRqSg51H0dne3pVKrI+ZkkxvbqgnWfY1sXXUToleMx7B8Xl3oVIOYYPMtuyIrS17LIEuOD7NrPcKE5gE4FPI/cf21PZhdx4wmEKKzQQkxCdyut79QGM0NUtFCuTz0Jww==
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0107d82-25ea-4958-255e-08de8a0eb901
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?BWAFO5R8odkh6vCsD11b9Z+odDUzIJUwkFZwY8s4xsN2fBx3QtyW2k9XPuEC?=
+ =?us-ascii?Q?B71ToT6UiXo+yn8axyXSgq5dXtDsL5yCx0ITReRiWZt322fXhTxPQm3ZOJ3m?=
+ =?us-ascii?Q?0mWObOK2+P7N4MlHTrkLGY8bdYCBtJpLBW12bQ8/2TSb+IvwtxhdSXK0R290?=
+ =?us-ascii?Q?yOu9mAmFr1uyKpTVVrTjvOcEcWjctCErx1FYYEJCKSRXQfD7R34yHjKi0pzL?=
+ =?us-ascii?Q?f75H/N9Oo54S4jI962Fbni3gnH1u9TOreE+S9LqMkDxjYjqR40zOHK4HPJrI?=
+ =?us-ascii?Q?ajUZ2U+S9GXiN27DqW/KGvrg/SWZrceDWZwTchHhml+GyLT13JY5QTi5dT2M?=
+ =?us-ascii?Q?ip6CLhJXbiL4AsnTr/zh7uvq5hBl68cybg/M24/3YefmLaMtB1S7uN/QSnqS?=
+ =?us-ascii?Q?x0eo55pcgdQoWeYb3uDC81TWeZdBCE7zR4652zxrjCL+qlJQ98MF2XaX3Zl2?=
+ =?us-ascii?Q?B7B0FcYXiUeoJqm19obiJ6stqLirCM2cQ4KF9Xh5/DIV3SHJltXWRBkTeFIA?=
+ =?us-ascii?Q?0mEnHFc1DOFba7jS6hZdh7CYDfmRudq49oabv0rortQK1CEvS9mof7WAVvtf?=
+ =?us-ascii?Q?4GBq49oYT7cVn+GBbyla1XaLMcJUaaY0FYu9pxhlR/gnizD5bd+AqgBC4kvl?=
+ =?us-ascii?Q?UT6wPfODixHJ+UtU/4yYFm1LccOxhC7EhHf4dYod7hrYBUlsbqxVTS/943mq?=
+ =?us-ascii?Q?slP+P+vifzQbmQChQDQTbniTFy/1Hbz97ZyZifxFFJjNxR7RtkBqH9SDJGFA?=
+ =?us-ascii?Q?XZHbGR5xHIC7oN2tcMBjsffWrmSjveQ+I0DQ8ohq3jO16QfZvvIkmMY5RQoo?=
+ =?us-ascii?Q?AssTTYq61f3pW8GFxou/XCcJV/ImY1IUjr+ml04UXpCtfwqGQIuc7ltpUMwN?=
+ =?us-ascii?Q?HitJmzgONAy+keBSI2XGRfDoozhwbDPCHGJ9Mkf/u+bsRNvYZO1bj0nqcuk1?=
+ =?us-ascii?Q?j65P2cwLGlWjbic805pIAcgOxNZWbSe4DeKW0qZO9LY2o4BFNDr6PzHmb9vy?=
+ =?us-ascii?Q?PcMH97ex0AbrJvwAsAr24eGFJGGBLJL8LWldlNrEOZg30UjrnhfzRIW7ISzD?=
+ =?us-ascii?Q?/cQKsxMXFcNIp6JG0nSQ8S46W2y3Omdx3x2hUhUavDB7LM5WtdjuztXuYW3P?=
+ =?us-ascii?Q?5G94Uwxq3wEIYjTexiGF1rzDdOEyNPjAgKgZrgW28jo7lyACJaQAVUhfidvX?=
+ =?us-ascii?Q?SV4uh6vUJR51PnkFSjWpNOhz3aBtGjCEzgQtudPMvod+t4vVPQ3Mb5RkQ1hR?=
+ =?us-ascii?Q?4NfsTkRkmjQG4+k8/CzgzUAFKFVxJHrABfgqGU1pBOkpvs6wL2XjQDaHOv9b?=
+ =?us-ascii?Q?+u6sdnQ/L9jSyFYe/xXYD8zvmJdo+CoKXQboS2Jvx+NxGEB2ZkaDZYz+2LVK?=
+ =?us-ascii?Q?MLgUZeH6J3366d+15xVTzM+P92/+eHujmnjp75yLXmNb/2NwHMgbEyDfxmzJ?=
+ =?us-ascii?Q?15HjSsaqufyQTJ3yP7FhNYHdCPnWRcpbQKvEfXkP/wk3kEuazNQEkJfZfKe9?=
+ =?us-ascii?Q?NgSgmTdaaB2ALMWtEuzTh1m6wDcZBM4VrUrg7hAda2BpR76PvIlKd5A+TOrJ?=
+ =?us-ascii?Q?7vz8aVFB2rlz8w5OTJ3freOe0u/tAm1NczXDegQVuRMZEhdLohHhq3A9+v4/?=
+ =?us-ascii?Q?0VcZ5GUSZ9G9+eZpIsScTZUsLwt8GPacFExaHqSeLRItAhAZL02vUTEchGnF?=
+ =?us-ascii?Q?YDANiugOXXrVswSHrwqHPZTnno3R7cvxTrN1GZhPPo+ylPmSiQFoBbgbyn1s?=
+ =?us-ascii?Q?a//i9uD3zMGXwAahQZbcx0pzLEdExF8=3D?=
+X-Exchange-RoutingPolicyChecked: KnOSpIDwQNBSpzyQenfpru5LKJYH8MN21rr5sfMc8N38Z5UrNAas4JZe3xYxB+xcw5fK4g3wpipFQ5GNH0SQpqkaWBCW36PecM23tVLOEXWflzSEpERHw20fsoeJgDa5r0YBOMadkz4lil3bzpyNZ5xybZdDnfbjEPjBryGnoNPIRw3chv/9tpQgiKM4zs0F+tEIzi1zzvRGGVtevxEvKk17Ekz01dI5x80zn9fND67VLJUL0bTSUWUnEzUZGVMe+4i7NK0W86ne3qJVHZ1bkfOF2PqTt1hbOijw+6z5TWLQXPqV38N/IUb16MlXa82048ftVBHzmsG9F7wLIyqHng==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2dd47685-cccc-460a-784c-08de8a112085
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2026 01:34:57.3803
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2026 01:52:09.9303
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g/9kO4ld2L4ostHnP7oVPCCpSxxdCtfYc+XM412WKvwV0pE7BTV/r1Y9qBNAobfo+7sKUtaXllXYiI9GmMpkBM+0gr2Ax+Zfg3iDeDDSE4U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR11MB9109
+X-MS-Exchange-CrossTenant-UserPrincipalName: DzaF/hJjqt9dt0R68blo08oCZbXMxiGoqiKl2pRItpmL8h+iMbTLy9JgvIEW1sp8EAgRftQHz3Dzto+sL/70Lqk18ZnZUXEU8vEg9froqQk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7001
 X-OriginatorOrg: intel.com
 
-Sungwoo Kim wrote:
-> In the following race scenario, devm_remove_action() can be called
-> before devm_add_action(), triggering a warning because there is no
-> action to remove.
-> 
-> To fix this, extend a critical section to embrace both
-> __cxl_dpa_reserve() and devm_add_action().
-> 
-> task 1:
-> cxl_dpa_alloc()
->   __cxl_dpa_reserve()    ...(1)
->   devm_add_action()      ...(4)
-> 
-> task 2:
-> cxl_dpa_free()
->   guard()
->   if (!cxled->dpa_res)   ...(2) pass, due to (1)
->     return 0;
->   devm_cxl_dpa_release()
->     devm_remove_action()  ...(3) warning, no action is added yet
-> 
-> Warning log:
-> 
-> WARNING: ./include/linux/device/devres.h:160 at devm_remove_action include/linux/device/devres.h:160 [inline], CPU#0: syz.1.6464/25993
-> WARNING: ./include/linux/device/devres.h:160 at devm_cxl_dpa_release drivers/cxl/core/hdm.c:290 [inline], CPU#0: syz.1.6464/25993
-> WARNING: ./include/linux/device/devres.h:160 at cxl_dpa_free+0x2a4/0x320 drivers/cxl/core/hdm.c:572, CPU#0: syz.1.6464/25993
-> Modules linked in:
-> CPU: 0 UID: 0 PID: 25993 Comm: syz.1.6464 Not tainted 6.19.0-g15a37b05f387 #10 PREEMPT(lazy)
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-gb52ca86e094d-prebuilt.qemu.org 04/01/2014
-> RIP: 0010:devm_remove_action include/linux/device/devres.h:160 [inline]
-> RIP: 0010:devm_cxl_dpa_release drivers/cxl/core/hdm.c:290 [inline]
-> RIP: 0010:cxl_dpa_free+0x2a4/0x320 drivers/cxl/core/hdm.c:572
-> Code: 01 31 ff 41 89 c4 89 c6 e8 a9 91 1d fe 45 85 e4 0f 85 55 ff ff ff e8 4b 96 1d fe 90 0f 0b 90 e9 47 ff ff ff e8 3d 96 1d fe 90 <0f> 0b 90 e9 63 ff ff ff bb f0 ff ff ff e9 68 ff ff ff 48 c7 c7 f4
-> RSP: 0018:ffff888129f77bb8 EFLAGS: 00010282
-> RAX: 00000000000000f3 RBX: ffff888102f64000 RCX: ffffffff837301d3
-> RDX: 0000000000080000 RSI: ffffc90001c5a000 RDI: 0000000000000005
-> RBP: 00000000fffffffe R08: 0000000000000001 R09: ffff888123f98000
-> R10: 00000000fffffffe R11: 0000000000000000 R12: 0000000000000001
-> R13: ffff888102f64040 R14: dffffc0000000000 R15: ffff888102f64000
-> FS:  00007fae0488d6c0(0000) GS:ffff88827086d000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000000000000 CR3: 000000012f7d6003 CR4: 0000000000770ef0
-> PKRU: 80000000
-> Call Trace:
->  <TASK>
->  dpa_size_store+0xfb/0x230 drivers/cxl/core/port.c:269
->  dev_attr_store+0x58/0x80 drivers/base/core.c:2437
->  sysfs_kf_write+0xf2/0x150 fs/sysfs/file.c:142
->  kernfs_fop_write_iter+0x3d6/0x5d0 fs/kernfs/file.c:352
->  new_sync_write fs/read_write.c:595 [inline]
->  vfs_write+0x68e/0x1050 fs/read_write.c:688
->  ksys_write+0x12a/0x250 fs/read_write.c:740
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xfc/0x670 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7fae0399c669
-> Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007fae0488d028 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 00007fae03c15fa0 RCX: 00007fae0399c669
-> RDX: 000000000000000a RSI: 00002000000001c0 RDI: 0000000000000009
-> RBP: 00007fae03a32c71 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> R13: 00007fae03c16038 R14: 00007fae03c15fa0 R15: 00007ffe53519fb8
->  </TASK>
-> irq event stamp: 1021
-> hardirqs last  enabled at (1029): [<ffffffffb7d04c4b>] __up_console_sem+0x7b/0x90 kernel/printk/printk.c:347
-> hardirqs last disabled at (1038): [<ffffffffb7d04c30>] __up_console_sem+0x60/0x90 kernel/printk/printk.c:345
-> softirqs last  enabled at (1016): [<ffffffffb7b73b93>] __do_softirq kernel/softirq.c:656 [inline]
-> softirqs last  enabled at (1016): [<ffffffffb7b73b93>] invoke_softirq kernel/softirq.c:496 [inline]
-> softirqs last  enabled at (1016): [<ffffffffb7b73b93>] __irq_exit_rcu+0xb3/0xe0 kernel/softirq.c:723
-> softirqs last disabled at (1005): [<ffffffffb7b73b93>] __do_softirq kernel/softirq.c:656 [inline]
-> softirqs last disabled at (1005): [<ffffffffb7b73b93>] invoke_softirq kernel/softirq.c:496 [inline]
-> softirqs last disabled at (1005): [<ffffffffb7b73b93>] __irq_exit_rcu+0xb3/0xe0 kernel/softirq.c:723
-> 
-> Fixes: cf880423b6a0 ("cxl/hdm: Add support for allocating DPA to an endpoint decoder")
-> Fixes: 9c57cde0dcbd ("cxl/hdm: Enumerate allocated DPA")
-> Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
+On Tue, Mar 24, 2026 at 12:46:38PM -0700, Dan Williams wrote:
+> Alison Schofield wrote:
 
-Good find!
+I didn't snip, but lucky for someone, I only appended. Goto EOF.
 
-However I am not a fan of the fact that this duplicates this subtle
-dance in multiple places. It looks like we can just make it by the case
-that __cxl_dpa_reserve() establishes the remove action before returning.
 
-> @@ -679,11 +686,28 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
->  	struct cxl_port *port = cxled_to_port(cxled);
->  	int rc;
->  
-> +	guard(rwsem_write)(&cxl_rwsem.dpa);
->  	rc = __cxl_dpa_alloc(cxled, size);
->  	if (rc)
->  		return rc;
->  
-> -	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
-> +	/*
-> +	 * Add the devres action while still holding cxl_rwsem.dpa to prevent
-> +	 * a race with cxl_dpa_free(). Without this, a concurrent cxl_dpa_free()
-> +	 * can observe dpa_res set (by __cxl_dpa_reserve()) and attempt
-> +	 * devm_remove_action() before devm_add_action() has been called,
-> +	 * triggering a WARN_ON in devm_remove_action().
-> +	 * Also, devm_add_action_or_reset() cannot be used here because
-> +	 * cxl_dpa_release() tries to hold the dpa lock that is already held,
-> +	 * causing a self deadlock.
-> +	 */
+> > On Wed, Mar 11, 2026 at 02:37:46PM -0700, Dan Williams wrote:
+> > > Smita Koralahalli wrote:
+> > > > __cxl_decoder_detach() currently resets decoder programming whenever a
+> > > > region is detached if cxl_config_state is beyond CXL_CONFIG_ACTIVE. For
+> > > > autodiscovered regions, this can incorrectly tear down decoder state
+> > > > that may be relied upon by other consumers or by subsequent ownership
+> > > > decisions.
+> > > > 
+> > > > Skip cxl_region_decode_reset() during detach when CXL_REGION_F_AUTO is
+> > > > set.
+> > > > 
+> > > > Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+> > > > Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+> > > > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > > > Reviewed-by: Alejandro Lucero <alucerop@amd.com>
+> > > > ---
+> > > >  drivers/cxl/core/region.c | 4 +++-
+> > > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > > > index ae899f68551f..45ee598daf95 100644
+> > > > --- a/drivers/cxl/core/region.c
+> > > > +++ b/drivers/cxl/core/region.c
+> > > > @@ -2178,7 +2178,9 @@ __cxl_decoder_detach(struct cxl_region *cxlr,
+> > > >  		cxled->part = -1;
+> > > >  
+> > > >  	if (p->state > CXL_CONFIG_ACTIVE) {
+> > > > -		cxl_region_decode_reset(cxlr, p->interleave_ways);
+> > > > +		if (!test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
+> > > > +			cxl_region_decode_reset(cxlr, p->interleave_ways);
+> > > > +
+> > > >  		p->state = CXL_CONFIG_ACTIVE;
+> > > 
+> > 
+> > Hi Dan,
+> > 
+> > > tl;dr: I do not think we need this, I do think we need to clarify to
+> > > users what enable/disable and/or hot remove violence is handled and not
+> > > handled by the CXL core.
+> > 
+> > I'm chiming in here because although this patch is no longer needed for
+> > this series, it has become a dependency for the Type 2 series.
+> 
+> Like I replied to Alejandro it is not a dependency for the type-2 series
+> [1]. It *is* a fix for the issue reported by PJ, but it can go in
+> independent of the base type-2 work as a standalone capability.
+> 
+> [1]: http://lore.kernel.org/69b8b9181bafd_452b100cb@dwillia2-mobl4.notmuch
+> 
+> > So this
+> > follow-up focuses on the hot-remove, endpoint-detach case where
+> > preserving decoders across detach is still needed for later recovery.
+> > 
+> > Some inline responses to you, and then a diff is appended for a
+> > direction check.
+> > 
+> > > So this looks deceptively simple, but I think it is incomplete or at
+> > > least adds to the current confusion. A couple points to consider:
+> > > 
+> > > 1/ There is no corresponding clear_bit(CXL_REGION_F_AUTO, ...) anywhere in
+> > > the driver. Yes, admin can still force cxl_region_decode_reset() via
+> > > commit_store() path, but admin can not force
+> > > cxl_region_teardown_targets() in the __cxl_decoder_detach() path. I do
+> > > not like that this causes us to end up with 2 separate considerations
+> > > for when __cxl_decoder_detach() skips cleanup actions
+> > > (cxl_region_teardown_targets() and cxl_region_decode_reset()). See
+> > > below, I think the cxl_region_teardown_targets() check is probably
+> > > bogus.
+> > 
+> > Rather than repurposing CXL_REGION_F_AUTO, this splits decode-reset policy
+> > from AUTO. A new region-scoped CXL_REGION_F_PRESERVE_DECODE flag is introduced
+> > and cleared on explicit decommit in commit_store(). AUTO remains origin/assembly
+> > state.
+> 
+> Just like the decoder LOCK bit the preservation setting is a decoder
+> property, not a region property. Region auto-assembly is then just an
+> automatic way to set that decoder policy.
+> 
+> So, no, I would not expect a new region flag for this policy.
+> 
+> > This does still leave two cleanup decisions:
+> > 1) decode reset (now keyed off PRESERVE_DECODE)
+> > 2) target teardown (still using existing AUTO behavior)
+> > 
+> > No change to cxl_region_teardown_targets() in this step.
+> 
+> Turns out that cxl_region_teardown_targets() never needed to consider
+> the CXL_F_REGION_AUTO flag.
+> 
+> > > At a minimum I think commit_store() should clear CXL_REGION_F_AUTO on
+> > > decommit such that cleaning up decoders and targets later proceeds as
+> > > expected.
+> > 
+> > This point is addressed by clearing CXL_REGION_F_PRESERVE_DECODE instead.
+> > Explicit decommit is treated as destructive and disables decode preservation
+> > before unbind/reset.
+> > 
+> > > 
+> > > 2/ The hard part about CXL region cleanup is that it needs to be prepared
+> > > for:
+> > > 
+> > >  a/ user manually removes the region via sysfs
+> > > 
+> > >  b/ user manually disables cxl_port, cxl_mem, or cxl_acpi causing the
+> > >     endpoint port to be removed
+> > > 
+> > >  c/ user physically removes the memdev causing the endpoint port to be
+> > >     removed (CXL core can not tell the difference with 2b/ it just sees
+> > >     cxl_mem_driver::remove() operation invocation)
+> > > 
+> > >  d/ setup action fails and region setup is unwound
+> > 
+> > Agreed. This change targets 2b, 2c.
+> > 
+> > >  
+> > > The cxl_region_decode_reset() is in __cxl_decoder_detach() because of
+> > > 2b/ and 2c/. No other chance to cleanup the decode topology once the
+> > > endpoint decoders are on their way out of the system.
+> > 
+> > Agreed. The reset remains. Proposed change only makes it conditional on
+> > explicit region policy rather than AUTO.
+> > 
+> > > 
+> > > In this case though the patch was generated back when we were committed
+> > > to cleaning up failed to assemble regions, a new 2d/ case, right?
+> > > However, in that case the decoder is not leaving the system. The
+> > > questions that arrive from that analysis are:
+> > > 
+> > > * Is this patch still needed now that there is no auto-cleanup?
+> > 
+> > Not for this Soft Reserved series, but yes for Type2 hotplug.
+> 
+> Type-2 hotplug is not the issue, it is boot-time configuration
+> preservation over device reset which is a different challenge.
+> 
+> > > * If this patch is still needed is it better to skip
+> > >   cxl_region_decode_reset() based on the 'enum cxl_detach_mode' rather
+> > >   than the CXL_REGION_F_AUTO flag? I.e. skip reset in the 2d/ case, or
+> > >   some other new general flag that says "please preserve hardware
+> > >   configuration".
+> > 
+> > I looked at using and expanding the cxl_detach_mode enum and rejected as
+> > not the right scope. The current detach mode is attached to an individual
+> > detach operation, whereas preserve vs reset decision applies to the region
+> > decode topology as a whole. If we expand detach mode for this region
+> > wide policy, then may risk inconsistent handling across endpoint of the
+> > same region. Just seemed wrong place. I could be missing another reason
+> > why you looked at it.
+> 
+> Regions are an emergent property from decoder settings. Decoder settings
+> come from firmware, user actions, and with the type-2 series driver
+> actions. Firmware, user and driver actions are per-decoder especially
+> because the behavior needed here is similar to the decoder LOCK bit.
+> 
+> Region assembly can set a default decoder policy, but the management of
+> that decoder policy need not go through the region.
+> 
+> Either way, settling this question can be post type-2 base series event,
+> not a lead-in dependency.
+> 
+> [..]
+> > > It is helpful that violence has been the default so far. So it allows to
+> > > introduce a decoder shutdown policy toggle where CXL_REGION_F_AUTO flags
+> > > decoders as "preserve" by default. Region decommit clears that flag,
+> > > and/or userspace can toggle that per endpoint decoder flag to determine
+> > > what happens when decoders leave the system. That probably also wants
+> > > some lockdown interaction such that root can not force unplug memory by
+> > > unbinding a driver.
+> > 
+> > As a step in the direction you suggest, AND  aiming to address Type2
+> > need, here is what I'd like a direction check on:
+> > 
+> > Start separating decode-reset policy rom CXL_REGION_F_AUTO:
+> > - keep CXL_REGION_F_AUTO as origin / assembly semantics
+> > - introduce CXL_REGION_F_PRESERVE_DECODE as a region-scoped policy
+> 
+> Not yet convinced about this.
+> 
+> > - initialize that policy from auto-assembly
+> > - clear it on explicit decommit in commit_store()
+> 
+> My expectation is still clear it on decoder configuration change, add an
+> attribute to toggle it independent of changing the decoder
+> configuration.
+> 
+> > - use it to gate cxl_region_decode_reset() in __cxl_decoder_detach()
+> 
+> cxl_region_decode_reset() just automates asking each decoder to carry
+> out reset if the decoder policy allows.
+> 
+> > The decode-reset decision is factored through a small helper,
+> > cxl_region_preserve_decode(), so the policy can be extended independent
+> > of the detach mechanics. Maybe overkill in this simple case, but I
+> > wanted to acknowledge the 'policy' direction.
+> 
+> Appreciate you pulling this together. I want to land type-2 with the
+> existing expectation that unload is always destructive then circle back
+> to address this additional detail because it is more than just decoder
+> policy that needs to be managed. The type-2 driver may need help finding
+> its platform firmware configured address range if a device reset
+> destroyed the decoder settings.
 
-Also, I agree with Alison, this is good detail, but way too much detail
-to carry around permanently in the source directly.
+I did go first for decoder policy, but switched to region thinking
+that this has to be managed at region level because region decode topology
+is programmed as a unit so mixed preserve/reset policy across decoders
+partitipating in a single active region seems scary.
+
+I can switch to a decoder policy where region auto assembly still inits
+a uniform preserve policy across participating programmed decoders and
+teardown paths would clear the policy.
+
+The other angle was future userspace access. It seems user intent would
+likely be at region scope, with the kernel applying the policy across
+the decoders that make up the region. So, sort of a control surface
+that is region oriented, but implementation that lives on decoders.
+
+I'll let the dust settle and see if there is anything I can pick up.
+
+
