@@ -1,224 +1,251 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D08F2D780E
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Mar 2026 03:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774410455; cv=none; b=NP0irzf6D3XYVxbLzc+c6LU+fcwEIpUoEAIE2tuZJR/s2aljCEYWfYmw/AoXhOFJnsKZ6TX9SDWelntwuLEmTHTAeH5Gq7LXZBZ29MUbr1fDk9eUQwO3OfYhykSbKgxEsa5XZAFO/qmQ1W3luLL3Qc1LoWu/Jx/8oKVPumGbeus=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774410455; c=relaxed/simple;
-	bh=aX1QeEJeBKbjxo/xhTd9n39mMYTPrnV0cS0hvKBPmOA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JhIXv00ZcE+dPda6LBLX/6rIG6adwDaahqc8Jh+VEMqIOVZZztSzqzbeLTqN9uT5k2n2jNTeCZi1JwuaBOhj6t/QAzAGFOUidT/WgQMtH2sGxzZOJtkrIMwh5fT/st1TTQb6WBJXV99DZnsWCppPyMqqKYC0du3Fn7YBHrkhKIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-b941762394aso795354766b.1
-        for <linux-cxl@vger.kernel.org>; Tue, 24 Mar 2026 20:47:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774410451; x=1775015251;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4iDkth+tKdu52b6B9v0RecpJBQbzK3CBu3cxApoZPG0=;
-        b=BfM1DiZMdKYpfKn+gxI2ZifU/p8c4eHuU0eoE7eeFLr/XvWEtCsDNrM+b8jgz3Me4e
-         NI/HX8TQADMu5zoFp59H4GX4AJZKQv0+7grFVoRbgg74Ge132ptZeBNkRmHKCHbQksU8
-         5uoe1Pb1dmF5FC6w3nF8QXlUKW3HfWf4L1nAP21IITZA5ks7SCoQP3I4l4LQe3lTa0eT
-         fji7taKhZ01c9W7no+SC2ivP5MmkgUf0/jyppUCy6OQj7OKnjdvZ29DGcRqozyOLpHjU
-         3/cAnNJwvcmURKeEe0ry/rDXzijiaTNCaY+QQJlMkj+YcbBRJQfbRKUhruulEuNjzwJf
-         8caA==
-X-Forwarded-Encrypted: i=1; AJvYcCVCWFl6+z8iyOJvOePBQhnOuu66TC45Rb+1uofu+rw9Uzpz8cOUzrkEdl2ruhCDb5Adj4m2lvpofmw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaK4qoIu/Knn9gXcqcej0Qrk4flno8GzK3xAnxEPONLBZyOBDY
-	IbkcBBO92D9bdzbyz2ojJS9nTP7q46OAyV4JtJ/yhJzZMsKl1kZiHC2Ex0T2Fhea41I=
-X-Gm-Gg: ATEYQzzyBx1gNqdPmQSrZuynmVcTqYRFlbH2/L+YQrjGLajdE1cp/8p4Bufsq5uawZG
-	R65l87YMcnC73ch1nUytfiprjNwdA4XVPevXsbmwSkMSmKNZQIfx0IZuHBWHUGNXBJ8ecvlBdqq
-	QMavd1UhrLou4ztmKHIb2klzU0fN/Vf0h13wuoEpviO7i+JvROgF5V1GYpztuNuP5gEmmZnGMpI
-	GnDb9DR46faY/dJV+WFHjfWa3UU7jfUbkZiU6kNk/985Au5zNtce7a65XrjK7Qwe2ia/BZWonTa
-	/vIDLl7kZcTYAP4Wbal6N2e5zw6QfTOji5Ld3PIrokNa1Z3zQFz3i/tM1SA70CfI6RX7+b2E5ge
-	A1cYSD0E6hc8CDDHDgJS4cDl6866XO86+hNxzz2ERRfsclVhKlhF3X4kmgBzx2xJUG9wv1UYRsI
-	Q8drhrPVo3KTgUTf/nfqybEZSgF15QymBQ/uhvutSmx/8u/DQqGTuqXC+o8EPbHwSUXw==
-X-Received: by 2002:a17:907:e113:b0:b8f:9bea:ad6 with SMTP id a640c23a62f3a-b9a3f17f147mr79310966b.18.1774410450952;
-        Tue, 24 Mar 2026 20:47:30 -0700 (PDT)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com. [209.85.128.53])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9832f43c3bsm738879866b.2.2026.03.24.20.47.30
-        for <linux-cxl@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2026 20:47:30 -0700 (PDT)
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-48704db565eso37276415e9.1
-        for <linux-cxl@vger.kernel.org>; Tue, 24 Mar 2026 20:47:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUGsoVK4eSSV6gW4gZsAqW80imdo+ofNz7RsOIyN663m/jaChv6etsktB0nsJ2VKn9s3eyeUfeIgG0=@vger.kernel.org
-X-Received: by 2002:a05:6000:2892:b0:439:b59e:5e65 with SMTP id
- ffacd0b85a97d-43b8896cedbmr2386628f8f.6.1774410450091; Tue, 24 Mar 2026
- 20:47:30 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF3230BB8A;
+	Wed, 25 Mar 2026 04:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774413903; cv=fail; b=X9mfkvq9ZJ8XDnMD7zc6rNhRNiWTLcs+P/I7HTvKXVj6tIng6cUhobuiDUtnyjJfoqHL/PG1mTK1UjttI/5IAmoi5PMvLvzNet0AcQcjVNuz8UaGxwSly/MuGMOuq62R9t1E036KvlURQTewtpHFAEapkMv4NA9bdkvoE5IMxBQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774413903; c=relaxed/simple;
+	bh=0krI7tjO951t6w45CMg8j12GbhfZrKZ0YbkaWwVTj0o=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Mr3+dqrdalfCqU8xBaGLTFqXcOG+vBtPfEgUGns4jZf19QdCK1fkNANtuGdf4JwZ6WVJyeFl3f7O8Q4kzvPcHz+pEvVUECd7vDs81GYPfJ92RfJPS7QIFF8UJD6SCvpR1iZdNJmiWETpzHX8zH7E+8tgppoCFnXb19HJYwhu53Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dIBiv5WU; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dIBiv5WU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774413902; x=1805949902;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=0krI7tjO951t6w45CMg8j12GbhfZrKZ0YbkaWwVTj0o=;
+  b=dIBiv5WUotENoZwsnp/DfR0aDvKqeP/nUT81QbelRQrKeKbN/hwMUbAf
+   j17Dzu9f0/gFynPtEzYCsunwFtl84KPgahpJCJwp2uEXQteXy6XXUwCbq
+   hnqoGrY86Lxk/5caMETL6ZV0uM+t0Efd7MA+cg/yCTfKowDDsRfhdWsD4
+   jMbZ416Ef+D4VFiL8rsV8uYHXrs6qT70E48xqcoMiJKLRHJDnSzDRu8e+
+   nntlBWE3fxdVSsNavCvCz3dvReu3Vou0yjlMFkbzXhivjNDmujLUGgBrV
+   JlbYMkHz1bNTUoL7JZmrqokVbkgBZbXAwCKCbyMU5z1yzV6Z+MPOZd+qi
+   g==;
+X-CSE-ConnectionGUID: oY7stbXxQJad/DMbT6jD/A==
+X-CSE-MsgGUID: W82veHX1ScS/fImYxwvlOw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11739"; a="86059549"
+X-IronPort-AV: E=Sophos;i="6.23,139,1770624000"; 
+   d="scan'208";a="86059549"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 21:45:01 -0700
+X-CSE-ConnectionGUID: VeG/YlUORVK/wRrnlrR2nQ==
+X-CSE-MsgGUID: zf6EuyF4TwuhfdNyQmeIkQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,139,1770624000"; 
+   d="scan'208";a="248105834"
+Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2026 21:44:55 -0700
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Tue, 24 Mar 2026 21:44:55 -0700
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Tue, 24 Mar 2026 21:44:55 -0700
+Received: from CH1PR05CU001.outbound.protection.outlook.com (52.101.193.62) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Tue, 24 Mar 2026 21:44:53 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JfcPcfEpfPElfYaY7U1bDQ3Ngn6DxS5RuugG/OqA0aabewF0RS1ntaPL5XbnjVkvNvS5jOXK5tl4JVvKfOQ3I4O7fgnbMOvqSGpazTJ6YWK12T+BMJehJ9/JKHxwGprsPVO1gQul+XhY6pa+1kWh/VN74jSjJn1j1Fswdz3Pw9lGUKEwFHREYIaZELj+FLT9zYBdNgB6RZwgGjXSXreHgrKf7e1MUchaT/VkEHJH+POSwmyjLoSCKjr/Hjp/FMAjGJN2Q5XxwE17hFDI9lgBEJoDeaKarB2i6GHnHWJA67fEgBTvVpmvaj+XcGmzC35aKm6AqCbJnf80CYZC9948TA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QEUO+coV6pqGlm3x2fZHGC752sduLkO4qThZPr7B9Jg=;
+ b=SXeNT4JzwabJxXN4Nm6TrWZO8+rvU0KauRiDdonVooa9jDwoFIIcO642UAcDqppw+auamAVQ55KdO09s0FgVRuSIO0i57WdU0QoG9fTrX1jPXEO7tOg1sRSBbzVKUUCetXXVsrBSFJ00oJ+Y28ckYqwrDWaNCY2zVTxXDzGwLg7zlUxZ6Kp7d+cUvYy2+O3d1JM8BESU6/UquoENoQHoxNID+hoGQhNUV5VW5MQW26pyjxQ774Pc8R7gaIqvWFjeulQb/z0B8fusauNcWhiw2OYQW34IWW9x0U648A53JfIcjBYVrfJ5mtWPXFc/o7lvz1U/RAwygZHIhh/lIUSP5A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
+ (2603:10b6:518:1::d3c) by IA4PR11MB8961.namprd11.prod.outlook.com
+ (2603:10b6:208:56e::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.20; Wed, 25 Mar
+ 2026 04:44:49 +0000
+Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
+ ([fe80::7d4b:a049:aed5:d2b0]) by PH3PPF9E162731D.namprd11.prod.outlook.com
+ ([fe80::7d4b:a049:aed5:d2b0%8]) with mapi id 15.20.9723.018; Wed, 25 Mar 2026
+ 04:44:49 +0000
+Date: Tue, 24 Mar 2026 23:48:33 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: John Groves <john@jagalactic.com>, John Groves <John@groves.net>, "Miklos
+ Szeredi" <miklos@szeredi.hu>, Dan Williams <dan.j.williams@intel.com>, "Bernd
+ Schubert" <bschubert@ddn.com>, Alison Schofield <alison.schofield@intel.com>
+CC: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, "Shuah
+ Khan" <skhan@linuxfoundation.org>, Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, "Jan
+ Kara" <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>, "David
+ Hildenbrand" <david@kernel.org>, Christian Brauner <brauner@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan Hajnoczi
+	<shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, Josef Bacik
+	<josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan
+	<chenlinxuan@uniontech.com>, James Morse <james.morse@arm.com>, Fuad Tabba
+	<tabba@google.com>, Sean Christopherson <seanjc@google.com>, Shivank Garg
+	<shivankg@amd.com>, Ackerley Tng <ackerleytng@google.com>, Gregory Price
+	<gourry@gourry.net>, Aravind Ramesh <arramesh@micron.com>, Ajay Joshi
+	<ajayjoshi@micron.com>, "venkataravis@micron.com" <venkataravis@micron.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, John Groves
+	<john@groves.net>
+Subject: Re: [PATCH V9 3/8] dax: add fsdev.c driver for fs-dax on character
+ dax
+Message-ID: <69c36921255b6_e9d8d1009b@iweiny-mobl.notmuch>
+References: <0100019d1d463523-617e8165-a084-4d91-aa5e-13778264d5d4-000000@email.amazonses.com>
+ <20260324003818.5009-1-john@jagalactic.com>
+ <0100019d1d476420-6b0bf60e-3b3a-4868-8f5f-484cd55d4709-000000@email.amazonses.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <0100019d1d476420-6b0bf60e-3b3a-4868-8f5f-484cd55d4709-000000@email.amazonses.com>
+X-ClientProxiedBy: MW4PR04CA0044.namprd04.prod.outlook.com
+ (2603:10b6:303:6a::19) To PH3PPF9E162731D.namprd11.prod.outlook.com
+ (2603:10b6:518:1::d3c)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260309000810.2632065-2-iam@sung-woo.kim> <69c33bbeae7e5_5162110077@dwillia2-mobl4.notmuch>
-In-Reply-To: <69c33bbeae7e5_5162110077@dwillia2-mobl4.notmuch>
-From: Sungwoo Kim <iam@sung-woo.kim>
-Date: Tue, 24 Mar 2026 23:47:13 -0400
-X-Gmail-Original-Message-ID: <CAJNyHpLJvPBYyaAeWzF18mdAu5Xe=HFDCRizogntsLheivgF5Q@mail.gmail.com>
-X-Gm-Features: AQROBzAObaGaiC6tLWS1k03DJiuxU5dEx40ekprVoP7C5ef-grjwmcanw5eImPM
-Message-ID: <CAJNyHpLJvPBYyaAeWzF18mdAu5Xe=HFDCRizogntsLheivgF5Q@mail.gmail.com>
-Subject: Re: [PATCH] cxl/hdm: fix a warning in devm_remove_action()
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Ben Widawsky <bwidawsk@kernel.org>, Dave Tian <daveti@purdue.edu>, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH3PPF9E162731D:EE_|IA4PR11MB8961:EE_
+X-MS-Office365-Filtering-Correlation-Id: 07873dea-cda2-4841-18fd-08de8a293efc
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|56012099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: cvipf2WyWGRFn2WqhE2oHwizpS+iBbMFn0Knmr1t2utXSNGaNZiPvewsEWXdOxnglEXQk/Bt819QIo9Zm/HMzWNK5EED4vZEfyCelOSc4H9EgjdA7IBcjLhrklqZxdFzPqaLK3cimbyW3U+gQa4G/CyKNMtA48bFMmA/3Jju0wYD57tNdO11oXD8oq/FTumBGZFxXTOMqzcxIaxPs1sYujr10QYo3e1Nb3vID7xa6bh9K2OIIdPBOQoLXenOd7A5vRdN29F/9vAutTcx7b5kpplLlmp4SBweTV/lBgLgDbCUx9axaYCoOIUC+LgHY3ePk/GDodWC3q/1ShUkeo2YRIVgpgE8mwq39PY95fQyK85BRy7A4W1oHIadPSPomzyFCWex5WJ1Spm79KJtcWe3Co4Q4SL8N8BBmQh/k/13Z6kjfj7NKg+ql2dZqvBbsMBcDgnci0nA16f5QIzBfxqe5CfhoYfegTflCXw2ubJNL/nQA92u+vFIoPjz/MbOGuAaD6ebF4bxVpF831n6LfPVgFQpLbUMpEpGodGETk5DtKG9HKeNt4wvpGcAAvWnw0qhaltHRIr58ZaTPu8pZAOmSmoDp1+PThEipQtHM8FLLrjuBm6cNFERKu9Bi/eEQsOcs7VaBX3aoCQ4pbHcA7mx+wKHtf8daTL/LOfjDodrid6IRqzQWUto863ul73KUMZU6TDUFhf5qwRAuTQDaSdnqLf4Pnqa6WG0nBToHng5+Lo=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH3PPF9E162731D.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?REB74AgDCpSbCf3cCI7C4fwzE1LZrDLS5dFtUhl6Po22A1yDY6PqwlZ1lTVl?=
+ =?us-ascii?Q?ZIWo/7y1SMjDtKa95J/dKj9hXRX2yLvZQQTPjV9yBND9i1AWcMKIRN9WROsB?=
+ =?us-ascii?Q?pfUatOq5pgH1zZgnuft/3dMt9mnZykyAsztj2ZOGwUxj/ni6UYMlEchPoc01?=
+ =?us-ascii?Q?dPXojYv8aFzEsM8VWrk/1h2bIps6l/SdLl9zpzYxd3rm92c+3YMbVG9/lRPv?=
+ =?us-ascii?Q?EPZ5Cj0JnyJD80au+pjrr8K3lPZjDTpHC3fifBXRs7AEqKQ+0+TW2sb6sRO/?=
+ =?us-ascii?Q?8qTvy7tcwt88FEBLvplZ6hTXpLDtd5D13eJFGr+hoSv4yg59qdFdK/5GCnd4?=
+ =?us-ascii?Q?Yya3wYGyo27kByQq8JVWg8Kb8rnH223rjxA9UI7GqQvWCcuAU7NTDcNvpOuw?=
+ =?us-ascii?Q?+1gzdU5M/In4Qk9lQauxGDrvZfOhkvqd4/EjI8ABdma8Awd7c9GFdlrdzqFc?=
+ =?us-ascii?Q?H2pKwhA/yahOz37lNnfyBbcsmkgjn7ZFAxaZNKO1BCGIQkNf8718cYfyoWAb?=
+ =?us-ascii?Q?crj0XCzr/lsH9oGk/RA+INggMWQMgfXw7IldI75jJ/H0Kr/Tfy4ucIueoZwG?=
+ =?us-ascii?Q?oz4AhZ18IprJUDGdOlSwFULxQ1OM+TdWQRcMEmVVnfKB1cLQRY5ZSLJiByAi?=
+ =?us-ascii?Q?fPo02gpgxyFPPzBa5EPhSTTj94oQpTVnMUkor4iAM5Bqsby8YW8oL+5IdFp+?=
+ =?us-ascii?Q?oaZfGH1lGwzq/Ih4OUqjaUPwGKjVj5YEyZwBQa6x5AeQhaW0KiJ4ZoPBuzKQ?=
+ =?us-ascii?Q?xLq1J/9mqr9doJyRvV5gvCElzuAAMu43fPVjezkkjj9nWzMPhxNrZ21i3iEr?=
+ =?us-ascii?Q?fBJGwje8qGJzsWj524P0k4OtmT8PWP3qpKlniz2bJ+2M5O7RiYo1dDvL8CNa?=
+ =?us-ascii?Q?lz7ykDRT/Z7NZwT9v1YrqI+5FKfp2L6PvIzM/eBCs7pus6sLJ8a6bBftPSzU?=
+ =?us-ascii?Q?BAKsiMu3d8NiPUcxNxZgtvRc7QD26ryJcSfUrphUdq3XueJU7ao1Fox+DQRi?=
+ =?us-ascii?Q?YqxByP1+1d4/NqX6BbPCqRAeZMpi2cX9iyltl/N6XQwWbPTag6AqDDUJGBt7?=
+ =?us-ascii?Q?Z+NtTYXuu6gAJ2xUB2k69TM5VIqOYzuV6VO/hnsqEQzmyCvDxkouy4Kze2YG?=
+ =?us-ascii?Q?j6OpttYe6fxL/6OJbNbJmInzEIy08IYNFqQ8iRUur35VPmtdoxwqyJnJFu3Y?=
+ =?us-ascii?Q?VXrkmhrpKyHhX0pDe1H7s9GOYwCQXXIkakx+RxL6AXtmYiPqN5+BqkL3JWGM?=
+ =?us-ascii?Q?XS3EeLX0PHDfHgJwm1mwntssgR5xTgzri3Satu2NkCR4ga36hVESpYwxQmN2?=
+ =?us-ascii?Q?Ini/c+lZbg4FNTjb76qsqFyC64Vqfq7FfjCLsETh6AP5nmq+VybTean3IaGl?=
+ =?us-ascii?Q?d5NwddNMdwcInByTe7DB2i5hzDEZOqhjfKJmFer235HlDiQwTuKeLi4nVCx8?=
+ =?us-ascii?Q?8j9fY8lYkdt7DQqLfHHDEUKhSTnrHeZ82nbFsap1pXNsQ272hlub37+cxA+e?=
+ =?us-ascii?Q?d/XjpQe8gNqBYeYN12Fq9mNm265ntGR/6DEGM+8KZLDg13T/S5h3qyS9BGMr?=
+ =?us-ascii?Q?AwWBf2ecujnNy3hlyA9UbWQqFFpgoTiET+OHzLnF417Pl89ofKbk3dU6V9fu?=
+ =?us-ascii?Q?ZFmG/222Diuf9SulCepBZ/uf9e5iaUpvWLBYUThDqepHeoFtuI4rlKs0G3Ec?=
+ =?us-ascii?Q?rbrRdmmmqbF1lmF5GXUcr6Tjf5huCYMm6sRiGEXU+rDiN98zErJph3RrE2Tx?=
+ =?us-ascii?Q?QrMEDeH/5Q=3D=3D?=
+X-Exchange-RoutingPolicyChecked: tZSDzqsJRSLu/INXaxONRv3rgRVXx+CNpHqqmk12/mLZKTAsVefWIMKQw0eDVOt0OJQLURNJedFPxrWxcj6MvkjsLay0oCOTboGTML2Fd7EuhiTU0CAokcY3TF6a4fiBV3rvboIxLTmUrPTsM8Ae8aFEo75Q1tnPf3t3GVkb16I3p5B0HPIvI8jg2pXAgXVcxnfpzgGRY12R2murGgi7o32iGY+iZghPKZ9caW24crbBWpquF4kWfaXCU5YfbECqSn7/DJ9foUvvOmU+0/AAjt3RlS8DpUTqVTKD9a/rf+rJqRAAYShD9Y8NwZynbvNUmXlvrq6PXgddavFC8UWlqg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07873dea-cda2-4841-18fd-08de8a293efc
+X-MS-Exchange-CrossTenant-AuthSource: PH3PPF9E162731D.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2026 04:44:49.0384
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pYLLVfB8QVhmo2QNUXmn4CIWHHPnlBVsHfm7L29lmMY8wDErC94/s6BeDvGKBpjHRkX12uhyUAuaW0+yKZllbw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB8961
+X-OriginatorOrg: intel.com
 
-On Tue, Mar 24, 2026 at 9:35=E2=80=AFPM Dan Williams <dan.j.williams@intel.=
-com> wrote:
->
-> Sungwoo Kim wrote:
-> > In the following race scenario, devm_remove_action() can be called
-> > before devm_add_action(), triggering a warning because there is no
-> > action to remove.
-> >
-> > To fix this, extend a critical section to embrace both
-> > __cxl_dpa_reserve() and devm_add_action().
-> >
-> > task 1:
-> > cxl_dpa_alloc()
-> >   __cxl_dpa_reserve()    ...(1)
-> >   devm_add_action()      ...(4)
-> >
-> > task 2:
-> > cxl_dpa_free()
-> >   guard()
-> >   if (!cxled->dpa_res)   ...(2) pass, due to (1)
-> >     return 0;
-> >   devm_cxl_dpa_release()
-> >     devm_remove_action()  ...(3) warning, no action is added yet
-> >
-> > Warning log:
-> >
-> > WARNING: ./include/linux/device/devres.h:160 at devm_remove_action incl=
-ude/linux/device/devres.h:160 [inline], CPU#0: syz.1.6464/25993
-> > WARNING: ./include/linux/device/devres.h:160 at devm_cxl_dpa_release dr=
-ivers/cxl/core/hdm.c:290 [inline], CPU#0: syz.1.6464/25993
-> > WARNING: ./include/linux/device/devres.h:160 at cxl_dpa_free+0x2a4/0x32=
-0 drivers/cxl/core/hdm.c:572, CPU#0: syz.1.6464/25993
-> > Modules linked in:
-> > CPU: 0 UID: 0 PID: 25993 Comm: syz.1.6464 Not tainted 6.19.0-g15a37b05f=
-387 #10 PREEMPT(lazy)
-> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.17.0-0-g=
-b52ca86e094d-prebuilt.qemu.org 04/01/2014
-> > RIP: 0010:devm_remove_action include/linux/device/devres.h:160 [inline]
-> > RIP: 0010:devm_cxl_dpa_release drivers/cxl/core/hdm.c:290 [inline]
-> > RIP: 0010:cxl_dpa_free+0x2a4/0x320 drivers/cxl/core/hdm.c:572
-> > Code: 01 31 ff 41 89 c4 89 c6 e8 a9 91 1d fe 45 85 e4 0f 85 55 ff ff ff=
- e8 4b 96 1d fe 90 0f 0b 90 e9 47 ff ff ff e8 3d 96 1d fe 90 <0f> 0b 90 e9 =
-63 ff ff ff bb f0 ff ff ff e9 68 ff ff ff 48 c7 c7 f4
-> > RSP: 0018:ffff888129f77bb8 EFLAGS: 00010282
-> > RAX: 00000000000000f3 RBX: ffff888102f64000 RCX: ffffffff837301d3
-> > RDX: 0000000000080000 RSI: ffffc90001c5a000 RDI: 0000000000000005
-> > RBP: 00000000fffffffe R08: 0000000000000001 R09: ffff888123f98000
-> > R10: 00000000fffffffe R11: 0000000000000000 R12: 0000000000000001
-> > R13: ffff888102f64040 R14: dffffc0000000000 R15: ffff888102f64000
-> > FS:  00007fae0488d6c0(0000) GS:ffff88827086d000(0000) knlGS:00000000000=
-00000
-> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > CR2: 0000000000000000 CR3: 000000012f7d6003 CR4: 0000000000770ef0
-> > PKRU: 80000000
-> > Call Trace:
-> >  <TASK>
-> >  dpa_size_store+0xfb/0x230 drivers/cxl/core/port.c:269
-> >  dev_attr_store+0x58/0x80 drivers/base/core.c:2437
-> >  sysfs_kf_write+0xf2/0x150 fs/sysfs/file.c:142
-> >  kernfs_fop_write_iter+0x3d6/0x5d0 fs/kernfs/file.c:352
-> >  new_sync_write fs/read_write.c:595 [inline]
-> >  vfs_write+0x68e/0x1050 fs/read_write.c:688
-> >  ksys_write+0x12a/0x250 fs/read_write.c:740
-> >  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-> >  do_syscall_64+0xfc/0x670 arch/x86/entry/syscall_64.c:94
-> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> > RIP: 0033:0x7fae0399c669
-> > Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89=
- f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 =
-ff ff 73 01 c3 48 c7 c1 e8 ff ff ff f7 d8 64 89 01 48
-> > RSP: 002b:00007fae0488d028 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> > RAX: ffffffffffffffda RBX: 00007fae03c15fa0 RCX: 00007fae0399c669
-> > RDX: 000000000000000a RSI: 00002000000001c0 RDI: 0000000000000009
-> > RBP: 00007fae03a32c71 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> > R13: 00007fae03c16038 R14: 00007fae03c15fa0 R15: 00007ffe53519fb8
-> >  </TASK>
-> > irq event stamp: 1021
-> > hardirqs last  enabled at (1029): [<ffffffffb7d04c4b>] __up_console_sem=
-+0x7b/0x90 kernel/printk/printk.c:347
-> > hardirqs last disabled at (1038): [<ffffffffb7d04c30>] __up_console_sem=
-+0x60/0x90 kernel/printk/printk.c:345
-> > softirqs last  enabled at (1016): [<ffffffffb7b73b93>] __do_softirq ker=
-nel/softirq.c:656 [inline]
-> > softirqs last  enabled at (1016): [<ffffffffb7b73b93>] invoke_softirq k=
-ernel/softirq.c:496 [inline]
-> > softirqs last  enabled at (1016): [<ffffffffb7b73b93>] __irq_exit_rcu+0=
-xb3/0xe0 kernel/softirq.c:723
-> > softirqs last disabled at (1005): [<ffffffffb7b73b93>] __do_softirq ker=
-nel/softirq.c:656 [inline]
-> > softirqs last disabled at (1005): [<ffffffffb7b73b93>] invoke_softirq k=
-ernel/softirq.c:496 [inline]
-> > softirqs last disabled at (1005): [<ffffffffb7b73b93>] __irq_exit_rcu+0=
-xb3/0xe0 kernel/softirq.c:723
-> >
-> > Fixes: cf880423b6a0 ("cxl/hdm: Add support for allocating DPA to an end=
-point decoder")
-> > Fixes: 9c57cde0dcbd ("cxl/hdm: Enumerate allocated DPA")
-> > Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
->
-> Good find!
->
-> However I am not a fan of the fact that this duplicates this subtle
-> dance in multiple places. It looks like we can just make it by the case
-> that __cxl_dpa_reserve() establishes the remove action before returning.
+John Groves wrote:
+> From: John Groves <john@groves.net>
+> 
+> The new fsdev driver provides pages/folios initialized compatibly with
+> fsdax - normal rather than devdax-style refcounting, and starting out
+> with order-0 folios.
+> 
+> When fsdev binds to a daxdev, it is usually (always?) switching from the
+> devdax mode (device.c), which pre-initializes compound folios according
+> to its alignment. Fsdev uses fsdev_clear_folio_state() to switch the
+> folios into a fsdax-compatible state.
+> 
+> A side effect of this is that raw mmap doesn't (can't?) work on an fsdev
+> dax instance. Accordingly, The fsdev driver does not provide raw mmap -
+> devices must be put in 'devdax' mode (drivers/dax/device.c) to get raw
+> mmap capability.
+> 
+> In this commit is just the framework, which remaps pages/folios compatibly
+> with fsdax.
+> 
+> Enabling dax changes:
+> 
+> - bus.h: add DAXDRV_FSDEV_TYPE driver type
+> - bus.c: allow DAXDRV_FSDEV_TYPE drivers to bind to daxdevs
+> - dax.h: prototype inode_dax(), which fsdev needs
+> 
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Suggested-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: John Groves <john@groves.net>
+> ---
 
-This also makes sense to me. Then, we need to change __cxl_dpa_alloc()
-in the same way. Will do in V2.
+[snip]
 
-Other than those two, I can find other functions that likely have the
-same bug, such as devm_cxl_add_dax_region(), which might race with
-cxl_dax_region_release(). To confirm, I'll try to trigger bugs in
-these suspicious functions and see if they are indeed buggy.
+> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> index e4bd5c9f006c..562e2b06f61a 100644
+> --- a/drivers/dax/bus.c
+> +++ b/drivers/dax/bus.c
+> @@ -81,6 +81,10 @@ static int dax_match_type(const struct dax_device_driver *dax_drv, struct device
+>  	    !IS_ENABLED(CONFIG_DEV_DAX_KMEM))
+>  		return 1;
+>  
+> +	/* fsdev driver can also bind to device-type dax devices */
+> +	if (dax_drv->type == DAXDRV_FSDEV_TYPE && type == DAXDRV_DEVICE_TYPE)
+> +		return 1;
+> +
 
->
-> > @@ -679,11 +686,28 @@ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cx=
-led, u64 size)
-> >       struct cxl_port *port =3D cxled_to_port(cxled);
-> >       int rc;
-> >
-> > +     guard(rwsem_write)(&cxl_rwsem.dpa);
-> >       rc =3D __cxl_dpa_alloc(cxled, size);
-> >       if (rc)
-> >               return rc;
-> >
-> > -     return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxle=
-d);
-> > +     /*
-> > +      * Add the devres action while still holding cxl_rwsem.dpa to pre=
-vent
-> > +      * a race with cxl_dpa_free(). Without this, a concurrent cxl_dpa=
-_free()
-> > +      * can observe dpa_res set (by __cxl_dpa_reserve()) and attempt
-> > +      * devm_remove_action() before devm_add_action() has been called,
-> > +      * triggering a WARN_ON in devm_remove_action().
-> > +      * Also, devm_add_action_or_reset() cannot be used here because
-> > +      * cxl_dpa_release() tries to hold the dpa lock that is already h=
-eld,
-> > +      * causing a self deadlock.
-> > +      */
->
-> Also, I agree with Alison, this is good detail, but way too much detail
-> to carry around permanently in the source directly.
->
+In building up a topic branch for this I notice that this breaks the
+device-dax test.
 
-I will shrink it down. Thanks for the comments.
+1/1 ndctl:dax / device-dax FAIL             0.19s   (exit status 250 or signal 122 SIGinvalid)
+...
+Ok:                 0
+Expected Fail:      0
+Fail:               1
+Unexpected Pass:    0
+Skipped:            0
+Timeout:            0
 
-Sungwoo.
+Have you run this series with all the ndctl cxl selftests?
+
+How exactly is this supposed to ensure the fsdev driver does not bind to
+a regular dax device?
+
+This can be fixed by reloading the fsdev module thus pushing that driver
+later in the driver list...  So we need to come up with a more reliable
+method here.
+
+I'm holding off pushing a topic branch for the time being.
+
+Ira
+
+>  	return 0;
+>  }
+>  
+
+[snip]
