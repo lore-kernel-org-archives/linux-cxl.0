@@ -1,58 +1,49 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CC33D1CD4;
-	Wed, 25 Mar 2026 12:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A9830C62E;
+	Wed, 25 Mar 2026 12:33:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774440738; cv=none; b=eX0QreiB6N4TOcrjcabJAeTeteRVvFXrNq6vy9RzU7i3dJb7EOLkRIf6WKxz72ZzHLdndx1utWDVUG65a/GsyHd7mDTr8OylvD4vSqvy3bP3LecZeo+dji0TI8RbUIS968DdS05gMLLTFU0dIrbUFhLZH9ocRWKMPswDTx/Q00w=
+	t=1774442040; cv=none; b=WuYTxc+Sy7qhC/Cr5ri/r9GOp6TTmk0sIuGJwDWY5UDbm4A4Vq/qUFnMMkV//LKqezVt4DwhFlHTFeZzEkipKTb8yxXwDH3l9zmS5ORoqLH2N0T0wiRV7UY4FmMLioTAL/AxgekfwoJfvq2/knVHyz7ejaM1eNwXmYGPB98o7eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774440738; c=relaxed/simple;
-	bh=W0amWJTVjAlqw1Y2edFwnNyO89EgiXNsQUWTkzh9Ieo=;
+	s=arc-20240116; t=1774442040; c=relaxed/simple;
+	bh=VI5n89yu6N671jeZX60qaqVUH0lrFCOttK1XhdtfH5I=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VMyJvPlsaR1tA9mZbUNhmSzYS/e0OZhZnYbnT5QmW1/pL2aB5noSV5UqciDZMazb+JLbvePVA08LFmkHTMxkGwtgdy5/JtN4GScaGfUVNkdzV0NKhvVMyB8PyXMdN2B7rPaJJFDn7GpvPqF2EV+BauuQTma9RDazXYL+M/3Nl6s=
+	 MIME-Version:Content-Type; b=TOPIx/MejZCEq4QX82bmjrZlbo93aGUwASMz+HfATliU751j/4PnfwBiK4MQnbvXNlxX1Z+PjNQdXrpWyFabB2brUTudDmp7HoZcymn7+4hhrWkyMHTh1+9xulDZlN7McjtP2esS33s3m/6bF4L463wsGF/MDv+NfclSl9q8pKA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fgm3Z4J9dzHnGhp;
-	Wed, 25 Mar 2026 20:11:38 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fgmXZ1cdNzHnH55;
+	Wed, 25 Mar 2026 20:33:18 +0800 (CST)
 Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id DA20640086;
-	Wed, 25 Mar 2026 20:12:13 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 8520740569;
+	Wed, 25 Mar 2026 20:33:53 +0800 (CST)
 Received: from localhost (10.203.177.15) by dubpeml500005.china.huawei.com
  (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 25 Mar
- 2026 12:12:12 +0000
-Date: Wed, 25 Mar 2026 12:12:11 +0000
+ 2026 12:33:52 +0000
+Date: Wed, 25 Mar 2026 12:33:50 +0000
 From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: "Koralahalli Channabasappa, Smita" <skoralah@amd.com>
-CC: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, Ard Biesheuvel <ardb@kernel.org>, "Alison
- Schofield" <alison.schofield@intel.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
-	<dan.j.williams@intel.com>, Yazen Ghannam <yazen.ghannam@amd.com>, "Dave
- Jiang" <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, "Matthew
- Wilcox" <willy@infradead.org>, Jan Kara <jack@suse.cz>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek
-	<pavel@kernel.org>, Li Ming <ming.li@zohomail.com>, Jeff Johnson
-	<jeff.johnson@oss.qualcomm.com>, Ying Huang <huang.ying.caritas@gmail.com>,
-	Yao Xingtao <yaoxt.fnst@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nathan Fontenot
-	<nathan.fontenot@amd.com>, Terry Bowman <terry.bowman@amd.com>, Robert
- Richter <rrichter@amd.com>, "Benjamin Cheatham" <benjamin.cheatham@amd.com>,
-	Zhijian Li <lizhijian@fujitsu.com>, Borislav Petkov <bp@alien8.de>, Tomasz
- Wolski <tomasz.wolski@fujitsu.com>
-Subject: Re: [PATCH v8 8/9] dax/hmem, cxl: Defer and resolve Soft Reserved
- ownership
-Message-ID: <20260325121211.00007f7e@huawei.com>
-In-Reply-To: <403241c1-36f7-4fd6-bc99-d7dbf30e58f4@amd.com>
-References: <20260322195343.206900-1-Smita.KoralahalliChannabasappa@amd.com>
-	<20260322195343.206900-9-Smita.KoralahalliChannabasappa@amd.com>
-	<20260323181331.000018f2@huawei.com>
-	<403241c1-36f7-4fd6-bc99-d7dbf30e58f4@amd.com>
+To: Rakie Kim <rakie.kim@sk.com>
+CC: <akpm@linux-foundation.org>, <gourry@gourry.net>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<ziy@nvidia.com>, <matthew.brost@intel.com>, <joshua.hahnjy@gmail.com>,
+	<byungchul@sk.com>, <ying.huang@linux.alibaba.com>, <apopple@nvidia.com>,
+	<david@kernel.org>, <lorenzo.stoakes@oracle.com>, <Liam.Howlett@oracle.com>,
+	<vbabka@suse.cz>, <rppt@kernel.org>, <surenb@google.com>, <mhocko@suse.com>,
+	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <harry.yoo@oracle.com>,
+	<lsf-pc@lists.linux-foundation.org>, <kernel_team@skhynix.com>,
+	<honggyu.kim@sk.com>, <yunjeong.mun@sk.com>, Keith Busch <kbusch@kernel.org>
+Subject: Re: [LSF/MM/BPF TOPIC] [RFC PATCH 0/4] mm/mempolicy: introduce
+ socket-aware weighted interleave
+Message-ID: <20260325123350.00004d48@huawei.com>
+In-Reply-To: <20260324053549.324-1-rakie.kim@sk.com>
+References: <20260320165605.000024c0@huawei.com>
+	<20260324053549.324-1-rakie.kim@sk.com>
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -62,271 +53,258 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
+X-ClientProxiedBy: lhrpeml100010.china.huawei.com (7.191.174.197) To
  dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Tue, 24 Mar 2026 14:50:59 -0700
-"Koralahalli Channabasappa, Smita" <skoralah@amd.com> wrote:
+On Tue, 24 Mar 2026 14:35:45 +0900
+Rakie Kim <rakie.kim@sk.com> wrote:
 
-> Hi Jonathan,
-> 
-> On 3/23/2026 11:13 AM, Jonathan Cameron wrote:
-> > On Sun, 22 Mar 2026 19:53:41 +0000
-> > Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com> wrote:
+> On Fri, 20 Mar 2026 16:56:05 +0000 Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
 > >   
-> >> The current probe time ownership check for Soft Reserved memory based
-> >> solely on CXL window intersection is insufficient. dax_hmem probing is not
-> >> always guaranteed to run after CXL enumeration and region assembly, which
-> >> can lead to incorrect ownership decisions before the CXL stack has
-> >> finished publishing windows and assembling committed regions.
-> >>
-> >> Introduce deferred ownership handling for Soft Reserved ranges that
-> >> intersect CXL windows. When such a range is encountered during the
-> >> initial dax_hmem probe, schedule deferred work to wait for the CXL stack
-> >> to complete enumeration and region assembly before deciding ownership.
-> >>
-> >> Once the deferred work runs, evaluate each Soft Reserved range
-> >> individually: if a CXL region fully contains the range, skip it and let
-> >> dax_cxl bind. Otherwise, register it with dax_hmem. This per-range
-> >> ownership model avoids the need for CXL region teardown and
-> >> alloc_dax_region() resource exclusion prevents double claiming.
-> >>
-> >> Introduce a boolean flag dax_hmem_initial_probe to live inside device.c
-> >> so it survives module reload. Ensure dax_cxl defers driver registration
-> >> until dax_hmem has completed ownership resolution. dax_cxl calls
-> >> dax_hmem_flush_work() before cxl_driver_register(), which both waits for
-> >> the deferred work to complete and creates a module symbol dependency that
-> >> forces dax_hmem.ko to load before dax_cxl.
-> >>
-> >> Co-developed-by: Dan Williams <dan.j.williams@intel.com>
-> >> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> >> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>  
+> > > > > 
+> > > > > To make this possible, the system requires a mechanism to understand
+> > > > > the physical topology. The existing NUMA distance model provides only
+> > > > > relative latency values between nodes and lacks any notion of
+> > > > > structural grouping such as socket boundaries. This is especially
+> > > > > problematic for CXL memory nodes, which appear without an explicit
+> > > > > socket association.    
+> > > > 
+> > > > So in a general sense, the missing info here is effectively the same
+> > > > stuff we are missing from the HMAT presentation (it's there in the
+> > > > table and it's there to compute in CXL cases) just because we decided
+> > > > not to surface anything other than distances to memory from nearest
+> > > > initiator.  I chatted to Joshua and Kieth about filling in that stuff
+> > > > at last LSFMM. To me that's just a bit of engineering work that needs
+> > > > doing now we have proven use cases for the data. Mostly it's figuring out
+> > > > the presentation to userspace and kernel data structures as it's a
+> > > > lot of data in a big system (typically at least 32 NUMA nodes).
+> > > >     
+> > > 
+> > > Hearing about the discussion on exposing HMAT data is very welcome news.
+> > > Because this detailed topology information is not yet fully exposed to
+> > > the kernel and userspace, I used a temporary package-based restriction.
+> > > Figuring out how to expose and integrate this data into the kernel data
+> > > structures is indeed a crucial engineering task we need to solve.
+> > > 
+> > > Actually, when I first started this work, I considered fetching the
+> > > topology information from HMAT before adopting the current approach.
+> > > However, I encountered a firmware issue on my test systems
+> > > (Granite Rapids and Sierra Forest).
+> > > 
+> > > Although each socket has its own locally attached CXL device, the HMAT
+> > > only registers node1 (Socket 1) as the initiator for both CXL memory
+> > > nodes (node2 and node3). As a result, the sysfs HMAT initiators for
+> > > both node2 and node3 only expose node1.  
 > > 
-> > https://sashiko.dev/#/patchset/20260322195343.206900-1-Smita.KoralahalliChannabasappa%40amd.com
-> > Might be worth a look.  I think the last comment is potentially correct
-> > though unlikely a platform_driver_register() actually fails.
+> > Do you mean the Memory Proximity Domain Attributes Structure has
+> > the "Proximity Domain for the Attached Initiator" set wrong?
+> > Was this for it's presentation of the full path to CXL mem nodes, or
+> > to a PXM with a generic port?  Sounds like you have SRAT covering
+> > the CXL mem so ideal would be to have the HMAT data to GP and to
+> > the CXL PXMs that BIOS has set up.
 > > 
-> > I've not looked too closely at the others. Given this was doing something
-> > unusual I thought I'd see what it found. Looks like some interesting
-> > questions if nothing else.  
+> > Either way having that set at all for CXL memory is fishy as it's about
+> > where the 'memory controller' is and on CXL mem that should be at the
+> > device end of the link.  My understanding of that is was only meant
+> > to be set when you have separate memory only Nodes where the physical
+> > controller is in a particular other node (e.g. what you do
+> > if you have a CPU with DRAM and HBM).  Maybe we need to make the
+> > kernel warn + ignore that if it is set to something odd like yours.
+> >   
 > 
-> Thanks for pointing this out. I went through the findings:
+> Hello Jonathan,
 > 
-> The init error path one is valid I think, if 
-> platform_driver_register(&dax_hmem_driver) fails after 
-> dax_hmem_platform_driver has already probed and queued work, the error 
-> path doesn't flush the work or release the pdev reference.
+> Your insight is incredibly accurate. To clarify the situation, here is
+> the actual configuration of my system:
 > 
-> I was thinking something like below for v9:
+> NODE   Type          PXD
+> node0  local memory  0x00
+> node1  local memory  0x01
+> node2  cxl memory    0x0A
+> node3  cxl memory    0x0B
 > 
-> @@ -258,8 +262,13 @@ static __init int dax_hmem_init(void)
-> 		return rc;
+> Physically, the node2 CXL is attached to node0 (Socket 0), and the
+> node3 CXL is attached to node1 (Socket 1). However, extracting the
+> HMAT.dsl reveals the following:
 > 
-> 	rc = platform_driver_register(&dax_hmem_driver);
-> -	if (rc)
-> +	if (rc) {
-> +		if (dax_hmem_work.pdev) {
-> +			flush_work(&dax_hmem_work.work);
-> +			put_device(&dax_hmem_work.pdev->dev);
-> +		}
-> 		platform_driver_unregister(&dax_hmem_platform_driver);
-> +	}
+> - local memory
+>   [028h] Flags: 0001 (Processor Proximity Domain Valid = 1)
+>          Attached Initiator Proximity Domain: 0x00
+>          Memory Proximity Domain: 0x00
+>   [050h] Flags: 0001 (Processor Proximity Domain Valid = 1)
+>          Attached Initiator Proximity Domain: 0x01
+>          Memory Proximity Domain: 0x01
 > 
-> 	return rc;
->   }
-> 
-> 
-> Worth adding considering the unlikeliness?
+> - cxl memory
+>   [078h] Flags: 0000 (Processor Proximity Domain Valid = 0)
+>          Attached Initiator Proximity Domain: 0x00
+>          Memory Proximity Domain: 0x0A
+>   [0A0h] Flags: 0000 (Processor Proximity Domain Valid = 0)
+>          Attached Initiator Proximity Domain: 0x00
+>          Memory Proximity Domain: 0x0B
 
-I think so.  Alternative would be a very obvious comment to say we've
-deliberately not handled this corner.  Code seems easier to me and
-lines up with what remove is doing.
-
+That's faintly amusing given it conveys no information at all.
+Still unless we have a bug shouldn't cause anything odd.
 
 > 
-> The others I looked at the IS_ENABLED vs IS_REACHABLE question is 
-> something I'm discussing with Dan in 3/9 (there's a Kconfig dependency 
-> and CXL_BUS dependency fix needed I guess), the module reload behavior 
-> is intentional and others are mostly false positives I think..
+> As you correctly suspected, the flags for the CXL memory are 0000,
+> meaning the Processor Proximity Domain is marked as invalid. But when
+> checking the sysfs initiator configurations, it shows a different story:
+> 
+> Node   access0 Initiator  access1 Initiator
+> node0  node0              node0
+> node1  node1              node1
+> node2  node1              node1
+> node3  node1              node1
+> 
+> Although the Attached Initiator is set to 0 in HMAT with an invalid
+> flag, sysfs strangely registers node1 as the initiator for both CXL
+> nodes.
+Been a while since I looked the hmat parser..
 
-I was more suspicious of those ones as can never remember exactly what
-the effective rule are.
+If ACPI_HMAT_PROCESSOR_PD_VALID isn't set, hmat_parse_proximity_domain()
+shouldn't set the target. At end of that function should be set to PXM_INVALID.
 
-Thanks,
+It should therefore retain the state from alloc_memory_intiator() I think?
+
+Given I did all my testing without the PD_VALID set (as it wasn't on my
+test system) it should be fine with that.  Anyhow, let's look at the data
+for proximity.
+
+
+
+> Because both HMAT and sysfs are exposing abnormal values, it was
+> impossible for me to determine the true socket connections for CXL
+> using this data.
+> 
+> > > 
+> > > Even though the distance map shows node2 is physically closer to
+> > > Socket 0 and node3 to Socket 1, the HMAT incorrectly defines the
+> > > routing path strictly through Socket 1. Because the HMAT alone made it
+> > > difficult to determine the exact physical socket connections on these
+> > > systems, I ended up using the current CXL driver-based approach.  
+> > 
+> > Are the HMAT latencies and bandwidths all there?  Or are some missing
+> > and you have to use SLIT (which generally is garbage for historical
+> > reasons of tuning SLIT to particular OS behaviour).
+> >   
+> 
+> The HMAT latencies and bandwidths are present, but the values seem
+> broken. Here is the latency table:
+> 
+> Init->Target | node0 | node1 | node2 | node3
+> node0        | 0x38B | 0x89F | 0x9C4 | 0x3AFC
+> node1        | 0x89F | 0x38B | 0x3AFC| 0x4268
+
+Yeah. That would do it...  Looks like that final value is garbage.
+
+> 
+> I used the identical type of DRAM and CXL memory for both sockets.
+> However, looking at the table, the local CXL access latency from
+> node0->node2 (0x9C4) and node1->node3 (0x4268) shows a massive,
+> unjustified difference. This asymmetry proves that the table is
+> currently unreliable.
+
+Poke your favourite bios vendor I guess.
+
+I asked one of the intel folk to take a look at see if this is a broader issue
+or just one particular bios.
+
+> 
+> > > 
+> > > I wonder if others have experienced similar broken HMAT cases with CXL.
+> > > If HMAT information becomes more reliable in the future, we could
+> > > build a much more efficient structure.  
+> > 
+> > Given it's being lightly used I suspect there will be many bugs :(
+> > I hope we can assume they will get fixed however!
+> > 
+> > ...
+> >   
+> 
+> The most critical issue caused by this broken initiator setting is that
+> topology analysis tools like `hwloc` are completely misled. Currently,
+> `hwloc` displays both CXL nodes as being attached to Socket 1.
+> 
+> I observed this exact same issue on both Sierra Forest and Granite
+> Rapids systems. I believe this broken topology exposure is a severe
+> problem that must be addressed, though I am not entirely sure what the
+> best fix would be yet. I would love to hear your thoughts on this.
+
+Fix then bios.  If you don't mind, can you provide dumps of
+cat /sys/firmware/acpi/tables/HMAT  just so we can check there is nothing
+wrong with the parser.
+
+> 
+> > > 
+> > > The complex topology cases you presented, such as multi-NUMA per socket,
+> > > shared CXL switches, and IO expanders, are very important points.
+> > > I clearly understand that the simple package-level grouping does not fully
+> > > reflect the 1:1 relationship in these future hardware architectures.
+> > > 
+> > > I have also thought about the shared CXL switch scenario you mentioned,
+> > > and I know the current design falls short in addressing it properly.
+> > > While the current implementation starts with a simple socket-local
+> > > restriction, I plan to evolve it into a more flexible node aggregation
+> > > model to properly reflect all the diverse topologies you suggested.  
+> > 
+> > If we can ensure it fails cleanly when it finds a topology that it can't
+> > cope with (and I guess falls back to current) then I'm fine with a partial
+> > solution that evolves.
+> >   
+> 
+> I completely agree with ensuring a clean failure. To stabilize this
+> partial solution, I am currently considering a few options for the
+> next version:
+> 
+> 1. Enable this feature only when a strict 1:1 topology is detected.
+Definitely default to off.  Maybe allow a user to say they want to do it
+anyway. I can see there might be systems that are only a tiny bit off and
+it makes not practical difference.
+
+> 2. Provide a sysfs allowing users to enable/disable it.
+Makes sense.
+> 3. Allow users to manually override/configure the topology via sysfs.
+
+No.  If people are in this state we should apply fixes to the HMAT table
+either by injection of real data or some quirking.  If we add userspace
+control via simpler means the motivation for people to fix bios goes out
+the window and it never gets resolved.
+
+> 4. Implement dynamic fallback behaviors depending on the detected
+>    topology shape (needs further thought).
+
+That would be interesting. But maybe not a 1st version thing :)
+
+> 
+> By the way, when I first posted this RFC, I accidentally missed adding
+> lsf-pc@lists.linux-foundation.org to the CC list. I am considering
+> re-posting it to ensure it reaches the lsf-pc.
+
+Makes sense. Make sure to add a back link to this so it is visible
+discussion already going on.
+> 
+> Thanks again for your profound insights and time. It is tremendously
+> helpful.
+
+Thanks to you for starting to solve the problem!
 
 J
 > 
-> Thanks,
-> Smita
+> Rakie Kim
 > 
 > >   
-> >> ---
-> >>   drivers/dax/bus.h         |  7 ++++
-> >>   drivers/dax/cxl.c         |  1 +
-> >>   drivers/dax/hmem/device.c |  3 ++
-> >>   drivers/dax/hmem/hmem.c   | 74 +++++++++++++++++++++++++++++++++++++++
-> >>   4 files changed, 85 insertions(+)
-> >>
-> >> diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
-> >> index cbbf64443098..ebbfe2d6da14 100644
-> >> --- a/drivers/dax/bus.h
-> >> +++ b/drivers/dax/bus.h
-> >> @@ -49,6 +49,13 @@ void dax_driver_unregister(struct dax_device_driver *dax_drv);
-> >>   void kill_dev_dax(struct dev_dax *dev_dax);
-> >>   bool static_dev_dax(struct dev_dax *dev_dax);
-> >>   
-> >> +#if IS_ENABLED(CONFIG_DEV_DAX_HMEM)
-> >> +extern bool dax_hmem_initial_probe;
-> >> +void dax_hmem_flush_work(void);
-> >> +#else
-> >> +static inline void dax_hmem_flush_work(void) { }
-> >> +#endif
-> >> +
-> >>   #define MODULE_ALIAS_DAX_DEVICE(type) \
-> >>   	MODULE_ALIAS("dax:t" __stringify(type) "*")
-> >>   #define DAX_DEVICE_MODALIAS_FMT "dax:t%d"
-> >> diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
-> >> index a2136adfa186..3ab39b77843d 100644
-> >> --- a/drivers/dax/cxl.c
-> >> +++ b/drivers/dax/cxl.c
-> >> @@ -44,6 +44,7 @@ static struct cxl_driver cxl_dax_region_driver = {
-> >>   
-> >>   static void cxl_dax_region_driver_register(struct work_struct *work)
-> >>   {
-> >> +	dax_hmem_flush_work();
-> >>   	cxl_driver_register(&cxl_dax_region_driver);
-> >>   }
-> >>   
-> >> diff --git a/drivers/dax/hmem/device.c b/drivers/dax/hmem/device.c
-> >> index 56e3cbd181b5..991a4bf7d969 100644
-> >> --- a/drivers/dax/hmem/device.c
-> >> +++ b/drivers/dax/hmem/device.c
-> >> @@ -8,6 +8,9 @@
-> >>   static bool nohmem;
-> >>   module_param_named(disable, nohmem, bool, 0444);
-> >>   
-> >> +bool dax_hmem_initial_probe;
-> >> +EXPORT_SYMBOL_GPL(dax_hmem_initial_probe);
-> >> +
-> >>   static bool platform_initialized;
-> >>   static DEFINE_MUTEX(hmem_resource_lock);
-> >>   static struct resource hmem_active = {
-> >> diff --git a/drivers/dax/hmem/hmem.c b/drivers/dax/hmem/hmem.c
-> >> index ca752db03201..9ceda6b5cadf 100644
-> >> --- a/drivers/dax/hmem/hmem.c
-> >> +++ b/drivers/dax/hmem/hmem.c
-> >> @@ -3,6 +3,7 @@
-> >>   #include <linux/memregion.h>
-> >>   #include <linux/module.h>
-> >>   #include <linux/dax.h>
-> >> +#include <cxl/cxl.h>
-> >>   #include "../bus.h"
-> >>   
-> >>   static bool region_idle;
-> >> @@ -58,6 +59,23 @@ static void release_hmem(void *pdev)
-> >>   	platform_device_unregister(pdev);
-> >>   }
-> >>   
-> >> +struct dax_defer_work {
-> >> +	struct platform_device *pdev;
-> >> +	struct work_struct work;
-> >> +};
-> >> +
-> >> +static void process_defer_work(struct work_struct *w);
-> >> +
-> >> +static struct dax_defer_work dax_hmem_work = {
-> >> +	.work = __WORK_INITIALIZER(dax_hmem_work.work, process_defer_work),
-> >> +};
-> >> +
-> >> +void dax_hmem_flush_work(void)
-> >> +{
-> >> +	flush_work(&dax_hmem_work.work);
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(dax_hmem_flush_work);
-> >> +
-> >>   static int __hmem_register_device(struct device *host, int target_nid,
-> >>   				  const struct resource *res)
-> >>   {
-> >> @@ -122,6 +140,11 @@ static int hmem_register_device(struct device *host, int target_nid,
-> >>   	if (IS_ENABLED(CONFIG_DEV_DAX_CXL) &&
-> >>   	    region_intersects(res->start, resource_size(res), IORESOURCE_MEM,
-> >>   			      IORES_DESC_CXL) != REGION_DISJOINT) {
-> >> +		if (!dax_hmem_initial_probe) {
-> >> +			dev_dbg(host, "await CXL initial probe: %pr\n", res);
-> >> +			queue_work(system_long_wq, &dax_hmem_work.work);
-> >> +			return 0;
-> >> +		}
-> >>   		dev_dbg(host, "deferring range to CXL: %pr\n", res);
-> >>   		return 0;
-> >>   	}
-> >> @@ -129,8 +152,54 @@ static int hmem_register_device(struct device *host, int target_nid,
-> >>   	return __hmem_register_device(host, target_nid, res);
-> >>   }
-> >>   
-> >> +static int hmem_register_cxl_device(struct device *host, int target_nid,
-> >> +				    const struct resource *res)
-> >> +{
-> >> +	if (region_intersects(res->start, resource_size(res), IORESOURCE_MEM,
-> >> +			      IORES_DESC_CXL) == REGION_DISJOINT)
-> >> +		return 0;
-> >> +
-> >> +	if (cxl_region_contains_resource((struct resource *)res)) {
-> >> +		dev_dbg(host, "CXL claims resource, dropping: %pr\n", res);
-> >> +		return 0;
-> >> +	}
-> >> +
-> >> +	dev_dbg(host, "CXL did not claim resource, registering: %pr\n", res);
-> >> +	return __hmem_register_device(host, target_nid, res);
-> >> +}
-> >> +
-> >> +static void process_defer_work(struct work_struct *w)
-> >> +{
-> >> +	struct dax_defer_work *work = container_of(w, typeof(*work), work);
-> >> +	struct platform_device *pdev;
-> >> +
-> >> +	if (!work->pdev)
-> >> +		return;
-> >> +
-> >> +	pdev = work->pdev;
-> >> +
-> >> +	/* Relies on cxl_acpi and cxl_pci having had a chance to load */
-> >> +	wait_for_device_probe();
-> >> +
-> >> +	guard(device)(&pdev->dev);
-> >> +	if (!pdev->dev.driver)
-> >> +		return;
-> >> +
-> >> +	if (!dax_hmem_initial_probe) {
-> >> +		dax_hmem_initial_probe = true;
-> >> +		walk_hmem_resources(&pdev->dev, hmem_register_cxl_device);
-> >> +	}
-> >> +}
-> >> +
-> >>   static int dax_hmem_platform_probe(struct platform_device *pdev)
-> >>   {
-> >> +	if (work_pending(&dax_hmem_work.work))
-> >> +		return -EBUSY;
-> >> +
-> >> +	if (!dax_hmem_work.pdev)
-> >> +		dax_hmem_work.pdev =
-> >> +			to_platform_device(get_device(&pdev->dev));
-> >> +
-> >>   	return walk_hmem_resources(&pdev->dev, hmem_register_device);
-> >>   }
-> >>   
-> >> @@ -168,6 +237,11 @@ static __init int dax_hmem_init(void)
-> >>   
-> >>   static __exit void dax_hmem_exit(void)
-> >>   {
-> >> +	if (dax_hmem_work.pdev) {
-> >> +		flush_work(&dax_hmem_work.work);
-> >> +		put_device(&dax_hmem_work.pdev->dev);
-> >> +	}
-> >> +
-> >>   	platform_driver_unregister(&dax_hmem_driver);
-> >>   	platform_driver_unregister(&dax_hmem_platform_driver);
-> >>   }  
+> > > 
+> > > Thanks again for your time and review.  
+> > 
+> > You are welcome.
+> > 
+> > Thanks
+> > 
+> > Jonathan
 > >   
-> 
+> > > 
+> > > Rakie Kim
+> > >   
 > 
 
