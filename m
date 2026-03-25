@@ -1,29 +1,29 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0993E318BA6
-	for <linux-cxl@vger.kernel.org>; Wed, 25 Mar 2026 18:46:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C9D313E29
+	for <linux-cxl@vger.kernel.org>; Wed, 25 Mar 2026 18:47:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774464389; cv=none; b=Icc1VhdwrwoegkZrF4tmCfHl7DAa/6VRUyw0CV8M3sUKMY6kT4NAQ+Cvdk86DV11JHk5V4p53mY9BwdF3B1T/1yXLjVHtBstd+gLu1wiSnoOW1PET0MG1lb7/mgJl9v1ovxaYAuHafKpviS1erxrInW1Hxc0TMx42L7exzM4u2o=
+	t=1774464422; cv=none; b=XvOa4fNYztcOr507i+WAQh2m/Td9v24Nqn8iQw0+b6COr9ssYYPc6uTkIGUikUz9OAdfQLQKaIYmSDGPl0OQ8mFQOqtMm+Iu3YNotcBgU6DCsFE5/B/oWXUKgDU+/SCayO1+KRbZBtyuOwkGkjnIFTx4ILRTAw82M1JY3xhCKMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774464389; c=relaxed/simple;
-	bh=wmqKWX/7BXMob1Rh1XRHClz15HTruf+fG4jwwfgpfmk=;
+	s=arc-20240116; t=1774464422; c=relaxed/simple;
+	bh=KR2Amgh2vKu3QZEyHXZ3+CKMQyo89iDhLbyUCPphgqw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CDQ0xdsKQTJRfLA73nP8C4ZfaXZr+6e5OrF/frCUzKIEyQfZDoehibCkq8tTQgQbm6Os67CD6wR2t4cDY2W2ODG0rJHv9mKkaFC4sy9LNgsNML9+nCgDq3iGy5iGKDqQPEtCUP8jAtqsamcfeKcOdtTJVulVZgKvtI4tjYwWT/c=
+	 MIME-Version:Content-Type; b=X9ylcgRGvkeGuYrH8XrwVg0278CvhDyl5iB+9CUYha4svYi8R6thfSl79vZE0xAE3DAd43dcpFgqro6Qghi0pKY5cLlmIY2eNDxtEsZ6B8AaThXtk2iHp+GTnq5qGTw+cY8JFJgzWw8NcnXzyPutuWiOAENzVK22GSBLcyy+YTc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.224.107])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fgwpQ3lhYzHnGdQ;
-	Thu, 26 Mar 2026 02:45:50 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fgwq31L7bzHnGdQ;
+	Thu, 26 Mar 2026 02:46:23 +0800 (CST)
 Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5A88740584;
-	Thu, 26 Mar 2026 02:46:26 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id F3DB240587;
+	Thu, 26 Mar 2026 02:46:58 +0800 (CST)
 Received: from a2303103017.china.huawei.com (10.47.66.203) by
  dubpeml500005.china.huawei.com (7.214.145.207) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 25 Mar 2026 18:46:25 +0000
+ 15.2.1544.11; Wed, 25 Mar 2026 18:46:57 +0000
 From: Alireza Sanaee <alireza.sanaee@huawei.com>
 To: <qemu-devel@nongnu.org>
 CC: <anisa.su@samsung.com>, <armbru@redhat.com>, <berrange@redhat.com>,
@@ -31,9 +31,9 @@ CC: <anisa.su@samsung.com>, <armbru@redhat.com>, <berrange@redhat.com>,
 	<linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>, <lizhijian@fujitsu.com>,
 	<mst@redhat.com>, <pbonzini@redhat.com>, <gourry@gourry.net>,
 	<nifan.cxl@gmail.com>, <me@linux.beauty>
-Subject: [PATCH 6/9] hw/cxl: Create direct fixed-window aliases for accepted extents
-Date: Wed, 25 Mar 2026 18:42:54 +0000
-Message-ID: <20260325184259.366-7-alireza.sanaee@huawei.com>
+Subject: [PATCH 7/9] hw/cxl: Add release-time teardown for direct-mapped extents
+Date: Wed, 25 Mar 2026 18:42:55 +0000
+Message-ID: <20260325184259.366-8-alireza.sanaee@huawei.com>
 X-Mailer: git-send-email 2.51.0.windows.2
 In-Reply-To: <20260325184259.366-1-alireza.sanaee@huawei.com>
 References: <20260325184259.366-1-alireza.sanaee@huawei.com>
@@ -48,316 +48,344 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
  dubpeml500005.china.huawei.com (7.214.145.207)
 
-For devices using dc-regions-total-size, the fallback read/write path still
-routes through host_dc_as, but accepted extents are backed by individual
-host memory backends rather than a single preconfigured address space.
-Install aliases into the owning fixed window so accepted dynamic-capacity
-memory is reachable through the normal CXL decoder path.
+Consolidate teardown into the release path so all cleanup flows through a
+single place.
 
-Record the non-interleaved decoder window discovered during HDM setup,
-reserve per-device alias slots for lazy DC extents, and create an alias
-from the accepted backend into that window when Add Dynamic Capacity
-Response commits the extent.
-
-This is scoped to the current non-interleaved direct-mapping model and uses
-a small fixed pool of alias slots for now.
+When an extent is removed, tear down any direct alias tied to it and unmap
+a lazy-mode tagged backend before dropping the extent record. Partial
+release of backend-backed extents is rejected, since those backends are
+tracked one-per-extent and cannot be split.
 
 Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
 ---
- hw/cxl/cxl-host.c           |  6 ++++
- hw/cxl/cxl-mailbox-utils.c  | 61 +++++++++++++++++++++++++++++--------
- hw/mem/cxl_type3.c          |  6 ++--
- include/hw/cxl/cxl_device.h | 18 +++++++++--
- 4 files changed, 75 insertions(+), 16 deletions(-)
+ hw/cxl/cxl-mailbox-utils.c  | 103 +++++++++++++++++++++++++++++-------
+ hw/mem/cxl_type3.c          |  37 ++++++++++++-
+ include/hw/cxl/cxl_device.h |   9 +++-
+ 3 files changed, 126 insertions(+), 23 deletions(-)
 
-diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
-index 079b27133b..4647754cc9 100644
---- a/hw/cxl/cxl-host.c
-+++ b/hw/cxl/cxl-host.c
-@@ -300,6 +300,7 @@ static void cxl_fmws_direct_passthrough_setup(CXLDirectPTState *state,
-             offset = state->dpa_base - vmr_size;
-         }
-     }
-+
-     if (!mr) {
-         return;
-     }
-@@ -358,10 +359,15 @@ static int cxl_fmws_direct_passthrough(Object *obj, void *opaque)
- 
-     /* Verify not interleaved */
-     if (!cxl_cfmws_find_device(fw, state->decoder_base, false)) {
-+        state->ct3d->direct_mr_enabled = false;
-         return 0;
-     }
-+    state->ct3d->direct_mr_enabled = true;
- 
-     cxl_fmws_direct_passthrough_setup(state, fw);
-+    state->ct3d->dc.fw = fw;
-+    state->ct3d->dc.dc_decoder_window.base = state->decoder_base;
-+    state->ct3d->dc.dc_decoder_window.size = state->decoder_size;
- 
-     return 0;
- }
 diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
-index cc7be6e68c..4684c33ba1 100644
+index 4684c33ba1..9853740994 100644
 --- a/hw/cxl/cxl-mailbox-utils.c
 +++ b/hw/cxl/cxl-mailbox-utils.c
-@@ -3531,7 +3531,8 @@ void cxl_insert_extent_to_extent_list(CXLDCExtentList *list,
-                                              uint64_t len,
+@@ -3532,7 +3532,8 @@ void cxl_insert_extent_to_extent_list(CXLDCExtentList *list,
                                               uint8_t *tag,
                                               uint16_t shared_seq,
--                                             int rid)
-+                                             int rid,
-+                                             uint64_t offset)
+                                              int rid,
+-                                             uint64_t offset)
++                                             uint64_t offset,
++                                             int direct_window_idx)
  {
      CXLDCExtent *extent;
  
-@@ -3540,6 +3541,7 @@ void cxl_insert_extent_to_extent_list(CXLDCExtentList *list,
-     extent->fw = fw;
-     extent->start_dpa = dpa;
-     extent->len = len;
-+    extent->offset = offset;
-     if (tag) {
-         memcpy(extent->tag, tag, 0x10);
+@@ -3547,6 +3548,7 @@ void cxl_insert_extent_to_extent_list(CXLDCExtentList *list,
      }
-@@ -3568,7 +3570,8 @@ CXLDCExtentGroup *cxl_insert_extent_to_extent_group(CXLDCExtentGroup *group,
-                                                     uint64_t len,
+     extent->shared_seq = shared_seq;
+     extent->rid = rid;
++    extent->direct_window_idx = direct_window_idx;
+ 
+     QTAILQ_INSERT_TAIL(list, extent, node);
+ }
+@@ -3571,7 +3573,8 @@ CXLDCExtentGroup *cxl_insert_extent_to_extent_group(CXLDCExtentGroup *group,
                                                      uint8_t *tag,
                                                      uint16_t shared_seq,
--                                                    int rid)
-+                                                    int rid,
-+                                                    uint64_t offset)
+                                                     int rid,
+-                                                    uint64_t offset)
++                                                    uint64_t offset,
++                                                    int direct_window_idx)
  {
      if (!group) {
          group = g_new0(CXLDCExtentGroup, 1);
-@@ -3576,7 +3579,7 @@ CXLDCExtentGroup *cxl_insert_extent_to_extent_group(CXLDCExtentGroup *group,
+@@ -3579,7 +3582,8 @@ CXLDCExtentGroup *cxl_insert_extent_to_extent_group(CXLDCExtentGroup *group,
      }
      cxl_insert_extent_to_extent_list(&group->list,
                                       host_mem, fw, dpa, len,
--                                     tag, shared_seq, rid);
-+                                     tag, shared_seq, rid, offset);
+-                                     tag, shared_seq, rid, offset);
++                                     tag, shared_seq, rid, offset,
++                                     direct_window_idx);
      return group;
  }
  
-@@ -3672,7 +3675,8 @@ static CXLRetCode cxl_detect_malformed_extent_list(CXLType3Dev *ct3d,
- static bool cxl_extent_find_extent_detail(CXLDCExtentGroupList *list,
-                                           uint64_t start_dpa, uint64_t len,
-                                           uint8_t *tag, HostMemoryBackend **hmb,
--                                          struct CXLFixedWindow **fw, int *rid)
-+                                          struct CXLFixedWindow **fw, int *rid,
-+                                          uint64_t *offset)
+@@ -3695,6 +3699,25 @@ static bool cxl_extent_find_extent_detail(CXLDCExtentGroupList *list,
+     return false;
+ }
+ 
++static void cxl_unmap_extent_backend(CXLDCExtent *ent)
++{
++    MemoryRegion *mr;
++
++    if (!ent->hm) {
++        return;
++    }
++
++    mr = host_memory_backend_get_memory(ent->hm);
++    if (!mr) {
++        qemu_log_mask(LOG_GUEST_ERROR,
++                      "Could not get memory region from host memory backend\n");
++        return;
++    }
++
++    memory_region_set_enabled(mr, false);
++    host_memory_backend_set_mapped(ent->hm, false);
++}
++
+ static CXLRetCode cxl_dcd_add_dyn_cap_rsp_dry_run(CXLType3Dev *ct3d,
+         const CXLUpdateDCExtentListInPl *in)
  {
-     CXLDCExtent *ent;
-     CXLDCExtentGroup *group = QTAILQ_FIRST(list);
-@@ -3683,6 +3687,7 @@ static bool cxl_extent_find_extent_detail(CXLDCExtentGroupList *list,
-             *hmb = ent->hm;
-             memcpy(tag, ent->tag, 0x10);
-             *rid = ent->rid;
-+            *offset = ent->offset;
-             return true;
-         }
-     }
-@@ -3744,7 +3749,7 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
-     HostMemoryBackend *hmb_dc;
-     uint8_t tag[0x10];
-     uint32_t i, num;
--    uint64_t dpa, len;
-+    uint64_t dpa, len, offset;
-     int rid;
-     CXLRetCode ret;
+@@ -3856,11 +3879,12 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
  
-@@ -3783,12 +3788,14 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
-         dpa = in->updated_entries[i].start_dpa;
-         len = in->updated_entries[i].len;
-         if (ct3d->dc.total_capacity_cmd) {
-+            int mr_idx = -1;
-             bool found;
-             MemoryRegion *mr;
- 
-             found = cxl_extent_find_extent_detail(&ct3d->dc.extents_pending,
-                                                   dpa, len, tag,
--                                                  &hmb_dc, &fw, &rid);
-+                                                  &hmb_dc, &fw, &rid,
-+                                                  &offset);
- 
-             /*
-              * Host accepted an extent where device lacks details including
-@@ -3822,13 +3829,38 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
-             memory_region_set_enabled(mr, true);
-             host_memory_backend_set_mapped(hmb_dc, true);
- 
-+            /* Optional direct alias mapping into fixed memory window */
-+            if (ct3d->direct_mr_enabled) {
-+                uint32_t full_mask = (1u << CXL_DC_MAX_DIRECT_MR) - 1;
-+                if ((ct3d->dc.direct_mr_bitmap & full_mask) == full_mask) {
-+                    qemu_log_mask(LOG_GUEST_ERROR,
-+                                  "Out of direct mapping slots\n");
-+                    return CXL_MBOX_RESOURCES_EXHAUSTED;
-+                }
-+                mr_idx = ctz32(~ct3d->dc.direct_mr_bitmap);
-+                g_autofree char *direct_mapping_name =
-+                    g_strdup_printf("cxl-direct-mapping-%d", mr_idx);
-+                hwaddr region_offset = dpa - ct3d->dc.regions[rid].base;
-+                MemoryRegion *dr_dc_mr = &ct3d->dc.dc_direct_mr[mr_idx];
-+
-+                memory_region_init_alias(dr_dc_mr, OBJECT(ct3d),
-+                                         direct_mapping_name, mr,
-+                                         region_offset,
-+                                         ct3d->dc.dc_decoder_window.size);
-+                memory_region_add_subregion(&fw->mr,
-+                    ct3d->dc.dc_decoder_window.base - fw->base + offset,
-+                    dr_dc_mr);
-+
-+                ct3d->dc.direct_mr_bitmap |= (1u << mr_idx);
-+            }
-+
              cxl_insert_extent_to_extent_list(extent_list,
                                               hmb_dc, fw, dpa, len,
--                                             NULL, 0, rid);
-+                                             tag, 0, rid, offset);
+-                                             tag, 0, rid, offset);
++                                             tag, 0, rid, offset, mr_idx);
          } else {
              cxl_insert_extent_to_extent_list(extent_list,
                                               NULL, NULL, dpa, len,
--                                             NULL, 0, -1);
-+                                             NULL, 0, -1, (uint64_t)-1);
+-                                             NULL, 0, -1, (uint64_t)-1);
++                                             NULL, 0, -1,
++                                             (uint64_t)-1, -1);
          }
          ct3d->dc.total_extent_count += 1;
          ct3d->dc.nr_extents_accepted += 1;
-@@ -3860,7 +3892,7 @@ static uint32_t copy_extent_list(CXLDCExtentList *dst,
+@@ -3892,7 +3916,8 @@ static uint32_t copy_extent_list(CXLDCExtentList *dst,
                                           ent->hm, ent->fw,
                                           ent->start_dpa, ent->len,
                                           ent->tag, ent->shared_seq,
--                                         ent->rid);
-+                                         ent->rid, ent->offset);
+-                                         ent->rid, ent->offset);
++                                         ent->rid, ent->offset,
++                                         ent->direct_window_idx);
          cnt++;
      }
      return cnt;
-@@ -3917,14 +3949,18 @@ static CXLRetCode cxl_dc_extent_release_dry_run(CXLType3Dev *ct3d,
-                         cxl_insert_extent_to_extent_list(updated_list,
-                                                          NULL, NULL,
-                                                          ent_start_dpa, len1,
--                                                         NULL, 0, ent->rid);
-+                                                         ent->tag, 0,
-+                                                         ent->rid,
-+                                                         ent->offset);
+@@ -3900,6 +3925,7 @@ static uint32_t copy_extent_list(CXLDCExtentList *dst,
+ 
+ static CXLRetCode cxl_dc_extent_release_dry_run(CXLType3Dev *ct3d,
+         const CXLUpdateDCExtentListInPl *in, CXLDCExtentList *updated_list,
++        CXLDCExtentList *updated_removed_list,
+         uint32_t *updated_list_size)
+ {
+     CXLDCExtent *ent, *ent_next;
+@@ -3909,6 +3935,9 @@ static CXLRetCode cxl_dc_extent_release_dry_run(CXLType3Dev *ct3d,
+     CXLRetCode ret = CXL_MBOX_SUCCESS;
+ 
+     QTAILQ_INIT(updated_list);
++    if (updated_removed_list) {
++        QTAILQ_INIT(updated_removed_list);
++    }
+     copy_extent_list(updated_list, &ct3d->dc.extents);
+ 
+     for (i = 0; i < in->num_entries_updated; i++) {
+@@ -3942,25 +3971,44 @@ static CXLRetCode cxl_dc_extent_release_dry_run(CXLType3Dev *ct3d,
+                     }
+                     len_done = ent_len - len1 - len2;
+ 
++                    /*
++                     * Tagged backends are mapped one-backend-per-extent.
++                     * Partial release would leave a backend-backed extent
++                     * behind without a clean backend lifecycle.
++                     */
++                    if (ent->hm && (len1 || len2)) {
++                        ret = CXL_MBOX_INVALID_INPUT;
++                        goto free_and_exit;
++                    }
++
++                    /* Cannot split extents with direct window mapping */
++                    if (ent->direct_window_idx >= 0 && (len1 || len2)) {
++                        ret = CXL_MBOX_INVALID_INPUT;
++                        goto free_and_exit;
++                    }
++
++                    if (updated_removed_list) {
++                        cxl_insert_extent_to_extent_list(
++                            updated_removed_list, ent->hm, ent->fw,
++                            ent->start_dpa, ent->len, ent->tag, ent->shared_seq,
++                            ent->rid, ent->offset, ent->direct_window_idx);
++                    }
++
+                     cxl_remove_extent_from_extent_list(updated_list, ent);
+                     cnt_delta--;
+ 
+                     if (len1) {
+-                        cxl_insert_extent_to_extent_list(updated_list,
+-                                                         NULL, NULL,
+-                                                         ent_start_dpa, len1,
+-                                                         ent->tag, 0,
+-                                                         ent->rid,
+-                                                         ent->offset);
++                        cxl_insert_extent_to_extent_list(
++                            updated_list, NULL, NULL,
++                            ent_start_dpa, len1, ent->tag, 0,
++                            ent->rid, ent->offset, ent->direct_window_idx);
                          cnt_delta++;
                      }
                      if (len2) {
-                         cxl_insert_extent_to_extent_list(updated_list,
-                                                          NULL, NULL,
-                                                          dpa + len, len2,
--                                                         NULL, 0, ent->rid);
-+                                                         ent->tag, 0,
-+                                                         ent->rid,
-+                                                         ent->offset);
+-                        cxl_insert_extent_to_extent_list(updated_list,
+-                                                         NULL, NULL,
+-                                                         dpa + len, len2,
+-                                                         ent->tag, 0,
+-                                                         ent->rid,
+-                                                         ent->offset);
++                        cxl_insert_extent_to_extent_list(
++                            updated_list, NULL, NULL,
++                            dpa + len, len2, ent->tag, 0,
++                            ent->rid, ent->offset, ent->direct_window_idx);
                          cnt_delta++;
                      }
  
-@@ -4401,7 +4437,8 @@ static CXLRetCode cmd_fm_initiate_dc_add(const struct cxl_cmd *cmd,
-                                                           NULL, NULL,
+@@ -4002,6 +4050,7 @@ static CXLRetCode cmd_dcd_release_dyn_cap(const struct cxl_cmd *cmd,
+     CXLUpdateDCExtentListInPl *in = (void *)payload_in;
+     CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+     CXLDCExtentList updated_list;
++    CXLDCExtentList updated_removed_list;
+     CXLDCExtent *ent, *ent_next;
+     uint32_t updated_list_size;
+     CXLRetCode ret;
+@@ -4025,11 +4074,26 @@ static CXLRetCode cmd_dcd_release_dyn_cap(const struct cxl_cmd *cmd,
+     }
+ 
+     ret = cxl_dc_extent_release_dry_run(ct3d, in, &updated_list,
++                                        &updated_removed_list,
+                                         &updated_list_size);
+     if (ret != CXL_MBOX_SUCCESS) {
+         return ret;
+     }
+ 
++    if (ct3d->direct_mr_enabled) {
++        /* Remove memory alias for the removed extents */
++        QTAILQ_FOREACH_SAFE(ent, &updated_removed_list, node, ent_next) {
++            cxl_remove_memory_alias(ct3d, ent->fw, ent->direct_window_idx);
++            cxl_unmap_extent_backend(ent);
++            cxl_remove_extent_from_extent_list(&updated_removed_list, ent);
++        }
++    } else {
++        QTAILQ_FOREACH_SAFE(ent, &updated_removed_list, node, ent_next) {
++            cxl_unmap_extent_backend(ent);
++            cxl_remove_extent_from_extent_list(&updated_removed_list, ent);
++        }
++    }
++
+     /*
+      * If the dry run release passes, the returned updated_list will
+      * be the updated extent list and we just need to clear the extents
+@@ -4438,7 +4502,7 @@ static CXLRetCode cmd_fm_initiate_dc_add(const struct cxl_cmd *cmd,
                                                            ext->start_dpa,
                                                            ext->len, ext->tag,
--                                                          ext->shared_seq, 0);
-+                                                          ext->shared_seq, 0,
-+                                                          (uint64_t)-1);
+                                                           ext->shared_seq, 0,
+-                                                          (uint64_t)-1);
++                                                          (uint64_t)-1, -1);
              }
  
              cxl_extent_group_list_insert_tail(&ct3d->dc.extents_pending, group);
+@@ -4520,6 +4584,7 @@ static CXLRetCode cmd_fm_initiate_dc_release(const struct cxl_cmd *cmd,
+             rc = cxl_dc_extent_release_dry_run(ct3d,
+                                                list,
+                                                &updated_list,
++                                               NULL,
+                                                &updated_list_size);
+             if (rc) {
+                 return rc;
 diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index bd32532c7a..e13826eb0b 100644
+index e13826eb0b..6b73d58358 100644
 --- a/hw/mem/cxl_type3.c
 +++ b/hw/mem/cxl_type3.c
-@@ -2464,7 +2464,8 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
-                                                           extents[i].len,
+@@ -2465,7 +2465,8 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
                                                            extents[i].tag,
                                                            extents[i].shared_seq,
--                                                          rid);
-+                                                          rid,
-+                                                          offset);
+                                                           rid,
+-                                                          offset);
++                                                          offset,
++                                                          0);
              } else {
                  group = cxl_insert_extent_to_extent_group(group,
                                                            dcd->dc.host_dc,
-@@ -2473,7 +2474,8 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
-                                                           extents[i].len,
+@@ -2475,7 +2476,8 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
                                                            extents[i].tag,
                                                            extents[i].shared_seq,
--                                                          rid);
-+                                                          rid,
-+                                                          offset);
+                                                           rid,
+-                                                          offset);
++                                                          offset,
++                                                          0);
              }
          }
  
+@@ -2541,6 +2543,37 @@ void qmp_cxl_release_dynamic_capacity(const char *path, uint16_t host_id,
+     }
+ }
+ 
++void cxl_remove_memory_alias(CXLType3Dev *dcd, struct CXLFixedWindow *fw,
++                             int hdm_id)
++{
++    MemoryRegion *mr;
++
++    if (hdm_id < 0 || hdm_id >= CXL_DC_MAX_DIRECT_MR) {
++        qemu_log_mask(LOG_GUEST_ERROR,
++                      "Invalid direct window index %d\n", hdm_id);
++        return;
++    }
++
++    if (dcd->dc.total_capacity_cmd > 0) {
++        mr = &dcd->dc.dc_direct_mr[hdm_id];
++    } else {
++        qemu_log_mask(LOG_GUEST_ERROR,
++                      "No dynamic capacity command support, "
++                      "cannot remove memory region alias\n");
++        return;
++    }
++
++    if (!fw) {
++        qemu_log_mask(LOG_GUEST_ERROR,
++                      "Cannot remove memory region alias "
++                      "without a valid fixed window\n");
++        return;
++    }
++
++    memory_region_del_subregion(&fw->mr, mr);
++    dcd->dc.direct_mr_bitmap &= ~(1u << hdm_id);
++}
++
+ static void ct3_class_init(ObjectClass *oc, const void *data)
+ {
+     DeviceClass *dc = DEVICE_CLASS(oc);
 diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
-index a84b8ab358..1e904d7b48 100644
+index 1e904d7b48..42db9c7ce4 100644
 --- a/include/hw/cxl/cxl_device.h
 +++ b/include/hw/cxl/cxl_device.h
-@@ -634,6 +634,7 @@ typedef struct CXLMemSparingWriteAttrs {
- #define CXL_MEMDEV_SOFT_SPARING_SUPPORT_FLAG    BIT(2)
- 
- #define DCD_MAX_NUM_REGION 8
-+#define CXL_DC_MAX_DIRECT_MR 4
- 
- typedef struct CXLDCExtentRaw {
-     uint64_t start_dpa;
-@@ -652,6 +653,7 @@ typedef struct CXLDCExtent {
-     uint16_t shared_seq;
+@@ -654,6 +654,7 @@ typedef struct CXLDCExtent {
      uint8_t rsvd[0x6];
      int rid;
-+    uint64_t offset;
+     uint64_t offset;
++    int direct_window_idx;
  
      QTAILQ_ENTRY(CXLDCExtent) node;
  } CXLDCExtent;
-@@ -720,6 +722,7 @@ struct CXLType3Dev {
-     /* State */
-     MemoryRegion direct_mr[CXL_HDM_DECODER_COUNT];
-     CXLFixedWindow *direct_mr_fw[CXL_HDM_DECODER_COUNT];
-+    bool direct_mr_enabled;
-     AddressSpace hostvmem_as;
-     AddressSpace hostpmem_as;
-     CXLComponentState cxl_cstate;
-@@ -785,6 +788,14 @@ struct CXLType3Dev {
-         HostMemoryBackend *host_dc;
-         AddressSpace host_dc_as;
-         struct CXLFixedWindow *fw;
-+        uint32_t direct_mr_bitmap;
-+        /*
-+         * dc_decoder_window represents the CXL Decoder Window
-+         */
-+        struct decoder_window {
-+            hwaddr base;
-+            hwaddr size;
-+        } dc_decoder_window;
-         /*
-          * total_capacity is equivalent to the dynamic capability
-          * memory region size.
-@@ -799,6 +810,7 @@ struct CXLType3Dev {
- 
-         uint8_t num_regions; /* 0-8 regions */
-         CXLDCRegion regions[DCD_MAX_NUM_REGION];
-+        MemoryRegion dc_direct_mr[CXL_DC_MAX_DIRECT_MR];
-     } dc;
- 
-     struct CXLSanitizeInfo *media_op_sanitize;
-@@ -866,7 +878,8 @@ void cxl_insert_extent_to_extent_list(CXLDCExtentList *list,
-                                       uint64_t len,
+@@ -879,7 +880,8 @@ void cxl_insert_extent_to_extent_list(CXLDCExtentList *list,
                                        uint8_t *tag,
                                        uint16_t shared_seq,
--                                      int rid);
-+                                      int rid,
-+                                      uint64_t offset);
+                                       int rid,
+-                                      uint64_t offset);
++                                      uint64_t offset,
++                                      int direct_window_idx);
  bool test_any_bits_set(const unsigned long *addr, unsigned long nr,
                         unsigned long size);
  bool cxl_extents_contains_dpa_range(CXLDCExtentList *list,
-@@ -878,7 +891,8 @@ CXLDCExtentGroup *cxl_insert_extent_to_extent_group(CXLDCExtentGroup *group,
-                                                     uint64_t len,
+@@ -892,7 +894,8 @@ CXLDCExtentGroup *cxl_insert_extent_to_extent_group(CXLDCExtentGroup *group,
                                                      uint8_t *tag,
                                                      uint16_t shared_seq,
--                                                    int rid);
-+                                                    int rid,
-+                                                    uint64_t offset);
+                                                     int rid,
+-                                                    uint64_t offset);
++                                                    uint64_t offset,
++                                                    int direct_window_idx);
  void cxl_extent_group_list_insert_tail(CXLDCExtentGroupList *list,
                                         CXLDCExtentGroup *group);
  uint32_t cxl_extent_group_list_delete_front(CXLDCExtentGroupList *list);
+@@ -900,6 +903,8 @@ void ct3_set_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
+                                  uint64_t len);
+ void ct3_clear_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
+                                    uint64_t len);
++void cxl_remove_memory_alias(CXLType3Dev *dcd, struct CXLFixedWindow *fw,
++                             int hdm_id);
+ bool ct3_test_region_block_backed(CXLType3Dev *ct3d, uint64_t dpa,
+                                   uint64_t len);
+ void cxl_assign_event_header(CXLEventRecordHdr *hdr,
 -- 
 2.50.1 (Apple Git-155)
 
