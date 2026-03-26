@@ -1,169 +1,187 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD59637D13B;
-	Thu, 26 Mar 2026 14:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D576391838
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Mar 2026 15:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774535615; cv=none; b=fdhUP9Uu6F54TXrFRmJhMr1hxnnHiHlP5aurtVSYRXHZTsN3ULqpZ9YnQZchgPFAtaYQQUS8D3aebXaAL5IaKyrEeztnhwsR604ExvVNugrdv5WJty+aP1OmAvlFEE7q6u7f8WqcNpDC0fqZO6khJiu8AdOsL7g1MTI2oWSqJGQ=
+	t=1774538152; cv=none; b=MrsWcdOlrTPKl3XNJxsqKPB3uNBeCUlaIQdfffSPKifwBGzhpRneBrWO4Pgg2jHc8TDhZ2FkiNQdOoxu0IgN+uaix8pgoSZrcThd4PKchTrQgLMwxV3QMGv5eKJ1Peyr8/BmcxscM9GlPBiNBHjU1dqWqTFFN1BHIuJbdIDrLeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774535615; c=relaxed/simple;
-	bh=uitE5N4MSLCwc03nT54vCrcste7AWysJiPN/uu/wMcI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=atlCZ3Y3bi+2BYvudXDacASaz3rTATJhpTpMlNwHWE3wJRGdTrLX5buk4f5kbLatMmMKXsDR6LafmInv0LqFw9F6lTga0mwfLWZhDihzoVoG8m0rKnz7G8mLP50SByLNQHzeEzGdR1vBuj9/tkpoAkjQtkc6qbuvxyj02dsmfyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 614E88D205;
-	Thu, 26 Mar 2026 14:33:28 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf14.hostedemail.com (Postfix) with ESMTPA id 42EDA30;
-	Thu, 26 Mar 2026 14:33:15 +0000 (UTC)
-Date: Thu, 26 Mar 2026 09:33:13 -0500
-From: John Groves <John@groves.net>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V9 3/8] dax: add fsdev.c driver for fs-dax on character
- dax
-Message-ID: <acVDCKeolpJM9qg6@groves.net>
-References: <0100019d1d463523-617e8165-a084-4d91-aa5e-13778264d5d4-000000@email.amazonses.com>
- <20260324003818.5009-1-john@jagalactic.com>
- <0100019d1d476420-6b0bf60e-3b3a-4868-8f5f-484cd55d4709-000000@email.amazonses.com>
- <20260324143927.000024c3@huawei.com>
- <acPX9T2ZF7xTCHtZ@groves.net>
- <69c407903b54c_130d6e1007a@iweiny-mobl.notmuch>
+	s=arc-20240116; t=1774538152; c=relaxed/simple;
+	bh=PE9Xm9YaJcVXYL6P8d7ga1shjgBHydXIAq6yxZMVaD0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DI+GC+q8cemxcoSMYczBtTuZ1NDZ24Pssfpl3edp2y23/bUY7RJCNepu9rvg831r4zEPxC2YDglvx8bWHQ2BNSW6Cvm2ISfDF6nuqjsKm3LlODNnipO6BXjWCMJFlr6Je8tMONCXkV2MO5OB3L3x7bR2G1q4Krw1on0wnsuYKH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HIuMX1Vq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HIuMX1Vq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1774538149;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vzpehDqYgCyCogpznJ1yRYvkvpNP6+3YYzUqRgqyluU=;
+	b=HIuMX1VqhAHkE72CYeoVkSdXKpMuhl+zslj9tCeVO1DWib9V/vNRfuSnZtf2MaQ35ncHhb
+	IyfC0H9047jwKHpCyPI3sjCSARyh/8tyo1wy8eKBvqZhFHo6TZ0Fw3KyZ9Mv49g2Y+k0jr
+	DuLA8DmzCJJkC2oW0Muev5u75gs5/b0=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-348-dVAnXoqzMDWhQysiOPlhcw-1; Thu,
+ 26 Mar 2026 11:15:46 -0400
+X-MC-Unique: dVAnXoqzMDWhQysiOPlhcw-1
+X-Mimecast-MFC-AGG-ID: dVAnXoqzMDWhQysiOPlhcw_1774538145
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EEABB1956048;
+	Thu, 26 Mar 2026 15:15:43 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.45.242.6])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 085F31955D84;
+	Thu, 26 Mar 2026 15:15:42 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id 952BA21E6937; Thu, 26 Mar 2026 16:15:40 +0100 (CET)
+From: Markus Armbruster <armbru@redhat.com>
+To: Alireza Sanaee <alireza.sanaee@huawei.com>
+Cc: <qemu-devel@nongnu.org>,  <anisa.su@samsung.com>,
+  <berrange@redhat.com>,  <eblake@redhat.com>,
+  <jonathan.cameron@huawei.com>,  <linux-cxl@vger.kernel.org>,
+  <linuxarm@huawei.com>,  <lizhijian@fujitsu.com>,  <mst@redhat.com>,
+  <pbonzini@redhat.com>,  <gourry@gourry.net>,  <nifan.cxl@gmail.com>,
+  <me@linux.beauty>
+Subject: Re: [PATCH 9/9] hw/cxl: Add QMP status query for dynamic-capacity
+ extent release
+In-Reply-To: <20260325184259.366-10-alireza.sanaee@huawei.com> (Alireza
+	Sanaee's message of "Wed, 25 Mar 2026 18:42:57 +0000")
+References: <20260325184259.366-1-alireza.sanaee@huawei.com>
+	<20260325184259.366-10-alireza.sanaee@huawei.com>
+Date: Thu, 26 Mar 2026 16:15:40 +0100
+Message-ID: <87mrzuei5f.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69c407903b54c_130d6e1007a@iweiny-mobl.notmuch>
-X-Rspamd-Queue-Id: 42EDA30
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: 5eg85543faus5y8qbax17j5g17jtwxzw
-X-Session-Marker: 6A6F686E4067726F7665732E6E6574
-X-Session-ID: U2FsdGVkX19vLDgSS82Pku/H0CS1NgXwFtSVcyMwGZI=
-X-HE-Tag: 1774535595-812783
-X-HE-Meta: U2FsdGVkX1/Ks6E7tKWGMh2aa6R2BohAXkl/97fmQKcl8v/Wik6akqPqBhbNwOUwsQ1hpL8OGYRPf5DozAPXKP1HfCmn2AePBj7XTJcaoE4lwODhimP2J63AMLtaPA6OjGG9opKV+kT9e38423SIFvfJQwUy7ATE//MIDlWaqWn7bn2eThIs14xUlra2v9+d8Uq36M9JrfNlRixl6ULq5pREJFVhuvqyZwoSh3438PJ6pRiHHfTfu8a0mB5n6zzGSmEiKIGulnDSmV3ezak6yohb7oUR+VcLmBrizK4bGV23slgtT9os2G2bmB9j1VJyJS8/+FKjhuELPvargPlDpVjUaC0A0HEPAnFD/9W/NNxLKxnHMPi+eqUdGrQbynXeXg0oNQyADz+S7jsT8w2X1N1y3OQbWD8HJO3BZOu6CR1J9KzEB32I6uImy4tzP7X7yNUOAQZxvh6cff/YTkrphIB7Z7QZChOtxR2A7O0C7v4dq7nnrUrsUCVfk+1VE8Z3NxREyQRo1XWSojPUQ5gusJNdZ9qIf2ZH1PaZ6J/NVCGRBMnGNu70e8q82OJKbs7Q
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-MFC-PROC-ID: rpfbegNFT8SVP7xFBQMK_8v5T2XSV3oiyelsvt5wSQ8_1774538145
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On 26/03/25 11:04AM, Ira Weiny wrote:
-> John Groves wrote:
-> > On 26/03/24 02:39PM, Jonathan Cameron wrote:
-> > > On Tue, 24 Mar 2026 00:38:31 +0000
-> > > John Groves <john@jagalactic.com> wrote:
-> > > 
-> > > > From: John Groves <john@groves.net>
-> > > > 
-> > > > The new fsdev driver provides pages/folios initialized compatibly with
-> > > > fsdax - normal rather than devdax-style refcounting, and starting out
-> > > > with order-0 folios.
-> > > > 
-> > > > When fsdev binds to a daxdev, it is usually (always?) switching from the
-> > > > devdax mode (device.c), which pre-initializes compound folios according
-> > > > to its alignment. Fsdev uses fsdev_clear_folio_state() to switch the
-> > > > folios into a fsdax-compatible state.
-> > > > 
-> > > > A side effect of this is that raw mmap doesn't (can't?) work on an fsdev
-> > > > dax instance. Accordingly, The fsdev driver does not provide raw mmap -
-> > > > devices must be put in 'devdax' mode (drivers/dax/device.c) to get raw
-> > > > mmap capability.
-> > > > 
-> > > > In this commit is just the framework, which remaps pages/folios compatibly
-> > > > with fsdax.
-> > > > 
-> > > > Enabling dax changes:
-> > > > 
-> > > > - bus.h: add DAXDRV_FSDEV_TYPE driver type
-> > > > - bus.c: allow DAXDRV_FSDEV_TYPE drivers to bind to daxdevs
-> > > > - dax.h: prototype inode_dax(), which fsdev needs
-> > > > 
-> > > > Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> > > > Suggested-by: Gregory Price <gourry@gourry.net>
-> > > > Signed-off-by: John Groves <john@groves.net>
-> > > 
-> > > I was kind of thinking you'd go with a hidden KCONFIG option with default
-> > > magic to do the same build condition to you had in the Makefil, but one the
-> > > user can opt in or out for is also fine.
-> > > 
-> > > Comments on that below. Meh, I think this is better anyway :)
-> > > 
-> > > Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> > > 
-> > > 
-> > > 
-> > > > diff --git a/drivers/dax/Kconfig b/drivers/dax/Kconfig
-> > > > index d656e4c0eb84..7051b70980d5 100644
-> > > > --- a/drivers/dax/Kconfig
-> > > > +++ b/drivers/dax/Kconfig
-> > > > @@ -61,6 +61,17 @@ config DEV_DAX_HMEM_DEVICES
-> > > >  	depends on DEV_DAX_HMEM && DAX
-> > > >  	def_bool y
-> > > >  
-> > > > +config DEV_DAX_FSDEV
-> > > > +	tristate "FSDEV DAX: fs-dax compatible devdax driver"
-> > > > +	depends on DEV_DAX && FS_DAX
-> > > > +	help
-> > > > +	  Support fs-dax access to DAX devices via a character device
-> > > > +	  interface. Unlike device_dax (which pre-initializes compound folios
-> > > > +	  based on device alignment), this driver leaves folios at order-0 so
-> > > > +	  that fs-dax filesystems can manage folio order dynamically.
-> > > > +
-> > > > +	  Say M if unsure.
-> > > Fine like this, but if you wanted to hide it in interests of not
-> > > confusing users...
-> > > 
-> > > config DEV_DAX_FSDEV
-> > > 	tristate
-> > > 	depends on DEV_DAX && FS_DAX
-> > > 	default DEV_DAX
-> > 
-> > I like this better. I see no reason not to default to including fsdev.
-> > It does nothing other than frustrating famfs users if it's off - since
-> > building it still has no effect unless you put a daxdev in famfs mode.
-> > 
-> > Ira, it's kinda in your hands at the moment. Do you feel like making this
-> > change?
-> 
-> I don't mind making this change.  But we have to deal with the breakage to
-> current device dax users.
-> 
-> https://lore.kernel.org/all/69c36921255b6_e9d8d1009b@iweiny-mobl.notmuch/
-> 
-> What am I missing?
-> 
-> Ira
+I'm a near-complete CXL ignoramus, and beg your patience.
 
-OK, I can reproduce that failure with kernel 7.0.0-rc5 and 
-straight ndctl v84. So it's not famfs.
+Alireza Sanaee <alireza.sanaee@huawei.com> writes:
 
-I also studied the verbose logs trying to figure out if famfs
-could cause it (while running a famfs kernel and ndctl), but
-I don't see it.
+> Add a small status query so orchestration layers can check whether a tagged
+> extent is still pending, committed, or no longer present after a release
+> request.
 
-Then I tried non-famfs kernel and ndctl and it's the same with
-or without famfs kernel and famfs ndctl.
+Why would they want to check?
 
-John
+What is a "release request"?
+
+>
+> Introduce the ExtentStatus QAPI struct and the
+> cxl-release-dynamic-capacity-status command.
+>
+> Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
+
+[...]
+
+> diff --git a/qapi/cxl.json b/qapi/cxl.json
+> index 81d6198ba0..53325ba530 100644
+> --- a/qapi/cxl.json
+> +++ b/qapi/cxl.json
+> @@ -636,3 +636,49 @@
+>             },
+>    'features': [ 'unstable' ]
+>  }
+> +
+> +##
+> +# @ExtentStatus:
+
+Blank line here, please.
+
+> +# This is an object that describes the status of an extent.
+> +#
+> +# @status:   String indicating the overall result, e.g. "success".
+
+What are the possible values?  Are they defined in some spec?
+
+> +# @message:  Human-readable description of the outcome.
+
+Intended use?
+
+> +#
+> +# Since: 9.1
+
+11.1 most likely.
+
+> +##
+> +{ 'struct': 'ExtentStatus',
+> +      'data': { 'status': 'str', 'message': 'str' }
+> +}
+> +
+> +##
+> +# @cxl-release-dynamic-capacity-status:
+> +#
+> +# This commands checks if an extent tag has been released or not.
+
+Use imperative mood to describe commands: "Check whether an extent tag
+has been released."
+
+> +#
+> +# @path: path to the CXL Dynamic Capacity Device in the QOM tree.
+
+We commonly call such members @qom-path.
+
+> +#
+> +# @host-id: The "Host ID" field as defined in Compute Express Link
+> +#     (CXL) Specification, Revision 3.1, Table 7-71.
+> +#
+> +# @region: The "Region Number" field as defined in Compute Express
+> +#     Link Specification, Revision 3.1, Table 7-71.  Valid range
+> +#     is from 0-7.
+> +#
+> +# @tag: The "Tag" field as defined in Compute Express Link (CXL)
+> +#     Specification, Revision 3.1, Table 7-71.
+
+I guess the command interrogates something called "extent", and the
+something is related to the CXL device at @path in the QOM tree.
+Correct?
+
+How is it related?  Is it a part of the device?
+
+I further guess multiple extends can be so related, and @host-id,
+@region, and @tag identify select the one we want to interrogate.
+Correct?
+
+> +#
+> +# Features:
+> +#
+> +# @unstable: For now this command is subject to change.
+
+The conventional language is "This command is experimental."
+
+> +#
+> +# Since: 9.1
+
+11.1 most likely.
+
+> +##
+> +{ 'command': 'cxl-release-dynamic-capacity-status',
+> +  'data': { 'path': 'str',
+> +            'host-id': 'uint16',
+> +            'region': 'uint8',
+> +            'tag': 'str'
+> +          },
+> +  'features': [ 'unstable' ],
+> +  'returns': 'ExtentStatus'
+
+Swap these two lines, please.
+
+> +}
 
