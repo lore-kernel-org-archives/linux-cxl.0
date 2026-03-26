@@ -1,90 +1,332 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C315A41162B
-	for <linux-cxl@vger.kernel.org>; Thu, 26 Mar 2026 16:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774542882; cv=none; b=Faft1JTWarnm6vj+CgYXhZYtIteauPVFzLpeP7ReQ0BwoepLEkmN5QkwnMym0/uLPy7GFJ3M9S/qS+7yXZtzUQY9nJ86qfoLlMxBCwrdf5+qU7r8EBsV7HyhK1a4qlqcpPZ+p+Wrhbnx5gMqjio5RYGwu/orVgfFsWxEVx39l+Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774542882; c=relaxed/simple;
-	bh=Ut79i05r6KmGU8yExp7cn4mMCYr3fnEE0l/7p0zhKrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BUHXZOduF6j5Vhe7G1fFdm0jqeuTkXhLFc9bprAdDcQKKJMPK+CNUy/keDxzdaZJfzSZp3v/DASTnHYyjLXUnkJIIRb96uok0/mqFTjY802jixbO4QTCHcmp2tbeXsGBn3KqfS3Bea/PNzEq7yk/6tviyqSj9zNrJzICoKtDdO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=H07Xehwb; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE07121CC4F;
+	Thu, 26 Mar 2026 20:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774556034; cv=fail; b=eZmouwKtQgj4kAQWwPbP739U75OS/DkUnN0OUqckXzPf7lUzxxCnGOQHK6pQlDjb1ZHsbsAMnL0PxmfK0r/oARuGWueJfdZwPwtwmAtL4SigADdemHSmkDyfaTFRkVXbaTmf64cSBAW2fQxTp9COHhhdcHh/Bh7EsZSlLshHYaE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774556034; c=relaxed/simple;
+	bh=cb+SBtpeQlKfa79fagvT5f4udfKUvfqNkpW40Wbvvtw=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=D5xNZza/Vqjj311QhXKEELng5TGh1OO4LOA7K3AYoNpfWwyP7WnppDa6J0+Bn2g8DXJllOtRlTsjGRD5GIOBxvAdKz8kNxBJwzLj9Ya2asgqe2ikvokYnO4Ye/KOkits4LuMUbDixl8c0fyEHJLqpAi2tE4nepQ97hbztEDaeKc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h3n8269/; arc=fail smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="H07Xehwb"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-50b2b289925so11382331cf.2
-        for <linux-cxl@vger.kernel.org>; Thu, 26 Mar 2026 09:34:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1774542878; x=1775147678; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M6ciZ7B7psiQWnK9EJFuh8TuUxnEOvrrtlB2iVfSnAg=;
-        b=H07XehwbIj1YQpnfpE9eQLtj2dp564cEh8omGfM+t410ervk5SDBIuzLw/l1m/F0VL
-         t/V2IklinGRbuveHKHqcBjhdwJbKIwnybwsugZqHBNWKp2qNVfr8tAeYwdJ8PzD+yXXc
-         /uWl3I5i6VAFZy/R44R81VwJ3ed+RB2eLu8uagjc3IaNCuMhNaMZ1i2FLLHQEuG4eFxY
-         M1BTvsEJyo1Lv/nL8lPYNxUcu249/IYJwmZRtYX+ALVttbA0PTmQf+Zw8dHXx3K/Ls4g
-         Qa2erjDrTPaClEAeP3bZ9AfD7fYUzmevWKxAjqihhfdLL0G1/s+gL5m2nfSyz3DsH7a0
-         TPcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774542878; x=1775147678;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M6ciZ7B7psiQWnK9EJFuh8TuUxnEOvrrtlB2iVfSnAg=;
-        b=BHLAjteaebVPujYM+2hLbcCzd1I19QNgpgcjybf7TcpzUBD+YgGFdinDVwzToNc+1t
-         d8YF3SAn0lb1TJ/ztjV7TmrpiSpXvBO0da1L2HJOC+HmXT4XCSELIPLNqmaN3UtNNBbK
-         oD9nO3FhwDm4q3iMPotxQTZ0el6W58Ngto1zSER0RC6Op+SIpd09DchvumvSL/mV5aR6
-         hmvI2gSae8CsmcTf5Kk+IGew/81loXJWxX05+fRi4ax3sbaSs7Kf4zIG0xnSfMkhUA5X
-         FejsFL3gnfWWFsInV1OccHTrYszFnM5AOTdoz3A+s9cTDQsFClsFHCUMkeWM7UDr/ief
-         ghiA==
-X-Gm-Message-State: AOJu0Ywa9w7lFlCk21uSFGELTAbigZuqEoD05cd2WRF47xvzE+KajkRk
-	+TvlE1KSLDGTEjceDVUqNaxZ6RmlqC6y4gNve4b2E3O5fBSWM72tRcynV8rOZppHga8=
-X-Gm-Gg: ATEYQzy6abxv+UqeefWNddI0cJMhJ0X9VUaeEH82aAVnNZ7uIlc3ItKIaolZvPhYDrK
-	M5POYqQupLES2jgnYWpLMcij2TFv4T/3nPZrY1SFWjizU3DhbcwZ0lURQ0MK67KnN2Tfs7UCDFb
-	u8iWfUOF+67wNF/CG97AScUB3Gw1AEs0pfWbuFW+HpfzrdjHSrgi1IgykTQ80zsDome9H0mJNJH
-	6JMMHTzMozqV3abgFVqJX2Ml5uAvSZbLoCqXKgaV+dAQOTFzXtpaR/wPMtCMTD0BtXpeuoIbHIY
-	EXwvCyEafoVfEZibRiPEhrzFhuSo2qvBSMQhiz38F7QrqSCciwXSAxpsKgdVGTibC4fVr60bJpq
-	idJCwNfzWGSKPLqBj2BdaIzVNMK/PA9fqHqJkXDIUXyqOh1JBxwkYadtV8FXdY5A9mxECnlFeTu
-	Xu8jX7ESbs6T190pLV9Ih2
-X-Received: by 2002:a05:622a:22a9:b0:50b:4b2f:1606 with SMTP id d75a77b69052e-50b80c9ad0amr112829091cf.15.1774542878294;
-        Thu, 26 Mar 2026 09:34:38 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:500::2:e5e8])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50b9234e1e6sm34113941cf.17.2026.03.26.09.34.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2026 09:34:37 -0700 (PDT)
-Date: Thu, 26 Mar 2026 11:34:35 -0500
-From: Gregory Price <gourry@gourry.net>
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	dan.j.williams@intel.com
-Subject: Re: [PATCH v4 0/3] pull region-specific logic into new files
-Message-ID: <acVgG5veOwDLnY9X@gourry-fedora-PF4VCD3F>
-References: <20260322131638.3636725-1-gourry@gourry.net>
- <69c55e9b11465_1400331005a@iweiny-mobl.notmuch>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h3n8269/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774556032; x=1806092032;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=cb+SBtpeQlKfa79fagvT5f4udfKUvfqNkpW40Wbvvtw=;
+  b=h3n8269/OQ+ScMMnGlQy1XbzP7cvZc2YdcM3uwtYbk6GCBMKT4lLmp2Z
+   dJJofxIICkZdlB6gWK+PAUCoONXAJkmffV+doPR+FW6XB10lvzpd1yKFi
+   EEdAYMEoNeANpnMBXaZfLFYmINp5ojTbL2jbzlHkX1HOApVYPNNTmsOpD
+   ycv6cT0QRafI8thO+PB218HLtwZH4ssnO1ZwAz1IBtQdbV7ZdqegzFiJE
+   Z9LVi2R/Tm9oNg9P0OUyyDGd6s4OO0jef4ZmT3FPMosvmWRYtRm+5v2Gn
+   ezIfgZimGxm33K7aS7Rwk6jqtvsr8YG/Vu3ad31n5VH1JVPXBCb+0+9WO
+   g==;
+X-CSE-ConnectionGUID: EkHXc0tqR3i69CRFpyGcDA==
+X-CSE-MsgGUID: ADHUQnmeR1CLChNp/sdoWw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11741"; a="87009751"
+X-IronPort-AV: E=Sophos;i="6.23,142,1770624000"; 
+   d="scan'208";a="87009751"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2026 13:13:51 -0700
+X-CSE-ConnectionGUID: RTNnGcP2TaureVIcb8qHsA==
+X-CSE-MsgGUID: 8+kOP1Z3S5KleScJux6GEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,142,1770624000"; 
+   d="scan'208";a="255603788"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2026 13:13:50 -0700
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Thu, 26 Mar 2026 13:13:49 -0700
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Thu, 26 Mar 2026 13:13:49 -0700
+Received: from CH4PR04CU002.outbound.protection.outlook.com (40.107.201.5) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Thu, 26 Mar 2026 13:13:47 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XNa+Cd6D0L5o8x24i9MaeGFCpFV6ZfJ8Eg687rMVJ5y5gwO5zMDMzB9Illei0WUzs0U469tEeUCtinCMWz7NdAF46ZVgaCBUWzQmaPGR5WXPI7r8aABbEh3ZpCq7Ysv3tqGZl+CPUn2GgvLw6MxmJY3sDOSpnh1FJqGRIHWH/pN8yDDrv1TH1P81sWoOvntriPXbkz0UMo886rwZ4N1T4ZhnY/WlLNzHO8ztU0AaGU+aS1rZPG0MYiJCxomMlfhirT167frubs0AM29juEn9n6BaVKQnOimiOxeZKM1O2lBE/y9TLE70dlHC4SUR8o2zqvXZZ51Vsgdcm0Nnt6649Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Fxr6eSBhTe7cjzwVpA7NaaY0/9dEuis2QgpVLdT0MNY=;
+ b=ELDQjj+wVxhaQWmaYGc0YYxsVYvgqpLSf/sf/WOjcGslSYUSvk80oLFuOQ8riCv18onMbdqk1T/SUuoWemQXWKMTi/cdJMDfJOlneqTc0+F+rBQksSG0w0+rYdUenH39/t1loqDAqrgO9l+azdlMrHMeBxPy50ltHcaFLZQTEvgpH79DQj3D6ZhjJsrv8AwYk8WVRf7HIJ5QYCdoJ1zGWEithXkBwPhphI7xytmjOR1S5IXMkUkNS6YhnD23REWQuvXWlC4TJveUqmefSaJ012tR0wZlx0w/F7NJXScgVdCh9VlVVAZORAS+GQGLEtrgMx6ziW6OZUb8QlhvXA2ehA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SA3PR11MB7655.namprd11.prod.outlook.com (2603:10b6:806:307::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.20; Thu, 26 Mar
+ 2026 20:13:43 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::1ff:1e09:994b:21ff%3]) with mapi id 15.20.9769.006; Thu, 26 Mar 2026
+ 20:13:43 +0000
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Thu, 26 Mar 2026 13:13:40 -0700
+To: Rakie Kim <rakie.kim@sk.com>, Jonathan Cameron
+	<jonathan.cameron@huawei.com>
+CC: <akpm@linux-foundation.org>, <gourry@gourry.net>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+	<ziy@nvidia.com>, <matthew.brost@intel.com>, <joshua.hahnjy@gmail.com>,
+	<byungchul@sk.com>, <ying.huang@linux.alibaba.com>, <apopple@nvidia.com>,
+	<david@kernel.org>, <lorenzo.stoakes@oracle.com>, <Liam.Howlett@oracle.com>,
+	<vbabka@suse.cz>, <rppt@kernel.org>, <surenb@google.com>, <mhocko@suse.com>,
+	<dave@stgolabs.net>, <dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <harry.yoo@oracle.com>,
+	<lsf-pc@lists.linux-foundation.org>, <kernel_team@skhynix.com>,
+	<honggyu.kim@sk.com>, <yunjeong.mun@sk.com>, Keith Busch <kbusch@kernel.org>,
+	Rakie Kim <rakie.kim@sk.com>
+Message-ID: <69c5937425273_7ee31005f@dwillia2-mobl4.notmuch>
+In-Reply-To: <20260324053549.324-1-rakie.kim@sk.com>
+References: <20260324053549.324-1-rakie.kim@sk.com>
+Subject: Re: [LSF/MM/BPF TOPIC] [RFC PATCH 0/4] mm/mempolicy: introduce
+ socket-aware weighted interleave
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR04CA0123.namprd04.prod.outlook.com
+ (2603:10b6:303:84::8) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69c55e9b11465_1400331005a@iweiny-mobl.notmuch>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SA3PR11MB7655:EE_
+X-MS-Office365-Filtering-Correlation-Id: e4407161-29c6-4ce8-3898-08de8b742d96
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|56012099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: dgt6nK5VjNgH1/JEiqR7HpiyBJ0KsSw9ZJeLcLA1+CN6ulhZW5uU6py0g66G0QsP0g35osJosFeq0YTmhTxR95Lg3d+dIAaibrKI0Eu6l8qkqEkLRkqO5N5z30HTjYJw4gDw0C2GJKFGFjwNyrWLhvjz0/jrMMvDkZItFSHOOYPdUow1Nietq+f6+/ZOTx0VEcaeEXGpA7/ARYmJbk0FzjFW15ez9CFrZbd5bPJj3jAzh+Lw3424Ydw1A/ee7tbt6hcz+jDO4lu3y2kjyPwjvrpnNAoY6gsz7zFDYm1ElSqLcWIZzFI4DC482zHO4VMgLZbqJ0NjyEmHHA/Q16k/TzSGbOeNQqIf2ZSMASfSim/FueKc+hR9yhPTO3yFIWSGaNMmjw91m8C8yMkeBOzYR4+0jG8S42nfmm6IMRXLQ2X01nvOSutOzIEuzbNYOK81Lv7xKw8pIUbsgBR2G3aOkz/iCnLgn5VmIXQn19+1D0PJ5rLr6B4fT1qg3sb4WNBzd3P87B67WXEuVzJQIbfGm8dGZowTInLndgr2SK4wnvcIhNfoKPoq/5rSPbOKeXKE1dGZW7d0Al2O06egEkHmUJDCPg1841s0CYvlPtPU0se5287lt5yFf9OqUf/FIm8eAWKX1faOulhzBZYeI65E8Ke6dptRVsft2JhzgBqh6NqiiMQvtZhDm2ADL4BqbzccKyot+ivBVaVArgVbxEdaJOXWK1IWAIBkRrtm4kevTq4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UDZHeTg5TUI4cEN5VUdrL2pGQ1h2TWNrQk15MXVaWHFTc3Y0Wmc0QzdDQ2dK?=
+ =?utf-8?B?aEhYNUNiSGJKWTVFQWhLYVlxQXN4WnN6QlREVXNmTXl6S0hrVkVMNkVSem5C?=
+ =?utf-8?B?amxob0hTRmp5bVNSMkpRMzhITVJvMlRxdzF5ampuQWtIZC81YVJxUHpEWTZD?=
+ =?utf-8?B?WUJBOVUyU1hkcm5OYmZjRTZ3LzNKUE5BVXRiWkJOT0JtbnQxZnE4dGhPVWVI?=
+ =?utf-8?B?bytrYU9vcmVYM2tCOTFiQytlUXFrN0doMEE1YnJJYW90UWFwakFNSWFNSGxV?=
+ =?utf-8?B?dFZLT3B4a3hzUHRwYUJxS2JwSzdIcEgvbHAxYnhObjhjYmNpM1lOWUo4RTBO?=
+ =?utf-8?B?MUtydXk1Sm5PbGJUdEwvVmlkbURWbXRveUU0Y21JZHMxVzg2WGU3TmFXVEc0?=
+ =?utf-8?B?b0wzWG1xMGFhaE9VZVpMOGUvNGRldmxWL2hDNlZ5dVJDZm5kZGxCeHBPKzlJ?=
+ =?utf-8?B?c0xPeURGY1NhT0QvbjVVRE93SWtCcHJNTlUyYlRtakNyVUZ2bHdaaDZSOHBD?=
+ =?utf-8?B?SG51aEZlWlRSS2RTTWRSTkJKYVBhNWUxbzNjd0hRdHNuZ2lTS1hZcm9QUlJl?=
+ =?utf-8?B?MTFDank4TzdqWHMreHhJdlhkaVBncUxQcEVkOXpwcy9OWm9UNXo0SVBVOFRx?=
+ =?utf-8?B?a0NsaFhQSDBBR2E4ZzJHakpZQTBjT1FZMXE1M0k3ZFZUWFJpcG1abHBpc3BQ?=
+ =?utf-8?B?WTBlaTdPMDNwMFE1NTNZTUpmcmw2L29BQmFIUlV6TkNUcnBjM0hjUkNzZFpn?=
+ =?utf-8?B?aFFUaHN0Y3hUZWZzRlZDSUMzOGtsTy96UlJ2MS82Ly9PLzgvcWh3R1l2dVFj?=
+ =?utf-8?B?cHhhaGl1NThwMmtzUG0yOHEwZDNSdGRKYmppRkFVQW9XQklZY1ZubzJHRWkz?=
+ =?utf-8?B?R1o0eWxubWtpWm01RElpb2JodDZZMm5DWHJLcXBRSVozQVNmUHI1RE9Ka3hq?=
+ =?utf-8?B?Vm53ZERkSXZyaHFzd3p1UTJQMkhNYndpYm1kdHNvbUFROWMrYWtoQnV2bFNm?=
+ =?utf-8?B?WkhCT0U1ei9VcExDdUlNWThISTA1MGxHQ0w2V2NTUi9LUitIbVBuN3JWNUI4?=
+ =?utf-8?B?T1RXWDc5NWRwUXd0SU8yZi8zeHFiK3pwRlFMbGNKWUNEc2JreGtmaXZ5ZlhT?=
+ =?utf-8?B?Ulo0U3NsVEw2M3JWTDBSRUFtSkdMSkJoMkhXMmpYcmRpZDMrUkliMi9ieElK?=
+ =?utf-8?B?b1d4MFBjc2VTc0RXaGtFT1NicFJoY2NublI0aExDY1pEOW1ueUxBWTRlMHgz?=
+ =?utf-8?B?bkZWak5KbGhUYnowdS8rTXFmU0U2S3ZOakFTbWxWVWVVSXVoOXI1VzRFZEw2?=
+ =?utf-8?B?UFdqNG1wKzVNbmlWbWF3WmpCMWYvVXh0SWF5ZWg5ZmxmUGNTRUErY2ZuR3hq?=
+ =?utf-8?B?b05qeDZObEppOE43Ri9HdWhRSG1ERStkQm5LRzRWaHlpY3dlSGhsa2Y4SHlW?=
+ =?utf-8?B?dkF6OGNDK2dDWTgzcytHVmJ5U3lGT294SXRmbnYybERNLzQ0dUFqSDk4Qjk3?=
+ =?utf-8?B?U2o2NVNmek96ay93Nm1IdXFNaXdXTzZ4OVREQmQ0ZWl0Y1g1eFU5RTB5dldw?=
+ =?utf-8?B?a0dpOFptWnZqakprU0VzbDhKZTltL2oyT0ZlU0Jsa1NrcWdtWlZ5SGVCVmlJ?=
+ =?utf-8?B?WHoxZTVUS0JCZ2drbFNJcktnUzNWQkEzT2MyOEpRS08vQ3NpTkJuZzUySUVH?=
+ =?utf-8?B?cG9hYkJSUTJaNm50UXlmV3JvS3BpNlRSbWVzM2t2WEMwQ3Y2eVorZFJCekNO?=
+ =?utf-8?B?QkdTYzB6N2RIMFBpQWljMFZ2NFAyMEhyckd6czJ2bmRqSGMxbEFPU1B1VFBr?=
+ =?utf-8?B?YjFDUUoreGk5aXlQT1E3ckJGOFVvSWpoVWFxSmtUUzYvMXpUNzBqcll1dlN0?=
+ =?utf-8?B?SGJINktSY1NPaHd0eVNReWVPUDlxWkUzSm1RaHJRTy9iZitWK1g5WnpiZGRL?=
+ =?utf-8?B?UWNBTDhpbFpOa0NNV0tqTHhQU2NBK1VyUURPbDBLcUZBQW5saS8zVWVOUGcw?=
+ =?utf-8?B?eWpXOXYrZFRuaElDN2daTWpsdlhuRnJPQ0dRcWQxclV3K1kvdzZ4VFpGK2p6?=
+ =?utf-8?B?QUswUWtZVUVJeFF3dDNRYkVVT0U0aGJLWHJzT2E0eklOL1ZJWXowY3dWeXc4?=
+ =?utf-8?B?N1NHWmp4TnpnM3VvUlhoRFN4UnduUGlVeUdtWG1jdFpIWThORVVGYkFwSUxa?=
+ =?utf-8?B?NVhrc0VVbk01a2tCS1NjNFh3KzZLSm5TSDJLMGRvdHFOdkgvWmpleFlxYWcz?=
+ =?utf-8?B?bmVLb2ZnbDVTQ2JpRnhTVzFQT3FFVm8rS21lN1lmTW9hdEV3NFhWdDFqZVRm?=
+ =?utf-8?B?Y3AyVk0vS1Z1ZXpYWkpISFA3RmFScXBRUkNSV2xxdE5ic2NVUWRKdWtuUnhz?=
+ =?utf-8?Q?GXHNeDOpdRXOzDyA=3D?=
+X-Exchange-RoutingPolicyChecked: Ab1irHozw8AOGR6nl52CwcfsKYV9qEUa6y33nxrIWV2SvlIcrlqIs0B+VekUStAnmxYD2UF5d2+lApRPEoDbphSsMSl2cEfOAwgxBQuiULaynHoATzlmR0wdqnrU/7+uCw3luBVxppfZPms3mn/QoUd5qPNCjK4FNjgWYIRGWbTfD3nZ5UkgaWRa1PmGbR+hzqLhJq4Y03XhbjO1rwnjrb9A0aaJUyLR/lgmgHA6gx1l8UEFt3MOWRVnfBzA7luP+vyR4M+uHpQAJAyCyPIbLhgRv/I+rxGl1YiKIJRyHwCONdQwwIK4jQvaXFfLTHV7hT6ItDcLlLkAs3hSt64qNA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: e4407161-29c6-4ce8-3898-08de8b742d96
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2026 20:13:43.2539
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: J9FOqFXz+RDA4H/hFlZ1Gh/VXJXgxetJ/zm0Kf1DBnZM/5xW6m76cx9p7pRQAtkOl0pK3Zha8lPDhzwXJXBTmgcbZq5JYncou48KPZrOHLQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR11MB7655
+X-OriginatorOrg: intel.com
 
-On Thu, Mar 26, 2026 at 11:28:11AM -0500, Ira Weiny wrote:
-> The 2 patches below fix it.
+Rakie Kim wrote:
+[..]
+> Hello Jonathan,
 > 
-> Ira
+> Your insight is incredibly accurate. To clarify the situation, here is
+> the actual configuration of my system:
 > 
+> NODE   Type          PXD
+> node0  local memory  0x00
+> node1  local memory  0x01
+> node2  cxl memory    0x0A
+> node3  cxl memory    0x0B
+> 
+> Physically, the node2 CXL is attached to node0 (Socket 0), and the
+> node3 CXL is attached to node1 (Socket 1). However, extracting the
+> HMAT.dsl reveals the following:
+> 
+> - local memory
+>   [028h] Flags: 0001 (Processor Proximity Domain Valid = 1)
+>          Attached Initiator Proximity Domain: 0x00
+>          Memory Proximity Domain: 0x00
+>   [050h] Flags: 0001 (Processor Proximity Domain Valid = 1)
+>          Attached Initiator Proximity Domain: 0x01
+>          Memory Proximity Domain: 0x01
+> 
+> - cxl memory
+>   [078h] Flags: 0000 (Processor Proximity Domain Valid = 0)
+>          Attached Initiator Proximity Domain: 0x00
+>          Memory Proximity Domain: 0x0A
+>   [0A0h] Flags: 0000 (Processor Proximity Domain Valid = 0)
+>          Attached Initiator Proximity Domain: 0x00
+>          Memory Proximity Domain: 0x0B
 
-Probably i should just fold these in and add a Co-dev here.  I'll spin a
-v5
+This looks good.
 
-~Gregory
+Unless the CPU is directly attached to the memory controller then there
+is no attached initiator. For example, if you wanted to run an x86
+memory controller configuration instruction like PCONFIG you would issue
+an IPI to the CPU attached to the target memory controller. There is no
+such connection for a CPU to do the same for a CXL proximity domain.
+
+> As you correctly suspected, the flags for the CXL memory are 0000,
+> meaning the Processor Proximity Domain is marked as invalid. But when
+> checking the sysfs initiator configurations, it shows a different story:
+> 
+> Node   access0 Initiator  access1 Initiator
+> node0  node0              node0
+> node1  node1              node1
+> node2  node1              node1
+> node3  node1              node1
+
+2 comments. HMAT is not a physical topology layout table. The
+fallback determination of "best" initiator when "Attached Initiator PXM"
+is not set is just a heuristic. That heuristic probably has not been
+touched since the initial HMAT support went upstream.
+
+> Although the Attached Initiator is set to 0 in HMAT with an invalid
+> flag, sysfs strangely registers node1 as the initiator for both CXL
+> nodes. Because both HMAT and sysfs are exposing abnormal values, it was
+> impossible for me to determine the true socket connections for CXL
+> using this data.
+
+Yeah, this sounds more like a kernel bug report than a firmware bug
+report at this point.
+
+
+> > > Even though the distance map shows node2 is physically closer to
+> > > Socket 0 and node3 to Socket 1, the HMAT incorrectly defines the
+> > > routing path strictly through Socket 1. Because the HMAT alone made it
+> > > difficult to determine the exact physical socket connections on these
+> > > systems, I ended up using the current CXL driver-based approach.
+> > 
+> > Are the HMAT latencies and bandwidths all there?  Or are some missing
+> > and you have to use SLIT (which generally is garbage for historical
+> > reasons of tuning SLIT to particular OS behaviour).
+> > 
+> 
+> The HMAT latencies and bandwidths are present, but the values seem
+> broken. Here is the latency table:
+> 
+> Init->Target | node0 | node1 | node2 | node3
+> node0        | 0x38B | 0x89F | 0x9C4 | 0x3AFC
+> node1        | 0x89F | 0x38B | 0x3AFC| 0x4268
+> 
+> I used the identical type of DRAM and CXL memory for both sockets.
+> However, looking at the table, the local CXL access latency from
+> node0->node2 (0x9C4) and node1->node3 (0x4268) shows a massive,
+> unjustified difference. This asymmetry proves that the table is
+> currently unreliable.
+
+...or it is telling the truth. Would need more data.
+
+> > > I wonder if others have experienced similar broken HMAT cases with CXL.
+> > > If HMAT information becomes more reliable in the future, we could
+> > > build a much more efficient structure.
+> > 
+> > Given it's being lightly used I suspect there will be many bugs :(
+> > I hope we can assume they will get fixed however!
+> > 
+> > ...
+> > 
+> 
+> The most critical issue caused by this broken initiator setting is that
+> topology analysis tools like `hwloc` are completely misled. Currently,
+> `hwloc` displays both CXL nodes as being attached to Socket 1.
+> 
+> I observed this exact same issue on both Sierra Forest and Granite
+> Rapids systems. I believe this broken topology exposure is a severe
+> problem that must be addressed, though I am not entirely sure what the
+> best fix would be yet. I would love to hear your thoughts on this.
+
+Before determining that these numbers are wrong you would need to redo
+the calculation from CDAT data to see if you get a different answer.
+
+The driver currently does this calculation as part of determining a QoS
+class. It would be reasonable to also use that same calculation to double
+check the BIOS firmware numbers for CXL proximity domains established at
+boot.
+
+> > > The complex topology cases you presented, such as multi-NUMA per socket,
+> > > shared CXL switches, and IO expanders, are very important points.
+> > > I clearly understand that the simple package-level grouping does not fully
+> > > reflect the 1:1 relationship in these future hardware architectures.
+> > > 
+> > > I have also thought about the shared CXL switch scenario you mentioned,
+> > > and I know the current design falls short in addressing it properly.
+> > > While the current implementation starts with a simple socket-local
+> > > restriction, I plan to evolve it into a more flexible node aggregation
+> > > model to properly reflect all the diverse topologies you suggested.
+> > 
+> > If we can ensure it fails cleanly when it finds a topology that it can't
+> > cope with (and I guess falls back to current) then I'm fine with a partial
+> > solution that evolves.
+> > 
+> 
+> I completely agree with ensuring a clean failure. To stabilize this
+> partial solution, I am currently considering a few options for the
+> next version:
+> 
+> 1. Enable this feature only when a strict 1:1 topology is detected.
+> 2. Provide a sysfs allowing users to enable/disable it.
+> 3. Allow users to manually override/configure the topology via sysfs.
+> 4. Implement dynamic fallback behaviors depending on the detected
+>    topology shape (needs further thought).
+
+The advice is always start as simple as possible but no simpler.
+
+It may be the case that Linux indeed finds that platform firmware comes
+to a different result than expected. When that happens the CXL subsystem
+can probably emit the mismatch details, or otherwise validate the HMAT.
+
+As for actual physical topology layout determination, that is out of
+scope for HMAT, but the CXL CDAT calculations do consider PCI link
+details.
+
+> By the way, when I first posted this RFC, I accidentally missed adding
+> lsf-pc@lists.linux-foundation.org to the CC list. I am considering
+> re-posting it to ensure it reaches the lsf-pc.
+
+They are on the Cc: now, I expect that is sufficient.
