@@ -1,134 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECC13CBE85
-	for <linux-cxl@vger.kernel.org>; Thu, 26 Mar 2026 10:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2E0C3A7839
+	for <linux-cxl@vger.kernel.org>; Thu, 26 Mar 2026 10:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774521212; cv=none; b=Z945pAxM8kI7VKe+0dF6VOAIEM9ft+dtwHCEvcrhiQX466kCgnofsJOHSMbDydqrQycaA9Wx1z1GBb+7YdXbAFfqmFFS3tVlh2+YK8YTXuzZy80PA6lp8NEnTQEBtgze+98XE43S6IbaBS+Uz8b507/nuZD+OJ28Hp7WA1rqZKs=
+	t=1774521750; cv=none; b=eJ1zMeNub6Rx64+hRVBxG50jamWuIyb3+TZAPraTCBtsStq1iyr6Q2ZRxFPrIMD8EOjCRXwahn2MegHhIlK0avkEf1kR84TbljeDhnOYR9+b14Bng08LRMItmcPBB9mA0v2vVHTQMVFR/+ycXKIr8dOMt2nAjvdoLNf2x9Ev3iI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774521212; c=relaxed/simple;
-	bh=ZudevnbvHxuJFNRVUgY0l6TTlPYj57cCXzQfq18RxyU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RGND5Tk6sZo1QNAWUHcn9RSbt38jLPeNhR8XF9Cb4S54x6BT6xA9q7QDA9xvhqmDWev3uMpDjXwCa77UJlEbsvthk0ZGFLHAYe1NwaTAsiQ3VuoY1knVUCkYkUrl2M+aZWVkgJABCKeMTovZrAfCWdTH7MmhMsnkuIF2oxKZJ8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kLAVn+yy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1774521750; c=relaxed/simple;
+	bh=998cViLeJkKEBaad+bnoC/XHmEaYJIWNV0T/i/Fp4hg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=B7jLHZdeD7YYO3MnYtfQfbOYFfDR6Q1Io1QpTeDMuBVywDSxFCPJnMdZQPQeG6zXC6hlDIwNvGbfN7Hg+Tp4mGtdHynR8kR4A2Qw5PrfBkknLh/AyjifdvCZ+W4cF3In1jR++esF2uh7oC2LTpW8fzRV1sXs+Un4T6TlGwclATU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tb5YYGVw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kLAVn+yy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBF38C4AF0C
-	for <linux-cxl@vger.kernel.org>; Thu, 26 Mar 2026 10:33:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774521211;
-	bh=ZudevnbvHxuJFNRVUgY0l6TTlPYj57cCXzQfq18RxyU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kLAVn+yyTl/Q8z+UhqbNmfz2LrWrp36HL1Ae4tSkcqPbq1qp3GRw4UjT323vqOUua
-	 8ahJjFB01lxdM/2KIMuWIT/npAo065XzkAEJITt09khnLhIl+eLEP4WHkDeGlGhT4f
-	 e0aeWHoRGhZBI4R40jiCJ1bYcjad052WCHxrFwLVGoii6XzPg7Pg1HGrPKXJuKh9dZ
-	 FixFToi4dvl3Fnnmk6MV3sIitDaktMkzrAFWZVUVpwagZgrFRx2FtV0UYZvB2u1NgG
-	 sqo55jxPVDBNxHLQcxm2vrGc3ZOgOvS+j+ZAYexlcyf+b06vLqMYU9z3zUlgUTwEUY
-	 w55U+UPZxDs9w==
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-79628fb5c05so6860427b3.2
-        for <linux-cxl@vger.kernel.org>; Thu, 26 Mar 2026 03:33:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXkBLgu+9BLg/A7MliOLFWtPGepWA9mgZaKv8KY7t0f6IUqaPElRzTrkXdljJ4GrEfY0brQ6aZEDhE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwltSQcjpCHw7psLXYmIQcYz/goPbZAyrJZQ8QyhkLFF/uNktc
-	Jg/erqbpytghlaLbFKWOqMKQaOhbb7YDb7aN17oXNRvidiHHZgqZR5sQd2Z/wls37P3qd6N3Vx8
-	7m/o0SR8P52WKdwejXZJLIi5hIx15Guk=
-X-Received: by 2002:a05:690c:6086:b0:79a:69bc:f20f with SMTP id
- 00721157ae682-79acf3a8b76mr76387137b3.21.1774521210579; Thu, 26 Mar 2026
- 03:33:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tb5YYGVw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1774521747;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uRiVM/hQz0BvpG69+7beiImyjSsPHNvKncV4RQM/tmk=;
+	b=Tb5YYGVwjnw7C1bAjM/3GcYIGrXD5f9l8VZWRjOY+sjNVHSrCUW9UzDUTkKeB9vei13Msn
+	ycn7xEhLPRgYjIZZYTbRJq8z/4Jhn/tHTuuTh6OImLAQ8aZ1ONjk3Bba/J/TITgDCNGAz7
+	VV67pTZcNy5E1rcw8iJOpQmukJFzBDg=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-14-7NkrLcZKNYCwbta6h5sLGQ-1; Thu,
+ 26 Mar 2026 06:42:23 -0400
+X-MC-Unique: 7NkrLcZKNYCwbta6h5sLGQ-1
+X-Mimecast-MFC-AGG-ID: 7NkrLcZKNYCwbta6h5sLGQ_1774521742
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 20E5619560B1;
+	Thu, 26 Mar 2026 10:42:21 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.45.242.6])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CB6221955D84;
+	Thu, 26 Mar 2026 10:42:19 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id 622E321E6937; Thu, 26 Mar 2026 11:42:17 +0100 (CET)
+From: Markus Armbruster <armbru@redhat.com>
+To: Alireza Sanaee <alireza.sanaee@huawei.com>
+Cc: <qemu-devel@nongnu.org>,  <anisa.su@samsung.com>,
+  <berrange@redhat.com>,  <eblake@redhat.com>,
+  <jonathan.cameron@huawei.com>,  <linux-cxl@vger.kernel.org>,
+  <linuxarm@huawei.com>,  <lizhijian@fujitsu.com>,  <mst@redhat.com>,
+  <pbonzini@redhat.com>,  <gourry@gourry.net>,  <nifan.cxl@gmail.com>,
+  <me@linux.beauty>
+Subject: Re: [PATCH 1/9] hw/mem: Add tag support to generic host memory
+ backends
+In-Reply-To: <20260325184259.366-2-alireza.sanaee@huawei.com> (Alireza
+	Sanaee's message of "Wed, 25 Mar 2026 18:42:49 +0000")
+References: <20260325184259.366-1-alireza.sanaee@huawei.com>
+	<20260325184259.366-2-alireza.sanaee@huawei.com>
+Date: Thu, 26 Mar 2026 11:42:17 +0100
+Message-ID: <87a4vuhnxy.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260325143555.451852-1-herve.codina@bootlin.com> <20260325143555.451852-21-herve.codina@bootlin.com>
-In-Reply-To: <20260325143555.451852-21-herve.codina@bootlin.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 26 Mar 2026 11:33:19 +0100
-X-Gmail-Original-Message-ID: <CAD++jLkFu+Z22QBFiaa9S+Epeh=RJZOYX8BOLVDFw4bhEoYF1Q@mail.gmail.com>
-X-Gm-Features: AQROBzC4i_eE97sXtt89YSs_3fVQUuKW8eO9nnDvhVba5azUhozyRvIt7ceD-wY
-Message-ID: <CAD++jLkFu+Z22QBFiaa9S+Epeh=RJZOYX8BOLVDFw4bhEoYF1Q@mail.gmail.com>
-Subject: Re: [PATCH v6 20/27] misc: lan966x_pci: Fix dtso nodes ordering
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kalle Niemi <kaleposti@gmail.com>, 
-	Matti Vaittinen <mazziesaccount@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org, 
-	driver-core@lists.linux.dev, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-MFC-PROC-ID: baL2JkNfG9isYiLAGWLYPNgSzmLzB64ragz_4qf5CFk_1774521742
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-Hi Herve,
+Alireza Sanaee <alireza.sanaee@huawei.com> writes:
 
-this is nitpicking, but if you respin the series consider the following:
+> Add a string tag property to HostMemoryBackend so that backends can be
+> identified by a user-assigned name at runtime. Expose the property through
+> QOM and add a host_memory_backend_find_by_tag() helper that walks the
+> object tree to locate a backend by its tag.
 
-On Wed, Mar 25, 2026 at 3:42=E2=80=AFPM Herve Codina <herve.codina@bootlin.=
-com> wrote:
->
-> Nodes available in the dtso are not ordered by their unit address.
->
-> Fix that re-ordering them according to their unit address.
->
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-(...)
-> +                               switch: switch@e0000000 {
+Why can't you use the QOM ID?
 
-Recommended practice is:
+$ qemu-system-x86_64 -S -display none -monitor stdio -object memory-backend-ram,id=fred,size=1M
+QEMU 10.2.90 monitor - type 'help' for more information
+(qemu) info qom-tree /objects/fred
+/fred (memory-backend-ram)
+  /fred[0] (memory-region)
 
-ethernet-switch@...
-
-> +                                       compatible =3D "microchip,lan966x=
--switch";
-> +                                       reg =3D <0xe0000000 0x0100000>,
-> +                                             <0xe2000000 0x0800000>;
-> +                                       reg-names =3D "cpu", "gcb";
-> +
-> +                                       interrupt-parent =3D <&oic>;
-> +                                       interrupts =3D <12 IRQ_TYPE_LEVEL=
-_HIGH>,
-> +                                                    <9 IRQ_TYPE_LEVEL_HI=
-GH>;
-> +                                       interrupt-names =3D "xtr", "ana";
-> +
-> +                                       resets =3D <&reset 0>;
-> +                                       reset-names =3D "switch";
-> +
-> +                                       pinctrl-names =3D "default";
-> +                                       pinctrl-0 =3D <&tod_pins>;
-> +
-> +                                       ethernet-ports {
-> +                                               #address-cells =3D <1>;
-> +                                               #size-cells =3D <0>;
-> +
-> +                                               port0: port@0 {
-
-Recommended practice is:
-ethernet-port@...
-
-Yours,
-Linus Walleij
