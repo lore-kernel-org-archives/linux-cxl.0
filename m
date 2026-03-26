@@ -1,248 +1,357 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0756434C123;
-	Wed, 25 Mar 2026 22:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C52F275B15;
+	Thu, 26 Mar 2026 08:55:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774478413; cv=none; b=WL1UiZs3tRc6HBHINpGzkWgJHJC70eEYN0Ev10hByXvQMJyAnDjWQyDA9Ch0fISHbE4tO1WKkAGxMLS/0hPm0QRNx0yASwor4tRPzvdoVZ39ZZSXmJk3bFUy3VzFjdI/jaiF4EOdY6IB0Zmntzb6gzbVOWAjwSDCZgXfkBPrTSE=
+	t=1774515318; cv=none; b=SHt0zZC5A9OjsVseuC2n9di8PIqum2g72PK3HoNcvEfM4QQQ6ONdBobk0EIP7VeCN05BGqQ+JkUspPYygfGWNI8MQNZyJ/ortCyJ7GNCGTNO8gGT9FdZ0tkDrLZkQZStzCy9+FiBnxNxbdDgAiEU6oVIrU0Pr4zZE65/gPMOe3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774478413; c=relaxed/simple;
-	bh=PqTP0XkdJntwO9g5IgLymwo+IDzZfl5miQp0d2W3nxw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oSPfg24GeU2qVLhIgeDiLCh2yHyrW3fUUlstZzGRDgnPzabKi4Ft58/zh4cjgIZugtP68OkguFP8PcKleI/y9i8ie0g6ExNh7oSVD0I0xlPYSO0/D2/NCQf7WIlj7Wb2G2qw9nna6mu9vgzKOQf/1rM+6IDNWwhtdgY/sKiiEgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eAs7Ry9d; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eAs7Ry9d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774478411; x=1806014411;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PqTP0XkdJntwO9g5IgLymwo+IDzZfl5miQp0d2W3nxw=;
-  b=eAs7Ry9dKOzEAjFTShCSgM3TZ09/4x2rzanN71mnkIC9PCYfgjgLXCdq
-   zmIIAsLWZNtHZFCcCE4xvztEWdUMCx+umDviMzvIz56A2xcSha6WrS/4q
-   rzJoGQrErSADbO84R8MP60SHqIlADAsBDnBtlz+4ekzVQuGn57+6W62oK
-   FIvLJAyP7RGvqShrRdiKSOyFl6dkXPIpKTr6qe2VPnPj3FhlyBkwPr2Et
-   IPndHSJ4iwFKAF1IQOOS+Ds7QgdcZpj5SSzEAyp5+oCyr7FPPWoWX0gg0
-   ibqNdlGR8EYqdHXI8aXyzct7F7E3k6ImCs/qXybCawAqXhLETj8cAONpn
-   Q==;
-X-CSE-ConnectionGUID: 2Y8GG1ApTXq0DasAe6qSqg==
-X-CSE-MsgGUID: AiEeCuKkS1mRkx3CRnhnYA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11740"; a="75431523"
-X-IronPort-AV: E=Sophos;i="6.23,140,1770624000"; 
-   d="scan'208";a="75431523"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2026 15:40:10 -0700
-X-CSE-ConnectionGUID: +H3iDFUlR1yAwroMyKoUFw==
-X-CSE-MsgGUID: 78ZJoL+WQp6zAP/rCFkm6A==
-X-ExtLoop1: 1
-Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.110.56]) ([10.125.110.56])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2026 15:40:05 -0700
-Message-ID: <d4461e56-8a4d-4d2c-8de9-23a265dc617f@intel.com>
-Date: Wed, 25 Mar 2026 15:40:04 -0700
+	s=arc-20240116; t=1774515318; c=relaxed/simple;
+	bh=x9CbQ+81YJR9MCYHmSnpbO1Rqijt7tSKdoMD2YW0kBs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=q2BgfM84hN2e8uu/n2xidsaumDsG5CKhHl991rux+sUepHotueQA50lnuvuP4v4lXIewmP44JOfNqfxD3v3NUtltLeQ+kh8CFxHa0FXC2TqjCyCuxYZKSOragTQ/yDzlabZ0hJGqfMRTjVRNY7YYj4Sy/8L/mjYx/wuN1h7R+w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-c2dff70000001609-03-69c4f468f747
+From: Rakie Kim <rakie.kim@sk.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: akpm@linux-foundation.org,
+	gourry@gourry.net,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	byungchul@sk.com,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	david@kernel.org,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	dave@stgolabs.net,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	Keith Busch <kbusch@kernel.org>,
+	Rakie Kim <rakie.kim@sk.com>
+Subject: Re: [LSF/MM/BPF TOPIC] [RFC PATCH 0/4] mm/mempolicy: introduce socket-aware weighted interleave
+Date: Thu, 26 Mar 2026 17:54:55 +0900
+Message-ID: <20260326085501.343-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.52.0.windows.1
+In-Reply-To: <20260325123350.00004d48@huawei.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V9 5/8] dax: Add dax_operations for use by fs-dax on fsdev
- dax
-To: John Groves <john@jagalactic.com>, John Groves <John@Groves.net>,
- Miklos Szeredi <miklos@szeredi.hu>, Dan Williams <dan.j.williams@intel.com>,
- Bernd Schubert <bschubert@ddn.com>,
- Alison Schofield <alison.schofield@intel.com>
-Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>,
- Vishal Verma <vishal.l.verma@intel.com>, Matthew Wilcox
- <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- David Hildenbrand <david@kernel.org>, Christian Brauner
- <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>,
- Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>,
- Amir Goldstein <amir73il@gmail.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong
- <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Chen Linxuan <chenlinxuan@uniontech.com>, James Morse <james.morse@arm.com>,
- Fuad Tabba <tabba@google.com>, Sean Christopherson <seanjc@google.com>,
- Shivank Garg <shivankg@amd.com>, Ackerley Tng <ackerleytng@google.com>,
- Gregory Price <gourry@gourry.net>, Aravind Ramesh <arramesh@micron.com>,
- Ajay Joshi <ajayjoshi@micron.com>,
- "venkataravis@micron.com" <venkataravis@micron.com>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-References: <0100019d1d463523-617e8165-a084-4d91-aa5e-13778264d5d4-000000@email.amazonses.com>
- <20260324003851.5045-1-john@jagalactic.com>
- <0100019d1d47e459-48f2a4e6-edab-4002-bde3-2ba642deccaf-000000@email.amazonses.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <0100019d1d47e459-48f2a4e6-edab-4002-bde3-2ba642deccaf-000000@email.amazonses.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYRjHeXeO5xyHy+Na+HqhbBBRkLcMXi1CPwjHD5FgBGWQhzy10TZl
+	U3OlqFhW3hqGNDfTWeBliuZyeQ1rmvOWeaGl4jUTcWqUhuAFrSmB3/78/pfnw0NhQgvuSUkV
+	CZxSwcrEBB/nr7iUnZH86ZT6f5vzRsV1NQSanBskUMvoFfSicBCg7rEMAlWP1QC0YN4EaGPS
+	SqL2+QUcGctsBLKaS0hUYLEB1Jg+Q6Ivul4cjbQUE2iqZtcJ9eiqcLSe74Wm80NRZ10jDz0f
+	NhBIn5EP0Limi4eqayRI/2mKDPVgmnWTJGMwJTI5WSMk87BzxYl53bbIY0zGpwRjWi0gmW7t
+	Fs40zwYzeZk/Ceb3/DjOFOrTmLqGrzjTb+gkmTXT0UjX6/wLsZxMmsQp/S7G8CUjc1oyfiAm
+	uaHPLx1MRGQDioJ0EGwujc4Gznty4m094cAELYZd7284sIgOhPbcDyAb8CmMtjnB5Y0nwGEc
+	piVQU7GLOfI4fQIOt59zYAF9FvbZlsn9yVOwtn4cd2hnOgC+tK7tVYW0C7S/aQf7eTfYU/Rj
+	L4PRx2CmWY85bkF6g4Tb33OJ/SEP+LFyFNcAV92Bju5AxwB4RiCUKpLkrFQW5CtRK6TJvrfi
+	5Cbw77PlqdvRTWB1MMoCaAqIXQQx9g6p0IlNUqnlFgApTCwSDL2ySIWCWFZ9n1PG3VQmyjiV
+	BXhRuNhdELh+L1ZI32ETuLscF88p/7s8ytkzHaQI2nsPaT9v+ocH7TzCgocitx74eL0rNoq8
+	F+NCcti2+iNsSoeLsGhJ3oCL1DN2okPh7q/lu3Vr/MKiBp61hllDyB71bRK72hSSdrwimfc4
+	omoWN7fVXs6zxzNL16zlgTknV0pKfVo77OGjZvG6bvpX5fmqVFl5vxu2k3VJjKskbMBpTKli
+	/wLtOXGg1QIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYRiA+XbOzjkuF8epdHCksdAoSVMzvy6Uf6ov6UeQaYTZRh7cySub
+	igqSYomampqSbSpLoctcmuYdLzHnLcNrjryWmVpeQlOkqWBNCfz38jzP+/55KUzUgttRXHgU
+	qwiXhUoIAS4oOBJwXL5m4E48LBTCwgodASem+wnY+NkX9uapCfg0vx/ArpEkApaN6ACcq9kA
+	0DTRScLV2QUMts7M4VD73EjAzppiEubqjQC2FXXzYV3iVxL2qT7gcKixkICTum0+7Fa9xuF6
+	lhh+yfKGeuMcHxoq6njwyaCGgOqkLABHszt4sEwnh5u1r/6h9knS2x41qCZIpKmKRo9Shkj0
+	wLDER6VNP3moSptGoKrfuSTqKtjEUcPUaZSZ/ItAKzOjOFofQ6j0xzIP5avvo4rqYRx91BjI
+	a1a3BOeC2FAuhlW4npcK5EPTBWRkrzS2usc1EYxfSQcWFEOfZMbfVRLpgKIIWsJ0NAeYsQ3t
+	zsxnvAfpQEBhtJHPLJpSgVlY03Im++U2Zu5x2pEZbPU0YyHtwfQYF8ndk0eZ8spR3Dxb0G5M
+	UefqzqqItmTm37aC3d6K6X72fafBaAcmuUaNZQNL1R6l2qM0gKcFNlx4TJiMC/V0UYbI48K5
+	WJe7EWFV4N9XXyRs5dSDtaHLekBTQGIpvDndxon4shhlXJgeMBQmsREOlOg5kTBIFhfPKiLu
+	KKJDWaUeiClcckDo489KRXSwLIoNYdlIVvHf8igLu0TwSX/DdHVAB8VsY8SIbYb2wmyx9FC8
+	aX9gs7OT41Z2Hudhv7Chdvdqaq63vX1JU5vWMukjP4xlymk/o7hj3Dne/6JSQzDXU6YSfE/d
+	c3IeC+7XUWc0w37eK2edBhexP0nEG2VgDuvVnvqtPHp53trP4aBpKaFkvm/f4xSkZiS4Ui5z
+	O4YplLK/Y8m+PtECAAA=
+X-CFilter-Loop: Reflected
 
-
-
-On 3/23/26 5:39 PM, John Groves wrote:
-> From: John Groves <John@Groves.net>
+On Wed, 25 Mar 2026 12:33:50 +0000 Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
+> On Tue, 24 Mar 2026 14:35:45 +0900
+> Rakie Kim <rakie.kim@sk.com> wrote:
 > 
-> fsdev: Add dax_operations for use by famfs.
+> > On Fri, 20 Mar 2026 16:56:05 +0000 Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
+> > >   
+> > > > > > 
+> > > > > > To make this possible, the system requires a mechanism to understand
+> > > > > > the physical topology. The existing NUMA distance model provides only
+> > > > > > relative latency values between nodes and lacks any notion of
+> > > > > > structural grouping such as socket boundaries. This is especially
+> > > > > > problematic for CXL memory nodes, which appear without an explicit
+> > > > > > socket association.    
+> > > > > 
+> > > > > So in a general sense, the missing info here is effectively the same
+> > > > > stuff we are missing from the HMAT presentation (it's there in the
+> > > > > table and it's there to compute in CXL cases) just because we decided
+> > > > > not to surface anything other than distances to memory from nearest
+> > > > > initiator.  I chatted to Joshua and Kieth about filling in that stuff
+> > > > > at last LSFMM. To me that's just a bit of engineering work that needs
+> > > > > doing now we have proven use cases for the data. Mostly it's figuring out
+> > > > > the presentation to userspace and kernel data structures as it's a
+> > > > > lot of data in a big system (typically at least 32 NUMA nodes).
+> > > > >     
+> > > > 
+> > > > Hearing about the discussion on exposing HMAT data is very welcome news.
+> > > > Because this detailed topology information is not yet fully exposed to
+> > > > the kernel and userspace, I used a temporary package-based restriction.
+> > > > Figuring out how to expose and integrate this data into the kernel data
+> > > > structures is indeed a crucial engineering task we need to solve.
+> > > > 
+> > > > Actually, when I first started this work, I considered fetching the
+> > > > topology information from HMAT before adopting the current approach.
+> > > > However, I encountered a firmware issue on my test systems
+> > > > (Granite Rapids and Sierra Forest).
+> > > > 
+> > > > Although each socket has its own locally attached CXL device, the HMAT
+> > > > only registers node1 (Socket 1) as the initiator for both CXL memory
+> > > > nodes (node2 and node3). As a result, the sysfs HMAT initiators for
+> > > > both node2 and node3 only expose node1.  
+> > > 
+> > > Do you mean the Memory Proximity Domain Attributes Structure has
+> > > the "Proximity Domain for the Attached Initiator" set wrong?
+> > > Was this for it's presentation of the full path to CXL mem nodes, or
+> > > to a PXM with a generic port?  Sounds like you have SRAT covering
+> > > the CXL mem so ideal would be to have the HMAT data to GP and to
+> > > the CXL PXMs that BIOS has set up.
+> > > 
+> > > Either way having that set at all for CXL memory is fishy as it's about
+> > > where the 'memory controller' is and on CXL mem that should be at the
+> > > device end of the link.  My understanding of that is was only meant
+> > > to be set when you have separate memory only Nodes where the physical
+> > > controller is in a particular other node (e.g. what you do
+> > > if you have a CPU with DRAM and HBM).  Maybe we need to make the
+> > > kernel warn + ignore that if it is set to something odd like yours.
+> > >   
+> > 
+> > Hello Jonathan,
+> > 
+> > Your insight is incredibly accurate. To clarify the situation, here is
+> > the actual configuration of my system:
+> > 
+> > NODE   Type          PXD
+> > node0  local memory  0x00
+> > node1  local memory  0x01
+> > node2  cxl memory    0x0A
+> > node3  cxl memory    0x0B
+> > 
+> > Physically, the node2 CXL is attached to node0 (Socket 0), and the
+> > node3 CXL is attached to node1 (Socket 1). However, extracting the
+> > HMAT.dsl reveals the following:
+> > 
+> > - local memory
+> >   [028h] Flags: 0001 (Processor Proximity Domain Valid = 1)
+> >          Attached Initiator Proximity Domain: 0x00
+> >          Memory Proximity Domain: 0x00
+> >   [050h] Flags: 0001 (Processor Proximity Domain Valid = 1)
+> >          Attached Initiator Proximity Domain: 0x01
+> >          Memory Proximity Domain: 0x01
+> > 
+> > - cxl memory
+> >   [078h] Flags: 0000 (Processor Proximity Domain Valid = 0)
+> >          Attached Initiator Proximity Domain: 0x00
+> >          Memory Proximity Domain: 0x0A
+> >   [0A0h] Flags: 0000 (Processor Proximity Domain Valid = 0)
+> >          Attached Initiator Proximity Domain: 0x00
+> >          Memory Proximity Domain: 0x0B
 > 
-> This replicates the functionality from drivers/nvdimm/pmem.c that
-> conventional fs-dax file systems (e.g. xfs) use to support dax
-> read/write/mmap to a daxdev - without which famfs can't sit atop a
-> daxdev.
+> That's faintly amusing given it conveys no information at all.
+> Still unless we have a bug shouldn't cause anything odd.
 > 
-> - These methods are based on pmem_dax_ops from drivers/nvdimm/pmem.c
-> - fsdev_dax_direct_access() returns the hpa, pfn and kva. The kva was
->   newly stored as dev_dax->virt_addr by dev_dax_probe().
-> - The hpa/pfn are used for mmap (dax_iomap_fault()), and the kva is used
->   for read/write (dax_iomap_rw())
-> - fsdev_dax_recovery_write() and dev_dax_zero_page_range() have not been
->   tested yet. I'm looking for suggestions as to how to test those.
-> - dax-private.h: add dev_dax->cached_size, which fsdev needs to
->   remember. The dev_dax size cannot change while a driver is bound
->   (dev_dax_resize returns -EBUSY if dev->driver is set). Caching the size
->   at probe time allows fsdev's direct_access path can use it without
->   acquiring dax_dev_rwsem (which isn't exported anyway).
+> > 
+> > As you correctly suspected, the flags for the CXL memory are 0000,
+> > meaning the Processor Proximity Domain is marked as invalid. But when
+> > checking the sysfs initiator configurations, it shows a different story:
+> > 
+> > Node   access0 Initiator  access1 Initiator
+> > node0  node0              node0
+> > node1  node1              node1
+> > node2  node1              node1
+> > node3  node1              node1
+> > 
+> > Although the Attached Initiator is set to 0 in HMAT with an invalid
+> > flag, sysfs strangely registers node1 as the initiator for both CXL
+> > nodes.
+> Been a while since I looked the hmat parser..
 > 
-> Signed-off-by: John Groves <john@groves.net>
-
-Couple nits below while I'm stealing code from you.
-
-> ---
->  drivers/dax/dax-private.h |  1 +
->  drivers/dax/fsdev.c       | 84 +++++++++++++++++++++++++++++++++++++++
->  2 files changed, 85 insertions(+)
+> If ACPI_HMAT_PROCESSOR_PD_VALID isn't set, hmat_parse_proximity_domain()
+> shouldn't set the target. At end of that function should be set to PXM_INVALID.
 > 
-> diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-> index 7a3727d76a68..ee8f3af8387f 100644
-> --- a/drivers/dax/dax-private.h
-> +++ b/drivers/dax/dax-private.h
-> @@ -85,6 +85,7 @@ struct dev_dax {
->  	struct dax_region *region;
->  	struct dax_device *dax_dev;
->  	void *virt_addr;
-> +	u64 cached_size;
->  	unsigned int align;
->  	int target_node;
->  	bool dyn_id;
-> diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
-> index c75478d3d548..be3d2b0e8418 100644
-> --- a/drivers/dax/fsdev.c
-> +++ b/drivers/dax/fsdev.c
-> @@ -28,6 +28,85 @@
->   * - No mmap support - all access is through fs-dax/iomap
->   */
->  
-> +static void fsdev_write_dax(void *pmem_addr, struct page *page,
+> It should therefore retain the state from alloc_memory_intiator() I think?
+> 
+> Given I did all my testing without the PD_VALID set (as it wasn't on my
+> test system) it should be fine with that.  Anyhow, let's look at the data
+> for proximity.
+> 
+> 
 
-addr instead of pmem_addr? copy pasta error?
+Hello Jonathan,
 
-> +		unsigned int off, unsigned int len)
-> +{
-> +	while (len) {
-> +		void *mem = kmap_local_page(page);
-> +		unsigned int chunk = min_t(unsigned int, len, PAGE_SIZE - off);
-> +
-> +		memcpy_flushcache(pmem_addr, mem + off, chunk);
-> +		kunmap_local(mem);
-> +		len -= chunk;
-> +		off = 0;
-> +		page++;
-> +		pmem_addr += chunk;
-> +	}
-> +}
-> +
-> +static long __fsdev_dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff,
-> +			long nr_pages, enum dax_access_mode mode, void **kaddr,
-> +			unsigned long *pfn)
-> +{
-> +	struct dev_dax *dev_dax = dax_get_private(dax_dev);
-> +	size_t size = nr_pages << PAGE_SHIFT;
-> +	size_t offset = pgoff << PAGE_SHIFT;
-> +	void *virt_addr = dev_dax->virt_addr + offset;
-> +	phys_addr_t phys;
-> +	unsigned long local_pfn;
-> +
-> +	phys = dax_pgoff_to_phys(dev_dax, pgoff, nr_pages << PAGE_SHIFT);
+Thank you for the deep insight into the HMAT parser code. As you
+mentioned, considering the current state where node 1 is still
+registered as the initiator in sysfs despite the flag being 0, it
+seems highly likely that the kernel parser logic is not handling
+this specific situation gracefully.
 
-you can use 'size' instead here since it's previously computed already.
+> 
+> > Because both HMAT and sysfs are exposing abnormal values, it was
+> > impossible for me to determine the true socket connections for CXL
+> > using this data.
+> > 
+> > > > 
+> > > > Even though the distance map shows node2 is physically closer to
+> > > > Socket 0 and node3 to Socket 1, the HMAT incorrectly defines the
+> > > > routing path strictly through Socket 1. Because the HMAT alone made it
+> > > > difficult to determine the exact physical socket connections on these
+> > > > systems, I ended up using the current CXL driver-based approach.  
+> > > 
+> > > Are the HMAT latencies and bandwidths all there?  Or are some missing
+> > > and you have to use SLIT (which generally is garbage for historical
+> > > reasons of tuning SLIT to particular OS behaviour).
+> > >   
+> > 
+> > The HMAT latencies and bandwidths are present, but the values seem
+> > broken. Here is the latency table:
+> > 
+> > Init->Target | node0 | node1 | node2 | node3
+> > node0        | 0x38B | 0x89F | 0x9C4 | 0x3AFC
+> > node1        | 0x89F | 0x38B | 0x3AFC| 0x4268
+> 
+> Yeah. That would do it...  Looks like that final value is garbage.
+> 
+> > 
+> > I used the identical type of DRAM and CXL memory for both sockets.
+> > However, looking at the table, the local CXL access latency from
+> > node0->node2 (0x9C4) and node1->node3 (0x4268) shows a massive,
+> > unjustified difference. This asymmetry proves that the table is
+> > currently unreliable.
+> 
+> Poke your favourite bios vendor I guess.
+> 
+> I asked one of the intel folk to take a look at see if this is a broader issue
+> or just one particular bios.
+> 
 
-DJ
+I really appreciate you reaching out to the Intel contact to check if
+this is a broader platform issue. I will also try to find a way to
+report this BIOS issue to our system vendor, though I might need to
+figure out the proper channel since I am not the system administrator.
 
-> +	if (phys == -1) {
-> +		dev_dbg(&dev_dax->dev,
-> +			"pgoff (%#lx) out of range\n", pgoff);
-> +		return -EFAULT;
-> +	}
-> +
-> +	if (kaddr)
-> +		*kaddr = virt_addr;
-> +
-> +	local_pfn = PHYS_PFN(phys);
-> +	if (pfn)
-> +		*pfn = local_pfn;
-> +
-> +	/*
-> +	 * Use cached_size which was computed at probe time. The size cannot
-> +	 * change while the driver is bound (resize returns -EBUSY).
-> +	 */
-> +	return PHYS_PFN(min(size, dev_dax->cached_size - offset));
-> +}
-> +
-> +static int fsdev_dax_zero_page_range(struct dax_device *dax_dev,
-> +			pgoff_t pgoff, size_t nr_pages)
-> +{
-> +	void *kaddr;
-> +
-> +	WARN_ONCE(nr_pages > 1, "%s: nr_pages > 1\n", __func__);
-> +	__fsdev_dax_direct_access(dax_dev, pgoff, 1, DAX_ACCESS, &kaddr, NULL);
-> +	fsdev_write_dax(kaddr, ZERO_PAGE(0), 0, PAGE_SIZE);
-> +	return 0;
-> +}
-> +
-> +static long fsdev_dax_direct_access(struct dax_device *dax_dev,
-> +		  pgoff_t pgoff, long nr_pages, enum dax_access_mode mode,
-> +		  void **kaddr, unsigned long *pfn)
-> +{
-> +	return __fsdev_dax_direct_access(dax_dev, pgoff, nr_pages, mode,
-> +					 kaddr, pfn);
-> +}
-> +
-> +static size_t fsdev_dax_recovery_write(struct dax_device *dax_dev, pgoff_t pgoff,
-> +		void *addr, size_t bytes, struct iov_iter *i)
-> +{
-> +	return _copy_from_iter_flushcache(addr, bytes, i);
-> +}
-> +
-> +static const struct dax_operations dev_dax_ops = {
-> +	.direct_access = fsdev_dax_direct_access,
-> +	.zero_page_range = fsdev_dax_zero_page_range,
-> +	.recovery_write = fsdev_dax_recovery_write,
-> +};
-> +
->  static void fsdev_cdev_del(void *cdev)
->  {
->  	cdev_del(cdev);
-> @@ -167,6 +246,11 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
->  		}
->  	}
->  
-> +	/* Cache size now; it cannot change while driver is bound */
-> +	dev_dax->cached_size = 0;
-> +	for (i = 0; i < dev_dax->nr_range; i++)
-> +		dev_dax->cached_size += range_len(&dev_dax->ranges[i].range);
-> +
->  	/*
->  	 * Use MEMORY_DEVICE_FS_DAX without setting vmemmap_shift, leaving
->  	 * folios at order-0. Unlike device.c (MEMORY_DEVICE_GENERIC), this
+Regarding the HMAT dump you requested, how should I provide it to you?
+Would a hex dump converted via a utility like `xxd` be acceptable,
+something like the snippet below?
 
+00000000: 484d 4154 6806 0000 026a 4742 5420 2020  HMATh....jGBT
+00000010: 4742 5455 4143 5049 0920 0701 414d 4920  GBTUACPI. ..AMI
+00000020: 2806 2320 0000 0000 0000 0000 2800 0000  (.# ........(...
+00000030: 0100 0000 0000 0000 0000 0000 0000 0000  ................
+
+> > 
+> > > > 
+> > > > I wonder if others have experienced similar broken HMAT cases with CXL.
+> > > > If HMAT information becomes more reliable in the future, we could
+> > > > build a much more efficient structure.  
+> > > 
+> > > Given it's being lightly used I suspect there will be many bugs :(
+> > > I hope we can assume they will get fixed however!
+> > > 
+> > > ...
+> > >   
+> > 
+> > The most critical issue caused by this broken initiator setting is that
+> > topology analysis tools like `hwloc` are completely misled. Currently,
+> > `hwloc` displays both CXL nodes as being attached to Socket 1.
+> > 
+> > I observed this exact same issue on both Sierra Forest and Granite
+> > Rapids systems. I believe this broken topology exposure is a severe
+> > problem that must be addressed, though I am not entirely sure what the
+> > best fix would be yet. I would love to hear your thoughts on this.
+> 
+> Fix then bios.  If you don't mind, can you provide dumps of
+> cat /sys/firmware/acpi/tables/HMAT  just so we can check there is nothing
+> wrong with the parser.
+> 
+> > 
+> > > > 
+> > > > The complex topology cases you presented, such as multi-NUMA per socket,
+> > > > shared CXL switches, and IO expanders, are very important points.
+> > > > I clearly understand that the simple package-level grouping does not fully
+> > > > reflect the 1:1 relationship in these future hardware architectures.
+> > > > 
+> > > > I have also thought about the shared CXL switch scenario you mentioned,
+> > > > and I know the current design falls short in addressing it properly.
+> > > > While the current implementation starts with a simple socket-local
+> > > > restriction, I plan to evolve it into a more flexible node aggregation
+> > > > model to properly reflect all the diverse topologies you suggested.  
+> > > 
+> > > If we can ensure it fails cleanly when it finds a topology that it can't
+> > > cope with (and I guess falls back to current) then I'm fine with a partial
+> > > solution that evolves.
+> > >   
+> > 
+> > I completely agree with ensuring a clean failure. To stabilize this
+> > partial solution, I am currently considering a few options for the
+> > next version:
+> > 
+> > 1. Enable this feature only when a strict 1:1 topology is detected.
+> Definitely default to off.  Maybe allow a user to say they want to do it
+> anyway. I can see there might be systems that are only a tiny bit off and
+> it makes not practical difference.
+> 
+
+Your suggestion is very reasonable. I will proceed with this approach
+for the next version, keeping the feature disabled by default.
+
+> > 2. Provide a sysfs allowing users to enable/disable it.
+> Makes sense.
+
+I will include this sysfs enable/disable feature in the next version.
+
+> > 3. Allow users to manually override/configure the topology via sysfs.
+> 
+> No.  If people are in this state we should apply fixes to the HMAT table
+> either by injection of real data or some quirking.  If we add userspace
+> control via simpler means the motivation for people to fix bios goes out
+> the window and it never gets resolved.
+> 
+
+Your reasoning is absolutely correct. I will not allow users to modify
+the topology via sysfs. However, I plan to provide a read-only sysfs
+interface so users can at least check the current topology information.
+
+> > 4. Implement dynamic fallback behaviors depending on the detected
+> >    topology shape (needs further thought).
+> 
+> That would be interesting. But maybe not a 1st version thing :)
+> 
+
+This is an area I also need to think more deeply about. I will not
+include it in the initial version, but will consider implementing it
+in the future.
+
+Once again, I deeply appreciate your time, thorough review, and for
+reaching out to Intel for further clarification. It is a huge help.
+
+Rakie Kim
+
+ 
