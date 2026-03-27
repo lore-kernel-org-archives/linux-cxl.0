@@ -1,149 +1,96 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [148.163.129.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB791C5486
-	for <linux-cxl@vger.kernel.org>; Fri, 27 Mar 2026 12:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F153B9DA6
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Mar 2026 13:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.129.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774615496; cv=none; b=WEr+Di+NMF8JPn9qMGTxHo3ETrWS0rvr8gSHfpZlvguNlGNHJkujKDJp1xCbkMr9wRNr8kuCDJEdDZXaCA4j4X2YM9LNjLRDVg4T9Wav8WKh4/cKbIT40HbfIyLgXqt6/dTalcbhkVVcG4QOYy8NUwy0vFgn95UxlDFsuCoyzP0=
+	t=1774618040; cv=none; b=qsfkzOr1MZCJJx8xf+z2eHtqqHZlSBjX/AZkQClKQ35jjoiLgFFcHzWghZMOyUo8Bg1rshU+nayI2sDMpF0r7d4ZkWornX1WGBTc1cQK4W4PGbBrbLASnA/gl/ZgZGzqHe9TZRteglN7btvUK9bot32OGFxpx8dIz7wV3NUHIJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774615496; c=relaxed/simple;
-	bh=xowaL81NGKRtgX6RTWK6OKDnVsOHauBgdYm+8wmDBFM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cz0BInKp/RfBiSTMHVcvj1Ex+v7wHWybinIwfSXaVRxsdvN6EiV0pBHBhJReqdfDgyK8QnVuPr1DYa6TgOWSNXzH1/4sEt0tBiB9YVbLF/DQsVVW1trzEj6gcpQKH4ghJS2XC6p6nJsjyjKcdmZEjl7gKO09+Hnn2Mdk87mK8zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Kclo86X3; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1774618040; c=relaxed/simple;
+	bh=Fs0Zu7BzfWMWvpZrZXXWwl+h8mly81mWY39/A/0JgvI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RGzBcpZjnsPP7zpPQfWcoUD0v07YIGqQw/1NCcF1i1IGeQkYU/YH9kSko0eRxbZIGDRIAAnsb0RfEcdSp5O1anWfCWx9KL55Q6TTFc19goKTRotnk6rQPeQIkIrivXr+6XKr95HSErBHedqyQ/z64zKgGuv2dqCrkygRGjH6V2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com; spf=pass smtp.mailfrom=candelatech.com; dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b=CStHXI48; arc=none smtp.client-ip=148.163.129.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=candelatech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Kclo86X3"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1774615483;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=KbK7ntUxSzrFQGj/27aTab0fONy8ZoPaESF8ksut9hU=;
-	b=Kclo86X3wPXq0hyPYxYklKXZMxUuwSaF1OL1vIZqmGsI5pKDM4aLkX0oUC0noIhMgE/kwR
-	gMs9v4lQILgCEDUxRMnWZghAtynZPpEVyiEEHT05DSihJOipWiJn6alDMisXQcl+142F4s
-	pCwNA8SKVWSvut/OywWAEYdqU4FtlR4=
-From: Hao Li <hao.li@linux.dev>
-To: david@kernel.org,
-	osalvador@suse.de,
-	akpm@linux-foundation.org
-Cc: vbabka@suse.cz,
-	harry.yoo@oracle.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Hao Li <hao.li@linux.dev>
-Subject: [PATCH] mm/memory_hotplug: maintain N_NORMAL_MEMORY during hotplug
-Date: Fri, 27 Mar 2026 20:42:47 +0800
-Message-ID: <20260327124412.469833-1-hao.li@linux.dev>
+	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="CStHXI48"
+Received: from dispatch1-us1.ppe-hosted.com (ip6-localhost [127.0.0.1])
+	by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 94DAE2C2C29
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Mar 2026 13:27:11 +0000 (UTC)
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from mail3.candelatech.com (mail.candelatech.com [208.74.158.173])
+	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 6F04BC00074;
+	Fri, 27 Mar 2026 13:27:03 +0000 (UTC)
+Received: from [192.168.101.118] (firewall.candelatech.com [50.251.239.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by mail3.candelatech.com (Postfix) with ESMTPSA id 5B52B13C2B0;
+	Fri, 27 Mar 2026 06:27:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com 5B52B13C2B0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
+	s=default; t=1774618021;
+	bh=Fs0Zu7BzfWMWvpZrZXXWwl+h8mly81mWY39/A/0JgvI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CStHXI48c1pYryKQT+XchvE5RhxVqCi9op+kSQc7t4lFY6+4toNLDD2gyniI5rBkD
+	 SZtokn6jaB9zesgTiFSnsuCDLyYeGlh/lbBn2uJtxTXvOwBv1pJer7kl7MeRf5/AKW
+	 p01tRyeI86ODH61GiPEMnBknhqeuLwXqSLa7aPBo=
+Message-ID: <7e8a5d33-9b5e-41a1-b431-afa8c63d2ee4@candelatech.com>
+Date: Fri, 27 Mar 2026 06:27:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl: Add CXL_PMEM as dependency for CXL_ACPI
+To: Dave Jiang <dave.jiang@intel.com>, dave@stgolabs.net,
+ jonathan.cameron@huawei.com, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org
+References: <20260326211441.83573-2-dylan.eskew@candelatech.com>
+ <594e2663-06ff-44c4-8420-f00b788290cc@intel.com>
+Content-Language: en-US
+From: "Dylan E." <dylan.eskew@candelatech.com>
+In-Reply-To: <594e2663-06ff-44c4-8420-f00b788290cc@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-MDID: 1774618024-mOqQIxMBP4CZ
+X-PPE-STACK: {"stack":"us5"}
+X-MDID-O:
+ us5;ut7;1774618024;mOqQIxMBP4CZ;<dylan.eskew@candelatech.com>;12862f54078ff5ce47578406b6d80bf8
+X-PPE-TRUSTED: V=1;DIR=OUT;
 
-N_NORMAL_MEMORY is initialized from zone population at boot, but memory
-hotplug currently only updates N_MEMORY. As a result, a node that gains
-normal memory via hotplug can remain invisible to users iterating over
-N_NORMAL_MEMORY, while a node that loses its last normal memory can stay
-incorrectly marked as such.
+> On 3/26/26 2:14 PM, dylan.eskew@candelatech.com wrote:
+>> From: Dylan Eskew <dylan.eskew@candelatech.com>
+>>
+>> Prevent a linking issue against CXL_PMEM when CXL_ACPI is configured in
+>> Kconfig.
+>>
+>> Signed-off-by: Dylan Eskew <dylan.eskew@candelatech.com>
+> Hi Dylan, does this commit fixes your issue? It's in Linus's tree now.
+> 93d0fcdddc9e ("cxl/acpi: Fix CXL_ACPI and CXL_PMEM Kconfig tristate mismatch")
 
-Restore N_NORMAL_MEMORY maintenance directly in online_pages() and
-offline_pages(). Set the bit when a node that currently lacks normal
-memory onlines pages into a zone <= ZONE_NORMAL, and clear it when
-offlining removes the last present pages from zones <= ZONE_NORMAL.
+Hi Dave,
 
-This restores the intended semantics without bringing back the old
-status_change_nid_normal notifier plumbing which was removed in
-8d2882a8edb8.
+This looks to fix it, thanks! I was sitting at -rc5 not thinking there 
+was anything farther up the tree.
 
-Current users that benefit include list_lru, zswap, nfsd filecache,
-hugetlb_cgroup, and has_normal_memory sysfs reporting.
-
-Signed-off-by: Hao Li <hao.li@linux.dev>
----
-
-This patch also prepares for a subsequent SLUB change that makes
-can_free_to_pcs() rely on N_NORMAL_MEMORY to decide whether an object can be
-freed to the sheaf.
-
----
- mm/memory_hotplug.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index bc805029da51..5498744aa1f1 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1155,6 +1155,7 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
- 	int need_zonelists_rebuild = 0;
- 	unsigned long flags;
- 	int ret;
-+	bool need_set_normal_memory = false;
- 
- 	/*
- 	 * {on,off}lining is constrained to full memory sections (or more
-@@ -1180,6 +1181,9 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
- 		if (ret)
- 			goto failed_addition;
- 	}
-+	/* Adding normal memory to the node for the first time */
-+	if (!node_state(nid, N_NORMAL_MEMORY) && zone_idx(zone) <= ZONE_NORMAL)
-+		need_set_normal_memory = true;
- 
- 	ret = memory_notify(MEM_GOING_ONLINE, &mem_arg);
- 	ret = notifier_to_errno(ret);
-@@ -1209,6 +1213,8 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
- 
- 	if (node_arg.nid >= 0)
- 		node_set_state(nid, N_MEMORY);
-+	if (need_set_normal_memory)
-+		node_set_state(nid, N_NORMAL_MEMORY);
- 	if (need_zonelists_rebuild)
- 		build_all_zonelists(NULL);
- 
-@@ -1908,6 +1914,9 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
- 	unsigned long flags;
- 	char *reason;
- 	int ret;
-+	bool need_clear_normal_memory = false;
-+	unsigned long node_normal_pages = 0;
-+	enum zone_type zt;
- 
- 	/*
- 	 * {on,off}lining is constrained to full memory sections (or more
-@@ -1977,6 +1986,13 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
- 			goto failed_removal_isolated;
- 		}
- 	}
-+	/*
-+	 * Check whether this operation removes the node's last normal memory.
-+	 */
-+	for (zt = 0; zt <= ZONE_NORMAL; zt++)
-+		node_normal_pages += pgdat->node_zones[zt].present_pages;
-+	if (nr_pages >= node_normal_pages && zone_idx(zone) <= ZONE_NORMAL)
-+		need_clear_normal_memory = true;
- 
- 	ret = memory_notify(MEM_GOING_OFFLINE, &mem_arg);
- 	ret = notifier_to_errno(ret);
-@@ -2055,6 +2071,12 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
- 	/* reinitialise watermarks and update pcp limits */
- 	init_per_zone_wmark_min();
- 
-+	/*
-+	 * Clear N_NORMAL_MEMORY first to avoid the transient state
-+	 * "!N_MEMORY && N_NORMAL_MEMORY".
-+	 */
-+	if (need_clear_normal_memory)
-+		node_clear_state(node, N_NORMAL_MEMORY);
- 	/*
- 	 * Make sure to mark the node as memory-less before rebuilding the zone
- 	 * list. Otherwise this node would still appear in the fallback lists.
--- 
-2.50.1
-
+>> ---
+>>   drivers/cxl/Kconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+>> index 48b7314afdb8..baf1d17ec0fc 100644
+>> --- a/drivers/cxl/Kconfig
+>> +++ b/drivers/cxl/Kconfig
+>> @@ -58,6 +58,7 @@ config CXL_ACPI
+>>   	tristate "CXL ACPI: Platform Support"
+>>   	depends on ACPI
+>>   	depends on ACPI_NUMA
+>> +	depends on CXL_PMEM
+>>   	default CXL_BUS
+>>   	select ACPI_TABLE_LIB
+>>   	select ACPI_HMAT
