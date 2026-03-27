@@ -1,55 +1,55 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA70371CEF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F3C346FD0
 	for <linux-cxl@vger.kernel.org>; Fri, 27 Mar 2026 05:27:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774589231; cv=none; b=fXUKpKmONPENC5m5jtFCJ1F9Vslzj2w9bAezqb+pVihio05b+p1q9HDH7HniROkF9tueOg/7J9TNscynerChbB5iqCSM/tUt+z+Q+kuioTgvcW4t9ozfMA2QBnoUwxcWLFsNW53Ii8e93/U1b8Z+AMvS4v711Hy3K7t3Xc7gAG4=
+	t=1774589231; cv=none; b=DsSV2tV/hcWXwco1LoxOzR9twEvWghcqB9wUCyi4slsYke7IbOkVeVTcf8B+9AYjNXy+ouVJHZzLiyjqR+1rVFJM/tuABIQ0ojh2dVW7jHWspja85rk1pJ/6JwI28CUbJuoP9uAFpc62HjeaZ8TbESGwkvMhg22nKegD1tygyxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1774589231; c=relaxed/simple;
-	bh=I/LICR98j4NyKeW19BwXls+7A2b5r/ZcdQ4p+18VO0g=;
+	bh=pXYLlyR7AvX4cYo/+0W6iPdaXHmlws5szrL2k65F1/M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o1BCTv9FLzCyJ2u0ShmiQnqvMI6AgZEUn13ZuceK/n8CQ00mfqNpJ3R03AV9mFxxTNAo9mdRSWbflXhIbtsLVGkFOGCEJVMjEEPmwlNjGE7/RHf8m23DjFgT4cuuh5ao0NVzaMs1uwa1bwY4gEV/IQxVJO/WCAJXC68rlbrm2HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eoTCgcFD; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=dqthFh9YvWKejSN+2iSrTgYkweMcJ5hgiKTmYkIM4iYkc8P4YhHZCGrMXdFfeeBvuF2+rnRQXjvAmnhcxpc5Gomufpq26CnZ4PnGFlEVXlNL6JwdlDZ940HMHFHCtK1Erg0kYuvIVIrBA3hCmwrxWpG3dKOsn04H51kgcnE//Fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O1X/wMR+; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eoTCgcFD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O1X/wMR+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774589230; x=1806125230;
+  t=1774589229; x=1806125229;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=I/LICR98j4NyKeW19BwXls+7A2b5r/ZcdQ4p+18VO0g=;
-  b=eoTCgcFDq/HTjLvgd3qrJ7Rr2iGwzajQ+/n4Il8Z51Tmg2IDVJq4rO76
-   NIDcRafQI5tUO0bvkGqxRcvt5+YyYz4Gu0LEBg0wEZI4aeA6NAegRBOCC
-   xQO0lbKRXXf3nXGjIcL0Hc0CZTSFXX6AjoX4mpYwPRSEJS4f4MMFrNooY
-   giEAmJJ0HbEP2h720Dp8ltYGYQwxPrQkFMjoeDEwNdm9m4mwb/wA2hChB
-   eM7EhKMQ1L1hPhT9M6wvy5zeWMhMp9lrVPkKzQ/u4/3K93jX/QnoqGNpt
-   uVeyBFnVfKaOi7L9JGmQHYjwuyCDcVu57twLdwYE10dxP69e70t3k/qCg
-   A==;
-X-CSE-ConnectionGUID: 3mpqXJFfR+C6uJIf8galXw==
-X-CSE-MsgGUID: 2lAzYP0ARqqQ8KYTIAAm7A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11741"; a="101117959"
+  bh=pXYLlyR7AvX4cYo/+0W6iPdaXHmlws5szrL2k65F1/M=;
+  b=O1X/wMR+83n34GWMrh78us02Q0/3ecQqtmlmvQhkrN07Uv3ZpXj5Mn2o
+   4nJXkH2wGGtrc3R6FuRv+WCYIoilWiJhJsgtBb3n9PZ2GBn0kM1XJ/hh0
+   to3qkXqIvr+rK9z7ywA/45fOh4NtXO43Cwjj0Ak7mZsQNFUGJsuAmHi1+
+   jSsQUi6W2h4fKyMLet44vJVxTIuywWp1SGaTQiRuvEIEqBSTKyQGG0mGa
+   zRNI/SnE3UYuHwYNFL3FQjTI02qNRFZ7yKm06u8kXLSpEhmHMw1K0k0H9
+   7Uz+1M9ziSFVeQP52tJO0n1iZkuxAeTGBZsisENgjvH+xwu2WzaGbrUR1
+   g==;
+X-CSE-ConnectionGUID: y+qA/e+jR62tv4h/e++mYA==
+X-CSE-MsgGUID: iAVnPs3aS6uN1+gvXodHmA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11741"; a="101117953"
 X-IronPort-AV: E=Sophos;i="6.23,143,1770624000"; 
-   d="scan'208";a="101117959"
+   d="scan'208";a="101117953"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2026 22:27:07 -0700
-X-CSE-ConnectionGUID: SZetRyzOQz6keeXuIM+U0A==
-X-CSE-MsgGUID: GRDfq8C5Q7aQNJya7tNvxw==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2026 22:27:06 -0700
+X-CSE-ConnectionGUID: KQFpEI9qQYatTxCo9jTCRw==
+X-CSE-MsgGUID: O4C4NkfoR3+2iA4k41nwUw==
 X-ExtLoop1: 1
 Received: from dwillia2-desk.jf.intel.com ([10.88.27.145])
-  by fmviesa003.fm.intel.com with ESMTP; 26 Mar 2026 22:27:06 -0700
+  by fmviesa003.fm.intel.com with ESMTP; 26 Mar 2026 22:27:05 -0700
 From: Dan Williams <dan.j.williams@intel.com>
 To: dave.jiang@intel.com
 Cc: patches@lists.linux.dev,
 	linux-cxl@vger.kernel.org,
 	alison.schofield@intel.com,
 	Smita.KoralahalliChannabasappa@amd.com
-Subject: [PATCH 7/9] dax/hmem: Parent dax_hmem devices
-Date: Thu, 26 Mar 2026 22:28:19 -0700
-Message-ID: <20260327052821.440749-8-dan.j.williams@intel.com>
+Subject: [PATCH 5/9] dax/hmem: Reduce visibility of dax_cxl coordination symbols
+Date: Thu, 26 Mar 2026 22:28:17 -0700
+Message-ID: <20260327052821.440749-6-dan.j.williams@intel.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260327052821.440749-1-dan.j.williams@intel.com>
 References: <20260327052821.440749-1-dan.j.williams@intel.com>
@@ -61,28 +61,42 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For test purposes it is useful to be able to determine which
-"hmem_platform" device is hosting a given sub-device.
-
-Register hmem devices underneath "hmem_platform".
+No other module or use case should be using dax_hmem_initial_probe or
+dax_hmem_flush_work(). Limit their use to dax_hmem, and dax_cxl
+respectively.
 
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/dax/hmem/hmem.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dax/hmem/device.c | 2 +-
+ drivers/dax/hmem/hmem.c   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/dax/hmem/device.c b/drivers/dax/hmem/device.c
+index 991a4bf7d969..675d56276d78 100644
+--- a/drivers/dax/hmem/device.c
++++ b/drivers/dax/hmem/device.c
+@@ -9,7 +9,7 @@ static bool nohmem;
+ module_param_named(disable, nohmem, bool, 0444);
+ 
+ bool dax_hmem_initial_probe;
+-EXPORT_SYMBOL_GPL(dax_hmem_initial_probe);
++EXPORT_SYMBOL_FOR_MODULES(dax_hmem_initial_probe, "dax_hmem");
+ 
+ static bool platform_initialized;
+ static DEFINE_MUTEX(hmem_resource_lock);
 diff --git a/drivers/dax/hmem/hmem.c b/drivers/dax/hmem/hmem.c
-index e1dae83dae8d..af21f66bf872 100644
+index b2ab1292fa81..dd3d7f93baee 100644
 --- a/drivers/dax/hmem/hmem.c
 +++ b/drivers/dax/hmem/hmem.c
-@@ -96,6 +96,7 @@ static int __hmem_register_device(struct device *host, int target_nid,
- 		return -ENOMEM;
- 	}
+@@ -74,7 +74,7 @@ void dax_hmem_flush_work(void)
+ {
+ 	flush_work(&dax_hmem_work.work);
+ }
+-EXPORT_SYMBOL_GPL(dax_hmem_flush_work);
++EXPORT_SYMBOL_FOR_MODULES(dax_hmem_flush_work, "dax_cxl");
  
-+	pdev->dev.parent = host;
- 	pdev->dev.numa_node = numa_map_to_online_node(target_nid);
- 	info = (struct memregion_info) {
- 		.target_node = target_nid,
+ static int __hmem_register_device(struct device *host, int target_nid,
+ 				  const struct resource *res)
 -- 
 2.53.0
 
