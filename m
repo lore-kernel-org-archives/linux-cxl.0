@@ -1,188 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B783ED5D3;
-	Fri, 27 Mar 2026 14:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD5128313D;
+	Fri, 27 Mar 2026 14:46:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774622662; cv=none; b=BpjHPVA0mE68d75ZseNHiH10qaqCHTTYZ6nupfb+ks41jaiwePl5hnZd/ZgfViqjU0jhEjKk5WXbBoEpnME2lTsuTz4qtinDSXq8seu6hagfHHQwC0Qmoqy9ue2E1l+g+hYR4Otn8+5NRo7EA12Ua1JXa9OTGqG+B3HKh5F0tTk=
+	t=1774622769; cv=none; b=EBYCqYNY7olGmm6VtbHpRlhGdoQOvcxY8glBDsdBmLj73DF+7TVM6K2etKdb4NmEENWBqWhZrH/FvOQFoZSD+Hb04AISRrZkL89UkwP+jpbMbdSFI4K8NXJCUdvTtCTkxRTjyQ1E3HavcjTCEgT7pgklXc1qlnB3ZZfU07f+wmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774622662; c=relaxed/simple;
-	bh=VzHqT1HLWRjCt76mqRElErCGJJ63FvELKETApdvgTtc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G2ZzdKD72rlfxPnyG979ReGp6GrIaO7bCYceUp+B9mYHuOwxEUmAMwdihDqSg6wfaVNiULVCO9GcwVzW5IMS1PDNOHX9VO9klCjTuy2KGGVVOqyWhWDgy9xHE3L/ucvMca6/WWT1w+zZdgZqgVfB0ZJR8HhZ6Zc1w5NNFUaV6Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a8E2wyNd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8E2wyNd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9445CC19423;
-	Fri, 27 Mar 2026 14:44:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774622662;
-	bh=VzHqT1HLWRjCt76mqRElErCGJJ63FvELKETApdvgTtc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=a8E2wyNdJdSDZm0OE8JfiS0ZOuXavyS8W+f3sH3lFuwsiRPNFKHKQuJ37M5mjZ7gP
-	 vk/NEMG//USy10sqpVztsM6u/7B5EcEerEDDx/SvI6+nSnMCyWxFCvPddhJNJJ3SNC
-	 wJfUkzB0oy27IjdARRblG64Ei4E8V40vR2iDoCrZwXVq0MVnCKyYRrDNPkei+YHZAy
-	 dV5obcBpIRU5PUZ+4Et8Ob37LyIf5R6YwF//O8oBlXJHN5TtEZqcrPCii0sRI5a5fx
-	 5NnHYhh1ehALiW8ZME4bu9f3vV1L/kQUmpg2mXDKGKH9D8BZO/ZyWpkQd+phdl0AuR
-	 9riX2874GFefw==
-Message-ID: <2356614e-d9b8-4639-8e2a-96c5e4eaef61@kernel.org>
-Date: Fri, 27 Mar 2026 15:44:18 +0100
+	s=arc-20240116; t=1774622769; c=relaxed/simple;
+	bh=4abyi0QFJA+ENtgPePryoxoJ/65jZXwGxdGsYQGWJ/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EkNuNKejReyjGHY686ptQzwCtdRBMXYF29aOluIWz1QLGQQiGNVrCvdJ7qVDrmZtVvVhSF4967ES81g2dXMU8et/d26l4QzG5PhSDw/8iOGVnUVfl8ItUggk3EXQAVtomgaTvgGK7c4EZC8MgiiMp7LXEPP/EwGVx8tzVcmolr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 10F391411DB;
+	Fri, 27 Mar 2026 14:45:57 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf09.hostedemail.com (Postfix) with ESMTPA id F1F552003B;
+	Fri, 27 Mar 2026 14:45:44 +0000 (UTC)
+Date: Fri, 27 Mar 2026 09:45:42 -0500
+From: John Groves <John@groves.net>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
+	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V9 7/8] dax: Add fs_dax_get() func to prepare dax for
+ fs-dax usage
+Message-ID: <acaX5fMhxSl0aD5h@groves.net>
+References: <0100019d1d463523-617e8165-a084-4d91-aa5e-13778264d5d4-000000@email.amazonses.com>
+ <20260324003919.5106-1-john@jagalactic.com>
+ <0100019d1d484ddc-2487f887-7ecd-49a3-abfe-9dabec28873f-000000@email.amazonses.com>
+ <20260324150526.000047b6@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/memory_hotplug: maintain N_NORMAL_MEMORY during
- hotplug
-Content-Language: en-US
-To: Joshua Hahn <joshua.hahnjy@gmail.com>, Hao Li <hao.li@linux.dev>
-Cc: david@kernel.org, osalvador@suse.de, akpm@linux-foundation.org,
- vbabka@suse.cz, harry.yoo@oracle.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-References: <20260327143823.3063541-1-joshua.hahnjy@gmail.com>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-In-Reply-To: <20260327143823.3063541-1-joshua.hahnjy@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260324150526.000047b6@huawei.com>
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: F1F552003B
+X-Stat-Signature: 9bfz1px3crt5gbbbqfyugqsepybdznwf
+X-Session-Marker: 6A6F686E4067726F7665732E6E6574
+X-Session-ID: U2FsdGVkX1+2XQXA8LG1Z1gPhCVVcUDiPnAuvqEAEUE=
+X-HE-Tag: 1774622744-193271
+X-HE-Meta: U2FsdGVkX19uXYBvOa/PdwyxV5VkzlppzyKL/FKiMhfYbCosuJ3ekwr2xWqOqHs4tqX7vVS7EiXaXpsof09wXFdRoEjmq9VNuHMhM8phOJUeE0vCyScTnyWAeORd/3AxPJ5mJHamRkQlNMfJXgl5lOO7xivNG/Mz+6ntwciRcug7cJeTCaSE+O8TRrootHB37g+aziwAwI4V4JqD8cMWsTSbOhrlBJGF3gkleT16yA7gHUOWdDDPcdoHp3DyZTHHWs081bo2h8s6Xtd+yfwPKih/8Tda1Is1l0DxR5HYGyDHF1UgsvrMc1fCY21fv56XdaaRBtMgRdPvAUXdP/g+sveuQ7Qb+x6YpXk1RHw98opI/sgNXmgTUfaZ8mNUiZjKMAH7z+VjvDkZ55zfJQ7aLVPrwKeebgq+tKC89Djw3Trjl/RgfRAQNC+84i+IGPMwtYVRBLrvSMt+sXZCrsdbXw==
 
-On 3/27/26 15:38, Joshua Hahn wrote:
-> On Fri, 27 Mar 2026 20:42:47 +0800 Hao Li <hao.li@linux.dev> wrote:
+On 26/03/24 03:05PM, Jonathan Cameron wrote:
+> On Tue, 24 Mar 2026 00:39:31 +0000
+> John Groves <john@jagalactic.com> wrote:
 > 
-> Hello Hao,
+> > From: John Groves <john@groves.net>
+> > 
+> > The fs_dax_get() function should be called by fs-dax file systems after
+> > opening a fsdev dax device. This adds holder_operations, which provides
+> > a memory failure callback path and effects exclusivity between callers
+> > of fs_dax_get().
+> > 
+> > fs_dax_get() is specific to fsdev_dax, so it checks the driver type
+> > (which required touching bus.[ch]). fs_dax_get() fails if fsdev_dax is
+> > not bound to the memory.
+> > 
+> > This function serves the same role as fs_dax_get_by_bdev(), which dax
+> > file systems call after opening the pmem block device.
+> > 
+> > This can't be located in fsdev.c because struct dax_device is opaque
+> > there.
+> > 
+> > This will be called by fs/fuse/famfs.c in a subsequent commit.
+> > 
+> > Signed-off-by: John Groves <john@groves.net>
+> Hi John,
 > 
-> I hope you are doing well, thank you for the patch!
+> Looks like a stray header change  - see inline.
 > 
->> N_NORMAL_MEMORY is initialized from zone population at boot, but memory
->> hotplug currently only updates N_MEMORY. As a result, a node that gains
->> normal memory via hotplug can remain invisible to users iterating over
->> N_NORMAL_MEMORY, while a node that loses its last normal memory can stay
->> incorrectly marked as such.
+> With that tidied up.
+> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 > 
-> The second part feels more important than the second part, doing a quick
-> glance through the code I can see a few N_NORMAL_MEMORY iterators that
+> >  #define dax_driver_register(driver) \
+> > diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+> > index ba0b4cd18a77..d4ab60c406bf 100644
+> > --- a/drivers/dax/super.c
+> > +++ b/drivers/dax/super.c
+> 
+> > diff --git a/include/linux/dax.h b/include/linux/dax.h
+> > index b19bfe0c2fd1..bf37b9a982f3 100644
+> > --- a/include/linux/dax.h
+> > +++ b/include/linux/dax.h
+> 
+> >  #if IS_ENABLED(CONFIG_FS_DAX)
+> > +void fs_put_dax(struct dax_device *dax_dev, void *holder);
+> > +int fs_dax_get(struct dax_device *dax_dev, void *holder,
+> > +	       const struct dax_holder_operations *hops);
+> > +struct dax_device *inode_dax(struct inode *inode);
+> 
+> What's this? Not used in this patch and not stubbed.
+> It's in drivers/dax/dax-private.h already and given I assume code builds
+> before this patch (and it's not used in patch 8) then presumably it doesn't
+> need to be here.
+> 
+> I got suspicious due to the lack of stub rather indicating something differnt
+> form the other two.
 
-Note in practice it's unlikely that a node would hotplug normal memory,
-start using it, and then manage to successfully hotremove it, due to
-unmovable allocations. Most likely only ZONE_MOVABLE memory can get hotremoved.
+Dropped, thanks!
 
-> are in some hot paths like shrink_memcg. Iterating over nodes that don't
-> contain any NORMAL memory seems like an inefficiency rather than a bug
-> though. 
-
-Ignoring nodes that have normal memory, just because it was hotplugged, will
-result also just in some form of inefficiency, or can the consequences be worse?
-
->> Restore N_NORMAL_MEMORY maintenance directly in online_pages() and
->> offline_pages(). Set the bit when a node that currently lacks normal
->> memory onlines pages into a zone <= ZONE_NORMAL, and clear it when
->> offlining removes the last present pages from zones <= ZONE_NORMAL.
->> 
->> This restores the intended semantics without bringing back the old
->> status_change_nid_normal notifier plumbing which was removed in
->> 8d2882a8edb8.
-
-But commit 8d2882a8edb8 didn't introduce the current state, or did it?
-
->> Current users that benefit include list_lru, zswap, nfsd filecache,
->> hugetlb_cgroup, and has_normal_memory sysfs reporting.
->> 
->> Signed-off-by: Hao Li <hao.li@linux.dev>
->> ---
->> 
->> This patch also prepares for a subsequent SLUB change that makes
->> can_free_to_pcs() rely on N_NORMAL_MEMORY to decide whether an object can be
->> freed to the sheaf.
->> 
->> ---
->>  mm/memory_hotplug.c | 22 ++++++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->> 
->> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->> index bc805029da51..5498744aa1f1 100644
->> --- a/mm/memory_hotplug.c
->> +++ b/mm/memory_hotplug.c
->> @@ -1155,6 +1155,7 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
->>  	int need_zonelists_rebuild = 0;
->>  	unsigned long flags;
->>  	int ret;
->> +	bool need_set_normal_memory = false;
->>  
->>  	/*
->>  	 * {on,off}lining is constrained to full memory sections (or more
->> @@ -1180,6 +1181,9 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
->>  		if (ret)
->>  			goto failed_addition;
->>  	}
->> +	/* Adding normal memory to the node for the first time */
->> +	if (!node_state(nid, N_NORMAL_MEMORY) && zone_idx(zone) <= ZONE_NORMAL)
->> +		need_set_normal_memory = true;
->>  
->>  	ret = memory_notify(MEM_GOING_ONLINE, &mem_arg);
->>  	ret = notifier_to_errno(ret);
->> @@ -1209,6 +1213,8 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
->>  
->>  	if (node_arg.nid >= 0)
->>  		node_set_state(nid, N_MEMORY);
->> +	if (need_set_normal_memory)
->> +		node_set_state(nid, N_NORMAL_MEMORY);
->>  	if (need_zonelists_rebuild)
->>  		build_all_zonelists(NULL);
-> 
-> Do we need the flag here? As far as I can tell, we can just skip this and just
-> directly check whether this is the first normal memory we are adding to the
-> node here and set the bit. Then we can remove the flag and the extraneous
-> check. We won't do any notifier work so I think it should be OK.
-> 
->> @@ -1908,6 +1914,9 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
->>  	unsigned long flags;
->>  	char *reason;
->>  	int ret;
->> +	bool need_clear_normal_memory = false;
->> +	unsigned long node_normal_pages = 0;
->> +	enum zone_type zt;
->>  
->>  	/*
->>  	 * {on,off}lining is constrained to full memory sections (or more
->> @@ -1977,6 +1986,13 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
->>  			goto failed_removal_isolated;
->>  		}
->>  	}
->> +	/*
->> +	 * Check whether this operation removes the node's last normal memory.
->> +	 */
->> +	for (zt = 0; zt <= ZONE_NORMAL; zt++)
->> +		node_normal_pages += pgdat->node_zones[zt].present_pages;
->> +	if (nr_pages >= node_normal_pages && zone_idx(zone) <= ZONE_NORMAL)
->> +		need_clear_normal_memory = true;
->>  
->>  	ret = memory_notify(MEM_GOING_OFFLINE, &mem_arg);
->>  	ret = notifier_to_errno(ret);
->> @@ -2055,6 +2071,12 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
->>  	/* reinitialise watermarks and update pcp limits */
->>  	init_per_zone_wmark_min();
-> 
-> Same here, couldn't we just iterate through the paegs here and accumulate
-> node_normal_pages and clear the memory here? We can get rid of the bool and
-> also keep node_normal_pages defined inside an if (zone_idx(zone) <= ZONE_NORMAL)
-> check as well. 
-> 
->> +	/*
->> +	 * Clear N_NORMAL_MEMORY first to avoid the transient state
->> +	 * "!N_MEMORY && N_NORMAL_MEMORY".
->> +	 */
->> +	if (need_clear_normal_memory)
->> +		node_clear_state(node, N_NORMAL_MEMORY);
->>  	/*
->>  	 * Make sure to mark the node as memory-less before rebuilding the zone
->>  	 * list. Otherwise this node would still appear in the fallback lists.
->> -- 
->> 2.50.1
->> 
->> 
-> 
-> Thank you for the patch. The rest looks good to me! Have a great day : -)
-> Joshua
+John
 
