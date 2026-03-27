@@ -1,53 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0A03BADB5;
-	Fri, 27 Mar 2026 14:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C4E31A81C
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Mar 2026 15:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774623170; cv=none; b=bPgXfxhPBRwfgeP4dI8JFRYpCVUT6syxuUsCmqZNigbHLvL6s2+ku15ZwyPDqOmyS1lu73O/1DHQcGPATD2wWTEB8WQ+LZCnANq1cM6pllBPX45jAXgE0jyKbbnOq5JNOMHthSCwXxF8g/rBlHsmhEW8VSVrPYb9e1Kx8U3wK30=
+	t=1774624640; cv=none; b=sZKFCmsef2IyIbk9vcVV/nblgql2dfdbwe+UEfuuHPs2Pt92b29tjoFInWjL2jESXuTCyVSrGAXHtnSPSU1m1c69wrh4uDmAbJmxkA65f3CK3mIa9Xv4kdlJPZuskd+4eCkF9dyhff/P0f2vPu3kFfCI86nUvgKIYdxNJhXexlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774623170; c=relaxed/simple;
-	bh=b+o8RyCMAs22IAZgIJO84wgLfvydOGliYGSLwf391wM=;
+	s=arc-20240116; t=1774624640; c=relaxed/simple;
+	bh=pis06wkXD4RWAfuRxuug5rKUZx3VJQr1v7l+fB6zzzQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ncBUop5p3x2JwEKt/TL7ptE5vCWTpuh7bSQrTxtM6SMEhQjlwYFrmpiMQaH/JmVsO82oC/geZNnTzmva0KGVGqQrfxGBM56rbwRD+LaVkj/1gaV3Bu92oQd/sIpRqNqstpUh/yY3zWulZtg5V8n1PPepLbadWXprTlcV/a8Kvig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.16
+	 Content-Type:Content-Disposition:In-Reply-To; b=aJImvHUNxvRhbhRSGLymxv7wAJN1dHAjHdHV+6IgOpQB0sYixqP/bkai4JImkWxrevVwYqjmHyU3Plg2TyaXTWVPJ782l8TqXt2d5ou6QhOpaCCV0AXP0/G5WsxscEhWcRS4rA1qC9OhrMVkq3xT/O4fD1do/wI7gm8AGbnNXTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
 Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id A802E8DAF6;
-	Fri, 27 Mar 2026 14:52:37 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf14.hostedemail.com (Postfix) with ESMTPA id 4F3E833;
-	Fri, 27 Mar 2026 14:52:25 +0000 (UTC)
-Date: Fri, 27 Mar 2026 09:52:22 -0500
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 51A061B9962;
+	Fri, 27 Mar 2026 15:17:08 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf14.hostedemail.com (Postfix) with ESMTPA id 70A0830;
+	Fri, 27 Mar 2026 15:17:05 +0000 (UTC)
+Date: Fri, 27 Mar 2026 10:17:01 -0500
 From: John Groves <John@groves.net>
 To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V9 01/10] famfs_fuse: Update macro
- s/FUSE_IS_DAX/FUSE_IS_VIRTIO_DAX/
-Message-ID: <acaZRqeGO7P3iozd@groves.net>
-References: <0100019d1d48b7e8-4468329f-b446-43f1-87db-3c7e1ff6f28b-000000@email.amazonses.com>
- <20260324004026.5170-1-john@jagalactic.com>
- <0100019d1d494e7b-2f01e83a-ebaa-4d1b-ae35-33b882a7bda4-000000@email.amazonses.com>
- <20260324151253.00006b86@huawei.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, dave.jiang@intel.com, 
+	alison.schofield@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com, 
+	dongjoo.seo1@samsung.com, anisa.su@samsung.com, linux-cxl@vger.kernel.org, 
+	John Groves <jgroves@micron.com>
+Subject: Re: [RFC PATCH 0/1] cxl: Media Operations
+Message-ID: <acaes_gqFt-LLFrC@groves.net>
+References: <20260323204013.4010634-1-dave@stgolabs.net>
+ <20260324153238.0000750e@huawei.com>
+ <20260324180754.et4gwn6dobdplurt@offworld>
+ <20260325120613.00007003@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -56,158 +40,89 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260324151253.00006b86@huawei.com>
-X-Rspamd-Queue-Id: 4F3E833
-X-Rspamd-Server: rspamout06
-X-Stat-Signature: 6yx58x5nfu7ffewnnsesr1btncocbd1q
+In-Reply-To: <20260325120613.00007003@huawei.com>
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 70A0830
+X-Stat-Signature: jde38t4c6xgfw9omomu7uho7qau5xnyc
 X-Session-Marker: 6A6F686E4067726F7665732E6E6574
-X-Session-ID: U2FsdGVkX189GkLpt1nECEgB1RZ5HV34VbGYITYpBXo=
-X-HE-Tag: 1774623145-297233
-X-HE-Meta: U2FsdGVkX1/iIrjepB/tOVe6pqP1Emyi9FiDGaVW2opQ9xrpLV/NzZ65/TqVjlU42C2XN/5jUr5yZ8aMwlnkv1Ln+XzuWUZgfn/Ae2umamlOUg+/ZYH0eLR2/RvO5JeVBV4BIWYn5ro9IfUFEk9RU46Kd6f9zHv7RWFxtvrwXQctw2gZO+Ee95ltuf8vFMkUBuxnJ2ACp1T2pU415hdCw/scUq9eyjusOTmR4fpAmDeJF0v5dwNl9vHdpV1tF13AuCxE+MiCCpTGBtxsewW/5ejApktdEdB+AFUwd1NcAbtCWZn4ASj6zwk9tdzyxEUJDUfM6U7o8kAjzPaj6BFQ/2tluwHT5f/595bYeN86qOA6xnHje4cKp2SGfUdgKIrIhlCACJDi9R5MUFJ2690GLOA4635KBFDDAxlAzVJyCznPoj47mtXb8wZXMdt/79s0AxE94h5CbxPBw1LuoL/vjXlpxlX4mHPiKZ5Qo2MmSGQQ282MJbar+A4FfSHT2abjLXz/+WIkGxjLnJI73lX5vPhVZb5GY9M/KizoTtfmHkj4hvVP5OlV+X87XKt2KLRZToHQHlQ9ayxxgdVASlFx0Ty7fOmjPsdt
+X-Session-ID: U2FsdGVkX19MkH3PTVbriYSiZRCQz1ujHn/a+sbAtv8=
+X-HE-Tag: 1774624625-677811
+X-HE-Meta: U2FsdGVkX19rC4hhL6LiP66cYCh5UY5FsoWT5SjTeyaRM0KlwKwJxkHcCTT4MmvnTMyFRxI7wijutmsXfMdhXo25+AEVvLk/gz8C959KgvjKKBURb/1LU6EdFJu3uLtPdBI3g1YemBx1Qwym8woztsAPzsyl7gjTpLJES7rxjHW0Is3PbAFLBcuC629yCnsAlDsk+ni2i/IhdHhMoCqzAJHwVYHHVbRuFbJ3sNIwOTWgSuhFBD+3Mbvlk8ynnsrdFaPyTVPK7dDiaOsPW6zSemH4Wh4fQpkV9XEXQz32zFKB3N7PMwxGdw4mn0Gz6aA5hH+Uu1UStqA8b70XVYXyuSQ/cft9nJ9J1SJgeIO9E4FcYpjtD1eXCqSpuKYvX4r6
 
-On 26/03/24 03:12PM, Jonathan Cameron wrote:
-> On Tue, 24 Mar 2026 00:40:36 +0000
-> John Groves <john@jagalactic.com> wrote:
+On 26/03/25 12:06PM, Jonathan Cameron wrote:
+> On Tue, 24 Mar 2026 11:07:54 -0700
+> Davidlohr Bueso <dave@stgolabs.net> wrote:
 > 
-> > From: John Groves <john@groves.net>
+> > On Tue, 24 Mar 2026, Jonathan Cameron wrote:
 > > 
-> > Virtio_fs now needs to determine if an inode is DAX && not famfs.
-> FWIW patch bundles broke sashiko
-> 
-> https://sashiko.dev/#/message/0100019d1d46d094-cc0a4b79-3bd2-43e8-a08d-ab8cd21266a6-000000%40email.amazonses.com
-> It only reviewed the fuse part.  (I was looking to see what it had found I missed
-> in the DAX ones).
-> > This relaces the FUSE_IS_DAX() macro with FUSE_IS_VIRTIO_DAX(),
-> 
-> replaces (Sashiko spell checks ;)
-
-Derp. With v10 I will just post separate series'
-
-> 
-> > in preparation for famfs in later commits. The dummy
-> > fuse_file_famfs() macro will be replaced with a working
-> > function.
+> > >On Mon, 23 Mar 2026 13:40:12 -0700
+> > >Davidlohr Bueso <dave@stgolabs.net> wrote:
+> > >  
+> > >> Hello,
+> > >>
+> > >> This implements support for Media Operation cmd. It is marked RFC because of these
+> > >> noteworthy points:
+> > >>
+> > >>  (i) Sysfs interfaces. These changes implement 'security/zero' and multiplex
+> > >>      'security/sanitize' to allow dpa, len pairs for the range (no impact for
+> > >>      current usage as whole-device). This breaks the 1 value per file "rule",
+> > >>      and would be a first for drivers/cxl/*, so am I open to suggestions.  
+> > >
+> > >Value is a vague sort of term.  It's one thing (an range) so seems fine to me.  
 > > 
-> > Reviewed-by: Joanne Koong <joannelkoong@gmail.com>
-> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> > Signed-off-by: John Groves <john@groves.net>
-> 
-> 
-> 
-> > ---
-> >  fs/fuse/dir.c    |  2 +-
-> >  fs/fuse/file.c   | 13 ++++++++-----
-> >  fs/fuse/fuse_i.h |  9 ++++++++-
-> >  fs/fuse/inode.c  |  4 ++--
-> >  fs/fuse/iomode.c |  2 +-
-> >  5 files changed, 20 insertions(+), 10 deletions(-)
+> > I agree.
 > > 
-> > diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-> > index 7ac6b232ef12..c63f097bc697 100644
-> > --- a/fs/fuse/dir.c
-> > +++ b/fs/fuse/dir.c
-> > @@ -2161,7 +2161,7 @@ int fuse_do_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
-> >  		is_truncate = true;
-> >  	}
-> >  
-> > -	if (FUSE_IS_DAX(inode) && is_truncate) {
-> > +	if (FUSE_IS_VIRTIO_DAX(fi) && is_truncate) {
-> >  		filemap_invalidate_lock(mapping);
-> >  		fault_blocked = true;
-> >  		err = fuse_dax_break_layouts(inode, 0, -1);
-> > diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> > index b1bb7153cb78..4ee5065737d8 100644
-> > --- a/fs/fuse/file.c
-> > +++ b/fs/fuse/file.c
-> > @@ -252,7 +252,7 @@ static int fuse_open(struct inode *inode, struct file *file)
-> >  	int err;
-> >  	bool is_truncate = (file->f_flags & O_TRUNC) && fc->atomic_o_trunc;
-> >  	bool is_wb_truncate = is_truncate && fc->writeback_cache;
-> > -	bool dax_truncate = is_truncate && FUSE_IS_DAX(inode);
-> > +	bool dax_truncate = is_truncate && FUSE_IS_VIRTIO_DAX(fi);
-> >  
-> >  	if (fuse_is_bad(inode))
-> >  		return -EIO;
-> > @@ -1812,11 +1812,12 @@ static ssize_t fuse_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
-> >  	struct file *file = iocb->ki_filp;
-> >  	struct fuse_file *ff = file->private_data;
-> >  	struct inode *inode = file_inode(file);
-> > +	struct fuse_inode *fi = get_fuse_inode(inode);
-> >  
-> >  	if (fuse_is_bad(inode))
-> >  		return -EIO;
-> >  
-> > -	if (FUSE_IS_DAX(inode))
-> > +	if (FUSE_IS_VIRTIO_DAX(fi))
-> >  		return fuse_dax_read_iter(iocb, to);
-> >  
-> >  	/* FOPEN_DIRECT_IO overrides FOPEN_PASSTHROUGH */
-> > @@ -1833,11 +1834,12 @@ static ssize_t fuse_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
-> >  	struct file *file = iocb->ki_filp;
-> >  	struct fuse_file *ff = file->private_data;
-> >  	struct inode *inode = file_inode(file);
-> > +	struct fuse_inode *fi = get_fuse_inode(inode);
-> >  
-> >  	if (fuse_is_bad(inode))
-> >  		return -EIO;
-> >  
-> > -	if (FUSE_IS_DAX(inode))
-> > +	if (FUSE_IS_VIRTIO_DAX(fi))
-> >  		return fuse_dax_write_iter(iocb, from);
-> >  
-> >  	/* FOPEN_DIRECT_IO overrides FOPEN_PASSTHROUGH */
-> > @@ -2370,10 +2372,11 @@ static int fuse_file_mmap(struct file *file, struct vm_area_struct *vma)
-> >  	struct fuse_file *ff = file->private_data;
-> >  	struct fuse_conn *fc = ff->fm->fc;
-> >  	struct inode *inode = file_inode(file);
-> > +	struct fuse_inode *fi = get_fuse_inode(inode);
-> >  	int rc;
-> >  
-> >  	/* DAX mmap is superior to direct_io mmap */
-> > -	if (FUSE_IS_DAX(inode))
-> > +	if (FUSE_IS_VIRTIO_DAX(fi))
-> >  		return fuse_dax_mmap(file, vma);
-> >  
-> >  	/*
-> > @@ -2934,7 +2937,7 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
-> >  		.mode = mode
-> >  	};
-> >  	int err;
-> > -	bool block_faults = FUSE_IS_DAX(inode) &&
-> > +	bool block_faults = FUSE_IS_VIRTIO_DAX(fi) &&
-> >  		(!(mode & FALLOC_FL_KEEP_SIZE) ||
-> >  		 (mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_ZERO_RANGE)));
-> >  
-> > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> > index 7f16049387d1..45e108dec771 100644
-> > --- a/fs/fuse/fuse_i.h
-> > +++ b/fs/fuse/fuse_i.h
-> > @@ -1508,7 +1508,14 @@ void fuse_free_conn(struct fuse_conn *fc);
-> >  
-> >  /* dax.c */
-> >  
-> > -#define FUSE_IS_DAX(inode) (IS_ENABLED(CONFIG_FUSE_DAX) && IS_DAX(inode))
-> > +static inline bool fuse_file_famfs(struct fuse_inode *fuse_inode) /* Will be superseded */
-> > +{
-> > +	(void)fuse_inode;
-> > +	return false;
-> > +}
-> > +#define FUSE_IS_VIRTIO_DAX(fuse_inode) (IS_ENABLED(CONFIG_FUSE_DAX)	\
-> > +					&& IS_DAX(&fuse_inode->inode)  \
-> > +					&& !fuse_file_famfs(fuse_inode))
+> > >  
+> > >>
+> > >>  (ii) Background cmd handling semantics. Media operations are synchronous,
+> > >>       which for raged zeroing operations makes sense and for range sanitize  
+> > >
+> > >ranged
+> > >  
+> > >>       differs from the current async handling for whole-device, so user response
+> > >>       differs significantly, something I am not crazy about. Another downside
+> > >>       of this is that it exposes lock hold times to be user-controllable, but is
+> > >>       no different than what we do for fw. Fundamentally, users have the
+> > >>       responsibility to break up the work into sane ranges.  
+> > >
+> > >We could apply a limit on this and make that discoverable via another sysfs attribute.
+> > >So let userspace request in say 1Gig chunks.  Would have to check that the device
+> > >supports that granularity though.  
+> > 
+> > If we agree that this will be performed synchronously, then yes, adding a size cap
+> > would be necessary. I don't love having it in ie: security/range_limit(?), but that
+> > could be created at discovery time when we know the granularity. Another way would
+> > be to avoid the extra file and just print the limit in the error message - but I
+> > guess dev_dbg() would be needed to not spam the dmesg. In any case with a cap,
+> > while no guarantees, this also reduces the chances of the user triggering driver timeouts.
+> > 
+> > >I don't think there is anything in the spec today to let us query how long
+> > >something takes (which would be a better way to bound this).  
+> > 
+> > Correct, that is just something Scan Media allows for - and yes, that's exactly
+> > the sane way to do the work breakup.
+> > 
+> Yo John,
 > 
-> The AI overlord pointed out you should probably have a few more brackets
-> just in case someone passes something odd in as fuse_inode. Lets assume
-> they don't pass things with side effects in.
+> I'm sure you are keeping a list of potential improvements for the appropriate group
+> that I believe you have some leadership role in ;)
 > 
-> #define FUSE_IS_VIRTIO_DAX(fuse_inode) (IS_ENABLED(CONFIG_FUSE_DAX)	\
-> 					&& IS_DAX(&(fuse_inode)->inode)  \
-> 					&& !fuse_file_famfs(fuse_inode))
+> I'd like devices to provide info to allow us to establish an upper bound on how
+> long a zero / sanitize media operation would take.  This one doesn't need to be
+> code first so we can consider this a potential feature request.
+> 
+> Jonathan
+> 
+> > Thanks,
+> > Davidlohr
 > 
 
-Thank you for your tokens ;)
+Acknowledged. Are you thinking of a one-off for sanitize, or is there
+a class of commands that might ought to provide such an upper-bound?
 
-Fixed - and now there is a change for the v10 fuse series
+I'd be happy to try to push something through, but the solution ought
+to come from somebody who experiences the inconvenience directtly :D
 
+Regards,
 John
 
