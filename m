@@ -1,96 +1,116 @@
-Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [148.163.129.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F153B9DA6
-	for <linux-cxl@vger.kernel.org>; Fri, 27 Mar 2026 13:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.129.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1233A5E87;
+	Fri, 27 Mar 2026 14:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774618040; cv=none; b=qsfkzOr1MZCJJx8xf+z2eHtqqHZlSBjX/AZkQClKQ35jjoiLgFFcHzWghZMOyUo8Bg1rshU+nayI2sDMpF0r7d4ZkWornX1WGBTc1cQK4W4PGbBrbLASnA/gl/ZgZGzqHe9TZRteglN7btvUK9bot32OGFxpx8dIz7wV3NUHIJM=
+	t=1774620440; cv=none; b=YpFSvT2OIWg3zntm+de3/XBcaZOdrznYho6TUtT1XD8uwunDYfBI5HqMeS7WotdsHRs/YLFsGHACIM57gBMvMrExJ5pX2c950l8FFfx11pSWtwWokLoB66kXGVrxwyEYYVIVmbEBUcbRH+DvJvSKbkEoXFSlkAqhrVZfa3a/ThU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774618040; c=relaxed/simple;
-	bh=Fs0Zu7BzfWMWvpZrZXXWwl+h8mly81mWY39/A/0JgvI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RGzBcpZjnsPP7zpPQfWcoUD0v07YIGqQw/1NCcF1i1IGeQkYU/YH9kSko0eRxbZIGDRIAAnsb0RfEcdSp5O1anWfCWx9KL55Q6TTFc19goKTRotnk6rQPeQIkIrivXr+6XKr95HSErBHedqyQ/z64zKgGuv2dqCrkygRGjH6V2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com; spf=pass smtp.mailfrom=candelatech.com; dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b=CStHXI48; arc=none smtp.client-ip=148.163.129.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=candelatech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=candelatech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=candelatech.com header.i=@candelatech.com header.b="CStHXI48"
-Received: from dispatch1-us1.ppe-hosted.com (ip6-localhost [127.0.0.1])
-	by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 94DAE2C2C29
-	for <linux-cxl@vger.kernel.org>; Fri, 27 Mar 2026 13:27:11 +0000 (UTC)
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from mail3.candelatech.com (mail.candelatech.com [208.74.158.173])
-	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 6F04BC00074;
-	Fri, 27 Mar 2026 13:27:03 +0000 (UTC)
-Received: from [192.168.101.118] (firewall.candelatech.com [50.251.239.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by mail3.candelatech.com (Postfix) with ESMTPSA id 5B52B13C2B0;
-	Fri, 27 Mar 2026 06:27:01 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail3.candelatech.com 5B52B13C2B0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=candelatech.com;
-	s=default; t=1774618021;
-	bh=Fs0Zu7BzfWMWvpZrZXXWwl+h8mly81mWY39/A/0JgvI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CStHXI48c1pYryKQT+XchvE5RhxVqCi9op+kSQc7t4lFY6+4toNLDD2gyniI5rBkD
-	 SZtokn6jaB9zesgTiFSnsuCDLyYeGlh/lbBn2uJtxTXvOwBv1pJer7kl7MeRf5/AKW
-	 p01tRyeI86ODH61GiPEMnBknhqeuLwXqSLa7aPBo=
-Message-ID: <7e8a5d33-9b5e-41a1-b431-afa8c63d2ee4@candelatech.com>
-Date: Fri, 27 Mar 2026 06:27:01 -0700
+	s=arc-20240116; t=1774620440; c=relaxed/simple;
+	bh=AggJWbzXgAJW8nJRhQGxWDobjA7ATMqWYFMZpxSl+TA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EeOLm3ztkI/xhaP/T4Cfe5txkqUICeO7v2MKXD69tVdjuxA+22RD/tD+5rZjuNt+LXW77uw7eXTPnB5V02Lg/Q/Voh/lT42Mxq1qIXR3cHXd/M7hhqAYouY0rbOHx+UNwH8QZCBHuBuVkk9E0ZqZeudbce5Vb7J18/cU7OvqVHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 1FF49E0F30;
+	Fri, 27 Mar 2026 14:07:08 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf06.hostedemail.com (Postfix) with ESMTPA id D41B82000F;
+	Fri, 27 Mar 2026 14:06:55 +0000 (UTC)
+Date: Fri, 27 Mar 2026 09:06:53 -0500
+From: John Groves <John@groves.net>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
+	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Chen Linxuan <chenlinxuan@uniontech.com>, James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V9 5/8] dax: Add dax_operations for use by fs-dax on
+ fsdev dax
+Message-ID: <acaOzmCYOZHr_Ia1@groves.net>
+References: <0100019d1d463523-617e8165-a084-4d91-aa5e-13778264d5d4-000000@email.amazonses.com>
+ <20260324003851.5045-1-john@jagalactic.com>
+ <0100019d1d47e459-48f2a4e6-edab-4002-bde3-2ba642deccaf-000000@email.amazonses.com>
+ <593b2b5c-779b-4e29-8b03-12ce743b10b4@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl: Add CXL_PMEM as dependency for CXL_ACPI
-To: Dave Jiang <dave.jiang@intel.com>, dave@stgolabs.net,
- jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org
-References: <20260326211441.83573-2-dylan.eskew@candelatech.com>
- <594e2663-06ff-44c4-8420-f00b788290cc@intel.com>
-Content-Language: en-US
-From: "Dylan E." <dylan.eskew@candelatech.com>
-In-Reply-To: <594e2663-06ff-44c4-8420-f00b788290cc@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-MDID: 1774618024-mOqQIxMBP4CZ
-X-PPE-STACK: {"stack":"us5"}
-X-MDID-O:
- us5;ut7;1774618024;mOqQIxMBP4CZ;<dylan.eskew@candelatech.com>;12862f54078ff5ce47578406b6d80bf8
-X-PPE-TRUSTED: V=1;DIR=OUT;
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <593b2b5c-779b-4e29-8b03-12ce743b10b4@intel.com>
+X-Stat-Signature: 7dqy4jynbesstz9697ot4cz4cexh86pu
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: D41B82000F
+X-Session-Marker: 6A6F686E4067726F7665732E6E6574
+X-Session-ID: U2FsdGVkX19u88rI/RZbOnBIHfsRi86A2mDPG8VKxsA=
+X-HE-Tag: 1774620415-652695
+X-HE-Meta: U2FsdGVkX1+FrBjZnrpIbH0kvez85SGTcc2xxECCcDS+nAaDETophnfrphfd5mO9QQhYEdXOx92QLbEWRoJ9nDerbKGHUDtoN6YOsp7jWLzV7JSuDVRjE9A0MCbpn2Khfo5hWKqQiiTbEVX6AdSqGR2bRTk7OUuaByYUZz87MIOrwNJOhx0cn4b79EikkIiwmb+rJrYWJzPe5qRFV23oiY2dfKw1Anv3CmCHgBuMsQ/u4t5n5dwjt5d6SGNbPQTtnGHdoaSqLW6mO4xqMEAMhO3CFDaqGw3eQWKEQUX4xUcyefn0zqY+lXxLNiuUeL1+MpKiV07znBajEkTfCZ37KHMxl5M/SKjM4wW8yo1/nxVslThUrFIeDiyokY3c/6GG
 
-> On 3/26/26 2:14 PM, dylan.eskew@candelatech.com wrote:
->> From: Dylan Eskew <dylan.eskew@candelatech.com>
->>
->> Prevent a linking issue against CXL_PMEM when CXL_ACPI is configured in
->> Kconfig.
->>
->> Signed-off-by: Dylan Eskew <dylan.eskew@candelatech.com>
-> Hi Dylan, does this commit fixes your issue? It's in Linus's tree now.
-> 93d0fcdddc9e ("cxl/acpi: Fix CXL_ACPI and CXL_PMEM Kconfig tristate mismatch")
+On 26/03/25 02:28PM, Dave Jiang wrote:
+> 
+> 
+> On 3/23/26 5:39 PM, John Groves wrote:
+> > From: John Groves <John@Groves.net>
+> > 
+> > fsdev: Add dax_operations for use by famfs.
+> > 
+> > This replicates the functionality from drivers/nvdimm/pmem.c that
+> > conventional fs-dax file systems (e.g. xfs) use to support dax
+> > read/write/mmap to a daxdev - without which famfs can't sit atop a
+> > daxdev.
+> > 
+> > - These methods are based on pmem_dax_ops from drivers/nvdimm/pmem.c
+> > - fsdev_dax_direct_access() returns the hpa, pfn and kva. The kva was
+> >   newly stored as dev_dax->virt_addr by dev_dax_probe().
+> > - The hpa/pfn are used for mmap (dax_iomap_fault()), and the kva is used
+> >   for read/write (dax_iomap_rw())
+> > - fsdev_dax_recovery_write() and dev_dax_zero_page_range() have not been
+> >   tested yet. I'm looking for suggestions as to how to test those.
+> > - dax-private.h: add dev_dax->cached_size, which fsdev needs to
+> >   remember. The dev_dax size cannot change while a driver is bound
+> >   (dev_dax_resize returns -EBUSY if dev->driver is set). Caching the size
+> >   at probe time allows fsdev's direct_access path can use it without
+> >   acquiring dax_dev_rwsem (which isn't exported anyway).
+> > 
+> > Signed-off-by: John Groves <john@groves.net>
+> > ---
+> >  drivers/dax/dax-private.h |  1 +
+> >  drivers/dax/fsdev.c       | 84 +++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 85 insertions(+)
+> > 
+> > diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
+> > index 7a3727d76a68..ee8f3af8387f 100644
+> > --- a/drivers/dax/dax-private.h
+> > +++ b/drivers/dax/dax-private.h
+> > @@ -85,6 +85,7 @@ struct dev_dax {
+> >  	struct dax_region *region;
+> >  	struct dax_device *dax_dev;
+> >  	void *virt_addr;
+> > +	u64 cached_size;
+> 
+> Just caught this. Need a kdoc entry.
+> 
+> DJ
 
-Hi Dave,
+Thank you! Added for v10
 
-This looks to fix it, thanks! I was sitting at -rc5 not thinking there 
-was anything farther up the tree.
+John
 
->> ---
->>   drivers/cxl/Kconfig | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
->> index 48b7314afdb8..baf1d17ec0fc 100644
->> --- a/drivers/cxl/Kconfig
->> +++ b/drivers/cxl/Kconfig
->> @@ -58,6 +58,7 @@ config CXL_ACPI
->>   	tristate "CXL ACPI: Platform Support"
->>   	depends on ACPI
->>   	depends on ACPI_NUMA
->> +	depends on CXL_PMEM
->>   	default CXL_BUS
->>   	select ACPI_TABLE_LIB
->>   	select ACPI_HMAT
