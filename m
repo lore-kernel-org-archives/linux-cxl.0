@@ -1,128 +1,183 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C4E31A81C
-	for <linux-cxl@vger.kernel.org>; Fri, 27 Mar 2026 15:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E236842A80
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Mar 2026 15:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774624640; cv=none; b=sZKFCmsef2IyIbk9vcVV/nblgql2dfdbwe+UEfuuHPs2Pt92b29tjoFInWjL2jESXuTCyVSrGAXHtnSPSU1m1c69wrh4uDmAbJmxkA65f3CK3mIa9Xv4kdlJPZuskd+4eCkF9dyhff/P0f2vPu3kFfCI86nUvgKIYdxNJhXexlg=
+	t=1774624709; cv=none; b=fgM+DLpawc4yZWkwnxrrZp3mw1JLnEuy038PXzpohazO83ZY6HzZMGqfr+PSSCBM9t23z8P129kzyYvMWiMU2cfSphfgVnR9nG/T9VrgTSeTFI6Kl9IqGdl7tGxYdJZc283wlF9EF7MutsXWht5XpsnQBOlEy2W6IGr8DTSMTsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774624640; c=relaxed/simple;
-	bh=pis06wkXD4RWAfuRxuug5rKUZx3VJQr1v7l+fB6zzzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aJImvHUNxvRhbhRSGLymxv7wAJN1dHAjHdHV+6IgOpQB0sYixqP/bkai4JImkWxrevVwYqjmHyU3Plg2TyaXTWVPJ782l8TqXt2d5ou6QhOpaCCV0AXP0/G5WsxscEhWcRS4rA1qC9OhrMVkq3xT/O4fD1do/wI7gm8AGbnNXTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 51A061B9962;
-	Fri, 27 Mar 2026 15:17:08 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf14.hostedemail.com (Postfix) with ESMTPA id 70A0830;
-	Fri, 27 Mar 2026 15:17:05 +0000 (UTC)
-Date: Fri, 27 Mar 2026 10:17:01 -0500
-From: John Groves <John@groves.net>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, dave.jiang@intel.com, 
-	alison.schofield@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com, 
-	dongjoo.seo1@samsung.com, anisa.su@samsung.com, linux-cxl@vger.kernel.org, 
-	John Groves <jgroves@micron.com>
-Subject: Re: [RFC PATCH 0/1] cxl: Media Operations
-Message-ID: <acaes_gqFt-LLFrC@groves.net>
-References: <20260323204013.4010634-1-dave@stgolabs.net>
- <20260324153238.0000750e@huawei.com>
- <20260324180754.et4gwn6dobdplurt@offworld>
- <20260325120613.00007003@huawei.com>
+	s=arc-20240116; t=1774624709; c=relaxed/simple;
+	bh=lMHOwVjXWi8E80e8fHlqNr+wX9en/ytbJ8Nc2KHyGLY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cmEohhDXNGpU6elErvhrM2ED5nbtmuap4FDTNUKin8FoyBxmAu2VIC5ANVoFt/TDBHcP7VXZveHt86soolOouv1EBSfj3LYiHtRZAgbiuhYQfvkG8VO8kaTqvIg15XvLNxPx6Nhaq9HqRcOeseX5BOeQ39CY/IFfqDZf+Wi6Opw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.224.83])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fj45p1HzJzJ46Bp;
+	Fri, 27 Mar 2026 23:18:06 +0800 (CST)
+Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
+	by mail.maildlp.com (Postfix) with ESMTPS id 30FA640577;
+	Fri, 27 Mar 2026 23:18:18 +0800 (CST)
+Received: from localhost (10.203.177.99) by dubpeml500005.china.huawei.com
+ (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 27 Mar
+ 2026 15:18:17 +0000
+Date: Fri, 27 Mar 2026 15:18:11 +0000
+From: Alireza Sanaee <alireza.sanaee@huawei.com>
+To: Markus Armbruster <armbru@redhat.com>
+CC: <qemu-devel@nongnu.org>, <anisa.su@samsung.com>, <berrange@redhat.com>,
+	<eblake@redhat.com>, <jonathan.cameron@huawei.com>,
+	<linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>, <lizhijian@fujitsu.com>,
+	<mst@redhat.com>, <pbonzini@redhat.com>, <gourry@gourry.net>,
+	<nifan.cxl@gmail.com>, <me@linux.beauty>
+Subject: Re: [PATCH 9/9] hw/cxl: Add QMP status query for dynamic-capacity
+ extent release
+Message-ID: <20260327151811.00005564.alireza.sanaee@huawei.com>
+In-Reply-To: <87mrzuei5f.fsf@pond.sub.org>
+References: <20260325184259.366-1-alireza.sanaee@huawei.com>
+	<20260325184259.366-10-alireza.sanaee@huawei.com>
+	<87mrzuei5f.fsf@pond.sub.org>
+Organization: Huawei
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260325120613.00007003@huawei.com>
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 70A0830
-X-Stat-Signature: jde38t4c6xgfw9omomu7uho7qau5xnyc
-X-Session-Marker: 6A6F686E4067726F7665732E6E6574
-X-Session-ID: U2FsdGVkX19MkH3PTVbriYSiZRCQz1ujHn/a+sbAtv8=
-X-HE-Tag: 1774624625-677811
-X-HE-Meta: U2FsdGVkX19rC4hhL6LiP66cYCh5UY5FsoWT5SjTeyaRM0KlwKwJxkHcCTT4MmvnTMyFRxI7wijutmsXfMdhXo25+AEVvLk/gz8C959KgvjKKBURb/1LU6EdFJu3uLtPdBI3g1YemBx1Qwym8woztsAPzsyl7gjTpLJES7rxjHW0Is3PbAFLBcuC629yCnsAlDsk+ni2i/IhdHhMoCqzAJHwVYHHVbRuFbJ3sNIwOTWgSuhFBD+3Mbvlk8ynnsrdFaPyTVPK7dDiaOsPW6zSemH4Wh4fQpkV9XEXQz32zFKB3N7PMwxGdw4mn0Gz6aA5hH+Uu1UStqA8b70XVYXyuSQ/cft9nJ9J1SJgeIO9E4FcYpjtD1eXCqSpuKYvX4r6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ dubpeml500005.china.huawei.com (7.214.145.207)
 
-On 26/03/25 12:06PM, Jonathan Cameron wrote:
-> On Tue, 24 Mar 2026 11:07:54 -0700
-> Davidlohr Bueso <dave@stgolabs.net> wrote:
-> 
-> > On Tue, 24 Mar 2026, Jonathan Cameron wrote:
-> > 
-> > >On Mon, 23 Mar 2026 13:40:12 -0700
-> > >Davidlohr Bueso <dave@stgolabs.net> wrote:
-> > >  
-> > >> Hello,
-> > >>
-> > >> This implements support for Media Operation cmd. It is marked RFC because of these
-> > >> noteworthy points:
-> > >>
-> > >>  (i) Sysfs interfaces. These changes implement 'security/zero' and multiplex
-> > >>      'security/sanitize' to allow dpa, len pairs for the range (no impact for
-> > >>      current usage as whole-device). This breaks the 1 value per file "rule",
-> > >>      and would be a first for drivers/cxl/*, so am I open to suggestions.  
-> > >
-> > >Value is a vague sort of term.  It's one thing (an range) so seems fine to me.  
-> > 
-> > I agree.
-> > 
-> > >  
-> > >>
-> > >>  (ii) Background cmd handling semantics. Media operations are synchronous,
-> > >>       which for raged zeroing operations makes sense and for range sanitize  
-> > >
-> > >ranged
-> > >  
-> > >>       differs from the current async handling for whole-device, so user response
-> > >>       differs significantly, something I am not crazy about. Another downside
-> > >>       of this is that it exposes lock hold times to be user-controllable, but is
-> > >>       no different than what we do for fw. Fundamentally, users have the
-> > >>       responsibility to break up the work into sane ranges.  
-> > >
-> > >We could apply a limit on this and make that discoverable via another sysfs attribute.
-> > >So let userspace request in say 1Gig chunks.  Would have to check that the device
-> > >supports that granularity though.  
-> > 
-> > If we agree that this will be performed synchronously, then yes, adding a size cap
-> > would be necessary. I don't love having it in ie: security/range_limit(?), but that
-> > could be created at discovery time when we know the granularity. Another way would
-> > be to avoid the extra file and just print the limit in the error message - but I
-> > guess dev_dbg() would be needed to not spam the dmesg. In any case with a cap,
-> > while no guarantees, this also reduces the chances of the user triggering driver timeouts.
-> > 
-> > >I don't think there is anything in the spec today to let us query how long
-> > >something takes (which would be a better way to bound this).  
-> > 
-> > Correct, that is just something Scan Media allows for - and yes, that's exactly
-> > the sane way to do the work breakup.
-> > 
-> Yo John,
-> 
-> I'm sure you are keeping a list of potential improvements for the appropriate group
-> that I believe you have some leadership role in ;)
-> 
-> I'd like devices to provide info to allow us to establish an upper bound on how
-> long a zero / sanitize media operation would take.  This one doesn't need to be
-> code first so we can consider this a potential feature request.
-> 
-> Jonathan
-> 
-> > Thanks,
-> > Davidlohr
-> 
+On Thu, 26 Mar 2026 16:15:40 +0100
+Markus Armbruster <armbru@redhat.com> wrote:
 
-Acknowledged. Are you thinking of a one-off for sanitize, or is there
-a class of commands that might ought to provide such an upper-bound?
+Hi Markus,
 
-I'd be happy to try to push something through, but the solution ought
-to come from somebody who experiences the inconvenience directtly :D
+This commit adds a test command to check whether an extent (a piece of memory region) has been released or not by the guest.
+The process of removal is highly asynchronous, that's why I needed to add a new command to check it.
 
-Regards,
-John
+I would be happy to drop this patch, as this is extra.
+
+Thanks,
+Ali
+
+> I'm a near-complete CXL ignoramus, and beg your patience.
+> 
+> Alireza Sanaee <alireza.sanaee@huawei.com> writes:
+> 
+> > Add a small status query so orchestration layers can check whether a tagged
+> > extent is still pending, committed, or no longer present after a release
+> > request.  
+> 
+> Why would they want to check?
+> 
+> What is a "release request"?
+> 
+> >
+> > Introduce the ExtentStatus QAPI struct and the
+> > cxl-release-dynamic-capacity-status command.
+> >
+> > Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>  
+> 
+> [...]
+> 
+> > diff --git a/qapi/cxl.json b/qapi/cxl.json
+> > index 81d6198ba0..53325ba530 100644
+> > --- a/qapi/cxl.json
+> > +++ b/qapi/cxl.json
+> > @@ -636,3 +636,49 @@
+> >             },
+> >    'features': [ 'unstable' ]
+> >  }
+> > +
+> > +##
+> > +# @ExtentStatus:  
+> 
+> Blank line here, please.
+> 
+> > +# This is an object that describes the status of an extent.
+> > +#
+> > +# @status:   String indicating the overall result, e.g. "success".  
+> 
+> What are the possible values?  Are they defined in some spec?
+> 
+> > +# @message:  Human-readable description of the outcome.  
+> 
+> Intended use?
+> 
+> > +#
+> > +# Since: 9.1  
+> 
+> 11.1 most likely.
+> 
+> > +##
+> > +{ 'struct': 'ExtentStatus',
+> > +      'data': { 'status': 'str', 'message': 'str' }
+> > +}
+> > +
+> > +##
+> > +# @cxl-release-dynamic-capacity-status:
+> > +#
+> > +# This commands checks if an extent tag has been released or not.  
+> 
+> Use imperative mood to describe commands: "Check whether an extent tag
+> has been released."
+> 
+> > +#
+> > +# @path: path to the CXL Dynamic Capacity Device in the QOM tree.  
+> 
+> We commonly call such members @qom-path.
+> 
+> > +#
+> > +# @host-id: The "Host ID" field as defined in Compute Express Link
+> > +#     (CXL) Specification, Revision 3.1, Table 7-71.
+> > +#
+> > +# @region: The "Region Number" field as defined in Compute Express
+> > +#     Link Specification, Revision 3.1, Table 7-71.  Valid range
+> > +#     is from 0-7.
+> > +#
+> > +# @tag: The "Tag" field as defined in Compute Express Link (CXL)
+> > +#     Specification, Revision 3.1, Table 7-71.  
+> 
+> I guess the command interrogates something called "extent", and the
+> something is related to the CXL device at @path in the QOM tree.
+> Correct?
+> 
+> How is it related?  Is it a part of the device?
+> 
+> I further guess multiple extends can be so related, and @host-id,
+> @region, and @tag identify select the one we want to interrogate.
+> Correct?
+> 
+> > +#
+> > +# Features:
+> > +#
+> > +# @unstable: For now this command is subject to change.  
+> 
+> The conventional language is "This command is experimental."
+> 
+> > +#
+> > +# Since: 9.1  
+> 
+> 11.1 most likely.
+> 
+> > +##
+> > +{ 'command': 'cxl-release-dynamic-capacity-status',
+> > +  'data': { 'path': 'str',
+> > +            'host-id': 'uint16',
+> > +            'region': 'uint8',
+> > +            'tag': 'str'
+> > +          },
+> > +  'features': [ 'unstable' ],
+> > +  'returns': 'ExtentStatus'  
+> 
+> Swap these two lines, please.
+> 
+> > +}  
+> 
+> 
 
