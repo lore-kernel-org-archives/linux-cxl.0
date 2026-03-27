@@ -1,167 +1,210 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A2E345CB0;
-	Fri, 27 Mar 2026 14:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A9B53BADB5
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Mar 2026 14:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774620887; cv=none; b=Ov2M2cJTuHAlnLCGNHPRZZ3vCT+ySHFH5IwV1cezj52RJz6fKRRL1Fsok2YrFL4HDPDjxKV9Q/ZD548pCJ0GxCZfVR3ZkoCmPF4kh7LLkNxHaC/Cg8dt4iN5ol2J2fpT++l7+zsYTZya6TBab2s8zkluHDv/NgRi2Mf1qbyhdsM=
+	t=1774622313; cv=none; b=Xoz5VLW/66o5xGdhGKaCD+Z3rDj5J2JJtMgzvb7rDvwKuqkiJhAl0FMVfLLGHJuKX0k80pHhJXj56EN2aTxaHZYHruzmefEj9GbIx0uvIJqovxNAz+Eb6LDywVS5emBNT9EJl8/biqiljHaqRnxfJjqm/SqWR0n+R8F3R+cWMQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774620887; c=relaxed/simple;
-	bh=INKVJIFSQ2mJLOypFSOZweFPtWyfByrCi/uSSs2jZrU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pZhd34KG8UkouiN5F81+a9Q/21+7OOLJa4mEy8vGg6ijhnFTWZdVzBLl/ILMdY8lP8A2pcBnWr6VIRVQ8A0do8Cum6VwzcLofHc3oObv/UcAcVqropmN8MQAeujb0HPBimG+BbXckXK4SvkfskGsZkwPBoNNxWYXMQdKP5rNM+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 9FA765E9F3;
-	Fri, 27 Mar 2026 14:14:40 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf13.hostedemail.com (Postfix) with ESMTPA id 3816C20021;
-	Fri, 27 Mar 2026 14:14:28 +0000 (UTC)
-Date: Fri, 27 Mar 2026 09:14:26 -0500
-From: John Groves <John@groves.net>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Chen Linxuan <chenlinxuan@uniontech.com>, James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V9 5/8] dax: Add dax_operations for use by fs-dax on
- fsdev dax
-Message-ID: <acaQiBN2vlVwZ5EK@groves.net>
-References: <0100019d1d463523-617e8165-a084-4d91-aa5e-13778264d5d4-000000@email.amazonses.com>
- <20260324003851.5045-1-john@jagalactic.com>
- <0100019d1d47e459-48f2a4e6-edab-4002-bde3-2ba642deccaf-000000@email.amazonses.com>
- <d4461e56-8a4d-4d2c-8de9-23a265dc617f@intel.com>
+	s=arc-20240116; t=1774622313; c=relaxed/simple;
+	bh=9v818Ky96X3kKvfhq8lmP5FL0SmE7tB4uBWxn4HqJwY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JrhO3PikUF5cBvfe8s251ybzJK1ROHGl8+UOu9xBotuBceSFiTC8HWbbf6EsYA4sej7dm0WjWFKvHYT4HrMVEJWtSJKd7dGiVX2vn99iHY0RGKqAlEXx6+y8tLQAC8cCwtg3xWvkhL+y3kEPOme1PelfpnkoIEJnHrjeuG/A1FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QpArWJNf; arc=none smtp.client-ip=209.85.167.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QpArWJNf"
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-464ba2bb3aeso1279403b6e.1
+        for <linux-cxl@vger.kernel.org>; Fri, 27 Mar 2026 07:38:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774622306; x=1775227106; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qVAYAgb5FKWZkJuctDg9ra0Rbmkh6Srijd12FXQPO3k=;
+        b=QpArWJNfONb3S3BpLt7h3V/ziDV+jQY0wAAtNT3qRUKEOm+Rc0yDQ7UpJZsK1hzvA9
+         2MrEy4sPhsz/v3cLvrv3xUNb6Z4yXRnvTofthuqAcBC9Wm2tDJpxtsZDBDs1FOY+fM7J
+         o8/msJrTf0NcU/u8z6pHb6m6zSWsZtFB+UlDKQaZQ4nBvYQ/LYoDiKewfNbahB++tqln
+         zdYp6eYPJ+jmJEfpImsNGUHepvlTCBUcpfV4SID7CZhEw9J97wj84cotgAsqSbmzXTh6
+         ylYu/ARF59DMYGz6HpRL9dxYJU5eCtGGQHznOXD21B8/GsmLn0RckYHlEunFHdRCPGj7
+         J/WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774622306; x=1775227106;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=qVAYAgb5FKWZkJuctDg9ra0Rbmkh6Srijd12FXQPO3k=;
+        b=SzQSmKrWzD+PXCr5RtE+szrp8RYr4DkVqQ8U4gzy67GNCJ05uuDkl3+1kBeUjZ2DwG
+         D/VLoZA0FCPfkAwZubwlbj7ZntnIqKh2OKPGPmenXKexrRSePeLNc3SbXRQO0JRs+bdY
+         lxf3yy+lOy7JB2VqoxNomEtX4IQexUHzzdQqN5sqX5zK5STO+MOHkbRocyJcT6/mzzLM
+         ha6hnYEvil5oF9btlS0EYT8AUYDqEr1h/9tOyhD9+/PngXZWJTwyVhZI+Sr6noTtPIhS
+         h5rxPR5DusnmYOCn4BDs9PoglYjPUaPvAbZzmLxTeqGkv7+ciYOmKye6Oha/BqRTxhqy
+         C/3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUOyCrcWrjG3xjmAmd3uxHSbshwyk8YDOrdSqWVx3lp86FUPDDFb+ioyGOBFsn7dvb6efozOGZSwrE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRDjGsv9Qe2OTLPxFL2zesRnHBMfuHN5a1YQR64piW/6xhyNOv
+	qiZdbtMzCsmZzvB4rBmJJT0T899Eae79RIJf1EF1uO8gKRgGiwhHtJI1
+X-Gm-Gg: ATEYQzw31CoGavEgFBqj9dw+lEDPAkjZ0aIQfKx1RRiyQilIILem7a104ZiBP+BQgsm
+	90mF71/6EZtjc9aghyo3HXt2ON1LVY0/WVNzzkTmRAGvXCC487b3gQC9HE6L7EFg9rhjrcQ0PGa
+	NllVZ00PbZ5Q5+tXiJ9/2xaTY2NycUY/YaBF/W90wvrQmY4GEyTM+jFd2XMwZ8p2tmR0/Ha1H+f
+	k4MtRL9/wOm/pM3xyAKTgS87czQFuXfy7DujnpdWnYaschANccR7gDNbU28wS1MEx16tLZ79Bsx
+	RhlKp2K4mtCAjmehNRfn7URIYvV6MdZGNOF7vxzfKN4XMXDrzThCo1wjBMi52+SC97hWaoLRVja
+	idacno2/74Abt3hQ2hSiEve8h+TK/kiMRuB8CJI85YZLonTW38ZxRQcdOhgZRE/QEaXQKd9sQqM
+	+ScWZnDz80FlNcuHDROcUqSQ==
+X-Received: by 2002:a05:6808:1918:b0:45c:85fa:5a3e with SMTP id 5614622812f47-46a7aa021d9mr2688406b6e.25.1774622306023;
+        Fri, 27 Mar 2026 07:38:26 -0700 (PDT)
+Received: from localhost ([2a03:2880:10ff:73::])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7d9e71f5abdsm4847756a34.13.2026.03.27.07.38.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Mar 2026 07:38:25 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Hao Li <hao.li@linux.dev>
+Cc: david@kernel.org,
+	osalvador@suse.de,
+	akpm@linux-foundation.org,
+	vbabka@suse.cz,
+	harry.yoo@oracle.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH] mm/memory_hotplug: maintain N_NORMAL_MEMORY during hotplug
+Date: Fri, 27 Mar 2026 07:38:23 -0700
+Message-ID: <20260327143823.3063541-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260327124412.469833-1-hao.li@linux.dev>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d4461e56-8a4d-4d2c-8de9-23a265dc617f@intel.com>
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 3816C20021
-X-Stat-Signature: a3gmc9z1zgxc6hf8kzmhk83yunuieo3t
-X-Session-Marker: 6A6F686E4067726F7665732E6E6574
-X-Session-ID: U2FsdGVkX19D8SBDWcEBvpv9lVq+qSMSLSs9sPxCwdI=
-X-HE-Tag: 1774620868-202939
-X-HE-Meta: U2FsdGVkX19wBee9icGSPWMdcxMlM6lU3SHQCwJTze+pNrOeNshQ1FEASeTwWC1axg6fNWqOtbYVjY+KeasJtos5ku0EYP1vooqjp/Zzm/XNcN2bIFtSnad98mRfgbILCWhLxD6wS07JykPVMKDeKs2UTVQ9AJtcN78kRDHVGbrcd0Kpq3wnjn8QSAUrUK7k1IL3rzDqJWWUATmhGtQuq0N2VjlGdwtZCFxdsJBzABXCVzbJvarLI4QGZ1LahzV6uHIpqqni6/cHQfhV3ZNH87sGUxaPKI374th7CQkiFqdfeYoiYVMPO0/JCLVa9uRQbgdFLNx8V4B6PUGHOfiUpqKHQeVh8Q7NV/hg82h7jR+cwu6OiNpGMx/9BHW93d1E
+Content-Transfer-Encoding: 8bit
 
-On 26/03/25 03:40PM, Dave Jiang wrote:
+On Fri, 27 Mar 2026 20:42:47 +0800 Hao Li <hao.li@linux.dev> wrote:
+
+Hello Hao,
+
+I hope you are doing well, thank you for the patch!
+
+> N_NORMAL_MEMORY is initialized from zone population at boot, but memory
+> hotplug currently only updates N_MEMORY. As a result, a node that gains
+> normal memory via hotplug can remain invisible to users iterating over
+> N_NORMAL_MEMORY, while a node that loses its last normal memory can stay
+> incorrectly marked as such.
+
+The second part feels more important than the second part, doing a quick
+glance through the code I can see a few N_NORMAL_MEMORY iterators that
+are in some hot paths like shrink_memcg. Iterating over nodes that don't
+contain any NORMAL memory seems like an inefficiency rather than a bug
+though. 
+
+> Restore N_NORMAL_MEMORY maintenance directly in online_pages() and
+> offline_pages(). Set the bit when a node that currently lacks normal
+> memory onlines pages into a zone <= ZONE_NORMAL, and clear it when
+> offlining removes the last present pages from zones <= ZONE_NORMAL.
+> 
+> This restores the intended semantics without bringing back the old
+> status_change_nid_normal notifier plumbing which was removed in
+> 8d2882a8edb8.
+> 
+> Current users that benefit include list_lru, zswap, nfsd filecache,
+> hugetlb_cgroup, and has_normal_memory sysfs reporting.
+> 
+> Signed-off-by: Hao Li <hao.li@linux.dev>
+> ---
+> 
+> This patch also prepares for a subsequent SLUB change that makes
+> can_free_to_pcs() rely on N_NORMAL_MEMORY to decide whether an object can be
+> freed to the sheaf.
+> 
+> ---
+>  mm/memory_hotplug.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index bc805029da51..5498744aa1f1 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1155,6 +1155,7 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
+>  	int need_zonelists_rebuild = 0;
+>  	unsigned long flags;
+>  	int ret;
+> +	bool need_set_normal_memory = false;
+>  
+>  	/*
+>  	 * {on,off}lining is constrained to full memory sections (or more
+> @@ -1180,6 +1181,9 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
+>  		if (ret)
+>  			goto failed_addition;
+>  	}
+> +	/* Adding normal memory to the node for the first time */
+> +	if (!node_state(nid, N_NORMAL_MEMORY) && zone_idx(zone) <= ZONE_NORMAL)
+> +		need_set_normal_memory = true;
+>  
+>  	ret = memory_notify(MEM_GOING_ONLINE, &mem_arg);
+>  	ret = notifier_to_errno(ret);
+> @@ -1209,6 +1213,8 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
+>  
+>  	if (node_arg.nid >= 0)
+>  		node_set_state(nid, N_MEMORY);
+> +	if (need_set_normal_memory)
+> +		node_set_state(nid, N_NORMAL_MEMORY);
+>  	if (need_zonelists_rebuild)
+>  		build_all_zonelists(NULL);
+
+Do we need the flag here? As far as I can tell, we can just skip this and just
+directly check whether this is the first normal memory we are adding to the
+node here and set the bit. Then we can remove the flag and the extraneous
+check. We won't do any notifier work so I think it should be OK.
+
+> @@ -1908,6 +1914,9 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
+>  	unsigned long flags;
+>  	char *reason;
+>  	int ret;
+> +	bool need_clear_normal_memory = false;
+> +	unsigned long node_normal_pages = 0;
+> +	enum zone_type zt;
+>  
+>  	/*
+>  	 * {on,off}lining is constrained to full memory sections (or more
+> @@ -1977,6 +1986,13 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
+>  			goto failed_removal_isolated;
+>  		}
+>  	}
+> +	/*
+> +	 * Check whether this operation removes the node's last normal memory.
+> +	 */
+> +	for (zt = 0; zt <= ZONE_NORMAL; zt++)
+> +		node_normal_pages += pgdat->node_zones[zt].present_pages;
+> +	if (nr_pages >= node_normal_pages && zone_idx(zone) <= ZONE_NORMAL)
+> +		need_clear_normal_memory = true;
+>  
+>  	ret = memory_notify(MEM_GOING_OFFLINE, &mem_arg);
+>  	ret = notifier_to_errno(ret);
+> @@ -2055,6 +2071,12 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
+>  	/* reinitialise watermarks and update pcp limits */
+>  	init_per_zone_wmark_min();
+
+Same here, couldn't we just iterate through the paegs here and accumulate
+node_normal_pages and clear the memory here? We can get rid of the bool and
+also keep node_normal_pages defined inside an if (zone_idx(zone) <= ZONE_NORMAL)
+check as well. 
+
+> +	/*
+> +	 * Clear N_NORMAL_MEMORY first to avoid the transient state
+> +	 * "!N_MEMORY && N_NORMAL_MEMORY".
+> +	 */
+> +	if (need_clear_normal_memory)
+> +		node_clear_state(node, N_NORMAL_MEMORY);
+>  	/*
+>  	 * Make sure to mark the node as memory-less before rebuilding the zone
+>  	 * list. Otherwise this node would still appear in the fallback lists.
+> -- 
+> 2.50.1
 > 
 > 
-> On 3/23/26 5:39 PM, John Groves wrote:
-> > From: John Groves <John@Groves.net>
-> > 
-> > fsdev: Add dax_operations for use by famfs.
-> > 
-> > This replicates the functionality from drivers/nvdimm/pmem.c that
-> > conventional fs-dax file systems (e.g. xfs) use to support dax
-> > read/write/mmap to a daxdev - without which famfs can't sit atop a
-> > daxdev.
-> > 
-> > - These methods are based on pmem_dax_ops from drivers/nvdimm/pmem.c
-> > - fsdev_dax_direct_access() returns the hpa, pfn and kva. The kva was
-> >   newly stored as dev_dax->virt_addr by dev_dax_probe().
-> > - The hpa/pfn are used for mmap (dax_iomap_fault()), and the kva is used
-> >   for read/write (dax_iomap_rw())
-> > - fsdev_dax_recovery_write() and dev_dax_zero_page_range() have not been
-> >   tested yet. I'm looking for suggestions as to how to test those.
-> > - dax-private.h: add dev_dax->cached_size, which fsdev needs to
-> >   remember. The dev_dax size cannot change while a driver is bound
-> >   (dev_dax_resize returns -EBUSY if dev->driver is set). Caching the size
-> >   at probe time allows fsdev's direct_access path can use it without
-> >   acquiring dax_dev_rwsem (which isn't exported anyway).
-> > 
-> > Signed-off-by: John Groves <john@groves.net>
-> 
-> Couple nits below while I'm stealing code from you.
 
-:D
-
-> 
-> > ---
-> >  drivers/dax/dax-private.h |  1 +
-> >  drivers/dax/fsdev.c       | 84 +++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 85 insertions(+)
-> > 
-> > diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-> > index 7a3727d76a68..ee8f3af8387f 100644
-> > --- a/drivers/dax/dax-private.h
-> > +++ b/drivers/dax/dax-private.h
-> > @@ -85,6 +85,7 @@ struct dev_dax {
-> >  	struct dax_region *region;
-> >  	struct dax_device *dax_dev;
-> >  	void *virt_addr;
-> > +	u64 cached_size;
-> >  	unsigned int align;
-> >  	int target_node;
-> >  	bool dyn_id;
-> > diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
-> > index c75478d3d548..be3d2b0e8418 100644
-> > --- a/drivers/dax/fsdev.c
-> > +++ b/drivers/dax/fsdev.c
-> > @@ -28,6 +28,85 @@
-> >   * - No mmap support - all access is through fs-dax/iomap
-> >   */
-> >  
-> > +static void fsdev_write_dax(void *pmem_addr, struct page *page,
-> 
-> addr instead of pmem_addr? copy pasta error?
-
-Yep, fixed thanks
-
-> 
-> > +		unsigned int off, unsigned int len)
-> > +{
-> > +	while (len) {
-> > +		void *mem = kmap_local_page(page);
-> > +		unsigned int chunk = min_t(unsigned int, len, PAGE_SIZE - off);
-> > +
-> > +		memcpy_flushcache(pmem_addr, mem + off, chunk);
-> > +		kunmap_local(mem);
-> > +		len -= chunk;
-> > +		off = 0;
-> > +		page++;
-> > +		pmem_addr += chunk;
-> > +	}
-> > +}
-> > +
-> > +static long __fsdev_dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff,
-> > +			long nr_pages, enum dax_access_mode mode, void **kaddr,
-> > +			unsigned long *pfn)
-> > +{
-> > +	struct dev_dax *dev_dax = dax_get_private(dax_dev);
-> > +	size_t size = nr_pages << PAGE_SHIFT;
-> > +	size_t offset = pgoff << PAGE_SHIFT;
-> > +	void *virt_addr = dev_dax->virt_addr + offset;
-> > +	phys_addr_t phys;
-> > +	unsigned long local_pfn;
-> > +
-> > +	phys = dax_pgoff_to_phys(dev_dax, pgoff, nr_pages << PAGE_SHIFT);
-> 
-> you can use 'size' instead here since it's previously computed already.
-> 
-> DJ
-
-Indeed - thanks!
-
-John
-
+Thank you for the patch. The rest looks good to me! Have a great day : -)
+Joshua
