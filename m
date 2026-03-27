@@ -1,162 +1,360 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC4B19B5A3;
-	Fri, 27 Mar 2026 17:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774630933; cv=fail; b=lRoS6HDMs1JENVdS0mbyWinrWTc5LAZ2+vx4xCpRKydL1DLBYYNJmsN6QXcyf3Bypk4eZZvgy1yMZbUfVzdgiXGP/21eqtnrvebFM1UB1mnkaJLxohhbxaQeGyGJOsO8fKjc2p1yX1lWw4kYIEZsNmA8BBn5bhhJh/csdcBgXSU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774630933; c=relaxed/simple;
-	bh=rEABx8RzR3Tb7JJSs4Yfqk3pf1BDhtYVAB7H9FjFb0o=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=moNNHrQdri/ZqKaAPfizjPYhzcIFpvUFBj76KAfMZ8l+u7HIktkJBrM5kMVka9NkC6ROI/4m4usXyMi5ECs9NOlSEvZJbFgnc+AeTqyhhoICPTO/BudoyatCFyh1SsAWgA4WJ5Pr9wpMQ83Tp9s1pVIf6sFVMsFCuDeNxucz014=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=koKPlXIo; arc=fail smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEC937756D
+	for <linux-cxl@vger.kernel.org>; Fri, 27 Mar 2026 17:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774631188; cv=none; b=DdyxsBmjHlmYgVHXlVpHJ/wMpYOhmHqgCQyBf3l9lQkGPkVxRn74880lCeebsPgwMbZw9D7sVrRL103JhXNY/gm1F2gjlLsUV7AXlUZ9dgkDwIle5/L9rsET5M+z5i8Qb9chh9iwbGfWruUlyUMa2UWUAwf0JGvPr8PAq7lAd8Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774631188; c=relaxed/simple;
+	bh=UwndItpshjirI9E2ygumuVUz+yWfSx7dt+yErdD2uK8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nRWZTAjEGZj5c/R9/jUExUC7LVlj33SI0R78nQ6Zjvc/89PqnP14Za0ehlE3YUNbpeQw+FirfQvtptPI/0AnPIT8oxvm2bKjW2yj9HIPbbQRDUPXUrK/udXVMOeIGb/WAFq+jTw4ZmRRmQWZU8fbeL3JhBtGsofhohE75IoF49E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tn/4UP8Q; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="koKPlXIo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tn/4UP8Q"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774630932; x=1806166932;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=rEABx8RzR3Tb7JJSs4Yfqk3pf1BDhtYVAB7H9FjFb0o=;
-  b=koKPlXIoxWG8mNLWwqTpBwJmrEvN0WKqDgixGlYITtsTkHqi/7rOGK3u
-   Nu2djRRfOuvuYZV6d0G0iseQdO1pq7eF1dxtHrNYwk9sCp00NsEiV/itS
-   YpdEbZFqgvLVjBr0BL67M9m4AdgjHn5FTwFlMHHadi8gktJDYD+3/Ete2
-   hWpRrYyqVcQTbSgiCn3SuYV7miUIjpPKIwmsz6IQVeYq0XAaU02SGu0Cv
-   JD9UeqkTBlZFAVpa4mlNhHCnwI0dRAf6Fhk4DB1uTWgXyK0JdOC1U9jBv
-   a5uSIpJgwwTHxd9DhHbNou5hw4C4Ts8P3NtWNmwapIMITvMt1CFtzQz8a
-   A==;
-X-CSE-ConnectionGUID: kYz8I5b5R5GDqLtZPAsZIg==
-X-CSE-MsgGUID: CByIKZE6T/qRnXywMI8fpg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11742"; a="74739170"
+  t=1774631183; x=1806167183;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=UwndItpshjirI9E2ygumuVUz+yWfSx7dt+yErdD2uK8=;
+  b=Tn/4UP8QbjWRxXvEzZxEfUUuriwP7IA0kaQMqrs4Uuagx1bpRXHYD7LY
+   hWNr74r2gc0NuA3bLqbI2+lK1UwzFYGxt8KJ8Ps4Lxjquk2F44UCtjMDL
+   YQfAdEDv4jed0Ahx6HaRzwnUWePM0ViqIQAdsOLDg+dKtocyldEmrqpNv
+   hMrTnqqxq7n6xg90GlPPfqirejsX6bbPJKhq50Yhyl+uvFiDvce1d/Drx
+   Qge+lRolsMER/+BvRSbgpkPHkfUOeVIxpbp2PRLoBis1fJpLp1wkt0Yjg
+   w6i6+iu0q2R6EXK6BQfcBiPqA7EfY3Wpac8cRTbb7YNNmtnO0SrCulDfQ
+   Q==;
+X-CSE-ConnectionGUID: 9Py8NgWURJqB1YnUi0quIw==
+X-CSE-MsgGUID: AWVX2wTmT6a9a7k4r6ZudQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11742"; a="79315311"
 X-IronPort-AV: E=Sophos;i="6.23,144,1770624000"; 
-   d="scan'208";a="74739170"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2026 10:02:11 -0700
-X-CSE-ConnectionGUID: lUY4PRxKRAOdA37tvIhPMw==
-X-CSE-MsgGUID: Xzs+lFCGSp2jcxrslOmAvQ==
+   d="scan'208";a="79315311"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2026 10:06:22 -0700
+X-CSE-ConnectionGUID: xLd6HYlzTOmsjhCHyfuE0g==
+X-CSE-MsgGUID: un/7xKWXSv63NUpGUjBbLw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,144,1770624000"; 
-   d="scan'208";a="224412846"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2026 10:02:10 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Fri, 27 Mar 2026 10:02:10 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Fri, 27 Mar 2026 10:02:10 -0700
-Received: from CH4PR04CU002.outbound.protection.outlook.com (40.107.201.62) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Fri, 27 Mar 2026 10:02:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ToV6fq/vAgecxkk+IQ+ZZ17HhRqJi6e5sRA7O5K51esMGBgAVYQtbeWjxUs59TiKHoSvZp7b1MRJ537BAa5TjOG4Z2achqP5+MlqBv5yQrwHvB7V+e6xsk2Jpa4WCPrnlBF7Dmd76sj0K/mvPW6Hh3mkyASy/3BF9dm81nl0MtbaosDeP1stda0VOpAg8VFySS7Q4y4b1UPHxCwFhWhIvw3i4Llc4S1aPm0GADuBJ6eXLWRy61c94akanC3RzgQM9RLpLbKT0KOQT+J6J3upg3QLNEh6umf81u9jbHTjJdwHK3YIFhkUankw8iG8vn/T/dKTQGHrPXC9j78MDiB/Ww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oVcnIsEBmrHqzCIvGTwu6x+rAucnWVXjGNgSJscoxes=;
- b=Gehabi0eUun8/nUfiGkLdJ7OQer0ULifu7iaS9H06VD3f04BrBT0vPeeOZLIxzbGv7EosY5zAHCN0bdwhT7UH3K4bybn+2u4TH9Nj12KzAcre2Dl53VHT7i1HhD2e3fZN0fF6xnLIDyXdNLjncgW8QloSbjUCMjza00PnW8+vDBddXfh67VeewbiHPWN0z+HYd/Jlw9N3iYYp6IUby5bgkB/sz6LKqAygCTQWR7AaxBENq5ecZeruUxMcaLvm1sq1hFeXmo5nYzv9i6y6r1mnpAuIQqlJSQ8No8sqANIZF05hm0mWpQUo8B+Y/N8DxCbWVkRLY48Cx3T4MxKwO6d3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
- (2603:10b6:518:1::d3c) by MW4PR11MB5798.namprd11.prod.outlook.com
- (2603:10b6:303:185::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.8; Fri, 27 Mar
- 2026 17:02:05 +0000
-Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
- ([fe80::7d4b:a049:aed5:d2b0]) by PH3PPF9E162731D.namprd11.prod.outlook.com
- ([fe80::7d4b:a049:aed5:d2b0%8]) with mapi id 15.20.9723.018; Fri, 27 Mar 2026
- 17:02:05 +0000
-Date: Fri, 27 Mar 2026 12:05:56 -0500
-From: Ira Weiny <ira.weiny@intel.com>
-To: Gregory Price <gourry@gourry.net>, <linux-cxl@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <kernel-team@meta.com>,
-	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <dan.j.williams@intel.com>
-Subject: Re: [PATCH v5 3/3] cxl/core: use cleanup.h for
- devm_cxl_add_dax_region
-Message-ID: <69c6b8f459a7f_1771f410046@iweiny-mobl.notmuch>
-References: <20260327020203.876122-1-gourry@gourry.net>
- <20260327020203.876122-4-gourry@gourry.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260327020203.876122-4-gourry@gourry.net>
-X-ClientProxiedBy: MW4PR03CA0144.namprd03.prod.outlook.com
- (2603:10b6:303:8c::29) To PH3PPF9E162731D.namprd11.prod.outlook.com
- (2603:10b6:518:1::d3c)
+   d="scan'208";a="225625101"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.110.180]) ([10.125.110.180])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Mar 2026 10:06:21 -0700
+Message-ID: <15065a06-e674-4bb2-b9d7-89057ff1ded9@intel.com>
+Date: Fri, 27 Mar 2026 10:06:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH3PPF9E162731D:EE_|MW4PR11MB5798:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0e68906f-b101-4742-cb48-08de8c229299
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|18002099003|22082099003|56012099003;
-X-Microsoft-Antispam-Message-Info: YuUfl5IwJoLF7/7BDt2LpHhA4d1yLn7V1daOreuwr8Sd/a6eMnh9M2mw9YFTCDQgmIDClsDnAYnmbCbpdcmRJlMImGnG8fOWXlVleEK9mMNF3aixP3emhGeV6txWeEuKIDLeyc/Xt4zVdM/prNeNvttVayhJC8uSTISf0qipR6XIdDjzySiwFrl+DO3kFt4wz5Vgf+hH7Q7AzuD1XEeXgEvfAWwZWX1+sqjNDW9SxxrRf1sG3350SAoZwazxc0ibbECi4XCzkE42cWoGGpXDFdedq9M+uRKABiv2lb3ceIQCi4A4R8uYemakAwKFkn8fXyKY9pPC1wn/3CEO99r08jCt2hS35g7U3xRYKnsuxZb7D9mhxmv3fW+XyJWVZNgUhrRktTTp6zxR+qYvtVfNhWLEY3hBNp+pqjtI3zvCDEfscyQUyrZWp2a6Ai+cymAcfHFVyuszFuaOP6xuXmVylm9G9y2OYAd8vzkwxwYZkw8QpKlXCJPxGNFAbMsOyHOq1QgOCfU/swrZygZtd6WwqlPpzypSp+7uRVqhBolVW3jH1fIAARmk4lIHABMIO7T/QR1CCGJCQsxRk3LxHY38ZffwmZUa7xnTYCSchMz+sE3dRE/g3CzJ9FbHmMYTH0+rTsHvUAThbmH412IZXXb6YFvXm38fe1UbDsHNxit+CPh0P/kYc6oWbJ9JlVh6amuzrjIROYIlTsShJiJoLEzWLXrhML2GedK69W95SXUoLy4=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH3PPF9E162731D.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?kU5K0wUdC+UICu/VyC+voENMFR1I4FP9BKcLxAbKKdAKxCBqlFelZEDHbnIw?=
- =?us-ascii?Q?GuFCcgOqW4Qbe7wRqKQ0y4hhRWJUClqF8/cC60/yFMYiVGPAaWpZLpWw6Lvu?=
- =?us-ascii?Q?G6LowasqAd6idFZfkznRQyptM0OirCvxa/q/m5atuTtutx2ojHl5PddpidOs?=
- =?us-ascii?Q?49mEuDjv7WQZRB8Kfv90ZvhsTxJvC4artCr/j4kEQXhUtdsV7Fgmh/M6/7RC?=
- =?us-ascii?Q?Jg1OMhQskNGnJ7PsKrripm3Biv2rXhpTbgHo1RG+RGcL3kvUv6dAeESTqCWT?=
- =?us-ascii?Q?4QpODCpj9M5iWa/p5XxpaKDqF+SCs030QIw0onap9s+SAM0MgdF/vPI3AniR?=
- =?us-ascii?Q?cnrGyKHjs5VlBRWw1g1JRtKPKIBS7s7McouYVCT5SNZcfAqbNFhofBZ0FtY9?=
- =?us-ascii?Q?Wcc7Jg++o+WocaXvwcSscxruprwI3nFHEgWk83ZDkdWe7XOy79WpFSelAgyf?=
- =?us-ascii?Q?7Dtz10axSMkZqRodV0e1t78vzdivCvr3Z3hGsN46z15yVao262UWNhO2mVa3?=
- =?us-ascii?Q?UYmGXWam/3eiu//x0ullLrP6O2tcsnm4+AgeaL4GuammNR8KnF66qLA5ijbr?=
- =?us-ascii?Q?StlwtIivhR33wbHdChGFbvHWLD2bj/b51ZFbJhQpkj35mZE6SPkZB8INDXel?=
- =?us-ascii?Q?Us4Zs42AeYbngVLZNaKdTlbqCvjyAN7YYhagAWjZmuvORanYNfmrAzpl/yvT?=
- =?us-ascii?Q?VC+t2JGox3H+q5g7Mt+89LbxsPyxrrTi/FfRpIGoM76MYaOqs3tSnwLz5ApJ?=
- =?us-ascii?Q?vi8YG1nI9yanr1GVaiRlrcheKzH6w8jaP0rAq+05Y6g8QCFCBNvigzldZmkR?=
- =?us-ascii?Q?RycbUqLQJl8jL//EMX6e4er/Oer3bvbUEjah2GkSuereaqq8iP0QtMt2zFJH?=
- =?us-ascii?Q?TJAbz/WE77FZOvd1F9Jk6VOrKiBIEzSmBrJbECMzWxrDXUiB00RGuxPLMikt?=
- =?us-ascii?Q?R1uY5l67nYCQKA5i1tb9BN87VcGlQWFznPfO5jrgQ5CpWpvwLKzd4+UNhSPt?=
- =?us-ascii?Q?I0QobXmA8uEuikF+2alGs6nP5usKpS/0/SD1chgt+WVoPg3MvuFp7NzjEc/F?=
- =?us-ascii?Q?mvyelJbxpREMgz5/IPMAodTqjSb5IuX5kjTcpeC9LRUy8FvBR4UojtcSTAsU?=
- =?us-ascii?Q?yX2kguONAaaex91V/VcrG6i6+5onAuRUVaX67CjM7okk2+R06APCnyZQluLg?=
- =?us-ascii?Q?tMPncS/0W7D3yFii7rkq1jrOnPRikMVD6r4fsMm+qqCv9JilebgjLxu8DTXr?=
- =?us-ascii?Q?6gAFo1BfCHswTmAyEGz5KeR5El1e21lA5fjUnDgHxyjh384/wJgxXyneZLZ6?=
- =?us-ascii?Q?3xttIuG1bStFQX4uvLJ68A/r6b3dCfNX6IpsborbLi/4xSJD3mPa/4zc/LlT?=
- =?us-ascii?Q?cBRg5tv3hT+/awsxwThGON/kxHaJ2ZxcMXLEuiKyenb6nTPHasfkhbdLCBf/?=
- =?us-ascii?Q?V6q7wUXbR6oGkkWWSozKGYoI6jd7KIRxr68K9tkXYyeENi8GD3Yh3x/NBed2?=
- =?us-ascii?Q?idyUnoi9P2FdbgxG/73hJzX5y7ee328VURrHOR6DfzV88fZ1ZW6PV7hPjHzg?=
- =?us-ascii?Q?kT+5zz0QJN5M1L5Oa3BrfxhpNcePqCIXyPqppXq8yn/Vx1oUURdpGC/0GKPr?=
- =?us-ascii?Q?kFJlP2JSDIhNZPo5laKeJMJWLUTmdQKbciEZJdDg2ryuSUcgjtrr9JD6sLzv?=
- =?us-ascii?Q?VNpzAnpyiCcxM9efm/wz3U+bPwRK7v5s2rfRF12Ckn+H66wBfEfg6O0OTs1q?=
- =?us-ascii?Q?F6tuKiy+hg=3D=3D?=
-X-Exchange-RoutingPolicyChecked: awwp2iJZaNuoRBgTg+f3+E7eu1pwbfmTjJiZ0R4mkv2UqZIxF4Fx/n+w9BQNx+fCRovJJ7nAgNtLbSglJPDQSCDtCgZVv0mA66iHWaZv1Sh4UMbeT0V/7rozTemztHxvtBlw0XFa3BYxY9zRRGjy2YdqKfs/qmvmLv4T3L+CST/4k3L5I4PPjoBgkRMjjGCq5WmwdJgZVTqN8xJWQxE5pKx9tpSsELUxIIE/B6MtDsSGDHE7F0YihJyKOwbT2reQaZBfjJ9yiE4c6li0qXO65by4OY9fN44BIXLydX+5RaCw4x3v+lqQH2rpkpmYf6qZzbDWOD90QUnnQDivuWQd/A==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e68906f-b101-4742-cb48-08de8c229299
-X-MS-Exchange-CrossTenant-AuthSource: PH3PPF9E162731D.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2026 17:02:05.0792
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: E0GPjtN/9dGwhO1GRBmMcI68xKnuEjZw0eqi9i+S4uPO8xfEzQStqA1t+at4LszIxtmOWg7WIUs4kiWGC1wdfw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB5798
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/9] dax/hmem: Fix singleton confusion between
+ dax_hmem_work and hmem devices
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: patches@lists.linux.dev, linux-cxl@vger.kernel.org,
+ alison.schofield@intel.com, Smita.KoralahalliChannabasappa@amd.com
+References: <20260327052821.440749-1-dan.j.williams@intel.com>
+ <20260327052821.440749-7-dan.j.williams@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260327052821.440749-7-dan.j.williams@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Gregory Price wrote:
-> Cleanup the gotos in the function.  No functional change.
+
+
+On 3/26/26 10:28 PM, Dan Williams wrote:
+> dax_hmem (ab)uses a platform device to allow for a module to autoload in
+> the presence of "Soft Reserved" resources. The dax_hmem driver had no
+> dependencies on the "hmem_platform" device being a singleton until the
+> recent "dax_hmem vs dax_cxl" takeover solution.
 > 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
+> Replace the layering violation of dax_hmem_work assuming that there will
+> never be more than one "hmem_platform" device associated with a global work
+> item with a dax_hmem local workqueue that can theoretically support any
+> number of hmem_platform devices.
+> 
+> Fixup the reference counting to only pin the device while it is live in the
+> queue.
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-[snip]
+
+> ---
+>  drivers/dax/bus.h         |  15 +++++-
+>  drivers/dax/hmem/device.c |  28 ++++++----
+>  drivers/dax/hmem/hmem.c   | 108 +++++++++++++++++++-------------------
+>  3 files changed, 85 insertions(+), 66 deletions(-)
+> 
+> diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
+> index ebbfe2d6da14..7b1a83f1ce1f 100644
+> --- a/drivers/dax/bus.h
+> +++ b/drivers/dax/bus.h
+> @@ -3,7 +3,9 @@
+>  #ifndef __DAX_BUS_H__
+>  #define __DAX_BUS_H__
+>  #include <linux/device.h>
+> +#include <linux/platform_device.h>
+>  #include <linux/range.h>
+> +#include <linux/workqueue.h>
+>  
+>  struct dev_dax;
+>  struct resource;
+> @@ -49,8 +51,19 @@ void dax_driver_unregister(struct dax_device_driver *dax_drv);
+>  void kill_dev_dax(struct dev_dax *dev_dax);
+>  bool static_dev_dax(struct dev_dax *dev_dax);
+>  
+> +struct hmem_platform_device {
+> +	struct platform_device pdev;
+> +	struct work_struct work;
+> +	bool did_probe;
+> +};
+> +
+> +static inline struct hmem_platform_device *
+> +to_hmem_platform_device(struct platform_device *pdev)
+> +{
+> +	return container_of(pdev, struct hmem_platform_device, pdev);
+> +}
+> +
+>  #if IS_ENABLED(CONFIG_DEV_DAX_HMEM)
+> -extern bool dax_hmem_initial_probe;
+>  void dax_hmem_flush_work(void);
+>  #else
+>  static inline void dax_hmem_flush_work(void) { }
+> diff --git a/drivers/dax/hmem/device.c b/drivers/dax/hmem/device.c
+> index 675d56276d78..d70359b4307b 100644
+> --- a/drivers/dax/hmem/device.c
+> +++ b/drivers/dax/hmem/device.c
+> @@ -4,13 +4,11 @@
+>  #include <linux/module.h>
+>  #include <linux/dax.h>
+>  #include <linux/mm.h>
+> +#include "../bus.h"
+>  
+>  static bool nohmem;
+>  module_param_named(disable, nohmem, bool, 0444);
+>  
+> -bool dax_hmem_initial_probe;
+> -EXPORT_SYMBOL_FOR_MODULES(dax_hmem_initial_probe, "dax_hmem");
+> -
+>  static bool platform_initialized;
+>  static DEFINE_MUTEX(hmem_resource_lock);
+>  static struct resource hmem_active = {
+> @@ -36,9 +34,21 @@ int walk_hmem_resources(struct device *host, walk_hmem_fn fn)
+>  }
+>  EXPORT_SYMBOL_GPL(walk_hmem_resources);
+>  
+> +static void hmem_work(struct work_struct *work)
+> +{
+> +	/* place holder until dax_hmem driver attaches */
+> +}
+> +
+> +static struct hmem_platform_device hmem_platform = {
+> +	.pdev = {
+> +		.name = "hmem_platform",
+> +		.id = 0,
+> +	},
+> +	.work = __WORK_INITIALIZER(hmem_platform.work, hmem_work),
+> +};
+> +
+>  static void __hmem_register_resource(int target_nid, struct resource *res)
+>  {
+> -	struct platform_device *pdev;
+>  	struct resource *new;
+>  	int rc;
+>  
+> @@ -54,17 +64,13 @@ static void __hmem_register_resource(int target_nid, struct resource *res)
+>  	if (platform_initialized)
+>  		return;
+>  
+> -	pdev = platform_device_alloc("hmem_platform", 0);
+> -	if (!pdev) {
+> +	rc = platform_device_register(&hmem_platform.pdev);
+> +	if (rc) {
+>  		pr_err_once("failed to register device-dax hmem_platform device\n");
+>  		return;
+>  	}
+>  
+> -	rc = platform_device_add(pdev);
+> -	if (rc)
+> -		platform_device_put(pdev);
+> -	else
+> -		platform_initialized = true;
+> +	platform_initialized = true;
+>  }
+>  
+>  void hmem_register_resource(int target_nid, struct resource *res)
+> diff --git a/drivers/dax/hmem/hmem.c b/drivers/dax/hmem/hmem.c
+> index dd3d7f93baee..e1dae83dae8d 100644
+> --- a/drivers/dax/hmem/hmem.c
+> +++ b/drivers/dax/hmem/hmem.c
+> @@ -59,20 +59,11 @@ static void release_hmem(void *pdev)
+>  	platform_device_unregister(pdev);
+>  }
+>  
+> -struct dax_defer_work {
+> -	struct platform_device *pdev;
+> -	struct work_struct work;
+> -};
+> -
+> -static void process_defer_work(struct work_struct *w);
+> -
+> -static struct dax_defer_work dax_hmem_work = {
+> -	.work = __WORK_INITIALIZER(dax_hmem_work.work, process_defer_work),
+> -};
+> +static struct workqueue_struct *dax_hmem_wq;
+>  
+>  void dax_hmem_flush_work(void)
+>  {
+> -	flush_work(&dax_hmem_work.work);
+> +	flush_workqueue(dax_hmem_wq);
+>  }
+>  EXPORT_SYMBOL_FOR_MODULES(dax_hmem_flush_work, "dax_cxl");
+>  
+> @@ -134,24 +125,6 @@ static int __hmem_register_device(struct device *host, int target_nid,
+>  	return rc;
+>  }
+>  
+> -static int hmem_register_device(struct device *host, int target_nid,
+> -				const struct resource *res)
+> -{
+> -	if (IS_ENABLED(CONFIG_DEV_DAX_CXL) &&
+> -	    region_intersects(res->start, resource_size(res), IORESOURCE_MEM,
+> -			      IORES_DESC_CXL) != REGION_DISJOINT) {
+> -		if (!dax_hmem_initial_probe) {
+> -			dev_dbg(host, "await CXL initial probe: %pr\n", res);
+> -			queue_work(system_long_wq, &dax_hmem_work.work);
+> -			return 0;
+> -		}
+> -		dev_dbg(host, "deferring range to CXL: %pr\n", res);
+> -		return 0;
+> -	}
+> -
+> -	return __hmem_register_device(host, target_nid, res);
+> -}
+> -
+>  static int hmem_register_cxl_device(struct device *host, int target_nid,
+>  				    const struct resource *res)
+>  {
+> @@ -170,35 +143,55 @@ static int hmem_register_cxl_device(struct device *host, int target_nid,
+>  
+>  static void process_defer_work(struct work_struct *w)
+>  {
+> -	struct dax_defer_work *work = container_of(w, typeof(*work), work);
+> -	struct platform_device *pdev;
+> -
+> -	if (!work->pdev)
+> -		return;
+> -
+> -	pdev = work->pdev;
+> +	struct hmem_platform_device *hpdev = container_of(w, typeof(*hpdev), work);
+> +	struct device *dev = &hpdev->pdev.dev;
+>  
+>  	/* Relies on cxl_acpi and cxl_pci having had a chance to load */
+>  	wait_for_device_probe();
+>  
+> -	guard(device)(&pdev->dev);
+> -	if (!pdev->dev.driver)
+> -		return;
+> +	guard(device)(dev);
+> +	if (!dev->driver)
+> +		goto out;
+>  
+> -	if (!dax_hmem_initial_probe) {
+> -		dax_hmem_initial_probe = true;
+> -		walk_hmem_resources(&pdev->dev, hmem_register_cxl_device);
+> +	if (!hpdev->did_probe) {
+> +		hpdev->did_probe = true;
+> +		walk_hmem_resources(dev, hmem_register_cxl_device);
+>  	}
+> +out:
+> +	put_device(dev);
+> +}
+> +
+> +static int hmem_register_device(struct device *host, int target_nid,
+> +				const struct resource *res)
+> +{
+> +	struct platform_device *pdev = to_platform_device(host);
+> +	struct hmem_platform_device *hpdev = to_hmem_platform_device(pdev);
+> +
+> +	if (IS_ENABLED(CONFIG_DEV_DAX_CXL) &&
+> +	    region_intersects(res->start, resource_size(res), IORESOURCE_MEM,
+> +			      IORES_DESC_CXL) != REGION_DISJOINT) {
+> +		if (!hpdev->did_probe) {
+> +			dev_dbg(host, "await CXL initial probe: %pr\n", res);
+> +			hpdev->work.func = process_defer_work;
+> +			get_device(host);
+> +			if (!queue_work(dax_hmem_wq, &hpdev->work))
+> +				put_device(host);
+> +			return 0;
+> +		}
+> +		dev_dbg(host, "deferring range to CXL: %pr\n", res);
+> +		return 0;
+> +	}
+> +
+> +	return __hmem_register_device(host, target_nid, res);
+>  }
+>  
+>  static int dax_hmem_platform_probe(struct platform_device *pdev)
+>  {
+> -	if (work_pending(&dax_hmem_work.work))
+> -		return -EBUSY;
+> +	struct hmem_platform_device *hpdev = to_hmem_platform_device(pdev);
+>  
+> -	if (!dax_hmem_work.pdev)
+> -		dax_hmem_work.pdev =
+> -			to_platform_device(get_device(&pdev->dev));
+> +	/* queue is only flushed on module unload, fail rebind with pending work */
+> +	if (work_pending(&hpdev->work))
+> +		return -EBUSY;
+>  
+>  	return walk_hmem_resources(&pdev->dev, hmem_register_device);
+>  }
+> @@ -224,26 +217,33 @@ static __init int dax_hmem_init(void)
+>  		request_module("cxl_pci");
+>  	}
+>  
+> +	dax_hmem_wq = alloc_ordered_workqueue("dax_hmem_wq", 0);
+> +	if (!dax_hmem_wq)
+> +		return -ENOMEM;
+> +
+>  	rc = platform_driver_register(&dax_hmem_platform_driver);
+>  	if (rc)
+> -		return rc;
+> +		goto err_platform_driver;
+>  
+>  	rc = platform_driver_register(&dax_hmem_driver);
+>  	if (rc)
+> -		platform_driver_unregister(&dax_hmem_platform_driver);
+> +		goto err_driver;
+> +
+> +	return 0;
+> +
+> +err_driver:
+> +	platform_driver_unregister(&dax_hmem_platform_driver);
+> +err_platform_driver:
+> +	destroy_workqueue(dax_hmem_wq);
+>  
+>  	return rc;
+>  }
+>  
+>  static __exit void dax_hmem_exit(void)
+>  {
+> -	if (dax_hmem_work.pdev) {
+> -		flush_work(&dax_hmem_work.work);
+> -		put_device(&dax_hmem_work.pdev->dev);
+> -	}
+> -
+>  	platform_driver_unregister(&dax_hmem_driver);
+>  	platform_driver_unregister(&dax_hmem_platform_driver);
+> +	destroy_workqueue(dax_hmem_wq);
+>  }
+>  
+>  module_init(dax_hmem_init);
+
