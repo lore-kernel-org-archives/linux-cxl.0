@@ -1,203 +1,208 @@
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013063.outbound.protection.outlook.com [40.107.201.63])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from a11-129.smtp-out.amazonses.com (a11-129.smtp-out.amazonses.com [54.240.11.129])
+	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97D237F742;
-	Fri, 27 Mar 2026 19:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774640227; cv=fail; b=a0SUsCmuGYklErd4hbppv6XEXnR0DZbUXMidfzOwfC/ip/gbJDjSKsOQijT2qUpysMHuWS8wL2Ou8Bbgqlf6NJmhR+8TI4J2+iphAmLLZ4CN7ZdXyLiy9y2edalCDpb6MQk4nZG68y+wpbdP4o0y7CnQ/qtyI4311wYdmJfeonA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774640227; c=relaxed/simple;
-	bh=/30KfLQwKGrKqPU7WT/dxLVghbdVmeboLQ1BU9zqkO8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=L2Y4B84BZkDy3L9RWlvGFiCjaVCZAal53E7nAYV2GTFRlqgD/HiY+yVS74PekQTdSdMBNxd+dskqFLRsZnv+3yAiTQz1gVicaiZR7VEedL5YyHVXUyaAu35A5zKDGuRoEEwyN1d3xSiyGz88QFeOuhruGQnRnQctDk7CLMc3AFQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=bhVoj0DZ; arc=fail smtp.client-ip=40.107.201.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4534F31F993;
+	Fri, 27 Mar 2026 21:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.11.129
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774645409; cv=none; b=OqAlnvk3wVPYNDRMOfblQPiyv4flgSmYLSMQM9T3ct7acAexp6HKxVixq/ODkUQm9ZlYxvgknIbJcQj5LwOaL5E+UEG3NGiXeODXQYAZI/8eb7Fp2XATc/6HteAQ0tVjsFZbVKXHNqEznhJgck2/9UrU0CPNemq3r/jqQgKRsgs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774645409; c=relaxed/simple;
+	bh=A2BrIr6rXnTotQ9XqwAZO2cLL9b65i1MLJaOZrNR9/I=;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:References:
+	 Message-ID; b=GAJoXOOLi6FB17SgU1m0DvhLfXknsCftJbiK8ScuibKFZTMX6bXZX8fOIcEcXN4OmHL88HpYEfACq9JEYgWueaiwoDD9oYRBuHM7POonyTZXdsFzpMHtAp3Td/TZMk0BthKhfXtC+y9QIshOoPuBeKiFrr8t5/FpR8xzdoO9I2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=HXODNL2G; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=D42K4U7s; arc=none smtp.client-ip=54.240.11.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="bhVoj0DZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kNtcaUZw+696ojOnuLKZpdO5ulFZmBGjp0kzD2NUMis+vtVxuQ3n/zZdokqvTJ688pN07k6vJaGu+VpM6gyn5Kxl7rgYzpQiPS9Bs+K6hdabAS6+z82jD9cSoyKzolcu9b8kr20Ts3Vu1P3idz1tjyiAnAVIMUbLdgoLZLcX8YC4yWOFwgkxUQacgDKrcn940cXijm/Z0sl98w/dgx3Pnjh5IDrSp7d2tnNEPKOeEzLHvYI7ivJRi6BRi/L8vGHElKDL2X6yp9jBz3tctAj5tyAUfHxSBmaFMESuB0VSlHyzpc5P1QZxJlXkM06wKvuwONLeiCMWJGY76QfMR7fKRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jwFwKFBW0FgVr8TQU5eDiYzlsi9SqI3Lhyclak8q7g4=;
- b=NN8iitAW4WWIbAZsYLcvAJcrE+wpsDzAP8Qfg+DfDaL7yuOow4vq7dBxHbtKW3jMwTsxNHtIGUlvFNRcuS+uGcIRI8u2etK57aIKUex7gQH65WdMDh58nSZuy5vITAOqrPnXumEOLWEaxg5g6o3nrMtDOtc9PSMspi8dN9XxH9wZC3BKYXS8uWcbo+IibNjpOqdIx61Yx2whKCwkH1bF794RP23uxj39eqlEqSm4NzVLx5OMvh0Bz0Hqp9j7+V7SsYypL3md8kN1B8k2I5nPmst0E9d5EzDxqZ7P0lDRLcc4Nj7PAERCUdnm+ir9TkUM18DsfwipqU6zTUd9MebsLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jwFwKFBW0FgVr8TQU5eDiYzlsi9SqI3Lhyclak8q7g4=;
- b=bhVoj0DZ1F8jXkoDQQpVL7Sp7aA9AZ3febHWU5q764OPdlTBZwmG0qlCl6VKa9F2EkXlcw3D4Rr6ZVAT7YQ7HyIUVxNqfVYshstL6se+5cIgZx4leVLBJoi0S6SP6k6d0x169TzcsHrFs/3Ilw4vPi0S/T0tVjgivLxIA9Tt3Sk=
-Received: from SA9P223CA0015.NAMP223.PROD.OUTLOOK.COM (2603:10b6:806:26::20)
- by CH3PR12MB9169.namprd12.prod.outlook.com (2603:10b6:610:1a0::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.6; Fri, 27 Mar
- 2026 19:36:55 +0000
-Received: from SN1PEPF00036F40.namprd05.prod.outlook.com
- (2603:10b6:806:26:cafe::78) by SA9P223CA0015.outlook.office365.com
- (2603:10b6:806:26::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9745.22 via Frontend Transport; Fri,
- 27 Mar 2026 19:36:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SN1PEPF00036F40.mail.protection.outlook.com (10.167.248.24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9745.21 via Frontend Transport; Fri, 27 Mar 2026 19:36:55 +0000
-Received: from [10.31.193.100] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Fri, 27 Mar
- 2026 14:36:54 -0500
-Message-ID: <54f54f8f-e3ab-4070-a26c-1bbb6490493c@amd.com>
-Date: Fri, 27 Mar 2026 14:36:53 -0500
+	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="HXODNL2G";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="D42K4U7s"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1774645407;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id;
+	bh=A2BrIr6rXnTotQ9XqwAZO2cLL9b65i1MLJaOZrNR9/I=;
+	b=HXODNL2GTIEZb6+v0dkdXog3gVIojgh8dsNR9OncYo/TZ8BZBC9FcSbrEfs7Iwbf
+	2q2t5xQZDivtvXtptIs1Nt2z0FgcxQD4iDGm7E4VffWmHUDkyVsz/XGXYDaISdbUrtO
+	ZIjBGqfN8sRUkTEBjV9Ln6b6LIDfq7rBn7fs8nz8=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1774645407;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id:Feedback-ID;
+	bh=A2BrIr6rXnTotQ9XqwAZO2cLL9b65i1MLJaOZrNR9/I=;
+	b=D42K4U7sF8QJGDdqg/K8DV0r5vlDTwbVmQ7VuastmMF3QDDVWRxYGtGpEiz/upiI
+	+gqCRu0YYipUIj1QVqR66VgmgTqroS9wETBe0KWuoK7YoXtBCPlE1PfvClKetONo9IB
+	8bDgA2daVMx7EMnpZpUM8SGclIdJsRTazPHl/WmE=
+Subject: [PATCH V10 0/8] dax: prepare for famfs
+From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
+To: =?UTF-8?Q?John_Groves?= <John@Groves.net>, 
+	=?UTF-8?Q?Miklos_Szeredi?= <miklos@szeredi.hu>, 
+	=?UTF-8?Q?Dan_Williams?= <dan.j.williams@intel.com>, 
+	=?UTF-8?Q?Bernd_Schubert?= <bschubert@ddn.com>, 
+	=?UTF-8?Q?Alison_Schofiel?= =?UTF-8?Q?d?= <alison.schofield@intel.com>
+Cc: =?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
+	=?UTF-8?Q?Jonathan_Corbe?= =?UTF-8?Q?t?= <corbet@lwn.net>, 
+	=?UTF-8?Q?Shuah_Khan?= <skhan@linuxfoundation.org>, 
+	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
+	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
+	=?UTF-8?Q?Matthew_Wilcox?= <willy@infradead.org>, 
+	=?UTF-8?Q?Jan_Kara?= <jack@suse.cz>, 
+	=?UTF-8?Q?Alexander_Viro?= <viro@zeniv.linux.org.uk>, 
+	=?UTF-8?Q?David_Hildenbrand?= <david@kernel.org>, 
+	=?UTF-8?Q?Christian_Bra?= =?UTF-8?Q?uner?= <brauner@kernel.org>, 
+	=?UTF-8?Q?Darrick_J_=2E_Wong?= <djwong@kernel.org>, 
+	=?UTF-8?Q?Randy_Dunlap?= <rdunlap@infradead.org>, 
+	=?UTF-8?Q?Jeff_Layton?= <jlayton@kernel.org>, 
+	=?UTF-8?Q?Amir_Goldstein?= <amir73il@gmail.com>, 
+	=?UTF-8?Q?Jonathan_Cameron?= <Jonathan.Cameron@huawei.com>, 
+	=?UTF-8?Q?Stefan_Hajnoczi?= <shajnocz@redhat.com>, 
+	=?UTF-8?Q?Joanne_Koong?= <joannelkoong@gmail.com>, 
+	=?UTF-8?Q?Josef_Bacik?= <josef@toxicpanda.com>, 
+	=?UTF-8?Q?Bagas_Sanjaya?= <bagasdotme@gmail.com>, 
+	=?UTF-8?Q?Chen_Linxuan?= <chenlinxuan@uniontech.com>, 
+	=?UTF-8?Q?James_Morse?= <james.morse@arm.com>, 
+	=?UTF-8?Q?Fuad_Tabba?= <tabba@google.com>, 
+	=?UTF-8?Q?Sean_Christopherson?= <seanjc@google.com>, 
+	=?UTF-8?Q?Shivank_Garg?= <shivankg@amd.com>, 
+	=?UTF-8?Q?Ackerley_Tng?= <ackerleytng@google.com>, 
+	=?UTF-8?Q?Gregory_Pric?= =?UTF-8?Q?e?= <gourry@gourry.net>, 
+	=?UTF-8?Q?Aravind_Ramesh?= <arramesh@micron.com>, 
+	=?UTF-8?Q?Ajay_Joshi?= <ajayjoshi@micron.com>, 
+	=?UTF-8?Q?venkataravis=40micron=2Ecom?= <venkataravis@micron.com>, 
+	=?UTF-8?Q?linux-doc=40vger=2Ekernel=2Eorg?= <linux-doc@vger.kernel.org>, 
+	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?nvdimm=40lists=2Elinux=2Edev?= <nvdimm@lists.linux.dev>, 
+	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
+	=?UTF-8?Q?linux-fsdevel=40vger=2Ekernel=2Eorg?= <linux-fsdevel@vger.kernel.org>, 
+	=?UTF-8?Q?John_Groves?= <john@groves.net>
+Date: Fri, 27 Mar 2026 21:03:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-Subject: Re: [PATCH v24 08/11] cxl: Export function for unwinding cxl by
- accelerators
-To: <alejandro.lucero-palau@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<dave.jiang@intel.com>, <dan.j.williams@intel.com>, <edward.cree@amd.com>,
-	<davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<edumazet@google.com>
-References: <20260323113117.2352709-1-alejandro.lucero-palau@amd.com>
- <20260323113117.2352709-9-alejandro.lucero-palau@amd.com>
-Content-Language: en-US
-In-Reply-To: <20260323113117.2352709-9-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F40:EE_|CH3PR12MB9169:EE_
-X-MS-Office365-Filtering-Correlation-Id: 27eea9a7-2201-4a4a-dacd-08de8c38342b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700016|56012099003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	D02psBzui0fVBgKGm3pbdYGEl8vzZGry2jlwG909QeMaraIpLkBkJILrm7w5O8KZxcIkCrHF/NBCQ3IjlOMp2bfOPx9JcYzsT5paDbrp/4yis0qCONAMdjbDbnMsPepay9kUkKsdx8v3ENaYt2aw2tNqhGrsxoDI0Yt4+WNnTznbv+6I+Fhs0bK8q28kEAvDZ9Tk+bwOFUaMNiPWOaMxF8LOTi0sv4ViytTAw5NxoBeQJax4Sm4I6aKTPS8QAuURqCcOfIrdwxPSF1zyItwFUnBnR4t1sWP7cC13n07ct3mS3M73nPuF8/mhRIMYyJINB4tQ9VIPngP4IDTG4UGyiM9dPtpxV8AmlGH7DRwB+fq0+aI9FDg+ikPGNMjc6PtLqh7KD+pIDGREanBEQFeOFdwITFIwiPbvXi8Adnqc4/48ovwt1kFhadwW0tny8mfVs20iTp3XqUCqwUyBoOfdT9J5Da4ooYXqTdlE8+5Mtt6kT5EXSDFI3JmSiES+WaMCbIicyXDnscc6T85QtjWI1GcoPoKpLmpBcptvOktosjK8cyy8jQLH0NhFoZDCkwW769OhjKGwizkvao/3ui+/wnL0Ka/fgT2NfCuzf/ZQWUy02/YJatiIRVypk646AxsactwpQelclrbK0xjHhMcyFqW0HfCsGSsFdal7sCAOuBqM5Sc4OKG7vugHOoOlppdQqb7KxdKQMzAWIkIjbOu4S+7hThFqEfvBlc0orYvJvaAC99fGG37RvgjLLS0b4NaeihIZQWnQeQlfN2tP2+HjBw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700016)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	FCkNhkyT/5tKLn3mTLz2/Li9ZFOASwA3h7xsFn2mJWA1ClX5Wpig6qxZqBvKsv6yCpPs8IBfiNXl5DA5JH3FpjmYJ+8nWgwoGKW7m3DR8AnibvEdQ9/5QiOvaEZJS7E8hsa/mmksW/Xk/vpC5XcVKxQPT/1/NqKK62MH24agyVgE0UHDkdytwn+xw8SmCXJN46n04Ipxk4d/ggurJlZvdkPb54dWM3QFam1trNz+Oo+VyKCihz/GYVMS5MWU/+xU8KHpDtACo4F0OQoHpAWtL2EB4WbzMGas3TpSe9KfN3frTRMGx/QzlTtWPJVqXxmjLMmLSLbQMpIH8+Vmx/362JzzKJg9q478vWT0+cRPqYzdTN4HLWQNodCwKUlu1/4cX3qGvhr/eT8ScI4X3u0JJec0sWraTuhRQNOfGEm7QpS5HVWEwXZtxMQ81LW+Ungn
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2026 19:36:55.3908
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27eea9a7-2201-4a4a-dacd-08de8c38342b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00036F40.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9169
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <20260327210311.79099-1-john@jagalactic.com>
+X-Mailer: Amazon WorkMail
+Thread-Index: AQHcvi0mx7x6wp1DRPy3+MfCNqaxsA==
+Thread-Topic: [PATCH V10 0/8] dax: prepare for famfs
+X-Wm-Sent-Timestamp: 1774645405
+X-Original-Mailer: git-send-email 2.52.0
+Message-ID: <0100019d311bed04-dbb67b48-c55d-4e6a-962a-a0f8b714f2e7-000000@email.amazonses.com>
+Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
+X-SES-Outgoing: 2026.03.27-54.240.11.129
 
-On 3/23/2026 6:31 AM, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> Add cxl_unregister_region() to the accelerator driver API
-> for a clean exit.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  drivers/cxl/core/region.c | 17 ++++++++++++-----
->  include/cxl/cxl.h         |  1 +
->  2 files changed, 13 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 9c3ba911d865..8bb53a095290 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2468,9 +2468,8 @@ static struct cxl_region *to_cxl_region(struct device *dev)
->  	return container_of(dev, struct cxl_region, dev);
->  }
->  
-> -static void unregister_region(void *_cxlr)
-> +void cxl_unregister_region(struct cxl_region *cxlr)
->  {
-> -	struct cxl_region *cxlr = _cxlr;
->  	struct cxl_region_params *p = &cxlr->params;
->  	int i;
->  
-> @@ -2489,6 +2488,14 @@ static void unregister_region(void *_cxlr)
->  	cxl_region_iomem_release(cxlr);
->  	put_device(&cxlr->dev);
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_unregister_region, "CXL");
-> +
-> +static void __unregister_region(void *_cxlr)
-> +{
-> +	struct cxl_region *cxlr = _cxlr;
-> +
-> +	return cxl_unregister_region(cxlr);
-> +}
-
-After taking another look, I have another possible solution: Leave cxl_unregister_region() as-is and
-remove this wrapper function, but only register it below when the decoder type is HOSTONLYMEM
-(with the below devm_release_action() calls updated accordingly). Then you'd add a disclaimer
-that the accelerator driver should call cxl_unregister_region() during it's cleanup to cxl_get_committed_decoder().
-
-I'm not sure that works out better than just letting the CXL core clean up the region and not touching it in
-the accelerator driver though. I could see the above approach causing some region lifetime issues, but I'm
-not well versed enough on that to actually know what they'd be :/.
-
-Thanks,
-Ben
-
->  
->  static struct lock_class_key cxl_region_key;
->  
-> @@ -2642,7 +2649,7 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
->  	if (rc)
->  		goto err;
->  
-> -	rc = devm_add_action_or_reset(port->uport_dev, unregister_region, cxlr);
-> +	rc = devm_add_action_or_reset(port->uport_dev, __unregister_region, cxlr);
->  	if (rc)
->  		return ERR_PTR(rc);
->  
-> @@ -2797,7 +2804,7 @@ static ssize_t delete_region_store(struct device *dev,
->  	if (IS_ERR(cxlr))
->  		return PTR_ERR(cxlr);
->  
-> -	devm_release_action(port->uport_dev, unregister_region, cxlr);
-> +	devm_release_action(port->uport_dev, __unregister_region, cxlr);
->  	put_device(&cxlr->dev);
->  
->  	return len;
-> @@ -3963,7 +3970,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  
->  	rc = __construct_region(cxlr, ctx);
->  	if (rc) {
-> -		devm_release_action(port->uport_dev, unregister_region, cxlr);
-> +		devm_release_action(port->uport_dev, __unregister_region, cxlr);
->  		return ERR_PTR(rc);
->  	}
->  
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 122b3331469d..b8cdc604480a 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -236,4 +236,5 @@ struct cxl_endpoint_decoder *cxl_get_committed_decoder(struct cxl_memdev *cxlmd,
->  						       struct cxl_region **cxlr);
->  struct range;
->  int cxl_get_region_range(struct cxl_region *region, struct range *range);
-> +void cxl_unregister_region(struct cxl_region *cxlr);
->  #endif /* __CXL_CXL_H__ */
-
+From: John Groves <john@groves.net>=0D=0A=0D=0AThis patch series along wi=
+th the bundled patches to fuse are available=0D=0Aas a git tag at [0].=0D=
+=0A=0D=0ADropped the "bundle" thread. If this submission goes smoothly, I=
+'ll update=0D=0Athe fuse patches to v10 (very little change there as yet)=
+=2E=0D=0A=0D=0AChanges v9 -> v10=0D=0A- Minor modernizations per comments=
+ from (mostly) Jonathan=0D=0A- Minor Kconfig simplification=0D=0A- bus.c:=
+dax_match_type(): don't make fsdev_dax eligible for automatic binding=0D=0A=
+  where devdax would otherwise bind=0D=0A- dax-private.h: add missing ker=
+neldoc comment for field cached_size in=0D=0A  struct dev_dax_range (than=
+ks Dave)=0D=0A- fsdev_write_dax(): s/pmem_addr/addr/ (thanks Dave)=0D=0A-=
+ include/linux/dax.h: remove a spuriously-added declaration of inode_dax(=
+)=0D=0A  (thanks Jonathan)=0D=0A=0D=0ADescription:=0D=0A=0D=0AThis patch =
+series introduces the required dax support for famfs.=0D=0APrevious versi=
+ons of the famfs series included both dax and fuse patches.=0D=0AThis ser=
+ies separates them into separate patch series' (and the fuse=0D=0Aseries =
+dependends on this dax series).=0D=0A=0D=0AThe famfs user space code can =
+be found at [1]=0D=0A=0D=0ADax Overview:=0D=0A=0D=0AThis series introduce=
+s a new "famfs mode" of devdax, whose driver is=0D=0Adrivers/dax/fsdev.c.=
+ This driver supports dax_iomap_rw() and=0D=0Adax_iomap_fault() calls aga=
+inst a character dax instance. A dax device=0D=0Anow can be converted amo=
+ng three modes: 'system-ram', 'devdax' and=0D=0A'famfs' via daxctl or sys=
+fs (e.g. unbind devdax and bind famfs instead).=0D=0A=0D=0AIn famfs mode,=
+ a dax device initializes its pages consistent with the=0D=0Afsdaxmode of=
+ pmem. Raw read/write/mmap are not supported in this mode,=0D=0Abut famfs=
+ is happy in this mode - using dax_iomap_rw() for read/write and=0D=0Adax=
+_iomap_fault() for mmap faults.=0D=0A=0D=0AChanges v8 -> v9=0D=0A- Big cl=
+arifying comments in fs/dax.c:dax_folio_reset_order() in response=0D=0A  =
+to Jonathan's comments/questions=0D=0A- Added drivers/dax/Kconfig:CONFIG_=
+DEV_DAX_FSDEV to control inclusion of the=0D=0A  new famfs dax mode (whic=
+h is in drivers/dax/fsdev.c - bind that to a daxdev=0D=0A  and you have f=
+amfs mode)=0D=0A- Some trivial refactoring, mostly per Jonathan's comment=
+s=0D=0A=0D=0AChanges v7 -> v8=0D=0A- dax: Added a devm action to clear fo=
+lio state when unbinding fsdev.c=0D=0A  (thanks Allison)=0D=0A- Added a m=
+issing device_lock() in fs_dax_get() (thanks Dave)=0D=0A- Re-factored som=
+e __free blocks for inline declaration=0D=0A- Used FIELD_PREP where appro=
+priate=0D=0A- Minor doc edits=0D=0A=0D=0AChanges v6 -> v7=0D=0A- Fixed a =
+regression in famfs_interleave_fileofs_to_daxofs() that=0D=0A  was report=
+ed by Intel's kernel test robot=0D=0A- Added a check in __fsdev_dax_direc=
+t_access() for negative return=0D=0A  from pgoff_to_phys(), which would i=
+ndicate an out-of-range offset=0D=0A- Fixed a bug in __famfs_meta_free(),=
+ where not all interleaved=0D=0A  extents were freed=0D=0A- Added chunksi=
+ze alignment checks in famfs_fuse_meta_alloc() and=0D=0A  famfs_interleav=
+e_fileofs_to_daxofs() as interleaved chunks must=0D=0A  be PTE or PMD ali=
+gned=0D=0A- Simplified famfs_file_init_dax() a bit=0D=0A- Re-ran CM's ker=
+nel code review prompts on the entire series and=0D=0A  fixed several min=
+or issues=0D=0A=0D=0AChanges v4 -> v5 -> v6=0D=0A- None. Re-sending due t=
+o technical difficulties=0D=0A=0D=0AChanges v3 [9] -> v4=0D=0A- The patch=
+ "dax: prevent driver unbind while filesystem holds device"=0D=0A  has be=
+en dropped. Dan Williams indicated that the favored behavior is=0D=0A  fo=
+r a file system to stop working if an underlying driver is unbound,=0D=0A=
+  rather than preventing the unbind.=0D=0A- The patch "famfs_fuse: Famfs =
+mount opt: -o shadow=3D<shadowpath>" has=0D=0A  been dropped. Found a way=
+ for the famfs user space to do without the=0D=0A  -o opt (via getxattr).=
+=0D=0A- Squashed the fs/fuse/Kconfig patch into the first subsequent patc=
+h=0D=0A  that needed the change=0D=0A  ("famfs_fuse: Basic fuse kernel AB=
+I enablement for famfs")=0D=0A- Many review comments addressed.=0D=0A- Ad=
+dressed minor kerneldoc infractions reported by test robot.=0D=0A=0D=0ACh=
+anges v2 [7] -> v3=0D=0A- Dax: Completely new fsdev driver (drivers/dax/f=
+sdev.c) replaces the=0D=0A  dev_dax_iomap modifications to bus.c/device.c=
+=2E Devdax devices can now=0D=0A  be switched among 'devdax', 'famfs' and=
+ 'system-ram' modes via daxctl=0D=0A  or sysfs.=0D=0A- Dax: fsdev uses ME=
+MORY_DEVICE_FS_DAX type and leaves folios at order-0=0D=0A  (no vmemmap_s=
+hift), allowing fs-dax to manage folio lifecycles=0D=0A  dynamically like=
+ pmem does.=0D=0A- Dax: The "poisoned page" problem is properly fixed via=
+=0D=0A  fsdev_clear_folio_state(), which clears stale mapping/compound st=
+ate=0D=0A  when fsdev binds. The temporary WARN_ON_ONCE workaround in fs/=
+dax.c=0D=0A  has been removed.=0D=0A- Dax: Added dax_set_ops() so fsdev c=
+an set dax_operations at bind time=0D=0A  (and clear them on unbind), sin=
+ce the dax_device is created before we=0D=0A  know which driver will bind=
+=2E=0D=0A- Dax: Added custom bind/unbind sysfs handlers; unbind return -E=
+BUSY if a=0D=0A  filesystem holds the device, preventing unbind while fam=
+fs is mounted.=0D=0A- Fuse: Famfs mounts now require that the fuse server=
+/daemon has=0D=0A  CAP_SYS_RAWIO because they expose raw memory devices.=0D=
+=0A- Fuse: Added DAX address_space_operations with noop_dirty_folio since=
+=0D=0A  famfs is memory-backed with no writeback required.=0D=0A- Rebased=
+ to latest kernels, fully compatible with Alistair Popple=0D=0A  et. al's=
+ recent dax refactoring.=0D=0A- Ran this series through Chris Mason's cod=
+e review AI prompts to check=0D=0A  for issues - several subtle problems =
+found and fixed.=0D=0A- Dropped RFC status - this version is intended to =
+be mergeable.=0D=0A=0D=0AChanges v1 [8] -> v2:=0D=0A=0D=0A- The GET_FMAP =
+message/response has been moved from LOOKUP to OPEN, as=0D=0A  was the pr=
+etty much unanimous consensus.=0D=0A- Made the response payload to GET_FM=
+AP variable sized (patch 12)=0D=0A- Dodgy kerneldoc comments cleaned up o=
+r removed.=0D=0A- Fixed memory leak of fc->shadow in patch 11 (thanks Joa=
+nne)=0D=0A- Dropped many pr_debug and pr_notice calls=0D=0A=0D=0A=0D=0ARe=
+ferences=0D=0A=0D=0A[0] - https://github.com/jagalactic/linux/tree/famfs-=
+v10 (this patch set)=0D=0A[1] - https://famfs.org (famfs user space)=0D=0A=
+[2] - https://lore.kernel.org/linux-cxl/cover.1708709155.git.john@groves.=
+net/=0D=0A[3] - https://lore.kernel.org/linux-cxl/cover.1714409084.git.jo=
+hn@groves.net/=0D=0A[4] - https://lwn.net/Articles/983105/ (lsfmm 2024)=0D=
+=0A[5] - https://lwn.net/Articles/1020170/ (lsfmm 2025)=0D=0A[6] - https:=
+//lore.kernel.org/linux-cxl/cover.8068ad144a7eea4a813670301f4d2a86a8e68ec=
+4.1740713401.git-series.apopple@nvidia.com/=0D=0A[7] - https://lore.kerne=
+l.org/linux-fsdevel/20250703185032.46568-1-john@groves.net/ (famfs fuse v=
+2)=0D=0A[8] - https://lore.kernel.org/linux-fsdevel/20250421013346.32530-=
+1-john@groves.net/ (famfs fuse v1)=0D=0A[9] - https://lore.kernel.org/lin=
+ux-fsdevel/20260107153244.64703-1-john@groves.net/T/#mb2c868801be16eca82d=
+ab239a1d201628534aea7 (famfs fuse v3)=0D=0A=0D=0A=0D=0AJohn Groves (8):=0D=
+=0A  dax: move dax_pgoff_to_phys from [drivers/dax/] device.c to bus.c=0D=
+=0A  dax: Factor out dax_folio_reset_order() helper=0D=0A  dax: add fsdev=
+=2Ec driver for fs-dax on character dax=0D=0A  dax: Save the kva from mem=
+remap=0D=0A  dax: Add dax_operations for use by fs-dax on fsdev dax=0D=0A=
+  dax: Add dax_set_ops() for setting dax_operations at bind time=0D=0A  d=
+ax: Add fs_dax_get() func to prepare dax for fs-dax usage=0D=0A  dax: exp=
+ort dax_dev_get()=0D=0A=0D=0A MAINTAINERS               |   8 +=0D=0A dri=
+vers/dax/Kconfig       |   5 +=0D=0A drivers/dax/Makefile      |   2 +=0D=
+=0A drivers/dax/bus.c         |  22 ++-=0D=0A drivers/dax/bus.h         |=
+   3 +=0D=0A drivers/dax/dax-private.h |   4 +=0D=0A drivers/dax/device.c=
+      |  23 ---=0D=0A drivers/dax/fsdev.c       | 346 +++++++++++++++++++=
++++++++++++++++++++=0D=0A drivers/dax/super.c       | 107 +++++++++++-=0D=
+=0A fs/dax.c                  |  74 ++++++--=0D=0A include/linux/dax.h   =
+    |  19 ++-=0D=0A 11 files changed, 563 insertions(+), 50 deletions(-)=0D=
+=0A create mode 100644 drivers/dax/fsdev.c=0D=0A=0D=0A=0D=0Abase-commit: =
+c369299895a591d96745d6492d4888259b004a9e=0D=0A--=20=0D=0A2.53.0=0D=0A=0D=0A=
