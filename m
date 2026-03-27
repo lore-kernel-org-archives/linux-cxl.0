@@ -1,147 +1,155 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8901E31353B
-	for <linux-cxl@vger.kernel.org>; Fri, 27 Mar 2026 02:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FBD34028F;
+	Fri, 27 Mar 2026 02:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774576979; cv=none; b=X6La0lPbRKpGOThCXS9cLtqbsw+lThZpf66N1cu+gnfArUslwvPSmS+AcwBiZ5nSKAf69HAhZ+DYKTwsZ+tOW9UeN7NXhFdz826Oly030N+vngfifeWjwyVVvWThA10o2u6XE/XyJK9dSsscOp6PptAVZkA84Bl45XNqC+F6Vn4=
+	t=1774580297; cv=none; b=BNGyZX3vbBwsipMdmtth//nmMK/ltp+DzOhghp//pZOhu9tO6rHvO0Q+1O07PtMA+7+aCB0ZAgUUP+e4BGRAeYcICPM7oAtFuEfXf/OzfM3E7mQZY44bZIS+v6hj315C0nSbEechKM56dJQS/qV9Cre3bK/SGJ7GKVjDhJK/BlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774576979; c=relaxed/simple;
-	bh=zg2VKuwFsN6029euqX1jn+gIisP3yKnPstGsmq0VUEc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j6Rxf4CMhwHmDnz5P3ZUBStIO+v+0sJqM8sGKTV7Btz9tqbPI7gH58jfRRcNt6W6n6qfAejchiHXP2FRhcD3JxLePSlMS/edbjU4ku2wWP0Nq9VjFqpdsoTYNwu08vd8GmGpMW64A8EzbFFGPwdij4GhgyPqoYc8VnmZjAf4QH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=abV6A38w; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1774580297; c=relaxed/simple;
+	bh=ZpNIEcUffsRq1bL9mSuUjHcLakM3o1+hxG4crvmOh68=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=fseCBUJ84GycXfXkH9Gudexg0lWjT/6saP0XJ9a99E9sf/Vy4UrqdD4kp4N+4bPbso3rFans2bQoyYpfN3O26bGsVlW/NQ8LRvlnF2AeWi7dHBMmZzCnOosazuLZqUJvgAk14kPMuohRB6zUyjFr8iwc8sFeDOdlBFi0iwvpmco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=j/Vo3ys2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="abV6A38w"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-50b268fba9aso14952481cf.3
-        for <linux-cxl@vger.kernel.org>; Thu, 26 Mar 2026 19:02:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1774576977; x=1775181777; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PihiyqdH9fgSKKz89FjkxG4uYpkRrGrjVrq6arvX1sY=;
-        b=abV6A38wFRK8jjwEjo6u6Dys0TfULUO1y0ITjwTuI4dpKwkqeqtfAlzRKzCyq43k9p
-         83hGbtVBc6DL8jJwadwgmwhB19vn0BoehY69OqwzXYnWOKbb8AbEeWb03GtDKOEXetxQ
-         0L9NlE/UITgoW5V7Jjf6tROWy1OjzHdKk5wX/B4bDOh1Gn0o6IodF+Qspg3+/FRI3wgC
-         33za/j5XtinBJqiI7KgXPecfkWhS/zmuoNu7UF4pVvFoDFO93ohqwAqUdEZDHRGAStfX
-         GerBohgwfkzIqTkWWVQRF923NaY4MfmjzeSFsFBCkyC+hyylrcupFdEnSb+xZMjsY4x7
-         cnug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774576977; x=1775181777;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=PihiyqdH9fgSKKz89FjkxG4uYpkRrGrjVrq6arvX1sY=;
-        b=hGKLZq35Zpd2XX+WDRPdEkrgzRtPvOihl2hu+Phgb6WAofCxNyy5ewE/J/Kw+/EW/5
-         kaXxdFWI2/ONuntANCOoB3PVP1ERi6lCM0PT66PVTGIv1Z1NUNQafpWh12mLdxWiIHxv
-         PaXCuGGnBOS9tY2bTgYqGK1Nt8UrOtInf4+4hPK7OwsIgCapAiuKPlIxGq+QRaiT/OUV
-         8QEqtnt7Tn9YQ3Mt/SuEcn4n3MY0okvNiRbk5tEWiOAmDWR0qTZp5vqjIy/pHXDtzdEM
-         LTZqL/oi7Rmle2C0j26PfH0c3Osr2kXQbkmK5qMYoL6finOGGAoBnN6e8q6jSeCKp165
-         sCOg==
-X-Gm-Message-State: AOJu0YygVvxBjSf+pHNum84OpEm0MrzRmpaPjflanoBrMacLpRjujEbM
-	/pNV8qBjbA4g/gN8DxBKEFLEIgOzqc2Wbifj/zSFwSt3q6+r2YKe8/McX2UrSShZ7i9/VGOkPZC
-	KLHY+
-X-Gm-Gg: ATEYQzwCiUlaZ/al18mScGkd8Gh+l+XUD2lcLm2nDOFSFvuTz+6s28kjZEQniPiPuV0
-	5REb00eFlTBY+3Lzo5jeuQxh4QGg3XS8Iq3KPUYUxYz4JXDbwWcvMcIRYK4ihT3IJTeEhPJQ5TD
-	uM2Ssma/hswU5zhYTRarxR8CQ7JwaqeZUXvdW4FSX0y7adPxL1K26P/XoVSKIZovAPcyxFxAFHz
-	a3h1cKyAAUdRNehIULvEhFJvg07NgNXNL66JNfp/Ih98t2MW1d46R13dQ5Btu3Zvik+81DsX2fx
-	LSB0GtylQkWaApJvPVBpXPLHsMEO023rye6SSFXzLYenqlCGp0uKnqA19ghAigY62cE78Mik350
-	FUve8kkZ5snClCFJIp4doJYG8a2KSGI/nxyvz5sNevwinZ3aaywwkfuaSHkCIBYWzHifjFzvduI
-	MsvKVTeTc+HcnYK5jPfXGPKCtqOKeUn5rWu/o=
-X-Received: by 2002:ac8:5fc7:0:b0:50b:36af:56a6 with SMTP id d75a77b69052e-50ba383ebf5mr12273061cf.15.1774576977214;
-        Thu, 26 Mar 2026 19:02:57 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([63.116.149.204])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50b923c0fc1sm39158901cf.27.2026.03.26.19.02.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2026 19:02:56 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Subject: [PATCH v5 3/3] cxl/core: use cleanup.h for devm_cxl_add_dax_region
-Date: Thu, 26 Mar 2026 22:02:03 -0400
-Message-ID: <20260327020203.876122-4-gourry@gourry.net>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260327020203.876122-1-gourry@gourry.net>
-References: <20260327020203.876122-1-gourry@gourry.net>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="j/Vo3ys2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B30C0C116C6;
+	Fri, 27 Mar 2026 02:58:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1774580297;
+	bh=ZpNIEcUffsRq1bL9mSuUjHcLakM3o1+hxG4crvmOh68=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=j/Vo3ys2nroHY54igrcUEcoYgsxYsT3vxeiCyy/aOfXJa1yRgskAMVRG73QbfSFFf
+	 JM5nLEh474y06NHY6UPYTi/omXySC/awZK0BmobSkQgM8axUdCr4bD26qAKb/5n4XZ
+	 I6MCP8QNv6Ig+O/3PIioVHSyf2KK920H2p86r6uA=
+Date: Thu, 26 Mar 2026 19:58:16 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Oscar Salvador <osalvador@suse.de>, Axel
+ Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei
+ Xu <weixugc@google.com>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan
+ <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Sidhartha Kumar
+ <sidhartha.kumar@oracle.com>, linux-mm@kvack.org,
+ linux-cxl@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 00/15] mm: memory hot(un)plug and SPARSEMEM cleanups
+Message-Id: <20260326195816.60110f50cd464d0076aad0ff@linux-foundation.org>
+In-Reply-To: <20260320-sparsemem_cleanups-v2-0-096addc8800d@kernel.org>
+References: <20260320-sparsemem_cleanups-v2-0-096addc8800d@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Cleanup the gotos in the function.  No functional change.
+On Fri, 20 Mar 2026 23:13:32 +0100 "David Hildenbrand (Arm)" <david@kernel.org> wrote:
 
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- drivers/cxl/core/region_dax.c | 13 +++++--------
- drivers/cxl/cxl.h             |  1 +
- 2 files changed, 6 insertions(+), 8 deletions(-)
+> Some cleanups around memory hot(un)plug and SPARSEMEM. In essence,
+> we can limit CONFIG_MEMORY_HOTPLUG to CONFIG_SPARSEMEM_VMEMMAP,
+> remove some dead code, and move all the hotplug bits over to
+> mm/sparse-vmemmap.c.
+> 
+> Some further/related cleanups around other unnecessary code
+> (memory hole handling and complicated usemap allocation).
 
-diff --git a/drivers/cxl/core/region_dax.c b/drivers/cxl/core/region_dax.c
-index fe367759ac69..de04f78f6ad8 100644
---- a/drivers/cxl/core/region_dax.c
-+++ b/drivers/cxl/core/region_dax.c
-@@ -81,29 +81,26 @@ static void cxlr_dax_unregister(void *_cxlr_dax)
+Sorry, for some (age-related) reason I've been sitting on v1 for nearly
+a week.
+
+Thanks, I've updated mm-unstable to this version.
+
+Lorenzo, I've assumed that your conditional R-b on [01/15] is now
+unconditional.
+
+> v1 -> v2:
+> * Added "mm/memory_hotplug: fix possible race in scan_movable_pages()"
+> * Update the comment above section_deactivate()
+> * Reordered the flags in sparse_init_one_section()
+> * Patch description improvements
+
+Here's how v2 altered mm.git:
+
+
+ mm/internal.h       |    2 +-
+ mm/memory_hotplug.c |   11 ++++++++---
+ mm/sparse-vmemmap.c |    8 ++------
+ 3 files changed, 11 insertions(+), 10 deletions(-)
+
+--- a/mm/internal.h~b
++++ a/mm/internal.h
+@@ -985,7 +985,7 @@ static inline void sparse_init_one_secti
  
- int devm_cxl_add_dax_region(struct cxl_region *cxlr)
- {
--	struct cxl_dax_region *cxlr_dax;
- 	struct device *dev;
- 	int rc;
- 
--	cxlr_dax = cxl_dax_region_alloc(cxlr);
-+	struct cxl_dax_region *cxlr_dax __free(put_cxl_dax_region) =
-+		cxl_dax_region_alloc(cxlr);
- 	if (IS_ERR(cxlr_dax))
- 		return PTR_ERR(cxlr_dax);
- 
- 	dev = &cxlr_dax->dev;
- 	rc = dev_set_name(dev, "dax_region%d", cxlr->id);
- 	if (rc)
--		goto err;
-+		return rc;
- 
- 	rc = device_add(dev);
- 	if (rc)
--		goto err;
-+		return rc;
- 
- 	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
- 		dev_name(dev));
- 
- 	return devm_add_action_or_reset(&cxlr->dev, cxlr_dax_unregister,
--					cxlr_dax);
--err:
--	put_device(dev);
--	return rc;
-+					no_free_ptr(cxlr_dax));
+ 	ms->section_mem_map &= ~SECTION_MAP_MASK;
+ 	ms->section_mem_map |= coded_mem_map;
+-	ms->section_mem_map |= SECTION_HAS_MEM_MAP | flags;
++	ms->section_mem_map |= flags | SECTION_HAS_MEM_MAP;
+ 	ms->usage = usage;
  }
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index f08be12e0e53..249a2f5ffc7b 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -712,6 +712,7 @@ DEFINE_FREE(put_cxl_root, struct cxl_root *, if (_T) put_device(&_T->port.dev))
- DEFINE_FREE(put_cxl_port, struct cxl_port *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
- DEFINE_FREE(put_cxl_root_decoder, struct cxl_root_decoder *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->cxlsd.cxld.dev))
- DEFINE_FREE(put_cxl_region, struct cxl_region *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
-+DEFINE_FREE(put_cxl_dax_region, struct cxl_dax_region *, if (!IS_ERR_OR_NULL(_T)) put_device(&_T->dev))
  
- int devm_cxl_enumerate_ports(struct cxl_memdev *cxlmd);
- void cxl_bus_rescan(void);
--- 
-2.53.0
+--- a/mm/memory_hotplug.c~b
++++ a/mm/memory_hotplug.c
+@@ -1738,6 +1738,7 @@ static int scan_movable_pages(unsigned l
+ 	unsigned long pfn;
+ 
+ 	for (pfn = start; pfn < end; pfn++) {
++		unsigned long nr_pages;
+ 		struct page *page;
+ 		struct folio *folio;
+ 
+@@ -1754,9 +1755,9 @@ static int scan_movable_pages(unsigned l
+ 		if (PageOffline(page) && page_count(page))
+ 			return -EBUSY;
+ 
+-		if (!PageHuge(page))
+-			continue;
+ 		folio = page_folio(page);
++		if (!folio_test_hugetlb(folio))
++			continue;
+ 		/*
+ 		 * This test is racy as we hold no reference or lock.  The
+ 		 * hugetlb page could have been free'ed and head is no longer
+@@ -1766,7 +1767,11 @@ static int scan_movable_pages(unsigned l
+ 		 */
+ 		if (folio_test_hugetlb_migratable(folio))
+ 			goto found;
+-		pfn |= folio_nr_pages(folio) - 1;
++		nr_pages = folio_nr_pages(folio);
++		if (unlikely(nr_pages < 1 || nr_pages > MAX_FOLIO_NR_PAGES ||
++			     !is_power_of_2(nr_pages)))
++			continue;
++		pfn |= nr_pages - 1;
+ 	}
+ 	return -ENOENT;
+ found:
+--- a/mm/sparse-vmemmap.c~b
++++ a/mm/sparse-vmemmap.c
+@@ -725,11 +725,9 @@ static int fill_subsection_map(unsigned
+ }
+ 
+ /*
+- * To deactivate a memory region, there are 3 cases to handle across
+- * two configurations (SPARSEMEM_VMEMMAP={y,n}):
++ * To deactivate a memory region, there are 3 cases to handle:
+  *
+- * 1. deactivation of a partial hot-added section (only possible in
+- *    the SPARSEMEM_VMEMMAP=y case).
++ * 1. deactivation of a partial hot-added section:
+  *      a) section was present at memory init.
+  *      b) section was hot-added post memory init.
+  * 2. deactivation of a complete hot-added section.
+@@ -737,8 +735,6 @@ static int fill_subsection_map(unsigned
+  *
+  * For 1, when subsection_map does not empty we will not be freeing the
+  * usage map, but still need to free the vmemmap range.
+- *
+- * For 2 and 3, the SPARSEMEM_VMEMMAP={y,n} cases are unified
+  */
+ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+ 		struct vmem_altmap *altmap)
+_
 
