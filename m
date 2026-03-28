@@ -1,183 +1,101 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94FD358361
-	for <linux-cxl@vger.kernel.org>; Sat, 28 Mar 2026 04:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C52783A14
+	for <linux-cxl@vger.kernel.org>; Sat, 28 Mar 2026 06:02:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774671186; cv=none; b=R45Wviixf3YYya94AuC5Vbq+c9mGOJe/ThzNJX4CLiNAIoaLvp579f9m9u/TxzD0txVQAv1R1uWZij3zTzXHainooe29LC5uTfEW6RMK4237iGdx5opleYVNWVhOKoSlF+WLWiC9l99Xoqu8lXMJKU7fuVF4ib3xs385OYk3H/8=
+	t=1774677724; cv=none; b=XqJgnrPeJaUUqXsZ8iQT+lxpEFAv8VWknbyt9Wn74PlKsfP0Xp4EraHVaHzL9i9ptYib/Mf/lfh6Extn9hOspqq1Z9KLZHf2TAQQX3Lc93ufBXX4juOE08tWm1VOfl7Wc3AnMdDJnZQ4M/L0TLDCoIDj+MKjeRBAW2CS+/DJaos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774671186; c=relaxed/simple;
-	bh=u6wmU9dB7ePH26aCiJf2BF9rCXEiZhX4kL2ZChNpoLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eubjZv8rwxUHizfFAx4X/RkLCUaFmqdg++tLFIzWI08l8WbxpWNSTpZbs17N7LlV/DTLSEfAR+RIgR0i1ir34eGtwomevv3zeZDdRq1sOYQBjrVxvuER903DkuhqPXp4HnzHG7aVGeYI5Oxh8KSbKsrFGiCfL3mU5yT/EOrVu3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=q5e5vjdl; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1774677724; c=relaxed/simple;
+	bh=HQvREEeEfU0eREdXkyLooYyQCzQdvXnGvKCNU5uCkXI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=i/qMufzrBaZ7kYW6y30ctAWB4nkL1jeagYza75p738ndePq+Dk8LR0QB0fd+fwmvlD8RyISA1ZMCZY2ssGLZ3TA6NpWpCAv7ysv+toJ09pofdWswPVK0P560AYRJNBkEMOyZyKoyDNRBP5Nrld+eSeQbY6sCTUuyd7wv1JvDnVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZuDggVp9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="q5e5vjdl"
-Date: Sat, 28 Mar 2026 12:12:42 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1774671173;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZuDggVp9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1774677722;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jwH9djlM7EeldEvmT12J+amit/qHM19CLj9Hfcbnv6A=;
-	b=q5e5vjdlc+es4dIZkNqfTSQAgfkrqcruuQ7cX7MIYdTRgEU/AatvbRrFWGM4+yyb8rrFDD
-	9cA+t2kcLFKyRQ+fgcLAyDvOf3rhUNtOjUkPl1m5UpfJA/sR9dJJz3Ln70Ey3hlAVSR7LL
-	nje6uALOeF3MkyLtDwYv5dDAbUyxm4o=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Hao Li <hao.li@linux.dev>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Joshua Hahn <joshua.hahnjy@gmail.com>, osalvador@suse.de, 
-	akpm@linux-foundation.org, vbabka@suse.cz, harry.yoo@oracle.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] mm/memory_hotplug: maintain N_NORMAL_MEMORY during
- hotplug
-Message-ID: <2rzg3awmws2odvgysb4ty73nf4nrqfvpzosdlexttn7hsvyfkd@x7lkzb2y3ugs>
-References: <20260327143823.3063541-1-joshua.hahnjy@gmail.com>
- <c8d9fba0-a001-42b0-b0e3-323235cb652b@kernel.org>
+	bh=LOl67eVYjM6XwA+2aoAT/RR6VujgC2WWk7a6aW7H6AI=;
+	b=ZuDggVp99Z7LgOLNPmqXCggHXhuT+gJmUx7Z8UuQ13Yqv6Qo5vyECXdOTIJJ9OaaU+9tvr
+	drzVUu0MDcFTcg+CNdbJIx4HGp2Hu6IqyHliUsf9C3LIepB9ygojUX3Dvu+RGjERrsRQVa
+	OeQ6t8QerFAd2oBktPRfDX5/Jr5WdWg=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-461-QK3TLCZJNl6B8duKTuTrnw-1; Sat,
+ 28 Mar 2026 02:01:56 -0400
+X-MC-Unique: QK3TLCZJNl6B8duKTuTrnw-1
+X-Mimecast-MFC-AGG-ID: QK3TLCZJNl6B8duKTuTrnw_1774677715
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AA6AC19560BB;
+	Sat, 28 Mar 2026 06:01:54 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.45.242.6])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 803171955D84;
+	Sat, 28 Mar 2026 06:01:53 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id 291A021E6937; Sat, 28 Mar 2026 07:01:51 +0100 (CET)
+From: Markus Armbruster <armbru@redhat.com>
+To: Alireza Sanaee <alireza.sanaee@huawei.com>
+Cc: <qemu-devel@nongnu.org>,  <anisa.su@samsung.com>,
+  <berrange@redhat.com>,  <eblake@redhat.com>,
+  <jonathan.cameron@huawei.com>,  <linux-cxl@vger.kernel.org>,
+  <linuxarm@huawei.com>,  <lizhijian@fujitsu.com>,  <mst@redhat.com>,
+  <pbonzini@redhat.com>,  <gourry@gourry.net>,  <nifan.cxl@gmail.com>,
+  <me@linux.beauty>
+Subject: Re: [PATCH 9/9] hw/cxl: Add QMP status query for dynamic-capacity
+ extent release
+In-Reply-To: <20260327151811.00005564.alireza.sanaee@huawei.com> (Alireza
+	Sanaee's message of "Fri, 27 Mar 2026 15:18:11 +0000")
+References: <20260325184259.366-1-alireza.sanaee@huawei.com>
+	<20260325184259.366-10-alireza.sanaee@huawei.com>
+	<87mrzuei5f.fsf@pond.sub.org>
+	<20260327151811.00005564.alireza.sanaee@huawei.com>
+Date: Sat, 28 Mar 2026 07:01:51 +0100
+Message-ID: <87zf3s1ohc.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c8d9fba0-a001-42b0-b0e3-323235cb652b@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-MFC-PROC-ID: QVU8AEx7gJzi3SqCzZs5WKwBworqlRJd_LNT6LBApyY_1774677715
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On Fri, Mar 27, 2026 at 04:28:53PM +0100, David Hildenbrand (Arm) wrote:
-> On 3/27/26 15:38, Joshua Hahn wrote:
-> > On Fri, 27 Mar 2026 20:42:47 +0800 Hao Li <hao.li@linux.dev> wrote:
-> > 
-> > Hello Hao,
-> > 
-> > I hope you are doing well, thank you for the patch!
-> > 
-> >> N_NORMAL_MEMORY is initialized from zone population at boot, but memory
-> >> hotplug currently only updates N_MEMORY. As a result, a node that gains
-> >> normal memory via hotplug can remain invisible to users iterating over
-> >> N_NORMAL_MEMORY, while a node that loses its last normal memory can stay
-> >> incorrectly marked as such.
-> > 
-> > The second part feels more important than the second part, doing a quick
-> > glance through the code I can see a few N_NORMAL_MEMORY iterators that
-> > are in some hot paths like shrink_memcg. Iterating over nodes that don't
-> > contain any NORMAL memory seems like an inefficiency rather than a bug
-> > though. 
-> > 
-> >> Restore N_NORMAL_MEMORY maintenance directly in online_pages() and
-> >> offline_pages(). Set the bit when a node that currently lacks normal
-> >> memory onlines pages into a zone <= ZONE_NORMAL, and clear it when
-> >> offlining removes the last present pages from zones <= ZONE_NORMAL.
-> >>
-> >> This restores the intended semantics without bringing back the old
-> >> status_change_nid_normal notifier plumbing which was removed in
-> >> 8d2882a8edb8.
-> >>
-> >> Current users that benefit include list_lru, zswap, nfsd filecache,
-> >> hugetlb_cgroup, and has_normal_memory sysfs reporting.
-> >>
-> >> Signed-off-by: Hao Li <hao.li@linux.dev>
-> >> ---
-> >>
-> >> This patch also prepares for a subsequent SLUB change that makes
-> >> can_free_to_pcs() rely on N_NORMAL_MEMORY to decide whether an object can be
-> >> freed to the sheaf.
-> >>
-> >> ---
-> >>  mm/memory_hotplug.c | 22 ++++++++++++++++++++++
-> >>  1 file changed, 22 insertions(+)
-> >>
-> >> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> >> index bc805029da51..5498744aa1f1 100644
-> >> --- a/mm/memory_hotplug.c
-> >> +++ b/mm/memory_hotplug.c
-> >> @@ -1155,6 +1155,7 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
-> >>  	int need_zonelists_rebuild = 0;
-> >>  	unsigned long flags;
-> >>  	int ret;
-> >> +	bool need_set_normal_memory = false;
-> >>  
-> >>  	/*
-> >>  	 * {on,off}lining is constrained to full memory sections (or more
-> >> @@ -1180,6 +1181,9 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
-> >>  		if (ret)
-> >>  			goto failed_addition;
-> >>  	}
-> >> +	/* Adding normal memory to the node for the first time */
-> >> +	if (!node_state(nid, N_NORMAL_MEMORY) && zone_idx(zone) <= ZONE_NORMAL)
-> >> +		need_set_normal_memory = true;
-> >>  
-> >>  	ret = memory_notify(MEM_GOING_ONLINE, &mem_arg);
-> >>  	ret = notifier_to_errno(ret);
-> >> @@ -1209,6 +1213,8 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
-> >>  
-> >>  	if (node_arg.nid >= 0)
-> >>  		node_set_state(nid, N_MEMORY);
-> >> +	if (need_set_normal_memory)
-> >> +		node_set_state(nid, N_NORMAL_MEMORY);
-> >>  	if (need_zonelists_rebuild)
-> >>  		build_all_zonelists(NULL);
-> > 
-> > Do we need the flag here? As far as I can tell, we can just skip this and just
-> > directly check whether this is the first normal memory we are adding to the
-> > node here and set the bit. Then we can remove the flag and the extraneous
-> > check. We won't do any notifier work so I think it should be OK.
-> 
-> I assume you simply mean:
-> 
-> 
-> if (zone_idx(zone) <= ZONE_NORMAL && !node_state(nid, N_NORMAL_MEMORY))
-> 	node_set_state(nid, N_NORMAL_MEMORY);
-> 
-> That looks m uch better!
+Alireza Sanaee <alireza.sanaee@huawei.com> writes:
 
-Yes, this approach is elegant! Thanks.
+> On Thu, 26 Mar 2026 16:15:40 +0100
+> Markus Armbruster <armbru@redhat.com> wrote:
+>
+> Hi Markus,
+>
+> This commit adds a test command to check whether an extent (a piece of memory region) has been released or not by the guest.
+> The process of removal is highly asynchronous, that's why I needed to add a new command to check it.
+>
+> I would be happy to drop this patch, as this is extra.
 
-> 
-> > 
-> >> @@ -1908,6 +1914,9 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
-> >>  	unsigned long flags;
-> >>  	char *reason;
-> >>  	int ret;
-> >> +	bool need_clear_normal_memory = false;
-> >> +	unsigned long node_normal_pages = 0;
-> >> +	enum zone_type zt;
-> >>  
-> >>  	/*
-> >>  	 * {on,off}lining is constrained to full memory sections (or more
-> >> @@ -1977,6 +1986,13 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
-> >>  			goto failed_removal_isolated;
-> >>  		}
-> >>  	}
-> >> +	/*
-> >> +	 * Check whether this operation removes the node's last normal memory.
-> >> +	 */
-> >> +	for (zt = 0; zt <= ZONE_NORMAL; zt++)
-> >> +		node_normal_pages += pgdat->node_zones[zt].present_pages;
-> >> +	if (nr_pages >= node_normal_pages && zone_idx(zone) <= ZONE_NORMAL)
-> >> +		need_clear_normal_memory = true;
-> >>  
-> >>  	ret = memory_notify(MEM_GOING_OFFLINE, &mem_arg);
-> >>  	ret = notifier_to_errno(ret);
-> >> @@ -2055,6 +2071,12 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
-> >>  	/* reinitialise watermarks and update pcp limits */
-> >>  	init_per_zone_wmark_min();
-> > 
-> > Same here, couldn't we just iterate through the paegs here and accumulate
-> > node_normal_pages and clear the memory here? We can get rid of the bool and
-> > also keep node_normal_pages defined inside an if (zone_idx(zone) <= ZONE_NORMAL)
-> > check as well.
-> 
-> Right, all we have to do is check for remaining present_pages in one of
-> the nodes IIUC.
+So your motivation for adding the command is "just" testing.  Correct?
 
-Yes, we can simply sum up the remaining present_pages and check whether it
-comes out to 0. That feels more straightforward and direct.
+Can you think of other uses?
 
--- 
-Thanks,
-Hao
+In particular, would a management application need this query to monitor
+removal?
+
+The description of feature @unstable may need to be adjusted for the
+answers we work out here.
+
+>
+> Thanks,
+> Ali
+
