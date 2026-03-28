@@ -1,60 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E8F28371
-	for <linux-cxl@vger.kernel.org>; Sat, 28 Mar 2026 07:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C37A13AD26
+	for <linux-cxl@vger.kernel.org>; Sat, 28 Mar 2026 07:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774683139; cv=none; b=SodAR8x+A639Lft+QBG05th3aXy5qeiM3UBwAvyhiiDeXnsav9FFJpizX2I0JMEkdSLAKzHYPPF9roth1XVuhdzB4puFq+XHIhsGVdj0orINsKK4z+vxQM63M2jFt5AdXOZR3u14wV9LOwMrqXuCR+pcGGJHPtKuR8dIsylTX88=
+	t=1774683600; cv=none; b=mA/u2VxURDeSFLI5gDEP2RvTMJzB041iLeAjPoXqaxhAxuyWrhjLo49kXu9HdDdXsKGOemMVrhKoS5o+2/jTfirxSWI1/iIOcjp/AHy3UcEWXIvKmGQnuZq6r7Z0Q90Pd+XA8bV4nAplV8eTcaJSlGzzW+6osKTiDX+CgSs5c4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774683139; c=relaxed/simple;
-	bh=/NCUZ1oaJmdc8yM8Be7CMDd9mLaeYdjB2AUYsAoAlXs=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=fijRQNt3TlaO8fX5mLEIwoJKUKz4iiwIJHpYVblITtMDJ18x9gh70Ge77vReQ0ENpLVfZvOzRTBhsjfBO9YDi++q0ntwbixcrIyOR2V+MviQbLs0XxjF6k7VOK13fTHBpStL8KT80JEp1XnavUKR4NB22XkTduDGa2llclZvj6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AGqJmqW4; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1774683600; c=relaxed/simple;
+	bh=ejv9tVqAjQNWlKSRISrs0iCJkMGhN1FhOsudnsj33VM=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=G8sEyxdu1oebAsRtF0qegBdXt6Bz4tTWBAgZ5W+sOhrXSWPRGn/17kWZrTyoDNkfi7p5OLaLNd55cOg7nZb/TzFW1j0s6YUP6JLCqGURgeDZazWhAkBxIHWET6twgGRJ1AN7MQFWM08Feib3jISKY1S0COAOOtUV5iEoFQPRBfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nfCfHYKQ; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AGqJmqW4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nfCfHYKQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774683137; x=1806219137;
+  t=1774683598; x=1806219598;
   h=date:from:to:cc:subject:message-id;
-  bh=/NCUZ1oaJmdc8yM8Be7CMDd9mLaeYdjB2AUYsAoAlXs=;
-  b=AGqJmqW4ZIUusxfVhbG4TQWAlvbAesyuh5mrbvIbSJ/Pjb028mLEZnbT
-   QJkfnRoGSVvDCv9gVTusP7VTn8P2qamvEMENFiRCERaw52RDk0I+S66KO
-   1Iz82c2VNjUCqIOe2en6bAyBLC6QGsdoF/JmN9BnFCMUaTaQP7iDYIT1F
-   ERsslxfNcfgPQ4wTpftLLrOxmQ26H4wf3BUuqydfKz12vSeWfjNj0329D
-   uJBuv0UEiX2xdHGPuyJ5DUuv+jB+jK0HOsySeKu1h+QOuRSWiS+Chsz/W
-   SWmlUd8DePuZyVRcG51ZRN13mLaqzbxFNYyA5cUAmFu4orvFeB8TCL0By
-   A==;
-X-CSE-ConnectionGUID: DlSiIlQ6SiKDkRkhJgWxMw==
-X-CSE-MsgGUID: q78KaUzMSnq/yGJtIdznKQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11742"; a="75771238"
+  bh=ejv9tVqAjQNWlKSRISrs0iCJkMGhN1FhOsudnsj33VM=;
+  b=nfCfHYKQ/rFVvQn0EbPGwjntTVPQGJx1BECXGvrIK1RxJC3NU1wCDH93
+   oKG6N0i8UWIPrsLTgQLJMWxIL9+UtVnrLBtKyuvQzG7aNv3b4Ze4BzUPb
+   OgLBo/L2VKtTSshlZoZGgUycWqsIayX3M02S250DjKj5M0nv17sLpc7VE
+   uAYpv8UhIOfhhfTeU8vPxSMWuKLiP422x57ca0OxXLznctuWiWAtwRAG/
+   9yvXkVfH9/ValQHqLbPWi6AfRYxL66wHdq+xs3kX9ti7xCuWDoKnV2ceX
+   Gf+UKpygEBbcL/aYh6FWFeqWhufLXyT0UpjlCMUq/FhElVNPw3wIqfWrO
+   Q==;
+X-CSE-ConnectionGUID: O8oEHxflRm6BPLWDJgeidg==
+X-CSE-MsgGUID: 0CN9VowlRN+5iFqicTbjpw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11742"; a="74781177"
 X-IronPort-AV: E=Sophos;i="6.23,145,1770624000"; 
-   d="scan'208";a="75771238"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2026 00:31:58 -0700
-X-CSE-ConnectionGUID: 0Py1rkl9Q+G3geptF8blfw==
-X-CSE-MsgGUID: +yCt8qcjT/64Yjd3JYKM2A==
+   d="scan'208";a="74781177"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2026 00:39:58 -0700
+X-CSE-ConnectionGUID: NVxCQTqoSlyA3o3DE8+63w==
+X-CSE-MsgGUID: 5Bx/Tj+tQE6JX+wUNFdlKQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,145,1770624000"; 
-   d="scan'208";a="225528949"
+   d="scan'208";a="220671757"
 Received: from lkp-server01.sh.intel.com (HELO 3905d212be1b) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 28 Mar 2026 00:31:56 -0700
+  by fmviesa006.fm.intel.com with ESMTP; 28 Mar 2026 00:39:56 -0700
 Received: from kbuild by 3905d212be1b with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1w6O9B-00000000BB3-1PKM;
-	Sat, 28 Mar 2026 07:31:53 +0000
-Date: Sat, 28 Mar 2026 15:30:54 +0800
+	id 1w6OGv-00000000BBl-3VwY;
+	Sat, 28 Mar 2026 07:39:53 +0000
+Date: Sat, 28 Mar 2026 15:38:56 +0800
 From: kernel test robot <lkp@intel.com>
 To: Dave Jiang <dave.jiang@intel.com>
 Cc: Alison Schofield <alison.schofield@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>,
  Ira Weiny <ira.weiny@intel.com>,
  Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org
-Subject: [cxl:for-7.1/dax-hmem] BUILD SUCCESS
- e4de6b910bf3645c224cd873d4e03ce3dd81fbe0
-Message-ID: <202603281545.3LuXxXAR-lkp@intel.com>
+Subject: [cxl:for-7.1/cxl-region-refactor] BUILD SUCCESS
+ 29990ab5cb408d5aa15939d6535e3291aeef748b
+Message-ID: <202603281546.WKWFamup-lkp@intel.com>
 User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -62,13 +62,13 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-7.1/dax-hmem
-branch HEAD: e4de6b910bf3645c224cd873d4e03ce3dd81fbe0  dax/hmem, cxl: Defer and resolve Soft Reserved ownership
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-7.1/cxl-region-refactor
+branch HEAD: 29990ab5cb408d5aa15939d6535e3291aeef748b  cxl/core: use cleanup.h for devm_cxl_add_dax_region
 
-elapsed time: 733m
+elapsed time: 741m
 
 configs tested: 263
-configs skipped: 3
+configs skipped: 4
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
