@@ -1,147 +1,146 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-dl1-f54.google.com (mail-dl1-f54.google.com [74.125.82.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1233A6F17
-	for <linux-cxl@vger.kernel.org>; Mon, 30 Mar 2026 07:59:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13734315F
+	for <linux-cxl@vger.kernel.org>; Mon, 30 Mar 2026 08:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774857600; cv=none; b=Z4cDHoavpWEvVKny+2HZvu+W0mubsbpswUMeHxE3SFEnB7jYaquDoTZfxyaRXfQ2FSXeMTpo+tHMeGVEYlTfHWuygfXKCOjKvbQAY+dHvveuGhSF8Mf/oZYi/Z1QMnjN44Z63b37ziDL/w9lU3QA6kF/CorH8koFlZA8eYeHe6o=
+	t=1774859098; cv=none; b=iyFq8M4AG4M7JK9e2NGBv2qFSRFmK5P78txxwfFWxHZQSFUHcgzVl7+f9Mp0WPmg8h4cs+soOI3qcpRZjLjm4T4g6srSEyZ9bkXaFdwy92RqJx/SRqFH3aXm1GqemPM1AEN4YQtUEG29a0mNhe2HS7/OqEchP8V44McYpcXNzNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774857600; c=relaxed/simple;
-	bh=On+5TNT/a2qCCsGWnRoKiqe9wAlWY5lMDN2hymFFVTo=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=iHDOXmglMYd6mIfU4iq4FdrrbBN/FiGJUZ7OmaRi7XQVYbbL8ztLCDJ3OmH6nXMHJiU5arSrsjnCFxsKOAJ539K+9+MH5ntaw0OaJ1iuCR9YfcWxPc0kU8iJX1ybhCIwFfKHy2zugeyni0SzJz+IzfoPwvIS5fY2fUR5Msh7FH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DVqKR34e; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=e9hB2+q/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DVqKR34e; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=e9hB2+q/; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1774859098; c=relaxed/simple;
+	bh=kvm8Cs7D/fkLiiNkxYVqeguE7ebRhZj5DhY+LblxUd0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hK03XC1N7Z6pnTtrkgo8hquRt/Wc/fNquglOfvBKEI9uLJScHZodVgFTj8h+5lXI4YhUL8QrkG8/Lo9oCtCI8Ip4jmGkTzDwsJt3svaGOBIGfDgmXGBilXlHk2J13BCnnIfEXaE5wgWmUFD1vnigvwpePlmQHuVvWZXPnm/cFrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dx8UId7R; arc=none smtp.client-ip=74.125.82.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DVqKR34e";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="e9hB2+q/";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DVqKR34e";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="e9hB2+q/"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2E7794D521;
-	Mon, 30 Mar 2026 07:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1774857597; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2MuVzNnvc+lp/lx6vvEM5pbvKJ4+UfTZF7WaWKGgmSM=;
-	b=DVqKR34e8x2HMvRSmpDKiH0ZzxxffumGGsv2mKN541UTA4zA4g/NZEg/qp06jdj+SWjR7R
-	O7sTl2vDlkRwluT3mDhi6n4uO1w0QZ5cLKYeMXZHaMG+x3DLe2H3uQ4UUorzvlKeUilJlI
-	8MzHB4AU2JJuuT5mwWzcISuYc+jv4jc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1774857597;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2MuVzNnvc+lp/lx6vvEM5pbvKJ4+UfTZF7WaWKGgmSM=;
-	b=e9hB2+q/S4daTKHe+ReZb7hycDHcyMs7qr8TcGiUlj0XXmUWrewMVB3ND9yiRJxaQPWyl9
-	WM7I1yMFoYNWaZBA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=DVqKR34e;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="e9hB2+q/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1774857597; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2MuVzNnvc+lp/lx6vvEM5pbvKJ4+UfTZF7WaWKGgmSM=;
-	b=DVqKR34e8x2HMvRSmpDKiH0ZzxxffumGGsv2mKN541UTA4zA4g/NZEg/qp06jdj+SWjR7R
-	O7sTl2vDlkRwluT3mDhi6n4uO1w0QZ5cLKYeMXZHaMG+x3DLe2H3uQ4UUorzvlKeUilJlI
-	8MzHB4AU2JJuuT5mwWzcISuYc+jv4jc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1774857597;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2MuVzNnvc+lp/lx6vvEM5pbvKJ4+UfTZF7WaWKGgmSM=;
-	b=e9hB2+q/S4daTKHe+ReZb7hycDHcyMs7qr8TcGiUlj0XXmUWrewMVB3ND9yiRJxaQPWyl9
-	WM7I1yMFoYNWaZBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0C53A4A0A2;
-	Mon, 30 Mar 2026 07:59:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id t/SEAX0tymkGQAAAD6G6ig
-	(envelope-from <hare@suse.de>); Mon, 30 Mar 2026 07:59:57 +0000
-Message-ID: <e06deabf-44ad-4f3f-b817-78506c5e3203@suse.de>
-Date: Mon, 30 Mar 2026 09:59:56 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dx8UId7R"
+Received: by mail-dl1-f54.google.com with SMTP id a92af1059eb24-12732e6a123so2588002c88.1
+        for <linux-cxl@vger.kernel.org>; Mon, 30 Mar 2026 01:24:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774859097; x=1775463897; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=g5TduLyOB2E5auatV1YEbPKRJcZ4ZLa0E2+8Df6dxNQ=;
+        b=Dx8UId7Rw/PI5nL8sRhlqgc49r+5h0rZdWKBdWfgbWuQhidXTsSWCewg6LLEhxNZUC
+         Jx+u/sGspxvwbzTVtjfYWZOXw5RELMfMN0xpQgt4TSHZU/QJFHDJp4tAO/KrnsHK/S0I
+         dsY4Uce9kuLl/BUOKJoOyi48FZXJ2L5VAkJF50fXly0gPVDZ9iQCbMWqekgxYfWNcVGe
+         Q5uuBXrDI63M5tby3K+jdNsY4+KA1vfZPZgpufNT/R7jrfd6bnC3nDSt5ftaFI3AMFJt
+         xDrbxT+O0/XxdfRNcXxkhjTCZuJxETQ5mpOcvtHKwfTJmjck+PEXD28Dr+6oXBtX6Aov
+         IcKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774859097; x=1775463897;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g5TduLyOB2E5auatV1YEbPKRJcZ4ZLa0E2+8Df6dxNQ=;
+        b=i1wJg22fkZHbrLslWSarECPZA9d0hUIrocIeiW1wDa3/9ZdUXE9fhZ/VtHXWQtc1wa
+         44QIyinohQzox2B6YfEHdRWVrmk+RQZRKqAFQ8mIYRAcFJYRTQ89FVoF0xX/fdwr8lTu
+         T0nbRwRFwwiy8z2YB8/f42aaPgW/zCcEETXDsZv3yj3QwbsTGWkOHHgdXpIhfyI4xL8h
+         8gOWNaBLHQtuBjmnJwu94IMJ3kI4vzbVoAlFrCTR9FoT/0v2EAcwvXrkXKpSQVM0mQ+l
+         MNGcqNXVmaD+V7BIiyFYzQLzGnH2G3C0UwzrlCb+JefuTA7MT2G8ZPWGzlsQVVSiJnDj
+         jw+A==
+X-Forwarded-Encrypted: i=1; AJvYcCVLfKVgVgspH0YTNqg3tbq+32hA0SE4g1tHJwnGbKIsX8NDYxTVEsPvijun2sKsqSW9eUbxBbhbKAg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCXB99V0BL3bs4+csNOdr4RmpfHTll9pGWgtlh1sJ/bZdiRi6N
+	9+9X+h7LPDAF51z7fmxaPQuFKSzAOjpotnCC3gMUnhJQjfvmJdjjU07C
+X-Gm-Gg: ATEYQzwaDLDTYa7XFtXKIEiwQF5cGSKoHLI6ME80+EQbswKumCD+31j9ZgpA8lWXmTc
+	7PqdAvv/SyJTDIJ3/3T25GwF6X5qbexpPLUQp74i62VqcrNHobXveT0iFDi9VCJjMs343vuIaB2
+	95bNVNWI4GCHE5JRPjuTg8wYC3BNvBGyIBBXJ6/bPR1IEuLc5GUv3KEOvUNvM759th51sKkJ11X
+	h5sB6zFYcZxa7HPXyQXzaQUNjnV+bwcX1j1gLAv/HLtOoQ8FUZoFhrKfpqCUcx7kyXfVbDnCY3T
+	2hrQO3sbecFq5WMJPKObCYOg+WmR82AYH7/QnKUabMpUBmetJj2qbl3CT+WbPfCgSLI2TuFAXYZ
+	wbcA9/ayIjqASed0BeEc6hugU3JK9S09i5EvAfEREseBL6woDx3VM1taKf2Tz9ZP1e8q0iw6Hek
+	LMWHUqYlH48A8tn/oBC4Cn3m5sFE0IEsPODpAkHF2BKlM9LWKK/1ikYDtlRAz8kw16qGZnq7vMy
+	M4hH1oE2vcg
+X-Received: by 2002:a05:701b:221a:b0:12a:b3c4:c3b6 with SMTP id a92af1059eb24-12ab3c4c608mr3436080c88.21.1774859096593;
+        Mon, 30 Mar 2026 01:24:56 -0700 (PDT)
+Received: from 4470NRD-ASU.ssi.samsung.com (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-12ab97e7a57sm8777404c88.6.2026.03.30.01.24.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2026 01:24:56 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Mon, 30 Mar 2026 01:24:54 -0700
+To: Alireza Sanaee <alireza.sanaee@huawei.com>
+Cc: qemu-devel@nongnu.org, armbru@redhat.com, berrange@redhat.com,
+	eblake@redhat.com, jonathan.cameron@huawei.com,
+	linux-cxl@vger.kernel.org, linuxarm@huawei.com,
+	lizhijian@fujitsu.com, mst@redhat.com, pbonzini@redhat.com,
+	gourry@gourry.net, nifan.cxl@gmail.com, me@linux.beauty
+Subject: Re: [PATCH 5/9] hw/cxl: Map lazy memory backend after host acceptance
+Message-ID: <acozVjvVT1THZP_S@4470NRD-ASU.ssi.samsung.com>
+References: <20260325184259.366-1-alireza.sanaee@huawei.com>
+ <20260325184259.366-6-alireza.sanaee@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: lsf-pc <lsf-pc@lists.linux-foundation.org>, linux-cxl@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-From: Hannes Reinecke <hare@suse.de>
-Subject: [LSF/MM/BPF TOPIC] Strategies for memory deallocation/movement for
- Dynamic Capacity Pooling
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spam-Score: -4.51
-X-Spam-Level: 
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 2E7794D521
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260325184259.366-6-alireza.sanaee@huawei.com>
 
-Hi all,
+On Wed, Mar 25, 2026 at 06:42:53PM +0000, Alireza Sanaee wrote:
+> In the dc-regions-total-size flow, a requested extent is not backed when it
+> is queued. It becomes usable only after the host accepts it with Add
+> Dynamic Capacity Response.
+> 
+> Use that response path to look up the first pending group's metadata for
+> each accepted extent, enable the selected host backend, and move the
+> backend and fixed-window references onto the committed extent list. The
+> accepted range is then marked backed just like the non-lazy path.
+> 
+> This wires host acceptance to the lazy backend lifecycle and leaves the
+> fixed-window direct aliasing to the following patch.
+> 
+> Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
+> ---
+>  hw/cxl/cxl-mailbox-utils.c | 76 ++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 73 insertions(+), 3 deletions(-)
+> 
+> diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+> index c5427adb3a..cc7be6e68c 100644
+> --- a/hw/cxl/cxl-mailbox-utils.c
+> +++ b/hw/cxl/cxl-mailbox-utils.c
+[snip]
+>  static CXLRetCode cxl_dcd_add_dyn_cap_rsp_dry_run(CXLType3Dev *ct3d,
+>          const CXLUpdateDCExtentListInPl *in)
+>  {
+> @@ -3718,8 +3740,12 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
+>      CXLUpdateDCExtentListInPl *in = (void *)payload_in;
+>      CXLType3Dev *ct3d = CXL_TYPE3(cci->d);
+>      CXLDCExtentList *extent_list = &ct3d->dc.extents;
+> +    struct CXLFixedWindow *fw;
+> +    HostMemoryBackend *hmb_dc;
+> +    uint8_t tag[0x10];
+>      uint32_t i, num;
+>      uint64_t dpa, len;
+> +    int rid;
+>      CXLRetCode ret;
+>  
+>      if (len_in < sizeof(*in)) {
+> @@ -3756,10 +3782,54 @@ static CXLRetCode cmd_dcd_add_dyn_cap_rsp(const struct cxl_cmd *cmd,
+>      for (i = 0; i < in->num_entries_updated; i++) {
+>          dpa = in->updated_entries[i].start_dpa;
+>          len = in->updated_entries[i].len;
+> +        if (ct3d->dc.total_capacity_cmd) {
+               memcpy(tag, in->updated_entries[i], 0x10);
+> +            bool found;
+> +            MemoryRegion *mr;
+> +
+> +            found = cxl_extent_find_extent_detail(&ct3d->dc.extents_pending,
+> +                                                  dpa, len, tag,
+> +                                                  &hmb_dc, &fw, &rid);
+> +
+Btw, I'm using this patchset to test my current DCD RFC :) The main thing is I
+want to test having multiple extents in the same add request for the new
+requirements for tags on the host side. Since we can only add/remove tagged
+capacity at once (no incremental add/partial release), would it be possible to
+support that? Sorry I didn't have a look sooner
 
-during discussion with our partners regarding implementing dynamic 
-capacity devices (DCD) on CXL the question has been brought up if
-we can somehow 'steer' which memory page to move.
-The problem is that for dynamic capacity devices we have a certain
-freedom which memory page to move/deallocate, so ideally there would
-be a strategy which pages to move/deallocate.
-Should it be per application/cgroup?
-Does it make sense to move individual pages from one application/cgroup
-or would it be better to move all pages from the application/cgroup?
-Should we implement something (eg via madvise()) to allow applicaitons
-to influence the policy?
-If so, what would that be?
-
-So quite some things to discuss; however, not sure if this isn't too
-much of an arcane topic which should rather be directed at places like
-LPC. But I'll let the PC decide.
-
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
-
+Thanks,
+Anisa
+ -- 
+> 2.50.1 (Apple Git-155)
+> 
