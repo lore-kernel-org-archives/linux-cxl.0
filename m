@@ -1,185 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010037.outbound.protection.outlook.com [52.101.61.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36A0202C29;
-	Mon, 30 Mar 2026 14:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774880427; cv=none; b=phMZ13CGCUXEO0uX0TwsbecLxqose4lY/kV6LdfLoxnwuvKP8UMDRIK9uZ4AhnB5Wh8FBs+tQcRA6O5IgI+Zk253GjbQ/vmVQYFRXnCM1BvK/jQuw9NHhy2YvjSXanLJZAt3ESylZsuJnPyGlz60A45ddjJewaFGi6aRpWRuhLs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774880427; c=relaxed/simple;
-	bh=06bf5S3/WSaRWoCBlnC2mh9au4sOQz5mO11EQY3Buns=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L9nQtCheiZKnoFmpzs9vncy+38GREkRyhYujHF2/FsLw/opiyHeKlv+xDWHMH3vKNjBPD2IXpAn+8Sd37krbjyVH9NVoPgMLmZgiwIYICSBeOjyi+cI1GCCsW7fOog34JnyS6NW5GFyLYAD993jpkB6xOsivTJ97+Rpli5A+1lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pXcZ+7fn; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22EEB3A1A42;
+	Mon, 30 Mar 2026 14:27:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774880825; cv=fail; b=ICP5BMU6mf/MzZbjQKO1nZe0jxYc6lpPg2Ws5bTdS3Bqmm8YjDt+lT84UTMPVwuZonfGSkK3yTLbFtPUn2I0Sv4PAn6tZdrDlNXLFjQ2gFA9a79l5bMAWrk8sZHRh9olpWIYbgarzG9QOqZ4iVDgAgevHLbFjESXGoYy+N5NH7c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774880825; c=relaxed/simple;
+	bh=9BUkAh4wgEGRTcktG6F1OgKfKnBCby9BhFhnGMmzyuw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=R2OhMzcOB9cW6HnFH46jRJ89KAnB35AIi4O9rPx3U57nMYMPHSI5Ccl1WxC2/alh/DrsvpFzQOoOhXIvPtnyfDCUciZbz/vDJ2lpJCoMZm0Jbz3l97BWfuCS8VZHL3qOMyxta/1CmTC/Hi8NjZXI/+mq9zXBBgEOf44FE7x0SAI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=rNcoS1WG; arc=fail smtp.client-ip=52.101.61.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pXcZ+7fn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D420FC4CEF7;
-	Mon, 30 Mar 2026 14:20:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774880426;
-	bh=06bf5S3/WSaRWoCBlnC2mh9au4sOQz5mO11EQY3Buns=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pXcZ+7fncPEcnrzkSfN6YMN6OGr061xooYBr65rWkkI8sB/QKQ/qimT6UI5BQGz0r
-	 YXuf43myE3joGOPmz60hD2l8+GzzUiu85x93Cf9J2oZBZJG5h11ERYxW1+j6IeWFMv
-	 D8KERD1V78j0ECVlK0ByYkH5UkyBI5W8S77NkMVD/OVgzs7O/0S9kAUKM6oG2ArqvE
-	 eRSjC2TuVo2bykiLZmpPufFgHEvywx/YEYYj6TLH1bHsqEYAZ8CaJ9T5q7WdVlDHQR
-	 qT5gl++rEnuydu/LUPFKdINEFnkRqUgv4i7TBNDPFv/nthgbVhBI4+KrViH4VtuwAF
-	 GXMJozgEcc29g==
-Message-ID: <5de08585-fd2b-4395-b421-99c7b887aa8f@kernel.org>
-Date: Mon, 30 Mar 2026 16:20:23 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="rNcoS1WG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kp9zZtJMhEfHKSvceWd7JSD+dBTs/bAkQ7BbkDYQqCUIOaRchPALHEfsZH3a/lmP0BOS5+wzbw7LNXUNDjhy9lND3t1q2NDPAY2lQykgIXSLBLDiG5wZ71IsEvwpAmwtk1EwGdxqEjp7L194Aj0dd/Rva00VXXeKdPR3b2vCp1Z7Votgi+Kr8QBoBwcmqst9OV6xzWN2nRqt+uQiSWh3cCokWF/QU9XkT23/53ZaTUhMor0gzd1yzvdYZkhQuevE+Rg/OYrwX10vg5a7jDvRdlzmo5FxtutWAVRJJy3YQZ9odfDwVKL6FiuxHH1bUPRLnQNrcKXrv1tC0ha4aAlGDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ha2GMFALJvEN8eFo2ggyS18xUQl5bp/V4/whRaXqgzk=;
+ b=o1ORqzPbl6d0zen0KXfRSNSODbu1KxXHwBSkkSChhKWWuH19kRMzKmILM7vPAvC60Kx3fFA88n6hbQdaGGsr6BOs4edrxIPOeMWhsRZBIkC/nbxlS3T8oyk6Z/MjOEWweizSDjRZYRTU1wQV2qyzrdMgHS8cvjpXnptidrkzobbnFjzgDlCu1DiUNntJwfRJ8x+32dwK+BqFizAZRUynbME7FsXOUU/lRcaFz3OzX+p1i2lDWPokKYs6ONaKdulhEilc0NQt77y6Vi7Tkwa603My5KLY65f5ZyNiz0OZY/G1j1nI3dMEr3w1Ki6BrxvubIMKaMEeIrHqLjwHNkPnQg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ha2GMFALJvEN8eFo2ggyS18xUQl5bp/V4/whRaXqgzk=;
+ b=rNcoS1WGMxWbTfCgU9s9HMtDEldJfjQSSzt/X5zj7pCKbsywSXeWhPJXwyL/yCXcL5zb5FoM/5c+NxdhiwMYLLPLNqfPRQL4u5nDbJiGxsXb8TAB3zNvulqKJXh0hHxv1b97ntOOwFkL6l4que2vyNgHmLGo099VicJnwzmN0Gc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
+ by SN7PR12MB6714.namprd12.prod.outlook.com (2603:10b6:806:272::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.15; Mon, 30 Mar
+ 2026 14:26:58 +0000
+Received: from DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::9e55:f616:6a93:7a3d]) by DM6PR12MB4202.namprd12.prod.outlook.com
+ ([fe80::9e55:f616:6a93:7a3d%6]) with mapi id 15.20.9769.014; Mon, 30 Mar 2026
+ 14:26:58 +0000
+Message-ID: <8737035f-07e9-4c14-93a9-bb542197d7f7@amd.com>
+Date: Mon, 30 Mar 2026 15:26:41 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v24 10/11] cxl: Avoid dax creation for accelerators
+Content-Language: en-US
+To: Alison Schofield <alison.schofield@intel.com>,
+ alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org, dave.jiang@intel.com,
+ dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Davidlohr Bueso <daves@stgolabs.net>,
+ Ben Cheatham <benjamin.cheatham@amd.com>
+References: <20260323113117.2352709-1-alejandro.lucero-palau@amd.com>
+ <20260323113117.2352709-11-alejandro.lucero-palau@amd.com>
+ <acNPnzDryNIQlTFS@aschofie-mobl2.lan>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <acNPnzDryNIQlTFS@aschofie-mobl2.lan>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: JN3P275CA0128.ZAFP275.PROD.OUTLOOK.COM (2603:1086:0:d0::10)
+ To DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm/memory_hotplug: maintain N_NORMAL_MEMORY during
- hotplug
-To: Hao Li <hao.li@linux.dev>, osalvador@suse.de, akpm@linux-foundation.org
-Cc: vbabka@suse.cz, harry.yoo@oracle.com, joshua.hahnjy@gmail.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-References: <20260330035941.518186-1-hao.li@linux.dev>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260330035941.518186-1-hao.li@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 3/30/26 05:57, Hao Li wrote:
-> N_NORMAL_MEMORY is initialized from zone population at boot, but memory
-> hotplug currently only updates N_MEMORY. As a result, a node that gains
-> normal memory via hotplug can remain invisible to users iterating over
-> N_NORMAL_MEMORY, while a node that loses its last normal memory can stay
-> incorrectly marked as such.
-> 
-> Restore N_NORMAL_MEMORY maintenance directly in online_pages() and
-> offline_pages(). Set the bit when a node that currently lacks normal
-> memory onlines pages into a zone <= ZONE_NORMAL, and clear it when
-> offlining removes the last present pages from zones <= ZONE_NORMAL.
-> 
-> This restores the intended semantics without bringing back the old
-> status_change_nid_normal notifier plumbing which was removed in
-> 8d2882a8edb8.
-> 
-> Current users that benefit include list_lru, zswap, nfsd filecache,
-> hugetlb_cgroup, and has_normal_memory sysfs reporting.
-> 
-> Fixes: 8d2882a8edb8 ("mm,memory_hotplug: remove status_change_nid_normal and update documentation")
-
-Agreed on CCing stable.
-
-> Signed-off-by: Hao Li <hao.li@linux.dev>
-> ---
-> Changes: simplify the code. (Thanks Joshua and David)
-> ---
->  mm/memory_hotplug.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index bc805029da51..05a47953ef21 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1209,6 +1209,13 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
->  
->  	if (node_arg.nid >= 0)
->  		node_set_state(nid, N_MEMORY);
-> +	/*
-> +	 * Check whether we are adding normal memory to the node for the first
-> +	 * time.
-> +	 */
-> +	if (!node_state(nid, N_NORMAL_MEMORY) && zone_idx(zone) <= ZONE_NORMAL)
-> +		node_set_state(nid, N_NORMAL_MEMORY);
-> +
->  	if (need_zonelists_rebuild)
->  		build_all_zonelists(NULL);
->  
-> @@ -1908,6 +1915,8 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
->  	unsigned long flags;
->  	char *reason;
->  	int ret;
-> +	unsigned long normal_pages = 0;
-> +	enum zone_type zt;
->  
->  	/*
->  	 * {on,off}lining is constrained to full memory sections (or more
-> @@ -2055,6 +2064,17 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
->  	/* reinitialise watermarks and update pcp limits */
->  	init_per_zone_wmark_min();
->  
-> +	/*
-> +	 * Check whether this operation removes the last normal memory from
-> +	 * the node. We do this before clearing N_MEMORY to avoid the possible
-> +	 * transient "!N_MEMORY && N_NORMAL_MEMORY" state.
-> +	 */
-> +	if (zone_idx(zone) <= ZONE_NORMAL) {
-> +		for (zt = 0; zt <= ZONE_NORMAL; zt++)
-> +			normal_pages += pgdat->node_zones[zt].present_pages;
-> +		if (!normal_pages)
-> +			node_clear_state(node, N_NORMAL_MEMORY);
-> +	}
-
-Was wondering whether we could just do an early exit, like:
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|SN7PR12MB6714:EE_
+X-MS-Office365-Filtering-Correlation-Id: 71a982f8-756f-4653-8679-08de8e686698
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|22082099003|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	rKnMrSc5/egiF5nzl/Ce33g4HNlt9fHeUIvpahPoIZFm+CuJe1ExTnsqIJDV1yMdPfwyYYIzvRnLPzirZvakbUEm/dJKLYw22A+kfsRdijkiwZ2eujzzxfCe9/SYy31m4BPymjUTIHjsLYAwRN0TZ7x6ZwY5xC9L8XSXVgdTrVamyf/MRlqdD2139E1O1kjYoeg+mcrWCmzpDEviG0F1i5m4j0px6pz1jZOs/Ks7Z04S3nwyoMwKjycP3FhZ2095mPbzmHSz8UtjqMzZ8HPUWiljSJ57Xq54OXybu6GOK1SC3tm34ITXEkjxKBp+oAH3pKZsKC6OBCdae0otp6McCfvNhxWxfhPbSZfhj45Rh+1bC1bHvTNoBKZQLTDLf+x8XOaBZBm/qkFNSgJsGB8PbRlBRIKPstNP7r9uvTvv/tWQiL5bLxJqmVZg2nTgjKyrPaQYNTP7QjPFFWFtVPWVmeu5FLjixJM1YKOii9lZ733VahwJ9B89bik/W9hl8NyKRAhBVPTySzKrYE50ZzHLdD6Mn/16V6SPrvJ6KLUTcYa6IUSaJnFHvZOZTWhkOiDoBFlymybdc8C5ddxifWaIBLzUVWoLYmuGuafwAAfggSlU78povRuvrUJ2MVnaaZ0iGS5ZHNKYK7/rrsAppStjS1IX3mEuiWH5KjBeVWRVDBdqxs9eC9D4SjejldFrJNgZkdKnQQnJbRCxoyQii2iev7iHZOAc138jY9BuN3f7Wek=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?R0MxNTJHLy91eWRTblIrOWRRa3B1Yytac1NkcUd4WUNBanExQ3hHRk1IVG9G?=
+ =?utf-8?B?NVZ3akU5UVZMUmZBY040QWk4UEZTY2ZaZTJOZ25KKzVuNGVRNzFBTlVZVXNK?=
+ =?utf-8?B?aFZPMVp6VjkzaDZ0TXp4MVFUUDhIYnFqVzNOZGtmTkg3WEVkb0J0dEpDeG5H?=
+ =?utf-8?B?bVBueldLa2dMNXBsODZXb0JBdXN4RDVQUTRzTys2TUZUSHVSU3A2OVYwaVNl?=
+ =?utf-8?B?TTlLbDl2OWkvVjZRYjI1UmtpRUNMQ091Wi8wTWtXbzZLU0RXdkZPb1NobVFQ?=
+ =?utf-8?B?TlNLZDFDTkdENjd5TVJWb2FJaWM0WmNpWkVvY0NqY1U0OGhIdDhiMzNIRkY0?=
+ =?utf-8?B?VHBEN05DMDlqQWVnK1RhSkNocXNSQnZuZXlLNFRPMzBiQm1WUks1cFJEbmRW?=
+ =?utf-8?B?YjlzcWliaFFGQ3ZpVEJxTytKSUc3Y1lPb1JPUjdLZDdPQzNjcDNQbDhkMllQ?=
+ =?utf-8?B?M0pBTGpGRlRKaGRFSDhzWVFSUlZGdFZXR0padmU2VHdZcjgwdGNCWUNMRjUr?=
+ =?utf-8?B?T3FPQ2NXMjJFVkp4NmEyR1J4aGREa0haYmlMNFllOWRKWHc0cnplWDBVSkQy?=
+ =?utf-8?B?RWl2SENzMXFweGNOSy9qSFVzMDlXTjI2TjkybU1MWTl5TWc5L2NIbkkwclBv?=
+ =?utf-8?B?bEEvcVRXQlRwdFp0bGkrUlRSUVIra2xtc1dpUG4wT01FdC9HNWJ0V1V2OG5m?=
+ =?utf-8?B?dk91RVVzMDFXbmZGQUlzb3BIQlhYZ1dEV0trK3p3MU9Mb0Q0U0c0dVlVVHJp?=
+ =?utf-8?B?SnYxZ042VGtlazR4Z1Exd1J6VnhML1VMMEdHVHFPSFZpWEZSOTZBQkMrcGM5?=
+ =?utf-8?B?Q2JLd1l4TVhVUDNTVVVwL1NGOUdGR0VmVTJmQmdTMDBSa2UyMGdqSmFNbVhM?=
+ =?utf-8?B?bGpBMG44bVJZeHp4SnYybzN3bmhwOGozOUVFMWZZallRdGpVUjZjY3dFNGI5?=
+ =?utf-8?B?Yy9RNEpNNWNJUjlBb1BxUGVESUx3bGxPNUw5aHVYN2h6bkZsMFowRWdPZmY1?=
+ =?utf-8?B?STAzY2tlV2ZCc2RFdjB5dDRoa3BibDNOd1FIZXlFdzgrY245a0lGbGxZRUNV?=
+ =?utf-8?B?bnVYNDJiL05ZZy8zMEpRQlVobHRNSVIzMzZtbWJ6UTdaYVBrb0xHelFmK1NM?=
+ =?utf-8?B?RHhKMGNaTkdqNjN2bzgreUNXeDY2T2hhL0VLOEhQWlN2WDdwOWd0MXg5VFRY?=
+ =?utf-8?B?cm9nSG9NTjVNTThlWXcyWHJJQ1A1ZndqTUtZVFI4VjB4ang2NkF0Mm0rY1Mx?=
+ =?utf-8?B?aHAxREVhdXgvWlQ1THV3MkM2MzRZZ1JGbU05RUc4WlJ5Z2NOS3VBRlRmL2p5?=
+ =?utf-8?B?Q1Z6SmJNcXlPc0NCM0FKVTZPTlJDZGVwcVZpcHlUYmpSZ2pTaVI0RWNpcm9U?=
+ =?utf-8?B?MWE0cVQxQWhqd1FEMTFWWWtaa1hDMjhmZkJ0RktZRXJROWpQblJmVUZBTFh5?=
+ =?utf-8?B?blFWbk1Mdmw4bTFtMHE4dld6YThiTDE2M0U0dnQzbUZoa2FlU2pVY2J2bVFs?=
+ =?utf-8?B?M09IR3llMWJ4VCtxeDEyOFZheU03WTFvU2FzdjFpakYvbEFnZGtzMVMxaXM4?=
+ =?utf-8?B?Zzg2UjM0c2E3SmttcU9BWGdQNGpUMzdaK0VBNlVMcm53R1UwOHRQUjlBL09q?=
+ =?utf-8?B?cjBqWnR0RDhzdUJ1VWRRb3VYYXZjN3hzVm1iQ2JEUkJBV2tpYU9id0lxSCt1?=
+ =?utf-8?B?M0l6c1hwTnA3Q3kvYk5vcVFSS2ZDS1RPS0c4VjU5Um13enN2cU51YWRod1pl?=
+ =?utf-8?B?b1l5ek1vdkZVTlRQMHViZXVrb2FwTHVhay9tVmFPYktXc2dZOThweWtHUE5x?=
+ =?utf-8?B?WHJzb3llTmNYRytjQ1hvTFhIRTRVM0pRRjEyN0h0dVZ5YkdlQUNGbytldC9m?=
+ =?utf-8?B?cU0wZUdjUFMydVNEMitIcmNSWnQ1TnJ5Vll3Wmg0aDdlWWxXd3VxSzhOWnhR?=
+ =?utf-8?B?VXl6SHRtaG9ocllGV2JlUU5rWFZrM2NJdmhmUVczb1h4SVZjV0g1M0NPbnFj?=
+ =?utf-8?B?eDRvOTZJNml4ZFVoQVVUOGd1YkdKaXNaMUQ1SExsMndtcVF6RlhTcjRBQ3di?=
+ =?utf-8?B?TWpXWThBRWlhbEN2ODJKa1NXZFlIOEZMTnJCWExZcjU2eE15bE1WM0RXbmxq?=
+ =?utf-8?B?bjlRR0s2ejVlKzlxWGdVOC8yZU9XVzhwcTBWSnorTE5UZTNCYXdHY2dkVVNu?=
+ =?utf-8?B?c2dsZ0JYODlwRnZzcTU0NmpGRUVCeEY1ZkN0LzlNT3RpTEJJVGlDQ3czb1dH?=
+ =?utf-8?B?N0pSZnBTUFpDVzVnazUvbGJ0cExHSXR6NFlvblF4bTNJNnVXOFpDRlpKcFZ5?=
+ =?utf-8?B?QW5MSitoaUFyR1RwZUQwMWZTOWZsUk5ZNFI4UnZiLytwdWNYUEZVQT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71a982f8-756f-4653-8679-08de8e686698
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2026 14:26:58.6391
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vUnbn3YD7fGbqpqWtk8WQM1W7RNrvRpDvFRcUqhNrR37YvVSd4TaaOZC9XHXwb8QnS4iVh6nElYnTzGSi9RSNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6714
 
 
-for (zt = 0; zt <= ZONE_NORMAL; zt++) {
-	if (pgdat->node_zones[zt].present_pages)
-		break;
-}
-if (zt > ZONE_NORMAL)
-	node_clear_state(node, N_NORMAL_MEMORY);
+On 3/25/26 02:59, Alison Schofield wrote:
+> On Mon, Mar 23, 2026 at 11:31:16AM +0000, alejandro.lucero-palau@amd.com wrote:
+>> From: Alejandro Lucero <alucerop@amd.com>
+>>
+>> By definition a type2 cxl device will use the host managed memory for
+>> specific functionality, therefore it should not be available to other
+>> uses.
+> Hi Alejandro,
+>
+> I'm wondering if we're skipping too much, or perhaps just needs
+> a clarifying comment?
+>
+> Commit message says 'Avoid dax creation...', that's specific.
+>
+> Commit log says 'should not be available to other uses', that's less specific
 
-But ends up being harder to digest (incl. all variants I tried :) ), so
 
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+Hi Allison,
 
 
--- 
-Cheers,
+Would you prefer something like "should not be available to other uses 
+like DAX".?
 
-David
+
+> follow me ...
+>
+>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> Reviewed-by: Davidlohr Bueso <daves@stgolabs.net>
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+>> ---
+>>   drivers/cxl/core/region.c | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index 8bb53a095290..2f9bdb4f1f4f 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -4263,6 +4263,13 @@ static int cxl_region_probe(struct device *dev)
+>>   	if (rc)
+>>   		return rc;
+>>   
+>> +	/*
+>> +	 * HDM-D[B] (device-memory) regions have accelerator specific usage.
+>> +	 * Skip device-dax registration.
+>> +	 */
+>> +	if (cxlr->type == CXL_DECODER_DEVMEM)
+>> +		return 0;
+>> +
+> And above says 'Skip device-dax' specific again, and is indeed skipped.
+>
+> This escape is not surgically placed at the point where dax is added.
+> We are skipping a few other things before dax registration actually
+> happens. Why skip memory notifiers, shutdown_notifiers, poison setup?
+
+
+posion setup crashes with a type2 and I'm not sure if the memory 
+notifiers make sense for Type2.
+
+
+If it is really needed, I would prefer to support it as a follow up.
+
+
+Thank you
+
+
+>
+>>   	/*
+>>   	 * From this point on any path that changes the region's state away from
+>>   	 * CXL_CONFIG_COMMIT is also responsible for releasing the driver.
+>> -- 
+>> 2.34.1
+>>
+>>
