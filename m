@@ -1,66 +1,80 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2761B30DECC
-	for <linux-cxl@vger.kernel.org>; Mon, 30 Mar 2026 13:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1B53A5E94
+	for <linux-cxl@vger.kernel.org>; Mon, 30 Mar 2026 13:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774875895; cv=none; b=IN6XaAUmKUVgw5LZqHN509Ny6fy9Yv1tP5iC5JTTXxBXHggviJJ3brB7bKbu9AqSSZwhzK+irpTkpEQf3lw1ndqMjtDm9zng380ncz5tEWdOMgE1fKWOpPFHgqrfNxjpKNU6XwDBLicJJ3nke/1kdp5njQAvXyW9A1kTAgxD1Yg=
+	t=1774878816; cv=none; b=uKN3+j8yG0+jBWf4kdFEADisdI42zQxmM5km2NNhK56UhnP6GzGo5KfkO05R1tjHAWCvk2NChdtsk+Fv4+UJwJpj5x4SXZMfDHXlX0dGLWK7rhg9g5Q0F5a0gzFfpWpcZwFlVEJ4wYVMSXHr+ycKoRRaFl2QC5Xeez2T+dehbEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774875895; c=relaxed/simple;
-	bh=HO46xXiaOEoNQuNX446KuoMFMjLpaf8jb4DS4NNt61k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=saag+TnpfX0P4EeSFrSZGk4P2eql0fun9V03R62nJ7AAeWzBp5sahSou8adn8t/R87bAxlOP5Dk2dTVBYh7IoZkapn24CYblLMwNkUnw+XVezjXtwEqevcEWGI0a0q9QDb8pWllpFTkX4UTs8PVuG/BoRAXfEGIVUHKLOpIqkmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
+	s=arc-20240116; t=1774878816; c=relaxed/simple;
+	bh=xwl2wvmpLFqYRffPQxNL26mBjggzJSbkOmLrL6ckK6U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mEDDbNVMksgQpqHsWTa9Cv8cXwvIAnSPM8cEqWXkU/dxmPPOXD2PJkA/kmJMWuAVmk3aKA2SbthiqrTbVDeMUol6j16+vfLIrtKxGU0sa3g0v4Xo29xIn1kym1BjGJg4qPh4xkhkb02Mv8cx8lVclfUVSZ2HaaPyULNOGJKkEj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L0DlGmiI; arc=none smtp.client-ip=209.85.160.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-8cd8576a512so594673685a.0
-        for <linux-cxl@vger.kernel.org>; Mon, 30 Mar 2026 06:04:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774875893; x=1775480693;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L0DlGmiI"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-41c420d1460so1727131fac.3
+        for <linux-cxl@vger.kernel.org>; Mon, 30 Mar 2026 06:53:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774878813; x=1775483613; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zPxDq54rMr2H74jw6fg584rwf//Zw9k/WAlYqCcMc1A=;
-        b=jHSCaCkD4vN1uQPp07n3wDZG/9nM0IEoZCu35q/BEWHQE3VJHMf3lOSKXWPE52EAsm
-         uEJrVsh9zQjP+sZh5nRNeVi5v2pujx/g2FIYh3Am9gPkyF27OwcF1x7ppHUX53Hjylya
-         cQDqZ/hxApBeVCBFSo/JNbHrjbp3pBM1yN1RlbNDWoDap6+gq19hHKZqtMvosb0mf/wW
-         bDe4mzIIcl2HXeRufPFQgRdmibd2x4TzNqH+2bXXwdhPFr3imCqKjBwDukXKMdaMDUXF
-         bENc+Wct5IVau/eEoNvH8Nrx7cLQFmaY3zo+PcKqW99Y+bxNo1NQydu44qa9W+awALeu
-         uhhg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHw6s4FwVGVO85bdR65h28cPTT0WyIGVltq47mJYQSIw4aGwWgYjGi8gtNrP0Ipxxavk7vn7kM67c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxz/HSTCYnI1TDMqA7EQyO4tzVJuhztHizp3rNb7SQuT18MEsFn
-	xdyCqFX6h88UNQ9BqQ5DOL23FXAq6Pjvqpn+0d3Wq2gKD3Enhj8uL7oj
-X-Gm-Gg: ATEYQzwNvR0RFJN/oPI51TKXzICQC4QLvnQBPjN48n4KbtrKpISMzOP2g/hVab1an8A
-	o1CEs1AyqQNHFS7WTE9xHWkrvORFDIcD0GOkVC2fDxrOXj7zBln87xcCC/W7HBM4+Q94Ip2ANvR
-	eCQ/CoDLetR21PneJW9dK8/9LCWRiY7wA8/e0cIiPXIeMBLEtxJz50LTltSeYnNUm8bc+ZvFZdq
-	E2iz13HokRwKRE2CenlIKL1M/1Wet4DtZfcF2bw4EgktxifWm+MHDVo3bWJzeBZNOItvz2XnyF/
-	owAHYkP7CpzkMvKgLmR5SSi7uW16I/RvbGyjBnVs9yFgW1hl3+RwrWzozKqNEaTekk5NvQ3TD3n
-	aipBjRAXhtgE+0B//kX3ks2arGnqaP9eeRPZ13xI+zgXVSNwVydtfqdow5yLqMLlnvzhWjLg+K9
-	VZ41A26nBqlA==
-X-Received: by 2002:a05:690c:6989:b0:79b:cced:2342 with SMTP id 00721157ae682-79bde5b9536mr99687637b3.28.1774875893014;
-        Mon, 30 Mar 2026 06:04:53 -0700 (PDT)
-Received: from tofu.. ([128.210.0.165])
-        by smtp.googlemail.com with ESMTPSA id 00721157ae682-79cba172828sm34618347b3.35.2026.03.30.06.04.51
+        bh=l78p31yEoZ3arnxGyYF6VPRhnCnmHLaaS+hRioFyojM=;
+        b=L0DlGmiIAhqUVBxH0AhO3HmXIYbw6tETboAks6pC+CNNiAmgWr5Gr5RJIEXmL1jNHx
+         5Ycz6O4Q+fpK9qOFiEmLqJ+qICFzCWqWrsNwjZ7apRUCwHGwXuoclVmJcYFnpToWNNdM
+         oH2sRTcghUr+6AyzC00X4EGoDNoLG6FlBJdEfImRVHUsK59HVpBreio4PLDs9EoNWkR9
+         JuCPnuUfVc5qzK8+dHbp9JgsQKaVCS2g2+lpKTlFKOOmWH7aD432Tu3Ln9WKZdTesqkn
+         RiwnWEsCToK+r9aBQEA7s3kDMiydBGhxe2D9T4bdnjyLpy5znovIgXCGaO0tR1NpoCih
+         PqIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774878813; x=1775483613;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=l78p31yEoZ3arnxGyYF6VPRhnCnmHLaaS+hRioFyojM=;
+        b=C3kcAMXU1RBVMAcymVa7si5I9Q7djAi5pj9TDRRjMmZPyP4u2JQiDRbFb4EH/2W7Il
+         W5TaEDErRgDishgvoBldn4VgLmKoQK534k7Kf6Iyst3e37rEeckMYRhqerEEvufFY09I
+         2Vz/l79UuD5CUvoxLonKJMT/M8nA7ySnGaNfWJLEwFELNESFXE9I4qMiOBq56F9T8G19
+         bbJxPk3v5PscdHZwcRpRz95OIrSrK4/wNC/8vyWBklwmPj49fZH/UOsjf6Vth3FVok0M
+         vGd67F64kCz8my/5TVC9Nz0IbiV6L+msK7RTx94Bddt4kMOMJWYw1ogKBaCoRuhCF6ta
+         elvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUodgmQYBxQzmlTxdwjXIPCNYO1gIHIyEHRAkMZonllrLfxmRHkSdBsZoudYLruC8GxFlsGK4PF7dI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrooOXbf3jVz/DLgWKiZM6qFRlDvIhQI/lLc1jYCOy2rampQ9H
+	U/vhl+sxV9c0KZbWgt9FR2cjt7TJew4Fb3D0DAP6VaHHqJrmw0UbKGkU
+X-Gm-Gg: ATEYQzx62ZVgj1sWyCzkQGXivXjfIP85rDFZuZSRFxTM17UZjMLgG6GoIQU/7Cevau2
+	gJuR8qEglyAD9pMpXXPVZGCBtW133FZEWKlCm9yimh3bI/v3bMlJ7GoaVHVKkLlLpBxQve4Fmw2
+	/wbx47mClmErCjFlKYoid18vPVkXGFYZaXuoAHx5kNuyWQJ4fo2LO3GJAgDo5QP4eBmXNodymU0
+	A/xptVstwbHvYEoXnuBgodt2ZEI05/trWpggaVQ2b+yp+2nNpYrkZEKdJ0uW1INffhow3xRllDb
+	mvaV0megUOeOd3hOKLuoy5APVJfgtBGY1OjfoJj2ZoLkQVGeQ71dNRE1sbxkPhs5sVLoF1TcoHi
+	6RaoZGwrOkuR+U3TYhRgwB4gWnbrImKxSs5SIWK2nCW0rl30LQlJPLA7JvV+vtUrliEGxHsm1Qo
+	QkSNLKLR0vvAgLc1LIgUEnQw==
+X-Received: by 2002:a05:6870:d376:b0:417:9244:d180 with SMTP id 586e51a60fabf-41cec375cc6mr6655147fac.46.1774878813034;
+        Mon, 30 Mar 2026 06:53:33 -0700 (PDT)
+Received: from localhost ([2a03:2880:10ff:5a::])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-41d04cf9ceesm5252471fac.15.2026.03.30.06.53.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2026 06:04:52 -0700 (PDT)
-From: Sungwoo Kim <iam@sung-woo.kim>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Ben Widawsky <bwidawsk@kernel.org>
-Cc: Dave Tian <daveti@purdue.edu>,
-	Sungwoo Kim <iam@sung-woo.kim>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] cxl/hdm: fix a warning in devm_remove_action()
-Date: Mon, 30 Mar 2026 09:01:57 -0400
-Message-ID: <20260330130156.2212694-3-iam@sung-woo.kim>
-X-Mailer: git-send-email 2.47.3
+        Mon, 30 Mar 2026 06:53:32 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Hao Li <hao.li@linux.dev>
+Cc: david@kernel.org,
+	osalvador@suse.de,
+	akpm@linux-foundation.org,
+	vbabka@suse.cz,
+	harry.yoo@oracle.com,
+	joshua.hahnjy@gmail.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2] mm/memory_hotplug: maintain N_NORMAL_MEMORY during hotplug
+Date: Mon, 30 Mar 2026 06:53:30 -0700
+Message-ID: <20260330135331.2948804-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260330035941.518186-1-hao.li@linux.dev>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -69,115 +83,40 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In the following race scenario, devm_remove_action() can be called
-before devm_add_action(), triggering a warning because there is no
-action to remove.
+On Mon, 30 Mar 2026 11:57:49 +0800 Hao Li <hao.li@linux.dev> wrote:
 
-To fix this, __cxl_dpa_reserve() performs devm_add_action(). This
-extends the critical section that embraces cxled->dpa_res = res and
-devm_add_action(), so cxl_dpa_free() cannot observe dpa_res without
-the devres action.
+> N_NORMAL_MEMORY is initialized from zone population at boot, but memory
+> hotplug currently only updates N_MEMORY. As a result, a node that gains
+> normal memory via hotplug can remain invisible to users iterating over
+> N_NORMAL_MEMORY, while a node that loses its last normal memory can stay
+> incorrectly marked as such.
+> 
+> Restore N_NORMAL_MEMORY maintenance directly in online_pages() and
+> offline_pages(). Set the bit when a node that currently lacks normal
+> memory onlines pages into a zone <= ZONE_NORMAL, and clear it when
+> offlining removes the last present pages from zones <= ZONE_NORMAL.
+> 
+> This restores the intended semantics without bringing back the old
+> status_change_nid_normal notifier plumbing which was removed in
+> 8d2882a8edb8.
+> 
+> Current users that benefit include list_lru, zswap, nfsd filecache,
+> hugetlb_cgroup, and has_normal_memory sysfs reporting.
+> 
+> Fixes: 8d2882a8edb8 ("mm,memory_hotplug: remove status_change_nid_normal and update documentation")
+> Signed-off-by: Hao Li <hao.li@linux.dev>
 
-task 1:
-cxl_dpa_alloc()
-  __cxl_dpa_alloc()
-    guard(&cxl_rwsem.dpa)
-    cxled->dpa_res = res;  ...(1)
-  devm_add_action()        ...(4)
+LGTM, thanks for the new version Hao! I hope you have a great day : -)
 
-task 2:
-cxl_dpa_free()
-  guard(&cxl_rwsem.dpa)
-  if (!cxled->dpa_res)     ...(2) pass, due to (1)
-    return 0;
-  devm_cxl_dpa_release()
-    devm_remove_action()   ...(3) warning, no action is added yet
+Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
 
-Splat:
-
-WARNING: ./include/linux/device/devres.h:160 at devm_remove_action include/linux/device/devres.h:160 [inline], CPU#0: syz.1.6464/25993
-WARNING: ./include/linux/device/devres.h:160 at devm_cxl_dpa_release drivers/cxl/core/hdm.c:290 [inline], CPU#0: syz.1.6464/25993
-WARNING: ./include/linux/device/devres.h:160 at cxl_dpa_free+0x2a4/0x320 drivers/cxl/core/hdm.c:572, CPU#0: syz.1.6464/25993
-
-Fixes: cf880423b6a0 ("cxl/hdm: Add support for allocating DPA to an endpoint decoder")
-Fixes: 9c57cde0dcbd ("cxl/hdm: Enumerate allocated DPA")
-Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
----
-V1: https://lore.kernel.org/linux-cxl/20260309000810.2632065-2-iam@sung-woo.kim/
-V1->V2:
-- Let __cxl_dpa_reserve() handle devm_remove_action() to reduce
-  duplicated patches. (Thanks to Dan for the suggestion)
-- Make the comment concise (Reflect Dan and Alison's comments)
-- Make a warning log in a commit message concise
-
- drivers/cxl/core/hdm.c | 33 +++++++++++++--------------------
- 1 file changed, 13 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index cb5d5a047a9d..63bd0d5f31df 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -408,7 +408,13 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 
- 	port->hdm_end++;
- 	get_device(&cxled->cxld.dev);
--	return 0;
-+
-+	/*
-+	 * Perform devres registration while holding cxl_rwsem.dpa so
-+	 * cxl_dpa_free() cannot observe dpa_res without a matching devres
-+	 * action.
-+	 */
-+	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
- }
- 
- static int add_dpa_res(struct device *dev, struct resource *parent,
-@@ -499,16 +505,8 @@ int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 				resource_size_t base, resource_size_t len,
- 				resource_size_t skipped)
- {
--	struct cxl_port *port = cxled_to_port(cxled);
--	int rc;
--
--	scoped_guard(rwsem_write, &cxl_rwsem.dpa)
--		rc = __cxl_dpa_reserve(cxled, base, len, skipped);
--
--	if (rc)
--		return rc;
--
--	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
-+	guard(rwsem_write)(&cxl_rwsem.dpa);
-+	return __cxl_dpa_reserve(cxled, base, len, skipped);
- }
- EXPORT_SYMBOL_NS_GPL(devm_cxl_dpa_reserve, "CXL");
- 
-@@ -606,7 +604,8 @@ static int __cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
- 	struct resource *p, *last;
- 	int part;
- 
--	guard(rwsem_write)(&cxl_rwsem.dpa);
-+	lockdep_assert_held_write(&cxl_rwsem.dpa);
-+
- 	if (cxled->cxld.region) {
- 		dev_dbg(dev, "decoder attached to %s\n",
- 			dev_name(&cxled->cxld.region->dev));
-@@ -669,14 +668,8 @@ static int __cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
- 
- int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
- {
--	struct cxl_port *port = cxled_to_port(cxled);
--	int rc;
--
--	rc = __cxl_dpa_alloc(cxled, size);
--	if (rc)
--		return rc;
--
--	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
-+	guard(rwsem_write)(&cxl_rwsem.dpa);
-+	return __cxl_dpa_alloc(cxled, size);
- }
- 
- static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
--- 
-2.47.3
-
+> ---
+> Changes: simplify the code. (Thanks Joshua and David)
+> ---
+>  mm/memory_hotplug.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index bc805029da51..05a47953ef21 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
