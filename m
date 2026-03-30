@@ -1,94 +1,176 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5633C3B47EE
-	for <linux-cxl@vger.kernel.org>; Mon, 30 Mar 2026 09:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 636D5389E07;
+	Mon, 30 Mar 2026 09:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774863290; cv=none; b=cwBoNcVeTWArIRWZAXP78ilrg+JUBslTKbERzYXU8ZaUHSPd/GVgOv638CW3MOdgk+QY7P85iVQiqakHeI3yIeLnJoC2MD56TFG/jQlG9StGUuSss6rGC8YZejFr+Q1aCanP6ZiJUmBcPhPR4tmVNYgGNGkIUkX0mkjIAi3EshE=
+	t=1774864064; cv=none; b=Tl7Cmea/tlF4b8Up4xJAJ+GkOB2XnZXVxJ2DzEcmZM3pvrT/+4BbpzhyeHl0npVko9BPCDkUE8e7ZwMKEGN3RFcVZZAiaD82ftEPL0dqIENBIjLc+gvafx7QnvgPT+cJWMBt95thVRINR+gqwzhqmxpZwyuyhsiZCFUTZ4RS6hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774863290; c=relaxed/simple;
-	bh=MOgOgvvVHi7BgeERfeaf3lMEYneJuuMSvhmFZ7GhHr0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G1SdEae0TUZFZrcauNwgKMfAFEaqBEP5m7bUAPOovC6exwZXcjuejOvsG6SA+HvusNGBK4M/A/Pt6EkZiZKJbD9E8yghwp21vbaSV5KkBXAoek787oulFziIlcvazi81SLntJDD77dSfg585ZRgA5pFdXhQpdE/Q87vPWzKgRuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HJENXvRm; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HJENXvRm"
-Date: Mon, 30 Mar 2026 17:34:21 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1774863287;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QGkDj1PBQwxhRCTzQSOpS9DEQZkCaWieM/DJwzadiGA=;
-	b=HJENXvRm2Fd5wnRz+GYvxiRAnbc7T7Ywrpjz7wQVSnzC4SJzA+ElU6I+uvySgtS0wUd0OX
-	/5ZQ/FxtYE/ipg+O8+W+ZWRQ75BcHQNaMS1S2Adasam1F1KZ9GDFUyZbjIqe0UwUEsOIpS
-	VZQNjUbndz9fUXMBrnGZwhVfgxSHKbQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Hao Li <hao.li@linux.dev>
-To: "Harry Yoo (Oracle)" <harry@kernel.org>
-Cc: david@kernel.org, osalvador@suse.de, akpm@linux-foundation.org, 
-	vbabka@suse.cz, joshua.hahnjy@gmail.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2] mm/memory_hotplug: maintain N_NORMAL_MEMORY during
- hotplug
-Message-ID: <23feu42lqvc7iymgaxmnywea7c3qie5vmjm4aijbgdiazwvrcb@mmlxjowgtotv>
-References: <20260330035941.518186-1-hao.li@linux.dev>
- <aco0MtqpysMXMZdy@hyeyoo>
+	s=arc-20240116; t=1774864064; c=relaxed/simple;
+	bh=XV7ZhyWKSkcYUr2FMm+gAq7VOSVORpizBUGLyoOk6QI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BG22cchYIip503RKhWPt9zJOiEi5KzOpv1WKIcFzIrgoeXFePyx3e+/yNBtJnX9Fic/KB9CoUFd0TS9z/T0atGB19hoUfxRfovWb+zQbuhJfcAQxeY7b4fFV50uIhfrXGHH4CmgLCd3w3ct7QBD8tKJKnKLxYz1umuVeRaASGSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-c2dff70000001609-3c-69ca46b88de5
+From: Rakie Kim <rakie.kim@sk.com>
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: akpm@linux-foundation.org,
+	gourry@gourry.net,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	byungchul@sk.com,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	david@kernel.org,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	dave@stgolabs.net,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	Rakie Kim <rakie.kim@sk.com>
+Subject: Re: [RFC PATCH 2/4] mm/memory-tiers: introduce socket-aware topology management for NUMA nodes
+Date: Mon, 30 Mar 2026 18:47:23 +0900
+Message-ID: <20260330094733.425-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.52.0.windows.1
+In-Reply-To: <20260318122242.00004e0d@huawei.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aco0MtqpysMXMZdy@hyeyoo>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPIsWRmVeSWpSXmKPExsXC9ZZnke4Ot1OZBmumG1rMWb+GzeLu4wts
+	FrtuhFhMn3qB0eLEzUY2i9U31zBaPN/6i9Hi593j7Bb7nz5nsVi18BqbxfGt89gttjc8YLc4
+	P+sUi8XlXXPYLO6t+c9qcXLWShaLb33SFvf7HCyOrN/OZDH50gI2i9mNfYwWtyYcY7JYvSbD
+	YvbRe+wOEh47Z91l91iwqdSju+0yu0fLkbesHov3vGTy2LSqk81j06dJ7B4nZvxm8dj50NKj
+	t/kdm8fHp7dYPKbOrvdYv+Uqi8eZBUfYPT5vkgvgj+KySUnNySxLLdK3S+DK2LTkFVPBa4WK
+	Sy/3sjQwrpLqYuTgkBAwkdjQG9bFyAlm3pk+iRUkzCagJHFsbwxIWETASOJVzwHGLkYuDmaB
+	zawSD8/3sYAkhAXSJaZdmwxmswioSmzdcxHM5hUwlviw7zMzxExNiXUbb4HFOQUMJb5PaGUC
+	sYUEeCRebdjPCFEvKHFy5hOwGmYBeYnmrbOZQZZJCPxklzh75A0jxCBJiYMrbrBMYOSfhaRn
+	FpKeBYxMqxiFMvPKchMzc0z0MirzMiv0kvNzNzECo3VZ7Z/oHYyfLgQfYhTgYFTi4TVgO5kp
+	xJpYVlyZe4hRgoNZSYS3e/qxTCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8Rt/KU4QE0hNLUrNT
+	UwtSi2CyTBycUg2MStJX9pgu6V+aqzP3iHP4sbqX9z8efCO6JF1M+zz3EXkWt/UKJ9tP9dze
+	v4t7U/OSM3nmoRvv/Q7Y+8bxxZMvfrtqajtSrpw4PJ3zwf9rXRHL0gW0M9L9FB/vtdh34tu5
+	C14zzwn+FGWXM5/DJnuJ12rddi6jGrNtp7/w8zi8VbAzKRXtUZTdpsRSnJFoqMVcVJwIAGld
+	VcLSAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNIsWRmVeSWpSXmKPExsXCNUM9RneH26lMg9d7FC3mrF/DZnH38QU2
+	i103QizOTZnNZjF96gVGixM3G9ksVt9cw2jxfOsvRoufd4+zW3x+9prZYv/T5ywWqxZeY7M4
+	vnUeu8XhuSdZLbY3PGC3OD/rFIvF5V1z2CzurfnPanFy1koWi2990hb3+xwsDl17zmpxZP12
+	JovJlxawWcxu7GO0uDXhGJPF6jUZFr+3rQAKHb3H7iDrsXPWXXaPBZtKPbrbLrN7tBx5y+qx
+	eM9LJo9NqzrZPDZ9msTucWLGbxaPnQ8tPXqb37F5fHx6i8Xj220Pj8UvPjB5TJ1d77F+y1UW
+	jzMLjrAHCEZx2aSk5mSWpRbp2yVwZWxa8oqp4LVCxaWXe1kaGFdJdTFyckgImEjcmT6JtYuR
+	g4NNQEni2N4YkLCIgJHEq54DjF2MXBzMAptZJR6e72MBSQgLpEtMuzYZzGYRUJXYuucimM0r
+	YCzxYd9nZoiZmhLrNt4Ci3MKGEp8n9DKBGILCfBIvNqwnxGiXlDi5MwnYDXMAvISzVtnM09g
+	5JmFJDULSWoBI9MqRpHMvLLcxMwcU73i7IzKvMwKveT83E2MwChdVvtn4g7GL5fdDzEKcDAq
+	8fAasJ3MFGJNLCuuzD3EKMHBrCTC2z39WKYQb0piZVVqUX58UWlOavEhRmkOFiVxXq/w1AQh
+	gfTEktTs1NSC1CKYLBMHp1QDY+uube5+X0o21y7n/T7p65Oa1XuuiFu9s18rcrta+TaTvmma
+	6kffN193FCTvvWN7kWnupF9Rn8QlHOdf/vFszZVL/P8rnKR+9AotvKZ+atnU5wJed+Nl38nV
+	Pv/xIoSx6TET07qTnwKcjml65m/+csaeMe6TfddxvxrVyAMrb8ucvc1+dIXUES8lluKMREMt
+	5qLiRAAqZ2b+zgIAAA==
+X-CFilter-Loop: Reflected
 
-On Mon, Mar 30, 2026 at 05:28:34PM +0900, Harry Yoo (Oracle) wrote:
-> On Mon, Mar 30, 2026 at 11:57:49AM +0800, Hao Li wrote:
-> > N_NORMAL_MEMORY is initialized from zone population at boot, but memory
-> > hotplug currently only updates N_MEMORY. As a result, a node that gains
-> > normal memory via hotplug can remain invisible to users iterating over
-> > N_NORMAL_MEMORY, while a node that loses its last normal memory can stay
-> > incorrectly marked as such.
+On Wed, 18 Mar 2026 12:22:42 +0000 Jonathan Cameron <jonathan.cameron@huawei.com> wrote:
+> On Mon, 16 Mar 2026 14:12:50 +0900
+> Rakie Kim <rakie.kim@sk.com> wrote:
+> 
+> > The existing NUMA distance model provides only relative latency values
+> > between nodes and lacks any notion of structural grouping such as socket
+> > or package boundaries. As a result, memory policies based solely on
+> > distance cannot differentiate between nodes that are physically local
+> > to the same socket and those that belong to different sockets. This
+> > often leads to inefficient cross-socket demotion and suboptimal memory
+> > placement.
 > > 
-> > Restore N_NORMAL_MEMORY maintenance directly in online_pages() and
-> > offline_pages(). Set the bit when a node that currently lacks normal
-> > memory onlines pages into a zone <= ZONE_NORMAL, and clear it when
-> > offlining removes the last present pages from zones <= ZONE_NORMAL.
+> > This patch introduces a socket-aware topology management layer that
+> > groups NUMA nodes according to their physical package (socket)
+> > association. Each group forms a "memory package" that explicitly links
+> > CPU and memory-only nodes (such as CXL or HBM) under the same socket.
+> > This structure allows the kernel to interpret NUMA topology in a way
+> > that reflects real hardware locality rather than relying solely on
+> > flat distance values.
 > > 
-> > This restores the intended semantics without bringing back the old
-> > status_change_nid_normal notifier plumbing which was removed in
-> > 8d2882a8edb8.
+> > By maintaining socket-level grouping, the kernel can:
+> >  - Enforce demotion and promotion policies that stay within the same
+> >    socket.
+> >  - Avoid unintended cross-socket migrations that degrade performance.
+> >  - Provide a structural abstraction for future policy and tiering logic.
 > > 
-> > Current users that benefit include list_lru, zswap, nfsd filecache,
-> > hugetlb_cgroup, and has_normal_memory sysfs reporting.
-> > 
-> > Fixes: 8d2882a8edb8 ("mm,memory_hotplug: remove status_change_nid_normal and update documentation")
+> > Unlike ACPI-provided distance tables, which offer static and symmetric
+> > relationships, this socket-aware model captures the true hardware
+> > hierarchy and provides a flexible foundation for systems where the
+> > distance matrix alone cannot accurately express socket boundaries or
+> > asymmetric topologies.
 > 
-> The Fixes: tag indeed looks correct to me.
+> Careful with the generalities in here. There is no way to derive the
+> 'true' hierarchy. What this is doing is applying a particular set
+> of heuristics to the data that ACPI provided and attempting to use
+> that to derive relationships. In simple cases that might work fine.0
 > 
-> By the way, MM needs an explicit Cc: stable@vger.kernel.org for backporting.
+> Doing so is OK in an RFC for discussion but this will need testing
+> against a wide range of topologies to at least ensure it fails gracefully.
+> Note we've had to paper over quite a few topology assumptions in the
+> kernel and this feels like another one that will bite us later.
 > 
-> Since this commit was introduced in v6.17 and we have v6.18 as LTS,
-> this should to be backported to v6.18.
+> I'd avoid the socket terminology as multiple NUMA nodes in sockets
+> have been a thing for many years. Today there can even be multiple
+> IO dies with a complex 'distance' relationship wrt to the CPUs
+> in that socket. Topologies of memory controllers in those
+> packages are another level of complexity.
+> 
+> 
+> Otherwise a few general things from a quick look. 
+> 
+> I'd avoid goto out; where out just returns.  That just makes code
+> flow more complex and often makes for longer code. When you have
+> an error and there is nothing to cleanup just return immediately.
+> 
+> guard() / scoped_guard() will help simplify some of the locking.
+> 
+> Thanks,
+> 
+> Jonathan
+>
 
-I had gone back and forth on whether to add the Cc tag, but I'm happy to
-include it now!
+Hello Jonathan,
 
-> 
-> > Signed-off-by: Hao Li <hao.li@linux.dev>
-> > ---
-> 
-> Otherwise looks good to me,
-> Reviewed-by: Harry Yoo (Oracle) <harry@kernel.org>
+First of all, I sincerely apologize for the delayed response. I completely 
+missed this email while I was highly focused on debugging the HMAT and 
+CDAT latency issues in the other threads.
 
-Thanks for the review!
+You are absolutely right about the terminology and the architectural 
+assumptions. Given modern complex architectures with multiple NUMA nodes 
+and IO dies within a single physical package, relying on the term "socket" 
+is outdated and misleading. I completely agree that this is just another 
+heuristic, not the "true" hierarchy. 
 
--- 
-Thanks,
-Hao
+For the v2 patch, I will reword the commit messages to remove those 
+generalities and avoid using the strict "socket" terminology. I will 
+also make sure the logic is designed to fail gracefully and fall back 
+to the default behavior when it encounters complex topologies that it 
+cannot cleanly resolve.
+
+Thank you so much for the detailed code review as well. I will definitely 
+remove the unnecessary `goto out;` statements and replace them with 
+direct returns. I will also adopt `guard()` and `scoped_guard()` to 
+simplify the locking mechanics. 
+
+Thanks again for your time and the valuable feedback.
+
+Rakie Kim
