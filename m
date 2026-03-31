@@ -1,167 +1,211 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B282D194C98
-	for <linux-cxl@vger.kernel.org>; Tue, 31 Mar 2026 14:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753FD3D75D9;
+	Tue, 31 Mar 2026 16:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774968823; cv=none; b=f49a4YIddo/6maFOHDnlE/rhfR7ulfdSkBXQxh7ao6qpIBgGVTJeHqpL7oFmdBWzNSNv01iPAU2HWPVGccwrqgn4BMFx6dN99YaPsij5yNlBy2hiQHM8jA4sm3KRrfy654a4kHQVwDO9sUr2ki8jRe5y6KY/b+YdYHycqyMb+qw=
+	t=1774974235; cv=none; b=ppFUYeHlI1IU2ha29Q7NVGnL++O5nucZvp7iatubtdFA25V3G+rTE5s3j/V0godvzDPPfTmwPuDPLZj7oNoKvwEo+sfz2N8O276mntsnkU4oYZJfYx6OnCoB04gBqK2Xsrdu8hghe+hLYNa49+TD5PECv+Vc/3TLAoBmcEarcxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774968823; c=relaxed/simple;
-	bh=D3GTkhP/lTSH51nc8quGY5NDjj/QgqMccivoGCMSPDk=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R2+iztX7Ug6S81adQ2ZLz/TEj2qZtkLuMuyLq0+tAWZojmlU/9vigkGts85pQbRffojcyBg9bYKoKNasenOP4l729e82OArjOSbrkZ57I27h3Y3YiSwaQOG0HNVaohiQPUbIw5bEvjrwvGLqtdXt5FYCycplgYQJd8bW+wG81ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4flWLp383CzHnGgW;
-	Tue, 31 Mar 2026 22:52:50 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id CB4FA40575;
-	Tue, 31 Mar 2026 22:53:37 +0800 (CST)
-Received: from localhost (10.203.177.99) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 31 Mar
- 2026 15:53:36 +0100
-Date: Tue, 31 Mar 2026 15:53:31 +0100
-From: Alireza Sanaee <alireza.sanaee@huawei.com>
-To: Anisa Su <anisa.su887@gmail.com>
-CC: <qemu-devel@nongnu.org>, <armbru@redhat.com>, <berrange@redhat.com>,
-	<eblake@redhat.com>, <jonathan.cameron@huawei.com>,
-	<linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>, <lizhijian@fujitsu.com>,
-	<mst@redhat.com>, <pbonzini@redhat.com>, <gourry@gourry.net>,
-	<nifan.cxl@gmail.com>, <me@linux.beauty>, <sarsanaee@gmail.com>
-Subject: Re: [PATCH 8/9] hw/cxl: Add tag-based dynamic-capacity release
- support
-Message-ID: <20260331155331.0000436d.alireza.sanaee@huawei.com>
-In-Reply-To: <acq63qeubIux3W0p@4470NRD-ASU.ssi.samsung.com>
-References: <20260325184259.366-1-alireza.sanaee@huawei.com>
-	<20260325184259.366-9-alireza.sanaee@huawei.com>
-	<acq63qeubIux3W0p@4470NRD-ASU.ssi.samsung.com>
-Organization: Huawei
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1774974235; c=relaxed/simple;
+	bh=Owy27NZIONsUdNTzktg4/3o+Iq30FcPIRoBuYypQxIE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dOmXgEk0y9ewbe/3jh/8DsfDqLycxrgi0zRLhwxRMkN3/YX7x8D54X55vGYYWKqEe57CvgsRNh90s0lvMdP9f8IVzuD9ioig7jwK1Y4+01WaI7LiDpyajGh2czWkuV7u643sWeIh/sPL6pPmgSuTSMVvZArSs3xUpzvLHcn1UIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hv/rzxlp; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hv/rzxlp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774974234; x=1806510234;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Owy27NZIONsUdNTzktg4/3o+Iq30FcPIRoBuYypQxIE=;
+  b=hv/rzxlpta3zLX3NoDA10qIuuOQNPUuAVfkj91UXVkya11PIU7f71jyE
+   Nntu9meFawdKVRQao/z4FehEGAunmREKnv59aWfGuJspVSK+MlvJ6Wikc
+   fTmAdN8w24qzgB3mxg+ldkM5Z29BFCk183e94xC8eeIA/mARMlFH1eUt6
+   UKIiu1QM6V/rIL+tascZyMKBg2gWjOdkDwRgq3rF2BszPb/UE96uC/8Pb
+   OuiJchUrb9PzvTLcE8YWrICVOEDODw59zkiVuVLqcjlqpb+LyiF4ZNpW0
+   X/1lMkXSqPSAhtxaFOlow7KTmmNtg2DO5pT2Z1BhewgBBUM7ZSZ5LSTic
+   g==;
+X-CSE-ConnectionGUID: pIZP2Qq8R6KktlaTckjLPA==
+X-CSE-MsgGUID: NvwQuBrXQlCDYi27I+QAOA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="87386939"
+X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
+   d="scan'208";a="87386939"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 09:23:54 -0700
+X-CSE-ConnectionGUID: cF1F+tt8QQ2ChLIXH7/5Aw==
+X-CSE-MsgGUID: 1YpHvgX7QJugjkhEZ86q+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
+   d="scan'208";a="230860100"
+Received: from lkp-server01.sh.intel.com (HELO 283bf2e1b94a) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 31 Mar 2026 09:23:50 -0700
+Received: from kbuild by 283bf2e1b94a with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1w7bsZ-000000002t3-2ihm;
+	Tue, 31 Mar 2026 16:23:47 +0000
+Date: Wed, 1 Apr 2026 00:23:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+	netdev@vger.kernel.org, dave.jiang@intel.com,
+	dan.j.williams@intel.com, edward.cree@amd.com, davem@davemloft.net,
+	kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
+Cc: oe-kbuild-all@lists.linux.dev, Alejandro Lucero <alucerop@amd.com>,
+	Edward Cree <ecree.xilinx@gmail.com>
+Subject: Re: [PATCH v25 09/11] sfc: obtain decoder and region if committed by
+ firmware
+Message-ID: <202604010036.h2OVjfQU-lkp@intel.com>
+References: <20260330143827.1278677-10-alejandro.lucero-palau@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
- dubpeml500005.china.huawei.com (7.214.145.207)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260330143827.1278677-10-alejandro.lucero-palau@amd.com>
 
-On Mon, 30 Mar 2026 11:03:10 -0700
-Anisa Su <anisa.su887@gmail.com> wrote:
+Hi,
 
-Hi Anisa,
+kernel test robot noticed the following build errors:
 
-Thanks for testing. I will make this change and send a new version then.
+[auto build test ERROR on 64584273dfb8a1e5fc7d78094ba22a93c204b44e]
 
-> On Wed, Mar 25, 2026 at 06:42:56PM +0000, Alireza Sanaee wrote:
-> > Add support for the tag-based dynamic-capacity release policy via the QMP
-> > interface. The new path scans committed extents, selects those whose stored
-> > tag matches the requested UUID, and emits a Release Dynamic Capacity event
-> > for each matching range.
-> > 
-> > This is intentionally scoped to tag-driven selection. Prescriptive release
-> > handling and the underlying extent teardown stay in the existing paths.
-> > 
-> > Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
-> > ---
-> >  hw/mem/cxl_type3.c | 61 ++++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 61 insertions(+)
-> > 
-> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-> > index 6b73d58358..d5fa8a530a 100644
-> > --- a/hw/mem/cxl_type3.c
-> > +++ b/hw/mem/cxl_type3.c
-> > @@ -2492,6 +2492,63 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
-> >      cxl_create_dc_event_records_for_extents(dcd, type, extents, num_extents);
-> >  }
-> >  
-> > +static void qmp_cxl_process_dynamic_capacity_tag_based(const char *path,
-> > +        uint16_t hid, CXLDCEventType type, uint8_t rid, const char *tag,
-> > +        CxlDynamicCapacityExtentList *records, Error **errp)
-> > +{
-> > +    Object *obj;
-> > +    CXLType3Dev *dcd;
-> > +    CXLDCExtentList *list = NULL;
-> > +    CXLDCExtent *ent;
-> > +    g_autofree CXLDCExtentRaw *extents = NULL;
-> > +
-> > +    obj = object_resolve_path_type(path, TYPE_CXL_TYPE3, NULL);
-> > +    if (!obj) {
-> > +        error_setg(errp, "Unable to resolve CXL type 3 device");
-> > +        return;
-> > +    }
-> > +
-> > +    dcd = CXL_TYPE3(obj);
-> > +    if (!dcd->dc.num_regions) {
-> > +        error_setg(errp, "No dynamic capacity support from the device");
-> > +        return;
-> > +    }
-> > +
-> > +    if (rid >= dcd->dc.num_regions) {
-> > +        error_setg(errp, "region id is too large");
-> > +        return;
-> > +    }
-> > +
-> > +    QemuUUID uuid_req;
-> > +    qemu_uuid_parse(tag, &uuid_req);
-> > +
-> > +    list = &dcd->dc.extents;
-> > +    size_t cap = 8, n = 0;
-> > +    extents = g_new0(CXLDCExtentRaw, cap);
-> > +    QTAILQ_FOREACH(ent, list, node) {
-> > +        QemuUUID uuid_ext;
-> > +        memcpy(&uuid_ext.data, ent->tag, sizeof(ent->tag));
-> > +        if (!qemu_uuid_is_equal(&uuid_req, &uuid_ext)) {
-> > +            continue;
-> > +        }
-> > +
-> > +        if (n == cap) {
-> > +            cap *= 2;
-> > +            extents = g_renew(CXLDCExtentRaw, extents, cap);
-> > +        }
-> > +
-> > +        extents[n++] = (CXLDCExtentRaw){ .start_dpa = ent->start_dpa,
-> > +                                         .len = ent->len,
-> > +                                         .shared_seq = 0 };  
-> 	extents[n] = (CXLDCExtentRaw){ .start_dpa = ent->start_dpa,
->                                        .len = ent->len,
->                                        .shared_seq = 0 };
->         memcpy(extents[n].tag, uuid_ext.data, 0x10);
->         n++;
-> 
-> That should fix the issue I was talking about earlier in the other thread haha
-> (I tested it this time)
-> > +    }
-> > +
-> > +    if (n == 0) {
-> > +        return;
-> > +    }
-> > +    extents = g_renew(CXLDCExtentRaw, extents, n);
-> > +    cxl_create_dc_event_records_for_extents(dcd, type, extents, n);
-> > +}
-> > +
-> >  void qmp_cxl_add_dynamic_capacity(const char *path, uint16_t host_id,
-> >                                    CxlExtentSelectionPolicy sel_policy,
-> >                                    uint8_t region, const char *tag,
-> > @@ -2537,6 +2594,10 @@ void qmp_cxl_release_dynamic_capacity(const char *path, uint16_t host_id,
-> >                                                        region, tag,
-> >                                                        extents, errp);
-> >          return;
-> > +    case CXL_EXTENT_REMOVAL_POLICY_TAG_BASED:
-> > +        qmp_cxl_process_dynamic_capacity_tag_based(path, host_id, type, region,
-> > +                                                   tag, extents, errp);
-> > +        return;
-> >      default:
-> >          error_setg(errp, "Removal policy not supported");
-> >          return;
-> > -- 
-> > 2.50.1 (Apple Git-155)
-> >   
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/alejandro-lucero-palau-amd-com/sfc-add-cxl-support/20260331-055820
+base:   64584273dfb8a1e5fc7d78094ba22a93c204b44e
+patch link:    https://lore.kernel.org/r/20260330143827.1278677-10-alejandro.lucero-palau%40amd.com
+patch subject: [PATCH v25 09/11] sfc: obtain decoder and region if committed by firmware
+config: sparc-randconfig-002-20260331 (https://download.01.org/0day-ci/archive/20260401/202604010036.h2OVjfQU-lkp@intel.com/config)
+compiler: sparc-linux-gcc (GCC) 15.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260401/202604010036.h2OVjfQU-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202604010036.h2OVjfQU-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   sparc-linux-ld: drivers/net/ethernet/sfc/efx_cxl.o: in function `efx_cxl_init':
+>> drivers/net/ethernet/sfc/efx_cxl.c:89:(.text+0x198): undefined reference to `cxl_get_region_range'
+   sparc-linux-ld: drivers/net/ethernet/sfc/efx_cxl.o: in function `efx_cxl_exit':
+>> drivers/net/ethernet/sfc/efx_cxl.c:120:(.text+0x234): undefined reference to `cxl_unregister_region'
+
+
+vim +89 drivers/net/ethernet/sfc/efx_cxl.c
+
+    16	
+    17	int efx_cxl_init(struct efx_probe_data *probe_data)
+    18	{
+    19		struct efx_nic *efx = &probe_data->efx;
+    20		struct pci_dev *pci_dev = efx->pci_dev;
+    21		struct efx_cxl *cxl;
+    22		struct range range;
+    23		u16 dvsec;
+    24		int rc;
+    25	
+    26		probe_data->cxl_pio_initialised = false;
+    27	
+    28		/* Is the device configured with and using CXL? */
+    29		if (!pcie_is_cxl(pci_dev))
+    30			return 0;
+    31	
+    32		dvsec = pci_find_dvsec_capability(pci_dev, PCI_VENDOR_ID_CXL,
+    33						  PCI_DVSEC_CXL_DEVICE);
+    34		if (!dvsec) {
+    35			pci_info(pci_dev, "CXL_DVSEC_PCIE_DEVICE capability not found\n");
+    36			return 0;
+    37		}
+    38	
+    39		pci_dbg(pci_dev, "CXL_DVSEC_PCIE_DEVICE capability found\n");
+    40	
+    41		/* Create a cxl_dev_state embedded in the cxl struct using cxl core api
+    42		 * specifying no mbox available.
+    43		 */
+    44		cxl = devm_cxl_dev_state_create(&pci_dev->dev, CXL_DEVTYPE_DEVMEM,
+    45						pci_dev->dev.id, dvsec, struct efx_cxl,
+    46						cxlds, false);
+    47	
+    48		if (!cxl)
+    49			return -ENOMEM;
+    50	
+    51		rc = cxl_pci_setup_regs(pci_dev, CXL_REGLOC_RBI_COMPONENT,
+    52					&cxl->cxlds.reg_map);
+    53		if (rc) {
+    54			pci_err(pci_dev, "No component registers\n");
+    55			return rc;
+    56		}
+    57	
+    58		if (!cxl->cxlds.reg_map.component_map.hdm_decoder.valid) {
+    59			pci_err(pci_dev, "Expected HDM component register not found\n");
+    60			return -ENODEV;
+    61		}
+    62	
+    63		if (!cxl->cxlds.reg_map.component_map.ras.valid) {
+    64			pci_err(pci_dev, "Expected RAS component register not found\n");
+    65			return -ENODEV;
+    66		}
+    67	
+    68		/* Set media ready explicitly as there are neither mailbox for checking
+    69		 * this state nor the CXL register involved, both not mandatory for
+    70		 * type2.
+    71		 */
+    72		cxl->cxlds.media_ready = true;
+    73	
+    74		if (cxl_set_capacity(&cxl->cxlds, EFX_CTPIO_BUFFER_SIZE)) {
+    75			pci_err(pci_dev, "dpa capacity setup failed\n");
+    76			return -ENODEV;
+    77		}
+    78	
+    79		cxl->cxlmd = devm_cxl_add_memdev(&cxl->cxlds, NULL);
+    80		if (IS_ERR(cxl->cxlmd)) {
+    81			pci_err(pci_dev, "CXL accel memdev creation failed");
+    82			return PTR_ERR(cxl->cxlmd);
+    83		}
+    84	
+    85		cxl->efx_region = cxl_get_region_from_committed_decoder(cxl->cxlmd);
+    86		if (!cxl->efx_region)
+    87			return -ENODEV;
+    88	
+  > 89		rc = cxl_get_region_range(cxl->efx_region, &range);
+    90		if (rc) {
+    91			pci_err(pci_dev,
+    92				"CXL getting regions params from a committed decoder failed");
+    93			return rc;
+    94		}
+    95	
+    96		cxl->ctpio_cxl = ioremap(range.start, range_len(&range));
+    97		if (!cxl->ctpio_cxl) {
+    98			pci_err(pci_dev, "CXL ioremap region (%pra) failed", &range);
+    99			return -ENOMEM;
+   100		}
+   101	
+   102	
+   103		probe_data->cxl = cxl;
+   104	
+   105		return 0;
+   106	}
+   107	
+   108	void efx_cxl_exit(struct efx_probe_data *probe_data)
+   109	{
+   110		if (!probe_data->cxl)
+   111			return;
+   112	
+   113		iounmap(probe_data->cxl->ctpio_cxl);
+   114	
+   115		/* If the sfc cxl initialization was successful, it implies the
+   116		 * endpoint decoder had an auto discover region which is the one
+   117		 * we used and we need to remove now. Otherwise the region will
+   118		 * be around until the root port is removed.
+   119		 */
+ > 120		cxl_unregister_region(probe_data->cxl->efx_region);
+   121	}
+   122	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
