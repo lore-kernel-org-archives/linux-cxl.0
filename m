@@ -1,46 +1,44 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D5B258EC2
-	for <linux-cxl@vger.kernel.org>; Tue, 31 Mar 2026 14:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B282D194C98
+	for <linux-cxl@vger.kernel.org>; Tue, 31 Mar 2026 14:53:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774968653; cv=none; b=jIPKXabCIdhn+ZJbgz9faOhsQGyDckJHtg+R1mwq4EgyZb2nASlVyn7NZjsSNHj4jdMnrmKO8+2XHnbKk0prkFKuFkZH5sPyJhL0ooXvLwAAzmusShf3PWSHM78hY+0UzCdXvLAsfQPwtv/Bkt7G1AXFjIa46H6VydixkdVEu4w=
+	t=1774968823; cv=none; b=f49a4YIddo/6maFOHDnlE/rhfR7ulfdSkBXQxh7ao6qpIBgGVTJeHqpL7oFmdBWzNSNv01iPAU2HWPVGccwrqgn4BMFx6dN99YaPsij5yNlBy2hiQHM8jA4sm3KRrfy654a4kHQVwDO9sUr2ki8jRe5y6KY/b+YdYHycqyMb+qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774968653; c=relaxed/simple;
-	bh=Mmb7vr4BkrgY6dZNNYez9kA5KnQqUFF8KwAdDIb2NWI=;
+	s=arc-20240116; t=1774968823; c=relaxed/simple;
+	bh=D3GTkhP/lTSH51nc8quGY5NDjj/QgqMccivoGCMSPDk=;
 	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aUtb5JN5+O3IeSmk3Ym7b5GkRUj6pCSnkE7A+NtIzbsmr49reRy+Ta7uTYbVgSA7RBwWt1tt1uiHiWzt1ttY1AB3Htv+ogSJwrCSEAsbKyOXKcGwJ236dQuxROuOFq6+nHqRZlqMpe6DLir7oGsSSebA3ZRm9/qf5UVKAw7LfyQ=
+	 MIME-Version:Content-Type; b=R2+iztX7Ug6S81adQ2ZLz/TEj2qZtkLuMuyLq0+tAWZojmlU/9vigkGts85pQbRffojcyBg9bYKoKNasenOP4l729e82OArjOSbrkZ57I27h3Y3YiSwaQOG0HNVaohiQPUbIw5bEvjrwvGLqtdXt5FYCycplgYQJd8bW+wG81ts=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4flWJ76QhRzJ4681;
-	Tue, 31 Mar 2026 22:50:31 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4flWLp383CzHnGgW;
+	Tue, 31 Mar 2026 22:52:50 +0800 (CST)
 Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7C61440575;
-	Tue, 31 Mar 2026 22:50:50 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id CB4FA40575;
+	Tue, 31 Mar 2026 22:53:37 +0800 (CST)
 Received: from localhost (10.203.177.99) by dubpeml500005.china.huawei.com
  (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 31 Mar
- 2026 15:50:49 +0100
-Date: Tue, 31 Mar 2026 15:50:44 +0100
+ 2026 15:53:36 +0100
+Date: Tue, 31 Mar 2026 15:53:31 +0100
 From: Alireza Sanaee <alireza.sanaee@huawei.com>
-To: Markus Armbruster <armbru@redhat.com>
-CC: <qemu-devel@nongnu.org>, <anisa.su@samsung.com>, <berrange@redhat.com>,
+To: Anisa Su <anisa.su887@gmail.com>
+CC: <qemu-devel@nongnu.org>, <armbru@redhat.com>, <berrange@redhat.com>,
 	<eblake@redhat.com>, <jonathan.cameron@huawei.com>,
 	<linux-cxl@vger.kernel.org>, <linuxarm@huawei.com>, <lizhijian@fujitsu.com>,
 	<mst@redhat.com>, <pbonzini@redhat.com>, <gourry@gourry.net>,
-	<nifan.cxl@gmail.com>, <me@linux.beauty>, <ira.weiny@intel.com>
-Subject: Re: [PATCH 9/9] hw/cxl: Add QMP status query for dynamic-capacity
- extent release
-Message-ID: <20260331155044.0000603d.alireza.sanaee@huawei.com>
-In-Reply-To: <87zf3s1ohc.fsf@pond.sub.org>
+	<nifan.cxl@gmail.com>, <me@linux.beauty>, <sarsanaee@gmail.com>
+Subject: Re: [PATCH 8/9] hw/cxl: Add tag-based dynamic-capacity release
+ support
+Message-ID: <20260331155331.0000436d.alireza.sanaee@huawei.com>
+In-Reply-To: <acq63qeubIux3W0p@4470NRD-ASU.ssi.samsung.com>
 References: <20260325184259.366-1-alireza.sanaee@huawei.com>
-	<20260325184259.366-10-alireza.sanaee@huawei.com>
-	<87mrzuei5f.fsf@pond.sub.org>
-	<20260327151811.00005564.alireza.sanaee@huawei.com>
-	<87zf3s1ohc.fsf@pond.sub.org>
+	<20260325184259.366-9-alireza.sanaee@huawei.com>
+	<acq63qeubIux3W0p@4470NRD-ASU.ssi.samsung.com>
 Organization: Huawei
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
@@ -54,58 +52,116 @@ Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: lhrpeml500012.china.huawei.com (7.191.174.4) To
  dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Sat, 28 Mar 2026 07:01:51 +0100
-Markus Armbruster <armbru@redhat.com> wrote:
+On Mon, 30 Mar 2026 11:03:10 -0700
+Anisa Su <anisa.su887@gmail.com> wrote:
 
-+CC Ira
+Hi Anisa,
 
-Hi Markus,
+Thanks for testing. I will make this change and send a new version then.
 
-Please look inline. I believe Ira might be able to help and we can see what he thinks.
-
-> Alireza Sanaee <alireza.sanaee@huawei.com> writes:
+> On Wed, Mar 25, 2026 at 06:42:56PM +0000, Alireza Sanaee wrote:
+> > Add support for the tag-based dynamic-capacity release policy via the QMP
+> > interface. The new path scans committed extents, selects those whose stored
+> > tag matches the requested UUID, and emits a Release Dynamic Capacity event
+> > for each matching range.
+> > 
+> > This is intentionally scoped to tag-driven selection. Prescriptive release
+> > handling and the underlying extent teardown stay in the existing paths.
+> > 
+> > Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
+> > ---
+> >  hw/mem/cxl_type3.c | 61 ++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 61 insertions(+)
+> > 
+> > diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> > index 6b73d58358..d5fa8a530a 100644
+> > --- a/hw/mem/cxl_type3.c
+> > +++ b/hw/mem/cxl_type3.c
+> > @@ -2492,6 +2492,63 @@ static void qmp_cxl_process_dynamic_capacity_prescriptive(const char *path,
+> >      cxl_create_dc_event_records_for_extents(dcd, type, extents, num_extents);
+> >  }
+> >  
+> > +static void qmp_cxl_process_dynamic_capacity_tag_based(const char *path,
+> > +        uint16_t hid, CXLDCEventType type, uint8_t rid, const char *tag,
+> > +        CxlDynamicCapacityExtentList *records, Error **errp)
+> > +{
+> > +    Object *obj;
+> > +    CXLType3Dev *dcd;
+> > +    CXLDCExtentList *list = NULL;
+> > +    CXLDCExtent *ent;
+> > +    g_autofree CXLDCExtentRaw *extents = NULL;
+> > +
+> > +    obj = object_resolve_path_type(path, TYPE_CXL_TYPE3, NULL);
+> > +    if (!obj) {
+> > +        error_setg(errp, "Unable to resolve CXL type 3 device");
+> > +        return;
+> > +    }
+> > +
+> > +    dcd = CXL_TYPE3(obj);
+> > +    if (!dcd->dc.num_regions) {
+> > +        error_setg(errp, "No dynamic capacity support from the device");
+> > +        return;
+> > +    }
+> > +
+> > +    if (rid >= dcd->dc.num_regions) {
+> > +        error_setg(errp, "region id is too large");
+> > +        return;
+> > +    }
+> > +
+> > +    QemuUUID uuid_req;
+> > +    qemu_uuid_parse(tag, &uuid_req);
+> > +
+> > +    list = &dcd->dc.extents;
+> > +    size_t cap = 8, n = 0;
+> > +    extents = g_new0(CXLDCExtentRaw, cap);
+> > +    QTAILQ_FOREACH(ent, list, node) {
+> > +        QemuUUID uuid_ext;
+> > +        memcpy(&uuid_ext.data, ent->tag, sizeof(ent->tag));
+> > +        if (!qemu_uuid_is_equal(&uuid_req, &uuid_ext)) {
+> > +            continue;
+> > +        }
+> > +
+> > +        if (n == cap) {
+> > +            cap *= 2;
+> > +            extents = g_renew(CXLDCExtentRaw, extents, cap);
+> > +        }
+> > +
+> > +        extents[n++] = (CXLDCExtentRaw){ .start_dpa = ent->start_dpa,
+> > +                                         .len = ent->len,
+> > +                                         .shared_seq = 0 };  
+> 	extents[n] = (CXLDCExtentRaw){ .start_dpa = ent->start_dpa,
+>                                        .len = ent->len,
+>                                        .shared_seq = 0 };
+>         memcpy(extents[n].tag, uuid_ext.data, 0x10);
+>         n++;
 > 
-> > On Thu, 26 Mar 2026 16:15:40 +0100
-> > Markus Armbruster <armbru@redhat.com> wrote:
-> >
-> > Hi Markus,
-> >
-> > This commit adds a test command to check whether an extent (a piece of memory region) has been released or not by the guest.
-> > The process of removal is highly asynchronous, that's why I needed to add a new command to check it.
-> >
-> > I would be happy to drop this patch, as this is extra.  
-> 
-> So your motivation for adding the command is "just" testing.  Correct?
-
-I wrote tests to make sure extents were released, and I used this QMP command to check.
-
-Now there is background about extents where DCD was developed in Linux by @Ira, CCed [1].
-
-In the DCD extent tracking section of the CXL spec, I see some commands 
-related to getting the extent list, maybe Ira can comment here. To be fair, knowing if an extent
-was released or not is a useful information in general from orchestrator perspective.
-
-[1] https://patchew.org/linux/20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com/
-
-> 
-> Can you think of other uses?
-> 
-> In particular, would a management application need this query to monitor
-> removal?
-
-I think management will get a signal on the removal given the schema in Ira's Linux kernel 
-patchset. I do not think this is implemented in QEMU at least (I might be missing something).
-
-> 
-> The description of feature @unstable may need to be adjusted for the
-> answers we work out here.
-
-Absolutely.
-
-> 
-> >
-> > Thanks,
-> > Ali  
-> 
+> That should fix the issue I was talking about earlier in the other thread haha
+> (I tested it this time)
+> > +    }
+> > +
+> > +    if (n == 0) {
+> > +        return;
+> > +    }
+> > +    extents = g_renew(CXLDCExtentRaw, extents, n);
+> > +    cxl_create_dc_event_records_for_extents(dcd, type, extents, n);
+> > +}
+> > +
+> >  void qmp_cxl_add_dynamic_capacity(const char *path, uint16_t host_id,
+> >                                    CxlExtentSelectionPolicy sel_policy,
+> >                                    uint8_t region, const char *tag,
+> > @@ -2537,6 +2594,10 @@ void qmp_cxl_release_dynamic_capacity(const char *path, uint16_t host_id,
+> >                                                        region, tag,
+> >                                                        extents, errp);
+> >          return;
+> > +    case CXL_EXTENT_REMOVAL_POLICY_TAG_BASED:
+> > +        qmp_cxl_process_dynamic_capacity_tag_based(path, host_id, type, region,
+> > +                                                   tag, extents, errp);
+> > +        return;
+> >      default:
+> >          error_setg(errp, "Removal policy not supported");
+> >          return;
+> > -- 
+> > 2.50.1 (Apple Git-155)
+> >   
 > 
 
