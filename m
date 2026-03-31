@@ -1,220 +1,436 @@
-Received: from a48-181.smtp-out.amazonses.com (a48-181.smtp-out.amazonses.com [54.240.48.181])
-	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020121.outbound.protection.outlook.com [52.101.196.121])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3D32BD59C;
-	Tue, 31 Mar 2026 12:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.48.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774960797; cv=none; b=tpIBs0Lo6A4TVqDpBmpi8eqvVgBqZEZEk1slBEKIXwO3ZMEypeKadyjbtsWTBEXnTIMdJ4DHzbIP1Sw8Ea04lBsfP0/5oLzj1+aKi1hbxQOQhAV4a/gelL7GChleFl0bzeJCX9FKz+JikEe5VBomoSeMKyzw6MTvPtpboi7IbYA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774960797; c=relaxed/simple;
-	bh=UWJrLX9CAMwzcYus/kRz5lyJzPtm88Tt+77VC3p1iNs=;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:In-Reply-To:
-	 References:Message-ID; b=dlX8u/Tb/jn1D9dT7p+Tm4bCQMBZ0xtYcubbxRUz5dlSqRTC8AIcjrorgWej3ehQaT1FT44XmQo3dd2jopLpzvm91nU1j8LZOj6d+OCcSvrhjLLu8mj1B/x9X2M11+HlN8gz28SzrCw7G6E+j1jeUB4Ii68Er/xJ41IWMxxnpW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=JI3VcEqy; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=PtTCa7A/; arc=none smtp.client-ip=54.240.48.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445973E3155;
+	Tue, 31 Mar 2026 13:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.121
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774963164; cv=fail; b=TPwtHLKqwMr7I/3EVLIwOOmkCdjQHeEJQie+aaM/cvs2syQzTJwBsOaM9P4XI7NB+5BOKAOV/1VNwr8nzJ8Jfm1gta4wdOxurtjh4ZOpQZjmYRtjX1SnZ1gapWzEouamzo8VwE+uQUmMh3PMhKcXgVL9+JBgz3Zij1hUkk/uOZ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774963164; c=relaxed/simple;
+	bh=1GpkqAVV6m/PWxnqfPC7FqMf8gXC4lwiiJnFAdmvi0w=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=D8NBIj935b5HSNiiSi/ec3MT4sLzrJE8FK9PwN+b6kpx8rKPKZnxuItGArnB1UDz8f/nLKh6YnDio1SuCKVww2ukd1wYvRjFvAikME9rHnmHyv6SKluSC9eCLkqPTYsapUQIHh2EhlcKxUqPbeWpvyHEg7n4Mycpp8lNcY8kntI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=s4WW11ST; arc=fail smtp.client-ip=52.101.196.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="JI3VcEqy";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="PtTCa7A/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1774960795;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id;
-	bh=UWJrLX9CAMwzcYus/kRz5lyJzPtm88Tt+77VC3p1iNs=;
-	b=JI3VcEqyNA0hC1YOk+gfRNzqkgk2YATCWx2PCan3tgCwhtjdf+VeoDXKvyqgAD4T
-	hUMnz/DcOpavoKzkOsV43pFqxQ7SF+bCUmWwGEBXvf82YgXGGf3FFCI/ZS5UA+DEyRN
-	U19kEzHQEvOeOlYKrHLA2p9AOWWCvuKaxKGxMUZM=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1774960795;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id:Feedback-ID;
-	bh=UWJrLX9CAMwzcYus/kRz5lyJzPtm88Tt+77VC3p1iNs=;
-	b=PtTCa7A/o5EhcydpUAGDrtMVDUmxWIS0TgGel2YzqVBc8HGZnMKBWWAmLpOsjkxA
-	n1eeeG802AVcanEdigRQsxhO7CV8bzl4o6/mp7oXdq4QWJvm8lbDfxmJOlewWqOOI14
-	7w1oaXyBz2r4PwXFi+qMcOryZmYnWTWG7cI+UB1U=
-Subject: [PATCH V10 10/10] famfs_fuse: Add documentation
-From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
-To: =?UTF-8?Q?John_Groves?= <John@Groves.net>, 
-	=?UTF-8?Q?Miklos_Szeredi?= <miklos@szeredi.hu>, 
-	=?UTF-8?Q?Dan_Williams?= <dan.j.williams@intel.com>, 
-	=?UTF-8?Q?Bernd_Schubert?= <bschubert@ddn.com>, 
-	=?UTF-8?Q?Alison_Schofiel?= =?UTF-8?Q?d?= <alison.schofield@intel.com>
-Cc: =?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
-	=?UTF-8?Q?Jonathan_Corbe?= =?UTF-8?Q?t?= <corbet@lwn.net>, 
-	=?UTF-8?Q?Shuah_Khan?= <skhan@linuxfoundation.org>, 
-	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
-	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
-	=?UTF-8?Q?Matthew_Wilcox?= <willy@infradead.org>, 
-	=?UTF-8?Q?Jan_Kara?= <jack@suse.cz>, 
-	=?UTF-8?Q?Alexander_Viro?= <viro@zeniv.linux.org.uk>, 
-	=?UTF-8?Q?David_Hildenbrand?= <david@kernel.org>, 
-	=?UTF-8?Q?Christian_Bra?= =?UTF-8?Q?uner?= <brauner@kernel.org>, 
-	=?UTF-8?Q?Darrick_J_=2E_Wong?= <djwong@kernel.org>, 
-	=?UTF-8?Q?Randy_Dunlap?= <rdunlap@infradead.org>, 
-	=?UTF-8?Q?Jeff_Layton?= <jlayton@kernel.org>, 
-	=?UTF-8?Q?Amir_Goldstein?= <amir73il@gmail.com>, 
-	=?UTF-8?Q?Jonathan_Cameron?= <Jonathan.Cameron@huawei.com>, 
-	=?UTF-8?Q?Stefan_Hajnoczi?= <shajnocz@redhat.com>, 
-	=?UTF-8?Q?Joanne_Koong?= <joannelkoong@gmail.com>, 
-	=?UTF-8?Q?Josef_Bacik?= <josef@toxicpanda.com>, 
-	=?UTF-8?Q?Bagas_Sanjaya?= <bagasdotme@gmail.com>, 
-	=?UTF-8?Q?Chen_Linxuan?= <chenlinxuan@uniontech.com>, 
-	=?UTF-8?Q?James_Morse?= <james.morse@arm.com>, 
-	=?UTF-8?Q?Fuad_Tabba?= <tabba@google.com>, 
-	=?UTF-8?Q?Sean_Christopherson?= <seanjc@google.com>, 
-	=?UTF-8?Q?Shivank_Garg?= <shivankg@amd.com>, 
-	=?UTF-8?Q?Ackerley_Tng?= <ackerleytng@google.com>, 
-	=?UTF-8?Q?Gregory_Pric?= =?UTF-8?Q?e?= <gourry@gourry.net>, 
-	=?UTF-8?Q?Aravind_Ramesh?= <arramesh@micron.com>, 
-	=?UTF-8?Q?Ajay_Joshi?= <ajayjoshi@micron.com>, 
-	=?UTF-8?Q?venkataravis=40micron=2Ecom?= <venkataravis@micron.com>, 
-	=?UTF-8?Q?linux-doc=40vger=2Ekernel=2Eorg?= <linux-doc@vger.kernel.org>, 
-	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
-	=?UTF-8?Q?nvdimm=40lists=2Elinux=2Edev?= <nvdimm@lists.linux.dev>, 
-	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
-	=?UTF-8?Q?linux-fsdevel=40vger=2Ekernel=2Eorg?= <linux-fsdevel@vger.kernel.org>, 
-	=?UTF-8?Q?John_Groves?= <john@groves.net>, 
-	=?UTF-8?Q?Jonathan_Cameron?= <jonathan.cameron@huawei.com>
-Date: Tue, 31 Mar 2026 12:39:55 +0000
+	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="s4WW11ST"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XeUgKpLg4W+mDxmuSdfXwl30Akl15jbtJcjE0X5YVzJSpWOKZbjB8RVrnGUYCq7IVzKNaM4rorIT9YUnsyoywN8zA+Ho0l0+N907kETMJMZ+Ev3KnZZ7/S3fDh3lpNSYVcg/G+9p+TzJFcXoJ4+8SDQe6PX14joR45y0lBG0yVDYWYfAG+/G+Z40LxZU0Zs7V6ik2h+JnVez+c2ZjKkTB5JVM3PmpdbDZGhFrIPc0pKEVhRZCrFnmw9kdp831SeNb7mPKdWkwU/jBBARrhY20fbNkbdgF1YiizDe4AI7QZpYuIjc0d3HF82KTMdHeBIV6kNBgzubqodrTeECdWBOFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SEBwTru3iMRP7ReZRIh0Fbr6YXWGEJlgjjc0FHtM9G4=;
+ b=ivykh13iZ5wE5cZlldg6BqYYidoRFp0Q3iGGXx2TJPUDpSA8TQ+5a15swU+Kn9G6NXf1tiFwVrmd8y2f5yL1O0D6iiIwJ5z0tzZRkLgK9gz46uY7YR0+9nj8cffwBR9ltN+t74olBlFmyHw91mdr6DCQVEdCuWzc9KiwX0eD6WFfoDOJ6OrVQXfaBcyj/kgZ2qGkoPXAX8lBS1KOWm4BH6+flTJfY6oor9AsFUJNa6/NO0Bpzjds6UFfj/Ltf0OY0edbBKXU1MEmMyMFi5OlQ37EiYaLHTLpAASjfeNu9CsFMkC2gT+C3qdYxY8/kWaf/bICOElqC18Y/cqTxL7TFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
+ dkim=pass header.d=garyguo.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SEBwTru3iMRP7ReZRIh0Fbr6YXWGEJlgjjc0FHtM9G4=;
+ b=s4WW11STEHmD/SiHu0tCAsqfMqoQ2bI+9cI9fWopFZKFDD7Hec0v6SPVMVpSj47IbRP0IVM73aPi6+lwxDH8z7/N2VovdRB8AsSOjCegwHtgzmYrUAwiccWDhJ2LcRNbbTSzKz3tILlaEUmirHPhqH1E8jubGmhJD+ARq+OTc78=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=garyguo.net;
+Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
+ by LO0P265MB5336.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:22a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9723.19; Tue, 31 Mar
+ 2026 13:19:18 +0000
+Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1c3:ceba:21b4:9986]) by LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1c3:ceba:21b4:9986%4]) with mapi id 15.20.9769.014; Tue, 31 Mar 2026
+ 13:19:18 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 31 Mar 2026 14:19:17 +0100
+Message-Id: <DHGZXDPKEDAU.1DX1Z6U87O8XS@garyguo.net>
+Cc: <bhelgaas@google.com>, <lukas@wunner.de>,
+ <rust-for-linux@vger.kernel.org>, <akpm@linux-foundation.org>,
+ <linux-pci@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <alex.gaynor@gmail.com>,
+ <benno.lossin@proton.me>, <boqun.feng@gmail.com>, <a.hindborg@kernel.org>,
+ <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <tmgross@umich.edu>,
+ <ojeda@kernel.org>, <wilfred.mallawa@wdc.com>, <aliceryhl@google.com>,
+ "Alistair Francis" <alistair@alistair23.me>
+Subject: Re: [RFC v3 16/27] lib: rspdm: Support SPDM get_certificate
+From: "Gary Guo" <gary@garyguo.net>
+To: "Alistair Francis" <alistair23@gmail.com>, "Jonathan Cameron"
+ <jonathan.cameron@huawei.com>
+X-Mailer: aerc 0.21.0
+References: <20260211032935.2705841-1-alistair.francis@wdc.com>
+ <20260211032935.2705841-17-alistair.francis@wdc.com>
+ <20260303145139.00007b80@huawei.com>
+ <CAKmqyKNrP6Ap-0Jy-uaYKM=7W3Fiz8WtdG=JWV4ACv=2weS5EQ@mail.gmail.com>
+In-Reply-To: <CAKmqyKNrP6Ap-0Jy-uaYKM=7W3Fiz8WtdG=JWV4ACv=2weS5EQ@mail.gmail.com>
+X-ClientProxiedBy: LNXP123CA0019.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:d2::31) To LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:488::16)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: 
- <0100019d43e5f632-f5862a3e-361c-4b54-a9a6-96c242a8f17a-000000@email.amazonses.com>
-References: 
- <0100019d43e5f632-f5862a3e-361c-4b54-a9a6-96c242a8f17a-000000@email.amazonses.com> 
- <20260331123941.35259-1-john@jagalactic.com>
-X-Mailer: Amazon WorkMail
-Thread-Index: AQHcwQsa9c5CQiOAQiO0uvZd0I9uvwAAF75Y
-Thread-Topic: [PATCH V10 10/10] famfs_fuse: Add documentation
-X-Wm-Sent-Timestamp: 1774960794
-X-Original-Mailer: git-send-email 2.52.0
-Message-ID: <0100019d43e85e43-a275df00-3e8d-4a93-8091-73ea6394a325-000000@email.amazonses.com>
-Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
-X-SES-Outgoing: 2026.03.31-54.240.48.181
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LO0P265MB5336:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2ec677c1-6e35-4978-02a2-08de8f281d08
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|7416014|376014|1800799024|366016|22082099003|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	xpK7k9Q4IyRi6ccwlF6kPwr8S9xLQrAB7xAfGSgkLB3gQrZsCwtNFdUXTNlVYSpuR1eWGgyit0gAR7WLs7VEdnEW6qOWgiSaX4Cg38Defgxa5jFrPcM6GtQKfAVV10AX6gxxAjzKUOEAb+EI3rOlZsE++f/18O+VbCsJ3Oi9FEdtLTGYQ4RJcNg5I0yYJE9Oyzk2F2ZFHXrTgIASmVnn+yxTE7n42v3BDDVq3zPc/3P2wZSFr7oTq836TbjJdTEfExzkK29Eeh0Or8cwVTUsftinFMQLzQTEka30+unI4pkZ8OEqmWtENWbokG8OHFdypPfw+j5ydi5tyC8b8kas+eMUpIoSm5NxTjtkhEpP+11ZeB3cm54kCLYM+wKGCOlhrA8XCj0xXa+NDOqqZlJABqM/peYxHXS7IJJcPiRuAGQjfnBJ3im93CeD3nJCItj55l7PuIvVnoJCXpHZQnL9DK3qsorKrDjbxoF4t+cTjKHKT/QWbpVRwL8m0mF5h4jOY5N+SIcf2RXCedujkhkZsCHFGpGG5/tsQOroSXdhIWbPU+x3p5Mob/NGGH0t02sdapeMCjmjW4B7MtTOhqJPyM2fnx7yraLSvFwieecw5Nc+zK3DUOIFji6mHmjN+exybhcjtl/Mngh2oSMJWXTcH1WRoythtsYgsculONlfOcEWavPG/E7n7vvXzd6O5qRamZtZlEpkc0erA9nlvispv+tkzfBaqg9H54Kfs/mRLDM=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(7416014)(376014)(1800799024)(366016)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N0s0ZzhRbXdCaU5CRWVxS2FSelZxM2JxSmUwcEI5Ykp1OWtKQXdzc3V3anZ3?=
+ =?utf-8?B?bDFJcDdXZjdET2FRQ3V6VGMySVRwQ3FtdVJQVTY1SFJuMkRpNzg0VDc0Tzcy?=
+ =?utf-8?B?NENpSEFHSVpjMURxMnV1OGhqcmhiUm9qOTZaUzFLbmc2elVpN1FXSW5COFhx?=
+ =?utf-8?B?cHF2LzQ2b2R5V1VhYkxKemU0b0s2ZVR6VFV0NVh0TlhpaCtWeGI1QTRQTE1B?=
+ =?utf-8?B?aVlCckNuUG1hbVMxa3IySDNwZS9HVXF5aHBsdEplMEZQNEhSQUR6SVI3YTBk?=
+ =?utf-8?B?SjNJOHlvSzVnRC9NOUJxUnJvZ2FFVURpV0Fkc2dheU5QWEVMYUszaERmbGll?=
+ =?utf-8?B?aVZwazkxODRCTTkyVG50MnovQlBSMDYzeHlNc1NBOHpaOEJZQU5IUlV0dU5y?=
+ =?utf-8?B?ZDdpMm43eXBRUWFIMm5rbUVIYVVkREVabkRNMHRURzQ2em96aGYwemtnVjBp?=
+ =?utf-8?B?bXRUd0ViVXFDd0pMeFgrTEorelZOMHZCQ3VQbEtqWDQ2eHVXenNPb2hycmE2?=
+ =?utf-8?B?RlJMcXBtbzRHcXpKaW5KNnFCdjdCdEgrU1FReUM0OGdOa3J5VGNZRGpjRUhl?=
+ =?utf-8?B?b0JNWkVQYWs1QitFWVZZZnF4ejBXcjF1M3V0ZjU0RUU1TWpWSFFYdlViQUNZ?=
+ =?utf-8?B?T2tEeDR2NFdIVllOcG5MSktYblJqV01Ec0ZkZWZpVDYrUTVQTXlWdDRiaVdu?=
+ =?utf-8?B?OUxGN2Nab1lWeVhzUG8wd1UwclN3Yng5cDBmQkpMVTZSLzRnRCtiaE1rWFgr?=
+ =?utf-8?B?aG9qNFFzREI4SjFNSng5SXY1QW1yM0Zyc1dPZXJmTVpYZlNLUW5yMTB6alY5?=
+ =?utf-8?B?ajdneGFjUUlwT0UvZDkxSXczNXVOazVnVXY0ZldSVlljTlRYS3JFaW8ySE5t?=
+ =?utf-8?B?WWk5RGppZDRhM3ZPYVNhaGZrQWY0ajV2U09qWkNCN0p2SWlHMFdsUjNsZEwz?=
+ =?utf-8?B?TlozUkhmclFCZ2hSSHhucDFJa3pyWHdLcUUwbzI2WU1XQ056dUZtK2NyMmk5?=
+ =?utf-8?B?cFFzM0UyVHB5c0owQW5jMEZHTDRaR1ViVjNYNWVrMzJERDJzNUw4OGVwWE5h?=
+ =?utf-8?B?SE5vV1VYVUU4Z1R4ekw3YnFROERDOTVrTGh1ZWw0TEtKMnExMUJGbGJSM1pN?=
+ =?utf-8?B?TTExeUJVcDUyMlZOQ25XK2grYXBvOVNwSlNmclZKYVcwbVFRczhrU0xRd2dk?=
+ =?utf-8?B?cG9ydkFySTRzdmZhc252TkVLZEk0VFNGZjc2L3NhOHc4K3FORzBJcHhaSENy?=
+ =?utf-8?B?Qmt4SGRPdVdURi9NaTcxbWs1TUlZcFU4empsTU83R2drSUE3b1l5SThDZ1JM?=
+ =?utf-8?B?OVMwdVdqOGZBU2dKKzVUbENhODZFaXJtTEY0M2RDNVl2Y0lVU0xZSXhrc1hs?=
+ =?utf-8?B?eHc2cTlRVXl0WVBXR3dWNk1EV3d4SEpBS2NDMXp3KzdXVnJsdVNyWjVJQ2RJ?=
+ =?utf-8?B?RFlTSUcrODdFU2paQUJIemxkbVYwK2xzbGVUZW44bU1GcFdNdlcvLzFFbVk0?=
+ =?utf-8?B?dTR6VEp5cC9pbWt1QTVXOEg0S0hkRm5scUwvS0RYY245YVFUempqVThPd0RI?=
+ =?utf-8?B?ZHdzemxjMFc4TzRWMnNDNm02eEJYMHFCUDJUY2hzMXJnZ0NtVXEzejJkUGxJ?=
+ =?utf-8?B?NXFMd2VZMk9MckZzRjA4QXlpNkRINU5POGU3eGdYUFpIQnBzdFBoV2NmOWJ5?=
+ =?utf-8?B?VExPZThMY2lqOW1wNTU1SXhlMzhmcjNpYUVIT0M0Z0ZTZmR2ZkY5aTVhcEpJ?=
+ =?utf-8?B?d1hpV3o2ZUQyMFJTb1M0eVZEU010SVZUU1lZOXVyd0FGa1FkYVVRdEFJTGx1?=
+ =?utf-8?B?SS9FSUV5NnFrYk1SY2VGSUFLWS9wNnhKWW0xWTFXNGZBQXptL3F2SmhwVGlI?=
+ =?utf-8?B?M3BRRm4rR2dSbk1FT0g3dUc1UDlUZjQvWko0YksvdFRxRzBib3NXejJHaTgv?=
+ =?utf-8?B?ZytFRDBGSTB5a01nTWRJOUtrRHBJL3dLWWQ0cGoxRWhIQ1kwVUc2a2pXeWtm?=
+ =?utf-8?B?a0FGSmV3OExLY0NSVHo2QnRibjh0cWxYMlVIcVBBSU5wQUE0S1pXemFmVWdO?=
+ =?utf-8?B?ckxkT0Vsbm9FQzBGZnBYd0dESnY3VFR1TDZoQzV1WkozWWxsc1RvRGd0eXQ5?=
+ =?utf-8?B?ckxvMkUvSFNPM0g5bjE4WlZncHgyQVJRaHZHNVZEVHlmQU9tT0JVU2dabFhn?=
+ =?utf-8?B?R3ExdkUvTnorRlNHNXhBbGQ2WHl5Um9JQTdJc0ZxRDcyMm1ScElvcFdoTlVC?=
+ =?utf-8?B?REs1anNKNGI4cTlCL1EvdG0zMEIxTk4zQzdsb3dZZEdQVUNreFZqQm9QbmFj?=
+ =?utf-8?B?ejRpeEFoU2UvcFFBaW5taXY1eC82UVJ3dHRQeVZjRUZYREdxamR6Zz09?=
+X-OriginatorOrg: garyguo.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ec677c1-6e35-4978-02a2-08de8f281d08
+X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2026 13:19:18.2620
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Zgq6nQo3Yo5gcro4F0QyaOMFMRXYwnlxUd3FxmOexByladHrGII3IDxd1JlJQkUFALnJ7S0vrbrHsEsLKGUhPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P265MB5336
 
-From: John Groves <john@groves.net>=0D=0A=0D=0AAdd Documentation/filesyst=
-ems/famfs.rst and update MAINTAINERS=0D=0A=0D=0AReviewed-by: Randy Dunlap=
- <rdunlap@infradead.org>=0D=0ATested-by: Randy Dunlap <rdunlap@infradead.=
-org>=0D=0AReviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>=0D=0A=
-Signed-off-by: John Groves <john@groves.net>=0D=0A---=0D=0A Documentation=
-/filesystems/famfs.rst | 142 ++++++++++++++++++++++++++++=0D=0A Documenta=
-tion/filesystems/index.rst |   1 +=0D=0A MAINTAINERS                     =
-    |   1 +=0D=0A 3 files changed, 144 insertions(+)=0D=0A create mode 10=
-0644 Documentation/filesystems/famfs.rst=0D=0A=0D=0Adiff --git a/Document=
-ation/filesystems/famfs.rst b/Documentation/filesystems/famfs.rst=0D=0Ane=
-w file mode 100644=0D=0Aindex 000000000000..d90ce96d6fda=0D=0A--- /dev/nu=
-ll=0D=0A+++ b/Documentation/filesystems/famfs.rst=0D=0A@@ -0,0 +1,142 @@=0D=
-=0A+.. SPDX-License-Identifier: GPL-2.0=0D=0A+=0D=0A+.. _famfs_index:=0D=0A=
-+=0D=0A+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0D=0A+famfs: Th=
-e fabric-attached memory file system=0D=0A+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=0D=0A+=0D=0A+- Copyright (C) 2024-2026 Micron Technolo=
-gy, Inc.=0D=0A+=0D=0A+Introduction=0D=0A+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=0D=0A+Compute Express Link (CXL) provides a mechanism for disaggregat=
-ed or=0D=0A+fabric-attached memory (FAM). This creates opportunities for =
-data sharing;=0D=0A+clustered apps that would otherwise have to shard or =
-replicate data can=0D=0A+share one copy in disaggregated memory.=0D=0A+=0D=
-=0A+Famfs, which is not CXL-specific in any way, provides a mechanism for=
-=0D=0A+multiple hosts to concurrently access data in shared memory, by gi=
-ving it=0D=0A+a file system interface. With famfs, any app that understan=
-ds files can=0D=0A+access data sets in shared memory. Although famfs supp=
-orts read and write,=0D=0A+the real point is to support mmap, which provi=
-des direct (dax) access to=0D=0A+the memory - either writable or read-onl=
-y.=0D=0A+=0D=0A+Shared memory can pose complex coherency and synchronizat=
-ion issues, but=0D=0A+there are also simple cases. Two simple and eminent=
-ly useful patterns that=0D=0A+occur frequently in data analytics and AI a=
-re:=0D=0A+=0D=0A+* Serial Sharing - Only one host or process at a time ha=
-s access to a file=0D=0A+* Read-only Sharing - Multiple hosts or processe=
-s share read-only access=0D=0A+  to a file=0D=0A+=0D=0A+The famfs fuse fi=
-le system is part of the famfs framework; user space=0D=0A+components [1]=
- handle metadata allocation and distribution, and provide a=0D=0A+low-lev=
-el fuse server to expose files that map directly to [presumably=0D=0A+sha=
-red] memory.=0D=0A+=0D=0A+The famfs framework manages coherency of its ow=
-n metadata and structures,=0D=0A+but does not attempt to manage coherency=
- for applications.=0D=0A+=0D=0A+Famfs also provides data isolation betwee=
-n files. That is, even though=0D=0A+the host has access to an entire memo=
-ry "device" (as a devdax device), apps=0D=0A+cannot write to memory for w=
-hich the file is read-only, and mapping one=0D=0A+file provides isolation=
- from the memory of all other files. This is pretty=0D=0A+basic, but some=
- experimental shared memory usage patterns provide no such=0D=0A+isolatio=
-n.=0D=0A+=0D=0A+Principles of Operation=0D=0A+=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0D=0A+=0D=0A+Famfs is a file s=
-ystem with one or more devdax devices as a first-class=0D=0A+backing devi=
-ce(s). Metadata maintenance and query operations happen=0D=0A+entirely in=
- user space.=0D=0A+=0D=0A+The famfs low-level fuse server daemon provides=
- file maps (fmaps) and=0D=0A+devdax device info to the fuse/famfs kernel =
-component so that=0D=0A+read/write/mapping faults can be handled without =
-up-calls for all active=0D=0A+files.=0D=0A+=0D=0A+The famfs user space is=
- responsible for maintaining and distributing=0D=0A+consistent metadata. =
-This is currently handled via an append-only=0D=0A+metadata log within th=
-e memory, but this is orthogonal to the fuse/famfs=0D=0A+kernel code.=0D=0A=
-+=0D=0A+Once instantiated, "the same file" on each host points to the sam=
-e shared=0D=0A+memory, but in-memory metadata (inodes, etc.) is ephemeral=
- on each host=0D=0A+that has a famfs instance mounted. Use cases are free=
- to allow or not=0D=0A+allow mutations to data on a file-by-file basis.=0D=
-=0A+=0D=0A+When an app accesses a data object in a famfs file, there is n=
-o page cache=0D=0A+involvement. The CPU cache is loaded directly from the=
- shared memory. In=0D=0A+some use cases, this is an enormous reduction in=
- read amplification=0D=0A+compared to loading an entire page into the pag=
-e cache.=0D=0A+=0D=0A+=0D=0A+Famfs is Not a Conventional File System=0D=0A=
-+---------------------------------------=0D=0A+=0D=0A+Famfs files can be =
-accessed by conventional means, but there are=0D=0A+limitations. The kern=
-el component of fuse/famfs is not involved in the=0D=0A+allocation of bac=
-king memory for files at all; the famfs user space=0D=0A+creates files an=
-d responds as a low-level fuse server with fmaps and=0D=0A+devdax device =
-info upon request.=0D=0A+=0D=0A+Famfs differs in some important ways from=
- conventional file systems:=0D=0A+=0D=0A+* Files must be pre-allocated by=
- the famfs framework; allocation is never=0D=0A+  performed on (or after)=
- write.=0D=0A+* Any operation that changes a file's size is considered to=
- put the file=0D=0A+  in an invalid state, disabling access to the data. =
-It may be possible to=0D=0A+  revisit this in the future. (Typically the =
-famfs user space can restore=0D=0A+  files to a valid state by replaying =
-the famfs metadata log.)=0D=0A+=0D=0A+Famfs exists to apply the existing =
-file system abstractions to shared=0D=0A+memory so applications and workf=
-lows can more easily adapt to an=0D=0A+environment with disaggregated sha=
-red memory.=0D=0A+=0D=0A+Memory Error Handling=0D=0A+=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0D=0A+=0D=0A+Possible memory e=
-rrors include timeouts, poison, and unexpected=0D=0A+reconfiguration of a=
-n underlying dax device. In all of these cases, famfs=0D=0A+receives a ca=
-ll from the devdax layer via its iomap_ops->notify_failure()=0D=0A+functi=
-on. If any memory errors have been detected, access to the affected=0D=0A=
-+daxdev is disabled to avoid further errors or corruption.=0D=0A+=0D=0A+I=
-n all known cases, famfs can be unmounted cleanly. In most cases errors=0D=
-=0A+can be cleared by re-initializing the memory - at which point a new f=
-amfs=0D=0A+file system can be created.=0D=0A+=0D=0A+Key Requirements=0D=0A=
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0D=0A+=0D=0A+The primar=
-y requirements for famfs are:=0D=0A+=0D=0A+1. Must support a file system =
-abstraction backed by sharable devdax memory=0D=0A+2. Files must efficien=
-tly handle VMA faults=0D=0A+3. Must support metadata distribution in a sh=
-arable way=0D=0A+4. Must handle clients with a stale copy of metadata=0D=0A=
-+=0D=0A+The famfs kernel component takes care of 1-2 above by caching eac=
-h file's=0D=0A+mapping metadata in the kernel.=0D=0A+=0D=0A+Requirements =
-3 and 4 are handled by the user space components, and are=0D=0A+largely o=
-rthogonal to the functionality of the famfs kernel module.=0D=0A+=0D=0A+R=
-equirements 3 and 4 cannot be met by conventional fs-dax file systems=0D=0A=
-+(e.g. xfs) because they use write-back metadata; it is not valid to moun=
-t=0D=0A+such a file system on two hosts from the same in-memory image.=0D=
-=0A+=0D=0A+=0D=0A+Famfs Usage=0D=0A+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0D=0A=
-+=0D=0A+Famfs usage is documented at [1].=0D=0A+=0D=0A+=0D=0A+References=0D=
-=0A+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0D=0A+=0D=0A+- [1] Famfs user space re=
-pository and documentation=0D=0A+      https://github.com/cxl-micron-resk=
-it/famfs=0D=0Adiff --git a/Documentation/filesystems/index.rst b/Document=
-ation/filesystems/index.rst=0D=0Aindex f4873197587d..e6fb467c1680 100644=0D=
-=0A--- a/Documentation/filesystems/index.rst=0D=0A+++ b/Documentation/fil=
-esystems/index.rst=0D=0A@@ -89,6 +89,7 @@ Documentation for filesystem im=
-plementations.=0D=0A    ext3=0D=0A    ext4/index=0D=0A    f2fs=0D=0A+   f=
-amfs=0D=0A    gfs2/index=0D=0A    hfs=0D=0A    hfsplus=0D=0Adiff --git a/=
-MAINTAINERS b/MAINTAINERS=0D=0Aindex 4edb56afb947..739388d290c1 100644=0D=
-=0A--- a/MAINTAINERS=0D=0A+++ b/MAINTAINERS=0D=0A@@ -10529,6 +10529,7 @@ =
-M:=09John Groves <John@Groves.net>=0D=0A L:=09linux-cxl@vger.kernel.org=0D=
-=0A L:=09linux-fsdevel@vger.kernel.org=0D=0A S:=09Supported=0D=0A+F:=09Do=
-cumentation/filesystems/famfs.rst=0D=0A F:=09fs/fuse/famfs.c=0D=0A F:=09f=
-s/fuse/famfs_kfmap.h=0D=0A=20=0D=0A--=20=0D=0A2.53.0=0D=0A=0D=0A
+On Tue Mar 31, 2026 at 3:37 AM BST, Alistair Francis wrote:
+> On Wed, Mar 4, 2026 at 12:51=E2=80=AFAM Jonathan Cameron
+> <jonathan.cameron@huawei.com> wrote:
+>>
+>> On Wed, 11 Feb 2026 13:29:23 +1000
+>> alistair23@gmail.com wrote:
+>>
+>> > From: Alistair Francis <alistair@alistair23.me>
+>> >
+>> > Support the GET_CERTIFICATE SPDM command.
+>> >
+>> > Signed-off-by: Alistair Francis <alistair@alistair23.me>
+>>
+>> Minor things inline. The endian handling in general needs
+>> some care + possibly some tests.
+>>
+>> > diff --git a/lib/rspdm/state.rs b/lib/rspdm/state.rs
+>> > index 2606b825c494..1e5656144611 100644
+>> > --- a/lib/rspdm/state.rs
+>> > +++ b/lib/rspdm/state.rs
+>> > @@ -26,8 +26,9 @@
+>> >      SPDM_REQ, SPDM_RSP_MIN_CAPS, SPDM_SLOTS, SPDM_VER_10, SPDM_VER_11=
+, SPDM_VER_12,
+>> >  };
+>>
+>> >  impl SpdmState {
+>> >      pub(crate) fn new(
+>> >          dev: *mut bindings::device,
+>> > @@ -620,4 +629,118 @@ pub(crate) fn get_digests(&mut self) -> Result<(=
+), Error> {
+>> >
+>> >          Ok(())
+>> >      }
+>> > +
+>> > +    fn get_cert_exchange(
+>> > +        &mut self,
+>> > +        request_buf: &mut [u8],
+>> > +        response_vec: &mut KVec<u8>,
+>> > +        rsp_sz: usize,
+>> > +    ) -> Result<&mut GetCertificateRsp, Error> {
+>> > +        // SAFETY: `request` is repr(C) and packed, so we can convert=
+ it to a slice
+>> > +        let response_buf =3D unsafe { from_raw_parts_mut(response_vec=
+.as_mut_ptr(), rsp_sz) };
+>> > +
+>> > +        let rc =3D self.spdm_exchange(request_buf, response_buf)?;
+>> > +
+>> > +        if rc < (core::mem::size_of::<GetCertificateReq>() as i32) {
+>> > +            pr_err!("Truncated certificate response\n");
+>> > +            to_result(-(bindings::EIO as i32))?;
+>> > +        }
+>> > +
+>> > +        // SAFETY: `rc` is the length of data read, which will be sma=
+ller
+>> > +        // then the capacity of the vector
+>> > +        unsafe { response_vec.inc_len(rc as usize) };
+>> > +
+>> > +        let response: &mut GetCertificateRsp =3D Untrusted::new_mut(r=
+esponse_vec).validate_mut()?;
+>> > +
+>> > +        if rc
+>> > +            < (core::mem::size_of::<GetCertificateRsp>() + response.p=
+ortion_length as usize) as i32
+>>
+>> As below, I'd keep the type matching the spec and have the little endian=
+ to cpu conversion out here.
+>>
+>>
+>> > +        {
+>> > +            pr_err!("Truncated certificate response\n");
+>> > +            to_result(-(bindings::EIO as i32))?;
+>> > +        }
+>> > +
+>> > +        Ok(response)
+>> > +    }
+>> > +
+>> > +    pub(crate) fn get_certificate(&mut self, slot: u8) -> Result<(), =
+Error> {
+>> > +        let mut request =3D GetCertificateReq::default();
+>> > +        request.version =3D self.version;
+>> > +        request.param1 =3D slot;
+>> > +
+>> > +        let req_sz =3D core::mem::size_of::<GetCertificateReq>();
+>> > +        let rsp_sz =3D ((core::mem::size_of::<GetCertificateRsp>() + =
+0xffff) as u32)
+>>
+>> Similar to earlier comment, do we have U16_MAX or similar available?
+>>
+>> > +            .min(self.transport_sz) as usize;
+>> > +
+>> > +        request.offset =3D 0;
+>>
+>> That's the default, so worth setting here?
+>
+> I like being explicit :)
+>
+>>
+>> > +        request.length =3D (rsp_sz - core::mem::size_of::<GetCertific=
+ateRsp>()).to_le() as u16;
+>>
+>> Why store it in a u16 if it is le16?
+>
+> core::mem::size_of gives us a usize. So this ensures it's little
+> endian then casts it to a u16.
+
+This is broken code then.
+
+In BE architectures, `.to_le()` flips the bytes around, and you do the trun=
+cation
+*after* the byteswap, which would give you 0.
+
+You'd need ((...) as u16).to_le()
+
+Best,
+Gary
+
+>
+> We could cast it to a __le16. u16 is a standard Rust type (compared to
+> __le16 which is a internal kernel type), so I prefer u16 as it matches
+> other Rust implementations.
+>
+>>
+>> > +
+>> > +        // SAFETY: `request` is repr(C) and packed, so we can convert=
+ it to a slice
+>> > +        let request_buf =3D unsafe { from_raw_parts_mut(&mut request =
+as *mut _ as *mut u8, req_sz) };
+>> > +
+>> > +        let mut response_vec: KVec<u8> =3D KVec::with_capacity(rsp_sz=
+, GFP_KERNEL)?;
+>> > +
+>> > +        let response =3D self.get_cert_exchange(request_buf, &mut res=
+ponse_vec, rsp_sz)?;
+>> > +
+>> > +        let total_cert_len =3D
+>> > +            ((response.portion_length + response.remainder_length) & =
+0xFFFF) as usize;
+>> > +
+>> > +        let mut certs_buf: KVec<u8> =3D KVec::new();
+>> > +
+>> > +        certs_buf.extend_from_slice(
+>> > +            &response_vec[8..(8 + response.portion_length as usize)],
+>> > +            GFP_KERNEL,
+>> > +        )?;
+>> > +
+>> > +        let mut offset: usize =3D response.portion_length as usize;
+>> > +        let mut remainder_length =3D response.remainder_length as usi=
+ze;
+>> > +
+>> > +        while remainder_length > 0 {
+>> > +            request.offset =3D offset.to_le() as u16;
+>>
+>> Similar to other places, why not just make the type __le16
+>> and avoid need to cast.
+>
+> Same as above
+>
+>>
+>> > +            request.length =3D (remainder_length
+>> > +                .min(rsp_sz - core::mem::size_of::<GetCertificateRsp>=
+()))
+>> > +            .to_le() as u16;
+>>
+>> Likewise.
+>
+> and above
+>
+>>
+>> > +
+>> > +            let request_buf =3D
+>> > +                unsafe { from_raw_parts_mut(&mut request as *mut _ as=
+ *mut u8, req_sz) };
+>> > +
+>> > +            let response =3D self.get_cert_exchange(request_buf, &mut=
+ response_vec, rsp_sz)?;
+>> > +
+>> > +            if response.portion_length =3D=3D 0
+>> > +                || (response.param1 & 0xF) !=3D slot
+>> > +                || offset as u16 + response.portion_length + response=
+.remainder_length
+>> > +                    !=3D total_cert_len as u16
+>> > +            {
+>> > +                pr_err!("Malformed certificate response\n");
+>> > +                to_result(-(bindings::EPROTO as i32))?;
+>> > +            }
+>> > +
+>> > +            certs_buf.extend_from_slice(
+>> > +                &response_vec[8..(8 + response.portion_length as usiz=
+e)],
+>> > +                GFP_KERNEL,
+>> > +            )?;
+>> > +            offset +=3D response.portion_length as usize;
+>> > +            remainder_length =3D response.remainder_length as usize;
+>> > +        }
+>> > +
+>> > +        let header_length =3D core::mem::size_of::<SpdmCertChain>() +=
+ self.hash_len;
+>> > +
+>> > +        let ptr =3D certs_buf.as_mut_ptr();
+>> > +        // SAFETY: `SpdmCertChain` is repr(C) and packed, so we can c=
+onvert it from a slice
+>> > +        let ptr =3D ptr.cast::<SpdmCertChain>();
+>> > +        // SAFETY: `ptr` came from a reference and the cast above is =
+valid.
+>> > +        let certs: &mut SpdmCertChain =3D unsafe { &mut *ptr };
+>> > +
+>> > +        if total_cert_len < header_length
+>> > +            || total_cert_len !=3D usize::from_le(certs.length as usi=
+ze)
+>>
+>> That's a confusing bit of casting as you are interpretting an __le16 as =
+a usize
+>> before doing the endian conversion?  Seems unlikely to get what you want
+>> on a big endian machine.
+>
+> Yeah, I think this is wrong
+>
+>>
+>> > +            || total_cert_len !=3D certs_buf.len()
+>> > +        {
+>> > +            pr_err!("Malformed certificate chain in slot {slot}\n");
+>> > +            to_result(-(bindings::EPROTO as i32))?;
+>> > +        }
+>> > +
+>> > +        self.certs[slot as usize].clear();
+>> > +        self.certs[slot as usize].extend_from_slice(&certs_buf, GFP_K=
+ERNEL)?;
+>> > +
+>> > +        Ok(())
+>> > +    }
+>> >  }
+>> > diff --git a/lib/rspdm/validator.rs b/lib/rspdm/validator.rs
+>> > index 2150a23997db..a8bc3378676f 100644
+>> > --- a/lib/rspdm/validator.rs
+>> > +++ b/lib/rspdm/validator.rs
+>> > @@ -17,8 +17,9 @@
+>> >  };
+>>
+>> >  #[repr(C, packed)]
+>> > @@ -364,3 +365,62 @@ fn validate(unvalidated: &mut Unvalidated<KVec<u8=
+>>) -> Result<Self, Self::Err>
+>> >          Ok(rsp)
+>> >      }
+>> >  }
+>>
+>> > +#[repr(C, packed)]
+>> > +pub(crate) struct GetCertificateRsp {
+>> > +    pub(crate) version: u8,
+>> > +    pub(crate) code: u8,
+>> > +    pub(crate) param1: u8,
+>> > +    pub(crate) param2: u8,
+>> > +
+>> > +    pub(crate) portion_length: u16,
+>> > +    pub(crate) remainder_length: u16,
+>> > +
+>> > +    pub(crate) cert_chain: __IncompleteArrayField<u8>,
+>> > +}
+>> > +
+>> > +impl Validate<&mut Unvalidated<KVec<u8>>> for &mut GetCertificateRsp =
+{
+>> > +    type Err =3D Error;
+>> > +
+>> > +    fn validate(unvalidated: &mut Unvalidated<KVec<u8>>) -> Result<Se=
+lf, Self::Err> {
+>> > +        let raw =3D unvalidated.raw_mut();
+>> > +        if raw.len() < mem::size_of::<GetCertificateRsp>() {
+>> > +            return Err(EINVAL);
+>> > +        }
+>> > +
+>> > +        let ptr =3D raw.as_mut_ptr();
+>> > +        // CAST: `GetCertificateRsp` only contains integers and has `=
+repr(C)`.
+>> > +        let ptr =3D ptr.cast::<GetCertificateRsp>();
+>> > +        // SAFETY: `ptr` came from a reference and the cast above is =
+valid.
+>> > +        let rsp: &mut GetCertificateRsp =3D unsafe { &mut *ptr };
+>> > +
+>> > +        rsp.portion_length =3D rsp.portion_length.to_le();
+>> > +        rsp.remainder_length =3D rsp.remainder_length.to_le();
+>>
+>> Why to_le()?  I can understand from_le() but then I'm a bit dubious abou=
+t the
+>> types. My gut feeling is that the validate code should leave these in li=
+ttle
+>> endian and we should convert them only at time of use.
+>
+> Fixed
+>
+> Alistair
+>
+>>
+>> > +
+>> > +        Ok(rsp)
+>> > +    }
+>> > +}
+>>
+
