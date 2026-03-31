@@ -1,198 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10824279798;
-	Tue, 31 Mar 2026 03:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774928769; cv=fail; b=tRa/770DYfSkYATyxG7nyEWIvdRv4wM5gyuulKRFzbkero2k/D1JzFwc5/XJ0tPUXd3pCavqHrE3UEFv2/wyU0fCErWSFTYCdAcfqurHd3ZUHI37wY0Po+IjW7qvYHMlpYtpY79NC3KsmTBVoDzwuL9OcyreV+t03pblgFd/fio=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774928769; c=relaxed/simple;
-	bh=Uh1I0lKIhF8Tx6KrfBlqX3Fq1PHrtZsn1AD1qfb4guM=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=hTqFEsrsHXDHPhzK3/J1hFS98bROGw2XmspgOJAg+TkxZZtiFtQAPVTxcLc1bd9ne0VZEO/SWeW7ZX98yvoR0kpJBX7PbBD9u3X/vT79eOnY/ZptlMnzAOVV30G097gZiX4KlFCfX+ri+GoFhWRtZXzpgwYvAGgIhXfKeXkgJiI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FJq45ose; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC792C17A0
+	for <linux-cxl@vger.kernel.org>; Tue, 31 Mar 2026 04:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774930476; cv=none; b=du4BPsHUC5V8UueL1TEiBZM3o0eSXzw/yIFvSLHLM3BminarZ7whv3vQUuU3ENZTJB976MeqkJ1s/5U0mA5vMBMJ7w+p9H/xcu8Ovy+7UsLqLYZtGYQnRgYLAnvAOx1PmgtOqjmI4ATIpwISQNqvrxrkzim0xgUlUCP4tQWhimI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774930476; c=relaxed/simple;
+	bh=mpRpgWJup5x2ZOxjfOaQCawA4BP1QokeWgH703DTax4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OAfCG8DCChp5PhVpnhymiJeaIi5X2vEH4VvY+zzoWGENW3kZuNTsD4pAOm06QR+ZO+YnvPhYZs0/yiFe+MADorUrz/Ch/Ypx+CNL99d8OkVbVC41KSm+dYy12nkPiYMHQ5F/o+Atgjr+vUncJOg73ItQtlywqMGVBvKJALR8Hyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FcX3e4P7; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FJq45ose"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774928768; x=1806464768;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=Uh1I0lKIhF8Tx6KrfBlqX3Fq1PHrtZsn1AD1qfb4guM=;
-  b=FJq45osep8u20yG3K4A1Aecpu1M048LMrYg1JhTSHMDiiM0yVGBcTxZn
-   +/5a8NjrlNqlRJbnl/JVbp+S7rlf7PtTvIgqhAglKYN2yTXzAF9rDvvl1
-   fa24QQZwEsrS+xziZMb9Wq3rqD45Wl+HzHBwxFlgDefzmXHeKwOKZRMIr
-   FxJ9tLesOUoIoU03PXnfg36kN3O05tW0PzigY38l6VkdNec8ImVYyxHag
-   6rlkJkteLT5oHuycHXUQBlXlPeWuoN0gH+WuPeDnCW0+LG2ZI+u9YDJMX
-   MC02ucdjmvgYWMFKBAqX7VbYmy3VQljXCUmkNDsTxABuNay9f10XzBARR
-   g==;
-X-CSE-ConnectionGUID: ZU5Euq02R+WFnOvAabJTDw==
-X-CSE-MsgGUID: iqLf17eQQaKY9dss3AGrdw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11744"; a="75816310"
-X-IronPort-AV: E=Sophos;i="6.23,151,1770624000"; 
-   d="scan'208";a="75816310"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 20:46:07 -0700
-X-CSE-ConnectionGUID: KO/YPwcUQvu7+IYdy/RXKA==
-X-CSE-MsgGUID: 3VGIBVJpRaqT3UtZbH4t1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,151,1770624000"; 
-   d="scan'208";a="225407593"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 20:46:07 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Mon, 30 Mar 2026 20:46:06 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Mon, 30 Mar 2026 20:46:06 -0700
-Received: from PH8PR06CU001.outbound.protection.outlook.com (40.107.209.27) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Mon, 30 Mar 2026 20:46:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=G3CsFFHHMsFURj/RMJ5Hu1kwmF0fVgEw3kqf+wHXGINuuFBLQOsOp4yAiJ1YjlggMEE5r4ejmsxjqon37pA6E/tKxitiKFHXExDQaZnppxLl2xdfHkrQbwAlUuTeGrdW28I8fAnDi3MUvOAA9RkUU6rimO+YyLAlJ8IczKxOJaI2laK9cfk7sDZ/vcMBAZ9JoYx9ntNqi6POL1+4oAoYS+0ZQ/e/dfxcDoxtEsxvSnVjUQ1XmDim1zZwSJgBoaDhB/fcMKbghoQn5HahuT1j6hhujOE6qPOUvBhTdCpjLa9QXRD11R9EXHQ4b92SS8ojP5SRQbD2Ik2RUFGBGewvEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PtbwZN+iOXFzpvE6zRn+buSM8mfqDVx8pOwu4kz2V7M=;
- b=TRKMVsbvaQXr/12qRyztikb51mt4BXUPD7PNysA4OvWdGSt5tKtHNDS4E8sEvNJ8ajTOnXGWTWj9pZVheY34Llt4DLTY/36QrVOx4hTusFN7n7meTGz4L2O9UVoJKbC32qUB1nsSLo6p4+OLRr/kUoc94cW8LL+F7w9ye9QhH1VDHo48mzAn+/rKZCvzJCYUAsSkuDtMiqZOnlXTaWslIYrWjiYy75VFKN5EGRbzJTEHYWd6zMbDH/24B3Y46efZpRIzFuDsjdcfeHU+SBwtLgkI9OfrNMRxXQLFx247l59G/rZPh2Kjkd8NcxiMEsq0tGBN2AvSR6HNWnOtdsp8Xw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CO1PR11MB4883.namprd11.prod.outlook.com (2603:10b6:303:9b::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.15; Tue, 31 Mar
- 2026 03:46:04 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff%3]) with mapi id 15.20.9769.014; Tue, 31 Mar 2026
- 03:46:04 +0000
-From: Dan Williams <dan.j.williams@intel.com>
-Date: Mon, 30 Mar 2026 20:46:01 -0700
-To: <alejandro.lucero-palau@amd.com>, <linux-cxl@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <dave.jiang@intel.com>, <dan.j.williams@intel.com>,
-	<edward.cree@amd.com>, <davem@davemloft.net>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <edumazet@google.com>
-CC: Alejandro Lucero <alucerop@amd.com>, Ben Cheatham
-	<benjamin.cheatham@amd.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Alison Schofield <alison.schofield@intel.com>
-Message-ID: <69cb4379e2b73_1b0cc610085@dwillia2-mobl4.notmuch>
-In-Reply-To: <20260330143827.1278677-5-alejandro.lucero-palau@amd.com>
-References: <20260330143827.1278677-1-alejandro.lucero-palau@amd.com>
- <20260330143827.1278677-5-alejandro.lucero-palau@amd.com>
-Subject: Re: [PATCH v25 04/11] cxl: Prepare memdev creation for type2
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR03CA0255.namprd03.prod.outlook.com
- (2603:10b6:303:b4::20) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FcX3e4P7"
+Date: Tue, 31 Mar 2026 12:14:14 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1774930462;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OuvZGNCpc5ageytlY+oW5uy/i3LviqcbXfIayS0ZEo4=;
+	b=FcX3e4P7G90Em1TGT4P7k+9itASOOUWQnxeESkUIj+27i1UH3ormvlgY7HCvuoiRRMBA6l
+	lXYcZ3Gf/YkfxFK32SiHdYGDgERj3aVEiKC/C6XwGceTs5kHHDse2G3Z0KgbFVkCXrbgLZ
+	DEyKHQH0PKcqCB/B5OkMnpJiJvCgveI=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Hao Li <hao.li@linux.dev>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: osalvador@suse.de, akpm@linux-foundation.org, vbabka@suse.cz, 
+	harry.yoo@oracle.com, joshua.hahnjy@gmail.com, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2] mm/memory_hotplug: maintain N_NORMAL_MEMORY during
+ hotplug
+Message-ID: <lj2h4mig2za32bi5gnxmeh7gjshd2gwa45zl3xhot4cjsvtwsv@5jjtp2el3yn5>
+References: <20260330035941.518186-1-hao.li@linux.dev>
+ <5de08585-fd2b-4395-b421-99c7b887aa8f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CO1PR11MB4883:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6500585c-b98c-46b9-63a4-08de8ed80883
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|921020|18002099003|22082099003|56012099003;
-X-Microsoft-Antispam-Message-Info: gHtCI9KIP8DFfUbFaV22oVjronLTvkaraEwk0xj83d6D4YtE5qNUDKYQFTcqiagxSxZh3Eaup3WQNb+BQZZCOhkKrHyyUnQ0bBH22HocXwbwkAsb9qBLoOB0JwME2jMUcUT45Mt9Wur7IsFLJ7BDMByPgGGLBWOvAq0tlvdWyRbsKs8f7DkpZW958FiAyArutBmiERX61YEkouCK5+rTvHasArICr9Sg3B+EplaZtNinJ2RKE2xj3Mf5SniDLgvXzT9UanKG9GLNpHuPePt/1MlUU8TNAExngPgZRfrC5wfbOf3olfR2na4kZMIBOIXr51qGoArwE/C3QJdhhltXtznD1KesxMmpcLsv+UuaDY5++72vHEomzw8jcMYKS7IK1WIgZSAh+N2glNz9D3porq84GaXEd/cdnTmr2wotxKuGp3HcPiIS0Tnpl+eHab55G4JWqGgpcgwhbMWP31PKYh9kvoREgLVyRWY0VN5rsOLdNgOtZ3/d8FjhaWTzOS3vloTnhupck22vegeM/2LiDF6G/Gh0E1w50P+Yh+ZDs8iQqO0PpiD8A+/4iY4KEDhy0fL5KStHQMH8stq/6BoD3GZ4M9+UIBo6ZdCp/UqPYL0oHsH4MzeAU/aU+iZSYrVqddQ3bY0udH3l1rQ8a0oHomGbeLKBSTdHDXcW9kyRmBdq9SlufUKqkYNznqOA/z4HSHV78jx/J0qs0Ue1XDcVOiUD817AnAk0Dz4P7WMkK44FLq7NGA5XXbyFWJ73AchWASsYxaX/ztgT2k17XH2CUA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(921020)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bStLcTBxemZLb202cGtEdzBaU1hhT0hUdWY0SlAvbkEzQm4zS2RmU24xU3Rm?=
- =?utf-8?B?ZC9ENndNMXpQK1lhZkRUdFBleWUyMVlLT0Vrc0NtWmtzV3FXTHV2UU92eHJZ?=
- =?utf-8?B?c2NobERmZ0t5V2ZwdjFud3RVZXk5ZVJpS2p3N2JWWkRkNVBqRllmYVNRbC9H?=
- =?utf-8?B?QkdBVTRnM01KRkNMQWx5a1JNR1pjTi9nTGl1RzhJKzNRc0V1TStFUWhPK2JM?=
- =?utf-8?B?ejMybU5MTmFRQ2ZOZVdwdmdJVTdwOVJHYkFIeE1tTjVVd1k2RG9XcUd4ZWJP?=
- =?utf-8?B?dmJEekVJVFB5VTJKM2thM1BGZ1dYT0lYc2dUUkZMcXdLSWl5Tm82UDRUakpN?=
- =?utf-8?B?Q1p2K2QyeGZRbHdKMHZPdFc4UEYwVmFMeVloSnpZaHhFcHJKY09xeHp3d1I0?=
- =?utf-8?B?cWt6NmVRdjg2cTRCeWxMYWtFVU9oellQVGdVVkU5T3V5dUNFMnJVMFZrajNQ?=
- =?utf-8?B?UGZ5TmRiMU1henVOdCtGY2plL0pGWnFPSXp4YjRiVklSZ3dKMlNKWE4rZnBl?=
- =?utf-8?B?Q0Q0alFRK3gwWTFjNXoyNytiTUhhR3V4NG9saTgzRHZWa0NndEdRdXNwZXVi?=
- =?utf-8?B?blU2OFFUNjJFaldGRy9KdXdvb2RSK2xDcEd1MFRWdGQ4K0dKRDcvbjdodmZI?=
- =?utf-8?B?OFhTN0pDbEptU2d6SXN2MzVESUZTeGxoUkpaTUNmQk5KNDJmZUZOQ0JmWlBj?=
- =?utf-8?B?OTgvdW5jWVN0cXYrQyt0T3dxNVJmQWgxcHVHTFpvWnlYSG14UnE3YmxVZnRu?=
- =?utf-8?B?U3Q1UlJ3VWw1MlFwdDRXNmRrOXBieS9rQmxoeGVNSnRyM1dHMGlIWFo0bGw4?=
- =?utf-8?B?cVB6NStiV0VUeVhGb2pNblZuUzVUYlQ5clBoTmdmQ3NHbDZoVHNYZWNhNWlw?=
- =?utf-8?B?VlFHazVQZEZyWnVwWlQ2d1lZMWdQRzFDWXZuM1lVL21LTm5lTWJWc05RNHhT?=
- =?utf-8?B?Rm56QXpPUWpDOVVQQW0xRGhpVWFGQTg2Vy85Qmh4QXRyNWtOc2tqUHJ0dU5J?=
- =?utf-8?B?TWlJYkJ2eXVQUyt2YnorcjlpNm9lc3FRdDNtM0RKeUE4eHQvUnVEd3Jydm9t?=
- =?utf-8?B?R2grTmE1TVgyZFpMSkRTc0VFQUx4ek4wZTFyRitnbTBieUdxOWFNNnFNbDNG?=
- =?utf-8?B?Tjc5V3ZZN25HMmZvMU1mRGFKc1hkWTZJMEZESEZSK2h6NlpzN3JDV0h4TTVX?=
- =?utf-8?B?RFc1SnZVZnh5VCtEUm8zMzNTcnNXNkFWVTNJQUM5VmZ5b2xyUnltNG9Kd2FX?=
- =?utf-8?B?NC9UV25BZlJpb3R6VEE5Qll3WmMyL254KzdiVjNFbTJobXZ1NUFIZFJXNENI?=
- =?utf-8?B?NGxRYlJyYWkvVE5xUmRCdGQ4MXJrNnVVc3hWdXJjc1FZdUNwbWZVdkZxd0ZJ?=
- =?utf-8?B?d2VoRG5YWG9GaFZzWjNYdmF5bzNiVVdCaThsZjdtcFBsck84akV5bFZqOWtl?=
- =?utf-8?B?bUVmMFpMOVRhSEEwNDcyVDYzczVwN0o3Qkh4ekh1RFFOVkU0cXl0UG1IaE1n?=
- =?utf-8?B?NVRZU1U5REdQVERWS2dOUzNHY0pmYWVXdkl3QWxtL2JMcHlHcHFTMTc0ZXlO?=
- =?utf-8?B?cXVUbFVFYldvc003TStsSlJwUTdUSUdRWUlaMStvMGhVZmpyQU9Oa3daR0pn?=
- =?utf-8?B?c3lJZ0lMSlRJdmEwWVBtZG9aNWlmNE52QVZyWnNZdmNVK09hckVYZy9sVUxM?=
- =?utf-8?B?M0FHdGd0M0hITjB4eEk1VGlPQUpGM0hld1NYNkFRbDBSdCthMG1LZ1ROM2Q0?=
- =?utf-8?B?TWVZeCtXRmxhR3JXT3g4b0M5U0JnTFk5L3VvR01zN1BVNHlJYitIQnpiVmtJ?=
- =?utf-8?B?T0tpMEFlQ3NqQjB3S2lmOVhoM091T0F6eDd2RkpRY09meWxIaGJSU3QrZmdD?=
- =?utf-8?B?alQ4bHI5WUZoQjN6QlJINEJmVnlIM05CdWxRYWx0aEFUMi9jNVNyaWhnbFlF?=
- =?utf-8?B?TEE0ckR5NUZwNUVGaFFWMEZsc08zK2pndTBqQndUa3Y2Q1B1dU9vT2hBYU5Q?=
- =?utf-8?B?UVV3dWFQZnBPaFBUTU5VaTI0WGE4NWMyaWZZWVVQcVJ0S1lNcGlSTEsxVFFO?=
- =?utf-8?B?K2loYytFTDB1RGIwanZ5dnROaDA1Q0ZYSVlOcnI0STFKU2hLNlZmU3Z5Zk5U?=
- =?utf-8?B?MFdpWXhrL3ZqTjNNYjltbmtybytlTGFIbWVkNC9RSlQ0ZnIwRnpCY2I5YTJv?=
- =?utf-8?B?MFVBTXM0NTV1MUhyUkZGSzhVZFQ1aHJJUFpjN3RxVXdxVFlmOTBNcksrTHdv?=
- =?utf-8?B?dzV2ZzU3eDM1WGFrMzZJYnJkL1RaWWpUSzdvSi92a1BwQi94YTVwc0t6Tmxn?=
- =?utf-8?B?NXFzL1cxTmlRdXFWUUFDaEhvM2MwYSt4anZkYVUrK0hJTkJ0cDY1UHBPeTZI?=
- =?utf-8?Q?fCt3iuM17jUzIxms=3D?=
-X-Exchange-RoutingPolicyChecked: gIbdmji5wMqzBPlsQhy4uKjRno66QA50Evb/ujQGsEIXBDjd7Y3BXKK+sx37iQ++8lvtMhWl/NCNMDpmyxFjX1VxgvuxrcwAKtgAOtTd5L4RV5NwO92onlbAUNvpXsfzVMItts7M2OLAPoOHdekgzegwb8rbZuN/Ec1SWU3XbXuMtVnIv28GnVOPgQPA80tPfXZbqQdBSQ0TUFLu8ISTBw/7hcjOzyZ0zUTRmKKPWUZDOUovyfiLjnC/yMTE6nb3Vp5W+ybBjLvMOaChXnth0px/678jhi0tA0CCENBwuSEjgP4uB0PF1+TabEGEY2PgOjV4/qNFruUD6QRutAxvHQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6500585c-b98c-46b9-63a4-08de8ed80883
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2026 03:46:04.1508
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xJkSnP6X6pDg4+Kn4g+N62zxJu4tjwyedXmMmzgeVAPcHrPIaMaAlyNVLLQ/NbXfePVQJxo2gzETuz/JW2/KUHmDp5MXOeD5xd+88NhEDsg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4883
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5de08585-fd2b-4395-b421-99c7b887aa8f@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-alejandro.lucero-palau@ wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
+On Mon, Mar 30, 2026 at 04:20:23PM +0200, David Hildenbrand (Arm) wrote:
+> On 3/30/26 05:57, Hao Li wrote:
+> > N_NORMAL_MEMORY is initialized from zone population at boot, but memory
+> > hotplug currently only updates N_MEMORY. As a result, a node that gains
+> > normal memory via hotplug can remain invisible to users iterating over
+> > N_NORMAL_MEMORY, while a node that loses its last normal memory can stay
+> > incorrectly marked as such.
+> > 
+> > Restore N_NORMAL_MEMORY maintenance directly in online_pages() and
+> > offline_pages(). Set the bit when a node that currently lacks normal
+> > memory onlines pages into a zone <= ZONE_NORMAL, and clear it when
+> > offlining removes the last present pages from zones <= ZONE_NORMAL.
+> > 
+> > This restores the intended semantics without bringing back the old
+> > status_change_nid_normal notifier plumbing which was removed in
+> > 8d2882a8edb8.
+> > 
+> > Current users that benefit include list_lru, zswap, nfsd filecache,
+> > hugetlb_cgroup, and has_normal_memory sysfs reporting.
+> > 
+> > Fixes: 8d2882a8edb8 ("mm,memory_hotplug: remove status_change_nid_normal and update documentation")
 > 
-> Current cxl core is relying on a CXL_DEVTYPE_CLASSMEM type device when
-> creating a memdev leading to problems when obtaining cxl_memdev_state
-> references from a CXL_DEVTYPE_DEVMEM type.
+> Agreed on CCing stable.
 > 
-> Modify check for obtaining cxl_memdev_state adding CXL_DEVTYPE_DEVMEM
-> support.
+> > Signed-off-by: Hao Li <hao.li@linux.dev>
+> > ---
+> > Changes: simplify the code. (Thanks Joshua and David)
+> > ---
+> >  mm/memory_hotplug.c | 20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> > 
+> > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> > index bc805029da51..05a47953ef21 100644
+> > --- a/mm/memory_hotplug.c
+> > +++ b/mm/memory_hotplug.c
+> > @@ -1209,6 +1209,13 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
+> >  
+> >  	if (node_arg.nid >= 0)
+> >  		node_set_state(nid, N_MEMORY);
+> > +	/*
+> > +	 * Check whether we are adding normal memory to the node for the first
+> > +	 * time.
+> > +	 */
+> > +	if (!node_state(nid, N_NORMAL_MEMORY) && zone_idx(zone) <= ZONE_NORMAL)
+> > +		node_set_state(nid, N_NORMAL_MEMORY);
+> > +
+> >  	if (need_zonelists_rebuild)
+> >  		build_all_zonelists(NULL);
+> >  
+> > @@ -1908,6 +1915,8 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
+> >  	unsigned long flags;
+> >  	char *reason;
+> >  	int ret;
+> > +	unsigned long normal_pages = 0;
+> > +	enum zone_type zt;
+> >  
+> >  	/*
+> >  	 * {on,off}lining is constrained to full memory sections (or more
+> > @@ -2055,6 +2064,17 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
+> >  	/* reinitialise watermarks and update pcp limits */
+> >  	init_per_zone_wmark_min();
+> >  
+> > +	/*
+> > +	 * Check whether this operation removes the last normal memory from
+> > +	 * the node. We do this before clearing N_MEMORY to avoid the possible
+> > +	 * transient "!N_MEMORY && N_NORMAL_MEMORY" state.
+> > +	 */
+> > +	if (zone_idx(zone) <= ZONE_NORMAL) {
+> > +		for (zt = 0; zt <= ZONE_NORMAL; zt++)
+> > +			normal_pages += pgdat->node_zones[zt].present_pages;
+> > +		if (!normal_pages)
+> > +			node_clear_state(node, N_NORMAL_MEMORY);
+> > +	}
 > 
-> Make devm_cxl_add_memdev accessible from an accel driver.
+> Was wondering whether we could just do an early exit, like:
 > 
-[..]
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index fcffe24dcb42..ff858318091f 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -65,6 +65,26 @@ static int cxl_debugfs_poison_clear(void *data, u64 dpa)
->  DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
->  			 cxl_debugfs_poison_clear, "%llx\n");
->  
-> +static void cxl_memdev_poison_enable(struct cxl_memdev_state *mds,
-> +				     struct cxl_memdev *cxlmd,
-> +				     struct dentry *dentry)
-> +{
-> +	/*
-> +	 * Avoid poison debugfs for DEVMEM aka accelerators as they rely on
-> +	 * cxl_memdev_state.
-> +	 */
+> 
+> for (zt = 0; zt <= ZONE_NORMAL; zt++) {
+> 	if (pgdat->node_zones[zt].present_pages)
+> 		break;
+> }
+> if (zt > ZONE_NORMAL)
+> 	node_clear_state(node, N_NORMAL_MEMORY);
+> 
+> But ends up being harder to digest (incl. all variants I tried :) ), so
 
-There is nothing stopping an accelerator from having a CXL mailbox, so
-should probably circle back to either make this comment more generic, or
-just delete it.
+Thanks for exploring this.
+Yeah, this looks like one of those cases where we have to make a bit of a
+tradeoff for readability :)
+
+> 
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+
+Thanks for the Ack!
+
+-- 
+Thanks,
+Hao
