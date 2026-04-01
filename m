@@ -1,28 +1,28 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011031.outbound.protection.outlook.com [52.101.52.31])
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012071.outbound.protection.outlook.com [52.101.43.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F20477991;
-	Wed,  1 Apr 2026 14:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB63747CC98;
+	Wed,  1 Apr 2026 14:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.71
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775054514; cv=fail; b=RPPolVUoGL/m++iO2F4T4KRGwoFRoYCSkubwozR0WCDDqtYauiC1XqJyMnyPWOkLFlrxrTDeINeO483Cz9o86trIoMtcO3iPHxxGv0n3UbOAKZL8hXxs6y1aiV9AB4he37mRSMiorCNSPz4aS7JZTmPUJuMPWYVBItKqwo8RBao=
+	t=1775054516; cv=fail; b=HRM/Z6YYlnI8tqQ60PcbsTLTJ5HQ1Kl79DBerT4+0JCkExDdds//q+VbVg0XwWjZrRPmgLE5G5VuZ9S2ViSbECT6yXbrIYhGpKJwLxP3zBcNq4/kx+4jh1WhZn0lSNGz7tPzOGmVj4qoY2TkuzxTqGty0+3Xn7PkkjjeR6gHXtI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775054514; c=relaxed/simple;
-	bh=aVU8CdYnp9eKjsQtzfH1L7trCI9kB9PR7DMX1n4OcQ4=;
+	s=arc-20240116; t=1775054516; c=relaxed/simple;
+	bh=zyJuRmRD4IduuavNFAyt/nTJ4huI2Rw/qpToxdnLrwE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QUkkVFiJ7mtlt9V8p5TD3zs5hJF0sJmRn+fBMzmBCHv+dmoDZdM9Xn14WLK+pzenB/XKgLcJVZMrAy0rB3fSboQ8R8Yj3Y+m/ypWiGy+rnkiG+3HIxcLb/hZckWIviZUvtR7fAFvVE26rhel9eDnBHJaSIfGDjfF4xHW6h3ogII=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GNLMdL06; arc=fail smtp.client-ip=52.101.52.31
+	 MIME-Version:Content-Type; b=VWncq7Il60iloAL7R1/Qdm7SIxcnPZtC0/yeryhSmZ5UYF8dlZxFAJjDER13B1tb20InKFuIvN2PZLcQR4o2zlcZj2c6OoRZ9iP5CveAbh0iOoSzHhuOoE0GB+35mgmq7lO+c875TEjKnL9dyFjeOrXfo+byDYJNDapacWNFdcw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aY3R5EB6; arc=fail smtp.client-ip=52.101.43.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GNLMdL06"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aY3R5EB6"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FIY6ZAJy5BrmQVnH4CWSpUmZ/bygNhk9R69DMgEE7RIDChdYmhYFeZd59UD5Qngj30KuHzkj4HKQfYRgVQN9uES3Bh9GNA8nhQw7wfJUQQ9aVJs17VZ94WGleNM4K8bcOHpqLBe86As66aV3UIXV3fgeT4OCNZjJ/NaCgDFOw1z8INGjOF50AxsNehFip6mO//7MC/IWlV/JbQ5l+liARJo6BFA8mCZxL0NjZlDvjCa2N294vc3FjpApVASOZWTi6nOBheDXdsGlhEToJPA6qnPbaLCKXjZ0GFh7oQAD3wuHjTbn+91qQ9nfJuaL7R4Qnt7G8qC18XVtLAhnxaZNmw==
+ b=qxMy3cNbKYfBPoNC38KWjTnHp7wD69chGZ9kXZQ2o3SU2xOGVmlOaHmbL2xoLJB/O9ZmCrJySQ2RcT4/66chQa37tX+lxuhqt2kgbMe4vfq2LLwwnB2L2MDaYgKwSqCZkZpLrjRcE6iszntegZyqgXhGPgR4lgj06zsEOJnCIdkm210uiIC0etNchnK6osztv05Immy3OlImT89EpltQkmYrvzOZCYQvxJ8tvWwqNfYzEgpBjr1GnUZlru7UUfLJNUCqAG0IS4cPUE3Xr5njRa780+mrQd0lONz32fSxC7aNJy+iUlDBGRp+TZLRXjVMotG7tDkSDlNVCbfwJNwnjQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NQhvKt+IvBINGq5ByeFR7CgVwADZ59Ngp7qTEaCK5EA=;
- b=FwNdewb9Y0T+877ozx5JE6JX3U9VlFtGroDacQsgJG6+kYN6Uo7hy9DIQY/28tzHA+7iu7nC+e7PXlXl9afoOqCIffDG2+raFWCz9HPEz9l+B1AQM/85c90ncl1uCDs7sYR4snngv3iUgsPZm5VmNddErn6NyV/qwu7jnbltQJ5kf0zEfqA2sEs4xvMwp3Fa9DSeoSNmOiz9hl6NM2q7UpV6yFtKyajk+kLA3GOG0xYRWXKyS/vL6HwF17/pAxsGjLG3sfShEN+O3Y//wS3KB2Txmx2ryNZ5ApHpboStJJRM6VjPA5x6AkWdy4gDJip3dnrB7W+/ews7nXqKK/kAPg==
+ bh=0CywdbhIFUrMQw5CcE10L5D6QWxLR2qziki0gj47Sco=;
+ b=lazWWvSgy06JvCXzgR4sdnneuEiUmfuuv6eLf9hvYv2wmhaWcvmr3duYAGBf6l4Wh94VA8+KlR8sBBysRgC5SjoWRzdH8eUFy91ti8NO2Dd+Qzq/E4oLAsmwy7DM6TaGC4SGzojjeIurXt7S3KLH6w5bDlCKFST9I+LVMAY0DAVR07jrbTEsdWZP3IwGl1UQHkbjbLmpBPY4MjVW/ZyKgws7Pw09tEpKDILf6h3lu9o57gzcjJPCmTJ+n3FCbypi2eqdks3VrJzAHrltv8D3KppzEgr+i9xNlHxUfzYktE7wwS1p0BydkTE6ozl/lMr8joj5pQJDxtoXFRgP7OC7yw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
@@ -30,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NQhvKt+IvBINGq5ByeFR7CgVwADZ59Ngp7qTEaCK5EA=;
- b=GNLMdL06pIBMmgCXP11+TZmw3QTSafhtjcLM0StR1S6NDMc7lTY8XTQadeIWHmzekDnXGbo/0ORlqyA0vfB2w4HtlUQw6PsifjoEKOf40DU+XPSzPnDv3ukvgDrNk1o3Fly1VFZeY7+mlimwmNu1G6Y9vC+HdE9AxwIxUjBGq2Bk7qfws5aK9sVpC+H7A8me53oz1NdN5zo64PD95hFOgHssb3+MZvLMJZru+/0EoYYFhXYgg3y+uWnWVq+Wb7Rzv8qCYuMlwdbv1jGaVxmstBYTPGwGGBQztOWmFQh8TYw9ZYUeTzmaP2VlV0ZHCky1c3CkiH+zDNFL37o+XbMyLA==
-Received: from SJ0PR05CA0082.namprd05.prod.outlook.com (2603:10b6:a03:332::27)
- by SJ5PPFDDE56F72B.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::9a5) with
+ bh=0CywdbhIFUrMQw5CcE10L5D6QWxLR2qziki0gj47Sco=;
+ b=aY3R5EB6EPJVD9A2NTNi9aGt8XJcDe3b5Ma4AAqhknSO4Bi6oXkltne1gKEvHoNnxzh2KW6iNc4mfZ5YV3rWMA59uIqIaUD4b2uM2bPAhF9B1Evoh563fUTaOqrP0qoWisj8T9gtzPd07Mpuij1ZxiT+1pA3+4rUNAi/1JBhc3zUdWCFQgbLOj1aOWRbmPTbw+qtzzkqq4X/FnsmuPjnRAUkLFj5KCr7B42bpPpeBt1x3CUFETnAwhzV2maXvfePgCrPhuA38dPOWFKY9avOXP5eYp6vnoiYhOrFPF2dCK4Ug0HwJZmOWcuWmLnKleh9EFUVY43VqNOWqInJxTWpbg==
+Received: from BY5PR04CA0011.namprd04.prod.outlook.com (2603:10b6:a03:1d0::21)
+ by MN0PR12MB6128.namprd12.prod.outlook.com (2603:10b6:208:3c4::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.18; Wed, 1 Apr
- 2026 14:41:12 +0000
-Received: from SJ5PEPF000001D5.namprd05.prod.outlook.com
- (2603:10b6:a03:332:cafe::2e) by SJ0PR05CA0082.outlook.office365.com
- (2603:10b6:a03:332::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.15 via Frontend Transport; Wed,
- 1 Apr 2026 14:41:01 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Wed, 1 Apr
+ 2026 14:41:45 +0000
+Received: from SJ5PEPF000001D6.namprd05.prod.outlook.com
+ (2603:10b6:a03:1d0:cafe::41) by BY5PR04CA0011.outlook.office365.com
+ (2603:10b6:a03:1d0::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9745.30 via Frontend Transport; Wed,
+ 1 Apr 2026 14:41:45 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -49,17 +49,17 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.117.160 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
 Received: from mail.nvidia.com (216.228.117.160) by
- SJ5PEPF000001D5.mail.protection.outlook.com (10.167.242.57) with Microsoft
+ SJ5PEPF000001D6.mail.protection.outlook.com (10.167.242.58) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9769.17 via Frontend Transport; Wed, 1 Apr 2026 14:41:01 +0000
+ 15.20.9769.17 via Frontend Transport; Wed, 1 Apr 2026 14:41:44 +0000
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
  (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 1 Apr
- 2026 07:40:38 -0700
+ 2026 07:41:22 -0700
 Received: from nvidia-4028GR-scsim.nvidia.com (10.126.231.35) by
  rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.20; Wed, 1 Apr 2026 07:40:31 -0700
+ 15.2.2562.20; Wed, 1 Apr 2026 07:41:15 -0700
 From: <mhonap@nvidia.com>
 To: <alwilliamson@nvidia.com>, <dan.j.williams@intel.com>,
 	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
@@ -72,9 +72,9 @@ CC: <vsethi@nvidia.com>, <cjia@nvidia.com>, <targupta@nvidia.com>,
 	<zhiw@nvidia.com>, <kjaju@nvidia.com>, <linux-kselftest@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
 	<kvm@vger.kernel.org>, <mhonap@nvidia.com>
-Subject: [PATCH v2 08/20] vfio/pci: Add CONFIG_VFIO_CXL_CORE and stub CXL hooks
-Date: Wed, 1 Apr 2026 20:09:05 +0530
-Message-ID: <20260401143917.108413-9-mhonap@nvidia.com>
+Subject: [PATCH v2 14/20] vfio/cxl: DPA VFIO region with demand fault mmap and reset zap
+Date: Wed, 1 Apr 2026 20:09:11 +0530
+Message-ID: <20260401143917.108413-15-mhonap@nvidia.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20260401143917.108413-1-mhonap@nvidia.com>
 References: <20260401143917.108413-1-mhonap@nvidia.com>
@@ -90,191 +90,346 @@ X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
  rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D5:EE_|SJ5PPFDDE56F72B:EE_
-X-MS-Office365-Filtering-Correlation-Id: 008f60bb-96f6-473e-0417-08de8ffcb235
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D6:EE_|MN0PR12MB6128:EE_
+X-MS-Office365-Filtering-Correlation-Id: 66589cee-41c3-4c19-f225-08de8ffccc16
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|36860700016|921020|56012099003|18002099003|22082099003;
+	BCL:0;ARA:13230040|82310400026|36860700016|7416014|1800799024|376014|921020|56012099003|18002099003|22082099003;
 X-Microsoft-Antispam-Message-Info:
-	CQjuVf9pc6eghZm2eJJ6q+jdNHdwbQ2W74HYyr4AiCaFsyhG/sE3swJB9CBqYpRWvLV9V6uv/i8lJoBDyeFs5lUnckHGqyfApo2XcesbqWuC7NHYlkt15zc3Gak9FygZXxzDsBxtP+cCZGAwpGznsG3ZFt42jtj+l8x6SFgywcQfO12DGVwgf6Ez/bYjuxqcpHGECCv6iXc1WlJzpjEkVfw6e1SCpTKqRJLXLgxzTL+nsvEYV2fJ6WYIVVt0AIkHI7YthYy+T3xpsl5Fv48L3gzBMKRMMlJlBvpcKM1l/i8vq3CvXtY0Q6IZrEo6D29UjfworRLvwleEr1mI2npNYDTLQ4ZFBQAcOowv7IsgEDyjOjlGPOZgkNcimz5H6coQ3pQQhdFujCkbZ+4P1LsmcgEv1QU6jkVO1jGfl1zlGuwx9BLLRXI7zgGnkNc9Ni0KXunPuZQJf4UvXDlzqu9KA5U3mPHjUFgVjNiymUeb77HJjIVMcoEdoO8VeRZb+4Zxlw7LPcEbmlDYb1unnjt2PMHCZc6w9TnjvQRSmTUz9oQSd3KReWgyMB3luzBQvuBnDNlqDUZiIyGP7aWzfUahJyLrzjAGO/PIpEtl9lOwp9ENbTl5jLCWGy8USJAu/J8yF2mmZrDcbhbIXRA7BZAimaNdcldNvuaWObsnhkTCcWupSNzLEnwyR2VTLs4m52nZLhfSQJmRMxqGsPQceFitkuff8uw8Sqjv8IsOhcZ2C0ATtRQAoaxZrFm2EygV8kywX5Izr/hlP/vmc387p1hn5Imrs3mb9nCdnygTEvq6NdrEfQ00uKCk1hOGZnkXh/ib
+	URksfL8oDi+sAyMqU14iBGca39IdMIJH/DuAEIQki8oyOV3HvIPfOXqYZefLP7q3KcFEYs+3Bh9qG24OftiUOl6bDgIfc2hfbtmWFL3VsfaLpviIeMW5/oGMfNvdGc6aqfH+rRAE4UlS/JiqG8kMpM+JR/1PCxvZEmCc3+00RSCE3su2pLDPZf/1P486/IPsOyjLYba5Z4XLDXp6z3OGLezDoR2I6dkmyhEgLfCPhGc7wrKLD2ECmz9czaFWsmA03+kpa0E+GfWUGebDiXwvvyQmP2gzpBPzZHWyoVq7NdC9wQF6scgFr37a/nLOM3gd1nnKofW7kxLu2AhlM4Th5XKls9J6It00WqoaHTtTKquKnPkLvjy3AJm1TGH+vVNOS/OCNjKm2Sa1GMBxmVDJk+Pqr+1ikPkbmFK5gMcqHsXxwQdqwHVs6T5YExjhOg/Ucrhd8TIDbFfwyENrsgKHMqWHHCM5QYsNOb2UgE6Vqt52+lOIgST5juxBdXiAZirSBjGCanUPwJZlcmPSW64U1UcORXh8W0m36NnabUrxd/JY8P0iYOj0i4Xa7XSn3imk2NplOVT0ooKkC/z8KPANnL/eeVljrrjn73qJ9zjPqFuF85VXQl20d+TSeqUJLA5jvxNSMUXHXiVvF29lCQFAFN6/1qdHANmXyJPVcWSufkn9K6C67G5Od6aCfUfIbjeH+TeXz5qzMXxY4b1xqXYjnBEBKrJfsT4W3ancnTXrvyyfZiUTSOcsK7Wwq79xHL7RKYJb/bDGusYe5zVqbox2UGdRciY1z4hhtzXuxrR5Lxsjflh2iQVCsd9KLs6xztNL
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(36860700016)(921020)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(7416014)(1800799024)(376014)(921020)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	TNs6FrUbhzoQr5HeUIMxr9fkRLs+6Eh/GV2WCP4NJ4rRRLjvwhODHSXhorK4yO0uqmFi9I8ewFQltm0C5C2EWSyJ2iJy214cwLE54NPCDif0To8G0qPLNSlGX4xwDo27sDdiuvrQOz6jrHHsOewlNAhR4m6DJFs0jFUn7AQYGua7Vatj2jpP4v2k/+W3AwYxmSzyf139HvjgZgr2+3lAvRo4ij4zfkQnwqfwQA8GvRIhH/+0ouxlMGntXRzrZgX6t2koexCyLcKQnYp2v7C8p35K+iObW1s2GMRLpOC63Znxe9VxEMLG6xh7J3JHg7PitH3I97SK5zPkMVYW1fhVDTTadLGz+vf2NhH/AfwquHQEepVEWnQedFOCxN4ca0s1+QT96LoGxaJhcMDbeDcVgHTb+OviStodT95I2tYieS3C7kjhnO/SAFO4CW81zRIn
+	Er6GdcLkmU+D+f64rfemfXDCrXQc9Bd7Gf22eRDWzL7jnAAHZBeSW4XbXomYSE+iQgv1IwlFyp7Mso0CthD68bFppgxyQ0xzQ8rcWWokbCzMfA+MkUdmofaYszPFYPBddwQEn6166tiHlMJ2JFTmqf+1TL+K5t+Nf/XKobs2Yl3SpEcsnwCgRcgTiaSwK8O8M8wj9TFpCnXiL86twGeYHamLjTwcfKfL6WYXszJtLR0vsi4fgQ3BjajbmNVNcLWLiUMAGoNaA66gX5PjN5A4vWQ/O/c3Y1mXNFu5w+RJEZwbelmbtqdXrcSSmQzGv15COZ/qwnkTCVpqgbLy3xiWUUHp4fpbFsN4ZvT/TfPF+K8RzP4+6hFBCBdNSfUgNDO4cay2QoLlrColUiNdjQF6GeB/fJKMiruo8Gn4fnAr8NdeNEcJRvRlU86x/goWYXJY
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2026 14:41:01.6239
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2026 14:41:44.9745
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 008f60bb-96f6-473e-0417-08de8ffcb235
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66589cee-41c3-4c19-f225-08de8ffccc16
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001D5.namprd05.prod.outlook.com
+	SJ5PEPF000001D6.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPFDDE56F72B
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6128
 
 From: Manish Honap <mhonap@nvidia.com>
 
-Introduce the Kconfig option CONFIG_VFIO_CXL_CORE and the necessary
-build rules to compile CXL.mem passthrough infrastructure for
-vendor-specific CXL devices into the vfio-pci-core module.  The new
-option depends on VFIO_PCI_CORE, CXL_BUS and CXL_MEM.
+Wire the CXL DPA range up as a VFIO demand-paged region so QEMU can
+mmap guest device memory directly. Faults call vmf_insert_pfn() to
+insert one PFN at a time rather than mapping the full range upfront.
 
-Wire up the detection and cleanup entry-point stubs in
-vfio_pci_core_register_device() and vfio_pci_core_unregister_device()
-so that subsequent patches can fill in the CXL-specific logic without
-touching the vfio-pci-core flow again.
+CXL region lifecycle:
+- The CXL memory region is registered with VFIO layer during
+  vfio_pci_open_device
+- mmap() establishes the VMA with vm_ops but inserts no PTEs
+- Each guest page fault calls vfio_cxl_region_page_fault() which
+  inserts a single PFN under the memory_lock read side
+- On device reset, vfio_cxl_zap_region_locked() sets region_active=false
+  and calls unmap_mapping_range() to invalidate all DPA PTEs atomically
+  while holding memory_lock for writing
+- Faults racing with reset see region_active==false and return
+  VM_FAULT_SIGBUS
+- vfio_cxl_reactivate_region() restores region_active after successful
+  hardware reset
 
-The vfio_cxl_core.c file added here is an empty skeleton; the actual
-CXL detection and initialisation code is introduced in the following
-patch to keep this build-system patch reviewable on its own.
+Also integrate the zap/reactivate calls into vfio_pci_ioctl_reset() so
+that FLR correctly invalidates DPA mappings and restores them on success.
 
+Co-developed-by: Zhi Wang <zhiw@nvidia.com>
+Signed-off-by: Zhi Wang <zhiw@nvidia.com>
 Signed-off-by: Manish Honap <mhonap@nvidia.com>
 ---
- drivers/vfio/pci/Kconfig             |  2 ++
- drivers/vfio/pci/Makefile            |  1 +
- drivers/vfio/pci/cxl/Kconfig         |  9 ++++++
- drivers/vfio/pci/cxl/vfio_cxl_core.c | 41 ++++++++++++++++++++++++++++
- drivers/vfio/pci/vfio_pci_core.c     |  4 +++
- drivers/vfio/pci/vfio_pci_priv.h     | 14 ++++++++++
- 6 files changed, 71 insertions(+)
- create mode 100644 drivers/vfio/pci/cxl/Kconfig
- create mode 100644 drivers/vfio/pci/cxl/vfio_cxl_core.c
+ drivers/vfio/pci/cxl/vfio_cxl_core.c | 187 +++++++++++++++++++++++++++
+ drivers/vfio/pci/cxl/vfio_cxl_emu.c  |   2 +-
+ drivers/vfio/pci/cxl/vfio_cxl_priv.h |   3 +
+ drivers/vfio/pci/vfio_pci_core.c     |  11 ++
+ drivers/vfio/pci/vfio_pci_priv.h     |   6 +
+ 5 files changed, 208 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-index 1e82b44bda1a..b981a7c164ca 100644
---- a/drivers/vfio/pci/Kconfig
-+++ b/drivers/vfio/pci/Kconfig
-@@ -68,6 +68,8 @@ source "drivers/vfio/pci/virtio/Kconfig"
- 
- source "drivers/vfio/pci/nvgrace-gpu/Kconfig"
- 
-+source "drivers/vfio/pci/cxl/Kconfig"
-+
- source "drivers/vfio/pci/qat/Kconfig"
- 
- source "drivers/vfio/pci/xe/Kconfig"
-diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
-index e0a0757dd1d2..ecb0eacbc089 100644
---- a/drivers/vfio/pci/Makefile
-+++ b/drivers/vfio/pci/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
- vfio-pci-core-y := vfio_pci_core.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
-+vfio-pci-core-$(CONFIG_VFIO_CXL_CORE) += cxl/vfio_cxl_core.o
- vfio-pci-core-$(CONFIG_VFIO_PCI_ZDEV_KVM) += vfio_pci_zdev.o
- vfio-pci-core-$(CONFIG_VFIO_PCI_DMABUF) += vfio_pci_dmabuf.o
- obj-$(CONFIG_VFIO_PCI_CORE) += vfio-pci-core.o
-diff --git a/drivers/vfio/pci/cxl/Kconfig b/drivers/vfio/pci/cxl/Kconfig
-new file mode 100644
-index 000000000000..fad53300fecf
---- /dev/null
-+++ b/drivers/vfio/pci/cxl/Kconfig
-@@ -0,0 +1,9 @@
-+config VFIO_CXL_CORE
-+	bool "VFIO CXL core"
-+	depends on VFIO_PCI_CORE && CXL_BUS && CXL_MEM
-+	help
-+	    Extends vfio-pci-core with CXL.mem passthrough for vendor-specific
-+	    CXL devices (CXL_DEVTYPE_DEVMEM) that implement HDM-D or HDM-DB
-+	    decoders without the standard CXL memory expander class code
-+	    (PCI_CLASS_MEMORY_CXL).  Covers CXL Type-2 accelerators and
-+	    non-class-code Type-3 variants (e.g. compressed memory devices).
 diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-new file mode 100644
-index 000000000000..d12afec82ecd
---- /dev/null
+index 30b365b91903..19d3dc205f99 100644
+--- a/drivers/vfio/pci/cxl/vfio_cxl_core.c
 +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-@@ -0,0 +1,41 @@
-+// SPDX-License-Identifier: GPL-2.0-only
+@@ -435,4 +435,191 @@ void vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev)
+ 	vfio_cxl_destroy_cxl_region(cxl);
+ }
+ 
++static vm_fault_t vfio_cxl_region_vm_fault(struct vm_fault *vmf)
++{
++	struct vfio_pci_region *region = vmf->vma->vm_private_data;
++	struct vfio_pci_cxl_state *cxl = region->data;
++	unsigned long pgoff;
++	unsigned long pfn;
++
++	if (!READ_ONCE(cxl->region_active))
++		return VM_FAULT_SIGBUS;
++
++	pgoff = vmf->pgoff &
++		((1UL << (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT)) - 1);
++
++	if (pgoff >= (cxl->region_size >> PAGE_SHIFT))
++		return VM_FAULT_SIGBUS;
++
++	pfn = PHYS_PFN(cxl->region_hpa) + pgoff;
++
++	return vmf_insert_pfn(vmf->vma, vmf->address, pfn);
++}
++
++static const struct vm_operations_struct vfio_cxl_region_vm_ops = {
++	.fault = vfio_cxl_region_vm_fault,
++};
++
++static int vfio_cxl_region_mmap(struct vfio_pci_core_device *vdev,
++				struct vfio_pci_region *region,
++				struct vm_area_struct *vma)
++{
++	struct vfio_pci_cxl_state *cxl = vdev->cxl;
++	u64 req_len, pgoff, end;
++
++	if (!(region->flags & VFIO_REGION_INFO_FLAG_MMAP))
++		return -EINVAL;
++
++	if (!(region->flags & VFIO_REGION_INFO_FLAG_READ) &&
++	    (vma->vm_flags & VM_READ))
++		return -EPERM;
++
++	if (!(region->flags & VFIO_REGION_INFO_FLAG_WRITE) &&
++	    (vma->vm_flags & VM_WRITE))
++		return -EPERM;
++
++	pgoff = vma->vm_pgoff &
++		((1U << (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT)) - 1);
++
++	if (check_sub_overflow(vma->vm_end, vma->vm_start, &req_len) ||
++	    check_add_overflow(PFN_PHYS(pgoff), req_len, &end))
++		return -EOVERFLOW;
++
++	if (end > cxl->region_size)
++		return -EINVAL;
++
++	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
++
++	vm_flags_set(vma, VM_ALLOW_ANY_UNCACHED | VM_IO | VM_PFNMAP |
++		     VM_DONTEXPAND | VM_DONTDUMP);
++
++	vma->vm_ops = &vfio_cxl_region_vm_ops;
++	vma->vm_private_data = region;
++
++	return 0;
++}
++
 +/*
-+ * VFIO CXL Core - CXL.mem passthrough for vendor-specific CXL devices
++ * vfio_cxl_zap_region_locked - Invalidate all DPA region PTEs.
 + *
-+ * Copyright (c) 2026, NVIDIA CORPORATION & AFFILIATES. All rights reserved
-+ *
-+ * This module extends vfio-pci-core to pass through CXL.mem regions for
-+ * vendor-specific CXL devices (CXL_DEVTYPE_DEVMEM) that implement HDM-D or
-+ * HDM-DB decoders but do not report the standard CXL memory expander class
-+ * code (PCI_CLASS_MEMORY_CXL, 0x0502).  This covers both CXL Type-2
-+ * accelerators (with CXL.cache) and non-class-code Type-3 variants (e.g.
-+ * compressed memory devices) which cannot be paravirtualized by the host
-+ * CXL subsystem and require direct DPA region access from the guest.
++ * Must be called with vdev->memory_lock held for writing.  Sets
++ * region_active=false before zapping so any subsequent I/O to the region
++ * sees the inactive state and returns an error rather than accessing
++ * stale mappings.
 + */
-+
-+#include <linux/vfio_pci_core.h>
-+#include <linux/pci.h>
-+#include <cxl/cxl.h>
-+#include <cxl/pci.h>
-+
-+#include "../vfio_pci_priv.h"
-+#include "vfio_cxl_priv.h"
-+
-+/**
-+ * vfio_pci_cxl_detect_and_init - Detect and initialize a vendor-specific
-+ *                                CXL.mem device
-+ * @vdev: VFIO PCI device
-+ *
-+ * Called from vfio_pci_core_register_device(). Detects CXL DVSEC capability
-+ * and initializes CXL features. On failure vdev->cxl remains NULL and the
-+ * device operates as a standard PCI device.
-+ */
-+void vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device *vdev)
++void vfio_cxl_zap_region_locked(struct vfio_pci_core_device *vdev)
 +{
++	struct vfio_pci_cxl_state *cxl = vdev->cxl;
++
++	lockdep_assert_held_write(&vdev->memory_lock);
++
++	if (!cxl)
++		return;
++
++	WRITE_ONCE(cxl->region_active, false);
 +}
 +
-+void vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev)
++/*
++ * vfio_cxl_reactivate_region - Re-enable DPA region after successful reset.
++ *
++ * Must be called with vdev->memory_lock held for writing.  Re-reads the
++ * HDM decoder state from hardware (FLR cleared it) and sets region_active
++ * so that subsequent I/O to the region is permitted again.
++ */
++void vfio_cxl_reactivate_region(struct vfio_pci_core_device *vdev)
 +{
++	struct vfio_pci_cxl_state *cxl = vdev->cxl;
++
++	lockdep_assert_held_write(&vdev->memory_lock);
++
++	if (!cxl)
++		return;
++	/*
++	 * Re-initialise the emulated HDM comp_reg_virt[] from hardware.
++	 * After FLR the decoder registers read as zero; mirror that in
++	 * the emulated state so QEMU sees a clean slate.
++	 */
++	vfio_cxl_reinit_comp_regs(cxl);
++
++	/*
++	 * Only re-enable the DPA mmap if the hardware has actually
++	 * re-committed decoder 0 after FLR.  Read the COMMITTED bit from the
++	 * freshly-re-snapshotted comp_reg_virt[] so we check the post-FLR
++	 * hardware state, not stale pre-reset state.
++	 *
++	 * If COMMITTED is 0 (slow firmware re-commit path), leave
++	 * region_active=false.	 Guest faults will return VM_FAULT_SIGBUS
++	 * until the decoder is re-committed and the region is re-enabled.
++	 */
++	if (cxl->precommitted && cxl->comp_reg_virt) {
++		/*
++		 * Read CTRL via the full CXL.mem-relative index: hdm_reg_offset
++		 * (now CXL.mem-relative) plus the within-HDM-block offset.
++		 */
++		u32 ctrl = le32_to_cpu(*hdm_reg_ptr(cxl,
++					    CXL_HDM_DECODER0_CTRL_OFFSET(0)));
++
++		if (ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED)
++			WRITE_ONCE(cxl->region_active, true);
++	}
 +}
 +
-+MODULE_IMPORT_NS("CXL");
++static ssize_t vfio_cxl_region_rw(struct vfio_pci_core_device *core_dev,
++				  char __user *buf, size_t count, loff_t *ppos,
++				  bool iswrite)
++{
++	unsigned int i = VFIO_PCI_OFFSET_TO_INDEX(*ppos) - VFIO_PCI_NUM_REGIONS;
++	struct vfio_pci_cxl_state *cxl = core_dev->region[i].data;
++	loff_t pos = *ppos & VFIO_PCI_OFFSET_MASK;
++
++	if (!count || pos >= cxl->region_size)
++		return 0;
++
++	/*
++	 * Guard against access after a failed reset (region_active=false)
++	 * or a release race (region_vaddr=NULL).  Either condition means
++	 * the memremap'd window is no longer valid; touching it would produce
++	 * a Synchronous External Abort.  Return -EIO so the caller gets a
++	 * clean error rather than a kernel oops.
++	 */
++	if (!READ_ONCE(cxl->region_active) || !cxl->region_vaddr)
++		return -EIO;
++
++	count = min(count, (size_t)(cxl->region_size - pos));
++
++	if (iswrite) {
++		if (copy_from_user(cxl->region_vaddr + pos, buf, count))
++			return -EFAULT;
++	} else {
++		if (copy_to_user(buf, cxl->region_vaddr + pos, count))
++			return -EFAULT;
++	}
++
++	return count;
++}
++
++static void vfio_cxl_region_release(struct vfio_pci_core_device *vdev,
++				    struct vfio_pci_region *region)
++{
++	struct vfio_pci_cxl_state *cxl = region->data;
++
++	/*
++	 * Deactivate the region before removing user mappings so that any
++	 * fault handler racing the release returns VM_FAULT_SIGBUS rather
++	 * than inserting a PFN into an unmapped region.
++	 */
++	WRITE_ONCE(cxl->region_active, false);
++
++	if (cxl->region_vaddr) {
++		memunmap(cxl->region_vaddr);
++		cxl->region_vaddr = NULL;
++	}
++}
++
++static const struct vfio_pci_regops vfio_cxl_regops = {
++	.rw		= vfio_cxl_region_rw,
++	.mmap		= vfio_cxl_region_mmap,
++	.release	= vfio_cxl_region_release,
++};
++
+ MODULE_IMPORT_NS("CXL");
+diff --git a/drivers/vfio/pci/cxl/vfio_cxl_emu.c b/drivers/vfio/pci/cxl/vfio_cxl_emu.c
+index 11195e8c21d7..781328a79b43 100644
+--- a/drivers/vfio/pci/cxl/vfio_cxl_emu.c
++++ b/drivers/vfio/pci/cxl/vfio_cxl_emu.c
+@@ -33,7 +33,7 @@
+  *     +0x1c: (reserved)
+  */
+ 
+-static inline __le32 *hdm_reg_ptr(struct vfio_pci_cxl_state *cxl, u32 hdm_off)
++__le32 *hdm_reg_ptr(struct vfio_pci_cxl_state *cxl, u32 hdm_off)
+ {
+ 	/*
+ 	 * hdm_off is a byte offset within the HDM decoder block.
+diff --git a/drivers/vfio/pci/cxl/vfio_cxl_priv.h b/drivers/vfio/pci/cxl/vfio_cxl_priv.h
+index 72a0d7d7e183..3458768445af 100644
+--- a/drivers/vfio/pci/cxl/vfio_cxl_priv.h
++++ b/drivers/vfio/pci/cxl/vfio_cxl_priv.h
+@@ -33,6 +33,7 @@ struct vfio_pci_cxl_state {
+ 	u8                           comp_reg_bar;
+ 	bool                         cache_capable;
+ 	bool                         precommitted;
++	bool                         region_active;
+ };
+ 
+ /* Register access sizes */
+@@ -96,4 +97,6 @@ int vfio_cxl_create_cxl_region(struct vfio_pci_cxl_state *cxl,
+ 			       resource_size_t size);
+ void vfio_cxl_destroy_cxl_region(struct vfio_pci_cxl_state *cxl);
+ 
++__le32 *hdm_reg_ptr(struct vfio_pci_cxl_state *cxl, u32 hdm_off);
++
+ #endif /* __LINUX_VFIO_CXL_PRIV_H */
 diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 3a11e6f450f7..b7364178e23d 100644
+index b7364178e23d..48e0274c19aa 100644
 --- a/drivers/vfio/pci/vfio_pci_core.c
 +++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -2181,6 +2181,8 @@ int vfio_pci_core_register_device(struct vfio_pci_core_device *vdev)
- 	if (ret)
- 		goto out_vf;
+@@ -1223,6 +1223,9 @@ static int vfio_pci_ioctl_reset(struct vfio_pci_core_device *vdev,
  
-+	vfio_pci_cxl_detect_and_init(vdev);
+ 	vfio_pci_zap_and_down_write_memory_lock(vdev);
+ 
++	/* Zap CXL DPA region PTEs before hardware reset clears HDM state */
++	vfio_cxl_zap_region_locked(vdev);
 +
- 	vfio_pci_probe_power_state(vdev);
- 
  	/*
-@@ -2224,6 +2226,8 @@ void vfio_pci_core_unregister_device(struct vfio_pci_core_device *vdev)
- 	vfio_pci_vf_uninit(vdev);
- 	vfio_pci_vga_uninit(vdev);
+ 	 * This function can be invoked while the power state is non-D0. If
+ 	 * pci_try_reset_function() has been called while the power state is
+@@ -1236,6 +1239,14 @@ static int vfio_pci_ioctl_reset(struct vfio_pci_core_device *vdev,
  
-+	vfio_pci_cxl_cleanup(vdev);
+ 	vfio_pci_dma_buf_move(vdev, true);
+ 	ret = pci_try_reset_function(vdev->pdev);
 +
- 	if (!disable_idle_d3)
- 		pm_runtime_get_noresume(&vdev->pdev->dev);
- 
++	/*
++	 * Re-enable DPA region if reset succeeded; fault handler will
++	 * re-insert PFNs on next access without requiring a new mmap.
++	 */
++	if (!ret)
++		vfio_cxl_reactivate_region(vdev);
++
+ 	if (__vfio_pci_memory_enabled(vdev))
+ 		vfio_pci_dma_buf_move(vdev, false);
+ 	up_write(&vdev->memory_lock);
 diff --git a/drivers/vfio/pci/vfio_pci_priv.h b/drivers/vfio/pci/vfio_pci_priv.h
-index 27ac280f00b9..d7df5538dcde 100644
+index 1082ba43bafe..726063b6ff70 100644
 --- a/drivers/vfio/pci/vfio_pci_priv.h
 +++ b/drivers/vfio/pci/vfio_pci_priv.h
-@@ -133,4 +133,18 @@ static inline void vfio_pci_dma_buf_move(struct vfio_pci_core_device *vdev,
- }
- #endif
+@@ -145,6 +145,8 @@ static inline void vfio_pci_dma_buf_move(struct vfio_pci_core_device *vdev,
  
-+#if IS_ENABLED(CONFIG_VFIO_CXL_CORE)
-+
-+void vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device *vdev);
-+void vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev);
-+
-+#else
-+
+ void vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device *vdev);
+ void vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev);
++void vfio_cxl_zap_region_locked(struct vfio_pci_core_device *vdev);
++void vfio_cxl_reactivate_region(struct vfio_pci_core_device *vdev);
+ 
+ #else
+ 
+@@ -152,6 +154,10 @@ static inline void
+ vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device *vdev) { }
+ static inline void
+ vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev) { }
 +static inline void
-+vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device *vdev) { }
++vfio_cxl_zap_region_locked(struct vfio_pci_core_device *vdev) { }
 +static inline void
-+vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev) { }
-+
-+#endif /* CONFIG_VFIO_CXL_CORE */
-+
- #endif
++vfio_cxl_reactivate_region(struct vfio_pci_core_device *vdev) { }
+ 
+ #endif /* CONFIG_VFIO_CXL_CORE */
+ 
 -- 
 2.25.1
 
