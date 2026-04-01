@@ -1,28 +1,28 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012020.outbound.protection.outlook.com [52.101.53.20])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011005.outbound.protection.outlook.com [52.101.62.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58737472785;
-	Wed,  1 Apr 2026 14:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0922347DF92;
+	Wed,  1 Apr 2026 14:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.5
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775054557; cv=fail; b=fl2/4dD/dOICXIDkU+5nNgT9darT5QAGq5OTTgVgsdGPJ11eiy/k7eLomd92vuB/jxLINs/TfgsJOfLN9AP4sPHbcpsUXGEEhTk6aV2G3KknGJHKCnKCJAGXaXYdHjM/yr0xBKcCiplWrhJiPiRR1OZwA6kJBTL87aiMjEDYMvw=
+	t=1775054571; cv=fail; b=SlSSS/4MuP/InaxiapSpSTSbAJElVm8etQAj4tv62XM38ssPhu9gV2dzEV6F/9LP1ud796h/8Flcmhktp/Bh2xH6KhEJSdo5QB3bSSaEaZzMHyFBYZZQZ3XZdnDxIFhT4qorBLh+joypJD03SnT5cqptOBe0aaN7otLWVdkOb5k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775054557; c=relaxed/simple;
-	bh=uJtgQVJj3Cc78GJXwVAJXEIliRoMsoXqNyUEWm5VIwU=;
+	s=arc-20240116; t=1775054571; c=relaxed/simple;
+	bh=2rr7y30pUE1DoIZLeKSK4BDDV3Me8otLx+M2LBJxUO0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EP9Bi8naheOAU78Ei5IFFS8IXvyelJHa71nJSauQHThx/1J3/C0p5PUjo791HCgm7WAxbiRC+4eBK7VWhmq16qsQ5PyJfydSYmD5nHaD4nbCZdc8M5l8AiwVWwLn1STnbwgXMucvLNKNMyPQjhJEly2be3yMvotIU18HX+6GCf8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=sDB9MVLg; arc=fail smtp.client-ip=52.101.53.20
+	 MIME-Version:Content-Type; b=uFGvWgZDiDgiSkE2gTmXU+HU8HDvzo7tf1YBUbtuduEq7NwSAw2N/Wnh3SZA5uvOGAceZz93zMTq6zPmi0KRj1buNMxj+oIRO65Pvpx9UQM+X2FNYJyptlQPosPIKGYXKNm0UkpqMTflnTWHTPAxlOulWspdx30zKiICoe1JBX0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CJdANlb8; arc=fail smtp.client-ip=52.101.62.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="sDB9MVLg"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CJdANlb8"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=f0+uUKd6JbOs50VWJWsgMUCK7SCDrMhmeJLjBaZVQXgksOccXVugpqzyOc1NYwDJ2LFv77A8vurECV3rVBSHIFccnGuSlZFp20pfSmGJl5Jpqy6LY0qK3JmkWZo+gyiFM54EdcDIso0XHQF5yzTNCqB07gZ7TpGIBtEp6z1bRgi+eokCWP5+B/X/EgUoA8PwMWH6av4sGRV3+UCOeh+u5L7c5fGV8iay+gqrJdbau+l/kKgWREZN22qZSClsKIym//cM5SV+28YHBNYMSwsx6wzs9TUUG2lDDNDzLAzwbcfrGAhtHTHsn2NVNGXMDATsCtmzEc0Lw+xG8lHUAc/WQQ==
+ b=gOxVWFeH8Cr5QnfwXM59CVMUwc+GqLCZbHcUP19Fl3iZZxYlI5JBJ6gemNOaJuUGuCeNVXaoaBG9qKWZ7ltr63km0R3/Jb2qC9I5y6Y4nPJfmEcOAvcgIfOw1HJk1GNo8f3TRumxHe8nMfafQWzx2XuOr2YKcLU4qAtuWelF9xGUqB3qLzEHWXz/+XCznx4greHY/n1MuOVhCIjw3e2Qex5oiuOa2bf6RGC1nj9X7KzroJPpIzTyz3M+vJxiiNX67pr6yjc+LRJdMil4LqeOjCeZtdpogT58XnOSQ+If6CQCIe+c03gPxfdImLd3Sp5uGJhehHGC7YWymV58/AtjBA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gCZsi08z0F3p6R+7rSsyV4muAmrPPdPCPHq9S/ZJcMo=;
- b=UjU9/tqA55GGFzDVNhmiH1tuJAE3CSJO+7xlG+ubWafzokYEbuxzNeh7OaQsMZA6sqR81CRNKbpA3AH4m4udoz3mof32EmKgb/3GtDKKx4aZhFoJDjeZsPAtXGFBalJGYIeut3kUUhlNBlutc/NcfMap0RGKdhtO/2yc5/PF2admhR7Htv14YTZ+yCS6b6ei5HtnOldqKOfNq3XdbIMtOwzUqWUyEdGJTW+AZkLCGaQBnxrKBwnQ/lh19GEvn7InBA3wjrdZZqMVUZkG+tLWDNRj2rdF52HUV90Q75VQedfxV6Zbyi84ofYW5SvHf63pqFPVJYS1l5p9cpZan16YDw==
+ bh=vjCsG53TfBRVec16a3ioXovRaqDjw+chXjBxWlfAVf0=;
+ b=Vf9esN3Z6mot6VG9PMhJzbA1K40ZnybB7VpbV7LlrLmVGEvL5a29CIQcBkcFBcSNPcZESQk8rLHSDtNMiHkaqtOhVGO2H+bEd0l6iJvvToJf0/IZmHKnUNl/tEjc/XmqiRRZ3TiQloaAt+YCfT/Sf4wwayrvGJd6rbVDp/axqRG3aZwLbP8dGhDeXnv9tSOhc1/6Mri9NRnYDmxmnhbU5FLI27nFCjK5Gr2QhlRocRDmRRG6N1CC715lWHtD1LTCcSWVd8gUWG3tcXs6hf/zIBLiZgy43BG/nOEAnx+7kgV/js8U6W8hzHSWdw84hb1SJhVw97vNA1q0lrrJ4qYsWg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.117.161) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
@@ -30,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gCZsi08z0F3p6R+7rSsyV4muAmrPPdPCPHq9S/ZJcMo=;
- b=sDB9MVLgVEj9RCgoRUgJMSJRyfYjlsHK0GW++IOmwebWcK/cns80ty5BL3JbWPNvigbvVmKol2mqwSBr95UGxzxt2/e7O5HxOmWgVbXey+eVyGJWub+2j9chxguar9w3SynZvxFWoHq/wouv7ocKCd14SeuF2DzglIU9xQQOk1O1vfaSwtaltCsxFXCvPE4E+9G2pvDKxbHmiJJhCljdT+PAFGhHCViHNUTx8snrxbuUG5B6guAhsPSbh2JEvkMONXQrTT6x8gttYk//NBzcIyz3DFBkHeQz2SWIZbAtXcI04j6g7N3XvVDyoqRraKv4g3Gh3CBRA3cFnJqFKQO2/A==
-Received: from BN9PR03CA0259.namprd03.prod.outlook.com (2603:10b6:408:ff::24)
- by LV2PR12MB5750.namprd12.prod.outlook.com (2603:10b6:408:17e::6) with
+ bh=vjCsG53TfBRVec16a3ioXovRaqDjw+chXjBxWlfAVf0=;
+ b=CJdANlb8V2dofl/T59hEIjBo74pY7Glo2/6FNfAS/LvdockPvAujhD4wZRkqgfdVcf82uLFSa965ViMhmCBla3yR5m5HIHvPHcpP0N91QQMuC3TmldTi/X34J+b92VdP3hXHD0v+IBiq5PrORu+TVKQeGW3SpwkZ2JtdyTbKnpKMXZCquIPdYP9URiVplpyA/XqtWe21x6sVZw+vVED9/5v1lYbUw4F6ALMwOwTIwx/MXC02pBe9hci+ECHlY+C3jvkHfkfXCwNrpZa18qSDlLAgq3ValSkzNKmKxko3olPooFpPk8q13cAkG/qTTZcvN0hplYjbvgLJhLGPKWjgaw==
+Received: from BL1P222CA0005.NAMP222.PROD.OUTLOOK.COM (2603:10b6:208:2c7::10)
+ by IA0PR12MB8255.namprd12.prod.outlook.com (2603:10b6:208:404::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.18; Wed, 1 Apr
- 2026 14:42:22 +0000
-Received: from BN1PEPF00006003.namprd05.prod.outlook.com
- (2603:10b6:408:ff:cafe::19) by BN9PR03CA0259.outlook.office365.com
- (2603:10b6:408:ff::24) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9745.28 via Frontend Transport; Wed,
- 1 Apr 2026 14:42:22 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Wed, 1 Apr
+ 2026 14:42:30 +0000
+Received: from BN1PEPF00005FFF.namprd05.prod.outlook.com
+ (2603:10b6:208:2c7:cafe::cb) by BL1P222CA0005.outlook.office365.com
+ (2603:10b6:208:2c7::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9745.30 via Frontend Transport; Wed,
+ 1 Apr 2026 14:42:30 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -49,17 +49,17 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.117.161 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
 Received: from mail.nvidia.com (216.228.117.161) by
- BN1PEPF00006003.mail.protection.outlook.com (10.167.243.235) with Microsoft
+ BN1PEPF00005FFF.mail.protection.outlook.com (10.167.243.231) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9769.17 via Frontend Transport; Wed, 1 Apr 2026 14:42:21 +0000
+ 15.20.9769.17 via Frontend Transport; Wed, 1 Apr 2026 14:42:30 +0000
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
  (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 1 Apr
- 2026 07:41:59 -0700
+ 2026 07:42:06 -0700
 Received: from nvidia-4028GR-scsim.nvidia.com (10.126.231.35) by
  rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.20; Wed, 1 Apr 2026 07:41:51 -0700
+ 15.2.2562.20; Wed, 1 Apr 2026 07:41:59 -0700
 From: <mhonap@nvidia.com>
 To: <alwilliamson@nvidia.com>, <dan.j.williams@intel.com>,
 	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
@@ -72,9 +72,9 @@ CC: <vsethi@nvidia.com>, <cjia@nvidia.com>, <targupta@nvidia.com>,
 	<zhiw@nvidia.com>, <kjaju@nvidia.com>, <linux-kselftest@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
 	<kvm@vger.kernel.org>, <mhonap@nvidia.com>
-Subject: [PATCH v2 19/20] docs: vfio-pci: Document CXL Type-2 device passthrough
-Date: Wed, 1 Apr 2026 20:09:16 +0530
-Message-ID: <20260401143917.108413-20-mhonap@nvidia.com>
+Subject: [PATCH v2 20/20] selftests/vfio: Add CXL Type-2 VFIO assignment test
+Date: Wed, 1 Apr 2026 20:09:17 +0530
+Message-ID: <20260401143917.108413-21-mhonap@nvidia.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20260401143917.108413-1-mhonap@nvidia.com>
 References: <20260401143917.108413-1-mhonap@nvidia.com>
@@ -90,458 +90,1012 @@ X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
  rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00006003:EE_|LV2PR12MB5750:EE_
-X-MS-Office365-Filtering-Correlation-Id: cf8dd821-a9ad-4668-7aec-08de8ffce21a
+X-MS-TrafficTypeDiagnostic: BN1PEPF00005FFF:EE_|IA0PR12MB8255:EE_
+X-MS-Office365-Filtering-Correlation-Id: 91458d26-46a1-4ed3-c0e3-08de8ffce730
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|7416014|376014|36860700016|921020|22082099003|18002099003|56012099003;
+	BCL:0;ARA:13230040|376014|7416014|1800799024|36860700016|82310400026|921020|22082099003|18002099003|56012099003;
 X-Microsoft-Antispam-Message-Info:
-	4IW30JanQsu+9dyVSYchqm01qkYMHUb1Tj2DUNZ8Jeb3vwUGzRWoU6eL1rCSO/+0Tc//ejl0fqB0oB2S+uqXGMv9WnGZfO+K6S35dEKb4NNpUsE359mbswtINqM5g+WQiIVWzulCx8FeTiD3iDCrN3dVw9g7RFPfi0NHSLIHCTJddfwSUnXkRHvVLRJG/e74mFFn4SVhyBKe+qj+LSvwx4HyuiUimz/TZyKevWXjzCAmsxxiLUMK18Zt/aeLMFBFNFfHYuvh2DzXXgy+LWtxU1rcWGQR6bWEz3+MdNcsuScWF8ktr6yLun8YTwlV2cKR5MB9KUvelsdtBakRFbsXboe2hjh4j1vvrjG42tZjAgOImqQEJ913gn8dE2KQ/blCk+gyVdV12IACmP/NdpaFmC6llr41yPzQpT/SnM8/ofvqABFsyMjcB/ui5cC2TP7q58ilzckb34bJaPXj6wh9fpQfkJgO+Sys6mDscKtnQhwZIiSKEjPG5FIW2AVdnpYFMOlyhGPsPFyAz+xITV0GgZQC2H1+3b67jQhsOPG9mgndv8P+hFZ8nQxNwxbK782qHEihNuwq7BZwI+alNb+yntt67T8+qaCoaSBsjsHP3VRdrC1o4BZkC6ADhvwr7D4h4GL2f2MEWriAtAAt7HqZDNdFkXpoaR3E0WGTTFSB+R8ZnTOM2y1MTiehFjcITH0EvP2I8EIC2mCMEz1eHJ5FYcOiz+f9njtSWJXY5ZA9Mu1O5LC7MkXK7YOgaBVdndKncIxEQERcmW804Gg/uAkSvC9SSe/4ROsEzxU6ACEwpTo2WVqr8ASASvqUnfW6I2Jn
+	1RCWw4hPZ3WpuvB9xRmHjeX98DHPWQuruL18fUYIwGUGXjKzNhsNowrtb/CooSmKDlYYzprax56pgTiFJMmOBzBxm72c/ulVToL8TU4MG0/O12MV8KsGY+sTPtW6vAkP3dQK9fi6eUx4ID7+CBOrDzygQppafKfslyFB+IuomXK0N80+dJbzvM8nCRRVGiKFTX1s+t4AGgHTHHpizX4QCES5BTUudhBpZeHr2dv1LMSXTJBQ4NXn2q4+Vv7ZY23CSSbr6MzfEJv2eRJFoQHw+hzInYv9Kfmctu0+Aa92dvj8m9PAx2p2iWCVzkFrnpk0JZQcSytspNp54EQur7rEElqDXgJEaJvtlYmzNZ3hacLT3d8kHfc+60F8I98lGJAPb//eMp+k7+XEpj13Vz4ScrCJA8iSNITvN6oq1U/WVCLi6HOU4Ug33vInV9JknUDT2NuxdzBIAyyW8i1iq4HToTAkKhKLVhdq5hepsI7yJfPnCS0bvmaM9O650W20TVm6rFr7aXY2q4p4qs73ZZ/kJU0PELEwyZp0h10j3ITHwviX0kPGsoPj7I5gXXBkMSGUN2zgjkb+I1LjBNOAP3snaHyc5gzdiZeJsss5bsbhaef+nT9CMXxA9zDUM7kXzDkSYKwlgqG0bJqA+Ouh800eUSv14MuRwvogNM3U60rHOtBwgm5nLVI7/7s1046eEoMTlohbtaQP7SuR1f21BTpw/MVNckYdT9f2uYMZmbhOraqANSqSUmRJN5ZADzU7/jVNBCJcmaI/6sBQr7rkBHGKK5fmwW4sJvMRLcQ1WIx0o/ovpIqPRhykYli9nTV1xu8Q
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(7416014)(376014)(36860700016)(921020)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(36860700016)(82310400026)(921020)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	wYk/A6RPYXCMUbFZUY8Ktuo+AgYdEwcWt1y830daRmU39TczkjVblOMifL1QVZp7qNT48wMaSTtDU4H9hDC5UV6br+Wyo45AXlbYzRhHVZBFble/S2wWsDGt7yWk4kbNhtm7kNbaFTAgziCM/430Vyxp8YSrQmUJqfFKz5AxIyHLRWDxmqckGtxtYf22fuSy8Lu49QWnjJUmu/erC9m1NbpBqFrDI7zuAb7r86vMBWlUanX9Dg3ArvgFYJZ4019vcht+jCXdl7LEKNXs+SWoyBWf9YCJ72n4RfNaZMQWxKqyFX0NgT3PMf5wQWI6JpUQ+GcoX9udIVb5E+0XnFwZK3kc9MQIwYRTeGmEztz43MKm4miClOTeXoTWWppbqLAVVsKV0SAZIjXeNMSBRPjBh8EiBO7SGNAYOs5KVpPt1HYmPy5EDLL+JP3dj1S3S+6w
+	Oo0ZhNW0E2ZCtPHIttj9iQZmdbG0y2bcX36cMWEBLhhygcesr9SrEajDHJABzGqL2IRuq8vd0+ZV00jWpxsTTqmz5GnypXMk7txBNNqtaABj7leGOcRSUI5grUEsN9N4/c2aAVEK4pWwuvbvCoMSC7g7zrvY0uL27FgVAJAGWRue7VF6NSGFhExOt3qFNcvk5ix5+WFFYQ17Y32wdNdcqyRI2bhoFnmv0FyvUQlsAxCN2NX1KT12RSJIqTJ1P0r3k5PFdSkd+lPzdNFLWRje7cvg8QEJamZsk96ck+3Ma8zOTzI/UymcDyyqozU6m3sPACJ+EOn6IyPxMC+cgyHKlFWF2VLBRi6WmYvvVIhN+zCH6SYUBSt2fXvjqX6FgP4RW8kyCsW49wriHzfhdydYJqYDzHFUeswi+iWZ0v5Xh/BvaHW64QRtPwrKHlryJDV/
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2026 14:42:21.9209
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2026 14:42:30.4556
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf8dd821-a9ad-4668-7aec-08de8ffce21a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 91458d26-46a1-4ed3-c0e3-08de8ffce730
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00006003.namprd05.prod.outlook.com
+	BN1PEPF00005FFF.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5750
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8255
 
 From: Manish Honap <mhonap@nvidia.com>
 
-Add Documentation/driver-api/vfio-pci-cxl.rst describing the architecture,
-VFIO interfaces, and operational constraints for CXL Type-2 (cache-coherent
-accelerator) passthrough via vfio-pci-core, and link it from the driver-api
-index.
+Add vfio_cxl_type2_test and build it from the vfio selftest Makefile. The
+binary expects a PCI BDF (argv or VFIO_SELFTESTS_BDF) with the device
+already on vfio-pci and CONFIG_VFIO_CXL_CORE enabled.
 
-The document covers:
-- VFIO_DEVICE_FLAGS_CXL and VFIO_DEVICE_INFO_CAP_CXL: what the capability
-  struct contains and what the FIRMWARE_COMMITTED and CACHE_CAPABLE flags mean
-- How to derive hdm_decoder_offset and hdm_count from the COMP_REGS region
-  by traversing the CXL Capability Array to find cap ID 0x5 and reading the
-  HDM Decoder Capability register
-- Topology-aware sparse mmap on the component BAR (topologies A, B, C
-  covering comp block at end, start, or middle of the BAR)
-- Two extra VFIO device regions: COMP_REGS for the emulated HDM register
-  state and the DPA memory window
-- DVSEC config write virtualization: what the guest sees vs. hardware
-- FLR coordination: DPA PTEs zapped before reset, restored after
+It exercises:
+- VFIO_DEVICE_GET_INFO,
+- GET_REGION_INFO,
+- VFIO_DEVICE_INFO_CAP_CXL capability list,
+- sparse component-BAR vs DPA/COMP_REG regions,
+- HDM decoder emulation (masks, commit, lock),
+- DVSEC-backed config where the driver exposes it.
+
+Large region read/write loops and FLR-heavy test cases are still
+pending; Need to revisit these in next version of patches.
+
+vfio_pci_device_setup() skips auto-mmap for BARs that carry
+sparse-mmap capabilities; those require the caller to mmap only the
+windows advertised by the capability.
 
 Signed-off-by: Manish Honap <mhonap@nvidia.com>
 ---
- Documentation/driver-api/index.rst        |   1 +
- Documentation/driver-api/vfio-pci-cxl.rst | 382 ++++++++++++++++++++++
- 2 files changed, 383 insertions(+)
- create mode 100644 Documentation/driver-api/vfio-pci-cxl.rst
+ tools/testing/selftests/vfio/Makefile         |   1 +
+ .../selftests/vfio/lib/vfio_pci_device.c      |   3 +-
+ .../selftests/vfio/vfio_cxl_type2_test.c      | 920 ++++++++++++++++++
+ 3 files changed, 923 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/vfio/vfio_cxl_type2_test.c
 
-diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-index 1833e6a0687e..7ec661846f6b 100644
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@ -47,6 +47,7 @@ of interest to most developers working on device drivers.
-    vfio-mediated-device
-    vfio
-    vfio-pci-device-specific-driver-acceptance
-+   vfio-pci-cxl
+diff --git a/tools/testing/selftests/vfio/Makefile b/tools/testing/selftests/vfio/Makefile
+index 3c796ca99a50..2cac98302609 100644
+--- a/tools/testing/selftests/vfio/Makefile
++++ b/tools/testing/selftests/vfio/Makefile
+@@ -4,6 +4,7 @@ TEST_GEN_PROGS += vfio_iommufd_setup_test
+ TEST_GEN_PROGS += vfio_pci_device_test
+ TEST_GEN_PROGS += vfio_pci_device_init_perf_test
+ TEST_GEN_PROGS += vfio_pci_driver_test
++TEST_GEN_PROGS += vfio_cxl_type2_test
  
- Bus-level documentation
- =======================
-diff --git a/Documentation/driver-api/vfio-pci-cxl.rst b/Documentation/driver-api/vfio-pci-cxl.rst
+ TEST_FILES += scripts/cleanup.sh
+ TEST_FILES += scripts/lib.sh
+diff --git a/tools/testing/selftests/vfio/lib/vfio_pci_device.c b/tools/testing/selftests/vfio/lib/vfio_pci_device.c
+index fac4c0ecadef..98832acc31ac 100644
+--- a/tools/testing/selftests/vfio/lib/vfio_pci_device.c
++++ b/tools/testing/selftests/vfio/lib/vfio_pci_device.c
+@@ -257,7 +257,8 @@ static void vfio_pci_device_setup(struct vfio_pci_device *device)
+ 		struct vfio_pci_bar *bar = device->bars + i;
+ 
+ 		vfio_pci_region_get(device, i, &bar->info);
+-		if (bar->info.flags & VFIO_REGION_INFO_FLAG_MMAP)
++		if ((bar->info.flags & VFIO_REGION_INFO_FLAG_MMAP) &&
++		    !(bar->info.flags & VFIO_REGION_INFO_FLAG_CAPS))
+ 			vfio_pci_bar_map(device, i);
+ 	}
+ 
+diff --git a/tools/testing/selftests/vfio/vfio_cxl_type2_test.c b/tools/testing/selftests/vfio/vfio_cxl_type2_test.c
 new file mode 100644
-index 000000000000..1256e4d33fc6
+index 000000000000..272412a7b22f
 --- /dev/null
-+++ b/Documentation/driver-api/vfio-pci-cxl.rst
-@@ -0,0 +1,382 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=======================================
-+VFIO PCI CXL Type-2 device passthrough
-+=======================================
-+
-+Overview
-+--------
-+
-+Type-2 CXL devices are PCIe accelerators (GPUs, compute ASICs, and similar)
-+with coherent device memory on CXL.mem. DPA is mapped into host physical
-+address space through HDM decoders that the kernel's CXL subsystem owns. A
-+guest cannot program that hardware directly.
-+
-+This ``vfio-pci`` mode hands a VMM:
-+
-+- A read/write VFIO device region (COMP_REGS) that emulates the HDM decoder
-+  register block with CXL register rules enforced in kernel code.
-+- A mmapable VFIO device region (DPA) backed by the kernel-chosen host physical
-+  range for device memory.
-+- DVSEC config-space emulation so the guest cannot change host-owned CXL.io /
-+  CXL.mem enable bits.
-+
-+Build with ``CONFIG_VFIO_CXL_CORE=y``. At runtime you can turn it off with::
-+
-+    modprobe vfio-pci disable_cxl=1
-+
-+or, in a variant driver, set ``vdev->disable_cxl = true`` before registration.
-+
-+
-+Device detection
-+----------------
-+
-+At ``vfio_pci_core_register_device()`` the driver checks for a Type-2 style
-+setup. All of the following must hold:
-+
-+1. CXL Device DVSEC present (PCIe DVSEC Vendor ID ``0x1E98``, DVSEC ID
-+   ``0x0000``).
-+2. ``Mem_Capable`` (bit 2) set in the CXL Capability register inside that DVSEC.
-+3. PCI class code is **not** ``0x050210`` (CXL Type-3 memory expander).
-+4. An HDM Decoder capability block reachable through the Register Locator DVSEC.
-+5. At least one HDM decoder committed by firmware with non-zero size.
-+
-+The CXL spec labels "Type-2" as devices with both ``Mem_Capable`` and
-+``Cache_Capable``. This driver also takes ``Mem_Capable``-only devices
-+(``Cache_Capable=0``), which behave like Type-3 style accelerators without the
-+usual class code. ``VFIO_CXL_CAP_CACHE_CAPABLE`` exposes the cache bit to
-+userspace so a VMM can treat FLR differently when needed.
-+
-+When detection succeeds, ``VFIO_DEVICE_FLAGS_CXL`` is ORed into
-+``vfio_device_info.flags`` together with ``VFIO_DEVICE_FLAGS_PCI``.
-+
-+.. note::
-+
-+   **Firmware must commit an HDM decoder before open.** The driver only
-+   discovers DPA range and size from a decoder that firmware already committed.
-+   Devices without that, or hot-plugged setups that never get it, are out of
-+   scope for now.
-+
-+   Follow-up options under discussion include CXL range registers in the
-+   Device DVSEC (often enough on single-decoder parts), CDAT over DOE, mailbox
-+   Get Partition Info, or a future DVSEC field from the consortium for
-+   base/size/NUMA without extra side channels. There is also talk of a sysfs
-+   path, modeled on resizable BAR, where an orchestrator fixes the DPA window
-+   before vfio-pci binds so the driver still sees a committed range.
-+
-+
-+UAPI: VFIO_DEVICE_INFO_CAP_CXL
-+------------------------------
-+
-+When ``VFIO_DEVICE_FLAGS_CXL`` is set, the device info capability chain
-+includes a ``vfio_device_info_cap_cxl`` structure (cap ID 6, version 1)::
-+
-+    struct vfio_device_info_cap_cxl {
-+        struct vfio_info_cap_header header; /* id=6, version=1 */
-+        __u8   hdm_regs_bar_index;  /* BAR index containing component regs */
-+        __u8   reserved[3];
-+        __u32  flags;               /* VFIO_CXL_CAP_* flags */
-+        __u64  hdm_regs_offset;     /* byte offset within the BAR to the
-+                                     * CXL.mem register area start.  This
-+                                     * equals comp_reg_offset + CXL_CM_OFFSET
-+                                     * where CXL_CM_OFFSET = 0x1000. */
-+        __u32  dpa_region_index;    /* VFIO region index for DPA memory */
-+        __u32  comp_regs_region_index; /* VFIO region index for COMP_REGS */
-+    };
-+    /*
-+     * hdm_count and hdm_decoder_offset are intentionally absent from this
-+     * struct. Both are derivable from the COMP_REGS region. See the
-+     * "Deriving HDM info from COMP_REGS" section below.
-+     */
-+
-+    #define VFIO_CXL_CAP_FIRMWARE_COMMITTED  (1 << 0)
-+    #define VFIO_CXL_CAP_CACHE_CAPABLE       (1 << 1)
-+
-+``VFIO_CXL_CAP_FIRMWARE_COMMITTED``
-+    At least one HDM decoder was pre-committed by firmware. The DPA region
-+    is live at device open; the VMM can map it without waiting for a guest
-+    COMMIT cycle.
-+
-+``VFIO_CXL_CAP_CACHE_CAPABLE``
-+    The device has an HDM-DB decoder (CXL.mem + CXL.cache). This mirrors the
-+    ``Cache_Capable`` bit from the CXL DVSEC Capability register. The kernel
-+    does not run Write-Back Invalidation (WBI) before FLR; with this flag set
-+    that stays the VMM's job.
-+
-+DPA region size comes from ``VFIO_DEVICE_GET_REGION_INFO`` on
-+``dpa_region_index``, not from this struct.
-+
-+
-+VFIO regions
-+------------
-+
-+A CXL device adds two device regions on top of the usual BARs. Their indices
-+are in ``dpa_region_index`` and ``comp_regs_region_index``.
-+
-+DPA region (``VFIO_REGION_SUBTYPE_CXL``)
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+Flags: ``READ | WRITE | MMAP``.
-+
-+The backing store is the host physical range the kernel assigned for DPA. The
-+kernel maps it with ``memremap(MEMREMAP_WB)`` because CXL device memory on a
-+coherent link sits in the CPU cache hierarchy. That mapping is normal cached
-+memory, so ``copy_to/from_user`` works without extra barriers.
-+
-+Page faults are lazy: PFNs are installed per page on first touch via
-+``vmf_insert_pfn``. ``mmap()`` does not populate the whole region up front.
-+
-+Region read/write through the fd uses the same ``MEMREMAP_WB`` mapping with
-+``copy_to/from_user``. ``ioread``/``iowrite`` MMIO helpers are not used on
-+this path.
-+
-+During FLR, ``unmap_mapping_range()`` drops user PTEs and ``region_active``
-+clears before the reset runs. Ongoing faults or region I/O then error instead
-+of touching a dead mapping. IOMMU ATC invalidation from the zap has to finish
-+before the device resets; doing it the other way around can leave an SMMU
-+waiting on a device that no longer responds.
-+
-+After reset, the region comes back once ``COMMITTED`` shows up again in fresh
-+HDM hardware state. The VMM can fault pages in again without a new ``mmap()``.
-+
-+COMP_REGS region (``VFIO_REGION_SUBTYPE_CXL_COMP_REGS``)
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+Flags: ``READ | WRITE`` (no mmap).
-+
-+Emulated registers for the CXL.mem slice of the component register block: the
-+CXL Capability Array header at offset 0, then the HDM Decoder capability
-+starting at ``hdm_decoder_offset`` (the byte offset derived by traversing the
-+CXL Capability Array — see "Deriving HDM info from COMP_REGS" below).
-+Region size from ``VFIO_DEVICE_GET_REGION_INFO`` covers the full capability
-+array prefix plus all HDM decoder blocks.
-+
-+Only 32-bit, 32-bit-aligned accesses are allowed. 8- and 16-bit attempts get
-+``-EINVAL``.
-+
-+Offsets below ``hdm_decoder_offset`` return the snapshot from device open.
-+Writes there are dropped (with a WARN); the capability array stays read-only.
-+
-+From ``hdm_decoder_offset`` upward the kernel keeps a shadow
-+(``comp_reg_virt[]``) and applies field rules:
-+
-+- At open, hardware HDM state is snapshotted. For firmware-committed decoders
-+  the LOCK bit is cleared and BASE_HI/BASE_LO are zeroed in the shadow so the
-+  VMM can program guest GPA; the host HPA is not carried in the shadow after
-+  that.
-+- ``COMMIT`` (bit 9 of CTRL): writing 1 sets ``COMMITTED`` (bit 10) in the
-+  shadow immediately. Real hardware stays committed; the shadow tracks what
-+  the guest should see.
-+- When LOCK is set, writes to BASE_HI and SIZE_HI are ignored so
-+  firmware-committed values survive.
-+
-+Region type identifiers::
-+
-+    /* type = PCI_VENDOR_ID_CXL | VFIO_REGION_TYPE_PCI_VENDOR_TYPE */
-+    #define VFIO_REGION_SUBTYPE_CXL           1  /* DPA memory region */
-+    #define VFIO_REGION_SUBTYPE_CXL_COMP_REGS 2  /* HDM register shadow */
-+
-+
-+BAR access
-+----------
-+
-+``VFIO_DEVICE_GET_REGION_INFO`` for ``hdm_regs_bar_index`` reports the full
-+BAR size with ``READ | WRITE | MMAP`` flags and a
-+``VFIO_REGION_INFO_CAP_SPARSE_MMAP`` capability listing the GPU or
-+accelerator register windows — the mmappable parts of the BAR that do **not**
-+contain CXL component registers.
-+
-+The number of sparse areas depends on where the CXL component register block
-+``[comp_reg_offset, comp_reg_offset + comp_reg_size)`` sits within the BAR:
-+
-+* **Topology A** - component block at BAR end:
-+  ``[gpu_regs | comp_regs]`` → 1 area: ``[0, comp_reg_offset)``
-+
-+* **Topology B** - component block at BAR start:
-+  ``[comp_regs | gpu_regs]`` → 1 area: ``[comp_reg_size, bar_len)``
-+
-+* **Topology C** - component block in middle:
-+  ``[gpu_regs | comp_regs | gpu_regs]`` → 2 areas:
-+  ``[0, comp_reg_offset)`` and ``[comp_reg_offset + comp_reg_size, bar_len)``
-+
-+VMMs **must** iterate all ``nr_areas`` entries; do not assume a single area or
-+that the first area starts at offset zero.
-+
-+The GPU/accelerator register windows listed in the sparse capability **are**
-+physically mmappable: ``mmap()`` on the VFIO device fd at the corresponding
-+BAR offset succeeds and yields a host-physical-backed mapping suitable for
-+KVM stage-2 installation.
-+
-+The CXL component register block itself **is not** mmappable.  Any ``mmap()``
-+request whose range overlaps ``[comp_reg_offset, comp_reg_offset +
-+comp_reg_size)`` returns ``-EINVAL``; those registers must be accessed through
-+the ``COMP_REGS`` device region.
-+
-+
-+DVSEC configuration space emulation
-+-----------------------------------
-+
-+With ``CONFIG_VFIO_CXL_CORE=y``, vfio-pci installs a handler for
-+``PCI_EXT_CAP_ID_DVSEC`` (``0x23``) in the config access table. Non-CXL
-+devices fall through as before.
-+
-+On CXL devices, writes to these DVSEC registers are caught and reflected in
-+``vdev->vconfig`` (shadow config space):
-+
-++--------------------+--------+--------------------------------------------------+
-+| Register           | Offset | Emulation                                        |
-++====================+========+==================================================+
-+| CXL Control        | +0x0c  | RWL; IO_Enable held at 1; locked when Lock       |
-+|                    |        | bit 0 is set.                                    |
-++--------------------+--------+--------------------------------------------------+
-+| CXL Status         | +0x0e  | Bit 14 (Viral_Status) is RW1CS.                  |
-++--------------------+--------+--------------------------------------------------+
-+| CXL Control2       | +0x10  | Bits 1 and 2 forwarded to hardware.              |
-++--------------------+--------+--------------------------------------------------+
-+| CXL Status2        | +0x12  | Bit 3 forwarded when Capability3 bit 3 is set.   |
-++--------------------+--------+--------------------------------------------------+
-+| CXL Lock           | +0x14  | RWO; once set, Control becomes read-only until   |
-+|                    |        | conventional reset.                              |
-++--------------------+--------+--------------------------------------------------+
-+| Range Base Hi/Lo   | varies | Stored in vconfig; Base Low [27:0] reserved bits |
-+|                    |        | cleared on write.                                |
-++--------------------+--------+--------------------------------------------------+
-+
-+Reads return the shadow. Read-only registers (Capability, Size High/Low) are
-+filled from hardware at open.
-+
-+
-+FLR and reset
-+-------------
-+
-+FLR goes through ``vfio_pci_ioctl_reset()``. The CXL-specific part is:
-+
-+1. ``vfio_cxl_zap_region_locked()`` runs under the write side of
-+   ``memory_lock``. It clears ``region_active`` and calls
-+   ``unmap_mapping_range()`` on the DPA inode mapping so user PTEs go away.
-+   Concurrent faults or fd I/O hit the inactive flag and error. IOMMU ATC must
-+   drain before reset (see the DPA region notes above).
-+
-+2. After FLR, ``vfio_cxl_reactivate_region()`` reads HDM hardware again into
-+   ``comp_reg_virt[]``. If ``COMMITTED`` is set (common when firmware left the
-+   decoder committed), ``region_active`` turns back on and the VMM can refault
-+   without remapping.
-+
-+
-+Known limitations
-+-----------------
-+
-+**Pre-committed HDM decoder required**
-+    See `Device detection`_ and the note there.
-+
-+**CXL hot-plug not supported**
-+    Slots need to be present and programmed by firmware at boot.
-+
-+**CXL.cache Write-Back Invalidation not implemented**
-+    For HDM-DB devices (``VFIO_CXL_CAP_CACHE_CAPABLE``), the kernel does not
-+    run WBI before FLR. The VMM must do it and expose Back-Invalidation in the
-+    guest topology where required.
-+
-+
-+VMM integration notes
-+---------------------
-+
-+For a ``VFIO_CXL_CAP_FIRMWARE_COMMITTED`` device (what works today)::
-+
-+    /* 1. Get device info and locate the CXL cap */
-+    vfio_device_get_info(fd, &dinfo);
-+    assert(dinfo.flags & VFIO_DEVICE_FLAGS_CXL);
-+    cxl = find_cap(&dinfo, VFIO_DEVICE_INFO_CAP_CXL);
-+
-+    /* 2. Get DPA and COMP_REGS region sizes */
-+    get_region_info(fd, cxl->dpa_region_index, &dpa_ri);
-+    get_region_info(fd, cxl->comp_regs_region_index, &comp_ri);
-+
-+    /* 3. Map DPA region at a guest physical address */
-+    gpa_base = allocate_guest_phys(dpa_ri.size);
-+    mmap(gpa_base, dpa_ri.size, PROT_READ|PROT_WRITE,
-+         MAP_SHARED|MAP_FIXED, vfio_fd,
-+         (off_t)cxl->dpa_region_index << VFIO_PCI_OFFSET_SHIFT);
-+
-+    /* 4. Derive hdm_decoder_offset from COMP_REGS (see section below) */
-+    uint64_t hdm_decoder_offset = derive_hdm_offset(vfio_fd, comp_ri);
-+
-+    /* 5. Write guest GPA into HDM Decoder 0 BASE via COMP_REGS pwrite */
-+    u32 base_hi = gpa_base >> 32;
-+    comp_off = (off_t)cxl->comp_regs_region_index << VFIO_PCI_OFFSET_SHIFT;
-+    pwrite(vfio_fd, &base_hi, 4,
-+           comp_off + hdm_decoder_offset + CXL_HDM_DECODER0_BASE_HIGH_OFFSET);
-+
-+    /* 6. Build guest CXL topology using gpa_base and dpa_ri.size */
-+    build_cfmws(gpa_base, dpa_ri.size);
-+
-+    /* 7. If CACHE_CAPABLE: issue WBI before any guest FLR */
-+
-+Extra detail:
-+
-+- DPA size is ``dpa_ri.size`` from region info.
-+- ``CXL_HDM_DECODER0_BASE_HIGH_OFFSET`` lives in ``include/uapi/cxl/cxl_regs.h``.
-+- On the BAR, ``mmaps[0].size`` from the sparse-mmap cap on
-+  ``hdm_regs_bar_index`` splits GPU MMIO (BAR fd) from the CXL block (COMP_REGS
-+  region).
-+- If ``VFIO_CXL_CAP_CACHE_CAPABLE`` is set, the guest CXL topology should
-+  advertise Back-Invalidation and the VMM should run WBI before FLR.
-+
-+
-+Deriving HDM info from COMP_REGS
-+---------------------------------
-+
-+``hdm_decoder_offset`` and ``hdm_count`` are not in ``vfio_device_info_cap_cxl``
-+because both are directly readable from the ``COMP_REGS`` region.
-+
-+**Finding hdm_decoder_offset:**
-+
-+Read dwords from the COMP_REGS region starting at offset 0 (the CXL Capability
-+Array).  ``comp_off`` is the VFIO file offset for the COMP_REGS region:
-+``(off_t)cxl->comp_regs_region_index << VFIO_PCI_OFFSET_SHIFT``::
-+
-+    /* Dword 0: CXL Capability Array Header */
-+    pread(fd, &hdr, 4, comp_off + 0);
-+    /* bits[15:0] must be 1 (CM_CAP_HDR_CAP_ID) */
-+    /* bits[31:24] = number of capability entries */
-+    num_caps = (hdr >> 24) & 0xff;  /* CXL_CM_CAP_HDR_ARRAY_SIZE_MASK */
-+
-+    /* Walk entries at dword 1..num_caps */
-+    for (i = 1; i <= num_caps; i++) {
-+        pread(fd, &entry, 4, comp_off + i * 4);
-+        cap_id = entry & 0xffff;           /* CXL_CM_CAP_HDR_ID_MASK */
-+        if (cap_id == 0x5) {               /* CXL_CM_CAP_CAP_ID_HDM */
-+            hdm_decoder_offset = (entry >> 20) & 0xfff; /* CXL_CM_CAP_PTR_MASK */
-+            break;
-+        }
-+    }
-+
-+**Finding hdm_count:**
-+
-+Read the HDM Decoder Capability register (HDMC) at ``hdm_decoder_offset + 0``::
-+
-+    pread(fd, &hdmc, 4, comp_off + hdm_decoder_offset);
-+    field = hdmc & 0xf;  /* CXL_HDM_DECODER_COUNT_MASK bits[3:0] */
-+    hdm_count = field ? field * 2 : 1;  /* 0→1, N→N*2 decoders */
-+
-+All constants are in ``include/uapi/cxl/cxl_regs.h``.
-+
-+
-+Kernel configuration
-+--------------------
-+
-+``CONFIG_VFIO_CXL_CORE`` (bool)
-+    CXL Type-2 passthrough in ``vfio-pci-core``. Needs ``CONFIG_VFIO_PCI_CORE``,
-+    ``CONFIG_CXL_BUS``, and ``CONFIG_CXL_MEM``.
-+
-+References
-+----------
-+
-+* CXL Specification 4.0, 8.1.3 - PCIe DVSEC for CXL Devices
-+* CXL Specification 4.0, 8.2.4.20 - CXL HDM Decoder Capability Structure
-+* ``include/uapi/linux/vfio.h`` - ``VFIO_DEVICE_INFO_CAP_CXL``,
-+  ``VFIO_REGION_SUBTYPE_CXL``, ``VFIO_REGION_SUBTYPE_CXL_COMP_REGS``
-+* ``include/uapi/cxl/cxl_regs.h`` - ``CXL_CM_OFFSET``,
-+  ``CXL_CM_CAP_HDR_ARRAY_SIZE_MASK``, ``CXL_CM_CAP_HDR_ID_MASK``,
-+  ``CXL_CM_CAP_PTR_MASK``, ``CXL_HDM_DECODER_COUNT_MASK``,
-+  ``CXL_HDM_DECODER0_BASE_HIGH_OFFSET``
++++ b/tools/testing/selftests/vfio/vfio_cxl_type2_test.c
+@@ -0,0 +1,920 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * vfio_cxl_type2_test - selftests for CXL Type-2 device passthrough via vfio-pci
++ *
++ * Tests the UAPI and emulation layer introduced by CONFIG_VFIO_CXL_CORE
++ *
++ * Usage:
++ *   ./vfio_cxl_type2_test <BDF>
++ * or set the environment variable VFIO_SELFTESTS_BDF before running.
++ *
++ * The device must be a CXL Type-2 device (e.g. a GPU with coherent memory).
++ * Tests adapt automatically to firmware-committed (COMMITTED/COMMIT_LOCK set)
++ * and CONFIG_LOCK-set hardware states instead of skipping.
++ *
++ * Copyright (c) 2026, NVIDIA CORPORATION & AFFILIATES. All rights reserved
++ */
++
++#include <fcntl.h>
++#include <stdint.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
++
++#include <sys/ioctl.h>
++#include <sys/mman.h>
++
++#include <linux/pci_regs.h>
++#include <cxl/cxl_regs.h>
++#include <linux/sizes.h>
++#include <linux/vfio.h>
++
++#include <libvfio.h>
++
++#include "kselftest_harness.h"
++
++/* Userspace equivalents of kernel helpers not available in user headers */
++#ifndef BIT
++#define BIT(n)			(1u << (n))
++#endif
++#ifndef GENMASK
++#define GENMASK(h, l)		(((~0u) >> (31 - (h))) & ((~0u) << (l)))
++#endif
++#define VFIO_PCI_INDEX_TO_OFFSET(idx)	((uint64_t)(idx) << 40)
++
++static const char *device_bdf;
++
++/* ------------------------------------------------------------------ */
++/* CXL UAPI constants (mirrors include/uapi/linux/vfio.h)             */
++/* ------------------------------------------------------------------ */
++
++#define VFIO_DEVICE_INFO_CAP_CXL	6
++
++#define PCI_VENDOR_ID_CXL		0x1e98
++
++#ifndef VFIO_REGION_SUBTYPE_CXL
++#define VFIO_REGION_SUBTYPE_CXL		1
++#endif
++#ifndef VFIO_REGION_SUBTYPE_CXL_COMP_REGS
++#define VFIO_REGION_SUBTYPE_CXL_COMP_REGS 2
++#endif
++
++/*
++ * HDM Decoder register layout within the component register block.
++ * Offsets relative to the start of the HDM decoder capability block.
++ * The HDM decoder block begins at hdm_decoder_offset within the COMP_REGS
++ * region; add hdm_decoder_offset before indexing into the region.
++ */
++#define HDM_GLOBAL_CTRL_OFFSET		0x04
++#define HDM_DECODER_FIRST_OFFSET	0x10
++#define HDM_DECODER_STRIDE		0x20
++#define HDM_DECODER_BASE_LO		0x00
++#define HDM_DECODER_BASE_HI		0x04
++#define HDM_DECODER_SIZE_LO		0x08
++#define HDM_DECODER_SIZE_HI		0x0c
++#define HDM_DECODER_CTRL		0x10
++
++#define HDM_CTRL_COMMIT			BIT(9)
++#define HDM_CTRL_COMMITTED		BIT(10)
++#define HDM_CTRL_RESERVED_MASK		(BIT(15) | GENMASK(31, 28))
++
++#define CXL_LOCK_RESERVED_MASK GENMASK(15, 1)
++
++/* ------------------------------------------------------------------ */
++/* Helpers                                                            */
++/* ------------------------------------------------------------------ */
++
++/*
++ * Walk the vfio_device_info capability chain embedded in @buf.
++ * Returns a pointer to the capability with the given @id, or NULL.
++ */
++static const struct vfio_info_cap_header *
++find_device_cap(const void *buf, size_t bufsz, uint16_t id)
++{
++	const struct vfio_device_info *info = buf;
++	const struct vfio_info_cap_header *cap;
++
++	if (!(info->flags & VFIO_DEVICE_FLAGS_CAPS) || !info->cap_offset)
++		return NULL;
++
++	cap = (const struct vfio_info_cap_header *)
++		((const char *)buf + info->cap_offset);
++
++	while (true) {
++		if (cap->id == id)
++			return cap;
++		if (!cap->next)
++			return NULL;
++		cap = (const struct vfio_info_cap_header *)
++			((const char *)buf + cap->next);
++		if ((const char *)cap + sizeof(*cap) > (const char *)buf + bufsz)
++			return NULL;
++	}
++}
++
++/*
++ * Walk the vfio_region_info capability chain embedded in @buf.
++ * Returns a pointer to the capability with the given @id, or NULL.
++ * @buf must have been obtained from VFIO_DEVICE_GET_REGION_INFO with
++ * argsz large enough to hold the full capability chain.
++ */
++static const struct vfio_info_cap_header *
++find_region_cap(const void *buf, size_t bufsz, uint16_t id)
++{
++	const struct vfio_region_info *info = buf;
++	const struct vfio_info_cap_header *cap;
++
++	if (!(info->flags & VFIO_REGION_INFO_FLAG_CAPS) || !info->cap_offset)
++		return NULL;
++
++	cap = (const struct vfio_info_cap_header *)
++		((const char *)buf + info->cap_offset);
++
++	while (true) {
++		if (cap->id == id)
++			return cap;
++		if (!cap->next)
++			return NULL;
++		cap = (const struct vfio_info_cap_header *)
++			((const char *)buf + cap->next);
++		if ((const char *)cap + sizeof(*cap) > (const char *)buf + bufsz)
++			return NULL;
++	}
++}
++
++/*
++ * Read a 32-bit value from the COMP_REGS region at @offset (HDM-relative).
++ */
++static uint32_t comp_regs_read32(struct vfio_pci_device *dev,
++				 uint32_t region_idx, uint64_t offset)
++{
++	uint32_t val;
++	loff_t pos = (loff_t)VFIO_PCI_INDEX_TO_OFFSET(region_idx) + offset;
++	ssize_t r;
++
++	r = pread(dev->fd, &val, sizeof(val), pos);
++	if (r != sizeof(val))
++		return ~0u;
++	return val;
++}
++
++/*
++ * Write a 32-bit value to the COMP_REGS region at @offset.
++ * Mirrors the error-propagation contract of comp_regs_read32() which returns
++ * ~0u on a short or failed pread.
++ */
++static ssize_t comp_regs_write32(struct vfio_pci_device *dev,
++				 uint32_t region_idx, uint64_t offset,
++				 uint32_t val)
++{
++	loff_t pos = (loff_t)VFIO_PCI_INDEX_TO_OFFSET(region_idx) + offset;
++
++	return pwrite(dev->fd, &val, sizeof(val), pos);
++}
++
++/*
++ * HDM register accessors.
++ *
++ * The COMP_REGS region starts at the CXL component register block
++ * start (comp_reg_offset).  The HDM decoder capability block begins at
++ * hdm_decoder_offset within this region. These helpers add
++ * hdm_decoder_offset so that callers can continue to use the HDM-relative
++ * offsets defined by the macros above.
++ */
++static uint32_t hdm_regs_read32(struct vfio_pci_device *dev,
++				uint32_t region_idx,
++				uint64_t hdm_decoder_offset,
++				uint64_t hdm_off)
++{
++	return comp_regs_read32(dev, region_idx, hdm_decoder_offset + hdm_off);
++}
++
++static ssize_t hdm_regs_write32(struct vfio_pci_device *dev,
++				uint32_t region_idx,
++				uint64_t hdm_decoder_offset,
++				uint64_t hdm_off,
++				uint32_t val)
++{
++	return comp_regs_write32(dev, region_idx, hdm_decoder_offset + hdm_off, val);
++}
++
++/*
++ * Traverse the CXL Capability Array at COMP_REGS region offset 0 to find the
++ * HDM Decoder capability block offset and decoder count.
++ *
++ * COMP_REGS region layout at offset 0 (CXL Capability Array):
++ *   Dword 0 bits[31:24] (CXL_CM_CAP_HDR_ARRAY_SIZE_MASK): entry count N.
++ *   Dwords 1..N at offset (cap*4): bits[15:0] = cap ID (CXL_CM_CAP_HDR_ID_MASK),
++ *   bits[31:20] = byte offset from COMP_REGS start (CXL_CM_CAP_PTR_MASK).
++ *
++ * HDM Decoder cap ID = 0x5 (CXL_CM_CAP_CAP_ID_HDM).
++ * HDMC at hdm_decoder_offset+0 bits[3:0]: count = (field==0) ? 1 : field*2.
++ *
++ * Returns true on success; sets *hdm_off and *hdm_cnt.
++ */
++static bool find_hdm_decoder_info(struct vfio_pci_device *dev,
++				  uint32_t comp_regs_idx,
++				  uint64_t *hdm_off, uint8_t *hdm_cnt)
++{
++	uint32_t hdr, num_caps, i;
++
++	/* Read CXL Capability Array Header (dword 0) */
++	hdr = comp_regs_read32(dev, comp_regs_idx, 0);
++	if (hdr == ~0u)
++		return false;
++
++	/* Validate: bits[15:0] must be CM_CAP_HDR_CAP_ID (1) */
++	if ((hdr & 0xffff) != 1)
++		return false;
++
++	/* bits[31:24] = number of capability entries */
++	num_caps = (hdr >> 24) & 0xff;
++
++	for (i = 1; i <= num_caps; i++) {
++		uint32_t entry = comp_regs_read32(dev, comp_regs_idx, i * 4);
++		uint32_t cap_id = entry & 0xffff; /* CXL_CM_CAP_HDR_ID_MASK */
++
++		if (cap_id == 0x5) { /* CXL_CM_CAP_CAP_ID_HDM */
++			uint32_t hdmc;
++			uint32_t field;
++
++			/* bits[31:20]: byte offset from COMP_REGS start */
++			*hdm_off = (entry >> 20) & 0xfff;
++
++			/* Read HDMC register at hdm_decoder_offset + 0 */
++			hdmc = comp_regs_read32(dev, comp_regs_idx, *hdm_off);
++			if (hdmc == ~0u)
++				return false;
++
++			/* bits[3:0]: 0 = 1 decoder, N = N*2 decoders */
++			field = hdmc & 0xf;
++			*hdm_cnt = field ? (uint8_t)(field * 2) : 1;
++			return true;
++		}
++	}
++	return false;
++}
++
++/*
++ * Find the CXL DVSEC capability base in config space.
++ */
++#define PCI_DVSEC_VENDOR_ID_CXL	0x1e98
++#define PCI_DVSEC_ID_CXL_DEVICE	0x0000
++#define PCI_EXT_CAP_ID_DVSEC	0x23
++
++static uint16_t find_cxl_dvsec(struct vfio_pci_device *dev)
++{
++	uint16_t pos = PCI_CFG_SPACE_SIZE; /* 0x100 */
++	int iter = 0;
++
++	while (pos && iter++ < 64) {
++		uint32_t hdr  = vfio_pci_config_readl(dev, pos);
++		uint32_t hdr1, hdr2;
++		uint16_t cap_id	 = hdr & 0xffff;
++		uint16_t next	 = (hdr >> 20) & 0xffc;
++
++		if (cap_id == PCI_EXT_CAP_ID_DVSEC) {
++			hdr1 = vfio_pci_config_readl(dev, pos + 4);
++			hdr2 = vfio_pci_config_readl(dev, pos + 8);
++			/*
++			 * PCIe DVSEC Header 1 layout (Table 9-16):
++			 *   Bits [15: 0] = DVSEC Vendor ID
++			 *   Bits [19:16] = DVSEC Revision
++			 *   Bits [31:20] = DVSEC Length
++			 * DVSEC Header 2 layout:
++			 *   Bits [15: 0] = DVSEC ID
++			 */
++			if ((hdr1 & 0xffff) == PCI_DVSEC_VENDOR_ID_CXL &&
++			    (hdr2 & 0xffff) == PCI_DVSEC_ID_CXL_DEVICE)
++				return pos;
++		}
++		pos = next;
++	}
++	return 0;
++}
++
++/* ------------------------------------------------------------------ */
++/* Fixture                                                            */
++/* ------------------------------------------------------------------ */
++
++FIXTURE(cxl_type2) {
++	struct iommu *iommu;
++	struct vfio_pci_device *dev;
++
++	/* Filled in during FIXTURE_SETUP from the CXL cap */
++	struct vfio_device_info_cap_cxl cxl_cap;
++	uint16_t dvsec_base;
++
++	/*
++	 * Sizes derived from VFIO_DEVICE_GET_REGION_INFO at setup time.
++	 * These are not in the CXL cap struct; query the region directly.
++	 */
++	uint64_t dpa_size;       /* size of the DPA region */
++	uint64_t hdm_regs_size;  /* size of the COMP_REGS region */
++
++	/*
++	 * HDM decoder info derived from the COMP_REGS region at setup time.
++	 * hdm_count and hdm_decoder_offset are no longer in the UAPI cap struct;
++	 * they are derived by traversing the CXL Capability Array and reading
++	 * the HDM Decoder Capability register (HDMC).
++	 */
++	uint64_t hdm_decoder_offset; /* byte offset in COMP_REGS to HDM block */
++	uint8_t  hdm_count;          /* number of HDM decoders */
++
++	/* DPA mmap pointer (may be NULL if test skips mmap sub-tests) */
++	void *dpa_mmap;
++	size_t dpa_mmap_size;
++};
++
++FIXTURE_SETUP(cxl_type2)
++{
++	uint8_t infobuf[512] = {};
++	struct vfio_device_info *info = (void *)infobuf;
++	const struct vfio_device_info_cap_cxl *cap;
++
++	self->iommu = iommu_init(default_iommu_mode);
++	self->dev   = vfio_pci_device_init(device_bdf, self->iommu);
++
++	/* Query device info with space for capability chain */
++	info->argsz = sizeof(infobuf);
++	ASSERT_EQ(0, ioctl(self->dev->fd, VFIO_DEVICE_GET_INFO, info));
++
++	if (!(info->flags & VFIO_DEVICE_FLAGS_CXL)) {
++		printf("Device %s is not a CXL Type-2 device — skipping\n",
++		       device_bdf);
++		SKIP(return, "not a CXL Type-2 device");
++	}
++
++	cap = (const struct vfio_device_info_cap_cxl *)
++		find_device_cap(infobuf, sizeof(infobuf),
++				VFIO_DEVICE_INFO_CAP_CXL);
++	ASSERT_NE(NULL, cap);
++	memcpy(&self->cxl_cap, cap, sizeof(*cap));
++
++	/*
++	 * Populate dpa_size and hdm_regs_size from region queries.
++	 */
++	{
++		struct vfio_region_info ri = { .argsz = sizeof(ri) };
++
++		ri.index = cap->dpa_region_index;
++		ASSERT_EQ(0, ioctl(self->dev->fd,
++				   VFIO_DEVICE_GET_REGION_INFO, &ri));
++		self->dpa_size = ri.size;
++
++		ri.index = cap->comp_regs_region_index;
++		ASSERT_EQ(0, ioctl(self->dev->fd,
++				   VFIO_DEVICE_GET_REGION_INFO, &ri));
++		self->hdm_regs_size = ri.size;
++	}
++
++	/*
++	 * Derive hdm_decoder_offset and hdm_count from the COMP_REGS region.
++	 * These fields were removed from vfio_device_info_cap_cxl to keep the
++	 * UAPI minimal; userspace derives them via the CXL Capability Array.
++	 */
++	ASSERT_TRUE(find_hdm_decoder_info(self->dev,
++					  cap->comp_regs_region_index,
++					  &self->hdm_decoder_offset,
++					  &self->hdm_count));
++
++	self->dvsec_base    = find_cxl_dvsec(self->dev);
++	self->dpa_mmap      = MAP_FAILED;
++	self->dpa_mmap_size = 0;
++}
++
++FIXTURE_TEARDOWN(cxl_type2)
++{
++	if (self->dpa_mmap != MAP_FAILED && self->dpa_mmap_size)
++		munmap(self->dpa_mmap, self->dpa_mmap_size);
++	vfio_pci_device_cleanup(self->dev);
++	iommu_cleanup(self->iommu);
++}
++
++/* ------------------------------------------------------------------ */
++/* Tests: VFIO_DEVICE_GET_INFO                                        */
++/* ------------------------------------------------------------------ */
++
++/*
++ * CXL and PCI flags must both be set; CAPS must be set since we have a cap.
++ */
++TEST_F(cxl_type2, device_flags)
++{
++	uint8_t infobuf[512] = {};
++	struct vfio_device_info *info = (void *)infobuf;
++
++	info->argsz = sizeof(infobuf);
++	ASSERT_EQ(0, ioctl(self->dev->fd, VFIO_DEVICE_GET_INFO, info));
++
++	ASSERT_TRUE(info->flags & VFIO_DEVICE_FLAGS_CXL);
++	ASSERT_TRUE(info->flags & VFIO_DEVICE_FLAGS_PCI);
++	ASSERT_TRUE(info->flags & VFIO_DEVICE_FLAGS_CAPS);
++
++	printf("device flags: 0x%x  num_regions: %u\n",
++	       info->flags, info->num_regions);
++}
++
++/*
++ * The CXL capability must report sane HDM and DPA values.
++ * hdm_count and hdm_decoder_offset are no longer in the cap struct; they
++ * are derived from the COMP_REGS region in FIXTURE_SETUP and stored in
++ * self->hdm_count and self->hdm_decoder_offset.
++ */
++TEST_F(cxl_type2, cxl_cap_fields)
++{
++	const struct vfio_device_info_cap_cxl *c = &self->cxl_cap;
++
++	ASSERT_EQ(VFIO_DEVICE_INFO_CAP_CXL, c->header.id);
++	ASSERT_EQ(1, c->header.version);
++
++	/* Must have at least one HDM decoder (derived from HDMC bits[3:0]) */
++	ASSERT_GT(self->hdm_count, 0);
++
++	/* COMP_REGS region size must be non-zero and 4-byte aligned */
++	ASSERT_GT(self->hdm_regs_size, 0ULL);
++	ASSERT_EQ(0ULL, self->hdm_regs_size % 4);
++
++	/*
++	 * hdm_decoder_offset is derived from the CXL Capability Array.
++	 * It must be:
++	 *   - non-zero (the CXL Capability Array Header precedes the HDM block)
++	 *   - dword-aligned
++	 *   - strictly less than hdm_regs_size (HDM block fits in the region)
++	 */
++	ASSERT_GT(self->hdm_decoder_offset, 0ULL);
++	ASSERT_EQ(0ULL, self->hdm_decoder_offset % 4);
++	ASSERT_LT(self->hdm_decoder_offset, self->hdm_regs_size);
++
++	/* Region indices must not be ~0U (sentinel for "not found") */
++	ASSERT_NE(~0U, c->dpa_region_index);
++	ASSERT_NE(~0U, c->comp_regs_region_index);
++
++	/* The two regions must be distinct */
++	ASSERT_NE(c->dpa_region_index, c->comp_regs_region_index);
++
++	/*
++	 * FIRMWARE_COMMITTED: decoder was pre-programmed by firmware; DPA
++	 * region is immediately live.  dpa_size must be non-zero in this case.
++	 */
++	if (c->flags & VFIO_CXL_CAP_FIRMWARE_COMMITTED)
++		ASSERT_GT(self->dpa_size, 0ULL);
++
++	printf("hdm_count=%u dpa_size=0x%llx hdm_regs_size=0x%llx "
++	       "hdm_decoder_offset=0x%llx "
++	       "dpa_idx=%u comp_regs_idx=%u flags=0x%x "
++	       "(firmware_committed=%d cache_capable=%d)\n",
++	       self->hdm_count, (unsigned long long)self->dpa_size,
++	       (unsigned long long)self->hdm_regs_size,
++	       (unsigned long long)self->hdm_decoder_offset,
++	       c->dpa_region_index, c->comp_regs_region_index, c->flags,
++	       !!(c->flags & VFIO_CXL_CAP_FIRMWARE_COMMITTED),
++	       !!(c->flags & VFIO_CXL_CAP_CACHE_CAPABLE));
++}
++
++/* ------------------------------------------------------------------ */
++/* Tests: VFIO_DEVICE_GET_REGION_INFO                                 */
++/* ------------------------------------------------------------------ */
++
++/*
++ * The component register BAR must report its real (non-zero) size with
++ * READ/WRITE/MMAP flags and a VFIO_REGION_INFO_CAP_SPARSE_MMAP capability.
++ * The sparse areas advertise the GPU/accelerator register windows — the
++ * mmappable parts of the BAR that do NOT contain CXL component registers.
++ *
++ * Three topologies are possible depending on where comp_regs sits in the BAR:
++ *   Topology A [gpu_regs | comp_regs]      → 1 area: [0, comp_reg_offset)
++ *   Topology B [comp_regs | gpu_regs]      → 1 area: [comp_end, bar_len)
++ *   Topology C [gpu_regs | comp_regs | gpu_regs] → 2 areas
++ *
++ * In all cases each sparse area is a GPU register window; no area may overlap
++ * the CXL component register block at [comp_reg_offset, comp_reg_offset +
++ * comp_reg_size).
++ */
++TEST_F(cxl_type2, component_bar_sparse_mmap)
++{
++	struct vfio_region_info probe = { .argsz = sizeof(probe) };
++	struct vfio_region_info *reg;
++	const struct vfio_region_info_cap_sparse_mmap *sparse;
++	uint32_t bar_idx = self->cxl_cap.hdm_regs_bar_index;
++	uint64_t comp_reg_offset;
++	uint64_t total_gpu_size;
++	uint8_t *buf;
++	uint32_t needed;
++	uint32_t i;
++
++	/* First probe: learn required buffer size and basic flags */
++	probe.index = bar_idx;
++	ASSERT_EQ(0, ioctl(self->dev->fd, VFIO_DEVICE_GET_REGION_INFO, &probe));
++
++	ASSERT_GT(probe.size, 0ULL);
++	ASSERT_TRUE(probe.flags & VFIO_REGION_INFO_FLAG_READ);
++	ASSERT_TRUE(probe.flags & VFIO_REGION_INFO_FLAG_WRITE);
++	ASSERT_TRUE(probe.flags & VFIO_REGION_INFO_FLAG_MMAP);
++
++	/* Kernel must signal caps are present by expanding argsz */
++	ASSERT_GT(probe.argsz, (uint32_t)sizeof(probe));
++	needed = probe.argsz;
++
++	buf = calloc(1, needed);
++	ASSERT_NE(NULL, buf);
++	reg = (struct vfio_region_info *)buf;
++	reg->argsz = needed;
++	reg->index = bar_idx;
++	ASSERT_EQ(0, ioctl(self->dev->fd, VFIO_DEVICE_GET_REGION_INFO, reg));
++
++	/* Must carry a sparse-mmap cap */
++	sparse = (const struct vfio_region_info_cap_sparse_mmap *)
++		find_region_cap(buf, needed, VFIO_REGION_INFO_CAP_SPARSE_MMAP);
++	ASSERT_NE(NULL, sparse);
++
++	/* 1 area (topology A or B) or 2 areas (topology C); never more */
++	ASSERT_GE(sparse->nr_areas, 1U);
++	ASSERT_LE(sparse->nr_areas, 2U);
++
++	/*
++	 * comp_reg_offset = hdm_regs_offset - CXL_CM_OFFSET.
++	 * hdm_regs_offset is the BAR-relative address of the CXL.mem area
++	 * start, which sits CXL_CM_OFFSET (0x1000) bytes into the component
++	 * register block.
++	 */
++	ASSERT_GE(self->cxl_cap.hdm_regs_offset, (uint64_t)CXL_CM_OFFSET);
++	comp_reg_offset = self->cxl_cap.hdm_regs_offset - CXL_CM_OFFSET;
++
++	total_gpu_size = 0;
++	for (i = 0; i < sparse->nr_areas; i++) {
++		uint64_t area_start = sparse->areas[i].offset;
++		uint64_t area_end   = area_start + sparse->areas[i].size;
++
++		/* Each area must be non-empty and fit within the BAR */
++		ASSERT_GT(sparse->areas[i].size, 0ULL);
++		ASSERT_LE(area_end, reg->size);
++
++		/*
++		 * No sparse area may overlap the CXL component register block.
++		 * Use hdm_regs_offset as a witness point: it is comp_reg_offset
++		 * + CXL_CM_OFFSET, guaranteed inside the block.
++		 */
++		ASSERT_FALSE(area_start <= self->cxl_cap.hdm_regs_offset &&
++			     self->cxl_cap.hdm_regs_offset < area_end);
++
++		total_gpu_size += sparse->areas[i].size;
++
++		printf("  sparse area[%u]: offset=0x%llx size=0x%llx\n", i,
++		       (unsigned long long)area_start,
++		       (unsigned long long)sparse->areas[i].size);
++	}
++
++	/* GPU windows together must be strictly smaller than the full BAR */
++	ASSERT_LT(total_gpu_size, reg->size);
++
++	printf("component BAR %u: bar_size=0x%llx comp_reg_offset=0x%llx "
++	       "nr_areas=%u total_gpu=0x%llx flags=0x%x\n",
++	       bar_idx, (unsigned long long)reg->size,
++	       (unsigned long long)comp_reg_offset,
++	       sparse->nr_areas, (unsigned long long)total_gpu_size,
++	       reg->flags);
++
++	free(buf);
++}
++
++/*
++ * DPA region must be readable, writable, and mmappable.
++ * Its size must be non-zero (verified in fixture setup via self->dpa_size).
++ */
++TEST_F(cxl_type2, dpa_region_info)
++{
++	struct vfio_region_info reg = { .argsz = sizeof(reg) };
++
++	reg.index = self->cxl_cap.dpa_region_index;
++	ASSERT_EQ(0, ioctl(self->dev->fd, VFIO_DEVICE_GET_REGION_INFO, &reg));
++
++	ASSERT_EQ(self->dpa_size, reg.size);
++	ASSERT_TRUE(reg.flags & VFIO_REGION_INFO_FLAG_READ);
++	ASSERT_TRUE(reg.flags & VFIO_REGION_INFO_FLAG_WRITE);
++	ASSERT_TRUE(reg.flags & VFIO_REGION_INFO_FLAG_MMAP);
++
++	printf("DPA region: size=0x%llx offset=0x%llx flags=0x%x\n",
++	       (unsigned long long)reg.size,
++	       (unsigned long long)reg.offset, reg.flags);
++}
++
++/*
++ * COMP_REGS region must be readable and writable but not mmappable.
++ * Its size covers [comp_reg_offset, comp_reg_offset + hdm_regs_size), which
++ * includes both the CXL Capability Array prefix (hdm_decoder_offset bytes)
++ * and the HDM decoder block. Size is available in self->hdm_regs_size
++ * (populated from this same region query at fixture setup time).
++ */
++TEST_F(cxl_type2, comp_regs_region_info)
++{
++	struct vfio_region_info reg = { .argsz = sizeof(reg) };
++
++	reg.index = self->cxl_cap.comp_regs_region_index;
++	ASSERT_EQ(0, ioctl(self->dev->fd, VFIO_DEVICE_GET_REGION_INFO, &reg));
++
++	ASSERT_EQ(self->hdm_regs_size, reg.size);
++	ASSERT_TRUE(reg.flags  & VFIO_REGION_INFO_FLAG_READ);
++	ASSERT_TRUE(reg.flags  & VFIO_REGION_INFO_FLAG_WRITE);
++	ASSERT_FALSE(reg.flags & VFIO_REGION_INFO_FLAG_MMAP);
++
++	printf("COMP_REGS region: size=0x%llx offset=0x%llx flags=0x%x\n",
++	       (unsigned long long)reg.size,
++	       (unsigned long long)reg.offset, reg.flags);
++}
++
++/* ------------------------------------------------------------------ */
++/* Tests: DPA region mmap                                             */
++/* ------------------------------------------------------------------ */
++
++/*
++ * mmap() the DPA region and verify the first page can be read.
++ * The region uses lazy fault insertion so the first access triggers the
++ * vfio_cxl_region_page_fault path.
++ */
++TEST_F(cxl_type2, dpa_mmap_fault)
++{
++	struct vfio_region_info reg = { .argsz = sizeof(reg) };
++	size_t map_size;
++	void *ptr;
++	uint8_t *p;
++	uint8_t val;
++
++	reg.index = self->cxl_cap.dpa_region_index;
++	ASSERT_EQ(0, ioctl(self->dev->fd, VFIO_DEVICE_GET_REGION_INFO, &reg));
++
++	/* Map just the first 2MB or the full region, whichever is smaller */
++	map_size = (size_t)reg.size < (size_t)(2 * SZ_1M)
++		 ? (size_t)reg.size : (size_t)(2 * SZ_1M);
++
++	ptr = mmap(NULL, map_size, PROT_READ | PROT_WRITE,
++		   MAP_SHARED, self->dev->fd, (off_t)reg.offset);
++	ASSERT_NE(MAP_FAILED, ptr);
++
++	self->dpa_mmap = ptr;
++	self->dpa_mmap_size = map_size;
++
++	/* First access - triggers vmf_insert_pfn */
++	p = (uint8_t *)ptr;
++	val = *p;
++	(void)val;
++
++	printf("DPA mmap: ptr=%p size=0x%zx first byte=0x%02x\n",
++	       ptr, map_size, (uint8_t)val);
++
++	/* Write a pattern and read it back */
++	*p = 0xab;
++	ASSERT_EQ(0xab, *p);
++}
++
++/*
++ * mmap() of the COMP_REGS region (no MMAP flag) must fail.
++ */
++TEST_F(cxl_type2, comp_regs_no_mmap)
++{
++	struct vfio_region_info reg = { .argsz = sizeof(reg) };
++	void *ptr;
++
++	reg.index = self->cxl_cap.comp_regs_region_index;
++	ASSERT_EQ(0, ioctl(self->dev->fd, VFIO_DEVICE_GET_REGION_INFO, &reg));
++
++	ptr = mmap(NULL, (size_t)reg.size, PROT_READ,
++		   MAP_SHARED, self->dev->fd, (off_t)reg.offset);
++	ASSERT_EQ(MAP_FAILED, ptr);
++
++	printf("mmap of COMP_REGS correctly failed (errno=%d)\n", errno);
++}
++
++/*
++ * mmap() of the CXL component register block within the component BAR must
++ * fail with EINVAL.  The kernel blocks any mmap request whose range overlaps
++ * [comp_reg_offset, comp_reg_offset + comp_reg_size) even though the BAR as
++ * a whole carries the MMAP flag (GPU windows are mmappable).
++ *
++ * hdm_regs_offset (= comp_reg_offset + CXL_CM_OFFSET) is a page-aligned
++ * address guaranteed to lie inside the component register block.
++ */
++TEST_F(cxl_type2, comp_reg_mmap_blocked)
++{
++	struct vfio_region_info bar_reg = { .argsz = sizeof(bar_reg) };
++	void *ptr;
++
++	bar_reg.index = self->cxl_cap.hdm_regs_bar_index;
++	ASSERT_EQ(0, ioctl(self->dev->fd, VFIO_DEVICE_GET_REGION_INFO, &bar_reg));
++	ASSERT_TRUE(bar_reg.flags & VFIO_REGION_INFO_FLAG_MMAP);
++
++	/*
++	 * hdm_regs_offset is page-aligned and is comp_reg_offset + CXL_CM_OFFSET
++	 * (0x1000), so it is always within the component register block.
++	 */
++	ASSERT_EQ(0ULL, self->cxl_cap.hdm_regs_offset % SZ_4K);
++
++	ptr = mmap(NULL, (size_t)SZ_4K, PROT_READ,
++		   MAP_SHARED, self->dev->fd,
++		   (off_t)(bar_reg.offset + self->cxl_cap.hdm_regs_offset));
++	ASSERT_EQ(MAP_FAILED, ptr);
++	ASSERT_EQ(EINVAL, errno);
++
++	printf("comp_reg_mmap_blocked: hdm_regs_offset=0x%llx correctly blocked "
++	       "(errno=%d)\n",
++	       (unsigned long long)self->cxl_cap.hdm_regs_offset, errno);
++}
++
++/* ------------------------------------------------------------------ */
++/* Tests: COMP_REGS region (HDM decoder emulation)                    */
++/* ------------------------------------------------------------------ */
++
++/*
++ * Reading HDM Capability (offset 0x00) must return a non-zero value
++ * consistent with at least one decoder being present.
++ * Bits [3:0] encode the HDM decoder count.
++ */
++TEST_F(cxl_type2, hdm_cap_read)
++{
++	uint32_t cap;
++	uint32_t idx = self->cxl_cap.comp_regs_region_index;
++	uint64_t hdm_off = self->hdm_decoder_offset;
++
++	cap = hdm_regs_read32(self->dev, idx, hdm_off, CXL_HDM_DECODER_CAP_OFFSET);
++	ASSERT_NE(~0u, cap);
++
++	/*
++	 * Verify the live HDMC register matches the count we derived in setup.
++	 * Encoding: bits[3:0] = 0 → 1 decoder; N → N*2 decoders.
++	 */
++	{
++		uint32_t field = cap & 0xf;
++		uint8_t expected = field ? (uint8_t)(field * 2) : 1;
++
++		ASSERT_EQ(self->hdm_count, expected);
++	}
++
++	printf("HDM Capability register: 0x%08x  decoder_count_field=%u  hdm_count=%u\n",
++	       cap, cap & 0xf, self->hdm_count);
++}
++
++/*
++ * HDM decoder COMMIT -> COMMITTED transition.
++ *
++ * On firmware-committed hardware (COMMITTED already set) the COMMIT path
++ * is not exercisable.  Instead verify the committed state is self-consistent:
++ * COMMITTED set, BASE/SIZE non-zero and large enough to cover dpa_size, and
++ * reserved bits cleared by the emulation layer.
++ *
++ * On hardware where the decoder is not yet committed, exercise the full
++ * COMMIT=1 -> COMMITTED=1 path followed by COMMIT=0 -> COMMITTED=0.
++ */
++TEST_F(cxl_type2, hdm_ctrl_commit_to_committed)
++{
++	uint32_t idx = self->cxl_cap.comp_regs_region_index;
++	uint64_t hdm_off = self->hdm_decoder_offset;
++	uint64_t base_lo_off = HDM_DECODER_FIRST_OFFSET + HDM_DECODER_BASE_LO;
++	uint64_t base_hi_off = HDM_DECODER_FIRST_OFFSET + HDM_DECODER_BASE_HI;
++	uint64_t size_lo_off = HDM_DECODER_FIRST_OFFSET + HDM_DECODER_SIZE_LO;
++	uint64_t size_hi_off = HDM_DECODER_FIRST_OFFSET + HDM_DECODER_SIZE_HI;
++	uint64_t ctrl_off    = HDM_DECODER_FIRST_OFFSET + HDM_DECODER_CTRL;
++	uint32_t ctrl_readback;
++	uint32_t base_lo, base_hi, size_lo, size_hi;
++	uint64_t dec_base, dec_size;
++
++	ctrl_readback = hdm_regs_read32(self->dev, idx, hdm_off, ctrl_off);
++
++	if (ctrl_readback & HDM_CTRL_COMMITTED) {
++		/*
++		 * Firmware-committed decoder: verify the committed state is
++		 * self-consistent.
++		 *
++		 * BASE is expected to be zero: the kernel clears BASE_LO/HI in
++		 * the shadow for firmware-committed decoders so that the host
++		 * HPA does not leak to the guest.  The VMM will write the guest
++		 * GPA into BASE before booting the VM.
++		 *
++		 * SIZE must cover at least dpa_size, and reserved bits must be
++		 * clear (the emulation scrubs them on every write).
++		 */
++		base_lo = hdm_regs_read32(self->dev, idx, hdm_off, base_lo_off);
++		base_hi = hdm_regs_read32(self->dev, idx, hdm_off, base_hi_off);
++		size_lo = hdm_regs_read32(self->dev, idx, hdm_off, size_lo_off);
++		size_hi = hdm_regs_read32(self->dev, idx, hdm_off, size_hi_off);
++		dec_base = ((uint64_t)base_hi << 32) | (base_lo & ~GENMASK(27, 0));
++		dec_size = ((uint64_t)size_hi << 32) | (size_lo & ~GENMASK(27, 0));
++
++		ASSERT_EQ(0ULL, dec_base);
++		ASSERT_GE(dec_size, self->dpa_size);
++		ASSERT_EQ(0u, ctrl_readback & HDM_CTRL_RESERVED_MASK);
++
++		printf("Decoder 0 firmware-committed: ctrl=0x%08x "
++		       "base=0x%llx (zeroed by kernel) size=0x%llx dpa_size=0x%llx\n",
++		       ctrl_readback,
++		       (unsigned long long)dec_base,
++		       (unsigned long long)dec_size,
++		       (unsigned long long)self->dpa_size);
++		return;
++	}
++
++	/* Decoder not committed: exercise COMMIT=1 -> COMMITTED=1 path */
++	ASSERT_EQ(4, hdm_regs_write32(self->dev, idx, hdm_off, base_lo_off, 0x10000000));
++	ASSERT_EQ(4, hdm_regs_write32(self->dev, idx, hdm_off, base_hi_off, 0));
++	ASSERT_EQ(4, hdm_regs_write32(self->dev, idx, hdm_off, size_lo_off, 0x10000000));
++	ASSERT_EQ(4, hdm_regs_write32(self->dev, idx, hdm_off, size_hi_off, 0));
++
++	ASSERT_EQ(4, hdm_regs_write32(self->dev, idx, hdm_off, ctrl_off, HDM_CTRL_COMMIT));
++	ctrl_readback = hdm_regs_read32(self->dev, idx, hdm_off, ctrl_off);
++	ASSERT_TRUE(ctrl_readback & HDM_CTRL_COMMITTED);
++
++	printf("HDM decoder 0 CTRL after COMMIT=1: 0x%08x (COMMITTED set)\n",
++	       ctrl_readback);
++
++	ASSERT_EQ(4, hdm_regs_write32(self->dev, idx, hdm_off, ctrl_off, 0));
++	ctrl_readback = hdm_regs_read32(self->dev, idx, hdm_off, ctrl_off);
++	ASSERT_FALSE(ctrl_readback & HDM_CTRL_COMMITTED);
++
++	printf("HDM decoder 0 CTRL after COMMIT=0: 0x%08x (COMMITTED cleared)\n",
++	       ctrl_readback);
++}
++
++/*
++ * CXL Lock (DVSEC offset 0x14):
++ *   - Reserved bits GENMASK(15,1) must be cleared.
++ *   - Once locked, CXL Control writes must be discarded.
++ *
++ * On firmware-committed hardware CONFIG_LOCK is set before OS load by the
++ * BIOS.
++ * In this case verify:
++ * (a) Lock reserved bits are zero,
++ * (b) a write to CXL Control is silently discarded by the emulation.
++ * Both are directly testable without needing to transition from unlocked
++ * to locked.
++ *
++ * On hardware where CONFIG_LOCK is not yet set, exercise the full sequence:
++ * write reserved bits (must be cleared), set CONFIG_LOCK, verify Control
++ * writes are then discarded.
++ */
++TEST_F(cxl_type2, dvsec_lock_semantics)
++{
++	uint16_t dvsec = self->dvsec_base;
++	uint16_t lock_val, ctrl_before, ctrl_after;
++
++	if (!dvsec)
++		SKIP(return, "CXL DVSEC not found in config space");
++
++	lock_val = vfio_pci_config_readw(self->dev,
++					 dvsec + CXL_DVSEC_LOCK_OFFSET);
++
++	if (lock_val & CXL_DVSEC_LOCK_CONFIG_LOCK) {
++		/*
++		 * Lock is already set: verify reserved bits are zero in the
++		 * current shadow, then verify a Control write is discarded.
++		 */
++		ASSERT_EQ(0u, lock_val & CXL_LOCK_RESERVED_MASK);
++
++		ctrl_before = vfio_pci_config_readw(self->dev,
++						    dvsec + CXL_DVSEC_CONTROL_OFFSET);
++		/* Attempt to flip CXL_Mem_Enable (bit 2) */
++		vfio_pci_config_writew(self->dev, dvsec + CXL_DVSEC_CONTROL_OFFSET,
++				       ctrl_before ^ BIT(2));
++		ctrl_after = vfio_pci_config_readw(self->dev,
++						   dvsec + CXL_DVSEC_CONTROL_OFFSET);
++		ASSERT_EQ(ctrl_before, ctrl_after);
++
++		printf("CONFIG_LOCK set: lock=0x%04x, "
++		       "Control write discarded (ctrl=0x%04x unchanged)\n",
++		       lock_val, ctrl_after);
++		return;
++	}
++
++	/* Lock is not set: exercise reserved-bit masking and lock-set sequence */
++	vfio_pci_config_writew(self->dev, dvsec + CXL_DVSEC_LOCK_OFFSET,
++			       CXL_LOCK_RESERVED_MASK);
++	lock_val = vfio_pci_config_readw(self->dev,
++					 dvsec + CXL_DVSEC_LOCK_OFFSET);
++	ASSERT_EQ(0u, lock_val & CXL_LOCK_RESERVED_MASK);
++	ASSERT_FALSE(lock_val & CXL_DVSEC_LOCK_CONFIG_LOCK);
++
++	ctrl_before = vfio_pci_config_readw(self->dev,
++					    dvsec + CXL_DVSEC_CONTROL_OFFSET);
++	vfio_pci_config_writew(self->dev, dvsec + CXL_DVSEC_LOCK_OFFSET,
++			       CXL_DVSEC_LOCK_CONFIG_LOCK);
++	lock_val = vfio_pci_config_readw(self->dev,
++					 dvsec + CXL_DVSEC_LOCK_OFFSET);
++	ASSERT_TRUE(lock_val & CXL_DVSEC_LOCK_CONFIG_LOCK);
++
++	vfio_pci_config_writew(self->dev, dvsec + CXL_DVSEC_CONTROL_OFFSET,
++			       ctrl_before ^ BIT(0));
++	ctrl_after = vfio_pci_config_readw(self->dev,
++					   dvsec + CXL_DVSEC_CONTROL_OFFSET);
++	ASSERT_EQ(ctrl_before, ctrl_after);
++
++	printf("Lock set, Control write discarded: "
++	       "lock=0x%04x ctrl_before=0x%04x ctrl_after=0x%04x\n",
++	       lock_val, ctrl_before, ctrl_after);
++}
++
++/* ------------------------------------------------------------------ */
++/* main                                                               */
++/* ------------------------------------------------------------------ */
++
++int main(int argc, char *argv[])
++{
++	device_bdf = vfio_selftests_get_bdf(&argc, argv);
++	return test_harness_run(argc, argv);
++}
 -- 
 2.25.1
 
