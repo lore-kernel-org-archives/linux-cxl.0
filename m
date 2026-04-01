@@ -1,98 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27A019D89E;
-	Tue, 31 Mar 2026 23:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861422AE68
+	for <linux-cxl@vger.kernel.org>; Wed,  1 Apr 2026 00:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775001459; cv=fail; b=uTG7ohK82eATw4zQFBZ1YNOy4yGA2zaU4yaYfWxl12Azcz/kXNxyb9b5JuuwIRNpxdmqopW+8/h5Aj+bCIa3gIcVwQDi2pa826Bwlonnhvz2iJsYy9PUJdbG03Av8XzU3vj70LAunPvG0miLPGASxsN0kx7zNBa7HgEtCu7PXZ4=
+	t=1775003206; cv=fail; b=suAgLndqLz33WDwOcc/F6IISBwMjM4TQ6KnyKxcPeG0VLmY0AB7HSmsysY5qEp67/GLs8AthNo70sJuZggPmvOvjGFbiL5a1RBBzlg8Y8Mji9MZzy9f8ChOrNCb0ocvzyodUNAXboQLpnv388IHv4Vvu+7uvCC7aPGuLe7xx+p4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775001459; c=relaxed/simple;
-	bh=gT16U+sVt5ZfxLtdMNt7RILaAt2ZRlxzgUJUrdTMHtY=;
+	s=arc-20240116; t=1775003206; c=relaxed/simple;
+	bh=lRV3UgmN22aR0HL6qeQa7bDzPChzDED4q2tmtPWaYIc=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=kugnHKT0m7LTCyPUGOlXLG8GYKhKMhjdc5sgk+CUZMmSGyPm7l7PGHk+DQ+UXpX1wyfzfB/bLIndRiuy5wWxBvpZ1v4TMdJqLb9V0tR0XyuuM1/zE9/rGdq4muuJN87vBWF+RNIiFqFADMtkxad+PoUUedJRQTL7fZ6GM+J/uyM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jMb9sK+S; arc=fail smtp.client-ip=192.198.163.19
+	 Content-Disposition:In-Reply-To:MIME-Version; b=da4+h8pjKiXzQqZvbwn87kTPTy3RSXdGgI+/9iT2sKER6qtBDbTFrPiSm8olcchCSUMiNccnzf1x7qBneP9ZK4iYRcsyKsRCipyPcmALTzyUSU9dJSg/Cdj8CwWD2KlB04apkNJMtX87GQAlnv3Rsl1UlkLgCKxjLPLi8WXupik=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RvrySOdF; arc=fail smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jMb9sK+S"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RvrySOdF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775001458; x=1806537458;
+  t=1775003205; x=1806539205;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=gT16U+sVt5ZfxLtdMNt7RILaAt2ZRlxzgUJUrdTMHtY=;
-  b=jMb9sK+SOHX8QDMe4GY8ntVhUso7QnK/eS89asd4KEE0n3LCkahsBLLi
-   VUOH16/TL8xNm8yowvs9qtCf4PFOjritbt5uucBO2Ve3TRVKKfDg/raZQ
-   SSh7NZFj11Ie/gVkKYwaaQEre18T/IReGfJY51Y+19Il5kZCIweIEfUQZ
-   OkiYE4Ws8z70mL60fC5hJDXMmccIyJsyHoNdsluwl20adYZ8Q2eTHN5gI
-   JgaL2g34mQgR8q69pmUEWyHb0PMtDNHS/jovp/V+vKIu3k7SSr0rYsX8c
-   A6/MjgXTwhIfu7ObQjAR911QOPnuF11L0uNr1+iG0rasTS1LGydksmAyB
-   Q==;
-X-CSE-ConnectionGUID: kCk/tVz4QCu9Hql3Wcl3/g==
-X-CSE-MsgGUID: PW26nG/LT4eqglj7JSLvgA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="75067532"
+  bh=lRV3UgmN22aR0HL6qeQa7bDzPChzDED4q2tmtPWaYIc=;
+  b=RvrySOdF154jgP8C5wCrzIPFrVH4/JPWoVBqVLfZHs96MUQb3B37wQou
+   zsHVdVS/l2cr25GoILAuKIMVx/rc7zPSX9TsUQ89380F7QYD9B79qXr0L
+   9eEwl3t5+ldLYkjIgsn82cKP5EsR4I/77UnQW1VD7RMztz0RTk6Ob5WF8
+   HjDAugcHK7n7zu4oVVEr9esKCqlPiHZi4U8veGbT7sMOot3KjroE6oUNg
+   zNGEI0AwHjdDeJ+Wpvn3iNtzdvpeZT1HJx4exjCMLYVFWcn3K8XXqUk/s
+   Qd792mi0W+PQ7cDl8EU7ESrLCz6rQ9rbW4uc/FHSmtuQtyI7rTZjAkQS5
+   w==;
+X-CSE-ConnectionGUID: jMTrsGd6SZCm6IIo+rUaTA==
+X-CSE-MsgGUID: JiPGYwj7RwuGLnwAE6svbw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="87108078"
 X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="75067532"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 16:57:37 -0700
-X-CSE-ConnectionGUID: gGRUCQnDR0mnHCTYpuhhAg==
-X-CSE-MsgGUID: DKQjI1OYT3GKjIlj8xRtPw==
+   d="scan'208";a="87108078"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 17:26:45 -0700
+X-CSE-ConnectionGUID: 6CQYJRYGTeK14hEGGNicFg==
+X-CSE-MsgGUID: X2CCg7rSSseX1bzjfTtcrw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,152,1770624000"; 
-   d="scan'208";a="231446295"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 16:57:37 -0700
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+   d="scan'208";a="230582007"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2026 17:26:45 -0700
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 31 Mar 2026 16:57:36 -0700
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ 15.2.2562.37; Tue, 31 Mar 2026 17:26:43 -0700
+Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Tue, 31 Mar 2026 16:57:36 -0700
-Received: from PH7PR06CU001.outbound.protection.outlook.com (52.101.201.35) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ 15.2.2562.37 via Frontend Transport; Tue, 31 Mar 2026 17:26:43 -0700
+Received: from CH1PR05CU001.outbound.protection.outlook.com (52.101.193.49) by
+ edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 31 Mar 2026 16:57:35 -0700
+ 15.2.2562.37; Tue, 31 Mar 2026 17:26:43 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kKy6H8lzt1yQAiPKo0P5oKkQKjDp1BjLtKoSrJWXVJi1p3OWpJEqNPId9VkzjCH9vDeKdqvzcAKdzoi2UIw40YSkc6bt6eor2dDpypxgcAMUTRTOGvgr+y0CngJgKSB+qZnoRIZ7AjRlwi5gfLaPpYWyGHMERvc47QerxV8JBLPCoIRrle51WsG3wW9fQIqSj/f33RcA1PozNkPMOznRV3T9PjTx9m5fM36tjmDvqkB80+FFNs/FysE3l+bpKjknMg1P8YMZRYHG0hZNQ724Da9zszDMjOwbMtxRLxU/PhwB2jDsiMae+Uvw9Oy34VgA5pNRkuY2D0xfahTtFJ5kFg==
+ b=VDWpwxTCtKTO8y+II49RLUVTU94WZq6+id/y80Z44BVDjt8SxlEgx9HLRYG9nEoyBn6lo0UpQa7q+Mk4OsJf6EPAul3YLB/hK6jlhqfmaqMePZLEF9wZLSZsSdilMzoHgX9GPXDpEcM92mnhjybCEGQ+kGmUT/p3+I3hVkqTyLSnGmc4W3HdVa078KJBBp7LRmk5DLNmTxjyEYF8vrzyCyppZgAHz24r7+lQJXH8oMyLPv4gd8OjCDbO4lNgUmn/+UNY/B3GGre8QKsmANoD1xS3QPN4+5sTe1QtAvfbP02S6TIXKbD2ohRghctpRJ1LHZ7hj1AqBoMHxFkndB8aEQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qznNQU4zo4BBfwO7z7exYG7Sl1JEj7a2S80a2jdhj8A=;
- b=hQ93jEPQX3gq2mlfjdfieBKSYYu5PCGgi4CW+khn10KO7GImHTYakOrxUgzf+T9Ma6vq0As9z48PuE9KMEmbct6n4qV696qQnBC+NijhAyh+/edplcB3XYpcrglMeCnT2egLj1/Nk5k7TsQAosPBxFCfetW30Nj16Z+Is/yPyM0FT5H0lwFfDYt99iv8zO0sDKS3Bgeud7iDYDA/teZkjFRy+14LPRnLJEgOmPdqo5KWPLj/cySjYM106stFa3y/E+0kxzEPSOQ2zQZTUB/z+KybnbpdGTtPmd45vvCGUDM/aXalozPUd/WQheBlptXklRUxksW21BFFyyV9MD2kug==
+ bh=6TPIVVvjH6MT3MvTLzuBswSZ2rO71BV24zv/reSF7xI=;
+ b=JVfa11E2m4WzTeXXzPi04cw61w90xAcZlarNKGYZj3vXjFQKqVfr9PRd1oqtevIWQAxdTNhPTtouCJr84FzppQfV5UthM6wp3PrmpU9Hv47WQd2Z4eMSBxu8Z5TVF0LTEYiXc7kZiL9tLZtuJx3Qkmdr4Vvbkid3/gES0rYOJFzyU1ZUa7D/ZAGRGxnAbZoPZofHyMaRD6VqImhoTkKX+LXUk6ZCEf0VImQntqOHhfQDVRNzwqZvJHnwPAnIv8TArJ+MA3m5pwMIkKEYlcI/WF5q/1oFFzb6yWmSRNF/Kk6IGzoP0ojifYCV1JG2hZVj7Cec8IL/NAOx0wso1ul+7g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by PH0PR11MB5093.namprd11.prod.outlook.com (2603:10b6:510:3e::23) with
+ by DS3PR11MB9671.namprd11.prod.outlook.com (2603:10b6:8:38e::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.15; Tue, 31 Mar
- 2026 23:57:32 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.16; Wed, 1 Apr
+ 2026 00:26:36 +0000
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::fa8a:90e4:57d4:8026]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::fa8a:90e4:57d4:8026%6]) with mapi id 15.20.9769.014; Tue, 31 Mar 2026
- 23:57:32 +0000
-Date: Tue, 31 Mar 2026 16:57:26 -0700
+ ([fe80::fa8a:90e4:57d4:8026%6]) with mapi id 15.20.9769.014; Wed, 1 Apr 2026
+ 00:26:36 +0000
+Date: Tue, 31 Mar 2026 17:26:32 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Li Ming <ming.li@zohomail.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, "Vishal
- Verma" <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, "Dan
- Williams" <dan.j.williams@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH] cxl/region: Add a region sysfs interface for region lock
- status
-Message-ID: <acxfZiQWfYaIY2BU@aschofie-mobl2.lan>
-References: <20260329-expose_region_locked_status-v1-1-cd860feaff6e@zohomail.com>
+CC: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 1/1] ndctl: Show region locked status to user
+Message-ID: <acxmON1VSw4EEp4q@aschofie-mobl2.lan>
+References: <20260329144714.888155-1-ming.li@zohomail.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20260329-expose_region_locked_status-v1-1-cd860feaff6e@zohomail.com>
-X-ClientProxiedBy: SJ0PR03CA0215.namprd03.prod.outlook.com
- (2603:10b6:a03:39f::10) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+In-Reply-To: <20260329144714.888155-1-ming.li@zohomail.com>
+X-ClientProxiedBy: BY3PR10CA0020.namprd10.prod.outlook.com
+ (2603:10b6:a03:255::25) To DS4PPF0BAC23327.namprd11.prod.outlook.com
  (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -101,168 +98,134 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|PH0PR11MB5093:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4514ef2a-70d1-4c99-30e0-08de8f81462f
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DS3PR11MB9671:EE_
+X-MS-Office365-Filtering-Correlation-Id: c71f482f-9759-4318-fd18-08de8f8555d6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|56012099003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info: Ic2ZRMYxm8j507NmN2wfoMygYcERNK5FobLsxxkI4kMO1ft6tWeRrUVPpY31H3OcMpax2kJHODnmOHe85Vo1665tiz9toxWsKva8gmfKENvqgFwAsNd5zNb9NH8nvofeFpx+iUScaZ5qTm+hndvNzN5RW9S1wp6Z80X8mIazE4MLkbtQcG0XBmZ1YytlICXeJbY/5nlMXCY1a/JBqVW4XdU9JwVTWfbX0uQUT7LwIS73ofd0yuD4zDJWgV9v25w2MmYuLZpCgCIJ62DSa4NdBbhbRIy42rVMWlZe7fEdnkrTXEG4vPqyrS6TEjs1DO0m+DIxDAgXhGZCsLs6SKJMhASP5wZTUAP/3DVcc9WYwlgYDLdNuC2w59fOQNCzqCldebDVEue+3RAooZOEseh9FXM+oDLj8lGQ9F/ct8bQjrOux3p68dbsnwpmcTE8qTRX+FCFlJi36HlvDpEMLGHDYxwj1Ds6hNep+mcBmVdMcNxnjYk4FM/XsEfWc2EdzU0wDyQtQ4jJO5cddmOu4Aw4Yt7olOqGSKa1UEPm0ZqZy/hBuNJNBBsk8Q16giWXqN0eq9BB2togrq+CdB+gwDhC4J0IXxjKj/9tsdjQu2/pvZu9NXbIVyN6A6+hWtvE0xk9KAyJ6lEyxGznT4URRYNcZ87oRbAN9iM9Ylxs3dM6gDDwty+SavXe8m03rA81A+TwspjBRrr1k2OHavnKHWN8wprMAQdpOsA9lD55RuJoITw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|56012099003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info: +H671YDbHsFVRvGh4TXBWJz4gnUdEx/xSv/EYlBsauJHPtrQ3ZlZEyWTIjLRPpq6a46InSCoIRy7EqLHG0jHm7apNATQjv2n3EK1wwZ7ytvAm4Up1hhbejqjoQuAyxjFf3KnEz/JrXWwtk8FwK6buL2jkwiaIbyOwpACWwKvzQh7U5sid8o4TzMM++Ve2O51s8e/HkqSdmvzwmWO/e5eYw/Dy7Enfx4s0KF7QEp+YXOh/LWESydfDyI4q0L1orh/hvtIgh7Lk1k3Pw4wCZ4lpDdM4nkOguozBJS7FWKZguAyCiN9Yc9NcPIdnJ40xb+q+d9l9Ix2G7dlWUi9UgLigyqq/6eId9FSyI9qOqcj50xas3PDPn3duUgdY5xfgmjw+ljM/O6oNgb+6M/bYZ5XJFeZvO7n+FiCr5SqKQKb0TTIxjDi0Qe6q5IXKOF1BLrWBJa/RVcGJxThxol1vPohL4RXitkK9PL3LJ4z+AKDydacEplyztLTndknZdimBeyvhRahEozA8UfhymlK/wNOLq149WL/jP+RnbpIhwcwstPeMKySa6BnG2ysEx5I82CxbtpvVLqRer6iU1T8fDh/ke1Ig/PNU8UhOl7uGPLICoi6/wiCZvYp/flGkPCMQtrfFrR2l0KR7GqGnyGo70EE9HRuU2R743rzPNLooAcAFGLiyxiy4Cx4fnEuanxJV7Q4OV4/UH7HsYFFJoy9zKum7XgTVrtfE0S362vdWp4nlDc=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?WHr1uwBOiFL8fut9ciqtbfW17gU9H1PHKvhQw6N1in6sHDtHIF3fsK6YHtin?=
- =?us-ascii?Q?umtce7un/AshtrT/o2/QE9lklUzlIIig+NOzC+TTeaUcRwU6I+Y70m77Zusj?=
- =?us-ascii?Q?tbu0tFB+mJmKl93U+EfNgfHbhVssruW6sgDflMuuqHuSsYrL9KbD2/Ri6cEr?=
- =?us-ascii?Q?D5ynYJYiTRYuaZXH9GVqldHc6b2+nwZuDrAG0YS3XZKuUyZVdthYS1dt+RN2?=
- =?us-ascii?Q?eKakUWxFvf7c41NpaJELgurEUBXnuu+psE28HCMvu3wQiCJOD24Y/6q/nK8o?=
- =?us-ascii?Q?8Q0BalUTb+TDj2lxaV3FhDDTe0B/ThhIhJ9L8ZtKhXmr/ZPOOKdj9OEkCTX+?=
- =?us-ascii?Q?Qriiq6nePpcklJW279W/egdvHrFGF6YlSCwdWmF0LgNllq/Q/YEzb9SCWSeV?=
- =?us-ascii?Q?ob51bH5nW6xiMjjynkr6yetIKqwJ2NxqAPM8ywTEuU8n5dj1n4L83mZj+omz?=
- =?us-ascii?Q?LdR+gx4WGsONtPPaRUdz3yIweHjFBYoLB++UOilvlmEGIFWHgebMFgJIHIrF?=
- =?us-ascii?Q?jFRh23zmpTuOBeyCCeLj8P7coYnta3EaRLnq1hPetnuSfbrn6paeYMaVE3ma?=
- =?us-ascii?Q?B2p/3EIPloPqEW36+k8xjsaou2B0uo3AEN8XHuS04cv0/CsA8FQ4Sq0eC01U?=
- =?us-ascii?Q?xgzTwvEL/6rR/KaNmEhhYxzswClx1ewC11RFSdaT/T+dFqhH+Tzb6dzkvw6S?=
- =?us-ascii?Q?HU1zg8OPjfjDAKn3sfv4tJRmqKl4qTUT9afDO0b8ZKGtf3dC8LK9Hl2KdJk1?=
- =?us-ascii?Q?yrq3tM9CIB72VvxcIxkBGQD3Nx3OU3242bssZmHQMU1ro4cTilRHYz1quaaC?=
- =?us-ascii?Q?ypkogwjZqCiruoLJ4HzLaR++s4WDjHgh7s8qPrjyL0j22QvMR30C3AzZ4ySj?=
- =?us-ascii?Q?fhv6S+NwXA+OWAF29ejzITGmxzyqVert1PQ79raW0IWsk3bwbqgacnHlXkYE?=
- =?us-ascii?Q?h9cHY2iI8W3cHWUEu4mVuWG8r7HaMCVKIhRC7WAXgC4IT6FKIy2XrcYvgCEA?=
- =?us-ascii?Q?HzHAjI6a+F4iyCmDY+kJgsZWUeQ8H5maHVM6go5TtV1/BY1BxWuHacg18XcB?=
- =?us-ascii?Q?aDMPLzLoXLAwm7T/ksb4SPrcxes1kYE/ARaQmO6GGTNs/lrGZu8IowAD9l/r?=
- =?us-ascii?Q?OGj/ZkIV4dMreR4W+o70NwgdiyqixZ1BMii+SvXruN/qPfmYt2mRsukWgcNc?=
- =?us-ascii?Q?lA0qlZqYUwJuwunYlStAarHzSP5O9sPmoPTB9ZycbuNUpyNzVWHmq6O2B46o?=
- =?us-ascii?Q?KuYp78xY+xuyYzp+BWPcKG1NqDJenxUADOJVOj568yu9BWIuQBq3bk0MXX+q?=
- =?us-ascii?Q?WtuS+k7Rqhkj8WSQ+Wqr+D0JW2481s3XcLVMjEiW6AxWOKXUc8npc8CUCyI8?=
- =?us-ascii?Q?+NIlnFgrhHFUUTNsrWiFD1fJlNazh2zO1i0peWmTU7kERs6pYIcGdJwWaoVc?=
- =?us-ascii?Q?82vtBNl2oL3tgnZV7lZFIA69o02xvXy1LujJYirRd/aJ0kQqFpI/nr7wSuxH?=
- =?us-ascii?Q?xbkVcfdMkZYYpUqqOkVX4xR9yNEYwIPAosDOCNTcPduRrdR1K6eB5hMWPVoS?=
- =?us-ascii?Q?mib6wmlGtrxuxAkKgm+xqV/1OErPJl4Y1PvSqFH933a/imSCY27Rf21zmvHU?=
- =?us-ascii?Q?Acm09GfKa3TeQJIJlmgOV2emu9aqSXh9pNeUWJNMZ39ym6bK3wZkZdqwi5pZ?=
- =?us-ascii?Q?NXvB2/MVydJ8kyzbkf3rXDPwIWMyNpLcPQ/I4a6HrfC1CqafWR0Zr77uBWPT?=
- =?us-ascii?Q?jN3KctYTl64VTHe1ZRWGeyOuDQgrZUU=3D?=
-X-Exchange-RoutingPolicyChecked: T/CVW545/NUD2bYmHv2YdqCepfMLYfGEYKBk6PPxABrbt6qv1cRh0vlFP/WcbIYt7LdDVa1QCDHQUi/7d3zpV5sG4pa8mP8lB6q70wHMjzbMWjAuf9RWigpWRTVHBgOaRxfDfDq8Fb6JmF6ErspCQsW0zHHDqY661U8hBsDmPN2ySjAcoNejfFk7M1gb7S4mQLJdyZgbei7Lec7kErhUoLw/wx5sJbfPLKIQ2kn66d09ui10r/1eeMGLL8V1u4N21mISrEGY8VexvAjqe5fRE2rX36OtkklMviEnZqM7V8urdn/F/VCctXQeKszneANxiteTbOWmPsc+bV/aOO8ffQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4514ef2a-70d1-4c99-30e0-08de8f81462f
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?fMIEtarFTgNkLGpIcxoNiI/Qp3cgqkD6RuS0H6i8q1iWT/aDip2PR7q08eOQ?=
+ =?us-ascii?Q?qJsqIA6CwOXA2XMmxJdaoRmZqtZN4F9qHAe4wOOwaN49kXNNyMY9ERuB3IGH?=
+ =?us-ascii?Q?diMb9+WzlFbU8AiCrz/egPX5n5a7FaF6QouUAAu0Uvg1RR00eQjK/Fa7n3w3?=
+ =?us-ascii?Q?LPEirVkf08J7ec1rIObxwz7A7KxA1E2eYz0rRehqsf/s6xA13Jra/aAIZBSj?=
+ =?us-ascii?Q?Dog2jCuzN0F1tWQkrgC5vL/uMVdYVqNQKfEeiesURr6hAoIu6qTNdoKgFE5u?=
+ =?us-ascii?Q?L5AiBmod2sv5n+f9wsML7UQDK1c0bDEexvVqvKnpvEn+PKDoWkCtL6tA+2AV?=
+ =?us-ascii?Q?HHjBa7/bpQNRkOUxogRn0eNEcce0Ju4abYm2u9Kcbs1S5aPfL3Y62sdS/PEd?=
+ =?us-ascii?Q?Z39Jp3Xt95CwK4rMHwLs4y8qkIOdJIXTvyLWVNQVzwykrxGAk0f1//KTTbiZ?=
+ =?us-ascii?Q?Gm4QudoPGH0GsSakdXX/IxcrrQedYBmbY3gzAVNHUhT30bJda9Tzd1jaP7MR?=
+ =?us-ascii?Q?SKZ9wgU5XZcdPZ7FqArH+DbNrXLgg5mcD8+wdGRH44WvEQPEi8rTKjPlomoJ?=
+ =?us-ascii?Q?d7Ga7GzUmSeMQModeYl5BdAx4ydU9GtlcqClYedtK+iQsyBY7fWAP7glwMQE?=
+ =?us-ascii?Q?TwXuj8XKDk8cKhk8U3dVrPfVwBlinGmPyH9n1ZlMlKTDU6QCxlb3Z/mjW+QO?=
+ =?us-ascii?Q?QsgSZd9Viwqr9Usg3Dpm9zt5qqWdHNAyY1+01jfEVfkJY0ygnAS1Kfahrm8q?=
+ =?us-ascii?Q?KizJDM45cdbv7dLt3gsUH78um+B4aHkmwA3Qe6ZF9F+WfqfbxXmFBXN6LPuI?=
+ =?us-ascii?Q?Ri6g8E2y81skf7CXGGw1pz/y04oy+VySYgA/tGOpjYAQ8O9xeOlUtQAn3fqu?=
+ =?us-ascii?Q?x15wJ4+2Q/94MsxrjwchZW04P/PylWyxzBw1HHKmkt6AubhvWxGCBQxV/XDg?=
+ =?us-ascii?Q?qPcAkDxbCnwFPS6SwioLeMa+W7DIjHyXJdna8tCpTUUCe8StdgXwUfqlzZZP?=
+ =?us-ascii?Q?04HvVO9gWph/Xkb0a5pp6SPdRlxF92ybpb0QpLcY7L6diANLj1BEtm+S4G6o?=
+ =?us-ascii?Q?mt2TEWW2Q5G7szG1Id2OuuVQzJ8fe/3OeApdtdOdRdhON3htz18R4J1Y3Slr?=
+ =?us-ascii?Q?Ti1iTkcGNPKy9vKWIKOqzC2xuQn57gOxjIbJm4XtJ/LCbKcnuUTyH4b5V7hP?=
+ =?us-ascii?Q?oZwCGs0EV2abbK41te+xJY2uP0DHBV6ZR9grcCq8w8WS94YZUxqRRDaYlcrp?=
+ =?us-ascii?Q?aRpB14gt7W7o+dIcf2glHeSrSY7TSFTFbFqXno3Ex01LPgeVpKCYWXep+P9+?=
+ =?us-ascii?Q?6RmvvIJpWlzn8rDfviUuKi4Z+Y1NZelv4yDks8c3PdwnetpFIp1WvY+kvPUE?=
+ =?us-ascii?Q?t6Ph6/wXAF/zXuPfkp8DYfFWWKUPsqPvcCGdiVKemPJrxsgCePjukFtxF7oZ?=
+ =?us-ascii?Q?HNu6CwRFgDVSHgujps8EuJ1PVKZJpzNltcUrYyBwp0H318fpi6Nna1lO7JJB?=
+ =?us-ascii?Q?roBwptdicRbK8fKrJwF1YjDuGajvKGdH5Q86w15bUdG2/H2bhb6GiFu26lmM?=
+ =?us-ascii?Q?vxl9qRj5tK31tfH8dc60lLMeYIGSAtuPz/N+wZ1Jug0GSFaLMO3NLd49GY/L?=
+ =?us-ascii?Q?VJY9PfnkUs7y1aaL/0nrZ4x12eCUdr3Lm0bFXezfLy9VoCGzSNoD5gHsVLcs?=
+ =?us-ascii?Q?IA7I0iBRG2TRwpiyGnwWX/57eC2/NIaWJQzYrMTFn565AjYwSiSAiYXWL+KF?=
+ =?us-ascii?Q?LPIQGeRdDVWV9dr7ET7BWBsbcSYXRs4=3D?=
+X-Exchange-RoutingPolicyChecked: vZm33/g9U86RkzaWEg3dZsHmFhYBodJFu9MFB8T7Pu+udO1JNammJ8dlr/zXPXna9JakoxpcBbsqTruos6aTwSx+XlC4cg7cuzjfAKBzCjI/orSA5xnIayxYQOCQ2PO81Wt14iqH8xDVxwoQvQ4ANbKApzwtC1IfdusIkbvodnvnoAWD7i+qbL0Xoc0jrJyrxeLXQg+H0wAEbf1nRS8spGoVX6vZEHU5iw8HOIkoil+U73Z1u+LqApbiS8/M1nA2sE6FHHSvrk1hssGLfbW9MkZyBe4qJtj1CtO548MXscMr6kGQo6jK3SUfISqNbVTzIVzorANKNLvCqyMpTCp94w==
+X-MS-Exchange-CrossTenant-Network-Message-Id: c71f482f-9759-4318-fd18-08de8f8555d6
 X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2026 23:57:32.5993
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2026 00:26:36.7785
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: o5MDWRC5udbAMM7ogFxUHKjhgT/kZnPNnrHBPJoB5CV2l46Klsl2/Ff1rKGsWC1VCmt/OgDkmtLJ5GDBcSsV+oDBPGn5VCDnqzEpsJqmpj0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5093
+X-MS-Exchange-CrossTenant-UserPrincipalName: NZ4z4oerryshllJl43UiauPOnbtE+T/iWJIfIM2Iy2V7ZBvi4ojx4Rm27qm2daPCmk2aVxgO7kPpiv5eMW4MPmWSJcepBFzqRDPGau3oiyk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS3PR11MB9671
 X-OriginatorOrg: intel.com
 
-On Sun, Mar 29, 2026 at 10:44:17PM +0800, Li Ming wrote:
-> If a region is created on a root decoder with Fixed Device Confiuration
-> attribute, the region will be locked , meaning region destroy
-> operations are not permitted. CXL region driver returns -EPERM for
-> region destroy operations.
+On Sun, Mar 29, 2026 at 10:47:14PM +0800, Li Ming wrote:
+> A region is not allowed to be destroyed if it is in locked status.
+> cxl destroy-region command will fail and ask user to try it again as
+> root, but it is not the real reason and it will confuse user if user is
+> already a root user. This patch will shows the region locked status in
+> region information and outputs an explicit log to user that operation is
+> not allowed like below.
 > 
-
-There is at least 3 paths to a locked region:
-
-1) the FIXED root decoder attribute (above)
-
-2) CXL_HDM_DECODER0_CTRL_LOCK
-   Both 1) and 2) well described in:
-   2230c4bdc412 ("cxl: Add handling of locked CXL decoder")
-
-3) AMD Zen5 region creation always locks the region, regardless of the
-   FIXED attribute or decoder ctrl bit.
-
-
-I like the added info provided by this patch. Please consider expanding
-the sysfs 'Decription:' field. If user reads the decoder lock sysfs
-description they may think they can reset their way out of a region lock
-situation, and I don't think they can.
-
-more...
-
-> Although the locked status of the corresponding root decoder implies the
-> region is also locked, exposing the region lock status directly to
-> userspace improves usability for users who may not be aware of this
-> relationship.
+> Before the patch:
+> cxl list -ir region0
+> [
+>   {
+>     "region":"region0",
+>     "resource":53955526656,
+>     "size":536870912,
+>     "type":"ram",
+>     "interleave_ways":2,
+>     "interleave_granularity":256,
+>     "decode_state":"commit",
+>     "state":"disabled",
+>     "qos_class_mismatch":true
+>   }
+> ]
 > 
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-cxl | 10 ++++++++++
->  drivers/cxl/core/region.c               | 17 +++++++++++++++++
->  2 files changed, 27 insertions(+)
+> cxl destroy-region region0
+> libcxl: write_attr: failed to write 0
+>  to /sys/bus/cxl/devices/root0/decoder0.0/region0/commit: Operation not permitted hint: try running as root or using sudo
+> cxl region: destroy_region: region0: failed to reset decode: Operation not permitted
+> cxl region: decoder_region_action: region0: failed: Operation not permitted
+> cxl region: region_action: one or more failures, last failure: Operation not permitted
+> cxl region: cmd_destroy_region: destroyed 0 regions
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index c80a1b5a03db..50bf7334465b 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -508,6 +508,16 @@ Description:
->  		(RO) The size of extended linear cache, if there is an extended
->  		linear cache. Otherwise the attribute will not be visible.
+> After the patch:
+> root@jammy-cloud:~/ndctl# cxl list -ir region0
+> [
+>   {
+>     "region":"region0",
+>     "resource":53955526656,
+>     "size":536870912,
+>     "type":"ram",
+>     "interleave_ways":2,
+>     "interleave_granularity":256,
+>     "decode_state":"commit",
+>     "state":"disabled",
+>     "locked":true,
+>     "qos_class_mismatch":true
+>   }
+> ]
+> 
+> cxl destroy-region region0
+> cxl region: destroy_region: region0: Cannot destroy a locked region.
+> cxl region: decoder_region_action: region0: failed: Operation not permitted
+> cxl region: region_action: one or more failures, last failure: Operation not permitted
+> cxl region: cmd_destroy_region: destroyed 0 regions
+
+Nice!
+
+> @@ -853,6 +853,12 @@ static int destroy_region(struct cxl_region *region)
+>  		}
+>  	}
 >  
+> +	if (cxl_region_is_locked(region)) {
+> +		log_err(&rl, "%s: Cannot destroy a locked region.\n",
+> +			devname);
+> +		return -EPERM;
+> +	}
 > +
-> +What:		/sys/bus/cxl/devices/regionZ/locked
-> +Date:		Mar, 2026
-> +KernelVersion:	v7.1
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) The lock status of the region, region destroy operations
-> +		are not permitted if the region is locked.
 
-Maybe similar to the sys/bus/cxl/devices/decoderX.Y/locked, say:
+How about moving the check earlier, before the unbind/disable?
 
-The CXL driver has the capability to lock a region based on a
-BIOS or platform dependent configuration. Regions created as locked
-are never permitted to be destroyed. Resets to participating decoders
-will not result in a region destroy and will not free the decoder
-resources.
+With this here, users selecting --force will get back a disabled
+region. Seems better to do nothing at all if destroy is not an
+option.
 
-Maybe the last sentence is too much.
-
-
-> +
-> +
->  What:		/sys/bus/cxl/devices/regionZ/mode
->  Date:		January, 2023
->  KernelVersion:	v6.3
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 42874948b589..95d81816008e 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -767,6 +767,22 @@ static ssize_t extended_linear_cache_size_show(struct device *dev,
->  }
->  static DEVICE_ATTR_RO(extended_linear_cache_size);
->  
-> +static ssize_t locked_show(struct device *dev,
-> +			   struct device_attribute *attr,
-> +			   char *buf)
-> +{
-> +	struct cxl_region *cxlr = to_cxl_region(dev);
-> +	int rc;
-> +
-> +	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
-> +	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
-> +		return rc;
-> +
-> +	rc = test_bit(CXL_REGION_F_LOCK, &cxlr->flags);
-> +	return sysfs_emit(buf, "%d\n", rc);
-> +}
-> +static DEVICE_ATTR_RO(locked);
-> +
->  static struct attribute *cxl_region_attrs[] = {
->  	&dev_attr_uuid.attr,
->  	&dev_attr_commit.attr,
-> @@ -776,6 +792,7 @@ static struct attribute *cxl_region_attrs[] = {
->  	&dev_attr_size.attr,
->  	&dev_attr_mode.attr,
->  	&dev_attr_extended_linear_cache_size.attr,
-> +	&dev_attr_locked.attr,
->  	NULL,
->  };
->  
-> 
-> ---
-> base-commit: c369299895a591d96745d6492d4888259b004a9e
-> change-id: 20260329-expose_region_locked_status-b05c4b8f97d6
-> 
-> Best regards,
+>  	/* Reset the region decode in preparation for removal */
+>  	rc = cxl_region_decode_reset(region);
+>  	if (rc) {
 > -- 
-> Li Ming <ming.li@zohomail.com>
+> 2.43.0
 > 
