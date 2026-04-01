@@ -1,308 +1,251 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0123A6EFA;
-	Wed,  1 Apr 2026 15:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775056567; cv=none; b=u6+Wd2zZeth0Se39SGooIEb19nSpZP8sH3zoLgjx9RJ1FOIb7kCc6j2+MEsIvooTUo5Ag4lce7eCES5s64kO8p7VmwwHpyUKAiMi6c1Ynlab7cyFS5P4HM9OGkbY1ohQyHx/wj2X2NIV7w2ITAny5js2prgbU2tVw11RsjJLzuA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775056567; c=relaxed/simple;
-	bh=25lB7qQccaiGXkodAdpCqYi2IXgKw+RXo/4CAG/NB9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ttv/EFcz6awTJYJMamvxgsQnzJJiiPnvCGKZHPt6UqmocJ0S5M34rQHfCVh5eG4Ay79CXNoDsAFakGxtxTp3MT5g7x31XuP5JM8Obyl0TTFSMSFEE1eLVwMQrbQElDikeN5cWXfklz3eXMtXcFArxpsCj7VCNDMBOuDfXZrAxIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id A03F713AD7A;
-	Wed,  1 Apr 2026 15:15:56 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf05.hostedemail.com (Postfix) with ESMTPA id C725320018;
-	Wed,  1 Apr 2026 15:15:43 +0000 (UTC)
-Date: Wed, 1 Apr 2026 10:15:41 -0500
-From: John Groves <John@groves.net>
-To: John Groves <john@jagalactic.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Chen Linxuan <chenlinxuan@uniontech.com>, James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V10 00/10] famfs: port into fuse
-Message-ID: <ac0zFPM9BT0XQq45@groves.net>
-References: <20260331123702.35052-1-john@jagalactic.com>
- <0100019d43e5f632-f5862a3e-361c-4b54-a9a6-96c242a8f17a-000000@email.amazonses.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 963C547A0A2;
+	Wed,  1 Apr 2026 16:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775062234; cv=fail; b=iFEbooz8wdvtjuhGFp8vndsM6LMZQrVqoNcQ1n7Hq5hCTXbVZDeD9ypsfJX94CfmoaJgBSZ1Su1FT/X9uTpWKAwdt3C/VfuvyP8pQCHzIeRc2y/FR7UsxHMAeQeGc1rptWfHBrUbfCIjJjm+DH6qaIRIAqST6WRzH/Hs6BR0wEs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775062234; c=relaxed/simple;
+	bh=ieqwunbXVYzLyNJP3dPnKudT921bXt1UcG9hNaKdagk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=U5ITvgXBCHxYj7jWOohH+i/5IpQ4h4K0BcBXlpUJvBdh2YCDbJRqkaNY2QPzVEo4Zb2MMuzoa1zkAIcgKOfa0tqBhf/GljahEeDXcEWf6fG3E5X0hskc8UQVQLs2w/GcuhNQV1yuEVJ4fBsYIX6JBj5UmywhZseZDs5fydKBLS4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IChMjUbl; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IChMjUbl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775062233; x=1806598233;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=ieqwunbXVYzLyNJP3dPnKudT921bXt1UcG9hNaKdagk=;
+  b=IChMjUblFzPJQ/JO2tIjo43xQrRXoXz6aGoZLbmUBNJ4DOWIAxwMhDqv
+   YqYtYPbuqDXPr+SXQ+7IawmaxRoUR0mh4XbdxiAVy3pzi6aXpYiniBWzw
+   jzdaB1s6hoBE07rRxRagG0aC+EIDfHrGlv/TFHIvAsqFdkOgeKtSE/PtU
+   mSLazWcZc2lofwX6OB9nbuHAhZOsqhGJgqr4EBP7y9ToiRxyPVbdHuED3
+   6PJQs3r3jenIpfYuoTAdEdMMRpiavA2FnbdVWnkib/JV9lxd51TJPAAUw
+   POS8mXQyTFy7Ym8kpLCkk4WqSRhvZbC3FESpUct7zauWZ+eslyypcQBAv
+   w==;
+X-CSE-ConnectionGUID: 3msHOmDMT22SQUmVXsXGGg==
+X-CSE-MsgGUID: ySVCzaevRxyA5u3FzdmuIA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11745"; a="86721810"
+X-IronPort-AV: E=Sophos;i="6.23,153,1770624000"; 
+   d="scan'208";a="86721810"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2026 09:50:32 -0700
+X-CSE-ConnectionGUID: DtWVEOH/Tb6JLCWHpWhgmQ==
+X-CSE-MsgGUID: Vfs0pMoMTg+jsX4AmWqwgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,153,1770624000"; 
+   d="scan'208";a="226718197"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2026 09:50:31 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Wed, 1 Apr 2026 09:50:30 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Wed, 1 Apr 2026 09:50:30 -0700
+Received: from CH4PR04CU002.outbound.protection.outlook.com (40.107.201.6) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Wed, 1 Apr 2026 09:50:30 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TmIeUUo6yA2HeDvfkI2EIB89oC9TcBa0J2rsvgCc4WX/wvPjp6EuLoC/a1Xq1m4bvks/Qm0AG0gUSmLyZztP7Yj8Jd+mvH9TR2B6M9eHrRS2v4ut8AiUlbhpsUIkdkj82IsdBu35U34Il60RZbHK57EnhznRShKy7ViSjIyBGpGNuGoQEp0+tmwiUDagc5GIE+cPKzvguS+E4oCVogVLM1Lc3ALTh7AKWUECQQBXVeHE9ysVNVvQ8T2hqSTMWiDRw6R1yYG7x9SK/soSa1RsnuvBraFF40aCah6p2u5sVDODsochZBC7ZK4KHlbzPPiGw0+ERMRt7RgesJxf1Joneg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xegS/YclFuAvc62vls7AXZt+yau7S6ldy6qWsiZqG78=;
+ b=FaC2joWrXEAOqrya7y7WQgpAonweq5QIGzuXPdXA8uxbt/F79kMOJWLaXkIVo/TXVwoIaNxRC+LL1Yx+FBBMru79SV6kQNQeM1gGfGGd33dmzxdiQTzSkCgAx8WeFRdxvmQ0KMewXyjOPWUzcdgz1xMJdf/9fM0RX358nQ0HtnrPUtjjM77cbfvA0e1wtCB1JVLkfkzydjYqyn9gpeGdPL0a097U5bt1sSwysGBuRyujMAGkizsdOqF+RMtAJob2GIXv5X2F28eksAi+PC7yGzKeCPoE3yAf0TK8sGMxMQJl9uGGr+dQpZUPiy3QJ3hhNpgqM60mLI94C3q3iggXKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by CH3PR11MB8547.namprd11.prod.outlook.com (2603:10b6:610:1bd::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.16; Wed, 1 Apr
+ 2026 16:50:28 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::fa8a:90e4:57d4:8026]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::fa8a:90e4:57d4:8026%6]) with mapi id 15.20.9769.014; Wed, 1 Apr 2026
+ 16:50:28 +0000
+Date: Wed, 1 Apr 2026 09:50:24 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Li Ming <ming.li@zohomail.com>
+CC: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Alejandro Lucero <alucerop@amd.com>
+Subject: Re: [PATCH v2 1/1] cxl/region: Add a region sysfs interface for
+ region lock status
+Message-ID: <ac1M0Mkbu97MkvB4@aschofie-mobl2.lan>
+References: <20260401124951.1290041-1-ming.li@zohomail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260401124951.1290041-1-ming.li@zohomail.com>
+X-ClientProxiedBy: SJ0PR13CA0172.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c7::27) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0100019d43e5f632-f5862a3e-361c-4b54-a9a6-96c242a8f17a-000000@email.amazonses.com>
-X-Stat-Signature: yn54oi6s9m8mzq66a3pqox3gimnxnxr8
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: C725320018
-X-Session-Marker: 6A6F686E4067726F7665732E6E6574
-X-Session-ID: U2FsdGVkX1/tr9utI/djPd2yoN0Cz5Xt2wi19B0GCoo=
-X-HE-Tag: 1775056543-621479
-X-HE-Meta: U2FsdGVkX1+LGtl4ayG4DfaC9oS7dL/Y8rgmAvHptiwOmLe3q753H6mFaGQr69ZqxTaYI7M9ziV06XGHbw9SKh52t7CFF2feqhWM6+dbz95CjWoJ8EdgnlEDtYokZMJfDJr32xATHfcCb1XHYuOtqkq+SP7U0X6wmmsRwIFWuakMQ4l9Bc5CfwHN3hqMv9G1CMlyRJub/FawpP5G6c7WX/i71aIdolTjUCUoxCKjYG7irh1wYQ57T9X67ESmY5bpROGC05gZdftM1s/Ltci//NbM7bhtY/Sg+IFxWfEZmFv9ClE/R1yfGriVuQ2IXTd2NTos9CYRiZRn/I+yMitq5Rp747v7h952WPlDOcj9JdADKNaICTzfFaTwk6d7lmaCpz/OZVE55yKcdY2o0nLegZytGcpohaUl/NYj1bG9cg6iWzjf+Mc64uQZcqJgS6vuyJDRDku8vaObJlFX5sU1mYwUWXao5K1h1YUAqn6LiUzv8pZeVhKQ/cOW3G9xlMDfS5RMs/kUFHK4R9Qwb7Y7lA6Zu0YfKkXxJQMpn63i0Yw=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|CH3PR11MB8547:EE_
+X-MS-Office365-Filtering-Correlation-Id: 40db080a-1ed4-4707-7606-08de900ec70e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|18002099003|56012099003|22082099003;
+X-Microsoft-Antispam-Message-Info: m0QZaeUALStc+dSD3tg0SqtKGjGH+BtqqBr5/46rp6eRKlVIlr8hCm0WapdKJokwjGhRYC/jGtBoIvRPh3vGh2UAJWDPGE9MCShNGe/5D2I88rywfFv29R5FZXdvs79VIs2IGQh+tuYWWLkSDUEJNOIqITTw7aky3akAjuU60U4S6nsjEu0LqSgDD00HooKZDO9UB40i+slBeqYVeFWh+SzRKCdsOZLyc5qKbeYcE35Irqyns7ETFYx+m5REjAR1PbFh4A/IF3HpAI/dYFfdR+K8ZVvFvfFX0aIWXPyKol7EHsTAZziBa3xRgd27W+RXZ3QdPQ/QDwk+iOSyBW/6hGXUCJHr7edWgQOkIzt4TjaZZtT0IjvsIF4RIsX1Nxhl3hWm7dYsPSYwFvwdHYCfg2bdC+z7ZN0+G45x/D6Bj9VMgjjfYYcKVCspZSy2/3sHgQMyHjXjj0iyToGPKpp2TdXQ+xNnwa1cOPccdYW4tnsG7/EaT8wmDaOEPPDf+4CX/NFl4CIQAqJ7NFIg+Hemy35rSwfujm+Zc5Qbf333h4FM67FaH2RNqU5GBvZBXcHh/0BQQri94B+e5/W/135YxnJ2ppZcVXAbud+V5/G8hgc09PYI9XFEz98g3wblRv6wCvXLYUPXITD4QA674R2AdJo/SOxtzMphK3lxLmGsGi2IFrhe4FnDV+0KAiuFu4eWPOmAVYZvNyHrjIBTudK9Hz1ie5U1ERXgaAIo1bUIb1E=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6IO8V3Dz8xRrApw8q9AlLrcoT1Aq38v1ZiXD6REXd4lQ80LzZ3udNp5syGeR?=
+ =?us-ascii?Q?+QFhG4gvz4quxcnVHPLbFW2NOTn1Ve1oS9qofRU81np7ckceHZlMDeweCr+w?=
+ =?us-ascii?Q?zq0rEa1gJZxJaV22PpyNCt9u9iyH34Hmhdv5a8mB2z25xULjG+wxm7U8Z4jq?=
+ =?us-ascii?Q?AuVUS9M/kRhV7qHZXvMtg+K3fA+MHwS+4+WOm6Vavx4zQuRm7b90XHPsJ5eb?=
+ =?us-ascii?Q?l8rs4TncGxXrd7BGkL/8kU7guMPbF7ouJM/D+dN+aP8nU2W8NU60QXY+isYf?=
+ =?us-ascii?Q?c19tj3G8yAM8vA/zzwodWx/YyVRbp3MWlxIAzy0PxWC9ElIk6qPlMw749giA?=
+ =?us-ascii?Q?V3FDsdpsgdL1BPHpb6G7873Af5Gc+1Ti2Kp5Gm4w2siUoFyBsSsIozdbqVdt?=
+ =?us-ascii?Q?+qQjBqZJU3Pw4qmSqTw3h+jKG0ICTSWXTEYXrRIn4ChKXKHsVnqCVJueDbBP?=
+ =?us-ascii?Q?r+/5f5BI0P3cAdH/oFQWcDdBROemaBA9EKrxLSujsMMyF6wNUz9g8dNJUWEx?=
+ =?us-ascii?Q?rjiAHGaLv8QruGsUSgEmVNpJMSU3xmSqLa8iOLvMlIeh1lcXHhkdV594iASC?=
+ =?us-ascii?Q?tAtYlcEMbWQ8WT4wWw8z6m64bL4vOLu2vZxMx+ZYow3vBByRKm7aMB6dqdew?=
+ =?us-ascii?Q?snog8o4nnyvsZZQIMcta8KmRK2m12R1PvB4kOEQBtjmW3LWEfJhd4+pZ1/Y3?=
+ =?us-ascii?Q?uNQ7ISuJgX66jFdmd5xdQQnyfqFEF47rHam4CzYTl9L66vUbbCDHOW1NTx4O?=
+ =?us-ascii?Q?OTwM0wqj7+tTmB4Q8GP6G8AOG3V4VJ4j9r9jgvqlapVUFYDPlQsghNbwQ3mW?=
+ =?us-ascii?Q?AZT8eCYDqZSCRVUy70aYylFny8oqdvQFHnuqCSG+d8/fKdNNmvTLx3K3nCvk?=
+ =?us-ascii?Q?6caJGGYjkyEsBY0wxwias2ILCVn6EHYf11mVY1zhnjtftM//q+aBNz5gq7km?=
+ =?us-ascii?Q?ysPkLfuXGFQW3jm9386zk+Hv6QFRwwkWqX1DchJPvRrvAuheTbnYsTmvoiQ4?=
+ =?us-ascii?Q?NuzNrIi0uJSc6bt5feByTK0z90OiC/TibVPRRB2e79qQS3E0k5MHassZwQrB?=
+ =?us-ascii?Q?DGNxGaFp5ltB/RWXfnYqE9k9sb8s1EX83VJ+nW+x97YOCAYKvPWcKHOCN18g?=
+ =?us-ascii?Q?LtN5hS/u4WenjmJtzj9RAlxwajfxgOVmVwcDXrsd0nx2cLXXrlA904I24I9h?=
+ =?us-ascii?Q?JpSbVnPXLP9hErhS4ZBo5l5k4RE3G1H8q9vMZkP7hs8mxJD0Kf/mm5UR8YfD?=
+ =?us-ascii?Q?N+BOVTrlnD+T7DX1fT/AngOk7mujHPcCtbUwijTH99s3hmfj8iUN8Si5FPMH?=
+ =?us-ascii?Q?umA4LO0RzwccEAfVbMIxO1R/WxR4uvN/0+8QZfD1au5KgRNTNfyDWKX4cpmU?=
+ =?us-ascii?Q?om49wjzlQ1MdX2EFfW6AGdj4bvD7E1yeqxvaWpHLVbAyKtxzoBFrTa+goTKd?=
+ =?us-ascii?Q?A5tHLn8i2un6r0+jLGDMHzY0BwMOTt+LYYqyl8GBQO8KtcmP+7SeowZwcC9u?=
+ =?us-ascii?Q?s6HDYwK2apU1WlQvgHes5x6PnZfF3aLtqKY/FoXbOeQ1A1rg9ZlLa5VWsDVl?=
+ =?us-ascii?Q?nBvabKsGd/JrqwhFOYuOcFGBELoRS1iZnS16nmniocZw3VkXyklhl4I4k6bL?=
+ =?us-ascii?Q?YST3mi8oKQuNzpMpHMVkCPEym3xfNpLd9gM5gL3Rs6RGH4ZAELgQfNwgwlNF?=
+ =?us-ascii?Q?KjTE6wyAmW5AaFKYAu3rtoSnbxNKyGO+E0RnviNAetSS7LIx/rHxCgFpz5Dy?=
+ =?us-ascii?Q?Iv0UUPPNmZskYwHKIuK2zi3pjaVWRJU=3D?=
+X-Exchange-RoutingPolicyChecked: fHoWAiYC4P7p/7A1xrFxmAhUkl/JbNwW8OE3jRTy4imFwlT8jfURuONEvSe+ibLZvbKggcspD5uCTqUF4Y4e0+/OtGxoH5jaMc5qfTyVaQMU30TXZGHvK+BtHm9mWzT/MwS7E+B3Mh/4G7guuVipbuRH3ajT0CuJKF7GgECyrn9Mg4NAUPd1EAs2wSNuUr4FIrQmXJaa4IRpoHbVGNkiTiiti80fGci0lAf+Z2wjLz/Hm35Y62isWBuCHQachEiFmLHRUBXhnu7OdtCiVTtnEqBFlAv7z5EGVAZr9GRI30xwp7vaqV21SSHKeMgpzxKMGdQq+TlKGiT/wRHvDGbRkQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40db080a-1ed4-4707-7606-08de900ec70e
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2026 16:50:28.0241
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: syatEYkycHze97Sc91dFIeW0EPAAEo78H6uG6bJ3v1CrKjtAza+pLA1klXs0t/pbl8K5YDTq40JcLtBkdlePn4jKxgcbcn9w97T8abwCXgI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8547
+X-OriginatorOrg: intel.com
 
-On 26/03/31 12:37PM, John Groves wrote:
-> From: John Groves <john@groves.net>
+On Wed, Apr 01, 2026 at 08:49:51PM +0800, Li Ming wrote:
+> If a region is created on a root decoder with Fixed Device Confiuration
+> attribute, the region will be locked, meaning region destroy
+> operations are not permitted. CXL region driver returns -EPERM for
+> region destroy operations.
+
+The above intro is too narrow for why region may be locked. See v1
+comments. Let's keep it similar to the sysfs 'Description:' field,
+like this:
+
+The CXL driver has the capability to lock a region based on a BIOS or
+platform dependent configuration. Region destroy operations are not
+permitted on locked regions and the CXL region driver returns -EPERM
+for region destroy operations.
+
+Otherwise, LGTM 
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+
+
 > 
-> NOTE: this series depends on the famfs dax series in Ira's for-7.1/dax-famfs
-> branch [0]
+> Although the locked status of the corresponding root decoder implies the
+> region is also locked, exposing the region lock status directly to
+> userspace improves usability for users who may not be aware of this
+> relationship.
 > 
-> Changes v9 -> v10
-> - Rebased to Ira's for-7.1/dax-famfs branch [0], which contains the required
->   dax patches
-> - Add parentheses to FUSE_IS_VIRTIO_DAX() macro, in case something bad is
->   passed in as fuse_inode (thanks Jonathan's AI)
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Alejandro Lucero <alucerop@amd.com>
+> ---
+> v2:
+> * Add more info to the interface description. (Alison)
+> ---
+>  Documentation/ABI/testing/sysfs-bus-cxl | 13 +++++++++++++
+>  drivers/cxl/core/region.c               | 17 +++++++++++++++++
+>  2 files changed, 30 insertions(+)
 > 
-> Description:
-> 
-> This patch series introduces famfs into the fuse file system framework.
-> Famfs depends on the bundled dax patch set.
-> 
-> The famfs user space code can be found at [1].
-> 
-> Fuse Overview:
-> 
-> Famfs started as a standalone file system, but this series is intended to
-> permanently supersede that implementation. At a high level, famfs adds
-> two new fuse server messages:
-> 
-> GET_FMAP   - Retrieves a famfs fmap (the file-to-dax map for a famfs
-> 	     file)
-> GET_DAXDEV - Retrieves the details of a particular daxdev that was
-> 	     referenced by an fmap
-> 
-> Famfs Overview
-> 
-> Famfs exposes shared memory as a file system. Famfs consumes shared
-> memory from dax devices, and provides memory-mappable files that map
-> directly to the memory - no page cache involvement. Famfs differs from
-> conventional file systems in fs-dax mode, in that it handles in-memory
-> metadata in a sharable way (which begins with never caching dirty shared
-> metadata).
-> 
-> Famfs started as a standalone file system [2,3], but the consensus at
-> LSFMM was that it should be ported into fuse [4,5].
-> 
-> The key performance requirement is that famfs must resolve mapping faults
-> without upcalls. This is achieved by fully caching the file-to-devdax
-> metadata for all active files. This is done via two fuse client/server
-> message/response pairs: GET_FMAP and GET_DAXDEV.
-> 
-> Famfs remains the first fs-dax file system that is backed by devdax
-> rather than pmem in fs-dax mode (hence the need for the new dax mode).
-> 
-> Notes
-> 
-> - When a file is opened in a famfs mount, the OPEN is followed by a
->   GET_FMAP message and response. The "fmap" is the full file-to-dax
->   mapping, allowing the fuse/famfs kernel code to handle
->   read/write/fault without any upcalls.
-> 
-> - After each GET_FMAP, the fmap is checked for extents that reference
->   previously-unknown daxdevs. Each such occurrence is handled with a
->   GET_DAXDEV message and response.
-> 
-> - Daxdevs are stored in a table (which might become an xarray at some
->   point). When entries are added to the table, we acquire exclusive
->   access to the daxdev via the fs_dax_get() call (modeled after how
->   fs-dax handles this with pmem devices). Famfs provides
->   holder_operations to devdax, providing a notification path in the
->   event of memory errors or forced reconfiguration.
-> 
-> - If devdax notifies famfs of memory errors on a dax device, famfs
->   currently blocks all subsequent accesses to data on that device. The
->   recovery is to re-initialize the memory and file system. Famfs is
->   memory, not storage...
-> 
-> - Because famfs uses backing (devdax) devices, only privileged mounts are
->   supported (i.e. the fuse server requires CAP_SYS_RAWIO).
-> 
-> - The famfs kernel code never accesses the memory directly - it only
->   facilitates read, write and mmap on behalf of user processes, using
->   fmap metadata provided by its privileged fuse server. As such, the
->   RAS of the shared memory affects applications, but not the kernel.
-> 
-> - Famfs has backing device(s), but they are devdax (char) rather than
->   block. Right now there is no way to tell the vfs layer that famfs has a
->   char backing device (unless we say it's block, but it's not). Currently
->   we use the standard anonymous fuse fs_type - but I'm not sure that's
->   ultimately optimal (thoughts?)
-> 
-> Changes v8 -> v9
-> - Kconfig: fs/fuse/Kconfig:CONFIG_FUSE_FAMFS_DAX now depends on the
->   new CONFIG_DEV_DAX_FSDEV (from drivers/dax/Kconfig) rather than
->   just CONFIG_DEV_DAX and CONFIG_FS_DAX. (CONFIG_FUSE_FAMFS_DAX
->   depends on those...)
-> 
-> Changes v7 -> v8
-> - Moved to inline __free declaration in fuse_get_fmap() and
->   famfs_fuse_meta_alloc(), famfs_teardown()
-> - Adopted FIELD_PREP() macro rather than manual bitfield manipulation
-> - Minor doc edits
-> - I dropped adding magic numbers to include/uapi/linux/magic.h. That
->   can be done later if appropriate
-> 
-> Changes v6 -> v7
-> - Fixed a regression in famfs_interleave_fileofs_to_daxofs() that
->   was reported by Intel's kernel test robot
-> - Added a check in __fsdev_dax_direct_access() for negative return
->   from pgoff_to_phys(), which would indicate an out-of-range offset
-> - Fixed a bug in __famfs_meta_free(), where not all interleaved
->   extents were freed
-> - Added chunksize alignment checks in famfs_fuse_meta_alloc() and
->   famfs_interleave_fileofs_to_daxofs() as interleaved chunks must
->   be PTE or PMD aligned
-> - Simplified famfs_file_init_dax() a bit
-> - Re-ran CM's kernel code review prompts on the entire series and
->   fixed several minor issues
-> 
-> Changes v4 -> v5 -> v6
-> - None. Re-sending due to technical difficulties
-> 
-> Changes v3 [9] -> v4
-> - The patch "dax: prevent driver unbind while filesystem holds device"
->   has been dropped. Dan Williams indicated that the favored behavior is
->   for a file system to stop working if an underlying driver is unbound,
->   rather than preventing the unbind.
-> - The patch "famfs_fuse: Famfs mount opt: -o shadow=<shadowpath>" has
->   been dropped. Found a way for the famfs user space to do without the
->   -o opt (via getxattr).
-> - Squashed the fs/fuse/Kconfig patch into the first subsequent patch
->   that needed the change
->   ("famfs_fuse: Basic fuse kernel ABI enablement for famfs")
-> - Many review comments addressed.
-> - Addressed minor kerneldoc infractions reported by test robot.
-> 
-> Changes v2 [7] -> v3
-> - Dax: Completely new fsdev driver (drivers/dax/fsdev.c) replaces the
->   dev_dax_iomap modifications to bus.c/device.c. Devdax devices can now
->   be switched among 'devdax', 'famfs' and 'system-ram' modes via daxctl
->   or sysfs.
-> - Dax: fsdev uses MEMORY_DEVICE_FS_DAX type and leaves folios at order-0
->   (no vmemmap_shift), allowing fs-dax to manage folio lifecycles
->   dynamically like pmem does.
-> - Dax: The "poisoned page" problem is properly fixed via
->   fsdev_clear_folio_state(), which clears stale mapping/compound state
->   when fsdev binds. The temporary WARN_ON_ONCE workaround in fs/dax.c
->   has been removed.
-> - Dax: Added dax_set_ops() so fsdev can set dax_operations at bind time
->   (and clear them on unbind), since the dax_device is created before we
->   know which driver will bind.
-> - Dax: Added custom bind/unbind sysfs handlers; unbind return -EBUSY if a
->   filesystem holds the device, preventing unbind while famfs is mounted.
-> - Fuse: Famfs mounts now require that the fuse server/daemon has
->   CAP_SYS_RAWIO because they expose raw memory devices.
-> - Fuse: Added DAX address_space_operations with noop_dirty_folio since
->   famfs is memory-backed with no writeback required.
-> - Rebased to latest kernels, fully compatible with Alistair Popple
->   et. al's recent dax refactoring.
-> - Ran this series through Chris Mason's code review AI prompts to check
->   for issues - several subtle problems found and fixed.
-> - Dropped RFC status - this version is intended to be mergeable.
-> 
-> Changes v1 [8] -> v2:
-> 
-> - The GET_FMAP message/response has been moved from LOOKUP to OPEN, as
->   was the pretty much unanimous consensus.
-> - Made the response payload to GET_FMAP variable sized (patch 12)
-> - Dodgy kerneldoc comments cleaned up or removed.
-> - Fixed memory leak of fc->shadow in patch 11 (thanks Joanne)
-> - Dropped many pr_debug and pr_notice calls
-> 
-> 
-> References
-> 
-> [0] - https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git/
-> [1] - https://famfs.org (famfs user space)
-> [2] - https://lore.kernel.org/linux-cxl/cover.1708709155.git.john@groves.net/
-> [3] - https://lore.kernel.org/linux-cxl/cover.1714409084.git.john@groves.net/
-> [4] - https://lwn.net/Articles/983105/ (lsfmm 2024)
-> [5] - https://lwn.net/Articles/1020170/ (lsfmm 2025)
-> [6] - https://lore.kernel.org/linux-cxl/cover.8068ad144a7eea4a813670301f4d2a86a8e68ec4.1740713401.git-series.apopple@nvidia.com/
-> [7] - https://lore.kernel.org/linux-fsdevel/20250703185032.46568-1-john@groves.net/ (famfs fuse v2)
-> [8] - https://lore.kernel.org/linux-fsdevel/20250421013346.32530-1-john@groves.net/ (famfs fuse v1)
-> [9] - https://lore.kernel.org/linux-fsdevel/20260107153244.64703-1-john@groves.net/T/#mb2c868801be16eca82dab239a1d201628534aea7 (famfs fuse v3)
-> 
-> 
-> John Groves (10):
->   famfs_fuse: Update macro s/FUSE_IS_DAX/FUSE_IS_VIRTIO_DAX/
->   famfs_fuse: Basic fuse kernel ABI enablement for famfs
->   famfs_fuse: Plumb the GET_FMAP message/response
->   famfs_fuse: Create files with famfs fmaps
->   famfs_fuse: GET_DAXDEV message and daxdev_table
->   famfs_fuse: Plumb dax iomap and fuse read/write/mmap
->   famfs_fuse: Add holder_operations for dax notify_failure()
->   famfs_fuse: Add DAX address_space_operations with noop_dirty_folio
->   famfs_fuse: Add famfs fmap metadata documentation
->   famfs_fuse: Add documentation
-> 
->  Documentation/filesystems/famfs.rst |  142 ++++
->  Documentation/filesystems/index.rst |    1 +
->  MAINTAINERS                         |   10 +
->  fs/fuse/Kconfig                     |   13 +
->  fs/fuse/Makefile                    |    1 +
->  fs/fuse/dir.c                       |    2 +-
->  fs/fuse/famfs.c                     | 1180 +++++++++++++++++++++++++++
->  fs/fuse/famfs_kfmap.h               |  167 ++++
->  fs/fuse/file.c                      |   45 +-
->  fs/fuse/fuse_i.h                    |  116 ++-
->  fs/fuse/inode.c                     |   35 +-
->  fs/fuse/iomode.c                    |    2 +-
->  fs/namei.c                          |    1 +
->  include/uapi/linux/fuse.h           |   88 ++
->  14 files changed, 1790 insertions(+), 13 deletions(-)
->  create mode 100644 Documentation/filesystems/famfs.rst
->  create mode 100644 fs/fuse/famfs.c
->  create mode 100644 fs/fuse/famfs_kfmap.h
-> 
-> 
-> base-commit: 2ae624d5a555d47a735fb3f4d850402859a4db77
+> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+> index c80a1b5a03db..16a9b3d2e2c0 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-cxl
+> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
+> @@ -508,6 +508,19 @@ Description:
+>  		(RO) The size of extended linear cache, if there is an extended
+>  		linear cache. Otherwise the attribute will not be visible.
+>  
+> +
+> +What:		/sys/bus/cxl/devices/regionZ/locked
+> +Date:		Mar, 2026
+> +KernelVersion:	v7.1
+> +Contact:	linux-cxl@vger.kernel.org
+> +Description:
+> +		(RO) The CXL driver has the capability to lock a region based on
+> +		a BIOS or platform dependent configuration. Regions created as
+> +		locked are never permitted to be destroyed. Resets to participating
+> +		decoders will not result in a region destroy and will not free the
+> +		decoder resources.
+> +
+> +
+>  What:		/sys/bus/cxl/devices/regionZ/mode
+>  Date:		January, 2023
+>  KernelVersion:	v6.3
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 42874948b589..95d81816008e 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -767,6 +767,22 @@ static ssize_t extended_linear_cache_size_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(extended_linear_cache_size);
+>  
+> +static ssize_t locked_show(struct device *dev,
+> +			   struct device_attribute *attr,
+> +			   char *buf)
+> +{
+> +	struct cxl_region *cxlr = to_cxl_region(dev);
+> +	int rc;
+> +
+> +	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
+> +	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
+> +		return rc;
+> +
+> +	rc = test_bit(CXL_REGION_F_LOCK, &cxlr->flags);
+> +	return sysfs_emit(buf, "%d\n", rc);
+> +}
+> +static DEVICE_ATTR_RO(locked);
+> +
+>  static struct attribute *cxl_region_attrs[] = {
+>  	&dev_attr_uuid.attr,
+>  	&dev_attr_commit.attr,
+> @@ -776,6 +792,7 @@ static struct attribute *cxl_region_attrs[] = {
+>  	&dev_attr_size.attr,
+>  	&dev_attr_mode.attr,
+>  	&dev_attr_extended_linear_cache_size.attr,
+> +	&dev_attr_locked.attr,
+>  	NULL,
+>  };
+>  
 > -- 
-> 2.53.0
+> 2.43.0
 > 
-> 
-
-Miklos,
-
-I would appreciate a read on what you're thinking WRT merging famfs. The
-dax patches are ready; this series should be applied on top of Ira's 
-for-7.1/dax-famfs branch, which is at [1].
-
-I saw that you had the famfs series in your for-next branch briefly a
-couple of weeks ago, but it didn't build because it depends on the dax
-series. It will build and run cleanly if you put it on Ira's branch above.
-
-Famfs has been in use for a long time, though availability of sharable cxl
-memory is still limited; that is changing with early availability (now) of 
-sharable JBOMs up to 100TB.
-
-The presence of famfs won't affect anybody who doesn't use it though...
-
-What are your thoughts?
-
-Thanks,
-John
-
-[1] - https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git/
-
