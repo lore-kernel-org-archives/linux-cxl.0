@@ -1,28 +1,28 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012071.outbound.protection.outlook.com [52.101.43.71])
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012054.outbound.protection.outlook.com [52.101.48.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB63747CC98;
-	Wed,  1 Apr 2026 14:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38BA429806;
+	Wed,  1 Apr 2026 14:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.54
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775054516; cv=fail; b=HRM/Z6YYlnI8tqQ60PcbsTLTJ5HQ1Kl79DBerT4+0JCkExDdds//q+VbVg0XwWjZrRPmgLE5G5VuZ9S2ViSbECT6yXbrIYhGpKJwLxP3zBcNq4/kx+4jh1WhZn0lSNGz7tPzOGmVj4qoY2TkuzxTqGty0+3Xn7PkkjjeR6gHXtI=
+	t=1775054529; cv=fail; b=iJb7Czv/Ky8A09RL8c/RBLJ5H0ot90suhJy7cy9I+1eieGRqmsy10TA6Ox83aapBT2X2/7VWJ/Gkx3CNzIV66qRkB7Yus7s+uqF5zmKis7g1pYtuemZBwb8TPhd0fuM+dYMpzky/08eUyJcVWeJ8V0JWSimSutU28DZs3a6tv6A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775054516; c=relaxed/simple;
-	bh=zyJuRmRD4IduuavNFAyt/nTJ4huI2Rw/qpToxdnLrwE=;
+	s=arc-20240116; t=1775054529; c=relaxed/simple;
+	bh=nr2QnWoBN/0g5cP9umDBp103Ls6oPH+cAhV88eIuOYQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VWncq7Il60iloAL7R1/Qdm7SIxcnPZtC0/yeryhSmZ5UYF8dlZxFAJjDER13B1tb20InKFuIvN2PZLcQR4o2zlcZj2c6OoRZ9iP5CveAbh0iOoSzHhuOoE0GB+35mgmq7lO+c875TEjKnL9dyFjeOrXfo+byDYJNDapacWNFdcw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aY3R5EB6; arc=fail smtp.client-ip=52.101.43.71
+	 MIME-Version:Content-Type; b=t+HveK8Ng/x7TTVG3gZgJLABHbZduukBr+HmEdox20JMJ5cgXBg0I375fOvR0C5BRE7NyxCVoVkiYcScMSi7GHDXX5sEMsFdp5IUUCwFieaDSoGa+66+IP/SG7hTo2i3n93oubaZiKRjHZyMNf/kRpQGpwVwa2lcFH+acXMSRB8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=qpe6hAXG; arc=fail smtp.client-ip=52.101.48.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aY3R5EB6"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="qpe6hAXG"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qxMy3cNbKYfBPoNC38KWjTnHp7wD69chGZ9kXZQ2o3SU2xOGVmlOaHmbL2xoLJB/O9ZmCrJySQ2RcT4/66chQa37tX+lxuhqt2kgbMe4vfq2LLwwnB2L2MDaYgKwSqCZkZpLrjRcE6iszntegZyqgXhGPgR4lgj06zsEOJnCIdkm210uiIC0etNchnK6osztv05Immy3OlImT89EpltQkmYrvzOZCYQvxJ8tvWwqNfYzEgpBjr1GnUZlru7UUfLJNUCqAG0IS4cPUE3Xr5njRa780+mrQd0lONz32fSxC7aNJy+iUlDBGRp+TZLRXjVMotG7tDkSDlNVCbfwJNwnjQ==
+ b=vXZWbxEDnDcYK3cxuiPmakMXHC3ymmANhs4cVE0UnmDwmS01wesBVxLxJhUUUCHpCPD53yGEDsyAwmebjRF5W/3QJHlFyl5lArECO2qCfJkwyk0zg5AtXaGrb69yIE185vHrZn8DDugIZGyTpn8xlFSu61w2WVPbIRpPfiUp0moNPR9yQJIlSsInSjgGTqikpkiaPzWmjwyKKa2tzc12FDyHbsZE4aMnQxMFyeGcza9KUchst8YxJ2J3M/Q+LoNT+nHDpfvbnmOqWT5LkctmssqwmZ8ajUsfQaaqk64V09s2g7VCF71wEgN0uzPVqhTehKu23ACm8r2H057JDmApuA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0CywdbhIFUrMQw5CcE10L5D6QWxLR2qziki0gj47Sco=;
- b=lazWWvSgy06JvCXzgR4sdnneuEiUmfuuv6eLf9hvYv2wmhaWcvmr3duYAGBf6l4Wh94VA8+KlR8sBBysRgC5SjoWRzdH8eUFy91ti8NO2Dd+Qzq/E4oLAsmwy7DM6TaGC4SGzojjeIurXt7S3KLH6w5bDlCKFST9I+LVMAY0DAVR07jrbTEsdWZP3IwGl1UQHkbjbLmpBPY4MjVW/ZyKgws7Pw09tEpKDILf6h3lu9o57gzcjJPCmTJ+n3FCbypi2eqdks3VrJzAHrltv8D3KppzEgr+i9xNlHxUfzYktE7wwS1p0BydkTE6ozl/lMr8joj5pQJDxtoXFRgP7OC7yw==
+ bh=ppzCk7ulIkbQ5RJzgPPsc1aR4Kl4JNvXEdzbs/itF+Y=;
+ b=SsE+oovnyDscWUour/bxDy6Pl69YaZonfcqOD2L2SQhHrjUD3eqNTsNso3IF6KyYNw2PD1H3BGZ2cd7ADrzyWkcz8JvlyRUCL1xr7sBqOiq0KBF7zVnj13LR9h/XEMCBWpG5SdA1RRscA8iFksO+16ePzuCawhxb2v+O7LT0EJyiDRriAkbZ2SUJP3RhC/f5NSi1LUDD/k9nV2sFihMzuTuESZ5gR2jxb+L6WQ7xEjCBxgP9xJ3ChvnqUMiU84LvfVK5le8pdgCkwDSnDk7ZkmPbCGGb/Tfz4TojicBFZSd2Meq78TCbdgPmODdOn903Be4KEs35i7n+ET5U4Gm6lQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
@@ -30,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0CywdbhIFUrMQw5CcE10L5D6QWxLR2qziki0gj47Sco=;
- b=aY3R5EB6EPJVD9A2NTNi9aGt8XJcDe3b5Ma4AAqhknSO4Bi6oXkltne1gKEvHoNnxzh2KW6iNc4mfZ5YV3rWMA59uIqIaUD4b2uM2bPAhF9B1Evoh563fUTaOqrP0qoWisj8T9gtzPd07Mpuij1ZxiT+1pA3+4rUNAi/1JBhc3zUdWCFQgbLOj1aOWRbmPTbw+qtzzkqq4X/FnsmuPjnRAUkLFj5KCr7B42bpPpeBt1x3CUFETnAwhzV2maXvfePgCrPhuA38dPOWFKY9avOXP5eYp6vnoiYhOrFPF2dCK4Ug0HwJZmOWcuWmLnKleh9EFUVY43VqNOWqInJxTWpbg==
-Received: from BY5PR04CA0011.namprd04.prod.outlook.com (2603:10b6:a03:1d0::21)
- by MN0PR12MB6128.namprd12.prod.outlook.com (2603:10b6:208:3c4::6) with
+ bh=ppzCk7ulIkbQ5RJzgPPsc1aR4Kl4JNvXEdzbs/itF+Y=;
+ b=qpe6hAXGSn1Zrd588FWyiM98yYZX40wSqY9t5Jj4p+XscqiGgeZrpCx+NeCSksbkWvli2M0al/zKRxuLhV0ut/n/yPB9pfhToKPMR86A7iLmSUVbXK+QG2MazcsKPilrwhi2uQHYbYdSvHC0i68RhBgyMVqKCzCI1IN7NkbDziZGE0Tzi4foaL1fYd7vMuGWqE/2gJZWVSDpxPglDQZ/h8g1npPYjsGrFrdM0fAcLqB+hFiK2rZ14lrIkp3NdOdaMDqWEj0vfp26SvL0eMC/VSCChRLe+cNP/6+AlrqDTKeWnXRKr5o2KI4Wyzaqs/5scY5+sywe1vlKuaF6T5u7Mw==
+Received: from BY5PR04CA0019.namprd04.prod.outlook.com (2603:10b6:a03:1d0::29)
+ by IA0PPF84D37DD5C.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bd6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Wed, 1 Apr
- 2026 14:41:45 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.15; Wed, 1 Apr
+ 2026 14:42:01 +0000
 Received: from SJ5PEPF000001D6.namprd05.prod.outlook.com
- (2603:10b6:a03:1d0:cafe::41) by BY5PR04CA0011.outlook.office365.com
- (2603:10b6:a03:1d0::21) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:a03:1d0:cafe::ad) by BY5PR04CA0019.outlook.office365.com
+ (2603:10b6:a03:1d0::29) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.9745.30 via Frontend Transport; Wed,
- 1 Apr 2026 14:41:45 +0000
+ 1 Apr 2026 14:42:00 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -51,15 +51,15 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
 Received: from mail.nvidia.com (216.228.117.160) by
  SJ5PEPF000001D6.mail.protection.outlook.com (10.167.242.58) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9769.17 via Frontend Transport; Wed, 1 Apr 2026 14:41:44 +0000
+ 15.20.9769.17 via Frontend Transport; Wed, 1 Apr 2026 14:42:00 +0000
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
  (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 1 Apr
- 2026 07:41:22 -0700
+ 2026 07:41:37 -0700
 Received: from nvidia-4028GR-scsim.nvidia.com (10.126.231.35) by
  rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.20; Wed, 1 Apr 2026 07:41:15 -0700
+ 15.2.2562.20; Wed, 1 Apr 2026 07:41:29 -0700
 From: <mhonap@nvidia.com>
 To: <alwilliamson@nvidia.com>, <dan.j.williams@intel.com>,
 	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
@@ -72,9 +72,9 @@ CC: <vsethi@nvidia.com>, <cjia@nvidia.com>, <targupta@nvidia.com>,
 	<zhiw@nvidia.com>, <kjaju@nvidia.com>, <linux-kselftest@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
 	<kvm@vger.kernel.org>, <mhonap@nvidia.com>
-Subject: [PATCH v2 14/20] vfio/cxl: DPA VFIO region with demand fault mmap and reset zap
-Date: Wed, 1 Apr 2026 20:09:11 +0530
-Message-ID: <20260401143917.108413-15-mhonap@nvidia.com>
+Subject: [PATCH v2 16/20] vfio/cxl: Register regions with VFIO layer
+Date: Wed, 1 Apr 2026 20:09:13 +0530
+Message-ID: <20260401143917.108413-17-mhonap@nvidia.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20260401143917.108413-1-mhonap@nvidia.com>
 References: <20260401143917.108413-1-mhonap@nvidia.com>
@@ -90,343 +90,312 @@ X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
  rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D6:EE_|MN0PR12MB6128:EE_
-X-MS-Office365-Filtering-Correlation-Id: 66589cee-41c3-4c19-f225-08de8ffccc16
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D6:EE_|IA0PPF84D37DD5C:EE_
+X-MS-Office365-Filtering-Correlation-Id: 08060c6d-7719-45ce-7f05-08de8ffcd56d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700016|7416014|1800799024|376014|921020|56012099003|18002099003|22082099003;
+	BCL:0;ARA:13230040|82310400026|36860700016|1800799024|376014|7416014|921020|22082099003|18002099003|56012099003;
 X-Microsoft-Antispam-Message-Info:
-	URksfL8oDi+sAyMqU14iBGca39IdMIJH/DuAEIQki8oyOV3HvIPfOXqYZefLP7q3KcFEYs+3Bh9qG24OftiUOl6bDgIfc2hfbtmWFL3VsfaLpviIeMW5/oGMfNvdGc6aqfH+rRAE4UlS/JiqG8kMpM+JR/1PCxvZEmCc3+00RSCE3su2pLDPZf/1P486/IPsOyjLYba5Z4XLDXp6z3OGLezDoR2I6dkmyhEgLfCPhGc7wrKLD2ECmz9czaFWsmA03+kpa0E+GfWUGebDiXwvvyQmP2gzpBPzZHWyoVq7NdC9wQF6scgFr37a/nLOM3gd1nnKofW7kxLu2AhlM4Th5XKls9J6It00WqoaHTtTKquKnPkLvjy3AJm1TGH+vVNOS/OCNjKm2Sa1GMBxmVDJk+Pqr+1ikPkbmFK5gMcqHsXxwQdqwHVs6T5YExjhOg/Ucrhd8TIDbFfwyENrsgKHMqWHHCM5QYsNOb2UgE6Vqt52+lOIgST5juxBdXiAZirSBjGCanUPwJZlcmPSW64U1UcORXh8W0m36NnabUrxd/JY8P0iYOj0i4Xa7XSn3imk2NplOVT0ooKkC/z8KPANnL/eeVljrrjn73qJ9zjPqFuF85VXQl20d+TSeqUJLA5jvxNSMUXHXiVvF29lCQFAFN6/1qdHANmXyJPVcWSufkn9K6C67G5Od6aCfUfIbjeH+TeXz5qzMXxY4b1xqXYjnBEBKrJfsT4W3ancnTXrvyyfZiUTSOcsK7Wwq79xHL7RKYJb/bDGusYe5zVqbox2UGdRciY1z4hhtzXuxrR5Lxsjflh2iQVCsd9KLs6xztNL
+	X2A+A1auVVdEU79iOl2fv8s80LGiP41KtxijqoFp8JIwak6Y1FliX0YIGCuDjX+OCMdn2DaQfFqGJmb/L1vIJXslsEenajq7cxVtt/V7u60QR0DU4YjUCPGwVFm4D/ZQYeX4NsQ73gD40JhaVSFgmM94gdzDpM7h7E0iw8e0oLLg69GKDqJlNG//DzZ06R/6+2vjIgdEjEuPKthgoo7TqF+T5zqZMlBRNKmQB1NRw3VuRJ4weBjXtv7gSvuE0yzHygwCE0urdyHOORv9pYMCdiLZvyh9UC3E4l1DJcSDRl4VCIjIgockazJS25LU0SxFmEuCHhHa3oqJBh31hrhQzoWf6aKIgCC1XteakhCXBeh12nJ0Z4gT9zxoceG+qGtQXkFxz4RdCuDoq0zHr1q1UM84wCBcN8YQ/YHFd7MBcHGkMO7JlV3qWl2erhqr3UyUsg2WFaySzQDXZ00aIHtyW8eZ0swWYW23A696s5ut8lvxqpW5FlSLkmFh/AQ8QxH7cSbsMbv+973Ks3p3crJ6D8iuogFDHK9RnKujQZ6exY3jk1NDP6leimI83W/J8FU5QC+fzR5epvFybKwFULs9jTeJwKDBY5PY0nOVwtglaW6VHxgFkf7bJRZkTbWgi7lRr5dEZ4nXkilIP15hU165a2FUN8+vDDY8Ub5W+c/MoUZrlx+MVqSjkZtVHmhmxDnq7RQJHudxuzLZgHqUaFUObbAEpszwL/ddCFpUgFpS6DJ03an1zOaZqPXGbKWrLIAt/s+CY3JfflsXy2NSwawniOfPSDs0USN68tqOwDnuFXmczgsRn+slQJRXYMM8526H
 X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(7416014)(1800799024)(376014)(921020)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(1800799024)(376014)(7416014)(921020)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	Er6GdcLkmU+D+f64rfemfXDCrXQc9Bd7Gf22eRDWzL7jnAAHZBeSW4XbXomYSE+iQgv1IwlFyp7Mso0CthD68bFppgxyQ0xzQ8rcWWokbCzMfA+MkUdmofaYszPFYPBddwQEn6166tiHlMJ2JFTmqf+1TL+K5t+Nf/XKobs2Yl3SpEcsnwCgRcgTiaSwK8O8M8wj9TFpCnXiL86twGeYHamLjTwcfKfL6WYXszJtLR0vsi4fgQ3BjajbmNVNcLWLiUMAGoNaA66gX5PjN5A4vWQ/O/c3Y1mXNFu5w+RJEZwbelmbtqdXrcSSmQzGv15COZ/qwnkTCVpqgbLy3xiWUUHp4fpbFsN4ZvT/TfPF+K8RzP4+6hFBCBdNSfUgNDO4cay2QoLlrColUiNdjQF6GeB/fJKMiruo8Gn4fnAr8NdeNEcJRvRlU86x/goWYXJY
+	3r+d70GQkjlrbbqJqfJls0Ovbe8CD7RcdvAwkjuFghEdykELqYVTLryEO9pXfdHo1153d8G1emttnOTMx1ImcPBiOzaG9CgE6eJVnmogSDssgZ0IOxtF8nKLwo2UXu36Jft3PnsV5eCZcX/F8FxSQHVPD/Fgsn7u/AhMRRk7o1n9+vjqXlIG3U3AfnMtQwFiYPioXM5mENhGdSHe7fC6yn/59IaW9H2snbpVs+CS6mFkDLzMck48rJBYKy7pN33WMKVWRMJ5ZyTYnhJyO222UkVyEnCKtYalwuL0zWOxFJK3njoLgr8YJVe4xgPOSqQxGAKW67Nn9+GtwPd3C/yXdAtAHzSLD8kQBDRgvw0JGUCmfyzVEcwHmgTOIFhfIN8w/jU9/yYi1DYhQkbEIn8+CTqCVhGxEY1/+URjtvni+dJMDHV3xndEBsjMWH0OLziy
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2026 14:41:44.9745
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2026 14:42:00.6537
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66589cee-41c3-4c19-f225-08de8ffccc16
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08060c6d-7719-45ce-7f05-08de8ffcd56d
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	SJ5PEPF000001D6.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6128
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF84D37DD5C
 
 From: Manish Honap <mhonap@nvidia.com>
 
-Wire the CXL DPA range up as a VFIO demand-paged region so QEMU can
-mmap guest device memory directly. Faults call vmf_insert_pfn() to
-insert one PFN at a time rather than mapping the full range upfront.
+Register the DPA and component register region with VFIO layer.
+Region indices for both these regions are cached for quick lookup.
 
-CXL region lifecycle:
-- The CXL memory region is registered with VFIO layer during
-  vfio_pci_open_device
-- mmap() establishes the VMA with vm_ops but inserts no PTEs
-- Each guest page fault calls vfio_cxl_region_page_fault() which
-  inserts a single PFN under the memory_lock read side
-- On device reset, vfio_cxl_zap_region_locked() sets region_active=false
-  and calls unmap_mapping_range() to invalidate all DPA PTEs atomically
-  while holding memory_lock for writing
-- Faults racing with reset see region_active==false and return
-  VM_FAULT_SIGBUS
-- vfio_cxl_reactivate_region() restores region_active after successful
-  hardware reset
+vfio_cxl_register_cxl_region()
+- memremap(WB) the region HPA (treat CXL.mem as RAM, not MMIO)
+- Register VFIO_REGION_SUBTYPE_CXL
+- Records dpa_region_idx.
 
-Also integrate the zap/reactivate calls into vfio_pci_ioctl_reset() so
-that FLR correctly invalidates DPA mappings and restores them on success.
+vfio_cxl_register_comp_regs_region()
+- Registers VFIO_REGION_SUBTYPE_CXL_COMP_REGS with size
+  hdm_reg_offset + hdm_reg_size
+- Records comp_reg_region_idx.
 
-Co-developed-by: Zhi Wang <zhiw@nvidia.com>
-Signed-off-by: Zhi Wang <zhiw@nvidia.com>
 Signed-off-by: Manish Honap <mhonap@nvidia.com>
 ---
- drivers/vfio/pci/cxl/vfio_cxl_core.c | 187 +++++++++++++++++++++++++++
- drivers/vfio/pci/cxl/vfio_cxl_emu.c  |   2 +-
- drivers/vfio/pci/cxl/vfio_cxl_priv.h |   3 +
- drivers/vfio/pci/vfio_pci_core.c     |  11 ++
- drivers/vfio/pci/vfio_pci_priv.h     |   6 +
- 5 files changed, 208 insertions(+), 1 deletion(-)
+ drivers/vfio/pci/cxl/vfio_cxl_core.c | 98 +++++++++++++++++++++++++++-
+ drivers/vfio/pci/cxl/vfio_cxl_emu.c  | 34 ++++++++++
+ drivers/vfio/pci/cxl/vfio_cxl_priv.h |  2 +
+ drivers/vfio/pci/vfio_pci.c          | 23 +++++++
+ drivers/vfio/pci/vfio_pci_priv.h     | 11 ++++
+ 5 files changed, 167 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-index 30b365b91903..19d3dc205f99 100644
+index a3ff90b7a22c..b38a04301660 100644
 --- a/drivers/vfio/pci/cxl/vfio_cxl_core.c
 +++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-@@ -435,4 +435,191 @@ void vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev)
- 	vfio_cxl_destroy_cxl_region(cxl);
+@@ -75,6 +75,8 @@ vfio_cxl_create_device_state(struct pci_dev *pdev, u16 dvsec)
+ 	}
+ 
+ 	cxl->cache_capable = FIELD_GET(CXL_DVSEC_CAP_CACHE_CAPABLE, cap_word);
++	cxl->dpa_region_idx = -1;
++	cxl->comp_reg_region_idx = -1;
+ 
+ 	return cxl;
+ }
+@@ -509,14 +511,19 @@ static int vfio_cxl_region_mmap(struct vfio_pci_core_device *vdev,
+  */
+ void vfio_cxl_zap_region_locked(struct vfio_pci_core_device *vdev)
+ {
++	struct vfio_device *core_vdev = &vdev->vdev;
+ 	struct vfio_pci_cxl_state *cxl = vdev->cxl;
+ 
+ 	lockdep_assert_held_write(&vdev->memory_lock);
+ 
+-	if (!cxl)
++	if (!cxl || cxl->dpa_region_idx < 0)
+ 		return;
+ 
+ 	WRITE_ONCE(cxl->region_active, false);
++	unmap_mapping_range(core_vdev->inode->i_mapping,
++			    VFIO_PCI_INDEX_TO_OFFSET(VFIO_PCI_NUM_REGIONS +
++						     cxl->dpa_region_idx),
++			    cxl->region_size, true);
  }
  
-+static vm_fault_t vfio_cxl_region_vm_fault(struct vm_fault *vmf)
-+{
-+	struct vfio_pci_region *region = vmf->vma->vm_private_data;
-+	struct vfio_pci_cxl_state *cxl = region->data;
-+	unsigned long pgoff;
-+	unsigned long pfn;
+ /*
+@@ -601,6 +608,7 @@ static ssize_t vfio_cxl_region_rw(struct vfio_pci_core_device *core_dev,
+ static void vfio_cxl_region_release(struct vfio_pci_core_device *vdev,
+ 				    struct vfio_pci_region *region)
+ {
++	struct vfio_device *core_vdev = &vdev->vdev;
+ 	struct vfio_pci_cxl_state *cxl = region->data;
+ 
+ 	/*
+@@ -610,6 +618,16 @@ static void vfio_cxl_region_release(struct vfio_pci_core_device *vdev,
+ 	 */
+ 	WRITE_ONCE(cxl->region_active, false);
+ 
++	/*
++	 * Remove all user mappings of the DPA region while the device is
++	 * still alive.
++	 */
++	if (cxl->dpa_region_idx >= 0)
++		unmap_mapping_range(core_vdev->inode->i_mapping,
++			    VFIO_PCI_INDEX_TO_OFFSET(VFIO_PCI_NUM_REGIONS +
++						     cxl->dpa_region_idx),
++				    cxl->region_size, true);
 +
-+	if (!READ_ONCE(cxl->region_active))
-+		return VM_FAULT_SIGBUS;
-+
-+	pgoff = vmf->pgoff &
-+		((1UL << (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT)) - 1);
-+
-+	if (pgoff >= (cxl->region_size >> PAGE_SHIFT))
-+		return VM_FAULT_SIGBUS;
-+
-+	pfn = PHYS_PFN(cxl->region_hpa) + pgoff;
-+
-+	return vmf_insert_pfn(vmf->vma, vmf->address, pfn);
-+}
-+
-+static const struct vm_operations_struct vfio_cxl_region_vm_ops = {
-+	.fault = vfio_cxl_region_vm_fault,
-+};
-+
-+static int vfio_cxl_region_mmap(struct vfio_pci_core_device *vdev,
-+				struct vfio_pci_region *region,
-+				struct vm_area_struct *vma)
+ 	if (cxl->region_vaddr) {
+ 		memunmap(cxl->region_vaddr);
+ 		cxl->region_vaddr = NULL;
+@@ -622,4 +640,82 @@ static const struct vfio_pci_regops vfio_cxl_regops = {
+ 	.release	= vfio_cxl_region_release,
+ };
+ 
++int vfio_cxl_register_cxl_region(struct vfio_pci_core_device *vdev)
 +{
 +	struct vfio_pci_cxl_state *cxl = vdev->cxl;
-+	u64 req_len, pgoff, end;
++	u32 flags;
++	int ret;
 +
-+	if (!(region->flags & VFIO_REGION_INFO_FLAG_MMAP))
-+		return -EINVAL;
++	if (!cxl)
++		return -ENODEV;
 +
-+	if (!(region->flags & VFIO_REGION_INFO_FLAG_READ) &&
-+	    (vma->vm_flags & VM_READ))
-+		return -EPERM;
++	if (!cxl->region || cxl->region_vaddr)
++		return -ENODEV;
 +
-+	if (!(region->flags & VFIO_REGION_INFO_FLAG_WRITE) &&
-+	    (vma->vm_flags & VM_WRITE))
-+		return -EPERM;
++	/*
++	 * CXL device memory is RAM, not MMIO.  Use memremap() rather than
++	 * ioremap_cache() so the correct memory-mapping API is used.
++	 * The WB attribute matches the cache-coherent nature of CXL.mem.
++	 */
++	cxl->region_vaddr = memremap(cxl->region_hpa, cxl->region_size,
++				     MEMREMAP_WB);
++	if (!cxl->region_vaddr)
++		return -ENOMEM;
 +
-+	pgoff = vma->vm_pgoff &
-+		((1U << (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT)) - 1);
++	flags = VFIO_REGION_INFO_FLAG_READ |
++		VFIO_REGION_INFO_FLAG_WRITE |
++		VFIO_REGION_INFO_FLAG_MMAP;
 +
-+	if (check_sub_overflow(vma->vm_end, vma->vm_start, &req_len) ||
-+	    check_add_overflow(PFN_PHYS(pgoff), req_len, &end))
-+		return -EOVERFLOW;
++	ret = vfio_pci_core_register_dev_region(vdev,
++						PCI_VENDOR_ID_CXL |
++						VFIO_REGION_TYPE_PCI_VENDOR_TYPE,
++						VFIO_REGION_SUBTYPE_CXL,
++						&vfio_cxl_regops,
++						cxl->region_size, flags,
++						cxl);
++	if (ret) {
++		memunmap(cxl->region_vaddr);
++		cxl->region_vaddr = NULL;
++		return ret;
++	}
 +
-+	if (end > cxl->region_size)
-+		return -EINVAL;
++	/*
++	 * Cache the vdev->region[] index before activating the region.
++	 * vfio_pci_core_register_dev_region() placed the new entry at
++	 * vdev->region[num_regions - 1] and incremented num_regions.
++	 * vfio_cxl_zap_region_locked() uses this to avoid scanning
++	 * vdev->region[] on every FLR.
++	 */
++	cxl->dpa_region_idx = vdev->num_regions - 1;
 +
-+	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
++	vfio_cxl_reinit_comp_regs(cxl);
 +
-+	vm_flags_set(vma, VM_ALLOW_ANY_UNCACHED | VM_IO | VM_PFNMAP |
-+		     VM_DONTEXPAND | VM_DONTDUMP);
-+
-+	vma->vm_ops = &vfio_cxl_region_vm_ops;
-+	vma->vm_private_data = region;
++	WRITE_ONCE(cxl->region_active, true);
 +
 +	return 0;
 +}
++EXPORT_SYMBOL_GPL(vfio_cxl_register_cxl_region);
 +
-+/*
-+ * vfio_cxl_zap_region_locked - Invalidate all DPA region PTEs.
++/**
++ * vfio_cxl_unregister_cxl_region - Undo vfio_cxl_register_cxl_region()
++ * @vdev: VFIO PCI device
 + *
-+ * Must be called with vdev->memory_lock held for writing.  Sets
-+ * region_active=false before zapping so any subsequent I/O to the region
-+ * sees the inactive state and returns an error rather than accessing
-+ * stale mappings.
++ * Marks the DPA region inactive and resets dpa_region_idx.
++ * Does NOT touch CXL subsystem state (cxl->region, cxl->cxled, cxl->cxlrd).
++ * The caller must call vfio_cxl_destroy_cxl_region() separately to release
++ * those objects.
 + */
-+void vfio_cxl_zap_region_locked(struct vfio_pci_core_device *vdev)
++void vfio_cxl_unregister_cxl_region(struct vfio_pci_core_device *vdev)
 +{
 +	struct vfio_pci_cxl_state *cxl = vdev->cxl;
 +
-+	lockdep_assert_held_write(&vdev->memory_lock);
-+
-+	if (!cxl)
++	if (!cxl || cxl->dpa_region_idx < 0)
 +		return;
 +
 +	WRITE_ONCE(cxl->region_active, false);
++
++	cxl->dpa_region_idx = -1;
 +}
-+
-+/*
-+ * vfio_cxl_reactivate_region - Re-enable DPA region after successful reset.
-+ *
-+ * Must be called with vdev->memory_lock held for writing.  Re-reads the
-+ * HDM decoder state from hardware (FLR cleared it) and sets region_active
-+ * so that subsequent I/O to the region is permitted again.
-+ */
-+void vfio_cxl_reactivate_region(struct vfio_pci_core_device *vdev)
-+{
-+	struct vfio_pci_cxl_state *cxl = vdev->cxl;
-+
-+	lockdep_assert_held_write(&vdev->memory_lock);
-+
-+	if (!cxl)
-+		return;
-+	/*
-+	 * Re-initialise the emulated HDM comp_reg_virt[] from hardware.
-+	 * After FLR the decoder registers read as zero; mirror that in
-+	 * the emulated state so QEMU sees a clean slate.
-+	 */
-+	vfio_cxl_reinit_comp_regs(cxl);
-+
-+	/*
-+	 * Only re-enable the DPA mmap if the hardware has actually
-+	 * re-committed decoder 0 after FLR.  Read the COMMITTED bit from the
-+	 * freshly-re-snapshotted comp_reg_virt[] so we check the post-FLR
-+	 * hardware state, not stale pre-reset state.
-+	 *
-+	 * If COMMITTED is 0 (slow firmware re-commit path), leave
-+	 * region_active=false.	 Guest faults will return VM_FAULT_SIGBUS
-+	 * until the decoder is re-committed and the region is re-enabled.
-+	 */
-+	if (cxl->precommitted && cxl->comp_reg_virt) {
-+		/*
-+		 * Read CTRL via the full CXL.mem-relative index: hdm_reg_offset
-+		 * (now CXL.mem-relative) plus the within-HDM-block offset.
-+		 */
-+		u32 ctrl = le32_to_cpu(*hdm_reg_ptr(cxl,
-+					    CXL_HDM_DECODER0_CTRL_OFFSET(0)));
-+
-+		if (ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED)
-+			WRITE_ONCE(cxl->region_active, true);
-+	}
-+}
-+
-+static ssize_t vfio_cxl_region_rw(struct vfio_pci_core_device *core_dev,
-+				  char __user *buf, size_t count, loff_t *ppos,
-+				  bool iswrite)
-+{
-+	unsigned int i = VFIO_PCI_OFFSET_TO_INDEX(*ppos) - VFIO_PCI_NUM_REGIONS;
-+	struct vfio_pci_cxl_state *cxl = core_dev->region[i].data;
-+	loff_t pos = *ppos & VFIO_PCI_OFFSET_MASK;
-+
-+	if (!count || pos >= cxl->region_size)
-+		return 0;
-+
-+	/*
-+	 * Guard against access after a failed reset (region_active=false)
-+	 * or a release race (region_vaddr=NULL).  Either condition means
-+	 * the memremap'd window is no longer valid; touching it would produce
-+	 * a Synchronous External Abort.  Return -EIO so the caller gets a
-+	 * clean error rather than a kernel oops.
-+	 */
-+	if (!READ_ONCE(cxl->region_active) || !cxl->region_vaddr)
-+		return -EIO;
-+
-+	count = min(count, (size_t)(cxl->region_size - pos));
-+
-+	if (iswrite) {
-+		if (copy_from_user(cxl->region_vaddr + pos, buf, count))
-+			return -EFAULT;
-+	} else {
-+		if (copy_to_user(buf, cxl->region_vaddr + pos, count))
-+			return -EFAULT;
-+	}
-+
-+	return count;
-+}
-+
-+static void vfio_cxl_region_release(struct vfio_pci_core_device *vdev,
-+				    struct vfio_pci_region *region)
-+{
-+	struct vfio_pci_cxl_state *cxl = region->data;
-+
-+	/*
-+	 * Deactivate the region before removing user mappings so that any
-+	 * fault handler racing the release returns VM_FAULT_SIGBUS rather
-+	 * than inserting a PFN into an unmapped region.
-+	 */
-+	WRITE_ONCE(cxl->region_active, false);
-+
-+	if (cxl->region_vaddr) {
-+		memunmap(cxl->region_vaddr);
-+		cxl->region_vaddr = NULL;
-+	}
-+}
-+
-+static const struct vfio_pci_regops vfio_cxl_regops = {
-+	.rw		= vfio_cxl_region_rw,
-+	.mmap		= vfio_cxl_region_mmap,
-+	.release	= vfio_cxl_region_release,
-+};
++EXPORT_SYMBOL_GPL(vfio_cxl_unregister_cxl_region);
 +
  MODULE_IMPORT_NS("CXL");
 diff --git a/drivers/vfio/pci/cxl/vfio_cxl_emu.c b/drivers/vfio/pci/cxl/vfio_cxl_emu.c
-index 11195e8c21d7..781328a79b43 100644
+index 781328a79b43..50d3718b101d 100644
 --- a/drivers/vfio/pci/cxl/vfio_cxl_emu.c
 +++ b/drivers/vfio/pci/cxl/vfio_cxl_emu.c
-@@ -33,7 +33,7 @@
-  *     +0x1c: (reserved)
-  */
- 
--static inline __le32 *hdm_reg_ptr(struct vfio_pci_cxl_state *cxl, u32 hdm_off)
-+__le32 *hdm_reg_ptr(struct vfio_pci_cxl_state *cxl, u32 hdm_off)
- {
- 	/*
- 	 * hdm_off is a byte offset within the HDM decoder block.
+@@ -473,3 +473,37 @@ void vfio_cxl_clean_virt_regs(struct vfio_pci_cxl_state *cxl)
+ 	kfree(cxl->comp_reg_virt);
+ 	cxl->comp_reg_virt = NULL;
+ }
++
++/*
++ * vfio_cxl_register_comp_regs_region - Register the COMP_REGS device region.
++ *
++ * Exposes the emulated HDM decoder register state as a VFIO device region
++ * with type VFIO_REGION_SUBTYPE_CXL_COMP_REGS.	 QEMU attaches a
++ * notify_change callback to this region to intercept HDM COMMIT writes
++ * and map the DPA MemoryRegion at the appropriate GPA.
++ *
++ * The region is read+write only (no mmap) to ensure all accesses pass
++ * through comp_regs_dispatch_write() for proper bit-field enforcement.
++ */
++int vfio_cxl_register_comp_regs_region(struct vfio_pci_core_device *vdev)
++{
++	struct vfio_pci_cxl_state *cxl = vdev->cxl;
++	u32 flags = VFIO_REGION_INFO_FLAG_READ | VFIO_REGION_INFO_FLAG_WRITE;
++	int ret;
++
++	if (!cxl || !cxl->comp_reg_virt)
++		return -ENODEV;
++
++	ret = vfio_pci_core_register_dev_region(vdev,
++						PCI_VENDOR_ID_CXL |
++						VFIO_REGION_TYPE_PCI_VENDOR_TYPE,
++						VFIO_REGION_SUBTYPE_CXL_COMP_REGS,
++						&vfio_cxl_comp_regs_ops,
++						cxl->hdm_reg_offset +
++						cxl->hdm_reg_size, flags, cxl);
++	if (!ret)
++		cxl->comp_reg_region_idx = vdev->num_regions - 1;
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(vfio_cxl_register_comp_regs_region);
 diff --git a/drivers/vfio/pci/cxl/vfio_cxl_priv.h b/drivers/vfio/pci/cxl/vfio_cxl_priv.h
-index 72a0d7d7e183..3458768445af 100644
+index b86ee691d050..b884689a1226 100644
 --- a/drivers/vfio/pci/cxl/vfio_cxl_priv.h
 +++ b/drivers/vfio/pci/cxl/vfio_cxl_priv.h
-@@ -33,6 +33,7 @@ struct vfio_pci_cxl_state {
+@@ -28,6 +28,8 @@ struct vfio_pci_cxl_state {
+ 	__le32                      *comp_reg_virt;
+ 	size_t                       dpa_size;
+ 	void __iomem                *hdm_iobase;
++	int                          dpa_region_idx;
++	int                          comp_reg_region_idx;
+ 	u16                          dvsec_len;
+ 	u8                           hdm_count;
  	u8                           comp_reg_bar;
- 	bool                         cache_capable;
- 	bool                         precommitted;
-+	bool                         region_active;
- };
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index 0c771064c0b8..22cf9ea831f9 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -120,6 +120,29 @@ static int vfio_pci_open_device(struct vfio_device *core_vdev)
+ 		}
+ 	}
  
- /* Register access sizes */
-@@ -96,4 +97,6 @@ int vfio_cxl_create_cxl_region(struct vfio_pci_cxl_state *cxl,
- 			       resource_size_t size);
- void vfio_cxl_destroy_cxl_region(struct vfio_pci_cxl_state *cxl);
- 
-+__le32 *hdm_reg_ptr(struct vfio_pci_cxl_state *cxl, u32 hdm_off);
++	if (vdev->cxl) {
++		/*
++		 * pci_config_map and vconfig are valid now (allocated by
++		 * vfio_config_init() inside vfio_pci_core_enable() above).
++		 */
++		vfio_cxl_setup_dvsec_perms(vdev);
 +
- #endif /* __LINUX_VFIO_CXL_PRIV_H */
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index b7364178e23d..48e0274c19aa 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -1223,6 +1223,9 @@ static int vfio_pci_ioctl_reset(struct vfio_pci_core_device *vdev,
- 
- 	vfio_pci_zap_and_down_write_memory_lock(vdev);
- 
-+	/* Zap CXL DPA region PTEs before hardware reset clears HDM state */
-+	vfio_cxl_zap_region_locked(vdev);
++		ret = vfio_cxl_register_cxl_region(vdev);
++		if (ret) {
++			pci_warn(pdev, "Failed to setup CXL region\n");
++			vfio_pci_core_disable(vdev);
++			return ret;
++		}
 +
- 	/*
- 	 * This function can be invoked while the power state is non-D0. If
- 	 * pci_try_reset_function() has been called while the power state is
-@@ -1236,6 +1239,14 @@ static int vfio_pci_ioctl_reset(struct vfio_pci_core_device *vdev,
++		ret = vfio_cxl_register_comp_regs_region(vdev);
++		if (ret) {
++			pci_warn(pdev, "Failed to register COMP_REGS region\n");
++			vfio_cxl_unregister_cxl_region(vdev);
++			vfio_pci_core_disable(vdev);
++			return ret;
++		}
++	}
++
+ 	vfio_pci_core_finish_enable(vdev);
  
- 	vfio_pci_dma_buf_move(vdev, true);
- 	ret = pci_try_reset_function(vdev->pdev);
-+
-+	/*
-+	 * Re-enable DPA region if reset succeeded; fault handler will
-+	 * re-insert PFNs on next access without requiring a new mmap.
-+	 */
-+	if (!ret)
-+		vfio_cxl_reactivate_region(vdev);
-+
- 	if (__vfio_pci_memory_enabled(vdev))
- 		vfio_pci_dma_buf_move(vdev, false);
- 	up_write(&vdev->memory_lock);
+ 	return 0;
 diff --git a/drivers/vfio/pci/vfio_pci_priv.h b/drivers/vfio/pci/vfio_pci_priv.h
-index 1082ba43bafe..726063b6ff70 100644
+index 96f8361ce6f3..ae0091d5096c 100644
 --- a/drivers/vfio/pci/vfio_pci_priv.h
 +++ b/drivers/vfio/pci/vfio_pci_priv.h
-@@ -145,6 +145,8 @@ static inline void vfio_pci_dma_buf_move(struct vfio_pci_core_device *vdev,
- 
- void vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device *vdev);
- void vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev);
-+void vfio_cxl_zap_region_locked(struct vfio_pci_core_device *vdev);
-+void vfio_cxl_reactivate_region(struct vfio_pci_core_device *vdev);
+@@ -148,6 +148,9 @@ void vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev);
+ void vfio_cxl_zap_region_locked(struct vfio_pci_core_device *vdev);
+ void vfio_cxl_reactivate_region(struct vfio_pci_core_device *vdev);
+ void vfio_cxl_setup_dvsec_perms(struct vfio_pci_core_device *vdev);
++int vfio_cxl_register_cxl_region(struct vfio_pci_core_device *vdev);
++void vfio_cxl_unregister_cxl_region(struct vfio_pci_core_device *vdev);
++int  vfio_cxl_register_comp_regs_region(struct vfio_pci_core_device *vdev);
  
  #else
  
-@@ -152,6 +154,10 @@ static inline void
- vfio_pci_cxl_detect_and_init(struct vfio_pci_core_device *vdev) { }
+@@ -161,6 +164,14 @@ static inline void
+ vfio_cxl_reactivate_region(struct vfio_pci_core_device *vdev) { }
  static inline void
- vfio_pci_cxl_cleanup(struct vfio_pci_core_device *vdev) { }
+ vfio_cxl_setup_dvsec_perms(struct vfio_pci_core_device *vdev) { }
++static inline int
++vfio_cxl_register_cxl_region(struct vfio_pci_core_device *vdev)
++{ return 0; }
 +static inline void
-+vfio_cxl_zap_region_locked(struct vfio_pci_core_device *vdev) { }
-+static inline void
-+vfio_cxl_reactivate_region(struct vfio_pci_core_device *vdev) { }
++vfio_cxl_unregister_cxl_region(struct vfio_pci_core_device *vdev) { }
++static inline int
++vfio_cxl_register_comp_regs_region(struct vfio_pci_core_device *vdev)
++{ return 0; }
  
  #endif /* CONFIG_VFIO_CXL_CORE */
  
