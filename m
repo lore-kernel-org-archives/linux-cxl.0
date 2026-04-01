@@ -1,92 +1,146 @@
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231C43A3E78
-	for <linux-cxl@vger.kernel.org>; Wed,  1 Apr 2026 12:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614C83D5672;
+	Wed,  1 Apr 2026 12:50:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775047404; cv=pass; b=cgWKN95iL3ES2Odk9KFcFyBhIeZlFRuWEdT5yUeGl4ro1Gfv76f46vQVuP6SMcOLtJEvYskLDI9I2ryXDcGhczF/cjkjhMrWHr0iFBM0ccMXwoyJ71Xs+lzH9oA1Ew2mZ7MySJwsuHCRBx+tcGQmgqYA7hfeRW6omoKZ3JKYnJI=
+	t=1775047815; cv=pass; b=VxJshFMp5+BJX2Xu8H7StRd19xB+f0uQn7muYC+B+6FgbXQ/Molk4OU2G9S0EAxDiHWb1f0FCB/YHDEjZjc/FRddXKnYTPM2vQdwKiDorMjyJDmakRVBMD9T/cPcwmFbwFbYnus1cIOdHtvMyStb0xkou2oQ01ybOCdg3nBJ76o=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775047404; c=relaxed/simple;
-	bh=fhi6d2YKo7wJKPwzjvcQkCl0E7tutCjvvFtKrpYSwCI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A/viJa60p0cihbODC7RE9EoZdTR+wvp5QA0zcDuFq1OCnuLeIvom9eYK9bnm1mLp59ow+S2s10OytJmxI/4yR+jI67U/YE+Tqj4/zpMDnHxwUgRU7yyBZ5dMNqsdIk5rSblzYocCGWWj1D+sCXr5jk1cg9SiFp5NupGfNcbDJOs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=PC+Pq15t; arc=pass smtp.client-ip=136.143.188.94
+	s=arc-20240116; t=1775047815; c=relaxed/simple;
+	bh=0TpE//NDba80R4x6HTf+IbDhLdY03k7TyyZ9iXEo7gY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tivdjupVx0+gicYwjQOSFdNeIUASDXpQxe97m7IOcOhRvx3g0NQL2i7Ok1bLmpbHa6hntXdaJWNXoOLdWQzjS3trRqrczkwm12Cu+5xeBiZhXNqslEx50TRJbqNupHMGHgHrgHbe52sDLOSM7zX2BEVDv3SRfsnCA7S/05kVvKM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=FxO+tegF; arc=pass smtp.client-ip=136.143.188.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="PC+Pq15t"
-ARC-Seal: i=1; a=rsa-sha256; t=1775047394; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="FxO+tegF"
+ARC-Seal: i=1; a=rsa-sha256; t=1775047802; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=VDaM6yf0HR9VkjVqsUyCgcMz8H9En+AsBw8YkcHYyrpd4lqhN1xxLGmttXOd/eO/hm9+lvcc6k/zHFj+TkrheHJERSISxoXJIlCD+Vrt5uVINV3PtN2hfmZ66uuq1BQ4Dlj6Z/+x5Oe0uvGEmehkHJV4LGuHRKTKCVjmMB8ejA8=
+	b=MlzlXCST0qsPAlVJC0QZHZcjlfn+xdtA3xRG/BB4T8pE3so9UlsDvh9JJk3m7sm6p742POrNR8lLOUK8KefZMdCDtVics13p75mFdA4ewfYW9miis5vmgZSNA6pjprCNHvgYbzxGqPt9gLJ7zdGudNDTkz1a1yXuYDkhhmVolC0=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1775047394; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=wtvh9inwdwiJw0UH4MNObvbZ5mzuBOGQXZmBqWGPMz0=; 
-	b=nriE6k1mieDRrcI+P8Xq8RZrtSnDbe+fin3PqYLOUrruLG1275QAWnQGoryj6VgjykTIOKuZnDEdjiI85X3gl0HEB/xSI840E56pYq3bHnmnxy9AnPHwC048iXoPJVO8k90MXXL9/mX9+fsUCkrJD+FxeCWESN5+VKGi2s5FwA0=
+	t=1775047802; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ImFDoJmzDoQLqXxX/rG+/JQkrJ03GR3mLWa87iyt7ik=; 
+	b=TZ4zPkDsDqHhwG8Ad0UWQ8BOqT6GaxOVagfCrqTSHL0PdHbem0km/nTVJqXAORTN/cNWMDrlzfdEKKuz4dUwqWpqAtSpHnAsc7zGu0vqaI5X7LHHS/4gyPr7df+x9exok4oKp6MuuLYMAeaYaH3DeYFkq0jJEQw7mKLS/r3JxRg=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1775047394;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1775047802;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=wtvh9inwdwiJw0UH4MNObvbZ5mzuBOGQXZmBqWGPMz0=;
-	b=PC+Pq15t/nQ3LxvlCZ8+BBZKq8xdaIQFC4y+CaDoe1CpQmCBHdAUduQogIS9F7cG
-	WwIYUkMCGlAlO8NxXEnOxce0jFj6P5N1Yo+O86T4IF87BYXPwVuX3dEoAf6tneqFLFP
-	ILRz+bvUZ7SeJNwMfhp7dz/wei8JXxRPidZj3WpY=
-Received: by mx.zohomail.com with SMTPS id 1775047390410211.3802146889152;
-	Wed, 1 Apr 2026 05:43:10 -0700 (PDT)
-Message-ID: <c21f31bf-28ea-44ca-83fd-92fa16b8ed39@zohomail.com>
-Date: Wed, 1 Apr 2026 20:43:02 +0800
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=ImFDoJmzDoQLqXxX/rG+/JQkrJ03GR3mLWa87iyt7ik=;
+	b=FxO+tegFHxK9BghGqEw/wE2K8PyPN/aud6kYdWum0ZahOkPaZgL173lpjrObBW5g
+	uNSMYFRi6vo6Dwg4b3cr2ZfCu0T/ul+E8DULMBX3iLp6zxNm3rV1WdJLGxMKj1gToUO
+	KmzemaQVgsOkU3kwvEvpZbKSYKLBem9azdGbA9Cw=
+Received: by mx.zohomail.com with SMTPS id 17750477992641011.3673642657153;
+	Wed, 1 Apr 2026 05:49:59 -0700 (PDT)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ming.li@zohomail.com,
+	Alejandro Lucero <alucerop@amd.com>
+Subject: [PATCH v2 1/1] cxl/region: Add a region sysfs interface for region lock status
+Date: Wed,  1 Apr 2026 20:49:51 +0800
+Message-ID: <20260401124951.1290041-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] ndctl: Show region locked status to user
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- linux-cxl@vger.kernel.org
-References: <20260329144714.888155-1-ming.li@zohomail.com>
- <acxmON1VSw4EEp4q@aschofie-mobl2.lan>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <acxmON1VSw4EEp4q@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011228b9931cb50f57a0300536de4200003efcf5c1d1de49980ba5136e9796d4cffa0251ddea0da6a4ed07:zu08011227e669b58709739e8eb07626870000740b6e2fdc6be1acfd4f736786275742838956801abd1825e5:rf0801122de42df92bec5bf03bd1e237300000e4f2dd1477d42f0e123f88b038c0f52c16238c1ea20510a6dc3bccbda20853:ZohoMail
+Feedback-ID: rr08011228dee731c24cf1f4e0801a025b0000696ee9cea4e247fc3803a5e92da00fa0efedaf5b19106c04639c:zu08011227c905e98434fe6bc3104259eb0000a0aa3097f9462d5486f734fcc3fccc45acab3ff080741b7cc4:rf0801122dcbb711b7e6d653d2e969f4f000000e3bcf364736cda31a494c19dbeccdb0448a96d1c52348142ee072980c2e8e:ZohoMail
 X-ZohoMailClient: External
 
+If a region is created on a root decoder with Fixed Device Confiuration
+attribute, the region will be locked, meaning region destroy
+operations are not permitted. CXL region driver returns -EPERM for
+region destroy operations.
 
-在 2026/4/1 08:26, Alison Schofield 写道:
-> On Sun, Mar 29, 2026 at 10:47:14PM +0800, Li Ming wrote:
-[...]
->> @@ -853,6 +853,12 @@ static int destroy_region(struct cxl_region *region)
->>   		}
->>   	}
->>   
->> +	if (cxl_region_is_locked(region)) {
->> +		log_err(&rl, "%s: Cannot destroy a locked region.\n",
->> +			devname);
->> +		return -EPERM;
->> +	}
->> +
-> How about moving the check earlier, before the unbind/disable?
->
-> With this here, users selecting --force will get back a disabled
-> region. Seems better to do nothing at all if destroy is not an
-> option.
+Although the locked status of the corresponding root decoder implies the
+region is also locked, exposing the region lock status directly to
+userspace improves usability for users who may not be aware of this
+relationship.
 
-Yes, you are right, that is better. thanks.
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Alejandro Lucero <alucerop@amd.com>
+---
+v2:
+* Add more info to the interface description. (Alison)
+---
+ Documentation/ABI/testing/sysfs-bus-cxl | 13 +++++++++++++
+ drivers/cxl/core/region.c               | 17 +++++++++++++++++
+ 2 files changed, 30 insertions(+)
 
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index c80a1b5a03db..16a9b3d2e2c0 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -508,6 +508,19 @@ Description:
+ 		(RO) The size of extended linear cache, if there is an extended
+ 		linear cache. Otherwise the attribute will not be visible.
+ 
++
++What:		/sys/bus/cxl/devices/regionZ/locked
++Date:		Mar, 2026
++KernelVersion:	v7.1
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) The CXL driver has the capability to lock a region based on
++		a BIOS or platform dependent configuration. Regions created as
++		locked are never permitted to be destroyed. Resets to participating
++		decoders will not result in a region destroy and will not free the
++		decoder resources.
++
++
+ What:		/sys/bus/cxl/devices/regionZ/mode
+ Date:		January, 2023
+ KernelVersion:	v6.3
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 42874948b589..95d81816008e 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -767,6 +767,22 @@ static ssize_t extended_linear_cache_size_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(extended_linear_cache_size);
+ 
++static ssize_t locked_show(struct device *dev,
++			   struct device_attribute *attr,
++			   char *buf)
++{
++	struct cxl_region *cxlr = to_cxl_region(dev);
++	int rc;
++
++	ACQUIRE(rwsem_read_intr, rwsem)(&cxl_rwsem.region);
++	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &rwsem)))
++		return rc;
++
++	rc = test_bit(CXL_REGION_F_LOCK, &cxlr->flags);
++	return sysfs_emit(buf, "%d\n", rc);
++}
++static DEVICE_ATTR_RO(locked);
++
+ static struct attribute *cxl_region_attrs[] = {
+ 	&dev_attr_uuid.attr,
+ 	&dev_attr_commit.attr,
+@@ -776,6 +792,7 @@ static struct attribute *cxl_region_attrs[] = {
+ 	&dev_attr_size.attr,
+ 	&dev_attr_mode.attr,
+ 	&dev_attr_extended_linear_cache_size.attr,
++	&dev_attr_locked.attr,
+ 	NULL,
+ };
+ 
+-- 
+2.43.0
 
-Ming
-
->>   	/* Reset the region decode in preparation for removal */
->>   	rc = cxl_region_decode_reset(region);
->>   	if (rc) {
->> -- 
->> 2.43.0
->>
