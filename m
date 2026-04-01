@@ -1,147 +1,146 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5823F2111
-	for <linux-cxl@vger.kernel.org>; Wed,  1 Apr 2026 10:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775039863; cv=pass; b=Wj6/J1Y7JUBxXa+3gOU149RgWXlxKM1diOP1qLDQk1YH52rPpKSxqrDlioBOngVsKeCuddkw0tykSMyCu9PjDmuQgAfNoKbizJMq0+558LZpImNx4KFr9F/Js+52wAv+4sc+91clssQi0vxSNiMuORi2KyxtuOLZycZ64LQMdNs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775039863; c=relaxed/simple;
-	bh=NB7IgTsm5fAY1HRxukcTkg282cMT+NcIa7BPVwXaI4g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hGnqeafJ17rLqldTmlF8C3hPD+oqKArVOsY9ZmOriG646pyQmOZcSVvdjWTzENMNAFB1tuI/Bdv2SOf+YE0RK0CoVylW9COM0SIYFb8wtbrLrO672imF5H+L8k1/YtIGTSmwl4L1mXHd1IqRqhIfLXk59fa4AUpVLKi/8B5kggo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PV4MJZUe; arc=pass smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A799372661
+	for <linux-cxl@vger.kernel.org>; Wed,  1 Apr 2026 11:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775043593; cv=none; b=dUtuRGwaaI86UdHUQTAtRR71Cogvu0+H5kGN6k6Mz2X51svHU3VBrAsZrmtlmYAUMoSZJU62tJpG6ZpDDHyUy2UgFGK9DROkpVVBdIPE0I279aOYk/ZkwymZa0qPmBUnDdHK1aatzy5qKbf/IkgAvfpls6T/8hLLERAKMgxxxKk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775043593; c=relaxed/simple;
+	bh=brLi2CxkT8OsknOe2gRnXgDDN6nDEXe2PCEZt8AxjjQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=aWIrQ1ynuV0tCv/WwDkHXyQizyEQhmuc5FhBhe6oczFQMAB7GAJsq3G3aB1lbL0yfLH96EDBC9lLA3EuEKiVeWo1YLWPSyrTMJmPEEcoVUPfu0P0AvOFS4JmcAdHAtfl1oZBjeq4yjDY2OM9ddgktH5iE5DJGsUS5sJCLDA9O/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BKDXy8gS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PV4MJZUe"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5a2c47a327cso34659e87.3
-        for <linux-cxl@vger.kernel.org>; Wed, 01 Apr 2026 03:37:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1775039859; cv=none;
-        d=google.com; s=arc-20240605;
-        b=UPzI9aRXsnyhzudNpNimEp3qIcfxWEOqDMF7I957gAjdU0GkNHbSKlKg7F99UuJ9dj
-         bjLIURRvsKbufs5Y5zePr7kBE8IAbHrkUhbPkY/5U0NXvNYM8S1qCXYH3skQJ+GCc1cf
-         IuSsjz7MVPGZhUkWx3tj/IrYgDn/LWVKyGngjs5fdWbYCJuBMYMO6sFn4y8W+TiIPQta
-         Z96RbaVxdm4UmyMulo9j97+xG8NVDvAx+kk/0tkr4hFeVwzuHLsc22NHv4S+H/thiBtI
-         dY5vwyFTX35KMsfWtd1H6fsUmNyTQ5CFxYH/kFtETM5zKwHCumR5DRuR0yzzXk2wpdYP
-         z6Uw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=VOv6sQrE1pMcWIiRRePCMC/GRfEX8gOaFbZKQ7PwRiA=;
-        fh=2UuS5Ir0x2L+jDnbjT/V6vKyNihGqtqudSX2vIkjXBk=;
-        b=R7VV+ugJ2YhP8HS0dkhvi+dYdzZi2YBOvkzJlIF6nTm3hswtBc/rIgL4PhaQTlqljn
-         GXBaFt07hetuAIuampHuZMGvj/6sgWPlYxVkboae05jyOpeuGPTGg4+0HaEr4FgBZYD9
-         QgKZXTzut4DE4Xvj3tSnQ5dyekKpn8arAlpP9e2upSMz2X32eL1OgzRtN/0+sJMW62D8
-         P3jBbszIl3QD49xzjd6V/OqYqH16kDzPMOQ4eY2A3099qxhDPekPN5Jw10498Yxoq4z1
-         1SHXZgPyteNALRyf1+WrOEKipFX237+1hxkEAHHRKXThnlhlh1lQ1eSW4/u8aAIjPcNr
-         8W2g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775039859; x=1775644659; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VOv6sQrE1pMcWIiRRePCMC/GRfEX8gOaFbZKQ7PwRiA=;
-        b=PV4MJZUe6fk484cZO4W/xaPmqcNtTaWfVnuaPvOycgHWLcjwfiVSFv2g01d5SgmkGY
-         cG8c7ck+6drc11/+l9jE2IUVKfo9LeNaHp7M7pReSwj4N6o9tm0VSVtcVRBbr9Fk+k75
-         T5aHs7N7Bf0bnfCIlOBMMv266XqCQHj1z/ZZbTxTLppyAZj8w8V9JStkAZKeRmEL7AyJ
-         Gm0UxLN/3rwmZvRnRonxAcNCcixLoXmE9raVWYd1jPMeKAAFNXppSaKHfIt0krHlGs6i
-         Ag4MpoICZkTddJ9vJ3DQRg/6G5mB7MZ1KS02KblwcHxj7v/Q1i8nMlgZx7fmjD/zRBzx
-         X+CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775039859; x=1775644659;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=VOv6sQrE1pMcWIiRRePCMC/GRfEX8gOaFbZKQ7PwRiA=;
-        b=l9+6ObhyNK1bci8Gt7ZRe3ysm40k7JvJHw6Bdi6BNAJaXzWjI4M3vNoQwlaqHXdIK1
-         Em1Vxj2ZBUttEj3HfXLdmwsdTyO55DtLc0mjTkSIFqbjZ2uhqNbN67VDgEXLIJZMkR1U
-         nlXYgSGBEkcx/eD8LqvtkTquwEjQKglDS2d/RuuZX4eUNB+Y4PPEvsIP3aHYwBRkrtTq
-         aUvG9J6i6pQsQiRmdxEt0kYPjt78OZFpvbSHzK/jbhkNYFDrGPGdpkR6t7vM8xWExGbL
-         KlQ0cIMpvsWtxulGO/5HqPmuP9bGtNv2dM6Yy1pRJukxrZeNpxaKqBBTcUlFXa4W8NJR
-         f5XQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXqQAi5mw1GBIDmWK2mt07WgtxIdF6FXVtNc7otaorS5CPzgVjjysB6tetkcTvL+YgTDl0XcuZp76A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+UAY4npWjHKDhE3ueB9lbTTrwsmyi02ru3FiRtG66SouJfhY7
-	MYYImIBrSeqe1Xfbn+zI/Vyb45B1+1hxP/fjxovcUrXnV/SA7b4eDD4t2BzdqM9Qq3cF15a0xxi
-	RwrfSzhWX9XgvnhznZsSs/S83fvapN+o=
-X-Gm-Gg: ATEYQzz1uJ2U8y0DOjhlZAcXhBW+ZKf3M/6bcHu7SYBmCt9XaTB94GK0bK6WzxhNgX7
-	reGVZ4Gn0B+D0Nmq9Wwwq6762bVGrRMvaMbg56btlHvMEcuUD9kZk749uIw2qF18oPOhO/Nd3a1
-	wr5yUYl0iJWmJUqXzskOL3O04EtYp3WYPV2S3cp9+KzJMCVGBEs3pgsoMcwXjfoeHqiDQJ+kyzb
-	2jczT5kA7h4taKKi9mplhK9M23ZCr8GSorGzloaniygLpERB25hTf2BbG6W+idp7dDD6eyD1WVT
-	MBjHnPHXcgg5acciuUoJKzFEtoG7GgSnrL5nqKc6D2LYZEmcuW6L++Y8hpUKQ7GzCFaPV+NzLkK
-	pwg8NJ7EgodOHWmJbrPnJ5O8=
-X-Received: by 2002:a05:6512:1093:b0:5a1:2ec0:7442 with SMTP id
- 2adb3069b0e04-5a2c1ca6ad7mr571822e87.0.1775039858363; Wed, 01 Apr 2026
- 03:37:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BKDXy8gS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1775043591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mqezalPl4i3JBcgLVBe3bFLBNdF5OgFM/6xHTa3bquo=;
+	b=BKDXy8gSfPExMkyrSGqd6BX15T0FlhTTZ2dkILZFDJOIwzZxglHe8R/RRCWAyoBBbfKaMk
+	Jb58k1iF1iQm+HvbBHVfX39ZdOQD7j1cIWgH++0kg4fIGVL+IM0E2xL2yUPMIVNdtxBdpE
+	z0sXpEuuVAaaOObhf2cHJgOmOLhmJbE=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-202-qe4Ff5YzMWiw4qyQPLAQqg-1; Wed,
+ 01 Apr 2026 07:39:47 -0400
+X-MC-Unique: qe4Ff5YzMWiw4qyQPLAQqg-1
+X-Mimecast-MFC-AGG-ID: qe4Ff5YzMWiw4qyQPLAQqg_1775043586
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0B930195607D;
+	Wed,  1 Apr 2026 11:39:46 +0000 (UTC)
+Received: from blackfin.pond.sub.org (unknown [10.44.22.6])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 17205180058B;
+	Wed,  1 Apr 2026 11:39:45 +0000 (UTC)
+Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
+	id BAB5321E6A28; Wed, 01 Apr 2026 13:39:42 +0200 (CEST)
+From: Markus Armbruster <armbru@redhat.com>
+To: Alireza Sanaee <alireza.sanaee@huawei.com>
+Cc: <qemu-devel@nongnu.org>,  <anisa.su@samsung.com>,
+  <berrange@redhat.com>,  <eblake@redhat.com>,
+  <jonathan.cameron@huawei.com>,  <linux-cxl@vger.kernel.org>,
+  <linuxarm@huawei.com>,  <lizhijian@fujitsu.com>,  <mst@redhat.com>,
+  <pbonzini@redhat.com>,  <gourry@gourry.net>,  <nifan.cxl@gmail.com>,
+  <me@linux.beauty>,  <ira.weiny@intel.com>
+Subject: Re: [PATCH 9/9] hw/cxl: Add QMP status query for dynamic-capacity
+ extent release
+In-Reply-To: <20260331155044.0000603d.alireza.sanaee@huawei.com> (Alireza
+	Sanaee's message of "Tue, 31 Mar 2026 15:50:44 +0100")
+References: <20260325184259.366-1-alireza.sanaee@huawei.com>
+	<20260325184259.366-10-alireza.sanaee@huawei.com>
+	<87mrzuei5f.fsf@pond.sub.org>
+	<20260327151811.00005564.alireza.sanaee@huawei.com>
+	<87zf3s1ohc.fsf@pond.sub.org>
+	<20260331155044.0000603d.alireza.sanaee@huawei.com>
+Date: Wed, 01 Apr 2026 13:39:42 +0200
+Message-ID: <87tstu29kx.fsf@pond.sub.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260211032935.2705841-1-alistair.francis@wdc.com>
- <20260211032935.2705841-23-alistair.francis@wdc.com> <20260303150040.00007458@huawei.com>
- <CAKmqyKM6CBucDEo0aKZVWrKtozbT_ddk0PaZFtHyEMMMx558JA@mail.gmail.com>
- <CANiq72nOt1E8=GYdh2T5BWNvG7J8sZRF+60taghoxKm8fkadHg@mail.gmail.com> <CAKmqyKPa5fDmo1A6OzF0ROn7iTrBrhV1Q2L=1Wkb=o27f5fDSQ@mail.gmail.com>
-In-Reply-To: <CAKmqyKPa5fDmo1A6OzF0ROn7iTrBrhV1Q2L=1Wkb=o27f5fDSQ@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 1 Apr 2026 12:37:23 +0200
-X-Gm-Features: AQROBzCtb7kxhE58oOSjFtnvKeq8ygzpCG4EYIkaMQYWrhFl3CKqeEv1E8oqMJc
-Message-ID: <CANiq72nV3ArhtQoQYbX-cRKM5JjnqVtzP79c43q+eJjbANgONA@mail.gmail.com>
-Subject: Re: [RFC v3 22/27] lib: rspdm: Support SPDM certificate validation
-To: Alistair Francis <alistair23@gmail.com>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, bhelgaas@google.com, lukas@wunner.de, 
-	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org, 
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, alex.gaynor@gmail.com, benno.lossin@proton.me, 
-	boqun.feng@gmail.com, a.hindborg@kernel.org, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, tmgross@umich.edu, ojeda@kernel.org, 
-	wilfred.mallawa@wdc.com, aliceryhl@google.com, 
-	Alistair Francis <alistair@alistair23.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: fvLztn0JellFa5fpgwvyRvb7NtR7AZZBQYAbburlAR4_1775043586
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On Wed, Apr 1, 2026 at 3:48=E2=80=AFAM Alistair Francis <alistair23@gmail.c=
-om> wrote:
+Alireza Sanaee <alireza.sanaee@huawei.com> writes:
+
+> On Sat, 28 Mar 2026 07:01:51 +0100
+> Markus Armbruster <armbru@redhat.com> wrote:
 >
-> I think it's Rust-ier as it uses the fact that
->  * if statements can be used as expressions, which is a cool feature of R=
-ust
+> +CC Ira
+>
+> Hi Markus,
+>
+> Please look inline. I believe Ira might be able to help and we can see what he thinks.
+>
+>> Alireza Sanaee <alireza.sanaee@huawei.com> writes:
+>> 
+>> > On Thu, 26 Mar 2026 16:15:40 +0100
+>> > Markus Armbruster <armbru@redhat.com> wrote:
+>> >
+>> > Hi Markus,
+>> >
+>> > This commit adds a test command to check whether an extent (a piece of memory region) has been released or not by the guest.
+>> > The process of removal is highly asynchronous, that's why I needed to add a new command to check it.
+>> >
+>> > I would be happy to drop this patch, as this is extra.  
+>> 
+>> So your motivation for adding the command is "just" testing.  Correct?
+>
+> I wrote tests to make sure extents were released, and I used this QMP command to check.
 
-Sure, but a feature being nice doesn't mean it is idiomatic to apply
-it in every context.
+As long as this is the only known use case, we want
 
-More generally, regarding cool features (whether in C or C++ or Rust
-etc.), I would say one should strive to keep code as simple as
-possible, i.e. we use fancy features when they buy us something, not
-just because we can. The kernel applies this principle too.
+    # @unstable: This command is meant for debugging.
 
->  * Rust is explicit about comparisons being bools (no `if (value)` for ex=
-ample)
+in the QAPI schema.
 
-Yes, but I am not sure how this is related.
+> Now there is background about extents where DCD was developed in Linux by @Ira, CCed [1].
+>
+> In the DCD extent tracking section of the CXL spec, I see some commands 
+> related to getting the extent list, maybe Ira can comment here. To be fair, knowing if an extent
+> was released or not is a useful information in general from orchestrator perspective.
+>
+> [1] https://patchew.org/linux/20250413-dcd-type2-upstream-v9-0-1d4911a0b365@intel.com/
 
-> So I find the if statement expression returning explicit bools very
-> Rust-y and easier to read
+If we believe there are other uses, but we're unsure the command
+actually serves them:
 
-If you mean that that seeing `true` and `false` may be clearer because
-it is more explicit, then that sounds OK (whether someone agrees or
-not), but it is a different argument than being idiomatic.
+    # @unstable: This command is experimental.
 
-In any case, I replied initially because the code should be
-Clippy-clean, and currently we have that lint enabled -- does it not
-trigger in your particular case? i.e. even if you have removed the
-code, it would be nice to know why it didn't trigger, or if you were
-not testing with `CLIPPY=3D1`.
+>> Can you think of other uses?
+>> 
+>> In particular, would a management application need this query to monitor
+>> removal?
+>
+> I think management will get a signal on the removal given the schema in Ira's Linux kernel 
+> patchset. I do not think this is implemented in QEMU at least (I might be missing something).
 
-Anyway, if you think it is idiomatic Rust, then I would suggest
-discussing it with the Clippy folks, because they have it as a warning
-by default.
+I'm getting a feeling of "this is underbaked" :)  But that's for the CXL
+maintainers to judge.
 
-Thanks!
+>> The description of feature @unstable may need to be adjusted for the
+>> answers we work out here.
+>
+> Absolutely.
+>
+>> 
+>> >
+>> > Thanks,
+>> > Ali  
+>> 
+>> 
 
-Cheers,
-Miguel
