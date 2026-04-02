@@ -1,84 +1,120 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6903C373BEB
-	for <linux-cxl@vger.kernel.org>; Thu,  2 Apr 2026 18:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67828472
+	for <linux-cxl@vger.kernel.org>; Thu,  2 Apr 2026 18:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775154400; cv=none; b=LRuB8hHbx00jJqQnxKgU+oYYiWYGuDVIbkNx/sMqUHJ8Z04nUPh2aBxhocGYUxY5wmUjrniThR9cCHgIt89dlGAgi8xECbJOYbgKiPib7NgHGlK3WWDTT7qEV7phQoMcIr5MvnhWX7xyPoyLX/kCWlCwCHjYgBe1G8HkSMcAOwc=
+	t=1775154512; cv=none; b=OsPirrkK1OC6jSa0eV0yhTLUMXiVkqanLl8fAv8t0d7TygUQD/ODMz3iF6DYsdKJLwDhuA95n3s7gfuwIO4cbxkCsRB7Y/S8AnuUlo5395D71yffB9y3xnkywszjGQdKYcEwfJX7Dg7PBCEdXxvjzO/nitBI4lCthY7gbmukGmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775154400; c=relaxed/simple;
-	bh=uQ0uAbnejGH89M/cGWkkbIsyRAlwpwWbhOGqD3/1FPA=;
+	s=arc-20240116; t=1775154512; c=relaxed/simple;
+	bh=3wLn2EzGj/ZCUyJnUgUcvL+uUYO+oONRzbuPkYnaT6M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kZif5ZPITc1kcbeQ2q75uAJnF9t5EBFrh/diHiHaZkVam2umtJI4fd7IXzpRSdKvH81ERzwge8LlzGrO7Gkdk8muT0Rr90PMHRL3nfVg04GysVLUf8N716/tWKfMwHvx5uYyLc2CBT1gD3VltXUeeBRaqI82wk9Z/yccvKAQ9Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
+	 To:Cc:Content-Type; b=BpzbMo9TMWdBNx0WwvUalQU0MO308UTTomVBk6RdLQODjhMT4yCRvVevlx3Vu+5nFWQ/RJlm3SxHqFq+twHBRjCaYt/ORSIXdlwsWrE9R8E8a57g1myZRv43fZmGkhrPiwiYXQYlWuRZcurHuy4qWFsQRJi6jOF7jd3s0lr5z8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b93698bb57aso249652366b.0
-        for <linux-cxl@vger.kernel.org>; Thu, 02 Apr 2026 11:26:39 -0700 (PDT)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b9358bc9c50so169736766b.1
+        for <linux-cxl@vger.kernel.org>; Thu, 02 Apr 2026 11:28:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775154398; x=1775759198;
+        d=1e100.net; s=20251104; t=1775154509; x=1775759309;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=lTYIwjaImmoM2tq6z6YuXZGmV8pazwJWOGsrNCSDtbQ=;
-        b=Efo2LkWB4Uhmbv7Bhmyp3U/pRqR5huo0Yabreodzq1Wcb1+2ZYucIFdDItdPRvUhoA
-         Walnfs/8Kc8S+6AGR6p6DpSybYLAzakURbwtELFgHe2B25mDslKpyfOof2V63Na7fCqx
-         dSjZNX6GaY5gZwWcyIQ2GX1dXKjLumTAYwtRvmlTeF7V0FLz4jndNnj/8ZIPuZxGaice
-         laUUmplSQLi+10mTZiUfgNKp8oMcyfFoZ3TweK2OvXb9pBdglFqK7fhC3VBKsbjNcSqx
-         WcI7MjRjTDXW5ggBC+bSwG/X/R0ZH8Nr59K/WZyhOSuWu5mFKWN7Eu1EYRVxytSKxo1P
-         s1RA==
-X-Forwarded-Encrypted: i=1; AJvYcCW2kb6kzi8Wl+acG8f/Pg5SDTZyAr7ZAME8Ssy8n+OAb1NZ+IASFRxt1kcp51EkM5nyTFjfxXzjGEA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVxlo0ObAUlsy2p5fJiEAKvgQfvK32wz8abute3soE/lOZncDT
-	f+gHXlXDFvav4cqEKAuDlE+L/ZWrzWKoqY+2lfIdZhgN+CzQOa++uy7941RM0WuoS2Foeg==
-X-Gm-Gg: ATEYQzw4tkvtwAMgcFd+QsYlWxFk4rVdey29FhHlRnjYEGmzTKsyY2RiI3bP2R+zBLt
-	btC5MJXrRUfUndWqi8qSLoxrQBA948bJLFgqkfShZ4bF0BuIqH7Z7NYkOW5Ymtp+KgH1OTy3HZC
-	OeG/eH63h03596XlEJwx+Bz1YCbWL1qt/ykmrOPzYWZyffSQI/L5eZhmqt4zo7p496N0+v3iLBt
-	lxIQP6Gl9MExq4v5uIwV0FGc4IPLCwRiS9JogN7pwRyXyHnKO1aOzyuhElybmkcVB2unQBtcjw1
-	r0Hze+RhTTtemk9zf5Zyh3yS1JOvR3DFfBePu1cVqBzJU9wEEzYu6XX0RaBLmaysUqAwEyLjN5Z
-	D3wX+j5G78TDb+RIvRrQ5NZbUf2H9kMvaaTaD1jwsJIiKR6eNvg4Dj14ahQFHWPuBGs6fCTqajC
-	ctNUlNlN4ctT3Tk8i+HIcjGlUrHU6U3vuUOW9ubttitBmBBDMKQKRnU6k=
-X-Received: by 2002:a17:906:f5a0:b0:b97:6d1b:4be8 with SMTP id a640c23a62f3a-b9c46e2677fmr177298666b.10.1775154397460;
-        Thu, 02 Apr 2026 11:26:37 -0700 (PDT)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9c3cec6f2bsm110116266b.35.2026.04.02.11.26.37
+        bh=S5DT2wBs8AqJgexCrhyhylPGuRKzHa9bxGRV2/uoaFw=;
+        b=eoYibWHaKxnsGUHB0sSzV+G69RJf1CvhSPe6WNAmsSYszbQ/KB59rRYPahhoPpD/St
+         WTaoJSsUB17epY6+Yz80eBuw4pPGOJScn7lKEBlZIUoBhTlTN3tgbHgtKhPjOZhC4b3I
+         kI7ijIWFWqDbZaWWnmu6j3jy5/T9t9Lr77diELw9LntACCE7aty34KPkf3hZbVq0385J
+         p0JbnorScpyzcfU6Fi30vtp5jzVzX71FYjSC52pYYVxt4dCKqf/vdNWWnG6145S7Nepm
+         XRwPeYfb9CRACVNa7QXyUbOn9DvWpfYPyXsTXuvSPf01pHBugvdpuY/jNzjZqSUmVesY
+         bSYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVX/HupYf+Hw3qHVHkInV9b2H71RAHTahNqgNbNQ9deivig0sDAEveyuIw+lMp69Npd7DIOsJzjnpQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOcRX62o7bnXJ2ixcqiXoTNI4yKm978lbpPQkmiq99RSzRhCBO
+	qsPyHaGbiIbrRzNMmUbkPlfZbzWdl3ykLQSZoBpVfLFCbr356vxyfJcP6AY/zPMovLIivA==
+X-Gm-Gg: ATEYQzwrkXInBRfhd4wRvN8gHwcNQQjCPnL8sqkN1EUsUfjkYs6QPRLgscZB/tmYSE4
+	kVhou0vD8VuWYd26NASFq67wvvNmWMTDJMXHb1F0V6se6KTcjqIeUG3CBOuafj/ZQKG/OgNjkQV
+	9v+BISxefwPKfjn1ms5of+7l+GLzZH6MhBtP32OEwOpxdhmF87wHv8GLl6QVN8SL9nUcRZ94YDU
+	NoYIAG5SKKvD8iflE2gi9IHOFHKliH6c1byLRtDqToh4XdFqz3c6ESvoitlYT3neWpLYgoLSZOm
+	90TcpCOz01ZhEkNPTQbGWocinwj0ZLr9MuGUflBwChfubfBxZQAAFrYmrRV6eJqLEg5NaSjEqaJ
+	AE3iCOrRH10T3E6w7jZ3GD0Z1gvPFptlxK8RuGsnQ3mpo8VPnMBBVAJHVCi9bo0MVjCAi9EsfgB
+	7JAmrEsLNG7qzu/MTNlpuAkc8znPlqPMuhqni6d9W5nbC3siGOAD4duwk=
+X-Received: by 2002:a17:907:11c6:b0:b97:6384:2317 with SMTP id a640c23a62f3a-b9c13904e59mr440120766b.17.1775154508790;
+        Thu, 02 Apr 2026 11:28:28 -0700 (PDT)
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com. [209.85.221.52])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9c3cff131csm119863166b.52.2026.04.02.11.28.28
         for <linux-cxl@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 02 Apr 2026 11:26:37 -0700 (PDT)
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-43b949bf4easo1605917f8f.0
-        for <linux-cxl@vger.kernel.org>; Thu, 02 Apr 2026 11:26:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWo/DYGbXmXsy83dKmz+hBbm4h6sDQKJhCtKfxPvqoLbwHEZb6x9WbpOUQkqYurLz6nDMcPUs+8sys=@vger.kernel.org
-X-Received: by 2002:a05:6000:2489:b0:43c:f67a:5b50 with SMTP id
- ffacd0b85a97d-43d28fad7f8mr359049f8f.10.1775154396797; Thu, 02 Apr 2026
- 11:26:36 -0700 (PDT)
+        Thu, 02 Apr 2026 11:28:28 -0700 (PDT)
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-43cfe71e5d3so1096674f8f.0
+        for <linux-cxl@vger.kernel.org>; Thu, 02 Apr 2026 11:28:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX9IboxiBNBGd1wsCAJrZvtVvEwYYbBVCJDSxtHQlIGez/gPMEsSTAvkUxCgVT1Pggp+O8Ozycf0xg=@vger.kernel.org
+X-Received: by 2002:a05:6000:2303:b0:43c:fb9f:150c with SMTP id
+ ffacd0b85a97d-43d292ecccbmr136467f8f.43.1775154507981; Thu, 02 Apr 2026
+ 11:28:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260330130156.2212694-3-iam@sung-woo.kim> <a9b88efb-320c-4cfd-98d9-508a237c4444@intel.com>
-In-Reply-To: <a9b88efb-320c-4cfd-98d9-508a237c4444@intel.com>
+References: <20260330130156.2212694-3-iam@sung-woo.kim> <69caf2141dd3d_178904100ea@dwillia2-mobl4.notmuch>
+In-Reply-To: <69caf2141dd3d_178904100ea@dwillia2-mobl4.notmuch>
 From: Sungwoo Kim <iam@sung-woo.kim>
-Date: Fri, 3 Apr 2026 03:26:21 +0900
-X-Gmail-Original-Message-ID: <CAJNyHpKCHR5p9wGLi8Zrw6X78Q7nsubMwHWs4skBfGHi_9LGLA@mail.gmail.com>
-X-Gm-Features: AQROBzATSOha-R_tArgODXoqGgdkOAD9ws14x8CMeSn0rLaFOZCmpLXxo7e3QCM
-Message-ID: <CAJNyHpKCHR5p9wGLi8Zrw6X78Q7nsubMwHWs4skBfGHi_9LGLA@mail.gmail.com>
+Date: Fri, 3 Apr 2026 03:28:12 +0900
+X-Gmail-Original-Message-ID: <CAJNyHpL-fyDnEJv2bxKNjBAzxHZ9HmKTu72MzcVhWiFrDRKzpw@mail.gmail.com>
+X-Gm-Features: AQROBzA0EggoHd90nFQiTUhHuNUBwPV709PJRZhA8yWo5N0XBATQF54qspafGuA
+Message-ID: <CAJNyHpL-fyDnEJv2bxKNjBAzxHZ9HmKTu72MzcVhWiFrDRKzpw@mail.gmail.com>
 Subject: Re: [PATCH v2] cxl/hdm: fix a warning in devm_remove_action()
-To: Dave Jiang <dave.jiang@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
 	Ben Widawsky <bwidawsk@kernel.org>, Dave Tian <daveti@purdue.edu>, linux-cxl@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 31, 2026 at 6:35=E2=80=AFAM Dave Jiang <dave.jiang@intel.com> w=
-rote:
-
-[snip]
-
+On Tue, Mar 31, 2026 at 6:58=E2=80=AFAM Dan Williams <dan.j.williams@intel.=
+com> wrote:
+>
+> Sungwoo Kim wrote:
+> > In the following race scenario, devm_remove_action() can be called
+> > before devm_add_action(), triggering a warning because there is no
+> > action to remove.
+> >
+> > To fix this, __cxl_dpa_reserve() performs devm_add_action(). This
+> > extends the critical section that embraces cxled->dpa_res =3D res and
+> > devm_add_action(), so cxl_dpa_free() cannot observe dpa_res without
+> > the devres action.
+> >
+> > task 1:
+> > cxl_dpa_alloc()
+> >   __cxl_dpa_alloc()
+> >     guard(&cxl_rwsem.dpa)
+> >     cxled->dpa_res =3D res;  ...(1)
+> >   devm_add_action()        ...(4)
+> >
+> > task 2:
+> > cxl_dpa_free()
+> >   guard(&cxl_rwsem.dpa)
+> >   if (!cxled->dpa_res)     ...(2) pass, due to (1)
+> >     return 0;
+> >   devm_cxl_dpa_release()
+> >     devm_remove_action()   ...(3) warning, no action is added yet
+> >
+> > Splat:
+> >
+> > WARNING: ./include/linux/device/devres.h:160 at devm_remove_action incl=
+ude/linux/device/devres.h:160 [inline], CPU#0: syz.1.6464/25993
+> > WARNING: ./include/linux/device/devres.h:160 at devm_cxl_dpa_release dr=
+ivers/cxl/core/hdm.c:290 [inline], CPU#0: syz.1.6464/25993
+> > WARNING: ./include/linux/device/devres.h:160 at cxl_dpa_free+0x2a4/0x32=
+0 drivers/cxl/core/hdm.c:572, CPU#0: syz.1.6464/25993
+> >
+> > Fixes: cf880423b6a0 ("cxl/hdm: Add support for allocating DPA to an end=
+point decoder")
+> > Fixes: 9c57cde0dcbd ("cxl/hdm: Enumerate allocated DPA")
+> > Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
 > > ---
 > > V1: https://lore.kernel.org/linux-cxl/20260309000810.2632065-2-iam@sung=
 -woo.kim/
@@ -111,72 +147,22 @@ s
 > > +     return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxle=
 d);
 >
-> With this function added the devm_add_action_or_reset(), I think it needs=
- to be renamed to __devm_cxl_add_dpa_reserve().
+> This needs the pattern you identified in v1 and comments should be
+> reserved for cases where the code needs more explanation. Something
+> like:
 >
-> DJ
+> /*
+>  * Invoke the release action with the unlocked __cxl_dpa_release() since
+>  * cxl_dpa_release() acquires the the dpa rwsem
+>  */
+> rc =3D devm_add_action(..., cxl_dpa_release())
+> if (rc)
+>     __cxl_dpa_release()
+> return rc;
 >
 
-Sounds reasonable to me. I will do this in v3.
-Thank you for your review.
-
+Dan,
+Thank you for your review and suggestion. I will fix this and add a
+comment in v3.
 
 Sungwoo.
-
-> >  }
-> >
-> >  static int add_dpa_res(struct device *dev, struct resource *parent,
-> > @@ -499,16 +505,8 @@ int devm_cxl_dpa_reserve(struct cxl_endpoint_decod=
-er *cxled,
-> >                               resource_size_t base, resource_size_t len=
-,
-> >                               resource_size_t skipped)
-> >  {
-> > -     struct cxl_port *port =3D cxled_to_port(cxled);
-> > -     int rc;
-> > -
-> > -     scoped_guard(rwsem_write, &cxl_rwsem.dpa)
-> > -             rc =3D __cxl_dpa_reserve(cxled, base, len, skipped);
-> > -
-> > -     if (rc)
-> > -             return rc;
-> > -
-> > -     return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxle=
-d);
-> > +     guard(rwsem_write)(&cxl_rwsem.dpa);
-> > +     return __cxl_dpa_reserve(cxled, base, len, skipped);
-> >  }
-> >  EXPORT_SYMBOL_NS_GPL(devm_cxl_dpa_reserve, "CXL");
-> >
-> > @@ -606,7 +604,8 @@ static int __cxl_dpa_alloc(struct cxl_endpoint_deco=
-der *cxled, u64 size)
-> >       struct resource *p, *last;
-> >       int part;
-> >
-> > -     guard(rwsem_write)(&cxl_rwsem.dpa);
-> > +     lockdep_assert_held_write(&cxl_rwsem.dpa);
-> > +
-> >       if (cxled->cxld.region) {
-> >               dev_dbg(dev, "decoder attached to %s\n",
-> >                       dev_name(&cxled->cxld.region->dev));
-> > @@ -669,14 +668,8 @@ static int __cxl_dpa_alloc(struct cxl_endpoint_dec=
-oder *cxled, u64 size)
-> >
-> >  int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
-> >  {
-> > -     struct cxl_port *port =3D cxled_to_port(cxled);
-> > -     int rc;
-> > -
-> > -     rc =3D __cxl_dpa_alloc(cxled, size);
-> > -     if (rc)
-> > -             return rc;
-> > -
-> > -     return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxle=
-d);
-> > +     guard(rwsem_write)(&cxl_rwsem.dpa);
-> > +     return __cxl_dpa_alloc(cxled, size);
-> >  }
-> >
-> >  static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
->
->
