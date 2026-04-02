@@ -1,248 +1,182 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85772171CD
-	for <linux-cxl@vger.kernel.org>; Thu,  2 Apr 2026 10:29:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775125791; cv=pass; b=Q5HZWTIJS/UzlmByEZzOXivFAyZzOq9xqx3Vfw4G9WNVqs9Ur3y0FW71QJpRP/1dpPbhgvlGeQmPvRD3ewkIqbEvV/XbjnH2A7qhiiZUm1cI6Qxa1g7cLoYBo2mLd7uHtnUR0hMZ47RQqZgDSDqV2tTldIX2J1SyJj6NIuk1uCY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775125791; c=relaxed/simple;
-	bh=Q+a/xKe5eNA1ne+cV1nH4L2VnAJTk07nXN82LuaTim8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jWR3CMltsn8Vzds7+2++OBHGZ1717NYdI15ixeWUaK38vImGCIorJz1ggjPxiJ3cdyhJiI+jzpFxM99SxWXmFADTnuXgNqsPnTKInj3mms2iWnK+C/AlWQpPRCcexNS5APnzc9w9WeGee1cOFulurEHJxm/nEwQc8CRGQYnXOeU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=T8Y3SQaW; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="T8Y3SQaW"
-ARC-Seal: i=1; a=rsa-sha256; t=1775125781; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=a3ogbccfDYKT2KvZ/UeTh8vTCeBmDeAhZ2fOahBKXbuBqGAJAHvmBQNOunVVL4gUX0XpJgm1P1MK30E4MlDQ5DqoQP1JLXunn5mWrNZBAx7Q2DQSEAxpbuaj0JE+6E2Suj+7I4aInMkYxhaFNJ/UArDk4sJx0aYYbu1XeAvy2yU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1775125781; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=nf8C0bI1OP6yqtVtrRRPQSrLjTgwog5FtA1ezw0IHlw=; 
-	b=BcBPbcZdZRn+GewknhnbUndMOrfdR8LCfOt0AR7/ljn2Fg52MewZZ2GrgB9OWLsSyiVHsg2Onhbg5LeHqPZqZ1y0W6ZwmE8IMJqHCamjlUjsGk3it1ad0+SBFt8ANfKShVa4jlirAyr67etwbUBpN0TyVKB2VKvzwfwPm180jGQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1775125781;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=nf8C0bI1OP6yqtVtrRRPQSrLjTgwog5FtA1ezw0IHlw=;
-	b=T8Y3SQaWYZm+4Ysp9SqE0ezIeoWgWoQlb7OvuQFqJRujeXd2SASHds/uDLF7slBi
-	tenMFKykoEAep/1cF6pD994iYuSUJR6v0bIL/FxonlcY8V/XDG+I6SP4BtG3czQktDX
-	/2RCAxoRQndIFGgs9pvCMDeObRkpIWsNSSOGnT60=
-Received: by mx.zohomail.com with SMTPS id 1775125779074418.60612082314617;
-	Thu, 2 Apr 2026 03:29:39 -0700 (PDT)
-Message-ID: <e29eab5f-2a28-4bd8-838e-041d148cd441@zohomail.com>
-Date: Thu, 2 Apr 2026 18:29:26 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6903C373BEB
+	for <linux-cxl@vger.kernel.org>; Thu,  2 Apr 2026 18:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775154400; cv=none; b=LRuB8hHbx00jJqQnxKgU+oYYiWYGuDVIbkNx/sMqUHJ8Z04nUPh2aBxhocGYUxY5wmUjrniThR9cCHgIt89dlGAgi8xECbJOYbgKiPib7NgHGlK3WWDTT7qEV7phQoMcIr5MvnhWX7xyPoyLX/kCWlCwCHjYgBe1G8HkSMcAOwc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775154400; c=relaxed/simple;
+	bh=uQ0uAbnejGH89M/cGWkkbIsyRAlwpwWbhOGqD3/1FPA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kZif5ZPITc1kcbeQ2q75uAJnF9t5EBFrh/diHiHaZkVam2umtJI4fd7IXzpRSdKvH81ERzwge8LlzGrO7Gkdk8muT0Rr90PMHRL3nfVg04GysVLUf8N716/tWKfMwHvx5uYyLc2CBT1gD3VltXUeeBRaqI82wk9Z/yccvKAQ9Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-b93698bb57aso249652366b.0
+        for <linux-cxl@vger.kernel.org>; Thu, 02 Apr 2026 11:26:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775154398; x=1775759198;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lTYIwjaImmoM2tq6z6YuXZGmV8pazwJWOGsrNCSDtbQ=;
+        b=Efo2LkWB4Uhmbv7Bhmyp3U/pRqR5huo0Yabreodzq1Wcb1+2ZYucIFdDItdPRvUhoA
+         Walnfs/8Kc8S+6AGR6p6DpSybYLAzakURbwtELFgHe2B25mDslKpyfOof2V63Na7fCqx
+         dSjZNX6GaY5gZwWcyIQ2GX1dXKjLumTAYwtRvmlTeF7V0FLz4jndNnj/8ZIPuZxGaice
+         laUUmplSQLi+10mTZiUfgNKp8oMcyfFoZ3TweK2OvXb9pBdglFqK7fhC3VBKsbjNcSqx
+         WcI7MjRjTDXW5ggBC+bSwG/X/R0ZH8Nr59K/WZyhOSuWu5mFKWN7Eu1EYRVxytSKxo1P
+         s1RA==
+X-Forwarded-Encrypted: i=1; AJvYcCW2kb6kzi8Wl+acG8f/Pg5SDTZyAr7ZAME8Ssy8n+OAb1NZ+IASFRxt1kcp51EkM5nyTFjfxXzjGEA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVxlo0ObAUlsy2p5fJiEAKvgQfvK32wz8abute3soE/lOZncDT
+	f+gHXlXDFvav4cqEKAuDlE+L/ZWrzWKoqY+2lfIdZhgN+CzQOa++uy7941RM0WuoS2Foeg==
+X-Gm-Gg: ATEYQzw4tkvtwAMgcFd+QsYlWxFk4rVdey29FhHlRnjYEGmzTKsyY2RiI3bP2R+zBLt
+	btC5MJXrRUfUndWqi8qSLoxrQBA948bJLFgqkfShZ4bF0BuIqH7Z7NYkOW5Ymtp+KgH1OTy3HZC
+	OeG/eH63h03596XlEJwx+Bz1YCbWL1qt/ykmrOPzYWZyffSQI/L5eZhmqt4zo7p496N0+v3iLBt
+	lxIQP6Gl9MExq4v5uIwV0FGc4IPLCwRiS9JogN7pwRyXyHnKO1aOzyuhElybmkcVB2unQBtcjw1
+	r0Hze+RhTTtemk9zf5Zyh3yS1JOvR3DFfBePu1cVqBzJU9wEEzYu6XX0RaBLmaysUqAwEyLjN5Z
+	D3wX+j5G78TDb+RIvRrQ5NZbUf2H9kMvaaTaD1jwsJIiKR6eNvg4Dj14ahQFHWPuBGs6fCTqajC
+	ctNUlNlN4ctT3Tk8i+HIcjGlUrHU6U3vuUOW9ubttitBmBBDMKQKRnU6k=
+X-Received: by 2002:a17:906:f5a0:b0:b97:6d1b:4be8 with SMTP id a640c23a62f3a-b9c46e2677fmr177298666b.10.1775154397460;
+        Thu, 02 Apr 2026 11:26:37 -0700 (PDT)
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9c3cec6f2bsm110116266b.35.2026.04.02.11.26.37
+        for <linux-cxl@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 02 Apr 2026 11:26:37 -0700 (PDT)
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-43b949bf4easo1605917f8f.0
+        for <linux-cxl@vger.kernel.org>; Thu, 02 Apr 2026 11:26:37 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWo/DYGbXmXsy83dKmz+hBbm4h6sDQKJhCtKfxPvqoLbwHEZb6x9WbpOUQkqYurLz6nDMcPUs+8sys=@vger.kernel.org
+X-Received: by 2002:a05:6000:2489:b0:43c:f67a:5b50 with SMTP id
+ ffacd0b85a97d-43d28fad7f8mr359049f8f.10.1775154396797; Thu, 02 Apr 2026
+ 11:26:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ndctl PATCH v2 1/1] ndctl/cxl: Show region locked status to user
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- linux-cxl@vger.kernel.org
-References: <20260401124205.1288996-1-ming.li@zohomail.com>
- <ac1snnLIKRO7EzkM@aschofie-mobl2.lan>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <ac1snnLIKRO7EzkM@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr080112289a2a415b1fbb75fe11974c47000014aa3b42cb5cc6e846b0bda68f2daa597fa71e9db3109ff7f16c:zu080112272c84c5deb980deadcba981d000008bc60935b86ecf717c721512a7b64871e837fe294a76d79eaa:rf0801122d2661da1f90f392aadeb2ee5b0000e2f8b6c80142ddb0a8078e527a97cf37773cd2ab9bf47db7388574b0049dd1:ZohoMail
-X-ZohoMailClient: External
+References: <20260330130156.2212694-3-iam@sung-woo.kim> <a9b88efb-320c-4cfd-98d9-508a237c4444@intel.com>
+In-Reply-To: <a9b88efb-320c-4cfd-98d9-508a237c4444@intel.com>
+From: Sungwoo Kim <iam@sung-woo.kim>
+Date: Fri, 3 Apr 2026 03:26:21 +0900
+X-Gmail-Original-Message-ID: <CAJNyHpKCHR5p9wGLi8Zrw6X78Q7nsubMwHWs4skBfGHi_9LGLA@mail.gmail.com>
+X-Gm-Features: AQROBzATSOha-R_tArgODXoqGgdkOAD9ws14x8CMeSn0rLaFOZCmpLXxo7e3QCM
+Message-ID: <CAJNyHpKCHR5p9wGLi8Zrw6X78Q7nsubMwHWs4skBfGHi_9LGLA@mail.gmail.com>
+Subject: Re: [PATCH v2] cxl/hdm: fix a warning in devm_remove_action()
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Ben Widawsky <bwidawsk@kernel.org>, Dave Tian <daveti@purdue.edu>, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Mar 31, 2026 at 6:35=E2=80=AFAM Dave Jiang <dave.jiang@intel.com> w=
+rote:
 
-在 2026/4/2 03:06, Alison Schofield 写道:
-> On Wed, Apr 01, 2026 at 08:42:05PM +0800, Li Ming wrote:
->> A region is not allowed to be destroyed if it is in locked status.
->> cxl destroy-region command will fail and ask user to try it again as
->> root, but it is not the real reason and it will confuse user if user is
->> already a root user. This patch will show the region locked status in
->> region information and output an explicit log to user that operation is
->> not permitted like below.
->>
->> Before the patch:
->> cxl list -ir region0
->> [
->>    {
->>      "region":"region0",
->>      "resource":53955526656,
->>      "size":536870912,
->>      "type":"ram",
->>      "interleave_ways":2,
->>      "interleave_granularity":256,
->>      "decode_state":"commit",
->>      "state":"disabled",
->>      "qos_class_mismatch":true
->>    }
->> ]
->>
->> cxl destroy-region region0
->> libcxl: write_attr: failed to write 0
->>   to /sys/bus/cxl/devices/root0/decoder0.0/region0/commit: Operation not permitted hint: try running as root or using sudo
->> cxl region: destroy_region: region0: failed to reset decode: Operation not permitted
->> cxl region: decoder_region_action: region0: failed: Operation not permitted
->> cxl region: region_action: one or more failures, last failure: Operation not permitted
->> cxl region: cmd_destroy_region: destroyed 0 regions
->>
->> After the patch:
->> cxl list -ir region0
->> [
->>    {
->>      "region":"region0",
->>      "resource":53955526656,
->>      "size":536870912,
->>      "type":"ram",
->>      "interleave_ways":2,
->>      "interleave_granularity":256,
->>      "decode_state":"commit",
->>      "state":"disabled",
->>      "locked":true,
->>      "qos_class_mismatch":true
->>    }
->> ]
->>
->> cxl destroy-region region0
->> cxl region: destroy_region: region0: Cannot destroy a locked region.
->> cxl region: decoder_region_action: region0: failed: Operation not permitted
->> cxl region: region_action: one or more failures, last failure: Operation not permitted
->> cxl region: cmd_destroy_region: destroyed 0 regions
-> Sorry Ming, I missed previously-
+[snip]
+
+> > ---
+> > V1: https://lore.kernel.org/linux-cxl/20260309000810.2632065-2-iam@sung=
+-woo.kim/
+> > V1->V2:
+> > - Let __cxl_dpa_reserve() handle devm_remove_action() to reduce
+> >   duplicated patches. (Thanks to Dan for the suggestion)
+> > - Make the comment concise (Reflect Dan and Alison's comments)
+> > - Make a warning log in a commit message concise
+> >
+> >  drivers/cxl/core/hdm.c | 33 +++++++++++++--------------------
+> >  1 file changed, 13 insertions(+), 20 deletions(-)
+> >
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > index cb5d5a047a9d..63bd0d5f31df 100644
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -408,7 +408,13 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_d=
+ecoder *cxled,
+> >
+> >       port->hdm_end++;
+> >       get_device(&cxled->cxld.dev);
+> > -     return 0;
+> > +
+> > +     /*
+> > +      * Perform devres registration while holding cxl_rwsem.dpa so
+> > +      * cxl_dpa_free() cannot observe dpa_res without a matching devre=
+s
+> > +      * action.
+> > +      */
+> > +     return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxle=
+d);
 >
-> This always emits "locked":false on kernels without the new sysfs
-> attribute. Please make it skip the emit in that case.
-
-Hi Alison, the case you mentioned requires an extra interface 
-implementation for checking the new sysfs attribute exists. Or a new 
-variable to represent if the new attribute exists.
-
-How about just skpping the emit when locked == false? It works for both 
-no the new sysfs attribute and the region is not locked cases.
-
-
-Ming
-
+> With this function added the devm_add_action_or_reset(), I think it needs=
+ to be renamed to __devm_cxl_add_dpa_reserve().
 >
->> Signed-off-by: Li Ming <ming.li@zohomail.com>
->> ---
->> v2:
->> * Move lock status checking to the beginning of destroy_region().
->>    (Alison)
->> ---
->>   cxl/json.c         |  4 ++++
->>   cxl/lib/libcxl.c   | 11 +++++++++++
->>   cxl/lib/libcxl.sym |  5 +++++
->>   cxl/lib/private.h  |  1 +
->>   cxl/libcxl.h       |  1 +
->>   cxl/region.c       |  6 ++++++
->>   6 files changed, 28 insertions(+)
->>
->> diff --git a/cxl/json.c b/cxl/json.c
->> index a0dc343..3bbe07a 100644
->> --- a/cxl/json.c
->> +++ b/cxl/json.c
->> @@ -1077,6 +1077,10 @@ struct json_object *util_cxl_region_to_json(struct cxl_region *region,
->>   			json_object_object_add(jregion, "state", jobj);
->>   	}
->>   
->> +	jobj = json_object_new_boolean(cxl_region_is_locked(region));
->> +	if (jobj)
->> +		json_object_object_add(jregion, "locked", jobj);
->> +
->>   	if (flags & UTIL_JSON_MEDIA_ERRORS) {
->>   		jobj = util_cxl_poison_list_to_json(region, NULL, flags);
->>   		if (jobj)
->> diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
->> index 5e8deb6..ce2b364 100644
->> --- a/cxl/lib/libcxl.c
->> +++ b/cxl/lib/libcxl.c
->> @@ -472,6 +472,11 @@ CXL_EXPORT int cxl_region_is_enabled(struct cxl_region *region)
->>   	return is_enabled(path);
->>   }
->>   
->> +CXL_EXPORT bool cxl_region_is_locked(struct cxl_region *region)
->> +{
->> +	return region->locked;
->> +}
->> +
->>   CXL_EXPORT bool cxl_region_qos_class_mismatch(struct cxl_region *region)
->>   {
->>   	struct cxl_decoder *root_decoder = cxl_region_get_decoder(region);
->> @@ -689,6 +694,12 @@ static void *add_cxl_region(void *parent, int id, const char *cxlregion_base)
->>   	if (sysfs_read_attr(ctx, path, buf) == 0)
->>   		region->module = util_modalias_to_module(ctx, buf);
->>   
->> +	sprintf(path, "%s/locked", cxlregion_base);
->> +	if (sysfs_read_attr(ctx, path, buf) < 0)
->> +		region->locked = false;
->> +	else
->> +		region->locked = strtoul(buf, NULL, 0);
->> +
->>   	cxl_region_foreach_safe(decoder, region_dup, _r)
->>   		if (region_dup->id == region->id) {
->>   			list_del_from(&decoder->regions, &region_dup->list);
->> diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
->> index 797e398..7c586f4 100644
->> --- a/cxl/lib/libcxl.sym
->> +++ b/cxl/lib/libcxl.sym
->> @@ -315,3 +315,8 @@ global:
->>   	cxl_memdev_clear_poison;
->>   	cxl_debugfs_exists;
->>   } LIBCXL_10;
->> +
->> +LIBCXL_12 {
->> +global:
->> +	cxl_region_is_locked;
->> +} LIBCXL_11;
->> diff --git a/cxl/lib/private.h b/cxl/lib/private.h
->> index 582eebf..d074122 100644
->> --- a/cxl/lib/private.h
->> +++ b/cxl/lib/private.h
->> @@ -189,6 +189,7 @@ struct cxl_region {
->>   	u64 start;
->>   	u64 size;
->>   	u64 cache_size;
->> +	bool locked;
->>   	unsigned int interleave_ways;
->>   	unsigned int interleave_granularity;
->>   	enum cxl_decode_state decode_state;
->> diff --git a/cxl/libcxl.h b/cxl/libcxl.h
->> index a853ab6..6ff58de 100644
->> --- a/cxl/libcxl.h
->> +++ b/cxl/libcxl.h
->> @@ -353,6 +353,7 @@ int cxl_region_clear_all_targets(struct cxl_region *region);
->>   int cxl_region_decode_commit(struct cxl_region *region);
->>   int cxl_region_decode_reset(struct cxl_region *region);
->>   bool cxl_region_qos_class_mismatch(struct cxl_region *region);
->> +bool cxl_region_is_locked(struct cxl_region *region);
->>   
->>   #define cxl_region_foreach(decoder, region)                                    \
->>   	for (region = cxl_region_get_first(decoder); region != NULL;           \
->> diff --git a/cxl/region.c b/cxl/region.c
->> index 207cf2d..8a85522 100644
->> --- a/cxl/region.c
->> +++ b/cxl/region.c
->> @@ -837,6 +837,12 @@ static int destroy_region(struct cxl_region *region)
->>   	unsigned int ways, i;
->>   	int rc;
->>   
->> +	if (cxl_region_is_locked(region)) {
->> +		log_err(&rl, "%s: Cannot destroy a locked region.\n",
->> +			devname);
->> +		return -EPERM;
->> +	}
->> +
->>   	/* First, unbind/disable the region if needed */
->>   	if (cxl_region_is_enabled(region)) {
->>   		if (param.force) {
->> -- 
->> 2.43.0
->>
+> DJ
+>
+
+Sounds reasonable to me. I will do this in v3.
+Thank you for your review.
+
+
+Sungwoo.
+
+> >  }
+> >
+> >  static int add_dpa_res(struct device *dev, struct resource *parent,
+> > @@ -499,16 +505,8 @@ int devm_cxl_dpa_reserve(struct cxl_endpoint_decod=
+er *cxled,
+> >                               resource_size_t base, resource_size_t len=
+,
+> >                               resource_size_t skipped)
+> >  {
+> > -     struct cxl_port *port =3D cxled_to_port(cxled);
+> > -     int rc;
+> > -
+> > -     scoped_guard(rwsem_write, &cxl_rwsem.dpa)
+> > -             rc =3D __cxl_dpa_reserve(cxled, base, len, skipped);
+> > -
+> > -     if (rc)
+> > -             return rc;
+> > -
+> > -     return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxle=
+d);
+> > +     guard(rwsem_write)(&cxl_rwsem.dpa);
+> > +     return __cxl_dpa_reserve(cxled, base, len, skipped);
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(devm_cxl_dpa_reserve, "CXL");
+> >
+> > @@ -606,7 +604,8 @@ static int __cxl_dpa_alloc(struct cxl_endpoint_deco=
+der *cxled, u64 size)
+> >       struct resource *p, *last;
+> >       int part;
+> >
+> > -     guard(rwsem_write)(&cxl_rwsem.dpa);
+> > +     lockdep_assert_held_write(&cxl_rwsem.dpa);
+> > +
+> >       if (cxled->cxld.region) {
+> >               dev_dbg(dev, "decoder attached to %s\n",
+> >                       dev_name(&cxled->cxld.region->dev));
+> > @@ -669,14 +668,8 @@ static int __cxl_dpa_alloc(struct cxl_endpoint_dec=
+oder *cxled, u64 size)
+> >
+> >  int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
+> >  {
+> > -     struct cxl_port *port =3D cxled_to_port(cxled);
+> > -     int rc;
+> > -
+> > -     rc =3D __cxl_dpa_alloc(cxled, size);
+> > -     if (rc)
+> > -             return rc;
+> > -
+> > -     return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxle=
+d);
+> > +     guard(rwsem_write)(&cxl_rwsem.dpa);
+> > +     return __cxl_dpa_alloc(cxled, size);
+> >  }
+> >
+> >  static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
+>
+>
