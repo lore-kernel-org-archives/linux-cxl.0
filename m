@@ -1,289 +1,273 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f45.google.com (mail-dl1-f45.google.com [74.125.82.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FED42DCC04;
-	Thu,  2 Apr 2026 21:52:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775166767; cv=fail; b=Brcs3RRXEVdNZp6I9eefNUyXYGXLIaMr0WPh/PuxothxZlXtFtJWwP4N6+uhvHcE3xQhC0dyFrdccZcGN2UltqI6CQKiUVKv94tc0fs1gnILtzIsbACImEclmRwLmdSG8JGZ+sod7MBKEsZm0vlR1Xc5o921P14+tQ7LIWhkqDg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775166767; c=relaxed/simple;
-	bh=nYMPxwNFAS/7ergCLxnZO9ep37afcjL2xyFA7AOxrDA=;
-	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
-	 Content-Type:MIME-Version; b=YlmQ4Ge+BH18ZOCGVdHrpZQ6cXTMjCLcP5EJUc8Ejbtp3B5oe9FfOoLxzGGwOw4rU92pM+n6KxPoYNfnyaSVAMsiw7tU4PeyVoi2+Mt2kXqOzZUi+eLoJLfjVMLlqB9yNtYJsPtjOqv72Gxn06qUPZ7KVrbgivcYrXqHfH3S03o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eJXFwFMJ; arc=fail smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA4B24A06A
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Apr 2026 00:51:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775177495; cv=none; b=JYb+Ml+12QXC2bulImx50paTqHs/2tFNPakrw2U0Q4pakCp45LPBD8HiWNQqFGtjoSobLQvVwOaMhxodoCGchZDavnO+xJn0GIoEvZvGn+0gg5vds2kvxz2Rign4XEeovYr1xUeIS70Oyty0WNT2cMbJ+n+UccyWrjXU+EOetyI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775177495; c=relaxed/simple;
+	bh=MLU3H0vT5l7RkyqJ4axMsnZCk3EEo/xxuxHDjIkeDXs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VOvHSM3tswuJHdSr4XgW3zYdqqk2swDnXHDsc36Avn0LpJ15+ukJsf+IyS2T2vgch7qne2lu54ZXY6+uvG5TArtNvdIJrX1q7HJLojeZ4W/SmrryoxuwdlTyARXAKfITzI6VGR94ruah+/SySeuov2AFlWgSJDjZuyKtSYjcQJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=U6fb1bYX; arc=none smtp.client-ip=74.125.82.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eJXFwFMJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775166765; x=1806702765;
-  h=from:date:to:cc:message-id:in-reply-to:references:
-   subject:content-transfer-encoding:mime-version;
-  bh=nYMPxwNFAS/7ergCLxnZO9ep37afcjL2xyFA7AOxrDA=;
-  b=eJXFwFMJmqcmBLGD0JOuoxIsgRZtiNUgf/OtBNrRDFaa3yKSOHmElaW6
-   HdHpYHylt4G8pNhnjwavuIXvq3lqNVGlaT6gr7t8HMPKMvGs8fDHGqiBM
-   dm962bMR6AkbBqjFd+uHzEIUoXOZuUkwh9ZWllLI0w/zHCFCrViw5HOS7
-   jtjQXcZidFPogQyEweMVTfLcrZPF4Lu7WDQx6Ak0yIteHm9qyNFhab/vJ
-   uyUshjG1GIJXCsJItFM36GsKUtFuGLaUMgo/dtsL5JCoV3EKw7rZ9HZj9
-   tG6J5j1waDoHNUmPD6EaHLHSTLucQHz3IpmnE/h5D7wya5f6fIv6a7NWQ
-   Q==;
-X-CSE-ConnectionGUID: kKeCSx0xTkCuQnWHIrPyoA==
-X-CSE-MsgGUID: gdYPTz5NT56kXketvW/XIQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11747"; a="76127419"
-X-IronPort-AV: E=Sophos;i="6.23,156,1770624000"; 
-   d="scan'208";a="76127419"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 14:52:44 -0700
-X-CSE-ConnectionGUID: uQTzeFnxRAy74K4bTkbjgw==
-X-CSE-MsgGUID: AE1+WaUrQYugy1fmoDeRWQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,156,1770624000"; 
-   d="scan'208";a="223815491"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2026 14:52:44 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Thu, 2 Apr 2026 14:52:44 -0700
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Thu, 2 Apr 2026 14:52:44 -0700
-Received: from CY3PR05CU001.outbound.protection.outlook.com (40.93.201.67) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Thu, 2 Apr 2026 14:52:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QfIF21htn8Lny9Ee9cx6/VZUH2mvFOpRhxr2yIPwv0U6jpiYPeVEUjRakG2TDffoVdl14CzDQ2z0IHs4522JAMyqO0U/LJgFOvvV74YpkbybJAOPQ/BPovXBWIlMxvt2NbFqWyhfwXJjUgTM5mToUWN04M23B5/lYGaKa/9q7pGaXoE9dz4i+xbGmFgYrdfQbfMkPt27Wy81DA92jZyVByGtCBgYHt+0Zjth0f1fuQ4FTJLb+Rso5CASc/eO11MEt/3FAgZkQQCnpugarWohgBGG+RJAK/0mb1wofSlGZ9pj4LARuBPpi+myHUsswBxH40UZAMutzSueb51Ae4Oitg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VrLJGQSYSjtJcjmYO5fOXmLZA1ntb2HQvWH4IE91x74=;
- b=kZE2gYtNt/77YYW+Fj4krdBuw5Tin70lSVxb4Ru1Qes0CmWLehZplM9QxE/9IvHNxj4CIuL6Mg7PqmbJ9O0AaAamNXB/mO3yThIhZoIJp9SEPhOAd6K721DuUzc/+CjHKqiLM1Kpq2dWHAdUeRNVK1ZuF1TJXRC4EwkZ9eHoovyBrgNllRdC9Wt3NdwDklhHgWD3LyRAGU3LY9WGL7BCpGIhyMH9aXk5T785kj50Xsxhm5LoXd4wB8i9mn4aOJgsG7rnWFsYPbQQnwfwzzSqRt5TurUH0MJVE8nlNmKZX236SJ1fY3+FcYM1AeUxtOmo5TemC2YysY8vWoxQdXN+6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by CH3PR11MB8517.namprd11.prod.outlook.com (2603:10b6:610:1ad::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Thu, 2 Apr
- 2026 21:52:39 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::1ff:1e09:994b:21ff%3]) with mapi id 15.20.9769.016; Thu, 2 Apr 2026
- 21:52:39 +0000
-From: Dan Williams <dan.j.williams@intel.com>
-Date: Thu, 2 Apr 2026 14:52:36 -0700
-To: Alex Williamson <alex@shazbot.org>, Dan Williams
-	<dan.j.williams@intel.com>
-CC: Manish Honap <mhonap@nvidia.com>, "jonathan.cameron@huawei.com"
-	<jonathan.cameron@huawei.com>, Srirangan Madhavan <smadhavan@nvidia.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"dave@stgolabs.net" <dave@stgolabs.net>, Jeshua Smith <jeshuas@nvidia.com>,
-	Vikram Sethi <vsethi@nvidia.com>, Sai Yashwanth Reddy Kancherla
-	<skancherla@nvidia.com>, Vishal Aslot <vaslot@nvidia.com>, Shanker Donthineni
-	<sdonthineni@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, Jiandi An
-	<jan@nvidia.com>, Matt Ochs <mochs@nvidia.com>, Derek Schumacher
-	<dschumacher@nvidia.com>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, <alex@shazbot.org>
-Message-ID: <69cee524adfd9_1b0cc6100f2@dwillia2-mobl4.notmuch>
-In-Reply-To: <20260402150131.0abe12e0@shazbot.org>
-References: <20260306080026.116789-1-smadhavan@nvidia.com>
- <69b08f8d8eb97_490a10042@dwillia2-mobl4.notmuch>
- <20260310164630.7abeed30@shazbot.org>
- <69b0c934b2793_2132100ec@dwillia2-mobl4.notmuch>
- <IA1PR12MB90304014081461742C3977F4BD41A@IA1PR12MB9030.namprd12.prod.outlook.com>
- <69b98960907e9_7ee31003b@dwillia2-mobl4.notmuch>
- <20260317121943.3c404db9@shazbot.org>
- <69cdc273ca48e_1b0cc610042@dwillia2-mobl4.notmuch>
- <20260402150131.0abe12e0@shazbot.org>
-Subject: Re: [PATCH 0/5] PCI/CXL: Save and restore CXL DVSEC and HDM state
- across resets
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4P221CA0027.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:303:8b::32) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U6fb1bYX"
+Received: by mail-dl1-f45.google.com with SMTP id a92af1059eb24-12a74039dc6so1290177c88.0
+        for <linux-cxl@vger.kernel.org>; Thu, 02 Apr 2026 17:51:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1775177493; x=1775782293; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lb2HYWEQxB/om4yhyjxjNip9666HK8Fi8TGkiu9j7VQ=;
+        b=U6fb1bYXSFh8hkp9cNXTZqV0oKW2o3WGWUrIJCFeMAoeuwJh4rs88N+4Ft/69+Akbe
+         yc0JovpEZfrW8+QvEM9WOWM560NZi8j+ES3IivhSWxA+G8l1WPLEvjINJoULkNm/le+a
+         UGkWXcH+Wlj6BoSy9+6OKmwemoOa1Y2eiqXdY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775177493; x=1775782293;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Lb2HYWEQxB/om4yhyjxjNip9666HK8Fi8TGkiu9j7VQ=;
+        b=osZQiJGmFkSuk1g+sZhUfvdoODS4QVvdu3wAEAD0WHVtokmgqhyUXGzw7r0EFrcj3O
+         VcRrJSjiSl/qiIY/iXEZGtye83ka13oyymcgtaqnr4Z/Ui5eDugL+/puP+nNrFRlAYAq
+         gORfEy9z88NNoLyYof5v6IolBszZtOi3goaBDahx4fr+9WU+3YrZjWcS4X/0d//SOWCz
+         YZDV+ZkdIAUL7gHS9cao8ePhikZ3mmNXoDgZwwf7dWGh6V2jEaLU51rOyYNqKkoLETbG
+         y5Jgm7H/4Op3TGO3FxugvK0kF6Zllc5MDgg6Ge0cb3bg/w0MRdfinFYPuTRX2Any9pXy
+         QaBw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOvUxbiu2lorgbfkhgRUpjb8pwVV3peVMEiS/9VFK0l2JvZnxixWzY4ou+hMn4Ib8iYcFsZSKw2Lw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyg9Qtddh2BAREi2ovxD1YWto1u2ltlxIIESVbieIbSwzcgEhkd
+	NCyY1OGdgQguSN4vrEZVwxJMSOfRN88TVHZWNZDXpcohsr8Gf/p5SNDRGBoUPWQaPg==
+X-Gm-Gg: AeBDietIv+ByydHRwVWcK3BoKUdKQMbiNwF49MEpjoYRnRVqVtxPrEAVZ36nUlovo75
+	r/cLsFzcZWjmkCdtBxZInvG/cqq1bD92hztF+L6nOikL2am3+8g8u1OacenvbYy/kloOWsFmrIL
+	6zoW7lkyPRoFezXC4aBDmvP+pcNxDv5w860x4yjR+3pyHhs85ewX/VKNu2hKwejqLPJaleDzwjl
+	+6MvO39yO/7rSSPHwsdDaPUM5Do6z/qNUippGHcYAH5VZY5bwe1Zg0kiXl0lebhLWGo7YLL99WR
+	BU9n0O/5m+8Kq/DQccjinagw5MHN79sp5H64d3b2w+xHs+1SmcyYVG0BIhK7uhigAVI8zNdrcbP
+	RnhMFO0fqNMs3sPcnnuL1bVNWHTw9vAjoK0/9dc4EIwmamd917RjDN6Ec7f7iM0rML6VehcxwTw
+	eyq6Zxteher9yin3BP/Wl0Uy66y9WxFY5Au3irfjAl+DjBY2NaRyxYyZOiT38DM8pDKtMvu94BC
+	T+AU9aLL189vbxLRH51LQ==
+X-Received: by 2002:a05:693c:3009:b0:2c1:558c:16f7 with SMTP id 5a478bee46e88-2cbf950392cmr655589eec.6.1775177492780;
+        Thu, 02 Apr 2026 17:51:32 -0700 (PDT)
+Received: from dianders.sjc.corp.google.com ([2a00:79e0:2e7c:8:5db3:7542:a530:f43a])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ca78df3b84sm3630074eec.5.2026.04.02.17.51.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2026 17:51:31 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>
+Cc: Robin Murphy <robin.murphy@arm.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Paul Burton <paul.burton@mips.com>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Toshi Kani <toshi.kani@hp.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Alexey Kardashevskiy <aik@ozlabs.ru>,
+	Johan Hovold <johan@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Frank.Li@kernel.org,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	alex@ghiti.fr,
+	alexander.stein@ew.tq-group.com,
+	andre.przywara@arm.com,
+	andrew@codeconstruct.com.au,
+	andrew@lunn.ch,
+	andriy.shevchenko@linux.intel.com,
+	aou@eecs.berkeley.edu,
+	ardb@kernel.org,
+	astewart@tektelic.com,
+	bhelgaas@google.com,
+	brgl@kernel.org,
+	broonie@kernel.org,
+	catalin.marinas@arm.com,
+	chleroy@kernel.org,
+	davem@davemloft.net,
+	david@kernel.org,
+	devicetree@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	driver-core@lists.linux.dev,
+	gbatra@linux.ibm.com,
+	gregory.clement@bootlin.com,
+	hkallweit1@gmail.com,
+	iommu@lists.linux.dev,
+	jirislaby@kernel.org,
+	joel@jms.id.au,
+	joro@8bytes.org,
+	kees@kernel.org,
+	kevin.brodsky@arm.com,
+	kuba@kernel.org,
+	lenb@kernel.org,
+	lgirdwood@gmail.com,
+	linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-serial@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-usb@vger.kernel.org,
+	linux@armlinux.org.uk,
+	linuxppc-dev@lists.ozlabs.org,
+	m.szyprowski@samsung.com,
+	maddy@linux.ibm.com,
+	mani@kernel.org,
+	maz@kernel.org,
+	miko.lenczewski@arm.com,
+	mpe@ellerman.id.au,
+	netdev@vger.kernel.org,
+	npiggin@gmail.com,
+	osalvador@suse.de,
+	oupton@kernel.org,
+	pabeni@redhat.com,
+	palmer@dabbelt.com,
+	peter.ujfalusi@gmail.com,
+	peterz@infradead.org,
+	pjw@kernel.org,
+	robh@kernel.org,
+	sebastian.hesselbarth@gmail.com,
+	tglx@kernel.org,
+	tsbogend@alpha.franken.de,
+	vgupta@kernel.org,
+	vkoul@kernel.org,
+	will@kernel.org,
+	willy@infradead.org,
+	yangyicong@hisilicon.com,
+	yeoreum.yun@arm.com
+Subject: [PATCH v3 0/9] driver core: Fix some race conditions
+Date: Thu,  2 Apr 2026 17:49:46 -0700
+Message-ID: <20260403005005.30424-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH3PR11MB8517:EE_
-X-MS-Office365-Filtering-Correlation-Id: 10f4427a-f73f-41e1-bcd5-08de910228b1
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info: UMqsbTyNKuZiUPaMjVu+BRE6/j07dR2RW6xEd/0b45Rha3OWo4NCwwsVuelMPa23GVCOjV98YpGdfbtjCaugi/ZGMD5VCUYh4es0E7lN3mTSg8vlcWIGAbOCSN/AQkPOFI3NzdTdNaghygWl+ENnbHICxNYCnqx/QVDFv8jW/b4/hkZ07wtVdguwIGboZBfWXdiOSzN5V6hUOVsyFYNYY6pxrYOEaeEzYm9JAQ5/FF5ZFPZ31CC5dZujLyWkRuwhhtI5DG/QRu6kYLuD0J4CKcVANuRyBR59bn5FLJz4zNrg7Dp8Uv1F6Jug1WEpZEKNvP45lNtIC4IqWPk/qH05LwEjBr4j/rKNluExH9Knq3jpGNKDx3JL3QBLf2xZfpw0HLwjaWQuIeK7kSvF/Ez/O3Z/SM0RvtvRg/3Hnt+UsIh7qP9vt/8EeN17ClALtc5Q+ofR5GwpEwU340ak5HD4BVakeReszfaa9VAc7v9FQAPa3N43PyylKfGxM7pnDKpJB0aGCygQDFrQl3YpTo1EMb9ZN+yZZboDqmh7rmUOv1GBAwp4OAHJs2+Kie6kZQKaw4oOR82CzKxkls/QHcvMGY0oKRu+zB3pwDTVaA0bOtucUoHew2dqwEpxoZczoIyfkkNowHKLg+sROlwiy1KH0gUk71adfhfU1Fh/LrxXrROf4rhim5MeIv77Rvtqk9K9An1JYKjjo9nTRg1JUyXG/ceIBtlmcpHfaZIqk2ux0FM=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VTBDa2s0S2VBWWo2Z1VteGJhbFFNcSswV092cnp2V2EwZ3dXdjRySUNnZmlt?=
- =?utf-8?B?TFFnZXJIOW5rTzUydVlVd3FqaDAwbjJpVE15U05DdmNRNzZWemNMbmNhVjUy?=
- =?utf-8?B?QXpabGxyM09naFFXOHMwWDE0cjNzSEdmM2Z2S2U2TlgrVERzWXpJZy9oMWpW?=
- =?utf-8?B?UGt5S2ZJcEhmbGEvWWtKVmNEaDNpMWNjU0lkWktLMVlPRXpKZExxSmZEb01x?=
- =?utf-8?B?bHlBaVFjemhybGN0aUdNK1plUXBNdzRNbGVjNW84bXJvTzJ1Z1pyT3F6MEty?=
- =?utf-8?B?Y1hvREY5YkpqQUc2M0g4c1FWVGZLUGZtREZXTFR3YkZTL2tHSW9QamMrZlNt?=
- =?utf-8?B?bEFZWGV5NmZtelNjVVJTSkVoWGxlUk1IbjRLY1dsaEZWcFlqcVVESldwRzdj?=
- =?utf-8?B?WXd1T1c1ckwrWXdrZGtpVjE4OC91cHdCSVVkSG1IdzBOekZ4Tm84MmtRMEN5?=
- =?utf-8?B?TjNqM3JmZjlMNFJEcDAvYXpFOWRMMC9qTWRLVU8xcWcwV2t2YmlybFZsTDFw?=
- =?utf-8?B?aWdDYnBiU2ljQWNsbkFEL0Vzanp1ZW9JRXNrcUVxV0N1bm5wdlUxSUNTeFN2?=
- =?utf-8?B?NFpRZDlSZHI1MEJBYVBzMTN3SGRDYks3d0FJQXBkWDN4WWRQc0VweWZpak9z?=
- =?utf-8?B?bXk1M3l2UnVHTGV6WEpNS08wd0tNaWp0THNVTWtRU0RHaXVPTE9sSTAvVUlJ?=
- =?utf-8?B?TlEwK3NxOWVJeFAxUnZ3eWlRcDFrclFOaXl6TlFwV21EenR2VWJBaXVLc1J1?=
- =?utf-8?B?NWQxeHdvd0M0dUFLQklzbVFIWmFjSUpUdEtpN1V3dkwwNHhMUVlON3lRbDVn?=
- =?utf-8?B?aENENnV0RDRyVkhYWlhvKzhIdGRkWUo5Z0RJdlZZWE1JU04wRDlnNmRram5N?=
- =?utf-8?B?YVlQOS9kMCtzVHNxTHBNM0VEY1IvWnV2RXQrdlRSWGRMbndWelFYaWhhK2ZW?=
- =?utf-8?B?YVp0R012TFlZNDdJVFpmcVkrR0U5WWsrUUkwbGNCeDlMRjIvUi9yRldTdUh1?=
- =?utf-8?B?eHlFeGc1aUJkT0trc1BIZTBMVVd0TnQ5MnhOc3c5WjBLbnlORk9wbEtsMGtB?=
- =?utf-8?B?b0FDQktvK1B3WUlvZE14TlVUc1c0MUhjb2NpRUtUaEJQMzA5ODNydSt3S010?=
- =?utf-8?B?eFNid0xDQVpLOVBBWlFRNUxNMWJZelM2cncvSG1NUitwZEJnM2cwK0RLUnBZ?=
- =?utf-8?B?VDZXLzc5a012bWpkY0l6azRBc1NUVXRjbzRldnQ2b1FFNG1hajY1aTltc2x2?=
- =?utf-8?B?ZEZyWEMrVG9IZTRYL2YvR0MzR0pRTnByTE9vVUxEOGF0bmRPbjdNbFVDYmtk?=
- =?utf-8?B?dCtWNmlLdU9uRVNMS1lpNGM5eFR3TVdTMW9TYjZPS3FxY3JsR0cvL1kxdjNi?=
- =?utf-8?B?Y0tEMnFIUVBLU1B3S3piWjJHODgzdFpvbDBScHk3b2s3c0NuWExKZnFUSFYy?=
- =?utf-8?B?elVWaFdvNDJxekFOckJYQjFzVWxmNklZQ0xjQ1pQVEpkeW05MFA0UDM1OU9o?=
- =?utf-8?B?NDl3QlpBRWJHMjNmY2lYVW9YRzNLOFJMTXZ1R2RzdmRRWjhSd210dmV3d3FS?=
- =?utf-8?B?SnpXd3dvTVlkSU4zQzNacS85SFU3ZDMwL0wzOTVtZUJjZVNPUXpGa2FkTk1o?=
- =?utf-8?B?Z05zbHpQNWNWOXhHMW9hUUF0R096U3BpQkxHVlFDeEM4SDlTUzFML0RLaDdq?=
- =?utf-8?B?ampzdUUyc0UyQjdPMkVEZGEzUjZPT01uM1YvTVB1V1FpTkg2clFaL2xwY2hO?=
- =?utf-8?B?b0huRjBBRU92N2M3WU1WcEk3MHRvdUh4YmQ3SnFObW5OYkJYbURacWVRSkpI?=
- =?utf-8?B?NEZHLzErZndZZXFCb0V1RndIb2FQcXlEQlZ1RVA3V3ByWDV5YnA0R2RwTitQ?=
- =?utf-8?B?eUJLZjZsaXFvY0pkaEpsK3Y0cWoxOGNac3MzS2c2NnpOeXFGQklQU25qY2Jo?=
- =?utf-8?B?V2JDcjY4aXBVY2xhTVRCSE9aMFNzMi9CbHUySmRwNUZpSlhPSmlzRUNvT2F4?=
- =?utf-8?B?V2JWRThpMXl0bFY2aUFCaDdGRGh5bnpGdEs3Y0paQytIbW1ZNlliTHRoTUVR?=
- =?utf-8?B?MXlNbDRnVUU0OGhFekhCTHk4ZGhpM1NJcTFhLy9lUTB0U283bnBmY2d1c3Rn?=
- =?utf-8?B?dnMzU2s1ZUhraVlwNVZ4YlZKZDl6OXpBa01DWnl2ZUZyV1hGL25lRnRuQzN4?=
- =?utf-8?B?d0lRd2JRc1dUSUlmdHZXWHFNTWxMamw0b3U1WTQzMTVsQXByVjFEcXBpbkY0?=
- =?utf-8?B?RFpMNTgxOGM5bXlIc2t1L1NIRHRmOEJMTERQZWFzQVF1WXM1elZjVnNVcE5k?=
- =?utf-8?B?THZuclVXamNsdStjVUo1c1hzNWZlaDBiaFJYZlB1WDViTDl6U3NkT0FvMngy?=
- =?utf-8?Q?efqVh6i2gmQoqOg4=3D?=
-X-Exchange-RoutingPolicyChecked: GEWkAU5DQ3MXRBhI2OE/yFj3mDR7bRWe3EvCt+Ah4LaWhs0gLiCCx2Rx3x+a1qQ/gkjOlmTQgX7yetZtfrrBqE2R6Sa3VX6s4ucRAk+6jx+DlupC57ebgJaq+S3XqmylEZxdITf3HQKU64CNzuvn7B2FIQbTxuSuPYMYTrcaURZJD1/c9E1u6vWzJZYA0TcQWjgYm60P8mLZZXeI/uco56aOm+Ncw5p+A50uewqJ/nFAPnia1WaOPOVgPZ27xMV7Opl8veaOEbQvyR4mUmmlcczORE64eUJP9+SL+UC7smvgns7roDgxV+V+/iniDxC2e1BoEwM+2cVh87S1uUoG0w==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10f4427a-f73f-41e1-bcd5-08de910228b1
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2026 21:52:39.3221
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 54kYZS/2giRkotds0Azwr+pwgp5T+45Z5CuoKW+D+lBaAXk8wswoP+9SGAnNAZ3bhGaf0ULle8GUcGynbj20OtBxlUzSs0FoO5LW8bPqQgc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8517
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
-Alex Williamson wrote:
-[..]
-> > Now a follow on concern is the plan to manage a case of "PCI operation
-> > is available, but CXL operation is not. Does the driver proceed?" Put
-> > another way, I immediately see how to convey the policy of "continue
-> > without CXL" when there is an explicit driver distinction, but it is
-> > ambiguous with an enlightened vfio-pci driver.
-> 
-> As an enlightenment to vfio-pci, CXL support must in all cases degrade
-> to PCI support.  Manish's series proposes a new flag bit in the
-> DEVICE_INFO ioctl for CXL (type2 specifically) that would be used in
-> combination with the existing PCI flag.  If both are set, it's a PCI
-> device with CXL.{mem,cache} capability, otherwise only PCI would be set.
+The main goal of this series is to fix the observed bug talked about
+in the first patch ("driver core: Don't let a device probe until it's
+ready"). That patch fixes a problem that has been observed in the real
+world and could land even if the rest of the patches are found
+unacceptable or need to be spun.
 
-Ok.
+That said, during patch review Danilo correctly pointed out that many
+of the bitfield accesses in "struct device" are unsafe. I added a
+bunch of patches in the series to address each one.
 
->  
-> > > > If vfio-pci functionality is also a library
-> > > > then vfio-cxl is a driver that uses services from both libraries. Where
-> > > > the module and driver name boundaries are drawn is more an organization
-> > > > decision not an functional one.  
-> > > 
-> > > But as above, it is functional.  Someone needs to define when to use
-> > > which driver, which leads to libvirt needing to specify whether a
-> > > device is being exposed as PCI or CXL, and the same understanding in
-> > > each VMM.  OTOH, using vfio-pci as the basis and layering CXL feature
-> > > detection, ie. enlightenment, gives us a more compatible, incremental
-> > > approach.  
-> > 
-> > Ok, to make sure I understand the proposal: userspace still needs to to
-> > end up with knowledge of CXL operation, but that need not be resolved by
-> > module policy.
-> 
-> It's a single module as far as userspace is concerned, and the decision
-> lies with userspace whether to take advantage of the CXL features
-> indicated by the device flag.
->  
-> > Userspace also just needs to be ok with the unsightliness of the CXL
-> > modules autoloading on systems without CXL.
-> 
-> I'm open to suggestions here.  The current proposal will pull in CXL
-> modules regardless of having a CXL device.
-> 
-> We could build vfio_cxl_core as a module with an automatic
-> MODULE_SOFTDEP in vfio_pci_core.  We could then do a symbol_get around
-> CXL code so that we never CXL enlighten a device if the module isn't
-> loaded, allowing userspace policy control via modprobe.d blacklists.
-> We could also use a registration mechanism from vfio-cxl-core to
-> vfio-pci-core to avoid symbol_gets.
+Danilo said he's most worried about "can_match", so I put that one
+first. After that, I tried to transition bitfields to flags in reverse
+order to when the bitfield was added.
 
-Probably just wait until someone really needs that small bit of memory
-back.
+Even if transitioning from bitfields to flags isn't truly needed for
+correctness, it seems silly (and wasteful of space in struct device)
+to have some in bitfields and some as flags. Thus I didn't spend time
+for each bitfield showing that it's truly needed for correctness.
 
-> > Implement features like CXL Reset as operations against CXL objects like
-> > memdevs and regions. For example, PCI reset does not consider management
-> > of cache coherent memory, and certainly not interleaved cache coherent
-> > memory. Other CXL drivers also benefit if these capabilities are
-> > centralized.
-> 
-> I think "CXL Reset as operations against CXL objects" is large already
-> proposed as [1].  However, it's specifically for type2 devices, so we
-> can ignore some of the complications, such as interleaved cache
-> coherence, of a type3 use case.  
+Transition was done semi manually. Presumably someone skilled at
+coccinelle could do a better job, but I just used sed in a heavy-
+handed manner and then reviewed/fixed the results, undoing anything my
+script got wrong. My terrible/ugly script was:
 
-Nothing type3 specific about interleaved cache coherence. Now,
-interleaving for accelerators is not in near term scope, but CXL.mem is
-coherent. I do not want to paint the design into a corner in case
-host-bridge interleaving for bandwidth becomes a consideration.
+var=can_match
+caps="${var^^}"
+for f in $(git grep -l "[>\.]${var}[^1-9_a-zA-Z\[]"); do
+  echo $f
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var} = true/set_bit(DEV_FLAG_${caps}, \&\\1->flags)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var} = true/set_bit(DEV_FLAG_${caps}, \&\\1.flags)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var} = false/clear_bit(DEV_FLAG_${caps}, \&\\1->flags)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var} = false/clear_bit(DEV_FLAG_${caps}, \&\\1.flags)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var} = \([^;]*\)/assign_bit(DEV_FLAG_${caps}, \&\\1->flags, \\2)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var} = \([^;]*\)/assign_bit(DEV_FLAG_${caps}, \&\\1.flags, \\2)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var}\([^1-9_a-zA-Z\[]\)/test_bit(DEV_FLAG_${caps}, \&\\1->flags)\\2/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var}\([^1-9_a-zA-Z\[]\)/test_bit(DEV_FLAG_${caps}, \&\\1.flags)\\2/" "$f"
+done
 
-> [1]https://lore.kernel.org/all/20260306092322.148765-1-smadhavan@nvidia.com/
+NOTE: one potentially "controversial" choice I made in some patches
+was to always reserve a flag ID even if a flag is only used under
+certain CONFIG_ settings. This is a change from how things were
+before. Keeping the numbering consistent and allowing easy
+compile-testing of both CONFIG settings seemed worth it, especially
+since it won't take up any extra space until we've added a lot more
+flags.
 
-Still playing catch up on review, but yes, that version looks
-directionally ok and at least has a chance to be extended for
-interleaving.
+I only marked the first patch as a "Fix" since it is the only one
+fixing observed problems. Other patches could be considered fixes too
+if folks want.
 
-[..]
-> > > This is largely a consequence of CXL_BUS being a loadable module.  
-> > 
-> > Yes, the question is why does that matter for CXL enlightened operation?
-> > Simply do not burden the PCI core to learn all the CXL concerns.
-> 
-> How do we then proceed relative to save/restore of CXL state based on a
-> PCI reset?  Should CXL core register a save/restore handler with PCI
-> core or does PCI core reach out for a symbol from CXL core to support
-> save/restore?
+I tested the first patch in the series backported to kernel 6.6 on the
+Pixel phone that was experiencing the race. I added extra printouts to
+make sure that the problem was hitting / addressed. The rest of the
+patches are tested with allmodconfig with arm32, arm64, ppc, and
+x86. I boot tested on an arm64 Chromebook running mainline.
 
-I am currently thinking CXL registered handler to enable enlightened
-reset, or direct CXL uAPI.
+Changes in v3:
+- Use a new "flags" bitfield
+- Add missing \n in probe error message
 
-Is it not safe to assume that new CXL awareness in user tooling is
-prepared move to new CXL aware reset interfaces?
+Changes in v2:
+- Instead of adjusting the ordering, use "ready_to_probe" flag
 
-> If CXL core is not loaded, are we ok with silently losing CXL state
-> across a PCI reset, ie. assume that state is unused currently and accept
-> the risk of losing preconfigured decoders?
+Douglas Anderson (9):
+  driver core: Don't let a device probe until it's ready
+  driver core: Replace dev->can_match with DEV_FLAG_CAN_MATCH
+  driver core: Replace dev->dma_iommu with DEV_FLAG_DMA_IOMMU
+  driver core: Replace dev->dma_skip_sync with DEV_FLAG_DMA_SKIP_SYNC
+  driver core: Replace dev->dma_ops_bypass with DEV_FLAG_DMA_OPS_BYPASS
+  driver core: Replace dev->state_synced with DEV_FLAG_STATE_SYNCED
+  driver core: Replace dev->dma_coherent with DEV_FLAG_DMA_COHERENT
+  driver core: Replace dev->of_node_reused with DEV_FLAG_OF_NODE_REUSED
+  driver core: Replace dev->offline + ->offline_disabled with DEV_FLAGs
 
-> Does PCI core need to be involved in suppressing SBR?
+ arch/arc/mm/dma.c                             |  4 +-
+ arch/arm/mach-highbank/highbank.c             |  2 +-
+ arch/arm/mach-mvebu/coherency.c               |  2 +-
+ arch/arm/mm/dma-mapping-nommu.c               |  4 +-
+ arch/arm/mm/dma-mapping.c                     | 30 +++----
+ arch/arm64/kernel/cpufeature.c                |  2 +-
+ arch/arm64/mm/dma-mapping.c                   |  2 +-
+ arch/mips/mm/dma-noncoherent.c                |  2 +-
+ arch/powerpc/kernel/dma-iommu.c               |  8 +-
+ .../platforms/pseries/hotplug-memory.c        |  4 +-
+ arch/riscv/mm/dma-noncoherent.c               |  2 +-
+ drivers/acpi/scan.c                           |  3 +-
+ drivers/base/core.c                           | 55 +++++++-----
+ drivers/base/cpu.c                            |  4 +-
+ drivers/base/dd.c                             | 28 +++++--
+ drivers/base/memory.c                         |  2 +-
+ drivers/base/pinctrl.c                        |  2 +-
+ drivers/base/platform.c                       |  2 +-
+ drivers/dma/ti/k3-udma-glue.c                 |  6 +-
+ drivers/dma/ti/k3-udma.c                      |  6 +-
+ drivers/iommu/dma-iommu.c                     |  9 +-
+ drivers/iommu/iommu.c                         |  5 +-
+ drivers/net/pcs/pcs-xpcs-plat.c               |  2 +-
+ drivers/of/device.c                           |  6 +-
+ drivers/pci/of.c                              |  2 +-
+ drivers/pci/pwrctrl/core.c                    |  2 +-
+ drivers/regulator/bq257xx-regulator.c         |  2 +-
+ drivers/regulator/rk808-regulator.c           |  2 +-
+ drivers/tty/serial/serial_base_bus.c          |  2 +-
+ drivers/usb/gadget/udc/aspeed-vhub/dev.c      |  2 +-
+ include/linux/device.h                        | 83 ++++++++++---------
+ include/linux/dma-map-ops.h                   |  6 +-
+ include/linux/dma-mapping.h                   |  2 +-
+ include/linux/iommu-dma.h                     |  4 +-
+ kernel/cpu.c                                  |  4 +-
+ kernel/dma/mapping.c                          | 16 ++--
+ mm/hmm.c                                      |  2 +-
+ 37 files changed, 178 insertions(+), 143 deletions(-)
 
-SBR is disabled by default. It can currently be destructively forced
-with the PCI "cxl_bus" reset type.
+-- 
+2.53.0.1213.gd9a14994de-goog
 
-Maybe what this wants is a new "SBR iff single device CXL.mem and mem
-not kernel mapped", to set aside the "but coherent interleave" noise.
-Just not sure it is worth introducing the concept of "device rejectable
-PCI reset" vs requiring using CXL uAPI directly.
