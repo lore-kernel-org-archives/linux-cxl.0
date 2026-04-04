@@ -1,248 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BA23EA66
-	for <linux-cxl@vger.kernel.org>; Sat,  4 Apr 2026 17:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461163081D7
+	for <linux-cxl@vger.kernel.org>; Sat,  4 Apr 2026 18:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775322732; cv=none; b=og+NSDm9H4xOney1WXcVVlFkB3+EVAvEobndAb1++jWS3xVVcT0kd87KhWPi0J5GUi0E76QARn5S/23DU72KZqoOUTSEE9aysEEyKW4bwvC8s9pje+NaDyWijqoKES2IUPsAnuDO+qx/lEYL2QTQeNtYWx4K+kZBumxX1coc18g=
+	t=1775328815; cv=none; b=He5pDew8iPMDvryx0u9yhq/Ge9FI6Q2GgOpybbEhZVfgFAWricRrZI830Q8CEItuz2IzlP1wxuYiL5ekbge0Uh2SqvvAo5zCS7o4Y8lSJ3K7qYo5jq04ON2ZJ8tQF6Itx8l8MMQ4Jb4YhpNFtMvORG4CxSqd8MjG9ApTB1o2t9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775322732; c=relaxed/simple;
-	bh=6HWbdXTvY5ARCKQw/mJejk6jJkYYvhLGzuFZu/CMKrk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iZ4SZe5/TvP6jTGDpITa1VW05L3v3xF8taazeJ7pK/AEC1oKvqE4aJmlUGTwfEQbAf2imfaf9GqDFugYwYwPizPbtiMvz9N3jp0Wr9d2MixXcW2H16Mb5kJqLL+MUwbbsuLligjPl+0Hc3B69clFcG2CgFDP/+yRqojrLt1DmL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l24Zqoay; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775328815; c=relaxed/simple;
+	bh=dtScXWXhuDldnt6Kvgogigjrvo1FHXnb9GiXekrXjiM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IKNvhgXtLVR61diOxfigkx3FimOddrv3l8cRTwaNqL6AKWzg7QjT+J6vGzzkcMr/oXCh9yEoIJ4LH1GH9rckh9qTSBp2nmNPrlu6boTbNOF5vcwmrqEOyEki17xRuJF2YVMWad8AY1GyHMPjb/zQUTzjNBYq4B+vn9zgukTzTQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=ByDIMUKw; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l24Zqoay"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 752B7C2BCB0
-	for <linux-cxl@vger.kernel.org>; Sat,  4 Apr 2026 17:12:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775322732;
-	bh=6HWbdXTvY5ARCKQw/mJejk6jJkYYvhLGzuFZu/CMKrk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=l24ZqoayMC0xXGNQJsL1cczZw+VJ7tydZVENUQoFBihS5d0jJ67r8PkLWJbt7LO9X
-	 nNEDpcOuw7tthiYq0W7ZllEXSxo1P0nmWkteU2AW/A7FTMB1eKiec9rAGl/eCan8xY
-	 cuG+x8njyYuOQVmOLYoW96ZXXvFkJbdIJ3bSrizrTqBsUnV5NqWT9CmoPEJSZT/A6T
-	 r5TzM/5f+0qceH5JHMLsipBwEFTxPAxgKYIZJkysfbQQD4BlPelJVwSHHuqi7q9ITh
-	 PB7cR/Biqc2lujS5dbZrpsEBHzOGjFI+k/3wAx1GIyCMqHCsgfCso8EOVfFUYrU5xg
-	 hCnONTBJ0i0Nw==
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-4042905015cso1753031fac.0
-        for <linux-cxl@vger.kernel.org>; Sat, 04 Apr 2026 10:12:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXfxIEkpUVAoFU/rYxSWFtTp65kINqo/4H1w4/eskM4d+q0jvXrKTlLkQnefLMd5M3zUdEI8mnwSG4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVvqOomQJvZ+iGxB23FcKkLZfQBt4gCVyev6CB341/xOHbyFol
-	CA9g6Ll/DDl7oB2aFk8+Svu4BhqYPqPbmnl3E4U3YsFymyMFTmvZsXbbTk08GUIHY56qdpLvdKT
-	duEeb9K1jEPGMSq5qKp73nFiiRWDyKL4=
-X-Received: by 2002:a05:6871:581e:b0:422:cd76:929d with SMTP id
- 586e51a60fabf-4230fd2d9e4mr3996409fac.18.1775322730928; Sat, 04 Apr 2026
- 10:12:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ByDIMUKw"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-8d4f78fc9f6so154135485a.3
+        for <linux-cxl@vger.kernel.org>; Sat, 04 Apr 2026 11:53:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1775328813; x=1775933613; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nck4cGiGZiXSzZzHQhsuUAn9cXTimQB//kh9QdWI6lU=;
+        b=ByDIMUKwmTdGCOxitwoHje2n/+PTeyBAv707lgF33j61xnMUcwkFFHQqg/RkbGFaHh
+         Zz6yMrfvfJnvp1flwz60AtMoXBTvUV4tbTb4YcH9CxdfZSk5kxULJ8Ifmacf+MQfqZqs
+         VWWcDBe9rURqQ9M7dosyV3nNTgCDXz222O6V/tHlKCwsbnzrIcB569Ghy8B6/p9i9nsW
+         5tJiNINRpJWSZe0MKlDI+X4ZcTXtdZZtosUT9ATanZKqQvVfbL7H1aJUiHQjy48Qa8OJ
+         4uG5XtFt90iMXBenMCAVNAUjfUy0eEjr2qLh2l431Rryhh7wXaNGNfAU/uH1jB8IQ79y
+         azmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775328813; x=1775933613;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nck4cGiGZiXSzZzHQhsuUAn9cXTimQB//kh9QdWI6lU=;
+        b=Vz/cKsXS2omCWqozWtXff7/qwR+Fn0Q03W65mM7g9jR4ZFaCWX5vixeWAtMGIQaqwm
+         eFzhaI+xDjwgkWGc35pZbylL1cW7IUdm7qVE5FTaVSPdQRXf7ZkkCrn3x557T+C3JU5l
+         3k1+luWMCHqwbOJe16J4z9ohFHlSH4AeyKkoD+4zFthQQti2irNZM1p5NmAcCrjHp44I
+         L+RpK6ijCL305Dz0xkyQaJQnW5YNKhcsbmQUxMC3pFR66V2sT510rHPbHoJfF0ndPO50
+         ZGBne/Wut0J/X7TRogBO0VDPtYYSLXcRjBg2hDJrD9hKW37IMmvyx49OxvCEkk/+qKJT
+         4K1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWHwia2eQZopsLKN7cGHzma014aMFlOVN9AAQF6FkmTnlui43XzeRB1R8eIXD6VVfN1IcvPLqzyZQo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLAE5JdmXjVseD5HrOC7asGkwWVJbmTY39zcHppU4CcxsjGiMc
+	ifsWhwddDvS59wG8/TyuoCoa8aJ+kNPn2Bzsn/i0MYVfAJ1TooSYyKqKqSpw61cPNyE=
+X-Gm-Gg: AeBDieulsDJsST2oc/a8mbjEEAIcCwbwsrXup/v8wlnFuevGemRJYh1OrfEQRGvh54Y
+	r6HoqWENkPhZRpXFzqGXgSS+CQr071Ogv3QvD0q2H38fsY5vuDZLreEChkGKbSbB7zYQZ6vmEoM
+	9mK/zgHcdsoQSzXyXn4z5tfuUyUBLoKYO1BXbpnuHAsUX9b6Fstd0wIj4IJMQJ/LN6fAy6THCYK
+	FunPE8hFdKKh7chkrUCd7JgLd7Ckka36JwR0t2igjKMsfn0seduMR2Rxt96I4w9cSYWgHVbf0iq
+	KN9D6xKX4O8HFsmjxwfRj8bSzdtnoISRE/F9ua2uzYtCFrDqGx0iKLUtE/tBJheFbdEP6KXP3TJ
+	zHhXknCzYTYYrGudPGWxnPQrr9vM8GY9n7pHSAgkg0kdKbW9lxRa2ocQjHqp/K+44KR1Xvonzoc
+	Fz1K4OFO0UYBpqCxOR/f6YIB2z7M0WrjNTGDggHQyFZICfmoGGhEJPgMJ4xI6mwN8PZBcezw==
+X-Received: by 2002:a05:620a:4003:b0:8d6:bd01:a67a with SMTP id af79cd13be357-8d6bd01b3f5mr99323085a.26.1775328812984;
+        Sat, 04 Apr 2026 11:53:32 -0700 (PDT)
+Received: from ziepe.ca (mctnnbsa70w-159-2-73-22.dhcp-dynamic.fibreop.nb.bellaliant.net. [159.2.73.22])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8d2a864b516sm733755685a.37.2026.04.04.11.53.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 Apr 2026 11:53:31 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1w967e-0000000CyRZ-3Zuw;
+	Sat, 04 Apr 2026 15:53:30 -0300
+Date: Sat, 4 Apr 2026 15:53:30 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: mhonap@nvidia.com, alwilliamson@nvidia.com, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alejandro.lucero-palau@amd.com,
+	dave@stgolabs.net, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com, dmatlack@google.com,
+	shuah@kernel.org, yishaih@nvidia.com, skolothumtho@nvidia.com,
+	kevin.tian@intel.com, ankita@nvidia.com, vsethi@nvidia.com,
+	cjia@nvidia.com, targupta@nvidia.com, zhiw@nvidia.com,
+	kjaju@nvidia.com, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v2 16/20] vfio/cxl: Register regions with VFIO layer
+Message-ID: <20260404185330.GD2551565@ziepe.ca>
+References: <20260401143917.108413-1-mhonap@nvidia.com>
+ <20260401143917.108413-17-mhonap@nvidia.com>
+ <69d0169115c06_1b0cc6100a5@dwillia2-mobl4.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260404000644.522677-1-dianders@chromium.org>
-In-Reply-To: <20260404000644.522677-1-dianders@chromium.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Sat, 4 Apr 2026 19:11:59 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hRKyPesMGKGoDZEMDCX-GVw6Z-dxMLhNhwy6Kjz=7MCQ@mail.gmail.com>
-X-Gm-Features: AQROBzCS1sK1yep87rT-2xolltVfQ4j4qlt-9lHai0wQJnu4V3tzUHOX8_7jVCo
-Message-ID: <CAJZ5v0hRKyPesMGKGoDZEMDCX-GVw6Z-dxMLhNhwy6Kjz=7MCQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/9] driver core: Fix some race conditions
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, 
-	Saravana Kannan <saravanak@kernel.org>, Christoph Hellwig <hch@lst.de>, Eric Dumazet <edumazet@google.com>, 
-	Johan Hovold <johan@kernel.org>, Leon Romanovsky <leon@kernel.org>, 
-	Alexander Lobakin <aleksander.lobakin@intel.com>, Alexey Kardashevskiy <aik@ozlabs.ru>, 
-	Robin Murphy <robin.murphy@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Frank.Li@kernel.org, 
-	Jason Gunthorpe <jgg@ziepe.ca>, alex@ghiti.fr, alexander.stein@ew.tq-group.com, 
-	andre.przywara@arm.com, andrew@codeconstruct.com.au, andrew@lunn.ch, 
-	andriy.shevchenko@linux.intel.com, aou@eecs.berkeley.edu, ardb@kernel.org, 
-	bhelgaas@google.com, brgl@kernel.org, broonie@kernel.org, 
-	catalin.marinas@arm.com, chleroy@kernel.org, davem@davemloft.net, 
-	david@kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, 
-	driver-core@lists.linux.dev, gbatra@linux.ibm.com, 
-	gregory.clement@bootlin.com, hkallweit1@gmail.com, iommu@lists.linux.dev, 
-	jirislaby@kernel.org, joel@jms.id.au, joro@8bytes.org, kees@kernel.org, 
-	kevin.brodsky@arm.com, kuba@kernel.org, lenb@kernel.org, lgirdwood@gmail.com, 
-	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-serial@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-	linux-usb@vger.kernel.org, linux@armlinux.org.uk, 
-	linuxppc-dev@lists.ozlabs.org, m.szyprowski@samsung.com, maddy@linux.ibm.com, 
-	mani@kernel.org, maz@kernel.org, miko.lenczewski@arm.com, mpe@ellerman.id.au, 
-	netdev@vger.kernel.org, npiggin@gmail.com, osalvador@suse.de, 
-	oupton@kernel.org, pabeni@redhat.com, palmer@dabbelt.com, 
-	peter.ujfalusi@gmail.com, peterz@infradead.org, pjw@kernel.org, 
-	robh@kernel.org, sebastian.hesselbarth@gmail.com, tglx@kernel.org, 
-	tsbogend@alpha.franken.de, vgupta@kernel.org, vkoul@kernel.org, 
-	will@kernel.org, willy@infradead.org, yangyicong@hisilicon.com, 
-	yeoreum.yun@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <69d0169115c06_1b0cc6100a5@dwillia2-mobl4.notmuch>
 
-On Sat, Apr 4, 2026 at 2:07=E2=80=AFAM Douglas Anderson <dianders@chromium.=
-org> wrote:
->
-> The main goal of this series is to fix the observed bug talked about
-> in the first patch ("driver core: Don't let a device probe until it's
-> ready"). That patch fixes a problem that has been observed in the real
-> world and could land even if the rest of the patches are found
-> unacceptable or need to be spun.
->
-> That said, during patch review Danilo correctly pointed out that many
-> of the bitfield accesses in "struct device" are unsafe. I added a
-> bunch of patches in the series to address each one.
->
-> Danilo said he's most worried about "can_match", so I put that one
-> first. After that, I tried to transition bitfields to flags in reverse
-> order to when the bitfield was added.
->
-> Even if transitioning from bitfields to flags isn't truly needed for
-> correctness, it seems silly (and wasteful of space in struct device)
-> to have some in bitfields and some as flags. Thus I didn't spend time
-> for each bitfield showing that it's truly needed for correctness.
->
-> Transition was done semi manually. Presumably someone skilled at
-> coccinelle could do a better job, but I just used sed in a heavy-
-> handed manner and then reviewed/fixed the results, undoing anything my
-> script got wrong. My terrible/ugly script was:
->
-> var=3Dcan_match
-> caps=3D"${var^^}"
-> for f in $(git grep -l "[>\.]${var}[^1-9_a-zA-Z\[]"); do
->   echo $f
->   sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var} =3D tru=
-e/set_bit(DEV_FLAG_${caps}, \&\\1->flags)/" "$f"
->   sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var} =3D tru=
-e/dev_set_${caps}(\&\\1)/" "$f"
->   sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var} =3D fal=
-se/clear_bit(DEV_FLAG_${caps}, \&\\1->flags)/" "$f"
->   sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var} =3D fal=
-se/dev_clear_${caps}(\&\\1)/" "$f"
->   sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var} =3D \([=
-^;]*\)/assign_bit(DEV_FLAG_${caps}, \&\\1->flags, \\2)/" "$f"
->   sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var} =3D \([=
-^;]*\)/dev_assign_${caps}(\&\\1, \\2)/" "$f"
->   sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var}\([^1-9_=
-a-zA-Z\[]\)/test_bit(DEV_FLAG_${caps}, \&\\1->flags)\\2/" "$f"
->   sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var}\([^1-9_=
-a-zA-Z\[]\)/dev_${caps}(\&\\1)\\2/" "$f"
-> done
->
-> From v3 to v4, I transitioned to accessor functions with another ugly
-> sed script. I had git format the old patches, then transformed them
-> with:
->
-> for f in *.patch; do
->   echo $f
->   sed -i~ -e "s/test_and_set_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags)/dev=
-_test_and_set_\\L\\1(\\2)/" "$f"
->   sed -i~ -e "s/test_and_set_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags)/dev_t=
-est_and_set_\\L\\1(\\2)/" "$f"
->   sed -i~ -e "s/test_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags)/dev_\\L\\1(=
-\\2)/" "$f"
->   sed -i~ -e "s/test_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags)/dev_\\L\\1(\\=
-2)/" "$f"
->   sed -i~ -e "s/set_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags)/dev_set_\\L\=
-\1(\\2)/" "$f"
->   sed -i~ -e "s/set_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags)/dev_set_\\L\\1=
-(\\2)/" "$f"
->   sed -i~ -e "s/clear_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags)/dev_clear_=
-\\L\\1(\\2)/" "$f"
->   sed -i~ -e "s/clear_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags)/dev_clear_\\=
-L\\1(\\2)/" "$f"
->   sed -i~ -e "s/assign_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags, \(.*\))/d=
-ev_assign_\\L\\1(\\2, \\3)/" "$f"
->   sed -i~ -e "s/assign_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags, \(.*\))/dev=
-_assign_\\L\\1(\\2, \\3)/" "$f"
-> done
->
-> ...and then did a few manual touchups for spacing.
->
-> NOTE: one potentially "controversial" choice I made in some patches
-> was to always reserve a flag ID even if a flag is only used under
-> certain CONFIG_ settings. This is a change from how things were
-> before. Keeping the numbering consistent and allowing easy
-> compile-testing of both CONFIG settings seemed worth it, especially
-> since it won't take up any extra space until we've added a lot more
-> flags.
->
-> I only marked the first patch as a "Fix" since it is the only one
-> fixing observed problems. Other patches could be considered fixes too
-> if folks want.
->
-> I tested the first patch in the series backported to kernel 6.6 on the
-> Pixel phone that was experiencing the race. I added extra printouts to
-> make sure that the problem was hitting / addressed. The rest of the
-> patches are tested with allmodconfig with arm32, arm64, ppc, and
-> x86. I boot tested on an arm64 Chromebook running mainline.
->
-> Changes in v4:
-> - Use accessor functions for flags
->
-> Changes in v3:
-> - Use a new "flags" bitfield
-> - Add missing \n in probe error message
->
-> Changes in v2:
-> - Instead of adjusting the ordering, use "ready_to_probe" flag
->
-> Douglas Anderson (9):
->   driver core: Don't let a device probe until it's ready
->   driver core: Replace dev->can_match with dev_can_match()
->   driver core: Replace dev->dma_iommu with dev_dma_iommu()
->   driver core: Replace dev->dma_skip_sync with dev_dma_skip_sync()
->   driver core: Replace dev->dma_ops_bypass with dev_dma_ops_bypass()
->   driver core: Replace dev->state_synced with dev_state_synced()
->   driver core: Replace dev->dma_coherent with dev_dma_coherent()
->   driver core: Replace dev->of_node_reused with dev_of_node_reused()
->   driver core: Replace dev->offline + ->offline_disabled with accessors
->
->  arch/arc/mm/dma.c                             |   4 +-
->  arch/arm/mach-highbank/highbank.c             |   2 +-
->  arch/arm/mach-mvebu/coherency.c               |   2 +-
->  arch/arm/mm/dma-mapping-nommu.c               |   4 +-
->  arch/arm/mm/dma-mapping.c                     |  28 ++--
->  arch/arm64/kernel/cpufeature.c                |   2 +-
->  arch/arm64/mm/dma-mapping.c                   |   2 +-
->  arch/mips/mm/dma-noncoherent.c                |   2 +-
->  arch/powerpc/kernel/dma-iommu.c               |   8 +-
->  .../platforms/pseries/hotplug-memory.c        |   4 +-
->  arch/riscv/mm/dma-noncoherent.c               |   2 +-
->  drivers/acpi/scan.c                           |   2 +-
->  drivers/base/core.c                           |  53 +++++---
->  drivers/base/cpu.c                            |   4 +-
->  drivers/base/dd.c                             |  28 ++--
->  drivers/base/memory.c                         |   2 +-
->  drivers/base/pinctrl.c                        |   2 +-
->  drivers/base/platform.c                       |   2 +-
->  drivers/dma/ti/k3-udma-glue.c                 |   6 +-
->  drivers/dma/ti/k3-udma.c                      |   6 +-
->  drivers/iommu/dma-iommu.c                     |   9 +-
->  drivers/iommu/iommu.c                         |   5 +-
->  drivers/net/pcs/pcs-xpcs-plat.c               |   2 +-
->  drivers/of/device.c                           |   6 +-
->  drivers/pci/of.c                              |   2 +-
->  drivers/pci/pwrctrl/core.c                    |   2 +-
->  drivers/regulator/bq257xx-regulator.c         |   2 +-
->  drivers/regulator/rk808-regulator.c           |   2 +-
->  drivers/tty/serial/serial_base_bus.c          |   2 +-
->  drivers/usb/gadget/udc/aspeed-vhub/dev.c      |   2 +-
->  include/linux/device.h                        | 120 ++++++++++++------
->  include/linux/dma-map-ops.h                   |   6 +-
->  include/linux/dma-mapping.h                   |   2 +-
->  include/linux/iommu-dma.h                     |   3 +-
->  kernel/cpu.c                                  |   4 +-
->  kernel/dma/mapping.c                          |  12 +-
->  mm/hmm.c                                      |   2 +-
->  37 files changed, 206 insertions(+), 142 deletions(-)
->
-> --
+On Fri, Apr 03, 2026 at 12:35:45PM -0700, Dan Williams wrote:
+> > +	/*
+> > +	 * CXL device memory is RAM, not MMIO.  Use memremap() rather than
+> 
+> Right, CXL.mem is RAM, not MMIO, so I question why is this not being
+> mapped via a RAM mechanism? Can you explain a bit more about why reusing
+> vfio MMIO mapping mechanisms is suitable here and what happens when we
+> get to questions like guest_memfd integration, page conversions, and
+> large page mapping support? 
 
-For the whole set
+None of that is applicable to VFIO. VFIO owns the entire address space
+and does not share it with the mm or anything else.
 
-Reviewed-by: Rafael J. Wysocki (Intel) <rafael@kernel.org>
+> Maybe this is the start of the conversation for something simple, but I
+> would actually prefer uncached ioremap() if only to avoid all the
+> coherence management and suitability of MMIO mechanisms questions.
+
+The entire thing needs to be mmapable in a cache coherent way since
+that is what the HW semantic is. If you try to do something else you
+will break KVM support since it follows the VMA.
+
+Jason
