@@ -1,181 +1,293 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75B437BE7A;
-	Fri,  3 Apr 2026 22:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6871E288B8
+	for <linux-cxl@vger.kernel.org>; Sat,  4 Apr 2026 00:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775257019; cv=none; b=Pq4uSCAZ4hRQzkw34R7ddWy/j6ONA8lmSmv74TddXTw4LVojVhrctL8HhOasOqvpndC/Jq8puO4iUfTDNNJ1bI67zrV0nP+2R6ZXIcyzM+DIh0Pi5CCtcPbBgexMmY3CVsp0aVuSGNtoUgOoDdXOnb18GPVLFcfuwlkUgnkDqCg=
+	t=1775261243; cv=none; b=uC+lgZTBZqWpGiDNYmYVmQTqeLt0ODf7p+t+vYAnYF6oIyqMisn/g5D0JpEbEG2gkfyB9DJcvzSOUL9JAm4RUqK1uT9Wy0sC8FcvZtMT3FX6Z3Mh2BGOD8koLoi/BxYdpOJ7crcjswCscuIS+nkLiaGd1YMl9ZQZmp/or1x5Fuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775257019; c=relaxed/simple;
-	bh=821qJUwjF6o6Ev3F1IGyIIE03ftfAgp4aF2dcVT1OI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n/w8acxx9pmarjAmhQQ8Ki17BkKgvG8LQZaC7WKLNFRqWLxn6HgIlI06KSWfk3aIa66+dFOhS1wT0/Hyt9WVjz64ipRuw0DMaKRuJ4Qo+/jnuekxeXs8l3a5SDe1y4Xrn8MDJJZ/0jn9Ye2CbY/WeZNW9hq/JxTnxfHnbhyUbxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PtWHlCxA; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1775261243; c=relaxed/simple;
+	bh=4U6qcOnXRz1y4XkIRO6Hkkenfy7He0XdH8Hlg7ak3cg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qEGpn9G+BtrnEXoK/xTF9KoWe3yeweJOo2HXUe75deKAe74jruCrWhC0R5Ao8di15l0qB4c9DQ7Xg79qjSHyhTUdQiUR862EdTGsm0byLZ9BB7dbcrhpfqJKZcLmjUJrEXpRmmflr/VeW+sO+EA7xNiCIXlbgeG1DEJsCBj72Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PwkM0ca5; arc=none smtp.client-ip=74.125.82.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PtWHlCxA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775257015; x=1806793015;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=821qJUwjF6o6Ev3F1IGyIIE03ftfAgp4aF2dcVT1OI8=;
-  b=PtWHlCxAmZjAzczb6L7gsrDuCdtCzog8stmBvT0BquuXbRi8cwUSFsZk
-   +Jn8L0z25CNxiL8mvwNHNsakVtvthbTrvl8pjg6OXViOJ8m3VYvTF2dZd
-   AX+P7bLkl4E9WHLvUHCc5ENxLI9wmvgKYZEXYrV9B5dmzj731ii8Cd5dV
-   k0ikQD/NuV6HMq5+BWlzMqvngKlirZBvlfbIr17dc1Z7+9HmDiiE+mWKP
-   Ek9w7QimNT5oGjVSKuoVC3bxgNZyb7OFbmyFTkZFlAfneWEgLP6TpA0FG
-   EIRdX231pfsFSQ9K65cg8EYUifmyjQ8I/YR51d9at//WA4pHwXqllgdJO
-   g==;
-X-CSE-ConnectionGUID: apywKDa4TkOOJuX9/JP6VA==
-X-CSE-MsgGUID: ilxK3nByQSOlQJgcB29MZg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11748"; a="86619223"
-X-IronPort-AV: E=Sophos;i="6.23,158,1770624000"; 
-   d="scan'208";a="86619223"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2026 15:56:55 -0700
-X-CSE-ConnectionGUID: hx3fvgEDT9mZO6RnDJs0xw==
-X-CSE-MsgGUID: mthYTd3OR0mKibWnwdCHqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,158,1770624000"; 
-   d="scan'208";a="231400763"
-Received: from jmaxwel1-mobl.amr.corp.intel.com (HELO [10.125.111.241]) ([10.125.111.241])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2026 15:56:55 -0700
-Message-ID: <af63eb65-66d6-42e2-b8f3-dd8d3938a280@intel.com>
-Date: Fri, 3 Apr 2026 15:56:54 -0700
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PwkM0ca5"
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-2c1632faeb9so4450966eec.0
+        for <linux-cxl@vger.kernel.org>; Fri, 03 Apr 2026 17:07:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1775261240; x=1775866040; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KGKsMy9vhlN9yvdnOvYy+R4lmavPYuTzTATeThGwgQc=;
+        b=PwkM0ca5QROQeAiqfW1iW3X5spqYFYnS/2L8X2vcFUpdpBz6vLqXtTdxRmqYTeF6q/
+         NDi5p9sCrUEvbIK5uHiC57+gLzcOEIBYv7aCk5GMpae+1/ZnhWFUDq8sr72nlwgdVNST
+         nHX5BJ12zprQxgF4o/WMCad7kw+xm3w03KRW8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775261240; x=1775866040;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KGKsMy9vhlN9yvdnOvYy+R4lmavPYuTzTATeThGwgQc=;
+        b=fZXICLljtVGI1AzX4g7Ops2Ks4QfGZWyIFs8u8W4qQSAA0fTHMjJUL1bTw1FR/6qo3
+         5ehghcUzfOdI2TdTfKvogKrPLbnxGBXqOPXiN15512fBWWaXbyH5eBBvM4+lptnoet2l
+         UJEaEQ6MPnBKgzNAbIwflAXpbC6xgMRJ59Gx1fnWXE8/xawE6Emvr7AdtUvn8GKb090s
+         41Q+DzUvKF7nXcNyPfTqe8+qy9kvjUCS3GyDCudt3LGjt8bUsndT7ThrcnQ489Q3jtf/
+         0JoSAn2VreKSRZUrzbQMcS0xh+gUxYwfbrgVKZ8lDnN/1SG5HgRLttTQHxxg7e3Nzy9j
+         pOzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUR9dwQbF4kycuqTexgLEixr5LwxKLaHjDdCl2xmvDiX0IcjalOg8Z5lMXVMjNT28jy96RwwWbGkZk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTyEoBuuDImvqpm4w12gxF45AkTy/X4Ylmi2NDYOIdBFFsH45a
+	maUJ2zAPWMwSaejiL/76pfe2FnVpaXdZyokLsHFJCGdT00xfjHcrn7n5dH8rBMyFXg==
+X-Gm-Gg: AeBDietRc0U2qQIEYFICHMPAccx4YCWUqs3Ngx+XKiljyETghP4wEKfV0ED+nN+9Ssf
+	+9TlIJMcatjASLMK7qlQqHOz0kGGfOi+wPlWSqdgZazLQ6Z1BM8dDc6HIc5qat0PgumhGF5Afq6
+	Qz/1WfKNwJHSOMeOzZiWMYB+x4BwgEFNIC6DT/iICMpQS0/79YVVlHy1OpUABx5nudkeUi7sXLn
+	xZ5+d/neBhimAj/AHVDw5LDUJqxJNo5zas7LBkQkrSyfNKVqpx6WgX4fwpUx37vVHZhAhlZKi3E
+	aXdmFCrStR9JGu12ZEW2ooss1i+vWHoVpRq+B3jIH47vd8SUXqVo+5H/ahHBtFz1r94QUZJ/PJw
+	rvoImGHezxXKXmCXQ4bE0HryRJ78b9VBMEHfqDAVFB/sAI6m3Huqz541KDzcRX+YOvvYIVOWBde
+	epYiwdgoAoddDACglyPD+E46Jr4MhT722A+M0Oq+JT68/mzoM93gStSKiMRsWTD8NBVyZI69fkv
+	OJEziK3MzU=
+X-Received: by 2002:a05:7300:5722:b0:2c7:ea98:da0 with SMTP id 5a478bee46e88-2cbfbc8aeb9mr2680118eec.19.1775261240285;
+        Fri, 03 Apr 2026 17:07:20 -0700 (PDT)
+Received: from dianders.sjc.corp.google.com ([2a00:79e0:2e7c:8:a8b6:55b2:3eb6:2c0e])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2ca79e1d93bsm6520716eec.12.2026.04.03.17.07.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Apr 2026 17:07:19 -0700 (PDT)
+From: Douglas Anderson <dianders@chromium.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alan Stern <stern@rowland.harvard.edu>
+Cc: Saravana Kannan <saravanak@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Eric Dumazet <edumazet@google.com>,
+	Johan Hovold <johan@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Alexey Kardashevskiy <aik@ozlabs.ru>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Frank.Li@kernel.org,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	alex@ghiti.fr,
+	alexander.stein@ew.tq-group.com,
+	andre.przywara@arm.com,
+	andrew@codeconstruct.com.au,
+	andrew@lunn.ch,
+	andriy.shevchenko@linux.intel.com,
+	aou@eecs.berkeley.edu,
+	ardb@kernel.org,
+	bhelgaas@google.com,
+	brgl@kernel.org,
+	broonie@kernel.org,
+	catalin.marinas@arm.com,
+	chleroy@kernel.org,
+	davem@davemloft.net,
+	david@kernel.org,
+	devicetree@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	driver-core@lists.linux.dev,
+	gbatra@linux.ibm.com,
+	gregory.clement@bootlin.com,
+	hkallweit1@gmail.com,
+	iommu@lists.linux.dev,
+	jirislaby@kernel.org,
+	joel@jms.id.au,
+	joro@8bytes.org,
+	kees@kernel.org,
+	kevin.brodsky@arm.com,
+	kuba@kernel.org,
+	lenb@kernel.org,
+	lgirdwood@gmail.com,
+	linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-pci@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-serial@vger.kernel.org,
+	linux-snps-arc@lists.infradead.org,
+	linux-usb@vger.kernel.org,
+	linux@armlinux.org.uk,
+	linuxppc-dev@lists.ozlabs.org,
+	m.szyprowski@samsung.com,
+	maddy@linux.ibm.com,
+	mani@kernel.org,
+	maz@kernel.org,
+	miko.lenczewski@arm.com,
+	mpe@ellerman.id.au,
+	netdev@vger.kernel.org,
+	npiggin@gmail.com,
+	osalvador@suse.de,
+	oupton@kernel.org,
+	pabeni@redhat.com,
+	palmer@dabbelt.com,
+	peter.ujfalusi@gmail.com,
+	peterz@infradead.org,
+	pjw@kernel.org,
+	robh@kernel.org,
+	sebastian.hesselbarth@gmail.com,
+	tglx@kernel.org,
+	tsbogend@alpha.franken.de,
+	vgupta@kernel.org,
+	vkoul@kernel.org,
+	will@kernel.org,
+	willy@infradead.org,
+	yangyicong@hisilicon.com,
+	yeoreum.yun@arm.com
+Subject: [PATCH v4 0/9] driver core: Fix some race conditions
+Date: Fri,  3 Apr 2026 17:04:54 -0700
+Message-ID: <20260404000644.522677-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.53.0.1213.gd9a14994de-goog
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: Update address for Dan Williams
-To: Dan Williams <dan.j.williams@intel.com>, linux-kernel@vger.kernel.org
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-References: <20260403214846.1062341-1-dan.j.williams@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260403214846.1062341-1-dan.j.williams@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+The main goal of this series is to fix the observed bug talked about
+in the first patch ("driver core: Don't let a device probe until it's
+ready"). That patch fixes a problem that has been observed in the real
+world and could land even if the rest of the patches are found
+unacceptable or need to be spun.
 
+That said, during patch review Danilo correctly pointed out that many
+of the bitfield accesses in "struct device" are unsafe. I added a
+bunch of patches in the series to address each one.
 
-On 4/3/26 2:48 PM, Dan Williams wrote:
-> Update MAINTAINERS and .mailmap to point to my kernel.org address:
-> djbw@kernel.org.
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Danilo said he's most worried about "can_match", so I put that one
+first. After that, I tried to transition bitfields to flags in reverse
+order to when the bitfield was added.
 
-Applied to cxl/next
-9b6e1ed28a7f
+Even if transitioning from bitfields to flags isn't truly needed for
+correctness, it seems silly (and wasteful of space in struct device)
+to have some in bitfields and some as flags. Thus I didn't spend time
+for each bitfield showing that it's truly needed for correctness.
 
+Transition was done semi manually. Presumably someone skilled at
+coccinelle could do a better job, but I just used sed in a heavy-
+handed manner and then reviewed/fixed the results, undoing anything my
+script got wrong. My terrible/ugly script was:
 
-> ---
->  .mailmap    |  1 +
->  MAINTAINERS | 18 +++++++++---------
->  2 files changed, 10 insertions(+), 9 deletions(-)
-> 
-> diff --git a/.mailmap b/.mailmap
-> index 2d04aeba68b4..a4ad593b5ed8 100644
-> --- a/.mailmap
-> +++ b/.mailmap
-> @@ -204,6 +204,7 @@ Colin Ian King <colin.i.king@gmail.com> <colin.king@canonical.com>
->  Corey Minyard <minyard@acm.org>
->  Damian Hobson-Garcia <dhobsong@igel.co.jp>
->  Dan Carpenter <error27@gmail.com> <dan.carpenter@oracle.com>
-> +Dan Williams <djbw@kernel.org> <dan.j.williams@intel.com>
->  Daniel Borkmann <daniel@iogearbox.net> <danborkmann@googlemail.com>
->  Daniel Borkmann <daniel@iogearbox.net> <danborkmann@iogearbox.net>
->  Daniel Borkmann <daniel@iogearbox.net> <daniel.borkmann@tik.ee.ethz.ch>
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c3fe46d7c4bc..150784b8febc 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4058,7 +4058,7 @@ S:	Maintained
->  F:	crypto/rsa*
->  
->  ASYNCHRONOUS TRANSFERS/TRANSFORMS (IOAT) API
-> -R:	Dan Williams <dan.j.williams@intel.com>
-> +R:	Dan Williams <djbw@kernel.org>
->  S:	Odd fixes
->  W:	http://sourceforge.net/projects/xscaleiop
->  F:	Documentation/crypto/async-tx-api.rst
-> @@ -6429,7 +6429,7 @@ M:	Dave Jiang <dave.jiang@intel.com>
->  M:	Alison Schofield <alison.schofield@intel.com>
->  M:	Vishal Verma <vishal.l.verma@intel.com>
->  M:	Ira Weiny <ira.weiny@intel.com>
-> -M:	Dan Williams <dan.j.williams@intel.com>
-> +M:	Dan Williams <djbw@kernel.org>
->  L:	linux-cxl@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/driver-api/cxl
-> @@ -7290,7 +7290,7 @@ S:	Maintained
->  F:	scripts/dev-needs.sh
->  
->  DEVICE DIRECT ACCESS (DAX)
-> -M:	Dan Williams <dan.j.williams@intel.com>
-> +M:	Dan Williams <djbw@kernel.org>
->  M:	Vishal Verma <vishal.l.verma@intel.com>
->  M:	Dave Jiang <dave.jiang@intel.com>
->  L:	nvdimm@lists.linux.dev
-> @@ -9816,7 +9816,7 @@ F:	include/linux/fcntl.h
->  F:	include/uapi/linux/fcntl.h
->  
->  FILESYSTEM DIRECT ACCESS (DAX)
-> -M:	Dan Williams <dan.j.williams@intel.com>
-> +M:	Dan Williams <djbw@kernel.org>
->  R:	Matthew Wilcox <willy@infradead.org>
->  R:	Jan Kara <jack@suse.cz>
->  L:	linux-fsdevel@vger.kernel.org
-> @@ -12872,7 +12872,7 @@ F:	drivers/platform/x86/intel/hid.c
->  
->  INTEL I/OAT DMA DRIVER
->  M:	Dave Jiang <dave.jiang@intel.com>
-> -R:	Dan Williams <dan.j.williams@intel.com>
-> +R:	Dan Williams <djbw@kernel.org>
->  L:	dmaengine@vger.kernel.org
->  S:	Supported
->  Q:	https://patchwork.kernel.org/project/linux-dmaengine/list/
-> @@ -14575,7 +14575,7 @@ K:	libie
->  
->  LIBNVDIMM BTT: BLOCK TRANSLATION TABLE
->  M:	Vishal Verma <vishal.l.verma@intel.com>
-> -M:	Dan Williams <dan.j.williams@intel.com>
-> +M:	Dan Williams <djbw@kernel.org>
->  M:	Dave Jiang <dave.jiang@intel.com>
->  L:	nvdimm@lists.linux.dev
->  S:	Supported
-> @@ -14584,7 +14584,7 @@ P:	Documentation/nvdimm/maintainer-entry-profile.rst
->  F:	drivers/nvdimm/btt*
->  
->  LIBNVDIMM PMEM: PERSISTENT MEMORY DRIVER
-> -M:	Dan Williams <dan.j.williams@intel.com>
-> +M:	Dan Williams <djbw@kernel.org>
->  M:	Vishal Verma <vishal.l.verma@intel.com>
->  M:	Dave Jiang <dave.jiang@intel.com>
->  L:	nvdimm@lists.linux.dev
-> @@ -14602,7 +14602,7 @@ F:	Documentation/devicetree/bindings/pmem/pmem-region.yaml
->  F:	drivers/nvdimm/of_pmem.c
->  
->  LIBNVDIMM: NON-VOLATILE MEMORY DEVICE SUBSYSTEM
-> -M:	Dan Williams <dan.j.williams@intel.com>
-> +M:	Dan Williams <djbw@kernel.org>
->  M:	Vishal Verma <vishal.l.verma@intel.com>
->  M:	Dave Jiang <dave.jiang@intel.com>
->  M:	Ira Weiny <ira.weiny@intel.com>
-> @@ -26869,7 +26869,7 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/trigger-source/*
->  
->  TRUSTED EXECUTION ENVIRONMENT SECURITY MANAGER (TSM)
-> -M:	Dan Williams <dan.j.williams@intel.com>
-> +M:	Dan Williams <djbw@kernel.org>
->  L:	linux-coco@lists.linux.dev
->  S:	Maintained
->  F:	Documentation/ABI/testing/configfs-tsm-report
-> 
-> base-commit: 7aaa8047eafd0bd628065b15757d9b48c5f9c07d
+var=can_match
+caps="${var^^}"
+for f in $(git grep -l "[>\.]${var}[^1-9_a-zA-Z\[]"); do
+  echo $f
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var} = true/set_bit(DEV_FLAG_${caps}, \&\\1->flags)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var} = true/dev_set_${caps}(\&\\1)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var} = false/clear_bit(DEV_FLAG_${caps}, \&\\1->flags)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var} = false/dev_clear_${caps}(\&\\1)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var} = \([^;]*\)/assign_bit(DEV_FLAG_${caps}, \&\\1->flags, \\2)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var} = \([^;]*\)/dev_assign_${caps}(\&\\1, \\2)/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)->${var}\([^1-9_a-zA-Z\[]\)/test_bit(DEV_FLAG_${caps}, \&\\1->flags)\\2/" "$f"
+  sed -i~ -e "s/\([a-zA-Z_0-9\.>()-][a-zA-Z_0-9\.>()-]*\)\.${var}\([^1-9_a-zA-Z\[]\)/dev_${caps}(\&\\1)\\2/" "$f"
+done
+
+From v3 to v4, I transitioned to accessor functions with another ugly
+sed script. I had git format the old patches, then transformed them
+with:
+
+for f in *.patch; do
+  echo $f
+  sed -i~ -e "s/test_and_set_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags)/dev_test_and_set_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/test_and_set_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags)/dev_test_and_set_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/test_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags)/dev_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/test_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags)/dev_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/set_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags)/dev_set_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/set_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags)/dev_set_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/clear_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags)/dev_clear_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/clear_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags)/dev_clear_\\L\\1(\\2)/" "$f"
+  sed -i~ -e "s/assign_bit(DEV_FLAG_\([^,]*\), \&\(.*\)->flags, \(.*\))/dev_assign_\\L\\1(\\2, \\3)/" "$f"
+  sed -i~ -e "s/assign_bit(DEV_FLAG_\([^,]*\), \(.*\)\.flags, \(.*\))/dev_assign_\\L\\1(\\2, \\3)/" "$f"
+done
+
+...and then did a few manual touchups for spacing.
+
+NOTE: one potentially "controversial" choice I made in some patches
+was to always reserve a flag ID even if a flag is only used under
+certain CONFIG_ settings. This is a change from how things were
+before. Keeping the numbering consistent and allowing easy
+compile-testing of both CONFIG settings seemed worth it, especially
+since it won't take up any extra space until we've added a lot more
+flags.
+
+I only marked the first patch as a "Fix" since it is the only one
+fixing observed problems. Other patches could be considered fixes too
+if folks want.
+
+I tested the first patch in the series backported to kernel 6.6 on the
+Pixel phone that was experiencing the race. I added extra printouts to
+make sure that the problem was hitting / addressed. The rest of the
+patches are tested with allmodconfig with arm32, arm64, ppc, and
+x86. I boot tested on an arm64 Chromebook running mainline.
+
+Changes in v4:
+- Use accessor functions for flags
+
+Changes in v3:
+- Use a new "flags" bitfield
+- Add missing \n in probe error message
+
+Changes in v2:
+- Instead of adjusting the ordering, use "ready_to_probe" flag
+
+Douglas Anderson (9):
+  driver core: Don't let a device probe until it's ready
+  driver core: Replace dev->can_match with dev_can_match()
+  driver core: Replace dev->dma_iommu with dev_dma_iommu()
+  driver core: Replace dev->dma_skip_sync with dev_dma_skip_sync()
+  driver core: Replace dev->dma_ops_bypass with dev_dma_ops_bypass()
+  driver core: Replace dev->state_synced with dev_state_synced()
+  driver core: Replace dev->dma_coherent with dev_dma_coherent()
+  driver core: Replace dev->of_node_reused with dev_of_node_reused()
+  driver core: Replace dev->offline + ->offline_disabled with accessors
+
+ arch/arc/mm/dma.c                             |   4 +-
+ arch/arm/mach-highbank/highbank.c             |   2 +-
+ arch/arm/mach-mvebu/coherency.c               |   2 +-
+ arch/arm/mm/dma-mapping-nommu.c               |   4 +-
+ arch/arm/mm/dma-mapping.c                     |  28 ++--
+ arch/arm64/kernel/cpufeature.c                |   2 +-
+ arch/arm64/mm/dma-mapping.c                   |   2 +-
+ arch/mips/mm/dma-noncoherent.c                |   2 +-
+ arch/powerpc/kernel/dma-iommu.c               |   8 +-
+ .../platforms/pseries/hotplug-memory.c        |   4 +-
+ arch/riscv/mm/dma-noncoherent.c               |   2 +-
+ drivers/acpi/scan.c                           |   2 +-
+ drivers/base/core.c                           |  53 +++++---
+ drivers/base/cpu.c                            |   4 +-
+ drivers/base/dd.c                             |  28 ++--
+ drivers/base/memory.c                         |   2 +-
+ drivers/base/pinctrl.c                        |   2 +-
+ drivers/base/platform.c                       |   2 +-
+ drivers/dma/ti/k3-udma-glue.c                 |   6 +-
+ drivers/dma/ti/k3-udma.c                      |   6 +-
+ drivers/iommu/dma-iommu.c                     |   9 +-
+ drivers/iommu/iommu.c                         |   5 +-
+ drivers/net/pcs/pcs-xpcs-plat.c               |   2 +-
+ drivers/of/device.c                           |   6 +-
+ drivers/pci/of.c                              |   2 +-
+ drivers/pci/pwrctrl/core.c                    |   2 +-
+ drivers/regulator/bq257xx-regulator.c         |   2 +-
+ drivers/regulator/rk808-regulator.c           |   2 +-
+ drivers/tty/serial/serial_base_bus.c          |   2 +-
+ drivers/usb/gadget/udc/aspeed-vhub/dev.c      |   2 +-
+ include/linux/device.h                        | 120 ++++++++++++------
+ include/linux/dma-map-ops.h                   |   6 +-
+ include/linux/dma-mapping.h                   |   2 +-
+ include/linux/iommu-dma.h                     |   3 +-
+ kernel/cpu.c                                  |   4 +-
+ kernel/dma/mapping.c                          |  12 +-
+ mm/hmm.c                                      |   2 +-
+ 37 files changed, 206 insertions(+), 142 deletions(-)
+
+-- 
+2.53.0.1213.gd9a14994de-goog
 
