@@ -1,161 +1,192 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9023F3845A9
-	for <linux-cxl@vger.kernel.org>; Sun,  5 Apr 2026 22:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6672DF717
+	for <linux-cxl@vger.kernel.org>; Mon,  6 Apr 2026 15:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775429494; cv=none; b=P0RiltzuRnwi1fb0bliAJlw5QBMDEhVoZi4nEEdUqdLC9XzVI94KLKb/5V6JQDqrS84kL4+ElJS93KXW5uPTKfbiKgXbP2kbZP8/hO7Xfm3/UB7fAtdhJyMaBg5fBIlOSl9kh4ChfLZ83qn46kismN9BXhL8SMMw8ew/JcKGBlI=
+	t=1775488937; cv=none; b=YXCMbUw5sJ3tcR10cO6wMhwPpF7hcf5QyG0lbhJopA/Qn1WJtn8Uk7rL0ZKS86mWrqjqW64mBuZ5hH31CZHSpSKFY7iWn2vB6HWEMlAACrmCLPt2OgrsuXqEFKiVRWH9toSEAIed1bkMYuFjO2T/5TQDCbZ5mY9qLjpDGKxFjOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775429494; c=relaxed/simple;
-	bh=zzMy5NtaL7AD5tUyCQ9LrBMAHeKvVDbZmilsbp1EV5w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sN7FNWVGsxdfUyVlUk4VyRHGHDZnXTqE1wi+Hvg/ROoEztdLUcjkGUH/UcO76IL0aVKTVbj1xyBTda5cHQZj9FdLtIsQGYszZ3gAYmoc2PtPC1Tmeh3iq12mGJFIOyB3P94m54TE8o4u3UC3gPoFtNn5hE9x9RyvVxBT+KYEA64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XM0uTOJT; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1775488937; c=relaxed/simple;
+	bh=NMI742bMYxFB0aLiRJfaAm0g02uvHH/QYllcJi+70CQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jC3JiZcfzVgZGZb4qRsr6u/mZaHyFts2nQG+pxBFVMtgfKGNbquqRuNSnzoCaUPiT2OPFa2RyQiy3DERVRjveH27pO0bl6HiWCAJoD7I8VJIg1ci+Js00mh9KKJeS/kuRkffXOTIg9eFAIvOLCjZTHmziKln9HxGC+emcP1X7oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LKlOb/wH; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XM0uTOJT"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-66c17372965so6321766a12.1
-        for <linux-cxl@vger.kernel.org>; Sun, 05 Apr 2026 15:51:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1775429490; x=1776034290; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jzjlDiAhhtCwD9FkXK7yFaosCzkOtMCSogVYlSJljQY=;
-        b=XM0uTOJTWbutFK6aL/lRkptDffA80a6fQQ1z6nJ5eKgU5DccAnDpGV3TwfcJIgd4e4
-         eQUmNr65ZthX3ZDLbzUdlZ7d15+CC0i5WKrRv0+eUsABYbO28PEaBlYPYiKIL01jp6ED
-         dVqHZVWuEu0vd4iWGDkdPLYmMUZyOsVprE86s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775429490; x=1776034290;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jzjlDiAhhtCwD9FkXK7yFaosCzkOtMCSogVYlSJljQY=;
-        b=hbXz/7uOc+1W7zcnsznCwlx+VQwsPKI7X3QgOKVA9vAiuKoU/X5AIsmzmlUrlbJw8+
-         DbKlKE3CzD+T6HdGY5xEqgSfa6PQ5IWpfaZkPigXe0Z3xIiG66AQwnL2RJvNtVrMYuJL
-         Ev0J6q9sq3C83h2lxmWVg7SACid8gZhwrjDmJJibh/yGq/FUPzKWO/frWDSYGkK5RWVN
-         Q2ZA97dRG9W+1bxxioZbZjJVamlnPm4pmOsz1GsBe5hbYdOe0VI4pH/7LMmiu0c4yzgy
-         u7KMWvTM8VBIdLxGWG7dXJ7iq/7OntVwXovUAO05lUM1V8mIZIJYHqVpYwH7HPbkI8fM
-         oGjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXNVlRCXwSNWBqOK8SroSwDG2bka5gxWrWxl2ydkAVKmXfBGKeOYiS4Und3cDkP59wy7ShqVdpirD8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUTLmctIGavX7ktlPnHhQS7PXpvSDGkRGtP9KmSZgIdSuxhLEX
-	fDhDAywiM+veaJFsD/uprJl/s/k1BfnwFS/o3LbSgGbmrgK6b7zsJQYYwEBWdE0BAKyFMONgve2
-	IbZ10SG8r
-X-Gm-Gg: AeBDieus4JfZcGBGujwKosahrPmSM1k/ricTwudhkmaMjlPhZPKTKuqyWX/wUnlsb6H
-	ri3ZWYz6WTVOJeE1bmVUAnrkFnXj2AzeEzIDi0vHVlpb1qjSQPZdvzBzBWjZxAg54zo+XEHfQVa
-	7Z70R/AdKtOvhtlholZUR6PWrf/P7dzPwrKoCZ5aYGdIV9HHho+Xgax0ZZz0k65FJRazw1oiO2G
-	1+zydoh6T2Rvx7YgRpyo6VRHcm3GwqAefxIPG860LmeLfeQtXmwjH2y793NUpf0CgwDbn56I0vZ
-	asIkd5VCA1gGU2dJvqe35PrjU14XGsg8aSJOp930Mad+rdPJxHlRiY2Ueble1k9TMPs9cl+5bTP
-	Rh42N2l+wDU6KdWtzCvTHcs+pIiqr+2BSHarsnuPv/jD6mDmoWFv64edchnY7LyCSRgYl0qLT3R
-	A/KNQJkAA4DZWvIwhNexuw6K0an412W64+XIFoV18syKL1+XPoZGfXV0DDGint+g==
-X-Received: by 2002:a17:907:802:b0:b98:a49:a22e with SMTP id a640c23a62f3a-b9c679f5810mr517496666b.36.1775429490424;
-        Sun, 05 Apr 2026 15:51:30 -0700 (PDT)
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b9c3d0287b5sm427274466b.56.2026.04.05.15.51.30
-        for <linux-cxl@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Apr 2026 15:51:30 -0700 (PDT)
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-66b2d49ffb0so4407659a12.3
-        for <linux-cxl@vger.kernel.org>; Sun, 05 Apr 2026 15:51:30 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU56HOYj4RakF1Ahs3KHzwbOQ4AtzCJ9ZGSqbUSUXjApy/V0sON1ylQV40pfqPWXS6JKkoGeOIL/Rg=@vger.kernel.org
-X-Received: by 2002:a5d:5889:0:b0:43b:47ee:4586 with SMTP id
- ffacd0b85a97d-43d292d34e1mr14051064f8f.29.1775429026066; Sun, 05 Apr 2026
- 15:43:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LKlOb/wH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775488936; x=1807024936;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=NMI742bMYxFB0aLiRJfaAm0g02uvHH/QYllcJi+70CQ=;
+  b=LKlOb/wHy6KJVQ60JX0w8AC4nhx9BvR5XzvDNUOkBBjQhtrMcJzu6jeU
+   WSfpROscHltNnCUZ44Nhzlw/ayKz89NvzmpitZ1ommAbshhbkOW9BX9Er
+   d/Ajb3oQ1xNovOeIe4/Os+IFtZJOuwk5R74uAjrFglHlwdfAF9c4uN27U
+   s544LXL8jYgqe7Q1laiESwk/CsyeWxrFd0iiD2BfE4uKRjaJsG8r/EuFh
+   8M/pitV6JIrRUavt1IHnuR5MuxDxbfd4KSUhiz2SE/Bx4EjLdLeCIr/p0
+   QYk3mL6Y6OOK+T3SNBdBOwk0OY87y6ZBkho/hLP6SIEFHNHdHzveTctpP
+   Q==;
+X-CSE-ConnectionGUID: gHyvHBIbQ5Crga5RPXiHBQ==
+X-CSE-MsgGUID: SY5MGCs2QdWbW513gHfykA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11750"; a="99060094"
+X-IronPort-AV: E=Sophos;i="6.23,163,1770624000"; 
+   d="scan'208";a="99060094"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2026 08:22:15 -0700
+X-CSE-ConnectionGUID: HlVD919gRsOXGgWpLjvXkg==
+X-CSE-MsgGUID: QMf7ULW+TLu747ifPGehTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,163,1770624000"; 
+   d="scan'208";a="251180731"
+Received: from rfrazer-mobl3.amr.corp.intel.com (HELO [10.125.108.81]) ([10.125.108.81])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2026 08:22:14 -0700
+Message-ID: <afd0f7b1-77d9-424e-99d7-d2e4bd75ee79@intel.com>
+Date: Mon, 6 Apr 2026 08:22:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260404000644.522677-1-dianders@chromium.org> <2026040539-sponge-publisher-2b42@gregkh>
-In-Reply-To: <2026040539-sponge-publisher-2b42@gregkh>
-From: Doug Anderson <dianders@chromium.org>
-Date: Sun, 5 Apr 2026 15:43:34 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X6DRHV6k7G=p5Mno22na75G-69F-EzMkisSxMoxuvJcQ@mail.gmail.com>
-X-Gm-Features: AQROBzBHjVedWun0AWH98b5RajBbraAAaRvLQSenEhaNEY8p1Czch8mAczvPiQQ
-Message-ID: <CAD=FV=X6DRHV6k7G=p5Mno22na75G-69F-EzMkisSxMoxuvJcQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/9] driver core: Fix some race conditions
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Alan Stern <stern@rowland.harvard.edu>, Saravana Kannan <saravanak@kernel.org>, 
-	Christoph Hellwig <hch@lst.de>, Eric Dumazet <edumazet@google.com>, Johan Hovold <johan@kernel.org>, 
-	Leon Romanovsky <leon@kernel.org>, Alexander Lobakin <aleksander.lobakin@intel.com>, 
-	Alexey Kardashevskiy <aik@ozlabs.ru>, Robin Murphy <robin.murphy@arm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Frank.Li@kernel.org, 
-	Jason Gunthorpe <jgg@ziepe.ca>, alex@ghiti.fr, alexander.stein@ew.tq-group.com, 
-	andre.przywara@arm.com, andrew@codeconstruct.com.au, andrew@lunn.ch, 
-	andriy.shevchenko@linux.intel.com, aou@eecs.berkeley.edu, ardb@kernel.org, 
-	bhelgaas@google.com, brgl@kernel.org, broonie@kernel.org, 
-	catalin.marinas@arm.com, chleroy@kernel.org, davem@davemloft.net, 
-	david@kernel.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, 
-	driver-core@lists.linux.dev, gbatra@linux.ibm.com, 
-	gregory.clement@bootlin.com, hkallweit1@gmail.com, iommu@lists.linux.dev, 
-	jirislaby@kernel.org, joel@jms.id.au, joro@8bytes.org, kees@kernel.org, 
-	kevin.brodsky@arm.com, kuba@kernel.org, lenb@kernel.org, lgirdwood@gmail.com, 
-	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-serial@vger.kernel.org, linux-snps-arc@lists.infradead.org, 
-	linux-usb@vger.kernel.org, linux@armlinux.org.uk, 
-	linuxppc-dev@lists.ozlabs.org, m.szyprowski@samsung.com, maddy@linux.ibm.com, 
-	mani@kernel.org, maz@kernel.org, miko.lenczewski@arm.com, mpe@ellerman.id.au, 
-	netdev@vger.kernel.org, npiggin@gmail.com, osalvador@suse.de, 
-	oupton@kernel.org, pabeni@redhat.com, palmer@dabbelt.com, 
-	peter.ujfalusi@gmail.com, peterz@infradead.org, pjw@kernel.org, 
-	robh@kernel.org, sebastian.hesselbarth@gmail.com, tglx@kernel.org, 
-	tsbogend@alpha.franken.de, vgupta@kernel.org, vkoul@kernel.org, 
-	will@kernel.org, willy@infradead.org, yangyicong@hisilicon.com, 
-	yeoreum.yun@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Sat, Apr 4, 2026 at 10:28=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Fri, Apr 03, 2026 at 05:04:54PM -0700, Douglas Anderson wrote:
-> > NOTE: one potentially "controversial" choice I made in some patches
-> > was to always reserve a flag ID even if a flag is only used under
-> > certain CONFIG_ settings. This is a change from how things were
-> > before. Keeping the numbering consistent and allowing easy
-> > compile-testing of both CONFIG settings seemed worth it, especially
-> > since it won't take up any extra space until we've added a lot more
-> > flags.
->
-> Nah, this is fine, I don't see any problems with this as the original
-> code kind of was doing the same thing with the "hole" in the structure
-> if those options were not enabled.
->
-> > I only marked the first patch as a "Fix" since it is the only one
-> > fixing observed problems. Other patches could be considered fixes too
-> > if folks want.
-> >
-> > I tested the first patch in the series backported to kernel 6.6 on the
-> > Pixel phone that was experiencing the race. I added extra printouts to
-> > make sure that the problem was hitting / addressed. The rest of the
-> > patches are tested with allmodconfig with arm32, arm64, ppc, and
-> > x86. I boot tested on an arm64 Chromebook running mainline.
->
-> I'm guessing your tests passed?  :)
-
-Yup, all the tests that I've run have passed. I also threw in an
-"allnoconfig" compile test just for good measure.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ndctl PATCH v2] test/cxl-dax-hmem.sh: validate dax_hmem vs CXL
+ collisions
+To: Alison Schofield <alison.schofield@intel.com>, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org
+Cc: Dan Williams <dan.j.williams@intel.com>
+References: <20260404025123.2967169-1-alison.schofield@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260404025123.2967169-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-> Anyway, this looks great, unless there are any objections, other than
-> the "needs to be undefined", which a follow-on patch can handle, I'll
-> queue them up next week for 7.1-rc1.
 
-Thanks. As per the other thread, I'm happy if you or Danilo want to
-apply it, and I'm happy if you want to make minor fixups when
-applying.
+On 4/3/26 7:51 PM, Alison Schofield wrote:
+> From: Dan Williams <dan.j.williams@intel.com>
+> 
+> Use the new "cxl_test.hmem_test" and "cxl_test.fail_autoassemble"
+> module options to implement a new cxl-dax-hmem.sh test. The test
+> checks dax_hmem takeover of Soft Reserve ranges that collide with
+> autoassembled CXL regions. It depends on the cxl_mock_mem driver
+> to launch multiple async probes before the dax_hmem driver attaches.
+> 
+> [as: do_skip on missing params, explicit param usage, robust unload,
+> check_dmesg, misc style]
+> 
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Tested-by: Alison Schofield <alison.schofield@intel.com>
 
-When I see the patches applied, I'll send a followup patch to address
-the "needs to be undefined" comment, unless Danilo makes that change
-himself when applying.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
--Doug
+> ---
+> 
+> Changes in v2:
+> - Add delay (cxl-list) between modprobe and dax lookup
+>   In testing sometimes a daxctl right after modprobe fails to find
+>   the devices.
+> 
+>  test/cxl-dax-hmem.sh | 68 ++++++++++++++++++++++++++++++++++++++++++++
+>  test/meson.build     |  2 ++
+>  2 files changed, 70 insertions(+)
+>  create mode 100755 test/cxl-dax-hmem.sh
+> 
+> diff --git a/test/cxl-dax-hmem.sh b/test/cxl-dax-hmem.sh
+> new file mode 100755
+> index 000000000000..6f4ed5076870
+> --- /dev/null
+> +++ b/test/cxl-dax-hmem.sh
+> @@ -0,0 +1,68 @@
+> +#!/bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2026 Intel Corporation
+> +
+> +. $(dirname $0)/common
+> +
+> +rc=77
+> +
+> +set -ex
+> +
+> +trap 'err $LINENO' ERR
+> +
+> +check_prereq "jq"
+> +
+> +modinfo cxl_test | grep -q '^parm:.*hmem_test' || \
+> +	do_skip "cxl_test hmem_test module param not available"
+> +
+> +modinfo cxl_test | grep -q '^parm:.*fail_autoassemble' || \
+> +	do_skip "cxl_test fail_autoassemble module param not available"
+> +
+> +rc=1
+> +
+> +unload()
+> +{
+> +	modprobe -r dax_cxl 2>/dev/null || true
+> +	modprobe -r dax_hmem 2>/dev/null || true
+> +	modprobe -r cxl_mock_mem 2>/dev/null || true
+> +	modprobe -r cxl_test 2>/dev/null || true
+> +}
+> +
+> +find_dax_cxl()
+> +{
+> +	$DAXCTL list -R | jq -r \
+> +		'.[] | select(.path | contains("cxl_acpi.0")) | .path'
+> +}
+> +
+> +find_dax_hmem()
+> +{
+> +	$DAXCTL list -R | jq -r \
+> +		'.[] | select(.path | contains("hmem_platform.1")) | .path'
+> +}
+> +
+> +unload
+> +
+> +# Verify CXL autoassembly claims the Soft Reserve range before dax_hmem
+> +modprobe cxl_mock_mem
+> +modprobe cxl_test hmem_test=1
+> +$CXL list
+> +
+> +dax=$(find_dax_cxl)
+> +[[ -z "$dax" ]] && err $LINENO
+> +dax=$(find_dax_hmem)
+> +[[ -n "$dax" ]] && err $LINENO
+> +
+> +unload
+> +
+> +# Verify dax_hmem claims the Soft Reserve range when CXL autoassembly fails
+> +modprobe cxl_mock_mem
+> +modprobe cxl_test hmem_test=1 fail_autoassemble=1
+> +$CXL list
+> +
+> +dax=$(find_dax_cxl)
+> +[[ -n "$dax" ]] && err $LINENO
+> +dax=$(find_dax_hmem)
+> +[[ -z "$dax" ]] && err $LINENO
+> +
+> +unload
+> +check_dmesg "$LINENO"
+> diff --git a/test/meson.build b/test/meson.build
+> index 593edf552b36..4260a3fa4448 100644
+> --- a/test/meson.build
+> +++ b/test/meson.build
+> @@ -169,6 +169,7 @@ cxl_destroy_region = find_program('cxl-destroy-region.sh')
+>  cxl_qos_class = find_program('cxl-qos-class.sh')
+>  cxl_translate = find_program('cxl-translate.sh')
+>  cxl_elc = find_program('cxl-elc.sh')
+> +cxl_dax_hmem = find_program('cxl-dax-hmem.sh')
+>  
+>  tests = [
+>    [ 'libndctl',               libndctl,		  'ndctl' ],
+> @@ -203,6 +204,7 @@ tests = [
+>    [ 'cxl-qos-class.sh',       cxl_qos_class,      'cxl'   ],
+>    [ 'cxl-translate.sh',       cxl_translate,      'cxl'   ],
+>    [ 'cxl-elc.sh',             cxl_elc,            'cxl'   ],
+> +  [ 'cxl-dax-hmem.sh',        cxl_dax_hmem,       'cxl'   ],
+>  ]
+>  
+>  if get_option('destructive').enabled()
+
