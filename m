@@ -1,86 +1,85 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508BE3B892B
-	for <linux-cxl@vger.kernel.org>; Tue,  7 Apr 2026 14:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DA0347BBD;
+	Tue,  7 Apr 2026 18:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775571332; cv=none; b=GBPmWO7bIbY19Eseb4aJo647+EBwTIKFGBeaqbx8CjOKslaZqwDOyo/rV70s4a/fbuL6u7YQJEPA9AQ5jtON/KQgVM4cB5ojIccZQZLp++TkooOrdQuWNDWpAprGYtcryWI7sMYaNc91ob2lywik1FuQc4KZ/06EPej3HfXf9nw=
+	t=1775584998; cv=none; b=REQKc/pVWZ9YeaCyzCuKjAdEgoCj0/XMS4GXMCYThWha9X3uj9sF7iUrkeF4y0CSaXq06hCKkBHr9CmLmfNhAxL1gCqQ+OqPtnkIppKPSIPVw9uhkA/2YzABNfyGgYBiooVIIapcqedmMLFhTrSxjhhgIZ/5OLicExrtulCh9gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775571332; c=relaxed/simple;
-	bh=FnSsZuPnGyxPDhNZRLYQ6JCnZWuSSmTUwVpsXpmU4SY=;
+	s=arc-20240116; t=1775584998; c=relaxed/simple;
+	bh=3uwoWXiaWvykl7yJaZ1MybGYtDm95i7JzUU39F5We00=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HRxUk9IGwBhoQTRcZqe7/hhrRntgC+ipILt21+ZVx+NaKLDsb8cEg+6BjUEAfTuQmSXTkb1UVTd8ORDy3a7TUl0MT4edCqi/KtjnHvfEf5/5dbh4pnyAJud2wug8PP15+o0Tsn/FODW74RiWP1DKpaU70PNABk/mO7BuAxj/HMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=MtaqTtWC; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=jEHksvFuA4r9SCEjXDHlsUYEoJnIEAqdqmLS297L0FbV5Dpqqqyierm5/dwFmgG+E9Hnwia05mgobYKNOMZHCqawUF/7v9HKBTr0N3/FqZ8zQsA2Fn2zQ2Eq/3D+YncymDVjrhmLOIVwk4uyeuVilNUWMfAWbuK4Wp87cVFOCwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SiT1saIf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="MtaqTtWC"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-8a1e1817db6so50591036d6.2
-        for <linux-cxl@vger.kernel.org>; Tue, 07 Apr 2026 07:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1775571330; x=1776176130; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qrXvcr862UuyP9u64puUV6+vM1HuF+WgVzFiTHYkxJA=;
-        b=MtaqTtWCayCARWnIfAPjHP9sgccrUonJRIK8Swc2gcl2f8lHjGClpqtv2R1df2NZJA
-         A/ifVD2S55jf7AngdY6uUPhI5nGMeX3IDKA5mLsic7GDGQfBqGDiEYdH0Id7wupSketU
-         L+t1ngjlUlmMA2O7DBM6sOkr5RN9K/U73cJnwu0bmcraxzr+QusBAmyxAEDPSNw/nsZD
-         UmHVpz2jeyyLXRvEnFOgEQgslBrrkNbqzhWuYgzgT3jcHOdfPeM/CjgXFMvbr6PXuTrF
-         57hq7ZDVXjZTNxHPoTCBcNiEWHmYPBkvt9yGZNEe6tIy2Vgt1h/ZaSs1VYK/FUHdxpPq
-         Qjdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775571330; x=1776176130;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qrXvcr862UuyP9u64puUV6+vM1HuF+WgVzFiTHYkxJA=;
-        b=P4CO3p9UHvYfsBiB0cNHLt/XABicSX6JgVZLS6EIT3qFvI9FF1Y/yLfOqrModonk0Z
-         XZkR4Kki2U5HaKuP2YwJ9TfALm6Rb9ZIuB3NxjSRlvuIC8/cPGGmew76q/M9WJ5+4iYR
-         BUO3J0cJB0jr6YqurfH4+BUrodyWHvzM6Hndr3dfAVaVf2+wF1oo9D6x3ph+na0+DTx3
-         WTE2HJvlmvQAD+lNJReNFkB9xIW0RWIvb6mze0xuccJ7x2EHVWd1xTgFeecZry5IVf86
-         Lg+OWRzfx2H6uaCOvKgAo+mm/WPS9qiYqsF2kG5FVbpeMjEVSSrglG3+15544nbA7gaK
-         cb4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXbODzyGd7tM8zqw5vYhP9asCJgljzz4ZAro/I8lkjWtTvauiWhps4E3xFwxZztBoaPLcU0elFi5M0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd0b9V4d1zz1rjhyNzNQ4ffHzdTH/x0qng6tGq169cNp3LigCl
-	/oq80rZjHviYq/hBMazQUhAzBW/kw641vROoqCuv479We+F7xjipKWBGfRGjebwhfLU=
-X-Gm-Gg: AeBDiev7RlZp76LnEVfnrx+eyRLGwjGJltwosuOSNPngvATh5HJziCm9lpdgnN/iE5f
-	8pRW7UV4n+YLsobEf5IxD5KG0u95h0dB6K5H+I5Ays62xhixrkp7LI5Giv83MXpJvioszSpDyur
-	wSZGqc5HD7izCUAk4VwfCXkbFRJIVCMJggGhxQzKIhC+bc1wbseaJP5VzqCuQlYdUZ6Y2sru3QL
-	wT+9Wbrb74C+s5VUkjEVg6RsEBURhfVxK6lFvBrrMBIsSo3kiQlAXbgzndGwaEByI6t5fqECjZy
-	uoB3lhYFIJJiktIgjAvfv06s/gc7FsMUzTN6CmZpLsqX4K8+uGL+8e8T5omGfL669bwYpEttnTu
-	jCLYGnjcPcy1zNUMVlfGxfVszJeSxc9pfiegp9nS4v7/sIFfcBgcZKd5Ob4qOwY+2Q770u1otsh
-	LRkSwSxg524NNe2eBAngcU5lqbYuy28MDWXKO8s6yia+tq85+pdfI16QCp/3Gi/MYCNSukUFkSF
-	9qwAyjxNx8D
-X-Received: by 2002:a05:6214:400a:b0:89a:f92:b09f with SMTP id 6a1803df08f44-8a7022bb7a7mr282281776d6.4.1775571329335;
-        Tue, 07 Apr 2026 07:15:29 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-71-191-243-150.washdc.fios.verizon.net. [71.191.243.150])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8a596ff619asm183100226d6.37.2026.04.07.07.15.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2026 07:15:28 -0700 (PDT)
-Date: Tue, 7 Apr 2026 10:15:26 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Dan Williams <djbw@kernel.org>, mhonap@nvidia.com,
-	alwilliamson@nvidia.com, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alejandro.lucero-palau@amd.com,
-	dave@stgolabs.net, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com, dmatlack@google.com,
-	shuah@kernel.org, yishaih@nvidia.com, skolothumtho@nvidia.com,
-	kevin.tian@intel.com, ankita@nvidia.com, vsethi@nvidia.com,
-	cjia@nvidia.com, targupta@nvidia.com, zhiw@nvidia.com,
-	kjaju@nvidia.com, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: Re: [PATCH v2 16/20] vfio/cxl: Register regions with VFIO layer
-Message-ID: <adURfscEwBuT3utz@gourry-fedora-PF4VCD3F>
-References: <20260401143917.108413-1-mhonap@nvidia.com>
- <20260401143917.108413-17-mhonap@nvidia.com>
- <69d0169115c06_1b0cc6100a5@dwillia2-mobl4.notmuch>
- <20260404185330.GD2551565@ziepe.ca>
- <69d1685538f45_556821002f@djbw-dev.notmuch>
- <adQj_gxSzjA51Q6n@gourry-fedora-PF4VCD3F>
- <20260406220521.GG2551565@ziepe.ca>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SiT1saIf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 841E3C116C6;
+	Tue,  7 Apr 2026 18:03:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775584997;
+	bh=3uwoWXiaWvykl7yJaZ1MybGYtDm95i7JzUU39F5We00=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SiT1saIfY9Ab6kOYEQ3WpRgDO5HxJo85XldRjkKTNqDhL5ApF489HMB3tKOAFklkP
+	 LukelZtxIDrjgTFvEEqKrHYqfkq0b5v3CSo9Q+e4crsWHHIIYvwLgYCI+hXLAD+GIj
+	 bHQeOmzjU0DNTobFFcy4Fr/81U6KFEtsKf3dfPulQwK4yRVpTR6kENGphWMN+0W1wP
+	 CCQe9sQ1ZoFiL3F0cYpQwiMftmUycrzxrAhzdmocr2VVSBGVDMs5W8n9Pj2THQ/Ibm
+	 /+Cg5LZRqpaP8rrYTz+SsYNq2eoQKGtc2pOOf6KycTknSvco09Y8TfuMiDmvhFkEfu
+	 wJV6rdmOrLv+g==
+Date: Tue, 7 Apr 2026 13:03:15 -0500
+From: Rob Herring <robh@kernel.org>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Kalle Niemi <kaleposti@gmail.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Peter Rosin <peda@axentia.se>, Arnd Bergmann <arnd@arndb.de>,
+	Saravana Kannan <saravanak@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Linus Walleij <linusw@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Shawn Guo <shawnguo@kernel.org>, Wolfram Sang <wsa@kernel.org>,
+	linux-kernel@vger.kernel.org, driver-core@lists.linux.dev,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
+	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	Allan Nielsen <allan.nielsen@microchip.com>,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Steen Hegelund <steen.hegelund@microchip.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v6 00/27] lan966x pci device: Add support for SFPs
+Message-ID: <20260407180315.GA3175985-robh@kernel.org>
+References: <20260325143555.451852-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -89,31 +88,83 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260406220521.GG2551565@ziepe.ca>
+In-Reply-To: <20260325143555.451852-1-herve.codina@bootlin.com>
 
-On Mon, Apr 06, 2026 at 07:05:21PM -0300, Jason Gunthorpe wrote:
-> On Mon, Apr 06, 2026 at 05:22:06PM -0400, Gregory Price wrote:
-> > On Sat, Apr 04, 2026 at 12:36:53PM -0700, Dan Williams wrote:
-> > > Jason Gunthorpe wrote:
+On Wed, Mar 25, 2026 at 03:35:27PM +0100, Herve Codina wrote:
+> Hi,
 > 
-> I would expect this to happen via the request_resource mechanism, if
-> MM is using the CXL range it should be locked in the resource tree and
-> vfio should request it and then fail during the initial startup
-> phases.
+> This series add support for SFPs ports available on the LAN966x PCI
+> device. In order to have the SFPs supported, additional devices are
+> needed such as clock controller and I2C.
 > 
-> > I need to read up a little bit on this area, but i don't see the "needs
-> > to be mmap'able in a cache coherent way" to be an argument for one
-> > particular method or another (hotplug, private node, memremap, etc).
+> As a reminder, the LAN966x PCI device driver use a device-tree overlay
+> to describe devices available on the PCI board. Adding support for SFPs
+> ports consists in adding more devices in the already existing
+> device-tree overlay.
 > 
-> It is speaking to what VFIO has to do. It is the exclusive owner of
-> the physical range, it does not have struct pages, it must be cachable
-> for VFIO and KVM to work - not alot of choices here. Turn the
-> phys_addr_t's into large cachable special PTEs inside a VMA.
+> With those devices added, the device-tree overlay is more complex and
+> some consumer/supplier relationship are needed in order to remove
+> devices in correct order when the LAN966x PCI driver is removed.
 > 
+> Those links are typically provided by fw_devlink and we faced some
+> issues with fw_devlink and overlays.
+> 
+> This series gives the big picture related to the SFPs support from
+> fixing issues to adding new devices. Of course, it can be split if
+> needed.
+> 
+> The first part of the series (patch 1 and 2 ) fixes fw_devlink when it
+> is used with overlay. Those patches were previously sent by Saravana
+> [0]. I rebased them on top of v7.0-rc1.
+> 
+> Also I added a call to driver_deferred_probe_trigger() in Saravana's
+> patch (patch 2) to ensure that probes are retried after the modification
+> performed on the dangling consumers. This allows to fix issues reported
+> by Matti and Geert [2] with the previous iteration patches.
+> 
+> Those modification were not sufficient in our case and so, on top of
+> that, patches 3 to 5 fix some more issues related to fw_devlink.
+> 
+> Patches 6 to 11 introduce and use fw_devlink_set_device() in already
+> existing code.
+> 
+> Patches 12 and 13 are related also to fw_devlink but specific to PCI and
+> the device-tree nodes created during enumeration.
+> 
+> Patches 14, 15 and 16 are related fw_devlink too but specific to I2C
+> muxes. Patches purpose is to correctly set a link between an adapter
+> supplier and its consumer. Indeed, an i2c mux adapter's parent is not
+> the i2c mux supplier but the adapter the i2c mux is connected to. Adding
+> a new link between the adapter supplier involved when i2c muxes are used
+> avoid a freeze observed during device removal.
+> 
+> Patch 17 adds support for fw_delink on x86. fw_devlink is needed to have
+> the consumer/supplier relationship between devices in order to ensure a
+> correct device removal order. Adding fw_devlink support for x86 has been
+> tried in the past but was reverted [1] because it broke some systems.
+> Instead of enabling fw_devlink on *all* x86 system, enable it on *all*
+> x86 except on those where it leads to issue.
+> 
+> Patches 18 and 19 allow to build clock and i2c controller used by the
+> LAN966x PCI device when the LAN966x PCI device is enabled.
+> 
+> Patches 20 to 24 are specific to the LAN966x. They touch the current
+> dtso, split it in dtsi/dtso files, rename the dtso and improve the
+> driver to allow easier support for other boards.
+> 
+> The next patch (patch 25) update the LAN966x device-tree overlay itself
+> to have the SPF ports and devices they depends on described.
+> 
+> The last two patches (patches 26 and 27) sort the existing drivers in
+> the needed driver list available in the Kconfig help and add new drivers
+> in this list keep the list up to date with the devices described in the
+> device-tree overlay.
+> 
+> We believe some items from the above list can be merged separately, with
+> no build dependencies. We expect:
+> 
+>  - Patches 1 to 5 to be taken by driver core maintainers
 
-Right - the observation here is essentially "if you need struct page and
-need to get fancy with them...".   But if you just need to plonk a
-region into one set of page tables and move on - then this is fine and
-arguable preferable.
+From a quick look, can't the first 2 DT patches be taken by me?
 
-~Gregory
+Rob
