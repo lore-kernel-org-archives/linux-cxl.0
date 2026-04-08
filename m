@@ -1,136 +1,103 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012034.outbound.protection.outlook.com [52.101.53.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E8A3537DE
-	for <linux-cxl@vger.kernel.org>; Wed,  8 Apr 2026 21:39:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.34
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775684389; cv=fail; b=h0sEfgQheB6FmepW3bTiIB9HamtjklFpsrL7Nhaat/sEBRS3NbPrUCwTqoV/1gopO1otXr6s94ESaaCCVvdielYippEJftaFCP3JLBQixCvrpIW2/xXLSpLJkkDljnrp1QxyDpLq+lNtMCn7btKob58W79ze0boQld2z9sepN3w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775684389; c=relaxed/simple;
-	bh=K1/ugQ4mT3QVbfEbjptWYWkxvhZDRPRJo4EfxUYdBr8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=LrBviGLdcPGXSLSl6+CzPL0pafmVvVQCbrxjw+XZKS/B7Q6/8OlslrZdz47qTNEPOt1QhegT5lmPr8iCaD6kdsj2vLxuaKYVKS91O8z+7gpzM5Ij2tcSAOy8+0c/Zs3paY5IrTAyBJBuYKnrNgtilRy06zohOXAYms/I0a0GEAc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OiR8O2hV; arc=fail smtp.client-ip=52.101.53.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D403A0B05
+	for <linux-cxl@vger.kernel.org>; Wed,  8 Apr 2026 21:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775685377; cv=none; b=cIzi3N8uYjElKsueAT13Yub+7DTymZHTYY5dcNA465pr/C5MHm9UOqNp/TbWnsMTUSyI3OrSeLVitnbW8E06wr9a5ZUaakeEymXdVCbFswx/3q4RYnfLFf9cvP8jwUPCmlccArFGUqztxxHdjyyujI5P3paNgIck4dv+oOXiqVo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775685377; c=relaxed/simple;
+	bh=m/RIsCZ6L9sAmGDRZI2YbyVGhDO+TzeVpIUyc9KH1Pw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qPu5tJaVRVsYKFECfsCzIpapcNsx+09GJKqnu1brue/Ik6mpaiORp9rpbClT4UWJJqaECGnaS+RkXFz1jsPy2kAjwpaqIors2dYSMLvnV4JKe/Pvl69XVIo3oG1TDUuWL1GHyUYQhy+imF+vuETA23Mj4YJDEvjIeezcjlAdMEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=WbZlpVdA; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OiR8O2hV"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cK8aEWbBgBkgKf++MvH8z3h2vuvNRZO0lJ1g+4OVyoyCGpr1Y/8QE2uX6rXQkemk5rlaXtktX9hMqVHKEp1Xsnwbun4GHIR/mEzJQkIzUpmdXZaV6GtPCKMQ9rptzDLUlSDmsqyLHSUrVOB7hNuwyiR2qIjX88iJpH/7zREngPM4AZA3XUIUcHv6m9bf/GNH9Q9D1D37a9B9IS3L0eXnLFspBG4e2EhzadO6SaMkG7js+Kr3PdJMiycguNo9BcQrJDFqqT6hmQTc5bi0S6ez1Ys3sUf6HpPYm4dbzd3r2yVGaY1AHdkeIa4to2jvE3AKiSUnNtyVmWdX2VXQAIJkFw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Zn0w19zLvdFd6fGhMOp29QSGJE6EPIAHanAFsG90fCk=;
- b=f66IhDSh/+sL5BGK+5OxU5uZ8mOmExacca/EchBBzYJk1f0b8EgHpsQOt4tdObYJolbYUMk9uuhRxoxU7cW7FQveKLo+1hvKsgzlloXiskCWDWqEyy9I4812Kc+HB8VeAf8SZuC5n8Rg2I0rFhVspZYbZfRJgPwlcTiVGTKGK1JJ1Q9ws5alAmJLeEvbANZ85n40/TNJVE1sLYlS8uDIsQ3SlgIuGZ2Tspnpc1lmhknb4ZaFHMMg3Uy7NzxTwLiv7wVOJmwhIfm6m8D0D3Givv54macjoL5RIdhkuTxO/61VGL3lZIa6h5Gxnt2jaf6hLPUDaj+kqGbo2DYztl3isw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zn0w19zLvdFd6fGhMOp29QSGJE6EPIAHanAFsG90fCk=;
- b=OiR8O2hVu/ZcIbFvCJVlleSNfKMHIMGBjWo37rkpMErkHKHv7sAYr2Z9IzAC+Rt7nssfuxI0bdDKWRBWOPpMnsGi0ara+/7QD57KhAkflMW0fLtWac/w4solq6sKvJDQdcvMcjvzffzdjG0RE6M6115MIYxEy+YIvUbsFFX4HlM=
-Received: from SJ0PR13CA0129.namprd13.prod.outlook.com (2603:10b6:a03:2c6::14)
- by DS0PR12MB8218.namprd12.prod.outlook.com (2603:10b6:8:f2::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.18; Wed, 8 Apr
- 2026 21:39:44 +0000
-Received: from CO1PEPF000075F3.namprd03.prod.outlook.com
- (2603:10b6:a03:2c6:cafe::df) by SJ0PR13CA0129.outlook.office365.com
- (2603:10b6:a03:2c6::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.37 via Frontend Transport; Wed,
- 8 Apr 2026 21:39:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- CO1PEPF000075F3.mail.protection.outlook.com (10.167.249.42) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9745.21 via Frontend Transport; Wed, 8 Apr 2026 21:39:44 +0000
-Received: from [10.236.182.193] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 8 Apr
- 2026 16:39:42 -0500
-Message-ID: <7fe63454-9df7-47c9-ae7f-4db1fd1a3576@amd.com>
-Date: Wed, 8 Apr 2026 16:39:41 -0500
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="WbZlpVdA"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-50d6249bb99so2254921cf.0
+        for <linux-cxl@vger.kernel.org>; Wed, 08 Apr 2026 14:56:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1775685373; x=1776290173; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qndnJttoApFXUO2POEtVDoUfAMGPbRgoP3C1nGgpeNw=;
+        b=WbZlpVdAVg4/a8k/okNew88UBd78k8vdw7AVRhZqFjKtpHP6glg9FH8DkicHFEBmmF
+         2nYUR1Q73PV4hpYYaPyu9h54xWwfDieHsPxL/R0T1L+6Em4TvpLU6kbf9T+9L3dAURQP
+         0eu7WL7hcsvgCIYmUefP/zQ/QokOisRWbeJkVWgICBCNaL8PsB2kFpDnTFcHCLXnUfr+
+         byqTf/u0Nl+G09hdRbyXNH3zB8q20LOqdLmMycWdyOBvWiFX2aMR8InXpkEI8Oiwbwc6
+         BiipGUfAJGI48xk24nwOgZBkAlREFXVtEqVCXBcrSohYiyzEW7Siqp3qZPTQUnT/mrae
+         hCyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775685373; x=1776290173;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qndnJttoApFXUO2POEtVDoUfAMGPbRgoP3C1nGgpeNw=;
+        b=PWdR4eT7nnYy5A2nsVKMfeqt0Wy3MT54mSyMrtPJLT1nqZ0KOX1HBRDdYODq+kNaVR
+         EU1HsbQ9yFBxSoqs0HlR4IhFpgCZw5la6yDVl5lR4MYt10xb7fDJVjgAd6YjLemg9cRP
+         Jr2A4s616L6OanQDBThO+l0duajtGHDDlG2Ncv01dDIVHTXMxnNWK8NJ1g0K1+1T0xX6
+         PcjDWWcx9vv3AD8mMWqhCLVEU5PXi8Q1aTJPs14yuRXVvKud1iEHHI83QA+1lY1EfzJp
+         1+O0p9impa/VCZABRK+y+VQbwaiUVv5ck95lX4R28/myQVhV7FM3R2vNbm5fbX7qtez9
+         M6xg==
+X-Forwarded-Encrypted: i=1; AJvYcCXqrNnHUjwmhQwROZi/i9MMK8B/KemI6/vSUM4gB+lJRO+GrWR7IMAwkRsJD1UsrEAdFKmDDAE51Pk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQaJzgXa9u58osTVn5nPj95HYB2jQ6hWedF0MgoDYFgAH9qAAu
+	EPfXikBqNP5TwpFSjraCU6AuAu3f65z8ZZtl59wq1HKWWpKAadOofgMIrzTuyn61DyU=
+X-Gm-Gg: AeBDiev90Qn72Nl1+fAKNYvdhr3VLFPfYoWiZCGMp5P9B/mQP20kYTPEgfkWKgV+7db
+	m6tjm97xgIj/VA6/l1fkeseVPd5lfRKpO+d+/x7TMjurWw4uWWiSnqxTJ+Qts1Ygej7xmm1ALLf
+	XGSVIrr6cSjUx1UJNtqHD3Ay4TGZwZLJg1HJikVP4sz0RFJGhUc3KDiv0MLXHf0mUSl9snuPokI
+	2nCYVO4PB8/gJVLyeII63VK0ILh94vfinoM1j7o8kQIxRpweUC44frFzSn4hSeVkzkdhA4W4ocf
+	PKSPGhJd1arUO2tTjHAtO2v4rw/1DCdEYSm5ndOVy5BVi5EHRN5IPk54ppi++WOu2+sbA81cUhH
+	CkTfCwFdV/mWURLmXFqf88Hys706ITJ3rv+ejv/sajo+hz38dMV//KNr6LiWiyluqnUmMDsMPic
+	BS+W2WdIcwEYdu2tmOURDAyQ8Q9opcVdAiIRJ1fiWcxzBqmLhN0m5h6wPohnYGEadexS5MNjdFT
+	GGVupiiOKO8
+X-Received: by 2002:a05:620a:1a11:b0:8cf:d565:fca4 with SMTP id af79cd13be357-8d41b8df4ecmr3283687885a.3.1775685373060;
+        Wed, 08 Apr 2026 14:56:13 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-71-191-243-150.washdc.fios.verizon.net. [71.191.243.150])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-8d2a5392d35sm1601280185a.10.2026.04.08.14.56.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Apr 2026 14:56:12 -0700 (PDT)
+Date: Wed, 8 Apr 2026 17:56:10 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Dan Williams <djbw@kernel.org>
+Cc: lsf-pc@lists.linux-foundation.org, linux-cxl@vger.kernel.org,
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [LSF/MM/BPF TOPIC] What's brewing in CXL?
+Message-ID: <adbO-tqwA_MJ1NHW@gourry-fedora-PF4VCD3F>
+References: <69d5bf0ab2210_2b3110036@djbw-dev.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-Subject: Re: [ndctl PATCH 0/3] Enable CXL protocol testing
-To: Terry Bowman <terry.bowman@amd.com>, <dave@stgolabs.net>,
-	<jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <dan.j.williams@intel.com>,
-	<shiju.jose@huawei.com>, <ming.li@zohomail.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <rrichter@amd.com>,
-	<dan.carpenter@linaro.org>, <PradeepVineshReddy.Kodamati@amd.com>,
-	<lukas@wunner.de>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<nvdimm@lists.linux.dev>, <alucerop@amd.com>, <ira.weiny@intel.com>
-CC: <linux-cxl@vger.kernel.org>
-References: <20260408203231.962206-1-terry.bowman@amd.com>
-Content-Language: en-US
-In-Reply-To: <20260408203231.962206-1-terry.bowman@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000075F3:EE_|DS0PR12MB8218:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45dd616d-25b3-4f8b-6230-08de95b75933
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700016|7416014|376014|921020|22082099003|56012099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	2M7Ff3NpBlz4fEt0h2YE772D8o9qi8qkTdp7a3xdD/AN20trjppYeeSX5OBjyNLlzt7447XbLW3pl+i4BEfemOhS95KeVFG6E8PyqVe0GBBcYSfn9RiiBvWzF4dOVRQCOVfXOXMmKZ3FpiSwiIOml5YPOdpj0wJLxxhNIshiXijhmV1Nhgfu3wFyIM5UtmPdAGSMCms24W1DuZ6WBM7vlO1xDJL0/bSa7wLq216TrbjgRduJPbTTGIsBjuHFo3+G9par2aTMa63CCMVYTSnGUMJTwXFU+amnDn7fHkDVvpQGv9u1/lMMwVQ4ggAsjoCh++WKh+i/Gmd3iCUWx1vsBpBpTNIVezBlwwd1M0sk3h7HjKNiPGkpIGbyutRGTFMX+nRrYM15j+pcBcCxQUkS4jp7ZQfh1VZGEy2zqU3XmYjIRv6LJLzF/n5hSjpf8qLzw+LuqKVrzCie8jaG4lGOvooYI2U4sBDE0Up1ImyXju1ETKZoYuAHX/PMBhVPBTd+zXoK030C9cRoIpluyCBzJuE0YonlrfBuKdrWYjNPDp6Ha4+gvurc8CQhzoYhV4Jsm3zSaZ9a4zf27rTQ2odAuvjMtsnDaxw3ECdG/jIJDtYr++nk1iVyoka4irqZicb3Kbnuy9HqiSok7A0AITuij/UTMz5Fux51q1iemc32m8uW4Xbb9DQBNl8hOUDz9+FI/hFeqUR30S5g+qKnvpjcp2hid4m4tzgweeXQNwgBmz/z08Gkr5AgX5Rb1ptIJN259Rxdu+ofeEjsyDjSZSYb2vK16TR7OUBIm1nwxewQ/ofXKuNUIrvS7zWmOTjagvGL
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700016)(7416014)(376014)(921020)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	EJrqbXega2lSQrm15SoVLYOR4fB6J31EO8ksh2aXPSXkzfCWMB6pFEJA9L97KXfyGojABIGBDryvZ9+mjJQxt2HmMjSA9Oh58/wECkjBPaZPnC3KLlhyZEl4T/FqmQfAngJ3DGRs/+WkuHDOIpM3RhzG0dWBpSOyhREl/gNeCwI+dGiUJ3HYe2kf5Jfc4n7qrXJDEh/s874dHHzDLbn1S5riCgR5KRaiN7vn141P4xRgHSzzx5ZVDjy/+l2tSSLpRu+G4nceXnWcH/99KAz+8VTOWIUOjlSeeHiHlYSN9gUf4Pmy9xeY+aEd2HusoqQ3bQbKrQXcfwJ3EhebIwLzNoUoVxrB1aVU+wLp5hrMtZgaqJgs+k9JBzT/X3wQUrFYbzxO67uW34D5z8XQKjGQ2A9aJf9TgnIcoisRp+o/gPZyh6IjUUMN7+VHKBORufMp
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2026 21:39:44.0522
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45dd616d-25b3-4f8b-6230-08de95b75933
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000075F3.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8218
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <69d5bf0ab2210_2b3110036@djbw-dev.notmuch>
 
-On 4/8/2026 3:32 PM, Terry Bowman wrote:
-> Current CXL error injection (EINJ) only supports Root Port protocol error
-> injection but a method to test all CXL devices is needed. This series
-> outlines methods to update both the kernel and the 'aer-inject' tool-without
-> relying on EINJ-to enable CXL RAS protocol error handling across all CXL
-> devices.
+On Tue, Apr 07, 2026 at 07:35:54PM -0700, Dan Williams wrote:
+> For the summit I offered to organize a discussion on what has been
+> happening in CXL since Plumbers and a summary of the monthly CXL calls
+> since. The session goal is present top challenges, address concerns /
+> questions from the room, and perhaps introduce the CXL topics that have
+> their own session later in the day.
 > 
+> Please do comment, question, ack/nak, or add to the themes below to
+> highlight interest and help focus on the few topics we can cover in the
+> limited time.
+> 
+... snip ...
+> 
+> "CXL, making MM problems worse since 2021..." -- CXL subsystem tagline
 
-This functionality should probably be added to the inject-protocol-error subcommand
-instead of spread out across the directory as a bunch of scripts + patches. The command
-is only set up for protocol error injection, but I don't think it would be *too* hard
-to extend.
+Acked-By: Gregory Price <gourry@gourry.net>
 
-I think the first thing you have to do is expand the accepted device types to include ports and
-memdevs instead of just dports. That should be simple enough, there are already helpers to find
-both based on sbdf, name, etc. Then, you'd need to change the interface used to inject the error
-based on device type (is it a root port? then use EINJ, otherwise use aer-inject). All that's
-left at that point is to actually call the aer-inject command with the correct options (and
-update the documentation/help messages).
+;P
 
-I would be happy to help with any of the above if you agree with the direction, just let me
-know!
+Obviously I have interest in this space, and the private nodes
+discussion is semi-orthogonal as I have been applying it to non-cxl use
+cases - but i do think the framing of it replacing some DAX patterns is
+a decent one.
 
-Thanks,
-Ben
+~Gregory
