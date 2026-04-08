@@ -1,100 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C5F37B02E;
-	Tue,  7 Apr 2026 22:58:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980821D5174;
+	Wed,  8 Apr 2026 02:35:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775602726; cv=none; b=e+sI2uhKu2i/P7Z5BZNR0yR/oeOxB+SX6vGPcCc2bzdHMwLrxYb134U5MV5ks5sSOKOnxNuBvjKM2PZXlj17Hrd9wr3LSg8/AOf/19w/vl48l5Sk+QGebZiNIB1qDbU5mJaAh8JJk1uX5Zrh5KRNP0dPUFZU+81PZ0vdA9pqsbw=
+	t=1775615757; cv=none; b=lRF3J+KNCX5n/7UXhF8qqK8UB1tzfqrm5lRztJ2FWZX9iAPA8oN33ThZU2XZLG6vckqbTjydkON6pnV/mXHGuKa97qXcqVfVUkUEjeEb8DFqnbo+V0z9du5rf6j25VBBT7G3xKIwAWLSzGDZLMg5FJ5exaf8SGsp08IghhDdGx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775602726; c=relaxed/simple;
-	bh=ZxMhQkn/NMJTsfUq+eNI5wRqTDBwCQBg1cjTyGaGSzA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=CAFvIFUcUCh0VIHYGjMrdQEU7mL056z+zfQGxWKN+y2EY4XuEQ+udsZzjBcgQZOMoNA+EQ4UDQruMAtfVoplvx+xf66OTsQffPw2Syll1ZFr/yBHxAY6sBNTcBP4WY2reidLOzXk6Re7rfFdF3Ro6CnEnIxr81bH/Ngj88si6qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YxT4H0gM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1775615757; c=relaxed/simple;
+	bh=x+v/WG2GftoMBlJMi6E/znxkqCjwUXYr5lqBIrrZgxA=;
+	h=Date:From:To:Cc:Message-ID:Subject:Mime-Version:Content-Type; b=jKTl2ha6XNSVPm6iGgFIDY73oofWqN4ujGdfTM8WN2k6a4OzIcTyzvwuWpuTpjZyTe0aPxnH0k91jhPU4kq2QoBpCcyyaZD6fYpNOFe4yrldAf5rJ4NDbPGoHiN3LdYlcGFJWOCmFjf8H5IwNMxqqYo+jDsRB5CHf5n+x2zgh7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MjzcvJNT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YxT4H0gM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C69C116C6;
-	Tue,  7 Apr 2026 22:58:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MjzcvJNT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07D6EC116C6;
+	Wed,  8 Apr 2026 02:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775602726;
-	bh=ZxMhQkn/NMJTsfUq+eNI5wRqTDBwCQBg1cjTyGaGSzA=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
-	b=YxT4H0gMU1uiOeHwbtOxxGkfFWJBaCzthqg03Sftf8l9d186Y09INkfJ8VCpcsjUT
-	 Qfd/Qlw+XjxQGpsD/+wtJtFtyh3etr3/mtV9qhSmixByvSXfzBB7nBSEJNPsodmdHd
-	 n6aWnXLqcu6DDQCkFID7N0ab2dedIpF0ftmNXCcvehsYTzafVVvpTSGtJI0Yt78qAh
-	 7zcrBzbK4e2mGEgKbxfT4/RQOcj3aPhgKqv9IwN+ABisbMsvBq2hQAvVVGI9l26vIJ
-	 NOji8KIk0pikMh4DCWmZrmRQsTJnp7fjTB24k9B9hx+3b4Laf7gnEUw1IEsuOG28xo
-	 +wM+h43SmOleg==
+	s=k20201202; t=1775615757;
+	bh=x+v/WG2GftoMBlJMi6E/znxkqCjwUXYr5lqBIrrZgxA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=MjzcvJNTGtX2eAUAX4l1OvT7c6/mxer5VUVKy4XqYDi1n6OhdY6iUMOcMRJUvb8UC
+	 U0IFo0atnAaiNcnHd2ddDMoaQHr5PQN4dIXd7OXLMUzakIW/+qDIh3dx5vLXhL4gL6
+	 H0fKXUSM/W/2efB56PzSRWVPlQ6Tywx88U0h9iZKsq+Z8S0T4OEoPfk/TRRC9uOL0w
+	 1e20Xgb2x52zfuLTT/NCywruEWmGkc9aSkirDECimhPsB1LbesJqfUcznFTvMMVfVd
+	 7IzuP6ULCrjV8vRjd0nNunvYIAb4m/EnW3hVEGhyEvveCg1CDCX3UOgyuJ+PcNPy1W
+	 dZz+2CNDObw4g==
+Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 327E3F40069;
+	Tue,  7 Apr 2026 22:35:56 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-03.internal (MEProxy); Tue, 07 Apr 2026 22:35:56 -0400
+X-ME-Sender: <xms:DL_VaSAZZAV53uxjsRoP8ApXqKPTHg7KaBhB7ifUm8g8fwFadW9NrA>
+    <xme:DL_VaX_AR3Is1-h9xH8WUeuJcRC38pgF90y0A6m3yM7MpjDZARyngo-u9S3wPZIUJ
+    4o2uNUJ3XyzvWXOV7ZIRoTYYLs56H9p8vJ4Izg_7XLDsypywO4IZt-R>
+X-ME-Received: <xmr:DL_VaZEjfj4Ec1nGc6wYr8-0FSY_nr59Sbmj-g9KVnDM8g4QhUw4u2vAuTLe_YPrMBG6hOJEjQ11pfQsEQoj6sOtMtHkbSh7dLU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddvvdefkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecunecujfgurhepfffhvfevkffugggtgfesthejredttddtje
+    enucfhrhhomhepffgrnhcuhghilhhlihgrmhhsuceoughjsgifsehkvghrnhgvlhdrohhr
+    gheqnecuggftrfgrthhtvghrnheptdfhtefhheekffekueetkeeuteelieffteetieegje
+    evueevveefledugfefhfefnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegujhgsfidomhgvsh
+    hmthhprghuthhhphgvrhhsohhnrghlihhthidqudejjedvfedtgeehhedqfeeffeelgedt
+    geejqdgujhgsfieppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsg
+    gprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlshhfqdhp
+    tgeslhhishhtshdrlhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoh
+    eplhhinhhugidqtgiglhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehl
+    ihhnuhigqdhmmheskhhvrggtkhdrohhrghdprhgtphhtthhopehlihhnuhigqdhfshguvg
+    hvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:DL_VaVNRgpJOjWjXP8hbzVv3ecxHhcj4jkmX_hhlkwFAzGQIjjZfkA>
+    <xmx:DL_VaTfFIwx3t5CasfjAMCpUsgvnb2MJXQ08a8_8Zi6o0Kvwehm6ZQ>
+    <xmx:DL_VaauMv1Ry1BCjazIFh2eT6bby-rGeKEz16WKt5x9_EdDmbhHhmw>
+    <xmx:DL_VaclDqlrxZWas45yv3xXH0aT9QZzYkg-JK7QuPGinkIOshHG8Jg>
+    <xmx:DL_VaUzMrWI9WaBAGB14TgJZjrS71Tos5c9nOdNlAxbfV_njFljK-y-o>
+Feedback-ID: i67ae4b3e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 7 Apr 2026 22:35:55 -0400 (EDT)
+Date: Tue, 07 Apr 2026 19:35:54 -0700
+From: Dan Williams <djbw@kernel.org>
+To: lsf-pc@lists.linux-foundation.org
+Cc: linux-cxl@vger.kernel.org, 
+ linux-mm@kvack.org, 
+ linux-fsdevel@vger.kernel.org
+Message-ID: <69d5bf0ab2210_2b3110036@djbw-dev.notmuch>
+Subject: [LSF/MM/BPF TOPIC] What's brewing in CXL?
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 08 Apr 2026 00:58:28 +0200
-Message-Id: <DHNAMNISZJ9O.3B58NWX64GBGE@kernel.org>
-Subject: Re: [PATCH v5 0/9] driver core: Fix some race conditions
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J . Wysocki"
- <rafael@kernel.org>, "Alan Stern" <stern@rowland.harvard.edu>, "Alexey
- Kardashevskiy" <aik@ozlabs.ru>, "Johan Hovold" <johan@kernel.org>, "Eric
- Dumazet" <edumazet@google.com>, "Leon Romanovsky" <leon@kernel.org>,
- "Christoph Hellwig" <hch@lst.de>, <maz@kernel.org>, "Alexander Lobakin"
- <aleksander.lobakin@intel.com>, "Saravana Kannan" <saravanak@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>, <Frank.Li@kernel.org>, "Jason
- Gunthorpe" <jgg@ziepe.ca>, <alex@ghiti.fr>,
- <alexander.stein@ew.tq-group.com>, <andre.przywara@arm.com>,
- <andrew@codeconstruct.com.au>, <andrew@lunn.ch>,
- <andriy.shevchenko@linux.intel.com>, <aou@eecs.berkeley.edu>,
- <ardb@kernel.org>, <astewart@tektelic.com>, <bhelgaas@google.com>,
- <brgl@kernel.org>, <broonie@kernel.org>, <catalin.marinas@arm.com>,
- <chleroy@kernel.org>, <davem@davemloft.net>, <david@kernel.org>,
- <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
- <driver-core@lists.linux.dev>, <gbatra@linux.ibm.com>,
- <gregory.clement@bootlin.com>, <hkallweit1@gmail.com>,
- <iommu@lists.linux.dev>, <jirislaby@kernel.org>, <joel@jms.id.au>,
- <joro@8bytes.org>, <kees@kernel.org>, <kevin.brodsky@arm.com>,
- <kuba@kernel.org>, <lenb@kernel.org>, <lgirdwood@gmail.com>,
- <linux-acpi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-aspeed@lists.ozlabs.org>, <linux-cxl@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-mips@vger.kernel.org>,
- <linux-mm@kvack.org>, <linux-pci@vger.kernel.org>,
- <linux-riscv@lists.infradead.org>, <linux-serial@vger.kernel.org>,
- <linux-snps-arc@lists.infradead.org>, <linux-usb@vger.kernel.org>,
- <linux@armlinux.org.uk>, <linuxppc-dev@lists.ozlabs.org>,
- <maddy@linux.ibm.com>, <mani@kernel.org>, <miko.lenczewski@arm.com>,
- <mpe@ellerman.id.au>, <netdev@vger.kernel.org>, <npiggin@gmail.com>,
- <osalvador@suse.de>, <oupton@kernel.org>, <pabeni@redhat.com>,
- <palmer@dabbelt.com>, <peter.ujfalusi@gmail.com>, <peterz@infradead.org>,
- <pjw@kernel.org>, <robh@kernel.org>, <sebastian.hesselbarth@gmail.com>,
- <tglx@kernel.org>, <tsbogend@alpha.franken.de>, <vgupta@kernel.org>,
- <vkoul@kernel.org>, <will@kernel.org>, <willy@infradead.org>,
- <yangyicong@hisilicon.com>, <yeoreum.yun@arm.com>
-To: "Douglas Anderson" <dianders@chromium.org>, <m.szyprowski@samsung.com>,
- "Robin Murphy" <robin.murphy@arm.com>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20260406232444.3117516-1-dianders@chromium.org>
-In-Reply-To: <20260406232444.3117516-1-dianders@chromium.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-On Tue Apr 7, 2026 at 1:22 AM CEST, Douglas Anderson wrote:
+For the summit I offered to organize a discussion on what has been
+happening in CXL since Plumbers and a summary of the monthly CXL calls
+since. The session goal is present top challenges, address concerns /
+questions from the room, and perhaps introduce the CXL topics that have
+their own session later in the day.
 
-Applied to driver-core-testing, thanks!
+Please do comment, question, ack/nak, or add to the themes below to
+highlight interest and help focus on the few topics we can cover in the
+limited time.
 
-> Douglas Anderson (9):
->   driver core: Don't let a device probe until it's ready
->   driver core: Replace dev->can_match with dev_can_match()
->   driver core: Replace dev->dma_iommu with dev_dma_iommu()
->   driver core: Replace dev->dma_skip_sync with dev_dma_skip_sync()
->   driver core: Replace dev->dma_ops_bypass with dev_dma_ops_bypass()
->   driver core: Replace dev->state_synced with dev_state_synced()
->   driver core: Replace dev->dma_coherent with dev_dma_coherent()
+* CXL vs MM:
 
-    [ Since all DEV_FLAG_DMA_COHERENT accessors are exposed unconditionally=
-,
-      also drop the CONFIG guards around dev_assign_dma_coherent() in
-      device_initialize() to ensure a correct default value. - Danilo ]
+  * Much of the angst of "CXL vs MM" has been harnessed by Gregory in
+    his Private Memory Nodes proposal [1]. The meta discussion for this
+    session would be questions like "how many former device-dax use cases
+    can be subsumed by a mechanism like this?". In general, the game here is
+    how to properly isolate memory that does not behave like locally
+    attached DRAM.
 
->   driver core: Replace dev->of_node_reused with dev_of_node_reused()
->   driver core: Replace dev->offline + ->offline_disabled with accessors
+  * The granularity of CXL hotplug vs memory_blocks vs various
+    distribution hotplug policies stimulated a proposal to support full
+    "region" hotplug [2].
+ 
+* CXL vs Platform Firmware (ACPI/EFI/BIOS):
+
+  * Attempts to use software interleaving to amortize the surprise of
+    "memory that does not behave like locally attached DRAM", introduce
+    firmware dependencies. The firmware descriptions of the performance need
+    to be complete and match a shared understanding of the requirements.
+    Surprise, sometimes this does not line up. [3].
+
+  * Firmware, in trying to be helpful to pre-CXL aware OSes, pre-map CXL
+    memory (whether public generic expansion or private belonging to an
+    accelerator) into the system address map. This causes problems for a
+    subsystem that wants to support hot remove and re-assignment of
+    host-bridge resources. Lack of a specified protocol and the resulting
+    problems it causes for accelerator reset and driver reload, need more
+    thought.
+ 
+* CXL vs PCI:
+
+  * While CXL capabilities are enumerated over PCI, to software it is an
+    additional optional protocol. The subsystem supports being built as a
+    module. This has led to a design for error handling that sees the PCI
+    core minimally involved to forward events over kfifo. This arrangement
+    is raising ongoing questions for uAPI like PCI reset and vfio_pci
+    that expect to be able to manage device with PCI core services alone
+    [4].
+
+* CXL vs Tooling / RAS:
+
+  * Error injection, tests, and usability have continued to improve. For
+    folks looking to deploy CXL in production what is cxl-cli missing?
+
+  * While CXL Error isolation has a hard time justifying its utility for
+    general purpose memory expansion, the accelerator use case at least
+    has a reasonable chance to construct a recoverable scenario.
+
+[1]: https://lore.kernel.org/linux-cxl/abwRu1FNqI3dVyqL@gourry-fedora-PF4VCD3F/
+[2]: https://lore.kernel.org/linux-cxl/20260321150404.3288786-6-gourry@gourry.net/
+[3]: http://lore.kernel.org/20260316051258.246-1-rakie.kim@sk.com
+[4]: http://lore.kernel.org/20260401143917.108413-1-mhonap@nvidia.com
+
+"CXL, making MM problems worse since 2021..." -- CXL subsystem tagline
