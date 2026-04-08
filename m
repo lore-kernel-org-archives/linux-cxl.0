@@ -1,151 +1,159 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012006.outbound.protection.outlook.com [40.93.195.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF002396D17
-	for <linux-cxl@vger.kernel.org>; Wed,  8 Apr 2026 08:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775635849; cv=none; b=QdAt8YXbDBkLZUcHYl/EmvuDFbs3YV+WzFHuHsg1ukejqsKM7x6l1QrwYJ4zGT1T7LMPNKMgfmWdou32mjCdICDuGeJfaAoG1C/2v5T7EGik5rfcdUxXykfzIO6U3xtGMC0bJSSgquxkue8F6xQakqJdrD76nNWIO64eQ3KZU8c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775635849; c=relaxed/simple;
-	bh=qgkECxzGSpnuq07rnxhj52qCBc/KBJvowuMtgBzyENM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jfa7JoxJ+nLh3KHKafKLaDJ8UOlP3yF1M95ZyvKd0PaBKgxNT0X1Pdb4gykQBmOyMxrFlUMjKvce8jQiqY5C8g4FldPRxg2kykM4tbAY4/It6+HiZWSyJp8zaX/vHNkhulkWHnskczhVF0oITGu3ifPHHAfyMlAuv75UhTySaOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-82cebbdab08so4255906b3a.2
-        for <linux-cxl@vger.kernel.org>; Wed, 08 Apr 2026 01:10:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775635847; x=1776240647;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dgSjrs+bZCBNPvbS97WPj5GTT7jaQlR+JpRwd/gT2+Y=;
-        b=SpRzjNST/+rJxz9Eeu3zyYMdtfw295Zy13SLnzfq0inc9NCnRheJHg2fV1+idbavmG
-         JkgUjnFKBPjTK6rynOqJ9KR11M86nFPcbjQsHAgel2XDNlWWx6/WsBJp06cgWpq8FtvG
-         vJRhycBvImtAP4k37FVFof+/Yfb/yXDJ5o+Vshh6DhksMdEUfKCntlKlsWJYZBkfjJDK
-         wgxLivkHm6jRs0ZxdIr9e21jfykXYWeYkELRxu87jQVKXViOXuys3epOM4JC1VepNV0H
-         QEZmvMaeiyYGjnHxTetFvXqcGZmPvGUU+q/V6/5JFWgOy1yLnfjdPlbWEzhDtSoQdP53
-         MSCg==
-X-Forwarded-Encrypted: i=1; AJvYcCVuMfhI7a4hF+AX/mYwBwERklgiRvAst1NLyPmqX8ZAmGK2/vJrgSufVbAhHV6KGKhr7jo0dmlSPOo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAmT2j3WxWuUoInam72vHMGdAlxmcezXRrkUaXRztxO6UuTK8K
-	cA9uEAEW4LQ+LvrO9+pD+US7Edr2MYaF+xUUqo9BFmOWu799MGYDwwAiJjIz5bGV
-X-Gm-Gg: AeBDietVvZyYLoq9SVVm8GgqOmUicJW2b6sCMMWc3znpmxYUO+IAlMFzqIcvpPjqcJ+
-	T4C937ki+o9Qk8U2Py6xNsjqQ8Jl/JESMgLA7hR++lIkJs9wVZMLTFesK7BF4Y4EX52aAT/wtdO
-	qsnWnUq1SEcQTl8DvuNAwPmkUm0jlTxeEg0ECJkl4r9m5KmbVPtFWpXZsIcqifXcHOOn03rQGyf
-	+PzZyMOfCBmasH3rofe3yu+FJHuEQN3G/7CS8BvwGHAUYwCYfyIP396Eq/XM0BwUT10hJUzebi5
-	wIra7N0YLCRLzjgz6/hCX95qtq7+FrxiNdEqNipF37vaQzN9IhA+C6VJwJHTwdnoGT8GfjCtSVq
-	DHt7O2vSMZrE9QMr09M0zJMjGSKQxz05HfyJkxkwNpDIh4Fi3PiQ5Is0zXjb11WjJt076ylk+Ay
-	kLf32MCAQ3YTzHyFErIu4IiBqCuDqfAcwyKDwm0scOww0m/RV1UERhuSG7gkSX
-X-Received: by 2002:a05:6a00:2d15:b0:81f:3cac:38a1 with SMTP id d2e1a72fcca58-82d0da41a30mr19419876b3a.6.1775635847265;
-        Wed, 08 Apr 2026 01:10:47 -0700 (PDT)
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com. [209.85.216.46])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82cf9b589b8sm19718973b3a.24.2026.04.08.01.10.46
-        for <linux-cxl@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Apr 2026 01:10:46 -0700 (PDT)
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-35d8e548a05so6411093a91.1
-        for <linux-cxl@vger.kernel.org>; Wed, 08 Apr 2026 01:10:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWqVw4aPwNXv/Lcty0w7HGFlHDamPybbtTXIJLcheeP1Xx4SgclNTol3JxnVa7Mqa7p1IG+1Cl6Jpk=@vger.kernel.org
-X-Received: by 2002:a05:6102:688e:b0:607:9b47:81f2 with SMTP id
- ada2fe7eead31-6079b478f09mr649179137.20.1775635395263; Wed, 08 Apr 2026
- 01:03:15 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C0F35AC2B
+	for <linux-cxl@vger.kernel.org>; Wed,  8 Apr 2026 20:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.6
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775680364; cv=fail; b=Qsx0dAiP6RemSb/QDJj1g8bt23oHpfdIFOOUv2TnMcWRn52GBgr/fA2e7dYY+dZfYjnCPb2Ffk2dwTwE/v8/uh7oOWbZlvwwZy8GwRJW6OuZoArfxIVN3FM+iTuAO18c8X0Ladbu3Wynp8ZiKc5h9FMfsEOLQVduZDLcHW/GGQ8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775680364; c=relaxed/simple;
+	bh=O9K7Sus8cqVctJGNPQzqZEsQSO3HkxI9RhklP41plUE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Bg5e6YbsrXxpawGxRfihIvwEg0rYzzFpqiulf7JkFPdPCyPojz2ktFTCsy/7PcHDe4SfNH5XkDzrx2vgCOnkMeHvXiyBgS/l5tzWuRcbijNSilKdktSW0DE5wVIvf4Aucqpycm1T2HOgE3WSrtVhEMteWz8U+s1hyFEWKRiXh74=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=25CBD0ZR; arc=fail smtp.client-ip=40.93.195.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="25CBD0ZR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FPyIZEAsno6eMovqvn/uzyW6+9658jPi9cEJlWvCnPWboJKqhCAoF9AFOz9zJuEAHjgV/LEV758mhCDcuI2faENPfMmeSS0dL5VGr/YqcqZfWnEqRluyx3D/O3zYRTFURHgrHoRXckPFdFZ4f0cRKsgo9D9gSEV/Zl4SKFU4xVXPQNAWf3eyGfNd+TmC4pNITHkUcmhBhl1lz3WTjgdQpnm4XLrWWgYw5xsW5+HaHy1pPuBEfdXu1mLkGp+D2XEaOx/iRBBvpi2YBFRTmxW2F+76QRHa78BD00AdkMc/xM1u4YDyG12PKbYRSJTAd0senpe8NKnogIxAljSAEQRvKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bDu82FVz6zlkm/ylkKXt0BuOpa2FqbmZzk+6DPpO8QY=;
+ b=cQZ/t0sF2IAom+e6ZrJKEE3OKTQaEPVRPM9/Ac2aNUSBjnseou8V3zyQIMpmHqbTpgs4qtv/RxJwUV/LKk5ttsyHLZFbsFZZ5kzUptMeuV0DT7EY/oZaXaS/mHA3iz0UFlx/4VAtWPDag6MlE2gGuO9gqbBbmdIlSztSzb8RClL31EQvkj0DzaUAYXJUquhVxyqsxICa+Z1+9U/J1IyxgFlkbcLvnTrM0RC5G0Cr1D4+AfGkkhzFwiSfUabUpo8e6RHUq65K8vjA/T8/XRS5e0QyyLa13G/brG43nDe1Dei/mnQYCTLA/kK7S/oCOg+pyMqOlqY9JoHkvPS/hR67ZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bDu82FVz6zlkm/ylkKXt0BuOpa2FqbmZzk+6DPpO8QY=;
+ b=25CBD0ZRc5zKXze5FcbGRk1Wy0lzdEHZyZyb/5Jyx8ui5hnwNKzZjV1WztSpCDeviBzOCRXtTy+vTxl0isfce6L5cLCuqEXxHhVHsr+ZCIAE792KW921XJBbH8l1jZfmEjJo76RdpAst2FPhzsRVx+BMVsUntALF6hWLDYEyjz0=
+Received: from BL1PR13CA0071.namprd13.prod.outlook.com (2603:10b6:208:2b8::16)
+ by CY8PR12MB7633.namprd12.prod.outlook.com (2603:10b6:930:9c::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.19; Wed, 8 Apr
+ 2026 20:32:38 +0000
+Received: from BL6PEPF00020E5F.namprd04.prod.outlook.com
+ (2603:10b6:208:2b8:cafe::26) by BL1PR13CA0071.outlook.office365.com
+ (2603:10b6:208:2b8::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.37 via Frontend Transport; Wed,
+ 8 Apr 2026 20:32:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ BL6PEPF00020E5F.mail.protection.outlook.com (10.167.249.20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9769.17 via Frontend Transport; Wed, 8 Apr 2026 20:32:38 +0000
+Received: from ethanolx7ea3host.amd.com (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Wed, 8 Apr
+ 2026 15:32:37 -0500
+From: Terry Bowman <terry.bowman@amd.com>
+To: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<dan.j.williams@intel.com>, <shiju.jose@huawei.com>, <ming.li@zohomail.com>,
+	<Smita.KoralahalliChannabasappa@amd.com>, <rrichter@amd.com>,
+	<dan.carpenter@linaro.org>, <PradeepVineshReddy.Kodamati@amd.com>,
+	<lukas@wunner.de>, <Benjamin.Cheatham@amd.com>,
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, <nvdimm@lists.linux.dev>,
+	<alucerop@amd.com>, <ira.weiny@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <terry.bowman@amd.com>
+Subject: [ndctl PATCH 0/3] Enable CXL protocol testing
+Date: Wed, 8 Apr 2026 15:32:28 -0500
+Message-ID: <20260408203231.962206-1-terry.bowman@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260325143555.451852-1-herve.codina@bootlin.com> <20260325143555.451852-2-herve.codina@bootlin.com>
-In-Reply-To: <20260325143555.451852-2-herve.codina@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 8 Apr 2026 10:03:04 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVh2gFQf16AarJCY+2y+24bOgaQyTUv6opPqVKCoUwMag@mail.gmail.com>
-X-Gm-Features: AQROBzDnP0FsdrSe7kiaKBzgO-Rt21-zwjAE4PjirQbwD7WYIqJw4iFM_IJ47Kw
-Message-ID: <CAMuHMdVh2gFQf16AarJCY+2y+24bOgaQyTUv6opPqVKCoUwMag@mail.gmail.com>
-Subject: Re: [PATCH v6 01/27] Revert "treewide: Fix probing of devices in DT overlays"
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kalle Niemi <kaleposti@gmail.com>, Matti Vaittinen <mazziesaccount@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Linus Walleij <linusw@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org, 
-	driver-core@lists.linux.dev, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Saravana Kannan <saravanak@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF00020E5F:EE_|CY8PR12MB7633:EE_
+X-MS-Office365-Filtering-Correlation-Id: a01643da-2d73-452c-575a-08de95adf9a8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700016|7416014|82310400026|1800799024|921020|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	F2TodULu5Tg2skJPTo0Bb4Coy4W4/2njN6z7aINyKM7puky95LwJmiB8rQAbvOcz19jJWC/G5QZ/zyXWp25i3f5FwHmIq7sKMmCVhse442wHsoZfN4xXY9Da6bm4WQYhuBJPR8vnBTwFTaNw43BooSsXSCpNs+9vXv6s7eb+EkNdjfGdmdb6IFetzya5USR4InLbpTO+akd649rKMHQhSU0LxJ75r4DCbIYJJHHrxDhrC/Me6+jo7Nm1aRPhFl0P04mw8rI2xZbegevAB1Fvc6X14NN06KQnQmIZ2es7B6tbd2LLidPHLQIse3tbdiBa5wHwQP/3CYJdhRrRqp7RKdSh1bdLU+kn3XDz32iDTujOETowT3kO4MUYeZVbRMI4udMnvmFOZ41/QApamcR2OHuJC2+jLk6pPo1euNzGOpXijqjJ0B+3Rs6j9MzMG/iA2JxotmswP26dwFFpruZMEfDjSkLTgklPnX4er6KGqRKHkdi1zY7mkWS9kfBLGrkztgQ/yqWm4xQeSlHCruRbFTn9TcBfxoU1PVXZh9nm+tn7tMebYx4UX2t72nJgiP8o5j42FTUfaErTHcsDC23eBBtHJbHMJDI6OpOtHsjWYAxXS2CVXnMSPZNS8+xSqqUPWl6lGPSz4xyxSAElKNxy3YK0cZ4UOb/d+z232E5sLaD1UYr0sj2QM5qqwJqk+UK5ex84pczU0FzAmgC4xZbLf77c4atEGfxy/AgzK8mAyOkUxh3cHoXba4q2SIdIL9TKU+/4bLinFTT8rlH2ms1HWuz6HYC2R2XbqTQUnCPsSsk9OvzKwyl9flYROtGAIKLa
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700016)(7416014)(82310400026)(1800799024)(921020)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	EuTzxErsUg7XbZnOj89AamphJd2Ett9WXDIYIx1dKliGuJcL7H67QLtfr7oKDlsyYLia3/hhsONNP1wFsiKMNAnNqQaDp0dXbfsr4jrJMQWrH7kYXE+raF6vvt3qcKwk6j1l5jFBt/6bQlnaM12k4b78yYpL+mT62dFFhMZtdbKtne66CN9metN/ARxSaaeLZ6QWiJbSmcoeXwh5HOm0DSM6tAvXNT92AmG6lsDqAT879HSm5Qn/sZ3kqE9E0a3pYsqJHMDy49HkzMv+wLJhwOMMbPa1LfJb/Dqqku2EhXnNb1oHRJwl/uOHL3hMPMvgquOaKFAfFeyg60FJke5Nnyj5+l1RLf//QyxQDLRjFr3s28bFoaIZaaQcBGE36/2hzMynJ1YnXBGos5V8lFekdbt0m8W0Fft51158FEeM0f5Fo0l8rUzyNqsavmEWitwf
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2026 20:32:38.3186
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a01643da-2d73-452c-575a-08de95adf9a8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF00020E5F.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7633
 
-On Wed, 25 Mar 2026 at 15:36, Herve Codina <herve.codina@bootlin.com> wrote:
-> From: Saravana Kannan <saravanak@google.com>
->
-> This reverts commit 1a50d9403fb90cbe4dea0ec9fd0351d2ecbd8924.
->
-> While the commit fixed fw_devlink overlay handling for one case, it
-> broke it for another case. So revert it and redo the fix in a separate
-> patch.
->
-> Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overlays")
-> Reported-by: Herve Codina <herve.codina@bootlin.com>
-> Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgyo8x6=9F9rZ+-KzjOg@mail.gmail.com/
-> Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin.com/
-> Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootlin.com/
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> Link: https://lore.kernel.org/lkml/20240411235623.1260061-2-saravanak@google.com/
-> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-> Acked-by: Mark Brown <broonie@kernel.org>
+Current CXL error injection (EINJ) only supports Root Port protocol error
+injection but a method to test all CXL devices is needed. This series
+outlines methods to update both the kernel and the 'aer-inject' tool-without
+relying on EINJ-to enable CXL RAS protocol error handling across all CXL
+devices.
 
-> --- a/drivers/bus/imx-weim.c
-> +++ b/drivers/bus/imx-weim.c
-> @@ -327,12 +327,6 @@ static int of_weim_notify(struct notifier_block *nb, unsigned long action,
->                                  "Failed to setup timing for '%pOF'\n", rd->dn);
->
->                 if (!of_node_check_flag(rd->dn, OF_POPULATED)) {
-> -                       /*
-> -                        * Clear the flag before adding the device so that
-> -                        * fw_devlink doesn't skip adding consumers to this
-> -                        * device.
-> -                        */
-> -                       rd->dn->fwnode.flags &= ~FWNODE_FLAG_NOT_DEVICE;
->                         if (!of_platform_device_create(rd->dn, NULL, &pdev->dev)) {
->                                 dev_err(&pdev->dev,
->                                         "Failed to create child device '%pOF'\n",
+The first patch provides the scripts to enable and trigger AER protocol
+errors. This patch also includes the README.md with install details.
 
-Note that all these removals no longer apply cleanly due to commit
-f72e77c33e4b5657 ("device property: Make modifications of fwnode
-"flags" thread safe") in driver-core-next, which is gonna complicate
-backporting to stable.
+The second patch enables correctable and uncorrectable AER internal error
+handling in the aer-inject tool.
 
-Gr{oetje,eeting}s,
+The third patch is a kernel patch to set the RAS status in the handler. 
 
-                        Geert
+Terry Bowman (3):
+  test/cxl: Enable CXL protocol error testing using aer-inject
+  test/aer-inject: Add aer-inject correctable and uncorrectable interanl
+    error support
+  test/cxl: Force RAS status in cxl_handle_cor_ras() and
+    cxl_handle_ras()
 
+ test/contrib/cxl-aer-einj/README.md           | 80 ++++++++++++++++
+ ...Add-internal-error-injection-support.patch | 91 +++++++++++++++++++
+ ...AS-status-in-cxl_handle_cor_ras-and-.patch | 51 +++++++++++
+ .../cxl-aer-einj/scripts/ds-ce-inject.sh      |  4 +
+ .../cxl-aer-einj/scripts/ds-uce-inject.sh     |  4 +
+ .../cxl-aer-einj/scripts/enable-trace.sh      |  5 +
+ .../cxl-aer-einj/scripts/ep-ce-inject.sh      |  4 +
+ .../cxl-aer-einj/scripts/ep-uce-inject.sh     |  4 +
+ .../cxl-aer-einj/scripts/root-ce-inject.sh    |  4 +
+ .../cxl-aer-einj/scripts/root-uce-inject.sh   |  4 +
+ .../cxl-aer-einj/scripts/us-ce-inject.sh      |  4 +
+ .../cxl-aer-einj/scripts/us-uce-inject.sh     |  4 +
+ 12 files changed, 259 insertions(+)
+ create mode 100644 test/contrib/cxl-aer-einj/README.md
+ create mode 100644 test/contrib/cxl-aer-einj/patches/0001-aer-inject-Add-internal-error-injection-support.patch
+ create mode 100644 test/contrib/cxl-aer-einj/patches/0001-test-cxl-Force-RAS-status-in-cxl_handle_cor_ras-and-.patch
+ create mode 100755 test/contrib/cxl-aer-einj/scripts/ds-ce-inject.sh
+ create mode 100755 test/contrib/cxl-aer-einj/scripts/ds-uce-inject.sh
+ create mode 100755 test/contrib/cxl-aer-einj/scripts/enable-trace.sh
+ create mode 100755 test/contrib/cxl-aer-einj/scripts/ep-ce-inject.sh
+ create mode 100755 test/contrib/cxl-aer-einj/scripts/ep-uce-inject.sh
+ create mode 100755 test/contrib/cxl-aer-einj/scripts/root-ce-inject.sh
+ create mode 100755 test/contrib/cxl-aer-einj/scripts/root-uce-inject.sh
+ create mode 100755 test/contrib/cxl-aer-einj/scripts/us-ce-inject.sh
+ create mode 100755 test/contrib/cxl-aer-einj/scripts/us-uce-inject.sh
+
+
+base-commit: 8ad90e54f0ff4f7291e7f21d44d769d10f24e2b6
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.34.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
