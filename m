@@ -1,103 +1,113 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D403A0B05
-	for <linux-cxl@vger.kernel.org>; Wed,  8 Apr 2026 21:56:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F259366563
+	for <linux-cxl@vger.kernel.org>; Thu,  9 Apr 2026 02:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775685377; cv=none; b=cIzi3N8uYjElKsueAT13Yub+7DTymZHTYY5dcNA465pr/C5MHm9UOqNp/TbWnsMTUSyI3OrSeLVitnbW8E06wr9a5ZUaakeEymXdVCbFswx/3q4RYnfLFf9cvP8jwUPCmlccArFGUqztxxHdjyyujI5P3paNgIck4dv+oOXiqVo=
+	t=1775701302; cv=none; b=LQaxZxnD7yM9ZCvtGuL9J5O6eVFfutoFEGrcB1GvnMJlnHce2zFglwzcNd8ClL2pFy4NQSaycz07whPWoeccmWx+zSF1Hcu4Szir90WJnJM4eFHkGON+WVYF5G2jmMMw4ISgSvlbIL6SYI//vDnB0pWFrOQ6MNUr0LQLWaSEkaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775685377; c=relaxed/simple;
-	bh=m/RIsCZ6L9sAmGDRZI2YbyVGhDO+TzeVpIUyc9KH1Pw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qPu5tJaVRVsYKFECfsCzIpapcNsx+09GJKqnu1brue/Ik6mpaiORp9rpbClT4UWJJqaECGnaS+RkXFz1jsPy2kAjwpaqIors2dYSMLvnV4JKe/Pvl69XVIo3oG1TDUuWL1GHyUYQhy+imF+vuETA23Mj4YJDEvjIeezcjlAdMEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=WbZlpVdA; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1775701302; c=relaxed/simple;
+	bh=r3zYs9jDmE5wwzwFSJ8XK+QZj3Iw6+7s+2G03qWboqM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AZSmpSJNbiJ17E5Hdxrq0TdEf3xPqUtuK8mriZlxZwrqOeIxngnaTrQu1vXNqt2nlTOHWfxifm0BR02L/ez+2hyzPeEqBUuS5RU1000n0gCL1H74uZiRU26hoPD/lMUcmZX6lpVjab2RFMmTDhyp0+G2pj76ms4HY4uKY/FQTlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jtEMjlKl; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="WbZlpVdA"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-50d6249bb99so2254921cf.0
-        for <linux-cxl@vger.kernel.org>; Wed, 08 Apr 2026 14:56:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1775685373; x=1776290173; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qndnJttoApFXUO2POEtVDoUfAMGPbRgoP3C1nGgpeNw=;
-        b=WbZlpVdAVg4/a8k/okNew88UBd78k8vdw7AVRhZqFjKtpHP6glg9FH8DkicHFEBmmF
-         2nYUR1Q73PV4hpYYaPyu9h54xWwfDieHsPxL/R0T1L+6Em4TvpLU6kbf9T+9L3dAURQP
-         0eu7WL7hcsvgCIYmUefP/zQ/QokOisRWbeJkVWgICBCNaL8PsB2kFpDnTFcHCLXnUfr+
-         byqTf/u0Nl+G09hdRbyXNH3zB8q20LOqdLmMycWdyOBvWiFX2aMR8InXpkEI8Oiwbwc6
-         BiipGUfAJGI48xk24nwOgZBkAlREFXVtEqVCXBcrSohYiyzEW7Siqp3qZPTQUnT/mrae
-         hCyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775685373; x=1776290173;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qndnJttoApFXUO2POEtVDoUfAMGPbRgoP3C1nGgpeNw=;
-        b=PWdR4eT7nnYy5A2nsVKMfeqt0Wy3MT54mSyMrtPJLT1nqZ0KOX1HBRDdYODq+kNaVR
-         EU1HsbQ9yFBxSoqs0HlR4IhFpgCZw5la6yDVl5lR4MYt10xb7fDJVjgAd6YjLemg9cRP
-         Jr2A4s616L6OanQDBThO+l0duajtGHDDlG2Ncv01dDIVHTXMxnNWK8NJ1g0K1+1T0xX6
-         PcjDWWcx9vv3AD8mMWqhCLVEU5PXi8Q1aTJPs14yuRXVvKud1iEHHI83QA+1lY1EfzJp
-         1+O0p9impa/VCZABRK+y+VQbwaiUVv5ck95lX4R28/myQVhV7FM3R2vNbm5fbX7qtez9
-         M6xg==
-X-Forwarded-Encrypted: i=1; AJvYcCXqrNnHUjwmhQwROZi/i9MMK8B/KemI6/vSUM4gB+lJRO+GrWR7IMAwkRsJD1UsrEAdFKmDDAE51Pk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQaJzgXa9u58osTVn5nPj95HYB2jQ6hWedF0MgoDYFgAH9qAAu
-	EPfXikBqNP5TwpFSjraCU6AuAu3f65z8ZZtl59wq1HKWWpKAadOofgMIrzTuyn61DyU=
-X-Gm-Gg: AeBDiev90Qn72Nl1+fAKNYvdhr3VLFPfYoWiZCGMp5P9B/mQP20kYTPEgfkWKgV+7db
-	m6tjm97xgIj/VA6/l1fkeseVPd5lfRKpO+d+/x7TMjurWw4uWWiSnqxTJ+Qts1Ygej7xmm1ALLf
-	XGSVIrr6cSjUx1UJNtqHD3Ay4TGZwZLJg1HJikVP4sz0RFJGhUc3KDiv0MLXHf0mUSl9snuPokI
-	2nCYVO4PB8/gJVLyeII63VK0ILh94vfinoM1j7o8kQIxRpweUC44frFzSn4hSeVkzkdhA4W4ocf
-	PKSPGhJd1arUO2tTjHAtO2v4rw/1DCdEYSm5ndOVy5BVi5EHRN5IPk54ppi++WOu2+sbA81cUhH
-	CkTfCwFdV/mWURLmXFqf88Hys706ITJ3rv+ejv/sajo+hz38dMV//KNr6LiWiyluqnUmMDsMPic
-	BS+W2WdIcwEYdu2tmOURDAyQ8Q9opcVdAiIRJ1fiWcxzBqmLhN0m5h6wPohnYGEadexS5MNjdFT
-	GGVupiiOKO8
-X-Received: by 2002:a05:620a:1a11:b0:8cf:d565:fca4 with SMTP id af79cd13be357-8d41b8df4ecmr3283687885a.3.1775685373060;
-        Wed, 08 Apr 2026 14:56:13 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-71-191-243-150.washdc.fios.verizon.net. [71.191.243.150])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8d2a5392d35sm1601280185a.10.2026.04.08.14.56.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Apr 2026 14:56:12 -0700 (PDT)
-Date: Wed, 8 Apr 2026 17:56:10 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Dan Williams <djbw@kernel.org>
-Cc: lsf-pc@lists.linux-foundation.org, linux-cxl@vger.kernel.org,
-	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [LSF/MM/BPF TOPIC] What's brewing in CXL?
-Message-ID: <adbO-tqwA_MJ1NHW@gourry-fedora-PF4VCD3F>
-References: <69d5bf0ab2210_2b3110036@djbw-dev.notmuch>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jtEMjlKl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775701302; x=1807237302;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=r3zYs9jDmE5wwzwFSJ8XK+QZj3Iw6+7s+2G03qWboqM=;
+  b=jtEMjlKlC14l4WeJ6arYPjtaJm9jdqH5V+LNd7+m9k2hoPd8sYOe6OhV
+   3FX1QpMrAie+m9bTXvsDI6OUaGjkof1cEgS3cGHST2DLSjbc6Gr1tDz34
+   8X0wMZZAVC9VSyS9PEVwzObmtzD+eta7xRsaX3MMddmDwdQx15Xemnvqp
+   SZ37SZdTsZ6Ic+d3LxsD01Tx3YFHX9xoVzrK3k3P2j13IXOcF58IG56uP
+   six77/PXmaorF9nYpdCKczSIolg0zuOD08SR0aHsN55DJ3iyI85oGVptG
+   9HB+wFxGENVKyFGUGw3I5hyfYbDF1eazR4O3zeZsH1mhlTvL0WYN/lPes
+   A==;
+X-CSE-ConnectionGUID: M07ZFrIVS4WVOR5Z1gfExg==
+X-CSE-MsgGUID: izwLeXzBT5GIg5r1Kf7U1Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11753"; a="88147859"
+X-IronPort-AV: E=Sophos;i="6.23,168,1770624000"; 
+   d="scan'208";a="88147859"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2026 19:21:41 -0700
+X-CSE-ConnectionGUID: 0HJM3tR1ScubAxiqDmeIkw==
+X-CSE-MsgGUID: Qz4YPsGRR6+lecDuUbp4bQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,168,1770624000"; 
+   d="scan'208";a="227774135"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.220.237])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2026 19:21:40 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH] Documentation: Update the CXL Maturity Map
+Date: Wed,  8 Apr 2026 19:21:34 -0700
+Message-ID: <20260409022137.3063980-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69d5bf0ab2210_2b3110036@djbw-dev.notmuch>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 07, 2026 at 07:35:54PM -0700, Dan Williams wrote:
-> For the summit I offered to organize a discussion on what has been
-> happening in CXL since Plumbers and a summary of the monthly CXL calls
-> since. The session goal is present top challenges, address concerns /
-> questions from the room, and perhaps introduce the CXL topics that have
-> their own session later in the day.
-> 
-> Please do comment, question, ack/nak, or add to the themes below to
-> highlight interest and help focus on the few topics we can cover in the
-> limited time.
-> 
-... snip ...
-> 
-> "CXL, making MM problems worse since 2021..." -- CXL subsystem tagline
+Update scores of existing items.
 
-Acked-By: Gregory Price <gourry@gourry.net>
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
 
-;P
+Please help make this document meaningful:
+- are there items listed that need an update
+- are there items omitted that need to be added
+Thanks!
 
-Obviously I have interest in this space, and the private nodes
-discussion is semi-orthogonal as I have been applying it to non-cxl use
-cases - but i do think the framing of it replacing some DAX patterns is
-a decent one.
 
-~Gregory
+ Documentation/driver-api/cxl/maturity-map.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/driver-api/cxl/maturity-map.rst b/Documentation/driver-api/cxl/maturity-map.rst
+index 282c1102dd81..a55de0239e58 100644
+--- a/Documentation/driver-api/cxl/maturity-map.rst
++++ b/Documentation/driver-api/cxl/maturity-map.rst
+@@ -52,7 +52,7 @@ in place, but there are several corner cases that are pending closure.
+ * [2] CXL Window Enumeration
+ 
+   * [2] :ref:`Extended-linear memory-side cache <extended-linear>`
+-  * [0] Low Memory-hole
++  * [X] Low Memory-hole
+   * [X] Hetero-interleave
+ 
+ * [2] Switch Enumeration
+@@ -78,7 +78,7 @@ in place, but there are several corner cases that are pending closure.
+ * [2] Hotplug
+   (see CXL Window Enumeration)
+ 
+-  * [0] Handle Soft Reserved conflicts
++  * [2] Handle Soft Reserved conflicts
+ 
+ * [0] :ref:`RCH link status <rch-link-status>`
+ * [0] Fabrics / G-FAM (chapter 7)
+@@ -99,7 +99,7 @@ mainly caused by the enumeration corner cases above.
+ * [1] Switch protocol errors (FFM)
+ * [2] DPA->HPA Address translation
+ 
+-    * [1] XOR Interleave translation
++    * [2] XOR Interleave translation
+       (see CXL Window Enumeration)
+ 
+ * [1] Memory Failure coordination
+-- 
+2.37.3
+
