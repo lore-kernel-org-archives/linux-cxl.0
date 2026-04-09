@@ -1,311 +1,159 @@
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011043.outbound.protection.outlook.com [40.107.208.43])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012025.outbound.protection.outlook.com [40.93.195.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC5D242D89;
-	Thu,  9 Apr 2026 22:02:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0BEB397E77;
+	Thu,  9 Apr 2026 22:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.25
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775772176; cv=fail; b=MfbrwTZL1wbz69LH30CPI8Qgjk01ls+tV8sLdaXcYLOg2LJ8aWQWbFNA54Nd9uq7fW+Z6DvQaAIzVHEF33nEA5kC2llr/0k0euMY7C5RcIYVPxcTpi+E8qkW1WpyL8dfa7mAUI8iXp68SvK24Gb0aA7LNX7dVDnUc5t6kglTOvE=
+	t=1775774756; cv=fail; b=VToO9wkUBxsnFmnPdZbxXGWnXH5FyM0+hWX51nI6ukjAaW6wrRbKcPhS2+ew5zvHUCNAef+KYZwfc/Apkhyy532H/g3+ip05hI+wBTumBKlW8tm+HOa5qMkOLVEtGr2132FUTK8/uJl6MD8QxqSsQMHMim66pF/nLIX6Lka8tp8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775772176; c=relaxed/simple;
-	bh=l538b8nh06ciUz6qNaovppUU6OHjqEYb9ccjjnZBbHE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=XHfn7+bYdoDWqE8xXDdWWsJwIEmOMnCqmH6sG3o/W9d5cSgBvpjUHw7kvLME7Foxhrv29lzAInpEKV9KwaaXq1+f+4bIgW7p21qgk+Wq54wKkYdm7Tf5U7zjhFFXUS7DsY9SB7T0rZGuzoXE3bQModZWdPqm3iFvB0WPNyDitoM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=AuiOSywC; arc=fail smtp.client-ip=40.107.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1775774756; c=relaxed/simple;
+	bh=C+3jx847XZjRzyWwWbaRWSfapBlQjPyL++w9iwptLFo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kFm6CyrQwcYykKPZ/e1Sd173yc2htJzFqgMX6K281TMes2BUjbwPdC4PBT7wn0RCZzD2rLR57FBRjwaAf9qTKtJgpiD5txtJd+vAdArDplp7NkYisTlIUAP53v3zqWXHZ3+NFWL3TyKPv33TkSEUt8q1nmONvf7uecVxDeKwUAk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FhWGRA0v; arc=fail smtp.client-ip=40.93.195.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="AuiOSywC"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FhWGRA0v"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HYUuvaOs4JUhHsaDfRMl4nY5VKYHpIZNBPDZPvbhl8QGUtsTg6p633hPigbFJFxImUuGH3TgvVyrcVV5IQhX9sP8u8txlIBJUGplhAmBUMTpYGUHKGgQNI6QRFsOoMWwJFHvX0m80maJRS/keLYV9mvZ75J+356/wiEornBwQ3sQ0Asu45zZsJz2XkJxJkXVm9dWO00XzFUyJRjzCa8e/4JrZTE3TxWaSc53dSLdGjAjA7Vi7dMbs4n0KYD+HhwPos2hcMzdKowsS7a0m8smFI+GsbqhHgkyNHJwk25OglUfa5bUa0OkfjTqwBX8ZLWxKBv8APJDpbFeBw4Mov5bMA==
+ b=zC8Asoegxc5Pvsxlv8FLeturxjSn+2b3hIp+Tsk5/w8B/SZ4OVaocDWNkU03iu7caG7OMMOl6sKvPnk0MuborXFoyp9uf7qv0GzldY0HE5Di9S/cBn8TqthoZCDYlo8ogCjp6uLMwbgerl/9E7bsp/CwbMGQin78nIUOkgaR9zZozJOxgmg3FLzpuXlIRlSkJFWWbASDVNGYNpMhWUrZs888u2xvb+152P/Mc6skuDQ/vfkBhcoyFXajdSmUssv2VPBWuGaY3FghFb2CJEstTx8+x5iYc0Pb2plt/cn2bSQnD6o7KCDgRfkO2fXVOrw/y4ueCMm8awADwk2ynarNGw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HaYeBad3AERoWiKtoQthc/RjJi+suUcPiGU0I9Dk6TQ=;
- b=bFpg+58aRiIeGfqCTheWVSG8Cc0MM/BtsM+g/Y/7VhoE7b3qKKShlBpSYbFWfJA9GxmqwSUJI/aMHzN9ZW3XXCHYxl+QhWqlpjc30O5b5jF8XJ6aE372jb5v3R3spM1lTBBoPlrt7O7jy/uWwYmzYjyMKdd2XIYGGKUStXnYjf0e1FDshmJW2jtXlYhCdsuvR6CC6doN3Ij78kMoUbAEC98oHL1gZ5bVgV4viySom5Nn6Xgral9QL5p/pDvyKKGfa04c1KCjUEQOC15WIJwaY8TpXX8q1n6VOLAqI1I6xVrfY6KCeqhSXeWqhhwCdQX6sLhZkAqC4hXfHO+eLUOPqg==
+ bh=me/OIO/1PANziuyvM33f8krzkyLdR1a4WHdYNDlGjpo=;
+ b=QvJS/Nvn3c58qr+SUIZnVMIt8IEYCl8hXdSKkH2lKlh1xoYrEXbq11xCeONblwaMSctJi5dSBtvAT8mVjxKHQZft5xGIRvEVbpmnXpSUx5OmWIddj/LIQHeUMS20+OrxveRpmG3exWQDHI+K0LrSUf9Md2C+U+33id24yJTMwc8gBKMk/Zxnfwf83bLwpehB1kyefPYbJHC+dFa7xROW3e0E3h2PjrvQg01QRGsE++ZCB5MYGOvazvH65CiEAKAkG6SRnS68VH4qpaBmq8XvvmRP4+bReD1u3Hqp8ShthS6Svrd8U8gjGFyb52KeLC+HILr2C53HXMkMfOkkAg3Rig==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ 216.228.118.233) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HaYeBad3AERoWiKtoQthc/RjJi+suUcPiGU0I9Dk6TQ=;
- b=AuiOSywC7HuaZBodZvibdDHqsH5Y9Fu8YESZVNFwSGMwf2dCXSnUKVtClPPVtmbMDFrRSdcQ/rxXVrmK2htzBO8WIoIJ1VxJVIa1COfy226IbEhzjg3QSakExatgG93j9tFf+47nbA6GRuo8+CvjH8lxbXPjTf/3x6ZxHssr2ew=
-Received: from MN2PR22CA0014.namprd22.prod.outlook.com (2603:10b6:208:238::19)
- by DM3PR12MB9433.namprd12.prod.outlook.com (2603:10b6:0:47::11) with
+ bh=me/OIO/1PANziuyvM33f8krzkyLdR1a4WHdYNDlGjpo=;
+ b=FhWGRA0veLqhQJPxddfh28Ig+wDAe8CNkV0usJH+6Np+G6Pk3WvmhbHuYXjueeC4fXQ5kLfGptki3PVYkxAy7/wIVjaIPTilNwc41QaAwGcIRXzxaiPuZqQ2YFfX9Kp04xt8osBkjplSzMIe/NtzZPZ2qugfC5nKPN7egTlMMQC90+b6Ro350lw8iN9f6YADu6GlkPK0ptZYTAM9Tt5nD6B3i0jcgYSEZDRAoo93lWu+fs+1MqNCqcjNwfX6Byo6+t05/fT4n7D61RkPEksk6M2Hh8PUfMarQkqTelNuIBnCyn4Ht0Rlu8zP2hxSG895sbsWEx7RQumwX32i6OKlYA==
+Received: from CH2PR15CA0021.namprd15.prod.outlook.com (2603:10b6:610:51::31)
+ by DS0PR12MB7851.namprd12.prod.outlook.com (2603:10b6:8:14a::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.17; Thu, 9 Apr
- 2026 22:02:50 +0000
-Received: from BN3PEPF0000B069.namprd21.prod.outlook.com
- (2603:10b6:208:238:cafe::1d) by MN2PR22CA0014.outlook.office365.com
- (2603:10b6:208:238::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.41 via Frontend Transport; Thu,
- 9 Apr 2026 22:02:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- BN3PEPF0000B069.mail.protection.outlook.com (10.167.243.68) with Microsoft
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.20; Thu, 9 Apr
+ 2026 22:45:47 +0000
+Received: from CH2PEPF00000141.namprd02.prod.outlook.com
+ (2603:10b6:610:51:cafe::cb) by CH2PR15CA0021.outlook.office365.com
+ (2603:10b6:610:51::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.33 via Frontend Transport; Thu,
+ 9 Apr 2026 22:45:03 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ CH2PEPF00000141.mail.protection.outlook.com (10.167.244.74) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9818.0 via Frontend Transport; Thu, 9 Apr 2026 22:02:50 +0000
-Received: from [10.236.181.115] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Thu, 9 Apr
- 2026 17:02:49 -0500
-Message-ID: <59f69b87-e37e-44c7-8c15-c332118622b5@amd.com>
-Date: Thu, 9 Apr 2026 17:02:49 -0500
+ 15.20.9769.17 via Frontend Transport; Thu, 9 Apr 2026 22:45:47 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 9 Apr
+ 2026 15:45:28 -0700
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.20; Thu, 9 Apr 2026 15:45:28 -0700
+Received: from Asurada-Nvidia (10.127.8.11) by mail.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
+ Transport; Thu, 9 Apr 2026 15:45:27 -0700
+Date: Thu, 9 Apr 2026 15:45:26 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+CC: "jgg@nvidia.com" <jgg@nvidia.com>, "will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "joro@8bytes.org" <joro@8bytes.org>,
+	"praan@google.com" <praan@google.com>, "baolu.lu@linux.intel.com"
+	<baolu.lu@linux.intel.com>, "miko.lenczewski@arm.com"
+	<miko.lenczewski@arm.com>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "Williams, Dan J" <dan.j.williams@intel.com>,
+	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>, Vikram Sethi
+	<vsethi@nvidia.com>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v3 1/3] PCI: Allow ATS to be always on for CXL.cache
+ capable devices
+Message-ID: <adgsBgXYy68GmxAf@Asurada-Nvidia>
+References: <cover.1772833963.git.nicolinc@nvidia.com>
+ <a0dd3e4cc5260f55bbec5b3ed6791def33028735.1772833963.git.nicolinc@nvidia.com>
+ <BN9PR11MB5276A6B1B103C4B0201458348C53A@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-Subject: Re: [RFC PATCH 4/4] cxl/region: Introduce cxl_memdev_attach_region
-To: Dan Williams <dan.j.williams@intel.com>, <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<alejandro.lucero-palau@amd.com>
-References: <20260403210050.1058650-1-dan.j.williams@intel.com>
- <20260403210050.1058650-5-dan.j.williams@intel.com>
-Content-Language: en-US
-In-Reply-To: <20260403210050.1058650-5-dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <BN9PR11MB5276A6B1B103C4B0201458348C53A@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-NV-OnPremToCloud: ExternallySecured
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B069:EE_|DM3PR12MB9433:EE_
-X-MS-Office365-Filtering-Correlation-Id: f299915a-49d8-49f2-5b4d-08de9683bdb4
+X-MS-TrafficTypeDiagnostic: CH2PEPF00000141:EE_|DS0PR12MB7851:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8540e8b5-2729-43e7-cd57-08de9689be31
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700016|1800799024|30052699003|18002099003|56012099003|22082099003;
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700016|376014|7416014|22082099003|18002099003|56012099003;
 X-Microsoft-Antispam-Message-Info:
-	GLKsK71BeNDhvxiO99jey/JvgkMTwOym4JIg3IcXuah+feHvKtm1WTwvii26cV7q5UtudYL341VzxsHBtq4j0Tf6oul1mre0ioW1RUibosYgPerzABrUQV6rpChd/s4eDZeVDwROm61e1Evt5WZed7LOlrXWXy5DU/NwhDq9CDjZ1jgUM8DtBssjKVp6khFS/1rN3IaADB/V64BpESJyePJUf/Sc9Y/ZleOaAcQOMUB0RpkeucgO3T4UqIg/FaB+388ILwudHVATGBtdGtUfSX3hDerJryr3kZvQqvnWzNixenbZu6UQLEh2fUfv9gvqeQ/Z2D97RX4T4JFjtXjZUPpn+LXloaJm3McgV4RLx7YzN8tsz/n2s7K1vLSXylZLAJpoL0CsItVThd7zZFoiIaqK+9aTdzEZG2QNNTGR/ULDGSHQfXHgqTWqxDolzrpbZk1vQ6Hzg3bYotKYqTNUaqjeH34n6zdtuQGDwD35bX08vWsOqNqhrvj1ngFSlswlMlAq8vJtD4YlBlmgMg/HgAKQnNmBXhvSgeh5/IBWeVsuU4VGNexCPhjAtauIESopsEWljOrzvIKTzWKLCYxzKeGpC8ij6GyAFidQTmDLXUBgw9ziERiPmIZamDdN8Vr+ffYqKzkM6Ta5y7tYKb2Wp4Tq55uTST7kBxUlT3STcxG9wBZRstaHYCqa54uMKYOQMHTxcUZn4PQX3QjMNFdy2nAjjg1we2w9QkzK9Vej2g0ATSZsKH+FrqnbdciiXdTvnpFAEe2mn7+hCgBQDsjfMw==
+	9Ga+IriFArx4Lg+yse3Bjq5Di0Axc0aEJRwwmR+FDgUjUhgeOnuZWQftJ8LGBcVS4KqASSwjKmd0drqn1ZSaBxAMSiN3K7XVoFuhlgGoWcrGResfr2kzCHicxRIYV50h+LH+U4rqzFCkcGayXNFh7K3AoajWIWkAUAWj+gQ9alww4kElh835I8EPmL29FgA/divgqUwY5f+fM0qPZyDqb94g0lLsemgrPjPswYp99/i8QQWe/h+86FmgZhqRzGKS4W3NsBtLYtKJfKk+1p9w0pOVzCLVC4b5PyuyWXxXaYhbA4CnrQgYNWqMN9317Gu+IPuXtNKq1TUI6y47qPBBDeDQHpZsyPRi+ojqr8/yC0+tdY31SvLxJKY0wRprPfATG3Roo+Y+YRrhWFFOPSxDwjppCKinsCkvpwNM69Wfqg5Af/D75jx8litSN03nzDiO2tF3f4BkOyr29ZA4TBg83RUINvyUvHwwzhRXwEnzUCM1YjM5us1fK49in5T0mkUf4eoboqiNSHeGdba8u7FLRzLMGHrCd7043+bihkDTpwrFH4SLYH4uSsQhRMpN3zVCnMgaxsvlyV2h81RFt26kTjeGg00b/Sk3gHkj0Mf+eEv46ahXil5y1TQf7OibTOCZR78uqtqtL3ummFnHGsGRdUhbDCCT1LOKLRQMbJfHZg6E2/Rsi5q60AoYFwAJMtn+Dqw0HNhXPuQFYyuArCRJBou6M0HldHXPGYQjOnb94IUfWamBz4UAB2PTgKb4uBuriK8I+QPQ5OHTiyWZgeY5Uw==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700016)(1800799024)(30052699003)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700016)(376014)(7416014)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	l79fL8juY9foXKmtLzWgjgymp9QsRBNTnY0nI/xGx2XMD+giXvj+rva8sPOjeOfq7jo3iPzEMvrrZfmUArqv44FaJWiIqurR4YSJLvkrD7kQhY/3YoTwgfIGrHlSS03X/ilfV69rs7UmrO1B+8oY2trFD/jm7rH+PUUCkPqsPeVol8tmVKOu/XhP+hMt2UVzqH09MWYTMe19bfMSt74i9cZfFZG8dY78DGarh6lvS4a4r4BoipE0Ms5MO4nJvpeBJmELOHj7c05EBe/MPJqwzp1mY/9LTUEJLdjC2PJnQyUXLnYotvkm/MMwY8HiroU6z66kP845rm+AuiKdbI6rCQB+xhpUXZ7hMaQlwOrf1jeuuE2QhkgzpJ+3bovwnPzLNabhIS9DmIRX8EDeg6Z460bQE0EvEOf5hYKDHOsm7QktDybsWrpx4bqtlxYH0RCe
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2026 22:02:50.0395
+	+a99R+uzYKM4IVbwR89RVnLaRC5fNalNpBJpm/WVptFBREsaKk4OmAm3RGzd3JAuFu6BqVGkNgPjihjsn2Zy9GDJdsuvx50CXejJh9HaqT7+UB+czuSpFrIlGAcBrJMR48GSXNGUL3mEtBTh9I6NAMPb5ycDMXW+5v3YP8zu3HrJZiSsDLD2uVo2Nql7giDv/gHgiJR+zJkwWJkntyVtambYh81YUmM9YbT7/B4BVqXj1z0qqXZHhsHgDPY3tenxd2Yso4lPTY2oducY/1ROX0yXVp8HZOyh8FB3V86gYkQu8tuZ0xAJsnzvfR2yPyT4tRgDUzv99kK4XhvwtLeThE+9bZa2IOhXVtHcPv15hM/+7AYHWdX8Ca1b+eI0wiN9yR2gGFOUREe1h+tavLftcoLdY8q//jJqIPLQFsfYhxKzhQNptoxg4q8HtmDaYRr0
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2026 22:45:47.7307
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f299915a-49d8-49f2-5b4d-08de9683bdb4
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8540e8b5-2729-43e7-cd57-08de9689be31
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B069.namprd21.prod.outlook.com
+	CH2PEPF00000141.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9433
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7851
 
-On 4/3/2026 4:00 PM, Dan Williams wrote:
-> To date, platform firmware maps accelerator memory and accelerator drivers
-> simply want an address range that they can map themselves. This typically
-> results in a single region being auto-assembled upon registration of a
-> memory device.  Use the @attach mechanism of devm_cxl_add_memdev()
-> parameter to retrieve that region while also adhering to CXL subsystem
-> locking and lifetime rules. As part of adhering to current object lifetime
-> rules, if the region or the CXL port topology is invalidated, the CXL core
-> arranges for the accelertor driver to be detached as well.
-
-I'm probably missing something, but where does the core detach the accelerator driver?
-I assume it's part of unregister_region(), but I'm not seeing any driver_detach() calls
-on the accelerator device.
-
-I don't think there's any demand for this at the moment, so it's more of a "food for thought"
-kind of thing, but why not allow for a fallback mode of operation instead of detaching
-the accelerator driver? First thing that comes to mind is an optional callback as part
-of struct cxl_memdev_attach that is called by the core during CXL removal. The assumption
-would be that an accelerator driver that provides the callback would clean up all of its CXL
-usage in the callback then continue in a PCIe-only mode of operation (hardware willing).
-When the callback isn't provided, you get the behavior in this patch. Again, this isn't
-needed here but may be a nice middle-ground later on down the line.
-
+On Tue, Mar 31, 2026 at 08:19:19AM +0000, Tian, Kevin wrote:
+> > From: Nicolin Chen <nicolinc@nvidia.com>
+> > Sent: Saturday, March 7, 2026 7:41 AM
+> > 
+> > Controlled by the IOMMU driver, ATS is usually enabled "on demand" when
+> > a
+> > device requests a translation service from its associated IOMMU HW running
+> > on the channel of a given PASID. This is working even when a device has no
+> > translation on its RID (i.e., the RID is IOMMU bypassed).
 > 
-> The locking and lifetime rules were validated by this local change to
-> cxl_mock_mem. This tests all the lock acquisition and cleanup at
-> modprobe -r cxl_test time. More work needed to also test the full positive
-> case.
+> ATS is usually enabled "on demand" when a given PASID on the device
+> is attached to an I/O page table. Above sounds like there will be a software
+> action to enable ATS upon a device translation request.
+> > +/*
+> > + * CXL r4.0, sec 3.2.5.13 Memory Type on CXL.cache notes: to source
+> > requests on
+> > + * CXL.cache, devices need to get the Host Physical Address (HPA) from the
+> > Host
+> > + * by means of an ATS request on CXL.io.
+> > + *
+> > + * In other world, CXL.cache devices cannot access host physical memory
+> > without
+> > + * ATS.
+> > + */
 > 
->     struct cxl_attach_region
->             attach = { .attach = {
->                                .probe = cxl_memdev_attach_region,
->                        } };
->     cxlmd = devm_cxl_add_memdev(cxlds, &attach.attach);
-> 
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  include/cxl/cxl.h         |  16 +++++
->  drivers/cxl/core/region.c | 125 ++++++++++++++++++++++++++++++++++++++
->  2 files changed, 141 insertions(+)
-> 
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 10a9b8fa2f6b..1698d15ec1ca 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -153,6 +153,22 @@ struct cxl_memdev_attach {
->  	int (*probe)(struct cxl_memdev *cxlmd);
->  };
->  
-> +/**
-> + * struct cxl_attach_region - coordinate mapping a region at memdev registration
-> + * @attach: common core attachment descriptor
-> + * @region: physical address range of the region
-> + *
-> + * For the common simple case of a CXL device with private (non-general purpose
-> + * / "accelerator") memory, enumerate firmware instantiated region, or
-> + * instantiate a region for the device's capacity. Destroy the region on detach.
-> + */
-> +struct cxl_attach_region {
-> +	struct cxl_memdev_attach attach;
-> +	struct range region;
-> +};
-> +
-> +int cxl_memdev_attach_region(struct cxl_memdev *cxlmd);
-> +
->  /**
->   * struct cxl_dev_state - The driver device state
->   *
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 11bc0b88b05f..090f52392b20 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1123,6 +1123,19 @@ static int cxl_rr_assign_decoder(struct cxl_port *port, struct cxl_region *cxlr,
->  static void cxl_region_setup_flags(struct cxl_region *cxlr,
->  				   struct cxl_decoder *cxld)
->  {
-> +	if (is_endpoint_decoder(&cxld->dev)) {
-> +		struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(&cxld->dev);
-> +		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +
-> +		/*
-> +		 * When a region's memdevs specify an @attach method the attach
-> +		 * provider is responsible for dispositioning the region for
-> +		 * both probe and userspace management
-> +		 */
-> +		if (cxlmd->attach)
-> +			set_bit(CXL_REGION_F_LOCK, &cxlr->flags);
-> +	}
-> +
+> s/world/words/
 
-It seems unfortunate that you set the region lock bit here and then immediately do a check
-to set the bit again. I can't think of a way to leverage cxld->flags for type 2 in an
-ergonomic way though, so I guess it's fine.
->  	if (cxld->flags & CXL_DECODER_F_LOCK) {
->  		set_bit(CXL_REGION_F_LOCK, &cxlr->flags);
->  		clear_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags);
-> @@ -4226,6 +4239,115 @@ static int cxl_region_can_probe(struct cxl_region *cxlr)
->  	return 0;
->  }
->  
-> +static int first_mapped_decoder(struct device *dev, const void *data)
-> +{
-> +	struct cxl_endpoint_decoder *cxled;
-> +
-> +	if (!is_endpoint_decoder(dev))
-> +		return 0;
-> +
-> +	cxled = to_cxl_endpoint_decoder(dev);
-> +	if (cxled->cxld.region)
-> +		return 1;
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * As this is running in endpoint port remove context it does not race cxl_root
-> + * destruction since port topologies are always removed depth first.
-> + */
-> +static void cxl_endpoint_region_autoremove(void *_cxlr)
-> +{
-> +	struct cxl_region *cxlr = _cxlr;
-> +	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
-> +	struct cxl_port *port = cxlrd_to_port(cxlrd);
-> +
-> +	devm_release_action(port->uport_dev, unregister_region, cxlr);
-> +}
-> +
-> +/*
-> + * Runs in cxl_mem_probe context after successful endpoint probe, assumes the
-> + * simple case of single mapped decoder per memdev.
-> + */
-> +int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
-> +{
-> +	struct cxl_attach_region *attach =
-> +		container_of(cxlmd->attach, typeof(*attach), attach);
-> +	struct cxl_port *endpoint = cxlmd->endpoint;
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_region *cxlr;
-> +	int rc;
-> +
-> +	/* hold endpoint lock to setup autoremove of the region */
-> +	guard(device)(&endpoint->dev);
-> +	if (!endpoint->dev.driver)
-> +		return -ENXIO;
-> +	guard(rwsem_read)(&cxl_rwsem.region);
-> +	guard(rwsem_read)(&cxl_rwsem.dpa);
-> +
-> +	/*
-> +	 * TODO auto-instantiate a region, for now assume this will find an
-> +	 * auto-region
-> +	 */
-> +	struct device *dev __free(put_device) =
-> +		device_find_child(&endpoint->dev, NULL, first_mapped_decoder);
-> +
-> +	if (!dev) {
-> +		dev_dbg(cxlmd->cxlds->dev, "no region found for memdev %s\n",
-> +			dev_name(&cxlmd->dev));
-> +		return -ENXIO;
-> +	}
-> +
-> +	cxled = to_cxl_endpoint_decoder(dev);
-> +	cxlr = cxled->cxld.region;
-> +
-> +	if (cxlr->params.state < CXL_CONFIG_COMMIT) {
-> +		dev_dbg(cxlmd->cxlds->dev,
-> +			"region %s not committed for memdev %s\n",
-> +			dev_name(&cxlr->dev), dev_name(&cxlmd->dev));
-> +		return -ENXIO;
-> +	}
-> +
-> +	if (cxlr->params.nr_targets > 1) {
-> +		dev_dbg(cxlmd->cxlds->dev,
-> +			"Only attach to local non-interleaved region\n");
-> +		return -ENXIO;
-> +	}
-> +
-> +	/* Only teardown regions that pass validation, ignore the rest */
-> +	rc = devm_add_action_or_reset(&endpoint->dev,
-> +				      cxl_endpoint_region_autoremove, cxlr);
-> +	if (rc)
-> +		return rc;
-> +
-> +	attach->region = (struct range) {
-> +		.start = cxlr->params.res->start,
-> +		.end = cxlr->params.res->end,
-> +	};
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_memdev_attach_region, "CXL");
-> +
-> +/*
-> + * The presence of an attach method indicates that the region is designated for
-> + * a purpose outside of CXL core memory expansion defaults.
-> + */
-> +static bool cxl_region_has_memdev_attach(struct cxl_region *cxlr)
-> +{
+I have updated commit messages and inline comments. Thanks all for
+the reviews!
 
-I think this should be renamed to something like "cxl_region_is_private()"; it
-better matches the intended use of the function while lessening the burden on
-a non-type 2 educated reader. Also has the added benefit of being one less
-change site if the mechanism for determining if a region belongs to an accelerator
-changes in the future.
+One question regarding VM case: if a device is ats_always_on, while
+VM somehow doesn't set nested_domain->enable_ats. Should the kernel
+at least spit a warning, given that it would surely fail the device?
 
-Thanks,
-Ben
+Nicolin
