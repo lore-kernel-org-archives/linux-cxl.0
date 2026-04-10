@@ -1,161 +1,369 @@
-Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012070.outbound.protection.outlook.com [52.101.48.70])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D7F388E40;
-	Fri, 10 Apr 2026 12:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775822716; cv=fail; b=uTCtsgp/jMh4hpXdeZdkyP/0ZuyJLq2T1n0wKAN5ndBEwQbq7qEtnBe1Gdgl3L74Sc/hZTl6vrhDQquQgYdv5+0qhOhPAFGam9nEzfn5rsUeCPSCoDnATA6QXccyG6ARNTgFVQXR+kM/v3uxkWeKBk+nmEztvgaeBy06xf3YSk8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775822716; c=relaxed/simple;
-	bh=wxdgXtI5ULUaPPZWficCC7vcWYa5991qmRcsFqNetvQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=J8nb0AM0irCWrRB0U+o8n3piKW1L02YlgN3hrfwKzlfB9j1CIM3H/O7lrAf6hwj5230ffgazphwZ5Pm86DbzqL6YID5Ze8CdJDvUI2z4vhTktkCwJ+SV8OnX6vjFE+hFsACLIE9sYOnJpCLzumpnDYuxQZPXqSENNPGhDADmdNo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=iCYq12jq; arc=fail smtp.client-ip=52.101.48.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="iCYq12jq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=h4Ce366s8UhnXkLmN3dolgd8+t3XCPcp2Nb4/t9Cm5Dl3NCrYM7wMoRXTRdYakkrcICmJplMmJuFSw0vX2Mw3R1Obk/VVtCvPGkcrPUUx7hqL1hvdoNAXRydBuuyRp4paRAwJSBkWFO6mAke9qQgQELDXdqhcebcMUZO8W8DyroE4fNN1rT6aIz0h7yM/0kFnaO+68HLEU03MOZjYKkdV+kEfoASzwsDN3BDOG1KMry+y03ixUZv0fsXoiaGzqVMpEz5Qn9ZFPrzBCFhOPk/yw5jBOeT9MwsG/QlO/XEs/+dmrwT4SD51jL3tYI/9Pjc1+/xkeRHjm3zilVatErlpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6DVWrltULqSjWgzEyse8zg3HmE3jP8nXnImlo8bGpHE=;
- b=XvlXY0xZhE1rzTJB7mvUYiOqvw8EBneZGIAchap/ATNGF0M1hrK5UaPQAryjupVech6q5gEIrYqbv9qVLYjOFG9WD06A8Qr3COqVr7TE48GmcWouy8xxKVJ+ompCVo5X0OlJc9paMoIkPigYeECJNFVX5upfWkTd7sVvwqp/1pkmMl8pzpO4/FX6IBOC8T9ouiTewKJp8TRy03y3Dp3cM+XiDtNiqZQsEwk1cU1pJa3LZ0wewj0OtcYB+4SYAuluTWXwrlUmdNF4a9d/JlfHovgP3//wkqTyYQYzivqGC3ItgGe+fyCUOtgBGb+tomtzpmJVxmQ7QK+Mle8A9m/eow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6DVWrltULqSjWgzEyse8zg3HmE3jP8nXnImlo8bGpHE=;
- b=iCYq12jqi4fAScy/xTf2DdmpAnW7hiyJiyKYdYHLVIE33U8zhs0lFKMBme9t6fkouzO684Mqa8hIkwMSQwxrNVp6dCVX0pVJ4rDkoEpBbqCbfkKA9IaAgrux7sMTulHjtMbCYgSKiX8pSODvShh1kORRTmtJbnt6qzwMHP659YeNWlQZJKgT4laVAbc8ddDmocEPH8CQ+9tLCpOoSK7bS9Wb/w4WPd+EVgl82KAdMjxk9hqXHXZgvokyAo7+sIs8ycXwUS2Ty7bWPPIPmvwUQT5A8DyN3sgC2WD7fV51UaP78AXgs5A/cdsL9rdCUEs5pFcWOfrB8p52kJ6PZS2pkA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
- by DS0PR12MB7874.namprd12.prod.outlook.com (2603:10b6:8:141::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9791.32; Fri, 10 Apr
- 2026 12:05:09 +0000
-Received: from LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
- ([fe80::299d:f5e0:3550:1528%5]) with mapi id 15.20.9791.032; Fri, 10 Apr 2026
- 12:05:09 +0000
-Date: Fri, 10 Apr 2026 09:05:08 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: Nicolin Chen <nicolinc@nvidia.com>, "will@kernel.org" <will@kernel.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"joro@8bytes.org" <joro@8bytes.org>,
-	"praan@google.com" <praan@google.com>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"miko.lenczewski@arm.com" <miko.lenczewski@arm.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"Williams, Dan J" <dan.j.williams@intel.com>,
-	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>,
-	Vikram Sethi <vsethi@nvidia.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3 1/3] PCI: Allow ATS to be always on for CXL.cache
- capable devices
-Message-ID: <20260410120508.GA2588311@nvidia.com>
-References: <cover.1772833963.git.nicolinc@nvidia.com>
- <a0dd3e4cc5260f55bbec5b3ed6791def33028735.1772833963.git.nicolinc@nvidia.com>
- <BN9PR11MB5276A6B1B103C4B0201458348C53A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <adgsBgXYy68GmxAf@Asurada-Nvidia>
- <20260409225252.GU3357077@nvidia.com>
- <BL1PR11MB527184E183703E14F6C861118C592@BL1PR11MB5271.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL1PR11MB527184E183703E14F6C861118C592@BL1PR11MB5271.namprd11.prod.outlook.com>
-X-ClientProxiedBy: IA4P220CA0004.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:208:558::8) To LV8PR12MB9620.namprd12.prod.outlook.com
- (2603:10b6:408:2a1::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D22A3D75C8;
+	Fri, 10 Apr 2026 14:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775832385; cv=none; b=BZ3+MAFpLKn9GOlcXTbxnLy1oViT6Wi4rLPhS0MCTxU4dFhjwUav3SnjWgLPOJIqlmypKJLPvD5rI360rNEkoXH/146u+GpVYDbK5vprmxLK+X1KNskuqpxWSDAntCI+rOlVMoe0m/bd9wgFRKZZV4udnrt9smvLaSDnTAwS8g0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775832385; c=relaxed/simple;
+	bh=13gX3EbKN5SloFw3x7gZpmh1+KTteyaOkjcObn9GtsQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LzMwpVG46rfjX+++d3Be+RE0zORumBrdElUpyRO/CUgm0soQCx6+8fieHWkyF3nNms/Jdaw7dPE8SyOcqfcWb5OOp9ANC3CK+RbQYfkHivep4DDSb4X41PmVTmilqff2/5gVYNqqP/5tGa8vlLSKSeaslKavrdalm4hVEzFDUzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 27B3AE31FD;
+	Fri, 10 Apr 2026 14:46:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf02.hostedemail.com (Postfix) with ESMTPA id CB7D780014;
+	Fri, 10 Apr 2026 14:46:03 +0000 (UTC)
+Date: Fri, 10 Apr 2026 09:46:02 -0500
+From: John Groves <John@groves.net>
+To: Joanne Koong <joannelkoong@gmail.com>
+Cc: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
+	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V10 00/10] famfs: port into fuse
+Message-ID: <adkDq0m5Wt9YhJ8A@groves.net>
+References: <20260331123702.35052-1-john@jagalactic.com>
+ <0100019d43e5f632-f5862a3e-361c-4b54-a9a6-96c242a8f17a-000000@email.amazonses.com>
+ <CAJnrk1ZRTGWjNzkMxS3UkeZMmrpadJDtWKontMx2=d-smXYq=w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|DS0PR12MB7874:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5860b2a1-3839-4674-0530-08de96f9697c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|22082099003|18002099003|56012099003;
-X-Microsoft-Antispam-Message-Info:
-	WIGardqNCvKwIxTnEqDIXhmgoDQ5FqmNAZpOVMmFAC+otPu0HQEVBtTitSL92V0PfFcW8oP7UOClcrBwVb0Azgpk8IhunPP2/0+JdOBDVOEJiAyMga7/gfByiVRZz4DKpUNu9p08pkbJvZhxxqhZYn7MFoki2QCeBJYU081Ic00xWnbJs2xRiyWCdeShR+qdtQgPNMTjNTKViIW/ixH63YBsQs7sSc1hYOqNvwCqfiUckt3uxVNIcNssbxrAIufIhavpjLaUpYURP9cEtNfgV1SSJHnejRV0VTP4gKt2betAOp2kV4+ZdCMnAblsfHcOAzA7T9wbSAvQI8fEwyDoWTZC7liZuvg6C+qwxH8eauz2HgWDyCht/VqMzFDZB9g/DfpgwFRBnPYAoQ/RAlEM+UtLKoMQwkVBDMSI+DKhLJAfULYPbgPokzcZ+CTnzVxHncPhzscPSzQ0ioNnEbSKiYQt65hz22YZq6bkiMk9YU6yU/kFVZzjQmd++vOiQxxF2FsEPmgvuHXIhNbF6lo1+OjM2QPxyPAJ/WSwCBOY0f2DA1H0nAwot2ritv/wjuInZujkcgvbYi9IQOnKfFOzCiPW4dDhjJlZ9l4ewm++gbX+9eVNpiCbc9sgoeRmiu//ItnuJbJRm8MZQQ+FZm/cUN6LiIqCqMMnr6/XJlS7XWYwF1ISghH5uBmsudZhL2y3RdM3pa8UW+gjdJYVoJkO68YzCNak9/Qakf2dNQgVSAY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?q4043A5mk/LKiHfdq/dFP578xVB6qRxFpIzTnnGWkNkMyEfYWMoc7eSdQ9mD?=
- =?us-ascii?Q?/hQfusE1sz3nzUTZCPJVnGz66rGPimrhX9Lq7IBk2XUsGX2jxshUJxFfV/IR?=
- =?us-ascii?Q?sxnfsAMxY4A9hiOYsQkjJWUL0AUSgIxU3Iy3g+nmjlcrX2Mx9JlwEIVBgGb6?=
- =?us-ascii?Q?n2irNRikqod+R/aT4y936Eq5+oOOLjcG3crAtGWuqdOim+2294dLRS7EjphB?=
- =?us-ascii?Q?1t2jsGhy4DniJN0YvsC9Y0sz6W3aJCUCnyTi5BX1p2TQLevqTGoHBudQL32d?=
- =?us-ascii?Q?rd48TluVABr/513g38BeACXhz7jqKHkUADpXhmdVrllzPw2qPbU9yqa8zsVx?=
- =?us-ascii?Q?kMphdnezaG/Epn4k36HMqgDG5yRVES8GyS7oV3/RC6LFv1rt+W44z+cRLn6J?=
- =?us-ascii?Q?sWzraa897dMh63XzhYYhsEbZ1XX7E6H2nhKWgFMg3goCcii8jYEHG1Nve3JL?=
- =?us-ascii?Q?SOZT9joFRkFG8n0rh/fCxc2Ne/kHyOiDsZkfk92WmjgGJbTP46m+hQU68Zw+?=
- =?us-ascii?Q?r+8ZlPP8FwLZRuNNQwOYlHjeAuV7vFVjTapzAyChCgfSW8KBBgNcJ2H4dTaU?=
- =?us-ascii?Q?SD2K4J0FSdDhst/1eLHaYOdMYlJcd8030aG9DMsgsQ2Hk+Zk+3ANNCRAmLuS?=
- =?us-ascii?Q?MpIR1inWbQqIHbO04WwT3NhAQeYBNhnKj/kkU6jN3bBRQXTmaS/fOl5xZrMJ?=
- =?us-ascii?Q?RaIdB7r4pZyAV+hEzm/tGvHM6VFyHp1xZ/ZIVML5rQvBfizqJfmUA2sRU1Z3?=
- =?us-ascii?Q?YiIT+zh2f6dMvFw4PsAMkT1Kss2+Fckclfg3SgL29vMDQY6PwJw4+KkJwmSL?=
- =?us-ascii?Q?rTzipww32YFfvOJzjfMgRTUP6EjCw2uiGRg/awlD7SzIK/DadF0uONYxSgFT?=
- =?us-ascii?Q?CGbMJmrz78DiSibWXwI0DzLqIauhEov/U9oxDWdx57oCat6gih9MR+j01N3+?=
- =?us-ascii?Q?a28L9nkqJGQGMEqC2XX47uCuO0Oy6UTZK0maEF8oNGRAVU951IKV0aKKsfL+?=
- =?us-ascii?Q?EeGS7SS/QVyQIJo/cEYcYoiXrmH7sd0yJzwdaVhAxKtwFXb+l/eVLMzPkM+o?=
- =?us-ascii?Q?vdiZheDfPyhlEvRkecv4CbkJFbzNXk2a7z/5mFXRRowlmzKGLSo3VWTgL8FD?=
- =?us-ascii?Q?YfRq54hBbtcYmtSGRYFZ9mg6Tu9PBqKCNGRKQTCSKMHKbxR2XH43i1j6+nQn?=
- =?us-ascii?Q?muupIefD3IzMuyRhlVpl/LI2k84nKfFkBKUhpxcRDrv5whWqLce7/TxHP3s1?=
- =?us-ascii?Q?i1jX28Ib4laPMURLMLI5ZY8jUgZ3DKYS6n3EuaoqXatNMQGQ05AW92VNVsHs?=
- =?us-ascii?Q?QbAZsK7ei7uylu5QiQzYvlZWuwyvqbbqPF1f7QkYkxMEtcENTd6gHjOLqj5m?=
- =?us-ascii?Q?Bx7p6HPyjw4KBB9lozIrJ9I56CDa0dvV5B/Xf9GM/SBEGk43fYchz7E1GkAv?=
- =?us-ascii?Q?wvgkHnYrwEqtKwq+CoCJY0KZEdmOPpVUONSogEXNtMJEmtlxVJ17IcSqCTXh?=
- =?us-ascii?Q?VMfYfHMXgJMMSkN1LqLVO5eAg1CzHo37/NE5KXKEIoZ7CSnQBUtmAiNhDz9C?=
- =?us-ascii?Q?PhKDLVf5NZrinrw229QdZQtpnfiolxlN3dadwi6F2kSE9B62m6UozwvydOZU?=
- =?us-ascii?Q?poL66XSspf9ca/UVPPWkkDq1LDTv9csE+KUw6vCBXTh+MNlVDO6ElKuCnUBW?=
- =?us-ascii?Q?qxeY590H+xqpUqlmUEpS7aPX3cvc/GRX1EEwEVq9uKWuMnps?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5860b2a1-3839-4674-0530-08de96f9697c
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2026 12:05:09.7319
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fAmp+LpUoxGfgtwIPnKMr5rg7rqupDhHSdXveY/t+0G+2o6CKy+pMXIcxvdj7jln
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7874
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJnrk1ZRTGWjNzkMxS3UkeZMmrpadJDtWKontMx2=d-smXYq=w@mail.gmail.com>
+X-Stat-Signature: ihdmbg1zgywygkoujrwy354wdo3sbca3
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: CB7D780014
+X-Session-Marker: 6A6F686E4067726F7665732E6E6574
+X-Session-ID: U2FsdGVkX1/dvAlKyofCw6UM5jL1uQABD38JRpHtNBc=
+X-HE-Tag: 1775832363-431619
+X-HE-Meta: U2FsdGVkX1912XIrOD1TQWz9LKbZw5xOMXl/+bv1nTu14riyUmL2WllhsvQeMhJ70Z0iX0pv6ZQhLqThRAAjX7WYFZWyTkSj+/GPM9FL3vGouDXmHgjZNxbCvpuusU5pKI8LeAZtKd1WO50iitjIBqN4LEAaaZKliCRt4P16W5mY7SKooyDgfs/SHTj2IBAx52VFR87ZM/jX1UGqr+qfsRctyNSFN47R+MCCWqI55OqMqgBC/AZG3JAQQh78cVBeFHK88aiJpJp13kz14Tv608xoffXwuhVbhxnqO10feWv4fC6SmB37VDkpKlWg2XKQa7T8fAPfodJ/ekVJepi5RHX3HFnYlE2TtknIAIiJNNG0aXLRqWDiYz7N4cjoU++49u3liMPWFSUgXKz9M1bKtdzELq9WWUdapFasqJTYEM1m0O9eZNrJHAZDRLJJIkQPLOGbIMY7WLBxEgStmxIn/oCe9sjuynMtIMcdVN+flXBCWXUyvRlKNMaPZz5Igihul0Ux9RIyuurNcUODcOUsfqDmzlV8bmbKYFrt9OSWTAaeBtxUlnQs3XBine0WaXhClROQu4q7vBYYq9C2XGQFmRah33HY4MffwoIf+1Bb7Fbmat9cQLtoDXqxSgS6rsIW
 
-On Fri, Apr 10, 2026 at 03:13:59AM +0000, Tian, Kevin wrote:
-> > From: Jason Gunthorpe <jgg@nvidia.com>
-> > Sent: Friday, April 10, 2026 6:53 AM
-> > 
-> > On Thu, Apr 09, 2026 at 03:45:26PM -0700, Nicolin Chen wrote:
-> > 
-> > > One question regarding VM case: if a device is ats_always_on, while
-> > > VM somehow doesn't set nested_domain->enable_ats. Should the kernel
-> > > at least spit a warning, given that it would surely fail the device?
-> > 
-> > No, just let break, the resulting failure has to be contained to the
-> > VM or the platform is broken..
-> > 
-> > The HV can't turn on ATS because we it can't know what invalidations
-> > to push so not much other choice.
-> > 
+On 26/04/06 10:43AM, Joanne Koong wrote:
+> On Tue, Mar 31, 2026 at 5:37 AM John Groves <john@jagalactic.com> wrote:
+> >
+> > From: John Groves <john@groves.net>
+> >
+> > NOTE: this series depends on the famfs dax series in Ira's for-7.1/dax-famfs
+> > branch [0]
+> >
+> > Changes v9 -> v10
+> > - Rebased to Ira's for-7.1/dax-famfs branch [0], which contains the required
+> >   dax patches
+> > - Add parentheses to FUSE_IS_VIRTIO_DAX() macro, in case something bad is
+> >   passed in as fuse_inode (thanks Jonathan's AI)
+> >
+> > Description:
+> >
+> > This patch series introduces famfs into the fuse file system framework.
+> > Famfs depends on the bundled dax patch set.
+> >
+> > The famfs user space code can be found at [1].
+> >
+> > Fuse Overview:
+> >
+> > Famfs started as a standalone file system, but this series is intended to
+> > permanently supersede that implementation. At a high level, famfs adds
+> > two new fuse server messages:
+> >
+> > GET_FMAP   - Retrieves a famfs fmap (the file-to-dax map for a famfs
+> >              file)
+> > GET_DAXDEV - Retrieves the details of a particular daxdev that was
+> >              referenced by an fmap
+> >
+> > Famfs Overview
+> >
+> > Famfs exposes shared memory as a file system. Famfs consumes shared
+> > memory from dax devices, and provides memory-mappable files that map
+> > directly to the memory - no page cache involvement. Famfs differs from
+> > conventional file systems in fs-dax mode, in that it handles in-memory
+> > metadata in a sharable way (which begins with never caching dirty shared
+> > metadata).
+> >
+> > Famfs started as a standalone file system [2,3], but the consensus at
+> > LSFMM was that it should be ported into fuse [4,5].
+> >
+> > The key performance requirement is that famfs must resolve mapping faults
+> > without upcalls. This is achieved by fully caching the file-to-devdax
+> > metadata for all active files. This is done via two fuse client/server
+> > message/response pairs: GET_FMAP and GET_DAXDEV.
+> >
+> > Famfs remains the first fs-dax file system that is backed by devdax
+> > rather than pmem in fs-dax mode (hence the need for the new dax mode).
+> >
+> > Notes
+> >
+> > - When a file is opened in a famfs mount, the OPEN is followed by a
+> >   GET_FMAP message and response. The "fmap" is the full file-to-dax
+> >   mapping, allowing the fuse/famfs kernel code to handle
+> >   read/write/fault without any upcalls.
+> >
+> > - After each GET_FMAP, the fmap is checked for extents that reference
+> >   previously-unknown daxdevs. Each such occurrence is handled with a
+> >   GET_DAXDEV message and response.
+> >
+> > - Daxdevs are stored in a table (which might become an xarray at some
+> >   point). When entries are added to the table, we acquire exclusive
+> >   access to the daxdev via the fs_dax_get() call (modeled after how
+> >   fs-dax handles this with pmem devices). Famfs provides
+> >   holder_operations to devdax, providing a notification path in the
+> >   event of memory errors or forced reconfiguration.
+> >
+> > - If devdax notifies famfs of memory errors on a dax device, famfs
+> >   currently blocks all subsequent accesses to data on that device. The
+> >   recovery is to re-initialize the memory and file system. Famfs is
+> >   memory, not storage...
+> >
+> > - Because famfs uses backing (devdax) devices, only privileged mounts are
+> >   supported (i.e. the fuse server requires CAP_SYS_RAWIO).
+> >
+> > - The famfs kernel code never accesses the memory directly - it only
+> >   facilitates read, write and mmap on behalf of user processes, using
+> >   fmap metadata provided by its privileged fuse server. As such, the
+> >   RAS of the shared memory affects applications, but not the kernel.
+> >
+> > - Famfs has backing device(s), but they are devdax (char) rather than
+> >   block. Right now there is no way to tell the vfs layer that famfs has a
+> >   char backing device (unless we say it's block, but it's not). Currently
+> >   we use the standard anonymous fuse fs_type - but I'm not sure that's
+> >   ultimately optimal (thoughts?)
+> >
+> > Changes v8 -> v9
+> > - Kconfig: fs/fuse/Kconfig:CONFIG_FUSE_FAMFS_DAX now depends on the
+> >   new CONFIG_DEV_DAX_FSDEV (from drivers/dax/Kconfig) rather than
+> >   just CONFIG_DEV_DAX and CONFIG_FS_DAX. (CONFIG_FUSE_FAMFS_DAX
+> >   depends on those...)
+> >
+> > Changes v7 -> v8
+> > - Moved to inline __free declaration in fuse_get_fmap() and
+> >   famfs_fuse_meta_alloc(), famfs_teardown()
+> > - Adopted FIELD_PREP() macro rather than manual bitfield manipulation
+> > - Minor doc edits
+> > - I dropped adding magic numbers to include/uapi/linux/magic.h. That
+> >   can be done later if appropriate
+> >
+> > Changes v6 -> v7
+> > - Fixed a regression in famfs_interleave_fileofs_to_daxofs() that
+> >   was reported by Intel's kernel test robot
+> > - Added a check in __fsdev_dax_direct_access() for negative return
+> >   from pgoff_to_phys(), which would indicate an out-of-range offset
+> > - Fixed a bug in __famfs_meta_free(), where not all interleaved
+> >   extents were freed
+> > - Added chunksize alignment checks in famfs_fuse_meta_alloc() and
+> >   famfs_interleave_fileofs_to_daxofs() as interleaved chunks must
+> >   be PTE or PMD aligned
+> > - Simplified famfs_file_init_dax() a bit
+> > - Re-ran CM's kernel code review prompts on the entire series and
+> >   fixed several minor issues
+> >
+> > Changes v4 -> v5 -> v6
+> > - None. Re-sending due to technical difficulties
+> >
+> > Changes v3 [9] -> v4
+> > - The patch "dax: prevent driver unbind while filesystem holds device"
+> >   has been dropped. Dan Williams indicated that the favored behavior is
+> >   for a file system to stop working if an underlying driver is unbound,
+> >   rather than preventing the unbind.
+> > - The patch "famfs_fuse: Famfs mount opt: -o shadow=<shadowpath>" has
+> >   been dropped. Found a way for the famfs user space to do without the
+> >   -o opt (via getxattr).
+> > - Squashed the fs/fuse/Kconfig patch into the first subsequent patch
+> >   that needed the change
+> >   ("famfs_fuse: Basic fuse kernel ABI enablement for famfs")
+> > - Many review comments addressed.
+> > - Addressed minor kerneldoc infractions reported by test robot.
+> >
+> > Changes v2 [7] -> v3
+> > - Dax: Completely new fsdev driver (drivers/dax/fsdev.c) replaces the
+> >   dev_dax_iomap modifications to bus.c/device.c. Devdax devices can now
+> >   be switched among 'devdax', 'famfs' and 'system-ram' modes via daxctl
+> >   or sysfs.
+> > - Dax: fsdev uses MEMORY_DEVICE_FS_DAX type and leaves folios at order-0
+> >   (no vmemmap_shift), allowing fs-dax to manage folio lifecycles
+> >   dynamically like pmem does.
+> > - Dax: The "poisoned page" problem is properly fixed via
+> >   fsdev_clear_folio_state(), which clears stale mapping/compound state
+> >   when fsdev binds. The temporary WARN_ON_ONCE workaround in fs/dax.c
+> >   has been removed.
+> > - Dax: Added dax_set_ops() so fsdev can set dax_operations at bind time
+> >   (and clear them on unbind), since the dax_device is created before we
+> >   know which driver will bind.
+> > - Dax: Added custom bind/unbind sysfs handlers; unbind return -EBUSY if a
+> >   filesystem holds the device, preventing unbind while famfs is mounted.
+> > - Fuse: Famfs mounts now require that the fuse server/daemon has
+> >   CAP_SYS_RAWIO because they expose raw memory devices.
+> > - Fuse: Added DAX address_space_operations with noop_dirty_folio since
+> >   famfs is memory-backed with no writeback required.
+> > - Rebased to latest kernels, fully compatible with Alistair Popple
+> >   et. al's recent dax refactoring.
+> > - Ran this series through Chris Mason's code review AI prompts to check
+> >   for issues - several subtle problems found and fixed.
+> > - Dropped RFC status - this version is intended to be mergeable.
+> >
+> > Changes v1 [8] -> v2:
+> >
+> > - The GET_FMAP message/response has been moved from LOOKUP to OPEN, as
+> >   was the pretty much unanimous consensus.
+> > - Made the response payload to GET_FMAP variable sized (patch 12)
+> > - Dodgy kerneldoc comments cleaned up or removed.
+> > - Fixed memory leak of fc->shadow in patch 11 (thanks Joanne)
+> > - Dropped many pr_debug and pr_notice calls
+> >
+> >
+> > References
+> >
+> > [0] - https://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm.git/
+> > [1] - https://famfs.org (famfs user space)
+> > [2] - https://lore.kernel.org/linux-cxl/cover.1708709155.git.john@groves.net/
+> > [3] - https://lore.kernel.org/linux-cxl/cover.1714409084.git.john@groves.net/
+> > [4] - https://lwn.net/Articles/983105/ (lsfmm 2024)
+> > [5] - https://lwn.net/Articles/1020170/ (lsfmm 2025)
+> > [6] - https://lore.kernel.org/linux-cxl/cover.8068ad144a7eea4a813670301f4d2a86a8e68ec4.1740713401.git-series.apopple@nvidia.com/
+> > [7] - https://lore.kernel.org/linux-fsdevel/20250703185032.46568-1-john@groves.net/ (famfs fuse v2)
+> > [8] - https://lore.kernel.org/linux-fsdevel/20250421013346.32530-1-john@groves.net/ (famfs fuse v1)
+> > [9] - https://lore.kernel.org/linux-fsdevel/20260107153244.64703-1-john@groves.net/T/#mb2c868801be16eca82dab239a1d201628534aea7 (famfs fuse v3)
+> >
+> >
+> > John Groves (10):
+> >   famfs_fuse: Update macro s/FUSE_IS_DAX/FUSE_IS_VIRTIO_DAX/
+> >   famfs_fuse: Basic fuse kernel ABI enablement for famfs
+> >   famfs_fuse: Plumb the GET_FMAP message/response
+> >   famfs_fuse: Create files with famfs fmaps
+> >   famfs_fuse: GET_DAXDEV message and daxdev_table
+> >   famfs_fuse: Plumb dax iomap and fuse read/write/mmap
+> >   famfs_fuse: Add holder_operations for dax notify_failure()
+> >   famfs_fuse: Add DAX address_space_operations with noop_dirty_folio
+> >   famfs_fuse: Add famfs fmap metadata documentation
+> >   famfs_fuse: Add documentation
+> >
+> >  Documentation/filesystems/famfs.rst |  142 ++++
+> >  Documentation/filesystems/index.rst |    1 +
+> >  MAINTAINERS                         |   10 +
+> >  fs/fuse/Kconfig                     |   13 +
+> >  fs/fuse/Makefile                    |    1 +
+> >  fs/fuse/dir.c                       |    2 +-
+> >  fs/fuse/famfs.c                     | 1180 +++++++++++++++++++++++++++
+> >  fs/fuse/famfs_kfmap.h               |  167 ++++
+> >  fs/fuse/file.c                      |   45 +-
+> >  fs/fuse/fuse_i.h                    |  116 ++-
+> >  fs/fuse/inode.c                     |   35 +-
+> >  fs/fuse/iomode.c                    |    2 +-
+> >  fs/namei.c                          |    1 +
+> >  include/uapi/linux/fuse.h           |   88 ++
+> >  14 files changed, 1790 insertions(+), 13 deletions(-)
+> >  create mode 100644 Documentation/filesystems/famfs.rst
+> >  create mode 100644 fs/fuse/famfs.c
+> >  create mode 100644 fs/fuse/famfs_kfmap.h
+> >
+> >
+> > base-commit: 2ae624d5a555d47a735fb3f4d850402859a4db77
+> > --
+> > 2.53.0
+> >
 > 
-> Taking about in theory - host can append a devtlb invalidation cmd
-> after iotlb invalidation (if vcmdq is not used)?
+> Hi John,
+> 
+> I’m curious to hear your thoughts on whether you think it makes sense
+> for the famfs-specific logic in this series to be moved to a bpf
+> program that goes through a generic fuse iomap dax layer.
+> 
+> Based on [1], this gives feature-parity with the famfs logic in this
+> series. In my opinion, having famfs go through a generic fuse iomap
+> dax layer makes the fuse kernel code more extensible for future
+> servers that will also want to use dax iomap, and keeps the fuse code
+> cleaner by not having famfs-specific logic hardcoded in and having to
+> introduce new fuse uapis for something famfs-specific. In my
+> understanding of it, fuse is meant to be generic and it feels like
+> adding server-specific logic goes against that design philosophy and
+> sets a precedent for other servers wanting similar special-casing in
+> the future. I'd like to explore whether the bpf and generic fuse iomap
+> dax layer approach can preserve that philosophy while still giving
+> famfs the flexibility it needs.
+> 
+> I think moving the famfs logic to bpf benefits famfs as well:
+> - Instead of needing to issue a FUSE_GET_FMAP request after a file is
+> opened, the server can directly populate the metadata map from
+> userspace with the mapping info when it processes the FUSE_OPEN
+> request, which gets rid of the roundtrip cost
+> - The server can dynamically update the metadata / bpf maps during
+> runtime from userspace if any mapping info needs to change
+> - Future code changes / updates for famfs are all server-side and can
+> be deployed immediately instead of needing to go through the upstream
+> kernel mailing list process
+> - Famfs updates / new releases can ship independently of kernel releases
+> 
+> I'd appreciate the chance to discuss tradeoffs or if you'd rather
+> discuss this at the fuse BoF at lsf, that sounds great too.
+> 
+> Thanks,
+> Joanne
+> 
 
-It can't map an ASID to a BDF without shadowing all the STE and CD
-tables which we don't do for nesting.
+Hi Joanne,
 
-Jason
+I'm definitely up for discussing it, and talking before LSFMM would be
+good because then I'd have some time to think about before we discuss
+at LSFMM.
+
+I have not had a chance to really study this, in part since I've never even
+written a "hello world" BPF program.
+
+I'll ping off-list about times to talk.
+
+However... 
+
+I would object vehemently to this sort of re-write prior to going upstream, 
+as would users and vendors who need famfs now that the memory products it 
+enables have started to ship.
+
+This work started over 3 years ago, initial patches over 2 years ago, 
+community decision that it should go into fuse 2 years ago, first fuse 
+patches a year ago.
+
+This implementation is pretty much exactly in line with expectation-setting
+starting two years ago. Famfs is a complicated orchestration between dax, 
+fuse, ndctl (for daxctl), libfuse and the extensive famfs user space. Famfs 
+has a fairly small kernel footprint, but its user space is much larger.
+This could set it back a year if we re-write now.
+
+Two things are true at once: I think this is a serious idea worth 
+considering, and I think it's too late to make this sort of change before
+going upstream. Products need this enablement, and quite a long process has
+run in order to make it available in a timely fashion (which means soon 
+now). I hope we can avoid making the perfect the enemy of the good.
+
+I believe the risk of merging famfs soon is quite low, because famfs will 
+not affect anybody who doesn't use it. I hope we can run this discussion and
+analysis in parallel with merging the current implementation of famfs soon.
+
+Thank you,
+John
+
+
+
+
