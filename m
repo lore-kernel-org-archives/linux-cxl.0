@@ -1,83 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3ECB78F4F;
-	Sat, 11 Apr 2026 20:52:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6509282F00
+	for <linux-cxl@vger.kernel.org>; Sat, 11 Apr 2026 21:42:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775940722; cv=none; b=niEmBTt1fnpri/AeKxtUAdpzF+aL+JMyBYUt4bHctPQLyqcOe3lyq14nMQVGWEeCwusYdN5+sQO5DuvXPyALfsiO1s9yBpbcyACJ5xa1edKtVlm+aQNeNFIBVK7VS/Kg/jCN9eB8EuIPPGYwhFKfW/2zrG0n4dNUrmZcPpGubuI=
+	t=1775943779; cv=none; b=iWMZ0803h6ZCjXkdM8onooTuWAn43CAfazfBPWgCI1vO5syCmgRBfMNElFF5EyNhaEY2m1/1fgAUFYP1W18RyHJi6VwRYzyQkqZ9Odj8d28HqCCqBuOxy7LFJVflbgKbO1ZJ9zS9oKZ7vfmbOsVGhkFR982/wm77qnF87QVz51I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775940722; c=relaxed/simple;
-	bh=mfV1FNvrjdVUzdm+i9nkmb3Qv/azNgVd3U3y7TrWUQM=;
+	s=arc-20240116; t=1775943779; c=relaxed/simple;
+	bh=BwoKLYwPflHSzfJYtksWfLEs3N8OSAUTPFKGBOlCPt4=;
 	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=iUqfrcDUyWlW43tMDnOt/QrLf8vg2NYg3dxZKfpqIF11oG3dzLK+MUQ1+IJ3AXWz7Tvika65SKSNkkRHhoiEo3OJ00Oe8AjRb0IPbiMRH5R7MZ/Xei9dDoHfa0dHPtpN56xtNq9LHgLhjcgPFZ0pRHok2OKrQYBkzD2N80IZKO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZY64dye5; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=LYDcu+UYx6xxsfg0NTxhsPx+AiQ2NDXg74x9m4V+r1USbZ/Rh+nadt1oSLSXX6EPE+1Zcd8EgGMDRYcJUy3LUJxtRNAmc9H4Ze/o1gjVn0PK7f/dIRjAMwYz2eltaOB0HuI72lgUN/FW6iAN0PBzDdV97Dwlu4WKv/L8TGIgLuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tFJZaMu7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZY64dye5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E187C2BCAF;
-	Sat, 11 Apr 2026 20:52:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tFJZaMu7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 613B1C2BCAF;
+	Sat, 11 Apr 2026 21:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775940722;
-	bh=mfV1FNvrjdVUzdm+i9nkmb3Qv/azNgVd3U3y7TrWUQM=;
+	s=k20201202; t=1775943778;
+	bh=BwoKLYwPflHSzfJYtksWfLEs3N8OSAUTPFKGBOlCPt4=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=ZY64dye5dPD3M3IacT/nYTmEFi6NNeUXdVtel2V/oN5+m+2J8B4rivsKdGM28g2sy
-	 iHYmjp0iwhhYxHTRDMPWB5ZHh7996Niif/te6ipMFeRvf/m9fmK+Gf1pFcg0hcRS4m
-	 5Dfoi9suYzVvGh8e4wzS3l5XZK0jDPtO9nP7bCXXCKsIYEGbr8FSYu0OJowiDyeX8v
-	 M5G9elqNthInZon9wfTBQ29zpTiuqeIPOHFChPoH6/ZMn8mQ9C+8FVEME8JLQDsKMz
-	 BpP4VBR85VOtj3NjA/hbJwEd5twMOQF1FT0i8wijweIOxVjOA5pFQrAwWHSF7rsFxq
-	 +if2zy3GWpIew==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 34A2EF40071;
-	Sat, 11 Apr 2026 16:52:01 -0400 (EDT)
+	b=tFJZaMu75HyDtqp5vOK+nerKooJFmutQE2nmPxZPCXyV/r1eXZotE2kkgjw1xS1l3
+	 XwKoGZhDj09+gxKMdVp4wo5ihwunEe36bj4jfQtq93YuS9LxBe7yvZJHDANqczl0MA
+	 c4WqZk2iNavSQFw45yCe1hFYRjzqo9JqiTLJMrDHUit6CHOh+ZwlJVJtY/rvgUqlRD
+	 pZYnhxwZkhMQoMD+O0DvVJnEFsoOb+YGLvbMIp9yzoVwD8yJNtDTKw3E57UypLTMNa
+	 CaLlc41W+PsapvVo10KTg40q1k7ny4Kybm6b2IN9zCyzuUiVXfUiixs0trkDUn7t4V
+	 2rSZBbpJxA4sQ==
+Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 8901DF40068;
+	Sat, 11 Apr 2026 17:42:57 -0400 (EDT)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Sat, 11 Apr 2026 16:52:01 -0400
-X-ME-Sender: <xms:cbTaafBEZpJTB6yjbtUwqbAQnzuY-MykZcAmyY7j8hxell6JISY5Sw>
-    <xme:cbTaaXE3aRfkxE23TnQWiITY366BOk8-GBbQPU-hUvtfqeXEUVQBUGPUuU-E4S2Fh
-    2EITMGA5fZyWs2QyenQsSc7nzVzXks2v4bJOr8MVKBc-pZ03d17jTA>
-X-ME-Received: <xmr:cbTaaZ23UuCd-V2T2uK46elEuCZv51INdUTqSNsG7Cb3x-t_oavxIjdrYXmHoeUVu9JFkf4fLUPkGipZGTVUP116s_5M4skRiZ4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeffeefkecutefuodetggdotefrod
+  by phl-compute-06.internal (MEProxy); Sat, 11 Apr 2026 17:42:57 -0400
+X-ME-Sender: <xms:YcDaaRPtTCs2OP4p02OLmvCf12w1jjnm65XwvXzgk_CgbujO6KGCvA>
+    <xme:YcDaadRyMXjegQxQiEpKBq2PNx_YLZqUhpZksW5oSNvOxGUu2J98M7-rovOSvBJQL
+    5IV94GiHyjPKTNSfBFw30Vl-UQC0zTRJTA5aYMX5wbYXJZ1zb0vaQnF>
+X-ME-Received: <xmr:YcDaaXgrHrQUf-PqsI-weunmDE-f1Iki_XkMpIz6Dp1FCjiZoRZm8h3ueWsaIQObRuXXffyQfFna72UErW5dD0J7j110IffCAys>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeffeeglecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefkjghfufggtgfgsehtjeertddttdejnecuhfhrohhmpeffrghnucghihhl
-    lhhirghmshcuoegujhgsfieskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
-    elhfeiudfgvdeijedtleeltdduueekffejjedvjefhgeevjeefueejledtleetjeenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegujhgsfidomh
-    gvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudejjedvfedtgeehhedqfeeffeel
-    gedtgeejqdgujhgsfieppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpd
-    hnsggprhgtphhtthhopeduvddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgv
-    sehlihhnuhigrdgsvggruhhthidprhgtphhtthhopegurghvvgesshhtghholhgrsghsrd
-    hnvghtpdhrtghpthhtohepjhhonhgrthhhrghnrdgtrghmvghrohhnsehhuhgrfigvihdr
-    tghomhdprhgtphhtthhopegurghvvgdrjhhirghnghesihhnthgvlhdrtghomhdprhgtph
-    htthhopegrlhhishhonhdrshgthhhofhhivghlugesihhnthgvlhdrtghomhdprhgtphht
-    thhopehvihhshhgrlhdrlhdrvhgvrhhmrgesihhnthgvlhdrtghomhdprhgtphhtthhope
-    hirhgrrdifvghinhihsehinhhtvghlrdgtohhmpdhrtghpthhtohepthgvrhhrhidrsgho
-    fihmrghnsegrmhgurdgtohhmpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:cbTaaYMN6mntUGy9XLnVVFXtDzilXvOLGOAQz1MJ3bUjp_SfwQzIeA>
-    <xmx:cbTaaZaAKDmoG4Lq7sZWI0RMfuDaSZ1gPdOZSYyWcgD4SPT-suvC0w>
-    <xmx:cbTaaWwCeKrCzUE6R5PcL2QYPxc7KWD8i08W6iXPYEov2xpy4GBaJg>
-    <xmx:cbTaaYMxxsf9YNGIcFMxyHiQFCFi9hquJZ1boXRDcucQemUZBgKVTg>
-    <xmx:cbTaaVdmEMRfOxqgodk44QMtIiyuOnxsSojp7ikXJxR_97AIZUuV4Mo6>
+    ihhlohhuthemuceftddtnecunecujfgurhepfffhvfevkfgjfhfugggtgfesthejredttd
+    dtjeenucfhrhhomhepffgrnhcuhghilhhlihgrmhhsuceoughjsgifsehkvghrnhgvlhdr
+    ohhrgheqnecuggftrfgrthhtvghrnhephfefgfelffeluedtudeftdetgedvkeeikeeutd
+    duhfdvkeeiudfhjedvkeduvdeunecuffhomhgrihhnpehsrghshhhikhhordguvghvpdhk
+    vghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpegujhgsfidomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudej
+    jedvfedtgeehhedqfeeffeelgedtgeejqdgujhgsfieppehkvghrnhgvlhdrohhrghesfh
+    grshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopegrlhhutggvrhhophesrghmugdrtghomhdprhgtphhtthhopegurg
+    hnrdhjrdifihhllhhirghmshesihhnthgvlhdrtghomhdprhgtphhtthhopegurghvvgdr
+    jhhirghnghesihhnthgvlhdrtghomhdprhgtphhtthhopehlihhnuhigqdgtgihlsehvgh
+    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehv
+    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvghjrghnughrohdrlhhutg
+    gvrhhoqdhprghlrghusegrmhgurdgtohhm
+X-ME-Proxy: <xmx:YcDaae9wtn0SZMMtPPOs-iOAOW4ixxoXFmid6yq6-OCj4fgvoNq5Kg>
+    <xmx:YcDaaWFGgdzTjJH0DCVfiY5CtQHZJ6CcKwbawp51P9W3XSfL1UvdPg>
+    <xmx:YcDaaZkhgAY3AH8HR9xViMD9rqEqPrFrNOl86onA2kj4_htlJY_78g>
+    <xmx:YcDaaSagDXWUx03Z2uQmxYx6ejUBbCGIbDGqXn-lwi5evvkntGBqpQ>
+    <xmx:YcDaaWHCZjo2gvQ6sMWOEkS_lZQmBZfTmuuRFyO4f-gfMnHA9re8D4Ng>
 Feedback-ID: i67ae4b3e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 11 Apr 2026 16:52:00 -0400 (EDT)
-Date: Sat, 11 Apr 2026 13:51:59 -0700
+ 11 Apr 2026 17:42:57 -0400 (EDT)
+Date: Sat, 11 Apr 2026 14:42:55 -0700
 From: Dan Williams <djbw@kernel.org>
-To: Li Chen <me@linux.beauty>, 
- Davidlohr Bueso <dave@stgolabs.net>, 
- Jonathan Cameron <jonathan.cameron@huawei.com>, 
- Dave Jiang <dave.jiang@intel.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, 
- Ira Weiny <ira.weiny@intel.com>, 
- Terry Bowman <terry.bowman@amd.com>, 
- Kees Cook <kees@kernel.org>, 
- linux-cxl@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Cc: Li Chen <me@linux.beauty>
-Message-ID: <69dab46f79b12_fdcb410071@djbw-dev.notmuch>
-In-Reply-To: <20260325062051.3777413-1-me@linux.beauty>
-References: <20260325062051.3777413-1-me@linux.beauty>
-Subject: Re: [PATCH v1] cxl/pmem: Defer nvdimm bridge attachment failures
+To: Alejandro Lucero Palau <alucerop@amd.com>, 
+ Dan Williams <dan.j.williams@intel.com>, 
+ dave.jiang@intel.com
+Cc: linux-cxl@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ alejandro.lucero-palau@amd.com
+Message-ID: <69dac05fd8b20_fdcb410011@djbw-dev.notmuch>
+In-Reply-To: <1bb8bdd7-1083-4b08-8d9f-21d218e383ca@amd.com>
+References: <20260403210050.1058650-1-dan.j.williams@intel.com>
+ <20260403210050.1058650-5-dan.j.williams@intel.com>
+ <1bb8bdd7-1083-4b08-8d9f-21d218e383ca@amd.com>
+Subject: Re: [RFC PATCH 4/4] cxl/region: Introduce cxl_memdev_attach_region
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -88,9 +83,85 @@ Content-Type: text/plain;
  charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-Li Chen wrote:
-> cxl_acpi is initialized before cxl_pmem registers
+Alejandro Lucero Palau wrote:
+> 
+> On 4/3/26 22:00, Dan Williams wrote:
+> > To date, platform firmware maps accelerator memory and accelerator drivers
+> > simply want an address range that they can map themselves. This typically
+> > results in a single region being auto-assembled upon registration of a
+> > memory device.  Use the @attach mechanism of devm_cxl_add_memdev()
+> > parameter to retrieve that region while also adhering to CXL subsystem
+> > locking and lifetime rules.
+> 
+> 
+> I doubt this approach is safer than the type2 v25 case. 
 
-Should be fixed since:
+I believe it is safer, see evidence below...
 
-be5c5280cf2b cxl: Adjust the startup priority of cxl_pmem to be higher than that of cxl_acpi
+> Apparently you are reducing the potential concurrency issue if someone
+> removes cxl_acpi, but I think it is as strong as the v25 approach.
+> With the rwsem lock, the region will exist or it will not. If the
+> removal happens after the driver gets the region, the ioremap can
+> race, with your approach and with the v25 one.
+
+Yes, ioremap can race and in the attach case when the ioremap is
+invalidated the sfc driver gets unloaded. In v25 it leads to
+use-after-free issues.
+
+> Also, you are keen to use your attach function for doing the same thing 
+> I have, which needs to be justified.
+
+No, you need to justify usage and export of cxl_core objects without
+taking care of the current lifetime rules. Did you see these reports
+from sashiko about v25? These issues are the motivation to pull
+responsibility away from client drivers.
+
+https://sashiko.dev/#/patchset/20260330143827.1278677-1-alejandro.lucero-palau%40amd.com?part=6
+https://sashiko.dev/#/patchset/20260330143827.1278677-1-alejandro.lucero-palau%40amd.com?part=7
+
+Now, I do not think the "attach" appraoch is the final end state. This
+needs to get simpler still, but it can not get simpler with an
+increasing attack surface.
+
+> I can not see a reason for that attach functionality with the sfc
+> case. You did not reply to that comment:
+> 
+> 
+> https://lore.kernel.org/linux-cxl/20260330143827.1278677-1-alejandro.lucero-palau@amd.com/T/#m21968fd0ddf02df3641194d1450cb2bd392def26
+
+Yes, did not have bandwidth to reply to that beyond sending out the
+attach approach to better contain CXL core complexity.
+
+> And although I have not tested it, I think this is buggy. Removal of 
+> cxl_acpi will trigger unregister_region and a subsequent driver exit 
+> will invoke, inside the autoremove call linked to the endpoint device, 
+> devm_release_action on something not existing anymore.
+
+If there is a bug here I would like to see that test case because as far
+as I can see it would be shared with the generic expander case.
+
+> It is the same problem with v25 type2 and potential cxl_acpi removal.
+> Maybe we should avoid linking a type2-related region to the cxl root
+> port ...
+> 
+> 
+> And IMO, hiding what we are doing to the user/driver is not convenient. 
+> Although current type2 is going to rely on a committed decoder, that 
+> will not be the case if we look beyond impending needs.
+
+Yes, start with the simple committed decoder case. Later, follow-on with
+auto-create support. That would have no need to go back and teach
+accelerator drivers how to create regions in the simple case the same
+helper would "just work".
+
+> A function with a name describing this situation can add clarity to
+> the different possibilities to support as a follow up of this initial
+> work. About naming, attaching a region to a memdev is confusing ... as
+> it is already "attached" or linked, and the reason you give for having
+> that explicit attachment not being clear from a safety point of view.
+
+I would be happy if the only detail left to discuss was naming.
+
+In this case "attach" means "attach to CXL the topology". A PCI driver
+can create a cxl_memdev, but if that cxl_memdev finds no active CXL
+topology then that "attachment" fails.
