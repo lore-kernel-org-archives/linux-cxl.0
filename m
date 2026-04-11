@@ -1,177 +1,235 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0D932BF4B
-	for <linux-cxl@vger.kernel.org>; Sat, 11 Apr 2026 23:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775948557; cv=none; b=ELGaI3lht7/zSVmMGmkrCdBvVCZpcg0Xchwa7xxVuqisXi1pUygP1UHJ6atI78KMcKro2JsMIFX06LKTs6lf/gx/l3gtDZqrq6pUeXC02iZufRq7u2+U1VXKUxccfMg2Xr8M0nrjK+nWNXWi10hjzAIPop5XCuaqg0B3JOAjedE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775948557; c=relaxed/simple;
-	bh=5CUnoaDm/f0C0we/UpikDShp/IU32vwibTNzk/jhn/U=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=HI9hZ+eIUEINxEUFXFk/0NWeUZTtyygaR2drqolTcqgJXePlgrUUmqPvOxWeN9JzhA/N2Mihr+5tPexeVddZaVVwl4VAciPbUAIoqnrNckGUp3F1AvNHyfQzfyRHqaJ0KElgB0UR8689dPUi+baj7CheGX+CC3oU/r+7lo3vK6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nWkmiGnT; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE76214812;
+	Sat, 11 Apr 2026 23:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775949379; cv=fail; b=YZfskUVKk9TGzhJ1ewrJiFRGFPHyLpnVwv94R+x7rtywZUY2GblgEbntblIYMa3wRZZ5M15io8XwLshfwS7GT7Ljbshf5n+o0Q+ngMW0UKvRsFKLvfXLw5Zz9IxYVTItgVq/JuePnwBwWcKzGFlWUiEkbnmXjC6oAGh3S0c/9M8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775949379; c=relaxed/simple;
+	bh=xHujJ82Gj65c61qAFWWKfj884WXCdMrn1BhOQ1BEf88=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=k8/RXdEZ/LmY/57gjFaLa/CRbQ3o+voOT+UkeJabjrJlMshrXV7sxPUpLeLp7mZh1KsqaNVy0FofUw+rJCt4Dlz7/FIxXowXOnjfFzyYVK8FuXcuISSjv2JJ5HAIx0f9mScIblZy/TDrUQgwdcGul9A79jB63+hssytXBqzunOI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XrvZe9fV; arc=fail smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nWkmiGnT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E109DC116C6;
-	Sat, 11 Apr 2026 23:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775948557;
-	bh=5CUnoaDm/f0C0we/UpikDShp/IU32vwibTNzk/jhn/U=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=nWkmiGnT1EqbaKCVGjdJMhJ3pzIEzLzLyYUgWSbK17mkCBf8fYx4qrgwkX9H5eed0
-	 eOiuAx+dcf7bxCn2qtwTKpuCKpNksj7a6etcuuo7ZaVi29dTGCVU0wasWijhQWN9DY
-	 aPGxTaHt7higbE417ZHGUn4ZcFdj75BajQNSd+3kll7VKpSfmZ1CeQWR30duDngCAE
-	 iYOl5fV8tOPDSB09WJFAWgOvvWd0Rx5Xw/2zOTmeDsEWGfqbaYrqGdPi/8nVnDqkya
-	 LwJOmutS51rDDxR16+ng1EQtKeAFf5AEDw72tSR3XK7IWomRqzaQLiqhWHVSJhAO60
-	 aYWXHB88haRlA==
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id E5CE8F40077;
-	Sat, 11 Apr 2026 19:02:35 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Sat, 11 Apr 2026 19:02:35 -0400
-X-ME-Sender: <xms:C9PaaWRM6X4O_HSyvRWxUcfbBieIzd7Q3yIaImVmf0gUla3HBa0qrA>
-    <xme:C9PaaVHOFKx9tgfFUtwbO4Ayydn3I1j219XhjjbN869pojQMXIf2yt9JwNUdknrMN
-    HjHEgN5LgFYx61LeWnJaZOy8O_ponXwxLEbR1XK-D0fPGrpkS4COzg>
-X-ME-Received: <xmr:C9PaabFtWs3CQoxVu3TeEgnG49KLyK1a2IEFRuhn2FAiSA-GREb-fkz4AXBsx8TeA_aKUcQfR7qd13VzF1XyheZfsXdmvF6hchg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeffeeihecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefkjghfufggtgfgsehtjeertddttdejnecuhfhrohhmpeffrghnucghihhl
-    lhhirghmshcuoegujhgsfieskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
-    elhfeiudfgvdeijedtleeltdduueekffejjedvjefhgeevjeefueejledtleetjeenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegujhgsfidomh
-    gvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudejjedvfedtgeehhedqfeeffeel
-    gedtgeejqdgujhgsfieppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpd
-    hnsggprhgtphhtthhopeeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsvghn
-    jhgrmhhinhdrtghhvggrthhhrghmsegrmhgurdgtohhmpdhrtghpthhtohepuggrvhgvrd
-    hjihgrnhhgsehinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqtgiglhesvhhg
-    vghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvh
-    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvjhgrnhgurhhordhluhgt
-    vghrohdqphgrlhgruhesrghmugdrtghomhdprhgtphhtthhopehluhhkrghsseifuhhnnh
-    gvrhdruggv
-X-ME-Proxy: <xmx:C9PaaTTZadqmfQH06OTNML7Bt1_GJKj8Frt5nBJQVHu2q616KPWs0A>
-    <xmx:C9PaacKpLnqqmdvkguOtFsgvbeLV3MJBkUc8M4XJJIoAdxV1Zkn2Zw>
-    <xmx:C9PaaeaXCKxsK2d1hY6u3nFws7TVQkjgtKrjtBEHStou3SPD8aNc_Q>
-    <xmx:C9Paae8sbV_wHa1Ma7cQ490M2xUcJC0hLElplBXmnMhTSfNEMnqBUA>
-    <xmx:C9PaafZJ3vRo25oof4jyM7oN7p8HGor7MIz0yiY8vsCjpI_8dhybpqWJ>
-Feedback-ID: i67ae4b3e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 11 Apr 2026 19:02:35 -0400 (EDT)
-Date: Sat, 11 Apr 2026 16:02:34 -0700
-From: Dan Williams <djbw@kernel.org>
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>, 
- dave.jiang@intel.com
-Cc: linux-cxl@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- alejandro.lucero-palau@amd.com, 
- lukas@wunner.de
-Message-ID: <69dad30a614d7_fdcb41008c@djbw-dev.notmuch>
-In-Reply-To: <59f69b87-e37e-44c7-8c15-c332118622b5@amd.com>
-References: <20260403210050.1058650-1-dan.j.williams@intel.com>
- <20260403210050.1058650-5-dan.j.williams@intel.com>
- <59f69b87-e37e-44c7-8c15-c332118622b5@amd.com>
-Subject: Re: [RFC PATCH 4/4] cxl/region: Introduce cxl_memdev_attach_region
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XrvZe9fV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1775949378; x=1807485378;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=xHujJ82Gj65c61qAFWWKfj884WXCdMrn1BhOQ1BEf88=;
+  b=XrvZe9fV2e1L+7kxgK/G9RCuZs1QvAjaJ519y//emExEx+udI4jjtwWx
+   mFZBPMg+fNc/DSMR6jEas4WdtkoPnAaPg0jfUFrhA8qm/bv9ttvfbVJjJ
+   wW3xH8U99YrjPHS9zOPQxV04RXqBDj0oqvLIwMadEHvOIDgEiGcjnyMTB
+   35FMxFwS/pVIZtXKilKLzAb0SDMnfwHME6Q6vFBYLLIywifHxiu0cT2OO
+   NIAKeWXqphkEVKagtXjMXn6Rjpo9J3pSiNRjsIe97vAJdgWnxnonYUh2e
+   iZzjsBz1Nc2bXsXyIoGuuWzXE72M/JLAOtEyOh0j4JEFhykR3y8Wh5JEP
+   w==;
+X-CSE-ConnectionGUID: SBkw7X3EQJmjBYybgMFITg==
+X-CSE-MsgGUID: LVJsTQyzQQKLJ3GTZPzF8Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11755"; a="80814236"
+X-IronPort-AV: E=Sophos;i="6.23,174,1770624000"; 
+   d="scan'208";a="80814236"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2026 16:16:17 -0700
+X-CSE-ConnectionGUID: iVulnMDDTyy+0gNrTyDdKQ==
+X-CSE-MsgGUID: 2fW/FO1FQWa2MGtNfzG4PA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,174,1770624000"; 
+   d="scan'208";a="226264072"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2026 16:16:17 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Sat, 11 Apr 2026 16:16:16 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Sat, 11 Apr 2026 16:16:16 -0700
+Received: from PH8PR06CU001.outbound.protection.outlook.com (40.107.209.8) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Sat, 11 Apr 2026 16:16:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QGYWxv2zS+1mfnjCs6ZQWkPRMlnM2Am+uSvZEo6ijOaPwbqDLZ/LNhCjnV9aaMfzZXlspsF43OPXSREtCSNY5XQ5ADJj3HDT/fNkeZq+lJz5lOoXinBdyU8fGyHFPXhUvl7IFnyMYkmur2T5Bxw/CQETv2wzMYkFtBdLzU1YmAUc4D9aPltdp6/wifktVriXlTDZX+y5fxnqoLVGlZkrCaL2feMK4IuiC3c6fbkWB3xBWpfL2XAAm5w/n3dOgICUXx1U5tgGyJ0xBYQ425FmJw0K+Tg6BW6DlV0o4ndQLxM7dWlPMvmkphLdpt8FurnPNlKGrA9QZj8tem2RN2lXiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=G3hqHCv4vKuEvkwa1KMWJwViOlhh1EJXBDxjWbXcd20=;
+ b=LzUnkdr/uLjpt/0yDtheqsHa19tFQvJaCMMwym9HFM4VhuDqlkTHE/9tZpLsAuBICKSpPKRCvOjVVAqbMfx9FSOj6Cbe6I+rQWIbz2uqxrnv4QR9vm0Jl69OCCSj3uw+5sT/R9SRTJkXQ3f1EcjiBLxn7m2bRgY1m/9NCp9CYFjVg5E65VXY3VwCKNBUrNbx9OldvfZ72ZgXPSyyD6Gh2Lute9uOAPf9Poz26zJWBLQnbOzVtmBC5dyAwNqowOFyiMW2Jna3tbth2ZZjMpAZnLpnJILuqXw04tAjIfXPt5BnQdVBub0xH2uviArOpCC3j6M2rgx3XEWkIILfviGFPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by CY8PR11MB6844.namprd11.prod.outlook.com (2603:10b6:930:5f::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9791.33; Sat, 11 Apr
+ 2026 23:16:12 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::fa8a:90e4:57d4:8026]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::fa8a:90e4:57d4:8026%6]) with mapi id 15.20.9769.014; Sat, 11 Apr 2026
+ 23:16:12 +0000
+Date: Sat, 11 Apr 2026 16:16:06 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: KobaK <kobak@nvidia.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Dan Williams
+	<dan.j.williams@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, "Jonathan
+ Cameron" <jonathan.cameron@huawei.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Li Ming
+	<ming.li@zohomail.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cxl/region: Validate partition index before array access
+Message-ID: <adrWNiO-KeTIqBbL@aschofie-mobl2.lan>
+References: <20260409154445.2416120-1-kobak@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260409154445.2416120-1-kobak@nvidia.com>
+X-ClientProxiedBy: SJ2PR07CA0012.namprd07.prod.outlook.com
+ (2603:10b6:a03:505::13) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|CY8PR11MB6844:EE_
+X-MS-Office365-Filtering-Correlation-Id: 66939892-a8d8-4d11-2d08-08de9820513b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|56012099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: mt64F+psOPjrM3MEfr0FN3CIKzdixG1HaBpIfWz0A/nnws2jNJH9Nw8JzRHpscvGpGpix6KEhb/pBegrLNeDavvXeywtHWVV2KCU6ZCRbYhUScImL0UVFD2g2t+ZFgb17I3NhHLFM1bBHOb+8IGQ7uqM8MvQoMBQmTjOT06QenKEXBWtAyV8TCfElFeabHw7edBfIMTjPInKW20JOd3KPvoZuIhQMYkhYCVpi+kW9NzoUodrXkd+vScWZcthra9cPTbLoAlQzt3m2cMvOBhN+hSYcHZRjZlHsUBDAeCnv8s39obrJH5NR+ZTM14uUjzUDfTtXAgGeswcxAEP3qEApIFGZ9W2CSIaYKnLxZXn+xgTR34x+jXwrqCDM+hqyCvBjnef9igfx/cEoxx0MzwDYlHLw1ghHDX73PdPfjRsNBDmeNeVLH7Kn/vRoTensFsCI4RuDlYZWd3y1gentQJOwKr2dAeEo/NPF9zVYB9yT3ZRrN6QgRw1iNvu5wWC6eWkURI0jEgWp/U7q/Uk6jhKJOCFEDxlAIrQXxYCrSpqDsUk/NvoJSrbiqEium+Dut5GgOZSNHt31jP5Pgbs5iwHxewS6H8vMbF32+Pc/oyy2d7kxCKFVuh431X8AVuey2aHB/j6Y/H4+/UPJT9OMjsluFSy0OvU5W8tO4RAIYThAohNFdC/TAX5n5mI8DjcsEYhF2yPKqMqdneIJWzrTvt7Jrg0jlipNQZX8uHCrPIr7Cg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?AoNCstzvMWMtwYWL5bSqwwyz9ozfhQ8sjgJkB4SmzTlZNjWQK6pS1D+X2i9+?=
+ =?us-ascii?Q?/NlZh67jYP0YQwxp4V/1xaNzkHx9RSrOmIXghS62vin1O2RSUCis2eViemeJ?=
+ =?us-ascii?Q?8GvE0K5PskM2Yf7mdgmZ03kclfgWRIoSehU1odHcETBguUpL/wg57X7swIkO?=
+ =?us-ascii?Q?EnrRjojePx5FssHPSqyXN504Tt7YqznlGYIq1rGkmazsJ0/zu6rU8ENQIWdO?=
+ =?us-ascii?Q?zgVcNzdY/bvN5wJXHJyZpXerMdLeqQFwPcG6C3g3Z+LNXR7M/0iPp+MqhToa?=
+ =?us-ascii?Q?x8z/6KtGPT0BiLltgDRK6G7sUVC4u6PA723sZE5EooLKaXAPbT93EAFiGFAH?=
+ =?us-ascii?Q?DWljnL6xzprE1fO+34Fyfc78Jl5SeMTmsizloZKQeMyEkHq/yegUM+owUCSR?=
+ =?us-ascii?Q?ssPxG83uBesLKXkTnSVsfItJxp7gP9Dkm8YPeK9BWMNk1dlfEsBn+ayqhCnl?=
+ =?us-ascii?Q?2wRxJzWt8eRE7cbMzR8daBdlk3CsDp6GMunS/dTDtzXZw6ZnFJG7tzwuAjhn?=
+ =?us-ascii?Q?33onC8b6P0hMa0IQACBvy6WIyHzYAoqv2n6G6YMpuJgh9qoAQuomZnRe+GgB?=
+ =?us-ascii?Q?EJvvMiGT7Ip+JGCwMpATkNR2n5bzGP9PspMDXP2elY2keBAjDaX4C+rEBVMg?=
+ =?us-ascii?Q?f218U2AayVCRQ4YHix86BmdM9m+sP/z9ZeS/R1jNd/zZgAvBhzKE2EmoeIsj?=
+ =?us-ascii?Q?MTqimVKZJ1Z1Bh6yGIecaIUNhM058lTvMpipo/uFPNoIwqtUv8RvdL0OO+6+?=
+ =?us-ascii?Q?FCc/KdNxXT2VbHHl//RMuwdiYDWdQQzFTrvRudLN8M6I8fmX0UvqmolU2Enw?=
+ =?us-ascii?Q?zQh42tEbSoW0SZiAE2U90ijU7h4P5Yemb9fCZaPQHsmqC2Nbtv6is7v7RmIM?=
+ =?us-ascii?Q?JLdmywfQTKtzjP3jTvnZatxki7KPjW3GGwsQXFexBpKujd/ENLT3otqUlNDo?=
+ =?us-ascii?Q?tr6iVxm9kb8LFfvuHuQSaJTBxZWBwp8EnbeOMh46QVGYHH4Xog/p7sumD2AC?=
+ =?us-ascii?Q?3Hc6pb/xoQSUDkity3glytpGht02XNMBsj/2abtItEHUvcRPuLxLx7kSdcti?=
+ =?us-ascii?Q?w87wlg3UnF9wju/gPTBJllEvzfZFIUHQj79LgxkXKnaiC4Zh0fTWL955/gXK?=
+ =?us-ascii?Q?3QGFm1N20E59IiqPZEIAhqWkxv7IOZlhnVViG7XcI+QiFvlQEMf5w01jZqKk?=
+ =?us-ascii?Q?4aqOqMXYuRMfK3AKcjjJ2pqLNbqdRw475y0UuMbeYaR7L+T8mYpGDpzvOJ6b?=
+ =?us-ascii?Q?RNRxaWIPoQQQ54BqKcm9vFFWBA8axDQPLdQYGZl7ZpdcULi4Bn5AxVKpCKPW?=
+ =?us-ascii?Q?fFxXgr8SBNF80BcHAqzaMoH7wtUKCZwz3OW2wJfpIL0VtQvy1cEflTuciUR0?=
+ =?us-ascii?Q?+NMdsxCCIyzcg5OZP6X3kbFwRwYGe8A+rNLyRRxYdxfrInhAROj8jjcKcVPZ?=
+ =?us-ascii?Q?oIWan4VMIPcApNFg5ISgfooghDCxSaV/SOZVHZiwSq/K5+pSDdA+NLSKYh9N?=
+ =?us-ascii?Q?LScSxhjnPctfIeHSq7/C8xXcrEUbbb8wyXU4yVG/XpDe+otRWArdiyU38iIT?=
+ =?us-ascii?Q?sj4EmEQZHS4ecaEZ2WEpSDmd0Xnu2qvsCimkndNd0CyHqUVdcSgnVJrQNwwC?=
+ =?us-ascii?Q?0SQysqE12uQSB3tx1gCBqRNLjgvMMqgSXYYONWnuQT1fwrVvEyAcdA7ykOv9?=
+ =?us-ascii?Q?68QRUzIL51tWwlO8T1XVhbrnPwAO0P6CMsPdNXKyaTEtZ6beF9EkTlgx16o1?=
+ =?us-ascii?Q?kqkw/LNq6GIKpbg+JekWoBj/SrWEJhU=3D?=
+X-Exchange-RoutingPolicyChecked: THeAO3xTbcZJpWy2pA7Cd8vPEubOGYrzof5t4EH1CAxkQrW6++O20ZubnZ8KLx7P1vxZkyOb+9lWniBE7Ccg+fNrjoDmVBEKkTkN/PNwgtwzOyIY80LuA0OAs/ofqPoQdA5LTxSEUmcOxx+xxz0KNPExCMaGNvjE/SSrsHumr3pMTtbI9S37SJdUwwRPGKhIpyc7+a/27jhMd/O29lEheQxyD04ZRSDN3j7agrgJPtSyf3gEWLp9n9Lv+tIyJzJ+8pP5V1wpbItv1pSOsZqV3noaDnKnQ3xHvOCsqhI6y4muAIi5V3jgwf0iaTguOZ/q4HyrdARzbfu2STf5hi3I7g==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66939892-a8d8-4d11-2d08-08de9820513b
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2026 23:16:12.1916
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cC9eev5IcS9ITuML9N05p/JY7s7z/R1CguTfVvPf7uWjilAhnELtgFUtTkQasGjDsgGKQw9LrA7PIJRVRANPDB3G0zKIF62HpEcCmxD1vcY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB6844
+X-OriginatorOrg: intel.com
 
-[ add Lukas ]
-
-Cheatham, Benjamin wrote:
-> On 4/3/2026 4:00 PM, Dan Williams wrote:
-> > To date, platform firmware maps accelerator memory and accelerator drivers
-> > simply want an address range that they can map themselves. This typically
-> > results in a single region being auto-assembled upon registration of a
-> > memory device.  Use the @attach mechanism of devm_cxl_add_memdev()
-> > parameter to retrieve that region while also adhering to CXL subsystem
-> > locking and lifetime rules. As part of adhering to current object lifetime
-> > rules, if the region or the CXL port topology is invalidated, the CXL core
-> > arranges for the accelertor driver to be detached as well.
+On Thu, Apr 09, 2026 at 11:44:45PM +0800, KobaK wrote:
+> From: Koba Ko <kobak@nvidia.com>
 > 
-> I'm probably missing something, but where does the core detach the
-> accelerator driver?  I assume it's part of unregister_region(), but
-> I'm not seeing any driver_detach() calls on the accelerator device.
-
-It happens in detach_memdev().
-
-> I don't think there's any demand for this at the moment, so it's more
-> of a "food for thought" kind of thing, but why not allow for a
-> fallback mode of operation instead of detaching the accelerator
-> driver? First thing that comes to mind is an optional callback as part
-> of struct cxl_memdev_attach that is called by the core during CXL
-> removal. The assumption would be that an accelerator driver that
-> provides the callback would clean up all of its CXL usage in the
-> callback then continue in a PCIe-only mode of operation (hardware
-> willing).  When the callback isn't provided, you get the behavior in
-> this patch. Again, this isn't needed here but may be a nice
-> middle-ground later on down the line.
-
-I think that is possible, and also is not really a CXL specific feature. A
-capability to move resources in active use by drivers has been proposed before
-[1] (credit: Lukas).
-
-[..]
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index 11bc0b88b05f..090f52392b20 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> > @@ -1123,6 +1123,19 @@ static int cxl_rr_assign_decoder(struct cxl_port *port, struct cxl_region *cxlr,
-> >  static void cxl_region_setup_flags(struct cxl_region *cxlr,
-> >  				   struct cxl_decoder *cxld)
-> >  {
-> > +	if (is_endpoint_decoder(&cxld->dev)) {
-> > +		struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(&cxld->dev);
-> > +		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> > +
-> > +		/*
-> > +		 * When a region's memdevs specify an @attach method the attach
-> > +		 * provider is responsible for dispositioning the region for
-> > +		 * both probe and userspace management
-> > +		 */
-> > +		if (cxlmd->attach)
-> > +			set_bit(CXL_REGION_F_LOCK, &cxlr->flags);
-> > +	}
-> > +
+> Check partition index bounds before accessing cxlds->part[] to prevent
+> out-of-bounds access when part is -1 or invalid.
 > 
-> It seems unfortunate that you set the region lock bit here and then
-> immediately do a check to set the bit again.
-
-There are 2 different cases to lock the region here, presence of attach, or
-presence of hardware locked decoder.
-
-> I can't think of a way to leverage cxld->flags for type 2 in an
-> ergonomic way though, so I guess it's fine.
-
-The flags are just caching hardware state, I do not want to have drivers
-play games with the flags that dilute that "cached hardware value"
-meaning.
-
-[..]
-> > +/*
-> > + * The presence of an attach method indicates that the region is designated for
-> > + * a purpose outside of CXL core memory expansion defaults.
-> > + */
-> > +static bool cxl_region_has_memdev_attach(struct cxl_region *cxlr)
-> > +{
+> The partition index is read from cxled->part without validation. If it's
+> negative or exceeds nr_partitions, accessing cxlds->part[part].mode will
+> cause out-of-bounds array access.
 > 
-> I think this should be renamed to something like "cxl_region_is_private()"; it
-> better matches the intended use of the function while lessening the burden on
-> a non-type 2 educated reader. Also has the added benefit of being one less
-> change site if the mechanism for determining if a region belongs to an accelerator
-> changes in the future.
+> Fixes: 5ec67596e368 ("cxl/region: Drop goto pattern of construct_region()")
+> Signed-off-by: Koba Ko <kobak@nvidia.com>
 
-Why does the CXL core naming need to cater to accelerator vs expansion
-use case naming?  CXL core developer needs to understand all the use
-cases and wants to make them unified as much as possible.
-"cxl_region_is_private()" says nothing about what "private" means and
-where to look next. It also muddies the namespace for when CXL regions
-start becoming the backing store for "private" nodes. Is that a
-"private" region?
+
+This bounds check need is overstated. All writers of cxled->part either
+initialize it to -1 or assign it from a bounded walk of cxlds->nr_partitions.
+There is no path in that code that produces a positive out-of-range index,
+and the only invalid state is part == -1. So, let's focus on the -1 case.
+
+(If we did want to defensively guard against out-of-range indices, that
+would need to be applied consistently across all accesses of cxlds->part[part],
+not just in construct_region(). I don't think that is needed.)
+
+The Fixes: Tag was a bit perplexing. The cited commit does touch any lines
+related to partition indexing, at least based on "git show 5ec67596e368".
+However, a close look suggests something else is going on.
+
+Commit be5cbd084027 ("cxl: Kill enum cxl_decoder_mode") which previously
+reworked this code included the needed check:
+
++	int rc, part = READ_ONCE(cxled->part);+
++       if (part < 0)
++               return ERR_PTR(-EBUSY);
+
+And that check is indeed preserved in the final lore posting of the patch
+referenced in the Fixes: tag:
+https://lore.kernel.org/all/20250221013205.126419-1-ming.li@zohomail.com/
+
+The version that landed in the tree however is different:
+5ec67596e368 ("cxl/region: Drop goto pattern of construct_region()")
+
+This suggests the check was not removed by that commit directly but instead
+lost during a merge.
+
+At this point, I suggest a v2 of 'this' patch that simply restores the
+missing check, no added range check, no debug messaging, simply:
+
+	+       if (part < 0)
+	+               return ERR_PTR(-EBUSY);
+
+
+It would be useful for Ming and DaveJ to take a close look at the merge
+to confirm if anything else is off.
+
+
+> ---
+>  drivers/cxl/core/region.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index edc267c6cf77a..6be46636db7ee 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3712,6 +3712,14 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>  	int rc, part = READ_ONCE(cxled->part);
+>  	struct cxl_region *cxlr;
+>  
+> +	if (part < 0 || part >= cxlds->nr_partitions) {
+> +		dev_err(cxlmd->dev.parent,
+> +			"%s:%s: invalid partition index %d (max %u)\n",
+> +			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+> +			part, cxlds->nr_partitions);
+> +		return ERR_PTR(-ENXIO);
+> +	}
+> +
+>  	do {
+>  		cxlr = __create_region(cxlrd, cxlds->part[part].mode,
+>  				       atomic_read(&cxlrd->region_id),
+> -- 
+> 2.43.0
+> 
