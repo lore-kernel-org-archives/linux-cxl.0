@@ -1,62 +1,62 @@
 Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67AC26D4F9
-	for <linux-cxl@vger.kernel.org>; Sat, 11 Apr 2026 01:40:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD17F1CEADB
+	for <linux-cxl@vger.kernel.org>; Sat, 11 Apr 2026 01:40:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775871645; cv=none; b=sGbYCKdqEpxbPDfZoRbpNo9mzXDJhnSmuuIXXmANlETD9FIAbis0tue8z6BfFa0gpOAtNDdItiWV862AJN0aIgq3ZcPSsbra6gOe1tkZpV79t5OwXRIRTEGNuUwQz+0qXzb4pYT4ay8MWXc7cgnpG0/Qvax9dnKR4egl+wnaNyw=
+	t=1775871647; cv=none; b=qur4bYwyJS8QI2UiZx9DiKfEqXG0NZT5j28H6y5KV1MXM6me7k3KhH4Dh0GeYG94JZAnr/U3uPMsyuthXqmd0S/lqSr5IhTjEzIQP6iSlxSEtIWwubF4syFl8eoy+MvyNrQPbOV48U7bMfeTNNcJ5DQSFX0gDP2Km1S8cQyHCEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775871645; c=relaxed/simple;
-	bh=CnUyb8K4IKoNoHwuP8C4pP8dLJcnwQZOS7vxNgDK9dw=;
+	s=arc-20240116; t=1775871647; c=relaxed/simple;
+	bh=QHn7ieEid47WTEFJ2WMdYtqFPw9lv7IgPPIAjVaHAjw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=toeRuidOvpET1Stnkv+XAOIwx61JjXyz8J5Vf8CCdy7qdg2lGT8asEFpHO8dsyyfyWJiT5TT0Z8RBvcRyO2xL2eK9bjQ5m4R/H2/b3cVHMIFDIlWn8eOCkCMpC9oHOhikozscwcAmWTbGrO4iPLOA2uxCotow2PJQd62uKQsn4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YbFKBIJW; arc=none smtp.client-ip=209.85.128.177
+	 MIME-Version; b=RQiMjb1L9LNvFBRa8/l/bIolGKWpPEQ+7irbWMgt2Y1hlbrAHff2leSoufwm/UVqMqaJeAVPZEnJBFm1QS5qEuhdLfwrzcodf0G8FZ/IkAW565qaYHrrR8AHgcsLvMmvE9RFuO0RPti1fxq2WGS+L+fHs/8i/R4KryHgUijMTF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KrG5hauT; arc=none smtp.client-ip=209.85.128.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YbFKBIJW"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-7a43424f861so22787047b3.1
-        for <linux-cxl@vger.kernel.org>; Fri, 10 Apr 2026 18:40:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KrG5hauT"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-793fdbb8d3aso30629507b3.3
+        for <linux-cxl@vger.kernel.org>; Fri, 10 Apr 2026 18:40:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1775871642; x=1776476442; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1775871644; x=1776476444; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VZemOb7Nr3A613tO6Z4B+BfUUwzc//YehLmE03EZx3Q=;
-        b=YbFKBIJW25a2nZOcGJtqTNU6tepbCAsyPs/JhoeLn2yfQbAJnWCzAvfCRUHAkXC0hE
-         pcQeDaoffwC0gwsqyPDes0iOAHsGiXHjAdLsYoxMSEJvXd2wOIObpAyw5POaN+qRikAN
-         KW7vO2d5udn0I4knmHvE0NRIgc1H1KFZnuFf88Uuw7jhbwAu1EHI5IxMPAeUwSVIBZtw
-         aNSwWo3fqe77pmgZW5XwIQcA/GguArdBJLQ7yrAfdjKpQiei2qb9ba8k9Vk3BQ6YxiZF
-         jZPTA1m4FViwMpWwnQtJrRxZXoeHLNp0xm4nWYkLWFdYFhEOoeEoYuemDs+fPwR1YZc8
-         S7VA==
+        bh=7hMbFzbKyATSd8MEYQXDyg3tLh7e5iSg6PU3CPCFlOg=;
+        b=KrG5hauTNIjOpn2VxvUiUKrL9cnSJmuS7BsHi3Io/Qpgi0OXvY71QHRG/quouVQA3v
+         hHz/JCGXtUaorFwjlwQHURBO8Ru9d148nC5dbpwlgj8CQWhH9lh9oNAd14CTNmC9fRvC
+         pFYV/kNdQdURyrgn/4Czr4RjyWIUttyBNjJ5AOdED60zocfKqWzql1HQwh2t88ptYUPl
+         JD/mpiIlYRz5vF/FnElW2FJYPooF+IlfsLG9HGA5eeX5Okz0fuUMJ4BrOF+usVhIktvT
+         GcX9Cv8ROvDa/YejkMFDZebdwFXCCi2CH2ALE8ZJJ1Nf5eDFRVAJq0BDjg9zYRxAHsVe
+         QAdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775871642; x=1776476442;
+        d=1e100.net; s=20251104; t=1775871644; x=1776476444;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=VZemOb7Nr3A613tO6Z4B+BfUUwzc//YehLmE03EZx3Q=;
-        b=L8FHvRQUkRBQhZxNn+7qpXpQ1aA0rUVz2jJ9B6IRkPz0WOTY66kXg4TxgeI+IVjxsG
-         e6fenJJLXvlHVzS2837pdbr4AQYLoacFVe/UouSBjLPQLmqZeRiUd97fFXne8p+vfTwa
-         f5iRIzVbYUvfuWQ80XQkEddW7tG9CnoNT2HIW+C10KSg1PezrTbtzAHkmtW5QdM/1H6t
-         YZcxeu5LYuEKxzSpqFB+ajqcBib5Fsn6qWnRg8bWjg7vWklPBzQZs0xUdHUEiPPSFoaT
-         XlwQELXoQZttxXKJJzvHGicyEqiQx+F2+DeyCRF2SOs+lO7Ue1ze1zvcKmG3Od0XhduM
-         mjtg==
-X-Gm-Message-State: AOJu0YzxJ7AJ4uI3/SaQ4ZTyoCJUisFbMujQ9DGwy+v26uHtFAZ8j18D
-	/YV95FgsYMmtpiyKk+dQ0hsygx091iRAER2wmQCY4Ib4AObGlpw+i7GFnXOXUg==
-X-Gm-Gg: AeBDies9+/cKwLe2OnHeY/mG2LNCtsBtX2Iqz2NAE3wO00ShDysHN6RdTYLRa5MiC7Y
-	wSozRVBBg1bnRoXpqyOeird/ZXgpQk1zG1w6zo3+VD7DgcyPy5jSpdAfYGcIgTqA9rWT1FZXeof
-	66spzCZ5d05+4n6lSWfdNCeUMaXrDDr16yA/I8CDfKQ4nNNqVdYMJa4u/DYXPCS/8TmemsZS+9N
-	J+wovztV2WMCb4oWdlr4ahTLqM/nHUXMQhuvQGOLkHvZj420FbkVhH82lknEbFYQtIECIh/8UA8
-	dtieuKeLyrUutI4wkLh19xTu5BJ52LPU6uBdEgQ3N7By6tYzBpXan3aMIKfKshz5A83dV5zk1VM
-	bXNvYj+W3vSip4XzkJ63F87rUezZjqidxht4T5qhJ87V3mrtp4a5cmDv32lcnP+fP7FnoMM3NPf
-	Ex1AXcBEOD1xCmPIRGLtHrjMj3vNRkqHnoTf5Jvi045w==
-X-Received: by 2002:a05:690c:8d05:b0:79b:e1e1:9e4d with SMTP id 00721157ae682-7af71e4e8c4mr50472217b3.40.1775871641767;
-        Fri, 10 Apr 2026 18:40:41 -0700 (PDT)
+        bh=7hMbFzbKyATSd8MEYQXDyg3tLh7e5iSg6PU3CPCFlOg=;
+        b=slIanZoFKU2TAcov07507/fSKDrf6dhMHDz1eltGFM/vfLTLPJkiRZXUW9ygXAWJe0
+         YABeqfnHvAMKcEQkU5TU9DHn6GsPqJqZSmB8HahhPpltRxq+6picJXf+Jjf+cAz7EUct
+         mvM9b5GAGIa8s7GMrZNPzOQ/FNWnmVwiVgvondSjQ/vrXUv91aEXO3u4esZzHXx0olRE
+         tOxl7hHSNogH6IlszFIjWogJHKwyFKplBxr8VDoq803+Nm1TKhqmUsMhdz9uh5h9pku1
+         3vBExDQ6PTu1ECvLtS91TstLtKoPpzzerx+eRLsCpNa3xyomafFM0nFLWnbSs6L33T4X
+         UyIg==
+X-Gm-Message-State: AOJu0Yy7yRLvfye4o2bgMsBWLC8YwA7ixfrRmpVUkO7p2aIirmZWoVwT
+	1j60x0Av0PBRd93YWU3g0keYgP+PeUzbXdwQBFr8IGjR7SPKODaA8cnfB5yY+g==
+X-Gm-Gg: AeBDieshXB8MJILgAW91ZsSeYEOlozMhh6HkU/wsUrCTtf2mGler+gzY+9CnduwSdb/
+	aSghJMLqIIe3uyNHWE1b+B6wDcTttMREq6C2L3aRZZtuocmx3jBGCVsK/7lGgid5KxJjttphCEQ
+	RfmVDr64Vri00qsvL0BFpKpQ+OvNCqN9vdBO5DBSvdgak78LZFi2uXXQ01maUWwWGNEHfKTUeMs
+	t9Uh5M7T0HaZZzuYfd08WCvdMn2HNLF50J1ykqUwBEezofWE3dVaLAxsgsFdU/L8VjV8dnVkZ6D
+	2pLi6FenzXVA4XNdba2Desju76sgDH93f3dU5XFgEOAkUQwLVbPrXY1K/SINO3CaBsmcQUhmWcQ
+	JOuOr3xlPH4oCRimDLHznyoJnm46v55dfnUSvtHSeiaDTDPH8X0giI4O0NyASB1dKXQ0AchItUz
+	QhKiUMiEVOaWW9lmS3c5CQ8l+cI9L6nXXBgB8rnbEOzw==
+X-Received: by 2002:a05:690c:a041:b0:7ae:7e57:440a with SMTP id 00721157ae682-7af6ee47eaamr44626557b3.8.1775871644573;
+        Fri, 10 Apr 2026 18:40:44 -0700 (PDT)
 Received: from 4470NRD-ASU.ssi.samsung.com ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7af3fa06595sm21690547b3.40.2026.04.10.18.40.40
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7af3fa06595sm21690547b3.40.2026.04.10.18.40.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Apr 2026 18:40:41 -0700 (PDT)
+        Fri, 10 Apr 2026 18:40:44 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
 To: linux-cxl@vger.kernel.org
@@ -69,11 +69,10 @@ Cc: john@groves.net,
 	ira.weiny@intel.com,
 	dan.j.williams@intel.com,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Fan Ni <fan.ni@samsung.com>,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH 11/20] cxl/core: Return endpoint decoder information from region search
-Date: Fri, 10 Apr 2026 18:23:06 -0700
-Message-ID: <20260411013958.47422-12-anisa.su@samsung.com>
+	Fan Ni <fan.ni@samsung.com>
+Subject: [PATCH 13/20] cxl/region/extent: Expose region extent information in sysfs
+Date: Fri, 10 Apr 2026 18:23:08 -0700
+Message-ID: <20260411013958.47422-14-anisa.su@samsung.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260411013958.47422-1-anisa.su@samsung.com>
 References: <20260411013958.47422-1-anisa.su@samsung.com>
@@ -87,128 +86,152 @@ Content-Transfer-Encoding: 8bit
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-cxl_dpa_to_region() finds the region from a <DPA, device> tuple.
-The search involves finding the device endpoint decoder as well.
+Extent information can be helpful to the user to coordinate memory usage
+with the external orchestrator and FM.
 
-Dynamic capacity extent processing uses the endpoint decoder HPA
-information to calculate the HPA offset.  In addition, well behaved
-extents should be contained within an endpoint decoder.
+Expose the details of region extents by creating the following
+sysfs entries.
 
-Return the endpoint decoder found to be used in subsequent DCD code.
+        /sys/bus/cxl/devices/dax_regionX/extentX.Y
+        /sys/bus/cxl/devices/dax_regionX/extentX.Y/offset
+        /sys/bus/cxl/devices/dax_regionX/extentX.Y/length
+        /sys/bus/cxl/devices/dax_regionX/extentX.Y/tag
+
+Based on an original patch by Navneet Singh.
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Reviewed-by: Fan Ni <fan.ni@samsung.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Tested-by: Fan Ni <fan.ni@samsung.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
 Changes:
 [anisa: rebase]
 ---
- drivers/cxl/core/core.h   | 6 ++++--
- drivers/cxl/core/mbox.c   | 2 +-
- drivers/cxl/core/memdev.c | 4 ++--
- drivers/cxl/core/region.c | 8 +++++++-
- 4 files changed, 14 insertions(+), 6 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-cxl | 36 +++++++++++++++
+ drivers/cxl/core/extent.c               | 58 +++++++++++++++++++++++++
+ 2 files changed, 94 insertions(+)
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 8881cc9323e0..14723cfd05f0 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -58,7 +58,8 @@ int cxl_decoder_detach(struct cxl_region *cxlr,
- int cxl_region_init(void);
- void cxl_region_exit(void);
- int cxl_get_poison_by_endpoint(struct cxl_port *port);
--struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
-+struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa,
-+				     struct cxl_endpoint_decoder **cxled);
- u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
- 		   u64 dpa);
- int devm_cxl_add_dax_region(struct cxl_region *cxlr);
-@@ -71,7 +72,8 @@ static inline u64 cxl_dpa_to_hpa(struct cxl_region *cxlr,
- 	return ULLONG_MAX;
- }
- static inline
--struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
-+struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa,
-+				     struct cxl_endpoint_decoder **cxled)
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 3080aef9ad67..38cf0a2894b9 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -661,3 +661,39 @@ Description:
+ 		The count is persistent across power loss and wraps back to 0
+ 		upon overflow. If this file is not present, the device does not
+ 		have the necessary support for dirty tracking.
++
++
++What:		/sys/bus/cxl/devices/dax_regionX/extentX.Y/offset
++Date:		May, 2025
++KernelVersion:	v6.16
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) [For Dynamic Capacity regions only] Users can use the
++		extent information to create DAX devices on specific extents.
++		This is done by creating and destroying DAX devices in specific
++		sequences and looking at the mappings created.  Extent offset
++		within the region.
++
++
++What:		/sys/bus/cxl/devices/dax_regionX/extentX.Y/length
++Date:		May, 2025
++KernelVersion:	v6.16
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) [For Dynamic Capacity regions only] Users can use the
++		extent information to create DAX devices on specific extents.
++		This is done by creating and destroying DAX devices in specific
++		sequences and looking at the mappings created.  Extent length
++		within the region.
++
++
++What:		/sys/bus/cxl/devices/dax_regionX/extentX.Y/uuid
++Date:		May, 2025
++KernelVersion:	v6.16
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) [For Dynamic Capacity regions only] Users can use the
++		extent information to create DAX devices on specific extents.
++		This is done by creating and destroying DAX devices in specific
++		sequences and looking at the mappings created.  UUID of this
++		extent.
+diff --git a/drivers/cxl/core/extent.c b/drivers/cxl/core/extent.c
+index ecdd7717f7d7..17fad51f084d 100644
+--- a/drivers/cxl/core/extent.c
++++ b/drivers/cxl/core/extent.c
+@@ -6,6 +6,63 @@
+ 
+ #include "core.h"
+ 
++static ssize_t offset_show(struct device *dev, struct device_attribute *attr,
++			   char *buf)
++{
++	struct region_extent *region_extent = to_region_extent(dev);
++
++	return sysfs_emit(buf, "%#llx\n", region_extent->hpa_range.start);
++}
++static DEVICE_ATTR_RO(offset);
++
++static ssize_t length_show(struct device *dev, struct device_attribute *attr,
++			   char *buf)
++{
++	struct region_extent *region_extent = to_region_extent(dev);
++	u64 length = range_len(&region_extent->hpa_range);
++
++	return sysfs_emit(buf, "%#llx\n", length);
++}
++static DEVICE_ATTR_RO(length);
++
++static ssize_t uuid_show(struct device *dev, struct device_attribute *attr,
++			 char *buf)
++{
++	struct region_extent *region_extent = to_region_extent(dev);
++
++	return sysfs_emit(buf, "%pUb\n", &region_extent->uuid);
++}
++static DEVICE_ATTR_RO(uuid);
++
++static struct attribute *region_extent_attrs[] = {
++	&dev_attr_offset.attr,
++	&dev_attr_length.attr,
++	&dev_attr_uuid.attr,
++	NULL
++};
++
++static uuid_t empty_uuid = { 0 };
++
++static umode_t region_extent_visible(struct kobject *kobj,
++				     struct attribute *a, int n)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct region_extent *region_extent = to_region_extent(dev);
++
++	if (a == &dev_attr_uuid.attr &&
++	    uuid_equal(&region_extent->uuid, &empty_uuid))
++		return 0;
++
++	return a->mode;
++}
++
++static const struct attribute_group region_extent_attribute_group = {
++	.attrs = region_extent_attrs,
++	.is_visible = region_extent_visible,
++};
++
++__ATTRIBUTE_GROUPS(region_extent_attribute);
++
+ static void cxled_release_extent(struct cxl_endpoint_decoder *cxled,
+ 				 struct cxled_extent *ed_extent)
  {
- 	return NULL;
- }
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index f9a5e21f5d09..01b1a318f34f 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -968,7 +968,7 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
- 		guard(rwsem_read)(&cxl_rwsem.dpa);
- 
- 		dpa = le64_to_cpu(evt->media_hdr.phys_addr) & CXL_DPA_MASK;
--		cxlr = cxl_dpa_to_region(cxlmd, dpa);
-+		cxlr = cxl_dpa_to_region(cxlmd, dpa, NULL);
- 		if (cxlr) {
- 			u64 cache_size = cxlr->params.cache_size;
- 
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 064cfd628577..b8b3489f69e5 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -320,7 +320,7 @@ int cxl_inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
- 	if (rc)
- 		return rc;
- 
--	cxlr = cxl_dpa_to_region(cxlmd, dpa);
-+	cxlr = cxl_dpa_to_region(cxlmd, dpa, NULL);
- 	if (cxlr)
- 		dev_warn_once(cxl_mbox->host,
- 			      "poison inject dpa:%#llx region: %s\n", dpa,
-@@ -389,7 +389,7 @@ int cxl_clear_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
- 	if (rc)
- 		return rc;
- 
--	cxlr = cxl_dpa_to_region(cxlmd, dpa);
-+	cxlr = cxl_dpa_to_region(cxlmd, dpa, NULL);
- 	if (cxlr)
- 		dev_warn_once(cxl_mbox->host,
- 			      "poison clear dpa:%#llx region: %s\n", dpa,
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index d2ce844a142f..e00fdb74589c 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2991,6 +2991,7 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port)
- struct cxl_dpa_to_region_context {
- 	struct cxl_region *cxlr;
- 	u64 dpa;
-+	struct cxl_endpoint_decoder *cxled;
+@@ -44,6 +101,7 @@ static void region_extent_release(struct device *dev)
+ static const struct device_type region_extent_type = {
+ 	.name = "extent",
+ 	.release = region_extent_release,
++	.groups = region_extent_attribute_groups,
  };
  
- static int __cxl_dpa_to_region(struct device *dev, void *arg)
-@@ -3024,11 +3025,13 @@ static int __cxl_dpa_to_region(struct device *dev, void *arg)
- 			dev_name(dev));
- 
- 	ctx->cxlr = cxlr;
-+	ctx->cxled = cxled;
- 
- 	return 1;
- }
- 
--struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
-+struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa,
-+				     struct cxl_endpoint_decoder **cxled)
- {
- 	struct cxl_dpa_to_region_context ctx;
- 	struct cxl_port *port = cxlmd->endpoint;
-@@ -3042,6 +3045,9 @@ struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
- 	if (cxl_num_decoders_committed(port))
- 		device_for_each_child(&port->dev, &ctx, __cxl_dpa_to_region);
- 
-+	if (cxled)
-+		*cxled = ctx.cxled;
-+
- 	return ctx.cxlr;
- }
- 
+ bool is_region_extent(struct device *dev)
 -- 
 2.43.0
 
