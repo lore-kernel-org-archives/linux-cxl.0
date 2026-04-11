@@ -1,227 +1,373 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9439D3876D5;
-	Fri, 10 Apr 2026 23:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775863589; cv=fail; b=n6qafap94lir5ig3jqLXSfHbzT9dRlQi64Hl23cBkekNQ8WEH1maUIx4KN72V03Raii8nMvZycj8ANpdHomEFTldWVg2jrhYdY2rzb+wrJn8JGpPwbYkgtt/I9aDP6pl7fI4ZsGTLMU8OVzbmKDFzb+gQo9SDR2Q0gyU8+vTlCs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775863589; c=relaxed/simple;
-	bh=HPebPFh30WAAB7vh4dUtQ80kJh+Qg8SpvmUcPHHMA5g=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=p1mxPPIK2CMdKvgV+l/JwphYDZtwhf/hPpOjP8E2FZVAJp07yYDi5R9DMnuR/Iv0ZnAfgwkQxrHaNyXv8v4d0b4FL9iX/2Y4Tfff8WjotecRCBz8iPPaMzeUwXuzMjrXFvSvpYtsQuZ1UYO9TBL4b6TrgiymQ+eFiyiDwTCiPME=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kw5grZTO; arc=fail smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C512171CD
+	for <linux-cxl@vger.kernel.org>; Sat, 11 Apr 2026 00:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775865725; cv=none; b=FnezyY2b0uzA0ckiccXY60vgQJh6pDQFIp0VGxrMMzfPG+lbrNFYH8XJR+XnQsGAhLI2Lp9im9oJoDSUaEwpqcLJbog426/5GYKHjtZC14HMyTeHT6e+OoQC+I9EWX6Y5A2DmVQuMCy8bB2ZLkzl59Ixl+m8eBMtwNO9xhtyOI4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775865725; c=relaxed/simple;
+	bh=sUUDowhwfmXiYs0dQWxc+LB6/jO3xW4YYkDxcaVMc7I=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pNOb8VEjVyekubjvR0wPCOR50f+n4nBklg3eXQQaFEfs5AbgpW77+JwEU5BgYvm7ySHANwZsqNhqR8qhIQeSMTmBFa2FtB8Dn2pW6iSWGtetRektLADUe7NUSuKAqhY1Jleo5o6mZQJuFfXDzVTzQkcdG5zuIlIL6e0utlaIzgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gh0AhNNx; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kw5grZTO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1775863586; x=1807399586;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=HPebPFh30WAAB7vh4dUtQ80kJh+Qg8SpvmUcPHHMA5g=;
-  b=kw5grZTOMXKHTlGzv6TR4ySNrnPhjC03O3J2up9+0JhBBqlOs5DjYEO6
-   VaqdrNl2Y+BYMYmuRD6t8tdch0/xiP5UaOiKQKO8EAWh5ACickQCb2PaM
-   TFGxKFRnDutVsa6FHSj8eOw0tejzF4UTHZP4/tdfZmq5Li413CWUs3aQL
-   +F82mzPXhkCJI46gH4gePDjO17SThBnyY8gU27+SzEdQSKguxWBkJiqlz
-   2SrHwwHtB8LtNpeq2aKO2AjpGD9U/P44A3C9iwfCwOtKa+7zeHN622l86
-   A771H9eagHBucKbyGjBbZAuYbNRcG0I3JB46uv0Zlta29rPFJBQtNpJLV
-   A==;
-X-CSE-ConnectionGUID: GDRByKR1RCWrLqmDxrJmZg==
-X-CSE-MsgGUID: HITglS4nQY6cqJHUua/JlQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11755"; a="76960838"
-X-IronPort-AV: E=Sophos;i="6.23,172,1770624000"; 
-   d="scan'208";a="76960838"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 16:26:26 -0700
-X-CSE-ConnectionGUID: BXZfgEo/Q3eoZc3nrIpnQA==
-X-CSE-MsgGUID: XkoHWcf7S7mnc4wniTMTPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,172,1770624000"; 
-   d="scan'208";a="233294896"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2026 16:26:26 -0700
-Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Fri, 10 Apr 2026 16:26:25 -0700
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Fri, 10 Apr 2026 16:26:25 -0700
-Received: from CY3PR05CU001.outbound.protection.outlook.com (40.93.201.10) by
- edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Fri, 10 Apr 2026 16:26:24 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Tn2pa9an0e8UqCAohdgi0RC44xjVbHhaE0xNu7TpuRonOUHaR6AS6ePUu+fR5f8BcR9yIT0/CPXbdXMVxawefPXJkoUQDLZXXz4Mjyp7ip2Jy/2P+UDlN+B60sYYIWMB8FG8QuN7cvqdSNast/w4Ft2BrPmpXJ29t58C7JGXYx6uSyDiD9Yr872P+WNXDLUqZ1Yseo5WsKiKJirURz+ED8K6O4J9luLeuM1gbZy5IftK7R/80Vddba+2sevFgCLQO02hHDCLV35c01W5Bf/1IztwZMo+kpH0vqnRTA3J+JyRd66csvA/1uoAZ+sq0kLkCCh4OXjWcFLRA/9gpEGEIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mKJLnEGn75U4tTaJx6HzjJ+7mNAq7BQxIDiCkJNGIXA=;
- b=JWsp6MtBZiMAWjmkPo6MJpPWPdAzoGplbPR1yrZsju8DkqjCiLsr7PdGtGn/f/OMD3bt/VMafppfDzgL2zABdpcE5FxdIDmHomAUX31f6MayeUGZ6RGzunTOYif6K0YLkkTUCCiIJTkfIAlaKzQo42WIO/5EC5C6HZAM8IkSSqEtLWmve1mdv/4+foDWyGfpvT3pMKKe4a1B1lFNcz2g1wXydocQGXz0eGErucUsOpHu+8fVKXG1VSz8l+5sqFP9dNiJ/8uBCSnWW8dX26tdVGJCdCgUmXicZDPH9b8PXvVPJ0HccZUrkxJAaLn1n17ISgPL1cL3fXkPBBOFrB0qrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BL3PR11MB6508.namprd11.prod.outlook.com (2603:10b6:208:38f::5)
- by PH7PR11MB7002.namprd11.prod.outlook.com (2603:10b6:510:209::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.15; Fri, 10 Apr
- 2026 23:26:19 +0000
-Received: from BL3PR11MB6508.namprd11.prod.outlook.com
- ([fe80::53c9:f6c2:ffa5:3cb5]) by BL3PR11MB6508.namprd11.prod.outlook.com
- ([fe80::53c9:f6c2:ffa5:3cb5%7]) with mapi id 15.20.9769.016; Fri, 10 Apr 2026
- 23:26:18 +0000
-Date: Fri, 10 Apr 2026 16:26:14 -0700
-From: Matthew Brost <matthew.brost@intel.com>
-To: <intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>
-CC: David Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>, Balbir Singh <balbirs@nvidia.com>,
-	<linux-mm@kvack.org>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm/zone_device: Do not touch device folio after calling
- ->folio_free()
-Message-ID: <admHFtANBj9nTtKw@gsse-cloud1.jf.intel.com>
-References: <20260410230346.4009855-1-matthew.brost@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260410230346.4009855-1-matthew.brost@intel.com>
-X-ClientProxiedBy: MW4PR03CA0208.namprd03.prod.outlook.com
- (2603:10b6:303:b8::33) To BL3PR11MB6508.namprd11.prod.outlook.com
- (2603:10b6:208:38f::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gh0AhNNx"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-7927261a3acso26190807b3.0
+        for <linux-cxl@vger.kernel.org>; Fri, 10 Apr 2026 17:02:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1775865723; x=1776470523; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=houtKEASg9Aq9lkLj9uhLhMfcl+G341VvfzWXy9t+5A=;
+        b=Gh0AhNNxlrcWde5Yj2jD0GaGWNU2/YF/igEcflPF0Q8JGw1vRSGuHQYaANmYHdgf3d
+         Zzwjd6seOWuYyqjtmIjv0T2Ky1aQ/dTykt2mCkzH6NN1TobVQMv9NaUAQptLpoug0b2a
+         w8ybbWKnZgvvVPc5FlEfCS1zOuScIykPZYBXWFUg80V5qTCLksjqMT+w8xtCajxU8Jzo
+         eD0F0N+JvENqOyvit2i702FhUajaMHmAd1Tl6s7uqOpn5JA6ZpyDLME2xwEAmyZ2VRfL
+         vHtLhHmY7iezJZTOvgt/EILkGNDFGAg24//4MF0QkvA7ZwwhKOEB+I4/wBv6ca/I5Be6
+         HjqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1775865723; x=1776470523;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=houtKEASg9Aq9lkLj9uhLhMfcl+G341VvfzWXy9t+5A=;
+        b=ZKOm7uTJNUlvarqWhBW6WE76XrD8IRS2gQ+Cf24tcSOoqFBHVh0ps0LR6G7EgMTF/w
+         OyI+5x5skeiaae+q6TpwfiGcUQohN2hm3DmYTzRY50fWl2+Zmu3AKQZCve+S/fQ9EYGT
+         yw2sXVec2C3LHKvcKE4JSh+fSK462ZOq+ZAr51sUhyEvdGnoCIndF01LcneeS8VAhSWP
+         ra3CcxqmNkQkW4c0mkvR19hlOr0D+KIE2pWQfF1gntuOWhcaivllQWcnauSrIU+vKUIk
+         19jcJiNWpXByEGAHkk6ovyx5rM4v6ea4A5LGZEou9/9en5KTWWwqUIB7twDfNvPC9NRl
+         BAwA==
+X-Gm-Message-State: AOJu0YzGmUWgtdC42MtZS4t6HEXJUM4mBYKU+0QWM/aN/uyODGvM+pm+
+	tm742N+YoFCS3+3FLoVGgRkRYcjhoRbva+ol5ejOdAMkkR1X6C9rjY/1
+X-Gm-Gg: AeBDievwir1pour1vHZY+YlShI5NKJ93fmcVFSZ4CJ8MrUUC1MUm9cmKSlSLEP7sHym
+	MGDzj2qCXwagyG6nvPNFxPs0zDnaz/5/iYoSVAFgoTbGLKBkZKz7cKSQyDwYJWv0LTAUX2G5Atd
+	hdQq0oVlJDIpwHR4VxbqhF6i6dtVxqHg6kPvRw2/MSuXTGGDHRSvF8aBs6IObCtExLMZTp42iCy
+	KxfnbiN1zJxIg1BmOQJKYw4U42AxlW93mpwmbMXRanRu8yYzEDaFdCq8i7pKIpGipYw76iHAaJR
+	WMsMjdSuY0WvbunZluBsgSjW8JOhp7kVAwmMoTVWrRk5FoqMpHqDzSgrvyC1Id9vwBWvuojfIta
+	9q3vYHhKZg3oBxkMqmFTETEAPeF3y3O/aA8mjWfhFvELaVGKYH+5ggQaN+zMoZRh8F1vVojj6vE
+	xz55nsFzABJ6XzLEBVYNCqWY19kTYtbc7L01K6AO8ItQ==
+X-Received: by 2002:a05:690c:8d05:b0:799:198d:8c78 with SMTP id 00721157ae682-7af71e4792cmr47719237b3.46.1775865723199;
+        Fri, 10 Apr 2026 17:02:03 -0700 (PDT)
+Received: from 4470NRD-ASU.ssi.samsung.com ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-7af3fff584bsm22762737b3.43.2026.04.10.17.02.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Apr 2026 17:02:02 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Fri, 10 Apr 2026 17:02:00 -0700
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com
+Subject: Re: [PATCH v5 2/3] cxl/core/region: move dax region device logic
+ into region_dax.c
+Message-ID: <admPeJv7mjDZPhJv@4470NRD-ASU.ssi.samsung.com>
+References: <20260327020203.876122-1-gourry@gourry.net>
+ <20260327020203.876122-3-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL3PR11MB6508:EE_|PH7PR11MB7002:EE_
-X-MS-Office365-Filtering-Correlation-Id: 14733355-a2d3-4b17-63e6-08de97589135
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info: 5jbgmVvs+MFqptK0H4LcTGzeNNx0/ORZWB0K4B+ornrf8al8ZlrfHF9LQvWKoYKvO23HkJ1cxZTP96vj8w1KjfCh+w8BjWL+V1aZl6WCq3oHqY26qa/qDKsPdfduKQnkQYr/jDQBx59A613PBwKUQI2Jc2CYto96L+VIQdlgxEUiEOWlnWdR+vNbev8o1nCQ9GvBeEpNEvc7rQOX7bGGZs9bUvxxjCY7J9xwLB7edHcI5PZLCKBDH2HyAuxfcU7KzxsKMfRMobiuaxbGsgeqT+Nc2e9ecisyOvfQcaXFggVasodsL7rv06R1/G1vtvhFRMUCFeUjB4UAsldYdJHqwIx5KM/zOsePJnDvgnhW5PRrbWtQuCnJkSqfwefwW8lFZhINyDpn2OKIAmwLS2EzH/uyGTTkm6X+WFhL0nS5dIrVLC4OJEj+hLbSS3xAfVkuo68gy8sWCk4V5x817616c2RjwX0tww9UZy6atd6erUXtmqnHloVN9lS1VijXNy/SK2yN2bahVtySOK8Xo6G/58ygTaMp2+DshinBOozTsXQYXjUzdhv6GzV3+ZQ5+Ipqs2fB4psdpaWqQs1AHc+PC7YLSCv2j6LcYK/UB8Maq4mQU6pnmuNndrJsb6T8MI/6LLYaxc9zXlLo+oK9KcZDtgzCPDzGoOuGDGnU02bZ9FfspgiFlMvlg9t0POEcbmAHaFBb8CKp2WEqEYHTGdxAMxBr1onlWqR7TS9w3T7LA00=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR11MB6508.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?SNVY/FHjEf4h1b6R+xiDIy8W1Vw+zAZ0zFWsHIESdvYN22J2TpnSCBOKW6hX?=
- =?us-ascii?Q?fXycy0MzWwyuNDvXUdpXiMZlFOokqp/Cs50NZU/MvHqoVdsiUg8e3RwCtev5?=
- =?us-ascii?Q?EZLqLNX5tEnHnd5XM2PEtwPmNk7ws3dy24BbLramMByH960Ks+74oMS9Acj2?=
- =?us-ascii?Q?qb5Exd8dtIXBHcHveWxNSElEZmqpDBfYvpwFervmwq8prQyVhfVmGRWxl+e9?=
- =?us-ascii?Q?q62tqZHZe94DOxgVY5N7YkW+R9TAuUUaijTAF89EhxD6qETQ65BU/MuyBSxp?=
- =?us-ascii?Q?BAH5/zHCOwdLAYQlxOLpZgR1jP94HT3IIU/XqlKlDjVCh8AiQZlRx6tDmSXT?=
- =?us-ascii?Q?mkFpSTdQK07Xf7WgOmMKoNYnnYUHuGmfEgwrw1erH6wZjYdarCfq2F3NVc7S?=
- =?us-ascii?Q?sKZhh0t2XxGDZJa+wXocO+Xm2JtNPhUqAawWi81CESVK1A4hfroQTwu4W8FC?=
- =?us-ascii?Q?RjDTbHm3zH9WWIltvWD/4blW2vwp8iQRig0+O1wERHO/vrrMLT50VP/T0SeH?=
- =?us-ascii?Q?wIUJiT6bqqzCk0ClzY0PsO6LU2mo9AUnTBmVmQDjOINa8EuT3K7qisd/pTNG?=
- =?us-ascii?Q?4s1Zbrv37CBuy7ddn1u5HRlwclvMvHJxxHi14xHTDNCs8NPZJdtD1zuQ9XFz?=
- =?us-ascii?Q?WXIgY4k1Fte/QGe54e5r3/p/eQ85bmIJC6QR4je8E6SKhdB6cltUsEadHAW7?=
- =?us-ascii?Q?/B60qdN+014nRfHIXShnBAVk5PTKy0bAk8ezWCtAyzAbfzOyMQnAsA++39Lo?=
- =?us-ascii?Q?ECAxELEE7G3brBra/kCbEOpPsbEY5DpPIeFhstUMPQ259eeo8GD8N++YWUXg?=
- =?us-ascii?Q?x+aBpiVgHlZmJu29kE3M1E0lCDQYbHU9yxilbta4N7AsuPdmNHun2jU1UexS?=
- =?us-ascii?Q?KFTbvkKsKfZOWNIgaD038GM7fPUIWhCmOSWHazMzPqbrVW4QQGv8AnZb/2tx?=
- =?us-ascii?Q?RGt0z+MJUthPhKrEK55oYMltuk40H4LTtpukYVBqtGPfifBK2rdrtstAyETi?=
- =?us-ascii?Q?mEV0v4xfwODu1tBYLgOvZN0byxXSH3gkmIEs9pOdY4/vq+yUEQwd2MbWZJUV?=
- =?us-ascii?Q?mDlPJXNddMvBY5mi3kEFc4sc9iX25ddQIB01BLfOMvY0/nMerT+9cSlzY2kr?=
- =?us-ascii?Q?zuN34KLL5CNUw7BqN6wN/+0UeqbTIr16Xlz6ApdkGK7nPh1S79OU6w76/1Rm?=
- =?us-ascii?Q?XFH3PKJufNMpnQpT2HhUZcmxqw3x4RY/nSAbH/zjd3fQb5rsbzbYx5cgTD6m?=
- =?us-ascii?Q?3ZX467uvyv8fruQ7eiaTp26ucNJ0yqke+B3gWn6s0mWYBOH80oPNJwIcyFiF?=
- =?us-ascii?Q?xTBsBEkTbPO5Vt6TUHP2w7I3qgq6WGPlTK6y3jdn4n5nIUr+0BlTJuBQAXic?=
- =?us-ascii?Q?Ig97pvBSCM0t+hxyL46jLKfFS3oMm356sF3VOLVTbXoBXX+dpj29QKw9c1fC?=
- =?us-ascii?Q?7E+HgfuwyYudFq4JqKRnaUlzcqx16r4jf7r8CkjHVQTt6he3fLs0sYKW/Xa2?=
- =?us-ascii?Q?zPdd9tuJKBTG+QQ0JH9mqPZa6ozHmFWeJkjVkTkfdR3O+YlffRYYaAgU3LNt?=
- =?us-ascii?Q?dMsMIsb7urq1dJ3tvhDXYJncNnwh+a38ULhDM3wTiNxa9xpaYqYGCczFXMq0?=
- =?us-ascii?Q?5f/kwNIxrG5QAq9Rn26FJpua/5iWJOJEBXc2NznX/BfYcQboj6Admnbw+0ds?=
- =?us-ascii?Q?Z8WDiZHX21zclSM2+Fr36jzclhWD1EJNWyVzaSdOiSzI5gvo3biN7+WCv3tg?=
- =?us-ascii?Q?PVL0raIH3mfXZKLK9d5+ec1S1TvXUPY=3D?=
-X-Exchange-RoutingPolicyChecked: N/jcxJcTThFXMbPlewnIRll0suWVfdTA4dx4lsxmDNC0SZTzjpxxW0fsF7YJTtO+3jCZV8Z8TmR/coEg7n3vvc9ItRZisXC/XnpfSQrLl031qWArCZAtaFxYnFKN8kKlm7Z2vlsArOWSntNddyxg+zID2kJFDfgDgkvd9AO0ohhy8t52o6a0IN8E/aynIctawkhmxF+vmjQEcVfOk6YKMyTDbydOtCfklDia3JO401gy4Djf98LXWitGGarKos0B3HF5iHoO65EUTFVVQxiXsFuiNXCj/zR3Hd0SnqjMtV5PQbDEnzYpBCJUfWnZq9Q6yqB6X0nOZn6CoVHHje3Wug==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14733355-a2d3-4b17-63e6-08de97589135
-X-MS-Exchange-CrossTenant-AuthSource: BL3PR11MB6508.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2026 23:26:18.7992
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tvx1gmtvgEwEFVBz6RR7wRrL+qbRLwUklzN0YPU3VVhlhXSuGlIKxmlHjrpGNNfC+7D5Xxro1xB2POUxNfxXYw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7002
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260327020203.876122-3-gourry@gourry.net>
 
-On Fri, Apr 10, 2026 at 04:03:46PM -0700, Matthew Brost wrote:
-> The contents of a device folio can immediately change after calling
-> ->folio_free(), as the folio may be reallocated by a driver with a
-> different order. Instead of touching the folio again to extract the
-> pgmap, use the local stack variable when calling percpu_ref_put_many().
+On Thu, Mar 26, 2026 at 10:02:02PM -0400, Gregory Price wrote:
+> core/region.c is overloaded with per-region control logic (pmem, dax,
+> sysram, etc). Move the CXL DAX region device infrastructure from
+> region.c into a new region_dax.c file.
 > 
-> Cc: David Hildenbrand <david@kernel.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Balbir Singh <balbirs@nvidia.com>
-> Cc: linux-mm@kvack.org
-> Cc: linux-cxl@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-
-Cc: <stable@vger.kernel.org>
-
-> Fixes: d245f9b4ab80 ("mm/zone_device: support large zone device private folios")
-> Signed-off-by: Matthew Brost <matthew.brost@intel.com>
+> This will also allow us to add additional dax-driver integration paths
+> that don't further dirty the core region.c logic.
 > 
+> No functional changes.
+> 
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> Co-developed-by: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > ---
-> Stack trace:
+>  drivers/cxl/core/Makefile     |   2 +-
+>  drivers/cxl/core/core.h       |   1 +
+>  drivers/cxl/core/region.c     |  99 ------------------------------
+>  drivers/cxl/core/region_dax.c | 109 ++++++++++++++++++++++++++++++++++
+>  tools/testing/cxl/Kbuild      |   2 +-
+>  5 files changed, 112 insertions(+), 101 deletions(-)
+>  create mode 100644 drivers/cxl/core/region_dax.c
 > 
-> [  631.875165] [IGT] xe_exec_system_allocator: starting subtest threads-many-new-prefetch
-> [  632.282992] Oops: general protection fault, probably for non-canonical address 0x900000000000000: 0000 [#1] SMP NOPTI
-> [  632.293469] CPU: 8 UID: 0 PID: 59267 Comm: xe_exec_system_ Not tainted 7.0.0-rc7-xe+ #281 PREEMPT(full)
-> [  632.316023] RIP: 0010:free_zone_device_folio+0x149/0x240
-> [  632.339782] RSP: 0000:ffffc90023d1fd00 EFLAGS: 00010206
-> [  632.344947] RAX: 0900000000000000 RBX: 0000000000000001 RCX: 0000000094472d4d
-> [  632.351991] RDX: ffffffff8155c76f RSI: 000000006f2213bf RDI: 000000008e84943a
-> [  632.359042] RBP: ffffea0ff4030001 R08: 0000000000000000 R09: 0000000000000001
-> [  632.366094] R10: 0000000000000028 R11: 0000000000000000 R12: ffff88811828e400
-> [  632.373145] R13: 0000000000000000 R14: 000fffffc0000000 R15: 0000000000100073
-> [  632.380194] FS:  00007f2f0fdfe6c0(0000) GS:ffff88890a7e7000(0000) knlGS:0000000000000000
-> [  632.388186] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  632.393870] CR2: 00007f2f002e90f8 CR3: 0000000106708002 CR4: 0000000000f70ef0
-> [  632.400919] PKRU: 55555554
-> [  632.403605] Call Trace:
-> [  632.406039]  <TASK>
-> [  632.408131]  do_swap_page+0x146d/0x18c0
-> [  632.411938]  ? __pte_offset_map+0x3e/0x190
-> [  632.415994]  __handle_mm_fault+0x6e8/0x8d0
-> [  632.420053]  handle_mm_fault+0xbf/0x250
-> [  632.423855]  ? lock_mm_and_find_vma+0x41/0x6f0
-> [  632.428256]  do_user_addr_fault+0x168/0x690
-> [  632.432399]  exc_page_fault+0x74/0x200
-> [  632.436117]  asm_exc_page_fault+0x26/0x30
-> [  632.440092] RIP: 0033:0x5587554ff70d
-> [  632.462142] RSP: 002b:00007f2f0fdfc970 EFLAGS: 00010246
-> [  632.467308] RAX: 0000000000003fc0 RBX: 00007f2f082e1fc0 RCX: 00007f2f12b3287d
-> [  632.474355] RDX: 0000000000000000 RSI: 00000000c048644a RDI: 0000000000000003
-> [  632.481404] RBP: 00007f2f082e1fc0 R08: 00007f2f0fdfc958 R09: 0000000000000066
-> [  632.488450] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-> [  632.495495] R13: 00007f2f082de000 R14: 0000000000c00002 R15: 00007f2f1319e000
-> [  632.502547]  </TASK>
-> ---
->  mm/memremap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/memremap.c b/mm/memremap.c
-> index ac7be07e3361..053842d45cb1 100644
-> --- a/mm/memremap.c
-> +++ b/mm/memremap.c
-> @@ -454,7 +454,7 @@ void free_zone_device_folio(struct folio *folio)
->  		if (WARN_ON_ONCE(!pgmap->ops || !pgmap->ops->folio_free))
->  			break;
->  		pgmap->ops->folio_free(folio);
-> -		percpu_ref_put_many(&folio->pgmap->ref, nr);
-> +		percpu_ref_put_many(&pgmap->ref, nr);
->  		break;
+> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+> index f73776fe323b..ce7213818d3c 100644
+> --- a/drivers/cxl/core/Makefile
+> +++ b/drivers/cxl/core/Makefile
+> @@ -15,7 +15,7 @@ cxl_core-y += hdm.o
+>  cxl_core-y += pmu.o
+>  cxl_core-y += cdat.o
+>  cxl_core-$(CONFIG_TRACING) += trace.o
+> -cxl_core-$(CONFIG_CXL_REGION) += region.o region_pmem.o
+> +cxl_core-$(CONFIG_CXL_REGION) += region.o region_pmem.o region_dax.o
+>  cxl_core-$(CONFIG_CXL_MCE) += mce.o
+>  cxl_core-$(CONFIG_CXL_FEATURES) += features.o
+>  cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index ef03966eeabd..82ca3a476708 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -50,6 +50,7 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port);
+>  struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
+>  u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
+>  		   u64 dpa);
+> +int devm_cxl_add_dax_region(struct cxl_region *cxlr);
+>  int devm_cxl_add_pmem_region(struct cxl_region *cxlr);
 >  
->  	case MEMORY_DEVICE_GENERIC:
+>  #else
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 72aee1408efb..6a2ef3475764 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3436,105 +3436,6 @@ static int region_offset_to_dpa_result(struct cxl_region *cxlr, u64 offset,
+>  	return -ENXIO;
+>  }
+>  
+> -static void cxl_dax_region_release(struct device *dev)
+> -{
+> -	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
+> -
+> -	kfree(cxlr_dax);
+> -}
+> -
+> -static const struct attribute_group *cxl_dax_region_attribute_groups[] = {
+> -	&cxl_base_attribute_group,
+> -	NULL,
+> -};
+> -
+> -const struct device_type cxl_dax_region_type = {
+> -	.name = "cxl_dax_region",
+> -	.release = cxl_dax_region_release,
+> -	.groups = cxl_dax_region_attribute_groups,
+> -};
+> -
+> -static bool is_cxl_dax_region(struct device *dev)
+> -{
+> -	return dev->type == &cxl_dax_region_type;
+> -}
+> -
+> -struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
+> -{
+> -	if (dev_WARN_ONCE(dev, !is_cxl_dax_region(dev),
+> -			  "not a cxl_dax_region device\n"))
+> -		return NULL;
+> -	return container_of(dev, struct cxl_dax_region, dev);
+> -}
+> -EXPORT_SYMBOL_NS_GPL(to_cxl_dax_region, "CXL");
+> -
+> -static struct lock_class_key cxl_dax_region_key;
+> -
+> -static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
+> -{
+> -	struct cxl_region_params *p = &cxlr->params;
+> -	struct cxl_dax_region *cxlr_dax;
+> -	struct device *dev;
+> -
+> -	guard(rwsem_read)(&cxl_rwsem.region);
+> -	if (p->state != CXL_CONFIG_COMMIT)
+> -		return ERR_PTR(-ENXIO);
+> -
+> -	cxlr_dax = kzalloc_obj(*cxlr_dax);
+> -	if (!cxlr_dax)
+> -		return ERR_PTR(-ENOMEM);
+> -
+> -	cxlr_dax->hpa_range.start = p->res->start;
+> -	cxlr_dax->hpa_range.end = p->res->end;
+> -
+> -	dev = &cxlr_dax->dev;
+> -	cxlr_dax->cxlr = cxlr;
+> -	device_initialize(dev);
+> -	lockdep_set_class(&dev->mutex, &cxl_dax_region_key);
+> -	device_set_pm_not_required(dev);
+> -	dev->parent = &cxlr->dev;
+> -	dev->bus = &cxl_bus_type;
+> -	dev->type = &cxl_dax_region_type;
+> -
+> -	return cxlr_dax;
+> -}
+> -
+> -static void cxlr_dax_unregister(void *_cxlr_dax)
+> -{
+> -	struct cxl_dax_region *cxlr_dax = _cxlr_dax;
+> -
+> -	device_unregister(&cxlr_dax->dev);
+> -}
+> -
+> -static int devm_cxl_add_dax_region(struct cxl_region *cxlr)
+> -{
+> -	struct cxl_dax_region *cxlr_dax;
+> -	struct device *dev;
+> -	int rc;
+> -
+> -	cxlr_dax = cxl_dax_region_alloc(cxlr);
+> -	if (IS_ERR(cxlr_dax))
+> -		return PTR_ERR(cxlr_dax);
+> -
+> -	dev = &cxlr_dax->dev;
+> -	rc = dev_set_name(dev, "dax_region%d", cxlr->id);
+> -	if (rc)
+> -		goto err;
+> -
+> -	rc = device_add(dev);
+> -	if (rc)
+> -		goto err;
+> -
+> -	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
+> -		dev_name(dev));
+> -
+> -	return devm_add_action_or_reset(&cxlr->dev, cxlr_dax_unregister,
+> -					cxlr_dax);
+> -err:
+> -	put_device(dev);
+> -	return rc;
+> -}
+> -
+>  static int match_root_decoder(struct device *dev, const void *data)
+>  {
+>  	const struct range *r1, *r2 = data;
+> diff --git a/drivers/cxl/core/region_dax.c b/drivers/cxl/core/region_dax.c
+> new file mode 100644
+> index 000000000000..fe367759ac69
+> --- /dev/null
+> +++ b/drivers/cxl/core/region_dax.c
+> @@ -0,0 +1,109 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright(c) 2022 Intel Corporation. All rights reserved.
+> + * Copyright(c) 2026 Meta Technologies Inc. All rights reserved.
+> + */
+> +#include <linux/device.h>
+> +#include <linux/slab.h>
+> +#include <cxlmem.h>
+> +#include <cxl.h>
+> +#include "core.h"
+> +
+> +static void cxl_dax_region_release(struct device *dev)
+> +{
+> +	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
+> +
+> +	kfree(cxlr_dax);
+> +}
+> +
+> +static const struct attribute_group *cxl_dax_region_attribute_groups[] = {
+> +	&cxl_base_attribute_group,
+> +	NULL
+> +};
+> +
+> +const struct device_type cxl_dax_region_type = {
+> +	.name = "cxl_dax_region",
+> +	.release = cxl_dax_region_release,
+> +	.groups = cxl_dax_region_attribute_groups,
+> +};
+> +
+> +static bool is_cxl_dax_region(struct device *dev)
+> +{
+> +	return dev->type == &cxl_dax_region_type;
+> +}
+> +
+> +struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
+> +{
+> +	if (dev_WARN_ONCE(dev, !is_cxl_dax_region(dev),
+> +			  "not a cxl_dax_region device\n"))
+> +		return NULL;
+> +	return container_of(dev, struct cxl_dax_region, dev);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(to_cxl_dax_region, "CXL");
+> +
+> +static struct lock_class_key cxl_dax_region_key;
+> +
+> +static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	struct cxl_dax_region *cxlr_dax;
+> +	struct device *dev;
+> +
+> +	guard(rwsem_read)(&cxl_rwsem.region);
+> +	if (p->state != CXL_CONFIG_COMMIT)
+> +		return ERR_PTR(-ENXIO);
+> +
+> +	cxlr_dax = kzalloc_obj(*cxlr_dax);
+> +	if (!cxlr_dax)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	cxlr_dax->hpa_range.start = p->res->start;
+> +	cxlr_dax->hpa_range.end = p->res->end;
+> +
+> +	dev = &cxlr_dax->dev;
+> +	cxlr_dax->cxlr = cxlr;
+	cxlr->cxlr_dax = cxlr_dax;
+
+Running into segfaults without this ^
+> +	device_initialize(dev);
+> +	lockdep_set_class(&dev->mutex, &cxl_dax_region_key);
+> +	device_set_pm_not_required(dev);
+> +	dev->parent = &cxlr->dev;
+> +	dev->bus = &cxl_bus_type;
+> +	dev->type = &cxl_dax_region_type;
+> +
+> +	return cxlr_dax;
+> +}
+> +
+> +static void cxlr_dax_unregister(void *_cxlr_dax)
+> +{
+> +	struct cxl_dax_region *cxlr_dax = _cxlr_dax;
+> +
+> +	device_unregister(&cxlr_dax->dev);
+> +}
+> +
+> +int devm_cxl_add_dax_region(struct cxl_region *cxlr)
+> +{
+> +	struct cxl_dax_region *cxlr_dax;
+> +	struct device *dev;
+> +	int rc;
+> +
+> +	cxlr_dax = cxl_dax_region_alloc(cxlr);
+> +	if (IS_ERR(cxlr_dax))
+> +		return PTR_ERR(cxlr_dax);
+> +
+> +	dev = &cxlr_dax->dev;
+> +	rc = dev_set_name(dev, "dax_region%d", cxlr->id);
+> +	if (rc)
+> +		goto err;
+> +
+> +	rc = device_add(dev);
+> +	if (rc)
+> +		goto err;
+> +
+> +	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
+> +		dev_name(dev));
+> +
+> +	return devm_add_action_or_reset(&cxlr->dev, cxlr_dax_unregister,
+> +					cxlr_dax);
+> +err:
+> +	put_device(dev);
+> +	return rc;
+> +}
+> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+> index f53d79a05661..d2b291e5f842 100644
+> --- a/tools/testing/cxl/Kbuild
+> +++ b/tools/testing/cxl/Kbuild
+> @@ -59,7 +59,7 @@ cxl_core-y += $(CXL_CORE_SRC)/hdm.o
+>  cxl_core-y += $(CXL_CORE_SRC)/pmu.o
+>  cxl_core-y += $(CXL_CORE_SRC)/cdat.o
+>  cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
+> -cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o $(CXL_CORE_SRC)/region_pmem.o
+> +cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o $(CXL_CORE_SRC)/region_pmem.o $(CXL_CORE_SRC)/region_dax.o
+>  cxl_core-$(CONFIG_CXL_MCE) += $(CXL_CORE_SRC)/mce.o
+>  cxl_core-$(CONFIG_CXL_FEATURES) += $(CXL_CORE_SRC)/features.o
+>  cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += $(CXL_CORE_SRC)/edac.o
 > -- 
-> 2.34.1
+> 2.53.0
 > 
