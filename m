@@ -1,72 +1,87 @@
-Received: from mailout1.hostsharing.net (mailout1.hostsharing.net [83.223.95.204])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from a11-129.smtp-out.amazonses.com (a11-129.smtp-out.amazonses.com [54.240.11.129])
+	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC54339A8;
-	Sun, 12 Apr 2026 08:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3801CA5A;
+	Sun, 12 Apr 2026 15:50:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.11.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775984257; cv=none; b=qoE8bSZ5VFQ9LufzUM3TR2WuyJeFwm2ZEVEfvz/s311wt99IFjaerBmW+PJxD2jBLWgHMNenIFa08SowpYnSHxYcK+R/nTOO1v3XyWdXkaoMi8LnwsWyI7l8ep+fwps5o/htAjOm6d62Q13Sut5pVfFtzKR0shf0jmsHPyUSPto=
+	t=1776009008; cv=none; b=KR2i23xwVKH9RMM13xWwW4SIINpy2DaH5ZzhIxdm/6kWnuoPW7pydebvRXNVSUnAwFmlfhD/zXeBAVNFPE2wuO6ddLbIPqaShrI681FVLRTNXkui7vWUpFtUpm+mM/ViUwM3pCUdkJNpiVI+9qrJ8ZvzYXWi+pIMAHt/unsjrHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775984257; c=relaxed/simple;
-	bh=wHvh5owJ/ckLeAWUCXgFtnerVe4Q4KiALc/fgMTdIz4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kiieSjAAKc97BXh6UvM+ap6WnzZz2xC/oZOwSJcOBwlgSJ54CXO/qwDVS+XKlD5rpRrkjUS7Yp8M27SsDs9jRxSxCnRNTTWJiGk1/6komsiUj2tPJxYeHxeAv60JPvFXiFyWpGbCPJwzI3n27YwbabFWH5nIXXzLH827TCWpY0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.95.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by mailout1.hostsharing.net (Postfix) with ESMTPS id 5582536C;
-	Sun, 12 Apr 2026 10:57:25 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 3F0E36017530; Sun, 12 Apr 2026 10:57:25 +0200 (CEST)
-Date: Sun, 12 Apr 2026 10:57:25 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Dan Williams <djbw@kernel.org>
-Cc: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>, dave.jiang@intel.com,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	alejandro.lucero-palau@amd.com
-Subject: Re: [RFC PATCH 4/4] cxl/region: Introduce cxl_memdev_attach_region
-Message-ID: <adteddEh4I5UX-mq@wunner.de>
-References: <20260403210050.1058650-1-dan.j.williams@intel.com>
- <20260403210050.1058650-5-dan.j.williams@intel.com>
- <59f69b87-e37e-44c7-8c15-c332118622b5@amd.com>
- <69dad30a614d7_fdcb41008c@djbw-dev.notmuch>
+	s=arc-20240116; t=1776009008; c=relaxed/simple;
+	bh=neAQvvv/hyVTBAB5YwhRWXaPt9x/OTou63RHu59lGTc=;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:References:
+	 Message-ID; b=NMduOfHhhWhCWhS+Emr7lT66B7bq6pSfIGRchzuK8tE+vpjkOVNdjJyq4swPf/hf8Ig6EBHZp4hlBWo2W3ihJZMcSs3f8dg6wmVqpTSf5rQkHOjhFmfIg10oCiP5NdE8sTfwbn2aCyZP9n6qIxQpK76iguv8EwXmYOWPgGPq5Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=pkDqB8ZA; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=MK2rnbyk; arc=none smtp.client-ip=54.240.11.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="pkDqB8ZA";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="MK2rnbyk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1776009006;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id;
+	bh=neAQvvv/hyVTBAB5YwhRWXaPt9x/OTou63RHu59lGTc=;
+	b=pkDqB8ZAo2BfGISnZK3OR8lfBdIy9VFgGjrIVT7ry/WpsQD4lYX9qz6/DQzIm35G
+	rgxqL/RRUeJFkfbfhJwGQ5p7fM6EuQVbp4/v8crg/7JsIXti+IjSj4LKLkrYF92ybcd
+	/h5cC/35WDvQcZ1IQdPM7PIu8IL77XwgkC2qOtec=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1776009006;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id:Feedback-ID;
+	bh=neAQvvv/hyVTBAB5YwhRWXaPt9x/OTou63RHu59lGTc=;
+	b=MK2rnbykTn4gsG2kBHLRd3n/AueoSpjR6ZQe7HtPS5blDXZjwNUj4NrUnmYyDIM1
+	VxeGJe8tq+NNfmNz1f8ZWdEMSrjK3Gl1xcmTOKtrBjZ9XFBHxTvFgc6jIJ7RFDrQfMO
+	exoTfXqyODOhIIzqQBO7CWokQcsa2SEzmmMplWPE=
+Subject: [PATCH] dax/fsdev: fix uninitialized kaddr in
+ fsdev_dax_zero_page_range()
+From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
+To: =?UTF-8?Q?Dan_Williams?= <djbw@kernel.org>, 
+	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
+	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
+	=?UTF-8?Q?Ira_Weiny?= <ira.weiny@intel.com>, 
+	=?UTF-8?Q?nvdimm=40lists=2El?= =?UTF-8?Q?inux=2Edev?= <nvdimm@lists.linux.dev>, 
+	=?UTF-8?Q?linux-cxl=40vg?= =?UTF-8?Q?er=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>
+Cc: 
+	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?Dan_Carpenter?= <dan.carpenter@linaro.org>, 
+	=?UTF-8?Q?John_Groves?= <John@Groves.net>, 
+	=?UTF-8?Q?John_Groves?= <john@groves.net>
+Date: Sun, 12 Apr 2026 15:50:06 +0000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69dad30a614d7_fdcb41008c@djbw-dev.notmuch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <20260412154944.461748-1-john@jagalactic.com>
+X-Mailer: Amazon WorkMail
+Thread-Index: AQHcypQHpyrYMyPqQm+7F5viUQCFoQ==
+Thread-Topic: [PATCH] dax/fsdev: fix uninitialized kaddr in
+ fsdev_dax_zero_page_range()
+X-Wm-Sent-Timestamp: 1776009005
+X-Original-Mailer: git-send-email 2.53.0
+Message-ID: <0100019d8262cda2-9714d31c-8fc1-4ca5-b32d-4df678240d14-000000@email.amazonses.com>
+Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
+X-SES-Outgoing: 2026.04.12-54.240.11.129
 
-On Sat, Apr 11, 2026 at 04:02:34PM -0700, Dan Williams wrote:
-> Cheatham, Benjamin wrote:
-> > On 4/3/2026 4:00 PM, Dan Williams wrote:
-> > > To date, platform firmware maps accelerator memory and accelerator drivers
-> > > simply want an address range that they can map themselves. This typically
-> > > results in a single region being auto-assembled upon registration of a
-> > > memory device.  Use the @attach mechanism of devm_cxl_add_memdev()
-> > > parameter to retrieve that region while also adhering to CXL subsystem
-> > > locking and lifetime rules. As part of adhering to current object lifetime
-> > > rules, if the region or the CXL port topology is invalidated, the CXL core
-> > > arranges for the accelertor driver to be detached as well.
-
-Nit: s/accelertor/accelerator/ and wrap to 72 chars
-
-> I think that is possible, and also is not really a CXL specific feature. A
-> capability to move resources in active use by drivers has been proposed before
-> [1] (credit: Lukas).
-
-There's no link provided for [1] in your e-mail but you may be referring to:
-
-https://lore.kernel.org/all/20201218174011.340514-1-s.miroshnichenko@yadro.com/
-
-Thanks,
-
-Lukas
+From: John Groves <John@Groves.net>=0D=0A=0D=0A__fsdev_dax_direct_access(=
+) returns -EFAULT without setting *kaddr when=0D=0Adax_pgoff_to_phys() re=
+turns -1 (pgoff out of range). The return value=0D=0Awas ignored, leaving=
+ kaddr uninitialized before being passed to=0D=0Afsdev_write_dax().=0D=0A=
+=0D=0ACheck the return value and propagate the error.=0D=0A=0D=0AThanks t=
+o Dan Carpenter and the smatch project for reporting this.=0D=0A=0D=0ASig=
+ned-off-by: John Groves <john@groves.net>=0D=0A---=0D=0A drivers/dax/fsde=
+v.c | 5 ++++-=0D=0A 1 file changed, 4 insertions(+), 1 deletion(-)=0D=0A=0D=
+=0Adiff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c=0D=0Aindex 4499=
+d9621f33..188b2526bee4 100644=0D=0A--- a/drivers/dax/fsdev.c=0D=0A+++ b/d=
+rivers/dax/fsdev.c=0D=0A@@ -80,9 +80,12 @@ static int fsdev_dax_zero_page=
+_range(struct dax_device *dax_dev,=0D=0A =09=09=09pgoff_t pgoff, size_t n=
+r_pages)=0D=0A {=0D=0A =09void *kaddr;=0D=0A+=09long rc;=0D=0A=20=0D=0A =09=
+WARN_ONCE(nr_pages > 1, "%s: nr_pages > 1\n", __func__);=0D=0A-=09__fsdev=
+_dax_direct_access(dax_dev, pgoff, 1, DAX_ACCESS, &kaddr, NULL);=0D=0A+=09=
+rc =3D __fsdev_dax_direct_access(dax_dev, pgoff, 1, DAX_ACCESS, &kaddr, N=
+ULL);=0D=0A+=09if (rc < 0)=0D=0A+=09=09return rc;=0D=0A =09fsdev_write_da=
+x(kaddr, ZERO_PAGE(0), 0, PAGE_SIZE);=0D=0A =09return 0;=0D=0A }=0D=0A=0D=
+=0Abase-commit: 2ae624d5a555d47a735fb3f4d850402859a4db77=0D=0A--=20=0D=0A=
+2.53.0=0D=0A=0D=0A
