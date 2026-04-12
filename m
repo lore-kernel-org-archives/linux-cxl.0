@@ -1,155 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013023.outbound.protection.outlook.com [40.107.201.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0518F3BED1B;
-	Sat, 11 Apr 2026 23:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775950168; cv=none; b=WZqgJLtFQPQC2iLuOccsEooKXYjrGImScWw107XVmzgdLQq0hkBj2x2FL4T+vuldMCZB/TmfvGGjlYeTiyMECpRWe6qJscVtZtVBNx4JHOeU+N6mguiQRmyrVj6I/MSp/dWJeC9cSb9/4gFHZ+BqvNoOBpR4g0FNbOyUDO+nuHQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775950168; c=relaxed/simple;
-	bh=bGYMj1nEU3rTt3DSUk3rq+ORCg6O2I9VqoBBgW/e8ZE=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=eHA8IeEXZ1uMMJg4w/emGR9f2hBLrbExABBtU/D2a1xxbDhYQcW8gVlPye5FCsoqt6wEYfQ42q0Bq0f/GARCclEM+P/fCA7AMa4Qg6DbDVnzaa5yuY+Rfbiwa8ugbJoy4+8f0HPf8a57NyuukLRKVEOYpdIVDZI9enTcDTX5T7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PTW0H71F; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91796FC3;
+	Sun, 12 Apr 2026 01:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.23
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775957548; cv=fail; b=qRs2oHgzXX62bZJGBqqbWHN59K87JUPTNiVD8RtQSePdJWyR3mT6YN7QcLqcYeVO9C2OesF+vONyHMdJIxwwD9k9N9uhYsAh6ZzWX9ttYvLoM01zLYReMthxoSISdo3C1kYUYpVL5T0JzSB3V3TK8PdQZohwwNK/WvIZIbhx+3Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775957548; c=relaxed/simple;
+	bh=pHemIVwHBUfHMs+cjQA3kVmhdGsDQA8JAAi5qzl4/tw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Fcwrlf7sfQiYJ0e9PRU9Na5Db0Zx8JtcWhjnO+djeMpRj3mgGTshgnmNVEtUCUhE1+ekW0w5kLdOJr0RUpvjggU0SHI3BNOq+1ZGg8cpHd4b1UiZhOHtpr8pkCN/EYlVm6Mmi3C/MOOg9kLGXtVphzN/GLlILy/ROO+lQ8W2nqE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=I+fQUUK/; arc=fail smtp.client-ip=40.107.201.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PTW0H71F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3571CC4AF09;
-	Sat, 11 Apr 2026 23:29:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775950167;
-	bh=bGYMj1nEU3rTt3DSUk3rq+ORCg6O2I9VqoBBgW/e8ZE=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=PTW0H71FfkjRl1QX4y6k443xaOyYaudhpdTrBQgIp216uINOPXxTscHgzEmi4QvlK
-	 ugROyUVSbyqIn9rlyfxZIgcVL79Tj0uO0LSOxdfzKp5Ln68MJRihJSJXWekVunI9e+
-	 e/Q83YZhS8fCBstXHuWaUeZPi/KtewsaSS39bXW2oUNDgyNPPz4dM7TG0tPJ0w/uxV
-	 O1JdwtTAE3UMJX9jV/fWey2iMkwFszo1yUkUq9vDHComIISede1kiq2HJVHKVS7pdg
-	 +IRZpv8REdXjLhhfiWzTEugsVatT2tp+lODoOAqqKP/U16RDikglsXWf9AUHat6CIf
-	 oVC+0UDnLAI4Q==
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 5F449F40068;
-	Sat, 11 Apr 2026 19:29:26 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Sat, 11 Apr 2026 19:29:26 -0400
-X-ME-Sender: <xms:VtnaaQViXEzT_3c_vkp0v9eyDsH95g8wzc0sfEbor4-ItlgcpOVrGQ>
-    <xme:VtnaaRIhzq13-m1HhVomcLPry2aEW13JC-bWpyv2M8PN-JqY9eLnq8TYwFoxI964h
-    U-eVBDQdyakTsjzewMm2sgGGccEl8_oknXJmylJ528mmtW87NOYn7g>
-X-ME-Received: <xmr:VtnaaY15uL4oxRyT6e6uu_fAVkAXZK8dkAQrabzfmCGxucyvUILBG1uZUG0G7X9buCXvbIGmfu4h7Ci5q62uu1zblpxPjtv7fU0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeffeejtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefkjghfufggtgfgsehtjeertddttdejnecuhfhrohhmpeffrghnucghihhl
-    lhhirghmshcuoegujhgsfieskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
-    elhfeiudfgvdeijedtleeltdduueekffejjedvjefhgeevjeefueejledtleetjeenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegujhgsfidomh
-    gvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudejjedvfedtgeehhedqfeeffeel
-    gedtgeejqdgujhgsfieppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpd
-    hnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlghhs
-    vddtudelvddtudeftddvgeegsehgmhgrihhlrdgtohhmpdhrtghpthhtohepvhhishhhrg
-    hlrdhlrdhvvghrmhgrsehinhhtvghlrdgtohhmpdhrtghpthhtohepuggrvhgvrdhjihgr
-    nhhgsehinhhtvghlrdgtohhmpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunh
-    gurghtihhonhdrohhrghdprhgtphhtthhopehnvhguihhmmheslhhishhtshdrlhhinhhu
-    gidruggvvhdprhgtphhtthhopehlihhnuhigqdgtgihlsehvghgvrhdrkhgvrhhnvghlrd
-    horhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
-    rdhorhhgpdhrtghpthhtohepshhtrggslhgvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:VtnaaWJwMXZeycWNjiQNAB0ocSUhbnqqeopV4oCaEH3MWJok6S2Bvw>
-    <xmx:Vtnaabi9erDa7dLzLKn1g_I5gAkfykv5676W2mhlChTaL_Zo7pDiGg>
-    <xmx:VtnaaeCOWLm4KNsynmcuCBdiWmTd794QduiYt3gUd4UJenekD-vPHw>
-    <xmx:VtnaaV5-UgUpwBam6oNLcrgDgy8UVKQZBPdZNeg9toLD-3Pmexh1Xw>
-    <xmx:VtnaabFSwiYaevjut23MZeWtjqznb_G7fOOG8wYBUWmTRk7xw-hwvA8R>
-Feedback-ID: i67ae4b3e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 11 Apr 2026 19:29:25 -0400 (EDT)
-Date: Sat, 11 Apr 2026 16:29:24 -0700
-From: Dan Williams <djbw@kernel.org>
-To: Guangshuo Li <lgs201920130244@gmail.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, 
- Dave Jiang <dave.jiang@intel.com>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- nvdimm@lists.linux.dev, 
- linux-cxl@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-Cc: Guangshuo Li <lgs201920130244@gmail.com>, 
- stable@vger.kernel.org
-Message-ID: <69dad954cbd27_fdcb41005c@djbw-dev.notmuch>
-In-Reply-To: <20260411145726.2299438-1-lgs201920130244@gmail.com>
-References: <20260411145726.2299438-1-lgs201920130244@gmail.com>
-Subject: Re: [PATCH] device-dax: Fix refcount leak in __devm_create_dev_dax()
- error path
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="I+fQUUK/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=i8UzFPpkBjbTKmYUfmlPaoLtOPT0bGTHjOWltpG6ODLiRgWduFwDVCGs347HKNfpnmuLEu7Y79YUOu5Tv5QxLSPHjEg3Vo7ZT2DSoG4BrGfzjhsXJnb+qzbBZBzICkqGxj2qTQpTN2HOYJVba3w5XDJhNQhspMMyTGmKUHcJsr0XZOgKHBe2QVW07fskm41Y05S2zmjQreL6qKagO2tYqc2sRZcN28maJBIwC1S/3aB51miNO+/pEkv/SB4pnGyWO6PGIa1rulmQnJeW23lr2Uy9hHc6tCK0m5ThyWiJBxvZ4Krry6Hgrn7Tp7Xrm7GXqHGmy1IPMwt5eM9EMAiIuA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=96hMw74eE64KSbnsRaJt29cyly9A8JuzZvYS2un1czw=;
+ b=LQms59GxQ9x0c13sTopy6nEGFwfvjWd58tF+Pp8YiGH7rkMkRvRN+8k1O3LqxFZgpSeHcf5bFPj8Qyg3ABaJ4j/kuhCll0SL6mZkAacX7+NRFIu7wes+uu1J7fqBai9tKQdqo1fVMFr9N/pkNfxdYro8VYGsMRpjbqM9DaW5sGdsMKpm4RoJ8pCEMau88agmOHl+IJzIVHzGOf7XgoFsflhRgMSLBgAvnbZCQpIMBBuRMUihFQRzIg/oR7o/tsb250HHnZ7gfhXC9WyGNi1WXZx3mi08gHwb14oeC54dIpf9qaovj3YMwhlxm/Lthn4OpMhlf93zaJAQhWRJ0AFLug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=96hMw74eE64KSbnsRaJt29cyly9A8JuzZvYS2un1czw=;
+ b=I+fQUUK/mOiiPaNIgrQqOsEa2dGN1pgqtzy/cH4M5bmqL8/acNGg3/Po3HXGnrHbAEXa+MUQHgtv5grVtbCpP51y3RubCDUrzoiGMHCDW39cA85UY5KxlzIWsGw2mEmenpx/b8OFy6mF9lOVd4mj1B5p0mDobouF5aClglujABDWR7eo/OMstmbiTjAflIEtsk178KP+P4Moyc+qWvMajyjvX2YHQEir7HANjTPzr23TXaAtVjnYSNJR28Js23OJb5VMS+k027rf7NGpLQluoLmKzN6UKkz79FwNF1VFNtwJeuqeT9S/uWfByQgK2/2ywpwbzTD64ZvxPVf2m42Hxw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH8PR12MB7277.namprd12.prod.outlook.com (2603:10b6:510:223::13)
+ by CY8PR12MB7316.namprd12.prod.outlook.com (2603:10b6:930:50::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.17; Sun, 12 Apr
+ 2026 01:32:19 +0000
+Received: from PH8PR12MB7277.namprd12.prod.outlook.com
+ ([fe80::2920:e6d9:4461:e2b4]) by PH8PR12MB7277.namprd12.prod.outlook.com
+ ([fe80::2920:e6d9:4461:e2b4%5]) with mapi id 15.20.9818.017; Sun, 12 Apr 2026
+ 01:32:18 +0000
+Message-ID: <aaf85ad5-477f-41d1-a4b0-85789640df02@nvidia.com>
+Date: Sun, 12 Apr 2026 11:32:14 +1000
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/zone_device: Do not touch device folio after calling
+ ->folio_free()
+To: Matthew Brost <matthew.brost@intel.com>, intel-xe@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org
+Cc: David Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260410230346.4009855-1-matthew.brost@intel.com>
+Content-Language: en-US
+From: Balbir Singh <balbirs@nvidia.com>
+In-Reply-To: <20260410230346.4009855-1-matthew.brost@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0187.namprd05.prod.outlook.com
+ (2603:10b6:a03:330::12) To PH8PR12MB7277.namprd12.prod.outlook.com
+ (2603:10b6:510:223::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB7277:EE_|CY8PR12MB7316:EE_
+X-MS-Office365-Filtering-Correlation-Id: 780aa992-1b06-4ac6-b8ec-08de983355e2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|56012099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	7S4guqryE05NDduSJcDtv7LpbdMQXxKiDfYcx2jmFJgiViId8uPQQtdtYqZW2uj9PBxTJRACeowxMbZTrvnsndvWwBoLLYhL0VA/2pUj+FMrj1dYamFAtpPcaSB7fllM5cMHOI+mxQJXcaOdwQ4RmyJa8UFzJ9ZmVX6PLeEqfCmitEZ/DhVLvRViAjBEfssO7JC47Ryo2Aw0c2FQPxx+pYMoMaae3/TRwOuvXkt1yY1GOcB91h5t4KngGQ45qEVF0NklxD9neXfUOv8IsuzEsaagu0FG/IFbJPSC0AKX+l9Zri8f4iKRQbj1Rhd12lYyIom/OPYb7Jobd4+OX/qrR7MH0nICmDyGba1YJYS2bf3KTFJrp1UeWYdRyIEi0Qg407VzhCj2l3IyuJX4WhPSgJVKPU2AR3QC7rBt7iPDmTyFvkWBOY2sqWOCBQnqRz+zz8iITT6Xq07IH1mlL9k/Ydnt2PNIjflPnZq7NLzxgPytADvvFWQ9fJXYzDz2G/qwxBCZHMZ400qzMUrdWYYLZZSjwVrlw7UutQ0+QUr8rQrh0etF1bykj/WzYCovK2jy+G1W17aDIlNYv0vnMvi4U2VtKgf79kR40Qmyc9uj9JAfBL7qMmRo/Cumq4Gsy385N8ABc8S26MpF80X6pdoM98xWlL58boofmJFy7hg4jhxw3jFMsart+nIHPKLmy+mNGgGh8TP/oAVZSuIvhu6IfpGVS7qqB6VJG+Kh7N94d/A=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7277.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aXlwSThJMmhJWHB6U3hQWUFqVHpsY0F3cmM1UHh5empBcWdYbVVHWnFmMFlE?=
+ =?utf-8?B?VDVoekwzcUNPc0liTWEybTVCOFlDOWwwazd3SUxJSVM1UUwzSHN6N1Z6MXhP?=
+ =?utf-8?B?YkVoSkpnRmhjSStheHdmUlJzRCs4SHM2MWlrZnAvQ0hPYnFqUHlQWWE1QTZ5?=
+ =?utf-8?B?K0FYcEowajF4UjVtME5Ic3Zmb010N3QxR3ZoL1JOM2hIUVhVRWViV1JWVFpU?=
+ =?utf-8?B?ZStXUmpYa3UzaTNVMzNNdXQ1UGg0Zjg2WmlaMHFxRFpIbGJDVmc0WUpLZkpp?=
+ =?utf-8?B?aVd3SEg5TnRjamljYmhEUU9pZStUMUhzYzY5NEpqY1A1ckMraVVTNWxTQ3N6?=
+ =?utf-8?B?MlAzcm1aa1NpNDR1ZmNCdmw3VUdTci9jeUxOaGduMTZIcmJDZEVCU3BlblBW?=
+ =?utf-8?B?bUZYMjZ1MC9KOTJwbVhKNUQzRVZtcWRKcGpPQyszR1I0U0xldkpFSEpWUzA2?=
+ =?utf-8?B?eGdJc0h5UHQxVFBkVW5ZZUFFZWVwUkRMei96WkZDeHNRQ1h4ZVNUV1pYSm1p?=
+ =?utf-8?B?NUxKSHh0QVJicUg3eVRmS1lhbVpGNmJvdEF4bEsrYWtKWk1TOU5TK2dqVENO?=
+ =?utf-8?B?ZTBwQXRSOC9pWnNoMG1LTmJ5M28zQWxNckJkS1dSdXlXbUljWFpKR0ZIMkd0?=
+ =?utf-8?B?NFI2cXhGUDRxZVdyNW0zdlRib2RxZFpLS2M2aHNjdVlSTUQveGZDZ0ovL1k1?=
+ =?utf-8?B?WlRJM3NqcTRuWXg2M3dJM1NrM0dwRnpWdENXRm5xSmlFOWs3T3p3QXdFaG9S?=
+ =?utf-8?B?MjEwUU9NRGNJSTlKRjNkYWpQcTRSOVhNZGNaT2M0Y3lnWm5HTlpIQXdSZWRk?=
+ =?utf-8?B?RWxsaGkvQzNRdEh0SEZZcU1OazBBckJYbE1LMTRPWDUzc1ExcXZhVFNZQVo3?=
+ =?utf-8?B?WHdoc0dYaVNtQ1p2NXhER0srQ2VnYmNDcGRMQVFlNzJPNlRiSmkxeU1TRzJu?=
+ =?utf-8?B?cmVkR2xRelY4cTlZUmVQeUtkd0wxdUNDTjgxMFFmWDYwNzB5WXdDSDMrNDU0?=
+ =?utf-8?B?eDI5UC84TkN3WVk5b21lVGhIMll3TDdwZm52U1ppTWRCVWFWSFhqVU1Xc21q?=
+ =?utf-8?B?bUVtUDJjeW5Ha3Nlc2lKMWJJRXkzU0VvQ0ZrdjJnNHRCQ05xZk1YS0R3N0xz?=
+ =?utf-8?B?TmtPY2xiWTBrRDFDeUtEYk1PYzUzY21yN0hkYWRDa1JKSEdZallLRTE0UnJ0?=
+ =?utf-8?B?ZVQyWGw3OHp1ODFhd1JMZ2J6SzBLZ0IwaU5Ub21WMWFNMVlRSWlQcStDSGZY?=
+ =?utf-8?B?UGRMbEgrdmN4TVdjV1J2SGJEbmE3MHBneVhteXMzcTl0T3lxNXhLMDlkSThS?=
+ =?utf-8?B?ZlZQOFhkaElUWDhaY3hPRk1EUFFSWVpnT1NhaFgwa0s5U25qRDY2QzRXMmFw?=
+ =?utf-8?B?R3lhY01SUm4wb1RyVUlmQWNjY2NhcUtvNkwxNW8yMG5uWHlTSmJQZVhST1FI?=
+ =?utf-8?B?LzNzekczMU15TGhHZytCYURaMGNLVW1oc3IraHAzbGZnYlB1SjVmL2pEbGt0?=
+ =?utf-8?B?SkMxZldYNjJnOHJzdGU5am1DaUVqcFh3ellnV05qU3lmQWl2Ni8yVzJhazVa?=
+ =?utf-8?B?Szd3YWZDa0dRTkRvanNKQTVOcVBKWmpJN2JQVy9Vcys4a3dxSTZoT3EzZGd1?=
+ =?utf-8?B?NmI0Z1NFUHlDYjEyV2N1emQxVks1NitJYnNKREFTS1lXdnpGOGlpT1ZKSTdv?=
+ =?utf-8?B?NUdkSnhLSHVnV2ROd2Q5UVJ1WjBhR2hmc2huKzVsODdQTWk2ODc2bG9ObXNq?=
+ =?utf-8?B?VllHOHRpY2d6bnBqYUJ2MVErVTVHamF4TWpySGZBZURKOFk0TGpCTFNkQ0cw?=
+ =?utf-8?B?N0dLQW45Qlk5eldyejZ6ZlZzb1I5U2tmVlBNZDl3MXNlL3ZBZkh6eUtYYmxq?=
+ =?utf-8?B?c1czUjVnZ0cvRWhQQjdGMWwxakduMDRadFRFVnRmT0g5cHZkOXJESkRqaEUz?=
+ =?utf-8?B?Vk12NlVudmMwSTNwL0lJOFZKUzNaU1F5MTV6S3FZT2t2cWV4all6TU9jNG1X?=
+ =?utf-8?B?bldKdHJKdnE0YjRzWER5MmhvemtsbmZValAxeVNOY0YwcThhT1RKZkUzRElN?=
+ =?utf-8?B?bFVKUlpmelZYZ1F1RUNkakhjQ0QrbElwR09WS1dxUmN1bk9YaDEyaW45b1Rw?=
+ =?utf-8?B?RnZ2WFhpSFA1aGJ3MzNVS1lKZ2ZGQnowYlZVR0ZZQjRoVEZOSVNHMkxwQlc2?=
+ =?utf-8?B?SFZwVnczOXd1TGlMQVpjbDlIeU9RWWNyMVc2U2RsZWo3dlZPSm82R2p6bzRs?=
+ =?utf-8?B?OEU5NGdqejRkcUR1WGNXbkJEMnlWd2QyVjFESjUrUWl6UFY4cUdlZFFmK3FL?=
+ =?utf-8?B?ZDN6VTlqckYzVXdYclJMSit3OFo5d1cvMjhvbHBzOERnWWJoUEtWdz09?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 780aa992-1b06-4ac6-b8ec-08de983355e2
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7277.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2026 01:32:18.7079
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FAmKBWaXtiQ9e7fBoHMeLpnQtSRB1GYvNmP00GICb610HQKgHUdtQqlT/YI+DYmCJaxR/+NK2Niasb6x5Kaj3A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7316
 
-Guangshuo Li wrote:
-> After device_initialize(), the lifetime of the embedded struct device is
-> expected to be managed through the device core reference counting.
+On 4/11/26 09:03, Matthew Brost wrote:
+> The contents of a device folio can immediately change after calling
+> ->folio_free(), as the folio may be reallocated by a driver with a
+> different order. Instead of touching the folio again to extract the
+> pgmap, use the local stack variable when calling percpu_ref_put_many().
 > 
-> In __devm_create_dev_dax(), several failure paths after
-> device_initialize() free dev_dax directly instead of releasing the
-> device reference with put_device(). This bypasses the normal device
-> lifetime rules and may leave the reference count of the embedded struct
-> device unbalanced, resulting in a refcount leak and potentially leading
-> to a use-after-free.
-
-Please do not list "theoretical" problems as justification. Point to
-real problems.
-
-> Fix this by assigning dev->type before device_initialize(), so the
-> release callback is available for put_device(), and use put_device() in
-> the post-initialization error paths. Keep dev_dax range cleanup explicit
-> in the error path.
-
-I see a more straightforward way to address just the practical problem
-that also incorporates the other feedback I have below. Can you spot
-that and fixup the changelog to address the practical impact?
-
-> Fixes: c2f3011ee697f ("device-dax: add an allocation interface for device-dax instances")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
+> Cc: David Hildenbrand <david@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Balbir Singh <balbirs@nvidia.com>
+> Cc: linux-mm@kvack.org
+> Cc: linux-cxl@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Fixes: d245f9b4ab80 ("mm/zone_device: support large zone device private folios")
+> Signed-off-by: Matthew Brost <matthew.brost@intel.com>
+> 
 > ---
->  drivers/dax/bus.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+> Stack trace:
 > 
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index fde29e0ad68b..8753115cd371 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -1453,6 +1453,7 @@ static struct dev_dax *__devm_create_dev_dax(struct dev_dax_data *data)
->  	}
+> [  631.875165] [IGT] xe_exec_system_allocator: starting subtest threads-many-new-prefetch
+> [  632.282992] Oops: general protection fault, probably for non-canonical address 0x900000000000000: 0000 [#1] SMP NOPTI
+> [  632.293469] CPU: 8 UID: 0 PID: 59267 Comm: xe_exec_system_ Not tainted 7.0.0-rc7-xe+ #281 PREEMPT(full)
+> [  632.316023] RIP: 0010:free_zone_device_folio+0x149/0x240
+> [  632.339782] RSP: 0000:ffffc90023d1fd00 EFLAGS: 00010206
+> [  632.344947] RAX: 0900000000000000 RBX: 0000000000000001 RCX: 0000000094472d4d
+> [  632.351991] RDX: ffffffff8155c76f RSI: 000000006f2213bf RDI: 000000008e84943a
+> [  632.359042] RBP: ffffea0ff4030001 R08: 0000000000000000 R09: 0000000000000001
+> [  632.366094] R10: 0000000000000028 R11: 0000000000000000 R12: ffff88811828e400
+> [  632.373145] R13: 0000000000000000 R14: 000fffffc0000000 R15: 0000000000100073
+> [  632.380194] FS:  00007f2f0fdfe6c0(0000) GS:ffff88890a7e7000(0000) knlGS:0000000000000000
+> [  632.388186] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  632.393870] CR2: 00007f2f002e90f8 CR3: 0000000106708002 CR4: 0000000000f70ef0
+> [  632.400919] PKRU: 55555554
+> [  632.403605] Call Trace:
+> [  632.406039]  <TASK>
+> [  632.408131]  do_swap_page+0x146d/0x18c0
+> [  632.411938]  ? __pte_offset_map+0x3e/0x190
+> [  632.415994]  __handle_mm_fault+0x6e8/0x8d0
+> [  632.420053]  handle_mm_fault+0xbf/0x250
+> [  632.423855]  ? lock_mm_and_find_vma+0x41/0x6f0
+> [  632.428256]  do_user_addr_fault+0x168/0x690
+> [  632.432399]  exc_page_fault+0x74/0x200
+> [  632.436117]  asm_exc_page_fault+0x26/0x30
+> [  632.440092] RIP: 0033:0x5587554ff70d
+> [  632.462142] RSP: 002b:00007f2f0fdfc970 EFLAGS: 00010246
+> [  632.467308] RAX: 0000000000003fc0 RBX: 00007f2f082e1fc0 RCX: 00007f2f12b3287d
+> [  632.474355] RDX: 0000000000000000 RSI: 00000000c048644a RDI: 0000000000000003
+> [  632.481404] RBP: 00007f2f082e1fc0 R08: 00007f2f0fdfc958 R09: 0000000000000066
+> [  632.488450] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+> [  632.495495] R13: 00007f2f082de000 R14: 0000000000c00002 R15: 00007f2f1319e000
+> [  632.502547]  </TASK>
+> ---
+>  mm/memremap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index ac7be07e3361..053842d45cb1 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -454,7 +454,7 @@ void free_zone_device_folio(struct folio *folio)
+>  		if (WARN_ON_ONCE(!pgmap->ops || !pgmap->ops->folio_free))
+>  			break;
+>  		pgmap->ops->folio_free(folio);
+> -		percpu_ref_put_many(&folio->pgmap->ref, nr);
+> +		percpu_ref_put_many(&pgmap->ref, nr);
+>  		break;
 >  
->  	dev = &dev_dax->dev;
-> +	dev->type = &dev_dax_type;
->  	device_initialize(dev);
->  	dev_set_name(dev, "dax%d.%d", dax_region->id, dev_dax->id);
->  
-> @@ -1499,7 +1500,6 @@ static struct dev_dax *__devm_create_dev_dax(struct dev_dax_data *data)
->  	dev->devt = inode->i_rdev;
->  	dev->bus = &dax_bus_type;
->  	dev->parent = parent;
-> -	dev->type = &dev_dax_type;
->  
->  	rc = device_add(dev);
->  	if (rc) {
-> @@ -1523,14 +1523,21 @@ static struct dev_dax *__devm_create_dev_dax(struct dev_dax_data *data)
->  
->  err_alloc_dax:
->  	kfree(dev_dax->pgmap);
-> +	dev_dax->pgmap = NULL;
-> +
->  err_pgmap:
->  	free_dev_dax_ranges(dev_dax);
-> +	put_device(dev);
-> +	return ERR_PTR(rc);
-> +
->  err_range:
-> -	free_dev_dax_id(dev_dax);
-> +	put_device(dev);
-> +	return ERR_PTR(rc);
+>  	case MEMORY_DEVICE_GENERIC:
 
-Please no gotos with early returns, that makes a mess.
+
+Reviewed-by: Balbir Singh <balbirs@nvidia.com>
