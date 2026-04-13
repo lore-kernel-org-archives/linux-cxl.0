@@ -1,87 +1,205 @@
-Received: from a11-129.smtp-out.amazonses.com (a11-129.smtp-out.amazonses.com [54.240.11.129])
-	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010067.outbound.protection.outlook.com [52.101.201.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3801CA5A;
-	Sun, 12 Apr 2026 15:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.11.129
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776009008; cv=none; b=KR2i23xwVKH9RMM13xWwW4SIINpy2DaH5ZzhIxdm/6kWnuoPW7pydebvRXNVSUnAwFmlfhD/zXeBAVNFPE2wuO6ddLbIPqaShrI681FVLRTNXkui7vWUpFtUpm+mM/ViUwM3pCUdkJNpiVI+9qrJ8ZvzYXWi+pIMAHt/unsjrHo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776009008; c=relaxed/simple;
-	bh=neAQvvv/hyVTBAB5YwhRWXaPt9x/OTou63RHu59lGTc=;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:References:
-	 Message-ID; b=NMduOfHhhWhCWhS+Emr7lT66B7bq6pSfIGRchzuK8tE+vpjkOVNdjJyq4swPf/hf8Ig6EBHZp4hlBWo2W3ihJZMcSs3f8dg6wmVqpTSf5rQkHOjhFmfIg10oCiP5NdE8sTfwbn2aCyZP9n6qIxQpK76iguv8EwXmYOWPgGPq5Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=pkDqB8ZA; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=MK2rnbyk; arc=none smtp.client-ip=54.240.11.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E462C21F2;
+	Mon, 13 Apr 2026 04:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776053204; cv=fail; b=L5+cK/lLgzzf5wDTcGcMYeVyd6KuFEge1RGf8NU/Xyp7j2b1pCXpyOegd+6yvP3JlUsPOh4MefgZd9V3LaYPySmcW/jG3UVJqnZS0g+DW8x3jL+rSm7FBJz/6RluE6frlbhPFyvQcq7dG7yGsqd8lGluAgXClqzPgaHsXUQ190M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776053204; c=relaxed/simple;
+	bh=yyk3KVJz3utIKbSxihEGKPuwdvuRwYmVsFIah/wc5MY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Bhc2qOouv8s3CzR6YOgeRDEZ/7Mk6Qx+H8C5kDjulbr7l82yP4geX/Rmw+uf3CILkEG+3n9DBu9Vl/RPDNDqRegvoaDbdOji4atI+9yIMPkFylNG8kcDgYpy8fPo0AJY2n3acWcFxF+b/WaHnvPHmiS3mo2YcoEyQMqiPm45fj4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=puRghlxr; arc=fail smtp.client-ip=52.101.201.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="pkDqB8ZA";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="MK2rnbyk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1776009006;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id;
-	bh=neAQvvv/hyVTBAB5YwhRWXaPt9x/OTou63RHu59lGTc=;
-	b=pkDqB8ZAo2BfGISnZK3OR8lfBdIy9VFgGjrIVT7ry/WpsQD4lYX9qz6/DQzIm35G
-	rgxqL/RRUeJFkfbfhJwGQ5p7fM6EuQVbp4/v8crg/7JsIXti+IjSj4LKLkrYF92ybcd
-	/h5cC/35WDvQcZ1IQdPM7PIu8IL77XwgkC2qOtec=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1776009006;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id:Feedback-ID;
-	bh=neAQvvv/hyVTBAB5YwhRWXaPt9x/OTou63RHu59lGTc=;
-	b=MK2rnbykTn4gsG2kBHLRd3n/AueoSpjR6ZQe7HtPS5blDXZjwNUj4NrUnmYyDIM1
-	VxeGJe8tq+NNfmNz1f8ZWdEMSrjK3Gl1xcmTOKtrBjZ9XFBHxTvFgc6jIJ7RFDrQfMO
-	exoTfXqyODOhIIzqQBO7CWokQcsa2SEzmmMplWPE=
-Subject: [PATCH] dax/fsdev: fix uninitialized kaddr in
- fsdev_dax_zero_page_range()
-From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
-To: =?UTF-8?Q?Dan_Williams?= <djbw@kernel.org>, 
-	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
-	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
-	=?UTF-8?Q?Ira_Weiny?= <ira.weiny@intel.com>, 
-	=?UTF-8?Q?nvdimm=40lists=2El?= =?UTF-8?Q?inux=2Edev?= <nvdimm@lists.linux.dev>, 
-	=?UTF-8?Q?linux-cxl=40vg?= =?UTF-8?Q?er=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>
-Cc: 
-	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
-	=?UTF-8?Q?Dan_Carpenter?= <dan.carpenter@linaro.org>, 
-	=?UTF-8?Q?John_Groves?= <John@Groves.net>, 
-	=?UTF-8?Q?John_Groves?= <john@groves.net>
-Date: Sun, 12 Apr 2026 15:50:06 +0000
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="puRghlxr"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ek4QhPADZlHrvF1evmLxg891DmWEoF1yBK6WTV7iHyo7RArG28emDVSz1v/7lrq/RtoqG1FJjnTuP0eexydqIFExQ7AHCuWKo6VjyVGW4sMqKte1tYLUiwPu27LonK5nEAku9ClusWVMS8cC/fW9/m4WMQh/UwKpevnlZMi5SVQuVqjaf2zXxGB/IGe66lravR9EPsp/fVek0b0Ws9SkMVT6Sd7/ILXr4bsz88G099RtMDzopjfp1VjJ2xwJRYl9m1vR2NsDW99rLDVwCcnn82TW7gBzWwegplP/akBd6NurgxGPREo9pVoeJJzRl+FCWjA8Qndylc8ixUHW3NCkBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IJIDPtvfNal+zRkdTb/po8DsleFJ0qvyBuO3zwp5r30=;
+ b=PvZaJMFBvc0KM8QfhUGcv8bgoipV37LUvW9dRZyD18Z5h3BO3fSho7etb6D35TktrbpaOAVwqU09ijX3+FYYqtDa0OpEx6B5AUtTfaPYH2SSm9QLrdM++t9nTuPPLcAKnwELTlI6NTSIXDpjmLO9c9Sf7Tn8mxhZO4AOwnIwxHsYvH12O5DCrQpgVkrM5Pz7i+fCf8QA37heI/KSTfalHJFxFtjCNPrclrkfvqco/dzzuSLXPNDNFfdtGw2Bt5rhFRZrDXo4C63EPBSx2W47Zy92ne+YtfX95WePMD0saYJVNhEaTwFyE2c0F2QQYID6AQCr4o63B98/K94zyCq7ng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IJIDPtvfNal+zRkdTb/po8DsleFJ0qvyBuO3zwp5r30=;
+ b=puRghlxr/9tnp6NLrWzrcrzj447yO2CtE9x1TmAF1k9xPElNb5Oth7xqjGu8WPV5qqjvFBMuGotbBixusTMUxe4FxNwsoi6c+6qplrsoIr3lt0F8245scTcJgY8Miteh5JxnySLQQAPU0mEO6W5ebZjDzJVR62Lpn0QizUgjof3RoEN9qmUIPnUe9luTrz8KpjejaLf16HEufUREGdeeoGwdEiDGOOsuwy0+ckCNPlHrN2/mAJmSuK6YTjS67jJpX5tBItQ3Mh2JssAf2+aXNCArf/6vo7hmwuyDpnY8nigkwSexvGetG8s6WcwvOiwUrMdlDiLqn7upHVRFDTECNw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ PH7PR12MB5620.namprd12.prod.outlook.com (2603:10b6:510:137::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9818.20; Mon, 13 Apr 2026 04:06:36 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::5807:8e24:69b0:f6c0]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::5807:8e24:69b0:f6c0%4]) with mapi id 15.20.9818.017; Mon, 13 Apr 2026
+ 04:06:35 +0000
+Date: Mon, 13 Apr 2026 14:06:29 +1000
+From: Alistair Popple <apopple@nvidia.com>
+To: Matthew Brost <matthew.brost@intel.com>
+Cc: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	David Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Balbir Singh <balbirs@nvidia.com>, linux-mm@kvack.org, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/zone_device: Do not touch device folio after calling
+ ->folio_free()
+Message-ID: <adxnwZMn-BHD5bAA@nvdebian.thelocal>
+References: <20260410230346.4009855-1-matthew.brost@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260410230346.4009855-1-matthew.brost@intel.com>
+X-ClientProxiedBy: SY6PR01CA0030.ausprd01.prod.outlook.com
+ (2603:10c6:10:eb::17) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-References: <20260412154944.461748-1-john@jagalactic.com>
-X-Mailer: Amazon WorkMail
-Thread-Index: AQHcypQHpyrYMyPqQm+7F5viUQCFoQ==
-Thread-Topic: [PATCH] dax/fsdev: fix uninitialized kaddr in
- fsdev_dax_zero_page_range()
-X-Wm-Sent-Timestamp: 1776009005
-X-Original-Mailer: git-send-email 2.53.0
-Message-ID: <0100019d8262cda2-9714d31c-8fc1-4ca5-b32d-4df678240d14-000000@email.amazonses.com>
-Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
-X-SES-Outgoing: 2026.04.12-54.240.11.129
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|PH7PR12MB5620:EE_
+X-MS-Office365-Filtering-Correlation-Id: a7dd28a6-1939-4ec0-dd1e-08de99120dc4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|366016|56012099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	cFgSRt9d+Q5asGXoBZI/yweHOzf+lRTJdiSTVjYx1LJpmjcMOpnEL6LkjB3iLafzdxL6UMqLr3XUObQwlAZ5EwSgNGo191kEr6+f6hdRYcTPJ3iTOFNubFmYLZYhlLUpykbCVbDm3U8Y38CJfnz3nVvhcashcQ9dAJkYXtBm2x8ucRu3HXh5lmB9h1U8eY7mi0eN8vtpqivsBDeE8gcQVFWLJHGBUcKb3t7XU20i1VS4ZjUwDNPsNf48YcwwGmC7L3MHqBvbiYlSujTxny80qHc03LYpXXqx3D2dqFaSKAsqKZFBjLmlAs4gpvS3e1lCNWWgZSuBi7gmc9jdFuu7OBxDKho2FJfekC9QwG129uArXvBwEpQsTNxC4d62cV5/73lj42pT3AVikexvNyVcQUy4guEgSw4c2EMd3IJwoXlGE7JwEfRenKM2Tp4daDEJs6+GjBbDM88L9TqH5NG5nak2+CvFR/2/Pm0FMSumK95rX7AQj6a04hi7HPBIhz7QQ1I0uKjbSs2oz+KtlUHg/llnHNPw1PnB1br1p5xVMGH6GOg6uxfmCGAx/eKkK8kAoVBroPUxyWBxa/ElZjaXjvp6oWSBZNmgfyZ52krtQbTI1tkYxEvEt84a7NjWELyFZRcX8uhhQousFwBORY/XgtO/HuR4QtXG7LqSEAGVYST9AW86PZ2+ql/cYiyMENXTmOGz76NVH9O7eCn2DU/xnede3xpOsBaAjGLbeKAtBzo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(56012099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?+Aa5dTfGkwJoGzwjPY1cxkh14HEOlZl7/XliOgxKsqSfUxXbuSSXJdRp4MO0?=
+ =?us-ascii?Q?KJG/TmuvoGBnt+285GYsLzX0cNt7zqnfpb5/8shnHEM6X2rzDd4NYu/ANOHq?=
+ =?us-ascii?Q?D2F+cfjwiYz0ORS9KU3Je2osuAhZtXrDLr2rWYwYomV9d8/hSmogWWjJzUDV?=
+ =?us-ascii?Q?IXsOLvQnvugQz3Z8MfXrq1tsX00Zog+iOjtWFK5qYcgDjqAzkGMztZDiw74z?=
+ =?us-ascii?Q?FTFiOSahUxFhJaQOeaS2vY5xwyoUMX0GLohltsuYXofXrjYGx+ZzBPzYQvpx?=
+ =?us-ascii?Q?1OEXgsY9FydiFsDRZ7I7OhMC1zIrdBr5Q7FUB7vAHC8zk+14KZZXPy+uZMHu?=
+ =?us-ascii?Q?saRQFUoPybh5MVzS7ANGCpGlHWANHLtq9kOQPY+l2psDfchjo1DhWaSAsjCM?=
+ =?us-ascii?Q?Ygh3qWZvg6bjAibh+eG4SdzapuffPOR38salbI98W3eAefz5qe9cV9YIBvWA?=
+ =?us-ascii?Q?w0/MgJTuG8DqtzPYUKKdxBzCMzVbF8t/sIbBb3/p0vbUjbplWb+IjaKvmZdH?=
+ =?us-ascii?Q?Bcefsrth++XCdh2/UuoezXj+2GCt8W9eUS6UG3MFrSa6hz/eGiS6cGEnvQfv?=
+ =?us-ascii?Q?gFFkAwrRm2syovgVf9uzQNGzDDL6mVaLpgSAVK+49gkYHr8LIl/HgwpO8uVg?=
+ =?us-ascii?Q?NSUvHC50FrnQpGKmGEUq+/kR2Rm+4xWI6sazUAniHoqG7n0zkAopVj99QcbG?=
+ =?us-ascii?Q?ND/LfWavQc7kc/Uh7xLRDKEhHhCsGSL26R9OhEhnRnNeyyLuGjDzVtEY6fFc?=
+ =?us-ascii?Q?Th4lpt98JPf4LE8YBUCDbY4lN+evL5kOBBIrX8vme6kRLBF1CGX26fEcn7gT?=
+ =?us-ascii?Q?B4ETBed1p1BK71mdJ2LrazfIofuStXtMf7hRkOA4HSMnZh1tcXjHD1++D/cF?=
+ =?us-ascii?Q?vNAcGqh/ADwaQjoMrsoQR40j7wgVCDUdBigZQEe3vo0QCVnbCXrULm3Wumr9?=
+ =?us-ascii?Q?vtMfXx6TdwLOLJpGeQEWJMwPmNSHCmjnsTVg9W+CH9b5pWfhXPUGlgEw4dSJ?=
+ =?us-ascii?Q?mt6FXRsDxOJY9/TN13pyytAVha4eXki1qUvsYmnjUdnnKt0QANtX08ogfvaw?=
+ =?us-ascii?Q?+1hf/63g8YQTEVbVI8CMpOPZEnVbl9APdA6tOWSzd9QCmIsrBdt8RwE7X8X0?=
+ =?us-ascii?Q?uizUmrmUnrNIRs8Tj/lOCihcwzGzdPB9CK5VcV13bU9uzdtrFfkC/GAOqESK?=
+ =?us-ascii?Q?iswBTuWxDX7EhRPum918WcIngsykLi3MaSNQ4PNs2Ivcjvd1oALzT/0O5WlM?=
+ =?us-ascii?Q?3R4IEJEsj9UfqTmzU/Ldsm5hLBGfVTOosxhWP2428Mrv4rA0Ag2uOWCZIjs9?=
+ =?us-ascii?Q?BWXlxULmmLyd2l50K8nlS5lvt+822dhOo+xKH1rgmPztRa29r9Zt3Ado5Gz3?=
+ =?us-ascii?Q?b6z7gwpWeqHTIrNpn6HmeBUjZsgcF8bru2oQiIaBTa7OuSPAaic/17AIs/rz?=
+ =?us-ascii?Q?yvWP+g4nOwkLWJbTalHvay03SCoDWPAXbaldASZXJYnuRmYZg/elHEGnLRrg?=
+ =?us-ascii?Q?Mmb19T0nLuVaZ0+J3cNXeOC10kFLfCXzLQGBkfyPJhxUJsKrjBnEQEo6Nwyf?=
+ =?us-ascii?Q?hBr7TzoK4W9wqAsCgJIU/7SM0zNnbxKqCAHDZBsdp3lazIGjNP833zkizHcD?=
+ =?us-ascii?Q?MBgCQFEmjzUVrKZArAZt2B1YoDfK3URj3eNL5c5h1f8A4atO2CvDSgFfe7hj?=
+ =?us-ascii?Q?DMcB76YxBbMJVwdTVkQpU/aNPLYqRtih2sgcgWIQuv2pHjIjSqHF/5fQlj54?=
+ =?us-ascii?Q?h/JkXa18KA=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7dd28a6-1939-4ec0-dd1e-08de99120dc4
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2026 04:06:35.7522
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fuuNS+stkb9e8jh/S8zW8t5x7MScyc7Zdnd6nOgjCSJU0xtbbgsi28TZoVE7lfrwpH6/Pma0N/uNRbb1bUIxfA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5620
 
-From: John Groves <John@Groves.net>=0D=0A=0D=0A__fsdev_dax_direct_access(=
-) returns -EFAULT without setting *kaddr when=0D=0Adax_pgoff_to_phys() re=
-turns -1 (pgoff out of range). The return value=0D=0Awas ignored, leaving=
- kaddr uninitialized before being passed to=0D=0Afsdev_write_dax().=0D=0A=
-=0D=0ACheck the return value and propagate the error.=0D=0A=0D=0AThanks t=
-o Dan Carpenter and the smatch project for reporting this.=0D=0A=0D=0ASig=
-ned-off-by: John Groves <john@groves.net>=0D=0A---=0D=0A drivers/dax/fsde=
-v.c | 5 ++++-=0D=0A 1 file changed, 4 insertions(+), 1 deletion(-)=0D=0A=0D=
-=0Adiff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c=0D=0Aindex 4499=
-d9621f33..188b2526bee4 100644=0D=0A--- a/drivers/dax/fsdev.c=0D=0A+++ b/d=
-rivers/dax/fsdev.c=0D=0A@@ -80,9 +80,12 @@ static int fsdev_dax_zero_page=
-_range(struct dax_device *dax_dev,=0D=0A =09=09=09pgoff_t pgoff, size_t n=
-r_pages)=0D=0A {=0D=0A =09void *kaddr;=0D=0A+=09long rc;=0D=0A=20=0D=0A =09=
-WARN_ONCE(nr_pages > 1, "%s: nr_pages > 1\n", __func__);=0D=0A-=09__fsdev=
-_dax_direct_access(dax_dev, pgoff, 1, DAX_ACCESS, &kaddr, NULL);=0D=0A+=09=
-rc =3D __fsdev_dax_direct_access(dax_dev, pgoff, 1, DAX_ACCESS, &kaddr, N=
-ULL);=0D=0A+=09if (rc < 0)=0D=0A+=09=09return rc;=0D=0A =09fsdev_write_da=
-x(kaddr, ZERO_PAGE(0), 0, PAGE_SIZE);=0D=0A =09return 0;=0D=0A }=0D=0A=0D=
-=0Abase-commit: 2ae624d5a555d47a735fb3f4d850402859a4db77=0D=0A--=20=0D=0A=
-2.53.0=0D=0A=0D=0A
+On 2026-04-11 at 09:03 +1000, Matthew Brost <matthew.brost@intel.com> wrote...
+> The contents of a device folio can immediately change after calling
+> ->folio_free(), as the folio may be reallocated by a driver with a
+> different order. Instead of touching the folio again to extract the
+> pgmap, use the local stack variable when calling percpu_ref_put_many().
+> 
+> Cc: David Hildenbrand <david@kernel.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Balbir Singh <balbirs@nvidia.com>
+> Cc: linux-mm@kvack.org
+> Cc: linux-cxl@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Fixes: d245f9b4ab80 ("mm/zone_device: support large zone device private folios")
+> Signed-off-by: Matthew Brost <matthew.brost@intel.com>
+> 
+> ---
+> Stack trace:
+> 
+> [  631.875165] [IGT] xe_exec_system_allocator: starting subtest threads-many-new-prefetch
+> [  632.282992] Oops: general protection fault, probably for non-canonical address 0x900000000000000: 0000 [#1] SMP NOPTI
+> [  632.293469] CPU: 8 UID: 0 PID: 59267 Comm: xe_exec_system_ Not tainted 7.0.0-rc7-xe+ #281 PREEMPT(full)
+> [  632.316023] RIP: 0010:free_zone_device_folio+0x149/0x240
+> [  632.339782] RSP: 0000:ffffc90023d1fd00 EFLAGS: 00010206
+> [  632.344947] RAX: 0900000000000000 RBX: 0000000000000001 RCX: 0000000094472d4d
+> [  632.351991] RDX: ffffffff8155c76f RSI: 000000006f2213bf RDI: 000000008e84943a
+> [  632.359042] RBP: ffffea0ff4030001 R08: 0000000000000000 R09: 0000000000000001
+> [  632.366094] R10: 0000000000000028 R11: 0000000000000000 R12: ffff88811828e400
+> [  632.373145] R13: 0000000000000000 R14: 000fffffc0000000 R15: 0000000000100073
+> [  632.380194] FS:  00007f2f0fdfe6c0(0000) GS:ffff88890a7e7000(0000) knlGS:0000000000000000
+> [  632.388186] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  632.393870] CR2: 00007f2f002e90f8 CR3: 0000000106708002 CR4: 0000000000f70ef0
+> [  632.400919] PKRU: 55555554
+> [  632.403605] Call Trace:
+> [  632.406039]  <TASK>
+> [  632.408131]  do_swap_page+0x146d/0x18c0
+> [  632.411938]  ? __pte_offset_map+0x3e/0x190
+> [  632.415994]  __handle_mm_fault+0x6e8/0x8d0
+> [  632.420053]  handle_mm_fault+0xbf/0x250
+> [  632.423855]  ? lock_mm_and_find_vma+0x41/0x6f0
+> [  632.428256]  do_user_addr_fault+0x168/0x690
+> [  632.432399]  exc_page_fault+0x74/0x200
+> [  632.436117]  asm_exc_page_fault+0x26/0x30
+> [  632.440092] RIP: 0033:0x5587554ff70d
+> [  632.462142] RSP: 002b:00007f2f0fdfc970 EFLAGS: 00010246
+> [  632.467308] RAX: 0000000000003fc0 RBX: 00007f2f082e1fc0 RCX: 00007f2f12b3287d
+> [  632.474355] RDX: 0000000000000000 RSI: 00000000c048644a RDI: 0000000000000003
+> [  632.481404] RBP: 00007f2f082e1fc0 R08: 00007f2f0fdfc958 R09: 0000000000000066
+> [  632.488450] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+> [  632.495495] R13: 00007f2f082de000 R14: 0000000000c00002 R15: 00007f2f1319e000
+> [  632.502547]  </TASK>
+
+I'm not sure, but I think Andrew likes the stack traces included in the actual
+commit messages. I've certainly found it helpful when debugging traces reported
+from the field so would prefer it there.
+
+> ---
+>  mm/memremap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index ac7be07e3361..053842d45cb1 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -454,7 +454,7 @@ void free_zone_device_folio(struct folio *folio)
+>  		if (WARN_ON_ONCE(!pgmap->ops || !pgmap->ops->folio_free))
+>  			break;
+>  		pgmap->ops->folio_free(folio);
+> -		percpu_ref_put_many(&folio->pgmap->ref, nr);
+> +		percpu_ref_put_many(&pgmap->ref, nr);
+
+It's a pity this was open-coded rather than implementing put_dev_pagemap_many()
+which makes it clearer what this is doing, but that's unrelated to this issue
+and on me for not catching it when reviewing. So for this fix:
+
+Reviewed-by: Alistair Popple <apopple@nvidia.com>
+
+>  		break;
+>  
+>  	case MEMORY_DEVICE_GENERIC:
+> -- 
+> 2.34.1
+> 
+> 
