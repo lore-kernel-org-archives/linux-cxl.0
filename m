@@ -1,143 +1,114 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0080F125A9
-	for <linux-cxl@vger.kernel.org>; Mon, 13 Apr 2026 15:50:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02EE2C08AC;
+	Mon, 13 Apr 2026 16:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776095450; cv=none; b=aP7zw4J2EG70dT+6I8QOoYh3huhLZnnEWK9xCxZRLjIlj9Ua3YQYwctJIJT8PPwKO9NbKoViOsI6jDExi7hVjgXCublUAUXEc7kNcfX5X0CZxNHdBbDAQpldFijeq8CTTajGkkOycSDN2jciqsqjIMLRfbB8nG4QChquj9mHfsY=
+	t=1776096749; cv=none; b=jpn+w44t4qHqXcWcrN8rGyhmPBy5yC3KanwcND3vk/hSBl+J94mVUf8NLYtIQOXgyo5Rchmg7Vz3Y9Aj2M0dajO0C3FRseJSwDYpvk5lS76Zf5ITGE5YhskBvN4ifxUeYznBsGk7NRp1kRkA+KL2owmPYgCj5QyWMNyzO+eFF/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776095450; c=relaxed/simple;
-	bh=xK4r1imp4wqDB8X4g2vLJ/eYGxYoxVGV8y487uiArvg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A1ip6TM1v6MOvrQFhSehVTHTQlhJru3kkM+AIIeeMyLvo/Y9x0fv9j4GBzYClldI5QhkBkCisrg64vaQwpV36SSHOMiDk6p9DjcK690u49lAeUtzJhY1gGQ/22sKEBnJhMvwt9aWMKClHUtlMTpfrxVkYpfg/ga4dGh/EX1DmXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.224.83])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTPS id 4fvX1N50KLzHnGcW;
-	Mon, 13 Apr 2026 23:50:32 +0800 (CST)
-Received: from dubpeml500005.china.huawei.com (unknown [7.214.145.207])
-	by mail.maildlp.com (Postfix) with ESMTPS id 11C0340575;
-	Mon, 13 Apr 2026 23:50:45 +0800 (CST)
-Received: from localhost (10.203.86.132) by dubpeml500005.china.huawei.com
- (7.214.145.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 13 Apr
- 2026 16:50:44 +0100
-Date: Mon, 13 Apr 2026 16:50:42 +0100
-From: Jonathan Cameron <jonathan.cameron@huawei.com>
-To: John Groves <John@groves.net>
-CC: Davidlohr Bueso <dave@stgolabs.net>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <ira.weiny@intel.com>,
-	<dan.j.williams@intel.com>, <dongjoo.seo1@samsung.com>,
-	<anisa.su@samsung.com>, <linux-cxl@vger.kernel.org>, John Groves
-	<jgroves@micron.com>
-Subject: Re: [RFC PATCH 0/1] cxl: Media Operations
-Message-ID: <20260413165042.00004ec8@huawei.com>
-In-Reply-To: <acaes_gqFt-LLFrC@groves.net>
-References: <20260323204013.4010634-1-dave@stgolabs.net>
-	<20260324153238.0000750e@huawei.com>
-	<20260324180754.et4gwn6dobdplurt@offworld>
-	<20260325120613.00007003@huawei.com>
-	<acaes_gqFt-LLFrC@groves.net>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1776096749; c=relaxed/simple;
+	bh=hYX0m8El0e7JbM0seA0zgW/XLhcFeqneBwankDKddQU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Clpq0USfp7d8oIJk3C7eavJ+UBfN9VUyMWZUnnMpPZ/CQ4idXZMVkTm5TGrXicsmxacuJwVnh7gBijp0qHqAVOmPDPgoWA3P997uJsQwPYqkauqK77W5QoYqHrOwK3l5DTEKrWWJFxLBIo4q51nHsrE40xUAhoD92Mc691ffFOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wdmi/uzj; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wdmi/uzj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776096747; x=1807632747;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hYX0m8El0e7JbM0seA0zgW/XLhcFeqneBwankDKddQU=;
+  b=Wdmi/uzjqrVXYOg5ImHejCtltnxIMVbhSAxfnWAsvSSnPBdM7/HeIGH+
+   sfrZNmvMe1LxxyE3B26H3XFfaTJVoYKCSSsMF/y3o6tdBg9/NlowUz69k
+   3IN4IIB7LJ3DlZLnqLLCuQWNyV/8u2J5gyKTrAZ4LnqWfWvbTq2r7Tdxb
+   Weog1/Sa6pHAaKTHKYRxBYGij40fDHWD/G27lRJ79EJ3fJAv6Jcn+CJ/c
+   Rr1A1nS/2p6Lhg7NcQiZ8qML0bAJ52QA13kv8uAb+2oCTc972mC/ujwOm
+   e78X48Xk3/sX9fUgMBkNWsWohWxKoJ8ab00rfnRHlbpewr+A1C0HfUPSW
+   w==;
+X-CSE-ConnectionGUID: 2/reTLK7TqWUV5JwTjjVKw==
+X-CSE-MsgGUID: 1EY3o7ChQ9C03hREOeesxA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11758"; a="76202824"
+X-IronPort-AV: E=Sophos;i="6.23,177,1770624000"; 
+   d="scan'208";a="76202824"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2026 09:12:26 -0700
+X-CSE-ConnectionGUID: nrwgHC0NS7apn4kFFSA+Uw==
+X-CSE-MsgGUID: ybx229t5SgCL83V0YaNXZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,177,1770624000"; 
+   d="scan'208";a="233856721"
+Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.109.175]) ([10.125.109.175])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2026 09:12:24 -0700
+Message-ID: <5946384b-e35c-460d-8b2c-4e995b1c07e3@intel.com>
+Date: Mon, 13 Apr 2026 09:12:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dax/fsdev: fix uninitialized kaddr in
+ fsdev_dax_zero_page_range()
+To: John Groves <john@jagalactic.com>, Dan Williams <djbw@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Dan Carpenter <dan.carpenter@linaro.org>, John Groves <John@Groves.net>
+References: <20260412154944.461748-1-john@jagalactic.com>
+ <0100019d8262cda2-9714d31c-8fc1-4ca5-b32d-4df678240d14-000000@email.amazonses.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <0100019d8262cda2-9714d31c-8fc1-4ca5-b32d-4df678240d14-000000@email.amazonses.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- dubpeml500005.china.huawei.com (7.214.145.207)
 
-On Fri, 27 Mar 2026 10:17:01 -0500
-John Groves <John@groves.net> wrote:
 
-> On 26/03/25 12:06PM, Jonathan Cameron wrote:
-> > On Tue, 24 Mar 2026 11:07:54 -0700
-> > Davidlohr Bueso <dave@stgolabs.net> wrote:
-> >   
-> > > On Tue, 24 Mar 2026, Jonathan Cameron wrote:
-> > >   
-> > > >On Mon, 23 Mar 2026 13:40:12 -0700
-> > > >Davidlohr Bueso <dave@stgolabs.net> wrote:
-> > > >    
-> > > >> Hello,
-> > > >>
-> > > >> This implements support for Media Operation cmd. It is marked RFC because of these
-> > > >> noteworthy points:
-> > > >>
-> > > >>  (i) Sysfs interfaces. These changes implement 'security/zero' and multiplex
-> > > >>      'security/sanitize' to allow dpa, len pairs for the range (no impact for
-> > > >>      current usage as whole-device). This breaks the 1 value per file "rule",
-> > > >>      and would be a first for drivers/cxl/*, so am I open to suggestions.    
-> > > >
-> > > >Value is a vague sort of term.  It's one thing (an range) so seems fine to me.    
-> > > 
-> > > I agree.
-> > >   
-> > > >    
-> > > >>
-> > > >>  (ii) Background cmd handling semantics. Media operations are synchronous,
-> > > >>       which for raged zeroing operations makes sense and for range sanitize    
-> > > >
-> > > >ranged
-> > > >    
-> > > >>       differs from the current async handling for whole-device, so user response
-> > > >>       differs significantly, something I am not crazy about. Another downside
-> > > >>       of this is that it exposes lock hold times to be user-controllable, but is
-> > > >>       no different than what we do for fw. Fundamentally, users have the
-> > > >>       responsibility to break up the work into sane ranges.    
-> > > >
-> > > >We could apply a limit on this and make that discoverable via another sysfs attribute.
-> > > >So let userspace request in say 1Gig chunks.  Would have to check that the device
-> > > >supports that granularity though.    
-> > > 
-> > > If we agree that this will be performed synchronously, then yes, adding a size cap
-> > > would be necessary. I don't love having it in ie: security/range_limit(?), but that
-> > > could be created at discovery time when we know the granularity. Another way would
-> > > be to avoid the extra file and just print the limit in the error message - but I
-> > > guess dev_dbg() would be needed to not spam the dmesg. In any case with a cap,
-> > > while no guarantees, this also reduces the chances of the user triggering driver timeouts.
-> > >   
-> > > >I don't think there is anything in the spec today to let us query how long
-> > > >something takes (which would be a better way to bound this).    
-> > > 
-> > > Correct, that is just something Scan Media allows for - and yes, that's exactly
-> > > the sane way to do the work breakup.
-> > >   
-> > Yo John,
-> > 
-> > I'm sure you are keeping a list of potential improvements for the appropriate group
-> > that I believe you have some leadership role in ;)
-> > 
-> > I'd like devices to provide info to allow us to establish an upper bound on how
-> > long a zero / sanitize media operation would take.  This one doesn't need to be
-> > code first so we can consider this a potential feature request.
-> > 
-> > Jonathan
-> >   
-> > > Thanks,
-> > > Davidlohr  
-> >   
+
+On 4/12/26 8:50 AM, John Groves wrote:
+> From: John Groves <John@Groves.net>
 > 
-> Acknowledged. Are you thinking of a one-off for sanitize, or is there
-> a class of commands that might ought to provide such an upper-bound?
-
-Not sure - probably one to through at the spec group and see if anyone can
-think of more usecases beyond the various media operations.
-
+> __fsdev_dax_direct_access() returns -EFAULT without setting *kaddr when
+> dax_pgoff_to_phys() returns -1 (pgoff out of range). The return value
+> was ignored, leaving kaddr uninitialized before being passed to
+> fsdev_write_dax().
 > 
-> I'd be happy to try to push something through, but the solution ought
-> to come from somebody who experiences the inconvenience directtly :D
+> Check the return value and propagate the error.
+> 
+> Thanks to Dan Carpenter and the smatch project for reporting this.
+> 
+> Signed-off-by: John Groves <john@groves.net>
 
-Over to you Davidlohr ;)
-> 
-> Regards,
-> John
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
+
+> ---
+>  drivers/dax/fsdev.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
+> index 4499d9621f33..188b2526bee4 100644
+> --- a/drivers/dax/fsdev.c
+> +++ b/drivers/dax/fsdev.c
+> @@ -80,9 +80,12 @@ static int fsdev_dax_zero_page_range(struct dax_device *dax_dev,
+>  			pgoff_t pgoff, size_t nr_pages)
+>  {
+>  	void *kaddr;
+> +	long rc;
+>  
+>  	WARN_ONCE(nr_pages > 1, "%s: nr_pages > 1\n", __func__);
+> -	__fsdev_dax_direct_access(dax_dev, pgoff, 1, DAX_ACCESS, &kaddr, NULL);
+> +	rc = __fsdev_dax_direct_access(dax_dev, pgoff, 1, DAX_ACCESS, &kaddr, NULL);
+> +	if (rc < 0)
+> +		return rc;
+>  	fsdev_write_dax(kaddr, ZERO_PAGE(0), 0, PAGE_SIZE);
+>  	return 0;
+>  }
 > 
+> base-commit: 2ae624d5a555d47a735fb3f4d850402859a4db77
 
