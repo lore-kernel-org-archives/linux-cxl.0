@@ -1,202 +1,430 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D097221F24;
-	Mon, 13 Apr 2026 06:40:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776062445; cv=fail; b=cXhDv9uGX8cVnNIbViMyFUicSb53Clg31WAk+YxJOo6CL/Ue1QkG080lv7y2afEv4/VLg8An8W6JvLn1P8+BmcPkBM+7XQmgwjicU+vuUSvVaP9EWCLdvFksbsXsEMc4VmoQV2IOCrHw6q7cUxLnsb2A6shARToYachr9fI6WRY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776062445; c=relaxed/simple;
-	bh=uMf7sghh0q5q9zuCzPMO6ZngbelEBlAvwQKt+jjT7f0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZhxXdd3HUjUiZ5tUg9Qayy5fjP2WbqUI2Ni1CfJPGGAvOmKn1tlw/5EywBFxbvCqGXtZaPvIggmxTDon7A+uNZWtLFOUeSTdMKSDY95M+qCpTWwBL/wwwo2TxMJ9B0L9mFdtygXyZEa3Ms2VwXXuiL2LlSNdVr1tiSrGNUdndNo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EE7yvNlq; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F093CAE93;
+	Mon, 13 Apr 2026 13:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776085893; cv=none; b=TGlO/Glc8vCCoZvF7EQsUAmBtacqEN1mkpZJLACS48D4tWkzMt6pQmaCFYX/INkQfKlvkOPdyp8t+DDd2UG0Y/IrAh++lp04aoFlj4BpHGUcgbiTyKhkte+NItHb7VlaKMAO0fuhx8tZnbGr5jaMoMFf/Cc3sviiocFZ3YFf2ZY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776085893; c=relaxed/simple;
+	bh=7MGZ9oe6YDDqQrwWtten4a0WNnW38UoJ0Vjub40l4lo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uKzeM0bMfqHIKzjknnVF9VK8A7ouST3OGsXhITdWJO+wapnUWdY88t8MxC3lYfaOuGhUjfcwM3HzdssFUAyu4SYE+35xhPhzOAT+wq99HhBddVJjGsyR+2Qb3BQ0v3YY8/5W+rE7lDvsKspHOTotfDWZZBWOU/WmT139wiUJQCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTu3k7kU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EE7yvNlq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776062444; x=1807598444;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=uMf7sghh0q5q9zuCzPMO6ZngbelEBlAvwQKt+jjT7f0=;
-  b=EE7yvNlqA7CwiFwtQgDVZYSoMtql14k4eDO0OUgI8PfQfiZRuF3rM5lV
-   vOLJWBQxDUFS99NI39qvWnjwNaEjNVZ4bNiXP175ZuRSWksjhmYzKuINX
-   z41HUYhmK+ozWGUFmibjxvznM7XsMxVdtKUOs2y0VtX+2eUScMfxzjldc
-   PDRebJuZ7kfrnEMJ7RZFwjZ0eng6zXY4LPRmlOmrA6jSnYMB7R5LhQaUA
-   LgsuYI7RlHc+J1LoB9X4l5grAKE+Wq4vKp8O1gZstJH8Rs3zMBCfVoPHL
-   5flcgLcofWLTgm61LIJlK9b4LMhS0/frIIhBxrbo9OjK5nnQabRj8JHsz
-   g==;
-X-CSE-ConnectionGUID: BDH+OotqQDWrawGPlUnEKw==
-X-CSE-MsgGUID: +jMlHcDfT4CzQsayKw8kIg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11757"; a="87692536"
-X-IronPort-AV: E=Sophos;i="6.23,176,1770624000"; 
-   d="scan'208";a="87692536"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2026 23:40:44 -0700
-X-CSE-ConnectionGUID: HYULBIEaRkCGdg93l7yYuQ==
-X-CSE-MsgGUID: Mp39aBe2QOC66Odgo2mFgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,176,1770624000"; 
-   d="scan'208";a="253087052"
-Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2026 23:40:43 -0700
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Sun, 12 Apr 2026 23:40:43 -0700
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Sun, 12 Apr 2026 23:40:43 -0700
-Received: from BN8PR05CU002.outbound.protection.outlook.com (52.101.57.29) by
- edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Sun, 12 Apr 2026 23:40:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YmBdbCVN7l9LqS0DomaWJPGd3H64JkFAAQAEJzmNbLxUmjC8AVzpv32REVNg54TJOibljDWzbhTQEIhZy/XvHa+gN9gERt/0PcXdfZvgrfgjQFHCRCQc8EzZWSeLnNGY273YE2nbc6Xsd3VrWpjUkNuleJ+dPZFhzOrclJ7P8PhBpESHDH2HV67Fais3PzsH4mNMD8lZE0aXL4jCAMd553Ac31xr8E+/Ri5LMSXZmyE7QYUh1q8WS3JVfNXTW4G/AL8a6Ty75Iyn0rYIpqwG+M4AHHpV+a6aEr0Nc/cj/ahNO4QyTUihv6sdTfeNgLy5tiQYMJaHp/o1HNsy6wM7SA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uMf7sghh0q5q9zuCzPMO6ZngbelEBlAvwQKt+jjT7f0=;
- b=L+5UMFI0kkUWKiLyOBgeVEKuGgHLbVWMYHyUOp1mr9nUZccGAzi+qA/jxK0QARYH4WxNG2eOliyktwJtysPzDh2Y9KgK59C6HjjS/qNeFOguk1Ut70U/LLCio7o4f+ePYsdyjSvsLaHTn+i/b3ZdXGVdXvQcOVU/CnrEsiEsDIxahkp3xFZ1FaPfymUlzgIStO3y0JOy+CktdBi5d3mQRsrvUofrHHrXbhaG+tKK6h6/F9+eX9Ncdp3a7uuyOc6h+ZOhfNTQJtbg7IMB17uUtbg0X7D/1TnPP0S2ZuDEIaqanuYP3ILBTbEIZj/22XoSBK7WaCg91vvHYL6h2G77Zg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by IA4PR11MB8889.namprd11.prod.outlook.com (2603:10b6:208:565::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.20; Mon, 13 Apr
- 2026 06:40:39 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::f997:762f:f079:134f]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::f997:762f:f079:134f%5]) with mapi id 15.20.9818.017; Mon, 13 Apr 2026
- 06:40:38 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: Nicolin Chen <nicolinc@nvidia.com>, "will@kernel.org" <will@kernel.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "joro@8bytes.org" <joro@8bytes.org>,
-	"praan@google.com" <praan@google.com>, "baolu.lu@linux.intel.com"
-	<baolu.lu@linux.intel.com>, "miko.lenczewski@arm.com"
-	<miko.lenczewski@arm.com>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
-	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
-	<linux-pci@vger.kernel.org>, "Williams, Dan J" <dan.j.williams@intel.com>,
-	"jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>, Vikram Sethi
-	<vsethi@nvidia.com>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
-Subject: RE: [PATCH v3 1/3] PCI: Allow ATS to be always on for CXL.cache
- capable devices
-Thread-Topic: [PATCH v3 1/3] PCI: Allow ATS to be always on for CXL.cache
- capable devices
-Thread-Index: AQHcrcLZlsPpC1aSZEGOkgr6dEwpTbXIca9QgA8X6ACAAAIUAIAASGZAgACU9QCABFtj0A==
-Date: Mon, 13 Apr 2026 06:40:38 +0000
-Message-ID: <BN9PR11MB5276A0E069B21137833ABAED8C242@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <cover.1772833963.git.nicolinc@nvidia.com>
- <a0dd3e4cc5260f55bbec5b3ed6791def33028735.1772833963.git.nicolinc@nvidia.com>
- <BN9PR11MB5276A6B1B103C4B0201458348C53A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <adgsBgXYy68GmxAf@Asurada-Nvidia> <20260409225252.GU3357077@nvidia.com>
- <BL1PR11MB527184E183703E14F6C861118C592@BL1PR11MB5271.namprd11.prod.outlook.com>
- <20260410120508.GA2588311@nvidia.com>
-In-Reply-To: <20260410120508.GA2588311@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|IA4PR11MB8889:EE_
-x-ms-office365-filtering-correlation-id: 48556ff0-19fa-429c-f8d5-08de99279369
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|38070700021|18002099003|56012099003|22082099003;
-x-microsoft-antispam-message-info: xFXs5ot6q9TMsnSdKaZHzrSVBnCXBNvMYUpEnBKVXbOwDITOkCwB80/RYr8WzRm8xR9j9Kw8S8z13ZBDIsxfGnXi009aWRNJuFAWO5SAulvRDfuNqyzxGYoGCCRFFmgy8C4FjS8pyRMvmkUfhEM9yFRUqtD4KD827EMrVqhCIKOYoVtIJM92/S4XA589FcAtFhbfyj393LX0xLm5pX2a9AeS+rQxloqNjP2b2GfDJQkYV/XmUOHvSFl9DozjAgBSPaQ0Ep6U/FvjG/FU3246VxeRR7LT0hP2NejFWXWN23dbV0sQzCQZI8NprtrH+2qIpcXUAG9ENKqcwtbHo271BlSuwi5GVkmpTahNizJ0WzsS0EE3Mgmi5IbT2w7p7gi+X5x3M0qo2tr5/SNuABfkrfNrFYUpQOicz67eScj3qTr2SYy47G3rRqbM4lCnJoqCfwroZZ9eSe/K/g4hbly2wLdzkzPt+rG4aDEU/c6iszyhncEpEHizb8775gm/1gZ9u5vm/rFu+oGEty4Y2fFja0tILkcCpdzEoy4keNKmexG2wuFhY/gY52BXMLniSIJFxODCHxeoaxFxNOZY276fI4kv51g3RK0bfsDmrFbLprhcqpawUXsnAvP42LgWFsnOE8tjaKBsUXtqeRAnRbiwt0tXOTA7c9aK4T3Bc/sWkepW/U0x9Hk0/wJsC5KruwCwFMds3LE7DI/1tlEjSs6q5WD9u4HD4Pe5AyESRubqwQXj63fvvzQuvoA1fdTxS7C6WVnwr9z95dVPW5bDjUI83OqTD//jVhHw/MC4ZuXSsoE=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(38070700021)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?GSZrAuNhv72YYNYPQhFeC929EPkqGi0B8tgZGm3hpc/ZPiIrTvRM2BPM0KMs?=
- =?us-ascii?Q?ebChzh9a42x/xCmJa5sB3/gihchWo56rjXJ5Bw9q1+zWTcC/IFDj9Om+t4sz?=
- =?us-ascii?Q?Z7IGhgEcRNyMHPPdjIdMKKBmKdEYNS6oPIrupWeKGhRrcgcIsioqX2fAi3Pv?=
- =?us-ascii?Q?PAM9MdH01ctS8d/6HWsNXBSrWOnYS7nzESQMwyB9+YznFBetle7mtrGm+PI0?=
- =?us-ascii?Q?jKnfgrMcEg8j5oCKNwc8dKeie9dexbqoj/nM4g63/4ZR+t0YIu3NpqTfFxDn?=
- =?us-ascii?Q?P4CyqVAPJo02bFLIhy/yXfod15zK6ce8L5a46oJ7PDY1a8nEU7K1Egp3rYwI?=
- =?us-ascii?Q?c8mUdBEeC1z4UPbgaXr71rEbJ3Gv5vLPKTgEvpE27vU7E8o5pep+6D0VT8IF?=
- =?us-ascii?Q?oyjqRHPr2fFENfbSvpl8o5C/QjjJDOV2/YOOI15lBC8ZeqK96iDdCqxaCgC8?=
- =?us-ascii?Q?P8gMJHrcYk6l+cf2U/QAQF6YeY562R6WgO7ersSGIJC3oPvPnY65P57NGqHN?=
- =?us-ascii?Q?+f9LTBVx9ssDftxje8pgNngMlF/ecrLqhurWrAg0ARCGXOBLxZzvOqgrEcxZ?=
- =?us-ascii?Q?qay9b/LIa7ki/KbdavTFczEeNSFIWlZvCmE/xHI6fA0emi6HFXQPn9jnC4xs?=
- =?us-ascii?Q?Vo8gTv32ryx4jJFKopmimugAON47zVGLJ2CHuk8+Zmne3tiC2z2Mz+WNjjBp?=
- =?us-ascii?Q?FB3TID+OfGMYBkQLjs+J83UorLc5E+uLSWOtUdxuTctgFs4jbcLeaNPZygfB?=
- =?us-ascii?Q?DgyDTOu9wrMcykEs/X7G1fIRFZBtMlEWjkosCTEhR5iTT1yPgJeYEoiqzSDb?=
- =?us-ascii?Q?90IVBmULjQ2nSO95NWKdHamdp/hKTsHHNnS8U1Nv+q7SvrJwuJvdWCR+jITX?=
- =?us-ascii?Q?2om0RW5/LhRnYZ3ygi6DPCddYlTROsEjz3cSkuqP16lnOd0jOlTTd5jItMhC?=
- =?us-ascii?Q?1f2TsulmVXe3tv+AuU8qnLGJI1jEE4dTrxaK0uqh9XuGKVebXUCRBKmJmHOK?=
- =?us-ascii?Q?XchukgrXcu4uOR529A/zRqZYh8uZ0dF7IG4MmfQTk8IhzFtueTtTwvpnEyNU?=
- =?us-ascii?Q?8yaEUr460gj4+FuYa6Rc706tz0UszPdpChDM8GvDSbTaH4T+kpJy8KX8kdoJ?=
- =?us-ascii?Q?DS+QRuWQdChMJDIog7EXdSbNuZudI2YcyRTOqjAyVwzQN8HG+vSC7RbpIuLN?=
- =?us-ascii?Q?tZoLZL1AF6K0A8vA6IqFLOcV76lqn8C9UcRJDQqjiRFokCL3p4yuSJCQPREs?=
- =?us-ascii?Q?NrWd+yD4nRN4I89eQT0eE5Q8wXbeFhhCxuBY08sqS6mxoV3TKKzeTG2Aonsz?=
- =?us-ascii?Q?hSwFUFi0DGt7FCJQ+0WYwsELSlTZwaSjRKsOcV1v8ZN/m2jw78dYXytQPXgh?=
- =?us-ascii?Q?b4HFlWPHlS3OFvwOmJ8TjyeTK65m498HkZTSTfx7JW3KSdO/PhpitwQWNwhl?=
- =?us-ascii?Q?M5o5AzSfHDG5hlE+7PVsPygqgvjv8PqcMVqZAPF4Jw0Piy1J1XaavPmFdzFo?=
- =?us-ascii?Q?JF/n/itBeDmz7ZQS2mAJ8q24PVYfzMwPKKP5ZA6KGi8Vfuw8iwHkRJfxX5+1?=
- =?us-ascii?Q?xfzYHGTK12/w6EkMQ/iKI80tyfoeZg1YSlrYhln2LGyWsO+PVH4lCdNtvbAP?=
- =?us-ascii?Q?fpnVhw+b23Ke9NUpBa+eYRPlj6T5sGsiXvCoeCJJs1ndyC/Fb+PZdL0cUD0e?=
- =?us-ascii?Q?IK/bK9peqYn+vehGYkIiY2kItRZxr1+JRBr76cbC3MRcmZZS?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTu3k7kU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDABFC2BCAF;
+	Mon, 13 Apr 2026 13:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776085892;
+	bh=7MGZ9oe6YDDqQrwWtten4a0WNnW38UoJ0Vjub40l4lo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lTu3k7kUc6eRNilLbXFu6HVFqchTI6w0PEnkTKQp8BZO9kLYETy7ixH/8wRcT/DF6
+	 LqcFLI8Ke6xPXINS4EiO/iR/gFK9WYIxj5hbnunJRAummOY+Yk7MARZAQvzy4B0fLj
+	 dU3pnHG1JISr5QjlsiESGw6cZQ0FRg9Jg0gnT9CFsWJSSNn5UL8PgnSUWv08Q+HyrS
+	 WXQwiAjaYq47MkyNplgE0EljEPiktkbyPawHW2AD619JXNyIooGaJ+x+dd7+H5iyc5
+	 lA/oMjIS77Rxy3PZj5T2R9Qp16+SHhHTnP3pcGNgsQ/tQT8AixvwNaSV8oOTFrzkKz
+	 rRCZZz82E/cwA==
+Message-ID: <2608a03b-72bb-4033-8e6f-a439502b5573@kernel.org>
+Date: Mon, 13 Apr 2026 15:11:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked: rR4mvLF4uKEgxRh0yRVrqvtaKWUI+I1Nm+WgbzMn7PJj4Ca5Mq89mJXYkvUEYsQ9MLODX3banXPszsWJszHG40bLPWRJKBEPJbnxDlU5RROzQDXPkqWBk/dG6u6DcYwq4oYWL88nIRkwMIWnw6mjpwFTMRy1pX360MP0fUBT8bC1OvMlLcu24UNHsDnv2smUQuxlWQA5l0ypq9+wtu1sV/pdVnTBXf2xEKd9Is+fSdMq30vPL90avRXZFrSlRyG37G3svCW+r9FvMEyX9QZsPdDbn7KxwXFxJaVDiqwU5uVWetah427IoJwhmmM9MpqOAR//6I6XFdFLXWyyWr7UkA==
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48556ff0-19fa-429c-f8d5-08de99279369
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Apr 2026 06:40:38.8916
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Gz5QG0uQ4jhhQ/NDsoYfBTa+MlbnLyQ8/pM/8eC35bwb+DnP1/bifJ6sGsbuLA/xZNyJGhPqdQDKBUztFgwbTg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB8889
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+To: Gregory Price <gourry@gourry.net>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+ kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+ dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
+ akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+ joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+ ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
+ yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+ linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+ mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+ baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
+ dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
+ muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
+ jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
+ pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
+ riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
+ roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+ shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+ zhengqi.arch@bytedance.com, terry.bowman@amd.com
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <3342acb5-8d34-4270-98a2-866b1ff80faf@kernel.org>
+ <abwRu1FNqI3dVyqL@gourry-fedora-PF4VCD3F>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <abwRu1FNqI3dVyqL@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> From: Jason Gunthorpe <jgg@nvidia.com>
-> Sent: Friday, April 10, 2026 8:05 PM
->=20
-> On Fri, Apr 10, 2026 at 03:13:59AM +0000, Tian, Kevin wrote:
-> > > From: Jason Gunthorpe <jgg@nvidia.com>
-> > > Sent: Friday, April 10, 2026 6:53 AM
-> > >
-> > > On Thu, Apr 09, 2026 at 03:45:26PM -0700, Nicolin Chen wrote:
-> > >
-> > > > One question regarding VM case: if a device is ats_always_on, while
-> > > > VM somehow doesn't set nested_domain->enable_ats. Should the
-> kernel
-> > > > at least spit a warning, given that it would surely fail the device=
-?
-> > >
-> > > No, just let break, the resulting failure has to be contained to the
-> > > VM or the platform is broken..
-> > >
-> > > The HV can't turn on ATS because we it can't know what invalidations
-> > > to push so not much other choice.
-> > >
-> >
-> > Taking about in theory - host can append a devtlb invalidation cmd
-> > after iotlb invalidation (if vcmdq is not used)?
->=20
-> It can't map an ASID to a BDF without shadowing all the STE and CD
-> tables which we don't do for nesting.
->=20
+On 3/19/26 16:09, Gregory Price wrote:
+> On Tue, Mar 17, 2026 at 02:25:29PM +0100, David Hildenbrand (Arm) wrote:
+>> On 2/22/26 09:48, Gregory Price wrote:
+>>> Topic type: MM
+>>
+>> Hi Gregory,
+>>
+>> stumbling over this again, some questions whereby I'll just ignore the
+>> compressed RAM bits for now and focus on use cases where promotion etc
+>> are not relevant :)
+> 
+> A more concrete example up your alley:
+> 
+> I've since been playing with a virtio-net private node.
+> 
+> Normally cloud-hypervisor VMs with virtio-net can't be subject to KSM
+> because the entire boot region gets marked shared.  
 
-I see - on VT-d the PASID table is managed by host which requires=20
-explicit pasid attach then that knowledge is a side effect, but it's
-certainly not the case on ARM side...
+What exactly do you mean with "mark shared". Do you mean, that "shared
+memory" is used in the hypervisor for all boot memory?
+
+> If virtio-net has
+> its own private node / region separate from the boot region, the boot
+> region is now free to be subject to KSM.
+
+You mean, in the VM, memory usable by virtio-net can only be consumed
+from a dedicated physical memory region, and that region would be a
+separate node?
+
+> 
+> I may have that up as an example sometime before LSF, but i need to
+> clean up some networking stack hacks i've made to make it work.
+> 
+>>>
+>>> N_MEMORY_PRIVATE is all about isolating NUMA nodes and then punching
+>>> explicit holes in that isolation to do useful things we couldn't do
+>>> before without re-implementing entire portions of mm/ in a driver.
+>>
+>> Just to clarify: we don't currently have any mechanism to expose, say,
+>> SPM/PMEM/whatsoever to the buddy allocator through the dax/kmem driver
+>> and *not* have random allocations end up on it, correct?
+>>
+>> Assume we online the memory to ZONE_MOVABLE, still other (fallback)
+>> allocations might end up on that memory.
+>>
+> 
+> Correct, when you hotplug memory into a node, it's a free for all.
+> Fallbacks are going to happen.
+
+Right, and I agree that having a mechanism to prevent that is reasonable.
+
+> 
+> I see you saw below that one of the extensions is removing the nodes
+> from the fallback list.  That is part one, but it's insufficient to
+> prevent complete leakage (someone might iterate over the nodes-possible
+> list and try migrating memory).
+
+Which code would do that?
+
+> 
+>> How would we currently handle something like that? (do we have drivers
+>> for that? I'd assume that drivers would only migrate some user memory to
+>> ZONE_DEVICE memory.)
+>>
+>> Assuming we don't have such a mechanism, I assume that part of your
+>> proposal would be very interesting: online the memory to a
+>> "special"/"restricted" (you call it private) NUMA node, whereby all
+>> memory of that NUMA node will only be consumable through
+>> mbind() and friends.
+>>
+> 
+> Basically the only isolation mechanism we have today is ZONE_DEVICE.
+> 
+> Either via mbind and friends, or even just the driver itself managing it
+> directly via alloc_pages_node() and exposing some userland interface.
+
+Would mbind() work here? I thought mbind() would not suddenly give
+access to some ZONE_DEVICE memory.
+
+> 
+> You can imagine a network driver providing an ioctl for a shared buffer
+> or a driver exposing a mmap'able file descriptor as the trivial case.
+
+Right.
+
+> 
+>> Any other allocations (including automatic page migration etc) would not
+>> end up on that memory.
+> 
+> One of the complications of exposing this memory via mbind is that
+> mempolicy.c has a lot of migration mechanics, just to name two:
+> 
+>   - migrate on mbind
+>   - cpuset rebinds
+> 
+> So for a completely solution you need to support migration if you
+> support mempolicy.  But with the callbacks, you can control how/when
+> migration occurs.
+> 
+> tl;dr: many of mm/'s services are actually predicated on migration
+> support, so you have to manage that somehow.
+
+Agreed.
+
+> 
+>>
+>> Thinking of some "terribly slow" or "terribly fast" memory that we don't
+>> want to involve in automatic memory tiering, being able to just let
+>> selected workloads consume that memory sounds very helpful.
+>>
+>>
+>> (wondering if there could be some way allocations might get migrated out
+>> of the node, for example, during memory offlining etc, which might also
+>> not be desirable)
+>>
+> 
+> in the NP_OPS_MIGRATION patch, this gets covered.
+
+Right, but I am not sure if NP_OPS_MIGRATION is really the right
+approach for that. Have to think about that.
+
+
+> 
+> I'm not sure the NP_OPS_* pattern is what we actually want, it's just
+> what i came up with to make it clear what's being enabled.
+> 
+> Basically without NP_OPS_MIGRATION, this memory is completely
+> non-migratable.  The driver managing it therefore needs to control the
+> lifetime, and if hotplug is requested - kill anyone using it (which by
+> definition should not the kernel) and either release the pages or take
+> them so they can be released while hotplug is spinning.
+> 
+>> I am not sure if __GFP_PRIVATE etc is really required for that. But some
+>> mechanism to make that work seems extremely helpful.
+>>
+>> Because ...
+>>
+>>> /* And now I can use mempolicy with my memory */
+>>> buf = mmap(...);
+>>> mbind(buf, len, mode, private_node, ...);
+>>> buf[0] = 0xdeadbeef;  /* Faults onto private node */
+>>
+>> ... just being able to consume that memory through mbind() and having
+>> guarantees sounds extremely helpful.
+>>
+> 
+> Yes! :]
+> 
+>>>
+>>>   - Filter allocation requests on __GFP_PRIVATE
+>>>     	numa_zone_allowed() excludes them otherwise. 
+>>
+>> I think we discussed that in the past, but why can't we find a way that
+>> only people requesting __GFP_THISNODE could allocate that memory, for
+>> example? I guess we'd have to remove it from all "default NUMA bitmaps"
+>> somehow.
+>>
+> 
+> I experimented with this.  There were two concerns:
+> 
+> 1) as you note, removing it from the default bitmaps, which is actually
+>    hard.  You can't remove it from the possible-node bitmap, so that
+>    just seemed non-tractable.
+
+What about making people use a different set of bitmaps here? Quite some
+work, but maybe that's the right direction given that we'll now treat
+some nodes differently.
+
+> 
+> 2) __GFP_THISNODE actually means (among other things) "don't fallback".
+>    And, in fact, there are some hotplug-time allocations that occur in
+>    SLAB (pglist_data) that target the private node that *must* fallback
+>    to successfully allocate for successful kernel operation.
+
+
+Can you point me at the code?
+
+> 
+> So separating PRIVATE from THISNODE and allowing some use of fallback
+> mechanics resolves some problems here.
+> 
+> I think #2 is a solvable problem, but #1 i don't think can be addressed.
+> I need to investigate the slab interactions a little more.
+
+I'll also have to think about this some more.
+
+> 
+>>>   - Use standard struct page / folio.  No ZONE_DEVICE, no pgmap,
+>>>     no struct page metadata limitations.
+>>
+>> Good.
+> 
+> Note: I've actually since explored merging this with pgmap, and
+> rebranding it as node-scope pgmap.
+> 
+> In that sense, you could think of this as NODE_DEVICE instead of
+> NODE_PRIVATE - but maybe I'm inviting too much baggage :]
+
+:)
+
+NODE_DEVICE sounds interesting though.
+
+> 
+>>>
+>>> Re-use of ZONE_DEVICE Hooks
+>>> ===
+>>
+>> I think all of that might not be required for the simplistic use case I
+>> mentioned above (fast/slow memory only to be consumed by selected user
+>> space that opts in through mbind() and friends).
+>>
+>> Or are there other use cases for these callbacks
+>>
+> 
+> Many `folio_is_zone_device()` hooks result in the operations being
+> a no-op / failing.  We need all those same hooks.
+> 
+> Some hooks I added - such as migration hooks, are combined with the
+> zone_device hooks via i helper to demonstrate the pattern is the same
+> when the memory is opted into migration.
+> 
+> I do not think all of these hooks are required, I would think of this
+> more as an exploration of the whole space, and then we can throw what
+> does not have an active use case.
+> 
+> For the compressed ram component I've been designing, the needs are:
+> 
+> - Migration
+> - Reclaim
+> - Demotion
+> - Write Protect (maybe, possibly optional)
+> 
+> But you could argue another user might want the same device to have:
+> - Migration
+> - Mempolicy
+> 
+> Where they manage things from userland, rather than via reclaim.
+> 
+> The flexibility is kind of the point :]
+
+Yeah, but it would be interesting which minimal support we would need to
+just let some special memory be managed by the kernel, allowing mbind()
+users to use it, but not have any other fallback allocations end up on it.
+
+Something very basic, on which we could build additional functionality.
+
+> 
+>> [...]
+>>>
+>>>
+>>> Flag-gated behavior (NP_OPS_*) controls:
+>>> ===
+>>>
+>>> We use OPS flags to denote what mm/ services we want to allow on our
+>>> private node.   I've plumbed these through so far:
+>>>
+>>>   NP_OPS_MIGRATION       - Node supports migration
+>>>   NP_OPS_MEMPOLICY       - Node supports mempolicy actions
+>>>   NP_OPS_DEMOTION        - Node appears in demotion target lists
+>>>   NP_OPS_PROTECT_WRITE   - Node memory is read-only (wrprotect)
+>>>   NP_OPS_RECLAIM         - Node supports reclaim
+>>>   NP_OPS_NUMA_BALANCING  - Node supports numa balancing
+>>>   NP_OPS_COMPACTION      - Node supports compaction
+>>>   NP_OPS_LONGTERM_PIN    - Node supports longterm pinning
+>>>   NP_OPS_OOM_ELIGIBLE	 - (MIGRATION | DEMOTION), node is reachable
+>>>                            as normal system ram storage, so it should
+>>> 			   be considered in OOM pressure calculations.
+>>
+>> I have to think about all that, and whether that would be required as a
+>> first step. I'd assume in a simplistic use case mentioned above we might
+>> only forbid the memory to be used as a fallback for any oom etc.
+>>
+>> Whether reclaim (e.g., swapout) makes sense is a good question.
+>>
+> 
+> I would simply state: "That depends on the memory device"
+
+Let's keep it very simple: just some memory that you mbind(), and you
+only want the mbind() user to make use of that memory.
+
+What would be the minimal set of hooks to guarantee that.
+
+For example, I assume compaction could just be supported for such
+memory? Similarly, longterm-pinning.
+
+For some of the other hooks it's rather unclear how they would affect
+the very simple mbind() rule. What is the effect of demotion or NUMA
+balancing?
+
+I'm afraid we're making things too complicated here or it might be the
+wrong abstraction, if i cannot even figure out how to make the simplest
+use case work.
+
+Maybe I'm wrong :)
+
+> 
+> Which is kind of the point.  The ability to isolate and poke holes in
+> that isolation explictly, while using the same mm/ code, creates a new
+> design space we haven't had before.
+> 
+> ---
+> 
+> I think it would be fair to say all of these would not be required for
+> an MVP interface, and should require a use case to merge.  But the code
+> is here because I wanted to explore just how far it can go.
+
+That's absolutely fair. :)
+
+-- 
+Cheers,
+
+David
