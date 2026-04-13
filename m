@@ -1,155 +1,192 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010014.outbound.protection.outlook.com [52.101.61.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE703CD8DE
-	for <linux-cxl@vger.kernel.org>; Mon, 13 Apr 2026 13:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776088604; cv=none; b=UJ74TMUwoOD7td/Ika6EANWmvggFB80JuponeSGGPbdRWUG0pHCci8QxmgJ1vVoZkL60ARY/JmOakww1901YiDxeOcDb6BbxGUWtBLFNUxmx/q+bDIO0y27NWbW0/htrKysN//v3tH7JwjW3tzxbs3aRRvoWW7mhMvTjnS2lTXE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776088604; c=relaxed/simple;
-	bh=Hpvv+IN2EELEEcnD5YwW84ys/b/L7dP7YW1BRzo/t8U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F9QDNXgFpgIFOCcTfizu14un2fFMENFLrmHvGmR/Okr38C1Yj+Yj6+2SS5MTyZqv2ubewwFSSsp/8slR2eGQILT6gaAIS7POOcaYQglJB4gVOo23SpaBuM2uNH89Q/8ratGiFgjWAvmBmRMGFTB8JObxI+PZFmxbAtl0PVnH1jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kVhPRJuD; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D3E334681;
+	Mon, 13 Apr 2026 14:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776090314; cv=fail; b=WWQkDRvq4b/tKziMICjOmSzaM1BB6AeuzXKpVbTTf9Jsa/j6Bd9ozyhcZwFbMFDJlf2f2WrRYIZX8kuG4mtSiheu9SouIzvGmWmhZ2IRSGn5sQe+WeCGThwYLi2v789gY3pLVFX2me+y0hYUUIyI0twqnNq0fJtWZ+KO1zK3N18=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776090314; c=relaxed/simple;
+	bh=EqzALhc/zKcj2Ja13H0+bq4j7tOsPRS/ZilmtKH1o6s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=iGfEVwYlMwn+WZ5jmZFNt/RN2KNFKK/xPc4toACVhQR2rYD6S2Q1my7NSEnFuW7cBwLsRWwSWXXoezYCWX4Un/OiGS+EbZKj/51tHxDALnGaGLdgcjw3TFy3BpJDYcLUKO/RJcqwa+4TfTGx+K9ukPQMm27sj9bYDHuux0xA4n8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BNjePtpz; arc=fail smtp.client-ip=52.101.61.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVhPRJuD"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-35fc2b18363so133074a91.0
-        for <linux-cxl@vger.kernel.org>; Mon, 13 Apr 2026 06:56:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776088602; x=1776693402; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IwI7fhoIYuDnAceYOXsnx6dLQgMpnwbjObgo8mwaSj4=;
-        b=kVhPRJuDq7yFzsHSk2U9Vb5efnwz6LzIgQSv9kE4LTe1GsvjMdpKz89Hg2pDWkHXdA
-         sTTYSQBzdsv8N8HXDedTb7q159RjfBKKZ+cI/rKMSZFhIUpEnPYkL9G8CU4arhq7KEg+
-         dZc7njBroO+FiLHvMYTi8tldCTI8JZ1aShsHXodD52bzww56ToamtqpCbd9dG1AXTa9m
-         dDhTwzF6veIMjzpK6rhqDnIRMglcz7bLvOYijIXdZSVFcpOhk539mR4qS5BzQ/tqrWoS
-         g5Pwi8W85anYs6EdOymUqRBLNFH443TSmQ+xkDrBSM+CBlcA9x86Osg0OVa88qZ7EdHR
-         28JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776088602; x=1776693402;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IwI7fhoIYuDnAceYOXsnx6dLQgMpnwbjObgo8mwaSj4=;
-        b=MY25fa44OskFGVCtnjiWbGDLRGzqWzOa9pS9h9AIIQ6ZKLPFwqNxLytX4OebRClYxi
-         vhmVsd0uQmeOWkwuVb1OvukF4uKnXyqFrad6Np1fqNPUuYrlMn2eY7c8QACh+QSExnBn
-         GaCbZNm0KShyyT24a9AhzL9RCwWrfqa4N2S46+yF9uG5Uv0cEaHJJdAOaDbllX4mOAJH
-         7QFVOW2rJ9C6Zer8Pe8o//tzvDpls/GMntS/PDqLq6uMvresgFlKuV3E6RqFfZ9d/J+J
-         rLezJS61U3mh4g8s2vhTu9A6T+2JzebPw1rD1KhxJQbojhs/vJbnL2TK4/1N4dtQDyX5
-         xuUA==
-X-Forwarded-Encrypted: i=1; AFNElJ+vhWRiOaffsnOPyDoyvC2N9b0y6Q1Ldrir3k2XRXrtb5EosC/8zfUW0OqMVVfDMYmxbtzEIxUKqkA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqvW79ZqBKbypLHedTMfTh8bHM3acxVmk4xzXCyEO/YFNpkBq0
-	XFRZaY/X+0tI0kO9ePO8gPRwTJuDgjPv9dDxeVMuHdCj3bTHWFaC4Bx8
-X-Gm-Gg: AeBDievB/khhQJ+SsXqd12X0gF0j9QJRr++YYzlyKYb7xVzz10W9Ezlp1za1pYlT1re
-	ImxKaVNtUR3Jvl08z+EtOI0vRM5vN7V57UM22tIy4pA3dFX69+BW+QO+L66SnjLxzE7RlUxZ2Ou
-	MFc8n5s4+wzdnwUOFKJZ9G/PQw5fHo/jucUi1o+2SHlfe2lk6hKbFWs9Kq42AXe6fsYcL4+bUBE
-	xtUhQ9cWJ03PFKoA2lslBbYZu3F8mplb4nEtKkgTYuH3DcJUkWnfRyXuztYpY49t9D4l0TJqI9P
-	unepk++/jD371OBfNFLvZA2xhlkVAL7smHiaN/mIStJoki0+F9Yp3jX7y/H7N2cXsDdzGv4TK9b
-	E6FJzHakkgUqfeepOE2IXfgI77vF6kCkfUt1RH7FO2hvQaXp6U0M7A1Zi5vo5Ig7x6+K5cBh5m4
-	O3sGhNxhbRb63NVmzq+foDluHm4B8pxWI=
-X-Received: by 2002:a17:902:b698:b0:2b2:aa93:cc5f with SMTP id d9443c01a7336-2b2d597609dmr100423715ad.10.1776088602230;
-        Mon, 13 Apr 2026 06:56:42 -0700 (PDT)
-Received: from lgs.. ([2409:893d:1188:142d:6c67:74e8:5200:1f39])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b468273ccfsm12585665ad.43.2026.04.13.06.56.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2026 06:56:41 -0700 (PDT)
-From: Guangshuo Li <lgs201920130244@gmail.com>
-To: Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Guangshuo Li <lgs201920130244@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] device-dax: Fix refcount leak in __devm_create_dev_dax() error path
-Date: Mon, 13 Apr 2026 21:56:25 +0800
-Message-ID: <20260413135625.2890908-1-lgs201920130244@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BNjePtpz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nHq5vLH38pk55fnRw5ecqcYh4Cy/Zl0/Gy7S/w5w+q027VVv6PRgYeObUg+q/Uh5TtOY9dpCco29OaST4BFiXq4ETo1tzoOYdurrMGJ8x0Q/P5Bc+UXS0b8WJ+Z3qOcBQ+c0UW+xNzBd6waZ4N8T/o8CuCgNzpHwo79LU8jn7Nblf5nxWj5Q/+lzQIioqNkH6xq7j2YzrsV+Trkmb89/nn4PnNwdOJIZjfDVH0Nrdihv812sXIRU50s3qQVaRwHUq0wzYAgaEZK+C2whHh8uEI530ddKwWCB70iIfJbkA956VBaK1ll/DHrysb9v/LkUKJwHxk4DD8Gh4QjTFsxaQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SHHCaydMWSXvFmKU3EOLnDCGPlKq4E5Xs2TMCVogVjE=;
+ b=o40N2M8p/+YMehGy8s4Ol/BxYE9fqCdlZZQmEjaBqlWsSJF9RsBlKeTEQeH1T3v9oKHGn1oTtyyf1CPtNv4uJcHp+jZjNfG1OsrYwlCVCx1cyI4RDvQHSi1BxOXklwX/6vE0h39J3RhBkeApudyfnWoYYEzOskuS1H+Q4W/eVO9RJoVTXHpbTJUdy3MG1pSAcKqHPZ5iW/fQ4dhhhZsc3VOcUOFFPaIjTT6WGkHGXEPcNryuJvH9d/jUyVj9H/tmvwBXdG0wUOvkx8bk6t1VOouNRtMQS9zu61MMjtW54DLBH9QYdhbwZBqt5HuoMkXuhrFDtwYvbYuGVwvbAlC1AQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SHHCaydMWSXvFmKU3EOLnDCGPlKq4E5Xs2TMCVogVjE=;
+ b=BNjePtpz26RVux1774yOdbvDbdfaa3/inaFB/HTXdTnDAumKGZk5tszXlZMGgDS/jhIQwBfQo9Td7sSLSUlgUVjQe0c4qL5U2PKp+xImugASHpYl4Pvur0hL0faMeXJT6Ebw+n5kt8Hp4nHyTRmIcepVxh+yA2vQYSq/c4aAGHg=
+Received: from SN7PR04CA0071.namprd04.prod.outlook.com (2603:10b6:806:121::16)
+ by CH2PR12MB4150.namprd12.prod.outlook.com (2603:10b6:610:a6::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.20; Mon, 13 Apr
+ 2026 14:25:10 +0000
+Received: from SA2PEPF000015CD.namprd03.prod.outlook.com
+ (2603:10b6:806:121:cafe::d4) by SN7PR04CA0071.outlook.office365.com
+ (2603:10b6:806:121::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9769.48 via Frontend Transport; Mon,
+ 13 Apr 2026 14:25:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SA2PEPF000015CD.mail.protection.outlook.com (10.167.241.203) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9769.17 via Frontend Transport; Mon, 13 Apr 2026 14:25:10 +0000
+Received: from [10.254.59.95] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.17; Mon, 13 Apr
+ 2026 09:25:08 -0500
+Message-ID: <c5487f86-f9ed-4d54-b420-4ef451be558e@amd.com>
+Date: Mon, 13 Apr 2026 09:25:02 -0500
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 4/4] cxl/region: Introduce cxl_memdev_attach_region
+To: Dan Williams <djbw@kernel.org>, <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<alejandro.lucero-palau@amd.com>, <lukas@wunner.de>
+References: <20260403210050.1058650-1-dan.j.williams@intel.com>
+ <20260403210050.1058650-5-dan.j.williams@intel.com>
+ <59f69b87-e37e-44c7-8c15-c332118622b5@amd.com>
+ <69dad30a614d7_fdcb41008c@djbw-dev.notmuch>
+Content-Language: en-US
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+In-Reply-To: <69dad30a614d7_fdcb41008c@djbw-dev.notmuch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015CD:EE_|CH2PR12MB4150:EE_
+X-MS-Office365-Filtering-Correlation-Id: a15b70f5-fde0-4bc4-7f6b-08de99687810
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700016|1800799024|376014|82310400026|22082099003|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	xM3uk1JAMT08t9rnilIHc/c+eOM4zCMyBrb26INniqSIMbXNjY++dj8SkRN2G+D2sk0VGzu+DGkimu6xKPsVawI4t1RF4A/gmSKGVTP73jYWcQBkDsueo1sAadE/HWZai/rtmZKUFbjnbbqgy35KQmnH91RsNo+jwlPNmA3rVcXCf7DDk6vdDjO9vfpsllWy28qqo21U7VUjIstUlisjUtos7VWs87TXWrlLtNtrEkoXQxre9Sc7WwP/0Bdsmx69h7KUYclCYKm3y8LF/iRYHuipTo/CMMOrKySs4IblFkIJsg5R3pY9DXuhm+qlS+9qG7PVVdRMBVgH+a6X7oeu5OmrcYFQeVWGBWi5DP21Ncj0sIqNeYEwpkV7qYbOXw6YZRZd5rTiUZiTMOgxcStuOBVRHF1wVjR4bsJynRRfWbZ9RKGHZexY6TejcAUppiX4/wz5WJ14XViNmdXInVoBFvPDwILZLAYXw6SMLnRi7HIMCYFeI6zsfg79aWSDBrDbaRuFY6qlkkhnL9anM56Xgy/ZYZqaqXp5Csx3Hk1XhUMc4Rr/A4zOcgUxUG2CJ9O8fEglZWX3kNdqY4Vymq/eDD3hWhRpa22ABF6OiiZICQQ5KNZveZR2ViSod7sNtOTaEY8oBoNHLxyyvHoMaa9EsTfOER/RMtjrJ84z2kkW6BuJCP4RdBYTdgF9dJJb5ZWcpTjS1RudHsqdW46FrrKLxBGdCnIEWNJGWONvNd6Myjr9lD4H+hDTK2S9PWq8COwAlhxHXUjj0TWoobZs36zZZg==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(1800799024)(376014)(82310400026)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	OpzA7sWIg2RzDjONV5xPvX0z+q9mpIziD42CNlqxTJtvqKqppWwltHdVwNQ0EKzbHkiYRKffLX7PeSPSR3PrdDuiG14CKP+MzxsQlt9MEno1Jr5taZD1R1+6fa8+VYEHTHhWUj4pcOFiueFZjBC883bIqofDJulKMQHzP4pdmUmFHm6xcSBVRrGng+AfFS1TDMd3gqS+ZaeCrTLqWYOvWE3v/wrNhJsmxsOdRFLeMyyR20y7QVSliPRIwqHYeQEYjq2w2nRtdfhoRZhmSuWla2bKc0BP70rElcekKi7yTSinfapSAsvrlE+W01Avv48s61e7Oo/KlNo7eu/OUXnZIgR3dDa9ykpw2J6DaGIMtohWE1dJwr8lcHiquhpQrmPLcnOVKHaeiaAAYuR3agAacjf/WPvnq+9I7woFGsy4wUR20GsIoGxmqV2q6ff+Aa0v
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2026 14:25:10.2531
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a15b70f5-fde0-4bc4-7f6b-08de99687810
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF000015CD.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4150
 
-After device_initialize(), the embedded struct device in dev_dax is
-expected to be released through the device core with put_device().
+On 4/11/2026 6:02 PM, Dan Williams wrote:
 
-In __devm_create_dev_dax(), several failure paths after
-device_initialize() free dev_dax directly instead of dropping the device
-reference, which bypasses the normal device core lifetime handling and
-leaks the reference held on the embedded struct device.
+[snip]
 
-The issue was identified by a static analysis tool I developed and
-confirmed by manual review.
+>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>>> index 11bc0b88b05f..090f52392b20 100644
+>>> --- a/drivers/cxl/core/region.c
+>>> +++ b/drivers/cxl/core/region.c
+>>> @@ -1123,6 +1123,19 @@ static int cxl_rr_assign_decoder(struct cxl_port *port, struct cxl_region *cxlr,
+>>>  static void cxl_region_setup_flags(struct cxl_region *cxlr,
+>>>                                struct cxl_decoder *cxld)
+>>>  {
+>>> +   if (is_endpoint_decoder(&cxld->dev)) {
+>>> +           struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(&cxld->dev);
+>>> +           struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+>>> +
+>>> +           /*
+>>> +            * When a region's memdevs specify an @attach method the attach
+>>> +            * provider is responsible for dispositioning the region for
+>>> +            * both probe and userspace management
+>>> +            */
+>>> +           if (cxlmd->attach)
+>>> +                   set_bit(CXL_REGION_F_LOCK, &cxlr->flags);
+>>> +   }
+>>> +
+>>
+>> It seems unfortunate that you set the region lock bit here and then
+>> immediately do a check to set the bit again.
+> 
+> There are 2 different cases to lock the region here, presence of attach, or
+> presence of hardware locked decoder.
+> 
+>> I can't think of a way to leverage cxld->flags for type 2 in an
+>> ergonomic way though, so I guess it's fine.
+> 
+> The flags are just caching hardware state, I do not want to have drivers
+> play games with the flags that dilute that "cached hardware value"
+> meaning.
+> 
 
-Fix this by assigning dev->type before device_initialize(), so the
-release callback is available, use put_device() in the
-post-initialization error paths, and keep dev_dax range cleanup explicit
-since it is not handled by dev_dax_release().
+Didn't realize that, makes sense.
 
-Fixes: c2f3011ee697f ("device-dax: add an allocation interface for device-dax instances")
-Cc: stable@vger.kernel.org
-Signed-off-by: Guangshuo Li <lgs201920130244@gmail.com>
----
-v3:
-  - note that the issue was identified by my static analysis tool
-  - and confirmed by manual review
+> [..]
+>>> +/*
+>>> + * The presence of an attach method indicates that the region is designated for
+>>> + * a purpose outside of CXL core memory expansion defaults.
+>>> + */
+>>> +static bool cxl_region_has_memdev_attach(struct cxl_region *cxlr)
+>>> +{
+>>
+>> I think this should be renamed to something like "cxl_region_is_private()"; it
+>> better matches the intended use of the function while lessening the burden on
+>> a non-type 2 educated reader. Also has the added benefit of being one less
+>> change site if the mechanism for determining if a region belongs to an accelerator
+>> changes in the future.
+> 
+> Why does the CXL core naming need to cater to accelerator vs expansion
+> use case naming?  CXL core developer needs to understand all the use
+> cases and wants to make them unified as much as possible.
 
-v2:
-  - clarify the commit message around the device reference leak
-  - drop the unsupported use-after-free claim
-  - set dev->type before device_initialize() so put_device() can use the
-    release callback on post-init failures
-  - simplify the post-initialization error paths to use explicit range
-    cleanup plus put_device()
+It doesn't. I agree that developers that are going to touch this code should
+understand all the use cases but the naming here doesn't accurately convey
+the intended use case. memdev_attach is only used by accelerator drivers, so
+this function is checking the device type/driver.
 
- drivers/dax/bus.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+That does somewhat go against unifying the use cases but the use cases
+definitely do diverge here. It's really more about clearly delineating where
+the cases diverge to someone who is less knowledgeable about accelerators
+(which is most people in my experience).
 
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index fde29e0ad68b..2d92674d0d6e 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -1453,6 +1453,7 @@ static struct dev_dax *__devm_create_dev_dax(struct dev_dax_data *data)
- 	}
- 
- 	dev = &dev_dax->dev;
-+	dev->type = &dev_dax_type;
- 	device_initialize(dev);
- 	dev_set_name(dev, "dax%d.%d", dax_region->id, dev_dax->id);
- 
-@@ -1499,7 +1500,6 @@ static struct dev_dax *__devm_create_dev_dax(struct dev_dax_data *data)
- 	dev->devt = inode->i_rdev;
- 	dev->bus = &dax_bus_type;
- 	dev->parent = parent;
--	dev->type = &dev_dax_type;
- 
- 	rc = device_add(dev);
- 	if (rc) {
-@@ -1522,14 +1522,13 @@ static struct dev_dax *__devm_create_dev_dax(struct dev_dax_data *data)
- 	return dev_dax;
- 
- err_alloc_dax:
--	kfree(dev_dax->pgmap);
- err_pgmap:
- 	free_dev_dax_ranges(dev_dax);
- err_range:
--	free_dev_dax_id(dev_dax);
-+	put_device(dev);
-+	return ERR_PTR(rc);
- err_id:
- 	kfree(dev_dax);
--
- 	return ERR_PTR(rc);
- }
- 
--- 
-2.43.0
+> "cxl_region_is_private()" says nothing about what "private" means and
+> where to look next. It also muddies the namespace for when CXL regions
+> start becoming the backing store for "private" nodes. Is that a
+> "private" region?
+
+Bad naming suggestion on my part, I forgot about the private nodes set.
+I was about to suggest changing it to "cxl_region_is_reserved()" but that's
+an even more overloaded term :/. Going along the lines of what I said above,
+maybe something like "cxl_region_reserved_by_acclerator()"? Kind of long, but
+gets to the point.
+
+Thanks,
+Ben
 
