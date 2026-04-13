@@ -1,129 +1,110 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552CF3E314F
-	for <linux-cxl@vger.kernel.org>; Mon, 13 Apr 2026 19:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E463E51D2
+	for <linux-cxl@vger.kernel.org>; Mon, 13 Apr 2026 19:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776109304; cv=none; b=DEx4cc3Zs180WD5J+wq5Tyxz+dm7g9J9godjlkIaBM92Om+q8dPXTwCBi1dzdZEBe8+xnBxheuSVR8nRbNKekv3Vgec4swo9aNQdJWKAJ9PDB5Bn646+AcAEz189MQJzrfm2M1kVGb4WkPVzJ4r7t7ge0xSfn6oWQwT63IVdVzE=
+	t=1776110360; cv=none; b=U74wkFsrSIufggG+tDoGFzpkH/4RXQRmXUrcPRSFjwjgK5v3tePZ5+qjQg8CD3S4oQmdQ5pWzL78jHAFmf3Gjy+vB3UFTAZY3FitTaKBILSU+Vz9JyUp8eXgA9jLqegK5qWQqyV30N1TH4p9yo5nocay60b/KobxMx6AbOlw/Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776109304; c=relaxed/simple;
-	bh=6hRiNGqvtOWKux9ylwRAer4046Lz3jBPnR8zW37UMoA=;
+	s=arc-20240116; t=1776110360; c=relaxed/simple;
+	bh=dkvR6+DO0Np/gQd4zUN6ufz3HgdPmilT+Y3eAl7ElY0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OyN0rvyaL42ByoupZqxUqL1ZswXnYYUVz+vyRpeVojYiOhn2rB6SFqOBLQe741WOFTwC/5aAysmVvHqk6KljasVokXM6/Sat8xv8oOpoNZPoJwInLX2i9weLMhshwT0vSaQMqwa4Sz7krKFJbj6Z24TLH1eXbkoimqlb7/QEPts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=FRo9LgiE; arc=none smtp.client-ip=209.85.222.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=ie4NFOpo+OfUPmpdI28D0/H8Ty4E3SVsnFh8i2tyMkyzIz05uwwINxflbBCiKT1N1vbmHnGiz6mimM044eTtXvrd29C5Cuy2irrFrUjpU92lnzjR+SqO7y5nltBC/bcBs4CA4XC4FmsjmM7+Iyg+tojVIXzIfUu7QDV+hiNAkTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Mai9XVu/; arc=none smtp.client-ip=209.85.222.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="FRo9LgiE"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-8cb38e86cf2so434637385a.1
-        for <linux-cxl@vger.kernel.org>; Mon, 13 Apr 2026 12:41:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Mai9XVu/"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-8cfc3ca1922so446543585a.1
+        for <linux-cxl@vger.kernel.org>; Mon, 13 Apr 2026 12:59:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1776109302; x=1776714102; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ANyztBlS8ASp9MHR198GNmIsfqkyGsWGhTyu9QD8TKg=;
-        b=FRo9LgiES7NQwMR9ULvyVcTSS3IjJAqLCF3Kp3xZyVjvoNFVwZoiNn4FWXvLif03UM
-         iFdFl4XBFQHMbtQRyHas5Q3MS9qTIb+uwMhl2+xm1WCgkYynQhkNuDjUbrAtA3y+Rcr5
-         YvWxZlyrbgP5Dj7aS9U6c931SPItYy5qxXgf4xlgy9x2UzKnfeqvnl713wD9jWmSrIj+
-         gRMHZ6LGMO9l2iVKL++u3FuG7o6ZvMVdADsPBbWBFqiVlj1XAbAPLgfcriccqgjF/bIi
-         WBiWzRtPeZKR4OiB46Wk6bfqWTrA6J/boX5wa2xnmJxzYocLwIADIpkRo5Tj3PxiKUQN
-         /+oA==
+        d=gourry.net; s=google; t=1776110357; x=1776715157; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1azq21Esoe1p/aY/WIwRSLCrXwL5NJKdtQZKDmxglNA=;
+        b=Mai9XVu/wyzHrkYnCEtLPCXb9Yf8JoGTb6DdvjUgtGRZdyljYJhCCBTHZTPLzyt2bv
+         hU1vwOi2HqMhs8Pcy5a85CZ4V9BV9tt+hP2ADB56Pr4C0pBVY6HtWKI527i0YEhDclBh
+         RsVGL/wnvBg1TnEKWhY0/xviuqm62d7+CQMTU9usro+NMKwBl+UtDicfSA3VxnPSTYWc
+         gtivuqNrco4UPNd2XNV59LFkDZcKFJvzMU4p/cGj1Cimy7KUv4oiBPZZHOdxvzL9ON98
+         p71HiFfEOb/sezev6JZ6PFfAaXR8ioTPI1ITsBliz7LwcKXR2eBDfG2kD4pQg4+io+7J
+         OysQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776109302; x=1776714102;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ANyztBlS8ASp9MHR198GNmIsfqkyGsWGhTyu9QD8TKg=;
-        b=ssKF8Fxbb7d0AcdFlu3bvULgvvAbufHvaGo9aWEGbtQhpKTnSPgfao24X2tk/2tI8o
-         eMLbdlz/kIEebiSzYguqeCg91PCxUzBfCcF/+pQ+Ig4n9SR1QOwAZAmKJCKxQeRCbMiU
-         jns8zsJ1ZQUVWFFFi+YUz9qG+nPTQbsrBBHy6bV0TJvQeeNMjOSnau4pUcXPfS4xEpNY
-         1NIvd4FhTtOaeE0gx+3EX+EtW5CmE+q4wq8unoJqnLWN4bWKd8cdi6Pecl5KDlIlP6wq
-         JPjppL20CynLgD/9XM9fmhHKQ1elPISdBVq1UEUvvNUVz1Ra0uw4Zh+41fEmeyNmOtdY
-         +Dew==
-X-Forwarded-Encrypted: i=1; AFNElJ9Ypqrucgu/+VPEvGA1LDw92+KUfHKrZ5FrP9ZCpbDpf34aHJDDmTR9tvdrHzUlph5BY9AEufNKMwE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQitZV8mIwoTGvsyuDoWQWX76dYGVN0NunKHi2S4jZa4K1VKz8
-	DGwB+CClMzAwEJvZWJnXwN9v7fa3ut7GiUHuAXaHbTvomFIpOzAQDc8r5VIZQeHNtJo=
-X-Gm-Gg: AeBDiesOF1fdgUBtCLs+49ovhBFhEpzz/cswHyY/nhyWh2le4ATBWRVrereqpWEEreK
-	rzybSajkw8hxDtXfsNbqBHBpNh09ZBwnE3tMu2SPgbE4Kr6CPrgyk4v2TgFj5G3cR7L5gWLoNts
-	58AyCLFBYZx1wuVgg8hUXKy4sjibDEg2ZbSAex2uqeo1IMnClET3+qAf/CSNh5rs1ldt+8PUcVq
-	jxdz3hjtGj4ptkHzUYLb2WxCS2grrDSQSU6asZWdlgtULfde75cwa1Bk+ZMpM8JxPuqfZRJKW/e
-	MolcuOmTTToviTjZRonj8FZ11KwZxwQsvduu4cekDUkrPFf4L5MgEaEBnCGKdmh5YzpjdY/VluM
-	srl6MM7TDJycNgQyDH34I8H33EbxqlZpnulP6zEVSecNGQwGQoLHnZ84zqf3C+5PzZFfal1CNAu
-	Tl74ptR1cqzyPtjn29/j4HKEBtx6UoBaIJdt7TNWdtG8QtEisd7w8RCKdZSFjempQnNFy0S9Ftv
-	MsXFqEi24eAZDtL00zNXl4rcGrrJyGYdg==
-X-Received: by 2002:a05:620a:440c:b0:8cd:8320:3359 with SMTP id af79cd13be357-8ddcd024831mr2080049985a.9.1776109302203;
-        Mon, 13 Apr 2026 12:41:42 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1776110357; x=1776715157;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1azq21Esoe1p/aY/WIwRSLCrXwL5NJKdtQZKDmxglNA=;
+        b=HpkLK0uOxuV/iev6ip++s2UJtsCgbksZIsPUNmWG6Z9av2+exYUMzd9gTWZKR+o7+v
+         wQQWpCFxKXBYgo2o+1KMY+U8eUkxqXHOX9Lxc7wCISQG7n7ZyX2q16UfBFdCpEtsCNMh
+         Bv8gckMTj4D3MHyMv5RGCinbnyYrXKdLaNW0+jMirU5qs6O07vkfSC3R/ssfAWpqvdOX
+         gL6yapRhZnlz4f61jiprRHZIsqntneQHBuf53rnAmhFqakLLkL4Ll/M2zn3Yh9lci5Bi
+         Ria7Zfm50th5dAXFl0Oa1ERsRmPKMWNX7PcGBtG+iyXQHI3FDKEctBRhglnW+ZbC3QgX
+         iYkg==
+X-Forwarded-Encrypted: i=1; AFNElJ/68WX80GtCQwBC/c0W2l4XNsKqDBlWwGYemZkJqZ0tHmghTelM7MbBgrVwtPNXB3/0C2vw1avT/PU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn2DfG9GCbPgdFkFHMTZbiPPK4zaIpftIeeTTUNNFcPsaDztPE
+	nnz4+7UOylSc6APT5QTGRziNlM5B079o2hJqBfV4z+y4la6LW9bJCMf0nRikmYAx/RM=
+X-Gm-Gg: AeBDievv4KHcdoQtmz6Ws7QY26Sj5xhxluOWNfZqUVVi7AhLdHSA0yXE2ssXxlzIIGl
+	B81fvuDx3LKXSfdzCcpmu1Zk5EcBvQzfuGr9dyIZLQBqdsPorbYeywXlgfZdm95yNyGBvH8wQVI
+	TxswglmjGXp7EKJRQQkuuOhq6Z/XbMnDbeEWaGSqNLnl5ZNB9hef2jC3vO/9P2eUb1kipubuJWN
+	pnNZ/oW3xGQgdh59/GhwA2Kl9A61MT8hXybewWEEHfIvw+V/aXWvVa+jQLz4txxtjN6ZGpZ8a99
+	IWOzo4v5+b6S/v+glIxfkI63wIu/CIREmnAueKRFqO052sbrlKgOUjF63aEiLvfSPlKOC1nirzv
+	hJNf1sz6gOlBg3/K99D2aIrHwYZ2a2TukpvmB2UbRDi/W5cf5TxnhQZfl0yWEVZSIs6lP+2papM
+	SdcFnxZByes0akXA29F4bLKb+KHrZped+LPgid6gDIzTnX+Lbu+ryb5V45VAJPPqowXqZm9Qpjz
+	L0EfrO3vsoC9Iw3SS57A53wqHwrZyetWg==
+X-Received: by 2002:a05:620a:44ce:b0:8d8:9434:9379 with SMTP id af79cd13be357-8dc444ad8d1mr2489658185a.18.1776110357176;
+        Mon, 13 Apr 2026 12:59:17 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-71-191-243-150.washdc.fios.verizon.net. [71.191.243.150])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8ddb5f88c82sm901067685a.2.2026.04.13.12.41.41
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8aca259724csm53270746d6.12.2026.04.13.12.59.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Apr 2026 12:41:41 -0700 (PDT)
-Date: Mon, 13 Apr 2026 15:41:39 -0400
+        Mon, 13 Apr 2026 12:59:16 -0700 (PDT)
+Date: Mon, 13 Apr 2026 15:59:14 -0400
 From: Gregory Price <gourry@gourry.net>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: linux-mm@kvack.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-	akpm@linux-foundation.org, osalvador@suse.de,
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+	vishal.l.verma@intel.com, dave.jiang@intel.com, osalvador@suse.de,
 	dan.j.williams@intel.com, ljs@kernel.org, Liam.Howlett@oracle.com,
 	vbabka@kernel.org, rppt@kernel.org, surenb@google.com,
 	mhocko@suse.com, linux-kernel@vger.kernel.org,
 	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
 	kernel-team@meta.com
-Subject: Re: [PATCH 1/8] mm/memory-tiers: consolidate memory type dedup into
- mt_get_memory_type()
-Message-ID: <ad1G84KdvOmKSRNM@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH 0/8] dax/kmem: atomic whole-device hotplug via sysfs
+Message-ID: <ad1LEgvfwzgvvWPO@gourry-fedora-PF4VCD3F>
 References: <20260321150404.3288786-1-gourry@gourry.net>
- <20260321150404.3288786-2-gourry@gourry.net>
- <e0e48659-8ce1-496d-8b5a-f6d4416f2ea0@kernel.org>
+ <20260321104021.4a6074330131a2058e8706bd@linux-foundation.org>
+ <ab7_AVLgzLaDRcv5@gourry-fedora-PF4VCD3F>
+ <a4be48f2-ab0a-4808-a7db-2532ec65ad0b@kernel.org>
+ <ad1GJRyAfIAhj1iz@gourry-fedora-PF4VCD3F>
+ <478c5700-8bf5-42b9-ad71-bbc618b36c9c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e0e48659-8ce1-496d-8b5a-f6d4416f2ea0@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <478c5700-8bf5-42b9-ad71-bbc618b36c9c@kernel.org>
 
-On Mon, Apr 13, 2026 at 05:06:35PM +0200, David Hildenbrand (Arm) wrote:
-> On 3/21/26 16:03, Gregory Price wrote:
-> > Replace per-driver memory type list infrastructure with a single
-> > mt_get_memory_type(adist) that deduplicates against the global
-> > default_memory_types list under memory_tier_lock.
+On Mon, Apr 13, 2026 at 09:40:49PM +0200, David Hildenbrand (Arm) wrote:
 > > 
-> > The per-driver lists (mutex + list_head + find/put wrappers) provided
-> > dedup within a single driver, but not across drivers or with the core.
-> > Since the number of distinct adist values is bounded and types on
-> > default_memory_types are never freed anyway, the per-driver cleanup
-> > on module unload was not useful.
-> > 
-> > Add MEMTIER_DEFAULT_LOWTIER_ADISTANCE to replace the default DAX
-> > adistance, since it was really used as a standin for all kmem hotplugged
-> > memory.  This at least makes the default tier relationship clearer to
-> > other drivers and they can see where to put their memory in relation to
-> > the default lower tier.
+> > I don't think this is a very large lift, just a slightly larger hotplug
+> > locking scope.  But then - the per-range thing in this set should just
+> > work, so let me know if it's worth the extra churn.
 > 
-> Very confusing code.
-> 
-> What's the purpose of kref_get/kref_put if "the types on
-> default_memory_types are never freed anyway" ?
+> Well, you can rather cleanly undo the operation if any offlining fails.
+> If that's not a requirement, then no need to change it!
 > 
 
-Mostly trying to retain existing functionality rather than delete it.
+It's not a requirement for me, but maybe it makes sense that
 
-I think the entire memory_type() infrastructure in memory-tiers.c is
-generally very confusing and of dubious value - but i don't know who
-out there still depends on it.
+   echo unplug > dax0.0/hotplug
 
-> IOW, couldn't init_node_memory_type()/clear_node_memory_type() just
-> consume the "adist", and lookup the memory type itself?
-> 
-> All you'd need is some way in the driver to verify that there is a
-> memory type for the given adist, as some kind of prepare step.
-> 
-> Alternatively, let init_node_memory_type() return an error to get a
-> clean interface? :)
-> 
+Either fully succeeds or fully rolls back.  Otherwise `cat hotplug`
+would have to report "¯\_(ツ)_/¯".
 
-tl;dr: yes all of this is true and I will rework it.
+So makes sense, i'll come back around on this.
 
 ~Gregory
