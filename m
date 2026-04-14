@@ -1,174 +1,268 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FDD313558
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Apr 2026 03:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776136411; cv=fail; b=Cp0F6RqW+om+erEtRtha7l+RC4SLGaJEoMLuzrTl8bvC7wBMh5x8t/FzcOb3Q2jBODS+Jlv/21d1C0HgWCLVcGwIVQod6YMxjfszfdnGJ589yBEmjVae7A+igbeg1vsiSS1gfRPowUAxep6hSbcAnw6jp9VZg/FoD0nDRYXq3wM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776136411; c=relaxed/simple;
-	bh=avKPqJSR/CXiNcRejx170X26FrPw6EX4Lz4Yxe5FHAU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IQcvrlDmQmtNpJgnHStIBNRs260FUs1j9MGu0gU5BiO9pqisjoim2MB9r4tPOqEFnqwrsH/zpQIV58yh+rIJIo/yW+gVJoqPASB8A6EwCoUSn9xwHz7kBR/UhRjKYA9FQjw2ym0TdK84O+BwxcdGf/2dwafDLiRSWLybPW1mp88=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jxLvMPHu; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431D531E82F;
+	Tue, 14 Apr 2026 04:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776139722; cv=none; b=Dd57iDuJfFOf4KGAIrfsw560Qsc8tk5yJ9jPaWNfQqwA45hT0Q078cjYItSHEIS02LHx86GOpoivJ/ZvHeGOoQEW25RQFUR9etd4QMY71B/aw9lAk9H7t2pGkX+rrCjnkztyQ+fZ321azoTQvBbv6dumQvcfboYllny7eFJlpYs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776139722; c=relaxed/simple;
+	bh=ARztGMrXZDnZhS58Mi3ctqJrBRRWG54ZaEx1BBLdL4o=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=NlRRaAFzSIEj6hsFwbQ3NwwObBH823Qx1qUb6YH1kmY0Fo88ropYVfKsRKNIZZmkQHehJw7s4SbHftYQMflz1NSAiYz3D+D3ZyROH6tAg/K+NN6jEZ30qjI8xbkRc10xAMQGvG8sdfNciw3k2xmSK2bl6LuMdGgTrASHZsJoeVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dyohq9wz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jxLvMPHu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776136411; x=1807672411;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=avKPqJSR/CXiNcRejx170X26FrPw6EX4Lz4Yxe5FHAU=;
-  b=jxLvMPHuFgqA/E+cDGg0PpYm5ReZrgm39D8BZET152sHL3ez9VMUzbxL
-   SnPb46kV5Zs0duKsx7RLC3mZHzTkC+2Hrbl/NkI4keq4LKgkw9R2OO+Di
-   H1H5gwNg9DcNRmjFsY0VBOqoQR3GT1ANGQY+W4QlMpsi4MwxAdXFi7BPQ
-   K+9WZqrbtPCHbv9Gc3Sh6+f4oW8jyTDV+hxX8+vRhnPnPSt7b7jHGHhQX
-   pjFr3+yLJ6zmbHvPvU8W+ip8U+zag/Oqu2wCGVET4XGaDq2PTQhP1jKvt
-   D/G5eK5yWerkUD1riftFu8pG56QBzME2oqplD+OJ9VpFKcL82HJsaA5o0
-   Q==;
-X-CSE-ConnectionGUID: 0YwdqZiuTMmUDo30meDwqg==
-X-CSE-MsgGUID: YSZwJhmrTLyGnENnB8Hz9g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11758"; a="87782338"
-X-IronPort-AV: E=Sophos;i="6.23,178,1770624000"; 
-   d="scan'208";a="87782338"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2026 20:13:30 -0700
-X-CSE-ConnectionGUID: f9iozjNhTEWI3oRPJigm8A==
-X-CSE-MsgGUID: S88bIGnrRLGNmP8ppgnwIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,178,1770624000"; 
-   d="scan'208";a="227299862"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2026 20:13:30 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Mon, 13 Apr 2026 20:13:29 -0700
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Mon, 13 Apr 2026 20:13:29 -0700
-Received: from CY7PR03CU001.outbound.protection.outlook.com (40.93.198.43) by
- edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Mon, 13 Apr 2026 20:13:28 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fBOkz53pYxGonbRbYt1OwytUU5z3cA6yWUiOI06eshhtkTZQVvXZHko79QNGXSzJYGdKw7yTPGHq2Piv1DU13fQReuAd5dh4HNsDES68d+n8M5P2t158fjMdfrq/KeBpC2ZFGvN+szEQ8WrgBHCFqSSjYg1QfkEqEQsJvXABLv1AYOZP76AYAS/AAW7eg5ZN4wHSu/KHblN0/xPxT13r1h64L2dEhi3E8CrncfXC/qUiBsIA8i7l2o5674aCXObaRHOqi/yqN/+Rw1T5GGDCYrf4nBtHNtXqGvDR9dhdF3m0NeSxzz6vQoRk7xTchaldq4zFpxiTQfrnUaszW7a7Jw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/EHARJr2UrkMZWlUVqV1PMccQ/3cIRdjs2064x4EniA=;
- b=HLVHZ8o6Tg+AoWxAEfBtCBFrTBkvKjjG3jWj0xvdiigzqhByPaLk0T8wvUEICoMAOOKn0MaEf/G+QhFZ4J2F4XxDLsDl4JGNmm1gcvYUFjnPyMpHQhBrds+UU2PycRy+I9+jdjdtMxpmw6dnuyMZeOEJwcKVyVSu+Utt7aj0rD8XVFFLDc11MxGXKeKhesLSgC96ZDdXvECNSxh68v30zI9Cr1HXxL/r92DQ0qZSzXJWZoEKoFYXkjy1sTsus4uphlJvSypJfZ3IojDfK37Ufsr7B2ggIgcBrcKO/xEyOi2NHAew6viahSHq9tANoaVIn58QMb7M3x6/3s+ju/3ItQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by DM4PR11MB5262.namprd11.prod.outlook.com (2603:10b6:5:389::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.20; Tue, 14 Apr
- 2026 03:13:24 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::a195:49d4:38c5:3891%8]) with mapi id 15.20.9818.017; Tue, 14 Apr 2026
- 03:13:24 +0000
-Date: Mon, 13 Apr 2026 20:13:21 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>, Dan Williams
-	<dan.j.williams@intel.com>
-Subject: Re: [ndctl PATCH v2] test/cxl-dax-hmem.sh: validate dax_hmem vs CXL
- collisions
-Message-ID: <ad2w0SrHaeIXz-l3@aschofie-mobl2.lan>
-References: <20260404025123.2967169-1-alison.schofield@intel.com>
- <afd0f7b1-77d9-424e-99d7-d2e4bd75ee79@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <afd0f7b1-77d9-424e-99d7-d2e4bd75ee79@intel.com>
-X-ClientProxiedBy: BYAPR21CA0011.namprd21.prod.outlook.com
- (2603:10b6:a03:114::21) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dyohq9wz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25B2BC2BCB6;
+	Tue, 14 Apr 2026 04:08:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776139722;
+	bh=ARztGMrXZDnZhS58Mi3ctqJrBRRWG54ZaEx1BBLdL4o=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=Dyohq9wz3rm78p93OCsju8nvFU97xmlAwQ+978AI66Jo8aZwDpaxYTqC3hlAU8h9d
+	 BkQPxTa/ytvCkHrZsYzC9wYJt9tZnHET+W6/9gvsjecgaejkk/LztxQK9Vier0IALN
+	 qMPq63pmAGkWqu5knV/oCXO86jmfjqXPX8J9wAXoK+/O1Fy1884c7L7UDG4iGROgDN
+	 /fjuma2wcD2BH656Mn3F1BFt+cwGrxWOdUn82t7Xsnac5ps/ar+M+Uif3FyvB45O7N
+	 n+O2ii8kis84UGOEKgoJ42R0AgX3WTNw5fJVeOeBZ6obMe1UK41CbMta4QJ1XQlq/Z
+	 w+gbk5kOcprVg==
+Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 21C03F40068;
+	Tue, 14 Apr 2026 00:08:40 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-08.internal (MEProxy); Tue, 14 Apr 2026 00:08:40 -0400
+X-ME-Sender: <xms:yL3daTlPLijkkyyUeqBN8wkwuqy56urmDvhxKgAjguSka0_XQGq38g>
+    <xme:yL3daeVIaOXbeAl-Uwt0gM3ouDEbQI4pb0LaEB36bSVDHAv7oEW2evCPd1EjFV-og
+    OZ22RMErIm028LfcCAKk0VoKk3UIUVtlccrwJNnYGh6mXb4YWNqpRc>
+X-ME-Received: <xmr:yL3dafvdpLF-BAPT7cn5WiE20_vsNC2_YG51eQUj8P87zACKPDK5hk2mXOtAIVjgjwLY5DG9qC3LWvijoVL0t-sTgXu4yQLAir8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdegtddufecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefkjghfufggtgfgsehtqhertddttdejnecuhfhrohhmpeffrghnucghihhl
+    lhhirghmshcuoegujhgsfieskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
+    ffkeefgfdutdetjedvhedtgfehiedugedtleduvdfgveejfeetleekgeefteevvdenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegujhgsfidomh
+    gvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudejjedvfedtgeehhedqfeeffeel
+    gedtgeejqdgujhgsfieppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpd
+    hnsggprhgtphhtthhopedvkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhhh
+    ohhnrghpsehnvhhiughirgdrtghomhdprhgtphhtthhopegrlhifihhllhhirghmshhonh
+    esnhhvihguihgrrdgtohhmpdhrtghpthhtohepjhhonhgrthhhrghnrdgtrghmvghrohhn
+    sehhuhgrfigvihdrtghomhdprhgtphhtthhopegurghvvgdrjhhirghnghesihhnthgvlh
+    drtghomhdprhgtphhtthhopegrlhgvjhgrnhgurhhordhluhgtvghrohdqphgrlhgruhes
+    rghmugdrtghomhdprhgtphhtthhopegurghvvgesshhtghholhgrsghsrdhnvghtpdhrtg
+    hpthhtoheprghlihhsohhnrdhstghhohhfihgvlhgusehinhhtvghlrdgtohhmpdhrtghp
+    thhtohepvhhishhhrghlrdhlrdhvvghrmhgrsehinhhtvghlrdgtohhmpdhrtghpthhtoh
+    epihhrrgdrfigvihhnhiesihhnthgvlhdrtghomh
+X-ME-Proxy: <xmx:yL3daZoPt19xMCkTzTGKRk_mwfO_w48S877__1iFm33JImopiaucZw>
+    <xmx:yL3dac7hmyRmCWkUFRm2Tzwzk6a8ERCWLyo6BT37jM8DpRZ8la669A>
+    <xmx:yL3dafGLSa6YEnLjP9AgjdcN-7cmixRl8tE9AIziXKwhf67Arwo54Q>
+    <xmx:yL3dab4F8i0WdrfAGtb2k1y0ewrlagFn9jlS7nu-YWX9fe3_RvhXLw>
+    <xmx:yL3daaipqIzMz0E5AjryKYmXQEEbUcsHZpgOlJjRohm2ieM3O1EFub0U>
+Feedback-ID: i67ae4b3e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 14 Apr 2026 00:08:39 -0400 (EDT)
+Date: Mon, 13 Apr 2026 21:08:38 -0700
+From: Dan Williams <djbw@kernel.org>
+To: mhonap@nvidia.com, 
+ alwilliamson@nvidia.com, 
+ jonathan.cameron@huawei.com, 
+ dave.jiang@intel.com, 
+ alejandro.lucero-palau@amd.com, 
+ dave@stgolabs.net, 
+ alison.schofield@intel.com, 
+ vishal.l.verma@intel.com, 
+ ira.weiny@intel.com, 
+ dmatlack@google.com, 
+ shuah@kernel.org, 
+ jgg@ziepe.ca, 
+ yishaih@nvidia.com, 
+ skolothumtho@nvidia.com, 
+ kevin.tian@intel.com, 
+ ankita@nvidia.com
+Cc: vsethi@nvidia.com, 
+ cjia@nvidia.com, 
+ targupta@nvidia.com, 
+ zhiw@nvidia.com, 
+ kjaju@nvidia.com, 
+ linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ linux-cxl@vger.kernel.org, 
+ kvm@vger.kernel.org, 
+ mhonap@nvidia.com, 
+ Alex Williamson <alex@shazbot.org>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Message-ID: <69ddbdc62016d_147c801004d@djbw-dev.notmuch>
+In-Reply-To: <20260401143917.108413-1-mhonap@nvidia.com>
+References: <20260401143917.108413-1-mhonap@nvidia.com>
+Subject: Re: [PATCH v2 00/20] vfio/pci: Add CXL Type-2 device passthrough
+ support
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DM4PR11MB5262:EE_
-X-MS-Office365-Filtering-Correlation-Id: 50512bfa-4973-4a4d-a182-08de99d3ca00
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|22082099003|18002099003|56012099003;
-X-Microsoft-Antispam-Message-Info: VFyFoUR0RL/357PwqI7i99OjPch2jvuYAEe0aHkPacYz1o2XvqO1iUSG/YfbbzSCLmat1oWslvKaP2Dq8sdJ1FHcPuD9NPTbcq+z0rNavwV/3Hwkvg4Oon9loePxZlIM/W+sUUgnwhRpiLhvMefNhOWcIVffMLoGvqZG+0HL42f4Pd/6RO7rI8nD6FcqWdO+JuhudN8CBskRWVGEHSMGhs9SmTodVUsTcuvWsgyEALgfRu/niWew6SoSuWwl0VubVvbu2iTegqzySZiKZT1kV47iZkeiFzlhf6T4nva2CrquJf8tE5f418TzJl7kzK8qitPUQC0HINeQ+mnkmPgwNIXGP/6TMDfQ7r8XxwFtNPTNY7TXLWc9Mt5e/kGDAXPCdBXDkdxPaezNK5BU1Hto2jgUbm18X877lCKmibu975SRfMGr2KCiOwNWZexp5G2CHEyXuIKiUZq4R/Kr4+yhjnumdaNv1eUKbpWsvsKJzSF2+Ig7jPSfxwSA/ruYCE9sIQLbF4nbAAwpSLNFuMzSmoMmpwcfPhB7uQ8MgsuBGnT25CjvIHCbS7HqcqxF2vhRyfIGqTMs/FBesLDy2rLbp+nUB0h2aUGyrBAm9fJUg275aj7XX/vvdP6rhCe70axc2qeT+kh79xSw7Ul5VQx31Xri3YHUN+HcTkjiFmWh8xG5gxO8A6AzzfNtAEGFLJXkX4x+qdRzEHTExurAOFC0ByyMQ8cR8qXEeo22r5FpWwE=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?LwM1orTelQI7i1j5pYwDNhBN4CH7fjx2HjPeiAZq1RP75NgNc338iiUAwqZB?=
- =?us-ascii?Q?pfnVUalE9cV7a1f3Oj1vDRHJV6wjFJNnlOSFHHaFyEE/m5lGADxkLIwePOyu?=
- =?us-ascii?Q?DWR2BKvmbSPv2Z0l31IWq5t7f8JNVQn6T+3NfObEc6I15oCQtPoRNRDwRjWA?=
- =?us-ascii?Q?rfYtCacEc/aRwUlYl1ZEeqOs1trJ31uM+TAzJE0LOWkxI6rRjSbu3TfhoxPY?=
- =?us-ascii?Q?qQBXZFkkwdnp7OmaWcqM9CvKFJpUam1NykqjyMozKdCAgyfb413stOfE70v+?=
- =?us-ascii?Q?M741Ks9+IM87B5QHIihmB8WMaFt69cU65C0s49GyVIU/vAdiupC/CyF81EUo?=
- =?us-ascii?Q?X3281uzgTlRM4P2KNrn+f7UI77G+bfjEVQAYWSE2khlRAJu+2wGg6G/x8/Ws?=
- =?us-ascii?Q?kI3x08bhxXsucOX+iuQtHqxUxCPy9cM0Qd9EZT99b8NVNHMMxrAgSHfI0kpD?=
- =?us-ascii?Q?dm4Z84DCJGqjemm2DugyWqSs+YRvfcOWgI+eewdIeZNvunREeRq1LZM8IzLo?=
- =?us-ascii?Q?ppR9vQ2G1JZ0Gl0iJfIU2OyWXOXZtRuCS43Y71ljXcUk9EA4gjCK9w4DL/aO?=
- =?us-ascii?Q?ftdwr8qBuQ/0U+G0eYncyS8k1EGgB6zh4FfH1dXdNDPePTr+QJbSYUHbasNZ?=
- =?us-ascii?Q?eAx2jHVadRe87yHhKq93WbCwD19tg4qGht103M8obMg+O8yrxEnUVVtYjdKF?=
- =?us-ascii?Q?lCB2UUvFr/tNcUd52dge4PBw0IQoX9hue1Ex190Pz4jLeSVsAtoLgIZZsGjP?=
- =?us-ascii?Q?074B3tv60BYXu520l7qIbN3Jx4yJKYd5Uhw2wHhNzyH//SJseUmeXGBzuwe/?=
- =?us-ascii?Q?Cp/B2sNPEsitX+MPG4eBAbWkFDdL+eMgIkspGf5rg/I1XKheDPf0vYHOEDwB?=
- =?us-ascii?Q?QHn2bdB/aORb8HnP094u3UkAuqlBBIF8381E7bHOxzKSzFm5Ia1C01wzuB9U?=
- =?us-ascii?Q?IxtzTH5he1IrAkKekzO62wxnFkdvhw7NoR/EbTGc13IeNe4kexBVzxKE1NA5?=
- =?us-ascii?Q?XDW6/+9qAAeTQokF3WAtpnT1yMOPW9X1It1mp3zT0cIYUNwe/IOC6FWLhph0?=
- =?us-ascii?Q?YHbgwPOLIV/Wa/FiOOGEDWZy+wZgu3xQtefJTbUTwT3dB1NMlAKnT0cFx0kP?=
- =?us-ascii?Q?t9Oef6ykcFWwacRy9KN4yUnOkf/1KDXzLeN2hOTMH37wPFKu6apK3h3lrDSV?=
- =?us-ascii?Q?Dj3dxWhnBNr9m0p7nkSu6EeA6n9GEwRWW5oSHHDJP4FZ4vzRWf+2QVGthrS5?=
- =?us-ascii?Q?Gumwm48alHn1ziQ1dvAE1m3w/foXpFPSLJ+o60VXuMJUsC3j/yB9SV+zVaU3?=
- =?us-ascii?Q?OxYSD9zwNbBuzdLeTjB1qiaUuU4SBukFe5p0q35oDgSZmeiCFBAf1D3Y+KC9?=
- =?us-ascii?Q?Xz0zIMkFEGRiILiZ639JwgZ51rDqm4TeQ2LE0Gefdcjvbbd1TABdUqudPBc7?=
- =?us-ascii?Q?l8YFuDnkhlu+GlFlcGzDvGpF7JbbpCvrRW+ZY7cAMCkoQQdkucD12RFM8ECT?=
- =?us-ascii?Q?50E9IA80EWUZSnYpW5xhn3bzfCLPeCevrfduSTnS4GPcnyK7sXdNw1A7hnoG?=
- =?us-ascii?Q?uNV12CKYV7GwGtxmmPargdRmolY/tizrOVPQCiiLxOxpmHxMtHFKX1mNOF/m?=
- =?us-ascii?Q?exBdR2ZUNEnheLAiAqSJ31xtXL1HuDC20CwMsj5/9vgQdhwRUafb0H47ZMPU?=
- =?us-ascii?Q?c39r5340lT79d10/lK8xXPu7D7xlq8B3X94H5oJY1Pgx0Qo+oqGcAhb7aRpQ?=
- =?us-ascii?Q?3NEEjdz70Nv1eLsarQOiexikf8rEmZM=3D?=
-X-Exchange-RoutingPolicyChecked: LWk5UyWZk4n6lIOr8rjz9ng/3byGtqznkgrwgZOGZIfM40gSrc2G1t8LNjkgokX13lb2zB6a1E/AbbGbnAw4t4m4+0U2syzwemef61zOY7q8p57eOcDiT4X2qTvZmxIaeBZGl1SVNFRhjnZytFusqV9fjP3MRtcFOxtlCB/TtnBqYSIOaknr2b7f3rUg+27AgBtl4b7o+AjdaZn9nNT7Jppp0icXMij9/nvaX7ZDSMf0sUIMXLQmcXYNNgAX8KZVjZGg1rTdlyrp4j9ESy9A+WLBvypIy5xXpTk1+sXPNvYW0T3OpHVzXtHry0RRIhyNIdgR/2j4b87KgsbJEAwqHw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 50512bfa-4973-4a4d-a182-08de99d3ca00
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2026 03:13:24.1083
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ApaJo67c+dgU+u7U5a+6DyoEDuD1aVBguzH4C3wcwbrTv2O4wdE1XERaGyxxtN8u3q/kBDhoyJw/8ZjgCynI+kBPGUdTfGwkLNS8pDVJsig=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5262
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 06, 2026 at 08:22:13AM -0700, Dave Jiang wrote:
-> 
-> 
-> On 4/3/26 7:51 PM, Alison Schofield wrote:
-> > From: Dan Williams <dan.j.williams@intel.com>
-> > 
-> > Use the new "cxl_test.hmem_test" and "cxl_test.fail_autoassemble"
-> > module options to implement a new cxl-dax-hmem.sh test. The test
-> > checks dax_hmem takeover of Soft Reserve ranges that collide with
-> > autoassembled CXL regions. It depends on the cxl_mock_mem driver
-> > to launch multiple async probes before the dax_hmem driver attaches.
-> > 
-> > [as: do_skip on missing params, explicit param usage, robust unload,
-> > check_dmesg, misc style]
-> > 
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > Tested-by: Alison Schofield <alison.schofield@intel.com>
-> 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Forgive me if any of the commentary below was already hashed out in the
+v1 discussion. Your excellent changelog notes make catching up much
+easier, thanks!
 
-Thanks! Applied https://github.com/pmem/ndctl/tree/pending
+mhonap@ wrote:
+> From: Manish Honap <mhonap@nvidia.com>
+> =
 
+> CXL Type-2 accelerators (e.g. CXL.mem-capable GPUs) cannot be passed
+> through to virtual machines with stock vfio-pci because the driver has
+> no concept of HDM decoder management, DPA region exposure, or component=
+
+> register emulation.  This series wires all of that into vfio-pci-core
+> behind a new CONFIG_VFIO_CXL_CORE optional module, without requiring a
+> variant driver.
+> =
+
+> When a CXL Device DVSEC (Vendor ID 0x1E98, ID 0x0000) is detected at
+> device open time, the driver:
+> =
+
+>   - Probes the HDM Decoder Capability block in the component registers
+>     and allocates a DPA region through the CXL subsystem.  On devices
+>     where firmware has already committed a decoder, the kernel skips
+>     allocation and re-uses the committed range.
+> =
+
+>   - Builds a kernel-owned shadow of the HDM register block.  The VMM
+>     reads and writes this shadow through a dedicated COMP_REGS VFIO
+>     region rather than touching the hardware directly.  The kernel
+>     enforces CXL 3.1 bit-field rules: reserved bits, read-only bits,
+>     the COMMIT/COMMITTED latch, and the LOCK=E2=86=920 reprogram path f=
+or
+>     firmware-committed decoders.
+> =
+
+>   - Exposes the DPA range as a second VFIO region (VFIO_REGION_SUBTYPE_=
+CXL)
+>     backed by the kernel-assigned HPA.  PTEs are inserted lazily on fir=
+st
+>     page fault and torn down atomically under memory_lock during FLR.
+
+I assume, or hope this means expose a CXL region as
+VFIO_REGION_SUBTYPE_CXL, as DPA is a device-internal address space that
+VFIO probably does not need to worry about. VFIO likely only needs to
+care about system visible resource.
+
+If / when interleaving arrives for CXL accelerators the 1:1 vfio-pci to
+DPA to CXL region HPA association breaks. Ok, to assume 1:1 for now.
+
+>   - Intercepts writes to the CXL DVSEC configuration-space registers
+>     (Control, Status, Control2, Status2, Lock, Range Base) and replays
+
+Range Base is ignored when global HDM Decoder Control is enabled. I
+would hope that this enabling ditches CXL 1.x legacy wherever possible.
+
+>     them through a per-device vconfig shadow, enforcing RWL/RW1CS/RWO
+>     access semantics and the CONFIG_LOCK one-shot latch.
+
+Linux should have no need to ever trigger CXL register bit locks. That
+is only for firmware to make changes immutable if the firmware has
+requirements that nothing moves for its own purposes.
+
+Now, it makes sense to configure the vCXL device to be locked at setup,
+but I do not currently see the use case for the vBIOS to mutate and lock
+the configuration.
+
+[..] =
+
+>   - Includes selftests
+
+Yay!
+
+>     covering device detection, capability parsing,
+>     region enumeration, HDM register emulation, DPA mmap with page-faul=
+t
+>     insertion, FLR invalidation, and DVSEC register emulation.
+> =
+
+> The series is applied on top of the cxl/next branch using the base
+> specified at the end of this cover letter plus Alejandro's v23 Type-2
+> device support patches [1].
+
+One of the sticking points of the accelerator series has been how many
+details of the CXL core internal object lifetime leak out.
+
+My hope / thought experiment is that the initial version of this
+enabling only needs to facilitate getting a VMM established CXL region
+into a guest. With that VFIO only needs is the CXL region HPA and MMIO
+layout so that CXL registers can be trapped and non-CXL registers can be
+direct mapped.
+
+> Series structure
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =
+
+>   Patches 1-5 extend the CXL subsystem with the APIs vfio-pci needs.
+> =
+
+>   Patches 6-8 add the vfio-pci-core plumbing (UAPI, device state,
+>   Kconfig/build).
+> =
+
+>   Patches 9-15 implement the core device lifecycle: detection, HDM
+>   emulation, media readiness, region management, DPA region, and DVSEC
+>   emulation.
+> =
+
+>   Patches 16-18 wire everything together at open/close time and
+>   populate the VFIO ioctl paths.
+> =
+
+>   Patches 19-20 add documentation and selftests.
+> =
+
+> Changes since v1
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[..]
+> HDM API simplification (patch 1)
+> =
+
+>   v1 exported cxl_get_hdm_reg_info() which returned a raw struct with
+>   offset and size fields. v2 replaces it with cxl_get_hdm_info() which
+>   uses the cached count already populated by cxl_probe_component_regs()=
+
+>   and returns a single struct with all HDM metadata, removing the need
+>   for callers to re-read the hardware.
+
+What is the accelerator use case to support multiple CXL regions per
+device?
+
+In other words, it feels ambitious to support that while simultaneously
+kicking the "interleave" question down the road. If we are going for
+initial simplicity that also means single region to start.
+
+> cxl_await_range_active() split (patch 4)
+> =
+
+>   cxl_await_media_ready() requires a CXLMDEV mailbox register, which
+>   Type-2 accelerators may not have.  v2 splits out cxl_await_range_acti=
+ve()
+>   so the HDM range-active poll can be used independently of the media
+>   ready path.
+
+This feels like a detail vfio-pci does not need to worry about. The core
+knows that the device does not have a mailbox and the core knows it
+needs to await range ready when probing HDM. Something is broken if
+vfio-pci needs to duplicate this part of the setup.
+
+> LOCK=E2=86=920 transition in HDM ctrl write emulation (patch 11)
+> =
+
+>   v1 did not handle the case where a guest tries to clear the LOCK bit
+>   to reprogram a firmware-committed decoder. v2 allows this transition
+>   and re-programs the hardware accordingly.
+
+? Guest has no ability to manipulate Host HPA mappings. A protocol for a
+guest to work with a host to remap HPA does not sound like a v1
+requirement. This would be equivalent to a guest asking to move a host
+PCI BAR.
