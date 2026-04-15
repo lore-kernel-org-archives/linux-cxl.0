@@ -1,146 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC22B2DECBA;
-	Wed, 15 Apr 2026 15:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 629263DD50C;
+	Wed, 15 Apr 2026 15:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776266322; cv=none; b=J6I6nuBQpANN2P0xsIYOdW9CXZQ5L6AjtBt3C12mDIIidV1jBYnNCY944AVDDenVjIHnQ3dKhFdx8sT4N5GPisTl+rLNqML0VDc5SXDlhc4O7nfHCtVWqvpQo3cUVi36gBHoBpn2s3rQpTSKqdrROU3V3jQrmHMubxknQhZZbaI=
+	t=1776266924; cv=none; b=I75et184mqQwVyWGAeokG7PnTgAAaQciIyAMKFL2cb59906ORolir0Xl1qOQAHPAWYBpXPDRFw5FfrNmxJ7FZB/BNLdqRGR7xZgQ5CsPJmoAOZ7oKGwe3NvAi5xIrtyY8MpZD26c8EKqPbJxwZ8AaTVWG5UZA/bxFRWoHuXBTy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776266322; c=relaxed/simple;
-	bh=e3REa60twSDju4GhxpK9P4fAHki7XSVkaT2px3NoSNY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n0kxnicXZyx8X6F0KCwEAGYITg3r55Wrf0goIS6/i7Dtp86mUZ/uA1WyKb+UMSCzsiz3hPTOR9fBaMgjfUMh1rViw/K9w9tAE/1B2RON0aqxKm0Nh9v3FYtBfB2RqqNKXxElDEkiF2lX/YN3NCRWQN2pg+7rJi7eNy1pBwOGfJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gzyEsEdd; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1776266924; c=relaxed/simple;
+	bh=ufsmAtOD0yHw+RsgJJ4sXSOPoeLwmzYUhCQwaCzodcU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X648Ttip2OuZEEYMUccAHjMU/yc/LnhGRStjv01zlqt0DUrlCfPl8DpjQEeI9G+ZUf2CLSOYGWsRlo39vGDc54WXs+7GJOJmZAcS3uKSMm6c9Ec1C/ktqCpsV81Z/FJ2vTAX6SA8CeEDshN17djKjKcdLspzUvwBOfcKbFP5rGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=npV2ST4D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gzyEsEdd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776266321; x=1807802321;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=e3REa60twSDju4GhxpK9P4fAHki7XSVkaT2px3NoSNY=;
-  b=gzyEsEdd8vF6U+aPgklsba1on7X8SIBAECQg5K41CXaXHoIkhZ5tgnn2
-   23UpzPx484s+1usVnPtvKeeuWnBRraNlUwAg79rlnENsq+v2NLct6nZPw
-   sEw/NVRXxIRRdUPFFo2ZI087fAYzmzkg0GlKPjlCplflT5O50swwiqsIa
-   M/mBTV492j21i2p82FEzMYbM0+xC2N0FUkTbBDXpLyumFE99sq0sZOX3+
-   NbUPMR0jXnBw1+wWqVNq4rx7VXSyUkf7KG/V5SuKQn4VOmMqhOIq5q/o4
-   68P/rRXrbjtXjuUC+fd2Qqs5b6MFGlPnW4C5jMZEwwuiRxcnSzo8coGgJ
-   A==;
-X-CSE-ConnectionGUID: /ez7yT1uSEmps5qQIpeD1A==
-X-CSE-MsgGUID: MTylbzSzQ+m21qVpinEO7Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11760"; a="94649519"
-X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
-   d="scan'208";a="94649519"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2026 08:18:41 -0700
-X-CSE-ConnectionGUID: NMyh1FouQ5O7tJDJ8buXwQ==
-X-CSE-MsgGUID: 3K+4ivnNSduieQd3Q5wQAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,179,1770624000"; 
-   d="scan'208";a="226132168"
-Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.110.66]) ([10.125.110.66])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Apr 2026 08:18:38 -0700
-Message-ID: <77a6193b-62bc-416d-8bdd-a56266df9c73@intel.com>
-Date: Wed, 15 Apr 2026 08:18:37 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="npV2ST4D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E59C8C19424;
+	Wed, 15 Apr 2026 15:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776266924;
+	bh=ufsmAtOD0yHw+RsgJJ4sXSOPoeLwmzYUhCQwaCzodcU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=npV2ST4DkuRvF76smD+WhL358pUDN+1WaEf6e2MqTIyik0S5HsHen588IZ+wqVe2P
+	 mMtIfCmHNBEX4LzOuprBT5H36CXtGSp52Acgbj+W3Rpg5xspJCtOWotn8k6RTRh8ht
+	 4CtTK8ULkLg9KSACPGhICaleBVYa/p7xiGuZ0GYFctspAbrHINsvwwYV/ilXKDb5jO
+	 4VZl9Qr2bL8aL0ve/8RP00YUJDGT6iKQzuakc22cTPQgIRDsoFp63XU3Cpm73MUia5
+	 CLIJQoGLYYc1JgzpbAUHafgTDRWbLXg4vIoKtEPW1If+x9a0ZUsaToluhAcVm8uYbF
+	 DLlmHM0etiPxA==
+Date: Wed, 15 Apr 2026 08:28:42 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, Gregory Price <gourry@gourry.net>,
+	"David Hildenbrand (Arm)" <david@kernel.org>,
+	John Groves <John@groves.net>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Bernd Schubert <bernd@bsbernd.com>,
+	John Groves <john@jagalactic.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Bernd Schubert <bschubert@ddn.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Chen Linxuan <chenlinxuan@uniontech.com>,
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Shivank Garg <shivankg@amd.com>,
+	Ackerley Tng <ackerleytng@google.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>,
+	"venkataravis@micron.com" <venkataravis@micron.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	djbw@kernel.org
+Subject: Re: [PATCH V10 00/10] famfs: port into fuse
+Message-ID: <20260415152842.GB114184@frogsfrogsfrogs>
+References: <adlBcwJjLOQDAR65@groves.net>
+ <CAJnrk1a06zkUmXW5EFiUmgAoFauwtzsYvnotaPH0ifVtyh7iDQ@mail.gmail.com>
+ <CAJfpegvVTcV89=q3L326aGQjhduBcv7PVg5QKftGLjNZmCLmaw@mail.gmail.com>
+ <ad4_jFsR951c2Mtn@groves.net>
+ <20260414185740.GA604658@frogsfrogsfrogs>
+ <ad69tTnx5YkD4Y9K@gourry-fedora-PF4VCD3F>
+ <f254f6fc-dc06-4612-82d7-35bb10dbd32e@kernel.org>
+ <ad-UAMcALRubBcHk@gourry-fedora-PF4VCD3F>
+ <CAJfpegsUVv0ziMSQiq9pKeXf6G-+LROPTW077hHMSmAirVCLQw@mail.gmail.com>
+ <ad-qSB4oL5D3S-ht@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: Update Jonathan Cameron's email address
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- linux-kernel@vger.kernel.org, jic23@kernel.org,
- Davidlohr Bueso <dave@stgolabs.net>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- djbw@kernel.org, linux-cxl@vger.kernel.org, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Conor Dooley <conor@kernel.org>,
- Jason Gunthorpe <jgg@nvidia.com>, Saeed Mahameed <saeedm@nvidia.com>
-Cc: linuxarm@huawei.com
-References: <20260415124357.12539-1-Jonathan.Cameron@huawei.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260415124357.12539-1-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ad-qSB4oL5D3S-ht@casper.infradead.org>
 
-
-
-On 4/15/26 5:43 AM, Jonathan Cameron wrote:
-> Update my email address for CXL, FWCTL and Cache subsystems to use my
-> kernel.org account. Also update .mailmap.
+On Wed, Apr 15, 2026 at 04:10:00PM +0100, Matthew Wilcox wrote:
+> On Wed, Apr 15, 2026 at 04:04:50PM +0200, Miklos Szeredi wrote:
+> > On Wed, 15 Apr 2026 at 15:35, Gregory Price <gourry@gourry.net> wrote:
+> > 
+> > > This was my first reaction when I realized the BPF program would be
+> > > controlling iomap return value in the fault path.  Big ol' (!)  popped
+> > > up over my head.
+> > 
+> > I'm wondering which part of this triggers the big (!).
+> > 
+> > BPF program being run in the fault path?
+> > 
+> > Or that the return value from the BPF function is used as iomap?
+> > 
+> > Or something else?
 > 
-> Separate patches will replace maintainers for HiSilicon specific hardware.
+> If a BPF program controls what memory address a fault now allows access
+> to, who validates that this is a memory address within the purview of
+> the BPF program, and not, say, the address of the kernel page tables?
 > 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> (I have done no looking to determine if this is already considered)
 
-Applied to cxl/next
-dc989bb79380
+We're not using bpf to implement ->filemap_fault directly.  fuse would
+implement that as a call to dax_iomap_fault, iomap would then call
+fuse's ->iomap_begin, and that's where the bpf program would take over.
+The mapping provided would return a (struct dax_device, u64 addr, u64
+length), and (presumably) the dax device access function would
+rangecheck that.
 
-> ---
-> 
-> Any merge route works for this, but given there are two CXL entries,
-> perhaps that one is most obvious.
-> 
->  .mailmap    | 1 +
->  MAINTAINERS | 8 ++++----
->  2 files changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/.mailmap b/.mailmap
-> index 22c5ab1c5d55..55be3163f8ea 100644
-> --- a/.mailmap
-> +++ b/.mailmap
-> @@ -419,6 +419,7 @@ John Stultz <johnstul@us.ibm.com>
->  <jon.toppins+linux@gmail.com> <jtoppins@cumulusnetworks.com>
->  <jon.toppins+linux@gmail.com> <jtoppins@redhat.com>
->  Jonas Gorski <jonas.gorski@gmail.com> <jogo@openwrt.org>
-> +Jonathan Cameron <jic23@kernel.org> <jonathan.cameron@huawei.com>
->  Jordan Crouse <jordan@cosmicpenguin.net> <jcrouse@codeaurora.org>
->  <josh@joshtriplett.org> <josh@freedesktop.org>
->  <josh@joshtriplett.org> <josh@kernel.org>
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d1cc0e12fe1f..558b92f5fbc5 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6426,7 +6426,7 @@ F:	include/linux/compiler_attributes.h
->  
->  COMPUTE EXPRESS LINK (CXL)
->  M:	Davidlohr Bueso <dave@stgolabs.net>
-> -M:	Jonathan Cameron <jonathan.cameron@huawei.com>
-> +M:	Jonathan Cameron <jic23@kernel.org>
->  M:	Dave Jiang <dave.jiang@intel.com>
->  M:	Alison Schofield <alison.schofield@intel.com>
->  M:	Vishal Verma <vishal.l.verma@intel.com>
-> @@ -6442,7 +6442,7 @@ F:	include/uapi/linux/cxl_mem.h
->  F:	tools/testing/cxl/
->  
->  COMPUTE EXPRESS LINK PMU (CPMU)
-> -M:	Jonathan Cameron <jonathan.cameron@huawei.com>
-> +M:	Jonathan Cameron <jic23@kernel.org>
->  L:	linux-cxl@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/admin-guide/perf/cxl.rst
-> @@ -10539,7 +10539,7 @@ FWCTL SUBSYSTEM
->  M:	Dave Jiang <dave.jiang@intel.com>
->  M:	Jason Gunthorpe <jgg@nvidia.com>
->  M:	Saeed Mahameed <saeedm@nvidia.com>
-> -R:	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> +R:	Jonathan Cameron <jic23@kernel.org>
->  S:	Maintained
->  F:	Documentation/userspace-api/fwctl/
->  F:	drivers/fwctl/
-> @@ -25148,7 +25148,7 @@ F:	drivers/staging/
->  
->  STANDALONE CACHE CONTROLLER DRIVERS
->  M:	Conor Dooley <conor@kernel.org>
-> -M:	Jonathan Cameron <jonathan.cameron@huawei.com>
-> +M:	Jonathan Cameron <jic23@kernel.org>
->  S:	Maintained
->  T:	git https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/
->  F:	Documentation/devicetree/bindings/cache/
+Unless someone foolishly puts kernel page tables on the dax device...
 
+--D
