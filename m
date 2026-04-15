@@ -1,165 +1,248 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB21021146C
-	for <linux-cxl@vger.kernel.org>; Wed, 15 Apr 2026 00:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DF13FCC
+	for <linux-cxl@vger.kernel.org>; Wed, 15 Apr 2026 02:23:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776212825; cv=none; b=ItyFgGfgbrLPco1Ii9XghWF7gJ3dP7h+PjFr7M8Sino79HFo9Rz8lcW9vQRdsSNarSGQUOMwxsWTtbElFpb1N4T9iSsOFFTJSxSLwzKQuqKN/UkX0xBck5cRw56FYoBw1ZvAFhzoA56hgIcVXsls9qnQhSIKxIE4EbHYV5w32Eg=
+	t=1776219834; cv=none; b=dzTi/OJklvfQTiMXQWkPz0cfVfmvcp6I2mJa3wdqujKpzmlB+hdSX5QWGsmO296vTH+Ot+DskMZZDipQkt4oux8Uh7IG+kphHTVzp1LpZKHDpzlbESSxCV8wtLdSSjHAg37hZRMwovFsdOlbHzFvyxcP1KM3pP+IGvNy1S7TiUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776212825; c=relaxed/simple;
-	bh=QWGt3yYXGUvErlXif60E5XBK1F4dufhS+zYK3q7W1E4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UKVszfOGeV4nzSwCVSpQ2q2T29X34Ti+rnKmrs49edHbVp6KIXAYZgZL9kP5/vPhPizTKWah/oiurKB6RfNeI69muhi5O4ToCTqTse2pYnInq1RJpcRSbQR8l9Za25LnvJxrbZxzuc/3Yzo7yEzH/VzVfBJa63h0mW45/rgLMTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=GpOjnPJC; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1776219834; c=relaxed/simple;
+	bh=1qYzuPfEiagDAJsWVpKR2GhgDpXMsF1bWLnPT/gVGyc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c4i96Vo+ZK53fxbWMpgEBhbDAaj6zUWUTWTBQVzCWh7+NDl/Dx9w9XNvU6AOCcu65XG7CrYUPzMhBC6Cem9RaZ984dLB2Oe4Cyf+4vU06eYc7xAOuVB0U2LwPt4xNzBasxqKb8U9WPpzWGOFONeRw6DqoyQ+hn/4aVwH/FP8tZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=bQWmCSQ6; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="GpOjnPJC"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-8d736211595so443109885a.0
-        for <linux-cxl@vger.kernel.org>; Tue, 14 Apr 2026 17:27:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="bQWmCSQ6"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-82cebbdbdccso3083222b3a.1
+        for <linux-cxl@vger.kernel.org>; Tue, 14 Apr 2026 19:23:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1776212823; x=1776817623; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kDpGBnaT3lT3hUJ3gOq0kFT1XqTcnbKHudND+6nYB6c=;
-        b=GpOjnPJCL0fCxWKNCc2TR7IYRh/cpj8VGXStSuivNVsvV3k6kIKdyMNhdr3O3tSKVS
-         UKdk9iQFL/pA/qDulrpnRYvEu8m4BVClNcX6hiXMvIpxfLLlvGoJOFICxWCvBf+0A6WY
-         MnDjGibcRVuTBNDWsP4IQYw7kAMUjHLWtwbQq9v3b26HFbE20WDDoEfot5j+Q4IqaWJB
-         n9+SKXe4JIzFgGMLRfCN0t/8KIJ7ujuPpSF/cNnDDW03Qvm0v7o5EiHgCTdjFkdICikl
-         pJbNvncBej3yNkA0N6nYmxUEUJY3v0A90vADsdj011pRup2oTgRuYeD4K+MP0g6EUB2Q
-         nlMA==
+        d=bytedance.com; s=google; t=1776219831; x=1776824631; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AS7olroNFEXattkGrKD+rS7tU+zP8C4dXdnIq/RdScM=;
+        b=bQWmCSQ6xBvFvYK4SC5b+SjtAZFCF8Az/Bi2HFfLctCNuflpsLhay8mVG0rYlDwUHe
+         BaipAsRpGFw/X1QE8oe6KVDcbK4ayIj9xMgdb4U6H/QAU5q9rQLt3LvA6wduqV3fR/9B
+         kRjJnJL/FG0BXZowz7sefhE9edmeuv1lNGxwWbzIwdHxJP4pkW6vgRNGUD4aecx+M2nr
+         4Dg5UvZ3SY2gYM+vocwLWzACSrV+1+4DLGkV4Gsah2csZtn/njnPdhTpddISUlaqfMmZ
+         zdbXHqaTdZwrYDRL4ADeEWg1wDD9zvEEfKgSb510RzPNCKZ2vZyoRVEUXF1ruvc6LqAN
+         vRaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776212823; x=1776817623;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kDpGBnaT3lT3hUJ3gOq0kFT1XqTcnbKHudND+6nYB6c=;
-        b=QJzozhc5i5ceN9KHuqMg/oBPa+xub+Yt8RhbCBtMMIHQkfp/Ip8vOKWG2pSuyVpm6T
-         6J/th5pkPgAGTwHVroF6z1innVW/vH/xDCE6dno8d7nWifnepRkkmBGkJAQy7mbMkiVT
-         nfri9y22mfqjJM/ES9+GmpDgbDLv0lHmL36Hyz2T/SexWznOagKIOtYtWuKnHWnJaq1r
-         Qmu/NUqxHmmpEGcDLEKxAMKZz7ZOSzEsJ5u5OPK7KIMmNAoebWitW7F9bM51J02Dq6nG
-         JZcsPnGImO4tTB+zgnslar/kbGLwGpOwn6unNvF73tYgmPB7KudettAO7lIcWg0TobPd
-         GwAA==
-X-Forwarded-Encrypted: i=1; AFNElJ/+b5cqdD7lztrmRrQh3qbqv6vi4NMg/BHRXoCoiKxfbVCFaxKKOxJuctiv4qehfu1kc9rnnHDaZS8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUDsDGh/EzFTZI86Sd/N+kRxj+nAi2UETfD1/vt2cWUVDOgKCc
-	kulLR5e3FSul548wVsRoFQlLI0KYnSAT245N8NS+oHLEbdCDAIzyVg0vTRnT2H6tPew=
-X-Gm-Gg: AeBDieskTsMQe16is6GgwkBJ3GoIV0umy6Jyavv4YqX7FASwzymhgJfybOGymYt7EoT
-	ChgQAKzq32j7UdWjgG/u1u6UkmzxWOkg17HK8/zN5bP3d2HouC1AoYYApykXpnOqJUCYh/S7oTm
-	4QXx72J/t3+h5D94N49PiwcBe/eztRfqWPYxfXTOBnEf/chiZKmnMoaPh7LRpt553ibqyGK3MyW
-	xhHplz6obVyf39cbAZxuIxhMk17yh7uY+VD5g9rgCw4XcgKWss2WtGEW2KkBDrMrlqJHBmdwXxU
-	P5dO62BX8Ro5oSuUWe/oNKgKbQcb3le55JfcqTau5YYozVKVwKX3ifswcB99AnUDJqTh86ug2/S
-	YaA5WiuFIt99DQrRh9zec8OOjlSWKmXP4HA37Yy35ElSXu+3JkNVCVinNJSrLwCcLMpWDVJEz/D
-	AwG2p6ULpowzw7FQlThDo82yB12FqH0cybC+aZbHaahkkS/kafYCpw7NZ+CvPrD8eT4ibQszTJ4
-	vh0DbNb9vE9cSPPUMHtABw=
-X-Received: by 2002:a05:620a:4411:b0:8d6:bd01:a684 with SMTP id af79cd13be357-8ddcd6f8560mr2828658085a.7.1776212822595;
-        Tue, 14 Apr 2026 17:27:02 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-71-191-243-150.washdc.fios.verizon.net. [71.191.243.150])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8e4ef33afc7sm7479885a.18.2026.04.14.17.27.01
+        d=1e100.net; s=20251104; t=1776219831; x=1776824631;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AS7olroNFEXattkGrKD+rS7tU+zP8C4dXdnIq/RdScM=;
+        b=N67M9cSJpZnisf98GfXvKY6stHAS7q2UXBvohOHh2rElA33JN+bniAkcqfNVc8Gr3c
+         f7OOCBfGJUDQ/j1eS34up43/LNfojlx/6X9vwv4u2Frb0rx+WHTgVGvGZ0E9jolkJ5lN
+         Q8CY4ptXCwjvQw7JHZT2rRfl7+CYXQ8SxPZVza1q/ZPlT0opmt6IJ9oEXTQJ9IkGzIVx
+         4FCkS5q//NLrzeCB2z6si94fEzNiJ952iZtAKNaCKfPIR2obHG6lehOW+LgFDeObkO2M
+         2R2iBZdrMmjof9mCxXpOQCBq1bjU/63hp2wb6q87rHWTkQY98JaK0oOC6tkUsza5wDdp
+         E9/w==
+X-Forwarded-Encrypted: i=1; AFNElJ97NkZFmp0cjgoU3C8j3L3HL0CieRxxdYCFi4MkOb13yg7EcK2JPdglzMMKmw9EC5tPFLkz+7u/08A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNzLXfVkiP8/NpYEXEUy+F1b1Wp2PzaklAIW/gmOsbAwZEyFgQ
+	Qvn0OWNUQEvS6w5umnMWrLI3OGmKux0sv20bOIKBRfTUbgqzAGA08dbsYHjQslE41jk=
+X-Gm-Gg: AeBDiesXTa0HsbGXssye82bpvrp15YOmxIvkOrcPXz34xdXQ62ZUCiYbDTGRkg+Yccr
+	eh+v6oUau4wM8J/n1yUpF1JoXwAbZgfklJ07U2Z8LGomPXMB6i5GRRPcsLKKqq4qaqlhEVSoxBP
+	JO9SKFdFT7JBHwnqfKYCRf2Ay41EjMO533TbpEnc2rGYx6S/rHrjQpbaxRWNx07KrXbuSeei6OX
+	EeDz9skllUX+jCTbQMHi0mhON1d16jKaF2Xr3csIPjHkOwVic7HFfyN0ZTMV/TUC3GViTc9I/uB
+	iwG2NA5++KZv8KOAplDRyUm24MCzIiM9Ny5dIk7XoVPmLm95gXVk2mzeOmUKiiHmoMLY+Qd86QY
+	eTpP7CQAvUyJA4Omhx6YUAh1zfNS12YsLI8CGe/s3Wmlo98vq7FGePfRFsAsnV7i/My5W39VRcT
+	aX7JHm/OZAByqvSbEckQ==
+X-Received: by 2002:a05:6a00:cc3:b0:81e:1b77:9e61 with SMTP id d2e1a72fcca58-82f0d379ba8mr16521188b3a.25.1776219830661;
+        Tue, 14 Apr 2026 19:23:50 -0700 (PDT)
+Received: from n232-176-004.byted.org ([240e:83:200::347])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82f69ef0b34sm102517b3a.31.2026.04.14.19.23.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2026 17:27:01 -0700 (PDT)
-Date: Tue, 14 Apr 2026 20:26:59 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Hannes Reinecke <hare@suse.de>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
-	lsf-pc <lsf-pc@lists.linux-foundation.org>,
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [LSF/MM/BPF TOPIC] Strategies for memory deallocation/movement
- for Dynamic Capacity Pooling
-Message-ID: <ad7bU9Guk_csFsEG@gourry-fedora-PF4VCD3F>
-References: <e06deabf-44ad-4f3f-b817-78506c5e3203@suse.de>
- <20260413164359.00001c86@huawei.com>
- <ad1b4dVCgG27A5AK@gourry-fedora-PF4VCD3F>
- <38952332-dad4-4d17-a9c1-5c25d79f67b4@suse.de>
+        Tue, 14 Apr 2026 19:23:50 -0700 (PDT)
+From: Muchun Song <songmuchun@bytedance.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Charan Teja Kalla <quic_charante@quicinc.com>
+Cc: Muchun Song <muchun.song@linux.dev>,
+	Muchun Song <songmuchun@bytedance.com>,
+	Kairui Song <kasong@tencent.com>,
+	Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Barry Song <baohua@kernel.org>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH] mm/sparse: Fix race on mem_section->usage in pfn walkers
+Date: Wed, 15 Apr 2026 10:23:26 +0800
+Message-Id: <20260415022326.53218-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <38952332-dad4-4d17-a9c1-5c25d79f67b4@suse.de>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 14, 2026 at 09:08:22AM +0200, Hannes Reinecke wrote:
-> On 4/13/26 23:10, Gregory Price wrote:
-> > On Mon, Apr 13, 2026 at 04:43:59PM +0100, Jonathan Cameron wrote:
-> > > > 
-> > > > So quite some things to discuss; however, not sure if this isn't too
-> > > > much of an arcane topic which should rather be directed at places like
-> > > > LPC. But I'll let the PC decide.
-> > > 
-> > > Superficially feels a bit arcane, particularly as we are currently
-> > > kicking untagged memory into the long grass as there are too many
-> > > open questions on how to present it at all (e.g. related to Gregory's
-> > > recent work on private nodes).  On recent CXL sync calls the proposal
-> > > has been to do tagged memory first and only support allocation of
-> > > all memory with a given tag in one go and full release.
-> > > 
-> > 
-> > General consensus after last few months seems to be:
-> > 
-> > "While technically possible, untagged memory a bad idea for $REASONS"
-> > 
-> > I do not thing the private node case changes this, if anything it only
-> > changes where the capacity ends up.
-> > 
-> Thing is, there will be things like CXL switches. And with that we'll get
-> CXL memory behind the switch, making it possible to reshuffle memory
-> 'behind the back' of the application.
-> While the situation is similar to the current memory hotplug case
-> (and, in fact, the mechanism on the host side will be the same I guess),
-> the problem is now that we have a bit more flexibility.
-> 
-> The reason why one would want to reshuffle memory behind a CXL switch
-> is to deallocate memory from one machine to reassign it to another
-> machine. But as the request is just for 'memory' (not 'this particular
-> CXL card holding _that_ memory'), the admin gets to decide _which_
-> of the memory areas assigned to machine A should be moved to machine B.
-> But how?
-> 
-> And that basically is the question: Can we get the admin / orchestration
-> a better idea which of the memory blocks should be preferred for
-> reassignment?
-> I'm sure there are applications which have a pretty flexible memory
-> allocation strategy which, with some prodding, they would be happy to
-> relinquish. But I'm equally sure there are applications which react
-> extremely allergic to memory being pulled of underneath them.
-> And then there are 'modern' applications, which also don't like that
-> but for them it really doesn't matter as one can simply restart them.
-> 
-> So it would be cool if we could address this, as then the admin
-> /orchastration can make a far better choice which memory area to
-> reassign.
-> And it might even help in other scenarios (VM ballooning?), too.
-> 
+When memory is hot-removed, section_deactivate() can tear down
+mem_section->usage while concurrent pfn walkers still inspect the
+subsection map via pfn_section_valid() or pfn_section_first_valid().
 
-I'm a little confused by how you imagine this memory actually gets used.
+After commit 5ec8e8ea8b77 ("mm/sparsemem: fix race in accessing
+memory_section->usage") converted the teardown to an RCU-based
+scheme, the code still relies on SECTION_HAS_MEM_MAP becoming visible
+to readers before ms->usage is cleared and queued for freeing.
 
-  1) Are you hotplugging directly into the buddy as a normal NUMA node
-     and letting the kernel dole out allocations to anything?
-     - i.e.: existing add_memory_driver_managed() interface
+That ordering is not guaranteed. section_deactivate() can clear
+ms->usage and queue kfree_rcu() before another CPU observes the
+SECTION_HAS_MEM_MAP clear. A concurrent pfn walker can therefore see
+valid_section() return true, enter its sched-RCU read-side critical
+section after kfree_rcu() has already been queued, and then dereference
+a stale ms->usage pointer.
 
-  2) Are you trying to plop the entire dynamically added extent into a
-     a specific workload?  Something like ioremap/mremap or ZONE_DEVICE
-     exposed by a driver's /dev/fd ?
+And pfn_to_online_page() can call pfn_section_valid() without its
+own sched-RCU read-side critical section, which has similar problem.
 
-  3) Are you reserving this region specifically for in-kernel/driver
-     use but not doled out to random users?
+The race looks like this:
 
-  4) Are you trying to just plop an entire extent into a VM (in which
-     case you technically shouldn't even need to hotplug, in theory)?
+  compact_zone()                    memunmap_pages
+  ==============                    ==============
+                                    __remove_pages()->
+                                      sparse_remove_section()->
+                                        section_deactivate():
+                                          a) [ Clear SECTION_HAS_MEM_MAP
+                                               is reordered to b) ]
+                                          kfree_rcu(ms->usage)
+      __pageblock_pfn_to_page
+         ......
+          pfn_valid():
+            rcu_read_lock_sched()
+            valid_section() // return true
+            pfn_section_valid()
+              [Access ms->usage which is UAF]
+                                          WRITE_ONCE(ms->usage, NULL)
+            rcu_read_unlock_sched()       b) Clear SECTION_HAS_MEM_MAP
 
-  5) Are you trying to just decide which memory to release based on how
-     much of it is used / hot / cold / etc?
+Fix this by using rcu_replace_pointer() when clearing ms->usage in
+section_deactivate(), then it does not rely on the order of clearing
+of SECTION_HAS_MEM_MAP.
 
-I see lot of "Wondering if..." here based on what a switch COULD do, but
-divorced from real use cases, 99.999% of what COULD be done is useless.
+Fixes: 5ec8e8ea8b77 ("mm/sparsemem: fix race in accessing memory_section->usage")
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+---
+This patch is focused on the ms->usage lifetime race only.
 
-There are basically an infinite number of ways we should shuffle this
-memory around - the actual question is what's useful?
+One open question is the interaction between pfn_to_online_page() and
+vmemmap teardown during memory hot-remove.
 
-Some use-case clarity here would be helpful.
+Could pfn_to_online_page() still hand out a stale struct page here?
 
-~Gregory
+The new sched-RCU critical section ends before pfn_to_page(pfn), but
+section_deactivate() can still tear the vmemmap down immediately afterwards:
+
+mm/sparse-vmemmap.c:section_deactivate()
+    ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
+    usage = rcu_replace_pointer(ms->usage, NULL, true);
+    kfree_rcu(usage, rcu);
+    depopulate_section_memmap(...);
+
+That looks like a reader can observe valid = true, drop sched-RCU, race with
+section_deactivate(), and then execute pfn_to_page(pfn) after the backing
+vmemmap was depopulated.
+
+Callers such as mm/compaction.c:__reset_isolation_pfn(),
+mm/page_idle.c:page_idle_get_folio(), and fs/proc/kcore.c:read_kcore_iter()
+dereference the returned page immediately, and they do not appear to hold
+get_online_mems() across the pfn_to_online_page() call.
+
+I am not fully sure whether that reasoning is correct, or whether current
+callers are expected to rely on additional hotplug serialization instead.
+Comments on whether this is a real issue, and how the vmemmap lifetime is
+expected to be handled here, would be very helpful.
+---
+ include/linux/mmzone.h | 6 +++---
+ mm/memory_hotplug.c    | 6 +++++-
+ mm/sparse-vmemmap.c    | 6 ++++--
+ 3 files changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 238bf2d35a54..0e850924cbeb 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -2014,7 +2014,7 @@ struct mem_section {
+ 	 */
+ 	unsigned long section_mem_map;
+ 
+-	struct mem_section_usage *usage;
++	struct mem_section_usage __rcu *usage;
+ #ifdef CONFIG_PAGE_EXTENSION
+ 	/*
+ 	 * If SPARSEMEM, pgdat doesn't have page_ext pointer. We use
+@@ -2178,14 +2178,14 @@ static inline int subsection_map_index(unsigned long pfn)
+ static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
+ {
+ 	int idx = subsection_map_index(pfn);
+-	struct mem_section_usage *usage = READ_ONCE(ms->usage);
++	struct mem_section_usage *usage = rcu_dereference_sched(ms->usage);
+ 
+ 	return usage ? test_bit(idx, usage->subsection_map) : 0;
+ }
+ 
+ static inline bool pfn_section_first_valid(struct mem_section *ms, unsigned long *pfn)
+ {
+-	struct mem_section_usage *usage = READ_ONCE(ms->usage);
++	struct mem_section_usage *usage = rcu_dereference_sched(ms->usage);
+ 	int idx = subsection_map_index(*pfn);
+ 	unsigned long bit;
+ 
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 0c1d3df3a296..335835abe74c 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -340,6 +340,7 @@ struct page *pfn_to_online_page(unsigned long pfn)
+ 	unsigned long nr = pfn_to_section_nr(pfn);
+ 	struct dev_pagemap *pgmap;
+ 	struct mem_section *ms;
++	bool valid;
+ 
+ 	if (nr >= NR_MEM_SECTIONS)
+ 		return NULL;
+@@ -355,7 +356,10 @@ struct page *pfn_to_online_page(unsigned long pfn)
+ 	if (IS_ENABLED(CONFIG_HAVE_ARCH_PFN_VALID) && !pfn_valid(pfn))
+ 		return NULL;
+ 
+-	if (!pfn_section_valid(ms, pfn))
++	rcu_read_lock_sched();
++	valid = pfn_section_valid(ms, pfn);
++	rcu_read_unlock_sched();
++	if (!valid)
+ 		return NULL;
+ 
+ 	if (!online_device_section(ms))
+diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+index 717ac953bba2..05f68dcec0f8 100644
+--- a/mm/sparse-vmemmap.c
++++ b/mm/sparse-vmemmap.c
+@@ -601,8 +601,10 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+ 		 * was allocated during boot.
+ 		 */
+ 		if (!PageReserved(virt_to_page(ms->usage))) {
+-			kfree_rcu(ms->usage, rcu);
+-			WRITE_ONCE(ms->usage, NULL);
++			struct mem_section_usage *usage;
++
++			usage = rcu_replace_pointer(ms->usage, NULL, true);
++			kfree_rcu(usage, rcu);
+ 		}
+ 		memmap = pfn_to_page(SECTION_ALIGN_DOWN(pfn));
+ 	}
+-- 
+2.20.1
+
