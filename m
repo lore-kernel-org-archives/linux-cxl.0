@@ -1,286 +1,317 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3E11FCFEF
-	for <linux-cxl@vger.kernel.org>; Thu, 16 Apr 2026 01:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA4F386C03
+	for <linux-cxl@vger.kernel.org>; Thu, 16 Apr 2026 08:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776302705; cv=none; b=AMffM1Zcranu+660JJNkYkCeNBQtAfinBvfdOswQ3nldTqXQaWZQvD/DRDPab3isjFBW2TvesCScpMCwxTqLJK5wbbWl82Mf7LeSFO62x6BuOq/Fp7JWkkQp1q8C63tVv38FDNiP9274Ev7vy+r3ddpACGrhlzPNyoXzEhAgDss=
+	t=1776328118; cv=none; b=R0W5ikyailBqkfCX8niPq1AHXEKx/peRUCFjmigdqUNfygQe1flJOT5em2sG4UZ6/X0xHjP1h1tXvmE1pwMoZuCf/vcgYl0brsme3Zvlfi6Vwuo/9mr+24jGq76Gdjpu+6SZxbzpjiEba1rv6SjYfKekaBEQkjEFvSIrEe/FcU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776302705; c=relaxed/simple;
-	bh=Fp1CWQFZhoQan9vy0Uw+XPprLq5wH18fTjKWUBYQg18=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qb6AA/nzOFUEBySA/aiSWFeG+z457PjwuAiDpudczG0N6A5vk6fPUUeoBNaw6R/l2dwyGi6/9+3kLcGRROgqr0LgyGn8eoLKymPS9BRyNXpjH7uKuUE3/Z1ohO6mrMyyT8xB9nY6/QyuK9Fl5SODhFFUft/FL5CZA9GkkCxgvlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Rh8mmNfw; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1776328118; c=relaxed/simple;
+	bh=wX45i5cVJBTC+X6yc8kDxe8NtXGu5vVJfm5UJCpCPiQ=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=jRdlQpRuLxk76A+zDLEHFTl3E3vttVSmBYvwdmIej/K8ZOvENzn1A9j8L63fN3otdu2vl4ed8k819ckphdt4ndcvGyG6rAqQDcExtZjJAeXpqhS+q8svuoeGpErjfps9QbNRuKZao4Sckh7q5Dnzdh31ON+6aa2lUIJpv2ObONM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ExeDLLAh; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Rh8mmNfw"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-50b3488fb31so2086771cf.1
-        for <linux-cxl@vger.kernel.org>; Wed, 15 Apr 2026 18:25:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1776302702; x=1776907502; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L0GVcI8Mcl8O7u/nlxfa5xhicBajYIQOeBkH2STJXfY=;
-        b=Rh8mmNfwNmVC7LDtFVtV6tGl0KJDGXyvkyp3IgM12BVmL8xinNHXHP+iqbka0LbMhd
-         TtWLEWLNxOkIhOoll4IOY4PdbzlqJmVQsO3qP7IL32YmeGGzgmGgNFDeiaU4BFItjXDb
-         yRCO09FxW9nh4Y8xJMzzIYqGAvA/9kYQY7NZ/Gws2T0P7aBwOQjkLI7zMKYXVF+IHH7A
-         CMKLFxr9flu2JlHdUcqVMQpzN6Kz9SSBMfPOP+FzLNtzxfvoGsCkz43bFw3SoKRqESaO
-         zmB+vTOlepZytLt2h7ifvEf4rZrCe4+e22FDSuju28VbAty9H01gSQL2fLJ6STPUAELp
-         EOZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776302702; x=1776907502;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L0GVcI8Mcl8O7u/nlxfa5xhicBajYIQOeBkH2STJXfY=;
-        b=FTKQeJRjEwEb990XPqW9NZ3/XR24Rj7LU4YYn5dSQ3hzbGBy1KTWYD8OxtDicSpIAo
-         KOoqKP8vcSEBWPNna6xAu+K1+0PMof79y7WeLwRzgS1u0HTdI19Kc08aaJZEi9eK0hDA
-         2hH3n7YPP8JbixW2XlokRaYBXaTGcd3bNRse/y5F1RY4s4np9kDkRRhKXZ9s4GTIf/L1
-         5qXPnbp49p2htMCxnkFaeOeIvN1lYxLLA9EtAxAJwNRqXbGK9Mt+0fkTov9evSBgLPXu
-         6ASldMDzPQT2lo743ZdnpxlKRyurFbq3pNRVecVCflE+Sz7QbWvjFK5HLtWx9eLqpg1r
-         KG8w==
-X-Forwarded-Encrypted: i=1; AFNElJ+2d63DmBcklTMFWEhVKbTMTeC1HaFy+aAVwPj6uxyBUsGLzKbm+eHbf6WQT0rPqeouIHNTZjcM7Lc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzLkwagm9jjGgcIPOUK64Wv+G+zGQ5R4sFU8RhTB6atH5GbTev
-	QYCjQZDHCt8Tm2U5ru5fZNoD3xe6thoL7+KoerNVZtXWIOUp6IXyb2z8duOOBlxxfVA=
-X-Gm-Gg: AeBDiesBQsrT3Jamo9hYsotSw5REArZ2i+wFcWvMBPCkND/xC1rw39WuKsLhmvKpPHV
-	0wi7O+pR0xLgInxFjxCGel+gtDnkr1vJmxrUQaalDQv8TyfYvE/o7xMRoQARPp/Te7v6ZoCp1cZ
-	fF9jYF8KS8CBg7Xg4oX1VytHxW0LgoZdG1PvSh8g3Wcn3rMUMwOMZa6c6e4IUlwHlzPJqXd0GKi
-	X6BLZL8KTnr0llk+0H8dwO25bDylCqR4sOUjax5C0s3vqH5woo1itLwTPAwQpU9iRzhAwSMBZZZ
-	bXvg2Cvd43TrNvaOFWQcSoTP+c7kCxfSAdFOcW+B/9XSc8Ww/ThUFhVkp6D3U9S2v5PKRG/Ku6g
-	JtyXxFerqhpJD53q+GxZygfK5fcqTEcN0hdowfxzb2F+Mx/5g7pDaQ1CXLFQaK48phNUa2pDP4A
-	k4DzUdjtPmAGsHt7B6apJhqadXDSsqVCr1dhS4mAsl2HaLEvb40M1qTq/FykWDfQZfWuyYIMfg8
-	sBJYb2YXhiugedTU1jhAIA=
-X-Received: by 2002:a05:622a:d1c:b0:509:1b5c:fe25 with SMTP id d75a77b69052e-50e24b8e774mr23717671cf.23.1776302702216;
-        Wed, 15 Apr 2026 18:25:02 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-108-28-184-130.washdc.fios.verizon.net. [108.28.184.130])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50e1adbcf10sm24957831cf.10.2026.04.15.18.24.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2026 18:25:00 -0700 (PDT)
-Date: Wed, 15 Apr 2026 21:24:56 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Frank van der Linden <fvdl@google.com>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
-	lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
-	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
-	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
-	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aeA6aNDpQ-U5UJCs@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <3342acb5-8d34-4270-98a2-866b1ff80faf@kernel.org>
- <abwRu1FNqI3dVyqL@gourry-fedora-PF4VCD3F>
- <2608a03b-72bb-4033-8e6f-a439502b5573@kernel.org>
- <ad0iT4UWka3gMUpu@gourry-fedora-PF4VCD3F>
- <38cf52d1-32a8-462f-ac6a-8fad9d14c4f0@kernel.org>
- <ad-r7hwIdnvKsrh9@gourry-fedora-PF4VCD3F>
- <CAPTztWajm_JLpp9BjRcX=h72r25ELrXeGkOXVachybBxLJGS=g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ExeDLLAh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776328116; x=1807864116;
+  h=date:from:to:cc:subject:message-id;
+  bh=wX45i5cVJBTC+X6yc8kDxe8NtXGu5vVJfm5UJCpCPiQ=;
+  b=ExeDLLAhCorCHrs5feWd/PIUeRkTDhLbZFSVduG69dDB52ZfnNdsP8Bh
+   DM+oSMiJf7HJhTVdch8qYlHuqkV3XzBwNUIO6LTOWFxVdtiSfmAyGFnRO
+   xU2Hdot6ZHTiMPhbSmd3XWnKh+W4PZoq6BLPxVLRPIxWVsve4YOZ8q8CC
+   W8ENz+xOUPD013d5gev6uGYSZpYJbDzS6Wylriyx4JzzYHZ3fWg0jRk8L
+   GjvJO+etTlc+NTEMsQhSFVkhw3VdNMlVMon+e9zEya4ajsEFNT3n2J00Y
+   uQlcdxZDakATteS+Ie4Z+PUkUrdNbsSPtoZhoVeZajDUuPgSYj6D0s73m
+   g==;
+X-CSE-ConnectionGUID: Ix48ICYoRySq3kboQES61A==
+X-CSE-MsgGUID: anu8QNtoR+y7vdvKWvXcPA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11760"; a="76353182"
+X-IronPort-AV: E=Sophos;i="6.23,181,1770624000"; 
+   d="scan'208";a="76353182"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2026 01:28:35 -0700
+X-CSE-ConnectionGUID: tonWXPrASieI0PyTJ0SYyA==
+X-CSE-MsgGUID: LjlgJlYOS0+ZpQy0PC/RDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,181,1770624000"; 
+   d="scan'208";a="226336769"
+Received: from lkp-server01.sh.intel.com (HELO 7f3b36e5d6a5) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 16 Apr 2026 01:28:34 -0700
+Received: from kbuild by 7f3b36e5d6a5 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wDI5P-000000001P0-2gWP;
+	Thu, 16 Apr 2026 08:28:31 +0000
+Date: Thu, 16 Apr 2026 16:28:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ 6c724ce0ec6ed8608917673bbb363b208ce2644c
+Message-ID: <202604161601.mFyv4jbn-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPTztWajm_JLpp9BjRcX=h72r25ELrXeGkOXVachybBxLJGS=g@mail.gmail.com>
 
-On Wed, Apr 15, 2026 at 12:47:50PM -0700, Frank van der Linden wrote:
-> 
-> This has been a really great discussion. I just wanted to add a few
-> points that I think I have mentioned in other forums, but not here.
-> 
-> In essence, this is a discussion about memory properties and the level
-> at which they should be dealt with. Right now there are basically 3
-> levels: pageblocks, zones and nodes. While these levels exist for good
-> reasons, they also sometimes lead to issues. There's duplication of
-> functionality. MIGRATE_CMA and ZONE_MOVABLE both implement the same
-> basic property, but at different levels (attempts have been made to
-> merge them, but it didn't work out).
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: 6c724ce0ec6ed8608917673bbb363b208ce2644c  Merge branch 'for-7.1/cxl-misc' into cxl-for-next
 
-I have made this observation as well.  ZONEs in particular are a bit
-odd because they're somehow simultaneously too broad and too narrow in
-terms of what they control and what they're used for.
+elapsed time: 726m
 
-1GB ZONE_MOVABLE HugeTLBFS Pages is an example weird carve-out, because
-the memory is in ZONE_MOVABLE to help make 1GB allocations more
-reliable, but 1GB movable pages were removed from the kernel because
-they're not easily migrated (and therefore may block hot-unplug).
+configs tested: 238
+configs skipped: 3
 
-(Thankfully they're back now, so VMs can live on this memory :P)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-So you have competing requirements, which suggests zone is the wrong
-abstraction at some level - but it's what we've got.
+tested configs:
+alpha                             allnoconfig    gcc-15.2.0
+alpha                            allyesconfig    gcc-15.2.0
+alpha                               defconfig    gcc-15.2.0
+arc                              allmodconfig    clang-16
+arc                              allmodconfig    gcc-15.2.0
+arc                               allnoconfig    gcc-15.2.0
+arc                              allyesconfig    clang-23
+arc                              allyesconfig    gcc-15.2.0
+arc                                 defconfig    gcc-15.2.0
+arc                   randconfig-001-20260416    gcc-14.3.0
+arc                   randconfig-002-20260416    gcc-10.5.0
+arc                   randconfig-002-20260416    gcc-14.3.0
+arm                               allnoconfig    clang-23
+arm                               allnoconfig    gcc-15.2.0
+arm                              allyesconfig    clang-16
+arm                              allyesconfig    gcc-15.2.0
+arm                                 defconfig    clang-23
+arm                          ixp4xx_defconfig    gcc-15.2.0
+arm                   randconfig-001-20260416    clang-23
+arm                   randconfig-001-20260416    gcc-14.3.0
+arm                   randconfig-002-20260416    gcc-14.3.0
+arm                   randconfig-002-20260416    gcc-8.5.0
+arm                   randconfig-003-20260416    gcc-14.3.0
+arm                   randconfig-003-20260416    gcc-8.5.0
+arm                   randconfig-004-20260416    gcc-11.5.0
+arm                   randconfig-004-20260416    gcc-14.3.0
+arm64                            allmodconfig    clang-19
+arm64                            allmodconfig    clang-23
+arm64                             allnoconfig    gcc-15.2.0
+arm64                               defconfig    gcc-15.2.0
+arm64                 randconfig-001-20260416    gcc-8.5.0
+arm64                 randconfig-002-20260416    gcc-10.5.0
+arm64                 randconfig-002-20260416    gcc-8.5.0
+arm64                 randconfig-003-20260416    clang-23
+arm64                 randconfig-003-20260416    gcc-8.5.0
+arm64                 randconfig-004-20260416    clang-16
+arm64                 randconfig-004-20260416    gcc-8.5.0
+csky                             allmodconfig    gcc-15.2.0
+csky                              allnoconfig    gcc-15.2.0
+csky                                defconfig    gcc-15.2.0
+csky                  randconfig-001-20260416    gcc-14.3.0
+csky                  randconfig-001-20260416    gcc-8.5.0
+csky                  randconfig-002-20260416    gcc-14.3.0
+csky                  randconfig-002-20260416    gcc-8.5.0
+hexagon                          allmodconfig    clang-17
+hexagon                          allmodconfig    gcc-15.2.0
+hexagon                           allnoconfig    clang-23
+hexagon                           allnoconfig    gcc-15.2.0
+hexagon                             defconfig    clang-23
+hexagon               randconfig-001-20260416    clang-23
+hexagon               randconfig-001-20260416    gcc-15.2.0
+hexagon               randconfig-002-20260416    clang-23
+hexagon               randconfig-002-20260416    gcc-15.2.0
+i386                             allmodconfig    clang-20
+i386                             allmodconfig    gcc-14
+i386                              allnoconfig    gcc-14
+i386                              allnoconfig    gcc-15.2.0
+i386                             allyesconfig    clang-20
+i386                             allyesconfig    gcc-14
+i386        buildonly-randconfig-001-20260416    gcc-14
+i386        buildonly-randconfig-002-20260416    gcc-12
+i386        buildonly-randconfig-003-20260416    clang-20
+i386        buildonly-randconfig-004-20260416    clang-20
+i386        buildonly-randconfig-005-20260416    clang-20
+i386        buildonly-randconfig-006-20260416    gcc-14
+i386                                defconfig    clang-20
+i386                  randconfig-001-20260416    gcc-14
+i386                  randconfig-002-20260416    clang-20
+i386                  randconfig-002-20260416    gcc-14
+i386                  randconfig-003-20260416    clang-20
+i386                  randconfig-003-20260416    gcc-14
+i386                  randconfig-004-20260416    clang-20
+i386                  randconfig-004-20260416    gcc-14
+i386                  randconfig-005-20260416    clang-20
+i386                  randconfig-005-20260416    gcc-14
+i386                  randconfig-006-20260416    clang-20
+i386                  randconfig-006-20260416    gcc-14
+i386                  randconfig-007-20260416    gcc-14
+i386                  randconfig-011-20260416    gcc-14
+i386                  randconfig-012-20260416    gcc-14
+i386                  randconfig-013-20260416    clang-20
+i386                  randconfig-014-20260416    clang-20
+i386                  randconfig-015-20260416    clang-20
+i386                  randconfig-016-20260416    clang-20
+i386                  randconfig-017-20260416    gcc-14
+loongarch                        allmodconfig    clang-19
+loongarch                        allmodconfig    clang-23
+loongarch                         allnoconfig    clang-23
+loongarch                         allnoconfig    gcc-15.2.0
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20260416    gcc-15.2.0
+loongarch             randconfig-002-20260416    gcc-15.2.0
+m68k                             allmodconfig    gcc-15.2.0
+m68k                              allnoconfig    gcc-15.2.0
+m68k                             allyesconfig    clang-16
+m68k                             allyesconfig    gcc-15.2.0
+m68k                                defconfig    clang-19
+m68k                                defconfig    gcc-15.2.0
+microblaze                        allnoconfig    gcc-15.2.0
+microblaze                       allyesconfig    gcc-15.2.0
+microblaze                          defconfig    clang-19
+microblaze                          defconfig    gcc-15.2.0
+mips                             allmodconfig    gcc-15.2.0
+mips                              allnoconfig    gcc-15.2.0
+mips                             allyesconfig    gcc-15.2.0
+nios2                            allmodconfig    clang-23
+nios2                            allmodconfig    gcc-11.5.0
+nios2                             allnoconfig    clang-23
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    clang-19
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20260416    gcc-15.2.0
+nios2                 randconfig-001-20260416    gcc-8.5.0
+nios2                 randconfig-002-20260416    gcc-15.2.0
+nios2                 randconfig-002-20260416    gcc-8.5.0
+openrisc                         allmodconfig    clang-23
+openrisc                         allmodconfig    gcc-15.2.0
+openrisc                          allnoconfig    clang-23
+openrisc                          allnoconfig    gcc-15.2.0
+openrisc                            defconfig    gcc-15.2.0
+parisc                           allmodconfig    gcc-15.2.0
+parisc                            allnoconfig    clang-23
+parisc                            allnoconfig    gcc-15.2.0
+parisc                           allyesconfig    clang-19
+parisc                           allyesconfig    gcc-15.2.0
+parisc                              defconfig    gcc-15.2.0
+parisc                randconfig-001-20260416    gcc-10.5.0
+parisc                randconfig-001-20260416    gcc-8.5.0
+parisc                randconfig-002-20260416    gcc-8.5.0
+parisc64                            defconfig    clang-19
+parisc64                            defconfig    gcc-15.2.0
+powerpc                          allmodconfig    gcc-15.2.0
+powerpc                           allnoconfig    clang-23
+powerpc                           allnoconfig    gcc-15.2.0
+powerpc                 linkstation_defconfig    clang-20
+powerpc               randconfig-001-20260416    clang-23
+powerpc               randconfig-001-20260416    gcc-8.5.0
+powerpc               randconfig-002-20260416    gcc-8.5.0
+powerpc64             randconfig-001-20260416    clang-16
+powerpc64             randconfig-001-20260416    gcc-8.5.0
+powerpc64             randconfig-002-20260416    gcc-8.5.0
+riscv                            allmodconfig    clang-23
+riscv                             allnoconfig    clang-23
+riscv                             allnoconfig    gcc-15.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-23
+riscv                               defconfig    gcc-15.2.0
+riscv                 randconfig-001-20260416    clang-23
+riscv                 randconfig-001-20260416    gcc-11.5.0
+riscv                 randconfig-002-20260416    clang-23
+s390                             allmodconfig    clang-18
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-23
+s390                             allyesconfig    gcc-15.2.0
+s390                                defconfig    clang-23
+s390                                defconfig    gcc-15.2.0
+s390                  randconfig-001-20260416    clang-23
+s390                  randconfig-002-20260416    clang-20
+s390                  randconfig-002-20260416    clang-23
+sh                               allmodconfig    gcc-15.2.0
+sh                                allnoconfig    clang-23
+sh                                allnoconfig    gcc-15.2.0
+sh                               allyesconfig    clang-19
+sh                               allyesconfig    gcc-15.2.0
+sh                                  defconfig    gcc-14
+sh                                  defconfig    gcc-15.2.0
+sh                    randconfig-001-20260416    clang-23
+sh                    randconfig-001-20260416    gcc-9.5.0
+sh                    randconfig-002-20260416    clang-23
+sh                    randconfig-002-20260416    gcc-15.2.0
+sparc                             allnoconfig    clang-23
+sparc                             allnoconfig    gcc-15.2.0
+sparc                               defconfig    gcc-15.2.0
+sparc                 randconfig-001-20260416    clang-23
+sparc                 randconfig-001-20260416    gcc-15.2.0
+sparc                 randconfig-002-20260416    clang-23
+sparc                 randconfig-002-20260416    gcc-15.2.0
+sparc64                          allmodconfig    clang-23
+sparc64                             defconfig    clang-20
+sparc64                             defconfig    gcc-14
+sparc64               randconfig-001-20260416    clang-23
+sparc64               randconfig-002-20260416    clang-23
+sparc64               randconfig-002-20260416    gcc-8.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-23
+um                               allyesconfig    gcc-14
+um                               allyesconfig    gcc-15.2.0
+um                                  defconfig    clang-23
+um                                  defconfig    gcc-14
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20260416    clang-23
+um                    randconfig-002-20260416    clang-23
+um                           x86_64_defconfig    clang-23
+um                           x86_64_defconfig    gcc-14
+x86_64                           allmodconfig    clang-20
+x86_64                            allnoconfig    clang-20
+x86_64                            allnoconfig    clang-23
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20260416    gcc-12
+x86_64      buildonly-randconfig-002-20260416    gcc-14
+x86_64      buildonly-randconfig-003-20260416    clang-20
+x86_64      buildonly-randconfig-004-20260416    gcc-14
+x86_64      buildonly-randconfig-005-20260416    clang-20
+x86_64      buildonly-randconfig-006-20260416    clang-20
+x86_64                              defconfig    gcc-14
+x86_64                randconfig-001-20260416    gcc-13
+x86_64                randconfig-002-20260416    gcc-14
+x86_64                randconfig-003-20260416    clang-20
+x86_64                randconfig-004-20260416    clang-20
+x86_64                randconfig-005-20260416    gcc-14
+x86_64                randconfig-006-20260416    gcc-14
+x86_64                randconfig-011-20260416    clang-20
+x86_64                randconfig-011-20260416    gcc-12
+x86_64                randconfig-012-20260416    gcc-12
+x86_64                randconfig-012-20260416    gcc-14
+x86_64                randconfig-013-20260416    gcc-12
+x86_64                randconfig-013-20260416    gcc-14
+x86_64                randconfig-014-20260416    gcc-12
+x86_64                randconfig-015-20260416    clang-20
+x86_64                randconfig-015-20260416    gcc-12
+x86_64                randconfig-016-20260416    gcc-12
+x86_64                randconfig-071-20260416    gcc-14
+x86_64                randconfig-072-20260416    gcc-14
+x86_64                randconfig-073-20260416    gcc-14
+x86_64                randconfig-074-20260416    clang-20
+x86_64                randconfig-075-20260416    clang-20
+x86_64                randconfig-076-20260416    clang-20
+x86_64                           rhel-9.4-bpf    gcc-14
+x86_64                         rhel-9.4-kunit    gcc-14
+x86_64                           rhel-9.4-ltp    gcc-14
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    clang-23
+xtensa                            allnoconfig    gcc-15.2.0
+xtensa                           allyesconfig    clang-23
+xtensa                randconfig-001-20260416    clang-23
+xtensa                randconfig-001-20260416    gcc-11.5.0
+xtensa                randconfig-002-20260416    clang-23
+xtensa                randconfig-002-20260416    gcc-10.5.0
 
-> There's also memory with clashing
-> properties inhabiting the same data structure: LRUs. Having strictly
-> movable memory on the same LRU as unmovable memory is a mismatch. It
-> leads to the well known problem of reclaim done in the name of an
-> unmovable allocation attempt can be entirely pointless in the face of
-> large amounts of ZONE_MOVABLE or MIGRATE_CMA memory: the anon LRU will
-> be chock full of movable-only pages. Reclaiming them is useless for
-> your allocation, and skipping them leads to locking up the system
-> because you're holding on to the LRU lock a long time.
->
-
-This is an interesting observation that should be solvable.
-
-For example - i'm pretty sure mlock'd pages are on an unevictable LRU
-for exactly this reason (to just skip scanning them during reclaim).
-
-Which is a different pain point I have - since they're still migratable,
-they could be demoted to make room for local hot pages.
-
-> So, looking at having some properties set at the node level makes
-> sense to me even in the non-device case. But perhaps that is out of
-> scope for the initial discussion.
-> 
-> One use case that seems like a good match for private nodes is guest
-> memory. Guest memory is special enough to want to allocate / maintain
-> it separately, which is acknowledged by the introduction of
-> guest_memfd.
-> 
-> I'm interested in enabling guest_memfd allocation from private nodes.
-> I've been playing around with setting aside memory at boot, and
-> assigning it to private nodes (one private node per physical NUMA
-> node), and making it available to guest_memfd only. There are issues
-> to be solved there, but the private node abstraction seems to fit
-> well, and provides for useful hooks to manage guest memory.
-> 
-
-I have wondered about this use case, but I haven't really played with
-guest_memfd to know what the implications are here, so it's nice to hear
-someone is looking at this.  It will be nice to hear your input on where
-the abstraction could be better.
-
-> Some properties that I'm interested in for this use case:
-> 
-> 1) is the memory in the direct map or not? Should that be configurable
-> for a private node? I know there are patches right now to remove
-> memory from the direct map for guest_memfd, but what if there was a
-> private node whose memory is not in the direct map by default?
-
-Presuming a page was not in the direct map and it was in the buddy
-(strong assumption here), there's a handful of things that would
-straight up break:
-
-  - init_on_alloc (post_alloc_hook) / __GFP_ZERO (clear_highpage)
-  - init_on_free (free_pages_prepare)
-  - kernel_poison_pages (accesses the page contents)
-  - CONFIG_DEBUG_PAGEALLOC
-
-But... these things seem eminently skippable based on a node attribute.
-
-I think this could be done, but there is added concern about spewing
-an ever increasing numbers of hooks throughout mm/ as the number of
-attributes increase.
-
-But in this case I think the contract would require that an NP_OPS_NOMAP
-would have to be mutually exclusive with all other node attributes (too
-many places that touch the mapping, it would be too fragile).
-
-There's a few catches here though
-
-  1) you lose the ability to zero out the page after allocation, so
-     whatever is in the memory already is going into the guest.
-
-     That seems problematic for a variety of reasons.
-
-     I guess you can use kmap_local_page?
-     But then why not just unmap after allocation?
-
-     If never mapping is a hard requirement, if that memory lives on
-     a device with a sanitize function, you maybe could massage kernel
-     free-page-reporting to offload the zeroing without having the
-     kernel map it - as long as you can take a delay after free before
-     the page becomes available again.
-
-  2) the current mempolicy guest_memfd patches would not apply because
-     I can't see how OPS_MEMPOLICY & OPS_NOMAP co-exist.  A user program
-     could call mbind(nomap_node) on a random VMA - and there would be
-     kernel OOPS everywhere.
-
-     That would just mean pre-setting the node backing for all
-     guest_memfd VMAs, rather than using mbind().
-
-Something like (cribbing from the memfd code with absolutely no
-context, so there's a pile of assumptions being made here)
-
-  struct kvm_create_guest_memfd {
-        __u64 size;
-        __u64 flags;
-        __s32 numa_node;  /* Set at creation */
-        __u32 pad;
-        __u64 reserved[5];
-  };
-
-  #define GUEST_MEMFD_FLAG_NUMA_NODE    (1ULL << 2)
-
-  if (gmem->flags & GUEST_MEMFD_FLAG_NUMA_NODE)
-      folio = __folio_alloc(gfp | __GFP_PRIVATE, order,
-                            gmem->numa_node, NULL);
-  else
-      /* existing mempolicy / default path */
-      folio = __filemap_get_folio_mpol(...);
-
-Which may even be preferable to the recently upstreamed pattern.
-
-> 2) Default page size. devdax, a ZONE_DEVICE user, allows for memory
-> setup on hotplug that initializes things with HVO-ed large pages.
-> Could the page size be a property of the node? That would make it easy
-> to hand out larger pages to guests.  Of course, if you use anything
-> but 4k, the argument of 'we can use the general buddy allocator' goes
-> out the window, unless it's made to deal with a per-node base page
-> size.
-> 
-
-Per-node page sizes are probably a bridge too far, that's seems like
-a change that would echo through most of the buddy infrastructure, not
-just a few hooks to prevent certain interactions.
-
-However, I also don't think this is a requirement.
-
-I know there is some work to try to raise the max page order to allow
-THP to support 1GB huge pages - if max size is a concern, there's hope.
-
-On fragmentation though...
-
-If the consumer of a private node only ever allocates a specific order
-(order-9) - the buddy never fragments smaller than that (it maybe
-spends time coalescing for no value, but it'll never fragment smaller).
-
-So is the concern here that you want to guarantee a minimum page size
-to deal with the fragmentation problem on normal general-purpose nodes,
-or do you want to guarantee a minimum page size because you can't limit
-the allocations to be of a base order?
-
-i.e.: is limiting guest_memfd allocations on a private node to a single
-order (or a minimum order? 2MB?) a feasible option?  (Pretend i know
-very little about the guest_memfd specific memory management code).
-
-~Gregory
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
