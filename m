@@ -1,66 +1,61 @@
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011006.outbound.protection.outlook.com [40.107.208.6])
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011033.outbound.protection.outlook.com [52.101.57.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D923A5E78;
-	Thu, 16 Apr 2026 10:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D35B33120C;
+	Thu, 16 Apr 2026 14:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.33
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776335869; cv=fail; b=SGwtUaTMLWzSCHfQXHRt7zhKzgRlVPV5ZDNIympvTY1XupoOJFNfeNEYnIf/HuEEAcxkX19trJoKTKUcH1lsJgqZ1wa8xRSaU8BPDuHBqX5GNjiVr6XywY+8cCAYzEJmJuR26lx7uvylVQeC1MD2kpNqP4soDiyLw9gcESqEDb4=
+	t=1776348719; cv=fail; b=s3mcwW/eJUUmmc+v9mKVOFTg/zmQiQzAhb/C/MZ7ZWVrSguOjzDNa5hGrRb9oWnyDfK+IqCAIjvsFSbZwav7s1iQBV8jKcUqcfLphdswQISoeNPnP8P5DDo4HnGj1At9SsRBfp5pT+qTLGLPu1tR4WOQiGe+PuJI0xB6PeBa3A8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776335869; c=relaxed/simple;
-	bh=BxGSC0iUE1TGZcFWMxq5hOtPbO8IJ98UL+uzvvOQaLw=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=aLTT6y+6F33uHRDcY/KKgniSWgdxQTf6QeOkyLQ4bVA3rUP7HjNotqNJGuFDA7eMFuIqUWl4m31CRZGxcoDgx7d0cI1Tq9U/AC0Ba3IFGtmF2ng2OM45Eex8IxBGh+SfEB4dJJ465rwwjliUaZRWCUuvH024TZzSX/73/IoYAxU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=30HfBRMN; arc=fail smtp.client-ip=40.107.208.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1776348719; c=relaxed/simple;
+	bh=rBBEIjML0hsRfD5yo2Hp/zVqbK7sLeJNUMTZ8OY4/hM=;
+	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=daouaXm9mAvIzQFkMeaHaJhujuQlV+/bY31xZ75M1F6mzsKXGYRO8HFkrSrf7wS43tvb4fn1FRSicQVXYgp0+1ypH+AoU7hKfdro34F662pgYolxHh2nxncUziHdKvJpePQPQ6ha2Abtn/uuobCBkYCURMnWQ7+RA3hqTV8yQ5Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gd2C0G8R; arc=fail smtp.client-ip=52.101.57.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="30HfBRMN"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gd2C0G8R"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=AM3Eo0czXLV09gJuJrSasQ+6Tic4wgKOzcc6G8zDJUtI2ItTef4VaedaMwOdpsz5EaIE+XH80oibKehkVmTabXTu738PHx88Rhi5H0is13afcKudhyP7clkiMnfuVkKI9PTvdokpTM30LNjMi6hgMHgp42DoL82ZrhFDm7GAg19iNHNILrCdefreyb3tkMD9wVSJFtqHlyrJ1YKaud9D83KIv7e98FSsFy5TvpcoBkFI4p/XGXXnP3BP9QDBWEVTTI3pvbFlTsdLr26TZSQQfNCVJ7ynNdNeoH1B4yTlTCvP4Mb1ek3skx7XbC3jMy8jYV0uzIy2Flsfx0NoZqeOFQ==
+ b=PFXW5xGy6/xGs3wASFAvqjo67O7pWlKef1F9/GiQMyzBnzqSTwsMHvE7o+fdLbdWbC2v1onPwp/unPktLFC08vuddYj+DLEy/6zHk5qJqGfuf51SObY5b0gV1oE4ForVBksAmTGrV9Y3F0iBof7uYCIT9G8HuJ2TSJh5MNwCR/P/+oRanzwwIC3Ejq4C2/b2PJ1nbZLDqBo2dhQSdvfagl5x3NX1+Z4tzWCdRvV+xD9LcZNjTwlvJ6yqPcLhZa2m/u5rvOuz77TmPxFZme2ZBmnnLLk5PnWcplQF/G84lrRkBGk1OUbGhsb5Q/TDjQB/sN7IdxbQsG+cwX7mtvpz2Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1OhTv71dYDcYkooCp2lZLP8auD6Mzt7+J8w9zuAgWWE=;
- b=SCXxMdE3QRhdeFjJW7z5UtCTsZKbvhkLR7YY8ZMaZaOv0bFmC2XHZTGOS3nGyfiD4q8uQGReGylhkOrFR02UX27s2WvmtrpZS5bSWkwkeslAoDMNglCZhRRqjHKHxp+Sfzqv4FGKq5VD4VI/E2jX2a/GxGHpX8cx9Qd7k5ujl3a7rKUMqgYwT2niQ8dxgQZtiRfGKEPhGUzWrvrFXzzj1+c3vxLt50VsY71JHeIPFByYzJ8VpspLxyjS5MCnwr1FBtLJRdUarxKtGQxCWTPrZTVL8PKv6pkfBxGrgU35561K+gPWrpN/aU6FIe/d/JNUCwluJfta7Zj3o5xjBdw/Iw==
+ bh=8IgrbqAjKd0bwuWqFVEIhtsqma9bKwslORbTF/ZDsYg=;
+ b=C31NkpzPedX5wKs0W2wUw9OJIqHzx4DqjheTStLBhlslQYPMihdcO36TCXRoaWrGaN43AKAQV4X3YpshIluXvifPp7tFR5Ya/Fqgzkc2aRQSorpmDUeA1NXn8RFXNFrulUjMlvC+ucyW9lacEvZyTlxhmJGnZjflksGMDQan8IP9EFoXHSNAilHZQWeLdK8unUMYK5+xrUNPeDeMYy7JlxBneDGeCkZTTl0Co1PUVLSggvoMpjTE7M1D32pK2+0niSiOlZop8B8ROO0ZvZLTaSPS4Gu2ijumo5nZX5Wdh7oLd+KUcjpxilI7GwwQP4KWGINx1TbvESdDXqUCqgZTkg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1OhTv71dYDcYkooCp2lZLP8auD6Mzt7+J8w9zuAgWWE=;
- b=30HfBRMNJfdpWjQnzHz6e+qBQ5uD/buu1OWgBhB5I7B3pGH2ELpyxAIIIGGCxCXUFq4BwBDEOZEgn5hVFZrAXO0Ht/LP9iZ5S1ndUxhENVDJ0kswoyJ+fR/60g0qsNJtLrwywwi3WfaBnEN9quYxBbrWfs3DDh43PEY5qMiVV+s=
+ bh=8IgrbqAjKd0bwuWqFVEIhtsqma9bKwslORbTF/ZDsYg=;
+ b=gd2C0G8R1ShezgimayqGC3HDtfNSIVGMPDke9+sMqpmxlH3HNmZU55PElfsgrOvS84GfxTxHVf+xxAPWLX1GuwinIsHQ4CwUEe7qw3mDZAOsYTdmOZxlry8jxvLdcw5GRU3wjegyK3IngJpomGb0la1TNs9odgmtLwD2A+sR1LofEdqStqepYe/StqA72vHpz/nMo/4guur9KRWAB2o6tl6FX5tpaGjwsgNBcSRiyGwXRBZkBBB+AlJ3ryP/ixQVMRvS/So/FDRvTuLHq3OxhB4rWm1H68X1Y73cWKV/bsxc0rg4BbBJg/YbQfBQt418YgYOlcXy2eSowIelhFr4/w==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by SJ0PR12MB7005.namprd12.prod.outlook.com (2603:10b6:a03:486::10) with
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by MN0PR12MB5907.namprd12.prod.outlook.com (2603:10b6:208:37b::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.20; Thu, 16 Apr
- 2026 10:37:43 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::9e55:f616:6a93:7a3d]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::9e55:f616:6a93:7a3d%6]) with mapi id 15.20.9818.017; Thu, 16 Apr 2026
- 10:37:43 +0000
-Message-ID: <12594667-5b3b-402a-b94a-54104892b0a2@amd.com>
-Date: Thu, 16 Apr 2026 11:37:37 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v25 06/11] cxl/hdm: Add support for getting region from
- committed decoder
-Content-Language: en-US
-To: Dan Williams <dan.j.williams@intel.com>, alejandro.lucero-palau@amd.com,
- linux-cxl@vger.kernel.org, netdev@vger.kernel.org, dave.jiang@intel.com,
- edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com
-References: <20260330143827.1278677-1-alejandro.lucero-palau@amd.com>
- <20260330143827.1278677-7-alejandro.lucero-palau@amd.com>
- <69ccaabf8d9cc_1b0cc6100fd@dwillia2-mobl4.notmuch>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <69ccaabf8d9cc_1b0cc6100fd@dwillia2-mobl4.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P123CA0450.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1a9::23) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.25; Thu, 16 Apr
+ 2026 14:11:54 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528%5]) with mapi id 15.20.9818.017; Thu, 16 Apr 2026
+ 14:11:54 +0000
+Date: Thu, 16 Apr 2026 11:11:53 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-rdma@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+	Saeed Mahameed <saeedm@nvidia.com>
+Subject: [GIT PULL] Please pull FWCTL subsystem changes
+Message-ID: <20260416141153.GA1646988@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="n+R94BSBfpwtzvW3"
+Content-Disposition: inline
+X-ClientProxiedBy: MN2PR22CA0010.namprd22.prod.outlook.com
+ (2603:10b6:208:238::15) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -68,147 +63,149 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|SJ0PR12MB7005:EE_
-X-MS-Office365-Filtering-Correlation-Id: 625085b0-75b4-4f4e-53a3-08de9ba430b4
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|MN0PR12MB5907:EE_
+X-MS-Office365-Filtering-Correlation-Id: a5149a2a-baed-4ef8-213c-08de9bc21ce8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|921020|22082099003|56012099003|18002099003;
+	BCL:0;ARA:13230040|1800799024|366016|376014|56012099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	jgbPdWCaMNuvzM7odsjiG1/ChChdmIk1pbFD4sY2eoOSXSQXpi4Bfkut9HzBFpOlkpdZdSuD6AFoqG6XH8qo8fZqvsBhvSxR7eNmxoapFrTe2cN3dRXopgmgamBJcsNtUNXdwNk7iicZTIy7stKw3EBmTBDICw/NV91WEUibhFOX21PgbrlmlO9GqB7KlEcJ6AaRf6Jd4IechKgP/3zS0933II7Vr8jsLS9Cl4X4r6zCcn7Vlx0VZUxrxxmcz2yJO/RT9hzeQjMNjog44s73suCEEnslJ3juAjakk92CRdeV7JyMdpCkYCoc9NbmpB7n8ymS/SAaYnB9OVVrxu4+mR/FI128JG/jw3H1JC3nh+iauUzVjdiywDgvkvk/HqJypFjUz/6Gi+5PD7xfUwioPq22MLV1pILg7MUg4cSLUi8zKOC7zelQ78zwAeVP6M7iqlzEzRvEuSrDxpqxL1jov/ybaHwxvTEE7ESwtQckRMi02p7CkSgfPxDi2bmZz26vp8DUyUApJ/KXiv7IYE0PJLIpwlJ2gso4vs4OFWl3uCKEMqa+2GVHd0yy2OCgHG/vAcMGqBQvodJuPCaUZgqJ6k+2zxGnYilqOfKQwvx4ODTkHNoQjS4V++w4+nxqOwBoSpwpXpSymiJyu6ObEdmaUGpzlbQULHABY6MxqNFx93zLxrXw6x6OJ2V3rqjxO65pciVe1nfDXdEGf4zcjh5xDtTbf008FjuCESa4wxFQbvM=
+	BfV7q0IUwajm55BE1lie4zMKjlF3ti72pUDpANAUfKs6Nb4cQkqeeoKbFQd1D5iGXS1jFut6fu4SdR+AKukoyWqoGrRwCMwGM0OWkqZd3nAwS8Js2F93GCkAQCctwAy9diJFUsTA7bIuW+fi0pqtBdl/L4Ww8ClX03qcS8BSJNkGzj1VCgRhiyc4pGWzjmbqX3tjL6ybs9COtezoPG8E7k2A6grRpmrwgZJyijPCrgVG1jyjE9AdHv1sYEffF0ELMH4GOmm2J4AncSza1R0n9ytT37He1UZgsZq7xpF8nBdZD+h5TLv0JN/VHPBDAGPzupPIkpy84jw5bmvRRYmjKwp0kHw/y349Fw9EQ89odbo0HHMsDCx1DNUPFz47nXuO5jfgdRBEUYtx5RSugUty2YQIKi7kdqKONFTX8vxXeAmoYXkFx1QfgSOKKRZPPySLmBdYJ1ezs1vjhAu5ews9k+SQdGRIiCJCDAbimAt3mMAKUwtlV/j2VQonvWgCYNAwshvpD48oc3dbYhE13aY6HkTEx65YE37PY2a1Bf0kfA5sMYgDcy9IxJRytMe+J0EokyGlUHaO39s7BGfikJkLjtLrsVzC3eerwwtNneiMYCU5yG2jCg9grsUUmR9O2xtVvXTK0GQ5CcbO395OQ15b01nA5xc7+P+s0/0UMAWY9Y+6cMm/k5TQpQI+noIdj9uQ878z31K6qly9SZLUqa94WXYJ8+bmcj+Si1oYG+0B0ng=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(921020)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(56012099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UzFzalozOGFqM2lXRk5XQmZranhpWDdWNTYrSk1obzJlSVpXWEZibEdkendV?=
- =?utf-8?B?b1BnTk5qYXNzRUxRNGhLK09EOG5OamZTYWhvOG9sL1h0OUw4dWQySWxqcEt1?=
- =?utf-8?B?eVJwdTNic2lmUEtPYzFUVGN4TFdpS1ZlMFZScHFrc3VKV2FVcHR0VVppa3Uw?=
- =?utf-8?B?SGRrQmdNbndtWTZIblMrT0QwVUpXMzY5R1lYLzdSSTQ0dlpTWjBqYUMzcVVE?=
- =?utf-8?B?WDFmYXhZazd1bk1vbjlMaUdtWkpMS0hGNkEzdUpiYWJNbzk1VnlRTzZJY1JI?=
- =?utf-8?B?KzI3cjlpTWZMU0k1Tm50NEJ6b09JN2FkM0c2VnkyQmRuWmZZdk5LNkFIUWc1?=
- =?utf-8?B?bmdDejd4ekFNZ0FmOGdlMnNUSGk2ckFkRWd0akZENEowbVFLNVF0N1JYQU0y?=
- =?utf-8?B?OWR5d2paOU5FQVAxYnZDam1BSXV5cHBuMGpOL3JuZW9wbXVpb3FzQ3B0Zms5?=
- =?utf-8?B?WmlReWxhTzdacmg1MC9WSW9FRFdSbkp6K2RzbFJxZ0ZabVZsUHJvQXVKTWV2?=
- =?utf-8?B?aUxNUFRoNjhGa0pPOXVpbmVHVlIxK0hLcWFkY3dtL050OHFiallRaVp2NzhE?=
- =?utf-8?B?VXJOMmF3MUQ4enk1S1VOclBObzhrTDk2WkVCK3JDa0tEc3VkbjFNQUFYNVZ1?=
- =?utf-8?B?OGtZSytLdDI1OVVGU1FjWlNza1M1dGlHMzV2cDdwcSt1N29BeHhpNmNhUUM0?=
- =?utf-8?B?UVBpZVFZSE1MUVpqeGtYTVVSSW9zK0RKNmlISGpOd2gvRWdNazNCOHkybFo0?=
- =?utf-8?B?OVEvSXJXQTZsUkNVRis3SjZwOGFwUmVnRmtoemVVQ3k1MmdoY3k5d2VEMUJU?=
- =?utf-8?B?dVJHMEVaOUVqMm9oQ3kzTXM1RlpzZzhFbk0yR0hZZmxhVVhRZ0hxWmF2WDBG?=
- =?utf-8?B?KzU4U09MUjJYQWx5cFF0MVdqNnk1cjU0SkhaZ1NZaFp5dHNOQ3JOa3JHNjlt?=
- =?utf-8?B?V1Z2UEdFS2Jsekl0SmZ1by95YVZHSW11YWRMQ1BzZlcxNVBFalJteTB0QmZJ?=
- =?utf-8?B?M3l2cnc5ZzUrRFIrTW1jNXdkNktJT1M1R2EyeFhxQzJIQzBOZEJpSmZHTnI1?=
- =?utf-8?B?N3lEME53RlJSTUo2T0QvRHlrcmo1MEM2akllQ0RFYmpwOVBrZWNSejRVMmV5?=
- =?utf-8?B?Y2xsYVE1N1BzaEpUckJzMTN2K3Rwc3RySEZtRWVJN21rY2NxRjJUWm5IZXQz?=
- =?utf-8?B?QmNUUXQyRUJZRnpqT2RhL1JaOTBMQnlDRHlTSkpFUmV2c2dhejZHT2hUUlF2?=
- =?utf-8?B?UWIzSElKSmhYVTkxSlUxMHk1N2UrMGtoNEZOajArVzRLT0J3TUt3WWw0KzJP?=
- =?utf-8?B?YU9lMHN0eDhQM05memI5eVdrWURXcjV0alRJbWFNcUlJdFhJZGFwSzhjSE5t?=
- =?utf-8?B?U0hOZzRRdDB3bmtadklwdmVhVFp2Ym1tMzZIdXFONVZQT052NFFzOWlZd1ph?=
- =?utf-8?B?WkRJSWxiQXdjd3MxTjBJYkI5MzVUSmljZW92VVk0Z3NKTGxSendDOSt2c3l4?=
- =?utf-8?B?YW5IZ1JLZC9vN2dDNEFuZ0pIRS8yaFNya0NRZ0tHMXk0dk5UcGMxOTJmNUVl?=
- =?utf-8?B?cWpCVzdTQ1RTTjhaVHNzTkw3RGdiaFdHY01Za2ZzNUF2VWdDazl6dDJYd3Nt?=
- =?utf-8?B?dWRKVldleUZlNnptRjM5ai8zTWNpZ0ZEMXlGcUF3eCtmVFJ0Wld2bkVlNGhD?=
- =?utf-8?B?VWVUakRBMlFzWk83SlpDRlVzS0xyMjlFK05LMTJURmlQc0phUXAwZ0IxREsz?=
- =?utf-8?B?WWJXZ1lqQkFKOU12ZnYzV2k0TE15UmZVQ1ZzU1B0QXJyc2Z3QTVOUXgzK0Nw?=
- =?utf-8?B?SXc4Q2s4TE13NDFEVW91SElkTGdMOUpzdTExMnZUYkt6QjEweVpDK1hwUDBm?=
- =?utf-8?B?eXV2M3EwdGN0SnFSWUREOFdsVlh0ajRLTUgxMFFjdkdoUlk5MzgyVnNGZkk3?=
- =?utf-8?B?QW8wWi9hc2lXcWdQTG10T3g5bUt1SDNwaWxGM2ZkMVJjTWEzOENIU0VIV0Va?=
- =?utf-8?B?TDBOQWxsK2dnL1pjYkpZcnd4aUNYZUVNZ2VLS0RGdmdZbDVPWmF6dGNpZy9G?=
- =?utf-8?B?dWpTc0o3RHBUVmRsSDM5dloxeUpUVXpxRE9rc0hweDlIeGFUM0lDcEUrVSt4?=
- =?utf-8?B?VElxNlRhY1FnSjcybmN4V2lZUXZUY0ZxSXl3MHZJeFBERnZIbUJqUXJMNjJ4?=
- =?utf-8?B?M3FmaFNZYWxCMUgyQnNLT2E1OE5mczM3OHoxUnY1ckRQc0RLeVNEM2t4aUVQ?=
- =?utf-8?B?K2pjWkdLWnRJQ05CeFZQRndBOHlQVUhiREhYSVZrT3lGWHkzV25MMm9EWG0z?=
- =?utf-8?B?RUdtYk9oY1dUN0NQZWZRWi8xRE9JNmJoSDhreGtNV1NiNmNDWFBLdz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 625085b0-75b4-4f4e-53a3-08de9ba430b4
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
+	=?us-ascii?Q?6qqpvovc+eR0qZHkDM8pPeQ5eDVKQeYINBtqzNfDjYhiuZNlzVekArV6XxkD?=
+ =?us-ascii?Q?0XCqsNKUk1oWGij4VnI7fuucNyRicn7Sme/u1Em/TzjjtFPgMl0hGcca+AUy?=
+ =?us-ascii?Q?spl9m/0eWwX1beAs8GqqPOPUbepNEPuzkAJhPyJCF+5CTe32RM6tvmE1eH/f?=
+ =?us-ascii?Q?s3WDLdZs2/3TxINYzSqRkNoCQwd8sJopyiRTDQnD5ShgRkrDsRZi01r4y5jn?=
+ =?us-ascii?Q?T4DN9tEIlWK28iIySBTzTAVTSk/2HZ2Y0KWUEGv8hF46aDMgxWDOQfxv6ujr?=
+ =?us-ascii?Q?6C0sYLQOuohTxkOuJqfkzU9a2wdZdoSxnGwvjO21WlejmzwiQ+1Gm5VT/dvu?=
+ =?us-ascii?Q?bbxYBYrMQWPa3+2B2k+yZGRVebKrDD0y6b6Cs1SyL/VxUpQIypnG5GdJqvgF?=
+ =?us-ascii?Q?RJStQK6q17ALtQgA2b4E/IclsghYIqYKauQr3tmMYm91F3n86uVta3iL+lO5?=
+ =?us-ascii?Q?fTtIPp1SbT01G8nrfsMk0SDxDOlk5S8uCISsz15u8TI2vZcdHq+nzrqCmKps?=
+ =?us-ascii?Q?z6Hp8AWpvA0zL7ziRLDlFxbvoywhczaXhrOR0P3Satc3uIvc/5xB2Pk2g9B1?=
+ =?us-ascii?Q?1PLXuTgSPk33aLtW7q5DaKIeuQwOY0Syxi6dojv3aav0J8jxoap4+spEU4zh?=
+ =?us-ascii?Q?nN8KtGCaIs/+NH1RV7TmKE4skrNWknmjURwgaWztNjaFbBYzJ5hwqAC0POkr?=
+ =?us-ascii?Q?tdo4LMy7JVaEhgeMEJS958BQ11r2GmuBIpR7dYBEqlRXyweg8VO/Xs+dQjyQ?=
+ =?us-ascii?Q?xNv3CH0NUoMdQcepfUaaflYKWGhx+4s9mCT+hTVPGyJl1TDI6vy53CArlz3a?=
+ =?us-ascii?Q?Kk9zoCgGw1rveU2lepesh8V8clQDc1FT4IbCbWtAjzv9XWi70LN8i63dTbsd?=
+ =?us-ascii?Q?mqPaukxiP+o9lhydjJomffxil6XOGyR/4mlR+bCNRGdnM/rm8RJVFcTYNVpu?=
+ =?us-ascii?Q?buR12S8+d398qdA/K/YMJdf0hz/e93gkcmvfhaA7bBV9FeCfGkzF49t/AEDm?=
+ =?us-ascii?Q?N21Vy9Tj9rweKhThRoHLauArEsXicVUcZ8kQWNkzNq6f476pYID2LVjvgSZN?=
+ =?us-ascii?Q?7o7BcDw2f+hNUwuy+kMjmsBbi2hAZ+aBkr1pt1Ct2DoUxQ9GMO3/8epJrNFw?=
+ =?us-ascii?Q?ZXrQHhubWvtODz9uzJSwB79NPlQsz1NAhq2glyFaCg+2rjha241lo//Qjfmo?=
+ =?us-ascii?Q?4eBjdDqmj+ucUyIwJX6cVv/wMB9UlMULPMi2cGBG2hYAxTh3zbyWnmc9sNH9?=
+ =?us-ascii?Q?F6CWIhdFKsb4hKfpobMqAkJHuvv13ySAbUqY518PD0/ZAbv4lllSr54DcGTL?=
+ =?us-ascii?Q?1GZqB+U83KTaztEduEU7cQY0JC7QzAau67+4R3kmT1bAXEWjFfxz1zUilzoH?=
+ =?us-ascii?Q?eYY8YnB8AyM60ffwhUPv6oS0mfBGHAuBsApIIEhFbXwPpj4/cg5lSlAHeGMI?=
+ =?us-ascii?Q?iW9cjPaG4SokY7aVRDXS+IDvG2lzUaWh6FvPqbV4Pf4TBvvajNEVfFnDQOQx?=
+ =?us-ascii?Q?csHRMzbkRIN66u3CnbIT91xlp1XuyVeU4zxvIn53do/jZ+srLdA9nIKtRerZ?=
+ =?us-ascii?Q?DNdF5SUGsoXhG8R8XvybPuhAC1DnbiGdKP2cfaPBuWDdUZP06W/mu7MBITYx?=
+ =?us-ascii?Q?vmLgsx1DA4dRLReFo1C4H4yNLx6PiA3wd9Wj9NqewVVrsC6njW9nvW11y1Rb?=
+ =?us-ascii?Q?/5dgSekhiq2IuzGFDkTQcVJeTuwa/HtArrddfkICjzVazDQx?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5149a2a-baed-4ef8-213c-08de9bc21ce8
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2026 10:37:43.3346
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2026 14:11:54.6700
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZZwzdH54UXq+gcBoaHGysYu6jKffeSqBpJ1hRbJT+8/j29NRrMz7r93wYSPNZijtq54c1dLy86T29uOL66enXA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7005
+X-MS-Exchange-CrossTenant-UserPrincipalName: SzF5Tu0y6gfe+E4/JKOlf9V0CM30Iarm61WFeGlA2FB4Zv4OJyFe4s9PXhUGx5dG
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5907
+
+--n+R94BSBfpwtzvW3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Linus,
+
+Small fwctl update, another new driver for Broadcom RDMA NICs.=20
+
+this brings the number to four. At least two more seem to be in
+progress, and there are some WIP rust bindings for the subsystem as
+well that we may see in future PRs.
+
+Thanks,
+Jason
 
 
-On 4/1/26 06:18, Dan Williams wrote:
-> alejandro.lucero-palau@ wrote:
->> From: Alejandro Lucero <alucerop@amd.com>
->>
->> A Type2 device configured by the BIOS can have its HDM committed and
->> a cxl region linked by auto discovery when the device memdev is created.
->>
->> Add a function for a Type2 driver to obtain such a region.
->>
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> [..]
->> +/**
->> + * cxl_get_region_from_committed_decoder - obtain a pointer to a region
->> + * @cxlmd: CXL memdev from an endpoint device
->> + *
->> + * An accelerator decoder can be set up by the firmware/BIOS and the auto
->> + * discovery region creation triggered by the memdev object initialization.
->> + * Using this function the related driver can obtain such a region.
->> + *
->> + * Only one committed HDM is expected, returning the first one found.
->> + *
->> + * Return pointer to a region or NULL
->> + */
->> +struct cxl_region *cxl_get_region_from_committed_decoder(struct cxl_memdev *cxlmd)
->> +{
->> +	struct cxl_port *endpoint = cxlmd->endpoint;
->> +	struct cxl_endpoint_decoder *cxled;
->> +
->> +	if (!endpoint)
->> +		return NULL;
->> +
->> +	guard(rwsem_read)(&cxl_rwsem.dpa);
->> +	struct device *cxled_dev __free(put_device) =
->> +		device_find_child(&endpoint->dev, NULL,
->> +				  find_committed_endpoint_decoder);
->> +
->> +	if (!cxled_dev)
->> +		return NULL;
->> +
->> +	cxled = to_cxl_endpoint_decoder(cxled_dev);
->> +
->> +	return cxled->cxld.region;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_get_region_from_committed_decoder, "CXL");
-> As soon as this function returns there is no guarantee that the region
-> is still valid.
+The following changes since commit c369299895a591d96745d6492d4888259b004a9e:
 
+  Linux 7.0-rc5 (2026-03-22 14:42:17 -0700)
 
- From my comment on your patch trying to solve this problem:
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/fwctl/fwctl.git tags/for-li=
+nus-fwctl
 
-https://lore.kernel.org/linux-cxl/20260403210050.1058650-1-dan.j.williams@intel.com/T/#m467dc88199645865a05b5fef858a67f3a608895b
+for you to fetch changes up to a55f80233f384dc89ef3425b2e1dd0e6d44bcf29:
 
+  fwctl: Fix class init ordering to avoid NULL pointer dereference on devic=
+e removal (2026-04-10 11:21:06 -0300)
 
-I think the protection for getting the region needs to cover the use 
-from the type2 driver, what is likely the ioremapping and some internal 
-updates based on the success of these "atomic" actions. If the region 
-disappears after that point, the same type2 driver should get an event 
-for stopping that usage, what can be implemented as a callback/action 
-for the cxl region device removal as done in v17.
+----------------------------------------------------------------
+fwctl 7.1 merge window pull request
 
+- New fwctl driver for Broadcom RDMA NICs
 
-If we agree on this, the main issue is how to implement it. I do not 
-think adding specific functions or params covering the different 
-possibilities (ioremap, ioremap_wc, ...) is desirable, and it will lack 
-the flexibility needs for syncing things internally by the type2 driver 
-against the region removal race. I wonder if we could have something 
-like this:
+- Bug fix for non-modular builds
 
+----------------------------------------------------------------
+Pavan Chebbi (5):
+      fwctl/bnxt_en: Move common definitions to include/linux/bnxt/
+      fwctl/bnxt_en: Refactor aux bus functions to be more generic
+      fwctl/bnxt_en: Create an aux device for fwctl
+      fwctl/bnxt_fwctl: Add bnxt fwctl device
+      fwctl/bnxt_fwctl: Add documentation entries
 
-cxl_get_locked_region_from_committed_decoder()   --> implying locking on 
-cxlrd->dev, if regions does exist
+Richard Cheng (1):
+      fwctl: Fix class init ordering to avoid NULL pointer dereference on d=
+evice removal
 
+ Documentation/userspace-api/fwctl/bnxt_fwctl.rst   |  74 +++++
+ Documentation/userspace-api/fwctl/fwctl.rst        |   1 +
+ Documentation/userspace-api/fwctl/index.rst        |   1 +
+ MAINTAINERS                                        |   6 +
+ drivers/fwctl/Kconfig                              |  11 +
+ drivers/fwctl/Makefile                             |   1 +
+ drivers/fwctl/bnxt/Makefile                        |   4 +
+ drivers/fwctl/bnxt/main.c                          | 281 +++++++++++++++++
+ drivers/fwctl/main.c                               |   2 +-
+ drivers/infiniband/hw/bnxt_re/debugfs.c            |   2 +-
+ drivers/infiniband/hw/bnxt_re/main.c               |   2 +-
+ drivers/infiniband/hw/bnxt_re/qplib_fp.c           |   2 +-
+ drivers/infiniband/hw/bnxt_re/qplib_res.h          |   2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c          |  49 +--
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h          |  19 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c  |  10 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c  |   4 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_sriov.c    |   2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c      | 349 +++++++++++++----=
+----
+ .../bnxt/bnxt_ulp.h =3D> include/linux/bnxt/ulp.h    |  26 +-
+ include/uapi/fwctl/bnxt.h                          |  26 ++
+ include/uapi/fwctl/fwctl.h                         |   1 +
+ 22 files changed, 698 insertions(+), 177 deletions(-)
+ create mode 100644 Documentation/userspace-api/fwctl/bnxt_fwctl.rst
+ create mode 100644 drivers/fwctl/bnxt/Makefile
+ create mode 100644 drivers/fwctl/bnxt/main.c
+ rename drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.h =3D> include/linux/bn=
+xt/ulp.h (86%)
+ create mode 100644 include/uapi/fwctl/bnxt.h
 
-cxl_release_region_lock  --> implying unlocking cxlrd->dev
+--n+R94BSBfpwtzvW3
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-  to be used by the type2 driver allowing the safe ioremap and any 
-internal variable updates between them.
+iHUEABYKAB0WIQRRRCHOFoQz/8F5bUaFwuHvBreFYQUCaeDuJgAKCRCFwuHvBreF
+YfVpAQDbs2KNRMD7BZdKqXQBhF+WGbClT7MnDxKM5UWN6AbT1wEA0KHNAARU8JBz
+E55vaniOK4kTnCZsDXm2oixJ0n3zFgI=
+=4wUh
+-----END PGP SIGNATURE-----
 
+--n+R94BSBfpwtzvW3--
