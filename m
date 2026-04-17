@@ -1,182 +1,381 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D288331B830
-	for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 09:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776416834; cv=pass; b=PhclokRvy9U5MwSW2biPzUkYVfGDKN9zwwZxTP18y9tEH/NBZYcy5Ev4eyK4v2qZSK9SzHaYw6XYROe5psdySDEJyW2viS6mf5e7LlR5UOi7usggfT69LrX2MOmxaIbGK3C3+oLqJ90rTusuSxcRTbniSaFP5JmXDFHnYHuQd9s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776416834; c=relaxed/simple;
-	bh=5c9bOfL9xX1M5qYLTtO6chvkErafEILwQ1Vq/seoipk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ExutuLRPYjtezWQhZgc2eFS2hg+PFWe58xWPZrTD8GFzi99Z25UxUYYi1A/YDmjyCxls3L1wfNwpWAdZ+89NZPrmWZfS27RYRmJt06lUSJ73u0zzmSs01cNXuhy3MzsKNEcOzxfT8vKgvo3EH8vAhkSEVG8iGf3kHWddYAoHMbk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=o8DDWT/D; arc=pass smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCA643B9D9D;
+	Fri, 17 Apr 2026 09:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776418678; cv=none; b=aaOe/8Kn6XU9s+Opbt4v1f26TGxqYRbaV/eoMnlwO78zJ1jDjz4nKBMqZUm+h1RZuL4svoJUPfTfifmeJzNdXPoZVBl0j2rdU7kpAnO25QveZY58dFDfY4lIs78ADe5UPMlJArlKsxHFVbgiPb9PaRc8JRXBhbwtIs90/MJ/EVc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776418678; c=relaxed/simple;
+	bh=/Mm05rNcceoP1klbDIHSBZQ6nPBeCz4Ze+snoKdOIUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KLSfIsVoLDasY+8wsyM1Pvry/5g1OSluRpX4EC8VMjsXTqaqq61iuukqt72d+6Ba3Lm76X7NnpB270ntX+o399n3+8UJgkqtGZ1ZxpDtSMNPKUHOplZ4IRx+KmoQoG8LVAQlTGGpmdk6emxIrkJ9rR8/M4DnZtCLgQW/158iSK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ucuzcPqc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o8DDWT/D"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b9c6f1d1282so66445666b.3
-        for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 02:07:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776416831; cv=none;
-        d=google.com; s=arc-20240605;
-        b=fyV+6pErgYsnBekdg/YzbDmc3p/y88c7rETlKljnBO6fdsyx3Q6WkEBoc2Wtp9rL2D
-         kpAl6pHwFOnRf31A5bafreoztY9KAS2EwHUnZlJ3KtuFtEaSzDcYn+Ut+jaY+F6oDYFu
-         +KJCb8LA4oTG3vVkpd0aB5IeRNXnPzTlRKpPb3feYP24Y0ojBeQ6lA/Ri6fF81ppHjd0
-         59jNr2Od41wWPaO2ZlwNOxZMZ19ocjhQi//4ovWPPZZbrazkm/E922/Zh71Z4rDvJs0U
-         qXKBWlQetf67ljbL9DiWAldDM55bIhjYYH8X20deW1RlEVAyrdnxJIrxv5t6q5QoY7ja
-         yMSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=5c9bOfL9xX1M5qYLTtO6chvkErafEILwQ1Vq/seoipk=;
-        fh=BnaRVdep493RzxWpCF8+UN3NCpWkIwbuvZS6HFSF0nY=;
-        b=By6+mOV/hWt8afyWozGEveuOYhc4a9CUXlLdzNp8mZSiozKrVuHKXuXG8AWQIWwOnS
-         PlksfhGtUGX8LYuG7NxWkAo+flnxcPgZLB+cTmStK2QS6cW4fSLU0uyMaPX/aJod9OSA
-         kVPnheiGRCquOBRTLfc6q47LaBL8L+3bZCT1n5PccWQKwYAvP7gpa8ItHQyWxcFCeAcK
-         boFytDxsTKCeMgdgOP6fpe+zAaxdXZoIZ+winGwWXFpNAoM8veExqJkgvivsiWp8riME
-         f/8jCsxDAPzscRhXWjHtxptXNDjADTbWjJFJHWNDCmtnslmO2ZQuoaPKwmAFhYUG1QDC
-         jpDg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776416831; x=1777021631; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5c9bOfL9xX1M5qYLTtO6chvkErafEILwQ1Vq/seoipk=;
-        b=o8DDWT/DlaErGn4DeUAkK7BgN+afJgGmhxqZ1q3b6VxSaJ4M5giKBs9fF8Qz8j2zGs
-         a2F2ywQXQY4zEE50PtC5vKXIjQ4806vwpb/MxvN1jLYoUcxK8iLtb0D9L9bfiuWIkQqd
-         REgBwyCvnuvvdXo9Y/ZqPaXI4fMEpgww0SJfq9cMzKCsnDRjqw2NseuYl7cy7HX/L1ue
-         TaBvIVGEeZ7mTsoOmTko9qfzVr35fumAY0MAzJQBeIybwwZJySQy6amvHvvjYKh2R+QV
-         P4yL/C7c1Fst1l29oFfuSgOdYkzxM/SgcvAYrCYqOmORYuQDRqRqiQcnTO/HyztDmzP7
-         QEFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776416831; x=1777021631;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=5c9bOfL9xX1M5qYLTtO6chvkErafEILwQ1Vq/seoipk=;
-        b=DHjr/omt74eHh5F9ISCf+vYpRgPiNAMmtizdu6UUAzqg1qu4Y7H6wDAZcUrWXztzJT
-         OeRvBA00j/zatRIq71nUblun0v7RZOKKk/78NIzhgrwc0NEEy/OW2m+LqJszuN+1AVzG
-         dqiZslpqtS2XVtwEM2TA8F/f2vu9sUNbuwXiatuGs2SZxfWnpJMgoc9FMJM2gTxTCOO8
-         +ITADSeh2oFqFTMKbdz1JKF0C6Ta61HK3nzyASulPUllK6RkXqFrzZIBUWZPswnPbttd
-         qJKFjaeEa+J0EG69+5H5M7p53qcUmJ/ZwR1Z5gG66aHRkU8b51X6tA4B+ZMY7tTHWq65
-         wmGA==
-X-Forwarded-Encrypted: i=1; AFNElJ8X0QGCcR3bFbhkeRZP2TbMPFHDqpd5KCcFbkyTRdycVaG8HzENdm4aMNvEgR6Q7yBZZ/+t72+uMWg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx38rzEvs9zfCIghqgkxCBm1dDdWlMKEadGHsF4KiOmYCWAWD8j
-	qnsX7Bm8cgEToZWknFH/bUyYYAvSM51n91MRiGcJFrLIpNqrFB01q7HmRph1m2InK1NPy6PbEe0
-	geO4jlHKxZozsd/JLsjZjnEl5GrFvsNU=
-X-Gm-Gg: AeBDievhh5GddlvOXn6vTAIfuaOAsXAmGkoYTVN8m6LUOl9PuXyKjHF6jUJc1mqC21q
-	ufRz6XS0OoE9585Znk0QrvJvwTO+CaC52MQNEosPviAAoApgLAeqHF7pYJ66jYn5D7HFiV2u1Hw
-	rUhfiTQxe68qlPw0Q1dHKKPROOYkqdS5bUl9fyUxzJVQB5XLyjxeOuw9aSPJurKqGnVW0flGIO2
-	ilxfJL6KQVpLwv/Ie7/gk+gj2BnJiBw0lSw8QOmKj4JSAxRk/7U9IxRoWX8Cgke7U2MEm2c+vq7
-	u462JuewdfpnXKbVBiHwiCfLtrX+q3SFT0QUGDsKL6pRhuxtxKWF
-X-Received: by 2002:a17:907:742:b0:ba3:55bb:c380 with SMTP id
- a640c23a62f3a-ba41afe9047mr107433166b.37.1776416830641; Fri, 17 Apr 2026
- 02:07:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ucuzcPqc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A9ABC19425;
+	Fri, 17 Apr 2026 09:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776418678;
+	bh=/Mm05rNcceoP1klbDIHSBZQ6nPBeCz4Ze+snoKdOIUg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ucuzcPqc/qKtpNlnFKyEBAGTowF9YO5oMsF1YF8bCJBIH4SeiCZY9SXlcFn3kgMZG
+	 qr8uaZql95ScHw3ch5wbYyQJm7+DW6ad0/Eu3X0Csad4YJ39DNzrsAJD7IGrZBOE8L
+	 cs+Fm//oWJsKd3MdrKudiV3SP5RUTKv+WpwouG+tg5JAXIc24kxeitKJU+4TpsUW3J
+	 Kb5OAuFtRxuTgAjj2WFrtaxBheeN6JHa6VyOju92+PPsDZoslndlxCpNlfU5mK9EWa
+	 5cb216jZkLaXRSls22pItPJXV7PEiOLqfMlrf33+oWb4rE4XuD94lqDzeP2Vjz5jKh
+	 kwW6FRvArOU0g==
+Message-ID: <46837cea-5d90-49d8-be67-7306e0e89aa3@kernel.org>
+Date: Fri, 17 Apr 2026 11:37:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <adlBcwJjLOQDAR65@groves.net> <CAJnrk1a06zkUmXW5EFiUmgAoFauwtzsYvnotaPH0ifVtyh7iDQ@mail.gmail.com>
- <CAJfpegvVTcV89=q3L326aGQjhduBcv7PVg5QKftGLjNZmCLmaw@mail.gmail.com>
- <ad4_jFsR951c2Mtn@groves.net> <20260414185740.GA604658@frogsfrogsfrogs>
- <CAJnrk1ZgcMuwfMpT1fXvUwBBiq9eWFHWVeOFQFFKiamGGe1RJg@mail.gmail.com>
- <ad7Tps4tkNbndd9Z@groves.net> <CAJnrk1ZWVsKW2dhAWdBkCQskoTE+hmOhPFDhyz4EtExn=GdXGA@mail.gmail.com>
- <aeFDCeqZDPI3rm3s@gourry-fedora-PF4VCD3F> <CAJnrk1ad6t6CJV+xnXwhoNHrHYA3htuaVdDq47FeT60cPBzj7g@mail.gmail.com>
- <aeHXQ2EW2ivlLb_N@gourry-fedora-PF4VCD3F>
-In-Reply-To: <aeHXQ2EW2ivlLb_N@gourry-fedora-PF4VCD3F>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 17 Apr 2026 11:06:58 +0200
-X-Gm-Features: AQROBzD2EP6ID8hIkZ19dTfzX26KpQgRIz65UgWPtyN4gSS439LCb3U6ka7SEj4
-Message-ID: <CAOQ4uxhXTTyySG3tXnqNnP0edbbwUxfeeC7=CypDSyw_Mod48A@mail.gmail.com>
-Subject: Re: [PATCH V10 00/10] famfs: port into fuse
+User-Agent: Mozilla Thunderbird
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
 To: Gregory Price <gourry@gourry.net>
-Cc: Joanne Koong <joannelkoong@gmail.com>, John Groves <John@groves.net>, 
-	"Darrick J. Wong" <djwong@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Bernd Schubert <bernd@bsbernd.com>, John Groves <john@jagalactic.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>, "venkataravis@micron.com" <venkataravis@micron.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, djbw@kernel.org, 
-	Christoph Hellwig <hch@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+ kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+ dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
+ akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+ joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+ ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
+ yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+ linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+ mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+ baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
+ dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
+ muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
+ jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
+ pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
+ riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
+ roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+ shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+ zhengqi.arch@bytedance.com, terry.bowman@amd.com
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <3342acb5-8d34-4270-98a2-866b1ff80faf@kernel.org>
+ <abwRu1FNqI3dVyqL@gourry-fedora-PF4VCD3F>
+ <2608a03b-72bb-4033-8e6f-a439502b5573@kernel.org>
+ <ad0iT4UWka3gMUpu@gourry-fedora-PF4VCD3F>
+ <38cf52d1-32a8-462f-ac6a-8fad9d14c4f0@kernel.org>
+ <ad-r7hwIdnvKsrh9@gourry-fedora-PF4VCD3F>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <ad-r7hwIdnvKsrh9@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 17, 2026 at 8:46=E2=80=AFAM Gregory Price <gourry@gourry.net> w=
-rote:
->
-> On Thu, Apr 16, 2026 at 06:24:02PM -0700, Joanne Koong wrote:
-> > On Thu, Apr 16, 2026 at 1:14=E2=80=AFPM Gregory Price <gourry@gourry.ne=
-t> wrote:
-> > >
-> > > I worry that this discussion is going to turn towards implementing a
-> > > solution grounded in parsing arbitrary formats and how to store them,
-> > > and that is completely detached from why FAMFS went this route in the
-> > > first place.
-> > >
-> > > I question whether the actual issue here lies in the interface APPEAR=
-ING
-> > > more general purpose than it actually is - and therefore inviting
-> > > attempts to over-genericize it.
-> >
-> > Would you mind clarifying this part? Are you saying that the interface
-> > and logic is *already* generic and usable for other dax-backed
-> > servers, just that everything is *named* famfs but it's not really
-> > famfs specific?
->
-> Yes.
->
-> If you just find/replace "famfs" with "dax_iomap", the structures
-> here don't really seem all *that* crazy specific - they're just
-> optimized for memory speeds instead of I/O.
->
-> There is a circular nature to this - FAMFS figured it out first, in
-> what we think is a reasonably generic way, but we can't know for sure.
->
-> John, Dan, and Darrick have all proposed reasonable ways to hedge
-> against the obvious fact the interface will not be perfect - which
-> incorporates your BPF proposal along with a reasonably straight forward
-> deprecation path that's not always possible in other arenas.
->
-> All that while solving a real (and novel) problem.
->
-> That's actually pretty damn cool.
->
-> I would urge you to consider these proposals earnestly.
->
+On 4/15/26 17:17, Gregory Price wrote:
+> On Wed, Apr 15, 2026 at 11:49:59AM +0200, David Hildenbrand (Arm) wrote:
+>> On 4/13/26 19:05, Gregory Price wrote:
+> 
+> As a preface - the current RFC was informed by ZONE_DEVICE patterns.
 
-Apart from your suggestion to replace s/famfs/dax_iomap/
-the fact that this logic sits in fs/fuse/famfs.c (or fuse/dax_iomap.c)
-is the other big architecture issue.
+:)
 
-If this logic was to be placed in fs/iomap/ as Christoph suggested,
-I think the rest of the UAPI issues could be sorted out.
+> 
+> I think that was useful as a way to find existing friction points - but
+> ultimately wrong for this new interface.
+> 
+> I don't thinks an ops struct here is the right design, and I think there
+> are only a few patterns that actually make sense for device memory using
+> nodes this way.
+> 
+> So there's going to be a *major* contraction in the complexity of this
+> patch series (hopefully I'll have something next week), and much of what
+> you point out below is already in-flight.
 
-In any case, considering the sheer amount of discussion on this thread
-I have scheduled a cross-track FS+MM+IO for Famfs and DAX iomap.
+Sounds like this discussion was valuable. Sorry for not being that
+responsive  ... repeatedly :)
 
-I wasn't going to include Storage people at first, but since Christoph
-mentioned that stride/offset iomap could be useful for block iomap,
-I included them as well.
 
-Thanks,
-Amir.
+[...]
+
+>>
+>> Something else people were discussing in the past was to physically
+>> limit the area where virtio queues could be placed.
+>>
+> 
+> That is functionally what I did - the idea was pretty simple, just have
+> a separate memfd/node dedicated for the queues:
+> 
+> guest_memory = memfd(MAP_PRIVATE)
+> net_memory = memfd(MAP_SHARED)
+> 
+> And boom, you get what you want.
+> 
+> So yeah "It works" - but there's likely other ways to do this too, and
+> as you note re: compatibility, i'm not sure virtio actually wants this,
+> but it's a nice proof-of-concept for a network device on the host that
+> carries its own memory.
+> 
+
+Jup.
+
+
+[...]
+
+>> Needs a second thought regarding fallback logic I raised above.
+>>
+>> What I think would have to be audited is the usage of __GFP_THISNODE by
+>> kernel allocations, where we would not actually want to allocate from
+>> this private node.
+>>
+> 
+> This is fair, and I a re-visit is absolutely warranted.
+> 
+> Re-examining the quick audit from my last response suggests - I should
+> never have seen leakage in those cases, but the fallbacks are needed.
+> 
+> So yes, this all requires a second look (and a third, and a ninth).
+> 
+> I'm not married to __GFP_PRIVATE, but it has been reliable for me.
+
+Yes, we should carefully describe which semantics we want to achieve, to
+then figure out how we could achieve them.
+
+> 
+>> Maybe we could just outright refuse *any* non-user (movable) allocations
+>> that target the node, even with __GFP_THISNODE.
+>>
+>> Because, why would we want kernel allocations to even end up on a
+>> private node that is supposed to only be consumed by user space? Or
+>> which use cases are there where we would want to place kernel
+>> allocations on there?
+>>
+> 
+> As a start, maybe? But as a permanent invariant?  I would wonder whether
+> the decision here would lock us into a design.
+> 
+> But then - this is all kernel internal, so i think it would be feasible
+> to change this out from under users without backward compatibility pain.
+
+Right. Was just an idea, whether it would currently even make sense to
+allow any kernel allocations on there.
+
+The handful of kernel allocations that would be allowed to end up on
+there would likely be extremely special.
+
+[...]
+
+>> Again, I am not sure about compaction and khugepaged. All we want to
+>> guarantee is that our memory does not leave the private node.
+>>
+>> That doesn't require any __GFP_PRIVATE magic, just en-lighting these
+>> subsystems that private nodes must use __GFP_THISNODE and must not leak
+>> to other nodes.
+> 
+> This is where specific use-cases matter.
+> 
+> In the compressed memory example - the device doesn't care about memory
+> leaving - but it cares about memory arriving and *and being modified*.
+> (more on this in your next question)
+
+Right, but naive me would say that that's a memory allocation problem,
+right?
+
+khugepaged() wants to allocate a 2M page to collapse. Goes to the buddy
+to allocate it.
+
+Buddy has to say no if the device cannot support it.
+
+So there are free pages but we just don't want to hand them out.
+
+I am being very naive here about the compressed memory scenario, because
+it's one of these extremely weird corner cases ;)
+
+[...]
+
+>>> If you want the mbind contract to stay intact:
+>>>
+>>>    NP_OPS_MIGRATION (mbind can generate migrations)
+>>>    NP_OPS_MEMPOLICY (this just tells mempolicy.c to allow the node)
+>>
+>> I'm missing why these are even opt-in. What's the problem with allowing
+>> mbind and mempolicy to use these nodes in some of your drivers?
+>>
+> 
+> First:
+> 
+> In my latest working branch these two flags have been folded into just
+> _OPS_MEMPOLICY and any other migration interaction is just handled by
+> filtering with the GFP flag. 
+> 
+> 
+> on always allowing mbind and mempolicy vs opt-in
+> ---
+> 
+> A proper compressed memory solution should not allow mbind/mempolicy.
+> 
+> Compressed memory is different from normal memory - as the kernel can
+> percieves free memory (many unused struct page in the buddy) when the
+> device knows there's none left (the physical capacity is actually full).
+> 
+> Any form of write to a compressed memory device is essentially a
+> dangerous condition (OOMs = poison, not oom_kill()).
+> 
+> So you need two controls:  Allocation and (userland) Write protection
+> I implemented via:
+>     - Demotion-only (allocations only happen in reclaim path)
+>     - Write-protecting the entire node
+> 
+> (I fully accept that a write-protection extension here might be a bridge
+>  to far, but please stick with me for the sake of exploration).
+> 
+> 
+> There's a serious argument to limit these devices to using an mbind
+> pattern, but I wanted to make a full-on attempt to integrate this device
+> into the demotion path as a transparent tier (kinda like zswap).
+> 
+> I could not square write-protection with mempolicy, so i had to make
+> them both optional and mutually exclusive.
+> 
+> If you limit the device to mbind interactions, you do limit what can
+> crash - but this forces userland software to be less portable by design:
+> 
+>   - am i running on a system where this device is present?
+>   - is that device exposing its memory on a node?
+>   - which node?
+>   - what memory can i put on that node? (can you prevent a process from
+>     putting libc on that node?)
+>   - how much compression ratio is left on the device?
+>   - can i safety write to this virtual address?
+>   - should i write-protect compressed VMAs? Can i handle those faults?
+>   - many more
+> 
+> That sounds a lot like re-implementing a bunch of mm/ in userland, and
+> that's exactly where we were at with DAX.  We know this pattern failed.
+> 
+> I'm trying to very much avoid repeating these mistakes, and so I'm very
+> much trying to find a good path forward here that results in transparent
+> usage of this memory.
+> 
+
+As stated above, maybe that's really just a memory allocation problem
+for mbind/khugepaged etc, and the memory allocator would need hooks to
+say "well, I do have that free memory. but sorry bro, you really cannot
+have it right now because it's actually not really free right now, -ENOMEM".
+
+Devil is in the detail, I suppose.
+
+(again, I consider such devices an extreme corner cases; if it makes the
+overall design waaaaayy to complicated, we might just want to say "we
+cannot reasonably support this without shittifying MM". But maybe there
+are ways to handle this in a better way, as of above)
+
+> 
+>> I also have some questions about longterm pinnings, but that's better
+>> discussed in person :)
+>>
+> 
+> The longterm pin extention came from auditing existing zone_device
+> filters.  
+> 
+> tl;dr: informative mechanism - but it probably should be dropped,
+> it makes no sense (it's device memory, pinnings mean nothing?).
+
+What I was thinking: We still have different zone options for this memory.
+
+Expose memory to ZONE_MOVABLE -> no longterm pinning allowed.
+
+Expose memory to ZONE_NORMAL -> longterm pinning allowed.
+
+And if we don't even allow arbitrary kernel allocations to end up
+ZONE_NORMAL of these special nodes, we can just start using ZONE_NORMAL
+and let user space (using vfio/iouring fixed buffers etc) consume this
+private memory with longterm pinning.
+
+Just a random thought.
+
+> 
+> 
+>>>
+>>> The task dies and frees the pages back to the buddy - the question is
+>>> whether the 4-5 free_folio paths (put_folio, put_unref_folios, etc) can
+>>> all eat an ops.free_folio() callback to inform the driver the memory has
+>>> been freed.
+>>
+>> Right, that's rather invasive.
+>>
+> 
+> Yeah i'm trying to avoid it, and the answer may actually just exist in
+> the task-death and VMA cleanup path rather than the folio-free path.
+> 
+> From what i've seen of accelerator drivers that implement this, when you
+> inform the driver of a memory region with a task, the driver should have
+> a mechanism to take references on that VMA (or something like this) - so
+> that when the task dies the driver has a way to be notified of the VMA
+> being cleaned up.
+> 
+> This probably exists - I just haven't gotten there yet.
+
+That sounds reasonable. Alternatively, maybe the buddy can just inform
+the driver about pages getting freed?
+
+Again, just a another random thought. But if these nodes are already
+special-private, then why not enlighten the buddy in some way.
+
+That also aligns with my "buddy rejects to hand out free pages if the
+device says no" case.
+
+Something to thinker about.
+
+-- 
+Cheers,
+
+David
