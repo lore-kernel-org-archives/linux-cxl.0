@@ -1,160 +1,220 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C802D3A7B
-	for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 19:35:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776454528; cv=pass; b=G5c59AHTTNYgGsFeXS8TXgI0Dq5kGaTeB5bdHnCFgghipsk2WCn+uXG+fOpDVDbLhBrbyNTj0MgcAF16132tJxzlC2JonwJysfl9LmM6g9xcA1G87EvUlQzRTTyv/hj5PbLVtpUDV36Ip+IlEyVMKN9xs6W7njphnY7378F1STk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776454528; c=relaxed/simple;
-	bh=EPXnTicHxjO3r0CVVtRWh3D1dZqlAPTDXfoysvtgqqM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ADeBKMSKQhSr5tKQnGON2/wopi0C1Z58NwSdcB8leckY1IYke5RUpJ0Qur2xBDUiuIgfVNLq2gxRzhdKB2spaddxcxmYG5+rfK9U4+EtqIJYcmm79SgAm+cwa01FouQrWAWqU5QF3afEBcsZ4gDgwvzvJ6+9u/oquvVvZCQOzDM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XpHnN9kU; arc=pass smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4FD38F64A
+	for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 19:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776455792; cv=none; b=XFedblQobLFdb9cxr+k5piF+X4+5KhVLMUAv5qtdXzb0HQir+z3OjtEilnZTwCe4f7OjcgmxejEWyLopgzyMwlXlrHz68swYDRTuGCKZofSv9bolf0JE4ym+MqTnRcp2T+hnBdEazrhPsjNFI1kQBkjHtSHey54zDA95dHGsB/A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776455792; c=relaxed/simple;
+	bh=ksuYBGHbHGCoFIpozDY/F5XCFRC+LNWv6xjmNIfUBnM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B1aWgRrCKD3OMDDrCYBZWy/l6NHDIIUdbNphM49WO/NKb78nhNNeIplAEaA7dL01gD0J8hWKMr/8nX6cJ19pEUrBXlxLNAFy1b1Pt1gJdx0h8MZ4azoVYDRspQ4ZHLeKVbKmkxI05MdS+xCprVmFCZ7yJI/jiAN6ZWr/OrNFsn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eL/ToGA4; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XpHnN9kU"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-488a88aeec9so15651795e9.2
-        for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 12:35:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1776454526; cv=none;
-        d=google.com; s=arc-20240605;
-        b=JVNguVXbTQKHq3pC/W5XB7+96J5BbpuIkjqdab/OAa1gublW/sv1RkuFTSslLkwzLj
-         j5MJqSIvWtE3wvW+IRXx55ERgFpwW4FhCS/i77ob4byUAcY7XkjbidoyS1w9kh7U4Eir
-         aXJTHdUSw8NhKxAIsmjD2f/8dKblgvh/SBoOzxGUnBTuHCTro+W6/ZNked9xUywUNwfA
-         4UaswcTMrnXIDrO3LJXXqojtfinXFjXgFSM8RhPDH2gEWZyjEr1KQ20MlRGajyAng9bO
-         qJik/LJ2uW/RHv/IuCoDB++pWOcVOh3CjEvJHAhsOrYCNOcAxBze+tFyeoBPjt2M8KAA
-         Rx1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=BKQtLrK767PS4V8iaYQzHGGgM/KC0ExoAgrnjJyr8Lk=;
-        fh=OzrolxtA0i0XXDUhOn/GOQbF5WNFHkGDLTwoVqn1meE=;
-        b=JdNIeVFCOf9ChdkksUc/Qs1HYB3MvNtX7umq8JWzMGyYyPOZKN+Yt+waus2ZPhqnrI
-         9hBmV7J/tEXyOFH+b6rruCRsq8jBKwMvdFdEPat/MRl9ViMYCWxmZOlBALWIWTDzjzuF
-         +w7ri2t9qv6bPjtJiJ1Hc94Q3Mtbkghzikxoz4jObRfm/3O3kMwZZyv/yq4X62z/qRHr
-         orQNVp2uQa81YwXckJ/yZlmPI7x9WGfPYwa0xVZPkMsRbrqU7q/dRJo3VavafJhAq6Qe
-         CW1eFbMgDxE7wq2eChk6shG8vEIeGiKpJ3jXb9mQavqlCDlkL8Vrub3BZM51GSKlufgP
-         gdVw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776454526; x=1777059326; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BKQtLrK767PS4V8iaYQzHGGgM/KC0ExoAgrnjJyr8Lk=;
-        b=XpHnN9kURoEwAEunp9ZErv1Z+SK0yb9+22cR/DvdaesZ4JDCety6WKRZ0pQf3dWuyv
-         iZMclneWAHY7r3mWc9UIYNooN741K/90eBvoFutga5DzKYg/sNkXvBAOIExJa4vfzYJT
-         reA2inwr4DTtjPvM3gaIYFzSG/6S7hyZ2Dga/KBny3CfCghsPoJAgtPHmZzUTkLuOrI0
-         rxzMBoWVCER20lkM6dUCRg3FtaRFR71cjDmYUo57Z14BPyEYNrLTZhlTe63OV8n74eao
-         nTWwGni+mBhxFhkdkfea8sDR4NwOfZUjAGA+9bW3Sw5QHp9KQBr2An9EpKUNAscIBQdk
-         +dXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776454526; x=1777059326;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=BKQtLrK767PS4V8iaYQzHGGgM/KC0ExoAgrnjJyr8Lk=;
-        b=dPjv0wvcIjbPpGyQzYPiEwJMKbfsWJ+FEiqotrgUK+zZHG4SxENd5GkiCxSK3wj0ZV
-         4Cn1U8dU1D9/2YtLvrpEHVn1xQDBMJmGhOF2yrgGjFq/QKeCcnI0nDxgF5aI5n+5sU/y
-         bpkKKZPMP+OuvA4kkFZgKaZjt0+IfQ2FVrtG12i5+wwcby9AoLRqPj2ziZwV6phy3ywQ
-         BwMnpi6M2FzjBcydJ7bWg8NK8mldnIpj/sI5qKGtnYCkzinOOpl1S6SLi9zuEmBo5qGL
-         u3l+64yHQ9SM11bg0Zscx8sgwwhUjYQk3j4jbnG33+AkUVE9lQsBw3JKcWJ6zKpppni7
-         mXmw==
-X-Forwarded-Encrypted: i=1; AFNElJ/sxz50yim7mcjSmOolN67uIVHvEDdCXotSGFIzaGOdX4jwrBEVr6aInebAa5ht0jQllrYe5aCe1Kw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy33LkyAJiwM37ic4tzaWGODeCRBEYC6pAdC3Fq2bZOay91EgCo
-	4gcdYnmrDxWLkMRbzzAI7rD25khhl3dI+qgJ01cUD99B5BEDsIECjmxAW+S/TX7RBwSX02LipEv
-	9vyHd8PDfD6BPELOxFM6+PJ/Op0sYmok=
-X-Gm-Gg: AeBDievKHqIF2TTZS29kbtkhYuBLiJx5D/I3K8MF5JS4GGZM0ehsZL91+frFvIYJC+G
-	6TZuzLSn/66IITBzGXB/FslkXA9GDFq4qixjtt8izRgU7EzUJVOfb3KJcnFqaoImyeYVlLbH7xi
-	274ykB+3T48k0S+yLg20WkUQmBvbAI31EgC3oyTFBJfavPkZ1Qett5lxVkTkWqapkgZ1rnsWhLh
-	u19LReb48svZWBTk6TaTMSGkegYAhlkvF8N3DJJlK3touqtvrQYamX/NgX43iEBjGy8UdMQfnIm
-	vUTH0nUl4DDuY59v
-X-Received: by 2002:a05:6000:4283:b0:43d:73ff:fd59 with SMTP id
- ffacd0b85a97d-43fe3db9bc9mr6846919f8f.10.1776454525489; Fri, 17 Apr 2026
- 12:35:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eL/ToGA4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776455790; x=1807991790;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ksuYBGHbHGCoFIpozDY/F5XCFRC+LNWv6xjmNIfUBnM=;
+  b=eL/ToGA4Tuxs2skR6m0W83j0JlLSSGAz+e3hIY3KHOuGg9M4Kg6o8E6M
+   z+HeOanP0FvqBbuVQxi2Zu9Gq0c8TCneuCSl0pQ2IJQguk0M+pjVz1WLJ
+   JxiKvLB/w1RwpHn7pCRlH3Aray695EiFjhlIqk9PsuwFFtE+5lAVTmMg7
+   QHJkbLhH1R5Hia5tqUMA5lZlXYUrWOTet2G3QrMnQT6upsqbRt6kUF1a5
+   lKHEXYTpj0IWnXltWt2oqArJYCxF/qOhkkP78ZRE9mky4khY68uR8X1DP
+   zcxcQ0Ozyd5JNfyuV08qlrxzjZERhEBQxdMEZRzovZqqy49RzOacIlVBW
+   w==;
+X-CSE-ConnectionGUID: NgdewKSTS+Saay5RAsM9PA==
+X-CSE-MsgGUID: dfKFBrZFSAGuW3tg6RlM+g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11762"; a="77548544"
+X-IronPort-AV: E=Sophos;i="6.23,184,1770624000"; 
+   d="scan'208";a="77548544"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2026 12:56:29 -0700
+X-CSE-ConnectionGUID: mJIVEl5yQ4iMF0UhAE08nw==
+X-CSE-MsgGUID: QokvExqaQA280F311kQepw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,184,1770624000"; 
+   d="scan'208";a="224620538"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.223.71])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2026 12:56:29 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: [ndctl PATCH v2 1/2] test/common: add helpers for CXL region replay testing
+Date: Fri, 17 Apr 2026 12:56:23 -0700
+Message-ID: <ccc1955b697f7b74e16924bff1b1e262eb52fba0.1776454849.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260331123702.35052-1-john@jagalactic.com> <0100019d43e5f632-f5862a3e-361c-4b54-a9a6-96c242a8f17a-000000@email.amazonses.com>
- <CAJnrk1ZRTGWjNzkMxS3UkeZMmrpadJDtWKontMx2=d-smXYq=w@mail.gmail.com>
- <adkDq0m5Wt9YhJ8A@groves.net> <38744253-efa3-41c5-a491-b177a4a4c835@bsbernd.com>
- <adlBcwJjLOQDAR65@groves.net> <CAJnrk1a06zkUmXW5EFiUmgAoFauwtzsYvnotaPH0ifVtyh7iDQ@mail.gmail.com>
- <CAJfpegvVTcV89=q3L326aGQjhduBcv7PVg5QKftGLjNZmCLmaw@mail.gmail.com> <aeHpjpNN4TliZOyp@infradead.org>
-In-Reply-To: <aeHpjpNN4TliZOyp@infradead.org>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Fri, 17 Apr 2026 12:35:13 -0700
-X-Gm-Features: AQROBzCmeJrVtq6kS88NntBxYwuWq2p8m5V_NUCivAWMbSPdKuP6DBJLkBWNmVk
-Message-ID: <CAJnrk1a7idWN4UNpW0P-X4xeBKOkhnR+Mvfo3QW38OfShiwpKw@mail.gmail.com>
-Subject: Re: [PATCH V10 00/10] famfs: port into fuse
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, John Groves <John@groves.net>, 
-	Bernd Schubert <bernd@bsbernd.com>, John Groves <john@jagalactic.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, djbw@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 17, 2026 at 1:04=E2=80=AFAM Christoph Hellwig <hch@infradead.or=
-g> wrote:
->
-> This is the first mail without annoying and pointless full quotes,
-> so chiming in here.  Sorry if I missed something important in all the
-> noise.
->
-> On Tue, Apr 14, 2026 at 03:19:36PM +0200, Miklos Szeredi wrote:
-> > On Fri, 10 Apr 2026 at 21:44, Joanne Koong <joannelkoong@gmail.com> wro=
-te:
-> >
-> > > Overall, my intention with bringing this up is just to make sure we'r=
-e
-> > > at least aware of this alternative before anything is merged and
-> > > permanent. If Miklos and you think we should land this series, then
-> > > I'm on board with that.
-> >
-> > TBH, I'd prefer not to add the famfs specific mapping interface if not
-> > absolutely necessary.
->
-> Yes,  fuse needing support for a specific file systems sounds like a
-> design mistake.
->
-> >This was the main sticking point originally,
-> > but there seemed to be no better alternative.
-> >
-> > However with the bpf approach this would be gone, which is great.
->
-> So what is this bpf magic actually trying to solve?
+Add replay_regions() and supporting helpers to the CXL test common
+library. The helpers capture the current region configuration, trigger
+a region replay by unbinding and rebinding the cxl_acpi driver, and
+verify that the regions reconstructed during enumeration match the
+original configuration.
 
-It is trying to avoid having famfs-specific implementation details
-hardcoded permanently into fuse's uapi and kernel code. I really like
-your suggestion of adding generic stride/offset multi-device support
-to fs/iomap. That is a much better solution than bpf.
+Replay is enabled by instructing the cxl_test module to preserve its
+decoder registry across the driver unbind/bind cycle. This allows the
+decoder programming associated with user-created regions to survive
+topology teardown so that the regions are reconstructed during driver
+initialization as auto-discovered regions.
 
-Thanks,
-Joanne
+Region signatures are derived from region attributes and memdev serial
+numbers so that the replayed configuration can be compared independent
+of topology enumeration order and device numbering.
 
->
+These helpers provide a reusable mechanism for CXL tests that need to
+exercise region replay behavior. A unit test, cxl-region-replay.sh, is
+posted in a follow-on patch and demonstrates the workflow.
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Tested-by: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Link: https://lore.kernel.org/r/8646e0b11697e3adb4fc9a83fa486e68a4b9b5c5.1773466514.git.alison.schofield@intel.com
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+
+Changes in v2:
+- Add comment for replay state comparison (Fabio)
+- Rebase onto latest ndctl/pending
+- Add Fabio's Tags
+
+
+ test/common | 111 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 111 insertions(+)
+
+diff --git a/test/common b/test/common
+index 2eb11b7396d0..d60d9e046445 100644
+--- a/test/common
++++ b/test/common
+@@ -168,3 +168,114 @@ check_dmesg()
+ 
+ # CXL COMMON
+ CXL_TEST_QOS_CLASS=42
++
++# CXL region replay helpers
++#
++# replay_regions() snapshots the current region configuration, performs
++# a cxl_acpi driver unbind/bind cycle to trigger region replay, and
++# verifies that the regions reconstructed during enumeration match the
++# original configuration.
++#
++# This allows tests to create regions through the user interface and
++# then replay them as auto-discovered regions during driver
++# initialization.
++#
++# See example usage in test/cxl-region-replay.sh.
++
++CXL_EXPECTED_REGION_SIGS=""
++
++cxl_get_memdev_serial()
++{
++	local memdev="$1"
++
++	"$CXL" list -m "$memdev" | jq -r '.[0].serial'
++}
++
++cxl_emit_region_signature()
++{
++	local region="$1"
++	local region_json size type ways gran state
++	local entry pos memdev serial sig
++
++	region_json=$("$CXL" list -R --targets -r "$region")
++	[[ -n "$region_json" && "$region_json" != "[]" ]] || return 1
++
++	size=$(jq -r '.[0].size' <<<"$region_json")
++	type=$(jq -r '.[0].type' <<<"$region_json")
++	ways=$(jq -r '.[0].interleave_ways' <<<"$region_json")
++	gran=$(jq -r '.[0].interleave_granularity' <<<"$region_json")
++	state=$(jq -r '.[0].decode_state' <<<"$region_json")
++
++	sig="size=$size type=$type ways=$ways gran=$gran"
++
++	while IFS= read -r entry; do
++		pos=$(jq -r '.position' <<<"$entry")
++		memdev=$(jq -r '.memdev' <<<"$entry")
++		serial=$(cxl_get_memdev_serial "$memdev") || return 1
++		[[ -n "$serial" && "$serial" != "null" ]] || return 1
++		sig="$sig pos=$pos serial=$serial"
++	done < <(jq -c '.[0].mappings | sort_by(.position)[]' <<<"$region_json")
++
++	echo "$sig state=$state"
++}
++
++cxl_collect_region_signatures()
++{
++	local region
++	local -a regions=()
++
++	mapfile -t regions < <("$CXL" list -Ri | jq -r '.[].region' | sort) || return 1
++
++	for region in "${regions[@]}"; do
++		cxl_emit_region_signature "$region" || return 1
++	done | sort
++}
++
++cxl_capture_expected_region_signatures()
++{
++	CXL_EXPECTED_REGION_SIGS=$(cxl_collect_region_signatures) || return 1
++}
++
++cxl_verify_replayed_regions()
++{
++	local actual_region_sigs
++	local -a expected_lines=()
++	local -a actual_lines=()
++	local i
++	local expected_line actual_line
++	local expected_struct actual_struct
++	local expected_state actual_state
++
++	actual_region_sigs=$(cxl_collect_region_signatures) || return 1
++
++	mapfile -t expected_lines < <(printf '%s\n' "$CXL_EXPECTED_REGION_SIGS" | sed '/^$/d')
++	mapfile -t actual_lines < <(printf '%s\n' "$actual_region_sigs" | sed '/^$/d')
++
++	[ "${#expected_lines[@]}" -eq "${#actual_lines[@]}" ] || return 1
++
++	for ((i = 0; i < ${#expected_lines[@]}; i++)); do
++		expected_line=${expected_lines[i]}
++		actual_line=${actual_lines[i]}
++
++		expected_struct=${expected_line% state=*}
++		expected_state=${expected_line##* state=}
++		actual_struct=${actual_line% state=*}
++		actual_state=${actual_line##* state=}
++
++		# Require exact structural match for the region config.
++		# Only enforce state when the expected state was commit.
++		[ "$expected_struct" = "$actual_struct" ] || return 1
++		[ "$expected_state" != "commit" ] || [ "$actual_state" = "commit" ] || return 1
++	done
++}
++
++replay_regions()
++{
++	echo "replaying existing regions"
++	cxl_capture_expected_region_signatures || return 1
++	echo 1 > /sys/bus/platform/devices/cxl_acpi.0/decoder_reset_preserve_registry
++	echo cxl_acpi.0 > /sys/bus/platform/drivers/cxl_acpi/unbind
++	echo cxl_acpi.0 > /sys/bus/platform/drivers/cxl_acpi/bind
++	echo 0 > /sys/bus/platform/devices/cxl_acpi.0/decoder_reset_preserve_registry
++	cxl_verify_replayed_regions || return 1
++}
+-- 
+2.37.3
+
