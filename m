@@ -1,279 +1,219 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010027.outbound.protection.outlook.com [52.101.193.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84443C0607
-	for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 14:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776437159; cv=none; b=sei/iaJhW08VSYusOOuEYywu88SXKgP2auVbcYRu/CJFCIcCss5IyHZHu1VvkRkEkK5ztXjfXTU0xsxqMSRGSsGfieO7wPy1Q/BAvKRnh5LcqqA5e+U5iPzjVsPPXRWibLYy/+Vc3+azisbwTRMDEZ16kBMJVa7n9H+0Coy5jS8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776437159; c=relaxed/simple;
-	bh=UNrb3fspU9BdkXegwdmwqukr2NvwEt0LLiivOVSbqvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gpID1MRWqeC5AyRGgJ/6ia7z6L52+bD/N+84BCESa6BLUlQtmP8M+Os2gOcpS8+X8l0uoKy1HBnd32pbLBck3FVbrhoUSMzyWq/k0+6E4MFZX/4KrPI8lawJ4ird33PaixFzeH0K4VlxpobuadlCzTZgqkaw8JC/Ye4lz9uKckY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=LFMvbAhk; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E542315B0EC;
+	Fri, 17 Apr 2026 14:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.27
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776437539; cv=fail; b=i/aVx2pGT7SSGEKFuwWN+Ooo6iixjaV9boDlDcYZWE3Ib+GeC/Ud5QqSckr9fGfPL5O0SAeB86JgOj8PnkEjvA7xvve2SZ1q1Sel7690nWisJrRJS3sXmXIeqs7jDvFzR8aggxSvmoFWBfDLz1q60cZ0NEcPNahuLsEOj/uvipk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776437539; c=relaxed/simple;
+	bh=mp5FxOD5mpaEe/96wdrrdZxPQXrzJZrnbrnJ/pGTQ84=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=eK77RqLwSv8lFsaSdvwm+otKJWPz93wW+4A7FQRcAUiPepj3es0zUdLCSjNXm0LRAw723tlyfSd0xSPLLbHjaN6+SlCb1oJ9GPEDe9gtmpOUY8AZk8ztT9PmN0C46xLOsdaI4ReuvsvD53LJUUVoWK63Q/Bc/f70vavye0jEg/c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kpW4Pff5; arc=fail smtp.client-ip=52.101.193.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="LFMvbAhk"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-50baafd6c4aso8739651cf.1
-        for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 07:45:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1776437157; x=1777041957; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6Jkzv2KvncmaDlTxMf9kep+UrjgSD3pdlFDgixpHVA0=;
-        b=LFMvbAhkQucFdmfedNUtfb8qvWQ7VnK58a7nArceqK/1C0On7wFdqMfppjGPDfSbwD
-         eP7ceaWSbGp9tVxj2KyC1OGt+0zLfdWYlCgsuXs7Wgnd4TMWQ8Z+wKxA9HcJrmI52UCE
-         ofesP6jeG7tpRSCfFKz3WcpZddvAUa4m9CIAClDKphsbxYpqCD/Z4jDNW1NXKU/O0Tnc
-         FpIWR1ACgc9tXR9vvtXTyA/PM1Hx3LsbNA4lNFX+MRjh+hWDIuij3leDSSrcjCz5cak2
-         +L1162DjOMNIUdXbuzKYHJiEylXL3t+ULpyxhanC7CmyibQ3f0/LQQybUZ2GFxL3mMZz
-         hTQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776437157; x=1777041957;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6Jkzv2KvncmaDlTxMf9kep+UrjgSD3pdlFDgixpHVA0=;
-        b=MfkdLy9GRHXA5zGnmDxnhLzlQCtnSBUnrogip1ellHLqjskhkKxtQRIJHGIbXSmON/
-         RGRtyHOz58I1Kj/U0pRtQmSA3k1D5Kem8Iq0Eb+NweUK5X0SZh6A7si2vue/HodFO9B2
-         2ehbGohQF/35h7YunwOgiaBNVfAVmN28yC0mElwWfuG8b6YHOR65qGcFQO2pB27wCNFU
-         WL0DOmUC2YZTT5dOgr2TVOojfXaPfIjwS1RLVEnhoTFPCJOXIvKmt5iyrhvW4khJEcrq
-         XCKjMHVpk3INOYkaGpyF1Si+DLfP6dhmdFqq7Rd4ljZ6qg0xLaJ3L7tOJnTjSAybHJK3
-         HARQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+FNIbPcsyofKOfLU7f8WG8Y/S3fSbvu/lhkux1EnKEEBhBPndoQN2BGW6xhIEv3tGv9M2qdWGvvHM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcxOVdqU9X3PljOR2VvPmnzGhEte3TBo5jAt5yEpKf0VDVOUqY
-	l0S0Fjd0CNYVtMYovLwNDutHS6r07y+irWYT4/MdOI0+hympjsOy3VHbyGfggJGi0PQ=
-X-Gm-Gg: AeBDiesrJmITB0NeTtjkrBaz3PeFOaYBOfd9C7UVVsTXijsL0GWrWrVZIwOC511KBeR
-	UmPYo79rcASMUpG9q/M7Tsejnj+gWT1IJIFAM9SWj+KGIzGfwOM1Q8NRMMC4mxjY6i9YqjzbbGF
-	9tk10GFrKGC602SvZ1IzFJVOidN4IPF2GKY6kXFDOGWzvzV6uaekDzfqUltup5w1mej4J2OpXzx
-	tYEGMSNdip5CkqFDgYX8QTeamfsGh7khkKtAv8adQHAi+myBRzPqehm6K8D/dgywjBPkQMR+Bxd
-	0qtK8xBMFd+qHXoYBzBvFs5bUEcmHMYudJhwJDu06XnJwIteWPTuM7h/GCIVkVF5qxXN29QNSpN
-	odB+aUj0qtV/Ey/bWdvInAt3IOIASuAPV53SwS6R6VUcGk9tOnlUGbZKs5xuvTazoDDQT2vrHjo
-	pQCp7Tib6m37tl79siTx2YlePryIaFOOXRD5aeMa33nqFglfVOnJbXtiCE5wE5WvcwUUJZtFDh3
-	oqnpv64ETr0FiKsciz0
-X-Received: by 2002:a05:622a:15d3:b0:50d:b1fc:c7cf with SMTP id d75a77b69052e-50e36ebc865mr44534921cf.39.1776437156692;
-        Fri, 17 Apr 2026 07:45:56 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-108-18-109-80.washdc.ftas.verizon.net. [108.18.109.80])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50e393ffe6fsm13613881cf.16.2026.04.17.07.45.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2026 07:45:55 -0700 (PDT)
-Date: Fri, 17 Apr 2026 10:45:45 -0400
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
-	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
-	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
-	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aeJHmSpGYBafAgWC@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <3342acb5-8d34-4270-98a2-866b1ff80faf@kernel.org>
- <abwRu1FNqI3dVyqL@gourry-fedora-PF4VCD3F>
- <2608a03b-72bb-4033-8e6f-a439502b5573@kernel.org>
- <ad0iT4UWka3gMUpu@gourry-fedora-PF4VCD3F>
- <38cf52d1-32a8-462f-ac6a-8fad9d14c4f0@kernel.org>
- <ad-r7hwIdnvKsrh9@gourry-fedora-PF4VCD3F>
- <46837cea-5d90-49d8-be67-7306e0e89aa3@kernel.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kpW4Pff5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HjiPeGDqABzGZHKAzfLY8eaWZv268JoMfUMIEVegH3kskGR0D7VgQSO4cZlMrM/GHc/VuxqmDys5daC2PnQgvtBG/SuSM5kzzgENv1Jz9bsvyS842/tNOik/WBzxKCgdQZc5m6fi5903Vj8A9iVR6e6nzf7Bvwoo2arH9awKQHvCezUjRHW5dOXtKTujkt63f94hyTI9dZ6y7DXzKXKvtRiDi2LjbMSZ05RnUgZRlBUsOQFEs/UYwaWoJVrF7eR0G3fc3a3ddswD8kIAifhvADP/kqjc6ZgqrmEyLL7YRZ1D3o8mv6Ia7eS7YhHNE2s120fjUzWFaIBeZkAZR6SiYA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mp5FxOD5mpaEe/96wdrrdZxPQXrzJZrnbrnJ/pGTQ84=;
+ b=Nab3xzn+I0f++OP+8nPQI8kAUoncicbuxpVh2K5i46XrJRMMhI2C63eWQqAmQNvWnItCIdrCdWEad534QyHmieHAWUBsNF3Br1/RvCi24pRMXVPYN5iXjFATx+tSKwGVY2wUpNz1FB1AqLOHSDhZ1Mic8KugcW1dOMgiPRqJMU0wecu3RdI9+P/WMHZ0O+fTZ/76nQZVkHHSGbekuk+hMc4uGclmRh8MAOxWhagJs3KmCOcFixuanGtJwP3OuFrs4gsAU/NgQ46iWssG9wJ6Q+m79CPnH4v5gIcXKiFFyL5dTcW4/wz+87egTSPDmBN8For2jKhPC948hueRwWhT6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mp5FxOD5mpaEe/96wdrrdZxPQXrzJZrnbrnJ/pGTQ84=;
+ b=kpW4Pff5lPDPQCdLDVurVEJ//DXHYkuEEom0Uo6ubjbMYgQXGKeBmpwxrwYkZ69dt6vSQ7yRGyF4sNnGiOGLLTzrx2LWABoA58NdkI4vkGSz+PAuqCQ+QDX5ziKkqy/9bmw5hUIFzX4ZB6INDxKKWCOhUVk62aMMhgRO0AW4tYRRowF5z+YP7fC9dMAkKGetmerzch+m9ImXo6bRVCgV4LT/lWO68HipNKSO/M2cWludNV8P1DQA7NlWPGelUHTw/SNJYXYVF4KqIBMnZtu4bLARLaRaW7H/IRCVilAwZTFU2LkKG7zVZEh+B3PufDGgaK+TGZX4mApSy4uf1XRKAw==
+Received: from IA1PR12MB9030.namprd12.prod.outlook.com (2603:10b6:208:3f2::22)
+ by SN7PR12MB7980.namprd12.prod.outlook.com (2603:10b6:806:341::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.25; Fri, 17 Apr
+ 2026 14:52:13 +0000
+Received: from IA1PR12MB9030.namprd12.prod.outlook.com
+ ([fe80::2c1d:ed27:b53a:97d2]) by IA1PR12MB9030.namprd12.prod.outlook.com
+ ([fe80::2c1d:ed27:b53a:97d2%6]) with mapi id 15.20.9818.017; Fri, 17 Apr 2026
+ 14:52:13 +0000
+From: Manish Honap <mhonap@nvidia.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>, Dan Williams <djbw@kernel.org>
+CC: Alex Williamson <alwilliamson@nvidia.com>, "jonathan.cameron@huawei.com"
+	<jonathan.cameron@huawei.com>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alejandro.lucero-palau@amd.com" <alejandro.lucero-palau@amd.com>,
+	"dave@stgolabs.net" <dave@stgolabs.net>, "alison.schofield@intel.com"
+	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
+	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"dmatlack@google.com" <dmatlack@google.com>, "shuah@kernel.org"
+	<shuah@kernel.org>, Yishai Hadas <yishaih@nvidia.com>, Shameer Kolothum Thodi
+	<skolothumtho@nvidia.com>, "kevin.tian@intel.com" <kevin.tian@intel.com>,
+	Ankit Agrawal <ankita@nvidia.com>, Vikram Sethi <vsethi@nvidia.com>, Neo Jia
+	<cjia@nvidia.com>, "Tarun Gupta (SW-GPU)" <targupta@nvidia.com>, Zhi Wang
+	<zhiw@nvidia.com>, Krishnakant Jaju <kjaju@nvidia.com>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, Manish Honap <mhonap@nvidia.com>
+Subject: RE: [PATCH v2 16/20] vfio/cxl: Register regions with VFIO layer
+Thread-Topic: [PATCH v2 16/20] vfio/cxl: Register regions with VFIO layer
+Thread-Index: AQHcweW3qEQZGUYksEezJvXZTdKFmrXNvlWAgAGGhwCAAAwfgIADT4+AgBDOwnA=
+Date: Fri, 17 Apr 2026 14:52:13 +0000
+Message-ID:
+ <IA1PR12MB90305B038F2A088F31F56767BD202@IA1PR12MB9030.namprd12.prod.outlook.com>
+References: <20260401143917.108413-1-mhonap@nvidia.com>
+ <20260401143917.108413-17-mhonap@nvidia.com>
+ <69d0169115c06_1b0cc6100a5@dwillia2-mobl4.notmuch>
+ <20260404185330.GD2551565@ziepe.ca>
+ <69d1685538f45_556821002f@djbw-dev.notmuch>
+ <20260406221025.GH2551565@ziepe.ca>
+In-Reply-To: <20260406221025.GH2551565@ziepe.ca>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA1PR12MB9030:EE_|SN7PR12MB7980:EE_
+x-ms-office365-filtering-correlation-id: 8a5a03c4-2f9b-4795-3f42-08de9c90e936
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|1800799024|366016|18002099003|22082099003|56012099003|38070700021;
+x-microsoft-antispam-message-info:
+ A3DR2XrFfi4NsfD3+Im7+qpK9BOD9ps7mcyIvlMsDZEaBnEF4VgCa1hrgEd2EEVElR8s6D5uKQeXKidINJvQ/Rr75XrZUqUG7iQhiFAubOmO+sAvmNSLbjKN39k+Okdcmzsv3HwViwo1ZD4ECPt8KCwCLJI0IB9Rpyw6ruXUtMwTyMWDn9KxUgQ87oh+i1cpAdjnghheEsVkBNeI6rZ3Hc9xVE33LVJKqDU7oe5RaSaTqrtN3ascgRO7M12E62dJSf77DFD06qxJDl1DC0DbsN3WcfNFmWO12eW9hIvhiKpPEe2hKoTfI0Q0Eo5pnw+EdBThaf8rqkfL8lJsLVjys9TzR7igt4QmjwW2ZAdOl5h6C0QmujXbu7hb06tOT2B/ZYkn0qpy2d92ILHSHZUZ6fjRPgeZF9WTGyP4ICJBguR674sgKQDtZe4kYNKQWhOdZ1NIW7jkCLvtroKbs1NzCga2Ue2wG7/e8Ic2E2aJRvtRmv/AptoIg6YglrXM21DfZtiJ5quR0EG8nd4d3JZ6d0AlWJnkFx9zKCrhoYOpBEfMAgT4DdCjEoYT025PcxS5u8auRnWzSdQy32rWroEsSgCSrip5eDLY/6BIuxanPWGPf3bB7XXq9ZfZTatbgPYV4R89dD9PH1ezP/rJR95AKtPYqYbD4QLngjptCnmmj6zMq+9HjnJ1EG67/cPe/8P49iV4ZB8XgcnKCyF6+DMuAjmcq0YRFdUOX+sSM4RjJij/ohYzezYfFB/DyrFBNdSXHcMLwETt2ZRrhDF5vYWW7LLw2lu1Z+pGbXasO2VdJgQ=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9030.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(18002099003)(22082099003)(56012099003)(38070700021);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?TTYbAh3+69Q/18rJ7fCOcRAkkhGjEp3XoUD88FWtrSu80UASkRJpBvpPP2QL?=
+ =?us-ascii?Q?2Jwhg6eCiZ9cT24zHKT2uW07eU7jOce7U1b9aHpzT4Q6CrvYjynD2hYNWmu9?=
+ =?us-ascii?Q?GW7QeO8UJ9go59lA+TJlOKhW/VQksGmJ8TbbVTiKcjHSoCmpJATrSnw9QY7A?=
+ =?us-ascii?Q?xI0Wse/1rEZA4vvqU4hd1NENhgDeTqJ5egw03WSvkY3NCwuz17oy/+N0VKiL?=
+ =?us-ascii?Q?qPOlEYhE1ypAdGG9hRupyPJFsnMUgTdsKrT3c8a4bQtaCVmjU9UvVwAdDEFc?=
+ =?us-ascii?Q?syz+a2rRwt6/XcCSViNX225/+5dTZPyGV182dUHHRNzYhl0cTD+dDdybL//2?=
+ =?us-ascii?Q?TFkYPkG+j2aH6iPhmYl3kdO5zpyeOt35YN+q1tWLpkTykcLw/oQX85Rz1UV5?=
+ =?us-ascii?Q?bmKhsUxIRs6T36AQFLOPzkX3ybaUUnf1ufZ2ZI58OjMtZDTGYowMcG9wk6Qt?=
+ =?us-ascii?Q?itihiTFanoYsTiqvCrcG0D3thavwY/73pwJLR/8uh5oD1wIp23hO+UTSeLUC?=
+ =?us-ascii?Q?YWPCbbgFv6g9eRWA+nMi4vd55SI9JqVXeghpQacbORdOjzxF6PHFsgbGIaAh?=
+ =?us-ascii?Q?KdV/nBmFXkSnWYSRrucGeN1d7NCw6NzWDUT+bDjRGpjM3F+NEkg84+tVhBzV?=
+ =?us-ascii?Q?mAM4rSbapTrDeKl+tjbgYTEAUhgiInrD1OfCcLKeRncGrZAYYUqDSY5zeIBu?=
+ =?us-ascii?Q?ls7yBywepkk6m007gTWQHtmCDl3/4Byv9yFVU3CorPzmJBmaUuGbSEpbFdcH?=
+ =?us-ascii?Q?qy+wpR51wjMdoxzR3x4JoxelQzCqd9EtPyHDfPYKpletQpAVhtIrGwO7ezXZ?=
+ =?us-ascii?Q?OglgXRo0Wg3sEqAKPY7Di8hTs5yrxHT7wFYDWDGl6QnE+tKEMBoUsxhDnujD?=
+ =?us-ascii?Q?sSkSPP9RdRP+GWrF30Lk/PhNhM0b41NossafHaefN0o6YTjbCqiCkOmUS5CU?=
+ =?us-ascii?Q?fPaq93znGVSVmMHhfhyahGu0ZK2wE5o/WCQhE0ee0LvdFg+NUVpsCaHtYZWO?=
+ =?us-ascii?Q?ifZswUdhPj+rrcMccWZzmY0yGkeWt3hs1uWTimioSlJge9khhKT7fbDqHkQ/?=
+ =?us-ascii?Q?eXkwTP6vXlKQSz+NTx9juC8ZQ2rNHTlc7U9wnTc8Rdf9LIqvgL0r87LH/dip?=
+ =?us-ascii?Q?aELE2+4G0JSjTd/h7Z/7ifMrQKCsdQgeOnwuXABwMoEW+zcuCsN7lerVquco?=
+ =?us-ascii?Q?D9gK3KMtGoewGSLP2sIAB4g1zHpxV0T1en6eAlRWs4/7g0e3EokfIQXPj/6d?=
+ =?us-ascii?Q?2ZF4Cvj2CdhJkAGn0NEKLlJ5HFThN/4nN3LqTlJoqQS7/ZP64Se7Eg3t5Zqu?=
+ =?us-ascii?Q?fr+tUleMkxA5+VK6VXIM9MW3fjW1akHElPlFFyi8uHpSt5Z99r5KafkBwM5I?=
+ =?us-ascii?Q?Ft7gJIEOTpmDoWdc4MZIvxjg/WcwThG+JCpO0aMc5BwBxXIq1ZL5bmbrhewe?=
+ =?us-ascii?Q?BvMNqTIAdbBchDTDM7i1qyHqOUiW1C7/8fGRZRRkVC3Ra64qQOZt4ULcFMTL?=
+ =?us-ascii?Q?k0GqhQxGamoxutYfg510NC7lJ8Sr2Tw9XoE52kiTLk37kmnaCfQFzpd9jgnD?=
+ =?us-ascii?Q?SyWC6cc6MPd89PeqL1On1SxzeqnXxmQBwq4eH0iuIfl/TS65SqfbRAk2Whgg?=
+ =?us-ascii?Q?P0IR93jJUfM8rAlHDiFk9wUf43hW7ri5CAyNMHTeCcbht3lpFNteXKQOHXWs?=
+ =?us-ascii?Q?+uoszuxKeTe9RKTQw2sXOx2iDP3b7moG/U1XKj0Sbl0BBXkm?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <46837cea-5d90-49d8-be67-7306e0e89aa3@kernel.org>
-
-On Fri, Apr 17, 2026 at 11:37:36AM +0200, David Hildenbrand (Arm) wrote:
-> > 
-> > I'm not married to __GFP_PRIVATE, but it has been reliable for me.
-> 
-> Yes, we should carefully describe which semantics we want to achieve, to
-> then figure out how we could achieve them.
->
-
-Yeah, __GFP_THISNODE does seem similar enough at first look - but its
-semantic is actually backwards from the problem we're trying to solve.
-
-__GFP_THISNODE says:  Don't fall back   (restrict access)
-__GFP_PRIVATE says:   Enable Allocation (allow access)
-
-But I think there is merit in asking the question whether the problem
-is a GFP flag or the current node iterations thoughout the system.
-
-My concern is essentially some driver doing something like:
-
-   for node in possible_nodes:
-       alloc_pages_node(..., node, __GFP_THISNODE);
-
-Which, while silly looking, its not hard to imagine such a pattern
-accidentally creeping into code in a less obvious form.
-
-I'll take some time to chew on it - maybe the answer is private nodes
-should not be in the default node iteration macros either.
-
-I had briefly considered this, but had moved on when I figured out
-removing these nodes from the fallback lists.
-
-> >> Again, I am not sure about compaction and khugepaged. All we want to
-> >> guarantee is that our memory does not leave the private node.
-> >>
-> >> That doesn't require any __GFP_PRIVATE magic, just en-lighting these
-> >> subsystems that private nodes must use __GFP_THISNODE and must not leak
-> >> to other nodes.
-> > 
-> > This is where specific use-cases matter.
-> > 
-> > In the compressed memory example - the device doesn't care about memory
-> > leaving - but it cares about memory arriving and *and being modified*.
-> > (more on this in your next question)
-> 
-> Right, but naive me would say that that's a memory allocation problem,
-> right?
-> 
-
-Allocation is only 1 part of the problem - the second is modification.
-
-Putting aside that I don't think this memory should be mempolicy
-enabled for the moment - the problem is best described in code:
-
-    /* We have a 512MB compressed memory region */
-    buf = malloc(1GB);
-    mbind(buf, compressed_node); 
-
-    /* Nothing is faulted yet - our first chance to catch OOM */
-    memset(buf, 0x42, 1GB);  /* Allocation - compressed nicely */
-
-    /* Pages are now faulted and have R/W PTEs */
-    memcpy(buf, uncompressible, 1GB); 
-
-    /* There is a bear chasing you now, run fast. */
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9030.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a5a03c4-2f9b-4795-3f42-08de9c90e936
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2026 14:52:13.4666
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NNbsejzV+pQvT9Jg5Ns18hq0BEfYx+FCsXMUioakR4oj9VEXTqxKS2Oy86F249T7e9w0h9X19ltncsBfcl0FJQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7980
 
 
-There is nothing an operating system can do to slow down the writer in
-this scenario - the memory is faulted and mapped R/W in the page tables.
 
-Another way to think about this is that modification is basically a
-"Re-allocation" on the device with the CPU and OS removed from the loop.
+> -----Original Message-----
+> From: Jason Gunthorpe <jgg@ziepe.ca>
+> Sent: 07 April 2026 03:40
+> To: Dan Williams <djbw@kernel.org>
+> Cc: Manish Honap <mhonap@nvidia.com>; Alex Williamson
+> <alwilliamson@nvidia.com>; jonathan.cameron@huawei.com;
+> dave.jiang@intel.com; alejandro.lucero-palau@amd.com; dave@stgolabs.net;
+> alison.schofield@intel.com; vishal.l.verma@intel.com; ira.weiny@intel.com=
+;
+> dmatlack@google.com; shuah@kernel.org; Yishai Hadas <yishaih@nvidia.com>;
+> Shameer Kolothum Thodi <skolothumtho@nvidia.com>; kevin.tian@intel.com;
+> Ankit Agrawal <ankita@nvidia.com>; Vikram Sethi <vsethi@nvidia.com>; Neo
+> Jia <cjia@nvidia.com>; Tarun Gupta (SW-GPU) <targupta@nvidia.com>; Zhi
+> Wang <zhiw@nvidia.com>; Krishnakant Jaju <kjaju@nvidia.com>; linux-
+> kselftest@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> cxl@vger.kernel.org; kvm@vger.kernel.org
+> Subject: Re: [PATCH v2 16/20] vfio/cxl: Register regions with VFIO layer
+>=20
+> External email: Use caution opening links or attachments
+>=20
+>=20
+> On Sat, Apr 04, 2026 at 12:36:53PM -0700, Dan Williams wrote:
+>=20
+> > Then I assume it matters that memremap() sometimes silently falls back
+> > to the direct map. The "VFIO owns" expectation needs to guard against
+> > some helpful platform firmware mapping accelerator memory as System RAM=
+.
+>=20
+> I don't think how memremap works under the covers matters to vfio, it
+> takes in a phys_addr_t an gives back a KVA that is cachable kernel memory=
+.
+>=20
+> We just have to be mindful to not allow mismatched attributes on virtual
+> aliases.
+>=20
+> > At a minimum having VFIO fail to map in that case helps with the
+> > argument I have been making that "no, EFI_CONVENTIONAL_MEMORY type +
+> > EFI_SPECIFIC_PURPOSE flag" is not suitable for accelerators with
+> > private CXL memory. Those want to be enforcing "EFI_RESERVED".
+>=20
+> Certainly it should fail the request region if something else is using it=
+,
+> so if those EFI flags plug it into the mm and it is plugged when VFIO
+> starts then it should stop.
+>=20
+> The direct map isn't really "plugged into the mm" but it does raise the
+> mismatched attributed issue.
+>=20
+> Jason
 
-So you need both allocation control (private node, dmeotion only) and
-modification control (PTE write-protection) to make this reliable.
+Thank you all for your suggestions.
 
-> khugepaged() wants to allocate a 2M page to collapse. Goes to the buddy
-> to allocate it.
-> 
-> Buddy has to say no if the device cannot support it.
-> 
-> So there are free pages but we just don't want to hand them out.
->
+As pointed out by Jason/Gregory, the whole design presented here is
+VFIO owned device regions + mmap + vmf_insert_pfn (patch 14) and registrati=
+on
+at vfio_pci_open_device() (patch 16), Lazy fault (vmf_insert_pfn), zapping
+PTEs on reset.
 
-On the allocation side - I think we can borrow from kernel free page
-reporting and/or ballooning to control this aspect.
+I am convinced on the memremap usage as discussed. VFIO owns the physical
+range exclusively: no struct pages are involved (vmf_insert_pfn inserts raw
+PFNs), and memremap(MEMREMAP_WB) gives the VMA the correct WB cache
+attributes.
 
-But on the khugepaged observation... hmm
+As suggested, I will add request_mem_region for memory range and a failure
+message if we cannot request mem region at probe.
+This will also catch the EFI case: if firmware marks accelerator memory as
+EFI_CONVENTIONAL_MEMORY, MM will claim it at boot and request_mem_region wi=
+ll
+return a failure at probe time itself.
 
-If we regularly scanned the compressed node, we could soft-protect them
-similar to the way numa balancing sets prot_none.
+I will also add a comment in next cover letter explaining why we have decid=
+ed
+to use memremap and not ioremap so that the decision we have taken in v2 is
+entirely clear at the start of review cycle.
 
-Combined with the node being demotion-only, this might be sufficient
-unless you're riding the line pretty hard.
-
-If a write-protect node attribute is a bridge too far, this might be
-the best we can do.
-
-Hmmmm. As usual, you have given me something very interesting to chew on
-- thank you David.
-
-> > 
-> > tl;dr: informative mechanism - but it probably should be dropped,
-> > it makes no sense (it's device memory, pinnings mean nothing?).
-> 
-> What I was thinking: We still have different zone options for this memory.
-> 
-> Expose memory to ZONE_MOVABLE -> no longterm pinning allowed.
-> 
-> Expose memory to ZONE_NORMAL -> longterm pinning allowed.
->
-
-Yeah I have this in my pile of notes somewhere and it just fell out of
-my context window.
-
-This is actually a nice example of how isolation is better dealt with at
-the node level, while ZONE suddenly becomes just another attribute bit.
-
-In my response to Alistair, I pointed out that zones almost become
-meaningless on a private node (almost).
-
-If you have a private node in ZONE_NORMAL, and your services are in full
-control of how the allocations occur and what code touches them - you
-can still (in theory) guarantee the unpluggability of that memory with
-proper startup/teardown of the service.
-
-So what's the use in ZONE_MOVABLE existing for a private node? :]
-
-> > 
-> > Yeah i'm trying to avoid it, and the answer may actually just exist in
-> > the task-death and VMA cleanup path rather than the folio-free path.
-> > 
-> > From what i've seen of accelerator drivers that implement this, when you
-> > inform the driver of a memory region with a task, the driver should have
-> > a mechanism to take references on that VMA (or something like this) - so
-> > that when the task dies the driver has a way to be notified of the VMA
-> > being cleaned up.
-> > 
-> > This probably exists - I just haven't gotten there yet.
-> 
-> That sounds reasonable. Alternatively, maybe the buddy can just inform
-> the driver about pages getting freed?
->
-> Again, just a another random thought. But if these nodes are already
-> special-private, then why not enlighten the buddy in some way.
-> 
-> That also aligns with my "buddy rejects to hand out free pages if the
-> device says no" case.
-> 
-> Something to thinker about.
-> 
-
-The only thing i'll push back on here is this implies an ops callback
-in the buddy (on free, at least - alloc could be a bitcheck on pgdat).
-
-But yes, the current RFC has a free_folio() callback just like
-zone_device.  The problem starts to become obvious when you let
-other parts of mm/ touch those pages.
-
-There are at least 3 or 4 different paths back into the buddy that
-would need to be instrumented this way.
-
-Some of them are called in NMI contexts.
-
-The questions about "What is safe" start piling up very quick, and they
-are hard to answer definitively.  I think we should at make strong attempt
-to avoid such things entirely if possible.
-
-~Gregory
+Manish
