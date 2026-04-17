@@ -1,114 +1,104 @@
 Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90B03A3E7D
-	for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 13:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84443C0607
+	for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 14:45:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776432632; cv=none; b=KE+iamOqDjLkSZMUEO+hIMUDsOINxxEBRKbRVhXwJ95CuC0WScz684+T53pDTwivsZ214GiQFVHjRRjXB8KP1JDzQivEMRo03eRhN0npM9TCar8SfJUFNuoTZGy3rtu6xSe/OgHUZUBdn6uWJcWE/wC5kGMa7HBj+N6F3Ql6gnA=
+	t=1776437159; cv=none; b=sei/iaJhW08VSYusOOuEYywu88SXKgP2auVbcYRu/CJFCIcCss5IyHZHu1VvkRkEkK5ztXjfXTU0xsxqMSRGSsGfieO7wPy1Q/BAvKRnh5LcqqA5e+U5iPzjVsPPXRWibLYy/+Vc3+azisbwTRMDEZ16kBMJVa7n9H+0Coy5jS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776432632; c=relaxed/simple;
-	bh=hkpNLJ3ybawOIa1fkGOwYhoNiDG571CgTvN9uVT7u+s=;
+	s=arc-20240116; t=1776437159; c=relaxed/simple;
+	bh=UNrb3fspU9BdkXegwdmwqukr2NvwEt0LLiivOVSbqvk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vEA2VXvM9/TwbbwbI3FqYPu6PcrDQ9DYnEpl8gj+ykyvudmZuoIKZ/FzRNGQuSOkDdbONB7ZhO6ddoIkJb3lOY//1XcQ8c5UHp/GdJXO4yXSWPTREQUPoiM9ilH7cdJ2YBSZQuJ2Ym+zQqPCpmrlal+SEB2H5m9mw0vxUnXrnjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=fwqU9rc9; arc=none smtp.client-ip=209.85.160.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=gpID1MRWqeC5AyRGgJ/6ia7z6L52+bD/N+84BCESa6BLUlQtmP8M+Os2gOcpS8+X8l0uoKy1HBnd32pbLBck3FVbrhoUSMzyWq/k0+6E4MFZX/4KrPI8lawJ4ird33PaixFzeH0K4VlxpobuadlCzTZgqkaw8JC/Ye4lz9uKckY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=LFMvbAhk; arc=none smtp.client-ip=209.85.160.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="fwqU9rc9"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-50d75bfb259so5371571cf.1
-        for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 06:30:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="LFMvbAhk"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-50baafd6c4aso8739651cf.1
+        for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 07:45:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1776432629; x=1777037429; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1776437157; x=1777041957; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xgTqv4J4Fl9HXQyBvnfY8cYHtSEuC0puU/+LlJmiu7o=;
-        b=fwqU9rc95o1LTxXbeM3xVzr/YEF6qQLLwnIhwMCPZzaaEAl6BjYzd9K4SMG+IkvcuM
-         6mF3iufDqSliJDpuDd/qFSvj6sge9Bl6ut1WQEhwxX0NgfPVSWBt/NIEhoSvE9LQky4a
-         ziPucVpAOTXZqRs1IfU6TcWSLjQa1gWhvYBhb+gLbuOTkswwRsbepenvXxOBM0cVOhdU
-         kJ8LZl5X0d7GiOhsaUPmwijnaf6SX7xQfBrOoXP+sYNxndqV9EygIoLTQephxZOm6Me6
-         iEJgTv8oYwCldLJ0rlD116HeN2ahjql2pDnql+FNBAYlDIyU7quduG/rVTPQVc1ZAxVX
-         WNEQ==
+        bh=6Jkzv2KvncmaDlTxMf9kep+UrjgSD3pdlFDgixpHVA0=;
+        b=LFMvbAhkQucFdmfedNUtfb8qvWQ7VnK58a7nArceqK/1C0On7wFdqMfppjGPDfSbwD
+         eP7ceaWSbGp9tVxj2KyC1OGt+0zLfdWYlCgsuXs7Wgnd4TMWQ8Z+wKxA9HcJrmI52UCE
+         ofesP6jeG7tpRSCfFKz3WcpZddvAUa4m9CIAClDKphsbxYpqCD/Z4jDNW1NXKU/O0Tnc
+         FpIWR1ACgc9tXR9vvtXTyA/PM1Hx3LsbNA4lNFX+MRjh+hWDIuij3leDSSrcjCz5cak2
+         +L1162DjOMNIUdXbuzKYHJiEylXL3t+ULpyxhanC7CmyibQ3f0/LQQybUZ2GFxL3mMZz
+         hTQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776432629; x=1777037429;
+        d=1e100.net; s=20251104; t=1776437157; x=1777041957;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xgTqv4J4Fl9HXQyBvnfY8cYHtSEuC0puU/+LlJmiu7o=;
-        b=MMiFVOQkGmXMi9QyvUVtIAd5riZOmYUEnlgFffkzT9lSZwmwvnRCNEkkQ7u6rQ0XGm
-         vBiTg2ZL17gmbzKb/JJHpNfj7XBHQfq1ZUS0uYOE6uRX6ibN5IIR0ElVj4JwhwG/oLt+
-         d1fowVAinBE9qP6cIDQzXoLzVQhBntqogKJ340HwJV529pKsUTeA/1RHCkC+7kgFIlgF
-         fq2F7EDMNnYxeyRq4pmKjsngYRlQLM3j7sn1xN5BVqBBwQtpy5a4DZCK2eqR+dvWfeuq
-         8elp71AsJMtYlgXTGBbNh01JjH9xLYTl6tUrz/+P4VNCiStJtX50cn06DSOJkFw1dVxs
-         /BCA==
-X-Forwarded-Encrypted: i=1; AFNElJ8b/20oEoB7OIxr+J/r5reJ02kPuXYcYIA0r1hN6c2+uxN+dxr1CxL3eC6iqa77aoP1KpqgI6Lcqwk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz4+CKkdZLR2X7DjaCgOZC74aKN2xNpirBPDqotBgdE82yWvdr
-	VrRmKcgBUXxf9RUI1GJgtez8/qh3sCSvofblDhgQjSW8OJ2zz9w6uQNoVSxL1YtUf78=
-X-Gm-Gg: AeBDies0O5wyr/MFS4r2urCSqgTUoduszAOuoZM4uEhQMeARqkEaaqa94YIFI5mozM+
-	QjI0W8zGj1aWRcXv0iFlJqXKy8fEVUv2jVv8+JMBmO3y2pFjRMwhSiaWHTy++9j9NaKQnSKoPxO
-	ew3OOruys82WO4ZMQqRkVgjfHOXnyqE9d60LxtaC2pfn8rpZXNmuECwnQAlbyJHXthGZzkg3CJJ
-	e/x9CG36OUzklRfq8SO47D38d4ioe71S6T5FSTLeDGQBM+8+G/B+BRWt/QQ9F43Tr/tNlbG27bS
-	92P5YZiVSj7+ATgMqOclAs07qyvI9Seh1fTeL7fZyk4UowVxkpVqFp5W2TwSVGcPtsWePbOqH4Y
-	n8l5QrHfI9qF5c7MbjZzyaD6qjyWsXShnj2QH84Gf/Fe/9o6xyZyY4tHrem0DMz5Mo+abpv4dPI
-	4yHfP0QvZO4/2fd8T5VZhEQfx+6pRjZz46E0/UQIrcSJCVomq6f6HoXqWx9PgrkFOgjp7EkR+p6
-	MmOEEoi1etCRoEruOeq
-X-Received: by 2002:a05:622a:1f17:b0:50d:80ee:3962 with SMTP id d75a77b69052e-50e3683091dmr40533621cf.17.1776432629479;
-        Fri, 17 Apr 2026 06:30:29 -0700 (PDT)
+        bh=6Jkzv2KvncmaDlTxMf9kep+UrjgSD3pdlFDgixpHVA0=;
+        b=MfkdLy9GRHXA5zGnmDxnhLzlQCtnSBUnrogip1ellHLqjskhkKxtQRIJHGIbXSmON/
+         RGRtyHOz58I1Kj/U0pRtQmSA3k1D5Kem8Iq0Eb+NweUK5X0SZh6A7si2vue/HodFO9B2
+         2ehbGohQF/35h7YunwOgiaBNVfAVmN28yC0mElwWfuG8b6YHOR65qGcFQO2pB27wCNFU
+         WL0DOmUC2YZTT5dOgr2TVOojfXaPfIjwS1RLVEnhoTFPCJOXIvKmt5iyrhvW4khJEcrq
+         XCKjMHVpk3INOYkaGpyF1Si+DLfP6dhmdFqq7Rd4ljZ6qg0xLaJ3L7tOJnTjSAybHJK3
+         HARQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+FNIbPcsyofKOfLU7f8WG8Y/S3fSbvu/lhkux1EnKEEBhBPndoQN2BGW6xhIEv3tGv9M2qdWGvvHM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcxOVdqU9X3PljOR2VvPmnzGhEte3TBo5jAt5yEpKf0VDVOUqY
+	l0S0Fjd0CNYVtMYovLwNDutHS6r07y+irWYT4/MdOI0+hympjsOy3VHbyGfggJGi0PQ=
+X-Gm-Gg: AeBDiesrJmITB0NeTtjkrBaz3PeFOaYBOfd9C7UVVsTXijsL0GWrWrVZIwOC511KBeR
+	UmPYo79rcASMUpG9q/M7Tsejnj+gWT1IJIFAM9SWj+KGIzGfwOM1Q8NRMMC4mxjY6i9YqjzbbGF
+	9tk10GFrKGC602SvZ1IzFJVOidN4IPF2GKY6kXFDOGWzvzV6uaekDzfqUltup5w1mej4J2OpXzx
+	tYEGMSNdip5CkqFDgYX8QTeamfsGh7khkKtAv8adQHAi+myBRzPqehm6K8D/dgywjBPkQMR+Bxd
+	0qtK8xBMFd+qHXoYBzBvFs5bUEcmHMYudJhwJDu06XnJwIteWPTuM7h/GCIVkVF5qxXN29QNSpN
+	odB+aUj0qtV/Ey/bWdvInAt3IOIASuAPV53SwS6R6VUcGk9tOnlUGbZKs5xuvTazoDDQT2vrHjo
+	pQCp7Tib6m37tl79siTx2YlePryIaFOOXRD5aeMa33nqFglfVOnJbXtiCE5wE5WvcwUUJZtFDh3
+	oqnpv64ETr0FiKsciz0
+X-Received: by 2002:a05:622a:15d3:b0:50d:b1fc:c7cf with SMTP id d75a77b69052e-50e36ebc865mr44534921cf.39.1776437156692;
+        Fri, 17 Apr 2026 07:45:56 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-108-18-109-80.washdc.ftas.verizon.net. [108.18.109.80])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50e3bf260fbsm9752291cf.10.2026.04.17.06.30.27
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-50e393ffe6fsm13613881cf.16.2026.04.17.07.45.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2026 06:30:28 -0700 (PDT)
-Date: Fri, 17 Apr 2026 09:30:25 -0400
+        Fri, 17 Apr 2026 07:45:55 -0700 (PDT)
+Date: Fri, 17 Apr 2026 10:45:45 -0400
 From: Gregory Price <gourry@gourry.net>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, Dan Williams <djbw@kernel.org>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	John Groves <John@groves.net>, Miklos Szeredi <miklos@szeredi.hu>,
-	Bernd Schubert <bernd@bsbernd.com>,
-	John Groves <john@jagalactic.com>,
-	Dan J Williams <dan.j.williams@intel.com>,
-	Bernd Schubert <bschubert@ddn.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	David Hildenbrand <david@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Chen Linxuan <chenlinxuan@uniontech.com>,
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Shivank Garg <shivankg@amd.com>,
-	Ackerley Tng <ackerleytng@google.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>,
-	"venkataravis@micron.com" <venkataravis@micron.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V10 00/10] famfs: port into fuse
-Message-ID: <aeI18Q2lcxZLw-1V@gourry-fedora-PF4VCD3F>
-References: <CAJfpegvVTcV89=q3L326aGQjhduBcv7PVg5QKftGLjNZmCLmaw@mail.gmail.com>
- <ad4_jFsR951c2Mtn@groves.net>
- <20260414185740.GA604658@frogsfrogsfrogs>
- <CAJnrk1ZgcMuwfMpT1fXvUwBBiq9eWFHWVeOFQFFKiamGGe1RJg@mail.gmail.com>
- <ad7Tps4tkNbndd9Z@groves.net>
- <CAJnrk1ZWVsKW2dhAWdBkCQskoTE+hmOhPFDhyz4EtExn=GdXGA@mail.gmail.com>
- <aeFDCeqZDPI3rm3s@gourry-fedora-PF4VCD3F>
- <43d36427-4629-4712-a262-391e64006eb5@app.fastmail.com>
- <20260416224331.GD114184@frogsfrogsfrogs>
- <aeHrsIGagdmZJ1Fw@infradead.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	damon@lists.linux.dev, kernel-team@meta.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
+	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
+	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
+	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
+	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
+	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <aeJHmSpGYBafAgWC@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <3342acb5-8d34-4270-98a2-866b1ff80faf@kernel.org>
+ <abwRu1FNqI3dVyqL@gourry-fedora-PF4VCD3F>
+ <2608a03b-72bb-4033-8e6f-a439502b5573@kernel.org>
+ <ad0iT4UWka3gMUpu@gourry-fedora-PF4VCD3F>
+ <38cf52d1-32a8-462f-ac6a-8fad9d14c4f0@kernel.org>
+ <ad-r7hwIdnvKsrh9@gourry-fedora-PF4VCD3F>
+ <46837cea-5d90-49d8-be67-7306e0e89aa3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -117,26 +107,173 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aeHrsIGagdmZJ1Fw@infradead.org>
+In-Reply-To: <46837cea-5d90-49d8-be67-7306e0e89aa3@kernel.org>
 
-On Fri, Apr 17, 2026 at 01:13:36AM -0700, Christoph Hellwig wrote:
-> On Thu, Apr 16, 2026 at 03:43:31PM -0700, Darrick J. Wong wrote:
+On Fri, Apr 17, 2026 at 11:37:36AM +0200, David Hildenbrand (Arm) wrote:
+> > 
+> > I'm not married to __GFP_PRIVATE, but it has been reliable for me.
 > 
-> > ...however the strongest case (IMO) would be if (having merged famfs) we
-> > then merge fuse-iomap after famfs.  Then we extend the existing
-> > fuse-iomap-bpf prototype to allow per-mount and per-inode iomap bpf ops.
-> > That enables us to analyze thoroughly the performance characteristics of:
-> 
-> Don't go there.  I think that you two are comining up with two
-> interfaces for roughly the same thing is a pretty clear indicator
-> that this needs to be fully hashed out as a single interface first,
-> and any kind of preliminary merging is just going to create problems.
+> Yes, we should carefully describe which semantics we want to achieve, to
+> then figure out how we could achieve them.
 >
 
-We're not sure how deep this rathole goes, and John's work has been
-in the rathole for a few years now.  Hence the desire to hedge.
+Yeah, __GFP_THISNODE does seem similar enough at first look - but its
+semantic is actually backwards from the problem we're trying to solve.
 
-But it's obvious no decisions will be made before LSFMM - so we can
-take a breath and chew on it. Maybe we'll get there in person.
+__GFP_THISNODE says:  Don't fall back   (restrict access)
+__GFP_PRIVATE says:   Enable Allocation (allow access)
+
+But I think there is merit in asking the question whether the problem
+is a GFP flag or the current node iterations thoughout the system.
+
+My concern is essentially some driver doing something like:
+
+   for node in possible_nodes:
+       alloc_pages_node(..., node, __GFP_THISNODE);
+
+Which, while silly looking, its not hard to imagine such a pattern
+accidentally creeping into code in a less obvious form.
+
+I'll take some time to chew on it - maybe the answer is private nodes
+should not be in the default node iteration macros either.
+
+I had briefly considered this, but had moved on when I figured out
+removing these nodes from the fallback lists.
+
+> >> Again, I am not sure about compaction and khugepaged. All we want to
+> >> guarantee is that our memory does not leave the private node.
+> >>
+> >> That doesn't require any __GFP_PRIVATE magic, just en-lighting these
+> >> subsystems that private nodes must use __GFP_THISNODE and must not leak
+> >> to other nodes.
+> > 
+> > This is where specific use-cases matter.
+> > 
+> > In the compressed memory example - the device doesn't care about memory
+> > leaving - but it cares about memory arriving and *and being modified*.
+> > (more on this in your next question)
+> 
+> Right, but naive me would say that that's a memory allocation problem,
+> right?
+> 
+
+Allocation is only 1 part of the problem - the second is modification.
+
+Putting aside that I don't think this memory should be mempolicy
+enabled for the moment - the problem is best described in code:
+
+    /* We have a 512MB compressed memory region */
+    buf = malloc(1GB);
+    mbind(buf, compressed_node); 
+
+    /* Nothing is faulted yet - our first chance to catch OOM */
+    memset(buf, 0x42, 1GB);  /* Allocation - compressed nicely */
+
+    /* Pages are now faulted and have R/W PTEs */
+    memcpy(buf, uncompressible, 1GB); 
+
+    /* There is a bear chasing you now, run fast. */
+
+
+There is nothing an operating system can do to slow down the writer in
+this scenario - the memory is faulted and mapped R/W in the page tables.
+
+Another way to think about this is that modification is basically a
+"Re-allocation" on the device with the CPU and OS removed from the loop.
+
+So you need both allocation control (private node, dmeotion only) and
+modification control (PTE write-protection) to make this reliable.
+
+> khugepaged() wants to allocate a 2M page to collapse. Goes to the buddy
+> to allocate it.
+> 
+> Buddy has to say no if the device cannot support it.
+> 
+> So there are free pages but we just don't want to hand them out.
+>
+
+On the allocation side - I think we can borrow from kernel free page
+reporting and/or ballooning to control this aspect.
+
+But on the khugepaged observation... hmm
+
+If we regularly scanned the compressed node, we could soft-protect them
+similar to the way numa balancing sets prot_none.
+
+Combined with the node being demotion-only, this might be sufficient
+unless you're riding the line pretty hard.
+
+If a write-protect node attribute is a bridge too far, this might be
+the best we can do.
+
+Hmmmm. As usual, you have given me something very interesting to chew on
+- thank you David.
+
+> > 
+> > tl;dr: informative mechanism - but it probably should be dropped,
+> > it makes no sense (it's device memory, pinnings mean nothing?).
+> 
+> What I was thinking: We still have different zone options for this memory.
+> 
+> Expose memory to ZONE_MOVABLE -> no longterm pinning allowed.
+> 
+> Expose memory to ZONE_NORMAL -> longterm pinning allowed.
+>
+
+Yeah I have this in my pile of notes somewhere and it just fell out of
+my context window.
+
+This is actually a nice example of how isolation is better dealt with at
+the node level, while ZONE suddenly becomes just another attribute bit.
+
+In my response to Alistair, I pointed out that zones almost become
+meaningless on a private node (almost).
+
+If you have a private node in ZONE_NORMAL, and your services are in full
+control of how the allocations occur and what code touches them - you
+can still (in theory) guarantee the unpluggability of that memory with
+proper startup/teardown of the service.
+
+So what's the use in ZONE_MOVABLE existing for a private node? :]
+
+> > 
+> > Yeah i'm trying to avoid it, and the answer may actually just exist in
+> > the task-death and VMA cleanup path rather than the folio-free path.
+> > 
+> > From what i've seen of accelerator drivers that implement this, when you
+> > inform the driver of a memory region with a task, the driver should have
+> > a mechanism to take references on that VMA (or something like this) - so
+> > that when the task dies the driver has a way to be notified of the VMA
+> > being cleaned up.
+> > 
+> > This probably exists - I just haven't gotten there yet.
+> 
+> That sounds reasonable. Alternatively, maybe the buddy can just inform
+> the driver about pages getting freed?
+>
+> Again, just a another random thought. But if these nodes are already
+> special-private, then why not enlighten the buddy in some way.
+> 
+> That also aligns with my "buddy rejects to hand out free pages if the
+> device says no" case.
+> 
+> Something to thinker about.
+> 
+
+The only thing i'll push back on here is this implies an ops callback
+in the buddy (on free, at least - alloc could be a bitcheck on pgdat).
+
+But yes, the current RFC has a free_folio() callback just like
+zone_device.  The problem starts to become obvious when you let
+other parts of mm/ touch those pages.
+
+There are at least 3 or 4 different paths back into the buddy that
+would need to be instrumented this way.
+
+Some of them are called in NMI contexts.
+
+The questions about "What is safe" start piling up very quick, and they
+are hard to answer definitively.  I think we should at make strong attempt
+to avoid such things entirely if possible.
 
 ~Gregory
