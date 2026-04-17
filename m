@@ -1,166 +1,160 @@
-Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279EA39FCE
-	for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 17:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776446250; cv=none; b=MBBAx/LbduBlmmsDlY6lNdUPXeMNRXwkTWZHqFBmni5IIQCugYEDFATMQTWsPuTSSSxd068j/V7tOkZKAv5sfk0UcgXr6LFYkgQ7LLvgUbQK2Yif6rjuqOgQeZpAx8fI2Y5v4BvRi5WyGb3w2Skzn4S0e3Aj2xxlZxhJDHApzXs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776446250; c=relaxed/simple;
-	bh=GAH4XF1NgNJRoMcFMyQvrp+y3baAeih2I7T2qtEfVYU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SGKU+Yt3D+fnLGqGaBxXH0EoADzKVMknACQPn1fJy/9uhootesj8hBFLOPkl/pi/ZkMXmNSAO7vCgc7Qzf81q39KAXvh54vFPSKi5nGI7IE9ij/mqzyOwg8LjGRI6pWPovTqnnNEzQbE26LouRcZlkT0c0j6EHRmkFrI/wYQ0W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AbgbvG3y; arc=none smtp.client-ip=74.125.82.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C802D3A7B
+	for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 19:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776454528; cv=pass; b=G5c59AHTTNYgGsFeXS8TXgI0Dq5kGaTeB5bdHnCFgghipsk2WCn+uXG+fOpDVDbLhBrbyNTj0MgcAF16132tJxzlC2JonwJysfl9LmM6g9xcA1G87EvUlQzRTTyv/hj5PbLVtpUDV36Ip+IlEyVMKN9xs6W7njphnY7378F1STk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776454528; c=relaxed/simple;
+	bh=EPXnTicHxjO3r0CVVtRWh3D1dZqlAPTDXfoysvtgqqM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ADeBKMSKQhSr5tKQnGON2/wopi0C1Z58NwSdcB8leckY1IYke5RUpJ0Qur2xBDUiuIgfVNLq2gxRzhdKB2spaddxcxmYG5+rfK9U4+EtqIJYcmm79SgAm+cwa01FouQrWAWqU5QF3afEBcsZ4gDgwvzvJ6+9u/oquvVvZCQOzDM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XpHnN9kU; arc=pass smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbgbvG3y"
-Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-2bdd40d3c61so945092eec.1
-        for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 10:17:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XpHnN9kU"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-488a88aeec9so15651795e9.2
+        for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 12:35:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1776454526; cv=none;
+        d=google.com; s=arc-20240605;
+        b=JVNguVXbTQKHq3pC/W5XB7+96J5BbpuIkjqdab/OAa1gublW/sv1RkuFTSslLkwzLj
+         j5MJqSIvWtE3wvW+IRXx55ERgFpwW4FhCS/i77ob4byUAcY7XkjbidoyS1w9kh7U4Eir
+         aXJTHdUSw8NhKxAIsmjD2f/8dKblgvh/SBoOzxGUnBTuHCTro+W6/ZNked9xUywUNwfA
+         4UaswcTMrnXIDrO3LJXXqojtfinXFjXgFSM8RhPDH2gEWZyjEr1KQ20MlRGajyAng9bO
+         qJik/LJ2uW/RHv/IuCoDB++pWOcVOh3CjEvJHAhsOrYCNOcAxBze+tFyeoBPjt2M8KAA
+         Rx1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=BKQtLrK767PS4V8iaYQzHGGgM/KC0ExoAgrnjJyr8Lk=;
+        fh=OzrolxtA0i0XXDUhOn/GOQbF5WNFHkGDLTwoVqn1meE=;
+        b=JdNIeVFCOf9ChdkksUc/Qs1HYB3MvNtX7umq8JWzMGyYyPOZKN+Yt+waus2ZPhqnrI
+         9hBmV7J/tEXyOFH+b6rruCRsq8jBKwMvdFdEPat/MRl9ViMYCWxmZOlBALWIWTDzjzuF
+         +w7ri2t9qv6bPjtJiJ1Hc94Q3Mtbkghzikxoz4jObRfm/3O3kMwZZyv/yq4X62z/qRHr
+         orQNVp2uQa81YwXckJ/yZlmPI7x9WGfPYwa0xVZPkMsRbrqU7q/dRJo3VavafJhAq6Qe
+         CW1eFbMgDxE7wq2eChk6shG8vEIeGiKpJ3jXb9mQavqlCDlkL8Vrub3BZM51GSKlufgP
+         gdVw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776446247; x=1777051047; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BuTu8TP70mRfxnhCxquQpMyHJWTiwzWTYyU/WtqEMX8=;
-        b=AbgbvG3yusJ74NFW+PtAgX+tHtpOoFk1ICncmdRwzEUtiSeY6R0gDUEswimG+oIHhv
-         63A+cqse6/rH6LiyM27ljfA2bqik+u+LLdjNoIKOhYz+OjIQY4VyyC9SlX5FrFaZCCxw
-         lVj0h3+OW0LML8LiaRYjlgVtxbTlS3cPh6eCr8aS6WqPwfjGyx+RJo8CefpJZp4IBk5x
-         FDwyheQKIcZWmx0bakADgudnx2qnm+yNOM3aN9wvqs4bxvMByhFIEb43wtiNaUUt1qAf
-         sw6/mtt0Ok80uFw+QzMKIvi9wyYOd2gK3vSnfz1ebioufOUKR7urUDmEak3ahrWztzCh
-         QMug==
+        d=gmail.com; s=20251104; t=1776454526; x=1777059326; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BKQtLrK767PS4V8iaYQzHGGgM/KC0ExoAgrnjJyr8Lk=;
+        b=XpHnN9kURoEwAEunp9ZErv1Z+SK0yb9+22cR/DvdaesZ4JDCety6WKRZ0pQf3dWuyv
+         iZMclneWAHY7r3mWc9UIYNooN741K/90eBvoFutga5DzKYg/sNkXvBAOIExJa4vfzYJT
+         reA2inwr4DTtjPvM3gaIYFzSG/6S7hyZ2Dga/KBny3CfCghsPoJAgtPHmZzUTkLuOrI0
+         rxzMBoWVCER20lkM6dUCRg3FtaRFR71cjDmYUo57Z14BPyEYNrLTZhlTe63OV8n74eao
+         nTWwGni+mBhxFhkdkfea8sDR4NwOfZUjAGA+9bW3Sw5QHp9KQBr2An9EpKUNAscIBQdk
+         +dXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776446247; x=1777051047;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BuTu8TP70mRfxnhCxquQpMyHJWTiwzWTYyU/WtqEMX8=;
-        b=Z4YYJP6XhBbmkGs5asxRqrW7tKfwlub689S04ux+30jZ/uy5AUIaz62yZxI1yxRQtu
-         ZzxDfA+zDdQDvW3JwNH+1Wxxcu3KRWD6tI7GHnOQRughmq6axR+gnecS4gcoaJnUy7yF
-         KfZGQXqQ5rApHE0ax/JuFfjHAeq4ZAdQxRFbpUQJ0us16hzAFpSQ8Bd0mVN5V8Dc03kw
-         EdlgJGvszuEvZhheSh9inkzRuiwmCLSv1ylhhmSXR/HA0XlbhEWDL0qDYWBgkzJI8LUU
-         7RLWiKVTpPLQK0PjVzvV6EZRxamVlJjKLjHGmPxDPlYKI3lEmlcqeEvGy+3c38wW0TqI
-         XMig==
-X-Forwarded-Encrypted: i=1; AFNElJ/jJf+hRuEK6mF04+X7EuZCTGYfT36jUsa6UCiCRIleSARWWhVeskJbNGYoNOYkfOk2nzncpzARQwc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YymWBOv/1vBrEUQ2A5pEM+kYqp+qoRcSy3gDr+peaT2/bfI1TXU
-	YaKhYcVms+jhj3R4te532gf/AdleK9iX1wXFkmfnm4WpmzEVJu6Rki6W
-X-Gm-Gg: AeBDiesQjMJvz/9Y8SI7uBMk9OVLDa7vZkFE3e0FUOpWpaxraLNESk2ybLQLqCadIpm
-	YFdckVixYljWsLyIJLzzVqu1lkGMjUw9Fxwz9MSEPCobEGGMIR3Uq3FUu0vGr8bnz7UHVKhPctQ
-	cdwE8qrQYGAPVlTKJUEMOlvg3ZAu2XA7gPlcSXTemjxLFqtIrSi4H5rQD/Ia/E3Tm4If7C345i2
-	1/TTR5ybFy32u7suh8EB6aaqRZD3WC6q64cdgPHCOKQM5yv0BKBW6oNw79aYHTUxoqz8/La82cA
-	tYJpOF+qt3TpXkmuVscGKY9A0GwFCq3CzlroqzHmtlGhQDApgwGzuZLHqWjaxRyqDKdl4sb5G08
-	p4/e/YiFmRikwF83aPXnq5+zErY9CRqPKZoMKlmWZYRgnHAEhVSvq2R/z9tyx8AHJGIMXT1u47Y
-	IERIbvWFR4ld/eMtkd+PWD7KBYT1wrANWSQ0I0Mrc219Uisiut+JM0VaFg0Dfzaimslpffav8IK
-	VffoGhHHdTd1EcX7jOs2ns=
-X-Received: by 2002:a05:7300:6c05:b0:2c7:3a7:c792 with SMTP id 5a478bee46e88-2e47a1027ecmr1967434eec.20.1776446246635;
-        Fri, 17 Apr 2026 10:17:26 -0700 (PDT)
-Received: from 4470NRD-ASU.ssi.samsung.com (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2e53ac84c38sm3045034eec.13.2026.04.17.10.17.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Apr 2026 10:17:26 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Fri, 17 Apr 2026 10:17:23 -0700
-To: Ira Weiny <ira.weiny@intel.com>
-Cc: Anisa Su <anisa.su887@gmail.com>, dave.jiang@intel.com,
-	gourry@gourry.net, dave@stgolabs.net, jonathan.cameron@huawei.com,
-	alison.schofield@intel.com, dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl/core/region_dax.c: fix missing assignment in
- cxl_dax_region_alloc()
-Message-ID: <aeJrI1S5omou28MQ@4470NRD-ASU.ssi.samsung.com>
-References: <20260411011137.43545-1-anisa.su@samsung.com>
- <69e17d9ee2924_52a121009@iweiny-mobl.notmuch>
+        d=1e100.net; s=20251104; t=1776454526; x=1777059326;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=BKQtLrK767PS4V8iaYQzHGGgM/KC0ExoAgrnjJyr8Lk=;
+        b=dPjv0wvcIjbPpGyQzYPiEwJMKbfsWJ+FEiqotrgUK+zZHG4SxENd5GkiCxSK3wj0ZV
+         4Cn1U8dU1D9/2YtLvrpEHVn1xQDBMJmGhOF2yrgGjFq/QKeCcnI0nDxgF5aI5n+5sU/y
+         bpkKKZPMP+OuvA4kkFZgKaZjt0+IfQ2FVrtG12i5+wwcby9AoLRqPj2ziZwV6phy3ywQ
+         BwMnpi6M2FzjBcydJ7bWg8NK8mldnIpj/sI5qKGtnYCkzinOOpl1S6SLi9zuEmBo5qGL
+         u3l+64yHQ9SM11bg0Zscx8sgwwhUjYQk3j4jbnG33+AkUVE9lQsBw3JKcWJ6zKpppni7
+         mXmw==
+X-Forwarded-Encrypted: i=1; AFNElJ/sxz50yim7mcjSmOolN67uIVHvEDdCXotSGFIzaGOdX4jwrBEVr6aInebAa5ht0jQllrYe5aCe1Kw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy33LkyAJiwM37ic4tzaWGODeCRBEYC6pAdC3Fq2bZOay91EgCo
+	4gcdYnmrDxWLkMRbzzAI7rD25khhl3dI+qgJ01cUD99B5BEDsIECjmxAW+S/TX7RBwSX02LipEv
+	9vyHd8PDfD6BPELOxFM6+PJ/Op0sYmok=
+X-Gm-Gg: AeBDievKHqIF2TTZS29kbtkhYuBLiJx5D/I3K8MF5JS4GGZM0ehsZL91+frFvIYJC+G
+	6TZuzLSn/66IITBzGXB/FslkXA9GDFq4qixjtt8izRgU7EzUJVOfb3KJcnFqaoImyeYVlLbH7xi
+	274ykB+3T48k0S+yLg20WkUQmBvbAI31EgC3oyTFBJfavPkZ1Qett5lxVkTkWqapkgZ1rnsWhLh
+	u19LReb48svZWBTk6TaTMSGkegYAhlkvF8N3DJJlK3touqtvrQYamX/NgX43iEBjGy8UdMQfnIm
+	vUTH0nUl4DDuY59v
+X-Received: by 2002:a05:6000:4283:b0:43d:73ff:fd59 with SMTP id
+ ffacd0b85a97d-43fe3db9bc9mr6846919f8f.10.1776454525489; Fri, 17 Apr 2026
+ 12:35:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69e17d9ee2924_52a121009@iweiny-mobl.notmuch>
+References: <20260331123702.35052-1-john@jagalactic.com> <0100019d43e5f632-f5862a3e-361c-4b54-a9a6-96c242a8f17a-000000@email.amazonses.com>
+ <CAJnrk1ZRTGWjNzkMxS3UkeZMmrpadJDtWKontMx2=d-smXYq=w@mail.gmail.com>
+ <adkDq0m5Wt9YhJ8A@groves.net> <38744253-efa3-41c5-a491-b177a4a4c835@bsbernd.com>
+ <adlBcwJjLOQDAR65@groves.net> <CAJnrk1a06zkUmXW5EFiUmgAoFauwtzsYvnotaPH0ifVtyh7iDQ@mail.gmail.com>
+ <CAJfpegvVTcV89=q3L326aGQjhduBcv7PVg5QKftGLjNZmCLmaw@mail.gmail.com> <aeHpjpNN4TliZOyp@infradead.org>
+In-Reply-To: <aeHpjpNN4TliZOyp@infradead.org>
+From: Joanne Koong <joannelkoong@gmail.com>
+Date: Fri, 17 Apr 2026 12:35:13 -0700
+X-Gm-Features: AQROBzCmeJrVtq6kS88NntBxYwuWq2p8m5V_NUCivAWMbSPdKuP6DBJLkBWNmVk
+Message-ID: <CAJnrk1a7idWN4UNpW0P-X4xeBKOkhnR+Mvfo3QW38OfShiwpKw@mail.gmail.com>
+Subject: Re: [PATCH V10 00/10] famfs: port into fuse
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, John Groves <John@groves.net>, 
+	Bernd Schubert <bernd@bsbernd.com>, John Groves <john@jagalactic.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
+	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	"venkataravis@micron.com" <venkataravis@micron.com>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, djbw@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 16, 2026 at 07:23:58PM -0500, Ira Weiny wrote:
->> Anisa Su wrote:
-> > cxlr->cxlr_dax assignment was dropped during refactor.
-> > 
-> > Fixes: d747cf98f091 cxl/core/region: move dax region device logic into
-> > region_dax.c
-> 
-> I don't believe this is a valid fixes tag.
-> 
-> Looking only at commit d747cf98f091, this line does not appear in the
-> original function...
-> 
-yeah it's not, sorry :((( the assignment was added in the dcd patches and I
-dropped it while resolving the conflicts during the rebase cuz I was just in a
-rush to finish it
+On Fri, Apr 17, 2026 at 1:04=E2=80=AFAM Christoph Hellwig <hch@infradead.or=
+g> wrote:
+>
+> This is the first mail without annoying and pointless full quotes,
+> so chiming in here.  Sorry if I missed something important in all the
+> noise.
+>
+> On Tue, Apr 14, 2026 at 03:19:36PM +0200, Miklos Szeredi wrote:
+> > On Fri, 10 Apr 2026 at 21:44, Joanne Koong <joannelkoong@gmail.com> wro=
+te:
+> >
+> > > Overall, my intention with bringing this up is just to make sure we'r=
+e
+> > > at least aware of this alternative before anything is merged and
+> > > permanent. If Miklos and you think we should land this series, then
+> > > I'm on board with that.
+> >
+> > TBH, I'd prefer not to add the famfs specific mapping interface if not
+> > absolutely necessary.
+>
+> Yes,  fuse needing support for a specific file systems sounds like a
+> design mistake.
+>
+> >This was the main sticking point originally,
+> > but there seemed to be no better alternative.
+> >
+> > However with the bpf approach this would be gone, which is great.
+>
+> So what is this bpf magic actually trying to solve?
 
-I realized the error and said "pls ignore it I was wrong" in the original thread here:
-https://lore.kernel.org/linux-cxl/ad0hJ1q5Lp5mckt1@4470NRD-ASU.ssi.samsung.com/T/#u
+It is trying to avoid having famfs-specific implementation details
+hardcoded permanently into fuse's uapi and kernel code. I really like
+your suggestion of adding generic stride/offset multi-device support
+to fs/iomap. That is a much better solution than bpf.
 
-but I definitely should have mentioned it here too. anyway sorry, just pretend
-I never said anything
+Thanks,
+Joanne
 
-- Anisa
-> -static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
-> -{
-> -       struct cxl_region_params *p = &cxlr->params;
-> -       struct cxl_dax_region *cxlr_dax;
-> -       struct device *dev;
-> -
-> -       guard(rwsem_read)(&cxl_rwsem.region);
-> -       if (p->state != CXL_CONFIG_COMMIT)
-> -               return ERR_PTR(-ENXIO);
-> -
-> -       cxlr_dax = kzalloc_obj(*cxlr_dax);
-> -       if (!cxlr_dax)
-> -               return ERR_PTR(-ENOMEM);
-> -
-> -       cxlr_dax->hpa_range.start = p->res->start;
-> -       cxlr_dax->hpa_range.end = p->res->end;
-> -
-> -       dev = &cxlr_dax->dev;
-> -       cxlr_dax->cxlr = cxlr;
-> -       device_initialize(dev);
-> -       lockdep_set_class(&dev->mutex, &cxl_dax_region_key);
-> -       device_set_pm_not_required(dev);
-> -       dev->parent = &cxlr->dev;
-> -       dev->bus = &cxl_bus_type;
-> -       dev->type = &cxl_dax_region_type;
-> -
-> -       return cxlr_dax;
-> -}
-> 
-> 
-> Furthermore, I don't see where this line ever appeared in
-> cxl_dax_region_alloc() prior to commit d747cf98f091.
-> 
-> So what is the purpose of this change?
-> 
-> Ira
-> 
-> 
-> > Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> > ---
-> >  drivers/cxl/core/region_dax.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/cxl/core/region_dax.c b/drivers/cxl/core/region_dax.c
-> > index de04f78f6ad8..068690d02c8c 100644
-> > --- a/drivers/cxl/core/region_dax.c
-> > +++ b/drivers/cxl/core/region_dax.c
-> > @@ -62,6 +62,7 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
-> >  
-> >  	dev = &cxlr_dax->dev;
-> >  	cxlr_dax->cxlr = cxlr;
-> > +	cxlr->cxlr_dax = cxlr_dax;
-> >  	device_initialize(dev);
-> >  	lockdep_set_class(&dev->mutex, &cxl_dax_region_key);
-> >  	device_set_pm_not_required(dev);
-> > -- 
-> > 2.43.0
-> > 
-> 
-> 
+>
