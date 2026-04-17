@@ -1,174 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67ED054654
-	for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 02:35:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6255730EF82;
+	Fri, 17 Apr 2026 04:29:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776393348; cv=none; b=H/SKwaz9ukMOZpuAthF70+trUn/A3FDveahL5gRU01RmXYE+Y2DvBG+jcM5QQ8lyqvTfLZLtRRve//8kin6wF47R1CY48vppdOO51Ezfne8vqaoCupogHSrozlU+v+vqjDglHhmUI70SO+Bed+rM58+g3o2FcwhmZoHuu0Vs+1Y=
+	t=1776400147; cv=none; b=mD/0opfL4pbomGd3iWun1GwG0ljd7Qo6dXNjw20RDOMZu+jFy/pWahAJMJQ5IpJtOes/lWA/H3qSPeoeToDqEjBleBQVTwybGRoDJh1ERW45ehiAD3ncc4RuSR2+JFjInCnG0A22VJWkwqxm7ScxuEVC3omdhh8xhCN1MlouPto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776393348; c=relaxed/simple;
-	bh=4ewrZC1pbvvWyiCjNfr5Tz0N06j8o3Fh4tuSS5rDTJ4=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=gh1q+KrC59jbgD1YBoy2mOX1iVyjwJi28mwX2nnlV62raB+naNnZUq3vyAjhR020CAZQus/sD53aOZL1q0wB12ZF2gFG/uTqAMZMP89B5dlW5s/unmu5k5S58CBc1T+tG8T+fnYI+Up6bIo3aPFAwf8iO8ssYFaqVmMXcUko0GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nklv1ezo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1776400147; c=relaxed/simple;
+	bh=IEfe9oki188nLOX4Bd/cL9c4EcqAthvst6DVxATAG5U=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=RRj6KAN2TMB9wRBzkFcvZwqzMpz+8TcAUJiMaIrkSqqwTOsKceJcV2NqbYcj3Hvg6LsOU5EZNTo1gkEPSGxuqa1wEsLRceJRnvXp8Ss4Iug6tHGf9WW3CZsUhN+GdvaJW+NMuy6bQKtYOODJmJGZSHXeI9NBHeZkj0EMsootvzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ul7xI9jw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nklv1ezo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C69AC4AF0B;
-	Fri, 17 Apr 2026 02:35:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ul7xI9jw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E2EC19425;
+	Fri, 17 Apr 2026 04:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776393348;
-	bh=4ewrZC1pbvvWyiCjNfr5Tz0N06j8o3Fh4tuSS5rDTJ4=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=nklv1ezoMQLDRFg3bQ4Nb3oIz+0mczDaWlyfjrIbPJv/jbvKWrNfMDwOHNp/CNBEd
-	 GNZsgGrsdFNcKJekHILFitnh0GJuCcP5lryx+CyGUHRha5OycRuOkwCVmP5DHG7IRa
-	 dG7VFHbJdSAB7GwCpCn3dOgRx0lc4b1HANvpwXsF9fZb5uOa/uSiM1IEdNkTSPqfLR
-	 o7ySJ3jNau2eRj41jxHv8TgeGcQuesIG7hbyZzuD48gev7RnA0nH1GHlLULpFccLj8
-	 cCS9xZvpM3jbwAAQZOAlk2S9t8Q8mVBOIE98nL7WXxp0jDjnrVNvsVNswPfjSLiEdP
-	 bVywn807oDJCw==
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 9EB09F40084;
-	Thu, 16 Apr 2026 22:35:46 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Thu, 16 Apr 2026 22:35:46 -0400
-X-ME-Sender: <xms:gpzhaX3uuGFusm-Pwkfg0detpGEZ6qXfmNL839sme2xLFSqbm_d0AQ>
-    <xme:gpzhaR8oQd-zsqXlYZwoOkDVCs0iEf7t7ckAODkH2xdf3AB0sWBquCUg_LympITi7
-    61ySM12mLm93-FLdgPpCOIIKkgExhV01FC8wtcdqjav6fVN96zWog>
-X-ME-Received: <xmr:gpzhaTbWcYArXfw_Cr3h9ESlb2ddlVsB6_I07D_0AWNI-BdKGj4hy4OyMt2sANEn2fzMzAw9RUA7wcLK9l_R7P3cS7tKJPbH37U>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdegkeejtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefkjghfufggtgfgsehtqhertddttdejnecuhfhrohhmpeffrghnucghihhl
-    lhhirghmshcuoegujhgsfieskhgvrhhnvghlrdhorhhgqeenucggtffrrghtthgvrhhnpe
-    dukeelueetjeekgeeiheelvdehleekgeejvdejvdetgfdugffgveefgfejhffhvdenucff
-    ohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepughjsgifodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqddujeejvdeftdegheehqdeffeefleegtdegjedqughjsgifpeepkhgvrhhnvg
-    hlrdhorhhgsehfrghsthhmrghilhdrtghomhdpnhgspghrtghpthhtohepvddtpdhmohgu
-    vgepshhmthhpohhuthdprhgtphhtthhopegrlhhishhtrghirhdvfeesghhmrghilhdrtg
-    homhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthht
-    oheplhhukhgrshesfihunhhnvghrrdguvgdprhgtphhtthhopehruhhsthdqfhhorhdqlh
-    hinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrkhhpmheslhhi
-    nhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtih
-    esvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjohhnrghthhgrnhdrtggr
-    mhgvrhhonheshhhurgifvghirdgtohhmpdhrtghpthhtoheplhhinhhugidqtgiglhesvh
-    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhes
-    vhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:gpzhaQyjJ5hIMyv3bQgt1VY-Wlf8vsA1J8PzmA2cAH9ttZq1JQTxpw>
-    <xmx:gpzhaR_t2JfSj7XZVIZhp0rc4dlCiJdiO2rZqt3a90KEj27kgAfInQ>
-    <xmx:gpzhacxmVscxJaUt3yaqz4PDlNtVJg2HBUYYoZJe0POI6J8KDiFoyg>
-    <xmx:gpzhaWsu_zUF_480HHg52DHnJ3Pxx4i9vsEQ7PGqilUCeBh1HSOO0Q>
-    <xmx:gpzhab2ZDaBwDco3092wa-bHgUim0pZs9xKk9XItNPg8SGMWIiIoCKF9>
-Feedback-ID: i67ae4b3e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 16 Apr 2026 22:35:46 -0400 (EDT)
-Date: Thu, 16 Apr 2026 19:35:44 -0700
-From: Dan Williams <djbw@kernel.org>
-To: Alistair Francis <alistair23@gmail.com>
-Cc: bhelgaas@google.com, 
- lukas@wunner.de, 
- rust-for-linux@vger.kernel.org, 
- akpm@linux-foundation.org, 
- linux-pci@vger.kernel.org, 
- Jonathan.Cameron@huawei.com, 
- linux-cxl@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- alex.gaynor@gmail.com, 
- benno.lossin@proton.me, 
- boqun.feng@gmail.com, 
- a.hindborg@kernel.org, 
- gary@garyguo.net, 
- bjorn3_gh@protonmail.com, 
- tmgross@umich.edu, 
- ojeda@kernel.org, 
- wilfred.mallawa@wdc.com, 
- aliceryhl@google.com, 
- Alistair Francis <alistair.francis@wdc.com>
-Message-ID: <69e19c80b892b_fe0831000@djbw-dev.notmuch>
-In-Reply-To: <CAKmqyKPyR165rACXRMJXgyUOp6OUdQqSsym-gfYVFnKLZ4ednQ@mail.gmail.com>
-References: <20260211032935.2705841-1-alistair.francis@wdc.com>
- <698d6b7faa190_2e57100d3@dwillia2-mobl4.notmuch>
- <CAKmqyKPyR165rACXRMJXgyUOp6OUdQqSsym-gfYVFnKLZ4ednQ@mail.gmail.com>
-Subject: Re: [RFC v3 00/27] lib: Rust implementation of SPDM
+	s=k20201202; t=1776400147;
+	bh=IEfe9oki188nLOX4Bd/cL9c4EcqAthvst6DVxATAG5U=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=ul7xI9jwMmxIrxBJic0vDQTwwaXj35a80YRdBPSgB56TIG0LAtMv+0i15TWFo0CNs
+	 VWhf8FhM9sLtUSKmYeAU0HAFlLnd4lZ8WdT0//VCcW9UTzdWuRR4B19IX377ejVos+
+	 8qVZSNv2HyHwk2NCxG+POBQeyqGCycqtTf903cYM0amwTpKKtybd20TdLsnapQbQc7
+	 ldWAz+CwkJLyqpniFFuBygJYtOmZFZbaqepgjTmWYxxhWq+6jD9Vj/R351jiNPIbHb
+	 3Msr/ddkB1z4FsVYMJBCtdxkc/6q/bluGh8Y6zkSPCxR3XCt0YspKulcflNVsOwqx0
+	 mYFNgfAzy/5UQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3FD7F380AA78;
+	Fri, 17 Apr 2026 04:28:36 +0000 (UTC)
+Subject: Re: [GIT PULL] Please pull FWCTL subsystem changes
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20260416141153.GA1646988@nvidia.com>
+References: <20260416141153.GA1646988@nvidia.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20260416141153.GA1646988@nvidia.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/fwctl/fwctl.git tags/for-linus-fwctl
+X-PR-Tracked-Commit-Id: a55f80233f384dc89ef3425b2e1dd0e6d44bcf29
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 87fe97a184c000a3941e2b53671742993abb1ddc
+Message-Id: <177640011468.3538458.14524320514426798479.pr-tracker-bot@kernel.org>
+Date: Fri, 17 Apr 2026 04:28:34 +0000
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-rdma@vger.kernel.org, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>, Saeed Mahameed <saeedm@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-Alistair Francis wrote:
-> On Thu, Feb 12, 2026 at 3:56=E2=80=AFPM <dan.j.williams@intel.com> wrot=
-e:
-[..]
-> >
-> > So this is where it will collide with TSM that also emits an
-> > authenticated attribute. See Documentation/ABI/testing/sysfs-bus-pci.=
+The pull request you sent on Thu, 16 Apr 2026 11:11:53 -0300:
 
-> >
-> > The rough plan Lukas and I worked out is that switching between TSM a=
-nd
-> > CMA based authentication would use sysfs visibility to coordinate. I.=
-e.
-> > TSM to CMA conversion hides the TSM "authenticated" attribute and
-> > unhides the CMA attribute of the same name.
-> =
+> git://git.kernel.org/pub/scm/linux/kernel/git/fwctl/fwctl.git tags/for-linus-fwctl
 
-> That seems straightforward and is already documented upstream as well,
-> so that's pretty easy.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/87fe97a184c000a3941e2b53671742993abb1ddc
 
-Later in the thread I proposed an alternative that instead of supporting
-2 flavors of uapi through "authenticated", instead implement CMA as
-another TSM driver [1].
+Thank you!
 
-[1]: http://lore.kernel.org/69976d7d39c60_2f4a1009@dwillia2-mobl4.notmuch=
-
-
-> > The most significant unsolved point of contention between TSM and CMA=
- is
-> > the policy on when authentication is mandated and the driver probe
-> > policy. The proposed model for enforcing device security for
-> > Confidential Computing is make it completely amenable to userspace
-> > policy. Draft details here [2] to be refreshed "soon" when I send out=
-
-> > the next version of that.
-> >
-> > [2]: http://lore.kernel.org/20250827035259.1356758-6-dan.j.williams@i=
-ntel.com
-> =
-
-> CMA will eventually need to support some sort of drive probe policy as
-> well, but that can wait until later and isn't going to be dealt with
-> in this series.
-
-Makes sense, and Greg wants to a see a more universal "device trust"
-mechanism for this. This also means CMA as a TSM driver gets that
-mechanism "for free" when the PCI/TSM effort moves it forward.
-
-> > To be clear I am ok if there is an incremental option to have auto_cm=
-a
-> > and/or auto_tsm that arranges for authentication or link encryption t=
-o
-> > happen without asking. I take issue with auto_cma being the only hard=
-
-> > coded option.
-> =
-
-> I have been working through all of the comments and discussions and I
-> think I have addressed everything, except for this one.
-> =
-
-> To summerise, is the high level issue is how do we know if we should
-> use CMA or TSM?
-> =
-
-> Do you have any more thoughts on this?
-
-So most of the thinking is in that [1] above, and the new mechanism
-would just be to auto-connect to the first TSM driver that appears, or
-auto-connect to the TSM driver with the most capbility. For example,
-auto-connect to the CMA-TSM at initial discovery, switch to Platform-TSM
-if the device additionally supports IDE.=
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
