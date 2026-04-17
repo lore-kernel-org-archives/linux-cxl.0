@@ -1,69 +1,38 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74C928726E
-	for <linux-cxl@vger.kernel.org>; Fri, 17 Apr 2026 06:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1423033CF;
+	Fri, 17 Apr 2026 08:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776408394; cv=none; b=a4oaEyFMEseM2s+rBXGyvjiR++1U8OHpHhG+RSop7W5vwsGyDRP+zElpl/FVs/wJqbcJRbc6qQkYG1jRkeDVP6F3yLqyN3BREMznkVUC6zzOv/qGbrY34xo54y+80ABlPi8IXiDkqidQ8n8tVzFuekFHWkUbGPTxHsvVaj+4Uk0=
+	t=1776413094; cv=none; b=hVF9DP7rXiijxgXs1/iePRnQ21kMiP4L39t0KHFjU0CSXL6j0+mjZ+NIxt3z/45Hm1CTYLj3gGFwUzVUiN5hTm/GOBL0kBSKlqpcR0tYoYOslybwj/N3gNhcgjvOygakKZBgtdi0V37/BpZSXp/Dsqo6razQ/IctPB+IiCAa7Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776408394; c=relaxed/simple;
-	bh=d4PpKCk3+cY+Ia63Uy2Vt+eoNLKg4rm4l23ANxaSUh8=;
+	s=arc-20240116; t=1776413094; c=relaxed/simple;
+	bh=Z1/9pPNfUbG+2/KcKKt8WrOWINsx2g4XRefFSdIht+4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=laTxqn5T4OEAKyZFc3524fQc1qktFdvjQiPEfXJvpBMa1/zZg4mUF0UyaOGxVEZrZIkiM/lAMP9tq+TSC1cRIjafvSFzTn+28iD3zHzKKZA54kMtl+6V54WH5t9dQhSxQu9OzPbwsVIy8ecgLeMlTZHQcs4JHHNTMvrH1GBQew0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=G6TWVyi7; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=YUbnlvf4o+h+AcSwTs+pZV+L2SRqQFEIaM9WG//4mWb/mKxZ54i6WT7dXsEc5oCkuRAea9k6S4dviVdMbbBRr+6mwWd8b7YpFsqEGvHbj41MqY2Id4fvyNkqK9UI1DqLdDeGtUS+bKpe4uO/AHEGLC/9Jg9H8R92SFHoNKqI/nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T87ww8kT; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="G6TWVyi7"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-8cb40149037so34244085a.2
-        for <linux-cxl@vger.kernel.org>; Thu, 16 Apr 2026 23:46:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1776408392; x=1777013192; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=hhIjuJ3A3M20AFrPa5BfGVCAhbvvigIUz2GsEPa7gR8=;
-        b=G6TWVyi7A+bojIeIPu6SwEfEYSmy3x7RRUApMxRyyuVrRZ1cHPp+Ni1hEoNJF7O4G5
-         BVaj81i+xGeRdkhdmTeChTdi/FzS8fK+wTz1W18hSpNyTc/FBIGpU60ilWXAPVtPuZ8R
-         P2ruTgGTk+Zo0DZdo9wZBo330WAdwdhBt/4xUpWzvBu/BH7Sd5FiWESWJiAZu3ibSl7v
-         KqB7jbhVuKjavGYk9zC2EebvCD4GoJDHEwBI+kB0V0CNlviVK0UXgIDHvNaQTRqKhihX
-         1aZJHYnG0lnlEGhH8HgAT7aHfRc6mB/rA2CSza3Kr+gTiz7OsROULxfSS46qC7ZsG2SS
-         lpOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776408392; x=1777013192;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hhIjuJ3A3M20AFrPa5BfGVCAhbvvigIUz2GsEPa7gR8=;
-        b=jhrrbtTmaJmfiGIOi68li7buav23JDXAcmm0RdXUxAqV63fTKLXI9Rv9ZGc2yliTi0
-         ywSFi2Q6COiEQhAzSO5tTuRoBa/Z0shgzOGXuPw3CA2oVQ+lKC4qPqzYRJbzVHTKuIyi
-         UAlJmlo+swbhXqxvNCcnAClss5LlNlOXsSg7pd4RbWxgvYrL3Kzoktqxua3F0IfWu5vv
-         Y9K15mV24Rsyo5O/0sd/jVmFV7CdniAqQi4EgTjiW8gAGCzcdNUsCvvfcOb0P+0V5rdp
-         MBh2qTqU7fevbMDtsGqyd2uH6FJb5fUhhOvSYGJnZNYgh851kz8tK517Zlj9juf2Sz5c
-         fO8Q==
-X-Forwarded-Encrypted: i=1; AFNElJ9LScGPmVmdA9KnlcrYBfbASpPGpQ/5YDXOqZi9mt8l40JU6ro1aGJefY6e/y8IW8D1H+lbMoeZTdo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHnJ0zOpaOGSG07uTFtYs2z1aVYDYlyy4vt2ipopkZj1MJD9pa
-	kfGYtbO9rKNaqQpXHxGcbT3gcdhb4OJgv+o2fKzc7cNAfHJA2necD02OQ5IIeUM1oSE=
-X-Gm-Gg: AeBDieviRQI59OqK2Yt3qUp68FjPHSsCm5OKXp6gf8dAbC4ePddLwLsIEb3j5WrggvQ
-	Um5Q4sHoQnSyIqxtYITq9jck8tTnJTfQqEXQeFyyjzGRh2AxV/lAVzqq0+3Jhn96xF4t9WBIAFP
-	pfr+/HZMXLYz63Q0yyL7syykqErqlOLd6dnfFxXf6NO4NE859Hk99oOB0MUhHIKFyea5Xvq6eA/
-	UIxuJX7Kz1xATxoMd9gf47tTBX+PxoAnBlLx+rZXokqGqH7g54UdBjqTZ+GCbm/kxkt+fp7Vr+y
-	a+xDJSRidoJXerNklrTWeDyPNHCcdZM9wA3PUbSLWTvOOcfcr8d0TN0xO7nf+WI6feuLQToOEZr
-	ib2SuV7LmiW4/2QU9PDapLuMCLnH8ec/cr+25C7a/NSIPbPG54LtoW0B484COJLfzShMCq6ZEDL
-	8eY0rvEDUru0HP4vC8v4AWdkCyX604MYUvhzh5wvC9UTDZvIpYL17HDSpVakHI7uAxxJnU50FtN
-	z6SwB/+jFPDx6xP2v66oahG8YDmI14=
-X-Received: by 2002:a05:620a:4690:b0:8cd:92c5:b3e7 with SMTP id af79cd13be357-8e790407b72mr203408385a.18.1776408391906;
-        Thu, 16 Apr 2026 23:46:31 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-108-18-109-80.washdc.ftas.verizon.net. [108.18.109.80])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8e7d93c2fffsm42616985a.36.2026.04.16.23.46.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Apr 2026 23:46:30 -0700 (PDT)
-Date: Fri, 17 Apr 2026 02:46:27 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Joanne Koong <joannelkoong@gmail.com>
-Cc: John Groves <John@groves.net>, "Darrick J. Wong" <djwong@kernel.org>,
-	Miklos Szeredi <miklos@szeredi.hu>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T87ww8kT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=iq953/W1fH4+ePeN3WVL9mT3UeuaUrsvH971+8ptC2o=; b=T87ww8kTWwqx+U9QSTfTTqRRqZ
+	RxojXMb7XwOyEEKKGOkXGtQNspCDywrnPZkZvxdVjytiJ2Ot6juHDPLznayKXy6OvXf9CAWS70srF
+	nOqZbeb7N35lcHqP3v1ZJgyVerqGiYnYekgL9XP8WpxkSzA5RgtVtVIvCiw1k4UKq2NjnMCnazBz1
+	oePh2DcpFxB0JnQ07QvWUHbBbf/ArmV99Ejom7HyOPRfD16PjWULAG81oyrtYedrW4EXxaQM8pfHt
+	hn8wiHwZHbkhBpbdmUAP+ZW5LXy7q7DwcJ2lcNqMtvCcrZsXVgNvkrD7dfytayeaFdG5BXf4JJntW
+	nwkx7/ag==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1wDeBi-00000003eCj-42fO;
+	Fri, 17 Apr 2026 08:04:30 +0000
+Date: Fri, 17 Apr 2026 01:04:30 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Joanne Koong <joannelkoong@gmail.com>, John Groves <John@groves.net>,
 	Bernd Schubert <bernd@bsbernd.com>,
 	John Groves <john@jagalactic.com>,
 	Dan Williams <dan.j.williams@intel.com>,
@@ -77,6 +46,7 @@ Cc: John Groves <John@groves.net>, "Darrick J. Wong" <djwong@kernel.org>,
 	Alexander Viro <viro@zeniv.linux.org.uk>,
 	David Hildenbrand <david@kernel.org>,
 	Christian Brauner <brauner@kernel.org>,
+	"Darrick J . Wong" <djwong@kernel.org>,
 	Randy Dunlap <rdunlap@infradead.org>,
 	Jeff Layton <jlayton@kernel.org>,
 	Amir Goldstein <amir73il@gmail.com>,
@@ -89,6 +59,7 @@ Cc: John Groves <John@groves.net>, "Darrick J. Wong" <djwong@kernel.org>,
 	Sean Christopherson <seanjc@google.com>,
 	Shivank Garg <shivankg@amd.com>,
 	Ackerley Tng <ackerleytng@google.com>,
+	Gregory Price <gourry@gourry.net>,
 	Aravind Ramesh <arramesh@micron.com>,
 	Ajay Joshi <ajayjoshi@micron.com>,
 	"venkataravis@micron.com" <venkataravis@micron.com>,
@@ -99,63 +70,48 @@ Cc: John Groves <John@groves.net>, "Darrick J. Wong" <djwong@kernel.org>,
 	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
 	djbw@kernel.org
 Subject: Re: [PATCH V10 00/10] famfs: port into fuse
-Message-ID: <aeHXQ2EW2ivlLb_N@gourry-fedora-PF4VCD3F>
-References: <adlBcwJjLOQDAR65@groves.net>
+Message-ID: <aeHpjpNN4TliZOyp@infradead.org>
+References: <20260331123702.35052-1-john@jagalactic.com>
+ <0100019d43e5f632-f5862a3e-361c-4b54-a9a6-96c242a8f17a-000000@email.amazonses.com>
+ <CAJnrk1ZRTGWjNzkMxS3UkeZMmrpadJDtWKontMx2=d-smXYq=w@mail.gmail.com>
+ <adkDq0m5Wt9YhJ8A@groves.net>
+ <38744253-efa3-41c5-a491-b177a4a4c835@bsbernd.com>
+ <adlBcwJjLOQDAR65@groves.net>
  <CAJnrk1a06zkUmXW5EFiUmgAoFauwtzsYvnotaPH0ifVtyh7iDQ@mail.gmail.com>
  <CAJfpegvVTcV89=q3L326aGQjhduBcv7PVg5QKftGLjNZmCLmaw@mail.gmail.com>
- <ad4_jFsR951c2Mtn@groves.net>
- <20260414185740.GA604658@frogsfrogsfrogs>
- <CAJnrk1ZgcMuwfMpT1fXvUwBBiq9eWFHWVeOFQFFKiamGGe1RJg@mail.gmail.com>
- <ad7Tps4tkNbndd9Z@groves.net>
- <CAJnrk1ZWVsKW2dhAWdBkCQskoTE+hmOhPFDhyz4EtExn=GdXGA@mail.gmail.com>
- <aeFDCeqZDPI3rm3s@gourry-fedora-PF4VCD3F>
- <CAJnrk1ad6t6CJV+xnXwhoNHrHYA3htuaVdDq47FeT60cPBzj7g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJnrk1ad6t6CJV+xnXwhoNHrHYA3htuaVdDq47FeT60cPBzj7g@mail.gmail.com>
+In-Reply-To: <CAJfpegvVTcV89=q3L326aGQjhduBcv7PVg5QKftGLjNZmCLmaw@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Thu, Apr 16, 2026 at 06:24:02PM -0700, Joanne Koong wrote:
-> On Thu, Apr 16, 2026 at 1:14 PM Gregory Price <gourry@gourry.net> wrote:
-> >
-> > I worry that this discussion is going to turn towards implementing a
-> > solution grounded in parsing arbitrary formats and how to store them,
-> > and that is completely detached from why FAMFS went this route in the
-> > first place.
-> >
-> > I question whether the actual issue here lies in the interface APPEARING
-> > more general purpose than it actually is - and therefore inviting
-> > attempts to over-genericize it.
+This is the first mail without annoying and pointless full quotes,
+so chiming in here.  Sorry if I missed something important in all the
+noise.
+
+On Tue, Apr 14, 2026 at 03:19:36PM +0200, Miklos Szeredi wrote:
+> On Fri, 10 Apr 2026 at 21:44, Joanne Koong <joannelkoong@gmail.com> wrote:
 > 
-> Would you mind clarifying this part? Are you saying that the interface
-> and logic is *already* generic and usable for other dax-backed
-> servers, just that everything is *named* famfs but it's not really
-> famfs specific? 
+> > Overall, my intention with bringing this up is just to make sure we're
+> > at least aware of this alternative before anything is merged and
+> > permanent. If Miklos and you think we should land this series, then
+> > I'm on board with that.
+> 
+> TBH, I'd prefer not to add the famfs specific mapping interface if not
+> absolutely necessary.
 
-Yes.
+Yes,  fuse needing support for a specific file systems sounds like a
+design mistake.
 
-If you just find/replace "famfs" with "dax_iomap", the structures
-here don't really seem all *that* crazy specific - they're just
-optimized for memory speeds instead of I/O.
+>This was the main sticking point originally,
+> but there seemed to be no better alternative.
+> 
+> However with the bpf approach this would be gone, which is great.
 
-There is a circular nature to this - FAMFS figured it out first, in
-what we think is a reasonably generic way, but we can't know for sure.
+So what is this bpf magic actually trying to solve?
 
-John, Dan, and Darrick have all proposed reasonable ways to hedge
-against the obvious fact the interface will not be perfect - which
-incorporates your BPF proposal along with a reasonably straight forward
-deprecation path that's not always possible in other arenas.
-
-All that while solving a real (and novel) problem.
-
-That's actually pretty damn cool.
-
-I would urge you to consider these proposals earnestly.
-
-~Gregory
