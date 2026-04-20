@@ -1,196 +1,204 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A3137EFE5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06FFA37EFFB
 	for <linux-cxl@vger.kernel.org>; Mon, 20 Apr 2026 02:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776653787; cv=none; b=HLfx1KBLr1C/dE8PndtcXrrV714Wqq2jm994d3bTFSZfgsBSYMiffB8qb/Az9K9UqjL+I5I6TN+5O1ghbrjQ69gdia9OyRq/UpWopJrp49ZaiXmnXEIy/Jf1jR8X/+NY8+rAGGREE6+eOvGkzNMSVqOECdOKtiaHbvXVv3xLy28=
+	t=1776653787; cv=none; b=tj1GZmds8z4oOTXUKJC18kghBU90gp6HCpTDlubjVu1M3gNIu7F3Kpk+zHni0QxONhdyJlKmzZmk3LNVDhBS82UXxvbV1ozWuI+iRKb3+vHyCiCBx4wjk1a5Abo6EpNW15vBDRWUo5inooqh0B7ii+nJMVUUd1+R9lT488Zjhaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1776653787; c=relaxed/simple;
-	bh=Gy7C5LgAy0+dNJVh3a/spG3LUsjag46Tvhe61CPzqjQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OrZVNCpOw4JvkAjPQOBFD/QhH88CZo4BWg5lo7AtjbTsWRZsUixD6p0NncfOtL5LagRt6Y8IiDkbpuHC0tvb3/FZM+O+sohQz1Np5sqtDYPAqnORfhSUms6uVGmtqrSsRrDFhW5w+tKhAJtml59pQKLwJNZrdTN/vyMr49M+g30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=t1b3S+bk; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="t1b3S+bk"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-8d4f78fc9f6so287819385a.3
+	bh=u4OAGjaTLHitOXmOMoh2P98LOLbxyvsz5/hPqsMZVkI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nj8oOLK+8a0EUISkuqFyXFOQ4kK9LWHRIfywY1qJ4RQIKrqMit/3loKU6tyaRWOjTmkzoSLREaAHCGcBx4tTeySe4uvN8HkjynMO37pavTPGoBd2Rm8GzRK9nfXAYAzt4Lcfnc0CcP02BS7teOfI3IHVkoYUKSOIzae/wDiFdIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7b23713eac9so22612377b3.2
         for <linux-cxl@vger.kernel.org>; Sun, 19 Apr 2026 19:56:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1776653784; x=1777258584; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tugQt2aIOJgoqj0Ob37lQ1a1TrVKhZ7jSIgjv7qjxfc=;
-        b=t1b3S+bkTXE3j00v5UNCH8rPHlmuEMJsB+F6lwv8trpr/PskjdnmsL4XxF9lpDjdF0
-         hzhD9hJ/y1a/SqHQ9k6S04uBN6tyzhw5ddh6/Dr0Efbu75Z1tYBl2rwLwqjXkXjwnWgi
-         zo99c5KrKmAg31ptTacy0m7WGoFP2qXpCPOewg5RUjcFmBnHyEsPkQ3CXu4Ap0yWF8Jp
-         y2Tsuja+wRqOw1p5f5NtBwF5g9oGJSKcc6UHi76irOasuXa4l6PJP9bbsi4xnRWezIZd
-         Dv7TbLaOn+YYUq/YkJ20RultXKWF5eKRrsoyZjlEXfxwcliifnoOs3LV8VCvxdCBCLUA
-         uHww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776653784; x=1777258584;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tugQt2aIOJgoqj0Ob37lQ1a1TrVKhZ7jSIgjv7qjxfc=;
-        b=Qqd0O7uOizugGXZUS6aBLwtqOfdyIzvrGoCfLVpSFirxlVx4aW/29Dq5HmTXyfvi4h
-         LQutQfu1b9YflZqa+F0rvcdk9cBGUxRHcxI1L6p9iaICGIBTkv8f6UOhztITSM+FsFXP
-         vn7Jf6c+Cyqg4CBviCIj3suXO1roxN5wRCIIu8M+2VYPgTToLcLXwQg/kJtwkPDwMdab
-         c+JYR9rhrsQNa1/Of89FpsRanpboSRyf1INvG0shBOzlsRE/oOJNK1O4tAFPPp4bNKO+
-         qOXcpH9ZXQNh5yz634eVOytOweHcIMP1l42f0t+nFHzhscUb2GfWJx7Tm/jDPvnMczbP
-         QfQw==
-X-Forwarded-Encrypted: i=1; AFNElJ+G+6RB/7xznl/zilziBBmeRUJ9L4ZxqQS1yLINYKvFfc6nJXRBGKViQ9b76ADE+RABDmI+5BdYSLs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOOisnwi0QhAA+XbZoCaqeecD5ZKG6tGs89F63eko/GvAgI6F9
-	cs0IXj6Ne8B5mjxF/E8yskS2VTdSZpMfIrq1077SH0W/D4jQVeVxsG1k5Y51WQ9jB3o=
-X-Gm-Gg: AeBDiesVyUlyMhd3mNm09tZg9jRc0zmYGwQzIR/XlCAONvNblVw2f+J5BF3Ek+PDGfB
-	CViJFJmB01gpWrTxsciMSYgWuuY6FgDyjynxkSAWsjQdD4VX6DOcS19qr9hbMJ07IUvK9v6aocC
-	UUVbRM7HhSO76/5v4hHHN0tb9kD8MX5skaXaNGI67dQ0eTki4IN3YM2SfmznozsqP2mFdcwnt0j
-	ko5ahLIcbS2tchUt109WXYzfH55M+dP6njHm3u2NNPJxzvHbMOeZxaRgE0RjVJ42RuHcfoHWCzT
-	7Of9lGPtx+/gd8jVYeQa2XpX9R3yaSrym00nYC68CY8XYU1XIkojJ/DHO5c4v2ZmW6pupiNTYjh
-	L3g6Ppi/WydJmBHkAjiL8JxkEhHEN8bJzIDaD+1v/dPVJG2SCEkQF+6dNZoGJFIOwz/Vc4yWJwF
-	QX5E5lDjPC7lINrW4/FIahM6mb2YuhrhWSvPVXwdfYYqVP7/3T2DJL9jXvkloYApjJz5Au+j+z5
-	Cm2LIrl1vLTJCWRLRg+oLE=
-X-Received: by 2002:a05:620a:a2c3:10b0:8e8:bedd:14b2 with SMTP id af79cd13be357-8e8bedd1701mr799144185a.43.1776653784400;
-        Sun, 19 Apr 2026 19:56:24 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-108-28-184-223.washdc.fios.verizon.net. [108.28.184.223])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-8e7d5fe9638sm706089185a.1.2026.04.19.19.56.22
+        d=1e100.net; s=20251104; t=1776653785; x=1777258585;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9+O44+JVKuk80yoA2AZ1Ss5dIsNhIz1HifmT4ZdqZZA=;
+        b=SwV2l73+ONPcGw8VY/nvgv3wbg+WJuSrJ/dIWD6vJCBAd5BBFWq+5gBt+tPZ2FJzSu
+         qnC3pUdHC3obfiU6fJgw2id2VPnU/Ag8rcj7aJBGaDv3/Q4bY1TfC1iL4B3Gv5Q9jFh5
+         HaGhQyNxzjT5BLCYb8/PFIjOSAq6FtXZf+RBQ2ek/paK/ygpiCN7EcQ3E629EDHxk9V3
+         dEZDq/Q9ZT+stk9YP6azyZqD/wI81/z0zTZK6FWiVNks4ZZAxZXchknJlfnc3NvH7fPm
+         mHMfKkLA2r3vWHTeRQo8mS6MAc5wFHGQW05UyGzeUzseOpkDkQxMpSe6YCmHLN+VZrT2
+         kwjQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8bEaIDobeUTsjDvpHQvGjBB9TemstfmRPiXfwcTzfrcN568fmhi3S3SmqNcrmS1SnLrvxbxl2MmFs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWJSZqaK1exAELIw4oGjdkGWn4D4F+G5h/xY+3SUlnC0UZmqZm
+	OYxnVwGEjduaSw8z2LXldkdavSdeSzTzJzSbG+XVgJjbPAKWHdfHwS3S
+X-Gm-Gg: AeBDiesplNLc6WlpLJA+HZUQFkpzsGdsm73pnH8O19NC/Xrcg3aHqaJhDijcZKHrhBa
+	Rx7V5UvnZFz1BOGb3kPvU2Ng6czumUW104qCqIEwHwXNTYiG+MQRH3qVEaXXGmcanSQrGTtIP7k
+	v8sXG61AyFtWhbGOeRayoTSuGNBTUNSp83nOTvtVH/0lJxEo9lggbhN0j6AM5mBeTpP6hgSIZLz
+	Wg9Quy8ST5mJN3zlWJGF99SvmvAtaKnFzuw7AFKxVMpulcCJAc41kK4du0nYvC3gb/HUyMrFRyU
+	7OOgKYH2Cc04ORbaeE9bmP8d7mQdR6mvV4FKaAkej0Q/zE/Z3S85R7tc3DFEInRCTTmtzem6wNM
+	hfcELT9cjorrKvG72HouygkJAMQHnd6SCfSh8WtttevIBW0BT58D5t2FRv8FT5hIhKVQ5/fWuiN
+	YzhLiVubmDjSkZRdj1yHTn
+X-Received: by 2002:a05:690c:6e83:b0:7b8:f152:7526 with SMTP id 00721157ae682-7b9ecffb58fmr114883037b3.42.1776653785003;
+        Sun, 19 Apr 2026 19:56:25 -0700 (PDT)
+Received: from tofu.. ([128.210.0.165])
+        by smtp.googlemail.com with ESMTPSA id 00721157ae682-7b9ee8be8e4sm38961957b3.14.2026.04.19.19.56.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Sun, 19 Apr 2026 19:56:23 -0700 (PDT)
-Date: Sun, 19 Apr 2026 22:56:20 -0400
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
-	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
-	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
-	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aeWV1CvP9ImZ3eEG@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <3342acb5-8d34-4270-98a2-866b1ff80faf@kernel.org>
- <abwRu1FNqI3dVyqL@gourry-fedora-PF4VCD3F>
- <2608a03b-72bb-4033-8e6f-a439502b5573@kernel.org>
- <ad0iT4UWka3gMUpu@gourry-fedora-PF4VCD3F>
- <38cf52d1-32a8-462f-ac6a-8fad9d14c4f0@kernel.org>
- <ad-r7hwIdnvKsrh9@gourry-fedora-PF4VCD3F>
- <46837cea-5d90-49d8-be67-7306e0e89aa3@kernel.org>
+From: Sungwoo Kim <iam@sung-woo.kim>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Ben Widawsky <bwidawsk@kernel.org>
+Cc: Dave Tian <daveti@purdue.edu>,
+	Sungwoo Kim <iam@sung-woo.kim>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] cxl/hdm: fix a warning in devm_remove_action()
+Date: Sun, 19 Apr 2026 22:55:47 -0400
+Message-ID: <20260420025547.1704692-2-iam@sung-woo.kim>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <46837cea-5d90-49d8-be67-7306e0e89aa3@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 17, 2026 at 11:37:36AM +0200, David Hildenbrand (Arm) wrote:
-> On 4/15/26 17:17, Gregory Price wrote:
-> 
-> >> Needs a second thought regarding fallback logic I raised above.
-> >>
-> >> What I think would have to be audited is the usage of __GFP_THISNODE by
-> >> kernel allocations, where we would not actually want to allocate from
-> >> this private node.
-> >>
-> > 
-> > This is fair, and I a re-visit is absolutely warranted.
-> > 
-> > Re-examining the quick audit from my last response suggests - I should
-> > never have seen leakage in those cases, but the fallbacks are needed.
-> > 
-> > So yes, this all requires a second look (and a third, and a ninth).
-> > 
-> > I'm not married to __GFP_PRIVATE, but it has been reliable for me.
-> 
-> Yes, we should carefully describe which semantics we want to achieve, to
-> then figure out how we could achieve them.
-> 
+In the following race scenario, devm_remove_action() can be called
+before devm_add_action(), triggering a warning because there is no
+action to remove.
 
-Ah, I finally dug up my notes on this.
+To fix this, __cxl_dpa_reserve() performs devm_add_action(). This
+extends the critical section that embraces cxled->dpa_res = res and
+devm_add_action(), so cxl_dpa_free() cannot observe dpa_res without
+the devres action.
 
-If we overload __GFP_THISNODE - then we have to audit all gfp_mask's
-with THISNODE against the use of any of the following *forever*:
+Also, renamed __cxl_dpa_reserve() to __devm_cxl_dpa_reserve().
 
-#define node_online_map         node_states[N_ONLINE]
-#define node_possible_map       node_states[N_POSSIBLE]
-#define for_each_node(node)        for_each_node_state(node, N_POSSIBLE)
-#define for_each_online_node(node) for_each_node_state(node, N_ONLINE)
+task 1:
+cxl_dpa_alloc()
+  __cxl_dpa_alloc()
+    guard(&cxl_rwsem.dpa)
+    cxled->dpa_res = res;  ...(1)
+  devm_add_action()        ...(4)
 
-  or
+task 2:
+cxl_dpa_free()
+  guard(&cxl_rwsem.dpa)
+  if (!cxled->dpa_res)     ...(2) pass, due to (1)
+    return 0;
+  devm_cxl_dpa_release()
+    devm_remove_action()   ...(3) warning, no action is added yet
 
-cgroup.cpuset.mems_allowed / mems_effective
+Splat:
 
+WARNING: ./include/linux/device/devres.h:160 at devm_remove_action include/linux/device/devres.h:160 [inline], CPU#0: syz.1.6464/25993
+WARNING: ./include/linux/device/devres.h:160 at devm_cxl_dpa_release drivers/cxl/core/hdm.c:290 [inline], CPU#0: syz.1.6464/25993
+WARNING: ./include/linux/device/devres.h:160 at cxl_dpa_free+0x2a4/0x320 drivers/cxl/core/hdm.c:572, CPU#0: syz.1.6464/25993
 
-Anyone that attempts to do:
+Fixes: cf880423b6a0 ("cxl/hdm: Add support for allocating DPA to an endpoint decoder")
+Fixes: 9c57cde0dcbd ("cxl/hdm: Enumerate allocated DPA")
+Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
+---
+V2: https://lore.kernel.org/linux-cxl/CAJNyHpL-fyDnEJv2bxKNjBAzxHZ9HmKTu72MzcVhWiFrDRKzpw@mail.gmail.com/
+V2->V3:
+- Fixed a potential deadlock in V2.
+- Renamed __cxl_dpa_reserve() to __devm_cxl_dpa_reserve().
 
-    for_each_online_node(node):
-        buf = alloc_pages_node(node, __GFP_THISNODE, NULL)
+ drivers/cxl/core/hdm.c | 43 +++++++++++++++++++++---------------------
+ 1 file changed, 21 insertions(+), 22 deletions(-)
 
-*will* get incidental access to private node memory, and it won't be
-obvious to existing tooling that this should be considered a bug.
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 0c80b76a5f9b..0492a878a065 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -336,7 +336,7 @@ static int request_skip(struct cxl_dev_state *cxlds,
+ 	return -EBUSY;
+ }
+ 
+-static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
++static int __devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+ 			     resource_size_t base, resource_size_t len,
+ 			     resource_size_t skipped)
+ {
+@@ -408,7 +408,19 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+ 
+ 	port->hdm_end++;
+ 	get_device(&cxled->cxld.dev);
+-	return 0;
++
++	/*
++	 * Perform devres registration while holding cxl_rwsem.dpa so
++	 * cxl_dpa_free() cannot observe dpa_res without a matching devres
++	 * action.
++	 * Also, invoke the release action with the unlocked __cxl_dpa_release()
++	 * since cxl_dpa_release() acquires the the cxl_rwsem.dpa.
++	 */
++	rc = devm_add_action(&port->dev, cxl_dpa_release, cxled);
++	if (rc) {
++		__cxl_dpa_release(cxled);
++	}
++	return rc;
+ }
+ 
+ static int add_dpa_res(struct device *dev, struct resource *parent,
+@@ -499,16 +511,8 @@ int devm_cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
+ 				resource_size_t base, resource_size_t len,
+ 				resource_size_t skipped)
+ {
+-	struct cxl_port *port = cxled_to_port(cxled);
+-	int rc;
+-
+-	scoped_guard(rwsem_write, &cxl_rwsem.dpa)
+-		rc = __cxl_dpa_reserve(cxled, base, len, skipped);
+-
+-	if (rc)
+-		return rc;
+-
+-	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
++	guard(rwsem_write)(&cxl_rwsem.dpa);
++	return __devm_cxl_dpa_reserve(cxled, base, len, skipped);
+ }
+ EXPORT_SYMBOL_NS_GPL(devm_cxl_dpa_reserve, "CXL");
+ 
+@@ -606,7 +610,8 @@ static int __cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
+ 	struct resource *p, *last;
+ 	int part;
+ 
+-	guard(rwsem_write)(&cxl_rwsem.dpa);
++	lockdep_assert_held_write(&cxl_rwsem.dpa);
++
+ 	if (cxled->cxld.region) {
+ 		dev_dbg(dev, "decoder attached to %s\n",
+ 			dev_name(&cxled->cxld.region->dev));
+@@ -664,19 +669,13 @@ static int __cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
+ 		return -ENOSPC;
+ 	}
+ 
+-	return __cxl_dpa_reserve(cxled, start, size, skip);
++	return __devm_cxl_dpa_reserve(cxled, start, size, skip);
+ }
+ 
+ int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size)
+ {
+-	struct cxl_port *port = cxled_to_port(cxled);
+-	int rc;
+-
+-	rc = __cxl_dpa_alloc(cxled, size);
+-	if (rc)
+-		return rc;
+-
+-	return devm_add_action_or_reset(&port->dev, cxl_dpa_release, cxled);
++	guard(rwsem_write)(&cxl_rwsem.dpa);
++	return __cxl_dpa_alloc(cxled, size);
+ }
+ 
+ static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
+-- 
+2.47.3
 
-
-rate of occurance in the current code:
------------------
-node_online_map       -  21 instances
-node_possible_map     -  25 instances
-for_each_node         -  346 instances
-for_each_online_node  -  67 instances
-GFP_THISNODE          -  58 instances
-(notes don't have mems_allowed/mems_effective instances)
-
-
-But it's not always going to be obvious - since nodemasks and gfp_masks
-get passed around as variables all throughout the kernel.
-
-I ultimately determined that auditing this in-tree is already a fools
-errand - and suggesting we try to validate this never occurs for all
-future code moving forward is just not realistic in any sense.
-
-I could not come up with a way to remove private nodes from
-node_online/possible_map - and private nodes must be added to
-cpuset.mems_allowed to allow cpuset control (otherwise all userland
-access is blanket denied).
-
-So I moved back to __GFP_PRIVATE.
-
-=== TL;DR:
-
-The core premise of private nodes is isolation first.
-
-So we want this code:
-
-   for node in cpuset.mems_allowed / online_map
-       buf = alloc_pages_node(node, __GFP_THISNODE, NULL)
-
-To explicitly fail - so that the caller knows they can't use these
-masks this way anymore (it was already potentially a bug, but could
-have been masked if all online nodes had memory).
-
-~Gregory
