@@ -1,212 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8673933C502;
-	Wed, 22 Apr 2026 18:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776881175; cv=fail; b=i1xn7ya/GnuB92n5b3INwttOrmxsEBGdLfjLRNxxhYF4QdSL0ZudYk+uroCPMhsX889IdtfTFuIvB4OJwJcHDhgkjRUfnoKBFgM5PSrS4t28Xm1NA4KZWA34zEFZkhr6NMuhoTeEaEvnDApQbgmYR27MHbWn7tPUe46ayfy2ahs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776881175; c=relaxed/simple;
-	bh=74PDjV7694KtJ1YhRY2edLy37y9lv0ExbgH7YR1R9Ww=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ElVXXvBaYc5STpUBi5Z26LvvSWPPAx1D+xvs63Zz9WlArjZU7sraKad0ElQKG/exNCa4tR+NuRBXL0n+0oX/2o25RD4iV+cZlFKSSIgbmjC4LgquANsQQKuUwPSOpeQYfR8PqeFK6MQERKtTxQTFwWoQfKmSMu1ivvcLq4Smy3Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OUkHVTWM; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E583EF0D4
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Apr 2026 18:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776884345; cv=none; b=txAc4pCBY37YGwMyTdsiY8plcbYBMx/iVj545Wj/r10KSDJ6zfDid0NqyP2krvI3cSHjdFIEOnKmVInq8hTYimE2tt/OdJaCKLeG5jdReoMotlP2hwZwvZaI5tmTdWakcN8OBVAoyzVWox/2v8iufsBMiB3a6DfSRelfSttBlT4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776884345; c=relaxed/simple;
+	bh=W3gJGhETv1i99hgZ4Qzxlq7+a/rqAi15n3RaJvZubfA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nOSRNSSGsaABP07H+/gNmFvTNG3GgoY1HXxSlRKJ0hFSJwOS8s7AhE8N/7Oa+hJ605QcWoITEGIvpes4lbHPVmw7XVP+/VtosOCaEkCqf5uBEK7zYyJZiX0gdLVpe1ag3OHtnvrEPSQ2drITGn28rLgRYFVg4o3l8gKhzXUETHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=li7ym60b; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OUkHVTWM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776881173; x=1808417173;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=74PDjV7694KtJ1YhRY2edLy37y9lv0ExbgH7YR1R9Ww=;
-  b=OUkHVTWMi3LvzBTURt1E1jiLtC4wlpmnsJJXdH59E4g7AipfU41+qQZo
-   goD10Pl8H22++TUHQt5tQheJI6uAuQw49dUxceKr7hmf9z6sSaQFe3wLe
-   WOvmPIgcN7UQJb60Q+rakbjl02wLNz4ZIsGj6vyxUZ877LJwGTgheG889
-   MC8bWm6lDSOVcj2bsQmvqbnsNhYiGJuplTOzEuLBpK6VAbs7vLbWRBRBZ
-   jsZNrhXUfb4b376g2DQznGLOgSK3KyFxbwEA1yixzKNme4t5HgsVh33V8
-   QfLboG7uwNy4C8PsLI2CACu8dBI0hm0zIWRR+wwqpg4iyMmAYP6WH6K8G
-   Q==;
-X-CSE-ConnectionGUID: VBRTB2vTTlWbb2z9yymXrQ==
-X-CSE-MsgGUID: 8mHT88MyRv+lp+9SCERxVw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11764"; a="88147490"
-X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
-   d="scan'208";a="88147490"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 11:06:03 -0700
-X-CSE-ConnectionGUID: Oc9+GwpdQbi4c1Sz2EPLNw==
-X-CSE-MsgGUID: v8mrMw78TF+J1wkp8jsz4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
-   d="scan'208";a="232327520"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 11:06:03 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Wed, 22 Apr 2026 11:06:02 -0700
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Wed, 22 Apr 2026 11:06:02 -0700
-Received: from SA9PR02CU001.outbound.protection.outlook.com (40.93.196.55) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Wed, 22 Apr 2026 11:06:01 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IvN1KznF/Cfe5PAtjHQKs9GgU9FvChs1ELDj/3UceOd0Mvd5U2Hf8quZkW2gylB9sDnSdzXqs6KaN1gcnQWISWM5E9s2onM779CK7t3KP8KO7BTp6+t6b1B+GhfK/q17jiWAcZxWksCDWGjarHttsTZXW/J7AMvjySkaRBWQIkqpGAIrPz0l/usw5/NFcNgGa+GCb4W7L+AMmbAQT2QIxuufcXG8P86mgfFDBTECxQs+n6mlB9hjz8DTFDC/gXVE6SPYFkVSMgnOYRzfw9yqr7XlZItqtO8Pggp2ct7cc+FgnUYzkfTA2bmjQEUmkoRFeZz6VMKEnom2wL1nFbJLtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rjfYk9Hka2umYdlUon4/ePFtAtj3UywmI2XwGXx1oyE=;
- b=GTh70OJMFWVSevB1ekrgt7ZoFIpuNmh9J99eC7ErMFlUpO+nbv2ENXTtWIxyF3TKxhyvUUr+1VImQOxuWl7RFWnOBDxk39T7+pAjPfSNCNx8NBM2SjP+taeRw/SJuxWdju1yoPt9sg6B/1LCFMn5Q+2a2z0Y8CMWGXWv/io+QT7HPzuS8E8vwkjyZTXsLSQO4ESNz1FF03Fa5fYhV6sDTOT1m7E4/fegH3rLCrxA3YHasToKzTwMtShXy6YeLdU3YatUynfhIh/4ii+z8RI5pgX1YQfagpP4NR6kv8BY02/FGv9wvGNrFwizfecbWzObRTNaphC6RD6MfIPQ4TwKlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
- (2603:10b6:518:1::d3c) by CH2PR11MB8867.namprd11.prod.outlook.com
- (2603:10b6:610:285::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.16; Wed, 22 Apr
- 2026 18:05:57 +0000
-Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
- ([fe80::9618:33dd:29ce:41d1]) by PH3PPF9E162731D.namprd11.prod.outlook.com
- ([fe80::9618:33dd:29ce:41d1%6]) with mapi id 15.20.9818.017; Wed, 22 Apr 2026
- 18:05:57 +0000
-Date: Wed, 22 Apr 2026 13:09:52 -0500
-From: Ira Weiny <ira.weiny@intel.com>
-To: John Groves <jgroves@fastmail.com>, Alison Schofield
-	<alison.schofield@intel.com>, John Groves <john@jagalactic.com>
-CC: John Groves <John@groves.net>, Miklos Szeredi <miklos@szeredi.hu>, "Dan
- Williams" <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>,
-	"John Groves (jgroves)" <jgroves@micron.com>, Jonathan Corbet
-	<corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang
-	<dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara
-	<jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand
-	<david@kernel.org>, Christian Brauner <brauner@kernel.org>, "Darrick J .
- Wong" <djwong@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Jeff Layton
-	<jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, "Joanne
- Koong" <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, "Bagas
- Sanjaya" <bagasdotme@gmail.com>, James Morse <james.morse@arm.com>, Fuad
- Tabba <tabba@google.com>, Sean Christopherson <seanjc@google.com>, Shivank
- Garg <shivankg@amd.com>, Ackerley Tng <ackerleytng@google.com>, Gregory Price
-	<gourry@gourry.net>, Aravind Ramesh <arramesh@micron.com>, Ajay Joshi
-	<ajayjoshi@micron.com>, "venkataravis@micron.com" <venkataravis@micron.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V4 1/2] daxctl: Add support for famfs mode
-Message-ID: <69e90ef0d9627_911a0100ac@iweiny-mobl.notmuch>
-References: <0100019bd34040d9-0b6e9e4c-ecd4-464d-ab9d-88a251215442-000000@email.amazonses.com>
- <20260118223629.92852-1-john@jagalactic.com>
- <0100019bd340cdd5-89036a70-3ef5-4c34-abf8-07a3ea4d9f92-000000@email.amazonses.com>
- <aaD6yQLiyZznfAxr@aschofie-mobl2.lan>
- <aeaz9TecrINXaHcR@aschofie-mobl2.lan>
- <497e9e6f-6770-48d7-929b-8543a25172f2@app.fastmail.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <497e9e6f-6770-48d7-929b-8543a25172f2@app.fastmail.com>
-X-ClientProxiedBy: MW4PR04CA0226.namprd04.prod.outlook.com
- (2603:10b6:303:87::21) To PH3PPF9E162731D.namprd11.prod.outlook.com
- (2603:10b6:518:1::d3c)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="li7ym60b"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-b9c9d03524cso803766066b.3
+        for <linux-cxl@vger.kernel.org>; Wed, 22 Apr 2026 11:58:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1776884332; x=1777489132; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R4vBmmJ5gC2QCrFlTLiSjZ3SPsY2SAKP5dBxbzswxUI=;
+        b=li7ym60beuSB+J0Js5TfsIkV0edlc1kgEB/xClDmYpZYwA4gmF4kZK7vjtuvjWg8vA
+         ak5XyXi72tbUNe4sJhtq/RcAPmMHPpzvzaa+m1qCqpBkV+YK7vOjkLKMjsVvLVsPH2EB
+         xtYX1AtRI8Qx+Zb5j+yE1wBIyf97jarkyhiMY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776884332; x=1777489132;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=R4vBmmJ5gC2QCrFlTLiSjZ3SPsY2SAKP5dBxbzswxUI=;
+        b=ekyFPu5Lnv37+0WZwH+0eTkFsI2RLksaoDihkmOY8JFQPnFoUEp7yttmrGYuJzKEZF
+         dB0QfiMQe+vAFnXr0RQ5K3JtiInhaQfxYlCVDJwKIhIYiBzjr5kB2fhjjhDYXCPzdYMc
+         3lGcz2lHh3ad/26zi5kUXYeO41XR6FWCuW95HEcy4jjq1VfSFqdiU7H/NB+sXg8Iv25x
+         pkS3vl9spmShavKMwqCf8pRjpHKZ33WBbaPBgj9LoArKIbINYS+oK7NflUWqptBCQPlw
+         +6nOnm8SEzAjchds+p9SFY08CzAuDMiCXmcd3fRuws4I2VY9hsHc5Di2Q3Ri1SEQyF4V
+         BhJQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+cL9vBfUgH3xk/J+Z1R+/v1eBrXQk95dqr75PUzlFwoDIFzDOgkS4hYZdg8mbUVDGWEHcSVin/L80=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0dgFYPd3m8P7kvmYTGQ3TWOu7afbwxHvy2934VMWBPhguFKC+
+	VXJWQRX03kAwgwRIoE27OxeVpZ1ZsuBE10grNQcvxsuUt6kcND/9m1aTyDBoWFZvTinZj4z0awJ
+	dHDIWWg+x
+X-Gm-Gg: AeBDievZNtA5RojE+1ZnrpumTXd3R2adrXUCw0StfCrZdxrajC4BV5Hqgok+UxUH1JM
+	i2QXadhWiF4qomL/8Yr9IVEsS4NdM0KcbI1y1s/botlgg7iry2F3iR58YaXPbvfOGL+BzMZ+pS+
+	63oqKlEJ2Z5H4ywatW6bbsin4yEKKIi3X4xQHrE/wHRl1+YIKRp5kCc6EtMZ1Iq+dW6BYIgnn4L
+	mFy8mtO4O+95CIsWhQMfE5gWW7/UobIlqM4vm5CWthh3kuMS9XaliN7cu/U81iatBB67WpLad9H
+	flyeimzgICJ3iES42S+zwiqsP7VcRCOMf2OP13VSPak82aDb5aW7RR3dwXivHpKMOVGv3+KDDMH
+	Ao0J0qJ6OvNTtZonmuClDW8CLkQfmQvndw1pOT3Qd3Xc9x6hrDUccjyQoXUabzvcaxbGyfi84bA
+	8/P196BL84ZuKvF922Q7mgHxkOtAmVexP6v0oFfy+fSE9A5BptYWZQLV98ncIXtGoWHebldLOqC
+	cGaH7clzes=
+X-Received: by 2002:a17:907:985:b0:ba9:2f5a:fa38 with SMTP id a640c23a62f3a-ba92f5afde1mr559600966b.0.1776884331820;
+        Wed, 22 Apr 2026 11:58:51 -0700 (PDT)
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com. [209.85.218.53])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ba45553e502sm572736966b.61.2026.04.22.11.58.51
+        for <linux-cxl@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2026 11:58:51 -0700 (PDT)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-bab8ae52954so136347566b.1
+        for <linux-cxl@vger.kernel.org>; Wed, 22 Apr 2026 11:58:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+wO7KSu73lL400XTyy4brf3/0irDSjYvySR3BG9HGTfUhujmiJUiBCe05Y7gEPcZq+OF/9EAPThow=@vger.kernel.org
+X-Received: by 2002:a05:6000:2f8a:b0:43d:7a08:a5e6 with SMTP id
+ ffacd0b85a97d-43fe3e073c9mr39087653f8f.29.1776883909243; Wed, 22 Apr 2026
+ 11:51:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH3PPF9E162731D:EE_|CH2PR11MB8867:EE_
-X-MS-Office365-Filtering-Correlation-Id: 86a0a92c-4bc6-4299-6df9-08dea099cd62
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016|18002099003|56012099003|22082099003;
-X-Microsoft-Antispam-Message-Info: CPOkFd7/9ttoEIGH0QQtT48Nfq0qD8lx54eMHfSOFj55DHp91ggH7SinG3E0VdsyMeqKVgJgLj/4jmw6VLVz/PIQ/P9/jFKK5eqiDsfwPppGvLIktsFiDJw1SQ9q6iPUn3E7w+fldQvvBU/ybm4IWPGjeCeKuZZHccyrPnl1Slrj0Xks2mo/TT588toQCmGZ9Msgm1tVNXyx/luLjmtnhehywkiWJxVSK5w5sBKuZroUOfrtkSQdiWen1OYOgexEvhJv6qulIYj/nvTf/DL0yaGRI4VEyw8jV6K2eVj5x7N7pkN/3vgerbQOgMihXJBKjZ524bP4938alB/PzKmiQkwl25LxXYDr3Vddxsk9CwenQbriKdwKTf2yuZo3Z8uz1nPR3BohYOEwtAJsnzo/kWN5a3Jw8CtgBmreiVdyMFl0GADVn72nmvRzMRzFrwNGKHu+EiFiT7I30Tn7w/AYO65PD/7vZivDOoKu1NHJUF/m/OAWkqrPkNyyVoai3Md5c0brksZRom9nP6baFsMBO72Ozo+eh6AjwXZ4HgHIec4H12ptDdC7T0zqU8WRUmPfL9l2x23HIJ7iPPMKsQOZ2pd9cCoAHiW8z9xEJzgB5xzQ2kAdqQIDz4jRkYeXggLYhq12Lili5wFyAGLY+g6GvvJbRDDOR0E1ROaOs36M5N9wHo8Q70SFCN+38e8qN+y21fcZQTmJDBhF7OKV3CsWuP3BJZ2e2ae/3+9+X/nxn4A=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH3PPF9E162731D.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?TlTGlgOLj1I+z6PjI1Aov+sF0z5MJBw8cDEO2zIRvMNXlH4dsI9jOV/geYr7?=
- =?us-ascii?Q?nDsz/ty+lmmiFj56Vfjz+ZlBpfJkLKJk/YlOkrs+VTEyG7vOdOFx02bBZSeF?=
- =?us-ascii?Q?dTFmKLzC/DMOEA4/2Tpb2YYFagJN7WDZEORTaVj4MhCRPZufunRWdI659sB6?=
- =?us-ascii?Q?CT0JC1Af2Bx2Km0aOuKfF0jKOlBLoE9y6ghp45PaQ7EK08MMWgduUyC7h4oj?=
- =?us-ascii?Q?GGD6dkL8LJzYzZW6g3eL/1tsKNX/QGjsJpSqz3j3b4e07ZK3XdWF1zHocP5Q?=
- =?us-ascii?Q?gIJvB66z0j5b9MpAdu6V2nL0/ZysMGXtm3WPtz+0YUUXL4FepvJWwM7GTIzC?=
- =?us-ascii?Q?HDQNVwebmKLmNOn3CogUT/6+/XP4yr9MykDD+MJfQEzXOru/XRaosNrpVUFc?=
- =?us-ascii?Q?ShA6cLKRY8Z+aXJNZeonLFmPO/oBHKKMyRTXnOWwrbkkJ6P6dWxDwPfhMCNN?=
- =?us-ascii?Q?wdtxC3nz81GY3xMwNKj7lmKkgbbUgp7CofCBbnaK4kcSPKQcuWqdkJxEoeDR?=
- =?us-ascii?Q?dXRyEslCLLD1hYdptsJxP1a3U8ACPGz0yhIydzJjG7m7EGd81/OipOa9OAXQ?=
- =?us-ascii?Q?IXq80RLU8nw20rYgJVsxBONFPrCtLG8/j1tZ6XfLHbfELT11GPNkZmHA1Yh4?=
- =?us-ascii?Q?m4QwgoGfp97RS0Zo7rwx+7VtdN5UKIDcYVh/qJ1zQhEtjzD8kANrJZrYcFr1?=
- =?us-ascii?Q?P0qrC4VZrG8vpXnUbkj1ZebTG8rnKiMvbGvkwf7eq98VgUdJg6/D1YlS+srO?=
- =?us-ascii?Q?tJTvOGD1w1Sn24NK96HsSjeEPBO3PybEt8e/1zgZqf+RkmEfy7kW1GRJajae?=
- =?us-ascii?Q?vv5rrAbgXam/04Sd8NTVt9568RL11dhoIARD3Ma+wlZoIOvevSs3vPE2saRu?=
- =?us-ascii?Q?4yBqAP0yVv2mf4rggmkcp3PZ+9yyGgpmitzHW0yJFwMlaqLFxRriskkPS9ZM?=
- =?us-ascii?Q?br5Fh36zF+eTeQ4R/R9Rdpz0rOY9Mz5llSv9nP3apuSQfZJJpmdgvtAzh3Zu?=
- =?us-ascii?Q?csmWSmEOyT3Hy6ZzAo+pIyZijxUyF+nctqjqaO7TLQvYw5mZQzcBu/arahji?=
- =?us-ascii?Q?3VMTrkgjnEIjudELw/FUhlEktqZn49oKtyVBSiPjJ3ChJ/U6z7/wdOlr3MZO?=
- =?us-ascii?Q?rzdultdjSqHJmGhtUPzCiFhL6nWbjx8pSR0t7weUtpN8Ryggl2ucbPR5ng3m?=
- =?us-ascii?Q?qufj+pJyFNPTC83Qbm1LqoaExPdRbPqwGruzWjBMV5CWArzknFGm+DysLJGX?=
- =?us-ascii?Q?LTA0ndGQGl1NYiyU8OwGbQ5HbKPr0Xsj3GLro6wzVOk1xt3SZNys0faL38I7?=
- =?us-ascii?Q?+NHCmUmp95EzpQWvP4AhkpW+z8L4fKezqQFex3PfOtf8IAJu+5zwjr73Nu53?=
- =?us-ascii?Q?HVKvAgySh/z4dU6Sg0pIPIloSuq0p/sqrAsJ+IfI7Is5g50XYmUXeH2sTaT9?=
- =?us-ascii?Q?a1roI4txl0MaKWkq1NC1Gs0UpDzr+aQ4HNZW3YkHy+HoT+Cn4JILDJlv7q/u?=
- =?us-ascii?Q?FAnCZQ1xMkiyzSYJhA39aQXqKI/Oa+zfLQvHPxIGYR3Y6NVB/7m2Qgnd90+Y?=
- =?us-ascii?Q?xdgSbtXK1iHGY6GLe8yEnzGPJC00iB9PmmLoG25wa0x7vV9fipOv1Qo55x3L?=
- =?us-ascii?Q?5Utdk4O1oCBjTdvQTnuGJTq5bpzywKVusKmY5SO8pdgCzB36asmnxNq81nY2?=
- =?us-ascii?Q?gudrHZwUfQoA8clsAv7KZSd9v0foMgxMPbKIVp8zmCtcEES/DxJsZUL9hmIG?=
- =?us-ascii?Q?180XpMNRzg=3D=3D?=
-X-Exchange-RoutingPolicyChecked: VSHSRw70jGcaeilyRE1WxoJsD2E2oi6nJAzPQ9zXVl1IC5hyRgFULvE4BB8YrMUlSYhcZD6bXMGqWTwGN+msaEHgoRnbCvbcusDUpCNeoGVgw2f4RzCRGA82Ntek2qaOsIyNUihzftO4N/9ZiqOsPi7UUxv31jWUlTiEsTNSJZqZHZ1sXIisjSBcSdbVh8sF/JCoPdARlbOnGdAD9CrLZ0wo1sQn51CbEFom2FtTaB7qYHN4fXSfsljm4LFTSQOSVo1j2Mion0k8bX4Y1pOn2DBKLFOicuaVw9mMFEmNnl2UA3iW3cwFoyM5GOJuwSvntsFfKYp33bUbb5JnPNeZyw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86a0a92c-4bc6-4299-6df9-08dea099cd62
-X-MS-Exchange-CrossTenant-AuthSource: PH3PPF9E162731D.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2026 18:05:57.2007
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: k1WBoa8NL5IsTX8+XNQOkQD0Y7lO7GsydU0+p6FdB9M6PTsSEhcmtUeHQYqWHD5dyuTx74MAI7rT7mwmmhg+tw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR11MB8867
-X-OriginatorOrg: intel.com
+References: <20260325143555.451852-1-herve.codina@bootlin.com>
+ <20260325143555.451852-3-herve.codina@bootlin.com> <CAMuHMdU7x7LWFkD9xiq+wyOqnn0bdzr+JLfvbBexoiWyv8kftA@mail.gmail.com>
+In-Reply-To: <CAMuHMdU7x7LWFkD9xiq+wyOqnn0bdzr+JLfvbBexoiWyv8kftA@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 22 Apr 2026 11:51:36 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UK3NQKQN7FXyG4nGdDKO=LQYhnL4ZweomQ_4R9-EAYag@mail.gmail.com>
+X-Gm-Features: AQROBzAV3w_CPq4qi5veiP_uOv4VWrOsaTYpBbypDAKqTbu6jiZzeNsnLIn0Vds
+Message-ID: <CAD=FV=UK3NQKQN7FXyG4nGdDKO=LQYhnL4ZweomQ_4R9-EAYag@mail.gmail.com>
+Subject: Re: [PATCH v6 02/27] of: dynamic: Fix overlayed devices not probing
+ because of fw_devlink
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Herve Codina <herve.codina@bootlin.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kalle Niemi <kaleposti@gmail.com>, Matti Vaittinen <mazziesaccount@gmail.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Linus Walleij <linusw@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org, 
+	driver-core@lists.linux.dev, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Saravana Kannan <saravanak@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-John Groves wrote:
-> 
-> 
-> On Mon, Apr 20, 2026, at 6:17 PM, Alison Schofield wrote:
-> > On Thu, Feb 26, 2026 at 06:00:41PM -0800, Alison Schofield wrote:
-> > > On Sun, Jan 18, 2026 at 10:36:38PM +0000, John Groves wrote:
-> > > > From: John Groves <John@Groves.net>
-> > > > 
-> > 
-> > Hi John,
-> > 
-> > This is where I left off with the actual changes to "daxctl" for FAMFS.
-> > We need a new rev of this ndctl set that includes both patches rebased
-> > on ndctl pending and addressing the review comments below for daxctl.
-> > (Although I've used more recent branches, I haven't looked at whether
-> > these issues were addressed in the code.)
-> > 
-> > With a new rev, I'll take another look at ensuring a dax device is
-> > available for the unit test.
-> > 
-> > Thanks!
-> > 
-> > --Alison
-> > 
-> 
-> Will you be on the DAX call tomorrow? If so, let's work out a plan and assign
-> my action items as necessary. Not that I need any more action items :D
+Hi,
 
-What plan do you need?  Now that the kernel changes have been merged, we
-need to have an updated daxctl patch set which Alison can apply so that
-rc1 can be tested without me applying this set.
+On Wed, Apr 22, 2026 at 10:44=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Herv=C3=A9,
+>
+> CC Douglas
+>
+> On Wed, 25 Mar 2026 at 15:36, Herve Codina <herve.codina@bootlin.com> wro=
+te:
+> > From: Saravana Kannan <saravanak@google.com>
+> >
+> > When an overlay is applied, if the target device has already probed
+> > successfully and bound to a device, then some of the fw_devlink logic
+> > that ran when the device was probed needs to be rerun. This allows newl=
+y
+> > created dangling consumers of the overlayed device tree nodes to be
+> > moved to become consumers of the target device.
+> >
+> > Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overlays")
+> > Reported-by: Herve Codina <herve.codina@bootlin.com>
+> > Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgy=
+o8x6=3D9F9rZ+-KzjOg@mail.gmail.com/
+> > Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin.com=
+/
+> > Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootlin.co=
+m/
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > Link: https://lore.kernel.org/lkml/20240411235623.1260061-3-saravanak@g=
+oogle.com/
+> > [Herve: Rebase on top of recent kernel]
+> > [Herve: Add the call to driver_deferred_probe_trigger()]
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > Tested-by: Kalle Niemi <kaleposti@gmail.com>
+> > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -235,6 +235,79 @@ static void __fw_devlink_pickup_dangling_consumers=
+(struct fwnode_handle *fwnode,
+> >                 __fw_devlink_pickup_dangling_consumers(child, new_sup);
+> >  }
+> >
+> > +static void fw_devlink_pickup_dangling_consumers(struct device *dev)
+> > +{
+> > +       struct fwnode_handle *child;
+> > +
+> > +       guard(mutex)(&fwnode_link_lock);
+> > +
+> > +       fwnode_for_each_available_child_node(dev->fwnode, child)
+> > +               __fw_devlink_pickup_dangling_consumers(child, dev->fwno=
+de);
+> > +       __fw_devlink_link_to_consumers(dev);
+> > +}
+> > +
+> > +/**
+> > + * fw_devlink_refresh_fwnode - Recheck the tree under this firmware no=
+de
+> > + * @fwnode: The fwnode under which the fwnode tree has changed
+> > + *
+> > + * This function is mainly meant to adjust the supplier/consumer depen=
+dencies
+> > + * after a fwnode tree overlay has occurred.
+> > + */
+> > +void fw_devlink_refresh_fwnode(struct fwnode_handle *fwnode)
+> > +{
+> > +       struct device *dev;
+> > +
+> > +       /*
+> > +        * Find the closest ancestor fwnode that has been converted to =
+a device
+> > +        * that can bind to a driver (bus device).
+> > +        */
+> > +       fwnode_handle_get(fwnode);
+> > +       do {
+> > +               if (fwnode->flags & FWNODE_FLAG_NOT_DEVICE)
+>
+> After commit f72e77c33e4b5657 ("device property: Make modifications
+> of fwnode "flags" thread safe"), this must be changed to:
+>
+>     if (fwnode_test_flag(fwnode, FWNODE_FLAG_NOT_DEVICE))
+>
+> With this change my DT overlays are working again.
+>
+> I guess keeping the FWNODE_FLAG_* names, but changing their values
+> from bit masks to bit numbers was probably not such a good idea,
+> as it fails to catch missing conversions...
 
-This is a pain for me to apply by hand.  Please update this and submit
-with Alison for merging soon.
+Crud, I should have thought about that. :( Do you think it's worth it
+to do a rename at this point to catch future problems?
 
-Ira
+-Doug
