@@ -1,365 +1,260 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB0C3A4528
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Apr 2026 03:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D1C139D
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Apr 2026 05:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776827728; cv=none; b=OoAOCN3FkIHELIIFATBHd4KvibCv/JS0TZoffmENfNNGW480lPvdqguql4/jGblxY0Dbalnezoaq3dAWLjBIbGk8qmontkelT7VGfGjWAbFgH/E50Ypu4pHDc/R0HTHvHPyixqyIm7K0S7CCJZZOmysTEZNpnf5utesoq+q+9AI=
+	t=1776834027; cv=none; b=lc3PU5ZJgwlVDKB0L9c6E/7K/luUWeOmRjjP0xgrHcL2zKLUH9tvO9aOXbuCfyBCVPFXE60AebFjCGKORJiue34ReoIupDKFrfZW8un+n66yZUk/thw/cjIOT+A70Ewiv8aSRDv4yQWaB2bIpJIYFEEVg/AKSgc/i2LxsY/wPWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776827728; c=relaxed/simple;
-	bh=a7cP/xI1+En3Lvm2qTq/w+sFhLUAdd/NYXFCkoKemb4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=A3j1OCQ6808B01sOQnahvtswbVN4AkDgkF2G+9vh6I0Joij6N0BtwS54b+5x6mRrxCmJDMC4IGYbvU+6O64xmRB1UbqgFmpN8sqJ80St3/7syezP4KTmMdZHYOr7yip2ayYWpr/rF2C5MO2T40sRRoZPfdEmrBCKVbRbS01eSOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id CA4CB161364;
-	Wed, 22 Apr 2026 03:15:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf03.hostedemail.com (Postfix) with ESMTPA id 41CF26000A;
-	Wed, 22 Apr 2026 03:15:13 +0000 (UTC)
-Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
-	by mailfauth.phl.internal (Postfix) with ESMTP id A69BAF4006A;
-	Tue, 21 Apr 2026 23:15:12 -0400 (EDT)
-Received: from phl-imap-14 ([10.202.2.87])
-  by phl-compute-09.internal (MEProxy); Tue, 21 Apr 2026 23:15:12 -0400
-X-ME-Sender: <xms:QD3oad6sweGk3krAyrcKbO_DqznGut252CqDTfRDwMdqx7f5VhspEQ>
-    <xme:QD3oaVvi_NwL24qpHUd8yjtWqKsj133KWEDTZIRga9I1P2NrkIWtGX-664peIhsQ2
-    ZD_4l_48Bx1w_F99FCbqhOAFO3TdbUy_B44iov-sdJvQfZIZam81_o>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeifeduiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdflohhhnhcu
-    ifhrohhvvghsfdcuoehjohhhnhesghhrohhvvghsrdhnvghtqeenucggtffrrghtthgvrh
-    hnpeeffeegueehleetgfffgfejffelhfdttdelkedvteetieehvddugeegvdfhfedvtden
-    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjghhrohhvvghsodhm
-    vghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduieehgeduieeludduqdeffeduje
-    dtkeekjedqjhhohhhnpeepghhrohhvvghsrdhnvghtsehfrghsthhmrghilhdrtghomhdp
-    nhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrnh
-    hishgrrdhsuhekkeejsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggvvhdrshhrihhn
-    ihhvrghsuhhluhesghhmrghilhdrtghomhdprhgtphhtthhopehgohhurhhrhiesghhouh
-    hrrhihrdhnvghtpdhrtghpthhtohepjhhonhgrthhhrghnrdgtrghmvghrohhnsehhuhgr
-    figvihdrtghomhdprhgtphhtthhopegrlhhishhonhdrshgthhhofhhivghlugesihhnth
-    gvlhdrtghomhdprhgtphhtthhopegurghnrdhjrdifihhllhhirghmshesihhnthgvlhdr
-    tghomhdprhgtphhtthhopegurghvvgdrjhhirghnghesihhnthgvlhdrtghomhdprhgtph
-    htthhopehirhgrrdifvghinhihsehinhhtvghlrdgtohhmpdhrtghpthhtoheprghjrgih
-    jhhoshhhihesmhhitghrohhnrdgtohhm
-X-ME-Proxy: <xmx:QD3oaWKxlRm8q-BcgzwrttEYFWqJbAbLWvu-4zH8qDP1plnnHCg6og>
-    <xmx:QD3oaUoy4EnCRy5gMkZ_evK1tV3XzyFVXuV2xDy7qqHq9ZTxfl75Uw>
-    <xmx:QD3oaUvwxQLe9Rw9GSatNccqHwnoXctXc0ognDELTocNaXfhLZQKbg>
-    <xmx:QD3oaeL9-KCg9jv2VaEnXe4K-B2tdzOYjElk4o4XGnlMtuY-yDGKng>
-    <xmx:QD3oaToIY8C47VnYR583pgOk2GeJfqB04lT2yb5_3fql_K7o88T3vxNO>
-Feedback-ID: i3a164872:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 6EBA5C40077; Tue, 21 Apr 2026 23:15:12 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1776834027; c=relaxed/simple;
+	bh=JVg6WuJdpnrGYPBRN8h7I89sVuilX1TIZd3bOZQvQ+U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FPit3D83OmYBRcwfIVGw4vY40jxV0J4coJQtbQsXFx0SfsVV1YiCO03Y5+UjM4C5K9w7IVnQp7BAwVQIjxe4LmPyu+YWUkvCc7xqnGayJ+k1yUhGLt+5rjUQJBjI4WxD61zqdaamXvagkkgJtvI7mXjZGFP6tpuGyRNkEpx9nSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-79ab5fd969aso55149797b3.0
+        for <linux-cxl@vger.kernel.org>; Tue, 21 Apr 2026 22:00:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776834025; x=1777438825;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hcov1izHTpncQzuxQpNFTuDzi6szui6lCG7Na0Ey9Hc=;
+        b=Ou8SrtfNzLfyedHEthm+d0Z6kOneEj9yP3vZk2kAWpObVuqo80pJLw+q5UwT7T2SM4
+         qpi768DUTJqkjirEbD+BhvZWkfjbWA9rwbPYfV2MvJZ03REzpBT65IOpES6bVlV16wGm
+         c5kkIFm+NdRj6w4npCZCXW6WNunXWWvuGyMUzKhlpkyMeyskISGxumhFtfQmluBLKDJe
+         IjGQ2sPLim0hXh8Bx4b2gGDR+5T3jRQgJdVJEGGLxhXO0V4BHY2dKwPDZdZ9aNikybzv
+         7QUhWYehbvMLnox5gekm1O6uGEBXkXj3ww9T1mS3du+41RthO3CaXRxFNQ+eA5K1Wc41
+         LOxw==
+X-Forwarded-Encrypted: i=1; AFNElJ8v6oJoh1aYid82SObJbCVFg6Uy58eOsKYbg1U8F5srEL2Gzh/K9iE9oCMvjLl9CDgzEtNrhnu/3bA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfJNZlmppjE7ntljg4ZtQGfNXXtSkUoYpWanZAtK6lZ3/7/bM0
+	H6Iqcc8IWgOxWZ8zOu8WFVFWMlSZ7cAnbIu2eP0/t29NIsdqUR+WilNw
+X-Gm-Gg: AeBDieuHLRNT+tSVdphU+Cc6ce2bj5pjnnM1xc7nomRHUWKoVYj2XerHNk7HrUxyuRr
+	vTtKNt17R3Cxg25H2+P3I1PBMtQ1DdAbwyGIDitAjTPasBWhc1n836c011WQipkVK4D/dYZbB2Q
+	mOe/GP4nbFSgMt5n3NBcGnB3LTz9zSXhkZk9aKToSwpjIPRcY94pKMkWC/YgxmD/ao31mQo+HmG
+	b/CuWdtEfYU1OBz2mTkuorDrutHu3/47gjEmslTsG7jBRkab4fGcRg7iw3Mb2wFcpWiQmce0mU7
+	aUQMmxqxBh+HoAVIijT12jsiPyX5aSkNn4eaJ3CGwtrg2zLLft0V0Jz0wkxkBRWgB71dyVqNswS
+	I9pI4/ZxJXTGhfKGDmk8EoWd/tsOqE58ncuDsQXwB68N0xVWwcsHaSih5tg6iAYBAi8yCOQeb2v
+	xMbe+w/PEXx6nw0VaIOCswhaHkC85StGQ=
+X-Received: by 2002:a05:690c:c4f9:b0:7b2:dad2:5e0d with SMTP id 00721157ae682-7b9ecfe760cmr207509197b3.33.1776834025393;
+        Tue, 21 Apr 2026 22:00:25 -0700 (PDT)
+Received: from tofu.. ([128.210.0.165])
+        by smtp.googlemail.com with ESMTPSA id 00721157ae682-7baeeaa2cb5sm33636607b3.21.2026.04.21.22.00.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Apr 2026 22:00:24 -0700 (PDT)
+From: Sungwoo Kim <iam@sung-woo.kim>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Ben Widawsky <bwidawsk@kernel.org>
+Cc: Dave Tian <daveti@purdue.edu>,
+	Sungwoo Kim <iam@sung-woo.kim>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] cxl/region: Fix a race bug in delete_region_store
+Date: Wed, 22 Apr 2026 00:56:36 -0400
+Message-ID: <20260422045637.3048249-2-iam@sung-woo.kim>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 21 Apr 2026 22:14:42 -0500
-From: "John Groves" <john@groves.net>
-To: "Anisa Su" <anisa.su887@gmail.com>
-Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "Dave Jiang" <dave.jiang@intel.com>, "Gregory Price" <gourry@gourry.net>,
- dave@stgolabs.net, "Jonathan Cameron" <jonathan.cameron@huawei.com>,
- "Alison Schofield" <alison.schofield@intel.com>,
- "Ira Weiny" <ira.weiny@intel.com>, "Dan Williams" <dan.j.williams@intel.com>,
- "Anisa Su" <anisa.su@samsung.com>, "Aravind Ramesh" <arramesh@micron.com>,
- "Ajay Joshi" <ajayjoshi@micron.com>, dev.srinivasulu@gmail.com
-Message-Id: <fb7dc730-4e9f-43c7-b243-21130f6ca5cd@app.fastmail.com>
-In-Reply-To: <aeeX7sSGiW4VRCIH@groves.net>
-References: <20260411013958.47422-1-anisa.su@samsung.com>
- <aeeX7sSGiW4VRCIH@groves.net>
-Subject: Re: [RFC PATCH 00/20] DCD: Remove support for sparse regions & add tags
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 1hiqqiukbrh7sq8b4sp38ym3mghsrgeo
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 41CF26000A
-X-Session-Marker: 6A6F686E4067726F7665732E6E6574
-X-Session-ID: U2FsdGVkX1/45tQlf+Ax0PuMqxT1ACCwP/X5H+Z5HLw=
-X-HE-Tag: 1776827713-972469
-X-HE-Meta: U2FsdGVkX1+AEJyDgbUsvJHRlQoS3fzWksxaoA2ypE0da7Yg1ut1sujwKyQWFRDNcELsfuZbBQ3cEC0Pd52QklFx8UuPeISjtnC8RWvF5SXaE1cLKpski7h8BrjK7OmXx1iPy8hJqHwtXvt9THdJ0SF7B6y025r0tss0sHyty8i1uYT57jRSE1uhK6jpU1sGLPyI0BgC2ok6rPYNsfEXV4yqcEdVwTqNq0saPy+scG65Amp7WqWLq9Rf0MhYfR0mSwORZ84S66cS6H4BSBouPCsOmvkFbEpQYvuArOEkvfawpzyh5VtSH93zZLpSuarB94RNC3xLOQ4TZZ59klAM+QLC9AWtSIdnN0PuLu/r0hZp5Bad+NvQGyaAyYE1mld5wb13+gpRAwItP9SU86myuAOnRwgB2lb6
+Content-Transfer-Encoding: 8bit
 
+devm_release_action() cannot find a matching entry in the following two
+race scenarios.
 
+scenario 1: delete two same regions concurrently
 
-On Tue, Apr 21, 2026, at 10:30 AM, John Groves wrote:
-> On 26/04/10 06:22PM, Anisa Su wrote:
-> > This RFC modifies Ira's DCD patchset to enforce tags and remove sparse DAX region
-> > support, which are the requirements that I've understood from the community
-> > meetings, with the end goal of FAMFS as the end user for DCD. Feedback would be
-> > greatly appreciated to let me know if this is on the right track? Or totally off
-> > the mark...
-> > 
-> > Everything is the same as before except:
-> > - extents must have tags (uuids)
-> > - 1 tag per region
-> > - regions must be contiguous (no more sparse regions)
-> > 
-> > To achieve this, the main thing is to change the relationship between
-> > cxl_dax_region : region_extent from 1 : many to 1 : 1. Each region_extent is
-> > comprised of 1+ contiguous device extents with the same tag. Contiguity
-> > is enforced by sorting device extents by DPA order. They're re-sorted by the
-> > original order in which they were sent for the response, which is required by
-> > the spec.
-> > 
-> > Once valid extents have been collected, it's passed as 1 contiguous capacity
-> > to the DAX layer via cxl_dax_region notify(). Once notified, the same region
-> > cannot be added to again, unless all extents are released.
-> > 
-> > For release: upon receiving a release event record, if the extent is within the
-> > bounds of any cxl_region, and it has the correct tag, then all extents in the
-> > region are released, so the "More" flag is still ignored. Not sure if this is the
-> > right way to do it but it was the simplest.
-> > 
-> > The changes to the DAX layer remain untouched, as all of this extra validation is done
-> > in the CXL layer. And since FAMFS already takes care of the devdax -> fsdev conversion,
-> > there was no need to add anything there.
-> > 
-> > Most of the series remains unchanged as I've tried not to make too many big changes
-> > right off the bat. Only the following commits were modified:
-> > - cxl/extent: Process dynamic partition events and realize region extents
-> > - dax/region: Create resources on DAX regions
-> > - cxl/region: Read existing extents on region creation
-> > 
-> > I've tacked on 1 commit at the end to change the driver type of DC regions from
-> > DAXDRV_KMEM_TYPE to DAXDRV_DEVICE_TYPE so it can be bound to the new fsdev driver.
-> > 
-> > Also, I've documented with more detail in the commit messages of the commits
-> > that were modified on what exactly was changed, so I hope that's clear.
-> > 
-> > ================================================================================
-> > Git History
-> > 
-> > This series is based on cxl-next, with base commit:
-> > 3939dba00f98 Merge branch 'for-7.1/cxl-misc' into cxl-for-next
-> > + bug fix: https://lore.kernel.org/linux-cxl/20260411011137.43545-1-anisa.su@samsung.com/T/#u
-> > 
-> > GH Branch: https://github.com/anisa-su993/anisa-linux-kernel/tree/dcd-rfc-04-10-26
-> > 
-> > It doesn't apply cleanly onto famfs-v9, although I have the version that's applied
-> > onto famfs-v9 here: https://github.com/anisa-su993/anisa-linux-kernel/tree/famfs-v9-dcd
-> > - famfs-v9 for reference: https://github.com/jagalactic/linux/tree/famfs-v9
-> > 
-> > I've tested the current series without famfs as well as the series applied on
-> > famfs-v9 with famfs.
-> > ================================================================================
-> > Testing:
-> > 
-> > This patchset was tested with Ali's QEMU patchset adding tag support:
-> > https://lore.kernel.org/linux-cxl/20260325184259.366-1-alireza.sanaee@huawei.com/T/#t
-> > 
-> > Details:
-> > Topology: '-object memory-backend-file,id=cxl-mem1,mem-path=/tmp/t3_cxl1.raw,size=12G \
-> >      -object memory-backend-file,id=cxl-lsa1,mem-path=/tmp/t3_lsa1.raw,size=1G \
-> >      -device usb-ehci,id=ehci \
-> >      -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
-> >      -device cxl-rp,port=0,bus=cxl.1,id=cxl_rp_port0,chassis=0,slot=2 \
-> >      -device cxl-type3,bus=cxl_rp_port0,id=cxl-dcd0,dc-regions-total-size=12G,num-dc-regions=1,sn=99 \
-> >      -device usb-cxl-mctp,bus=ehci.0,id=usb1,target=cxl-dcd0\
-> >      -machine cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=12G,cxl-fmw.0.interleave-granularity=1k'
-> > 
-> > 1. Start VM (12GB)
-> > 2. Issue QMP to add tagged backend (8GB):
-> > { "execute": "qmp_capabilities" }
-> > {
-> >     "execute": "object-add",
-> >     "arguments": {
-> >         "qom-type": "memory-backend-ram",
-> >         "id": "tm0",
-> >         "size": 8589934592,
-> >         "share": true,
-> >         "tag": "5be13bce-ae34-4a77-b6c3-16df975fcf1a"
-> >     }
-> > }
-> > 3. Create region on the VM: cxl create-region -m -d decoder0.0 -w 1 -s 8G mem0 -t dynamic_ram_a
-> > 4. Issue QMP to add an 8GB extent:
-> > { "execute": "qmp_capabilities" }
-> > {
-> >     "execute": "cxl-add-dynamic-capacity",
-> >     "arguments": {
-> >         "path": "/machine/peripheral/cxl-dcd0",
-> >         "host-id": 0,
-> >         "selection-policy": "prescriptive",
-> >         "region": 0,
-> >         "tag": "5be13bce-ae34-4a77-b6c3-16df975fcf1a",
-> >         "extents": [
-> >             {
-> >                 "offset": 0,
-> >                 "len": 8589934592
-> >             }
-> >         ]
-> >     }
-> > }
-> > 5. Verify with sysfs:
-> > root@bgt-140510-bm03:~# cat /sys/bus/cxl/devices/dax_region0/extent0.0/offset
-> > 0x0
-> > root@bgt-140510-bm03:~# cat /sys/bus/cxl/devices/dax_region0/extent0.0/length
-> > 0x200000000
-> > root@bgt-140510-bm03:~# cat /sys/bus/cxl/devices/dax_region0/extent0.0/uuid
-> > 5be13bce-ae34-4a77-b6c3-16df975fcf1a
-> > 
-> > 6. daxctl create-device -r region0
-> > [
-> >   {
-> >     "chardev":"dax0.1",
-> >     "size":8589934592,
-> >     "target_node":1,
-> >     "align":2097152,
-> >     "mode":"devdax"
-> >   }
-> > ]
-> > created 1 device
-> > 
-> > Currently, QEMU only supports sending 1 extent in an add/release request, which
-> > limits what I can test. However, I was able to verify that once extent(s) have
-> > been added to a region, it can't be added to again (size cannot be increased).
-> > 
-> > Up to this point is what I test with this patchset. Then below is the additional
-> > famfs tests for the version applied on famfs.
-> > ================================================================================
-> > 7. Install famfs userspace tool:
-> > https://github.com/cxl-micron-reskit/famfs
-> > 
-> > 8.mkfs.famfs --v /dev/dax0.1 output:
-> > devsize: 8589934592
-> > Famfs Superblock:
-> >   Filesystem UUID:   c33b4525-a2c7-4d64-9204-e8ed273b4ffb
-> >   Device UUID:       ae887e6b-f886-45f9-bc55-f0696f3cd91d
-> >   System UUID:       da314140-12e7-45c2-98b2-753d3bfe4f46
-> >   role of this node: Owner
-> >   alloc_unit:        0x200000
-> >   OMF major version: 2
-> >   OMF minor version: 1
-> >   sizeof superblock: 200
-> >   log size (bytes):  8388608
-> >   primary: /dev/dax0.1   8589934592
-> > 
-> > Log stats:
-> >   # of log entries in use: 0 of 15420
-> >   Log size in use:          48
-> >   Log size (total bytes)    8388608
-> >   No allocation errors found
-> > 
-> > Capacity:
-> >   Device capacity:        8.00G
-> >   Bitmap capacity:        8.00G
-> >   Sum of file sizes:      0.00G
-> >   Allocated space:        0.01G
-> >   Free space:             7.99G
-> >   Space amplification:     inf
-> >   Percent used:            0.1%
-> > 
-> > Famfs log:
-> >   0 of 15420 entries used
-> >   0 bad log entries detected
-> >   0 files
-> >   0 directories
-> > 
-> > 9. famfs smoke tests also succeed. The smoke tests include
-> > some fio tests, which run some simulated workloads
-> > 
-> > :== Test Timing Summary
-> > :==-------------------------------------------------------------------
-> > :==  prepare              0:10
-> > :==  test0                0:07
-> > :==  test_shadow_yaml     0:04
-> > :==  test1                0:22
-> > :==  test2                0:12
-> > :==  test3                0:03
-> > :==  test4                0:10
-> > :==  test_errors          0:01
-> > :==  stripe_test          0:58
-> > :==  test_pcq             1:26
-> > :==  test_fio             0:34
-> > :==-------------------------------------------------------------------
-> > :==  TOTAL                4:27
-> > :==-------------------------------------------------------------------
-> > :==run_smoke completed successfully (Thu Apr  9 10:33:28 PM UTC 2026)
-> > 
-> > Anisa Su (1):
-> >   dax/bus.c: make DC regions driver type DAXDRV_DEVICE_TYPE
-> > 
-> > Ira Weiny (19):
-> >   cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
-> >   cxl/mem: Read dynamic capacity configuration from the device
-> >   cxl/cdat: Gather DSMAS data for DCD partitions
-> >   cxl/core: Enforce partition order/simplify partition calls
-> >   cxl/mem: Expose dynamic ram A partition in sysfs
-> >   cxl/port: Add 'dynamic_ram_a' to endpoint decoder mode
-> >   cxl/region: Add sparse DAX region support
-> >   cxl/events: Split event msgnum configuration from irq setup
-> >   cxl/pci: Factor out interrupt policy check
-> >   cxl/mem: Configure dynamic capacity interrupts
-> >   cxl/core: Return endpoint decoder information from region search
-> >   cxl/extent: Process dynamic partition events and realize region
-> >     extents
-> >   cxl/region/extent: Expose region extent information in sysfs
-> >   dax/bus: Factor out dev dax resize logic
-> >   dax/region: Create resources on DAX regions
-> >   cxl/region: Read existing extents on region creation
-> >   cxl/mem: Trace Dynamic capacity Event Record
-> >   tools/testing/cxl: Make event logs dynamic
-> >   tools/testing/cxl: Add DC Regions to mock mem data
-> > 
-> >  Documentation/ABI/testing/sysfs-bus-cxl |  100 ++-
-> >  drivers/cxl/core/Makefile               |    2 +-
-> >  drivers/cxl/core/cdat.c                 |   11 +
-> >  drivers/cxl/core/core.h                 |   47 +-
-> >  drivers/cxl/core/extent.c               |  471 +++++++++++
-> >  drivers/cxl/core/hdm.c                  |   13 +-
-> >  drivers/cxl/core/mbox.c                 |  770 ++++++++++++++++-
-> >  drivers/cxl/core/memdev.c               |   87 +-
-> >  drivers/cxl/core/port.c                 |    5 +
-> >  drivers/cxl/core/region.c               |   43 +-
-> >  drivers/cxl/core/region_dax.c           |    6 +
-> >  drivers/cxl/core/trace.h                |   65 ++
-> >  drivers/cxl/cxl.h                       |   60 +-
-> >  drivers/cxl/cxlmem.h                    |  124 ++-
-> >  drivers/cxl/mem.c                       |    2 +-
-> >  drivers/cxl/pci.c                       |  115 ++-
-> >  drivers/dax/bus.c                       |  360 ++++++--
-> >  drivers/dax/bus.h                       |    4 +-
-> >  drivers/dax/cxl.c                       |   71 +-
-> >  drivers/dax/dax-private.h               |   40 +
-> >  drivers/dax/hmem/hmem.c                 |    2 +-
-> >  drivers/dax/pmem.c                      |    2 +-
-> >  include/cxl/cxl.h                       |    6 +
-> >  include/cxl/event.h                     |   39 +
-> >  include/linux/ioport.h                  |    3 +
-> >  tools/testing/cxl/Kbuild                |    5 +-
-> >  tools/testing/cxl/test/mem.c            | 1018 ++++++++++++++++++++---
-> >  27 files changed, 3210 insertions(+), 261 deletions(-)
-> >  create mode 100644 drivers/cxl/core/extent.c
-> > 
-> > -- 
-> > 2.43.0
-> > 
-> 
-> what commit or branch does this apply on top of? Not v7.0...
-> 
-> Thanks!
-> John
+CPU 0                     CPU 1
+======                    ======
+delete_region_store()
+  cxlr = cxl_find_region_by_name()
+                          delete_region_store()
+                            cxlr = cxl_find_region_by_name()
+  devm_release_action()
+                            devm_release_action()
+                            // cannot find the action, WARN_ON()
 
-I've bounced around about the best way to do this, but I'm working on 
-one patch at the end of this series that fixes up the tagged extent handling
-to concatenate together all extents that share the same tag into one 
-daxdev, in sequence number order (and fail if any of the extent boundaries 
-are misaligned). The DPA ranges of the extents don't matter, provided the
-boundary alignment is good. And the extents get assembled in sequence
-number order, not DPA order.
+scenario 2: delete parent and child concurrently [1]
 
-Once we've agreed it's right, I'll help with squashing it sensibly if you like.
+CPU0                                    CPU1
+devres_release_all()
+   // take devres_lock
+   remove_nodes(devres_head) // mv to local todo
+   // drop devres_lock                   delete_region_store()
+                                           cxlr = cxl_find_region_by_name()  // success
+                                           devm_release_action(unregister_region)
+                                             devres_release()
+                                               devres_remove()
+                                                 // hold devres_lock
+                                                 find_dr(devres_head) // does not find it
+                                             WARN_ON(-ENOENT)
+   release_nodes() // drain todo
+     unregister_region(cxlr) // release() cb
+       device_del()
 
-I'm close, but it's not quite ready. I should be able to send it Wednesday.
+To fix scenario 1, delete_region_store() directly calls
+unregister_region() with a test_and_set_bit(CXL_REGION_F_UNREGISTER).
+Also, replace devm_release_action() to devm_remove_action() as
+unregister_region() is now called directly.
 
-Then I'll try to channel Jonathan and to a general review pass on the series.
-Actually, maybe I'll try to program AI Jonathan :D
+To fix scenario 2, delete_region_store() removes actions only if the
+driver is still attached. To ensure this, scoped_guard(device,
+port->uport_dev) is required to check port->uport_dev->driver.
+To hold this lock, a workqueue is required for a clean context.
 
-Thanks for what you do Anisa,
-John
+Splat:
+
+WARNING: drivers/base/devres.c:824 at devm_release_action drivers/base/devres.c:824 [inline], CPU#0: syz.1.12224/47589
+WARNING: drivers/base/devres.c:824 at devm_release_action+0x2b2/0x360 drivers/base/devres.c:817, CPU#0: syz.1.12224/47589
+
+[1] https://lore.kernel.org/linux-cxl/20260310183644.4rwc7ilmzy4t5xp6@offworld/
+
+Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
+Suggested-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
+---
+V1: https://lore.kernel.org/linux-cxl/20260308185958.2453707-2-iam@sung-woo.kim/
+V1->V2:
+- Made devm_remove_action() asynchronous.
+- Made unregister_region() idempotent.
+- Addressed Dan's comments and added the suggested-by tag.
+
+ drivers/cxl/core/region.c | 45 ++++++++++++++++++++++++++++++++++++---
+ drivers/cxl/cxl.h         |  8 +++++++
+ 2 files changed, 50 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index e50dc716d4e8..64db0d332c13 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -39,6 +39,7 @@
+ static nodemask_t nodemask_region_seen = NODE_MASK_NONE;
+ 
+ static struct cxl_region *to_cxl_region(struct device *dev);
++static void remove_devm_actions_work(struct work_struct *work);
+ 
+ #define __ACCESS_ATTR_RO(_level, _name) {				\
+ 	.attr	= { .name = __stringify(_name), .mode = 0444 },		\
+@@ -2543,6 +2544,9 @@ static void unregister_region(void *_cxlr)
+ 	struct cxl_region_params *p = &cxlr->params;
+ 	int i;
+ 
++	if (test_and_set_bit(CXL_REGION_F_UNREGISTER, &cxlr->flags))
++		return;
++
+ 	device_del(&cxlr->dev);
+ 
+ 	/*
+@@ -2589,6 +2593,8 @@ static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd, int i
+ 	dev->type = &cxl_region_type;
+ 	cxl_region_setup_flags(cxlr, &cxlrd->cxlsd.cxld);
+ 
++	INIT_WORK(&cxlr->remove_work, remove_devm_actions_work);
++
+ 	return cxlr;
+ }
+ 
+@@ -2831,20 +2837,53 @@ cxl_find_region_by_name(struct cxl_root_decoder *cxlrd, const char *name)
+ 	return to_cxl_region(region_dev);
+ }
+ 
++static void remove_devm_actions_work(struct work_struct *work)
++{
++	struct cxl_region *cxlr = container_of(work, typeof(*cxlr), remove_work);
++	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
++	struct cxl_port *port = to_cxl_port(cxlrd->cxlsd.cxld.dev.parent);
++
++	if (test_and_set_bit(CXL_REGION_F_DEVM_REMOVE, &cxlr->flags)) {
++		put_device(&cxlr->dev);
++		return;
++	}
++
++	scoped_guard(device, port->uport_dev) {
++		if (port->uport_dev->driver)
++			devm_remove_action(port->uport_dev, unregister_region, cxlr);
++	}
++
++	put_device(&cxlr->dev);
++}
++
++static int remove_devm_actions(struct cxl_region *cxlr)
++{
++	if (!schedule_work(&cxlr->remove_work))
++		return -EBUSY;
++
++	return 0;
++}
++
+ static ssize_t delete_region_store(struct device *dev,
+ 				   struct device_attribute *attr,
+ 				   const char *buf, size_t len)
+ {
+ 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
+-	struct cxl_port *port = to_cxl_port(dev->parent);
+ 	struct cxl_region *cxlr;
++	int rc;
+ 
++	/* remove_devm_actions_work() will put cxlr->dev. */
+ 	cxlr = cxl_find_region_by_name(cxlrd, buf);
+ 	if (IS_ERR(cxlr))
+ 		return PTR_ERR(cxlr);
+ 
+-	devm_release_action(port->uport_dev, unregister_region, cxlr);
+-	put_device(&cxlr->dev);
++	unregister_region(cxlr);
++
++	rc = remove_devm_actions(cxlr);
++	if (rc) {
++		put_device(&cxlr->dev);
++		return rc;
++	}
+ 
+ 	return len;
+ }
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 1297594beaec..75ec292a9f42 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -447,6 +447,12 @@ struct cxl_region_params {
+  */
+ #define CXL_REGION_F_NORMALIZED_ADDRESSING 3
+ 
++/* Indicate that this region is being unregistered to prevent a race. */
++#define CXL_REGION_F_UNREGISTER 4
++
++/* Indicate that this region called devm_remove_action. */
++#define CXL_REGION_F_DEVM_REMOVE 5
++
+ /**
+  * struct cxl_region - CXL region
+  * @dev: This region's device
+@@ -462,6 +468,7 @@ struct cxl_region_params {
+  * @coord: QoS access coordinates for the region
+  * @node_notifier: notifier for setting the access coordinates to node
+  * @adist_notifier: notifier for calculating the abstract distance of node
++ * @remove_work: trigger the remove action in a safe context to acquire locks
+  */
+ struct cxl_region {
+ 	struct device dev;
+@@ -477,6 +484,7 @@ struct cxl_region {
+ 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
+ 	struct notifier_block node_notifier;
+ 	struct notifier_block adist_notifier;
++	struct work_struct remove_work;
+ };
+ 
+ struct cxl_nvdimm_bridge {
+-- 
+2.47.3
+
