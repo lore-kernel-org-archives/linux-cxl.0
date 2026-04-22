@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3220B3ED105;
-	Wed, 22 Apr 2026 14:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EA223E33D;
+	Wed, 22 Apr 2026 14:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776868982; cv=none; b=B8Rw1Ic5S5johuTvq1/ReLHJlNBOiaqG1A+VdH2wDpWoe48lSehK4kMy9h8DuQ4nQaRNmVMYEU5TRuYTC6/OzWaHGIifdQ4Pns1DYAyq87PzVob5wEuNc3itEJ4IdfMLYnIs9NdeCPIij/61iJG48N8Wj4CzWZp/+fF0vYiYuGI=
+	t=1776869558; cv=none; b=MOtnWuu8ERNRpX+uTkQZHsDDGbLjxk7MN3n0wxxNJ7ey5383iPEdnxxdMrTn5UFxRdUXkmcwqz4kZPOrwGcT9WUS2DPSQVLst45q5Qa88u+hyEQKViT9Zv8uuKsrwVsWk2/ZHyjO6+3NrA21E64p2G/LXejyrmvoZ6+ZGacgLqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776868982; c=relaxed/simple;
-	bh=QLmTzE04VCPNN3oLklmEfcXshpdYx0l3Gur3dKpm9JY=;
+	s=arc-20240116; t=1776869558; c=relaxed/simple;
+	bh=9POO/x0VfL63iKkVn4iXRczR0qsJ4xsTjBpObnePjPk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DYQUvZ79mYVj/H/QMNYwknVzpjOELVElSShXv3+K1IMZoo3TL29MiKIro1Ei+15eu95xGeeyQdrmW3zYA9Uac449xFCtf/jVuSfezXS8T8/IV+xyC3lgaiBgnPPRp8C5dp2F8HlTJ+PtdoMkT4RsE/1ZLvXFL1EH8pGfYEEOoTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ihFQkusi; arc=none smtp.client-ip=198.175.65.10
+	 In-Reply-To:Content-Type; b=QRxIRsbB8pGHu9TFINoyZc+7aFMFzPVMM+/mOgubGHc3dms2r8xA6nBR4HKEz+jpurmdZXZ5/2HcD0U4E/cDSBsaAcARpgWje4fi2cDCVjwi1ah+mYL81xgG26HMdl9Qu2kBU28ZJdhvw3G7SzB0p9GcAM3W2awQoBilqd6Vy3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CSevka53; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ihFQkusi"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CSevka53"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776868981; x=1808404981;
+  t=1776869557; x=1808405557;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=QLmTzE04VCPNN3oLklmEfcXshpdYx0l3Gur3dKpm9JY=;
-  b=ihFQkusiDbbGbAjV50gymM8QJ59AhHCVlARtDuhutmoq8SYdbaFMZkR9
-   TmU5eQeF0VGqxNiytnfgR66kvH5RZVzdPG/o6vGWD6JujlqKpFTXqX7/0
-   HrsV8v7WQrJyUKehLGtGGz/gxd/yP0tC3WQBlfCR0ewsZUbjAYdstQq8m
-   Z/03ZgRGb1DVTgIfK+13wzXy4u/vANBZqnI0mV8RL5rvneg7E+RkS6yBf
-   msUrCwp3LK2Wus4zhmrAYE46hKYO2VhDo/hCJVC/yGr8fuvl35uhRgnRc
-   GK8lrjW46N1Mhpq1GcYcDuh/yk+e0wg0h3wDrGdv/3e0ULFpib/WHtSJa
-   A==;
-X-CSE-ConnectionGUID: 9LP2r8blQ0O59eYhBa5EFQ==
-X-CSE-MsgGUID: Qx93FkEzRiOHWXcOZMLc6A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11764"; a="95237547"
+  bh=9POO/x0VfL63iKkVn4iXRczR0qsJ4xsTjBpObnePjPk=;
+  b=CSevka53QNxIG4wx+OzFzqMenBM36PBJ58jyCci5sbyd1yvfsQIo5uNV
+   pqcaY35sriCNWHBsiCiWFzOon5Wh984AqorTZg42cgrYCuwIt7kwB5cvz
+   JQ4teOtHCW5ha8WD0WzfeVY7hdZLAU3s2yiW2S47yTFbSy49muCw/sRXq
+   ypBYR5lw/bxZ8rxFF0mWUvdjaIXBxFbze3Bjc2xCZ5hxYrD37X2ba6uc/
+   Asm2uhl1k61sJ9oT+d8aEEjNz79zRuKKsFx2V8LJluUTHP/QMRG8+L58E
+   a9NHaCU68jzXbDWxOls6NFF3sBbLmA2vBIuLBrdKdn440XsRnAqZRp+82
+   Q==;
+X-CSE-ConnectionGUID: NeNPcSvTQBWdMnBLV5NrvQ==
+X-CSE-MsgGUID: SVYYt/9SRzahS5nnZyRMFA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11764"; a="81434579"
 X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
-   d="scan'208";a="95237547"
+   d="scan'208";a="81434579"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 07:43:01 -0700
-X-CSE-ConnectionGUID: s7P7ceMmRa6XgjqvtARLNQ==
-X-CSE-MsgGUID: 8zM6YAHZRrGtvjiFB/r1XA==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 07:52:36 -0700
+X-CSE-ConnectionGUID: UWoPUBgrRharWIGOpcI7pw==
+X-CSE-MsgGUID: ltYWA/tkQle0ObgyP26+PQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
-   d="scan'208";a="227789130"
+   d="scan'208";a="227790161"
 Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.111.207]) ([10.125.111.207])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 07:42:59 -0700
-Message-ID: <91a0734e-09df-4172-a28b-a6443dfe313a@intel.com>
-Date: Wed, 22 Apr 2026 07:42:57 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 07:52:35 -0700
+Message-ID: <3295ea6a-f177-4a34-bdf6-6a4cf7731972@intel.com>
+Date: Wed, 22 Apr 2026 07:52:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,104 +52,87 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] cxl/memdev: Hold memdev lock during memdev poison
- injection/clear
-To: Li Ming <ming.li@zohomail.com>
-Cc: driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Ira Weiny <ira.weiny@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Danilo Krummrich <dakr@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ben Cheatham <benjamin.cheatham@amd.com>, Dan Williams <djbw@kernel.org>
-References: <20260314-fix_access_endpoint_without_drv_check-v2-0-4c09edf2e1db@zohomail.com>
- <20260314-fix_access_endpoint_without_drv_check-v2-2-4c09edf2e1db@zohomail.com>
- <c784d84c-e8ac-4c87-abec-3d4e64f074a2@intel.com>
- <d2ed94ec-e5c7-4b6b-9fe8-68f22bd632ad@zohomail.com>
- <dfc0979a-b01a-4c90-8bc8-7a60fb795dc7@intel.com>
- <69da9fa696d0f_6c31a100e8@djbw-dev.notmuch>
- <778c8dc5-b65e-4b1f-be13-8bfb960cefc3@zohomail.com>
- <92f138f9-b041-461d-b159-ff1bc265bbee@intel.com>
- <6b967b54-ade8-4398-b4c1-2cdb755ab684@zohomail.com>
+Subject: Re: [PATCH] cxl/dax: assign target node to cxl memdev during dax
+ region probe
+To: liuqiqi@kylinos.cn, Dan Williams <djbw@kernel.org>
+Cc: Vishal Verma <vishal.l.verma@intel.com>, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260422060353.200821-1-liuqiqi@kylinos.cn>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <6b967b54-ade8-4398-b4c1-2cdb755ab684@zohomail.com>
+In-Reply-To: <20260422060353.200821-1-liuqiqi@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 4/22/26 5:09 AM, Li Ming wrote:
+On 4/21/26 11:03 PM, liuqiqi@kylinos.cn wrote:
+> From: liuqiqi <liuqiqi@kylinos.cn>
 > 
-> 在 2026/4/21 23:29, Dave Jiang 写道:
->>
->> On 4/21/26 3:48 AM, Li Ming wrote:
->>> 在 2026/4/12 03:23, Dan Williams 写道:
->>>> Dave Jiang wrote:
->>>>> On 3/18/26 4:59 AM, Li Ming wrote:
->>>>>> 在 2026/3/17 23:00, Dave Jiang 写道:
->>>>>>> On 3/14/26 12:06 AM, Li Ming wrote:
->>>>>>>> CXL memdev poison injection/clearing debugfs interfaces are visible
->>>>>>>> before the CXL memdev endpoint initialization, If user accesses the
->>>>>>>> interfaces before cxlmd->endpoint updated, it is possible to access an
->>>>>>>> invalid endpoint in cxl_dpa_to_region().
->>>>>>>>
->>>>>>>> Hold CXL memdev lock at the beginning of the interfaces, this blocks the
->>>>>>>> interfaces until CXL memdev probing completed.
->>>>>>>>
->>>>>>>> The following patch will check the given endpoint validity in
->>>>>>>> cxl_dpa_to_region().
->>>>>>>>
->>>>>>>> Suggested-by: Dan Williams <dan.j.williams@intel.com>
->>>>>>>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->>>>>>>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
->>>>>>>> Signed-off-by: Li Ming <ming.li@zohomail.com>
->>>>>>> Hi Ming, I dropped this patch with Dan's comments [1] and updated cxl/next. Please check and make sure everything looks ok to you. Thanks!
->>>>>>>
->>>>>>> [1]: https://lore.kernel.org/linux-cxl/69b8b81621e16_452b100e@dwillia2-mobl4.notmuch/
->>>>>> Hi Dave,
->>>>>>
->>>>>> I think there is no change needed in this patch, just need a independent patch for holding memdev lock in cxl_region_debugfs_poison_inject/clear.
->>>>>>
->>>>>> Or you want to review this patch again?
->>>>> No. Maybe I misunderstood the comment from Dan. So we should keep this patch?
->>>> tl;dr: yes, this patch is *now* valid.
->>>>
->>>> As originally structured having patch2 before patch3 added no value.
->>>> Going forward I would say do not structure a series such that a new lock
->>>> taken in patch N starts being useful in patch N+1.
->>>>
->>>> I assume that is what:
->>>>
->>>> "The following patch will check the given endpoint validity in
->>>> cxl_dpa_to_region()."
->>>>
->>>> ...is trying to say, but when commits are applied to the tree it is
->>>> difficult to see that this commit was from a series.
->>>>
->>>> So do pick this one up, but the changelog needs adjusting. Something
->>>> like:
->>>>
->>>> "cxl_dpa_to_region() assumes that it is running a context where it is not
->>>> racing changes to "cxlmd->dev.driver". Acquire the memdev device lock in
->>>> the debugfs entry points to preclude debugfs usage racing cxl_mem driver
->>>> detach."
->>>>
->>>> With that you can add:
->>>>
->>>> Reviewed-by: Dan Williams <djbw@kernel.org>
->>> Hi Dave,
->>>
->>> Will you pick this patch with changes from Dan's comment? Or I need to send out a new version?
->> I believe it's merged into linus/master already. Can you check and see if everything looks correct?
+> When a cxl_dax_region is probed, set the numa_node of associated
+> cxl_memdev devices to match the target node derived from the region's
+> address range.
+> The cxl_dax_region_probe function computes the correct target node (nid)
+> via phys_to_target_node() but does not propagate this information to
+> the underlying cxl_memdev devices. This can cause memory allocations
+> to use an incorrect NUMA node.
 > 
-> I don't see this patch in linus/master or cxl/next. I remember you dropped it after applying the patchset to cxl/next.
+> Environment: node0/node1 = DRAM, node2 = CXL memory.
+> Before this fix:
+>   # cat /sys/bus/cxl/devices/mem0/numa_node
+>   1
+> After this fix:
+>   # cat /sys/bus/cxl/devices/mem0/numa_node
+>   2
+> 
+> Signed-off-by: liuqiqi <liuqiqi@kylinos.cn>
 
-Oh then can you please just resubmit it with updates? That way I don't mess it up. Thanks!
+Thank you for the patch but NAK. The memdev numa node reflects the same numa node that is set for the parent 'struct pci_dev'. It's where the physical location of the device slot is NUMA wise. It may not be the same NUMA node compare to the region where it is based on the host physical address of the region.
 
+DJ
+
+> ---
+>  drivers/dax/cxl.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> 
-> Ming
-> 
+> diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
+> index 3ab39b77843d..a62af46ec31e 100644
+> --- a/drivers/dax/cxl.c
+> +++ b/drivers/dax/cxl.c
+> @@ -4,8 +4,27 @@
+>  #include <linux/dax.h>
+>  
+>  #include "../cxl/cxl.h"
+> +#include "../cxl/cxlmem.h"
+>  #include "bus.h"
+>  
+> +static void cxl_dax_set_numa_node(struct cxl_region *cxlr, int nid)
+> +{
+> +	struct cxl_region_params *p;
+> +	struct cxl_endpoint_decoder *cxled;
+> +	struct cxl_memdev *cxlmd;
+> +	int i;
+> +
+> +	p = &cxlr->params;
+> +	for (i = 0; i < p->nr_targets; i++) {
+> +		cxled = p->targets[i];
+> +		if (!cxled)
+> +			continue;
+> +
+> +		cxlmd = cxled_to_memdev(cxled);
+> +		set_dev_node(&cxlmd->dev, nid);
+> +	}
+> +}
+> +
+>  static int cxl_dax_region_probe(struct device *dev)
+>  {
+>  	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
+> @@ -28,6 +47,7 @@ static int cxl_dax_region_probe(struct device *dev)
+>  		.size = range_len(&cxlr_dax->hpa_range),
+>  		.memmap_on_memory = true,
+>  	};
+> +	cxl_dax_set_numa_node(cxlr, nid);
+>  
+>  	return PTR_ERR_OR_ZERO(devm_create_dev_dax(&data));
+>  }
 
