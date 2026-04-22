@@ -1,132 +1,143 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B55B6221F2F;
-	Wed, 22 Apr 2026 06:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776837878; cv=none; b=XpnzteBraOEZd+SMCpvYn9yJLSmWHltvXCyh4bb1IGvHDXdwb6L+ZcyALYNas1oxWR2AAjH6mHteJboO60Bmk6MnDzV4QLunBkg1E40KsZ6WjDbTssB8CvPxKPMDU1oaHbukfM3++UExEeHGhCMHK4tn8Srf9nG1k40RNz72vyA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776837878; c=relaxed/simple;
-	bh=4sdtm3kcfxi15Z1XpOSwj0brhn7USfL3qPuIppGv3xI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Fb+d/w9PnGX0UrHJ/cfAAZTevKuiE5qFxR/WItJ4Kfw//SkCMOKD6KnLOEFALoDA/NslaEbKdgJqVYF2Tmp71XREQi6zHdkU0V6rLHN+Z6RRV3/SsbTmb/aaV8/SV6Nf1jDkeuOtATeLlCttQep7H6N6JYLtWajoQQVZkLHTECk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 1a71d48a3e1111f1aa26b74ffac11d73-20260422
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_SJ_LANG
-	HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN
-	HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NAME, IP_TRUSTED
-	SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SPF_NOPASS, DKIM_NOPASS
-	DMARC_NOPASS, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS
-	GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:d6568489-323b-4af7-92b5-7e5013d4f5f7,IP:15,
-	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:35
-X-CID-INFO: VERSION:1.3.12,REQID:d6568489-323b-4af7-92b5-7e5013d4f5f7,IP:15,UR
-	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:35
-X-CID-META: VersionHash:e7bac3a,CLOUDID:4ca9574ad7c8cd59317a3a5d7bb99fab,BulkI
-	D:260422140421SPQYUZ2R,BulkQuantity:0,Recheck:0,SF:17|19|66|78|102|123|127
-	|850|898,TC:nil,Content:0|15|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil
-	,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:
-	0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 1a71d48a3e1111f1aa26b74ffac11d73-20260422
-X-User: liuqiqi@kylinos.cn
-Received: from localhost.localdomain [(39.156.73.13)] by mailgw.kylinos.cn
-	(envelope-from <liuqiqi@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1030496338; Wed, 22 Apr 2026 14:04:20 +0800
-From: liuqiqi@kylinos.cn
-To: Dan Williams <djbw@kernel.org>
-Cc: Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	liuqiqi <liuqiqi@kylinos.cn>
-Subject: [PATCH] cxl/dax: assign target node to cxl memdev during dax region probe
-Date: Wed, 22 Apr 2026 14:03:53 +0800
-Message-Id: <20260422060353.200821-1-liuqiqi@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545623CE4BB;
+	Wed, 22 Apr 2026 12:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776859802; cv=pass; b=LSy/FHwH3jg3nd1OsV8vTKtSfOb/omth9/NaCLOQhoELJzUSoKrAXlsFXAz86h4JefrntQ86z29NRNcP3fAUndu6rMJaDroybfptVvhFN2AyPY8CWnlyTj3cCpnI2ODP88kd5v+B1fOSAgmaJNo7be3+3IEg6ewXWZSv7M7ZZ50=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776859802; c=relaxed/simple;
+	bh=STE4d+wvx0hoLPp5MVn8a3Wlkg7ArATVNeymKFpTVMI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HesUAU4ue1Q7CXPzmszCUZ+AzHFDobUIMzTjqkqEHfO/nuPvMSU5WEsUdSqrPDXsW3AFdOC0es6TkfjycWWaTzQXLoypEb1Kz8sKFtqS0aoZrjgJd9Y2oFZD/jLabl6Khjgz+IIPK7gpjanjirdvaouv4bJjXp8BNgt66wAGirY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=V5OAhzFh; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="V5OAhzFh"
+ARC-Seal: i=1; a=rsa-sha256; t=1776859781; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=aCGDY5mGfjmPfG3dPkX/UA9TY2ML5MIFg5IQCgazhub/USUpy5GhkIdM0WzK9NMq68l3KxsS9gX2aOfg1nzsqzuyJVh37ex2sBjV7oQvLEfogJaFuT6Ww794vEVFuCiiSj5UKxoJ5XwmOT+61X4XbfsDSEqJr7V16VtWXZ7XxUU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1776859781; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=5v9bGqpTNxIAm+bo73TwmO9KlGUD6jTG8P4mKSEy4uA=; 
+	b=GYm89NRXRW1ew65v5M5/iqAk4GsNoO9g48ieRfbrXQ8cBAT/+F64BifgYN3JGRoHnv1qaSyzfdLEKib1tLxYQmxCdT2JiqZ2S3MjdXsPLj8kudPf3JGQX6ksef+wzbi2U9Hy0D6MbGMwD9qbzgqRvszPAqjTUYkLCVcwWawEkWs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1776859781;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=5v9bGqpTNxIAm+bo73TwmO9KlGUD6jTG8P4mKSEy4uA=;
+	b=V5OAhzFhAhqGog2hpc6qO41tEAEOz1ulAy2K2Hc3fq+Fo9ZKQywDT4/Ttn765OBr
+	MXYGbMuEToSewm0VpflofzRVFECevi+dH8jOUJb6hwsv2ZOgwmtnzvqK2Zz9vtL/MeL
+	0msdqwvWOexBa2a1OuJAQ04y53DqyVnKw3EJBP7I=
+Received: by mx.zohomail.com with SMTPS id 1776859779233435.4564064357088;
+	Wed, 22 Apr 2026 05:09:39 -0700 (PDT)
+Message-ID: <6b967b54-ade8-4398-b4c1-2cdb755ab684@zohomail.com>
+Date: Wed, 22 Apr 2026 20:09:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] cxl/memdev: Hold memdev lock during memdev poison
+ injection/clear
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Ira Weiny <ira.weiny@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Danilo Krummrich <dakr@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ben Cheatham <benjamin.cheatham@amd.com>, Dan Williams <djbw@kernel.org>
+References: <20260314-fix_access_endpoint_without_drv_check-v2-0-4c09edf2e1db@zohomail.com>
+ <20260314-fix_access_endpoint_without_drv_check-v2-2-4c09edf2e1db@zohomail.com>
+ <c784d84c-e8ac-4c87-abec-3d4e64f074a2@intel.com>
+ <d2ed94ec-e5c7-4b6b-9fe8-68f22bd632ad@zohomail.com>
+ <dfc0979a-b01a-4c90-8bc8-7a60fb795dc7@intel.com>
+ <69da9fa696d0f_6c31a100e8@djbw-dev.notmuch>
+ <778c8dc5-b65e-4b1f-be13-8bfb960cefc3@zohomail.com>
+ <92f138f9-b041-461d-b159-ff1bc265bbee@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <92f138f9-b041-461d-b159-ff1bc265bbee@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Feedback-ID: zu08011227289e85931126fb188b91240800007f1d1981d1187c78e986ef90ea07435d87ed8b6def0442e595:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-From: liuqiqi <liuqiqi@kylinos.cn>
 
-When a cxl_dax_region is probed, set the numa_node of associated
-cxl_memdev devices to match the target node derived from the region's
-address range.
-The cxl_dax_region_probe function computes the correct target node (nid)
-via phys_to_target_node() but does not propagate this information to
-the underlying cxl_memdev devices. This can cause memory allocations
-to use an incorrect NUMA node.
+在 2026/4/21 23:29, Dave Jiang 写道:
+>
+> On 4/21/26 3:48 AM, Li Ming wrote:
+>> 在 2026/4/12 03:23, Dan Williams 写道:
+>>> Dave Jiang wrote:
+>>>> On 3/18/26 4:59 AM, Li Ming wrote:
+>>>>> 在 2026/3/17 23:00, Dave Jiang 写道:
+>>>>>> On 3/14/26 12:06 AM, Li Ming wrote:
+>>>>>>> CXL memdev poison injection/clearing debugfs interfaces are visible
+>>>>>>> before the CXL memdev endpoint initialization, If user accesses the
+>>>>>>> interfaces before cxlmd->endpoint updated, it is possible to access an
+>>>>>>> invalid endpoint in cxl_dpa_to_region().
+>>>>>>>
+>>>>>>> Hold CXL memdev lock at the beginning of the interfaces, this blocks the
+>>>>>>> interfaces until CXL memdev probing completed.
+>>>>>>>
+>>>>>>> The following patch will check the given endpoint validity in
+>>>>>>> cxl_dpa_to_region().
+>>>>>>>
+>>>>>>> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+>>>>>>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>>>>>>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+>>>>>>> Signed-off-by: Li Ming <ming.li@zohomail.com>
+>>>>>> Hi Ming, I dropped this patch with Dan's comments [1] and updated cxl/next. Please check and make sure everything looks ok to you. Thanks!
+>>>>>>
+>>>>>> [1]: https://lore.kernel.org/linux-cxl/69b8b81621e16_452b100e@dwillia2-mobl4.notmuch/
+>>>>> Hi Dave,
+>>>>>
+>>>>> I think there is no change needed in this patch, just need a independent patch for holding memdev lock in cxl_region_debugfs_poison_inject/clear.
+>>>>>
+>>>>> Or you want to review this patch again?
+>>>> No. Maybe I misunderstood the comment from Dan. So we should keep this patch?
+>>> tl;dr: yes, this patch is *now* valid.
+>>>
+>>> As originally structured having patch2 before patch3 added no value.
+>>> Going forward I would say do not structure a series such that a new lock
+>>> taken in patch N starts being useful in patch N+1.
+>>>
+>>> I assume that is what:
+>>>
+>>> "The following patch will check the given endpoint validity in
+>>> cxl_dpa_to_region()."
+>>>
+>>> ...is trying to say, but when commits are applied to the tree it is
+>>> difficult to see that this commit was from a series.
+>>>
+>>> So do pick this one up, but the changelog needs adjusting. Something
+>>> like:
+>>>
+>>> "cxl_dpa_to_region() assumes that it is running a context where it is not
+>>> racing changes to "cxlmd->dev.driver". Acquire the memdev device lock in
+>>> the debugfs entry points to preclude debugfs usage racing cxl_mem driver
+>>> detach."
+>>>
+>>> With that you can add:
+>>>
+>>> Reviewed-by: Dan Williams <djbw@kernel.org>
+>> Hi Dave,
+>>
+>> Will you pick this patch with changes from Dan's comment? Or I need to send out a new version?
+> I believe it's merged into linus/master already. Can you check and see if everything looks correct?
 
-Environment: node0/node1 = DRAM, node2 = CXL memory.
-Before this fix:
-  # cat /sys/bus/cxl/devices/mem0/numa_node
-  1
-After this fix:
-  # cat /sys/bus/cxl/devices/mem0/numa_node
-  2
+I don't see this patch in linus/master or cxl/next. I remember you 
+dropped it after applying the patchset to cxl/next.
 
-Signed-off-by: liuqiqi <liuqiqi@kylinos.cn>
----
- drivers/dax/cxl.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
-index 3ab39b77843d..a62af46ec31e 100644
---- a/drivers/dax/cxl.c
-+++ b/drivers/dax/cxl.c
-@@ -4,8 +4,27 @@
- #include <linux/dax.h>
- 
- #include "../cxl/cxl.h"
-+#include "../cxl/cxlmem.h"
- #include "bus.h"
- 
-+static void cxl_dax_set_numa_node(struct cxl_region *cxlr, int nid)
-+{
-+	struct cxl_region_params *p;
-+	struct cxl_endpoint_decoder *cxled;
-+	struct cxl_memdev *cxlmd;
-+	int i;
-+
-+	p = &cxlr->params;
-+	for (i = 0; i < p->nr_targets; i++) {
-+		cxled = p->targets[i];
-+		if (!cxled)
-+			continue;
-+
-+		cxlmd = cxled_to_memdev(cxled);
-+		set_dev_node(&cxlmd->dev, nid);
-+	}
-+}
-+
- static int cxl_dax_region_probe(struct device *dev)
- {
- 	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
-@@ -28,6 +47,7 @@ static int cxl_dax_region_probe(struct device *dev)
- 		.size = range_len(&cxlr_dax->hpa_range),
- 		.memmap_on_memory = true,
- 	};
-+	cxl_dax_set_numa_node(cxlr, nid);
- 
- 	return PTR_ERR_OR_ZERO(devm_create_dev_dax(&data));
- }
--- 
-2.25.1
+Ming
 
