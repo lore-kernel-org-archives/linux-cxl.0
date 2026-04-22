@@ -1,270 +1,199 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62821624D5;
-	Wed, 22 Apr 2026 15:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6658314A6B
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Apr 2026 17:37:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776870609; cv=none; b=NzxozuVAEkegYSP7U4/kN1Z2ELjiWgiur/gUsISq9DadWHome/lzn0v8HWEu0iDkBaXE1qCyIblLExjKXz3qri1+lY/JIrstid/SSpj3G0xZusGy6PX/kZit3oUgbg6TF9kcCy6HAZQZWMVwbdiQ4CWfAhCSKeEKTNdVi1qJEOQ=
+	t=1776879436; cv=none; b=Bdi27kI9bqGKXIyQ7kQEljPjsSfGnh6XQCMxOZnOLdzNXizjF+yBs5Ys/zqgOG61kECOC70+kfCjcnre26bEyakRiwrtbE8FOK+8D0vyWAHkihHudkUgpqRr4x8wEs7Ivdo4n7PKDog8A6yYWLsxP/7mpnOYWFdPiMvAX6a0Z0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776870609; c=relaxed/simple;
-	bh=Zmpt1puC6wng8MZTklUXVo9nmVWRrIX611JK2y3jDD8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SPEEgMUvG5ugDyrbVtw0YCdAuFFCj2IrcIsMhRyqsccPWAnhyvP84vRx0osY8rdqAFe7mp+RO3qvawRZp3yw23idRbyzHTPqm8c4lahIhBmas3UZKZIYWwVuGr32TJUW7qML5eQkIvRnfctGBH9ak+79ktMxTgF5jMVctOwyitI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T/eGGa7r; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T/eGGa7r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776870606; x=1808406606;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Zmpt1puC6wng8MZTklUXVo9nmVWRrIX611JK2y3jDD8=;
-  b=T/eGGa7r1KrpHgKdLDPvsAYcVlZ6MHAyUyMuYxHGxolvVQ/E4U6uKneg
-   MC3HUuYBaiMWvspplqajhPObKvXqbm1e+vHizMo5nVCbv+eUbxQi1pU6r
-   5LeHt8DYQr3plsPAAHy16UIN44iGjgpqYwbIjFwKZxeuF2anN1UswniTC
-   HgRzftyd9YJVJ6y5V+S1QnwfrqhQBzXIJJZR7/aqkOvxQssuXKQTnOS80
-   6R/b8NSYy/of5nZqWB2jJApm3eRuyosLd/WUATSw0NrUNs5HjvRT/9r0P
-   xT4WqQuH64YidVsDb4wSfSvTYzHvVyReLPXak4NbhhC4dSsGTAzq+LrGK
-   g==;
-X-CSE-ConnectionGUID: ijiPHQcpSw2Olm57sMozTg==
-X-CSE-MsgGUID: uQFrLBthRgaZb69Fj/DYfw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11764"; a="81436935"
-X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
-   d="scan'208";a="81436935"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 08:10:05 -0700
-X-CSE-ConnectionGUID: v7p3KwMqS8KDs0ZOswqgDA==
-X-CSE-MsgGUID: NSOzrqWRRjCRXsv69TqoNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,193,1770624000"; 
-   d="scan'208";a="227795802"
-Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.111.207]) ([10.125.111.207])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2026 08:10:04 -0700
-Message-ID: <afb81a57-0dfc-4cd4-aba8-20d572a7f5aa@intel.com>
-Date: Wed, 22 Apr 2026 08:10:03 -0700
+	s=arc-20240116; t=1776879436; c=relaxed/simple;
+	bh=PEC67Z72ISCMHUutb9qe1/Y1CIJmRcte33AN4p2R2vs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mxORarjfDzsp7GpbmwKE+e+BUbNVJIOea6//JgWd1kixTIX+2LoUn8S1bIqPdD0OhUJKLq0TQpyIRYtk7FgV2G3ZFeJ6t8kfP9dhtkVN2E1oFRVlItp/zcNqkbxR4EBKipqvS74+xBF8RM/frsKAmeTJ1f1fpEn6Wwoxi74NWUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ba7a1cc0380so756581966b.2
+        for <linux-cxl@vger.kernel.org>; Wed, 22 Apr 2026 10:37:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1776879433; x=1777484233;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=XycB5P8XTGXaeVGqnVmOVfspQ1laZv9fkJpPGtynpSA=;
+        b=Zmhb6ba94bMGIRyTNWiw7+5J9e09UrsdfQWVjTNXm6BD0Ci0NK29hl4MxKZhmBApNb
+         MbD6/kmZtqFG5SAZ0NRPHmDxs9BWuGKa+y9fpr7UEIuyPxPQySPRthAlb8AEcX6dsB/B
+         m87U46gaTK8NSqFYiz/Rsx3iQMpcXiVY08M7iCw9rgBmqm+NxaQ0XxkexEDQvdOldHEr
+         AZrsxvT51aintfeiUN8IZr+mpgybP19szoQd1oN+Sn3zQ9f4FetpJj6aO6yKdmZFORQg
+         aDHJ9PqIb8YwBNLMSD5zs78+dskCsC/6ED3O0xW/e6vxqJOCvagNeZIeliT7j+52NLQY
+         Y6Xg==
+X-Forwarded-Encrypted: i=1; AFNElJ9RZn0Nl7RM9NBQRLkFeeZFs5Y7MJfiKczbo0790aXlCepHMxSaQMRsocMsEwPL5QVXEb+5b6xKIlg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxd1yqeYzZmYGG+5M3nOC9CXiQww25Df0FdUvl6I4UcEukYV3hj
+	GekWZj2h1cuWAGe4bIwKDd9QoiDQKlWtfibnztBLOdlE3BJHOxwMNz8A+Nge8t+/KxE=
+X-Gm-Gg: AeBDietAB9YsnPRXQWsxSTbvdibAaS+2UJEbGsYQVOv577806UhIcLkXtcTpVUfJqou
+	B3kjt3hgtAV/XHvA4FrTmrTBZZ18WAtbGTcRW6nS5Zyq6WlmzRljft17zce1g0Y7G2UBTWEGNB9
+	2J2tL0Sv6Klqlpyg9Ubg42V70IPcboJ0iwPSFUG6ca3OUKYD6UUdGVGjwVCn5Xqx3X70Ed+PuaB
+	FKgGOB11nnrA4nfx8OmNB+4CXWUmcGEQoujl4RVPHeF2sBRl0gcEZYxQ7fHob23vH0XzTWIyqwd
+	c3OOPIGdqwtrRMkT394dp5VuKDEZeoYCyOb4D+pWTJq7Cg+flDCQLy6e1W1omTZFugZDSJo2byL
+	z10O2pPj1Ei5N7Cunqbg9mOUmY2Keq4L7WCyRqsG1NmS2oFHLIPu0nQIniQgCuShoJOiRPje8M7
+	GsjDsUeaRSZ/QlW9vKU6dYHRm0Hykj+aKouZl8l267MYmizQDodUWX1fGK1iRAyXzUbuY0fuk=
+X-Received: by 2002:a17:907:803:b0:ba6:a05c:ac3f with SMTP id a640c23a62f3a-ba6a05cb5b6mr872015366b.4.1776879431901;
+        Wed, 22 Apr 2026 10:37:11 -0700 (PDT)
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ba454d1b694sm581998566b.29.2026.04.22.10.37.09
+        for <linux-cxl@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Apr 2026 10:37:10 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-676e62faf2bso2174978a12.1
+        for <linux-cxl@vger.kernel.org>; Wed, 22 Apr 2026 10:37:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+E9G3zyp/d/V95XstRtbcbky4+kkCQOhkRmzsr+vQmoPeiEYDDQMeKkTDChKRHRHaef22SnV0nvTY=@vger.kernel.org
+X-Received: by 2002:a17:907:7295:b0:ba7:3d21:c136 with SMTP id
+ a640c23a62f3a-ba73d3108d8mr812474966b.18.1776879429078; Wed, 22 Apr 2026
+ 10:37:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cxl/region: Fix a race bug in delete_region_store
-To: Sungwoo Kim <iam@sung-woo.kim>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jic23@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <djbw@kernel.org>, Ben Widawsky <bwidawsk@kernel.org>
-Cc: Dave Tian <daveti@purdue.edu>, Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260422045637.3048249-2-iam@sung-woo.kim>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260422045637.3048249-2-iam@sung-woo.kim>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260325143555.451852-1-herve.codina@bootlin.com> <20260325143555.451852-3-herve.codina@bootlin.com>
+In-Reply-To: <20260325143555.451852-3-herve.codina@bootlin.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 22 Apr 2026 19:36:55 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU7x7LWFkD9xiq+wyOqnn0bdzr+JLfvbBexoiWyv8kftA@mail.gmail.com>
+X-Gm-Features: AQROBzDRSuCo9KZmmr5oDnyHv4O1KWNwiPD4Dqbl5BIkN4nUOYnL3G8AwjYfgqE
+Message-ID: <CAMuHMdU7x7LWFkD9xiq+wyOqnn0bdzr+JLfvbBexoiWyv8kftA@mail.gmail.com>
+Subject: Re: [PATCH v6 02/27] of: dynamic: Fix overlayed devices not probing
+ because of fw_devlink
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kalle Niemi <kaleposti@gmail.com>, Matti Vaittinen <mazziesaccount@gmail.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
+	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Linus Walleij <linusw@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org, 
+	driver-core@lists.linux.dev, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Saravana Kannan <saravanak@google.com>, 
+	Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi Herv=C3=A9,
 
+CC Douglas
 
-On 4/21/26 9:56 PM, Sungwoo Kim wrote:
-> devm_release_action() cannot find a matching entry in the following two
-> race scenarios.
-> 
-> scenario 1: delete two same regions concurrently
-> 
-> CPU 0                     CPU 1
-> ======                    ======
-> delete_region_store()
->   cxlr = cxl_find_region_by_name()
->                           delete_region_store()
->                             cxlr = cxl_find_region_by_name()
->   devm_release_action()
->                             devm_release_action()
->                             // cannot find the action, WARN_ON()
-> 
-> scenario 2: delete parent and child concurrently [1]
-> 
-> CPU0                                    CPU1
-> devres_release_all()
->    // take devres_lock
->    remove_nodes(devres_head) // mv to local todo
->    // drop devres_lock                   delete_region_store()
->                                            cxlr = cxl_find_region_by_name()  // success
->                                            devm_release_action(unregister_region)
->                                              devres_release()
->                                                devres_remove()
->                                                  // hold devres_lock
->                                                  find_dr(devres_head) // does not find it
->                                              WARN_ON(-ENOENT)
->    release_nodes() // drain todo
->      unregister_region(cxlr) // release() cb
->        device_del()
-> 
-> To fix scenario 1, delete_region_store() directly calls
-> unregister_region() with a test_and_set_bit(CXL_REGION_F_UNREGISTER).
-> Also, replace devm_release_action() to devm_remove_action() as
-> unregister_region() is now called directly.
-> 
-> To fix scenario 2, delete_region_store() removes actions only if the
-> driver is still attached. To ensure this, scoped_guard(device,
-> port->uport_dev) is required to check port->uport_dev->driver.
-> To hold this lock, a workqueue is required for a clean context.
+On Wed, 25 Mar 2026 at 15:36, Herve Codina <herve.codina@bootlin.com> wrote=
+:
+> From: Saravana Kannan <saravanak@google.com>
+>
+> When an overlay is applied, if the target device has already probed
+> successfully and bound to a device, then some of the fw_devlink logic
+> that ran when the device was probed needs to be rerun. This allows newly
+> created dangling consumers of the overlayed device tree nodes to be
+> moved to become consumers of the target device.
+>
+> Fixes: 1a50d9403fb9 ("treewide: Fix probing of devices in DT overlays")
+> Reported-by: Herve Codina <herve.codina@bootlin.com>
+> Closes: https://lore.kernel.org/lkml/CAMuHMdXEnSD4rRJ-o90x4OprUacN_rJgyo8=
+x6=3D9F9rZ+-KzjOg@mail.gmail.com/
+> Closes: https://lore.kernel.org/all/20240221095137.616d2aaa@bootlin.com/
+> Closes: https://lore.kernel.org/lkml/20240312151835.29ef62a0@bootlin.com/
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> Link: https://lore.kernel.org/lkml/20240411235623.1260061-3-saravanak@goo=
+gle.com/
+> [Herve: Rebase on top of recent kernel]
+> [Herve: Add the call to driver_deferred_probe_trigger()]
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Tested-by: Kalle Niemi <kaleposti@gmail.com>
+> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thank you Sungwoo for the fix. Given that this deals with 2 different scenarios, can this be split into 2 patches each address a scenario uniquely?
-
-For scenario 2, can you please put a bit more context in its commit log to explain why a workqueue is needed from your discussion with Dan for future readers?
-
-Also for the commit log please add context on how these issues were found and what impact was observed and how that effects a user. This information necessary for the Fixes tag dispatching upstream.
-
-Thanks!
-
-DJ
-
-> 
-> Splat:
-> 
-> WARNING: drivers/base/devres.c:824 at devm_release_action drivers/base/devres.c:824 [inline], CPU#0: syz.1.12224/47589
-> WARNING: drivers/base/devres.c:824 at devm_release_action+0x2b2/0x360 drivers/base/devres.c:817, CPU#0: syz.1.12224/47589
-> 
-> [1] https://lore.kernel.org/linux-cxl/20260310183644.4rwc7ilmzy4t5xp6@offworld/
-> 
-> Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
-> Suggested-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
-> ---
-> V1: https://lore.kernel.org/linux-cxl/20260308185958.2453707-2-iam@sung-woo.kim/
-> V1->V2:
-> - Made devm_remove_action() asynchronous.
-> - Made unregister_region() idempotent.
-> - Addressed Dan's comments and added the suggested-by tag.
-> 
->  drivers/cxl/core/region.c | 45 ++++++++++++++++++++++++++++++++++++---
->  drivers/cxl/cxl.h         |  8 +++++++
->  2 files changed, 50 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e50dc716d4e8..64db0d332c13 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -39,6 +39,7 @@
->  static nodemask_t nodemask_region_seen = NODE_MASK_NONE;
->  
->  static struct cxl_region *to_cxl_region(struct device *dev);
-> +static void remove_devm_actions_work(struct work_struct *work);
->  
->  #define __ACCESS_ATTR_RO(_level, _name) {				\
->  	.attr	= { .name = __stringify(_name), .mode = 0444 },		\
-> @@ -2543,6 +2544,9 @@ static void unregister_region(void *_cxlr)
->  	struct cxl_region_params *p = &cxlr->params;
->  	int i;
->  
-> +	if (test_and_set_bit(CXL_REGION_F_UNREGISTER, &cxlr->flags))
-> +		return;
-> +
->  	device_del(&cxlr->dev);
->  
->  	/*
-> @@ -2589,6 +2593,8 @@ static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd, int i
->  	dev->type = &cxl_region_type;
->  	cxl_region_setup_flags(cxlr, &cxlrd->cxlsd.cxld);
->  
-> +	INIT_WORK(&cxlr->remove_work, remove_devm_actions_work);
-> +
->  	return cxlr;
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -235,6 +235,79 @@ static void __fw_devlink_pickup_dangling_consumers(s=
+truct fwnode_handle *fwnode,
+>                 __fw_devlink_pickup_dangling_consumers(child, new_sup);
 >  }
->  
-> @@ -2831,20 +2837,53 @@ cxl_find_region_by_name(struct cxl_root_decoder *cxlrd, const char *name)
->  	return to_cxl_region(region_dev);
->  }
->  
-> +static void remove_devm_actions_work(struct work_struct *work)
+>
+> +static void fw_devlink_pickup_dangling_consumers(struct device *dev)
 > +{
-> +	struct cxl_region *cxlr = container_of(work, typeof(*cxlr), remove_work);
-> +	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
-> +	struct cxl_port *port = to_cxl_port(cxlrd->cxlsd.cxld.dev.parent);
+> +       struct fwnode_handle *child;
 > +
-> +	if (test_and_set_bit(CXL_REGION_F_DEVM_REMOVE, &cxlr->flags)) {
-> +		put_device(&cxlr->dev);
-> +		return;
-> +	}
+> +       guard(mutex)(&fwnode_link_lock);
 > +
-> +	scoped_guard(device, port->uport_dev) {
-> +		if (port->uport_dev->driver)
-> +			devm_remove_action(port->uport_dev, unregister_region, cxlr);
-> +	}
-> +
-> +	put_device(&cxlr->dev);
+> +       fwnode_for_each_available_child_node(dev->fwnode, child)
+> +               __fw_devlink_pickup_dangling_consumers(child, dev->fwnode=
+);
+> +       __fw_devlink_link_to_consumers(dev);
 > +}
 > +
-> +static int remove_devm_actions(struct cxl_region *cxlr)
+> +/**
+> + * fw_devlink_refresh_fwnode - Recheck the tree under this firmware node
+> + * @fwnode: The fwnode under which the fwnode tree has changed
+> + *
+> + * This function is mainly meant to adjust the supplier/consumer depende=
+ncies
+> + * after a fwnode tree overlay has occurred.
+> + */
+> +void fw_devlink_refresh_fwnode(struct fwnode_handle *fwnode)
 > +{
-> +	if (!schedule_work(&cxlr->remove_work))
-> +		return -EBUSY;
+> +       struct device *dev;
 > +
-> +	return 0;
-> +}
-> +
->  static ssize_t delete_region_store(struct device *dev,
->  				   struct device_attribute *attr,
->  				   const char *buf, size_t len)
->  {
->  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
-> -	struct cxl_port *port = to_cxl_port(dev->parent);
->  	struct cxl_region *cxlr;
-> +	int rc;
->  
-> +	/* remove_devm_actions_work() will put cxlr->dev. */
->  	cxlr = cxl_find_region_by_name(cxlrd, buf);
->  	if (IS_ERR(cxlr))
->  		return PTR_ERR(cxlr);
->  
-> -	devm_release_action(port->uport_dev, unregister_region, cxlr);
-> -	put_device(&cxlr->dev);
-> +	unregister_region(cxlr);
-> +
-> +	rc = remove_devm_actions(cxlr);
-> +	if (rc) {
-> +		put_device(&cxlr->dev);
-> +		return rc;
-> +	}
->  
->  	return len;
->  }
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 1297594beaec..75ec292a9f42 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -447,6 +447,12 @@ struct cxl_region_params {
->   */
->  #define CXL_REGION_F_NORMALIZED_ADDRESSING 3
->  
-> +/* Indicate that this region is being unregistered to prevent a race. */
-> +#define CXL_REGION_F_UNREGISTER 4
-> +
-> +/* Indicate that this region called devm_remove_action. */
-> +#define CXL_REGION_F_DEVM_REMOVE 5
-> +
->  /**
->   * struct cxl_region - CXL region
->   * @dev: This region's device
-> @@ -462,6 +468,7 @@ struct cxl_region_params {
->   * @coord: QoS access coordinates for the region
->   * @node_notifier: notifier for setting the access coordinates to node
->   * @adist_notifier: notifier for calculating the abstract distance of node
-> + * @remove_work: trigger the remove action in a safe context to acquire locks
->   */
->  struct cxl_region {
->  	struct device dev;
-> @@ -477,6 +484,7 @@ struct cxl_region {
->  	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
->  	struct notifier_block node_notifier;
->  	struct notifier_block adist_notifier;
-> +	struct work_struct remove_work;
->  };
->  
->  struct cxl_nvdimm_bridge {
+> +       /*
+> +        * Find the closest ancestor fwnode that has been converted to a =
+device
+> +        * that can bind to a driver (bus device).
+> +        */
+> +       fwnode_handle_get(fwnode);
+> +       do {
+> +               if (fwnode->flags & FWNODE_FLAG_NOT_DEVICE)
 
+After commit f72e77c33e4b5657 ("device property: Make modifications
+of fwnode "flags" thread safe"), this must be changed to:
+
+    if (fwnode_test_flag(fwnode, FWNODE_FLAG_NOT_DEVICE))
+
+With this change my DT overlays are working again.
+
+I guess keeping the FWNODE_FLAG_* names, but changing their values
+from bit masks to bit numbers was probably not such a good idea,
+as it fails to catch missing conversions...
+
+> +                       continue;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
