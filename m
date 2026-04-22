@@ -1,18 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2190E28DC4
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Apr 2026 23:02:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C26228DC4
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Apr 2026 23:02:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776898959; cv=none; b=rqifl7xWi7q8cJ1L4cYq9abPsW/5c8SJfG6L2fsQ+s8kmPCzuCYQ3tArvYFfAMhyFgqhx6MM/wlu4xxiUAiTJXFrabkDRsZObhAx46Aeq+lP3DkHNXTijlmsoCe47KmdQCGCbQSyiGdP/Fj5alyAwB7Tgz5UqHFXgcKHtb85rNY=
+	t=1776898961; cv=none; b=YSAxE30nXSuJmUOif8CA0OxtY1QtmFUB89NWnPYyWJg93C7ycxoD/DaGq2EK1Pt4aIdDkquU7sPDCcscTBlMqxY1en/K6LTsTNvqa+m6SImr3tpXIbwr1bkz/WWbOyqph/HGrYMrkXIGYvRY4TigIjQ0bnKWJkigQnCkcawC1oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776898959; c=relaxed/simple;
-	bh=cazPg8mI6Kf85y48Mlq20jn/0vuJpQ4V5KDIGV/MOjQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OmXFbTM9OmTjiiBf17caqUIqll81PP4njCfO/KLvl5wyGZGiEof2svKeg0uRkxS8e0j3lsSOaxxvrPhW55cH81QjSv0Bc50NzLyBdpII8ucKoFifi/nA2VUjCvchaZz5pdc+xLFmobu5QXlLUzykNv02tW53B9tgyAXy7TwtIuE=
+	s=arc-20240116; t=1776898961; c=relaxed/simple;
+	bh=8d41cPLzVHpkorE97GlsU7bagmpanIw5FMYu+yQ4LxM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oS6rFvDztmh+ahCDGnXUBTLv1Luav6YpEhZJxl1wAlCfa7ZJJWRd84/kaJMzHs/PdxhS8ijE7FDqOXhw66XMVa7aRCk9+7n1HmoMpOcEyX8NZcMKWwLA1ulSHMsuXjwNH85LJFAJ/8UIt485zlefM4pw44+z+QLe0EphYjtoyrk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0A96C19425;
-	Wed, 22 Apr 2026 23:02:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A797C19425;
+	Wed, 22 Apr 2026 23:02:40 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dave@stgolabs.net,
@@ -21,10 +22,12 @@ Cc: dave@stgolabs.net,
 	vishal.l.verma@intel.com,
 	ira.weiny@intel.com,
 	djbw@kernel.org
-Subject: [PATCH 0/7] cxl: Add CXL type2 accelerator support for cxl_test
-Date: Wed, 22 Apr 2026 16:02:30 -0700
-Message-ID: <20260422230237.2599333-1-dave.jiang@intel.com>
+Subject: [PATCH 1/7] cxl/test: Refactor mock_init_hdm_decoder() to prep for type2 decoder
+Date: Wed, 22 Apr 2026 16:02:31 -0700
+Message-ID: <20260422230237.2599333-2-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260422230237.2599333-1-dave.jiang@intel.com>
+References: <20260422230237.2599333-1-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -33,76 +36,231 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The series is based on v7.0-rc7 with Alejandro's type2 series [1] and
-with Dan's follow on series [2].
+Split mock_init_hdm_decoder() into different types of initialization.
+Currently the code deals with default initialization, saved decoders,
+and type3 auto region initialization. In the future, a type2 auto
+initialization will also be added. This refactor will make it cleaner
+to add additional init types.
 
-Series adds a 'type2_test' module parameter where it setup a mock type2
-hierarchy with a mock type2 accelerator device directly under a root
-port that has an auto region setup.
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ tools/testing/cxl/test/cxl.c | 184 ++++++++++++++++++++++-------------
+ 1 file changed, 115 insertions(+), 69 deletions(-)
 
-It also includes a CXL fix that was encountered when running tests with
-the new code.
-
-[
-  {
-    "memdevs":[
-      {
-        "memdev":"mem0",
-        "ram_size":536870912,
-        "ram_qos_class":42,
-        "host":"cxl_type2_accel.0",
-        "poison_injectable":false
-      }
-    ]
-  },
-  {
-    "regions":[
-      {
-        "region":"region0",
-        "resource":70300293136384,
-        "size":536870912,
-        "type":"ram",
-        "interleave_ways":1,
-        "interleave_granularity":4096,
-        "decode_state":"commit"
-      }
-    ]
-  }
-]
-
-    "root decoders":[
-      {
-        "decoder":"decoder0.0",
-        "resource":70300293136384,
-        "size":1073741824,
-        "interleave_ways":1,
-        "accelmem_capable":true,
-        "qos_class":42,
-        "nr_targets":1
-      },
-
-[1]: https://lore.kernel.org/linux-cxl/20260330143827.1278677-1-alejandro.lucero-palau@amd.com/T/#t
-[2]: https://lore.kernel.org/linux-cxl/20260403210050.1058650-1-dan.j.williams@intel.com/T/#t
-
-
-Dave Jiang (7):
-  cxl/test: Refactor mock_init_hdm_decoder() to prep for type2 decoder
-  cxl/test: Add type2 support for mock CFMWS0
-  cxl/test: Refactor platform device enumerations
-  cxl/test: Add hierarchy enumeration support for type2 device
-  cxl/test: Fixup hdm init for auto region to support type2
-  cxl/test: Add cxl_test accelerator driver
-  cxl: Fix double unregistration of CXL regions for type2 devices
-
- drivers/cxl/core/region.c      |   3 +-
- tools/testing/cxl/test/Kbuild  |   2 +
- tools/testing/cxl/test/accel.c |  71 ++++
- tools/testing/cxl/test/cxl.c   | 717 ++++++++++++++++++++++++---------
- 4 files changed, 605 insertions(+), 188 deletions(-)
- create mode 100644 tools/testing/cxl/test/accel.c
-
-
-base-commit: 6fa897f2d9a917c4bd7b911b230fcfad05a952c2
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index cd47fdd7ccb5..c26c37cef12c 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -1052,74 +1052,25 @@ static int first_decoder(struct device *dev, const void *data)
+ 	return 0;
+ }
+ 
+-/*
+- * Initialize a decoder during HDM enumeration.
+- *
+- * If a saved registry entry exists:
+- *   - enabled decoders are restored from the saved programming
+- *   - disabled decoders are initialized in a clean disabled state
+- *
+- * If no registry entry exists the decoder follows the normal mock
+- * initialization path, including the special auto-region setup for
+- * the first endpoints under host-bridge0.
+- *
+- * Returns true if decoder state was restored from the registry. In
+- * that case the saved decode configuration (including target mapping)
+- * has already been applied and the map_targets() is skipped.
+- */
+-static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
++enum cxld_init_type {
++	MOCK_DECODER_INIT_DEFAULT,
++	MOCK_DECODER_INIT_SAVED,
++	MOCK_DECODER_INIT_TYPE3_AUTO,
++};
++
++static enum cxld_init_type get_decoder_init_type(struct cxl_decoder *cxld,
++						 struct platform_device *pdev,
++						 bool hb0,
++						 struct cxl_test_decoder **td)
+ {
+-	struct acpi_cedt_cfmws *window = mock_cfmws[0];
+-	struct platform_device *pdev = NULL;
+-	struct cxl_endpoint_decoder *cxled;
+-	struct cxl_switch_decoder *cxlsd;
+-	struct cxl_port *port, *iter;
+-	struct cxl_test_decoder *td;
+-	struct cxl_memdev *cxlmd;
+-	struct cxl_dport *dport;
+-	struct device *dev;
+-	bool hb0 = false;
+-	u64 base;
+-	int i;
++	struct cxl_test_decoder *found_td = cxld_registry_find(cxld);
+ 
+-	if (is_endpoint_decoder(&cxld->dev)) {
+-		cxled = to_cxl_endpoint_decoder(&cxld->dev);
+-		cxlmd = cxled_to_memdev(cxled);
+-		WARN_ON(!dev_is_platform(cxlmd->dev.parent));
+-		pdev = to_platform_device(cxlmd->dev.parent);
+-
+-		/* check is endpoint is attach to host-bridge0 */
+-		port = cxled_to_port(cxled);
+-		do {
+-			if (port->uport_dev == &cxl_host_bridge[0]->dev) {
+-				hb0 = true;
+-				break;
+-			}
+-			if (is_cxl_port(port->dev.parent))
+-				port = to_cxl_port(port->dev.parent);
+-			else
+-				port = NULL;
+-		} while (port);
+-		port = cxled_to_port(cxled);
+-	} else {
+-		port = to_cxl_port(cxld->dev.parent);
++	if (found_td) {
++		*td = found_td;
++		return MOCK_DECODER_INIT_SAVED;
+ 	}
+ 
+-	td = cxld_registry_find(cxld);
+-	if (td) {
+-		bool enabled;
+-
+-		if (is_switch_decoder(&cxld->dev))
+-			enabled = td->cxlsd.cxld.flags & CXL_DECODER_F_ENABLE;
+-		else
+-			enabled = td->cxled.cxld.flags & CXL_DECODER_F_ENABLE;
+-
+-		if (enabled)
+-			return !cxld_registry_restore(cxld, td);
+-
+-		init_disabled_mock_decoder(cxld);
+-		return false;
+-	}
++	*td = NULL;
+ 
+ 	/*
+ 	 * The first decoder on the first 2 devices on the first switch
+@@ -1130,10 +1081,40 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
+ 	 * See 'cxl list -BMPu -m cxl_mem.0,cxl_mem.4'
+ 	 */
+ 	if (!is_endpoint_decoder(&cxld->dev) || !hb0 || pdev->id % 4 ||
+-	    pdev->id > 4 || cxld->id > 0) {
+-		default_mock_decoder(cxld);
+-		return false;
+-	}
++	    pdev->id > 4 || cxld->id > 0)
++		return MOCK_DECODER_INIT_DEFAULT;
++
++	return MOCK_DECODER_INIT_TYPE3_AUTO;
++}
++
++static bool mock_decoder_handle_saved(struct cxl_decoder *cxld, struct cxl_test_decoder *td)
++{
++	bool enabled;
++
++	if (is_switch_decoder(&cxld->dev))
++		enabled = td->cxlsd.cxld.flags & CXL_DECODER_F_ENABLE;
++	else
++		enabled = td->cxled.cxld.flags & CXL_DECODER_F_ENABLE;
++
++	if (enabled)
++		return !cxld_registry_restore(cxld, td);
++
++	init_disabled_mock_decoder(cxld);
++	return false;
++}
++
++static void mock_init_hdm_type3_cxled(struct cxl_endpoint_decoder *cxled,
++				      struct cxl_port *port,
++				      struct platform_device *pdev)
++{
++	struct acpi_cedt_cfmws *window = mock_cfmws[0];
++	struct cxl_decoder *cxld = &cxled->cxld;
++	struct cxl_switch_decoder *cxlsd;
++	struct cxl_dport *dport;
++	struct cxl_port *iter;
++	struct device *dev;
++	u64 base;
++	int i;
+ 
+ 	base = window->base_hpa;
+ 	if (extended_linear_cache)
+@@ -1208,8 +1189,73 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
+ 		cxld_registry_update(cxld);
+ 		put_device(dev);
+ 	}
++}
+ 
+-	return false;
++/*
++ * Initialize a decoder during HDM enumeration.
++ *
++ * If a saved registry entry exists:
++ *   - enabled decoders are restored from the saved programming
++ *   - disabled decoders are initialized in a clean disabled state
++ *
++ * If no registry entry exists the decoder follows the normal mock
++ * initialization path, including the special auto-region setup for
++ * the first endpoints under host-bridge0.
++ *
++ * Returns true if decoder state was restored from the registry. In
++ * that case the saved decode configuration (including target mapping)
++ * has already been applied and the map_targets() is skipped.
++ */
++static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
++{
++	struct cxl_endpoint_decoder *cxled = NULL;
++	struct platform_device *pdev = NULL;
++	struct cxl_test_decoder *td;
++	struct cxl_memdev *cxlmd;
++	struct cxl_port *port;
++	bool hb0 = false;
++
++	if (is_endpoint_decoder(&cxld->dev)) {
++		cxled = to_cxl_endpoint_decoder(&cxld->dev);
++		cxlmd = cxled_to_memdev(cxled);
++		WARN_ON(!dev_is_platform(cxlmd->dev.parent));
++		pdev = to_platform_device(cxlmd->dev.parent);
++
++		/* check is endpoint is attach to host-bridge0 */
++		port = cxled_to_port(cxled);
++		do {
++			if (port->uport_dev == &cxl_host_bridge[0]->dev) {
++				hb0 = true;
++				break;
++			}
++			if (is_cxl_port(port->dev.parent))
++				port = to_cxl_port(port->dev.parent);
++			else
++				port = NULL;
++		} while (port);
++		port = cxled_to_port(cxled);
++	} else {
++		port = to_cxl_port(cxld->dev.parent);
++	}
++
++	switch (get_decoder_init_type(cxld, pdev, hb0, &td)) {
++	case MOCK_DECODER_INIT_SAVED:
++		if (!td)
++			return false;
++		return mock_decoder_handle_saved(cxld, td);
++	case MOCK_DECODER_INIT_DEFAULT:
++		/*
++		 * The default path picks up all the decoders that are not
++		 * endpoint.
++		 */
++		default_mock_decoder(cxld);
++		return false;
++	case MOCK_DECODER_INIT_TYPE3_AUTO:
++		mock_init_hdm_type3_cxled(cxled, port, pdev);
++		return false;
++	default:
++		return false;
++	}
+ }
+ 
+ static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
 -- 
 2.53.0
 
