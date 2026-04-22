@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF3328DC4
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Apr 2026 23:02:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF1F28DC4
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Apr 2026 23:02:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776898962; cv=none; b=JdnmapxQN7Co4Vqe7bCWHqZywPrFIETtUtuyEUJtwd7hIIRFz0MRhq2C9jHZTmuSo2Xy4ffAfIknje3Cnkua28VYTyIlpPDBcT1EO6Zje4zlEcWLS2W08Y8ppq3DBssYN/S8QqviOFdB/TAwU1TFYQjf87MaRBvXndCDbuPmPg4=
+	t=1776898963; cv=none; b=OkU01YEwQWAHH1WkFNvkuA8PoYJEZuOfepvIqDNgAfsbFQl9ZjDJNgSNqakws2y4LfI0gmLrQcVxwqDY7bkHLm27D4ilT423k38wAMRkivZ4lwCnevb5AXbQngIPK3tShKd8/kCCNlyBPlUU3drRnkb/DM/20Uy4E2rjRMevHww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776898962; c=relaxed/simple;
-	bh=DmWRTOwvlwu7PonTBPNiZ4nu6PmIv84Ijv0O3mdAWZ0=;
+	s=arc-20240116; t=1776898963; c=relaxed/simple;
+	bh=uMoxdv7aYh976+rSeiABIvz1ca0WrL4OBqsrJCMz2bc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u9SQATeo0OfG4uLU6ib1YShzwcG7AuMxQfUmqVCPWXSteRNijNvURW3pC61rZlNxPACAb1ePUmu3907l/WCeunaiWZ6FaDW40ykvaVwNJiYQuSAHwyIJ5iCuUuMRFat7psCSi7X3W84sFUoILV0xzp/8oCLGtK+98Y4UGN+dPEI=
+	 MIME-Version; b=Y8Xv3kYBtv2VqbKBy9bXQohq8Zv0yjB+x8hYpZBPOq2UqYw1Pbc7MOedUiqEVMgDw3lKnQrM81+mpqZ1SpISeUcdnSt0lOtuu2l3jSPj4ppAnpDsmnV3fjD6TX9z0X8mn9/ynM/Cmve4IiUxuqD+hEVlAViVSq0RALnFUQwdP/o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B734C19425;
-	Wed, 22 Apr 2026 23:02:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 812F6C19425;
+	Wed, 22 Apr 2026 23:02:43 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: dave@stgolabs.net,
@@ -22,9 +22,9 @@ Cc: dave@stgolabs.net,
 	vishal.l.verma@intel.com,
 	ira.weiny@intel.com,
 	djbw@kernel.org
-Subject: [PATCH 2/7] cxl/test: Add type2 support for mock CFMWS0
-Date: Wed, 22 Apr 2026 16:02:32 -0700
-Message-ID: <20260422230237.2599333-3-dave.jiang@intel.com>
+Subject: [PATCH 3/7] cxl/test: Refactor platform device enumerations
+Date: Wed, 22 Apr 2026 16:02:33 -0700
+Message-ID: <20260422230237.2599333-4-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260422230237.2599333-1-dave.jiang@intel.com>
 References: <20260422230237.2599333-1-dave.jiang@intel.com>
@@ -36,84 +36,386 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a module parameter 'type2_test' for triggering type2 test support
-in cxl_test. Setup the CFMWS0 configuration to be type2 when 'type2_test'
-is set.
+Split all the host bridges, rootports, upstream and downstream ports
+enumerations to separate helper functions. This should make adding
+type2 hierarchy easier later on.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- tools/testing/cxl/test/cxl.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ tools/testing/cxl/test/cxl.c | 327 +++++++++++++++++++++++------------
+ 1 file changed, 217 insertions(+), 110 deletions(-)
 
 diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index c26c37cef12c..903223013e41 100644
+index 903223013e41..5fd73f0634c6 100644
 --- a/tools/testing/cxl/test/cxl.c
 +++ b/tools/testing/cxl/test/cxl.c
-@@ -16,6 +16,7 @@
- 
- static int interleave_arithmetic;
- static bool extended_linear_cache;
-+static bool type2_test;
- 
- #define FAKE_QTG_ID	42
- 
-@@ -383,6 +384,19 @@ static struct {
- 	},
+@@ -1833,10 +1833,207 @@ static struct attribute *cxl_acpi_attrs[] = {
  };
+ ATTRIBUTE_GROUPS(cxl_acpi);
  
-+static struct acpi_cedt_cfmws type2_cfmws0 = {
-+	.header = {
-+		.type = ACPI_CEDT_TYPE_CFMWS,
-+		.length = sizeof(mock_cedt.cfmws0),
-+	},
-+	.interleave_ways = 0,
-+	.granularity = 4,
-+	.restrictions = ACPI_CEDT_CFMWS_RESTRICT_DEVMEM |
-+			ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
-+	.qtg_id = FAKE_QTG_ID,
-+	.window_size = SZ_256M * 4,
-+};
-+
- struct acpi_cedt_cfmws *mock_cfmws[] = {
- 	[0] = &mock_cedt.cfmws0.cfmws,
- 	[1] = &mock_cedt.cfmws1.cfmws,
-@@ -471,6 +485,11 @@ static void cfmws_elc_update(struct acpi_cedt_cfmws *window, int index)
- 	window->window_size = mock_auto_region_size * 2;
- }
- 
-+static void update_type2_cfmws(void)
++static void host_bridges_remove(void)
 +{
-+	memcpy(&mock_cedt.cfmws0.cfmws, &type2_cfmws0, sizeof(type2_cfmws0));
++	int i;
++
++	for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
++		struct platform_device *pdev = cxl_host_bridge[i];
++
++		if (!pdev)
++			break;
++
++		sysfs_remove_link(&pdev->dev.kobj, "physical_node");
++		platform_device_unregister(cxl_host_bridge[i]);
++	}
 +}
 +
- static int populate_cedt(void)
- {
- 	struct cxl_mock_res *res;
-@@ -492,10 +511,14 @@ static int populate_cedt(void)
- 		chbs->length = size;
- 	}
- 
-+	if (type2_test)
-+		update_type2_cfmws();
++static int host_bridges_populate(void)
++{
++	int rc = 0;
 +
- 	for (i = cfmws_start; i <= cfmws_end; i++) {
- 		struct acpi_cedt_cfmws *window = mock_cfmws[i];
++	for (int i = 0; i < ARRAY_SIZE(cxl_host_bridge); i++) {
++		struct acpi_device *adev = &host_bridge[i];
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_host_bridge", i);
++		if (!pdev)
++			goto err_bridge;
++
++		mock_companion(adev, &pdev->dev);
++		rc = platform_device_add(pdev);
++		if (rc) {
++			platform_device_put(pdev);
++			goto err_bridge;
++		}
++
++		cxl_host_bridge[i] = pdev;
++		mock_pci_bus[i].bridge = &pdev->dev;
++		rc = sysfs_create_link(&pdev->dev.kobj, &pdev->dev.kobj,
++				       "physical_node");
++		if (rc)
++			goto err_bridge;
++	}
++
++	return 0;
++
++err_bridge:
++	host_bridges_remove();
++	return rc;
++}
++
++static void cxl_rootports_remove(void)
++{
++	for (int i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--) {
++		struct platform_device *pdev = cxl_root_port[i];
++
++		if (!pdev)
++			break;
++
++		platform_device_unregister(pdev);
++	}
++}
++
++static int cxl_rootports_populate(void)
++{
++	int rc = 0;
++
++	for (int i = 0; i < ARRAY_SIZE(cxl_root_port); i++) {
++		struct platform_device *bridge =
++			cxl_host_bridge[i % ARRAY_SIZE(cxl_host_bridge)];
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_root_port", i);
++		if (!pdev)
++			goto err_port;
++
++		pdev->dev.parent = &bridge->dev;
++
++		rc = platform_device_add(pdev);
++		if (rc) {
++			platform_device_put(pdev);
++			goto err_port;
++		}
++		cxl_root_port[i] = pdev;
++	}
++
++	return 0;
++
++err_port:
++	cxl_rootports_remove();
++	return rc;
++}
++
++static void cxl_usps_remove(void)
++{
++	for (int i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--) {
++		struct platform_device *pdev = cxl_switch_dport[i];
++
++		if (!pdev)
++			break;
++
++		platform_device_unregister(cxl_switch_dport[i]);
++	}
++}
++
++static int cxl_usps_populate(void)
++{
++	int rc = 0;
++
++	for (int i = 0; i < ARRAY_SIZE(cxl_switch_uport); i++) {
++		struct platform_device *root_port = cxl_root_port[i];
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_switch_uport", i);
++		if (!pdev)
++			goto err_uport;
++
++		pdev->dev.parent = &root_port->dev;
++
++		rc = platform_device_add(pdev);
++		if (rc) {
++			platform_device_put(pdev);
++			goto err_uport;
++		}
++		cxl_switch_uport[i] = pdev;
++	}
++
++	return 0;
++
++err_uport:
++	cxl_usps_remove();
++	return rc;
++}
++
++static void cxl_dsps_remove(void)
++{
++	for (int i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--) {
++		struct platform_device *pdev = cxl_switch_uport[i];
++
++		if (!pdev)
++			break;
++
++		platform_device_unregister(cxl_switch_uport[i]);
++	}
++}
++
++static int cxl_dsps_populate(void)
++{
++	int rc = 0;
++
++	for (int i = 0; i < ARRAY_SIZE(cxl_switch_dport); i++) {
++		struct platform_device *uport =
++			cxl_switch_uport[i % ARRAY_SIZE(cxl_switch_uport)];
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_switch_dport", i);
++		if (!pdev)
++			goto err_dport;
++		pdev->dev.parent = &uport->dev;
++
++		rc = platform_device_add(pdev);
++		if (rc) {
++			platform_device_put(pdev);
++			goto err_dport;
++		}
++		cxl_switch_dport[i] = pdev;
++	}
++
++	return 0;
++
++err_dport:
++	cxl_dsps_remove();
++	return rc;
++}
++
++static void cxl_switches_remove(void)
++{
++	cxl_usps_remove();
++	cxl_dsps_remove();
++}
++
++static int cxl_switches_populate(void)
++{
++	int rc;
++
++	BUILD_BUG_ON(ARRAY_SIZE(cxl_switch_uport) != ARRAY_SIZE(cxl_root_port));
++	rc = cxl_usps_populate();
++	if (rc)
++		return rc;
++
++	rc = cxl_dsps_populate();
++	if (rc) {
++		cxl_usps_remove();
++		return rc;
++	}
++
++	return 0;
++}
++
+ static __init int cxl_test_init(void)
+ {
+-	int rc, i;
+ 	struct range mappable;
++	int rc;
  
--		cfmws_elc_update(window, i);
-+		if (i == 0 && !type2_test)
-+			cfmws_elc_update(window, i);
- 		res = alloc_mock_res(window->window_size, SZ_256M);
- 		if (!res)
- 			return -ENOMEM;
-@@ -2029,6 +2052,8 @@ module_param(interleave_arithmetic, int, 0444);
- MODULE_PARM_DESC(interleave_arithmetic, "Modulo:0, XOR:1");
- module_param(extended_linear_cache, bool, 0444);
- MODULE_PARM_DESC(extended_linear_cache, "Enable extended linear cache support");
-+module_param(type2_test, bool, 0444);
-+MODULE_PARM_DESC(type2_test, "Enable type 2 support testing");
- module_init(cxl_test_init);
- module_exit(cxl_test_exit);
- MODULE_LICENSE("GPL v2");
+ 	cxl_acpi_test();
+ 	cxl_core_test();
+@@ -1872,86 +2069,21 @@ static __init int cxl_test_init(void)
+ 	if (rc)
+ 		goto err_populate;
+ 
+-	for (i = 0; i < ARRAY_SIZE(cxl_host_bridge); i++) {
+-		struct acpi_device *adev = &host_bridge[i];
+-		struct platform_device *pdev;
++	rc = host_bridges_populate();
++	if (rc)
++		goto err_populate;
+ 
+-		pdev = platform_device_alloc("cxl_host_bridge", i);
+-		if (!pdev)
+-			goto err_bridge;
++	rc = cxl_rootports_populate();
++	if (rc)
++		goto err_host_bridges;
+ 
+-		mock_companion(adev, &pdev->dev);
+-		rc = platform_device_add(pdev);
+-		if (rc) {
+-			platform_device_put(pdev);
+-			goto err_bridge;
+-		}
+-
+-		cxl_host_bridge[i] = pdev;
+-		mock_pci_bus[i].bridge = &pdev->dev;
+-		rc = sysfs_create_link(&pdev->dev.kobj, &pdev->dev.kobj,
+-				       "physical_node");
+-		if (rc)
+-			goto err_bridge;
+-	}
+-
+-	for (i = 0; i < ARRAY_SIZE(cxl_root_port); i++) {
+-		struct platform_device *bridge =
+-			cxl_host_bridge[i % ARRAY_SIZE(cxl_host_bridge)];
+-		struct platform_device *pdev;
+-
+-		pdev = platform_device_alloc("cxl_root_port", i);
+-		if (!pdev)
+-			goto err_port;
+-		pdev->dev.parent = &bridge->dev;
+-
+-		rc = platform_device_add(pdev);
+-		if (rc) {
+-			platform_device_put(pdev);
+-			goto err_port;
+-		}
+-		cxl_root_port[i] = pdev;
+-	}
+-
+-	BUILD_BUG_ON(ARRAY_SIZE(cxl_switch_uport) != ARRAY_SIZE(cxl_root_port));
+-	for (i = 0; i < ARRAY_SIZE(cxl_switch_uport); i++) {
+-		struct platform_device *root_port = cxl_root_port[i];
+-		struct platform_device *pdev;
+-
+-		pdev = platform_device_alloc("cxl_switch_uport", i);
+-		if (!pdev)
+-			goto err_uport;
+-		pdev->dev.parent = &root_port->dev;
+-
+-		rc = platform_device_add(pdev);
+-		if (rc) {
+-			platform_device_put(pdev);
+-			goto err_uport;
+-		}
+-		cxl_switch_uport[i] = pdev;
+-	}
+-
+-	for (i = 0; i < ARRAY_SIZE(cxl_switch_dport); i++) {
+-		struct platform_device *uport =
+-			cxl_switch_uport[i % ARRAY_SIZE(cxl_switch_uport)];
+-		struct platform_device *pdev;
+-
+-		pdev = platform_device_alloc("cxl_switch_dport", i);
+-		if (!pdev)
+-			goto err_dport;
+-		pdev->dev.parent = &uport->dev;
+-
+-		rc = platform_device_add(pdev);
+-		if (rc) {
+-			platform_device_put(pdev);
+-			goto err_dport;
+-		}
+-		cxl_switch_dport[i] = pdev;
+-	}
++	rc = cxl_switches_populate();
++	if (rc)
++		goto err_root_ports;
+ 
+ 	rc = cxl_single_topo_init();
+ 	if (rc)
+-		goto err_dport;
++		goto err_switches;
+ 
+ 	rc = cxl_rch_topo_init();
+ 	if (rc)
+@@ -1981,24 +2113,12 @@ static __init int cxl_test_init(void)
+ 	cxl_rch_topo_exit();
+ err_single:
+ 	cxl_single_topo_exit();
+-err_dport:
+-	for (i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--)
+-		platform_device_unregister(cxl_switch_dport[i]);
+-err_uport:
+-	for (i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--)
+-		platform_device_unregister(cxl_switch_uport[i]);
+-err_port:
+-	for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--)
+-		platform_device_unregister(cxl_root_port[i]);
+-err_bridge:
+-	for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
+-		struct platform_device *pdev = cxl_host_bridge[i];
+-
+-		if (!pdev)
+-			continue;
+-		sysfs_remove_link(&pdev->dev.kobj, "physical_node");
+-		platform_device_unregister(cxl_host_bridge[i]);
+-	}
++err_switches:
++	cxl_switches_remove();
++err_root_ports:
++	cxl_rootports_remove();
++err_host_bridges:
++	host_bridges_remove();
+ err_populate:
+ 	depopulate_all_mock_resources();
+ err_gen_pool_add:
+@@ -2021,26 +2141,13 @@ static void free_decoder_registry(void)
+ 
+ static __exit void cxl_test_exit(void)
+ {
+-	int i;
+-
+ 	cxl_mem_exit();
+ 	platform_device_unregister(cxl_acpi);
+ 	cxl_rch_topo_exit();
+ 	cxl_single_topo_exit();
+-	for (i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--)
+-		platform_device_unregister(cxl_switch_dport[i]);
+-	for (i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--)
+-		platform_device_unregister(cxl_switch_uport[i]);
+-	for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--)
+-		platform_device_unregister(cxl_root_port[i]);
+-	for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
+-		struct platform_device *pdev = cxl_host_bridge[i];
+-
+-		if (!pdev)
+-			continue;
+-		sysfs_remove_link(&pdev->dev.kobj, "physical_node");
+-		platform_device_unregister(cxl_host_bridge[i]);
+-	}
++	cxl_switches_remove();
++	cxl_rootports_remove();
++	host_bridges_remove();
+ 	depopulate_all_mock_resources();
+ 	gen_pool_destroy(cxl_mock_pool);
+ 	unregister_cxl_mock_ops(&cxl_mock_ops);
 -- 
 2.53.0
 
