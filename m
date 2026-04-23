@@ -1,146 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from a8-21.smtp-out.amazonses.com (a8-21.smtp-out.amazonses.com [54.240.8.21])
+	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6588B78F26
-	for <linux-cxl@vger.kernel.org>; Thu, 23 Apr 2026 22:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0402D23A6;
+	Thu, 23 Apr 2026 23:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.8.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776982078; cv=none; b=n3Q4OftX3vLw9N4o5J6CYSxLY8FUPepCehiic6aAe6x14dKPtTM+h0TAmKU2uiu5FxMJMhxFaB8HjcBPjep1WOS+Fehazh+Kjh0zWCsQ2j9iaM3cOp3FFsHz4BHs8yPaAe9f3EEh1JwGkqwcirD0AfW7SWiqoUuPBZ436sMK7Ck=
+	t=1776988274; cv=none; b=sqWSfyaUlZcDrqWQN0TlZvG1roN5IvV+DqOsbEkqvA/IW6xQ+ldxLmiT/8I8+Kon5TpTHOMyNLebsfVaHwOddXE078kEsqKaRCZl97zBekGXp3bQgeAjy4AvAL+9lLDlpt5oUwnfge7FuB4kTFW2qqqGp7WrDh7B20QnCF2xlpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776982078; c=relaxed/simple;
-	bh=QGpcg/EhCTeK5FmLAZcXD6lY35PV/QOXSecMjf1KHK4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K2wWPvkwqV7Xzyfiz5PT7Am4lETx1wWAgrRsDRdmyIDuFOSoizPCgl45reAqv5dIrfRm+dxbFRXYFiU1y1td4hLZT56G4D6lZrYM/rjg1IWGpZoE86vTdUZF/qHuaVMGr/YWHJHKBpThhm5yGAhmNssQndPe+F7tA74jkMl8xFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jCxUy00b; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1776988274; c=relaxed/simple;
+	bh=/HvGF+yiVeXOsiwYAmEZlqwpUjxuZGoUDJ37IqEThgw=;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:References:
+	 Message-ID; b=c7YPCNII0oa/HFxwlH9ENkhB5v+9bUW5hSh2rRRd3nD/fpmE9wvzpm9AVCUecbJnIis9x9BaOsYr3tHclLxQCwXUZBP4BmuMCVCb0dszUGpka6/OOYk/HC5lbLsq2Ebmj0R/9PGkDyvnxmELS4p1Cw5aWxV/0Ww9qnCegctmjys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=j0sS4txj; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=aqkksNfs; arc=none smtp.client-ip=54.240.8.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jCxUy00b"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1776982076; x=1808518076;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=QGpcg/EhCTeK5FmLAZcXD6lY35PV/QOXSecMjf1KHK4=;
-  b=jCxUy00bAn6zUc1m+L7Y/KbxnG8sFCY+4RC/3sCWLYjOV1AqGjoa/B9C
-   PwrEBO8+ztNxZoHPuLdZHI5xeogzfP0TgI4gs263MisHns5OY18FjjUlI
-   4DZmmnErYH1xt3CylS8jyXLQ4O/7U099OV0cFgLrM5/catIEr99o+LGYN
-   vwvVWRu+wrihMnW+3zMrkFis2yRAN5R5li6MLPc4dn0miH98PcgbD8vY9
-   d2YIC0zcdFf+6ftWQZz1wDEW0WSumkooF/dbn8S0IjoMco6EiwiGVDAYp
-   usdtMtAUokD3wXSx9Dey0NQIJCcIdgKsK5ars+esPxl66zMWuQigT+TFM
-   g==;
-X-CSE-ConnectionGUID: e1f6rVfBQZS0V/GMjr7+ZA==
-X-CSE-MsgGUID: r1s5zPbZRBemZJw8hme7/g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11765"; a="103425232"
-X-IronPort-AV: E=Sophos;i="6.23,195,1770624000"; 
-   d="scan'208";a="103425232"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2026 15:07:56 -0700
-X-CSE-ConnectionGUID: EQBLItUWTeurYKIf1aCy0w==
-X-CSE-MsgGUID: 2DqEKS5kTW2hI8GBE0Jsvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,195,1770624000"; 
-   d="scan'208";a="236764761"
-Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.108.37]) ([10.125.108.37])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2026 15:07:55 -0700
-Message-ID: <52e82a4d-39f9-40ff-a78a-5b09e0813018@intel.com>
-Date: Thu, 23 Apr 2026 15:07:54 -0700
+	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="j0sS4txj";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="aqkksNfs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1776988272;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id;
+	bh=/HvGF+yiVeXOsiwYAmEZlqwpUjxuZGoUDJ37IqEThgw=;
+	b=j0sS4txjXKbebOHU71oovBYM65APJnXka3quzdBQPBL62XAZBoncv8taBT+yqC1+
+	2rLl5ixSU0XOyzYWFgjQcOlSF4bELe1ePuf2fI92BEqqxQnlQ22Wz10AUHmE3venhLL
+	ivKr0bUEVJFZr8Yi3p5MeXHpe5zG+7JGaKwU1S+U=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1776988272;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id:Feedback-ID;
+	bh=/HvGF+yiVeXOsiwYAmEZlqwpUjxuZGoUDJ37IqEThgw=;
+	b=aqkksNfsdNlsQTIOkeRYwfL4zdxT5kYz42fzl1z/qv5mwN3zzTyhohDHHgpMPoQh
+	gEiKiZPbDmzWDlBWUEFSFKZ6npSwvjIF1wBgc9pHrKqgtf/mw1lWHXoMfH+KMUIjEed
+	ja0GXHtjHSCL6cSDaUaVqS7ucHanJBQi9sRwRYA4=
+Subject: [RFC PATCH 0/4] cxl/extent: Enable and validate multi-extent DCDs
+From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
+To: =?UTF-8?Q?Davidlohr_Bueso?= <dave@stgolabs.net>, 
+	=?UTF-8?Q?Jonathan_Cameron?= <jonathan.cameron@huawei.com>, 
+	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
+	=?UTF-8?Q?Alison_Schofield?= <alison.schofield@intel.com>, 
+	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
+	=?UTF-8?Q?Ira_Weiny?= <ira.weiny@intel.com>, 
+	=?UTF-8?Q?Dan_Williams?= <dan.j.williams@intel.com>, 
+	=?UTF-8?Q?John_Groves?= <John@Groves.net>, 
+	=?UTF-8?Q?Fan_Ni?= <fan.ni@samsung.com>, 
+	=?UTF-8?Q?Anisa_Su?= <anisa.su@samsung.com>, 
+	=?UTF-8?Q?Shiju_Jose?= <shiju.jose@huawei.com>, 
+	=?UTF-8?Q?Robert_Richter?= <rrichter@amd.com>
+Cc: =?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
+	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?John_Groves?= <john@groves.net>, 
+	=?UTF-8?Q?dev=2Esrinivasulu=40?= =?UTF-8?Q?gmail=2Ecom?= <dev.srinivasulu@gmail.com>, 
+	=?UTF-8?Q?arramesh=40micron=2Ecom?= <arramesh@micron.com>, 
+	=?UTF-8?Q?ajayjoshi=40micron=2Ecom?= <ajayjoshi@micron.com>
+Date: Thu, 23 Apr 2026 23:51:12 +0000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v26 0/8] Type2 device basic support
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- djbw@kernel.org, edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org,
- pabeni@redhat.com, edumazet@google.com
-Cc: Alejandro Lucero <alucerop@amd.com>
-References: <20260423180528.17166-1-alejandro.lucero-palau@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260423180528.17166-1-alejandro.lucero-palau@amd.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+References: <20260423235108.3732424-1-john@jagalactic.com>
+X-Mailer: Amazon WorkMail
+Thread-Index: AQHc03wPAUxMlerVT8upYY6XegNaOA==
+Thread-Topic: [RFC PATCH 0/4] cxl/extent: Enable and validate multi-extent
+ DCDs
+X-Wm-Sent-Timestamp: 1776988271
+X-Original-Mailer: git-send-email 2.53.0
+Message-ID: <0100019dbcc13648-596853f3-0083-46e0-b654-396eedd657cb-000000@email.amazonses.com>
+Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
+X-SES-Outgoing: 2026.04.23-54.240.8.21
 
-
-
-On 4/23/26 11:05 AM, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> I feel this version suits better a RFC based on v25 plus the changes
-> introduced. It tries to address the problem of user space actions
-> triggering accelerator region removal, and extending Dan's approach
-> in here:
-> 
-> https://lore.kernel.org/linux-cxl/20260403210050.1058650-1-dan.j.williams@intel.com/T/#m2d9e5c59ce4873641037f9bcd2f70d5679cda03c
-> 
-> As discussed there, the protection needs to cover the accelerator driver
-> handling of the region physical range for things like ioremap, and to
-> offer a way for such driver to undo things or at least stop using that
-> very same physical range if the region disappears. It ends up merging
-> several of v25 patches into just one.
-> 
-> Another change is linking the region release to the endpoint device and
-> keep with Dan's autoremove. This makes unnecessary the previous cxl_exit
-> and similar actions are now performed inside region detach callback.
-
-So this would only work if the region is single device right? Which is fine for initial implementation. Maybe make a comment in the code that this is the assumption being made for the person one day needing to deal with the possibility of interleaving.
-
-DJ
-
-> 
-> I think the outcome is quite promising, lowering the accelerator driver
-> complexity regarding region handling. The cost is those new callbacks
-> which I think are totally necessary for doing things safely with the
-> region by the driver.
-> 
-> I have successfully tested the cases of cxl_acpi removal while sfc
-> driver remaining, and cxl_mem unbinding sfc cxl memdev.
-> 
-> v26 changes:
->  - patch 6: it implements all the new functionlity described above.
->  - patch 8: region detach callback invokes a new sfc function for safely
-> 	    stopping cxl-backed piobufs use.
-> 
-> Alejandro Lucero (8):
->   sfc: add cxl support
->   cxl/sfc: Map cxl regs
->   cxl/sfc: Initialize dpa without a mailbox
->   cxl: Prepare memdev creation for type2
->   sfc: create type2 cxl memdev
->   cxl: attach region to an accelerator/type2 memdev
->   cxl: Avoid dax creation for accelerators
->   sfc: support pio mapping based on cxl
-> 
->  drivers/cxl/core/core.h               |   2 +
->  drivers/cxl/core/mbox.c               |  51 +---------
->  drivers/cxl/core/memdev.c             |  81 +++++++++++++++-
->  drivers/cxl/core/pci.c                |   1 +
->  drivers/cxl/core/port.c               |   1 +
->  drivers/cxl/core/region.c             | 125 ++++++++++++++++++++++++-
->  drivers/cxl/core/regs.c               |   1 +
->  drivers/cxl/cxlmem.h                  |   6 --
->  drivers/cxl/cxlpci.h                  |  12 ---
->  drivers/cxl/mem.c                     |  45 ++++++---
->  drivers/cxl/pci.c                     |   1 +
->  drivers/net/ethernet/sfc/Kconfig      |   9 ++
->  drivers/net/ethernet/sfc/Makefile     |   1 +
->  drivers/net/ethernet/sfc/ef10.c       |  72 +++++++++++++--
->  drivers/net/ethernet/sfc/efx.c        |  14 ++-
->  drivers/net/ethernet/sfc/efx.h        |   1 +
->  drivers/net/ethernet/sfc/efx_cxl.c    | 128 ++++++++++++++++++++++++++
->  drivers/net/ethernet/sfc/efx_cxl.h    |  31 +++++++
->  drivers/net/ethernet/sfc/net_driver.h |  12 +++
->  drivers/net/ethernet/sfc/nic.h        |   3 +
->  include/cxl/cxl.h                     |  25 +++++
->  include/cxl/pci.h                     |  22 +++++
->  22 files changed, 552 insertions(+), 92 deletions(-)
->  create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
->  create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
->  create mode 100644 include/cxl/pci.h
-> 
-> 
-> base-commit: 6596a02b207886e9e00bb0161c7fd59fea53c081
-
+From: John Groves <john@groves.net>=0D=0A=0D=0AThis series fixes correctn=
+ess issues in the DCD (Dynamic Capacity=0D=0ADevice) add-capacity pipelin=
+e so that multi-tag allocations, sharable=0D=0ACDAT regions, and cross-pa=
+rtition checks work end-to-end.=0D=0A=0D=0ABase=0D=0A----=0D=0A=0D=0AThe =
+series applies on top of Anisa Su's DCD stack =E2=80=94 specifically the=0D=
+=0Atip of famfs-v9-dcd on the 'anisa' remote=0D=0A(git@github.com:anisa-s=
+u993/anisa-linux-kernel.git).  That stack is=0D=0Athe one posted to linux=
+-cxl here:=0D=0A=0D=0A  https://lore.kernel.org/linux-cxl/adnWg-60uKmduTs=
+h@gourry-fedora-PF4VCD3F/T/#t=0D=0A=0D=0AI started out commenting on prio=
+r series, then started modifying it,=0D=0Abefore settling on this initial=
+ approach of generalizing the=0D=0Afunctionality through additional patch=
+es. I'm hoping the stake holders=0D=0Awill find this easy to follow - at =
+least as easy to follow as something=0D=0Athis tedious and nuanced can be=
+=2E=0D=0A=0D=0AAlso, as one of the authors of the DCD spec: Now I get why=
+ this was hard=0D=0Ato follow and implement. The implementation is pretty=
+ complicated.=0D=0A=0D=0ANote that this RFC builds happily, but I have no=
+t tested it yet. This=0D=0Aexercise has been about fleshing out the full =
+logic.=0D=0A=0D=0AThe patches=0D=0A-----------=0D=0A=0D=0A 1) cxl/extent:=
+ Promote cxlr_dax->region_extent to an xarray=0D=0A=0D=0A    Infrastructu=
+re only.  Replaces the single-slot region_extent=0D=0A    pointer on stru=
+ct cxl_dax_region with an xarray keyed by an=0D=0A    allocator-assigned =
+u32.  No behavior change; prepares storage for=0D=0A    multiple tagged a=
+llocations per DAX-region shim.=0D=0A=0D=0A 2) cxl/extent: Fix DCD add-ca=
+pacity: per-tag assembly, ordering, and=0D=0A    integrity=0D=0A=0D=0A   =
+ Rewrites the add-capacity pipeline around the tag as the unit of=0D=0A  =
+  allocation (not the More-chain).  Drops the DPA-contiguity reject,=0D=0A=
+    assembles each tag group separately, stable-sorts by=0D=0A    shared_=
+extn_seq, and adds cross-More-chain uniqueness,=0D=0A    sequence-integri=
+ty, and alignment gates.  Lifts the single-slot=0D=0A    "already onlined=
+" gate now that (1) is in place.=0D=0A=0D=0A 3) cxl/extent: Support exten=
+ts in sharable CDAT regions=0D=0A=0D=0A    Drops the per-extent rejection=
+ of shared_extn_seq !=3D 0 and=0D=0A    replaces it with a partition-awar=
+e check driven by the DSMAS=0D=0A    SHAREABLE bit already exposed throug=
+h cxl_dpa_partition.=0D=0A=0D=0A 4) cxl/extent: Reject tagged extents tha=
+t span DC partitions=0D=0A=0D=0A    Adds a group-level check rejecting ta=
+gged allocations whose=0D=0A    extents resolve to different DC partition=
+s.  A single host-visible=0D=0A    allocation cannot meaningfully straddl=
+e partitions whose CDAT=0D=0A    attributes disagree.=0D=0A=0D=0ASigned-o=
+ff-by: John Groves <John@Groves.net>=0D=0A=0D=0AJohn Groves (4):=0D=0A  c=
+xl/extent: Promote cxlr_dax->region_extent to an xarray=0D=0A  cxl/extent=
+: Fix DCD add-capacity: per-tag assembly, ordering, and=0D=0A    integrit=
+y=0D=0A  cxl/extent: Support extents in sharable CDAT regions=0D=0A  cxl/=
+extent: Reject tagged extents that span DC partitions=0D=0A=0D=0A drivers=
+/cxl/core/extent.c |  93 +++---=0D=0A drivers/cxl/core/mbox.c   | 628 +++=
+++++++++++++++++++++++++++++-------=0D=0A drivers/cxl/core/region.c |   2=
+ +=0D=0A drivers/cxl/cxl.h         |   9 +-=0D=0A include/cxl/event.h    =
+   |   1 -=0D=0A 5 files changed, 584 insertions(+), 149 deletions(-)=0D=0A=
+=0D=0A--=20=0D=0A2.53.0=0D=0A=0D=0A
