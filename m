@@ -1,157 +1,120 @@
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476293DE455;
-	Thu, 23 Apr 2026 08:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776933728; cv=none; b=YzGU1yVa04HBHH0CadfgeSshaqSqkGpOjynniQzoGVK1FuWU+sYmF1+YHY2CglpjC4CnABp3NOG6aWO+baOHWIBz/YunrYs0kTBwWz/P7djDAbG3jj/e1BFGfcU3GVGTSLhQYSB/p9d78z3kVXDX5rG+Yhf3ry7pZ35jqEY7obg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776933728; c=relaxed/simple;
-	bh=qbmvRxNwjPJySkdRlLxR16VTUeX6pN7MhszSZBGGJgE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D3tUTt9qSDMJaZSePrLeWPO5cHTCK6kviLMSarFalOXb8j2mo3mY4AiizQgdqh9SgrRfWiLVbyBL1E1aBDZoGJ0zEnZmSNraVl9eciqhzlCNTmrpE66wMkt6Gt1cv7PdLfDxLjfypRWEcUweYQ2t+OiY/1tMXGyw6xSGg96H/80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RHSMPu0z; arc=none smtp.client-ip=185.171.202.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB93340A76;
+	Thu, 23 Apr 2026 11:20:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776943215; cv=pass; b=h2pbrjGxGo+8saVTVrlvtUz+iMuwJKzpuCLuE+joyfTdaXjq7FBdHqxI8nPCfvLFLJZ6LMjmB3+n2Us/mRt5FyjlcI4MAwipNFuGPSj13ixA7LxER5jvZ+MTKuFVUOHtZpJZ6lnij6vvcfJsOmrkfNvexGHcIVgCspyRHXf6q/A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776943215; c=relaxed/simple;
+	bh=JD8ZajRo0doGFmA+4bomWfvd7OhXwX/0671cbzQ6aCw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T+dIoKDDWvtYQ3kIlCs7MZhyDrgiRQbAdo4g/YAJ2WebMZiO8Vqc4OOn6bDVI2QaqVaHWa8kBbjU78xgPsAw33r+EVs9jxxdMJRFrk2Pzmdso4x6Y6k7uzBs0P1icG2hz8sOYWgCOYtCtB3lBRyHMO9p54+ftE6JZvAwqjpzu4I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=SOJ2nWA9; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RHSMPu0z"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id C68BEC5EF0B;
-	Thu, 23 Apr 2026 08:42:45 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 81637604EB;
-	Thu, 23 Apr 2026 08:42:04 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E551910460B49;
-	Thu, 23 Apr 2026 10:41:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1776933721; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=hpnJk/yJbY+uVhKNecCDBid6JdXHXsFWMSbXliiAR00=;
-	b=RHSMPu0z0hSdt3mn4ffe5+6hUm/ZCjtCUZUKE3rWKy/r3VhfZhbKf1a9Ulxwtthkq/Wtgh
-	ronPMyU1B2CxZw6JMN3u3wI3DLWBsdkToYIBM80eaHi7YgAeDyH1Z2ue1q/847GcERxQOk
-	g0JXmw3tYv6IvZXdp7pb5HMp5Kl7KsJKyYniqOHUilIBM3mmL0cJgDls1/VLPGNufaZTfw
-	v2x1SEkJspkHM37hhCeIXdZLX8dFFZdF2oY0Y3ytw9DTXzpHCHxarn2MoEkQvoK+911wsc
-	ELgVc4CKa9SO2hHeYBProWT6SvtWBufgTUp8YNP4tGFwdFM5Ild9qV3eo9YpxA==
-Date: Thu, 23 Apr 2026 10:41:39 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Doug Anderson <dianders@chromium.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, Kalle Niemi <kaleposti@gmail.com>, Matti
- Vaittinen <mazziesaccount@gmail.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
- <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
- Shyti <andi.shyti@kernel.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
- Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>, Charles Keepax
- <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
- <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
- Walleij <linusw@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Mark
- Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Daniel Scally
- <djrscally@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
- <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Alison
- Schofield <alison.schofield@intel.com>, Vishal Verma
- <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Shawn Guo
- <shawnguo@kernel.org>, Wolfram Sang <wsa@kernel.org>,
- linux-kernel@vger.kernel.org, driver-core@lists.linux.dev,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
- linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v6 02/27] of: dynamic: Fix overlayed devices not probing
- because of fw_devlink
-Message-ID: <20260423104139.0246ca0a@bootlin.com>
-In-Reply-To: <CAMuHMdUDCQrQ2Z9D7-ZOKiuDznDJVf2R_b_8P9+Xhk4RiJ3vdw@mail.gmail.com>
-References: <20260325143555.451852-1-herve.codina@bootlin.com>
-	<20260325143555.451852-3-herve.codina@bootlin.com>
-	<CAMuHMdU7x7LWFkD9xiq+wyOqnn0bdzr+JLfvbBexoiWyv8kftA@mail.gmail.com>
-	<CAD=FV=UK3NQKQN7FXyG4nGdDKO=LQYhnL4ZweomQ_4R9-EAYag@mail.gmail.com>
-	<aekg_IELc65BFrWp@ashevche-desk.local>
-	<CAD=FV=XTvvq11y7kxmrfBe3dZsKro7N9=i-Hj9aqsLBay2Q9Rw@mail.gmail.com>
-	<CAMuHMdUDCQrQ2Z9D7-ZOKiuDznDJVf2R_b_8P9+Xhk4RiJ3vdw@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="SOJ2nWA9"
+ARC-Seal: i=1; a=rsa-sha256; t=1776943198; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=WSCBqMNNSSUjZVpJGXLmgJooUUkgGjMP9W+0tQyNFndM7z5luzn6PLEx05gHOn47Begf7KcDHpDS/5nHZP4niDVNhA5DMjmMbLOZcjJslk5ZMWhR9KA8TuouG0tlsZ8Rm5juOMklRWkIuYMITQ3o7+IvtG3AfuIgMa7WOc8OhgA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1776943198; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=zx1TbB42QIOpTFwR1+0cKlMwUnpFMs7/CM8FmnsfLnc=; 
+	b=N19o0ZH3nMyeP782c4nYWZrMbAZXIoFaSgPdPIRsF00XcJyRlFt8qcU+HLjqddaoRp8GyzCDotd37O5hetpPz3yPNk/BjtxhFZ9j6+Q0TCQFXfDfoHZR4RWdUShPBLWCbXH0pKY/tzMZPy4V1KYzIneGPAWKt/oIcvYNORRd+C8=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1776943198;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=zx1TbB42QIOpTFwR1+0cKlMwUnpFMs7/CM8FmnsfLnc=;
+	b=SOJ2nWA9OyI8G/169GanCCLkgFi9hQjfnQMC0MNhai6pZj9Scmoc39e8Qm4fBjQe
+	N1rIfze8uiOIJXWa1MVyBO6HkC641m+DIZm34BIEsXTt5lkj+poM5MX2L5LNm5/cKBJ
+	wkSchXsUM/qsIGn8xQZpfSOfyCRhuym8/Vfc4Odc=
+Received: by mx.zohomail.com with SMTPS id 1776943195579487.7576515417993;
+	Thu, 23 Apr 2026 04:19:55 -0700 (PDT)
+From: Li Ming <ming.li@zohomail.com>
+To: dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	djbw@kernel.org
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ming.li@zohomail.com
+Subject: [PATCH v3 1/1] cxl/memdev: Hold memdev lock during memdev poison injection/clear
+Date: Thu, 23 Apr 2026 19:19:49 +0800
+Message-ID: <20260423111949.177399-1-ming.li@zohomail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Feedback-ID: zu08011227c38fcbaf9f449286ecf11dee00008ec274bd76935e0e953d72ebbb7b35dadff003cf15ca235031:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-Hi Geert, Doug,
+cxl_dpa_to_region() assumes that it is running a context where it is not
+racing changes to "cxlmd->dev.driver". Acquire the memdev device lock in
+the debugfs entry points to preclude debugfs usage racing cxl_mem driver
+detach.
 
-On Thu, 23 Apr 2026 08:53:33 +0200
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+Suggested-by: Dan Williams <djbw@kernel.org>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Reviewed-by: Dan Williams <djbw@kernel.org>
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+This patch originally belonged to the patchset[1], but was not merged
+into mainline together with the rest of the patchset. Resend this patch
+individually.
 
-> Hi Doug,
-> 
-> On Wed, 22 Apr 2026 at 21:40, Doug Anderson <dianders@chromium.org> wrote:
-> > On Wed, Apr 22, 2026 at 12:27 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:  
-> > > On Wed, Apr 22, 2026 at 11:51:36AM -0700, Doug Anderson wrote:  
-> > > > On Wed, Apr 22, 2026 at 10:44 AM Geert Uytterhoeven
-> > > > <geert@linux-m68k.org> wrote:  
-> > > > > On Wed, 25 Mar 2026 at 15:36, Herve Codina <herve.codina@bootlin.com> wrote:  
-> > >
-> > > ...
-> > >  
-> > > > > > +               if (fwnode->flags & FWNODE_FLAG_NOT_DEVICE)  
-> > > > >
-> > > > > After commit f72e77c33e4b5657 ("device property: Make modifications
-> > > > > of fwnode "flags" thread safe"), this must be changed to:
-> > > > >
-> > > > >     if (fwnode_test_flag(fwnode, FWNODE_FLAG_NOT_DEVICE))
-> > > > >
-> > > > > With this change my DT overlays are working again.
-> > > > >
-> > > > > I guess keeping the FWNODE_FLAG_* names, but changing their values
-> > > > > from bit masks to bit numbers was probably not such a good idea,
-> > > > > as it fails to catch missing conversions...  
-> > > >
-> > > > Crud, I should have thought about that. :( Do you think it's worth it
-> > > > to do a rename at this point to catch future problems?  
-> 
-> I am afraid it is too late (it is already in Linus' tree), and would
-> add only more to the confusion.  We just have to take care when this
-> patch (and 01/27) is backported to stable.  Fortunately the reverse
-> is caught, as the fwnode_*_flag() helpers did not exist before.
-> 
-> > > You can try locally with allyesconfig / allmodconfig and see the outcome.
-> > > If there are missed cases, and their amount reasonably low, I won't bother
-> > > in this case.  
-> >
-> > I believe I caught all of them at the time of my CL, but the problem
-> > is in-flight stuff, right? I think the problem Geert is pointing out
-> > isn't something I missed in my original patch but rather an
-> > interaction between my patch and this in-flight patch.  
-> 
-> There are no unconverted cases in upstream or linux-next
-> (I checked yesterday, and rechecked this morning).
-> 
+[1]: https://lore.kernel.org/linux-cxl/20260314-fix_access_endpoint_without_drv_check-v2-0-4c09edf2e1db@zohomail.com/T/#m9c302a841a3d26aa2eb7217ccdcdc4ae2607740a
 
-Thanks for having pointed out this modification.
-It will save some debug hours on my side when I test the next iteration. 
+Changes in v3:
+- Update changelog. (Dan)
+- Add review tag from Dan.
+Changes in v2:
+- Move hoding CXL memdev lock to cxl_debugfs_poison_inject/clear(). (Alison)
+---
+ drivers/cxl/mem.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-For this in-flight series, I will use new accessors introduced in
-f72e77c33e4b5657 ("device property: Make modifications of fwnode "flags"
-thread safe")
-
-Best regards,
-Hervé
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index fcffe24dcb42..ab88eaa31d1d 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -48,6 +48,11 @@ static int cxl_mem_dpa_show(struct seq_file *file, void *data)
+ static int cxl_debugfs_poison_inject(void *data, u64 dpa)
+ {
+ 	struct cxl_memdev *cxlmd = data;
++	int rc;
++
++	ACQUIRE(device_intr, devlock)(&cxlmd->dev);
++	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
++		return rc;
+ 
+ 	return cxl_inject_poison(cxlmd, dpa);
+ }
+@@ -58,6 +63,11 @@ DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_inject_fops, NULL,
+ static int cxl_debugfs_poison_clear(void *data, u64 dpa)
+ {
+ 	struct cxl_memdev *cxlmd = data;
++	int rc;
++
++	ACQUIRE(device_intr, devlock)(&cxlmd->dev);
++	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
++		return rc;
+ 
+ 	return cxl_clear_poison(cxlmd, dpa);
+ }
+-- 
+2.43.0
 
