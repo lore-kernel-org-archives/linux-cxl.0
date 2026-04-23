@@ -1,120 +1,136 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB93340A76;
-	Thu, 23 Apr 2026 11:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776943215; cv=pass; b=h2pbrjGxGo+8saVTVrlvtUz+iMuwJKzpuCLuE+joyfTdaXjq7FBdHqxI8nPCfvLFLJZ6LMjmB3+n2Us/mRt5FyjlcI4MAwipNFuGPSj13ixA7LxER5jvZ+MTKuFVUOHtZpJZ6lnij6vvcfJsOmrkfNvexGHcIVgCspyRHXf6q/A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776943215; c=relaxed/simple;
-	bh=JD8ZajRo0doGFmA+4bomWfvd7OhXwX/0671cbzQ6aCw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T+dIoKDDWvtYQ3kIlCs7MZhyDrgiRQbAdo4g/YAJ2WebMZiO8Vqc4OOn6bDVI2QaqVaHWa8kBbjU78xgPsAw33r+EVs9jxxdMJRFrk2Pzmdso4x6Y6k7uzBs0P1icG2hz8sOYWgCOYtCtB3lBRyHMO9p54+ftE6JZvAwqjpzu4I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=SOJ2nWA9; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348B42BE65F
+	for <linux-cxl@vger.kernel.org>; Thu, 23 Apr 2026 14:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776954983; cv=none; b=DAFtT+n4ybJNbRMRWWeURy009DqBMc9cb4WZ3pMB9gZognswDk8YEFyHdaqqRrzluhcYyz9nIQhMHhRspyRRiA+P6bCAcv50qxuRlF8/Bne0U2RtN6sKFRHKAEyHdjdCYtb8eS+CE6Gq3LjGlZML0gYQm7Ex6oIB+0BEbiikEPg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776954983; c=relaxed/simple;
+	bh=F2UPI+NDD+7DAZF71eH9F5AAZ3YNKEkBbyCuPmTeAXQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a/FpjiTZMvXasdRB/qzInKAILKj15K5CCL7d0q5qiMg7+R+WDaNUmhUftq80ncrW7tYBV70yLV8KRQbO7KJY0UBsUpUXCdakqhPT5W/PdN5sirNZXF8l05qxajoxcNge8gAz5Sis4V3EpKJx+9/AuNLW3cHboBD1nYliyCyjkTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g1DMDk/f; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="SOJ2nWA9"
-ARC-Seal: i=1; a=rsa-sha256; t=1776943198; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=WSCBqMNNSSUjZVpJGXLmgJooUUkgGjMP9W+0tQyNFndM7z5luzn6PLEx05gHOn47Begf7KcDHpDS/5nHZP4niDVNhA5DMjmMbLOZcjJslk5ZMWhR9KA8TuouG0tlsZ8Rm5juOMklRWkIuYMITQ3o7+IvtG3AfuIgMa7WOc8OhgA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1776943198; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=zx1TbB42QIOpTFwR1+0cKlMwUnpFMs7/CM8FmnsfLnc=; 
-	b=N19o0ZH3nMyeP782c4nYWZrMbAZXIoFaSgPdPIRsF00XcJyRlFt8qcU+HLjqddaoRp8GyzCDotd37O5hetpPz3yPNk/BjtxhFZ9j6+Q0TCQFXfDfoHZR4RWdUShPBLWCbXH0pKY/tzMZPy4V1KYzIneGPAWKt/oIcvYNORRd+C8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1776943198;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=zx1TbB42QIOpTFwR1+0cKlMwUnpFMs7/CM8FmnsfLnc=;
-	b=SOJ2nWA9OyI8G/169GanCCLkgFi9hQjfnQMC0MNhai6pZj9Scmoc39e8Qm4fBjQe
-	N1rIfze8uiOIJXWa1MVyBO6HkC641m+DIZm34BIEsXTt5lkj+poM5MX2L5LNm5/cKBJ
-	wkSchXsUM/qsIGn8xQZpfSOfyCRhuym8/Vfc4Odc=
-Received: by mx.zohomail.com with SMTPS id 1776943195579487.7576515417993;
-	Thu, 23 Apr 2026 04:19:55 -0700 (PDT)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	djbw@kernel.org
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ming.li@zohomail.com
-Subject: [PATCH v3 1/1] cxl/memdev: Hold memdev lock during memdev poison injection/clear
-Date: Thu, 23 Apr 2026 19:19:49 +0800
-Message-ID: <20260423111949.177399-1-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g1DMDk/f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1776954981; x=1808490981;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=F2UPI+NDD+7DAZF71eH9F5AAZ3YNKEkBbyCuPmTeAXQ=;
+  b=g1DMDk/fOMKpm3n/p5VC+XOz5u2mhOiz6B/EapJ3rgsQWMQVl0jZ2cE8
+   TVDrnjkF+gRiyn/SqCxTG9Z/9H11IaOZojp9syXxadmM6vStYbOTp0pWg
+   WWhbLjHZDSy49kg/C0TWl6mDr2bcMEK1cxcZYDSN1cW6ROPbP9mOnNYT5
+   juIlvLk5MG3qWEb5wPtOuaw1vU1yxZfu01GIQSR5IHX+0asCpO9z2yyOO
+   HyJnC8be5VVIAJfzK8jnQWBsNd0L38VAcUip3SEpfgsSuAslny4SzvYlg
+   LwciF6/mZb5jU9+eCskImS11I05tNblWlEgai1d7vKB4AnvxcN+FEy4E6
+   A==;
+X-CSE-ConnectionGUID: CEcgx5hvQeCUpUkWOJBrfA==
+X-CSE-MsgGUID: 0ZjyM3McQXqUYzH/if7Htg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11765"; a="103386890"
+X-IronPort-AV: E=Sophos;i="6.23,194,1770624000"; 
+   d="scan'208";a="103386890"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2026 07:36:21 -0700
+X-CSE-ConnectionGUID: ic0VaJ6ETw2uhwqZyNnXTg==
+X-CSE-MsgGUID: IQiiOqYTRtq+wXSon0tUcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,194,1770624000"; 
+   d="scan'208";a="226148347"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.108.12]) ([10.125.108.12])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2026 07:36:18 -0700
+Message-ID: <0a2b55cf-7df4-42e9-86b9-c5422a802085@intel.com>
+Date: Thu, 23 Apr 2026 07:36:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7/7] cxl: Fix double unregistration of CXL regions for
+ type2 devices
+To: Alejandro Lucero Palau <alucerop@amd.com>, linux-cxl@vger.kernel.org
+Cc: dave@stgolabs.net, jic23@kernel.org, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, djbw@kernel.org
+References: <20260422230237.2599333-1-dave.jiang@intel.com>
+ <20260422230237.2599333-8-dave.jiang@intel.com>
+ <e0806e00-f727-4399-ab40-f10fbf881662@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <e0806e00-f727-4399-ab40-f10fbf881662@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Feedback-ID: zu08011227c38fcbaf9f449286ecf11dee00008ec274bd76935e0e953d72ebbb7b35dadff003cf15ca235031:ZohoMail
-X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
-X-ZohoMailClient: External
 
-cxl_dpa_to_region() assumes that it is running a context where it is not
-racing changes to "cxlmd->dev.driver". Acquire the memdev device lock in
-the debugfs entry points to preclude debugfs usage racing cxl_mem driver
-detach.
 
-Suggested-by: Dan Williams <djbw@kernel.org>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Dan Williams <djbw@kernel.org>
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
-This patch originally belonged to the patchset[1], but was not merged
-into mainline together with the rest of the patchset. Resend this patch
-individually.
 
-[1]: https://lore.kernel.org/linux-cxl/20260314-fix_access_endpoint_without_drv_check-v2-0-4c09edf2e1db@zohomail.com/T/#m9c302a841a3d26aa2eb7217ccdcdc4ae2607740a
+On 4/23/26 12:10 AM, Alejandro Lucero Palau wrote:
+> 
+> On 4/23/26 00:02, Dave Jiang wrote:
+>> For a type2 device cxl_memdev_attach_region() is provided as the callback
+>> to devm_cxl_add_memdev() call. In cxl_memdev_attach_region() a devm
+>> action cxl_endpoint_region_autoremove() is registered to remove the
+>> region when the device is removed. And this action calls
+>> unregister_region() on trigger.
+>>
+>> When the endpoint port driver is probed, discover_region() is called
+>> to register a region. The call tree becomes discover_region() ->
+>> cxl_add_to_region() -> construct_region() -> __create_region() ->
+>> devm_cxl_add_region(). In devm_cxl_add_region(), unregister_region()
+>> is also added as a devm action.
+>>
+>> When removing the cxl_test module, the platform devices are removed
+>> and that triggers the endpoint driver removal and calling of
+>> unregister_region(). And then when the mock type2 device driver is being
+>> removed, the devm action of unregister_region() is called again, which
+>> causes a kernel warning about double unregistration of the same region.
+>> Add a check to see if the devm action is already removed before calling
+>> unregister_region() for cxl_endpoint_region_autoremove().
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>
+>> ---
+>> - Need to add a fixes tag when the patch commit that introduces
+>>    cxl_endpoint_region_autoremove() is stable.
+>> ---
+>>   drivers/cxl/core/region.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index 61a3efdbf3c9..1a7c0895bb88 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -4296,7 +4296,8 @@ static void cxl_endpoint_region_autoremove(void *_cxlr)
+>>       struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
+>>       struct cxl_port *port = cxlrd_to_port(cxlrd);
+>>   -    devm_release_action(port->uport_dev, unregister_region, cxlr);
+>> +    if (!devm_remove_action_nowarn(port->uport_dev, unregister_region, cxlr))
+>> +        unregister_region(cxlr);
+>>   }
+>>     /*
+> 
+> 
+> Hi Dave,
+> 
+> 
+> Yes, I saw that problem and reported to Dan:
+> 
+> 
+> https://lore.kernel.org/linux-cxl/20260403210050.1058650-1-dan.j.williams@intel.com/T/#m467dc88199645865a05b5fef858a67f3a608895b
+> 
+> 
+> I thought about adding similar check in my impending v26 but I ended up changing the linking of the created region from the root port to the endpoint device only. This avoids the problem you report for the cases of removing cxl_acpi before accelerator driver or cxl_mem unbinding the accelerator memdev.
+> 
+> 
+> You will see that later today within v26.
+> 
 
-Changes in v3:
-- Update changelog. (Dan)
-- Add review tag from Dan.
-Changes in v2:
-- Move hoding CXL memdev lock to cxl_debugfs_poison_inject/clear(). (Alison)
----
- drivers/cxl/mem.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index fcffe24dcb42..ab88eaa31d1d 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -48,6 +48,11 @@ static int cxl_mem_dpa_show(struct seq_file *file, void *data)
- static int cxl_debugfs_poison_inject(void *data, u64 dpa)
- {
- 	struct cxl_memdev *cxlmd = data;
-+	int rc;
-+
-+	ACQUIRE(device_intr, devlock)(&cxlmd->dev);
-+	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
-+		return rc;
- 
- 	return cxl_inject_poison(cxlmd, dpa);
- }
-@@ -58,6 +63,11 @@ DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_inject_fops, NULL,
- static int cxl_debugfs_poison_clear(void *data, u64 dpa)
- {
- 	struct cxl_memdev *cxlmd = data;
-+	int rc;
-+
-+	ACQUIRE(device_intr, devlock)(&cxlmd->dev);
-+	if ((rc = ACQUIRE_ERR(device_intr, &devlock)))
-+		return rc;
- 
- 	return cxl_clear_poison(cxlmd, dpa);
- }
--- 
-2.43.0
+Thanks. This series will adapt to whatever the final resulting version we merge upstream.
+> 
+> Thank you.
+> 
 
