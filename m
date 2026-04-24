@@ -1,150 +1,106 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02973D903C
-	for <linux-cxl@vger.kernel.org>; Fri, 24 Apr 2026 14:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777041339; cv=pass; b=ksgQWJOTqmEWe+wBxVgFc4upNJd9prh5KwttSeKej7NseDPzSAK8IVHl+d+S4OLqzc+HEElGfsU0EZ8W8hosLZYoVkQeW+TQERD9so1fK/0EwRzha9+B3gtVPad8orVDaCB6D4Y6FTye9JEqE1FSuTQkOvdIwHGbUKd7AIRgGG0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777041339; c=relaxed/simple;
-	bh=p9jt1gHiba+dFBOeRmZKFoj/PrXR4D3UohMC2L6rPSk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TzQoI9fZASr9IZNuLYXlL60HJj8D4oKnSHwQxXImn1dwNGwvjABpAYPy5+I6DGE+QWpr28T4oNXLQzG2Uofuokr1i2uP6Cjyfokj9iIi86iQBoL0Mffjxol3anzrrvNJ78DMvq27ivYQ5UNQshAIrF0unztONCbGtq/3WaS7/IE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CG47VSy+; arc=pass smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588F73E3172
+	for <linux-cxl@vger.kernel.org>; Fri, 24 Apr 2026 17:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777051765; cv=none; b=sYdgz70+Y7e+0/d/mjaqL2a53lLfCQsxvJDNtz5Q2KRJbOFrRzeUoJAvD47vXJy+kXlMeVK489Tz8qJTlG5ONjY/IxFfP4O6N2gS0O3chUUnhZg9dww/UuQrnXvQwx5WfOTsuN7/IG9H04gaYiRoamobe4Ww4NTie4Xsdtt8poE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777051765; c=relaxed/simple;
+	bh=hVvt9c8c4eWT57jkwRWLBGFn1vnZek926LtW06dMedQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=hDoX64D9J+Wdq1KvG3WLx5GYvBGEKafQBYdFzGamWKkICodA6QXH7q4P9O6L97qarYVbjZzutVcoYGsJFcTb5I+UkSExjiAa6ZRP70+mH5hBFphXKrTUyA2C/frF61Vd41H27p4RVn+3Iopc1GYQOuTvVscTR7GwqzNqJ2ZUh4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KzEnGWW4; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CG47VSy+"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ba5b107eaa2so704780066b.3
-        for <linux-cxl@vger.kernel.org>; Fri, 24 Apr 2026 07:35:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1777041336; cv=none;
-        d=google.com; s=arc-20240605;
-        b=htQD8tiiNLzEmR6m6gn2cHRtV/ulZ2P7OPMkZReRVMqGTElNuGe8EJztYZyYjAW7Nd
-         M0zc5/gPnBHspozRSG/u+6C3r8j3W3oMRKimOJ2u4wXuIlkVZuEHqLuDdNw70bsoNCTV
-         b9VObIebrzt/gV9aSM8fXD0jOrP64cdbMwEfrsc976qEd4KEUqiY/9F5Fasy2Co7T3yc
-         Fpj0JSMf3hOzgGE9zy8yQzKNWl5wxedE/7qYYNcBbuGc/3MPX6+a/Kz91xo0StCJMqSI
-         UUNYrqw9hS/OH/pClDa7yjrk73jr1lU3v5axIXm4W6FLML8YijCk7sUWFCSmvE1UkAz7
-         TTmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=wytk7xcJQB1xNQvFPDmiI04wJ1luZnUZ5xfDJ7i2YWg=;
-        fh=3BQ0kYUVVLRIN1oTpgZPxchDnPSwgMLBi3OKhIKF6j4=;
-        b=KYI/FdvHt4ssxTsYvh2U4Hmb4ItXiVM9xCkQ17YeybTE1L80j7AcIcNz7LGnOwfWAe
-         QUG9W4FGtqRCFQQWRmsK98JH8SnY9Z4avBoSnrzl3b+4eQkb2DAjKo05ljVdG4mNs4Tc
-         q9qoWuFC/aF6AH8Pp3D8dRCUZZ2l6pYdcppnfLkyhqJvaT6mRMSEmVi5fPynR+MPYfyF
-         xCSr6IdNI58IdpPssA8Qj9Bkhy2H33Ps4s8vVgu9ad7LIrUPwfOpqD5taX6Sz1Uuo1rj
-         +VxGM14iYGcmX/p7WMv+XRMQbV+yj7MlBdJcJXu/pScswOPnYlOW3CRmPEjykdqHGm0/
-         ZwkQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KzEnGWW4"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c7993b17335so2628220a12.0
+        for <linux-cxl@vger.kernel.org>; Fri, 24 Apr 2026 10:29:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777041336; x=1777646136; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wytk7xcJQB1xNQvFPDmiI04wJ1luZnUZ5xfDJ7i2YWg=;
-        b=CG47VSy+zOLdWI83PngziBgYIMIxdBsxYBEhf9wVb6IlTbadR3sgMoJLLOAP0P+Ekj
-         o9xF05II94+16RyKjQJJM19hCib6bmSSmcWPol7uFjuKXRX2zhmqtfQVrJxqoq74Km0f
-         apDMbRbr4g7F9xsFG6PUAQkFjjLmD513Z8vSBZrsteix3q9Bgmx4ZNM8/Qfbu/rhGCOm
-         ORsqrVeGnRuSLTj1vu0r+bk3/9PGWnr9vJyrgjxem/5u8WDQuqhKATbtmBvpQXwLj30M
-         nz8bkepCjFYiPV0qCfCRlGvexr46XSw597ZWK6e6tJ1tF0tibJHIzfH+Nu0mH5qvWtlI
-         If1A==
+        d=google.com; s=20251104; t=1777051764; x=1777656564; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=f7t+a1aWdVNT0iPLk92g40wmtJOhwN3/erB4JEhY870=;
+        b=KzEnGWW4o48NNH58WkY08ZOd5wSThkbmjzeHZmidOxmphWgOoSmKLZyUAf7Om5m/Yl
+         oSzbD4hF6+YbXGAENBKK+zsJ6BjP7lR39vbBmZdnun05STndn+Rd6tdPnhw2FscQQZcW
+         I2LrwrEVu8W8qHK9jqXluKShCcWMJO3oVspYNz4DDJMITqTbdLuxqqv4gz6jiMTX6/fJ
+         2R6rAGURW05ZXvF/L6+ylaKD0Zm1FgqsRr4AzPnME7Zt1IY3XBSl7giVFAxU6aKA5aHO
+         lz+snnA/USP9qzlETlrpRmq47PdvOR3Dm/VLVbyhRovHQNHaMdhDESswfjeWpDZdE6OR
+         +18w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777041336; x=1777646136;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=wytk7xcJQB1xNQvFPDmiI04wJ1luZnUZ5xfDJ7i2YWg=;
-        b=F8OBcppWul4KESB0oAmD2iaaSHta/UuOLpdblrHnR/LPKiHmFuMquMRuYpsuii6dd/
-         BlTKB+RU8rl7/MsuajabBSAruRDZ8cOv0AVKOQE2hp8XdCKkLJ0OLsLsnp3Nv4wqfWgP
-         qs6OV/4e3Oetl8NAHYy5sncQKgdosXqEjLvVkDgwXibb2Us6uj/EZ0ErQtVtmW3/1wjf
-         wAa+VMBlr6W8/7PduMoqT3nCxAgLZya6kpPPKVn3K4wlWl9oPBS88FL/OIAi2pOXer7/
-         p0kJs9y8HMcFDjvRcYHlLQrjwz4kS5M2RNXn+yLpcXdiK1So3F+Ydv8JyJ5OJpusdzkG
-         Q+2Q==
-X-Forwarded-Encrypted: i=1; AFNElJ9lQT9hS6APDmOMk5KQ20XM9uAXwBxn0UiWiNhf93n2BtxIo4EH4lrwy1J42RM45ltEQ1TUi7BEIdg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpvqE9cKmWyIpX+gF8jjpxCJFWiEt9kP1U7jxgdxR9cuswItQg
-	uSZiam5IGHUAvYJ3uYpQKGNCTQnsFmHHSYOS3c26iqPpFdc8FlC+3vqIcbCCf6yz9CIwSS03C7u
-	XmpDgCgbOaL3rwmAEQ1oq1Njs8oOOJF8=
-X-Gm-Gg: AeBDiesMRjLiyIy0I7QkbRpfbrKdpFvlF3Gpep3iLDiD+yAYXVqirf3Z1h/5/tLuXlj
-	BIQOVZ8O/0z9BMzP7h4VuOsbhB/Tssc8vVE+RpLSnl4gddQRLxOuY4jBEii38Hj0r6mWli7fLu/
-	ghcaU22D+LvyprXLj3ZrobeWjF64QdkpsVOupyr/Vof2mdOmXTEy2vsdRwENAh8xIyLzCoq6VyC
-	WPoQTXqyNHU3fBhKECfScDFfm/EuPbNDTIFE+Z5ppqQqi+/a5rhnqeoLyklUNLCbU8O85yd6qt2
-	W5/NcOgGaPAJLCj9+jeZZ+3JoICuaEwKSxtODUFQrcO7xZpK3+WZ
-X-Received: by 2002:a17:907:d93:b0:bae:58eb:674c with SMTP id
- a640c23a62f3a-bae58eb6a09mr81309766b.24.1777041335826; Fri, 24 Apr 2026
- 07:35:35 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1777051764; x=1777656564;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f7t+a1aWdVNT0iPLk92g40wmtJOhwN3/erB4JEhY870=;
+        b=hLG3S2DAhEHBqPDj7eQ0kRyQEKmHaZs24TfpTnbRJgIf50o322HAJw21Qe/16Dvz1h
+         h0uFIU9HPidXfTxYlAuI0IvPM39LTN68aJX+iYdsIxMxNBWn9dt/Rgbp3KmEA5pxVS3h
+         vYCBvFS1JhM98zRv4YSt1rg8kNMOeX3MEvnVG8d/M7ryoRQiZDdf/AKOrE8tJuhGWlSM
+         pvW3xIKnBnln+Zk+cf3kY5Yxrq0m9Ytoia3qVkfMSIKotfTkBuLrEPbv2n3ebAZwYHt5
+         IVjMePBlmWYt5R5uQRbdBYYenCw41vQTc9TDltnK+THgjQKB6mIGV+5Nmh2XvMADccYH
+         P/DQ==
+X-Gm-Message-State: AOJu0YzGAjDca44GNUi/8wltXy5paabzxULHfYN+hq0bWtNCNANVeV/H
+	M1HFzK6QCMz6k69kklNWm5acPmcl7J+0ha9hfIsLT6CkxPJr5Ejf6UgUvQX2vBgUbl3HjONhjQ=
+	=
+X-Received: from pgah12.prod.google.com ([2002:a05:6a02:4e8c:b0:c79:67c5:c6b0])
+ (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:99a9:b0:39b:be6f:3d4d
+ with SMTP id adf61e73a8af0-3a08d73f02cmr38112724637.23.1777051763548; Fri, 24
+ Apr 2026 10:29:23 -0700 (PDT)
+Date: Fri, 24 Apr 2026 17:13:44 +0000
+In-Reply-To: <20260423170219.281618-1-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAJfpegvVTcV89=q3L326aGQjhduBcv7PVg5QKftGLjNZmCLmaw@mail.gmail.com>
- <ad4_jFsR951c2Mtn@groves.net> <20260414185740.GA604658@frogsfrogsfrogs>
- <CAJnrk1ZgcMuwfMpT1fXvUwBBiq9eWFHWVeOFQFFKiamGGe1RJg@mail.gmail.com>
- <ad7Tps4tkNbndd9Z@groves.net> <CAJnrk1ZWVsKW2dhAWdBkCQskoTE+hmOhPFDhyz4EtExn=GdXGA@mail.gmail.com>
- <aeFDCeqZDPI3rm3s@gourry-fedora-PF4VCD3F> <CAJnrk1ad6t6CJV+xnXwhoNHrHYA3htuaVdDq47FeT60cPBzj7g@mail.gmail.com>
- <aeHXQ2EW2ivlLb_N@gourry-fedora-PF4VCD3F> <CAOQ4uxhXTTyySG3tXnqNnP0edbbwUxfeeC7=CypDSyw_Mod48A@mail.gmail.com>
- <aetxDlr0e9ILFIcg@infradead.org>
-In-Reply-To: <aetxDlr0e9ILFIcg@infradead.org>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 24 Apr 2026 16:35:23 +0200
-X-Gm-Features: AQROBzDRfaDvwqj3ChfxGHta3IykNz6mtcAvKLit3KlwoyD0SfB9SEJdl9WFDYQ
-Message-ID: <CAOQ4uxi2sb4rCR9_xTD3FFEwiPXxDG-sYzvAWqcjMQi1+Om+gQ@mail.gmail.com>
-Subject: Re: [PATCH V10 00/10] famfs: port into fuse
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Gregory Price <gourry@gourry.net>, Joanne Koong <joannelkoong@gmail.com>, 
-	John Groves <John@groves.net>, "Darrick J. Wong" <djwong@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Bernd Schubert <bernd@bsbernd.com>, John Groves <john@jagalactic.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>, "venkataravis@micron.com" <venkataravis@micron.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, djbw@kernel.org
+Mime-Version: 1.0
+References: <20260423170219.281618-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.54.0.rc2.544.gc7ae2d5bb8-goog
+Message-ID: <20260424172912.548636-1-fvdl@google.com>
+Subject: Re: [RFC PATCH 00/12] dax: Add DAX to guest memfd support for KVM
+From: Frank van der Linden <fvdl@google.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, djbw@kernel.org, 
+	iweiny@kernel.org, pasha.tatashin@soleen.com, mclapinski@google.com, 
+	rppt@kernel.org, joao.m.martins@oracle.com, jic23@kernel.org, 
+	gourry@gourry.net, john@groves.net, rick.p.edgecombe@intel.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 24, 2026 at 3:33=E2=80=AFPM Christoph Hellwig <hch@infradead.or=
-g> wrote:
->
-> On Fri, Apr 17, 2026 at 11:06:58AM +0200, Amir Goldstein wrote:
-> > If this logic was to be placed in fs/iomap/ as Christoph suggested,
-> > I think the rest of the UAPI issues could be sorted out.
->
-> For that you don't need it in iomap, it could stay in fuse an be a
-> generic striping API.  Although IMHO doing it in iomap would be a
-> lot cleaner and more efficient as well.
->
-> > In any case, considering the sheer amount of discussion on this thread
-> > I have scheduled a cross-track FS+MM+IO for Famfs and DAX iomap.
-> >
-> > I wasn't going to include Storage people at first, but since Christoph
-> > mentioned that stride/offset iomap could be useful for block iomap,
-> > I included them as well.
->
-> There is no overlap with storage.  Any use of this would have to be
-> file system level striping, not stackable block driver level striping.
-> And keeping the rooms smaller is a win on it's own - anyone interested
-> can join anyway.
->
+Dave Jiang <dave.jiang@intel.com> wrote:
+> This RFC series is created as a proof of concept to connect device DAX to guest
+> memory by riding on top of guest memfd in order to prove out that device DAX
+> can be used as guest memory. The series seeks to jump start a discussion on
+> if there are interests in creating a DAX bridge to utilize CXL memory for guest
+> memory until the N_PRIVATE implementation by Gregory [1] is available upstream
+> and DAX users are ready to move to the new scheme. Once there's an established
+> consensus of interest, we can move the discussion to the best way to implement
+> the DAX bridge and the future of device DAX as guest.
+> 
+> I did the bare minimal to get the PoC to pass a modified version of KVM gmem
+> selftest (guest_memfd_test) in order to prove out that DAX can go in the gmem
+> path. A DAX char dev is created and the fd is passed in user space with
+> vm_set_user_memory_region2(). The DAX region is passed in as a whole when used
+> unlike memfd where any size can be passed in to be allocated.
+> 
+> The folks on the cc line are people that Dan Williams has mentioned that may be
+> of interest to this.
+> 
+> [1]: https://lore.kernel.org/linux-cxl/aeWV1CvP9ImZ3eEG@gourry-fedora-PF4VCD3F/T/#t
 
-OK. Changed to FS+MM.
+One of the main ideas behind guest_memfd is that the memory is managed
+by the kernel only, so it knows what it has and that it can trust
+the memory. This RFC passes an fd in via the ioctl(), which I think
+breaks that model.
 
-Thanks,
-Amir.
+Since there is interest for several different allocation backends
+(default, hugetlb, zone_device), it might be better to use a model
+where guest_memfd has the option for backend allocators to register
+themselves in the kernel. The ioctl can then select one by their
+id/name (could be just a string). They can be configured using
+e.g. sysfs (like hugetlb already is).
+
+This would also allow easy experimentation with new allocators,
+having an allocator with BPF control, etc.
+
+- Frank
