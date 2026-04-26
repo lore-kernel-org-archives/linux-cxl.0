@@ -1,139 +1,299 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B8336AB77
-	for <linux-cxl@vger.kernel.org>; Sun, 26 Apr 2026 14:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC7B2C0268;
+	Sun, 26 Apr 2026 23:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777214724; cv=none; b=NL7MF+NLvXghxCmAYtEPwd+IdN2GHX2psLdWzDC6hEp+9Ekhf4GVFVY3nQ9uDW6y4QS9fc8FHiyRMbs7syjOhKTIS78jQPshxQDprbzYIXdJAVwkQ2wA2XQXyjYocq26lnWnQbbP/Ck9iJRLhJOqbXetBrDoJLjeGO/XZi5wajQ=
+	t=1777247823; cv=none; b=h5VqUIUFjIww87NW+oEeVkA6im71vE5zP2zEsrB40r7TNbViE9Mgz4q4H8tMYL0AR2h03G+5ALcyktIB5vkAIyaaZjaIH+maUucd2RnfCfDHa2/Fa7Y798JGzl8LUh8/GhNrPunDWPfpvy3jmDnoO9YFLG1CnxSZCEe3pjSsyes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777214724; c=relaxed/simple;
-	bh=7YaBT6iNVRZFSk14jBUoMTS77VVYE51p/LoYdbnTAqA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LDfYGxHr7LfDJvo0MSD5Epx1i6/UIz1rgtPTbEZABQze507FDVbMeTX0tDj0BZIiP0SEuKWPrg2lD1CKc6WiiMCz88ZNfHLKbLv2ptvppu0JK3Z/UKK6uNuxk8tLzsKZmhokwmNnw+5WtPwgRgkASMDVdIO88iEOfHL4UPVKBoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=GH9QmemW; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="GH9QmemW"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-35dac556bb2so5298417a91.1
-        for <linux-cxl@vger.kernel.org>; Sun, 26 Apr 2026 07:45:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1777214719; x=1777819519; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mYEWwYPnxNhfjfvrN9NBByfvj86/jsr9iqTYqVjgdNU=;
-        b=GH9QmemWAO9ojjYIbbd1iH538EruKq2wI1OUxm1dKsRhiyxk/fLxgHlYEne+8ot/wg
-         48evAYTITwF8ITQ+NVqt3HtgOiVGqArjuATqTQvioK58yeRfHeECak0NmOOPNa5i+jnI
-         9BzBcV8VgctM/Q3MJ1Rtgyd6FpcTjrFuBrc19rvp13T8pWzDffEYBjWyysazNadIWzeb
-         n4GGdPsFM8cvsG0J+3cNqmDZWhubeWhgTOkHyJw6piDUDoeKSxCHFuA1WNHnSy9Bo0OD
-         jrpTNaekELKoOYUIRd+l+7ZrDiMwmOmKp6NPXvf0GjSB8c684h8PztLjL3yghoz5mpCz
-         sN4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777214719; x=1777819519;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mYEWwYPnxNhfjfvrN9NBByfvj86/jsr9iqTYqVjgdNU=;
-        b=MWqU/PrdBFk9g9EW3SENOh1fGEMhWBXsZPUVxOZnGXGa84MhVpk5mb/tILUsieMffi
-         E3uPWucNyzD/AgME8e7ZCxwuAl2eOkZtpz0TvI2hSTQUbTdD8HV2kbH1ozbNFuU3UB8G
-         kGR3e/OvhcDD5xDdK7civprVcUo9KfBLPwEiw7XwXuTZw4/CRNF6Hv0EmsqBFm8QzVZ9
-         HVoaD0DmBwkPLjOp9HGPIOZqfvkPGjgpU4GMXDpbj0lsAPI9YgtZIx5W+iYOeNQrtDBe
-         3AkPviCLPDyj0NWr8r5YiLjdtVM9mmsuf4h1d1DoJYZUgKW2Brr6wS0DRe/HIyNFwrnB
-         7+wQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9AKjFFxnHgpTUiL4owsl6zEUtLk3J5PX4wmWsz/WzXKeOf64vJR4ST8jEEvZpyFcCEwNyhZ8AbzF8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz89i8RXnKVq18ZpaeVQLTzHMj2t6C8zUVz00FJrlfxkzcf8WwW
-	JxQbZPAbL/Ep7fKc8hr4B+J9TovW4hYn48mBgfj+TArudUKc7PophjEUMlBG5RDDG8g=
-X-Gm-Gg: AeBDiev4Le29g5yJlEjMM+ZcbaYUiPHxZoQSR5rQ6KSYk7mkT/bMR1N5+p/ZREtWE0C
-	QRsHyXujKWE/O5F0wSPvXdzPMuU6Qcm54TfLZ398Ra/CQwziZ2X2/ju2cwtpIAdItwlzp+gHnDh
-	z2OX5WDrU6JJ9MzkrwHdf8HXgWDYod6xeNBIQhtRZVPn/dehxfWFW9WCyMOq+gCyMTkc54NmQ9g
-	e7uC3EmrB5EV+QN/JjBFZSjxtBdsJYJbtm0WlAfb28cvSA0dJGw0FCVLwc0ub16Lucju0UT6+HF
-	2CI1HGZazWpwtuInGOP8eyuSRHq0gaA0G9xLhImmf3Gobgo/UfgKzcafdvRk1TmxY6lh47+dQRV
-	XUJlKK0k/vMUNYAWLAsgNqyc1vjoim4RaND9bmVuCZemlCFjLpGeONJfOrycvBb/EYESy/ZlaKF
-	fZCwFpcFkrwgoZ+Y7OOzp63+mq6/Vj
-X-Received: by 2002:a17:90a:f94f:b0:35f:c5cd:cc5 with SMTP id 98e67ed59e1d1-36140498686mr40821690a91.24.1777214718891;
-        Sun, 26 Apr 2026 07:45:18 -0700 (PDT)
-Received: from n232-176-004.byted.org ([240e:83:200::349])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-c797703059fsm22340550a12.24.2026.04.26.07.45.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2026 07:45:18 -0700 (PDT)
-From: Muchun Song <songmuchun@bytedance.com>
-To: David Hildenbrand <david@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>
-Cc: muchun.song@linux.dev,
-	Ying Huang <huang.ying.caritas@gmail.com>,
-	Dan Williams <djbw@kernel.org>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Naoya Horiguchi <nao.horiguchi@gmail.com>,
-	linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org,
-	driver-core@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Muchun Song <songmuchun@bytedance.com>,
-	stable@vger.kernel.org
-Subject: [PATCH 2/2] drivers/base/memory: fix memory block reference leak in poison accounting
-Date: Sun, 26 Apr 2026 22:44:47 +0800
-Message-Id: <20260426144447.817722-2-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20260426144447.817722-1-songmuchun@bytedance.com>
-References: <20260426144447.817722-1-songmuchun@bytedance.com>
+	s=arc-20240116; t=1777247823; c=relaxed/simple;
+	bh=XmNZ25JviKfT2ppQT+dMiP10WaXoGI2IHIweLZdopcU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qZbNj6v9c8r9tzP1aHv6uMfWLSp4kq34G5s+Jhc0s9pKA0eXU8GO6ELXUYvxfXQNRYstMD0mNSA8w9M48aureahJFe9akOv6fSsMiyjskqk50At6eNwOfDwoKfFw2liQdEnKs/g+Wjd0pg3AtPw+Q/yUOYXb6oSiIHXUCvkHXn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
+Received: from omf11.hostedemail.com (lb01b-stub [10.200.18.250])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 10AE51B8C10;
+	Sun, 26 Apr 2026 23:56:57 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf11.hostedemail.com (Postfix) with ESMTPA id 5B3072002A;
+	Sun, 26 Apr 2026 23:56:47 +0000 (UTC)
+Date: Sun, 26 Apr 2026 18:56:46 -0500
+From: John Groves <John@groves.net>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Dan Williams <dan.j.williams@intel.com>, Bernd Schubert <bschubert@ddn.com>, 
+	John Groves <jgroves@micron.com>, John Groves <jgroves@fastmail.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V4 1/2] daxctl: Add support for famfs mode
+Message-ID: <ae6e9wYqgLkWsS-e@groves.net>
+References: <0100019bd34040d9-0b6e9e4c-ecd4-464d-ab9d-88a251215442-000000@email.amazonses.com>
+ <20260118223629.92852-1-john@jagalactic.com>
+ <0100019bd340cdd5-89036a70-3ef5-4c34-abf8-07a3ea4d9f92-000000@email.amazonses.com>
+ <aaD6yQLiyZznfAxr@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aaD6yQLiyZznfAxr@aschofie-mobl2.lan>
+X-Rspamd-Queue-Id: 5B3072002A
+X-Stat-Signature: r49r8re331sizxziokm115mnz3b1s454
+X-Rspamd-Server: rspamout03
+X-Session-Marker: 6A6F686E4067726F7665732E6E6574
+X-Session-ID: U2FsdGVkX19u7GbFuQadFVki3V8MJh0E+hGt0fj4tgg=
+X-HE-Tag: 1777247807-31514
+X-HE-Meta: U2FsdGVkX1+ejEaOBEq+s20L42bbwXjGwb5g2mDO8CAE5LR6nn/pI2TTWArk1d1VlMhjsWX04EpdjtoUwD57LgCgKVnHXpsVZKTEgMOSQ/eBI1MFhpuilvIWaBO6Wcnp17MglLqJhjpGeab2cDeD4WFI0iypH2q9cWhVwm/XpBe783Ntivguwd4nXQdm1ocjbmt2f024CBQlGpjf5SMh4KYvEvrXnw2sq2Y75LIJj3S/I88WgwIHBBI9v+WZgrGBZG/3kAAoKqDNPoM7SjQvvTn8uDosAos/qF5dEOH642zm8ZtISN7mJ+MLeJ2yC8VY+TbUbtZ5LgrQhfrQcGlN9irbyW7qj5sYw6zYtiYYRgi+TjUq/7K/DG42fl3PLmlmwbhkOLDRwtLdlQg0lM8NpeDPO0xspyl1X1anyB1MiPD+Vua2TkmPKELhBNHbNr4KlDX9+KS8HWBIuShIbY5ocBewvEvFs3on
 
-memblk_nr_poison_inc() and memblk_nr_poison_sub() look up a memory
-block via find_memory_block_by_id(), which acquires a reference to the
-memory block device.
+Maybe I'm overcomplicating things (it's one of the things I do), 
+but I'm still struggling through how to address all these issues. 
+Some comments inline.
 
-Both helpers use the returned memory block without dropping that
-reference, leaking the device reference on each successful lookup. Drop
-the reference after updating nr_hwpoison.
+On 26/02/26 06:00PM, Alison Schofield wrote:
+> On Sun, Jan 18, 2026 at 10:36:38PM +0000, John Groves wrote:
+> > From: John Groves <John@Groves.net>
+> > 
+> > Putting a daxdev in famfs mode means binding it to fsdev_dax.ko
+> > (drivers/dax/fsdev.c). Finding a daxdev bound to fsdev_dax means
+> > it is in famfs mode.
+> > 
+> > The test is added to the destructive test suite since it
+> > modifies device modes.
+> 
+> Make it clear that it is added in a separate patch. (and assume you
+> can drop the destructive part too.)
+> 
+> > 
+> > With devdax, famfs, and system-ram modes, the previous logic that assumed
+> > 'not in mode X means in mode Y' needed to get slightly more complicated
+> > 
+> > Add explicit mode detection functions:
+> > - daxctl_dev_is_famfs_mode(): check if bound to fsdev_dax driver
+> > - daxctl_dev_is_devdax_mode(): check if bound to device_dax driver
+> 
+> 
+> The precedence check (ram->famfs->devdax->unknown) now happens in multiple
+> places. How about adding a daxctl_dev_get_mode() helper to centralize that.
+> It could be private for now, unless you expect external users to need it.
+> 
+> daxctl_dev_is_famfs_mode() and _is_devdax_mode() are nearly identical aside
+> from the module name. Refactoring the shared part into a single helper will
+> also make it easier to add a daxctl_dev_get_mode() without duplicating the
+> precedence logic.
+> 
+> > 
+> > Fix mode transition logic in device.c:
+> > - disable_devdax_device(): verify device is actually in devdax mode
+> > - disable_famfs_device(): verify device is actually in famfs mode
+> > - All reconfig_mode_*() functions now explicitly check each mode
+> > - Handle unknown mode with error instead of wrong assumption
+> 
+> Wondering about 'Fix' mode transition logic. Was prior logic broken and
+> should any of these changes be in a precursor patch that is a 'fix'.
+> 
+> 
+> > 
+> > Modify json.c to show 'unknown' if device is not in a recognized mode.
+> 
+> I think this means disabled devices will always look unknown even when
+> the intended mode is devdax or famfs, but disabled. This seems to
+> change the meaning of mode from 'configured' to 'active' personality.
+> Can you detect the configured mode even when disabled?
+> Perhaps a man page change about this new behavior?
 
-Fixes: 5033091de814 ("mm/hwpoison: introduce per-memory_block hwpoison counter")
-Cc: stable@vger.kernel.org
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
----
- drivers/base/memory.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Good point; before famfs mode there were just 2 modes, and 
+not-system-ram == devdax mode is the current standard, even if no driver 
+is bound. At some level that's a conflation, but I'll revise and stick 
+with that unless you have a better idea.
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index f806a683b767..6981b55d582a 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -1230,8 +1230,10 @@ void memblk_nr_poison_inc(unsigned long pfn)
- 	const unsigned long block_id = pfn_to_block_id(pfn);
- 	struct memory_block *mem = find_memory_block_by_id(block_id);
- 
--	if (mem)
-+	if (mem) {
- 		atomic_long_inc(&mem->nr_hwpoison);
-+		put_device(&mem->dev);
-+	}
- }
- 
- void memblk_nr_poison_sub(unsigned long pfn, long i)
-@@ -1239,8 +1241,10 @@ void memblk_nr_poison_sub(unsigned long pfn, long i)
- 	const unsigned long block_id = pfn_to_block_id(pfn);
- 	struct memory_block *mem = find_memory_block_by_id(block_id);
- 
--	if (mem)
-+	if (mem) {
- 		atomic_long_sub(i, &mem->nr_hwpoison);
-+		put_device(&mem->dev);
-+	}
- }
- 
- static unsigned long memblk_nr_poison(struct memory_block *mem)
--- 
-2.20.1
+Is that how you want it? No driver == devdax mode?
+
+Any thoughts?
+
+> 
+> snip
+> 
+> 
+> >  
+> > @@ -724,11 +767,21 @@ static int reconfig_mode_system_ram(struct daxctl_dev *dev)
+> >  	}
+> >  
+> >  	if (daxctl_dev_is_enabled(dev)) {
+> > -		rc = disable_devdax_device(dev);
+> > -		if (rc < 0)
+> > -			return rc;
+> > -		if (rc > 0)
+> 
+> Please check the return code semantics.
+> This gets rid of the <0 vs >0 distinction. That means a '1' skip
+> becomes an error return to the caller. Is that what you want?
+> 
+> Previously, we had a return 1 from disable_devdax_device for
+> “not applicable / already in other mode” and I think that is now
+> gone.
+> 
+> 
+> > +		if (mem) {
+> > +			/* already in system-ram mode */
+> >  			skip_enable = 1;
+> > +		} else if (daxctl_dev_is_famfs_mode(dev)) {
+> > +			rc = disable_famfs_device(dev);
+> > +			if (rc)
+> > +				return rc;
+> > +		} else if (daxctl_dev_is_devdax_mode(dev)) {
+> > +			rc = disable_devdax_device(dev);
+> > +			if (rc)
+> > +				return rc;
+> > +		} else {
+> > +			fprintf(stderr, "%s: unknown mode\n", devname);
+> > +			return -EINVAL;
+> > +		}
+> >  	}
+> >  
+> 
+> snip
+> 
+> >  static int reconfig_mode_devdax(struct daxctl_dev *dev)
+> >  {
+> > +	struct daxctl_memory *mem = daxctl_dev_get_memory(dev);
+> > +	const char *devname = daxctl_dev_get_devname(dev);
+> >  	int rc;
+> >  
+> >  	if (daxctl_dev_is_enabled(dev)) {
+> > -		rc = disable_system_ram_device(dev);
+> > -		if (rc)
+> > -			return rc;
+> > +		if (mem) {
+> > +			rc = disable_system_ram_device(dev);
+> > +			if (rc)
+> > +				return rc;
+> > +		} else if (daxctl_dev_is_famfs_mode(dev)) {
+> > +			rc = disable_famfs_device(dev);
+> > +			if (rc)
+> > +				return rc;
+> > +		} else if (daxctl_dev_is_devdax_mode(dev)) {
+> > +			/* already in devdax mode, just re-enable */
+> > +			rc = daxctl_dev_disable(dev);
+> > +			if (rc)
+> 
+> disable_* helpers print an error message on disable failure.
+> Seems this should too.
+> 
+> 
+> > +				return rc;
+> > +		} else {
+> > +			fprintf(stderr, "%s: unknown mode\n", devname);
+> > +			return -EINVAL;
+> > +		}
+> >  	}
+> >  
+> >  	rc = daxctl_dev_enable_devdax(dev);
+> > @@ -801,6 +870,40 @@ static int reconfig_mode_devdax(struct daxctl_dev *dev)
+> >  	return 0;
+> >  }
+> >  
+> > +static int reconfig_mode_famfs(struct daxctl_dev *dev)
+> > +{
+> > +	struct daxctl_memory *mem = daxctl_dev_get_memory(dev);
+> > +	const char *devname = daxctl_dev_get_devname(dev);
+> > +	int rc;
+> > +
+> > +	if (daxctl_dev_is_enabled(dev)) {
+> > +		if (mem) {
+> > +			fprintf(stderr,
+> > +				"%s is in system-ram mode, must be in devdax mode to convert to famfs\n",
+> > +				devname);
+> > +			return -EINVAL;
+> > +		} else if (daxctl_dev_is_famfs_mode(dev)) {
+> > +			/* already in famfs mode, just re-enable */
+> > +			rc = daxctl_dev_disable(dev);
+> > +			if (rc)
+> > +				return rc;
+> > +		} else if (daxctl_dev_is_devdax_mode(dev)) {
+> > +			rc = disable_devdax_device(dev);
+> > +			if (rc)
+> 
+> and here too...the disable error message.
+> 
+> 
+> > +				return rc;
+> > +		} else {
+> > +			fprintf(stderr, "%s: unknown mode\n", devname);
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +
+> > +	rc = daxctl_dev_enable_famfs(dev);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	return 0;
+> > +}
+> 
+> snip
+> 
+> > +DAXCTL_EXPORT int daxctl_dev_is_famfs_mode(struct daxctl_dev *dev)
+> > +{
+> > +	const char *devname = daxctl_dev_get_devname(dev);
+> > +	struct daxctl_ctx *ctx = daxctl_dev_get_ctx(dev);
+> > +	char *mod_path, *mod_base;
+> > +	char path[200];
+> 
+> We have PATH_MAX for the above.
+
+Done, thanks...
+
+> 
+> > +	const int len = sizeof(path);
+> > +
+> > +	if (!device_model_is_dax_bus(dev))
+> > +		return false;
+> > +
+> > +	if (!daxctl_dev_is_enabled(dev))
+> > +		return false;
+> > +
+> > +	if (snprintf(path, len, "%s/driver", dev->dev_path) >= len) {
+> > +		err(ctx, "%s: buffer too small!\n", devname);
+> > +		return false;
+> > +	}
+> > +
+> > +	mod_path = realpath(path, NULL);
+> > +	if (!mod_path)
+> 
+> Maybe a dbg() level err msg here
+> 
+> > +		return false;
+> > +
+> > +	mod_base = basename(mod_path);
+> 
+> Please use path_basename() because of this:
+> https://lore.kernel.org/all/20260116043056.542346-1-alison.schofield@intel.com/
+> 
+> Give me a minute ;) to push that to the pending branch and you can
+> work from there: https://github.com/pmem/ndctl/commits/pending/
+> 
+> snip to end.
+
+Done, thanks
+
+Still chewing on the other stuff
 
