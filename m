@@ -1,105 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC0726A1A4;
-	Mon, 27 Apr 2026 12:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586EA3C8705;
+	Mon, 27 Apr 2026 13:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777294304; cv=none; b=FSnYuAMN6GH1qTymYy/iJaSZDvR4ezHqg1a3MSJJrXIx6RGvuXL9Sl3BNsLuHw4kzeD5E5YWivdyz9IpK4b0B9YJ4E4fmp3abNS+UhrnOEGlMlOE4EIamXsGXHsF4WAUByLwPAp5OeqggCMSgvszpPncoCpMraX+HtbAs6jAyWs=
+	t=1777297388; cv=none; b=hNtnomqRbSfZFvhGdI3bzptu3ZdSv5mY950hKMcHXa4YXSmh7yUn/d+t+dKDAhiCVsBJaKwzwxmeyjxnkhmULbDgI8VfoIafiOk52yeCVy9XbsTXgoVLs/pcX7noIM6IcbvBTwMQbGSMtGJ0spdx0+Rw2s8zHJQ/NKT80RHz4Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777294304; c=relaxed/simple;
-	bh=Yupgt6WhksPtkoTuo9Rmvs+qfYOLtTWMBoIqgxRS2Ps=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FzNqgLiYiHWr9uFx0MeLF+KUP017iwPZsjnyzC2wXSeTw8WBANdXxVMfBM+USBAUo8esTHZZvlxIojaFSdN7lMZK5Qipc6fhFt+pmsbJqsD8WSeAZd4k3zD/8dCft6MLsvgr4oDG+6cxo7egOA3Fok9I0TWMVWeJ+uCpXCIrK3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p4XTPhc0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777297388; c=relaxed/simple;
+	bh=HYpZWzyqAIY0fKVdx1G8AWuk4ggGTSoGNuwwIO5d2iQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=EliIs7/DDKxv2jgUAhkKr4kJ5DbqZcdCSZhyQTbewPCX6JUeJS7Ne5L1Nmfz7Pv8Wf0KPj97WHXdRfQu4UOjUKXSHBxOcW2gGH2ME5Algq+Jjm4sd/fv1t+qM7EZaEY7/dF3g+eg2R/K59816ZwPZTLyLAooSpE8pmcITMh0Nfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oTje4ElN; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p4XTPhc0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3CBAC2BCB7;
-	Mon, 27 Apr 2026 12:51:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777294303;
-	bh=Yupgt6WhksPtkoTuo9Rmvs+qfYOLtTWMBoIqgxRS2Ps=;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oTje4ElN"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20260427134302epoutp0196401e6a027f43e9f7a2a8e4ec37def5~qOo2fjOBb1175011750epoutp01L;
+	Mon, 27 Apr 2026 13:43:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20260427134302epoutp0196401e6a027f43e9f7a2a8e4ec37def5~qOo2fjOBb1175011750epoutp01L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1777297383;
+	bh=HYpZWzyqAIY0fKVdx1G8AWuk4ggGTSoGNuwwIO5d2iQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=p4XTPhc0xls/70jA9TTIe57k2YH93QaLBlNiHNFaNRRTQn3hwWlFUqeWM0gZ2VG+l
-	 g2W2mQbYKAiuWaFXWgJaFmyEDQ8cUo8shQhOyKe2ofiiR00vCUAULpUzEJW/OhQ5/w
-	 +TZvVbW525EUglu1K+NIA1lDVOenT4t7JBVVMsfBD6D34ZHwYVQ+dtLiiBV7H5pHBS
-	 mczQILKejPHJcjigDwTAdW+dB6lCzI3NsLYqlaT2DncCyN7BfyicuIUQJ9wL/D/BRD
-	 5vPfkVXSs4hS6Dffeuk87UbaErMZc5xbcTUzGe/2tHg2PBjDaO+HxDEb0HBB+k5qtN
-	 i/to7M1e6DKsw==
-Date: Mon, 27 Apr 2026 13:51:32 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Sungwoo Kim <iam@sung-woo.kim>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>, Vishal Verma
- <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan Williams
- <djbw@kernel.org>, Robert Richter <rrichter@amd.com>, Li Ming
- <ming.li@zohomail.com>, Gregory Price <gourry@gourry.net>, Ben Widawsky
- <bwidawsk@kernel.org>, Dave Tian <daveti@purdue.edu>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] cxl/region: Fix race conditions in cxl region
- unregistration.
-Message-ID: <20260427135132.0fa47b24@jic23-huawei>
-In-Reply-To: <20260427032010.916681-2-iam@sung-woo.kim>
-References: <20260427032010.916681-2-iam@sung-woo.kim>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	b=oTje4ElNm4xecU1VG1Jrx86EY3Gpl1Vu+7Eg8igCfRDmuEWp0LdNN4Ssf0cEWBOKp
+	 03qrQy7Mwh4wQ/opBqnoORCUo1z8aoZlbY7D0/ViobxGIRXTFLcHW7dWyX9aTsl2N3
+	 Eh24v5hHa9Vb0gAdrDBssQHqG7CW+ElPnJnUatLc=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20260427134302epcas5p214d5e003586bc14fd5c926391fd2af9c~qOo16jVbi1491214912epcas5p24;
+	Mon, 27 Apr 2026 13:43:02 +0000 (GMT)
+Received: from epcpadp2new (unknown [182.195.40.142]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4g44Wp1ZR3z3hhT3; Mon, 27 Apr
+	2026 13:43:02 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0~qNwDrt8ay0098400984epcas5p1l;
+	Mon, 27 Apr 2026 12:38:00 +0000 (GMT)
+Received: from green245.gost (unknown [107.99.41.245]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20260427123748epsmtip257b0d1b83f2086e0e46dbf256b9f1ff0~qNv5BJqIr2057720577epsmtip23;
+	Mon, 27 Apr 2026 12:37:48 +0000 (GMT)
+Date: Mon, 27 Apr 2026 18:02:57 +0530
+From: Arun George <arun.george@samsung.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, david@kernel.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+	mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+	baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
+	dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
+	muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
+	jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
+	pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
+	riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
+	roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+	zhengqi.arch@bytedance.com, terry.bowman@amd.com, gost.dev@samsung.com,
+	arungeorge05@gmail.com, cpgs@samsung.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <1983025922.01777297382206.JavaMail.epsvc@epcpadp2new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
+X-CMS-MailID: 20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----lGFk.c4Zo19QZrlL9e6EpsCdvlY3lrbI5T.6445u7ei3FFQQ=_4f40_"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0
+References: <20260222084842.1824063-1-gourry@gourry.net>
+	<CGME20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0@epcas5p1.samsung.com>
 
-On Sun, 26 Apr 2026 23:20:07 -0400
-Sungwoo Kim <iam@sung-woo.kim> wrote:
+------lGFk.c4Zo19QZrlL9e6EpsCdvlY3lrbI5T.6445u7ei3FFQQ=_4f40_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-> This version mainly addresses Dave's comments and meaningful issues reported by Sashiko AI[1].
-> 
-> Overview
-> ========
-> This patch series fixes race conditions in cxl region unregistration.
-> 
-> devm_release_action() should be called once, otherwise, it warns about
-> the second call. However, the current implementation has a race condition
-> that allows multiple calls to devm_release_action(). The details are in
-> each patch.
-> 
-> To fix these, the first patch adds a new function that guarantees that
-> devm_release_action() is called only once.
-> Using this function, the second patch subsitutes the current use of 
-> devm_release_action() in cxl region with the new function.
-> 
-> Change in v3
-> ============
-> Addressed Dave's comments:
-> - Split and made this in a patch series.
-> - Enhanced a commit log explaining why a workqueue is used in the first patch.
-> - Added a context on how these issues were found and what impact was observed and how that effects a user in the second patch.
-> Sashiko AI review fixes:
-> - Fixed construct_region() as it also can race.
-> - Used a driver's wq instead of system wq so unbinding can drain a work.
-> 
-> [1] https://sashiko.dev/#/patchset/20260422045637.3048249-2-iam%40sung-woo.kim
-> 
-> Earlier approach:
-> v2: https://lore.kernel.org/linux-cxl/20260422045637.3048249-2-iam@sung-woo.kim/
-> v1: https://lore.kernel.org/linux-cxl/20260308185958.2453707-2-iam@sung-woo.kim/
+On 22/02/26 03:48AM, Gregory Price wrote:
+>Topic type: MM
+>
+>Presenter: Gregory Price <gourry@gourry.net>
+>
+>This series introduces N_MEMORY_PRIVATE, a NUMA node state for memory
+>managed by the buddy allocator but excluded from normal allocations.
+>
+>I present it with an end-to-end Compressed RAM service (mm/cram.c)
+>that would otherwise not be possible (or would be considerably more
+>difficult, be device-specific, and add to the ZONE_DEVICE boondoggle).
+>
+>
+>TL;DR
+>===
+>
+Appreciate the work as we also chase the same problem statement.
+A few queries please.
 
-Looks fine to me - I'm not particular keen on delayed releasing as it
-may end up with unordered tear down but I don't have a better idea.
+I see the current support relies on read-only mappings which might
+limit the performance. Any particular workload you are targeting with
+this (which can tolerate this latency)?
 
-Reviewed-by: Jonathan Cameron <jic23@kernel.org>
+Any deployments you think of where the goal is a capacity expansion
+with a compromise in performance?
+
+On the device side, are you targeting beyond compressed RAM like
+devices such as memory with NAND etc.?
+
+The TL;DR talked about mmap/mbind way of user space allocation from
+the private node. But the allocation is controlled by GFP flag
+N_MEMORY_PRIVATE. Does the user space path of allocation set this
+flag along the way?
+
+And I believe the bear-proof cage might work in the normal scenarios,
+but may not work for all. We might not be able to rely on the control
+path (backpressure) fully. The control path could go slow, slower and
+even die as well. Should the device respond with something like
+'bus error' if the host tries to write when it is not capable of
+taking any more writes?
+
+Are there any workloads (VM?) where this 'bus error'or similar error
+could be an OK / recoverable scenario?
+
+This is assuming that checking with the device on every operation
+(whether it is safe to write or not) could be slow.
+
+--- Arun George
+
+------lGFk.c4Zo19QZrlL9e6EpsCdvlY3lrbI5T.6445u7ei3FFQQ=_4f40_
+Content-Type: text/plain; charset="utf-8"
 
 
-> 
-> Sungwoo Kim (2):
->   cxl/region: serialize devm action removal via scheduled work
->   cxl/region: Fix a race bug in delete_region_store()
-> 
->  drivers/cxl/core/port.c   |  6 +++++
->  drivers/cxl/core/region.c | 47 ++++++++++++++++++++++++++++++++++-----
->  drivers/cxl/cxl.h         |  9 ++++++++
->  3 files changed, 57 insertions(+), 5 deletions(-)
-> 
+------lGFk.c4Zo19QZrlL9e6EpsCdvlY3lrbI5T.6445u7ei3FFQQ=_4f40_--
 
