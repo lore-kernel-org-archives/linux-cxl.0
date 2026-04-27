@@ -1,49 +1,49 @@
-Received: from mail-yx1-f54.google.com (mail-yx1-f54.google.com [74.125.224.54])
+Received: from mail-yx1-f49.google.com (mail-yx1-f49.google.com [74.125.224.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C717426A08A
-	for <linux-cxl@vger.kernel.org>; Mon, 27 Apr 2026 03:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1A826A08A
+	for <linux-cxl@vger.kernel.org>; Mon, 27 Apr 2026 03:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777260390; cv=none; b=ObBnK1E08L3DsFb5yjRIvqiaz3jQidbJVgZJ6F0tz8LkZ/x3x3tqZYWFj0xkkFsZ8261bzMEaHLPFh0rOsVWSUpmrqlGSW/clYqR9ifrOikmSOcndzJu9WOeH8hUvi5Q/B017Ufo0P3b/N70LJRURzzcDyX/9WO8NBKy44r54Q0=
+	t=1777260393; cv=none; b=pUUknTjo8s2AUAsdbjW0Huyn1hahym24hHR6lsW9V/YFk52yVQYfi4hYXkwhCsvGJB9BOw0fpARyP7b/Xe7629IdxeZOaMWjkrii4DsZeDG2mtj8ACnu7pOfcak9g/1cLqtBK4zxy5wLoe8isi3RNguLw2P++6+qs38xGkVWo30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777260390; c=relaxed/simple;
-	bh=o9u/OwTZbv2Jmv7Yqa1UMp6K0xAH19Dqu+osE5o1Pkw=;
+	s=arc-20240116; t=1777260393; c=relaxed/simple;
+	bh=/tuIm7lBZ2ovM2HT2MHU2C5GZd5ttgZkhMqpDfT31H0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gFINLJLv1ysM8y/qSMzggCnHGUTq73VNkKQpLlXSfFrL+hHjg8gfazB9UXbt+q/U3mHuC+dj55G2AUACw22yBQVAuY8gdoBz+a19lE0bCxQ/00y32U6MW12hFPZBPXO5awAckhufFWvMuHf5O8SbuG3Tx+mE6DjieO9P3RPMX5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=74.125.224.54
+	 MIME-Version; b=cQMcJ5tn72flxrFlXbgf2VRQvbKCmoDGu3vBgw1A9FlToZrjQkI1Tp4Qgy+UaYdAYqh+LzkBxuDhQGlBm0VkSiFi2eq6JmdhdGu1PCnCbaEktBD1U0G1cDeS9AdDPg2xi0gRWe35XO1IUAtDc0jh45D+ev3FwTZYUZL210J2h5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=74.125.224.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-650775f427eso10185966d50.2
-        for <linux-cxl@vger.kernel.org>; Sun, 26 Apr 2026 20:26:28 -0700 (PDT)
+Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-65318dafbcbso9409510d50.2
+        for <linux-cxl@vger.kernel.org>; Sun, 26 Apr 2026 20:26:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777260388; x=1777865188;
+        d=1e100.net; s=20251104; t=1777260391; x=1777865191;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=C5hxakvROgtrD8FVisml9LRgxf6CeSENy2gXMVuYHr4=;
-        b=MYrlRv4TnDiCtLymbt5kkNYjwVt8AXwdbPlQX4n+z4Yyyq0GomY/HxBSn7OlAH2pVk
-         zvXBKdZU8QoSrGyaW13DJtq1wTBKRdumljMrOP1I25Lk/WkJCTAYeh+ePIybEaY81MzE
-         iMKTLCrD8gN1NuDQrfVwZ+mFPj9jbQ3HInIp6hp2sxJh/EfNv+F8xLrRaXCMCOk7peuY
-         oiZ7pt1OIetqvsQk/HzSpYQ5Uscvik1w3/LYk0xisRTq80zlCk2vvAAO0rnksYIMkzjO
-         nUSHGQ40lpalPWliCcXD/lVnHXWMaHUegZe/OAq+XRpGurJUQTq5CY1/fLT0QSvlSiPl
-         w1yg==
-X-Forwarded-Encrypted: i=1; AFNElJ+8U5kxzmOjE7Dyny1eQKrithadsjU+fwGTZvXzDN9NuUNNM+C+GNzrRZH1kf1x805iQ4FJstmLkls=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv0KwsZTtKfqZuK6gmL4d6jCh7bNtayuJNbln0dKHvriZAm0zI
-	VFxPH60mTR3uoLZ4Kr0UNswjV1To+h3UY6EaQ7cCwTzvz8YLa74K4j49
-X-Gm-Gg: AeBDiet881klMzaa2z2A3leygLzMj0mJVV2GFTSf/TPBN/x9/QJl1NbsdN7+kHitYSS
-	wCWq0BS/8L+0r7OgblgCj8k24R2xT/XdL8HZm80jl8hyRsedo5VNsrK+hlVc/RkLl4Np0JI++Pc
-	K3ctH7184xl1udXknHfYvW7atx9DKDEePga9X2r7R38/YktTihv8pB+zVu8uhwfiF65w+ghi/D2
-	jFFotUS343u0eYbuKzIu1aLySMNT3BDVZkftAOculJY0dQAOFlznc25PV5c3LXcCQd1u2Tf6L8Z
-	dlRqfN2cpi/KyOqnZ9RgQgMMcJnamKcQ/rf4chw794bl1r/Myhcyyyskss/wCWZbGfsfv3f3Lqj
-	IZt5p6+P/84ork7dH5mI+yrfFkJ0OJbcfJQqNuHSZ990VBZngeW5lmmDwtW/7+hYmuUYKQtlAsb
-	3NGZhIferKdWdl/XbXfWHK
-X-Received: by 2002:a53:ea84:0:b0:651:8d82:acc5 with SMTP id 956f58d0204a3-653108c0224mr29243595d50.26.1777260387798;
-        Sun, 26 Apr 2026 20:26:27 -0700 (PDT)
+        bh=jL0w3++j1T4lvfmJHedjOyHD2Gu9RdXz+BDQhF932Xw=;
+        b=m/5KyxV0MsCkEMhyb3zgtBlRKjKkdSaKCws9rLqgJgKG8HLevtDelEBOLUnRxVb8Gx
+         sCWA+e0ZQYOHhhkX2cgTvCsRc2y3Sg8YtCqnYTA8+9I/qDYT9//QizQq26feICz8wNjj
+         pwZQvMOSm+dxT9x/6IGvSkTAewNFFY/pKQgP6tguwmlNzFad73J6mBJHU4W4QL2qSXQC
+         xBnJTY98m4X9IusHkiYwX+MpjT9FHJ9D+i1XTuxa6ufZ3nO8m4JnU8AN28qMilGZ3v1k
+         umM0STXDDUBjz7iptsFr3qc1ko85LMLX+JK0P3mgl70tK7ig9drORt/+ZQ7Pji5lu8ZS
+         Do+g==
+X-Forwarded-Encrypted: i=1; AFNElJ88o0RT5riPnxR+qWtrQaoyUqYu50GlUZeWBl/fPmXwR1MB8dxL7mVIYIpCMBTYnQmfbiyGemVURxQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCQ7XPHUy1Rn0W/Sjmh1E7T9Xtkg1FBlJ2Xemf9o0YduUrQP93
+	nZuBhR004thFuvpFBiSEsRZRMgWrcjoko6cV1cdYXe0q+HMdqjLCPSdo
+X-Gm-Gg: AeBDieuFAYoGglhaI8Wf/7TE1JFScQktdYxEi7nOWmP7nwPPFnexOcetk1eDY7XD1+G
+	AiwwUNtChpuqgeQgj/IjOMtuf+1Bqt2y0Pw4ayL/pMAN9I1FP9e4pCcuRezz6O0yTTvReYlUgtV
+	dQj9sKaljcG3XxBU7niP+3jBHjFNNp9crJkNKAeOJJoDPx7RTUnt0N4UYe/VVDRHurqcwVPti0d
+	QvjoN6xZkvGfiyil40fM/Mvasgax0QQdoST+62btH6vjSfbMGZs9uhm9ca/tMpbS9S+oBnVARUH
+	AX/FYuB7/Ns8LCdtk5x5b8NUa9PVog6tEYS0RvGHJeakO1AcCwnsjs71ZyMgNED0czcdUxiPvvT
+	O58BbpSmSyxH9XK9vqh0Di2xJxIe3bbAEFclf+iGbt9K+da2On3DTm5a9wysnGL/w99xCqu1mPW
+	H3KmjFVgZjANGpAEkLf44d
+X-Received: by 2002:a05:690e:144c:b0:654:6cd0:f96b with SMTP id 956f58d0204a3-6546cd144b3mr13884636d50.5.1777260391520;
+        Sun, 26 Apr 2026 20:26:31 -0700 (PDT)
 Received: from tofu.. ([128.210.0.165])
-        by smtp.googlemail.com with ESMTPSA id 956f58d0204a3-65314b26b56sm14087239d50.4.2026.04.26.20.26.26
+        by smtp.googlemail.com with ESMTPSA id 956f58d0204a3-65314b26b56sm14087239d50.4.2026.04.26.20.26.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2026 20:26:26 -0700 (PDT)
+        Sun, 26 Apr 2026 20:26:31 -0700 (PDT)
 From: Sungwoo Kim <iam@sung-woo.kim>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -51,14 +51,16 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Alison Schofield <alison.schofield@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <djbw@kernel.org>
+	Dan Williams <djbw@kernel.org>,
+	Ben Widawsky <bwidawsk@kernel.org>
 Cc: Dave Tian <daveti@purdue.edu>,
 	Sungwoo Kim <iam@sung-woo.kim>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/2] cxl/region: serialize devm action removal via scheduled work
-Date: Sun, 26 Apr 2026 23:20:09 -0400
-Message-ID: <20260427032010.916681-4-iam@sung-woo.kim>
+Subject: [PATCH v3 2/2] cxl/region: Fix a race bug in delete_region_store()
+Date: Sun, 26 Apr 2026 23:20:10 -0400
+Message-ID: <20260427032010.916681-5-iam@sung-woo.kim>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260427032010.916681-2-iam@sung-woo.kim>
 References: <20260427032010.916681-2-iam@sung-woo.kim>
@@ -70,160 +72,101 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-devm_remove_action() must be called (1) only once and (2) only if the
-device is still bound to a driver. However, several race conditions
-allow multiple calls to devm_remove_action().
+This patch fixes race conditions in cxl region unregistration by (1) using
+remove_devm_actions() instead of directly calling devm_release_action()
+and (2) making unregister_region() idempotent.
 
-For example, delete_region_store() and devres_release_all() can race [1]:
+Race:
 
-CPU0                                    CPU1
-devres_release_all()
-   // take devres_lock
-   remove_nodes(devres_head) // mv to local todo
-   // drop devres_lock                   delete_region_store()
-                                           cxlr = cxl_find_region_by_name()  // success
-                                           devm_release_action(unregister_region)
-                                             devres_release()
-                                               devres_remove()
-                                                 // hold devres_lock
-                                                 find_dr(devres_head) // does not find it
-                                             WARN_ON(-ENOENT)
-   release_nodes() // drain todo
-     unregister_region(cxlr) // release() cb
-       device_del()
+CPU 0                     CPU 1
+======                    ======
+delete_region_store()
+  cxlr = cxl_find_region_by_name()
+                          delete_region_store()
+                            cxlr = cxl_find_region_by_name()
+  devm_release_action()
+                            devm_release_action()
+                            // cannot find the action, WARN_ON()
 
-To prevent this, this patch introduces a new function,
-remove_devm_actions(), that safely performs devm_release_action().
+Splat:
 
-remove_devm_actions() guarantees that devm_release_action() is called
-only once by guarding with a flag. Also, it checks if the device is
-still bound to a driver before calling devm_remove_action().
+WARNING: drivers/base/devres.c:824 at devm_release_action drivers/base/devres.c:824 [inline], CPU#0: syz.1.12224/47589
+WARNING: drivers/base/devres.c:824 at devm_release_action+0x2b2/0x360 drivers/base/devres.c:817, CPU#0: syz.1.12224/47589
 
-In order to check the binding, a device lock must be held. To do this,
-Dan suggested [2] using a workqueue, since a new work has no prior lock
-and is clean to acquire a device lock.
+It's found by a fuzzer based on Syzkaller that rapidly executes CXL's
+sysfs interface with QEMU CXL devices cxl-type3 and pxb-cxl.
 
-[1] https://lore.kernel.org/linux-cxl/20260310183644.4rwc7ilmzy4t5xp6@offworld/
-[2] https://lore.kernel.org/linux-cxl/69b0a0f8bfb0b_213210026@dwillia2-mobl4.notmuch/
+Syzkaller's CXL grammar is available at:
+https://github.com/swkim101/syz-cxl/blob/main/cxl.txt
 
+The bug's impact seems low, since the region has already been released.
+So, it does not affect users, except for a negligible warning message.
+
+Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
 Suggested-by: Dan Williams <djbw@kernel.org>
 Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
 ---
- drivers/cxl/core/port.c   |  6 ++++++
- drivers/cxl/core/region.c | 27 +++++++++++++++++++++++++++
- drivers/cxl/cxl.h         |  9 +++++++++
- 3 files changed, 42 insertions(+)
+ drivers/cxl/core/region.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index c5aacd7054f1..2f142cea7f26 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -2305,6 +2305,12 @@ bool schedule_cxl_memdev_detach(struct cxl_memdev *cxlmd)
- }
- EXPORT_SYMBOL_NS_GPL(schedule_cxl_memdev_detach, "CXL");
- 
-+bool schedule_cxl_region_remove_devm_actions(struct cxl_region *cxlr)
-+{
-+	return queue_work(cxl_bus_wq, &cxlr->remove_work);
-+}
-+EXPORT_SYMBOL_NS_GPL(schedule_cxl_region_remove_devm_actions, "CXL");
-+
- static void add_latency(struct access_coordinate *c, long latency)
- {
- 	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index e50dc716d4e8..b086ae88b5bb 100644
+index b086ae88b5bb..08b93b14a2c7 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -39,6 +39,7 @@
- static nodemask_t nodemask_region_seen = NODE_MASK_NONE;
+@@ -2544,6 +2544,9 @@ static void unregister_region(void *_cxlr)
+ 	struct cxl_region_params *p = &cxlr->params;
+ 	int i;
  
- static struct cxl_region *to_cxl_region(struct device *dev);
-+static void remove_devm_actions_work(struct work_struct *work);
- 
- #define __ACCESS_ATTR_RO(_level, _name) {				\
- 	.attr	= { .name = __stringify(_name), .mode = 0444 },		\
-@@ -2589,6 +2590,8 @@ static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd, int i
- 	dev->type = &cxl_region_type;
- 	cxl_region_setup_flags(cxlr, &cxlrd->cxlsd.cxld);
- 
-+	INIT_WORK(&cxlr->remove_work, remove_devm_actions_work);
-+
- 	return cxlr;
- }
- 
-@@ -2831,6 +2834,30 @@ cxl_find_region_by_name(struct cxl_root_decoder *cxlrd, const char *name)
- 	return to_cxl_region(region_dev);
- }
- 
-+static bool remove_devm_actions(struct cxl_region *cxlr)
-+{
-+	return schedule_cxl_region_remove_devm_actions(cxlr);
-+}
-+
-+static void remove_devm_actions_work(struct work_struct *work)
-+{
-+	struct cxl_region *cxlr = container_of(work, typeof(*cxlr), remove_work);
-+	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
-+	struct cxl_port *port = to_cxl_port(cxlrd->cxlsd.cxld.dev.parent);
-+
-+	if (test_and_set_bit(CXL_REGION_F_DEVM_REMOVE, &cxlr->flags)) {
-+		put_device(&cxlr->dev);
++	if (test_and_set_bit(CXL_REGION_F_UNREGISTER, &cxlr->flags))
 +		return;
-+	}
 +
-+	scoped_guard(device, port->uport_dev) {
-+		if (port->uport_dev->driver)
-+			devm_remove_action(port->uport_dev, unregister_region, cxlr);
-+	}
-+
-+	put_device(&cxlr->dev);
-+}
-+
- static ssize_t delete_region_store(struct device *dev,
- 				   struct device_attribute *attr,
+ 	device_del(&cxlr->dev);
+ 
+ 	/*
+@@ -2863,15 +2866,18 @@ static ssize_t delete_region_store(struct device *dev,
  				   const char *buf, size_t len)
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 1297594beaec..31ca4e6676ed 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -447,6 +447,12 @@ struct cxl_region_params {
-  */
- #define CXL_REGION_F_NORMALIZED_ADDRESSING 3
+ {
+ 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
+-	struct cxl_port *port = to_cxl_port(dev->parent);
+ 	struct cxl_region *cxlr;
  
-+/* Indicate that this region is being unregistered to prevent a race. */
-+#define CXL_REGION_F_UNREGISTER 4
++	/* remove_devm_actions_work() will put cxlr->dev. */
+ 	cxlr = cxl_find_region_by_name(cxlrd, buf);
+ 	if (IS_ERR(cxlr))
+ 		return PTR_ERR(cxlr);
+ 
+-	devm_release_action(port->uport_dev, unregister_region, cxlr);
+-	put_device(&cxlr->dev);
++	unregister_region(cxlr);
++	if (!remove_devm_actions(cxlr)) {
++		put_device(&cxlr->dev);
++		return -EBUSY;
++	}
+ 
+ 	return len;
+ }
+@@ -3736,7 +3742,6 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+ {
+ 	struct cxl_endpoint_decoder *cxled = ctx->cxled;
+ 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+-	struct cxl_port *port = cxlrd_to_port(cxlrd);
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 	int rc, part = READ_ONCE(cxled->part);
+ 	struct cxl_region *cxlr;
+@@ -3757,7 +3762,12 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+ 
+ 	rc = __construct_region(cxlr, ctx);
+ 	if (rc) {
+-		devm_release_action(port->uport_dev, unregister_region, cxlr);
++		/* remove_devm_actions_work() will put the device */
++		get_device(&cxlr->dev);
++		unregister_region(cxlr);
++		if (!remove_devm_actions(cxlr))
++			put_device(&cxlr->dev);
 +
-+/* Indicate that this region called devm_remove_action. */
-+#define CXL_REGION_F_DEVM_REMOVE 5
-+
- /**
-  * struct cxl_region - CXL region
-  * @dev: This region's device
-@@ -462,6 +468,7 @@ struct cxl_region_params {
-  * @coord: QoS access coordinates for the region
-  * @node_notifier: notifier for setting the access coordinates to node
-  * @adist_notifier: notifier for calculating the abstract distance of node
-+ * @remove_work: trigger the remove action in a safe context to acquire locks
-  */
- struct cxl_region {
- 	struct device dev;
-@@ -477,6 +484,7 @@ struct cxl_region {
- 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
- 	struct notifier_block node_notifier;
- 	struct notifier_block adist_notifier;
-+	struct work_struct remove_work;
- };
+ 		return ERR_PTR(rc);
+ 	}
  
- struct cxl_nvdimm_bridge {
-@@ -733,6 +741,7 @@ struct cxl_port *cxl_pci_find_port(struct pci_dev *pdev,
- struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd,
- 				   struct cxl_dport **dport);
- bool schedule_cxl_memdev_detach(struct cxl_memdev *cxlmd);
-+bool schedule_cxl_region_remove_devm_actions(struct cxl_region *cxlr);
- 
- struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
- 				     struct device *dport, int port_id,
 -- 
 2.47.3
 
