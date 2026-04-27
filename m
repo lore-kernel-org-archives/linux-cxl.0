@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812207083C;
-	Mon, 27 Apr 2026 16:37:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA88C3D349F;
+	Mon, 27 Apr 2026 17:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777307858; cv=none; b=sJSmXtKA9tIZ7Y5kOP7uDqRQM5aiIMe5oXdz/NA7yU7K1O0bSI0b8+ZNolDe1TrgFYp+vxqukzPr+Uq5+WQhg7iBumU421CjjIpIrXfP47b63Ldw1Ds0ahGBz6S+11S3J+emts2vEqg3LTpFQcZKUU8CnIKgTSeEiB+WSVdeVnU=
+	t=1777310842; cv=none; b=l/zt32yvCqxYN2ObjNlhnpe61hmqKYL4j7WLz5GKD1Ds7Nc3W9tuxOr6qe/qpy7g+H7oc6N7/6yW/o/nMi0vRspSHmc1uQUd9jKb+hTSL3yQtlEYvDWQPG0lI1/2yyQHm/mLl821tb/VEsQUfKpmTOMDh4gwTSd+TzeC3VUgcT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777307858; c=relaxed/simple;
-	bh=YIh4WeN8QUAy34rQE95nzKe8DABTjUVlxtRPaQcJnk4=;
+	s=arc-20240116; t=1777310842; c=relaxed/simple;
+	bh=NYq9lXFC8KudYcnqYdHndij86Ukhz0k+Dqz0gchRTU8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fk+TSDi6s5QZBikgXT2BkwKBxhXaqDjZJ8N8OnE/UsuoA8eZlvKiZIWH0ph/PTJoedHGCh+hbnx15tlZL18U3abvWc5bxjygJOph6trwZePGxcVaQIINt31idGlOk7d+38ctz9+0nGIW2iL5CZqBMCfprwvbLeMmcoeWPfMM908=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O5k4jZRL; arc=none smtp.client-ip=192.198.163.19
+	 In-Reply-To:Content-Type; b=DXckG7UQsgpg8P7095nzkbzf+mu75QcWMFddX6j/2n0ow8QHLAOcwnCKMUIpFFeF3GNzxRRTrbDW2HwgGDJVjqRpcVPVUbEU+UGYlE8xTCjNWdp+79NMYkeB7QNuxO6hMxRSXMjaWm86trdeNhUHJtcV+7N9nABst5uaW+7ObGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nS3qMrUx; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O5k4jZRL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nS3qMrUx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777307856; x=1808843856;
+  t=1777310840; x=1808846840;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=YIh4WeN8QUAy34rQE95nzKe8DABTjUVlxtRPaQcJnk4=;
-  b=O5k4jZRLxsIY/8pNfZ79qgBRZjQQV7GWzrpBMeJfDgFSiYoyACf2cyoV
-   LnSesCx5JLgV3KGPRkBhFBDWEsk2BaTfkXvhJ5xasiviYLXbXlk6TdE2Y
-   5QrTkU9rAoq79buWbV1gFmMYH/8ICeVn2swh4pzQbzg7FhlhXwmiQedaG
-   4m8Deam15tZemK9212ALjzeiVdkQPl+VpcalKa1lt2TdVscVjLiwYUakz
-   XQzkySMT01Ui0oH/Mhxce68F+i8/h4LMsjmq1rUw6W5iUsat6teIwHsh7
-   3kAzJCQ7hgECw53sRs5unzFiPrwiybt5py4Er/JOYSMwWd1tVpR14EzGM
+  bh=NYq9lXFC8KudYcnqYdHndij86Ukhz0k+Dqz0gchRTU8=;
+  b=nS3qMrUxLMIjVfwz6DZCPZT4vWJwYjyBHQ5Md+w8ULRmMnbhzpBpBUkW
+   RG+sgr5lbBj3VU+glf9tkTS7OTsfIPKpE6YyxevfGyURA41qj2kPf3QuZ
+   7cK9EGTtwxWG0GHEwwnLiCnMkibxkyusNctU6j309tiy3gbatFjlTSYvJ
+   Ly+dvVK1FKYAhyOMX+xVXk3QKQ8WOLEw0ypNN//MOQAxsO/83h3h4IxmU
+   RMlt6nZc+TAXnoZDZVa0jfRppcxkK2yP22KY12owzIe/Iw6jYyK7brFSZ
+   h6svYnP6L5WlJDXXVdtbzMibGJHvmAMJob6LzHCYm6J0Nn+GI3ge2Zj8R
    g==;
-X-CSE-ConnectionGUID: nEAEmDe0QgulIc0wRb6rfA==
-X-CSE-MsgGUID: 57bALsCqSMyxATz0k4XaIg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11769"; a="77231917"
+X-CSE-ConnectionGUID: /+++KLKHQYOWvfvWEUfn7Q==
+X-CSE-MsgGUID: GcGRywLiRDKQWaWU0uVAcA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11769"; a="89295395"
 X-IronPort-AV: E=Sophos;i="6.23,202,1770624000"; 
-   d="scan'208";a="77231917"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2026 09:37:36 -0700
-X-CSE-ConnectionGUID: n0jX+b1ESp2QJU2StdRyxA==
-X-CSE-MsgGUID: m5gUBWOhT5Gq4mf82ZIymw==
+   d="scan'208";a="89295395"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2026 10:27:19 -0700
+X-CSE-ConnectionGUID: 5lH2qBWVRACMg5n2h36Ntg==
+X-CSE-MsgGUID: f0hBJUXaRkWHf0egUI5ZeA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,202,1770624000"; 
-   d="scan'208";a="235438818"
+   d="scan'208";a="233573391"
 Received: from msatwood-mobl.amr.corp.intel.com (HELO [10.125.108.172]) ([10.125.108.172])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2026 09:37:34 -0700
-Message-ID: <4389deb3-2c25-45ce-bbd5-ae36760d2619@intel.com>
-Date: Mon, 27 Apr 2026 09:37:33 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2026 10:27:18 -0700
+Message-ID: <5d122716-440c-465f-a999-a9e1fa8e308d@intel.com>
+Date: Mon, 27 Apr 2026 10:27:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,214 +52,183 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] iommu/arm-smmu-v3: Allow ATS to be always on
-To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, will@kernel.org,
- robin.murphy@arm.com, bhelgaas@google.com
-Cc: joro@8bytes.org, praan@google.com, baolu.lu@linux.intel.com,
- kevin.tian@intel.com, miko.lenczewski@arm.com,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- dan.j.williams@intel.com, jonathan.cameron@huawei.com, vsethi@nvidia.com,
- linux-cxl@vger.kernel.org, nirmoyd@nvidia.com
-References: <cover.1777269009.git.nicolinc@nvidia.com>
- <7403163ebf59380f88c7503b3adf0dae07428df8.1777269009.git.nicolinc@nvidia.com>
+Subject: Re: [PATCH v3 1/2] cxl/region: serialize devm action removal via
+ scheduled work
+To: Sungwoo Kim <iam@sung-woo.kim>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jic23@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <djbw@kernel.org>
+Cc: Dave Tian <daveti@purdue.edu>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260427032010.916681-2-iam@sung-woo.kim>
+ <20260427032010.916681-4-iam@sung-woo.kim>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <7403163ebf59380f88c7503b3adf0dae07428df8.1777269009.git.nicolinc@nvidia.com>
+In-Reply-To: <20260427032010.916681-4-iam@sung-woo.kim>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 4/26/26 10:54 PM, Nicolin Chen wrote:
-> When a device's default substream attaches to an identity domain, the SMMU
-> driver currently sets the device's STE between two modes:
+On 4/26/26 8:20 PM, Sungwoo Kim wrote:
+> devm_remove_action() must be called (1) only once and (2) only if the
+> device is still bound to a driver. However, several race conditions
+> allow multiple calls to devm_remove_action().
 > 
->   Mode 1: Cfg=Translate, S1DSS=Bypass, EATS=1
->   Mode 2: Cfg=bypass (EATS is ignored by HW)
+> For example, delete_region_store() and devres_release_all() can race [1]:
 > 
-> When there is an active PASID (non-default substream), mode 1 is used. And
-> when there is no PASID support or no active PASID, mode 2 is used.
+> CPU0                                    CPU1
+> devres_release_all()
+>    // take devres_lock
+>    remove_nodes(devres_head) // mv to local todo
+>    // drop devres_lock                   delete_region_store()
+>                                            cxlr = cxl_find_region_by_name()  // success
+>                                            devm_release_action(unregister_region)
+>                                              devres_release()
+>                                                devres_remove()
+>                                                  // hold devres_lock
+>                                                  find_dr(devres_head) // does not find it
+>                                              WARN_ON(-ENOENT)
+>    release_nodes() // drain todo
+>      unregister_region(cxlr) // release() cb
+>        device_del()
 > 
-> The driver will also downgrade an STE from mode 1 to mode 2, when the last
-> active substream becomes inactive.
+> To prevent this, this patch introduces a new function,
+> remove_devm_actions(), that safely performs devm_release_action().
 > 
-> However, there are PCIe devices that demand ATS to be always on. For these
-> devices, their STEs have to use the mode 1 as HW ignores EATS with mode 2.
+> remove_devm_actions() guarantees that devm_release_action() is called
+> only once by guarding with a flag. Also, it checks if the device is
+> still bound to a driver before calling devm_remove_action().
 > 
-> Change the driver accordingly:
->   - always use the mode 1
->   - never downgrade to mode 2
->   - allocate and retain a CD table (see note below)
+> In order to check the binding, a device lock must be held. To do this,
+> Dan suggested [2] using a workqueue, since a new work has no prior lock
+> and is clean to acquire a device lock.
 > 
-> Note that these devices might not support PASID, i.e. doing non-PASID ATS.
-> In such a case, the ssid_bits is set to 0. However, s1cdmax must be set to
-> a !0 value in order to keep the S1DSS field effective. Thus, when a master
-> requires ats_always_on, set its s1cdmax to at least 1, meaning that the CD
-> table will have a dummy entry (SSID=1) that will never be used.
+> [1] https://lore.kernel.org/linux-cxl/20260310183644.4rwc7ilmzy4t5xp6@offworld/
+> [2] https://lore.kernel.org/linux-cxl/69b0a0f8bfb0b_213210026@dwillia2-mobl4.notmuch/
 > 
-> Now for these devices, arm_smmu_cdtab_allocated() will always return true,
-> v.s. false prior to this change. When its default substream is attached to
-> an IDENTITY domain, its first CD is NULL in the table, which is a totally
-> valid case. Thus, add "!master->ats_always_on" to the condition.
-> 
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Tested-by: Nirmoy Das <nirmoyd@nvidia.com>
-> Acked-by: Nirmoy Das <nirmoyd@nvidia.com>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-
+> Suggested-by: Dan Williams <djbw@kernel.org>
+> Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
 > ---
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h |  1 +
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 75 ++++++++++++++++++---
->  2 files changed, 68 insertions(+), 8 deletions(-)
+>  drivers/cxl/core/port.c   |  6 ++++++
+>  drivers/cxl/core/region.c | 27 +++++++++++++++++++++++++++
+>  drivers/cxl/cxl.h         |  9 +++++++++
+>  3 files changed, 42 insertions(+)
 > 
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> index ef42df4753ec4..8c3600f4364c5 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> @@ -943,6 +943,7 @@ struct arm_smmu_master {
->  	bool				ats_enabled : 1;
->  	bool				ste_ats_enabled : 1;
->  	bool				stall_enabled;
-> +	bool				ats_always_on;
->  	unsigned int			ssid_bits;
->  	unsigned int			iopf_refcount;
->  };
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> index e8d7dbe495f03..d478f148cd34b 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-> @@ -1742,8 +1742,11 @@ void arm_smmu_clear_cd(struct arm_smmu_master *master, ioasid_t ssid)
->  	if (!arm_smmu_cdtab_allocated(&master->cd_table))
->  		return;
->  	cdptr = arm_smmu_get_cd_ptr(master, ssid);
-> -	if (WARN_ON(!cdptr))
-> +	if (!cdptr) {
-> +		/* Only ats_always_on allows a NULL CD on default substream */
-> +		WARN_ON(!master->ats_always_on || ssid);
->  		return;
-> +	}
->  	arm_smmu_write_cd_entry(master, ssid, cdptr, &target);
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index c5aacd7054f1..2f142cea7f26 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -2305,6 +2305,12 @@ bool schedule_cxl_memdev_detach(struct cxl_memdev *cxlmd)
 >  }
+>  EXPORT_SYMBOL_NS_GPL(schedule_cxl_memdev_detach, "CXL");
 >  
-> @@ -1756,6 +1759,22 @@ static int arm_smmu_alloc_cd_tables(struct arm_smmu_master *master)
->  	struct arm_smmu_ctx_desc_cfg *cd_table = &master->cd_table;
->  
->  	cd_table->s1cdmax = master->ssid_bits;
-> +
-> +	/*
-> +	 * When a device doesn't support PASID (non default SSID), ssid_bits is
-> +	 * set to 0. This also sets S1CDMAX to 0, which disables the substreams
-> +	 * and ignores the S1DSS field.
-> +	 *
-> +	 * On the other hand, if a device demands ATS to be always on even when
-> +	 * its default substream is IOMMU bypassed, it has to use EATS that is
-> +	 * only effective with an STE (CFG=S1translate, S1DSS=Bypass). For such
-> +	 * use cases, S1CDMAX has to be !0, in order to make use of S1DSS/EATS.
-> +	 *
-> +	 * Set S1CDMAX no lower than 1. This would add a dummy substream in the
-> +	 * CD table but it should never be used by an actual CD.
-> +	 */
-> +	if (master->ats_always_on)
-> +		cd_table->s1cdmax = max_t(u8, cd_table->s1cdmax, 1);
->  	max_contexts = 1 << cd_table->s1cdmax;
->  
->  	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB) ||
-> @@ -3851,7 +3870,8 @@ static int arm_smmu_blocking_set_dev_pasid(struct iommu_domain *new_domain,
->  	 * When the last user of the CD table goes away downgrade the STE back
->  	 * to a non-cd_table one, by re-attaching its sid_domain.
->  	 */
-> -	if (!arm_smmu_ssids_in_use(&master->cd_table)) {
-> +	if (!master->ats_always_on &&
-> +	    !arm_smmu_ssids_in_use(&master->cd_table)) {
->  		struct iommu_domain *sid_domain =
->  			iommu_driver_get_domain_for_dev(master->dev);
->  
-> @@ -3875,6 +3895,8 @@ static void arm_smmu_attach_dev_ste(struct iommu_domain *domain,
->  		.old_domain = old_domain,
->  		.ssid = IOMMU_NO_PASID,
->  	};
-> +	bool ats_always_on = master->ats_always_on &&
-> +			     s1dss != STRTAB_STE_1_S1DSS_TERMINATE;
->  
->  	/*
->  	 * Do not allow any ASID to be changed while are working on the STE,
-> @@ -3886,7 +3908,7 @@ static void arm_smmu_attach_dev_ste(struct iommu_domain *domain,
->  	 * If the CD table is not in use we can use the provided STE, otherwise
->  	 * we use a cdtable STE with the provided S1DSS.
->  	 */
-> -	if (arm_smmu_ssids_in_use(&master->cd_table)) {
-> +	if (ats_always_on || arm_smmu_ssids_in_use(&master->cd_table)) {
->  		/*
->  		 * If a CD table has to be present then we need to run with ATS
->  		 * on because we have to assume a PASID is using ATS. For
-> @@ -4215,6 +4237,42 @@ static void arm_smmu_remove_master(struct arm_smmu_master *master)
->  	kfree(master->build_invs);
->  }
->  
-> +static int arm_smmu_master_prepare_ats(struct arm_smmu_master *master)
+> +bool schedule_cxl_region_remove_devm_actions(struct cxl_region *cxlr)
 > +{
-> +	bool s1p = master->smmu->features & ARM_SMMU_FEAT_TRANS_S1;
-> +	unsigned int stu = __ffs(master->smmu->pgsize_bitmap);
-> +	struct pci_dev *pdev;
-> +	int ret;
+> +	return queue_work(cxl_bus_wq, &cxlr->remove_work);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(schedule_cxl_region_remove_devm_actions, "CXL");
 > +
-> +	if (!arm_smmu_ats_supported(master))
-> +		return 0;
+>  static void add_latency(struct access_coordinate *c, long latency)
+>  {
+>  	for (int i = 0; i < ACCESS_COORDINATE_MAX; i++) {
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index e50dc716d4e8..b086ae88b5bb 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -39,6 +39,7 @@
+>  static nodemask_t nodemask_region_seen = NODE_MASK_NONE;
+>  
+>  static struct cxl_region *to_cxl_region(struct device *dev);
+> +static void remove_devm_actions_work(struct work_struct *work);
+>  
+>  #define __ACCESS_ATTR_RO(_level, _name) {				\
+>  	.attr	= { .name = __stringify(_name), .mode = 0444 },		\
+> @@ -2589,6 +2590,8 @@ static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd, int i
+>  	dev->type = &cxl_region_type;
+>  	cxl_region_setup_flags(cxlr, &cxlrd->cxlsd.cxld);
+>  
+> +	INIT_WORK(&cxlr->remove_work, remove_devm_actions_work);
 > +
-> +	pdev = to_pci_dev(master->dev);
-> +
-> +	if (!pci_ats_always_on(pdev))
-> +		goto out_prepare;
-> +
-> +	/*
-> +	 * S1DSS is required for ATS to be always on for identity domain cases.
-> +	 * However, the S1DSS field is ignored if !IDR0_S1P or !IDR1_SSIDSIZE.
-> +	 */
-> +	if (!s1p || !master->smmu->ssid_bits) {
-> +		dev_info_once(master->dev,
-> +			      "SMMU doesn't support ATS to be always on\n");
-> +		goto out_prepare;
-> +	}
-> +
-> +	master->ats_always_on = true;
-> +
-> +	ret = arm_smmu_alloc_cd_tables(master);
-> +	if (ret)
-> +		return ret;
-> +
-> +out_prepare:
-> +	pci_prepare_ats(pdev, stu);
-> +	return 0;
+>  	return cxlr;
+>  }
+>  
+> @@ -2831,6 +2834,30 @@ cxl_find_region_by_name(struct cxl_root_decoder *cxlrd, const char *name)
+>  	return to_cxl_region(region_dev);
+>  }
+>  
+> +static bool remove_devm_actions(struct cxl_region *cxlr)
+> +{
+> +	return schedule_cxl_region_remove_devm_actions(cxlr);
 > +}
 > +
->  static struct iommu_device *arm_smmu_probe_device(struct device *dev)
->  {
->  	int ret;
-> @@ -4263,14 +4321,15 @@ static struct iommu_device *arm_smmu_probe_device(struct device *dev)
->  	    smmu->features & ARM_SMMU_FEAT_STALL_FORCE)
->  		master->stall_enabled = true;
+> +static void remove_devm_actions_work(struct work_struct *work)
+> +{
+> +	struct cxl_region *cxlr = container_of(work, typeof(*cxlr), remove_work);
+> +	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
+> +	struct cxl_port *port = to_cxl_port(cxlrd->cxlsd.cxld.dev.parent);
+> +
+> +	if (test_and_set_bit(CXL_REGION_F_DEVM_REMOVE, &cxlr->flags)) {
+> +		put_device(&cxlr->dev);
+> +		return;
+> +	}
+> +
+> +	scoped_guard(device, port->uport_dev) {
+> +		if (port->uport_dev->driver)
+> +			devm_remove_action(port->uport_dev, unregister_region, cxlr);
+> +	}
+> +
+> +	put_device(&cxlr->dev);
+> +}
+> +
+>  static ssize_t delete_region_store(struct device *dev,
+>  				   struct device_attribute *attr,
+>  				   const char *buf, size_t len)
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 1297594beaec..31ca4e6676ed 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -447,6 +447,12 @@ struct cxl_region_params {
+>   */
+>  #define CXL_REGION_F_NORMALIZED_ADDRESSING 3
 >  
-> -	if (dev_is_pci(dev)) {
-> -		unsigned int stu = __ffs(smmu->pgsize_bitmap);
-> -
-> -		pci_prepare_ats(to_pci_dev(dev), stu);
-> -	}
-> +	ret = arm_smmu_master_prepare_ats(master);
-> +	if (ret)
-> +		goto err_disable_pasid;
+> +/* Indicate that this region is being unregistered to prevent a race. */
+> +#define CXL_REGION_F_UNREGISTER 4
+
+I would flip the define of this with the one below and move this define to the second patch, since it is not being used here. Otherwise everything else LGTM.
+
+DJ
+
+> +
+> +/* Indicate that this region called devm_remove_action. */
+> +#define CXL_REGION_F_DEVM_REMOVE 5
+> +
+>  /**
+>   * struct cxl_region - CXL region
+>   * @dev: This region's device
+> @@ -462,6 +468,7 @@ struct cxl_region_params {
+>   * @coord: QoS access coordinates for the region
+>   * @node_notifier: notifier for setting the access coordinates to node
+>   * @adist_notifier: notifier for calculating the abstract distance of node
+> + * @remove_work: trigger the remove action in a safe context to acquire locks
+>   */
+>  struct cxl_region {
+>  	struct device dev;
+> @@ -477,6 +484,7 @@ struct cxl_region {
+>  	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
+>  	struct notifier_block node_notifier;
+>  	struct notifier_block adist_notifier;
+> +	struct work_struct remove_work;
+>  };
 >  
->  	return &smmu->iommu;
+>  struct cxl_nvdimm_bridge {
+> @@ -733,6 +741,7 @@ struct cxl_port *cxl_pci_find_port(struct pci_dev *pdev,
+>  struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd,
+>  				   struct cxl_dport **dport);
+>  bool schedule_cxl_memdev_detach(struct cxl_memdev *cxlmd);
+> +bool schedule_cxl_region_remove_devm_actions(struct cxl_region *cxlr);
 >  
-> +err_disable_pasid:
-> +	arm_smmu_disable_pasid(master);
-> +	arm_smmu_remove_master(master);
->  err_free_master:
->  	kfree(master);
->  	return ERR_PTR(ret);
+>  struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
+>  				     struct device *dport, int port_id,
 
