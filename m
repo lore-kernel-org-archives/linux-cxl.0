@@ -1,69 +1,80 @@
-Received: from mail-yx1-f49.google.com (mail-yx1-f49.google.com [74.125.224.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010042.outbound.protection.outlook.com [52.101.201.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1A826A08A
-	for <linux-cxl@vger.kernel.org>; Mon, 27 Apr 2026 03:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777260393; cv=none; b=pUUknTjo8s2AUAsdbjW0Huyn1hahym24hHR6lsW9V/YFk52yVQYfi4hYXkwhCsvGJB9BOw0fpARyP7b/Xe7629IdxeZOaMWjkrii4DsZeDG2mtj8ACnu7pOfcak9g/1cLqtBK4zxy5wLoe8isi3RNguLw2P++6+qs38xGkVWo30=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777260393; c=relaxed/simple;
-	bh=/tuIm7lBZ2ovM2HT2MHU2C5GZd5ttgZkhMqpDfT31H0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cQMcJ5tn72flxrFlXbgf2VRQvbKCmoDGu3vBgw1A9FlToZrjQkI1Tp4Qgy+UaYdAYqh+LzkBxuDhQGlBm0VkSiFi2eq6JmdhdGu1PCnCbaEktBD1U0G1cDeS9AdDPg2xi0gRWe35XO1IUAtDc0jh45D+ev3FwTZYUZL210J2h5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=74.125.224.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yx1-f49.google.com with SMTP id 956f58d0204a3-65318dafbcbso9409510d50.2
-        for <linux-cxl@vger.kernel.org>; Sun, 26 Apr 2026 20:26:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777260391; x=1777865191;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jL0w3++j1T4lvfmJHedjOyHD2Gu9RdXz+BDQhF932Xw=;
-        b=m/5KyxV0MsCkEMhyb3zgtBlRKjKkdSaKCws9rLqgJgKG8HLevtDelEBOLUnRxVb8Gx
-         sCWA+e0ZQYOHhhkX2cgTvCsRc2y3Sg8YtCqnYTA8+9I/qDYT9//QizQq26feICz8wNjj
-         pwZQvMOSm+dxT9x/6IGvSkTAewNFFY/pKQgP6tguwmlNzFad73J6mBJHU4W4QL2qSXQC
-         xBnJTY98m4X9IusHkiYwX+MpjT9FHJ9D+i1XTuxa6ufZ3nO8m4JnU8AN28qMilGZ3v1k
-         umM0STXDDUBjz7iptsFr3qc1ko85LMLX+JK0P3mgl70tK7ig9drORt/+ZQ7Pji5lu8ZS
-         Do+g==
-X-Forwarded-Encrypted: i=1; AFNElJ88o0RT5riPnxR+qWtrQaoyUqYu50GlUZeWBl/fPmXwR1MB8dxL7mVIYIpCMBTYnQmfbiyGemVURxQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCQ7XPHUy1Rn0W/Sjmh1E7T9Xtkg1FBlJ2Xemf9o0YduUrQP93
-	nZuBhR004thFuvpFBiSEsRZRMgWrcjoko6cV1cdYXe0q+HMdqjLCPSdo
-X-Gm-Gg: AeBDieuFAYoGglhaI8Wf/7TE1JFScQktdYxEi7nOWmP7nwPPFnexOcetk1eDY7XD1+G
-	AiwwUNtChpuqgeQgj/IjOMtuf+1Bqt2y0Pw4ayL/pMAN9I1FP9e4pCcuRezz6O0yTTvReYlUgtV
-	dQj9sKaljcG3XxBU7niP+3jBHjFNNp9crJkNKAeOJJoDPx7RTUnt0N4UYe/VVDRHurqcwVPti0d
-	QvjoN6xZkvGfiyil40fM/Mvasgax0QQdoST+62btH6vjSfbMGZs9uhm9ca/tMpbS9S+oBnVARUH
-	AX/FYuB7/Ns8LCdtk5x5b8NUa9PVog6tEYS0RvGHJeakO1AcCwnsjs71ZyMgNED0czcdUxiPvvT
-	O58BbpSmSyxH9XK9vqh0Di2xJxIe3bbAEFclf+iGbt9K+da2On3DTm5a9wysnGL/w99xCqu1mPW
-	H3KmjFVgZjANGpAEkLf44d
-X-Received: by 2002:a05:690e:144c:b0:654:6cd0:f96b with SMTP id 956f58d0204a3-6546cd144b3mr13884636d50.5.1777260391520;
-        Sun, 26 Apr 2026 20:26:31 -0700 (PDT)
-Received: from tofu.. ([128.210.0.165])
-        by smtp.googlemail.com with ESMTPSA id 956f58d0204a3-65314b26b56sm14087239d50.4.2026.04.26.20.26.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Apr 2026 20:26:31 -0700 (PDT)
-From: Sungwoo Kim <iam@sung-woo.kim>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <djbw@kernel.org>,
-	Ben Widawsky <bwidawsk@kernel.org>
-Cc: Dave Tian <daveti@purdue.edu>,
-	Sungwoo Kim <iam@sung-woo.kim>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] cxl/region: Fix a race bug in delete_region_store()
-Date: Sun, 26 Apr 2026 23:20:10 -0400
-Message-ID: <20260427032010.916681-5-iam@sung-woo.kim>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260427032010.916681-2-iam@sung-woo.kim>
-References: <20260427032010.916681-2-iam@sung-woo.kim>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4B936606A;
+	Mon, 27 Apr 2026 05:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777269275; cv=fail; b=IS64+t9kB7Hc8XnLZQRyhFYE7FxfQKc4MyD109GekFpx/xOpBAHjzJfKZnp2wzVXIzUqojR6lwvLwOc644OFTzbsAu5paknEN+AvST89pBptMaYGWLruVEJaIfH2tD98WWeOxgVgwlDLQQVv5vaoyqv+X9YsZE7yRLATBKKHZ+w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777269275; c=relaxed/simple;
+	bh=kZlSlJ0fXO6DogNFKq1ka/GtAloIhrLwtO0cHcQndWc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LTXiwvhLG118L6Tc3a2FQ4tXuyZWxrjbNxEVtC1QOAn61YFErE3gRw/PaPCG/GBogihDAvexzvoMxTnwKHQlxTLwTrlfJjDfUtiR+IUxXf19uCZ4dFsweoE85Be00/QpZsU0VK8Dbaf2y4fMZkDLWSrIZbt5izFwL75buKDzwKQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NbX+2/m6; arc=fail smtp.client-ip=52.101.201.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NbX+2/m6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MpKYXkqbryWenVlALi8Z7awgn8aKy1zy4U8uhe968g0jfuhoszE6uW4tVLbyzXqvA6FLVBGxFy8S7qUq+Ja/YBeGJSTNj4bGqVGvnOcFeenw99uxDlbd8xQSIeTzVb1pddFkWomVwCX0mHUrvaIAYOy0pR95cSiUcwTDnexUuqmUICO1BIHezUXdii0rDMgnDhDOy1ndTbXeguo+REGcYAcb8XSmqZcsP50o88ukhawL1lh/secsudaxkVAH/eR7x2l5CosWCPAU8ZxIE43aV4HyCS0Vj9iDUGmarEKisNFUqn6uaLeg4T/EpRqshtA5GomIakIUX/l3V5tdR7NMKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8uZsyzlJE9pH0xfDXTLUF7l3xylZBj3HrTveE3AJ1EY=;
+ b=F9ucS7+DxM+D4zzAK0wFuzet1i9wMlLzuYpByCVvsOCv2KySN9UMq3IdJvbkqCsqcnBzKPzMj7lYfQqPyHus/4Xzwa/PDWdFKo9Xjv/SQE2ODjyJrx6VShPeiO3MRQj/QCE6glHtCQcPgyMpevt3AdgcDlEwR7MJobhtoQ4zit5Lms70aoGSepy0W07lD2mF0X4eDeJHVyMc2sEkCP44SegZKg62sB6hbbr8BqB0lGnppmHYoI/KPnJ/scAFLk1A8vsHQ5+HCdLxnzEglp1TiL511JQ81uvwMXhAx8C46r3equ0GckBvz636qR+rv6XJTqkhNAjmDKqWVQldH0T0qQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=huawei.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8uZsyzlJE9pH0xfDXTLUF7l3xylZBj3HrTveE3AJ1EY=;
+ b=NbX+2/m6lKq8KvG/6Iadk/Zf1XxfrgGyQrXUaj9ZTqmsCb/mHgoTE8GvOIZqO1b6IC8y9xfTNg46dro37s848gDDyNuu+IFh/h46HosgetStdAZ0vyGNDonS+pdi8cZFTzYwxlBdpOEjR3vVFekCAEyJDm94epnd7VHiHtwQuKQAsHPeRcGlpRooXDw7LznNho6ynOlmQz9IClv0rkpXC9XRiY3Ecgm64ipblHHHFK8AXc4PW7DJcj6puxBP//kmy7cAxv8bGeRV7LXp8obWGWazjTp3iWK/ccfbuusv7JscIN32R8PFN11iVn0hz/aQZZ2/5weSqUEJpz885LkKhw==
+Received: from CY5PR22CA0018.namprd22.prod.outlook.com (2603:10b6:930:16::30)
+ by LVXPR12MB999198.namprd12.prod.outlook.com (2603:10b6:408:3dc::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9846.12; Mon, 27 Apr
+ 2026 05:54:30 +0000
+Received: from CY4PEPF0000EE31.namprd05.prod.outlook.com
+ (2603:10b6:930:16:cafe::7d) by CY5PR22CA0018.outlook.office365.com
+ (2603:10b6:930:16::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9846.26 via Frontend Transport; Mon,
+ 27 Apr 2026 05:54:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ CY4PEPF0000EE31.mail.protection.outlook.com (10.167.242.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9846.18 via Frontend Transport; Mon, 27 Apr 2026 05:54:28 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Sun, 26 Apr
+ 2026 22:54:19 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.20; Sun, 26 Apr 2026 22:54:18 -0700
+Received: from Asurada-Nvidia.nvidia.com (10.127.8.12) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
+ Transport; Sun, 26 Apr 2026 22:54:17 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: <jgg@nvidia.com>, <will@kernel.org>, <robin.murphy@arm.com>,
+	<bhelgaas@google.com>
+CC: <joro@8bytes.org>, <praan@google.com>, <baolu.lu@linux.intel.com>,
+	<kevin.tian@intel.com>, <miko.lenczewski@arm.com>,
+	<linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<dan.j.williams@intel.com>, <jonathan.cameron@huawei.com>,
+	<vsethi@nvidia.com>, <linux-cxl@vger.kernel.org>, <nirmoyd@nvidia.com>
+Subject: [PATCH v4 0/3] Allow ATS to be always on for certain ATS-capable devices
+Date: Sun, 26 Apr 2026 22:53:59 -0700
+Message-ID: <cover.1777269009.git.nicolinc@nvidia.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -71,102 +82,93 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE31:EE_|LVXPR12MB999198:EE_
+X-MS-Office365-Filtering-Correlation-Id: acda12f8-97e8-4edc-f167-08dea42171f3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700016|376014|7416014|1800799024|82310400026|56012099003|18002099003|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	lL3glxw8X/PdngCLUJt6Yd1RI6LkDAE4Oaa7KEuG++kaOsL99H53zGClviLBR3EWOILaeSMSwgcys04WuiY7ifQUEpJR4XdHnjL+guvcRGtO5Rj0hQAS/QvPe3L9CSoS5FOTS2Deql/0isJ+/0h9THg4HrF4VFZLzoW8kgl6bhOcDbLXgYWrJVR8H1KEklo5NwVUolN72He0MGVNJHxO2AAcNLc11B1jvr9WXYfjpMTqdUdmWsT+RO/rhySSM9z/7ZgC5PgnlFGlcqyGEQWt5YwjJ91DqdPbh9oYUt3wtTM9Qvef6WA2YswaKiYiunGyCSFjITb4W8ydMT7MJp8sk4ahQQGWrVKZEbfJq9gHtQ/KrxN5DpPvPHOJ/+pO2bhk2jkeAVO6k3byMCy40WzXSqXwQR0JY0iuvn0IvIeAZezCK0dZxjA+zCwYv0CrVYHerSjasrfcZt+GIZ8vkeWZGxDsLibFuExiFLgKWDMDsrub05uGUnIg9TmG3Mz0EelhlKtqo+9pnTV2aJ7hTVh9/qGNtu6vZeyvDVysVLQcSwhUNyoG8fyWUZZ8HXmBLPP1KtvtEhjHa1Cdv25mS+bUUmrVkr6veFacDdwh5pxxrYsfS3rgbOtXiUF6eru+nhCYstQhab5Awa0u9HoytdqpCDA/cFQ2vTkGpLjpWT03Ll/5IZnbx26FCGKq5U+svbddXRnTwQEa54FxvTeQd2KOx5GqMqDww1ik/tLEgIE7QmUqLWac613aVLdqp36pyZ6iqQy5JFKQg8urNoo3fwFsHw==
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700016)(376014)(7416014)(1800799024)(82310400026)(56012099003)(18002099003)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	Qe6eQ+Z/QSwfP2BcxBTNXGUBBjx+bJpm+ZtNRrFveZaAGwbKIwf9odoIN5xJm8X/rF5MyBO7ryi8mnukAFaLE2CBY6zgOBvAFhcM2X7OIaFt246BZBf5tdWPlJL2iabKOhOydPmyGWzkdbCSgqqFXoxkiP8HpK1bsVya2FjieYUTvZKDLrtIvBak5Ajp8TJv9uW8+07PGo0vHNCTRHt5tkCZErBNFhpzBPKylzFzecZYXqOuL+AO8CuxCM0HyOQ2oLpbQNsBlRoimRX/9TivZ6Rfhr0pgzoGCQ0pcgn9nYT4DkQkqsFqnT6OemB044+4hgXknUrZ3VQnE1cBr8WndQ+S3tmT5bbUdX2hfsV4FBiL46ubBC8zyCmH2w9e8t9nQMWwHNot7yIiXZc/A8z61p299B+FRIADsJc2b6qdmjfMdwBpyiDIzdhWJc6UJrCR
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2026 05:54:28.4653
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: acda12f8-97e8-4edc-f167-08dea42171f3
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE31.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LVXPR12MB999198
 
-This patch fixes race conditions in cxl region unregistration by (1) using
-remove_devm_actions() instead of directly calling devm_release_action()
-and (2) making unregister_region() idempotent.
+PCI ATS function is controlled by the IOMMU driver calling pci_enable_ats()
+and pci_disable_ats() helpers. In general, IOMMU driver only enables ATS
+when a translation channel is enabled on a PASID, typically for an SVA use
+case. When a device's RID is IOMMU bypassed and its PASIDs are not running
+SVA use case, ATS is always disabled.
 
-Race:
+However, certain PCIe devices require non-PASID ATS on the RID, even if the
+RID is IOMMU bypassed. E.g. CXL.cache capability requires ATS to access the
+physical memory; some pre-CXL NVIDIA GPUs also require the ATS to be always
+on even when their RIDs are IOMMU bypassed.
 
-CPU 0                     CPU 1
-======                    ======
-delete_region_store()
-  cxlr = cxl_find_region_by_name()
-                          delete_region_store()
-                            cxlr = cxl_find_region_by_name()
-  devm_release_action()
-                            devm_release_action()
-                            // cannot find the action, WARN_ON()
+Provide a helper function to detect CXL.cache capability and scan through a
+pre-CXL device ID list.
 
-Splat:
+As the initial use case, call the helper in ARM SMMUv3 driver and adapt the
+driver accordingly with a per-device ats_always_on flag.
 
-WARNING: drivers/base/devres.c:824 at devm_release_action drivers/base/devres.c:824 [inline], CPU#0: syz.1.12224/47589
-WARNING: drivers/base/devres.c:824 at devm_release_action+0x2b2/0x360 drivers/base/devres.c:817, CPU#0: syz.1.12224/47589
+This is on Github:
+https://github.com/nicolinc/iommufd/commits/pci_ats_always_on-v4/
 
-It's found by a fuzzer based on Syzkaller that rapidly executes CXL's
-sysfs interface with QEMU CXL devices cxl-type3 and pxb-cxl.
+Changelog
+v4
+ * Rebase on v7.1-rc1
+ * Added Reviewed/Tested/Acked-by lines
+ * Update commit messages and inline comments
+ * [pci-quirks] Add range-based scan for NVIDIA GPUs
+ * [smmu] Add missing arm_smmu_remove_master() in error path
+ * [pci-ats] Don't init "cap=0"; check pci_read_config_word error
+v3
+ https://lore.kernel.org/all/cover.1772833963.git.nicolinc@nvidia.com/
+ * Add Reviewed-by from Jonathan
+ * Update function kdocs of PCI APIs
+ * Simplify boolean return/variable computations
+v2
+ https://lore.kernel.org/all/cover.1771886695.git.nicolinc@nvidia.com/
+ * s/non-CXL/pre-CXL
+ * Rebase on v7.0-rc1
+ * Update inline comments and commit message
+ * Add WARN_ON back at !ptr in arm_smmu_clear_cd()
+ * Add NVIDIA CX10 Family NVlink-C2C to the pre-CXL list
+ * Do not add boolean parameter to arm_smmu_attach_dev_ste()
+v1
+ https://lore.kernel.org/all/cover.1768624180.git.nicolinc@nvidia.com/
 
-Syzkaller's CXL grammar is available at:
-https://github.com/swkim101/syz-cxl/blob/main/cxl.txt
+Nicolin Chen (3):
+  PCI: Allow ATS to be always on for CXL.cache capable devices
+  PCI: Allow ATS to be always on for pre-CXL devices
+  iommu/arm-smmu-v3: Allow ATS to be always on
 
-The bug's impact seems low, since the region has already been released.
-So, it does not affect users, except for a negligible warning message.
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h |  1 +
+ drivers/pci/pci.h                           |  9 +++
+ include/linux/pci-ats.h                     |  3 +
+ include/uapi/linux/pci_regs.h               |  1 +
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 75 ++++++++++++++++++---
+ drivers/pci/ats.c                           | 44 ++++++++++++
+ drivers/pci/quirks.c                        | 38 +++++++++++
+ 7 files changed, 163 insertions(+), 8 deletions(-)
 
-Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
-Suggested-by: Dan Williams <djbw@kernel.org>
-Signed-off-by: Sungwoo Kim <iam@sung-woo.kim>
----
- drivers/cxl/core/region.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index b086ae88b5bb..08b93b14a2c7 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2544,6 +2544,9 @@ static void unregister_region(void *_cxlr)
- 	struct cxl_region_params *p = &cxlr->params;
- 	int i;
- 
-+	if (test_and_set_bit(CXL_REGION_F_UNREGISTER, &cxlr->flags))
-+		return;
-+
- 	device_del(&cxlr->dev);
- 
- 	/*
-@@ -2863,15 +2866,18 @@ static ssize_t delete_region_store(struct device *dev,
- 				   const char *buf, size_t len)
- {
- 	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
--	struct cxl_port *port = to_cxl_port(dev->parent);
- 	struct cxl_region *cxlr;
- 
-+	/* remove_devm_actions_work() will put cxlr->dev. */
- 	cxlr = cxl_find_region_by_name(cxlrd, buf);
- 	if (IS_ERR(cxlr))
- 		return PTR_ERR(cxlr);
- 
--	devm_release_action(port->uport_dev, unregister_region, cxlr);
--	put_device(&cxlr->dev);
-+	unregister_region(cxlr);
-+	if (!remove_devm_actions(cxlr)) {
-+		put_device(&cxlr->dev);
-+		return -EBUSY;
-+	}
- 
- 	return len;
- }
-@@ -3736,7 +3742,6 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
- {
- 	struct cxl_endpoint_decoder *cxled = ctx->cxled;
- 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
--	struct cxl_port *port = cxlrd_to_port(cxlrd);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 	int rc, part = READ_ONCE(cxled->part);
- 	struct cxl_region *cxlr;
-@@ -3757,7 +3762,12 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
- 
- 	rc = __construct_region(cxlr, ctx);
- 	if (rc) {
--		devm_release_action(port->uport_dev, unregister_region, cxlr);
-+		/* remove_devm_actions_work() will put the device */
-+		get_device(&cxlr->dev);
-+		unregister_region(cxlr);
-+		if (!remove_devm_actions(cxlr))
-+			put_device(&cxlr->dev);
-+
- 		return ERR_PTR(rc);
- 	}
- 
 -- 
-2.47.3
+2.43.0
 
