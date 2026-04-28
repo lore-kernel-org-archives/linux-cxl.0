@@ -1,118 +1,110 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D60428470
-	for <linux-cxl@vger.kernel.org>; Tue, 28 Apr 2026 13:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55EA1477E24;
+	Tue, 28 Apr 2026 18:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777384374; cv=none; b=XUkV7r3xjQ5B7h0tlSCFF8/ECYtFMhL+g2HMgCqdEwh9zD7ybA+Da1yk/1LWzIr99X2AtfXbp/BNUu4E39ZRYMo0h/Cgln+0cpli9VmGPqGVaoBR+nIaiB3tM2z7ECb8O48R9GaN79+glKDnNjqnsPpDlzmjTl92PAreQlb73pY=
+	t=1777400705; cv=none; b=Aq9hduOvwhL6pmB6mQi6EmXJe441VzSABHPn/9jcQHhBZWA8YA5rcfJpOXG0xNczp3ismlxuumljymaNzFiJ4tJjr0In68KHZGIfD7hAs64EQgr+aaa5MYW6ITh/F4xQU5B1GLK7rJMOM3rlf77QBjinUhvYkgDlbxJIRHWkL0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777384374; c=relaxed/simple;
-	bh=wkjR01BepCnVnaMjug35GZEThZ0Qh8AtsLMqcKixOwA=;
-	h=Content-Type:From:Mime-Version:Subject:Message-Id:Date:Cc:To; b=UYV+JF83lmkyydq0wWGjRbR6qjenPaS8XBkWIE6L2OQUdVRvcIdXpg7ndiKTmbOY/hcu0TQJD9xQe4G9w1Gti7u/mV0hbD0wxkguwItOAgvJi0bLfCHM1lWVygiEEbvmlbJmZQwF5MXItibWDd9MI2JQRX5zc3QPH7yHLhihGsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PLvWtj2K; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1777400705; c=relaxed/simple;
+	bh=nWSgDWNyRjK2UE8cBnMUttmO5wGsRarbFLnYiLV8Aoc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VRpejoVoJShHz3f6onkbUUThVBi37F5FiZULyBClumGGKBh/5D55H0p2SD46lh/UUpddWlHBNUszz4FLU25shvz07z34z/f0Yi/PR4bQQZpXt8gY5wuh/OP37ykHyCnoP4Wo7Zwlgu4d1Zll+oW/JPQ7X6eNtdR8CUUXacRQEbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ha3Z3A3W; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PLvWtj2K"
-Content-Type: text/plain; charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1777384360;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=fSaI5CrYdlz9JeGFiodMZfSS16RBwlLh/md29GdDRjs=;
-	b=PLvWtj2Ke2MahB3td0bSGKYKjTzfkG+IvdHc1FUgCX5pZrEliuin0HPmkbSev4lLE1xuZ5
-	91c8CAMRZ0kVk2DQQYcrCZ6+kVutWaRLe9qP695l/CbKNZBaIi7FtiDooLIuzfl5nTt5wO
-	JurL+V4bVaPPf1q+1buipgPYlsOsd5E=
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ha3Z3A3W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777400703; x=1808936703;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nWSgDWNyRjK2UE8cBnMUttmO5wGsRarbFLnYiLV8Aoc=;
+  b=ha3Z3A3W0HxnXpXRixCdGj90p+Xrw2vHb7Iox3QNWdQ+SbjxNBdlMYHl
+   IqwYni314ZsTVhC4v9Y0sHOIXIVnE2c3jQQ+SnZJn91h3tk+l6lLoXT5m
+   XvFjNmYkbGvl17CsZnwJ9CfjHJAkYlA4oVw3o1oZFl6Jf6r+y3AB9+UEC
+   REv5uB1+UjsFg4jWO7GvVt1k+5X73QOyITunUk7yTaReAksEuZLz37k+t
+   YfnuxSBGf4meY6A12mwhTO0XALQWI/Nry9iGv1jbd799QnaZPrOYd0Wep
+   8gM0VkVHBopgzNhcZvEV7ZbhFjpt8o+cvhp4jtnWDtPaWvVTGTRqPWN/6
+   Q==;
+X-CSE-ConnectionGUID: GTfEzFDvSaSomWJS4f3pJg==
+X-CSE-MsgGUID: Y3T48M2TSjqqJv0CEKIa5Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11770"; a="81927200"
+X-IronPort-AV: E=Sophos;i="6.23,204,1770624000"; 
+   d="scan'208";a="81927200"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2026 11:25:03 -0700
+X-CSE-ConnectionGUID: HN5TYgJaTfqI9BCK+bCS8A==
+X-CSE-MsgGUID: SOj1cGtkTlWen76Dpez2fw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,204,1770624000"; 
+   d="scan'208";a="257352887"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.9])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2026 11:24:59 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: 
+Date: Tue, 28 Apr 2026 20:24:33 +0200
+Message-ID: <20260428182454.464655-1-fabio.m.de.francesco@linux.intel.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 3/3] drivers/base/memory: fix locking for poison accounting lookup
-Message-Id: <94F5B89A-008A-4EDB-920F-31B4895C2699@linux.dev>
-Date: Tue, 28 Apr 2026 21:52:23 +0800
-Cc: Muchun Song <songmuchun@bytedance.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ying Huang <huang.ying.caritas@gmail.com>, Dan Williams <djbw@kernel.org>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>, linux-mm@kvack.org,
- linux-cxl@vger.kernel.org, driver-core@lists.linux.dev,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- David Hildenbrand <david@kernel.org>, Oscar Salvador <osalvador@suse.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Rafael J Wysocki <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-To: Miaohe Lin <linmiaohe@huawei.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-=EF=BB=BF
+Subject: [PATCH 0/2] PCI/CXL: Recover CXL Downstream Ports from PM Init failure
 
+CXL r4.0 sec 8.1.5.1 Implementation Note describes a scenario in which a
+Secondary Bus Reset, a Link Down, or Downstream Port Containment on a
+CXL Downstream Port prevents Port PM Init from completing when ACS
+Source Validation is enabled on the Downstream Port. The spec states
+that another SBR alone does not recover the port and describes a
+software recovery sequence.  
 
-> On Apr 28, 2026, at 20:34, Miaohe Lin <linmiaohe@huawei.com> wrote:
-> =EF=BB=BFOn 2026/4/28 19:40, Muchun Song wrote:
->>=20
->>=20
->>> On Apr 28, 2026, at 19:37, Miaohe Lin <linmiaohe@huawei.com> wrote:
->>> On 2026/4/28 16:52, Muchun Song wrote:
->>>> memblk_nr_poison_inc() and memblk_nr_poison_sub() call
->>>> find_memory_block_by_id(), which requires device_hotplug_lock to
->>>> serialize the xarray lookup against memory block removal.
->>>> Take device_hotplug_lock around the lookup and nr_hwpoison update so
->>>> the memory block cannot disappear between xa_load() and get_device().
->>>> Fixes: 5033091de814 ("mm/hwpoison: introduce per-memory_block hwpoison c=
-ounter")
->>>> Cc: stable@vger.kernel.org
->>>> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
->>> Thanks for update.
->>>> ---
->>>> drivers/base/memory.c | 10 ++++++++--
->>>> 1 file changed, 8 insertions(+), 2 deletions(-)
->>>> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
->>>> index 6981b55d582a..f76aee29e9a5 100644
->>>> --- a/drivers/base/memory.c
->>>> +++ b/drivers/base/memory.c
->>>> @@ -1228,23 +1228,29 @@ int walk_dynamic_memory_groups(int nid, walk_me=
-mory_groups_func_t func,
->>>> void memblk_nr_poison_inc(unsigned long pfn)
->>>> {
->>>>    const unsigned long block_id =3D pfn_to_block_id(pfn);
->>>> -    struct memory_block *mem =3D find_memory_block_by_id(block_id);
->>>> +    struct memory_block *mem;
->>>> +    lock_device_hotplug();
->>> memblk_nr_poison_inc() and memblk_nr_poison_sub() are both called from m=
-emory_failure() context.
->>> I'm afraid if memory_failure() is triggered while lock_device_hotplug is=
- held, it will lead to
->>> deadlock. Or am I miss something?
->>=20
->> I am curious is there any place where memory_failure() is called with hol=
-ding lock_device_hotplug?
->=20
-> Sorry for dumb scenario, I was a bit too presumptuous. But there might be a=
-nother possible deadlock:
->=20
-> remove_memory
->  lock_device_hotplug <-- first called here
->  try_remove_memory
->    remove_memory_block_devices
->      num_poisoned_pages_sub
+Patch 1 extends cxl_reset_bus_function(), the helper backing the cxl_bus
+PCI/CXL reset method exposed to userspace via sysfs. It saves, clears,
+and restores ACS Source Validation and Bus Master Enable on the CXL
+Downstream Port around the SBR it issues. This keeps the userspace
+cxl_bus reset path from leaving the port unable to complete PM Init.
 
-Passing pfn =3D -1 here.
+Patch 2 adds a recovery pass during CXL enumeration. For each CXL
+Downstream Port in a memdev's ancestry, the CXL core checks whether PM
+Init has completed. If it has not, regardless of what caused the
+failure, it invokes cxl_reset_bus_function() on the child below the port
+in the hope of restoring the port to a usable state. CXL enumeration
+re-runs after events that tear down and re-probe the memdev, including
+DPC, AER, and Link Down, so those paths reach this recovery.
 
->        memblk_nr_poison_sub
->          lock_device_hotplug <-- deadlock here
+This small series is developed from an old RFC v3:
+https://lore.kernel.org/linux-cxl/20260330193347.25072-1-fabio.m.de.francesco@linux.intel.com/
 
-No. Can=E2=80=99t reach here. No deadlock.
+Fabio M. De Francesco (2):
+  PCI/CXL: Allow PM Init to complete on cxl_bus reset if ACS SV enabled
+  cxl/core: Recover from PM Init failure via cxl_reset_bus_function()
 
-Thanks.
+drivers/cxl/core/pci.c        | 30 ++++++++++++++++++++
+ drivers/cxl/core/port.c       | 22 +++++++++++++++
+ drivers/cxl/cxlpci.h          |  3 ++
+ drivers/pci/pci.c             | 52 ++++++++++++++++++++++++++++++++++-
+ include/linux/pci.h           |  1 + 
+ include/uapi/linux/pci_regs.h |  2 ++
+ 6 files changed, 109 insertions(+), 1 deletion(-)
 
->=20
-> Hope I'm not mistaken again. :)
->=20
-> Thank.
-> .
+-- 
+2.53.0
+
