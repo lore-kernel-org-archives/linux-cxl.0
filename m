@@ -1,289 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5614CB5B;
-	Tue, 28 Apr 2026 04:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777351149; cv=fail; b=RIy3DS0sIwZhi/4wS6VVFMncLdtMqNcsyaenVaJIFwrOpKmOsrbgP4J8zZ9t8KyS3zBrVD4F40U3X7sOP6Pifr/RFHyRw6HWmau1hXSzYcJCrjSJKfNKHPglBf/nmlW1NAUYRtc8Lxq+DDwHAZVt/W9CNOw5XfNrmdsdmDaNQVs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777351149; c=relaxed/simple;
-	bh=nOP5YnXKU8+NyGl2ENRgj98xjBiSvc+diQNbg//Pz4c=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=no6yqc6QnjkoIlTr7Qr6hHdEx2cHGRePtnrDEuvZu2vv5tTA8+jZfWsZbDFU3OVF1HKNwrHZ/7WG2hWba+BSET/hxuM79zllifeRFEWcDtqnQ020VgagSuRApnkrmHFCtGZyYfSpj5lD0v154s7jB4LKCZL0clboq4e2JSaIUi8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OkaPgz/z; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OkaPgz/z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777351147; x=1808887147;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=nOP5YnXKU8+NyGl2ENRgj98xjBiSvc+diQNbg//Pz4c=;
-  b=OkaPgz/zZQ7ZBuvTOI3f44Qw+yiSCaasbNE2OlnnDEY3EZ3qSqUhB9Ft
-   1Yje6Ubt+uwMcNUOVjGW+89TSRVk8wnw3lLmK3CBF1EVcqnNTOWV0Xe//
-   rYvRU2Ofx4FTSk+Y8hTY/OWBAlNhH+iRVxdzr2Dy+1hwUGAbr2h4a6ECC
-   ESiC2jBTWVlfQF0wWQoi39qz3ap88/XX8abY1kNCKzhCK1ugzqXb7HZ+G
-   i7lxlHNlCkhvgyKI1R8FLmGw0NJMjgRCCASm89tzj2wn/wPo3pHvQhoVr
-   IxiKQmfbsU/2tmdF0WvXpOWRYGh8yCkq8q4Ry6L150rMQUfBWcvz61v67
-   Q==;
-X-CSE-ConnectionGUID: NjMKKvdDReaWewoEieSzRQ==
-X-CSE-MsgGUID: Vuh8GZvRSM+jbIZUqyppUw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11769"; a="95665144"
-X-IronPort-AV: E=Sophos;i="6.23,203,1770624000"; 
-   d="scan'208";a="95665144"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2026 21:39:07 -0700
-X-CSE-ConnectionGUID: pZDpAjseQKChd6ZSCa8Jrw==
-X-CSE-MsgGUID: GFEVpqweQVGVv0/j9Se+8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,203,1770624000"; 
-   d="scan'208";a="234120016"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2026 21:39:06 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Mon, 27 Apr 2026 21:39:05 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Mon, 27 Apr 2026 21:39:05 -0700
-Received: from CY3PR05CU001.outbound.protection.outlook.com (40.93.201.63) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Mon, 27 Apr 2026 21:39:03 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PALS493L9R9GN+Vj8kPA9wYQ5WiHth5en6KCTR9Yk5b8t+z5dMTr8i0Gk/YfrbCEtUYqLdn6FFLuXWaCnLnsLUPiWsLTg+CfJgDdcENU2lih/NJNBAtfDoAlDbUM/9EaTqbq3HsAZBXCjaXGx1jnyYODnHMrO1qZtjJvsTssEvS9HAkiysMPbpT0wUY8TXbl8HF9ZXopXDIrYHia64VbCNtDCHS9pY3op3e1jzfmmCiBr0d7/dYcHZyqIWjCVuTqGGmdgexQsWs89zlXUS30peKaX4LBA1NzidI1tE1KX6jiu4JBT+yYDP/lwudRJ0S3UDd4ZSRECZboIcXon1pjFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I9S3V1gyknBnjqINjgXHdXJPEbDqc0rDyyvijgZoQhU=;
- b=Lz/pOBRjFCbrQnFfTSL2xt1LCCeC0EEdCFaHONoQMwA0mSh27OjvtTfwW/+pExjkyiJbgPAQts2xa/JKvz27L1KuxlzWMFc9oKp5Rhf271RTPlae2/NKDk1crIwAkZZsvnXb5YJvdMR+1Ca9CGDXbDgfKgM9JXx4n153BNXbC1iX9ndcDLBdmaGzUCrowu1kt6X6jIIp+e6UFOZgnFoLthR5YrfxXhO06cOjXxklKkuhD3XkVMN9/+J/VKeQ/ZBX1unhSJ3YIIYzIb8YNDtQUpHbTS+0yGa2+x2nUilj2T46LDdZvI+Cm37vLkZf1p3IyUz09z6wKx8+ymU9FI58xw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by SJ5PPF2F2B659FE.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::81c) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9818.21; Tue, 28 Apr
- 2026 04:38:57 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::a195:49d4:38c5:3891%8]) with mapi id 15.20.9870.013; Tue, 28 Apr 2026
- 04:38:57 +0000
-Date: Mon, 27 Apr 2026 21:38:45 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: John Groves <John@groves.net>
-CC: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>,
-	"Dan Williams" <dan.j.williams@intel.com>, Bernd Schubert
-	<bschubert@ddn.com>, "John Groves" <jgroves@micron.com>, John Groves
-	<jgroves@fastmail.com>, "Jonathan Corbet" <corbet@lwn.net>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox
-	<willy@infradead.org>, Jan Kara <jack@suse.cz>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, Christian
- Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, Randy
- Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, Amir
- Goldstein <amir73il@gmail.com>, Jonathan Cameron
-	<Jonathan.Cameron@huawei.com>, Stefan Hajnoczi <shajnocz@redhat.com>, "Joanne
- Koong" <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, "Bagas
- Sanjaya" <bagasdotme@gmail.com>, James Morse <james.morse@arm.com>, Fuad
- Tabba <tabba@google.com>, Sean Christopherson <seanjc@google.com>, Shivank
- Garg <shivankg@amd.com>, Ackerley Tng <ackerleytng@google.com>, Gregory Price
-	<gourry@gourry.net>, Aravind Ramesh <arramesh@micron.com>, Ajay Joshi
-	<ajayjoshi@micron.com>, "venkataravis@micron.com" <venkataravis@micron.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH V4 1/2] daxctl: Add support for famfs mode
-Message-ID: <afA51WpcRyIMVukX@aschofie-mobl2.lan>
-References: <0100019bd34040d9-0b6e9e4c-ecd4-464d-ab9d-88a251215442-000000@email.amazonses.com>
- <20260118223629.92852-1-john@jagalactic.com>
- <0100019bd340cdd5-89036a70-3ef5-4c34-abf8-07a3ea4d9f92-000000@email.amazonses.com>
- <aaD6yQLiyZznfAxr@aschofie-mobl2.lan>
- <ae6e9wYqgLkWsS-e@groves.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ae6e9wYqgLkWsS-e@groves.net>
-X-ClientProxiedBy: SJ0PR05CA0081.namprd05.prod.outlook.com
- (2603:10b6:a03:332::26) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0072713B5B3
+	for <linux-cxl@vger.kernel.org>; Tue, 28 Apr 2026 05:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777354996; cv=none; b=UehScKKLrYyFSEbXG1zAD/3YL/ECy760KliB0DBUK1Fl7cZ7ihtTv4D/TWzQ6Y7R9GsvKoaIIMTn27VKrlMRrfOFdAXfbdlEOgXuJ65bQim01f7PsX+JD47Z+oZoY5DyANvO2rhoa8yRcHWSkMDhxX8XEhhD7QpI7mwFh5EFnqI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777354996; c=relaxed/simple;
+	bh=HJ15R5Kw3hmWU/sk/kpE0svrFTDUqqfbvIpq7P0GHEA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H9J3gsGqmgvVxjCdu61aABbaxIxbbeyexMaiPONsbY7SVa+wm65jEMAl+JnIIHUG/P+CUFjHRapFOR8rkqRFjp7z4xnYllmMLHmHJH6LV5Je6l7IJRslSFb02hMfph6jHxWyjUnWVtUVUHyZWQrCnCq3Cb3QQD9KWrT2//Lw6SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=sung-woo.kim
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-671ab90fc1fso20788917a12.0
+        for <linux-cxl@vger.kernel.org>; Mon, 27 Apr 2026 22:43:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777354993; x=1777959793;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=1xpPg01MKYajp+Ist+hyAKv8dpH5VzBbcmxuwu8KQCk=;
+        b=dAg54gik+3PHWkm63HYkzmFyzF/ECAT7fTcpNNs4WfSZa0thr4x6L6TZV5lHYFdl3g
+         Cdzd4c9a3B7lmGpPLe6Jb8NO+hQ+oYCg+YxblgKyYJRDfq5HM0D4QNc5zHKO//HlWBB5
+         nIRV824OMB7A0WKOh1O+NYbbXMlcKq2Y4gP8FboPbmIubLiQEYAoFLKjMFZiH3Khb2zI
+         FZnShPeq73CjNMJcY3HduLcaubDruyjCam/XU9JG9snQf6g7bKcahikQx69sf6qjtpY6
+         amrcSVZO1fkvRX63gAGAf1GRgUrAkN5ycluBlntx+KLaLZOlK4w+ypkaMpH/ImlwpmTy
+         bp1Q==
+X-Forwarded-Encrypted: i=1; AFNElJ/0zNcnybJHEG7jjoSGFzTIDm7UKQjBItMrcfQW4yRzoWbUa+gCq9p+LtJJcoWFKH2X1D3vYXx5qVk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHR67WualNMdqHM8OfdwQKN0hBmk8QMiLDjuRK6XYO8YHes0+c
+	lWmef3V33Fy0xKVcgIEz8hEG4GJlFE4b3bpxzS0ElTCiJ39r3NKTJWRAJvRaVF8U2Rc=
+X-Gm-Gg: AeBDieu9McdNekQUxv87EIIKdNJaS8ZIqaOXOwIbPGFBZLYrimcdqiLDsLCXWZG4ZF/
+	9qw1Cb1ErcWEXkBatWrVUj1sZqhpnw5nVW6KRdGaP5nh3CVcVBsizS6ZRyYm0PNO2PT4+D7Ge+m
+	28UYW87QV1Rgjw36cgZG6sKMa63X4+s+9iBVlDk2enuhp3qD/KEsuuAlo9nQ8y50LznfHF7Qu0g
+	DIDXol/nyKuyuY+BV1O2QUobkLiR8cxUuKZ8h/1eZtFBzotAQ9nz7Tw/aKF4t0XGlkyfSAToyjE
+	ioBOrVbd1s+LyGd1XFuDV9fKCii8sBAtD+pL8ogtZU5hDyqxzU/ZyPHEoH1rC4p/N9zPciV0eCL
+	J2322qt9OvzrXiy2L5tZBETyVeI1bqXd195wYNnVsnF1piWWfwmfye53MXLm4iSXtbndXKuhP4J
+	mVVOL3MzkFI87v4ftSRv45UE2RL8cKVZ7bBgDQMPidYFlnGliM/ML7xASeWf5bE+wziA==
+X-Received: by 2002:a05:6402:3897:b0:66e:68e1:fc18 with SMTP id 4fb4d7f45d1cf-679bb089902mr739517a12.23.1777354993003;
+        Mon, 27 Apr 2026 22:43:13 -0700 (PDT)
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com. [209.85.128.44])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-679b67cd14bsm307524a12.3.2026.04.27.22.43.11
+        for <linux-cxl@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Apr 2026 22:43:11 -0700 (PDT)
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4852b81c73aso91214045e9.3
+        for <linux-cxl@vger.kernel.org>; Mon, 27 Apr 2026 22:43:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AFNElJ+EGJ6gDUviefx+TPmGL6CrAvhkRV5wDceJYEPEHesInw0nOow2B9GZFGKyHX0ECiGbMgppHCg8mUw=@vger.kernel.org
+X-Received: by 2002:a05:600c:6814:b0:488:a977:8d6 with SMTP id
+ 5b1f17b1804b1-48a77b1dac1mr24524935e9.19.1777354990909; Mon, 27 Apr 2026
+ 22:43:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SJ5PPF2F2B659FE:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0888dd05-960b-448a-17f2-08dea4e00f7c
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|56012099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info: /rFex38DTk0VnJJJbTZKbt4BuIhPg/8cLeTcawfpqcIsJ5e/VnAt2i1gFP7zSGtoGnuWIg2kGZMB5Uu6lDQ4E+8PwlOvGoT/1nVP/ImReGqZzMKI8q0anyVr7v/iUfE58ZaQ9V16eNPL5ZqBPCikwB0++w1ftoL+zrS5DTbG8idz1F7utT8GknL/rzRcNfnjrk3Otn1FtVdDxcSS5CFTSHWvuhx6mCFmp4+s8l8lp1JnBqu55JcnND2XQQ4nhIlRenn8hpbLOm5QWwLVbwjsD9bdIHcMrEbTvKDtpdq4x9RbOPJkqqBU3KB/MxduISEgM0ByV0jLdYAO2ApQiBHKg0zeeeZwNXHZA4FwsHyqtR/LaTGURwcTz2FPyKaTW9xAa3NleYNX6mFHY4aDTtuvG0jLekbKdNY0dQdFA4wNGf1MNlSXJ/ql65f60BN/t66ZrkIZFMeryCi9ZxBX4uF7n313PtxyNPV79cCmZzRENXpv2sYezAZjjs74ZsK4njfrn8Y5Q3Fj8gxV9aiDJxZd3LVuhRa4etN4ysk7xnd+UhxoQNSNSo+aJ/7Fti+CG3uz289qpEJBPHzAj95ax8oqnfqTN8ZpNi/c2c9j5f+JYfHCh304vxORb5opjpoDVSBHPQlfgJhOagjq70e6X2cGagQfNSL55Vu94x5Qn344YISPXA9qjO7ikbh+rdFek3cF+DnIfc18v2NOV8jeEbbZuMSsRQYDDMxeiz3Dw5uaCs4=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(56012099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dXJwK1pFZS9FYlBRWEliaWdKektaTHpBQ3MreHhaV1hFMHJtVlh6RUxTcmZW?=
- =?utf-8?B?bXRtUWRHeXFNemJCTzNoRVZ4RlhQKy9EV0dIZ3RraFg2ZEhXZXdoQVREcnkz?=
- =?utf-8?B?bFdLNGE0amJOTzQ3bzFvMXI0VGF2RGVtTU84OWh2RHRFajlOeGNoYXUwRUxN?=
- =?utf-8?B?OXdtNUFkY3RWblRVS0JwY2dBWS9OdC93MkE0dWZiZEFQQWRFOHl3VEUzWXEy?=
- =?utf-8?B?UXhKaVVXOEEyUUxKZlcyYmVwd2pDZUtXRTZmeVJQMnVRRlZ5ZUppZExaaHVZ?=
- =?utf-8?B?M1Z6aGdyMmZxT3IvRmt4LzN6eHRkcXZ0Sm5oL1NLN2hGVm90dno4d3FnUFc5?=
- =?utf-8?B?WVIzVEczTVpoZDF4MUtHUi9tZVJ3bWhWbFMxRUpQQTZHNW0yVis2aFVEbFVw?=
- =?utf-8?B?ckJ2elJYczVZdkx5SHRNaHp2Skh5cUhyeGJWSzQ5K0VQQjluNFBGOHQzTXBy?=
- =?utf-8?B?cmJlYnM4QzRaVitiNEhIUEVSdHMxQmlEaWptalBGYk8wTjE4Ymt2UmxKVVdl?=
- =?utf-8?B?SU1kS0pHSlVoUkxzb2RDcXd6ZHRpc3ZOZFppeElCaHJiUjdWYnNKMm1iTjFR?=
- =?utf-8?B?bW1UMmUxWnJnenBOTDgydzEyK3ovclJ6WGgrN0pReVdQcWNPcnFEZGxQM0tO?=
- =?utf-8?B?WklNdDZTc1FDL0xVU2JoaGY4SFh1NFoyeGR3TFVQVmlKWVpSSjVKK1UwVmQr?=
- =?utf-8?B?WFY5cVhkdnNNVWhaQVlwQk1iZ2VNcUd1eWFpNnc5L3V5L1BmQUxKbFgwTy9p?=
- =?utf-8?B?QU45RjNQemdxd256TkY2cWgvT2FKU1ZiUXJySUZvVHdBQmg4eFNCNUtJTzNJ?=
- =?utf-8?B?QU5xU0RxV3ZieGM0UXZsMUhWeG9zRDJiK0pEaGVabytDQ3lIcnhEaVY0Um1u?=
- =?utf-8?B?a3VZL2wrQjJkNUpvcE1kNnU3eE9lVmp0TUFlY3J3cmZiQ3RNVDJNa2RIdGZm?=
- =?utf-8?B?Y0xaY0FBenhha0ZQQndMbGZINzVmZkRpdTRINzJFejZ1dU1WNXVUNW9wVEx0?=
- =?utf-8?B?Q1ZjbW43cDBpb2dhaFlZcHpKOFZyM0FJR3JHK3VSZjdOc0Fxa1dmNGhZWm1X?=
- =?utf-8?B?QzU2MjBBcUx6dGxSWnMrcGczbjNoRVZVVDdUV1BYM2hQSXd3b0tJNVhvZXlJ?=
- =?utf-8?B?QWxoRGFPMGxXdmZlZjBYcEo5T1ZMc1ltQ0huRm5FS1VLUzBjUnBzUEVsUGZI?=
- =?utf-8?B?bk81VEpFNVpYQUgrNWhxWWZoN1lnRVBRUXRFTnBhbWl6bjJ6eUV5MHA1ZTFJ?=
- =?utf-8?B?MnNaSTVjeXo5WWo0STRRQWo5UWw3NDlNTFNpaUVxTEJ2WjROVkJDSDR0Sm1M?=
- =?utf-8?B?by9yRGRVVEpZK2M4N0JYem9JdHpLZ3haRnk3VHZkazN3RDdEajl5NjVEZHRo?=
- =?utf-8?B?ZkxoRTJIbFlub0JDWHk3TThacjd5WnBNUWNTSEpQOEVVaHdJMk5QUkdZZ0lU?=
- =?utf-8?B?cTF4a3d3NWl5dmUvUnc2MzNYc3ljRml4K3F3MEFvTG9ySGptQnVMaENLajVx?=
- =?utf-8?B?Z0hNMTBUbFRsU1J0SDRycnBBYVpMOExkY2l5Y0FLS0xiNEU0aEEzQnFWV2J2?=
- =?utf-8?B?MDhiS1ZaYmdETUZrZVRaaDJYQWtNTFRkOVJsdWRyVUxrRlIzekN1MTR6bTMz?=
- =?utf-8?B?NnFabzFiYlNSSWRnNm91Ulo3YzhWb21nOHo5eGZHalowUlVPekJyMmY1WG56?=
- =?utf-8?B?dnNvYVFuclpXUUNhR3ZtTzc1dWNwckt2L2FPeGsxUjhKakxnbWMxaytWYmd6?=
- =?utf-8?B?cmxLQ0NsVnpHckx2VW9zdjRJR1d4YTdhMTB3NW9sMkhPd0s4djZ2TEdrRGdE?=
- =?utf-8?B?dXZuMC9TcUNmREMyVm44SDVJUGRqSHEzYjVTekZyeDhuY01wODlhTWFRM1hR?=
- =?utf-8?B?T0xvSlRoUXNqQUR1OTRua21HVU9PeVNseEt1TlBqcWdadTVEeHhwU3FZTUFU?=
- =?utf-8?B?UVdhUUR0VmF4V1R2MTNCRWQ1M2Vpclg4MXE4VFRjRzZOdzlkd2t6VjVLVkVM?=
- =?utf-8?B?MFBUSWRuZjdWU3NQamVIeFdLd2p1a2FGckhLL2NLU3ROSWFORTVhYkthbUFW?=
- =?utf-8?B?M1M0OE1Rb2ZseER4OWdwZTU1MlJpYUhYZUpuLy9RNDdHRVdWaENQQUxnc01O?=
- =?utf-8?B?V3VvNm83eWgvNExJdWZrU0k4TVNpY3R4ZDBNaDhaWUZ5TEJVQUhUQm9PdEIx?=
- =?utf-8?B?QU9MWG1HbE9WL3lJVHB2dVlJLzIxaEhiZzQrZTNweENCeldKWXRaQmE4WjhJ?=
- =?utf-8?B?b2t6czRmRFZ6OS9yRkNmdHpOMGNvQkN2YlNYUUJISzVWY2FKR1o1RFdwSkp6?=
- =?utf-8?B?MlYyWkpEY1VoU1kyQlk0UDVrVmZFN2ZWdjQ1eEVUdmFlNmRlY29EY0kvRFRw?=
- =?utf-8?Q?lO+2pSgztthgqXFM=3D?=
-X-Exchange-RoutingPolicyChecked: k23z49IqJl4mamwgmDeYxng5YvLncHI/relaKReOkamukiBIqETwtup83gm1O4LNhsfwGlDH1o7/ABVmFhOZmdoq4TDj4kVePJhzT3/lBVgMQx34txD4HhCABZ+qb87fCyr17aayUkCvFKUEYUGuc+DQ5VaZjL9k8iitz1dLKXxB4tVD0PzPSTX5Hrqzw09OJlKm4NChrw0KPhUeSxau3ZGCMqlt8o+3DGb9K79jINaK5QJJj0Av+sS+Ho1jGFWWvq7QYpxnVimO9XQpV3nFu9RMbbKpwkBWHUYecRqqGmXQwwztqXBwghhsMRsMY+AEofrIn+G78cKa4ZkZlbbTqA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0888dd05-960b-448a-17f2-08dea4e00f7c
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2026 04:38:57.4406
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: boZhFu/KFujsxkXOH/djUR+fZtgC1VZxBp2CNcwGvlTBvdZe7sD6Ci9FBE0mJR0ETzWrQE4HM9gZ4C/SuGDJbKXocbGjmkpaIpZAg43/hHw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF2F2B659FE
-X-OriginatorOrg: intel.com
+References: <20260427032010.916681-2-iam@sung-woo.kim> <5b46d2ca-7821-4245-92fc-7169ea7435ae@intel.com>
+In-Reply-To: <5b46d2ca-7821-4245-92fc-7169ea7435ae@intel.com>
+From: Sungwoo Kim <iam@sung-woo.kim>
+Date: Tue, 28 Apr 2026 01:42:52 -0400
+X-Gmail-Original-Message-ID: <CAJNyHpKMMwGnf7+2yzNnSbzozm2ROzfWmWg4xj8gROha+ncQeA@mail.gmail.com>
+X-Gm-Features: AVHnY4LZ0LNj5Gsz2bpZoydVUmT_QxR4xsC47L-lPo_vlXsWP9fyjOfZlTvBHco
+Message-ID: <CAJNyHpKMMwGnf7+2yzNnSbzozm2ROzfWmWg4xj8gROha+ncQeA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] cxl/region: Fix race conditions in cxl region unregistration.
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>, 
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Dan Williams <djbw@kernel.org>, Robert Richter <rrichter@amd.com>, 
+	Li Ming <ming.li@zohomail.com>, Gregory Price <gourry@gourry.net>, 
+	Ben Widawsky <bwidawsk@kernel.org>, Dave Tian <daveti@purdue.edu>, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 26, 2026 at 06:56:46PM -0500, John Groves wrote:
-> Maybe I'm overcomplicating things (it's one of the things I do), 
-> but I'm still struggling through how to address all these issues. 
-> Some comments inline.
+On Mon, Apr 27, 2026 at 1:42=E2=80=AFPM Dave Jiang <dave.jiang@intel.com> w=
+rote:
+>
+>
+>
+> On 4/26/26 8:20 PM, Sungwoo Kim wrote:
+> > This version mainly addresses Dave's comments and meaningful issues rep=
+orted by Sashiko AI[1].
+> >
+> > Overview
+> > =3D=3D=3D=3D=3D=3D=3D=3D
+> > This patch series fixes race conditions in cxl region unregistration.
+> >
+> > devm_release_action() should be called once, otherwise, it warns about
+> > the second call. However, the current implementation has a race conditi=
+on
+> > that allows multiple calls to devm_release_action(). The details are in
+> > each patch.
+> >
+> > To fix these, the first patch adds a new function that guarantees that
+> > devm_release_action() is called only once.
+> > Using this function, the second patch subsitutes the current use of
+> > devm_release_action() in cxl region with the new function.
+> >
+> > Change in v3
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > Addressed Dave's comments:
+> > - Split and made this in a patch series.
+> > - Enhanced a commit log explaining why a workqueue is used in the first=
+ patch.
+> > - Added a context on how these issues were found and what impact was ob=
+served and how that effects a user in the second patch.
+> > Sashiko AI review fixes:
+> > - Fixed construct_region() as it also can race.
+> > - Used a driver's wq instead of system wq so unbinding can drain a work=
+.
+>
+> A few issues Sashiko raised with the v3.
+> https://sashiko.dev/#/patchset/20260427032010.916681-2-iam%40sung-woo.kim
 
+A Sashiko's reasoning makes sense to me. In the middle of
+construct_region(), users can perform a sysfs write, which then calls
+unregister_region().
+unregister_region() must not be called before construct_region() has
+completed, since it calls device_del() and put_device().
 
-Jumping to the part you commented on, which I think was the biggie:
+This isn't introduced by this patch, but I can fix it in v4.
 
-> 
-> On 26/02/26 06:00PM, Alison Schofield wrote:
-> > On Sun, Jan 18, 2026 at 10:36:38PM +0000, John Groves wrote:
-> > > From: John Groves <John@Groves.net>
-> > > 
-> > > Putting a daxdev in famfs mode means binding it to fsdev_dax.ko
-> > > (drivers/dax/fsdev.c). Finding a daxdev bound to fsdev_dax means
-> > > it is in famfs mode.
-> > > 
-> > > The test is added to the destructive test suite since it
-> > > modifies device modes.
-> > 
-> > Make it clear that it is added in a separate patch. (and assume you
-> > can drop the destructive part too.)
-> > 
-> > > 
-> > > With devdax, famfs, and system-ram modes, the previous logic that assumed
-> > > 'not in mode X means in mode Y' needed to get slightly more complicated
-> > > 
-> > > Add explicit mode detection functions:
-> > > - daxctl_dev_is_famfs_mode(): check if bound to fsdev_dax driver
-> > > - daxctl_dev_is_devdax_mode(): check if bound to device_dax driver
-> > 
-> > 
-> > The precedence check (ram->famfs->devdax->unknown) now happens in multiple
-> > places. How about adding a daxctl_dev_get_mode() helper to centralize that.
-> > It could be private for now, unless you expect external users to need it.
-> > 
-> > daxctl_dev_is_famfs_mode() and _is_devdax_mode() are nearly identical aside
-> > from the module name. Refactoring the shared part into a single helper will
-> > also make it easier to add a daxctl_dev_get_mode() without duplicating the
-> > precedence logic.
-> > 
-> > > 
-> > > Fix mode transition logic in device.c:
-> > > - disable_devdax_device(): verify device is actually in devdax mode
-> > > - disable_famfs_device(): verify device is actually in famfs mode
-> > > - All reconfig_mode_*() functions now explicitly check each mode
-> > > - Handle unknown mode with error instead of wrong assumption
-> > 
-> > Wondering about 'Fix' mode transition logic. Was prior logic broken and
-> > should any of these changes be in a precursor patch that is a 'fix'.
-> > 
-> > 
-> > > 
-> > > Modify json.c to show 'unknown' if device is not in a recognized mode.
-> > 
-> > I think this means disabled devices will always look unknown even when
-> > the intended mode is devdax or famfs, but disabled. This seems to
-> > change the meaning of mode from 'configured' to 'active' personality.
-> > Can you detect the configured mode even when disabled?
-> > Perhaps a man page change about this new behavior?
-> 
-> Good point; before famfs mode there were just 2 modes, and 
-> not-system-ram == devdax mode is the current standard, even if no driver 
-> is bound. At some level that's a conflation, but I'll revise and stick 
-> with that unless you have a better idea.
-> 
-> Is that how you want it? No driver == devdax mode?
-> 
-> Any thoughts?
-> 
+An enable/disable flag to allow sysfs write might fix this, like:
 
-I do think we need to introduce "unknown" rather than keep reporting
-devdax for all non-system-ram devices. With famfs added, that old
-"not system-ram == devdax" shortcut just isn’t true anymore, and in the
-unbound case we really don’t know if it’s devdax or famfs. I’d rather say
-"unknown" than guess wrong.
+static struct cxl_region *construct_region(...)
+{
+... // when a construction is done
+  set_bit(CXL_REGION_F_ENABLE_SYSFS);
+  return cxlr;
+}
 
-That said, I don’t think we should drop to "unknown" when we actually do
-know the mode. In particular, disable shouldn’t cause us to lose it. We
-already report state separately, so I’d expect something like this:
-	mode=devdax,  state=disabled
-and not like this:
-	mode=unknown, state=disabled
-for a device that we knew was devdax (same idea for famfs).
+This prevents a sysfs write before it's done:
 
-Also wondering about behavior here: if a device ends up in mode="unknown",
-what does enable-device do? It doesn’t take a mode, so if we’ve lost that
-info across disable it’s not obvious how we pick which driver to bind.
-Before famfs we kind of got away with defaulting to devdax, but that
-doesn’t really work anymore.
+static ssize_t delete_region_store(...)
+{
+  if (!test_bit(CXL_REGION_F_ENABLE_SYSFS)) {
+    return -EBUSY;
+  }
+...
+}
 
-So I think the rule should be: report a real mode when we can, and only
-use "unknown" when it’s actually ambiguous. That keeps disable/enable
-workflows predictable.
+Would there be a better solution? I'd like to ask for comments on this.
+This patch series already introduces two new flags, and I'm concerned
+about adding another.
 
-And if we do introduce "unknown", we need to document when it shows up,
-since this is a change from the old behavior.
+Thank you!
+Sungwoo.
 
--- Alison
-
-snipping here, I didn't see any questions or comments below here
-expect for the done on the PATH_MAX usage.
-
+>
+> DJ
+>
+>
+> >
+> > [1] https://sashiko.dev/#/patchset/20260422045637.3048249-2-iam%40sung-=
+woo.kim
+> >
+> > Earlier approach:
+> > v2: https://lore.kernel.org/linux-cxl/20260422045637.3048249-2-iam@sung=
+-woo.kim/
+> > v1: https://lore.kernel.org/linux-cxl/20260308185958.2453707-2-iam@sung=
+-woo.kim/
+> >
+> > Sungwoo Kim (2):
+> >   cxl/region: serialize devm action removal via scheduled work
+> >   cxl/region: Fix a race bug in delete_region_store()
+> >
+> >  drivers/cxl/core/port.c   |  6 +++++
+> >  drivers/cxl/core/region.c | 47 ++++++++++++++++++++++++++++++++++-----
+> >  drivers/cxl/cxl.h         |  9 ++++++++
+> >  3 files changed, 57 insertions(+), 5 deletions(-)
+> >
+>
+>
