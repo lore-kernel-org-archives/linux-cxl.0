@@ -1,738 +1,277 @@
-Received: from siberian.tulip.relay.mailchannels.net (siberian.tulip.relay.mailchannels.net [23.83.218.246])
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700E92609E3
-	for <linux-cxl@vger.kernel.org>; Tue, 28 Apr 2026 20:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.246
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777406666; cv=pass; b=pT78W+xZDC9fbFFpYi4uJ5qBI5Mor/M06F26MowzDjo7mVRwXr1rihIxURhSmPnzWy9zrXFML7n/87ce1bscqAs+fl+oGY6mzhEtHvYgcZikcCHwZ9OzTy+1mjSha1hwH/AYB7uBYJTsI0cGvKPvwBoyHuXrB9Ak7BaPJ10PPLQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777406666; c=relaxed/simple;
-	bh=PJ5wJgs9GR7ZA2Kb9YgqZ3e4L33qqT1wKiAvHQTvnk8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WVv2WPp8H7MT6KrFmfz8i7jdkZopPU7wYW4UNEO6bu8H7H8rJWv5Uxoj1StLFJk8iXJMyCclBs2mvgatXuw0s7GgVp5sVXSYjuMbnetWgs6PyOWAJU89JseBYh3EMi9HqfoLdSRYct0QSesCZz5HL3jpwsn2soh12HgLyg5xyVc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=KGsnTZ3j; arc=pass smtp.client-ip=23.83.218.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E343B530D;
+	Tue, 28 Apr 2026 20:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777406845; cv=none; b=TibZ8uS7bfZLscuojf1V8ENPx2gU+biZrBqnpJ861oy3mkVuNSn18O/P4tov0lw9pqTe7JyMeNq2JNPV7UqbBD7pqs3PJy3gQrV7iIZIu8TOKK3d45sROxAxdFj6vkoSTpyIeDO0uc9bxeEVadVvXo+BJSL134BHxTFnESXWH0I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777406845; c=relaxed/simple;
+	bh=Q/Zc71eKTdTdLbr93FAxExF+HwAPxrqwA/WEbkEfTJ4=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=hT+jC/+K4elp2whlpLZ2Ha6OrMSc3hqmGPk/fMkH8yR8lw9Bm8nENv/Bf++9eNZpNAC5Dt7vXzfGgnfR2EW6FujculAWvHEOBjwAEZi3cZYje9KdHSGA95XsjYX1XHdiIJ+3EZlhzomvZ1ES0MxxnU2j5ArT7YhAyaWeDuj6R54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=WfHQYUYi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XoYrTpDA; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="KGsnTZ3j"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id DA23C626E4;
-	Tue, 28 Apr 2026 20:04:17 +0000 (UTC)
-Received: from pdx1-sub0-mail-a251.dreamhost.com (100-96-24-226.trex-nlb.outbound.svc.cluster.local [100.96.24.226])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 763E86285B;
-	Tue, 28 Apr 2026 20:04:17 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1777406657;
-	b=vbs6U3Nvvxjhie/sAbg+DebL9Qk76laXvX4Atpro70Go6zNref72U20ispn113E0S9a28E
-	+sXXnBmbj2nBUuIB3TCyEMCW//uzHO3bia5j5gA+79kOq6dYz3jFmj1hplopc8MqgjzO4R
-	Z9CAx9vSr44l2rX2FfChX9+ZuapE/NNwjRgQrY8Tqivm/Il8Z1lF4jX/kBd/gGNWH+6fq8
-	u3NmozAuy2nWqn6iPQxq0b1RZp8Z/N6DYokGh9scmMHeQGUf3h25weNPtpcfqHGDdIiz3/
-	X5ZmDbp+vHL/Gqvsuc6d7F33BgtoX/X4hCRd26n7xo+q/dNLA+LWIx8/Xkt1SQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1777406657;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:dkim-signature;
-	bh=M/T+uCrd4tUKdCCn/A2q15hH+sVqk0hybRCJPLvT68E=;
-	b=M/OcGwqEyLPiSzZio0Wnjlg7sbxwpODKQmAopvwNiYHRQfM82Ehwrd8MAmxKqkf9sENCAa
-	y9PoQiuvUFtEpaknsxbdfepcuFyGJ0wngYlqmY4Hn7xJBLyHikUJzmigLAn+8A0udafYXd
-	Uto/VBND0DLZmyLFIAMvUF9WTRp/wh9/ZGkGAdSO7s98M6/RtEukASDBNB/9LX997q6C3y
-	RQCfeSiswONf0D6kuOWCAfy9asTNXmmJYXkErews74rnYRlsSUjzHHXM8zOTOxE15wxJtE
-	O+lY3lvkDVqUbwWj0fXSFIANg1s41rufGx0kKRKr1lwHI3LPHhi/r5J9ip4Abw==
-ARC-Authentication-Results: i=1;
-	rspamd-b9d4fc544-m58ln;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Wipe-Chemical: 05b4abfc002b2236_1777406657743_818713862
-X-MC-Loop-Signature: 1777406657743:1625055878
-X-MC-Ingress-Time: 1777406657743
-Received: from pdx1-sub0-mail-a251.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.96.24.226 (trex/7.1.5);
-	Tue, 28 Apr 2026 20:04:17 +0000
-Received: from offworld.lan (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a251.dreamhost.com (Postfix) with ESMTPSA id 4g4rxD24xsz107Q;
-	Tue, 28 Apr 2026 13:04:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1777406657;
-	bh=M/T+uCrd4tUKdCCn/A2q15hH+sVqk0hybRCJPLvT68E=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=KGsnTZ3joNFgoKMHClrW0VoQAJpxkJvjD4cn5aFvZ+PO4hQXJnD21BHS2uyV1dArv
-	 3dTt8eqNUlAf4IJ6GnZUrhh55YVs2xBCcgyygVNjMA4AoIBFu663YjXI+IaOmT4KA0
-	 Tm7kIJJOF+mDWmo+3OZvUcmQQMAzMPxrCGTtbib21Sp3yBFs79UKwpG1Zzz9l5PAIw
-	 OF5xc1Len4LHiwwt2O5nbiUYs7WnxRwLQN9LfB9FU8HV5hRmBsFADKJ6SD2Q0tliEb
-	 gfiukRDNVC46ghVqHf0QipYuytXznZ5wZhzYnhLn/YcelPJXFa4zQscKHBncY53OBB
-	 09nLh4lgwnqIQ==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: dave.jiang@intel.com
-Cc: jic23@kernel.org,
-	alison.schofield@intel.com,
-	ira.weiny@intel.com,
-	djbw@kernel.org,
-	dongjoo.seo1@samsung.com,
-	anisa.su@samsung.com,
-	linux-cxl@vger.kernel.org,
-	Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCH v2] cxl/mbox: Support Media Operation
-Date: Tue, 28 Apr 2026 13:04:10 -0700
-Message-Id: <20260428200410.705675-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="WfHQYUYi";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XoYrTpDA"
+Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 9D1E97A0205;
+	Tue, 28 Apr 2026 16:07:21 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-09.internal (MEProxy); Tue, 28 Apr 2026 16:07:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1777406841;
+	 x=1777493241; bh=h+T5BNJXFum81OyDPpP0uu72do5WYbQzUMyniP5JULY=; b=
+	WfHQYUYixWEtG1QhY2qb1i8cok5Vr9M+0k8UPTP+1aNYBaykqKiKZRHZMKcRLYFp
+	1KpeD+sh+i4WO6fz+6lCE2BDAXvu8NUIOHNezavZfQpxbAfcP8ioWIbZI2pN0ZAi
+	qlLtNA7MNNLhYp5NoBxlzajZno7+YfwGGmMY9UNclPID0/iA2AnM9zSAqahg8jF5
+	51xaxGTRmzOliE/gaxJvUvc7Mlcd/m3Q1VonblsangscEOYrz+PPifBTHwsf+uJ/
+	KR3WyCx9aawcmbiY1PZ5KxG9FbctfwXnPFbZDadpVPjWv6WrbQMUt72ELjOZW8nB
+	+OeOqQDcMWeMkc2qhvwe9Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1777406841; x=
+	1777493241; bh=h+T5BNJXFum81OyDPpP0uu72do5WYbQzUMyniP5JULY=; b=X
+	oYrTpDARkjFs3tkWE64JD6BbP0ALg9oufKyvp+m0qI+vb6uamIjoMd39ApWu4e8b
+	t3dacgdkGEdEB0Q8+r250IZa8wDJNbAAutOmUpDy+3f72rHYITikfiFkJw3KkhLU
+	qKJslrK4tk295sIMJ79VzHd87ju+PpZDZgZeuiYxgC4jjaqMf+B1RdhJLPwns2nH
+	2eAg9oCZsKOo/lmaGnGZ42EoX7WgYZ7ky9tJtVNT1rCJ+Zdm/0VjO51MJ2jLMcua
+	xclcgU5V18jkarbzl+gPmAn9dcWHMzb8Y83uR6I5v/KRCnE8KZIGBBSFbLbY37KX
+	dVzL8+Be3BEmuWlJEVyyA==
+X-ME-Sender: <xms:dxPxaZza2h11-PYKXeZ5-5dHbq7l4vMqpfU1Y6ASLdkhA6x6VrSPzA>
+    <xme:dxPxaUEQ9gGVjOlp83HzoQYeYGVxJg4eddsfguGnoR4v37Hu4hxXOB3lgu53O4MKw
+    gDLRB3YXHyV5N9I1eqv_ak0OEncNRpMno7COtrI13asY1F181fnP5s>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekvdegkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthhqredtredtjeenucfhrhhomhepfdflohhhnhcu
+    ifhrohhvvghsfdcuoehjghhrohhvvghssehfrghsthhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhepkeffgeefvdfhffevveegjeegfedvfedvtdfgtdfgvefffffgueeuieeg
+    veduteefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epjhhgrhhovhgvshesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthhopeefledp
+    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepshhhihhvrghnkhhgsegrmhgurdgtoh
+    hmpdhrtghpthhtohepjhgrmhgvshdrmhhorhhsvgesrghrmhdrtghomhdprhgtphhtthho
+    pegsshgthhhusggvrhhtseguughnrdgtohhmpdhrtghpthhtoheprghmihhrjeefihhlse
+    hgmhgrihhlrdgtohhmpdhrtghpthhtohepsggrghgrshguohhtmhgvsehgmhgrihhlrdgt
+    ohhmpdhrtghpthhtohepjhhorghnnhgvlhhkohhonhhgsehgmhgrihhlrdgtohhmpdhrtg
+    hpthhtoheprggtkhgvrhhlvgihthhnghesghhoohhglhgvrdgtohhmpdhrtghpthhtohep
+    shgvrghnjhgtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehtrggssggrsehgohhogh
+    hlvgdrtghomh
+X-ME-Proxy: <xmx:dxPxaVpF8GdGM6HhV3daxj-Vq9756pbdO1XTEDJz3oHVUWmfxnAm6w>
+    <xmx:dxPxaY7XacatWPK3z25Zn6yiVU6smPSfV1IoJhhyYU2Dam8pJsm0wA>
+    <xmx:dxPxafS4tAjgO8Vkm1cBfM0Nxxyuq5gsL6JV-jnPVD_5xXeYv0Wd-Q>
+    <xmx:dxPxaT76Mf-Q3m9Sf7MLKxzBzI2Ic_XymAap_yfs2A2dYDU0lNjQ8A>
+    <xmx:eRPxafCco4JpHMrhwtAMjqIm3P7GzLfXbfN0c-jq1OkU38Q8NaXd-EwI>
+Feedback-ID: if7ae487a:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 630F8700065; Tue, 28 Apr 2026 16:07:19 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Tue, 28 Apr 2026 15:06:58 -0500
+From: "John Groves" <jgroves@fastmail.com>
+To: "Ira Weiny" <ira.weiny@intel.com>,
+ "Alison Schofield" <alison.schofield@intel.com>,
+ "John Groves" <John@groves.net>
+Cc: "John Groves" <john@jagalactic.com>,
+ "Miklos Szeredi" <miklos@szeredi.hu>,
+ "Dan Williams" <dan.j.williams@intel.com>,
+ "Bernd Schubert" <bschubert@ddn.com>,
+ "John Groves (jgroves)" <jgroves@micron.com>,
+ "Jonathan Corbet" <corbet@lwn.net>,
+ "Vishal Verma" <vishal.l.verma@intel.com>,
+ "Dave Jiang" <dave.jiang@intel.com>,
+ "Matthew Wilcox" <willy@infradead.org>, "Jan Kara" <jack@suse.cz>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "David Hildenbrand" <david@kernel.org>,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Darrick J . Wong" <djwong@kernel.org>,
+ "Randy Dunlap" <rdunlap@infradead.org>,
+ "Jeff Layton" <jlayton@kernel.org>,
+ "Amir Goldstein" <amir73il@gmail.com>,
+ "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
+ "Stefan Hajnoczi" <shajnocz@redhat.com>,
+ "Joanne Koong" <joannelkoong@gmail.com>,
+ "Josef Bacik" <josef@toxicpanda.com>,
+ "Bagas Sanjaya" <bagasdotme@gmail.com>,
+ "James Morse" <james.morse@arm.com>, "Fuad Tabba" <tabba@google.com>,
+ "Sean Christopherson" <seanjc@google.com>,
+ "Shivank Garg" <shivankg@amd.com>,
+ "Ackerley Tng" <ackerleytng@google.com>,
+ "Gregory Price" <gourry@gourry.net>,
+ "Aravind Ramesh" <arramesh@micron.com>,
+ "Ajay Joshi" <ajayjoshi@micron.com>,
+ "venkataravis@micron.com" <venkataravis@micron.com>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Message-Id: <30fddcd1-ab6b-4512-bcfd-7f6d0de6fd4d@app.fastmail.com>
+In-Reply-To: <69f106fd55840_12d928100ca@iweiny-mobl.notmuch>
+References: 
+ <0100019bd34040d9-0b6e9e4c-ecd4-464d-ab9d-88a251215442-000000@email.amazonses.com>
+ <20260118223629.92852-1-john@jagalactic.com>
+ <0100019bd340cdd5-89036a70-3ef5-4c34-abf8-07a3ea4d9f92-000000@email.amazonses.com>
+ <aaD6yQLiyZznfAxr@aschofie-mobl2.lan> <ae6e9wYqgLkWsS-e@groves.net>
+ <afA51WpcRyIMVukX@aschofie-mobl2.lan>
+ <69f106fd55840_12d928100ca@iweiny-mobl.notmuch>
+Subject: Re: [PATCH V4 1/2] daxctl: Add support for famfs mode
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add support for the Media Operation command (opcode 4402h) which
-enables targeted sanitize and zero operations on specific DPA ranges,
-as defined in CXL 4.0 Section 8.2.10.9.5.3.
 
-Operations are only allowed on DPA ranges that do not overlap any
-hardware-committed endpoint decoder to ensure not corrupting active
-mappings.
 
-Following the path that we currently impose for background cmds, where
-users are left with the responsibility of breaking up work sanely, this
-implementation imposes an arbitrary limit of 1Gb range to avoid hogging
-locks (ie: region/dpa cannot change while media op is on going) and resource
-monopolization such as mbox. As such, background commands are processed
-synchronously, with a 30s timeout, and currently, per spec, there is no
-optional abort it either, nor a way for the device to inform how long the
-op could take, ala Scan Media. The observation is that this differs in
-semantics regarding the sanitize case, which for whole-device continues
-to be handled asynchronously, as a special case.
+On Tue, Apr 28, 2026, at 2:14 PM, Ira Weiny wrote:
+> Alison Schofield wrote:
+> > On Sun, Apr 26, 2026 at 06:56:46PM -0500, John Groves wrote:
+> > > Maybe I'm overcomplicating things (it's one of the things I do),=20
+> > > but I'm still struggling through how to address all these issues.=20
+> > > Some comments inline.
+> >=20
+> >=20
+> > Jumping to the part you commented on, which I think was the biggie:
+> >=20
+> > >=20
+> > > On 26/02/26 06:00PM, Alison Schofield wrote:
+> > > > On Sun, Jan 18, 2026 at 10:36:38PM +0000, John Groves wrote:
+> > > > > From: John Groves <John@Groves.net>
+> > > > >=20
+> > > > > Putting a daxdev in famfs mode means binding it to fsdev_dax.ko
+> > > > > (drivers/dax/fsdev.c). Finding a daxdev bound to fsdev_dax mea=
+ns
+> > > > > it is in famfs mode.
+> > > > >=20
+> > > > > The test is added to the destructive test suite since it
+> > > > > modifies device modes.
+> > > >=20
+> > > > Make it clear that it is added in a separate patch. (and assume =
+you
+> > > > can drop the destructive part too.)
+> > > >=20
+> > > > >=20
+> > > > > With devdax, famfs, and system-ram modes, the previous logic t=
+hat assumed
+> > > > > 'not in mode X means in mode Y' needed to get slightly more co=
+mplicated
+> > > > >=20
+> > > > > Add explicit mode detection functions:
+> > > > > - daxctl_dev_is_famfs_mode(): check if bound to fsdev_dax driv=
+er
+> > > > > - daxctl_dev_is_devdax_mode(): check if bound to device_dax dr=
+iver
+> > > >=20
+> > > >=20
+> > > > The precedence check (ram->famfs->devdax->unknown) now happens i=
+n multiple
+> > > > places. How about adding a daxctl_dev_get_mode() helper to centr=
+alize that.
+> > > > It could be private for now, unless you expect external users to=
+ need it.
+> > > >=20
+> > > > daxctl_dev_is_famfs_mode() and _is_devdax_mode() are nearly iden=
+tical aside
+> > > > from the module name. Refactoring the shared part into a single =
+helper will
+> > > > also make it easier to add a daxctl_dev_get_mode() without dupli=
+cating the
+> > > > precedence logic.
+> > > >=20
+> > > > >=20
+> > > > > Fix mode transition logic in device.c:
+> > > > > - disable_devdax_device(): verify device is actually in devdax=
+ mode
+> > > > > - disable_famfs_device(): verify device is actually in famfs m=
+ode
+> > > > > - All reconfig_mode_*() functions now explicitly check each mo=
+de
+> > > > > - Handle unknown mode with error instead of wrong assumption
+> > > >=20
+> > > > Wondering about 'Fix' mode transition logic. Was prior logic bro=
+ken and
+> > > > should any of these changes be in a precursor patch that is a 'f=
+ix'.
+> > > >=20
+> > > >=20
+> > > > >=20
+> > > > > Modify json.c to show 'unknown' if device is not in a recogniz=
+ed mode.
+> > > >=20
+> > > > I think this means disabled devices will always look unknown eve=
+n when
+> > > > the intended mode is devdax or famfs, but disabled. This seems to
+> > > > change the meaning of mode from 'configured' to 'active' persona=
+lity.
+> > > > Can you detect the configured mode even when disabled?
+> > > > Perhaps a man page change about this new behavior?
+> > >=20
+> > > Good point; before famfs mode there were just 2 modes, and=20
+> > > not-system-ram =3D=3D devdax mode is the current standard, even if=
+ no driver=20
+> > > is bound. At some level that's a conflation, but I'll revise and s=
+tick=20
+> > > with that unless you have a better idea.
+> > >=20
+> > > Is that how you want it? No driver =3D=3D devdax mode?
+> > >=20
+> > > Any thoughts?
+> > >=20
+> >=20
+> > I do think we need to introduce "unknown" rather than keep reporting
+> > devdax for all non-system-ram devices. With famfs added, that old
+> > "not system-ram =3D=3D devdax" shortcut just isn=E2=80=99t true anym=
+ore, and in the
+> > unbound case we really don=E2=80=99t know if it=E2=80=99s devdax or =
+famfs. I=E2=80=99d rather say
+> > "unknown" than guess wrong.
+>=20
+> While I like the explicit nature of 'unknown' we are unfortunately past
+> that point now.
+>=20
+> Current users expect a new device to come up as devdax.  I think a new
+> specifier needs to be added to bring a device up as famfs.  Because th=
+is
+> is the new way of doing things it may be that famfs needs to be specif=
+ied
+> explicitly somewhere.  I'm not quite sure where right off.
+>=20
+> But the current behavior needs to be maintained despite it being 'wron=
+g'
+> or a 'lie'...  It is just the way it was.
+>=20
+> Ira
 
-Run Discovery during probe to get the device's DPA range granularity
-and which operations are supported, and expose to sysfs accordingly:
+I think for famfs it's easier than that. The famfs tools already put it =
+in famfs
+mode when needed. I don't think it ever needs to have a sticky default
+to anything but devdax.
 
-  o 'security/sanitize' is multiplexed to allow single ranged input.
-  o 'security/zero' is added, also with single ranged input.
-  o 'security/range_limit' is added so users can see the max range supported.
+The following famfs operations already check and change the mode=20
+if necessary:
 
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
-Changes from v1 (https://lore.kernel.org/all/20260428000220.587249-1-dave@stgolabs.net/):
-  - Change range input length from hex to dec, leaving dpa
-    address as hex which is more intuitive. (sashiko)
-  - Move !cxlmd->dev.driver check out of overlaps logic. (sashiko)
-  - Interruptible locking for region and dpa rwsems.
-  - Reduce bgcmd timeout to 30s.
+- famfs mount
+- mkfs.famfs
+- famfs fsck /dev/dax0.0=20
 
- Documentation/ABI/testing/sysfs-bus-cxl |  64 ++++--
- drivers/cxl/core/mbox.c                 | 248 ++++++++++++++++++++++++
- drivers/cxl/core/memdev.c               |  66 ++++++-
- drivers/cxl/cxlmem.h                    |  67 +++++++
- drivers/cxl/pci.c                       |   4 +
- 5 files changed, 437 insertions(+), 12 deletions(-)
+So I don't see any problem with preserving the existing quirkiness.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 16a9b3d2e2c0..76e48e870d9f 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -117,10 +117,12 @@ Contact:	linux-cxl@vger.kernel.org
- Description:
- 		(RO) Reading this file will display the CXL security state for
- 		that device. Such states can be: 'disabled', 'sanitize', when
--		a sanitization is currently underway; or those available only
--		for persistent memory: 'locked', 'unlocked' or 'frozen'. This
--		sysfs entry is select/poll capable from userspace to notify
--		upon completion of a sanitize operation.
-+		a whole-device sanitization is currently underway; or those
-+		available only for persistent memory: 'locked', 'unlocked' or
-+		'frozen'. This sysfs entry is select/poll capable from
-+		userspace to notify upon completion of a sanitize operation.
-+		Targeted range sanitize via Media Operation does not affect
-+		this state as it completes synchronously.
- 
- 
- What:           /sys/bus/cxl/devices/memX/security/sanitize
-@@ -129,17 +131,25 @@ KernelVersion:  v6.5
- Contact:        linux-cxl@vger.kernel.org
- Description:
- 		(WO) Write a boolean 'true' string value to this attribute to
--		sanitize the device to securely re-purpose or decommission it.
-+		sanitize the entire device, to securely re-purpose or
-+		decommission it. If the device supports the Media Operation
-+		command with the sanitize operation, a DPA range may be written
-+		as 'start length' in bytes to sanitize a targeted region of
-+		media. The start address and length must be aligned to the
-+		device's media operation granularity, and the length must not
-+		exceed the value reported in 'range_limit'. The sanitize method
-+		applied to the range is the same as for whole-device sanitize.
-+
- 		This is done by ensuring that all user data and meta-data,
- 		whether it resides in persistent capacity, volatile capacity,
- 		or the LSA, is made permanently unavailable by whatever means
- 		is appropriate for the media type. This functionality requires
--		the device to be disabled, that is, not actively decoding any
--		HPA ranges. This permits avoiding explicit global CPU cache
--		management, relying instead for it to be done when a region
--		transitions between software programmed and hardware committed
--		states. If this file is not present, then there is no hardware
--		support for the operation.
-+		the device or relevant range to be disabled, that is, not
-+		actively decoding any HPA ranges. This permits avoiding explicit
-+		global CPU cache management, relying instead for it to be done
-+		when a region transitions between software programmed and
-+		hardware committed states. If this file is not present, then
-+		there is no hardware support for the operation.
- 
- 
- What            /sys/bus/cxl/devices/memX/security/erase
-@@ -158,6 +168,38 @@ Description:
- 		support for the operation.
- 
- 
-+What:		/sys/bus/cxl/devices/memX/security/zero
-+Date:		April, 2026
-+KernelVersion:	v7.2
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(WO) Write a DPA range as 'start length' in bytes to this
-+		attribute to zero a specific region of device media via the
-+		Media Operation command. The start address and length must be
-+		aligned to the device's media operation granularity, and the
-+		length must not exceed the value reported in 'range_limit'.
-+		This functionality requires the range to be disabled, that is,
-+		not actively decoding any HPA ranges. This permits avoiding
-+		explicit global CPU cache management, relying instead for it
-+		to be done when a region transitions between software
-+		programmed and hardware committed states. After completion and
-+		onlining, reads from the specified range will return zero. If
-+		this file is not present, then the device does not support the
-+		Media Operation zero command.
-+
-+
-+What:		/sys/bus/cxl/devices/memX/security/range_limit
-+Date:		April, 2026
-+KernelVersion:	v7.2
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) Maximum DPA range length in bytes that may be specified
-+		for a single Media Operation (sanitize or zero). Userspace
-+		must break larger operations into chunks no larger than this
-+		limit. If this file is not present, the device does not support
-+		Media Operations.
-+
-+
- What:		/sys/bus/cxl/devices/memX/firmware/
- Date:		April, 2023
- KernelVersion:	v6.5
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index aaa5c6277ebf..5535c342ff83 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -160,6 +160,10 @@ static void cxl_set_security_cmd_enabled(struct cxl_security_state *security,
- 		set_bit(CXL_SEC_ENABLED_PASSPHRASE_SECURE_ERASE,
- 			security->enabled_cmds);
- 		break;
-+	case CXL_MBOX_OP_MEDIA_OPERATION:
-+		set_bit(CXL_SEC_ENABLED_MEDIA_OPERATIONS,
-+			security->enabled_cmds);
-+		break;
- 	default:
- 		break;
- 	}
-@@ -893,6 +897,103 @@ int cxl_enumerate_cmds(struct cxl_memdev_state *mds)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, "CXL");
- 
-+#define CXL_MEDIA_OP_MAX_OPS 2
-+
-+/**
-+ * cxl_media_op_discover() - Discover supported media operation
-+ * @mds: The device data for the operation
-+ *
-+ * Discover any available Media Operations.
-+ *
-+ * Return: 0 on success or if Media Operation is not supported,
-+ * negative error code on failure.
-+ */
-+int cxl_media_op_discover(struct cxl_memdev_state *mds)
-+{
-+	int rc, i;
-+	u16 num_returned;
-+	u64 granularity;
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-+	struct cxl_mbox_media_op_discovery_out *disc_out __free(kfree) = NULL;
-+	struct cxl_mbox_media_op_discovery_in *disc_in __free(kfree) = NULL;
-+
-+	if (!test_bit(CXL_SEC_ENABLED_MEDIA_OPERATIONS,
-+		      mds->security.enabled_cmds))
-+		return 0;
-+
-+	disc_in = kzalloc_obj(*disc_in);
-+	if (!disc_in)
-+		return -ENOMEM;
-+
-+	disc_in->class = CXL_MEDIA_OP_CLASS_GENERAL;
-+	disc_in->subclass = CXL_MEDIA_OP_GENERAL_DISCOVERY;
-+	disc_in->dpa_range_count = 0;
-+	disc_in->start_index = 0;
-+	disc_in->num_ops = cpu_to_le16(CXL_MEDIA_OP_MAX_OPS);
-+
-+	disc_out = kzalloc_flex(*disc_out, ops, CXL_MEDIA_OP_MAX_OPS);
-+	if (!disc_out)
-+		return -ENOMEM;
-+
-+	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
-+		.opcode = CXL_MBOX_OP_MEDIA_OPERATION,
-+		.payload_in = disc_in,
-+		.size_in = sizeof(*disc_in),
-+		.payload_out = disc_out,
-+		.size_out = struct_size(disc_out, ops, CXL_MEDIA_OP_MAX_OPS),
-+		.min_out = sizeof(*disc_out),
-+		.poll_count = 1,
-+		.poll_interval_ms = 1000,
-+	};
-+
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-+	if (rc < 0) {
-+		dev_dbg(cxl_mbox->host,
-+			"Media Operation Discovery failed: %d\n", rc);
-+		return rc;
-+	}
-+
-+	num_returned = le16_to_cpu(disc_out->num_returned);
-+	if (num_returned > CXL_MEDIA_OP_MAX_OPS) {
-+		dev_dbg(cxl_mbox->host,
-+			"Discovery returned %u ops, expected max %u\n",
-+			num_returned, CXL_MEDIA_OP_MAX_OPS);
-+		return -EINVAL;
-+	}
-+
-+	granularity = le64_to_cpu(disc_out->granularity);
-+	/* spec requires granularity to be a power of 2 and a multiple of 0x40 */
-+	if (!is_power_of_2(granularity) || !IS_ALIGNED(granularity, SZ_64)) {
-+		dev_dbg(cxl_mbox->host,
-+			"Discovery returned invalid granularity: %llu\n",
-+			granularity);
-+		return -EINVAL;
-+	}
-+	mds->media_op.granularity = granularity;
-+	mds->media_op.range_limit = rounddown(SZ_1G, granularity);
-+
-+	for (i = 0; i < num_returned; i++) {
-+		u8 cls = disc_out->ops[i].class;
-+		u8 sub = disc_out->ops[i].subclass;
-+
-+		if (cls == CXL_MEDIA_OP_CLASS_SANITIZE &&
-+		    sub == CXL_MEDIA_OP_SANITIZE_SANITIZE)
-+			mds->media_op.sanitize_supported = true;
-+		if (cls == CXL_MEDIA_OP_CLASS_SANITIZE &&
-+		    sub == CXL_MEDIA_OP_SANITIZE_ZERO)
-+			mds->media_op.zero_supported = true;
-+	}
-+
-+	dev_dbg(cxl_mbox->host,
-+		"Media Operation: granularity=%llu sanitize=%d zero=%d\n",
-+		mds->media_op.granularity,
-+		mds->media_op.sanitize_supported,
-+		mds->media_op.zero_supported);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_media_op_discover, "CXL");
-+
- void cxl_event_trace_record(struct cxl_memdev *cxlmd,
- 			    enum cxl_event_log_type type,
- 			    enum cxl_event_type event_type,
-@@ -1308,6 +1409,153 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
- 	return -EBUSY;
- }
- 
-+static int __cxl_mem_media_op(struct cxl_memdev_state *mds, u8 class,
-+			      u8 subclass, u64 dpa_start, u64 dpa_length)
-+{
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-+	struct cxl_mbox_media_op_input *payload __free(kfree) = NULL;
-+	int rc;
-+
-+	payload = kzalloc_flex(*payload, dpa_range_list, 1);
-+	if (!payload)
-+		return -ENOMEM;
-+
-+	payload->class = class;
-+	payload->subclass = subclass;
-+	payload->dpa_range_count = cpu_to_le32(1);
-+	payload->dpa_range_list[0].starting_dpa = cpu_to_le64(dpa_start);
-+	payload->dpa_range_list[0].length = cpu_to_le64(dpa_length);
-+
-+	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
-+		.opcode = CXL_MBOX_OP_MEDIA_OPERATION,
-+		.payload_in = payload,
-+		.size_in = struct_size(payload, dpa_range_list, 1),
-+		.poll_count = 30,
-+		.poll_interval_ms = 1000,
-+	};
-+
-+	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-+	if (rc < 0) {
-+		dev_dbg(cxl_mbox->host,
-+			"Media Operation (class=%u sub=%u) failed: %d\n",
-+			class, subclass, rc);
-+		return rc;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __cxl_dpa_overlap_committed(struct device *dev, void *arg)
-+{
-+	const struct resource *range = arg;
-+	struct cxl_endpoint_decoder *cxled;
-+
-+	if (!is_endpoint_decoder(dev))
-+		return 0;
-+
-+	cxled = to_cxl_endpoint_decoder(dev);
-+	if (!(cxled->cxld.flags & CXL_DECODER_F_ENABLE))
-+		return 0;
-+	if (!cxled->dpa_res || !resource_size(cxled->dpa_res))
-+		return 0;
-+
-+	return resource_overlaps(cxled->dpa_res, range);
-+}
-+
-+static bool cxl_media_op_dpa_overlap(struct cxl_memdev *cxlmd,
-+				     u64 dpa_start, u64 dpa_length)
-+{
-+	struct cxl_port *endpoint = cxlmd->endpoint;
-+	struct resource range = DEFINE_RES_MEM(dpa_start, dpa_length);
-+
-+	if (cxl_num_decoders_committed(endpoint) == 0)
-+		return false;
-+
-+	return device_for_each_child(&endpoint->dev, &range,
-+				     __cxl_dpa_overlap_committed);
-+}
-+
-+/**
-+ * cxl_mem_media_op() - Send a Media Operation command to the device.
-+ * @cxlmd: The device for the operation
-+ * @class: Media operation class
-+ * @subclass: Media operation subclass
-+ * @dpa_start: Starting DPA in bytes
-+ * @dpa_length: Length of the DPA range in bytes
-+ *
-+ * Send a Media Operation command with a single DPA range.
-+ *
-+ * Requires corresponding decoder containing the range be offline to
-+ * prevent corrupting any actively mapped memory.
-+ *
-+ * Return: 0 on success, negative error code on failure.
-+ */
-+int cxl_mem_media_op(struct cxl_memdev *cxlmd, u8 class, u8 subclass,
-+		     u64 dpa_start, u64 dpa_length)
-+{
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-+	u64 granularity;
-+	int rc;
-+
-+	if (!test_bit(CXL_SEC_ENABLED_MEDIA_OPERATIONS,
-+		      mds->security.enabled_cmds))
-+		return -EOPNOTSUPP;
-+
-+	/* ensure the specific operation was reported by Discovery */
-+	if (class == CXL_MEDIA_OP_CLASS_SANITIZE) {
-+		switch (subclass) {
-+		case CXL_MEDIA_OP_SANITIZE_SANITIZE:
-+			if (!mds->media_op.sanitize_supported)
-+				return -EOPNOTSUPP;
-+			break;
-+		case CXL_MEDIA_OP_SANITIZE_ZERO:
-+			if (!mds->media_op.zero_supported)
-+				return -EOPNOTSUPP;
-+			break;
-+		}
-+	}
-+
-+	granularity = mds->media_op.granularity;
-+	if (!granularity)
-+		return -EINVAL;
-+
-+	if (dpa_length == 0 ||
-+	    !IS_ALIGNED(dpa_start, granularity) ||
-+	    !IS_ALIGNED(dpa_length, granularity)) {
-+		dev_dbg(cxl_mbox->host,
-+			"DPA range not aligned to %llu-byte granularity\n",
-+			granularity);
-+		return -EINVAL;
-+	}
-+
-+	if (dpa_length > mds->media_op.range_limit) {
-+		dev_dbg(cxl_mbox->host,
-+			"DPA range length %llu exceeds limit %llu\n",
-+			dpa_length, mds->media_op.range_limit);
-+		return -EINVAL;
-+	}
-+
-+	guard(device)(&cxlmd->dev);
-+	if (!cxlmd->dev.driver || !is_cxl_endpoint(cxlmd->endpoint))
-+		return -EBUSY;
-+
-+	ACQUIRE(rwsem_read_intr, region_rwsem)(&cxl_rwsem.region);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &region_rwsem)))
-+		return rc;
-+
-+	ACQUIRE(rwsem_read_intr, dpa_rwsem)(&cxl_rwsem.dpa);
-+	if ((rc = ACQUIRE_ERR(rwsem_read_intr, &dpa_rwsem)))
-+		return rc;
-+
-+	/* reject if the DPA range overlaps a committed decoder range */
-+	if (cxl_media_op_dpa_overlap(cxlmd, dpa_start, dpa_length))
-+		return -EBUSY;
-+
-+	return __cxl_mem_media_op(mds, class, subclass, dpa_start, dpa_length);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_mem_media_op, "CXL");
-+
- static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
- {
- 	int i = info->nr_partitions;
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 80e65690eb77..3db4e91170a8 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -164,9 +164,20 @@ static ssize_t security_sanitize_store(struct device *dev,
- 				       const char *buf, size_t len)
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	u64 dpa_start, dpa_length;
- 	bool sanitize;
- 	ssize_t rc;
- 
-+	/* start with ranged sanitize */
-+	if (sscanf(buf, "%llx %llu", &dpa_start, &dpa_length) == 2) {
-+		rc = cxl_mem_media_op(cxlmd, CXL_MEDIA_OP_CLASS_SANITIZE,
-+				      CXL_MEDIA_OP_SANITIZE_SANITIZE,
-+				      dpa_start, dpa_length);
-+		if (rc)
-+			return rc;
-+		return len;
-+	}
-+
- 	if (kstrtobool(buf, &sanitize) || !sanitize)
- 		return -EINVAL;
- 
-@@ -199,6 +210,40 @@ static ssize_t security_erase_store(struct device *dev,
- static struct device_attribute dev_attr_security_erase =
- 	__ATTR(erase, 0200, NULL, security_erase_store);
- 
-+static ssize_t security_zero_store(struct device *dev,
-+				   struct device_attribute *attr,
-+				   const char *buf, size_t len)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	u64 dpa_start, dpa_length;
-+	ssize_t rc;
-+
-+	if (sscanf(buf, "%llx %llu", &dpa_start, &dpa_length) != 2)
-+		return -EINVAL;
-+
-+	rc = cxl_mem_media_op(cxlmd, CXL_MEDIA_OP_CLASS_SANITIZE,
-+			      CXL_MEDIA_OP_SANITIZE_ZERO,
-+			      dpa_start, dpa_length);
-+	if (rc)
-+		return rc;
-+
-+	return len;
-+}
-+static struct device_attribute dev_attr_security_zero =
-+	__ATTR(zero, 0200, NULL, security_zero_store);
-+
-+static ssize_t security_range_limit_show(struct device *dev,
-+					 struct device_attribute *attr,
-+					 char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
-+
-+	return sysfs_emit(buf, "%llu\n", mds->media_op.range_limit);
-+}
-+static struct device_attribute dev_attr_security_range_limit =
-+	__ATTR(range_limit, 0444, security_range_limit_show, NULL);
-+
- bool cxl_memdev_has_poison_cmd(struct cxl_memdev *cxlmd,
- 			       enum poison_cmd_enabled_bits cmd)
- {
-@@ -479,6 +524,8 @@ static struct attribute *cxl_memdev_security_attributes[] = {
- 	&dev_attr_security_state.attr,
- 	&dev_attr_security_sanitize.attr,
- 	&dev_attr_security_erase.attr,
-+	&dev_attr_security_zero.attr,
-+	&dev_attr_security_range_limit.attr,
- 	NULL,
- };
- 
-@@ -540,14 +587,31 @@ static umode_t cxl_memdev_security_visible(struct kobject *kobj,
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
- 
-+	/* sanitize attr serves both whole-device sanitize and ranged media op */
- 	if (a == &dev_attr_security_sanitize.attr &&
--	    !test_bit(CXL_SEC_ENABLED_SANITIZE, mds->security.enabled_cmds))
-+	    !test_bit(CXL_SEC_ENABLED_SANITIZE, mds->security.enabled_cmds) &&
-+	    !(test_bit(CXL_SEC_ENABLED_MEDIA_OPERATIONS,
-+		       mds->security.enabled_cmds) &&
-+	      mds->media_op.sanitize_supported))
- 		return 0;
- 
- 	if (a == &dev_attr_security_erase.attr &&
- 	    !test_bit(CXL_SEC_ENABLED_SECURE_ERASE, mds->security.enabled_cmds))
- 		return 0;
- 
-+	if (a == &dev_attr_security_zero.attr &&
-+	    (!test_bit(CXL_SEC_ENABLED_MEDIA_OPERATIONS,
-+		       mds->security.enabled_cmds) ||
-+	     !mds->media_op.zero_supported))
-+		return 0;
-+
-+	if (a == &dev_attr_security_range_limit.attr &&
-+	    (!test_bit(CXL_SEC_ENABLED_MEDIA_OPERATIONS,
-+		       mds->security.enabled_cmds) ||
-+	     (!mds->media_op.sanitize_supported &&
-+	      !mds->media_op.zero_supported)))
-+		return 0;
-+
- 	return a->mode;
- }
- 
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 776c50d1db51..2fd8dc9c331d 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -251,6 +251,7 @@ enum security_cmd_enabled_bits {
- 	CXL_SEC_ENABLED_UNLOCK,
- 	CXL_SEC_ENABLED_FREEZE_SECURITY,
- 	CXL_SEC_ENABLED_PASSPHRASE_SECURE_ERASE,
-+	CXL_SEC_ENABLED_MEDIA_OPERATIONS,
- 	CXL_SEC_ENABLED_MAX
- };
- 
-@@ -352,6 +353,67 @@ struct cxl_fw_state {
- 	int next_slot;
- };
- 
-+/* Media Operation classes and subclasses (CXL 4.0 Table 8-331) */
-+#define CXL_MEDIA_OP_CLASS_GENERAL		0x00
-+#define CXL_MEDIA_OP_CLASS_SANITIZE		0x01
-+
-+/* General class subclasses */
-+#define CXL_MEDIA_OP_GENERAL_DISCOVERY		0x00
-+/* Sanitize class subclasses */
-+#define CXL_MEDIA_OP_SANITIZE_SANITIZE		0x00
-+#define CXL_MEDIA_OP_SANITIZE_ZERO		0x01
-+
-+/* Media Operation DPA Range (CXL 4.0 Table 8-330) */
-+struct cxl_media_op_dpa_range {
-+	__le64 starting_dpa;
-+	__le64 length;
-+} __packed;
-+
-+/* Media Operation Input Payload (CXL 4.0 Table 8-329) */
-+struct cxl_mbox_media_op_input {
-+	u8 class;
-+	u8 subclass;
-+	u8 rsvd[2];
-+	__le32 dpa_range_count;
-+	struct cxl_media_op_dpa_range dpa_range_list[] __counted_by_le(dpa_range_count);
-+} __packed;
-+
-+/* Discovery Input Payload (CXL 4.0 Table 8-329 + Table 8-332) */
-+struct cxl_mbox_media_op_discovery_in {
-+	u8 class;
-+	u8 subclass;
-+	u8 rsvd[2];
-+	__le32 dpa_range_count;
-+	__le16 start_index;
-+	__le16 num_ops;
-+} __packed;
-+
-+/* Discovery output payload (CXL 4.0 Table 8-333) */
-+struct cxl_mbox_media_op_discovery_out {
-+	__le64 granularity;
-+	__le16 total_supported;
-+	__le16 num_returned;
-+	struct {
-+		u8 class;
-+		u8 subclass;
-+	} __packed ops[] __counted_by_le(num_returned);
-+} __packed;
-+
-+/**
-+ * struct cxl_media_op_state - Media Operation state
-+ *
-+ * @granularity: DPA range granularity (bytes) from Discovery
-+ * @range_limit: maximum DPA range length per operation (bytes)
-+ * @sanitize_supported: device supports ranged sanitize
-+ * @zero_supported: device supports ranged zero
-+ */
-+struct cxl_media_op_state {
-+	u64 granularity;
-+	u64 range_limit;
-+	bool sanitize_supported;
-+	bool zero_supported;
-+};
-+
- /**
-  * struct cxl_security_state - Device security state
-  *
-@@ -429,6 +491,7 @@ struct cxl_memdev_state {
- 	struct cxl_poison_state poison;
- 	struct cxl_security_state security;
- 	struct cxl_fw_state fw;
-+	struct cxl_media_op_state media_op;
- 	struct notifier_block mce_notifier;
- };
- 
-@@ -479,6 +542,7 @@ enum cxl_opcode {
- 	CXL_MBOX_OP_GET_SCAN_MEDIA	= 0x4305,
- 	CXL_MBOX_OP_SANITIZE		= 0x4400,
- 	CXL_MBOX_OP_SECURE_ERASE	= 0x4401,
-+	CXL_MBOX_OP_MEDIA_OPERATION	= 0x4402,
- 	CXL_MBOX_OP_GET_SECURITY_STATE	= 0x4500,
- 	CXL_MBOX_OP_SET_PASSPHRASE	= 0x4501,
- 	CXL_MBOX_OP_DISABLE_PASSPHRASE	= 0x4502,
-@@ -829,6 +893,9 @@ static inline void cxl_mem_active_dec(void)
- #endif
- 
- int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd);
-+int cxl_media_op_discover(struct cxl_memdev_state *mds);
-+int cxl_mem_media_op(struct cxl_memdev *cxlmd, u8 class, u8 subclass,
-+		     u64 dpa_start, u64 dpa_length);
- 
- /**
-  * struct cxl_hdm - HDM Decoder registers and cached / decoded capabilities
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index bace662dc988..95bf773aab14 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -878,6 +878,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		dev_dbg(&pdev->dev, "No CXL Features discovered\n");
- 
-+	rc = cxl_media_op_discover(mds);
-+	if (rc)
-+		dev_dbg(&pdev->dev, "No Media Operation discovered\n");
-+
- 	cxlmd = devm_cxl_add_memdev(cxlds, NULL);
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
--- 
-2.39.5
+I'll get a patch v5 out asap that continues to mark unbound daxdev as
+'devdax' and also 'disabled'. No change to system-ram mode.=20
 
+I think this might be all we need...
+
+<snip>
+
+John
