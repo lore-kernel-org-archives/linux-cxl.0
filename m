@@ -1,71 +1,71 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BDE38A72C
-	for <linux-cxl@vger.kernel.org>; Wed, 29 Apr 2026 13:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D26738B12A
+	for <linux-cxl@vger.kernel.org>; Wed, 29 Apr 2026 13:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777471083; cv=none; b=e6Z9rR+VEUT6Nj8HJ33BaqjympqaJKy9kNnV1jBggLS3YAJ+U3aPQBEKoy7NmuvYUqMDRnHHGN5XpCnPbPR7rKSukD69yQz+euNjmPbKfP9j1lI4WgqcIvbW746hG3P+CwRGAFzqER+Wy9it3ZEXr86ZFGXyAnonNSqtj5YEIq4=
+	t=1777471084; cv=none; b=LonMJk62tO2y+iJP/nh2qpE1Z483q7PW8Il/L6EI1Y0idZ9Popb+trfqBlg3BuzNs+Amgam0RbeeATgCpZmhXeGp/T2xq2c2RIYKuTi3Ifuc9AxRtDoVdjviSnji/rXn1HzEvauCE2+wU5jV9VfKUgpqSRHn8wVHQ7m8QZLE6RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777471083; c=relaxed/simple;
-	bh=SypRMf865vqSHPHSTRK0rMNXSpDU8wk9nZrTlhRbY6E=;
+	s=arc-20240116; t=1777471084; c=relaxed/simple;
+	bh=nqkyJiQOacfE5+qZ6fXMSwyikqoQS1NHv1IVJWkLZ08=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bjb2KwA8dAI1zaM1zNCRAMbgig6HiYDfA+AAGGyd2Ht8gBUJr2gQr6MO/jntQhvkhqAJJZvw1aEYLmGjbSCuetHvWGSejZzdBQzQ7Ew8xeQTJsL6ukCbfcrraA4Yejz+FnSbQEn7CnthzSxuj8j/Up14ZFdXq8E+3IQtsAIsOwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A9TyhD7E; arc=none smtp.client-ip=209.85.221.54
+	 MIME-Version; b=Ip250BnEDN1tUgslqapyLG475jPsdbGeZ+M4d9C3Pe4ueLxzFOtCifwp1avWTcBAWm0z8+8+nTnrtYyW/ANo5SF/g65M0s457NK5ZYp8bhvV6Pzk/cbabiR1E1/d3gTULHto3itNRfmZKvOVCfHcFpCBzDKPX7I8oMOLZVA8/4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hxSiYidz; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9TyhD7E"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-43eb05b1875so7317850f8f.3
-        for <linux-cxl@vger.kernel.org>; Wed, 29 Apr 2026 06:58:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hxSiYidz"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-43d77f6092eso8782098f8f.2
+        for <linux-cxl@vger.kernel.org>; Wed, 29 Apr 2026 06:58:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777471079; x=1778075879; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1777471078; x=1778075878; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6CTSBzsBgkNvhDnVz+9h4ZL7e9PYIu5uJhtdDT/D+nI=;
-        b=A9TyhD7EObAG0ta15UwXsh19QXqqF/ewyCq2P+Lg0D8TmbAMoh7VOLOzalIbdmgQgc
-         aVDH6NEQYyINlQEdNSBbRAGdK4jBOJvps++2lM3e1QhhZlb8Lw2ItzEbaqiGEmQNPj8t
-         WIZKj5gBler7iny0uvf0T5Uy/C5h+wlr93PX6P5PTrowBWBDNfsETQLOKR+kqU6XvAXf
-         LfT9tqofbDwjhb8co3BA6qlQ+SAjKBBK8fxpk1+McfUApAOHkUbm7T4Kaa6xOeZuNuAj
-         2GugLX7P+EyyMnF9TQvCnuZQeTrOBkqCYGAXKAS6YNvggS0Gyy0FlYk05bPFq4em6PdL
-         BlGA==
+        bh=i55Tulez84uC6S30BzMAZAX+g+KufDCaRfey8FY/Ij4=;
+        b=hxSiYidzcvM9QihibEHOi2yzJMkWL31Ggjus85vFe81yWopcF7ZWuJhfsAo7oOxKea
+         NrGEyGiEtQ+FICXzlAxjeI3FytZnJ5VVUaOr3GQDmDwXsA4+nuGP10HQJMdYGeNJDFXD
+         uT6C5aCcyA2RtARbtx2PDOYtFSntOMP1ceg+Ue4zpkk5R33tMDpyfFV/XEjii7Sc6GNV
+         tgZefbaScRtJmX0nVJMtwjBRbrMYayHbV7sOL20hfxHkj8Y3jN98YqN2QicEMPzieE4a
+         5b+v2NAC2be0gH9L+zvQ7DlOa55GGN4NyLyZEh76bvSQ4gb8ncOm9D7iRu34ZhZuJNvv
+         ZInQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777471079; x=1778075879;
+        d=1e100.net; s=20251104; t=1777471078; x=1778075878;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=6CTSBzsBgkNvhDnVz+9h4ZL7e9PYIu5uJhtdDT/D+nI=;
-        b=ivgrvZEHjKD+u9ZgTUBSyTLTfNZXuGsHWgMCIdUMfxwezPX0OTgcr4SFOnmsMN+kup
-         ZGEIl4WyTVXx4eg+lrOmi7QugUCgkuXLY3nlTLXxI4Wlb+vHLUMbkppBO3AEhGwRDxH2
-         vrGJ3h+BnfZh1JXylPmzyTfn5Vb2nkioDwqkjbvRCrm2n6jme+x46MD+YBVi4X91Vgfo
-         s8I2UMzfbaXB+dxqwkJ0YnVXHQkifL54I7JPHeTXtk+tPWNLdh85PfPdatbpWiTcsu2K
-         e9e6Y6l/zyouRTgt+iOrsvEToy5jwCbftUI1jN8R3LiinNMt+X2WkN52MnNklPgDSayk
-         g7Eg==
-X-Gm-Message-State: AOJu0YzWWBEtE5jbTF1r7h1Uz1BjdKukjxT704oCsSR7TAz8ZP8bBT6p
-	nsgw/TGexAqQKgQpoUT88m/vvpGxnGqqY4aswOW7+a6JIEn+kv4E0CJTrAwXHV/L
-X-Gm-Gg: AeBDietHNTP+FGV68pCMyTV+xKCoEbUZ9IVqw2zflIRulFxZnZ2qDr4MprnOHXpFx13
-	N7dEiXtQ4Juh7AwBT0L8ZjEVbsYt01OvY+OZ3KEbfyqIFoqKLHX9gwx1U6JNZKy/9cxhX+lUxco
-	2URRDO/tsx5G5CyWdg0eSFXeuzZCd+gtyAWTXjzXgfb8GRZfqgXOp0K6hKGCrj/UhGKY4oaNNKJ
-	3vl79sPi/YwRm11VVvA5KQudyxnA+QUELFMnnfgwnxizYQpJryJD7r7s1Zp9nqLPusyGuxsrC04
-	o16Xr5Q0bAUW4zMlIiHt/AmQ6ZijTyd3BDqYGfs3tWgmAd7raaTO4MJdvtvHDD4qb59YGb4odwB
-	6mJ581MEioHh5RVk5frSW2foQnI4RlC+aMnIkm2/FZ/G25Qwjw2lh3txc4omxUA8smWOCRSWVIP
-	+Nq3xK/uIkEuA7v3RKT1pLRHx3kE3JYUXz4btcUmzIBi4w/fVm2dBlmU4akhZ2wum8yUC/ja7V
-X-Received: by 2002:a5d:5d0f:0:b0:43d:7b90:fa23 with SMTP id ffacd0b85a97d-4464a447024mr14262935f8f.29.1777471079173;
-        Wed, 29 Apr 2026 06:57:59 -0700 (PDT)
-Received: from node1.manccluster.local (revolution.cs.man.ac.uk. [130.88.198.135])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-447b3d48517sm5205950f8f.5.2026.04.29.06.57.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=i55Tulez84uC6S30BzMAZAX+g+KufDCaRfey8FY/Ij4=;
+        b=LGfiUhz2RChfbJl4cdzQFJ4oXxlOTd+1yVZ0izgoz29am7QcfSDslQsOGiyZzbNN2x
+         O5tA2QJZJH72ie0i6Y+K7zY2DQClhDjAA6lhg0I4l9wMzjxn7RUajkdri9WdB2nTg0u8
+         xIkwrCKYFMqlnQSyT5ZVQfzoeMKOhbGmEML4GSw0hIOWTcIiQTmqlkkbLHmd98clPlGE
+         PIuQXNTjULK8rP34yRYU+fE3UXpVYENnRoF3WcNvZwNltls2P5bqBeAseaon/bHQrIy/
+         pAss6h4f8YZkK+1TdaCFtaP4Fk5Aa+i0m3ktQQvG/TrA6/fSdUrGf+kbd9Q/aHpVFTvd
+         Ep/w==
+X-Gm-Message-State: AOJu0Yz/+ZNTd+i8Ku+aqAFyTjesxfSqw0DtCfonX8fEWEHURHp+tMTy
+	8l/Sz2G9QLTF/QZWQW6ekUvv3Q4G0SNIva9x9sOULmZSsr1/gJ0hZayQKgyjH1Is
+X-Gm-Gg: AeBDies3B9uWd6C0PwGHBhaSSC3pDlANH7eC5Y0m9YVWF1GtrbG2TbOgeoY9Xsd4wWp
+	raVaTUC64SxrFO0UNOohE5GrH6kXvjsUm1wolIdZv8BtwsvMgcmGEn5oTtQ+zmc1Kvj4swHL9M8
+	7Kc2LdR89yBIfbyyrfPurOqV9YHr4FuFRRwviNKsOM+IAw/LzQaP30imfFmmTLy3OeTQtS5NplZ
+	H1xQ49ZKBsKPMDQ3KMDzpqb4z3qRIgRhq7ZgaxBC+p90ayovg0YucocGc6B4fCZOCA3xyo6uojK
+	7A5IOOasQ3V/HLGY/X0ETRfer5w0bH8i3Sh1bCePGfK0ZlDSpI+F9NMiRAMsqFJ5Er+D1omGR3O
+	xGfWMsHJlxFWolW/QCF5q9C4OL79pGPZ6QMkDGCxHcBPGvzduRzK5OuqPOR8DIAwdv2FG29SsYH
+	vKAQsIsCWpr/4kB38an3cxIq5k4gCzaN0dgckzyFog20qR3xLhvJC75+s+730ONWwFG1POU8vG
+X-Received: by 2002:a05:6000:2304:b0:43d:75ec:26f7 with SMTP id ffacd0b85a97d-4464aced724mr14325698f8f.29.1777471077272;
         Wed, 29 Apr 2026 06:57:57 -0700 (PDT)
+Received: from node1.manccluster.local (revolution.cs.man.ac.uk. [130.88.198.135])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-447b3d48517sm5205950f8f.5.2026.04.29.06.57.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Apr 2026 06:57:56 -0700 (PDT)
 From: Joshua Lant <joshualant@gmail.com>
 To: linux-cxl@vger.kernel.org
 Cc: qemu-devel@nongnu.org,
 	Jonathan.Cameron@huawei.com,
 	arpit1.kumar@samsung.com,
 	Joshua Lant <joshualant@gmail.com>
-Subject: [RFC QEMU PATCH 03/10] cxl-type3: Properly unmap the memory-backend on device exit
-Date: Wed, 29 Apr 2026 14:48:37 +0100
-Message-ID: <20260429135717.3048713-4-joshualant@gmail.com>
+Subject: [RFC QEMU PATCH 02/10] qdev/qbus: Allow hidden devices to be busless on QEMU startup
+Date: Wed, 29 Apr 2026 14:48:36 +0100
+Message-ID: <20260429135717.3048713-3-joshualant@gmail.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260429135717.3048713-1-joshualant@gmail.com>
 References: <20260429135717.3048713-1-joshualant@gmail.com>
@@ -77,35 +77,74 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently the backend remains mapped, meaning that if the device owning
-the backend is hot-removed, it cannot be readded in the same QEMU
-instance.
+Extend the capability for hiding devices, introduced for virtio-net
+device in:
+
+commit f3a8505656935cde32e28c1c6317f725084da1e0
+Author: Jens Freimann <jfreimann@redhat.com>
+Date:   Tue Oct 29 12:48:55 2019 +0100
+qdev/qbus: add hidden device support
+
+Currently only endpoint devices can be hidden with a primary device
+and failover (known static configuration). However, looking at future
+composable systems, we see a need for hidden devices which have no associated
+bus upon boot. Move the check for hidden devices to before the bus
+search, and if it is hidden ignore the case where the device was
+described on the CLI without the "bus=" field.
+
+This is motivated by a specific use-case: implementing the VCS
+command set, part of the CXL specification (CXL r3.2 Section 7.1.3). In
+this scenario a switch controlled by a Fabric Manager is able to change the
+virtual hierarchy of devices seen by a guest within a fixed physical system
+topology. The connecting bus is not known until runtime when
+a bind command is issued by the Fabric Manager.
 
 Signed-off-by: Joshua Lant <joshualant@gmail.com>
 ---
- hw/mem/cxl_type3.c | 3 +++
- 1 file changed, 3 insertions(+)
+ system/qdev-monitor.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index 68cd04b7d9..414c776028 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -1072,12 +1072,15 @@ static void ct3_exit(PCIDevice *pci_dev)
-     cxl_destroy_cci(&ct3d->cci);
-     if (ct3d->dc.host_dc) {
-         cxl_destroy_dc_regions(ct3d);
-+        host_memory_backend_set_mapped(ct3d->dc.host_dc, false);
-         address_space_destroy(&ct3d->dc.host_dc_as);
+diff --git a/system/qdev-monitor.c b/system/qdev-monitor.c
+index f2aa400a77..b51dfe0645 100644
+--- a/system/qdev-monitor.c
++++ b/system/qdev-monitor.c
+@@ -650,6 +650,7 @@ DeviceState *qdev_device_add_from_qdict(const QDict *opts,
+     DeviceState *dev;
+     BusState *bus = NULL;
+     QDict *properties;
++    bool hide_device;
+ 
+     driver = qdict_get_try_str(opts, "driver");
+     if (!driver) {
+@@ -663,6 +664,11 @@ DeviceState *qdev_device_add_from_qdict(const QDict *opts,
+         return NULL;
      }
-     if (ct3d->hostpmem) {
-+        host_memory_backend_set_mapped(ct3d->hostpmem, false);
-         address_space_destroy(&ct3d->hostpmem_as);
+ 
++    /* Is the device hidden from the guest?
++     * If yes, no need to find a default bus if none given...
++     * Bus could be provided at runtime (i.e. in a switch)*/
++    hide_device = qdev_should_hide_device(opts, from_json, errp);
++
+     /* find bus */
+     path = qdict_get_try_str(opts, "bus");
+     if (path != NULL) {
+@@ -675,14 +681,14 @@ DeviceState *qdev_device_add_from_qdict(const QDict *opts,
+                        driver, object_get_typename(OBJECT(bus)));
+             return NULL;
+         }
+-    } else if (dc->bus_type != NULL) {
++    } else if (dc->bus_type != NULL && !hide_device) {
+         bus = qdev_find_default_bus(dc, errp);
+         if (!bus) {
+             return NULL;
+         }
      }
-     if (ct3d->hostvmem) {
-+        host_memory_backend_set_mapped(ct3d->hostvmem, false);
-         address_space_destroy(&ct3d->hostvmem_as);
-     }
- }
+ 
+-    if (qdev_should_hide_device(opts, from_json, errp)) {
++    if (hide_device) {
+         if (bus && !qbus_is_hotpluggable(bus)) {
+             error_setg(errp, "Bus '%s' does not support hotplugging",
+                        bus->name);
 -- 
 2.47.3
 
