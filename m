@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0FAC3B8955;
-	Wed, 29 Apr 2026 09:38:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589783C8731;
+	Wed, 29 Apr 2026 09:39:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777455533; cv=none; b=dLo0MEe8S0B4ZWZUSsjiQTEyER9g6UShnIbhfxasnC7Jo55yvlu8tCU/d1gUNMh8vU1QOFOL6bC9vWOiQkSXxQ/na/Q32NRyYw04ZZ1t3VF7OfpJ71it/DYiFXVTH3w8KygbtoWHgQvg9eUSneQZhpGrHvxG4tARrY8bfXNQvxw=
+	t=1777455566; cv=none; b=rdaWh0mEaiqnwpiSE5o/eYNyA1FABovCKhPgZOu84XmO9BsuMjFlZU4wHqa8xz3EMXtCJ0PS3YgpWYvo/2TODtLMVGir9gj5Qi6s+DMBck0zKKkuxo2+1MtIsbHLWVcPwKuT8sI88XtB5P1KboD8Cb3cC4ipFD3Be4a5mlVA/cI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777455533; c=relaxed/simple;
-	bh=UYLe+Qx25A8v7VB+wy7G+C+L2zGH6z6ujt+Hu+Js9H8=;
+	s=arc-20240116; t=1777455566; c=relaxed/simple;
+	bh=66fFrly8kPdZfVWImwjO4XAExc1kJnamL1b/TCdS+L8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bLO+mnmRd3NWYp8WywUeci164OJNfONuOHDkJQX74oMZ/7AzeEmH6K6byQEm/fxgjkq0lO0W4jhHkjRSl/YWLUNgiwF1JUnijwtlxlGItESmbKBExdAIyaokWL7PT8G2KRaoYr/YSG2V5O7BX4tv5G58Acl6PNy5+ZhGloQzF+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gKiYX7b6; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=idcxrG5C6K236fb7HboDkDyj04PnRdJl7DuChrv2Z6UOLnhgiA+Bf/3CTOuMYXfT4qHSsLm/m/LKuZZSxsqH6szJNFBiaEXdk1v8Ix3rj8eUWLtb9bE7I3plcgFc4ulzBSUaYz7wRsyp7tL0E1xlVnu92nOoOct5KHp8hKPvAs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=loXD/LAk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gKiYX7b6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1183CC19425;
-	Wed, 29 Apr 2026 09:38:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="loXD/LAk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6CDDC2BCB3;
+	Wed, 29 Apr 2026 09:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777455532;
-	bh=UYLe+Qx25A8v7VB+wy7G+C+L2zGH6z6ujt+Hu+Js9H8=;
+	s=k20201202; t=1777455564;
+	bh=66fFrly8kPdZfVWImwjO4XAExc1kJnamL1b/TCdS+L8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gKiYX7b6+RorGZIiBdCqYmEa7Zz6HOBaHL5zOGCrGVQmwT+RLdEhDb8NVSyXluOcv
-	 NO8JQ//p6OigMgATtXwl3SMPKssufasLmmA50SiBgT3m2YUtaCsPjdhKijmBPkOKYC
-	 IMj8Vbgttha9sAlKcY0F9fgiklqvtX0pDTNMG8lrBEX5yqRgSEXvqIdIiBFGckBdIU
-	 wWt9W6vtPkaBuz/Ewq/HZdY0+U17u4yfjfR6pUpmgf0N9M9ioWzW/yM2cieyKmUqEk
-	 3Ms/Shg5vta/wND5c1sJvW1HbaOU5fS9X4qjMnhJUSCMmBS2nXMTpa4aO3A9epygBY
-	 BYOX6DiKiMh9A==
-Message-ID: <0a16c8dc-3155-4886-8aa1-2d7dd3e3e13a@kernel.org>
-Date: Wed, 29 Apr 2026 11:38:46 +0200
+	b=loXD/LAkpPNZMilT1kMYqKWAyh8xNZ5R4JxY1AG0XfFsCpz58u9ei0MuzrtHyWTDs
+	 WpweOeJ1aKqiu4NzrQauA7gtt/4VfdfH7+ZE0ClDpkg1i+nVWYiaQ0dfysjpqV9pso
+	 TzlWCRfBGl3/dSu4CbCLyfRnwIt+vGPOLOvbg6RQ9tnbnSUXsv0Now34SSHxe7VKrt
+	 xpYnkCk6Qwienb/SFwRi3qI81v1DWlmIwIKnl46G7KQHvDrMeUbxllnUB/y5ILUVAj
+	 wln1rDPD0AR04foLuYf9BCJqttcPELvA0gayDwC3ZrSwguep2abhSqwohYIYiwQYup
+	 y99O8gZpG13qA==
+Message-ID: <76d06c0a-fe5c-4d61-a091-919db2ace4a1@kernel.org>
+Date: Wed, 29 Apr 2026 11:39:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,8 +35,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] mm/memory_hotplug: fix memory block reference leak
- on remove
+Subject: Re: [PATCH v2 2/3] drivers/base/memory: fix memory block reference
+ leak in poison accounting
 To: Muchun Song <songmuchun@bytedance.com>, Oscar Salvador
  <osalvador@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  "Rafael J . Wysocki" <rafael@kernel.org>, Danilo Krummrich
@@ -48,7 +48,7 @@ Cc: Vishal Verma <vishal.l.verma@intel.com>,
  driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
  stable@vger.kernel.org, muchun.song@linux.dev
 References: <20260428085219.1316047-1-songmuchun@bytedance.com>
- <20260428085219.1316047-2-songmuchun@bytedance.com>
+ <20260428085219.1316047-3-songmuchun@bytedance.com>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -95,24 +95,23 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260428085219.1316047-2-songmuchun@bytedance.com>
+In-Reply-To: <20260428085219.1316047-3-songmuchun@bytedance.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 4/28/26 10:52, Muchun Song wrote:
-> remove_memory_blocks_and_altmaps() looks up each memory block with
-> find_memory_block(), which acquires a reference to the memory block
-> device.
+> memblk_nr_poison_inc() and memblk_nr_poison_sub() look up a memory
+> block via find_memory_block_by_id(), which acquires a reference to the
+> memory block device.
 > 
-> That reference is never dropped on this path, resulting in a leaked
-> device reference when removing memory blocks and their altmaps. Drop
-> the reference after retrieving mem->altmap and clearing mem->altmap,
-> before removing the memory block device.
+> Both helpers use the returned memory block without dropping that
+> reference, leaking the device reference on each successful lookup. Drop
+> the reference after updating nr_hwpoison.
 > 
-> Fixes: 6b8f0798b85a ("mm/memory_hotplug: split memmap_on_memory requests across memblocks")
+> Fixes: 5033091de814 ("mm/hwpoison: introduce per-memory_block hwpoison counter")
 > Cc: stable@vger.kernel.org
 > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> Acked-by: Oscar Salvador <osalvador@suse.de>
+> Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
 
 Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
