@@ -1,231 +1,350 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFB44014BF
-	for <linux-cxl@vger.kernel.org>; Wed, 29 Apr 2026 13:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A80C29BD95
+	for <linux-cxl@vger.kernel.org>; Wed, 29 Apr 2026 13:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777470160; cv=none; b=kQHVKIVkZK+klb5aeGwrg7BDU7WbrWUfUlrGfEyBNef78owiGlmHpRs6dcWVGbgNrOuWOZrvLoDPIebE1qqIImxv49M6j8E4ZvMoP0kdHhLTL+Iui/9WMleh94jUITGScWenWpgvJMR48mlmn4pkaOCfbPnfnzn1r1ayGl8C20A=
+	t=1777471081; cv=none; b=VpOyd0txonBJvHqjz+pqSb7Cg8UVYsYPY7wYAMMZpraygMVMmmZ0J5Wht+i4Hko31wBVWO3620CZEYwdIKGvpeD3hnTQ9+ZYioaVFcmBj/0s5rATMj8pQrZtWO1JmNvFAI0/NTPEElVjqyfBZEZG7uNKqmQDfK6mNYhNPCQHEBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777470160; c=relaxed/simple;
-	bh=8oIl+9E5+ZYyjQyOzSkIqpOdnbcSGnOo1+PhoaP0ooI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IRGiP8JTnbUzqX4vOlAn9Qq5/xJ51Mn6uY6TPvnMPODAgNZg4f4uvmjaynX9mVRt+I3zClxAhHU9hCAVHWs9hu7VB+kVkeB+HvP5p9cdOdz+rsp633501N/R3MszqZtAT/yZxQIzMi+cZoJB/JweP6oaHeVu/qp6guUfyxFEak4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=kl5j43ji; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1777471081; c=relaxed/simple;
+	bh=+kj9nHen4QG9WQdeZ/8oJ5v5OQNw1z0XivC8V2vgrXw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aVh3u8S6OvakaZQ2c6Tg85fEP00Mt5ZORLZOq1HbfDZZUQ+gZGKB9G4lyBUuAfUJhMh14eaqiIIcquzCCoQsdsPm/bvGc6nBJMy9V1a43EgLBL9IYdodWAhMXy2o23YoSbGXOcCL3mZ//sPqUQ70biMGdWoyPOA7vXLiRr/U16I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J276aQ5Y; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="kl5j43ji"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-488b0e1b870so217917995e9.2
-        for <linux-cxl@vger.kernel.org>; Wed, 29 Apr 2026 06:42:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J276aQ5Y"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-488ba840146so112833305e9.1
+        for <linux-cxl@vger.kernel.org>; Wed, 29 Apr 2026 06:57:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1777470153; x=1778074953; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jZN8aaKgJ1Zzt3TUYPWuZx8THycU/Bmtyi8+XL6pyqc=;
-        b=kl5j43jipWlzoMiuKwgkQuv15hdLYwnEsARemamzlnZihHXd82ZyMWQjzI+PVtPlLn
-         FVA2L6BidrMR+akGvPmTzkescnXF1bVWkVTvhqsivS9lx5C1aBs6y/d3yy+sAcDcSxM+
-         DI1fBKpO5dw0Vhi/jKTuXylQ3Wl9uYYNf7JF2CMMcw7LIBzXnXYZ/Kw+QYFXgH+fQ5LS
-         KdQM/8dYR9pyYig2r7iD2s+AJB28MYuK+f5e06Gh9DppL5yt2VCGVnjXAwZ2TX8MBpU0
-         TtBfZnGBX1xytCDWRnBCTJ97yjy3hfIEyug+yYBMtbq2N21WqpHMVZ7dwVtodprdsGzW
-         fmzg==
+        d=gmail.com; s=20251104; t=1777471075; x=1778075875; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HSyR30y14N6Go6z0CTh+z8a0vdIoiDWRnE1Zhp/jpmg=;
+        b=J276aQ5Yy1XFBrMjXfWZsTchdhoVyPRgpn6ySLLyovEB12BY0TSDuXLTCvxkUMkDkK
+         W1kysoyrYDHkfkleVry1W6RpwvNyBzYDPpytGvBw8wr2Xl86azfaDGFpgV/GOB/wMNv1
+         uIvOsfj81JN9utrhVYsqunDJPTq5ONUtRq4k3sXoHEnVZS0bFARZIBtXWiLn1Kst9tMD
+         cBYY7I7Ab5IYjzyIzVMXfdzKnO5Y3ofTpuOM5nqqhjLpTkAOOI1mIyAgU2+wlizoqePe
+         YL8I7pFpegKzzHu5IOZNXCgcw+a7PURJnaeVZpdZVDH35ZBo/E/bggzTb/AxGTkHtfQ9
+         TzAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777470153; x=1778074953;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jZN8aaKgJ1Zzt3TUYPWuZx8THycU/Bmtyi8+XL6pyqc=;
-        b=MHhvpAVOPHr6t2MaQKXzPxcwpUdpeF9gO7S9fnkvZt24aHHS617VgbLNsJX/x/cVcV
-         aEpOHzDmmDLzK3wrkfZyb1y7Bn9omkBpkdFY0StRVjfCVXHRR6M6Kn/FrpcBUPvIZir8
-         2u+S1xcId3Qi4VGvp5KcCDcvSTfwUu2DKz5HyqJrzItMW3msmCwrqd7s2uI8GbJCwiKt
-         muRZ14VzMD+2EWNsf1YYfiogvVqmdbq1noSA0vDEUPhx9Q6wQV4i4LJ6OV+as9LUZQBx
-         IV0ywlNbNTolD6jVkFs9lQPblon28COsi2xhAqdKlajVXE6Acp0xtjX5p9To5eArJk52
-         IS3w==
-X-Forwarded-Encrypted: i=1; AFNElJ/bUU2Iw67UWT4XYzScPcywgOqZA+a23m6ee+2B6ETmN2qA6zjG48hYyMDQqxdBa5sbI7dQg9TBcPA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3XQsRCOkcWZ55xzrKekrBeBXExs9Ri9Ko++Z3NblZU6cRVyFV
-	KC9JLB01dpFzY3PQekSkf9WthRlpKpNERA1YUIYyZrcfL47DfopPUK8dM+heTHQnCIA=
-X-Gm-Gg: AeBDies2DZlhgeH30jCapCN3QE6iTRHRYz7QEzJUdDZ83kgvRofby495TZi5krS+7Pp
-	eAEJfWq0PUGToUtL/XOi0S3ciQJR11ZFnUWuCPtl1Wpq7Kf8nRQptFECyLqnyA/VgT/gIWN3UC8
-	nQqebtE2wli9NW0asZNV+P6uTFvanON4DyVPYQhrBUfdIrWAtkloaDLBzcyocYuxy+FoJDL0Y2H
-	I1q7bVEvz8qLApoEiA3u491x2G1hoA8gqLHRutN/m/xGa/fjCRjmgokrFA7DjcoKe+A347H6RBc
-	RhJvtAw/b1CYdtEtg3OHHk1xTGpqGdK2LqR1dMWs38bO7GH9Ro1aSH2hR62djWrwsKPpRasfJnt
-	lQZzHXTLL2N4z6JH7uvauOFuKdYoU+YnkvJ5Cuz9YBMcViIpE0XUImhZYOtyXCN/guuxnrpD7Ud
-	k087EajvrlvE3uMxqDetADUp6Gk8eQafIi6f7C4nk=
-X-Received: by 2002:a05:600c:4e4b:b0:488:be58:bb5b with SMTP id 5b1f17b1804b1-48a7b547375mr70345885e9.24.1777470152259;
-        Wed, 29 Apr 2026 06:42:32 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([2a00:23c8:67a7:3101::e3b])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-48a7bc79ab4sm59981745e9.9.2026.04.29.06.42.30
+        d=1e100.net; s=20251104; t=1777471075; x=1778075875;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HSyR30y14N6Go6z0CTh+z8a0vdIoiDWRnE1Zhp/jpmg=;
+        b=pIdxkI7hberHnDk6dhuXqmuaa4iimJflLaEeBSo4mDFdytW8lFYI4WLgHT0tgTKljE
+         9n/HeDryHW2VGt+g/nrhKxrkFdHzjroSRa6Wy2D/tyeB0asKwUMwtnI6xRikVQhKekoM
+         bbuMFTH0qdY4YC+TW2Kh6amClDu2C99K/x9frF1XGuCq/LEdTIX+WqSrPJi4hF4p3tkF
+         p7MVI3aQFI7pdoHxVrI8lR5Q8ks1e+laEJmICxzFgj9HE8vC2htVLMvk+Vf2+EL2i0BP
+         AXe50jOhPyXVijVpaGKpeoic9R6a7LBSCdfX4uQTNmH1Pu/nZlad+e1HGb3Uj1RjTxr9
+         AmcA==
+X-Gm-Message-State: AOJu0Yz1gd2F8x1Kdlcc2e8r3TK5D4v8/IQroFi5U1M5PvU5ofAEwn5S
+	pFobMFESFGl3MnNO1DrfZvH2P4pA+vY3pg5BNGtL/TMVk+iXJ1C0OzUpA/129GuU
+X-Gm-Gg: AeBDiesCPDDqCuYeIh8GRhk2GP9lzuzLRDEewId+PCJzq6C/a3FYi+W1YnACLynm6fF
+	SDZaRr44bL65X3LwWbZtrLJ62Bn3FDw/JvN7wTLr/YTcsqcOWtQT8ulS/2rmw0Mx67rCXkPQ5kW
+	DQSwopr8u357xKqToZ0YhqRKgY03P9xut9ppDXc6hvqXVxW79FxdEDTXybTmwuxFGO/uKXShI+E
+	caoFWvNkYpFaK7YnUyd7oD5GOguRaC6flwemgPBydbOBSiwW9/IBurVmvUpTpnTXx7AsjRe2yzP
+	092Nx3T4rgmvx+S/MuA2htb2Z+jAkEsjkIeshzRmxc8u29ZBa4iPDY2ojNLYiFF3hbWROA8HCeo
+	ZqvQ8tF5OAaaSHiwRe2pHy1ZZSHO41524THgE7E9fXka3Pbg2ApG6z0YgqIUHhUJUaIcboHh0Kk
+	g9vqD9z/IwoDKX2M4/xt112KkJPmrlJsMAq7nWSdrufTsQgafmY6pomQZ8NzY2dgBE1kc1F1eP
+X-Received: by 2002:a05:600c:1c20:b0:489:1aed:1658 with SMTP id 5b1f17b1804b1-48a77b241admr129709105e9.23.1777471074474;
+        Wed, 29 Apr 2026 06:57:54 -0700 (PDT)
+Received: from node1.manccluster.local (revolution.cs.man.ac.uk. [130.88.198.135])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-447b3d48517sm5205950f8f.5.2026.04.29.06.57.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2026 06:42:31 -0700 (PDT)
-Date: Wed, 29 Apr 2026 14:42:28 +0100
-From: Gregory Price <gourry@gourry.net>
-To: Arun George/Arun George <arun.george@samsung.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
-	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com,
-	gost.dev@samsung.com, arungeorge05@gmail.com, cpgs@samsung.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <afIKxG5mJZE6QgpR@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <CGME20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0@epcas5p1.samsung.com>
- <1983025922.01777297382206.JavaMail.epsvc@epcpadp2new>
- <ae_i9IlIndumJWN3@gourry-fedora-PF4VCD3F>
- <1891546521.01777455002601.JavaMail.epsvc@epcpadp1new>
+        Wed, 29 Apr 2026 06:57:53 -0700 (PDT)
+From: Joshua Lant <joshualant@gmail.com>
+To: linux-cxl@vger.kernel.org
+Cc: qemu-devel@nongnu.org,
+	Jonathan.Cameron@huawei.com,
+	arpit1.kumar@samsung.com,
+	Joshua Lant <joshualant@gmail.com>
+Subject: [RFC QEMU PATCH 00/10] Initial Support for VCS Switching
+Date: Wed, 29 Apr 2026 14:48:34 +0100
+Message-ID: <20260429135717.3048713-1-joshualant@gmail.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1891546521.01777455002601.JavaMail.epsvc@epcpadp1new>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 29, 2026 at 11:45:26AM +0530, Arun George/Arun George wrote:
-> On 28-04-2026 03:58 am, Gregory Price wrote:
-> > On Mon, Apr 27, 2026 at 06:02:57PM +0530, Arun George wrote:
-> >>
-> >> Any particular workload you are targeting with
-> >> this (which can tolerate this latency)?
-> >>
-> >> Any deployments you think of where the goal is a capacity expansion
-> >> with a compromise in performance?
-> >>
-> > Primary use cases for us are any workload that benefits from zswap -
-> > which is many, many (many, many [many, many]) workloads.
-> > 
-> A curious question please. If the primary use case is swap, can't we 
-> handle this problem statement by re-using the zsmalloc allocation classes?
->
+Hi,
 
-I'm using swap semantics for allocation ("demote + leafent") but otherwise
-on-fault rather than removing the swap-entry, we leave it cached and
-replace the page table entry with a read-only mapping (if Read-fault).
+(All references to the CXL specification here are made to v3.2.)
 
-If there's a writable budget, and the node is under that budget, we may
-also allow upgrading the read-only page to be writable (at which point
-we would reap the swap entry).
+VCS= Virtual CXL Switch
+PPB= PCI-PCI bridge
+vPPB= virtual PCI-PCI bridge
+SLD= Single Logical Device
+FM= Fabric Manager
+USP/DSP=Upstream/Downstream Port
 
-This requires careful reverse-mapping in case there are multiple mappers
-of the same folio.
+This patchset provides basic functionality for emulation of an FM-owned,
+multi-VCS CXL switch (7.1.3). Primarily it adds a new object defined
+in hw/cxl/cxl-vcs-switch.c, and supports the FMAPI commands vppb get
+info/bind/unbind 0x5200/0x5201/0x5202 (7.6.7.2.1-7.6.7.2.3) to be used on SLD’s.
 
-Since otherwise the allocation is just alloc_pages_node(), and the fault
-patterns differ from typical swap - i didn't see the need to overcomplicate
-things by cramming the logic into zswap/zsmalloc instead of just making
-it its own vswap[1] backend that sits in front of zswap.
+It is posted as an RFC since: 
+1). There are several limitations with this work and I would like to discuss
+how to proceed.
+2). There has been prior discussion on potential restructuring of the CXL
+cci/switch code[1], which I suppose will dictate how to move forward with parts
+of this series…
 
-vswap makes it easy to writeback a cram page to swap in the case where
-the device is over-pressured and we need to make room (close the node,
-disallow new cram entries, writeback existing cram entries to swap).
+-------------------
+VCS Emulation
 
-[1] vswap: https://lore.kernel.org/linux-mm/?t=20260320192741
+The VCS command set should ultimately allow for multi-host sharing of a MLD/DCD
+device through the same switched fabric, with a single Fabric Manager/CCI-mailbox
+endpoint for configuration/management. The work here is a stepping stone toward
+that, allowing for SLD’s to be bound/unbound to a local QEMU instance by the FM.
 
-> A separate size class can be reserved for non-compressed pages in 
-> zsmalloc. And this interface could be used by zswap, zram etc. (We have 
-> been using this implementation for testing btw.). This does not require 
-> additional book-keeping or buddy allocator.
-> 
+The cxl-vcs-switch is comprised of one or more VCSs, and one or more hidden
+endpoint devices. A single VCS is defined as a single cxl-upstream-port
+(meaning a 1:1 mapping between physical upstream PPBs and number of VCS’s),
+and one or more cxl-downstream-ports (these form the vPPBs of each VCS). The
+number of vcs-attached endpoints defined on the CLI forms the number of
+downstream PPBs the switch would have. These endpoints are hidden on boot, and
+connect to one of the vPPBs upon bind. This means that there is in effect
+no real downstream PPB in QEMU. The vPPB device effectively becomes the
+downstream PPB following bind.
 
-The other reason not to overload an existing mechanism is because these
-devices (that i've seen) cannot provide per-page compressability stats,
-and so it would end up just looking like a bunch of either
-uncompressible capacity or unknown compressed capacity.
+When the topology is initialised:
+- Upstream/downstream ports instantiated as part of a VCS switch are realized
+normally, but additionally register with the cxl-vcs-switch object, which are
+then referenced by the bind/unbind FMAPI commands etc.
+- The endpoint devices which connect to the downstream PPBs use the
+DeviceListener functionality for hiding devices (see the reference in the
+commit message of patch 2). The QDict from the CLI is stored in the VCS structs,
+which are then realized/unrealized on bind/unbind commands from the FM.
 
-That makes it harder for those components to reason about what to do
-with their normal software-compressed capacity (for which they do have
-that data).
+All this means that on boot the guest sees its upstream port and all downstream
+ports (vppbs) enumerated (as is described in section 7.1.4 and 7.2.1.3), but
+none of the endpoints are seen.
 
-> So write-control part need to handled in the specific back end driver of 
-> private pages while the allocation control is a generic front-end sort 
-> of, right? (Ex: zswap cram back end for compressed devices case.)
+The cxl-vcs-switch itself is implemented as a user creatable class, since it
+does not fit the single inheritance device model of QEMU, which would force
+association with a single PCIe bus, which will not work for multiple USPs.
+
+The cxl-vcs-switch uses local-fm=true/false CLI option to dictate whether the
+object will have a CCI mailbox attached. VCS state information will be held in
+the local-fm=true instance, and the FM will communicate directly with this
+instance only. IPC will be used (in multi-USP, multi-QEMU process environments)
+in order to maintain correct state information in the local-fm, and to
+bind/unbind devices in remote QEMU processes.
+
+Currently only the “managed hot-remove” flow is complete (Table 7-34) for the
+unbind operation, notifying the guest of removal and awaiting signal from
+the OS for unbind completion from the unrealize DeviceListener function.
+
+This is tested with the topology below and some additional libcxlmi test
+programs[2]. I am able to bind and unbind correctly to multiple VCSs, see the
+updated switch state, and see the delay in the unrealize listener callback from
+the delays in OS notification.
+
+-------------------
+Limitations and open questions
+
+1. Unbound, but fully realized devices (allowing proper MLDs/DCDs)
+
+The current method of hiding the endpoint device and storing the QDicts works
+for simple devices only. But ultimately the FM should be able to tunnel commands
+through the switch to communicate with the device, whether a guest is bound to
+it or not... We need a method of fully realizing the device, but on some sort of
+dummy bus that is not seen by the guest. I am unsure how to do this currently,
+since AFAICT it goes against the qdev model of device realization, being
+inherently associated with attaching to the guest’s bus (please correct me if
+I’m wrong on this). It will require a way to properly realize the devices, but
+bypass automatic association with the guest’s QOM tree? I don’t know if there
+is any precedent for behaviour like this in QEMU?
+
+2. Integration with Physical Switch Command set.
+
+Currently the physical switch command set in cci-mailbox-utils.c has not been
+modified to account for a VCS target (i.e. using those commands with a VCS
+target currently breaks things). This is where the discussion in [1] comes in.
+
+> - Move the call that caches state to the cxl_upstream_port reset
+>  to ensure downstream ports are in place before it is called.
+> Also will make it available from whatever CCI.  If we ever support
+> multiple VCS switches this will need to move an appropriate structure
+> representing whole switch information. With only one USP that is
+> a reasonable place to put full switch info.
+
+Since in my implementation the CXLPhyPortInfo will end up being associated with
+the VCS object and not with the USP, further refactoring will be required for
+this patch series to generalise the physical switch command set functions.
+
+3. Distributed VCS control
+
+Since the ultimate aim of this is to give the FM control of multiple VCSs in
+multiple QEMU instances, some method of sending FM commands between QEMU
+processes is needed, since the switch state will be distributed over these
+processes (with status kept in the local-fm=true instance). Does QEMU have a
+standard way for implementing such IPC or shall I just add some simple sockets
+communication into the cxl-vcs-switch.c?
+
+4. Unimplemented commands from virtual switch command set. 
+
+The actual bind process described in 7.6.6.7 shows how event records must be
+used, and the FMAPI command should return success without waiting on binding
+completion. Further work is needed to completely emulate the flow as described
+in the specification, and implement the remaining FMAPI commands.
+
+5. Tiered switching.
+
+Currently the downstream PPBs are nothing more than a struct, and only endpoint
+devices can be hidden. There should be some way to implement another complete
+switch below the downstream PPB of the first switch, as described in
+section 9.12.2.
+
+-------------------
+Testing
+
+topology:
+
+-device usb-ehci,id=ehci \
+-object memory-backend-file,id=cxl-mem1,share=on,mem-path=/$LOG_DIR/t3_cxl1.raw,size=8G \
+-object memory-backend-file,id=cxl-lsa1,share=on,mem-path=/$LOG_DIR/t3_lsa1.raw,size=1M \
+-object memory-backend-file,id=cxl-mem2,share=on,mem-path=/$LOG_DIR/t3_cxl2.raw,size=8G \
+-object memory-backend-file,id=cxl-lsa2,share=on,mem-path=/$LOG_DIR/t3_lsa2.raw,size=1M \
+-object memory-backend-file,id=cxl-mem3,share=on,mem-path=/$LOG_DIR/t3_cxl3.raw,size=8G \
+-object memory-backend-file,id=cxl-lsa3,share=on,mem-path=/$LOG_DIR/t3_lsa3.raw,size=1M \
+-object memory-backend-file,id=cxl-mem4,share=on,mem-path=/$LOG_DIR/t3_cxl4.raw,size=8G \
+-object memory-backend-file,id=cxl-lsa4,share=on,mem-path=/$LOG_DIR/t3_lsa4.raw,size=1M \
+-object cxl-vcs-switch,id=vcs0,usp-ppbs=2,dsp-ppbs=4,local-fm=true \
+-device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.0,hdm_for_passthrough=true \
+-device cxl-rp,port=0,bus=cxl.0,id=root_port1,chassis=0,slot=1 \
+-device pxb-cxl,bus_nr=22,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
+-device cxl-rp,port=0,bus=cxl.1,id=root_port2,chassis=1,slot=1 \
+-device cxl-upstream,port=0,sn=1234,bus=root_port1,id=us0,addr=0.0,multifunction=on,vcs=vcs0,usppb=0 \
+-device cxl-upstream,port=0,sn=5678,bus=root_port2,id=us1,addr=0.0,multifunction=on,vcs=vcs0,usppb=1 \
+-device cxl-switch-mailbox-cci,bus=root_port1,addr=0.3,target=vcs0 \
+-device usb-cxl-mctp,bus=ehci.0,id=usb0,target=vcs0 \
+-device cxl-downstream,port=0,bus=us0,id=swport0,slot=3 \
+-device cxl-downstream,port=1,bus=us0,id=swport1,slot=4 \
+-device cxl-downstream,port=2,bus=us0,id=swport2,slot=5 \
+-device cxl-downstream,port=3,bus=us0,id=swport3,slot=6 \
+-device cxl-downstream,port=0,bus=us1,id=swport4,slot=7 \
+-device cxl-downstream,port=1,bus=us1,id=swport5,slot=8 \
+-device cxl-downstream,port=2,bus=us1,id=swport6,slot=9 \
+-device cxl-downstream,port=3,bus=us1,id=swport7,slot=10 \
+-device cxl-type3,persistent-memdev=cxl-mem1,id=cxl-ep1,lsa=cxl-lsa1,sn=99,vcs=vcs0,dsppb=0 \
+-device cxl-type3,persistent-memdev=cxl-mem2,id=cxl-ep2,lsa=cxl-lsa2,sn=100,vcs=vcs0,dsppb=1 \
+-device cxl-type3,volatile-dc-memdev=cxl-mem3,id=cxl-dcd1,lsa=cxl-lsa3,num-dc-regions=8,sn=101,vcs=vcs0,dsppb=2 \
+-device cxl-type3,volatile-dc-memdev=cxl-mem4,id=cxl-dcd2,lsa=cxl-lsa4,num-dc-regions=8,sn=102,vcs=vcs0,dsppb=3 \
+-machine cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=8G,cxl-fmw.1.targets.0=cxl.1,cxl-fmw.1.size=8G
+
+libcxlmi:
+
+See [2]…
+
+1. Setup MCTP communication: e.g.
+mctp link set mctpusb0 up;
+mctp addr add 8 dev mctpusb0;
+mctp link set mctpusb0 net 1;
+systemctl restart mctpd.service
+busctl call au.com.codeconstruct.MCTP1 /au/com/codeconstruct/mctp1/interfaces/mctpusb0 au.com.codeconstruct.MCTP.BusOwner1 SetupEndpoint ay 0
+
+2. Build, then run libcxlmi commands to bind vcs0:
+./build/examples/vcs-bind-mctp 1 9 0 0 0
+./build/examples/vcs-get-virtual-switch-info-mctp 1 9
+
+3. Demonstrate the CXL device is usable:
+cxl create-region -m -t pmem -d decoder0.0 -w 1 -g 1024 -s 256M mem0
+ndctl create-namespace --region region0 --mode fsdax --size 256M
+echo "HELLO WORLD..." > /dev/pmem0
+cat /dev/pmem0
+
+4. Teardown the device, and rebind to vcs1, and check that it maps
+correctly:
+ndctl disable-namespace namespace0.0
+ndctl destroy-namespace namespace0.0
+cxl disable-region region0
+cxl destroy-region region0
+cxl disable-memdev mem0
+./build/examples/vcs-unbind-mctp 1 9 0 0 1
+# wait 5s for the hp notification... see lspci/dmesg change
+# bind the same device to the other VCS.
+./build/examples/vcs-bind-mctp 1 9 1 0 0
+cxl create-region -m -t pmem -d decoder0.1 -w 1 -g 1024 -s 256M mem0
+ndctl create-namespace --region region1 --mode fsdax --size 256M
+cat /dev/pmem1
+# See the hello world originally written by vcs0!
+
+-------------------
+Build
+
+The patches are applied on the upstream qemu 10.2 release, on top of the
+following patchsets from various branches of Jonathan’s fork:
+
+1: [PATCH qemu v5 0/5] cxl: r3.2 specification event updates.
+https://lore.kernel.org/linux-cxl/20260205112350.60681-1-Jonathan.Cameron@huawei.com/
+
+2: [PATCH qemu for 10.2 0/3] cxl: Additional RAS features support.
+https://lore.kernel.org/linux-cxl/20250917143330.294698-1-Jonathan.Cameron@huawei.com/
+
+3: [PATCH qemu 0/2] hw/cxl: Two media operations related fixes.
+https://lore.kernel.org/linux-cxl/20260102154731.474859-1-Jonathan.Cameron@huawei.com/
+
+4: [PATCH qemu v7 0/7] hw/cxl: Support Back-Invalidate (+ PCIe Flit mode)
+https://lore.kernel.org/linux-cxl/20260204170936.43959-1-Jonathan.Cameron@huawei.com/
+
+5: [PATCH qemu v5 0/3] hw/cxl: FM-API Physical Switch Command Set Support.
+https://lore.kernel.org/linux-cxl/20260204173223.44122-1-Jonathan.Cameron@huawei.com/
+
+6: [RFC PATCH qemu 0/5] hw/cxl/mctp/i2c/usb: MCTP for OoB control of CXL devices.
+https://lore.kernel.org/linux-cxl/20250609163334.922346-1-Jonathan.Cameron@huawei.com/
+
+-------------------
+References
+
+[1] https://lore.kernel.org/linux-cxl/20260127152350.00006447@huawei.com/
+
+[2] https://github.com/joshualant/libcxlmi/tree/vcs-testing
 
 
-write control is handled by the OS in three ways:
+Many thanks,
 
-   1) No file memory (no page cache)
-      We get this for free using the swap semantics
-      This prevents buffered i/o from bypassing page table controls
+Josh
 
-   2) User allocations only (or at least swap-eligible only)
-      This prevents catestrophic system failure if the device fails
+Joshua Lant (10):
+  docs: Add documentation for cxl-vcs-switch
+  qdev/qbus: Allow hidden devices to be busless on QEMU startup
+  cxl-type3: Properly unmap the memory-backend on device exit
+  cxl_downstream: enable power controller present capability.
+  cxl-vcs-switch: Initial support for CXL VCS.
+  cxl-upstream-port: Add support for targeting a VCS switch
+  cxl-downstream-port: Add support for VCS switching
+  cxl-cci-mailbox: Add support for targeting a VCS switch
+  cxl-mailbox-utils: Add support for VCS bind/unbind commands.
+  cxl-mailbox-utils: Add support for VCS Get Virtual CXL Switch Info
+    command.
 
-   3) Page table mapping control (disallow direct writes)
-      This prevents uncontended writes to compressed memory by the cpu
+ docs/system/devices/cxl.rst               |  90 +++-
+ hw/cxl/cxl-mailbox-utils.c                | 207 ++++++++-
+ hw/cxl/cxl-vcs-switch.c                   | 524 ++++++++++++++++++++++
+ hw/cxl/meson.build                        |   1 +
+ hw/cxl/switch-mailbox-cci.c               |  33 +-
+ hw/mem/cxl_type3.c                        |   3 +
+ hw/pci-bridge/cxl_downstream.c            |  13 +
+ hw/pci-bridge/cxl_upstream.c              |  20 +
+ hw/usb/dev-mctp.c                         |  23 +-
+ include/hw/cxl/cxl_device.h               |  10 +-
+ include/hw/cxl/cxl_vcs_switch.h           | 134 ++++++
+ include/hw/pci-bridge/cxl_upstream_port.h |   2 +
+ qapi/qom.json                             |  19 +
+ system/qdev-monitor.c                     |  10 +-
+ 14 files changed, 1055 insertions(+), 34 deletions(-)
+ create mode 100644 hw/cxl/cxl-vcs-switch.c
+ create mode 100644 include/hw/cxl/cxl_vcs_switch.h
 
-
-allocation control is handled via private nodes - the driver which
-hotplugs the private nodes hands that node to cram - and cram is now
-aware of that capacity and will use __GFP_PRIVATE to allocate from that
-node.   Removal of the private node from the fallback zonelist and the
-lack of __GFP_PRIVATE in all other paths prevent normal buddy allocator
-users from accessing that memory.
-
-> 
-> Great! I believe "writable budget" could be an interesting idea which 
-> can solve the 'bus error' sort of scenarios due to device not capable of 
-> taking any more writes. The write budget could be replenished using the 
-> control path and writes will not go ahead without the budget available, 
-> right?>
->
-
-Write budget is simple
-
-budget=1  (up to 1 page can be writable
-   1) swap 1 page ->  cram alloc 1 page, put VSWAP_CRAM in PTE
-   2) read-fault  ->  cram upgrades VSWAP_CRAM to R/O PTE
-   3) write-fault ->
-      a) if (writable_cnt < budget) { budget++; mkwrite(pte); }
-      b) else:  normal swap semantic -> promote to normal memory
-
-The catch with the writable budget is we may not always be able to catch
-all frees of the vswap pages - meaning we get zombie pages in the vswap
-tables.  But this is ok if we run a regular kthread scan the vswap entry
-list to reap zombies.
-
-This also gives us a great place to TRIM/FLUSH those pages to release
-the capacity without zeroing them.
-
-
-Meanwhile - use ballooning and a simple shrinker to dynamically size the
-region to respond to real compression ratio.
-
-
-All said an done - you get something close to zswap but with R/O
-mappings for all entries, and optional R/W-mappings for administrators
-who know something about their workload and can afford to take the risk
-of some amount of capacity being written to uncontended in exchange for
-performance.
-
-The writable-budget is a risk-dial:  How much do you trust your workload
-to now spew un/poorly-compressible memory?  The write-budget is a direct
-measure of that. (so take P99.99999 compression ratios, and you can make
-a good chunk of that writable).
-
-~Gregory
+-- 
+2.47.3
 
