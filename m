@@ -1,71 +1,71 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A154D37C921
-	for <linux-cxl@vger.kernel.org>; Wed, 29 Apr 2026 13:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF5537D11E
+	for <linux-cxl@vger.kernel.org>; Wed, 29 Apr 2026 13:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777471087; cv=none; b=QzSY2jgo/palqXm6PkLCQJEorYUKKKAofEqqa0ScpU4PA2QLba3EJHLYttUH9nogqLLzo2lcAH3kIspkjyZ5ZiEx8W4kXm6/p2R9LocBQlAUKk8du4sJePwkDOYOk9xNsFd560eA8V0u/JxQ8QQaCEqUQmNQ9iEK/tk4nTyzC0c=
+	t=1777471088; cv=none; b=pn0jYa7FOEX89n0/754qb3Tz2zug0OzrzWeYpFJ3HyDJftxBQbKZ6+1BnmL6xvqK5R+mry9XzBfm9tDv4lU5LGuou0Ma+CUcloooyWEO+Gb3g2qQLBWSviXI67IMq8h3CRClbS3GeocIO022xSe8SH7aL679qxMwl+qs1SC2JYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777471087; c=relaxed/simple;
-	bh=mWZDJ0bQ09Rbk9HWSIxtQwsYSIa5DJOoIeqfamMVsj0=;
+	s=arc-20240116; t=1777471088; c=relaxed/simple;
+	bh=FQZN8bKo46bAv5JC3qvcmsTZ5kJ+2INlPY4MPewL8dw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pm17dxi4SuVU6n+AFj7ynB4qtRMNKGf7chmxJ8ujrfYPEhrjuChR9i+lJEe1DwLiCqoNBQv37Ow2wMMntHyg9kIJGAF6WuP5DIp4ITxWhnepY3Uz4+zqlj4LqXz8cgpxCbdRkwIiex/vQczz+V9DKonCRuozppCsBqMYMRcyF3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NJzJK0dH; arc=none smtp.client-ip=209.85.221.47
+	 MIME-Version; b=FsYFTIDEOvQ6Dekne7pbFy2BTy7doyv0jAibiTDvUGZY4ybhxmMOTYmjJf9fLPS3HpO10D73FfCWfZlJfJunITj+Tj+z0YFUxKVsyyZuyUp7ICQ2S94UAcOcgCg+H/vkuxFT/g87fQm7SFp3SSReNfB3LJiLQ9PFwoLpoKxbIwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KpTdbgX1; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJzJK0dH"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-44261378651so624845f8f.0
-        for <linux-cxl@vger.kernel.org>; Wed, 29 Apr 2026 06:58:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KpTdbgX1"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-488ad135063so115606535e9.0
+        for <linux-cxl@vger.kernel.org>; Wed, 29 Apr 2026 06:58:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1777471083; x=1778075883; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1777471084; x=1778075884; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gfj+OEin87giEu8kZpIKXoKArfkMj1N2Z6jKqDhBiuE=;
-        b=NJzJK0dHdWAjqsovyre3pNTY6bPI6z2G1y93c0rXU0syFnGmv5M9ZkAdAEnpuM/smR
-         mJR035dLPNECRTvDU5chHSjAEWbmhl7gmNM2Dpg//lZzNQzrG4VqqkUSeqtdMtVzMSMk
-         XDR7hx/Cp98LDRv9ElrtJA0U2LqgH+dDaBuPE3SSisTyrfmVhJR1ujoERNFypu9QbgwF
-         65zV7BV6+xwStAsQ6N90s/J/2Ce+GhpB4Bq/tIcRB6RQpNsjzG0JXP+dLPzLWs5BjgVu
-         105obKJOp1FOkjHYet/dX3SDmlBgu5lNpQovM9lO7/P1+m9Bn0QrXkBkoS83jE60Yi3Z
-         FSwQ==
+        bh=dPS8B/0ftELxPYBJPOi/Jw2N6PyAu4qwVtoZHd48FII=;
+        b=KpTdbgX1+cRV/qgQ2gMHa/wuu5iUcqUstWvTYXj3JzXyP6QAAirVDngPrjIHuWf1TE
+         71Ft4ckL2Lfm8lE769hdReMsvQhm3eHgaoOrSvnjnaYhxrDmliWPlVnIc3MquD/8FA2e
+         doxNlX+BIsDKao4skprINaCWY8NWSnFZG0DArNEhxu72qzN1CQJoe6ZO9/XkhVhTF+pW
+         8b7IVRUqe5vJMv4jw5kiUGighbK0EreYvK2tMlfDg/Az8gZ5QQKq64aI6XYFfRCAxgbh
+         Yv7Z8zSSVI04vBe0+FVTLCo+Y2bJPS1uwdNcYdGz9NhjaG9j+avGUr7T1bb1Cm2A17gX
+         5hQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777471083; x=1778075883;
+        d=1e100.net; s=20251104; t=1777471084; x=1778075884;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=gfj+OEin87giEu8kZpIKXoKArfkMj1N2Z6jKqDhBiuE=;
-        b=a6FXdXHLppPbaTd9KD/crhDi79HwBaZvlOYn3SdDulEbLotGEQAskFEQ3o5miX1DTH
-         /wcLQdwplsLC/++0h/gtThj5TWSNFMVGwtLSyx262/fi/GnHf8YB5pudyXMzn8ehWT9O
-         uHDLz3KtDlQNP8v7ye9Q5MxCjdU5YB7UmGaGMsnjTAQpSNEvBVmLoEEjQ2PybvKq19nx
-         cmbUSWGCKfU1xCTgi8p4jSrg8bRynplZp9RBRffyb5f4cIPe8g3AmGqhjgnp3xJpS2+d
-         u+nSbWe37HGbNfoWRXgv+pYalNwuqRaTj/wtAqlsuOjIGHoHkyWuk4T4xhiUSsmLsUhh
-         Xptg==
-X-Gm-Message-State: AOJu0Yx5qwkF6digSvhJ7dtUBLQgzhCrU6NqZrMXZgAozRX+OdYHw7V6
-	HvXDR+qpYR3hEnpHqcXYUElNprZUSuMyvyrhqy8Rn1fMMSt7Dk6ePUH9G82pELF3
-X-Gm-Gg: AeBDiet359QQWDpNDyCk+Y0iGCMgSBv9a4Fyl2bEXQdfEqzijy5rbLIsZK/PagpSeBg
-	UncBXRrFDsuyK2U5+60/ajrDCWxpEBQg64ggYBwomEL0x4fsUR+VWRns20zaO2RCHoR1icNQrI1
-	vDCnpNHPeFj5rD/xk6EnKOXdV4QW+ZjTxa2yUpA9ap91ZOk21mFgVlOYS0p3xoreZV6sNQkumqm
-	wPqqDg3VWds2MLYGyxo3wnP2h8D49JC76Yr86lsBQ/rmrTcZp/jlfIkO5eRn+MWwMhJIX6KjgBR
-	HprC/uPBPOpaD7OlKxBkojoA8BCh3OlHYWTLFs95uKSNnJncDzoboAk0fJNh+lUZO/T9fqEannQ
-	d4KKVN2FwqpuW6clo0rS3w7p5bVryq6S4btNX3eKMEql0RZNdFEZUJ0cYX0MWMgwefMRFhHZVAo
-	oMeYlC7bHN/q606dT+3Piwouu6kIotozk6gNFVEJNzYBeE8FiC3v3iwnWtIQEyTdaIADT77mDc
-X-Received: by 2002:a05:6000:2102:b0:445:7f70:70d3 with SMTP id ffacd0b85a97d-447a3421972mr4063484f8f.5.1777471083406;
-        Wed, 29 Apr 2026 06:58:03 -0700 (PDT)
+        bh=dPS8B/0ftELxPYBJPOi/Jw2N6PyAu4qwVtoZHd48FII=;
+        b=cScOnRUgoeZsAz2UV3jv82V1MasvBEFJZWBPNQ/LdkQ0J43uSE4k2zw9it29txok48
+         LiPol1RaU8T4Xppqt+Z72VDOoAOuQMbk6IFExOJunwYkP182Yi53hXQqVWxO3AdbCT/O
+         cPPGzNUrv9ZLXghZcDa3BOGhd/ccypoE+F5/lq5PVMnz8eKNeuUkK1TtYmT/fXw1HpEU
+         4nQzueNpZO2V/aBNmOHPFdJs6p7k1vnYnU3OMQiRYbLY0rAWTI0h7mh9YAhYTP02+jCh
+         19JbZUHPhzABrnFe66x32O9i1wVntnxZAHFrDaJgL0/9gdHViAP6ajM2gZeeCb/N9M3j
+         ZRwg==
+X-Gm-Message-State: AOJu0YzXOFZl5Z/dKwp1ZVYwsCBFSpMbPnIFSW49B0ZXLHUevXQjq8LQ
+	FVrX/HrYBhOtOLcK9HTxDnf/MEc/HoppZZhWFAbMnFJJGg0n8amIPx+inX/XShj3
+X-Gm-Gg: AeBDieuM2VTn9TBKjzDuTY3vEDuu2MDU0SkiDar/SU9Vm5HDqPl70F3slLNHT8D7Gk2
+	kMSX8+GjwXAVgh6oie6s9SYoLla70g6U+pPIINrfOj5YGmgowgp4aIes6RoFr0bhFwOuztgagmj
+	3aq9JTPXNSW0Cwf+VOmvE9kj4NBEERRMe6J4UG1pg5bqgy8hFOhVH6gWo/bKLm7So2at6QFrSjl
+	mVP6M6Kp6hEg7BGl+7IiP5vCKEaEsK0tCcJX58Pprs5rlQX8F7Nh7w4oi1P3uQEDaYjAzMr7Nhq
+	80tpwOUFe+KPRu1L0FsZftH9roZ+uYlY5j1CNhx2tvtSZ5hu+VhK/qcQQFfFCp4j38JCb3hIpj+
+	fEab/0c/cHVz7lKEf1SuIY8eAE+b2jWUZHVRwXgtE3Gf6sPGclBJEv1avlY0ui0rVCgaz8eotAX
+	xPjrKxE7v1NoL5ZXg46pzPJyO1DXC9UgpG0EnJaetExQjO8mF57WV5kVJ3YhYhilMHm/wa6iZI
+X-Received: by 2002:a05:600c:c4a3:b0:488:fd7e:1063 with SMTP id 5b1f17b1804b1-48a7b54eb83mr71355305e9.29.1777471084202;
+        Wed, 29 Apr 2026 06:58:04 -0700 (PDT)
 Received: from node1.manccluster.local (revolution.cs.man.ac.uk. [130.88.198.135])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-447b3d48517sm5205950f8f.5.2026.04.29.06.58.02
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-447b3d48517sm5205950f8f.5.2026.04.29.06.58.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Apr 2026 06:58:02 -0700 (PDT)
+        Wed, 29 Apr 2026 06:58:03 -0700 (PDT)
 From: Joshua Lant <joshualant@gmail.com>
 To: linux-cxl@vger.kernel.org
 Cc: qemu-devel@nongnu.org,
 	Jonathan.Cameron@huawei.com,
 	arpit1.kumar@samsung.com,
 	Joshua Lant <joshualant@gmail.com>
-Subject: [RFC QEMU PATCH 06/10] cxl-upstream-port: Add support for targeting a VCS switch
-Date: Wed, 29 Apr 2026 14:48:40 +0100
-Message-ID: <20260429135717.3048713-7-joshualant@gmail.com>
+Subject: [RFC QEMU PATCH 07/10] cxl-downstream-port: Add support for VCS switching
+Date: Wed, 29 Apr 2026 14:48:41 +0100
+Message-ID: <20260429135717.3048713-8-joshualant@gmail.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260429135717.3048713-1-joshualant@gmail.com>
 References: <20260429135717.3048713-1-joshualant@gmail.com>
@@ -77,75 +77,52 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Allows an upstream port to be registered on the CLI as a VCS within a
-cxl-vcs-switch. A VCS is defined as an upstream pci-pci bridge, and a set of
-downstream virtual pci-pci bridges VPPBs, which form a single Virtual
-Hierarchy within the switch.
+When a downstream port is connnected to an upstream port which is
+defined as a VCS within a cxl-vcs-switch, the port will automatically be
+instantiated as a VPPB within that VCS. This downstream port will then
+appear normally to the guest, but can be connected to a real downstream
+PPB at runtime when the switch is issued a bind command by the Fabric
+Manager.
 
 Signed-off-by: Joshua Lant <joshualant@gmail.com>
 ---
- hw/pci-bridge/cxl_upstream.c              | 20 ++++++++++++++++++++
- include/hw/pci-bridge/cxl_upstream_port.h |  2 ++
- 2 files changed, 22 insertions(+)
+ hw/pci-bridge/cxl_downstream.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
-index 3fcfc2cde6..a91f721c9e 100644
---- a/hw/pci-bridge/cxl_upstream.c
-+++ b/hw/pci-bridge/cxl_upstream.c
-@@ -16,6 +16,8 @@
+diff --git a/hw/pci-bridge/cxl_downstream.c b/hw/pci-bridge/cxl_downstream.c
+index 5322c46900..5e7ce6410d 100644
+--- a/hw/pci-bridge/cxl_downstream.c
++++ b/hw/pci-bridge/cxl_downstream.c
+@@ -14,11 +14,14 @@
  #include "hw/pci/pcie.h"
  #include "hw/pci/pcie_port.h"
- #include "hw/pci-bridge/cxl_upstream_port.h"
+ #include "hw/pci-bridge/cxl_downstream_port.h"
++#include "hw/pci-bridge/cxl_upstream_port.h"
+ #include "hw/qdev-properties.h"
+ #include "hw/qdev-properties-system.h"
+ #include "hw/cxl/cxl.h"
+ #include "hw/cxl/cxl_port.h"
+ #include "qapi/error.h"
 +#include "hw/cxl/cxl_vcs_switch.h"
 +
- /*
-  * Null value of all Fs suggested by IEEE RA guidelines for use of
-  * EU, OUI and CID
-@@ -346,6 +348,22 @@ static void cxl_usp_realize(PCIDevice *d, Error **errp)
-         goto err_cap;
-     }
  
-+    if (usp->vcs_name && usp->ppb != UINT8_MAX) {
-+        Object *obj = object_resolve_path_component(
-+                          object_get_objects_root(), usp->vcs_name);
-+        if (!obj) {
-+            error_setg(errp, "vcs '%s' not found", usp->vcs_name);
-+            goto err_cap;
+ typedef struct CXLDownstreamPort {
+     /*< private >*/
+@@ -199,6 +202,14 @@ static void cxl_dsp_realize(PCIDevice *d, Error **errp)
+                          PCI_BASE_ADDRESS_MEM_TYPE_64,
+                      component_bar);
+ 
++    PCIDevice *parent = pci_bridge_get_device(pci_get_bus(PCI_DEVICE(d)));
++    if (parent && object_dynamic_cast(OBJECT(parent), TYPE_CXL_USP)) {
++        CXLUpstreamPort *usp = CXL_USP(parent);
++        if (usp->vcs_name) {
++            cxl_vcs_register_vppb(usp->swcci.vcs, usp, dsp, errp);
 +        }
-+        if (!object_dynamic_cast(obj, TYPE_CXL_VCS_SWITCH)) {
-+            error_setg(errp, "'%s' is not a cxl-vcs-switch", usp->vcs_name);
-+            goto err_cap;
-+        }
-+        cxl_vcs_register_usp(CXL_VCS_SWITCH(obj), usp, errp);
-+        if (*errp) 
-+            goto err_cap;
 +    }
 +
      return;
  
- err_cap:
-@@ -372,6 +390,8 @@ static const Property cxl_upstream_props[] = {
-     DEFINE_PROP_PCIE_LINK_WIDTH("x-width", CXLUpstreamPort,
-                                 width, PCIE_LINK_WIDTH_16),
-     DEFINE_PROP_BOOL("x-256b-flit", CXLUpstreamPort, flitmode, false),
-+    DEFINE_PROP_STRING("vcs", CXLUpstreamPort, vcs_name),
-+    DEFINE_PROP_UINT8("usppb", CXLUpstreamPort, ppb, UINT8_MAX),
- };
- 
- static void cxl_upstream_class_init(ObjectClass *oc, const void *data)
-diff --git a/include/hw/pci-bridge/cxl_upstream_port.h b/include/hw/pci-bridge/cxl_upstream_port.h
-index ce248f3dca..05632286db 100644
---- a/include/hw/pci-bridge/cxl_upstream_port.h
-+++ b/include/hw/pci-bridge/cxl_upstream_port.h
-@@ -22,6 +22,8 @@ typedef struct CXLUpstreamPort {
- 
-     DOECap doe_cdat;
-     uint64_t sn;
-+    char *vcs_name;
-+    uint8_t ppb;
- } CXLUpstreamPort;
- 
- #endif /* CXL_SUP_H */
+  err_chassis:
 -- 
 2.47.3
 
