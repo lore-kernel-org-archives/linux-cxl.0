@@ -1,131 +1,129 @@
-Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from a11-73.smtp-out.amazonses.com (a11-73.smtp-out.amazonses.com [54.240.11.73])
+	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1356FC5
-	for <linux-cxl@vger.kernel.org>; Thu, 30 Apr 2026 08:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A1232C302;
+	Thu, 30 Apr 2026 15:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.11.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777536058; cv=none; b=h+zWdaBIXNhC4brO7JF3ruxFcUTCvyigZGC07lyqClgHhljSBJ0HjCSEn0SFZhjpvnq+v0nH47gaDxrCyjAaLh5b89LeptCLN+FrBno+a8YflYtmX9yYSUXELdE3BNn8R9npO8qnTrfo0yZdF6Z5gNQMZC65gjzy/7Uj8iJh1ls=
+	t=1777563225; cv=none; b=TokFHSfRcx90YTFZSxeJD3Z50QdnD2WKaVUIUka6OHTeVfnZ3Kz031cDgEgHo8jPryIC1NGRz91ObWlyx+B4iqRzYgXebhnXgUXSLdwsTcj5MC2zQBC6GO+hv+iqSMY+V3mviG+5wY0T1wXFSt200GuRWYyt/KveSbHMfxvGAwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777536058; c=relaxed/simple;
-	bh=A4A6wwPd/ZSj0TC/HEHCOyDVduWypr9xbHHX7OGSc38=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=acGzdyQX5KLGDZvPxKPR8kZxiofVcZvma3Z82W3HAozgzD1FAiYnJVCwmFOW2p4M6s7PcRbT5OtkQK39hybd3+b2LVoLkD5/Oa2zPZhZveEKlq7/cdmjOBRS/imZqgTsLeaW9XNB5tOT/88rUHDqm4PSH0wAn2JZW/u109z7NzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cqGR0kT8; arc=none smtp.client-ip=95.215.58.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1777563225; c=relaxed/simple;
+	bh=oj2XVF6FdPCuPa+ba0OgiaDH0x216zjEbA8mmR+9qtA=;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:References:
+	 Message-ID; b=NsYFmNECGufLVXyHCi2Y9GEX7EYiZhLtA8XyB1+HHZ2HlxwgI805/iEt3KHugcjxGt5N/IruvJNIDzo8ua0MQK+RRYo9wTXMoPrl1ie3FjdxAdHdY6s4NDIZAw++mWz+em0Kmu2rBv78TTgxxlr1VOaokG/62NSbB0Bdc5dWAqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=I33twfbQ; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=UvPrGzw+; arc=none smtp.client-ip=54.240.11.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cqGR0kT8"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1777536043;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=A4A6wwPd/ZSj0TC/HEHCOyDVduWypr9xbHHX7OGSc38=;
-	b=cqGR0kT8YoGyTPyfnvPFCbwserdf1FLjN/yQXTPkocffUQHDm3U+VUtUUu2fiuMlqEYSSv
-	cnVkEmse2/Cj/svvt+OdUgzyZ8kaVKh+Cohi2PlJ2Dx3BSPWqgqDwaYBpaHZCBSQn4JO8m
-	Miq9YpF5ZyjrSAJTnBUrQRHoscQNybo=
+	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="I33twfbQ";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="UvPrGzw+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1777563223;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id;
+	bh=oj2XVF6FdPCuPa+ba0OgiaDH0x216zjEbA8mmR+9qtA=;
+	b=I33twfbQtNcNYKx8zBvXtTu3VCAFG+8J6LAviQiC/02ZuJlGI1SjHfBFoBLJNu3d
+	rA1nH2j6MOsVQ7zA54XwZi4IhYJO12BUzhqp0MKFBCrWKxJWMEM3tKetfROS00be6Vb
+	f+Q2/kSsg57UFs53t/5vlADZ9arNWVruSNTshdjY=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1777563223;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id:Feedback-ID;
+	bh=oj2XVF6FdPCuPa+ba0OgiaDH0x216zjEbA8mmR+9qtA=;
+	b=UvPrGzw+E5FLaIYtxBsgUoTMevRwamqoZyINzzEQ3DcV3tw/SCpoUXllerCgEfU2
+	9U+LdaPmhOWwKssw1UkfbRRg7CVk5kAWnNqGlnTev8CZMjXigoqgN6gnGs1wGg+wSZi
+	qpgAqh8w7uKVVOcnnGCTNl2bJr1HHfZhRzQoB0Nw=
+Subject: [PATCH V5 0/2] daxctl: Add support for famfs mode
+From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
+To: =?UTF-8?Q?John_Groves?= <John@Groves.net>, 
+	=?UTF-8?Q?John_Groves?= <jgroves@fastmail.com>, 
+	=?UTF-8?Q?Dan_Williams?= <djbw@kernel.org>, 
+	=?UTF-8?Q?Alison_Schofield?= <alison.schofield@intel.com>
+Cc: =?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
+	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
+	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
+	=?UTF-8?Q?Jonathan_Cameron?= <Jonathan.Cameron@huawei.com>, 
+	=?UTF-8?Q?Aravind_Ramesh?= <arramesh@micron.com>, 
+	=?UTF-8?Q?Ajay_Joshi?= <ajayjoshi@micron.com>, 
+	=?UTF-8?Q?venkataravis=40micron=2Ecom?= <venkataravis@micron.com>, 
+	=?UTF-8?Q?dev=2Esrinivasulu=40gmail=2Ecom?= <dev.srinivasulu@gmail.com>, 
+	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2E?= =?UTF-8?Q?org?= <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?nvdimm=40lists=2E?= =?UTF-8?Q?linux=2Edev?= <nvdimm@lists.linux.dev>, 
+	=?UTF-8?Q?linux-cxl=40v?= =?UTF-8?Q?ger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
+	=?UTF-8?Q?John_Groves?= <john@groves.net>
+Date: Thu, 30 Apr 2026 15:33:43 +0000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.500.181\))
-Subject: Re: [PATCH v2 3/3] drivers/base/memory: fix locking for poison
- accounting lookup
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <b67ff3f9-8661-45cc-b408-6a7b611d31c1@kernel.org>
-Date: Thu, 30 Apr 2026 15:59:33 +0800
-Cc: Usama Arif <usama.arif@linux.dev>,
- Oscar Salvador <osalvador@suse.de>,
- Miaohe Lin <linmiaohe@huawei.com>,
- Muchun Song <songmuchun@bytedance.com>,
- Vishal Verma <vishal.l.verma@intel.com>,
- Ying Huang <huang.ying.caritas@gmail.com>,
- Dan Williams <djbw@kernel.org>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>,
- linux-mm@kvack.org,
- linux-cxl@vger.kernel.org,
- driver-core@lists.linux.dev,
- linux-kernel@vger.kernel.org,
- stable@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Rafael J Wysocki <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C2C5188E-76BF-444C-BF2D-8BDC1410BC61@linux.dev>
-References: <20260429101134.1358607-1-usama.arif@linux.dev>
- <b67ff3f9-8661-45cc-b408-6a7b611d31c1@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <20260430153331.84139-1-john@jagalactic.com>
+X-Mailer: Amazon WorkMail
+Thread-Index: AQHc2La5yYcpNuZmSk2Q3QomIwRoLQ==
+Thread-Topic: [PATCH V5 0/2] daxctl: Add support for famfs mode
+X-Wm-Sent-Timestamp: 1777563222
+X-Original-Mailer: git-send-email 2.52.0
+Message-ID: <0100019ddf064477-8322b695-f2d8-481c-9fcd-8b16fc97ad4d-000000@email.amazonses.com>
+Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
+X-SES-Outgoing: 2026.04.30-54.240.11.73
+
+From: John Groves <john@groves.net>
+
+This series adds famfs mode support to daxctl, alongside the existing
+devdax and system-ram modes.  A daxdev is in famfs mode when it is bound
+to fsdev_dax.ko (drivers/dax/fsdev.c).
+
+Patch 1 adds the library plumbing: mode detection helpers, an enable
+function, and the device.c reconfigure-device wiring.  Patch 2 adds a
+test that exercises mode transitions.
+
+This series depends on the fsdev_dax kernel driver (which provides famfs
+mode) and on the famfs kernel patch series.
+
+Patches:
+  1/2 daxctl: Add support for famfs mode
+  2/2 Add test/daxctl-famfs.sh to test famfs mode transitions
+
+Changes since V4 (addressing Alison and Ira's comments):
+- Consolidate the per-mode driver-symlink lookups into a single static
+  helper daxctl_dev_bound_to_module(); the three mode predicates now
+  delegate to it.
+- Use PATH_MAX instead of a hardcoded char[200] in the mode-check path.
+- Use path_basename() instead of basename().
+- Emit a dbg() message when realpath() on the driver symlink returns
+  NULL.
+- Revert the json.c change that reported unbound devices as 'unknown'.
+  An unbound device is reported as 'devdax' again, matching the prior
+  behavior; the configured-vs-active distinction Alison raised goes
+  away.
+- Add missing fprintf(stderr) "disable failed" messages in the
+  "already in target mode, just re-enable" branches of
+  reconfig_mode_devdax() and reconfig_mode_famfs(), matching the
+  pattern used by the disable_*_device() helpers.
+- Reword commit messages: clarify that the test is in a separate
+  patch, drop the stale "json.c shows 'unknown'" line, and replace
+  "Fix mode transition logic" with "Update mode transition logic"
+  since these are extensions for the new mode rather than fixes to
+  broken existing behavior.
+
+John Groves (2):
+  daxctl: Add support for famfs mode
+  Add test/daxctl-famfs.sh to test famfs mode transitions:
+
+ daxctl/device.c                | 132 +++++++++++++++--
+ daxctl/json.c                  |  13 +-
+ daxctl/lib/libdaxctl-private.h |   2 +
+ daxctl/lib/libdaxctl.c         |  39 ++++-
+ daxctl/lib/libdaxctl.sym       |   7 +
+ daxctl/libdaxctl.h             |   3 +
+ test/daxctl-famfs.sh           | 253 +++++++++++++++++++++++++++++++++
+ test/meson.build               |   2 +
+ 8 files changed, 436 insertions(+), 15 deletions(-)
+ create mode 100755 test/daxctl-famfs.sh
 
 
-
-> On Apr 29, 2026, at 18:44, David Hildenbrand (Arm) <david@kernel.org> =
-wrote:
->=20
-> On 4/29/26 12:11, Usama Arif wrote:
->> On Wed, 29 Apr 2026 12:18:08 +0800 Muchun Song =
-<muchun.song@linux.dev> wrote:
->>=20
->>>=20
->>>=20
->>>>=20
->>>>=20
->>>> lock_device_hotplug is a mutex lock, and we already take other =
-mutex locks while
->>>> holding lock_folio in other paths, so I am not sure I see what =
-should be special
->>>> in this case.
->>>=20
->>> Hi Oscar and Miaohe,
->>>=20
->>> I saw sashiko's report [1] related to folio lock and =
-lock_device_hotplug.
->>> Seems it is possible. You can correct me if I am wrong.
->>>=20
->>> [1] =
-https://sashiko.dev/#/patchset/20260428085219.1316047-1-songmuchun%40byted=
-ance.com
->>>=20
->>> We could fix this by calling action_result() without holding folio =
-lock.
->>> What do you think?
->>>=20
->>=20
->> Hello Muchun,
->>=20
->> You could end up in memblk_nr_poison_sub() while holding hugetlb_lock =
-spin lock
->> from get_huge_page_for_hwpoison(), right?
->>=20
->> Lockdep would flag this as sleeping while atomic when acquiring mutex =
-I think.
->=20
-> Another thought would be, that we always call the inc/sub from memory =
-failure
-> code while we hold a folio reference and the page is not poisoned yet.
->=20
-> That way, memory offlining cannot continue and the memory block cannot =
-go away.
->=20
-> So we'd let out page reference keep the memory block alive.
-
-It seems unnecessary to hold lock_device_hotplug if the user already =
-holds a
-refcount on the page. I'd like to drop this patch.
-
-Thanks.
-
->=20
-> --=20
-> Cheers,
->=20
-> David
-
+base-commit: 8ad90e54f0ff4f7291e7f21d44d769d10f24e2b6
+-- 
+2.53.0
 
