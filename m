@@ -1,92 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DFE13B38A6
-	for <linux-cxl@vger.kernel.org>; Thu, 30 Apr 2026 21:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B854836E467
+	for <linux-cxl@vger.kernel.org>; Thu, 30 Apr 2026 23:23:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777585285; cv=none; b=tfaFmZUsHlfjYjGZJ0c6awXl4B79mMbA08+wsX4G+hW4ORnO5OP2GUI2T4oilRjb+RSH2C3u3dxBwSPCtfMZyz8ezw/qRf5EpLjpRZObUvBQSv8fnHoHCGn7amOCoMoqOgJt9CNQ1QkQ5BoJTQT/bxjdfos/4b9rBq/B5q3EMFU=
+	t=1777591413; cv=none; b=pOwJORWFazEmy89trFUPNqWDF1NkLAmhgbuZjnitXg2jJwbmPwinWAvORt1AeBwBTuPUR709gEauNeWHWveTv1cV1dRal45grEXgw3Kfj9d/p940uKwqtqU/MLNHFIrH6kCapaDs5wb25GDnfujqoC0fzIjZcEi/RHK70R01xDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777585285; c=relaxed/simple;
-	bh=6Uq6A0mV41CjUmZm/vm4w/OOWYrR+v7vH90TRC9z6Fo=;
+	s=arc-20240116; t=1777591413; c=relaxed/simple;
+	bh=c4SZhFpdfH2gKQ6qlG2PevqK3nZOHR6z2ilACiHLMVg=;
 	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=iriHr20CSiw9seiMHaWC9Nbr45ohGU2Vn70493KQgkWlUBMqbeZxZzA4V+9xVvkPV2acpKM4ZEJJ6HboGLkX6jvtf75k1BiaygDuNI7ChTuthwDzjUEklLumK8VIeBr5syRl8WbIqETBQSoRyfPTPU/f0YDyI+fBWib/HQt75mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsIch+r7; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=gcLU4Gz9T+mloST/Zt0v786EJ1EqWQBPwyxFQ+dYpWbY1auOdeJ+eLJFnEmRTlYGNOVDtBQUAqD8pigX591EIrk3pQshCXayc/po0d8Bm+JbvG85h6jEq0R/Jb3G8isX05p+P7zGofEgSvHucJ3RZqmvhzjgHCen0pTFXZAtTnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eYoE4bmP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PsIch+r7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C976C4AF09;
-	Thu, 30 Apr 2026 21:41:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eYoE4bmP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2870C2BCB3;
+	Thu, 30 Apr 2026 23:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777585285;
-	bh=6Uq6A0mV41CjUmZm/vm4w/OOWYrR+v7vH90TRC9z6Fo=;
+	s=k20201202; t=1777591413;
+	bh=c4SZhFpdfH2gKQ6qlG2PevqK3nZOHR6z2ilACiHLMVg=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=PsIch+r76xe72kDqHEkIy33zsA/upJwkYlyJcXfDyiRuR5To+68rQPGQMZYBuzk6g
-	 OqKsk4CKKljGZ4QsKB2u9pHR3qC+IX6vPFXmk0WonrKsNlCPTW/caKB/I2PBU+4LYP
-	 jem+yd5tvvCataumYlnJd4kg+44AFIs+4cCwip94FIUtHSB3+w5X3M4RiuBynLOKRg
-	 LFgk5yyt5Amex8TZc/RETnZTXUmraT1ZvIun0VVLyobWM8QA1uJkkkHiNlOESXjrHN
-	 LiYO8pmpOG5gEhCv1oMTGOjMZYcMbDng1jG/NpR9y53aghQnDaBBkh5ExRRHnlnHmr
-	 NT0As/Hq251hA==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 94594F40069;
-	Thu, 30 Apr 2026 17:41:23 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Thu, 30 Apr 2026 17:41:23 -0400
-X-ME-Sender: <xms:g8zzaXQgENWylzGXUzS7DIy7_MVtLBvpGnZlXC6l9lnbPza6jZNeIA>
-    <xme:g8zzadrgxzQZ8WQG377jnrScN_1U5hCKalHb5bGZSKQ7lOm2Kt7jtomXEU8wzGdzW
-    HI1uBlg8278mRPA6Bp-08Xca4RMYLU0UjuSX-RgCI3vwI0N0oPurZxC>
-X-ME-Received: <xmr:g8zzaVbhYpXjrya_LEUA3uzHZjKUJzC0xXQq5VMswANFGQFxnzNmGCRQ_1pCJbKyq_Xx7LN_oSCk6TeC3Jsk1KBzRwNq69olvpE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekkeegvdcutefuodetggdotefrod
+	b=eYoE4bmPA+8YW83A0muAWwD3Ura2mjWOGbNElnjMH3hUrRqJPufihMyezORD/rFuw
+	 4nHAVWz/GlI6bC3VPyIFzR1+yn/fnnOKhAG926vgfhukyjXkSmA0l5XGhUNfxxpi9c
+	 wkL7Znm0X6AfOxDFgmpd4NA7TR6pLiUGP9rMOHA0eiBcQyUG15MBnDHEJUp/BbwP9o
+	 h0mFS9bHK9JgwcoAEB6o2qYfmCW3GChP9v7SdbY7S6OkSpR6BnXkEn1jX+x+R3miAU
+	 B2H8CrqKXGjg6OAJyxGOGwX3Qsgis/qzq2J3+ZuiXpKxBLv6r6YbZRYimP66jaxdUP
+	 g7HUcMtoA0Azw==
+Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
+	by mailfauth.phl.internal (Postfix) with ESMTP id E7EF5F4007C;
+	Thu, 30 Apr 2026 19:23:30 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-08.internal (MEProxy); Thu, 30 Apr 2026 19:23:30 -0400
+X-ME-Sender: <xms:cuTzaWopv9BZPNIJOf6ZA78UJaEglbgyCn00f1YvcqNaay1r-b72uw>
+    <xme:cuTzabBcvAzjXvz3fUFuwuucy8GpvB7ivv-sfQXe1pimVD1q-5g6NZquRqDW2cXET
+    H2YIIiKpvQgCrkBi32ygno2dxfK_WCMjHuZ3CBlta1kEmETOie5H8l3>
+X-ME-Received: <xmr:cuTzaXe4qTZhSZeLG1KJ8mZrZQqzxq-PITWohptbefaQv8FWXxNTtFft5HfwcAZ2_Me4vklSS3f6zd1INqRmvz_Jboqyd1tOprs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekkeeifecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
     hrpeffhffvvefkjghfufggtgfgsehtjeertddttdejnecuhfhrohhmpedfffgrnhcuhghi
     lhhlihgrmhhsucdlnhhvihguihgrmddfuceoughjsgifsehkvghrnhgvlhdrohhrgheqne
-    cuggftrfgrthhtvghrnhepvdegheeikeetleeuffeuheefjeejvdejvdevteefgfffveeh
-    vdeuvdffveffvdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepughjsgifodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqddujeej
-    vdeftdegheehqdeffeefleegtdegjedqughjsgifpeepkhgvrhhnvghlrdhorhhgsehfrg
-    hsthhmrghilhdrtghomhdpnhgspghrtghpthhtohepudelpdhmohguvgepshhmthhpohhu
-    thdprhgtphhtthhopehnihgtohhlihhntgesnhhvihguihgrrdgtohhmpdhrtghpthhtoh
-    epjhhgghesnhhvihguihgrrdgtohhmpdhrtghpthhtohepfihilhhlsehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehrohgsihhnrdhmuhhrphhhhiesrghrmhdrtghomhdprhgtph
-    htthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtohepjhhorhho
-    seeksgihthgvshdrohhrghdprhgtphhtthhopehprhgrrghnsehgohhoghhlvgdrtghomh
-    dprhgtphhtthhopegsrgholhhurdhluheslhhinhhugidrihhnthgvlhdrtghomhdprhgt
-    phhtthhopehkvghvihhnrdhtihgrnhesihhnthgvlhdrtghomh
-X-ME-Proxy: <xmx:g8zzaYSE2Jx2rmrznxwwijil_ZmrHDUyhv1L3KBMpWgsfpdh-pmukw>
-    <xmx:g8zzaTfrAvo-mm8m-MnLVDxuPIDBNyMJjefbSFFwBffYMXtMvtg62g>
-    <xmx:g8zzaXl6uO6HxKg7ZZ5PmEP7eTvxQ1ZgcCJmUc5_nR0WJ0X3CYUxaw>
-    <xmx:g8zzaYiUjLOfhXDHc_GPQpF-MzkP6c3lJ6rNi8T8q18PotbHRkcXnA>
-    <xmx:g8zzaYEECV6ZeJ-2SWMSsTalAYimtXj19iYzO4gXvViI0c_Q9VsuGDzS>
+    cuggftrfgrthhtvghrnheptdekleekgfdtgeduieeitddtgfeugeeikeejffeuffeuteej
+    ffekveetffelhfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvg
+    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegujhgsfidomhgvshhmthhp
+    rghuthhhphgvrhhsohhnrghlihhthidqudejjedvfedtgeehhedqfeeffeelgedtgeejqd
+    gujhgsfieppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgt
+    phhtthhopedufedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlvghjrghnug
+    hrohdrlhhutggvrhhoqdhprghlrghusegrmhgurdgtohhmpdhrtghpthhtoheplhhinhhu
+    gidqtgiglhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegujhgsfieskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepvggufigrrhgurdgtrhgvvgesrghmugdrtgho
+    mhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoh
+    epkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughh
+    rghtrdgtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprh
+    gtphhtthhopegurghvvgdrjhhirghnghesihhnthgvlhdrtghomh
+X-ME-Proxy: <xmx:cuTzaTsUIGdSdn_oJeibSXhSbNDyRh4PUUJfpGhFRr8maToqrvfEaQ>
+    <xmx:cuTzaeipIyR7KuAvH3LrWWnFC8t1UXAaLJSuYOAXECBT8RKugcequw>
+    <xmx:cuTzabsTYE2rzVqS5dd3ighyAKY3nec2l57WRrzoZDw7z9SeXBdPsA>
+    <xmx:cuTzaZ9L9BdzeEkBH9hYNfVjWS5JCtaJQR13huKVvAlWQ82EomBlgQ>
+    <xmx:cuTzaRYAT-XRO15819EPgWl9GoDig2duJAIPbU7hGtjOyrAL2Ocm6oS9>
 Feedback-ID: i67ae4b3e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 30 Apr 2026 17:41:22 -0400 (EDT)
-Date: Thu, 30 Apr 2026 14:41:22 -0700
+ 30 Apr 2026 19:23:30 -0400 (EDT)
+Date: Thu, 30 Apr 2026 16:23:29 -0700
 From: "Dan Williams (nvidia)" <djbw@kernel.org>
-To: Nicolin Chen <nicolinc@nvidia.com>, 
- jgg@nvidia.com, 
- will@kernel.org, 
- robin.murphy@arm.com, 
- bhelgaas@google.com
-Cc: joro@8bytes.org, 
- praan@google.com, 
- baolu.lu@linux.intel.com, 
- kevin.tian@intel.com, 
- miko.lenczewski@arm.com, 
- linux-arm-kernel@lists.infradead.org, 
- iommu@lists.linux.dev, 
- linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, 
- dan.j.williams@intel.com, 
- jonathan.cameron@huawei.com, 
- vsethi@nvidia.com, 
+To: alejandro.lucero-palau@amd.com, 
  linux-cxl@vger.kernel.org, 
- nirmoyd@nvidia.com
-Message-ID: <69f3cc82926_3291a910039@djbw-dev.notmuch>
-In-Reply-To: <f6734b9dad0050138676f11ecd14e9db1cf6b697.1777269009.git.nicolinc@nvidia.com>
-References: <cover.1777269009.git.nicolinc@nvidia.com>
- <f6734b9dad0050138676f11ecd14e9db1cf6b697.1777269009.git.nicolinc@nvidia.com>
-Subject: Re: [PATCH v4 1/3] PCI: Allow ATS to be always on for CXL.cache
- capable devices
+ djbw@kernel.org, 
+ edward.cree@amd.com, 
+ davem@davemloft.net, 
+ kuba@kernel.org, 
+ pabeni@redhat.com, 
+ edumazet@google.com, 
+ dave.jiang@intel.com
+Cc: Alejandro Lucero <alucerop@amd.com>, 
+ Ben Cheatham <benjamin.cheatham@amd.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Alison Schofield <alison.schofield@intel.com>
+Message-ID: <69f3e4714219b_3291a9100fb@djbw-dev.notmuch>
+In-Reply-To: <20260423180528.17166-5-alejandro.lucero-palau@amd.com>
+References: <20260423180528.17166-1-alejandro.lucero-palau@amd.com>
+ <20260423180528.17166-5-alejandro.lucero-palau@amd.com>
+Subject: Re: [PATCH v26 4/8] cxl: Prepare memdev creation for type2
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -97,155 +91,163 @@ Content-Type: text/plain;
  charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-Nicolin Chen wrote:
-> Controlled by the IOMMU driver, ATS is usually enabled "on demand" when a
-> given PASID on a device is attached to an I/O page table. This is working
-> even when a device has no translation on its RID (i.e., the RID is IOMMU
-> bypassed).
+alejandro.lucero-palau@ wrote:
+> From: Alejandro Lucero <alucerop@amd.com>
 > 
-> However, certain PCIe devices require non-PASID ATS on their RID even when
-> the RID is IOMMU bypassed. Call this "always on".
+> Current cxl core is relying on a CXL_DEVTYPE_CLASSMEM type device when
+> creating a memdev leading to problems when obtaining cxl_memdev_state
+> references from a CXL_DEVTYPE_DEVMEM type.
 > 
-> For example, CXL spec r4.0 notes in sec 3.2.5.13 Memory Type on CXL.cache:
->  "To source requests on CXL.cache, devices need to get the Host Physical
->   Address (HPA) from the Host by means of an ATS request on CXL.io."
+> Modify check for obtaining cxl_memdev_state adding CXL_DEVTYPE_DEVMEM
+> support.
 > 
-> In other words, the CXL.cache capability requires ATS; otherwise, it can't
-> access host physical memory.
+> Make devm_cxl_add_memdev accessible from an accel driver.
 > 
-> Introduce a new pci_ats_always_on() helper for the IOMMU driver to scan a
-> PCI device and shift ATS policies between "on demand" and "always on".
-> 
-> Add the support for CXL.cache devices first. Pre-CXL devices will be added
-> in quirks.c file.
-> 
-> Note that pci_ats_always_on() validates against pci_ats_supported(), so we
-> ensure that untrusted devices (e.g. external ports) will not be always on.
-> This maintains the existing ATS security policy regarding potential side-
-> channel attacks via ATS.
-> 
-> Cc: linux-cxl@vger.kernel.org
-> Suggested-by: Vikram Sethi <vsethi@nvidia.com>
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-> Tested-by: Nirmoy Das <nirmoyd@nvidia.com>
-> Acked-by: Nirmoy Das <nirmoyd@nvidia.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+
+This did not address the comment I had on the last posting about not
+explicitly calling out accelerators.
+
+https://lore.kernel.org/all/69cb4379e2b73_1b0cc610085@dwillia2-mobl4.notmuch/
+
+So a small naming change to make this more palatable because the current
+"cxl_memdev_type" is a superset of all possible CXL memdevs. In other
+words, PCI_CLASS_MEMORY_CXL, requires the presence of a mailbox. Other
+devices with CXL.mem may not be "accelerators".
+
+See below a proposal to flip the polarity of the naming:
+
 > ---
->  include/linux/pci-ats.h       |  3 +++
->  include/uapi/linux/pci_regs.h |  1 +
->  drivers/pci/ats.c             | 43 +++++++++++++++++++++++++++++++++++
->  3 files changed, 47 insertions(+)
+>  drivers/cxl/core/memdev.c | 15 +++++++++++--
+>  drivers/cxl/cxlmem.h      |  6 ------
+>  drivers/cxl/mem.c         | 45 +++++++++++++++++++++++++++++----------
+>  include/cxl/cxl.h         |  6 ++++++
+>  4 files changed, 53 insertions(+), 19 deletions(-)
 > 
-> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> index 75c6c86cf09dc..d14ba727d38b3 100644
-> --- a/include/linux/pci-ats.h
-> +++ b/include/linux/pci-ats.h
-> @@ -12,6 +12,7 @@ int pci_prepare_ats(struct pci_dev *dev, int ps);
->  void pci_disable_ats(struct pci_dev *dev);
->  int pci_ats_queue_depth(struct pci_dev *dev);
->  int pci_ats_page_aligned(struct pci_dev *dev);
-> +bool pci_ats_always_on(struct pci_dev *dev);
->  #else /* CONFIG_PCI_ATS */
->  static inline bool pci_ats_supported(struct pci_dev *d)
->  { return false; }
-> @@ -24,6 +25,8 @@ static inline int pci_ats_queue_depth(struct pci_dev *d)
->  { return -ENODEV; }
->  static inline int pci_ats_page_aligned(struct pci_dev *dev)
->  { return 0; }
-> +static inline bool pci_ats_always_on(struct pci_dev *dev)
-> +{ return false; }
->  #endif /* CONFIG_PCI_ATS */
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index b8ff1c07e528..ef39803bb139 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/idr.h>
+>  #include <linux/pci.h>
+> +#include <cxl/cxl.h>
+>  #include <cxlmem.h>
+>  #include "trace.h"
+>  #include "core.h"
+> @@ -579,9 +580,16 @@ static const struct device_type cxl_memdev_type = {
+>  	.groups = cxl_memdev_attribute_groups,
+>  };
 >  
->  #ifdef CONFIG_PCI_PRI
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 14f634ab9350d..6ac45be1008b8 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1349,6 +1349,7 @@
->  /* CXL r4.0, 8.1.3: PCIe DVSEC for CXL Device */
->  #define PCI_DVSEC_CXL_DEVICE				0
->  #define  PCI_DVSEC_CXL_CAP				0xA
-> +#define   PCI_DVSEC_CXL_CACHE_CAPABLE			_BITUL(0)
->  #define   PCI_DVSEC_CXL_MEM_CAPABLE			_BITUL(2)
->  #define   PCI_DVSEC_CXL_HDM_COUNT			__GENMASK(5, 4)
->  #define  PCI_DVSEC_CXL_CTRL				0xC
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index ec6c8dbdc5e9c..fc871858b65bc 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -205,6 +205,49 @@ int pci_ats_page_aligned(struct pci_dev *pdev)
->  	return 0;
+> +static const struct device_type cxl_accel_memdev_type = {
+> +	.name = "cxl_accel_memdev",
+> +	.release = cxl_memdev_release,
+> +	.devnode = cxl_memdev_devnode,
+> +};
+
+/*
+ * CXL memory device with mandatory PCI_CLASS_MEMORY_CXL functions
+ * like a mailbox and corresponding sysfs ABI.
+ */
+static const struct device_type cxl_class_memdev_type = {
+	.name = "cxl_memdev",
+	.release = cxl_memdev_release,
+	.devnode = cxl_memdev_devnode,
+  	.groups = cxl_memdev_attribute_groups,
+};
+
+/* CXL memory device with no class device attributes */
+static const struct device_type cxl_memdev_type = {
+	.name = "cxl_memdev",
+	.release = cxl_memdev_release,
+	.devnode = cxl_memdev_devnode,
+};
+
+That ".name" can be the same between the types because to userspace they
+are fundamentally the same type of object. The distinction can be
+determined by walking sysfs to see what is there.
+
+I do not want userspace to start keying off of the DEVTYPE uevent
+variable distinction unless we have a really good reason for that.
+
+>  bool is_cxl_memdev(const struct device *dev)
+>  {
+> -	return dev->type == &cxl_memdev_type;
+> +	return (dev->type == &cxl_memdev_type ||
+> +		dev->type == &cxl_accel_memdev_type);
 >  }
+>  EXPORT_SYMBOL_NS_GPL(is_cxl_memdev, "CXL");
 >  
-> +/*
-> + * CXL r4.0, sec 3.2.5.13 Memory Type on CXL.cache notes: to source requests on
-> + * CXL.cache, devices need to get the Host Physical Address (HPA) from the Host
-> + * by means of an ATS request on CXL.io.
-> + *
-> + * In other words, CXL.cache devices cannot access host physical memory without
-> + * ATS.
-> + */
-> +static bool pci_cxl_ats_always_on(struct pci_dev *pdev)
+> @@ -776,7 +784,10 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+>  	dev->parent = cxlds->dev;
+>  	dev->bus = &cxl_bus_type;
+>  	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
+> -	dev->type = &cxl_memdev_type;
+> +	if (cxlds->type == CXL_DEVTYPE_DEVMEM)
+> +		dev->type = &cxl_accel_memdev_type;
+> +	else
+> +		dev->type = &cxl_memdev_type;
+>  	device_set_pm_not_required(dev);
+>  	INIT_WORK(&cxlmd->detach_work, detach_memdev);
+>  
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index 776c50d1db51..92cca400d113 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -34,10 +34,6 @@
+>  	(FIELD_GET(CXLMDEV_RESET_NEEDED_MASK, status) !=                       \
+>  	 CXLMDEV_RESET_NEEDED_NOT)
+>  
+> -struct cxl_memdev_attach {
+> -	int (*probe)(struct cxl_memdev *cxlmd);
+> -};
+> -
+>  /**
+>   * struct cxl_memdev - CXL bus object representing a Type-3 Memory Device
+>   * @dev: driver core device object
+> @@ -103,8 +99,6 @@ static inline bool is_cxl_endpoint(struct cxl_port *port)
+>  
+>  struct cxl_memdev *__devm_cxl_add_memdev(struct cxl_dev_state *cxlds,
+>  					 const struct cxl_memdev_attach *attach);
+> -struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds,
+> -				       const struct cxl_memdev_attach *attach);
+
+One of the dirty aspects of my RFC was continuing with the idea that
+drivers external to CXL would need to worry about all the details around
+how to construct cxl_memdev_attach.
+
+So similar to above I think we want to have a
+devm_cxl_add_class_memdev() that only the cxl_pci driver uses, and a
+specific export for the single-memdev-to-single-region case.
+devm_cxl_add
+
+I will move some of that into the rework of unregister_region() I am
+doing to solve the sysfs region deletion race. It is a similar problem.
+
+>  int devm_cxl_sanitize_setup_notifier(struct device *host,
+>  				     struct cxl_memdev *cxlmd);
+>  struct cxl_memdev_state;
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index fcffe24dcb42..ff858318091f 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -65,6 +65,26 @@ static int cxl_debugfs_poison_clear(void *data, u64 dpa)
+>  DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
+>  			 cxl_debugfs_poison_clear, "%llx\n");
+>  
+> +static void cxl_memdev_poison_enable(struct cxl_memdev_state *mds,
+> +				     struct cxl_memdev *cxlmd,
+> +				     struct dentry *dentry)
 > +{
-> +	int offset;
-> +	u16 cap;
-> +
-> +	offset = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-> +					   PCI_DVSEC_CXL_DEVICE);
-> +	if (!offset)
-> +		return false;
-> +
-> +	if (pci_read_config_word(pdev, offset + PCI_DVSEC_CXL_CAP, &cap))
-> +		return false;
-> +
-> +	return cap & PCI_DVSEC_CXL_CACHE_CAPABLE;
+> +	/*
+> +	 * Avoid poison debugfs for DEVMEM aka accelerators as they rely on
+> +	 * cxl_memdev_state.
+> +	 */
 
-Apologies for coming to this late and forgive me if the following has
-already been asked and answered. Why not check for actual CXL.cache
-protocol on the wire being present?
-
-I.e. replace pci_cxl_ats_always_on() with a pdev->is_cxl_cache and this
-incremental change (compile tested only):
-
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 2c4454583c11..45d87af4de63 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -483,7 +483,8 @@ struct pci_dev {
- 	unsigned int	is_pciehp:1;
- 	unsigned int	shpc_managed:1;		/* SHPC owned by shpchp */
- 	unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
--	unsigned int	is_cxl:1;               /* Compute Express Link (CXL) */
-+	unsigned int	is_cxl_mem:1;           /* Compute Express Link (CXL.mem) */
-+	unsigned int	is_cxl_cache:1;         /* Compute Express Link (CXL.cache) */
- 	/*
- 	 * Devices marked being untrusted are the ones that can potentially
- 	 * execute DMA attacks and similar. They are typically connected
-@@ -809,7 +810,7 @@ static inline bool pci_is_display(struct pci_dev *pdev)
- 
- static inline bool pcie_is_cxl(struct pci_dev *pci_dev)
- {
--	return pci_dev->is_cxl;
-+	return pci_dev->is_cxl_mem || pci_dev->is_cxl_cache;
- }
- 
- #define for_each_pci_bridge(dev, bus)				\
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index b63cd0c310bc..c01f0e8362f1 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1733,9 +1733,8 @@ static void set_pcie_cxl(struct pci_dev *dev)
- 	pci_read_config_word(dev, dvsec + PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS,
- 			     &cap);
- 
--	dev->is_cxl = FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS_CACHE, cap) ||
--		FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS_MEM, cap);
--
-+	dev->is_cxl_cache = FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS_CACHE, cap);
-+	dev->is_cxl_mem = FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS_MEM, cap);
- }
- 
- static void set_pcie_untrusted(struct pci_dev *dev)
+"Disable poison debugfs for memdevs without mailboxes."
