@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E25D4657E2;
-	Thu, 30 Apr 2026 16:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451063314C5;
+	Thu, 30 Apr 2026 16:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777564826; cv=none; b=cE2Oh0xEeFV0mGcGQjcq+m95ho/OZVXapbf90wTdlVP0TbtT4WdZSIc3qSt4KE6lFEgMFB+f73Ny6829IdJ/8JPparRqYLi6s41Zom0MoSEiryp4cc2ZjPgHsW2NoWHvSau8411fjxjQrE4qtzlSDiFFVaMqRKJsRFVLUHNpM80=
+	t=1777566034; cv=none; b=CdR+NhueVJgLli9h8aALfz5adM9wOJYL9ZDFdy01WPUu986BlM0RfKHxSd3sBVCQrb9hcT/ovaxxN8kw+yHPJ0sjWNt+LN0XzyMon02/ZN09nz79hJNo/PV4BWaGtZ+vF31SYS00UCYf8qDlsjC3bzZMKJc/1zp4y6z6ZteC9wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777564826; c=relaxed/simple;
-	bh=n6G/xOWzuV6pY4CedkM5NIcdJr47D/2uHYawH4dHv2w=;
+	s=arc-20240116; t=1777566034; c=relaxed/simple;
+	bh=heVPE5FfsxMVMMyG3SD2jcFpLf5zLZ1lhUnxbpovDU0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n24+jICM7tdhfo9yVxMb6zgpSZrcgKathx6wtcoL4Nj6/hGiU/0F/fSvljX5/x61W/D2/HIp+AM0hNRZpi+urX7ARMDJqJHxA0hcKz+xaVFrjF13JJKwpwRzjeYPegwp3nxYynjPSI0utyZgnZdRslZFTXf/IixmBnaTitlr34E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lxSKN2/E; arc=none smtp.client-ip=198.175.65.20
+	 In-Reply-To:Content-Type; b=rVJGL5FyCRkrZJvAKDvlv5JVUNuhRMoa6FlfltoBF8ZYHqTEWaFheOY4S1RRBGNvqZ3uTCEzBsh9KJTBLgYkLCPefm5fEncWf11ukuk4BnWQdOYLvvMA8LxsY068Fah/klxq7USdvH0UAxdSdAmtS+nvPkTKK49SmU9Ny8mIhFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TN1UPGZg; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lxSKN2/E"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TN1UPGZg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777564824; x=1809100824;
+  t=1777566034; x=1809102034;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=n6G/xOWzuV6pY4CedkM5NIcdJr47D/2uHYawH4dHv2w=;
-  b=lxSKN2/EqhoPnqntva1tZbKGw+odCcNBfSuK3GiFYvpxi+iDPdTPKh64
-   l+3j5r2bZ3C1WvOXxyaaPq8WTVRi/p6QLP8FdS+E7GcKsR9QwvOBORXI+
-   tr2Dlo5/XXS4EyQ1vpcm3E4YfA4KjfT8Ld6ckmvm6XOEuWM4xYRqQntv0
-   PqKcfAOj0mjsM9PmA8C8qqlqBOFYzzfm3SDPKdSs5F3+KpcjaRe6mDWe6
-   Q/Iw7DigNdt1EGCoGeY+85FK6V3Z5S5fC4/lDKKwFGb+Xqlgqt1QbVfgW
-   50xt9fXdRBd62pDMyf2mzaSnKSeLRHQDLKqsgzw+jlZ7r8/1GbE/LjQC7
+  bh=heVPE5FfsxMVMMyG3SD2jcFpLf5zLZ1lhUnxbpovDU0=;
+  b=TN1UPGZg25CTrZbKBi1RF98wTaPNCkBiNu9RM6o7ecSkkIi5kTQciVpk
+   4DYECx5BFIYg3hK5CenZUUGrCytfSmISHlkUzJhcRowKEBdhXSf3Sh17M
+   aGSSVuEtZBzUuCouKWV/pe6hGYIELNvPBn6GiSNq5irbCqTU/NFFtt8ge
+   PEvkAeUtvIj2TKo4zX6ecaCwsbNAByQbDe9dsWFu1X7BlqaJYmLdQWxoJ
+   Z6c6Vzxsep8Qrq1RKu0JNNLPX5dpjuhRXvBkEes3t6qLitHRMnKyDqAQI
+   sxOUxNAT1ldWDMm6xCDO3d60XctWvfv9Kakkin+dFH7AaGbgsGU+/2KsX
    Q==;
-X-CSE-ConnectionGUID: fKXDgOOASOeS/S+tswNoFQ==
-X-CSE-MsgGUID: E5MBtmHZQxKZ/lHazf51fw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11772"; a="78232209"
+X-CSE-ConnectionGUID: 6OWhi9mOSKCksOo2wmI7lQ==
+X-CSE-MsgGUID: U2V35KtlSY2mOERRzIfV5g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11772"; a="78419594"
 X-IronPort-AV: E=Sophos;i="6.23,208,1770624000"; 
-   d="scan'208";a="78232209"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 09:00:22 -0700
-X-CSE-ConnectionGUID: RDZ6yspqQfSrawlQ/VDC6w==
-X-CSE-MsgGUID: Sch427l6QzyXIttwOczDWQ==
+   d="scan'208";a="78419594"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 09:20:32 -0700
+X-CSE-ConnectionGUID: iDNnYqA4Q5e/IDefCenemw==
+X-CSE-MsgGUID: 4l3NcFw4RyqzlRC0vCQRgA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,208,1770624000"; 
-   d="scan'208";a="239615201"
+   d="scan'208";a="272732800"
 Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.109.99]) ([10.125.109.99])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 09:00:21 -0700
-Message-ID: <a893e485-470f-40ed-b26f-598c94c86814@intel.com>
-Date: Thu, 30 Apr 2026 09:00:20 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 09:20:31 -0700
+Message-ID: <b9812a61-ca8d-4522-8075-ab6bf8671a40@intel.com>
+Date: Thu, 30 Apr 2026 09:20:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,95 +52,431 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] cxl/region: Fix race conditions in cxl region
- unregistration.
-To: Sungwoo Kim <iam@sung-woo.kim>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <djbw@kernel.org>, Robert Richter <rrichter@amd.com>,
- Li Ming <ming.li@zohomail.com>, Gregory Price <gourry@gourry.net>,
- Ben Widawsky <bwidawsk@kernel.org>, Dave Tian <daveti@purdue.edu>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260427032010.916681-2-iam@sung-woo.kim>
- <5b46d2ca-7821-4245-92fc-7169ea7435ae@intel.com>
- <CAJNyHpKMMwGnf7+2yzNnSbzozm2ROzfWmWg4xj8gROha+ncQeA@mail.gmail.com>
- <4a20f390-a49d-4a9f-911f-21c36449b990@intel.com>
- <CAJNyHpJjXCRitQykyNTseGGstP2XbRXroZ+YzkQxMLECj32BUw@mail.gmail.com>
- <7e023076-6603-4a02-8e90-47bdad562b5e@intel.com>
- <CAJNyHpLFGxu3u7GHLsmL+U0Q3U7hNY3UzYVQmBFSxUuZDzU-wA@mail.gmail.com>
+Subject: Re: [PATCH V5 1/2] daxctl: Add support for famfs mode
+To: John Groves <john@jagalactic.com>, John Groves <John@Groves.net>,
+ John Groves <jgroves@fastmail.com>, Dan Williams <djbw@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>
+Cc: John Groves <jgroves@micron.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>,
+ "venkataravis@micron.com" <venkataravis@micron.com>,
+ "dev.srinivasulu@gmail.com" <dev.srinivasulu@gmail.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>
+References: <0100019ddf064477-8322b695-f2d8-481c-9fcd-8b16fc97ad4d-000000@email.amazonses.com>
+ <20260430153405.84164-1-john@jagalactic.com>
+ <0100019ddf06b207-eaf8cb8a-066e-4642-8947-effdb4848c20-000000@email.amazonses.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <CAJNyHpLFGxu3u7GHLsmL+U0Q3U7hNY3UzYVQmBFSxUuZDzU-wA@mail.gmail.com>
+In-Reply-To: <0100019ddf06b207-eaf8cb8a-066e-4642-8947-effdb4848c20-000000@email.amazonses.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 4/29/26 9:39 PM, Sungwoo Kim wrote:
-> On Tue, Apr 28, 2026 at 6:33 PM Dave Jiang <dave.jiang@intel.com> wrote:
->>
->>
->>
->> On 4/28/26 1:28 PM, Sungwoo Kim wrote:
->>> Dear Dave, thank you for sharing the patch that doesn't use the workqueue.
->>>
->>> Claude suggests not using wq, since it's simpler. I agree that it's
->>> simple, but it's overly tailored to fix a specific bug.
->>> Actually, v1[1] proposed a similar patch. So let me bring a patch and
->>> discussion from v1:
->>>
->>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>> index 08fa3deef70ab..7ade9aa2aeecc 100644
->>> --- a/drivers/cxl/core/region.c
->>> +++ b/drivers/cxl/core/region.c
->>> @@ -2745,12 +2745,19 @@ static ssize_t delete_region_store(struct device *dev,
->>>   struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
->>>   struct cxl_port *port = to_cxl_port(dev->parent);
->>>   struct cxl_region *cxlr;
->>> + int err;
->>>
->>>   cxlr = cxl_find_region_by_name(cxlrd, buf);
->>>   if (IS_ERR(cxlr))
->>>   return PTR_ERR(cxlr);
->>>
->>> - devm_release_action(port->uport_dev, unregister_region, cxlr);
->>> + err = devm_remove_action_nowarn(port->uport_dev, unregister_region,
->>> +       cxlr);
->>> + if (err) {
->>> + put_device(&cxlr->dev);
->>> + return err;
->>> + }
->>> + unregister_region(cxlr);
->>>   put_device(&cxlr->dev);
->>>
->>>   return len;
->>>
->>> However, v1 has not been merged. Dan[2] commented that "No, that is
->>> not an acceptable or comprehensive fix. A subsystem should never try
->>> to double unregister a device." Also in the following thread[3], "The
->>> patch was technically correct but it relies on a design that requires
->>> depending on a double free semantic."
->>>
->>> I respect this design decision. Then, I need to execute
->>> devm_release_[action|all]() only once, which requires a device lock,
->>> guard(device)(port->uport_dev). Under a lock, I can check a flag to
->>> execute devm_release_[action|all]() only once.
->>> To use the lock, a clean work without a prior lock is required. That's
->>> a reason this patch ended up in wq.
->>>
->>> I hope I've explained the rationale for using wq. What do you think?
->>
->> Right I went back and also read what Dan proposed. I just wonder if we are over complicating things now and introducing more issues on top by doing that. Obviously we have to address the issues sachiko brought up in v3. Below is what claude suggested to fix the Sashiko issues in v3 patches. Some of the comments may be excessive but help reading through the changes.
+On 4/30/26 8:34 AM, John Groves wrote:
+> From: John Groves <John@Groves.net>
 > 
-> I (and Claude) don't have a better solution than using wq, although I
-> agree that not using wq is simpler.
-> Also, I'm not yet experienced enough to decide which is better for
-> CXL, so I'm happy with both directions. Would you prefer the version
-> without wq?
+> Putting a daxdev in famfs mode means binding it to fsdev_dax.ko
+> (drivers/dax/fsdev.c). Finding a daxdev bound to fsdev_dax means
+> it is in famfs mode.
+> 
+> A test for this functionality is added in the next commit.
+> 
+> With devdax, famfs, and system-ram modes, the previous logic that assumed
+> 'not in mode X means in mode Y' needed to get slightly more complicated.
+> 
+> Add explicit mode detection functions:
+> - daxctl_dev_is_famfs_mode(): check if bound to fsdev_dax driver
+> - daxctl_dev_is_devdax_mode(): check if bound to device_dax driver
+> Both delegate to a shared static helper daxctl_dev_bound_to_module() to
+> avoid duplicating the driver-symlink lookup, as does the pre-existing
+> daxctl_dev_is_system_ram_capable().
+> 
+> Update mode transition logic in device.c:
+> - disable_devdax_device(): verify device is actually in devdax mode
+> - disable_famfs_device(): verify device is actually in famfs mode
+> - All reconfig_mode_*() functions explicitly check each mode
+> - Handle unrecognized mode with an error instead of wrong assumption
+> 
+> Update json.c to report fsdev_dax-bound devices as 'famfs' mode.  An
+> unbound device continues to be reported as 'devdax' (the legacy default
+> when no driver is bound), to preserve existing behavior.
+> 
+> Signed-off-by: John Groves <john@groves.net>
 
-Looks like Dan is working on something [1]. So maybe we wait and see what he comes up with.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-[1]: https://lore.kernel.org/linux-cxl/c65851c1-4fca-46ba-8dde-fa10b7cb9cd3@amd.com/T/#mdd1ab49c012321fcd3dc34bd0cb7c0846cf1d1f9
 
-DJ
+> ---
+>  daxctl/device.c                | 132 ++++++++++++++++++++++++++++++---
+>  daxctl/json.c                  |  13 +++-
+>  daxctl/lib/libdaxctl-private.h |   2 +
+>  daxctl/lib/libdaxctl.c         |  39 +++++++++-
+>  daxctl/lib/libdaxctl.sym       |   7 ++
+>  daxctl/libdaxctl.h             |   3 +
+>  6 files changed, 181 insertions(+), 15 deletions(-)
+> 
+> diff --git a/daxctl/device.c b/daxctl/device.c
+> index a4e36b1..003609e 100644
+> --- a/daxctl/device.c
+> +++ b/daxctl/device.c
+> @@ -42,6 +42,7 @@ enum dev_mode {
+>  	DAXCTL_DEV_MODE_UNKNOWN,
+>  	DAXCTL_DEV_MODE_DEVDAX,
+>  	DAXCTL_DEV_MODE_RAM,
+> +	DAXCTL_DEV_MODE_FAMFS,
+>  };
+>  
+>  struct mapping {
+> @@ -471,6 +472,13 @@ static const char *parse_device_options(int argc, const char **argv,
+>  					"--no-online is incompatible with --mode=devdax\n");
+>  				rc =  -EINVAL;
+>  			}
+> +		} else if (strcmp(param.mode, "famfs") == 0) {
+> +			reconfig_mode = DAXCTL_DEV_MODE_FAMFS;
+> +			if (param.no_online) {
+> +				fprintf(stderr,
+> +					"--no-online is incompatible with --mode=famfs\n");
+> +				rc =  -EINVAL;
+> +			}
+>  		}
+>  		break;
+>  	case ACTION_CREATE:
+> @@ -696,8 +704,42 @@ static int disable_devdax_device(struct daxctl_dev *dev)
+>  	int rc;
+>  
+>  	if (mem) {
+> -		fprintf(stderr, "%s was already in system-ram mode\n",
+> -			devname);
+> +		fprintf(stderr, "%s is in system-ram mode\n", devname);
+> +		return 1;
+> +	}
+> +	if (daxctl_dev_is_famfs_mode(dev)) {
+> +		fprintf(stderr, "%s is in famfs mode\n", devname);
+> +		return 1;
+> +	}
+> +	if (!daxctl_dev_is_devdax_mode(dev)) {
+> +		fprintf(stderr, "%s is not in devdax mode\n", devname);
+> +		return 1;
+> +	}
+> +	rc = daxctl_dev_disable(dev);
+> +	if (rc) {
+> +		fprintf(stderr, "%s: disable failed: %s\n",
+> +			daxctl_dev_get_devname(dev), strerror(-rc));
+> +		return rc;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int disable_famfs_device(struct daxctl_dev *dev)
+> +{
+> +	struct daxctl_memory *mem = daxctl_dev_get_memory(dev);
+> +	const char *devname = daxctl_dev_get_devname(dev);
+> +	int rc;
+> +
+> +	if (mem) {
+> +		fprintf(stderr, "%s is in system-ram mode\n", devname);
+> +		return 1;
+> +	}
+> +	if (daxctl_dev_is_devdax_mode(dev)) {
+> +		fprintf(stderr, "%s is in devdax mode\n", devname);
+> +		return 1;
+> +	}
+> +	if (!daxctl_dev_is_famfs_mode(dev)) {
+> +		fprintf(stderr, "%s is not in famfs mode\n", devname);
+>  		return 1;
+>  	}
+>  	rc = daxctl_dev_disable(dev);
+> @@ -711,6 +753,7 @@ static int disable_devdax_device(struct daxctl_dev *dev)
+>  
+>  static int reconfig_mode_system_ram(struct daxctl_dev *dev)
+>  {
+> +	struct daxctl_memory *mem = daxctl_dev_get_memory(dev);
+>  	const char *devname = daxctl_dev_get_devname(dev);
+>  	int rc, skip_enable = 0;
+>  
+> @@ -724,11 +767,21 @@ static int reconfig_mode_system_ram(struct daxctl_dev *dev)
+>  	}
+>  
+>  	if (daxctl_dev_is_enabled(dev)) {
+> -		rc = disable_devdax_device(dev);
+> -		if (rc < 0)
+> -			return rc;
+> -		if (rc > 0)
+> +		if (mem) {
+> +			/* already in system-ram mode */
+>  			skip_enable = 1;
+> +		} else if (daxctl_dev_is_famfs_mode(dev)) {
+> +			rc = disable_famfs_device(dev);
+> +			if (rc)
+> +				return rc;
+> +		} else if (daxctl_dev_is_devdax_mode(dev)) {
+> +			rc = disable_devdax_device(dev);
+> +			if (rc)
+> +				return rc;
+> +		} else {
+> +			fprintf(stderr, "%s: unknown mode\n", devname);
+> +			return -EINVAL;
+> +		}
+>  	}
+>  
+>  	if (!skip_enable) {
+> @@ -750,7 +803,7 @@ static int disable_system_ram_device(struct daxctl_dev *dev)
+>  	int rc;
+>  
+>  	if (!mem) {
+> -		fprintf(stderr, "%s was already in devdax mode\n", devname);
+> +		fprintf(stderr, "%s is not in system-ram mode\n", devname);
+>  		return 1;
+>  	}
+>  
+> @@ -786,12 +839,31 @@ static int disable_system_ram_device(struct daxctl_dev *dev)
+>  
+>  static int reconfig_mode_devdax(struct daxctl_dev *dev)
+>  {
+> +	struct daxctl_memory *mem = daxctl_dev_get_memory(dev);
+> +	const char *devname = daxctl_dev_get_devname(dev);
+>  	int rc;
+>  
+>  	if (daxctl_dev_is_enabled(dev)) {
+> -		rc = disable_system_ram_device(dev);
+> -		if (rc)
+> -			return rc;
+> +		if (mem) {
+> +			rc = disable_system_ram_device(dev);
+> +			if (rc)
+> +				return rc;
+> +		} else if (daxctl_dev_is_famfs_mode(dev)) {
+> +			rc = disable_famfs_device(dev);
+> +			if (rc)
+> +				return rc;
+> +		} else if (daxctl_dev_is_devdax_mode(dev)) {
+> +			/* already in devdax mode, just re-enable */
+> +			rc = daxctl_dev_disable(dev);
+> +			if (rc) {
+> +				fprintf(stderr, "%s: disable failed: %s\n",
+> +					devname, strerror(-rc));
+> +				return rc;
+> +			}
+> +		} else {
+> +			fprintf(stderr, "%s: unknown mode\n", devname);
+> +			return -EINVAL;
+> +		}
+>  	}
+>  
+>  	rc = daxctl_dev_enable_devdax(dev);
+> @@ -801,6 +873,43 @@ static int reconfig_mode_devdax(struct daxctl_dev *dev)
+>  	return 0;
+>  }
+>  
+> +static int reconfig_mode_famfs(struct daxctl_dev *dev)
+> +{
+> +	struct daxctl_memory *mem = daxctl_dev_get_memory(dev);
+> +	const char *devname = daxctl_dev_get_devname(dev);
+> +	int rc;
+> +
+> +	if (daxctl_dev_is_enabled(dev)) {
+> +		if (mem) {
+> +			fprintf(stderr,
+> +				"%s is in system-ram mode; must be in devdax mode to convert to famfs\n",
+> +				devname);
+> +			return -EINVAL;
+> +		} else if (daxctl_dev_is_famfs_mode(dev)) {
+> +			/* already in famfs mode, just re-enable */
+> +			rc = daxctl_dev_disable(dev);
+> +			if (rc) {
+> +				fprintf(stderr, "%s: disable failed: %s\n",
+> +					devname, strerror(-rc));
+> +				return rc;
+> +			}
+> +		} else if (daxctl_dev_is_devdax_mode(dev)) {
+> +			rc = disable_devdax_device(dev);
+> +			if (rc)
+> +				return rc;
+> +		} else {
+> +			fprintf(stderr, "%s: unknown mode\n", devname);
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	rc = daxctl_dev_enable_famfs(dev);
+> +	if (rc)
+> +		return rc;
+> +
+> +	return 0;
+> +}
+> +
+>  static int do_create(struct daxctl_region *region, long long val,
+>  		     struct json_object **jdevs)
+>  {
+> @@ -887,6 +996,9 @@ static int do_reconfig(struct daxctl_dev *dev, enum dev_mode mode,
+>  	case DAXCTL_DEV_MODE_DEVDAX:
+>  		rc = reconfig_mode_devdax(dev);
+>  		break;
+> +	case DAXCTL_DEV_MODE_FAMFS:
+> +		rc = reconfig_mode_famfs(dev);
+> +		break;
+>  	default:
+>  		fprintf(stderr, "%s: unknown mode requested: %d\n",
+>  			devname, mode);
+> diff --git a/daxctl/json.c b/daxctl/json.c
+> index 3cbce9d..2a4b12c 100644
+> --- a/daxctl/json.c
+> +++ b/daxctl/json.c
+> @@ -48,8 +48,19 @@ struct json_object *util_daxctl_dev_to_json(struct daxctl_dev *dev,
+>  
+>  	if (mem)
+>  		jobj = json_object_new_string("system-ram");
+> -	else
+> +	else if (daxctl_dev_is_famfs_mode(dev))
+> +		jobj = json_object_new_string("famfs");
+> +	else if (daxctl_dev_is_devdax_mode(dev))
+>  		jobj = json_object_new_string("devdax");
+> +	else {
+> +		/* Legacy condition; if a daxdev is not in any "mode", that
+> +		 * means no driver is bound. We report that as a disabled
+> +		 * device in devdax mode. (the disabled modifier is added later
+> +		 * in this function if applicable)
+> +		 */
+> +		jobj = json_object_new_string("devdax");
+> +	}
+> +
+>  	if (jobj)
+>  		json_object_object_add(jdev, "mode", jobj);
+>  
+> diff --git a/daxctl/lib/libdaxctl-private.h b/daxctl/lib/libdaxctl-private.h
+> index ae45311..0bb73e8 100644
+> --- a/daxctl/lib/libdaxctl-private.h
+> +++ b/daxctl/lib/libdaxctl-private.h
+> @@ -21,12 +21,14 @@ static const char *dax_subsystems[] = {
+>  enum daxctl_dev_mode {
+>  	DAXCTL_DEV_MODE_DEVDAX = 0,
+>  	DAXCTL_DEV_MODE_RAM,
+> +	DAXCTL_DEV_MODE_FAMFS,
+>  	DAXCTL_DEV_MODE_END,
+>  };
+>  
+>  static const char *dax_modules[] = {
+>  	[DAXCTL_DEV_MODE_DEVDAX] = "device_dax",
+>  	[DAXCTL_DEV_MODE_RAM] = "kmem",
+> +	[DAXCTL_DEV_MODE_FAMFS] = "fsdev_dax",
+>  };
+>  
+>  enum memory_op {
+> diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
+> index 02ae7e5..33121dc 100644
+> --- a/daxctl/lib/libdaxctl.c
+> +++ b/daxctl/lib/libdaxctl.c
+> @@ -385,13 +385,13 @@ static bool device_model_is_dax_bus(struct daxctl_dev *dev)
+>  	return false;
+>  }
+>  
+> -DAXCTL_EXPORT int daxctl_dev_is_system_ram_capable(struct daxctl_dev *dev)
+> +static int daxctl_dev_bound_to_module(struct daxctl_dev *dev, const char *mod_name)
+>  {
+>  	const char *devname = daxctl_dev_get_devname(dev);
+>  	struct daxctl_ctx *ctx = daxctl_dev_get_ctx(dev);
+>  	const char *mod_base;
+>  	char *mod_path;
+> -	char path[200];
+> +	char path[PATH_MAX];
+>  	const int len = sizeof(path);
+>  
+>  	if (!device_model_is_dax_bus(dev))
+> @@ -406,11 +406,13 @@ DAXCTL_EXPORT int daxctl_dev_is_system_ram_capable(struct daxctl_dev *dev)
+>  	}
+>  
+>  	mod_path = realpath(path, NULL);
+> -	if (!mod_path)
+> +	if (!mod_path) {
+> +		dbg(ctx, "%s: realpath failed for driver link\n", devname);
+>  		return false;
+> +	}
+>  
+>  	mod_base = path_basename(mod_path);
+> -	if (strcmp(mod_base, dax_modules[DAXCTL_DEV_MODE_RAM]) == 0) {
+> +	if (strcmp(mod_base, mod_name) == 0) {
+>  		free(mod_path);
+>  		return true;
+>  	}
+> @@ -419,6 +421,30 @@ DAXCTL_EXPORT int daxctl_dev_is_system_ram_capable(struct daxctl_dev *dev)
+>  	return false;
+>  }
+>  
+> +DAXCTL_EXPORT int daxctl_dev_is_system_ram_capable(struct daxctl_dev *dev)
+> +{
+> +	return daxctl_dev_bound_to_module(dev, dax_modules[DAXCTL_DEV_MODE_RAM]);
+> +}
+> +
+> +/*
+> + * Check if device is currently in famfs mode (bound to fsdev_dax driver).
+> + * Returns false for disabled devices: the DAX bus does not retain the previous
+> + * driver binding after unbind, so mode cannot be determined without a driver.
+> + */
+> +DAXCTL_EXPORT int daxctl_dev_is_famfs_mode(struct daxctl_dev *dev)
+> +{
+> +	return daxctl_dev_bound_to_module(dev, dax_modules[DAXCTL_DEV_MODE_FAMFS]);
+> +}
+> +
+> +/*
+> + * Check if device is currently in devdax mode (bound to device_dax driver).
+> + * Returns false for disabled devices; see daxctl_dev_is_famfs_mode().
+> + */
+> +DAXCTL_EXPORT int daxctl_dev_is_devdax_mode(struct daxctl_dev *dev)
+> +{
+> +	return daxctl_dev_bound_to_module(dev, dax_modules[DAXCTL_DEV_MODE_DEVDAX]);
+> +}
+> +
+>  /*
+>   * This checks for the device to be in system-ram mode, so calling
+>   * daxctl_dev_get_memory() on a devdax mode device will always return NULL.
+> @@ -983,6 +1009,11 @@ DAXCTL_EXPORT int daxctl_dev_enable_ram(struct daxctl_dev *dev)
+>  	return daxctl_dev_enable(dev, DAXCTL_DEV_MODE_RAM);
+>  }
+>  
+> +DAXCTL_EXPORT int daxctl_dev_enable_famfs(struct daxctl_dev *dev)
+> +{
+> +	return daxctl_dev_enable(dev, DAXCTL_DEV_MODE_FAMFS);
+> +}
+> +
+>  DAXCTL_EXPORT int daxctl_dev_disable(struct daxctl_dev *dev)
+>  {
+>  	const char *devname = daxctl_dev_get_devname(dev);
+> diff --git a/daxctl/lib/libdaxctl.sym b/daxctl/lib/libdaxctl.sym
+> index 3098811..2a812c6 100644
+> --- a/daxctl/lib/libdaxctl.sym
+> +++ b/daxctl/lib/libdaxctl.sym
+> @@ -104,3 +104,10 @@ LIBDAXCTL_10 {
+>  global:
+>  	daxctl_dev_is_system_ram_capable;
+>  } LIBDAXCTL_9;
+> +
+> +LIBDAXCTL_11 {
+> +global:
+> +	daxctl_dev_enable_famfs;
+> +	daxctl_dev_is_famfs_mode;
+> +	daxctl_dev_is_devdax_mode;
+> +} LIBDAXCTL_10;
+> diff --git a/daxctl/libdaxctl.h b/daxctl/libdaxctl.h
+> index 53c6bbd..84fcdb4 100644
+> --- a/daxctl/libdaxctl.h
+> +++ b/daxctl/libdaxctl.h
+> @@ -72,12 +72,15 @@ int daxctl_dev_is_enabled(struct daxctl_dev *dev);
+>  int daxctl_dev_disable(struct daxctl_dev *dev);
+>  int daxctl_dev_enable_devdax(struct daxctl_dev *dev);
+>  int daxctl_dev_enable_ram(struct daxctl_dev *dev);
+> +int daxctl_dev_enable_famfs(struct daxctl_dev *dev);
+>  int daxctl_dev_get_target_node(struct daxctl_dev *dev);
+>  int daxctl_dev_will_auto_online_memory(struct daxctl_dev *dev);
+>  int daxctl_dev_has_online_memory(struct daxctl_dev *dev);
+>  
+>  struct daxctl_memory;
+>  int daxctl_dev_is_system_ram_capable(struct daxctl_dev *dev);
+> +int daxctl_dev_is_famfs_mode(struct daxctl_dev *dev);
+> +int daxctl_dev_is_devdax_mode(struct daxctl_dev *dev);
+>  struct daxctl_memory *daxctl_dev_get_memory(struct daxctl_dev *dev);
+>  struct daxctl_dev *daxctl_memory_get_dev(struct daxctl_memory *mem);
+>  const char *daxctl_memory_get_node_path(struct daxctl_memory *mem);
+
