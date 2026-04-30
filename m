@@ -1,76 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879EB428488;
-	Thu, 30 Apr 2026 15:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E25D4657E2;
+	Thu, 30 Apr 2026 16:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777564260; cv=none; b=hKzj79zJ8DbHQ+RdhBEN0vtqCg74LYoy18sdWA6JZCmmwT/JFcPXJWHi6XxIK3kI5FtoZvsbZiEwQL3F/YG1oI+O1HT4rtqMhkhNljrpQ7Lr6xWEjTSyOfI8QxwiP7Lu4M0rRsUUUnzykk55inzzMp9FW/CM3ad35O+mF2dSimM=
+	t=1777564826; cv=none; b=cE2Oh0xEeFV0mGcGQjcq+m95ho/OZVXapbf90wTdlVP0TbtT4WdZSIc3qSt4KE6lFEgMFB+f73Ny6829IdJ/8JPparRqYLi6s41Zom0MoSEiryp4cc2ZjPgHsW2NoWHvSau8411fjxjQrE4qtzlSDiFFVaMqRKJsRFVLUHNpM80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777564260; c=relaxed/simple;
-	bh=VCwG/evqvBgdVG6GZCPvR18G1PtMuMNk/bVzaUD/ngU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=R6WpFZ/ZDtX7c+jjf5v7rw407EEX9L0RC6rymOImUnWVDcm3J8lnPlIVJ/YvvkNC+H/0+tY+hGX5U0eKNdNfwhHxkFa1XKkPUFD1TTi8eMK2n/EprjOmlJJnVX4UWgkbYa2ox7BBPYrNi12MfUa7WUL0EvHbaLyGtUxSWISnX30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=yGMSUjDg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777564826; c=relaxed/simple;
+	bh=n6G/xOWzuV6pY4CedkM5NIcdJr47D/2uHYawH4dHv2w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n24+jICM7tdhfo9yVxMb6zgpSZrcgKathx6wtcoL4Nj6/hGiU/0F/fSvljX5/x61W/D2/HIp+AM0hNRZpi+urX7ARMDJqJHxA0hcKz+xaVFrjF13JJKwpwRzjeYPegwp3nxYynjPSI0utyZgnZdRslZFTXf/IixmBnaTitlr34E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lxSKN2/E; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="yGMSUjDg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B317C2BCB3;
-	Thu, 30 Apr 2026 15:50:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1777564260;
-	bh=VCwG/evqvBgdVG6GZCPvR18G1PtMuMNk/bVzaUD/ngU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=yGMSUjDgcVWPfy1XYK0lJb4V8O16KsRRfBKQd/aD3cP6f+SYk9+hc2V4ICklHG6Sj
-	 8FHN0MJm3/mmxi77yGWm44pVUzUvRaAI3Dic1FDgpQoeCiZb1DBtUS4Ox2Qt5CKpny
-	 DuATWvnLOZDOFrVfhmkJR9Z6CfVrsiieyIbmhRoo=
-Date: Thu, 30 Apr 2026 08:50:58 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Muchun Song <muchun.song@linux.dev>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, Usama Arif
- <usama.arif@linux.dev>, Oscar Salvador <osalvador@suse.de>, Miaohe Lin
- <linmiaohe@huawei.com>, Muchun Song <songmuchun@bytedance.com>, Vishal
- Verma <vishal.l.verma@intel.com>, Ying Huang
- <huang.ying.caritas@gmail.com>, Dan Williams <djbw@kernel.org>, Naoya
- Horiguchi <nao.horiguchi@gmail.com>, linux-mm@kvack.org,
- linux-cxl@vger.kernel.org, driver-core@lists.linux.dev,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Rafael J Wysocki <rafael@kernel.org>, Danilo
- Krummrich <dakr@kernel.org>
-Subject: Re: [PATCH v2 3/3] drivers/base/memory: fix locking for poison
- accounting lookup
-Message-Id: <20260430085058.f566bdc2aa5c19a54936da30@linux-foundation.org>
-In-Reply-To: <C2C5188E-76BF-444C-BF2D-8BDC1410BC61@linux.dev>
-References: <20260429101134.1358607-1-usama.arif@linux.dev>
-	<b67ff3f9-8661-45cc-b408-6a7b611d31c1@kernel.org>
-	<C2C5188E-76BF-444C-BF2D-8BDC1410BC61@linux.dev>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lxSKN2/E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777564824; x=1809100824;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=n6G/xOWzuV6pY4CedkM5NIcdJr47D/2uHYawH4dHv2w=;
+  b=lxSKN2/EqhoPnqntva1tZbKGw+odCcNBfSuK3GiFYvpxi+iDPdTPKh64
+   l+3j5r2bZ3C1WvOXxyaaPq8WTVRi/p6QLP8FdS+E7GcKsR9QwvOBORXI+
+   tr2Dlo5/XXS4EyQ1vpcm3E4YfA4KjfT8Ld6ckmvm6XOEuWM4xYRqQntv0
+   PqKcfAOj0mjsM9PmA8C8qqlqBOFYzzfm3SDPKdSs5F3+KpcjaRe6mDWe6
+   Q/Iw7DigNdt1EGCoGeY+85FK6V3Z5S5fC4/lDKKwFGb+Xqlgqt1QbVfgW
+   50xt9fXdRBd62pDMyf2mzaSnKSeLRHQDLKqsgzw+jlZ7r8/1GbE/LjQC7
+   Q==;
+X-CSE-ConnectionGUID: fKXDgOOASOeS/S+tswNoFQ==
+X-CSE-MsgGUID: E5MBtmHZQxKZ/lHazf51fw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11772"; a="78232209"
+X-IronPort-AV: E=Sophos;i="6.23,208,1770624000"; 
+   d="scan'208";a="78232209"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 09:00:22 -0700
+X-CSE-ConnectionGUID: RDZ6yspqQfSrawlQ/VDC6w==
+X-CSE-MsgGUID: Sch427l6QzyXIttwOczDWQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,208,1770624000"; 
+   d="scan'208";a="239615201"
+Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.109.99]) ([10.125.109.99])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 09:00:21 -0700
+Message-ID: <a893e485-470f-40ed-b26f-598c94c86814@intel.com>
+Date: Thu, 30 Apr 2026 09:00:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2] cxl/region: Fix race conditions in cxl region
+ unregistration.
+To: Sungwoo Kim <iam@sung-woo.kim>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <djbw@kernel.org>, Robert Richter <rrichter@amd.com>,
+ Li Ming <ming.li@zohomail.com>, Gregory Price <gourry@gourry.net>,
+ Ben Widawsky <bwidawsk@kernel.org>, Dave Tian <daveti@purdue.edu>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260427032010.916681-2-iam@sung-woo.kim>
+ <5b46d2ca-7821-4245-92fc-7169ea7435ae@intel.com>
+ <CAJNyHpKMMwGnf7+2yzNnSbzozm2ROzfWmWg4xj8gROha+ncQeA@mail.gmail.com>
+ <4a20f390-a49d-4a9f-911f-21c36449b990@intel.com>
+ <CAJNyHpJjXCRitQykyNTseGGstP2XbRXroZ+YzkQxMLECj32BUw@mail.gmail.com>
+ <7e023076-6603-4a02-8e90-47bdad562b5e@intel.com>
+ <CAJNyHpLFGxu3u7GHLsmL+U0Q3U7hNY3UzYVQmBFSxUuZDzU-wA@mail.gmail.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <CAJNyHpLFGxu3u7GHLsmL+U0Q3U7hNY3UzYVQmBFSxUuZDzU-wA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 30 Apr 2026 15:59:33 +0800 Muchun Song <muchun.song@linux.dev> wrote:
 
-> >> Lockdep would flag this as sleeping while atomic when acquiring mutex I think.
-> > 
-> > Another thought would be, that we always call the inc/sub from memory failure
-> > code while we hold a folio reference and the page is not poisoned yet.
-> > 
-> > That way, memory offlining cannot continue and the memory block cannot go away.
-> > 
-> > So we'd let out page reference keep the memory block alive.
+
+On 4/29/26 9:39 PM, Sungwoo Kim wrote:
+> On Tue, Apr 28, 2026 at 6:33 PM Dave Jiang <dave.jiang@intel.com> wrote:
+>>
+>>
+>>
+>> On 4/28/26 1:28 PM, Sungwoo Kim wrote:
+>>> Dear Dave, thank you for sharing the patch that doesn't use the workqueue.
+>>>
+>>> Claude suggests not using wq, since it's simpler. I agree that it's
+>>> simple, but it's overly tailored to fix a specific bug.
+>>> Actually, v1[1] proposed a similar patch. So let me bring a patch and
+>>> discussion from v1:
+>>>
+>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>>> index 08fa3deef70ab..7ade9aa2aeecc 100644
+>>> --- a/drivers/cxl/core/region.c
+>>> +++ b/drivers/cxl/core/region.c
+>>> @@ -2745,12 +2745,19 @@ static ssize_t delete_region_store(struct device *dev,
+>>>   struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
+>>>   struct cxl_port *port = to_cxl_port(dev->parent);
+>>>   struct cxl_region *cxlr;
+>>> + int err;
+>>>
+>>>   cxlr = cxl_find_region_by_name(cxlrd, buf);
+>>>   if (IS_ERR(cxlr))
+>>>   return PTR_ERR(cxlr);
+>>>
+>>> - devm_release_action(port->uport_dev, unregister_region, cxlr);
+>>> + err = devm_remove_action_nowarn(port->uport_dev, unregister_region,
+>>> +       cxlr);
+>>> + if (err) {
+>>> + put_device(&cxlr->dev);
+>>> + return err;
+>>> + }
+>>> + unregister_region(cxlr);
+>>>   put_device(&cxlr->dev);
+>>>
+>>>   return len;
+>>>
+>>> However, v1 has not been merged. Dan[2] commented that "No, that is
+>>> not an acceptable or comprehensive fix. A subsystem should never try
+>>> to double unregister a device." Also in the following thread[3], "The
+>>> patch was technically correct but it relies on a design that requires
+>>> depending on a double free semantic."
+>>>
+>>> I respect this design decision. Then, I need to execute
+>>> devm_release_[action|all]() only once, which requires a device lock,
+>>> guard(device)(port->uport_dev). Under a lock, I can check a flag to
+>>> execute devm_release_[action|all]() only once.
+>>> To use the lock, a clean work without a prior lock is required. That's
+>>> a reason this patch ended up in wq.
+>>>
+>>> I hope I've explained the rationale for using wq. What do you think?
+>>
+>> Right I went back and also read what Dan proposed. I just wonder if we are over complicating things now and introducing more issues on top by doing that. Obviously we have to address the issues sachiko brought up in v3. Below is what claude suggested to fix the Sashiko issues in v3 patches. Some of the comments may be excessive but help reading through the changes.
 > 
-> It seems unnecessary to hold lock_device_hotplug if the user already holds a
-> refcount on the page. I'd like to drop this patch.
+> I (and Claude) don't have a better solution than using wq, although I
+> agree that not using wq is simpler.
+> Also, I'm not yet experienced enough to decide which is better for
+> CXL, so I'm happy with both directions. Would you prefer the version
+> without wq?
 
-Dropped, thanks.
+Looks like Dan is working on something [1]. So maybe we wait and see what he comes up with.
 
-mm-hotfixes-unstable still has
+[1]: https://lore.kernel.org/linux-cxl/c65851c1-4fca-46ba-8dde-fa10b7cb9cd3@amd.com/T/#mdd1ab49c012321fcd3dc34bd0cb7c0846cf1d1f9
 
-"mm/memory_hotplug: fix memory block reference leak on remove"
-and
-"drivers/base/memory: fix memory block reference leak in poison accounting"
+DJ
