@@ -1,92 +1,113 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CEB443E487;
-	Thu, 30 Apr 2026 16:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7081C472780
+	for <linux-cxl@vger.kernel.org>; Thu, 30 Apr 2026 16:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777566474; cv=none; b=EShHY9sDbtLPzoERDEjAYL81f+EyBQ3yB/3W6dtdXfRJY1SOxL8rE7UgLQpYgNKK/+t02Yn3z0O3QDPC6oGZ9Ak9H1sHSue0C7t8VbaR90YY9cmA64WG4e9vRBxzGjryCWePQFgyQSWQjl2PU23NUDp4PCKsBD47JfHOfPfRyhI=
+	t=1777566705; cv=none; b=tJE2fg2JfSVXopjcwCtIWyyDe/CwRFzO1zZAwUWXzgjJ59C7lF/3dJU8qQFih7X24TuYedy570XQCAspFZy2mQTmWcheT5uccNvXOa/pjMsqRtdPNr4mVGjx9PAAdpwcbAQ4alzeQs9obJ5j4nMdxqiRKoTXV+kX57Rchi/91FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777566474; c=relaxed/simple;
-	bh=SV4fG3AmKvvNwe+nhrkm5kTMKiYO/+3iBY3yXw95w48=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g352N7bIOAT1DpOl3in+C17Xesy74neajM4PfG2BlEqgGcWlUCq0aM8CKCnzfzgFYiawvoNYpBTc5zfNjenANN3AFBIv2kNtoMGpavDA5stQEaSag8C4EpZcH8pNCpHgcyGe7D92gNKl9jB4H24BifURdSvy4rPbhy0UmutrSjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UgLXvOY1; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1777566705; c=relaxed/simple;
+	bh=OT/k20UIojL6S9naSu8TuqOF0V/Hqlf+FUgBZqtdSz0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=n8ZH/gpA1h6AwJBGRYLI14kiPYE/Kpmy1XEC1jO1EyRX0ccimPtfojNJlERSqK0kMmOLGMl2leHi2fhSjP6u3TT5AGxG+q8YKVGp5dcMNO1lH1W/hmc72h2ZbfZIdIOEgogVTKf60mYURfajMX/pdC9gGrA+kg0hdDX6oHaF7EI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QkOJsiyI; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UgLXvOY1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=nY
-	09t2S96S1se8yxEhtEIeujcNEhDHbYJUoGMogUaEU=; b=UgLXvOY1pGPBBtMrTC
-	hXLlWH9MrJLHn8WJKu+cQGKLakbFsP9anaf0DUuPLHpTuutcfADQtCWLKtLXlftH
-	yf/Xzu0X2Qhh/bam2ibdekvjUTH1sHLsJl6r+14J5T4Or/88EZTt4XMBKuaF9G83
-	2eAEo5tsw8goOM3nYuUPwSRvs=
-Received: from zhb.. (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wA3k9_ogvNpGIRXCg--.51074S2;
-	Fri, 01 May 2026 00:27:20 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: dave@stgolabs.net,
-	jic23@kernel.org,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	djbw@kernel.org
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH] cxl/core: Use FIELD_MODIFY()
-Date: Fri,  1 May 2026 00:27:18 +0800
-Message-Id: <20260430162718.43536-1-18255117159@163.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QkOJsiyI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1777566703; x=1809102703;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=OT/k20UIojL6S9naSu8TuqOF0V/Hqlf+FUgBZqtdSz0=;
+  b=QkOJsiyIYLo8mpqHZZogXOePl0i2LZN0wWt5MOlSWiqUb20QpYBSXBzx
+   H+8UsyeLs5AV3zvzpO6zNRZpPibwyPhtOUVA1H3ODBQ/Rhts7NoSsZxA2
+   0cniFmEiB5Y5pG1xEek8XZ7pijapiulI2i20z6Lrvo496iB1j6fVE64zf
+   gKT78OAVjIoQ9xwvRjF/r4sGu2d3ElshIbbVx1R+3AHTn7Apvgmh3ZrKn
+   F2E231v/CLJEj1yETRWD0fsjFEy1rYamYrzwr94Sy44MrJmkQJ23XT9Hu
+   L/BaH++Dl/P44QKLbqdgB3yl8bBozG32S72zPbA3mIQnI+Z+zCm6ZD7YK
+   Q==;
+X-CSE-ConnectionGUID: mJCgWtTmRjiEy2ttVNzxTg==
+X-CSE-MsgGUID: 9nFDGgymR4CtoKwFV+zvoA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11772"; a="78553226"
+X-IronPort-AV: E=Sophos;i="6.23,208,1770624000"; 
+   d="scan'208";a="78553226"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 09:31:43 -0700
+X-CSE-ConnectionGUID: wguelkorT92q7P/AWL1K3w==
+X-CSE-MsgGUID: F4XRxBlSQD2WDDlzVbW4QA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,208,1770624000"; 
+   d="scan'208";a="234517872"
+Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.109.99]) ([10.125.109.99])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2026 09:31:42 -0700
+Message-ID: <7de20386-21d9-4e37-96bf-1e6397d4408e@intel.com>
+Date: Thu, 30 Apr 2026 09:31:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wA3k9_ogvNpGIRXCg--.51074S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrur17tw47ZryrurWkGF18Grg_yoWkWrc_CF
-	1xuF48Xr4qkFya9asruws7Ar9Y93Z5uws8uwsYga4avw1jqw15WFsI9r9xtrW7ZrWrAr10
-	yFn3ZryS9ry0kjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRi_M3PUUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbCwwky1WnzguluSQAA37
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ndctl PATCH] test/cxl-sanitize: avoid sanitize submit/wait race
+To: Alison Schofield <alison.schofield@intel.com>, nvdimm@lists.linux.dev,
+ linux-cxl@vger.kernel.org
+References: <20260430021843.3919334-1-alison.schofield@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260430021843.3919334-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Use FIELD_MODIFY() to remove open-coded bit manipulation.
-No functional change intended.
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/cxl/core/edac.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
-index b321971fef58..a374e8ebac87 100644
---- a/drivers/cxl/core/edac.c
-+++ b/drivers/cxl/core/edac.c
-@@ -717,8 +717,7 @@ static int cxl_set_ecs_count_mode(struct device *dev, u8 *log_cap, u16 *config,
- 		return -EINVAL;
- 	}
- 
--	*config &= ~CXL_ECS_COUNT_MODE_MASK;
--	*config |= FIELD_PREP(CXL_ECS_COUNT_MODE_MASK, val);
-+	FIELD_MODIFY(CXL_ECS_COUNT_MODE_MASK, config, val);
- 
- 	return 0;
- }
-@@ -729,8 +728,7 @@ static int cxl_set_ecs_reset_counter(struct device *dev, u8 *log_cap,
- 	if (val != CXL_ECS_RESET_COUNTER)
- 		return -EINVAL;
- 
--	*config &= ~CXL_ECS_RESET_COUNTER_MASK;
--	*config |= FIELD_PREP(CXL_ECS_RESET_COUNTER_MASK, val);
-+	FIELD_MODIFY(CXL_ECS_RESET_COUNTER_MASK, config, val);
- 
- 	return 0;
- }
+On 4/29/26 7:18 PM, Alison Schofield wrote:
+> This test verifies that wait-sanitize blocks for the programmed
+> timeout after issuing sanitize on an inactive memdev.
+> 
+> The sanitize request is issued in the background and wait-sanitize
+> is called immediately after. In cxl_test, sanitize completes
+> asynchronously via delayed work, and the sysfs write does not block.
+> This creates a race where wait-sanitize may run before sanitize is
+> observed and return immediately.
+> 
+> This test has been reliable since its introduction, but recently
+> started failing consistently in one environment, suggesting a
+> timing sensitivity. It fails here:
+> 
+>   ((SECONDS > start + 2)) || err $LINENO
+> 
+> Add a short delay after backgrounding the sanitize write to make
+> sure that wait-sanitize can observe the in-progress operation.
+> 
+> A sysfs-based synchronization was considered, but no in-progress
+> state is exposed to user space.
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-base-commit: 3b3bea6d4b9c162f9e555905d96b8c1da67ecd5b
--- 
-2.34.1
+Looks reasonable
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+> ---
+>  test/cxl-sanitize.sh | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/test/cxl-sanitize.sh b/test/cxl-sanitize.sh
+> index 9c161014ccb7..d1ed598f3663 100644
+> --- a/test/cxl-sanitize.sh
+> +++ b/test/cxl-sanitize.sh
+> @@ -68,6 +68,9 @@ done
+>  set_timeout $inactive 3000
+>  start=$SECONDS
+>  echo 1 > /sys/bus/cxl/devices/${inactive}/security/sanitize &
+> +
+> +# Allow background sanitize to start before wait-sanitize can observe it
+> +sleep 1
+>  "$CXL" wait-sanitize $inactive || err $LINENO
+>  ((SECONDS > start + 2)) || err $LINENO
+>  
 
