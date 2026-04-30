@@ -1,253 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013058.outbound.protection.outlook.com [40.107.201.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B854836E467
-	for <linux-cxl@vger.kernel.org>; Thu, 30 Apr 2026 23:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777591413; cv=none; b=pOwJORWFazEmy89trFUPNqWDF1NkLAmhgbuZjnitXg2jJwbmPwinWAvORt1AeBwBTuPUR709gEauNeWHWveTv1cV1dRal45grEXgw3Kfj9d/p940uKwqtqU/MLNHFIrH6kCapaDs5wb25GDnfujqoC0fzIjZcEi/RHK70R01xDE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777591413; c=relaxed/simple;
-	bh=c4SZhFpdfH2gKQ6qlG2PevqK3nZOHR6z2ilACiHLMVg=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=gcLU4Gz9T+mloST/Zt0v786EJ1EqWQBPwyxFQ+dYpWbY1auOdeJ+eLJFnEmRTlYGNOVDtBQUAqD8pigX591EIrk3pQshCXayc/po0d8Bm+JbvG85h6jEq0R/Jb3G8isX05p+P7zGofEgSvHucJ3RZqmvhzjgHCen0pTFXZAtTnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eYoE4bmP; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F6081ACA;
+	Thu, 30 Apr 2026 23:28:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777591735; cv=fail; b=SU/ntVzSKYU2006Ij+kzh1Bc87MtkKqBva3/s/fXY5+xsUFL2ijXudTGKkPRqP1BaFapzNtcwx95tcjK0W83wTI0u4lFpHMSlSQnvhJdDLboTzYnnO7WtfdMy6xcU1MOF9spndyyJSorwoKq/jpNa2SMpTLbhpNmWbx59zIh8+Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777591735; c=relaxed/simple;
+	bh=6b9Vd6TlijgcvXMNJ8qFtyei7G88cZrT4mbPgr3T/SU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PEFkSY+hni7Nh1RSfOj6Qs2E/bd5+fjR0VYnlcKhMdEgUBDYlas5+Hj/hoM2HOXu765UNv7CaJOmzSZJ6kZomJtflD4vWzMP5tu36AelZv4i4yKXu7jgyehzRUw+UhRr++DilZKahpCPbKjNYgtvZcEOFc7n89DdlNDMMMLyPuM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mMLBm6kV; arc=fail smtp.client-ip=40.107.201.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eYoE4bmP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2870C2BCB3;
-	Thu, 30 Apr 2026 23:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777591413;
-	bh=c4SZhFpdfH2gKQ6qlG2PevqK3nZOHR6z2ilACiHLMVg=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=eYoE4bmPA+8YW83A0muAWwD3Ura2mjWOGbNElnjMH3hUrRqJPufihMyezORD/rFuw
-	 4nHAVWz/GlI6bC3VPyIFzR1+yn/fnnOKhAG926vgfhukyjXkSmA0l5XGhUNfxxpi9c
-	 wkL7Znm0X6AfOxDFgmpd4NA7TR6pLiUGP9rMOHA0eiBcQyUG15MBnDHEJUp/BbwP9o
-	 h0mFS9bHK9JgwcoAEB6o2qYfmCW3GChP9v7SdbY7S6OkSpR6BnXkEn1jX+x+R3miAU
-	 B2H8CrqKXGjg6OAJyxGOGwX3Qsgis/qzq2J3+ZuiXpKxBLv6r6YbZRYimP66jaxdUP
-	 g7HUcMtoA0Azw==
-Received: from phl-compute-08.internal (phl-compute-08.internal [10.202.2.48])
-	by mailfauth.phl.internal (Postfix) with ESMTP id E7EF5F4007C;
-	Thu, 30 Apr 2026 19:23:30 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-08.internal (MEProxy); Thu, 30 Apr 2026 19:23:30 -0400
-X-ME-Sender: <xms:cuTzaWopv9BZPNIJOf6ZA78UJaEglbgyCn00f1YvcqNaay1r-b72uw>
-    <xme:cuTzabBcvAzjXvz3fUFuwuucy8GpvB7ivv-sfQXe1pimVD1q-5g6NZquRqDW2cXET
-    H2YIIiKpvQgCrkBi32ygno2dxfK_WCMjHuZ3CBlta1kEmETOie5H8l3>
-X-ME-Received: <xmr:cuTzaXe4qTZhSZeLG1KJ8mZrZQqzxq-PITWohptbefaQv8FWXxNTtFft5HfwcAZ2_Me4vklSS3f6zd1INqRmvz_Jboqyd1tOprs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdekkeeifecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefkjghfufggtgfgsehtjeertddttdejnecuhfhrohhmpedfffgrnhcuhghi
-    lhhlihgrmhhsucdlnhhvihguihgrmddfuceoughjsgifsehkvghrnhgvlhdrohhrgheqne
-    cuggftrfgrthhtvghrnheptdekleekgfdtgeduieeitddtgfeugeeikeejffeuffeuteej
-    ffekveetffelhfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvg
-    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegujhgsfidomhgvshhmthhp
-    rghuthhhphgvrhhsohhnrghlihhthidqudejjedvfedtgeehhedqfeeffeelgedtgeejqd
-    gujhgsfieppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgt
-    phhtthhopedufedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlvghjrghnug
-    hrohdrlhhutggvrhhoqdhprghlrghusegrmhgurdgtohhmpdhrtghpthhtoheplhhinhhu
-    gidqtgiglhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegujhgsfieskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepvggufigrrhgurdgtrhgvvgesrghmugdrtgho
-    mhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoh
-    epkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughh
-    rghtrdgtohhmpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprh
-    gtphhtthhopegurghvvgdrjhhirghnghesihhnthgvlhdrtghomh
-X-ME-Proxy: <xmx:cuTzaTsUIGdSdn_oJeibSXhSbNDyRh4PUUJfpGhFRr8maToqrvfEaQ>
-    <xmx:cuTzaeipIyR7KuAvH3LrWWnFC8t1UXAaLJSuYOAXECBT8RKugcequw>
-    <xmx:cuTzabsTYE2rzVqS5dd3ighyAKY3nec2l57WRrzoZDw7z9SeXBdPsA>
-    <xmx:cuTzaZ9L9BdzeEkBH9hYNfVjWS5JCtaJQR13huKVvAlWQ82EomBlgQ>
-    <xmx:cuTzaRYAT-XRO15819EPgWl9GoDig2duJAIPbU7hGtjOyrAL2Ocm6oS9>
-Feedback-ID: i67ae4b3e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 30 Apr 2026 19:23:30 -0400 (EDT)
-Date: Thu, 30 Apr 2026 16:23:29 -0700
-From: "Dan Williams (nvidia)" <djbw@kernel.org>
-To: alejandro.lucero-palau@amd.com, 
- linux-cxl@vger.kernel.org, 
- djbw@kernel.org, 
- edward.cree@amd.com, 
- davem@davemloft.net, 
- kuba@kernel.org, 
- pabeni@redhat.com, 
- edumazet@google.com, 
- dave.jiang@intel.com
-Cc: Alejandro Lucero <alucerop@amd.com>, 
- Ben Cheatham <benjamin.cheatham@amd.com>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Alison Schofield <alison.schofield@intel.com>
-Message-ID: <69f3e4714219b_3291a9100fb@djbw-dev.notmuch>
-In-Reply-To: <20260423180528.17166-5-alejandro.lucero-palau@amd.com>
-References: <20260423180528.17166-1-alejandro.lucero-palau@amd.com>
- <20260423180528.17166-5-alejandro.lucero-palau@amd.com>
-Subject: Re: [PATCH v26 4/8] cxl: Prepare memdev creation for type2
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mMLBm6kV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=IRUBYmhAuYfAijpbVwQQ6MbIu/KB1LGUpheZWgJwUvzR0y0XF0IJMzOo+d2CfeCNOEcgi4eCHrqKv1DRwveKSSQ22X2Iia5GQcw/dFy+VL5wGVfiGB6owb8a3fqvxmIdOyvSHrxRdQMaCdmzLWj360QBs4szUiP8pylJFIXWO8anTE4nbGn/IJ5AmSd3j35Hk69ubIhyV0w3ADKyAWGyny7Asq+8NeBvAowCQcp4trrpfJbD6zAzlk/xtETLlWUKGdfDun0JR53REdOrQamzXCtPXL9UmbH2Z2D5GOCh+MxYMleIMI6nSY7zuITQTQ28z8KrsebbHBV0zMIE9fIx4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f5eETolv2CRJ+KGuzqHXNWHz75SkAhmrcTAnZvVauEE=;
+ b=DcEBcN4HBFB8NWFbLvBWERyOGFPSntjOFSqRbi0GMnmezSqbxkTA+ehmkCGBQrPRj1c3HtOcoFPwBaDuK0DCHoJA89sEoEO0sOGlA5J6nojLKvgDKaCVi6ymK5+NXw8KGoifvj+7Y+KERpXkiMybXtfyR9apmccjBlXK8P23Ijx8uoHAivTItFD6Z6wqiNu3RzkDO61xi48aTpolc6IjsJcwNTuHsVSvQP4Z87obrTjMOrZbUd0DmOi8gRNvfnMjD0qRso+vi1OGvi7KTWaWDJeTLgYZxJ/BW6i1mi6+/5HXco0To9G6e3y2AsdHFzdp+wHB2tp0cfkvI2346cY4mA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f5eETolv2CRJ+KGuzqHXNWHz75SkAhmrcTAnZvVauEE=;
+ b=mMLBm6kV3YOXYYJRO8e/70BpjU0vtzzslFfTmDnSUjzo0eu4teU98t91S7Zuhi2jYjJZ75CdkSXrA+ebqHf4wcc/bHafQBH905u8wKDSpG4veX7yExnCUY5Xz2/XnjyNmSYrWYXVWjKJZx3nbcH9jW7iZQPltdEg9LlmQrjMx4YKhfjIWxEWHjWvbLNxCx669JFcue4suZSgwJrExaE7p8LKG2zAyTDgbuVz0xa+OlWpUHaO6xWUkd4UFcXtSjJlhe13oLDjXL8FSEAHMZsKnAH1uzL/E3gnFg1OxHL0/v+iHN5KUv8aLQ2OfVcK21bISyOcGu2B7xNOm9BKs3al2g==
+Received: from BL0PR05CA0003.namprd05.prod.outlook.com (2603:10b6:208:91::13)
+ by CYYPR12MB8890.namprd12.prod.outlook.com (2603:10b6:930:c7::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9870.15; Thu, 30 Apr
+ 2026 23:28:41 +0000
+Received: from BL6PEPF0001AB4B.namprd04.prod.outlook.com
+ (2603:10b6:208:91:cafe::e1) by BL0PR05CA0003.outlook.office365.com
+ (2603:10b6:208:91::13) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.9870.16 via Frontend Transport; Thu,
+ 30 Apr 2026 23:28:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BL6PEPF0001AB4B.mail.protection.outlook.com (10.167.242.69) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9870.22 via Frontend Transport; Thu, 30 Apr 2026 23:28:40 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 30 Apr
+ 2026 16:28:20 -0700
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 30 Apr
+ 2026 16:28:19 -0700
+Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com (10.129.68.6)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
+ Transport; Thu, 30 Apr 2026 16:28:18 -0700
+Date: Thu, 30 Apr 2026 16:28:17 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: "Dan Williams (nvidia)" <djbw@kernel.org>
+CC: <jgg@nvidia.com>, <will@kernel.org>, <robin.murphy@arm.com>,
+	<bhelgaas@google.com>, <joro@8bytes.org>, <praan@google.com>,
+	<baolu.lu@linux.intel.com>, <kevin.tian@intel.com>,
+	<miko.lenczewski@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+	<iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<jonathan.cameron@huawei.com>, <vsethi@nvidia.com>,
+	<linux-cxl@vger.kernel.org>, <nirmoyd@nvidia.com>
+Subject: Re: [PATCH v4 1/3] PCI: Allow ATS to be always on for CXL.cache
+ capable devices
+Message-ID: <afPlkW5zlTSHwQCT@Asurada-Nvidia>
+References: <cover.1777269009.git.nicolinc@nvidia.com>
+ <f6734b9dad0050138676f11ecd14e9db1cf6b697.1777269009.git.nicolinc@nvidia.com>
+ <69f3cc82926_3291a910039@djbw-dev.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <69f3cc82926_3291a910039@djbw-dev.notmuch>
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4B:EE_|CYYPR12MB8890:EE_
+X-MS-Office365-Filtering-Correlation-Id: 23c0172c-c533-40ce-6828-08dea710366b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|82310400026|36860700016|22082099003|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	Pa5XL9cSlKqDuP7K5er0RtlkfJlY6adNW4aBqIePvmlGlf2io5JMLUpDrZMmdQCur3kdjKuKsbw+2PBDs+vWOXxC7HDq6oqqUdS5Zf4lsh9yCoL1tgkKZ0Zk+CfpKPzqNYFkzrq2xjVgHcBbquKg3o8QJuKC7d5Pce/b5InXoVQ7UUw58WAVmGFA1j1KMC3fD/Sg9twNxRIf+5jgXNx4xq7ot/gEgiidMJwMmcMKrjhSuABFeCwkHSY5rbP3LZrxEUaEsKY/swl/TBkd9VJgoBKwutwRHBEMMr4hh6jw3NCPSQ0MP279pS+hbV67Tjc/6uzTB7dFchhVPoFJ7mLuyhLtlpFd7gGgZC32H36FKdTOYr/s9vW8VCf0K+q5E3M26QDnEqL5Zrbyt1u1eM3Xlzgwg/SalaFaO5A8feXpVicq18t9kRy5W7sXYkQShKQOCQw8VXqrFQu6MkFVbbVqaQZ3gbdxG6p9SppQdg+Ce9AgX7Ax+PuIgH7LzQaCgBmBpZZk3mr4PBcfze4eTUdhAJfMHFJUgN85lL7kO17xprhTqPKI9oagtLzBE81dJR+7NxosDbKEH1Cnb4CuskLgpEduiwXIHObnCBmR88VGCgSAQRkl6uqpv1MebVQBU/3uPJuxYXlC7QsTcrRex+XSdgssRX5RVRYkrc3ncp55Nh/hryWNXxV+mnoqzN9SC0NfIYbsFk4zSWuSqV+fCf4S/WD3DVhHFz5ZCnLog8eFES8=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(82310400026)(36860700016)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	5QRvdu2tsMZaZN6LaVF5mfJKTnQpODLoriiYBkjWTsLktvO7JrdjeDySsyOcq+ZSbIbea/2/wMMiUp3qI/TmGNNtk0phWymDrrdWo4AJpPyKM5Mi1oZRe16vqbQ1AIOzxtEfhN+IOcZAwsqQ5M9Ka6FjB5Ddy+i7rreix7amE3EoJQywtaWvJGx5ZoGzAdgmpDcMZBAaRHGfpFPFAA0Aag5WcwpfPpElHrg6+viV9PBu7bskH2EXw3+rOuwHFDQ+p7so24CPzX2Jc8bGmEtGw/dFSMtvw3dX/jos/Ra2Ad4ncIv5ILL8egmbbzTOh/e367j/Bj500kSv7oSlgcRlcIcHTZVtwNBDBM82yNmqjrekRkbYDYO1mcOtL9tzY5HKdNU0z7ti4PE0fcjbuapGKbdA6cagOm54xxrC0Q4opB8n7e2kdOpNIl4pPvil7MNL
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2026 23:28:40.5541
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23c0172c-c533-40ce-6828-08dea710366b
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB4B.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8890
 
-alejandro.lucero-palau@ wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> Current cxl core is relying on a CXL_DEVTYPE_CLASSMEM type device when
-> creating a memdev leading to problems when obtaining cxl_memdev_state
-> references from a CXL_DEVTYPE_DEVMEM type.
-> 
-> Modify check for obtaining cxl_memdev_state adding CXL_DEVTYPE_DEVMEM
-> support.
-> 
-> Make devm_cxl_add_memdev accessible from an accel driver.
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+On Thu, Apr 30, 2026 at 02:41:22PM -0700, Dan Williams (nvidia) wrote:
+> > +static bool pci_cxl_ats_always_on(struct pci_dev *pdev)
+> > +{
+> > +	int offset;
+> > +	u16 cap;
+> > +
+> > +	offset = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+> > +					   PCI_DVSEC_CXL_DEVICE);
+> > +	if (!offset)
+> > +		return false;
+> > +
+> > +	if (pci_read_config_word(pdev, offset + PCI_DVSEC_CXL_CAP, &cap))
+> > +		return false;
+> > +
+> > +	return cap & PCI_DVSEC_CXL_CACHE_CAPABLE;
+[...]
+> Apologies for coming to this late and forgive me if the following has
+> already been asked and answered. Why not check for actual CXL.cache
+> protocol on the wire being present?
 
-This did not address the comment I had on the last posting about not
-explicitly calling out accelerators.
+Actually it would make the patch smaller. The thing is that this
+is_cxl property wasn't added when I started the series. So, it's
+not using it. :)
 
-https://lore.kernel.org/all/69cb4379e2b73_1b0cc610085@dwillia2-mobl4.notmuch/
-
-So a small naming change to make this more palatable because the current
-"cxl_memdev_type" is a superset of all possible CXL memdevs. In other
-words, PCI_CLASS_MEMORY_CXL, requires the presence of a mailbox. Other
-devices with CXL.mem may not be "accelerators".
-
-See below a proposal to flip the polarity of the naming:
-
-> ---
->  drivers/cxl/core/memdev.c | 15 +++++++++++--
->  drivers/cxl/cxlmem.h      |  6 ------
->  drivers/cxl/mem.c         | 45 +++++++++++++++++++++++++++++----------
->  include/cxl/cxl.h         |  6 ++++++
->  4 files changed, 53 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index b8ff1c07e528..ef39803bb139 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -7,6 +7,7 @@
->  #include <linux/slab.h>
->  #include <linux/idr.h>
->  #include <linux/pci.h>
-> +#include <cxl/cxl.h>
->  #include <cxlmem.h>
->  #include "trace.h"
->  #include "core.h"
-> @@ -579,9 +580,16 @@ static const struct device_type cxl_memdev_type = {
->  	.groups = cxl_memdev_attribute_groups,
->  };
+> @@ -1733,9 +1733,8 @@ static void set_pcie_cxl(struct pci_dev *dev)
+>  	pci_read_config_word(dev, dvsec + PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS,
+>  			     &cap);
 >  
-> +static const struct device_type cxl_accel_memdev_type = {
-> +	.name = "cxl_accel_memdev",
-> +	.release = cxl_memdev_release,
-> +	.devnode = cxl_memdev_devnode,
-> +};
-
-/*
- * CXL memory device with mandatory PCI_CLASS_MEMORY_CXL functions
- * like a mailbox and corresponding sysfs ABI.
- */
-static const struct device_type cxl_class_memdev_type = {
-	.name = "cxl_memdev",
-	.release = cxl_memdev_release,
-	.devnode = cxl_memdev_devnode,
-  	.groups = cxl_memdev_attribute_groups,
-};
-
-/* CXL memory device with no class device attributes */
-static const struct device_type cxl_memdev_type = {
-	.name = "cxl_memdev",
-	.release = cxl_memdev_release,
-	.devnode = cxl_memdev_devnode,
-};
-
-That ".name" can be the same between the types because to userspace they
-are fundamentally the same type of object. The distinction can be
-determined by walking sysfs to see what is there.
-
-I do not want userspace to start keying off of the DEVTYPE uevent
-variable distinction unless we have a really good reason for that.
-
->  bool is_cxl_memdev(const struct device *dev)
->  {
-> -	return dev->type == &cxl_memdev_type;
-> +	return (dev->type == &cxl_memdev_type ||
-> +		dev->type == &cxl_accel_memdev_type);
->  }
->  EXPORT_SYMBOL_NS_GPL(is_cxl_memdev, "CXL");
->  
-> @@ -776,7 +784,10 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
->  	dev->parent = cxlds->dev;
->  	dev->bus = &cxl_bus_type;
->  	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
-> -	dev->type = &cxl_memdev_type;
-> +	if (cxlds->type == CXL_DEVTYPE_DEVMEM)
-> +		dev->type = &cxl_accel_memdev_type;
-> +	else
-> +		dev->type = &cxl_memdev_type;
->  	device_set_pm_not_required(dev);
->  	INIT_WORK(&cxlmd->detach_work, detach_memdev);
->  
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 776c50d1db51..92cca400d113 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -34,10 +34,6 @@
->  	(FIELD_GET(CXLMDEV_RESET_NEEDED_MASK, status) !=                       \
->  	 CXLMDEV_RESET_NEEDED_NOT)
->  
-> -struct cxl_memdev_attach {
-> -	int (*probe)(struct cxl_memdev *cxlmd);
-> -};
+> -	dev->is_cxl = FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS_CACHE, cap) ||
+> -		FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS_MEM, cap);
 > -
->  /**
->   * struct cxl_memdev - CXL bus object representing a Type-3 Memory Device
->   * @dev: driver core device object
-> @@ -103,8 +99,6 @@ static inline bool is_cxl_endpoint(struct cxl_port *port)
->  
->  struct cxl_memdev *__devm_cxl_add_memdev(struct cxl_dev_state *cxlds,
->  					 const struct cxl_memdev_attach *attach);
-> -struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds,
-> -				       const struct cxl_memdev_attach *attach);
+> +	dev->is_cxl_cache = FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS_CACHE, cap);
+> +	dev->is_cxl_mem = FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS_MEM, cap);
 
-One of the dirty aspects of my RFC was continuing with the idea that
-drivers external to CXL would need to worry about all the details around
-how to construct cxl_memdev_attach.
+One caveat is that:
 
-So similar to above I think we want to have a
-devm_cxl_add_class_memdev() that only the cxl_pci driver uses, and a
-specific export for the single-memdev-to-single-region case.
-devm_cxl_add
+Here it checks the cap from:
+	PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS (0xE) via
+		PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS (0x7)
 
-I will move some of that into the rework of unregister_region() I am
-doing to solve the sysfs region deletion race. It is a similar problem.
+On the other hand, mine checks from:
+	PCI_DVSEC_CXL_CAP (0xA) via
+		PCI_DVSEC_CXL_DEVICE (0x0)
 
->  int devm_cxl_sanitize_setup_notifier(struct device *host,
->  				     struct cxl_memdev *cxlmd);
->  struct cxl_memdev_state;
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index fcffe24dcb42..ff858318091f 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -65,6 +65,26 @@ static int cxl_debugfs_poison_clear(void *data, u64 dpa)
->  DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
->  			 cxl_debugfs_poison_clear, "%llx\n");
->  
-> +static void cxl_memdev_poison_enable(struct cxl_memdev_state *mds,
-> +				     struct cxl_memdev *cxlmd,
-> +				     struct dentry *dentry)
-> +{
-> +	/*
-> +	 * Avoid poison debugfs for DEVMEM aka accelerators as they rely on
-> +	 * cxl_memdev_state.
-> +	 */
+The spec mentions in 8.2.1.3.1 DVSEC Flex Bus Port Capability: "
+  Note: The Mem_Capable, IO_Capable, and Cache_Capable fields are
+  also present in the DVSEC Flex Bus for the device [which is the
+  legacy name for DVSEC 0x0]. This allows for future scalability
+  where multiple devices, each with potentially different
+  capabilities, may be populated behind a single Port.
+"
 
-"Disable poison debugfs for memdevs without mailboxes."
+Not arguing that set_pcie_cxl() is wrong, but I am not sure if there
+would be any side effect to rely on the "legacy name" over DVSEC 0x0.
+
+Is there any CXL expert who can help confirm?
+
+Thanks!
+Nicolin
