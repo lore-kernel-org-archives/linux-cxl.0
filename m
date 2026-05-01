@@ -1,119 +1,167 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54526CA52;
-	Fri,  1 May 2026 22:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF171A8F7B
+	for <linux-cxl@vger.kernel.org>; Fri,  1 May 2026 23:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777672870; cv=none; b=F7uQwMfIV4uW+qX7lp8lKwjJNxOgbBkr2rK9QJp97PFJaoxbzyYZzRJJ0Ml1neYL0aEhA+tmO+a1OgEC4WSg5tFXRTXU+/R6eHfTNLH/LaoT96x7UtMigQMKmph7X5zuQcNi0vUKF1IUiH2mFJyVjHn4QyHshg3Iz2YY+Yk8k/E=
+	t=1777678064; cv=none; b=Sa89I4MVxdiEsWnZ4Jt/CnQCy4eoyumTvDL5iLuaEaloRTchITxryxEcJBAbY3JnPzRbO8zVdy+PngkSeu+dyvD0Wfs0z2RuD8Zu7n62MUS96OEqOvcLeechEAWq+kjU4zEMkiBIi7jXKAI047M5AC0Zh864+pYGnKLSEBjcPcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777672870; c=relaxed/simple;
-	bh=C2zz4hu7GIcOji/Wc7Gg4hhpUn6qU2gT5VmLc1zTtLs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pafv42nit91+VqmJQPfqlZ5FC45na7FhDSnO7XKDqy91TrHh0nSc7/ZXtE6iUgP1TNAlvT6fbBUINyjxRlrpYrPQaYKlJ5yGeCEy7qA/94Aee+RLamxwSSeDvQI0F+F/SJmH+BXX3i3pafiq/TxhgGCMWh1Xrt+nphdVwwyefes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cj4UX7Ga; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1777678064; c=relaxed/simple;
+	bh=2k5q00p8L2SCLrIAB5imsL6AkKQY6Gzh059g+5BeG2w=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=RQAKWKQLz8M38bX1afeZMkGNc3DN3Fd9aNq03UT/vGDPLM+p/FiM96O0IH87C14Xk50QAWUDfahthGIiekfyFuVR3bVlHKBEc7YDFZpGFTK0VdldGlHGxnnqLiQhiD52LQlxnWJu36coeBZ1IUi94wnuu/GDNd0BC0HK+GVtRis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s0uSP/yC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cj4UX7Ga"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777672870; x=1809208870;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=C2zz4hu7GIcOji/Wc7Gg4hhpUn6qU2gT5VmLc1zTtLs=;
-  b=Cj4UX7GaW/oHRX+CpBFR8FlvcE0pl7bXgZxXsw6Y6q0QKIeMF21Oib7n
-   Ay4qhuHQkwlMkI96N1uvgkxkcR0psaVuznYekJSH+MTuWCTHy4jgzOAZx
-   tSx3nXhDEJTNBZS6HM+BWt2LI66DRAwGVGOP2Myt5+CZDJZteuupMULb2
-   rVovKMAvlvYjWl8Vg7WES2Ci+u7cHpN0dZJRwXic/Mi3wJeWSTPbF2dG3
-   AsEkyeXGc4YIXcqUFXUXoDeCF2ydhsJmExabklNJZhFu2xhdxucjgX+Ip
-   IbseK5TDQTTFPmLvoucN3cCBwkhk0kMp/l4wKb50MrT+SBf9/6ZvrpuxI
-   w==;
-X-CSE-ConnectionGUID: lOvMYmzvQZqjZliu/1yZIQ==
-X-CSE-MsgGUID: HDQIDXw3Rjq0pnl0JOsXzw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11773"; a="78735888"
-X-IronPort-AV: E=Sophos;i="6.23,210,1770624000"; 
-   d="scan'208";a="78735888"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2026 15:01:05 -0700
-X-CSE-ConnectionGUID: BUSDzGDZTXCZ4ITViRl34g==
-X-CSE-MsgGUID: m6nKGh/6Qi2VRP24xmyZ7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,210,1770624000"; 
-   d="scan'208";a="238940018"
-Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.109.150]) ([10.125.109.150])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2026 15:01:03 -0700
-Message-ID: <89876bd2-f1bd-419d-a8ac-83fa0b23cbb7@intel.com>
-Date: Fri, 1 May 2026 15:01:03 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s0uSP/yC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F87CC2BCB8;
+	Fri,  1 May 2026 23:27:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777678064;
+	bh=2k5q00p8L2SCLrIAB5imsL6AkKQY6Gzh059g+5BeG2w=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=s0uSP/yCn1UL3bPdLD/W/BCIjoWt3FOlHsijmAbt3e6fEvEK0QXXyr3FeOjXJ0Wsd
+	 aYjhLg0SnQrcWGmNHKxYTfpa9nr1gZpQY3tXLlHUsw1tc8nMoVYINo38GRgkJrJZiB
+	 RpSnq7XSuprhfKV0jsOvGpnGfzpTk5x2OpKxiWSnoucEvR+l59p/wUyMdQZCqYjD4e
+	 eNsd8KvjwO2O0JOFQVrXHJ0HEdLQyS/ivuAMwfzAkZ0vI5+HrBdmyE1yOnFM+3C4CF
+	 74fdvtxXaX1MNI4GNGHuXm7h6qKpAe6WOBk1nO++JFjD/aO9dhebaJ5TXn2T/xykHN
+	 wmwGJjBbLc6OA==
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id A88FDF40068;
+	Fri,  1 May 2026 19:27:42 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Fri, 01 May 2026 19:27:42 -0400
+X-ME-Sender: <xms:7jb1acHY-tPHMvyM98Jqckvdort1JVM99gSyfPMsEDUEEqUbN5gJcQ>
+    <xme:7jb1acZG05AiWaobmeQsjEXn-98j1WHrGb-VSSRg-QhDdU4c6ZbZ71W-zZCFNzgcP
+    hsATR-XUCjE1wPvKH-tsF2n5eZQAociU5IiwePTIZ6RMgI-mJkYng4K>
+X-ME-Received: <xmr:7jb1ad0n3Xd6f7-Z65FKboAL6YNLzkFObSdXGqjzz9Ahin0-X8SPDiE_MFwfOjxAph1BtznRROZL2BxS1XNUm2Ti32Gg4nCO8Zc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeludehvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefkjghfufggtgfgsehtjeertddttdejnecuhfhrohhmpedfffgrnhcuhghi
+    lhhlihgrmhhsucdlnhhvihguihgrmddfuceoughjsgifsehkvghrnhgvlhdrohhrgheqne
+    cuggftrfgrthhtvghrnhepvdegheeikeetleeuffeuheefjeejvdejvdevteefgfffveeh
+    vdeuvdffveffvdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepughjsgifodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqddujeej
+    vdeftdegheehqdeffeefleegtdegjedqughjsgifpeepkhgvrhhnvghlrdhorhhgsehfrg
+    hsthhmrghilhdrtghomhdpnhgspghrtghpthhtohepvddtpdhmohguvgepshhmthhpohhu
+    thdprhgtphhtthhopehnihgtohhlihhntgesnhhvihguihgrrdgtohhmpdhrtghpthhtoh
+    epughjsgifsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjghhgsehnvhhiughirgdr
+    tghomhdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprh
+    hosghinhdrmhhurhhphhihsegrrhhmrdgtohhmpdhrtghpthhtohepsghhvghlghgrrghs
+    sehgohhoghhlvgdrtghomhdprhgtphhtthhopehjohhroheskegshihtvghsrdhorhhgpd
+    hrtghpthhtohepphhrrggrnhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepsggrohhl
+    uhdrlhhusehlihhnuhigrdhinhhtvghlrdgtohhm
+X-ME-Proxy: <xmx:7jb1aUc7xep8-XO8N2WGdSLCmHALigT1u79gu81zGLEbTP19kskZDg>
+    <xmx:7jb1afAUat8iHAecyPX4xjpsjKHL7MLEgoZRwuNvZJIdGN1dLsSPFw>
+    <xmx:7jb1aW07DHrU6-JbKte1wiE-7EtcH2ze9v0pvjWzc_PNyAFr1HPPzg>
+    <xmx:7jb1afM_RN63IDbTfXgJndsz4SEIBN-UAnwcJ9lMdpGEKCGKX38t5A>
+    <xmx:7jb1aUc0Q01sB9YnmfYzZ1DP9YbWSwcXE7IeewNI6Ru4D3cN50Vq79pG>
+Feedback-ID: i67ae4b3e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 1 May 2026 19:27:42 -0400 (EDT)
+Date: Fri, 01 May 2026 16:27:41 -0700
+From: "Dan Williams (nvidia)" <djbw@kernel.org>
+To: Nicolin Chen <nicolinc@nvidia.com>, 
+ "Dan Williams (nvidia)" <djbw@kernel.org>
+Cc: jgg@nvidia.com, 
+ will@kernel.org, 
+ robin.murphy@arm.com, 
+ bhelgaas@google.com, 
+ joro@8bytes.org, 
+ praan@google.com, 
+ baolu.lu@linux.intel.com, 
+ kevin.tian@intel.com, 
+ miko.lenczewski@arm.com, 
+ linux-arm-kernel@lists.infradead.org, 
+ iommu@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, 
+ dan.j.williams@intel.com, 
+ jonathan.cameron@huawei.com, 
+ vsethi@nvidia.com, 
+ linux-cxl@vger.kernel.org, 
+ nirmoyd@nvidia.com
+Message-ID: <69f536ed263dd_3291a910017@djbw-dev.notmuch>
+In-Reply-To: <afPlkW5zlTSHwQCT@Asurada-Nvidia>
+References: <cover.1777269009.git.nicolinc@nvidia.com>
+ <f6734b9dad0050138676f11ecd14e9db1cf6b697.1777269009.git.nicolinc@nvidia.com>
+ <69f3cc82926_3291a910039@djbw-dev.notmuch>
+ <afPlkW5zlTSHwQCT@Asurada-Nvidia>
+Subject: Re: [PATCH v4 1/3] PCI: Allow ATS to be always on for CXL.cache
+ capable devices
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re:
-To: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- linux-cxl@vger.kernel.org
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>, Bjorn Helgaas
- <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20260428182454.464655-1-fabio.m.de.francesco@linux.intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260428182454.464655-1-fabio.m.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 4/28/26 11:24 AM, Fabio M. De Francesco wrote:
-> Subject: [PATCH 0/2] PCI/CXL: Recover CXL Downstream Ports from PM Init failure
+Nicolin Chen wrote:
+> On Thu, Apr 30, 2026 at 02:41:22PM -0700, Dan Williams (nvidia) wrote:
+> > > +static bool pci_cxl_ats_always_on(struct pci_dev *pdev)
+> > > +{
+> > > +	int offset;
+> > > +	u16 cap;
+> > > +
+> > > +	offset = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+> > > +					   PCI_DVSEC_CXL_DEVICE);
+> > > +	if (!offset)
+> > > +		return false;
+> > > +
+> > > +	if (pci_read_config_word(pdev, offset + PCI_DVSEC_CXL_CAP, &cap))
+> > > +		return false;
+> > > +
+> > > +	return cap & PCI_DVSEC_CXL_CACHE_CAPABLE;
+> [...]
+> > Apologies for coming to this late and forgive me if the following has
+> > already been asked and answered. Why not check for actual CXL.cache
+> > protocol on the wire being present?
 > 
-> CXL r4.0 sec 8.1.5.1 Implementation Note describes a scenario in which a
-> Secondary Bus Reset, a Link Down, or Downstream Port Containment on a
+> Actually it would make the patch smaller. The thing is that this
+> is_cxl property wasn't added when I started the series. So, it's
+> not using it. :)
+> 
+> > @@ -1733,9 +1733,8 @@ static void set_pcie_cxl(struct pci_dev *dev)
+> >  	pci_read_config_word(dev, dvsec + PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS,
+> >  			     &cap);
+> >  
+> > -	dev->is_cxl = FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS_CACHE, cap) ||
+> > -		FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS_MEM, cap);
+> > -
+> > +	dev->is_cxl_cache = FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS_CACHE, cap);
+> > +	dev->is_cxl_mem = FIELD_GET(PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS_MEM, cap);
+> 
+> One caveat is that:
+> 
+> Here it checks the cap from:
+> 	PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS (0xE) via
+> 		PCI_DVSEC_CXL_FLEXBUS_PORT_STATUS (0x7)
+> 
+> On the other hand, mine checks from:
+> 	PCI_DVSEC_CXL_CAP (0xA) via
+> 		PCI_DVSEC_CXL_DEVICE (0x0)
+> 
+> The spec mentions in 8.2.1.3.1 DVSEC Flex Bus Port Capability: "
+>   Note: The Mem_Capable, IO_Capable, and Cache_Capable fields are
+>   also present in the DVSEC Flex Bus for the device [which is the
+>   legacy name for DVSEC 0x0]. This allows for future scalability
+>   where multiple devices, each with potentially different
+>   capabilities, may be populated behind a single Port.
+> "
+> 
+> Not arguing that set_pcie_cxl() is wrong, but I am not sure if there
+> would be any side effect to rely on the "legacy name" over DVSEC 0x0.
+> 
+> Is there any CXL expert who can help confirm?
 
-I'm not sure if this series covers a Link Down event (i.e. hotplug). As I recall, cxl_reset_bus_function() only happens via sysfs trigger.
+You appear to be confusing Cache_Capable and Cache_Enabled.
 
-DJ
+"8.2.1.3.1 DVSEC Flex Bus Port Capability" != "8.2.1.3.3 DVSEC Flex Bus Port Status"
 
-
-> CXL Downstream Port prevents Port PM Init from completing when ACS
-> Source Validation is enabled on the Downstream Port. The spec states
-> that another SBR alone does not recover the port and describes a
-> software recovery sequence.  
-> 
-> Patch 1 extends cxl_reset_bus_function(), the helper backing the cxl_bus
-> PCI/CXL reset method exposed to userspace via sysfs. It saves, clears,
-> and restores ACS Source Validation and Bus Master Enable on the CXL
-> Downstream Port around the SBR it issues. This keeps the userspace
-> cxl_bus reset path from leaving the port unable to complete PM Init.
-> 
-> Patch 2 adds a recovery pass during CXL enumeration. For each CXL
-> Downstream Port in a memdev's ancestry, the CXL core checks whether PM
-> Init has completed. If it has not, regardless of what caused the
-> failure, it invokes cxl_reset_bus_function() on the child below the port
-> in the hope of restoring the port to a usable state. CXL enumeration
-> re-runs after events that tear down and re-probe the memdev, including
-> DPC, AER, and Link Down, so those paths reach this recovery.
-> 
-> This small series is developed from an old RFC v3:
-> https://lore.kernel.org/linux-cxl/20260330193347.25072-1-fabio.m.de.francesco@linux.intel.com/
-> 
-> Fabio M. De Francesco (2):
->   PCI/CXL: Allow PM Init to complete on cxl_bus reset if ACS SV enabled
->   cxl/core: Recover from PM Init failure via cxl_reset_bus_function()
-> 
-> drivers/cxl/core/pci.c        | 30 ++++++++++++++++++++
->  drivers/cxl/core/port.c       | 22 +++++++++++++++
->  drivers/cxl/cxlpci.h          |  3 ++
->  drivers/pci/pci.c             | 52 ++++++++++++++++++++++++++++++++++-
->  include/linux/pci.h           |  1 + 
->  include/uapi/linux/pci_regs.h |  2 ++
->  6 files changed, 109 insertions(+), 1 deletion(-)
-> 
-
+Cache_Capable is only a capability. To check that the device has
+actually trained the CXL.cache alternate protocol you need to look at
+the status register.
