@@ -1,171 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29C8188596
-	for <linux-cxl@vger.kernel.org>; Sat,  2 May 2026 01:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5497175A92
+	for <linux-cxl@vger.kernel.org>; Sat,  2 May 2026 10:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777685678; cv=none; b=ZdTnMWgiVJ5H9l+b9o0OaddOQ1A2SQ40OQJRRPeScPmsN+p8ocD1XSFGXnczIU+DJuyjWK70sybK2X76dc1SAk+RQdhh7HQaB4KiL+A+kuqHjWF322BXK85bPbrulVAAcvs1dHY2TJUIFn4OdTMWL0ObT+6S2GU9G+cw8LFed0w=
+	t=1777718927; cv=none; b=uObdFACBkGrHMF1qECvKDi2bScOc+V//IpZW1MsypdjJwS/kClNJGi1tF/5OZzKqVpgDB4Zmgl3IZPzwCG0OsrMJmuhL1+MhW/7Q7+lxeTFXgEnEperAKdG1vi6azwHT3qDrE3vfwbr/lLv/KrPeO0R6ts7I3pSL73wnau8R2V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777685678; c=relaxed/simple;
-	bh=6IeC1fGfmSPk4G3F6nPV2xqcB+uRScXf1At+qXNCcU0=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=JqAqMauLZNiySMztOxmM7CbyAzPYSyxdYzNi6aTunmNvicKEx/A5UcrHuJ+s31v6CH4MCn6Hr0C5tdyEVqYtZdPeVB29mBCGRGR/7j1mcrSiS5TCfkKJMar8ZCcP4ZNd7+q+zHIjXa3mS5O3cjF6tiBeJ6Kb2x9FcZmim27etcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MXuKcRsA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777718927; c=relaxed/simple;
+	bh=9l6RBQkFfSATQb3fnM0uNRz3ObBEIWFtqkXWPVtZhw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c7q+xP4WXaHbPAvOJ2gFUZDazPzrs7yIlGj06YacMqobfiOeL+i4XSOhGpVw/+U/sVUYFP8rvFeJ2bmhUlI8UNWJNj6DrsUz4cZtKetobO+TKCmXxFo7ViVhdgZbgtBgb0Fw3fCpOvVDCHhT/qWyO5dgoJgvMAG7ot+3ShTecFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=L6adCl+f; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MXuKcRsA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 255D1C2BCB4;
-	Sat,  2 May 2026 01:34:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777685677;
-	bh=6IeC1fGfmSPk4G3F6nPV2xqcB+uRScXf1At+qXNCcU0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=MXuKcRsAjTALD8vMP3GW9K46PJ4HDPY/a46SQDRk5KHATi0P0n9RqEcOgpxApNcLY
-	 Y41WKuu24xcx/3qQ4t5aC6MepMerDQBLH4a1KmYKvuI8Znz77Q8Jj/1pfdEomdQcyQ
-	 4qBW6Pz1BNGq57pWoLvAWLnt3e2bZxGbP5EgefirnGGh/YBy9fHPH7WHSS2hBCOgF8
-	 wdMfsVBlupnuBBeJjMl4wu0Z4H9ixk2SsoLgQ+tUUjEJrR6DWb4Nmy6BshV7COUFhZ
-	 z3JzSbQTUVDoqsDU71CnqtpFa3ZYzF/kQRQi9VrGzxm1QAlhf6GM8OeIZPBnBC/E8+
-	 iF5TracxV2+Fg==
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 25773F40068;
-	Fri,  1 May 2026 21:34:36 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Fri, 01 May 2026 21:34:36 -0400
-X-ME-Sender: <xms:rFT1afuifF2JbnowJq4kxoIgyO-uLBAziJXH2HU-PvRUTd-VSyuOgg>
-    <xme:rFT1aZT0nDCDorI_Udz-bxTIWOwGj53gyB0X6tgT-Jv9ieJiDo_Ht89kLzxWPo3ZZ
-    6f_G4_gB2l2xou6VUKIuHvJhFXklNE6QhAASkFi5VqRA5yPZXMryQ>
-X-ME-Received: <xmr:rFT1aUHM0iSu9pb_3ZP71jsV_aQPpWl0Wt-5_LvFaU1UjA3uGNMHL2KaeLzGOwV3YctM1Qv_R4O9k7NWGDz2oH98T8NtwZcG_gU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeludejjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefkjghfufggtgfgsehtqhertddttdejnecuhfhrohhmpedfffgrnhcuhghi
-    lhhlihgrmhhsucdlnhhvihguihgrmddfuceoughjsgifsehkvghrnhgvlhdrohhrgheqne
-    cuggftrfgrthhtvghrnhepueeffeeugfeggfehudduvdejieduveduvdekieeghefhkedv
-    hedtkefgtdevveeknecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvg
-    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegujhgsfidomhgvshhmthhp
-    rghuthhhphgvrhhsohhnrghlihhthidqudejjedvfedtgeehhedqfeeffeelgedtgeejqd
-    gujhgsfieppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgt
-    phhtthhopedvuddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlihhsthgrih
-    hrvdefsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhukhgrshesfihunhhnvghrrdgu
-    vgdprhgtphhtthhopegujhgsfieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghhvg
-    hlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehruhhsthdqfhhorhdqlhhi
-    nhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrkhhpmheslhhinh
-    hugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihes
-    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjohhnrghthhgrnhdrtggrmh
-    gvrhhonheshhhurgifvghirdgtohhmpdhrtghpthhtoheplhhinhhugidqtgiglhesvhhg
-    vghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:rFT1aTdiXlbZ_rOqV3YK1oT0q6xZ9lOUuj0peMWZIZuZLk3OlITC7w>
-    <xmx:rFT1aTvj3HnIhqPgnQv-tZbZ6iReHQQc1ExGbOah9j-GIgZzK__1eA>
-    <xmx:rFT1aZdfvUEHJ-36rnnqvp5Qp62Fzv-71_uy21ccmcl2xdtFSIfwnQ>
-    <xmx:rFT1aXokJE6QNEAmSTfRDUNaRVFCg2cciSmTcfTgSPocsCUd8hWFSw>
-    <xmx:rFT1aX9nX_-DPVYkku6FLbAH0vZ2oCBxx5X74GhykvliG9nxYEZhCmEe>
-Feedback-ID: i67ae4b3e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 1 May 2026 21:34:35 -0400 (EDT)
-Date: Fri, 01 May 2026 18:34:34 -0700
-From: "Dan Williams (nvidia)" <djbw@kernel.org>
-To: Alistair Francis <alistair23@gmail.com>, 
- Lukas Wunner <lukas@wunner.de>
-Cc: Dan Williams <djbw@kernel.org>, 
- bhelgaas@google.com, 
- rust-for-linux@vger.kernel.org, 
- akpm@linux-foundation.org, 
- linux-pci@vger.kernel.org, 
- Jonathan.Cameron@huawei.com, 
- linux-cxl@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- alex.gaynor@gmail.com, 
- benno.lossin@proton.me, 
- boqun.feng@gmail.com, 
- a.hindborg@kernel.org, 
- gary@garyguo.net, 
- bjorn3_gh@protonmail.com, 
- tmgross@umich.edu, 
- ojeda@kernel.org, 
- wilfred.mallawa@wdc.com, 
- aliceryhl@google.com, 
- Alistair Francis <alistair.francis@wdc.com>
-Message-ID: <69f554aa525ae_44a831001f@djbw-dev.notmuch>
-In-Reply-To: <CAKmqyKN3nuA_uH+1o9XPrFoi7TnBY_R92SiP1srhXFdhnngd3A@mail.gmail.com>
-References: <20260211032935.2705841-1-alistair.francis@wdc.com>
- <698d6b7faa190_2e57100d3@dwillia2-mobl4.notmuch>
- <CAKmqyKPyR165rACXRMJXgyUOp6OUdQqSsym-gfYVFnKLZ4ednQ@mail.gmail.com>
- <69e19c80b892b_fe0831000@djbw-dev.notmuch>
- <aeG4UnyYd1FKdt1D@wunner.de>
- <CAKmqyKN3nuA_uH+1o9XPrFoi7TnBY_R92SiP1srhXFdhnngd3A@mail.gmail.com>
-Subject: Re: [RFC v3 00/27] lib: Rust implementation of SPDM
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="L6adCl+f"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-444826c16ffso2396803f8f.1
+        for <linux-cxl@vger.kernel.org>; Sat, 02 May 2026 03:48:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1777718924; x=1778323724; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1bX9tRgr9mQ6ozEX4pk1mI8lnk6xhP9Lqie4fOYAHF8=;
+        b=L6adCl+fsSjrcKs1MT8gG+QCGQhLz3BqwvaKzfY2GiPdYZGe2kWaNzLBwxcKu4VFM7
+         E/uWozrtWv8lwAHqN965yhPwT4OPpgrVcgvIj5X21DK80wFakgexw2/aUXK2kd6Lvt1Q
+         zIePh83355FeqBOLOJGTg6d6kRFchmfTnrAB+4gZtD+B5qcyj7DDDUUEQ28iUZLcNfhn
+         764B5vHGfI2zSiAbIDvrw6vFA+B/74G5G3pxK07xiVL0pWs9qLPM9Y1RLXHMZs1FDMaR
+         kfJvsesj8XM8/+CV8yxhQH/zgr1g3QqRJAj2lWKdJ+LdEZmnW3GcAFpWf5JKeDBYhVCv
+         06Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1777718924; x=1778323724;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1bX9tRgr9mQ6ozEX4pk1mI8lnk6xhP9Lqie4fOYAHF8=;
+        b=CMV08E8zSzrNir20j+lNlPXuu7xFfT0buvHn+t6TcKxofW49Zte56Ivu7ZeXQ/56Zc
+         CmfhHmIG6Gy2SOO6u/JvEQczHJd5Xg5Gfs9uXz4ym4D8DvRTURVpHgfcDA3exKB8EhPd
+         g5K41THxX0Gym5q/JZYT7G965lYGOccIMvw+rqH1ij1ZYPWFL9oAkG3uVWw9Mx0u6cpY
+         N4WPqdmd63b6wJJjVBfzfrR+O0BmPSVMm3TKwiMXg/fNNqYBezr4OYX+2nDj65mfMKhI
+         mJ7sZNOQEFMoGRlua2BlhmmNbCPb0L3eocCoBFN1vL+382ZTeuZpP6MwL5mqWiT/ZoXy
+         N/PA==
+X-Forwarded-Encrypted: i=1; AFNElJ8//7hTZxY0r/fROfL9oqcLHY0NTeQ/5r5d3kpm/a2H3OXotUiSmOn/COMwvZcIhFQH0+9mD2lgWWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6b15XV1ce8yOVcE/g2RR+M7ovLWPF1HfW5aIVPNlhURISvZsi
+	EwAF4d+4kCgVjyG2qWjdL71N+QDRh7UxcwzWsn/kDgXBgnwq2ZN5a1f+wDvII/DfoIE=
+X-Gm-Gg: AeBDievakz9WgVML0JzP/7SVhVoMq0mJ062FEXbP8SvNCfRfrWcscxXZcxHyMtFyuAy
+	Vovys0H2z0fIKaqARUuSfW+jZneT9QVjrEuNPVQaoenDycopDdBVJIuO24x7OajL+Yesa653skS
+	gJIfXp0CM455z49t0fEVfqaaN1DTWOghxhHRu1lH3GhCJ8My5ermHs3+OLDA3IASw+rPbVxrg8/
+	/nR5M80AgrxjZZCsFiQm1eWannrt7G6OaWtMuwSNfddqagiN0J1t1cH1Si9GR7uxBrNqeCwg2ov
+	nQNKSWpESE7+3ILDdqJ5hlbVD6AnMw3wjHJI1gjxvFL2gyI08jW7t7cZH+JO1eTJ/3dhco+uAW9
+	re/uL4w9ysaYCbnKBkWI74Acdle9Jix1kR21C19AMMmg0y9gCPVI3jezOglK5f2eo8e+Ym345WZ
+	7hm7FPll6/e7MmpffCThfVxlv5mJHLIsQ7589jfcmgCxu+vsN4rqYzPxM=
+X-Received: by 2002:a5d:50cb:0:b0:44b:d21e:bdc1 with SMTP id ffacd0b85a97d-44bd21ebddemr2401445f8f.2.1777718924098;
+        Sat, 02 May 2026 03:48:44 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([213.122.39.21])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-44a8ea7cfd2sm10427246f8f.2.2026.05.02.03.48.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 May 2026 03:48:43 -0700 (PDT)
+Date: Sat, 2 May 2026 11:48:41 +0100
+From: Gregory Price <gourry@gourry.net>
+To: Anisa Su <anisa.su887@gmail.com>
+Cc: John Groves <john@jagalactic.com>, Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Dan Williams <djbw@kernel.org>,
+	John Groves <John@groves.net>, Shiju Jose <shiju.jose@huawei.com>,
+	Robert Richter <rrichter@amd.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"dev.srinivasulu@gmail.com" <dev.srinivasulu@gmail.com>,
+	"arramesh@micron.com" <arramesh@micron.com>,
+	"ajayjoshi@micron.com" <ajayjoshi@micron.com>
+Subject: Re: [RFC PATCH 0/4] cxl/extent: Enable and validate multi-extent DCDs
+Message-ID: <afXWiZy3Rp16XF-G@gourry-fedora-PF4VCD3F>
+References: <20260423235108.3732424-1-john@jagalactic.com>
+ <0100019dbcc13648-596853f3-0083-46e0-b654-396eedd657cb-000000@email.amazonses.com>
+ <afUiZ27UtF3589IR@4470NRD-ASU.ssi.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <afUiZ27UtF3589IR@4470NRD-ASU.ssi.samsung.com>
 
-Alistair Francis wrote:
-> On Fri, Apr 17, 2026 at 2:34=E2=80=AFPM Lukas Wunner <lukas@wunner.de> =
-wrote:
-> >
-> > On Thu, Apr 16, 2026 at 07:35:44PM -0700, Dan Williams wrote:
-> > > Later in the thread I proposed an alternative that instead of suppo=
-rting
-> > > 2 flavors of uapi through "authenticated", instead implement CMA as=
+On Fri, May 01, 2026 at 03:00:07PM -0700, Anisa Su wrote:
+> 
+> 4. If we allow non-tagged extents (as this patchset allows):
+> 	- can non-tagged extents be partially claimed by a DAX device that
+> 	  doesn't have a specified tag?
+> 
+> Ira's original patchset introduced minimal changes to DAX logic. Introducing
+> tag-awareness to
+> DAX resize logic may require adding more conditional statements, 
+> especially if we allow both NULL and non-NULL tags (but there might be a nice
+> way to do it;
+> This is just my initial impression, I haven't tried implementing it, and I could
+> certainly look into it more)
+>
 
-> > > another TSM driver [1].
-> > >
-> > > [1]: http://lore.kernel.org/69976d7d39c60_2f4a1009@dwillia2-mobl4.n=
-otmuch
-> >
-> > Please keep in mind though that CMA is just the PCIe adaption of SPDM=
-,
-> > SPDM is not only needed for PCIe but also SCSI, ATA and possibly othe=
-rs
-> > and so implementing CMA as a TSM driver must not preclude use of SPDM=
+There is a lot of confusion built around tagged vs untagged.
 
-> > in other subsystems.
-> =
+Can we at least agree if a DC Extent has a NULL tag:
 
-> That should be fine as the current SPDM implementation is
-> self-contained, but thanks for raising that.
-> =
+    1 extent = 1 DAX device
 
-> Just to make sure I'm not going in the wrong direction, the idea would
-> be to build on
-> =
+And we just denote that a NULL UUID is a sentinel value ("Unknown").
 
-> https://lore.kernel.org/all/20260303000207.1836586-9-dan.j.williams@int=
-el.com/
-> =
+e.g.:  there's no such thing as a "partial claim by a dax device".
+       either the extent is tagged (part of a set), or it is its own
+       thing without any identifying data around it (probably intended
+       to be hotplugged as system ram or something, userland problem).
 
-> and add something like this?
-> =
+alternatively:  do not allow untagged extents, because we can't make
+sense of what to do with it.
 
-> ```
-> static const struct pci_tsm_ops pci_cma_tsm_ops =3D {
->     .link_ops =3D {
->         .probe        =3D pci_cma_tsm_probe,
->         .remove        =3D pci_cma_tsm_remove,
->         .connect    =3D pci_cma_tsm_connect,
->         .disconnect    =3D pci_cma_tsm_disconnect,
->     },
->     .refresh_evidence    =3D pci_cma_tsm_refresh,
-> };
-> ```
-> =
-
-> The docs for `struct pci_tsm_ops` seem pretty TSM specific, so I just
-> wanted to double check before going ahead.
-> =
-
-> That means all of the netlink stuff in this series can be dropped and
-> we just use the TSM netlink (which might need some adjustments then,
-> I'll have to double check)
-
-Right, the above looks what I was expecting.
-
-As for netlink, Lukas is right about non CMA use cases. The netlink
-interface will either need to move to be a generic "device evidence"
-facility, not scoped to PCI/TSM, or itself become a library that
-different producers of SPDM material can use to export it to userspace.=
+~Gregory
