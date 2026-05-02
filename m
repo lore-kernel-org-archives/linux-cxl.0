@@ -1,122 +1,124 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cornsilk.maple.relay.mailchannels.net (cornsilk.maple.relay.mailchannels.net [23.83.214.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5497175A92
-	for <linux-cxl@vger.kernel.org>; Sat,  2 May 2026 10:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777718927; cv=none; b=uObdFACBkGrHMF1qECvKDi2bScOc+V//IpZW1MsypdjJwS/kClNJGi1tF/5OZzKqVpgDB4Zmgl3IZPzwCG0OsrMJmuhL1+MhW/7Q7+lxeTFXgEnEperAKdG1vi6azwHT3qDrE3vfwbr/lLv/KrPeO0R6ts7I3pSL73wnau8R2V8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777718927; c=relaxed/simple;
-	bh=9l6RBQkFfSATQb3fnM0uNRz3ObBEIWFtqkXWPVtZhw4=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FAC29B8D3
+	for <linux-cxl@vger.kernel.org>; Sat,  2 May 2026 19:53:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.214.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777751612; cv=pass; b=mP9MlQ1VOoXy8pRJu5YOgs3A5A0TjqO09wib01QBs9B9yeubY/hafdbdV4BqfnH0eJyOL1gbb5YiXOMTeMNrRhkLoObB5mb4xsIPm7T0kC7hlG4aO5RrKzRkEy53rVBVY4iDUN66CgC6oU1CRRL2MkvbXic/IHFD8wrNAjEdPpI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777751612; c=relaxed/simple;
+	bh=/ZohHdZoglrAXnRAqE/+hY20SfF3v/Z9qhXA5ve/WX0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c7q+xP4WXaHbPAvOJ2gFUZDazPzrs7yIlGj06YacMqobfiOeL+i4XSOhGpVw/+U/sVUYFP8rvFeJ2bmhUlI8UNWJNj6DrsUz4cZtKetobO+TKCmXxFo7ViVhdgZbgtBgb0Fw3fCpOvVDCHhT/qWyO5dgoJgvMAG7ot+3ShTecFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=L6adCl+f; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=R4hCw20gAW46Ozvdmbxz+4Z3FX6iMSMwdC7dulONNcOagtPW5Y17Eyw9GT08V0jYG/rf3lLd+dvSCh8E0zTHm/7HDVKpQ5isG4wcGMd4v7p3nAeUNH8TbUzlvTKLEOr5emUSosLVcMv5Iv3ZAsQ7PpvPLSf3S6kzH37+QWAM5YU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=nh6dFG+6; arc=pass smtp.client-ip=23.83.214.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="L6adCl+f"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-444826c16ffso2396803f8f.1
-        for <linux-cxl@vger.kernel.org>; Sat, 02 May 2026 03:48:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1777718924; x=1778323724; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1bX9tRgr9mQ6ozEX4pk1mI8lnk6xhP9Lqie4fOYAHF8=;
-        b=L6adCl+fsSjrcKs1MT8gG+QCGQhLz3BqwvaKzfY2GiPdYZGe2kWaNzLBwxcKu4VFM7
-         E/uWozrtWv8lwAHqN965yhPwT4OPpgrVcgvIj5X21DK80wFakgexw2/aUXK2kd6Lvt1Q
-         zIePh83355FeqBOLOJGTg6d6kRFchmfTnrAB+4gZtD+B5qcyj7DDDUUEQ28iUZLcNfhn
-         764B5vHGfI2zSiAbIDvrw6vFA+B/74G5G3pxK07xiVL0pWs9qLPM9Y1RLXHMZs1FDMaR
-         kfJvsesj8XM8/+CV8yxhQH/zgr1g3QqRJAj2lWKdJ+LdEZmnW3GcAFpWf5JKeDBYhVCv
-         06Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777718924; x=1778323724;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1bX9tRgr9mQ6ozEX4pk1mI8lnk6xhP9Lqie4fOYAHF8=;
-        b=CMV08E8zSzrNir20j+lNlPXuu7xFfT0buvHn+t6TcKxofW49Zte56Ivu7ZeXQ/56Zc
-         CmfhHmIG6Gy2SOO6u/JvEQczHJd5Xg5Gfs9uXz4ym4D8DvRTURVpHgfcDA3exKB8EhPd
-         g5K41THxX0Gym5q/JZYT7G965lYGOccIMvw+rqH1ij1ZYPWFL9oAkG3uVWw9Mx0u6cpY
-         N4WPqdmd63b6wJJjVBfzfrR+O0BmPSVMm3TKwiMXg/fNNqYBezr4OYX+2nDj65mfMKhI
-         mJ7sZNOQEFMoGRlua2BlhmmNbCPb0L3eocCoBFN1vL+382ZTeuZpP6MwL5mqWiT/ZoXy
-         N/PA==
-X-Forwarded-Encrypted: i=1; AFNElJ8//7hTZxY0r/fROfL9oqcLHY0NTeQ/5r5d3kpm/a2H3OXotUiSmOn/COMwvZcIhFQH0+9mD2lgWWA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6b15XV1ce8yOVcE/g2RR+M7ovLWPF1HfW5aIVPNlhURISvZsi
-	EwAF4d+4kCgVjyG2qWjdL71N+QDRh7UxcwzWsn/kDgXBgnwq2ZN5a1f+wDvII/DfoIE=
-X-Gm-Gg: AeBDievakz9WgVML0JzP/7SVhVoMq0mJ062FEXbP8SvNCfRfrWcscxXZcxHyMtFyuAy
-	Vovys0H2z0fIKaqARUuSfW+jZneT9QVjrEuNPVQaoenDycopDdBVJIuO24x7OajL+Yesa653skS
-	gJIfXp0CM455z49t0fEVfqaaN1DTWOghxhHRu1lH3GhCJ8My5ermHs3+OLDA3IASw+rPbVxrg8/
-	/nR5M80AgrxjZZCsFiQm1eWannrt7G6OaWtMuwSNfddqagiN0J1t1cH1Si9GR7uxBrNqeCwg2ov
-	nQNKSWpESE7+3ILDdqJ5hlbVD6AnMw3wjHJI1gjxvFL2gyI08jW7t7cZH+JO1eTJ/3dhco+uAW9
-	re/uL4w9ysaYCbnKBkWI74Acdle9Jix1kR21C19AMMmg0y9gCPVI3jezOglK5f2eo8e+Ym345WZ
-	7hm7FPll6/e7MmpffCThfVxlv5mJHLIsQ7589jfcmgCxu+vsN4rqYzPxM=
-X-Received: by 2002:a5d:50cb:0:b0:44b:d21e:bdc1 with SMTP id ffacd0b85a97d-44bd21ebddemr2401445f8f.2.1777718924098;
-        Sat, 02 May 2026 03:48:44 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([213.122.39.21])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-44a8ea7cfd2sm10427246f8f.2.2026.05.02.03.48.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 May 2026 03:48:43 -0700 (PDT)
-Date: Sat, 2 May 2026 11:48:41 +0100
-From: Gregory Price <gourry@gourry.net>
-To: Anisa Su <anisa.su887@gmail.com>
-Cc: John Groves <john@jagalactic.com>, Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <djbw@kernel.org>,
-	John Groves <John@groves.net>, Shiju Jose <shiju.jose@huawei.com>,
-	Robert Richter <rrichter@amd.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"dev.srinivasulu@gmail.com" <dev.srinivasulu@gmail.com>,
-	"arramesh@micron.com" <arramesh@micron.com>,
-	"ajayjoshi@micron.com" <ajayjoshi@micron.com>
-Subject: Re: [RFC PATCH 0/4] cxl/extent: Enable and validate multi-extent DCDs
-Message-ID: <afXWiZy3Rp16XF-G@gourry-fedora-PF4VCD3F>
-References: <20260423235108.3732424-1-john@jagalactic.com>
- <0100019dbcc13648-596853f3-0083-46e0-b654-396eedd657cb-000000@email.amazonses.com>
- <afUiZ27UtF3589IR@4470NRD-ASU.ssi.samsung.com>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="nh6dFG+6"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 8FE7E721161;
+	Sat, 02 May 2026 19:34:45 +0000 (UTC)
+Received: from pdx1-sub0-mail-a229.dreamhost.com (trex-green-6.trex.outbound.svc.cluster.local [100.97.142.130])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 2C8DB72132B;
+	Sat, 02 May 2026 19:34:43 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1777750483;
+	b=FJcdQqbtscSA9g0AyXg8aQdqFzhjg9j5JIQjtAlQrIxjSxjdn9W/0DmY2S4ecu+SuQKxJx
+	J8UdMVILsypp831GQFPjp8yU4fDJIUGDiQM2lptFnD6q3vvdiAnfVIXNj4JAC2G6jsfmER
+	6kQANREIs0NH7CDFaMCWoWZtYHT1VHMLTPi6Oo62xDNtQPSDm8YKsfL3jcI0y9Y8mNYbns
+	It6p/BAVbmeGTxS6A9OD0w09w9Xe/ijDf35h/3Cg4oj2NAQIcNtvTjY+G4nznZDAyIPI/x
+	OZhJz1vcaoMh6QBw2BkYnI0Mz8PicwujXUMBJEEGoJSSPyKdO4RprTPKow1+Gg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1777750483;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=1CKy+pRbfHAM2EQs/oXLaDkxHYa7jjcSO+CG5Q9KCTQ=;
+	b=qYhXpRuzwCg/ZHphg0i0uo0S+Eo839pagX28VrZ8rMhbFf/G6vMI/YmjNBjl8MEjiqgwnl
+	r0EIi/vLpZjfQRaxg3xGH12G9t2c2kzF02Iz3nj/SMj1p6y7HwzpC6f+X7r+m8Mst+5FhC
+	rwQAvniO/+D0g5MnGfGgKylv+oTCqa3fPbrMqKnEXuKFnh/oz/EYzSD9lvk2q5RTlp7nN8
+	uj8zXr1RhOMgU3V3qcdlw/307CqEC+AAYSpMIzBVLspyNUoUdiJHeGCx7dRLnD51G1jjJe
+	53pWh1VhwDe8TyT/uZbynLUy7R/jDmksG+ITZa9xXbqywH4S40BNOyuLfGtwHg==
+ARC-Authentication-Results: i=1;
+	rspamd-859c89884f-7g82c;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Thoughtful-Harbor: 09ad185372278d4a_1777750485393_628780005
+X-MC-Loop-Signature: 1777750485393:4293056259
+X-MC-Ingress-Time: 1777750485393
+Received: from pdx1-sub0-mail-a229.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.97.142.130 (trex/7.1.5);
+	Sat, 02 May 2026 19:34:45 +0000
+Received: from offworld (unknown [172.56.204.100])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a229.dreamhost.com (Postfix) with ESMTPSA id 4g7J5F1MctzRx;
+	Sat,  2 May 2026 12:34:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1777750483;
+	bh=1CKy+pRbfHAM2EQs/oXLaDkxHYa7jjcSO+CG5Q9KCTQ=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=nh6dFG+68NVfHNk2YXO5u0Ogbk7aICWAgdCWCE4z+IbADePPmHiAHTE7Wkgj+UvOg
+	 dzmDuYJaiedqbeSDjuV05D1iRPdFXc/hERD58L9JBaJM7Vvq9NmwZfj4GKGyftkWsd
+	 Z7vAKenBDWAprxyLWT8Cj35fLIq2MfcHKoItEY6bbOdLZqfGhGuiU3in+i2+6MuG/N
+	 j7H4+TVfh2/BXy+Yoc0Tnnjptq1pU6nS2cfDc2skP50fOG8qS4J6KuZhTEHetpCc4X
+	 dRqhxXYrp+GlzJYIzFi1FEBH7wd5VgIFL57tBH1xHT0PxQ9G/hqVIR8qsvw7e0pOWV
+	 T7Pn+/k9ATiEw==
+Date: Sat, 2 May 2026 12:34:29 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: jic23@kernel.org, alison.schofield@intel.com, ira.weiny@intel.com,
+	djbw@kernel.org, dongjoo.seo1@samsung.com, anisa.su@samsung.com,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2] cxl/mbox: Support Media Operation
+Message-ID: <20260502193429.hztbijgv3bjwit5k@offworld>
+References: <20260428200410.705675-1-dave@stgolabs.net>
+ <1999de6e-7f14-41d2-ace2-db00faede674@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <afUiZ27UtF3589IR@4470NRD-ASU.ssi.samsung.com>
+In-Reply-To: <1999de6e-7f14-41d2-ace2-db00faede674@intel.com>
+User-Agent: NeoMutt/20220429
 
-On Fri, May 01, 2026 at 03:00:07PM -0700, Anisa Su wrote:
-> 
-> 4. If we allow non-tagged extents (as this patchset allows):
-> 	- can non-tagged extents be partially claimed by a DAX device that
-> 	  doesn't have a specified tag?
-> 
-> Ira's original patchset introduced minimal changes to DAX logic. Introducing
-> tag-awareness to
-> DAX resize logic may require adding more conditional statements, 
-> especially if we allow both NULL and non-NULL tags (but there might be a nice
-> way to do it;
-> This is just my initial impression, I haven't tried implementing it, and I could
-> certainly look into it more)
+On Tue, 28 Apr 2026, Dave Jiang wrote:
+>> +What:		/sys/bus/cxl/devices/memX/security/zero
+>> +Date:		April, 2026
+>> +KernelVersion:	v7.2
+>> +Contact:	linux-cxl@vger.kernel.org
+>> +Description:
+>> +		(WO) Write a DPA range as 'start length' in bytes to this
 >
+>Same comment about multiple input in a single attribute. Maybe introduce these:
+>
+>security/zero_start_dpa
+>security/zero_len
+>security/zero
 
-There is a lot of confusion built around tagged vs untagged.
+I had missed this feedback - this suggested interface is horrible. While the
+sysfs documentation mentions the one rule per file, this is not strict and
+(as Jonathan also agreed previously) we can do <start> <len> inputs. There
+are plenty of examples that do not follow this rule when it makes sense.
 
-Can we at least agree if a DC Extent has a NULL tag:
+So my follow up patches will do
 
-    1 extent = 1 DAX device
+echo <start_dpa> <len> > /sys/bus/cxl/devices/mem0/security/sanitize_range
+echo <start_dpa> <len> > /sys/bus/cxl/devices/mem0/security/zero_range
 
-And we just denote that a NULL UUID is a sentinel value ("Unknown").
-
-e.g.:  there's no such thing as a "partial claim by a dax device".
-       either the extent is tagged (part of a set), or it is its own
-       thing without any identifying data around it (probably intended
-       to be hotplugged as system ram or something, userland problem).
-
-alternatively:  do not allow untagged extents, because we can't make
-sense of what to do with it.
-
-~Gregory
+Thanks,
+Davidlohr
