@@ -1,84 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073AA40DFA0
-	for <linux-cxl@vger.kernel.org>; Sat,  2 May 2026 00:46:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F29C8188596
+	for <linux-cxl@vger.kernel.org>; Sat,  2 May 2026 01:34:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777682795; cv=none; b=L9nebjxJoK0bglKZqt2jMEaJZe5sLjRVispUGlqp9qvtSrpX5uBILN1Dy56l+HktBkGl+EZPIcInRsxDUloFsmCNozsl1WGMft1o+0DFQhEikUyNc8KUfgc/EiEU4pcr/QA9yFBn6huk28iaZ8eYTog2GwPTzlKYMQLx/JrCtZM=
+	t=1777685678; cv=none; b=ZdTnMWgiVJ5H9l+b9o0OaddOQ1A2SQ40OQJRRPeScPmsN+p8ocD1XSFGXnczIU+DJuyjWK70sybK2X76dc1SAk+RQdhh7HQaB4KiL+A+kuqHjWF322BXK85bPbrulVAAcvs1dHY2TJUIFn4OdTMWL0ObT+6S2GU9G+cw8LFed0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777682795; c=relaxed/simple;
-	bh=XTGflNX+Q2aPS2DfKrLc/p0uoaXIOkmiEjOTKw1RbaI=;
-	h=Date:From:To:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=oWb69YrAtmzVlxeWnrdnsTG306D0ZCUVv0J8kzWIVesjpmLuGxDr+EdZAPaATUH3twiBPdQmYc5d5lL0Sxa4Lhf+0Xgd+w6W/87gZNA5ykjdO7z0krJrKUd7StK4Q6SjcHyV5Y4ICgIikFuL/hEe1p0GQAyfpkvxGsnYI5Zv1Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q7JXXict; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777685678; c=relaxed/simple;
+	bh=6IeC1fGfmSPk4G3F6nPV2xqcB+uRScXf1At+qXNCcU0=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=JqAqMauLZNiySMztOxmM7CbyAzPYSyxdYzNi6aTunmNvicKEx/A5UcrHuJ+s31v6CH4MCn6Hr0C5tdyEVqYtZdPeVB29mBCGRGR/7j1mcrSiS5TCfkKJMar8ZCcP4ZNd7+q+zHIjXa3mS5O3cjF6tiBeJ6Kb2x9FcZmim27etcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MXuKcRsA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q7JXXict"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69F21C2BCB4;
-	Sat,  2 May 2026 00:46:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MXuKcRsA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 255D1C2BCB4;
+	Sat,  2 May 2026 01:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777682794;
-	bh=XTGflNX+Q2aPS2DfKrLc/p0uoaXIOkmiEjOTKw1RbaI=;
-	h=Date:From:To:In-Reply-To:References:Subject:From;
-	b=Q7JXXictQBhxCWn158/ZJdF1UOn89unsN0/BHywntWXydVS3LOtCELX1bbVSdq3Bh
-	 6c5/p8/oocDL4o9fNS2VEwf04mIkVpAaI+GOXW+9g1vtm2yGIn1/Le5wVrnAC1E4wN
-	 FEupvycxSKwCgEoR0ihf6/Ydn988m3pZxiE1ox7asUfgCIVTml9E1PDVh7yg2r7Wnz
-	 N4gzRpa4N8W7NoVchIk9K85qW0D0Pn1QngB5J7Z0eywg1anxi3KoM/Pcwh0/U9W9Ii
-	 +3fQU7pFLl3F3o6w4+Nru8xRUu9jQSipQT9zlXN4Ux/chkDuWekmLMBlVkNz6qy4LZ
-	 6ud38w1lsOaYQ==
-Received: from phl-compute-09.internal (phl-compute-09.internal [10.202.2.49])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 8AC79F40082;
-	Fri,  1 May 2026 20:46:33 -0400 (EDT)
+	s=k20201202; t=1777685677;
+	bh=6IeC1fGfmSPk4G3F6nPV2xqcB+uRScXf1At+qXNCcU0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=MXuKcRsAjTALD8vMP3GW9K46PJ4HDPY/a46SQDRk5KHATi0P0n9RqEcOgpxApNcLY
+	 Y41WKuu24xcx/3qQ4t5aC6MepMerDQBLH4a1KmYKvuI8Znz77Q8Jj/1pfdEomdQcyQ
+	 4qBW6Pz1BNGq57pWoLvAWLnt3e2bZxGbP5EgefirnGGh/YBy9fHPH7WHSS2hBCOgF8
+	 wdMfsVBlupnuBBeJjMl4wu0Z4H9ixk2SsoLgQ+tUUjEJrR6DWb4Nmy6BshV7COUFhZ
+	 z3JzSbQTUVDoqsDU71CnqtpFa3ZYzF/kQRQi9VrGzxm1QAlhf6GM8OeIZPBnBC/E8+
+	 iF5TracxV2+Fg==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 25773F40068;
+	Fri,  1 May 2026 21:34:36 -0400 (EDT)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Fri, 01 May 2026 20:46:33 -0400
-X-ME-Sender: <xms:aUn1aVodcBeuR_3lLktGs8JYNteG5oKApuDjkUH83dhEExUM-eXc4w>
-    <xme:aUn1aUNC30evn5_-rt5WH0nDIxtg7ZkpQeZRAmMkjE5JQH7R1PFJ2iAqAmo8qdEPQ
-    VKxbcPYcZU6G3CvYqODM1oCUIruHdKk8NeEKlWpbzPwGbVoWOlxbxeh>
-X-ME-Received: <xmr:aUn1aWqhAdMTZU1Xtj6c-iZGfEqkhPfgYN5JaV6i0v4upcBP92X_6t6VwCwOsA3PAJRVSsMJ6vqNuzxbZqSPeCV1rrWYrwxvn90>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeludeikecutefuodetggdotefrod
+  by phl-compute-02.internal (MEProxy); Fri, 01 May 2026 21:34:36 -0400
+X-ME-Sender: <xms:rFT1afuifF2JbnowJq4kxoIgyO-uLBAziJXH2HU-PvRUTd-VSyuOgg>
+    <xme:rFT1aZT0nDCDorI_Udz-bxTIWOwGj53gyB0X6tgT-Jv9ieJiDo_Ht89kLzxWPo3ZZ
+    6f_G4_gB2l2xou6VUKIuHvJhFXklNE6QhAASkFi5VqRA5yPZXMryQ>
+X-ME-Received: <xmr:rFT1aUHM0iSu9pb_3ZP71jsV_aQPpWl0Wt-5_LvFaU1UjA3uGNMHL2KaeLzGOwV3YctM1Qv_R4O9k7NWGDz2oH98T8NtwZcG_gU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdeludejjecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecunecujfgurhepfffhvffkjghfufggtgfgsehtjeertddttd
-    ejnecuhfhrohhmpedfffgrnhcuhghilhhlihgrmhhsucdlnhhvihguihgrmddfuceoughj
-    sgifsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnhepjedvleeuffffvdehvd
-    egledttdetfeeugfdvuedugedugeefiedvvdduleefhefhnecuvehluhhsthgvrhfuihii
-    vgeptdenucfrrghrrghmpehmrghilhhfrhhomhepughjsgifodhmvghsmhhtphgruhhthh
-    hpvghrshhonhgrlhhithihqddujeejvdeftdegheehqdeffeefleegtdegjedqughjsgif
-    peepkhgvrhhnvghlrdhorhhgsehfrghsthhmrghilhdrtghomhdpnhgspghrtghpthhtoh
-    epuddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrlhhutggvrhhophesrghm
-    ugdrtghomhdprhgtphhtthhopegujhgsfieskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
-    eprghlvghjrghnughrohdrlhhutggvrhhoqdhprghlrghusegrmhgurdgtohhmpdhrtghp
-    thhtoheplhhinhhugidqtgiglhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopegvugifrghrugdrtghrvggvsegrmhgurdgtohhmpdhrtghpthhtohepuggrvhgvmhes
-    uggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopegv
-    ughumhgriigvthesghhoohhglhgvrdgtohhm
-X-ME-Proxy: <xmx:aUn1aXv34zjBtltrwxwwZPzuxbOVefSYZ3Wtab8_MEp6s7sUVxX4zw>
-    <xmx:aUn1aV256jRWSmRnrdBYVigFvYJQfEtAIHT1BCljpJhsKzQcyjlI6A>
-    <xmx:aUn1aSHyOMtiKWBlqMnOJjWoy5ZEDHwaPVUJ3KVgsKo1sfAP02eTJA>
-    <xmx:aUn1aQsn9Rjbs2vh7SgFsOvETX2VrUZoLfyzNWA29k8odyuHXfQ7YQ>
-    <xmx:aUn1aVqSCyxL1e9atDIRoStuKoEIrhjOTFx0zbehHhemyYoVCEeeXiff>
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefkjghfufggtgfgsehtqhertddttdejnecuhfhrohhmpedfffgrnhcuhghi
+    lhhlihgrmhhsucdlnhhvihguihgrmddfuceoughjsgifsehkvghrnhgvlhdrohhrgheqne
+    cuggftrfgrthhtvghrnhepueeffeeugfeggfehudduvdejieduveduvdekieeghefhkedv
+    hedtkefgtdevveeknecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvg
+    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegujhgsfidomhgvshhmthhp
+    rghuthhhphgvrhhsohhnrghlihhthidqudejjedvfedtgeehhedqfeeffeelgedtgeejqd
+    gujhgsfieppehkvghrnhgvlhdrohhrghesfhgrshhtmhgrihhlrdgtohhmpdhnsggprhgt
+    phhtthhopedvuddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlihhsthgrih
+    hrvdefsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhukhgrshesfihunhhnvghrrdgu
+    vgdprhgtphhtthhopegujhgsfieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghhvg
+    hlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopehruhhsthdqfhhorhdqlhhi
+    nhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegrkhhpmheslhhinh
+    hugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqphgtihes
+    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjohhnrghthhgrnhdrtggrmh
+    gvrhhonheshhhurgifvghirdgtohhmpdhrtghpthhtoheplhhinhhugidqtgiglhesvhhg
+    vghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:rFT1aTdiXlbZ_rOqV3YK1oT0q6xZ9lOUuj0peMWZIZuZLk3OlITC7w>
+    <xmx:rFT1aTvj3HnIhqPgnQv-tZbZ6iReHQQc1ExGbOah9j-GIgZzK__1eA>
+    <xmx:rFT1aZdfvUEHJ-36rnnqvp5Qp62Fzv-71_uy21ccmcl2xdtFSIfwnQ>
+    <xmx:rFT1aXokJE6QNEAmSTfRDUNaRVFCg2cciSmTcfTgSPocsCUd8hWFSw>
+    <xmx:rFT1aX9nX_-DPVYkku6FLbAH0vZ2oCBxx5X74GhykvliG9nxYEZhCmEe>
 Feedback-ID: i67ae4b3e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 1 May 2026 20:46:33 -0400 (EDT)
-Date: Fri, 01 May 2026 17:46:31 -0700
+ 1 May 2026 21:34:35 -0400 (EDT)
+Date: Fri, 01 May 2026 18:34:34 -0700
 From: "Dan Williams (nvidia)" <djbw@kernel.org>
-To: Alejandro Lucero Palau <alucerop@amd.com>, 
- "Dan Williams (nvidia)" <djbw@kernel.org>, 
- alejandro.lucero-palau@amd.com, 
+To: Alistair Francis <alistair23@gmail.com>, 
+ Lukas Wunner <lukas@wunner.de>
+Cc: Dan Williams <djbw@kernel.org>, 
+ bhelgaas@google.com, 
+ rust-for-linux@vger.kernel.org, 
+ akpm@linux-foundation.org, 
+ linux-pci@vger.kernel.org, 
+ Jonathan.Cameron@huawei.com, 
  linux-cxl@vger.kernel.org, 
- edward.cree@amd.com, 
- davem@davemloft.net, 
- kuba@kernel.org, 
- pabeni@redhat.com, 
- edumazet@google.com, 
- dave.jiang@intel.com
-Message-ID: <69f54967edd72_3291a9100c3@djbw-dev.notmuch>
-In-Reply-To: <b5110c3e-c5ee-4305-b307-704837fe4f9c@amd.com>
-References: <20260423180528.17166-1-alejandro.lucero-palau@amd.com>
- <20260423180528.17166-7-alejandro.lucero-palau@amd.com>
- <69f409325f7c0_3291a910046@djbw-dev.notmuch>
- <b5110c3e-c5ee-4305-b307-704837fe4f9c@amd.com>
-Subject: Re: [PATCH v26 6/8] cxl: attach region to an accelerator/type2 memdev
+ linux-kernel@vger.kernel.org, 
+ alex.gaynor@gmail.com, 
+ benno.lossin@proton.me, 
+ boqun.feng@gmail.com, 
+ a.hindborg@kernel.org, 
+ gary@garyguo.net, 
+ bjorn3_gh@protonmail.com, 
+ tmgross@umich.edu, 
+ ojeda@kernel.org, 
+ wilfred.mallawa@wdc.com, 
+ aliceryhl@google.com, 
+ Alistair Francis <alistair.francis@wdc.com>
+Message-ID: <69f554aa525ae_44a831001f@djbw-dev.notmuch>
+In-Reply-To: <CAKmqyKN3nuA_uH+1o9XPrFoi7TnBY_R92SiP1srhXFdhnngd3A@mail.gmail.com>
+References: <20260211032935.2705841-1-alistair.francis@wdc.com>
+ <698d6b7faa190_2e57100d3@dwillia2-mobl4.notmuch>
+ <CAKmqyKPyR165rACXRMJXgyUOp6OUdQqSsym-gfYVFnKLZ4ednQ@mail.gmail.com>
+ <69e19c80b892b_fe0831000@djbw-dev.notmuch>
+ <aeG4UnyYd1FKdt1D@wunner.de>
+ <CAKmqyKN3nuA_uH+1o9XPrFoi7TnBY_R92SiP1srhXFdhnngd3A@mail.gmail.com>
+Subject: Re: [RFC v3 00/27] lib: Rust implementation of SPDM
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -87,79 +102,70 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain;
  charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-Alejandro Lucero Palau wrote:
-[..]
-> >> +	}
-> > A couple problems here.
+Alistair Francis wrote:
+> On Fri, Apr 17, 2026 at 2:34=E2=80=AFPM Lukas Wunner <lukas@wunner.de> =
+wrote:
 > >
-> > 1/ Nothing stops a CXL class device from implementing a decoder with
-> >     CXL_DECODER_DEVMEM (HDM-DB).
-> 
-> Uhmmm...
+> > On Thu, Apr 16, 2026 at 07:35:44PM -0700, Dan Williams wrote:
+> > > Later in the thread I proposed an alternative that instead of suppo=
+rting
+> > > 2 flavors of uapi through "authenticated", instead implement CMA as=
 
-Consider a helpful expander that does not require the host OS to use
-cpu_cache_invalidate_memregion() whenever DPA space is changed. I
-imagine that would be useful for DCD where there could be a higher
-frequency of extent changes.
+> > > another TSM driver [1].
+> > >
+> > > [1]: http://lore.kernel.org/69976d7d39c60_2f4a1009@dwillia2-mobl4.n=
+otmuch
+> >
+> > Please keep in mind though that CMA is just the PCIe adaption of SPDM=
+,
+> > SPDM is not only needed for PCIe but also SCSI, ATA and possibly othe=
+rs
+> > and so implementing CMA as a TSM driver must not preclude use of SPDM=
 
-> >> +	/* hold endpoint lock to setup autoremove of the region */
-> >> +	guard(device)(&endpoint->dev);
-> > This does not handle the case when ->endpoint is an ERR_PTR() because
-> > the memdev never attached in the first instance.
-> 
-> Not sure about this but, is it not the success of devm_cxl_add_memdev() 
-> ensuring this can not happen?
+> > in other subsystems.
+> =
 
-That is only ensured by using the "attach" mechanism.
-devm_cxl_add_memdev(..., NULL) is only for the generic memory expander
-case. Where the entire usage model is governed by memdev ABIs.
+> That should be fine as the current SPDM implementation is
+> self-contained, but thanks for raising that.
+> =
 
-> Note I decouple region attach from memdev creation. No memdev, no call 
-> to this function.
+> Just to make sure I'm not going in the wrong direction, the idea would
+> be to build on
+> =
 
-Which leads to this problem.
+> https://lore.kernel.org/all/20260303000207.1836586-9-dan.j.williams@int=
+el.com/
+> =
 
-> >> +/* Called at driver exit or when user space triggers cxl region removal. */
-> >> +static void efx_cxl_unmap_region(void *data) {
-> >> +	struct efx_probe_data *probe_data = data;
-> >> +
-> >> +	probe_data->cxl_pio_initialised = false;
-> >> +	iounmap(probe_data->cxl->ctpio_cxl);
-> >> +}
-> > I do not see how an async event can safely zap that ctpio_cxl space with
-> > zero coordination with the driver, and I do not think you want to burden
-> > the fast path with new locks to coordinate this.
-> 
-> You should look patch 8 where your concern is hopefully tackled. I need 
-> to test this further, but there is no need of additional locks.
+> and add something like this?
+> =
 
-Please do not structure patches with bugs in the middle of the series.
-It burns reviewer resources.
+> ```
+> static const struct pci_tsm_ops pci_cma_tsm_ops =3D {
+>     .link_ops =3D {
+>         .probe        =3D pci_cma_tsm_probe,
+>         .remove        =3D pci_cma_tsm_remove,
+>         .connect    =3D pci_cma_tsm_connect,
+>         .disconnect    =3D pci_cma_tsm_disconnect,
+>     },
+>     .refresh_evidence    =3D pci_cma_tsm_refresh,
+> };
+> ```
+> =
 
-> > Can we please stick with the violent but simple "unload driver" approach
-> > for now? Someone removing cxl_acpi, disabling port drivers, or disabling
-> > the cxl_mem driver gets to keep all the pieces. Just like force
-> > unloading your storage driver underneath your root filesystem. Do not do
-> > it unless you want to see the fireworks or test various hotplug flows.
-> 
-> 
-> I have to disagree. The use of CXL is only part of the datapath. The 
-> driver can keep going without CXL. The related buffers can be used until 
-> the sync between the efx_ef10_disable_piobufs() added in patch 8 and the 
-> CXL CTPIO datapath.
-> 
-> 
-> Although the option of unloading the driver is possible, I do not think 
-> CXL should decide what to do here when there exists another option.
+> The docs for `struct pci_tsm_ops` seem pretty TSM specific, so I just
+> wanted to double check before going ahead.
+> =
 
-The concern is creeping complexity. There is no such concept in existing
-Linux drivers where an MMIO mapping disappears out from underneath a
-running driver. It may start returning all 0xff and fire an error
-interrupt, but the driver does not need to worry about responding to
-async unmap.
+> That means all of the netlink stuff in this series can be dropped and
+> we just use the TSM netlink (which might need some adjustments then,
+> I'll have to double check)
 
-All drivers must already be prepared to be unloaded. So we start with
-the simple semantic first to get this functionality landed and then
-think about adding sophistication like live fallback to PCI operation.
+Right, the above looks what I was expecting.
+
+As for netlink, Lukas is right about non CMA use cases. The netlink
+interface will either need to move to be a generic "device evidence"
+facility, not scoped to PCI/TSM, or itself become a library that
+different producers of SPDM material can use to export it to userspace.=
