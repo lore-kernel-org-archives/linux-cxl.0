@@ -1,118 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8362E413
-	for <linux-cxl@vger.kernel.org>; Sat,  2 May 2026 22:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18F03D3334;
+	Mon,  4 May 2026 13:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777762432; cv=none; b=B7EQtYQ3HnRteV0mJoh1pz2cB5cIcepm7bN4OKLjfxD6GknP6iTYjFqPTqHZ/cESbjLNGY6lEKyNdwVR6ZG4bfNazY+rWv6ixHU2hoV8y/6iH5yOM5kuYYZpGSHyy4xInO+5wcBu+nz9Oc1KCGgazmzSwWPfjr/BabQw3E42obY=
+	t=1777901894; cv=none; b=pnOV9SUmLcJFWxgKnyLxFrmfvzOXZnFHxoiyUWjnZx2mBAA7S3owJGRpWGcxOs++l5GpQRaVozWferPH5VMVSL3uxdl13UEaC12Ol3P47GS3glt3C0id7SpMwhbGMBBy+nRdVJsvP9Sct35n94Ot1A2pCzIA1Yi32k0XlzoL59M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777762432; c=relaxed/simple;
-	bh=cgsxqzBrl2z6jsAEFqE6leMtWdGB5FbCbFRUn4/JQSQ=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Zy91TONVI0AzLgzDsjfMmPNxkzrTqQfxBQ0GnbqTfbDpGmmB6RPa/8aZmKMGi1Hm6AmlEiv8+VP7UAxGM5f3a2FgMZ3kFNX/R1D7Ig80SWmQZQVw44N1zhnROSEoL4m/eTBVPSpslyUQlvZ2+POXPdksMbeR0g5mmHAlqx9vMPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f+L5ZKLP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1777901894; c=relaxed/simple;
+	bh=yxSm6/vu3IyP3srDroK/mn0D3idiK2xCmju19Wy9HrI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=XbNHjD3S/18u1QCUzqm7OWB/YJZg9iloQiU7Vru56Q1+xq38vmkkp92Kzn+SGsj+LascW79fwp3mP5v68D7NF7vh86pf9QTlk1qtcuxdTO6apEO72KWI53zaHds8FbT7SW8NJ/Z6+0kLWTCi+uVL+OSYqh3TTz6EaymerfZS7rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=nmZ8O9mw; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f+L5ZKLP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92101C4AF09;
-	Sat,  2 May 2026 22:53:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777762431;
-	bh=cgsxqzBrl2z6jsAEFqE6leMtWdGB5FbCbFRUn4/JQSQ=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=f+L5ZKLPLnA4HBkW5hOaklJeEkTXkbbj9gFeAmLoGXi2qCengwM0wEIhoeOi6B8zu
-	 uWhOEI1na33hFC4FHFdYpc09KJgRQaM9487GZnWBoeFY81d7LIPatRF4OKlj/umvAq
-	 z+Ve4TxiLy82zSjIHer05v1RRVZ1Xu2R6y5co3CjZxLVGEUpjr6wkrarT14WQ9S8C9
-	 In9su/n8DJTd98NfZKZ2hnBssJmSWl66YEVYiWZnkpbyNFP+pCxT9PAQP79HXjA2y3
-	 4XpjazcqW5nbf95qFq63IfaUzxHHtkngkFmYVArDjlGtQIF3XNpEfA2wGf5EsbHvwK
-	 h6PJxJA8O9caQ==
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 8F1CEF40080;
-	Sat,  2 May 2026 18:53:50 -0400 (EDT)
-Received: from phl-imap-16 ([10.202.2.88])
-  by phl-compute-02.internal (MEProxy); Sat, 02 May 2026 18:53:50 -0400
-X-ME-Sender: <xms:foD2aRoT2Ylm1ASq_5nIjvqAQpds2HVY-n_Onv0KmNCrtvUNgac80g>
-    <xme:foD2aedRHbyNBmhYXhNoR-e-FLYGa31ymM0M617Kp_gCpakupdjkmmBSnFPoH1rHs
-    k3pvIf60XMrWHEIDNjS88GTk9P6spTjVX2bu6KLG3unN5gxR8YFEGs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdelgeeffecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdffrghnucgh
-    ihhllhhirghmshdfuceoughjsgifsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvg
-    hrnhepgeekudeukefgudegveelfffhveekhfduuedtteffvdfhteeftefhkeehleefudet
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepughjsg
-    ifodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqddujeejvdeftdegheehqdef
-    feefleegtdegjedqughjsgifpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrghilhdrtg
-    homhdpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohep
-    rghlihhsohhnrdhstghhohhfihgvlhgusehinhhtvghlrdgtohhmpdhrtghpthhtohepug
-    grvhgvrdhjihgrnhhgsehinhhtvghlrdgtohhmpdhrtghpthhtohepihhrrgdrfigvihhn
-    hiesihhnthgvlhdrtghomhdprhgtphhtthhopehjihgtvdefsehkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopegrnhhishgrrdhsuhesshgrmhhsuhhnghdrtghomhdprhgtphhtthho
-    peguohhnghhjohhordhsvghoudesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegurg
-    hvvgesshhtghholhgrsghsrdhnvghtpdhrtghpthhtoheplhhinhhugidqtgiglhesvhhg
-    vghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:foD2aV8kltv7Vfk1R8WvM2UydX9Z9kgXbcx8km3UOB6gJ8TgRXv04w>
-    <xmx:foD2aTv0F8Igm22ZZzBa6vrR8PFE5MPAplsIWjbs3ZDel-Sz8g8mQA>
-    <xmx:foD2aZqNQqKUvr3EpOLIoakIsYjrtCSxteOCKZVaLB7SfjI1x0S47w>
-    <xmx:foD2aXqkPtgauJfN5wu8gUbQGOHiW3YitGPHnNlY2Qm184cbqGMggg>
-    <xmx:foD2aYb0rEmngAXwPBMzxVzw0XhkfgbKsCbVeAVBF9Ym77YAG2KWeO4b>
-Feedback-ID: i67ae4b3e:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 657122CC0083; Sat,  2 May 2026 18:53:50 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nmZ8O9mw"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20260504133802epoutp02b4fe67eaaad6b60cdae9efe8d85f925e~sYFeNTetM0577405774epoutp02e;
+	Mon,  4 May 2026 13:38:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20260504133802epoutp02b4fe67eaaad6b60cdae9efe8d85f925e~sYFeNTetM0577405774epoutp02e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1777901882;
+	bh=K5X6546rG8Q7CDMgHYe0dMLLoA8JVhsjJIJ+l/s2c4Y=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=nmZ8O9mwkiw6Qc3oNT26vkjmnNlI2wukd5FwCDzd9H7xY8AuXai7IIgT3MUN5KTvU
+	 zuWhH4yfS4vIWtH7ZZm3cCd5duET+79RK+Yll2CLppi9ZAF+JaB3VR+AtIpQLJzfYp
+	 kuHf8nA1xhwKYRz7MOqFl4cYZJ66wHOLsJP//U40=
+Received: from epsnrtp02.localdomain (unknown [182.195.42.154]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20260504133801epcas5p2868c041e3779e42e6e5fde3d36dba3a3~sYFd4KT8O2899328993epcas5p29;
+	Mon,  4 May 2026 13:38:01 +0000 (GMT)
+Received: from epcpadp2new (unknown [182.195.40.142]) by
+	epsnrtp02.localdomain (Postfix) with ESMTP id 4g8N4n4bV1z2SSKX; Mon,  4 May
+	2026 13:38:01 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20260504130907epcas5p29c41fc288662c37cd8ad7241772a53f8~sXsPFsdos2990329903epcas5p2Z;
+	Mon,  4 May 2026 13:09:07 +0000 (GMT)
+Received: from [107.122.10.65] (unknown [107.122.10.65]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20260504130855epsmtip2f74fac9944e13b661bd91b5d97d7c8d2~sXsD4QdS72669726697epsmtip2P;
+	Mon,  4 May 2026 13:08:55 +0000 (GMT)
+Message-ID: <1891546521.01777901881625.JavaMail.epsvc@epcpadp2new>
+Date: Mon, 4 May 2026 18:38:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sat, 02 May 2026 15:53:30 -0700
-From: "Dan Williams" <djbw@kernel.org>
-To: "Davidlohr Bueso" <dave@stgolabs.net>, "Dave Jiang" <dave.jiang@intel.com>
-Cc: "Jonathan Cameron" <jic23@kernel.org>,
- "Alison Schofield" <alison.schofield@intel.com>, ira.weiny@intel.com,
- dongjoo.seo1@samsung.com, anisa.su@samsung.com, linux-cxl@vger.kernel.org
-Message-Id: <9f73073f-09f0-4e08-b1d8-746be33fd674@app.fastmail.com>
-In-Reply-To: <20260502193429.hztbijgv3bjwit5k@offworld>
-References: <20260428200410.705675-1-dave@stgolabs.net>
- <1999de6e-7f14-41d2-ace2-db00faede674@intel.com>
- <20260502193429.hztbijgv3bjwit5k@offworld>
-Subject: Re: [PATCH v2] cxl/mbox: Support Media Operation
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+To: Gregory Price <gourry@gourry.net>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, longman@redhat.com, akpm@linux-foundation.org,
+	david@kernel.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+	vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
+	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+	baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
+	dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
+	muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
+	jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
+	pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
+	riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
+	roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+	zhengqi.arch@bytedance.com, terry.bowman@amd.com, gost.dev@samsung.com,
+	arungeorge05@gmail.com, cpgs@samsung.com
+Content-Language: en-US
+From: Arun George/Arun George <arun.george@samsung.com>
+In-Reply-To: <afIKxG5mJZE6QgpR@gourry-fedora-PF4VCD3F>
 Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20260504130907epcas5p29c41fc288662c37cd8ad7241772a53f8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0
+References: <20260222084842.1824063-1-gourry@gourry.net>
+	<CGME20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0@epcas5p1.samsung.com>
+	<1983025922.01777297382206.JavaMail.epsvc@epcpadp2new>
+	<ae_i9IlIndumJWN3@gourry-fedora-PF4VCD3F>
+	<1891546521.01777455002601.JavaMail.epsvc@epcpadp1new>
+	<afIKxG5mJZE6QgpR@gourry-fedora-PF4VCD3F>
 
-K
-
-On Sat, May 2, 2026, at 12:34 PM, Davidlohr Bueso wrote:
-> On Tue, 28 Apr 2026, Dave Jiang wrote:
->>> +What:		/sys/bus/cxl/devices/memX/security/zero
->>> +Date:		April, 2026
->>> +KernelVersion:	v7.2
->>> +Contact:	linux-cxl@vger.kernel.org
->>> +Description:
->>> +		(WO) Write a DPA range as 'start length' in bytes to this
+On 29-04-2026 07:12 pm, Gregory Price wrote:
 >>
->>Same comment about multiple input in a single attribute. Maybe introduce these:
+>> Great! I believe "writable budget" could be an interesting idea which
+>> can solve the 'bus error' sort of scenarios due to device not capable of
+>> taking any more writes. The write budget could be replenished using the
+>> control path and writes will not go ahead without the budget available,
+>> right?>
 >>
->>security/zero_start_dpa
->>security/zero_len
->>security/zero
->
-> I had missed this feedback - this suggested interface is horrible. While the
-> sysfs documentation mentions the one rule per file, this is not strict and
-> (as Jonathan also agreed previously) we can do <start> <len> inputs. There
-> are plenty of examples that do not follow this rule when it makes sense.
->
-> So my follow up patches will do
->
-> echo <start_dpa> <len> > /sys/bus/cxl/devices/mem0/security/sanitize_range
-> echo <start_dpa> <len> > /sys/bus/cxl/devices/mem0/security/zero_range
->
+> 
+> Write budget is simple
+> 
+> budget=1  (up to 1 page can be writable
+>     1) swap 1 page ->  cram alloc 1 page, put VSWAP_CRAM in PTE
+>     2) read-fault  ->  cram upgrades VSWAP_CRAM to R/O PTE
+>     3) write-fault ->
+>        a) if (writable_cnt < budget) { budget++; mkwrite(pte); }
+>        b) else:  normal swap semantic -> promote to normal memory
+> 
+> Meanwhile - use ballooning and a simple shrinker to dynamically size the
+> region to respond to real compression ratio.
+> 
+> 
+> All said an done - you get something close to zswap but with R/O
+> mappings for all entries, and optional R/W-mappings for administrators
+> who know something about their workload and can afford to take the risk
+> of some amount of capacity being written to uncontended in exchange for
+> performance.
+> 
+> The writable-budget is a risk-dial:  How much do you trust your workload
+> to now spew un/poorly-compressible memory?  The write-budget is a direct
+> measure of that. (so take P99.99999 compression ratios, and you can make
+> a good chunk of that writable).
+> 
+> ~Gregory
+> 
+> 
+I believe we are converging. Agree to most points you mentioned.
 
-Isn't a "start:len" tuple ABI a solved problem? It would be nice to share the same parsing as memmap=. For example, then you get features like "echo 1G:1G ..." to specify a range.
+I see this problem statement can be solved by 'write-control + write 
+budget' approach similar to what you have described, whether we take 
+swap path or not.
 
-However does userspace really need to pick ranges? Would it be sufficient to start with a "sanitize / zero all unmapped" semantic to walk all not mapped DPA. Or perhaps a "sanitize / zero on unmap" flag to the decoder to make it similar to a storage "trim on delete" semantic. The nice thing about that, you can defer freeing the DPA until it's clean to avoid reallocation races. You actually know what you're zapping because it had some recent prior association.
+But I see this 'write budget' (budget in terms of number of write 
+operations that can be handled by the device, not capacity) to be 
+provided by the device in control plane; not by the workloads in the host.
 
-Otherwise I do not trust the security properties of policy wanting to clean a DPA range but an unsuspecting thread can race to allocate between lock drops. Looks like a footgun.
+The budget can be communicated by the device in the device control plane 
+periodically (to be handled in the specific cram back-end driver; may be 
+interpreting the device back-pressure indications into a write budget 
+value). Even if the control plane breaks down, the host does not run 
+into issues except that it will not write further.
 
-What use case is missed with a per decoder automatic cleaning on unmap setting? Zero before map policy might be nice too...
+I assume you see this value coming from the workloads. This might be a 
+place where I have a different opinion.
+
+There are multiple advantages of this value coming from the device:
+
+  1) We can modulate the write budget depending on the actual 
+compressibility in the device (and so workloads data). We don't have to 
+do estimation based on the workloads.
+
+  2) We don't have to do the capacity modulation - as in ballooning or 
+shrinker.
+
+  3) Even if the control path is broken, host can write only till the 
+available 'write budget'; so it won't get into 'bus error' situations.
+
+~Arun George
+
+
+
+
