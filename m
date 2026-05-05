@@ -1,296 +1,264 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7C537F8D6
-	for <linux-cxl@vger.kernel.org>; Tue,  5 May 2026 22:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4308333A9C3;
+	Wed,  6 May 2026 00:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778019700; cv=none; b=ryjYUpLLcqYftED+8JuLVDTk4cO3OCUvLbipkIMCLod7vVqDg8yccGwhNqqI/UWqHL1L185ZMNr2qHmNRcRDCDs2n8na7EH1GjxZdtrtvuTdXPdpPF2xWVzEtAg2EddjweCsAf1Alvi9o2kM5enmWMWM7bohYQ/IBRn0DzaixIw=
+	t=1778025614; cv=none; b=RhxpgQAqn5g8C3TCC+RsB44lu5fw2kNE27OKrVoMgFm8Ms/k29ALQ08of2qi8S5yKwaEVzkC+7pbEyBmg4fJKqFHbBemFPy0pqPvy1PnZYxxMgWfJdY01Y0KBg1ZaekQMzjhqNK/aEHaJ8/WYRk/3SI80PgHAIDdDjcpnUxX8hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778019700; c=relaxed/simple;
-	bh=zOuCto/ei+q5X9zizDWicsGgHsnCs3KdS/blOqZ3EtY=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=XTf9HI5lpdHewUdnNVE1SD3yBNO3nw4X8F1TqnXnZ2RW48KtEQiI/JMgpYmY2a+mTbgmPOJpAYuvABCnxkq64OskzGjHBkU8M7StIHgzvA/P2uFJ5eG0fUsxKf2wyJshF/yAejC/dTEScFCIjCPs035EWE7pxX0ka4FoxFFNxeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dhDzHdpI; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1778025614; c=relaxed/simple;
+	bh=BU+ku2HbqivXM3GBbrgS1jHksjPhIuqY0hTbeAtLpCY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k2vWaspMBStlE8G3npRWZryKw8j+tHFs9wmdcElRDrUgd5RKIqcFLS9/v0VqdJtuai6+2osmkwy1r0GY4/RNJrhedDxHAqyvPJixNgfB9husYkWkIT9UaIdrVKc9G5rry62ooQNEHaSJJQz9NzgTZ6NiX7IO0WDPmhVS3y7GhhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QL1ttLtH; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhDzHdpI"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-38a01c80c34so56954071fa.0
-        for <linux-cxl@vger.kernel.org>; Tue, 05 May 2026 15:21:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778019697; x=1778624497; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e+bTaNE0dwTN+qN6h1nZ07Pw7t4BRJtO96DbmMB+uZo=;
-        b=dhDzHdpIngACreNbzmbm8RCTIW8zTkMR7G79zhBScFUHXStxwQkbuMfibjp3A5hkb7
-         VY3gq/jXXPJX0ubyimF6ucvb5UKE0NmZTkVcfeHg7Usbq443o+75yUrmA72uYV1vcKn/
-         6M7/X+8D9m073BIkO9sFGATy1oHktJ7AjRuzhsZW/tvtgO8k4lASmElJVpysbsjfqKs7
-         si/GDUhTLmuikvwccp96TYSor5G70rqgIh0BiAhHF07mIccyEH8ZNL2Aby29hqk4dvzd
-         uLMd33ZifyA0qp8QnR4lNnjg8P6fuLaFXpehFwqydeJB0wVfz4TI/p3pOPOBY/jWzqTo
-         ii1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778019697; x=1778624497;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=e+bTaNE0dwTN+qN6h1nZ07Pw7t4BRJtO96DbmMB+uZo=;
-        b=HpBi9ugZU8MvAYx+vn6AanEXDHapxHdHqDlQqMsVuILfGsqUN7duO8C5MYVUMsOQa6
-         dTU6ZxCWoGXzQDZWSTO7nqqpI5z/y7ql8lrAbNF516Ffvw8/ARbX2GgbQlYzX+AkJvt1
-         sQmS4GkhoAsi6uWhrwJYjG4oI+rW+pwaZ/ChXeGhv0gxx6b1eTn3el30dtwDhJpOQd5l
-         43EMgRj3BMfYgTpiPN/s6uzwlWAMMY6cVkPLSw8i0RnIIS34GTDF0EdzytddW0GWUfWL
-         6bE3f4q1LDyHV97E/JZsdofDiZPBnHVYldkkCr5rMdfyCl/mLWk+8yVvOxjZLU2EmTLH
-         U++Q==
-X-Forwarded-Encrypted: i=1; AFNElJ8u+4Fh8GSemNry+Ljr4luIdMFX03gvS95SOh9FgaNlgaUrkn0Tc8/qfDVPhWMfPAprJqUEdvswVGk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhMCm9macDqZSuGKe8CdfrLohLpwCX96xrBXe+513ykwp7cKcw
-	nu6vB7/knJAGorFOtPsLpYlY/7ubqPdeF8QSug+cAjE2Cu7RjnQGFA8I
-X-Gm-Gg: AeBDiev102YSUDtb0fIUT+FVFG9ps1Vutyh2fAXAatC09o1BnT+HlTm7PwGZa3y9xa7
-	udTYlnpZdU4NMfLKA9DAVZrN9PEmkYFMZZExiKOez4gA+ahXqlbYR/JH8OKjAIHfZ/k7mZh3lKc
-	JuUzQe3u0s5MVv3kN6HJnFwvhfXm32TNgDDTNZ0Hs8ZmtnjxaVc1l451nwssPY45n6E15mMfxZV
-	dnLntUEK+4AC86wpQ/xr8iVl4zqhWaLUDDbpNrOvuMT3AmdMD55FNKa3Ckoie4t1N7tSiYDS86r
-	rdPfvOPbekrExAJ3OuhNZeqAODK3yMxrtr1F8mtaNhMnGpgGht3AhKvdUFNhswHfjD+ITimgCMI
-	CSQH+YYATTzoly35bNjSoSAGAyTEG6yCsdh8F6BpauMx3e5VATQIX7KabMl1wwxiokun9mF5zh/
-	Pp3oIXDyvlhfduc7WfN/q/Nx5bCMP1h7yYTy1JZGSgLKzASmMWmvkoPzCgW870yY/zuV344Pm7c
-	Bh0xwVfm4as3M8eZgwqqlzmKkUsLfQ7S9ciUxNP
-X-Received: by 2002:a05:651c:4210:b0:393:8b23:a194 with SMTP id 38308e7fff4ca-393c41cedeemr3503181fa.19.1778019696437;
-        Tue, 05 May 2026 15:21:36 -0700 (PDT)
-Received: from smtpclient.apple (h-155-4-132-115.NA.cust.bahnhof.se. [155.4.132.115])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3936108fb80sm46308161fa.6.2026.05.05.15.21.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 May 2026 15:21:35 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QL1ttLtH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778025613; x=1809561613;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=BU+ku2HbqivXM3GBbrgS1jHksjPhIuqY0hTbeAtLpCY=;
+  b=QL1ttLtHqu2a9nn3xs8IQg763XleAATfO1eA5icokypFDhoSvWBa+q6r
+   hfICvgYrAU/todikd69+Y20zF+mO3Sg/bkY9BRb25EAtRc3tmvkmvsgUj
+   cxlLI+mUu2Datc9HCs6gOuaLVO2v8eIMaiAt6WkrzPQWdH+GgGhNdyN6h
+   CX0IDB4cRaY3sCOFxt5GUmJ2QZLpFY3DyF7qF6c0sdI9VsauUAdD2XcZ3
+   yH6AG375812AxoZQaOzn+4kIgv2ldnTiMv9OD/sMhFG0rEpJEmvJD23D1
+   smsAjJhU1dbLP0jA+vWRRSRHTMF7PapOzNnxDOme4pPQHE4HwmcDi71t5
+   Q==;
+X-CSE-ConnectionGUID: mwwx3kN2QWuEYuxkRYhbog==
+X-CSE-MsgGUID: Jcj8HCLWRWmfuIMRvYuWXw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11777"; a="78904501"
+X-IronPort-AV: E=Sophos;i="6.23,218,1770624000"; 
+   d="scan'208";a="78904501"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2026 17:00:05 -0700
+X-CSE-ConnectionGUID: 97GRI57NQquqI9I39KH9Dw==
+X-CSE-MsgGUID: MkPu+dmIQtm9R5fI4JCdNg==
+X-ExtLoop1: 1
+Received: from spandruv-mobl5.amr.corp.intel.com (HELO [10.125.110.85]) ([10.125.110.85])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2026 17:00:01 -0700
+Message-ID: <ba97bbfc-2fc3-49d2-be6a-9384a4095c2c@intel.com>
+Date: Tue, 5 May 2026 16:59:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.400.21\))
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-From: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
-In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
-Date: Wed, 6 May 2026 00:21:23 +0200
-Cc: lsf-pc@lists.linux-foundation.org,
- linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org,
- cgroups@vger.kernel.org,
- linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org,
- damon@lists.linux.dev,
- kernel-team@meta.com,
- gregkh@linuxfoundation.org,
- rafael@kernel.org,
- dakr@kernel.org,
- dave@stgolabs.net,
- jonathan.cameron@huawei.com,
- dave.jiang@intel.com,
- alison.schofield@intel.com,
- vishal.l.verma@intel.com,
- Ira Weiny <ira.weiny@intel.com>,
- dan.j.williams@intel.com,
- longman@redhat.com,
- akpm@linux-foundation.org,
- david@kernel.org,
- lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com,
- vbabka@suse.cz,
- rppt@kernel.org,
- Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>,
- osalvador@suse.de,
- ziy@nvidia.com,
- matthew.brost@intel.com,
- joshua.hahnjy@gmail.com,
- rakie.kim@sk.com,
- byungchul@sk.com,
- ying.huang@linux.alibaba.com,
- apopple@nvidia.com,
- axelrasmussen@google.com,
- yuanchu@google.com,
- weixugc@google.com,
- yury.norov@gmail.com,
- linux@rasmusvillemoes.dk,
- mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com,
- tj@kernel.org,
- hannes@cmpxchg.org,
- mkoutny@suse.com,
- jackmanb@google.com,
- sj@kernel.org,
- baolin.wang@linux.alibaba.com,
- npache@redhat.com,
- ryan.roberts@arm.com,
- dev.jain@arm.com,
- baohua@kernel.org,
- lance.yang@linux.dev,
- muchun.song@linux.dev,
- xu.xin16@zte.com.cn,
- chengming.zhou@linux.dev,
- jannh@google.com,
- linmiaohe@huawei.com,
- nao.horiguchi@gmail.com,
- pfalcato@suse.de,
- David Rientjes <rientjes@google.com>,
- shakeel.butt@linux.dev,
- riel@surriel.com,
- harry.yoo@oracle.com,
- cl@gentwo.org,
- roman.gushchin@linux.dev,
- chrisl@kernel.org,
- kasong@tencent.com,
- shikemeng@huaweicloud.com,
- nphamcs@gmail.com,
- bhe@redhat.com,
- zhengqi.arch@bytedance.com,
- terry.bowman@amd.com,
- Yiannis Nikolakopoulos <Yiannis@zptcorp.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <21B8D62E-38AB-4FA5-8942-DA4417A7E7E9@gmail.com>
-References: <20260222084842.1824063-1-gourry@gourry.net>
-To: Gregory Price <gourry@gourry.net>
-X-Mailer: Apple Mail (2.3864.400.21)
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v17 07/11] PCI/CXL: Add RCH support to CXL handlers
+To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net, jic23@kernel.org,
+ alison.schofield@intel.com, djbw@kernel.org, bhelgaas@google.com,
+ shiju.jose@huawei.com, ming.li@zohomail.com,
+ Smita.KoralahalliChannabasappa@amd.com, rrichter@amd.com,
+ dan.carpenter@linaro.org, PradeepVineshReddy.Kodamati@amd.com,
+ lukas@wunner.de, Benjamin.Cheatham@amd.com,
+ sathyanarayanan.kuppuswamy@linux.intel.com, vishal.l.verma@intel.com,
+ alucerop@amd.com, ira.weiny@intel.com, corbet@lwn.net, rafael@kernel.org,
+ xueshuai@linux.alibaba.com, linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20260505173029.2718246-1-terry.bowman@amd.com>
+ <20260505173029.2718246-8-terry.bowman@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260505173029.2718246-8-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-> On 22 Feb 2026, at 09:48, Gregory Price <gourry@gourry.net> wrote:
->=20
-> Topic type: MM
->=20
-> Presenter: Gregory Price <gourry@gourry.net>
->=20
-> This series introduces N_MEMORY_PRIVATE, a NUMA node state for memory
-> managed by the buddy allocator but excluded from normal allocations.
->=20
-> I present it with an end-to-end Compressed RAM service (mm/cram.c)
-> that would otherwise not be possible (or would be considerably more
-> difficult, be device-specific, and add to the ZONE_DEVICE boondoggle).
->=20
->=20
-> TL;DR
-> =3D=3D=3D
->=20
-> N_MEMORY_PRIVATE is all about isolating NUMA nodes and then punching
-> explicit holes in that isolation to do useful things we couldn't do
-> before without re-implementing entire portions of mm/ in a driver.
->=20
->=20
-> /* This is my memory. There are many like it, but this one is mine. */
-> rc =3D add_private_memory_driver_managed(nid, start, size, name, =
-flags,
->                                       online_type, private_context);
->=20
-> page =3D alloc_pages_node(nid, __GFP_PRIVATE, 0);
->=20
-> /* Ok but I want to do something useful with it */
-> static const struct node_private_ops ops =3D {
->        .migrate_to     =3D my_migrate_to,
->        .folio_migrate  =3D my_folio_migrate,
->        .flags =3D NP_OPS_MIGRATION | NP_OPS_MEMPOLICY,
-> };
-> node_private_set_ops(nid, &ops);
->=20
-> /* And now I can use mempolicy with my memory */
-> buf =3D mmap(...);
-> mbind(buf, len, mode, private_node, ...);
-> buf[0] =3D 0xdeadbeef;  /* Faults onto private node */
->=20
-> /* And to be clear, no one else gets my memory */
-> buf2 =3D malloc(4096);  /* Standard allocation */
-> buf2[0] =3D 0xdeadbeef; /* Can never land on private node */
->=20
-> /* But i can choose to migrate it to the private node */
-> move_pages(0, 1, &buf, &private_node, NULL, ...);
->=20
-> /* And more fun things like this */
->=20
->=20
-> Patchwork
-> =3D=3D=3D
-> A fully working branch based on cxl/next can be found here:
-> https://github.com/gourryinverse/linux/tree/private_compression
->=20
-> A QEMU device which can inject high/low interrupts can be found here:
-> https://github.com/gourryinverse/qemu/tree/compressed_cxl_clean
->=20
-> The additional patches on these branches are CXL and DAX driver
-> housecleaning only tangentially relevant to this RFC, so i've
-> omitted them for the sake of trying to keep it somewhat clean
-> here.  Those patches should (hopefully) be going upstream anyway.
->=20
-> Patches 1-22: Core Private Node Infrastructure
->=20
->  Patch  1:      Introduce N_MEMORY_PRIVATE scaffolding
->  Patch  2:      Introduce __GFP_PRIVATE
->  Patch  3:      Apply allocation isolation mechanisms
->  Patch  4:      Add N_MEMORY nodes to private fallback lists
->  Patches 5-9:   Filter operations not yet supported
->  Patch 10:      free_folio callback
->  Patch 11:      split_folio callback
->  Patches 12-20: mm/ service opt-ins:
->                   Migration, Mempolicy, Demotion, Write Protect,
->                   Reclaim, OOM, NUMA Balancing, Compaction,
->                   LongTerm Pinning
->  Patch 21:      memory_failure callback
->  Patch 22:      Memory hotplug plumbing for private nodes
->=20
-> Patch 23: mm/cram -- Compressed RAM Management
->=20
-> Patches 24-27: CXL Driver examples
->  Sysram Regions with Private node support
->  Basic Driver Example: (MIGRATION | MEMPOLICY)
->  Compression Driver Example (Generic)
->=20
-Hi,
 
-As I think this is about to be discussed in the conference, I thought
-to share some high level comments.
+On 5/5/26 10:30 AM, Terry Bowman wrote:
+> Restricted CXL Host (RCH) error handling is a separate path from the
+> new CXL Port error handling flow. Fold RCH error handling into the
+> Port flow so both share a common entry point.
+> 
+> Update cxl_rch_handle_error_iter() to forward RCH protocol errors
+> through the AER-CXL kfifo.
+> 
+> Update cxl_handle_proto_error() to dispatch RCH errors via
+> cxl_handle_rdport_errors(). cxl_handle_rdport_errors() handles both
+> correctable and uncorrectable RCH protocol errors.
+> 
+> Behavior change: an RCD uncorrectable CXL RAS error now panics via
+> cxl_do_recovery(). Before this patch the RCH path returned
+> PCI_ERS_RESULT_NEED_RESET via cxl_pci's err_handler. After this patch
+> the same condition panics. This matches the panic policy added in the
+> common CXL Port protocol error flow. CXL.cachemem traffic cannot be
+> safely recovered from an uncorrectable protocol error in software.
+> 
+> Change cxl_handle_rdport_errors() to take a PCI device instead of a
+> CXL device state, matching the new caller context. The error trace events
+> emitted from this path now report device=<PCI BDF> instead of device=<memN>,
+> matching the rest of the unified CXL trace events. Userspace consumers keyed
+> off the memdev name need to map the PCI BDF back to a memdev.
+> 
+> Include the RCD Endpoint serial number in RCH log messages so the RCH
+> can be associated with its RCD.
+> 
+> Remove the cxlds->rcd check from cxl_cor_error_detected() and
+> cxl_error_detected(). RCH errors are now forwarded by
+> cxl_rch_handle_error_iter() through the AER-CXL kfifo to
+> cxl_handle_proto_error(), so cxl_pci's err_handler no longer sees
+> them.
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> 
+> ---
+> 
+> Changes in v16->v17:
+> - Drop now-dead cxlds->rcd branches from cxl_{cor_,}error_detected().
+> - Drop duplicate subject line from commit body.
+> - Document panic-on-uncorrectable behavior change for RCD path.
+> - Document trace event device-name change (memN -> PCI BDF) for RCH path.
+> - Rewrite cxl_handle_proto_error() RC_END comment to clarify RCD/RCH shared
+>   interrupt relationship
+> - Rewrite commit message
+> 
+> Changes in v16:
+> - New commit
+> ---
+>  drivers/cxl/core/core.h        |  4 ++--
+>  drivers/cxl/core/ras.c         | 14 +++++++++-----
+>  drivers/cxl/core/ras_rch.c     |  8 +++-----
+>  drivers/pci/pcie/aer_cxl_rch.c | 17 +----------------
+>  4 files changed, 15 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index bc36cd1575a4..2c7387506dfb 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -188,7 +188,7 @@ void cxl_handle_cor_ras(struct device *dev, u64 serial,
+>  			void __iomem *ras_base);
+>  void cxl_dport_map_rch_aer(struct cxl_dport *dport);
+>  void cxl_disable_rch_root_ints(struct cxl_dport *dport);
+> -void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds);
+> +void cxl_handle_rdport_errors(struct pci_dev *pdev);
+>  void devm_cxl_dport_ras_setup(struct cxl_dport *dport);
+>  #else
+>  static inline int cxl_ras_init(void)
+> @@ -205,7 +205,7 @@ static inline void cxl_handle_cor_ras(struct device *dev, u64 serial,
+>  				      void __iomem *ras_base) { }
+>  static inline void cxl_dport_map_rch_aer(struct cxl_dport *dport) { }
+>  static inline void cxl_disable_rch_root_ints(struct cxl_dport *dport) { }
+> -static inline void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds) { }
+> +static inline void cxl_handle_rdport_errors(struct pci_dev *pdev) { }
+>  static inline void devm_cxl_dport_ras_setup(struct cxl_dport *dport) { }
+>  #endif /* CONFIG_CXL_RAS */
+>  
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index 0a552d5a236e..1f1dd20623f6 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -267,9 +267,6 @@ void cxl_cor_error_detected(struct pci_dev *pdev)
+>  			return;
+>  		}
+>  
+> -		if (cxlds->rcd)
+> -			cxl_handle_rdport_errors(cxlds);
+> -
+>  		cxl_handle_cor_ras(&cxlds->cxlmd->dev, pci_get_dsn(pdev),
+>  				   cxlmd->endpoint->regs.ras);
+>  	}
+> @@ -292,8 +289,6 @@ pci_ers_result_t cxl_error_detected(struct pci_dev *pdev,
+>  			return PCI_ERS_RESULT_DISCONNECT;
+>  		}
+>  
+> -		if (cxlds->rcd)
+> -			cxl_handle_rdport_errors(cxlds);
+>  		/*
+>  		 * A frozen channel indicates an impending reset which is fatal to
+>  		 * CXL.mem operation, and will likely crash the system. On the off
+> @@ -329,6 +324,15 @@ EXPORT_SYMBOL_NS_GPL(cxl_error_detected, "CXL");
+>  static void cxl_handle_proto_error(struct pci_dev *pdev, struct cxl_port *port,
+>  				   struct cxl_dport *dport, int severity)
+>  {
+> +	/*
+> +	 * An RC_END device is an RCD (Restricted CXL Device). Its AER
+> +	 * interrupt is shared with the RCH Downstream Port, so handle RCH
+> +	 * Downstream Port protocol errors first before processing the RCD's
+> +	 * own errors. See CXL spec r3.1 s12.2.
+> +	 */
+> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END)
 
-I have tested this for some time on a device with compression (after =
-some
-necessary fixes for CXL RCD to work, that Greg helped me with).
+May as well use is_cxl_restricted(pdev).
 
-Overall, the isolation property that this provides is something I deem =
-necessary
-for this technology. Others are better placed to judge the MM plumbing
-itself, but I wanted to say that this functionality is an important =
-piece of the puzzle
-from the device/use-case side.
-
-For cram itself, as it is in this RFC, I think there is still =
-performance and
-value left on the table (as noted in the description), but I fully =
-understand Gregory=E2=80=99s=20
-premise in approaching it this way.
-
-<snip>
->=20
-> Future CRAM : Loosening the read-only constraint
-> =3D=3D=3D
->=20
-> The read-only model is safe but conservative.  For workloads where
-> compressed pages are occasionally written, the promotion fault adds
-> latency.  A future optimization could allow a tunable fraction of
-> compressed pages to be mapped writable, accepting some risk of
-> write-driven decompression in exchange for lower overhead.
->=20
-> The private node ops make this straightforward:
->=20
->  - Adjust fixup_migration_pte to selectively skip
->    write-protection.
->  - Use the backpressure system to either revoke writable mappings,
->    deny additional demotions, or evict when device pressure rises.
-I have some quick hacks playing with these ideas but I haven=E2=80=99t =
-had the time
-to test it thoroughly and get to something robust yet. I saw in another =
-thread
-that there is a follow up cooking which looks interesting.
-
-Thanks Greg for pushing this, and I=E2=80=99m happy to test more on HW =
-in our lab.
-
-Best,
-/Yiannis
-
-
+DJ
+ 
+> +		cxl_handle_rdport_errors(pdev);
+> +
+>  	if (severity == AER_CORRECTABLE) {
+>  		cxl_handle_cor_ras(&pdev->dev, pci_get_dsn(pdev),
+>  				   to_ras_base(port, dport));
+> diff --git a/drivers/cxl/core/ras_rch.c b/drivers/cxl/core/ras_rch.c
+> index 61835fbafc0f..cbd02cabefbc 100644
+> --- a/drivers/cxl/core/ras_rch.c
+> +++ b/drivers/cxl/core/ras_rch.c
+> @@ -1,7 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright(c) 2025 AMD Corporation. All rights reserved. */
+>  
+> -#include <linux/types.h>
+>  #include <linux/aer.h>
+>  #include "cxl.h"
+>  #include "core.h"
+> @@ -95,9 +94,8 @@ static bool cxl_rch_get_aer_severity(struct aer_capability_regs *aer_regs,
+>  	return false;
+>  }
+>  
+> -void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
+> +void cxl_handle_rdport_errors(struct pci_dev *pdev)
+>  {
+> -	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+>  	struct aer_capability_regs aer_regs;
+>  	struct cxl_dport *dport;
+>  	int severity;
+> @@ -115,9 +113,9 @@ void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
+>  
+>  	pci_print_aer(pdev, severity, &aer_regs);
+>  	if (severity == AER_CORRECTABLE)
+> -		cxl_handle_cor_ras(&cxlds->cxlmd->dev, pci_get_dsn(pdev),
+> +		cxl_handle_cor_ras(&pdev->dev, pci_get_dsn(pdev),
+>  				   dport->regs.ras);
+>  	else
+> -		cxl_handle_ras(&cxlds->cxlmd->dev, pci_get_dsn(pdev),
+> +		cxl_handle_ras(&pdev->dev, pci_get_dsn(pdev),
+>  			       dport->regs.ras);
+>  }
+> diff --git a/drivers/pci/pcie/aer_cxl_rch.c b/drivers/pci/pcie/aer_cxl_rch.c
+> index e471eefec9c4..83142eac0cab 100644
+> --- a/drivers/pci/pcie/aer_cxl_rch.c
+> +++ b/drivers/pci/pcie/aer_cxl_rch.c
+> @@ -37,26 +37,11 @@ static bool cxl_error_is_native(struct pci_dev *dev)
+>  static int cxl_rch_handle_error_iter(struct pci_dev *dev, void *data)
+>  {
+>  	struct aer_err_info *info = (struct aer_err_info *)data;
+> -	const struct pci_error_handlers *err_handler;
+>  
+>  	if (!is_cxl_mem_dev(dev) || !cxl_error_is_native(dev))
+>  		return 0;
+>  
+> -	guard(device)(&dev->dev);
+> -
+> -	err_handler = dev->driver ? dev->driver->err_handler : NULL;
+> -	if (!err_handler)
+> -		return 0;
+> -
+> -	if (info->severity == AER_CORRECTABLE) {
+> -		if (err_handler->cor_error_detected)
+> -			err_handler->cor_error_detected(dev);
+> -	} else if (err_handler->error_detected) {
+> -		if (info->severity == AER_NONFATAL)
+> -			err_handler->error_detected(dev, pci_channel_io_normal);
+> -		else if (info->severity == AER_FATAL)
+> -			err_handler->error_detected(dev, pci_channel_io_frozen);
+> -	}
+> +	cxl_forward_error(dev, info);
+>  	return 0;
+>  }
+>  
 
