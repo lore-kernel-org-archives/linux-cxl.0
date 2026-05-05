@@ -1,227 +1,296 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6674B31716D;
-	Tue,  5 May 2026 22:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7C537F8D6
+	for <linux-cxl@vger.kernel.org>; Tue,  5 May 2026 22:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778019395; cv=none; b=ubwFbgqYHi2N2zC/16qHCoGfGFD15qlTM8MzpwLH6E0HJxvgzAwKHi6QAb2IwFbB7Dr6BiRBil9G/dweCQLMsoo3IPL5ESMMdGx/l/u+V5QH39kI6cA7y/uihM9vneWNkaH/SUKSf2H5ta4kLqvYU7Ks/PxUa/R00jgXu+jGYAI=
+	t=1778019700; cv=none; b=ryjYUpLLcqYftED+8JuLVDTk4cO3OCUvLbipkIMCLod7vVqDg8yccGwhNqqI/UWqHL1L185ZMNr2qHmNRcRDCDs2n8na7EH1GjxZdtrtvuTdXPdpPF2xWVzEtAg2EddjweCsAf1Alvi9o2kM5enmWMWM7bohYQ/IBRn0DzaixIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778019395; c=relaxed/simple;
-	bh=2kn9vnW/RQZlq9cSKZLyrOnx2FcEcdncD2IH1ClVi+s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZhICr71kdeEkEXp/CltqQ/wjTUwlXcEb+AYj78WjgXTIsG2b0MjgG0xu6952/nA+3jnz8lZWALqsgVX3MoJ077DBHEX3PLyoix+Ie/19yZNTumlGCVN9eBpgU0WcPACAugbh3Z79fJGrT5qWt7kmf02pmPXdNoNKieLZtxFu/oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WKMhNlH2; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1778019700; c=relaxed/simple;
+	bh=zOuCto/ei+q5X9zizDWicsGgHsnCs3KdS/blOqZ3EtY=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=XTf9HI5lpdHewUdnNVE1SD3yBNO3nw4X8F1TqnXnZ2RW48KtEQiI/JMgpYmY2a+mTbgmPOJpAYuvABCnxkq64OskzGjHBkU8M7StIHgzvA/P2uFJ5eG0fUsxKf2wyJshF/yAejC/dTEScFCIjCPs035EWE7pxX0ka4FoxFFNxeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dhDzHdpI; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WKMhNlH2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778019393; x=1809555393;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2kn9vnW/RQZlq9cSKZLyrOnx2FcEcdncD2IH1ClVi+s=;
-  b=WKMhNlH2bvtEL0//pY3DJl5pqWueH8xnIRnbSe0KmNSDdAaEbYMbSfS0
-   YXDTHNJgxf0Xq+vyGJ93WKB9O+iaNssgrK5VT6pnPc44EQVlFdcXIJ33D
-   DCfhdq2+pnlWtyUSy3U82QJVWeds/C+KKpsybHmGIuiTHQFISN3spnxz3
-   W64s1WM0w2fRNYvQgrSJ47KO1j5VGa+nUjYyV58QFcKV+0nIqJGfv9Y8K
-   9JEhid6dMupkg+Dsusj4RYNQYPc/PxyiZQpdMZqnkgFa7sHPqYfUzSPWV
-   mB25au8kG0zULh03dhNpyyuDp/u7iDnz4mwnj5dZpaco2YAnYlce7fMob
-   Q==;
-X-CSE-ConnectionGUID: i8xO3omuTGCrN/1YrZ+Kpw==
-X-CSE-MsgGUID: i1+jg5jFTPGb4Ldk6a/H+A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11777"; a="79004777"
-X-IronPort-AV: E=Sophos;i="6.23,218,1770624000"; 
-   d="scan'208";a="79004777"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2026 15:16:32 -0700
-X-CSE-ConnectionGUID: Zm8/Zq25Rem6IsII6PyFkQ==
-X-CSE-MsgGUID: FrPtP51RQhmnzK0vxrlPVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,218,1770624000"; 
-   d="scan'208";a="234940856"
-Received: from spandruv-mobl5.amr.corp.intel.com (HELO [10.125.110.85]) ([10.125.110.85])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2026 15:16:31 -0700
-Message-ID: <0a372718-a3ae-4c8c-94a6-6b6c334cab16@intel.com>
-Date: Tue, 5 May 2026 15:16:30 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhDzHdpI"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-38a01c80c34so56954071fa.0
+        for <linux-cxl@vger.kernel.org>; Tue, 05 May 2026 15:21:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778019697; x=1778624497; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e+bTaNE0dwTN+qN6h1nZ07Pw7t4BRJtO96DbmMB+uZo=;
+        b=dhDzHdpIngACreNbzmbm8RCTIW8zTkMR7G79zhBScFUHXStxwQkbuMfibjp3A5hkb7
+         VY3gq/jXXPJX0ubyimF6ucvb5UKE0NmZTkVcfeHg7Usbq443o+75yUrmA72uYV1vcKn/
+         6M7/X+8D9m073BIkO9sFGATy1oHktJ7AjRuzhsZW/tvtgO8k4lASmElJVpysbsjfqKs7
+         si/GDUhTLmuikvwccp96TYSor5G70rqgIh0BiAhHF07mIccyEH8ZNL2Aby29hqk4dvzd
+         uLMd33ZifyA0qp8QnR4lNnjg8P6fuLaFXpehFwqydeJB0wVfz4TI/p3pOPOBY/jWzqTo
+         ii1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778019697; x=1778624497;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-gg:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e+bTaNE0dwTN+qN6h1nZ07Pw7t4BRJtO96DbmMB+uZo=;
+        b=HpBi9ugZU8MvAYx+vn6AanEXDHapxHdHqDlQqMsVuILfGsqUN7duO8C5MYVUMsOQa6
+         dTU6ZxCWoGXzQDZWSTO7nqqpI5z/y7ql8lrAbNF516Ffvw8/ARbX2GgbQlYzX+AkJvt1
+         sQmS4GkhoAsi6uWhrwJYjG4oI+rW+pwaZ/ChXeGhv0gxx6b1eTn3el30dtwDhJpOQd5l
+         43EMgRj3BMfYgTpiPN/s6uzwlWAMMY6cVkPLSw8i0RnIIS34GTDF0EdzytddW0GWUfWL
+         6bE3f4q1LDyHV97E/JZsdofDiZPBnHVYldkkCr5rMdfyCl/mLWk+8yVvOxjZLU2EmTLH
+         U++Q==
+X-Forwarded-Encrypted: i=1; AFNElJ8u+4Fh8GSemNry+Ljr4luIdMFX03gvS95SOh9FgaNlgaUrkn0Tc8/qfDVPhWMfPAprJqUEdvswVGk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhMCm9macDqZSuGKe8CdfrLohLpwCX96xrBXe+513ykwp7cKcw
+	nu6vB7/knJAGorFOtPsLpYlY/7ubqPdeF8QSug+cAjE2Cu7RjnQGFA8I
+X-Gm-Gg: AeBDiev102YSUDtb0fIUT+FVFG9ps1Vutyh2fAXAatC09o1BnT+HlTm7PwGZa3y9xa7
+	udTYlnpZdU4NMfLKA9DAVZrN9PEmkYFMZZExiKOez4gA+ahXqlbYR/JH8OKjAIHfZ/k7mZh3lKc
+	JuUzQe3u0s5MVv3kN6HJnFwvhfXm32TNgDDTNZ0Hs8ZmtnjxaVc1l451nwssPY45n6E15mMfxZV
+	dnLntUEK+4AC86wpQ/xr8iVl4zqhWaLUDDbpNrOvuMT3AmdMD55FNKa3Ckoie4t1N7tSiYDS86r
+	rdPfvOPbekrExAJ3OuhNZeqAODK3yMxrtr1F8mtaNhMnGpgGht3AhKvdUFNhswHfjD+ITimgCMI
+	CSQH+YYATTzoly35bNjSoSAGAyTEG6yCsdh8F6BpauMx3e5VATQIX7KabMl1wwxiokun9mF5zh/
+	Pp3oIXDyvlhfduc7WfN/q/Nx5bCMP1h7yYTy1JZGSgLKzASmMWmvkoPzCgW870yY/zuV344Pm7c
+	Bh0xwVfm4as3M8eZgwqqlzmKkUsLfQ7S9ciUxNP
+X-Received: by 2002:a05:651c:4210:b0:393:8b23:a194 with SMTP id 38308e7fff4ca-393c41cedeemr3503181fa.19.1778019696437;
+        Tue, 05 May 2026 15:21:36 -0700 (PDT)
+Received: from smtpclient.apple (h-155-4-132-115.NA.cust.bahnhof.se. [155.4.132.115])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3936108fb80sm46308161fa.6.2026.05.05.15.21.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 May 2026 15:21:35 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v17 05/11] cxl: Limit CXL-CPER kfifo registration
- functions scope
-To: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net, jic23@kernel.org,
- alison.schofield@intel.com, djbw@kernel.org, bhelgaas@google.com,
- ming.li@zohomail.com, Smita.KoralahalliChannabasappa@amd.com,
- rrichter@amd.com, PradeepVineshReddy.Kodamati@amd.com, lukas@wunner.de,
- Benjamin.Cheatham@amd.com, sathyanarayanan.kuppuswamy@linux.intel.com,
- vishal.l.verma@intel.com, alucerop@amd.com, ira.weiny@intel.com,
- corbet@lwn.net, rafael@kernel.org, xueshuai@linux.alibaba.com,
- linux-cxl@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20260505173029.2718246-1-terry.bowman@amd.com>
- <20260505173029.2718246-6-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260505173029.2718246-6-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.400.21\))
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+From: Yiannis Nikolakopoulos <yiannis.nikolakop@gmail.com>
+In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
+Date: Wed, 6 May 2026 00:21:23 +0200
+Cc: lsf-pc@lists.linux-foundation.org,
+ linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org,
+ cgroups@vger.kernel.org,
+ linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org,
+ damon@lists.linux.dev,
+ kernel-team@meta.com,
+ gregkh@linuxfoundation.org,
+ rafael@kernel.org,
+ dakr@kernel.org,
+ dave@stgolabs.net,
+ jonathan.cameron@huawei.com,
+ dave.jiang@intel.com,
+ alison.schofield@intel.com,
+ vishal.l.verma@intel.com,
+ Ira Weiny <ira.weiny@intel.com>,
+ dan.j.williams@intel.com,
+ longman@redhat.com,
+ akpm@linux-foundation.org,
+ david@kernel.org,
+ lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com,
+ vbabka@suse.cz,
+ rppt@kernel.org,
+ Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>,
+ osalvador@suse.de,
+ ziy@nvidia.com,
+ matthew.brost@intel.com,
+ joshua.hahnjy@gmail.com,
+ rakie.kim@sk.com,
+ byungchul@sk.com,
+ ying.huang@linux.alibaba.com,
+ apopple@nvidia.com,
+ axelrasmussen@google.com,
+ yuanchu@google.com,
+ weixugc@google.com,
+ yury.norov@gmail.com,
+ linux@rasmusvillemoes.dk,
+ mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com,
+ tj@kernel.org,
+ hannes@cmpxchg.org,
+ mkoutny@suse.com,
+ jackmanb@google.com,
+ sj@kernel.org,
+ baolin.wang@linux.alibaba.com,
+ npache@redhat.com,
+ ryan.roberts@arm.com,
+ dev.jain@arm.com,
+ baohua@kernel.org,
+ lance.yang@linux.dev,
+ muchun.song@linux.dev,
+ xu.xin16@zte.com.cn,
+ chengming.zhou@linux.dev,
+ jannh@google.com,
+ linmiaohe@huawei.com,
+ nao.horiguchi@gmail.com,
+ pfalcato@suse.de,
+ David Rientjes <rientjes@google.com>,
+ shakeel.butt@linux.dev,
+ riel@surriel.com,
+ harry.yoo@oracle.com,
+ cl@gentwo.org,
+ roman.gushchin@linux.dev,
+ chrisl@kernel.org,
+ kasong@tencent.com,
+ shikemeng@huaweicloud.com,
+ nphamcs@gmail.com,
+ bhe@redhat.com,
+ zhengqi.arch@bytedance.com,
+ terry.bowman@amd.com,
+ Yiannis Nikolakopoulos <Yiannis@zptcorp.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <21B8D62E-38AB-4FA5-8942-DA4417A7E7E9@gmail.com>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+To: Gregory Price <gourry@gourry.net>
+X-Mailer: Apple Mail (2.3864.400.21)
 
 
+> On 22 Feb 2026, at 09:48, Gregory Price <gourry@gourry.net> wrote:
+>=20
+> Topic type: MM
+>=20
+> Presenter: Gregory Price <gourry@gourry.net>
+>=20
+> This series introduces N_MEMORY_PRIVATE, a NUMA node state for memory
+> managed by the buddy allocator but excluded from normal allocations.
+>=20
+> I present it with an end-to-end Compressed RAM service (mm/cram.c)
+> that would otherwise not be possible (or would be considerably more
+> difficult, be device-specific, and add to the ZONE_DEVICE boondoggle).
+>=20
+>=20
+> TL;DR
+> =3D=3D=3D
+>=20
+> N_MEMORY_PRIVATE is all about isolating NUMA nodes and then punching
+> explicit holes in that isolation to do useful things we couldn't do
+> before without re-implementing entire portions of mm/ in a driver.
+>=20
+>=20
+> /* This is my memory. There are many like it, but this one is mine. */
+> rc =3D add_private_memory_driver_managed(nid, start, size, name, =
+flags,
+>                                       online_type, private_context);
+>=20
+> page =3D alloc_pages_node(nid, __GFP_PRIVATE, 0);
+>=20
+> /* Ok but I want to do something useful with it */
+> static const struct node_private_ops ops =3D {
+>        .migrate_to     =3D my_migrate_to,
+>        .folio_migrate  =3D my_folio_migrate,
+>        .flags =3D NP_OPS_MIGRATION | NP_OPS_MEMPOLICY,
+> };
+> node_private_set_ops(nid, &ops);
+>=20
+> /* And now I can use mempolicy with my memory */
+> buf =3D mmap(...);
+> mbind(buf, len, mode, private_node, ...);
+> buf[0] =3D 0xdeadbeef;  /* Faults onto private node */
+>=20
+> /* And to be clear, no one else gets my memory */
+> buf2 =3D malloc(4096);  /* Standard allocation */
+> buf2[0] =3D 0xdeadbeef; /* Can never land on private node */
+>=20
+> /* But i can choose to migrate it to the private node */
+> move_pages(0, 1, &buf, &private_node, NULL, ...);
+>=20
+> /* And more fun things like this */
+>=20
+>=20
+> Patchwork
+> =3D=3D=3D
+> A fully working branch based on cxl/next can be found here:
+> https://github.com/gourryinverse/linux/tree/private_compression
+>=20
+> A QEMU device which can inject high/low interrupts can be found here:
+> https://github.com/gourryinverse/qemu/tree/compressed_cxl_clean
+>=20
+> The additional patches on these branches are CXL and DAX driver
+> housecleaning only tangentially relevant to this RFC, so i've
+> omitted them for the sake of trying to keep it somewhat clean
+> here.  Those patches should (hopefully) be going upstream anyway.
+>=20
+> Patches 1-22: Core Private Node Infrastructure
+>=20
+>  Patch  1:      Introduce N_MEMORY_PRIVATE scaffolding
+>  Patch  2:      Introduce __GFP_PRIVATE
+>  Patch  3:      Apply allocation isolation mechanisms
+>  Patch  4:      Add N_MEMORY nodes to private fallback lists
+>  Patches 5-9:   Filter operations not yet supported
+>  Patch 10:      free_folio callback
+>  Patch 11:      split_folio callback
+>  Patches 12-20: mm/ service opt-ins:
+>                   Migration, Mempolicy, Demotion, Write Protect,
+>                   Reclaim, OOM, NUMA Balancing, Compaction,
+>                   LongTerm Pinning
+>  Patch 21:      memory_failure callback
+>  Patch 22:      Memory hotplug plumbing for private nodes
+>=20
+> Patch 23: mm/cram -- Compressed RAM Management
+>=20
+> Patches 24-27: CXL Driver examples
+>  Sysram Regions with Private node support
+>  Basic Driver Example: (MIGRATION | MEMPOLICY)
+>  Compression Driver Example (Generic)
+>=20
+Hi,
 
-On 5/5/26 10:30 AM, Terry Bowman wrote:
-> From: Dan Williams <djbw@kernel.org>
-> 
-> Some CPER functions used by CXL drivers are exported using the
-> EXPORT_SYMBOL_NS_GPL(fn, ns) macro. This doesn't provide compile time
-> enforcement or visibility of the consumers.
-> 
-> This can be improved by using EXPORT_SYMBOL_FOR_MODULES() instead.
-> EXPORT_SYMBOL_FOR_MODULES() explicitly names the modules that can access
-> the function. This provides more precise control and visibility of symbol
-> exposure than the namespace macro. It also provides compile time checking.
-> 
-> To improve control and clarity, update cxl_cper_register_prot_err_work(),
-> cxl_cper_unregister_prot_err_work(), and cxl_cper_prot_err_kfifo_get()
-> to use EXPORT_SYMBOL_FOR_MODULES(). Also, update the register and unregister
-> functions to return void type.
-> 
-> Update the CPER kfifo unregister to cancel work while using
-> synchronization.
-> 
-> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Dan Williams <djbw@kernel.org>
+As I think this is about to be discussed in the conference, I thought
+to share some high level comments.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+I have tested this for some time on a device with compression (after =
+some
+necessary fixes for CXL RCD to work, that Greg helped me with).
+
+Overall, the isolation property that this provides is something I deem =
+necessary
+for this technology. Others are better placed to judge the MM plumbing
+itself, but I wanted to say that this functionality is an important =
+piece of the puzzle
+from the device/use-case side.
+
+For cram itself, as it is in this RFC, I think there is still =
+performance and
+value left on the table (as noted in the description), but I fully =
+understand Gregory=E2=80=99s=20
+premise in approaching it this way.
+
+<snip>
+>=20
+> Future CRAM : Loosening the read-only constraint
+> =3D=3D=3D
+>=20
+> The read-only model is safe but conservative.  For workloads where
+> compressed pages are occasionally written, the promotion fault adds
+> latency.  A future optimization could allow a tunable fraction of
+> compressed pages to be mapped writable, accepting some risk of
+> write-driven decompression in exchange for lower overhead.
+>=20
+> The private node ops make this straightforward:
+>=20
+>  - Adjust fixup_migration_pte to selectively skip
+>    write-protection.
+>  - Use the backpressure system to either revoke writable mappings,
+>    deny additional demotions, or evict when device pressure rises.
+I have some quick hacks playing with these ideas but I haven=E2=80=99t =
+had the time
+to test it thoroughly and get to something robust yet. I saw in another =
+thread
+that there is a follow up cooking which looks interesting.
+
+Thanks Greg for pushing this, and I=E2=80=99m happy to test more on HW =
+in our lab.
+
+Best,
+/Yiannis
 
 
-> 
-> ---
-> 
-> Changes in v16->v17:
-> - Split from v16 02/10 ("Update unregistration for AER-CXL and
->   CPER-CXL kfifos"); AER-CXL half folded into v17 01/10.
-> - Convert exports to EXPORT_SYMBOL_FOR_MODULES("cxl_core").
-> - Change register/unregister return type from int to void.
-> - Drop work_struct argument from cxl_cper_unregister_prot_err_work();
->   it now cancels its own work.
-> - Remove now-redundant cancel_work_sync() from cxl_ras_exit().
-> - Add WARN_ONCE() in cxl_cper_register_prot_err_work() for
->   double-registration.
-> ---
->  drivers/acpi/apei/ghes.c | 27 ++++++++++++++-------------
->  drivers/cxl/core/ras.c   |  6 +++---
->  include/cxl/event.h      | 10 ++++------
->  3 files changed, 21 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 3236a3ce79d6..dd0a073af93c 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
-> @@ -778,33 +778,34 @@ static void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
->  #endif
->  }
->  
-> -int cxl_cper_register_prot_err_work(struct work_struct *work)
-> +void cxl_cper_register_prot_err_work(struct work_struct *work)
->  {
-> -	if (cxl_cper_prot_err_work)
-> -		return -EINVAL;
-> -
->  	guard(spinlock)(&cxl_cper_prot_err_work_lock);
-> +	WARN_ONCE(cxl_cper_prot_err_work,
-> +		  "CPER-CXL kfifo consumer already registered\n");
->  	cxl_cper_prot_err_work = work;
-> -	return 0;
->  }
-> -EXPORT_SYMBOL_NS_GPL(cxl_cper_register_prot_err_work, "CXL");
-> +EXPORT_SYMBOL_FOR_MODULES(cxl_cper_register_prot_err_work, "cxl_core");
->  
-> -int cxl_cper_unregister_prot_err_work(struct work_struct *work)
-> +void cxl_cper_unregister_prot_err_work(void)
->  {
-> -	if (cxl_cper_prot_err_work != work)
-> -		return -EINVAL;
-> +	struct work_struct *work;
->  
-> -	guard(spinlock)(&cxl_cper_prot_err_work_lock);
-> +	spin_lock(&cxl_cper_prot_err_work_lock);
-> +	work = cxl_cper_prot_err_work;
->  	cxl_cper_prot_err_work = NULL;
-> -	return 0;
-> +	spin_unlock(&cxl_cper_prot_err_work_lock);
-> +
-> +	if (work)
-> +		cancel_work_sync(work);
->  }
-> -EXPORT_SYMBOL_NS_GPL(cxl_cper_unregister_prot_err_work, "CXL");
-> +EXPORT_SYMBOL_FOR_MODULES(cxl_cper_unregister_prot_err_work, "cxl_core");
->  
->  int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data *wd)
->  {
->  	return kfifo_get(&cxl_cper_prot_err_fifo, wd);
->  }
-> -EXPORT_SYMBOL_NS_GPL(cxl_cper_prot_err_kfifo_get, "CXL");
-> +EXPORT_SYMBOL_FOR_MODULES(cxl_cper_prot_err_kfifo_get, "cxl_core");
->  
->  /* Room for 8 entries for each of the 4 event log queues */
->  #define CXL_CPER_FIFO_DEPTH 32
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index 56611da8357a..9193dac4e507 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -68,13 +68,13 @@ static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
->  
->  int cxl_ras_init(void)
->  {
-> -	return cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
-> +	cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
-> +	return 0;
->  }
->  
->  void cxl_ras_exit(void)
->  {
-> -	cxl_cper_unregister_prot_err_work(&cxl_cper_prot_err_work);
-> -	cancel_work_sync(&cxl_cper_prot_err_work);
-> +	cxl_cper_unregister_prot_err_work();
->  }
->  
->  static void cxl_dport_map_ras(struct cxl_dport *dport)
-> diff --git a/include/cxl/event.h b/include/cxl/event.h
-> index ff97fea718d2..51acedb0d683 100644
-> --- a/include/cxl/event.h
-> +++ b/include/cxl/event.h
-> @@ -289,8 +289,8 @@ struct cxl_cper_prot_err_work_data {
->  int cxl_cper_register_work(struct work_struct *work);
->  int cxl_cper_unregister_work(struct work_struct *work);
->  int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd);
-> -int cxl_cper_register_prot_err_work(struct work_struct *work);
-> -int cxl_cper_unregister_prot_err_work(struct work_struct *work);
-> +void cxl_cper_register_prot_err_work(struct work_struct *work);
-> +void cxl_cper_unregister_prot_err_work(void);
->  int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data *wd);
->  #else
->  static inline int cxl_cper_register_work(struct work_struct *work)
-> @@ -306,13 +306,11 @@ static inline int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd)
->  {
->  	return 0;
->  }
-> -static inline int cxl_cper_register_prot_err_work(struct work_struct *work)
-> +static inline void cxl_cper_register_prot_err_work(struct work_struct *work)
->  {
-> -	return 0;
->  }
-> -static inline int cxl_cper_unregister_prot_err_work(struct work_struct *work)
-> +static inline void cxl_cper_unregister_prot_err_work(void)
->  {
-> -	return 0;
->  }
->  static inline int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data *wd)
->  {
 
