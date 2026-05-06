@@ -1,188 +1,198 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1150131E49
-	for <linux-cxl@vger.kernel.org>; Wed,  6 May 2026 20:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778099008; cv=pass; b=obI6zpwD4LhLiQjjYfx7d8aTYZbXlMulJV+t4Vu7Pr4KNVo02xoOQE/jMtpBCEbinz0N+nut1KaEcMSgqEj2ClFTJ0E6uTe4pZlcYyv20Mc+L0VvCtF9s5IADGv9T25NOY7ntpSfwNqHne0xZkDpUuhbQDtnfOrV6+Q1YuO5Zs0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778099008; c=relaxed/simple;
-	bh=l2qvs/OpiAY7DahdxZ+FXBkHDAj1ng953bhsOXn6/98=;
-	h=From:In-Reply-To:MIME-Version:Date:Message-ID:Subject:To:Cc:
-	 Content-Type; b=LWhlUYmoRabpOCE8mjaAfOxOm7VO/ZuEXh3u4U2hnIkKmWRF/vc4+3/4uDpiJRl7Gbzc5oDP/EBlGd3SMTgsIDTmD3NWzMQcWK5Q4+NcPYZzrWFfA3tCLSFy7wyYIlXKmeNZgL5pL+yOQfuqCCzdqb/Xb3M6/7VDPZm45moBMOc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lUe5V4C1; arc=pass smtp.client-ip=209.85.217.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB9353876BF;
+	Wed,  6 May 2026 20:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778099435; cv=none; b=LMhbBnzxNkosMX5wn/CNXw9ZhIzwRVLTnNr4P/2rmIosmiw7iqPca7AqvTqk2gsHL+6/Pe8GylwXm2AMc4JVxiOsWwWeg4AyoJ6qvFzN+SR5w0gy3T9Q9K4sSkpAviP+x1b8oeKBcg1mHOjQVG0nya0KdjfBtzpaZWK2BfK+S3c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778099435; c=relaxed/simple;
+	bh=ElJosHTYLcI9BgvAkBOdPtaYbxUdlkp93c6ZPh+hIQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Oh+zZ91cJdaqqm3Hn44tWu3DWdauSjNGYP7nSWNn7JWxhX1SNdU9cMqpl7eAZoQ5/7w95G3S0RRz/uRkHwcqqj6dCDZLHvYFKmMK4FD55QqTYGDvcTfRePQcggddC5Yk67kR8SEgiDUGg2oXXhTvTy2Nm7PssBqtOfN92r8kwdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=P6Hvk6+A; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lUe5V4C1"
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-60fee2fa3b8so53234137.2
-        for <linux-cxl@vger.kernel.org>; Wed, 06 May 2026 13:23:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1778099006; cv=none;
-        d=google.com; s=arc-20240605;
-        b=G/IrnHkAiYTAJMONvpfvHS5s6dkIo/lajASK1QdTBnsKW/8VqyZTIDWmPw2wEw5sIS
-         OQD0rqp9Fq6ZjQ/FM+gb5Vcu4dyl3TSJw6m1QpDKP3Lk/nnjf5MFHiAbygLp3CQou75m
-         olTvQomtb3xWa2LNnQ2Y8YIf/KuMZyaLN1RCvIfhnWcV+euGr4d/QeqetQOqZ4/h41Zk
-         ii/iHkXQg/WRc0Uen3oaxzyArnBmqvh0n6RQfatdMBrWqP4AFT1BGVeimosCMjIxAoTd
-         /vLF41qv+KYRJUl6q9y+cLJur0oTytJzUNa2plKubVUTAh2nj097qGmutRWqIrw3A11Z
-         w0Zw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:in-reply-to:from:dkim-signature;
-        bh=l2qvs/OpiAY7DahdxZ+FXBkHDAj1ng953bhsOXn6/98=;
-        fh=hCwdSieFKSA+ezmCqgo9rF/FPXEU5jzuy5aoS1nBUIQ=;
-        b=PzVFhmwGNWYGpUqxP7Bwl1ov7ASeDp+K7ZibBMGHypUnlOqDSWK/Wrk0stBp7+fJh/
-         tvlLl8o+QeS50gm8WTaI/Ebr2T03OdKpANrUYhgKbUnCqJQvoOUt9yhKtjblbyfLXf1F
-         X7RYvSBJD69fe7lY6V6ZnjbPEuFXG7GjxXWW713cxTuHFNzirMt4mlT4X74Cz01bbyYq
-         JWYsQBIsXHKtdbFFBdc/1hphowt54iQhu/lOtmPmo/KPodmSObgz8NjxxpQcWTed5Mgw
-         7lif/Xu+jmcDlXkaHsQ1NtMf4UdNiH8PijBKRiaLS0MMjrnqj0Gb5p8giEjrEKhdNwvN
-         u/7Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1778099006; x=1778703806; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:in-reply-to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=l2qvs/OpiAY7DahdxZ+FXBkHDAj1ng953bhsOXn6/98=;
-        b=lUe5V4C19wovKh//AHemWzWXNJf4ve92ZItjBXVb3ADK7VKkY+cb2VYdQx5tRm56WU
-         bo1904GJfphIv/1uCPY6J2otSNoJTQrltOvFtxXNF9b0P9OCf/jwJT5J9chtbxYCfW72
-         ISyEUa4u1vWw86MdxDBTkN22olUTA0CKfzXr2NS66H6dBMX5P8TOIuvMtLABEMHrxgZT
-         00QS+zuRINsi8Y/qDsMX7rYTqvaHNKgjQpaJbhp3rXP8lRurc2aqEZi3237OmI0HWETC
-         s3Voirbuk+hSD00HGmRTHf3tiG1USoxTw9iWyd5IrXlk5OFyA6PjiZA+8gl1c9p69/y+
-         NbUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778099006; x=1778703806;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l2qvs/OpiAY7DahdxZ+FXBkHDAj1ng953bhsOXn6/98=;
-        b=gFzRczi/N0jQnmZpM3/FivBN5KdTaxI4s6OMeoNhl9Pmu/Y0+4ev7GcGj/Gb60vhkg
-         lv/DjY3UuD0uBAGJpXeeF12jyqYel4CoZBpgAAUp/OMpRG3Na8qI51lXH3PrnHiQ+EXH
-         XagGYIwFaN05f/ia/ws/lt5+R3KnGhUwBMADVliWOY7WRS48DheE9jKmm2h8TQ5rpnsO
-         fo632fy0zR4Ghi72TxbbOlPdIxA+kYi1VS0bUKEqpmg7OvkKNmR32eXAg4rDYY4aCQLE
-         Er27DU9rpepDfhpepxkEc8QEm66bNnhS91+oYTFS7KiEMsPxvwACH2Eok0Zhrw+Ht6W/
-         te5Q==
-X-Forwarded-Encrypted: i=1; AFNElJ+q5j3ZVxLXfXE03FpJsBTZf4Nmk6JpEcsxk4KKCtyS5oR8JEEB+uCW+ejFLP/yfaaoW6l+3dGRTng=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/bP3WvNDqq2HdVislGBRUMUhN2SmrwePhOZRHWmqJDCdPm8HR
-	wVjCPt/gevS1Ga/bkr+E/y9Ann7aqt4TP/qH3eUdwTLeQON0/7jjp3GLApl2TQoAyjmHZJELohi
-	g3wJrGx7rjBYCj7x11nq1+D/pb2CPgaL6k+AnVFf/
-X-Gm-Gg: AeBDieuamEEZcopbifJ6l769HbpQDoSh/G3+XVUHtSbmtMTR7n0hXIdHqGZq7oPa9ve
-	HTOs2HaiVWE9fnjqT0+SuP0j9kQHOL99jcxmpyreFsitXU7GKBMw5qlaMiQc3eCtGzvgFSldYo7
-	FwtecJuOgpgeOdlcGBxW7ObuYX9tYTCb02JKXll/sgqx4nAUpKhXLZZ2rMCrjc2qVm+8ObcNoK3
-	gaTU+/OeqrvFW5vSB95yQh7SKPzsHzbyjDq/tZHNQiQbK3Rp6VGBnTyw5LbYsI6nISaMLPe4qU7
-	hNeA9Othxs6eGBE6gAFv9a2ok8b5Zs23Zm68Ew+puavIbyrHLHXY/j3N9AL3kbJUQyj/gOzn2mI
-	TZytAhzsDXv7DWA==
-X-Received: by 2002:a05:6102:374d:b0:611:a5b6:f4d6 with SMTP id
- ada2fe7eead31-630f8ff141fmr2407196137.18.1778099005276; Wed, 06 May 2026
- 13:23:25 -0700 (PDT)
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 6 May 2026 13:23:24 -0700
-Received: from 176938342045 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 6 May 2026 13:23:24 -0700
-From: Ackerley Tng <ackerleytng@google.com>
-In-Reply-To: <0e831045-3b01-4934-bf43-b3ef01ce0158@intel.com> (message from
- Dave Jiang on Fri, 24 Apr 2026 11:23:09 -0700)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="P6Hvk6+A"
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 6E250C5DC52;
+	Wed,  6 May 2026 20:31:16 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id E9AF660558;
+	Wed,  6 May 2026 20:30:28 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 879BB107F1E2B;
+	Wed,  6 May 2026 22:30:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1778099425; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=Vrqq7dyzDgCl+FqaMvTiuXKBdsOhTj/wqsPWsAfCeVU=;
+	b=P6Hvk6+A9KAGIiXMc5ppzQ8YnInesNyobJwlVOScdEn3BK6ZEG23RDVXqJ6UhXoJCZ/ClQ
+	IUaW5ffmO1GB5JT6pTn4JtgmuSK+cRR3G1OcUYmDqGuh+VBCxuJ5HSm/LVFRPC4a7eFPCK
+	lYEJgLQ08RS58hm0mDonItlSHMq4n57ZfMggV7q1BtmhvLggvm/45yz/tuzkuo9gCOFf+u
+	3K5HNHEI5PY46RtLY6F5VEi1OqnYZRWCqhL897NXI0JaUY6wU9HQsCRvqSXESwzhM7jo2T
+	za6fvFc/XcHv7AFGlUDrBhtbj3FxDismo+IFvtdNJhuaoK/yerA+Brrcvr3ndA==
+Date: Wed, 6 May 2026 22:30:15 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Kalle Niemi <kaleposti@gmail.com>,
+ Matti Vaittinen <mazziesaccount@gmail.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+ <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Andi
+ Shyti <andi.shyti@kernel.org>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, Arnd
+ Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@kernel.org>, Bjorn
+ Helgaas <bhelgaas@google.com>, Charles Keepax
+ <ckeepax@opensource.cirrus.com>, Richard Fitzgerald
+ <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, Linus
+ Walleij <linusw@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Mark
+ Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang
+ <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>, Shawn Guo <shawnguo@kernel.org>,
+ Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org,
+ driver-core@lists.linux.dev, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-sound@vger.kernel.org,
+ patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-spi@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, Allan Nielsen
+ <allan.nielsen@microchip.com>, Horatiu Vultur
+ <horatiu.vultur@microchip.com>, Steen Hegelund
+ <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v6 13/27] PCI: of: Remove fwnode_dev_initialized() call
+ for a PCI root bridge node
+Message-ID: <20260506222846.68963c71@bootlin.com>
+In-Reply-To: <20260325202037.GA1291636@bhelgaas>
+References: <20260325143555.451852-14-herve.codina@bootlin.com>
+	<20260325202037.GA1291636@bhelgaas>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 6 May 2026 13:23:24 -0700
-X-Gm-Features: AVHnY4IJAbobQd1jI1QFhsLlfJKxJLWrWZnikjZTL2Cfiw0_frRcrImPr17kfIg
-Message-ID: <CAEvNRgE3ifAvgVS4bLeNp_eVp0=6b3p+myYEXSfyS+Qrw5mrtw@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/12] dax: Add DAX to guest memfd support for KVM
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: fvdl@google.com, linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, 
-	djbw@kernel.org, iweiny@kernel.org, pasha.tatashin@soleen.com, 
-	mclapinski@google.com, rppt@kernel.org, joao.m.martins@oracle.com, 
-	jic23@kernel.org, gourry@gourry.net, john@groves.net, 
-	rick.p.edgecombe@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-Dave Jiang <dave.jiang@intel.com> writes:
+Hi Bjorn,
 
-> On 4/24/26 10:13 AM, Frank van der Linden wrote:
->> Dave Jiang <dave.jiang@intel.com> wrote:
->>> This RFC series is created as a proof of concept to connect device DAX =
-to guest
->>> memory by riding on top of guest memfd in order to prove out that devic=
-e DAX
->>> can be used as guest memory. The series seeks to jump start a discussio=
-n on
->>> if there are interests in creating a DAX bridge to utilize CXL memory f=
-or guest
->>> memory until the N_PRIVATE implementation by Gregory [1] is available u=
-pstream
->>> and DAX users are ready to move to the new scheme. Once there's an esta=
-blished
->>> consensus of interest, we can move the discussion to the best way to im=
-plement
->>> the DAX bridge and the future of device DAX as guest.
->>>
->>> I did the bare minimal to get the PoC to pass a modified version of KVM=
- gmem
->>> selftest (guest_memfd_test) in order to prove out that DAX can go in th=
-e gmem
->>> path. A DAX char dev is created and the fd is passed in user space with
->>> vm_set_user_memory_region2(). The DAX region is passed in as a whole wh=
-en used
->>> unlike memfd where any size can be passed in to be allocated.
->>>
->>> The folks on the cc line are people that Dan Williams has mentioned tha=
-t may be
->>> of interest to this.
->>>
+On Wed, 25 Mar 2026 15:20:37 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Thanks for the PoC! I've been working on guest_memfd HugeTLB and I'm
-glad there is interest in other "backends" for guest_memfd :)
+> On Wed, Mar 25, 2026 at 03:35:40PM +0100, Herve Codina wrote:
+> > During the instantiation of devices described by a device-tree overlay
+> > applied on a PCI device, devlink displays the following kind of debug
+> > messages instead of creating the expected links:
+> >    'Not linking xxxx - might never become dev'
+> > 
+> > Without those expected links, the device removal order cannot be
+> > correct.
+> > 
+> > Those debug traces are printed by fw_devlink_create_devlink(). In our
+> > use case, they are all printed because the supplier of the link has at
+> > least one of its ancestor with its fwnode flag FWNODE_FLAG_INITIALIZED
+> > set.
+> > 
+> > The culprit ancestor is the PCI root bridge.
+> > 
+> > The fwnode related to the PCI root bridge is created dynamically by the
+> > of_pci_make_host_bridge_node() function. During this creation
+> > fwnode_dev_initialized() is called which set the FWNODE_FLAG_INITIALIZED
+> > flag.
+> > 
+> > Calling fwnode_dev_initialized() tells devlink that the device related
+> > to this node is handled out of the driver core. This is not correct in
+> > our case. Indeed the device related to this firmware node is handled
+> > using driver core mechanisms and is fully compliant devlink
+> > expectations.
+> > 
+> > Simply remove the fwnode_dev_initialized() call. With that done, the
+> > devlink debug messages are no more displayed and links that were missing
+> > are correctly created.
+> > 
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>  
+> 
+> I would ordinarily make sure the person who added
+> fwnode_dev_initialized() here was ok with its removal, but it looks
+> like you added this with 1f340724419e ("PCI: of: Create device tree
+> PCI host bridge node"), so I assume you're ok with removing it :)
 
->>> [1]: https://lore.kernel.org/linux-cxl/aeWV1CvP9ImZ3eEG@gourry-fedora-P=
-F4VCD3F/T/#t
->>
->> One of the main ideas behind guest_memfd is that the memory is managed
->> by the kernel only, so it knows what it has and that it can trust
->> the memory. This RFC passes an fd in via the ioctl(), which I think
->> breaks that model.
+Yes, I am really ok to remove it :)
 
-Yup! One of guest_memfd's core purposes is to be able to block host
-accesses to guest private (in the CoCo sense) memory.
+> 
+> I suppose there could be a "Fixes: 1f340724419e" tag, but maybe
+> there's no need to backport this anywhere?
 
->
-> Don't we issue KVM_CREATE_GUEST_MEMFD ioctl to get a fd in userspace to b=
-e passed to KVM_SET_USER_MEMORY_REGION2 ioctl later? We are just passing in=
- a DAX fd instead of a guest mem fd.
->
+Yes, I will add the Fixes tag.
 
-This RFC is passing a DAX fd instead of a guest_memfd when creating a
-memslot, so it's not really using guest_memfd, it's just reusing the
-functions that were first created for guest_memfd to support another
-kind of fd.
+Also the previous patch ("PCI: of: Set fwnode device of newly created PCI
+device nodes") fixes 407d1a51921e ("PCI: Create device tree node for bridge")
 
-What's the use case you're shooting for? Why not mmap() from the DAX
-fd and then pass the userspace address to KVM when setting up a memslot?
+I plan to add "Fixes: 407d1a51921e" to the previous patch to make things
+consistent.
 
-Is there a requirement to have the DAX memory usable by CoCo guests as
-well, and hence requiring guest_memfd-style protection from host
-accesses for private DAX memory?
+To ease backports and avoid conflicts, I plan to add 'Cc: stable' in 4
+patches:
+ - patch 13 "PCI: of: Remove fwnode_dev_initialized() call for a PCI root
+   bridge node"
+   This current patch with Fixes added
 
->>
->> Since there is interest for several different allocation backends
->> (default, hugetlb, zone_device), it might be better to use a model
->> where guest_memfd has the option for backend allocators to register
->> themselves in the kernel. The ioctl can then select one by their
->> id/name (could be just a string). They can be configured using
->> e.g. sysfs (like hugetlb already is).
->>
->> This would also allow easy experimentation with new allocators,
->> having an allocator with BPF control, etc.
->
-> Agreed. Although my main intent is to see if there's interest with provid=
-ing something to the usages already on the DAX path an ease of transition u=
-ntil something like what's proposed above shows up. But if what I proposed =
-will be a security issue then maybe not.
->
->>
->> - Frank
+ - patch 12 "PCI: of: Set fwnode device of newly created PCI device nodes"
+   The previous patch with Fixes added
+
+ - patch 11 "PCI: of: Use fw_devlink_set_device()"
+   Avoid conflict when patch 13 is applied
+
+ - patch 6  "driver core: fw_devlink: Introduce fw_devlink_set_device()"
+   Needed for patch 11 and 12
+
+Do you think it makes sense ?
+
+Best regards,
+Hervé
+
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> > ---
+> >  drivers/pci/of.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > index b694fcda16b1..0993257fe025 100644
+> > --- a/drivers/pci/of.c
+> > +++ b/drivers/pci/of.c
+> > @@ -811,7 +811,6 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+> >  	 */
+> >  	of_node_set_flag(np, OF_POPULATED);
+> >  	fw_devlink_set_device(&np->fwnode, &bridge->dev);
+> > -	fwnode_dev_initialized(&np->fwnode, true);
+> >  
+> >  	ret = of_changeset_apply(cset);
+> >  	if (ret)
+> > -- 
+> > 2.53.0
+> >   
+
+
+
+-- 
+Hervé Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
