@@ -1,151 +1,159 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8794534B2
-	for <linux-cxl@vger.kernel.org>; Wed,  6 May 2026 14:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D733ED132
+	for <linux-cxl@vger.kernel.org>; Wed,  6 May 2026 14:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778078632; cv=none; b=E+JmrcfBVMhEzPK3hBq9tArs0zWHZsKQnOegdO+eXg/tFbix1nPa/PvydEM3RDVMig9Iw//oCO0GqvWfN44ZsK4Y80Y1/zLDZje2kQ+on0mV9XSKAALo/Nw3PNKRuU4W3D2pHDvSVrNHem/mEmx7+vhrqk+w7XojnAm+TPeB2/E=
+	t=1778079591; cv=none; b=OU/7pNqrScejhJHbf1spa8sw3NEvEMT68sveOgepYziUT/+0ParrW7DQXjxcXuIdIRwGEHT/VDXQIjFqnCfwp5YmhOZ6SFGp/Wz2ByS/62YdQqoCfZRCr+3Ek5mVdLvqK+/scYDbjuwvMyoSufFCI7ldrv51XDzr9iUTH6qhv+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778078632; c=relaxed/simple;
-	bh=8rYhAkFOKY6K/j1/wpxkQvi3y7Z+5CCbQC0nxatTUIY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WVH6q0/3xED/ld39HZ3+asuqJS+FjV5cJ9ilTf3/MWPAx2Caq3GunSX2NuG0gSPN9d5oo8tj03DekeEMXiwJxC00hqSxHbVjmMOP6U30GvgkjVVEOZicDHGPxjwTQc7LPVeolqk9XSiQFdhhqhcpoCptzsMwKBBBH8qp3lfmJXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=tseGfhns; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1778079591; c=relaxed/simple;
+	bh=xkbWvi58K+u0jKOUzFYtTq17x5Cix/DrD9VHXp/VuR0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SWj2a2g6atMO0n7Xc91SARVp7Kqow4T+TnQ2hzvpAX+z9vajlFA8Smsx2GtcX+BDkEJuQ5AqkUCZcvcywoiQYNFiFFAjmqDi/44P4yM1DZAJlBHFAYAIqA+UAvCYlIPJhzGOEoeJw8hu2hvkcNYlUI5ZMDgo20BU+nGi64rnuDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=epQy6iBA; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="tseGfhns"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-44b052142e1so2824388f8f.1
-        for <linux-cxl@vger.kernel.org>; Wed, 06 May 2026 07:43:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1778078629; x=1778683429; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0yrKfSuIFibBSjAR8E2oWzOhR6JQ9Zhv+MqRJc3mpQs=;
-        b=tseGfhns4w+9L4TQ8ZT857uRRltMFzAQPmLZhCRY+EGmJq0t6AvhRuFIS2LcdgEwPw
-         IWWfpzomqpb0AW+jcMqK3qZCRTT8gRjmbviSTyqQ9dMYRHQFRW81+DujnCHOO82yJrHH
-         A7OG/wPvOgIRDnKkRY3WkOYZb6YW3Z4q0qxKjyamqlQJHbSw+MaIKDosfAiIEjx3/L36
-         ca3De28TBjvihOBZqV3zY6GzNWXzsQYt7aLjFeVdNuIBq9wBxCiI0VNz/TLwO9dtHXlE
-         gwXigjF6RVNMwLpkFJ53l9nzqb/23+nhDiUX5xhcdKIgKb31heeP4FOx84OfNNVTOGQi
-         2rtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778078629; x=1778683429;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0yrKfSuIFibBSjAR8E2oWzOhR6JQ9Zhv+MqRJc3mpQs=;
-        b=g3jovP/C8JK2v8XCwr7HSvL3aWs8ZVIkwBLLVRV09mvOUq9HHzkyG8JVO9AqTanBLb
-         gYoDIo+hONcrlJ9q0n4E/MrABFCXk8xNuo9McYjxju2ZgLWs3oY/gdnyxIni5oqZBptC
-         idzDKJXbU7ic2ddgrPCxanodYLnSlcW6oybRakTEud397WI5YXY/hmJL8XKfcMTNq7S0
-         IfxXTM1c9shsAgL3qbDJWroZsKniJ7r0QqvZUCj6AjtveluP9Dt4SUVNXbYzwTKAgpW/
-         Cs2TDKFxjbIwHVEK5CWDsygutXT9nlyVmYSzlZ6TTPeVbINWdqM2SVdpFdbVj4OzOT+V
-         ysLQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+C9hflGXygfaFy6yd+CjSzMWPoJMhPeziTQqE0Bmmb23WEDya9fuGnnQOGzL0qpmNwXWjiAVwmOhM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/ZMLVupPS6pFAJfwi5eq57nMJ9kA7CSwyqwM3D5C95bp5Rxls
-	QOiYE513+Z9UuS69jEb466ugVFd1hjqnJ1Ye24M9BKysJniI4qvLujh5eKTPElUrUh8=
-X-Gm-Gg: AeBDieuBidNZCk74MyX+Ek/KqaJkJXqO56n2nJ+9hSKxuJtDmY9DlX72g+0ja21Tbnj
-	TrwAWMlLvXG4Lpmit2B/66i0x2CIevYZV+bl+nrwi2YuldzOp0XE7wIsIA62aDaBGxdtwWaZT4g
-	pA54iwwTH59nLNAlzzgeMHj5BT7dUX46bVH7qSnWPDS9as9x8+UO1aGLl5YK216AiMysZC6p5/n
-	3A4BmrJB5NMbmqo5RnnTQZ7K27WVQ1hu4MH3mQGHchCN2ylqaFQPiD3tbsYntF6Eq2R5j1m4/Dj
-	Rd+26scPbKoaRNFpvNbO/MCdK9PEwiXPrGr7nMSH4eIqy1792XLJLeVOeUbACr+n0ma31VAhLZj
-	T1Syvg4ITkGc46A1xWqNZuXgg7wz3Xu4NtzQluHA69soM0Q0ei58+Jpe6b0hUnXIb7pRE6hBqC5
-	M1lENY5QXv/cEQW9YAhWVqmf6S+zv9y3juzTzNzDTUHbOrTw==
-X-Received: by 2002:a05:6000:3106:b0:43d:300b:2285 with SMTP id ffacd0b85a97d-4515b524457mr6633850f8f.11.1778078628705;
-        Wed, 06 May 2026 07:43:48 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([185.194.185.26])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45055960fd6sm13732451f8f.31.2026.05.06.07.43.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2026 07:43:47 -0700 (PDT)
-Date: Wed, 6 May 2026 15:43:35 +0100
-From: Gregory Price <gourry@gourry.net>
-To: Alejandro Lucero Palau <alucerop@amd.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
-	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aftTlyHYNr0B9yL3@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <b704b05e-3e65-4a73-84c0-21557b0cc38f@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="epQy6iBA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778079587; x=1809615587;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xkbWvi58K+u0jKOUzFYtTq17x5Cix/DrD9VHXp/VuR0=;
+  b=epQy6iBArlbf20gimJFrEmr5uPLkEI/J4OsMsjHrIOOXkvIqcOsUh1AC
+   2mSADYBMvHFkiIt8Kl0uhi+VSUeYaYC47XMSYld7K65rWzsarzRs/eOYF
+   wnwIYl/+knSDj1u1Tt8EJrhtQgObwUOw3fcO6ktRzCNZJUyfiyP2nMRI5
+   s2r3U7ZvgZz60RqLzSgepvmi/q255iNVjik4fNuP4ORoF9VgaXXRUm1NC
+   gU/C4cbPV2+5RRgeKwCRxxXfeW6F9iTt9Kok4kfYKotPFq29+mDbtvchq
+   y6El2TUfSLxYIOaF9Ziiy/E+7T/vV1Em51oAxMph2alJU8ZFfw2/FDvHj
+   Q==;
+X-CSE-ConnectionGUID: b1jZTZ/PQAmD0mp97CuqHA==
+X-CSE-MsgGUID: 6mODOkBTSFepeGs8HJ8hmw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11778"; a="82882905"
+X-IronPort-AV: E=Sophos;i="6.23,219,1770624000"; 
+   d="scan'208";a="82882905"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2026 07:59:44 -0700
+X-CSE-ConnectionGUID: dW7Dhp9yQ+KwyxDk7f9hZg==
+X-CSE-MsgGUID: ZMWOhswyTXaWCpO4esePLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,219,1770624000"; 
+   d="scan'208";a="236419974"
+Received: from jmaxwel1-mobl.amr.corp.intel.com (HELO [10.125.110.159]) ([10.125.110.159])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2026 07:59:43 -0700
+Message-ID: <13c78882-d3df-474c-8232-6b22ef1b44ec@intel.com>
+Date: Wed, 6 May 2026 07:59:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b704b05e-3e65-4a73-84c0-21557b0cc38f@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/7] cxl: Add CXL type2 accelerator support for cxl_test
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net, jic23@kernel.org,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, djbw@kernel.org,
+ Davidlohr Bueso <dave@stgolabs.net>
+References: <20260422230237.2599333-1-dave.jiang@intel.com>
+ <afrBq3AIDrAkTTWR@aschofie-mobl2.lan>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <afrBq3AIDrAkTTWR@aschofie-mobl2.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 25, 2026 at 12:40:09PM +0000, Alejandro Lucero Palau wrote:
+
+
+On 5/5/26 9:20 PM, Alison Schofield wrote:
+> On Wed, Apr 22, 2026 at 04:02:30PM -0700, Dave Jiang wrote:
+>> The series is based on v7.0-rc7 with Alejandro's type2 series [1] and
+>> with Dan's follow on series [2].
+>>
+>> Series adds a 'type2_test' module parameter where it setup a mock type2
+>> hierarchy with a mock type2 accelerator device directly under a root
+>> port that has an auto region setup.
+>>
+>> It also includes a CXL fix that was encountered when running tests with
+>> the new code.
+>>
+>> [
+>>   {
+>>     "memdevs":[
+>>       {
+>>         "memdev":"mem0",
+>>         "ram_size":536870912,
+>>         "ram_qos_class":42,
+>>         "host":"cxl_type2_accel.0",
+>>         "poison_injectable":false
+>>       }
+>>     ]
+>>   },
+>>   {
+>>     "regions":[
+>>       {
+>>         "region":"region0",
+>>         "resource":70300293136384,
+>>         "size":536870912,
+>>         "type":"ram",
+>>         "interleave_ways":1,
+>>         "interleave_granularity":4096,
+>>         "decode_state":"commit"
+>>       }
+>>     ]
+>>   }
+>> ]
+>>
+>>     "root decoders":[
+>>       {
+>>         "decoder":"decoder0.0",
+>>         "resource":70300293136384,
+>>         "size":1073741824,
+>>         "interleave_ways":1,
+>>         "accelmem_capable":true,
 > 
-> I can see the nid param is just a "preferred nid" with alloc pages. Using
-> __GFP_PRIVATE will restrict the allocation to private nodes but I think the
-> idea here is:
+> FWIW - above was a pleasant surprise. We've had accelmem_capable plumbed in
+> cxl list since 2022 !
+> 
+> That's a segway to a sanity check: is there anything else we want to
+> display or do in the cxl-cli tooling that is special for Type 2 ?
+
+Maybe back invalidate attributes? I don't remember if that's already there or if Davidlohr is adding that.
+
+DJ
+
 > 
 > 
-> 1) I own this node
 > 
-> 2) Do not give me memory from another private node but from mine.
-> 
-> 
+>>         "qos_class":42,
+>>         "nr_targets":1
+>>       },
+>>
+>> [1]: https://lore.kernel.org/linux-cxl/20260330143827.1278677-1-alejandro.lucero-palau@amd.com/T/#t
+>> [2]: https://lore.kernel.org/linux-cxl/20260403210050.1058650-1-dan.j.williams@intel.com/T/#t
+>>
+>>
+>> Dave Jiang (7):
+>>   cxl/test: Refactor mock_init_hdm_decoder() to prep for type2 decoder
+>>   cxl/test: Add type2 support for mock CFMWS0
+>>   cxl/test: Refactor platform device enumerations
+>>   cxl/test: Add hierarchy enumeration support for type2 device
+>>   cxl/test: Fixup hdm init for auto region to support type2
+>>   cxl/test: Add cxl_test accelerator driver
+>>   cxl: Fix double unregistration of CXL regions for type2 devices
+>>
+>>  drivers/cxl/core/region.c      |   3 +-
+>>  tools/testing/cxl/test/Kbuild  |   2 +
+>>  tools/testing/cxl/test/accel.c |  71 ++++
+>>  tools/testing/cxl/test/cxl.c   | 717 ++++++++++++++++++++++++---------
+>>  4 files changed, 605 insertions(+), 188 deletions(-)
+>>  create mode 100644 tools/testing/cxl/test/accel.c
+>>
+>>
+>> base-commit: 6fa897f2d9a917c4bd7b911b230fcfad05a952c2
+>> -- 
+>> 2.53.0
+>>
 
-I mildly mis-read this question, apologies.
-
-Multiple private nodes in the nodemask are ignored, because the nodemask
-is a filter function for the fallback lists - and private nodes never
-show up in the fallback lists (except for their own).
-
-So for example
-
-Nodes:  Normal(A,B), Private(C,D)
-
-Fallback lists:
-   A:   [A,B]
-   B:   [B,A]
-   C:   [C,A,B]
-   D:   [D,B,A]
-
-            combination                       |  possible result
-----------------------------------------------------------------
-__GFP_PRIVATE + pref_node(C) + nodemask(NULL) = (C or A or B)
-__GFP_PRIVATE + pref_node(C) + nodemask(C,D)  = C
-GFP_PRIVATE + pref_node(C) + nodemask(ALL)    = C
-
-Basically private nodes are completely ignored in the nodemask, so you
-cannot do fallback allocations to other private nodes.
-
-There is no good abstraction (that I have found) to communicate
-multi-private-node allocations simply because this would imply needing
-private nodes to be in the fallback lists for other nodes.
-
-Maybe there is a possibility of modifying fallback lists explicitly, but
-I think that is out of scope for the first implementation.
-
-~Gregory
