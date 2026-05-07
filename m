@@ -1,370 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DD9274B53;
-	Thu,  7 May 2026 18:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFCD36EAAD
+	for <linux-cxl@vger.kernel.org>; Thu,  7 May 2026 23:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778179931; cv=none; b=NElLSfudHHqFk6/nCRYSgL19r/SDiwlmx/U7YUf9mnKGVVYbGSujGMcsOj5h9WApm/NzkxTTW1aXSEpfQFgQdcbwf2qd+s9F6NuwiUMVa/wXkxB8z9K3rEf4cJxJn7pc4rngZAnQMuB/Npy+Ma1j3LahT/GiXsaadScs+JT51WU=
+	t=1778196936; cv=none; b=nF//VKHjOoyS2EpKwjXfXBnM6k90J1OIG2XnvbjWHWWw17zrEJzBZ/F8jSkjCQoLM8NYYrXBhfJZ7WjcEYTf1wntciDjSyTbtpkhptegav5jORin5ZzYRBSUjtpioTkCAxMH8TxaWBb9YOi7IIvmbsZC6CBoQMeNB/eQUOzVUTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778179931; c=relaxed/simple;
-	bh=dPvk0Ao+9NzrVwPu/7e+NRYDILr8HDv2Ef1wxRjfB8A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Tuc7NQN3YjuxDssUd1ugQvG5vp8tCUmMFyK7ZT4nHztghS0c3sjEVYcdGtvdB1ZUULhL2a4OUoQwhT1ObGfJDidi3iqShDEoUs0c6ZLEpZ7gF+DElSnoifGfyfwpoZ+3sCFWxJ/ae2HFaZ5EOnCK63/UgmW94y91RYf2Y5UVQD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O2ut9QPm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778196936; c=relaxed/simple;
+	bh=kmo+q7PQxuYkeoc1Ef0o1IUx9iN8EycBEsb0eZbxc48=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ULKjxyvGxe95+1Bgrll43wV9vdlwUPMFE8nVq/Ytn86nEt6fiIQTWZt7NWTyDax8vmT4URLFlsuy2bg4CyyiX1tI4VnexAHjJG5+4QPOCAwaXGQwCbzFUJHutSUb/qSYCLCWGd67CNw//p7RuKH3xJdec0QVxepEqZ3ACOQmwPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cnh6CyKs; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O2ut9QPm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 497F2C2BCB2;
-	Thu,  7 May 2026 18:52:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778179930;
-	bh=dPvk0Ao+9NzrVwPu/7e+NRYDILr8HDv2Ef1wxRjfB8A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=O2ut9QPmkIas6p5rRy1BY/vSHFQJmBRPCVUzdc+ircsAvSbD4KdxXf60vz+T3DGou
-	 3JRiLQc5OR2j+riAjiZ+7ZxoUbmAViw1+T8wvpNLmVgls/D5wW4ReuKvlVDhuoN5Al
-	 tHJxzYE3b/ZOxK0ZlrHOYPul9/8d6vENSyeDkjAiscJ8go/OJSHUo293WFEBZ+rKIt
-	 08ommsQyaPb1OWcIPoJ/V7pcI4ZRLW/qY0Jiw4sbo+ZpKv3gHwglkMITSsTx1eGnJc
-	 x4SA+cUFGPfjgbmucaN7aBAaqbPsE5+4YbTCHHJmPSpJfQmEGaSavBGx8FGv1zNoiw
-	 wAqdUcfFL3BTA==
-Date: Thu, 7 May 2026 19:51:56 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: <dave@stgolabs.net>, <dave.jiang@intel.com>,
- <alison.schofield@intel.com>, <djbw@kernel.org>, <bhelgaas@google.com>,
- <shiju.jose@huawei.com>, <ming.li@zohomail.com>,
- <Smita.KoralahalliChannabasappa@amd.com>, <rrichter@amd.com>,
- <dan.carpenter@linaro.org>, <PradeepVineshReddy.Kodamati@amd.com>,
- <lukas@wunner.de>, <Benjamin.Cheatham@amd.com>,
- <sathyanarayanan.kuppuswamy@linux.intel.com>, <vishal.l.verma@intel.com>,
- <alucerop@amd.com>, <ira.weiny@intel.com>, <corbet@lwn.net>,
- <rafael@kernel.org>, <xueshuai@linux.alibaba.com>,
- <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
- <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v17 11/11] Documentation: cxl: Document CXL protocol
- error handling
-Message-ID: <20260507195156.3757a20b@jic23-huawei>
-In-Reply-To: <20260505173029.2718246-12-terry.bowman@amd.com>
-References: <20260505173029.2718246-1-terry.bowman@amd.com>
-	<20260505173029.2718246-12-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cnh6CyKs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778196934; x=1809732934;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=kmo+q7PQxuYkeoc1Ef0o1IUx9iN8EycBEsb0eZbxc48=;
+  b=cnh6CyKsgQbi6jM8RsMAdTCHGGI4mz/A7Xkwp/eH+6KGDaEFDtjVlNOJ
+   gNWivjeQ0A8xx3bxaG8URPe1459DR3A3v93EfXPcvbcCMxv/jbAcy/9Bq
+   Cz737h5/1LU81KzaO+4VQLpgIfBA1k57r4Fxlo3L1qE2JdtqJJxkBdHyN
+   noOFWvx+ZzB7fzMy1iJhqAlawzpo9ZcwLSPkOjZnslrlw8Z1/b6SJmpMN
+   O0QZUt2B8qm9fxP1vlpOBYc1eRQ9iDeovIiQKoRXua4BXAEzcOK04QYWb
+   FY9Kn6Ddex+gQEOTtf1DCEQF4bnvxOG9AmxO06LOqqipZOGci9uMldezM
+   g==;
+X-CSE-ConnectionGUID: ydCD35bCQASpRaXfW6nZig==
+X-CSE-MsgGUID: ZPbXWqpzQHafy0CQllI5cQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11779"; a="90622634"
+X-IronPort-AV: E=Sophos;i="6.23,222,1770624000"; 
+   d="scan'208";a="90622634"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 16:35:33 -0700
+X-CSE-ConnectionGUID: VxJt/IHBSgq9L/we4QyzWA==
+X-CSE-MsgGUID: GtPRugRfTYuqveEGUQ4u5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,222,1770624000"; 
+   d="scan'208";a="238401103"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.240]) ([10.125.110.240])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 16:35:32 -0700
+Message-ID: <ee6a45be-7905-470d-b546-7317f09aab12@intel.com>
+Date: Thu, 7 May 2026 16:35:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/7] cxl/test: Refactor mock_init_hdm_decoder() to prep
+ for type2 decoder
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net, jic23@kernel.org,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, djbw@kernel.org
+References: <20260422230237.2599333-1-dave.jiang@intel.com>
+ <20260422230237.2599333-2-dave.jiang@intel.com>
+ <afrELziKpyUDuZXS@aschofie-mobl2.lan>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <afrELziKpyUDuZXS@aschofie-mobl2.lan>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Tue, 5 May 2026 12:30:29 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
 
-> Add Documentation/driver-api/cxl/linux/protocol-error-handling.rst
-> describing the end-to-end CXL protocol error path: AER ingress, the
-> AER-CXL kfifo handoff, the cxl_core consumer worker, RCD/RCH special
-> cases, severity policy, trace events, and a source code map.
+
+On 5/5/26 9:31 PM, Alison Schofield wrote:
+> On Wed, Apr 22, 2026 at 04:02:31PM -0700, Dave Jiang wrote:
+>> Split mock_init_hdm_decoder() into different types of initialization.
+>> Currently the code deals with default initialization, saved decoders,
+>> and type3 auto region initialization. In the future, a type2 auto
+>> initialization will also be added. This refactor will make it cleaner
+>> to add additional init types.
 > 
-> This documents the architecture introduced by the preceding patches in
-> this series.
+> Nice refactor! A couple of nits below...
 > 
-> This was generated by claude-opus-4.7.
-
-Maybe too much?  I got bored reading it and stopped which is probably
-not the best sign.
-
-A few formatting related comments inline.
-
-Thanks,
-
-J
+>>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>  tools/testing/cxl/test/cxl.c | 184 ++++++++++++++++++++++-------------
+>>  1 file changed, 115 insertions(+), 69 deletions(-)
+>>
+>> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+>> index cd47fdd7ccb5..c26c37cef12c 100644
+>> --- a/tools/testing/cxl/test/cxl.c
+>> +++ b/tools/testing/cxl/test/cxl.c
+>> @@ -1052,74 +1052,25 @@ static int first_decoder(struct device *dev, const void *data)
+>>  	return 0;
+>>  }
+>>  
+>> -/*
+>> - * Initialize a decoder during HDM enumeration.
+>> - *
+>> - * If a saved registry entry exists:
+>> - *   - enabled decoders are restored from the saved programming
+>> - *   - disabled decoders are initialized in a clean disabled state
+>> - *
+>> - * If no registry entry exists the decoder follows the normal mock
+>> - * initialization path, including the special auto-region setup for
+>> - * the first endpoints under host-bridge0.
+>> - *
+>> - * Returns true if decoder state was restored from the registry. In
+>> - * that case the saved decode configuration (including target mapping)
+>> - * has already been applied and the map_targets() is skipped.
+>> - */
+>> -static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
+>> +enum cxld_init_type {
+>> +	MOCK_DECODER_INIT_DEFAULT,
+>> +	MOCK_DECODER_INIT_SAVED,
+>> +	MOCK_DECODER_INIT_TYPE3_AUTO,
+>> +};
 > 
-> Assisted-by: Claude:claude-opus-4.7
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
->  Documentation/driver-api/cxl/index.rst        |   1 +
->  .../cxl/linux/protocol-error-handling.rst     | 440 ++++++++++++++++++
->  2 files changed, 441 insertions(+)
->  create mode 100644 Documentation/driver-api/cxl/linux/protocol-error-handling.rst
+> skip
 > 
-> diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-> index 3dfae1d310ca..6861b2e5726a 100644
-> --- a/Documentation/driver-api/cxl/index.rst
-> +++ b/Documentation/driver-api/cxl/index.rst
-> @@ -42,6 +42,7 @@ that have impacts on each other.  The docs here break up configurations steps.
->     linux/dax-driver
->     linux/memory-hotplug
->     linux/access-coordinates
-> +   linux/protocol-error-handling
->  
->  .. toctree::
->     :maxdepth: 2
-> diff --git a/Documentation/driver-api/cxl/linux/protocol-error-handling.rst b/Documentation/driver-api/cxl/linux/protocol-error-handling.rst
-> new file mode 100644
-> index 000000000000..4d6f33f0ed31
-> --- /dev/null
-> +++ b/Documentation/driver-api/cxl/linux/protocol-error-handling.rst
-> @@ -0,0 +1,440 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +==============================
-> +CXL Protocol Error Handling
-> +==============================
-> +
-> +This document describes how the kernel detects, classifies, dispatches,
-> +logs, and recovers from CXL protocol errors signaled through the PCIe
-> +Advanced Error Reporting (AER) interface. It covers both Virtual
-> +Hierarchy (VH) topologies (Root Ports, Upstream/Downstream Switch
-> +Ports, and Endpoints) and Restricted CXL Host (RCH) topologies
-> +(Root Complex Event Collectors driving Restricted CXL Devices).
+>> +/*
+>> + * Initialize a decoder during HDM enumeration.
+>> + *
+>> + * If a saved registry entry exists:
+>> + *   - enabled decoders are restored from the saved programming
+>> + *   - disabled decoders are initialized in a clean disabled state
+>> + *
+>> + * If no registry entry exists the decoder follows the normal mock
+>> + * initialization path, including the special auto-region setup for
+>> + * the first endpoints under host-bridge0.
+>> + *
+>> + * Returns true if decoder state was restored from the registry. In
+>> + * that case the saved decode configuration (including target mapping)
+>> + * has already been applied and the map_targets() is skipped.
+>> + */
+>> +static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
+>> +{
+>> +	struct cxl_endpoint_decoder *cxled = NULL;
+>> +	struct platform_device *pdev = NULL;
+>> +	struct cxl_test_decoder *td;
+>> +	struct cxl_memdev *cxlmd;
+>> +	struct cxl_port *port;
+>> +	bool hb0 = false;
+>> +
+>> +	if (is_endpoint_decoder(&cxld->dev)) {
+>> +		cxled = to_cxl_endpoint_decoder(&cxld->dev);
+>> +		cxlmd = cxled_to_memdev(cxled);
+>> +		WARN_ON(!dev_is_platform(cxlmd->dev.parent));
+>> +		pdev = to_platform_device(cxlmd->dev.parent);
+>> +
+>> +		/* check is endpoint is attach to host-bridge0 */
+>> +		port = cxled_to_port(cxled);
+>> +		do {
+>> +			if (port->uport_dev == &cxl_host_bridge[0]->dev) {
+>> +				hb0 = true;
+>> +				break;
+>> +			}
+>> +			if (is_cxl_port(port->dev.parent))
+>> +				port = to_cxl_port(port->dev.parent);
+>> +			else
+>> +				port = NULL;
+>> +		} while (port);
+>> +		port = cxled_to_port(cxled);
+>> +	} else {
+>> +		port = to_cxl_port(cxld->dev.parent);
+>> +	}
+>> +
+>> +	switch (get_decoder_init_type(cxld, pdev, hb0, &td)) {
+>> +	case MOCK_DECODER_INIT_SAVED:
+>> +		if (!td)
+>> +			return false;
+> 
+> get_decoder_init_type never returns NULL w _SAVED.
+> 
+> suggest replace w
+> 		if (WARN_ON(!td))
+> 			return false;
+> 
 
-Odd drifting wrapping. I thought only humans did that. I guess it's common
-enough in kernel docs maybe it learn it!  Anyhow, I think Docs are 80 char
-limit in which case something like:
+ok
 
-This document describes how the kernel detects, classifies, dispatches, logs,
-and recovers from CXL protocol errors signaled through the PCIe Advanced Error
-Reporting (AER) interface. It covers both Virtual Hierarchy (VH) topologies
-(Root Ports, Upstream/Downstream Switch Ports, and Endpoints) and Restricted
-CXL Host (RCH) topologies (Root Complex Event Collectors driving Restricted
-CXL Devices).
+> 
+>> +		return mock_decoder_handle_saved(cxld, td);
+>> +	case MOCK_DECODER_INIT_DEFAULT:
+>> +		/*
+>> +		 * The default path picks up all the decoders that are not
+>> +		 * endpoint.
+>> +		 */
+>> +		default_mock_decoder(cxld);
+>> +		return false;
+>> +	case MOCK_DECODER_INIT_TYPE3_AUTO:
+>> +		mock_init_hdm_type3_cxled(cxled, port, pdev);
+>> +		return false;
+>> +	default:
+>> +		return false;
+> 
+> default is unreachable since the enum has 4 names values.
+> suggest dropping it.
+> 
 
-Maybe t was intentional to keep lines similar lengths and brackets on last one?
-I'm not sure..
-
-> +
-> +It is intended for kernel developers maintaining or extending
-> +``drivers/pci/pcie/aer*.c``, ``drivers/cxl/core/ras.c``, and the
-> +related plumbing in ``include/linux/aer.h``.
-> +
-> +
-> +Background
-> +==========
-> +
-> +A CXL device reports protocol-layer failures (CXL.cachemem RAS) as
-> +PCIe AER **Internal Errors**: ``PCI_ERR_COR_INTERNAL`` for correctable
-> +events and ``PCI_ERR_UNC_INTN`` for uncorrectable events. From the AER
-> +core's point of view these look like ordinary PCIe AER messages, but
-> +their semantics are CXL-specific: the actual fault information lives
-> +in CXL RAS capability registers, not in the PCIe AER status registers.
-> +
-> +Historically, native CXL.cachemem RAS handling was implemented only
-> +for CXL Endpoints and for RCH Downstream Ports. CXL Root Ports,
-> +Upstream Switch Ports, and Downstream Switch Ports were not covered.
-> +This left the kernel unable to log or react to protocol errors
-> +signaled by switch components.
-
-I'd drop the historical bit.  Not sure it adds value and these tend to
-become stale (like all the 'New Courts' in my local Uni. Some of those are
-500+ years old :)
-
-> +
-> +The unified CXL protocol error path closes that gap by routing every
-> +CXL Internal Error through a single producer/consumer pipeline shared
-> +by all CXL device types.
-
-The unified CXL Protocol path routes every ...
-(so no historical gap - as we don't care now you fixed it ;)
-
-Similar follows for some other parts - I might not have called them all out.
-
-> +
-> +
-> +Architecture overview
-> +=====================
-> +
-> +CXL protocol error handling is implemented as a distinct error plane
-> +layered on top of the existing PCIe AER infrastructure. The two planes
-
-(drop existing - same why do we need the history theme)
-
-> +are kept separate:
-> +
-> +* The **PCIe AER plane** continues to handle native PCIe errors
-** handles native  
-> +  (Receiver overflows, malformed TLPs, completion timeouts, and so
-> +  on). This is unchanged.
-> +
-> +* The **CXL protocol error plane** owns CXL Internal Errors. The AER
-> +  core forwards them to ``cxl_core`` via a dedicated kfifo; ``cxl_core``
-> +  then dispatches to CE/UE handlers and drives the recovery and
-> +  panic policy.
-> +
-> +The boundary between the two planes is ``is_cxl_error()`` in
-
-I think you can drop the `` and the automarkup.py magic in the kernel docs build
-will make that :c:func::is_cxl_error or something along those lines to
-both pretty print it and hopefully match autobuilt kernel-doc (assuming
-we include it anywhere for cxl)
-
-
-> +===============
-> +
-> +The diagram below shows the full path from an AER interrupt through
-> +producer classification, kfifo handoff, and consumer dispatch.
-> +
-> +.. code-block:: text
-> +
-> +   +-------------------------------------------------------------------------+
-> +   |                  CXL Internal Error Packet Flow                         |
-> +   |    From PCIe AER Interrupt to CXL Protocol Error Handling and Logging   |
-> +   +-------------------------------------------------------------------------+
-> +
-> +      CXL device (RP / USP / DSP / EP / RCD) raises AER Internal Error
-> +      (correctable PCI_ERR_COR_INTERNAL or uncorrectable PCI_ERR_UNC_INTN)
-> +                      |
-> +                      v
-> +      +-------------------------------------------------------------+
-> +      |    PCIe Root Port AER MSI/MSI-X interrupt fires             |
-> +      +-------------------------------------------------------------+
-> +                      |
-> +      ============= drivers/pci/pcie/aer.c (AER core) =============
-> +                      |
-> +                      v
-> +           +---------------------------------+
-> +           |  aer_irq()  /  aer_isr()        |  (top + threaded handler)
-> +           +---------------------------------+
-> +                      |
-> +                      v
-> +           +---------------------------------+
-> +           |  aer_isr_one_error()            |
-> +           |  aer_isr_one_error_type()       |
-> +           +---------------------------------+
-> +                      |
-> +                      v
-> +          +------------------------------------------+
-> +          |  aer_get_device_error_info()             |
-> +          |  - reads PCI_ERR_COR_STATUS              |
-> +          |  - reads PCI_ERR_UNCOR_STATUS  (*if RP/  |
-> +          |    RCEC/DSP, or non-fatal severity)      |
-> +          |  - sets info->is_cxl = pcie_is_cxl(dev)  |
-> +          +------------------------------------------+
-> +                      |
-> +                      v
-> +           +---------------------------------+
-> +           |  handle_error_source(dev, info) |
-> +           +---------------------------------+
-> +              |                          |
-> +              |  is_cxl_error()          +--->  pci_aer_handle_error()
-> +              |  (CXL device + Internal)        (native PCIe AER path,
-> +              v                                  not covered here)
-> +      +-------------------------------------------------------------+
-> +      | Topology dispatch within AER core:                          |
-> +      |                                                             |
-> +      |   - VH topology  (RP / USP / DSP / EP)                      |
-> +      |     -> drivers/pci/pcie/aer_cxl_vh.c                        |
-> +      |                                                             |
-> +      |   - RCH topology (RCEC iterates RCDs under it)              |
-> +      |     -> drivers/pci/pcie/aer_cxl_rch.c                       |
-> +      +-------------------------------------------------------------+
-> +           |                                            |
-> +           | VH path                            RCH path (RCEC AER)
-> +           v                                            v
-> +      ============= aer_cxl_vh.c (VH      ============= aer_cxl_rch.c (RCH
-> +                    producer) =============              producer) ==========
-> +           |                                            |
-> +           v                                            v
-> +      +-----------------------------+         +-------------------------------+
-> +      | cxl_forward_error(pdev,info)|         | cxl_rch_handle_error_iter()   |
-> +      |  - if AER_CORRECTABLE:      |         |  - iterate each RCD pdev      |
-> +      |     clear PCI_ERR_COR_STATUS|         |    beneath the RCEC           |
-> +      |  - pci_dev_get(pdev)        |         |  - call cxl_forward_error()   |
-> +      |  - build cxl_proto_err_     |         |    for each RCD               |
-> +      |    work_data                |         |    (same producer helper as   |
-> +      |    { pdev, severity }       |         |     the VH path uses)         |
-> +      |  - kfifo_in_spinlocked(...) |         +-------------------------------+
-> +      |  - schedule_work(...)       |                       |
-> +      +-----------------------------+                       |
-> +              |                                             |
-> +              +-----------------+---------------------------+
-> +                                |
-> +                                v
-> +                    +--------------------------+
-> +                    |     AER-CXL kfifo        |
-> +                    |     (work_struct)        |
-> +                    +--------------------------+
-> +                                |
-> +                                v
-> +      ============= drivers/cxl/core/ras.c (consumer worker) =======
-> +                                |
-> +                                v
-> +      +-------------------------------------------------------------+
-> +      | cxl_proto_err_work_fn() (workqueue handler)                 |
-> +      |   for_each_cxl_proto_err(&wd, __cxl_proto_err_work_fn)      |
-> +      +-------------------------------------------------------------+
-> +                      |
-> +                      v
-> +      +-------------------------------------------------------------+
-> +      | __cxl_proto_err_work_fn(wd)                                 |
-> +      |   port = find_cxl_port_by_dev(&pdev->dev, &dport)           |
-> +      |   cxl_handle_proto_error(pdev, port, dport, severity)       |
-> +      |   pci_dev_put(pdev)                                         |
-> +      +-------------------------------------------------------------+
-> +                      |
-> +                      v
-> +      +-------------------------------------------------------------+
-> +      | cxl_handle_proto_error()                                    |
-> +      +-------------------------------------------------------------+
-> +           |                                            |
-> +      pci_pcie_type ==                          pci_pcie_type !=
-> +      PCI_EXP_TYPE_RC_END                       PCI_EXP_TYPE_RC_END
-> +      (RCD Endpoint)                            (VH: RP/USP/DSP/EP)
-> +           |                                            |
-> +           v                                            |
-> +      +-------------------------------------+           |
-> +      | cxl_handle_rdport_errors(pdev)      |           |
-> +      |   - process RCH Downstream Port's   |           |
-> +      |     RAS register block first        |           |
-> +      |   - cxl_handle_cor_ras() for CE     |           |
-> +      |   - cxl_handle_ras() for UE         |           |
-> +      |     (log only; does NOT panic)      |           |
-> +      +-------------------------------------+           |
-> +           |                                            |
-> +           +--------------------+-----------------------+
-> +                                |
-> +                                v
-> +                   +-----------------------------+
-> +                   | severity == AER_CORRECTABLE |
-> +                   +-----------------------------+
-> +                         |                  |
-> +                         yes                no
-> +                         v                  v
-> +            +----------------------+   +-------------------------+
-> +            | cxl_handle_cor_ras() |   | cxl_do_recovery()       |
-> +            |  - emit cxl_aer_     |   | (described below)       |
-> +            |    correctable_      |   +-------------------------+
-> +            |    error trace       |
-> +            | pcie_clear_device_   |
-> +            |   status()           |
-> +            +----------------------+
-> +
-> +                    +-------------------------------+
-> +                    | cxl_do_recovery()             |
-> +                    |  if pci_dev_is_disconnected:  |
-> +                    |    panic("CXL cachemem err.") |
-> +                    |                               |
-> +                    |  ue = cxl_handle_ras()        |
-> +                    |    -> emit                    |
-> +                    |       cxl_aer_uncorrectable_  |
-> +                    |       error trace event       |
-> +                    |                               |
-> +                    |  if (ue):                     |
-> +                    |    panic("CXL cachemem err.") |
-> +                    |                               |
-> +                    |  pcie_clear_device_status()   |
-> +                    |  pci_aer_clear_nonfatal_status|
-> +                    |  pci_aer_clear_fatal_status   |
-> +                    +-------------------------------+
-
-Pretty diagram but maybe far too much given we have the code?
-
-> +
-> +
-> +Severity policy
-> +===============
-> +
-> +The kernel's response to a CXL protocol error depends on the AER
-> +severity reported by the device and on the result of inspecting the
-> +CXL RAS registers.
-> +
+ok
+> 
+>> +	}
+>>  }
+>>  
+>>  static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+>> -- 
+>> 2.53.0
+>>
 
