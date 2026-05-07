@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2511533B6F9
-	for <linux-cxl@vger.kernel.org>; Thu,  7 May 2026 23:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833CB301704
+	for <linux-cxl@vger.kernel.org>; Thu,  7 May 2026 23:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778197060; cv=none; b=YQ1RCxcHbh9FNZ6GBIdS0chAEjk8ZJL3Pln35F49IsfWb0rcLJZrAvnUWCey7ob4T+tA7jbLKgYKkSo3/a/fIRpqJtytT7MWwGE5+gh/WdY8qMm4CY0hBhQ6OpEPw79xsFK9CcnZM8PZstL3Y1ygQ+N6w7yvcZgeAiv+43ywOoA=
+	t=1778197268; cv=none; b=C7Grl56Ah/5FDNtZ9JB4aiyR7JCpBufdIIc4es1L9XHE41Y4dn7Ci0pR8Dz4Mrjvysvt8yfqxzIRT0EHMNM9PazvJfjCViyQ8rGUC0O7fdQ00SYQlFma0viDUl4tSkv74PBr/pEhM8I6DJTZ/25RaMqKgEAJoTEX0giIEsbgnVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778197060; c=relaxed/simple;
-	bh=d5dIxM1K3gq3yefoCIJ0MybYRzp7Sp+u/qgkNXKVbdY=;
+	s=arc-20240116; t=1778197268; c=relaxed/simple;
+	bh=BoxkG4pwwchEl8Q6iZFGuDjulci5e3e5Zjm3aB3rCQw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nJCXDgjWfs06qo5Ds5YE4psOz/L9eCklsY0PfDCxFIfpED/EW8w5Jy+Hv69pACre7exIb11shLtwZ0+ECqR8AmWAB/aWccCxlzOM7gYW7e9ucvLObbR71Jpt8vi73QglkbrHuzX0G5usqb5DvzsQekPacdhdBcRrcdzyKpziKf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mzRTG3eX; arc=none smtp.client-ip=198.175.65.12
+	 In-Reply-To:Content-Type; b=XwuTMaDD+wgiVfpgAqUJjmM95U3Olwt36hK5etGJm/Ry+d6fqhNnsbm5u/T9qxHoMdPW29XYa4F44bjklFEHNbURTcksPr4ae0NaihqTLc8DXwWJsx+OZf8zxSSJdh96Voi5C9cf4JFXPLuWpXLRoK6t7pkU03B0la15UbHlqxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JvCS1AVg; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mzRTG3eX"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JvCS1AVg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778197059; x=1809733059;
+  t=1778197267; x=1809733267;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=d5dIxM1K3gq3yefoCIJ0MybYRzp7Sp+u/qgkNXKVbdY=;
-  b=mzRTG3eX0qx+rLtJTrdRGoz+bA/yQwgbpmc14eXYcqBAONrrMV+XFe3W
-   jSzbFEoIyU9amjYICSv0IgZ1z22Y6+2ZMypuVgJQ+MZPZP26IBn75yA1b
-   8qbvs6X+kXz50J5o2E+KoJj2vMZqiS5ByhYqx/aCyLkcuSMBg75f24QJG
-   rrNpkiU5wc7cZ2djMe5kDNYQ6tkhzcZ09wh7W9Bzbj8VUT+EeAs3jMZ75
-   2opnCPmioKmn+YlqXiClk7fnKiU7COA29pZPjrhVieHjgBPSuK8x5BlP0
-   JqYM1udkg+poeIcvqib58Zq1KBn/t/sFI5p3g64bozaX610Kq2d1u7fh/
-   g==;
-X-CSE-ConnectionGUID: EhgA5tRZQneQZj45uiqx3w==
-X-CSE-MsgGUID: hIkI+4BlT/2YmqIC3aM2fA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11779"; a="90622731"
+  bh=BoxkG4pwwchEl8Q6iZFGuDjulci5e3e5Zjm3aB3rCQw=;
+  b=JvCS1AVg+M9sMIWaYaK0HreWPY7DhPG6evwvq4nBvWryObO9OOuP1cz3
+   zJeTyQXiWd5VTatvIgCvc9VhruWmQLJAW5qUtlnhnNtm0pZA5Uwfj3fa7
+   Qa1ZSzdMeZ8A9s5ezFFI5Ql33Ij3hyEC6VNOBflFYvL9xhb2xj+vgjWGS
+   P7ZNWO/WmKRnXO0+uv91ZBqGFDaLhclhyXxNIGTT53M3yNIO+gPg3S8zT
+   5qf7ogBIFHODsN/Ii/uzOxfpnFImENbjeQ4jTf2bcuVG2SOwGv8hNVBkT
+   xA/b3dnX4M4qhuElnhboymNsQo2YuZvsSm4iSC4/PVeJMEMUomWuFaMkh
+   Q==;
+X-CSE-ConnectionGUID: lHXaisBJQQmFY9huSGHxJw==
+X-CSE-MsgGUID: NYSGdyXxRZWFpA7smle49w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11779"; a="78885636"
 X-IronPort-AV: E=Sophos;i="6.23,222,1770624000"; 
-   d="scan'208";a="90622731"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 16:37:39 -0700
-X-CSE-ConnectionGUID: 3mvaks+1ScScmFYIKk+oDw==
-X-CSE-MsgGUID: W5D7l4R/Q0iI3IYbpzd5VA==
+   d="scan'208";a="78885636"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 16:41:06 -0700
+X-CSE-ConnectionGUID: dO2G8UwIQQ28PFBVbI8RNw==
+X-CSE-MsgGUID: hwiSOAxyR8+K2C38kREphA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,222,1770624000"; 
-   d="scan'208";a="238401267"
+   d="scan'208";a="232249150"
 Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.240]) ([10.125.110.240])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 16:37:38 -0700
-Message-ID: <5d72934e-c9c9-4709-9518-7d8f8d178fbe@intel.com>
-Date: Thu, 7 May 2026 16:37:36 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 16:41:05 -0700
+Message-ID: <e188d51c-0076-4e87-aca2-06000009e28c@intel.com>
+Date: Thu, 7 May 2026 16:41:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,164 +52,124 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/7] cxl/test: Add hierarchy enumeration support for type2
- device
+Subject: Re: [PATCH 6/7] cxl/test: Add cxl_test accelerator driver
 To: Alison Schofield <alison.schofield@intel.com>
 Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net, jic23@kernel.org,
  vishal.l.verma@intel.com, ira.weiny@intel.com, djbw@kernel.org
 References: <20260422230237.2599333-1-dave.jiang@intel.com>
- <20260422230237.2599333-5-dave.jiang@intel.com>
- <afrMEbtJf2m7ZFTF@aschofie-mobl2.lan>
+ <20260422230237.2599333-7-dave.jiang@intel.com>
+ <afrPVjKIQEPwCUAJ@aschofie-mobl2.lan>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <afrMEbtJf2m7ZFTF@aschofie-mobl2.lan>
+In-Reply-To: <afrPVjKIQEPwCUAJ@aschofie-mobl2.lan>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 5/5/26 10:05 PM, Alison Schofield wrote:
-> On Wed, Apr 22, 2026 at 04:02:34PM -0700, Dave Jiang wrote:
->> Add enumeration of type2 device hierarchy in cxl-test. The type2 device
->> is setup to be directly attached to a root port instead of rp -> switch
->> -> device that type3 hierarchy is setup..
+On 5/5/26 10:19 PM, Alison Schofield wrote:
+> On Wed, Apr 22, 2026 at 04:02:36PM -0700, Dave Jiang wrote:
+>> Add a type2 accelerator mock driver for the platform device that
+>> simulates a CXL type2 device. The driver exercises the same
+>> minimal API calls that a real CXL type2 driver would utilize.
 >>
 >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>  tools/testing/cxl/test/cxl.c | 110 ++++++++++++++++++++++++++++++++---
->>  1 file changed, 103 insertions(+), 7 deletions(-)
->>
 > 
-> skip
+> snp
 > 
-> 
->> +static int cxl_type2_mem_init(void)
->> +{
->> +	int i, rc;
+>> diff --git a/tools/testing/cxl/test/accel.c b/tools/testing/cxl/test/accel.c
+>> new file mode 100644
+>> index 000000000000..f21fdd57034e
+>> --- /dev/null
+>> +++ b/tools/testing/cxl/test/accel.c
+>> @@ -0,0 +1,71 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +// Copyright(c) 2026 Intel Corporation. All rights reserved.
 >> +
->> +	for (i = 0; i < NR_CXL_ROOT_PORTS; i++) {
+>> +#include <linux/platform_device.h>
+>> +#include <linux/mod_devicetable.h>
+>> +#include <linux/vmalloc.h>
+>> +#include <linux/module.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/sizes.h>
+>> +#include <linux/bits.h>
+>> +#include <cxl/mailbox.h>
+>> +#include <crypto/sha2.h>
+>> +#include <cxlmem.h>
 > 
-> I'd like to drop the artifact we carry here after copying type3 setup.
-> Type 2 doesn't use the second pdev. I think we can make the one accel
-> one region constraint explicit.
 > 
-> How about:
-> 
-> 	#define NR_CXL_TYPE2_ACCEL 1  /* One Type2 dev, One Region */
-> 
-> and then in cxl_type2_mem_init():
-> 
-> replace this:
-> 	for (i = 0; i < NR_CXL_ROOT_PORTS; i++) {
-> with this:
-> 	for (i = 0; i < NR_CXL_TYPE2_ACCEL; i++) {
-> 
+> Unused includes: crypto/sha2.h, linux/delay.h, linux/vmalloc.h,
+> linux/bits.h. Looks copy-pasted from mem.c.
 
 ok
 
 > 
 > 
->> +		struct platform_device *dport = cxl_root_port[i];
->> +		struct platform_device *pdev;
 >> +
->> +		pdev = platform_device_alloc("cxl_type2_accel", i);
->> +		if (!pdev)
->> +			goto err_mem;
->> +		pdev->dev.parent = &dport->dev;
->> +		set_dev_node(&pdev->dev, i % 2);
+>> +struct mock_cxl_accel {
+>> +	struct cxl_dev_state cxlds;
+>> +	struct cxl_memdev *cxlmd;
+>> +};
 >> +
->> +		rc = platform_device_add(pdev);
->> +		if (rc) {
->> +			platform_device_put(pdev);
->> +			goto err_mem;
+>> +static int cxl_mock_accel_probe(struct platform_device *pdev)
+>> +{
+>> +	struct cxl_attach_region attach = {
+>> +		.attach = {
+>> +			.probe = cxl_memdev_attach_region,
 >> +		}
->> +		cxl_mem[i] = pdev;
->> +	}
+>> +	};
+>> +	struct mock_cxl_accel *cxl_accel;
+>> +	struct cxl_dev_state *cxlds;
+>> +	struct cxl_memdev *cxlmd;
+>> +	int rc;
 >> +
->> +	return 0;
+>> +	cxl_accel = devm_cxl_dev_state_create(&pdev->dev, CXL_DEVTYPE_DEVMEM,
+>> +					      pdev->dev.id + 1, 0,
+>> +					      struct mock_cxl_accel, cxlds,
+>> +					      false);
+>> +	if (!cxl_accel)
+>> +		return -ENODEV;
+> 
+> devm_cxl_dev_state_create() NULL return means alloc failed, so 
+> return should be -ENOMEM.
+> 
+
+ok
+
+> 
 >> +
->> +err_mem:
->> +	for (i = NR_CXL_ROOT_PORTS - 1; i >= 0; i--) {
->> +		struct platform_device *pdev = cxl_mem[i];
+>> +	cxlds = &cxl_accel->cxlds;
+>> +	cxlds->media_ready = true;
+>> +	rc = cxl_set_capacity(cxlds, SZ_512M);
+>> +	if (rc)
+>> +		return rc;
 >> +
->> +		if (!pdev)
->> +			break;
->>  		platform_device_unregister(cxl_mem[i]);
->> +	}
->> +	return rc;
->>  }
+>> +	cxlmd = devm_cxl_add_memdev(cxlds, &attach.attach);
+> 
+> Above is storing pointer to stack allocated cxl_attach_region.
+> The stack goes away when probe returns leaving cxlmd->attach
+> dangling. I think we get away with it now because all our checks
+> of it are NULL checks. Would it ever be derferenced? 
+> Maybe devm_kzalloc attach or embed it in the the mock_cxl_accel
+> so it sticks around.
+> 
 > 
 > snip
 > 
->>  
->> +static int cxl_mem_init(void)
->> +{
->> +	if (type2_test)
->> +		return cxl_type2_mem_init();
->> +	return cxl_type3_mem_init();
->> +}
 > 
-> The precedent above would be good to follow for the topology helpers.
-> Now we have scattered 'if (type2_test) return 0;' at 7 sites that need
-> to know which topology this is. How about:
-> 
-> static int cxl_type3_topo_init(void)
-> {
-> 	/* inits all the things */
-> }
-> 
-> static int cxl_type2_topo_init(void)
-> {
-> 	return cxl_rootports_populate();
-> }
-> 
-> static int cxl_topo_init(void)
-> {
-> 	if (type2_test)
-> 		return cxl_type2_topo_init();
-> 	return cxl_type3_topo_init();
-> }
-> 
-> static void cxl_topo_exit(void)
-> {
-> 	if (type2_test) {
-> 		cxl_rootports_remove();
-> 	return;
-> 	}
-> 
-> 	cxl_rch_topo_exit();
-> 	cxl_single_topo_exit();
-> 	cxl_switches_remove();
-> 	cxl_rootports_remove();
-> }
 
-ok
+I'll dynamically allocate it. The usage of 'attach' resolves when devm_cxl_add_memdev() returns. I think only place it runs into trouble is during devm cleanup. 
+
+>> +module_platform_driver(cxl_mock_accel_driver);
+>> +MODULE_LICENSE("GPL");
+> 
+> "GPL v2"
+
+checkpatch suggested to use "GPL" instead of "GPL v2"
 
 > 
->> +
->>  static ssize_t
->>  decoder_reset_preserve_registry_show(struct device *dev,
->>  				     struct device_attribute *attr, char *buf)
->> @@ -2008,6 +2098,9 @@ static int cxl_dsps_populate(void)
->>  
->>  static void cxl_switches_remove(void)
->>  {
->> +	if (type2_test)
->> +		return;
->> +
->>  	cxl_usps_remove();
->>  	cxl_dsps_remove();
->>  }
->> @@ -2016,6 +2109,9 @@ static int cxl_switches_populate(void)
->>  {
->>  	int rc;
->>  
->> +	if (type2_test)
->> +		return 0;
->> +
->>  	BUILD_BUG_ON(ARRAY_SIZE(cxl_switch_uport) != ARRAY_SIZE(cxl_root_port));
->>  	rc = cxl_usps_populate();
->>  	if (rc)
+>> +MODULE_DESCRIPTION("cxl_test: accelerator device mock module");
+>> +MODULE_IMPORT_NS("CXL");
 >> -- 
 >> 2.53.0
 >>
