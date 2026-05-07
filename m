@@ -1,110 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from serval.cherry.relay.mailchannels.net (serval.cherry.relay.mailchannels.net [23.83.223.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C7E3C3456
-	for <linux-cxl@vger.kernel.org>; Thu,  7 May 2026 09:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778146053; cv=none; b=RapPg+63/pMyUOe4ETDRW1Rf1z+Iy2BE4SqdQ+sILfHaLZMZHzYUU6rF73FHezqewgzBKTI9qfwzqBHPRvNV5DCEGY41FN4wo3eUllEI1ZeFMKlU49MKJU4tKbx/6yhgHs/oVrgTPcLCCR9FjvwklUunih9YM9AzUjh8Zpdtd/k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778146053; c=relaxed/simple;
-	bh=x/JAxKHI7Ael5G6MScPlk2H+HssAyXfZZlY70tK9iiU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JeJnYEXcJrGn4XDQWpz9AFKbzCHtKmOZipOcz3ditdt6LWZQYkd93VA1AZiJniuUznWXa7+xc4f4IBY5aACs0HZONq4mHTvP45FpELSUzZKWA8FveKuJe2n9ZmZ2lnCAz69yuGL2t28X0yuv0iEd5fluDOFC5AIRG1Sslw2xW6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jLY+b/JI; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6690C3B7744
+	for <linux-cxl@vger.kernel.org>; Thu,  7 May 2026 12:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.163
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778156950; cv=pass; b=fvDRF2Of03mcVZjtgv40OhOdzDeeKsG+XSQlyClx7a83FNLbAJ0M/qx09hlaYvuZKs8BUd8zrV9kb4XgOJZ1g/JSVDcDSA26z98jBZRV8LgRCztDPXwGfK3moeEqBmlSqlUmtH6hAOaMggIsDA+iCKSccRTCLuUG4awbizPyLzo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778156950; c=relaxed/simple;
+	bh=HeqJ0aZAJGZZY7NdLUBrGus1WWOvl9X+lQzi2xjLLkg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SwwKYW9jzRuOxDxDcviFlF4C1C3ofKq6wUcijxAU4S2VTK+ma4N2D5F5l+qimDQ5gPuuZxtAdyIEjvDTRzrdNKsrXqyF0iRDrtujQKPWrufcskuIWS3075TE/zsSDvfINWZFuB/zY3Qswb5hjFFsQFUiFW5h6EOMMgKDWeKHzkk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=AXxNgcn8; arc=pass smtp.client-ip=23.83.223.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jLY+b/JI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50673C2BCF7
-	for <linux-cxl@vger.kernel.org>; Thu,  7 May 2026 09:27:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778146053;
-	bh=x/JAxKHI7Ael5G6MScPlk2H+HssAyXfZZlY70tK9iiU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jLY+b/JIweUhyC9EQbHXXX5+lUmjtPDCTb6CEWbCjVfCRDxJBarnaFFJzSN6Bzlh0
-	 uCBEKbVBx4QScxOyjQPbqKFL3Bu6RuD9bKJUAFyBz9J0FA4byC/YJXb0wVoxMsuReK
-	 3soKa5myCMdJejcLC2ivtOETqwzlHbP/ylHLwfkBHUJ9fLLxa/2mrtE2/52uncMt46
-	 UWtjOequ1q4un2go6HLe4u7eZZBLme1CZGfxagu1HpXGQOM+6JNistT2nFPmP0ex1D
-	 O7uWqQ49MgQjufgzK4+sdpbdDl6D0F/yZLKJyhL5sY3st+r4VSd5aLvszlIYA702LH
-	 Fc383SH2bck0Q==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5a8738c178dso384363e87.1
-        for <linux-cxl@vger.kernel.org>; Thu, 07 May 2026 02:27:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ+OPzOjKHFPrI4Im0N6Zu6OpNxOZtOag6UGyX4ZfD7DV6ii0P+DqdtPrC6esouf7FmAdFHFgEkCQZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwmxFIFUfQaTF3mtrbQ6KXnzF/o2dSqt4nwbT4CLYwbmp8iALCo
-	Z6Wot/E6hGfOPP0Zj3g6ZJsK+f03+lqiMAiH2eQbLbDuhxVZNKGM+W2VqUJxOnNx0NGsbzG/FPJ
-	ZFdQ7o61T+WyQVv6AVoQEEazJfPLp7IE=
-X-Received: by 2002:a05:6512:3ba7:b0:5a4:d34:5b38 with SMTP id
- 2adb3069b0e04-5a887ada944mr2206033e87.2.1778146051005; Thu, 07 May 2026
- 02:27:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="AXxNgcn8"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id A7B23641F37;
+	Thu, 07 May 2026 12:09:46 +0000 (UTC)
+Received: from pdx1-sub0-mail-a253.dreamhost.com (100-98-10-198.trex-nlb.outbound.svc.cluster.local [100.98.10.198])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id A8B15642152;
+	Thu, 07 May 2026 12:09:45 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
+	t=1778155785;
+	b=2rExssuw8ZOjpa0WrZvnUjw/C/hQzCUcIhIODF0NqAMKQTu/5i/eGRwx4rJguTR8joOcfe
+	WvsqVuJrXZ2/pGHwsKKqLdrWzgKlNHjWhqGV7bIyhyYWtOAIdHFvgS1NgAVZxowEP+6LiT
+	aWdK+CgYnBPIGlN+xtY1WWhemDHwpRbjicbTl+MuWz4M4ooC4jO7Niz9HmIBtdWLk8VAWY
+	/dzSTgLjTGxk267KqaTOEgo64JzzBC68T5A3ncmcnIH+ECi56+fRpRe7EMoXl05NYGYOn7
+	eZ6iTIIPNqvIuW4hVHOok94IVr4MKjH/nt1Xxw/XdrPmDwYEajPu6w4nSIbzWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1778155785;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=HeqJ0aZAJGZZY7NdLUBrGus1WWOvl9X+lQzi2xjLLkg=;
+	b=EykVSS7qFada9UNqjfTuKHA0BtF4X3IDnqaRe23ivd8wd6Hii5/wKVegX1SQDRrhOKiuyL
+	4WPbwp8qUFYP+Eq0w9OMdyfJcQlApwY6omslZVXy7gIX3uqU+aaFERdegq+HC6cpqNcMCY
+	SIjXlt0lgjhsW9ARb/0oIQ4sjwbD5PzCXYoBTibEdIx2SXIvp5aGrHmxe7sHLaUJw9/ao4
+	lHiSvRI6zJ6b7NZvfB1cbt7f6fgQPqdwSQAuBlySEC7LcUqxE96zJFjCqqIYhhj8T0Qtqv
+	B/x11VubcBPZ1jwjEXcjMPl8far7zJP6ykK1E/PwjX7AcwfFNy3Vb5zeUCjfIA==
+ARC-Authentication-Results: i=1;
+	rspamd-5c5444c55f-75gt7;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-White-Oafish: 4b7ab9c22d0ca9ba_1778155786502_1000765668
+X-MC-Loop-Signature: 1778155786502:4226656728
+X-MC-Ingress-Time: 1778155786502
+Received: from pdx1-sub0-mail-a253.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.98.10.198 (trex/7.1.5);
+	Thu, 07 May 2026 12:09:46 +0000
+Received: from offworld (cpe-188-129-77-158.dynamic.amis.hr [188.129.77.158])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a253.dreamhost.com (Postfix) with ESMTPSA id 4gB9zW3ZVBz106N;
+	Thu,  7 May 2026 05:09:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1778155785;
+	bh=HeqJ0aZAJGZZY7NdLUBrGus1WWOvl9X+lQzi2xjLLkg=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=AXxNgcn8V4wnu3aSQqX3ntXS8qPqvhSnznd+frhW/bUJyVLRPL8agzfuOsA+eJ4qD
+	 RGRRbF+wsGAp+E8ft7E8s6MperNe4BtAStG9e6uQlX7iuAqqye5doaOM2uP3X+I+tG
+	 xVXT+K2xQsIlSYc7dLPuGWeBR/p3rETMqZClN46TiTHwKPLKZ2J1pzZn8eewZP1AdE
+	 wsPtoG0HArmrP1tgj8auLfQ7uaM1weqRrMnXvl/mfnvyAGs0NGvvfQGMCDluzBOixe
+	 K0qxg1ziuUnkgWEiFpzs0iqNCxTPTixxgMWuigHMKgldRX9VTfdyXcL+kcBNZjKbIV
+	 4RMZjFTx1kX0Q==
+Date: Thu, 7 May 2026 05:09:38 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Dan Williams <djbw@kernel.org>
+Cc: Dave Jiang <dave.jiang@intel.com>, Jonathan Cameron <jic23@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>, ira.weiny@intel.com,
+	dongjoo.seo1@samsung.com, anisa.su@samsung.com,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2] cxl/mbox: Support Media Operation
+Message-ID: <20260507120938.yyfn6hxjobr64xa7@offworld>
+References: <20260428200410.705675-1-dave@stgolabs.net>
+ <1999de6e-7f14-41d2-ace2-db00faede674@intel.com>
+ <20260502193429.hztbijgv3bjwit5k@offworld>
+ <9f73073f-09f0-4e08-b1d8-746be33fd674@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260325143555.451852-1-herve.codina@bootlin.com>
- <20260325143555.451852-21-herve.codina@bootlin.com> <CAD++jLkFu+Z22QBFiaa9S+Epeh=RJZOYX8BOLVDFw4bhEoYF1Q@mail.gmail.com>
- <20260507092326.2f8e3b47@bootlin.com>
-In-Reply-To: <20260507092326.2f8e3b47@bootlin.com>
-From: Linus Walleij <linusw@kernel.org>
-Date: Thu, 7 May 2026 11:27:19 +0200
-X-Gmail-Original-Message-ID: <CAD++jLmsaddK4MLYhfK+1OkK263QqJfMZ3HF=L0Y7QdDsgX4XQ@mail.gmail.com>
-X-Gm-Features: AVHnY4J4kpHKlWyF60L1gEgZ_kRiVmUaWPxnRdg2mF7S7on9qK93oGWvqiVfuCU
-Message-ID: <CAD++jLmsaddK4MLYhfK+1OkK263QqJfMZ3HF=L0Y7QdDsgX4XQ@mail.gmail.com>
-Subject: Re: [PATCH v6 20/27] misc: lan966x_pci: Fix dtso nodes ordering
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Kalle Niemi <kaleposti@gmail.com>, 
-	Matti Vaittinen <mazziesaccount@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Peter Rosin <peda@axentia.se>, 
-	Arnd Bergmann <arnd@arndb.de>, Saravana Kannan <saravanak@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Richard Fitzgerald <rf@opensource.cirrus.com>, David Rhodes <david.rhodes@cirrus.com>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Sakari Ailus <sakari.ailus@linux.intel.com>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Wolfram Sang <wsa@kernel.org>, linux-kernel@vger.kernel.org, 
-	driver-core@lists.linux.dev, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
-	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	Allan Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <9f73073f-09f0-4e08-b1d8-746be33fd674@app.fastmail.com>
+User-Agent: NeoMutt/20220429
 
-On Thu, May 7, 2026 at 9:23=E2=80=AFAM Herve Codina <herve.codina@bootlin.c=
-om> wrote:
+On Sat, 02 May 2026, Dan Williams wrote:
 
-> > Recommended practice is:
-> >
-> > ethernet-switch@...
-(...)
-> > Recommended practice is:
-> > ethernet-port@...
+>However does userspace really need to pick ranges? Would it be sufficient to start with a "sanitize / zero all unmapped" semantic to walk all not mapped DPA. Or perhaps a "sanitize / zero on unmap" flag to the decoder to make it similar to a storage "trim on delete" semantic. The nice thing about that, you can defer freeing the DPA until it's clean to avoid reallocation races. You actually know what you're zapping because it had some recent prior association.
 >
-> Yes, it should be but the DT binding [0] says "switch" and "port".
-(...)
-> Those node names have to follow the DT binding even if this binding doesn=
-'t
-> follow recommended practice.
+>Otherwise I do not trust the security properties of policy wanting to clean a DPA range but an unsuspecting thread can race to allocate between lock drops. Looks like a footgun.
 
-Aha this binding is not referencing the standard ethernet-switch.yaml,
-that's why I got confused.
+I agree that this is much better than having the user explicitly pass the range.
 
-OK let's just fix it then, I sent a patch.
+As we discussed at lsfmm, for this we will need to move to the asynchronous bg handling since we can no longer control the size of the range.
 
-Yours,
-Linus Walleij
+>
+>What use case is missed with a per decoder automatic cleaning on unmap setting? Zero before map policy might be nice too...
+
+Agreed.
+
+Thanks,
+Davidlohr
