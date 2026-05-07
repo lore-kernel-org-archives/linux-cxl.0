@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DDCD33B6F9
-	for <linux-cxl@vger.kernel.org>; Thu,  7 May 2026 23:36:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2511533B6F9
+	for <linux-cxl@vger.kernel.org>; Thu,  7 May 2026 23:37:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778196993; cv=none; b=LteMCK+q9JdlD7ckfJRph+NxTK52MO6gVBIBg3Qjh03UAFOQsxsswoa2qzjjalMFUPrsp0UbOvZoM2UYWMi720DN/4kpJ1nGfvbAJjtJ8LpmpsX+N0jaMZYF30d0lfPA2qNXvDcmSMMtAJ6YjhH5YiX18w9pwzpVpGfpbl+8OKQ=
+	t=1778197060; cv=none; b=YQ1RCxcHbh9FNZ6GBIdS0chAEjk8ZJL3Pln35F49IsfWb0rcLJZrAvnUWCey7ob4T+tA7jbLKgYKkSo3/a/fIRpqJtytT7MWwGE5+gh/WdY8qMm4CY0hBhQ6OpEPw79xsFK9CcnZM8PZstL3Y1ygQ+N6w7yvcZgeAiv+43ywOoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778196993; c=relaxed/simple;
-	bh=/x7c13v2p6Ep/kcFRC4rcQlkwEoB5Hp0x+ZFJh9UGwc=;
+	s=arc-20240116; t=1778197060; c=relaxed/simple;
+	bh=d5dIxM1K3gq3yefoCIJ0MybYRzp7Sp+u/qgkNXKVbdY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=da8lT9E3X/yDBB9WzHSdcj89wwOyvwvVylYPNsRmhY+NsuLT39EkAXUNFZ1NbAYhwk0qj9KhwLJipJHgHCmfokzhVwsVJLrLoP7P7Fmq57z0VGRpd7ACXu9m/dDQaw0TaIhXoECay6QnxR3a0u/7Il03JsdVw06bmlqOFpsbLsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bW9ylkNK; arc=none smtp.client-ip=198.175.65.12
+	 In-Reply-To:Content-Type; b=nJCXDgjWfs06qo5Ds5YE4psOz/L9eCklsY0PfDCxFIfpED/EW8w5Jy+Hv69pACre7exIb11shLtwZ0+ECqR8AmWAB/aWccCxlzOM7gYW7e9ucvLObbR71Jpt8vi73QglkbrHuzX0G5usqb5DvzsQekPacdhdBcRrcdzyKpziKf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mzRTG3eX; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bW9ylkNK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mzRTG3eX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778196992; x=1809732992;
+  t=1778197059; x=1809733059;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=/x7c13v2p6Ep/kcFRC4rcQlkwEoB5Hp0x+ZFJh9UGwc=;
-  b=bW9ylkNKiHBXTUpYajmnhwD5Lg/V4s+bC1J6fRDgNissOKIBMhN8VfGs
-   boxAtzkfnp6bHVEH1xyF66RcWqoQ+1h4nQqSr3Sg6j5hWpIUfReHU3VNZ
-   UcXahEm49FeGSRYhJVqEqTD/fNLrIqLgeuH+hOUYB9YRh8Xl7/xSQ1cae
-   I4x+2oa1DMRuxkj55I2XrQHUYvrds6VqgGsMTQ2W7u/Bk7/A3spZ+ANXp
-   iHkVL863qRhwkQ9tZWW+ed1BUL2j1KX81EtnoIIAU1qkd7MBhuldEq5eZ
-   jN57Pb9FQFhfMlNwWxTUoOp6BlX02nDtnp65WNHdl0NPwjRbTUNOsQkvC
-   Q==;
-X-CSE-ConnectionGUID: 5XuP0i4RQjianlki71lo2g==
-X-CSE-MsgGUID: 5kN2h9k7RfSFMU0G1s/xPA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11779"; a="90622704"
+  bh=d5dIxM1K3gq3yefoCIJ0MybYRzp7Sp+u/qgkNXKVbdY=;
+  b=mzRTG3eX0qx+rLtJTrdRGoz+bA/yQwgbpmc14eXYcqBAONrrMV+XFe3W
+   jSzbFEoIyU9amjYICSv0IgZ1z22Y6+2ZMypuVgJQ+MZPZP26IBn75yA1b
+   8qbvs6X+kXz50J5o2E+KoJj2vMZqiS5ByhYqx/aCyLkcuSMBg75f24QJG
+   rrNpkiU5wc7cZ2djMe5kDNYQ6tkhzcZ09wh7W9Bzbj8VUT+EeAs3jMZ75
+   2opnCPmioKmn+YlqXiClk7fnKiU7COA29pZPjrhVieHjgBPSuK8x5BlP0
+   JqYM1udkg+poeIcvqib58Zq1KBn/t/sFI5p3g64bozaX610Kq2d1u7fh/
+   g==;
+X-CSE-ConnectionGUID: EhgA5tRZQneQZj45uiqx3w==
+X-CSE-MsgGUID: hIkI+4BlT/2YmqIC3aM2fA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11779"; a="90622731"
 X-IronPort-AV: E=Sophos;i="6.23,222,1770624000"; 
-   d="scan'208";a="90622704"
+   d="scan'208";a="90622731"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 16:36:32 -0700
-X-CSE-ConnectionGUID: 4pJptaSrTJCIIaPiAO8enQ==
-X-CSE-MsgGUID: sg6FDLZIQs+8k+Ik9xMUSA==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 16:37:39 -0700
+X-CSE-ConnectionGUID: 3mvaks+1ScScmFYIKk+oDw==
+X-CSE-MsgGUID: W5D7l4R/Q0iI3IYbpzd5VA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,222,1770624000"; 
-   d="scan'208";a="238401209"
+   d="scan'208";a="238401267"
 Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.240]) ([10.125.110.240])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 16:36:31 -0700
-Message-ID: <73b149b7-9af2-41c6-9ca3-1ff6bc3ece28@intel.com>
-Date: Thu, 7 May 2026 16:36:30 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 16:37:38 -0700
+Message-ID: <5d72934e-c9c9-4709-9518-7d8f8d178fbe@intel.com>
+Date: Thu, 7 May 2026 16:37:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,82 +52,165 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/7] cxl/test: Refactor platform device enumerations
+Subject: Re: [PATCH 4/7] cxl/test: Add hierarchy enumeration support for type2
+ device
 To: Alison Schofield <alison.schofield@intel.com>
 Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net, jic23@kernel.org,
  vishal.l.verma@intel.com, ira.weiny@intel.com, djbw@kernel.org
 References: <20260422230237.2599333-1-dave.jiang@intel.com>
- <20260422230237.2599333-4-dave.jiang@intel.com>
- <afrHW-6Rn9TEbwIj@aschofie-mobl2.lan>
+ <20260422230237.2599333-5-dave.jiang@intel.com>
+ <afrMEbtJf2m7ZFTF@aschofie-mobl2.lan>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <afrHW-6Rn9TEbwIj@aschofie-mobl2.lan>
+In-Reply-To: <afrMEbtJf2m7ZFTF@aschofie-mobl2.lan>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 5/5/26 9:45 PM, Alison Schofield wrote:
-> On Wed, Apr 22, 2026 at 04:02:33PM -0700, Dave Jiang wrote:
->> Split all the host bridges, rootports, upstream and downstream ports
->> enumerations to separate helper functions. This should make adding
->> type2 hierarchy easier later on.
+On 5/5/26 10:05 PM, Alison Schofield wrote:
+> On Wed, Apr 22, 2026 at 04:02:34PM -0700, Dave Jiang wrote:
+>> Add enumeration of type2 device hierarchy in cxl-test. The type2 device
+>> is setup to be directly attached to a root port instead of rp -> switch
+>> -> device that type3 hierarchy is setup..
 >>
 >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 >> ---
->>  tools/testing/cxl/test/cxl.c | 327 +++++++++++++++++++++++------------
->>  1 file changed, 217 insertions(+), 110 deletions(-)
+>>  tools/testing/cxl/test/cxl.c | 110 ++++++++++++++++++++++++++++++++---
+>>  1 file changed, 103 insertions(+), 7 deletions(-)
 >>
->> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
->> index 903223013e41..5fd73f0634c6 100644
->> --- a/tools/testing/cxl/test/cxl.c
->> +++ b/tools/testing/cxl/test/cxl.c
 > 
-> snip
+> skip
 > 
->> +static void cxl_usps_remove(void)
+> 
+>> +static int cxl_type2_mem_init(void)
 >> +{
->> +	for (int i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--) {
->> +		struct platform_device *pdev = cxl_switch_dport[i];
+>> +	int i, rc;
+>> +
+>> +	for (i = 0; i < NR_CXL_ROOT_PORTS; i++) {
+> 
+> I'd like to drop the artifact we carry here after copying type3 setup.
+> Type 2 doesn't use the second pdev. I think we can make the one accel
+> one region constraint explicit.
+> 
+> How about:
+> 
+> 	#define NR_CXL_TYPE2_ACCEL 1  /* One Type2 dev, One Region */
+> 
+> and then in cxl_type2_mem_init():
+> 
+> replace this:
+> 	for (i = 0; i < NR_CXL_ROOT_PORTS; i++) {
+> with this:
+> 	for (i = 0; i < NR_CXL_TYPE2_ACCEL; i++) {
+> 
+
+ok
+
+> 
+> 
+>> +		struct platform_device *dport = cxl_root_port[i];
+>> +		struct platform_device *pdev;
+>> +
+>> +		pdev = platform_device_alloc("cxl_type2_accel", i);
+>> +		if (!pdev)
+>> +			goto err_mem;
+>> +		pdev->dev.parent = &dport->dev;
+>> +		set_dev_node(&pdev->dev, i % 2);
+>> +
+>> +		rc = platform_device_add(pdev);
+>> +		if (rc) {
+>> +			platform_device_put(pdev);
+>> +			goto err_mem;
+>> +		}
+>> +		cxl_mem[i] = pdev;
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +err_mem:
+>> +	for (i = NR_CXL_ROOT_PORTS - 1; i >= 0; i--) {
+>> +		struct platform_device *pdev = cxl_mem[i];
 >> +
 >> +		if (!pdev)
 >> +			break;
->> +
->> +		platform_device_unregister(cxl_switch_dport[i]);
+>>  		platform_device_unregister(cxl_mem[i]);
 >> +	}
->> +}
+>> +	return rc;
+>>  }
 > 
 > snip
 > 
-> 
->> +
->> +static void cxl_dsps_remove(void)
+>>  
+>> +static int cxl_mem_init(void)
 >> +{
->> +	for (int i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--) {
->> +		struct platform_device *pdev = cxl_switch_uport[i];
->> +
->> +		if (!pdev)
->> +			break;
->> +
->> +		platform_device_unregister(cxl_switch_uport[i]);
->> +	}
+>> +	if (type2_test)
+>> +		return cxl_type2_mem_init();
+>> +	return cxl_type3_mem_init();
 >> +}
 > 
-> The bodies of cxl_usps_remove() and cxl_dsps_remove() appear swapped.
-> ie the Usps one iterates the Dport and the Dsps one iterates the Uport.
-> I think these above need a switcheroo, and then the call order below 
-> needs reversing:
+> The precedent above would be good to follow for the topology helpers.
+> Now we have scattered 'if (type2_test) return 0;' at 7 sites that need
+> to know which topology this is. How about:
+> 
+> static int cxl_type3_topo_init(void)
+> {
+> 	/* inits all the things */
+> }
+> 
+> static int cxl_type2_topo_init(void)
+> {
+> 	return cxl_rootports_populate();
+> }
+> 
+> static int cxl_topo_init(void)
+> {
+> 	if (type2_test)
+> 		return cxl_type2_topo_init();
+> 	return cxl_type3_topo_init();
+> }
+> 
+> static void cxl_topo_exit(void)
+> {
+> 	if (type2_test) {
+> 		cxl_rootports_remove();
+> 	return;
+> 	}
+> 
+> 	cxl_rch_topo_exit();
+> 	cxl_single_topo_exit();
+> 	cxl_switches_remove();
+> 	cxl_rootports_remove();
+> }
 
-ok will fix
+ok
 
 > 
->> +static void cxl_switches_remove(void)
->> +{
->> +	cxl_usps_remove();
->> +	cxl_dsps_remove();
->> +}
-> 
-> skip to end
-> 
-> 
+>> +
+>>  static ssize_t
+>>  decoder_reset_preserve_registry_show(struct device *dev,
+>>  				     struct device_attribute *attr, char *buf)
+>> @@ -2008,6 +2098,9 @@ static int cxl_dsps_populate(void)
+>>  
+>>  static void cxl_switches_remove(void)
+>>  {
+>> +	if (type2_test)
+>> +		return;
+>> +
+>>  	cxl_usps_remove();
+>>  	cxl_dsps_remove();
+>>  }
+>> @@ -2016,6 +2109,9 @@ static int cxl_switches_populate(void)
+>>  {
+>>  	int rc;
+>>  
+>> +	if (type2_test)
+>> +		return 0;
+>> +
+>>  	BUILD_BUG_ON(ARRAY_SIZE(cxl_switch_uport) != ARRAY_SIZE(cxl_root_port));
+>>  	rc = cxl_usps_populate();
+>>  	if (rc)
+>> -- 
+>> 2.53.0
+>>
 
