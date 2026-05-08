@@ -1,61 +1,63 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378EB1F3B85
-	for <linux-cxl@vger.kernel.org>; Fri,  8 May 2026 03:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161AD2857EE
+	for <linux-cxl@vger.kernel.org>; Fri,  8 May 2026 03:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778210245; cv=none; b=k2POio7iMFW2DCNVuWzTw8/VEiZLCUoun6VkVUVt9hI9iRxjwKq2Gl0HiVLy27XyuXyH2+91Qszc0zpdveSj0mlcLE5JdC4B9YHwvUBVmo9Qmf24NCHyAqivg2c7SOqjopeVEZUoFInhUSYs5hEtdmw60NFiF+R8M1SUKMMsB4A=
+	t=1778210253; cv=none; b=q7ihxzfqYwGPBOgcBnVStscYPLWHR7kj3oF0H9si9UJlAcy3zzzWMPnGV6FSTLc3gVLau2FEPy0cKZI44oTAngwZDC2N8Hjx0m3zZL/te7k3gNw49v9LUKQxCDu7TUVUZr4j8cDf/Fpv+2xRQmPJHO1HnAdefnEN9XNm8Wen8ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778210245; c=relaxed/simple;
-	bh=olWEdOC0npplVm/+buubaUjCS1b7j/tqkVFbPLXQiHM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TU5hRnR8ulP+3MTQNiEacg9kMd1fgtaYXI3NSz6yU2aG8M7I5UUil6wtDmN2q3pSy8RVVn6sbCxEN4KBiAHGT56EozxwK/s87P53HWLCM+ZMo280jWP2GUK4Fp4AtHT0fBZlmnnKOnvG5ELDmDRYXQg//AftJBgQqGzcl7z+Ewo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IiSk8ZWy; arc=none smtp.client-ip=209.85.215.173
+	s=arc-20240116; t=1778210253; c=relaxed/simple;
+	bh=LQg/AZA7eVbbVVKpeO2cgjGa7sODOFzfELG435RZYi4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TfZ7cUZxVet1zd7HYjpuMnncfn/V0qK6VyflvJ2+UQCb2Oo0pNmZB1RJaF6Dgb5MZMiY/wXN49kB5t6SzIEQnw9zy1O8Vfd/0VZ0FwAqOjSdnEZ3EeiElhQuSprOCus0jjUppZAZd8241D9vlEQPMY9FEoh2eO9mq4lnc0RxTsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mG3M7B5A; arc=none smtp.client-ip=209.85.215.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IiSk8ZWy"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-c80227b1f6cso597104a12.1
-        for <linux-cxl@vger.kernel.org>; Thu, 07 May 2026 20:17:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mG3M7B5A"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-c801912c903so655504a12.0
+        for <linux-cxl@vger.kernel.org>; Thu, 07 May 2026 20:17:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1778210242; x=1778815042; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bis4g28b9JZNcXJXn6/4Wkgj50FVt3cnNrHRU3VMTEw=;
-        b=IiSk8ZWymzWQazaVn/OelvOm0vt83ny7x4TNvh2Usgwwz+SR809iwWZNAknwc33WP8
-         mOdQ1QEAUvZ8+BZvIyL74MVEkmHQ1ELC7q0G/h+wF6sbsDXqDV+Cvp6ecPMBgIwp+4kJ
-         6PTHbpc28u875YFUnyE0KSNe5xWViCj2SZ5V5E3twsXqOjWvc25tdXjpOuBQRZjN+w2Q
-         YZ8auPcQ4uq7hNxZ8G0eGLIT7Xu0+iIz1MHZJPkQ8XRsAOhE+9hQcnmMxqmqnpZ+PneZ
-         wdJ9tL5P48GZfXY5PCJhKROf+sFdI22UXt/u0iK+gr/5CTcdQzI4n8U93FlGtQtR8haS
-         PjtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778210242; x=1778815042;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1778210250; x=1778815050; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Bis4g28b9JZNcXJXn6/4Wkgj50FVt3cnNrHRU3VMTEw=;
-        b=Gx9JWpjNv1Nbn+grm/FwiHLpkhaot7xfnR3etceuMFD8c3iaB7eyIlVVlDXAWyneVR
-         j7COG2CBIMeZrEaqraGwLHWcn/b0nLHz1MaZ2X12cnzWe2aniPj4OKRNgGJnkPcdXh1k
-         ZqoWKSb5mH6fSWV5CjWNekcPNIOPtWthh+LcdrXJJpmDLwHT7KGFW4gA5VT8cx0a2noQ
-         iMMurkNxZDKQ/CHSCYJVbH9SgDqa6wsUMPabd6XPD24ibL90PTBnRdhFVKIBfALcyKnT
-         qw1EwgCbTQ68KS4PNn1zIZ/KnWjjmaf2nvzB4zg5CAPuiM+kmrVMHQVULyhDgMHu5Dfl
-         cPFQ==
-X-Forwarded-Encrypted: i=1; AFNElJ9BBYcWxtmkSLBtcvohsS/uA8w4bhmGKnaOZMDwrauATxxitHJYWNZgpLNVsiKB7rcixgE8+eQyfR4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyatjHUjtlQh7EKyv4pybFFzfG+vAP0irceaqlqHpjy2zT+Fcp0
-	iGD/ezmvlnJSlI+/fbrDToEwO28z7p7eX70ADU40N1j7UAOA3NC1t+w4
-X-Gm-Gg: Acq92OH9CUFdtv99XM2+GD06mfIxa46Ne2Xi9ve6c/mAzLJiQBW4G2MSKCb7jZY0iT8
-	dyelBHvRxe+HRUU0rmpMsngLerrUfj7gaKEX9wNoqGhdYIkbmMe530u+cGm7WabD9/JQvhE9qNN
-	2LfuKLx0w+KMJrfjQZY4s4FkD5D78ypEGq98qA7GGcjsU8/m5wVKO39tW+OU6kHwT/mNWK4cYLs
-	YsysIcgY6464XS6gW5wD111yfZTFKiN0lWguALhY9bSGd0sSxOAvA/oaAf+d52NhQzY4YkYyezw
-	spqNrtDWq14XbTavV820LhTGTyhknvLsIVvNnYH7Ip+bMda3C1Q8eEa1NyiJn/UOiqw3E0DTEcd
-	ClibiaQaFkRW/OW3nrLgjAN40sY9tn89XYcqZ4lmWTPgkFYiuBxAJnHFE1LmZRcIYlrYLPN/WcN
-	wGE2PuOQV4jwthibc86i37UsVR8EqPoLTWj9GtM960IQFACDHf8SAE8kktfQEf9Q==
-X-Received: by 2002:a17:903:186:b0:2b7:975c:dacc with SMTP id d9443c01a7336-2baf0cf4251mr10476125ad.1.1778210242377;
-        Thu, 07 May 2026 20:17:22 -0700 (PDT)
+        bh=PJurxHK2KR6NiQggIlFIcPfQ0S77CgxMQQO4qIElRQ0=;
+        b=mG3M7B5AG2HIaWiWqfJ7HuVkeIrqIhufKNONt2eIIukdKvdpb7YGtiCq/7/4tyj3Op
+         N1Do0dHLoXhXEKZh1P0XaLEYg6s9XTZ2TBY6wPnmA+PiqlFBcUg+hEqXkqbv06a8EIuS
+         nENLeHcjjWxTeWFEG0NRu0pNPTH03A21C/S8ZQpPwUmz/3cLAnRNbdEy8a3zhiyb5za0
+         CANh7riiJZp5cWEn38OFEaRJfyJuPWl8W33mZA3lxPD0YA21aCxEMxWYFd7JgaHgHUex
+         0j2t/KGR75lFjvi+iMMZvNamZezEbh3jP7QchpXlZ4ORs3R+P5hBLzC4KFeqqkpSJ1hd
+         XYag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778210250; x=1778815050;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=PJurxHK2KR6NiQggIlFIcPfQ0S77CgxMQQO4qIElRQ0=;
+        b=DMS8JkOHXrvjKSeRgXc+2ja8ECnr1CLOvzlV4D7CM0QrDLiKZPJLGYk2KO9kPanY5D
+         luqEvzdzTyE8N2ZxNm6bi6zn/cZL5kf+3oD1bONRHkjzXmi4zKnhMVPvsmZ6EJc7Ns97
+         1vErTDSrUZaa98/7FaFfoZFwxTywR5Zos9OmMVwLecA8v8djceZpTVusf5fiSvl8PYYz
+         Mmt/1VTPEsJIzrYAuYs/VOtN1Hxwd7HTcBDNV3lQ8CFzMWiIgWIK2CI8YEyM69Scf1Bk
+         7vkB4+F8EPGTspB3J1QzeVXTNIhbIoIdZhkA0qVycxUpuAWp2lQbe9h+fZZ1WdpyHynD
+         z6MQ==
+X-Forwarded-Encrypted: i=1; AFNElJ/P3X//zCZ5kdIBkx2DEUbhRUoBvKY/FsnQ8KNrR/icwJgn4x64D49glrLVAyAVAN+wSv+2ETS3ht4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwpGk1u1vsGeD9QANap9G72+hXkVF8ErPzUaumWjA3PB8U/KhIY
+	Ara4exLxfRzOfb/5HrCWrURS13beDa1n+vOAoUKtI0WC2JR8t65nfhoe
+X-Gm-Gg: Acq92OEcnqDwTgsk59r5NlmaFZh8kmXZjhT2iTHR6mnrh2IWDaPVpeCYC+ycKkCUjZE
+	mTPyYJlSQxdFUtBYgfSD7MWtPjxodskcA0Xjg61vbMdvDGemRrWKsnUTHNcfDwJyY+ULNLM13oz
+	FrwrazoeL+IUgXSO1lx3d+0gwM2pvREAsMXiGYxkTio5oB+0MbZ6/heEd8gRZgmPDdF/qk1yYui
+	0UwJI/vsxX9m3ebKiX4/0XQQ/3m86H/GXQbqllP7KR67vHsqctvYTMy/2fFrseAdlnnd4r1Z5Uh
+	nUczaL3nojD9EV+sryB1QaNXZtqtkIjge6e06zpFdAFI89DnUL+RHHDTF8XDFj0fya2335LdwG7
+	DxZEzU9cw9b5NVRAeNbIK8YtBCgzISj5wZM2cnx9GmHiwAKr65BHHToaJ0zKclj9O8Ryd5j1pVx
+	NVfjc0n8f+7HLy65tAWqdF6NStGE7Uv+qQ7rbiLScI
+X-Received: by 2002:a17:902:f08a:b0:2b9:8ee1:73ac with SMTP id d9443c01a7336-2ba78e3f13fmr68717545ad.11.1778210250078;
+        Thu, 07 May 2026 20:17:30 -0700 (PDT)
 Received: from toolbx.alistair23.me ([2403:581e:fdf9:0:6209:4521:6813:45b7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2baf1eafa62sm3220685ad.74.2026.05.07.20.17.14
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2baf1eafa62sm3220685ad.74.2026.05.07.20.17.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 May 2026 20:17:21 -0700 (PDT)
+        Thu, 07 May 2026 20:17:29 -0700 (PDT)
 From: alistair23@gmail.com
 X-Google-Original-From: alistair.francis@wdc.com
 To: alistair@alistair23.me,
@@ -79,192 +81,686 @@ Cc: alex.gaynor@gmail.com,
 	tmgross@umich.edu,
 	ojeda@kernel.org,
 	alistair23@gmail.com,
-	Alistair Francis <alistair.francis@wdc.com>
-Subject: [PATCH 00/18] lib: Rust implementation of SPDM
-Date: Fri,  8 May 2026 13:16:52 +1000
-Message-ID: <20260508031710.514574-1-alistair.francis@wdc.com>
+	Simona Vetter <simona.vetter@ffwll.ch>
+Subject: [PATCH 01/18] rust: add untrusted data abstraction
+Date: Fri,  8 May 2026 13:16:53 +1000
+Message-ID: <20260508031710.514574-2-alistair.francis@wdc.com>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260508031710.514574-1-alistair.francis@wdc.com>
+References: <20260508031710.514574-1-alistair.francis@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Alistair Francis <alistair.francis@wdc.com>
+From: Benno Lossin <benno.lossin@proton.me>
 
-Security Protocols and Data Models (SPDM) [1] is used for authentication,
-attestation and key exchange. SPDM is generally used over a range of
-transports, such as PCIe, MCTP/SMBus/I3C, ATA, SCSI, NVMe or TCP.
+When reading data from userspace, hardware or other external untrusted
+sources, the data must be validated before it is used for logic within
+the kernel. This abstraction provides a generic newtype wrapper
+`Untrusted`; it prevents direct access to the inner type. The only way
+to use the underlying data is to call `.validate()` on such a value.
 
-From the kernels perspective SPDM is used to authenticate and attest devices.
-In this threat model a device is considered untrusted until it can be verified
-by the kernel and userspace using SPDM. As such SPDM data is untrusted data
-that can be mallicious.
+Doing so utilizes the new `Validate` trait that is responsible for all
+of the validation logic. This trait gives access to the inner value of
+`Untrusted` by means of another newtype wrapper `Unvalidated`. In
+contrast to `Untrusted`, `Unvalidated` allows direct access and
+additionally provides several helper functions for slices.
 
-The SPDM specification is also complex, with the 1.2.1 spec being almost 200
-pages and the 1.3.0 spec being almost 250 pages long.
+Having these two different newtype wrappers is an idea from Simona
+Vetter. It has several benefits: it fully prevents safe access to the
+underlying value of `Untrusted` without going through the `Validate`
+API. Additionally, it allows one to grep for validation logic by simply
+looking for `Unvalidated<`.
 
-As such we have the kernel parsing untrusted responses from a complex
-specification, which sounds like a possible exploit vector. This is the type
-of place where Rust excels!
+Any API that reads data from an untrusted source should return
+`Untrusted<T>` where `T` is the type of the underlying untrusted data.
+This generic allows other abstractions to return their custom type
+wrapped by `Untrusted`, signaling to the caller that the data must be
+validated before use. This allows those abstractions to be used both in
+a trusted and untrusted manner, increasing their generality.
+Additionally, using the arbitrary self types feature, APIs can be
+designed to explicitly read untrusted data:
 
-This series implements a SPDM requester in Rust.
+    impl MyCustomDataSource {
+        pub fn read(self: &Untrusted<Self>) -> &Untrusted<[u8]>;
+    }
 
-This is based on Lukas' C implementation [2], but has been refacted during the
-first few RFCs. I have included some of the relevent patchesfrom Lukas' C
-SPDM implementation in this series where they are required.
-
-This is a standalone series and doesn't depend on Lukas' implementation.
-
-The goal of this series is to get the smallest possible SPDM implementation
-upstream. That will provide building blocks for us to continue working on.
-
-As such we don't yet provide evidence or certificates to userspace, allow
-userspace to provide a nonce, support PQC or more advanced SPDM features.
-This is enough to communicate with a device and return "authenticated" to
-userspace.
-
-Note that RFC v3 did provide evidence and certificates to userspace and
-allowed a custom nonce. Showing that it's possible. I also have patches
-that build apon [4] to do this via a TSM driver, again showing it's
-possible with the current approach.
-We just don't support it yet and for TSM I need [4] upstream first.
-
-This series is different to Lukas' original approach and the approach taken
-in the previous RFCs and instead adds the PCI-CMA support as a TSM driver.
-This was described by Dan in [3] and [5]. The advantage here is that for PCIe
-we can leverage the TSM work for a lot of the features and provide userspace
-a consistient interface between PCI TSM and CMA.
-
-This series also doesn't check the certificate chain against the kernel
-keyring and will instead leave that to userspace once [4] is merged.
-
-Other transport mode (such as ATA, SCSI, NVMe and MCTP) will
-therefore need slightly different approaches, as TSM doesn't apply.
-The library can support this though, it will just need some netlink
-and sysfs wrappers added as applicable. This way each transport can support
-SPDM in the way it sees fit.
-
-The entire tree can be seen here:
-https://github.com/alistair23/linux/tree/alistair/spdm-rust-tsm
-
-I'm testing this by running the following
-
-```shell
-cargo run -- --qemu-server response
-
-qemu-system-x86_64 \
-  -nic none \
-  -object rng-random,filename=/dev/urandom,id=rng0 \
-  -device virtio-rng-pci,rng=rng0 \
-  -drive file=deploy/images/qemux86-64/core-image-pcie-qemux86-64.rootfs.ext4,if=virtio,format=raw \
-  -usb -device usb-tablet -usb -device usb-kbd \
-  -cpu Skylake-Client \
-  -machine q35,i8042=off \
-  -smp 4 -m 2G \
-  -drive file=blknvme,if=none,id=mynvme,format=raw \
-  -device nvme,drive=mynvme,serial=deadbeef,spdm_port=2323,spdm_trans=doe \
-  -snapshot \
-  -serial mon:stdio -serial null -nographic \
-  -kernel deploy/images/qemux86-64/bzImage \
-  -append 'root=/dev/vda rw  console=ttyS0 console=ttyS1 oprofile.timer=1 tsc=reliable no_timer_check rcupdate.rcu_expedited=1 swiotlb=0 '
-
-ls /sys/devices/pci0000:00/0000:00:03.0/
-ls /sys/devices/pci0000:00/0000:00:03.0/tsm/
-cat  /sys/devices/pci0000:00/0000:00:03.0/authenticated
-echo tsm0 > /sys/devices/pci0000:00/0000:00:03.0/tsm/connect
-cat  /sys/devices/pci0000:00/0000:00:03.0/authenticated
-```
-
-1: https://www.dmtf.org/standards/spdm
-2: https://lore.kernel.org/all/cover.1719771133.git.lukas@wunner.de/
-3: http://lore.kernel.org/69976d7d39c60_2f4a1009@dwillia2-mobl4.notmuch
-4: https://lore.kernel.org/all/69976d7d39c60_2f4a1009@dwillia2-mobl4.notmuch/
-5: https://lore.kernel.org/lkml/69e19c80b892b_fe0831000@djbw-dev.notmuch/
-
-v1:
- - Add CMA as a TSM driver
- - Initial support for SPDM 1.4
- - Cleanup a range of comments and concerns from RFC
- - Remove kernel keyring checks
-RFC v3:
- - Use netlink to send information to userspace
- - Don't autogenerate Rust helpers
-RFC v2:
- - Drop support for Rust and C implementations
- - Include patches from Lukas to reduce series deps
- - Large code cleanups based on more testing
- - Support for authentication
-
-Alistair Francis (13):
-  rust: add bindings for hash.h
-  rust: error: impl From<FromBytesWithNulError> for Kernel Error
-  lib: rspdm: Initial commit of Rust SPDM
-  PCI/TSM: Support connecting to PCIe CMA devices
-  PCI/CMA: Add a PCI TSM CMA driver using SPDM
-  lib: rspdm: Support SPDM get_version
-  lib: rspdm: Support SPDM get_capabilities
-  lib: rspdm: Support SPDM negotiate_algorithms
-  lib: rspdm: Support SPDM get_digests
-  lib: rspdm: Support SPDM get_certificate
-  lib: rspdm: Support SPDM certificate validation
-  rust: allow extracting the buffer from a CString
-  lib: rspdm: Support SPDM challenge
-
-Benno Lossin (1):
-  rust: add untrusted data abstraction
-
-Lukas Wunner (4):
-  X.509: Make certificate parser public
-  X.509: Parse Subject Alternative Name in certificates
-  X.509: Move certificate length retrieval into new helper
-  PCI/CMA: Validate Subject Alternative Name in certificates
-
- MAINTAINERS                               |   13 +
- crypto/asymmetric_keys/x509_cert_parser.c |    9 +
- crypto/asymmetric_keys/x509_loader.c      |   38 +-
- crypto/asymmetric_keys/x509_parser.h      |   42 +-
- drivers/pci/Kconfig                       |   14 +
- drivers/pci/Makefile                      |    4 +
- drivers/pci/cma.asn1                      |   41 +
- drivers/pci/cma.c                         |  262 +++++
- drivers/pci/doe.c                         |    3 -
- include/keys/asymmetric-type.h            |    2 +
- include/keys/x509-parser.h                |   57 ++
- include/linux/oid_registry.h              |    3 +
- include/linux/pci-doe.h                   |    4 +
- include/linux/pci-tsm.h                   |   11 +-
- include/linux/spdm.h                      |   39 +
- lib/Kconfig                               |   17 +
- lib/Makefile                              |    2 +
- lib/rspdm/Makefile                        |   10 +
- lib/rspdm/consts.rs                       |  155 +++
- lib/rspdm/lib.rs                          |  180 ++++
- lib/rspdm/state.rs                        | 1070 +++++++++++++++++++++
- lib/rspdm/validator.rs                    |  524 ++++++++++
- rust/bindings/bindings_helper.h           |    7 +
- rust/helpers/hash.c                       |   18 +
- rust/helpers/helpers.c                    |    1 +
- rust/kernel/error.rs                      |   10 +
- rust/kernel/lib.rs                        |    1 +
- rust/kernel/str.rs                        |   13 +-
- rust/kernel/validate.rs                   |  605 ++++++++++++
- 29 files changed, 3091 insertions(+), 64 deletions(-)
- create mode 100644 drivers/pci/cma.asn1
- create mode 100644 drivers/pci/cma.c
- create mode 100644 include/keys/x509-parser.h
- create mode 100644 include/linux/spdm.h
- create mode 100644 lib/rspdm/Makefile
- create mode 100644 lib/rspdm/consts.rs
- create mode 100644 lib/rspdm/lib.rs
- create mode 100644 lib/rspdm/state.rs
- create mode 100644 lib/rspdm/validator.rs
- create mode 100644 rust/helpers/hash.c
+Cc: Simona Vetter <simona.vetter@ffwll.ch>
+Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+Message-ID: <20240925205244.873020-2-benno.lossin@proton.me>
+---
+ rust/kernel/lib.rs      |   1 +
+ rust/kernel/validate.rs | 605 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 606 insertions(+)
  create mode 100644 rust/kernel/validate.rs
 
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index b72b2fbe046d..fe580fde609f 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -133,6 +133,7 @@
+ pub mod uaccess;
+ #[cfg(CONFIG_USB = "y")]
+ pub mod usb;
++pub mod validate;
+ pub mod workqueue;
+ pub mod xarray;
+ 
+diff --git a/rust/kernel/validate.rs b/rust/kernel/validate.rs
+new file mode 100644
+index 000000000000..ae0aa20e27b4
+--- /dev/null
++++ b/rust/kernel/validate.rs
+@@ -0,0 +1,605 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Types for handling and validating untrusted data.
++//!
++//! # Overview
++//!
++//! Untrusted data is marked using the [`Untrusted<T>`] type. See [Rationale](#rationale) for the
++//! reasons to mark untrusted data throughout the kernel. It is a totally opaque wrapper, it is not
++//! possible to read the data inside; but it is possible to [`Untrusted::write`] into it.
++//!
++//! The only way to "access" the data inside an [`Untrusted<T>`] is to [`Untrusted::validate`] it;
++//! turning it into a different form using the [`Validate`] trait. That trait receives the data in
++//! the form of [`Unvalidated<T>`], which in contrast to [`Untrusted<T>`], allows access to the
++//! underlying data. It additionally provides several utility functions to simplify validation.
++//!
++//! # Rationale
++//!
++//! When reading data from an untrusted source, it must be validated before it can be used for
++//! logic. For example, this is a very bad idea:
++//!
++//! ```
++//! # fn read_bytes_from_network() -> Box<[u8]> {
++//! #     Box::new([1, 0], kernel::alloc::flags::GFP_KERNEL).unwrap()
++//! # }
++//! let bytes: Box<[u8]> = read_bytes_from_network();
++//! let data_index = bytes[0];
++//! let data = bytes[usize::from(data_index)];
++//! ```
++//!
++//! While this will not lead to a memory violation (because the array index checks the bounds), it
++//! might result in a kernel panic. For this reason, all untrusted data must be wrapped in
++//! [`Untrusted<T>`]. This type only allows validating the data or passing it along, since copying
++//! data from one userspace buffer into another is allowed for untrusted data.
++
++use crate::prelude::Init;
++use core::{
++    mem::MaybeUninit,
++    ops::{Index, IndexMut},
++    ptr, slice,
++};
++
++/// Untrusted data of type `T`.
++///
++/// When reading data from userspace, hardware or other external untrusted sources, the data must
++/// be validated before it is used for logic within the kernel. To do so, the [`validate()`]
++/// function exists and uses the [`Validate`] trait.
++///
++/// Also see the [module] description.
++///
++/// [`validate()`]: Self::validate
++/// [module]: self
++#[repr(transparent)]
++pub struct Untrusted<T: ?Sized>(Unvalidated<T>);
++
++impl<T: ?Sized> Untrusted<T> {
++    /// Marks the given value as untrusted.
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// use kernel::validate::Untrusted;
++    ///
++    /// # mod bindings { pub(crate) unsafe fn read_foo_info() -> [u8; 4] { todo!() } };
++    /// fn read_foo_info() -> Untrusted<[u8; 4]> {
++    ///     // SAFETY: just an FFI call without preconditions.
++    ///     Untrusted::new(unsafe { bindings::read_foo_info() })
++    /// }
++    /// ```
++    pub fn new(value: T) -> Self
++    where
++        T: Sized,
++    {
++        Self(Unvalidated::new(value))
++    }
++
++    /// Marks the value behind the reference as untrusted.
++    ///
++    /// # Examples
++    ///
++    /// In this imaginary example there exists the `foo_hardware` struct on the C side, as well as
++    /// a `foo_hardware_read` function that reads some data directly from the hardware.
++    /// ```
++    /// use kernel::{error, types::Opaque, validate::Untrusted};
++    /// use core::ptr;
++    ///
++    /// # #[allow(non_camel_case_types)]
++    /// # mod bindings {
++    /// #     pub(crate) struct foo_hardware;
++    /// #     pub(crate) unsafe fn foo_hardware_read(_foo: *mut foo_hardware, _len: &mut usize) -> *mut u8 {
++    /// #         todo!()
++    /// #     }
++    /// # }
++    /// struct Foo(Opaque<bindings::foo_hardware>);
++    ///
++    /// impl Foo {
++    ///     fn read(&mut self, mut len: usize) -> Result<&Untrusted<[u8]>> {
++    ///         // SAFETY: just an FFI call without preconditions.
++    ///         let data: *mut u8 = unsafe { bindings::foo_hardware_read(self.0.get(), &mut len) };
++    ///         let data = error::from_err_ptr(data)?;
++    ///         let data = ptr::slice_from_raw_parts(data, len);
++    ///         // SAFETY: `data` returned by `foo_hardware_read` is valid for reads as long as the
++    ///         // `foo_hardware` object exists. That function updated the
++    ///         let data = unsafe { &*data };
++    ///         Ok(Untrusted::new_ref(data))
++    ///     }
++    /// }
++    /// ```
++    pub fn new_ref(value: &T) -> &Self {
++        let ptr: *const T = value;
++        // CAST: `Self` and `Unvalidated` are `repr(transparent)` and contain a `T`.
++        let ptr = ptr as *const Self;
++        // SAFETY: `ptr` came from a shared reference valid for `'a`.
++        unsafe { &*ptr }
++    }
++
++    /// Marks the value behind the reference as untrusted.
++    ///
++    /// # Examples
++    ///
++    /// In this imaginary example there exists the `foo_hardware` struct on the C side, as well as
++    /// a `foo_hardware_read` function that reads some data directly from the hardware.
++    /// ```
++    /// use kernel::{error, types::Opaque, validate::Untrusted};
++    /// use core::ptr;
++    ///
++    /// # #[allow(non_camel_case_types)]
++    /// # mod bindings {
++    /// #     pub(crate) struct foo_hardware;
++    /// #     pub(crate) unsafe fn foo_hardware_read(_foo: *mut foo_hardware, _len: &mut usize) -> *mut u8 {
++    /// #         todo!()
++    /// #     }
++    /// # }
++    /// struct Foo(Opaque<bindings::foo_hardware>);
++    ///
++    /// impl Foo {
++    ///     fn read(&mut self, mut len: usize) -> Result<&mut Untrusted<[u8]>> {
++    ///         // SAFETY: just an FFI call without preconditions.
++    ///         let data: *mut u8 = unsafe { bindings::foo_hardware_read(self.0.get(), &mut len) };
++    ///         let data = error::from_err_ptr(data)?;
++    ///         let data = ptr::slice_from_raw_parts_mut(data, len);
++    ///         // SAFETY: `data` returned by `foo_hardware_read` is valid for reads as long as the
++    ///         // `foo_hardware` object exists. That function updated the
++    ///         let data = unsafe { &mut *data };
++    ///         Ok(Untrusted::new_mut(data))
++    ///     }
++    /// }
++    /// ```
++    pub fn new_mut(value: &mut T) -> &mut Self {
++        let ptr: *mut T = value;
++        // CAST: `Self` and `Unvalidated` are `repr(transparent)` and contain a `T`.
++        let ptr = ptr as *mut Self;
++        // SAFETY: `ptr` came from a mutable reference valid for `'a`.
++        unsafe { &mut *ptr }
++    }
++
++    /// Validates and parses the untrusted data.
++    ///
++    /// See the [`Validate`] trait on how to implement it.
++    pub fn validate<'a, V: Validate<&'a Unvalidated<T>>>(&'a self) -> Result<V, V::Err> {
++        V::validate(&self.0)
++    }
++
++    /// Validates and parses the untrusted data.
++    ///
++    /// See the [`Validate`] trait on how to implement it.
++    pub fn validate_mut<'a, V: Validate<&'a mut Unvalidated<T>>>(
++        &'a mut self,
++    ) -> Result<V, V::Err> {
++        V::validate(&mut self.0)
++    }
++
++    /// Sets the underlying untrusted value.
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// use kernel::validate::Untrusted;
++    ///
++    /// let mut untrusted = Untrusted::new(42);
++    /// untrusted.write(24);
++    /// ```
++    pub fn write(&mut self, value: impl Init<T>) {
++        let ptr: *mut T = &mut self.0 .0;
++        // SAFETY: `ptr` came from a mutable reference and the value is overwritten before it is
++        // read.
++        unsafe { ptr::drop_in_place(ptr) };
++        // SAFETY: `ptr` came from a mutable reference and the initializer cannot error.
++        match unsafe { value.__init(ptr) } {
++            Ok(()) => {}
++            Err(_) => unreachable!(),
++        }
++    }
++
++    /// Turns a slice of untrusted values into an untrusted slice of values.
++    pub fn transpose_slice(slice: &[Untrusted<T>]) -> &Untrusted<[T]>
++    where
++        T: Sized,
++    {
++        let ptr = slice.as_ptr().cast::<T>();
++        // SAFETY: `ptr` and `len` come from the same slice reference.
++        let slice = unsafe { slice::from_raw_parts(ptr, slice.len()) };
++        Untrusted::new_ref(slice)
++    }
++
++    /// Turns a slice of uninitialized, untrusted values into an untrusted slice of uninitialized
++    /// values.
++    pub fn transpose_slice_uninit(
++        slice: &[MaybeUninit<Untrusted<T>>],
++    ) -> &Untrusted<[MaybeUninit<T>]>
++    where
++        T: Sized,
++    {
++        let ptr = slice.as_ptr().cast::<MaybeUninit<T>>();
++        // SAFETY: `ptr` and `len` come from the same mutable slice reference.
++        let slice = unsafe { slice::from_raw_parts(ptr, slice.len()) };
++        Untrusted::new_ref(slice)
++    }
++
++    /// Turns a slice of uninitialized, untrusted values into an untrusted slice of uninitialized
++    /// values.
++    pub fn transpose_slice_uninit_mut(
++        slice: &mut [MaybeUninit<Untrusted<T>>],
++    ) -> &mut Untrusted<[MaybeUninit<T>]>
++    where
++        T: Sized,
++    {
++        // CAST: `MaybeUninit<T>` and `MaybeUninit<Untrusted<T>>` have the same layout.
++        let ptr = slice.as_mut_ptr().cast::<MaybeUninit<T>>();
++        // SAFETY: `ptr` and `len` come from the same mutable slice reference.
++        let slice = unsafe { slice::from_raw_parts_mut(ptr, slice.len()) };
++        Untrusted::new_mut(slice)
++    }
++}
++
++impl<T> Untrusted<MaybeUninit<T>> {
++    /// Sets the underlying untrusted value.
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// use kernel::validate::Untrusted;
++    ///
++    /// let mut untrusted = Untrusted::new(42);
++    /// untrusted.write(24);
++    /// ```
++    pub fn write_uninit<E>(&mut self, value: impl Init<T, E>) -> Result<&mut Untrusted<T>, E> {
++        let ptr: *mut MaybeUninit<T> = &mut self.0 .0;
++        // CAST: `MaybeUninit<T>` is `repr(transparent)`.
++        let ptr = ptr.cast::<T>();
++        // SAFETY: `ptr` came from a reference and if `Err` is returned, the underlying memory is
++        // considered uninitialized.
++        unsafe { value.__init(ptr) }.map(|()| {
++            let this = self.0.raw_mut();
++            // SAFETY: we initialized the memory above.
++            Untrusted::new_mut(unsafe { this.assume_init_mut() })
++        })
++    }
++}
++
++impl<T> Untrusted<[MaybeUninit<T>]> {
++    /// Sets the underlying untrusted value.
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// use kernel::validate::Untrusted;
++    ///
++    /// let mut untrusted = Untrusted::new(42);
++    /// untrusted.write(24);
++    /// ```
++    pub fn write_uninit_slice<E>(
++        &mut self,
++        value: impl Init<[T], E>,
++    ) -> Result<&mut Untrusted<[T]>, E> {
++        let ptr: *mut [MaybeUninit<T>] = &mut self.0 .0;
++        // CAST: `MaybeUninit<T>` is `repr(transparent)`.
++        let ptr = ptr as *mut [T];
++        // SAFETY: `ptr` came from a reference and if `Err` is returned, the underlying memory is
++        // considered uninitialized.
++        unsafe { value.__init(ptr) }.map(|()| {
++            let this = self.0.raw_mut().as_mut_ptr();
++            // CAST: `MaybeUninit<T>` is `repr(transparent)`.
++            let this = this.cast::<T>();
++            // SAFETY: `this` and `len` came from the same slice reference.
++            let this = unsafe { slice::from_raw_parts_mut(this, self.0.len()) };
++            Untrusted::new_mut(this)
++        })
++    }
++}
++
++/// Marks types that can be used as input to [`Validate::validate`].
++pub trait ValidateInput: private::Sealed + Sized {}
++
++mod private {
++    pub trait Sealed {}
++}
++
++impl<'a, T: ?Sized> private::Sealed for &'a Unvalidated<T> {}
++impl<'a, T: ?Sized> ValidateInput for &'a Unvalidated<T> {}
++
++impl<'a, T: ?Sized> private::Sealed for &'a mut Unvalidated<T> {}
++impl<'a, T: ?Sized> ValidateInput for &'a mut Unvalidated<T> {}
++
++/// Validates untrusted data.
++///
++/// # Examples
++///
++/// The simplest way to validate data is to just implement `Validate<&Unvalidated<[u8]>>` for the
++/// type that you wish to validate:
++///
++/// ```
++/// use kernel::{
++///     error::{code::EINVAL, Error},
++///     str::{CStr, CString},
++///     validate::{Unvalidated, Validate},
++/// };
++///
++/// struct Data {
++///     flags: u8,
++///     name: CString,
++/// }
++///
++/// impl Validate<&Unvalidated<[u8]>> for Data {
++///     type Err = Error;
++///
++///     fn validate(unvalidated: &Unvalidated<[u8]>) -> Result<Self, Self::Err> {
++///         let raw = unvalidated.raw();
++///         let (&flags, name) = raw.split_first().ok_or(EINVAL)?;
++///         let name = CStr::from_bytes_with_nul(name)?.to_cstring()?;
++///         Ok(Data { flags, name })
++///     }
++/// }
++/// ```
++///
++/// This approach copies the data and requires allocation. If you want to avoid the allocation and
++/// copying the data, you can borrow from the input like this:
++///
++/// ```
++/// use kernel::{
++///     error::{code::EINVAL, Error},
++///     str::CStr,
++///     validate::{Unvalidated, Validate},
++/// };
++///
++/// struct Data<'a> {
++///     flags: u8,
++///     name: &'a CStr,
++/// }
++///
++/// impl<'a> Validate<&'a Unvalidated<[u8]>> for Data<'a> {
++///     type Err = Error;
++///
++///     fn validate(unvalidated: &'a Unvalidated<[u8]>) -> Result<Self, Self::Err> {
++///         let raw = unvalidated.raw();
++///         let (&flags, name) = raw.split_first().ok_or(EINVAL)?;
++///         let name = CStr::from_bytes_with_nul(name)?;
++///         Ok(Data { flags, name })
++///     }
++/// }
++/// ```
++///
++/// If you need to in-place validate your data, you currently need to resort to `unsafe`:
++///
++/// ```
++/// use kernel::{
++///     error::{code::EINVAL, Error},
++///     str::CStr,
++///     validate::{Unvalidated, Validate},
++/// };
++/// use core::mem;
++///
++/// // Important: use `repr(C)`, this ensures a linear layout of this type.
++/// #[repr(C)]
++/// struct Data {
++///     version: u8,
++///     flags: u8,
++///     _reserved: [u8; 2],
++///     count: u64,
++///     // lots of other fields...
++/// }
++///
++/// impl Validate<&Unvalidated<[u8]>> for &Data {
++///     type Err = Error;
++///
++///     fn validate(unvalidated: &Unvalidated<[u8]>) -> Result<Self, Self::Err> {
++///         let raw = unvalidated.raw();
++///         if raw.len() < mem::size_of::<Data>() {
++///             return Err(EINVAL);
++///         }
++///         // can only handle version 0
++///         if raw[0] != 0 {
++///             return Err(EINVAL);
++///         }
++///         // version 0 only uses the lower 4 bits of flags
++///         if raw[1] & 0xf0 != 0 {
++///             return Err(EINVAL);
++///         }
++///         let ptr = raw.as_ptr();
++///         // CAST: `Data` only contains integers and has `repr(C)`.
++///         let ptr = ptr.cast::<Data>();
++///         // SAFETY: `ptr` came from a reference and the cast above is valid.
++///         Ok(unsafe { &*ptr })
++///     }
++/// }
++/// ```
++///
++/// To be able to modify the parsed data, while still supporting zero-copy, you can implement
++/// `Validate<&mut Unvalidated<[u8]>>`:
++///
++/// ```
++/// use kernel::{
++///     error::{code::EINVAL, Error},
++///     str::CStr,
++///     validate::{Unvalidated, Validate},
++/// };
++/// use core::mem;
++///
++/// // Important: use `repr(C)`, this ensures a linear layout of this type.
++/// #[repr(C)]
++/// struct Data {
++///     version: u8,
++///     flags: u8,
++///     _reserved: [u8; 2],
++///     count: u64,
++///     // lots of other fields...
++/// }
++///
++/// impl Validate<&mut Unvalidated<[u8]>> for &Data {
++///     type Err = Error;
++///
++///     fn validate(unvalidated: &mut Unvalidated<[u8]>) -> Result<Self, Self::Err> {
++///         let raw = unvalidated.raw_mut();
++///         if raw.len() < mem::size_of::<Data>() {
++///             return Err(EINVAL);
++///         }
++///         match raw[0] {
++///             0 => {},
++///             1 => {
++///                 // version 1 implicitly sets the first bit.
++///                 raw[1] |= 1;
++///             },
++///             // can only handle version 0 and 1
++///             _ => return Err(EINVAL),
++///         }
++///         // version 0 and 1 only use the lower 4 bits of flags
++///         if raw[1] & 0xf0 != 0 {
++///             return Err(EINVAL);
++///         }
++///         if raw[1] == 0 {}
++///         let ptr = raw.as_ptr();
++///         // CAST: `Data` only contains integers and has `repr(C)`.
++///         let ptr = ptr.cast::<Data>();
++///         // SAFETY: `ptr` came from a reference and the cast above is valid.
++///         Ok(unsafe { &*ptr })
++///     }
++/// }
++/// ```
++pub trait Validate<I: ValidateInput>: Sized {
++    /// Validation error.
++    type Err;
++
++    /// Validate the given untrusted data and parse it into the output type.
++    fn validate(unvalidated: I) -> Result<Self, Self::Err>;
++}
++
++/// Unvalidated data of type `T`.
++#[repr(transparent)]
++pub struct Unvalidated<T: ?Sized>(T);
++
++impl<T: ?Sized> Unvalidated<T> {
++    fn new(value: T) -> Self
++    where
++        T: Sized,
++    {
++        Self(value)
++    }
++
++    fn new_ref(value: &T) -> &Self {
++        let ptr: *const T = value;
++        // CAST: `Self` is `repr(transparent)` and contains a `T`.
++        let ptr = ptr as *const Self;
++        // SAFETY: `ptr` came from a mutable reference valid for `'a`.
++        unsafe { &*ptr }
++    }
++
++    fn new_mut(value: &mut T) -> &mut Self {
++        let ptr: *mut T = value;
++        // CAST: `Self` is `repr(transparent)` and contains a `T`.
++        let ptr = ptr as *mut Self;
++        // SAFETY: `ptr` came from a mutable reference valid for `'a`.
++        unsafe { &mut *ptr }
++    }
++
++    /// Validates and parses the untrusted data.
++    ///
++    /// See the [`Validate`] trait on how to implement it.
++    pub fn validate_ref<'a, V: Validate<&'a Unvalidated<T>>>(&'a self) -> Result<V, V::Err> {
++        V::validate(self)
++    }
++
++    /// Validates and parses the untrusted data.
++    ///
++    /// See the [`Validate`] trait on how to implement it.
++    pub fn validate_mut<'a, V: Validate<&'a mut Unvalidated<T>>>(
++        &'a mut self,
++    ) -> Result<V, V::Err> {
++        V::validate(self)
++    }
++
++    /// Gives immutable access to the underlying value.
++    pub fn raw(&self) -> &T {
++        &self.0
++    }
++
++    /// Gives mutable access to the underlying value.
++    pub fn raw_mut(&mut self) -> &mut T {
++        &mut self.0
++    }
++}
++
++impl<T, I> Index<I> for Unvalidated<[T]>
++where
++    I: slice::SliceIndex<[T]>,
++{
++    type Output = Unvalidated<I::Output>;
++
++    fn index(&self, index: I) -> &Self::Output {
++        Unvalidated::new_ref(self.0.index(index))
++    }
++}
++
++impl<T, I> IndexMut<I> for Unvalidated<[T]>
++where
++    I: slice::SliceIndex<[T]>,
++{
++    fn index_mut(&mut self, index: I) -> &mut Self::Output {
++        Unvalidated::new_mut(self.0.index_mut(index))
++    }
++}
++
++/// Immutable unvalidated slice iterator.
++pub struct Iter<'a, T>(slice::Iter<'a, T>);
++
++/// Mutable unvalidated slice iterator.
++pub struct IterMut<'a, T>(slice::IterMut<'a, T>);
++
++impl<'a, T> Iterator for Iter<'a, T> {
++    type Item = &'a Unvalidated<T>;
++
++    fn next(&mut self) -> Option<Self::Item> {
++        self.0.next().map(Unvalidated::new_ref)
++    }
++}
++
++impl<'a, T> IntoIterator for &'a Unvalidated<[T]> {
++    type Item = &'a Unvalidated<T>;
++    type IntoIter = Iter<'a, T>;
++
++    fn into_iter(self) -> Self::IntoIter {
++        Iter(self.0.iter())
++    }
++}
++
++impl<'a, T> Iterator for IterMut<'a, T> {
++    type Item = &'a mut Unvalidated<T>;
++
++    fn next(&mut self) -> Option<Self::Item> {
++        self.0.next().map(Unvalidated::new_mut)
++    }
++}
++
++impl<'a, T> IntoIterator for &'a mut Unvalidated<[T]> {
++    type Item = &'a mut Unvalidated<T>;
++    type IntoIter = IterMut<'a, T>;
++
++    fn into_iter(self) -> Self::IntoIter {
++        IterMut(self.0.iter_mut())
++    }
++}
++
++impl<T> Unvalidated<[T]> {
++    /// Returns the number of elements in the underlying slice.
++    pub fn len(&self) -> usize {
++        self.0.len()
++    }
++
++    /// Returns true if the underlying slice has a length of 0.
++    pub fn is_empty(&self) -> bool {
++        self.0.is_empty()
++    }
++
++    /// Iterates over all items and validates each of them individually.
++    pub fn validate_iter<'a, V: Validate<&'a Unvalidated<T>>>(
++        &'a self,
++    ) -> impl Iterator<Item = Result<V, V::Err>> + 'a {
++        self.into_iter().map(|item| V::validate(item))
++    }
++
++    /// Iterates over all items and validates each of them individually.
++    pub fn validate_iter_mut<'a, V: Validate<&'a mut Unvalidated<T>>>(
++        &'a mut self,
++    ) -> impl Iterator<Item = Result<V, V::Err>> + 'a {
++        self.into_iter().map(|item| V::validate(item))
++    }
++}
 -- 
 2.52.0
 
