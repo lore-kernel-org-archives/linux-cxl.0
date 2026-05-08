@@ -1,176 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from flow-b2-smtp.messagingengine.com (flow-b2-smtp.messagingengine.com [202.12.124.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833CB301704
-	for <linux-cxl@vger.kernel.org>; Thu,  7 May 2026 23:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3801DFDA1
+	for <linux-cxl@vger.kernel.org>; Fri,  8 May 2026 01:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778197268; cv=none; b=C7Grl56Ah/5FDNtZ9JB4aiyR7JCpBufdIIc4es1L9XHE41Y4dn7Ci0pR8Dz4Mrjvysvt8yfqxzIRT0EHMNM9PazvJfjCViyQ8rGUC0O7fdQ00SYQlFma0viDUl4tSkv74PBr/pEhM8I6DJTZ/25RaMqKgEAJoTEX0giIEsbgnVw=
+	t=1778202572; cv=none; b=A797JbNo/VZUMm58YAWK3QYnq4hJuGS3oRDkmkFiC080d2ZVoZUbN99LfG6emfXICEdHW6pOZEwMkSwZuwkfNOE7Nc2bP9GoQR4qqC3VDEUoq2v1mDZv9/t+zHvGxElsn/pA6ILkrC0PXVJiipM5tcG11ZrFf0B4nAo1sZDdNDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778197268; c=relaxed/simple;
-	bh=BoxkG4pwwchEl8Q6iZFGuDjulci5e3e5Zjm3aB3rCQw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XwuTMaDD+wgiVfpgAqUJjmM95U3Olwt36hK5etGJm/Ry+d6fqhNnsbm5u/T9qxHoMdPW29XYa4F44bjklFEHNbURTcksPr4ae0NaihqTLc8DXwWJsx+OZf8zxSSJdh96Voi5C9cf4JFXPLuWpXLRoK6t7pkU03B0la15UbHlqxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JvCS1AVg; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1778202572; c=relaxed/simple;
+	bh=SsRwpVm4j9QY9NKLdsuljSWmsrJgGrE8xtzLmYtVlCE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U7zKEWVjN1zRYXbNlVTzS1KMOUwg+Gf63bqVAiEQgCcYDc2DHzufXNzoZWJohlpMrKTojo2NZLhE/hGmeLxcct7nD82T+Di1NiiQth+kzvMama1ETPlDRJ8ZvPT6JfiLUElnXYWeY1fSh4tiZ+nYmUxvDulu+t8sXUIweWHq4sA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=isV+Y6eF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cCEsZfvp; arc=none smtp.client-ip=202.12.124.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JvCS1AVg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778197267; x=1809733267;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BoxkG4pwwchEl8Q6iZFGuDjulci5e3e5Zjm3aB3rCQw=;
-  b=JvCS1AVg+M9sMIWaYaK0HreWPY7DhPG6evwvq4nBvWryObO9OOuP1cz3
-   zJeTyQXiWd5VTatvIgCvc9VhruWmQLJAW5qUtlnhnNtm0pZA5Uwfj3fa7
-   Qa1ZSzdMeZ8A9s5ezFFI5Ql33Ij3hyEC6VNOBflFYvL9xhb2xj+vgjWGS
-   P7ZNWO/WmKRnXO0+uv91ZBqGFDaLhclhyXxNIGTT53M3yNIO+gPg3S8zT
-   5qf7ogBIFHODsN/Ii/uzOxfpnFImENbjeQ4jTf2bcuVG2SOwGv8hNVBkT
-   xA/b3dnX4M4qhuElnhboymNsQo2YuZvsSm4iSC4/PVeJMEMUomWuFaMkh
-   Q==;
-X-CSE-ConnectionGUID: lHXaisBJQQmFY9huSGHxJw==
-X-CSE-MsgGUID: NYSGdyXxRZWFpA7smle49w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11779"; a="78885636"
-X-IronPort-AV: E=Sophos;i="6.23,222,1770624000"; 
-   d="scan'208";a="78885636"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 16:41:06 -0700
-X-CSE-ConnectionGUID: dO2G8UwIQQ28PFBVbI8RNw==
-X-CSE-MsgGUID: hwiSOAxyR8+K2C38kREphA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,222,1770624000"; 
-   d="scan'208";a="232249150"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.110.240]) ([10.125.110.240])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2026 16:41:05 -0700
-Message-ID: <e188d51c-0076-4e87-aca2-06000009e28c@intel.com>
-Date: Thu, 7 May 2026 16:41:04 -0700
+	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="isV+Y6eF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cCEsZfvp"
+Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
+	by mailflow.stl.internal (Postfix) with ESMTP id 2562513005A4;
+	Thu,  7 May 2026 21:09:29 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Thu, 07 May 2026 21:09:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1778202568; x=1778206168; bh=GaS7S8sB1N
+	BISn4/DuEd/QllRqEGT1kvPc2rO4mML/0=; b=isV+Y6eFSaLuAjXOr7KiymZRPN
+	1niBGyUeDvDj+9bbew286FZilRbpri6JkTMN2sh9bhr5Zfc8E5sl9vcOlMgHt7tF
+	DWSsGYFYClLRWpluCPXhQhevsYVKZ0NZipoiAXFmdAZJrGHiRZgI1sL56wdAjk1X
+	bah86rhMTpibwQXVLr1+p3mTI8QqjIhqHj2pvkP+9UEsirHNAf+Q0pFTKwV1B3mu
+	VLqAzd5M3DhKiYLz/DmvjwJdMoUGphfmizV5fn1J7nqlurpyowd7UufujwIPHPpQ
+	wAB7nkFP+vcbDAOmQ2R10Vd1De9qHggKKkRbrA/XSGYnoTWD5IyfA/4nFt7g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1778202568; x=1778206168; bh=GaS7S8sB1NBISn4/DuEd/QllRqEGT1kvPc2
+	rO4mML/0=; b=cCEsZfvpHC95Fl4JojRUciqEBstetOyV6lhy3kFFEBnyZezFJ/f
+	GZZN1QOnbmRh8l1bGd5gAWmbX0t0rwOeaHqcpSbfH/lIB28Lm8EaNacJfPJ8iwTE
+	JS7rM+fs52SIFG+4U/SQshbm/oqhS1GRNGgS3nhTBvcvUuE00XRuYxQ/0//VTn3l
+	8li1K3/yzsVJfHsWrxDZ+4H3V4mOyHbogI6QexUIepeNMFdl6VNvBnlWLqcrBqZ7
+	weuC7SeAjzKTp/NFRi2rGugR0kSrWKNcnAZu1GIlEsW4xCB1hhItlIfkvQ5zdawV
+	WRogFBB7CWyZhP9m2dXq04mDk8j8I2uSGRg==
+X-ME-Sender: <xms:yDf9abtiMlZx9UJ8xRvGEcmgVfboLSVOTmOUYrgmjzH80q6qGgLkNQ>
+    <xme:yDf9aW0gwa125SPZPEU2JsaQHMgl7GucVzbaFfXcGEh6M1Ne1644XeR8DzWplrAsj
+    xC5BzgKIxBIGkW-dGKmmhv8gsIJk62iQjk8UzFedFyEhcIuMhNmUcU>
+X-ME-Received: <xmr:yDf9aU5cn5XnIGWVTFZQ8rbrPEy12HG92PwWsBz_xth-W2bM6w8XUYaYcow-vdL4rVHEO0R9hdV9FDgG6aMRDIJT>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddutdekleelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepkfhrrgcuhggv
+    ihhnhicuoehifigvihhnhiesfhgrshhtmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
+    hnpefhvddthedtiedtffejkefhlefghefgtdehgedvheelgedugfeitedvfeekgeeufeen
+    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepihifvghinhihsehfrghsthhmrghilhdrtghomhdp
+    nhgspghrtghpthhtohepudehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrtg
+    hkvghrlhgvhihtnhhgsehgohhoghhlvgdrtghomhdprhgtphhtthhopegurghvvgdrjhhi
+    rghnghesihhnthgvlhdrtghomhdprhgtphhtthhopehfvhgulhesghhoohhglhgvrdgtoh
+    hmpdhrtghpthhtoheplhhinhhugidqtgiglhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopehnvhguihhmmheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtth
+    hopegujhgsfieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihifvghinhihsehkvghr
+    nhgvlhdrohhrghdprhgtphhtthhopehprghshhgrrdhtrghtrghshhhinhesshholhgvvg
+    hnrdgtohhmpdhrtghpthhtohepmhgtlhgrphhinhhskhhisehgohhoghhlvgdrtghomh
+X-ME-Proxy: <xmx:yDf9aVWFF7n4q7iBNRXR3oFd8o9-mLMAK_Lkq5Lxqs_bdu0uWJXUEA>
+    <xmx:yDf9aUgoVSVkDWLMD9RLVjpjz1b5VwXJO4Q8UQtVIDKjTqeKBkjltg>
+    <xmx:yDf9addJfS2204mbwmnRFFjQrqMy3ddXakddWBDqlgczaeFeCO81Rg>
+    <xmx:yDf9ab0Kx9PvI0USFudaIw3dUxdwUHc1kbshKNy4FnfhD_3-HKRatA>
+    <xmx:yDf9abLBr8NjILl_D1mt1lDoBihb1zWyaml45oTc9lAJhveoj8JkuRJC>
+Feedback-ID: i7ace4b6e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 7 May 2026 21:09:27 -0400 (EDT)
+Date: Thu, 7 May 2026 20:09:25 -0500
+From: Ira Weiny <iweiny@fastmail.com>
+To: Ackerley Tng <ackerleytng@google.com>,
+	Dave Jiang <dave.jiang@intel.com>
+Cc: fvdl@google.com, linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
+	djbw@kernel.org, iweiny@kernel.org, pasha.tatashin@soleen.com,
+	mclapinski@google.com, rppt@kernel.org, joao.m.martins@oracle.com,
+	jic23@kernel.org, gourry@gourry.net, john@groves.net,
+	rick.p.edgecombe@intel.com
+Subject: Re: [RFC PATCH 00/12] dax: Add DAX to guest memfd support for KVM
+Message-ID: <69fd37c5cfa4a_1d1951006d@xwing.notmuch>
+References: <0e831045-3b01-4934-bf43-b3ef01ce0158@intel.com>
+ <CAEvNRgE3ifAvgVS4bLeNp_eVp0=6b3p+myYEXSfyS+Qrw5mrtw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/7] cxl/test: Add cxl_test accelerator driver
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net, jic23@kernel.org,
- vishal.l.verma@intel.com, ira.weiny@intel.com, djbw@kernel.org
-References: <20260422230237.2599333-1-dave.jiang@intel.com>
- <20260422230237.2599333-7-dave.jiang@intel.com>
- <afrPVjKIQEPwCUAJ@aschofie-mobl2.lan>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <afrPVjKIQEPwCUAJ@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEvNRgE3ifAvgVS4bLeNp_eVp0=6b3p+myYEXSfyS+Qrw5mrtw@mail.gmail.com>
 
+Ackerley Tng wrote:
+> Dave Jiang <dave.jiang@intel.com> writes:
+> 
+> > On 4/24/26 10:13 AM, Frank van der Linden wrote:
+> >> Dave Jiang <dave.jiang@intel.com> wrote:
 
-
-On 5/5/26 10:19 PM, Alison Schofield wrote:
-> On Wed, Apr 22, 2026 at 04:02:36PM -0700, Dave Jiang wrote:
->> Add a type2 accelerator mock driver for the platform device that
->> simulates a CXL type2 device. The driver exercises the same
->> minimal API calls that a real CXL type2 driver would utilize.
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> snp
-> 
->> diff --git a/tools/testing/cxl/test/accel.c b/tools/testing/cxl/test/accel.c
->> new file mode 100644
->> index 000000000000..f21fdd57034e
->> --- /dev/null
->> +++ b/tools/testing/cxl/test/accel.c
->> @@ -0,0 +1,71 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +// Copyright(c) 2026 Intel Corporation. All rights reserved.
->> +
->> +#include <linux/platform_device.h>
->> +#include <linux/mod_devicetable.h>
->> +#include <linux/vmalloc.h>
->> +#include <linux/module.h>
->> +#include <linux/delay.h>
->> +#include <linux/sizes.h>
->> +#include <linux/bits.h>
->> +#include <cxl/mailbox.h>
->> +#include <crypto/sha2.h>
->> +#include <cxlmem.h>
-> 
-> 
-> Unused includes: crypto/sha2.h, linux/delay.h, linux/vmalloc.h,
-> linux/bits.h. Looks copy-pasted from mem.c.
-
-ok
+[snip]
 
 > 
+> >>> [1]: https://lore.kernel.org/linux-cxl/aeWV1CvP9ImZ3eEG@gourry-fedora-PF4VCD3F/T/#t
+> >>
+> >> One of the main ideas behind guest_memfd is that the memory is managed
+> >> by the kernel only, so it knows what it has and that it can trust
+> >> the memory. This RFC passes an fd in via the ioctl(), which I think
+> >> breaks that model.
 > 
->> +
->> +struct mock_cxl_accel {
->> +	struct cxl_dev_state cxlds;
->> +	struct cxl_memdev *cxlmd;
->> +};
->> +
->> +static int cxl_mock_accel_probe(struct platform_device *pdev)
->> +{
->> +	struct cxl_attach_region attach = {
->> +		.attach = {
->> +			.probe = cxl_memdev_attach_region,
->> +		}
->> +	};
->> +	struct mock_cxl_accel *cxl_accel;
->> +	struct cxl_dev_state *cxlds;
->> +	struct cxl_memdev *cxlmd;
->> +	int rc;
->> +
->> +	cxl_accel = devm_cxl_dev_state_create(&pdev->dev, CXL_DEVTYPE_DEVMEM,
->> +					      pdev->dev.id + 1, 0,
->> +					      struct mock_cxl_accel, cxlds,
->> +					      false);
->> +	if (!cxl_accel)
->> +		return -ENODEV;
+> Yup! One of guest_memfd's core purposes is to be able to block host
+> accesses to guest private (in the CoCo sense) memory.
 > 
-> devm_cxl_dev_state_create() NULL return means alloc failed, so 
-> return should be -ENOMEM.
+> >
+> > Don't we issue KVM_CREATE_GUEST_MEMFD ioctl to get a fd in userspace to be passed to KVM_SET_USER_MEMORY_REGION2 ioctl later? We are just passing in a DAX fd instead of a guest mem fd.
+> >
+> 
+> This RFC is passing a DAX fd instead of a guest_memfd when creating a
+> memslot, so it's not really using guest_memfd, it's just reusing the
+> functions that were first created for guest_memfd to support another
+> kind of fd.
+> 
+> What's the use case you're shooting for? Why not mmap() from the DAX
+> fd and then pass the userspace address to KVM when setting up a memslot?
+> 
+> Is there a requirement to have the DAX memory usable by CoCo guests as
+> well, and hence requiring guest_memfd-style protection from host
+> accesses for private DAX memory?
 > 
 
-ok
+I was thinking this would be an eventual use case for DAX/CXL memory yes.
 
-> 
->> +
->> +	cxlds = &cxl_accel->cxlds;
->> +	cxlds->media_ready = true;
->> +	rc = cxl_set_capacity(cxlds, SZ_512M);
->> +	if (rc)
->> +		return rc;
->> +
->> +	cxlmd = devm_cxl_add_memdev(cxlds, &attach.attach);
-> 
-> Above is storing pointer to stack allocated cxl_attach_region.
-> The stack goes away when probe returns leaving cxlmd->attach
-> dangling. I think we get away with it now because all our checks
-> of it are NULL checks. Would it ever be derferenced? 
-> Maybe devm_kzalloc attach or embed it in the the mock_cxl_accel
-> so it sticks around.
-> 
-> 
-> snip
-> 
-> 
+There are a couple of issues with mmaping DAX.
 
-I'll dynamically allocate it. The usage of 'attach' resolves when devm_cxl_add_memdev() returns. I think only place it runs into trouble is during devm cleanup. 
+1) DAX is getting a bit long in the tooth.  It may be that users are fine
+   with it and it should stick around but there are some who worry that it
+   is too deviated from the memfd/gmemfd style of management.
 
->> +module_platform_driver(cxl_mock_accel_driver);
->> +MODULE_LICENSE("GPL");
-> 
-> "GPL v2"
+2) What you propose above does not give the gmem 'protection' for CoCo's.
+   So yea that is the bigger issue.
 
-checkpatch suggested to use "GPL" instead of "GPL v2"
+Allowing gmem to use DAX/CXL as a backend within the kernel is where I
+think this is headed.  But having the gmem fd be allocated with that
+backend would need to have more knobs in gmem.  Also I believe there may
+be use cases where a _specific_ CXL device is desired.  That case makes
+the knobs required more complicated.
 
-> 
->> +MODULE_DESCRIPTION("cxl_test: accelerator device mock module");
->> +MODULE_IMPORT_NS("CXL");
->> -- 
->> 2.53.0
->>
+What Dave has done here gives the device information via the dax fd.  It
+is kind of clunky but it works...
 
+Ira
+
+[snip]
