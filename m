@@ -1,156 +1,270 @@
-Received: from flow-b2-smtp.messagingengine.com (flow-b2-smtp.messagingengine.com [202.12.124.137])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3801DFDA1
-	for <linux-cxl@vger.kernel.org>; Fri,  8 May 2026 01:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378EB1F3B85
+	for <linux-cxl@vger.kernel.org>; Fri,  8 May 2026 03:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778202572; cv=none; b=A797JbNo/VZUMm58YAWK3QYnq4hJuGS3oRDkmkFiC080d2ZVoZUbN99LfG6emfXICEdHW6pOZEwMkSwZuwkfNOE7Nc2bP9GoQR4qqC3VDEUoq2v1mDZv9/t+zHvGxElsn/pA6ILkrC0PXVJiipM5tcG11ZrFf0B4nAo1sZDdNDA=
+	t=1778210245; cv=none; b=k2POio7iMFW2DCNVuWzTw8/VEiZLCUoun6VkVUVt9hI9iRxjwKq2Gl0HiVLy27XyuXyH2+91Qszc0zpdveSj0mlcLE5JdC4B9YHwvUBVmo9Qmf24NCHyAqivg2c7SOqjopeVEZUoFInhUSYs5hEtdmw60NFiF+R8M1SUKMMsB4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778202572; c=relaxed/simple;
-	bh=SsRwpVm4j9QY9NKLdsuljSWmsrJgGrE8xtzLmYtVlCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U7zKEWVjN1zRYXbNlVTzS1KMOUwg+Gf63bqVAiEQgCcYDc2DHzufXNzoZWJohlpMrKTojo2NZLhE/hGmeLxcct7nD82T+Di1NiiQth+kzvMama1ETPlDRJ8ZvPT6JfiLUElnXYWeY1fSh4tiZ+nYmUxvDulu+t8sXUIweWHq4sA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=isV+Y6eF; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cCEsZfvp; arc=none smtp.client-ip=202.12.124.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
+	s=arc-20240116; t=1778210245; c=relaxed/simple;
+	bh=olWEdOC0npplVm/+buubaUjCS1b7j/tqkVFbPLXQiHM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TU5hRnR8ulP+3MTQNiEacg9kMd1fgtaYXI3NSz6yU2aG8M7I5UUil6wtDmN2q3pSy8RVVn6sbCxEN4KBiAHGT56EozxwK/s87P53HWLCM+ZMo280jWP2GUK4Fp4AtHT0fBZlmnnKOnvG5ELDmDRYXQg//AftJBgQqGzcl7z+Ewo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IiSk8ZWy; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="isV+Y6eF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cCEsZfvp"
-Received: from phl-compute-11.internal (phl-compute-11.internal [10.202.2.51])
-	by mailflow.stl.internal (Postfix) with ESMTP id 2562513005A4;
-	Thu,  7 May 2026 21:09:29 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-11.internal (MEProxy); Thu, 07 May 2026 21:09:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1778202568; x=1778206168; bh=GaS7S8sB1N
-	BISn4/DuEd/QllRqEGT1kvPc2rO4mML/0=; b=isV+Y6eFSaLuAjXOr7KiymZRPN
-	1niBGyUeDvDj+9bbew286FZilRbpri6JkTMN2sh9bhr5Zfc8E5sl9vcOlMgHt7tF
-	DWSsGYFYClLRWpluCPXhQhevsYVKZ0NZipoiAXFmdAZJrGHiRZgI1sL56wdAjk1X
-	bah86rhMTpibwQXVLr1+p3mTI8QqjIhqHj2pvkP+9UEsirHNAf+Q0pFTKwV1B3mu
-	VLqAzd5M3DhKiYLz/DmvjwJdMoUGphfmizV5fn1J7nqlurpyowd7UufujwIPHPpQ
-	wAB7nkFP+vcbDAOmQ2R10Vd1De9qHggKKkRbrA/XSGYnoTWD5IyfA/4nFt7g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1778202568; x=1778206168; bh=GaS7S8sB1NBISn4/DuEd/QllRqEGT1kvPc2
-	rO4mML/0=; b=cCEsZfvpHC95Fl4JojRUciqEBstetOyV6lhy3kFFEBnyZezFJ/f
-	GZZN1QOnbmRh8l1bGd5gAWmbX0t0rwOeaHqcpSbfH/lIB28Lm8EaNacJfPJ8iwTE
-	JS7rM+fs52SIFG+4U/SQshbm/oqhS1GRNGgS3nhTBvcvUuE00XRuYxQ/0//VTn3l
-	8li1K3/yzsVJfHsWrxDZ+4H3V4mOyHbogI6QexUIepeNMFdl6VNvBnlWLqcrBqZ7
-	weuC7SeAjzKTp/NFRi2rGugR0kSrWKNcnAZu1GIlEsW4xCB1hhItlIfkvQ5zdawV
-	WRogFBB7CWyZhP9m2dXq04mDk8j8I2uSGRg==
-X-ME-Sender: <xms:yDf9abtiMlZx9UJ8xRvGEcmgVfboLSVOTmOUYrgmjzH80q6qGgLkNQ>
-    <xme:yDf9aW0gwa125SPZPEU2JsaQHMgl7GucVzbaFfXcGEh6M1Ne1644XeR8DzWplrAsj
-    xC5BzgKIxBIGkW-dGKmmhv8gsIJk62iQjk8UzFedFyEhcIuMhNmUcU>
-X-ME-Received: <xmr:yDf9aU5cn5XnIGWVTFZQ8rbrPEy12HG92PwWsBz_xth-W2bM6w8XUYaYcow-vdL4rVHEO0R9hdV9FDgG6aMRDIJT>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddutdekleelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepkfhrrgcuhggv
-    ihhnhicuoehifigvihhnhiesfhgrshhtmhgrihhlrdgtohhmqeenucggtffrrghtthgvrh
-    hnpefhvddthedtiedtffejkefhlefghefgtdehgedvheelgedugfeitedvfeekgeeufeen
-    ucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepihifvghinhihsehfrghsthhmrghilhdrtghomhdp
-    nhgspghrtghpthhtohepudehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrtg
-    hkvghrlhgvhihtnhhgsehgohhoghhlvgdrtghomhdprhgtphhtthhopegurghvvgdrjhhi
-    rghnghesihhnthgvlhdrtghomhdprhgtphhtthhopehfvhgulhesghhoohhglhgvrdgtoh
-    hmpdhrtghpthhtoheplhhinhhugidqtgiglhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopehnvhguihhmmheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtth
-    hopegujhgsfieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihifvghinhihsehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopehprghshhgrrdhtrghtrghshhhinhesshholhgvvg
-    hnrdgtohhmpdhrtghpthhtohepmhgtlhgrphhinhhskhhisehgohhoghhlvgdrtghomh
-X-ME-Proxy: <xmx:yDf9aVWFF7n4q7iBNRXR3oFd8o9-mLMAK_Lkq5Lxqs_bdu0uWJXUEA>
-    <xmx:yDf9aUgoVSVkDWLMD9RLVjpjz1b5VwXJO4Q8UQtVIDKjTqeKBkjltg>
-    <xmx:yDf9addJfS2204mbwmnRFFjQrqMy3ddXakddWBDqlgczaeFeCO81Rg>
-    <xmx:yDf9ab0Kx9PvI0USFudaIw3dUxdwUHc1kbshKNy4FnfhD_3-HKRatA>
-    <xmx:yDf9abLBr8NjILl_D1mt1lDoBihb1zWyaml45oTc9lAJhveoj8JkuRJC>
-Feedback-ID: i7ace4b6e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 7 May 2026 21:09:27 -0400 (EDT)
-Date: Thu, 7 May 2026 20:09:25 -0500
-From: Ira Weiny <iweiny@fastmail.com>
-To: Ackerley Tng <ackerleytng@google.com>,
-	Dave Jiang <dave.jiang@intel.com>
-Cc: fvdl@google.com, linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev,
-	djbw@kernel.org, iweiny@kernel.org, pasha.tatashin@soleen.com,
-	mclapinski@google.com, rppt@kernel.org, joao.m.martins@oracle.com,
-	jic23@kernel.org, gourry@gourry.net, john@groves.net,
-	rick.p.edgecombe@intel.com
-Subject: Re: [RFC PATCH 00/12] dax: Add DAX to guest memfd support for KVM
-Message-ID: <69fd37c5cfa4a_1d1951006d@xwing.notmuch>
-References: <0e831045-3b01-4934-bf43-b3ef01ce0158@intel.com>
- <CAEvNRgE3ifAvgVS4bLeNp_eVp0=6b3p+myYEXSfyS+Qrw5mrtw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IiSk8ZWy"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-c80227b1f6cso597104a12.1
+        for <linux-cxl@vger.kernel.org>; Thu, 07 May 2026 20:17:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1778210242; x=1778815042; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bis4g28b9JZNcXJXn6/4Wkgj50FVt3cnNrHRU3VMTEw=;
+        b=IiSk8ZWymzWQazaVn/OelvOm0vt83ny7x4TNvh2Usgwwz+SR809iwWZNAknwc33WP8
+         mOdQ1QEAUvZ8+BZvIyL74MVEkmHQ1ELC7q0G/h+wF6sbsDXqDV+Cvp6ecPMBgIwp+4kJ
+         6PTHbpc28u875YFUnyE0KSNe5xWViCj2SZ5V5E3twsXqOjWvc25tdXjpOuBQRZjN+w2Q
+         YZ8auPcQ4uq7hNxZ8G0eGLIT7Xu0+iIz1MHZJPkQ8XRsAOhE+9hQcnmMxqmqnpZ+PneZ
+         wdJ9tL5P48GZfXY5PCJhKROf+sFdI22UXt/u0iK+gr/5CTcdQzI4n8U93FlGtQtR8haS
+         PjtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778210242; x=1778815042;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bis4g28b9JZNcXJXn6/4Wkgj50FVt3cnNrHRU3VMTEw=;
+        b=Gx9JWpjNv1Nbn+grm/FwiHLpkhaot7xfnR3etceuMFD8c3iaB7eyIlVVlDXAWyneVR
+         j7COG2CBIMeZrEaqraGwLHWcn/b0nLHz1MaZ2X12cnzWe2aniPj4OKRNgGJnkPcdXh1k
+         ZqoWKSb5mH6fSWV5CjWNekcPNIOPtWthh+LcdrXJJpmDLwHT7KGFW4gA5VT8cx0a2noQ
+         iMMurkNxZDKQ/CHSCYJVbH9SgDqa6wsUMPabd6XPD24ibL90PTBnRdhFVKIBfALcyKnT
+         qw1EwgCbTQ68KS4PNn1zIZ/KnWjjmaf2nvzB4zg5CAPuiM+kmrVMHQVULyhDgMHu5Dfl
+         cPFQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9BBYcWxtmkSLBtcvohsS/uA8w4bhmGKnaOZMDwrauATxxitHJYWNZgpLNVsiKB7rcixgE8+eQyfR4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyatjHUjtlQh7EKyv4pybFFzfG+vAP0irceaqlqHpjy2zT+Fcp0
+	iGD/ezmvlnJSlI+/fbrDToEwO28z7p7eX70ADU40N1j7UAOA3NC1t+w4
+X-Gm-Gg: Acq92OH9CUFdtv99XM2+GD06mfIxa46Ne2Xi9ve6c/mAzLJiQBW4G2MSKCb7jZY0iT8
+	dyelBHvRxe+HRUU0rmpMsngLerrUfj7gaKEX9wNoqGhdYIkbmMe530u+cGm7WabD9/JQvhE9qNN
+	2LfuKLx0w+KMJrfjQZY4s4FkD5D78ypEGq98qA7GGcjsU8/m5wVKO39tW+OU6kHwT/mNWK4cYLs
+	YsysIcgY6464XS6gW5wD111yfZTFKiN0lWguALhY9bSGd0sSxOAvA/oaAf+d52NhQzY4YkYyezw
+	spqNrtDWq14XbTavV820LhTGTyhknvLsIVvNnYH7Ip+bMda3C1Q8eEa1NyiJn/UOiqw3E0DTEcd
+	ClibiaQaFkRW/OW3nrLgjAN40sY9tn89XYcqZ4lmWTPgkFYiuBxAJnHFE1LmZRcIYlrYLPN/WcN
+	wGE2PuOQV4jwthibc86i37UsVR8EqPoLTWj9GtM960IQFACDHf8SAE8kktfQEf9Q==
+X-Received: by 2002:a17:903:186:b0:2b7:975c:dacc with SMTP id d9443c01a7336-2baf0cf4251mr10476125ad.1.1778210242377;
+        Thu, 07 May 2026 20:17:22 -0700 (PDT)
+Received: from toolbx.alistair23.me ([2403:581e:fdf9:0:6209:4521:6813:45b7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2baf1eafa62sm3220685ad.74.2026.05.07.20.17.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 May 2026 20:17:21 -0700 (PDT)
+From: alistair23@gmail.com
+X-Google-Original-From: alistair.francis@wdc.com
+To: alistair@alistair23.me,
+	linux-kernel@vger.kernel.org,
+	lukas@wunner.de,
+	Jonathan.Cameron@huawei.com,
+	bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org,
+	akpm@linux-foundation.org,
+	linux-cxl@vger.kernel.org,
+	djbw@kernel.org,
+	linux-pci@vger.kernel.org
+Cc: alex.gaynor@gmail.com,
+	wilfred.mallawa@wdc.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	aliceryhl@google.com,
+	boqun.feng@gmail.com,
+	a.hindborg@kernel.org,
+	tmgross@umich.edu,
+	ojeda@kernel.org,
+	alistair23@gmail.com,
+	Alistair Francis <alistair.francis@wdc.com>
+Subject: [PATCH 00/18] lib: Rust implementation of SPDM
+Date: Fri,  8 May 2026 13:16:52 +1000
+Message-ID: <20260508031710.514574-1-alistair.francis@wdc.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEvNRgE3ifAvgVS4bLeNp_eVp0=6b3p+myYEXSfyS+Qrw5mrtw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Ackerley Tng wrote:
-> Dave Jiang <dave.jiang@intel.com> writes:
-> 
-> > On 4/24/26 10:13 AM, Frank van der Linden wrote:
-> >> Dave Jiang <dave.jiang@intel.com> wrote:
+From: Alistair Francis <alistair.francis@wdc.com>
 
-[snip]
+Security Protocols and Data Models (SPDM) [1] is used for authentication,
+attestation and key exchange. SPDM is generally used over a range of
+transports, such as PCIe, MCTP/SMBus/I3C, ATA, SCSI, NVMe or TCP.
 
-> 
-> >>> [1]: https://lore.kernel.org/linux-cxl/aeWV1CvP9ImZ3eEG@gourry-fedora-PF4VCD3F/T/#t
-> >>
-> >> One of the main ideas behind guest_memfd is that the memory is managed
-> >> by the kernel only, so it knows what it has and that it can trust
-> >> the memory. This RFC passes an fd in via the ioctl(), which I think
-> >> breaks that model.
-> 
-> Yup! One of guest_memfd's core purposes is to be able to block host
-> accesses to guest private (in the CoCo sense) memory.
-> 
-> >
-> > Don't we issue KVM_CREATE_GUEST_MEMFD ioctl to get a fd in userspace to be passed to KVM_SET_USER_MEMORY_REGION2 ioctl later? We are just passing in a DAX fd instead of a guest mem fd.
-> >
-> 
-> This RFC is passing a DAX fd instead of a guest_memfd when creating a
-> memslot, so it's not really using guest_memfd, it's just reusing the
-> functions that were first created for guest_memfd to support another
-> kind of fd.
-> 
-> What's the use case you're shooting for? Why not mmap() from the DAX
-> fd and then pass the userspace address to KVM when setting up a memslot?
-> 
-> Is there a requirement to have the DAX memory usable by CoCo guests as
-> well, and hence requiring guest_memfd-style protection from host
-> accesses for private DAX memory?
-> 
+From the kernels perspective SPDM is used to authenticate and attest devices.
+In this threat model a device is considered untrusted until it can be verified
+by the kernel and userspace using SPDM. As such SPDM data is untrusted data
+that can be mallicious.
 
-I was thinking this would be an eventual use case for DAX/CXL memory yes.
+The SPDM specification is also complex, with the 1.2.1 spec being almost 200
+pages and the 1.3.0 spec being almost 250 pages long.
 
-There are a couple of issues with mmaping DAX.
+As such we have the kernel parsing untrusted responses from a complex
+specification, which sounds like a possible exploit vector. This is the type
+of place where Rust excels!
 
-1) DAX is getting a bit long in the tooth.  It may be that users are fine
-   with it and it should stick around but there are some who worry that it
-   is too deviated from the memfd/gmemfd style of management.
+This series implements a SPDM requester in Rust.
 
-2) What you propose above does not give the gmem 'protection' for CoCo's.
-   So yea that is the bigger issue.
+This is based on Lukas' C implementation [2], but has been refacted during the
+first few RFCs. I have included some of the relevent patchesfrom Lukas' C
+SPDM implementation in this series where they are required.
 
-Allowing gmem to use DAX/CXL as a backend within the kernel is where I
-think this is headed.  But having the gmem fd be allocated with that
-backend would need to have more knobs in gmem.  Also I believe there may
-be use cases where a _specific_ CXL device is desired.  That case makes
-the knobs required more complicated.
+This is a standalone series and doesn't depend on Lukas' implementation.
 
-What Dave has done here gives the device information via the dax fd.  It
-is kind of clunky but it works...
+The goal of this series is to get the smallest possible SPDM implementation
+upstream. That will provide building blocks for us to continue working on.
 
-Ira
+As such we don't yet provide evidence or certificates to userspace, allow
+userspace to provide a nonce, support PQC or more advanced SPDM features.
+This is enough to communicate with a device and return "authenticated" to
+userspace.
 
-[snip]
+Note that RFC v3 did provide evidence and certificates to userspace and
+allowed a custom nonce. Showing that it's possible. I also have patches
+that build apon [4] to do this via a TSM driver, again showing it's
+possible with the current approach.
+We just don't support it yet and for TSM I need [4] upstream first.
+
+This series is different to Lukas' original approach and the approach taken
+in the previous RFCs and instead adds the PCI-CMA support as a TSM driver.
+This was described by Dan in [3] and [5]. The advantage here is that for PCIe
+we can leverage the TSM work for a lot of the features and provide userspace
+a consistient interface between PCI TSM and CMA.
+
+This series also doesn't check the certificate chain against the kernel
+keyring and will instead leave that to userspace once [4] is merged.
+
+Other transport mode (such as ATA, SCSI, NVMe and MCTP) will
+therefore need slightly different approaches, as TSM doesn't apply.
+The library can support this though, it will just need some netlink
+and sysfs wrappers added as applicable. This way each transport can support
+SPDM in the way it sees fit.
+
+The entire tree can be seen here:
+https://github.com/alistair23/linux/tree/alistair/spdm-rust-tsm
+
+I'm testing this by running the following
+
+```shell
+cargo run -- --qemu-server response
+
+qemu-system-x86_64 \
+  -nic none \
+  -object rng-random,filename=/dev/urandom,id=rng0 \
+  -device virtio-rng-pci,rng=rng0 \
+  -drive file=deploy/images/qemux86-64/core-image-pcie-qemux86-64.rootfs.ext4,if=virtio,format=raw \
+  -usb -device usb-tablet -usb -device usb-kbd \
+  -cpu Skylake-Client \
+  -machine q35,i8042=off \
+  -smp 4 -m 2G \
+  -drive file=blknvme,if=none,id=mynvme,format=raw \
+  -device nvme,drive=mynvme,serial=deadbeef,spdm_port=2323,spdm_trans=doe \
+  -snapshot \
+  -serial mon:stdio -serial null -nographic \
+  -kernel deploy/images/qemux86-64/bzImage \
+  -append 'root=/dev/vda rw  console=ttyS0 console=ttyS1 oprofile.timer=1 tsc=reliable no_timer_check rcupdate.rcu_expedited=1 swiotlb=0 '
+
+ls /sys/devices/pci0000:00/0000:00:03.0/
+ls /sys/devices/pci0000:00/0000:00:03.0/tsm/
+cat  /sys/devices/pci0000:00/0000:00:03.0/authenticated
+echo tsm0 > /sys/devices/pci0000:00/0000:00:03.0/tsm/connect
+cat  /sys/devices/pci0000:00/0000:00:03.0/authenticated
+```
+
+1: https://www.dmtf.org/standards/spdm
+2: https://lore.kernel.org/all/cover.1719771133.git.lukas@wunner.de/
+3: http://lore.kernel.org/69976d7d39c60_2f4a1009@dwillia2-mobl4.notmuch
+4: https://lore.kernel.org/all/69976d7d39c60_2f4a1009@dwillia2-mobl4.notmuch/
+5: https://lore.kernel.org/lkml/69e19c80b892b_fe0831000@djbw-dev.notmuch/
+
+v1:
+ - Add CMA as a TSM driver
+ - Initial support for SPDM 1.4
+ - Cleanup a range of comments and concerns from RFC
+ - Remove kernel keyring checks
+RFC v3:
+ - Use netlink to send information to userspace
+ - Don't autogenerate Rust helpers
+RFC v2:
+ - Drop support for Rust and C implementations
+ - Include patches from Lukas to reduce series deps
+ - Large code cleanups based on more testing
+ - Support for authentication
+
+Alistair Francis (13):
+  rust: add bindings for hash.h
+  rust: error: impl From<FromBytesWithNulError> for Kernel Error
+  lib: rspdm: Initial commit of Rust SPDM
+  PCI/TSM: Support connecting to PCIe CMA devices
+  PCI/CMA: Add a PCI TSM CMA driver using SPDM
+  lib: rspdm: Support SPDM get_version
+  lib: rspdm: Support SPDM get_capabilities
+  lib: rspdm: Support SPDM negotiate_algorithms
+  lib: rspdm: Support SPDM get_digests
+  lib: rspdm: Support SPDM get_certificate
+  lib: rspdm: Support SPDM certificate validation
+  rust: allow extracting the buffer from a CString
+  lib: rspdm: Support SPDM challenge
+
+Benno Lossin (1):
+  rust: add untrusted data abstraction
+
+Lukas Wunner (4):
+  X.509: Make certificate parser public
+  X.509: Parse Subject Alternative Name in certificates
+  X.509: Move certificate length retrieval into new helper
+  PCI/CMA: Validate Subject Alternative Name in certificates
+
+ MAINTAINERS                               |   13 +
+ crypto/asymmetric_keys/x509_cert_parser.c |    9 +
+ crypto/asymmetric_keys/x509_loader.c      |   38 +-
+ crypto/asymmetric_keys/x509_parser.h      |   42 +-
+ drivers/pci/Kconfig                       |   14 +
+ drivers/pci/Makefile                      |    4 +
+ drivers/pci/cma.asn1                      |   41 +
+ drivers/pci/cma.c                         |  262 +++++
+ drivers/pci/doe.c                         |    3 -
+ include/keys/asymmetric-type.h            |    2 +
+ include/keys/x509-parser.h                |   57 ++
+ include/linux/oid_registry.h              |    3 +
+ include/linux/pci-doe.h                   |    4 +
+ include/linux/pci-tsm.h                   |   11 +-
+ include/linux/spdm.h                      |   39 +
+ lib/Kconfig                               |   17 +
+ lib/Makefile                              |    2 +
+ lib/rspdm/Makefile                        |   10 +
+ lib/rspdm/consts.rs                       |  155 +++
+ lib/rspdm/lib.rs                          |  180 ++++
+ lib/rspdm/state.rs                        | 1070 +++++++++++++++++++++
+ lib/rspdm/validator.rs                    |  524 ++++++++++
+ rust/bindings/bindings_helper.h           |    7 +
+ rust/helpers/hash.c                       |   18 +
+ rust/helpers/helpers.c                    |    1 +
+ rust/kernel/error.rs                      |   10 +
+ rust/kernel/lib.rs                        |    1 +
+ rust/kernel/str.rs                        |   13 +-
+ rust/kernel/validate.rs                   |  605 ++++++++++++
+ 29 files changed, 3091 insertions(+), 64 deletions(-)
+ create mode 100644 drivers/pci/cma.asn1
+ create mode 100644 drivers/pci/cma.c
+ create mode 100644 include/keys/x509-parser.h
+ create mode 100644 include/linux/spdm.h
+ create mode 100644 lib/rspdm/Makefile
+ create mode 100644 lib/rspdm/consts.rs
+ create mode 100644 lib/rspdm/lib.rs
+ create mode 100644 lib/rspdm/state.rs
+ create mode 100644 lib/rspdm/validator.rs
+ create mode 100644 rust/helpers/hash.c
+ create mode 100644 rust/kernel/validate.rs
+
+-- 
+2.52.0
+
