@@ -1,95 +1,77 @@
-Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B212F8EAD
-	for <linux-cxl@vger.kernel.org>; Sat,  9 May 2026 16:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBFE375AC3
+	for <linux-cxl@vger.kernel.org>; Sun, 10 May 2026 14:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778344755; cv=none; b=uCAbXPU4W26RsLtD8jzRc1jy2f9D+Q2yfe1CXTAa7B+UHRrHfgTnQMUDhSQq4OV6k3DxYZJ+awQqWIXpqaqOtE+w+pw1pJb5/c8fd+rM0fwF0jNNexoLzG9cSbh9k3JMkwZtkBTF/uF3fPmiKXjXQIO26SCFkFDIF4kIT4UOnj4=
+	t=1778424021; cv=none; b=QL34visMOKZosXT0n+1FVlLCA8J1m86vU776nE/KSDu5jK3VimwDWo8cxGpTe0KXZHdyfH+EHlnO2PYaPv8DZiZ8g8li+S/crUYUwuQBJNz+mtGk7oehJZBJhb9xU9gG6whGl3Fn7PtUWhlmcWppzk95FInojxzCW1mBZYEgdM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778344755; c=relaxed/simple;
-	bh=FKd0CXJyl9QfJPa0aYz0nVfjWc/cyYUW7BZ587RmS00=;
+	s=arc-20240116; t=1778424021; c=relaxed/simple;
+	bh=siSpsQjxKBJBQUtqz/CL8FbCQlQeBJKwELhg7lkt6kE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VaqhVC1A3jsTbQiRoMN20Hikk2om41R4SP1TMSl6cD7ivuZw9qqwylfczL/DuGgAyIPbksZk+oxTPHSP34Ubs8vEFUv9T9W9Lub+2j2ArL22rR6BpuFZWfxSMNBjm/GlHKHk55gXH+kyKZ/w2NzBxI1zMoliYo5IpY0bnMC9Fjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=K8EZnlUw; arc=none smtp.client-ip=74.125.82.178
+	 Content-Type:Content-Disposition:In-Reply-To; b=BizW0jjGA+iNmBhbtqcvfJE2xw5E9rj6O/UHC/W6h74sdQcaxEczCweydoX67/LzkD6fnUelmUGi+6/6shjRbRc6EpWm3fepZUiK2Hdf9DW97q9rFtH9nqJ+BQDRfqDfDb9hPdi4YNJ0h/3RxmvCFOv3kMmiRSe4bkFSpQoGcg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=DJJq9vvz; arc=none smtp.client-ip=209.85.160.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="K8EZnlUw"
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-2f0ad52830cso4523655eec.1
-        for <linux-cxl@vger.kernel.org>; Sat, 09 May 2026 09:39:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="DJJq9vvz"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-50fb4a7d704so26189591cf.1
+        for <linux-cxl@vger.kernel.org>; Sun, 10 May 2026 07:40:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1778344753; x=1778949553; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1778424018; x=1779028818; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9Z2UMBx5dGhCxet+pSUCVtwvNzhJpnfXCgIbbDTxeL4=;
-        b=K8EZnlUw6Rlcw+P2oxSKatDiYwpGITthu7j2zRaIvDS3ds4uJVM8Lc6U2Ne3wr/sY1
-         +ESlYr3hODkFVTo4dJnV1CADquCb8JsEbE/bdLbiLmrjyUESWUSDUEM+QQfSrnOZKpJG
-         YKP24hW2pEZaAbxe8E/E9FJIG0GxZxfiFr6EHT1VQXatiUe5dUaK50HYu3JiMEYxBTIy
-         vr4aGr6zaZRXvkuocuk/4/du7q0HNGT+m+iL6B6woNiDzRrtgEkMU0bfKocs7MAs9dNg
-         jMAdJplw6wX3vmYkSXDm/jXV7Ah4migDb1P5CNnT5lqGmhsSUjmtoAzcLR7se/lPORYA
-         TuGQ==
+        bh=zN7aWTUA3H4RFHbkfRpLkMHDYoiJE8XD5BaVLkKqp84=;
+        b=DJJq9vvzen0LZVjxGhKDtS1iqoGK0QDNZ4wieLAuqSFGe7EaKsp7WgdiC9ezNG2Hen
+         LKKCmw6tSd+ZWxUu1iBYIEOxexIU+s4+uNzsgq12YZOF182fLKdLpAE7WxAejfSq+cQv
+         v9wdMp/YVCYgHnzd9FpZHHr6jE4h9oXWpbLJTRzOqYP9qjOYyL5cHj1ZOds4qCCmMxXE
+         QOHqIlTkE7YUWAsiM+ISjMd6LzciBTz7QuZ4z2rpgMGV5bw+2QkMLbl/2S7EJ0neoIKi
+         qS6uAbmbrNHYnlRT6QSVUupc2cD30p4TAqwkfqBEz8TVBWW/i8tJnkniNdLdQiXEY49g
+         93Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778344753; x=1778949553;
+        d=1e100.net; s=20251104; t=1778424018; x=1779028818;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9Z2UMBx5dGhCxet+pSUCVtwvNzhJpnfXCgIbbDTxeL4=;
-        b=jRQz3zOH9uIN0zA2b9DvK01X2Mu839RqczYL5FScusuaUFVidG35oEdimrjbEseBup
-         3dXZoFNg/CCc0lTSlRVQrkTRadtaXXPqEIv/VdQwOoq2Biok62hyrvTblB6TLRxwbiyl
-         M63wNUiEhjJqz1UrEpC/l7L1foQXJdOnJ8q91okxXfRmZvmegOBIiHxE60nymLNsA07d
-         vSPTIoRyTo1D6Fy0aXLYcAlkqwvnOdL9yc/mEUCrq2zaTOtxRkqmJYrUPtudgxIw/MuJ
-         SI4bF1q30HgYt0AypB/V1WWQzE8ImM0XBT4sY7h62hFk+K7oeoPFBxRh1GIXfFv8Ko9Y
-         o7Fg==
-X-Forwarded-Encrypted: i=1; AFNElJ93GMQAeVn+yolKOleSlz6RKxRPIuu+uMhdhaJmX71HrdV5tut19MEmmACEDp0BMAx/jicc+QzOuEg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbMTJq6NcJPGhXDd+fNCUfVgalAvAEZ3fv+Szdje4U9WlMxHMV
-	VrptM/238NMOogxjmgX6LOhnWqrfOnGCflyyWUKPbw9euQPKi/EuQFHH56DWQbBTne4=
-X-Gm-Gg: Acq92OH2ycL8oR7HwD54g5bp+/cHJVN/8aVKntnrh4Utd3wG3Ip1O6lv0xE4TAZKmwM
-	cPycgzmPNNxxsGjIQcwEtmVyGLb7M3o1LIErWcZG6kNKPJoArFIvo1jcwC644sbZHqbB3mDic1r
-	Nbln8Vjw2pu4CtPYyhvVZ4pdm2ZSjZWcA0fhYmn+DKOZRqT0Sd8PEDsX4X0ubUILwxMbl8oCt6M
-	pDMevp8eXBJduS7qT26AMekZ1ter484flv2H3+9i1VPITDkw0a895aBeDgkjv0f9sj+J8C8MD0X
-	HKMteOhHideVk87O49UnU+xs2Kn0Td1RldN2A8FKqpP9b4BMNuWbuAwIZgGWblM1w19eWJbtLUZ
-	HLotgFE/894O4DjivPKLtnGTpwOMdJO6KTfCoK36SB+qj19eDxYlhj/NYAPhVBita0iKSiFdX8j
-	uF3yn8sjAIlAez8EOnTNTA2R2Kq1F+Mw+beUz4/toN5g==
-X-Received: by 2002:a05:7300:724b:b0:2f8:1f2b:bb5d with SMTP id 5a478bee46e88-2fb4dc64acfmr984629eec.25.1778344752833;
-        Sat, 09 May 2026 09:39:12 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([205.220.129.38])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2f8859eb4b7sm6994852eec.2.2026.05.09.09.38.13
+        bh=zN7aWTUA3H4RFHbkfRpLkMHDYoiJE8XD5BaVLkKqp84=;
+        b=c6XaLtAorSpT4mg5Q1ptOCj0/9kH1amdy97k1ylUzunAls5LZ7oq6NJtSAAn6NHdX4
+         4b85RvHP8u153ailw+9QegkzONHyXtZ3b8utM9XJZkLxG8BT6HNnx+XMWdHdL+ZBMvXi
+         9X67ZfuGkyWGw4a1BEbb/twQ97KU6b6QnjYIAxmGYyShZhk7FrRPsyHN0/BjxVaa5kxF
+         TnCfLK2SkvhXwaC+e6PUkeSLinEgpEelkL1jYav6MYcaNItZkkRNFz6TZLaYtzsDO46e
+         JMjHVMaHl+xOyGaXnShQMUsYOL9Rsm72KOyWxb6iyYyeesOIWoyBjmo9w/rwnetprcrX
+         tYAQ==
+X-Forwarded-Encrypted: i=1; AFNElJ8CWHvKonpT2ckezN/tqvlD25lLMY58cHsD7dfMyZN4hX810cAbLH8/lbH7N1vbLaY7p4l77MQHuqM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHzMbFAz7sSJs7zm8kSwuzs8im29xAFuov7kerCg3UYPJ+gjYh
+	lv8wKQpfNop+U7Zf6Rjqmsd1vgCCZr0Q+ZUsfk0JkQcyHWztqK+kW3dpgJwrFC//kr8=
+X-Gm-Gg: Acq92OHve+vdF1OCN8Bz5/fzuqW0AM+W0OHFPI77YYJ8CG6jlKvm9dZhzHAPWXVKYl4
+	BSIxPfwSS+Dq8sneJAj/3O0212QTm39N6oEKI2L4cfpx+RAvQgk9Wl/JuaO0Q/reAbPM34OaZ5M
+	BWEcdgvrlHZSuFvmS/TsvrvYz6kO0cl5QMJn1gk2pDIS25vULFGgw58z2732iSQOmXUJF6ZNxhO
+	JKAJqGYloNchaewyuMijVBv4DUreFhDAW6hIz2D9KMTvAERGNNA21BokE3VsPre3AnbGQRWd0uG
+	qVeAueCTdk/bI43Pb8tr3X/VpL+9h6ZX9WpKIvC+bCxQXf5omMvZbDF+Z+MwHqI7vDrfPThEjsV
+	h0jC7ur550oEvbIy3Qf2Cqw99RjCz92WFtlsOKcIrafLXby4jsZ+DZfU1TqCNB7qBZ0qR2KI+kT
+	Qj455R6bjWLmjwzpYbEwV6gj9s0Mqoz8d7wpddvkeIPC8utmV7rmnag8ZIKEOJUF5i/9aX8cVL2
+	5mkCf2nHQWr
+X-Received: by 2002:ac8:5e11:0:b0:50e:89e9:271c with SMTP id d75a77b69052e-514a0a60821mr91286531cf.17.1778424018487;
+        Sun, 10 May 2026 07:40:18 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-100-36-248-188.washdc.fios.verizon.net. [100.36.248.188])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5148e7bef56sm67617811cf.15.2026.05.10.07.40.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 May 2026 09:39:12 -0700 (PDT)
-Date: Sat, 9 May 2026 17:38:05 +0100
+        Sun, 10 May 2026 07:40:17 -0700 (PDT)
+Date: Sun, 10 May 2026 10:40:15 -0400
 From: Gregory Price <gourry@gourry.net>
-To: lsf-pc@lists.linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	cgroups@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
-	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
-	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
-	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC] Private Memory Nodes - follow up
-Message-ID: <af9i7dkNvGGxPHzu@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
+To: Ira Weiny <iweiny@fastmail.com>
+Cc: Ackerley Tng <ackerleytng@google.com>,
+	Dave Jiang <dave.jiang@intel.com>, fvdl@google.com,
+	linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, djbw@kernel.org,
+	iweiny@kernel.org, pasha.tatashin@soleen.com, mclapinski@google.com,
+	rppt@kernel.org, joao.m.martins@oracle.com, jic23@kernel.org,
+	john@groves.net, rick.p.edgecombe@intel.com
+Subject: Re: [RFC PATCH 00/12] dax: Add DAX to guest memfd support for KVM
+Message-ID: <agCYz5O36zLATni6@gourry-fedora-PF4VCD3F>
+References: <0e831045-3b01-4934-bf43-b3ef01ce0158@intel.com>
+ <CAEvNRgE3ifAvgVS4bLeNp_eVp0=6b3p+myYEXSfyS+Qrw5mrtw@mail.gmail.com>
+ <69fd37c5cfa4a_1d1951006d@xwing.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -98,209 +80,30 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260222084842.1824063-1-gourry@gourry.net>
+In-Reply-To: <69fd37c5cfa4a_1d1951006d@xwing.notmuch>
 
-Just wanting to follow up post-conference with a few major take-aways
-since I will be a bit sparse during May / Early June (so want to not
-forget, and garner a bit of input on the notes).
+On Thu, May 07, 2026 at 08:09:25PM -0500, Ira Weiny wrote:
+> 
+> 2) What you propose above does not give the gmem 'protection' for CoCo's.
+>    So yea that is the bigger issue.
+> 
 
-If you just want the tl;dr:
+Realistically, what you actually want is to add:
 
-   0) naming:  private -> managed
+   private_dax.c
+       +
+   MEMORY_DEVICE_CONFIDENTIAL
 
-   1) remove global general "possible" and "online" node lists
+And just make sure they work together to produce:
 
-   2) add consistency with "normal" nodes, by opting them all in
-      to all the new things, and just making that the new normal.
-      e.g.: node_is_private_managed -> node_is_lru_eligible
+  a) open() works -> produces an FD
+  b) no direct-mappings, struct page exists, can be accessed by KVM
+  c) all userland operations fault (memory is never in direct map)
+  d) unbind explicitly zeroes or calls a registered sanitize() func
 
-   3) Have __init add init time nodes to all the lists
-      Otherwise service/owner must add/enable services.
+But this adds a new dax mode and a new ZONE_DEVICE mode.
 
-   4) Make folio checks just way more explicit per service
-      e.g.: folio_is_private_managed -> folio_is_ksm_eligible
-
-   5) I still think w/o __GFP_PRIVATE this will still be too fragile,
-      but we're going to give it a try.
-
-   6) No callbacks in the MVP
-
-   7) MVP will be, essentially, Buddy + MBind support
-
-Otherwise, more notes below.
-
-~Gregory
-
-<wall of text>
-
-0) Naming is hard.  Willy and Liam expressed concern over "private".
-
-   We briefly discussed "Managed"
-
-   This results in the following changes:
-
-      - if (folio_is_zone_device(folio))
-      + if (folio_is_managed(folio))
-
-   and
-   
-      + if (node_is_managed(nid))
-
-   and
-
-      - N_MEMORY_PRIVATE
-      + N_MEMORY_MANAGED
-
-   I'm less enthused the last one, but i'm ok with it.
-
-
-1) There is a desire to fix possible / online node masks to avoid
-   bad patterns, and maybe to audit existing nodemask users.
-
-   there's one UAPI issue with this, and that that these masks
-   are exposed to userland by nature of existing node attributes
-   (N_MEMORY, N_CPU, N_POSSIBLE, etc).
-
-   I'm considering a name change from `possible` -> `init`, because
-   that's mostly how it is used (initialize some set of per-node
-   resources during __init, not at runtime).  Externally, this set
-   would still be reported to uapi as possible.
-
-
-2) There was concern about inconsistency towards nodes.
-
-   Along the lines of #1 - I'm thinking about actually adding explicit
-   service nodelists, which are populated at boot by __init, and by
-   hotplug if it's a general purpose node.
-
-   So we'd end up with things like:
-
-       for_each_ksm_node
-       for_each_lru_node
-       for_each_x_node
-
-   And we would retire such general defines like
-
-       for_each_node
-       for_each_online_node
-
-   For any "normal" node, it lands in all the lists.
-
-   For the buddy, we would have
-
-       for_buddy_node
-
-   For the default buddy-node list, and otherwise "managed" nodes would
-   still be removed from the standard fallback lists.
-
-   This means these nodes cannot be reached via nodemask arguments, and
-   can only be reached by `alloc_pages_node(nid, ...)` nid argument.
-
-                I *think* might resolve __GFP_PRIVATE.
-
-      But it's still dependent on system-wide for_each good behavior.
-
-
-3) How do private nodes get into the lists in the new system?
-
-   For any private node, the registering driver (owner) and the managing
-   service are responsible for adding/removing the nodes from the list.
-
-   Example workflow:
-
-     0) CXL driver hotplug: add_memory_driver_managed(..., nid, owner)
-           a) owner=NULL means general purpose node
-	   b) otherwise, reserve nid and (pgdat->owner = owner)
-
-     1) hotplug memory onto the node
-          a) if node is normal, add to all service lists
-	  b) if node is "managed" (private), omit from all lists
-
-     2) CXL driver registers node with specific services, e.g.:
-          cram_register_node(..., nid, owner);
-
-     3) Service sets node enabled in appropriate node list, and starts
-        any appropriate services (kswapd, kcompactd, etc) for that node.
-
-   In some cases, nodes would have individual mappings onto services
-   (cram), in other cases the intent would be to have the memory
-   otherwise treated as general-purpose, but with special access
-   patterns (e.g. an LRU node not marked N_MEMORY).
-
-
-4) There are still concerns about random hooks around the kernel.
-
-   My thought is to make this less "random", and more a change
-   in the way we think about folio operations / node operations
-   for ALL nodes.
-
-   ZONE_DEVICE has a bunch of implicit filtering due to not being
-   on the LRU - but the intent is to allow flexible LRU membership.
-
-   So what if we just made these checks much more explict overall
-
-    if (folio_is_ksm_eligible(folio))      /* can be merged */
-    if (folio_is_lru_eligible(folio))      /* managed by lru services */
-    if (folio_is_demotion_eligible(folio)) /* demotion target */
-    if (folio_is_mbind_eligible(folio))    /* can be an mbind target */
-
-  Rather than rathole over what the set of bits should be, i think it's
-  more important to determine what the actual operation here will be.
-
-  right now I have this defined as essentially:
-
-     folio_pgdat(folio)->private.ops.mask & NP_OPT_KSM
-
-  But if we generalize to all nodes / all features, it's essentially
-  a per-pgdat bitmask lookup:
-
-    bool folio_is_ksm_eligible(folio)) {
-        return test_bit(N_FEATURE_KSM, folio_pgdat(folio)->features);
-    }
-
-  With the bonus that all ZONE_DEVICE hooks can be sunk into these
-  checks, so there are many places in mm/ where this becomes essentially
-  a single-line change.
-
-
-5) Lacking __GFP_PRIVATE, I have concern over fragility.
-
-   Previously, __GFP_PRIVATE created a "default opt-out" mechanism.
-
-   I *think* the above nodelist changes, specifically removing:
-
-       for_each_node()
-       for_each_online_node()
-       for_each_node_with_cpus()
-
-   The problem I foresee is with existing node_state masks, like
-
-       node_state((node), N_POSSIBLE)
-       node_state((node), N_CPU)
-
-   This might be tractable, but it may also simply be too fragile.
-   
-   Right now only 3 or 4 locations use node_state() outside mm/, and
-   I'm tempted to try to sink these into mm/internal.h instead of
-   include/linux/nodemask.h.  If that becomes unpalletable, then I will
-   lobby for __GFP_PRIVATE again (I may still anyway :P).
-
-
-
-6) No callbacks by default, but nothing technically prevents it.
-
-   I was already in the process of killing this.  I think mmu_notifier
-   does *most* of what the callbacks where doing anyway, so we can
-   probably collapse that.
-
-
-7) David asked me to limit the MVP to Buddy + MBind support.
-
-   There's some odd interactions with pagecache, so that might evolve
-   too (may not be able to reliably fault a file directly onto a private
-   node, tbd - mempolicy does not apply to page cache faults, so it's
-   just unreliable).
-
-</wall of text>
+A private node with NP_OPT_NOMAP might be cleaner, but you still have to
+do the hotplug/memremap dance either way.
 
 ~Gregory
