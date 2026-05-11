@@ -1,128 +1,173 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5493C060F
-	for <linux-cxl@vger.kernel.org>; Mon, 11 May 2026 09:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4FC377567;
+	Mon, 11 May 2026 09:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778490146; cv=none; b=khOqDqE3q2WG9cdTTlFlGz/lseSUHUoweKTtJUAkgIjpZO7RIJnJoYWwBKZfRPisKTTqnEAIed1Jfymcq/ptsZLTi1krNxaiY3InUcvXwbSGjcdWhUpUT6ApjHLStlutvNA56sFkiLxtLVZygK5Am7UBlOitNIERiFDYQ0RZmOE=
+	t=1778490784; cv=none; b=SAX6rvl3+PwXMkDTviFfyjXv8pheUnoe9GKW4xojP6L+Mu5FlBkdbnklHBHhGbVt8EdvSuRl+mctcMkMsaXdDsLApOytFC7lMmASmHEavY4WOtysW7wkRpsyLLTCZGXR45vVOuN3VUS0KAIa9LsUVw5TKSxQss7XoBRRE3qVh8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778490146; c=relaxed/simple;
-	bh=8t0pjognVrKDItaBNGHlRn9xCyw4tHQ1nXmt5skAiLk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NGtWyxf+gEkESMOzI3Wq9sIxaL63iMALKDmy1eDWmDDvpR0ZD+QasJIJYuqjcJ8ljvKDLEvrL5cFo2CU23KyHuENzXC8Rsmzi030lkdEANaFuJLfn9Iujx2IJA1qTZXz7P3gunZXX6q3uMZLuOqIDhB4mlMtlhvEIBe1MXVIWpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PoCU8OzY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=fUlUSKNr; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=p2LY0gDu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=j9c2qRiB; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1778490784; c=relaxed/simple;
+	bh=v+NVvuMtu0+rgssi+Nf/wQoj/MpnCEhZR447leF12tY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bmQ9OrU/UZefRhBxrUMrlM+FkOmiEJOoQZZd3QSWfE7SDGvWIRSFbbK7a0xwSx5IAliyYUOC8lTfVzt16EH9/Ou4sIj2RSa0wJvO1nDgvzhVkPU3mKxaITN7Djf2AJGPYhmvNH4+65eBnUapmkomDnz3Xezw9ZRNLW1TE2jytL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Dhd0esCf; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PoCU8OzY";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fUlUSKNr";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="p2LY0gDu";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="j9c2qRiB"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 13B0B67EAE;
-	Mon, 11 May 2026 09:02:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1778490143; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FWWQDm25jLJiRbtKOd/fbqnKTLV1LaC9qSn9EBz6Y9Q=;
-	b=PoCU8OzYFqlNgawABXNYSMy2qaLFjPCaRy4eT8EnHHuFjtDcpxE9NI7RUT2WOffeY0mnd8
-	BHFo2W48VCESmk6fMtFtNBmtqd2kt2pw8olUsyreeGGLzn7+94TCZB72wQarXlWCa/fL/x
-	Jo9VpIR/YSVJadRJdfVtW2JeQd9Nac4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1778490143;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FWWQDm25jLJiRbtKOd/fbqnKTLV1LaC9qSn9EBz6Y9Q=;
-	b=fUlUSKNrKwGJEiVngq+DDIB6Ntk1eRbZ2+Y5VNKG3wyRIsgukmHOf/qjlIqV+ymbrVo+XH
-	b+iZsQX46Cvy4FCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1778490142; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FWWQDm25jLJiRbtKOd/fbqnKTLV1LaC9qSn9EBz6Y9Q=;
-	b=p2LY0gDuJVtgja3TPdczNQezQQLva3OYEpxP3EVpoqqIzJfhcvkOtlBtOPjp3gtJrP0hsE
-	GjwyThofqFBvdxwxoPqJdh8FH99aDq03gCCYfNLBknOkfOIYdh63rrIk+9qGmbbxOw15MR
-	oevWaNtGlOU7J6kN8PTWbjA5+r4npfA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1778490142;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FWWQDm25jLJiRbtKOd/fbqnKTLV1LaC9qSn9EBz6Y9Q=;
-	b=j9c2qRiBQ6fZl2gTsEXipcDU866IrbfW//42tU5HoZPaZF57OlQ36BO3YebxqTW02oshGe
-	OA0tMuLh+UnI1gCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 93B11593A3;
-	Mon, 11 May 2026 09:02:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 4XpbIB2bAWpkEwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Mon, 11 May 2026 09:02:21 +0000
-Date: Mon, 11 May 2026 11:02:19 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Muchun Song <songmuchun@bytedance.com>
-Cc: David Hildenbrand <david@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	muchun.song@linux.dev, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/memory_hotplug: Factor out altmap freeing checks
-Message-ID: <agGbG3pWN_qvPWqS@localhost.localdomain>
-References: <20260511084307.1827127-1-songmuchun@bytedance.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Dhd0esCf"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 64B5J9RQ2454484;
+	Mon, 11 May 2026 09:12:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=7Zcp0k
+	Wb+Anwe2WoWtnjD3EG2vBXgnnNuj3KIcfeAAM=; b=Dhd0esCf1iXuiU/vzkh1iY
+	sm9iZRZm5mb83web4eqRkiZES1bqScKUuBM7huhXAaNpyQHmzFsy9pP15mV7c1XA
+	yLFU7zv/HoO7sYheoXuqwV+8iM/hFFKVh+nsWLebceVlS4U06QUVIJNIvt8kATp6
+	gvFiQf2uTE8GP0NUbQ+PMnDfyZUzwbJYe2T5OFux1SXNAtEXX+st5VQjaBq9iBf2
+	1fkCq1HauNrmCRjhCCiB91eJ9v8rhIuTFt+8y+mennvxGj56tioGjE8NQjYcVETF
+	F/h0DLBJvYVKeAXUChxFdpnr2d+T478v12kk56HkbZdc5L0hgT4UnAJkDlXaj4mQ
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4e1ubdq34c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 May 2026 09:12:31 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 64B8sPXF016793;
+	Mon, 11 May 2026 09:12:31 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([172.16.1.72])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4e2f8q4pdg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 11 May 2026 09:12:31 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 64B9CUWC33620644
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 11 May 2026 09:12:30 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E585958067;
+	Mon, 11 May 2026 09:12:29 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 65B0258065;
+	Mon, 11 May 2026 09:12:27 +0000 (GMT)
+Received: from [9.123.6.34] (unknown [9.123.6.34])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 11 May 2026 09:12:27 +0000 (GMT)
+Message-ID: <67f5b175-7a9e-4693-95ce-84d4b42e6b45@linux.ibm.com>
+Date: Mon, 11 May 2026 14:42:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/memory_hotplug: Factor out altmap freeing checks
+To: Muchun Song <songmuchun@bytedance.com>,
+        David Hildenbrand <david@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc: muchun.song@linux.dev, linux-cxl@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20260511084307.1827127-1-songmuchun@bytedance.com>
+Content-Language: en-US
+From: Donet Tom <donettom@linux.ibm.com>
 In-Reply-To: <20260511084307.1827127-1-songmuchun@bytedance.com>
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,bytedance.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=BezoFLt2 c=1 sm=1 tr=0 ts=6a019d7f cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=IkcTkHD0fZMA:10 a=NGcC8JguVDcA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VwQbUJbxAAAA:8
+ a=968KyxNXAAAA:8 a=VnNF1IyMAAAA:8 a=Uail7pCi9VyjTqRTir0A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: fdcB4qRrTqLF4DtyW6B9LVSZHJfAxZTf
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNTExMDEwMCBTYWx0ZWRfX2eRwCj+7uMQ5
+ v4MWT3UjCyTxnkpX5VQqYC2W6PoVj8rr4nO4raC+au2LCS/78p8LRvXsy4BK9Sdc8H/230Vpclh
+ KAnCZ0CVm9NsfgE3+r/amdhaFDcyepqwKORgXidpkRIHcQiyDvoj8xvaXKDtdLAqz87/O/1n3pF
+ Yq2HiZSPwcOtya14p4K1r/8qgWsKtHLbm+RpHUVJVPPHFYdHy98eVm0izUj1iIA89F+8sOFObPT
+ lDRgAM09w4ZEc+/PrBRMk9EY3jrBn0tJk4jlzwtb+SZViMiRU6L3pG6AGXDbbTHYYNzqkWtFW88
+ fZyKrTAnBt8KBmM7E1JaflYz6e13NmJcceRviG6KAI3ZTE7JZQz+I76i/iTxztMARb5oCeWuspC
+ tShFtx6ep4nFPs5m+6iO4X8hao4qLdYlPJzW+b6o6joqBgpMOqSw2CBcO4JmtLNdNFwmfYnNgnd
+ YAqBu8qeBZ+H+LZ9fKw==
+X-Proofpoint-ORIG-GUID: fdcB4qRrTqLF4DtyW6B9LVSZHJfAxZTf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-05-11_02,2026-05-08_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0 malwarescore=0
+ adultscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0 spamscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604200000 definitions=main-2605110100
 
-On Mon, May 11, 2026 at 04:43:07PM +0800, Muchun Song wrote:
+
+On 5/11/26 2:13 PM, Muchun Song wrote:
 > Use a small helper to centralize altmap freeing after verifying that all
 > vmemmap pages were released. This keeps the check consistent between the
 > normal teardown path and the memory hotplug error paths.
-> 
+>
 > Suggested-by: David Hildenbrand (Arm) <david@kernel.org>
 > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 
-Acked-by: Oscar Salvador <osalvador@suse.de>
 
- 
+looks good to me.
 
--- 
-Oscar Salvador
-SUSE Labs
+Reviewed-by: Donet Tom <donettom@linux.ibm.com>
+
+-Donet
+
+> ---
+>   mm/memory_hotplug.c | 16 +++++++++-------
+>   1 file changed, 9 insertions(+), 7 deletions(-)
+>
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 462d8dcd636d..af5489f03771 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1403,6 +1403,12 @@ bool mhp_supports_memmap_on_memory(void)
+>   }
+>   EXPORT_SYMBOL_GPL(mhp_supports_memmap_on_memory);
+>   
+> +static void altmap_free(struct vmem_altmap *altmap)
+> +{
+> +	WARN_ONCE(altmap->alloc, "Altmap not fully unmapped");
+> +	kfree(altmap);
+> +}
+> +
+>   static void remove_memory_blocks_and_altmaps(u64 start, u64 size)
+>   {
+>   	unsigned long memblock_size = memory_block_size_bytes();
+> @@ -1427,12 +1433,8 @@ static void remove_memory_blocks_and_altmaps(u64 start, u64 size)
+>   		put_device(&mem->dev);
+>   
+>   		remove_memory_block_devices(cur_start, memblock_size);
+> -
+>   		arch_remove_memory(cur_start, memblock_size, altmap, NULL);
+> -
+> -		/* Verify that all vmemmap pages have actually been freed. */
+> -		WARN(altmap->alloc, "Altmap not fully unmapped");
+> -		kfree(altmap);
+> +		altmap_free(altmap);
+>   	}
+>   }
+>   
+> @@ -1463,7 +1465,7 @@ static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
+>   		/* call arch's memory hotadd */
+>   		ret = arch_add_memory(nid, cur_start, memblock_size, &params);
+>   		if (ret < 0) {
+> -			kfree(params.altmap);
+> +			altmap_free(params.altmap);
+>   			goto out;
+>   		}
+>   
+> @@ -1472,7 +1474,7 @@ static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
+>   						  params.altmap, group);
+>   		if (ret) {
+>   			arch_remove_memory(cur_start, memblock_size, params.altmap, NULL);
+> -			kfree(params.altmap);
+> +			altmap_free(params.altmap);
+>   			goto out;
+>   		}
+>   	}
+>
+> base-commit: e98d21c170b01ddef366f023bbfcf6b31509fa83
