@@ -1,109 +1,143 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBFE375AC3
-	for <linux-cxl@vger.kernel.org>; Sun, 10 May 2026 14:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896E03B3BF0
+	for <linux-cxl@vger.kernel.org>; Mon, 11 May 2026 08:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778424021; cv=none; b=QL34visMOKZosXT0n+1FVlLCA8J1m86vU776nE/KSDu5jK3VimwDWo8cxGpTe0KXZHdyfH+EHlnO2PYaPv8DZiZ8g8li+S/crUYUwuQBJNz+mtGk7oehJZBJhb9xU9gG6whGl3Fn7PtUWhlmcWppzk95FInojxzCW1mBZYEgdM0=
+	t=1778489008; cv=none; b=hCu0D8eVkE+LNkIvkh5481uggrqlqkJhr3wdaZn61VYM2k9NSyCUWBsLIDGh+I56Ur793KfQgLjXeIiDHdGKuOlJZ8W+06FM7w9GEfbe18S7Dx4kj4Jojx6o46xVzu2W9HsCfLy5L8bS62epUD5QDaAAeqgzXz2CYOlShmd+9J0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778424021; c=relaxed/simple;
-	bh=siSpsQjxKBJBQUtqz/CL8FbCQlQeBJKwELhg7lkt6kE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BizW0jjGA+iNmBhbtqcvfJE2xw5E9rj6O/UHC/W6h74sdQcaxEczCweydoX67/LzkD6fnUelmUGi+6/6shjRbRc6EpWm3fepZUiK2Hdf9DW97q9rFtH9nqJ+BQDRfqDfDb9hPdi4YNJ0h/3RxmvCFOv3kMmiRSe4bkFSpQoGcg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=DJJq9vvz; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1778489008; c=relaxed/simple;
+	bh=abKRP8Hq8LvHYhe2eiwHeT7AAr7qOth4sC+8vuMIMJ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RKd43PqfeTvczhcX2x/V2qiV6P6t7+WNKbBFaIfP0nsvfwWJ0SEEJKRTwZx/CWb0OPCHtCj/fS6hXuNZ9Jca7Dqtc7pCn8MfhhPAIwK+fHX0KCXBd6j3oPzFdx/RiVX/A5fL6U0vstR16cBC5AzMtroj04/XioKPtTgFsenfPw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=NUsGpqSi; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="DJJq9vvz"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-50fb4a7d704so26189591cf.1
-        for <linux-cxl@vger.kernel.org>; Sun, 10 May 2026 07:40:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="NUsGpqSi"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2ba856db1c0so27412715ad.3
+        for <linux-cxl@vger.kernel.org>; Mon, 11 May 2026 01:43:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1778424018; x=1779028818; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zN7aWTUA3H4RFHbkfRpLkMHDYoiJE8XD5BaVLkKqp84=;
-        b=DJJq9vvzen0LZVjxGhKDtS1iqoGK0QDNZ4wieLAuqSFGe7EaKsp7WgdiC9ezNG2Hen
-         LKKCmw6tSd+ZWxUu1iBYIEOxexIU+s4+uNzsgq12YZOF182fLKdLpAE7WxAejfSq+cQv
-         v9wdMp/YVCYgHnzd9FpZHHr6jE4h9oXWpbLJTRzOqYP9qjOYyL5cHj1ZOds4qCCmMxXE
-         QOHqIlTkE7YUWAsiM+ISjMd6LzciBTz7QuZ4z2rpgMGV5bw+2QkMLbl/2S7EJ0neoIKi
-         qS6uAbmbrNHYnlRT6QSVUupc2cD30p4TAqwkfqBEz8TVBWW/i8tJnkniNdLdQiXEY49g
-         93Eg==
+        d=bytedance.com; s=google; t=1778489004; x=1779093804; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NSVJMcCRDCZ65VHh5kS3ZBwZuxCk7Ny7ZgL99/YO4W8=;
+        b=NUsGpqSiNFlouxky6VXPNvL1lTf8f68QbRzRxIC/vkeejuzAfBGVd0pACRO5Q0tHKx
+         aDoZSUhuYl9tzi0aStzi4G97aRzBJ8DOhudUu0wfcHr+ZZdnb845sQdVX55inPbOLD+7
+         SQlUrISWYbRpYJQ0bFFCqWYY27zPPgC0ZyQXg7ek2oIvjZWlDsBkfR7mZaYXHNhrpV5v
+         03//hG+AEvbp3T36OpJ3leKnBL6mnZ4PfBGTvpBNAbBfL1GDtsMOXs0pHVI0Yr2vGpYR
+         zcWPEHDY7Z+4ks2dpOjWAxpkUTIQjRrshlKWhnf7MNrd9+TI2+d7FuHRdy6lNJ+LpNcm
+         NWJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1778424018; x=1779028818;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zN7aWTUA3H4RFHbkfRpLkMHDYoiJE8XD5BaVLkKqp84=;
-        b=c6XaLtAorSpT4mg5Q1ptOCj0/9kH1amdy97k1ylUzunAls5LZ7oq6NJtSAAn6NHdX4
-         4b85RvHP8u153ailw+9QegkzONHyXtZ3b8utM9XJZkLxG8BT6HNnx+XMWdHdL+ZBMvXi
-         9X67ZfuGkyWGw4a1BEbb/twQ97KU6b6QnjYIAxmGYyShZhk7FrRPsyHN0/BjxVaa5kxF
-         TnCfLK2SkvhXwaC+e6PUkeSLinEgpEelkL1jYav6MYcaNItZkkRNFz6TZLaYtzsDO46e
-         JMjHVMaHl+xOyGaXnShQMUsYOL9Rsm72KOyWxb6iyYyeesOIWoyBjmo9w/rwnetprcrX
-         tYAQ==
-X-Forwarded-Encrypted: i=1; AFNElJ8CWHvKonpT2ckezN/tqvlD25lLMY58cHsD7dfMyZN4hX810cAbLH8/lbH7N1vbLaY7p4l77MQHuqM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHzMbFAz7sSJs7zm8kSwuzs8im29xAFuov7kerCg3UYPJ+gjYh
-	lv8wKQpfNop+U7Zf6Rjqmsd1vgCCZr0Q+ZUsfk0JkQcyHWztqK+kW3dpgJwrFC//kr8=
-X-Gm-Gg: Acq92OHve+vdF1OCN8Bz5/fzuqW0AM+W0OHFPI77YYJ8CG6jlKvm9dZhzHAPWXVKYl4
-	BSIxPfwSS+Dq8sneJAj/3O0212QTm39N6oEKI2L4cfpx+RAvQgk9Wl/JuaO0Q/reAbPM34OaZ5M
-	BWEcdgvrlHZSuFvmS/TsvrvYz6kO0cl5QMJn1gk2pDIS25vULFGgw58z2732iSQOmXUJF6ZNxhO
-	JKAJqGYloNchaewyuMijVBv4DUreFhDAW6hIz2D9KMTvAERGNNA21BokE3VsPre3AnbGQRWd0uG
-	qVeAueCTdk/bI43Pb8tr3X/VpL+9h6ZX9WpKIvC+bCxQXf5omMvZbDF+Z+MwHqI7vDrfPThEjsV
-	h0jC7ur550oEvbIy3Qf2Cqw99RjCz92WFtlsOKcIrafLXby4jsZ+DZfU1TqCNB7qBZ0qR2KI+kT
-	Qj455R6bjWLmjwzpYbEwV6gj9s0Mqoz8d7wpddvkeIPC8utmV7rmnag8ZIKEOJUF5i/9aX8cVL2
-	5mkCf2nHQWr
-X-Received: by 2002:ac8:5e11:0:b0:50e:89e9:271c with SMTP id d75a77b69052e-514a0a60821mr91286531cf.17.1778424018487;
-        Sun, 10 May 2026 07:40:18 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-100-36-248-188.washdc.fios.verizon.net. [100.36.248.188])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-5148e7bef56sm67617811cf.15.2026.05.10.07.40.16
+        d=1e100.net; s=20251104; t=1778489004; x=1779093804;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NSVJMcCRDCZ65VHh5kS3ZBwZuxCk7Ny7ZgL99/YO4W8=;
+        b=pL+OFG0zKAQu9T6DMIXVNuJM5l6cAIWpzNcd/JdJJQoHvBJJeQXDz+kWmg7i6Vqc1I
+         tF4r6g3JH9Biw6X3LJ3TLtJXWylahRwCo98hOU930gkcFTWnZUSrcqQ6GlSXs6xgrkk/
+         SyTDiumn4+Ypvsp1DnlfkqMB6D3BhpdApTaQATcy18UG/gtRp1+5pIjJPK3VufqG5UIt
+         bC0XYDpfVFpacq3c+e29qFyFQGPuTbYuiih+Etchk9eSnO9mQk4MbxvGfrPVWCibGz60
+         pV2bTL/k1UpEZ1POzD9z0Qx+HmvnTPHvbJRD7gPoPSZZqJ/bC/NLoKfI1ayd09tTOgIQ
+         hHtg==
+X-Forwarded-Encrypted: i=1; AFNElJ/epYPRs2pKg/UHcofQJGMAbrQ/1IhKgVxURBI5zBlLVQupv5oV+97Ml0cvWGkPOAdfybtgy/+jjrM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6ku8wo2XVicGv/zXthMSVckxaJekawNX7gF+VYR2POpxuouCh
+	xOT/rp9kocDtx3fXiH8E33BmONGz9qaOj6S8x8ZlpAoj4ZiNOUQwKBzuG5S/jOYWWiI=
+X-Gm-Gg: Acq92OGhW4SUllVTnten1KvGR5uoz4nYeaaVRaZpI9Joe03DAJroIqiXlDLtBKyn5t1
+	lPg2O9mln4qtT04dCurLNmj8TqldRXmDmCUmPKLylva/q8ujV0u8K/AYwjJCDAhR5iJTCg8w/LC
+	amr0PQIeVaodGtHpE4iWnhtQwBJzB149pUfij1jA5dhtfGXXxyKHix5ZHEenPo0pwgl2ZkfybTX
+	NXGylWS+tujIUldTXGpe+GM5UoqilfOabjrNRN9oEGaP1/PRKn/pBEUVkSoIOw3GQONM/wPiiR0
+	2B4Ds+cUi8OBAZw+ZDLfSFB00F1nv+tRHQMwn4YD/YcyXl/j2jdN6rF9coPZJEeDj+X9lY/aZwN
+	i0fW2aNlz9vTknfW8lplyjJOcwttkfw5r5ylCBYeiMr+4p9Ys2hkmFtBCgpLs/dUC/7WYGj4rKh
+	zIyA7/h4WpiVv7BREvIu/yl1M8r12Az3gSTbzpkkgHKFS/pNLDPcxrLw==
+X-Received: by 2002:a17:903:1aae:b0:2b7:88f9:9c3d with SMTP id d9443c01a7336-2bc7a9a0d0emr95547205ad.12.1778489004370;
+        Mon, 11 May 2026 01:43:24 -0700 (PDT)
+Received: from n232-176-004.byted.org ([36.110.163.97])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2baf1e35bcfsm94125535ad.38.2026.05.11.01.43.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 May 2026 07:40:17 -0700 (PDT)
-Date: Sun, 10 May 2026 10:40:15 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Ira Weiny <iweiny@fastmail.com>
-Cc: Ackerley Tng <ackerleytng@google.com>,
-	Dave Jiang <dave.jiang@intel.com>, fvdl@google.com,
-	linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, djbw@kernel.org,
-	iweiny@kernel.org, pasha.tatashin@soleen.com, mclapinski@google.com,
-	rppt@kernel.org, joao.m.martins@oracle.com, jic23@kernel.org,
-	john@groves.net, rick.p.edgecombe@intel.com
-Subject: Re: [RFC PATCH 00/12] dax: Add DAX to guest memfd support for KVM
-Message-ID: <agCYz5O36zLATni6@gourry-fedora-PF4VCD3F>
-References: <0e831045-3b01-4934-bf43-b3ef01ce0158@intel.com>
- <CAEvNRgE3ifAvgVS4bLeNp_eVp0=6b3p+myYEXSfyS+Qrw5mrtw@mail.gmail.com>
- <69fd37c5cfa4a_1d1951006d@xwing.notmuch>
+        Mon, 11 May 2026 01:43:23 -0700 (PDT)
+From: Muchun Song <songmuchun@bytedance.com>
+To: David Hildenbrand <david@kernel.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org
+Cc: muchun.song@linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH] mm/memory_hotplug: Factor out altmap freeing checks
+Date: Mon, 11 May 2026 16:43:07 +0800
+Message-Id: <20260511084307.1827127-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69fd37c5cfa4a_1d1951006d@xwing.notmuch>
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 07, 2026 at 08:09:25PM -0500, Ira Weiny wrote:
-> 
-> 2) What you propose above does not give the gmem 'protection' for CoCo's.
->    So yea that is the bigger issue.
-> 
+Use a small helper to centralize altmap freeing after verifying that all
+vmemmap pages were released. This keeps the check consistent between the
+normal teardown path and the memory hotplug error paths.
 
-Realistically, what you actually want is to add:
+Suggested-by: David Hildenbrand (Arm) <david@kernel.org>
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+---
+ mm/memory_hotplug.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-   private_dax.c
-       +
-   MEMORY_DEVICE_CONFIDENTIAL
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 462d8dcd636d..af5489f03771 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1403,6 +1403,12 @@ bool mhp_supports_memmap_on_memory(void)
+ }
+ EXPORT_SYMBOL_GPL(mhp_supports_memmap_on_memory);
+ 
++static void altmap_free(struct vmem_altmap *altmap)
++{
++	WARN_ONCE(altmap->alloc, "Altmap not fully unmapped");
++	kfree(altmap);
++}
++
+ static void remove_memory_blocks_and_altmaps(u64 start, u64 size)
+ {
+ 	unsigned long memblock_size = memory_block_size_bytes();
+@@ -1427,12 +1433,8 @@ static void remove_memory_blocks_and_altmaps(u64 start, u64 size)
+ 		put_device(&mem->dev);
+ 
+ 		remove_memory_block_devices(cur_start, memblock_size);
+-
+ 		arch_remove_memory(cur_start, memblock_size, altmap, NULL);
+-
+-		/* Verify that all vmemmap pages have actually been freed. */
+-		WARN(altmap->alloc, "Altmap not fully unmapped");
+-		kfree(altmap);
++		altmap_free(altmap);
+ 	}
+ }
+ 
+@@ -1463,7 +1465,7 @@ static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
+ 		/* call arch's memory hotadd */
+ 		ret = arch_add_memory(nid, cur_start, memblock_size, &params);
+ 		if (ret < 0) {
+-			kfree(params.altmap);
++			altmap_free(params.altmap);
+ 			goto out;
+ 		}
+ 
+@@ -1472,7 +1474,7 @@ static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
+ 						  params.altmap, group);
+ 		if (ret) {
+ 			arch_remove_memory(cur_start, memblock_size, params.altmap, NULL);
+-			kfree(params.altmap);
++			altmap_free(params.altmap);
+ 			goto out;
+ 		}
+ 	}
 
-And just make sure they work together to produce:
+base-commit: e98d21c170b01ddef366f023bbfcf6b31509fa83
+-- 
+2.20.1
 
-  a) open() works -> produces an FD
-  b) no direct-mappings, struct page exists, can be accessed by KVM
-  c) all userland operations fault (memory is never in direct map)
-  d) unbind explicitly zeroes or calls a registered sanitize() func
-
-But this adds a new dax mode and a new ZONE_DEVICE mode.
-
-A private node with NP_OPT_NOMAP might be cleaner, but you still have to
-do the hotplug/memremap dance either way.
-
-~Gregory
