@@ -1,106 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa7.hc1455-7.c3s2.iphmx.com (esa7.hc1455-7.c3s2.iphmx.com [139.138.61.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A073672A6;
-	Tue, 12 May 2026 12:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A477360EEA;
+	Tue, 12 May 2026 12:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778588680; cv=none; b=iele5BlwkRWbpfhcTVJF2qSUFD6Q0iiC3FUPEmB251I3IGENE/o2+oaqlLQqX08sSwKWZZAWPrNzhhQk1+9jl5mY+M0P0dLjjI43dhE3kdMfXsYOLbozl1ciGhFGTTKPhens/0Br/ADhLwfWdtwU0rN2wBzgvNk3m75MHLu1JFA=
+	t=1778590758; cv=none; b=Lx1RmHHCzued+2V6XtwafkaKbR4PEfuYRBds8aAGXAS5MdikjwQcRy5pjAZFioxA6t66vAM1p0l5VAvuu8nUy1D/2I4j7fFNQDH7wrg4fuxDWwUIGSp+WYbsLxPDFoUvHu2o5WpAaL9kq208VWGeS18uYZtC0Ior/V9bhOckPcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778588680; c=relaxed/simple;
-	bh=0WjgXT8uGEuv2OmAhZFIdCShmadqOYqNR6SLU3pqcUo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D+2zecY6KrBlaG41+V3gBj9DA09CQvonzBAvtHrioUahfh5DTbCUcqZ1RysDNMn6Y+g1osfbh/6dXxeNZu2J/O7gGd548m7+EyN2u42T9aGhUH6RibGLbcP3sSNudcSBtedIzHBlNGVnG6MIPz8JteykAuZkmQ2O3/4LMktVTqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g7z+LwFD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778590758; c=relaxed/simple;
+	bh=8k/X+GBcN3HecsH9d0ZY/G38JCz9EdOaVsc9Cwpw0Tw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ob4+iMFpl4fYej3eB3JQLbptomHqPOEpfJefj7ZFvsNLBSVh+Ug8rzgPYKoHFvM47CjSwleJnZCtgpwYogyzKrfkxwtUc8dleORzRv08qdONze/rJokh3V8esXhtB60s/PWTITkxQ03j1OfBCwzc6jZ9MEE2IXJMxxcJ/ewbknE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=P5Od2HGZ; arc=none smtp.client-ip=139.138.61.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g7z+LwFD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F89FC2BCB0;
-	Tue, 12 May 2026 12:24:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778588678;
-	bh=0WjgXT8uGEuv2OmAhZFIdCShmadqOYqNR6SLU3pqcUo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g7z+LwFD9uRctO+XZBIgnYJ1JJ1TTPeLlWf5Hc10oJb98KOnqA+Zp4d0LyZSi9YOO
-	 U2Qi8Un2g4DRRRl93DQ2kIH8Tmf/j37D9ZNSxIIuIS1OFyYmN5Qa7FQgR0/K6/aGLD
-	 eVpYga7N1it0KN/yvBYTY4lmwzjVg2AExltyCati9nb5BVDJyb+LvnBMySxEUJ3T+q
-	 fUF1QLdqr1J4jqqL7IFpqmuCkIqopzqK7DVb36DMqmVeYxSAnZJIHjdJFPSbcTiP6A
-	 Wh/szX5KLC+7Qu2kGogmtOOpyLqgYKooKW/qiEbz5iLBemBj1LCGOanRlXBpnOPKil
-	 ZOifu5xNaODQg==
-Date: Tue, 12 May 2026 15:24:25 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Muchun Song <songmuchun@bytedance.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-mm@kvack.org,
-	driver-core@lists.linux.dev, Oscar Salvador <osalvador@suse.de>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R . Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Danilo Krummrich <dakr@kernel.org>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <chleroy@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Sumanth Korikkar <sumanthk@linux.ibm.com>,
-	Kees Cook <kees@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Donet Tom <donettom@linux.ibm.com>, muchun.song@linux.dev
-Subject: Re: [PATCH v2] drivers/base/memory: make memory block get/put
- explicit
-Message-ID: <agMb-fIGsOnUKxL6@kernel.org>
-References: <20260512072635.3969576-1-songmuchun@bytedance.com>
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="P5Od2HGZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1778590756; x=1810126756;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8k/X+GBcN3HecsH9d0ZY/G38JCz9EdOaVsc9Cwpw0Tw=;
+  b=P5Od2HGZB9IAOU5LyUSwSP9luvp8NHYKITSaosgk+G1gNlcYkpW7Uh04
+   zrBIXiPqABpzGzTY18JRaAzRbD/YrDjZzhaolr9/cc97IkT5wyJD/zqKa
+   wqRxNtqVXR3ho8f068PTJFK/DKPZj5Gd5JOU5KdUfagc5MNn7vJ4EckJe
+   nF/dMda979b6l4xsyQiYTT3/DD8An0owM8qwrlp72PReuPrcRAZ+Qbg9x
+   XJXoCCU0wS/DSuOSHXJk4k1YIiwHKMYFP8gH7tH8/bBIM3wFW9pmwPpXE
+   eYrYIe9f2ez44LqA5rWtmoeHm2Gbs81bhWVyomTXTT+/aY1om5wTQcy3P
+   A==;
+X-CSE-ConnectionGUID: 0kPhNcvWQ32WScYsAXMHQA==
+X-CSE-MsgGUID: hPstsACCTgCfjMfKf7gCrQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="218970910"
+X-IronPort-AV: E=Sophos;i="6.23,230,1770562800"; 
+   d="scan'208";a="218970910"
+Received: from gmgwuk01.global.fujitsu.com ([172.187.114.235])
+  by esa7.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 21:58:05 +0900
+Received: from az2uksmgm4.o.css.fujitsu.com (unknown [10.151.22.201])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by gmgwuk01.global.fujitsu.com (Postfix) with ESMTPS id 3309BC000A2;
+	Tue, 12 May 2026 12:58:05 +0000 (UTC)
+Received: from az2uksmom1.o.css.fujitsu.com (az2uksmom1.o.css.fujitsu.com [10.151.22.202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by az2uksmgm4.o.css.fujitsu.com (Postfix) with ESMTPS id E049A140036C;
+	Tue, 12 May 2026 12:58:04 +0000 (UTC)
+Received: from dhcp-portal (unknown [10.172.107.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by az2uksmom1.o.css.fujitsu.com (Postfix) with ESMTPS id 88AB01800A41;
+	Tue, 12 May 2026 12:58:03 +0000 (UTC)
+Received: from isar2.ecs00.fujitsu.local (unknown [10.172.183.27])
+	by dhcp-portal (Postfix) with ESMTP id D3033608BB;
+	Tue, 12 May 2026 14:58:02 +0200 (CEST)
+From: Tomasz Wolski <tomasz.wolski@fujitsu.com>
+To: tomasz.wolski@fujitsu.com
+Cc: alison.schofield@intel.com,
+	ardb@kernel.org,
+	benjamin.cheatham@amd.com,
+	bp@alien8.de,
+	dan.j.williams@intel.com,
+	dave.jiang@intel.com,
+	dave@stgolabs.net,
+	gregkh@linuxfoundation.org,
+	huang.ying.caritas@gmail.com,
+	ira.weiny@intel.com,
+	jack@suse.cz,
+	jeff.johnson@oss.qualcomm.com,
+	jonathan.cameron@huawei.com,
+	len.brown@intel.com,
+	linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	lizhijian@fujitsu.com,
+	ming.li@zohomail.com,
+	nathan.fontenot@amd.com,
+	nvdimm@lists.linux.dev,
+	pavel@kernel.org,
+	peterz@infradead.org,
+	rafael@kernel.org,
+	rrichter@amd.com,
+	smita.koralahallichannabasappa@amd.com,
+	terry.bowman@amd.com,
+	vishal.l.verma@intel.com,
+	willy@infradead.org,
+	yaoxt.fnst@fujitsu.com,
+	yazen.ghannam@amd.com
+Subject: Re: [PATCH v8 0/9] dax/hmem, cxl: Coordinate Soft Reserved handling with CXL and HMEM
+Date: Tue, 12 May 2026 14:57:59 +0200
+Message-Id: <20260512125759.30007-1-tomasz.wolski@fujitsu.com>
+X-Mailer: git-send-email 2.35.3
+In-Reply-To: <20260416224618.12987-1-tomasz.wolski@fujitsu.com>
+References: <20260416224618.12987-1-tomasz.wolski@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260512072635.3969576-1-songmuchun@bytedance.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 12, 2026 at 03:26:35PM +0800, Muchun Song wrote:
-> Rename the memory block lookup helper to make the acquired reference
-> explicit, add memory_block_put() to wrap put_device(), remove
-> find_memory_block(), and use memory_block_get() as the single block-id
-> based lookup interface.
-> 
-> This makes it clearer to callers that a successful lookup holds a
-> reference that must be dropped, reducing the chance of forgetting the
-> matching put and leaking the memory block device reference.
-> 
-> Link: https://lore.kernel.org/linux-mm/7887915D-E598-42B3-9AFE-BFFBACE8DE2D@linux.dev/#t
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> Acked-by: Oscar Salvador <osalvador@suse.de>
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Tested-by: Donet Tom <donettom@linux.ibm.com>
-> Reviewed-by: Lorenzo Stoakes <ljs@kernel.org>
+Hello Smita,
 
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Do you plan to address the remaining minor comments from Dan and Jonathan in the next revision?
+https://lore.kernel.org/linux-cxl/69c1a8d1c0fa9_7ee3100a1@dwillia2-mobl4.notmuch/
+https://lore.kernel.org/linux-cxl/20260323181331.000018f2@huawei.com/
 
-> ---
-> Changes in v2:
-> - mention the removal of find_memory_block() in the commit message
-> - drop the redundant extern from the memory_block_get() declaration
-> ---
->  .../platforms/pseries/hotplug-memory.c        | 14 ++-----
->  drivers/base/memory.c                         | 38 +++++++------------
->  drivers/base/node.c                           |  4 +-
->  drivers/s390/char/sclp_mem.c                  | 17 ++++-----
->  include/linux/memory.h                        |  7 +++-
->  mm/memory_hotplug.c                           |  5 +--
->  6 files changed, 35 insertions(+), 50 deletions(-)
-
--- 
-Sincerely yours,
-Mike.
+Best regards,
+Tomasz
