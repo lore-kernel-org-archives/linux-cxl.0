@@ -1,115 +1,94 @@
-Received: from esa7.hc1455-7.c3s2.iphmx.com (esa7.hc1455-7.c3s2.iphmx.com [139.138.61.252])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A477360EEA;
-	Tue, 12 May 2026 12:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.61.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967303C583B;
+	Tue, 12 May 2026 15:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778590758; cv=none; b=Lx1RmHHCzued+2V6XtwafkaKbR4PEfuYRBds8aAGXAS5MdikjwQcRy5pjAZFioxA6t66vAM1p0l5VAvuu8nUy1D/2I4j7fFNQDH7wrg4fuxDWwUIGSp+WYbsLxPDFoUvHu2o5WpAaL9kq208VWGeS18uYZtC0Ior/V9bhOckPcw=
+	t=1778600693; cv=none; b=jdcrz5HtIl7TacTKdyICOJ6GOUGBpitAYouqvWehI3Mk/Bm21lG5cJxBqnqKA/zK4UQ1uwSJXuirQsQ6vTBOxSswlU1oEwIBeEF38UpBnFNDbS20saeTkGs8g/t+hdvWQMFJlizINCywh+JPwrPCT4i9Dz0TuDH7Ma018sGVpGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778590758; c=relaxed/simple;
-	bh=8k/X+GBcN3HecsH9d0ZY/G38JCz9EdOaVsc9Cwpw0Tw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ob4+iMFpl4fYej3eB3JQLbptomHqPOEpfJefj7ZFvsNLBSVh+Ug8rzgPYKoHFvM47CjSwleJnZCtgpwYogyzKrfkxwtUc8dleORzRv08qdONze/rJokh3V8esXhtB60s/PWTITkxQ03j1OfBCwzc6jZ9MEE2IXJMxxcJ/ewbknE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=P5Od2HGZ; arc=none smtp.client-ip=139.138.61.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1778600693; c=relaxed/simple;
+	bh=KeYuZ8GxrTdO4QCnUizgHtWp/2BUl0oj1XJ8jBhQa4o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fLx4470o0E+u3EXOSQLDxHqioOEqBR5ObcfwqguSyjeR/Bfrgv7HnKlCtZ8gdm9zVVtDiLGYJHLXgzVtGVaEVwsPr9AfnouI1ZH/JabjmTYM0+pZI0eJCOqVfTEHs6czgdDMFsMz6lNtJb97+37MQufScTka3WZkHsDW5N7vGYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z4cYTyni; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="P5Od2HGZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1778590756; x=1810126756;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8k/X+GBcN3HecsH9d0ZY/G38JCz9EdOaVsc9Cwpw0Tw=;
-  b=P5Od2HGZB9IAOU5LyUSwSP9luvp8NHYKITSaosgk+G1gNlcYkpW7Uh04
-   zrBIXiPqABpzGzTY18JRaAzRbD/YrDjZzhaolr9/cc97IkT5wyJD/zqKa
-   wqRxNtqVXR3ho8f068PTJFK/DKPZj5Gd5JOU5KdUfagc5MNn7vJ4EckJe
-   nF/dMda979b6l4xsyQiYTT3/DD8An0owM8qwrlp72PReuPrcRAZ+Qbg9x
-   XJXoCCU0wS/DSuOSHXJk4k1YIiwHKMYFP8gH7tH8/bBIM3wFW9pmwPpXE
-   eYrYIe9f2ez44LqA5rWtmoeHm2Gbs81bhWVyomTXTT+/aY1om5wTQcy3P
-   A==;
-X-CSE-ConnectionGUID: 0kPhNcvWQ32WScYsAXMHQA==
-X-CSE-MsgGUID: hPstsACCTgCfjMfKf7gCrQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11783"; a="218970910"
-X-IronPort-AV: E=Sophos;i="6.23,230,1770562800"; 
-   d="scan'208";a="218970910"
-Received: from gmgwuk01.global.fujitsu.com ([172.187.114.235])
-  by esa7.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 21:58:05 +0900
-Received: from az2uksmgm4.o.css.fujitsu.com (unknown [10.151.22.201])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by gmgwuk01.global.fujitsu.com (Postfix) with ESMTPS id 3309BC000A2;
-	Tue, 12 May 2026 12:58:05 +0000 (UTC)
-Received: from az2uksmom1.o.css.fujitsu.com (az2uksmom1.o.css.fujitsu.com [10.151.22.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by az2uksmgm4.o.css.fujitsu.com (Postfix) with ESMTPS id E049A140036C;
-	Tue, 12 May 2026 12:58:04 +0000 (UTC)
-Received: from dhcp-portal (unknown [10.172.107.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by az2uksmom1.o.css.fujitsu.com (Postfix) with ESMTPS id 88AB01800A41;
-	Tue, 12 May 2026 12:58:03 +0000 (UTC)
-Received: from isar2.ecs00.fujitsu.local (unknown [10.172.183.27])
-	by dhcp-portal (Postfix) with ESMTP id D3033608BB;
-	Tue, 12 May 2026 14:58:02 +0200 (CEST)
-From: Tomasz Wolski <tomasz.wolski@fujitsu.com>
-To: tomasz.wolski@fujitsu.com
-Cc: alison.schofield@intel.com,
-	ardb@kernel.org,
-	benjamin.cheatham@amd.com,
-	bp@alien8.de,
-	dan.j.williams@intel.com,
-	dave.jiang@intel.com,
-	dave@stgolabs.net,
-	gregkh@linuxfoundation.org,
-	huang.ying.caritas@gmail.com,
-	ira.weiny@intel.com,
-	jack@suse.cz,
-	jeff.johnson@oss.qualcomm.com,
-	jonathan.cameron@huawei.com,
-	len.brown@intel.com,
-	linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	lizhijian@fujitsu.com,
-	ming.li@zohomail.com,
-	nathan.fontenot@amd.com,
-	nvdimm@lists.linux.dev,
-	pavel@kernel.org,
-	peterz@infradead.org,
-	rafael@kernel.org,
-	rrichter@amd.com,
-	smita.koralahallichannabasappa@amd.com,
-	terry.bowman@amd.com,
-	vishal.l.verma@intel.com,
-	willy@infradead.org,
-	yaoxt.fnst@fujitsu.com,
-	yazen.ghannam@amd.com
-Subject: Re: [PATCH v8 0/9] dax/hmem, cxl: Coordinate Soft Reserved handling with CXL and HMEM
-Date: Tue, 12 May 2026 14:57:59 +0200
-Message-Id: <20260512125759.30007-1-tomasz.wolski@fujitsu.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20260416224618.12987-1-tomasz.wolski@fujitsu.com>
-References: <20260416224618.12987-1-tomasz.wolski@fujitsu.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z4cYTyni"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778600692; x=1810136692;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=KeYuZ8GxrTdO4QCnUizgHtWp/2BUl0oj1XJ8jBhQa4o=;
+  b=Z4cYTyniVRhHj9hSsOEWIy6eAXHMMf2Hl8eSXM6r3b3Qg6n55TCOWKof
+   mghWBClXg9EUFxx4KvUfERMPksw62i7UIhu5mxQv7CaMN94mBZBjpMcmK
+   ZgAWksEEmsjyPHuWsaMPfSA+shs1tmpMAB0MvjrKwhFOiitea+vTblodj
+   jw0PjPwXb8RSNmEh7hJIogEJ67/eRi+lnMg6e2ce4fHi+Lrq7St/MtzYL
+   tm2czDDKnrSAyVRUoBk91swYN0fxVK2V+wFFQVgxCylOkUWhG/KgObPG4
+   EqTAFFIJ4+Y+A+VvdS3gY0X6FcciANa4jU4eIkLWNskjxyPY/MwWb7gXY
+   w==;
+X-CSE-ConnectionGUID: yt+hnab+TPKmXUHgbgfPog==
+X-CSE-MsgGUID: /8aZefKwTU+wrtyRSRdjyQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11784"; a="90616508"
+X-IronPort-AV: E=Sophos;i="6.23,231,1770624000"; 
+   d="scan'208";a="90616508"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 08:44:50 -0700
+X-CSE-ConnectionGUID: iLiBCTpWQXSkfOV5Cv/0bQ==
+X-CSE-MsgGUID: 9ZEmdtslRHu4DtVIXHY2lA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,231,1770624000"; 
+   d="scan'208";a="242773975"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.111.237]) ([10.125.111.237])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 08:44:47 -0700
+Message-ID: <6f82e991-30f7-4eb2-abdc-6b0bc704d4a6@intel.com>
+Date: Tue, 12 May 2026 08:44:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 0/9] dax/hmem, cxl: Coordinate Soft Reserved handling
+ with CXL and HMEM
+To: Tomasz Wolski <tomasz.wolski@fujitsu.com>
+Cc: alison.schofield@intel.com, ardb@kernel.org, benjamin.cheatham@amd.com,
+ bp@alien8.de, dave@stgolabs.net, gregkh@linuxfoundation.org,
+ huang.ying.caritas@gmail.com, ira.weiny@intel.com, jack@suse.cz,
+ jeff.johnson@oss.qualcomm.com, len.brown@intel.com,
+ linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ lizhijian@fujitsu.com, ming.li@zohomail.com, nathan.fontenot@amd.com,
+ nvdimm@lists.linux.dev, pavel@kernel.org, peterz@infradead.org,
+ rafael@kernel.org, rrichter@amd.com, smita.koralahallichannabasappa@amd.com,
+ terry.bowman@amd.com, vishal.l.verma@intel.com, willy@infradead.org,
+ yaoxt.fnst@fujitsu.com, yazen.ghannam@amd.com, Dan Williams
+ <djbw@kernel.org>, Jonathan Cameron <jic23@kernel.org>
+References: <20260416224618.12987-1-tomasz.wolski@fujitsu.com>
+ <20260512125759.30007-1-tomasz.wolski@fujitsu.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260512125759.30007-1-tomasz.wolski@fujitsu.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Smita,
 
-Do you plan to address the remaining minor comments from Dan and Jonathan in the next revision?
-https://lore.kernel.org/linux-cxl/69c1a8d1c0fa9_7ee3100a1@dwillia2-mobl4.notmuch/
-https://lore.kernel.org/linux-cxl/20260323181331.000018f2@huawei.com/
 
-Best regards,
-Tomasz
+On 5/12/26 5:57 AM, Tomasz Wolski wrote:
+> Hello Smita,
+> 
+> Do you plan to address the remaining minor comments from Dan and Jonathan in the next revision?
+> https://lore.kernel.org/linux-cxl/69c1a8d1c0fa9_7ee3100a1@dwillia2-mobl4.notmuch/
+> https://lore.kernel.org/linux-cxl/20260323181331.000018f2@huawei.com/
+
+Hi Tomaz,
+
+Smita's series were merged in during the 7.1 merge window. So any additional changes will have to be follow on patches.
+
+> 
+> Best regards,
+> Tomasz
+
