@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109E44266AE
-	for <linux-cxl@vger.kernel.org>; Wed, 13 May 2026 13:14:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C0C481A9F
+	for <linux-cxl@vger.kernel.org>; Wed, 13 May 2026 13:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778678082; cv=none; b=GBqxRfvni705Uri39oiA2RFqLz1IJHUK5T5RAazHM4/KenNQLLK6YMuBWHAQyDsJw5Hd43eWS1ppeSaTlK46sUS5m2Ap8HDHudYOngR8rqKUP7KSktOpJxW3rRSlbqFsApbaxMoT90kKdJQ7NqljwR05jZsvNhI5FY9JIfkSJww=
+	t=1778678427; cv=none; b=VQ1csd5sWFMBnwfL8j0bbUZBUE1GeKCJb1SQ6sRwgf4tIMr5YsyOHQb8bt+c68nqmhMfxDE4aHtR/GTg+BWB/q9hwDpsWBtcURYEFeuIG8QFJg2jhOILx+6wHdKkSCKdB4DT2deQqFeSXGIhu4dlJUy0QpVdwLd5uYQJheaOuwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778678082; c=relaxed/simple;
-	bh=iGtJtZL8kwA0OqD4D90M0XK7ZVj3HKnLRcD3fRO4Sf4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NfN7ymmPUKgFZMKTvUucFWtQya0BUWv1GIkaR1GozSoo5pHGjFSuNaWlxkTbtwj5VWC6immOtghEHXAgJ2reu/LgsJiaHzOB2ImWeddbDG1GB86pUBySfbsiQCBNYbK+PEQGIqAZWW5V3bFTh9034dguWtRE4kITQeUT9rRLC14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VxTEoFp6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1778678427; c=relaxed/simple;
+	bh=mYPlP7BhYPRmnKvhMakPBxOJsC1+fQGpxM4WYNcNWxQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=c1SsqUPGfAwAbye95Ovr3sdAzwLuwtSOjroYBn/BezUVaW2qVGjPhmAmm9fSRInAkYV+FeXBlFKEqjT3AIVHwrd5RGj7uQDdNxN4FP3VKi8O2qRSF2DEbBVHCpVUqjTsnNaThjssP/j5riWNTOnM5zTw3eBqUzsvztB0TZyuLIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aTYH39Ga; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VxTEoFp6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6488CC2BCB7;
-	Wed, 13 May 2026 13:14:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aTYH39Ga"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1684C2BCFF;
+	Wed, 13 May 2026 13:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778678081;
-	bh=iGtJtZL8kwA0OqD4D90M0XK7ZVj3HKnLRcD3fRO4Sf4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VxTEoFp6hGdR2zjczpWedca/wi1AI/awQxJaRCuuFnrqfxSW9MIxwOdoCxvAtdpTm
-	 M2p21KPUvNk/sCRBPG2gb8+iuYcbaBRBWHKmi/eRi+y9yCnHRUDvI+QQMvypsNTsJY
-	 xIccEXHbpixdgZFDebuUdzBHrcU94Kez31xPB0sblHcsK9SNpDKXFimE9XcFqz1ag0
-	 CpSddT1aQjW8dcmmavo+ncjdqPijLW5WFx2TFZ1wTbdETd7xKJprTs6dvlETrFMwSW
-	 ZtbmG3EHMpxa+fNn8LmOY1S4iylYD5yfLWa+jUOWO/luk208RcSGLoXzYy4SvtrPQN
-	 mrIv7PPlpnmaA==
-Message-ID: <f25f1ef0-5359-4c00-920d-cdfc37cda968@kernel.org>
-Date: Wed, 13 May 2026 15:14:37 +0200
+	s=k20201202; t=1778678426;
+	bh=mYPlP7BhYPRmnKvhMakPBxOJsC1+fQGpxM4WYNcNWxQ=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=aTYH39GaDWfyNYxmlTbxqWG5yyl/nqPV8orp+2b+V1dTd5UU9hw2mYdeuoqocoKo4
+	 2ZxZD4OIQRoYyofTL46wjmPS9b2d49+y9ZWwpH2TUFRgExrUqP2Con5OBQSuTa15UD
+	 lfIxlzBeSKSfZEunwQfD62A+Ngyyz1bPB1ZWYUpLMsuzyeQvNxox0qpa5YPF2rCEm0
+	 OzddAttG1jvcOC6q9D1YwdpZ+EGScjoquQEbsfBKFE0aAx78QoJdd46OvGnFevl9a6
+	 vji/MJDfY+01wWmnlG18ypeRv2Tx4pZAA1DcvgStvSq1iwUp2i1JH8hjXqyZqzyjTT
+	 ZVbX5VcHTW2Yg==
+Message-ID: <a3eea8f4-d693-41da-b8ab-764e6ce311ad@kernel.org>
+Date: Wed, 13 May 2026 15:20:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -37,11 +37,12 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] drivers/base/memory: set mem->altmap after successful
  device registration
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 To: Georgi Djakov <georgi.djakov@oss.qualcomm.com>, akpm@linux-foundation.org
 Cc: linux-mm@kvack.org, linux-cxl@vger.kernel.org, osalvador@suse.de,
  gregkh@linuxfoundation.org, rafael@kernel.org, djakov@kernel.org
 References: <20260513130900.2204499-1-georgi.djakov@oss.qualcomm.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
+ <f25f1ef0-5359-4c00-920d-cdfc37cda968@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -87,39 +88,44 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260513130900.2204499-1-georgi.djakov@oss.qualcomm.com>
+In-Reply-To: <f25f1ef0-5359-4c00-920d-cdfc37cda968@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 5/13/26 15:09, Georgi Djakov wrote:
-> If __add_memory_block() fails at xa_store() (under memory pressure
-> for example), device_unregister() is called, which eventually
-> triggers memory_block_release() with mem->altmap still set, causing
-> a WARN_ON(mem->altmap).
+On 5/13/26 15:14, David Hildenbrand (Arm) wrote:
+> On 5/13/26 15:09, Georgi Djakov wrote:
+>> If __add_memory_block() fails at xa_store() (under memory pressure
+>> for example), device_unregister() is called, which eventually
+>> triggers memory_block_release() with mem->altmap still set, causing
+>> a WARN_ON(mem->altmap).
+>>
+>> WARNING: CPU: 1 PID: 76 at drivers/base/memory.c:96 memory_block_release+0x28/0x30
+>> Call trace:
+>>  memory_block_release+0x28/0x30 (P)
+>>  kobject_put+0xc8/0x1bc
+>>  device_unregister+0x2c/0x68
+>>  add_memory_block+0x1b4/0x214
+>>  create_memory_block_devices+0x9c/0xfc
+>>  create_altmaps_and_memory_blocks+0x130/0x1cc
+>>  add_memory_resource+0x10c/0x21c
+>>  add_memory_driver_managed+0xb8/0xe8
+>>  virtio_mem_add_memory+0xa4/0x194 [virtio_mem]
+>>  virtio_mem_sbm_plug_and_add_mb+0xc8/0x16c [virtio_mem]
+>>  virtio_mem_run_wq+0xea8/0x1088 [virtio_mem]
+>>  process_scheduled_works+0x18c/0x300
+>>  worker_thread+0x1dc/0x2b8
+>>  kthread+0x1ac/0x1f4
+>>  ret_from_fork+0x10/0x20
+>>
+>> Fix this by delaying the assignment of mem->altmap until after
+>> __add_memory_block() has succeeded.
 > 
-> WARNING: CPU: 1 PID: 76 at drivers/base/memory.c:96 memory_block_release+0x28/0x30
-> Call trace:
->  memory_block_release+0x28/0x30 (P)
->  kobject_put+0xc8/0x1bc
->  device_unregister+0x2c/0x68
->  add_memory_block+0x1b4/0x214
->  create_memory_block_devices+0x9c/0xfc
->  create_altmaps_and_memory_blocks+0x130/0x1cc
->  add_memory_resource+0x10c/0x21c
->  add_memory_driver_managed+0xb8/0xe8
->  virtio_mem_add_memory+0xa4/0x194 [virtio_mem]
->  virtio_mem_sbm_plug_and_add_mb+0xc8/0x16c [virtio_mem]
->  virtio_mem_run_wq+0xea8/0x1088 [virtio_mem]
->  process_scheduled_works+0x18c/0x300
->  worker_thread+0x1dc/0x2b8
->  kthread+0x1ac/0x1f4
->  ret_from_fork+0x10/0x20
-> 
-> Fix this by delaying the assignment of mem->altmap until after
-> __add_memory_block() has succeeded.
+> Something does not add up here. How do you get an altmap with virtio-mem?
 
-Something does not add up here. How do you get an altmap with virtio-mem?
+That patch itself makes sense, but the callchain does not make sense.
 
+virtio_mem does not set MHP_MEMMAP_ON_MEMORY, so it should never reach
+create_altmaps_and_memory_blocks()?
 
 -- 
 Cheers,
