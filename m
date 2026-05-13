@@ -1,106 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010038.outbound.protection.outlook.com [40.93.198.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059E83A4F51;
-	Wed, 13 May 2026 05:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3451F1DE3B7;
+	Wed, 13 May 2026 05:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.38
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778650510; cv=fail; b=HAYHYvy2o3O8Md1wKR27DG17XWeX99TjWY0//i5XkT0QIzxyReYKhePuZ+/fcOIQ6j5MpMx0tB7gNe5j8QQfkr8xc+fUZ38pZ2ZJjtHCfeEHctOOppQU/UBAGJ92wRibuYuDuduHZ3vvp3CRvmGa2bXuKPWwJY49LRBxL0ZsV+U=
+	t=1778651670; cv=fail; b=TULc97OcPvCE2K1VfCuMbthTH5hedtBGQAv0PvWpXwhPNnuQ+3kltS/zSEslCfllZJ6a9VdfrMtwowu1bOMnZ5vzy9nOTjNjC9ptjdeB8pUVQQUaCgERAnkVmcVc24YIpB3y0CU2WciHTnyUoyU0qQEpnHlaksgq/Wql4wQRNsY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778650510; c=relaxed/simple;
-	bh=R0eE4o8/j7oQEz4/1snZLbrlxWD90/ehzTy6tXvNCg4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Q9ed60fyHq73/0VWOVROxiJz5yU9bTvnAOMufywvHjZMzewodiUvUe4EKIJdYvrY5O7Eh1MxAVxe5I2ErDf8w9+EawtupbaVQ5v8XgtVHfxCUMz1Cz7CtnR0Xb84O2LgQdKVki2WlaBaDvDuItgkwBZkbjdH0Thwva0491oqfng=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kzQA+A5N; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1778651670; c=relaxed/simple;
+	bh=hTZM5mPSw2nZw4oKcga9d/EcAoDdXQh8saukytPyHgQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=pwfm/6cOUSL/+EML/Uvi8imTSIW93AURm49yXCXPyVRkrOdTA6jumN0tTiYUwy9hfTPKTItPP3p/szj9SZQFHjrVcAAQp05KMdsgCGPIlEuolyb6Z7YDsn95eTDkUi+fIf+9l9toU4cWfsx6/+dMULecYapDd3IkBemjybfEZPo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Rn7HtyD9; arc=fail smtp.client-ip=40.93.198.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kzQA+A5N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778650508; x=1810186508;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=R0eE4o8/j7oQEz4/1snZLbrlxWD90/ehzTy6tXvNCg4=;
-  b=kzQA+A5NFY7ZdCJS4shL96T2/ZKZAZGS4W96/KKvvP6q57pQPvafyYuR
-   +xYe7t1FW874SvOlJLYC1nFXlnb3mLlvLGlGOu7UR/ROq3LgfKvNEDGGa
-   JMcMrhfzHC4Fjl2FuB31oC/jcZUneJMTFs7YugYpZFwR8TGlVTmD+x9zh
-   5XOBf0rfMVd6qdXXr4W8PMA34+VyHF2u0lhW4gy3ybEdHbFqLSYuytgXB
-   Fg1lCwPe8pJxaPi2E2k0T4peVWB3Gxbkj2cUxCIX7d06OFb/P0ADXLVc2
-   /RMM40VWR4Sfyodpiuptkp7PMHmPpKMyXek8Kf7eO05BHDWY7oEQkmiKk
-   g==;
-X-CSE-ConnectionGUID: JKh/9zg0Rq+J+dzjyehzuQ==
-X-CSE-MsgGUID: mqowm5P3Sq6TWy4by8ZYUg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11784"; a="83183702"
-X-IronPort-AV: E=Sophos;i="6.23,232,1770624000"; 
-   d="scan'208";a="83183702"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 22:35:07 -0700
-X-CSE-ConnectionGUID: cfVRWrmuQHGakh1qlGu1RA==
-X-CSE-MsgGUID: pxQOeQMSTw6G3ymNMG0liw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,232,1770624000"; 
-   d="scan'208";a="242332884"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 22:35:08 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 12 May 2026 22:35:06 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Tue, 12 May 2026 22:35:06 -0700
-Received: from BL2PR02CU003.outbound.protection.outlook.com (52.101.52.64) by
- edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 12 May 2026 22:35:06 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Rn7HtyD9"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HJb6hHrE0ogL76s9Nif3gzamgu7ZaKYinGRGqoU1l36M1O8aLFiSa+Jqc4szOzQ8h7R+ZexsCIwN9K0B8BtBt67Td/rLbAx7hwGQDZSZHAEeBziVdg01Rh7rLaD7T2QhhMqGDDYqGieAi4fGYdBGPxP9jljK9HuB2/L9AzOlCTXDH41t5WW7DYTXLUAWey0FZuXIk/9fNURyUb4PJpQOJQxgedC+AQd9GIAAIyRoVRaP9vHX7Ac+LNS/ikHSDkGTk//vDDAaTEGe95HLgxlHTm2UfGUotNPmowU/a57U7JvuEJOy99bH/ls4nm1gea95Rl9cPS3/5L17xH7ivF7cRg==
+ b=dnIniu2hn0QPtKgQU9SO8RDM8Er7xL/pHXSilbdtYS0vjuk7KdOqtqG3aBYcvP5FmBvHCfbqZcm5sOIcTWXAgYfKZAVZmk5yLECUcZ6S5SCaIY5ON6zmaVlz/KPa10au+5bM7scebI3CFhwD0UZJ6OqYI9v7e4gwtqjiDjOIPViQZcZ9JYAl6i+M0kM/u2c9LTRFjdEAXtloZnJKlXj5gEmVRihTDTIawqqz5A/24YdOWM3PNas2Zq6qPJGxOqzdDJPX7HBe0jCyk5Doklo/CKJ87N1fREiyEcD8nZwXrWgX+qsiapmhxdkzNzRjKFHOGqJGSO/fXyk9x5ZL7jD8Tg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iAb9F6soX+SV9KuzxyAgvR9NM1BOuxaTYYY4symY4XM=;
- b=CROeZ1KutvFmVbn9xv+8Db3x1mdSlIkzyURtc6A+T4OCZf2wzDfsqJnDRVBPq9icYVPEPaEtZzrJ9D+SHdUjoekGcnYvUXcLur3avXafohJwAqceMz9MA1WtbZvet+B9nCDZ+SbOjR1DioVmrg3i4s3qvApDjNanL68H2iBSWZbbUztQ12ul3JRLCO1BEFFdU5ajHl/o1GH9GIN2UmTmPV++DDScWSssBoNxktMKK+ipZDTLXNMcniD8OqXe7yddXl49COp3KLe9wlU53XV78QJT3+vNXB6G5f1r3G8wmnSYkHLcgqU4Rc0o5f4fxZYWWATo0AgGRjBkrwQyhHNgFQ==
+ bh=lUj/rqXL4xIAvB3noygtdItJnvmtvfw0MMRlgPcDOFk=;
+ b=y0UPcXZa+KjPJtjp4AVndw/gALVq6R5DMkhTtJHY3vDYR0Ya1LXLHYAvZa66bdQx7OeCk4BowJR/oxo8k12JDMm20AmwzpN5qyJOgEUU2uScK7XHznpWm7qyckwwoz8SWcL6ZNT2U8tLvXiBRFFLCDEyuDgR4UgbngR2ClGtMonko5Hx7MweMIRh2wdtylEIoOhC82PABTD6yNswd1UC5UdjUjPfwByAxBR3Bq8oj6Olsn4y8EY4Pn+7j/PBVc2MRQdsYejL3UyQxTfBsBAGrJadm4zrJnDfUC5dj2gtWDwT5HOmN86Vit++vPMnYgj8K5UqbQ3nCrFdDOBvnVtdQg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lUj/rqXL4xIAvB3noygtdItJnvmtvfw0MMRlgPcDOFk=;
+ b=Rn7HtyD9BKorQGqRo726rRYR2FuEsMRCvxc0nQ2h8KMWqVRc+a9Fs7WTDwot92zPGu4NvvYrSMLM9QXr/XMJDqgJud/nraMk3iSLYXsqkC9cLG0lI+MW4uGaWJLD0tJ+4qst5jo0gmRdRqXWckYRICBB1OLArMdVwTOznxTJF0I9CxJWGVfeFAWANwbBMGfskHeLZVurIfYOmxJbd2QH0WiVMPMm2Z4igRhj++P49KWocWR58xHZTg2lhs8ILWYZ7V4CJhiA9/Vt+GCJTo3aTcwvtto6Ta6TxLVjcJf4PzwYCAl03y5l0HKEjKVvnrTzytLH6v+kLsmtzBCDsgQ+vQ==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by PH0PR11MB5111.namprd11.prod.outlook.com (2603:10b6:510:3c::10) with
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by SA5PPF530AE3851.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8c9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9913.11; Wed, 13 May
- 2026 05:34:44 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::a195:49d4:38c5:3891%8]) with mapi id 15.20.9891.021; Wed, 13 May 2026
- 05:34:44 +0000
-Date: Tue, 12 May 2026 22:34:39 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: John Groves <john@jagalactic.com>
-CC: John Groves <John@groves.net>, John Groves <jgroves@fastmail.com>, "Dan
- Williams" <djbw@kernel.org>, John Groves <jgroves@micron.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Jonathan
- Cameron" <Jonathan.Cameron@huawei.com>, Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>, "venkataravis@micron.com"
-	<venkataravis@micron.com>, "dev.srinivasulu@gmail.com"
-	<dev.srinivasulu@gmail.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev"
-	<nvdimm@lists.linux.dev>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V5 2/2] Add test/daxctl-famfs.sh to test famfs mode
- transitions:
-Message-ID: <agQNb6f_G2lTL-2b@aschofie-mobl2.lan>
-References: <0100019ddf064477-8322b695-f2d8-481c-9fcd-8b16fc97ad4d-000000@email.amazonses.com>
- <20260430153413.84181-1-john@jagalactic.com>
- <0100019ddf06ce8f-c323d9cd-333b-4076-9717-7c80dbed7620-000000@email.amazonses.com>
-Content-Type: text/plain; charset="us-ascii"
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.21; Wed, 13 May
+ 2026 05:54:18 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.20.9913.009; Wed, 13 May 2026
+ 05:54:18 +0000
+Date: Wed, 13 May 2026 13:54:11 +0800
+From: Richard Cheng <icheng@nvidia.com>
+To: Muchun Song <muchun.song@linux.dev>
+Cc: Muchun Song <songmuchun@bytedance.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-mm@kvack.org, driver-core@lists.linux.dev, 
+	Oscar Salvador <osalvador@suse.de>, Lorenzo Stoakes <ljs@kernel.org>, 
+	"Liam R . Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Danilo Krummrich <dakr@kernel.org>, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <chleroy@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Sumanth Korikkar <sumanthk@linux.ibm.com>, 
+	Kees Cook <kees@kernel.org>, Douglas Anderson <dianders@chromium.org>, 
+	Donet Tom <donettom@linux.ibm.com>
+Subject: Re: [PATCH v2] drivers/base/memory: make memory block get/put
+ explicit
+Message-ID: <agQRSj2sGXSVegGJ@MWDK4CY14F>
+References: <20260512072635.3969576-1-songmuchun@bytedance.com>
+ <agMVtO5QPGYVb48D@MWDK4CY14F>
+ <3EE08C93-F28D-4363-AC1C-C9B99F8ABB7C@linux.dev>
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0100019ddf06ce8f-c323d9cd-333b-4076-9717-7c80dbed7620-000000@email.amazonses.com>
-X-ClientProxiedBy: SJ0PR05CA0033.namprd05.prod.outlook.com
- (2603:10b6:a03:33f::8) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3EE08C93-F28D-4363-AC1C-C9B99F8ABB7C@linux.dev>
+X-ClientProxiedBy: SG2PR02CA0131.apcprd02.prod.outlook.com
+ (2603:1096:4:188::6) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -108,574 +81,438 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|PH0PR11MB5111:EE_
-X-MS-Office365-Filtering-Correlation-Id: 478a8c34-743d-4a28-0076-08deb0b1566d
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|SA5PPF530AE3851:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9adbf709-c0c9-4bc0-55f5-08deb0b4122e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024|11063799003|22082099003|18002099003|56012099003|3023799003;
-X-Microsoft-Antispam-Message-Info: 2vUzfTvF5b9RMMWpWhyPMkLz5jsO9iVS8hJGTtO620SjaBvEiystR08LHsm6e8Awr+8wcM1z2BmS+iU3txbTdB1xtlhHbTiHbGIhNnizCsFJ8pvqJ16MSjy6olMSoPCGEICxTdcow2O5thgK8JPaqFyHqv2ayZBrbkn+9FVRnTg6ALYrQcFInjqcr9b2s6WZYOoIx2gZVQTrXboZAdVfv6xD9SBVsfrTYb+QEEgdZzImYSUFm7QG8CLi4HF1CXABsGraOIM/cURa03sHRAE1GNxhp82dAJDGkoPhjyh1TWFU04qsxxE/E1J1/TNOcstjBxEKbRn+vStqsnzCZshvucbGjWXlAQ2mFoeQdoAemj+vV1RfGclZ3KHhSU3bPwmCkTsV2YUgzM2BYdFTXRm4d3buSmZxW+GTGKMqrfPhifUEdRiiAqIBDFxrKMlaULx68hkVgANH5dqnUfHbs9QP+i517a0xgVh0mK1tZPRfLfGNnpylMWpqfHBJEpslBXFZqu5QmkxbzUmG87iE9t0v7ySd9rFbl6on1y4Hufy/zhytRdMxHUTesjnOkyIPb4A/3a/a3afbjIZ0b69y/6lZxU4F110jeZPLv28D+B9TAF7Qf+7CE8IRgLpKqTX1+Fn/1zcvoHAKuEMdIQ7MVSImIepImcdVPo1UiYs6563nQ8TsHTVznInBZ7+OxtPjFPom
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(11063799003)(22082099003)(18002099003)(56012099003)(3023799003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|56012099003|22082099003|18002099003|11063799003;
+X-Microsoft-Antispam-Message-Info:
+	rMYR9QTrQh2K1aNkM8UlIHe1xoz+fjo/qlrS5RFNcJQ5HUx+v0pEU64l8XK0Lq2W714jxHaIvlsllJYT56C3UaplZV8vYYH1SdvynNYHLY0rm0f8n2LG9rHhJDCs9YJvrEQziN7ml8ZHshKOjDPgdY2BYeIG7tIqj0J4g5etUu0yEqBBX39QBzGOzggRLgJFCYeAaMHQDhoLVkzfPjWdKTiw2g2V+McybyCJr3quvZf5+Pcj3psBN8cpEzt8uk89y0lgv5ymBzuVspq+Kuq5JyAOfaL2y+MrIfEdKSc/WqvLywQXmTfe5Y51DRvZiA3qC6J3dtbVgH30zdMdq/BbgGFjyZlH9i5anO9XWKyCa3BcC1/DuspWERdiBOs2ahjEoCsqTv94yg+weqEcTQ3l0ZvhN5ttQdXqhL9P615Ue+RtdEsgT3BSF9k/ntS4QJ+5cIT/Cc83pHCEz11+GMZ81Vkwc5TRHCvI3xS7Mrb+nqTYxKHo/hM2wePMXM8zTfiKTGVG886oZHze5/FIiigta9ILi3q97VeYd//7+5zJBmRQusskEniFgM6zuP5pX9EHWLjvkeIxdD60T3SfWg6PWZd0ekDTrEVwDJ2HcuvHfSxjEMwkhRWq61WI12ZQO5+2PybBtHJFtajAzVV2d2+EmumoXdb++qQU58Xcuq5TtZpiALs5FCs+JIYRSoF2MLbPrp9KVkq5fi4kdoDY0+hLhQ==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(56012099003)(22082099003)(18002099003)(11063799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?7knvpZECUU9yBJukul3vzwczF+aKhy3dSZ9lNtT0p2mDaDSumzwTQ8I9Wnr1?=
- =?us-ascii?Q?Mln0rz44upNG5MiUXDZ2Fw3oGevZU67BBPV3RO2Oc73nwmX4I/p/LXx/pqji?=
- =?us-ascii?Q?wEsSbxqbSt78dD6SOER4NNa8WjP86N2imW8NBg2V1onTDtBq7lMLftJWL+A7?=
- =?us-ascii?Q?/uDUEdjvJL7/Fu5cxyHmTPVnJ4J8x+ilFg9lF1eOg8JSz2menlOd4wENoAmR?=
- =?us-ascii?Q?c4BRZX46f2ErynT9/qbixDHpFj2L+chQXJEMz6g9VC2BBlow47j3ZD/qK/Bz?=
- =?us-ascii?Q?Eo86KWZvy97HGhwAoFIkcdHD6Up9yhtcmUajc2tmeDTCoz9YA8nSz3nWRjze?=
- =?us-ascii?Q?/q7thFH/pf1HnJQe1DkN2Ottp4YqjUP+aQ5JhbbwJHrpihaVWubPQzVPJkqS?=
- =?us-ascii?Q?WxTguKM/ha9gg8Nk/r5aZcG1iHUW3MZxGJT2cfDBgp11K21csz40qZA8jk4I?=
- =?us-ascii?Q?HJ2PZu4j4G2oKsk3aLM4g3dr4c3z1sYgAsmUI1N9SuwvHRBJYFpFTSI20yxD?=
- =?us-ascii?Q?ur7DOiekzx4Q8Qb6+UCXGkz3ZAKdzI+O69IreC5HLlJgAdULPbdN9XgiStyy?=
- =?us-ascii?Q?Di2v9hnu8Ipcaji+S3KCJwe4cT5B+/oKeK+1isgGVb9qg9Nno8ZiFhDJNBNa?=
- =?us-ascii?Q?jnzh3ZQAZRj1fh4gCA9pUY2z0uSeQhXa4EkO+rVTymq1S6yY8Q1q/XB+1Nbm?=
- =?us-ascii?Q?y09bXowAlYb+vtv3oqYpOFMPzkEvdEs3UPY2hadWv5ovVb18L7n6z6QacyQ/?=
- =?us-ascii?Q?BUa2yjOjVUv9Pf2m7OswkcNxEV+KZ0xPGBSpNBOYF3M3qUsRE2PLiu3rg3uZ?=
- =?us-ascii?Q?2qrTGUuYYMEhCtB8BOwdDUL7BOLLRSc2xA3W07vSh3Yu9It/sTY4r0uJ7dGA?=
- =?us-ascii?Q?HM4N9KRTsGeQrBg4VRu8wW0V8IhEYi/Q5CBJHv++PPR0dwbmJUYTMpXHZ6fm?=
- =?us-ascii?Q?76E3r5vuY9NR/Qx2SVTi1uNNF+3BXbtRcZ2zfPccrZfjep6yO6LnAA36JABe?=
- =?us-ascii?Q?TKIzPSKOFJCgn3p1XxVXtdTOk2vLNB8KXJQw1B01XWudU9Vs1yWDZklWlPOg?=
- =?us-ascii?Q?f7tKHDtv7rqZmWOFHO/GO+ksmskfVvuO2HUVqGWctFItv0OJzFyIOV4TEjq0?=
- =?us-ascii?Q?Uo8MLBmta5OZkBxfRPzC4iTYcN4VSY1QEa9Y+96xCHlpf73XNoJRpHZx2XUU?=
- =?us-ascii?Q?2TwfqCoOQ6dBz4VVdLycGiTOUMNG1c5lNqqpA3kpLAWsfuc68UUjos4bOoyL?=
- =?us-ascii?Q?a4TowQxSFgEGnGDBCqidzavqAaipABC0FU6HSXuVVzh7xl8dre64t+aHMn/o?=
- =?us-ascii?Q?KGoky63CJcLlJ25eieJr7AmQRWMllqMSy8lclvx2q8RClQXfZf87XOVxMfsF?=
- =?us-ascii?Q?/J1YAPhXuKFJs6DoA/p76wW5ijo/H67DmZYOdHxiKRlP/p6+dsMtvu9ClHvg?=
- =?us-ascii?Q?BQOZCTCARb4IvarrX4k2Q7mzYpGJcJHgIKL7jTDkJYkcaLQVkwP9mpKMJKnp?=
- =?us-ascii?Q?LjHGmdsY2WyMkBKP0kjDw9s2NHitdU2Fgbvk/nMidhPqQrVmZF4rP9VJ/M31?=
- =?us-ascii?Q?xhd12M9pu8vaEm23cMgcDM8gsY+/a24bB8U7WO7eZ0iKLZ7cPAKebdJi6piR?=
- =?us-ascii?Q?CKLjSSSw5mlglfQLdezsN55IQ/P41HJNdI966Sy/N1G0aVa5FPxPfxDYzrZt?=
- =?us-ascii?Q?CxMoF7KU7Au+pigIpPOIEoQLBzAutcUSYfFRtI3pHQdNdAY8rKcBd1GXaaVy?=
- =?us-ascii?Q?nVxNZrN1OvKth+YS5Sim0frO+FuoJpA=3D?=
-X-Exchange-RoutingPolicyChecked: Ri7dHq932fC4JxAGsRjNjWZDyF4csewZQpzxXyNl7jUeCQjDGysDtENmfyQoxXxnKbqBbOiNWfUn0eexAahCOBgddflrA+ezEigDfXRthx/kbFRIkVIFmcE38YVeFjx8Mof3FIiSwiL/KcProKUeBeNQbkaCOHAUT6TBoa/qvgd5QYuY/pcXHCBw95KRe+Js7lCiL6zKswYsO/8X7mVjsj9GrRCkbER6GijbjFM9gal0IplQNWRQP7vXt73+nfe/sRwkKJ3IPUKoPHWFY8hn9SM7RPozQ47h92yFWnvv4F4+DIE5dauNwHVo7kJIiMvL4KJVG/G/YTzIbsGFX1jxXw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 478a8c34-743d-4a28-0076-08deb0b1566d
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eXZWNDlwU25ReHhGaXlZQnNyZGlHNkR0cm1jc1pBQldITUJqUEhFVjB3ZFlH?=
+ =?utf-8?B?cURGQlJjNElrRGd6ZDBQVU82YjA1cnRyeG1UeFFibDRucEVkR09qTTJBSlk4?=
+ =?utf-8?B?NU00NW45eEdUK2lQa1hZbWJKK2pkOVI1SjhmK1k0ajJnZ2RoQWgzVzVaQVVI?=
+ =?utf-8?B?blNmcmxiZ1NXeUx0UzJSYjhsQ1g0eCtYTUcrcmNiczBRZ0xKMWkwNkRYMGJ0?=
+ =?utf-8?B?ellZUytBak01Vnc1SFlyV1phSXlSMG1YNldRVVlmV1NSY05KREhINSsvWkVS?=
+ =?utf-8?B?bDFaeEo3WENnWGNlVWVQRnRXRW1WVHRzTE9kNXdoUXl2c245TXEvWHpFMHR3?=
+ =?utf-8?B?TW9MbUljUVpRdTdYTmljY0hRdmJ1aUFVd2dLRWxneExhNGc3RnZWcTl6V05N?=
+ =?utf-8?B?d3ZHMWIxaWh3QXVUS1N0N2hXcXZsY3FhVmVocGNQN1ovN1creVo4MmJMdjln?=
+ =?utf-8?B?OERUR0hLYmorMjZDNW5mSHRJbVpkOFpIYkI3S3NVSEt1ZGVGSktVVmZHQnkw?=
+ =?utf-8?B?R1NZT096bzNTRmVBcDIzUXgrcHpoZG0zSXM3OW5veUFKRFFkaDJWN1JiUjVr?=
+ =?utf-8?B?Q2VIQlVsNFNOQlBDTGxLdjNQQjh6bjhnVE9FUlUwa0xxVGxIOC8xYzNUMTha?=
+ =?utf-8?B?MmhWYVhIdHJHbmh0eVJSNWpxVyt6MVRTQlo2Sll6ZjhVSzJxV2M0YWErVXZO?=
+ =?utf-8?B?YVBhVm05QjJyNExzNGo2by92WTFMNkZLSk1MdVdBUFBmM2prZmM1NHIwNXAv?=
+ =?utf-8?B?azVSVTV1cy9mUzRINzFkTzBTdU1LdEZWNTBEUjVqN2VJd09lWCt1ZmROdUV6?=
+ =?utf-8?B?TTVqQzRDQ0NLN1BSSzEzcG9KOXZqYVJ5dVBZR29yNi9VbCt0SHE5bU85NnJF?=
+ =?utf-8?B?MkVJLzVIUU94Z0p3TG9Pc3lrK3ZXM3lCVktMS2dvSGdkOUJQcnl0TGlrbldR?=
+ =?utf-8?B?SU5OSWcxVGMwOUZOMzdYV0ZsbUp5Z2ZDanR6bHQyaVJUbExWa2xqMVpSZjE2?=
+ =?utf-8?B?MmRBN1duajZnNGtyQ05XUW05VWJiMkI4bzVpaVU2MFJvUTI2ZU1QWjdoeTFm?=
+ =?utf-8?B?YmtyWGpSNGJldU5oK3Z3OFNXWkRPODM5VXR6ZnZTdER2aE9aYzFjVGpkZlZT?=
+ =?utf-8?B?V2FrUGJCOW9nVm4ydWVyd085dGxCSDZ4OVgrY04xdzMrSEJaOUJCaitRYnl0?=
+ =?utf-8?B?YzdXTDlKOUk0cEptODRCS1lmWG1iSlJtQ0VVNkhUem5hMEFIaHlWUkZ3SWFN?=
+ =?utf-8?B?U3JQdlZDczRSdFByd0h5RFVYbzRHK01hWDBJUEtNeDd4L2JTUVNiWmtyazBp?=
+ =?utf-8?B?V05tTSsrdk54TFI1N0JubDlNSDFYeGErNzlhbDdDa1FnN1RyZVJIUHZNRDM1?=
+ =?utf-8?B?bjlydzFSYUpPMHVMb2lOMW40c2tIZ0NPaUpQQU05bzFNZ1oyYVRJUU82dTBq?=
+ =?utf-8?B?ZnV4ckxtNzBnQ1Y2Q05sNlNJdTBmcU9Hd2RaN3RyaWpuTVkxbDBSenlqVVZx?=
+ =?utf-8?B?Z3dDaUtxOTJqditJUlpjL2J4M3VscHFCNmF1eUFidHZ3SHphNWxCOEpRTmZ3?=
+ =?utf-8?B?MmtYKzhyUHhwNHBLR2p3cEtnZnQ0bU9aY2RidDd3QUhPYUs1aDN6QmxFM2Zj?=
+ =?utf-8?B?bXZUbVBGNVRXaHRiVUMvdXhFVTFzUmIxeS92bVFZTWNZVTR4K3pOOERPUXgx?=
+ =?utf-8?B?T0RBdFd1UmxURUZ1K2ZtcTZKVE1tb3hqTGExNWlVM0ZoMTZDODZGZWxNNEYw?=
+ =?utf-8?B?cUhzUEdZSGc0Z2VQdW55WmRGTEN0N0RZYlJ5cFpHMWJ2R2U2bkU2KzNPbzBI?=
+ =?utf-8?B?SzJEUFNGcWRwaUV4aC82dUhxYW95bDNMK0w5anYyQ3V5akpMSlRhVk9MWE9k?=
+ =?utf-8?B?a0VaWndiaVhMVnlBaTVlUUhrK0R0YW95NFRxMmNSSTI0TjJJcThEVTUwT0dO?=
+ =?utf-8?B?UVVMeXZOOHdpWmY5Uk8zOWo4aXpDMTlEN2N2NzA2NTdHaG0wUzgrMDFObkZL?=
+ =?utf-8?B?ZHFZei9WYmVaRFJpL3RKb2NtdEdPcHRWWXkwWUVhOElIeUh5a0RkcVVoQUV0?=
+ =?utf-8?B?ZXJ5TllvOXhod0IzN1loZEdCWVJnWVFpRVk2a0tENWtXZDBsajNhZGN1NlBl?=
+ =?utf-8?B?dXRic21CdktMQVQ3aTYwRmF3UDBmODRkckdRemEybXluWExSai9BcHFld1ds?=
+ =?utf-8?B?OGtVUXZqd3M0d3BUcXlld0xBUHljMDBDK0hmVUUwNUk0VjNiSnFoN1lveHJk?=
+ =?utf-8?B?eFdydFlVdWRCU2I0b1hMU25TdGQ2S3l1ay9vRWxkdzJvcmNQV2VxZEpQSVJk?=
+ =?utf-8?B?RHN1ZHNCVjBjQ0cwNFlqRUZrQ210R3g5a2grRTRRem4xek1oaFFtUT09?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9adbf709-c0c9-4bc0-55f5-08deb0b4122e
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2026 05:34:44.1408
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2026 05:54:18.0744
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TqBn4kL81yfzvFHPJw7G0thgaM5MXX1zXf0SI+LQkxf/LxAJ9BHfSUCHFmg5vWykRPj9P8Tl8Xwx6rdgO9laBhoKRR6cNMKtfq9Kw2dYgfk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5111
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: oe9DlIF3ANyfZWyC+4wgzy1Zc8yfQi2nZF+4s74ZLNp8tMkrL10BiU9ITp+3F+c0YS++5STYboFxeVe4lz5KQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPF530AE3851
 
-On Thu, Apr 30, 2026 at 03:34:18PM +0000, John Groves wrote:
-> From: John Groves <John@Groves.net>
+On Wed, May 13, 2026 at 09:41:23AM +0800, Muchun Song wrote:
+> 
+> 
+> > On May 12, 2026, at 20:03, Richard Cheng <icheng@nvidia.com> wrote:
+> > 
+> > On Tue, May 12, 2026 at 03:26:35PM +0800, Muchun Song wrote:
+> >> Rename the memory block lookup helper to make the acquired reference
+> >> explicit, add memory_block_put() to wrap put_device(), remove
+> >> find_memory_block(), and use memory_block_get() as the single block-id
+> >> based lookup interface.
+> >> 
+> >> This makes it clearer to callers that a successful lookup holds a
+> >> reference that must be dropped, reducing the chance of forgetting the
+> >> matching put and leaking the memory block device reference.
+> >> 
+> >> Link: https://lore.kernel.org/linux-mm/7887915D-E598-42B3-9AFE-BFFBACE8DE2D@linux.dev/#t
+> >> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> >> Acked-by: Oscar Salvador <osalvador@suse.de>
+> >> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> >> Acked-by: Michal Hocko <mhocko@suse.com>
+> >> Tested-by: Donet Tom <donettom@linux.ibm.com>
+> >> Reviewed-by: Lorenzo Stoakes <ljs@kernel.org>
+> >> ---
+> >> Changes in v2:
+> >> - mention the removal of find_memory_block() in the commit message
+> >> - drop the redundant extern from the memory_block_get() declaration
+> >> ---
+> >> .../platforms/pseries/hotplug-memory.c        | 14 ++-----
+> >> drivers/base/memory.c                         | 38 +++++++------------
+> >> drivers/base/node.c                           |  4 +-
+> >> drivers/s390/char/sclp_mem.c                  | 17 ++++-----
+> >> include/linux/memory.h                        |  7 +++-
+> >> mm/memory_hotplug.c                           |  5 +--
+> >> 6 files changed, 35 insertions(+), 50 deletions(-)
+> >> 
+> >> diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+> >> index 75f85a5da981..94f3b57054b6 100644
+> >> --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
+> >> +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+> >> @@ -164,13 +164,7 @@ static int update_lmb_associativity_index(struct drmem_lmb *lmb)
+> >> 
+> >> static struct memory_block *lmb_to_memblock(struct drmem_lmb *lmb)
+> >> {
+> >> - unsigned long section_nr;
+> >> - struct memory_block *mem_block;
+> >> -
+> >> - section_nr = pfn_to_section_nr(PFN_DOWN(lmb->base_addr));
+> >> -
+> >> - mem_block = find_memory_block(section_nr);
+> >> - return mem_block;
+> >> + return memory_block_get(phys_to_block_id(lmb->base_addr));
+> >> }
+> >> 
+> >> static int get_lmb_range(u32 drc_index, int n_lmbs,
+> >> @@ -220,7 +214,7 @@ static int dlpar_change_lmb_state(struct drmem_lmb *lmb, bool online)
+> >> else
+> >> rc = 0;
+> >> 
+> >> - put_device(&mem_block->dev);
+> >> + memory_block_put(mem_block);
+> >> 
+> >> return rc;
+> >> }
+> >> @@ -319,12 +313,12 @@ static int dlpar_remove_lmb(struct drmem_lmb *lmb)
+> >> 
+> >> rc = dlpar_offline_lmb(lmb);
+> >> if (rc) {
+> >> - put_device(&mem_block->dev);
+> >> + memory_block_put(mem_block);
+> >> return rc;
+> >> }
+> >> 
+> >> __remove_memory(lmb->base_addr, memory_block_size);
+> >> - put_device(&mem_block->dev);
+> >> + memory_block_put(mem_block);
+> >> 
+> >> /* Update memory regions for memory remove */
+> >> memblock_remove(lmb->base_addr, memory_block_size);
+> >> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> >> index 11d57cfa8d72..5b5d41089e81 100644
+> >> --- a/drivers/base/memory.c
+> >> +++ b/drivers/base/memory.c
+> >> @@ -649,7 +649,7 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
+> >>  *
+> >>  * Called under device_hotplug_lock.
+> >>  */
+> >> -struct memory_block *find_memory_block_by_id(unsigned long block_id)
+> >> +struct memory_block *memory_block_get(unsigned long block_id)
+> >> {
+> >> struct memory_block *mem;
+> >> 
+> >> @@ -659,16 +659,6 @@ struct memory_block *find_memory_block_by_id(unsigned long block_id)
+> >> return mem;
+> >> }
+> >> 
+> >> -/*
+> >> - * Called under device_hotplug_lock.
+> >> - */
+> >> -struct memory_block *find_memory_block(unsigned long section_nr)
+> >> -{
+> >> - unsigned long block_id = memory_block_id(section_nr);
+> >> -
+> >> - return find_memory_block_by_id(block_id);
+> >> -}
+> >> -
+> >> static struct attribute *memory_memblk_attrs[] = {
+> >> &dev_attr_phys_index.attr,
+> >> &dev_attr_state.attr,
+> >> @@ -701,7 +691,7 @@ static int __add_memory_block(struct memory_block *memory)
+> >> 
+> >> ret = device_register(&memory->dev);
+> >> if (ret) {
+> >> - put_device(&memory->dev);
+> >> + memory_block_put(memory);
+> >> return ret;
+> >> }
+> >> ret = xa_err(xa_store(&memory_blocks, memory->dev.id, memory,
+> >> @@ -795,9 +785,9 @@ static int add_memory_block(unsigned long block_id, int nid, unsigned long state
+> >> struct memory_block *mem;
+> >> int ret = 0;
+> >> 
+> >> - mem = find_memory_block_by_id(block_id);
+> >> + mem = memory_block_get(block_id);
+> >> if (mem) {
+> >> - put_device(&mem->dev);
+> >> + memory_block_put(mem);
+> >> return -EEXIST;
+> >> }
+> >> mem = kzalloc_obj(*mem);
+> >> @@ -845,8 +835,8 @@ static void remove_memory_block(struct memory_block *memory)
+> >> memory->group = NULL;
+> >> }
+> >> 
+> >> - /* drop the ref. we got via find_memory_block() */
+> >> - put_device(&memory->dev);
+> >> + /* drop the ref. we got via memory_block_get() */
+> >> + memory_block_put(memory);
+> >> device_unregister(&memory->dev);
+> >> }
+> >> 
+> >> @@ -880,7 +870,7 @@ int create_memory_block_devices(unsigned long start, unsigned long size,
+> >> end_block_id = block_id;
+> >> for (block_id = start_block_id; block_id != end_block_id;
+> >>      block_id++) {
+> >> - mem = find_memory_block_by_id(block_id);
+> >> + mem = memory_block_get(block_id);
+> >> if (WARN_ON_ONCE(!mem))
+> >> continue;
+> >> remove_memory_block(mem);
+> >> @@ -908,7 +898,7 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
+> >> return;
+> >> 
+> >> for (block_id = start_block_id; block_id != end_block_id; block_id++) {
+> >> - mem = find_memory_block_by_id(block_id);
+> >> + mem = memory_block_get(block_id);
+> >> if (WARN_ON_ONCE(!mem))
+> >> continue;
+> >> num_poisoned_pages_sub(-1UL, memblk_nr_poison(mem));
+> >> @@ -1015,12 +1005,12 @@ int walk_memory_blocks(unsigned long start, unsigned long size,
+> >> return 0;
+> >> 
+> >> for (block_id = start_block_id; block_id <= end_block_id; block_id++) {
+> >> - mem = find_memory_block_by_id(block_id);
+> >> + mem = memory_block_get(block_id);
+> >> if (!mem)
+> >> continue;
+> >> 
+> >> ret = func(mem, arg);
+> >> - put_device(&mem->dev);
+> >> + memory_block_put(mem);
+> >> if (ret)
+> >> break;
+> >> }
+> >> @@ -1228,22 +1218,22 @@ int walk_dynamic_memory_groups(int nid, walk_memory_groups_func_t func,
+> >> void memblk_nr_poison_inc(unsigned long pfn)
+> >> {
+> >> const unsigned long block_id = pfn_to_block_id(pfn);
+> >> - struct memory_block *mem = find_memory_block_by_id(block_id);
+> >> + struct memory_block *mem = memory_block_get(block_id);
+> >> 
+> >> if (mem) {
+> >> atomic_long_inc(&mem->nr_hwpoison);
+> >> - put_device(&mem->dev);
+> >> + memory_block_put(mem);
+> >> }
+> >> }
+> >> 
+> >> void memblk_nr_poison_sub(unsigned long pfn, long i)
+> >> {
+> >> const unsigned long block_id = pfn_to_block_id(pfn);
+> >> - struct memory_block *mem = find_memory_block_by_id(block_id);
+> >> + struct memory_block *mem = memory_block_get(block_id);
+> >> 
+> >> if (mem) {
+> >> atomic_long_sub(i, &mem->nr_hwpoison);
+> >> - put_device(&mem->dev);
+> >> + memory_block_put(mem);
+> >> }
+> >> }
+> >> 
+> >> diff --git a/drivers/base/node.c b/drivers/base/node.c
+> >> index 126f66aa2c3e..b3333ca92090 100644
+> >> --- a/drivers/base/node.c
+> >> +++ b/drivers/base/node.c
+> >> @@ -847,13 +847,13 @@ static void register_memory_blocks_under_nodes(void)
+> >> for (block_id = start_block_id; block_id <= end_block_id; block_id++) {
+> >> struct memory_block *mem;
+> >> 
+> >> - mem = find_memory_block_by_id(block_id);
+> >> + mem = memory_block_get(block_id);
+> >> if (!mem)
+> >> continue;
+> >> 
+> >> memory_block_add_nid_early(mem, nid);
+> >> do_register_memory_block_under_node(nid, mem);
+> >> - put_device(&mem->dev);
+> >> + memory_block_put(mem);
+> >> }
+> >> 
+> >> }
+> >> diff --git a/drivers/s390/char/sclp_mem.c b/drivers/s390/char/sclp_mem.c
+> >> index 78c054e26d17..6df1926d4c62 100644
+> >> --- a/drivers/s390/char/sclp_mem.c
+> >> +++ b/drivers/s390/char/sclp_mem.c
+> >> @@ -204,7 +204,7 @@ static ssize_t sclp_config_mem_store(struct kobject *kobj, struct kobj_attribute
+> >> addr = sclp_mem->id * block_size;
+> >> /*
+> >>  * Hold device_hotplug_lock when adding/removing memory blocks.
+> >> -  * Additionally, also protect calls to find_memory_block() and
+> >> +  * Additionally, also protect calls to memory_block_get() and
+> >>  * sclp_attach_storage().
+> >>  */
+> >> rc = lock_device_hotplug_sysfs();
+> >> @@ -231,20 +231,19 @@ static ssize_t sclp_config_mem_store(struct kobject *kobj, struct kobj_attribute
+> >> sclp_mem_change_state(addr, block_size, 0);
+> >> goto out_unlock;
+> >> }
+> >> - mem = find_memory_block(pfn_to_section_nr(PFN_DOWN(addr)));
+> >> - put_device(&mem->dev);
+> >> + mem = memory_block_get(phys_to_block_id(addr));
+> >> + memory_block_put(mem);
+> >> WRITE_ONCE(sclp_mem->config, 1);
+> >> } else {
+> >> if (!sclp_mem->config)
+> >> goto out_unlock;
+> >> - mem = find_memory_block(pfn_to_section_nr(PFN_DOWN(addr)));
+> >> + mem = memory_block_get(phys_to_block_id(addr));
+> >> if (mem->state != MEM_OFFLINE) {
+> >> - put_device(&mem->dev);
+> >> + memory_block_put(mem);
+> >> rc = -EBUSY;
+> >> goto out_unlock;
+> >> }
+> >> - /* drop the ref just got via find_memory_block() */
+> >> - put_device(&mem->dev);
+> >> + memory_block_put(mem);
+> >> sclp_mem_change_state(addr, block_size, 0);
+> >> __remove_memory(addr, block_size);
+> >> #ifdef CONFIG_KASAN
+> >> @@ -294,11 +293,11 @@ static ssize_t sclp_memmap_on_memory_store(struct kobject *kobj, struct kobj_att
+> >> return rc;
+> >> block_size = memory_block_size_bytes();
+> >> sclp_mem = container_of(kobj, struct sclp_mem, kobj);
+> >> - mem = find_memory_block(pfn_to_section_nr(PFN_DOWN(sclp_mem->id * block_size)));
+> >> + mem = memory_block_get(phys_to_block_id(sclp_mem->id * block_size));
+> >> if (!mem) {
+> >> WRITE_ONCE(sclp_mem->memmap_on_memory, value);
+> >> } else {
+> >> - put_device(&mem->dev);
+> >> + memory_block_put(mem);
+> >> rc = -EBUSY;
+> >> }
+> >> unlock_device_hotplug();
+> >> diff --git a/include/linux/memory.h b/include/linux/memory.h
+> >> index 5bb5599c6b2b..463dc02f6cff 100644
+> >> --- a/include/linux/memory.h
+> >> +++ b/include/linux/memory.h
+> >> @@ -158,7 +158,11 @@ int create_memory_block_devices(unsigned long start, unsigned long size,
+> >> void remove_memory_block_devices(unsigned long start, unsigned long size);
+> >> extern void memory_dev_init(void);
+> >> extern int memory_notify(enum memory_block_state state, void *v);
+> >> -extern struct memory_block *find_memory_block(unsigned long section_nr);
+> >> +struct memory_block *memory_block_get(unsigned long block_id);
+> >> +static inline void memory_block_put(struct memory_block *mem)
+> >> +{
+> >> + put_device(&mem->dev);
+> >> +}
+> > 
+> > Hi Muchun,
+> 
+> Hi,
+> 
+> > 
+> > Thanks for the work, I have a small suggestion if that fits your thought.
+> > 
+> > I think we should at least add a comment  above memory_block_put() to remind the caller to check
+> > for the availabitliy of "mem" before calling this function.
+> > We perform the check in memory_block_get() inside the function body, I see different usage pattern
+> > across the caller when they're dealing with "mem == NULL" and avoid to call memory_block_put(), 
+> > I can understand we should leverage the check to caller, not inside memory_block_put().
+> > But just in case the next caller might forgot to do the check or think the behavior might be symmetric
+> > bettween memory_block_get() and memory_block_put(), a comment above the function would be nice.
+> 
+> Thanks for the suggestion!
+> 
+> Regarding the additional comment, I feel they might not be strictly necessary.
+> If a user passes a NULL pointer, the issue would be exposed immediately
+> before memory_block_put() is even called. It's unlikely a user would obtain
+> mem and not perform any read/write operations; any such attempt would trigger
+> a NULL pointer dereference right away.
+>
 
-Hi John,
-
-Thanks for the famfs mode-transition test. As promised, I took a look
-at how we can make it work as a unit test in an NDCTL test environment.
-
-The main blocker is the device-selection assumption:
-    region_id="$("$DAXCTL" list -R |
-        jq -r ".[] | select(.path | contains(\"cxl_acpi.0\")) | .id")"
-
-and then the test grabs whatever happens to be the first dax device on
-that region. That works in your QEMU setup but not in the ndctl unit-test
-model. NDCTL tests here are always tied to one of the emulated backends
-(nfit_test or cxl_test) and build their own test device from a known
-starting state. They don't scan for "an existing dax device" because there
-is no such thing in a fresh `meson test` run. Whatever is there may be
-leftover state from something else.
-
-So the test as written will either skip (no dax device found) or get
-tangled up with whatever prior test left the system in. Traditionally
-DAX has used nfit for its emulated backing, but CXL is a reasonable
-choice too. I've prepared both examples and appended to the end of
-this message.
-
-test/daxctl-famfs-nfit.sh
-    ACPI.NFIT-backed testdev with full devdax/famfs/system-ram coverage
-
-test/daxctl-famfs-cxltest.sh
-    cxl_test-backed testdev with devdax/famfs only, plus the 
-    system-ram -> famfs rejection via -N
-
-The cxl_test version cannot exercise kmem onlining because the memory
-has no real DRAM backing.
-
-My preference is the nfit version since it exercises the full transition
-matrix end-to-end, but if FAMFS is primarily a CXL story the cxl_test
-version is the equivalent. And of course, there is no lock-down here,
-ie. we can start with nfit and then when DCD support comes around and
-that is in cxl-test, we can switch completely to CXL or use both nfit
-and CXL. But - you do need to pick a lane to start in.
-
-Beyond selecting a backend, both versions were also aligned with the
-existing test style:
-- Drop per-step narration as set -x logs commands
-- Only emit failure path messages
-- Replaced printf with echo 
-- Suppress reconfigure-device JSON output with >/dev/null.
-- Remove restore-to-original-mode cleanup logic; rely on fixture
-  teardown instead.
-- Use err helpers for traps and cleanup
-- Extend ensure_devdax_mode to handle system-ram start state
-- Add check_dmesg "$LINENO" at test completion.
-
-Both versions have been tested, but please verify that the exact
-coverage and transition matrix still match what you want after my
-editing.
-
-Please post the selected version as part of the next revision of
-this series
-
-Patches appended below...
-
--- Alison
-
-======
-
-test/daxctl-famfs-nfit.sh: test famfs mode transitions on nfit_test
-
-Exercise devdax <-> famfs <-> system-ram transitions and JSON mode
-reporting on a dax device backed by the emulated ACPI.NFIT bus.
-
-nfit_test was chosen because its pmem ranges have real DRAM backing, so
-kmem onlining of the system-ram mode works normally and the full matrix
-of transitions can be tested end-to-end.
----
- test/daxctl-famfs-nfit.sh | 215 ++++++++++++++++++++++++++++++++++++++
- test/meson.build          |   4 +-
- 2 files changed, 218 insertions(+), 1 deletion(-)
- create mode 100755 test/daxctl-famfs-nfit.sh
-
-diff --git a/test/daxctl-famfs-nfit.sh b/test/daxctl-famfs-nfit.sh
-new file mode 100755
-index 000000000000..57302795c89f
---- /dev/null
-+++ b/test/daxctl-famfs-nfit.sh
-@@ -0,0 +1,215 @@
-+#!/bin/bash -Ex
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2025 Micron Technology, Inc. All rights reserved.
-+#
-+# Test daxctl famfs mode transitions and mode detection, targeting a
-+# nfit_test-backed dax device.
-+#
-+# nfit_test-backed dax devices have real DRAM backing, so kmem onlining
-+# works normally. This test exercises the full matrix of transitions
-+# between devdax, famfs, and system-ram.
-+
-+rc=77
-+. $(dirname $0)/common
-+
-+trap 'cleanup $LINENO' ERR
-+
-+testbus=""
-+testdev=""
-+daxdev=""
-+
-+cleanup()
-+{
-+	# Best-effort return to devdax so destroy-namespace can succeed.
-+	if [[ -n $daxdev ]]; then
-+		"$DAXCTL" reconfigure-device -f -m devdax "$daxdev" 2>/dev/null || true
-+	fi
-+	[[ -n $testdev ]] && reset_dev
-+	err "$1"
-+}
-+
-+check_fsdev_dax()
-+{
-+	modinfo fsdev_dax &>/dev/null && return 0
-+	grep -qF "fsdev_dax" "/lib/modules/$(uname -r)/modules.builtin" 2>/dev/null && return 0
-+	do_skip "fsdev_dax module not available"
-+}
-+
-+check_kmem()
-+{
-+	modinfo kmem &>/dev/null && return 0
-+	grep -qF "kmem" "/lib/modules/$(uname -r)/modules.builtin" 2>/dev/null && return 0
-+	do_skip "kmem module not available"
-+}
-+
-+find_testdev()
-+{
-+	testbus="$ACPI_BUS"
-+
-+	# Ensure the bus has labels, like align.sh / daxctl-devices.sh rely on.
-+	"$NDCTL" disable-region -b "$testbus" all
-+	"$NDCTL" init-labels -f -b "$testbus" all
-+	"$NDCTL" enable-region -b "$testbus" all
-+
-+	testdev=$("$NDCTL" list -b "$testbus" -Ni | jq -er '.[0].dev | .//""')
-+	[[ $testdev ]] || do_skip "no victim device on $testbus"
-+}
-+
-+setup_dev()
-+{
-+	test -n "$testbus"
-+	test -n "$testdev"
-+
-+	"$NDCTL" destroy-namespace -f -b "$testbus" "$testdev"
-+	# x86_64 memory hotplug can require up to a 2GiB-aligned chunk of
-+	# memory. Create a 4GiB namespace, so enough space is left after
-+	# alignment for kmem + online.
-+	testdev=$("$NDCTL" create-namespace -b "$testbus" -m devdax -fe "$testdev" -s 4G | \
-+		jq -er '.dev')
-+	test -n "$testdev"
-+
-+	daxdev=$("$NDCTL" list -n "$testdev" -X | jq -er '.[].daxregion.devices[0].chardev')
-+	test -n "$daxdev"
-+}
-+
-+reset_dev()
-+{
-+	"$NDCTL" destroy-namespace -f -b "$testbus" "$testdev"
-+}
-+
-+daxctl_get_mode()
-+{
-+	"$DAXCTL" list -d "$1" | jq -er '.[].mode'
-+}
-+
-+save_online_policy()
-+{
-+	saved_policy="$(cat /sys/devices/system/memory/auto_online_blocks)"
-+}
-+
-+restore_online_policy()
-+{
-+	echo "$saved_policy" > /sys/devices/system/memory/auto_online_blocks
-+}
-+
-+unset_online_policy()
-+{
-+	echo "offline" > /sys/devices/system/memory/auto_online_blocks
-+}
-+
-+ensure_devdax_mode()
-+{
-+	local mode
-+	mode=$(daxctl_get_mode "$daxdev")
-+
-+	case "$mode" in
-+	devdax)      return 0 ;;
-+	famfs)       "$DAXCTL" reconfigure-device -m devdax "$daxdev" >/dev/null ;;
-+	system-ram)  "$DAXCTL" reconfigure-device -f -m devdax "$daxdev" >/dev/null ;;
-+	*)
-+		echo "unexpected starting mode: $mode"
-+		return 1
-+		;;
-+	esac
-+
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+}
-+
-+test_famfs_mode_transitions()
-+{
-+	ensure_devdax_mode
-+
-+	# devdax -> famfs
-+	"$DAXCTL" reconfigure-device -m famfs "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "famfs" ]]
-+
-+	# famfs -> famfs (re-enable in same mode)
-+	"$DAXCTL" reconfigure-device -m famfs "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "famfs" ]]
-+
-+	# famfs -> devdax
-+	"$DAXCTL" reconfigure-device -m devdax "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+
-+	# devdax -> devdax (re-enable in same mode)
-+	"$DAXCTL" reconfigure-device -m devdax "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+}
-+
-+test_json_output()
-+{
-+	ensure_devdax_mode
-+	[[ $("$DAXCTL" list -d "$daxdev" | jq -er '.[].mode') == "devdax" ]]
-+
-+	"$DAXCTL" reconfigure-device -m famfs "$daxdev" >/dev/null
-+	[[ $("$DAXCTL" list -d "$daxdev" | jq -er '.[].mode') == "famfs" ]]
-+
-+	"$DAXCTL" reconfigure-device -m devdax "$daxdev" >/dev/null
-+}
-+
-+test_error_handling()
-+{
-+	"$DAXCTL" reconfigure-device -m famfs "$daxdev" >/dev/null
-+
-+	# Invalid mode must be rejected
-+	if "$DAXCTL" reconfigure-device -m invalidmode "$daxdev" &>/dev/null; then
-+		echo "FAIL: invalid mode should be rejected"
-+		return 1
-+	fi
-+
-+	"$DAXCTL" reconfigure-device -m devdax "$daxdev" >/dev/null
-+}
-+
-+# Full system-ram transitions (real backing, so online_pages() works).
-+# Turns auto-online off so daxctl drives onlining explicitly.
-+test_system_ram_transitions()
-+{
-+	save_online_policy
-+	unset_online_policy
-+
-+	ensure_devdax_mode
-+
-+	# devdax -> system-ram (no-online)
-+	"$DAXCTL" reconfigure-device -N -m system-ram "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "system-ram" ]]
-+
-+	# system-ram -> famfs must be rejected
-+	if "$DAXCTL" reconfigure-device -m famfs "$daxdev" &>/dev/null; then
-+		echo "FAIL: system-ram -> famfs should be rejected"
-+		restore_online_policy
-+		return 1
-+	fi
-+
-+	# system-ram -> devdax -> famfs
-+	"$DAXCTL" reconfigure-device -f -m devdax "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+	"$DAXCTL" reconfigure-device -m famfs "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "famfs" ]]
-+
-+	# Full online cycle: devdax -> system-ram (with online) -> devdax.
-+	"$DAXCTL" reconfigure-device -m devdax "$daxdev" >/dev/null
-+	"$DAXCTL" reconfigure-device -m system-ram "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "system-ram" ]]
-+	"$DAXCTL" reconfigure-device -f -m devdax "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+
-+	restore_online_policy
-+}
-+
-+check_fsdev_dax
-+check_kmem
-+
-+rc=1
-+
-+find_testdev
-+setup_dev
-+
-+test_famfs_mode_transitions
-+test_json_output
-+test_error_handling
-+test_system_ram_transitions
-+
-+ensure_devdax_mode
-+reset_dev
-+
-+check_dmesg "$LINENO"
-diff --git a/test/meson.build b/test/meson.build
-index 56aed9cc3c9d..d765fd99a4b1 100644
---- a/test/meson.build
-+++ b/test/meson.build
-@@ -218,6 +218,7 @@ if get_option('destructive').enabled()
-   daxctl_devices = find_program('daxctl-devices.sh')
-   daxctl_create = find_program('daxctl-create.sh')
-   daxctl_famfs = find_program('daxctl-famfs.sh')
-+  daxctl_famfs_nfit = find_program('daxctl-famfs-nfit.sh')
-   dm = find_program('dm.sh')
-   mmap_test = find_program('mmap.sh')
+Makes sense.
  
-@@ -235,7 +236,8 @@ if get_option('destructive').enabled()
-     [ 'device-dax-fio.sh', device_dax_fio, 'dax'   ],
-     [ 'daxctl-devices.sh', daxctl_devices, 'dax'   ],
-     [ 'daxctl-create.sh',  daxctl_create,  'dax'   ],
--    [ 'daxctl-famfs.sh',   daxctl_famfs,   'dax'   ],
-+    [ 'daxctl-famfs.sh',        daxctl_famfs,       'dax' ],
-+    [ 'daxctl-famfs-nfit.sh',   daxctl_famfs_nfit,  'dax' ],
-     [ 'dm.sh',             dm,		   'dax'   ],
-     [ 'mmap.sh',           mmap_test,	   'dax'   ],
-   ]
--- 
-2.37.3
+> As for adding comments to memory_block_get(), I’m wondering if it’s truly
+> essential. The function is quite straightforward—anyone looking at the
+> definition would see the implementation alongside the comments. It’s very
+> clear from the code that mem must be non-NULL to be "gotten."
+> 
+> Overall, I’m concerned the extra comments might not add much value. What do
+> you think?
+> 
 
-=========
+Agreed, let's leave it as it is then.
 
-test/daxctl-famfs-cxltest.sh: test famfs mode transitions on cxl_test
+Best regards,
+Richard Cheng.
 
-Exercise devdax <-> famfs transitions and JSON mode reporting on a dax
-device backed by the emulated cxl_test bus.
-
-cxl_test was chosen as an alternative to nfit_test for callers who want
-the famfs unit test to run against a CXL-backed dax device. Note that
-cxl_test emulated memory has no real DRAM backing, so this test avoids
-code paths that online memory through kmem; only the userspace-side
-rejection of system-ram -> famfs is exercised (via -N, which skips
-online_pages()).
----
- test/daxctl-famfs-cxltest.sh | 139 +++++++++++++++++++++++++++++++++++
- test/meson.build             |   4 +-
- 2 files changed, 142 insertions(+), 1 deletion(-)
- create mode 100755 test/daxctl-famfs-cxltest.sh
-
-diff --git a/test/daxctl-famfs-cxltest.sh b/test/daxctl-famfs-cxltest.sh
-new file mode 100755
-index 000000000000..aa85946c42ee
---- /dev/null
-+++ b/test/daxctl-famfs-cxltest.sh
-@@ -0,0 +1,139 @@
-+#!/bin/bash -Ex
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2025 Micron Technology, Inc. All rights reserved.
-+#
-+# Test daxctl famfs mode transitions and mode detection, targeting a
-+# cxl_test-backed dax device.
-+#
-+# NOTE: cxl_test backs its "memory" with a gen_pool region carved from high
-+# iomem space above iomem_resource.end. There is no real DRAM behind those
-+# pfns. Therefore this test does NOT exercise any code path that calls
-+# online_pages() on cxl_test memory. In particular there is no "-m system-ram"
-+# that runs without -N, and no explicit 'daxctl online-memory'.
-+#
-+# The 'system-ram -> famfs rejection' case below uses -N so that add_memory()
-+# runs but online_pages() does not. The rejection itself is a userspace-only
-+# check in reconfig_mode_famfs() (refuses when daxctl_memory is present), so
-+# it does not depend on the memory being onlined and is safe here.
-+
-+rc=77
-+. $(dirname $0)/common
-+
-+trap 'err $LINENO' ERR
-+
-+modprobe -r cxl_test
-+modprobe cxl_test
-+
-+rc=1
-+
-+daxdev=""
-+
-+check_fsdev_dax()
-+{
-+	modinfo fsdev_dax &>/dev/null && return 0
-+	grep -qF "fsdev_dax" "/lib/modules/$(uname -r)/modules.builtin" 2>/dev/null && return 0
-+	do_skip "fsdev_dax module not available"
-+}
-+
-+find_daxdev()
-+{
-+	region_id="$("$DAXCTL" list -R |
-+		jq -r ".[] | select(.path | contains(\"cxl_acpi.0\")) | .id")"
-+	[[ $region_id ]] || do_skip "Unable to find a CXL region"
-+
-+	daxdev=$("$DAXCTL" list -D -r "$region_id" |
-+		jq -er '.[0].chardev | .//""')
-+	[[ $daxdev ]] || do_skip "Unable to find a DAX device"
-+}
-+
-+daxctl_get_mode()
-+{
-+	"$DAXCTL" list -d "$1" | jq -er '.[].mode'
-+}
-+
-+ensure_devdax_mode()
-+{
-+	local mode
-+	mode=$(daxctl_get_mode "$daxdev")
-+
-+	case "$mode" in
-+	devdax)      return 0 ;;
-+	famfs)       "$DAXCTL" reconfigure-device -m devdax "$daxdev" >/dev/null ;;
-+	system-ram)  "$DAXCTL" reconfigure-device -f -m devdax "$daxdev" >/dev/null ;;
-+	*)           err "$LINENO" ;;
-+	esac
-+
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+}
-+
-+test_famfs_mode_transitions()
-+{
-+	ensure_devdax_mode
-+
-+	# devdax -> famfs
-+	"$DAXCTL" reconfigure-device -m famfs "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "famfs" ]]
-+
-+	# famfs -> famfs (re-enable in same mode)
-+	"$DAXCTL" reconfigure-device -m famfs "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "famfs" ]]
-+
-+	# famfs -> devdax
-+	"$DAXCTL" reconfigure-device -m devdax "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+
-+	# devdax -> devdax (re-enable in same mode)
-+	"$DAXCTL" reconfigure-device -m devdax "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+}
-+
-+test_json_output()
-+{
-+	ensure_devdax_mode
-+	[[ $("$DAXCTL" list -d "$daxdev" | jq -er '.[].mode') == "devdax" ]]
-+
-+	"$DAXCTL" reconfigure-device -m famfs "$daxdev" >/dev/null
-+	[[ $("$DAXCTL" list -d "$daxdev" | jq -er '.[].mode') == "famfs" ]]
-+
-+	"$DAXCTL" reconfigure-device -m devdax "$daxdev" >/dev/null
-+}
-+
-+test_error_handling()
-+{
-+	"$DAXCTL" reconfigure-device -m famfs "$daxdev" >/dev/null
-+
-+	# Invalid mode must be rejected
-+	if "$DAXCTL" reconfigure-device -m invalidmode "$daxdev" &>/dev/null; then
-+		err "$LINENO"
-+	fi
-+
-+	"$DAXCTL" reconfigure-device -m devdax "$daxdev" >/dev/null
-+}
-+
-+test_system_ram_rejects_famfs()
-+{
-+	ensure_devdax_mode
-+
-+	# -N: bind kmem without onlining memory
-+	"$DAXCTL" reconfigure-device -N -m system-ram "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "system-ram" ]]
-+
-+	if "$DAXCTL" reconfigure-device -m famfs "$daxdev" &>/dev/null; then
-+		err "$LINENO"
-+	fi
-+
-+	"$DAXCTL" reconfigure-device -f -m devdax "$daxdev" >/dev/null
-+	[[ $(daxctl_get_mode "$daxdev") == "devdax" ]]
-+}
-+
-+check_fsdev_dax
-+find_daxdev
-+
-+test_famfs_mode_transitions
-+test_json_output
-+test_error_handling
-+test_system_ram_rejects_famfs
-+
-+check_dmesg "$LINENO"
-+
-+modprobe -r cxl_test
-diff --git a/test/meson.build b/test/meson.build
-index d765fd99a4b1..ae5477408617 100644
---- a/test/meson.build
-+++ b/test/meson.build
-@@ -219,6 +219,7 @@ if get_option('destructive').enabled()
-   daxctl_create = find_program('daxctl-create.sh')
-   daxctl_famfs = find_program('daxctl-famfs.sh')
-   daxctl_famfs_nfit = find_program('daxctl-famfs-nfit.sh')
-+  daxctl_famfs_cxltest = find_program('daxctl-famfs-cxltest.sh')
-   dm = find_program('dm.sh')
-   mmap_test = find_program('mmap.sh')
- 
-@@ -237,7 +238,8 @@ if get_option('destructive').enabled()
-     [ 'daxctl-devices.sh', daxctl_devices, 'dax'   ],
-     [ 'daxctl-create.sh',  daxctl_create,  'dax'   ],
-     [ 'daxctl-famfs.sh',        daxctl_famfs,       'dax' ],
--    [ 'daxctl-famfs-nfit.sh',   daxctl_famfs_nfit,  'dax' ],
-+    [ 'daxctl-famfs-nfit.sh',     daxctl_famfs_nfit,     'dax' ],
-+    [ 'daxctl-famfs-cxltest.sh',  daxctl_famfs_cxltest,  'dax' ],
-     [ 'dm.sh',             dm,		   'dax'   ],
-     [ 'mmap.sh',           mmap_test,	   'dax'   ],
-   ]
--- 
-2.37.3
-
-
-
+> Thanks,
+> Muchun
+> > 
+> > Best regards,
+> > Richard Cheng.
+> > 
+> >> typedef int (*walk_memory_blocks_func_t)(struct memory_block *, void *);
+> >> extern int walk_memory_blocks(unsigned long start, unsigned long size,
+> >>       void *arg, walk_memory_blocks_func_t func);
+> >> @@ -171,7 +175,6 @@ struct memory_group *memory_group_find_by_id(int mgid);
+> >> typedef int (*walk_memory_groups_func_t)(struct memory_group *, void *);
+> >> int walk_dynamic_memory_groups(int nid, walk_memory_groups_func_t func,
+> >>        struct memory_group *excluded, void *arg);
+> >> -struct memory_block *find_memory_block_by_id(unsigned long block_id);
+> >> #define hotplug_memory_notifier(fn, pri) ({ \
+> >> static __meminitdata struct notifier_block fn##_mem_nb =\
+> >> { .notifier_call = fn, .priority = pri };\
+> >> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> >> index 462d8dcd636d..890c6453e887 100644
+> >> --- a/mm/memory_hotplug.c
+> >> +++ b/mm/memory_hotplug.c
+> >> @@ -1417,14 +1417,13 @@ static void remove_memory_blocks_and_altmaps(u64 start, u64 size)
+> >> struct vmem_altmap *altmap = NULL;
+> >> struct memory_block *mem;
+> >> 
+> >> - mem = find_memory_block(pfn_to_section_nr(PFN_DOWN(cur_start)));
+> >> + mem = memory_block_get(phys_to_block_id(cur_start));
+> >> if (WARN_ON_ONCE(!mem))
+> >> continue;
+> >> 
+> >> altmap = mem->altmap;
+> >> mem->altmap = NULL;
+> >> - /* drop the ref. we got via find_memory_block() */
+> >> - put_device(&mem->dev);
+> >> + memory_block_put(mem);
+> >> 
+> >> remove_memory_block_devices(cur_start, memblock_size);
+> >> 
+> >> 
+> >> base-commit: e98d21c170b01ddef366f023bbfcf6b31509fa83
+> >> -- 
+> >> 2.54.0
+> 
+> 
