@@ -1,494 +1,382 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19D137BE86
-	for <linux-cxl@vger.kernel.org>; Wed, 13 May 2026 01:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D9C42A9D;
+	Wed, 13 May 2026 02:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778636559; cv=none; b=tnhx7L0EtfuEhWj52pdyhSAICoU6YVEA1JSbu02pqVwya6vQA0a1DwBuLStWa05QrxFwvsl3qJDM5CmP/CVEKLtGpA1BH1bLPlyNDhAbJxck9SWwOldoSZzXEM5l8Y14k7fwuWFTzvcnSFbc5qqkweYYGa45mGw3vujgR0SyAOQ=
+	t=1778640324; cv=none; b=ko6Msz1+ssy9SPKDVtkA54qzRkEXqAY+rouJ9+v5QPTyNKU/gRkKaeTwmTiDJ4Dc9vNmCbX53W06ELbDv3CGAqk2UopTC7MhILhh4ZmUnajT7dWUEk5hXg1gnDZKaZ41FB9FSZcktiCtyXuoX4AE08I6AjbY53/Dx6WUH8Q34dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778636559; c=relaxed/simple;
-	bh=nfyv1LmuT66aBw8oe9Cw7xXi42xxaAH6r5UJGdnqEs0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=SGFdoDeIbZIoQ1VnvAKEehMGJ0q8r6sCpCiaMZRC6aoySHtl1ss7xCqYKBZ0/Jz1ATUxNEsH7gHo38AsbqYQKmqZ0JK7Y29FPLzT/L6gRvnX9/vLoccYFWJBUed6GAqGOvAutJIzWz6AGDG46NLbvdtf4oKtEYWO7p2xf1OSM3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=G+4UjxhM; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1778640324; c=relaxed/simple;
+	bh=UwYemmp61xQRMFa6jBcYjstuhyetmLZIy0nZsYupAwk=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=kF0VURnnvDpqotO6WO7L0NdSfcap7ZtjpPLFBAlar4BjFgVbEVBLUtV5tW9blNYhW9Cwnn2QzDuBVxkm+kHQ5ikpshtVwhMzp0yw8VrO+Ibkgtzl7c1B6nTQCHsHcuMiKd4riDSEhOweVx9EjEbxpjpUAL0/tvUYtmpVhH0NsmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HOahXm95; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="G+4UjxhM"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1778636542;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fhvTYmzHBJF0Uy2iUIqRc2sMKqrtzRCDZRsnolCJW14=;
-	b=G+4UjxhMuR07b1wvtvS6rFSIFCLeBeV0PTrTb930Igb2yqCO6sGi3cGOms8uKKb2mtUcT3
-	4uJfSpJciYXosRJ7A1RirFXphlg+tJTVg5sbiTMn94I6cgh7JeQtiYGE5xqL1CzEHZjSdJ
-	3hn3WfT3ZwzRVzkfVB2JN1kp7awPMV8=
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HOahXm95"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C08CC2BCF7;
+	Wed, 13 May 2026 02:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1778640324;
+	bh=UwYemmp61xQRMFa6jBcYjstuhyetmLZIy0nZsYupAwk=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=HOahXm955JdVByP6APo32i6eNnOG7fSU0bLaiqQZ+hrEXMCAt1oEIz0RIIadUOZ0Y
+	 nmaIeI9+Lo0pXZde9v76XKla7wW7TRWlUnoWZ9+hX1q3ytsEw8R+e6cv0vGdnaUkVg
+	 S9V+L2a+CFwLR9ZLomDSbVuKfKY0eXg3kZYXXTPkQ81z+3LTqEaHWRDC6ZqGhXIXQZ
+	 EOHRp6v/VRIBUu/AW7BrD8zDL3O3cn8I4VKxves7owcXLzzLf99zDr2ZMCqUnoAiEH
+	 3ztkSa4032HCV0j9ZEQhCQUVw+xAbSGZBvGHKvcLvFglaVjpssJ2ppOaQCj8f4tAys
+	 cJB31Je33TAxg==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 4B377F40075;
+	Tue, 12 May 2026 22:45:22 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Tue, 12 May 2026 22:45:22 -0400
+X-ME-Sender: <xms:wuUDajjKKO_O8LlX0OCmKeu6Bq-4zyOWdf_czDjdiAMvldmeAJSP1A>
+    <xme:wuUDars5T4LCkVRlCfClti9_p7nakcN3vuFvUc4XFaUASZauin99g56JyGyUaz62B
+    KjgxGGUCWZ5f4WaUUOBQJiu79T-K13rx5V50N-bBavbfWhwnwgHsq0>
+X-ME-Received: <xmr:wuUDatzvRajzSuvRx4DgD1dqqgrDpSRwGOEf7jChiAlRyDu41Vbny_nPqr8-rWQ-ZJrjE29_DYccT1qQC5gGenj7xXOcGKkhJIs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdduvdefheduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepfffhvfevkfgjfhfugggtgfesthejredttddtjeenucfhrhhomhepfdffrghnucgh
+    ihhllhhirghmshculdhnvhhiughirgdmfdcuoegujhgsfieskhgvrhhnvghlrdhorhhgqe
+    enucggtffrrghtthgvrhhnpedvgeehieekteelueffueehfeejjedvjedvveetfefgffev
+    hedvuedvffevffdvheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpegujhgsfidomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudej
+    jedvfedtgeehhedqfeeffeelgedtgeejqdgujhgsfieppehkvghrnhgvlhdrohhrghesfh
+    grshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthhopedvgedpmhhouggvpehsmhhtphho
+    uhhtpdhrtghpthhtohepshhmrgguhhgrvhgrnhesnhhvihguihgrrdgtohhmpdhrtghpth
+    htohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopegurghnrdhj
+    rdifihhllhhirghmshesihhnthgvlhdrtghomhdprhgtphhtthhopegurghvvgdrjhhirg
+    hnghesihhnthgvlhdrtghomhdprhgtphhtthhopehjohhnrghthhgrnhdrtggrmhgvrhho
+    nheshhhurgifvghirdgtohhmpdhrtghpthhtohepihhrrgdrfigvihhnhiesihhnthgvlh
+    drtghomhdprhgtphhtthhopehvihhshhgrlhdrlhdrvhgvrhhmrgesihhnthgvlhdrtgho
+    mhdprhgtphhtthhopegrlhhishhonhdrshgthhhofhhivghlugesihhnthgvlhdrtghomh
+    dprhgtphhtthhopegurghvvgesshhtghholhgrsghsrdhnvght
+X-ME-Proxy: <xmx:wuUDahMQQTCinQeCGi8yG2YCv9ZChfVAX366Guu3tNNxXO0ktSl15A>
+    <xmx:wuUDav0pZpTkXgHeoXpD8J-Al1pSrco8jsHoRM2xIrM_Zu_AP7vWOw>
+    <xmx:wuUDapE_UYZ6aYq4ymUjV1ggxM4Wx9Ms6VZDDt-k_K1pyFi5HJCI0Q>
+    <xmx:wuUDamipKFaPmyJBV_4dYMAUHd_gFMN9OhF0_OBeK5mJXGqL9kil6g>
+    <xmx:wuUDaiejrJLre83hDihTWwCkZqRB0dJabyAq1S7j4-YkhVU9edxl_qtM>
+Feedback-ID: i67ae4b3e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 12 May 2026 22:45:21 -0400 (EDT)
+Date: Tue, 12 May 2026 19:45:20 -0700
+From: "Dan Williams (nvidia)" <djbw@kernel.org>
+To: smadhavan@nvidia.com, 
+ bhelgaas@google.com, 
+ dan.j.williams@intel.com, 
+ dave.jiang@intel.com, 
+ jonathan.cameron@huawei.com, 
+ ira.weiny@intel.com, 
+ vishal.l.verma@intel.com, 
+ alison.schofield@intel.com, 
+ dave@stgolabs.net
+Cc: alwilliamson@nvidia.com, 
+ jeshuas@nvidia.com, 
+ vsethi@nvidia.com, 
+ skancherla@nvidia.com, 
+ vaslot@nvidia.com, 
+ sdonthineni@nvidia.com, 
+ mhonap@nvidia.com, 
+ vidyas@nvidia.com, 
+ jan@nvidia.com, 
+ mochs@nvidia.com, 
+ dschumacher@nvidia.com, 
+ linux-cxl@vger.kernel.org, 
+ linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Srirangan Madhavan <smadhavan@nvidia.com>
+Message-ID: <6a03e5c099d98_123a100e3@djbw-dev.notmuch>
+In-Reply-To: <20260306092322.148765-6-smadhavan@nvidia.com>
+References: <20260306092322.148765-1-smadhavan@nvidia.com>
+ <20260306092322.148765-6-smadhavan@nvidia.com>
+Subject: Re: [PATCH v5 5/7] cxl: Add CXL DVSEC reset sequence and flow
+ orchestration
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.500.181\))
-Subject: Re: [PATCH v2] drivers/base/memory: make memory block get/put
- explicit
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <agMVtO5QPGYVb48D@MWDK4CY14F>
-Date: Wed, 13 May 2026 09:41:23 +0800
-Cc: Muchun Song <songmuchun@bytedance.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-mm@kvack.org,
- driver-core@lists.linux.dev,
- Oscar Salvador <osalvador@suse.de>,
- Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R . Howlett" <liam@infradead.org>,
- Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>,
- Danilo Krummrich <dakr@kernel.org>,
- "Rafael J . Wysocki" <rafael@kernel.org>,
- linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <chleroy@kernel.org>,
- Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Sumanth Korikkar <sumanthk@linux.ibm.com>,
- Kees Cook <kees@kernel.org>,
- Douglas Anderson <dianders@chromium.org>,
- Donet Tom <donettom@linux.ibm.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3EE08C93-F28D-4363-AC1C-C9B99F8ABB7C@linux.dev>
-References: <20260512072635.3969576-1-songmuchun@bytedance.com>
- <agMVtO5QPGYVb48D@MWDK4CY14F>
-To: Richard Cheng <icheng@nvidia.com>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
+smadhavan@ wrote:
+> From: Srirangan Madhavan <smadhavan@nvidia.com>
 
+Hi Srirangan, some comments below:
 
-> On May 12, 2026, at 20:03, Richard Cheng <icheng@nvidia.com> wrote:
->=20
-> On Tue, May 12, 2026 at 03:26:35PM +0800, Muchun Song wrote:
->> Rename the memory block lookup helper to make the acquired reference
->> explicit, add memory_block_put() to wrap put_device(), remove
->> find_memory_block(), and use memory_block_get() as the single =
-block-id
->> based lookup interface.
->>=20
->> This makes it clearer to callers that a successful lookup holds a
->> reference that must be dropped, reducing the chance of forgetting the
->> matching put and leaking the memory block device reference.
->>=20
->> Link: =
-https://lore.kernel.org/linux-mm/7887915D-E598-42B3-9AFE-BFFBACE8DE2D@linu=
-x.dev/#t
->> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
->> Acked-by: Oscar Salvador <osalvador@suse.de>
->> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
->> Acked-by: Michal Hocko <mhocko@suse.com>
->> Tested-by: Donet Tom <donettom@linux.ibm.com>
->> Reviewed-by: Lorenzo Stoakes <ljs@kernel.org>
->> ---
->> Changes in v2:
->> - mention the removal of find_memory_block() in the commit message
->> - drop the redundant extern from the memory_block_get() declaration
->> ---
->> .../platforms/pseries/hotplug-memory.c        | 14 ++-----
->> drivers/base/memory.c                         | 38 =
-+++++++------------
->> drivers/base/node.c                           |  4 +-
->> drivers/s390/char/sclp_mem.c                  | 17 ++++-----
->> include/linux/memory.h                        |  7 +++-
->> mm/memory_hotplug.c                           |  5 +--
->> 6 files changed, 35 insertions(+), 50 deletions(-)
->>=20
->> diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c =
-b/arch/powerpc/platforms/pseries/hotplug-memory.c
->> index 75f85a5da981..94f3b57054b6 100644
->> --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
->> +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
->> @@ -164,13 +164,7 @@ static int update_lmb_associativity_index(struct =
-drmem_lmb *lmb)
->>=20
->> static struct memory_block *lmb_to_memblock(struct drmem_lmb *lmb)
->> {
->> - unsigned long section_nr;
->> - struct memory_block *mem_block;
->> -
->> - section_nr =3D pfn_to_section_nr(PFN_DOWN(lmb->base_addr));
->> -
->> - mem_block =3D find_memory_block(section_nr);
->> - return mem_block;
->> + return memory_block_get(phys_to_block_id(lmb->base_addr));
->> }
->>=20
->> static int get_lmb_range(u32 drc_index, int n_lmbs,
->> @@ -220,7 +214,7 @@ static int dlpar_change_lmb_state(struct =
-drmem_lmb *lmb, bool online)
->> else
->> rc =3D 0;
->>=20
->> - put_device(&mem_block->dev);
->> + memory_block_put(mem_block);
->>=20
->> return rc;
->> }
->> @@ -319,12 +313,12 @@ static int dlpar_remove_lmb(struct drmem_lmb =
-*lmb)
->>=20
->> rc =3D dlpar_offline_lmb(lmb);
->> if (rc) {
->> - put_device(&mem_block->dev);
->> + memory_block_put(mem_block);
->> return rc;
->> }
->>=20
->> __remove_memory(lmb->base_addr, memory_block_size);
->> - put_device(&mem_block->dev);
->> + memory_block_put(mem_block);
->>=20
->> /* Update memory regions for memory remove */
->> memblock_remove(lmb->base_addr, memory_block_size);
->> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
->> index 11d57cfa8d72..5b5d41089e81 100644
->> --- a/drivers/base/memory.c
->> +++ b/drivers/base/memory.c
->> @@ -649,7 +649,7 @@ int __weak arch_get_memory_phys_device(unsigned =
-long start_pfn)
->>  *
->>  * Called under device_hotplug_lock.
->>  */
->> -struct memory_block *find_memory_block_by_id(unsigned long block_id)
->> +struct memory_block *memory_block_get(unsigned long block_id)
->> {
->> struct memory_block *mem;
->>=20
->> @@ -659,16 +659,6 @@ struct memory_block =
-*find_memory_block_by_id(unsigned long block_id)
->> return mem;
->> }
->>=20
->> -/*
->> - * Called under device_hotplug_lock.
->> - */
->> -struct memory_block *find_memory_block(unsigned long section_nr)
->> -{
->> - unsigned long block_id =3D memory_block_id(section_nr);
->> -
->> - return find_memory_block_by_id(block_id);
->> -}
->> -
->> static struct attribute *memory_memblk_attrs[] =3D {
->> &dev_attr_phys_index.attr,
->> &dev_attr_state.attr,
->> @@ -701,7 +691,7 @@ static int __add_memory_block(struct memory_block =
-*memory)
->>=20
->> ret =3D device_register(&memory->dev);
->> if (ret) {
->> - put_device(&memory->dev);
->> + memory_block_put(memory);
->> return ret;
->> }
->> ret =3D xa_err(xa_store(&memory_blocks, memory->dev.id, memory,
->> @@ -795,9 +785,9 @@ static int add_memory_block(unsigned long =
-block_id, int nid, unsigned long state
->> struct memory_block *mem;
->> int ret =3D 0;
->>=20
->> - mem =3D find_memory_block_by_id(block_id);
->> + mem =3D memory_block_get(block_id);
->> if (mem) {
->> - put_device(&mem->dev);
->> + memory_block_put(mem);
->> return -EEXIST;
->> }
->> mem =3D kzalloc_obj(*mem);
->> @@ -845,8 +835,8 @@ static void remove_memory_block(struct =
-memory_block *memory)
->> memory->group =3D NULL;
->> }
->>=20
->> - /* drop the ref. we got via find_memory_block() */
->> - put_device(&memory->dev);
->> + /* drop the ref. we got via memory_block_get() */
->> + memory_block_put(memory);
->> device_unregister(&memory->dev);
->> }
->>=20
->> @@ -880,7 +870,7 @@ int create_memory_block_devices(unsigned long =
-start, unsigned long size,
->> end_block_id =3D block_id;
->> for (block_id =3D start_block_id; block_id !=3D end_block_id;
->>      block_id++) {
->> - mem =3D find_memory_block_by_id(block_id);
->> + mem =3D memory_block_get(block_id);
->> if (WARN_ON_ONCE(!mem))
->> continue;
->> remove_memory_block(mem);
->> @@ -908,7 +898,7 @@ void remove_memory_block_devices(unsigned long =
-start, unsigned long size)
->> return;
->>=20
->> for (block_id =3D start_block_id; block_id !=3D end_block_id; =
-block_id++) {
->> - mem =3D find_memory_block_by_id(block_id);
->> + mem =3D memory_block_get(block_id);
->> if (WARN_ON_ONCE(!mem))
->> continue;
->> num_poisoned_pages_sub(-1UL, memblk_nr_poison(mem));
->> @@ -1015,12 +1005,12 @@ int walk_memory_blocks(unsigned long start, =
-unsigned long size,
->> return 0;
->>=20
->> for (block_id =3D start_block_id; block_id <=3D end_block_id; =
-block_id++) {
->> - mem =3D find_memory_block_by_id(block_id);
->> + mem =3D memory_block_get(block_id);
->> if (!mem)
->> continue;
->>=20
->> ret =3D func(mem, arg);
->> - put_device(&mem->dev);
->> + memory_block_put(mem);
->> if (ret)
->> break;
->> }
->> @@ -1228,22 +1218,22 @@ int walk_dynamic_memory_groups(int nid, =
-walk_memory_groups_func_t func,
->> void memblk_nr_poison_inc(unsigned long pfn)
->> {
->> const unsigned long block_id =3D pfn_to_block_id(pfn);
->> - struct memory_block *mem =3D find_memory_block_by_id(block_id);
->> + struct memory_block *mem =3D memory_block_get(block_id);
->>=20
->> if (mem) {
->> atomic_long_inc(&mem->nr_hwpoison);
->> - put_device(&mem->dev);
->> + memory_block_put(mem);
->> }
->> }
->>=20
->> void memblk_nr_poison_sub(unsigned long pfn, long i)
->> {
->> const unsigned long block_id =3D pfn_to_block_id(pfn);
->> - struct memory_block *mem =3D find_memory_block_by_id(block_id);
->> + struct memory_block *mem =3D memory_block_get(block_id);
->>=20
->> if (mem) {
->> atomic_long_sub(i, &mem->nr_hwpoison);
->> - put_device(&mem->dev);
->> + memory_block_put(mem);
->> }
->> }
->>=20
->> diff --git a/drivers/base/node.c b/drivers/base/node.c
->> index 126f66aa2c3e..b3333ca92090 100644
->> --- a/drivers/base/node.c
->> +++ b/drivers/base/node.c
->> @@ -847,13 +847,13 @@ static void =
-register_memory_blocks_under_nodes(void)
->> for (block_id =3D start_block_id; block_id <=3D end_block_id; =
-block_id++) {
->> struct memory_block *mem;
->>=20
->> - mem =3D find_memory_block_by_id(block_id);
->> + mem =3D memory_block_get(block_id);
->> if (!mem)
->> continue;
->>=20
->> memory_block_add_nid_early(mem, nid);
->> do_register_memory_block_under_node(nid, mem);
->> - put_device(&mem->dev);
->> + memory_block_put(mem);
->> }
->>=20
->> }
->> diff --git a/drivers/s390/char/sclp_mem.c =
-b/drivers/s390/char/sclp_mem.c
->> index 78c054e26d17..6df1926d4c62 100644
->> --- a/drivers/s390/char/sclp_mem.c
->> +++ b/drivers/s390/char/sclp_mem.c
->> @@ -204,7 +204,7 @@ static ssize_t sclp_config_mem_store(struct =
-kobject *kobj, struct kobj_attribute
->> addr =3D sclp_mem->id * block_size;
->> /*
->>  * Hold device_hotplug_lock when adding/removing memory blocks.
->> -  * Additionally, also protect calls to find_memory_block() and
->> +  * Additionally, also protect calls to memory_block_get() and
->>  * sclp_attach_storage().
->>  */
->> rc =3D lock_device_hotplug_sysfs();
->> @@ -231,20 +231,19 @@ static ssize_t sclp_config_mem_store(struct =
-kobject *kobj, struct kobj_attribute
->> sclp_mem_change_state(addr, block_size, 0);
->> goto out_unlock;
->> }
->> - mem =3D find_memory_block(pfn_to_section_nr(PFN_DOWN(addr)));
->> - put_device(&mem->dev);
->> + mem =3D memory_block_get(phys_to_block_id(addr));
->> + memory_block_put(mem);
->> WRITE_ONCE(sclp_mem->config, 1);
->> } else {
->> if (!sclp_mem->config)
->> goto out_unlock;
->> - mem =3D find_memory_block(pfn_to_section_nr(PFN_DOWN(addr)));
->> + mem =3D memory_block_get(phys_to_block_id(addr));
->> if (mem->state !=3D MEM_OFFLINE) {
->> - put_device(&mem->dev);
->> + memory_block_put(mem);
->> rc =3D -EBUSY;
->> goto out_unlock;
->> }
->> - /* drop the ref just got via find_memory_block() */
->> - put_device(&mem->dev);
->> + memory_block_put(mem);
->> sclp_mem_change_state(addr, block_size, 0);
->> __remove_memory(addr, block_size);
->> #ifdef CONFIG_KASAN
->> @@ -294,11 +293,11 @@ static ssize_t =
-sclp_memmap_on_memory_store(struct kobject *kobj, struct kobj_att
->> return rc;
->> block_size =3D memory_block_size_bytes();
->> sclp_mem =3D container_of(kobj, struct sclp_mem, kobj);
->> - mem =3D find_memory_block(pfn_to_section_nr(PFN_DOWN(sclp_mem->id * =
-block_size)));
->> + mem =3D memory_block_get(phys_to_block_id(sclp_mem->id * =
-block_size));
->> if (!mem) {
->> WRITE_ONCE(sclp_mem->memmap_on_memory, value);
->> } else {
->> - put_device(&mem->dev);
->> + memory_block_put(mem);
->> rc =3D -EBUSY;
->> }
->> unlock_device_hotplug();
->> diff --git a/include/linux/memory.h b/include/linux/memory.h
->> index 5bb5599c6b2b..463dc02f6cff 100644
->> --- a/include/linux/memory.h
->> +++ b/include/linux/memory.h
->> @@ -158,7 +158,11 @@ int create_memory_block_devices(unsigned long =
-start, unsigned long size,
->> void remove_memory_block_devices(unsigned long start, unsigned long =
-size);
->> extern void memory_dev_init(void);
->> extern int memory_notify(enum memory_block_state state, void *v);
->> -extern struct memory_block *find_memory_block(unsigned long =
-section_nr);
->> +struct memory_block *memory_block_get(unsigned long block_id);
->> +static inline void memory_block_put(struct memory_block *mem)
->> +{
->> + put_device(&mem->dev);
->> +}
->=20
-> Hi Muchun,
+> cxl_dev_reset() implements the hardware reset sequence:
+> optionally enable memory clear, initiate reset via
+> CTRL2, wait for completion, and re-enable caching.
+> 
+> cxl_do_reset() orchestrates the full reset flow:
+>   1. CXL pre-reset: mem offlining and cache flush (when memdev present)
+>   2. PCI save/disable: pci_dev_save_and_disable() automatically saves
+>      CXL DVSEC and HDM decoder state via PCI core hooks
+>   3. Sibling coordination: save/disable CXL.cachemem sibling functions
+>   4. Execute CXL DVSEC reset
+>   5. Sibling restore: always runs to re-enable sibling functions
+>   6. PCI restore: pci_dev_restore() automatically restores CXL state
+> 
+> The CXL-specific DVSEC and HDM save/restore is handled
+> by the PCI core's CXL save/restore infrastructure (drivers/pci/cxl.c).
 
-Hi,
+I think the PCI core rules for pci_save_and_disable() really only work
+for a device that can be reliably quarantined off the bus simply by
+writing to its command register. I am also uncomfortable saving new MMIO
+data with new iomap mappings at pci_save_state() time, remapping MMIO
+space, and rewriting the command register at pci_restore_state() time.
+That feels like it is stretching the PCI state save model, and runs
+counter to other MMIO restore scenarios.
 
->=20
-> Thanks for the work, I have a small suggestion if that fits your =
-thought.
->=20
-> I think we should at least add a comment  above memory_block_put() to =
-remind the caller to check
-> for the availabitliy of "mem" before calling this function.
-> We perform the check in memory_block_get() inside the function body, I =
-see different usage pattern
-> across the caller when they're dealing with "mem =3D=3D NULL" and =
-avoid to call memory_block_put(),=20
-> I can understand we should leverage the check to caller, not inside =
-memory_block_put().
-> But just in case the next caller might forgot to do the check or think =
-the behavior might be symmetric
-> bettween memory_block_get() and memory_block_put(), a comment above =
-the function would be nice.
+Lets start with assuming similar behavior to MSI where restoration of
+MMIO is driven from other cached configuration, not PCI state save. For
+example, for MSI there is nothing to do at restore time if a driver has
+not first enabled interrupts.
 
-Thanks for the suggestion!
+The similarity for CXL would be that if nothing has ever registered a
+CXL memdev then it is indeterminate whether Linux has ever successfully
+parsed the CXL configuration and "enabled CXL".
 
-Regarding the additional comment, I feel they might not be strictly =
-necessary.
-If a user passes a NULL pointer, the issue would be exposed immediately
-before memory_block_put() is even called. It's unlikely a user would =
-obtain
-mem and not perform any read/write operations; any such attempt would =
-trigger
-a NULL pointer dereference right away.
+The downside of this is losing the ability to save firmware initiated
+CXL state from PCI reset paths. That loss is mitigated somewhat by SBR
+masking and the fact that FLR does not reset CXL state. So those resets
+do not destroy CXL HDM state by default.
 
-As for adding comments to memory_block_get(), I=E2=80=99m wondering if =
-it=E2=80=99s truly
-essential. The function is quite straightforward=E2=80=94anyone looking =
-at the
-definition would see the implementation alongside the comments. It=E2=80=99=
-s very
-clear from the code that mem must be non-NULL to be "gotten."
+Otherwise, if cxl_reset moves to a cxl_memdev sysfs attribute then the
+PCI ABI stays free of CXL concerns. More below:
 
-Overall, I=E2=80=99m concerned the extra comments might not add much =
-value. What do
-you think?
+> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+> ---
+>  drivers/cxl/core/pci.c | 181 ++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 179 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index b6f10a2cb404..c758b3f1b3f9 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -1078,7 +1078,7 @@ static int cxl_reset_collect_sibling(struct pci_dev *func, void *data)
+>  	return 0;
+>  }
+> 
+> -static void __maybe_unused cxl_pci_functions_reset_prepare(struct cxl_reset_context *ctx)
+> +static void cxl_pci_functions_reset_prepare(struct cxl_reset_context *ctx)
+>  {
+>  	struct pci_dev *pdev = ctx->target;
+>  	struct cxl_reset_walk_ctx wctx;
+> @@ -1103,7 +1103,7 @@ static void __maybe_unused cxl_pci_functions_reset_prepare(struct cxl_reset_cont
+>  	}
+>  }
+> 
+> -static void __maybe_unused cxl_pci_functions_reset_done(struct cxl_reset_context *ctx)
+> +static void cxl_pci_functions_reset_done(struct cxl_reset_context *ctx)
+>  {
+>  	int i;
+> 
+> @@ -1116,3 +1116,180 @@ static void __maybe_unused cxl_pci_functions_reset_done(struct cxl_reset_context
+>  	ctx->pci_functions = NULL;
+>  	ctx->pci_func_count = 0;
+>  }
+> +
+> +/*
+> + * CXL device reset execution
+> + */
+> +static int cxl_dev_reset(struct pci_dev *pdev, int dvsec)
+> +{
+> +	static const u32 reset_timeout_ms[] = { 10, 100, 1000, 10000, 100000 };
+> +	u16 cap, ctrl2, status2;
+> +	u32 timeout_ms;
+> +	int rc, idx;
+> +
+> +	if (!pci_wait_for_pending_transaction(pdev))
+> +		pci_err(pdev, "timed out waiting for pending transactions\n");
+> +
+> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CAP, &cap);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, &ctrl2);
+> +	if (rc)
+> +		return rc;
+> +
+> +	/*
+> +	 * Disable caching and initiate cache writeback+invalidation if the
+> +	 * device supports it. Poll for completion.
+> +	 * Per CXL r3.2 section 9.6, software may use the cache size from
+> +	 * DVSEC CXL Capability2 to compute a suitable timeout; we use a
+> +	 * default of 10ms.
+> +	 */
+> +	if (cap & PCI_DVSEC_CXL_CACHE_WBI_CAPABLE) {
+> +		u32 wbi_poll_us = 100;
+> +		s32 wbi_remaining_us = 10000;
+> +
+> +		ctrl2 |= PCI_DVSEC_CXL_DISABLE_CACHING;
+> +		rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2,
+> +					   ctrl2);
+> +		if (rc)
+> +			return rc;
+> +
+> +		ctrl2 |= PCI_DVSEC_CXL_INIT_CACHE_WBI;
+> +		rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2,
+> +					   ctrl2);
+> +		if (rc)
+> +			return rc;
+> +
+> +		do {
+> +			usleep_range(wbi_poll_us, wbi_poll_us + 1);
+> +			wbi_remaining_us -= wbi_poll_us;
+> +			rc = pci_read_config_word(pdev,
+> +						  dvsec + PCI_DVSEC_CXL_STATUS2,
+> +						  &status2);
+> +			if (rc)
+> +				return rc;
+> +		} while (!(status2 & PCI_DVSEC_CXL_CACHE_INV) &&
+> +			 wbi_remaining_us > 0);
+> +
+> +		if (!(status2 & PCI_DVSEC_CXL_CACHE_INV)) {
+> +			pci_err(pdev, "CXL cache WB+I timed out\n");
+> +			return -ETIMEDOUT;
+> +		}
+> +	} else if (cap & PCI_DVSEC_CXL_CACHE_CAPABLE) {
+> +		ctrl2 |= PCI_DVSEC_CXL_DISABLE_CACHING;
+> +		rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2,
+> +					   ctrl2);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	if (cap & PCI_DVSEC_CXL_RST_MEM_CLR_CAPABLE) {
+> +		rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2,
+> +					  &ctrl2);
+> +		if (rc)
+> +			return rc;
+> +
+> +		ctrl2 |= PCI_DVSEC_CXL_RST_MEM_CLR_EN;
+> +		rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2,
+> +					   ctrl2);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	idx = FIELD_GET(PCI_DVSEC_CXL_RST_TIMEOUT, cap);
+> +	if (idx >= ARRAY_SIZE(reset_timeout_ms))
+> +		idx = ARRAY_SIZE(reset_timeout_ms) - 1;
+> +	timeout_ms = reset_timeout_ms[idx];
+> +
+> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, &ctrl2);
+> +	if (rc)
+> +		return rc;
+> +
+> +	ctrl2 |= PCI_DVSEC_CXL_INIT_CXL_RST;
+> +	rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, ctrl2);
+> +	if (rc)
+> +		return rc;
+> +
+> +	msleep(timeout_ms);
 
-Thanks,
-Muchun
->=20
-> Best regards,
-> Richard Cheng.
->=20
->> typedef int (*walk_memory_blocks_func_t)(struct memory_block *, void =
-*);
->> extern int walk_memory_blocks(unsigned long start, unsigned long =
-size,
->>       void *arg, walk_memory_blocks_func_t func);
->> @@ -171,7 +175,6 @@ struct memory_group *memory_group_find_by_id(int =
-mgid);
->> typedef int (*walk_memory_groups_func_t)(struct memory_group *, void =
-*);
->> int walk_dynamic_memory_groups(int nid, walk_memory_groups_func_t =
-func,
->>        struct memory_group *excluded, void *arg);
->> -struct memory_block *find_memory_block_by_id(unsigned long =
-block_id);
->> #define hotplug_memory_notifier(fn, pri) ({ \
->> static __meminitdata struct notifier_block fn##_mem_nb =3D\
->> { .notifier_call =3D fn, .priority =3D pri };\
->> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->> index 462d8dcd636d..890c6453e887 100644
->> --- a/mm/memory_hotplug.c
->> +++ b/mm/memory_hotplug.c
->> @@ -1417,14 +1417,13 @@ static void =
-remove_memory_blocks_and_altmaps(u64 start, u64 size)
->> struct vmem_altmap *altmap =3D NULL;
->> struct memory_block *mem;
->>=20
->> - mem =3D find_memory_block(pfn_to_section_nr(PFN_DOWN(cur_start)));
->> + mem =3D memory_block_get(phys_to_block_id(cur_start));
->> if (WARN_ON_ONCE(!mem))
->> continue;
->>=20
->> altmap =3D mem->altmap;
->> mem->altmap =3D NULL;
->> - /* drop the ref. we got via find_memory_block() */
->> - put_device(&mem->dev);
->> + memory_block_put(mem);
->>=20
->> remove_memory_block_devices(cur_start, memblock_size);
->>=20
->>=20
->> base-commit: e98d21c170b01ddef366f023bbfcf6b31509fa83
->> --=20
->> 2.54.0
+Should this be msleep(max(100, timeout_ms)) just to honor the
+specification note:
 
+"9.7.3 CXL Reset and Request Retry Status (RRS) ...The device behavior
+in response to Configuration Space access to the device within 100 ms of
+initiating a CXL Reset is undefined"
 
+...not sure why the specification allowed for devices to specify less
+than 100ms timeout values.
+
+> +
+> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_STATUS2,
+> +				  &status2);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (status2 & PCI_DVSEC_CXL_RST_ERR) {
+> +		pci_err(pdev, "CXL reset error\n");
+> +		return -EIO;
+> +	}
+> +
+> +	if (!(status2 & PCI_DVSEC_CXL_RST_DONE)) {
+> +		pci_err(pdev, "CXL reset timeout\n");
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, &ctrl2);
+> +	if (rc)
+> +		return rc;
+> +
+> +	ctrl2 &= ~PCI_DVSEC_CXL_DISABLE_CACHING;
+> +	rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, ctrl2);
+> +	if (rc)
+> +		return rc;
+> +
+> +	return 0;
+> +}
+> +
+> +static int match_memdev_by_parent(struct device *dev, const void *parent)
+> +{
+> +	return is_cxl_memdev(dev) && dev->parent == parent;
+> +}
+> +
+> +static int cxl_do_reset(struct pci_dev *pdev)
+> +{
+> +	struct cxl_reset_context ctx = { .target = pdev };
+> +	struct cxl_memdev *cxlmd = NULL;
+> +	struct device *memdev = NULL;
+> +	int dvsec, rc;
+> +
+> +	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+> +					  PCI_DVSEC_CXL_DEVICE);
+> +	if (!dvsec)
+> +		return -ENODEV;
+> +
+> +	memdev = bus_find_device(&cxl_bus_type, NULL, &pdev->dev,
+> +				 match_memdev_by_parent);
+> +	if (memdev) {
+> +		cxlmd = to_cxl_memdev(memdev);
+> +		guard(device)(&cxlmd->dev);
+
+This guard scope ends at this bracket, so it is a nop.
+
+> +	}
+> +
+> +	mutex_lock(&cxl_reset_mutex);
+> +	pci_dev_lock(pdev);
+
+Given that CXL drivers create memdevs the lock ordering needs to be
+pci_dev_lock(), then guard(device)(&cxlmd->dev).
+
+> +	if (cxlmd) {
+> +		rc = cxl_reset_prepare_memdev(cxlmd);
+
+Ok, so per the lead in comment, a cxl_memdev becomes a requirement, not
+a trigger for opportunistic safety.
+
+I do think it ultimately begs the question of whether the PCI core
+should one day automatically register cxl devices for this purpose. For
+now the assumption is a driver, like vfio-pci, has registered a memdev
+to get a memX/cxl_reset interface published in sysfs.
+
+The presence of a cxl_memdev allows coordinating not only region
+discovery, but also reconfiguration locking. With the memdev we have a
+chance to ask the questions:
+
+1/ are any cacheable mappings of this device established?
+2/ is that answer durable for the duration of the reset?
+3/ can the HDM configuration be recovered from the cxl_memdev to
+   cxl_root decoder association?
+
+In the short term the fastest answers to those questions is just walk
+the memdev and cxl root, in the longer term I would be open to building
+more CXL awareness into the core so that CXL reset does not need a
+driver loaded.
+
+As for the safety guarantees, I do not think cxl_reset_prepare_memdev()
+should be trying to hot unplug memory. Either the caller has arranged
+for CXL to be idle or the reset fails.
+
+With cxl_acpi and cxl_mem loaded you can pin down the HPA space for the
+duration of the reset. It has a chance to be compatible with all CXL
+reset use cases.
