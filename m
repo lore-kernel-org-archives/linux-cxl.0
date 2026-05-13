@@ -1,382 +1,689 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D9C42A9D;
-	Wed, 13 May 2026 02:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778640324; cv=none; b=ko6Msz1+ssy9SPKDVtkA54qzRkEXqAY+rouJ9+v5QPTyNKU/gRkKaeTwmTiDJ4Dc9vNmCbX53W06ELbDv3CGAqk2UopTC7MhILhh4ZmUnajT7dWUEk5hXg1gnDZKaZ41FB9FSZcktiCtyXuoX4AE08I6AjbY53/Dx6WUH8Q34dM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778640324; c=relaxed/simple;
-	bh=UwYemmp61xQRMFa6jBcYjstuhyetmLZIy0nZsYupAwk=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=kF0VURnnvDpqotO6WO7L0NdSfcap7ZtjpPLFBAlar4BjFgVbEVBLUtV5tW9blNYhW9Cwnn2QzDuBVxkm+kHQ5ikpshtVwhMzp0yw8VrO+Ibkgtzl7c1B6nTQCHsHcuMiKd4riDSEhOweVx9EjEbxpjpUAL0/tvUYtmpVhH0NsmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HOahXm95; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9CB3A59A7;
+	Wed, 13 May 2026 05:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778650360; cv=fail; b=tNiNhP1Vy90T4ro43uxRrNzC0INaI30fpIElV6c0fzyxCaHqh4J70izGCOnCfBtaxCwuJY7HWaQhDf4aUEdB5RwxDVXeWSOtGqlFNbF0DBfWdRQIx5C4wVnQFUy+XewYe3bMBj9ruyBObSitmp58EiPT585ibj96JJYDAq4At4M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778650360; c=relaxed/simple;
+	bh=9ENRS1iHArjSLjL6Sveo9dapYt9DL08z1wl0pZ/H8t0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=d9xbCxm5xYWbe3jCGIzTP0Snpe3XVT1z18/qTw5WYqNW1VvzBXkpM4lVqBv5/7cw7l7ZmCH/TdHAmyWR3wRStM4Z6dYiP9VmljTORa31Qt8MinYBgQyXWV60JmYVue/9vGUFrmoGtTDpnJ/GXDcNdfWJWFVbkDOCNcW8r8TA7T8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VYBemj+4; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HOahXm95"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C08CC2BCF7;
-	Wed, 13 May 2026 02:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778640324;
-	bh=UwYemmp61xQRMFa6jBcYjstuhyetmLZIy0nZsYupAwk=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=HOahXm955JdVByP6APo32i6eNnOG7fSU0bLaiqQZ+hrEXMCAt1oEIz0RIIadUOZ0Y
-	 nmaIeI9+Lo0pXZde9v76XKla7wW7TRWlUnoWZ9+hX1q3ytsEw8R+e6cv0vGdnaUkVg
-	 S9V+L2a+CFwLR9ZLomDSbVuKfKY0eXg3kZYXXTPkQ81z+3LTqEaHWRDC6ZqGhXIXQZ
-	 EOHRp6v/VRIBUu/AW7BrD8zDL3O3cn8I4VKxves7owcXLzzLf99zDr2ZMCqUnoAiEH
-	 3ztkSa4032HCV0j9ZEQhCQUVw+xAbSGZBvGHKvcLvFglaVjpssJ2ppOaQCj8f4tAys
-	 cJB31Je33TAxg==
-Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 4B377F40075;
-	Tue, 12 May 2026 22:45:22 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Tue, 12 May 2026 22:45:22 -0400
-X-ME-Sender: <xms:wuUDajjKKO_O8LlX0OCmKeu6Bq-4zyOWdf_czDjdiAMvldmeAJSP1A>
-    <xme:wuUDars5T4LCkVRlCfClti9_p7nakcN3vuFvUc4XFaUASZauin99g56JyGyUaz62B
-    KjgxGGUCWZ5f4WaUUOBQJiu79T-K13rx5V50N-bBavbfWhwnwgHsq0>
-X-ME-Received: <xmr:wuUDatzvRajzSuvRx4DgD1dqqgrDpSRwGOEf7jChiAlRyDu41Vbny_nPqr8-rWQ-ZJrjE29_DYccT1qQC5gGenj7xXOcGKkhJIs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgdduvdefheduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurhepfffhvfevkfgjfhfugggtgfesthejredttddtjeenucfhrhhomhepfdffrghnucgh
-    ihhllhhirghmshculdhnvhhiughirgdmfdcuoegujhgsfieskhgvrhhnvghlrdhorhhgqe
-    enucggtffrrghtthgvrhhnpedvgeehieekteelueffueehfeejjedvjedvveetfefgffev
-    hedvuedvffevffdvheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpegujhgsfidomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudej
-    jedvfedtgeehhedqfeeffeelgedtgeejqdgujhgsfieppehkvghrnhgvlhdrohhrghesfh
-    grshhtmhgrihhlrdgtohhmpdhnsggprhgtphhtthhopedvgedpmhhouggvpehsmhhtphho
-    uhhtpdhrtghpthhtohepshhmrgguhhgrvhgrnhesnhhvihguihgrrdgtohhmpdhrtghpth
-    htohepsghhvghlghgrrghssehgohhoghhlvgdrtghomhdprhgtphhtthhopegurghnrdhj
-    rdifihhllhhirghmshesihhnthgvlhdrtghomhdprhgtphhtthhopegurghvvgdrjhhirg
-    hnghesihhnthgvlhdrtghomhdprhgtphhtthhopehjohhnrghthhgrnhdrtggrmhgvrhho
-    nheshhhurgifvghirdgtohhmpdhrtghpthhtohepihhrrgdrfigvihhnhiesihhnthgvlh
-    drtghomhdprhgtphhtthhopehvihhshhgrlhdrlhdrvhgvrhhmrgesihhnthgvlhdrtgho
-    mhdprhgtphhtthhopegrlhhishhonhdrshgthhhofhhivghlugesihhnthgvlhdrtghomh
-    dprhgtphhtthhopegurghvvgesshhtghholhgrsghsrdhnvght
-X-ME-Proxy: <xmx:wuUDahMQQTCinQeCGi8yG2YCv9ZChfVAX366Guu3tNNxXO0ktSl15A>
-    <xmx:wuUDav0pZpTkXgHeoXpD8J-Al1pSrco8jsHoRM2xIrM_Zu_AP7vWOw>
-    <xmx:wuUDapE_UYZ6aYq4ymUjV1ggxM4Wx9Ms6VZDDt-k_K1pyFi5HJCI0Q>
-    <xmx:wuUDamipKFaPmyJBV_4dYMAUHd_gFMN9OhF0_OBeK5mJXGqL9kil6g>
-    <xmx:wuUDaiejrJLre83hDihTWwCkZqRB0dJabyAq1S7j4-YkhVU9edxl_qtM>
-Feedback-ID: i67ae4b3e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 12 May 2026 22:45:21 -0400 (EDT)
-Date: Tue, 12 May 2026 19:45:20 -0700
-From: "Dan Williams (nvidia)" <djbw@kernel.org>
-To: smadhavan@nvidia.com, 
- bhelgaas@google.com, 
- dan.j.williams@intel.com, 
- dave.jiang@intel.com, 
- jonathan.cameron@huawei.com, 
- ira.weiny@intel.com, 
- vishal.l.verma@intel.com, 
- alison.schofield@intel.com, 
- dave@stgolabs.net
-Cc: alwilliamson@nvidia.com, 
- jeshuas@nvidia.com, 
- vsethi@nvidia.com, 
- skancherla@nvidia.com, 
- vaslot@nvidia.com, 
- sdonthineni@nvidia.com, 
- mhonap@nvidia.com, 
- vidyas@nvidia.com, 
- jan@nvidia.com, 
- mochs@nvidia.com, 
- dschumacher@nvidia.com, 
- linux-cxl@vger.kernel.org, 
- linux-pci@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Srirangan Madhavan <smadhavan@nvidia.com>
-Message-ID: <6a03e5c099d98_123a100e3@djbw-dev.notmuch>
-In-Reply-To: <20260306092322.148765-6-smadhavan@nvidia.com>
-References: <20260306092322.148765-1-smadhavan@nvidia.com>
- <20260306092322.148765-6-smadhavan@nvidia.com>
-Subject: Re: [PATCH v5 5/7] cxl: Add CXL DVSEC reset sequence and flow
- orchestration
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VYBemj+4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778650358; x=1810186358;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=9ENRS1iHArjSLjL6Sveo9dapYt9DL08z1wl0pZ/H8t0=;
+  b=VYBemj+4sVwApRe7CFc8CNdtwFbKbHwTy1+94JYycP8NE5xhkCs7va+G
+   0lY+OLaLH1aC7h09HpHyLoJmCQ1dur9A0peOzqDvCdR3tVtvWz5olmjyL
+   uy1UnHdw2zrZypZvdYjzVwXVjGrXQjZjmNpCnNG1SjbZg407k8wxR7hH3
+   cL1HgUfyXcRmYKkhPfI5Zb4Pj29WQ65RkyJtpxF3KCoh+w16ZcPQx50Kl
+   KoPX93V40smGOm1oz9jn1/DdJy931zUL7SDSOf86qF7pOKhz+CYm4/5rI
+   8e5N44lh62pvludIMrg02ZDpLP9kaMR0Bx8duQJeyHyWhBsak4FxtCiXq
+   A==;
+X-CSE-ConnectionGUID: L0LUizFyRFOycpLWcJSUTg==
+X-CSE-MsgGUID: zBq6cWjfTfmu9Nnor1xw8w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11784"; a="97136263"
+X-IronPort-AV: E=Sophos;i="6.23,232,1770624000"; 
+   d="scan'208";a="97136263"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 22:32:38 -0700
+X-CSE-ConnectionGUID: NGyquGxYQpyvwVEP/EuLBw==
+X-CSE-MsgGUID: eB7XBmOOSMuDQH296Z/acw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,232,1770624000"; 
+   d="scan'208";a="233706498"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2026 22:32:37 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Tue, 12 May 2026 22:32:36 -0700
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Tue, 12 May 2026 22:32:36 -0700
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (40.93.194.46)
+ by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Tue, 12 May 2026 22:32:33 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FaqV+p/bo+20ddhUpq6J1ideZiXe4m+wwkgbtTGYq8VHFNRX9UcA3ykVgevFPwPexGhG2O1YsKjlQC2TJV8PKtn0z6MbUBTCgcbByJuETWaHTkdxk9I6lPtLbuCqxQ1bjijPVB/3MVyvd2JdLwrqBYLfBKc1hv4I9HJzW5uH93AdXMZgbDrBYv6pTkvVbl+Yu5Z3Fa6g5iTn81yKEpA4EFAywbCaXbE0JShX5pbPIODPZZc0l/g1hF6vqAfQUNrDy3PTODjS6w0++3mrn9UFW5aiP57bhiNa6aKLdEqA+jBtxsJfo7Up1nh7dHdEjDji7aXWsnepWGTg0Mf+t39fFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wqQQ5JD6GZbIculwxRu5XFY32FDSRgI7Uc32uPZAqLI=;
+ b=KZrojbqc+JOgYBNjsBnuBQ3HvEkIO23Zj3ZdkO2JQT5OI5ERLKih0bMTeK27AJzx6cp9tuOh9ucGBVeeBmZcv+n6PuzYD6iKhh+JlLudx0D82wtHeHdacOLmC5yMQNnU+NvZpddVSgTjta8TOYWab9B+ougcjKWC8Pn4uOYx+r0dZ1bjaVjoZtBsxGLKPItox4KcWm6ukbIvBPaxqlX8RRNM9FMO+yRlK2OgIYq8wP6sAiLzjmdAEhJLc1nXPgBBEYYvT08NO99ec5g7RrmsbrwMO9UiHfniVInib3e66tvCwg4qtncrBObpnERC/Id5Hbq8UXpQmtnUQgukiaWvYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by PH0PR11MB5111.namprd11.prod.outlook.com (2603:10b6:510:3c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9913.11; Wed, 13 May
+ 2026 05:32:16 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891%8]) with mapi id 15.20.9891.021; Wed, 13 May 2026
+ 05:32:16 +0000
+Date: Tue, 12 May 2026 22:32:12 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: John Groves <john@jagalactic.com>
+CC: John Groves <John@groves.net>, John Groves <jgroves@fastmail.com>, "Dan
+ Williams" <djbw@kernel.org>, John Groves <jgroves@micron.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Jonathan
+ Cameron" <Jonathan.Cameron@huawei.com>, Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>, "venkataravis@micron.com"
+	<venkataravis@micron.com>, "dev.srinivasulu@gmail.com"
+	<dev.srinivasulu@gmail.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev"
+	<nvdimm@lists.linux.dev>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH V5 1/2] daxctl: Add support for famfs mode
+Message-ID: <agQM3KXNMvtbpb_0@aschofie-mobl2.lan>
+References: <0100019ddf064477-8322b695-f2d8-481c-9fcd-8b16fc97ad4d-000000@email.amazonses.com>
+ <20260430153405.84164-1-john@jagalactic.com>
+ <0100019ddf06b207-eaf8cb8a-066e-4642-8947-effdb4848c20-000000@email.amazonses.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <0100019ddf06b207-eaf8cb8a-066e-4642-8947-effdb4848c20-000000@email.amazonses.com>
+X-ClientProxiedBy: BYAPR08CA0016.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::29) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|PH0PR11MB5111:EE_
+X-MS-Office365-Filtering-Correlation-Id: f59ef810-8213-4e2d-fa99-08deb0b0fe44
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024|11063799003|22082099003|18002099003|56012099003;
+X-Microsoft-Antispam-Message-Info: aBjUgs/qMSMp4tVg0owT43yyd94/aicfJ+zshvCdXq0v3F5rteOQ4wCwBVnYho3i9EITDxKEft72/79DEOn4nFRoBAobh1NCVv7x95bMWusMApP1pTWeNeYNqCZkVZ88UHfkDQOdmOUnLAVT+IgS4gXAPiHRoZbD597a1TwLsirG2wSeSFIhrWLstlEh9IDhyZl7q3dRHknLW0zxx8zJjVbc0QJrjnKPyOilIRpI7J22veB7JbDCjTuegy5Tn+AVKso9aZV6RSeay1QI0dLj/djzJNlCe4c7xRBPn54dM/q4bdPa9EGBfyqWKJKWoK0d6iSoCpgFwXMzkRhY4+pHdvaHii/V53CcycIzSwNT+Wztf7GYrd0G/AESbld+tdXGeNNJauTCVtk18P/DlJ37diPzQzq4iQSUfU9IjPKWzKb5iEATKnlNNwAXdhao8/wBoACpDtz6HlWA9hvdlt9+SAyDxGyWl44BevWdSgXyrDDe9HfrLX9LapPGQtI1Y301IFzSEEZjldZNIupKG8yOzD2lYPU39Z7+aBRRMGade+OqxuDdGMkTnoqTOP8lVrDAYodCvGrDmkG3UAKQuAjNSoUOmG1NXNOILkPg/UdFky0UXwPUyjt9j+GJ1vPZWlxsxENb9h9/P6f0DlMUPdHZkq0t4ZEUbp+EB6qGT7vX1/6+GenZNrP1r9VqvLddTKVU
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(11063799003)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rDLyD7B6sxd9433xhdPq0b+X5DQJZdmShWT6pF2lOgfJG4P7tO/B/Yr77SiB?=
+ =?us-ascii?Q?nYbAHqb7paKbRd157F5hTsKV60GTfSeenE/VXGSOcJncEh3aRPVD/mylCsYC?=
+ =?us-ascii?Q?0nZLHArCK4FRgE6LAiNo34/KnIWqmYbl2Evij6uq3PSdP6qwy32RWR8hLIc3?=
+ =?us-ascii?Q?XiE3B8lCu8ZoJSPTIU6eX9/oEaFeyJbyHdmu2KtWgf5yOCFgZu+CB5hWkcZj?=
+ =?us-ascii?Q?i35xjYF8ToMRPLURioNRwfy6yfDnF8NrdLBe3RHW89gn/xIrDHIkTj1bapor?=
+ =?us-ascii?Q?t7GEHy8R2KsgvUSRnU/Uri3NeizXbVKtYVbEKIzPk3eiEWUR71mURCoxYAeD?=
+ =?us-ascii?Q?m0A05weGozjh2Wlb1DOGaTq4z5eRXaY3yhQwQ21m/m+ubzvEk16QNWhjjWHx?=
+ =?us-ascii?Q?L5rJnQukJsSDuI5FJlSQmKajzVvDfPxRswGx2OamqzIhM7EavLLJLo9fU3TV?=
+ =?us-ascii?Q?H6YO+jl9YauWmMIWJ1BHaTs1j5e4Hemf4lAVxHdMui4ywQHvNn+JdE2fpjr2?=
+ =?us-ascii?Q?Cw21617HEWRAvTiyyUsF5TuQ4CmP/bhu1aIJYefwdwd6MxdhJcN46wcZCyiA?=
+ =?us-ascii?Q?Q1Exm16qTXpBPoH+zULrAXg0JSLVwmlWUwstIXt2SDal+ZwsGJK9iLmFF+pc?=
+ =?us-ascii?Q?Iw/EFfZwlCHAXj2dQzaO4xaiwNIWlOriKpidwCDVCppkK5nBAsz4+AmWVfEa?=
+ =?us-ascii?Q?v+HvBIRMn/INPs20EdMMg+/0CX161+awfsKp/Y8kN29HN6mqC4YX35ZuGAHc?=
+ =?us-ascii?Q?NZduCsUxkvsUBSGZF1fKEx0kdiCuqk4f8UyUcFuc1GzT3JzG/w3i1S4hS5/a?=
+ =?us-ascii?Q?TN6Nyk+zo1SsYfR24aj3X9VQzIn9OhktQF6KquyegSSc5nEUSZwuNfcH/j8/?=
+ =?us-ascii?Q?ZCaOn7iuCaljrCQr6K8V7nSnlGCmpQKw/JyybLtbN8flojiUjFr6FAYhto9K?=
+ =?us-ascii?Q?exxfQdOVLk6SzJEs76OXvMB2HdR5hyRTJwoxgB9hrLUYtnYs6Y8zO/ql4/sX?=
+ =?us-ascii?Q?2oXCbDhEXv7UGyYzNZ0eVkRbGtZ3xu8m3gWhUTnfW+mzyHcArdKd5xI6TP84?=
+ =?us-ascii?Q?COEjdoNxj+ZspllOCiliYf+YDfXmmWyFX2tkTJQEobN/GnSpTYuereesZ3d7?=
+ =?us-ascii?Q?XdifZqp8akv20QD4EQiAyoLaFLpuq2QOqWmJ4gUCfNjUMtJwwYG9nvppdCV/?=
+ =?us-ascii?Q?ugT6hTmjDym3o9/0N8wdjyFFRwLVMeZYX9wb6ADrWsHwLFL7ZXMf+7Y+Y6Bi?=
+ =?us-ascii?Q?uJ8WPjaMJx+cqKq1kgHfbPC+51/PHBm4hcvkBPwJNUJC6E+byn1KpGNZD7yu?=
+ =?us-ascii?Q?AJL5A/oIlHuFbKO/LvqSYb3h21C9SF39XWmy0WjLJV0RgTU1vdQxMUkFADAc?=
+ =?us-ascii?Q?I0CYx7PuSBaFwZswDOQfd48+v+QARIMdFyc/8i3zFV+YKbsw1LbXgj4Ofuuc?=
+ =?us-ascii?Q?+VtlaFYfRpZ8Yv0gtznKbAx3f1Aa5F/6rW3uLuXsXluLYjA4BguWGkfZvYQp?=
+ =?us-ascii?Q?ejwdUxeMpth9IWf8NHzAjnI4jzRKuH6UxEMpHVC5FJg8SpUcyneLPxh/gtmM?=
+ =?us-ascii?Q?kqEuuhCgHFsdYKkLJBlJStiAdIQcxBJNJLy1dwZ55skG7C4dSazH5NErq3Sm?=
+ =?us-ascii?Q?KTkff1cUF9lul7N2ATyFabQLJQq15mqtKOWKBADBUpafpgZxGztYWxPF1cQr?=
+ =?us-ascii?Q?9VGr1I0pZ/mlsVEE/RFKlkYVTF8TYkMx5tLsJ6nOJK4POXc3wdek1Fq58P8a?=
+ =?us-ascii?Q?j12VweJJRDvCRZiZaWzy9JXBCxzKvUY=3D?=
+X-Exchange-RoutingPolicyChecked: jhgBknffUGG/cNqi2GECmYFWhdZd7l9WXSyVUfMrpIdNysgWHJlqYVkvmJvSn1XC89btK+57MyXVYVbn4kk4ZUgASKV1mk0Zid3JZFCQbmxoV3Mdw6/hmn/KSU1e/RgF58QQzKR4H6cyn5K6FDv69yWsRPqb/kSRE4CVd4W+jpqGU9FcAQ6wDE+5X95eVIe2QzmxeATlreDRW/nbGbcJB0v3n04vJ9pH3tMzGMQ1ZoQTvMC7mdXdSULIn5hsMYzlz1WrsCLwUe3peWt8Qz9qaVvgrzqfbuwk272jZChJStyjRMl84hNZLKvOqvW/M8bMuoCYJT2jQZFEHmPff8qBWQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: f59ef810-8213-4e2d-fa99-08deb0b0fe44
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2026 05:32:16.3059
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EU/+0u/xrM4EfAObuz11W8O6gfgWZ2z0gJBkEVdI+X2nrHZigsmPK128S957hOvrvRyoywszCPvDGYjOegXaDVlNUJsO/lUvAxXq0ZUIJ+c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5111
+X-OriginatorOrg: intel.com
 
-smadhavan@ wrote:
-> From: Srirangan Madhavan <smadhavan@nvidia.com>
+On Thu, Apr 30, 2026 at 03:34:11PM +0000, John Groves wrote:
+> From: John Groves <John@Groves.net>
 
-Hi Srirangan, some comments below:
+Hi John,
 
-> cxl_dev_reset() implements the hardware reset sequence:
-> optionally enable memory clear, initiate reset via
-> CTRL2, wait for completion, and re-enable caching.
-> 
-> cxl_do_reset() orchestrates the full reset flow:
->   1. CXL pre-reset: mem offlining and cache flush (when memdev present)
->   2. PCI save/disable: pci_dev_save_and_disable() automatically saves
->      CXL DVSEC and HDM decoder state via PCI core hooks
->   3. Sibling coordination: save/disable CXL.cachemem sibling functions
->   4. Execute CXL DVSEC reset
->   5. Sibling restore: always runs to re-enable sibling functions
->   6. PCI restore: pci_dev_restore() automatically restores CXL state
-> 
-> The CXL-specific DVSEC and HDM save/restore is handled
-> by the PCI core's CXL save/restore infrastructure (drivers/pci/cxl.c).
+Please add an intro paragraph saying what famfs is, preferably
+with links to reference material.
 
-I think the PCI core rules for pci_save_and_disable() really only work
-for a device that can be reliably quarantined off the bus simply by
-writing to its command register. I am also uncomfortable saving new MMIO
-data with new iomap mappings at pci_save_state() time, remapping MMIO
-space, and rewriting the command register at pci_restore_state() time.
-That feels like it is stretching the PCI state save model, and runs
-counter to other MMIO restore scenarios.
+This patch doesn't update any docs. Please take a look at what is
+needed. I think at least this one:
+Documentation/daxctl/daxctl-reconfigure-device.txt needs to add
+famfs as a 'mode' option.
 
-Lets start with assuming similar behavior to MSI where restoration of
-MMIO is driven from other cached configuration, not PCI state save. For
-example, for MSI there is nothing to do at restore time if a driver has
-not first enabled interrupts.
-
-The similarity for CXL would be that if nothing has ever registered a
-CXL memdev then it is indeterminate whether Linux has ever successfully
-parsed the CXL configuration and "enabled CXL".
-
-The downside of this is losing the ability to save firmware initiated
-CXL state from PCI reset paths. That loss is mitigated somewhat by SBR
-masking and the fact that FLR does not reset CXL state. So those resets
-do not destroy CXL HDM state by default.
-
-Otherwise, if cxl_reset moves to a cxl_memdev sysfs attribute then the
-PCI ABI stays free of CXL concerns. More below:
-
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+> Putting a daxdev in famfs mode means binding it to fsdev_dax.ko
+> (drivers/dax/fsdev.c). Finding a daxdev bound to fsdev_dax means
+> it is in famfs mode.
+>
+> A test for this functionality is added in the next commit.
+>
+> With devdax, famfs, and system-ram modes, the previous logic that assumed
+> 'not in mode X means in mode Y' needed to get slightly more complicated.
+>
+> Add explicit mode detection functions:
+> - daxctl_dev_is_famfs_mode(): check if bound to fsdev_dax driver
+> - daxctl_dev_is_devdax_mode(): check if bound to device_dax driver
+> Both delegate to a shared static helper daxctl_dev_bound_to_module() to
+> avoid duplicating the driver-symlink lookup, as does the pre-existing
+> daxctl_dev_is_system_ram_capable().
+>
+> Update mode transition logic in device.c:
+> - disable_devdax_device(): verify device is actually in devdax mode
+> - disable_famfs_device(): verify device is actually in famfs mode
+> - All reconfig_mode_*() functions explicitly check each mode
+> - Handle unrecognized mode with an error instead of wrong assumption
+>
+> Update json.c to report fsdev_dax-bound devices as 'famfs' mode.  An
+> unbound device continues to be reported as 'devdax' (the legacy default
+> when no driver is bound), to preserve existing behavior.
+>
+> Signed-off-by: John Groves <john@groves.net>
 > ---
->  drivers/cxl/core/pci.c | 181 ++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 179 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index b6f10a2cb404..c758b3f1b3f9 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -1078,7 +1078,7 @@ static int cxl_reset_collect_sibling(struct pci_dev *func, void *data)
->  	return 0;
->  }
-> 
-> -static void __maybe_unused cxl_pci_functions_reset_prepare(struct cxl_reset_context *ctx)
-> +static void cxl_pci_functions_reset_prepare(struct cxl_reset_context *ctx)
->  {
->  	struct pci_dev *pdev = ctx->target;
->  	struct cxl_reset_walk_ctx wctx;
-> @@ -1103,7 +1103,7 @@ static void __maybe_unused cxl_pci_functions_reset_prepare(struct cxl_reset_cont
->  	}
->  }
-> 
-> -static void __maybe_unused cxl_pci_functions_reset_done(struct cxl_reset_context *ctx)
-> +static void cxl_pci_functions_reset_done(struct cxl_reset_context *ctx)
->  {
->  	int i;
-> 
-> @@ -1116,3 +1116,180 @@ static void __maybe_unused cxl_pci_functions_reset_done(struct cxl_reset_context
->  	ctx->pci_functions = NULL;
->  	ctx->pci_func_count = 0;
->  }
+>  daxctl/device.c                | 132 +++++++++++++++++++++++++++++++++++++----
+>  daxctl/json.c                  |  13 +++-
+>  daxctl/lib/libdaxctl-private.h |   2 +
+>  daxctl/lib/libdaxctl.c         |  39 ++++++++++--
+>  daxctl/lib/libdaxctl.sym       |   7 +++
+>  daxctl/libdaxctl.h             |   3 +
+>  6 files changed, 181 insertions(+), 15 deletions(-)
+>
+> diff --git a/daxctl/device.c b/daxctl/device.c
+> index a4e36b130a09..003609e4abba 100644
+> --- a/daxctl/device.c
+> +++ b/daxctl/device.c
+> @@ -42,6 +42,7 @@ enum dev_mode {
+>  	DAXCTL_DEV_MODE_UNKNOWN,
+>  	DAXCTL_DEV_MODE_DEVDAX,
+>  	DAXCTL_DEV_MODE_RAM,
+> +	DAXCTL_DEV_MODE_FAMFS,
+>  };
+
+
+The above enum dev_mode in device.c shares enum names with enum
+daxctl_dev_mode later in this patch (in libdaxctl-private.h) but assigns
+different numeric values. The overlap predates this patch, so not
+something you introduced, but adding FAMFS to both is a good moment to
+fix it before it gets more entrenched.
+
+Two enums with identical member names but different values is confusing
+and risks silent cross-assignment bugs with no compiler warning.
+
+Suggest renaming this local enum to `enum reconfig_mode` with members
+`RECONFIG_MODE_{UNKNOWN,DEVDAX,RAM,FAMFS}`. That confines it to the reconfig
+path. Then the library enum gets unambiguous ownership of `DAXCTL_DEV_MODE_*`.
+After that accidental cross-assignments are obvious type mismatches rather
+than a silent wrong-value bug.
+
+
+>
+>  struct mapping {
+>  	unsigned long long start, end, pgoff;
+> @@ -471,6 +472,13 @@ static const char *parse_device_options(int argc, const char **argv,
+>  					"--no-online is incompatible with --mode=devdax\n");
+>  				rc =  -EINVAL;
+>  			}
+> +		} else if (strcmp(param.mode, "famfs") == 0) {
+> +			reconfig_mode = DAXCTL_DEV_MODE_FAMFS;
+> +			if (param.no_online) {
+> +				fprintf(stderr,
+> +					"--no-online is incompatible with --mode=famfs\n");
+> +				rc =  -EINVAL;
+
+
+rm extra whitespace after =
+
+
+> +			}
+>  		}
+>  		break;
+>  	case ACTION_CREATE:
+> @@ -696,8 +704,42 @@ static int disable_devdax_device(struct daxctl_dev *dev)
+>  	int rc;
+>
+>  	if (mem) {
+> -		fprintf(stderr, "%s was already in system-ram mode\n",
+> -			devname);
+> +		fprintf(stderr, "%s is in system-ram mode\n", devname);
+> +		return 1;
+> +	}
+> +	if (daxctl_dev_is_famfs_mode(dev)) {
+> +		fprintf(stderr, "%s is in famfs mode\n", devname);
+> +		return 1;
+> +	}
+> +	if (!daxctl_dev_is_devdax_mode(dev)) {
+> +		fprintf(stderr, "%s is not in devdax mode\n", devname);
+> +		return 1;
+> +	}
+> +	rc = daxctl_dev_disable(dev);
+> +	if (rc) {
+> +		fprintf(stderr, "%s: disable failed: %s\n",
+> +			daxctl_dev_get_devname(dev), strerror(-rc));
+> +		return rc;
+> +	}
+> +	return 0;
+> +}
 > +
-> +/*
-> + * CXL device reset execution
-> + */
-> +static int cxl_dev_reset(struct pci_dev *pdev, int dvsec)
+> +static int disable_famfs_device(struct daxctl_dev *dev)
 > +{
-> +	static const u32 reset_timeout_ms[] = { 10, 100, 1000, 10000, 100000 };
-> +	u16 cap, ctrl2, status2;
-> +	u32 timeout_ms;
-> +	int rc, idx;
+> +	struct daxctl_memory *mem = daxctl_dev_get_memory(dev);
+> +	const char *devname = daxctl_dev_get_devname(dev);
+> +	int rc;
 > +
-> +	if (!pci_wait_for_pending_transaction(pdev))
-> +		pci_err(pdev, "timed out waiting for pending transactions\n");
-> +
-> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CAP, &cap);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, &ctrl2);
-> +	if (rc)
-> +		return rc;
-> +
-> +	/*
-> +	 * Disable caching and initiate cache writeback+invalidation if the
-> +	 * device supports it. Poll for completion.
-> +	 * Per CXL r3.2 section 9.6, software may use the cache size from
-> +	 * DVSEC CXL Capability2 to compute a suitable timeout; we use a
-> +	 * default of 10ms.
-> +	 */
-> +	if (cap & PCI_DVSEC_CXL_CACHE_WBI_CAPABLE) {
-> +		u32 wbi_poll_us = 100;
-> +		s32 wbi_remaining_us = 10000;
-> +
-> +		ctrl2 |= PCI_DVSEC_CXL_DISABLE_CACHING;
-> +		rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2,
-> +					   ctrl2);
-> +		if (rc)
-> +			return rc;
-> +
-> +		ctrl2 |= PCI_DVSEC_CXL_INIT_CACHE_WBI;
-> +		rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2,
-> +					   ctrl2);
-> +		if (rc)
-> +			return rc;
-> +
-> +		do {
-> +			usleep_range(wbi_poll_us, wbi_poll_us + 1);
-> +			wbi_remaining_us -= wbi_poll_us;
-> +			rc = pci_read_config_word(pdev,
-> +						  dvsec + PCI_DVSEC_CXL_STATUS2,
-> +						  &status2);
+> +	if (mem) {
+> +		fprintf(stderr, "%s is in system-ram mode\n", devname);
+> +		return 1;
+> +	}
+> +	if (daxctl_dev_is_devdax_mode(dev)) {
+> +		fprintf(stderr, "%s is in devdax mode\n", devname);
+> +		return 1;
+> +	}
+> +	if (!daxctl_dev_is_famfs_mode(dev)) {
+> +		fprintf(stderr, "%s is not in famfs mode\n", devname);
+>  		return 1;
+>  	}
+>  	rc = daxctl_dev_disable(dev);
+
+
+disable_devdax_device() and disable_famfs_device() differ only in
+which mode they accept vs. reject. With reconfig_mode_* switching on
+daxctl_dev_get_mode() first, the caller already knows the mode, so
+the internal mode-sanity checks are redundant.
+
+What's left in each function is daxctl_dev_disable() and an error
+fprintf, the same code in both, so collapse to a single helper:
+
+    static int disable_mode_device(struct daxctl_dev *dev);
+
+No mode parameter: the precondition (caller has matched the mode)
+means nothing mode-specific remains.
+
+
+> @@ -711,6 +753,7 @@ static int disable_devdax_device(struct daxctl_dev *dev)
+>
+>  static int reconfig_mode_system_ram(struct daxctl_dev *dev)
+>  {
+> +	struct daxctl_memory *mem = daxctl_dev_get_memory(dev);
+>  	const char *devname = daxctl_dev_get_devname(dev);
+>  	int rc, skip_enable = 0;
+>
+> @@ -724,11 +767,21 @@ static int reconfig_mode_system_ram(struct daxctl_dev *dev)
+>  	}
+>
+>  	if (daxctl_dev_is_enabled(dev)) {
+> -		rc = disable_devdax_device(dev);
+> -		if (rc < 0)
+> -			return rc;
+> -		if (rc > 0)
+> +		if (mem) {
+> +			/* already in system-ram mode */
+>  			skip_enable = 1;
+> +		} else if (daxctl_dev_is_famfs_mode(dev)) {
+> +			rc = disable_famfs_device(dev);
 > +			if (rc)
 > +				return rc;
-> +		} while (!(status2 & PCI_DVSEC_CXL_CACHE_INV) &&
-> +			 wbi_remaining_us > 0);
-> +
-> +		if (!(status2 & PCI_DVSEC_CXL_CACHE_INV)) {
-> +			pci_err(pdev, "CXL cache WB+I timed out\n");
-> +			return -ETIMEDOUT;
+> +		} else if (daxctl_dev_is_devdax_mode(dev)) {
+> +			rc = disable_devdax_device(dev);
+> +			if (rc)
+> +				return rc;
+> +		} else {
+> +			fprintf(stderr, "%s: unknown mode\n", devname);
+> +			return -EINVAL;
 > +		}
-> +	} else if (cap & PCI_DVSEC_CXL_CACHE_CAPABLE) {
-> +		ctrl2 |= PCI_DVSEC_CXL_DISABLE_CACHING;
-> +		rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2,
-> +					   ctrl2);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	if (cap & PCI_DVSEC_CXL_RST_MEM_CLR_CAPABLE) {
-> +		rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2,
-> +					  &ctrl2);
-> +		if (rc)
-> +			return rc;
-> +
-> +		ctrl2 |= PCI_DVSEC_CXL_RST_MEM_CLR_EN;
-> +		rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2,
-> +					   ctrl2);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	idx = FIELD_GET(PCI_DVSEC_CXL_RST_TIMEOUT, cap);
-> +	if (idx >= ARRAY_SIZE(reset_timeout_ms))
-> +		idx = ARRAY_SIZE(reset_timeout_ms) - 1;
-> +	timeout_ms = reset_timeout_ms[idx];
-> +
-> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, &ctrl2);
-> +	if (rc)
-> +		return rc;
-> +
-> +	ctrl2 |= PCI_DVSEC_CXL_INIT_CXL_RST;
-> +	rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, ctrl2);
-> +	if (rc)
-> +		return rc;
-> +
-> +	msleep(timeout_ms);
+>  	}
 
-Should this be msleep(max(100, timeout_ms)) just to honor the
-specification note:
+This if-else chain is repeated in all three reconfig_mode_*() functions below.
+Please add a private helper and switch on the result. Something like:
 
-"9.7.3 CXL Reset and Request Retry Status (RRS) ...The device behavior
-in response to Configuration Space access to the device within 100 ms of
-initiating a CXL Reset is undefined"
+    static enum daxctl_dev_mode daxctl_dev_get_mode(struct daxctl_dev *dev)
+    {
+            if (daxctl_dev_get_memory(dev))
+                    return DAXCTL_DEV_MODE_RAM;
+            if (daxctl_dev_is_famfs_mode(dev))
+                    return DAXCTL_DEV_MODE_FAMFS;
+            if (daxctl_dev_is_devdax_mode(dev))
+                    return DAXCTL_DEV_MODE_DEVDAX;
+            return DAXCTL_DEV_MODE_UNKNOWN;
+    }
 
-...not sure why the specification allowed for devices to specify less
-than 100ms timeout values.
+Then each reconfig_mode_* becomes a switch on the current mode. The
+precedence (system-ram first because it's detected via `mem` rather
+than driver binding) lives in one place instead of three.
 
+> @@ -750,7 +803,7 @@ static int disable_system_ram_device(struct daxctl_dev *dev)
+>  	int rc;
+>
+>  	if (!mem) {
+> -		fprintf(stderr, "%s was already in devdax mode\n", devname);
+> +		fprintf(stderr, "%s is not in system-ram mode\n", devname);
+>  		return 1;
+>  	}
+>
+> @@ -786,12 +839,31 @@ static int disable_system_ram_device(struct daxctl_dev *dev)
+>
+>  static int reconfig_mode_devdax(struct daxctl_dev *dev)
+>  {
+> +	struct daxctl_memory *mem = daxctl_dev_get_memory(dev);
+> +	const char *devname = daxctl_dev_get_devname(dev);
+>  	int rc;
+>
+>  	if (daxctl_dev_is_enabled(dev)) {
+> -		rc = disable_system_ram_device(dev);
+> -		if (rc)
+> -			return rc;
+> +		if (mem) {
+> +			rc = disable_system_ram_device(dev);
+> +			if (rc)
+> +				return rc;
+> +		} else if (daxctl_dev_is_famfs_mode(dev)) {
+> +			rc = disable_famfs_device(dev);
+> +			if (rc)
+> +				return rc;
+> +		} else if (daxctl_dev_is_devdax_mode(dev)) {
+> +			/* already in devdax mode, just re-enable */
+> +			rc = daxctl_dev_disable(dev);
+> +			if (rc) {
+> +				fprintf(stderr, "%s: disable failed: %s\n",
+> +					devname, strerror(-rc));
+> +				return rc;
+> +			}
+> +		} else {
+> +			fprintf(stderr, "%s: unknown mode\n", devname);
+> +			return -EINVAL;
+> +		}
+>  	}
+
+
+Same if-else chain, second copy. See the helper suggestion above.
+
+
+>  	rc = daxctl_dev_enable_devdax(dev);
+> @@ -801,6 +873,43 @@ static int reconfig_mode_devdax(struct daxctl_dev *dev)
+>  	return 0;
+>  }
+>
+> +static int reconfig_mode_famfs(struct daxctl_dev *dev)
+> +{
+> +	struct daxctl_memory *mem = daxctl_dev_get_memory(dev);
+> +	const char *devname = daxctl_dev_get_devname(dev);
+> +	int rc;
 > +
-> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_STATUS2,
-> +				  &status2);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (status2 & PCI_DVSEC_CXL_RST_ERR) {
-> +		pci_err(pdev, "CXL reset error\n");
-> +		return -EIO;
+> +	if (daxctl_dev_is_enabled(dev)) {
+> +		if (mem) {
+> +			fprintf(stderr,
+> +				"%s is in system-ram mode; must be in devdax mode to convert to famfs\n",
+> +				devname);
+> +			return -EINVAL;
+> +		} else if (daxctl_dev_is_famfs_mode(dev)) {
+> +			/* already in famfs mode, just re-enable */
+> +			rc = daxctl_dev_disable(dev);
+> +			if (rc) {
+> +				fprintf(stderr, "%s: disable failed: %s\n",
+> +					devname, strerror(-rc));
+> +				return rc;
+> +			}
+> +		} else if (daxctl_dev_is_devdax_mode(dev)) {
+> +			rc = disable_devdax_device(dev);
+> +			if (rc)
+> +				return rc;
+> +		} else {
+> +			fprintf(stderr, "%s: unknown mode\n", devname);
+> +			return -EINVAL;
+> +		}
 > +	}
+
+
+Same if-else chain, third copy.
+
+
 > +
-> +	if (!(status2 & PCI_DVSEC_CXL_RST_DONE)) {
-> +		pci_err(pdev, "CXL reset timeout\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, &ctrl2);
-> +	if (rc)
-> +		return rc;
-> +
-> +	ctrl2 &= ~PCI_DVSEC_CXL_DISABLE_CACHING;
-> +	rc = pci_write_config_word(pdev, dvsec + PCI_DVSEC_CXL_CTRL2, ctrl2);
+> +	rc = daxctl_dev_enable_famfs(dev);
 > +	if (rc)
 > +		return rc;
 > +
 > +	return 0;
 > +}
 > +
-> +static int match_memdev_by_parent(struct device *dev, const void *parent)
-> +{
-> +	return is_cxl_memdev(dev) && dev->parent == parent;
-> +}
-> +
-> +static int cxl_do_reset(struct pci_dev *pdev)
-> +{
-> +	struct cxl_reset_context ctx = { .target = pdev };
-> +	struct cxl_memdev *cxlmd = NULL;
-> +	struct device *memdev = NULL;
-> +	int dvsec, rc;
-> +
-> +	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-> +					  PCI_DVSEC_CXL_DEVICE);
-> +	if (!dvsec)
-> +		return -ENODEV;
-> +
-> +	memdev = bus_find_device(&cxl_bus_type, NULL, &pdev->dev,
-> +				 match_memdev_by_parent);
-> +	if (memdev) {
-> +		cxlmd = to_cxl_memdev(memdev);
-> +		guard(device)(&cxlmd->dev);
+>  static int do_create(struct daxctl_region *region, long long val,
+>  		     struct json_object **jdevs)
+>  {
+> @@ -887,6 +996,9 @@ static int do_reconfig(struct daxctl_dev *dev, enum dev_mode mode,
+>  	case DAXCTL_DEV_MODE_DEVDAX:
+>  		rc = reconfig_mode_devdax(dev);
+>  		break;
+> +	case DAXCTL_DEV_MODE_FAMFS:
+> +		rc = reconfig_mode_famfs(dev);
+> +		break;
+>  	default:
+>  		fprintf(stderr, "%s: unknown mode requested: %d\n",
+>  			devname, mode);
+> diff --git a/daxctl/json.c b/daxctl/json.c
+> index 3cbce9dcd651..2a4b12c2f925 100644
+> --- a/daxctl/json.c
+> +++ b/daxctl/json.c
+> @@ -48,8 +48,19 @@ struct json_object *util_daxctl_dev_to_json(struct daxctl_dev *dev,
+>
+>  	if (mem)
+>  		jobj = json_object_new_string("system-ram");
+> -	else
+> +	else if (daxctl_dev_is_famfs_mode(dev))
+> +		jobj = json_object_new_string("famfs");
+> +	else if (daxctl_dev_is_devdax_mode(dev))
+>  		jobj = json_object_new_string("devdax");
 
-This guard scope ends at this bracket, so it is a nop.
 
+The 'else if' above, and the 'else' below, both assign "devdax",
+so the 'else if' is redundant. And once daxctl_dev_get_mode()
+exists, this becomes a switch on the result with "devdax"
+as the UNKNOWN fallback.
+
+
+> +	else {
+> +		/* Legacy condition; if a daxdev is not in any "mode", that
+> +		 * means no driver is bound. We report that as a disabled
+> +		 * device in devdax mode. (the disabled modifier is added later
+> +		 * in this function if applicable)
+> +		 */
+> +		jobj = json_object_new_string("devdax");
 > +	}
 > +
-> +	mutex_lock(&cxl_reset_mutex);
-> +	pci_dev_lock(pdev);
+>  	if (jobj)
+>  		json_object_object_add(jdev, "mode", jobj);
+>
+> diff --git a/daxctl/lib/libdaxctl-private.h b/daxctl/lib/libdaxctl-private.h
+> index ae45311e5d57..0bb73e8c04bf 100644
+> --- a/daxctl/lib/libdaxctl-private.h
+> +++ b/daxctl/lib/libdaxctl-private.h
+> @@ -21,12 +21,14 @@ static const char *dax_subsystems[] = {
+>  enum daxctl_dev_mode {
+>  	DAXCTL_DEV_MODE_DEVDAX = 0,
+>  	DAXCTL_DEV_MODE_RAM,
+> +	DAXCTL_DEV_MODE_FAMFS,
+>  	DAXCTL_DEV_MODE_END,
+>  };
+>
+>  static const char *dax_modules[] = {
+>  	[DAXCTL_DEV_MODE_DEVDAX] = "device_dax",
+>  	[DAXCTL_DEV_MODE_RAM] = "kmem",
+> +	[DAXCTL_DEV_MODE_FAMFS] = "fsdev_dax",
+>  };
 
-Given that CXL drivers create memdevs the lock ordering needs to be
-pci_dev_lock(), then guard(device)(&cxlmd->dev).
 
-> +	if (cxlmd) {
-> +		rc = cxl_reset_prepare_memdev(cxlmd);
+Add a DAXCTL_DEV_MODE_UNKNOWN sentinel here to support the
+daxctl_dev_get_mode() helper cleanly. Doesn't have to be assigned a
+value, can reuse END or add it alongside, your call.
 
-Ok, so per the lead in comment, a cxl_memdev becomes a requirement, not
-a trigger for opportunistic safety.
 
-I do think it ultimately begs the question of whether the PCI core
-should one day automatically register cxl devices for this purpose. For
-now the assumption is a driver, like vfio-pci, has registered a memdev
-to get a memX/cxl_reset interface published in sysfs.
+>  enum memory_op {
+> diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
+> index 02ae7e50b123..33121dcb1d1b 100644
+> --- a/daxctl/lib/libdaxctl.c
+> +++ b/daxctl/lib/libdaxctl.c
+> @@ -385,13 +385,13 @@ static bool device_model_is_dax_bus(struct daxctl_dev *dev)
+>  	return false;
+>  }
+>
+> -DAXCTL_EXPORT int daxctl_dev_is_system_ram_capable(struct daxctl_dev *dev)
+> +static int daxctl_dev_bound_to_module(struct daxctl_dev *dev, const char *mod_name)
+>  {
+>  	const char *devname = daxctl_dev_get_devname(dev);
+>  	struct daxctl_ctx *ctx = daxctl_dev_get_ctx(dev);
+>  	const char *mod_base;
+>  	char *mod_path;
+> -	char path[200];
+> +	char path[PATH_MAX];
+>  	const int len = sizeof(path);
+>
+>  	if (!device_model_is_dax_bus(dev))
 
-The presence of a cxl_memdev allows coordinating not only region
-discovery, but also reconfiguration locking. With the memdev we have a
-chance to ask the questions:
 
-1/ are any cacheable mappings of this device established?
-2/ is that answer durable for the duration of the reset?
-3/ can the HDM configuration be recovered from the cxl_memdev to
-   cxl_root decoder association?
+Nice!
 
-In the short term the fastest answers to those questions is just walk
-the memdev and cxl root, in the longer term I would be open to building
-more CXL awareness into the core so that CXL reset does not need a
-driver loaded.
 
-As for the safety guarantees, I do not think cxl_reset_prepare_memdev()
-should be trying to hot unplug memory. Either the caller has arranged
-for CXL to be idle or the reset fails.
+> @@ -406,11 +406,13 @@ DAXCTL_EXPORT int daxctl_dev_is_system_ram_capable(struct daxctl_dev *dev)
+>  	}
+>
+>  	mod_path = realpath(path, NULL);
+> -	if (!mod_path)
+> +	if (!mod_path) {
+> +		dbg(ctx, "%s: realpath failed for driver link\n", devname);
+>  		return false;
+> +	}
+>
+>  	mod_base = path_basename(mod_path);
+> -	if (strcmp(mod_base, dax_modules[DAXCTL_DEV_MODE_RAM]) == 0) {
+> +	if (strcmp(mod_base, mod_name) == 0) {
+>  		free(mod_path);
+>  		return true;
+>  	}
+> @@ -419,6 +421,30 @@ DAXCTL_EXPORT int daxctl_dev_is_system_ram_capable(struct daxctl_dev *dev)
+>  	return false;
+>  }
+>
+> +DAXCTL_EXPORT int daxctl_dev_is_system_ram_capable(struct daxctl_dev *dev)
+> +{
+> +	return daxctl_dev_bound_to_module(dev, dax_modules[DAXCTL_DEV_MODE_RAM]);
+> +}
 
-With cxl_acpi and cxl_mem loaded you can pin down the HPA space for the
-duration of the reset. It has a chance to be compatible with all CXL
-reset use cases.
+
+With daxctl_dev_is_famfs_mode() and daxctl_dev_is_devdax_mode() now
+alongside it, the _capable vs _mode naming split looks inconsistent.
+Post-refactor all three delegate to daxctl_dev_bound_to_module(), which
+checks current driver binding.
+
+Either document the semantic distinction more explicitly or consider
+adding daxctl_dev_is_system_ram_mode() as the preferred interface.
+
+
+> +
+> +/*
+> + * Check if device is currently in famfs mode (bound to fsdev_dax driver).
+> + * Returns false for disabled devices: the DAX bus does not retain the previous
+> + * driver binding after unbind, so mode cannot be determined without a driver.
+> + */
+> +DAXCTL_EXPORT int daxctl_dev_is_famfs_mode(struct daxctl_dev *dev)
+> +{
+> +	return daxctl_dev_bound_to_module(dev, dax_modules[DAXCTL_DEV_MODE_FAMFS]);
+> +}
+> +
+> +/*
+> + * Check if device is currently in devdax mode (bound to device_dax driver).
+> + * Returns false for disabled devices; see daxctl_dev_is_famfs_mode().
+> + */
+> +DAXCTL_EXPORT int daxctl_dev_is_devdax_mode(struct daxctl_dev *dev)
+> +{
+> +	return daxctl_dev_bound_to_module(dev, dax_modules[DAXCTL_DEV_MODE_DEVDAX]);
+> +}
+
+These comments claim "Returns false for disabled devices" as if that
+were unique to these two helpers, but it isn't. daxctl_dev_is_system_ram_capable
+returns false for disabled devices too. Either drop the comment or move it to
+to daxctl_dev_bound_to_module().
+
+> +
+>  /*
+>   * This checks for the device to be in system-ram mode, so calling
+>   * daxctl_dev_get_memory() on a devdax mode device will always return NULL.
+> @@ -983,6 +1009,11 @@ DAXCTL_EXPORT int daxctl_dev_enable_ram(struct daxctl_dev *dev)
+>  	return daxctl_dev_enable(dev, DAXCTL_DEV_MODE_RAM);
+>  }
+>
+> +DAXCTL_EXPORT int daxctl_dev_enable_famfs(struct daxctl_dev *dev)
+> +{
+> +	return daxctl_dev_enable(dev, DAXCTL_DEV_MODE_FAMFS);
+> +}
+
+OK.
+
+> +
+>  DAXCTL_EXPORT int daxctl_dev_disable(struct daxctl_dev *dev)
+>  {
+>  	const char *devname = daxctl_dev_get_devname(dev);
+> diff --git a/daxctl/lib/libdaxctl.sym b/daxctl/lib/libdaxctl.sym
+> index 309881196c86..2a812c6ad918 100644
+> --- a/daxctl/lib/libdaxctl.sym
+> +++ b/daxctl/lib/libdaxctl.sym
+> @@ -104,3 +104,10 @@ LIBDAXCTL_10 {
+>  global:
+>  	daxctl_dev_is_system_ram_capable;
+>  } LIBDAXCTL_9;
+> +
+> +LIBDAXCTL_11 {
+> +global:
+> +	daxctl_dev_enable_famfs;
+> +	daxctl_dev_is_famfs_mode;
+> +	daxctl_dev_is_devdax_mode;
+> +} LIBDAXCTL_10;
+
+
+If you resolve the _capable/_mode naming inconsistency by adding
+daxctl_dev_is_system_ram_mode(), please export it here as well.
+
+
+> diff --git a/daxctl/libdaxctl.h b/daxctl/libdaxctl.h
+> index 53c6bbdae5c3..84fcdb40c7a9 100644
+> --- a/daxctl/libdaxctl.h
+> +++ b/daxctl/libdaxctl.h
+> @@ -72,12 +72,15 @@ int daxctl_dev_is_enabled(struct daxctl_dev *dev);
+>  int daxctl_dev_disable(struct daxctl_dev *dev);
+>  int daxctl_dev_enable_devdax(struct daxctl_dev *dev);
+>  int daxctl_dev_enable_ram(struct daxctl_dev *dev);
+> +int daxctl_dev_enable_famfs(struct daxctl_dev *dev);
+>  int daxctl_dev_get_target_node(struct daxctl_dev *dev);
+>  int daxctl_dev_will_auto_online_memory(struct daxctl_dev *dev);
+>  int daxctl_dev_has_online_memory(struct daxctl_dev *dev);
+>
+>  struct daxctl_memory;
+>  int daxctl_dev_is_system_ram_capable(struct daxctl_dev *dev);
+> +int daxctl_dev_is_famfs_mode(struct daxctl_dev *dev);
+> +int daxctl_dev_is_devdax_mode(struct daxctl_dev *dev);
+
+
+Mirror whatever you do about _capable vs _mode here. If you add
+daxctl_dev_get_mode() as a public library function, declare it here
+too.
+
+
+>  struct daxctl_memory *daxctl_dev_get_memory(struct daxctl_dev *dev);
+>  struct daxctl_dev *daxctl_memory_get_dev(struct daxctl_memory *mem);
+>  const char *daxctl_memory_get_node_path(struct daxctl_memory *mem);
