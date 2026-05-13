@@ -1,458 +1,494 @@
-Received: from dragonfly.birch.relay.mailchannels.net (dragonfly.birch.relay.mailchannels.net [23.83.209.51])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCF235DA7B
-	for <linux-cxl@vger.kernel.org>; Wed, 13 May 2026 01:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778636345; cv=pass; b=gdqAxcbRTuTjcc836G1raZbP+kMbTMW/nPJl4+a3Ptva3nBu7tO85eJroH3VGeds8YbEHy2KCCAMipSR0KTJgZMnmk9efjpOyLZM7woF5xET9dBNuWF2+Xli/qz9AEB/7F9pBTkqN83jOymEn/10kIKlIsRQEIX3izuwexqMw3Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778636345; c=relaxed/simple;
-	bh=Q3NuhaPIVOA6Ts0MqLmfIcAtKGNrnAVQsuA90wYyt0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mZ9y4WNDBT+Iql2kGgNDLON6cldM35UVKzzAixO68m6vx+Pm3H2kLnDMqXjYF5ud5YBhhf7Mr5smjmn9MFjGxKXJ3OeysSMxks+hQekP4s8muh/rHSz7ioNn6ecaePnzmLQjMI2NjELE7bxBLlUwFvqrjnl0kLhfx+LV1tlZNtA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=jUhepLaK; arc=pass smtp.client-ip=23.83.209.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19D137BE86
+	for <linux-cxl@vger.kernel.org>; Wed, 13 May 2026 01:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1778636559; cv=none; b=tnhx7L0EtfuEhWj52pdyhSAICoU6YVEA1JSbu02pqVwya6vQA0a1DwBuLStWa05QrxFwvsl3qJDM5CmP/CVEKLtGpA1BH1bLPlyNDhAbJxck9SWwOldoSZzXEM5l8Y14k7fwuWFTzvcnSFbc5qqkweYYGa45mGw3vujgR0SyAOQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1778636559; c=relaxed/simple;
+	bh=nfyv1LmuT66aBw8oe9Cw7xXi42xxaAH6r5UJGdnqEs0=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=SGFdoDeIbZIoQ1VnvAKEehMGJ0q8r6sCpCiaMZRC6aoySHtl1ss7xCqYKBZ0/Jz1ATUxNEsH7gHo38AsbqYQKmqZ0JK7Y29FPLzT/L6gRvnX9/vLoccYFWJBUed6GAqGOvAutJIzWz6AGDG46NLbvdtf4oKtEYWO7p2xf1OSM3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=G+4UjxhM; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="jUhepLaK"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 078427E05B0;
-	Wed, 13 May 2026 00:22:54 +0000 (UTC)
-Received: from pdx1-sub0-mail-a207.dreamhost.com (100-98-7-66.trex-nlb.outbound.svc.cluster.local [100.98.7.66])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id A17007E211E;
-	Wed, 13 May 2026 00:22:53 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; d=mailchannels.net; s=arc-2022; cv=none;
-	t=1778631773;
-	b=6ygmGj0dXPxLmoG2mDXJduPJB7WwabFhTCJDwbVZ769UM/xrivNrQcN0LEwhtapGNE/hsJ
-	R/QNzC3B/BUJLSFYpaOveY81xNSgCjAj8CXFmrVWilzS+4mpQMKm1W5/WmRwE6XJtwhqrH
-	7JksPi5wPIQuqg6vsC7VLfSglreE04uYdXtbdyL5YCpBIxh1lQV/lLq2H9jCC1a5eB8QHU
-	KqftDKFY8cG3Kik9EINFm6sXdoUbDSHm3AQTMVvnrH5Xhfq4T460BuuWCCVRkWMeSpIC+b
-	eFxDdsUtQraVtmQGvv24p00gzYo+Auu7X+YJUsT0QY41l3EOjxLu9XZPa4cpew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1778631773;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="G+4UjxhM"
+Content-Type: text/plain;
+	charset=utf-8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1778636542;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=y4I3ncYHUuB25JbviNEXdRSLvsfTmWl7vgt9ZCL3bB8=;
-	b=gw8Qp9v3YB0iEUNIHh80izRf7TpwIFO4rwqnzcECYqWFoWqbiBC+/SjLALrdnjBROXXnfH
-	PJahGj+tc842XkTBHci/xQ3nnC0QCZnnHrHZyfYiQkfgtBSYqe8lBXr/QNl31iGKY7DUAY
-	mYUcvd2wUEKYOABrxL37xlCL6FJKQLYkOorNb+eL1Q91KDAxnvhoY26CZsU1il/Wf7vqO3
-	KlaPiVK03WPlwuFRrVLw0E3B1dsETmrPAifLA8B6m4H+dl7Ipnq364v8UhOooOX+CuLDHX
-	f+qH8nHar+i/PoZvU+Z9X+z41m/AKIPRItNCuOoJ0DJ74pfhS7VP+6G3WkT6ew==
-ARC-Authentication-Results: i=1;
-	rspamd-5c5444c55f-8p7gn;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Spill-Harmony: 59fbcd1f4b36e6b4_1778631773926_1200057820
-X-MC-Loop-Signature: 1778631773926:1220890308
-X-MC-Ingress-Time: 1778631773926
-Received: from pdx1-sub0-mail-a207.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.98.7.66 (trex/7.1.5);
-	Wed, 13 May 2026 00:22:53 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a207.dreamhost.com (Postfix) with ESMTPSA id 4gFZ1872wHz1NY;
-	Tue, 12 May 2026 17:22:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1778631773;
-	bh=y4I3ncYHUuB25JbviNEXdRSLvsfTmWl7vgt9ZCL3bB8=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=jUhepLaKuM0XJF/plwvbFogle7hpmKopt8S1mThKysgWwD2dDBUlxtayKR1WSi4wK
-	 wCFM85enegBBEk9H28n3IrcnB0l7B61W3z68dv0WsChDTNfY/cl7Wyj1wSWviL0nP4
-	 TejWE0Kg8Bee9vuN/vbQZ2zEJfIrzmSKCi5P5ynGgjZzWEnCRDs9L2yy62900u5Npw
-	 IzAHjagvPtd/o+X8iV6/CgyDvyfhIoH/0hQAfqQYwOg3BCNJMSXuRECRQnJANtn9l2
-	 C4eK6GIPGBnD4oulBgHRTAHkhKFkyna4RoFqLqGNnY/2qfKAK65F2jJKStkanujpRL
-	 3OB7KMnZX10jQ==
-Date: Tue, 12 May 2026 17:22:50 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-Cc: dave.jiang@intel.com, dan.j.williams@intel.com,
-	jonathan.cameron@huawei.com, alison.schofield@intel.com,
-	ira.weiny@intel.com, gourry@gourry.net, dongjoo.seo1@samsung.com,
-	anisa.su@samsung.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 3/6] cxl/pci: Add Back-Invalidate topology enable/disable
-Message-ID: <20260513002250.uuxynctachppk5ug@offworld>
-References: <20260315202741.3264295-1-dave@stgolabs.net>
- <20260315202741.3264295-4-dave@stgolabs.net>
- <fcebf688-ac73-4a72-b4ba-683b3380bce3@amd.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fhvTYmzHBJF0Uy2iUIqRc2sMKqrtzRCDZRsnolCJW14=;
+	b=G+4UjxhMuR07b1wvtvS6rFSIFCLeBeV0PTrTb930Igb2yqCO6sGi3cGOms8uKKb2mtUcT3
+	4uJfSpJciYXosRJ7A1RirFXphlg+tJTVg5sbiTMn94I6cgh7JeQtiYGE5xqL1CzEHZjSdJ
+	3hn3WfT3ZwzRVzkfVB2JN1kp7awPMV8=
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <fcebf688-ac73-4a72-b4ba-683b3380bce3@amd.com>
-User-Agent: NeoMutt/20220429
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.500.181\))
+Subject: Re: [PATCH v2] drivers/base/memory: make memory block get/put
+ explicit
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <agMVtO5QPGYVb48D@MWDK4CY14F>
+Date: Wed, 13 May 2026 09:41:23 +0800
+Cc: Muchun Song <songmuchun@bytedance.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-mm@kvack.org,
+ driver-core@lists.linux.dev,
+ Oscar Salvador <osalvador@suse.de>,
+ Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R . Howlett" <liam@infradead.org>,
+ Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>,
+ Danilo Krummrich <dakr@kernel.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org,
+ linux-s390@vger.kernel.org,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <chleroy@kernel.org>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Sumanth Korikkar <sumanthk@linux.ibm.com>,
+ Kees Cook <kees@kernel.org>,
+ Douglas Anderson <dianders@chromium.org>,
+ Donet Tom <donettom@linux.ibm.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3EE08C93-F28D-4363-AC1C-C9B99F8ABB7C@linux.dev>
+References: <20260512072635.3969576-1-songmuchun@bytedance.com>
+ <agMVtO5QPGYVb48D@MWDK4CY14F>
+To: Richard Cheng <icheng@nvidia.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 20 Mar 2026, Cheatham, Benjamin wrote:
 
->On 3/15/2026 3:27 PM, Davidlohr Bueso wrote:
->> +#define ___cxl_bi_commit(dev, bi, ctype)				\
->> +do {									\
->> +	u32 status, ctrl;						\
->> +	int scale, base;						\
->> +	ktime_t tmo, now, start;					\
->> +	unsigned long poll_us, tmo_us;					\
->> +									\
->> +	ctrl = readl(bi + CXL_BI_##ctype##_CTRL_OFFSET);		\
->> +	writel(ctrl & ~CXL_BI_##ctype##_CTRL_BI_COMMIT,			\
->> +	       (bi) + CXL_BI_##ctype##_CTRL_OFFSET);			\
->> +	writel(ctrl | CXL_BI_##ctype##_CTRL_BI_COMMIT,			\
->> +	       (bi) + CXL_BI_##ctype##_CTRL_OFFSET);			\
->> +									\
->> +	status = readl((bi) + CXL_BI_##ctype##_STATUS_OFFSET);		\
->> +	scale = FIELD_GET(CXL_BI_##ctype##_STATUS_BI_COMMIT_TM_SCALE,	\
->> +			  status);					\
->> +	base = FIELD_GET(CXL_BI_##ctype##_STATUS_BI_COMMIT_TM_BASE,	\
->> +			 status);					\
->> +									\
->> +	/* ... and poll */						\
->> +	tmo_us = min_t(unsigned long, CXL_BI_COMMIT_MAXTMO_US,		\
->> +		       __cxl_bi_get_timeout_us((dev), scale, base));	\
->> +	poll_us = tmo_us / 10; /* arbitrary 10% of timeout */		\
->> +	start = now = ktime_get();					\
->> +	tmo = ktime_add_us(now, tmo_us);				\
->> +	while (!FIELD_GET(CXL_BI_##ctype##_STATUS_BI_COMMITTED, status) && \
->> +	       !FIELD_GET(CXL_BI_##ctype##_STATUS_BI_ERR_NOT_COMMITTED,	\
->> +			  status)) {					\
->> +		if (ktime_after(now, tmo)) {				\
->> +			dev_dbg((dev), "BI-ID commit timed out (%luus)\n", \
->> +				tmo_us);				\
->> +			return -ETIMEDOUT;				\
->> +		}							\
->> +									\
->> +		fsleep(poll_us);					\
->> +		now = ktime_get();					\
->> +		status = readl((bi) + CXL_BI_##ctype##_STATUS_OFFSET);	\
->> +	}								\
->> +									\
->> +	if (FIELD_GET(CXL_BI_##ctype##_STATUS_BI_ERR_NOT_COMMITTED, status)) \
->> +		return -EIO;						\
->> +									\
->> +	dev_dbg((dev), "BI-ID commit wait took %lluus\n",		\
->> +		ktime_to_us(ktime_sub(now, start)));			\
->> +} while (0)
->
->I'm split on whether it's better to use a macro here or just duplicate the
->code between __cxl_bi_commit() and __cxl_bi_commit_rt(). On one hand it saves
->space, but I hate looking at long macros...
 
-I'm obviously biased, but will leave it as a macro for now as the v2 is
-already reworked in a lot of ways addressing all the feedback (thanks!).
-
->
->> +
->> +static int __cxl_bi_commit_rt(struct device *dev, void __iomem *bi)
+> On May 12, 2026, at 20:03, Richard Cheng <icheng@nvidia.com> wrote:
+>=20
+> On Tue, May 12, 2026 at 03:26:35PM +0800, Muchun Song wrote:
+>> Rename the memory block lookup helper to make the acquired reference
+>> explicit, add memory_block_put() to wrap put_device(), remove
+>> find_memory_block(), and use memory_block_get() as the single =
+block-id
+>> based lookup interface.
+>>=20
+>> This makes it clearer to callers that a successful lookup holds a
+>> reference that must be dropped, reducing the chance of forgetting the
+>> matching put and leaking the memory block device reference.
+>>=20
+>> Link: =
+https://lore.kernel.org/linux-mm/7887915D-E598-42B3-9AFE-BFFBACE8DE2D@linu=
+x.dev/#t
+>> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+>> Acked-by: Oscar Salvador <osalvador@suse.de>
+>> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+>> Acked-by: Michal Hocko <mhocko@suse.com>
+>> Tested-by: Donet Tom <donettom@linux.ibm.com>
+>> Reviewed-by: Lorenzo Stoakes <ljs@kernel.org>
+>> ---
+>> Changes in v2:
+>> - mention the removal of find_memory_block() in the commit message
+>> - drop the redundant extern from the memory_block_get() declaration
+>> ---
+>> .../platforms/pseries/hotplug-memory.c        | 14 ++-----
+>> drivers/base/memory.c                         | 38 =
++++++++------------
+>> drivers/base/node.c                           |  4 +-
+>> drivers/s390/char/sclp_mem.c                  | 17 ++++-----
+>> include/linux/memory.h                        |  7 +++-
+>> mm/memory_hotplug.c                           |  5 +--
+>> 6 files changed, 35 insertions(+), 50 deletions(-)
+>>=20
+>> diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c =
+b/arch/powerpc/platforms/pseries/hotplug-memory.c
+>> index 75f85a5da981..94f3b57054b6 100644
+>> --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
+>> +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+>> @@ -164,13 +164,7 @@ static int update_lmb_associativity_index(struct =
+drmem_lmb *lmb)
+>>=20
+>> static struct memory_block *lmb_to_memblock(struct drmem_lmb *lmb)
+>> {
+>> - unsigned long section_nr;
+>> - struct memory_block *mem_block;
+>> -
+>> - section_nr =3D pfn_to_section_nr(PFN_DOWN(lmb->base_addr));
+>> -
+>> - mem_block =3D find_memory_block(section_nr);
+>> - return mem_block;
+>> + return memory_block_get(phys_to_block_id(lmb->base_addr));
+>> }
+>>=20
+>> static int get_lmb_range(u32 drc_index, int n_lmbs,
+>> @@ -220,7 +214,7 @@ static int dlpar_change_lmb_state(struct =
+drmem_lmb *lmb, bool online)
+>> else
+>> rc =3D 0;
+>>=20
+>> - put_device(&mem_block->dev);
+>> + memory_block_put(mem_block);
+>>=20
+>> return rc;
+>> }
+>> @@ -319,12 +313,12 @@ static int dlpar_remove_lmb(struct drmem_lmb =
+*lmb)
+>>=20
+>> rc =3D dlpar_offline_lmb(lmb);
+>> if (rc) {
+>> - put_device(&mem_block->dev);
+>> + memory_block_put(mem_block);
+>> return rc;
+>> }
+>>=20
+>> __remove_memory(lmb->base_addr, memory_block_size);
+>> - put_device(&mem_block->dev);
+>> + memory_block_put(mem_block);
+>>=20
+>> /* Update memory regions for memory remove */
+>> memblock_remove(lmb->base_addr, memory_block_size);
+>> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+>> index 11d57cfa8d72..5b5d41089e81 100644
+>> --- a/drivers/base/memory.c
+>> +++ b/drivers/base/memory.c
+>> @@ -649,7 +649,7 @@ int __weak arch_get_memory_phys_device(unsigned =
+long start_pfn)
+>>  *
+>>  * Called under device_hotplug_lock.
+>>  */
+>> -struct memory_block *find_memory_block_by_id(unsigned long block_id)
+>> +struct memory_block *memory_block_get(unsigned long block_id)
+>> {
+>> struct memory_block *mem;
+>>=20
+>> @@ -659,16 +659,6 @@ struct memory_block =
+*find_memory_block_by_id(unsigned long block_id)
+>> return mem;
+>> }
+>>=20
+>> -/*
+>> - * Called under device_hotplug_lock.
+>> - */
+>> -struct memory_block *find_memory_block(unsigned long section_nr)
+>> -{
+>> - unsigned long block_id =3D memory_block_id(section_nr);
+>> -
+>> - return find_memory_block_by_id(block_id);
+>> -}
+>> -
+>> static struct attribute *memory_memblk_attrs[] =3D {
+>> &dev_attr_phys_index.attr,
+>> &dev_attr_state.attr,
+>> @@ -701,7 +691,7 @@ static int __add_memory_block(struct memory_block =
+*memory)
+>>=20
+>> ret =3D device_register(&memory->dev);
+>> if (ret) {
+>> - put_device(&memory->dev);
+>> + memory_block_put(memory);
+>> return ret;
+>> }
+>> ret =3D xa_err(xa_store(&memory_blocks, memory->dev.id, memory,
+>> @@ -795,9 +785,9 @@ static int add_memory_block(unsigned long =
+block_id, int nid, unsigned long state
+>> struct memory_block *mem;
+>> int ret =3D 0;
+>>=20
+>> - mem =3D find_memory_block_by_id(block_id);
+>> + mem =3D memory_block_get(block_id);
+>> if (mem) {
+>> - put_device(&mem->dev);
+>> + memory_block_put(mem);
+>> return -EEXIST;
+>> }
+>> mem =3D kzalloc_obj(*mem);
+>> @@ -845,8 +835,8 @@ static void remove_memory_block(struct =
+memory_block *memory)
+>> memory->group =3D NULL;
+>> }
+>>=20
+>> - /* drop the ref. we got via find_memory_block() */
+>> - put_device(&memory->dev);
+>> + /* drop the ref. we got via memory_block_get() */
+>> + memory_block_put(memory);
+>> device_unregister(&memory->dev);
+>> }
+>>=20
+>> @@ -880,7 +870,7 @@ int create_memory_block_devices(unsigned long =
+start, unsigned long size,
+>> end_block_id =3D block_id;
+>> for (block_id =3D start_block_id; block_id !=3D end_block_id;
+>>      block_id++) {
+>> - mem =3D find_memory_block_by_id(block_id);
+>> + mem =3D memory_block_get(block_id);
+>> if (WARN_ON_ONCE(!mem))
+>> continue;
+>> remove_memory_block(mem);
+>> @@ -908,7 +898,7 @@ void remove_memory_block_devices(unsigned long =
+start, unsigned long size)
+>> return;
+>>=20
+>> for (block_id =3D start_block_id; block_id !=3D end_block_id; =
+block_id++) {
+>> - mem =3D find_memory_block_by_id(block_id);
+>> + mem =3D memory_block_get(block_id);
+>> if (WARN_ON_ONCE(!mem))
+>> continue;
+>> num_poisoned_pages_sub(-1UL, memblk_nr_poison(mem));
+>> @@ -1015,12 +1005,12 @@ int walk_memory_blocks(unsigned long start, =
+unsigned long size,
+>> return 0;
+>>=20
+>> for (block_id =3D start_block_id; block_id <=3D end_block_id; =
+block_id++) {
+>> - mem =3D find_memory_block_by_id(block_id);
+>> + mem =3D memory_block_get(block_id);
+>> if (!mem)
+>> continue;
+>>=20
+>> ret =3D func(mem, arg);
+>> - put_device(&mem->dev);
+>> + memory_block_put(mem);
+>> if (ret)
+>> break;
+>> }
+>> @@ -1228,22 +1218,22 @@ int walk_dynamic_memory_groups(int nid, =
+walk_memory_groups_func_t func,
+>> void memblk_nr_poison_inc(unsigned long pfn)
+>> {
+>> const unsigned long block_id =3D pfn_to_block_id(pfn);
+>> - struct memory_block *mem =3D find_memory_block_by_id(block_id);
+>> + struct memory_block *mem =3D memory_block_get(block_id);
+>>=20
+>> if (mem) {
+>> atomic_long_inc(&mem->nr_hwpoison);
+>> - put_device(&mem->dev);
+>> + memory_block_put(mem);
+>> }
+>> }
+>>=20
+>> void memblk_nr_poison_sub(unsigned long pfn, long i)
+>> {
+>> const unsigned long block_id =3D pfn_to_block_id(pfn);
+>> - struct memory_block *mem =3D find_memory_block_by_id(block_id);
+>> + struct memory_block *mem =3D memory_block_get(block_id);
+>>=20
+>> if (mem) {
+>> atomic_long_sub(i, &mem->nr_hwpoison);
+>> - put_device(&mem->dev);
+>> + memory_block_put(mem);
+>> }
+>> }
+>>=20
+>> diff --git a/drivers/base/node.c b/drivers/base/node.c
+>> index 126f66aa2c3e..b3333ca92090 100644
+>> --- a/drivers/base/node.c
+>> +++ b/drivers/base/node.c
+>> @@ -847,13 +847,13 @@ static void =
+register_memory_blocks_under_nodes(void)
+>> for (block_id =3D start_block_id; block_id <=3D end_block_id; =
+block_id++) {
+>> struct memory_block *mem;
+>>=20
+>> - mem =3D find_memory_block_by_id(block_id);
+>> + mem =3D memory_block_get(block_id);
+>> if (!mem)
+>> continue;
+>>=20
+>> memory_block_add_nid_early(mem, nid);
+>> do_register_memory_block_under_node(nid, mem);
+>> - put_device(&mem->dev);
+>> + memory_block_put(mem);
+>> }
+>>=20
+>> }
+>> diff --git a/drivers/s390/char/sclp_mem.c =
+b/drivers/s390/char/sclp_mem.c
+>> index 78c054e26d17..6df1926d4c62 100644
+>> --- a/drivers/s390/char/sclp_mem.c
+>> +++ b/drivers/s390/char/sclp_mem.c
+>> @@ -204,7 +204,7 @@ static ssize_t sclp_config_mem_store(struct =
+kobject *kobj, struct kobj_attribute
+>> addr =3D sclp_mem->id * block_size;
+>> /*
+>>  * Hold device_hotplug_lock when adding/removing memory blocks.
+>> -  * Additionally, also protect calls to find_memory_block() and
+>> +  * Additionally, also protect calls to memory_block_get() and
+>>  * sclp_attach_storage().
+>>  */
+>> rc =3D lock_device_hotplug_sysfs();
+>> @@ -231,20 +231,19 @@ static ssize_t sclp_config_mem_store(struct =
+kobject *kobj, struct kobj_attribute
+>> sclp_mem_change_state(addr, block_size, 0);
+>> goto out_unlock;
+>> }
+>> - mem =3D find_memory_block(pfn_to_section_nr(PFN_DOWN(addr)));
+>> - put_device(&mem->dev);
+>> + mem =3D memory_block_get(phys_to_block_id(addr));
+>> + memory_block_put(mem);
+>> WRITE_ONCE(sclp_mem->config, 1);
+>> } else {
+>> if (!sclp_mem->config)
+>> goto out_unlock;
+>> - mem =3D find_memory_block(pfn_to_section_nr(PFN_DOWN(addr)));
+>> + mem =3D memory_block_get(phys_to_block_id(addr));
+>> if (mem->state !=3D MEM_OFFLINE) {
+>> - put_device(&mem->dev);
+>> + memory_block_put(mem);
+>> rc =3D -EBUSY;
+>> goto out_unlock;
+>> }
+>> - /* drop the ref just got via find_memory_block() */
+>> - put_device(&mem->dev);
+>> + memory_block_put(mem);
+>> sclp_mem_change_state(addr, block_size, 0);
+>> __remove_memory(addr, block_size);
+>> #ifdef CONFIG_KASAN
+>> @@ -294,11 +293,11 @@ static ssize_t =
+sclp_memmap_on_memory_store(struct kobject *kobj, struct kobj_att
+>> return rc;
+>> block_size =3D memory_block_size_bytes();
+>> sclp_mem =3D container_of(kobj, struct sclp_mem, kobj);
+>> - mem =3D find_memory_block(pfn_to_section_nr(PFN_DOWN(sclp_mem->id * =
+block_size)));
+>> + mem =3D memory_block_get(phys_to_block_id(sclp_mem->id * =
+block_size));
+>> if (!mem) {
+>> WRITE_ONCE(sclp_mem->memmap_on_memory, value);
+>> } else {
+>> - put_device(&mem->dev);
+>> + memory_block_put(mem);
+>> rc =3D -EBUSY;
+>> }
+>> unlock_device_hotplug();
+>> diff --git a/include/linux/memory.h b/include/linux/memory.h
+>> index 5bb5599c6b2b..463dc02f6cff 100644
+>> --- a/include/linux/memory.h
+>> +++ b/include/linux/memory.h
+>> @@ -158,7 +158,11 @@ int create_memory_block_devices(unsigned long =
+start, unsigned long size,
+>> void remove_memory_block_devices(unsigned long start, unsigned long =
+size);
+>> extern void memory_dev_init(void);
+>> extern int memory_notify(enum memory_block_state state, void *v);
+>> -extern struct memory_block *find_memory_block(unsigned long =
+section_nr);
+>> +struct memory_block *memory_block_get(unsigned long block_id);
+>> +static inline void memory_block_put(struct memory_block *mem)
 >> +{
->> +	if (!bi)
->> +		return 0;
->> +
->> +	if (FIELD_GET(CXL_BI_RT_CAPS_EXPLICIT_COMMIT_REQ,
->> +		      readl(bi + CXL_BI_RT_CAPS_OFFSET)))
->> +		___cxl_bi_commit(dev, bi, RT);
->> +
->> +	return 0;
+>> + put_device(&mem->dev);
 >> +}
->
->I'd make this return void. Leaving it as an int return suggests it can fail
->which isn't worth the mental overhead imo, especially if it only saves a few
->lines below.
+>=20
+> Hi Muchun,
 
-Agreed.
+Hi,
 
->
->> +
->> +static int __cxl_bi_commit(struct device *dev, void __iomem *bi)
->> +{
->> +	if (!bi)
->> +		return -EINVAL;
->> +
->> +	___cxl_bi_commit(dev, bi, DECODER);
->> +	return 0;
->> +}
->> +
->> +/* enable or dealloc BI-ID changes in the given level of the topology */
->> +static int cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable)
->> +{
->> +	u32 ctrl, value;
->> +	void __iomem *bi = dport->regs.bi;
->> +	struct cxl_port *port = dport->port;
->> +	struct pci_dev *pdev = to_pci_dev(dport->dport_dev);
->> +
->> +	guard(device)(&port->dev);
->> +
->> +	if (!bi)
->> +		return -EINVAL;
->> +
->> +	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
->> +
->> +	switch (pci_pcie_type(pdev)) {
->> +	case PCI_EXP_TYPE_ROOT_PORT:
->> +		if (enable) {
->> +			/*
->> +			 * There is no point of failure from here on,
->> +			 * BI will be enabled on the endpoint device.
->> +			 */
->> +			port->nr_bi++;
->> +
->> +			if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_FW, ctrl))
->> +				return 0;
->> +
->> +			value = ctrl | CXL_BI_DECODER_CTRL_BI_FW;
->> +			value &= ~CXL_BI_DECODER_CTRL_BI_ENABLE;
->> +		} else {
->> +			if (WARN_ON_ONCE(port->nr_bi == 0))
->> +				return -EINVAL;
->> +			if (--port->nr_bi > 0)
->> +				return 0;
->> +
->> +			value = ctrl & ~CXL_BI_DECODER_CTRL_BI_FW;
->> +		}
->> +
->> +		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
->> +		return 0;
->> +	case PCI_EXP_TYPE_DOWNSTREAM:
->> +		if (enable) {
->> +			value = ctrl & ~CXL_BI_DECODER_CTRL_BI_FW;
->> +			value |= CXL_BI_DECODER_CTRL_BI_ENABLE;
->> +		} else {
->> +			if (!FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl))
->> +				return 0;
->> +
->> +			value = ctrl & ~CXL_BI_DECODER_CTRL_BI_ENABLE;
->> +		}
->> +
->> +		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
->> +
->> +		if (FIELD_GET(CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ,
->> +			      readl(bi + CXL_BI_DECODER_CAPS_OFFSET))) {
->> +			int rc = __cxl_bi_commit(dport->dport_dev,
->> +						 dport->regs.bi);
->
->It's been a while since I looked at how these decoders work, but why not move the
->explicit commit check into __cxl_bi_commit()? I think it's only called here,
->but I could be missing something.
+>=20
+> Thanks for the work, I have a small suggestion if that fits your =
+thought.
+>=20
+> I think we should at least add a comment  above memory_block_put() to =
+remind the caller to check
+> for the availabitliy of "mem" before calling this function.
+> We perform the check in memory_block_get() inside the function body, I =
+see different usage pattern
+> across the caller when they're dealing with "mem =3D=3D NULL" and =
+avoid to call memory_block_put(),=20
+> I can understand we should leverage the check to caller, not inside =
+memory_block_put().
+> But just in case the next caller might forgot to do the check or think =
+the behavior might be symmetric
+> bettween memory_block_get() and memory_block_put(), a comment above =
+the function would be nice.
 
-Having it in cxl_bi_ctrl_dport() reads better imo, a reminder that __cxl_bi_commit
-is conditional. But sure, I can move it in.
+Thanks for the suggestion!
 
->
->> +			if (rc)
->> +				return rc;
->> +		}
->> +
->> +		return __cxl_bi_commit_rt(&port->dev, port->uport_regs.bi);
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +}
->> +
->> +static int cxl_bi_ctrl_endpoint(struct cxl_dev_state *cxlds, bool enable)
->> +{
->> +	u32 ctrl, val;
->> +	struct cxl_port *endpoint = cxlds->cxlmd->endpoint;
->> +	void __iomem *bi = endpoint->regs.bi;
->> +
->> +	if (!bi)
->> +		return -EINVAL;
->> +
->> +	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
->> +
->> +	if (enable) {
->> +		if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl)) {
->> +			WARN_ON_ONCE(!cxlds->bi);
->> +			return 0;
->> +		}
->> +		val = ctrl | CXL_BI_DECODER_CTRL_BI_ENABLE;
->> +	} else {
->> +		if (!FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl)) {
->> +			WARN_ON_ONCE(cxlds->bi);
->> +			return 0;
->> +		}
->> +		val = ctrl & ~CXL_BI_DECODER_CTRL_BI_ENABLE;
->> +	}
->> +
->> +	writel(val, bi + CXL_BI_DECODER_CTRL_OFFSET);
->> +	cxlds->bi = enable;
->> +
->> +	dev_dbg(cxlds->dev, "device %scapable of issuing BI requests\n",
->> +		enable ? "" : "in");
->
->Nit: It's pretty hard to tell the difference between the enable/disable case when it's only two letters.
->I'd prefer something like:
->	dev_dbg(cxlds->dev, "%s issuing BI requests\n", enable ? "enabled" : "disabled");
->
->The device part isn't really important since the dev_dbg() prints the device name anyway.
+Regarding the additional comment, I feel they might not be strictly =
+necessary.
+If a user passes a NULL pointer, the issue would be exposed immediately
+before memory_block_put() is even called. It's unlikely a user would =
+obtain
+mem and not perform any read/write operations; any such attempt would =
+trigger
+a NULL pointer dereference right away.
 
-Ok.
+As for adding comments to memory_block_get(), I=E2=80=99m wondering if =
+it=E2=80=99s truly
+essential. The function is quite straightforward=E2=80=94anyone looking =
+at the
+definition would see the implementation alongside the comments. It=E2=80=99=
+s very
+clear from the code that mem must be non-NULL to be "gotten."
 
->
->> +
->> +	return 0;
->> +}
->> +
->> +int cxl_bi_setup(struct cxl_dev_state *cxlds)
->> +{
->> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
->> +	struct cxl_port *endpoint = cxlds->cxlmd->endpoint;
->> +	struct cxl_dport *dport, *_dport, *failed;
->> +	struct cxl_port *parent_port, *port;
->> +	int rc;
->> +
->> +	struct cxl_port *_port __free(put_cxl_port) =
->> +		cxl_pci_find_port(pdev, &_dport);
->> +
->> +	if (!_port)
->> +		return -EINVAL;
->> +
->> +	if (!cxl_is_bi_capable(pdev, endpoint->regs.bi))
->> +		return 0;
->> +
->> +	/* walkup the topology twice, first to check, then to enable */
->> +	port = _port;
->> +	dport = _dport;
->> +	while (1) {
->
->You should be able to replace this with "while (!is_cxl_root(port))"; it's more
->resilient imo.
-
-Yep.
-
-...
->
->> +		parent_port = to_cxl_port(port->dev.parent);
->> +		/* check rp, dsp */
->> +		if (!cxl_is_bi_capable(to_pci_dev(dport->dport_dev),
->> +				       dport->regs.bi))
->> +			return -EINVAL;
->> +
->> +		/* check usp */
->> +		if (pci_pcie_type(to_pci_dev(dport->dport_dev)) ==
->> +		    PCI_EXP_TYPE_DOWNSTREAM) {
->> +			if (!cxl_is_bi_capable(to_pci_dev(port->uport_dev),
->> +					       port->uport_regs.bi))
->> +				return -EINVAL;
->> +		}
->> +
->> +		if (is_cxl_root(parent_port))
->> +			break;
->> +
->> +		dport = port->parent_dport;
->> +		port = parent_port;
->> +	}
->> +
->> +	port = _port;
->> +	dport = _dport;
->> +	while (1) {
->
->Same thing here.
->
->> +		parent_port = to_cxl_port(port->dev.parent);
->> +
->> +		rc = cxl_bi_ctrl_dport(dport, true);
->> +		if (rc)
->> +			goto err_rollback;
->> +
->> +		if (is_cxl_root(parent_port))
->> +			break;
->> +
->> +		dport = port->parent_dport;
->> +		port = parent_port;
->> +	}
->> +
->> +	/* finally, enable BI on the device */
->> +	cxl_bi_ctrl_endpoint(cxlds, true);
->> +	return 0;
->> +
->> +err_rollback:
->> +	/*
->> +	 * Undo all dports enabled so far by re-walking from the bottom
->> +	 * up to (but not including) the failed dport.
->> +	 */
->> +	failed = dport;
->> +	dport = _dport;
->> +	port = _port;
->> +	while (dport != failed) {
->> +		parent_port = to_cxl_port(port->dev.parent);
->> +
->> +		cxl_bi_ctrl_dport(dport, false);
->> +		if (is_cxl_root(parent_port))
->> +			break;
->> +		dport = port->parent_dport;
->> +		port = parent_port;
->> +	}
->> +	return rc;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_bi_setup, "CXL");
->> +
->> +int cxl_bi_dealloc(struct cxl_dev_state *cxlds)
->> +{
->> +	struct cxl_memdev *cxlmd = cxlds->cxlmd;
->> +	struct cxl_port *endpoint = cxlmd->endpoint;
->> +	struct cxl_port *parent_port, *port;
->> +	struct cxl_dport *dport, *_dport;
->> +
->> +	struct cxl_port *_port __free(put_cxl_port) =
->> +		cxl_pci_find_port(to_pci_dev(cxlds->dev), &_dport);
->> +
->> +	if (!_port)
->> +		return -EINVAL;
->> +
->> +	if (!cxlds->bi)
->> +		return 0;
->> +
->> +	if (endpoint) {
->> +		/* ensure the device is offline and unmapped */
->> +		scoped_guard(rwsem_read, &cxl_rwsem.region) {
->> +			if (cxl_num_decoders_committed(endpoint) > 0)
->> +				return -EBUSY;
->> +		}
->> +
->> +		/* first, disable BI on the device */
->> +		cxl_bi_ctrl_endpoint(cxlds, false);
->> +	} else {
->> +		/*
->> +		 * Teardown path: the endpoint was already removed, which
->> +		 * tears down regions and uncommits decoders. The endpoint
->> +		 * BI registers are no longer mapped so just clear the flag
->> +		 * and walk the dports below.
->> +		 */
->> +		cxlds->bi = false;
->> +	}
->> +
->> +	port = _port;
->> +	dport = _dport;
->> +	while (1) {
->
->And here.
->
->> +		int rc;
->> +
->> +		parent_port = to_cxl_port(port->dev.parent);
->> +
->> +		rc = cxl_bi_ctrl_dport(dport, false);
->> +		if (rc)
->> +			return rc;
->
->Would it be better to not return on an error here? It may be better to
->disable as many decoders as possible, but I don't know enough to
->say either way.
-
-Agreed.
+Overall, I=E2=80=99m concerned the extra comments might not add much =
+value. What do
+you think?
 
 Thanks,
-Davidlohr
+Muchun
+>=20
+> Best regards,
+> Richard Cheng.
+>=20
+>> typedef int (*walk_memory_blocks_func_t)(struct memory_block *, void =
+*);
+>> extern int walk_memory_blocks(unsigned long start, unsigned long =
+size,
+>>       void *arg, walk_memory_blocks_func_t func);
+>> @@ -171,7 +175,6 @@ struct memory_group *memory_group_find_by_id(int =
+mgid);
+>> typedef int (*walk_memory_groups_func_t)(struct memory_group *, void =
+*);
+>> int walk_dynamic_memory_groups(int nid, walk_memory_groups_func_t =
+func,
+>>        struct memory_group *excluded, void *arg);
+>> -struct memory_block *find_memory_block_by_id(unsigned long =
+block_id);
+>> #define hotplug_memory_notifier(fn, pri) ({ \
+>> static __meminitdata struct notifier_block fn##_mem_nb =3D\
+>> { .notifier_call =3D fn, .priority =3D pri };\
+>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>> index 462d8dcd636d..890c6453e887 100644
+>> --- a/mm/memory_hotplug.c
+>> +++ b/mm/memory_hotplug.c
+>> @@ -1417,14 +1417,13 @@ static void =
+remove_memory_blocks_and_altmaps(u64 start, u64 size)
+>> struct vmem_altmap *altmap =3D NULL;
+>> struct memory_block *mem;
+>>=20
+>> - mem =3D find_memory_block(pfn_to_section_nr(PFN_DOWN(cur_start)));
+>> + mem =3D memory_block_get(phys_to_block_id(cur_start));
+>> if (WARN_ON_ONCE(!mem))
+>> continue;
+>>=20
+>> altmap =3D mem->altmap;
+>> mem->altmap =3D NULL;
+>> - /* drop the ref. we got via find_memory_block() */
+>> - put_device(&mem->dev);
+>> + memory_block_put(mem);
+>>=20
+>> remove_memory_block_devices(cur_start, memblock_size);
+>>=20
+>>=20
+>> base-commit: e98d21c170b01ddef366f023bbfcf6b31509fa83
+>> --=20
+>> 2.54.0
+
+
