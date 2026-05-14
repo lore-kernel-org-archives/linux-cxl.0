@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BCC386C2D;
-	Thu, 14 May 2026 17:10:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89D833556D
+	for <linux-cxl@vger.kernel.org>; Thu, 14 May 2026 17:16:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778778654; cv=none; b=OJp+n8xVSf+64BKzlkteZwaaLfOmCfDBURMuMAaBVi2f6pIKmjBP6MRJiFDXCBru6C1kn67Zro7QZ3bhx7lQwEKfN/pGB1ABUoRD2nqccalmKXrdmwG7lbMGfvn6TMVxHnsoNyiFI8lkJqG3svjZce46uqkUOSLOX7Ui00Ilbzk=
+	t=1778779007; cv=none; b=bRmrGYQytEM+c6Ii6S5Yh0UpJH94UBKpPsyL2ATyJU85vJmZzDvUSHtLrl/0qb04Hu7fxvI7qyrPwOrlLJChohfiWcMWbYFu3hXLnifxuDOjhWbbMTdGfijoiCgtuJwUGv3CvaaRxFkp/C46ATbjVIeMkQHMjGiOEonlPPh2YXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778778654; c=relaxed/simple;
-	bh=uh4KhWeA/dAKaJzDF1UM7rw1diVC7QXouk9+kXu5160=;
+	s=arc-20240116; t=1778779007; c=relaxed/simple;
+	bh=hnC/lfNqpctTim9a6fu/j27gRyLG1LO3+0tYOQi/H4c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oekv9MxpBQN70dIqE6G7U3wI5bAipR4flSvIgZaIZwqsMSgunvRpzh7UqS97k6fw9fqg3tdlhDh90quwqFIFU9i+W+RrHOcp871HQPNwnrrw/iCp+wnSC+foyg8LR1lXQUIS7kn+/lmgGOjUrzVo60K0KT7eNonVHq6AW1sbpvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K6G1kf5q; arc=none smtp.client-ip=192.198.163.17
+	 In-Reply-To:Content-Type; b=ZhteVpOi1Dmkxj70LOWZPONqKr9kqkqxIbAmoRGCwvUOkAU4rxfy6JStLxwOxay4LfCixx2WZu9zZ3TeJYcKc3Fzv++HyXrd93QUQFw+x3BLGjqGCdyhlTiztp0KQuqrmKaDRn3VEcrn5hNuz/UToQ8y8d5JQ/JJirisHIvSqfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ang3TSqr; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K6G1kf5q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ang3TSqr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1778778653; x=1810314653;
+  t=1778779007; x=1810315007;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=uh4KhWeA/dAKaJzDF1UM7rw1diVC7QXouk9+kXu5160=;
-  b=K6G1kf5qXolMOjVL/xkKJMM/yDHdy1xo+SsKJI+UyOrznTVGvLsHEDVi
-   4mOhZ+mdXKUeIvabaiJi2x3iQSVOdzAb7nJuTqbGUs6Kb9C87v53Pk4XW
-   bIRlddpLtSRrvGJ1A/CDvdyA5CxMaB73wPx88xpay5rpM1TNYP3Shsr5Z
-   EjbOmSSp+qmi5SF/w3+i2tT3RrCC6z7z04NhhNLE98K7wysLcInuoIpon
-   L9MBnsRXQ7R5pG7mLpe+ARxaQ/G5Lto/OzANReWiGLWmr7MJKPq51wAq1
-   cSa7I7Q/+xe5RB1kmj/HUXZTETZ2C0m3FkvSPexYQ21mSEjGSyT5gV4BH
-   w==;
-X-CSE-ConnectionGUID: GIa/PMuiT+qCCeHy7Mmtcg==
-X-CSE-MsgGUID: yUfWqlkRSCS9OSNjpsxd6w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11786"; a="79584796"
+  bh=hnC/lfNqpctTim9a6fu/j27gRyLG1LO3+0tYOQi/H4c=;
+  b=ang3TSqrfXOBMs00Y6dqdvSEdrcTR+X58hD2d3c1SlfD00m4IDIsdLsH
+   Z3DR/9UrqCbvBM3u1m0H22a/Dx8frCTkxYe5ePTiZr2qmQUNvSXh+Ed3L
+   fTEj8lz8csFjUOvJ4Gm4JMJx9fAMBUqTdyfk5g6JXq1LggGws542tDhi2
+   dxeaH6KpSxFio4u87E0hL9Oh1PXb62jajKqoFm6Vk1lKJk15TYYmW8aKU
+   JA0QMsvUM2QkbloeI02pdg+h2xcl2pGCIIlOoTHUvzYxO25PdF9oO0ERo
+   p3uSFLYz9wwRkTeN4/oNSapQqST08gzzq7beHmnl5DLl2gKZ7f9l7Ox7D
+   g==;
+X-CSE-ConnectionGUID: o86jaYA7QByD1+m/XgtQ9Q==
+X-CSE-MsgGUID: YWMikpagQ7meBppMNaqZSA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11786"; a="79585377"
 X-IronPort-AV: E=Sophos;i="6.23,235,1770624000"; 
-   d="scan'208";a="79584796"
+   d="scan'208";a="79585377"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2026 10:10:52 -0700
-X-CSE-ConnectionGUID: iwNVOvCySIarA2uTnddKvg==
-X-CSE-MsgGUID: YpUWyxSbTHyQy1JVzNjLpA==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2026 10:16:46 -0700
+X-CSE-ConnectionGUID: ghn6Rx2dRDyBhEadq53Wug==
+X-CSE-MsgGUID: M62kff7vTaOIUPCrEYHkdg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,235,1770624000"; 
-   d="scan'208";a="238542684"
+   d="scan'208";a="238544279"
 Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.108.122]) ([10.125.108.122])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2026 10:10:52 -0700
-Message-ID: <f7f2e06e-e8a5-46b2-8516-235be474251e@intel.com>
-Date: Thu, 14 May 2026 10:10:50 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2026 10:16:46 -0700
+Message-ID: <bedcd7ec-b73e-470a-8d53-c77d28f33b31@intel.com>
+Date: Thu, 14 May 2026 10:16:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,93 +52,49 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/acpi: Defer probe when ACPI0016 PCI root bridge is
- not ready
-To: Chen Pei <cp0613@linux.alibaba.com>, dave@stgolabs.net, jic23@kernel.org,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- djbw@kernel.org, guoren@kernel.org
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260514023238.49984-1-cp0613@linux.alibaba.com>
+Subject: Re: [ndctl PATCH 1/2] daxctl: fix kmod reference leak on probe-insert
+ failure
+To: Chen Pei <cp0613@linux.alibaba.com>, alison.schofield@intel.com,
+ nvdimm@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org, guoren@kernel.org
+References: <20260514063234.86439-1-cp0613@linux.alibaba.com>
+ <20260514063234.86439-2-cp0613@linux.alibaba.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260514023238.49984-1-cp0613@linux.alibaba.com>
+In-Reply-To: <20260514063234.86439-2-cp0613@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 5/13/26 7:32 PM, Chen Pei wrote:
-> On some platforms (e.g., RISC-V and ARM64) that use the generic
-> pci_acpi_scan_root() implementation, cxl_acpi_probe may run before
-> acpi_pci_root driver has bound to ACPI0016 (CXL host bridge) devices.
-> In this case, acpi_pci_find_root() returns NULL, causing
-> to_cxl_host_bridge() to skip the device silently. This results in
-> incomplete CXL port enumeration on first boot.
+On 5/13/26 11:32 PM, Chen Pei wrote:
+> daxctl_insert_kmod_for_mode() obtains a kmod reference via
+> kmod_module_new_from_name() and only stores it in dev->module after a
+> successful kmod_module_probe_insert_module() call. On the failure path
+> the local reference was returned without being released, leaking one
+> reference per failed enable attempt.
 > 
-> Fix this by detecting the case where an ACPI0016 device exists but its
-> PCI root bridge is not yet ready, and returning -EPROBE_DEFER to trigger
-> a deferred probe retry.
+> Drop the reference before returning the error code.
 > 
 > Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+
 > ---
->  drivers/cxl/acpi.c | 26 ++++++++++++++++++++++++--
->  1 file changed, 24 insertions(+), 2 deletions(-)
+>  daxctl/lib/libdaxctl.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 127537628817..9952d0cff903 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -631,8 +631,21 @@ static int add_host_bridge_dport(struct device *match, void *arg)
->  	struct acpi_pci_root *pci_root;
->  	struct cxl_port *root_port = arg;
->  	struct device *host = root_port->dev.parent;
-> -	struct acpi_device *hb = to_cxl_host_bridge(host, match);
-> +	struct acpi_device *adev = to_acpi_device(match);
-> +	struct acpi_device *hb;
->  
-> +	/*
-> +	 * If this is an ACPI0016 device but acpi_pci_find_root() hasn't
-> +	 * found the PCI root yet (driver not probed), defer the probe
-> +	 * to allow acpi_pci_root to bind first.
-> +	 */
-> +	if (strcmp(acpi_device_hid(adev), "ACPI0016") == 0 &&
-> +	    !acpi_pci_find_root(adev->handle)) {
-> +		dev_dbg(host, "deferring probe, ACPI0016 PCI root not ready\n");
-> +		return -EPROBE_DEFER;
-> +	}
-> +
-> +	hb = to_cxl_host_bridge(host, match);
->  	if (!hb)
->  		return 0;
->  
-> @@ -688,7 +701,8 @@ static int add_host_bridge_uport(struct device *match, void *arg)
->  {
->  	struct cxl_port *root_port = arg;
->  	struct device *host = root_port->dev.parent;
-> -	struct acpi_device *hb = to_cxl_host_bridge(host, match);
-> +	struct acpi_device *adev = to_acpi_device(match);
-> +	struct acpi_device *hb;
->  	struct acpi_pci_root *pci_root;
->  	struct cxl_dport *dport;
->  	struct cxl_port *port;
-> @@ -697,6 +711,14 @@ static int add_host_bridge_uport(struct device *match, void *arg)
->  	resource_size_t component_reg_phys;
->  	int rc;
->  
-> +	/* Same deferral check as in add_host_bridge_dport() */
-> +	if (strcmp(acpi_device_hid(adev), "ACPI0016") == 0 &&
-> +	    !acpi_pci_find_root(adev->handle)) {
-> +		dev_dbg(host, "deferring probe, ACPI0016 PCI root not ready\n");
-> +		return -EPROBE_DEFER;
-> +	}
-
-I don't believe this check in add_host_bridge_uport() is necessary. add_host_bridge_dport() happens first and the check should've been done there. There is no reason to do it again and you'll never reach here if it's not ready. 
-
-DJ
-
-> +
-> +	hb = to_cxl_host_bridge(host, match);
->  	if (!hb)
->  		return 0;
->  
+> diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
+> index 02ae7e5..ffc81eb 100644
+> --- a/daxctl/lib/libdaxctl.c
+> +++ b/daxctl/lib/libdaxctl.c
+> @@ -927,6 +927,7 @@ static int daxctl_insert_kmod_for_mode(struct daxctl_dev *dev,
+>  			NULL, NULL, NULL, NULL);
+>  	if (rc < 0) {
+>  		err(ctx, "%s: insert failure: %d\n", devname, rc);
+> +		kmod_module_unref(kmod);
+>  		return rc;
+>  	}
+>  	dev->module = kmod;
 
