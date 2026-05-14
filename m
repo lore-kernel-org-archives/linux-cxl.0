@@ -1,45 +1,42 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBB3D1D86FF;
-	Thu, 14 May 2026 02:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0186D39061A
+	for <linux-cxl@vger.kernel.org>; Thu, 14 May 2026 06:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778725983; cv=none; b=CwHK/M/wzt0xXC4DBh7dBtdGe72Iar+uk3aFgAJ+YBMU98nmnbGOA9xh/M+uVBqDZHf/WJTO649zeibLmcmHrQsPJ/HrcpInAxTa2WwWoDMnHoy0HQHwQNJJCep7/ZAIoo2mYMyOtVcDxtuiopZ6dxFSXHBDhS7LaViDJkZzATE=
+	t=1778740368; cv=none; b=TkCYTFv9jb1+2W1INcwO6DH7jfKeIYtPLW/PAkVeF7j1/8YAXX4oMHuSvD5kfKHBWkXpWkXNvGkxmhIeSq27F91G1N5Qf1sl2mSdkU0vBCnLVQzWlXprhKUtX+wYRRr6k8QQkmzk5XWzxEgO9WJtUIbVdKeCHkFYbzCs8c9gqKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778725983; c=relaxed/simple;
-	bh=iIonJ8mGCab/GN+Er5sWbLAMioDzCPkDvICt99Jihfo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M2bObcR8YeHkxDKPlBN0jjIB9hMu7S1lUpb3bKQ3REuQcsPGCe/rnhI/G71G/QQPnGMImtziocXIDjX6xQQaY6HigqIyrfKHCvb+tv2aQPgI0R/tCzyS3A7aWH8eO5XOjgX/Pm7pyW+mBkjrI850vK+8xBtkjKqnFDUAbFrzZys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=bpy/ew6I; arc=none smtp.client-ip=115.124.30.100
+	s=arc-20240116; t=1778740368; c=relaxed/simple;
+	bh=oI5IO/JuIxpfhFofjSyTFYBneEIInV4rnJHaccXPSIU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jOAspDvgoergDM/8TwgqAurUjn2MKF3UbfP2GUaulS6y4n8bOxUA+H3uuhuQ2OGxYm/iDi3/CphuA/Bwr0/wYcFtDKCLuVFZVnnazgtMBqtq42b05SsNB+2WrNY3lVTNQZWpmLl8W3755+wE9/+wYuNh7xZ64QkkeU1WJiD3xDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aD2jxyid; arc=none smtp.client-ip=115.124.30.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="bpy/ew6I"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aD2jxyid"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1778725971; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=lbCagZyy3GUT0s2ScDbSsTXULb/YxLy55rgWTPCSXWs=;
-	b=bpy/ew6I+qbNFGCemRONUkVrMZqJ8eBsgZMweCqrBzwV7WUrTrz8ojSz/lU+X4d6Ei90epzzSyVplbmM7T/bZyjZJq3FE6NsvMl++l1fNyButP0NnQ/fK0YNsb2Um5l3jsL7G6cNBF1XxN4studAtZB2ixnWecvPOtobLARUA1s=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R571e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0X2vNJ7M_1778725961;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X2vNJ7M_1778725961 cluster:ay36)
+	t=1778740363; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=lMFH9YyVY9ENe/P49TfIR1IEA6wDe12nL5kppRzigNI=;
+	b=aD2jxyidO6OHKzLDnSW/F6yVP7Iz3xUB3diPnQwk7azvJ/cIWwbSDsqRv5y+HXqhvwotqT0lU56HUw0BKTBjFaOv226qiGmmMl1PRnBIMKt4Aa5D94PWgHGc+hhyybpuWzbitdN3Ke20xwwYKI34F0Ebh9rKO2ivzV2DcTW82j8=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0X2vwT8Y_1778740362;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X2vwT8Y_1778740362 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 14 May 2026 10:32:50 +0800
+          Thu, 14 May 2026 14:32:43 +0800
 From: Chen Pei <cp0613@linux.alibaba.com>
-To: dave@stgolabs.net,
-	jic23@kernel.org,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	djbw@kernel.org,
-	guoren@kernel.org
+To: alison.schofield@intel.com,
+	nvdimm@lists.linux.dev
 Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	guoren@kernel.org,
 	Chen Pei <cp0613@linux.alibaba.com>
-Subject: [PATCH] cxl/acpi: Defer probe when ACPI0016 PCI root bridge is not ready
-Date: Thu, 14 May 2026 10:32:38 +0800
-Message-ID: <20260514023238.49984-1-cp0613@linux.alibaba.com>
+Subject: [ndctl PATCH 2/2] daxctl, util/sysfs: skip module probe-insert when driver is builtin or live
+Date: Thu, 14 May 2026 14:32:34 +0800
+Message-ID: <20260514063234.86439-3-cp0613@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260514063234.86439-1-cp0613@linux.alibaba.com>
+References: <20260514063234.86439-1-cp0613@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -48,74 +45,91 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On some platforms (e.g., RISC-V and ARM64) that use the generic
-pci_acpi_scan_root() implementation, cxl_acpi_probe may run before
-acpi_pci_root driver has bound to ACPI0016 (CXL host bridge) devices.
-In this case, acpi_pci_find_root() returns NULL, causing
-to_cxl_host_bridge() to skip the device silently. This results in
-incomplete CXL port enumeration on first boot.
+kmod_module_probe_insert_module() is supposed to return 0 for builtin
+modules, but only when libkmod can locate the modules.builtin index. If
+the index is missing or out of sync, libkmod falls through to the real
+init_module() syscall and returns an error such as -ENOENT, producing a
+spurious "insert failure" even though the driver is already part of the
+running kernel.
 
-Fix this by detecting the case where an ACPI0016 device exists but its
-PCI root bridge is not yet ready, and returning -EPROBE_DEFER to trigger
-a deferred probe retry.
+Pre-check kmod_module_get_initstate() and short-circuit when the module
+is KMOD_MODULE_BUILTIN or KMOD_MODULE_LIVE, matching the pattern used by
+ndctl's own test/core.c.
+
+For builtin modules the local kmod reference is dropped because builtin
+drivers cannot be unloaded; for live modules the reference is retained
+in dev->module, matching the post-probe-success behavior.
 
 Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 ---
- drivers/cxl/acpi.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ daxctl/lib/libdaxctl.c | 18 ++++++++++++++++--
+ util/sysfs.c           | 17 +++++++++++------
+ 2 files changed, 27 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-index 127537628817..9952d0cff903 100644
---- a/drivers/cxl/acpi.c
-+++ b/drivers/cxl/acpi.c
-@@ -631,8 +631,21 @@ static int add_host_bridge_dport(struct device *match, void *arg)
- 	struct acpi_pci_root *pci_root;
- 	struct cxl_port *root_port = arg;
- 	struct device *host = root_port->dev.parent;
--	struct acpi_device *hb = to_cxl_host_bridge(host, match);
-+	struct acpi_device *adev = to_acpi_device(match);
-+	struct acpi_device *hb;
+diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
+index ffc81eb..42bfc39 100644
+--- a/daxctl/lib/libdaxctl.c
++++ b/daxctl/lib/libdaxctl.c
+@@ -910,7 +910,7 @@ static int daxctl_insert_kmod_for_mode(struct daxctl_dev *dev,
+ 	const char *devname = daxctl_dev_get_devname(dev);
+ 	struct daxctl_ctx *ctx = daxctl_dev_get_ctx(dev);
+ 	struct kmod_module *kmod;
+-	int rc;
++	int state, rc;
  
-+	/*
-+	 * If this is an ACPI0016 device but acpi_pci_find_root() hasn't
-+	 * found the PCI root yet (driver not probed), defer the probe
-+	 * to allow acpi_pci_root to bind first.
-+	 */
-+	if (strcmp(acpi_device_hid(adev), "ACPI0016") == 0 &&
-+	    !acpi_pci_find_root(adev->handle)) {
-+		dev_dbg(host, "deferring probe, ACPI0016 PCI root not ready\n");
-+		return -EPROBE_DEFER;
+ 	rc = kmod_module_new_from_name(ctx->kmod_ctx, mod_name, &kmod);
+ 	if (rc < 0) {
+@@ -919,7 +919,21 @@ static int daxctl_insert_kmod_for_mode(struct daxctl_dev *dev,
+ 		return rc;
+ 	}
+ 
+-	/* if the driver is builtin, this Just Works */
++	/* If the driver is builtin or already live, skip probe-insert. */
++	state = kmod_module_get_initstate(kmod);
++	if (state == KMOD_MODULE_BUILTIN) {
++		dbg(ctx, "%s: module %s is builtin\n", devname,
++			kmod_module_get_name(kmod));
++		kmod_module_unref(kmod);
++		return 0;
++	}
++	if (state == KMOD_MODULE_LIVE) {
++		dbg(ctx, "%s: module %s already loaded\n", devname,
++			kmod_module_get_name(kmod));
++		dev->module = kmod;
++		return 0;
 +	}
 +
-+	hb = to_cxl_host_bridge(host, match);
- 	if (!hb)
- 		return 0;
+ 	dbg(ctx, "%s inserting module: %s\n", devname,
+ 		kmod_module_get_name(kmod));
+ 	rc = kmod_module_probe_insert_module(kmod,
+diff --git a/util/sysfs.c b/util/sysfs.c
+index e027e38..641b86d 100644
+--- a/util/sysfs.c
++++ b/util/sysfs.c
+@@ -183,12 +183,17 @@ int __util_bind(const char *devname, struct kmod_module *module,
+ 	}
  
-@@ -688,7 +701,8 @@ static int add_host_bridge_uport(struct device *match, void *arg)
- {
- 	struct cxl_port *root_port = arg;
- 	struct device *host = root_port->dev.parent;
--	struct acpi_device *hb = to_cxl_host_bridge(host, match);
-+	struct acpi_device *adev = to_acpi_device(match);
-+	struct acpi_device *hb;
- 	struct acpi_pci_root *pci_root;
- 	struct cxl_dport *dport;
- 	struct cxl_port *port;
-@@ -697,6 +711,14 @@ static int add_host_bridge_uport(struct device *match, void *arg)
- 	resource_size_t component_reg_phys;
- 	int rc;
- 
-+	/* Same deferral check as in add_host_bridge_dport() */
-+	if (strcmp(acpi_device_hid(adev), "ACPI0016") == 0 &&
-+	    !acpi_pci_find_root(adev->handle)) {
-+		dev_dbg(host, "deferring probe, ACPI0016 PCI root not ready\n");
-+		return -EPROBE_DEFER;
-+	}
+ 	if (module) {
+-		rc = kmod_module_probe_insert_module(module,
+-						     KMOD_PROBE_APPLY_BLACKLIST,
+-						     NULL, NULL, NULL, NULL);
+-		if (rc < 0) {
+-			log_err(ctx, "%s: insert failure: %d\n", __func__, rc);
+-			return rc;
++		/* Skip probe-insert when the module is already builtin or live. */
++		int state = kmod_module_get_initstate(module);
 +
-+	hb = to_cxl_host_bridge(host, match);
- 	if (!hb)
- 		return 0;
++		if (state != KMOD_MODULE_BUILTIN && state != KMOD_MODULE_LIVE) {
++			rc = kmod_module_probe_insert_module(module,
++							     KMOD_PROBE_APPLY_BLACKLIST,
++							     NULL, NULL, NULL, NULL);
++			if (rc < 0) {
++				log_err(ctx, "%s: insert failure: %d\n", __func__, rc);
++				return rc;
++			}
+ 		}
+ 	}
  
 -- 
-2.50.1
+2.43.0
 
