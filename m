@@ -1,94 +1,154 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E4748122D;
-	Fri, 15 May 2026 13:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907FE305661;
+	Fri, 15 May 2026 15:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778853398; cv=none; b=ty0kKVL3UoSN/MjiCjWtMpZWclTWXRGqbUjnRL69z9qaqNlm2Fr2zZ/NXGfHvee60h44ur0lTGBlHWa+uIc4oxa57g6lOaxNErn1bBK0kohZMnFXxlrt/Roj8l5AwKwdBUQ22KGqzFHG0NR/8EU+4V9lIwlPbj4ZpcoixunWaWU=
+	t=1778859484; cv=none; b=C4dVvT1anPyfDkgW04rH1E7DscX1iF/VVp64xjBtXbjZKAmrLcZnBA9Hmy76bG08Nsz2gRnUIr7dawpf5YCJiPuBPLx2I0GHQsCmXDFbhAJk7qTxzwvJLOjGdiUA5Jlw/PKe0czrlftdq+FQrPub7xtrFT7LTHVm3J4BhVcFK4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778853398; c=relaxed/simple;
-	bh=+W+D6PIpWXO9DlRzH4ZSvQa8bIBp9pOQn0WDU5OHJuQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m6zylVcoCC+G6uHC0C+lvkxJq80w+IMfbMDadS+SwlV2dd7/JotoPgJwbrh2MVS1zaViWTXaZV0RxJ8QSp5HxqB4yLogYX/z5U3Fl8llVowHTWgkrmJHuTQ7qCpLIT6JMxv6WNlGpj366n1mnq+WBXYU8ZYJX9AalxNZJBjwH54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=JG77KB3N; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1778859484; c=relaxed/simple;
+	bh=e1j+WnYtb6u2FHkCnrsgbYvWRsOQ3cYPjN0DP6hilwI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JlUSBoWBQaRfX8ltn3WNR3l76O2GEeVR0zgakcLJDClBq4yaYoHhSbuoaj15356LbyITBBMQ9Uk1FSGvhFos4g3DU71iLFzNxotYRh0zCb+EgKxW7f4zrORXZZcdy0+8x2o2AcO1/3PaIORFHTrJq0ZhUnPlAxXNXaNjEWhljvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bLqCM1kd; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="JG77KB3N"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1778853386; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=hMlg8NpxKOQhryj84LfqoJqCjCDvbjqffeAD7JdmCZM=;
-	b=JG77KB3Nr1mOr99VQIQAMUrmeO4i5PNRG4LPnnfkWNsVKGB438qbrs7RzzzqISyygHfmVF8uaNecr/LRFEitVIuCjeKZutOsSl7vAd/rYiiFl6J5IM91NpBqgHC2px5mq8SJHqK7oub56SOalQ5IAyb7Gl61zeUo2HtdrIZAdlM=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0X2zfiTS_1778853381;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X2zfiTS_1778853381 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 15 May 2026 21:56:26 +0800
-From: Chen Pei <cp0613@linux.alibaba.com>
-To: alison.schofield@intel.com
-Cc: cp0613@linux.alibaba.com,
-	dave.jiang@intel.com,
-	dave@stgolabs.net,
-	djbw@kernel.org,
-	guoren@kernel.org,
-	ira.weiny@intel.com,
-	jic23@kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	vishal.l.verma@intel.com
-Subject: Re: [PATCH] cxl/acpi: Defer probe when ACPI0016 PCI root bridge is not ready
-Date: Fri, 15 May 2026 21:56:20 +0800
-Message-ID: <20260515135620.19429-1-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <agYEL3qFef-wqHB_@aschofie-mobl2.lan>
-References: <agYEL3qFef-wqHB_@aschofie-mobl2.lan>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bLqCM1kd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1778859483; x=1810395483;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=e1j+WnYtb6u2FHkCnrsgbYvWRsOQ3cYPjN0DP6hilwI=;
+  b=bLqCM1kdYFb7aC2SLxeAubwRfWy0jr+TVH8vYCUTHjjcat2LHJNzW00d
+   cf8bdgL5z2Zus6MYGHzqlr5SZhpD0J3V7BALUZDV84dMDbTgP7VWyR+MZ
+   Ai75tba460H/9HinSu821OKqMVQyP63S1V2FcXRJxrIHVokyI+b8X201m
+   cRK2aXXSz+ZU6mQiOlWQl5Ti1ChwzpX+rLZMJQcNAyMnztVhFCS6qtP58
+   n3SKhq0/EG2NAPMZDPVKWw4xCj5CPh+U7qnX1lvF72WkygKkBlkVxytjL
+   3Hvzwj1afq3T4e4yEezmzxp9AuFyJbhq4clsdo805qoEnhz+ZxXTcqgYo
+   Q==;
+X-CSE-ConnectionGUID: Iiy7BX25RnqWqLaV2sAkAQ==
+X-CSE-MsgGUID: l0tupulrR4OrK88PdBVsJw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11787"; a="79936084"
+X-IronPort-AV: E=Sophos;i="6.23,236,1770624000"; 
+   d="scan'208";a="79936084"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2026 08:38:03 -0700
+X-CSE-ConnectionGUID: +wWv4+uCS5uWU610mYmnDA==
+X-CSE-MsgGUID: v2WsUoZPTSWsG9zgEVT66A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,236,1770624000"; 
+   d="scan'208";a="243064129"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.108.188]) ([10.125.108.188])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2026 08:38:03 -0700
+Message-ID: <4ad8feae-6fc7-4e9d-8509-c9cc365d1c53@intel.com>
+Date: Fri, 15 May 2026 08:38:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/acpi: Defer probe when ACPI0016 PCI root bridge is
+ not ready
+To: Chen Pei <cp0613@linux.alibaba.com>, dave@stgolabs.net, jic23@kernel.org,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
+ djbw@kernel.org, guoren@kernel.org
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260514023238.49984-1-cp0613@linux.alibaba.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260514023238.49984-1-cp0613@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 14 May 2026 10:19:43 -0700, Alison Schofield wrote:
 
-> > On some platforms (e.g., RISC-V and ARM64) that use the generic
-> > pci_acpi_scan_root() implementation, cxl_acpi_probe may run before
-> > acpi_pci_root driver has bound to ACPI0016 (CXL host bridge) devices.
-> > In this case, acpi_pci_find_root() returns NULL, causing
-> > to_cxl_host_bridge() to skip the device silently. This results in
-> > incomplete CXL port enumeration on first boot.
-> > 
-> > Fix this by detecting the case where an ACPI0016 device exists but its
-> > PCI root bridge is not yet ready, and returning -EPROBE_DEFER to trigger
-> > a deferred probe retry.
-> > 
-> > Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+
+On 5/13/26 7:32 PM, Chen Pei wrote:
+> On some platforms (e.g., RISC-V and ARM64) that use the generic
+> pci_acpi_scan_root() implementation, cxl_acpi_probe may run before
+> acpi_pci_root driver has bound to ACPI0016 (CXL host bridge) devices.
+> In this case, acpi_pci_find_root() returns NULL, causing
+> to_cxl_host_bridge() to skip the device silently. This results in
+> incomplete CXL port enumeration on first boot.
 > 
-> Hi Chen Pei,
+> Fix this by detecting the case where an ACPI0016 device exists but its
+> PCI root bridge is not yet ready, and returning -EPROBE_DEFER to trigger
+> a deferred probe retry.
 > 
-> As Richard suggested, this fails for the mock platform in cxl-test.
-> (stack trace appended at end)
+> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+> ---
+>  drivers/cxl/acpi.c | 26 ++++++++++++++++++++++++--
+>  1 file changed, 24 insertions(+), 2 deletions(-)
 > 
-> With this diff applied on top of your patch, it works for cxl-test
-> AND I think it works for your case too. With real hardware,
-> ACPI_COMPANION returns the device, and with the mock platform,
-> ACPI_COMPANION returns NULL and the defer check is skipped.
-> 
-> Try it out, and note that I didn't consider if any of the comments
-> need updating.
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 127537628817..9952d0cff903 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -631,8 +631,21 @@ static int add_host_bridge_dport(struct device *match, void *arg)
+>  	struct acpi_pci_root *pci_root;
+>  	struct cxl_port *root_port = arg;
+>  	struct device *host = root_port->dev.parent;
+> -	struct acpi_device *hb = to_cxl_host_bridge(host, match);
+> +	struct acpi_device *adev = to_acpi_device(match);
+> +	struct acpi_device *hb;
+>  
+> +	/*
+> +	 * If this is an ACPI0016 device but acpi_pci_find_root() hasn't
+> +	 * found the PCI root yet (driver not probed), defer the probe
+> +	 * to allow acpi_pci_root to bind first.
+> +	 */
+> +	if (strcmp(acpi_device_hid(adev), "ACPI0016") == 0 &&
+> +	    !acpi_pci_find_root(adev->handle)) {
 
-Hi Alison,
+I would leave the assignment of 'hb' as is above and just what's below after looking at to_cxl_host_bridge() function.
 
-Thanks for the fix! 
+if (!hb) {
+	if (!acpi_pci_find_root(adev->handle)) {
+		...
+		return -EPROBE_DEFER;
+	}
+	return 0;
+}
 
-I'll test it on my RISC-V QEMU setup and fold it into v2 along with
-the other review feedback (switching to acpi_dev_hid_match(),
-dropping the redundant check in add_host_bridge_uport(), etc.).
+I am concerned of other failure cases that causes acpi_pci_find_root() to fail beyond the driver not being attached. Will cxl_acpi probe() be stuck permanently in the defer probe queue when that happens? This is also something that Sashiko raised. Is there no way to adjust the RISCV ACPI setup to go around subsys_initcall()? That would be preferred solution.
 
-Will also run the CXL kselftests to make sure the mock platform path
-works correctly.
+DJ
 
-Thanks,
-Pei
+> +		dev_dbg(host, "deferring probe, ACPI0016 PCI root not ready\n");
+> +		return -EPROBE_DEFER;
+> +	}
+> +
+> +	hb = to_cxl_host_bridge(host, match);
+>  	if (!hb)
+>  		return 0;
+>  
+> @@ -688,7 +701,8 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+>  {
+>  	struct cxl_port *root_port = arg;
+>  	struct device *host = root_port->dev.parent;
+> -	struct acpi_device *hb = to_cxl_host_bridge(host, match);
+> +	struct acpi_device *adev = to_acpi_device(match);
+> +	struct acpi_device *hb;
+>  	struct acpi_pci_root *pci_root;
+>  	struct cxl_dport *dport;
+>  	struct cxl_port *port;
+> @@ -697,6 +711,14 @@ static int add_host_bridge_uport(struct device *match, void *arg)
+>  	resource_size_t component_reg_phys;
+>  	int rc;
+>  
+> +	/* Same deferral check as in add_host_bridge_dport() */
+> +	if (strcmp(acpi_device_hid(adev), "ACPI0016") == 0 &&
+> +	    !acpi_pci_find_root(adev->handle)) {
+> +		dev_dbg(host, "deferring probe, ACPI0016 PCI root not ready\n");
+> +		return -EPROBE_DEFER;
+> +	}
+> +
+> +	hb = to_cxl_host_bridge(host, match);
+>  	if (!hb)
+>  		return 0;
+>  
+
