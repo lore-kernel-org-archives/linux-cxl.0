@@ -1,34 +1,34 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 423EE3FB051;
-	Mon, 18 May 2026 11:58:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55E723F9282;
+	Mon, 18 May 2026 11:59:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779105545; cv=none; b=Lo9pJLZEtX1fLYT7wDIACm7CeLuute5Zyh5ZQOa7VcdsYZejDmWXxDRaqPUYtP5XkkGllsxYAWJYMr7TPEpvPcSUligxndPVr/WO6yPrHy3KkWXlYncGGls/wYbYRRBcviqO0Z3sDJrOfIyWpGu8clEDezfH0towJuxsgAwjLbc=
+	t=1779105553; cv=none; b=FYViVnOn7EQTxrC9B6uLz8RhUrljafUNFns/NeGyuLU+XUOak3mc2LZFE6b/H3iOfL0U/IXHII7VPDpWgXk8Z7NUXnVhDBGL7IuGhNcJXGOQ7VojdJgcBBmLu1fp9NTRnaXYmQvR7RNjaEcsyY+0NaNOIvpmBOMfNmqFOnNCA6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779105545; c=relaxed/simple;
-	bh=SE5bStAb7vsrTWobe7ySsF8dvuF70BXHOSqTYvhTqMs=;
+	s=arc-20240116; t=1779105553; c=relaxed/simple;
+	bh=t7eff0nNKGqGSzC5Dpn2m5cRP7fPVTRKNbLymISWJn0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EzV6ePmA31Am8ZieR9y6v3zqvRrLeyFFMOLOpLlAAKobN9HQvMq5MP/mQZM42SJ0zGGRFrtbh5OfDqu60OuwPORxPOawSx4N3hqmXeB6IxKH4vi6QH0sgAnIC7aINqAp2rY7D2nMwMKrC2q7330J73+4OfZj1a5fQ8kcE3p/ohg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=slmFk/D0; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=HcQ9EnsAbb67Up7NTeJT4lK0QsJtmGtrcWg/xWl3H+i+duhgsd5Qc73cxu8q2J8eWif3jCRwx8MAvoYDWgAhwRrHhilCgErSFk54OTfPUn1EYelOjFJnqQhTPBZRpHnLktzfKOMXmjaGcxF2jEaz3skwh+rk4+HN/2d0iX+dWL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=chAQVYzq; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="slmFk/D0"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="chAQVYzq"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 885734617;
-	Mon, 18 May 2026 04:58:49 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9CA44660;
+	Mon, 18 May 2026 04:59:00 -0700 (PDT)
 Received: from e134710.arm.com (e134710.arm.com [10.33.10.82])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 862FD3F85F;
-	Mon, 18 May 2026 04:58:49 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C60BA3F85F;
+	Mon, 18 May 2026 04:59:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1779105534; bh=SE5bStAb7vsrTWobe7ySsF8dvuF70BXHOSqTYvhTqMs=;
+	t=1779105546; bh=t7eff0nNKGqGSzC5Dpn2m5cRP7fPVTRKNbLymISWJn0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=slmFk/D04MLP/owaJd/W2OWEY9rtoGtQXWrCWiDHr1qJf8EcnDJQq2H/itVYuN7Ed
-	 x8hH17IQLOOLR4CoBWI5BS+KLDxwOiZi10YRsxjuRzlPzXyqx3Z6m55nYaN51LjoOl
-	 LKJpkDPRo0/2MNFVzS1qkSTYM6X0pOqHIPAlA7CM=
+	b=chAQVYzqoAtBk1xmJ0LQA/Yk5bciRaNX2fBV1L04I7oVDXeL5rmVGlnNq0qBS8asx
+	 AFFXunfWa8soHrVYBApe1lN00BMcr3Anc0/8KsfTfwVSrnNpzAH+nXhwgMXtlSCCLw
+	 B7asKW5o9FNMY5ZE+QWdNjyzy1ZW01TPNCMn0wwU=
 From: Ahmed Tiba <ahmed.tiba@arm.com>
-Date: Mon, 18 May 2026 12:57:50 +0100
-Subject: [PATCH v4 07/10] ACPI: APEI: introduce GHES helper
+Date: Mon, 18 May 2026 12:57:52 +0100
+Subject: [PATCH v4 09/10] dt-bindings: firmware: add arm,ras-cper
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260518-topics-ahmtib01-ras_ffh_arm_internal_review-v4-7-42698675ba61@arm.com>
+Message-Id: <20260518-topics-ahmtib01-ras_ffh_arm_internal_review-v4-9-42698675ba61@arm.com>
 References: <20260518-topics-ahmtib01-ras_ffh_arm_internal_review-v4-0-42698675ba61@arm.com>
 In-Reply-To: <20260518-topics-ahmtib01-ras_ffh_arm_internal_review-v4-0-42698675ba61@arm.com>
 To: rafael@kernel.org, bp@alien8.de, saket.dumbre@intel.com, 
@@ -54,118 +54,117 @@ Cc: Ahmed Tiba <ahmed.tiba@arm.com>, devicetree@vger.kernel.org,
  acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779105490; l=3795;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779105490; l=3188;
  i=ahmed.tiba@arm.com; s=20260219; h=from:subject:message-id;
- bh=SE5bStAb7vsrTWobe7ySsF8dvuF70BXHOSqTYvhTqMs=;
- b=9qAJ+IYU7SDR5KvkJbTa4iw9kjVtH/2bAoSeyBXnUY3Udfq6EBAx0CDVFOjyhHSsUUwzGToYT
- DBOmT367y5jDpHFqn4gA+vZ2yMfVg9xPbYXADwv4fngfhb9HgT6dYCl
+ bh=t7eff0nNKGqGSzC5Dpn2m5cRP7fPVTRKNbLymISWJn0=;
+ b=SgWeIgcCxMLYKi3Aq/Hv3NVmCarm1O6TQOTIVwu8Q4qifa5LF03fUyU363y8JGnSRuuIld8Wc
+ XwAFkNsII5TDIDl37jyzslr6DElygh2yn7o3VZt2kYLoealFofD+Itr
 X-Developer-Key: i=ahmed.tiba@arm.com; a=ed25519;
  pk=xVOtd+Qklh/4tuM3tB+BEZD4jj5a6W59C3KCNX6v7OE=
 
-Add a dedicated GHES_CPER_HELPERS Kconfig entry so the shared helper code
-can be built even when ACPI_APEI_GHES is disabled. Update the build glue
-and headers to depend on the new symbol.
+Describe the DeviceTree node that exposes the Arm firmware-first
+CPER provider and hook the file into MAINTAINERS so the
+binding has an owner.
 
 Signed-off-by: Ahmed Tiba <ahmed.tiba@arm.com>
 ---
- drivers/Makefile           |  1 +
- drivers/acpi/Kconfig       |  4 ++++
- drivers/acpi/apei/Kconfig  |  1 +
- drivers/acpi/apei/Makefile |  2 +-
- include/acpi/ghes.h        | 10 ++++++----
- include/cxl/event.h        |  2 +-
- 6 files changed, 14 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/firmware/arm,ras-cper.yaml | 71 ++++++++++++++++++++++
+ MAINTAINERS                                        |  5 ++
+ 2 files changed, 76 insertions(+)
 
-diff --git a/drivers/Makefile b/drivers/Makefile
-index 0841ea851847..27a664cb45ea 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -31,6 +31,7 @@ obj-y				+= idle/
- obj-y				+= char/ipmi/
- 
- obj-$(CONFIG_ACPI)		+= acpi/
-+obj-$(CONFIG_GHES_CPER_HELPERS)	+= acpi/apei/ghes_cper.o
- 
- # PnP must come after ACPI since it will eventually need to check if acpi
- # was used and do nothing if so
-diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-index f165d14cf61a..13ef0e99f840 100644
---- a/drivers/acpi/Kconfig
-+++ b/drivers/acpi/Kconfig
-@@ -6,6 +6,10 @@
- config ARCH_SUPPORTS_ACPI
- 	bool
- 
-+config GHES_CPER_HELPERS
-+	bool
-+	select UEFI_CPER
+diff --git a/Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml b/Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml
+new file mode 100644
+index 000000000000..81dc37390af5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml
+@@ -0,0 +1,71 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/firmware/arm,ras-cper.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- menuconfig ACPI
- 	bool "ACPI (Advanced Configuration and Power Interface) Support"
- 	depends on ARCH_SUPPORTS_ACPI
-diff --git a/drivers/acpi/apei/Kconfig b/drivers/acpi/apei/Kconfig
-index 428458c623f0..ddb62638eb02 100644
---- a/drivers/acpi/apei/Kconfig
-+++ b/drivers/acpi/apei/Kconfig
-@@ -21,6 +21,7 @@ config ACPI_APEI_GHES
- 	bool "APEI Generic Hardware Error Source"
- 	depends on ACPI_APEI
- 	select ACPI_HED
-+	select GHES_CPER_HELPERS
- 	select IRQ_WORK
- 	select GENERIC_ALLOCATOR
- 	select ARM_SDE_INTERFACE if ARM64
-diff --git a/drivers/acpi/apei/Makefile b/drivers/acpi/apei/Makefile
-index f57f3b009d8e..66588d6be56f 100644
---- a/drivers/acpi/apei/Makefile
-+++ b/drivers/acpi/apei/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_ACPI_APEI)		+= apei.o
--obj-$(CONFIG_ACPI_APEI_GHES)	+= ghes.o ghes_cper.o
-+obj-$(CONFIG_ACPI_APEI_GHES)	+= ghes.o
- # clang versions prior to 18 may blow out the stack with KASAN
- ifeq ($(CONFIG_COMPILE_TEST)_$(CONFIG_CC_IS_CLANG)_$(call clang-min-version, 180000),y_y_)
- KASAN_SANITIZE_ghes.o := n
-diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
-index 8d7e5caef3f1..2ffab36b6154 100644
---- a/include/acpi/ghes.h
-+++ b/include/acpi/ghes.h
-@@ -83,15 +83,17 @@ int devm_ghes_register_vendor_record_notifier(struct device *dev,
- 					      struct notifier_block *nb);
++title: Arm RAS CPER provider
++
++maintainers:
++  - Ahmed Tiba <ahmed.tiba@arm.com>
++
++description:
++  Arm Reliability, Availability and Serviceability (RAS) firmware can expose
++  a firmware-first CPER error source directly via DeviceTree. Firmware
++  provides the CPER Generic Error Status block and notifies the OS through
++  an interrupt.
++
++properties:
++  compatible:
++    const: arm,ras-cper
++
++  memory-region:
++    oneOf:
++      - items:
++          - description:
++              CPER Generic Error Status block exposed by firmware
++      - items:
++          - description:
++              CPER Generic Error Status block exposed by firmware.
++          - description:
++              Optional firmware-owned ack buffer used on platforms
++              where firmware needs an explicit "ack" handshake before overwriting
++              the CPER buffer. Firmware watches bit 0 and expects the OS to set it
++              once the current status block has been consumed.
++
++  interrupts:
++    maxItems: 1
++    description:
++      Interrupt used to signal that a new status record is ready.
++
++required:
++  - compatible
++  - memory-region
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    reserved-memory {
++      #address-cells = <2>;
++      #size-cells = <2>;
++      ras_cper_buffer: memory@fe800000 {
++        reg = <0x0 0xfe800000 0x0 0x1000>;
++        no-map;
++      };
++
++      ras_cper_ack: memory@fe801000 {
++        reg = <0x0 0xfe801000 0x0 0x1000>;
++        no-map;
++      };
++    };
++
++    error-handler {
++      compatible = "arm,ras-cper";
++      memory-region = <&ras_cper_buffer>, <&ras_cper_ack>;
++      interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7492fefa447c..3bbc19589f1a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -22251,6 +22251,11 @@ M:	Alexandre Bounine <alex.bou9@gmail.com>
+ S:	Maintained
+ F:	drivers/rapidio/
  
- struct list_head *ghes_get_devices(void);
--
--void ghes_estatus_pool_region_free(unsigned long addr, u32 size);
- #else
- static inline struct list_head *ghes_get_devices(void) { return NULL; }
--
--static inline void ghes_estatus_pool_region_free(unsigned long addr, u32 size) { return; }
- #endif
- 
-+#ifdef CONFIG_GHES_CPER_HELPERS
- int ghes_estatus_pool_init(unsigned int num_ghes);
-+void ghes_estatus_pool_region_free(unsigned long addr, u32 size);
-+#else
-+static inline int ghes_estatus_pool_init(unsigned int num_ghes) { return -ENODEV; }
-+static inline void ghes_estatus_pool_region_free(unsigned long addr, u32 size) { }
-+#endif
- 
- static inline int acpi_hest_get_version(struct acpi_hest_generic_data *gdata)
- {
-diff --git a/include/cxl/event.h b/include/cxl/event.h
-index ff97fea718d2..2ebd65b0d9d6 100644
---- a/include/cxl/event.h
-+++ b/include/cxl/event.h
-@@ -285,7 +285,7 @@ struct cxl_cper_prot_err_work_data {
- 	int severity;
- };
- 
--#ifdef CONFIG_ACPI_APEI_GHES
-+#ifdef CONFIG_GHES_CPER_HELPERS
- int cxl_cper_register_work(struct work_struct *work);
- int cxl_cper_unregister_work(struct work_struct *work);
- int cxl_cper_kfifo_get(struct cxl_cper_work_data *wd);
++RAS ERROR STATUS
++M:	Ahmed Tiba <ahmed.tiba@arm.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml
++
+ RAS INFRASTRUCTURE
+ M:	Tony Luck <tony.luck@intel.com>
+ M:	Borislav Petkov <bp@alien8.de>
 
 -- 
 2.43.0
