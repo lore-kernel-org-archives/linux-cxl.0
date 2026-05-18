@@ -1,328 +1,337 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012008.outbound.protection.outlook.com [52.101.53.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4FF384CEC
-	for <linux-cxl@vger.kernel.org>; Mon, 18 May 2026 18:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE621398918
+	for <linux-cxl@vger.kernel.org>; Mon, 18 May 2026 21:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.8
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779130360; cv=fail; b=raA1je5zHGqCAgAxs31xV6TpBPlXJxp7lEi5gj+6uRd4xSxOlD9mTBorhHq3NNAO65QBbh7DP2fZBf8vQMZFqKXTGQCY+RD8JXcLvn7C7uIdo3OYF/izaV/MnrdufGuj1/5RUXxlnsUbFhVkGxCDmWSgW1xef9SoiVBgSrzgJzc=
+	t=1779139733; cv=fail; b=ZOGdfx7zYQosmpQb0c4kifGnceVSAs5mAWthamyLNpm7PuPrZk/KlALLpsdtby89KJ0/cJskzkvePMT6oOg3AXSOs/Ga4EZfkKJIqkCCURV6tuOgxOnKGyVxjsz9s52MaRb62kh3oI6i+hPJ1RvOZODOtp+5k2XFAG9OyKgdz6A=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779130360; c=relaxed/simple;
-	bh=dkznfxVQfPXuzwNE/oTvfki+ibYYPZFgSNfCmVfPADY=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=sErdZGfKAOY2dWA5oF+0fdzYet6I0qBzlBlFwixbf6hFY+bJqqNYy6VONZ1tBaC9pFyp0bY7Y1yqU6qeQPqPc7GUWUphwVushYnLr9Treb3yLGBAULIvUE9xZizE5pCDk6E6gbkb4M73p0lIrK4kelEG7onkkazg6mvjKkqUuL8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j0cexbE8; arc=fail smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1779139733; c=relaxed/simple;
+	bh=HjpVN5UxlcbS5SFMfIk7Srvob9nI8cim00uDvkLhZZw=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=MYe5ey/D0JlXQ9GM+zQKYRIb1xZTowfhdy/ghxLL1L+vTPvQbAQysGHkGjffAofjJg+wTNVfynI2r57ViSObtL52SRggcxJHsPgNugp3ebwRht9SFBWS+rQZkrN3Z+PHhGqTf09HGojEUmOxl5SkZ0tjLEcvrzCrFgHNyq2gfMc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=TLPE7Xpp; arc=fail smtp.client-ip=52.101.53.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j0cexbE8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779130359; x=1810666359;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=dkznfxVQfPXuzwNE/oTvfki+ibYYPZFgSNfCmVfPADY=;
-  b=j0cexbE8WrFBpHb1+363NqJ6SPnphH06XBe5rXjr6p2DEudlKPL/gdhi
-   sxSLoUadBZ1KlTdbEw/w2mC82bGUxjXsFT3Kfm8cwhlKVORM0ZKBtnwPH
-   XC696gOg3fEwTo5NKHCF4MvO+kHMz6agRTjq2oBL/vYrFpaXztfXUwDqE
-   50aUpDlxEeA/4qp1zuOp0oW2o5Elab7171bpKrBP4pPh8ZQdK2LvIC48d
-   r9ZPiLLMSMbABmj89ZTyF+kNIyJi+oAfJ6/98BhI1JjjMnetV8mXntv16
-   ADpqfGhpWSxB4lEbMiYHDMH7OEMEUVMoIHVNf+cAHSy/FnryLEG9EYZRB
-   Q==;
-X-CSE-ConnectionGUID: bSHeRnaoR5Wg9CZjqkjJig==
-X-CSE-MsgGUID: 276cxRzATQ+7bErYr0VzmA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11790"; a="79845492"
-X-IronPort-AV: E=Sophos;i="6.23,242,1770624000"; 
-   d="scan'208";a="79845492"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 11:52:39 -0700
-X-CSE-ConnectionGUID: dRi/N4gHSvKs9cjjrCJS8w==
-X-CSE-MsgGUID: ompW+Xd9SCmsuLFsH8BpuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,242,1770624000"; 
-   d="scan'208";a="263292718"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 11:52:38 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Mon, 18 May 2026 11:52:37 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Mon, 18 May 2026 11:52:37 -0700
-Received: from PH8PR06CU001.outbound.protection.outlook.com (40.107.209.31) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Mon, 18 May 2026 11:52:32 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="TLPE7Xpp"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TyJ5pmvAWAFLqUsn344pKO6PQSW2ph60UKip4JpVKn/s6zp4Prh10FkM7ugCulGdFL77JMSfEhASkLcO6YKTE1vXZr1C3Uy+ZYbx6le3moo2YtK5rvUBVi7ZarmcK5RKvgQOvF3mX1UrKeZwC7GuUOi0zFqDb2psPHW4Fk+eVkAsZueHhH1YVQDaf1mmEpLDMlpruBA3c3REr3LsMKNAbg6MbH27j47oOcMAHpUuZTD5YP4TSgTEyhhmx1qMxN33DRvKFSXEyL9jPnoGCBq2VDRUddeBenQe6g6KMxqpjIgFNXj+A21bgflSpzIhVflLq/YRrzvFCvnAUorpyhBFVA==
+ b=bao7f7g6cDqmMqR/TMHmMLY3d1o4KrMIeO5HgmR97NJZit8Y9dhMypLCFV+2XFgneZ2Y6lqLH9zmbX8si6Dv0THXVC0WLjdTb/mcaYnsuQQxH9tEiC51+olxBIGzGviDT3zx7veldZPoCiJmjKkGyVHb3Igb0Ff9sc99206sPVzPJXsMxAbU6sLEGQjWEx76p5R7ESwzuNXKE1tmmz5kDnJKzKBm1MtA6KYCbOJTsBGIN6hluImyrqDixnwl8dr52XK5adqij/JIgdyAxNcyAGUMVIQkiArLj4hnPVmHQ7KryeHA3b0iTYurayX8XooRBKXmQWB0eM2ozwZ/jptuAQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eK4TyttAJYpOW8rPHUAnsTu42vJwk79qmufNxEyg/VU=;
- b=eRCRSXAefFoleSshQrpxs8A5GXbmzNcExK9/1D7D3QcsHpGlTwkjcpeqXe5cXjKawLBJ0GJtGTbt9dvZldfROFYjQ1GUOiH3L7iEm6tSCn+jEheHTW0bY9MZdTdSU9jydFR5ZOuQq32LPhBEV8duDo3aYrid8W+qvBhs9G4s1ViDRkRnl3c06a3tV15IPMkL0cyoVA3NBwpbO/OfIzQVikYsdcyZq2k6w0ULjZrnVXc2nUxRDOMxvvkTMiVZ0dblV2h6Yc88g1iUV47T0JP2P/x8KXJ7hUt+sJx8rBhIMRm0E2CSbHsJIGNhj60MElxjdeaIt5X36mH35LzNkYXlgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20) with
+ bh=3eFbiRa7bVxOTQiZD0U4bFzOFZvi2Go2pUEdp+s5+48=;
+ b=jy8Is7rXrvsJmu2rTy2b9iFEeBOLp0VwlxVTrdoGBAejvhDQH/ToIEmmJX6n7T6/V7+HVOYH3APF5vtOidt0CM7rdTPgmN2j+2/XYkdKCrWtTpv/Wyk3T+kwN7j/5rz4bj7viuMsZ8c77K0wZBl1CRCFqq+8jED84D+IDQ6r6C42N9UYyKEECk1cfyotjnF51E/tT7kuh4GyAhyOouZK98uCw6zjhyLuxYKuBXqpwO8H/aqddefrkW/uzu3636Y1QSKNl5UkRuMllJ8Bz0ykAye6+s3eP9WEab3Ac5t744drFokW+c9r7EZiqCrKAePF2lJE67OrqJvnw1Lm0OjcPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3eFbiRa7bVxOTQiZD0U4bFzOFZvi2Go2pUEdp+s5+48=;
+ b=TLPE7XppMuDbf/RWiHgYG88KdDaEjQ0e++IhduYHpes3yVZ9uIUkrBYJh4wDKiJ3J367RmcXvjavFipZr7YSvQqW0Q2H229lNAXUUCd3HbKay9lRAxNijje9HcWxFcT24+waZPydaEuGX0VbblJTnwS2o2RzQ/DU79AaFDtNxEc=
+Received: from SJ0PR13CA0014.namprd13.prod.outlook.com (2603:10b6:a03:2c0::19)
+ by CH3PR12MB7762.namprd12.prod.outlook.com (2603:10b6:610:151::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.24; Mon, 18 May
- 2026 18:52:30 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::a195:49d4:38c5:3891%8]) with mapi id 15.20.9891.021; Mon, 18 May 2026
- 18:52:30 +0000
-Date: Mon, 18 May 2026 11:52:22 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Jonathan Cameron <jic23@kernel.org>
-CC: Chen Pei <cp0613@linux.alibaba.com>, <nvdimm@lists.linux.dev>,
-	<linux-cxl@vger.kernel.org>, <guoren@kernel.org>
-Subject: Re: [ndctl PATCH 2/2] daxctl, util/sysfs: skip module probe-insert
- when driver is builtin or live
-Message-ID: <agtf5uwBJOaCDR6l@aschofie-mobl2.lan>
-References: <20260514063234.86439-1-cp0613@linux.alibaba.com>
- <20260514063234.86439-3-cp0613@linux.alibaba.com>
- <20260514193749.0f0750e2@jic23-huawei>
- <agZJACMViARKTp8W@aschofie-mobl2.lan>
- <20260518170141.215d1755@jic23-huawei>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260518170141.215d1755@jic23-huawei>
-X-ClientProxiedBy: SJ0PR05CA0148.namprd05.prod.outlook.com
- (2603:10b6:a03:33d::33) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.23; Mon, 18 May
+ 2026 21:28:43 +0000
+Received: from SJ1PEPF00001CE1.namprd05.prod.outlook.com
+ (2603:10b6:a03:2c0:cafe::67) by SJ0PR13CA0014.outlook.office365.com
+ (2603:10b6:a03:2c0::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.48.13 via Frontend Transport; Mon, 18
+ May 2026 21:28:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ SJ1PEPF00001CE1.mail.protection.outlook.com (10.167.242.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.48.11 via Frontend Transport; Mon, 18 May 2026 21:28:43 +0000
+Received: from [10.254.60.74] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 18 May
+ 2026 16:28:41 -0500
+Message-ID: <3156f93f-13dd-4c71-9a26-b59b8607f914@amd.com>
+Date: Mon, 18 May 2026 16:28:40 -0500
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+Subject: Re: [PATCH v3 1/5] cxl: Add BI register probing and port
+ initialization
+To: Davidlohr Bueso <dave@stgolabs.net>, <dave.jiang@intel.com>,
+	<djbw@kernel.org>
+CC: <jic23@kernel.org>, <alucerop@amd.com>, <alison.schofield@intel.com>,
+	<ira.weiny@intel.com>, <gourry@gourry.net>, <dongjoo.seo1@samsung.com>,
+	<anisa.su@samsung.com>, <linux-cxl@vger.kernel.org>
+References: <20260516022037.1761453-1-dave@stgolabs.net>
+ <20260516022037.1761453-2-dave@stgolabs.net>
+Content-Language: en-US
+In-Reply-To: <20260516022037.1761453-2-dave@stgolabs.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
+ (10.181.42.216)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DS0PR11MB8718:EE_
-X-MS-Office365-Filtering-Correlation-Id: 06abb04a-712f-470b-aa08-08deb50e9cfc
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE1:EE_|CH3PR12MB7762:EE_
+X-MS-Office365-Filtering-Correlation-Id: 24955ece-63d3-415e-29fa-08deb5246fc0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|18002099003|22082099003|56012099003|4143699003|11063799003;
-X-Microsoft-Antispam-Message-Info: kkRStHEs4ClXXZVj5ibhkORmUuCR4+QMRbcdL2sf6GMUnWQp7BkP5BW1L7ZQNLVycmFwEyFr2rZo0WN8eABkuriYRhar6Bmxdu5EE/wG67PuvL3mvZdWAf8ZQFaZ+IZmjNxjikEEFCHOA8xKRAemDdGvzZJAojRZexoI+/jZALlV3GyhLcFqDNWoB6+RpmmdJOnZBMC0Wnv4CkBUkLLxNEtkL9wMdW67QO/B4n9KY74Vjs43I9WrLi4MxQf4/OPhaHFR1HhpLgPbcpxZ/x742OrtmVcuc6qgMoTIaPZhK3lCDDPkTHvb4J0IWC7DrXI6Id0eiR3Vee6h1MS5YA6K5RHHMJa6+69SKfY6VShGyWpvAsHZPYfn499Vzk3XhQguE5po/8PRdf24YA/wp3LkQW1TCs+S8zQBSY7/hWukwehxuxEVe0jkqk6UKdjWvgFcU57niC5b8FHWNe0dnxcABW6OgFBHRc5gKmDhL/5xXPAsgroDq2cwt5nUhRJFAYSmQWIxWFU3nUsy9tz8WTDOuNgVzCUas0JiLa7OIJrIlQvZvPdXHc7ALTaf5mqDxbBWLx4mSRHzodYhBMwEDBcMK+CPz4NmxnqOKBmmPBz0P6nciZvm9mgXCqYVkrrDED2/9M0hlehnk1GzMXjGWrARulGMLOxV7UBVlpL2It9VjsYMyjJ2Ab6WKy8/kqB8ZQ1SZX3cIlnGT9VcV3AKASfAjg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(18002099003)(22082099003)(56012099003)(4143699003)(11063799003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700016|7416014|376014|22082099003|56012099003|18002099003|4143699003|11063799003;
+X-Microsoft-Antispam-Message-Info:
+	2FgTOuF3vUQ1mAgD8lrvtVZczbxYil085nnSa5oWuQu4RV+i9fbVNWd9X4LIVEVzD1c5W+RACu/DNc5IweeSTUFsyR8TgjVtpWFbSQVPYefkjIJZgimfpxR3PPxMa9JXQNzF5hmc1WXRTlrJ9QGrihQKtW0Ors4lobLtZf6HRuhTE9++oJsSwZxzBgnrzbK71ERUi62JyIOw20V5X/XE4QOnAD4EySmUImyZyFfIIDY7LLy1WOBwhr2k/P9CjBpsVsuz+FaUiB3kOqJz9gXeAGIMVMLqGqLDRcw100UXVMltWF6ftM2Ctze/Q+orL+sahv9IdkQizBO6Jjl696ZKJVMnt/jOSTFFBOXuHOsN72QIP6YDOZWji8rlcUU4KUbK+lPNIlUCDUuuijRiuJL3bz+0cFubBqMq89K6SMM825zY3AYsBW2nQBcUFqe626hYvLQ2IHJec5ZnNzMYB2EHv1Bde96bWenmYawOtB1GkQ8H0KIzWXV4gK3ij7umalDZGwTrkbVRe9PtqnEVoF18T8z7gQXN+YmWXY+YhvXFhzGv60YZ7+X2uXDRFaTNi+Sx5TlQgcxcTVh+Na8juToAvZykGD2CSwWgfAw82XJKgmB0M8C045vXlAPgWHCNCvhDTVhXXyZzYuRUmo7cVZ6gi2sYwueKVgi2RJ3exRDCezASXAsmuWctH/XvtpHO7CFOmPgAMmFGJU75PVYwidl5hyOl9Fv/Q/f4JUDzXqBH2zA=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700016)(7416014)(376014)(22082099003)(56012099003)(18002099003)(4143699003)(11063799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?PrCdHwOBZ0UFsSngcMWAhHJnH9/psN9riAddl8Ht0t+m/9vdS4VMDVEEbETN?=
- =?us-ascii?Q?8+knqpKajipETldNcgNTOdCe1NJSgdViOwW5TZp/4qoGifb8w5y/6qzlHZpI?=
- =?us-ascii?Q?cZm3b08GSpliGDv/iDYFnckmZI11vLc7/hAdncZVqNg6STJ0mrI2BLonxMo+?=
- =?us-ascii?Q?BF7R5iazW2GY6RWpgBEdcqhO8V1rHKpctgrnXZBw1Y6M106ZudoH2tIWIfWM?=
- =?us-ascii?Q?44G139vx9PhB6McYhiwYbg3BVUFIDSdOlDhlFbArHuvAqOA1VKNHFsZTaBQt?=
- =?us-ascii?Q?SLzm5vMzuKcxgUOztJD4NH7vY08J7aLcLVtlwoe2ColMW5i2v/XSVeiqBZR6?=
- =?us-ascii?Q?yXWqInsBSROi5DjliEtRwP6zzgQ4HLYnQTKFgWsBl6ZZ9W/MOZEgIAVJG2et?=
- =?us-ascii?Q?lBzQcrxM2B62Q3PR76tHoHvnmIDHGeUt32uIyhzFKSVcne9RP+rglOxQeA6C?=
- =?us-ascii?Q?HJe2ouroI+fk2epeAKFL5ur2jcfVwwWYj0h3jTunpBvUcS35dP3MV4ckDqvw?=
- =?us-ascii?Q?9/ntT4T6X2aTfLYr/hHb80M/qN8JtvIcyA3EbniTod+q9vsm3jETNFNJfawH?=
- =?us-ascii?Q?GbZtei0ktzJYoYzGbgNtYjl0Ejb74flCTsyPVkW69nJSz3tel6C3De334RRY?=
- =?us-ascii?Q?1jQG+GIACwxTMAsRwW+41TSNb1g+w+UjS5snYaNLGaf1YA+82she4pR0j/dY?=
- =?us-ascii?Q?4wkslkYOovkmjItB3NY1VV9+HJgUYtUqF2uG+UzhqdkY3K8V4Sji+1ABG/NQ?=
- =?us-ascii?Q?q1EHGv+K2ryQYACWQCA6lkdyaQcim+jGGxugTbeWUOLHmkTkxjZC5vzYu3TB?=
- =?us-ascii?Q?jPhEduew3VBGPPtwJ8wtLdAY0E0Yiw1UZ4wuP6fw1yH8J57y+1x3d9HazJO9?=
- =?us-ascii?Q?Tfgp95PMGPXt6OlD487bAcJZHpy7TjiNhOEdnwMUei0lG0MGZvQkamRkeWkq?=
- =?us-ascii?Q?kbMvJVWzRbYGvQe+ok93IDD8rHMgG6En1GJrjd8tUKp/DlRn+EmJeF/K4h/Q?=
- =?us-ascii?Q?QUNtgS1l6vVpd6Hwvh9tGgIYiLhaSyR9wOKfOZsJy87eJhTzmS2TTBGU+aRj?=
- =?us-ascii?Q?2dsEc8Ca7ZIDwywtKha2lflXAHvwT6eqSmhqFUyZIuV/YLfHo8XLO2n1A/qS?=
- =?us-ascii?Q?Dszz2/GtMqXlQmZR5RKj2OZlQigmWUl+r+NF/joALMGX1jyABv1UKQxtcF28?=
- =?us-ascii?Q?SPfvO5lVWM8jHBBd8gi5dMDJsfDXq4GGxq0396M76nmvbjXvVpOGURzMnsV/?=
- =?us-ascii?Q?OdnlEiZbPhhf1RpeiCPS/tQGw5TYTJHG8ybTTggwYmXi5yf1qyx5JDH72Mh8?=
- =?us-ascii?Q?23rbFy6MyhDVELlmUSolY1PmRsqQmyTv8JoxMxTbTiRdqHloArdu/G6sdgDx?=
- =?us-ascii?Q?Fk9D9htYmP6T6LKVbz4w9OCB2eqjCfqjO0QIDqhokh44dSHnXz5GZq5kNVwK?=
- =?us-ascii?Q?pX4bYvI1j9gCqjhB/EcVGckXfnDjPAL/58FsGn1qiWlL0aLkT4xUpB/EFesV?=
- =?us-ascii?Q?KYpEqh2wF1oVXYNJY9W/CumSeyfaE5L4o/lPOVNuio0T7Tz2feBGxpRYUINT?=
- =?us-ascii?Q?KlItyQu7sibSKbRfeLG2ePLweKAwrgqiWD6rJwM1MXb/qEdNwsFbsxFSBBEo?=
- =?us-ascii?Q?RiuQOwh9jRrA7A0sDgXInidl0wcz0f5ruGpQdMQhEgi4DdKlpEB3K+w/Z7QA?=
- =?us-ascii?Q?EBmdY5eXqViejqYij9uW6JDhLoGXvUrq43kSEUwwB4+TrhlbDvvAzbsdz0rT?=
- =?us-ascii?Q?41gRR0tsS4f16q4+Av3IAZgXVuMsVPw=3D?=
-X-Exchange-RoutingPolicyChecked: hdTdZGmGnru6JcGMwOXbHUwQb07B0EzNwb13LCRmatc/MVHZZczsPoGLXc8I4te6VHxxlK9Naf89t+RUNfv7o71jOywH/Ndh/ZpuLoBO1zCtzC8292uNhcL7e5Pk2X+8Z3kWBzntekwf8pcx8GGq5yYxuakIJRi2pqKog6lNuGnfMvjta4Zxkork2Yj5mN28/QeoZ5xo6ixWFnp07fO6/A8F3996Ce+KUjdboZxPa3iNjnIcDKW6bOS8iyw2B7D4Xqu1BN53yI1V/suOf6IoicCO1ladX/P1R8ZFFOCrptcdW2kwafvhTfcI9zXDnGin8wvMp6h/J1IXwcauv70R4w==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06abb04a-712f-470b-aa08-08deb50e9cfc
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2026 18:52:30.3412
+X-MS-Exchange-AntiSpam-MessageData-0:
+	z5HLMO5rx+pbdANkeNvBI1Hs5uuzpiv4sipV0Cu9SWpzNLcOMNBeU/SRUXQWHvYGGZt+Ptmre1I/jYApYy6bglFAtp6CkOmLsYrAHuwNQlneLp1kCEJI+lLXiWwpInYnDRAoai7AVeY/ou5nWL42sovCvZUH8j+ZqO5Yo1/SZ3Oa+rmzfjNtuXYooDr/kKgWPjRWUO1x+OieVYqDNn0AWXgvAUpuPv9a+8/gwNDmJ7WMXJeGFgO3aJkXAL/cGWpgGPW8Iw/nKZGJAi6+LaQFq3T6agBCBLdDlODy57k9QkNhOuOJyJr+J93SzDji7s1Yej/D8jaLJIpgaOSKTzzpCk8k1nyA0LFmLtACdWmmhfzHoA3ZbWx27UubtMaPISG1GagkYi7P07UPwQWTL4rw1+m2RIJWdsUtHLn8rwzmLRTQD3ktklPbpoFiovY1mo5C
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2026 21:28:43.0145
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gX/PDOLKxPJ17QlpLmVGqO0HoGSx9xu6GPKB50UE4WkUKXrf9xO7cSl6RoWXssAk/GqNTH+zyBmP4keFQdRK3/P+v21sVvnvcNBdBwQ/mc0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8718
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24955ece-63d3-415e-29fa-08deb5246fc0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CE1.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7762
 
-On Mon, May 18, 2026 at 05:01:41PM +0100, Jonathan Cameron wrote:
-> On Thu, 14 May 2026 15:13:20 -0700
-> Alison Schofield <alison.schofield@intel.com> wrote:
+On 5/15/2026 9:20 PM, Davidlohr Bueso wrote:
+> Add register probing for BI Route Table and BI Decoder capability
+> structures in cxl_probe_component_regs(), and initialize BI registers
+> during port probe for switch ports and endpoint ports.
 > 
-> > On Thu, May 14, 2026 at 07:37:49PM +0100, Jonathan Cameron wrote:
-> > > On Thu, 14 May 2026 14:32:34 +0800
-> > > Chen Pei <cp0613@linux.alibaba.com> wrote:
-> > >   
-> > > > kmod_module_probe_insert_module() is supposed to return 0 for builtin
-> > > > modules, but only when libkmod can locate the modules.builtin index. If
-> > > > the index is missing or out of sync, libkmod falls through to the real
-> > > > init_module() syscall and returns an error such as -ENOENT, producing a
-> > > > spurious "insert failure" even though the driver is already part of the
-> > > > running kernel.
-> > > > 
-> > > > Pre-check kmod_module_get_initstate() and short-circuit when the module
-> > > > is KMOD_MODULE_BUILTIN or KMOD_MODULE_LIVE, matching the pattern used by
-> > > > ndctl's own test/core.c.  
-> > > 
-> > > So I happened to run into exactly this print earlier today and was
-> > > very happy to see this resolving it! I'm lazy so when developing in
-> > > a VM tend to do everything I care about built in and not bother with
-> > > installing the modules.
-> > > 
-> > > However - despite having CONFIG_DEV_DAX = y in the kernel, I'm getting
-> > > a state of KMOD_MODULE_COMING which is curious as there is no
-> > > initstate file to read that from.  
-> > 
-> > I think this patch is worth you trying. In libmkmod code I'm looking at:
+> Each port's probe initializes its own BI cap and the parent dport's
+> BI Decoder. Switch DSPs are therefore mapped by the children below
+> them (endpoint or sub-switch USP), and a root port is mapped by
+> whichever cxl_port sits directly below it -- a switch USP, or a
+> direct attached endpoint.
 > 
-> It doesn't work - hence the reply!
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> ---
+>  drivers/cxl/core/regs.c | 14 +++++++
+>  drivers/cxl/cxl.h       |  6 +++
+>  drivers/cxl/port.c      | 89 +++++++++++++++++++++++++++++++++++++++++
+>  include/cxl/cxl.h       |  6 +++
+>  4 files changed, 115 insertions(+)
 > 
-> > 
-> > https://github.com/lucasdemarchi/kmod/blob/master/libkmod/libkmod-module.c
-> > 
-> > the "module directory exists but initstate cannot be opened" case returns
-> > KMOD_MODULE_BUILTIN, not KMOD_MODULE_COMING.
-> 
-> I'm  not following... Also...
-> https://github.com/kmod-project/kmod/tree/master/libkmod
-> Is a lot more recent than that tree of Lucas and I'm guessing the current
-> home given it has 2 week old commits from Lucas.
-> 
-> Can you give me a line number for the path you are talking about because even
-> in that code of Lucas I'm failing to see it.  Note the kmod_module_is_buitin()
-> fails for the reason this patch is trying to fix. The file to check that isn't
-> there - hence we hit the path that tries to figure it out from sysfs.
-> I can't see any other path to a KMOD_MODULE_BUILTIN.
-> 
-> Jonathan
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 93710cf4f0a6..a6caa793e7a4 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -92,6 +92,18 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+>  			length = CXL_RAS_CAPABILITY_LENGTH;
+>  			rmap = &map->ras;
+>  			break;
+> +		case CXL_CM_CAP_CAP_ID_BI_RT:
+> +			dev_dbg(dev, "found BI RT capability (0x%x)\n",
+> +				offset);
+> +			length = CXL_BI_RT_CAPABILITY_LENGTH;
+> +			rmap = &map->bi_rt;
+> +			break;
+> +		case CXL_CM_CAP_CAP_ID_BI_DECODER:
+> +			dev_dbg(dev, "found BI Decoder capability (0x%x)\n",
+> +				offset);
+> +			length = CXL_BI_DECODER_CAPABILITY_LENGTH;
+> +			rmap = &map->bi_decoder;
+> +			break;
+>  		default:
+>  			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
+>  				offset);
+> @@ -211,6 +223,8 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
+>  	} mapinfo[] = {
+>  		{ &map->component_map.hdm_decoder, &regs->hdm_decoder },
+>  		{ &map->component_map.ras, &regs->ras },
+> +		{ &map->component_map.bi_rt, &regs->bi_rt },
+> +		{ &map->component_map.bi_decoder, &regs->bi_decoder },
+>  	};
+>  	int i;
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 1297594beaec..760f51b43891 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -42,6 +42,12 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
+>  #define   CXL_CM_CAP_CAP_ID_RAS 0x2
+>  #define   CXL_CM_CAP_CAP_ID_HDM 0x5
+>  #define   CXL_CM_CAP_CAP_HDM_VERSION 1
+> +#define   CXL_CM_CAP_CAP_ID_BI_RT 0xB
+> +#define   CXL_CM_CAP_CAP_ID_BI_DECODER 0xC
+> +
+> +/* CXL 4.0 8.2.4.26 / 8.2.4.27 BI Capability Structures */
+> +#define CXL_BI_RT_CAPABILITY_LENGTH 0xC
+> +#define CXL_BI_DECODER_CAPABILITY_LENGTH 0xC
+>  
+>  /* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
+>  #define CXL_HDM_DECODER_CAP_OFFSET 0x0
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index ada51948d52f..e0ac9432848a 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -58,6 +58,91 @@ static int discover_region(struct device *dev, void *unused)
+>  	return 0;
+>  }
+>  
+> +static int cxl_dport_init_bi(struct cxl_dport *dport)
+> +{
+> +	struct cxl_register_map *map = &dport->reg_map;
+> +	struct device *dev = dport->dport_dev;
+> +
+> +	/*
+> +	 * Already mapped. The BI Decoder iomap persists for the dport's
+> +	 * lifetime via the parent cxl_port's devm context.
+> +	 */
+> +	if (dport->regs.bi_decoder)
+> +		return 0;
+> +
+> +	if (!map->component_map.bi_decoder.valid) {
+> +		dev_dbg(dev, "BI decoder registers not found\n");
+> +		return 0;
+> +	}
+> +
+> +	if (cxl_map_component_regs(map, &dport->regs.component,
+> +				   BIT(CXL_CM_CAP_CAP_ID_BI_DECODER))) {
+> +		dev_dbg(dev, "Failed to map BI decoder capability.\n");
+> +		return -EINVAL;
 
-Ah, thanks, I see where I went off track. Aside from looking at old
-tree, I conflated kmod_module_is_builtin() w kmod_module_get_initstate()
-path that this patch is actually using.
+It looks like the return value of this function isn't being used. I haven't looked ahead in the
+series, but the return type should be void if it's never updated.
 
-So, I think I get it now and agree w you that once the builtin lookup
-path fails, we end up in sysfs probe path instead,  which returns
-KMOD_MODULE_COMING when both these are true:
+What initially caught my eye here was not returning the result of cxl_map_component_regs() here.
+It's probably better to return the result since it's the error code of the actual problem, even
+though it will always be -ENOMEM.
 
-	/sys/module/name/ exists 
-	/sys/module/name/initstate does not exist
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Initialize Back-Invalidate registers for @port: map the BI Decoder on
+> + * the upstream parent dport (root port or switch DSP), and map this
+> + * port's own BI capability -- BI RT for a switch USP, BI Decoder for
+> + * an endpoint.
+> + */
+> +static void cxl_port_init_bi(struct cxl_port *port)
+> +{
+> +	struct cxl_register_map *map = &port->reg_map;
+> +	struct cxl_dport *parent_dport = port->parent_dport;
+> +	struct device *dport_dev, *udev;
+> +	int cap_id;
+> +
+> +	/* no upstream BI registers above host bridges or the cxl_root */
+> +	if (!parent_dport || is_cxl_root(parent_dport->port))
+> +		return;
+> +
+> +	/* BI requires 256B Flit on the upstream link */
+> +	udev = is_cxl_endpoint(port) ?
+> +		port->uport_dev->parent : port->uport_dev;
+> +	if (dev_is_pci(udev) && !cxl_pci_flit_256(to_pci_dev(udev)))
+> +		return;
+> +
+> +	dport_dev = parent_dport->dport_dev;
+> +	if (dev_is_pci(dport_dev)) {
+> +		switch (pci_pcie_type(to_pci_dev(dport_dev))) {
+> +		case PCI_EXP_TYPE_ROOT_PORT:
+> +		case PCI_EXP_TYPE_DOWNSTREAM:
+> +			cxl_dport_init_bi(parent_dport);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (is_cxl_endpoint(port)) {
+> +		if (port->regs.bi_decoder)
+> +			return;
+> +		if (!map->component_map.bi_decoder.valid) {
+> +			dev_dbg(&port->dev, "BI Decoder registers not found\n");
+> +			return;
+> +		}
+> +		cap_id = CXL_CM_CAP_CAP_ID_BI_DECODER;
+> +	} else {
+> +		if (port->regs.bi_rt)
+> +			return;
+> +		if (!map->component_map.bi_rt.valid) {
+> +			dev_dbg(&port->dev, "BI RT registers not found\n");
+> +			return;
+> +		}
+> +		cap_id = CXL_CM_CAP_CAP_ID_BI_RT;
+> +	}
 
-Seems like patch needs one more case. In addition to LIVE || BUILTIN,
-like:
-	|| (COMING && sysfs-dir-exists-without-initstate)
-rather than reling on kmod_module_getinitstate() alone.
+Nit: I overlooked that this is now mapping the port's BI capability, maybe a comment above the if statement
+so that readers don't just gloss over it (like myself :/).
+> +
+> +	map->host = &port->dev;
+> +	if (cxl_map_component_regs(map, &port->regs, BIT(cap_id)))
+> +		dev_dbg(&port->dev, "Failed to map BI capability 0x%x\n",
+> +			cap_id);
+> +}
+> +
+>  static int cxl_switch_port_probe(struct cxl_port *port)
+>  {
+>  	/* Reset nr_dports for rebind of driver */
+> @@ -66,6 +151,8 @@ static int cxl_switch_port_probe(struct cxl_port *port)
+>  	/* Cache the data early to ensure is_visible() works */
+>  	read_cdat_data(port);
+>  
+> +	cxl_port_init_bi(port);
+> +
 
--- Alison
+Do you need this to be set up before an endpoint arrives? If not, I would prefer
+this to be mapped with the other capabilities in cxl_port_add_dport(). That may
+also allow you to get rid of the below call in the endpoint probe, but I'm not
+sure about that...
 
-> 
-> 
-> > 
-> > So if device_dax is builtin and /sys/module/device_dax exists without
-> > initstate, this patch should short-circuit before attempting insert. If
-> > you still see COMING with this patch applied, then we need to figure out
-> > where that state is coming from (before thinking about special casing
-> > it in ndctl).
-> > 
-> > > 
-> > > Looking at the code in libkmod it seems to first check if it can open
-> > > /sys/modules/device_dax/initstate and if it can't checks if
-> > > the directory /sys/modules/device_dax/ exists. If it finds that it returns
-> > > KMOD_MODULE_COMING which seems odd given in a fully initialized built in driver
-> > > that particular set of circumstances is normal.
-> > > 
-> > > Any ideas?
-> > > 
-> > > To me the description above is misleading if we need to have something else
-> > > for the builtin case to work.
-> > > 
-> > > I'm out of time to today but may get time to look at this tomorrow and chase
-> > > down if there is a way to get it to work.
-> > > 
-> > > Jonathan
-> > > 
-> > >   
-> > > > 
-> > > > For builtin modules the local kmod reference is dropped because builtin
-> > > > drivers cannot be unloaded; for live modules the reference is retained
-> > > > in dev->module, matching the post-probe-success behavior.
-> > > > 
-> > > > Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
-> > > > ---
-> > > >  daxctl/lib/libdaxctl.c | 18 ++++++++++++++++--
-> > > >  util/sysfs.c           | 17 +++++++++++------
-> > > >  2 files changed, 27 insertions(+), 8 deletions(-)
-> > > > 
-> > > > diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
-> > > > index ffc81eb..42bfc39 100644
-> > > > --- a/daxctl/lib/libdaxctl.c
-> > > > +++ b/daxctl/lib/libdaxctl.c
-> > > > @@ -910,7 +910,7 @@ static int daxctl_insert_kmod_for_mode(struct daxctl_dev *dev,
-> > > >  	const char *devname = daxctl_dev_get_devname(dev);
-> > > >  	struct daxctl_ctx *ctx = daxctl_dev_get_ctx(dev);
-> > > >  	struct kmod_module *kmod;
-> > > > -	int rc;
-> > > > +	int state, rc;
-> > > >  
-> > > >  	rc = kmod_module_new_from_name(ctx->kmod_ctx, mod_name, &kmod);
-> > > >  	if (rc < 0) {
-> > > > @@ -919,7 +919,21 @@ static int daxctl_insert_kmod_for_mode(struct daxctl_dev *dev,
-> > > >  		return rc;
-> > > >  	}
-> > > >  
-> > > > -	/* if the driver is builtin, this Just Works */
-> > > > +	/* If the driver is builtin or already live, skip probe-insert. */
-> > > > +	state = kmod_module_get_initstate(kmod);
-> > > > +	if (state == KMOD_MODULE_BUILTIN) {
-> > > > +		dbg(ctx, "%s: module %s is builtin\n", devname,
-> > > > +			kmod_module_get_name(kmod));
-> > > > +		kmod_module_unref(kmod);
-> > > > +		return 0;
-> > > > +	}
-> > > > +	if (state == KMOD_MODULE_LIVE) {
-> > > > +		dbg(ctx, "%s: module %s already loaded\n", devname,
-> > > > +			kmod_module_get_name(kmod));
-> > > > +		dev->module = kmod;
-> > > > +		return 0;
-> > > > +	}
-> > > > +
-> > > >  	dbg(ctx, "%s inserting module: %s\n", devname,
-> > > >  		kmod_module_get_name(kmod));
-> > > >  	rc = kmod_module_probe_insert_module(kmod,
-> > > > diff --git a/util/sysfs.c b/util/sysfs.c
-> > > > index e027e38..641b86d 100644
-> > > > --- a/util/sysfs.c
-> > > > +++ b/util/sysfs.c
-> > > > @@ -183,12 +183,17 @@ int __util_bind(const char *devname, struct kmod_module *module,
-> > > >  	}
-> > > >  
-> > > >  	if (module) {
-> > > > -		rc = kmod_module_probe_insert_module(module,
-> > > > -						     KMOD_PROBE_APPLY_BLACKLIST,
-> > > > -						     NULL, NULL, NULL, NULL);
-> > > > -		if (rc < 0) {
-> > > > -			log_err(ctx, "%s: insert failure: %d\n", __func__, rc);
-> > > > -			return rc;
-> > > > +		/* Skip probe-insert when the module is already builtin or live. */
-> > > > +		int state = kmod_module_get_initstate(module);
-> > > > +
-> > > > +		if (state != KMOD_MODULE_BUILTIN && state != KMOD_MODULE_LIVE) {
-> > > > +			rc = kmod_module_probe_insert_module(module,
-> > > > +							     KMOD_PROBE_APPLY_BLACKLIST,
-> > > > +							     NULL, NULL, NULL, NULL);
-> > > > +			if (rc < 0) {
-> > > > +				log_err(ctx, "%s: insert failure: %d\n", __func__, rc);
-> > > > +				return rc;
-> > > > +			}
-> > > >  		}
-> > > >  	}
-> > > >    
-> > >   
-> 
+>  	return 0;
+>  }
+>  
+> @@ -128,6 +215,8 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+>  	read_cdat_data(port);
+>  	cxl_endpoint_parse_cdat(port);
+>  
+> +	cxl_port_init_bi(port);
+> +
+>  	get_device(&cxlmd->dev);
+>  	rc = devm_add_action_or_reset(&port->dev, schedule_detach, cxlmd);
+>  	if (rc)
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index fa7269154620..8ce9b4e9ca73 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -34,10 +34,14 @@ struct cxl_regs {
+>  	 * Common set of CXL Component register block base pointers
+>  	 * @hdm_decoder: CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure
+>  	 * @ras: CXL 2.0 8.2.5.9 CXL RAS Capability Structure
+> +	 * @bi_rt: CXL 4.0 8.2.4.26 CXL BI Route Table Capability Structure
+> +	 * @bi_decoder: CXL 4.0 8.2.4.27 CXL BI Decoder Capability Structure
+>  	 */
+>  	struct_group_tagged(cxl_component_regs, component,
+>  		void __iomem *hdm_decoder;
+>  		void __iomem *ras;
+> +		void __iomem *bi_rt;
+> +		void __iomem *bi_decoder;
+>  	);
+>  	/*
+>  	 * Common set of CXL Device register block base pointers
+> @@ -80,6 +84,8 @@ struct cxl_reg_map {
+>  struct cxl_component_reg_map {
+>  	struct cxl_reg_map hdm_decoder;
+>  	struct cxl_reg_map ras;
+> +	struct cxl_reg_map bi_rt;
+> +	struct cxl_reg_map bi_decoder;
+>  };
+>  
+>  struct cxl_device_reg_map {
+
