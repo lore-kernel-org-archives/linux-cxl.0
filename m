@@ -1,494 +1,204 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A3F132C957;
-	Mon, 18 May 2026 11:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC29448AE17;
+	Mon, 18 May 2026 16:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779105560; cv=none; b=nDaud4vsOD22sdbr+GxSexNHf+yFigl+J2A1HQyoUu2KKEnqNHbwpf17WW8sUXZAIf+dfKbPWezbswOT4KZulFYJ4OMDgbVc7n8ScG7R7Rj65l3nPGZL0IEsSzyppmtEc5FELOxBOkdEDhgcsVayzLUM6k8emRgPqaev7jHe02w=
+	t=1779120109; cv=none; b=J/S/NCK21FZsh0mq8RIsZWR4eHIP+2shmwidw3b4LQpkUh8HVbaokCOffQdCItEPN0OHWb6FdwCytHTWbNWpRjG7uXBlLUwgNr7jAN/dSfK1K+PIWToAqicaeSxWisQhC88vL3WCsTQlfB4A6K/t7YRxPn4pH1w5Zj8IBe95Jus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779105560; c=relaxed/simple;
-	bh=r6+RDImTuCKLMNv+Yx19iSfyf7Yu2SLHUNVPzgPpbt4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lwMWNrPjT1k+Gm+Afc85UvqBbZOdxM/iGSc+MqRDCHFYuwy10A1j0ZWmFC5Yxrx6ejQIcNmdLOlUt8vfimFpUz6rIUZ/PI9xPSr8hK/ZwNaGr6VID8rKoW1T0GvOvTwC3FcKpArHeGnv4DTSKhyOv8MNrnU/utRrbvS+p3kJwIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=lFcsdUWu; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1779120109; c=relaxed/simple;
+	bh=FCGWUGMNjJV87dNcPdgRZIs+BRGoP/SlXkuHlY98T30=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UR37kub0wtnjrFGYG1OP7Nhmu/CIApDYsYFHn8CJRxMV1sQR7zExI8WW5GI+WcP1TOYnXIgiiaVsFx/WH1fFUNAUu93Nl2pxLnoPUMY4Q8DNgCUIX8gg6RAaxBqRG5a0yurdVbOcuePet0EC79ULDRdNauY8rH8mShAgNYe4mXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mooAlLJ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="lFcsdUWu"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 509FC4617;
-	Mon, 18 May 2026 04:59:06 -0700 (PDT)
-Received: from e134710.arm.com (e134710.arm.com [10.33.10.82])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A0C53F85F;
-	Mon, 18 May 2026 04:59:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1779105551; bh=r6+RDImTuCKLMNv+Yx19iSfyf7Yu2SLHUNVPzgPpbt4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=lFcsdUWuJTHXOBnDTFvCPSLLjDhMH/ctZ7t4YGt9TkjjgkryqV+Cku8CHVb0eBvdc
-	 yD5xtNHR6EEry5W7g8zPwUE0O+qELtcGtaq7H4VDdWF+FAHdY1V4GU2ylIGkLSlCXw
-	 SD8KjCcQrfrYSGxjK/sHFs8VxxRpZQ7FP2VZsEIA=
-From: Ahmed Tiba <ahmed.tiba@arm.com>
-Date: Mon, 18 May 2026 12:57:53 +0100
-Subject: [PATCH v4 10/10] RAS: add firmware-first CPER provider
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mooAlLJ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31EB4C2BCB7;
+	Mon, 18 May 2026 16:01:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779120109;
+	bh=FCGWUGMNjJV87dNcPdgRZIs+BRGoP/SlXkuHlY98T30=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mooAlLJ8eGyEh5XBPlgxqvsOXURyISyRpD+m1sQYECwNeyFbeEHQd93ygi+yV+zz+
+	 /D7lxzPpUKC88m5HLKZaMcoq1VhExtoQfxk0jJmZmPSNIjwBYs0zz4QczjWLZRx2b3
+	 9k+xlTk2idgJUG0EPnDtufZe0lfnxNVgo+csGqw2kLeSvhOhgnDvi7Pu2Z0Sx+g3hS
+	 stHOOgdePpxzdd6RHCt7KUO+ghfFIs4jhQHEcmbirbMW0sJHe1Drpwu6LV1/VUAnbQ
+	 LQRDhfONGIyGQF5PoGV0zxcPgWoNtm1X6E6f36wG4XcTgDIQSRg955GqS0/34bZIBS
+	 8jmUXACbLmvqA==
+Date: Mon, 18 May 2026 17:01:41 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Chen Pei <cp0613@linux.alibaba.com>, <nvdimm@lists.linux.dev>,
+ <linux-cxl@vger.kernel.org>, <guoren@kernel.org>
+Subject: Re: [ndctl PATCH 2/2] daxctl, util/sysfs: skip module probe-insert
+ when driver is builtin or live
+Message-ID: <20260518170141.215d1755@jic23-huawei>
+In-Reply-To: <agZJACMViARKTp8W@aschofie-mobl2.lan>
+References: <20260514063234.86439-1-cp0613@linux.alibaba.com>
+	<20260514063234.86439-3-cp0613@linux.alibaba.com>
+	<20260514193749.0f0750e2@jic23-huawei>
+	<agZJACMViARKTp8W@aschofie-mobl2.lan>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260518-topics-ahmtib01-ras_ffh_arm_internal_review-v4-10-42698675ba61@arm.com>
-References: <20260518-topics-ahmtib01-ras_ffh_arm_internal_review-v4-0-42698675ba61@arm.com>
-In-Reply-To: <20260518-topics-ahmtib01-ras_ffh_arm_internal_review-v4-0-42698675ba61@arm.com>
-To: rafael@kernel.org, bp@alien8.de, saket.dumbre@intel.com, 
- will@kernel.org, xueshuai@linux.alibaba.com, mchehab@kernel.org, 
- krzk+dt@kernel.org, dave@stgolabs.net, conor+dt@kernel.org, 
- vishal.l.verma@intel.com, jic23@kernel.org, corbet@lwn.net, 
- guohanjun@huawei.com, dave.jiang@intel.com, catalin.marinas@arm.com, 
- lenb@kernel.org, tony.luck@intel.com, skhan@linuxfoundation.org, 
- djbw@kernel.org, alison.schofield@intel.com, ira.weiny@intel.com, 
- robh@kernel.org
-Cc: Ahmed Tiba <ahmed.tiba@arm.com>, devicetree@vger.kernel.org, 
- linux-acpi@vger.kernel.org, linux-doc@vger.kernel.org, 
- Dmitry.Lamerov@arm.com, linux-cxl@vger.kernel.org, Michael.Zhao2@arm.com, 
- acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779105490; l=12767;
- i=ahmed.tiba@arm.com; s=20260219; h=from:subject:message-id;
- bh=r6+RDImTuCKLMNv+Yx19iSfyf7Yu2SLHUNVPzgPpbt4=;
- b=Dm1ll5gN7H7QlF+vqSoU49cHhTmuC+3TCZAcO7Ij8jXl6nzLkCv+tqxm8Ay8UQsVevm9PfJx3
- TZrV+7nVEP3A5gIuqoU/2XcT4eBkhT2/zkfA6m7w8FYBwx5TNIBoKow
-X-Developer-Key: i=ahmed.tiba@arm.com; a=ed25519;
- pk=xVOtd+Qklh/4tuM3tB+BEZD4jj5a6W59C3KCNX6v7OE=
 
-Add a firmware-first CPER provider that reuses the shared
-GHES helpers, wire it into the RAS Kconfig/Makefile and
-document it in the admin guide.
+On Thu, 14 May 2026 15:13:20 -0700
+Alison Schofield <alison.schofield@intel.com> wrote:
 
-Update MAINTAINERS now that the driver exists.
+> On Thu, May 14, 2026 at 07:37:49PM +0100, Jonathan Cameron wrote:
+> > On Thu, 14 May 2026 14:32:34 +0800
+> > Chen Pei <cp0613@linux.alibaba.com> wrote:
+> >   
+> > > kmod_module_probe_insert_module() is supposed to return 0 for builtin
+> > > modules, but only when libkmod can locate the modules.builtin index. If
+> > > the index is missing or out of sync, libkmod falls through to the real
+> > > init_module() syscall and returns an error such as -ENOENT, producing a
+> > > spurious "insert failure" even though the driver is already part of the
+> > > running kernel.
+> > > 
+> > > Pre-check kmod_module_get_initstate() and short-circuit when the module
+> > > is KMOD_MODULE_BUILTIN or KMOD_MODULE_LIVE, matching the pattern used by
+> > > ndctl's own test/core.c.  
+> > 
+> > So I happened to run into exactly this print earlier today and was
+> > very happy to see this resolving it! I'm lazy so when developing in
+> > a VM tend to do everything I care about built in and not bother with
+> > installing the modules.
+> > 
+> > However - despite having CONFIG_DEV_DAX = y in the kernel, I'm getting
+> > a state of KMOD_MODULE_COMING which is curious as there is no
+> > initstate file to read that from.  
+> 
+> I think this patch is worth you trying. In libmkmod code I'm looking at:
 
-Signed-off-by: Ahmed Tiba <ahmed.tiba@arm.com>
----
- Documentation/admin-guide/RAS/main.rst |  18 +++
- MAINTAINERS                            |   1 +
- drivers/acpi/apei/apei-internal.h      |  10 +-
- drivers/acpi/apei/ghes_cper.c          |   2 +
- drivers/ras/Kconfig                    |  11 ++
- drivers/ras/Makefile                   |   1 +
- drivers/ras/cper-esource.c             | 257 +++++++++++++++++++++++++++++++++
- include/acpi/ghes_cper.h               |  10 ++
- 8 files changed, 301 insertions(+), 9 deletions(-)
+It doesn't work - hence the reply!
 
-diff --git a/Documentation/admin-guide/RAS/main.rst b/Documentation/admin-guide/RAS/main.rst
-index 5a45db32c49b..84219d25a072 100644
---- a/Documentation/admin-guide/RAS/main.rst
-+++ b/Documentation/admin-guide/RAS/main.rst
-@@ -205,6 +205,24 @@ Architecture (MCA)\ [#f3]_.
- .. [#f3] For more details about the Machine Check Architecture (MCA),
-   please read Documentation/arch/x86/x86_64/machinecheck.rst at the Kernel tree.
- 
-+Firmware-first CPER providers
-+-----------------------------
-+
-+Some systems expose Common Platform Error Record (CPER) data
-+through platform firmware instead of ACPI HEST tables.
-+Enable ``CONFIG_RAS_CPER_ESOURCE`` to build the ``drivers/ras/cper-esource.c``
-+driver. The current in-tree firmware description uses the
-+``Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml`` binding.
-+The driver reuses the GHES CPER helper object in
-+``drivers/acpi/apei/ghes_cper.c`` so the logging, notifier chains, and
-+memory failure handling match the ACPI GHES behaviour even when
-+ACPI is disabled.
-+
-+Once a platform describes a firmware-first provider, both ACPI GHES and the
-+firmware-described driver reuse the same code paths. This keeps the
-+behaviour consistent regardless of whether the error source is described
-+by ACPI tables or another firmware description.
-+
- EDAC - Error Detection And Correction
- *************************************
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3bbc19589f1a..8a5151a49820 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22255,6 +22255,7 @@ RAS ERROR STATUS
- M:	Ahmed Tiba <ahmed.tiba@arm.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml
-+F:	drivers/ras/cper-esource.c
- 
- RAS INFRASTRUCTURE
- M:	Tony Luck <tony.luck@intel.com>
-diff --git a/drivers/acpi/apei/apei-internal.h b/drivers/acpi/apei/apei-internal.h
-index 77c10a7a7a9f..c16ac541f15b 100644
---- a/drivers/acpi/apei/apei-internal.h
-+++ b/drivers/acpi/apei/apei-internal.h
-@@ -8,6 +8,7 @@
- #define APEI_INTERNAL_H
- 
- #include <linux/acpi.h>
-+#include <acpi/ghes_cper.h>
- 
- struct apei_exec_context;
- 
-@@ -120,15 +121,6 @@ int apei_exec_collect_resources(struct apei_exec_context *ctx,
- struct dentry;
- struct dentry *apei_get_debugfs_dir(void);
- 
--static inline u32 cper_estatus_len(struct acpi_hest_generic_status *estatus)
--{
--	if (estatus->raw_data_length)
--		return estatus->raw_data_offset + \
--			estatus->raw_data_length;
--	else
--		return sizeof(*estatus) + estatus->data_length;
--}
--
- int apei_osc_setup(void);
- 
- int einj_get_available_error_type(u32 *type, int einj_action);
-diff --git a/drivers/acpi/apei/ghes_cper.c b/drivers/acpi/apei/ghes_cper.c
-index 0ff9d06eb78f..a7691aa5011c 100644
---- a/drivers/acpi/apei/ghes_cper.c
-+++ b/drivers/acpi/apei/ghes_cper.c
-@@ -46,7 +46,9 @@
- #include <asm/fixmap.h>
- #include <asm/tlbflush.h>
- 
-+#ifdef CONFIG_ACPI_APEI
- #include "apei-internal.h"
-+#endif
- 
- ATOMIC_NOTIFIER_HEAD(ghes_report_chain);
- 
-diff --git a/drivers/ras/Kconfig b/drivers/ras/Kconfig
-index fc4f4bb94a4c..3c1c63b2fefc 100644
---- a/drivers/ras/Kconfig
-+++ b/drivers/ras/Kconfig
-@@ -34,6 +34,17 @@ if RAS
- source "arch/x86/ras/Kconfig"
- source "drivers/ras/amd/atl/Kconfig"
- 
-+config RAS_CPER_ESOURCE
-+	bool "Firmware-first CPER error source block provider"
-+	select GHES_CPER_HELPERS
-+	help
-+	  Enable support for firmware-first Common Platform Error Record
-+	  (CPER) error source block providers. The current in-tree user is
-+	  described by the arm,ras-cper DeviceTree binding. The driver
-+	  reuses the existing GHES CPER helpers so the error processing
-+	  matches the ACPI code paths, but it can be built even when ACPI is
-+	  disabled.
-+
- config RAS_FMPM
- 	tristate "FRU Memory Poison Manager"
- 	default m
-diff --git a/drivers/ras/Makefile b/drivers/ras/Makefile
-index 11f95d59d397..0de069557f31 100644
---- a/drivers/ras/Makefile
-+++ b/drivers/ras/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_RAS)	+= ras.o
- obj-$(CONFIG_DEBUG_FS)	+= debugfs.o
- obj-$(CONFIG_RAS_CEC)	+= cec.o
-+obj-$(CONFIG_RAS_CPER_ESOURCE)	+= cper-esource.o
- 
- obj-$(CONFIG_RAS_FMPM)	+= amd/fmpm.o
- obj-y			+= amd/atl/
-diff --git a/drivers/ras/cper-esource.c b/drivers/ras/cper-esource.c
-new file mode 100644
-index 000000000000..83f7a910e50a
---- /dev/null
-+++ b/drivers/ras/cper-esource.c
-@@ -0,0 +1,257 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Firmware-first CPER error source provider.
-+ *
-+ * This driver shares the GHES CPER helpers so we keep the reporting and
-+ * notifier behaviour identical to ACPI GHES.
-+ *
-+ * Copyright (C) 2026 ARM Ltd.
-+ * Author: Ahmed Tiba <ahmed.tiba@arm.com>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/cleanup.h>
-+#include <linux/idr.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/panic.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+
-+#include <acpi/ghes.h>
-+#include <acpi/ghes_cper.h>
-+
-+static DEFINE_IDA(cper_esource_source_ids);
-+
-+struct cper_esource_ack {
-+	void __iomem *addr;
-+	u64 preserve;
-+	u64 set;
-+	u8 width;
-+	bool present;
-+};
-+
-+struct cper_esource {
-+	struct device *dev;
-+	void __iomem *status;
-+	size_t status_len;
-+
-+	struct cper_esource_ack ack;
-+
-+	struct acpi_hest_generic *generic;
-+	struct acpi_hest_generic_status *estatus;
-+
-+	bool sync;
-+	int irq;
-+
-+	/* Serializes access while firmware and the OS share the status buffer. */
-+	spinlock_t lock;
-+};
-+
-+static void cper_esource_release_source_id(void *data)
-+{
-+	struct acpi_hest_generic *generic = data;
-+
-+	ida_free(&cper_esource_source_ids, generic->header.source_id);
-+}
-+
-+static int cper_esource_init_pool(void)
-+{
-+	if (ghes_estatus_pool)
-+		return 0;
-+
-+	return ghes_estatus_pool_init(1);
-+}
-+
-+static int cper_esource_copy_status(struct cper_esource *ctx)
-+{
-+	memcpy_fromio(ctx->estatus, ctx->status, ctx->status_len);
-+	return 0;
-+}
-+
-+static void cper_esource_ack(struct cper_esource *ctx)
-+{
-+	u64 val;
-+
-+	if (!ctx->ack.present)
-+		return;
-+
-+	if (ctx->ack.width == 64) {
-+		val = readq(ctx->ack.addr);
-+		val &= ctx->ack.preserve;
-+		val |= ctx->ack.set;
-+		writeq(val, ctx->ack.addr);
-+	} else {
-+		val = readl(ctx->ack.addr);
-+		val &= (u32)ctx->ack.preserve;
-+		val |= (u32)ctx->ack.set;
-+		writel(val, ctx->ack.addr);
-+	}
-+}
-+
-+static void cper_esource_fatal(struct cper_esource *ctx)
-+{
-+	__ghes_print_estatus(KERN_EMERG, ctx->generic, ctx->estatus);
-+	add_taint(TAINT_MACHINE_CHECK, LOCKDEP_STILL_OK);
-+	panic("GHES: fatal firmware-first CPER record from %s\n",
-+	      dev_name(ctx->dev));
-+}
-+
-+static void cper_esource_process(struct cper_esource *ctx)
-+{
-+	int sev;
-+
-+	guard(spinlock_irqsave)(&ctx->lock);
-+
-+	if (cper_esource_copy_status(ctx))
-+		return;
-+
-+	sev = ghes_severity(ctx->estatus->error_severity);
-+	if (sev >= GHES_SEV_PANIC)
-+		cper_esource_fatal(ctx);
-+
-+	if (!ghes_estatus_cached(ctx->estatus) &&
-+	    ghes_print_estatus(NULL, ctx->generic, ctx->estatus))
-+		ghes_estatus_cache_add(ctx->generic, ctx->estatus);
-+
-+	ghes_cper_handle_status(ctx->dev, ctx->generic, ctx->estatus, ctx->sync);
-+	cper_esource_ack(ctx);
-+}
-+
-+static irqreturn_t cper_esource_irq(int irq, void *data)
-+{
-+	struct cper_esource *ctx = data;
-+
-+	cper_esource_process(ctx);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int cper_esource_init_ack(struct platform_device *pdev,
-+				 struct cper_esource *ctx)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	size_t size;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	if (!res)
-+		return 0;
-+
-+	ctx->ack.addr = devm_platform_get_and_ioremap_resource(pdev, 1, &res);
-+	if (IS_ERR(ctx->ack.addr))
-+		return PTR_ERR(ctx->ack.addr);
-+
-+	size = resource_size(res);
-+	switch (size) {
-+	case 4:
-+		ctx->ack.width = 32;
-+		ctx->ack.preserve = ~0U;
-+		break;
-+	case 8:
-+		ctx->ack.width = 64;
-+		ctx->ack.preserve = ~0ULL;
-+		break;
-+	default:
-+		return dev_err_probe(dev, -EINVAL,
-+				     "unsupported ack resource size %zu\n", size);
-+	}
-+
-+	ctx->ack.set = BIT_ULL(0);
-+	ctx->ack.present = true;
-+	return 0;
-+}
-+
-+static int cper_esource_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cper_esource *ctx;
-+	struct resource *res;
-+	int source_id;
-+	int rc;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&ctx->lock);
-+	ctx->dev = dev;
-+	ctx->sync = device_property_read_bool(dev, "arm,sea-notify");
-+
-+	ctx->status = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
-+	if (IS_ERR(ctx->status))
-+		return dev_err_probe(dev, PTR_ERR(ctx->status),
-+				     "failed to map status region\n");
-+
-+	ctx->status_len = resource_size(res);
-+	if (!ctx->status_len)
-+		return dev_err_probe(dev, -EINVAL, "status region has zero length\n");
-+
-+	rc = cper_esource_init_ack(pdev, ctx);
-+	if (rc)
-+		return rc;
-+
-+	rc = cper_esource_init_pool();
-+	if (rc)
-+		return rc;
-+
-+	ctx->estatus = devm_kzalloc(dev, ctx->status_len, GFP_KERNEL);
-+	if (!ctx->estatus)
-+		return -ENOMEM;
-+
-+	ctx->generic = devm_kzalloc(dev, sizeof(*ctx->generic), GFP_KERNEL);
-+	if (!ctx->generic)
-+		return -ENOMEM;
-+
-+	source_id = ida_alloc_min(&cper_esource_source_ids, 1, GFP_KERNEL);
-+	if (source_id < 0)
-+		return source_id;
-+
-+	ctx->generic->header.type = ACPI_HEST_TYPE_GENERIC_ERROR;
-+	ctx->generic->header.source_id = source_id;
-+
-+	rc = devm_add_action_or_reset(dev, cper_esource_release_source_id,
-+				      ctx->generic);
-+	if (rc)
-+		return rc;
-+
-+	ctx->generic->notify.type = ctx->sync ?
-+		ACPI_HEST_NOTIFY_SEA : ACPI_HEST_NOTIFY_EXTERNAL;
-+	ctx->generic->error_block_length = ctx->status_len;
-+
-+	ctx->irq = platform_get_irq(pdev, 0);
-+	if (ctx->irq < 0)
-+		return ctx->irq;
-+
-+	rc = devm_request_threaded_irq(dev, ctx->irq, NULL, cper_esource_irq,
-+				       IRQF_ONESHOT,
-+				       dev_name(dev), ctx);
-+	if (rc)
-+		return dev_err_probe(dev, rc, "failed to request interrupt\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cper_esource_of_match[] = {
-+	{ .compatible = "arm,ras-cper" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, cper_esource_of_match);
-+
-+static struct platform_driver cper_esource_driver = {
-+	.driver = {
-+		.name = "cper-esource",
-+		.of_match_table = cper_esource_of_match,
-+	},
-+	.probe = cper_esource_probe,
-+};
-+
-+module_platform_driver(cper_esource_driver);
-+
-+MODULE_AUTHOR("Ahmed Tiba <ahmed.tiba@arm.com>");
-+MODULE_DESCRIPTION("Firmware-first CPER provider");
-+MODULE_LICENSE("GPL");
-diff --git a/include/acpi/ghes_cper.h b/include/acpi/ghes_cper.h
-index 511b95b50911..a78d4a773129 100644
---- a/include/acpi/ghes_cper.h
-+++ b/include/acpi/ghes_cper.h
-@@ -80,6 +80,14 @@ static inline bool is_hest_sync_notify(struct ghes *ghes)
- 	return notify_type == ACPI_HEST_NOTIFY_SEA;
- }
- 
-+static inline u32 cper_estatus_len(struct acpi_hest_generic_status *estatus)
-+{
-+	if (estatus->raw_data_length)
-+		return estatus->raw_data_offset + estatus->raw_data_length;
-+	else
-+		return sizeof(*estatus) + estatus->data_length;
-+}
-+
- struct ghes_vendor_record_entry {
- 	struct work_struct work;
- 	int error_severity;
-@@ -108,6 +116,8 @@ int __ghes_read_estatus(struct acpi_hest_generic_status *estatus,
- int ghes_estatus_cached(struct acpi_hest_generic_status *estatus);
- void ghes_estatus_cache_add(struct acpi_hest_generic *generic,
- 			    struct acpi_hest_generic_status *estatus);
-+int ghes_register_vendor_record_notifier(struct notifier_block *nb);
-+void ghes_unregister_vendor_record_notifier(struct notifier_block *nb);
- void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
- 				   int sev);
- int ghes_severity(int severity);
+> 
+> https://github.com/lucasdemarchi/kmod/blob/master/libkmod/libkmod-module.c
+> 
+> the "module directory exists but initstate cannot be opened" case returns
+> KMOD_MODULE_BUILTIN, not KMOD_MODULE_COMING.
 
--- 
-2.43.0
+I'm  not following... Also...
+https://github.com/kmod-project/kmod/tree/master/libkmod
+Is a lot more recent than that tree of Lucas and I'm guessing the current
+home given it has 2 week old commits from Lucas.
+
+Can you give me a line number for the path you are talking about because even
+in that code of Lucas I'm failing to see it.  Note the kmod_module_is_buitin()
+fails for the reason this patch is trying to fix. The file to check that isn't
+there - hence we hit the path that tries to figure it out from sysfs.
+I can't see any other path to a KMOD_MODULE_BUILTIN.
+
+Jonathan
+
+
+> 
+> So if device_dax is builtin and /sys/module/device_dax exists without
+> initstate, this patch should short-circuit before attempting insert. If
+> you still see COMING with this patch applied, then we need to figure out
+> where that state is coming from (before thinking about special casing
+> it in ndctl).
+> 
+> > 
+> > Looking at the code in libkmod it seems to first check if it can open
+> > /sys/modules/device_dax/initstate and if it can't checks if
+> > the directory /sys/modules/device_dax/ exists. If it finds that it returns
+> > KMOD_MODULE_COMING which seems odd given in a fully initialized built in driver
+> > that particular set of circumstances is normal.
+> > 
+> > Any ideas?
+> > 
+> > To me the description above is misleading if we need to have something else
+> > for the builtin case to work.
+> > 
+> > I'm out of time to today but may get time to look at this tomorrow and chase
+> > down if there is a way to get it to work.
+> > 
+> > Jonathan
+> > 
+> >   
+> > > 
+> > > For builtin modules the local kmod reference is dropped because builtin
+> > > drivers cannot be unloaded; for live modules the reference is retained
+> > > in dev->module, matching the post-probe-success behavior.
+> > > 
+> > > Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+> > > ---
+> > >  daxctl/lib/libdaxctl.c | 18 ++++++++++++++++--
+> > >  util/sysfs.c           | 17 +++++++++++------
+> > >  2 files changed, 27 insertions(+), 8 deletions(-)
+> > > 
+> > > diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
+> > > index ffc81eb..42bfc39 100644
+> > > --- a/daxctl/lib/libdaxctl.c
+> > > +++ b/daxctl/lib/libdaxctl.c
+> > > @@ -910,7 +910,7 @@ static int daxctl_insert_kmod_for_mode(struct daxctl_dev *dev,
+> > >  	const char *devname = daxctl_dev_get_devname(dev);
+> > >  	struct daxctl_ctx *ctx = daxctl_dev_get_ctx(dev);
+> > >  	struct kmod_module *kmod;
+> > > -	int rc;
+> > > +	int state, rc;
+> > >  
+> > >  	rc = kmod_module_new_from_name(ctx->kmod_ctx, mod_name, &kmod);
+> > >  	if (rc < 0) {
+> > > @@ -919,7 +919,21 @@ static int daxctl_insert_kmod_for_mode(struct daxctl_dev *dev,
+> > >  		return rc;
+> > >  	}
+> > >  
+> > > -	/* if the driver is builtin, this Just Works */
+> > > +	/* If the driver is builtin or already live, skip probe-insert. */
+> > > +	state = kmod_module_get_initstate(kmod);
+> > > +	if (state == KMOD_MODULE_BUILTIN) {
+> > > +		dbg(ctx, "%s: module %s is builtin\n", devname,
+> > > +			kmod_module_get_name(kmod));
+> > > +		kmod_module_unref(kmod);
+> > > +		return 0;
+> > > +	}
+> > > +	if (state == KMOD_MODULE_LIVE) {
+> > > +		dbg(ctx, "%s: module %s already loaded\n", devname,
+> > > +			kmod_module_get_name(kmod));
+> > > +		dev->module = kmod;
+> > > +		return 0;
+> > > +	}
+> > > +
+> > >  	dbg(ctx, "%s inserting module: %s\n", devname,
+> > >  		kmod_module_get_name(kmod));
+> > >  	rc = kmod_module_probe_insert_module(kmod,
+> > > diff --git a/util/sysfs.c b/util/sysfs.c
+> > > index e027e38..641b86d 100644
+> > > --- a/util/sysfs.c
+> > > +++ b/util/sysfs.c
+> > > @@ -183,12 +183,17 @@ int __util_bind(const char *devname, struct kmod_module *module,
+> > >  	}
+> > >  
+> > >  	if (module) {
+> > > -		rc = kmod_module_probe_insert_module(module,
+> > > -						     KMOD_PROBE_APPLY_BLACKLIST,
+> > > -						     NULL, NULL, NULL, NULL);
+> > > -		if (rc < 0) {
+> > > -			log_err(ctx, "%s: insert failure: %d\n", __func__, rc);
+> > > -			return rc;
+> > > +		/* Skip probe-insert when the module is already builtin or live. */
+> > > +		int state = kmod_module_get_initstate(module);
+> > > +
+> > > +		if (state != KMOD_MODULE_BUILTIN && state != KMOD_MODULE_LIVE) {
+> > > +			rc = kmod_module_probe_insert_module(module,
+> > > +							     KMOD_PROBE_APPLY_BLACKLIST,
+> > > +							     NULL, NULL, NULL, NULL);
+> > > +			if (rc < 0) {
+> > > +				log_err(ctx, "%s: insert failure: %d\n", __func__, rc);
+> > > +				return rc;
+> > > +			}
+> > >  		}
+> > >  	}
+> > >    
+> >   
 
