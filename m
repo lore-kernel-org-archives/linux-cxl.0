@@ -1,152 +1,315 @@
-Received: from a11-79.smtp-out.amazonses.com (a11-79.smtp-out.amazonses.com [54.240.11.79])
-	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FAB039A050;
-	Mon, 18 May 2026 21:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.11.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 432D43AB291
+	for <linux-cxl@vger.kernel.org>; Mon, 18 May 2026 22:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779140199; cv=none; b=VyuG/QbFGCrUD2J7wMU1C+TmEAF0EHWs559gG5HBXmw/TaOuF3wbKFjZerrZeS6TNba9hymMorXeIs/uAZDq2DnROki7r1Dh6MZ92IsG8rkoSyZ+i1HLKTwLuYFG8eAfxaWc0oJ43HKmVH4knWXQCIjsJ7sXCe5jYUMGHLnBXDg=
+	t=1779142919; cv=none; b=gBR6oZJozmIYWqFyQbBWrtCKfTDtb5+vwh0JlcEgfL203LxWfVS7NFns511jgKZp6CIP1DdKXLd4mBzzJxgxjLi37Rdn0JJzO9RfJ+0WkrckHKBBv4QnJBhv+QEn8V14gO8WbBpgjYIM5kMJkGPM7mQzpEe1N/jP2OsRwKpzdqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779140199; c=relaxed/simple;
-	bh=az1RGapaCTQsQWX566iUctnHK71U0CH1Qh72A3XOvWI=;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:In-Reply-To:
-	 References:Message-ID; b=eUgWQGLo5YQFgGiLCHcQ8pYpHsizuDEMsJiTqazqz0+MjCVuuAPnn3I1rkawpXoAr8NgI+7yB3T53ldxd0G3O+ji0zpbUwHSq3TxdYhPuUvExCV9rtRof842FgO3h0VNL3YgAXffx0UYcJ9Pl4flSDSUSl4Y/IZRqJEMA79/O+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=pmy3ZI2E; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=pYnPvzAB; arc=none smtp.client-ip=54.240.11.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
+	s=arc-20240116; t=1779142919; c=relaxed/simple;
+	bh=XNPtYXuwElH/OaLxhx6P1kigIO/zKKCRVHFdXZhVnCg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j0D1LLa/mBz2tkPBYU3RjWjG8a8ihuu4+yKMgfCyiKvs1WqnT89fy3YLbUODEQ5FtVpeuvj+C/rJHaV/R69YBAuimxmBzCtMO/kYQzTQDQhxKMglqEoI6PIh5zQR16PH+2iJS1sp0+y6Fbc9zj57Rt/66qv9dDnUk6ihO3Er5QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YcIms5ub; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="pmy3ZI2E";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="pYnPvzAB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1779140197;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id;
-	bh=az1RGapaCTQsQWX566iUctnHK71U0CH1Qh72A3XOvWI=;
-	b=pmy3ZI2ERDIh5n+Q18GtVT1yRTjU8XTQU//wSTRFSI5jcvCjfuqmPlYKBVsfLhnb
-	dpM5x18Kml83w4O5RKRUE2cPvBApDx7jVvSJLKINifVTsSW7BNStpZy2UEtgNLc8J28
-	1deMBh5fsMk7ffAidHbTinI2aOeJx/L7dItTLHzc=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1779140197;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id:Feedback-ID;
-	bh=az1RGapaCTQsQWX566iUctnHK71U0CH1Qh72A3XOvWI=;
-	b=pYnPvzAB55htLdedLWJArYxH69KHnh0PXWuwDJAcgoWi3fTsAQUkp+dtQ8K8+ifw
-	VY3ZaAII2dz3Xq/xQZkiAtao50Uu6cLulsS9Q7XAsQS/DBcFgWTQu7mUNjLiwXvdN9i
-	WZ0v3Cl/sFiyT0mTLlCylKj/MQ/FgHBbaRbhatyM=
-Subject: [PATCH 6/6] dax: replace exported dax_dev_get() with non-allocating
- dax_dev_find()
-From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
-To: =?UTF-8?Q?John_Groves?= <John@Groves.net>, 
-	=?UTF-8?Q?Dan_Williams?= <djbw@kernel.org>
-Cc: =?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
-	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
-	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
-	=?UTF-8?Q?Matthew_Wilcox?= <willy@infradead.org>, 
-	=?UTF-8?Q?Jan_Kara?= <jack@suse.cz>, 
-	=?UTF-8?Q?Alexander_Viro?= <viro@zeniv.linux.org.uk>, 
-	=?UTF-8?Q?Christian_Brauner?= <brauner@kernel.org>, 
-	=?UTF-8?Q?Miklos_Szeredi?= <miklos@szeredi.hu>, 
-	=?UTF-8?Q?Alison_Schofiel?= =?UTF-8?Q?d?= <alison.schofield@intel.com>, 
-	=?UTF-8?Q?Ira_Weiny?= <iweiny@kernel.org>, 
-	=?UTF-8?Q?Jonathan_Cameron?= <jic23@kernel.org>, 
-	=?UTF-8?Q?nvdimm=40lists=2Elinux=2Edev?= <nvdimm@lists.linux.dev>, 
-	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
-	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
-	=?UTF-8?Q?linux-fsdevel=40vger=2Ekernel=2Eorg?= <linux-fsdevel@vger.kernel.org>, 
-	=?UTF-8?Q?John_Groves?= <john@groves.net>
-Date: Mon, 18 May 2026 21:36:36 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YcIms5ub"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779142918; x=1810678918;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=XNPtYXuwElH/OaLxhx6P1kigIO/zKKCRVHFdXZhVnCg=;
+  b=YcIms5ubyVFghitGd9KGdmA4fovM8znCgqoo6vH555CViuxxx7PmFwqw
+   WOShIm2n1vSDYxCCTFijfBV8T8wWUFN/yRhz9MOSSVbyXL6ZbujLxYEmw
+   oGMyVMUga/Z3s8HuuRP8wHUDuQGShM62huP+f6IUrhhM+3NZkKUgagQXp
+   t37/VzceLljB3aX5TUCDfQSIWepCAKDWJKp004CYrfLEJWShHQwEDzYFa
+   VTVe8eJ7g1pmR0N/xyyYJ1le/3D6NMCha+GhyEujG5alzH0fym9Vh5gqG
+   rUjAWSGGDtHxx/KGRVszdi/vEzNwbswQI5wS+gjuErNa2HrvvjdkSbyet
+   Q==;
+X-CSE-ConnectionGUID: udakaZ8bT5+WrPorAXpkyA==
+X-CSE-MsgGUID: AcgpS0w8Su66BrzgjpH3lQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11790"; a="97578785"
+X-IronPort-AV: E=Sophos;i="6.23,242,1770624000"; 
+   d="scan'208";a="97578785"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 15:21:57 -0700
+X-CSE-ConnectionGUID: 2ZQK3xGwToapnOsfNR8s7w==
+X-CSE-MsgGUID: pRAITfBeSIKk6ZphoWt1Kg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,242,1770624000"; 
+   d="scan'208";a="239635158"
+Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.109.65]) ([10.125.109.65])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 15:21:57 -0700
+Message-ID: <d83b6b61-ee28-487b-bb5c-ae9ac3f84cf6@intel.com>
+Date: Mon, 18 May 2026 15:21:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/5] cxl: Add BI register probing and port
+ initialization
+To: Davidlohr Bueso <dave@stgolabs.net>, djbw@kernel.org
+Cc: jic23@kernel.org, benjamin.cheatham@amd.com, alucerop@amd.com,
+ alison.schofield@intel.com, ira.weiny@intel.com, gourry@gourry.net,
+ dongjoo.seo1@samsung.com, anisa.su@samsung.com, linux-cxl@vger.kernel.org
+References: <20260516022037.1761453-1-dave@stgolabs.net>
+ <20260516022037.1761453-2-dave@stgolabs.net>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260516022037.1761453-2-dave@stgolabs.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: 
- <0100019e3d03bba9-d27282f3-5552-4fa0-8326-981e4c13dace-000000@email.amazonses.com>
-References: 
- <0100019e3d03bba9-d27282f3-5552-4fa0-8326-981e4c13dace-000000@email.amazonses.com> 
- <20260518213631.31342-1-john@jagalactic.com>
-X-Mailer: Amazon WorkMail
-Thread-Index: AQHc5w41mkJXxS0+R8GcNdWTTpRlkwAADGVL
-Thread-Topic: [PATCH 6/6] dax: replace exported dax_dev_get() with
- non-allocating dax_dev_find()
-X-Wm-Sent-Timestamp: 1779140195
-X-Original-Mailer: git-send-email 2.52.0
-Message-ID: <0100019e3d04fa32-0941bfaf-d42e-4b57-af82-ed8bef9b39c5-000000@email.amazonses.com>
-Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
-X-SES-Outgoing: 2026.05.18-54.240.11.79
+Content-Transfer-Encoding: 7bit
 
-From: John Groves <John@Groves.net>=0D=0A=0D=0AThis fix is in response to=
- a Sashiko review, and some subsequent=0D=0Aanalysis.=0D=0A=0D=0Adax_dev_=
-get() uses iget5_locked() which creates a new inode if no=0D=0Amatching o=
-ne exists. This is correct for the internal caller=0D=0A(alloc_dax), but =
-dangerous for external callers that look up devices=0D=0Afrom user-suppli=
-ed or metadata-supplied dev_t values:=0D=0A=0D=0A1. A new inode is create=
-d with DAXDEV_ALIVE set but no backing driver,=0D=0A   no ops, and no IDA=
--allocated minor number.=0D=0A=0D=0A2. On teardown, dax_destroy_inode() w=
-arns because kill_dax() was never=0D=0A   called, and dax_free_inode() ca=
-lls ida_free() for a minor that was=0D=0A   never ida_alloc'd =E2=80=94 p=
-otentially freeing the minor of a real device.=0D=0A=0D=0AAdd dax_dev_fin=
-d() which uses ilookup5() for lookup-only semantics:=0D=0Ait returns an e=
-xisting dax_device with an elevated inode reference, or=0D=0ANULL if no d=
-evice with the given dev_t exists. It never creates inodes.=0D=0A=0D=0AMa=
-ke dax_dev_get() static again (internal to super.c for alloc_dax),=0D=0Ae=
-xport dax_dev_find() instead, and update the two external callers=0D=0A(f=
-amfs_inode.c, famfs.c). Also add the missing CONFIG_DAX=3Dn stub.=0D=0A=0D=
-=0AFixes: 2ae624d5a555d ("dax: export dax_dev_get()")=0D=0ASigned-off-by:=
- John Groves <john@groves.net>=0D=0A---=0D=0A drivers/dax/super.c    | 27=
- +++++++++++++++++++++++++--=0D=0A fs/famfs/famfs_inode.c |  2 +-=0D=0A f=
-s/fuse/famfs.c        |  2 +-=0D=0A include/linux/dax.h    |  6 +++++-=0D=
-=0A 4 files changed, 32 insertions(+), 5 deletions(-)=0D=0A=0D=0Adiff --g=
-it a/drivers/dax/super.c b/drivers/dax/super.c=0D=0Aindex fa1d2a6eb2408..=
-79e5823d1010d 100644=0D=0A--- a/drivers/dax/super.c=0D=0A+++ b/drivers/da=
-x/super.c=0D=0A@@ -541,7 +541,7 @@ static int dax_set(struct inode *inode=
-, void *data)=0D=0A =09return 0;=0D=0A }=0D=0A=20=0D=0A-struct dax_device=
- *dax_dev_get(dev_t devt)=0D=0A+static struct dax_device *dax_dev_get(dev=
-_t devt)=0D=0A {=0D=0A =09struct dax_device *dax_dev;=0D=0A =09struct ino=
-de *inode;=0D=0A@@ -564,7 +564,30 @@ struct dax_device *dax_dev_get(dev_t=
- devt)=0D=0A=20=0D=0A =09return dax_dev;=0D=0A }=0D=0A-EXPORT_SYMBOL_GPL(=
-dax_dev_get);=0D=0A+=0D=0A+/**=0D=0A+ * dax_dev_find - look up an existin=
-g dax_device by dev_t=0D=0A+ * @devt: the device number to find=0D=0A+ *=0D=
-=0A+ * Returns a dax_device with an elevated inode reference, or NULL if =
-no=0D=0A+ * device with the given dev_t exists. Unlike dax_dev_get(), thi=
-s never=0D=0A+ * allocates a new inode =E2=80=94 it is safe for external =
-callers that are looking=0D=0A+ * up devices from user-supplied or metada=
-ta-supplied dev_t values.=0D=0A+ *=0D=0A+ * Caller must put_dax() the ret=
-urned device when done.=0D=0A+ */=0D=0A+struct dax_device *dax_dev_find(d=
-ev_t devt)=0D=0A+{=0D=0A+=09struct inode *inode;=0D=0A+=0D=0A+=09inode =3D=
- ilookup5(dax_superblock, hash_32(devt + DAXFS_MAGIC, 31),=0D=0A+=09=09=09=
- dax_test, &devt);=0D=0A+=09if (!inode)=0D=0A+=09=09return NULL;=0D=0A+=0D=
-=0A+=09return to_dax_dev(inode);=0D=0A+}=0D=0A+EXPORT_SYMBOL_GPL(dax_dev_=
-find);=0D=0A=20=0D=0A struct dax_device *alloc_dax(void *private, const s=
-truct dax_operations *ops)=0D=0A {=0D=0Adiff --git a/fs/famfs/famfs_inode=
-=2Ec b/fs/famfs/famfs_inode.c=0D=0Aindex 9b8944f6aabdb..a5e6616d84de9 100=
-644=0D=0A--- a/fs/famfs/famfs_inode.c=0D=0A+++ b/fs/famfs/famfs_inode.c=0D=
-=0A@@ -367,7 +367,7 @@ famfs_get_tree(struct fs_context *fc)=0D=0A =09}=0D=
-=0A=20=0D=0A =09/* This will fail if it's not a dax device */=0D=0A-=09da=
-x_devp =3D dax_dev_get(daxdevno);=0D=0A+=09dax_devp =3D dax_dev_find(daxd=
-evno);=0D=0A =09if (!dax_devp) {=0D=0A =09=09pr_warn("%s: device %s not f=
-ound or not dax\n",=0D=0A =09=09       __func__, fc->source);=0D=0Adiff -=
--git a/fs/fuse/famfs.c b/fs/fuse/famfs.c=0D=0Aindex 121ed74e97277..6f867d=
-cd289cc 100644=0D=0A--- a/fs/fuse/famfs.c=0D=0A+++ b/fs/fuse/famfs.c=0D=0A=
-@@ -193,7 +193,7 @@ famfs_fuse_get_daxdev(struct fuse_mount *fm, const u6=
-4 index)=0D=0A =09=09=09return -ENOMEM;=0D=0A=20=0D=0A =09=09/* This will=
- fail if it's not a dax device */=0D=0A-=09=09daxdev->devp =3D dax_dev_ge=
-t(daxdev->devno);=0D=0A+=09=09daxdev->devp =3D dax_dev_find(daxdev->devno=
-);=0D=0A =09=09if (!daxdev->devp) {=0D=0A =09=09=09pr_warn("%s: device %s=
- not found or not dax\n",=0D=0A =09=09=09=09__func__, daxdev_out.name);=0D=
-=0Adiff --git a/include/linux/dax.h b/include/linux/dax.h=0D=0Aindex fe6c=
-3ded1b50f..29113eb95e72d 100644=0D=0A--- a/include/linux/dax.h=0D=0A+++ b=
-/include/linux/dax.h=0D=0A@@ -54,7 +54,7 @@ struct dax_device *alloc_dax(=
-void *private, const struct dax_operations *ops);=0D=0A void *dax_holder(=
-struct dax_device *dax_dev);=0D=0A void put_dax(struct dax_device *dax_de=
-v);=0D=0A void kill_dax(struct dax_device *dax_dev);=0D=0A-struct dax_dev=
-ice *dax_dev_get(dev_t devt);=0D=0A+struct dax_device *dax_dev_find(dev_t=
- devt);=0D=0A void dax_write_cache(struct dax_device *dax_dev, bool wc);=0D=
-=0A bool dax_write_cache_enabled(struct dax_device *dax_dev);=0D=0A bool =
-dax_synchronous(struct dax_device *dax_dev);=0D=0A@@ -92,6 +92,10 @@ stat=
-ic inline void put_dax(struct dax_device *dax_dev)=0D=0A static inline vo=
-id kill_dax(struct dax_device *dax_dev)=0D=0A {=0D=0A }=0D=0A+static inli=
-ne struct dax_device *dax_dev_find(dev_t devt)=0D=0A+{=0D=0A+=09return NU=
-LL;=0D=0A+}=0D=0A static inline void dax_write_cache(struct dax_device *d=
-ax_dev, bool wc)=0D=0A {=0D=0A }=0D=0A--=20=0D=0A2.53.0=0D=0A=0D=0A
+
+
+On 5/15/26 7:20 PM, Davidlohr Bueso wrote:
+> Add register probing for BI Route Table and BI Decoder capability
+> structures in cxl_probe_component_regs(), and initialize BI registers
+> during port probe for switch ports and endpoint ports.
+> 
+> Each port's probe initializes its own BI cap and the parent dport's
+> BI Decoder. Switch DSPs are therefore mapped by the children below
+> them (endpoint or sub-switch USP), and a root port is mapped by
+> whichever cxl_port sits directly below it -- a switch USP, or a
+> direct attached endpoint.
+> 
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> ---
+>  drivers/cxl/core/regs.c | 14 +++++++
+>  drivers/cxl/cxl.h       |  6 +++
+>  drivers/cxl/port.c      | 89 +++++++++++++++++++++++++++++++++++++++++
+>  include/cxl/cxl.h       |  6 +++
+>  4 files changed, 115 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 93710cf4f0a6..a6caa793e7a4 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -92,6 +92,18 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+>  			length = CXL_RAS_CAPABILITY_LENGTH;
+>  			rmap = &map->ras;
+>  			break;
+> +		case CXL_CM_CAP_CAP_ID_BI_RT:
+> +			dev_dbg(dev, "found BI RT capability (0x%x)\n",
+> +				offset);
+> +			length = CXL_BI_RT_CAPABILITY_LENGTH;
+> +			rmap = &map->bi_rt;
+> +			break;
+> +		case CXL_CM_CAP_CAP_ID_BI_DECODER:
+> +			dev_dbg(dev, "found BI Decoder capability (0x%x)\n",
+> +				offset);
+> +			length = CXL_BI_DECODER_CAPABILITY_LENGTH;
+> +			rmap = &map->bi_decoder;
+> +			break;
+>  		default:
+>  			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
+>  				offset);
+> @@ -211,6 +223,8 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
+>  	} mapinfo[] = {
+>  		{ &map->component_map.hdm_decoder, &regs->hdm_decoder },
+>  		{ &map->component_map.ras, &regs->ras },
+> +		{ &map->component_map.bi_rt, &regs->bi_rt },
+> +		{ &map->component_map.bi_decoder, &regs->bi_decoder },
+>  	};
+>  	int i;
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 1297594beaec..760f51b43891 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -42,6 +42,12 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
+>  #define   CXL_CM_CAP_CAP_ID_RAS 0x2
+>  #define   CXL_CM_CAP_CAP_ID_HDM 0x5
+>  #define   CXL_CM_CAP_CAP_HDM_VERSION 1
+> +#define   CXL_CM_CAP_CAP_ID_BI_RT 0xB
+> +#define   CXL_CM_CAP_CAP_ID_BI_DECODER 0xC
+> +
+> +/* CXL 4.0 8.2.4.26 / 8.2.4.27 BI Capability Structures */
+> +#define CXL_BI_RT_CAPABILITY_LENGTH 0xC
+> +#define CXL_BI_DECODER_CAPABILITY_LENGTH 0xC
+>  
+>  /* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
+>  #define CXL_HDM_DECODER_CAP_OFFSET 0x0
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index ada51948d52f..e0ac9432848a 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -58,6 +58,91 @@ static int discover_region(struct device *dev, void *unused)
+>  	return 0;
+>  }
+>  
+> +static int cxl_dport_init_bi(struct cxl_dport *dport)
+
+cxl_dport_map_bi()?
+
+> +{
+> +	struct cxl_register_map *map = &dport->reg_map;
+> +	struct device *dev = dport->dport_dev;
+> +
+> +	/*
+> +	 * Already mapped. The BI Decoder iomap persists for the dport's
+> +	 * lifetime via the parent cxl_port's devm context.
+> +	 */
+> +	if (dport->regs.bi_decoder)
+> +		return 0;
+> +
+> +	if (!map->component_map.bi_decoder.valid) {
+> +		dev_dbg(dev, "BI decoder registers not found\n");
+> +		return 0;
+> +	}
+> +
+> +	if (cxl_map_component_regs(map, &dport->regs.component,
+> +				   BIT(CXL_CM_CAP_CAP_ID_BI_DECODER))) {
+> +		dev_dbg(dev, "Failed to map BI decoder capability.\n");
+> +		return -EINVAL;
+
+why not return the error from cxl_map_comonent_regs()?
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Initialize Back-Invalidate registers for @port: map the BI Decoder on
+> + * the upstream parent dport (root port or switch DSP), and map this
+> + * port's own BI capability -- BI RT for a switch USP, BI Decoder for
+> + * an endpoint.
+> + */
+> +static void cxl_port_init_bi(struct cxl_port *port)
+
+cxl_port_map_bi()
+
+Also, why return void? Are errors just ignored?
+
+> +{
+> +	struct cxl_register_map *map = &port->reg_map;
+> +	struct cxl_dport *parent_dport = port->parent_dport;
+> +	struct device *dport_dev, *udev;
+> +	int cap_id;
+> +
+> +	/* no upstream BI registers above host bridges or the cxl_root */
+> +	if (!parent_dport || is_cxl_root(parent_dport->port))
+> +		return;
+> +
+> +	/* BI requires 256B Flit on the upstream link */
+> +	udev = is_cxl_endpoint(port) ?
+> +		port->uport_dev->parent : port->uport_dev;
+> +	if (dev_is_pci(udev) && !cxl_pci_flit_256(to_pci_dev(udev)))
+
+I would split this up and do:
+
+if (!dev_is_pci(udev))
+	return;
+
+...
+
+That way you can skip everything else if it's not PCI. Like that switch a few lines down.
+
+
+> +		return;
+> +
+> +	dport_dev = parent_dport->dport_dev;
+
+Naming it parent_dport_dev makes it easier to keep track of what is what.
+
+
+> +	if (dev_is_pci(dport_dev)) {
+> +		switch (pci_pcie_type(to_pci_dev(dport_dev))) {
+> +		case PCI_EXP_TYPE_ROOT_PORT:
+> +		case PCI_EXP_TYPE_DOWNSTREAM:
+> +			cxl_dport_init_bi(parent_dport);
+
+error return value ignored
+
+> +			break;
+> +		default:
+> +			break;
+
+Should this be an error?
+
+DJ
+
+> +		}
+> +	}
+> +
+> +	if (is_cxl_endpoint(port)) {
+> +		if (port->regs.bi_decoder)
+> +			return;
+> +		if (!map->component_map.bi_decoder.valid) {
+> +			dev_dbg(&port->dev, "BI Decoder registers not found\n");
+> +			return;
+> +		}
+> +		cap_id = CXL_CM_CAP_CAP_ID_BI_DECODER;
+> +	} else {
+> +		if (port->regs.bi_rt)
+> +			return;
+> +		if (!map->component_map.bi_rt.valid) {
+> +			dev_dbg(&port->dev, "BI RT registers not found\n");
+> +			return;
+> +		}
+> +		cap_id = CXL_CM_CAP_CAP_ID_BI_RT;
+> +	}
+> +
+> +	map->host = &port->dev;
+> +	if (cxl_map_component_regs(map, &port->regs, BIT(cap_id)))
+> +		dev_dbg(&port->dev, "Failed to map BI capability 0x%x\n",
+> +			cap_id);
+> +}
+> +
+>  static int cxl_switch_port_probe(struct cxl_port *port)
+>  {
+>  	/* Reset nr_dports for rebind of driver */
+> @@ -66,6 +151,8 @@ static int cxl_switch_port_probe(struct cxl_port *port)
+>  	/* Cache the data early to ensure is_visible() works */
+>  	read_cdat_data(port);
+>  
+> +	cxl_port_init_bi(port);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -128,6 +215,8 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+>  	read_cdat_data(port);
+>  	cxl_endpoint_parse_cdat(port);
+>  
+> +	cxl_port_init_bi(port);
+> +
+>  	get_device(&cxlmd->dev);
+>  	rc = devm_add_action_or_reset(&port->dev, schedule_detach, cxlmd);
+>  	if (rc)
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index fa7269154620..8ce9b4e9ca73 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -34,10 +34,14 @@ struct cxl_regs {
+>  	 * Common set of CXL Component register block base pointers
+>  	 * @hdm_decoder: CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure
+>  	 * @ras: CXL 2.0 8.2.5.9 CXL RAS Capability Structure
+> +	 * @bi_rt: CXL 4.0 8.2.4.26 CXL BI Route Table Capability Structure
+> +	 * @bi_decoder: CXL 4.0 8.2.4.27 CXL BI Decoder Capability Structure
+>  	 */
+>  	struct_group_tagged(cxl_component_regs, component,
+>  		void __iomem *hdm_decoder;
+>  		void __iomem *ras;
+> +		void __iomem *bi_rt;
+> +		void __iomem *bi_decoder;
+>  	);
+>  	/*
+>  	 * Common set of CXL Device register block base pointers
+> @@ -80,6 +84,8 @@ struct cxl_reg_map {
+>  struct cxl_component_reg_map {
+>  	struct cxl_reg_map hdm_decoder;
+>  	struct cxl_reg_map ras;
+> +	struct cxl_reg_map bi_rt;
+> +	struct cxl_reg_map bi_decoder;
+>  };
+>  
+>  struct cxl_device_reg_map {
+
