@@ -1,34 +1,34 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A74D3F9F42;
-	Mon, 18 May 2026 11:59:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A3F132C957;
+	Mon, 18 May 2026 11:59:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779105553; cv=none; b=pWUn9vBfQCz8BRUrzOLLeVz3BZwS16H4D8D9da/15zLJZD79S/HwrVzOj1vfseX5M0itBeSPoLVcuXVy2E8ERhak6uEhOqiQdtXKzEieiBhjkaS30X2pThSnU4SQXEvZhYz1E99z3OHITS0uSePDHdqbcI1f3TfyY+IWYJMW1lc=
+	t=1779105560; cv=none; b=nDaud4vsOD22sdbr+GxSexNHf+yFigl+J2A1HQyoUu2KKEnqNHbwpf17WW8sUXZAIf+dfKbPWezbswOT4KZulFYJ4OMDgbVc7n8ScG7R7Rj65l3nPGZL0IEsSzyppmtEc5FELOxBOkdEDhgcsVayzLUM6k8emRgPqaev7jHe02w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779105553; c=relaxed/simple;
-	bh=Nr8pbX6kuG+sJhGivkt1KNgOf7a+dvHPl5xri+bUnFA=;
+	s=arc-20240116; t=1779105560; c=relaxed/simple;
+	bh=r6+RDImTuCKLMNv+Yx19iSfyf7Yu2SLHUNVPzgPpbt4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=JYL/4EQVUgNjSnBRz8y7wapi/1QlxvssxZ2KCAHVcG7lk1MMURkBdZMxU7IRz9GC2TxR6fJ5kMIP6FgD/SecvdRwInArR4nAoLLfs/pXyK+m6I2md7CUu89DqMEzhkfW257Z5ZvgG7FaAtdLadPhcIeJ8PjMa3jj2BhXdXQB8r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=IxvdPbCB; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=lwMWNrPjT1k+Gm+Afc85UvqBbZOdxM/iGSc+MqRDCHFYuwy10A1j0ZWmFC5Yxrx6ejQIcNmdLOlUt8vfimFpUz6rIUZ/PI9xPSr8hK/ZwNaGr6VID8rKoW1T0GvOvTwC3FcKpArHeGnv4DTSKhyOv8MNrnU/utRrbvS+p3kJwIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=lFcsdUWu; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="IxvdPbCB"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="lFcsdUWu"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4289C1CE0;
-	Mon, 18 May 2026 04:58:55 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 509FC4617;
+	Mon, 18 May 2026 04:59:06 -0700 (PDT)
 Received: from e134710.arm.com (e134710.arm.com [10.33.10.82])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DA023F85F;
-	Mon, 18 May 2026 04:58:54 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A0C53F85F;
+	Mon, 18 May 2026 04:59:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1779105540; bh=Nr8pbX6kuG+sJhGivkt1KNgOf7a+dvHPl5xri+bUnFA=;
+	t=1779105551; bh=r6+RDImTuCKLMNv+Yx19iSfyf7Yu2SLHUNVPzgPpbt4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=IxvdPbCBuDzU+hs9Ya0dj1SLxucBNxU8CWj3mJYtHfgDxEg2pql0U2IkWid+fDfqf
-	 oMHGIuOb8zH5b/e97Bj0ps9MZyPG0Q61ISQusG93C2AGlFFrBma//+UEDF8WcI65yM
-	 IVcayWT7XRnpo6Y7D3jy+tmzPhIAW4lRSpUfpr8Y=
+	b=lFcsdUWuJTHXOBnDTFvCPSLLjDhMH/ctZ7t4YGt9TkjjgkryqV+Cku8CHVb0eBvdc
+	 yD5xtNHR6EEry5W7g8zPwUE0O+qELtcGtaq7H4VDdWF+FAHdY1V4GU2ylIGkLSlCXw
+	 SD8KjCcQrfrYSGxjK/sHFs8VxxRpZQ7FP2VZsEIA=
 From: Ahmed Tiba <ahmed.tiba@arm.com>
-Date: Mon, 18 May 2026 12:57:51 +0100
-Subject: [PATCH v4 08/10] ACPI: APEI: share GHES CPER helpers
+Date: Mon, 18 May 2026 12:57:53 +0100
+Subject: [PATCH v4 10/10] RAS: add firmware-first CPER provider
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260518-topics-ahmtib01-ras_ffh_arm_internal_review-v4-8-42698675ba61@arm.com>
+Message-Id: <20260518-topics-ahmtib01-ras_ffh_arm_internal_review-v4-10-42698675ba61@arm.com>
 References: <20260518-topics-ahmtib01-ras_ffh_arm_internal_review-v4-0-42698675ba61@arm.com>
 In-Reply-To: <20260518-topics-ahmtib01-ras_ffh_arm_internal_review-v4-0-42698675ba61@arm.com>
 To: rafael@kernel.org, bp@alien8.de, saket.dumbre@intel.com, 
@@ -54,1002 +54,440 @@ Cc: Ahmed Tiba <ahmed.tiba@arm.com>, devicetree@vger.kernel.org,
  acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1779105490; l=31155;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779105490; l=12767;
  i=ahmed.tiba@arm.com; s=20260219; h=from:subject:message-id;
- bh=Nr8pbX6kuG+sJhGivkt1KNgOf7a+dvHPl5xri+bUnFA=;
- b=UusrT7kByp9iCwIU0IhO+76QJzOsBB1SNHX2yUIN/rwJBVTlri61GmQkMIAUeFptlrw9qPMzm
- Yvp0itBfp/FD8hwK3lfgTydcH/Xc85i6VGzFp1bOHtMc93hwdVX7bKO
+ bh=r6+RDImTuCKLMNv+Yx19iSfyf7Yu2SLHUNVPzgPpbt4=;
+ b=Dm1ll5gN7H7QlF+vqSoU49cHhTmuC+3TCZAcO7Ij8jXl6nzLkCv+tqxm8Ay8UQsVevm9PfJx3
+ TZrV+7nVEP3A5gIuqoU/2XcT4eBkhT2/zkfA6m7w8FYBwx5TNIBoKow
 X-Developer-Key: i=ahmed.tiba@arm.com; a=ed25519;
  pk=xVOtd+Qklh/4tuM3tB+BEZD4jj5a6W59C3KCNX6v7OE=
 
-Wire GHES up to the helper routines in ghes_cper.c and remove the local
-copies from ghes.c. This keeps the control flow identical while letting
-the helpers be shared with other firmware-first providers.
+Add a firmware-first CPER provider that reuses the shared
+GHES helpers, wire it into the RAS Kconfig/Makefile and
+document it in the admin guide.
+
+Update MAINTAINERS now that the driver exists.
 
 Signed-off-by: Ahmed Tiba <ahmed.tiba@arm.com>
 ---
- drivers/acpi/apei/ghes.c      | 416 +--------------------------------------
- drivers/acpi/apei/ghes_cper.c | 438 +++++++++++++++++++++++++++++++++++++++++-
- include/acpi/ghes_cper.h      |  20 ++
- 3 files changed, 459 insertions(+), 415 deletions(-)
+ Documentation/admin-guide/RAS/main.rst |  18 +++
+ MAINTAINERS                            |   1 +
+ drivers/acpi/apei/apei-internal.h      |  10 +-
+ drivers/acpi/apei/ghes_cper.c          |   2 +
+ drivers/ras/Kconfig                    |  11 ++
+ drivers/ras/Makefile                   |   1 +
+ drivers/ras/cper-esource.c             | 257 +++++++++++++++++++++++++++++++++
+ include/acpi/ghes_cper.h               |  10 ++
+ 8 files changed, 301 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 85be2ebf4d3e..f85b97c4db4c 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -67,8 +67,6 @@
- #define FIX_APEI_GHES_SDEI_CRITICAL	__end_of_fixed_addresses
- #endif
+diff --git a/Documentation/admin-guide/RAS/main.rst b/Documentation/admin-guide/RAS/main.rst
+index 5a45db32c49b..84219d25a072 100644
+--- a/Documentation/admin-guide/RAS/main.rst
++++ b/Documentation/admin-guide/RAS/main.rst
+@@ -205,6 +205,24 @@ Architecture (MCA)\ [#f3]_.
+ .. [#f3] For more details about the Machine Check Architecture (MCA),
+   please read Documentation/arch/x86/x86_64/machinecheck.rst at the Kernel tree.
  
--static ATOMIC_NOTIFIER_HEAD(ghes_report_chain);
--
- /*
-  * This driver isn't really modular, however for the time being,
-  * continuing to use module_param is the easiest way to remain
-@@ -113,276 +111,6 @@ static DEFINE_MUTEX(ghes_devs_mutex);
-  */
- static DEFINE_SPINLOCK(ghes_notify_lock_irq);
++Firmware-first CPER providers
++-----------------------------
++
++Some systems expose Common Platform Error Record (CPER) data
++through platform firmware instead of ACPI HEST tables.
++Enable ``CONFIG_RAS_CPER_ESOURCE`` to build the ``drivers/ras/cper-esource.c``
++driver. The current in-tree firmware description uses the
++``Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml`` binding.
++The driver reuses the GHES CPER helper object in
++``drivers/acpi/apei/ghes_cper.c`` so the logging, notifier chains, and
++memory failure handling match the ACPI GHES behaviour even when
++ACPI is disabled.
++
++Once a platform describes a firmware-first provider, both ACPI GHES and the
++firmware-described driver reuse the same code paths. This keeps the
++behaviour consistent regardless of whether the error source is described
++by ACPI tables or another firmware description.
++
+ EDAC - Error Detection And Correction
+ *************************************
  
--struct gen_pool *ghes_estatus_pool;
--
--int ghes_estatus_pool_init(unsigned int num_ghes)
--{
--	unsigned long addr, len;
--	int rc;
--
--	ghes_estatus_pool = gen_pool_create(GHES_ESTATUS_POOL_MIN_ALLOC_ORDER, -1);
--	if (!ghes_estatus_pool)
--		return -ENOMEM;
--
--	len = GHES_ESTATUS_CACHE_AVG_SIZE * GHES_ESTATUS_CACHE_ALLOCED_MAX;
--	len += (num_ghes * GHES_ESOURCE_PREALLOC_MAX_SIZE);
--
--	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
--	if (!addr)
--		goto err_pool_alloc;
--
--	rc = gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
--	if (rc)
--		goto err_pool_add;
--
--	return 0;
--
--err_pool_add:
--	vfree((void *)addr);
--
--err_pool_alloc:
--	gen_pool_destroy(ghes_estatus_pool);
--
--	return -ENOMEM;
--}
--
--/**
-- * ghes_estatus_pool_region_free - free previously allocated memory
-- *				   from the ghes_estatus_pool.
-- * @addr: address of memory to free.
-- * @size: size of memory to free.
-- *
-- * Returns none.
-- */
--void ghes_estatus_pool_region_free(unsigned long addr, u32 size)
--{
--	gen_pool_free(ghes_estatus_pool, addr, size);
--}
--EXPORT_SYMBOL_GPL(ghes_estatus_pool_region_free);
--
--static inline int ghes_severity(int severity)
--{
--	switch (severity) {
--	case CPER_SEV_INFORMATIONAL:
--		return GHES_SEV_NO;
--	case CPER_SEV_CORRECTED:
--		return GHES_SEV_CORRECTED;
--	case CPER_SEV_RECOVERABLE:
--		return GHES_SEV_RECOVERABLE;
--	case CPER_SEV_FATAL:
--		return GHES_SEV_PANIC;
--	default:
--		/* Unknown, go panic */
--		return GHES_SEV_PANIC;
--	}
--}
--
--
--/**
-- * struct ghes_task_work - for synchronous RAS event
-- *
-- * @twork:                callback_head for task work
-- * @pfn:                  page frame number of corrupted page
-- * @flags:                work control flags
-- *
-- * Structure to pass task work to be handled before
-- * returning to user-space via task_work_add().
-- */
--struct ghes_task_work {
--	struct callback_head twork;
--	u64 pfn;
--	int flags;
--};
--
--static void memory_failure_cb(struct callback_head *twork)
--{
--	struct ghes_task_work *twcb = container_of(twork, struct ghes_task_work, twork);
--	int ret;
--
--	ret = memory_failure(twcb->pfn, twcb->flags);
--	gen_pool_free(ghes_estatus_pool, (unsigned long)twcb, sizeof(*twcb));
--
--	if (!ret || ret == -EHWPOISON || ret == -EOPNOTSUPP)
--		return;
--
--	pr_err("%#llx: Sending SIGBUS to %s:%d due to hardware memory corruption\n",
--			twcb->pfn, current->comm, task_pid_nr(current));
--	force_sig(SIGBUS);
--}
--
--static bool ghes_do_memory_failure(u64 physical_addr, int flags)
--{
--	struct ghes_task_work *twcb;
--	unsigned long pfn;
--
--	if (!IS_ENABLED(CONFIG_ACPI_APEI_MEMORY_FAILURE))
--		return false;
--
--	pfn = PHYS_PFN(physical_addr);
--
--	if (flags == MF_ACTION_REQUIRED && current->mm) {
--		twcb = (void *)gen_pool_alloc(ghes_estatus_pool, sizeof(*twcb));
--		if (!twcb)
--			return false;
--
--		twcb->pfn = pfn;
--		twcb->flags = flags;
--		init_task_work(&twcb->twork, memory_failure_cb);
--		task_work_add(current, &twcb->twork, TWA_RESUME);
--		return true;
--	}
--
--	memory_failure_queue(pfn, flags);
--	return true;
--}
--
--static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
--				       int sev, bool sync)
--{
--	int flags = -1;
--	int sec_sev = ghes_severity(gdata->error_severity);
--	struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
--
--	if (!(mem_err->validation_bits & CPER_MEM_VALID_PA))
--		return false;
--
--	/* iff following two events can be handled properly by now */
--	if (sec_sev == GHES_SEV_CORRECTED &&
--	    (gdata->flags & CPER_SEC_ERROR_THRESHOLD_EXCEEDED))
--		flags = MF_SOFT_OFFLINE;
--	if (sev == GHES_SEV_RECOVERABLE && sec_sev == GHES_SEV_RECOVERABLE)
--		flags = sync ? MF_ACTION_REQUIRED : 0;
--
--	if (flags != -1)
--		return ghes_do_memory_failure(mem_err->physical_addr, flags);
--
--	return false;
--}
--
--static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata,
--				     int sev, bool sync)
--{
--	struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
--	int flags = sync ? MF_ACTION_REQUIRED : 0;
--	int length = gdata->error_data_length;
--	char error_type[120];
--	bool queued = false;
--	int sec_sev, i;
--	char *p;
--
--	sec_sev = ghes_severity(gdata->error_severity);
--	if (length >= sizeof(*err)) {
--		log_arm_hw_error(err, sec_sev);
--	} else {
--		pr_warn(FW_BUG "arm error length: %d\n", length);
--		pr_warn(FW_BUG "length is too small\n");
--		pr_warn(FW_BUG "firmware-generated error record is incorrect\n");
--		return false;
--	}
--
--	if (sev != GHES_SEV_RECOVERABLE || sec_sev != GHES_SEV_RECOVERABLE)
--		return false;
--
--	p = (char *)(err + 1);
--	length -= sizeof(err);
--
--	for (i = 0; i < err->err_info_num; i++) {
--		struct cper_arm_err_info *err_info;
--		bool is_cache, has_pa;
--
--		/* Ensure we have enough data for the error info header */
--		if (length < sizeof(*err_info))
--			break;
--
--		err_info = (struct cper_arm_err_info *)p;
--
--		/* Validate the claimed length before using it */
--		length -= err_info->length;
--		if (length < 0)
--			break;
--
--		is_cache = err_info->type & CPER_ARM_CACHE_ERROR;
--		has_pa = (err_info->validation_bits & CPER_ARM_INFO_VALID_PHYSICAL_ADDR);
--
--		/*
--		 * The field (err_info->error_info & BIT(26)) is fixed to set to
--		 * 1 in some old firmware of HiSilicon Kunpeng920. We assume that
--		 * firmware won't mix corrected errors in an uncorrected section,
--		 * and don't filter out 'corrected' error here.
--		 */
--		if (is_cache && has_pa) {
--			queued = ghes_do_memory_failure(err_info->physical_fault_addr, flags);
--			p += err_info->length;
--			continue;
--		}
--
--		cper_bits_to_str(error_type, sizeof(error_type),
--				 FIELD_GET(CPER_ARM_ERR_TYPE_MASK, err_info->type),
--				 cper_proc_error_type_strs,
--				 ARRAY_SIZE(cper_proc_error_type_strs));
--
--		pr_warn_ratelimited(FW_WARN GHES_PFX
--				    "Unhandled processor error type 0x%02x: %s%s\n",
--				    err_info->type, error_type,
--				    (err_info->type & ~CPER_ARM_ERR_TYPE_MASK) ? " with reserved bit(s)" : "");
--		p += err_info->length;
--	}
--
--	return queued;
--}
--
--/*
-- * PCIe AER errors need to be sent to the AER driver for reporting and
-- * recovery. The GHES severities map to the following AER severities and
-- * require the following handling:
-- *
-- * GHES_SEV_CORRECTABLE -> AER_CORRECTABLE
-- *     These need to be reported by the AER driver but no recovery is
-- *     necessary.
-- * GHES_SEV_RECOVERABLE -> AER_NONFATAL
-- * GHES_SEV_RECOVERABLE && CPER_SEC_RESET -> AER_FATAL
-- *     These both need to be reported and recovered from by the AER driver.
-- * GHES_SEV_PANIC does not make it to this handling since the kernel must
-- *     panic.
-- */
--static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
--{
--#ifdef CONFIG_ACPI_APEI_PCIEAER
--	struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
--
--	if (pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID &&
--	    pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
--		unsigned int devfn;
--		int aer_severity;
--		u8 *aer_info;
--
--		devfn = PCI_DEVFN(pcie_err->device_id.device,
--				  pcie_err->device_id.function);
--		aer_severity = cper_severity_to_aer(gdata->error_severity);
--
--		/*
--		 * If firmware reset the component to contain
--		 * the error, we must reinitialize it before
--		 * use, so treat it as a fatal AER error.
--		 */
--		if (gdata->flags & CPER_SEC_RESET)
--			aer_severity = AER_FATAL;
--
--		aer_info = (void *)gen_pool_alloc(ghes_estatus_pool,
--						  sizeof(struct aer_capability_regs));
--		if (!aer_info)
--			return;
--		memcpy(aer_info, pcie_err->aer_info, sizeof(struct aer_capability_regs));
--
--		aer_recover_queue(pcie_err->device_id.segment,
--				  pcie_err->device_id.bus,
--				  devfn, aer_severity,
--				  (struct aer_capability_regs *)
--				  aer_info);
--	}
--#endif
--}
--
- static void ghes_vendor_record_notifier_destroy(void *nb)
- {
- 	ghes_unregister_vendor_record_notifier(nb);
-@@ -401,151 +129,11 @@ int devm_ghes_register_vendor_record_notifier(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(devm_ghes_register_vendor_record_notifier);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3bbc19589f1a..8a5151a49820 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -22255,6 +22255,7 @@ RAS ERROR STATUS
+ M:	Ahmed Tiba <ahmed.tiba@arm.com>
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml
++F:	drivers/ras/cper-esource.c
  
--static void ghes_log_hwerr(int sev, guid_t *sec_type)
+ RAS INFRASTRUCTURE
+ M:	Tony Luck <tony.luck@intel.com>
+diff --git a/drivers/acpi/apei/apei-internal.h b/drivers/acpi/apei/apei-internal.h
+index 77c10a7a7a9f..c16ac541f15b 100644
+--- a/drivers/acpi/apei/apei-internal.h
++++ b/drivers/acpi/apei/apei-internal.h
+@@ -8,6 +8,7 @@
+ #define APEI_INTERNAL_H
+ 
+ #include <linux/acpi.h>
++#include <acpi/ghes_cper.h>
+ 
+ struct apei_exec_context;
+ 
+@@ -120,15 +121,6 @@ int apei_exec_collect_resources(struct apei_exec_context *ctx,
+ struct dentry;
+ struct dentry *apei_get_debugfs_dir(void);
+ 
+-static inline u32 cper_estatus_len(struct acpi_hest_generic_status *estatus)
 -{
--	if (sev != CPER_SEV_RECOVERABLE)
--		return;
--
--	if (guid_equal(sec_type, &CPER_SEC_PROC_ARM) ||
--	    guid_equal(sec_type, &CPER_SEC_PROC_GENERIC) ||
--	    guid_equal(sec_type, &CPER_SEC_PROC_IA)) {
--		hwerr_log_error_type(HWERR_RECOV_CPU);
--		return;
--	}
--
--	if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR) ||
--	    guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID) ||
--	    guid_equal(sec_type, &CPER_SEC_CXL_DRAM_GUID) ||
--	    guid_equal(sec_type, &CPER_SEC_CXL_MEM_MODULE_GUID)) {
--		hwerr_log_error_type(HWERR_RECOV_CXL);
--		return;
--	}
--
--	if (guid_equal(sec_type, &CPER_SEC_PCIE) ||
--	    guid_equal(sec_type, &CPER_SEC_PCI_X_BUS)) {
--		hwerr_log_error_type(HWERR_RECOV_PCI);
--		return;
--	}
--
--	if (guid_equal(sec_type, &CPER_SEC_PLATFORM_MEM)) {
--		hwerr_log_error_type(HWERR_RECOV_MEMORY);
--		return;
--	}
--
--	hwerr_log_error_type(HWERR_RECOV_OTHERS);
--}
--
- static void ghes_do_proc(struct ghes *ghes,
- 			 const struct acpi_hest_generic_status *estatus)
- {
--	int sev, sec_sev;
--	struct acpi_hest_generic_data *gdata;
--	guid_t *sec_type;
--	const guid_t *fru_id = &guid_null;
--	char *fru_text = "";
--	bool queued = false;
--	bool sync = is_hest_sync_notify(ghes);
--
--	sev = ghes_severity(estatus->error_severity);
--	apei_estatus_for_each_section(estatus, gdata) {
--		sec_type = (guid_t *)gdata->section_type;
--		sec_sev = ghes_severity(gdata->error_severity);
--		if (gdata->validation_bits & CPER_SEC_VALID_FRU_ID)
--			fru_id = (guid_t *)gdata->fru_id;
--
--		if (gdata->validation_bits & CPER_SEC_VALID_FRU_TEXT)
--			fru_text = gdata->fru_text;
--
--		ghes_log_hwerr(sev, sec_type);
--		if (guid_equal(sec_type, &CPER_SEC_PLATFORM_MEM)) {
--			struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
--
--			atomic_notifier_call_chain(&ghes_report_chain, sev, mem_err);
--
--			arch_apei_report_mem_error(sev, mem_err);
--			queued = ghes_handle_memory_failure(gdata, sev, sync);
--		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
--			ghes_handle_aer(gdata);
--		} else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
--			queued = ghes_handle_arm_hw_error(gdata, sev, sync);
--		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
--			struct cxl_cper_sec_prot_err *prot_err = acpi_hest_get_payload(gdata);
--
--			cxl_cper_post_prot_err(prot_err, gdata->error_severity);
--		} else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID)) {
--			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
--
--			cxl_cper_post_event(CXL_CPER_EVENT_GEN_MEDIA, rec);
--		} else if (guid_equal(sec_type, &CPER_SEC_CXL_DRAM_GUID)) {
--			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
--
--			cxl_cper_post_event(CXL_CPER_EVENT_DRAM, rec);
--		} else if (guid_equal(sec_type, &CPER_SEC_CXL_MEM_MODULE_GUID)) {
--			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
--
--			cxl_cper_post_event(CXL_CPER_EVENT_MEM_MODULE, rec);
--		} else {
--			void *err = acpi_hest_get_payload(gdata);
--
--			ghes_defer_non_standard_event(gdata, sev);
--			log_non_standard_event(sec_type, fru_id, fru_text,
--					       sec_sev, err,
--					       gdata->error_data_length);
--		}
--	}
--
--	/*
--	 * If no memory failure work is queued for abnormal synchronous
--	 * errors, do a force kill.
--	 */
--	if (sync && !queued) {
--		dev_err(ghes->dev,
--			HW_ERR GHES_PFX "%s:%d: synchronous unrecoverable error (SIGBUS)\n",
--			current->comm, task_pid_nr(current));
--		force_sig(SIGBUS);
--	}
--}
--
--static void __ghes_print_estatus(const char *pfx,
--				 const struct acpi_hest_generic *generic,
--				 const struct acpi_hest_generic_status *estatus)
--{
--	static atomic_t seqno;
--	unsigned int curr_seqno;
--	char pfx_seq[64];
--
--	if (pfx == NULL) {
--		if (ghes_severity(estatus->error_severity) <=
--		    GHES_SEV_CORRECTED)
--			pfx = KERN_WARNING;
--		else
--			pfx = KERN_ERR;
--	}
--	curr_seqno = atomic_inc_return(&seqno);
--	snprintf(pfx_seq, sizeof(pfx_seq), "%s{%u}" HW_ERR, pfx, curr_seqno);
--	printk("%s""Hardware error from APEI Generic Hardware Error Source: %d\n",
--	       pfx_seq, generic->header.source_id);
--	cper_estatus_print(pfx_seq, estatus);
--}
--
--static int ghes_print_estatus(const char *pfx,
--			      const struct acpi_hest_generic *generic,
--			      const struct acpi_hest_generic_status *estatus)
--{
--	/* Not more than 2 messages every 5 seconds */
--	static DEFINE_RATELIMIT_STATE(ratelimit_corrected, 5*HZ, 2);
--	static DEFINE_RATELIMIT_STATE(ratelimit_uncorrected, 5*HZ, 2);
--	struct ratelimit_state *ratelimit;
--
--	if (ghes_severity(estatus->error_severity) <= GHES_SEV_CORRECTED)
--		ratelimit = &ratelimit_corrected;
+-	if (estatus->raw_data_length)
+-		return estatus->raw_data_offset + \
+-			estatus->raw_data_length;
 -	else
--		ratelimit = &ratelimit_uncorrected;
--	if (__ratelimit(ratelimit)) {
--		__ghes_print_estatus(pfx, generic, estatus);
--		return 1;
--	}
--	return 0;
-+	ghes_cper_handle_status(ghes->dev, ghes->generic,
-+				estatus, is_hest_sync_notify(ghes));
- }
+-		return sizeof(*estatus) + estatus->data_length;
+-}
+-
+ int apei_osc_setup(void);
  
- static void __ghes_panic(struct ghes *ghes,
+ int einj_get_available_error_type(u32 *type, int einj_action);
 diff --git a/drivers/acpi/apei/ghes_cper.c b/drivers/acpi/apei/ghes_cper.c
-index d7a666a163c3..0ff9d06eb78f 100644
+index 0ff9d06eb78f..a7691aa5011c 100644
 --- a/drivers/acpi/apei/ghes_cper.c
 +++ b/drivers/acpi/apei/ghes_cper.c
-@@ -13,22 +13,32 @@
-  */
+@@ -46,7 +46,9 @@
+ #include <asm/fixmap.h>
+ #include <asm/tlbflush.h>
  
- #include <linux/aer.h>
-+#include <linux/bitfield.h>
-+#include <linux/device.h>
- #include <linux/err.h>
- #include <linux/genalloc.h>
--#include <linux/irq_work.h>
- #include <linux/io.h>
-+#include <linux/irq_work.h>
- #include <linux/kfifo.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/math64.h>
- #include <linux/mm.h>
-+#include <linux/string.h>
-+#include <linux/uuid.h>
-+#include <linux/sched/signal.h>
-+#include <linux/task_work.h>
- #include <linux/notifier.h>
- #include <linux/llist.h>
-+#include <linux/ras.h>
-+#include <ras/ras_event.h>
- #include <linux/ratelimit.h>
- #include <linux/rcupdate.h>
- #include <linux/rculist.h>
- #include <linux/sched/clock.h>
- #include <linux/slab.h>
-+#include <linux/vmcore_info.h>
-+#include <linux/vmalloc.h>
- 
- #include <acpi/apei.h>
- #include <acpi/ghes_cper.h>
-@@ -38,9 +48,363 @@
- 
++#ifdef CONFIG_ACPI_APEI
  #include "apei-internal.h"
- 
-+ATOMIC_NOTIFIER_HEAD(ghes_report_chain);
-+
-+#ifndef CONFIG_ACPI_APEI
-+void __weak arch_apei_report_mem_error(int sev, struct cper_sec_mem_err *mem_err) { }
 +#endif
-+
- static struct ghes_estatus_cache __rcu *ghes_estatus_caches[GHES_ESTATUS_CACHES_SIZE];
- static atomic_t ghes_estatus_cache_alloced;
  
-+struct gen_pool *ghes_estatus_pool;
+ ATOMIC_NOTIFIER_HEAD(ghes_report_chain);
+ 
+diff --git a/drivers/ras/Kconfig b/drivers/ras/Kconfig
+index fc4f4bb94a4c..3c1c63b2fefc 100644
+--- a/drivers/ras/Kconfig
++++ b/drivers/ras/Kconfig
+@@ -34,6 +34,17 @@ if RAS
+ source "arch/x86/ras/Kconfig"
+ source "drivers/ras/amd/atl/Kconfig"
+ 
++config RAS_CPER_ESOURCE
++	bool "Firmware-first CPER error source block provider"
++	select GHES_CPER_HELPERS
++	help
++	  Enable support for firmware-first Common Platform Error Record
++	  (CPER) error source block providers. The current in-tree user is
++	  described by the arm,ras-cper DeviceTree binding. The driver
++	  reuses the existing GHES CPER helpers so the error processing
++	  matches the ACPI code paths, but it can be built even when ACPI is
++	  disabled.
 +
-+int ghes_estatus_pool_init(unsigned int num_ghes)
-+{
-+	unsigned long addr, len;
-+	int rc;
-+
-+	ghes_estatus_pool = gen_pool_create(GHES_ESTATUS_POOL_MIN_ALLOC_ORDER, -1);
-+	if (!ghes_estatus_pool)
-+		return -ENOMEM;
-+
-+	len = GHES_ESTATUS_CACHE_AVG_SIZE * GHES_ESTATUS_CACHE_ALLOCED_MAX;
-+	len += (num_ghes * GHES_ESOURCE_PREALLOC_MAX_SIZE);
-+
-+	addr = (unsigned long)vmalloc(PAGE_ALIGN(len));
-+	if (!addr)
-+		goto err_pool_alloc;
-+
-+	rc = gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
-+	if (rc)
-+		goto err_pool_add;
-+
-+	return 0;
-+
-+err_pool_add:
-+	vfree((void *)addr);
-+
-+err_pool_alloc:
-+	gen_pool_destroy(ghes_estatus_pool);
-+
-+	return -ENOMEM;
-+}
-+EXPORT_SYMBOL_GPL(ghes_estatus_pool_init);
-+
-+/**
-+ * ghes_estatus_pool_region_free - free previously allocated memory
-+ *				   from the ghes_estatus_pool.
-+ * @addr: address of memory to free.
-+ * @size: size of memory to free.
+ config RAS_FMPM
+ 	tristate "FRU Memory Poison Manager"
+ 	default m
+diff --git a/drivers/ras/Makefile b/drivers/ras/Makefile
+index 11f95d59d397..0de069557f31 100644
+--- a/drivers/ras/Makefile
++++ b/drivers/ras/Makefile
+@@ -2,6 +2,7 @@
+ obj-$(CONFIG_RAS)	+= ras.o
+ obj-$(CONFIG_DEBUG_FS)	+= debugfs.o
+ obj-$(CONFIG_RAS_CEC)	+= cec.o
++obj-$(CONFIG_RAS_CPER_ESOURCE)	+= cper-esource.o
+ 
+ obj-$(CONFIG_RAS_FMPM)	+= amd/fmpm.o
+ obj-y			+= amd/atl/
+diff --git a/drivers/ras/cper-esource.c b/drivers/ras/cper-esource.c
+new file mode 100644
+index 000000000000..83f7a910e50a
+--- /dev/null
++++ b/drivers/ras/cper-esource.c
+@@ -0,0 +1,257 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Firmware-first CPER error source provider.
 + *
-+ * Returns none.
++ * This driver shares the GHES CPER helpers so we keep the reporting and
++ * notifier behaviour identical to ACPI GHES.
++ *
++ * Copyright (C) 2026 ARM Ltd.
++ * Author: Ahmed Tiba <ahmed.tiba@arm.com>
 + */
-+void ghes_estatus_pool_region_free(unsigned long addr, u32 size)
-+{
-+	gen_pool_free(ghes_estatus_pool, addr, size);
-+}
-+EXPORT_SYMBOL_GPL(ghes_estatus_pool_region_free);
 +
-+int ghes_severity(int severity)
-+{
-+	switch (severity) {
-+	case CPER_SEV_INFORMATIONAL:
-+		return GHES_SEV_NO;
-+	case CPER_SEV_CORRECTED:
-+		return GHES_SEV_CORRECTED;
-+	case CPER_SEV_RECOVERABLE:
-+		return GHES_SEV_RECOVERABLE;
-+	case CPER_SEV_FATAL:
-+		return GHES_SEV_PANIC;
-+	default:
-+		/* Unknown, go panic */
-+		return GHES_SEV_PANIC;
-+	}
-+}
++#include <linux/bitops.h>
++#include <linux/cleanup.h>
++#include <linux/idr.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/panic.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
 +
-+/**
-+ * struct ghes_task_work - for synchronous RAS event
-+ *
-+ * @twork:                callback_head for task work
-+ * @pfn:                  page frame number of corrupted page
-+ * @flags:                work control flags
-+ *
-+ * Structure to pass task work to be handled before
-+ * returning to user-space via task_work_add().
-+ */
-+struct ghes_task_work {
-+	struct callback_head twork;
-+	u64 pfn;
-+	int flags;
++#include <acpi/ghes.h>
++#include <acpi/ghes_cper.h>
++
++static DEFINE_IDA(cper_esource_source_ids);
++
++struct cper_esource_ack {
++	void __iomem *addr;
++	u64 preserve;
++	u64 set;
++	u8 width;
++	bool present;
 +};
 +
-+static void memory_failure_cb(struct callback_head *twork)
++struct cper_esource {
++	struct device *dev;
++	void __iomem *status;
++	size_t status_len;
++
++	struct cper_esource_ack ack;
++
++	struct acpi_hest_generic *generic;
++	struct acpi_hest_generic_status *estatus;
++
++	bool sync;
++	int irq;
++
++	/* Serializes access while firmware and the OS share the status buffer. */
++	spinlock_t lock;
++};
++
++static void cper_esource_release_source_id(void *data)
 +{
-+	struct ghes_task_work *twcb = container_of(twork, struct ghes_task_work, twork);
-+	int ret;
++	struct acpi_hest_generic *generic = data;
 +
-+	ret = memory_failure(twcb->pfn, twcb->flags);
-+	gen_pool_free(ghes_estatus_pool, (unsigned long)twcb, sizeof(*twcb));
-+
-+	if (!ret || ret == -EHWPOISON || ret == -EOPNOTSUPP)
-+		return;
-+
-+	pr_err("%#llx: Sending SIGBUS to %s:%d due to hardware memory corruption\n",
-+	       twcb->pfn, current->comm, task_pid_nr(current));
-+	force_sig(SIGBUS);
++	ida_free(&cper_esource_source_ids, generic->header.source_id);
 +}
 +
-+static bool ghes_do_memory_failure(u64 physical_addr, int flags)
++static int cper_esource_init_pool(void)
 +{
-+	struct ghes_task_work *twcb;
-+	unsigned long pfn;
++	if (ghes_estatus_pool)
++		return 0;
 +
-+	if (!IS_ENABLED(CONFIG_ACPI_APEI_MEMORY_FAILURE))
-+		return false;
-+
-+	pfn = PHYS_PFN(physical_addr);
-+
-+	if (flags == MF_ACTION_REQUIRED && current->mm) {
-+		twcb = (void *)gen_pool_alloc(ghes_estatus_pool, sizeof(*twcb));
-+		if (!twcb)
-+			return false;
-+
-+		twcb->pfn = pfn;
-+		twcb->flags = flags;
-+		init_task_work(&twcb->twork, memory_failure_cb);
-+		task_work_add(current, &twcb->twork, TWA_RESUME);
-+		return true;
-+	}
-+
-+	memory_failure_queue(pfn, flags);
-+	return true;
++	return ghes_estatus_pool_init(1);
 +}
 +
-+bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
-+				int sev, bool sync)
++static int cper_esource_copy_status(struct cper_esource *ctx)
 +{
-+	int flags = -1;
-+	int sec_sev = ghes_severity(gdata->error_severity);
-+	struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
-+
-+	if (!(mem_err->validation_bits & CPER_MEM_VALID_PA))
-+		return false;
-+
-+	/* iff following two events can be handled properly by now */
-+	if (sec_sev == GHES_SEV_CORRECTED &&
-+	    (gdata->flags & CPER_SEC_ERROR_THRESHOLD_EXCEEDED))
-+		flags = MF_SOFT_OFFLINE;
-+	if (sev == GHES_SEV_RECOVERABLE && sec_sev == GHES_SEV_RECOVERABLE)
-+		flags = sync ? MF_ACTION_REQUIRED : 0;
-+
-+	if (flags != -1)
-+		return ghes_do_memory_failure(mem_err->physical_addr, flags);
-+
-+	return false;
-+}
-+
-+bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata,
-+			      int sev, bool sync)
-+{
-+	struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
-+	int flags = sync ? MF_ACTION_REQUIRED : 0;
-+	int length = gdata->error_data_length;
-+	char error_type[120];
-+	bool queued = false;
-+	int sec_sev, i;
-+	char *p;
-+
-+	sec_sev = ghes_severity(gdata->error_severity);
-+	if (length >= sizeof(*err)) {
-+		log_arm_hw_error(err, sec_sev);
-+	} else {
-+		pr_warn(FW_BUG "arm error length: %d\n", length);
-+		pr_warn(FW_BUG "length is too small\n");
-+		pr_warn(FW_BUG "firmware-generated error record is incorrect\n");
-+		return false;
-+	}
-+
-+	if (sev != GHES_SEV_RECOVERABLE || sec_sev != GHES_SEV_RECOVERABLE)
-+		return false;
-+
-+	p = (char *)(err + 1);
-+	length -= sizeof(err);
-+
-+	for (i = 0; i < err->err_info_num; i++) {
-+		struct cper_arm_err_info *err_info;
-+		bool is_cache, has_pa;
-+
-+		/* Ensure we have enough data for the error info header */
-+		if (length < sizeof(*err_info))
-+			break;
-+
-+		err_info = (struct cper_arm_err_info *)p;
-+
-+		/* Validate the claimed length before using it */
-+		length -= err_info->length;
-+		if (length < 0)
-+			break;
-+
-+		is_cache = err_info->type & CPER_ARM_CACHE_ERROR;
-+		has_pa = (err_info->validation_bits & CPER_ARM_INFO_VALID_PHYSICAL_ADDR);
-+
-+		/*
-+		 * The field (err_info->error_info & BIT(26)) is fixed to set to
-+		 * 1 in some old firmware of HiSilicon Kunpeng920. We assume that
-+		 * firmware won't mix corrected errors in an uncorrected section,
-+		 * and don't filter out 'corrected' error here.
-+		 */
-+		if (is_cache && has_pa) {
-+			queued = ghes_do_memory_failure(err_info->physical_fault_addr, flags);
-+			p += err_info->length;
-+			continue;
-+		}
-+
-+		cper_bits_to_str(error_type, sizeof(error_type),
-+				 FIELD_GET(CPER_ARM_ERR_TYPE_MASK, err_info->type),
-+				 cper_proc_error_type_strs,
-+				 ARRAY_SIZE(cper_proc_error_type_strs));
-+
-+			pr_warn_ratelimited(FW_WARN GHES_PFX
-+					    "Unhandled processor error type 0x%02x: %s%s\n",
-+					    err_info->type, error_type,
-+					    err_info->type & ~CPER_ARM_ERR_TYPE_MASK ?
-+					    " with reserved bit(s)" : "");
-+		p += err_info->length;
-+	}
-+
-+	return queued;
-+}
-+
-+/*
-+ * PCIe AER errors need to be sent to the AER driver for reporting and
-+ * recovery. The GHES severities map to the following AER severities and
-+ * require the following handling:
-+ *
-+ * GHES_SEV_CORRECTABLE -> AER_CORRECTABLE
-+ *     These need to be reported by the AER driver but no recovery is
-+ *     necessary.
-+ * GHES_SEV_RECOVERABLE -> AER_NONFATAL
-+ * GHES_SEV_RECOVERABLE && CPER_SEC_RESET -> AER_FATAL
-+ *     These both need to be reported and recovered from by the AER driver.
-+ * GHES_SEV_PANIC does not make it to this handling since the kernel must
-+ *     panic.
-+ */
-+void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
-+{
-+#ifdef CONFIG_ACPI_APEI_PCIEAER
-+	struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
-+
-+	if (pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID &&
-+	    pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
-+		unsigned int devfn;
-+		int aer_severity;
-+		u8 *aer_info;
-+
-+		devfn = PCI_DEVFN(pcie_err->device_id.device,
-+				  pcie_err->device_id.function);
-+		aer_severity = cper_severity_to_aer(gdata->error_severity);
-+
-+		/*
-+		 * If firmware reset the component to contain
-+		 * the error, we must reinitialize it before
-+		 * use, so treat it as a fatal AER error.
-+		 */
-+		if (gdata->flags & CPER_SEC_RESET)
-+			aer_severity = AER_FATAL;
-+
-+		aer_info = (void *)gen_pool_alloc(ghes_estatus_pool,
-+						  sizeof(struct aer_capability_regs));
-+		if (!aer_info)
-+			return;
-+		memcpy(aer_info, pcie_err->aer_info, sizeof(struct aer_capability_regs));
-+
-+		aer_recover_queue(pcie_err->device_id.segment,
-+				  pcie_err->device_id.bus,
-+				  devfn, aer_severity,
-+				  (struct aer_capability_regs *)
-+				  aer_info);
-+	}
-+#endif
-+}
-+
-+void ghes_log_hwerr(int sev, guid_t *sec_type)
-+{
-+	if (sev != CPER_SEV_RECOVERABLE)
-+		return;
-+
-+	if (guid_equal(sec_type, &CPER_SEC_PROC_ARM) ||
-+	    guid_equal(sec_type, &CPER_SEC_PROC_GENERIC) ||
-+	    guid_equal(sec_type, &CPER_SEC_PROC_IA)) {
-+		hwerr_log_error_type(HWERR_RECOV_CPU);
-+		return;
-+	}
-+
-+	if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR) ||
-+	    guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID) ||
-+	    guid_equal(sec_type, &CPER_SEC_CXL_DRAM_GUID) ||
-+	    guid_equal(sec_type, &CPER_SEC_CXL_MEM_MODULE_GUID)) {
-+		hwerr_log_error_type(HWERR_RECOV_CXL);
-+		return;
-+	}
-+
-+	if (guid_equal(sec_type, &CPER_SEC_PCIE) ||
-+	    guid_equal(sec_type, &CPER_SEC_PCI_X_BUS)) {
-+		hwerr_log_error_type(HWERR_RECOV_PCI);
-+		return;
-+	}
-+
-+	if (guid_equal(sec_type, &CPER_SEC_PLATFORM_MEM)) {
-+		hwerr_log_error_type(HWERR_RECOV_MEMORY);
-+		return;
-+	}
-+
-+	hwerr_log_error_type(HWERR_RECOV_OTHERS);
-+}
-+
-+void __ghes_print_estatus(const char *pfx,
-+			  const struct acpi_hest_generic *generic,
-+			  const struct acpi_hest_generic_status *estatus)
-+{
-+	static atomic_t seqno;
-+	unsigned int curr_seqno;
-+	char pfx_seq[64];
-+
-+	if (!pfx) {
-+		if (ghes_severity(estatus->error_severity) <=
-+		    GHES_SEV_CORRECTED)
-+			pfx = KERN_WARNING;
-+		else
-+			pfx = KERN_ERR;
-+	}
-+	curr_seqno = atomic_inc_return(&seqno);
-+	snprintf(pfx_seq, sizeof(pfx_seq), "%s{%u}" HW_ERR, pfx, curr_seqno);
-+	printk("%sHardware error from APEI Generic Hardware Error Source: %d\n",
-+	       pfx_seq, generic->header.source_id);
-+	cper_estatus_print(pfx_seq, estatus);
-+}
-+
-+int ghes_print_estatus(const char *pfx,
-+		       const struct acpi_hest_generic *generic,
-+		       const struct acpi_hest_generic_status *estatus)
-+{
-+	/* Not more than 2 messages every 5 seconds */
-+	static DEFINE_RATELIMIT_STATE(ratelimit_corrected, 5 * HZ, 2);
-+	static DEFINE_RATELIMIT_STATE(ratelimit_uncorrected, 5 * HZ, 2);
-+	struct ratelimit_state *ratelimit;
-+
-+	if (ghes_severity(estatus->error_severity) <= GHES_SEV_CORRECTED)
-+		ratelimit = &ratelimit_corrected;
-+	else
-+		ratelimit = &ratelimit_uncorrected;
-+	if (__ratelimit(ratelimit)) {
-+		__ghes_print_estatus(pfx, generic, estatus);
-+		return 1;
-+	}
++	memcpy_fromio(ctx->estatus, ctx->status, ctx->status_len);
 +	return 0;
 +}
 +
-+#ifdef CONFIG_ACPI_APEI
- static void __iomem *ghes_map(u64 pfn, enum fixed_addresses fixmap_idx)
- {
- 	phys_addr_t paddr;
-@@ -272,6 +636,7 @@ void ghes_clear_estatus(struct ghes *ghes,
- 	if (is_hest_type_generic_v2(ghes))
- 		ghes_ack_error(ghes->generic_v2);
- }
-+#endif /* CONFIG_ACPI_APEI */
- 
- static BLOCKING_NOTIFIER_HEAD(vendor_record_notify_list);
- 
-@@ -323,6 +688,77 @@ void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
- 	schedule_work(&entry->work);
- }
- 
-+void ghes_cper_handle_status(struct device *dev,
-+			     const struct acpi_hest_generic *generic,
-+			     const struct acpi_hest_generic_status *estatus,
-+			     bool sync)
++static void cper_esource_ack(struct cper_esource *ctx)
 +{
-+	int sev, sec_sev;
-+	struct acpi_hest_generic_data *gdata;
-+	guid_t *sec_type;
-+	const guid_t *fru_id = &guid_null;
-+	char *fru_text = "";
-+	bool queued = false;
++	u64 val;
 +
-+	sev = ghes_severity(estatus->error_severity);
-+	apei_estatus_for_each_section(estatus, gdata) {
-+		sec_type = (guid_t *)gdata->section_type;
-+		sec_sev = ghes_severity(gdata->error_severity);
-+		if (gdata->validation_bits & CPER_SEC_VALID_FRU_ID)
-+			fru_id = (guid_t *)gdata->fru_id;
++	if (!ctx->ack.present)
++		return;
 +
-+		if (gdata->validation_bits & CPER_SEC_VALID_FRU_TEXT)
-+			fru_text = gdata->fru_text;
-+
-+		ghes_log_hwerr(sev, sec_type);
-+		if (guid_equal(sec_type, &CPER_SEC_PLATFORM_MEM)) {
-+			struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
-+
-+			atomic_notifier_call_chain(&ghes_report_chain, sev, mem_err);
-+
-+			arch_apei_report_mem_error(sev, mem_err);
-+			queued = ghes_handle_memory_failure(gdata, sev, sync);
-+		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
-+			ghes_handle_aer(gdata);
-+		} else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
-+			queued = ghes_handle_arm_hw_error(gdata, sev, sync);
-+		} else if (guid_equal(sec_type, &CPER_SEC_CXL_PROT_ERR)) {
-+			struct cxl_cper_sec_prot_err *prot_err = acpi_hest_get_payload(gdata);
-+
-+			cxl_cper_post_prot_err(prot_err, gdata->error_severity);
-+		} else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID)) {
-+			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
-+
-+			cxl_cper_post_event(CXL_CPER_EVENT_GEN_MEDIA, rec);
-+		} else if (guid_equal(sec_type, &CPER_SEC_CXL_DRAM_GUID)) {
-+			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
-+
-+			cxl_cper_post_event(CXL_CPER_EVENT_DRAM, rec);
-+		} else if (guid_equal(sec_type, &CPER_SEC_CXL_MEM_MODULE_GUID)) {
-+			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
-+
-+			cxl_cper_post_event(CXL_CPER_EVENT_MEM_MODULE, rec);
-+		} else {
-+			void *err = acpi_hest_get_payload(gdata);
-+
-+			ghes_defer_non_standard_event(gdata, sev);
-+			log_non_standard_event(sec_type, fru_id, fru_text,
-+					       sec_sev, err,
-+					       gdata->error_data_length);
-+		}
-+	}
-+
-+	/*
-+	 * If no memory failure work is queued for abnormal synchronous
-+	 * errors, do a force kill.
-+	 */
-+	if (sync && !queued) {
-+		dev_err(dev,
-+			HW_ERR GHES_PFX "%s:%d: synchronous unrecoverable error (SIGBUS)\n",
-+			current->comm, task_pid_nr(current));
-+		force_sig(SIGBUS);
++	if (ctx->ack.width == 64) {
++		val = readq(ctx->ack.addr);
++		val &= ctx->ack.preserve;
++		val |= ctx->ack.set;
++		writeq(val, ctx->ack.addr);
++	} else {
++		val = readl(ctx->ack.addr);
++		val &= (u32)ctx->ack.preserve;
++		val |= (u32)ctx->ack.set;
++		writel(val, ctx->ack.addr);
 +	}
 +}
- /* Room for 8 entries */
- #define CXL_CPER_PROT_ERR_FIFO_DEPTH 8
- static DEFINE_KFIFO(cxl_cper_prot_err_fifo, struct cxl_cper_prot_err_work_data,
++
++static void cper_esource_fatal(struct cper_esource *ctx)
++{
++	__ghes_print_estatus(KERN_EMERG, ctx->generic, ctx->estatus);
++	add_taint(TAINT_MACHINE_CHECK, LOCKDEP_STILL_OK);
++	panic("GHES: fatal firmware-first CPER record from %s\n",
++	      dev_name(ctx->dev));
++}
++
++static void cper_esource_process(struct cper_esource *ctx)
++{
++	int sev;
++
++	guard(spinlock_irqsave)(&ctx->lock);
++
++	if (cper_esource_copy_status(ctx))
++		return;
++
++	sev = ghes_severity(ctx->estatus->error_severity);
++	if (sev >= GHES_SEV_PANIC)
++		cper_esource_fatal(ctx);
++
++	if (!ghes_estatus_cached(ctx->estatus) &&
++	    ghes_print_estatus(NULL, ctx->generic, ctx->estatus))
++		ghes_estatus_cache_add(ctx->generic, ctx->estatus);
++
++	ghes_cper_handle_status(ctx->dev, ctx->generic, ctx->estatus, ctx->sync);
++	cper_esource_ack(ctx);
++}
++
++static irqreturn_t cper_esource_irq(int irq, void *data)
++{
++	struct cper_esource *ctx = data;
++
++	cper_esource_process(ctx);
++
++	return IRQ_HANDLED;
++}
++
++static int cper_esource_init_ack(struct platform_device *pdev,
++				 struct cper_esource *ctx)
++{
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	size_t size;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	if (!res)
++		return 0;
++
++	ctx->ack.addr = devm_platform_get_and_ioremap_resource(pdev, 1, &res);
++	if (IS_ERR(ctx->ack.addr))
++		return PTR_ERR(ctx->ack.addr);
++
++	size = resource_size(res);
++	switch (size) {
++	case 4:
++		ctx->ack.width = 32;
++		ctx->ack.preserve = ~0U;
++		break;
++	case 8:
++		ctx->ack.width = 64;
++		ctx->ack.preserve = ~0ULL;
++		break;
++	default:
++		return dev_err_probe(dev, -EINVAL,
++				     "unsupported ack resource size %zu\n", size);
++	}
++
++	ctx->ack.set = BIT_ULL(0);
++	ctx->ack.present = true;
++	return 0;
++}
++
++static int cper_esource_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct cper_esource *ctx;
++	struct resource *res;
++	int source_id;
++	int rc;
++
++	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	spin_lock_init(&ctx->lock);
++	ctx->dev = dev;
++	ctx->sync = device_property_read_bool(dev, "arm,sea-notify");
++
++	ctx->status = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
++	if (IS_ERR(ctx->status))
++		return dev_err_probe(dev, PTR_ERR(ctx->status),
++				     "failed to map status region\n");
++
++	ctx->status_len = resource_size(res);
++	if (!ctx->status_len)
++		return dev_err_probe(dev, -EINVAL, "status region has zero length\n");
++
++	rc = cper_esource_init_ack(pdev, ctx);
++	if (rc)
++		return rc;
++
++	rc = cper_esource_init_pool();
++	if (rc)
++		return rc;
++
++	ctx->estatus = devm_kzalloc(dev, ctx->status_len, GFP_KERNEL);
++	if (!ctx->estatus)
++		return -ENOMEM;
++
++	ctx->generic = devm_kzalloc(dev, sizeof(*ctx->generic), GFP_KERNEL);
++	if (!ctx->generic)
++		return -ENOMEM;
++
++	source_id = ida_alloc_min(&cper_esource_source_ids, 1, GFP_KERNEL);
++	if (source_id < 0)
++		return source_id;
++
++	ctx->generic->header.type = ACPI_HEST_TYPE_GENERIC_ERROR;
++	ctx->generic->header.source_id = source_id;
++
++	rc = devm_add_action_or_reset(dev, cper_esource_release_source_id,
++				      ctx->generic);
++	if (rc)
++		return rc;
++
++	ctx->generic->notify.type = ctx->sync ?
++		ACPI_HEST_NOTIFY_SEA : ACPI_HEST_NOTIFY_EXTERNAL;
++	ctx->generic->error_block_length = ctx->status_len;
++
++	ctx->irq = platform_get_irq(pdev, 0);
++	if (ctx->irq < 0)
++		return ctx->irq;
++
++	rc = devm_request_threaded_irq(dev, ctx->irq, NULL, cper_esource_irq,
++				       IRQF_ONESHOT,
++				       dev_name(dev), ctx);
++	if (rc)
++		return dev_err_probe(dev, rc, "failed to request interrupt\n");
++
++	return 0;
++}
++
++static const struct of_device_id cper_esource_of_match[] = {
++	{ .compatible = "arm,ras-cper" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, cper_esource_of_match);
++
++static struct platform_driver cper_esource_driver = {
++	.driver = {
++		.name = "cper-esource",
++		.of_match_table = cper_esource_of_match,
++	},
++	.probe = cper_esource_probe,
++};
++
++module_platform_driver(cper_esource_driver);
++
++MODULE_AUTHOR("Ahmed Tiba <ahmed.tiba@arm.com>");
++MODULE_DESCRIPTION("Firmware-first CPER provider");
++MODULE_LICENSE("GPL");
 diff --git a/include/acpi/ghes_cper.h b/include/acpi/ghes_cper.h
-index dd49e9179b63..511b95b50911 100644
+index 511b95b50911..a78d4a773129 100644
 --- a/include/acpi/ghes_cper.h
 +++ b/include/acpi/ghes_cper.h
-@@ -17,6 +17,8 @@
- #define ACPI_APEI_GHES_CPER_H
+@@ -80,6 +80,14 @@ static inline bool is_hest_sync_notify(struct ghes *ghes)
+ 	return notify_type == ACPI_HEST_NOTIFY_SEA;
+ }
  
- #include <linux/atomic.h>
-+#include <linux/device.h>
-+#include <linux/notifier.h>
- #include <linux/workqueue.h>
- 
- #include <acpi/ghes.h>
-@@ -57,6 +59,7 @@
- 	((struct ghes_vendor_record_entry *)(vendor_entry) + 1))
- 
- extern struct gen_pool *ghes_estatus_pool;
-+extern struct atomic_notifier_head ghes_report_chain;
- 
- static inline bool is_hest_type_generic_v2(struct ghes *ghes)
- {
-@@ -107,6 +110,23 @@ void ghes_estatus_cache_add(struct acpi_hest_generic *generic,
++static inline u32 cper_estatus_len(struct acpi_hest_generic_status *estatus)
++{
++	if (estatus->raw_data_length)
++		return estatus->raw_data_offset + estatus->raw_data_length;
++	else
++		return sizeof(*estatus) + estatus->data_length;
++}
++
+ struct ghes_vendor_record_entry {
+ 	struct work_struct work;
+ 	int error_severity;
+@@ -108,6 +116,8 @@ int __ghes_read_estatus(struct acpi_hest_generic_status *estatus,
+ int ghes_estatus_cached(struct acpi_hest_generic_status *estatus);
+ void ghes_estatus_cache_add(struct acpi_hest_generic *generic,
  			    struct acpi_hest_generic_status *estatus);
++int ghes_register_vendor_record_notifier(struct notifier_block *nb);
++void ghes_unregister_vendor_record_notifier(struct notifier_block *nb);
  void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
  				   int sev);
-+int ghes_severity(int severity);
-+bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
-+				int sev, bool sync);
-+bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata,
-+			      int sev, bool sync);
-+void ghes_handle_aer(struct acpi_hest_generic_data *gdata);
-+void ghes_log_hwerr(int sev, guid_t *sec_type);
-+void __ghes_print_estatus(const char *pfx,
-+			  const struct acpi_hest_generic *generic,
-+			  const struct acpi_hest_generic_status *estatus);
-+int ghes_print_estatus(const char *pfx,
-+		       const struct acpi_hest_generic *generic,
-+		       const struct acpi_hest_generic_status *estatus);
-+void ghes_cper_handle_status(struct device *dev,
-+			     const struct acpi_hest_generic *generic,
-+			     const struct acpi_hest_generic_status *estatus,
-+			     bool sync);
- void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
- 			    int severity);
- int cxl_cper_register_prot_err_work(struct work_struct *work);
+ int ghes_severity(int severity);
 
 -- 
 2.43.0
