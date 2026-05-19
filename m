@@ -1,86 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BABC346AFD
-	for <linux-cxl@vger.kernel.org>; Tue, 19 May 2026 21:08:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1191D5170
+	for <linux-cxl@vger.kernel.org>; Tue, 19 May 2026 21:37:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779224917; cv=none; b=rYDo03u4Pr2Dz/6NYqpnPpSIENHfuKX920MrPOga+oLNSIi7QsogITKiZM/k3i8YQiqWVpxTjW/MUr5likubTQ5EMIZJ918X0NE/tr0fV13VJPgfkH+ABLAEcn/TRj25QKW0fEuXPtCy8u7+kVsr5YDnTjSOs+DpItLbWOHQ7qw=
+	t=1779226660; cv=none; b=C9SfXbWuA5r7WrHVilOkc7VJp901bLjjt778FN/ifmtu3VMywwCPwXLqPCwKSEgxnlCQyVJ+BuMUPJzSxJF47RNhIoIrjfnONhSbYhysBSGd1Eeo/+FgT9jHFR3AQvEKw9PcqK4UJYW3sYdzipQOPZtQWHXGQcdzgvPmfzuJOkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779224917; c=relaxed/simple;
-	bh=YryeR5+L/LeaRnl87LJxqvht365aK+p4n61m5kFCEKg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=d5i/t0Hy2rTW91HElTU90Lhj9Wq+3stGTb/UvTBr6z9JduytnkVSfCGYocPLXoylJ9fUCbzl916K1IOSnBZpRk01mMpwJWd+Z2zfd5QXDgBruyPb0aYQ/FWR+Hv5oxvxkBXz027YNAWVSE8dziwz3L3jXFOW4s3/CgduRDP9muY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=jURyxAjI; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="jURyxAjI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C31C31F000E9;
-	Tue, 19 May 2026 21:08:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1779224916;
-	bh=JS1yyKmqnk5Unq24VeZ3/2R9CA2t4l0FygZRt/eQOoE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=jURyxAjICAw+O6bXQeTFnit8oi3xSXozTg6BCrySYVh2AqIh8wiej8qRBEzJHnOky
-	 nPwsy7Li5/Pk3jr3FgbINEvo06oasgpgVbznHfwcoIedWyZhAdkHs3bSbDcPP0Aa8F
-	 FGCVPMyqBeUksPS1S3m91+b2d8QFIN6q4xZwilNY=
-Date: Tue, 19 May 2026 14:08:35 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Georgi Djakov <djakov@kernel.org>
-Cc: Georgi Djakov <georgi.djakov@oss.qualcomm.com>, david@kernel.org,
- linux-mm@kvack.org, linux-cxl@vger.kernel.org, osalvador@suse.de,
- gregkh@linuxfoundation.org, rafael@kernel.org, Mike Rapoport
- <rppt@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH v2] drivers/base/memory: set mem->altmap after
- successful device registration
-Message-Id: <20260519140835.0eb262de8c8e37b9fd307c74@linux-foundation.org>
-In-Reply-To: <90c0af4b-f608-42e5-9f61-222d943bcebc@kernel.org>
-References: <20260514092657.3057141-1-georgi.djakov@oss.qualcomm.com>
-	<20260519132522.421c018b39328ebc4767dd8e@linux-foundation.org>
-	<90c0af4b-f608-42e5-9f61-222d943bcebc@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1779226660; c=relaxed/simple;
+	bh=MyQzguiPRTxaaTlo/I2hoLO36sbyDBdg2G+I/L6fuV0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mDrS7hxXamIVHU1R2Ak++a7JfcI9bZi+/LVjZBAnHKTNuqyuySjdDuLDnebKIYntnYsobg+/xlzqeiplIrsJvF6XoLmuDr3nXXHRSCaG5Hp/WJz0z+BzsRSg8S6P9zZ/hG/ypldfauAzHZiO4L2ouk2KZaL2CiqEd28CUTByZLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56E141F000E9;
+	Tue, 19 May 2026 21:37:39 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: djbw@kernel.org,
+	dave@stgolabs.net,
+	jic23@kernel.org,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com
+Subject: [PATCH v2 0/6] cxl: Add CXL type2 accelerator support for cxl_test
+Date: Tue, 19 May 2026 14:37:27 -0700
+Message-ID: <20260519213734.69737-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 19 May 2026 23:57:52 +0300 Georgi Djakov <djakov@kernel.org> wrote:
+See individual patches for changes from previous version.
 
-> On 5/19/26 11:25 PM, Andrew Morton wrote:
-> > On Thu, 14 May 2026 02:26:57 -0700 Georgi Djakov <georgi.djakov@oss.qualcomm.com> wrote:
-> > 
-> >> If __add_memory_block() fails at xa_store() (under memory pressure
-> >> for example), device_unregister() is called, which eventually
-> >> triggers memory_block_release() with mem->altmap still set, causing
-> >> a WARN_ON(mem->altmap).
-> > 
-> > That isn't good.
-> > 
-> >> This was triggered by modifying virtio-mem
-> >> driver.
-> >>
-> >> Fix this by delaying the assignment of mem->altmap until after
-> >> __add_memory_block() has succeeded.
-> >>
-> >> Fixes: 1a8c64e11043 ("mm/memory_hotplug: embed vmem_altmap details in memory block")
-> > 
-> > Patch is nice and simple so I'll add a cc:stable to this, even though
-> > the issue seems rather minor.
-> > 
-> > btw, AI review had no issue with your change but might have found a bug
-> > in create_altmaps_and_memory_blocks():
-> > 
-> > 	https://sashiko.dev/#/patchset/20260514092657.3057141-1-georgi.djakov@oss.qualcomm.com
-> 
-> Yes, i have hit exactly this bug actually (shortly after this WARN_ON, we crash)
-> and was going to send a fix, but noticed that someone already did:
-> https://lore.kernel.org/lkml/20260428081855.1249045-3-songmuchun@bytedance.com/
-> 
-> I can respond with my RB on that one if you haven't applied it yet.
+The series is based on v7.0-rc7 with Alejandro's type2 series v25 [1] and
+with Dan's follow on series [2].
 
-I have indeed applied it, but a R-b isn't a problem and would be
-welcomed.  One of the many reasons why I retain patches in quilt form
-for a few weeks before gitifying them.
+Series adds a 'type2_test' module parameter where it setup a mock type2
+hierarchy with a mock type2 accelerator device directly under a root
+port that has an auto region setup.
+
+It also includes a CXL fix that was encountered when running tests with
+the new code.
+
+[
+  {
+    "memdevs":[
+      {
+        "memdev":"mem0",
+        "ram_size":536870912,
+        "ram_qos_class":42,
+        "host":"cxl_type2_accel.0",
+        "poison_injectable":false
+      }
+    ]
+  },
+  {
+    "regions":[
+      {
+        "region":"region0",
+        "resource":70300293136384,
+        "size":536870912,
+        "type":"ram",
+        "interleave_ways":1,
+        "interleave_granularity":4096,
+        "decode_state":"commit"
+      }
+    ]
+  }
+]
+
+    "root decoders":[
+      {
+        "decoder":"decoder0.0",
+        "resource":70300293136384,
+        "size":1073741824,
+        "interleave_ways":1,
+        "accelmem_capable":true,
+        "qos_class":42,
+        "nr_targets":1
+      },
+
+[1]: https://lore.kernel.org/linux-cxl/20260330143827.1278677-1-alejandro.lucero-palau@amd.com/T/#t
+[2]: https://lore.kernel.org/linux-cxl/20260403210050.1058650-1-dan.j.williams@intel.com/T/#t
+
+
+Dave Jiang (6):
+  cxl/test: Add test for module parameters
+  cxl/test: Add type2 support for mock CFMWS0
+  cxl/test: Refactor platform device enumerations
+  cxl/test: Add hierarchy enumeration support for type2 device
+  cxl/test: Fixup hdm init for auto region to support type2
+  cxl/test: Add cxl_test accelerator driver
+
+ tools/testing/cxl/test/Kbuild  |   2 +
+ tools/testing/cxl/test/accel.c |  74 ++++
+ tools/testing/cxl/test/cxl.c   | 629 ++++++++++++++++++++++++++-------
+ 3 files changed, 571 insertions(+), 134 deletions(-)
+ create mode 100644 tools/testing/cxl/test/accel.c
+
+
+base-commit: f47d7b8dbd872ba638dd9b2c25efae2d6cd14dca
+-- 
+2.54.0
+
