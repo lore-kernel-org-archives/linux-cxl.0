@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E39C3E51FC
-	for <linux-cxl@vger.kernel.org>; Tue, 19 May 2026 21:37:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9EF3E928C
+	for <linux-cxl@vger.kernel.org>; Tue, 19 May 2026 21:37:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779226668; cv=none; b=R8fDYi7t1P7EWpxQVngBM5GDdcTWhfmGc2tr2x1vyCrQvJ7cwR7g7qoEC7KBIIICQ7YN3q+JS407u9JxP5ZealNLzj3Hme19YgWnAy//bktjJx04jEWk4bu5iKKmqs2n7UpIha+QfVMRookG/mbFl3gDa0QISk6yXWAmjweDCos=
+	t=1779226669; cv=none; b=maQ6l0dXvxIj4PLXXp14UQKYfkLnXFhvZoebBOfkQIIax2RIH+6+2dubVBP4wwfgp7UDJ82yC8+aNdMp6a6emy6M2vToMj9crs7MLHDWJu79l7NAgUnoFsP58b7ai55tQcwb5/JJHk/cMqjvzwaL0BQxIUVcKlE6g3qhj3cmxzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779226668; c=relaxed/simple;
-	bh=VgMBemJCp9riTyc5HbpGd9OCd1gXvyup5+sPSs1NXBk=;
+	s=arc-20240116; t=1779226669; c=relaxed/simple;
+	bh=Vt8myh9grEXTpMaF/5xtWrS878bFEJHpdYEVvkGbmjs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E8M61T7SSuAft0Vq3UZxxjBJXtl16FDuK1oKI31uq6aEmic+yEC6dZFYk8TxcuhSKH0DP+j5/gp3FTH+ulZgDbVtEVT6iSVHl1MyYiUgknv7WJfYcjWR/robG+MyhFpjULSXwLfDfq+Ap1Kgw3w+8ATGH5JJAtGcgY0s0XiZ7Uo=
+	 MIME-Version; b=ed/3fDg1sMed5MrxvE0mfLN84VGs9NvqlMp5PfM1V0sPbVCAtDnR+64ZhBy+7IljiLz8zMNmQjB7NMoWc2TSC3dw9hgSnehqW81twNDM1ZL3QiYLyUlZwjfDZNt4iQTs9Bw75JCX1Dsg8LrwTSyDpxlMrYSL0qfnkkj7WY/KIZo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1E691F000E9;
-	Tue, 19 May 2026 21:37:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 042611F00893;
+	Tue, 19 May 2026 21:37:47 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: djbw@kernel.org,
@@ -21,9 +21,9 @@ Cc: djbw@kernel.org,
 	jic23@kernel.org,
 	alison.schofield@intel.com,
 	vishal.l.verma@intel.com
-Subject: [PATCH v2 5/6] cxl/test: Fixup hdm init for auto region to support type2
-Date: Tue, 19 May 2026 14:37:32 -0700
-Message-ID: <20260519213734.69737-6-dave.jiang@intel.com>
+Subject: [PATCH v2 6/6] cxl/test: Add cxl_test accelerator driver
+Date: Tue, 19 May 2026 14:37:33 -0700
+Message-ID: <20260519213734.69737-7-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260519213734.69737-1-dave.jiang@intel.com>
 References: <20260519213734.69737-1-dave.jiang@intel.com>
@@ -35,120 +35,118 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support to setup initialization of decoders in order to support
-type2 auto region.
+Add a type2 accelerator mock driver for the platform device that
+simulates a CXL type2 device. The driver exercises the same
+minimal API calls that a real CXL type2 driver would utilize.
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- tools/testing/cxl/test/cxl.c | 73 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 72 insertions(+), 1 deletion(-)
+v2:
+- Remove unused headers. (Alison)
+- devm_cxl_dev_state_create() err return -ENOMEM. (Alison)
+---
+ tools/testing/cxl/test/Kbuild  |  2 +
+ tools/testing/cxl/test/accel.c | 74 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 76 insertions(+)
+ create mode 100644 tools/testing/cxl/test/accel.c
 
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 2a39b2575f06..042f057e42eb 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -1081,6 +1081,7 @@ enum cxld_init_type {
- 	MOCK_DECODER_INIT_DEFAULT,
- 	MOCK_DECODER_INIT_SAVED,
- 	MOCK_DECODER_INIT_TYPE3_AUTO,
-+	MOCK_DECODER_INIT_TYPE2_AUTO,
- };
+diff --git a/tools/testing/cxl/test/Kbuild b/tools/testing/cxl/test/Kbuild
+index c168e3c998a7..9a24ddc28488 100644
+--- a/tools/testing/cxl/test/Kbuild
++++ b/tools/testing/cxl/test/Kbuild
+@@ -5,10 +5,12 @@ obj-m += cxl_test.o
+ obj-m += cxl_mock.o
+ obj-m += cxl_mock_mem.o
+ obj-m += cxl_translate.o
++obj-m += cxl_mock_accel.o
  
- static enum cxld_init_type get_decoder_init_type(struct cxl_decoder *cxld,
-@@ -1109,7 +1110,8 @@ static enum cxld_init_type get_decoder_init_type(struct cxl_decoder *cxld,
- 	    pdev->id > 4 || cxld->id > 0)
- 		return MOCK_DECODER_INIT_DEFAULT;
+ cxl_test-y := cxl.o
+ cxl_test-y += hmem_test.o
+ cxl_mock-y := mock.o
+ cxl_mock_mem-y := mem.o
++cxl_mock_accel-y := accel.o
  
--	return MOCK_DECODER_INIT_TYPE3_AUTO;
-+	return type2_test ? MOCK_DECODER_INIT_TYPE2_AUTO :
-+			    MOCK_DECODER_INIT_TYPE3_AUTO;
- }
- 
- static bool mock_decoder_handle_saved(struct cxl_decoder *cxld, struct cxl_test_decoder *td)
-@@ -1128,6 +1130,70 @@ static bool mock_decoder_handle_saved(struct cxl_decoder *cxld, struct cxl_test_
- 	return false;
- }
- 
-+static void mock_init_hdm_type2_cxled(struct cxl_endpoint_decoder *cxled,
-+				      struct cxl_port *port,
-+				      struct platform_device *pdev)
+ KBUILD_CFLAGS := $(filter-out -Wmissing-prototypes -Wmissing-declarations, $(KBUILD_CFLAGS))
+diff --git a/tools/testing/cxl/test/accel.c b/tools/testing/cxl/test/accel.c
+new file mode 100644
+index 000000000000..f427383670f6
+--- /dev/null
++++ b/tools/testing/cxl/test/accel.c
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Copyright(c) 2026 Intel Corporation. All rights reserved.
++
++#include <linux/platform_device.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/sizes.h>
++#include <cxl/mailbox.h>
++#include <cxlmem.h>
++
++struct mock_cxl_accel {
++	struct cxl_dev_state cxlds;
++	struct cxl_memdev *cxlmd;
++};
++
++static int cxl_mock_accel_probe(struct platform_device *pdev)
 +{
-+	struct acpi_cedt_cfmws *window = mock_cfmws[0];
-+	struct cxl_decoder *cxld = &cxled->cxld;
-+	struct cxl_switch_decoder *cxlsd;
-+	struct cxl_dport *dport;
-+	struct cxl_port *root_port;
-+	struct device *dev;
-+	u64 base;
++	struct cxl_attach_region *attach;
++	struct mock_cxl_accel *cxl_accel;
++	struct device *dev = &pdev->dev;
++	struct cxl_dev_state *cxlds;
++	struct cxl_memdev *cxlmd;
++	int rc;
 +
-+	base = window->base_hpa;
-+	cxld->hpa_range = (struct range) {
-+		.start = base,
-+		.end = base + mock_auto_region_size - 1,
++	attach = devm_kzalloc(dev, sizeof(attach), GFP_KERNEL);
++	if (!attach)
++		return -ENOMEM;
++
++	*attach = (struct cxl_attach_region) {
++		.attach = {
++			.probe = cxl_memdev_attach_region,
++		}
 +	};
 +
-+	cxld->interleave_ways = 1;
-+	eig_to_granularity(window->granularity, &cxld->interleave_granularity);
-+	cxld->target_type = CXL_DECODER_DEVMEM;
-+	cxld->flags = CXL_DECODER_F_ENABLE;
-+	cxled->state = CXL_DECODER_STATE_AUTO;
-+	port->commit_end = cxld->id;
-+	devm_cxl_dpa_reserve(cxled, 0,
-+			     mock_auto_region_size / cxld->interleave_ways, 0);
-+	cxld->commit = mock_decoder_commit;
-+	cxld->reset = mock_decoder_reset;
++	cxl_accel = devm_cxl_dev_state_create(&pdev->dev, CXL_DEVTYPE_DEVMEM,
++					      pdev->dev.id + 1, 0,
++					      struct mock_cxl_accel, cxlds,
++					      false);
++	if (!cxl_accel)
++		return -ENOMEM;
 +
-+	WARN_ON_ONCE(!cxld_registry_new(cxld));
-+	/*
-+	 * Now that endpoint decoder is set up, walk up the hierarchy
-+	 * and setup the root port decoder targeting @cxlmd.
-+	 */
-+	dport = port->parent_dport;
-+	root_port = dport->port;
-+	dev = device_find_child(&root_port->dev, NULL, first_decoder);
-+	/*
-+	 * Ancestor ports are guaranteed to be enumerated before
-+	 * @port, and all ports have at least one decoder.
-+	 */
-+	if (WARN_ON(!dev))
-+		return;
++	cxlds = &cxl_accel->cxlds;
++	cxlds->media_ready = true;
++	rc = cxl_set_capacity(cxlds, SZ_512M);
++	if (rc)
++		return rc;
 +
-+	cxlsd = to_cxl_switch_decoder(dev);
-+	cxlsd->target[0] = dport;
-+	cxlsd->cxld.target_map[0] = dport->port_id;
-+	cxld = &cxlsd->cxld;
-+	cxld->target_type = CXL_DECODER_DEVMEM;
-+	cxld->flags = CXL_DECODER_F_ENABLE;
-+	root_port->commit_end = 0;
-+	cxld->interleave_ways = 1;
-+	cxld->interleave_granularity = 4096;
-+	cxld->hpa_range = (struct range) {
-+		.start = base,
-+		.end = base + mock_auto_region_size - 1,
-+	};
-+	cxld->commit = mock_decoder_commit;
-+	cxld->reset = mock_decoder_reset;
++	cxlmd = devm_cxl_add_memdev(cxlds, &attach->attach);
++	if (IS_ERR(cxlmd))
++		return PTR_ERR(cxlmd);
++	cxl_accel->cxlmd = cxlmd;
 +
-+	cxld_registry_update(cxld);
-+	put_device(dev);
++	return 0;
 +}
 +
- static void mock_init_hdm_type3_cxled(struct cxl_endpoint_decoder *cxled,
- 				      struct cxl_port *port,
- 				      struct platform_device *pdev,
-@@ -1285,6 +1351,11 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 	case MOCK_DECODER_INIT_TYPE3_AUTO:
- 		mock_init_hdm_type3_cxled(cxled, port, pdev, hb0);
- 		return false;
-+	case MOCK_DECODER_INIT_TYPE2_AUTO:
-+		mock_init_hdm_type2_cxled(cxled, port, pdev);
-+		return false;
-+	default:
-+		return false;
- 	}
- 	return false;
- }
++static const struct platform_device_id cxl_mock_accel_ids[] = {
++	{ .name = "cxl_type2_accel", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(platform, cxl_mock_accel_ids);
++
++static struct platform_driver cxl_mock_accel_driver = {
++	.probe = cxl_mock_accel_probe,
++	.id_table = cxl_mock_accel_ids,
++	.driver = {
++		.name = KBUILD_MODNAME,
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
++	},
++};
++
++module_platform_driver(cxl_mock_accel_driver);
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("cxl_test: accelerator device mock module");
++MODULE_IMPORT_NS("CXL");
 -- 
 2.54.0
 
