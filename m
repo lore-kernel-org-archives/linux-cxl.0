@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136364A138F
-	for <linux-cxl@vger.kernel.org>; Tue, 19 May 2026 11:41:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BFB3314DE;
+	Tue, 19 May 2026 11:49:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779190904; cv=none; b=tgV9a3VqBg96p3xtMwMWG8L1hPfB3QkhpkzqdyOtqW9d3A7UKKZcvSDAW1FFWXYREXASiahujZb7nFEURETOCz5dqXz0CG7C1vxyJOESIXWX1wTJZM6OSRtPVIowo5y2nm7MiZA4T2g8A/DX+FSf5Zb+ZT3j1CNX3ztvm/VXfOI=
+	t=1779191383; cv=none; b=VNY6hgyMU5u5LwHQj+M2ccbsYhLNkuI/uidieJJ5naob9bD8P1s3xtOlmsbvYjb41DfPlc6eW/KTd5eOptvE0yQE6hkgmwlghC+nVW0+fCsu+lX9nAHTtPtHCNokdOb7cGkZavQJctYwToHLNCtwVrpRCmHglj1a1QDTQ7pwzlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779190904; c=relaxed/simple;
-	bh=r6TRHI7QGDIZULFYxTQmWSUe2xBfipM8S7JpVimwiJQ=;
+	s=arc-20240116; t=1779191383; c=relaxed/simple;
+	bh=UpRjlMr0kBpQT1Dq9GKlBlF1j95+pLOSWlZJyRaJ1/A=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uYaHj+6TiAHYltMUIn4ru9bjA+ExymIacC0WYvfWdM514zFA47RYl12lms7BBn1flhEp3wPhyzVhAQPKa1lLUgQeNR4sd6cuRbDDea7vK6BuJzL+/+Jn0JVW3irwRHuGboHSLdN61AZMn6wwijPoSHqhiEsqq2lBnil9Z/0EryY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GKu/7V8C; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=DmZdGizhTHem93mFCW4SPOfr3IZB9/dEP6fLlobtYLcT2TB6QubNuoKtustnTPSmy+4D7a4drYeR8mS+3HdyoxSq/Hug+jhkonqdA34dZu1+kgvUtIKZqQDs2O4DKYecWmB5SEYJvyegqBiVxLLZAQvw4X71kuAZXFwHpfBCrrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lj/1iUEl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKu/7V8C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3272FC2BCC7;
-	Tue, 19 May 2026 11:41:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lj/1iUEl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C7A3C2BCC7;
+	Tue, 19 May 2026 11:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779190903;
-	bh=r6TRHI7QGDIZULFYxTQmWSUe2xBfipM8S7JpVimwiJQ=;
+	s=k20201202; t=1779191382;
+	bh=UpRjlMr0kBpQT1Dq9GKlBlF1j95+pLOSWlZJyRaJ1/A=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GKu/7V8ChrTCftl21HGiZ6nVjt3RLq8K6hSwGJqOD+hisdqSYmpSVgirppOe0OSqu
-	 c74r3rwtmxFqQa5rHKnTyYK1N5vP41f5OQ+AtRE7fM41ydY9o5ODrXipwKRzcgfSv+
-	 OQRiMmUAnPHE2h4RBFQcyZsa09M1kykQPMLTENocTNt4+TWqDjVQhyqjkvuHg1pzLr
-	 AtOhbZoudRrHZbiMN17ey2k4GBuMpJ6X2pYKXZb8Tvdp6Dx70iNkjvqxyJ6gz/8xDg
-	 wEXKLP3r3Txu2SR+VzbeDoXFcVm78GSbW+3Xo2LPbgJPROmzzxlcxeK0W4O0u2F2Lz
-	 w/KieEHQURYZw==
-Date: Tue, 19 May 2026 12:41:33 +0100
+	b=Lj/1iUElD+O+yvVtkw/ZXDNYxv9mNEwtDdW2dbU5kFm5Q9B/MuSlL2pzRqxF9HdMY
+	 w+fPLIXpz8QpmiERprKOEsoom+DiaWO8t8fJoFMKpTBX0ecfeqt5GYCAs6jtyx4P7M
+	 7/c5NPK1SqZf4mP975zl2d6KGCQ6AJOgKfLWZ1HRudL81k9Q098vWI584jklCzOInD
+	 LLQV1KXjK1ukBH032UxgTqtTRLw/j1mNEQE71W56wD6k/8bpLyGZJgAkKnWozTsZSX
+	 wvOaTRdgKLnNqrh39ImoSKhC/g853qklhlWQ65aY/5xatsUri1BOCQNBUut+lFcf8Q
+	 C+P+OvBZlKmbA==
+Date: Tue, 19 May 2026 12:49:34 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: "Dan Williams (nvidia)" <djbw@kernel.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, dave.jiang@intel.com,
- benjamin.cheatham@amd.com, alucerop@amd.com, alison.schofield@intel.com,
- ira.weiny@intel.com, gourry@gourry.net, dongjoo.seo1@samsung.com,
- anisa.su@samsung.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] cxl: Support Back-Invalidate
-Message-ID: <20260519124133.1f2bd813@jic23-huawei>
-In-Reply-To: <6a0bc26656f_128d711001f@djbw-dev.notmuch>
-References: <20260516022037.1761453-1-dave@stgolabs.net>
-	<6a0bc26656f_128d711001f@djbw-dev.notmuch>
+To: Chen Pei <cp0613@linux.alibaba.com>
+Cc: alison.schofield@intel.com, dave.jiang@intel.com, guoren@kernel.org,
+ linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, Lucas De Marchi
+ <lucas.demarchi@intel.com>
+Subject: Re: [ndctl PATCH 2/2] daxctl, util/sysfs: skip module probe-insert
+ when driver is builtin or live
+Message-ID: <20260519124934.6bdda161@jic23-huawei>
+In-Reply-To: <20260519034849.38047-1-cp0613@linux.alibaba.com>
+References: <20260518170141.215d1755@jic23-huawei>
+	<20260519034849.38047-1-cp0613@linux.alibaba.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -45,60 +45,82 @@ List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 18 May 2026 18:52:38 -0700
-"Dan Williams (nvidia)" <djbw@kernel.org> wrote:
+On Tue, 19 May 2026 11:48:47 +0800
+Chen Pei <cp0613@linux.alibaba.com> wrote:
 
-> Davidlohr Bueso wrote:
-> > Hello,  
-> 
-> Hi Davidlohr,
-> 
-> > The idea is for Type 3 memdevs and future Type 2 devices to make use
-> > of cxlds->bi when committing HDM decoders, such that different device
-> > coherence models can be differentiated as:  
-> [..]
-> > o Patch 4 adds ABI (sysfs) for HDM-DB region creation.  
-> 
-> I am skeptical about needing new region creation uapi for this. A
-> question from the example below:
-> 
-> [..]
-> > Testing has been done with the qemu HDM-DB Type 3 counterpart (now
-> > merged).  
-> [..]
-> > 2. On a Type 3 HDM-DB volatile device, create one BI and one regular region.
-> > ---------------------------------------------------------------------------  
-> [..]
-> > # echo region0 > /sys/bus/cxl/devices/decoder0.0/create_ram_bi_region  
-> [..]
-> > # echo region1 > /sys/bus/cxl/devices/decoder0.0/create_ram_region  
-> 
-> ...how can a single root decoder support mixed operation?
-> 
-> The root decoder restrictions specify the endpoint decoder requirements.
-> There is no flexibility to entertain beyond picking the root decoder
-> resource, right? Linux can avoid all the configuration corner cases by
-> making the endpoint decoder inherit settings by topology configuration.
-> 
-Hi Dan,
+> On Mon, 18 May 2026 17:01:41 +0100, Jonathan Cameron wrote:
+>=20
+> > > I think this patch is worth you trying. In libmkmod code I'm looking =
+at: =20
+> >=20
+> > It doesn't work - hence the reply!
+> >  =20
+> > >=20
+> > > https://github.com/lucasdemarchi/kmod/blob/master/libkmod/libkmod-mod=
+ule.c
+> > >=20
+> > > the "module directory exists but initstate cannot be opened" case ret=
+urns
+> > > KMOD_MODULE_BUILTIN, not KMOD_MODULE_COMING. =20
+>=20
+> Hi Jonathan,
+>=20
+> Thanks for testing and the detailed analysis.
+>=20
+> I wasn't able to reproduce this on my setup because the modules.builtin
+> index is correctly installed, so kmod_module_get_initstate() returns
+> KMOD_MODULE_BUILTIN at the first step (via kmod_module_is_builtin())
+> without ever falling through to the sysfs path.
+>=20
+> That said, I understand the scenario =E2=80=94 developing in a VM with
+> CONFIG_DEV_DAX=3Dy but without running modules_install is a perfectly
+> reasonable workflow, and I agree it's worth addressing.
+>=20
+> However, I feel that the suggested workaround (adding a COMING +
+> sysfs-dir-exists-without-initstate check in ndctl) is papering over
+> what is fundamentally a libkmod issue. When a module is builtin and
+> /sys/module/<name>/ exists without an initstate file, libkmod should
+> not return KMOD_MODULE_COMING =E2=80=94 that state implies a module is
+> actively being loaded, which is not the case for a fully initialized
+> builtin driver. The root cause is that kmod_module_is_builtin() fails
+> when modules.builtin is missing, and the sysfs fallback doesn't
+> distinguish "builtin without initstate" from "module in transition".
 
-Assuming I understand the question correctly...
+Agreed. I'm curious why it was built that way.  I scraped an email address
+that is hopefully the right Lucas from another thread. +CC
 
-No idea if anyone has done it but as far as I can tell you 'could' easily
-enough have a single fixed memory window that supports both BI and non BI,
-the host implementation would just have to use the programming of the
-decoders in the host bridges to figure out what it needs to support.
+Brief summary is that this series was trying to avoid a message when
+module load fails due to it already being loaded, or built in but some
+of the files are missing (as say no modules installed).   If modules.builtin
+isn't there we get return value of KMOD_MODULE_COMING as the extra is it
+loaded heuristic doesn't work because the initstate file isn't there at
+all.
 
-I'm not aware of anything in the spec that says you can't implement that.
-Now maybe it's a non thing but if it turns up later we need to be careful
-not to wall ourselves into a corner from ABI point of view.
+My suspicion is this is papering over a race condition that occurs in
+a normal module load -  it may not be possible to tell the difference
+between COMMING and BUILTIN reliably.
 
-Usual reasoning of HPA space being a fairly costly / limited resource
-would be the reason to build this more complex hardware.
+>=20
+> I think the proper fix belongs in libkmod: the sysfs fallback in
+> kmod_module_get_initstate() should return KMOD_MODULE_BUILTIN (or at
+> least not COMING) when the directory exists but initstate does not.
+>=20
+> For now, would it be acceptable to keep this patch as-is (covering the
+> BUILTIN and LIVE cases) and note in the commit message that the
+> modules.builtin index must be properly installed for the builtin
+> detection to work? If there is consensus that ndctl should carry the
+> workaround regardless, I'm happy to send a v2 with the additional
+> COMING handling. CC Alison.
+This is indeed better than current situation and given it's ultimately a
+case of message suppression that seems harmless. So I don't mind this
+if handing the corner case I hit is too complex.
 
 Jonathan
 
+>=20
+> Thanks,
+> Pei
 
