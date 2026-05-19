@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCF64D2EEF;
-	Tue, 19 May 2026 12:45:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3164A3403F7;
+	Tue, 19 May 2026 13:04:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779194754; cv=none; b=T7lDbgXf+fcQCRrJ1bYmaFF0ZhhYJZ+kzBl3x1sBNVQ5COs81VhKSTdpA4t1dLV9/kgC5SAo/sb13l6yYbymlnMOWQthTmrGT86lM9zDgDCgWohlwDerktkvokN/IDWsMZITsf64D8r7uJK/8LNLTovFcgSt44v0DZZWfXb7zLQ=
+	t=1779195871; cv=none; b=ZNVpVvxunZWBxxehJaLlZTHcDZFPiB872WWwA0634vKVLpS8YxeGp5e9v/79uCQeCKFs0aX1+Yvv5VSHEeyw/t0XRNCD3LIMWyvQEWkjwGt7HDaacfbN17lg9Jgc51iH5+PeNTLhQuvJJo1EmoRy1eJxID18n/kOLWX0bIvaO7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779194754; c=relaxed/simple;
-	bh=C87IXNJFNuffOPo6j/clO/ETCIoredweTuvFWS9kwRo=;
+	s=arc-20240116; t=1779195871; c=relaxed/simple;
+	bh=s7r31IRZbFW16C9VKh1NJLg1y0aRrzKMqmXg2we0mO8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KkDdB4KbKg6PCWHNhaM04FM5Cy1RvPa/zEoPkh9BrtSYXFTOWgI04GH88xzoQzehjEwnPkDlGKo5xyXbNjqwOgokAiA6tPg6iryqA83EBzc+LgYuiNJXDaQ3HvyPSn87vGhDFtnU0HPkc3NEF6ZeaJqAYGJpQxwm3Y58bpO+vfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UW0J9gop; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=arHHr4Z7Rh2tz9mFHyuQw6sa3ODPN36qGooChYqbYW58NEGnCpPp+0hv/Tl5I6yvAMTcadEwOc9UyV21GBwwfCqep2RVVFrcy1e6H3+z750RPzOMFe05QYTcWTvF+WtX39tCTD+utQprcPAz7hb5iRcdZtWArG4mQC4RZIlvb6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJCeA0kx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UW0J9gop"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20A93C2BCB3;
-	Tue, 19 May 2026 12:45:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJCeA0kx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A32C2BCB3;
+	Tue, 19 May 2026 13:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779194753;
-	bh=C87IXNJFNuffOPo6j/clO/ETCIoredweTuvFWS9kwRo=;
+	s=k20201202; t=1779195870;
+	bh=s7r31IRZbFW16C9VKh1NJLg1y0aRrzKMqmXg2we0mO8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=UW0J9gop/eSaKgskULyG7KraU52ARclJ4PYF99h/cA5Wzh+vAgGwxL8PUttXl44vh
-	 ZchTvo6DGmDuvwTAa5tc7i1d/C+5J3EKbUWPaQM5RhSyTOg5CUKceMw3mYLoRAIpOa
-	 L88HsPbmxNr1Jg4mHXobck9L1c5F934hcZKhvNev/dEoeOd/66+uQKNAWMXh/6zt2l
-	 IG8ac7n+8FsHKIUN7s3nilp6974Y7d4bpw+9QTjRBmOS6tMBi9do6TvDFg7AluN1/5
-	 d1yKmH7rSneQKbcRbDtSUC+eMdhJumP5DRiQLSkl7z/r8sYzsepl1rPnfrlF9LJ/Qq
-	 sYoaajKqzFcNw==
-Date: Tue, 19 May 2026 13:45:39 +0100
+	b=UJCeA0kxJyb1vjWmlhH2TMLG4bHfvhTNXN5f8sbs3oMfBBpDBqSzHBv010seCgBtC
+	 zkmbSZKS7Vz+w0a3G/isUa2Hhh6tTrSfcbrZCSHIu9VzSHZxKYUI3MDUXuGYOb+Yak
+	 VDH/0ahWvf1FuYhIBwNxUMJm/GbCCjD3+iK7aDKH962hPko1PIf4pmHZCzuy4xvsdr
+	 7YFmoX4HEXbsTaKCIgyu3KeDEXhA73w8sa7bZZUtPgmYj6GJvcLpgw+MFUhqpb/IH4
+	 SEu+ukr+Z5doLMvg74+En6PpOvrxMksQonkwjHFDLLpcCO36jCGnAnUGSRL5GQBjfs
+	 TrlKC/uYJ7Eaw==
+Date: Tue, 19 May 2026 14:04:16 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: <mhonap@nvidia.com>
 Cc: <alwilliamson@nvidia.com>, <skolothumtho@nvidia.com>,
@@ -40,11 +40,12 @@ Cc: <alwilliamson@nvidia.com>, <skolothumtho@nvidia.com>,
  <vsethi@nvidia.com>, <cjia@nvidia.com>, <targupta@nvidia.com>,
  <zhiw@nvidia.com>, <kjaju@nvidia.com>, <linux-cxl@vger.kernel.org>,
  <kvm@vger.kernel.org>, <qemu-devel@nongnu.org>, <qemu-arm@nongnu.org>
-Subject: Re: [RFC 2/9] cxl: Add preserve_config to pxb-cxl OSC method
-Message-ID: <20260519134539.1b11ace4@jic23-huawei>
-In-Reply-To: <20260427181235.3003865-3-mhonap@nvidia.com>
+Subject: Re: [RFC 7/9] hw/vfio+cxl: Program HDM decoder 0 at machine_done
+ for firmware-committed devices
+Message-ID: <20260519140416.02a793ce@jic23-huawei>
+In-Reply-To: <20260427181235.3003865-8-mhonap@nvidia.com>
 References: <20260427181235.3003865-1-mhonap@nvidia.com>
-	<20260427181235.3003865-3-mhonap@nvidia.com>
+	<20260427181235.3003865-8-mhonap@nvidia.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -55,154 +56,101 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 27 Apr 2026 23:42:28 +0530
+On Mon, 27 Apr 2026 23:42:33 +0530
 <mhonap@nvidia.com> wrote:
 
 > From: Manish Honap <mhonap@nvidia.com>
 > 
-> Before this patch, pxb-cxl bridges had no _DSM method at all. When the
-> OS called _DSM on a CXL host bridge, ACPI returned an error and the OS
-> defaulted to reassigning resources across suspend/resume. On machines
-> where firmware pre-commits the HDM decoder, that reassignment breaks the
-> DPA mapping.
+> setup_locked_hdm() runs as a machine_done notifier after all devices
+> have been realized. It programs HDM decoder 0 with the CFMWS base
 
-Ah. Ok. So it's suspend / resume that is causing trouble. I wasn't aware
-PCI reenumerated on that as opposed to boot. I surprised more doesn't
-break.  Make sure to call that out in the cover letter as the impression
-I got was the problem was initial enumeration.
+Be more specific on this.  Which HDM Decoder?  i.e. what device
+is it in.  Ultimately there may be several in the path.  Are you
+supporting that?  The reference to FLR() later would only apply to
+an endpoint (can't FLR a host bridge) + the code is clearly operating
+on the shadow registers for the EP.
 
-Mind you I'm still confused. Why is CXL.mem path affected?  That's
-nothing to do with PCI enumeration.
+I guess maybe you are relying on pass through host bridge decoders?
+If you are - you need to go check those - or better yet program
+and lock them as well.
 
-Jonathan
+> address so the guest can fault into device memory from the first
+> instruction.
+> 
+> The notifier is only registered when the kernel reports the device as
+> firmware-committed (VFIO_CXL_CAP_FIRMWARE_COMMITTED). The host is
+> responsible for HDM decoder programming; the guest has no mechanism to
+> remap host physical address mappings.
+
+Maybe say why this matters.  Presumably because only thing we can
+program from the guest is GPA to HPA mappings so linear ranges remain
+linear etc (more or less anyway given constraints on how many
+regions we can plug into qemu!)
 
 > 
-> Wire preserve_config through GPEXConfig into build_cxl_osc_method() so
-> pxb-cxl host bridges get a _DSM method that signals the OS to keep
-> resource assignments stable when needed. The _DSM function 5 (preserve
-> firmware PCI configuration) is the mechanism used to convey this.
+> The function uses cxl->fmws_base (set by the optional cxl-fmws-base
+> device property) if non-zero; otherwise it falls back to the
+
+Why is that property needed?  If it is add it in a separate patch where
+you can explain the need to force it. Smells like a hack so far.
+
+> cxl_fmws_base global captured by cxl_fmws_set_memmap() during machine
+> memory-map init. If neither is set, it warns and returns without
+> programming anything.
+
+Which CFMWS is that base in?  How is that controlled?  We may well
+have some type 3 devices in same VM and probably want those in different
+CFMWs (we'll need to actually upstream the patch to control constraints
+so the kernel won't try using your CFMWS for those - currently all CFMWS
+are entirely flexible).
+
+
 > 
-> build_pci_host_bridge_dsm_method() is promoted from static to exported
-> so cxl.c can call it without duplicating the AML.
+> If COMMIT_LOCK is set in decoder 0 CTRL at machine_done time (left-over
+> from a prior FLR?), it is cleared before writing BASE so the subsequent
+> write is not blocked. COMMIT_LOCK is re-set after programming so the
+> hardware enforces the committed base.
+
+Hmm. We should look into whether there is a correct way to reset that.
+Though as above from the description I'm not sure which decoder this
+is resetting.
+
 > 
-> The x86 build_cxl_osc_method() call site passes false since x86 does
-> not use firmware-committed HDM decoders.
+> read_region() return is checked; failure aborts programming rather than
+> leaving ctrl uninitialized. All write_region() failures are propagated.
+> The function exits cleanly rather than leaving the decoder half-programmed.
 > 
-> build_cxl_osc_method is renamed to acpi_dsdt_add_cxl_host_bridge_methods
-> The function now appends both the CXL _OSC method and the _DSM method,
-> so its old name is misleading. Renamed it to match the pxb-pcie analogue
-> acpi_dsdt_add_host_bridge_methods(), making the two root bridge code
-> paths symmetric. No AML change.
+> Add cxl_fmws_base as a hwaddr global in cxl-host.c (and a stub in
+> cxl-host-stubs.c). It is set once by cxl_fmws_set_memmap() and read
+> later at machine_done time.
 > 
-> Signed-off-by: Shameer Kolothum <skolothumtho@nvidia.com>
+> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
 > Signed-off-by: Manish Honap <mhonap@nvidia.com>
-> ---
->  hw/acpi/cxl-stub.c         | 2 +-
->  hw/acpi/cxl.c              | 4 +++-
->  hw/i386/acpi-build.c       | 2 +-
->  hw/pci-host/gpex-acpi.c    | 5 +++--
->  include/hw/acpi/cxl.h      | 2 +-
->  include/hw/pci-host/gpex.h | 1 +
->  6 files changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/hw/acpi/cxl-stub.c b/hw/acpi/cxl-stub.c
-> index 15bc21076b..d7c6731975 100644
-> --- a/hw/acpi/cxl-stub.c
-> +++ b/hw/acpi/cxl-stub.c
-> @@ -6,7 +6,7 @@
->  #include "hw/acpi/aml-build.h"
->  #include "hw/acpi/cxl.h"
->  
-> -void build_cxl_osc_method(Aml *dev)
-> +void acpi_dsdt_add_cxl_host_bridge_methods(Aml *dev, bool preserve_config)
->  {
->      g_assert_not_reached();
->  }
-> diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
-> index f92f7fa3d5..b32740a3e3 100644
-> --- a/hw/acpi/cxl.c
-> +++ b/hw/acpi/cxl.c
-> @@ -23,6 +23,7 @@
->  #include "hw/pci/pci_host.h"
->  #include "hw/cxl/cxl.h"
->  #include "hw/cxl/cxl_host.h"
-> +#include "hw/pci-host/gpex.h"
->  #include "hw/mem/memory-device.h"
->  #include "hw/acpi/acpi.h"
->  #include "hw/acpi/aml-build.h"
-> @@ -320,11 +321,12 @@ static Aml *__build_cxl_osc_method(void)
->      return method;
+
+
+> @@ -3486,6 +3646,18 @@ static bool vfio_cxl_setup(VFIOPCIDevice *vdev, Error **errp)
+>      trace_vfio_cxl_setup_params(vbasedev->name, cxl->hdm_regs_bar_index,
+>                                   cxl->hdm_regs_offset, cxl->hdm_regs_size,
+>                                   cxl->dpa_size);
+> +
+> +    /*
+> +     * Only pre-program the HDM decoder if the kernel reported the device as
+> +     * firmware-committed.  Non-committed devices need guest driver involvement
+
+For wording these can we be very clear which kernel.  Though I'm also unsure
+what FIRMWARE_COMMITTED means here.  Does it actually mean host firmware, or does
+it mean something running on the host pre guest boot (e.g. could it be qemu?)
+
+> +     * to commit the decoder; registering the notifier for them would write an
+> +     * uncommitted BASE value that the hardware ignores.
+> +     */
+> +    if (cap->flags & VFIO_CXL_CAP_FIRMWARE_COMMITTED) {
+> +        cxl->machine_done.notify = setup_locked_hdm;
+> +        qemu_add_machine_init_done_notifier(&cxl->machine_done);
+> +    }
+> +
+>      return true;
 >  }
 >  
-> -void build_cxl_osc_method(Aml *dev)
-> +void acpi_dsdt_add_cxl_host_bridge_methods(Aml *dev, bool preserve_config)
->  {
->      aml_append(dev, aml_name_decl("SUPP", aml_int(0)));
->      aml_append(dev, aml_name_decl("CTRL", aml_int(0)));
->      aml_append(dev, aml_name_decl("SUPC", aml_int(0)));
->      aml_append(dev, aml_name_decl("CTRC", aml_int(0)));
->      aml_append(dev, __build_cxl_osc_method());
-> +    aml_append(dev, build_pci_host_bridge_dsm_method(preserve_config));
->  }
-> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
-> index f622b91b76..f66ec8ed24 100644
-> --- a/hw/i386/acpi-build.c
-> +++ b/hw/i386/acpi-build.c
-> @@ -1013,7 +1013,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
->                  aml_append(aml_pkg, aml_eisaid("PNP0A08"));
->                  aml_append(aml_pkg, aml_eisaid("PNP0A03"));
->                  aml_append(dev, aml_name_decl("_CID", aml_pkg));
-> -                build_cxl_osc_method(dev);
-> +                acpi_dsdt_add_cxl_host_bridge_methods(dev, false);
->              } else if (pci_bus_is_express(bus)) {
->                  aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
->                  aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
-> diff --git a/hw/pci-host/gpex-acpi.c b/hw/pci-host/gpex-acpi.c
-> index 7de57bbc46..247bd78152 100644
-> --- a/hw/pci-host/gpex-acpi.c
-> +++ b/hw/pci-host/gpex-acpi.c
-> @@ -52,7 +52,7 @@ static void acpi_dsdt_add_pci_route_table(Aml *dev, uint32_t irq,
->      }
->  }
->  
-> -static Aml *build_pci_host_bridge_dsm_method(bool preserve_config)
-> +Aml *build_pci_host_bridge_dsm_method(bool preserve_config)
->  {
->      Aml *method = aml_method("_DSM", 4, AML_NOTSERIALIZED);
->      Aml *UUID, *ifctx, *ifctx1, *buf;
-> @@ -204,7 +204,8 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg)
->              aml_append(dev, aml_name_decl("_CRS", crs));
->  
->              if (is_cxl) {
-> -                build_cxl_osc_method(dev);
-> +                acpi_dsdt_add_cxl_host_bridge_methods(dev,
-> +                                                      cfg->preserve_config);
->              } else {
->                  /* pxb bridges do not have ACPI PCI Hot-plug enabled */
->                  acpi_dsdt_add_host_bridge_methods(dev, true,
-> diff --git a/include/hw/acpi/cxl.h b/include/hw/acpi/cxl.h
-> index 8f22c71530..6fe6c9c58d 100644
-> --- a/include/hw/acpi/cxl.h
-> +++ b/include/hw/acpi/cxl.h
-> @@ -24,7 +24,7 @@
->  void cxl_build_cedt(GArray *table_offsets, GArray *table_data,
->                      BIOSLinker *linker, const char *oem_id,
->                      const char *oem_table_id, CXLState *cxl_state);
-> -void build_cxl_osc_method(Aml *dev);
-> +void acpi_dsdt_add_cxl_host_bridge_methods(Aml *dev, bool preserve_config);
->  void build_cxl_dsm_method(Aml *dev);
->  
->  #endif
-> diff --git a/include/hw/pci-host/gpex.h b/include/hw/pci-host/gpex.h
-> index a7c2e2edf3..e5c2ebef78 100644
-> --- a/include/hw/pci-host/gpex.h
-> +++ b/include/hw/pci-host/gpex.h
-> @@ -73,6 +73,7 @@ struct GPEXHost {
->  int gpex_set_irq_num(GPEXHost *s, int index, int gsi);
->  
->  void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg);
-> +Aml *build_pci_host_bridge_dsm_method(bool preserve_config);
->  void acpi_dsdt_add_gpex_host(Aml *scope, uint32_t irq);
->  
->  #define PCI_HOST_PIO_BASE               "x-pio-base"
+
 
