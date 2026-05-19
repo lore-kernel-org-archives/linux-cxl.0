@@ -1,125 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31373327C0D;
-	Tue, 19 May 2026 19:36:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DEC320CD1
+	for <linux-cxl@vger.kernel.org>; Tue, 19 May 2026 20:25:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779219414; cv=none; b=J/F5/jNo9bn4P+DWkQmXLKX5GG+T11VQBnR0BkLhaRis9olUgnF48oQHl+nWrGOnFqmdlndl+ToETO5iud4eiivBzkLEadfmuslZCbmbUHR8itdxfhj26pEGwx1AJ0asr7NHkiHqxz3u08QYfEQDn18DnkrELuMpLMdtuu5MhSg=
+	t=1779222324; cv=none; b=meGjuy8do1insFqbco1MsJYdxOPruFa2VlZxG/EHYchJnfWcskDjsMWsArDDwO29NWpILKyhNRYh+W8RpMDxIHIvmpyynmgnIJlVks+Rcu8+WZ2AphbiYGaLmrbcDxkXnm2m2jDT/jGQMxKz5E1d3TIzz1LbA/zONiH7T0ZspxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779219414; c=relaxed/simple;
-	bh=XrTaU0zXVXOmf8pCUBn5T700clsPXs6t+wtPQD/DKys=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rpYNAdRN1DPb+tw9FZZ3xObeSHDqAzXvKqDtIDWk3HvHWSUKfYpW1SMQ/0EorSpiuIP5Ia15V4pOsaCEY5oNhMbvpiIfEYN1HfIAqJMCRivrcIrJYF6A3uj9BdK0rHonJm/8c98U7DSwObexQk14ZZ4SCUXm9d46XPDmhUxrws0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hOBYQZpO; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779222324; c=relaxed/simple;
+	bh=N1pj52V/YH8TuVI+JZfE6Z8xxvYmF8UJlQCFRfc5ipI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=EL59U42kQiDq1RCg+iomD9g6eWBY9wi0NNhtelkfI/AzHXeQfOWkcj18VGSL2FFsUqzjd3ZMZR7jedMIliVCZq6T0Mb1PDPk7/f3p19bt5fAfksqn/OMzpD3Mg9N50OgWw+ixqFVHpM5cY1T+crQWjz6QQjYyorWTZ/NL4q7JZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=G/AhxrKq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hOBYQZpO"
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 05A641F000E9;
-	Tue, 19 May 2026 19:36:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779219411;
-	bh=9zWCT6L164MPpYxvYUUjyVKQRnNx7/uPmsbeHhH1oG0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To;
-	b=hOBYQZpO0e5XVVO2zoVjayrxSbwRpUYoEspSmgSZEssnaM0rlFey8b0rrdN6hHa/S
-	 YYHhOnIlzQfHOHq4vRYUL1BJ+81JZJXEpIIeUGJAK1kgsruLHfVECy0Q12LHNTXv1x
-	 h8bzSY2wPKz+tS7IArsZYnRqR2Te7xVKbARE9af8YXEIa4nUNtOQw8SuXYjczAq9RG
-	 2zE7IJm0aQdh0Kw+LDghyeoGwhLxf0S5zO5weZuODHmeteQ2M1O7yMZfN9vxn5V+wD
-	 kYzFQvjTFbDXdS+rlXFCYjnZX5aFo2ckcyEkdz6NZO0E88o2gwwt4dxTvgll+cv5Jq
-	 i92uvT88ytZUQ==
-Date: Tue, 19 May 2026 14:36:49 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, will@kernel.org, robin.murphy@arm.com,
-	bhelgaas@google.com, joro@8bytes.org, praan@google.com,
-	baolu.lu@linux.intel.com, kevin.tian@intel.com,
-	miko.lenczewski@arm.com, linux-arm-kernel@lists.infradead.org,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, dan.j.williams@intel.com,
-	jonathan.cameron@huawei.com, vsethi@nvidia.com,
-	linux-cxl@vger.kernel.org, nirmoyd@nvidia.com
-Subject: Re: [PATCH v4 1/3] PCI: Allow ATS to be always on for CXL.cache
- capable devices
-Message-ID: <20260519193649.GA715262@bhelgaas>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="G/AhxrKq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BE741F000E9;
+	Tue, 19 May 2026 20:25:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1779222323;
+	bh=VDssL1JLJxE+xcjIOV/X2qrzoQDIuhvVsBuZSSJ5o50=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=G/AhxrKqZylZHoao3naUtVqUOBVx2Z80edFedYunyMmpFrNKy1Nyw+LbcVmZziH+v
+	 Ey8lX+XfkJizl377m4ouZp5vlg750X6TzVR++3cspgCIzcGUW9o2AuVxxHb4WDqqO+
+	 ba75mcVuDECO/FB3DSFXGLVgujDjixASzVt+lweM=
+Date: Tue, 19 May 2026 13:25:22 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Georgi Djakov <georgi.djakov@oss.qualcomm.com>
+Cc: david@kernel.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+ osalvador@suse.de, gregkh@linuxfoundation.org, rafael@kernel.org,
+ djakov@kernel.org, Mike Rapoport <rppt@kernel.org>, Vishal Verma
+ <vishal.l.verma@intel.com>
+Subject: Re: [PATCH v2] drivers/base/memory: set mem->altmap after
+ successful device registration
+Message-Id: <20260519132522.421c018b39328ebc4767dd8e@linux-foundation.org>
+In-Reply-To: <20260514092657.3057141-1-georgi.djakov@oss.qualcomm.com>
+References: <20260514092657.3057141-1-georgi.djakov@oss.qualcomm.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f6734b9dad0050138676f11ecd14e9db1cf6b697.1777269009.git.nicolinc@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Apr 26, 2026 at 10:54:00PM -0700, Nicolin Chen wrote:
-> Controlled by the IOMMU driver, ATS is usually enabled "on demand" when a
-> given PASID on a device is attached to an I/O page table. This is working
-> even when a device has no translation on its RID (i.e., the RID is IOMMU
-> bypassed).
+On Thu, 14 May 2026 02:26:57 -0700 Georgi Djakov <georgi.djakov@oss.qualcomm.com> wrote:
+
+> If __add_memory_block() fails at xa_store() (under memory pressure
+> for example), device_unregister() is called, which eventually
+> triggers memory_block_release() with mem->altmap still set, causing
+> a WARN_ON(mem->altmap).
+
+That isn't good.
+
+> This was triggered by modifying virtio-mem
+> driver.
 > 
-> However, certain PCIe devices require non-PASID ATS on their RID even when
-> the RID is IOMMU bypassed. Call this "always on".
+> Fix this by delaying the assignment of mem->altmap until after
+> __add_memory_block() has succeeded.
 > 
-> For example, CXL spec r4.0 notes in sec 3.2.5.13 Memory Type on CXL.cache:
->  "To source requests on CXL.cache, devices need to get the Host Physical
->   Address (HPA) from the Host by means of an ATS request on CXL.io."
-> 
-> In other words, the CXL.cache capability requires ATS; otherwise, it can't
-> access host physical memory.
-> 
-> Introduce a new pci_ats_always_on() helper for the IOMMU driver to scan a
-> PCI device and shift ATS policies between "on demand" and "always on".
-> 
-> Add the support for CXL.cache devices first. Pre-CXL devices will be added
-> in quirks.c file.
-> 
-> Note that pci_ats_always_on() validates against pci_ats_supported(), so we
-> ensure that untrusted devices (e.g. external ports) will not be always on.
-> This maintains the existing ATS security policy regarding potential side-
-> channel attacks via ATS.
+> Fixes: 1a8c64e11043 ("mm/memory_hotplug: embed vmem_altmap details in memory block")
 
-IMO this doesn't really fit in the PCI core.  ats.c encapsulates
-discovery and provides interfaces to access the ATS Capability, but
-the users of those interfaces are all outside the PCI core.
+Patch is nice and simple so I'll add a cc:stable to this, even though
+the issue seems rather minor.
 
-The decision to enable enable ATS for CXL.cache devices is fine but
-it's really an IOMMU usage policy, and I think it should be
-implemented in the IOMMU core.  All the pieces needed
-(pci_ats_disabled(), pci_ats_supported(), pci_find_dvsec_capability())
-are already exported.
+btw, AI review had no issue with your change but might have found a bug
+in create_altmaps_and_memory_blocks():
 
-One motivation for putting this in the PCI core was to use the quirk
-infrastructure, but this series doesn't use any of that.  It doesn't
-declare any fixups, e.g., DECLARE_PCI_FIXUP_FINAL, and it doesn't
-update any state cached by the PCI core.
+	https://sashiko.dev/#/patchset/20260514092657.3057141-1-georgi.djakov@oss.qualcomm.com
 
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -1349,6 +1349,7 @@
->  /* CXL r4.0, 8.1.3: PCIe DVSEC for CXL Device */
->  #define PCI_DVSEC_CXL_DEVICE				0
->  #define  PCI_DVSEC_CXL_CAP				0xA
-> +#define   PCI_DVSEC_CXL_CACHE_CAPABLE			_BITUL(0)
 
-This makes good sense, I'm fine with adding
-PCI_DVSEC_CXL_CACHE_CAPABLE.
-
-> +bool pci_ats_always_on(struct pci_dev *pdev)
-> +{
-> +	if (pci_ats_disabled() || !pci_ats_supported(pdev))
-> +		return false;
-
-Isn't this the same as:
-
-  if (!pci_ats_supported(pdev))
-    return false;
-
-If pci_ats_disabled(), dev->ats_cap should be zero, so
-pci_ats_supported() should always return false.
-
-> +
-> +	/* A VF inherits its PF's requirement for ATS function */
-> +	if (pdev->is_virtfn)
-> +		pdev = pci_physfn(pdev);
-> +
-> +	return pci_cxl_ats_always_on(pdev);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_ats_always_on);
