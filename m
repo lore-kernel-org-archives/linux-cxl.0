@@ -1,169 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0141F4A23;
-	Tue, 19 May 2026 17:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31373327C0D;
+	Tue, 19 May 2026 19:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779211095; cv=none; b=aFNZ6gRkwaOMnfuqRGITDhIeArXTts6hDy16XwCesFZtZWPWkNTzO20iMkSioRoJ5bVVPS85mZV+Uuh66JsoPXMKhM39eqNpOIExgkyHwAuC471Rlqu6FWSR7asJvvwBNFZU8wjia+JJH+ALyo859hO10oK8IUHz+/lQfIUkSJM=
+	t=1779219414; cv=none; b=J/F5/jNo9bn4P+DWkQmXLKX5GG+T11VQBnR0BkLhaRis9olUgnF48oQHl+nWrGOnFqmdlndl+ToETO5iud4eiivBzkLEadfmuslZCbmbUHR8itdxfhj26pEGwx1AJ0asr7NHkiHqxz3u08QYfEQDn18DnkrELuMpLMdtuu5MhSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779211095; c=relaxed/simple;
-	bh=xZ7SaWzHuJ/AFLLKsF5v6gnLJIrz0hhjq+cFHxK5WB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s0W2DITxTa7W/DADxYRDk2UEn59cwmiDDMobejaFK+h0FscJjwkh2MVO2ndgFdmXew80GhOhuPw0pa+0OBT4gbsnXgbzfitlFU50Is3ghPi7BgVju415jey1+hXo7o24jBg6UqivQQwXcOxoOi5FNx+VTwPgqHeL2uN6cqEFXLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VhrpabqV; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1779219414; c=relaxed/simple;
+	bh=XrTaU0zXVXOmf8pCUBn5T700clsPXs6t+wtPQD/DKys=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=rpYNAdRN1DPb+tw9FZZ3xObeSHDqAzXvKqDtIDWk3HvHWSUKfYpW1SMQ/0EorSpiuIP5Ia15V4pOsaCEY5oNhMbvpiIfEYN1HfIAqJMCRivrcIrJYF6A3uj9BdK0rHonJm/8c98U7DSwObexQk14ZZ4SCUXm9d46XPDmhUxrws0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hOBYQZpO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VhrpabqV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779211093; x=1810747093;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xZ7SaWzHuJ/AFLLKsF5v6gnLJIrz0hhjq+cFHxK5WB8=;
-  b=VhrpabqVbL32Bx8RiBwL+4h0hVHAdivqT724AU4F0bjpDtywvZ6jjugq
-   HNoNdC0MCU0F5t8XMib67HuW9H18YyEcYnnX1o0s1aWTyUYPFo0/gBS9/
-   R0xXYSnx8As6Kb4YwLwEGw2wZxi+S0RjEzLfIknjJmB8iOfKJwDJ+4/Zk
-   rYAAZytAb8ULRlKwuX6hnvaiEW5NccxJ1P4v1RECE7uuEs/WdhreseQc2
-   cLW288OONQYeKx/OOz4QUaIEywdx7z0ms95cFeNtU/pTSfl2JKMUxFuvQ
-   C8RE3dM2i7ILuEn65c667zjkAa+irPVV0u7Q4CRGrR9DlC9+PzgFfbDgq
-   g==;
-X-CSE-ConnectionGUID: NcOvrH29SLGuxRXVrZD4RQ==
-X-CSE-MsgGUID: jFxqTygWT2O+ZawmHBcAtg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11791"; a="90398782"
-X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="90398782"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 10:18:12 -0700
-X-CSE-ConnectionGUID: v37Jv/RETlCdH8/UseEnrQ==
-X-CSE-MsgGUID: YbUO2YBCR2mt8cZNvVnKtw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="239890202"
-Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.109.143]) ([10.125.109.143])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 10:18:12 -0700
-Message-ID: <25b0125a-b0fb-4401-8596-3252d2f8cbd6@intel.com>
-Date: Tue, 19 May 2026 10:18:11 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hOBYQZpO"
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 05A641F000E9;
+	Tue, 19 May 2026 19:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779219411;
+	bh=9zWCT6L164MPpYxvYUUjyVKQRnNx7/uPmsbeHhH1oG0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=hOBYQZpO0e5XVVO2zoVjayrxSbwRpUYoEspSmgSZEssnaM0rlFey8b0rrdN6hHa/S
+	 YYHhOnIlzQfHOHq4vRYUL1BJ+81JZJXEpIIeUGJAK1kgsruLHfVECy0Q12LHNTXv1x
+	 h8bzSY2wPKz+tS7IArsZYnRqR2Te7xVKbARE9af8YXEIa4nUNtOQw8SuXYjczAq9RG
+	 2zE7IJm0aQdh0Kw+LDghyeoGwhLxf0S5zO5weZuODHmeteQ2M1O7yMZfN9vxn5V+wD
+	 kYzFQvjTFbDXdS+rlXFCYjnZX5aFo2ckcyEkdz6NZO0E88o2gwwt4dxTvgll+cv5Jq
+	 i92uvT88ytZUQ==
+Date: Tue, 19 May 2026 14:36:49 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, will@kernel.org, robin.murphy@arm.com,
+	bhelgaas@google.com, joro@8bytes.org, praan@google.com,
+	baolu.lu@linux.intel.com, kevin.tian@intel.com,
+	miko.lenczewski@arm.com, linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, dan.j.williams@intel.com,
+	jonathan.cameron@huawei.com, vsethi@nvidia.com,
+	linux-cxl@vger.kernel.org, nirmoyd@nvidia.com
+Subject: Re: [PATCH v4 1/3] PCI: Allow ATS to be always on for CXL.cache
+ capable devices
+Message-ID: <20260519193649.GA715262@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/region: Fix out of bounds access in
- cxl_cancel_auto_attach()
-To: Li Ming <ming.li@zohomail.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jic23@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <djbw@kernel.org>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260519-fix_out_of_bounds_access-v1-1-55fc60d83388@zohomail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260519-fix_out_of_bounds_access-v1-1-55fc60d83388@zohomail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f6734b9dad0050138676f11ecd14e9db1cf6b697.1777269009.git.nicolinc@nvidia.com>
 
-
-
-On 5/19/26 6:23 AM, Li Ming wrote:
-> In cxl_cancel_auto_attach(), it assumes cxled->pos is a valid index for
-> accessing p->targets[]. However, cxled->pos can be set to -ENXIO in
-
-It can be set to other error codes I think? I would just s/-ENXIO/negative errno/
-
-> cxl_region_sort_targets() if cxl_calc_interleave_pos() fails. This
-> causes the driver to use a negative index to access p->targets[],
-> resulting in out-of-bounds access.
+On Sun, Apr 26, 2026 at 10:54:00PM -0700, Nicolin Chen wrote:
+> Controlled by the IOMMU driver, ATS is usually enabled "on demand" when a
+> given PASID on a device is attached to an I/O page table. This is working
+> even when a device has no translation on its RID (i.e., the RID is IOMMU
+> bypassed).
 > 
-> Fix it by walking p->targets[] instead of using cxled->pos directly.
-
-Does the comment in cxl_region_sort_targets() need to be updated with the new changes?
-
+> However, certain PCIe devices require non-PASID ATS on their RID even when
+> the RID is IOMMU bypassed. Call this "always on".
 > 
-> Fixes: 87805c32e6ad ("cxl/region: Fix use-after-free from auto assembly failure")
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
-
-The rest LGTM
-
-DJ
-
-> ---
->  drivers/cxl/core/region.c | 35 ++++++++++++++++-------------------
->  1 file changed, 16 insertions(+), 19 deletions(-)
+> For example, CXL spec r4.0 notes in sec 3.2.5.13 Memory Type on CXL.cache:
+>  "To source requests on CXL.cache, devices need to get the Host Physical
+>   Address (HPA) from the Host by means of an ATS request on CXL.io."
 > 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e50dc716d4e8..551228bc91f5 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2202,18 +2202,30 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->  	return 0;
->  }
->  
-> -static int cxl_region_by_target(struct device *dev, const void *data)
-> +static int cxl_region_remove_target(struct device *dev, void *data)
->  {
-> -	const struct cxl_endpoint_decoder *cxled = data;
-> +	struct cxl_endpoint_decoder *cxled = data;
->  	struct cxl_region_params *p;
->  	struct cxl_region *cxlr;
-> +	int i;
->  
->  	if (!is_cxl_region(dev))
->  		return 0;
->  
->  	cxlr = to_cxl_region(dev);
->  	p = &cxlr->params;
-> -	return p->targets[cxled->pos] == cxled;
-> +	for (i = 0; i < p->nr_targets; i++) {
-> +		if (p->targets[i] == cxled) {
-> +			p->nr_targets--;
-> +			cxled->state = CXL_DECODER_STATE_AUTO;
-> +			cxled->pos = -1;
-> +			p->targets[i] = NULL;
+> In other words, the CXL.cache capability requires ATS; otherwise, it can't
+> access host physical memory.
+> 
+> Introduce a new pci_ats_always_on() helper for the IOMMU driver to scan a
+> PCI device and shift ATS policies between "on demand" and "always on".
+> 
+> Add the support for CXL.cache devices first. Pre-CXL devices will be added
+> in quirks.c file.
+> 
+> Note that pci_ats_always_on() validates against pci_ats_supported(), so we
+> ensure that untrusted devices (e.g. external ports) will not be always on.
+> This maintains the existing ATS security policy regarding potential side-
+> channel attacks via ATS.
+
+IMO this doesn't really fit in the PCI core.  ats.c encapsulates
+discovery and provides interfaces to access the ATS Capability, but
+the users of those interfaces are all outside the PCI core.
+
+The decision to enable enable ATS for CXL.cache devices is fine but
+it's really an IOMMU usage policy, and I think it should be
+implemented in the IOMMU core.  All the pieces needed
+(pci_ats_disabled(), pci_ats_supported(), pci_find_dvsec_capability())
+are already exported.
+
+One motivation for putting this in the PCI core was to use the quirk
+infrastructure, but this series doesn't use any of that.  It doesn't
+declare any fixups, e.g., DECLARE_PCI_FIXUP_FINAL, and it doesn't
+update any state cached by the PCI core.
+
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1349,6 +1349,7 @@
+>  /* CXL r4.0, 8.1.3: PCIe DVSEC for CXL Device */
+>  #define PCI_DVSEC_CXL_DEVICE				0
+>  #define  PCI_DVSEC_CXL_CAP				0xA
+> +#define   PCI_DVSEC_CXL_CACHE_CAPABLE			_BITUL(0)
+
+This makes good sense, I'm fine with adding
+PCI_DVSEC_CXL_CACHE_CAPABLE.
+
+> +bool pci_ats_always_on(struct pci_dev *pdev)
+> +{
+> +	if (pci_ats_disabled() || !pci_ats_supported(pdev))
+> +		return false;
+
+Isn't this the same as:
+
+  if (!pci_ats_supported(pdev))
+    return false;
+
+If pci_ats_disabled(), dev->ats_cap should be zero, so
+pci_ats_supported() should always return false.
+
 > +
-> +			return 1;
-> +		}
-> +	}
+> +	/* A VF inherits its PF's requirement for ATS function */
+> +	if (pdev->is_virtfn)
+> +		pdev = pci_physfn(pdev);
 > +
-> +	return 0;
->  }
->  
->  /*
-> @@ -2222,25 +2234,10 @@ static int cxl_region_by_target(struct device *dev, const void *data)
->   */
->  static void cxl_cancel_auto_attach(struct cxl_endpoint_decoder *cxled)
->  {
-> -	struct cxl_region_params *p;
-> -	struct cxl_region *cxlr;
-> -	int pos = cxled->pos;
-> -
->  	if (cxled->state != CXL_DECODER_STATE_AUTO_STAGED)
->  		return;
->  
-> -	struct device *dev __free(put_device) =
-> -		bus_find_device(&cxl_bus_type, NULL, cxled, cxl_region_by_target);
-> -	if (!dev)
-> -		return;
-> -
-> -	cxlr = to_cxl_region(dev);
-> -	p = &cxlr->params;
-> -
-> -	p->nr_targets--;
-> -	cxled->state = CXL_DECODER_STATE_AUTO;
-> -	cxled->pos = -1;
-> -	p->targets[pos] = NULL;
-> +	bus_for_each_dev(&cxl_bus_type, NULL, cxled, cxl_region_remove_target);
->  }
->  
->  static struct cxl_region *
-> 
-> ---
-> base-commit: 5200f5f493f79f14bbdc349e402a40dfb32f23c8
-> change-id: 20260519-fix_out_of_bounds_access-8838759ee5a6
-> 
-> Best regards,
-
+> +	return pci_cxl_ats_always_on(pdev);
+> +}
+> +EXPORT_SYMBOL_GPL(pci_ats_always_on);
