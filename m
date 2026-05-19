@@ -1,51 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3597A233952;
-	Tue, 19 May 2026 11:34:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136364A138F
+	for <linux-cxl@vger.kernel.org>; Tue, 19 May 2026 11:41:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779190487; cv=none; b=ewbFCcyBbghqjbKP3PqnZAOpfV50W6/xwVf9ZJe3v8At0+aCtbEks2J41Y3Q0pUKjakLAy8o+XeA1ZSUd7u/BI5qbHChnvQQR8QI1UH+pb6q6kipIuPXcIhkUjzAabPyJxgZkQLJucbDvpbqFfYWnDeLt+KBZTY/XgZLEtUjYY0=
+	t=1779190904; cv=none; b=tgV9a3VqBg96p3xtMwMWG8L1hPfB3QkhpkzqdyOtqW9d3A7UKKZcvSDAW1FFWXYREXASiahujZb7nFEURETOCz5dqXz0CG7C1vxyJOESIXWX1wTJZM6OSRtPVIowo5y2nm7MiZA4T2g8A/DX+FSf5Zb+ZT3j1CNX3ztvm/VXfOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779190487; c=relaxed/simple;
-	bh=dYBNK9BCQHghU8qmFx2G1DFK6xWsL7Iok1FhcvW19I0=;
+	s=arc-20240116; t=1779190904; c=relaxed/simple;
+	bh=r6TRHI7QGDIZULFYxTQmWSUe2xBfipM8S7JpVimwiJQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h1P66NEtZvzKDrtm+h76KAxFkWDb/JlRmXlXeMwu7BBQDWA04fzGZT4DGf50HyP1iuyREYB9V/M9Qzv+fegwZ8+/h3RFhYakgHc2OrG6R8/Qgmfzoo+UgmUxM05cCVMt7eB5KS33iydz60Cw50YUEk6mNM5sAJpnhYyC4Cdmr2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lVK3PoUj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=uYaHj+6TiAHYltMUIn4ru9bjA+ExymIacC0WYvfWdM514zFA47RYl12lms7BBn1flhEp3wPhyzVhAQPKa1lLUgQeNR4sd6cuRbDDea7vK6BuJzL+/+Jn0JVW3irwRHuGboHSLdN61AZMn6wwijPoSHqhiEsqq2lBnil9Z/0EryY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GKu/7V8C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lVK3PoUj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD529C2BCB3;
-	Tue, 19 May 2026 11:34:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKu/7V8C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3272FC2BCC7;
+	Tue, 19 May 2026 11:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779190486;
-	bh=dYBNK9BCQHghU8qmFx2G1DFK6xWsL7Iok1FhcvW19I0=;
+	s=k20201202; t=1779190903;
+	bh=r6TRHI7QGDIZULFYxTQmWSUe2xBfipM8S7JpVimwiJQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lVK3PoUjecLuQGRwNciRDGnvHK3OFM9sFfzxfhCh827wo4PFrNFuTUCiyx1tEwZBR
-	 osT4eHCNV+Iwz9oq0HLUG0CoNim7bV1DEcRTHP2W1YDwWaqu8GrGUOKJWDLqKpXWBJ
-	 gTAoG2il0N6+U8YMZ8BrzPzeLfYuO6FylpXVfWwQaRH4jWZf6gSyouQh/atzZdOOTc
-	 joe8pU3HvgW30owFH7D7eJge2Hoq3vWXVq8tj4zIHV0tvlvpnCRHLLoXa6CicWPNU6
-	 4V5OxiI+Jqr0wSfy82jESPbbFR/c3iX5AeC4Lvx94fVS4FLJIttICH/Sr67OtSDWkE
-	 +vuUxu06E9Xrg==
-Date: Tue, 19 May 2026 12:34:36 +0100
+	b=GKu/7V8ChrTCftl21HGiZ6nVjt3RLq8K6hSwGJqOD+hisdqSYmpSVgirppOe0OSqu
+	 c74r3rwtmxFqQa5rHKnTyYK1N5vP41f5OQ+AtRE7fM41ydY9o5ODrXipwKRzcgfSv+
+	 OQRiMmUAnPHE2h4RBFQcyZsa09M1kykQPMLTENocTNt4+TWqDjVQhyqjkvuHg1pzLr
+	 AtOhbZoudRrHZbiMN17ey2k4GBuMpJ6X2pYKXZb8Tvdp6Dx70iNkjvqxyJ6gz/8xDg
+	 wEXKLP3r3Txu2SR+VzbeDoXFcVm78GSbW+3Xo2LPbgJPROmzzxlcxeK0W4O0u2F2Lz
+	 w/KieEHQURYZw==
+Date: Tue, 19 May 2026 12:41:33 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: John Groves <john@jagalactic.com>
-Cc: John Groves <John@Groves.net>, Dan Williams <djbw@kernel.org>, John
- Groves <jgroves@micron.com>, Vishal Verma <vishal.l.verma@intel.com>, Dave
- Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan
- Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
- Brauner <brauner@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, Alison
- Schofield <alison.schofield@intel.com>, Ira Weiny <iweiny@kernel.org>,
- "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 1/6] dax: fix misleading comment about share/index union
- in dax_folio_reset_order()
-Message-ID: <20260519123436.04aa1891@jic23-huawei>
-In-Reply-To: <0100019e3d045be0-088bc509-0545-4e5a-b532-507045af78d0-000000@email.amazonses.com>
-References: <0100019e3d03bba9-d27282f3-5552-4fa0-8326-981e4c13dace-000000@email.amazonses.com>
-	<20260518213549.31246-1-john@jagalactic.com>
-	<0100019e3d045be0-088bc509-0545-4e5a-b532-507045af78d0-000000@email.amazonses.com>
+To: "Dan Williams (nvidia)" <djbw@kernel.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, dave.jiang@intel.com,
+ benjamin.cheatham@amd.com, alucerop@amd.com, alison.schofield@intel.com,
+ ira.weiny@intel.com, gourry@gourry.net, dongjoo.seo1@samsung.com,
+ anisa.su@samsung.com, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] cxl: Support Back-Invalidate
+Message-ID: <20260519124133.1f2bd813@jic23-huawei>
+In-Reply-To: <6a0bc26656f_128d711001f@djbw-dev.notmuch>
+References: <20260516022037.1761453-1-dave@stgolabs.net>
+	<6a0bc26656f_128d711001f@djbw-dev.notmuch>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -56,58 +48,57 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 18 May 2026 21:35:56 +0000
-John Groves <john@jagalactic.com> wrote:
+On Mon, 18 May 2026 18:52:38 -0700
+"Dan Williams (nvidia)" <djbw@kernel.org> wrote:
 
-> From: John Groves <John@Groves.net>
+> Davidlohr Bueso wrote:
+> > Hello,  
 > 
-> The comment in dax_folio_reset_order() claims that DAX maintains an
-> invariant where folio->share != 0 only when folio->mapping == NULL,
-> implying folio->share is zero whenever mapping is non-NULL. This is
-> misleading because folio->share and folio->index are a union -- for
-> non-shared folios with mapping != NULL, reading folio->share returns
+> Hi Davidlohr,
+> 
+> > The idea is for Type 3 memdevs and future Type 2 devices to make use
+> > of cxlds->bi when committing HDM decoders, such that different device
+> > coherence models can be differentiated as:  
+> [..]
+> > o Patch 4 adds ABI (sysfs) for HDM-DB region creation.  
+> 
+> I am skeptical about needing new region creation uapi for this. A
+> question from the example below:
+> 
+> [..]
+> > Testing has been done with the qemu HDM-DB Type 3 counterpart (now
+> > merged).  
+> [..]
+> > 2. On a Type 3 HDM-DB volatile device, create one BI and one regular region.
+> > ---------------------------------------------------------------------------  
+> [..]
+> > # echo region0 > /sys/bus/cxl/devices/decoder0.0/create_ram_bi_region  
+> [..]
+> > # echo region1 > /sys/bus/cxl/devices/decoder0.0/create_ram_region  
+> 
+> ...how can a single root decoder support mixed operation?
+> 
+> The root decoder restrictions specify the endpoint decoder requirements.
+> There is no flexibility to entertain beyond picking the root decoder
+> resource, right? Linux can avoid all the configuration corner cases by
+> making the endpoint decoder inherit settings by topology configuration.
+> 
+Hi Dan,
 
-Maybe for consistency refer to that as folio->mapping != NULL
+Assuming I understand the question correctly...
 
-> the file page offset (folio->index), which is typically non-zero.
-> 
-> Reword the comment to accurately describe the union aliasing: the
-> assignment clears whichever interpretation of the union word is active
-> (index for non-shared folios, share for shared folios), which is correct
-> because the folio is being released in either case.
-> 
-> No functional change -- the code was already correct, only the
-> justification was wrong.
-> 
-> Fixes: 59eb73b98ae0b ("dax: Factor out dax_folio_reset_order() helper")
-> Signed-off-by: John Groves <john@groves.net>
-Reviewed-by: Jonathan Cameron <jic23@kernel.org>
+No idea if anyone has done it but as far as I can tell you 'could' easily
+enough have a single fixed memory window that supports both BI and non BI,
+the host implementation would just have to use the programming of the
+decoders in the host bridges to figure out what it needs to support.
 
-> ---
->  fs/dax.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/dax.c b/fs/dax.c
-> index 6d175cd47a99b..df19c9317d10e 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -392,12 +392,12 @@ int dax_folio_reset_order(struct folio *folio)
->  	int order = folio_order(folio);
->  
->  	/*
-> -	 * DAX maintains the invariant that folio->share != 0 only when
-> -	 * folio->mapping == NULL (enforced by dax_folio_make_shared()).
-> -	 * Equivalently: folio->mapping != NULL implies folio->share == 0.
-> -	 * Callers ensure share has been decremented to zero before
-> -	 * calling here, so unconditionally clearing both fields is
-> -	 * correct.
-> +	 * Clear the mapping and the index/share union word. folio->share
-> +	 * and folio->index occupy the same union in struct folio. For
-> +	 * non-shared folios (mapping != NULL), the union holds folio->index
-> +	 * (file page offset); for shared folios (mapping == NULL), it holds
-> +	 * folio->share (reference count). Either way, we are releasing the
-> +	 * folio and both fields should be zeroed.
->  	 */
->  	folio->mapping = NULL;
->  	folio->share = 0;
+I'm not aware of anything in the spec that says you can't implement that.
+Now maybe it's a non thing but if it turns up later we need to be careful
+not to wall ourselves into a corner from ABI point of view.
+
+Usual reasoning of HPA space being a fairly costly / limited resource
+would be the reason to build this more complex hardware.
+
+Jonathan
+
 
