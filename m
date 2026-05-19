@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB18B4DC540;
-	Tue, 19 May 2026 12:40:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCF64D2EEF;
+	Tue, 19 May 2026 12:45:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779194429; cv=none; b=Mheu0eoWSPk/wtYmM4Kn1lPwf6gvzcM/R89RttMOHclR77qW2K4J8a6PLRCkP145+fAejOODAGjaCecp1oQMzlukIsid29DM4iPj/M60tyoJT85J6FHEdf3XtAbK12QwmTyTxzAnlHr6xQZq3IgG8bK5TsBYjgKb0dSicIhW2kw=
+	t=1779194754; cv=none; b=T7lDbgXf+fcQCRrJ1bYmaFF0ZhhYJZ+kzBl3x1sBNVQ5COs81VhKSTdpA4t1dLV9/kgC5SAo/sb13l6yYbymlnMOWQthTmrGT86lM9zDgDCgWohlwDerktkvokN/IDWsMZITsf64D8r7uJK/8LNLTovFcgSt44v0DZZWfXb7zLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779194429; c=relaxed/simple;
-	bh=C9LJspxe9GlzuGA89k1Z0lPBgQt209jCJ7X50Q61Rbc=;
+	s=arc-20240116; t=1779194754; c=relaxed/simple;
+	bh=C87IXNJFNuffOPo6j/clO/ETCIoredweTuvFWS9kwRo=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SIdpHIHBPLBawCaDcMethnZUqePiOQ9CkwIMhD6W2A4xvxK/iPryNb6NkbV/ZlyELMNtWOO2M6U7N6BwVCgPbOnnTUQXwl+q6C4NyFTb0M0saY+eFBLwQ5dLLUJs3od0be4TeWp28WX3/ru6/Yqfz7j7VmC3DZ3Umm8R9V1P3To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BxvXTuw/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=KkDdB4KbKg6PCWHNhaM04FM5Cy1RvPa/zEoPkh9BrtSYXFTOWgI04GH88xzoQzehjEwnPkDlGKo5xyXbNjqwOgokAiA6tPg6iryqA83EBzc+LgYuiNJXDaQ3HvyPSn87vGhDFtnU0HPkc3NEF6ZeaJqAYGJpQxwm3Y58bpO+vfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UW0J9gop; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BxvXTuw/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA02C2BCB8;
-	Tue, 19 May 2026 12:40:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UW0J9gop"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20A93C2BCB3;
+	Tue, 19 May 2026 12:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779194429;
-	bh=C9LJspxe9GlzuGA89k1Z0lPBgQt209jCJ7X50Q61Rbc=;
+	s=k20201202; t=1779194753;
+	bh=C87IXNJFNuffOPo6j/clO/ETCIoredweTuvFWS9kwRo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BxvXTuw/1KacfEuUcxA2ShzLusAlC1/fZN4LJ1syCuxeVT0wCRJBbz1vfN2Oyv8Qm
-	 laupkzT3Szae7dDCk2WyAfR1JO6EWUtFWMeCu6GUrtojLGRciixMgNUgEbSGfwKxV5
-	 kWo+Ds/+lcbJkp0uff0/b8XlvXvOHzVyKvZY59zvDmFewnPbw2syELpEn9rJbiO6az
-	 9NyfExj1eN5h8NyjNtrhIyhPj7SkS+oKDidCjGzwfYzjVarRSqMQteA19hqSZYAntn
-	 ihCYDQjsc4vt82dLdQrSWcI1AlRa0A0NQ1dqijbRAs9ZIwuxe+azXu6L1e+ORAFgru
-	 5qwgcQBIjyV0w==
-Date: Tue, 19 May 2026 13:40:14 +0100
+	b=UW0J9gop/eSaKgskULyG7KraU52ARclJ4PYF99h/cA5Wzh+vAgGwxL8PUttXl44vh
+	 ZchTvo6DGmDuvwTAa5tc7i1d/C+5J3EKbUWPaQM5RhSyTOg5CUKceMw3mYLoRAIpOa
+	 L88HsPbmxNr1Jg4mHXobck9L1c5F934hcZKhvNev/dEoeOd/66+uQKNAWMXh/6zt2l
+	 IG8ac7n+8FsHKIUN7s3nilp6974Y7d4bpw+9QTjRBmOS6tMBi9do6TvDFg7AluN1/5
+	 d1yKmH7rSneQKbcRbDtSUC+eMdhJumP5DRiQLSkl7z/r8sYzsepl1rPnfrlF9LJ/Qq
+	 sYoaajKqzFcNw==
+Date: Tue, 19 May 2026 13:45:39 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: <mhonap@nvidia.com>
 Cc: <alwilliamson@nvidia.com>, <skolothumtho@nvidia.com>,
@@ -40,11 +40,11 @@ Cc: <alwilliamson@nvidia.com>, <skolothumtho@nvidia.com>,
  <vsethi@nvidia.com>, <cjia@nvidia.com>, <targupta@nvidia.com>,
  <zhiw@nvidia.com>, <kjaju@nvidia.com>, <linux-cxl@vger.kernel.org>,
  <kvm@vger.kernel.org>, <qemu-devel@nongnu.org>, <qemu-arm@nongnu.org>
-Subject: Re: [RFC 1/9] hw/arm/virt: Add CXL FMWS PA window for device memory
-Message-ID: <20260519134014.474a8289@jic23-huawei>
-In-Reply-To: <20260427181235.3003865-2-mhonap@nvidia.com>
+Subject: Re: [RFC 2/9] cxl: Add preserve_config to pxb-cxl OSC method
+Message-ID: <20260519134539.1b11ace4@jic23-huawei>
+In-Reply-To: <20260427181235.3003865-3-mhonap@nvidia.com>
 References: <20260427181235.3003865-1-mhonap@nvidia.com>
-	<20260427181235.3003865-2-mhonap@nvidia.com>
+	<20260427181235.3003865-3-mhonap@nvidia.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -55,215 +55,154 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 27 Apr 2026 23:42:27 +0530
+On Mon, 27 Apr 2026 23:42:28 +0530
 <mhonap@nvidia.com> wrote:
 
 > From: Manish Honap <mhonap@nvidia.com>
 > 
-> CXL VFIO passthrough needs a stable guest physical address range for
-> device memory (DPA) that falls inside a CFMWS entry the guest discovers
-> from ACPI CEDT. Without a dedicated range in the address map, the HDM
-> decoder has nowhere to point.
-> 
-> Add VIRT_HIGH_CXL_MMIO immediately after the second PCIe MMIO window.
-> It gets its own highmem_cxl_mmio flag in VirtMachineState rather than
-> sharing highmem_cxl, so the two slots are independently controllable
-> even though both are currently tied to CXL bridge presence.
+> Before this patch, pxb-cxl bridges had no _DSM method at all. When the
+> OS called _DSM on a CXL host bridge, ACPI returned an error and the OS
+> defaulted to reassigning resources across suspend/resume. On machines
+> where firmware pre-commits the HDM decoder, that reassignment breaks the
+> DPA mapping.
 
-Can we clearly state here what they are.  highmem_cxl is the root
-bridge registers. I'm not entirely sure I yet understand what highmem_cxl_mmio
+Ah. Ok. So it's suspend / resume that is causing trouble. I wasn't aware
+PCI reenumerated on that as opposed to boot. I surprised more doesn't
+break.  Make sure to call that out in the cover letter as the impression
+I got was the problem was initial enumeration.
 
-> 
-> The base and size flow through GPEXConfig.cxl_mmio to
-> acpi_dsdt_add_gpex(), which carves out a QWord memory descriptor in the
-> first CXL root bridge's _CRS. The CFMWS window is system-wide, so only
-> the first CXL bridge gets the descriptor - subsequent ones would
-> produce duplicate resource claims for the same range.
+Mind you I'm still confused. Why is CXL.mem path affected?  That's
+nothing to do with PCI enumeration.
 
-I don't follow. CFMWS are not system wide. They refer to one or more of the
-root bridges. I suppose you could argue that the 'or more' bit makes
-them kind of system wide. Right now I'm not even sure why they are in
-CRS at all as opposed to being obtained from CEDT.
-
-Maybe a spec reference for why a bridge should be claiming these regions?
-
-I'm not understanding yet why we can't use the existing CFMWS support
-so please add information on that tot his commit message.
-
+Jonathan
 
 > 
-> build_crs() already emits the bridge's own 64-bit ranges into crs.
-> The CFMWS window is a separate system-wide range, so only that window
-> is appended as a new QWord descriptor; the bridge ranges are not
-> re-emitted. A warn_report() fires if the CFMWS window overlaps any
-> existing bridge 64-bit range, since that would indicate an address
-> layout conflict.
+> Wire preserve_config through GPEXConfig into build_cxl_osc_method() so
+> pxb-cxl host bridges get a _DSM method that signals the OS to keep
+> resource assignments stable when needed. The _DSM function 5 (preserve
+> firmware PCI configuration) is the mechanism used to convey this.
 > 
-> Signed-off-by: Zhi Wang <zhiw@nvidia.com>
+> build_pci_host_bridge_dsm_method() is promoted from static to exported
+> so cxl.c can call it without duplicating the AML.
+> 
+> The x86 build_cxl_osc_method() call site passes false since x86 does
+> not use firmware-committed HDM decoders.
+> 
+> build_cxl_osc_method is renamed to acpi_dsdt_add_cxl_host_bridge_methods
+> The function now appends both the CXL _OSC method and the _DSM method,
+> so its old name is misleading. Renamed it to match the pxb-pcie analogue
+> acpi_dsdt_add_host_bridge_methods(), making the two root bridge code
+> paths symmetric. No AML change.
+> 
+> Signed-off-by: Shameer Kolothum <skolothumtho@nvidia.com>
 > Signed-off-by: Manish Honap <mhonap@nvidia.com>
 > ---
->  hw/arm/virt-acpi-build.c   |  5 +++++
->  hw/arm/virt.c              |  9 +++++++++
->  hw/pci-host/gpex-acpi.c    | 40 ++++++++++++++++++++++++++++++++++++++
->  include/hw/arm/virt.h      |  2 ++
->  include/hw/pci-host/gpex.h |  1 +
->  5 files changed, 57 insertions(+)
+>  hw/acpi/cxl-stub.c         | 2 +-
+>  hw/acpi/cxl.c              | 4 +++-
+>  hw/i386/acpi-build.c       | 2 +-
+>  hw/pci-host/gpex-acpi.c    | 5 +++--
+>  include/hw/acpi/cxl.h      | 2 +-
+>  include/hw/pci-host/gpex.h | 1 +
+>  6 files changed, 10 insertions(+), 6 deletions(-)
 > 
-> diff --git a/hw/arm/virt-acpi-build.c b/hw/arm/virt-acpi-build.c
-> index 591cfc993c..863e0680fb 100644
-> --- a/hw/arm/virt-acpi-build.c
-> +++ b/hw/arm/virt-acpi-build.c
-> @@ -176,6 +176,11 @@ static void acpi_dsdt_add_pci(Aml *scope, const MemMapEntry *memmap,
->          cfg.mmio64 = memmap[VIRT_HIGH_PCIE_MMIO];
->      }
+> diff --git a/hw/acpi/cxl-stub.c b/hw/acpi/cxl-stub.c
+> index 15bc21076b..d7c6731975 100644
+> --- a/hw/acpi/cxl-stub.c
+> +++ b/hw/acpi/cxl-stub.c
+> @@ -6,7 +6,7 @@
+>  #include "hw/acpi/aml-build.h"
+>  #include "hw/acpi/cxl.h"
 >  
-> +    if (vms->highmem_cxl) {
-> +        cfg.cxl_mmio.base = memmap[VIRT_HIGH_CXL_MMIO].base;
-> +        cfg.cxl_mmio.size = memmap[VIRT_HIGH_CXL_MMIO].size;
-> +    }
-> +
->      acpi_dsdt_add_gpex(scope, &cfg);
->      QLIST_FOREACH(bus, &vms->bus->child, sibling) {
->          if (pci_bus_is_cxl(bus)) {
-> diff --git a/hw/arm/virt.c b/hw/arm/virt.c
-> index ec0d8475ca..fa07819401 100644
-> --- a/hw/arm/virt.c
-> +++ b/hw/arm/virt.c
-> @@ -211,6 +211,8 @@ static const MemMapEntry base_memmap[] = {
->  #define DEFAULT_HIGH_PCIE_MMIO_SIZE_GB 512
->  #define DEFAULT_HIGH_PCIE_MMIO_SIZE (DEFAULT_HIGH_PCIE_MMIO_SIZE_GB * GiB)
->  
-> +#define DEFAULT_HIGH_CXL_MMIO_SIZE  DEFAULT_HIGH_PCIE_MMIO_SIZE
-> +
->  /*
->   * Highmem IO Regions: This memory map is floating, located after the RAM.
->   * Each MemMapEntry base (GPA) will be dynamically computed, depending on the
-> @@ -237,6 +239,11 @@ static MemMapEntry extended_memmap[] = {
->      [VIRT_HIGH_PCIE_ECAM] =     { 0x0, 256 * MiB },
->      /* Second PCIe window */
->      [VIRT_HIGH_PCIE_MMIO] =     { 0x0, DEFAULT_HIGH_PCIE_MMIO_SIZE },
-> +    /*
-> +     * CXL FMWS guest PA window - separate from PCIe MMIO so the two are
-> +     * independently sizeable. Same default size for now.
-> +     */
-> +    [VIRT_HIGH_CXL_MMIO] =      { 0x0, DEFAULT_HIGH_CXL_MMIO_SIZE },
->      /* Any CXL Fixed memory windows come here */
-
-Why not use the infra this comment is talking about?
-
->  };
->  
-> @@ -1724,6 +1731,7 @@ static void create_cxl_host_reg_region(VirtMachineState *vms)
->                         vms->memmap[VIRT_CXL_HOST].size);
->      memory_region_add_subregion(sysmem, vms->memmap[VIRT_CXL_HOST].base, mr);
->      vms->highmem_cxl = true;
-> +    vms->highmem_cxl_mmio = true;
+> -void build_cxl_osc_method(Aml *dev)
+> +void acpi_dsdt_add_cxl_host_bridge_methods(Aml *dev, bool preserve_config)
+>  {
+>      g_assert_not_reached();
+>  }
+> diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
+> index f92f7fa3d5..b32740a3e3 100644
+> --- a/hw/acpi/cxl.c
+> +++ b/hw/acpi/cxl.c
+> @@ -23,6 +23,7 @@
+>  #include "hw/pci/pci_host.h"
+>  #include "hw/cxl/cxl.h"
+>  #include "hw/cxl/cxl_host.h"
+> +#include "hw/pci-host/gpex.h"
+>  #include "hw/mem/memory-device.h"
+>  #include "hw/acpi/acpi.h"
+>  #include "hw/acpi/aml-build.h"
+> @@ -320,11 +321,12 @@ static Aml *__build_cxl_osc_method(void)
+>      return method;
 >  }
 >  
->  static void create_platform_bus(VirtMachineState *vms)
-> @@ -1897,6 +1905,7 @@ static inline bool *virt_get_high_memmap_enabled(VirtMachineState *vms,
->          &vms->highmem_cxl,
->          &vms->highmem_ecam,
->          &vms->highmem_mmio,
-> +        &vms->highmem_cxl_mmio,
->      };
->  
->      assert(ARRAY_SIZE(extended_memmap) - VIRT_LOWMEMMAP_LAST ==
+> -void build_cxl_osc_method(Aml *dev)
+> +void acpi_dsdt_add_cxl_host_bridge_methods(Aml *dev, bool preserve_config)
+>  {
+>      aml_append(dev, aml_name_decl("SUPP", aml_int(0)));
+>      aml_append(dev, aml_name_decl("CTRL", aml_int(0)));
+>      aml_append(dev, aml_name_decl("SUPC", aml_int(0)));
+>      aml_append(dev, aml_name_decl("CTRC", aml_int(0)));
+>      aml_append(dev, __build_cxl_osc_method());
+> +    aml_append(dev, build_pci_host_bridge_dsm_method(preserve_config));
+>  }
+> diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c
+> index f622b91b76..f66ec8ed24 100644
+> --- a/hw/i386/acpi-build.c
+> +++ b/hw/i386/acpi-build.c
+> @@ -1013,7 +1013,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker,
+>                  aml_append(aml_pkg, aml_eisaid("PNP0A08"));
+>                  aml_append(aml_pkg, aml_eisaid("PNP0A03"));
+>                  aml_append(dev, aml_name_decl("_CID", aml_pkg));
+> -                build_cxl_osc_method(dev);
+> +                acpi_dsdt_add_cxl_host_bridge_methods(dev, false);
+>              } else if (pci_bus_is_express(bus)) {
+>                  aml_append(dev, aml_name_decl("_HID", aml_eisaid("PNP0A08")));
+>                  aml_append(dev, aml_name_decl("_CID", aml_eisaid("PNP0A03")));
 > diff --git a/hw/pci-host/gpex-acpi.c b/hw/pci-host/gpex-acpi.c
-> index d9820f9b41..7de57bbc46 100644
+> index 7de57bbc46..247bd78152 100644
 > --- a/hw/pci-host/gpex-acpi.c
 > +++ b/hw/pci-host/gpex-acpi.c
-> @@ -7,6 +7,7 @@
->  #include "hw/pci/pci_bridge.h"
->  #include "hw/pci/pcie_host.h"
->  #include "hw/acpi/cxl.h"
-> +#include "qemu/error-report.h"
+> @@ -52,7 +52,7 @@ static void acpi_dsdt_add_pci_route_table(Aml *dev, uint32_t irq,
+>      }
+>  }
 >  
->  static void acpi_dsdt_add_pci_route_table(Aml *dev, uint32_t irq,
->                                            Aml *scope, uint8_t bus_num)
-> @@ -108,6 +109,7 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg)
->      CrsRangeSet crs_range_set;
->      CrsRangeEntry *entry;
->      int i;
-> +    bool first_cxl = true;
->  
->      /* start to construct the tables for pxb */
->      crs_range_set_init(&crs_range_set);
-> @@ -161,6 +163,44 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg)
->               */
->              crs = build_crs(PCI_HOST_BRIDGE(BUS(bus)->parent), &crs_range_set,
->                              cfg->pio.base, 0, 0, 0);
-> +            if (is_cxl && first_cxl && cfg->cxl_mmio.size) {
-> +                uint64_t cfmws_end = cfg->cxl_mmio.base +
-> +                                     cfg->cxl_mmio.size - 1;
-> +
-> +                /*
-> +                 * The CXL Fixed Memory Window (CFMWS) is a system-wide GPA
-> +                 * range.  Only the first CXL root bridge emits the QWord
-> +                 * descriptor; adding it to every bridge would give the OS
-> +                 * duplicate resource claims for the same range.
-> +                 *
-> +                 * build_crs() has already appended the bridge's own 64-bit
-> +                 * ranges into crs.  Do not copy them again here; only append
-> +                 * the CFMWS window itself as a new QWord descriptor.
-> +                 *
-> +                 * Warn if the CFMWS window overlaps any range already claimed
-> +                 * by the bridge; in the current address layout they should be
-> +                 * disjoint, but catch it early if the layout ever changes.
-> +                 */
-> +                for (i = 0; i < crs_range_set.mem_64bit_ranges->len; i++) {
-> +                    entry = g_ptr_array_index(crs_range_set.mem_64bit_ranges,
-> +                                              i);
-> +                    if (entry->base <= cfmws_end &&
-> +                        entry->limit >= cfg->cxl_mmio.base) {
-> +                        warn_report("CXL CFMWS [0x%"PRIx64"-0x%"PRIx64"] "
-> +                                    "overlaps CXL root bridge 64-bit range "
-> +                                    "[0x%"PRIx64"-0x%"PRIx64"]",
-> +                                    cfg->cxl_mmio.base, cfmws_end,
-> +                                    entry->base, entry->limit);
-> +                    }
-> +                }
-> +                aml_append(crs,
-> +                    aml_qword_memory(AML_POS_DECODE, AML_MIN_FIXED,
-> +                        AML_MAX_FIXED, AML_NON_CACHEABLE, AML_READ_WRITE,
-> +                        0x0000, cfg->cxl_mmio.base, cfmws_end, 0x0000,
-> +                        cfg->cxl_mmio.size));
-> +                first_cxl = false;
-> +            }
-> +
+> -static Aml *build_pci_host_bridge_dsm_method(bool preserve_config)
+> +Aml *build_pci_host_bridge_dsm_method(bool preserve_config)
+>  {
+>      Aml *method = aml_method("_DSM", 4, AML_NOTSERIALIZED);
+>      Aml *UUID, *ifctx, *ifctx1, *buf;
+> @@ -204,7 +204,8 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg)
 >              aml_append(dev, aml_name_decl("_CRS", crs));
 >  
 >              if (is_cxl) {
-> diff --git a/include/hw/arm/virt.h b/include/hw/arm/virt.h
-> index 5fcbd1c76f..88bb3c0bdf 100644
-> --- a/include/hw/arm/virt.h
-> +++ b/include/hw/arm/virt.h
-> @@ -91,6 +91,7 @@ enum {
->      VIRT_CXL_HOST,
->      VIRT_HIGH_PCIE_ECAM,
->      VIRT_HIGH_PCIE_MMIO,
-> +    VIRT_HIGH_CXL_MMIO,
->  };
+> -                build_cxl_osc_method(dev);
+> +                acpi_dsdt_add_cxl_host_bridge_methods(dev,
+> +                                                      cfg->preserve_config);
+>              } else {
+>                  /* pxb bridges do not have ACPI PCI Hot-plug enabled */
+>                  acpi_dsdt_add_host_bridge_methods(dev, true,
+> diff --git a/include/hw/acpi/cxl.h b/include/hw/acpi/cxl.h
+> index 8f22c71530..6fe6c9c58d 100644
+> --- a/include/hw/acpi/cxl.h
+> +++ b/include/hw/acpi/cxl.h
+> @@ -24,7 +24,7 @@
+>  void cxl_build_cedt(GArray *table_offsets, GArray *table_data,
+>                      BIOSLinker *linker, const char *oem_id,
+>                      const char *oem_table_id, CXLState *cxl_state);
+> -void build_cxl_osc_method(Aml *dev);
+> +void acpi_dsdt_add_cxl_host_bridge_methods(Aml *dev, bool preserve_config);
+>  void build_cxl_dsm_method(Aml *dev);
 >  
->  typedef enum VirtIOMMUType {
-> @@ -147,6 +148,7 @@ struct VirtMachineState {
->      bool highmem;
->      bool highmem_compact;
->      bool highmem_cxl;
-> +    bool highmem_cxl_mmio;  /* VIRT_HIGH_CXL_MMIO window; follows highmem_cxl */
->      bool highmem_ecam;
->      bool highmem_mmio;
->      bool highmem_redists;
+>  #endif
 > diff --git a/include/hw/pci-host/gpex.h b/include/hw/pci-host/gpex.h
-> index 1da9c85bce..a7c2e2edf3 100644
+> index a7c2e2edf3..e5c2ebef78 100644
 > --- a/include/hw/pci-host/gpex.h
 > +++ b/include/hw/pci-host/gpex.h
-> @@ -43,6 +43,7 @@ struct GPEXConfig {
->      MemMapEntry mmio32;
->      MemMapEntry mmio64;
->      MemMapEntry pio;
-> +    MemMapEntry cxl_mmio;
->      int         irq;
->      PCIBus      *bus;
->      bool        pci_native_hotplug;
+> @@ -73,6 +73,7 @@ struct GPEXHost {
+>  int gpex_set_irq_num(GPEXHost *s, int index, int gsi);
+>  
+>  void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg);
+> +Aml *build_pci_host_bridge_dsm_method(bool preserve_config);
+>  void acpi_dsdt_add_gpex_host(Aml *scope, uint32_t irq);
+>  
+>  #define PCI_HOST_PIO_BASE               "x-pio-base"
 
