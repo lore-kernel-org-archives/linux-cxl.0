@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E89A3E928C
-	for <linux-cxl@vger.kernel.org>; Tue, 19 May 2026 21:37:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E39C3E51FC
+	for <linux-cxl@vger.kernel.org>; Tue, 19 May 2026 21:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779226666; cv=none; b=s8OpUt8cSNk7DIupx2OGxv2u6I/W0xO0AknwlOGYO37AvOXSl1+VO6JI3l97A6WIzvaJXd4UKpmcyyB6HLD3QA3GePyPa7EbOsFvT4z75qcoznv7ONaUnXgiPmw+YlWNhTs1cOwgruTJET/waJ1LF+kG/gL7PThZXEtLJiBxVac=
+	t=1779226668; cv=none; b=R8fDYi7t1P7EWpxQVngBM5GDdcTWhfmGc2tr2x1vyCrQvJ7cwR7g7qoEC7KBIIICQ7YN3q+JS407u9JxP5ZealNLzj3Hme19YgWnAy//bktjJx04jEWk4bu5iKKmqs2n7UpIha+QfVMRookG/mbFl3gDa0QISk6yXWAmjweDCos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779226666; c=relaxed/simple;
-	bh=QRRkB6u48VDpn2HzPXjgHCHZkOXRTeLLyQNP0/Hu/5o=;
+	s=arc-20240116; t=1779226668; c=relaxed/simple;
+	bh=VgMBemJCp9riTyc5HbpGd9OCd1gXvyup5+sPSs1NXBk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YGFAKTEPDPuMe81F5y+2B3b+cImwLWlW5TvW9iqO5w2QlJsgBaQEAgRakew7fLwYn/Dq3g4hXQBRD4DwlE367aC6f8cp+B/HLaszTKFFoVB6iRtf1V8Gb7px91MPkH4t6VlCwV8TJ47LV2F1KEqVnzvVVaRYASrw2L5SQnVznNs=
+	 MIME-Version; b=E8M61T7SSuAft0Vq3UZxxjBJXtl16FDuK1oKI31uq6aEmic+yEC6dZFYk8TxcuhSKH0DP+j5/gp3FTH+ulZgDbVtEVT6iSVHl1MyYiUgknv7WJfYcjWR/robG+MyhFpjULSXwLfDfq+Ap1Kgw3w+8ATGH5JJAtGcgY0s0XiZ7Uo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D7241F00893;
-	Tue, 19 May 2026 21:37:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1E691F000E9;
+	Tue, 19 May 2026 21:37:46 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: djbw@kernel.org,
@@ -21,9 +21,9 @@ Cc: djbw@kernel.org,
 	jic23@kernel.org,
 	alison.schofield@intel.com,
 	vishal.l.verma@intel.com
-Subject: [PATCH v2 4/6] cxl/test: Add hierarchy enumeration support for type2 device
-Date: Tue, 19 May 2026 14:37:31 -0700
-Message-ID: <20260519213734.69737-5-dave.jiang@intel.com>
+Subject: [PATCH v2 5/6] cxl/test: Fixup hdm init for auto region to support type2
+Date: Tue, 19 May 2026 14:37:32 -0700
+Message-ID: <20260519213734.69737-6-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260519213734.69737-1-dave.jiang@intel.com>
 References: <20260519213734.69737-1-dave.jiang@intel.com>
@@ -35,300 +35,120 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add enumeration of type2 device hierarchy in cxl-test. The type2 device
-is setup to be directly attached to a root port instead of rp -> switch
--> device that type3 hierarchy is setup..
+Add support to setup initialization of decoders in order to support
+type2 auto region.
 
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
-v2:
-- Set type2 memdev to 1. (Alison)
-- Refactor topo init to device type specific. (Alison)
----
- tools/testing/cxl/test/cxl.c | 217 ++++++++++++++++++++++++++++-------
- 1 file changed, 177 insertions(+), 40 deletions(-)
+ tools/testing/cxl/test/cxl.c | 73 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 72 insertions(+), 1 deletion(-)
 
 diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index e2b5ec8e6982..2a39b2575f06 100644
+index 2a39b2575f06..042f057e42eb 100644
 --- a/tools/testing/cxl/test/cxl.c
 +++ b/tools/testing/cxl/test/cxl.c
-@@ -28,6 +28,7 @@ static bool type2_test;
- #define NR_CXL_SWITCH_PORTS 2
- #define NR_CXL_PORT_DECODERS 8
- #define NR_BRIDGES (NR_CXL_HOST_BRIDGES + NR_CXL_SINGLE_HOST + NR_CXL_RCH)
-+#define NR_CXL_TYPE2_ACCEL 1
+@@ -1081,6 +1081,7 @@ enum cxld_init_type {
+ 	MOCK_DECODER_INIT_DEFAULT,
+ 	MOCK_DECODER_INIT_SAVED,
+ 	MOCK_DECODER_INIT_TYPE3_AUTO,
++	MOCK_DECODER_INIT_TYPE2_AUTO,
+ };
  
- #define MOCK_AUTO_REGION_SIZE_DEFAULT SZ_512M
- static int mock_auto_region_size = MOCK_AUTO_REGION_SIZE_DEFAULT;
-@@ -1778,19 +1779,90 @@ static void cxl_single_topo_exit(void)
+ static enum cxld_init_type get_decoder_init_type(struct cxl_decoder *cxld,
+@@ -1109,7 +1110,8 @@ static enum cxld_init_type get_decoder_init_type(struct cxl_decoder *cxld,
+ 	    pdev->id > 4 || cxld->id > 0)
+ 		return MOCK_DECODER_INIT_DEFAULT;
+ 
+-	return MOCK_DECODER_INIT_TYPE3_AUTO;
++	return type2_test ? MOCK_DECODER_INIT_TYPE2_AUTO :
++			    MOCK_DECODER_INIT_TYPE3_AUTO;
+ }
+ 
+ static bool mock_decoder_handle_saved(struct cxl_decoder *cxld, struct cxl_test_decoder *td)
+@@ -1128,6 +1130,70 @@ static bool mock_decoder_handle_saved(struct cxl_decoder *cxld, struct cxl_test_
+ 	return false;
+ }
+ 
++static void mock_init_hdm_type2_cxled(struct cxl_endpoint_decoder *cxled,
++				      struct cxl_port *port,
++				      struct platform_device *pdev)
++{
++	struct acpi_cedt_cfmws *window = mock_cfmws[0];
++	struct cxl_decoder *cxld = &cxled->cxld;
++	struct cxl_switch_decoder *cxlsd;
++	struct cxl_dport *dport;
++	struct cxl_port *root_port;
++	struct device *dev;
++	u64 base;
++
++	base = window->base_hpa;
++	cxld->hpa_range = (struct range) {
++		.start = base,
++		.end = base + mock_auto_region_size - 1,
++	};
++
++	cxld->interleave_ways = 1;
++	eig_to_granularity(window->granularity, &cxld->interleave_granularity);
++	cxld->target_type = CXL_DECODER_DEVMEM;
++	cxld->flags = CXL_DECODER_F_ENABLE;
++	cxled->state = CXL_DECODER_STATE_AUTO;
++	port->commit_end = cxld->id;
++	devm_cxl_dpa_reserve(cxled, 0,
++			     mock_auto_region_size / cxld->interleave_ways, 0);
++	cxld->commit = mock_decoder_commit;
++	cxld->reset = mock_decoder_reset;
++
++	WARN_ON_ONCE(!cxld_registry_new(cxld));
++	/*
++	 * Now that endpoint decoder is set up, walk up the hierarchy
++	 * and setup the root port decoder targeting @cxlmd.
++	 */
++	dport = port->parent_dport;
++	root_port = dport->port;
++	dev = device_find_child(&root_port->dev, NULL, first_decoder);
++	/*
++	 * Ancestor ports are guaranteed to be enumerated before
++	 * @port, and all ports have at least one decoder.
++	 */
++	if (WARN_ON(!dev))
++		return;
++
++	cxlsd = to_cxl_switch_decoder(dev);
++	cxlsd->target[0] = dport;
++	cxlsd->cxld.target_map[0] = dport->port_id;
++	cxld = &cxlsd->cxld;
++	cxld->target_type = CXL_DECODER_DEVMEM;
++	cxld->flags = CXL_DECODER_F_ENABLE;
++	root_port->commit_end = 0;
++	cxld->interleave_ways = 1;
++	cxld->interleave_granularity = 4096;
++	cxld->hpa_range = (struct range) {
++		.start = base,
++		.end = base + mock_auto_region_size - 1,
++	};
++	cxld->commit = mock_decoder_commit;
++	cxld->reset = mock_decoder_reset;
++
++	cxld_registry_update(cxld);
++	put_device(dev);
++}
++
+ static void mock_init_hdm_type3_cxled(struct cxl_endpoint_decoder *cxled,
+ 				      struct cxl_port *port,
+ 				      struct platform_device *pdev,
+@@ -1285,6 +1351,11 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
+ 	case MOCK_DECODER_INIT_TYPE3_AUTO:
+ 		mock_init_hdm_type3_cxled(cxled, port, pdev, hb0);
+ 		return false;
++	case MOCK_DECODER_INIT_TYPE2_AUTO:
++		mock_init_hdm_type2_cxled(cxled, port, pdev);
++		return false;
++	default:
++		return false;
  	}
+ 	return false;
  }
- 
-+static void cxl_type3_mem_exit(void)
-+{
-+	struct platform_device *pdev;
-+	int i;
-+
-+	for (i = ARRAY_SIZE(cxl_rcd) - 1; i >= 0; i--) {
-+		pdev = cxl_rcd[i];
-+		if (!pdev)
-+			break;
-+		platform_device_unregister(cxl_rcd[i]);
-+	}
-+
-+	for (i = ARRAY_SIZE(cxl_mem_single) - 1; i >= 0; i--) {
-+		pdev = cxl_mem_single[i];
-+		if (!pdev)
-+			break;
-+		platform_device_unregister(cxl_mem_single[i]);
-+	}
-+
-+	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--) {
-+		pdev = cxl_mem[i];
-+		if (!pdev)
-+			break;
-+		platform_device_unregister(pdev);
-+	}
-+}
-+
-+static void cxl_type2_mem_exit(void)
-+{
-+	for (int i = NR_CXL_TYPE2_ACCEL - 1; i >= 0; i--) {
-+		struct platform_device *pdev = cxl_mem[i];
-+
-+		if (!pdev)
-+			break;
-+		platform_device_unregister(pdev);
-+	}
-+}
-+
- static void cxl_mem_exit(void)
- {
--	int i;
-+	if (type2_test) {
-+		cxl_type2_mem_exit();
-+		return;
-+	}
- 
--	for (i = ARRAY_SIZE(cxl_rcd) - 1; i >= 0; i--)
--		platform_device_unregister(cxl_rcd[i]);
--	for (i = ARRAY_SIZE(cxl_mem_single) - 1; i >= 0; i--)
--		platform_device_unregister(cxl_mem_single[i]);
--	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--)
-+	cxl_type3_mem_exit();
-+}
-+
-+static int cxl_type2_mem_init(void)
-+{
-+	int i, rc;
-+
-+	for (i = 0; i < NR_CXL_TYPE2_ACCEL; i++) {
-+		struct platform_device *dport = cxl_root_port[i];
-+		struct platform_device *pdev;
-+
-+		pdev = platform_device_alloc("cxl_type2_accel", i);
-+		if (!pdev)
-+			goto err_mem;
-+		pdev->dev.parent = &dport->dev;
-+		set_dev_node(&pdev->dev, i % 2);
-+
-+		rc = platform_device_add(pdev);
-+		if (rc) {
-+			platform_device_put(pdev);
-+			goto err_mem;
-+		}
-+		cxl_mem[i] = pdev;
-+	}
-+
-+	return 0;
-+
-+err_mem:
-+	for (i = NR_CXL_TYPE2_ACCEL - 1; i >= 0; i--) {
-+		struct platform_device *pdev = cxl_mem[i];
-+
-+		if (!pdev)
-+			break;
- 		platform_device_unregister(cxl_mem[i]);
-+	}
-+	return rc;
- }
- 
--static int cxl_mem_init(void)
-+static int cxl_type3_mem_init(void)
- {
- 	int i, rc;
- 
-@@ -1863,6 +1935,13 @@ static int cxl_mem_init(void)
- 	return rc;
- }
- 
-+static int cxl_mem_init(void)
-+{
-+	if (type2_test)
-+		return cxl_type2_mem_init();
-+	return cxl_type3_mem_init();
-+}
-+
- static ssize_t
- decoder_reset_preserve_registry_show(struct device *dev,
- 				     struct device_attribute *attr, char *buf)
-@@ -2104,6 +2183,92 @@ static int cxl_switches_populate(void)
- 	return 0;
- }
- 
-+static void cxl_type2_topo_exit(void)
-+{
-+	host_bridges_remove();
-+	cxl_rootports_remove();
-+}
-+
-+static int cxl_type2_topo_init(void)
-+{
-+	int rc;
-+
-+	rc = host_bridges_populate();
-+	if (rc)
-+		return rc;
-+
-+	rc = cxl_rootports_populate();
-+	if (rc) {
-+		host_bridges_remove();
-+		return rc;
-+	}
-+
-+	return 0;
-+}
-+
-+static void cxl_type3_topo_exit(void)
-+{
-+	host_bridges_remove();
-+	cxl_rootports_remove();
-+	cxl_switches_remove();
-+	cxl_single_topo_exit();
-+	cxl_rch_topo_exit();
-+}
-+
-+static int cxl_type3_topo_init(void)
-+{
-+	int rc;
-+
-+	rc = host_bridges_populate();
-+	if (rc)
-+		return rc;
-+
-+	rc = cxl_rootports_populate();
-+	if (rc)
-+		goto err_host_bridges;
-+
-+	rc = cxl_switches_populate();
-+	if (rc)
-+		goto err_root_ports;
-+
-+	rc = cxl_single_topo_init();
-+	if (rc)
-+		goto err_switches;
-+
-+	rc = cxl_rch_topo_init();
-+	if (rc)
-+		goto err_single;
-+
-+	return 0;
-+
-+err_single:
-+	cxl_single_topo_exit();
-+err_switches:
-+	cxl_switches_remove();
-+err_root_ports:
-+	cxl_rootports_remove();
-+err_host_bridges:
-+	host_bridges_remove();
-+	return rc;
-+}
-+
-+static void cxl_topo_exit(void)
-+{
-+	if (type2_test) {
-+		cxl_type2_topo_exit();
-+		return;
-+	}
-+
-+	cxl_type3_topo_exit();
-+}
-+
-+static int cxl_topo_init(void)
-+{
-+	if (type2_test)
-+		return cxl_type2_topo_init();
-+	return cxl_type3_topo_init();
-+}
-+
- static __init int cxl_test_init(void)
- {
- 	struct range mappable;
-@@ -2147,29 +2312,13 @@ static __init int cxl_test_init(void)
- 	if (rc)
- 		goto err_populate;
- 
--	rc = host_bridges_populate();
-+	rc = cxl_topo_init();
- 	if (rc)
- 		goto err_populate;
- 
--	rc = cxl_rootports_populate();
--	if (rc)
--		goto err_host_bridges;
--
--	rc = cxl_switches_populate();
--	if (rc)
--		goto err_root_ports;
--
--	rc = cxl_single_topo_init();
--	if (rc)
--		goto err_switches;
--
--	rc = cxl_rch_topo_init();
--	if (rc)
--		goto err_single;
--
- 	cxl_acpi = platform_device_alloc("cxl_acpi", 0);
- 	if (!cxl_acpi)
--		goto err_rch;
-+		goto err_topo;
- 
- 	mock_companion(&acpi0017_mock, &cxl_acpi->dev);
- 	acpi0017_mock.dev.bus = &platform_bus_type;
-@@ -2193,16 +2342,8 @@ static __init int cxl_test_init(void)
- 	cxl_mem_exit();
- err_root:
- 	platform_device_put(cxl_acpi);
--err_rch:
--	cxl_rch_topo_exit();
--err_single:
--	cxl_single_topo_exit();
--err_switches:
--	cxl_switches_remove();
--err_root_ports:
--	cxl_rootports_remove();
--err_host_bridges:
--	host_bridges_remove();
-+err_topo:
-+	cxl_topo_exit();
- err_populate:
- 	depopulate_all_mock_resources();
- err_gen_pool_add:
-@@ -2228,11 +2369,7 @@ static __exit void cxl_test_exit(void)
- 	hmem_test_exit();
- 	cxl_mem_exit();
- 	platform_device_unregister(cxl_acpi);
--	cxl_rch_topo_exit();
--	cxl_single_topo_exit();
--	cxl_switches_remove();
--	cxl_rootports_remove();
--	host_bridges_remove();
-+	cxl_topo_exit();
- 	depopulate_all_mock_resources();
- 	gen_pool_destroy(cxl_mock_pool);
- 	unregister_cxl_mock_ops(&cxl_mock_ops);
 -- 
 2.54.0
 
