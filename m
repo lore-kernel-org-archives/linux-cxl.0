@@ -1,318 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013040.outbound.protection.outlook.com [40.93.201.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197C318FDDE
-	for <linux-cxl@vger.kernel.org>; Tue, 19 May 2026 22:17:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779229044; cv=none; b=Tzq1txZKiWULzYca80smWKaIMqHn9MOvXKCdztg9KzNp/BUxInumOvwKIo7lfZWN6nM+CiGmKWGPwotbgHxLYe6SD0y95FFSzDdJxjmlIPQHCymM6Tra0te2QByDFv4o5Zz6566SjDhpIpqvMwIxbpjrP34ki0zt2U8gTr+ALo8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779229044; c=relaxed/simple;
-	bh=LiE3h+8F+Tpic7V3cKj9q7QAnk+hvlsWFP582UJCDt4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LPZo8Y8xNmtQa+3T3GtOagXaJIHSKTqSw8HPkoiVsaOJpph7w6MFLaJJAiS4o8LPq53GwaPjqyS2v/TEfShWVfBwuPQ8r3ZuQgPxf9nq0uQ2OkIPejiDBecbpTYKQ/xqK9D5auLFpbETCBIi8MarZp+dsaqBqmOyUMHq6sAiZus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YbdGXlRj; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C15A3DB30C;
+	Tue, 19 May 2026 22:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779229421; cv=fail; b=ocGn/VsQVrr5oYkXQFjBKBB7oy7K7zw2h5fA/m46jg2cb7DePl0rYjsblUfmaoIes6ic13gFCK035Y9cuWTEpA41KJ8f8K2Vr/JzCSdVHMEahkWZHZUW9F2sFJFZ5n4z761rX8paLG0BdvtyZtP2rScFIj9O0eMg0viTRvpfc2w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779229421; c=relaxed/simple;
+	bh=IhysmVDfzaxFdPB8wxr3lBp+73vJZR2pm/2EaKZAybE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=NqpiCCkL7SMo4KDKPWdCvQE3BwzNBNFm9FY72M50G22b+sfTZ6I0gI4uUwf/EqGpjnd7oo1C5TgJeP4OgrmuiLzrHRnlenzJ2rh0XgKfEMTfGWWWYsMz68QcHdeHchkWj+Qzz2zCCU4mnqfvkN3U9+JaDw1l8BjH8B8Z1epB3B8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nO3zFiqW; arc=fail smtp.client-ip=40.93.201.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YbdGXlRj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779229043; x=1810765043;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=LiE3h+8F+Tpic7V3cKj9q7QAnk+hvlsWFP582UJCDt4=;
-  b=YbdGXlRjMy62ujb6sejCA8/QvqQjberuJ6uLcezl1QPpIEC+bEXPtDeN
-   BfdtZSKnqkYo91qwdx6nfh39XGztYUDusbOfTIw2DB12AmBGxl2zB/pLJ
-   DpSqhlqDoWB5DCMdNEMIt/bzIOGosqa9AMb38uK5ICuw7wHVD527L3b9x
-   BSD31ONXx012sk7o6asoCQ0e3PAdHfkpW8+kJDRwI1FZ/D2NAEjwwP0L6
-   A0lEBV3wOatKERT6w4SlGorLgY9IgxJFk157HPN/Ymmku7cyrfIgvUI28
-   MddP09ZNttLSXuOlxXVzC0/Jr8OmOxT8+D5EF1XWB5syDmef80z6fsClp
-   Q==;
-X-CSE-ConnectionGUID: hPP4P5vxS8GjNHB7iAB76A==
-X-CSE-MsgGUID: Z1VszjCoQQCiyTpW+bUOvA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11791"; a="83976569"
-X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="83976569"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 15:17:22 -0700
-X-CSE-ConnectionGUID: KQ1pMu0AREK7bfh/gWa6Yw==
-X-CSE-MsgGUID: R3kfvf4KTruHdgoMmkTGAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
-   d="scan'208";a="278030233"
-Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.109.143]) ([10.125.109.143])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 15:17:15 -0700
-Message-ID: <0b4861da-5f05-498a-83f9-58b7a13cd9f8@intel.com>
-Date: Tue, 19 May 2026 15:17:13 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nO3zFiqW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YzQj4D0bOLaYmb6oHraBL9SlGvlh6Ge1kykz9W9QJCZ6XuSl/vCEMRZ4RF33eTD8c1jM4uNVH1dssTqX/2Xa2YqPduKkN9+2/cC+po/8hS3407SIwsceoTml1LwVcHidDyI77K1EAzG3YQ3luYWzjY3DmyQRDrvHBppSRhF/FIBFtI1kjbUlPG9UwP5eAkID6BC35FBPmlxcx+08gi82Eqo8enwE34pjg7G0n0SYJZIyy2nhgqUT7+nEq8IHvzLMsG/mXuIKJBEMNZCR5Ee+uiUoB5PaUhI4IZ56E6Pvuyuaz4KE1UzlY6hmJDJ1/T7U7HAuiLX4G1kzoR9BifR6Mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wK/DeOZxl8mFChgoN3SNuXd/sWKVZiupB2zTkYuqcUo=;
+ b=jeafDzI1wol5v/u/yKpTldKSJ1vSJcDfRmnX8JkPDoYeUoKAESy9h5FW9IULFQUaGh57dXs/ku6tTcFkmYlMf6gWr8oELdt7jHRrZiWQQJ0GrM5H2xTKBT7yEaZw3cRpxpmw7lVJM+mFtmlgEitXQ5cMq5APvYgU2Wyg4kqUt+UjZK+Sx30o1uz7f+Ns6H8wGLHyGUfOjuX+1qRU8L3cOf8URL+Iv63FNylR/R9F84Vdc+ajzVm8tsVDHKxoMXuWxsFhHLsYU/fAP+XsAo99RaC3sNM2kXisafA38ei1HiAIcD5M5tjXCg+mRK5KLvl2/EFvJKbJHHoAijVSVKiiFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wK/DeOZxl8mFChgoN3SNuXd/sWKVZiupB2zTkYuqcUo=;
+ b=nO3zFiqWt4ScQ9keQv4vq1yndj301m0vGJK/vJo2hQZk4FmJSW23gO+e85AUhZoOPcQTUY22bultOKmwbp6s4n/ryzuu6qry3iUxPwC9P/x7LayQzXAqXNqNlhL9hw9AglUyv0AZy7bpMH+KofzTCLIYsrBgOZaaIJDTDgcoMDqIm6VRfvPtiyZjqZkH0fn8ujIWwR0Fr+8TL5WNrREJqxuzr2eOVRFr6nBGVpRwpV2dcQCtWaRis1rVhhlQfHBPO1DGE1aLeiY/5fUhtSIF2ODTugI0O3LUP4Dw1whg4cps2NxRwGpIVA+hrsrF5ef5hU3zMdMLniRVW0uhoN/59w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by CY5PR12MB6479.namprd12.prod.outlook.com (2603:10b6:930:34::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.14; Tue, 19 May
+ 2026 22:23:36 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528%5]) with mapi id 15.21.0048.013; Tue, 19 May 2026
+ 22:23:36 +0000
+Date: Tue, 19 May 2026 19:23:35 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Nicolin Chen <nicolinc@nvidia.com>, will@kernel.org,
+	robin.murphy@arm.com, bhelgaas@google.com, joro@8bytes.org,
+	praan@google.com, baolu.lu@linux.intel.com, kevin.tian@intel.com,
+	miko.lenczewski@arm.com, linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, dan.j.williams@intel.com,
+	jonathan.cameron@huawei.com, vsethi@nvidia.com,
+	linux-cxl@vger.kernel.org, nirmoyd@nvidia.com
+Subject: Re: [PATCH v4 1/3] PCI: Allow ATS to be always on for CXL.cache
+ capable devices
+Message-ID: <20260519222335.GK3602937@nvidia.com>
+References: <f6734b9dad0050138676f11ecd14e9db1cf6b697.1777269009.git.nicolinc@nvidia.com>
+ <20260519193649.GA715262@bhelgaas>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260519193649.GA715262@bhelgaas>
+X-ClientProxiedBy: YT4PR01CA0119.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:d7::13) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] cxl/region: Resolve region deletion races
-To: Dan Williams <djbw@kernel.org>, linux-cxl@vger.kernel.org
-Cc: alejandro.lucero-palau@amd.com, jic23@kernel.org,
- Sungwoo Kim <iam@sung-woo.kim>
-References: <20260519210158.1499795-1-djbw@kernel.org>
- <20260519210158.1499795-3-djbw@kernel.org>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260519210158.1499795-3-djbw@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|CY5PR12MB6479:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9ea5da39-9b8d-4ebf-c9e9-08deb5f544e9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|11063799006|18002099003|22082099003|56012099003|4143699003;
+X-Microsoft-Antispam-Message-Info:
+	x2+shhaGcFVVCHrUvj+muhfdAn/LYU8mYVfshLrLi5/Scxv1huwnwjFrCMRKufllnmgRolknuvTLUKR3oGED2pUqWBdUPMJJY/wNqU+1EgQJ4trbiG+ZxCeWbCqe0cRU2nHvZlttsoF60r6qWO5wkPtkUp5myTEARJCS6iXv4BCRNp+EX7Cc2NMHzXVwfQ9DJZpZC70kHmRw6xCUfu91nXq0u8IDM/qlcjA5jNYKS2VHu83faxhXW8FruUIUTPH4a19369CCfOaensz1gYosseIMM8b9fLct6NQLlA+ihUjmktSUH1ynlg8la0CtgvWj1EGQatr05STE1DaQyb1xsd9DX+0ZPj40epDVJhjJGGr2e5S7etW/PNK7NGsD/Fye5hBVI8MNDn3wwAIujA14tRJScV64d7RguyR5rAf+YQ5WWNBudiTDlzerrXFZbhqg4NTD6sgeh1Xn/8j8huOy7MMcqQ7wHV5Awms4evJNeq4XP6XWruk5Kex67JCztK9YTJKYtxpxKsUcgq+RZGET6UyrxlM8ta0isqYfezCeOQE0XuX5juFKlfqAtpVQGeSfQXXNQbVVHPXHmKx6qeRrBxsTqMrwfFQwPXH97yrkg7zpgYFBJwdR2JoSmPLIBIHoqBlrrE7SyXEOSb4cFQTfE396cX7BVY0UySpAgHhh6VOFfSLD+Um92g2AWuoQmtxg
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(11063799006)(18002099003)(22082099003)(56012099003)(4143699003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8qcubIjF73R4LeBosEtSS4ZhMx7bcfo4DZDiU3/Quswoe1Excl4pkYvZRJHK?=
+ =?us-ascii?Q?ptomx7VYJsya3UOFBA1VfqN4K4EwEpL6fAyCv7UfHtjjWIz0f54emvm1fyQb?=
+ =?us-ascii?Q?YaCY3ghfwR90Absz2SRoZ3Ih/+qyG62ndSYMI1gZy+RGh29/Kl3Yb52q1wjg?=
+ =?us-ascii?Q?iOV1lbG9+BG/ZkoeIXsbrxXQPuf4x7gyw/ayF6G7QikYhx13fh8+739CHW1B?=
+ =?us-ascii?Q?jzLQ2BaRgwPOMha8EjTiLaGIqSOCB5Jn3uODsdjjW3ZB1ZSbJaC3s2a4lOaY?=
+ =?us-ascii?Q?U/GMVUgcFgAYPWfkbf3bmPsZEa+IzLRz319rlx9TQjVe/XbcVn/UUj18SWgm?=
+ =?us-ascii?Q?qA0elSWo3zrFi5Fb19FiSuLBCfmoV/YYXYB01wOacdUjnS99WMjaZfv3Ya3w?=
+ =?us-ascii?Q?fmHc8/nIyeGvDmOyW5bQ4GafLb86iTcYdlkB+9EmDYk+bUKKwr1Fb03peiu/?=
+ =?us-ascii?Q?vMfhQ3qq7WUSjkReIZFOW7NsoX6E+bq5vZl9mOECUJ1XqLvxJK2LyfiJH/pg?=
+ =?us-ascii?Q?azJNH9NuzgkvbvR6mtacvOwaUIGzZgU//gqncgOFNkx/1I1cjAgujhybpZxT?=
+ =?us-ascii?Q?SwF+S4aohmdOfsHZF/CwJqrXq86ma0I+7Zs8dvtu9Su3srLeKjzjI0lUt5Cw?=
+ =?us-ascii?Q?NOEENIG7vh8KHGGpN39vKJXvUqHTDXuPPDZ5FhVfq1Q1eXjL3vDYpGujXf+F?=
+ =?us-ascii?Q?HFljdulQIk/q31v79a+ASpGdNCgO+VzAtexJuJq7FK+lirX+7wshIrNnjSfw?=
+ =?us-ascii?Q?R7mKk+7vvq/CxMcc7xcZjl6cI0T8QZYyp1NVjBztOQmZyav/qQLPXAfqhzoB?=
+ =?us-ascii?Q?u88g0Qb18SIZ0/1VNk8n1m5Bsbplpd88IGQSuXT02b1exeX4zCo2SFXXxH91?=
+ =?us-ascii?Q?QgSwD1ci2Wvhc1fTvMQVkgXwIFg1ElMsyCWspXn3UYSahenAT8Lwf4Yjodbw?=
+ =?us-ascii?Q?hYzQA4e+YufqVMocWjAv2Y3HEVeRlAyY0ix9tcRMbfG8F7Z5DVH9lws3DwVw?=
+ =?us-ascii?Q?B2bJSDgujGDphkE2YEaShOZrS2BA/n6adZAfDGQG6JYbqNYQYmPKwBUhgcgN?=
+ =?us-ascii?Q?azPpBoJbIS4Qu5oGcMz7ewWkCOcJNMnQpNXeFTtK9GLVDNFLn3Sc0KUg1rMY?=
+ =?us-ascii?Q?LfWhmIhD/61OeBvEr6Js5Wz8ZMKC1hc+fqr5bnrfbRGFZjAaAJH6cFR54C7o?=
+ =?us-ascii?Q?1KO2ln1TzpczPY0we6b+56zrDgCD1zVPTIhGhCp3vou14ZzVcLw9Xa49gHqv?=
+ =?us-ascii?Q?2DVY7G6GMjmNd1/LCcAQIgfBqbNFHyCbgZ+Ahe/jCgxKfzFLgTrnUXXKvtxP?=
+ =?us-ascii?Q?DZNpDqheHWQknWk6YXlicNFX+fK1UCzLaJI6Y18JABcOPw//PNnNVFm15dxp?=
+ =?us-ascii?Q?EWEAqgrTsAtl8sKIOIC6CIiOl3Y2GxWrp1n+TYpxcgrZQAvLVBCGm6kL+Yj3?=
+ =?us-ascii?Q?Eg47hNtBFGyCrII7Tp82SbZAz04p8aqLEqWymbK7R8Y1uryXq3Jv2+f7jQoV?=
+ =?us-ascii?Q?XZQNer5Qzh4vp9dVod1DXQMzosOoXl5I57Znov3FPI5Xyr1MmOGhmi8YPnPe?=
+ =?us-ascii?Q?ugaK0nBI+HMdaGlrY1/LG0F5wEiwH0WG7xEZppqvI59273eU72ydhONQeP09?=
+ =?us-ascii?Q?mFMoq3GlQwfQp3k8DhZYbnL4G6GoC6218H0P4zsI9IuY2FHAtMiPwYVPyzYt?=
+ =?us-ascii?Q?1Fq+glyFnT59uTvgTg/OEYBf2PIqFZ+Jc13tGG/EgrVsD8Dc?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9ea5da39-9b8d-4ebf-c9e9-08deb5f544e9
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2026 22:23:36.3140
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cQb0TLWf2tw30P2tiwxktlVzzdwa0FBJTxHPEAjwd3eSfab3gZSFTMrVJxshwMyP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6479
 
+On Tue, May 19, 2026 at 02:36:49PM -0500, Bjorn Helgaas wrote:
+> One motivation for putting this in the PCI core was to use the quirk
+> infrastructure, but this series doesn't use any of that.  It doesn't
+> declare any fixups, e.g., DECLARE_PCI_FIXUP_FINAL, and it doesn't
+> update any state cached by the PCI core.
 
+It works like the acs quirks that are in the quirks file, which are
+also arguably only used by iommu too :)
 
-On 5/19/26 2:01 PM, Dan Williams wrote:
-> Sungwoo noticed that the sysfs trigger to delete a region may try to delete
-> a region multiple times. It also has no exclusion relative to the kernel
-> releasing the region via CXL root device teardown.
-> 
-> Instead of installing new cxl root devres actions per region, use the
-> existing root decoder unregistration event to remove all remaining regions.
-> An xarray of regions replaces a devres list of regions.
-> 
-> This handles 3 separate issues with the old approach:
-> 
-> 1/ sysfs users racing to delete the same region: no longer possible now
->    that the regions_lock is held over the lookup and deletion.
-> 
-> 2/ multiple actions triggering deletion of the same region: solved by
->    erasing regions while holding @regions_lock, and only proceeding on
->    successful erasure.
-> 
-> 3/ userspace racing devres_release_all() to trigger the devres not found
->    warning: solved by sysfs unregistration not requiring a release action
-> 
-> Fixes: 779dd20cfb56 ("cxl/region: Add region creation support")
-> Reported-by: Sungwoo Kim <iam@sung-woo.kim>
-> Closes: http://lore.kernel.org/20260427032010.916681-2-iam@sung-woo.kim
-> Signed-off-by: Dan Williams <djbw@kernel.org>
+I'm not keen on spreading lists of device ids for PCI quirks to iommu
+files, but it would be OK to move pci_ats_always_on() to
+iommu_ats_always_on() that calls the PCI quirk function.
 
-LGTM but with a nit below.
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-
-> ---
->  drivers/cxl/core/core.h   |  2 ++
->  drivers/cxl/cxl.h         |  4 +++
->  drivers/cxl/core/port.c   |  5 ++++
->  drivers/cxl/core/region.c | 60 +++++++++++++++++++++------------------
->  4 files changed, 44 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 82ca3a476708..07555ae63859 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -52,6 +52,7 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
->  		   u64 dpa);
->  int devm_cxl_add_dax_region(struct cxl_region *cxlr);
->  int devm_cxl_add_pmem_region(struct cxl_region *cxlr);
-> +void kill_regions(struct cxl_root_decoder *cxlrd);
->  
->  #else
->  static inline u64 cxl_dpa_to_hpa(struct cxl_region *cxlr,
-> @@ -81,6 +82,7 @@ static inline int cxl_region_init(void)
->  static inline void cxl_region_exit(void)
->  {
->  }
-> +static inline void kill_regions(struct cxl_root_decoder *cxlrd) { };
->  #define CXL_REGION_ATTR(x) NULL
->  #define CXL_REGION_TYPE(x) NULL
->  #define SET_CXL_REGION_ATTR(x)
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 3900a0778571..f43abd1903ce 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -360,6 +360,8 @@ struct cxl_rd_ops {
->   * @region_id: region id for next region provisioning event
->   * @platform_data: platform specific configuration data
->   * @regions_lock: sync region discovery, construction, and deletion
-> + * @regions: regions to remove at root decoder destruct time
-> + * @dead: root decoder dead to region creation
->   * @qos_class: QoS performance class cookie
->   * @ops: CXL root decoder operations
->   * @cxlsd: base cxl switch decoder
-> @@ -370,6 +372,8 @@ struct cxl_root_decoder {
->  	atomic_t region_id;
->  	void *platform_data;
->  	struct mutex regions_lock;
-> +	struct xarray regions;
-> +	bool dead;
->  	int qos_class;
->  	struct cxl_rd_ops ops;
->  	struct cxl_switch_decoder cxlsd;
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 6e7a70d51cfe..1215ee4f4035 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -458,6 +458,8 @@ static void cxl_root_decoder_release(struct device *dev)
->  
->  	if (atomic_read(&cxlrd->region_id) >= 0)
->  		memregion_free(atomic_read(&cxlrd->region_id));
-> +	mutex_destroy(&cxlrd->regions_lock);
-> +	xa_destroy(&cxlrd->regions);
->  	__cxl_decoder_release(&cxlrd->cxlsd.cxld);
->  	kfree(cxlrd);
->  }
-> @@ -2017,6 +2019,7 @@ struct cxl_root_decoder *cxl_root_decoder_alloc(struct cxl_port *port,
->  	}
->  
->  	mutex_init(&cxlrd->regions_lock);
-> +	xa_init(&cxlrd->regions);
->  
->  	cxld = &cxlsd->cxld;
->  	cxld->dev.type = &cxl_decoder_root_type;
-> @@ -2192,6 +2195,8 @@ static void cxld_unregister(void *dev)
->  	if (is_endpoint_decoder(dev))
->  		cxl_decoder_detach(NULL, to_cxl_endpoint_decoder(dev), -1,
->  				   DETACH_INVALIDATE);
-> +	if (is_root_decoder(dev))
-> +		kill_regions(to_cxl_root_decoder(dev));
->  
->  	device_unregister(dev);
->  }
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index b5601e89e302..faf9785c0509 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2537,12 +2537,13 @@ static struct cxl_region *to_cxl_region(struct device *dev)
->  	return container_of(dev, struct cxl_region, dev);
->  }
->  
-> -static void unregister_region(void *_cxlr)
-> +static void unregister_region(struct cxl_region *cxlr)
->  {
-> -	struct cxl_region *cxlr = _cxlr;
-> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
->  	struct cxl_region_params *p = &cxlr->params;
->  	int i;
->  
-> +	xa_erase(&cxlrd->regions, cxlr->id);
->  	device_del(&cxlr->dev);
->  
->  	/*
-> @@ -2673,6 +2674,19 @@ static int cxl_region_calculate_adistance(struct notifier_block *nb,
->  	return NOTIFY_STOP;
->  }
->  
-> +/* unwind all remaining regions */
-> +void kill_regions(struct cxl_root_decoder *cxlrd)
-> +{
-> +	unsigned long index;
-> +	struct cxl_region *cxlr;
-> +
-> +	guard(mutex)(&cxlrd->regions_lock);
-> +	/* no more region creation */
-> +	cxlrd->dead = true;
-> +	xa_for_each(&cxlrd->regions, index, cxlr)
-> +		unregister_region(cxlr);
-> +}
-> +
->  /**
->   * devm_cxl_add_region - Adds a region to a decoder
->   * @cxlrd: root decoder
-> @@ -2711,14 +2725,15 @@ static struct cxl_region *devm_cxl_add_region(struct cxl_root_decoder *cxlrd,
->  	if (rc)
->  		goto err;
->  
-> -	rc = devm_add_action_or_reset(port->uport_dev, unregister_region, cxlr);
-> -	if (rc)
-> +	rc = xa_insert(&cxlrd->regions, cxlr->id, cxlr, GFP_KERNEL);
-> +	if (rc) {
-> +		unregister_region(cxlr);
->  		return ERR_PTR(rc);
-> +	}
->  
->  	dev_dbg(port->uport_dev, "%s: created %s\n",
->  		dev_name(&cxlrd->cxlsd.cxld.dev), dev_name(dev));
->  	return cxlr;
-> -
->  err:
->  	put_device(dev);
->  	return ERR_PTR(rc);
-> @@ -2747,6 +2762,9 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
->  {
->  	int rc;
->  
-> +	if (cxlrd->dead)
-> +		return ERR_PTR(-ENXIO);
-> +
->  	switch (mode) {
->  	case CXL_PARTMODE_RAM:
->  	case CXL_PARTMODE_PMEM:
-> @@ -2822,38 +2840,27 @@ static ssize_t region_show(struct device *dev, struct device_attribute *attr,
->  }
->  DEVICE_ATTR_RO(region);
->  
-> -static struct cxl_region *
-> -cxl_find_region_by_name(struct cxl_root_decoder *cxlrd, const char *name)
-> -{
-> -	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
-> -	struct device *region_dev;
-> -
-> -	region_dev = device_find_child_by_name(&cxld->dev, name);
-> -	if (!region_dev)
-> -		return ERR_PTR(-ENODEV);
-> -
-> -	return to_cxl_region(region_dev);
-> -}
-> -
->  static ssize_t delete_region_store(struct device *dev,
->  				   struct device_attribute *attr,
->  				   const char *buf, size_t len)
->  {
->  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
-> -	struct cxl_port *port = to_cxl_port(dev->parent);
->  	struct cxl_region *cxlr;
-> -	int rc;
-> +	int rc, id;
->  
->  	ACQUIRE(mutex_intr, regions_lock)(&cxlrd->regions_lock);
->  	if ((rc = ACQUIRE_ERR(mutex_intr, &regions_lock)))
->  		return rc;
->  
-> -	cxlr = cxl_find_region_by_name(cxlrd, buf);
-> -	if (IS_ERR(cxlr))
-> -		return PTR_ERR(cxlr);
-> +	rc = sscanf(buf, "region%d\n", &id);
-> +	if (rc != 1)
-> +		return -EINVAL;
-
-Maybe add a check for (id >= 0) just to sanitize user input?
-
-DJ
-
->  
-> -	devm_release_action(port->uport_dev, unregister_region, cxlr);
-> -	put_device(&cxlr->dev);
-> +	cxlr = xa_load(&cxlrd->regions, id);
-> +	if (!cxlr || !sysfs_streq(buf, dev_name(&cxlr->dev)))
-> +		return -ENODEV;
-> +
-> +	unregister_region(cxlr);
->  
->  	return len;
->  }
-> @@ -3718,7 +3725,6 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  {
->  	struct cxl_endpoint_decoder *cxled = ctx->cxled;
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> -	struct cxl_port *port = cxlrd_to_port(cxlrd);
->  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->  	int rc, part = READ_ONCE(cxled->part);
->  	struct cxl_region *cxlr;
-> @@ -3739,7 +3745,7 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
->  
->  	rc = __construct_region(cxlr, ctx);
->  	if (rc) {
-> -		devm_release_action(port->uport_dev, unregister_region, cxlr);
-> +		unregister_region(cxlr);
->  		return ERR_PTR(rc);
->  	}
->  
-
+Thanks,
+Jason
