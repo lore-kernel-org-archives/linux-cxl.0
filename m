@@ -1,127 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7492530DEB2
-	for <linux-cxl@vger.kernel.org>; Tue, 19 May 2026 22:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F152837E308
+	for <linux-cxl@vger.kernel.org>; Tue, 19 May 2026 22:50:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779230740; cv=none; b=d8RpLqsFko04Dl3BsUGpDwURAFubGsMookcZ8Q8P2UUWDRvTarY5b1sev4SGZqZhVyqD6R+GqpVY/sVQk2qi9BnHbVRfCxGw0a/rAIM4BqruT4lcn5XQnzZEqiOOoKkGeHNpXxOQvla+5CTa4V87XZG1ROaxWMCy5ei2Q6Ji65I=
+	t=1779231048; cv=none; b=UodMqswuxDGMfWfYd+r0BIpou7wPqwSp8LQoy7jEYSIgEKLpNRFg/3LjIiS5BnB4bwNcnwd9KWhmG1eQ6b2RHl+sxmbtRMI+Dld56X9LW8ahKE/YZVePgNXUlZ1blqgoAN1qYkOc62M1+LtUX+z9D4B7o5FZ5ehCTl/w48xRiaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779230740; c=relaxed/simple;
-	bh=qoULMmlrESw2r2y9m6nXqcdyrsIJeYAqiusBScmIq3M=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=P7Ii7qVE580/Yi4ORArFtpBcgVIFJ/GpY7h17cAjdKvmsQuc3xiDzU5OUldx1IUaWKy+QSnVt2iXx7StGH8sAi2bi93m7YSSWW/CzAY1LdZ6xdNmA2HOBTbx7zPAYKC1pNZjAOz9FO5/qVe5juhYfeuomSnPY6SS0lUT4BxzADg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aP/GMjvV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1779231048; c=relaxed/simple;
+	bh=qLZTk1xjyfx//YablrpfUJmKW2Yk9/5LuZm/459+G7Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZhzJ61gZ7GVHurt0jFKVuv3irt2P6Qnzq/06DWQ6BSIbMTAGYtXCFGItbMbfaFIBQap3ytDec+OUFS8PEwJmVkOIMnuimlbds3fwgNv3yaxNsjWwEt2Znp0l2fC/sh5oR/si4l1gTI8Ogl51rNUANAXOFdleLCnyM7Hbikx+NmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PJahIN8U; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aP/GMjvV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8BC11F000E9;
-	Tue, 19 May 2026 22:45:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779230739;
-	bh=CcSH4J7EJK0K5QpnFVIpzlbYC1GIgCm3+wHCxQb3zy4=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=aP/GMjvVbpkJI/OoTQ5Jnui2rrRpo08X40IsAGXaSTmLIXNn2SLPaFkM/6rHnuccw
-	 KRDTyhv7rtRQ0VomnS4dgPx1mfD1nZqtUY4aKCK5QrM5p3xeFoMPU+ugboNOWcWbHe
-	 n89czUSqcmrKPbjFIBCbFQJzhcW3ibn64LJgy52m6PvZf6RlfcFDcrRAUHY7qx2zOZ
-	 VzliMPAQdzDG+wVGYKcaJdBqLEgn/dqiCqq0D5lKLM8tsK83ouwdIXl2/UGHuewr0H
-	 fkl7OoC/s0ZvlxsCPV3ThdhEyct4YRFCstdPi6AfCZ4SRTbpvaOFL7/OC/WV5225j9
-	 rLVBoYA3N1qEg==
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 1CC0DF40077;
-	Tue, 19 May 2026 18:45:38 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Tue, 19 May 2026 18:45:38 -0400
-X-ME-Sender: <xms:EugMaosJYwAigp86VvhPY_r02z_cTe5Mf6xxQkTVcQ3R86UqBdA1Qw>
-    <xme:EugMahRdEzh0Zm2kaQLmwUlpX4zgxHctlDg_BgaxpeCIn8KM1NZ2ywxZaGFr4MXQ9
-    cYYN_zctLIrBNh-_i_b9K-T8ULozwBfXd-nTuvQCauewu-_P8UGwaIL>
-X-ME-Received: <xmr:EugMavLSnzTj0fHMLIzouI52Vzk4pqgRbdxHUc82begm5R9RXfgumRyNCwVkWqmcKvsQTZlEbASjk4NGDmfH-r2JqxCukakTjPk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefhedrtddtgddugedvleekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefkjghfufggtgfgsehtjeertd
-    dttdejnecuhfhrohhmpedfffgrnhcuhghilhhlihgrmhhsucdlnhhvihguihgrmddfuceo
-    ughjsgifsehkvghrnhgvlhdrohhrgheqnecuggftrfgrthhtvghrnhepvdegheeikeetle
-    euffeuheefjeejvdejvdevteefgfffveehvdeuvdffveffvdehnecuvehluhhsthgvrhfu
-    ihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepughjsgifodhmvghsmhhtphgruh
-    hthhhpvghrshhonhgrlhhithihqddujeejvdeftdegheehqdeffeefleegtdegjedqughj
-    sgifpeepkhgvrhhnvghlrdhorhhgsehfrghsthhmrghilhdrtghomhdpnhgspghrtghpth
-    htohepuddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjihgtvdefsehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopegujhgsfieskhgvrhhnvghlrdhorhhgpdhrtghpth
-    htohepuggrvhgvsehsthhgohhlrggsshdrnhgvthdprhgtphhtthhopegurghvvgdrjhhi
-    rghnghesihhnthgvlhdrtghomhdprhgtphhtthhopegsvghnjhgrmhhinhdrtghhvggrth
-    hhrghmsegrmhgurdgtohhmpdhrtghpthhtoheprghluhgtvghrohhpsegrmhgurdgtohhm
-    pdhrtghpthhtoheprghlihhsohhnrdhstghhohhfihgvlhgusehinhhtvghlrdgtohhmpd
-    hrtghpthhtohepihhrrgdrfigvihhnhiesihhnthgvlhdrtghomhdprhgtphhtthhopehg
-    ohhurhhrhiesghhouhhrrhihrdhnvght
-X-ME-Proxy: <xmx:EugMakt6WIXGdG40GB9MI3OxtCSZ6zwbgpsSXVlUaQmnxUk23ndHzQ>
-    <xmx:EugMam8KOlK2EWntKd6Wnh0yAKWtCDtoydcwU7WrOMm-p8lHAfvqsQ>
-    <xmx:EugMau38aDO3pM42JRqtZLHY6eGkUD6umAzcnhiSb5UbgcZNLTC4Gg>
-    <xmx:EugMarisBbEU7LgxjDNxYoIPpxdFzW6ahUuLn-Kg4ZHN7rvCuWMjrw>
-    <xmx:EugMauZYopSFDQbW13FbfPLo43a7L1AveVQGmqjXq1gqxPcHi3dpthPq>
-Feedback-ID: i67ae4b3e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 19 May 2026 18:45:37 -0400 (EDT)
-Date: Tue, 19 May 2026 15:45:36 -0700
-From: "Dan Williams (nvidia)" <djbw@kernel.org>
-To: Jonathan Cameron <jic23@kernel.org>, 
- "Dan Williams (nvidia)" <djbw@kernel.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, 
- dave.jiang@intel.com, 
- benjamin.cheatham@amd.com, 
- alucerop@amd.com, 
- alison.schofield@intel.com, 
- ira.weiny@intel.com, 
- gourry@gourry.net, 
- dongjoo.seo1@samsung.com, 
- anisa.su@samsung.com, 
- linux-cxl@vger.kernel.org
-Message-ID: <6a0ce81082439_16dbc610018@djbw-dev.notmuch>
-In-Reply-To: <20260519124133.1f2bd813@jic23-huawei>
-References: <20260516022037.1761453-1-dave@stgolabs.net>
- <6a0bc26656f_128d711001f@djbw-dev.notmuch>
- <20260519124133.1f2bd813@jic23-huawei>
-Subject: Re: [PATCH v2 0/5] cxl: Support Back-Invalidate
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PJahIN8U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779231043; x=1810767043;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qLZTk1xjyfx//YablrpfUJmKW2Yk9/5LuZm/459+G7Q=;
+  b=PJahIN8UOj3U3S+RhbPn0KASSRU0zuvvWqmLKDeV39QdZvA4qyLnsMZM
+   Zk1M4NSBVUq4Ab8XzAdxR76K+xsTDRKDpp9PMnbmqTrL+1peQZv1Zdf9A
+   WBKOQ328GvY7qEeFtOkan5GXfxXYHxdx2pyE4uTBVud4xCPsMz7iF3VaQ
+   i3gwDXxA0+xc2ixVZrPrdwuUhyCAEIo53r+oBoM7WKQGi4Xi/7Z7QL1xE
+   HBoI23bVYbY5GVxcH2dAWfJucS0YkMl1dyS2S+QnKhU5CKJlKlWEtqmLW
+   D8L0dnOeRLfVJU/sbwTUsS0SNdonOk6Q6qBNiq/k+Ur9ek4vm3+DlGFGc
+   w==;
+X-CSE-ConnectionGUID: oKWU7oI3RYul5hbFoydhGQ==
+X-CSE-MsgGUID: dPyKwIN7TUykYxSCWSw7RQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11791"; a="105582025"
+X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
+   d="scan'208";a="105582025"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 15:50:40 -0700
+X-CSE-ConnectionGUID: G7gIgtZbTJ65b/NXAneP/g==
+X-CSE-MsgGUID: ZvaKmi0fRlKJDnPVgzqswA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,243,1770624000"; 
+   d="scan'208";a="243929547"
+Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.109.143]) ([10.125.109.143])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2026 15:50:41 -0700
+Message-ID: <9c291611-7f7e-473f-8a11-9376d98610fa@intel.com>
+Date: Tue, 19 May 2026 15:50:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] cxl/memdev: Introduce cxl_class_memdev_type
+To: Dan Williams <djbw@kernel.org>, linux-cxl@vger.kernel.org
+Cc: alejandro.lucero-palau@amd.com, jic23@kernel.org,
+ Alejandro Lucero <alucerop@amd.com>
+References: <20260519210158.1499795-1-djbw@kernel.org>
+ <20260519210158.1499795-5-djbw@kernel.org>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260519210158.1499795-5-djbw@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Jonathan Cameron wrote:
-[..]
-> > The root decoder restrictions specify the endpoint decoder requirements.
-> > There is no flexibility to entertain beyond picking the root decoder
-> > resource, right? Linux can avoid all the configuration corner cases by
-> > making the endpoint decoder inherit settings by topology configuration.
-> > 
-> Hi Dan,
-> 
-> Assuming I understand the question correctly...
-> 
-> No idea if anyone has done it but as far as I can tell you 'could' easily
-> enough have a single fixed memory window that supports both BI and non BI,
-> the host implementation would just have to use the programming of the
-> decoders in the host bridges to figure out what it needs to support.
-> 
-> I'm not aware of anything in the spec that says you can't implement that.
-> Now maybe it's a non thing but if it turns up later we need to be careful
-> not to wall ourselves into a corner from ABI point of view.
-> 
-> Usual reasoning of HPA space being a fairly costly / limited resource
-> would be the reason to build this more complex hardware.
 
-The BI bit in the CFMWS, unlike volatile and PMEM restrictions, has
-additional references by bit0 and bit1:
 
-Bit[0]: ...(HDM-D if bit[5]=0; HDM-DB if bit[5]=1).
-Bit[1]: ...If an HDM decoder that is mapped to this windows has the BI
-        bit set (bit[5]=1), it will result in undefined behavior.
+On 5/19/26 2:01 PM, Dan Williams wrote:
+> In preparation for memdev's without mailbox related infrastructure,
+> introduce cxl_class_memdev_type as a superset of a cxl_memdev_type.
+> Effectively the only difference is that cxl_class_memdev_type exports
+> common sysfs attributes where cxl_memdev_type has none.
+> 
+> Related to this is all the cxl_mem_probe() paths that assume the presence
+> of a class device mailbox are updated to skip that requirement.
+> 
+> Co-developed-by: Alejandro Lucero <alucerop@amd.com>
+> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> Signed-off-by: Dan Williams <djbw@kernel.org>
 
-The Bit[0] wording does not appear to leave room for optionality.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-The Bit[1] wording needs fixing, but to my eyes says "host-only ==
-host-only, do not enable BI operation in any decoder that maps this
-window and expect it to work".
+
+> ---
+>  drivers/cxl/core/memdev.c | 16 +++++++++++---
+>  drivers/cxl/mem.c         | 45 +++++++++++++++++++++++++++++----------
+>  2 files changed, 47 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 91c99eeea92c..33a3d2e7b13a 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -574,16 +574,23 @@ void cxl_memdev_update_perf(struct cxl_memdev *cxlmd)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_memdev_update_perf, "CXL");
+>  
+> -static const struct device_type cxl_memdev_type = {
+> +static const struct device_type cxl_class_memdev_type = {
+>  	.name = "cxl_memdev",
+>  	.release = cxl_memdev_release,
+>  	.devnode = cxl_memdev_devnode,
+>  	.groups = cxl_memdev_attribute_groups,
+>  };
+>  
+> +static const struct device_type cxl_memdev_type = {
+> +	.name = "cxl_memdev",
+> +	.release = cxl_memdev_release,
+> +	.devnode = cxl_memdev_devnode,
+> +};
+> +
+>  bool is_cxl_memdev(const struct device *dev)
+>  {
+> -	return dev->type == &cxl_memdev_type;
+> +	return (dev->type == &cxl_class_memdev_type ||
+> +		dev->type == &cxl_memdev_type);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(is_cxl_memdev, "CXL");
+>  
+> @@ -712,7 +719,10 @@ static struct cxl_memdev *cxl_memdev_alloc(struct cxl_dev_state *cxlds,
+>  	dev->parent = get_device(cxlds->dev);
+>  	dev->bus = &cxl_bus_type;
+>  	dev->devt = MKDEV(cxl_mem_major, cxlmd->id);
+> -	dev->type = &cxl_memdev_type;
+> +	if (cxlds->type == CXL_DEVTYPE_DEVMEM)
+> +		dev->type = &cxl_memdev_type;
+> +	else
+> +		dev->type = &cxl_class_memdev_type;
+>  	device_set_pm_not_required(dev);
+>  	INIT_WORK(&cxlmd->detach_work, detach_memdev);
+>  
+> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> index fcffe24dcb42..ff858318091f 100644
+> --- a/drivers/cxl/mem.c
+> +++ b/drivers/cxl/mem.c
+> @@ -65,6 +65,26 @@ static int cxl_debugfs_poison_clear(void *data, u64 dpa)
+>  DEFINE_DEBUGFS_ATTRIBUTE(cxl_poison_clear_fops, NULL,
+>  			 cxl_debugfs_poison_clear, "%llx\n");
+>  
+> +static void cxl_memdev_poison_enable(struct cxl_memdev_state *mds,
+> +				     struct cxl_memdev *cxlmd,
+> +				     struct dentry *dentry)
+> +{
+> +	/*
+> +	 * Avoid poison debugfs for DEVMEM aka accelerators as they rely on
+> +	 * cxl_memdev_state.
+> +	 */
+> +	if (!mds)
+> +		return;
+> +
+> +	if (test_bit(CXL_POISON_ENABLED_INJECT, mds->poison.enabled_cmds))
+> +		debugfs_create_file("inject_poison", 0200, dentry, cxlmd,
+> +				    &cxl_poison_inject_fops);
+> +
+> +	if (test_bit(CXL_POISON_ENABLED_CLEAR, mds->poison.enabled_cmds))
+> +		debugfs_create_file("clear_poison", 0200, dentry, cxlmd,
+> +				    &cxl_poison_clear_fops);
+> +}
+> +
+>  static int cxl_mem_probe(struct device *dev)
+>  {
+>  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> @@ -92,12 +112,7 @@ static int cxl_mem_probe(struct device *dev)
+>  	dentry = cxl_debugfs_create_dir(dev_name(dev));
+>  	debugfs_create_devm_seqfile(dev, "dpamem", dentry, cxl_mem_dpa_show);
+>  
+> -	if (test_bit(CXL_POISON_ENABLED_INJECT, mds->poison.enabled_cmds))
+> -		debugfs_create_file("inject_poison", 0200, dentry, cxlmd,
+> -				    &cxl_poison_inject_fops);
+> -	if (test_bit(CXL_POISON_ENABLED_CLEAR, mds->poison.enabled_cmds))
+> -		debugfs_create_file("clear_poison", 0200, dentry, cxlmd,
+> -				    &cxl_poison_clear_fops);
+> +	cxl_memdev_poison_enable(mds, cxlmd, dentry);
+>  
+>  	rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
+>  	if (rc)
+> @@ -206,16 +221,24 @@ static ssize_t trigger_poison_list_store(struct device *dev,
+>  }
+>  static DEVICE_ATTR_WO(trigger_poison_list);
+>  
+> -static umode_t cxl_mem_visible(struct kobject *kobj, struct attribute *a, int n)
+> +static bool cxl_poison_attr_visible(struct kobject *kobj, struct attribute *a)
+>  {
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+>  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
+>  
+> -	if (a == &dev_attr_trigger_poison_list.attr)
+> -		if (!test_bit(CXL_POISON_ENABLED_LIST,
+> -			      mds->poison.enabled_cmds))
+> -			return 0;
+> +	if (!mds ||
+> +	    !test_bit(CXL_POISON_ENABLED_LIST, mds->poison.enabled_cmds))
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +static umode_t cxl_mem_visible(struct kobject *kobj, struct attribute *a, int n)
+> +{
+> +	if (a == &dev_attr_trigger_poison_list.attr &&
+> +	    !cxl_poison_attr_visible(kobj, a))
+> +		return 0;
+>  
+>  	return a->mode;
+>  }
+
