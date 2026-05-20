@@ -1,325 +1,169 @@
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273C0304BCB;
-	Wed, 20 May 2026 12:15:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C9324E4A1;
+	Wed, 20 May 2026 12:30:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779279319; cv=pass; b=j+kI7StajCyAFvLHcv2QqtJd3/yyoz+Etm3kQVpbOBW68cArCTpzFxWTP8O/ghaS6hdH+3tD4Vxnyy9HyBMQtsRGaz7sTtQ1J0zCKuUyVUTYc0B9Qba4NHgIM6Y2RDe0OmZmlI11pFpzUWoj9+Cc2LxsI3q6nm1Z9h0sr14x0rc=
+	t=1779280259; cv=pass; b=G0grFYy3ThYqnFIGCgkO+IWqzvTaj12YhLgPVWF09WyE20l/B7G1sUV+TRBt4vRf4/kFFN41ODpAWDS1cUfu8NKe+oWxdDiuX+aqXOluwbgZaNKKNz3Y365leFSlI8JbNDwe4dzJshDPIZtEHACw0k6jaxwSQn5Uno3FrzfouDA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779279319; c=relaxed/simple;
-	bh=NlXcN8PNxoD5x7fABkPinbdWVPCdSx4ZdLcUh4yieew=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EdlX3v7jxhRe3U4lkfcAo9aaP7WdywhldsM9grgneklFriDUQMMiDH3BIMuamqYidQO/O0I6Jv9DwgCJyp9K1UN+H/YjnkFBYRwWJf+rGQ6M2zvOldGQ1oy1o5tKJqCdrDTZEIVVeD4qYHDruOimtGuOEg1gQgE3j8BvgVNnj/4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=UJMNfRGR; arc=pass smtp.client-ip=136.143.188.94
+	s=arc-20240116; t=1779280259; c=relaxed/simple;
+	bh=D/E8bOlYbAQLaoWRsGtN/wkdCb1mry2YvwBc0gSTAEY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rMAfub5P5LdW8edNP37o8hmFEfu2GSQkr55raXODVsYo5843PSoJ/wh9qEqnXGxK0ci47jz7knkGDkrjkrLkBlNvCmzaNE5LVU1+Nk2nly3sQKzGhsOVDOD0Lm7JKAXlkoVKUIE0courLP0LWEjuZ9AziuMJ0fX0CZMRn0YF7Mw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=a35+TJcJ; arc=pass smtp.client-ip=136.143.188.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="UJMNfRGR"
-ARC-Seal: i=1; a=rsa-sha256; t=1779279306; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="a35+TJcJ"
+ARC-Seal: i=1; a=rsa-sha256; t=1779280253; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=Wvlmbj4xYemKRSoPIWuxnaCrQmmAS1Z/Ue/92s+oL+xhIzs448Z8OaSagZ1igF9CLpepXYkPsnjU1vxYrE287wmvk/sUukFFvJB0cqeaayAJOZtWMHke+SkaDh0J5Qsbf3g/lIUlNw4ye07ETF2P/Kpd/oTJ91lQEqqYCWLsAbE=
+	b=FlBqqwykN+UzgOa0QEYBkCwPy7Ew5o+sGR96NRvtghIFcHnXQdegKU7TwLIZI64JWT1+we84iy5VAbp7Kp3cQsLgZu+ToBanHyPOLmK/KG8XDKStlZCym74wawUZUHdHiKoVoERgZ7BBiqvycFy7vggCc3ts5iRLyyxA+9XApFM=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1779279306; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=x6lPl6/w12+6v7XiDYKfQo8Whex34nORREQuqsysEjM=; 
-	b=P40SRB/zOKiJ/Q7QLCoUhoTVAoFqvxMU8L99dtjkkG2QlA6j0huOW3Ft8IvJN/qqGqAo7QjSNVt/H568aBlRa7uaf80gqkOJD6ZYUXqmVmkbpV+Ego2Tfm/jbQnUz0Y3tMnQemjBRbleRIwY7An0/IwHSTRgyl5hxKhokXrzo5k=
+	t=1779280253; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=xaLVCwWHO2IitJboH5v3OY7agVIZ3ZfkISRk+DFsucU=; 
+	b=j44Khp91vX8K9WfKRCdbrVN0Yb9zlCN36hX3khwvPVQ27F8eR4ZjkbRoXYN2VaDoxmwYunzf/BdsDpKTDSzH++GYqCcfNda1PLFpox0ZyiVZg78idzRuqrA2xZzL5I6e4UWlxpKcDICz29U/m6iXwHhqCyxBBm+hhqB1RL7/sv4=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1779279306;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1779280253;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=x6lPl6/w12+6v7XiDYKfQo8Whex34nORREQuqsysEjM=;
-	b=UJMNfRGR9hOaOUBahgvq6ZmM2vTZXcreMAv9jKMCDEMD7yiPdrVOPVOSgDqWkyQM
-	j/v2T2b7IDbXxwQPGZvlg77SjLXn+K7UiaDkCT7h6uxbot4+6eEXWEQ1WI5LhEN9g0j
-	UVEBNWFnd9kRqV2Ebgz1TIwERsNrDV9WG8vEhdQM=
-Received: by mx.zohomail.com with SMTPS id 1779279304559616.8743869116529;
-	Wed, 20 May 2026 05:15:04 -0700 (PDT)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jic23@kernel.org,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	djbw@kernel.org
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] cxl/test: Update mock dev array before calling platform_device_add()
-Date: Wed, 20 May 2026 20:14:57 +0800
-Message-ID: <20260520121457.234404-1-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.43.0
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=xaLVCwWHO2IitJboH5v3OY7agVIZ3ZfkISRk+DFsucU=;
+	b=a35+TJcJwHTZMbHX01RpUqv7Qfj+D9CSMA6Ib/0SzM7++7ReEwg0y5bOrXnTr/ua
+	HsbbR26sa+TrR05Q84B3VMxSyGhtd6NsDxTOUbvDE7BLnkfmIGscduIJszRX0KI8bCK
+	HwdEgBMezI/rAVhoaK29fjsQe55K9ep/y4QknCQM=
+Received: by mx.zohomail.com with SMTPS id 1779280251420104.15642641922364;
+	Wed, 20 May 2026 05:30:51 -0700 (PDT)
+Message-ID: <cedaee55-ff31-4aa0-981e-938db56b2b45@zohomail.com>
+Date: Wed, 20 May 2026 20:30:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/region: Fix out of bounds access in
+ cxl_cancel_auto_attach()
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <djbw@kernel.org>
+References: <20260519-fix_out_of_bounds_access-v1-1-55fc60d83388@zohomail.com>
+ <25b0125a-b0fb-4401-8596-3252d2f8cbd6@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <25b0125a-b0fb-4401-8596-3252d2f8cbd6@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Feedback-ID: zu080112274b37caa0e7a55dedb11c32ce0000db9c6b77455aa6ab73e3d4d50de4910b6e22878021ba212237:ZohoMail
+Feedback-ID: zu080112270888d34bd454ec8210ad6a4f00000eb6419a7c23a9af36d7b8efa7096f58cfb20d6ca4230c6560:ZohoMail
 X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
 X-ZohoMailClient: External
 
-CXL test environment hits the following error sometimes.
 
- cxl_mem mem9: endpoint7 failed probe
+在 2026/5/20 01:18, Dave Jiang 写道:
+>
+> On 5/19/26 6:23 AM, Li Ming wrote:
+>> In cxl_cancel_auto_attach(), it assumes cxled->pos is a valid index for
+>> accessing p->targets[]. However, cxled->pos can be set to -ENXIO in
+> It can be set to other error codes I think? I would just s/-ENXIO/negative errno/
+Sure, Will do that.
+>
+>> cxl_region_sort_targets() if cxl_calc_interleave_pos() fails. This
+>> causes the driver to use a negative index to access p->targets[],
+>> resulting in out-of-bounds access.
+>>
+>> Fix it by walking p->targets[] instead of using cxled->pos directly.
+> Does the comment in cxl_region_sort_targets() need to be updated with the new changes?
 
-All mock memdevs are platform firmware devices added by cxl_test module,
-and cxl_test module also provides a platform device driver for them to
-create a memdev device to CXL subsystem. cxl_test module uses
-cxl_rcd/mem_single/mem arrays to store different types of mock memdevs.
-CXL drivers calls registered mock functions for a mock memdev by
-checking if a given memdev is in these arrays.
+I'm not sure how to update the comment in cxl_region_sort_targets(). Any 
+suggestion?
 
-When cxl_test module adds these mock memdevs, it always calls
-platform_device_add() before adding them to a suitable mock memdev
-array. However, there is a small window where CXL drivers calls mock
-function for a added memdev before it added to a mock memdev array. In
-above case, cxl endpoint driver considers a added memdev was not a mock
-memdev, then calling devm_cxl_endpoint_decoders_setup() for it rather
-than mock_endpoint_decoders_setup().
 
-An appropriate solution is that adding a new mock device to a mock
-device array before calling platform_device_add() for it. It can
-guarantee the new mock device is visible to CXL subsystem.
+Ming
 
-This patch introduces a new helped called cxl_mock_platform_device_add()
-to handle the issue, and uses the function for all mock devices addition.
-
-Fixes: 3a2b97b3210b ("cxl/test: Improve init-order fidelity relative to real-world systems")
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
-Changes from v1:
-- Rebase to v7.1-rc4.
-- Introduce a new helper to handle the issue. (Alison)
-- Use new helper for all mock device addition.
----
- tools/testing/cxl/test/cxl.c | 105 ++++++++++++++---------------------
- 1 file changed, 43 insertions(+), 62 deletions(-)
-
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 418669927fb0..296516eecfd6 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -1523,6 +1523,23 @@ static void mock_companion(struct acpi_device *adev, struct device *dev)
- #define SZ_64G (SZ_32G * 2)
- #endif
- 
-+static int cxl_mock_platform_device_add(struct platform_device *pdev,
-+					struct platform_device **ppdev)
-+{
-+	int rc;
-+
-+	if (ppdev)
-+		*ppdev = pdev;
-+	rc = platform_device_add(pdev);
-+	if (rc) {
-+		platform_device_put(pdev);
-+		if (ppdev)
-+			*ppdev = NULL;
-+	}
-+
-+	return rc;
-+}
-+
- static __init int cxl_rch_topo_init(void)
- {
- 	int rc, i;
-@@ -1537,13 +1554,10 @@ static __init int cxl_rch_topo_init(void)
- 			goto err_bridge;
- 
- 		mock_companion(adev, &pdev->dev);
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_rch[i]);
-+		if (rc)
- 			goto err_bridge;
--		}
- 
--		cxl_rch[i] = pdev;
- 		mock_pci_bus[idx].bridge = &pdev->dev;
- 		rc = sysfs_create_link(&pdev->dev.kobj, &pdev->dev.kobj,
- 				       "firmware_node");
-@@ -1595,13 +1609,10 @@ static __init int cxl_single_topo_init(void)
- 			goto err_bridge;
- 
- 		mock_companion(adev, &pdev->dev);
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_hb_single[i]);
-+		if (rc)
- 			goto err_bridge;
--		}
- 
--		cxl_hb_single[i] = pdev;
- 		mock_pci_bus[i + NR_CXL_HOST_BRIDGES].bridge = &pdev->dev;
- 		rc = sysfs_create_link(&pdev->dev.kobj, &pdev->dev.kobj,
- 				       "physical_node");
-@@ -1620,12 +1631,9 @@ static __init int cxl_single_topo_init(void)
- 			goto err_port;
- 		pdev->dev.parent = &bridge->dev;
- 
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_root_single[i]);
-+		if (rc)
- 			goto err_port;
--		}
--		cxl_root_single[i] = pdev;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(cxl_swu_single); i++) {
-@@ -1638,12 +1646,9 @@ static __init int cxl_single_topo_init(void)
- 			goto err_uport;
- 		pdev->dev.parent = &root_port->dev;
- 
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_swu_single[i]);
-+		if (rc)
- 			goto err_uport;
--		}
--		cxl_swu_single[i] = pdev;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(cxl_swd_single); i++) {
-@@ -1657,12 +1662,9 @@ static __init int cxl_single_topo_init(void)
- 			goto err_dport;
- 		pdev->dev.parent = &uport->dev;
- 
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_swd_single[i]);
-+		if (rc)
- 			goto err_dport;
--		}
--		cxl_swd_single[i] = pdev;
- 	}
- 
- 	return 0;
-@@ -1735,12 +1737,9 @@ static int cxl_mem_init(void)
- 		pdev->dev.parent = &dport->dev;
- 		set_dev_node(&pdev->dev, i % 2);
- 
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_mem[i]);
-+		if (rc)
- 			goto err_mem;
--		}
--		cxl_mem[i] = pdev;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(cxl_mem_single); i++) {
-@@ -1753,12 +1752,9 @@ static int cxl_mem_init(void)
- 		pdev->dev.parent = &dport->dev;
- 		set_dev_node(&pdev->dev, i % 2);
- 
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_mem_single[i]);
-+		if (rc)
- 			goto err_single;
--		}
--		cxl_mem_single[i] = pdev;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(cxl_rcd); i++) {
-@@ -1772,12 +1768,9 @@ static int cxl_mem_init(void)
- 		pdev->dev.parent = &rch->dev;
- 		set_dev_node(&pdev->dev, i % 2);
- 
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_rcd[i]);
-+		if (rc)
- 			goto err_rcd;
--		}
--		cxl_rcd[i] = pdev;
- 	}
- 
- 	return 0;
-@@ -1869,13 +1862,10 @@ static __init int cxl_test_init(void)
- 			goto err_bridge;
- 
- 		mock_companion(adev, &pdev->dev);
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_host_bridge[i]);
-+		if (rc)
- 			goto err_bridge;
--		}
- 
--		cxl_host_bridge[i] = pdev;
- 		mock_pci_bus[i].bridge = &pdev->dev;
- 		rc = sysfs_create_link(&pdev->dev.kobj, &pdev->dev.kobj,
- 				       "physical_node");
-@@ -1893,12 +1883,9 @@ static __init int cxl_test_init(void)
- 			goto err_port;
- 		pdev->dev.parent = &bridge->dev;
- 
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_root_port[i]);
-+		if (rc)
- 			goto err_port;
--		}
--		cxl_root_port[i] = pdev;
- 	}
- 
- 	BUILD_BUG_ON(ARRAY_SIZE(cxl_switch_uport) != ARRAY_SIZE(cxl_root_port));
-@@ -1911,12 +1898,9 @@ static __init int cxl_test_init(void)
- 			goto err_uport;
- 		pdev->dev.parent = &root_port->dev;
- 
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_switch_uport[i]);
-+		if (rc)
- 			goto err_uport;
--		}
--		cxl_switch_uport[i] = pdev;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(cxl_switch_dport); i++) {
-@@ -1929,12 +1913,9 @@ static __init int cxl_test_init(void)
- 			goto err_dport;
- 		pdev->dev.parent = &uport->dev;
- 
--		rc = platform_device_add(pdev);
--		if (rc) {
--			platform_device_put(pdev);
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_switch_dport[i]);
-+		if (rc)
- 			goto err_dport;
--		}
--		cxl_switch_dport[i] = pdev;
- 	}
- 
- 	rc = cxl_single_topo_init();
-@@ -1953,9 +1934,9 @@ static __init int cxl_test_init(void)
- 	acpi0017_mock.dev.bus = &platform_bus_type;
- 	cxl_acpi->dev.groups = cxl_acpi_groups;
- 
--	rc = platform_device_add(cxl_acpi);
-+	rc = cxl_mock_platform_device_add(cxl_acpi, NULL);
- 	if (rc)
--		goto err_root;
-+		goto err_rch;
- 
- 	rc = cxl_mem_init();
- 	if (rc)
--- 
-2.43.0
-
+>
+>> Fixes: 87805c32e6ad ("cxl/region: Fix use-after-free from auto assembly failure")
+>> Signed-off-by: Li Ming <ming.li@zohomail.com>
+> The rest LGTM
+>
+> DJ
+>
+>> ---
+>>   drivers/cxl/core/region.c | 35 ++++++++++++++++-------------------
+>>   1 file changed, 16 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index e50dc716d4e8..551228bc91f5 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -2202,18 +2202,30 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>>   	return 0;
+>>   }
+>>   
+>> -static int cxl_region_by_target(struct device *dev, const void *data)
+>> +static int cxl_region_remove_target(struct device *dev, void *data)
+>>   {
+>> -	const struct cxl_endpoint_decoder *cxled = data;
+>> +	struct cxl_endpoint_decoder *cxled = data;
+>>   	struct cxl_region_params *p;
+>>   	struct cxl_region *cxlr;
+>> +	int i;
+>>   
+>>   	if (!is_cxl_region(dev))
+>>   		return 0;
+>>   
+>>   	cxlr = to_cxl_region(dev);
+>>   	p = &cxlr->params;
+>> -	return p->targets[cxled->pos] == cxled;
+>> +	for (i = 0; i < p->nr_targets; i++) {
+>> +		if (p->targets[i] == cxled) {
+>> +			p->nr_targets--;
+>> +			cxled->state = CXL_DECODER_STATE_AUTO;
+>> +			cxled->pos = -1;
+>> +			p->targets[i] = NULL;
+>> +
+>> +			return 1;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>>   }
+>>   
+>>   /*
+>> @@ -2222,25 +2234,10 @@ static int cxl_region_by_target(struct device *dev, const void *data)
+>>    */
+>>   static void cxl_cancel_auto_attach(struct cxl_endpoint_decoder *cxled)
+>>   {
+>> -	struct cxl_region_params *p;
+>> -	struct cxl_region *cxlr;
+>> -	int pos = cxled->pos;
+>> -
+>>   	if (cxled->state != CXL_DECODER_STATE_AUTO_STAGED)
+>>   		return;
+>>   
+>> -	struct device *dev __free(put_device) =
+>> -		bus_find_device(&cxl_bus_type, NULL, cxled, cxl_region_by_target);
+>> -	if (!dev)
+>> -		return;
+>> -
+>> -	cxlr = to_cxl_region(dev);
+>> -	p = &cxlr->params;
+>> -
+>> -	p->nr_targets--;
+>> -	cxled->state = CXL_DECODER_STATE_AUTO;
+>> -	cxled->pos = -1;
+>> -	p->targets[pos] = NULL;
+>> +	bus_for_each_dev(&cxl_bus_type, NULL, cxled, cxl_region_remove_target);
+>>   }
+>>   
+>>   static struct cxl_region *
+>>
+>> ---
+>> base-commit: 5200f5f493f79f14bbdc349e402a40dfb32f23c8
+>> change-id: 20260519-fix_out_of_bounds_access-8838759ee5a6
+>>
+>> Best regards,
