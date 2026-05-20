@@ -1,306 +1,202 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011046.outbound.protection.outlook.com [40.93.194.46])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011033.outbound.protection.outlook.com [52.101.62.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E49360722;
-	Wed, 20 May 2026 19:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A323546C6;
+	Wed, 20 May 2026 19:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.33
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779306419; cv=fail; b=u4ORBNg+MUU8H27A4DKVFAb7KKbVtKPWrzz91favDDFX/m/weh2k0VDLG0Vv8tIygGcqnJ5v6eZMfHvB6uzzuAHoNoUfDBE+EtElEGhgxYgJdSVeRt9kQxAWTnXTGTXbPdiUVlpNUM8sIJqbLrwatfRz0xiuWy1nn3iM/AXT7gQ=
+	t=1779306947; cv=fail; b=dJ0O6Pw1LNTQQxlUpBhX3VHIH8tsQRjB/UVaZqxucVqJn1SsNBppJPfNM3KnI2yNXF8PWFfV36Andb3q3MCQjFWHZtePGGfMeiA6cImIBusYfPT+0aSsMNvrDXdj1HEHmp04xHn37gdekQVaIpehqs2jf1muLC/PdTHefPRamak=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779306419; c=relaxed/simple;
-	bh=DAFOKCr55XkbvgymQ+QVx40T2qtAPwh5H+EwSvgysJs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dl5WpZOIIo5Kuq2MalpCsCVHKGBfBpebTo+tPyMDccQslvcq4p6+qHWY0S5e2jjvZLFUtkrDhaOzN3qtoh/mC/AllPczmKOwRO2mW2URampSUTFvlACzhvTJ2mTZnUCYx6+gvgG0jiAfnpJdQo3We0rnkrVGLpob4uVIL35kzEs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CB9ZBNHE; arc=fail smtp.client-ip=40.93.194.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1779306947; c=relaxed/simple;
+	bh=AXvPch0xjwJj24S5Hq1ssc3DBSNu4+Ne3X3ton/kgbU=;
+	h=Message-ID:Date:To:From:Subject:Cc:Content-Type:MIME-Version; b=UHC4//RQSIQjz3y8LKfjYtWfafoY+C+xDc9WP7W9qkyMOjq/75EG58qurqRrC2B9iDiwzL6aiWSBRBFj67QoZh8DYpOwl3JWXU2Nfb3mwpy1upAB/5WG++YynmkG8T0xawwt93Hkag+OHe4qXDKvQv26auujdi7ZSs9nr1CJub0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=k5zmtaf/; arc=fail smtp.client-ip=52.101.62.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CB9ZBNHE"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="k5zmtaf/"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UpMD/MhcP8UvrLX9n9nfD1CJP5gnkjTTHvZ/nJXNNLKdHza2AfJTxQX592BcWE7uwH10yPD88BxkWnDc5vUGecs3mYOuerd0PoacJtGrt+6BPmjg4dcJ9ItY2etXVePxajAoKG8NKxqECIh76PzaVpNH5bDqJa1Zv4YGAXQ0arFZlQ7B0wwQdfEd4qCfE0MhBBBanAtuy8TqenPHrFudGBQvfJ9kiYnhmjW1YzKQs8llh22mreTqeKIMeYtbFRaQfdEznUAGG3uHCKAFLIR6Vkw6I49X7aANOPRwoqac0wzBCXHZQKizgBK/8CY33aZRkRHTfbXqHiZLA3p1pGIZ3w==
+ b=ln1TYRqQvbY6jex3yu+bx6SPDjqgZUphkGRCb9BmhwwLrz3QwSmkqQoSdnbs05PJ65EChysq+xuNyDyF1/oqVBBe3bJGtDssA7Rt4zlIt8fBkMP0V6xYb+MyGJhVGxSy8ww/LrY2rfpt03dEY131eRgkKt8z2lRNWKX47jxMQ7O/bpAV6zmw3FIqJMe7/FMSsmHaZYRb0adKb8F6PySWReCuok3axosNKG8Y9QBkhGNqNCmK6WC19ZGuJ7CdAMDQXggxLlSK9snzEqvFztlkrJvtmg2FL7QBMU3q6rzq4hGa63F2Y2DuB5LjqrSsBv0tPrXAr84i/5Pi1wrSgEbSBg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/m/jdYLRKbRkOwHs29D8L7wx6k3gXHQK3PEXRGOq01E=;
- b=F4j3YJSNib+YDUP6cp7qU3ZPJYpJwuogIMB9fyl+W51auZV8H2EF1Yo57C8vVyXPhjCuPwgdjL6/4J7R3ypdOVDC/lNXEyqYB3ssUqNtTuauI4vTkJjdx6mqGTP91VyhZW17BFRfnwZ9LUe0NqftEDJF0zY0SGYrrJVqq4ath0QyR+dr5LEtQ3aNjHe+A4uVf+V7HDE0LBJL+1jY98NAD/nPeUPYkZ5fx7qPdo5GgbEyOS6rMLO0Jfd2Y7/diR/O8Z8TP+tO5uVHyZ31cJnD9qpLRF4G+gfWv39qta1B0lWdPyRTRSfVljEY8rLLEj0hy2An3l68fjZzGvdZCXxlZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=huawei.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=XARKEHI9b6GEaVuRB5au2AyGWv8RosDAQmvKjcDv+2g=;
+ b=DZmTHMt5VDiosvQhFePiyzt1uhul5s0G/Lb9pzuwgOfBEvxtoTIvukPMgf7Iy0BGm7b4f7Kv2mAbZl5LOAu3infEmsc67P3goLry8QdTxpLEtcihZHc0PRnsITB6LUQkK9jEhKeIgx3ZNsLDgxqOgatEEddDyxyv8vbeg9g3ksnTR/b4c/jVe4e/c4EBuzghZ3vlFwmjKewmpAq8KiAXshds2plb+leuiwXwau2ENvGPrRAazQ5q8wdC5qGeLMJdKtesJPsdJIVckim2WEyDT2lRwmxY2Iv+Ncirl7IOqJ3aBStfLex5fGTjLmpPJY02hi607d0P4Pe6U/+XmT5eng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/m/jdYLRKbRkOwHs29D8L7wx6k3gXHQK3PEXRGOq01E=;
- b=CB9ZBNHEOKD7IsTC447EOuuRQvfvlSM0yjxeffF4L5IMGDNp1S/u5f1E208V9b26teB3PtuQyb83X8bpFe7ZZFHSts+8d/hhJjm+llNcbhLVRZJrZhYTt+hJ/szAkSgyw/mwX05lZPbUFNqCqbQSuvrr1j2414S3mgvwVH0Bljv+4japdWymb+so0Qdx+2jqmluoGH759Fj8ZPUspOe++SDylcJE1Lz8gEoFPoN8UUG7zMjNgacrwVv3W3D1+OpEYLkqpTOCkU9aXSCXRdGNPPb8U2O0bV+Pjd4XxbfLXenODHlGCzFS0FxF/V8ThVjgy99YRnm8FDf51xY+YaCLpQ==
-Received: from SA9P223CA0007.NAMP223.PROD.OUTLOOK.COM (2603:10b6:806:26::12)
- by DM4PR12MB6039.namprd12.prod.outlook.com (2603:10b6:8:aa::12) with
+ bh=XARKEHI9b6GEaVuRB5au2AyGWv8RosDAQmvKjcDv+2g=;
+ b=k5zmtaf/6/liN1n/Br78fkyf/4Ix5wSKhzrwoBiwPnhR3tWqhNWVoPpOeToCxKTcyUQzCQKxP9WauDQYTm6YfYRRWPkSiQLVQaOVHkPqMsNUOJGmyHe50nYR7t8CXaQyC8jxPU6Bc5zBqsZhosJ745SCqMBZhjHrjFtKzP8FffY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH8PR12MB9766.namprd12.prod.outlook.com (2603:10b6:610:2b6::10)
+ by DS7PR12MB9549.namprd12.prod.outlook.com (2603:10b6:8:24e::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.14; Wed, 20 May
- 2026 19:46:45 +0000
-Received: from SN1PEPF000397B2.namprd05.prod.outlook.com
- (2603:10b6:806:26:cafe::b5) by SA9P223CA0007.outlook.office365.com
- (2603:10b6:806:26::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.48.16 via Frontend Transport; Wed, 20
- May 2026 19:46:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- SN1PEPF000397B2.mail.protection.outlook.com (10.167.248.56) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.48.11 via Frontend Transport; Wed, 20 May 2026 19:46:44 +0000
-Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 20 May
- 2026 12:46:26 -0700
-Received: from drhqmail202.nvidia.com (10.126.190.181) by
- drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.20; Wed, 20 May 2026 12:46:26 -0700
-Received: from Asurada-Nvidia.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.126.190.181) with Microsoft SMTP Server id 15.2.2562.20 via Frontend
- Transport; Wed, 20 May 2026 12:46:25 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: <jgg@nvidia.com>, <will@kernel.org>, <joro@8bytes.org>,
-	<bhelgaas@google.com>
-CC: <robin.murphy@arm.com>, <praan@google.com>, <baolu.lu@linux.intel.com>,
-	<kevin.tian@intel.com>, <miko.lenczewski@arm.com>,
-	<linux-arm-kernel@lists.infradead.org>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<dan.j.williams@intel.com>, <jonathan.cameron@huawei.com>,
-	<vsethi@nvidia.com>, <linux-cxl@vger.kernel.org>, <nirmoyd@nvidia.com>
-Subject: [PATCH v5 3/3] iommu/arm-smmu-v3: Allow ATS to be always on
-Date: Wed, 20 May 2026 12:46:10 -0700
-Message-ID: <b6d2f24356621c504e47633d9e96a7274c2859f3.1779304390.git.nicolinc@nvidia.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1779304390.git.nicolinc@nvidia.com>
-References: <cover.1779304390.git.nicolinc@nvidia.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.16; Wed, 20 May
+ 2026 19:55:43 +0000
+Received: from CH8PR12MB9766.namprd12.prod.outlook.com
+ ([fe80::be0f:431f:5f27:96d9]) by CH8PR12MB9766.namprd12.prod.outlook.com
+ ([fe80::be0f:431f:5f27:96d9%3]) with mapi id 15.21.0048.013; Wed, 20 May 2026
+ 19:55:42 +0000
+Message-ID: <51a77746-5199-44a2-aa2e-d04cdd6084e7@amd.com>
+Date: Wed, 20 May 2026 14:55:40 -0500
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Smita Koralahalli <smita.koralahallichannabasappa@amd.com>,
+ Robert Richter <rrichter@amd.com>, Jonathan Cameron <jic23@kernel.org>,
+ "Dan Williams (nvidia)" <djbw@kernel.org>, Shiju Jose
+ <shiju.jose@huawei.com>,
+ Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ Ben Cheatham <Benjamin.Cheatham@amd.com>, Lukas Wunner <lukas@wunner.de>,
+ "PradeepVineshReddy.Kodamati@amd.com" <PradeepVineshReddy.Kodamati@amd.com>
+From: "Bowman, Terry" <terry.bowman@amd.com>
+Subject: RFC: CXL: How to handle trace event ABI break from CXL_HEADERLOG_SIZE
+ fix?
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: CH5P223CA0013.NAMP223.PROD.OUTLOOK.COM
+ (2603:10b6:610:1f3::8) To CH8PR12MB9766.namprd12.prod.outlook.com
+ (2603:10b6:610:2b6::10)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF000397B2:EE_|DM4PR12MB6039:EE_
-X-MS-Office365-Filtering-Correlation-Id: 352f1114-590c-47b9-4183-08deb6a88569
+X-MS-TrafficTypeDiagnostic: CH8PR12MB9766:EE_|DS7PR12MB9549:EE_
+X-MS-Office365-Filtering-Correlation-Id: 303a042f-05b3-4bbb-3a69-08deb6a9c662
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|1800799024|376014|7416014|82310400026|11063799006|22082099003|18002099003|56012099003;
+	BCL:0;ARA:13230040|366016|376014|1800799024|921020|18002099003|56012099003|3023799007|11063799006|6133799003;
 X-Microsoft-Antispam-Message-Info:
-	4iz44O936WoXyo1nI+/jn0b//rgQ8hBS45ofW+KqL7U/kaVbVpy1mvkMEX4Sio92NrsXJ7PjqRh3VBbdCit0XW+fJXLgzC31IpG0Uds/gIcbBzrV1YI+intFibLuuIMyT4o0fWGV7ujtlBy2xW5pP9DCpxIaoDlxpGBDL4QK7SjG3iAFk9ZU3FZ9KXKeCekduuX9YGaaxucbUddged+JwPT1mBSx6LRqhI7avaXpyWr+lUYipjxEcDhkGgLH5Kl3CKYPtfiMSXwB1ipG6S2hhFgDBiUbWEBCZ8D0rNR2muTAscbSf2K8ixQWjOZ3Sp5i35eJXJkLw66vzsJeOB053rbhrDhT2CLLDFR3uBm9PILY1nOzGJmR5XnsHQa44/KKE9bxJidS1J24BpbgfzuGRH4rnRrSN5Bw7W660U5fnEVwjSAiF+5YWT/wlkCAubL7mRPuYGDXHuVDX+bHFtwDaBNW6wVXnCWYg3Lg9/loPhoY16temrzQC6ZFtCKLUiUfvnzNFsvt0Skq6PFw2jJ1kcqpH5irpH6RXHip88ao+8ujTCNreuVXRGWDLPA1fdRJmTprPK7t89WcpLlzlbqMDHapIo8SggHmdqkg3JdzfFaO4GE7k9G8A6pipntGMRq2lYs+M0/YNjHTd9+ZZXfIN3WLroGqgBwjQNF4VwzAF3a27Uribav4BrAgRaszngHpRSSP/i/IzooPp7yhEq4EB7APcPOVHIrTQo6LHM5FnDg=
+	tQw4+wsi2rjVKlRkhR6ogWj49ZNzrAW6vHXQYKg1ZCzbSN2DZYcVGJbsXfrJ74o/u8nj91yVE/fsrxLRLcAEiESNj+I+veS9ATCJmcXw1v0cH7YP24MvTvbL02m0FfZnhSfjKOqdw/OlyyPCqtVaOULl+BXcc6HMmjkUG+yOzrQ+x3Ne9bzMte5FhOhThiVRqi9+EMtvAM885nyc1GBYttHTWmeqhFfIW83+pTgXfklBmgPOIdWa8Db51T8BWdtpeaTlBjv8TtG/RQ/jnbfknkMEPBn0kIrSKlNcfy0Hx6M/UJBplqS5IeTLA/YToHu1jf/+IoxKM4GmByJc8oUyQ6Av2S4bd1lRHwDRYYXDUJMLogQwe9Mk406HJPrMq3HbIW+Qe99zIocO92/0VXn06mKFH003qKmPK9PfYSCe7FqLaMXWHniBgnz5uZFHEnbbhSN6YHJ2ycSBBBqQMfMXQZxs2Z7mYrOQh1kYCaLsuTG+x0yeg+wTez7EAGo8lMLrobOPmN9JnD+b9Jt5Kmg/58NNVtsy9YqEjq9hZM9dHpsqqgfu1UQYuefaslaEdPRnSW5hoAobmjlOy4bQ8EXkPeI9Ww2phHaUSYxCNzT919TiKkJwAWWFpSetAqAdoUI2rK6EwmZJe8EBDPppfrBzhG/JKxhCK+1dEfopGhuXO8owo1jhRtBHLhpU62dHku9XJhC956vccY8g6BqzKrmKcLj8aUCRx75jVQRm80dEXT0HncYPLIJkW/Cey3CYLxwc
 X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700016)(1800799024)(376014)(7416014)(82310400026)(11063799006)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH8PR12MB9766.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(921020)(18002099003)(56012099003)(3023799007)(11063799006)(6133799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	ZAYCgotm7nJ9/4NpXVkDef+drb5M99Ip5UYi93oJodSBNOmf0FUiS8EYTFGoEn8xE30sC3qfPEJDmwSfC0FJ8SivmFbqj+ut2rP0K42n0VZNHTFnx86hnxBiLvUV8A8vsVqkdtNgS4/jMP0+7fKpXMqEDANbcDe+r9YpBdyNG3b6qvPD+WBAGuUtv/oCvqBT7fEfFIZ8wNGDbUVv50Eh2wA76Bwvqg5LTCWaUSffJOWRN1OiLs05sZY0x4dn4jtMbRmf6ftkuM17pNq4n904D0vG3XkUgsnN6P0j5ivYoFGKx1q859JoAk1RiiqOWhxTPRJCL4UCjRnoKd44ItF/7gcwKA7BsBwPnjzu8SjzH1t8tBDdgLZqqZVq2Rg6/5rml06fTXmZyEpP58a4zcM151f0cHhvd4+5z/6M9nYqrq6dh6jKkJCn9Wo9VDdi19kj
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2026 19:46:44.0897
+	=?utf-8?B?cm02NHBtZ0ZmWHdISWdGOW04SmVGSEVOenIwcWV5WWhXcysrbkdaQnhTOG42?=
+ =?utf-8?B?alA2M2RwZlByN1FWYTBLaG4vcGN2MXRhYWdPUFdCallFUkIrdnVQWDl3Vkpu?=
+ =?utf-8?B?eEVzVjkzUUlqY2dDWGh0TVJpR3JLRFdqSklIQmhPRVJzb1RIUHBQczZWd0NP?=
+ =?utf-8?B?YnBtMTJ4Qjgyc05CSTVCcEorZDhDZHV0Wk51UE9LRjNxSjVyZi9GbHNaTHph?=
+ =?utf-8?B?S1VtdDdaNGFGWUp5SE5ldjR3RnQ4MU9PUE5PdmUzYUxlRE91UW5mcE5pTGpY?=
+ =?utf-8?B?SXo3bUUydVZuTnRCRjY1M0tUZlluR2pmM0Y3QWkzS1VWSXF2QzlOSlBRVFBp?=
+ =?utf-8?B?Ni9PLzZxQTZVS0VTc2ZvNVhDRlhDb0tIYlhsSkJBQ2hDc3pqZDY0NzdmQjdy?=
+ =?utf-8?B?T2RpUHZGUnVYTUJ6dC9YZm8yOXM5VmhDWTdlZVJ3OUxOVUdlbFUzZTVDMDgr?=
+ =?utf-8?B?MkJJUXZHNmpBbURWT2ZROHhranZjYnZ3OUxLZ2hEb0JTUlFKcGhrWUx6VnpR?=
+ =?utf-8?B?Y0ZnaWV2UWtPR1ZWTjBUMjJvc1dzZk5INmovRk1IRjQwRkR2WWEreWI3TUhY?=
+ =?utf-8?B?dWVvR0taSHY5REFVc0d1WFhBbkVoZVU3MC83VUNpbEc2YW9qY0Q3RTRadm9O?=
+ =?utf-8?B?dnMxUHZzcmUxa0wvblBDc0lUT01kb2xzQzVOMnh5WjYyM2V4MWxBL2hlY0hq?=
+ =?utf-8?B?cUx5VkxQa1VpaG5Kcnh1dGxVcFRVK3ZqdXQwRVJ6OVQrQ3NjWG44WkRJRDlG?=
+ =?utf-8?B?Z0UvcnF6Y05nZ05Db0NTZXhoNkFHU0dMUlZxZkR6bjlYNlpmNERJeWZoK29v?=
+ =?utf-8?B?b1VXRmN1cnppWXl4OUlNZUpWblNvbU1Nc1ZLakEwVjU1c28vTjBQVjZJOU5m?=
+ =?utf-8?B?UFlGa1dHWHFZS0dVRnR0R0ExZTBXYnVROVRJNS9hdStrRGJidVBxYXRlNVMx?=
+ =?utf-8?B?eURjdi9jQVVLVXFrT0ticFU0SjJJZWwySDV4bVJ2OGJmNklmUkcvZElWaDlx?=
+ =?utf-8?B?RXBUSjhNdlM2S2wvUVA2L2FhMjZybTJHVE0vZ211Uk5rQjZKVkhuajBtTmor?=
+ =?utf-8?B?V1pmS1Y2dlpQMWMyOEV5ZEdKRUk3dmlyYThVbWtYVVh3SmUrd1hCaXpXYWMz?=
+ =?utf-8?B?VFUwV1VJMW9rV3ROWTBOOHNDVkhONnM0cFpwbjN2NFpxaXhweXJjVWpMMDhl?=
+ =?utf-8?B?MnJiSmNEcnc2T3F2UDczd3M0bjE0ZGovZXVKeTdwbEpiVzNFTXRnUFVJYS9Q?=
+ =?utf-8?B?elB0S2x6ZkpqYzFmSVVuM1Y1SVRLcEVVcy9VcUJiTXR5UGlSWkgxSXJuNVFo?=
+ =?utf-8?B?L3pxV0wvK2V3dDkzL2lta3ZwUlNHV0I1bDNpQmdoaEJNZncwTVZud3hZRHVv?=
+ =?utf-8?B?Wk5kR3l0cVRaUk5ZaVZQTnlFYUNxRTJXTUVEV2tIbk5zL1cwWXN4R3FKVGI5?=
+ =?utf-8?B?aGx5QUorSkhkZmNjbTI3THV2MUpHVlVQWnhRZk0ySENVUjR1dWZ0MTQ3NW1s?=
+ =?utf-8?B?ODBFNkx0SlgrR1h0VWxDUzBTK2FWVlA2ZXl5bVRsdVhKRmtiVE4wTmpPSURx?=
+ =?utf-8?B?UVIzQXc2Q2NEVUpFVUoxNzVCbFVMY2NJMExpVFRZK2UyaFhuLzNZNlFqSW0v?=
+ =?utf-8?B?UmYwWDlmK1FUaGVseGtMZ2owQ0NldUxXclFjZEdlVDFVc0s2L3ZIR0xyVEQ0?=
+ =?utf-8?B?M2FwcUJPd0x6SmNiOStWMStNNGJXN1llMklLdTZXZVRtcnlITzFsand4V3ow?=
+ =?utf-8?B?MXpmdUErbUJ5MkMvakswOVd4ckNDSmFJQWU3VGlHWDV2K1p6S0xnK3N4L09E?=
+ =?utf-8?B?U2RBSXZqKzdPS2M0Rm1rRUlUbkovdGJ2c1VidGN6d2dJUUJpR0lLV1owSUdp?=
+ =?utf-8?B?aFA5Y0N0ZUViV1lmK2tpZEtNdE5jcmFYREpLUnZYMjR0YzVJWFc0Y2VqTkM0?=
+ =?utf-8?B?Q3NFUWJtdXR1U2FGeHE1Y21wejV5b1Z5MnU2NXBxditnaE4vdFgrNlprcjkz?=
+ =?utf-8?B?ZlZIZTYwSHcydDZhMldMUFVPOGtZQmNLVXowazBWcW1HcG9mdVFHTXVYcTRZ?=
+ =?utf-8?B?Qk9LOTZrUDBNQm03WHF1dVVpWXVYbHNsempsVEJSVk83aWhaRGlPeXFYMlV6?=
+ =?utf-8?B?UnJGUE95VTRaUVZnaU5keERZVVFmaHNFenNRSU5QWFFlMHZaVnBuZ3JjeUdR?=
+ =?utf-8?B?aTJ1bGFFYTZvaFhrcUh0eTZCSUhiWlpVcGxnVllybExJODh5TzZSbTl4d3Fm?=
+ =?utf-8?B?Umd6TG4zOUNYelFIVDlJRkkrNDZBZE9NZHJxZEVidmsxTG1ZVm50dVlvcUJ3?=
+ =?utf-8?Q?Jj+pmzMc6bLEfQXF41?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 303a042f-05b3-4bbb-3a69-08deb6a9c662
+X-MS-Exchange-CrossTenant-AuthSource: CH8PR12MB9766.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2026 19:55:42.8690
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 352f1114-590c-47b9-4183-08deb6a88569
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF000397B2.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6039
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GqTTe/GjhW1dbO7Iaj/TckgO460Ye9s7joVVacwPwdI3g4IWv/7sN8AqLdww1Fj667gU1Zrd6UD1uemLeM3nXA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9549
 
-When a device's default substream attaches to an identity domain, the SMMU
-driver currently sets the device's STE between two modes:
+Hi Mauro and Everyone,
 
-  Mode 1: Cfg=Translate, S1DSS=Bypass, EATS=1
-  Mode 2: Cfg=bypass (EATS is ignored by HW)
+During development of the CXL protocol series [1], the Sashiko tool 
+identified an issue in the CXL RAS UCE trace logging for Ports and Endpoints. 
+Specifically, the CXL RAS UCE header log size is incorrectly defined in 
+drivers/cxl/cxl.h.
 
-When there is an active PASID (non-default substream), mode 1 is used. And
-when there is no PASID support or no active PASID, mode 2 is used.
+The UCE header log size is currently defined as 128 u32s (512 bytes),
+whereas it should be 16 u32s (64 bytes) per CXL r4.0 8.2.4.17.7. Correcting 
+this will change the trace format and break the existing ABI contract 
+with rasdaemon.
 
-The driver will also downgrade an STE from mode 1 to mode 2, when the last
-active substream becomes inactive.
+How would you recommend proceeding to resolve this? I’ve included the Sashiko 
+review comments here:
 
-However, there are PCIe devices that demand ATS to be always on. For these
-devices, their STEs have to use the mode 1 as HW ignores EATS with mode 2.
+commit 07869896095a6c3e7f10bf70e3c8c7b3f11530e1
+Author: Terry Bowman <terry.bowman@amd.com>
+cxl: Fix CXL_HEADERLOG_SIZE to match RAS Capability size
+This patch corrects CXL_HEADERLOG_SIZE from SZ_512 (512 bytes) to 64
+bytes to match the actual size of the Header Log field in the CXL RAS
+Capability Structure. The old value caused header_log_copy() to overrun
+its iomap mapping, and caused the cxl_aer_uncorrectable_error trace
+event to memcpy 448 bytes of kernel stack into the ring buffer.
 
-Change the driver accordingly:
-  - always use the mode 1
-  - never downgrade to mode 2
-  - allocate and retain a CD table (see note below)
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 1297594beaec..3e69bcdbbbed 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -158,8 +158,8 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+>  #define CXL_RAS_CAP_CONTROL_FE_MASK GENMASK(5, 0)
+>  #define CXL_RAS_HEADER_LOG_OFFSET 0x18
+>  #define CXL_RAS_CAPABILITY_LENGTH 0x58
+> -#define CXL_HEADERLOG_SIZE SZ_512
+> -#define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
+> +#define CXL_HEADERLOG_SIZE 64
+> +#define CXL_HEADERLOG_SIZE_U32 (CXL_HEADERLOG_SIZE / sizeof(u32))
 
-Note that these devices might not support PASID, i.e. doing non-PASID ATS.
-In such a case, the ssid_bits is set to 0. However, s1cdmax must be set to
-a !0 value in order to keep the S1DSS field effective. Thus, when a master
-requires ats_always_on, set its s1cdmax to at least 1, meaning that the CD
-table will have a dummy entry (SSID=1) that will never be used.
+[ ... ]
 
-Now for these devices, arm_smmu_cdtab_allocated() will always return true,
-v.s. false prior to this change. When its default substream is attached to
-an IDENTITY domain, its first CD is NULL in the table, which is a totally
-valid case. Thus, add "!master->ats_always_on" to the condition.
+The commit message acknowledges that this shrinks the header_log array
+in both cxl_aer_uncorrectable_error and cxl_port_aer_uncorrectable_error
+from 128 u32s to 16 u32s, changing the binary trace event ABI.
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-Tested-by: Nirmoy Das <nirmoyd@nvidia.com>
-Acked-by: Nirmoy Das <nirmoyd@nvidia.com>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
----
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h |  1 +
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 75 ++++++++++++++++++---
- 2 files changed, 68 insertions(+), 8 deletions(-)
+The event format exposed at:
+  /sys/kernel/tracing/events/cxl/cxl_aer_uncorrectable_error/format
 
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-index ef42df4753ec4..8c3600f4364c5 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-@@ -943,6 +943,7 @@ struct arm_smmu_master {
- 	bool				ats_enabled : 1;
- 	bool				ste_ats_enabled : 1;
- 	bool				stall_enabled;
-+	bool				ats_always_on;
- 	unsigned int			ssid_bits;
- 	unsigned int			iopf_refcount;
- };
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-index e8d7dbe495f03..5c9d4bb542249 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-@@ -1742,8 +1742,11 @@ void arm_smmu_clear_cd(struct arm_smmu_master *master, ioasid_t ssid)
- 	if (!arm_smmu_cdtab_allocated(&master->cd_table))
- 		return;
- 	cdptr = arm_smmu_get_cd_ptr(master, ssid);
--	if (WARN_ON(!cdptr))
-+	if (!cdptr) {
-+		/* Only ats_always_on allows a NULL CD on default substream */
-+		WARN_ON(!master->ats_always_on || ssid);
- 		return;
-+	}
- 	arm_smmu_write_cd_entry(master, ssid, cdptr, &target);
- }
- 
-@@ -1756,6 +1759,22 @@ static int arm_smmu_alloc_cd_tables(struct arm_smmu_master *master)
- 	struct arm_smmu_ctx_desc_cfg *cd_table = &master->cd_table;
- 
- 	cd_table->s1cdmax = master->ssid_bits;
-+
-+	/*
-+	 * When a device doesn't support PASID (non default SSID), ssid_bits is
-+	 * set to 0. This also sets S1CDMAX to 0, which disables the substreams
-+	 * and ignores the S1DSS field.
-+	 *
-+	 * On the other hand, if a device demands ATS to be always on even when
-+	 * its default substream is IOMMU bypassed, it has to use EATS that is
-+	 * only effective with an STE (CFG=S1translate, S1DSS=Bypass). For such
-+	 * use cases, S1CDMAX has to be !0, in order to make use of S1DSS/EATS.
-+	 *
-+	 * Set S1CDMAX no lower than 1. This would add a dummy substream in the
-+	 * CD table but it should never be used by an actual CD.
-+	 */
-+	if (master->ats_always_on)
-+		cd_table->s1cdmax = max_t(u8, cd_table->s1cdmax, 1);
- 	max_contexts = 1 << cd_table->s1cdmax;
- 
- 	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB) ||
-@@ -3851,7 +3870,8 @@ static int arm_smmu_blocking_set_dev_pasid(struct iommu_domain *new_domain,
- 	 * When the last user of the CD table goes away downgrade the STE back
- 	 * to a non-cd_table one, by re-attaching its sid_domain.
- 	 */
--	if (!arm_smmu_ssids_in_use(&master->cd_table)) {
-+	if (!master->ats_always_on &&
-+	    !arm_smmu_ssids_in_use(&master->cd_table)) {
- 		struct iommu_domain *sid_domain =
- 			iommu_driver_get_domain_for_dev(master->dev);
- 
-@@ -3875,6 +3895,8 @@ static void arm_smmu_attach_dev_ste(struct iommu_domain *domain,
- 		.old_domain = old_domain,
- 		.ssid = IOMMU_NO_PASID,
- 	};
-+	bool ats_always_on = master->ats_always_on &&
-+			     s1dss != STRTAB_STE_1_S1DSS_TERMINATE;
- 
- 	/*
- 	 * Do not allow any ASID to be changed while are working on the STE,
-@@ -3886,7 +3908,7 @@ static void arm_smmu_attach_dev_ste(struct iommu_domain *domain,
- 	 * If the CD table is not in use we can use the provided STE, otherwise
- 	 * we use a cdtable STE with the provided S1DSS.
- 	 */
--	if (arm_smmu_ssids_in_use(&master->cd_table)) {
-+	if (ats_always_on || arm_smmu_ssids_in_use(&master->cd_table)) {
- 		/*
- 		 * If a CD table has to be present then we need to run with ATS
- 		 * on because we have to assume a PASID is using ATS. For
-@@ -4215,6 +4237,42 @@ static void arm_smmu_remove_master(struct arm_smmu_master *master)
- 	kfree(master->build_invs);
- }
- 
-+static int arm_smmu_master_prepare_ats(struct arm_smmu_master *master)
-+{
-+	bool s1p = master->smmu->features & ARM_SMMU_FEAT_TRANS_S1;
-+	unsigned int stu = __ffs(master->smmu->pgsize_bitmap);
-+	struct pci_dev *pdev;
-+	int ret;
-+
-+	if (!arm_smmu_ats_supported(master))
-+		return 0;
-+
-+	pdev = to_pci_dev(master->dev);
-+
-+	if (!pci_ats_required(pdev))
-+		goto out_prepare;
-+
-+	/*
-+	 * S1DSS is required for ATS to be always on for identity domain cases.
-+	 * However, the S1DSS field is ignored if !IDR0_S1P or !IDR1_SSIDSIZE.
-+	 */
-+	if (!s1p || !master->smmu->ssid_bits) {
-+		dev_info_once(master->dev,
-+			      "SMMU doesn't support ATS to be always on\n");
-+		goto out_prepare;
-+	}
-+
-+	master->ats_always_on = true;
-+
-+	ret = arm_smmu_alloc_cd_tables(master);
-+	if (ret)
-+		return ret;
-+
-+out_prepare:
-+	pci_prepare_ats(pdev, stu);
-+	return 0;
-+}
-+
- static struct iommu_device *arm_smmu_probe_device(struct device *dev)
- {
- 	int ret;
-@@ -4263,14 +4321,15 @@ static struct iommu_device *arm_smmu_probe_device(struct device *dev)
- 	    smmu->features & ARM_SMMU_FEAT_STALL_FORCE)
- 		master->stall_enabled = true;
- 
--	if (dev_is_pci(dev)) {
--		unsigned int stu = __ffs(smmu->pgsize_bitmap);
--
--		pci_prepare_ats(to_pci_dev(dev), stu);
--	}
-+	ret = arm_smmu_master_prepare_ats(master);
-+	if (ret)
-+		goto err_disable_pasid;
- 
- 	return &smmu->iommu;
- 
-+err_disable_pasid:
-+	arm_smmu_disable_pasid(master);
-+	arm_smmu_remove_master(master);
- err_free_master:
- 	kfree(master);
- 	return ERR_PTR(ret);
--- 
-2.43.0
+will reflect the new smaller layout after this patch. Userspace tools
+such as rasdaemon, perf, and trace-cmd that were built against the old
+format file and hardcode 128 u32s (512 bytes) for header_log will
+silently misparse events from a patched kernel -- reading the 448 bytes
+of unrelated ring-buffer data that follow as though they were part of
+the header_log field, and computing wrong offsets for any field after
+it.
 
+The old 512-byte size was always wrong per the spec, so no correctly
+written tool could have fully relied on it. But does the Cc: stable tag
+risk propagating this ABI change to stable kernels where production CXL
+RAS monitoring tools may have been written against what was, however
+incorrectly, a previously stable layout?
+Is there a way to accompany this with a tools/ or Documentation/ update
+to help userspace consumers detect and adapt to the new format, rather
+than silently misparsing it?
+
+[1] - https://lore.kernel.org/linux-cxl/20260505173029.2718246-1-terry.bowman@amd.com/
+
+Regards,
+Terry
