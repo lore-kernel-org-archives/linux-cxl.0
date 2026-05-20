@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BADD3EE1EE;
-	Wed, 20 May 2026 14:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5831F3F1AAB;
+	Wed, 20 May 2026 14:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779289001; cv=none; b=MQbNZujH13iZk8qyRCfnVgDsQSmwYeR+NbS2IpLJRP7P+exNeZ49R3Y6W4UMj8WReQxtp5lLhkXx81RHF88gbugZQ1Qw91ucfSoXAMeuNXIgi21eD2tggoZNNj31w4tPFZ+Uk1ug12lUS/rHEG4QxFU+H1jM3ZZOwfNajpusVv0=
+	t=1779289167; cv=none; b=HJ2OQm4rTAHqCGXyNEG/h/IYp6oKys0jAdFRwmstpdSru+O9mWWD6FxivwGOayVaMGYqWCbWFHElYQZAcPx3Ywitlu8/JYOD7iKuSSVGyqebginGVitcoh4Q9g9/RqZUYHzbpjOhbFLEhfPQOdLFv3Vn7EeVX0eqh9vpM4tGwiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779289001; c=relaxed/simple;
-	bh=xuNi0xiASqqfEloY3Pmvynl8rKpwTvcAtKkliqBdZuM=;
+	s=arc-20240116; t=1779289167; c=relaxed/simple;
+	bh=HPQnB/wg9UwBu5AE8gehW6Kw6CCIDFaJ/8UovYpXoVE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YMBgGUecY1YzFSvCA4pCp1zB6DO7V6ksxeHrya+zSATrJv9sSKFlCXmI7LcTfwZATQHHqk64ME8N34Op7vuiztkx0o0M424KfmEz2tWsrHkEOea/7mz8m6m3Zo59Zn3ncrScna+m02RYSZ8k+MnK+4iLCv3Iu8ESzmCsifpGkdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qg6mHF3R; arc=none smtp.client-ip=198.175.65.11
+	 In-Reply-To:Content-Type; b=TBDdA1U/dyYX6VdGtcKju+hTPpnvDVd8PPNDLlidJjoduAqnfyBNtlleAUnVRHjTMchAaMsiSID7B/mxhUs8gXKitRzY8AJtsJ/TrFgHCMBVbm24t9kcuyYysXckVBkuBcoua1SBQ1533c84ONN8u3gWki8iAjtNPyJaEsXwVjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QsXv1lwU; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qg6mHF3R"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QsXv1lwU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779288999; x=1810824999;
+  t=1779289164; x=1810825164;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=xuNi0xiASqqfEloY3Pmvynl8rKpwTvcAtKkliqBdZuM=;
-  b=Qg6mHF3RdS1jtOgHD2QJbAsTjydgU+dRKuzt0DT+hNaGvCyE9U2eD4y+
-   PP8shp1ON2A5aXUP45IMCGkfHD7jLqTvjfxv16gej6SOgazDZsEyxjAT9
-   wDJEU/8l7ggJjEHir6li4Bmq0uoQSHiKUyisizzJpvkN2NCa6yOX9Mtl5
-   8iXBerZlecF33CR114qna9qArNogi9sthGzHBBWggE/UmhbIGsmQWp+9+
-   EX68ktqxHaIfaKGahNStDHShskY4jVr4yOz0zXDUZl8GSXDLCq4qn92Jq
-   Bs9//7V812wr5gMZYBXdg5CmWQbcTqDwkMIughPRGsB5Uc+/Voe+qzdaF
-   g==;
-X-CSE-ConnectionGUID: Jo47flIkRmm3pXzyI18/vg==
-X-CSE-MsgGUID: CuHmHDIGT8i+fMdi9XrwEg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11792"; a="90487358"
+  bh=HPQnB/wg9UwBu5AE8gehW6Kw6CCIDFaJ/8UovYpXoVE=;
+  b=QsXv1lwUcCvQCdtbn/e+czdH5CvxQqaS+PzToXeuAewjjW0az58EUOlk
+   /8HmNtaKvUU9BVbaqsUUqJ6fCltf83tLep+HYWdt7GHxtGBLHyBMTijAo
+   LIEinyhO+2c/GIkuwpbHJ0MnnNVL8X/iOKpF+hwslsC+YYC2otBoMning
+   uJcmDORe9lJF6rYfxuPWR7EzeL8C755OJbzjVdjGM0fQzG+tSahRKbtvv
+   +hpfNJ0sm5Ul5Fe2+xdoGFoi2/CkfG2c2LaD+mvk8ugivwBUzp0ey10qe
+   Cju1RqiAaBwgglKb5+54nncvtOXGIFZM5KyvldpQKp+UPQFMPQ4roTdX8
+   A==;
+X-CSE-ConnectionGUID: PszC9QG9QXCSqFNyTfLDPQ==
+X-CSE-MsgGUID: FDjIaxhLR9ayTU7YaFb/+Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11792"; a="102868226"
 X-IronPort-AV: E=Sophos;i="6.23,244,1770624000"; 
-   d="scan'208";a="90487358"
+   d="scan'208";a="102868226"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2026 07:56:38 -0700
-X-CSE-ConnectionGUID: XlSQa1WqQyifenaTUyFIag==
-X-CSE-MsgGUID: VFSbqdYOSXu03svpfwFclQ==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2026 07:59:23 -0700
+X-CSE-ConnectionGUID: GKLVY0yCRjWwvK2YO05caA==
+X-CSE-MsgGUID: gcDnVwl9T4yhMmN8vsM+mQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,244,1770624000"; 
-   d="scan'208";a="240071354"
+   d="scan'208";a="240072001"
 Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.109.205]) ([10.125.109.205])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2026 07:56:37 -0700
-Message-ID: <ee59d270-5cb1-4eb5-ad4e-f5ae2fb27449@intel.com>
-Date: Wed, 20 May 2026 07:56:35 -0700
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2026 07:59:22 -0700
+Message-ID: <8a835dea-956f-4eab-931c-e1a54e14331d@intel.com>
+Date: Wed, 20 May 2026 07:59:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,71 +52,125 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tools/testing/cxl: Align mock CFMWS to PMD_SIZE for ARM64
- 64K pages
-To: Richard Cheng <icheng@nvidia.com>, dave@stgolabs.net
-Cc: jonathan.cameron@huawei.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com,
- fabio.m.de.francesco@linux.intel.com, ming.li@zohomail.com,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, newtonl@nvidia.com,
- kristinc@nvidia.com, kaihengf@nvidia.com, kobak@nvidia.com
-References: <20260519233523.5991-1-icheng@nvidia.com>
+Subject: Re: [PATCH] cxl/region: Fix out of bounds access in
+ cxl_cancel_auto_attach()
+To: Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <djbw@kernel.org>
+References: <20260519-fix_out_of_bounds_access-v1-1-55fc60d83388@zohomail.com>
+ <25b0125a-b0fb-4401-8596-3252d2f8cbd6@intel.com>
+ <cedaee55-ff31-4aa0-981e-938db56b2b45@zohomail.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260519233523.5991-1-icheng@nvidia.com>
+In-Reply-To: <cedaee55-ff31-4aa0-981e-938db56b2b45@zohomail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 5/19/26 4:35 PM, Richard Cheng wrote:
-> cxl_test allocate synthetic CFMWS HPA windows out of a gen_pool and asks
-> the allocator for SZ_256M alignment. It has been sufficient on x86 with
-> 4k pages, arm64 with 4k pages since their PMD_SIZE are 2MB.
+On 5/20/26 5:30 AM, Li Ming wrote:
 > 
-> But for 64k-page arm64 kernel with CONFIG_ARM64_64K_PAGES=y and
-> CONFIG_PGTABLE_LEVELS=3 , the PMD_SIZE is 512 MB, which is much larger
-> than the alignment cxl_test guarantees. That results in every CXL region
-> carved from that window inherits a mis-aligned start.
+> 在 2026/5/20 01:18, Dave Jiang 写道:
+>>
+>> On 5/19/26 6:23 AM, Li Ming wrote:
+>>> In cxl_cancel_auto_attach(), it assumes cxled->pos is a valid index for
+>>> accessing p->targets[]. However, cxled->pos can be set to -ENXIO in
+>> It can be set to other error codes I think? I would just s/-ENXIO/negative errno/
+> Sure, Will do that.
+>>
+>>> cxl_region_sort_targets() if cxl_calc_interleave_pos() fails. This
+>>> causes the driver to use a negative index to access p->targets[],
+>>> resulting in out-of-bounds access.
+>>>
+>>> Fix it by walking p->targets[] instead of using cxled->pos directly.
+>> Does the comment in cxl_region_sort_targets() need to be updated with the new changes?
 > 
-> The DAX driver's cxl_dax_region_probe() then calls "alloc_dax_region()
-> and the probe fails with -ENOMEM, with error message
-> 
-> """
->     cxl_dax_region dax_region1: probe with driver cxl_dax_region failed
->                                 with error -12
-> """
-> 
-> It was hit while bringing up cxl_test on an ARM64 server with
-> ARM64_64K_PAGES config.
-> 
-> Raise the alignment passed to "alloc"mock_res()" to the larger of
-> SZ_256M and PMD_SIZE so that the mock CFMWS window is always at least as
-> well-aligned as "alloc_dax_region()" require.
-> 
-> Signed-off-by: Richard Cheng <icheng@nvidia.com>
-> Acked-by: Kai-Heng Feng <kaihengf@nvidia.com>
+> I'm not sure how to update the comment in cxl_region_sort_targets(). Any suggestion?
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+idk if we should just drop it entirely since the comment is no longer true. At least that second part. Alison?
 
-Does this need a fixes tag?
 
-> ---
->  tools/testing/cxl/test/cxl.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 418669927fb0..b40e4bbcc958 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -497,7 +497,8 @@ static int populate_cedt(void)
->  		struct acpi_cedt_cfmws *window = mock_cfmws[i];
->  
->  		cfmws_elc_update(window, i);
-> -		res = alloc_mock_res(window->window_size, SZ_256M);
-> +		res = alloc_mock_res(window->window_size,
-> +				     max_t(int, SZ_256M, PMD_SIZE));
->  		if (!res)
->  			return -ENOMEM;
->  		window->base_hpa = res->range.start;
+> 
+> Ming
+> 
+>>
+>>> Fixes: 87805c32e6ad ("cxl/region: Fix use-after-free from auto assembly failure")
+>>> Signed-off-by: Li Ming <ming.li@zohomail.com>
+>> The rest LGTM
+>>
+>> DJ
+>>
+>>> ---
+>>>   drivers/cxl/core/region.c | 35 ++++++++++++++++-------------------
+>>>   1 file changed, 16 insertions(+), 19 deletions(-)
+>>>
+>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>>> index e50dc716d4e8..551228bc91f5 100644
+>>> --- a/drivers/cxl/core/region.c
+>>> +++ b/drivers/cxl/core/region.c
+>>> @@ -2202,18 +2202,30 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>>>       return 0;
+>>>   }
+>>>   -static int cxl_region_by_target(struct device *dev, const void *data)
+>>> +static int cxl_region_remove_target(struct device *dev, void *data)
+>>>   {
+>>> -    const struct cxl_endpoint_decoder *cxled = data;
+>>> +    struct cxl_endpoint_decoder *cxled = data;
+>>>       struct cxl_region_params *p;
+>>>       struct cxl_region *cxlr;
+>>> +    int i;
+>>>         if (!is_cxl_region(dev))
+>>>           return 0;
+>>>         cxlr = to_cxl_region(dev);
+>>>       p = &cxlr->params;
+>>> -    return p->targets[cxled->pos] == cxled;
+>>> +    for (i = 0; i < p->nr_targets; i++) {
+>>> +        if (p->targets[i] == cxled) {
+>>> +            p->nr_targets--;
+>>> +            cxled->state = CXL_DECODER_STATE_AUTO;
+>>> +            cxled->pos = -1;
+>>> +            p->targets[i] = NULL;
+>>> +
+>>> +            return 1;
+>>> +        }
+>>> +    }
+>>> +
+>>> +    return 0;
+>>>   }
+>>>     /*
+>>> @@ -2222,25 +2234,10 @@ static int cxl_region_by_target(struct device *dev, const void *data)
+>>>    */
+>>>   static void cxl_cancel_auto_attach(struct cxl_endpoint_decoder *cxled)
+>>>   {
+>>> -    struct cxl_region_params *p;
+>>> -    struct cxl_region *cxlr;
+>>> -    int pos = cxled->pos;
+>>> -
+>>>       if (cxled->state != CXL_DECODER_STATE_AUTO_STAGED)
+>>>           return;
+>>>   -    struct device *dev __free(put_device) =
+>>> -        bus_find_device(&cxl_bus_type, NULL, cxled, cxl_region_by_target);
+>>> -    if (!dev)
+>>> -        return;
+>>> -
+>>> -    cxlr = to_cxl_region(dev);
+>>> -    p = &cxlr->params;
+>>> -
+>>> -    p->nr_targets--;
+>>> -    cxled->state = CXL_DECODER_STATE_AUTO;
+>>> -    cxled->pos = -1;
+>>> -    p->targets[pos] = NULL;
+>>> +    bus_for_each_dev(&cxl_bus_type, NULL, cxled, cxl_region_remove_target);
+>>>   }
+>>>     static struct cxl_region *
+>>>
+>>> ---
+>>> base-commit: 5200f5f493f79f14bbdc349e402a40dfb32f23c8
+>>> change-id: 20260519-fix_out_of_bounds_access-8838759ee5a6
+>>>
+>>> Best regards,
 
