@@ -1,415 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6151C3ED3A4
-	for <linux-cxl@vger.kernel.org>; Wed, 20 May 2026 17:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7B13F20FA;
+	Wed, 20 May 2026 17:48:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779298644; cv=none; b=okfZLwK+I5Y/A8o0GPYF4dIxMGLSx47LYfOR6Wz+2MlwZ9+O5FbTx4WIRe64YwrGau5FpLiEs5RgPFS+3iQBmu8vtjyZDSVGEzz6iY2Kw0rHgXUAkAbL+yDVkhQKFymYKj1IB1Ww+THPIytKUjSre4Byk00GEtBy+HKNU1HkY78=
+	t=1779299281; cv=none; b=VlqmAKzZZ4sT5QWuCz1aPda+InCejuqCqi+J/K2iKyam9JtyPx80bEI5DNwOft9LjGiCpH58ivRrAkH+vH4uBaRr3P1+cDdO/60nHERKBGXMFwrCybnT6u8Gpy8aUPDS5Xbo51vv5ZLJA419yoWddoUAMksJ3itn4ANl+4Tf788=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779298644; c=relaxed/simple;
-	bh=QZxawQlNRc8erzwymhMjxiDmCK4rC7nOhxrtP/5iVeg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sE8sFYCI2jAJfsGnm+blMfFfDeBD6yXAiSjXft0cuMwih6ndI+qqg2KK3PnuJ0rnBpmQtfF6yXBgqCL6rI89e2oum26SyA20/MTd00usPz9ZPLjLdtJYOdbBvdYMAMhAVMbMjNj8RwhGUW+kwLycbrRSahOLPYzwwYWXkb2Ukis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=je4neYrS; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1779299281; c=relaxed/simple;
+	bh=Ou04mB7JYTog298zI/Z60+tMDz89U5qS5BPKX5kr/+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=EiQsVBSTWZQU3d9CHWiAc0AcPhigzjQDmcJKWtibqsFAZmTH8vCO2zVj6DtFi7Gv5MK51Oqo9e53+CVnL2Z27mnxXkoQWxHuCpYOiZuOdq0fvnFGLO3hIE+q51GhRBa7LJ6KEbul1elJmTG7FXZMiapMXhhfnh8sn5x/qIJo8Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X59zp2JT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="je4neYrS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779298642; x=1810834642;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=QZxawQlNRc8erzwymhMjxiDmCK4rC7nOhxrtP/5iVeg=;
-  b=je4neYrSJHs0MxABiKsI6iiEPfwrdStsLvGQPzCP4L4U+8fNtRD7JsR5
-   JC14oA23bO4IxJasfZ/6QeG1Aovtgkm6griRwh96X/RBjPV3EpupJh0jK
-   GzoZG8rrQV5Ehc6Zpl9yeO3/rB0ANgqaOr322vPrzM7lf4ZQOFGjdQcyb
-   gfs2Z7mrsE9qOg4ihXgvpd1K5qeL6yUKcXTZSjjGC6S8Gs6YhTJxmYXd1
-   N1bxdria6sUAEU7eDlqqh93RpGu6T1hSrUhERKWPzkFtSF0EMQrwJmCs6
-   qFcJZ48Iu8wp29nv1v41ktFFvE07bsZvodQq3o+59/gUgbcart+aLM56v
-   g==;
-X-CSE-ConnectionGUID: 43FqCcEBS62Pv5XMok165w==
-X-CSE-MsgGUID: KnUuXkqDQSuYqrm6KbsSRA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11792"; a="84064683"
-X-IronPort-AV: E=Sophos;i="6.23,244,1770624000"; 
-   d="scan'208";a="84064683"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2026 10:37:22 -0700
-X-CSE-ConnectionGUID: oOgAlrhhQXS5eYu5zeSeOw==
-X-CSE-MsgGUID: moeEX3GrSiSRUSIo5YGH1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,244,1770624000"; 
-   d="scan'208";a="240500129"
-Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.109.205]) ([10.125.109.205])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2026 10:37:20 -0700
-Message-ID: <1c4db903-290e-4aa0-b3f2-c4e7688eeb2e@intel.com>
-Date: Wed, 20 May 2026 10:37:19 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X59zp2JT"
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id E55DC1F000E9;
+	Wed, 20 May 2026 17:47:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1779299280;
+	bh=QokDhHnAKqLWHjogTXLoR4DHLEoCdHeJVwDfmUpDWFI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To;
+	b=X59zp2JT2ThlWcF8Vwx5hipnuU3pVcb+NfDjk2Z2sHtYDjkv+g3dJ0zZr2SGgl213
+	 1C0hCo1gnbyqdhUCR+J6gzpc8QSsRa50+ECq21EUTPKSlop5c2ppovIB2kN3lPYiDQ
+	 GR1Ypw4utLINVSrZVNL5Ysm4lJlrsSdcXXrYlEYy81+++le0P7+ckaH3kTfZIPhd/h
+	 G5L5/+OpcbEO3IC+73xXcXcYHpivSRqU3jGXcMYQKbRNtlDpVoDXwc8ETE1DGBGa/B
+	 FzvalrcDibzcUjSlRfzL+b/TJhLoq8ZU6IGme8BJScJjxXYhD+VHvlU8uda6mLonKz
+	 zFY9Io0VLlY6A==
+Date: Wed, 20 May 2026 12:47:58 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, will@kernel.org, robin.murphy@arm.com,
+	bhelgaas@google.com, joro@8bytes.org, praan@google.com,
+	baolu.lu@linux.intel.com, kevin.tian@intel.com,
+	miko.lenczewski@arm.com, linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, dan.j.williams@intel.com,
+	jonathan.cameron@huawei.com, vsethi@nvidia.com,
+	linux-cxl@vger.kernel.org, nirmoyd@nvidia.com
+Subject: Re: [PATCH v4 1/3] PCI: Allow ATS to be always on for CXL.cache
+ capable devices
+Message-ID: <20260520174758.GA66039@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] cxl/region: Introduce devm_cxl_probe_mem()
-To: Dan Williams <djbw@kernel.org>, linux-cxl@vger.kernel.org
-Cc: alejandro.lucero-palau@amd.com, jic23@kernel.org,
- Alejandro Lucero <alucerop@amd.com>
-References: <20260519210158.1499795-1-djbw@kernel.org>
- <20260519210158.1499795-6-djbw@kernel.org>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260519210158.1499795-6-djbw@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ag3vb4SWIfuw++vp@Asurada-Nvidia>
 
-
-
-On 5/19/26 2:01 PM, Dan Williams wrote:
-> To date, platform firmware maps accelerator memory and accelerator drivers
-> simply want an address range that they can map themselves. This typically
-> results in a single region being auto-assembled upon registration of a
-> memory device.  Use the @attach mechanism of devm_cxl_add_memdev()
-> parameter to retrieve that region while also adhering to CXL subsystem
-> locking and lifetime rules. As part of adhering to current object lifetime
-> rules, if the region or the CXL port topology is invalidated, the CXL core
-> arranges for the accelertor driver to be detached as well.
+On Wed, May 20, 2026 at 10:29:19AM -0700, Nicolin Chen wrote:
+> On Wed, May 20, 2026 at 11:20:43AM -0300, Jason Gunthorpe wrote:
+> > On Tue, May 19, 2026 at 06:04:18PM -0700, Nicolin Chen wrote:
+> > 
+> > > > Yeah, that's fair, so let's rename it to 
+> > > > 
+> > > > pci_translated_required()
+> > > > 
+> > > > ie the device requires translated requests to function. This is what
+> > > > CXL.cache implies (IIRC I was told the spec specifically says this)
+> > > > 
+> > > > Requiring translated requests implies you have to enable ATS in the
+> > > > system.
+> > > 
+> > > Perhaps we could let IOMMU drivers check:
+> > >   pci_cxl_is_cache_capable() || pci_dev_specific_is_pre_cxl()
+> > > directly?
+> > 
+> > I'd rather have a single function.
 > 
-> The locking and lifetime rules were validated with Dave's work-in-progress
-> cxl-type-2 support for cxl_test.
+> OK. Can we use pci_ats_required()?
 > 
-> devm_cxl_add_classdev() supports the general memory expansion flow where
-> region assembly is optional, dynamic, and user controlled.
-> 
-> Cc: Alejandro Lucero <alucerop@amd.com>
-> Signed-off-by: Dan Williams <djbw@kernel.org>
-> ---
->  drivers/cxl/cxlmem.h         |  27 ++++++--
->  include/cxl/cxl.h            |   3 +
->  drivers/cxl/core/region.c    | 124 +++++++++++++++++++++++++++++++++++
->  drivers/cxl/mem.c            |  50 +++++++++++---
->  drivers/cxl/pci.c            |   2 +-
->  tools/testing/cxl/test/mem.c |   2 +-
->  6 files changed, 191 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 776c50d1db51..d3bdd00f94b3 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -34,10 +34,6 @@
->  	(FIELD_GET(CXLMDEV_RESET_NEEDED_MASK, status) !=                       \
->  	 CXLMDEV_RESET_NEEDED_NOT)
->  
-> -struct cxl_memdev_attach {
-> -	int (*probe)(struct cxl_memdev *cxlmd);
-> -};
-> -
->  /**
->   * struct cxl_memdev - CXL bus object representing a Type-3 Memory Device
->   * @dev: driver core device object
-> @@ -101,10 +97,29 @@ static inline bool is_cxl_endpoint(struct cxl_port *port)
->  	return is_cxl_memdev(port->uport_dev);
->  }
->  
-> +struct cxl_memdev_attach {
-> +	int (*probe)(struct cxl_memdev *cxlmd);
-> +};
-> +
-> +/**
-> + * struct cxl_attach_region - coordinate mapping a region at memdev registration
-> + * @attach: common core attachment descriptor
-> + * @hpa_range: physical address range of the region
-> + *
-> + * For the common simple case of a CXL device with private (non-general purpose
-> + * / "accelerator") memory, enumerate firmware instantiated region, or
-> + * instantiate a region for the device's capacity. Destroy the region on detach.
-> + */
-> +struct cxl_attach_region {
-> +	struct cxl_memdev_attach attach;
-> +	struct range hpa_range;
-> +};
-> +
-> +int cxl_memdev_attach_region(struct cxl_memdev *cxlmd);
-> +
-> +struct cxl_memdev *devm_cxl_add_classdev(struct cxl_dev_state *cxlds);
->  struct cxl_memdev *__devm_cxl_add_memdev(struct cxl_dev_state *cxlds,
->  					 const struct cxl_memdev_attach *attach);
-> -struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds,
-> -				       const struct cxl_memdev_attach *attach);
->  int devm_cxl_sanitize_setup_notifier(struct device *host,
->  				     struct cxl_memdev *cxlmd);
->  struct cxl_memdev_state;
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index fa7269154620..016c74fb747c 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -223,4 +223,7 @@ struct cxl_dev_state *_devm_cxl_dev_state_create(struct device *dev,
->  		(drv_struct *)_devm_cxl_dev_state_create(parent, type, serial, dvsec,	\
->  						      sizeof(drv_struct), mbox);	\
->  	})
-> +
-> +struct cxl_memdev *devm_cxl_probe_mem(struct cxl_dev_state *cxlds,
-> +				      struct range *range);
->  #endif /* __CXL_CXL_H__ */
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index faf9785c0509..ce99f0650764 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1148,6 +1148,19 @@ static int cxl_rr_assign_decoder(struct cxl_port *port, struct cxl_region *cxlr,
->  static void cxl_region_setup_flags(struct cxl_region *cxlr,
->  				   struct cxl_decoder *cxld)
->  {
-> +	if (is_endpoint_decoder(&cxld->dev)) {
-> +		struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(&cxld->dev);
-> +		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +
-> +		/*
-> +		 * When a region's memdevs specify an @attach method the attach
-> +		 * provider is responsible for dispositioning the region for
-> +		 * both probe and userspace management
-> +		 */
-> +		if (cxlmd->attach)
-> +			set_bit(CXL_REGION_F_LOCK, &cxlr->flags);
-> +	}
-> +
->  	if (cxld->flags & CXL_DECODER_F_LOCK) {
->  		set_bit(CXL_REGION_F_LOCK, &cxlr->flags);
->  		clear_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags);
-> @@ -2560,6 +2573,17 @@ static void unregister_region(struct cxl_region *cxlr)
->  	put_device(&cxlr->dev);
->  }
->  
-> +static void endpoint_unregister_region(void *_cxlr)
-> +{
-> +	struct cxl_region *cxlr = _cxlr;
-> +	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(cxlr->dev.parent);
-> +
-> +	guard(mutex)(&cxlrd->regions_lock);
-> +	if (xa_load(&cxlrd->regions, cxlr->id))
-> +		unregister_region(cxlr);
-> +	put_device(&cxlr->dev);
+> CXL spec explicitly used "ATS" when stating the requirement of
+> CXL.cache). And it'd fit into the existing pci_ats_ functions.
 
-Claude mentioned that there may be a refcount underflow happening here when xa_load() succeeds, where unregister_region() calls put_device(&cxlr->dev) and then another put_device(&cxlr->dev) in endpoint_unregister_region().
+OK by me.
 
-DJ
+You already have a comment in the code about the CXL.cache
+requirement; thanks for that.
 
-> +}
-> +
->  static struct lock_class_key cxl_region_key;
->  
->  static struct cxl_region *cxl_region_alloc(struct cxl_root_decoder *cxlrd, int id)
-> @@ -4057,6 +4081,103 @@ static int cxl_region_can_probe(struct cxl_region *cxlr)
->  	return 0;
->  }
->  
-> +static int first_mapped_decoder(struct device *dev, const void *data)
-> +{
-> +	struct cxl_endpoint_decoder *cxled;
-> +
-> +	if (!is_endpoint_decoder(dev))
-> +		return 0;
-> +
-> +	cxled = to_cxl_endpoint_decoder(dev);
-> +	if (cxled->cxld.region)
-> +		return 1;
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Runs in cxl_mem_probe context after successful endpoint probe, assumes the
-> + * simple case of single mapped decoder per memdev.
-> + */
-> +int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
-> +{
-> +	struct cxl_attach_region *attach =
-> +		container_of(cxlmd->attach, typeof(*attach), attach);
-> +	struct cxl_port *endpoint = cxlmd->endpoint;
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_region *cxlr;
-> +	int rc;
-> +
-> +	/* hold endpoint lock to setup autoremove of the region */
-> +	guard(device)(&endpoint->dev);
-> +	if (!endpoint->dev.driver)
-> +		return -ENXIO;
-> +	guard(rwsem_read)(&cxl_rwsem.region);
-> +	guard(rwsem_read)(&cxl_rwsem.dpa);
-> +
-> +	/*
-> +	 * TODO auto-instantiate a region, for now assume this will find an
-> +	 * auto-region
-> +	 */
-> +	struct device *dev __free(put_device) =
-> +		device_find_child(&endpoint->dev, NULL, first_mapped_decoder);
-> +
-> +	if (!dev) {
-> +		dev_dbg(cxlmd->cxlds->dev, "no region found for memdev %s\n",
-> +			dev_name(&cxlmd->dev));
-> +		return -ENXIO;
-> +	}
-> +
-> +	cxled = to_cxl_endpoint_decoder(dev);
-> +	cxlr = cxled->cxld.region;
-> +
-> +	if (cxlr->params.state < CXL_CONFIG_COMMIT) {
-> +		dev_dbg(cxlmd->cxlds->dev,
-> +			"region %s not committed for memdev %s\n",
-> +			dev_name(&cxlr->dev), dev_name(&cxlmd->dev));
-> +		return -ENXIO;
-> +	}
-> +
-> +	if (cxlr->params.nr_targets > 1) {
-> +		dev_dbg(cxlmd->cxlds->dev,
-> +			"Only attach to local non-interleaved region\n");
-> +		return -ENXIO;
-> +	}
-> +
-> +	/* Only teardown regions that pass validation, ignore the rest */
-> +	get_device(&cxlr->dev);
-> +	rc = devm_add_action_or_reset(&endpoint->dev,
-> +				      endpoint_unregister_region, cxlr);
-> +	if (rc)
-> +		return rc;
-> +
-> +	attach->hpa_range = (struct range) {
-> +		.start = cxlr->params.res->start,
-> +		.end = cxlr->params.res->end,
-> +	};
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_FOR_MODULES(cxl_memdev_attach_region, "cxl_mem");
-> +
-> +/*
-> + * The presence of an attach method indicates that the region is designated for
-> + * a purpose outside of CXL core memory expansion defaults.
-> + */
-> +static bool cxl_region_has_memdev_attach(struct cxl_region *cxlr)
-> +{
-> +	struct cxl_region_params *p = &cxlr->params;
-> +
-> +	for (int i = 0; i < p->nr_targets; i++) {
-> +		struct cxl_endpoint_decoder *cxled = p->targets[i];
-> +		struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> +
-> +		if (cxlmd->attach)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  static int cxl_region_probe(struct device *dev)
->  {
->  	struct cxl_region *cxlr = to_cxl_region(dev);
-> @@ -4088,6 +4209,9 @@ static int cxl_region_probe(struct device *dev)
->  	if (rc)
->  		return rc;
->  
-> +	if (cxl_region_has_memdev_attach(cxlr))
-> +		return 0;
-> +
->  	switch (cxlr->mode) {
->  	case CXL_PARTMODE_PMEM:
->  		rc = devm_cxl_region_edac_register(cxlr);
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index ff858318091f..67d31482f06b 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -183,27 +183,59 @@ static int cxl_mem_probe(struct device *dev)
->  }
->  
->  /**
-> - * devm_cxl_add_memdev - Add a CXL memory device
-> + * devm_cxl_add_classdev - Add a CXL memory class-code device
->   * @cxlds: CXL device state to associate with the memdev
-> - * @attach: Caller depends on CXL topology attachment
->   *
->   * Upon return the device will have had a chance to attach to the
->   * cxl_mem driver, but may fail to attach if the CXL topology is not ready
->   * (hardware CXL link down, or software platform CXL root not attached).
->   *
-> - * When @attach is NULL it indicates the caller wants the memdev to remain
-> - * registered even if it does not immediately attach to the CXL hierarchy. When
-> - * @attach is provided a cxl_mem_probe() failure leads to failure of this routine.
-> + * The parent of the resulting device and the devm context for allocations is
-> + * @cxlds->dev.
-> + */
-> +struct cxl_memdev *devm_cxl_add_classdev(struct cxl_dev_state *cxlds)
-> +{
-> +	return __devm_cxl_add_memdev(cxlds, NULL);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_add_classdev, "CXL");
-> +
-> +/**
-> + * devm_cxl_probe_mem - Add a CXL memory device and probe its region
-> + * @cxlds: CXL device state to associate with the memdev
-> + * @hpa_range: CXL.mem physical address range result
-> + *
-> + * Upon return the device will have had a chance to attach to the
-> + * cxl_mem driver, but may fail to attach if the CXL topology is not ready
-> + * (hardware CXL link down, or software platform CXL root not attached).
-> + *
-> + * Failure to probe the memdev and/or setup a region for the memdev
-> + * results in this function failing.
->   *
->   * The parent of the resulting device and the devm context for allocations is
->   * @cxlds->dev.
->   */
-> -struct cxl_memdev *devm_cxl_add_memdev(struct cxl_dev_state *cxlds,
-> -				       const struct cxl_memdev_attach *attach)
-> +struct cxl_memdev *devm_cxl_probe_mem(struct cxl_dev_state *cxlds,
-> +				      struct range *hpa_range)
->  {
-> -	return __devm_cxl_add_memdev(cxlds, attach);
-> +	struct cxl_attach_region *attach =
-> +		devm_kmalloc(cxlds->dev, sizeof(*attach), GFP_KERNEL);
-> +	struct cxl_memdev *cxlmd;
-> +
-> +	if (!attach)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	*attach = (struct cxl_attach_region) {
-> +		.attach = {
-> +			   .probe = cxl_memdev_attach_region,
-> +		},
-> +		.hpa_range = { 0, -1 },
-> +	};
-> +
-> +	cxlmd = __devm_cxl_add_memdev(cxlds, &attach->attach);
-> +	*hpa_range = attach->hpa_range;
-> +	return cxlmd;
->  }
-> -EXPORT_SYMBOL_NS_GPL(devm_cxl_add_memdev, "CXL");
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_probe_mem, "CXL");
->  
->  static ssize_t trigger_poison_list_store(struct device *dev,
->  					 struct device_attribute *attr,
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index bace662dc988..267c679b0b3c 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -878,7 +878,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
->  	if (rc)
->  		dev_dbg(&pdev->dev, "No CXL Features discovered\n");
->  
-> -	cxlmd = devm_cxl_add_memdev(cxlds, NULL);
-> +	cxlmd = devm_cxl_add_classdev(cxlds);
->  	if (IS_ERR(cxlmd))
->  		return PTR_ERR(cxlmd);
->  
-> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> index 271c7ad8cc32..095ca544ac02 100644
-> --- a/tools/testing/cxl/test/mem.c
-> +++ b/tools/testing/cxl/test/mem.c
-> @@ -1769,7 +1769,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
->  
->  	cxl_mock_add_event_logs(&mdata->mes);
->  
-> -	cxlmd = devm_cxl_add_memdev(cxlds, NULL);
-> +	cxlmd = devm_cxl_add_classdev(cxlds);
->  	if (IS_ERR(cxlmd))
->  		return PTR_ERR(cxlmd);
->  
+I don't know enough about CXL to know what's behind the ATS
+requirement.  It sounds like it's more than a simple performance
+optimization.  If you happen to know the reason, it might be worth
+a short comment about that too.
 
+Please add a one-line comment in the code about why we check
+Cache_Capable instead of Cache_Enable, i.e., even if CXL.cache is not
+enabled now, it may be enabled later.
+
+Bjorn
