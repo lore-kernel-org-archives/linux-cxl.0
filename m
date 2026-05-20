@@ -1,179 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66221F09AD;
-	Wed, 20 May 2026 05:24:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779254686; cv=none; b=KFVdyXqa6jjG9Jp/wiMPz+yUZxWmINzpFc1Y1GK8avoeCH4zeGbYwzUzuXbWZhtfS2OdDvSeaciHr7PJjPnk6ypjzYlPM8nzojFgqlMOsC8NKcKti19w8nIF3ikC8eOsDFFM2efoaNnbkPFHxbxpc+IwR99ojb9LfRasArDDAlM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779254686; c=relaxed/simple;
-	bh=wt5PL7eZzpDLT1c5IQbwq85XravimGfOYHQ1YUDMvC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F8R14pmecocmIsPbFydAMX0y744JY14bJ1sveVhDIyyVVMnwlhsJZKQXuaTFNdcuPeGB4JxrabE8iqdDdamgSKleYOl/q2NXenN9Qjyftijo06y/CGHIOOUoqdF8gTlAsf9LjRrWzXAmOIOY8ET/RHd//Q9lgNqya8vVZQ1Ea/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CeXhaErD; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711FD2C11CB
+	for <linux-cxl@vger.kernel.org>; Wed, 20 May 2026 05:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779256617; cv=pass; b=Txce3+/vDTKAOudKKyaKlVOU7u8t7MHxDVcBSnkpz7Por6NWwi6y1yC8JYyRaQKxC7Nzpc2vt3QhDYTcN7O3eVCuGKN36KTDiA+XWcs0k6bpQcIR32Dj9v3tRBgbOM5ov+0GmEkhfX7hBY95URO8ICTaNaECY9nW0vATR9URgAc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779256617; c=relaxed/simple;
+	bh=AVRlE0G99BC+L7y0nye1ZxQzkDfQkyMJSbR7r+WemrA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jKhGIU87C282eyQ6+AQ0jha9hApwDz6J2HxtnufzUp9v4NpdWWNoZZ0ogLVZamBkWSlhpokc9iemBsuOQ1x2zPvmoOfWZIIIvlFXQGiEa7clzK6mYsyZazD7NDvhZkIphmyc7y5nZDIT6pJgJUXbCl3tgNz+9hyEnIwhe2ZCIqg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PC3cpC6b; arc=pass smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CeXhaErD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B2D1F00893;
-	Wed, 20 May 2026 05:24:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779254684;
-	bh=wR7fOlF0LlueJQhUFw+Vok2GUwf2oNEmjv9G0fGQyXM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=CeXhaErDxGhpp5vtO2zAUNlzvSOK+rvobBv4yrq+My2/c6N7ZmhIhP7mWNJYuKhTQ
-	 zGAf2AFh+6x/Xq2zT3jAoi3TO6bj5YDfN9UXDhWrGKVY4YFKQkM7+K7n6O4gG7/bqn
-	 lJUD5RGZJFNPZ/u2iQzScjHZGCIM67LMUWtXJLWaL7aPHASVd5nL771UbKK1NiZeky
-	 jurmxJReNsKW8qdxX1U/JI1wVZNvSU3Ptf/jt+ODPmNkeLE5dj6BxKY8h9m5eSVBBr
-	 17hwT9qWV3IuEB/BtOF0lBMP/uPFe1FA+IjtQA3HvFTqLjV/pc31XP164/AyzB1DTT
-	 CSd8OEOK2iMsA==
-Message-ID: <e9a08bed-3d5f-4606-8d17-80a16a4c82f1@kernel.org>
-Date: Wed, 20 May 2026 07:24:36 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PC3cpC6b"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-bd373f83042so926536966b.1
+        for <linux-cxl@vger.kernel.org>; Tue, 19 May 2026 22:56:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779256614; cv=none;
+        d=google.com; s=arc-20240605;
+        b=judTbRs1qHOEw7BzBRSTxSWeCsIuGQDPvfuZmotwWdBxkABsFtl2S3nIWlx9criqWZ
+         DHYHpK5P1HFMy1MXcDQS/Z62GDGVotnl5z57IqlI9RTMh3KL1nwZR6q1miHqDENmAe0h
+         H1GFD720e0hdVLFLt6qlswJpa8zZGHDskhSbYEMqbijnHvuPw71xjJPDBHlyHA+/nSXM
+         d6ajJactEP+TOIhLtXkJl+q3halHchfk/hWqUe333y97uXgE41fIExN4pbzvR7yLKo0f
+         yEM8aQRP6vRfi/ftcqgafK/r0CmdLS+tPvg/yaT77z3Z3t9ZGH2K9CLbOV5lVGlssIxZ
+         sUFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=etsMGOIVq2kJS1rwImtVQ8IDqskkHwe2NYV85OoKq3M=;
+        fh=jCB5upi5Zpar7AsTnqDGKBvyo0PgHxguofCUbt3t190=;
+        b=bYQD1BLBvrmabYeChY9Kg4T34hBS6bxIIz82e4hWsJ1SfxWigRbLfsNXvv6oKCj5Xc
+         2bWUo1gWkMtXYUirzrE9rjATG9IXtct7WGBvNXnLKGUDFceJqBjTpsJ0qyDIfIO4dTco
+         ULCPpFp3T7eSocjMImp+bQIvwqJxdT56elSq47lzEghBUGk8ifvSfnuqWl1TrQ5702yC
+         WLOV0B3oxIMtd0AyWsdBC2N+8r22W3BFfiuRssQOIFlNRvCh0qAZQvWzHEuYwiys6aAO
+         zt0QrrlTQxqSa4aSEYlPyu7bG8DYeP3qki9sbD07+o7iNb7N5Vm1L0hXnjP2d5v1uHx2
+         eh5g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779256614; x=1779861414; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=etsMGOIVq2kJS1rwImtVQ8IDqskkHwe2NYV85OoKq3M=;
+        b=PC3cpC6bLm5EWnctfQW1snECzgyoJjl5STmtJ8D6JiCz/UzJRAUALv0ho6Wu6HKRBw
+         VZNuXMT4gZArwE+Q61ckzLgIrlyumrXcE5H9J0HyG7cZKCwn9L5L8S6kKz3ileYERbsc
+         2euVZuYp9h6SAn3J19A6G0YrfQjAO8Est0EZRKVXNEv+B+Qk9iKH0+WEK0t9fZ4GtnAZ
+         li0F2d2/nXPNQpXRLma/8ERnNuWm8cgT40vFNftYf3JEjSxH3Wzw/zeaat6e5xug83Hj
+         KwdlhN7yvB4tvaSmpdvcBdprrhUrUZEYOpV0v3ozt8FeQw8EX9Rjbc91+uvilotbdBHX
+         JfiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779256614; x=1779861414;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=etsMGOIVq2kJS1rwImtVQ8IDqskkHwe2NYV85OoKq3M=;
+        b=JEM1xBH4z6KL/K6Vr45l7BXMIUe0chqrAjsnfwYwDyYA/ECQ/ruIiZmAuP0Bcy5n3A
+         leafULcGfbFjAev4+m3bg7nhzGRPMdE2KZVDUhEBXx6Ix5s12/iNNPAqtPgEdAZDPbrY
+         +VMZB8X3zCl+YrfZB6z+EKDbFl4Y8mWFXDjpJ9Q/qTyql2c4Dzbfh4nHWNfSkMWqH521
+         HkaAPxEltKvM1nfk4k2vqtyHOrLg7wV/df9Oz80zR5iA8siRky7QV/kZgSaEBRImbAZJ
+         7e8MuCnRGHe4BEAMv3z26ns5xMiprj89ult76cOIGNWkFL/o+kfKvGWD2ZkA0XwbySiu
+         XKpA==
+X-Forwarded-Encrypted: i=1; AFNElJ/FgTAfky07FFJGEX4+GdfyXyyeq12n2iyetrC9yC2ZIu95VIGHR6bnjxcLbR2Ck2EcCK9Zxzj3hJo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzEgeCV/uT+R7M5/S2gLmdDp06v4JbPvaeMzBiaoN+7yBuqa9tL
+	NqngLsrLm5WdPl5OlfgKubGMBgRTQ3et+3R0WdphA0Glo0nMqmHOvulYmm83uhTdsEifMwHHDs7
+	QhwUKmaigepLeNyucWHttBiWrmqptfw8=
+X-Gm-Gg: Acq92OECIbLj2sgWQkeYS/GidxlKi+H1RYhgYguiz/JcWoF4nr0Oc1Ymr8z6RBPiyp7
+	Gm1LSyxZO8MvVbqJNJfF0tlLM95rTDc0GIvzXZKkI6fgSbLgn9VqENrwgSUG9/l1MLu9ndisUit
+	cZCRFCpwp6RyZ2JUjVJYIMLyKNpCVAisIQK8W1/L18uhJw0XsoQcBMGSSMxNhV2yD7Daf8Aq4J/
+	nnkO/k5fu4vTvf8+PkFtk2AnnohO1PzIizr+SFA3NP6b2IPQhbF7/vZEY55fexpb35F8X+dZOUv
+	I2KL+lf4kdX0psGFaoBvsfKaWKLvgnEoa3P1Fw==
+X-Received: by 2002:a17:907:c206:b0:bd8:f7f1:d31e with SMTP id
+ a640c23a62f3a-bd8f7f1d8acmr470179866b.49.1779256613629; Tue, 19 May 2026
+ 22:56:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/mm: fix vmemmap leak on memory hot-remove
-To: Juhyung Park <qkrwngud825@gmail.com>, linux-mm@kvack.org
-Cc: stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
- Jason Gunthorpe <jgg@nvidia.com>, "Mike Rapoport (Microsoft)"
- <rppt@kernel.org>, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dan Williams <djbw@kernel.org>,
- Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-References: <20260519151008.1399226-1-qkrwngud825@gmail.com>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260519151008.1399226-1-qkrwngud825@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260508031710.514574-1-alistair.francis@wdc.com> <20260508031710.514574-9-alistair.francis@wdc.com>
+In-Reply-To: <20260508031710.514574-9-alistair.francis@wdc.com>
+From: Alistair Francis <alistair23@gmail.com>
+Date: Wed, 20 May 2026 15:56:27 +1000
+X-Gm-Features: AVHnY4KniR3r_N3kxaUwuJ2NdVV3JVmbSqiPSHds9-OenhdEMA5je4KUw5NkTj4
+Message-ID: <CAKmqyKO1L+sCHWMDJ-tH1WVc+=oMVidnVSMttr6ft0-ewSjMVA@mail.gmail.com>
+Subject: Re: [PATCH 08/18] PCI/TSM: Support connecting to PCIe CMA devices
+To: alistair@alistair23.me, linux-kernel@vger.kernel.org, lukas@wunner.de, 
+	Jonathan.Cameron@huawei.com, bhelgaas@google.com, 
+	rust-for-linux@vger.kernel.org, akpm@linux-foundation.org, 
+	linux-cxl@vger.kernel.org, djbw@kernel.org, linux-pci@vger.kernel.org
+Cc: alex.gaynor@gmail.com, wilfred.mallawa@wdc.com, gary@garyguo.net, 
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me, aliceryhl@google.com, 
+	boqun.feng@gmail.com, a.hindborg@kernel.org, tmgross@umich.edu, 
+	ojeda@kernel.org, Alistair Francis <alistair.francis@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/19/26 17:10, Juhyung Park wrote:
-> free_pagetable() is called via free_hugepage_table() with
-> get_order(PMD_SIZE) = 9 to free the 2 MB vmemmap PMD leaves that back
-> struct page arrays on x86_64. After commit bf9e4e30f353 ("x86/mm: use
-> pagetable_free()"), it goes through pagetable_free() instead of
-> __free_pages(), and pagetable_free() ultimately calls
-> __free_pages(page, compound_order()) which ignores the explicit order
-> argument and infers it from the page's compound metadata.
-> 
-> The vmemmap PMD chunks are allocated by vmemmap_alloc_block() using
-> alloc_pages_node() without __GFP_COMP, so PG_head is not set and
-> compound_order() returns 0. Only the first of 512 pages of each PMD
-> chunk is returned to the buddy allocator on hot-remove; the remaining
-> 511 pages stay allocated and become unreachable. Generalized: roughly
-> 16 MB leaked per GB of hot-removed memory per cycle.
-> 
-> The leak affects every memory hot-remove path on x86_64 when
-> memmap_on_memory=N (the default), including dax_kmem, virtio-mem,
-> balloon drivers, ACPI memory hotplug, and direct sysfs offline+remove.
-> memmap_on_memory=Y avoids it because free_hugepage_table() then takes
-> the altmap branch and does not call free_pagetable().
-> 
-> Reproduced with CXL memory toggled through DAX in a loop:
-> 
->   daxctl reconfigure-device --mode=system-ram dax0.0 --force
->   daxctl reconfigure-device --mode=devdax    dax0.0 --force
-> 
-> Fixes: bf9e4e30f353 ("x86/mm: use pagetable_free()")
-> Cc: stable@vger.kernel.org
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Cc: Jason Gunthorpe <jgg@nvidia.com>
-> Cc: David Hildenbrand <david@kernel.org>
-> Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@kernel.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dan Williams <djbw@kernel.org>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: linux-cxl@vger.kernel.org
-> Cc: nvdimm@lists.linux.dev
-> Assisted-by: Claude:claude-opus-4-7
-> Signed-off-by: Juhyung Park <qkrwngud825@gmail.com>
+On Fri, May 8, 2026 at 1:18=E2=80=AFPM <alistair23@gmail.com> wrote:
+>
+> From: Alistair Francis <alistair.francis@wdc.com>
+>
+> In the next patch we are going to add a PCIe CMA TSM driver, as such we
+> need to ensure that is_pci_tsm_pf0() will allow us to connect to CMA
+> capable devices. These devices don't necessarily has DEVCAP_TEE or IDE
+> support.
+>
+> As such for Root Complex Integrated Endpoint (PCI_EXP_TYPE_RC_END) we
+> also check for the CMA DOE feature.
+
+@Dan Williams this is the patch I really need your thoughts on.
+
+The current upstream pci_tsm code only works if IDE or TDISP is
+supported, which isn't true for CMA support.
+
+This patch works around that, but the more I think about it the
+hackier it is. I have a local change that reverts this and
+updates`tsm.c` to work with a DSM (`->dsm_dev` is NULL), but that
+doesn't feel right either. Do you have a better idea or how to enable
+a CMA TSM driver?
+
+Alistair
+
+>
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
 > ---
->  arch/x86/mm/init_64.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-> index df2261fa4f98..a2301bddb647 100644
-> --- a/arch/x86/mm/init_64.c
-> +++ b/arch/x86/mm/init_64.c
-> @@ -1024,7 +1024,12 @@ static void __meminit free_pagetable(struct page *page, int order)
->  		free_reserved_pages(page, nr_pages);
->  #endif
->  	} else {
-> -		pagetable_free(page_ptdesc(page));
-> +		/*
-> +		 * Use __free_pages() to honor @order: vmemmap PMD leaves
-> +		 * freed here are not compound pages, so pagetable_free()
-> +		 * would lose leak 511 of 512 pages per 2 MB chunk.
-> +		 */
-> +		__free_pages(page, order);
->  	}
->  }
->  
-
-I sent a proper fix for this already:
-
-https://lore.kernel.org/all/20260429-vmemmap-v2-1-8dfcacffd877@kernel.org/
-
--- 
-Cheers,
-
-David
+>  include/linux/pci-tsm.h | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/pci-tsm.h b/include/linux/pci-tsm.h
+> index a6435aba03f9..5059954e4853 100644
+> --- a/include/linux/pci-tsm.h
+> +++ b/include/linux/pci-tsm.h
+> @@ -3,6 +3,7 @@
+>  #define __PCI_TSM_H
+>  #include <linux/mutex.h>
+>  #include <linux/pci.h>
+> +#include <linux/pci-doe.h>
+>  #include <linux/sockptr.h>
+>
+>  struct pci_tsm;
+> @@ -129,6 +130,8 @@ struct pci_tsm_pf0 {
+>  /* physical function0 and capable of 'connect' */
+>  static inline bool is_pci_tsm_pf0(struct pci_dev *pdev)
+>  {
+> +       struct pci_doe_mb *doe;
+> +
+>         if (!pdev)
+>                 return false;
+>
+> @@ -146,9 +149,15 @@ static inline bool is_pci_tsm_pf0(struct pci_dev *pd=
+ev)
+>          * switch.
+>          */
+>         switch (pci_pcie_type(pdev)) {
+> +       case PCI_EXP_TYPE_RC_END:
+> +               doe =3D pci_find_doe_mailbox(pdev, PCI_VENDOR_ID_PCI_SIG,
+> +                                          PCI_DOE_FEATURE_CMA);
+> +
+> +               if (doe)
+> +                       break;
+> +               fallthrough;
+>         case PCI_EXP_TYPE_ENDPOINT:
+>         case PCI_EXP_TYPE_UPSTREAM:
+> -       case PCI_EXP_TYPE_RC_END:
+>                 if (pdev->ide_cap || (pdev->devcap & PCI_EXP_DEVCAP_TEE))
+>                         break;
+>                 fallthrough;
+> --
+> 2.52.0
+>
