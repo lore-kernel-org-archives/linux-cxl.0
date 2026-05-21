@@ -1,334 +1,403 @@
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010043.outbound.protection.outlook.com [52.101.56.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BB735C1BD;
-	Thu, 21 May 2026 08:48:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779353300; cv=fail; b=YLUOVNbX+9Zk278Pvzg3gD2BUhvVnY3YvKfw4og+XIqsgbdAFY5Hw/1CELDlTh4g+AQh0CpH1FzngC8GYNTpxIis34Sb7z65rgjsC28/TXi3OhBbcSpA6jlunemYIUpNIAfbzUMXE+HjEzDNNZthK4jXWh/v/oWstUDUCZRDKYY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779353300; c=relaxed/simple;
-	bh=Bd5UbG2MistxGqDVLKze4mTsTDlR8AAm55CsZcB9tvY=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Ewvm1NOq7epQTrcbKKTxroVdlZU2lIYRsTVZ1V5CcfGEYbPSuiJOf7+YISMNseSGvHK7eValCAZaaHadRvJU+mTsArW/S95nZ/I/JTH6UtHjHFbOwxLT4GP7MFPMARiGc0xxpFTg+yfZUZosjRAChW3qAtKgSxjrxcYZoRRcoWo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=eLjGj2GN; arc=fail smtp.client-ip=52.101.56.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DC437B003
+	for <linux-cxl@vger.kernel.org>; Thu, 21 May 2026 09:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779356551; cv=none; b=f8XZfgqFTpBHRJKLbMUDajvqan1VQkD+eXYNmcu32FF7EMlisMs1vy1KuSgz3mYiHTr8hr4gTgjQcaUxpT7di3YMB5Ezp1+eZVMK8NsmXyntjEtnm9dCm4uo7hC5sleVIs2SBTPLPv0CY2NA/x7oC/WBkb3aQHjwLSDuauDIBgI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779356551; c=relaxed/simple;
+	bh=DDSE4V9vwMkX18NBxZMNlBDCxYK4O9WxYSJKtetq7Z4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GE2OLpCMo2tL7WDCM5S9gL/2K+J1bjH5qS528i5l9hCAZ93ekbp+rhRKnahFpHgTh3t9YWB0GzUD3+ihCQm0N/P4FKdt5Y4ezE57m4u/ekViEKPk+Km/CM8rT9ns1Z85jX7sk12Q80aocS+81+W1DWJhVFXr/jH5OatZeDIUeGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D3C3AjF7; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="eLjGj2GN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LfPzD7xWw+c7k0wBIoW3evkm4yjbxHkxx3ftjyYG2U5tND6WymFgCA8wMYgmo/pJiJN3sOWu8cYjRra6BI7N+5GVzx/m/kjRu1vilCZDRF4Z2INbyFByNTDBFb6eaNZtRZTb3gc2JP30V7rjzCHWlBUIHWnMwJnod0L/ChK89MM4cOsM/AjVl1tfuy+quY+Q4kwTgUl7OG1/lqLt1yyl/AGmoUJNEkUx0BFrQbE/AOhGltFQ4W8/ngH7SZiyJzQDBi9xACdKEg6v5fciYTTuhSeIua8+bILSkfDoXajRv6n1TNYDYhmNDb9SuXZz5/t+YNCkxKeYEHtJ0Z7X49lpVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Q0QMmz1YOoP3BgFoa6Md86K4aZmStuhPINXTDUK6xHU=;
- b=U1b5ey48QLSJmdG3Mo8iuDXcMon79hPaKFrfJCaJYBe9Canqx6Pf6IHmoRfNsL7Y1So0OfXJ+1cS2j7NgpEjDJOdXfGZZEDwqdIPe/5yWmVNY/OgixlQ3RfAH2i9xcACBOS0xm3UP7OZIULD3R0O1umjgbTcO/lAJNb1JF2W9zowvTs+xaKMypMsc/0JC1r9okapWJ0h2JSnPtAAVjlIweWiJkLRfympe27SucQu94yQxbsrYWchCrs4PbOJxHLmlRoAZK7gvfgUubtjphuA20N7a68yRtlBFTb4PuVcI9UW7YmiK3Z6WiYRM6thAAF0J2S/QmCqeLDte49aK6L9mA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Q0QMmz1YOoP3BgFoa6Md86K4aZmStuhPINXTDUK6xHU=;
- b=eLjGj2GNjfQDBQdhUZbFuMK+N24UxiL34q7MNc7N+7ZFOyqW91x6/hviw7MgUkT3ovEeXVSHDl2sjVoQdZkAeBe+fifstwISAExpqo3FAeUtT8OPN0fr/tJg/tAgztQWMMZ4BqKTyRoxQrUrdVaPfAcPkoOVVq104qPUecUAce/w/teenzLy9kxAefq8YpKiekSqDmgUwwdv6T3cRWtpknMX8uQqObcCIuBvEbS5GzjK5OntUgzVTpe+DCrm/39u3TugdmjtdLlCJGUBlyzW6Zv2p/li2eTjpFPrEXRwNA7+PSywWxI9CeV6+wgi0jEQXv6IzAfyN+rAgoK5xPem0g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by IA1PR12MB9522.namprd12.prod.outlook.com (2603:10b6:208:594::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.23; Thu, 21 May
- 2026 08:48:13 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0048.013; Thu, 21 May 2026
- 08:48:13 +0000
-From: Richard Cheng <icheng@nvidia.com>
-To: dave@stgolabs.ne
-Cc: jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	fabio.m.de.francesco@linux.intel.com,
-	rrichter@amd.com,
-	ming.li@zohomail.com,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	newtonl@nvidia.com,
-	kristinc@nvidia.com,
-	kaihengf@nvidia.com,
-	kobak@nvidia.com,
-	Richard Cheng <icheng@nvidia.com>
-Subject: [RFC PATCH] tools/testing/cxl: Support multi-decoder shared-dport topology
-Date: Thu, 21 May 2026 16:48:06 +0800
-Message-ID: <20260521084806.28232-1-icheng@nvidia.com>
-X-Mailer: git-send-email 2.50.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TPYP295CA0026.TWNP295.PROD.OUTLOOK.COM
- (2603:1096:7d0:a::20) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3C3AjF7"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4903d730b1fso408985e9.2
+        for <linux-cxl@vger.kernel.org>; Thu, 21 May 2026 02:42:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1779356548; x=1779961348; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EvbcgxZMEngpix8PPNffa9OACapw9cCTxSSTQ7Xgr3o=;
+        b=D3C3AjF7rrTM19NOBCNRZ0AewSfpwpTQXJJuylzXSy4njIyXQMn6AqSMhSIkZ4dfKF
+         u8HxQF8Aaq9Uo01meKH0KJqXprDfEsyWkIsXUTdz8ZIW//fG1a8pcW+DbC2SFhKNofUQ
+         cdnG7e5lGJ6wkGTpQ0NDK1U7gLp53TwT7ZNsOLqMk++xMkgM/15sp40/OyqnaxrDezhJ
+         AY/LeON2/QYcRrmnrYPBWHHgM0b2QteTWvlQlXyjdeTRhR5SmQnfWl5gz7dlY3NgSmnz
+         MD3LaQuI+KLSQWOH/cDhnzRi1VExcchVtQ4ALOYhzOAFZiE5ViZJzLSc4n2f2YMMTNz1
+         40pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779356548; x=1779961348;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EvbcgxZMEngpix8PPNffa9OACapw9cCTxSSTQ7Xgr3o=;
+        b=lHcen6agxPxIEb7w5ThWVFYtoBHoJtxJBQuNnpt5E+60FCvm+jQIxQImV0RRP/aUCp
+         AVK1dvvIz25qKDiZGWXDpBGljoBVpnv72Lw68Etoo/vswaFjc8qKiGMGf+/Nf9qUeIk+
+         D7Cu0VUKmxdNaqg7WR+V+IGzJ4aCNtN5xl/9dfDK2vvvKvPDwG4Q5l6aOwhqYfp9MD80
+         m+wyBM3LVrOGkZLKqpfgEuf7zJAiEiqHcJLdXBDEghxGx+wv7Xo6zahulOw+tR3pKS5l
+         KZJTHyzg+BT0oT73H3mKyvkrXxeHZX+a171y4ekpJw8Us0elr2c//SOeNSKpxVAUX2LW
+         VBBw==
+X-Gm-Message-State: AOJu0YzSYiGzUe/sGLWr+UZKpnVqAbYuHogMCNgeemGBckSjtCcLDbgk
+	t2+VCmqglpf10RiLXHZGS9BQWiinXdCqwaj7ws7AoJYPeMe2TpO+ayU/
+X-Gm-Gg: Acq92OHcjyR1P9RcMMv0hFJ1ZoNrrMWBnm/KfgWlHSN63M1cTxbFvT93G6fuOFLDoW5
+	bEg3atvH3zKsFvAdPJHcdfPC/avyJRTmrNw9ecnFyOghRculQ0WiKGXYZ7QHDD+VHci2VUiWG3m
+	4krzDaqYf74g4FnZ+MQiA5QD6lFpSkrpCYPax2Bqsqg2uGXYh5dlOilDEOZOKi9j0v6QbgnuBMd
+	b/a99nBcKV3kU0WWe/dI0F4fcPbQXKKafaEWm0SBwmVxWNE0WB/1fImT40agk641Np0c1pkxHIV
+	dlkhPm6NkEN1HIJS1amBt+a73XYrXACD2V1DxNS6tstSHhokoRum7/JeL4DxwPwkqk+wtOps7Ip
+	v8msRRLV5Ymg3M0xZ/Kzz68hMAnFOrA/MQnuytfJ0mPG0UW2OR2VJXPUMgCQaSFVZXk9FCmmvGX
+	+G5XY4BKseVjHyfONi2GbXHzbXI3x9sfLQ2gEgWDAdmZHeXY4ZFvco0mjw63Pw4hKE5PDy8vZ82
+	dZkrWt4IIju
+X-Received: by 2002:a05:600c:26cb:b0:48f:e6de:1cc6 with SMTP id 5b1f17b1804b1-490360e1832mr18320785e9.32.1779356547548;
+        Thu, 21 May 2026 02:42:27 -0700 (PDT)
+Received: from thinkpc (shef-16-b2-v4wan-175958-cust4.vm3.cable.virginm.net. [80.193.46.5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49035adf173sm17183185e9.0.2026.05.21.02.42.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2026 02:42:26 -0700 (PDT)
+Date: Thu, 21 May 2026 10:42:23 +0100
+From: Joshua Lant <joshualant@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: linux-cxl@vger.kernel.org, qemu-devel@nongnu.org,
+	Jonathan.Cameron@huawei.com, arpit1.kumar@samsung.com
+Subject: Re: [RFC QEMU PATCH 01/10] docs: Add documentation for cxl-vcs-switch
+Message-ID: <ag7Tf+5Fn4460FL0@thinkpc>
+References: <20260429135717.3048713-1-joshualant@gmail.com>
+ <20260429135717.3048713-2-joshualant@gmail.com>
+ <20260519153308.4626e491@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|IA1PR12MB9522:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2fe665f1-2707-4287-94de-08deb715b16e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|3023799007|6133799003|11063799006|18002099003|56012099003;
-X-Microsoft-Antispam-Message-Info:
-	IYQzfa4tuv/qe3gyScKCr4yHCtS8IxknwDYAzecWQXizpmtRm9BxxuACNY2d0n/TP/WPu7v2BphNxLEkrvMiXujrp3qZg0VoyqHUJC3BsFzud8WTH24aS7A3DZz0XPb4FC8PEomWZWb9GiO/DOHr1hi+3BfW8SDJy2UzF985flrQtkOpVMf4jGSd/QAOXcjJuzlN0ABhVQCskCTgeKKi69S7CV3aYpYqxoPLDAO9f3akcb3dXwUjUvA7BzTNbV67OQJTnDUBH7LGf/Xkzakg+q9+L6p/beB/JhV/RSXw7TVVLqWpu6/rCm5DOfhqZ7j5uEoxGZq30au9aOdhTczHOxQnWt/tnYy4NNkxMkIuIpKHgUQJRbSLUD1QFJvMZaDHKl7CCoEXOtLGyzOAXAK6v1OvnNkhlK0EI8pem2W/i+TE6QtaL2QdXUfah4F4VgYiNi0pLXUF/BoJiezUjgA9vOMhztGh3VJqkVatjUzibwvXfi9Sz2FFiHx8T6/xWuIRTGPsbUHAiRnJm+1mwWo9OW5XCySvLiWOXfd6M0uIWYR9blLOd5AOUGC8EbKbTVmjc5lQo9lGm+ZtGH6bco3KtNjoE7aQcFP0BgcgMsaekcHs6yhwkX2x6g9VMLkhDJXg9/KPnc4mEMmFbaZF6RHjqfsCAUlClVk9co56qWQGrPhEFDcDDc1jyPgbrZtXJ2dVwujcOHuU4x1vOqHe/ahKfQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(3023799007)(6133799003)(11063799006)(18002099003)(56012099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?YZwcbhRg4O01Z/FxywHGBDk2YmEXMkK6ISROYxzTd7vPTXuo9NIWfnAWHK65?=
- =?us-ascii?Q?j83QARhTviPPZaMxRMzlJCNxzV5cM3hNdfahXFKPPMpduj31IOx21u7iNZIN?=
- =?us-ascii?Q?VhRVbjaXqHcQy5fCcZAYXJVjhrmnhyKwqENcg2yyeCwo16C2xoC496A47hWH?=
- =?us-ascii?Q?7AWcpOqMgC2jv5hTFOMAhExkeyQ1YoQNJ20sb2rK2MQxyuWlkgCa2he9r56W?=
- =?us-ascii?Q?HViynva+UAPVoWmQTY8HS6DX8SNpQmwNPvbi9CExvBK2E32VT28bz54KbhYQ?=
- =?us-ascii?Q?TWRrVQErJMV+tR37tdMA5yKYRxNenLKqotxz0q+fUQ4fqacKoy3J7BQY0mZY?=
- =?us-ascii?Q?3u0HuGCraogcvnfjfaF4nmq7Vpno4GLn+RiI7hJEHR8h9A3RaNRawvlwMjg/?=
- =?us-ascii?Q?9exUcj1CQ59eE2/7vlUl+ewTGHa16E1MBSp76JeZZ+uVG8aZzJUE9V3pkL56?=
- =?us-ascii?Q?UiEnry2FEYoZquNQtGlKCr+62CgumfJpH7quISB/GuvmNZ6Q8cZ3kpfLyZDY?=
- =?us-ascii?Q?R5NH0aGBD4QwJm5WtprXrBUI0vecH60fYoUBxU0NabXnPn9r2sj/tvyP+jaJ?=
- =?us-ascii?Q?6uxk1nMQ7S9qPl8YZlMi8OehcQXaCAZUsw89gI/fNFVNax/dCd80EATtc9dP?=
- =?us-ascii?Q?qFRQfGK3n9xnE+os+/i67ubG7PIkPz7TlkNRKfur2HipzZxUuiETUu1WX78X?=
- =?us-ascii?Q?5i7aSaPDzD2OKi7jB1AlUZshrhhZ2HQKoT0rqtu/ggv35HhpovVIoBqcCPYn?=
- =?us-ascii?Q?E4g+uUj3ToHk7xd/QAbTMtgITDD4dxGG03jQWq+BG3bw+3tOPMxKd0c1DtfN?=
- =?us-ascii?Q?Oj4nM7VfejHmDWvqz8R/+m8DrAoqMEzrM0h30AoofxpVzCNZo8ZkHZOeqATx?=
- =?us-ascii?Q?TTqCCCZbwaXanzJ6/x181awU8IDq6qrXek/r6aR2k4eadIvk9ZcQ78gtrCKN?=
- =?us-ascii?Q?0ZMzoek7yICNlkz81Xeo18+6uPS/W1MnedB0LhmyfxbIlVzsCHuwYodZVhND?=
- =?us-ascii?Q?luOO3E33fU5mg2y/99NqRt9WjEncaiplFGJdUshUqYjaTmgJMNbqjCmPooJB?=
- =?us-ascii?Q?bD5/KvoVwNcMNbClhIP3J/bePO16R1qTX5d5T4f6UMdy4hbOikh5x097Py0c?=
- =?us-ascii?Q?qu44dOybSoBnRU6jyoaWbJZ1laghvj4ZQD4nFvGgSDQLNdrHWiSuoKMrKkJk?=
- =?us-ascii?Q?1K9L+vAvxnkavkOnF9eT2mZOL3GVH0sy172XRMymckdcsARGGfW8pZq8Pedw?=
- =?us-ascii?Q?TdqbufLxWF+CTcjbUi6WUgDxyByyYVhh+hPNM68jB+ni4OrGl4sJcXrk23Ty?=
- =?us-ascii?Q?jRejwmO8xVR9H+nQlGgte/imqSSCs4EylccfYHlRz9LrjoHkn/ueDhdeTFFn?=
- =?us-ascii?Q?fXxRmk0gycoJQdUSVmDGtr1U0ojA2tFkniDjV6tqIN+SqFoW2BVJlc8IY19/?=
- =?us-ascii?Q?BlGMcKzPB+ZRdZ6LpSibSCGS3mLu7LMK2CFXiQxkn7ezfr7Lq77pJjwvHtGk?=
- =?us-ascii?Q?ynEzcsUVG5UqCrsFcwQXA758jZbW2xYlQBe6L4gT0fMz+VBE16UGf4DXCxrM?=
- =?us-ascii?Q?BqrzDXiIRR2ssGUTwighImVLK7pX98jwEb9FFeBuPs/CufiVDghVg/uO/SoP?=
- =?us-ascii?Q?xmbKmwAofOmMI5V/iZYAQ3bwotljuzzWtzaTsEqI09zjKZfi7b2FA0OWXBRw?=
- =?us-ascii?Q?2z51LSjc4HW323u5Mgl7mBltm/j3sXG98LVzB1qiA27h6QpD?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2fe665f1-2707-4287-94de-08deb715b16e
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 08:48:13.5660
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: momGE93brEdwi0LD+1LZuri6hy+0zEDmXcCCkgS3mWdSyNmhQPv5yts4r5I+9B+Gr8aNkaW0DIaw2/Xs1i/hiw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB9522
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260519153308.4626e491@jic23-huawei>
 
-Add "multi_decoder" module param to the cxl_test emulator. When enabled,
-mock_init_hdm_decoder() addtionally programs decoder X.1 on cxl_mem.0
-and cxl_mem.4 as a second auto-region carved from the next
-mock_auto_region_size of HPA in the same CFMWS window.
-The result is 2 committed switch decoders that share the same
-downstream-port target_map[].
+> On Wed, 29 Apr 2026 14:48:35 +0100
+> Joshua Lant <joshualant@gmail.com> wrote:
+> 
+> > Signed-off-by: Joshua Lant <joshualant@gmail.com>
+> Hi Joshua,
+> 
+> Sorry it's taken me a while to get to this!  I blame to much activity
+> on other open source projects! :)
 
-This is inspired by [1] so the emulator can detect and test for scenario
-like that.
+No problem at all! I appreciate you taking time to review this.
 
-[1]: https://lore.kernel.org/all/20260108101324.509667-1-rrichter@amd.com/
-Signed-off-by: Richard Cheng <icheng@nvidia.com>
----
- tools/testing/cxl/test/cxl.c | 88 +++++++++++++++++++++++++++++++++---
- 1 file changed, 81 insertions(+), 7 deletions(-)
+> 
+> I've mused in the past on how to do the command lines for these.
+> So some thoughts are based on that - feel free to argue why we
+> the structure you have here works better.
+> 
+> When I get through the series I may well change my mind on some
+> of what follows ;)
+> 
+> 
+> > ---
+> >  docs/system/devices/cxl.rst | 90 ++++++++++++++++++++++++++++++++++---
+> >  1 file changed, 85 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/docs/system/devices/cxl.rst b/docs/system/devices/cxl.rst
+> > index 32b1b5d773..9e8452e576 100644
+> > --- a/docs/system/devices/cxl.rst
+> > +++ b/docs/system/devices/cxl.rst
+> > @@ -119,11 +119,11 @@ and associated component register access via PCI bars.
+> >  CXL Switch
+> >  ~~~~~~~~~~
+> >  Here we consider a simple CXL switch with only a single
+> > -virtual hierarchy. Whilst more complex devices exist, their
+> > -visibility to a particular host is generally the same as for
+> > -a simple switch design. Hosts often have no awareness
+> > -of complex rerouting and device pooling, they simply see
+> > -devices being hot added or hot removed.
+> > +virtual hierarchy. Whilst more complex devices exist (see VCS
+> > +Switching below), their visibility to a particular host is
+> > +generally the same as for a simple switch design. Hosts often
+> > +have no awareness of complex rerouting and device pooling,
+> > +they simply see devices being hot added or hot removed.
+> >  
+> >  A CXL switch has a similar architecture to those in PCIe,
+> >  with a single upstream port, internal PCI bus and multiple
+> > @@ -467,6 +467,86 @@ Example configuration:
+> >  Guest OS communication with the MCTP CCI can then be established using standard
+> >  MCTP configuration tools.
+> >  
+> > +CXL Multi-VCS Switching
+> > +-----------------------
+> > +
+> > +The cxl-vcs-switch object allows for a Fabric Manager to dynamically reconfigure
+> > +the switching within a multi-upstream port CXL/PCIe topology, This moves beyond
+> > +the static switching configuration described above. The use of vcs=X on an
+> > +endpoint device indicates that it should be hidden from guests at boot. 
+> 
+> That bit seems rather unintuitive.  EPs shouldn't really be involved in this
+> at all. I guess you are using them as a proxy for a physical downstream port?
 
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 418669927fb0..929bbee471db 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -17,6 +17,7 @@
- static int interleave_arithmetic;
- static bool extended_linear_cache;
- static bool fail_autoassemble;
-+static bool multi_decoder;
- 
- #define FAKE_QTG_ID	42
- 
-@@ -1041,6 +1042,17 @@ static void default_mock_decoder(struct cxl_decoder *cxld)
- 	WARN_ON_ONCE(!cxld_registry_new(cxld));
- }
- 
-+static int decoder_by_id(struct device *dev, const void *data)
-+{
-+	int target_id = (int)(uintptr_t)data;
-+	struct cxl_decoder *cxld;
-+
-+	if (!is_switch_decoder(dev))
-+		return 0;
-+	cxld = to_cxl_decoder(dev);
-+	return cxld->id == target_id;
-+}
-+
- static int first_decoder(struct device *dev, const void *data)
- {
- 	struct cxl_decoder *cxld;
-@@ -1079,6 +1091,8 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 	struct cxl_memdev *cxlmd;
- 	struct cxl_dport *dport;
- 	struct device *dev;
-+	int max_decoder_id;
-+	int region_decoder_id = 0;
- 	bool hb0 = false;
- 	u64 base;
- 	int i;
-@@ -1129,9 +1143,16 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 	 * assignment those devices are named cxl_mem.0, and cxl_mem.4.
- 	 *
- 	 * See 'cxl list -BMPu -m cxl_mem.0,cxl_mem.4'
-+	 *
-+	 * When multi_decoder is enabled, additionally program decoder
-+	 * X.1 of the same endpoints as a second auto-region that shares
-+	 * the switch's downstream ports with the first region, so that
-+	 * the same dport ends up in target_map[] of two committed switch
-+	 * decoders simultaneously.
- 	 */
-+	max_decoder_id = multi_decoder ? 1 : 0;
- 	if (!is_endpoint_decoder(&cxld->dev) || !hb0 || pdev->id % 4 ||
--	    pdev->id > 4 || cxld->id > 0) {
-+	    pdev->id > 4 || cxld->id > max_decoder_id) {
- 		default_mock_decoder(cxld);
- 		return false;
- 	}
-@@ -1142,9 +1163,14 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 		return false;
- 	}
- 
-+	region_decoder_id = cxld->id;
-+
- 	base = window->base_hpa;
- 	if (extended_linear_cache)
- 		base += mock_auto_region_size;
-+	/* Place the second auto-region right after the first. */
-+	if (region_decoder_id == 1)
-+		base += mock_auto_region_size;
- 	cxld->hpa_range = (struct range) {
- 		.start = base,
- 		.end = base + mock_auto_region_size - 1,
-@@ -1156,7 +1182,9 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 	cxld->flags = CXL_DECODER_F_ENABLE;
- 	cxled->state = CXL_DECODER_STATE_AUTO;
- 	port->commit_end = cxld->id;
--	devm_cxl_dpa_reserve(cxled, 0,
-+	devm_cxl_dpa_reserve(cxled,
-+			     region_decoder_id *
-+				 (mock_auto_region_size / 2),
- 			     mock_auto_region_size / cxld->interleave_ways, 0);
- 	cxld->commit = mock_decoder_commit;
- 	cxld->reset = mock_decoder_reset;
-@@ -1165,12 +1193,23 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 	/*
- 	 * Now that endpoint decoder is set up, walk up the hierarchy
- 	 * and setup the switch and root port decoders targeting @cxlmd.
-+	 *
-+	 * For region 0 use switch-decoder slot 0 (selected by
-+	 * first_decoder()); for region 1 use slot 1 so that the two
-+	 * regions exercise the multi-decoder / shared-dport scenario.
- 	 */
- 	iter = port;
- 	for (i = 0; i < 2; i++) {
- 		dport = iter->parent_dport;
- 		iter = dport->port;
--		dev = device_find_child(&iter->dev, NULL, first_decoder);
-+		if (region_decoder_id == 0) {
-+			dev = device_find_child(&iter->dev, NULL,
-+						first_decoder);
-+		} else {
-+			dev = device_find_child(&iter->dev,
-+						(void *)(uintptr_t)region_decoder_id,
-+						decoder_by_id);
-+		}
- 		/*
- 		 * Ancestor ports are guaranteed to be enumerated before
- 		 * @port, and all ports have at least one decoder.
-@@ -1179,23 +1218,36 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 			continue;
- 
- 		cxlsd = to_cxl_switch_decoder(dev);
-+		/*
-+		 * Region 0 (decoder.0) keeps the historical shortcut of
-+		 * stamping target[] directly so single-region setup is
-+		 * unaffected by dport-add ordering quirks of cxl_test.
-+		 *
-+		 * Region 1 (decoder.1, only programmed when
-+		 * multi_decoder=1) intentionally leaves target[]
-+		 * to update_decoder_targets() at dport-add time.
-+		 */
- 		if (i == 0) {
- 			/* put cxl_mem.4 second in the decode order */
- 			if (pdev->id == 4) {
--				cxlsd->target[1] = dport;
-+				if (region_decoder_id == 0)
-+					cxlsd->target[1] = dport;
- 				cxlsd->cxld.target_map[1] = dport->port_id;
- 			} else {
--				cxlsd->target[0] = dport;
-+				if (region_decoder_id == 0)
-+					cxlsd->target[0] = dport;
- 				cxlsd->cxld.target_map[0] = dport->port_id;
- 			}
- 		} else {
--			cxlsd->target[0] = dport;
-+			if (region_decoder_id == 0)
-+				cxlsd->target[0] = dport;
- 			cxlsd->cxld.target_map[0] = dport->port_id;
- 		}
- 		cxld = &cxlsd->cxld;
- 		cxld->target_type = CXL_DECODER_HOSTONLYMEM;
- 		cxld->flags = CXL_DECODER_F_ENABLE;
--		iter->commit_end = 0;
-+		if (iter->commit_end < region_decoder_id)
-+			iter->commit_end = region_decoder_id;
- 		/*
- 		 * Switch targets 2 endpoints, while host bridge targets
- 		 * one root port
-@@ -1212,6 +1264,26 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 		cxld->commit = mock_decoder_commit;
- 		cxld->reset = mock_decoder_reset;
- 
-+		/*
-+		 * For the second region only target_map[] is set above,
-+		 * not cxlsd->target[]. On real hardware target[] gets
-+		 * populated when dports are added (BIOS-programmed
-+		 * decoders are read first, then dports get enumerated).
-+		 * cxl_test's order is reversed: dports were added long
-+		 * before this point, so re-fire the update here against
-+		 * each existing dport to mimic the real-hardware
-+		 * ordering and exercise update_decoder_targets() with
-+		 * pre-programmed decoders.
-+		 */
-+		if (region_decoder_id == 1) {
-+			struct cxl_dport *existing;
-+			unsigned long index;
-+
-+			xa_for_each(&iter->dports, index, existing)
-+				cxl_port_update_decoder_targets(iter,
-+								existing);
-+		}
-+
- 		cxld_registry_update(cxld);
- 		put_device(dev);
- 	}
-@@ -2049,6 +2121,8 @@ module_param(extended_linear_cache, bool, 0444);
- MODULE_PARM_DESC(extended_linear_cache, "Enable extended linear cache support");
- module_param(fail_autoassemble, bool, 0444);
- MODULE_PARM_DESC(fail_autoassemble, "Simulate missing member of an auto-region");
-+module_param(multi_decoder, bool, 0444);
-+MODULE_PARM_DESC(multi_decoder, "Auto-program a 2nd decoder per endpoint sharing switch dports");
- module_init(cxl_test_init);
- module_exit(cxl_test_exit);
- MODULE_LICENSE("GPL v2");
--- 
-2.43.0
+correct...
 
+> Interesting idea if a bit non intuitive. I wonder if we can put in an explicit
+> physical DSP device in. When linked it just proxies the vPPD.
+> 
+> Maybe we can get away without that but it leaves us with no physical port hotplug
+> as we can't connect an empty physical downstream port to a VCS.
+> 
+
+The main reason it has been designed this way is becasue I could not see
+a way of replacing one DSP (the vPPB seen by the guest) with another DSP
+(the actual physical port to which the device would be attached). Doing this
+could be done in 1 of 3 ways. Two of which I dont think will work. The
+third I have not figured out how to do it yet.
+
+1. Reconnect USP to PPB and endpoint rather than the vPPB on bind.
+
+The connection(s) to the USP needs to remain static since the USP itself is not
+hotpluggable. This is a mandate from the PCIe spec regarding slot/device
+characteristics, rather than a QEMU implementation detail AFAICT.
+
+2.
+The connection between DSP (PPB) and endpoint is severed on bind, and
+then the endpoint is then attached to the vPPB.
+
+This will mean in QEMU that the device has to go through the teardown process
+and reenumeration, so will potentially lose device state information. The
+alternative being (i'd imagine) a messy piece of code to rewrite the exit
+functions depending what is happening (real exit or "rewiring")...
+
+3.
+Create some sort of new device which looks like a DSP but actually is
+more of a shim of some sort and is able to connect pre-realized devices to
+pre-existing DSPs (the vPPBs) but somehow trigger a hotplug event in the guest
+as if it was only just being realized.
+
+> > Each
+> > +upstream port with vcs=X set will conceptually become an upstream PPB. Any
+> > +downstream port that is connected to an upstream port with vcs=X set will
+> > +automatically become a vPPB for that VCS. The overall cxl-virtual-switch has a
+> Neat not to have to set it for the DSPs, but I think we will need them to
+> grow new functionality so maybe a different device type is good.
+> 
+> > +single CCI mailbox used for config/status of all ports within the switch.
+> 
+> Need to support both MCTP and switch-cci but that should be fine.
+> 
+> > +Setting local-fm=true indicates that this QEMU instance has the CCI mailbox
+> > +attached. Setting it false will create listeners for commands from a remote
+> > +QEMU process (yet to be implemented).
+> 
+> Nice but make that the default for now (And drop the parameter).
+> Absence of a connected CCI might be sufficient though that's a bit ugly
+> to check.
+> 
+> > +
+> > +An example of how the topology is described on the CLI is shown below:
+> > +
+> > +  -object cxl-vcs-switch,id=vcs0,usp-ppbs=2,dsp-ppbs=4,local-fm=true \
+> Interesting.  I'd kind of like it to be a device, but it has no presence
+> on any bus in of itself (arguably it is on a whole load of them). So maybe not.
+> 
+
+I mentioned this briefly in the cover letter (sorry if unclear). I would
+have liked it to be a device as well, but I couldn't figure out how
+to do this given the way QEMU associates the buses and
+devices to one another in the QOM tree. You can't not give it a bus
+option, becasue it will then choose a single default bus to associate
+with. Im unsure about adding multiple bus association. Doing this will require
+deeper changes to the qdev/qbus which might be messy or unpalatable to upstream
+folk. I made my changes to qbus as minimal as possible.
+
+> > +  -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.0,hdm_for_passthrough=true \
+> 
+> Small side note - avoid the passthrough trick. It means a bunch of code
+> paths aren't exercised and has hidden various OS bugs.
+> 
+> > +  -device cxl-rp,port=0,bus=cxl.0,id=root_port1,chassis=0,slot=1 \
+> > +  -device pxb-cxl,bus_nr=22,bus=pcie.0,id=cxl.1,hdm_for_passthrough=true \
+> > +  -device cxl-rp,port=0,bus=cxl.1,id=root_port2,chassis=1,slot=1 \
+> > +  -device cxl-upstream,port=0,sn=1234,bus=root_port1,id=us0,addr=0.0,multifunction=on,vcs=vcs0,usppb=0 \
+> > +  -device cxl-upstream,port=0,sn=5678,bus=root_port2,id=us1,addr=0.0,multifunction=on,vcs=vcs0,usppb=1 \
+> 
+> How can we have two upstream ports in a single vcs?  To me those are separate VCSs
+> where a VCS is normally a tree topology below a given USP.
+> 
+> I think we have a terminology problem.  If I read this right you are using VCS
+> to mean the whole physical switch?  Been a little while but I don't think
+> that corresponds at all to it's meaning in the CXL Spec. Your VCS0/1 below
+> are right.
+> 
+
+Yeah I was struggling with the naming somewhat trying not to conflate a "VCS
+capable switch" with the VCS within the switch itself. Seems I didn't do a
+great job. Just to be clear 1 VCS = 1 USP. The whole switch is the collection
+of all the VCS's. The id's here of the CLI devices is misleading I see
+that.
+
+> 
+> 
+> > +  -device cxl-switch-mailbox-cci,bus=root_port1,addr=0.3,target=vcs0 \
+> > +  -device usb-cxl-mctp,bus=ehci.0,id=usb0,target=vcs0 \
+> > +  -device cxl-downstream,port=0,bus=us0,id=dsp0,slot=3 \
+> > +  -device cxl-downstream,port=1,bus=us0,id=dsp1,slot=4 \
+> > +  -device cxl-downstream,port=0,bus=us1,id=dsp2,slot=7 \
+> > +  -device cxl-downstream,port=1,bus=us1,id=dsp3,slot=8 \
+> Ok. So these only know they are virtual because they are connected to a virtual USP.
+> Might be enough - or we might want to make that more explicit via
+> a new device type.
+> 
+> > +  -device cxl-type3,persistent-memdev=cxl-mem1,id=cxl-ep1,lsa=cxl-lsa1,sn=99,vcs=vcs0,dsppb=0 \
+> > +  -device cxl-type3,persistent-memdev=cxl-mem2,id=cxl-ep2,lsa=cxl-lsa2,sn=100,vcs=vcs0,dsppb=1 \
+> > +  -device cxl-type3,persistent-memdev=cxl-mem3,id=cxl-ep3,lsa=cxl-lsa3,sn=101,vcs=vcs0,dsppb=2 \
+> > +  -device cxl-type3,persistent-memdev=cxl-mem4,id=cxl-ep4,lsa=cxl-lsa4,sn=102,vcs=vcs0,dsppb=3 \
+> This I mention above. I 'think' you are using the dsppb to instantiate something that is pretending
+> to be a the physical DSP.
+> I haven't yet read thee series, but gut feeling is that will make the querying of link
+> properties etc rather different from the normal case.
+> 
+> > +  -machine cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=8G,cxl-fmw.1.targets.0=cxl.1,cxl-fmw.1.size=8G
+> > +
+> > +Example topology involving VCS switching::
+> > +
+> > +               +--------------------+  +--------------------+
+> > +               |   Host Bridge 0    |  |   Host Bridge 1    |
+> > +               +----------+---------+  +----------+---------+
+> > +    +-------+             |                       |
+> > +    | MCTP  |             |                       |
+> > +    | USB/  |  +----------+---------+  +----------+---------+
+> > +    | I2C   |  |    Root Port 0     |  |    Root Port 1     |
+> > +    +-----+-+  +----------+---------+  +----------+---------+
+> > +          |               |                       |
+> > +          |               |                       |
+> > +   +------|---------------+-----------------------+-----------------------+
+> > +   |    +-+--------+      |  cxl-vcs-switch (vcs0)|                       |
+> > +   | +--| CCI MBOX |---*  |                       |                       |
+> > +   | |  +----------+      |                       |                       |
+> > +   | |  +-----------------+--------+      +-------+------------------+    |
+> > +   | +--+                 |   VCS0 |  *---+       |             VCS1 |    |
+> > +   |    | +---------------+------+ |      | +-----+----------------+ |    |
+> > +   |    | |                      | |      | |                      | |    |
+> > +   |    | |        USP 0         | |      | |        USP 1         | |    |
+> > +   |    | |                      | |      | |                      | |    |
+> > +   |    | +----+------------+----+ |      | +----+------------+----+ |    |
+> > +   |    |      |            |      |      |      |            |      |    |
+> > +   |    | +----+----+  +----+----+ |      | +----+----+  +----+----+ |    |
+> > +   |    | |  DSP 0  |  |  DSP 1  | |      | |  DSP 2  |  |  DSP 3  | |    |
+> > +   |    | |(vPPB 0) |  |(vPPB 1) | |      | |(vPPB 0) |  |(vPPB 1) | |    |
+> > +   |    | |         |  |         | |      | |         |  |         | |    |
+> > +   |    | +---------+  +---------+ |      | +---------+  +----+----+ |    |
+> > +   |    +--------------------------+      +-------------------+------+    |
+> > +   |                                                          |           |
+> > +   |           +----------------------------------------------+           |
+> > +   |           |                                                          |
+> > +   |           |            -                    -            -           |
+> > +   +-----------|------------|--------------------|------------|-----------+
+> > +               |            |                    |            |
+> > +          +---------+  +---------+          +---------+  +---------+
+> > +          |CXL/PCIe |  |CXL/PCIe |          |CXL/PCIe |  |CXL/PCIe |
+> > +          |  EP 0   |  |  EP 1   |          |  EP 2   |  |  EP 3   |
+> > +          | (PPB0)  |  | (PPB1)  |          | (PPB2)  |  | (PPB3)  |
+> > +          +---------+  +---------+          +---------+  +---------+
+> > +                 PPB0 Bound to VCS1, vPPB1. Others unbound...
+> > +
+> Good to have the diagram as makes it easier to discuss.  
+> 
+> What you have here is a bit of a hack because only some entities created
+> exist in the command line - the others are spun up implicitly.  I suspect
+> we really want to make them explicit.  The one thing I never looked into in
+> the following is how hard it would be to poke a vDSP in front of a physical
+> DSP and basically proxy stuff through or not.  Some stuff will be programmed
+> at boot (windows etc for hotplug later) but other stuff will fire in the hotplug
+> flow on an attach of a physical port. Will need some care and stitching up
+> memory regions across the boundary.
+> 
+
+I think that this is really the crux of the issue with this series, and
+all relates to the first question I posed in the cover letter and some of the
+other comments you make on other patches, and with my comments below.
+
+The way these patches work currently make the software side of the
+hotplug on binding trivial, but they disallow FM comms to the device when it is
+not bound. If we solve this and have realized devices dangling off the
+DSPs, then it makes the hotplug to the guest more complex.
+
+The issue is that the hotplug events and the realize/exit functions seem so
+tied up with one another. I'm unsure at the moment how to decouple them cleanly
+in the VCS case.
+
+> The command line I'd be looking at for this as a target (feel free to shoot
+> at it) would be something like (I went with one PXB - but need to test both options). 
+> Note some of this is probably garbage as I haven't checked parameters are right.
+>  -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.0 \
+>  -device cxl-rp,bus,cxl.0,id=root_port1...
+>  -device cxl-rp,bus,cxl.0,id=root_port2..
+>  -device cxl-upstream,port=0,sn=1234,bus=root_port1,id=us0,addr=0.0,multifunction=on,virtual=on \
+>  -device cxl-upstream,port=0,sn=5678,bus=root_port2,id=us1,addr=0.0,virtual=on \
+> 
+> #note I extended current target to a list
+>  -device cxl-virtual-downstream,vport=0,bus=us0,id=vppb0 \
+>  -device cxl-virtual-downstream,vport=1,bus=us0,id=vppb0 \
+>  -device cxl-virtual-downstream,vport=2,bus=us0,id=vppb0 \
+>  -device cxl-virtual-downstream,vport=0,bus=us1,id=vppb0 \
+>  -device cxl-virtual-downstream,vport=1,bus=us1,id=vppb0 \
+>  -device cxl-virtual-downstream,vport=2,bus=us1,id=vppb0 \
+> # Note more virtual ports than physical - likely common situation.
+>  -object cxl-switch,usps.0=usp0,usps.1=usp1,id=vsw0 \
+> #list of usps so we can navigate downwards from this.
+>  -device cxl-switch-mailbox-cci,id=swcci0,bus=root_por1,multifunction=on,target=vsw0\
+> # Maybe hang the unconnected physical dsps on a bus created by the cxl-switch?
+
+I had tried writing it like this originally. The issue comes from the
+fact that having a "bus" implies something has been added to the QOM Tree, which
+forces an association to the guest. When actually we need this whole bus
+to be invisible to the guest (but visible to an FM) on boot.
+
+I'm sure this can be solved, but I can't see a way of doing it wihtout
+more invasive changes to the qbus/qdev code (patch 2), and conceptually
+to how the QOMTree represents the whole machine in general. I'm not sure yet
+if this could open up a can of worms with other stuff going on deeper in the
+guts of QEMU...
+
+Ultimately this is at the boundary of my knowledge of QEMU internals
+currently, but I think something like this might be necessary to
+solve the issues regarding FM communication with the
+unbound devices etc. I would really appreciate input about this
+specific issue.
+
+>  -device cxl-downstream,port=0,bus=vsw0,id=dsp0,slot=3 \
+>  -device cxl-downstream,port=1,bus=vsw0,id=dsp1,slot=4 \
+>  -device cxl-downstream,port=2,bus=vsw0,id=dsp2,slot=7 \
+>  -device cxl-downstream,port=3,bus=vsw0,id=dsp3,slot=8 \
+> #ideally a device but need to think where to hang it.
+>  -device cxl-type3,persistent-memdev=cxl-mem1,id=cxl-ep1,lsa=cxl-lsa1,sn=99,bus=dsp0 \
+>  -device cxl-type3,persistent-memdev=cxl-mem2,id=cxl-ep2,lsa=cxl-lsa2,sn=100,bus=dsp1 \
+>  -device cxl-type3,persistent-memdev=cxl-mem3,id=cxl-ep3,lsa=cxl-lsa3,sn=101,bus=dsp2 \
+> #note not all DSPs have anything on them.
+> 
+> Few reasons for this structure.
+> 1) The unconnected physical port - we want to make sure physical hotplug works both
+>    when not associated with a VCS and when it is.
+> 2) We need to be able to talk to EPs via FM interfaces when they aren't connected
+>    Given we have to make that look like PCI, let's make it PCI.  I'm not sure how
+>    much hackery that will take as we'll need to do some level of enumeration from
+>    the the switch controller.  Only need that once we want to do more than check
+>    training etc though - so maybe job for another day.  In theory we can do everything
+>    with devices in that state (be it slowly) so would need all the addresses programmed
+>    etc. Not as general as current discussions on enumerating full PCI bus in QEMU as
+>    all direct connect.
+
+What discussions are you refering to?
+
+> 
+> Anyhow it's fiddly with this scheme but I think a little more general
+> than your current one and closer representation of the hardware which will
+> matter as we add all the introspection stuff etc in the FMAPI.
+> 
+
+I agree fully. It would be much better if I could get this general
+solution. I just need to figure out how to do it...
+
+Cheers,
+
+Josh
