@@ -1,176 +1,171 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011015.outbound.protection.outlook.com [52.101.62.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94513A1A42
-	for <linux-cxl@vger.kernel.org>; Thu, 21 May 2026 10:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779359013; cv=none; b=q151Za226I+XtteAtVQFuijN5vITbowiXllJm/RpDDVqJBnUjq6ltOITkP/wNYuwuitU8Y0HGr71gao2FcfQlvwWiIfjsYpkyaHkp8AooBBxb2kG33Z6xgUoayenJYWUwI98YKzT6fuUstCI5NenmfVN7+MPfwAz3Zm17G/Axpo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779359013; c=relaxed/simple;
-	bh=iOrQJNri7D/5ugaOdUFq88eR0Oiqa3VJ0O5guePPSCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rPcB9Cl7HPs93577eypEr4IM0xar688p+UyzZp+WYLcaa+dibP/z6bafoikcIkcOrJTHEUtQHM6g4R78zgGqoARFQY6XFzg+97Hu5KHkZ27h0ywLnflQtVYJx/8P/EqLeDfBJ4aNosqDeBu9K0cjQD2Azh2/QEBTRtMwVz/J5X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T5ZMAcqy; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A043C2BA2;
+	Thu, 21 May 2026 12:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779366235; cv=fail; b=LodWqFVKI9aH68lVwq3umaGxXEwEyrVXyc58rESS6yDoIiye4mSYgS8CyC4bRKxTDbdqKeyhNFobooqe7Xbr++9KT4eAfqZ6SMJI/MWiReDcHX7xjLtxkmk/Z6NAhrgRp89k3w4SRPCka5mRR2VI/KPO2dSXVQlmYlxbyZHbOkY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779366235; c=relaxed/simple;
+	bh=I8KOj3uwgpDwZqNIj4VKyUvN6I5FTh9mcOvXunKHvis=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=CBICYBNND0KhJj5pnCkzNwj83Bje6hzqh1ybT0nkuPbgs+E4jxMX5NLx6v861C2HFpwBOh7kn1SOk54BNlZtiW5Vt87J6rL9CmTnXQGECF/qoWz7mp+MwHOnZklwga0s8uzzKixBFwkc0tRKaZMfBFykvR8oJF8DSUw1XOS7QRs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lGdFqpVO; arc=fail smtp.client-ip=52.101.62.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5ZMAcqy"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-43fe62837baso3464530f8f.3
-        for <linux-cxl@vger.kernel.org>; Thu, 21 May 2026 03:23:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779359010; x=1779963810; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QMYdl/jcyRx/rzoqCLEOyD78Cx4h4XXTE2K9BVYo1K0=;
-        b=T5ZMAcqyZY8MgNfMy8PhosAB9okxrerpAum3eh1hR+I7eUZSU2n8n0NEtw3lof8gWy
-         SHxPULA94jZ2CCM6AXpbORvNAuUwZNo8uYpVpHva4CN3gfUYokbPgtsJPPVz1rBNO5BW
-         fInqH3g9S3YvbEu626yub6ICBJQ8xkHZMMDwic5EvOtlFVZP6uTN1OUOaZcRl3pqYDx6
-         +ZTPH+Xrmqn0Xin5iPi26VSgDlUPknzKW7EHdnm/L4GRP06GIFrnp482q/28G/SwYZ3C
-         F3sgJpz215xwxsReCPaBIwdWIB5AiBdcVhKNGcIEI1P9ynEUIMOamAiGrFy2EmAV4nkf
-         V7xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779359010; x=1779963810;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QMYdl/jcyRx/rzoqCLEOyD78Cx4h4XXTE2K9BVYo1K0=;
-        b=W4PBvDUbXSUGLQzuEgywpuJ7oalmePP0/ye0XGxNciWOA34SeFlsfjHk2nK2928Rxm
-         haKFsJbz7uHrjmOYU3NEUddcWm1CPfDuqmOJpK0PzODG+5r6x1Sduzy7eltxg2IjgYuj
-         u/KN8bg0ogbvo2Pf2JBXfhnjRvM55gP1b9Fpoa5a08UW5PIQdl8mLA0PYO9Cl6HuTI5Q
-         MApoXKxp3U1IB5yrLieanFFEZUBumfzhk19qJXY7Yb/1NbEW1dgOSmk8yh1m+SRZjybl
-         Rlu8XaCNdV/e7Si7WkUcd6OE77SF9vXmA//P5JofTVJi9as+L5F2XdNh2rZfv10rZ2+h
-         6NRw==
-X-Gm-Message-State: AOJu0Yz2Pwdrf8zDNacv7l3CZcuU+tzVj5Df66fu8AoKzHlX675eIgki
-	ht7RhDJ+xpEmph43qz9KRx98Kfnp6srCNDF5rQ9dVX6lP+Un4EGoo58P
-X-Gm-Gg: Acq92OFDnt4PuLefA/DpccXLWP9kds/mgtOBMNmFj3iTPAIBJFv5lJvVp2eNlhU1f2H
-	7rFelsbuXJk+UBpzYZA9c5gih1sdTUq25caneukuRN+9bB5Eda/L6QG5wsphiZHiVwFsz8VLjsj
-	GfhKOnrkIcRaDPJn+pcPTdRgO7pJ7G62x7f/AeLIszCnh9ul/GJo2HrMnaUiRDacgXb3sMpLzwu
-	rns42ru+PSeCEmdqeeqgt0QOUs1z+UukstF78JuwAc/N3tEas5rl/UC/z8ft23JVmFYru8Y2H2R
-	IVotZza3sezBzYHxLLH/Ua96HRk439J+x/GM5bA8sUZ1tchT/zhAGWtAJJ7cQdgd8jeN7xVIF1a
-	uu0DeF7xAua9YMReSob2aFr++aCYjnbrykEEbruo3jX0N9HQLP0hK7DcmzaVyHrlTicv4joWMnC
-	kRMAvDsCRckRhdwb4uHastoBY/VmaR09EoYkdoLH7SI9PKJ7TA9uG/1pwg2LhZMm6Fui/GTtOAf
-	D/7MLMTgKMM
-X-Received: by 2002:a05:6000:240b:b0:45e:8526:7dc8 with SMTP id ffacd0b85a97d-45ea3ff7b2emr3512157f8f.25.1779359010014;
-        Thu, 21 May 2026 03:23:30 -0700 (PDT)
-Received: from thinkpc (shef-16-b2-v4wan-175958-cust4.vm3.cable.virginm.net. [80.193.46.5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-45eaa7d0a36sm1700715f8f.2.2026.05.21.03.23.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2026 03:23:28 -0700 (PDT)
-Date: Thu, 21 May 2026 11:23:27 +0100
-From: Joshua Lant <joshualant@gmail.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: linux-cxl@vger.kernel.org, qemu-devel@nongnu.org,
-	Jonathan.Cameron@huawei.com, arpit1.kumar@samsung.com
-Subject: Re: [RFC QEMU PATCH 02/10] qdev/qbus: Allow hidden devices to be
- busless on QEMU startup
-Message-ID: <ag7dHwNXS/qGnEJD@thinkpc>
-References: <20260429135717.3048713-1-joshualant@gmail.com>
- <20260429135717.3048713-3-joshualant@gmail.com>
- <20260520110205.428d0395@jic23-huawei>
- <ag7XkPS0ylFSeIGO@thinkpc>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lGdFqpVO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=h5mEU0ZcS2Nqu7MKjs2BFFl5hWg0ZTol2K89+u7qbKw+9ReaLNYkUWJ0ptgtshA3BJSLsPBEoj9N/7nWy9FtGLi6qI9JoYXoIyPcVs2viKz13NevF2knFTBejCYuKPXQPfL6QWWXUB/lFwUUAbRFSUWAn8BjN8MAgJDlYtpX+iDBLLPIkoUBDrkTGeOs8V2wuDbe05uqiQeBkYvIp/FT+MMtRXa913JSe4AyK+hOSsbaBL/QL8sAcfisf761OjhOlDa4mnx/HfjRnbz8Ew3+ieNVe5EtI416syjfZMV+QuT0q2K34gcN3Hp8c7yo9mYWavBNt8KxPor8riatXpya4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dCRdwsdiGfi6ry4Y45pDmfmg1Dw7E8NSIr2Lisaw3gw=;
+ b=IeElkyDo6XQ8Uyw5HLrbx/6vB2m9z9FcIXtJ0gG0Y1frHtU9KhgREWdzdJvN3mFMufzLlB/Srx3r+ZVqp8y/IrYsXtJi9OF8VR5+VmvfKGb3HZczV1kKqsqt54/yDnbJL+mrcQwwM5sYgxp962rGkcuCuRuAj7tDHsJE96yJjqlOtgrRZNNkQFYCvodJwrarmEqOBGA05TQ/JS506hlQyIoiK/FZob1lnRIs+Vk9PID1ASA890UOl1x0cJRdbMw5Ivm/HcenMX5tYgsn1FdaY7gdhC7Vxnbth/g7owjeyf5yoi84IUBIrOJBvgtUNYq6H+cAr1Z91gfA/LoTi/g+mg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dCRdwsdiGfi6ry4Y45pDmfmg1Dw7E8NSIr2Lisaw3gw=;
+ b=lGdFqpVO2nnA/YpUR+Sbw3UGUvWl/bVXJpqCQ+djpPRA81uqVCHm+IyyWaSE5Zb+QVAsRIYkJA9qNknY+FEZ/6i+nx/mAT1PSzKziVKQZsbkAg/n4X4wZQ8CRLxQgURJbPEoiaeJt/ww6lOAdPNjjUIGGuWgnrU+R1PMR6xocxQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH8PR12MB9766.namprd12.prod.outlook.com (2603:10b6:610:2b6::10)
+ by CYYPR12MB8653.namprd12.prod.outlook.com (2603:10b6:930:c5::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.14; Thu, 21 May
+ 2026 12:23:48 +0000
+Received: from CH8PR12MB9766.namprd12.prod.outlook.com
+ ([fe80::be0f:431f:5f27:96d9]) by CH8PR12MB9766.namprd12.prod.outlook.com
+ ([fe80::be0f:431f:5f27:96d9%3]) with mapi id 15.21.0048.013; Thu, 21 May 2026
+ 12:23:47 +0000
+Message-ID: <7c9cb682-ec3e-438b-830c-2a5997b69c43@amd.com>
+Date: Thu, 21 May 2026 07:23:45 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: RFC: CXL: How to handle trace event ABI break from
+ CXL_HEADERLOG_SIZE fix?
+To: "Dan Williams (nvidia)" <djbw@kernel.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Dave Jiang
+ <dave.jiang@intel.com>,
+ Smita Koralahalli <smita.koralahallichannabasappa@amd.com>,
+ Robert Richter <rrichter@amd.com>, Jonathan Cameron <jic23@kernel.org>,
+ Shiju Jose <shiju.jose@huawei.com>,
+ Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ Ben Cheatham <Benjamin.Cheatham@amd.com>, Lukas Wunner <lukas@wunner.de>,
+ "PradeepVineshReddy.Kodamati@amd.com" <PradeepVineshReddy.Kodamati@amd.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <51a77746-5199-44a2-aa2e-d04cdd6084e7@amd.com>
+ <6a0e33507e961_1717cc100f6@djbw-dev.notmuch>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <6a0e33507e961_1717cc100f6@djbw-dev.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR18CA0039.namprd18.prod.outlook.com
+ (2603:10b6:610:55::19) To CH8PR12MB9766.namprd12.prod.outlook.com
+ (2603:10b6:610:2b6::10)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ag7XkPS0ylFSeIGO@thinkpc>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH8PR12MB9766:EE_|CYYPR12MB8653:EE_
+X-MS-Office365-Filtering-Correlation-Id: 021494d5-9f21-47c4-fbfd-08deb733cefd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|366016|1800799024|18002099003|22082099003|56012099003|3023799007|4143699003|11063799006|921020|6133799003;
+X-Microsoft-Antispam-Message-Info:
+	9m/KBbMLOojJTQkG9CB5HrOpVu+8UFGHe34RJgvKGKNklce9aSZvzoPwAczm/sUTLmQ5puF5jt6ByPfZ85M9bsNs/viylPU8em3eI5034FNSAqgMmMPz1A8+tkiDFzrZ8jAvMjclBm3FZ2lu2vHAkGA1zCqVfpmgQcX9gM6Ld/epx28ctfJCkDSOMaWTXjJniTbO3Z45WNWRPwY42lIA49KveucNsYYN4Zdr4NryyF8U8WU/v40BEgwBNztbXJfbCO+fBcX583xzpcu8vFERRRiWeR/DTjoaGh9iMKXmj2GtglbRWP5uHDrihvbXppCxaYVWFjuT8T+NrLFCXzMTdVD0D5biKrWTT0RT8MDdk7nh5HB4O9txp5iTpuhFg3OPzDKzlApJgNRXqEDztGkA+h++7lxUPhs0s3LLICKGOh5HzNM8+IFpUVyfeHQQR3M80XJXVijbp7zZ+AsQUoV8kNt0mljgBlJixG8F9vB//0KkjtNFS5Vaplfqen2mNAn0NibeJCr7cXES0zHu2pQsw5jEXAAeARpuLkoTG+yExYYg/dvuEYzFoVZafCIof8ZxLpzfnvny3JZJjV3mUKjHDktzGM9gnhtfXnfUkRTq1ln4srFtw0ndNsqrvHJmb182/Rwx9kppYaeh29+6MdPrVqb4JkCllal3Edw2fv4fg2ci9TcBLsYj35uAio1NGlNNAHOx3AAhspXMalygOQTuPb+uAcKsvM4Av/hlh2PM2z4=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH8PR12MB9766.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(18002099003)(22082099003)(56012099003)(3023799007)(4143699003)(11063799006)(921020)(6133799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MkQwSVc0QVRwTWh1REJtU3RLbFRnSjNSQTd1b1hDSzBLeG9hTzBpTDE1UWQ0?=
+ =?utf-8?B?YlBKaS9Td1N1bnVrdTJsVHIzY0Y1Q0hSRmRCRFozcjl5MkFEL1FWdEMxdWQw?=
+ =?utf-8?B?ak1lMkg2eDJDb1pDcC9PWDFwOHpSdVowUUs4SjkzY0YrU1Q0ZU1UM09OUU1B?=
+ =?utf-8?B?MTFaOXVzbGEwWktGRU5aUlJsWW5MdUJJY25ZYmVkWEZYR28yN1M0THAzVm5x?=
+ =?utf-8?B?UDRBcldjZGlZTVBnbkt4eStKc3ZMWlNTZUhxSE9KRUh2bzJ2TkxQdzdIc25x?=
+ =?utf-8?B?d1ZYWktiUlpuSHlEa055TFpyWFVycHVJcmVSWjkrbUMrZjZZc1JLKzZLanc5?=
+ =?utf-8?B?MWNsL2VQY01WQnF6ajJWVVVuVWNSVFlaRHZHdVJja2liYi9LaUxtbTVJZkJ1?=
+ =?utf-8?B?blU1M1N4VElQMXJjei9yLy9SdmswTXdFdk1YLzZudWltS2QxY0NjTFY3WnRs?=
+ =?utf-8?B?S1ZORGFKTmdpOWtSTmlVdVd3blc3NmFaMnFUcTNHU0Jva1doQ05iejNkSW1G?=
+ =?utf-8?B?N0Fpd3hXVlQya3I2a0NSUGJza0g4YkVCS2pHTlllQXJyNFMzZ3BHSlVwcDVN?=
+ =?utf-8?B?ckJKaGR6NW85VzZzMDExMGlzbGRDRS9WTzVMVlFIQ3FzeUgrQ09DKzZVMkxY?=
+ =?utf-8?B?TzMvRU40R3NsRTFVZGpPMW56V3IrVXpjUGxVdHZPdjZzY3hGMUNUekFMaGs0?=
+ =?utf-8?B?M0N5U0l3aGtUUXZlRE10dUJza2g0TlFMM2VMRFlHQWVUMGhMWEZuRlBsNlJJ?=
+ =?utf-8?B?M25jbmVrazNvKzA3YmVnZEVsSGhuY0F0MHNXMzlCSVVVWkJqcnkrODBMRXZZ?=
+ =?utf-8?B?N2duaWdTakdMSnBsK3M5U3FsNmo1Q2M3b29ua0hNYlZKcEtKb2VCSWs5NnRs?=
+ =?utf-8?B?OVdReHNEdzF2bEl2dzB5bjFraVRWZHhRMk8rV3pQSVZrVFk4NktrOVhBRjlG?=
+ =?utf-8?B?VzNKWlhiMnRzWXFEalkzUDBPaUdRbS9KMnVuQXZvaWdrV0dpSDhxdnk5emJY?=
+ =?utf-8?B?STN2Q3JRbGI2WTl2dkIrK2FVZjdXTmx3UHRNNEJQWnZJQjJOdndqTTVjWHIv?=
+ =?utf-8?B?RCtSbHBIZU9DYm5JZCtBRFVmb1FCZWR4cDdpamhHWmtTRmtacDdhdW1hcUJP?=
+ =?utf-8?B?VTJ3Y0dQQ1R4Z1BQSXVJS1V1ZTV4UlVwODBqSkY4ZGxSVDNCSk9YZmY2ai83?=
+ =?utf-8?B?NXJyZjg0TjdURkxHY1k4b040YkpRWk5XT1J2QWdIUzlLNHpXSGRwUFFjeFRw?=
+ =?utf-8?B?czJVQ2FtQnZpcTIwekNXa0YvR3JvajlJMmMvWEptR3Q4L3JIR29CR2xKVnBN?=
+ =?utf-8?B?Y3dzVUVZWTJKcEhnWHd2Tm9lS3VPTVVjS09Zckd2NTZoUkwycmxUYTk0TDhD?=
+ =?utf-8?B?aE9TTXpWVHUra1hMdDRaZ2pPT3Q0RFdlSnhrK1VrT29icHU3aUlobFpoamta?=
+ =?utf-8?B?YWhtQnB6RlA4YjE0R1NYaEZYRHJta1hyL1k5V255cnZpcjVTZHViRnhPc2JF?=
+ =?utf-8?B?eEFTWUdlMjBWNUxFRFJRVkxZcS94NDZoL0dkQjZEU2x2azBjc3dDdk1GQ1NY?=
+ =?utf-8?B?eURTUXpSMUZVNGhYTU4zeENmcjdIYU9IWForQXp5dGxadG0yWktZWnlpUmZr?=
+ =?utf-8?B?emtEN1FqVStFUzZteittM1c2K2M2aXZGdEJlcEo0MWRXa09rMFc5UFBKKzZ1?=
+ =?utf-8?B?RW5SeHNWa243dGNTZHRDU09EWStmNXpuZVNheDUrbnVleDRudW1xUmd5MjNX?=
+ =?utf-8?B?YzQ0akg1cTVFQ0x2a0VRdCtlL2JibFpRVHg5VFVGSStJOHhwclJZMTFyYmFR?=
+ =?utf-8?B?cHBQaFZYTGdVTG9CeFBMcjgyZ2FEaS9UK2hGUXp3SFJsSGhxc3RINTVJYzBJ?=
+ =?utf-8?B?R0xiN2NoSUU3UjdnOU95bGQ3VlM5bjZJMUt1MEI0dTNrc0U1MEhjQTFMMEdQ?=
+ =?utf-8?B?dGtHVWhmUm9XQ1laSUlZNzN1Z0xjdUR1bmhUQWM5eXZRbzRxY0ZoY2R6bmpu?=
+ =?utf-8?B?SVNsaEJMeE9LdEFMM0ljRWJjbmxQQkJtSkZacjViUFFpVW1CRGxlYXVmano1?=
+ =?utf-8?B?Q3VTRHdHY2JaNTZBQ0ZHOCtJODBCeVdIUGhpbGZUS0xZM2VHam5xRlhIZTBX?=
+ =?utf-8?B?aHN3UGdqdVZtS3pqbWhlZjNsRDNMcUUyWXNRU0I2NUJiTnNjYVZGTk5GZWZh?=
+ =?utf-8?B?REFnTGhaNEhqQUxtMkFWcWJpaEdTS2hCMmxHcmZGS2RhU2I1aEkxandSVlJV?=
+ =?utf-8?B?TVMySXh4U0RwSUkySThodlNJendaT3d3TFlhempGcG5EcGhLc01VaFFCZUJY?=
+ =?utf-8?B?cTdFUjBJaGdLelo4RWxzOW1XTUJ6NEZ2bExZR2JuQndwQlhKRnpZQT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 021494d5-9f21-47c4-fbfd-08deb733cefd
+X-MS-Exchange-CrossTenant-AuthSource: CH8PR12MB9766.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 12:23:47.8402
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3G+nXPvU91wC7QqnpO9zEXwqBJLTZGECV/8CM2iMW9cYPeJgnfWh77eJPB+ZZHDT20VkUZe9+3i56PpMbijzIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8653
 
-> > On Wed, 29 Apr 2026 14:48:36 +0100
-> > Joshua Lant <joshualant@gmail.com> wrote:
-> > 
-> > > Extend the capability for hiding devices, introduced for virtio-net
-> > > device in:
-> > > 
-> > > commit f3a8505656935cde32e28c1c6317f725084da1e0
-> > > Author: Jens Freimann <jfreimann@redhat.com>
-> > > Date:   Tue Oct 29 12:48:55 2019 +0100
-> > > qdev/qbus: add hidden device support
-> > > 
-> > > Currently only endpoint devices can be hidden with a primary device
-> > > and failover (known static configuration). However, looking at future
-> > > composable systems, we see a need for hidden devices which have no associated
-> > > bus upon boot. Move the check for hidden devices to before the bus
-> > > search, and if it is hidden ignore the case where the device was
-> > > described on the CLI without the "bus=" field.
-> > > 
-> > > This is motivated by a specific use-case: implementing the VCS
-> > > command set, part of the CXL specification (CXL r3.2 Section 7.1.3). In
-> > > this scenario a switch controlled by a Fabric Manager is able to change the
-> > > virtual hierarchy of devices seen by a guest within a fixed physical system
-> > > topology. The connecting bus is not known until runtime when
-> > > a bind command is issued by the Fabric Manager.
-> > 
-> > So this comes back to the earlier comment on whether they are completely
-> > hidden from a guest.  They aren't quite - we need to be able to
-> > get to them via the MCTP or cxl-switch-cci (in band mailbox) paths.
-> > 
-> > Maybe we can solve that later without any compatibility problems
-> > or by cheating and just searching hidden devices. I'm not sure.
+On 5/20/2026 5:18 PM, Dan Williams (nvidia) wrote:
+> Bowman, Terry wrote:
+>> Hi Mauro and Everyone,
+>>
+>> During development of the CXL protocol series [1], the Sashiko tool 
+>> identified an issue in the CXL RAS UCE trace logging for Ports and Endpoints. 
+>> Specifically, the CXL RAS UCE header log size is incorrectly defined in 
+>> drivers/cxl/cxl.h.
+>>
+>> The UCE header log size is currently defined as 128 u32s (512 bytes),
+>> whereas it should be 16 u32s (64 bytes) per CXL r4.0 8.2.4.17.7. Correcting 
+>> this will change the trace format and break the existing ABI contract 
+>> with rasdaemon.
+>>
+>> How would you recommend proceeding to resolve this?
 > 
-> Funnily enough I had something like this when I was originally writing
-> this series. I scrapped it becasue I ran into issues. I was storing
-> as a tree the QDicts of hidden busses and devices below them, but then realised
-> I couldnt hotplug into the USP and abandoned it. I was doing this with the
-> aim of eventual support for cascaded switches.
+> Split the definitions into one that reads from the register space and
+> once that passes the parsed log to the trace buffer.
 > 
-> There was another issue I cant fully remember... That the searching was easy
-> when it was referring to unrealized devices with QDicts from the CLI, but it
-> became much more difficult to get proper reference to some structures I needed
-> from the devices inside the qdev/qbus code when they were realized...
+> Something like:
 > 
+> u32 hl[CXL_HEADERLOG_TRACE_SIZE_U32];
+> 
+> ...zero-fill that and put a comment about how userspace has already
+> grown a dependency on the buggy size.
+> 
+> In other words, keep the userspace compatibility, but fix the iomem
+> overflow.
 
-I just remembered... I was having to introduce cxl specific code into the qdev
-code... I'm sure it could be separated but would require a fair bit more work.
+Ok, that's straight forward. Thanks.
 
-> > > 
-> > > Signed-off-by: Joshua Lant <joshualant@gmail.com>
-> > > ---
-> > >  system/qdev-monitor.c | 10 ++++++++--
-> > >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/system/qdev-monitor.c b/system/qdev-monitor.c
-> > > index f2aa400a77..b51dfe0645 100644
-> > > --- a/system/qdev-monitor.c
-> > > +++ b/system/qdev-monitor.c
-> > > @@ -650,6 +650,7 @@ DeviceState *qdev_device_add_from_qdict(const QDict *opts,
-> > >      DeviceState *dev;
-> > >      BusState *bus = NULL;
-> > >      QDict *properties;
-> > > +    bool hide_device;
-> > >  
-> > >      driver = qdict_get_try_str(opts, "driver");
-> > >      if (!driver) {
-> > > @@ -663,6 +664,11 @@ DeviceState *qdev_device_add_from_qdict(const QDict *opts,
-> > >          return NULL;
-> > >      }
-> > >  
-> > > +    /* Is the device hidden from the guest?
-> > > +     * If yes, no need to find a default bus if none given...
-> > > +     * Bus could be provided at runtime (i.e. in a switch)*/
-> > > +    hide_device = qdev_should_hide_device(opts, from_json, errp);
-> > > +
-> > >      /* find bus */
-> > >      path = qdict_get_try_str(opts, "bus");
-> > >      if (path != NULL) {
-> > > @@ -675,14 +681,14 @@ DeviceState *qdev_device_add_from_qdict(const QDict *opts,
-> > >                         driver, object_get_typename(OBJECT(bus)));
-> > >              return NULL;
-> > >          }
-> > > -    } else if (dc->bus_type != NULL) {
-> > > +    } else if (dc->bus_type != NULL && !hide_device) {
-> > >          bus = qdev_find_default_bus(dc, errp);
-> > >          if (!bus) {
-> > >              return NULL;
-> > >          }
-> > >      }
-> > >  
-> > > -    if (qdev_should_hide_device(opts, from_json, errp)) {
-> > > +    if (hide_device) {
-> > >          if (bus && !qbus_is_hotpluggable(bus)) {
-> > >              error_setg(errp, "Bus '%s' does not support hotplugging",
-> > >                         bus->name);
-> > 
+- Terry
