@@ -1,112 +1,165 @@
-Received: from a11-79.smtp-out.amazonses.com (a11-79.smtp-out.amazonses.com [54.240.11.79])
-	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012062.outbound.protection.outlook.com [40.107.209.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39EF4382283;
-	Fri, 22 May 2026 19:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.11.79
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779477587; cv=none; b=qzYerDN3JtVp7AuefCUbPgr/RFXA0eeurfibx4drUEzLuRUyRxYqbMJQ5FhfUp9eirW1TpSpfRAqo03/2JDHJ9n+8kIXajSXwjZMHYyo8dLBA8lMNDvHLFhhTNViGHKVGXu9J5DFVNuzA+/YF1g5IjozLGBwnQ+/JpH8nYIjmnQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779477587; c=relaxed/simple;
-	bh=tu4UxLvc/sX88yWSCNCjqG5f+79wuYtCVrBLE5YzpsA=;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:In-Reply-To:
-	 References:Message-ID; b=fU9bNXirF/Jr+OX1jSq+CFgfuuho/8xP3VnDyVooT5MfqviEuW/B7SFoPRrXkGP5ESNUAHxo3axAwp1Tg7k7T1ygfgpmKm/NHvkLjIElx1XPe6EsMHC7XUmnxOh+BN6uA3M5gVZdQYV4on1zba+8NwZbOSice4Nh72H6um/3P0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=kED1lgXP; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=sAOqeUb0; arc=none smtp.client-ip=54.240.11.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D1B22157B;
+	Fri, 22 May 2026 23:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.62
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779492309; cv=fail; b=GEwojgD48CnAebjYT4qGxCIRdH271ITHkZS6BM/9TKLFINGH2nihYS8qqDF5N0WRKPB76m3skHzbJ0KS7sT2coVXMiAYTZ7FngVdrF4c2+8i4PhcD/R965dkYEYEwaT3rUJCV5Sq2QLyZw1L+xiB3nFwDi7HY9kZF3VpR3CdJfk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779492309; c=relaxed/simple;
+	bh=M1NKzTlT9USo8X1bNCQKJtSpNZ7s83wL14WLxp1BZlg=;
+	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=k93HYZ2vMYBYo88ponizUUMzKApyVjx0qJwoKJFfwXef8+GAsUrbg1GXwS3SiUx19HkeozBIxq6jHoVWrz9RGH6hPaU2ULH0Hy60YnOQTblsTTbrUMI/LaRu1VRA5yEcVJJj8VgubStNQMzeR9AlXsINxfzJy/xIPBZlrCvWtqQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=t6qQbYAu; arc=fail smtp.client-ip=40.107.209.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="kED1lgXP";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="sAOqeUb0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1779477584;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id;
-	bh=tu4UxLvc/sX88yWSCNCjqG5f+79wuYtCVrBLE5YzpsA=;
-	b=kED1lgXPlJTY7/crAwpr7k767A3gJ5aMjJ+7Rj6Mk8c5nKIXwassGeLkb9Wn/CGW
-	W3ERAdGbVqRnUHcYq++K+p7Ahj27ZXg6O0lR2VtupXeVlVaH0pB1nAkY+64Fk0iqLat
-	udTh/r9/b29t3TdBz0djGOYozPPZubC0mVL2fGLs=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1779477584;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id:Feedback-ID;
-	bh=tu4UxLvc/sX88yWSCNCjqG5f+79wuYtCVrBLE5YzpsA=;
-	b=sAOqeUb08ZdiS8uGMFxjMwsPlirfskMIOel9VLwJqrYfyG+oFzHsqWXydw90i7Gy
-	oWQaOtbMpX0Y++pyLdzbavdDSHne4AjruBfJdq4yo5OzMbzK0FD+Diq8IXxuhzdaqHL
-	H1metyQlAV3JWrXe4s31587F6vh9Lpi3VXLRaBx4=
-Subject: [PATCH V2 7/7] dax: fsdev.c minor formatting cleanup
-From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
-To: =?UTF-8?Q?John_Groves?= <John@Groves.net>, 
-	=?UTF-8?Q?Dan_Williams?= <djbw@kernel.org>
-Cc: =?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
-	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
-	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
-	=?UTF-8?Q?Matthew_Wilcox?= <willy@infradead.org>, 
-	=?UTF-8?Q?Jan_Kara?= <jack@suse.cz>, 
-	=?UTF-8?Q?Alexander_Viro?= <viro@zeniv.linux.org.uk>, 
-	=?UTF-8?Q?Christian_Brauner?= <brauner@kernel.org>, 
-	=?UTF-8?Q?Miklos_Szeredi?= <miklos@szeredi.hu>, 
-	=?UTF-8?Q?Alison_Schofiel?= =?UTF-8?Q?d?= <alison.schofield@intel.com>, 
-	=?UTF-8?Q?Ira_Weiny?= <iweiny@kernel.org>, 
-	=?UTF-8?Q?Jonathan_Cameron?= <jic23@kernel.org>, 
-	=?UTF-8?Q?nvdimm=40lists=2Elinux=2Edev?= <nvdimm@lists.linux.dev>, 
-	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
-	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
-	=?UTF-8?Q?linux-fsdevel=40vger=2Ekernel=2Eorg?= <linux-fsdevel@vger.kernel.org>, 
-	=?UTF-8?Q?John_Groves?= <john@groves.net>
-Date: Fri, 22 May 2026 19:19:43 +0000
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="t6qQbYAu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WFQ6gzX8d8mAi/RCZaw9NmDrve01n8RfIXx0cCgdE3L4TZco+eJLNHUU6ZjKKZQ4aXR4hJQuRUAWAwgmvUxmMMH+SB7MX/nJ7VxUzxHR6YW+NqoSkH8E+HWJt7FU6V776lXZ7tCnmVXt0uDyrVbUJuZPav4Lb9NWK0s6Qoid3tboSzvPEzjGjK0UIv0VnLATtp5m0ycbfxHvX+OrkE9ls3OxbwSum726/whTxdtcoVBs24hMmsM7Jxbb+s08QfOVwFuAiO1zgXZqZCZjwzNxofTn5arV5vXqXzpQbVOvkU/edJlwqHWTwFX+ZRfHQqirDXre4POF+lKxYq9kWXhAyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jvNc+vwWD1AjIj6DjEf8OS8L4fq/8wNw8sUnEwm1nSk=;
+ b=X/nWHyiGfI0gs8YzLB4PQXbhwtQyZQar0T9h4/tP8palif5esDpJKD+gV7BTW/pm5TVycCE9xjqcgWwa277om26pcc88r+bMCPGlz5AMk7Ha3yS+HCjWODuDk5OEeEccvn9iDPe95Cy8W1Mj4yp0sLWwA31NACJhdVHrDupHd6Vnm3l3jHc0hPpxuiiI2zQF6ms6Wy4eZ9popE041/XidQT4wI3h8SZTGmaye0K43Kw4DVYiBGrCbrXaYbSGxLVXuMwgPo6YKqMyW6uAMu3SBbomLs0OWtEULphOtaLrE88WcUG8udPkOPcFPQv3FcebdXT414rNG9sGmEuycMocrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jvNc+vwWD1AjIj6DjEf8OS8L4fq/8wNw8sUnEwm1nSk=;
+ b=t6qQbYAuugRTdup49D0zJQMWeMwYC51PqZBy+dr8YnKRtyapTEEQjHppbLW9/YKUspAAoJeHuFoRPY7EH2/LLr0VOLs2ALndljnuv90uhv4h3+C5AJLjxe0WuHct6T1FgZRtJrI66pz0sSD8CVyq6fR8OcIPsibFNegPF01GQ2Wn1Gk1xAFCQMGhAnTbb4Hpg5dfYYMi/nzaRdGqRExui8VIpD0pfcQD+TT1i3VjaMdYsfI9DwXD9Seyq0kZhjNQNcs2IM0Ctok2H02wP6Dd6PCXZ1m+4OO1li+V1uLmlQ9MZLgPP2VCg0z20cb7kRaoxVpJOqBewBmcMF9QBDvq2Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by PH7PR12MB6394.namprd12.prod.outlook.com (2603:10b6:510:1fe::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.17; Fri, 22 May
+ 2026 23:25:04 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::299d:f5e0:3550:1528%5]) with mapi id 15.21.0048.016; Fri, 22 May 2026
+ 23:25:03 +0000
+Date: Fri, 22 May 2026 20:25:01 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-rdma@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+	Saeed Mahameed <saeedm@nvidia.com>
+Subject: [GIT PULL] Please pull FWCTL subsystem changes
+Message-ID: <20260522232501.GA1168039@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vrweTSVcj2CEpzrR"
+Content-Disposition: inline
+X-ClientProxiedBy: YT4PR01CA0051.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:111::19) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: 
- <0100019e511fb82e-1a444df3-8310-40ed-8380-72e1373d5da9-000000@email.amazonses.com>
-References: 
- <0100019e511fb82e-1a444df3-8310-40ed-8380-72e1373d5da9-000000@email.amazonses.com> 
- <20260522191937.79247-1-john@jagalactic.com>
-X-Mailer: Amazon WorkMail
-Thread-Index: AQHc6h+7e4zSojcNRQ2wV9eJQr6w4gAADXpr
-Thread-Topic: [PATCH V2 7/7] dax: fsdev.c minor formatting cleanup
-X-Wm-Sent-Timestamp: 1779477582
-X-Original-Mailer: git-send-email 2.52.0
-Message-ID: <0100019e512117cd-2a9b3b34-6f2c-42e3-9110-71aef0463358-000000@email.amazonses.com>
-Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
-X-SES-Outgoing: 2026.05.22-54.240.11.79
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|PH7PR12MB6394:EE_
+X-MS-Office365-Filtering-Correlation-Id: 04b3c7e9-bdcc-410b-7809-08deb85959e4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|18002099003|56012099003|6133799003|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	4VS1bPRYJx1i0ZynFxGiENNL6t/417tdZ3d4TxxJZoeBOwy01GcUnlTkHRoyjAEquF/JZQUb4EvkYvOjMRie+frFL8oq7vuDUJYCF0KDpVt2YeLp/8ZGWQxyTMIuCjgp9V9UDM1pEUA1LV4E3Rp27TLM/AOMpqQmp6LoKOzB0xebO+OvrOFsDHadtGKHByWuR51jzHKxZuUWMjwiJlHsg0OE4eCRv7/kk280TBsdkOKi5/ye8z1Ul18pYexiKbm1EW6otUCdIXBtHQfS//wecjRBMw9vj+dTwOhUurWXAverwg/MQ/OafFt4DDpjlvG88i+0nbC+td8d/q/+2gvfzn+ZgnwU9WUC+u1XpxUzlyVkozarl5YmLLH3RkVg7EPjEq014ozQf4YST8IKeZayZ1NELRrT+ku8LPBHe/BYqnQ0lL5BBwd+wRTDbjsHFUjnrtPafA6gFG6NdFhT9JBA31u9z4ggKduwL8REMC6pmDAZWAPOpOMCxjdjQGoYooZAMNjRWopy7gSUnSRjaS8yjDSQ924Xwm25eJMoA4nHXbacuobkRIT+jZRYHRVG6ugP8FrRpZ1xSxrfYkntaAfV+iZR7nhtn/YWibQhCuruU7QjMNEI6/MvejmUEk28atlB30j7bX0lQQa7JBXRfmZhZc0VePNVS1OVNqCRobDWD9OeUjObKT24BJ8NHscf7q+v
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(18002099003)(56012099003)(6133799003)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?y7KtJ9smbeB/dp5pVJe7FN3KE/NnaNo3uD8x/r7ZnZ+vTGwCZ0XS1qTtWX0W?=
+ =?us-ascii?Q?Bo1n1f7rXsQlMrTUaP5Y6p0qumu+cOjebRTlQ2CX0YBeHnbjyrRCn9Mm/o0V?=
+ =?us-ascii?Q?1mF0lQuJqR+vS2xBtyPS4QuBSomMSP1FxKiReHH/H6GxkbGtY+nEitBow0eT?=
+ =?us-ascii?Q?A7cPrBORDfLVRLlI3AcxmljSKQVfs/9CWbTU6t5/P0/3LchQTDF9wfJH8LH7?=
+ =?us-ascii?Q?SkCO+kyZR2/wpsCF+gwhMx2RkSQvyiuJ7spAeDhBZ7JlWaRwMdXdjCbpZE24?=
+ =?us-ascii?Q?PfBwFPhEkW/xHrPbJiVS0lXK0ax8r5t5UaEFHzr7/XoKDVyPYyEVoKENt8SR?=
+ =?us-ascii?Q?zXZQrE1G1wG8U/Zokcm/5UnC81aYCT+vIhl5SUbm7uhpFieuJa0PWb1l2PLx?=
+ =?us-ascii?Q?PI7nIf5j9aWTUq4wU1wkGQ191HQaVCFmJiAjXNI19PuXgnzfq8ji7Y0/Qi5W?=
+ =?us-ascii?Q?n6nn1X1zN8GkArmKeVVmhondkjIjYYCccxatcD2zb5Jo0xNj9QyDnHYSRHU/?=
+ =?us-ascii?Q?KYg1P0zHt08bK0VZjGbz4OvB7OE4Ys/iWHXv+0DR6aeau9gwFYg28Wl4CGCa?=
+ =?us-ascii?Q?HtETFdAs27nq/ViAAQCFXu74Ed3SLJWCM3t3WO7yQhZ2s2tLYcj8HeRA0dQ9?=
+ =?us-ascii?Q?TTRunsWwvO6sguVf9xG5qRf9ATAO3DJXLZ+uFzjWiyfrstllZFt960fCdR1E?=
+ =?us-ascii?Q?LVb3K8jdQ6YV8acFMefrrY8ld58M3asv+0ck/d7trlF0AfRLfJ6gUgQhlBbo?=
+ =?us-ascii?Q?/KY31mEcq9xZgqBpRhbjJVyMGeCYN0hSSg9QaR6V94DUeSbPGhi+DP+P1Qex?=
+ =?us-ascii?Q?5+8sjRokT2avCIEh2oO1Y9CN9lclYIyhZtiG7kcZKU/Qv6jcpp+NQR2NsmrL?=
+ =?us-ascii?Q?Ry3iuGnk4epn2fTq4PUoMt8Txj5b2sytVQQKpUkaRPAPTRRCnSWstXuw2Ayd?=
+ =?us-ascii?Q?8ZuWLVNndAuPENSDmlirkRT0ddr8tGRdMZ53WQtJwuuScFKnNPThMxKH4g50?=
+ =?us-ascii?Q?nlmOlFD2B2qZE7gmf5ncVwSEodfAszketsNWL8NWJss0BKBbVk5aRQda9r2m?=
+ =?us-ascii?Q?cSs0oVvSIhhltCciQohWs8DhaJHG6xDgpPohE0fW47EcqNMAvPC94CBi+pX9?=
+ =?us-ascii?Q?5YnBlpOTmzPN4O7btfduHoiXyCWCcXRhAOeQoYWMdzzMYssCB0BcBeplemjU?=
+ =?us-ascii?Q?YxIHmlH88bk9Gumckwpfbz5L2L2r5nZ3f8u1azFxCHnXMcIZgFeDvMwQFlkX?=
+ =?us-ascii?Q?wtM8exaYmGvMNW0j2z1hfq/+oSXk2x6Z+BmDJ1ScTo1eSHH6NN30YGhMoI8X?=
+ =?us-ascii?Q?ZpxCodbvdHi4W/K6JS0gVaNJnoQN4VEtFd5aw8fL1VdNEO/QeW3tmYcP7aKh?=
+ =?us-ascii?Q?PWMNyrKrMC49ddrHdAmHSWx6Vkl1ZKhjvabvoj+5pvM2w3TaX3aA3gmGqLqZ?=
+ =?us-ascii?Q?oBENlNpV0jTOPhqU8ZUBYUNHMkNko7juLPIzuYDKjejkfKMnLsSzJuGYV1Dk?=
+ =?us-ascii?Q?619W4ZYohIIhYDwvCrFyRfwbIVH16ax/3MC9uV6/KOYS8klYoiAzh0Pxynmy?=
+ =?us-ascii?Q?TX5D2si9CISMSVv7ZaoGuf2TLLDQ+FrpCyO909TdOH+UuHBnP0pYtDWCNbYs?=
+ =?us-ascii?Q?fe4/yONlUxeNK0AayD15RgevYpji86zZhrLvQQU2vmDRSkyPQr+HZgocgDkG?=
+ =?us-ascii?Q?ixEStt2LfEKsZ321G1lRRh18/QYTycSMkynw3ZOJJC57373N?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04b3c7e9-bdcc-410b-7809-08deb85959e4
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2026 23:25:03.7266
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2YW1XaftjNF5hs09Q9Ddw4fKjfmtXU5ZzNhfM+c0tbFqxaIdbcJV5DHJPjVxpLQv
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6394
 
-From: John Groves <John@Groves.net>=0D=0A=0D=0AAddress some comments from=
- Jonathan that were missed in the merged=0D=0Aseries. Fix line wrapping i=
-n fsdev_dax_recovery_write() and=0D=0Afsdev_dax_zero_page_range() signatu=
-res.=0D=0A=0D=0AFixes: 099c81a1f0ab ("dax: Add dax_operations for use by =
-fs-dax on fsdev dax")=0D=0ASigned-off-by: John Groves <john@groves.net>=0D=
-=0A---=0D=0A drivers/dax/fsdev.c | 15 ++++++++-------=0D=0A 1 file change=
-d, 8 insertions(+), 7 deletions(-)=0D=0A=0D=0Adiff --git a/drivers/dax/fs=
-dev.c b/drivers/dax/fsdev.c=0D=0Aindex f74fd1bb7f4c5..dafa24761e8ff 10064=
-4=0D=0A--- a/drivers/dax/fsdev.c=0D=0A+++ b/drivers/dax/fsdev.c=0D=0A@@ -=
-45,8 +45,8 @@ static void fsdev_write_dax(void *addr, struct page *page,=0D=
-=0A }=0D=0A=20=0D=0A static long __fsdev_dax_direct_access(struct dax_dev=
-ice *dax_dev, pgoff_t pgoff,=0D=0A-=09=09=09long nr_pages, enum dax_acces=
-s_mode mode, void **kaddr,=0D=0A-=09=09=09unsigned long *pfn)=0D=0A+=09=09=
-long nr_pages, enum dax_access_mode mode, void **kaddr,=0D=0A+=09=09unsig=
-ned long *pfn)=0D=0A {=0D=0A =09struct dev_dax *dev_dax =3D dax_get_priva=
-te(dax_dev);=0D=0A =09size_t size =3D nr_pages << PAGE_SHIFT;=0D=0A@@ -90=
-,7 +90,8 @@ static int fsdev_dax_zero_page_range(struct dax_device *dax_d=
-ev,=0D=0A =09long rc;=0D=0A=20=0D=0A =09WARN_ONCE(nr_pages > 1, "%s: nr_p=
-ages > 1\n", __func__);=0D=0A-=09rc =3D __fsdev_dax_direct_access(dax_dev=
-, pgoff, 1, DAX_ACCESS, &kaddr, NULL);=0D=0A+=09rc =3D __fsdev_dax_direct=
-_access(dax_dev, pgoff, 1, DAX_ACCESS,=0D=0A+=09=09=09=09       &kaddr, N=
-ULL);=0D=0A =09if (rc < 0)=0D=0A =09=09return rc;=0D=0A =09fsdev_write_da=
-x(kaddr, ZERO_PAGE(0), 0, PAGE_SIZE);=0D=0A@@ -98,15 +99,15 @@ static int=
- fsdev_dax_zero_page_range(struct dax_device *dax_dev,=0D=0A }=0D=0A=20=0D=
-=0A static long fsdev_dax_direct_access(struct dax_device *dax_dev,=0D=0A=
--=09=09  pgoff_t pgoff, long nr_pages, enum dax_access_mode mode,=0D=0A-=09=
-=09  void **kaddr, unsigned long *pfn)=0D=0A+=09=09pgoff_t pgoff, long nr=
-_pages, enum dax_access_mode mode,=0D=0A+=09=09void **kaddr, unsigned lon=
-g *pfn)=0D=0A {=0D=0A =09return __fsdev_dax_direct_access(dax_dev, pgoff,=
- nr_pages, mode,=0D=0A =09=09=09=09=09 kaddr, pfn);=0D=0A }=0D=0A=20=0D=0A=
--static size_t fsdev_dax_recovery_write(struct dax_device *dax_dev, pgoff=
-_t pgoff,=0D=0A-=09=09void *addr, size_t bytes, struct iov_iter *i)=0D=0A=
-+static size_t fsdev_dax_recovery_write(struct dax_device *dax_dev,=0D=0A=
-+=09=09pgoff_t pgoff, void *addr, size_t bytes, struct iov_iter *i)=0D=0A=
- {=0D=0A =09return _copy_from_iter_flushcache(addr, bytes, i);=0D=0A }=0D=
-=0A--=20=0D=0A2.53.0=0D=0A=0D=0A
+--vrweTSVcj2CEpzrR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Linus,
+
+One fairly bad bug for PDS
+
+Thanks,
+Jason
+
+The following changes since commit 5200f5f493f79f14bbdc349e402a40dfb32f23c8:
+
+  Linux 7.1-rc4 (2026-05-17 13:59:58 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/fwctl/fwctl.git tags/for-linus-fwctl
+
+for you to fetch changes up to e7537735028c3ad4b0bfc02ff8fa2a1a28aa04fe:
+
+  fwctl: pds: Validate RPC input size before parsing (2026-05-19 10:44:32 -0300)
+
+----------------------------------------------------------------
+fwctl 7.1 first rc pull request
+
+- Buffer overflow due to missing input validation in pds
+
+----------------------------------------------------------------
+Heechan Kang (1):
+      fwctl: pds: Validate RPC input size before parsing
+
+ drivers/fwctl/pds/main.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+--vrweTSVcj2CEpzrR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRRRCHOFoQz/8F5bUaFwuHvBreFYQUCahDlzAAKCRCFwuHvBreF
+YYpfAQDjRu2WSx/ej/hVxC/80uqDc3ppTgBOytrcLfWMUBgSNAEAizC9nHXJtUaN
+CtZtlm07Cyoq/kGDOfAs/svsozucqQ8=
+=xduo
+-----END PGP SIGNATURE-----
+
+--vrweTSVcj2CEpzrR--
