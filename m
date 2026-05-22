@@ -1,43 +1,50 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DAB3E9C06;
-	Fri, 22 May 2026 11:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779450675; cv=pass; b=rd+vDlWrFD1Fj9PfWX5jlyKwK22kzLajeItaXV0bQak5TMnHml6asVEkPdmDssjgmI0aPKHDREDp5q2NcPKnH9rSzH9EZFi6H1juQ7NLhvqtZqIoRgeiBqAzEEbuY4AZc4V8hpoNAjnsGjiH/EAealCduL3OBshXafmn6WpbSTA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779450675; c=relaxed/simple;
-	bh=woMCRgXR4kwKYKDurUZHiOt9IdkSlv8oVaxuJ0mvV8Y=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=DxFwqJ8clN/It3jOR7cCUGn4UNBdSSj3WzOQjn7r4C0Wmxbx82AId1ypZNfTNjRPXFUmF0b+9JTyFpffhwLK67vlLJV7YOt423VXsvXuttDq1cgkx84T618ZBiJ6pZDC2EZRRjaOA9QvEPPYnjqv1SRYAZuvWl00SAIy5k/8Jjs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Tp4XC/xK; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF45477E55;
+	Fri, 22 May 2026 15:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779464666; cv=none; b=Lh+dd2F6fVCOx6iNGKJdgligGkt/2fHKuzZkS145RU7obqrbIZaUtbrIUUIIqhNHncH31Wu+NlFWyCB+B2COypNuyx7zZlFXf9GSTdf2CNXcYlUxVKAvcpgmYlpd+2Mo4ZZRnoEamt5Lv751S9rrME3Pn/vnFlqUu+2DMgmZrfk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779464666; c=relaxed/simple;
+	bh=F9h68o6fjyyP+4rPa/kaWaAIp9phw74Od7npmULhHXM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kFmchxnQZxGLcnRH6/SABKaDljWDMKpb6u0ZpWcGRveb9zT+43tsWi9g62zXeErjyfsHktZZUVnRQC27lb0mD8t22p6hNDSKZVneuJmbZfKOdgs3yw0EA8EW9MvdDWQmy7JN/vAYeEE0anPcjPPrvEMfdaQVBb9hAC8y7YJsfQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=afULI31y; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Tp4XC/xK"
-ARC-Seal: i=1; a=rsa-sha256; t=1779450669; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=k8DCtI437PvVqxVj6QILJKP9D3vLzO6nU8cY+SiVZJsDNMbr9Rc9J4BbtX/Lk+SvTSQB48pyKNWsi1uxzLfmEmRTyvekpBV8xCaUrlRS5b2XPAQHWs8sDF4ayCGvlOYA+72B2LZNiMkfef7t5BKjpqElnkRoi5f60qUNHYwiEQ4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1779450669; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=oVGmRJL62RfXiWV9ueGhVYKFsvCpcKEbNOsFTv2UJvY=; 
-	b=bluoeaGEc22E17OYcVah5tj8LMQrY+Ax42wccDWzZrNNW1nAYcPBJ86IEpwfZ+1OCLbBNhquFedYIPNzOv88O59hlBhjHtWxMECObANOIUGU83d6i1X5rUu0s0mS/3jyew6QsXwAhbu4Uqc8hy+jSSZHzHhwmvUsDBnj1pU23Z4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1779450669;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:From:From:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=oVGmRJL62RfXiWV9ueGhVYKFsvCpcKEbNOsFTv2UJvY=;
-	b=Tp4XC/xKGn5Gc3mYMJ3aZWZe74dh7lDNAlNJE8xOyCIIFtuc8wI121JHGUr8vfsT
-	e9NgI68IDqcRAE3x40RYP94NB6yYpwMrzPBCT+ChCfKGZvqH2IOi/NUCZsYnkU/T6wd
-	GHT/wJgriayJFOznOamdsJ4ZJt4FyCb9CZBsaDq4=
-Received: by mx.zohomail.com with SMTPS id 1779450667436436.7647965313753;
-	Fri, 22 May 2026 04:51:07 -0700 (PDT)
-Message-ID: <83dc5f69-115b-4d2a-bc0e-46ed0c3cee10@zohomail.com>
-Date: Fri, 22 May 2026 19:50:59 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="afULI31y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779464663; x=1811000663;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=F9h68o6fjyyP+4rPa/kaWaAIp9phw74Od7npmULhHXM=;
+  b=afULI31y455Z6rdFfnqK2yqN4tj75UTSpIKMbrZa9zw+QXiJ/qDXwUia
+   qIE9DnHbut7dgwkl+jf8j3/V3X5H5YngbHAcg7F9KsPn8HnhOty0HmESa
+   A7hp1xNzSfuaymiM+ZcZnJEkHS/9YwCVrqf9k42MMIZv5q7Wv3yoNsyu2
+   ZMZwhptoiNZoEBNzyHcM7MYlcXuvyUYaZ56i+M16jSQB+ccj3Jhi5gQVC
+   c2zatHB4vrGf3TuheXxwWmmsj6gMyvT7E2uuGaK1mzKOXTZ3CWWcfTwD8
+   rAf1g3VFUm8w7IDEYKEqXaGPVTmcjrlEYjHIQ60rMQ0eofrmKK2taxU9V
+   w==;
+X-CSE-ConnectionGUID: jJnGzSJRQtei8hlSigbokg==
+X-CSE-MsgGUID: zr6sKXQ3RMueAfsO7EfW3g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11794"; a="97818824"
+X-IronPort-AV: E=Sophos;i="6.24,162,1774335600"; 
+   d="scan'208";a="97818824"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2026 08:44:21 -0700
+X-CSE-ConnectionGUID: THss/askQOKwJiiFvcRKdw==
+X-CSE-MsgGUID: 9X5NLiCiRca9bNgwC1hYDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,162,1774335600"; 
+   d="scan'208";a="240111453"
+Received: from schen9-mobl4.amr.corp.intel.com (HELO [10.125.110.86]) ([10.125.110.86])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2026 08:44:21 -0700
+Message-ID: <e0ad8650-414a-4f9b-a419-60476c44e6a2@intel.com>
+Date: Fri, 22 May 2026 08:44:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,93 +52,97 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] cxl/test: Update mock dev array before calling
- platform_device_add()
-From: Li Ming <ming.li@zohomail.com>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com,
- vishal.l.verma@intel.com, ira.weiny@intel.com, djbw@kernel.org,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260520121457.234404-1-ming.li@zohomail.com>
- <ag6zbJFdvxkf6Q9I@aschofie-mobl2.lan>
- <082c7b2d-e9dc-443a-b385-79585cf8e48d@zohomail.com>
-In-Reply-To: <082c7b2d-e9dc-443a-b385-79585cf8e48d@zohomail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH] cxl/region: Fix out of bounds access in
+ cxl_cancel_auto_attach()
+To: Li Ming <ming.li@zohomail.com>,
+ Alison Schofield <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <djbw@kernel.org>
+References: <20260519-fix_out_of_bounds_access-v1-1-55fc60d83388@zohomail.com>
+ <25b0125a-b0fb-4401-8596-3252d2f8cbd6@intel.com>
+ <cedaee55-ff31-4aa0-981e-938db56b2b45@zohomail.com>
+ <8a835dea-956f-4eab-931c-e1a54e14331d@intel.com>
+ <ag6rFgctpwSNPWgt@aschofie-mobl2.lan>
+ <f27fef4c-6b27-4027-88bb-0db57c1b346a@zohomail.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <f27fef4c-6b27-4027-88bb-0db57c1b346a@zohomail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Feedback-ID: zu08011227f3443ed76d37f5874f4fee290000d43ee5d4ef712aa17a59f71a0631417d8d43cccc1e406fd146:ZohoMail
-X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
-X-ZohoMailClient: External
 
 
-在 2026/5/21 20:25, Li Ming 写道:
->
-> 在 2026/5/21 15:25, Alison Schofield 写道:
->> On Wed, May 20, 2026 at 08:14:57PM +0800, Li Ming wrote:
->>> CXL test environment hits the following error sometimes.
->>>
->>>   cxl_mem mem9: endpoint7 failed probe
->>>
->>> All mock memdevs are platform firmware devices added by cxl_test 
->>> module,
->>> and cxl_test module also provides a platform device driver for them to
->>> create a memdev device to CXL subsystem. cxl_test module uses
->>> cxl_rcd/mem_single/mem arrays to store different types of mock memdevs.
->>> CXL drivers calls registered mock functions for a mock memdev by
->>> checking if a given memdev is in these arrays.
->>>
->>> When cxl_test module adds these mock memdevs, it always calls
->>> platform_device_add() before adding them to a suitable mock memdev
->>> array. However, there is a small window where CXL drivers calls mock
->>> function for a added memdev before it added to a mock memdev array. In
->>> above case, cxl endpoint driver considers a added memdev was not a mock
->>> memdev, then calling devm_cxl_endpoint_decoders_setup() for it rather
->>> than mock_endpoint_decoders_setup().
->>>
->>> An appropriate solution is that adding a new mock device to a mock
->>> device array before calling platform_device_add() for it. It can
->>> guarantee the new mock device is visible to CXL subsystem.
->>>
->>> This patch introduces a new helped called 
->>> cxl_mock_platform_device_add()
->>> to handle the issue, and uses the function for all mock devices 
->>> addition.
->>>
->> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
->
-> Hi Alison,
->
->
-> I missed that you mentioned putting platform_device_alloc() into the 
-> helper. I will send out v3 for that.
->
->
-After taking a look into the implementation, maybe keep current 
-implementation would be better.
 
-This helper is responsible for performing the platform_device_add() 
-operation for all mock devices. However, each type of mock device has 
-its own specific logic between platform_device_alloc() and 
-platform_device_add().
+On 5/22/26 1:49 AM, Li Ming wrote:
+> 
+> 在 2026/5/21 14:52, Alison Schofield 写道:
+>> On Wed, May 20, 2026 at 07:59:21AM -0700, Dave Jiang wrote:
+>>>
+>>> On 5/20/26 5:30 AM, Li Ming wrote:
+>>>> 在 2026/5/20 01:18, Dave Jiang 写道:
+>>>>> On 5/19/26 6:23 AM, Li Ming wrote:
+>>>>>> In cxl_cancel_auto_attach(), it assumes cxled->pos is a valid index for
+>>>>>> accessing p->targets[]. However, cxled->pos can be set to -ENXIO in
+>>>>> It can be set to other error codes I think? I would just s/-ENXIO/negative errno/
+>>>> Sure, Will do that.
+>>>>>> cxl_region_sort_targets() if cxl_calc_interleave_pos() fails. This
+>>>>>> causes the driver to use a negative index to access p->targets[],
+>>>>>> resulting in out-of-bounds access.
+>>>>>>
+>>>>>> Fix it by walking p->targets[] instead of using cxled->pos directly.
+>>>>> Does the comment in cxl_region_sort_targets() need to be updated with the new changes?
+>>>> I'm not sure how to update the comment in cxl_region_sort_targets(). Any suggestion?
+>>> idk if we should just drop it entirely since the comment is no longer true. At least that second part. Alison?
+>> I'd like to see it replaced w this so we continue to have the
+>> debug info, but stop the lie that led to this issue.
+>>
+>> /*
+>>   * Record that sorting failed, but still continue to calc
+>>   * cxled->pos so that cxl_calc_interleave_pos() emits its
+>>   * dev_dbg() for every member, which is useful for auto
+>>   * discovery debug.
+>>   */
+>>
+>> snip
+>>
+>>>>>> +static int cxl_region_remove_target(struct device *dev, void *data)
+>>>>>>    {
+>>>>>> -    const struct cxl_endpoint_decoder *cxled = data;
+>>>>>> +    struct cxl_endpoint_decoder *cxled = data;
+>>>>>>        struct cxl_region_params *p;
+>>>>>>        struct cxl_region *cxlr;
+>>>>>> +    int i;
+>>>>>>          if (!is_cxl_region(dev))
+>>>>>>            return 0;
+>>>>>>          cxlr = to_cxl_region(dev);
+>>>>>>        p = &cxlr->params;
+>>>>>> -    return p->targets[cxled->pos] == cxled;
+>>>>>> +    for (i = 0; i < p->nr_targets; i++) {
+>>>>>> +        if (p->targets[i] == cxled) {
+>>>>>> +            p->nr_targets--;
+>>>>>> +            cxled->state = CXL_DECODER_STATE_AUTO;
+>>>>>> +            cxled->pos = -1;
+>>>>>> +            p->targets[i] = NULL;
+>>>>>> +
+>>>>>> +            return 1;
+>>>>>> +        }
+>>>>>> +    }
+>> Sashiko review looks like it is calling out a valid 'hole' issue above.
+>> Does the array need to be compacted when we remove an entry that is not
+>> the last. That would keep nr_targets same as 'first free slot', so
+>> there are no NULL holes. I think that fix goes in a separate patch.
+> 
+> Good catch, how about using p->interleave_ways instead of p->nr_targets as the loop condition? I think it can solve the problem.
+> 
+> BTW, where did you get the Sashiko review? I didn't get any email from it.
 
-If I move platform_device_alloc() into this helper,I will also have to 
-incorporate all these device-specific implementations.
+You'll have to look, unless you cc Sachiko with your patch submission. I've asked to have linux-cxl added to Sachiko review.
+https://sashiko.dev/#/?list=org.kernel.vger.linux-cxl
 
-Ming
 
+> 
+> 
 > Ming
->
->>
->>
->>> Fixes: 3a2b97b3210b ("cxl/test: Improve init-order fidelity relative 
->>> to real-world systems")
->>> Signed-off-by: Li Ming <ming.li@zohomail.com>
->>> ---
->>> Changes from v1:
->>> - Rebase to v7.1-rc4.
->>> - Introduce a new helper to handle the issue. (Alison)
->>> - Use new helper for all mock device addition.
->>> ---
->>>   tools/testing/cxl/test/cxl.c | 105 
->>> ++++++++++++++---------------------
->>>   1 file changed, 43 insertions(+), 62 deletions(-)
->>>
+> 
+
