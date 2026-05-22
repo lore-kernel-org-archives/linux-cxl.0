@@ -1,49 +1,43 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B929F3CAA27;
-	Fri, 22 May 2026 11:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779449893; cv=none; b=UYsAGgS/ofAAL9LXeE90wbO2fZ9ulJ4G3Ib2l9ettUCKQ4dV99eMkx9RvFcSciGERzy0LKY2wnBjSMfb6OxHJfTvcsxo67mZXT4MYIISDQiwOD5Ee6yS94e9zmE7YS9s6WSxewe+7ztLESRJGpP1c0sk9SyKlbmmRoUkwp+uBFY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779449893; c=relaxed/simple;
-	bh=8+SVtEunmLO5luTB/woJSREfnnEC/4OY69OYVm8LLR4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=KF0fmiQs3ZIP37GbSzxQsyTzKg8qvXXm6cheqMTM3QeVlKef8oJ5+Iei3gNFHU5zHqwtIugnOTsi1wWJCb2uoRCZp+fGMD0xnPZ7ZXzuoXAZ7QgtBdaRmDVAZ9ge0Mv+k3UYCenIvtGTW/Q3KDhpQo+oaj2LA4kW01SpM0CkVCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JERPYZtT; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DAB3E9C06;
+	Fri, 22 May 2026 11:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779450675; cv=pass; b=rd+vDlWrFD1Fj9PfWX5jlyKwK22kzLajeItaXV0bQak5TMnHml6asVEkPdmDssjgmI0aPKHDREDp5q2NcPKnH9rSzH9EZFi6H1juQ7NLhvqtZqIoRgeiBqAzEEbuY4AZc4V8hpoNAjnsGjiH/EAealCduL3OBshXafmn6WpbSTA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779450675; c=relaxed/simple;
+	bh=woMCRgXR4kwKYKDurUZHiOt9IdkSlv8oVaxuJ0mvV8Y=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=DxFwqJ8clN/It3jOR7cCUGn4UNBdSSj3WzOQjn7r4C0Wmxbx82AId1ypZNfTNjRPXFUmF0b+9JTyFpffhwLK67vlLJV7YOt423VXsvXuttDq1cgkx84T618ZBiJ6pZDC2EZRRjaOA9QvEPPYnjqv1SRYAZuvWl00SAIy5k/8Jjs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Tp4XC/xK; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JERPYZtT"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260522113802epoutp047d45dc3660ab4d2cdce57be27d46d659~x4D12kzVZ0577105771epoutp04e;
-	Fri, 22 May 2026 11:38:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260522113802epoutp047d45dc3660ab4d2cdce57be27d46d659~x4D12kzVZ0577105771epoutp04e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1779449882;
-	bh=X9XR94YHNMocWUFw9punBQGDBFYxc1lt25ZEVZWgtac=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=JERPYZtTU2TlEprNnCJlv0WM7hhtolUmAJHHUSjqwurELxRa/onqsWy1YDtIN+8xj
-	 +MRV/ZDvXNq0x1UISaIT5DzyMNQLc2ARA7V98cZIDNSHBwP9Pl28ac/y9dgft9Nee1
-	 aqj+yfQb92T4awPevYqHuFEft5mQPyEqwKj12DkU=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20260522113801epcas5p3905b503bc0cfbc37e68be912f3324730~x4D1cklL90648906489epcas5p32;
-	Fri, 22 May 2026 11:38:01 +0000 (GMT)
-Received: from epcpadp2new (unknown [182.195.40.142]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4gMNZ16HSyz6B9m7; Fri, 22 May
-	2026 11:38:01 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20260522084048epcas5p4778c8dc9ced70300473adfc67f24098c~x1pGJAfr53182831828epcas5p4i;
-	Fri, 22 May 2026 08:40:48 +0000 (GMT)
-Received: from [107.122.10.65] (unknown [107.122.10.65]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260522084036epsmtip25fbb927d3a064212cc2ad4bc1ee9e926~x1o6sdf2f2396423964epsmtip2V;
-	Fri, 22 May 2026 08:40:35 +0000 (GMT)
-Message-ID: <1891546521.01779449881859.JavaMail.epsvc@epcpadp2new>
-Date: Fri, 22 May 2026 14:10:34 +0530
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Tp4XC/xK"
+ARC-Seal: i=1; a=rsa-sha256; t=1779450669; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=k8DCtI437PvVqxVj6QILJKP9D3vLzO6nU8cY+SiVZJsDNMbr9Rc9J4BbtX/Lk+SvTSQB48pyKNWsi1uxzLfmEmRTyvekpBV8xCaUrlRS5b2XPAQHWs8sDF4ayCGvlOYA+72B2LZNiMkfef7t5BKjpqElnkRoi5f60qUNHYwiEQ4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1779450669; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=oVGmRJL62RfXiWV9ueGhVYKFsvCpcKEbNOsFTv2UJvY=; 
+	b=bluoeaGEc22E17OYcVah5tj8LMQrY+Ax42wccDWzZrNNW1nAYcPBJ86IEpwfZ+1OCLbBNhquFedYIPNzOv88O59hlBhjHtWxMECObANOIUGU83d6i1X5rUu0s0mS/3jyew6QsXwAhbu4Uqc8hy+jSSZHzHhwmvUsDBnj1pU23Z4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1779450669;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:From:From:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=oVGmRJL62RfXiWV9ueGhVYKFsvCpcKEbNOsFTv2UJvY=;
+	b=Tp4XC/xKGn5Gc3mYMJ3aZWZe74dh7lDNAlNJE8xOyCIIFtuc8wI121JHGUr8vfsT
+	e9NgI68IDqcRAE3x40RYP94NB6yYpwMrzPBCT+ChCfKGZvqH2IOi/NUCZsYnkU/T6wd
+	GHT/wJgriayJFOznOamdsJ4ZJt4FyCb9CZBsaDq4=
+Received: by mx.zohomail.com with SMTPS id 1779450667436436.7647965313753;
+	Fri, 22 May 2026 04:51:07 -0700 (PDT)
+Message-ID: <83dc5f69-115b-4d2a-bc0e-46ed0c3cee10@zohomail.com>
+Date: Fri, 22 May 2026 19:50:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -51,116 +45,93 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-To: Gregory Price <gourry@gourry.net>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
-	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
-	dakr@kernel.org, dave@stgolabs.net, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
-	longman@redhat.com, akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, osalvador@suse.de,
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
-	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
-	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
-	dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
-	muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
-	jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
-	pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
-	riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
-	roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
-	shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
-	zhengqi.arch@bytedance.com, terry.bowman@amd.com, gost.dev@samsung.com,
-	arungeorge05@gmail.com, cpgs@samsung.com
-Content-Language: en-US
-From: Arun George/Arun George <arun.george@samsung.com>
-In-Reply-To: <afmgJcFUjQLYxkb5@gourry-fedora-PF4VCD3F>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20260522084048epcas5p4778c8dc9ced70300473adfc67f24098c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0
-References: <20260222084842.1824063-1-gourry@gourry.net>
-	<CGME20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0@epcas5p1.samsung.com>
-	<1983025922.01777297382206.JavaMail.epsvc@epcpadp2new>
-	<ae_i9IlIndumJWN3@gourry-fedora-PF4VCD3F>
-	<1891546521.01777455002601.JavaMail.epsvc@epcpadp1new>
-	<afIKxG5mJZE6QgpR@gourry-fedora-PF4VCD3F>
-	<1891546521.01777901881625.JavaMail.epsvc@epcpadp2new>
-	<afmgJcFUjQLYxkb5@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH v2 1/1] cxl/test: Update mock dev array before calling
+ platform_device_add()
+From: Li Ming <ming.li@zohomail.com>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, djbw@kernel.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260520121457.234404-1-ming.li@zohomail.com>
+ <ag6zbJFdvxkf6Q9I@aschofie-mobl2.lan>
+ <082c7b2d-e9dc-443a-b385-79585cf8e48d@zohomail.com>
+In-Reply-To: <082c7b2d-e9dc-443a-b385-79585cf8e48d@zohomail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Feedback-ID: zu08011227f3443ed76d37f5874f4fee290000d43ee5d4ef712aa17a59f71a0631417d8d43cccc1e406fd146:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-Thanks.
 
-On 05-05-2026 01:15 pm, Gregory Price wrote:
-> In the scenario i'm talking about, a "write budget" is defined as a
-> number of pages that are allows to be mapped writable in the page
-> tables at any given time.
-> Agree. I was also in the same context.
+在 2026/5/21 20:25, Li Ming 写道:
+>
+> 在 2026/5/21 15:25, Alison Schofield 写道:
+>> On Wed, May 20, 2026 at 08:14:57PM +0800, Li Ming wrote:
+>>> CXL test environment hits the following error sometimes.
+>>>
+>>>   cxl_mem mem9: endpoint7 failed probe
+>>>
+>>> All mock memdevs are platform firmware devices added by cxl_test 
+>>> module,
+>>> and cxl_test module also provides a platform device driver for them to
+>>> create a memdev device to CXL subsystem. cxl_test module uses
+>>> cxl_rcd/mem_single/mem arrays to store different types of mock memdevs.
+>>> CXL drivers calls registered mock functions for a mock memdev by
+>>> checking if a given memdev is in these arrays.
+>>>
+>>> When cxl_test module adds these mock memdevs, it always calls
+>>> platform_device_add() before adding them to a suitable mock memdev
+>>> array. However, there is a small window where CXL drivers calls mock
+>>> function for a added memdev before it added to a mock memdev array. In
+>>> above case, cxl endpoint driver considers a added memdev was not a mock
+>>> memdev, then calling devm_cxl_endpoint_decoders_setup() for it rather
+>>> than mock_endpoint_decoders_setup().
+>>>
+>>> An appropriate solution is that adding a new mock device to a mock
+>>> device array before calling platform_device_add() for it. It can
+>>> guarantee the new mock device is visible to CXL subsystem.
+>>>
+>>> This patch introduces a new helped called 
+>>> cxl_mock_platform_device_add()
+>>> to handle the issue, and uses the function for all mock devices 
+>>> addition.
+>>>
+>> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+>
+> Hi Alison,
+>
+>
+> I missed that you mentioned putting platform_device_alloc() into the 
+> helper. I will send out v3 for that.
+>
+>
+After taking a look into the implementation, maybe keep current 
+implementation would be better.
 
-I am trying to bring the device perspective here, and would like to 
-discuss a few corner cases and possible solutions.
+This helper is responsible for performing the platform_device_add() 
+operation for all mock devices. However, each type of mock device has 
+its own specific logic between platform_device_alloc() and 
+platform_device_add().
 
-As I see, solving the compressed memory problem statement has these 
-aspects mainly:
+If I move platform_device_alloc() into this helper,I will also have to 
+incorporate all these device-specific implementations.
 
-1) Allocation control: private/managed memory concept.
-2) Write control: write-protected PTEs, write-controlled use cases like 
-ZSWAP
-3) Proactive reclaims: optional methods to ease back-pressure using 
-memory shrinkers, ballooning, kswapd, promotion etc. These methods will 
-be triggered based on notifications/interrupts from the device.
+Ming
 
-May be they are not enough to cover some corner cases for cram!
-
-  I believe that this thin-provisioned memory infra is susceptible to 
-'writes-above-media-capacity corner cases' (because of not handling 
-device back-pressure notifications in time) whichever methods we use in 
-the kernel. Even if we use write-controlled methods like ZSWAP and 
-pro-active reclaims, there could be corner cases where the communication 
-with the device could be broken and the write path is not aware of it 
-immediately. Note that OCP spec [1] says the device should mark the 
-memory location as 'poisoned' in 'over-capacity' writes.
-
-So I have the following proposals / options for this scenario.
-
-    Option 1: Poisoned data management - This is about accepting that 
-poisoning of memory locations can happen in much more regular frequency 
-here than regular memories and we need to figure out potential recovery 
-mechanisms in host (not recovery of data; but recovery from the poison 
-situation). But I guess folks will not be okay with it in general, and I 
-am not aware of any workloads where data poisoning is tolerated (may be 
-caching workloads?).
-
-    Option 2 (preferred): Device assisted write budgeting - This is 
-about a device aware / assisted mechanism for the write-controlled 
-use-cases (Ex: ZSWAP) to know the 'safe number of  writes' that can be 
-performed to the device (Or allows to be mapped writable in the page 
-tables). This could be like a 'token bucket' algorithm, where the device 
-provides a 'budget / set of tokens' to the host. And it need to be 
-replenished periodically in the device communication code path; and if 
-the host does not find the token, writes cannot go ahead.
-
-In short, the communication with the device has to be maintained to make 
-pages mapped writable. For MVP, this could be a simple constraint of 
-checking actual device capacity periodically to replenish write-budget 
-for CRAM. For other users of private nodes (GPU memory?), this 
-constraint may not be needed at all.
-
-We are planning to send an RFC code which will fit into your CRAM infra 
-to discuss this poison management approach further.
-
-[1]: 
-https://www.opencompute.org/documents/hyperscale-tiered-memory-expander-specification-for-compute-express-link-cxl-1-pdf
-
-~Arun George
-
+> Ming
+>
+>>
+>>
+>>> Fixes: 3a2b97b3210b ("cxl/test: Improve init-order fidelity relative 
+>>> to real-world systems")
+>>> Signed-off-by: Li Ming <ming.li@zohomail.com>
+>>> ---
+>>> Changes from v1:
+>>> - Rebase to v7.1-rc4.
+>>> - Introduce a new helper to handle the issue. (Alison)
+>>> - Use new helper for all mock device addition.
+>>> ---
+>>>   tools/testing/cxl/test/cxl.c | 105 
+>>> ++++++++++++++---------------------
+>>>   1 file changed, 43 insertions(+), 62 deletions(-)
+>>>
