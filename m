@@ -1,63 +1,63 @@
 Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614B732860F
-	for <linux-cxl@vger.kernel.org>; Sat, 23 May 2026 09:50:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D633876A9
+	for <linux-cxl@vger.kernel.org>; Sat, 23 May 2026 09:51:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779529860; cv=none; b=mr/xcXPpKBtAWgGqElJ2wNgSddP7p70YWgcW8iY7BepxfWPDFb30eeDgXTkfXFgH3FSn+BZomjNjISzUIQhfmfy3NxImYlvf/QE/Ex1W3Khzx4mt6WZGshxvvJiXzea2fDhi850waddgOmDYxty3T/k//eNeJn6DsvWcbRgcxuQ=
+	t=1779529862; cv=none; b=bOHYs5Rl07skwRLWvJ8jvoz8oLh77p0Cv7t6Juqc+EEYZ5nwlDONtV/U3Nt3zDGqZUstzp/eoR4/UocPEsZ1uu6jCVPkGrlLold02JRF3j/AEYGbpIqPoEpLP2WsbzGxYjTVfAf8Pg+ZkOPiKlDaTWdcXw48e0d/wL7ylGNGrgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779529860; c=relaxed/simple;
-	bh=6YH0VSg8z29bgT7vuC21hIpLnKsIOMZukMbTGDrmXbI=;
+	s=arc-20240116; t=1779529862; c=relaxed/simple;
+	bh=jCEHApWqv0hzZwZpXbD5jrSPD2cM1dtmn7Aic6jAUK0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j6vGN92eFXXODGDvFySwoVjjXnwChBJL6oqq03zmzGFHuaCv3tBrlULUJ5nK5jpQRW979uSHt532vyn81LLcNE1kkq8mVzZr5R0uQji9vKJVsYi2LFz0GH7dvCivdflFPkk10pz8NBpHVbHoMvaVuIV/G4Grg/eMsHw9G1a6A78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Go+mJMkO; arc=none smtp.client-ip=74.125.82.178
+	 MIME-Version; b=Rlh3ST/Chgi/6q8F06fhsBs8CRDhZtToa4K2ixWCaj9jhfVLXgucpEODo6p5xF58O4gmecAapM7MngB+X8Rh2YCaAT5a8zKuw9NSFmOgXIfwUcdzrcmaO2yV06SLFL7k4TN5pos2NlasI3wtMM7zjTFh3NctIFiZPVHqw+5mneA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pwNV3Mws; arc=none smtp.client-ip=74.125.82.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Go+mJMkO"
-Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-30455f77e0eso1450570eec.0
-        for <linux-cxl@vger.kernel.org>; Sat, 23 May 2026 02:50:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pwNV3Mws"
+Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-303dbfbec77so9303331eec.0
+        for <linux-cxl@vger.kernel.org>; Sat, 23 May 2026 02:51:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779529858; x=1780134658; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1779529860; x=1780134660; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KSuhJuhrWfLqNYKOHdVj5Qj8f5x9bU9bPIIaF+njKdY=;
-        b=Go+mJMkOGj8Ud80gVWVRJkHKKmN93yNikkfLQODzVWvCHzSAVWfWUXYkTU9TTY0I7n
-         2uhnXL8DkKoW7XLR2cU4tAueHIyDI8unh6I1FvPoCr8+f0G7VRA7o5KI+pqKDlU1x0tC
-         k/rogrfmvqe4I0R2gjoR0BV074OJBz1Ezcf182ShaD/SpLmbb6HkIPZfDRToijS9QY59
-         o88w0hv9pCJ/5JtIW41qyLfoxsIo3mPpTt3wRKDE+58v8WnfrrtDG7whVgFSKilwgqW6
-         WvzoyWjut+bIattzM92G79FrdnBymxOn7o0KtvqoMtWixKSkxX76XAvphEx48BAf3roO
-         9nSA==
+        bh=WB2DB1mYBidB9TwFtpFj7mZX6EdDGm71XkD/oRhHqD8=;
+        b=pwNV3Mws319j6RPXNs3d5j3Ptqhvzef7nPTaYTnpUa2RPvFJu9vLYBtwPv4rHiiyTj
+         yzw/tGE0PDlREDy71mrjDmvLCyyLLGX6M94MC1LpoyEcKRLsnKPKsgO5imj9gCFpZedx
+         PStCJDIrN7uT8wOnVRuKButSJ2hYRmN99MjyjtzegFm+GCNz1zXRN8Zwzl7dPnKAUxOA
+         n0ZrgUYlRc3uz8eUWNMb9qAXtRtJByIQQkmPaissrNRRbvr+R9tQvuftqTaN2fEFqXjt
+         ayzoOHcm1eTTRQOCxgZEFHY4xFaU1DVSpYwBTO34OIwOWS0LXgc0cbsn0YNH0E8jCHlq
+         AkJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779529858; x=1780134658;
+        d=1e100.net; s=20251104; t=1779529860; x=1780134660;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=KSuhJuhrWfLqNYKOHdVj5Qj8f5x9bU9bPIIaF+njKdY=;
-        b=rV440gJJ8ByeQxWN0KAA5evpF2+0/8K6rX8bkJwmqoR4aEVRQdxbskarY45mjQ5M7v
-         ywK5IjlegF5g3ToUQuk9LsKzNVSNeyBOdBZv7LZV8/lltu8FW9JjkVwqJD8PWyRXS7dM
-         7aXCcL1FfApLmmUJTnUtsZ6MUzB7bnOB6HRMrlzb5SqDRuWIO3wipdcTTR2TLSfOcBX9
-         Bj/8i+qbVyvwI9niFCTQ/n03Lq0Wl+z5Fg0DCKGU5hnpwiVEcFvLMOmovr7JYGwdSzuY
-         qzP9j1Rf+sDVUxgQ36w3hibwUbMTFjkLlva8D3AzJ8BfTeRRnhTvxOs34cniOHFgyd0S
-         XN0A==
-X-Gm-Message-State: AOJu0YwnXYwtFYrlFkKNx8N534490Ju9MU1UKP/SerwYZbEZp78hSemK
-	/8vRriAKHqhZbGUzRGkI2Xm35vZSq/AjMJ98KbX9YUgAwTd4d06rJNnz3Vqr7g==
-X-Gm-Gg: Acq92OHr2x2KH5unk98QOnIvSiz0TTMYiC/1mEgMCLUwN+3t5bPjKQaJo9a+oW3tqEP
-	x/dQRdEML5gcLGMF/OFMmpClmUwfMyDsHlvskxi5TVe6JRlzGFmyyg2HgLXC9Bz7h9GUnfueRTF
-	kHgKBCva8SHYFNFMEb57GRr/4x2EGmeX2/0On60XRvsdERrPROiLRwJALagomU46CrdwMVeckg4
-	DS79wLLllS7DNdieB+u4aMz0tcTy0zxftUtqfTnwNMg5YQm0YA65eESQbKRwxjwVXeqly9DKfJU
-	hOSLBMdxbWBFZVlPXhemjrmZcEqWT3XYejNkhAloT64yJqZqxKuSqXoA8H7bx7TcoMUa3dlxmZx
-	fJgPyuK4u7piG0PAx5y+avwUM7rnwTGp0TwJvtsKXvjjnfePjeJqBBo+jgCkp8DVAFHEj/SyapJ
-	lFf6+NH0aaaqBTscXSX+KyG5Y2akUnltL2pln6moDT06RbIE2xZAjRRRitWF9S0L/ENvw/W3s+I
-	RFpohg=
-X-Received: by 2002:a05:7300:cb86:b0:2ed:e12:3773 with SMTP id 5a478bee46e88-304491faf02mr3957866eec.35.1779529858372;
-        Sat, 23 May 2026 02:50:58 -0700 (PDT)
+        bh=WB2DB1mYBidB9TwFtpFj7mZX6EdDGm71XkD/oRhHqD8=;
+        b=oJ0z1LCgtgs9e6+q6rVtDrhA9sOlk57hEt6i6MkJGXfsmfx3D0jyiNY1uOK4HY/47o
+         /9nEjgutEld68EGy8lvHB72rdwenDM8GclpD7Zwr09lihfBOsXmhIW/1ooZ8CF/gZwEE
+         Ave99NbVzlv11KjxPNKoL5Vc0uOhgyC+kCiT7bP6XE520inMPhd9oxJVWrBlSQben1wS
+         ygC0gKnJp/zANy//2mjOUQcruL98XFa32qvfxujckaoy1xnfd/owAxUj7fWgdVgyoUTq
+         YJWACADZYsw4KJgQoduENTogh6Oln2ZeZ/MA2Ls0kq0gEr/Fjp1FPeQtQCsRMHPhzS0z
+         StiA==
+X-Gm-Message-State: AOJu0YxxzPW3hDXPswYaxHzuAE8t5Z/RzOKeklbBJfWG+5Oc26MNAVbc
+	SFRlq2J6t+ssRBiNJCwl5co4+rttrCaazoh4iflrvl3YslMxKlMZ91HiPnMT3Q==
+X-Gm-Gg: Acq92OEjp0zhXy/tl3OORGnZCpipZLYe5x7g6swDo3BFK/jB026RiisSaNd3PIzvy7H
+	0QZUsnDe4ns3COOiFdXZ0J1YI7N08KZbBJFQIL+ya1MuQq05b6vBoNhVPBF7wT4934DrpD0soJM
+	x14eGTtWCpL+jRc4DGN21p9B5FrctXmxcO8y8e0QktI0ifj9HIEqGT80+URKczaDpQhJTiYP9bB
+	dkM84qonmkPmr0Gkwf2KP94+soa/4pANkMJFXLlr8x4NmYZ/vAFYky5CrenYhL/SUCrMQj5IiKF
+	L5COHgxk1PPL/6RXUU8HmsIV7efdb7AhReb2sagjnVnFP/m8mcc02kJ3VixYJGIYASITCveXpsE
+	jWPGW0dsMAyrshCbHRp5eHDPFgxw87ewWQGuBLXUgXJSpn2WKPZDzgNdmY/Y88Un/wGkBOXrMh/
+	WuqKi05CwAsAymfNnGAsLPxnBbKmyCqTfDNp1PHfK8+EtnOtT1I9Z+ZHNKjw5U0KllhoZALTlAz
+	q8Vq0JO/G0DPTCbkStE0PAPcdV7
+X-Received: by 2002:a05:7300:2313:b0:2f5:285c:4374 with SMTP id 5a478bee46e88-30449119476mr3508800eec.35.1779529860170;
+        Sat, 23 May 2026 02:51:00 -0700 (PDT)
 Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3045225b7b6sm4595756eec.25.2026.05.23.02.50.56
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3045225b7b6sm4595756eec.25.2026.05.23.02.50.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2026 02:50:56 -0700 (PDT)
+        Sat, 23 May 2026 02:50:59 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
 To: linux-cxl@vger.kernel.org,
@@ -72,9 +72,9 @@ Cc: nvdimm@lists.linux.dev,
 	John Groves <John@Groves.net>,
 	Gregory Price <gourry@gourry.net>,
 	Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH v6 3/7] cxl/region: Add cxl-cli support for dynamic RAM A
-Date: Sat, 23 May 2026 02:50:38 -0700
-Message-ID: <20260523095043.471098-4-anisa.su@samsung.com>
+Subject: [PATCH v6 4/7] libcxl: Add extent functionality to DC regions
+Date: Sat, 23 May 2026 02:50:39 -0700
+Message-ID: <20260523095043.471098-5-anisa.su@samsung.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260523095043.471098-1-anisa.su@samsung.com>
 References: <20260523095043.471098-1-anisa.su@samsung.com>
@@ -88,151 +88,292 @@ Content-Transfer-Encoding: 8bit
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-A singular Dynamic RAM partition is exposed via the kernel.
+DCD regions have 0 or more extents.  The ability to list those and their
+properties is useful to end users.
 
-Use this partition in cxl-cli.
+Add extent scanning and reporting functionality to libcxl.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
 Changes:
-[iweiny: New patch for decoder_ram_a]
+[alison: s/tag/uuid/ for extents]
 ---
- cxl/json.c   | 20 ++++++++++++++++++++
- cxl/memdev.c |  4 +++-
- cxl/region.c | 27 ++++++++++++++++++++++++---
- 3 files changed, 47 insertions(+), 4 deletions(-)
+ Documentation/cxl/lib/libcxl.txt |  27 ++++++
+ cxl/lib/libcxl.c                 | 138 +++++++++++++++++++++++++++++++
+ cxl/lib/libcxl.sym               |   5 ++
+ cxl/lib/private.h                |  11 +++
+ cxl/libcxl.h                     |  11 +++
+ 5 files changed, 192 insertions(+)
 
-diff --git a/cxl/json.c b/cxl/json.c
-index a925488..e94c809 100644
---- a/cxl/json.c
-+++ b/cxl/json.c
-@@ -620,6 +620,20 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
- 		}
- 	}
+diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
+index 9921ac1..0ad294c 100644
+--- a/Documentation/cxl/lib/libcxl.txt
++++ b/Documentation/cxl/lib/libcxl.txt
+@@ -635,6 +635,33 @@ where its properties can be interrogated by daxctl. The helper
+ cxl_region_get_daxctl_region() returns an 'struct daxctl_region *' that
+ can be used with other libdaxctl APIs.
  
-+	size = cxl_memdev_get_dynamic_ram_a_size(memdev);
-+	if (size) {
-+		jobj = util_json_object_size(size, flags);
-+		if (jobj)
-+			json_object_object_add(jdev, "dynamic_ram_a_size", jobj);
++EXTENTS
++-------
 +
-+		qos_class = cxl_memdev_get_dynamic_ram_a_qos_class(memdev);
-+		if (qos_class != CXL_QOS_CLASS_NONE) {
-+			jobj = json_object_new_int(qos_class);
-+			if (jobj)
-+				json_object_object_add(jdev, "dynamic_ram_a_qos_class", jobj);
-+		}
++=== EXTENT: Enumeration
++----
++struct cxl_region_extent;
++struct cxl_region_extent *cxl_extent_get_first(struct cxl_region *region);
++struct cxl_region_extent *cxl_extent_get_next(struct cxl_region_extent *extent);
++#define cxl_extent_foreach(region, extent) \
++        for (extent = cxl_extent_get_first(region); \
++             extent != NULL; \
++             extent = cxl_extent_get_next(extent))
++
++----
++
++=== EXTENT: Attributes
++----
++unsigned long long cxl_extent_get_offset(struct cxl_region_extent *extent);
++unsigned long long cxl_extent_get_length(struct cxl_region_extent *extent);
++void cxl_extent_get_uuid(struct cxl_region_extent *extent, uuid_t uuid);
++----
++
++Extents represent available memory within a dynamic capacity region.  Extent
++objects are available for informational purposes to aid in allocation of
++memory.
++
++
+ include::../../copyright.txt[]
+ 
+ SEE ALSO
+diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+index be0bc03..c096666 100644
+--- a/cxl/lib/libcxl.c
++++ b/cxl/lib/libcxl.c
+@@ -635,6 +635,7 @@ static void *add_cxl_region(void *parent, int id, const char *cxlregion_base)
+ 	region->ctx = ctx;
+ 	region->decoder = decoder;
+ 	list_head_init(&region->mappings);
++	list_head_init(&region->extents);
+ 
+ 	region->dev_path = strdup(cxlregion_base);
+ 	if (!region->dev_path)
+@@ -1257,6 +1258,143 @@ cxl_mapping_get_next(struct cxl_memdev_mapping *mapping)
+ 	return list_next(&region->mappings, mapping, list);
+ }
+ 
++static void cxl_extents_init(struct cxl_region *region)
++{
++	const char *devname = cxl_region_get_devname(region);
++	struct cxl_ctx *ctx = cxl_region_get_ctx(region);
++	char *extent_path, *dax_region_path;
++	struct dirent *de;
++	DIR *dir = NULL;
++
++	if (region->extents_init)
++		return;
++	region->extents_init = 1;
++
++	dax_region_path = calloc(1, strlen(region->dev_path) + 64);
++	if (!dax_region_path) {
++		err(ctx, "%s: allocation failure\n", devname);
++		return;
 +	}
 +
- 	if (flags & UTIL_JSON_HEALTH) {
- 		jobj = util_cxl_memdev_health_to_json(memdev, flags);
- 		if (jobj)
-@@ -917,6 +931,12 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
- 				json_object_object_add(
- 					jdecoder, "volatile_capable", jobj);
- 		}
-+		if (cxl_decoder_is_dynamic_ram_a_capable(decoder)) {
-+			jobj = json_object_new_boolean(true);
-+			if (jobj)
-+				json_object_object_add(
-+					jdecoder, "dynamic_ram_a_capable", jobj);
++	extent_path = calloc(1, strlen(region->dev_path) + 100);
++	if (!extent_path) {
++		err(ctx, "%s: allocation failure\n", devname);
++		free(dax_region_path);
++		return;
++	}
++
++	sprintf(dax_region_path, "%s/dax_region%d",
++		region->dev_path, region->id);
++	dir = opendir(dax_region_path);
++	if (!dir) {
++		err(ctx, "no extents found (%s): %s\n",
++			strerror(errno), dax_region_path);
++		free(extent_path);
++		free(dax_region_path);
++		return;
++	}
++
++	while ((de = readdir(dir)) != NULL) {
++		struct cxl_region_extent *extent;
++		char buf[SYSFS_ATTR_SIZE];
++		u64 offset, length;
++		int id, region_id;
++
++		if (sscanf(de->d_name, "extent%d.%d", &region_id, &id) != 2)
++			continue;
++
++		sprintf(extent_path, "%s/extent%d.%d/offset",
++			dax_region_path, region_id, id);
++		if (sysfs_read_attr(ctx, extent_path, buf) < 0) {
++			err(ctx, "%s: failed to read extent%d.%d/offset\n",
++				devname, region_id, id);
++			continue;
 +		}
- 	}
- 
- 	if (cxl_port_is_root(port) &&
-diff --git a/cxl/memdev.c b/cxl/memdev.c
-index 6e44d15..bdcb008 100644
---- a/cxl/memdev.c
-+++ b/cxl/memdev.c
-@@ -269,8 +269,10 @@ static int __reserve_dpa(struct cxl_memdev *memdev,
- 
- 	if (mode == CXL_DECODER_MODE_RAM)
- 		avail_dpa = cxl_memdev_get_ram_size(memdev);
--	else
-+	else if (mode == CXL_DECODER_MODE_PMEM)
- 		avail_dpa = cxl_memdev_get_pmem_size(memdev);
-+	else
-+		avail_dpa = cxl_memdev_get_dynamic_ram_a_size(memdev);
- 
- 	cxl_decoder_foreach(port, decoder) {
- 		size = cxl_decoder_get_dpa_size(decoder);
-diff --git a/cxl/region.c b/cxl/region.c
-index 85d4d9b..3c935bf 100644
---- a/cxl/region.c
-+++ b/cxl/region.c
-@@ -303,7 +303,8 @@ static int parse_create_options(struct cxl_ctx *ctx, int count,
- 
- 	if (param.type) {
- 		p->mode = cxl_decoder_mode_from_ident(param.type);
--		if (p->mode == CXL_DECODER_MODE_RAM && param.uuid) {
-+		if ((p->mode == CXL_DECODER_MODE_RAM ||
-+		     p->mode == CXL_DECODER_MODE_DYNAMIC_RAM_A) && param.uuid) {
- 			log_err(&rl,
- 				"can't set UUID for ram / volatile regions");
- 			goto err;
-@@ -417,6 +418,9 @@ static void collect_minsize(struct cxl_ctx *ctx, struct parsed_params *p)
- 		case CXL_DECODER_MODE_PMEM:
- 			size = cxl_memdev_get_pmem_size(memdev);
- 			break;
-+		case CXL_DECODER_MODE_DYNAMIC_RAM_A:
-+			size = cxl_memdev_get_dynamic_ram_a_size(memdev);
-+			break;
- 		default:
- 			/* Shouldn't ever get here */ ;
- 		}
-@@ -448,8 +452,10 @@ static int create_region_validate_qos_class(struct parsed_params *p)
- 
- 		if (p->mode == CXL_DECODER_MODE_RAM)
- 			qos_class = cxl_memdev_get_ram_qos_class(memdev);
--		else
-+		else if (p->mode == CXL_DECODER_MODE_PMEM)
- 			qos_class = cxl_memdev_get_pmem_qos_class(memdev);
-+		else
-+			qos_class = cxl_memdev_get_dynamic_ram_a_qos_class(memdev);
- 
- 		/* No qos_class entries. Possibly no kernel support */
- 		if (qos_class == CXL_QOS_CLASS_NONE)
-@@ -488,6 +494,12 @@ static int validate_decoder(struct cxl_decoder *decoder,
- 			return -EINVAL;
- 		}
- 		break;
-+	case CXL_DECODER_MODE_DYNAMIC_RAM_A:
-+		if (!cxl_decoder_is_dynamic_ram_a_capable(decoder)) {
-+			log_err(&rl, "%s is not dynamic_ram_a capable\n", devname);
-+			return -EINVAL;
++
++		offset = strtoull(buf, NULL, 0);
++		if (offset == ULLONG_MAX) {
++			err(ctx, "%s extent%d.%d: failed to read offset\n",
++				devname, region_id, id);
++			continue;
 +		}
-+		break;
- 	default:
- 		log_err(&rl, "unknown type: %s\n", param.type);
- 		return -EINVAL;
-@@ -509,9 +521,11 @@ static void set_type_from_decoder(struct cxl_ctx *ctx, struct parsed_params *p)
- 		return;
- 
- 	/*
--	 * default to pmem if both types are set, otherwise the single
-+	 * default to pmem if all types are set, otherwise the single
- 	 * capability dominates.
- 	 */
-+	if (cxl_decoder_is_dynamic_ram_a_capable(p->root_decoder))
-+		p->mode = CXL_DECODER_MODE_DYNAMIC_RAM_A;
- 	if (cxl_decoder_is_volatile_capable(p->root_decoder))
- 		p->mode = CXL_DECODER_MODE_RAM;
- 	if (cxl_decoder_is_pmem_capable(p->root_decoder))
-@@ -699,6 +713,13 @@ static int create_region(struct cxl_ctx *ctx, int *count,
- 				param.root_decoder);
- 			return -ENXIO;
- 		}
-+	} else if (p->mode == CXL_DECODER_MODE_DYNAMIC_RAM_A) {
-+		region = cxl_decoder_create_dynamic_ram_a_region(p->root_decoder);
-+		if (!region) {
-+			log_err(&rl, "failed to create region under %s\n",
-+				param.root_decoder);
-+			return -ENXIO;
++
++		sprintf(extent_path, "%s/extent%d.%d/length",
++			dax_region_path, region_id, id);
++		if (sysfs_read_attr(ctx, extent_path, buf) < 0) {
++			err(ctx, "%s: failed to read extent%d.%d/length\n",
++				devname, region_id, id);
++			continue;
 +		}
- 	} else {
- 		log_err(&rl, "region type '%s' is not supported\n",
- 			param.type);
++
++		length = strtoull(buf, NULL, 0);
++		if (length == ULLONG_MAX) {
++			err(ctx, "%s extent%d.%d: failed to read length\n",
++				devname, region_id, id);
++			continue;
++		}
++
++		sprintf(extent_path, "%s/extent%d.%d/tag",
++			dax_region_path, region_id, id);
++		buf[0] = '\0';
++		if (sysfs_read_attr(ctx, extent_path, buf) != 0)
++			dbg(ctx, "%s extent%d.%d: failed to read uuid\n",
++				devname, region_id, id);
++
++		extent = calloc(1, sizeof(*extent));
++		if (!extent) {
++			err(ctx, "%s extent%d.%d: allocation failure\n",
++				devname, region_id, id);
++			continue;
++		}
++		if (strlen(buf) && uuid_parse(buf, extent->uuid) < 0)
++			err(ctx, "%s:%s\n", extent_path, buf);
++		extent->region = region;
++		extent->offset = offset;
++		extent->length = length;
++
++		list_node_init(&extent->list);
++		list_add(&region->extents, &extent->list);
++		dbg(ctx, "%s added extent%d.%d\n", devname, region_id, id);
++	}
++	free(dax_region_path);
++	free(extent_path);
++	closedir(dir);
++}
++
++CXL_EXPORT struct cxl_region_extent *
++cxl_extent_get_first(struct cxl_region *region)
++{
++	cxl_extents_init(region);
++
++	return list_top(&region->extents, struct cxl_region_extent, list);
++}
++
++CXL_EXPORT struct cxl_region_extent *
++cxl_extent_get_next(struct cxl_region_extent *extent)
++{
++	struct cxl_region *region = extent->region;
++
++	return list_next(&region->extents, extent, list);
++}
++
++CXL_EXPORT unsigned long long
++cxl_extent_get_offset(struct cxl_region_extent *extent)
++{
++	return extent->offset;
++}
++
++CXL_EXPORT unsigned long long
++cxl_extent_get_length(struct cxl_region_extent *extent)
++{
++	return extent->length;
++}
++
++CXL_EXPORT void
++cxl_extent_get_uuid(struct cxl_region_extent *extent, uuid_t uuid)
++{
++	memcpy(uuid, extent->uuid, sizeof(uuid_t));
++}
++
+ CXL_EXPORT struct cxl_decoder *
+ cxl_mapping_get_decoder(struct cxl_memdev_mapping *mapping)
+ {
+diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+index 258bdd3..dcfe242 100644
+--- a/cxl/lib/libcxl.sym
++++ b/cxl/lib/libcxl.sym
+@@ -298,6 +298,11 @@ global:
+ 	cxl_memdev_get_dynamic_ram_a_qos_class;
+ 	cxl_decoder_is_dynamic_ram_a_capable;
+ 	cxl_decoder_create_dynamic_ram_a_region;
++	cxl_extent_get_first;
++	cxl_extent_get_next;
++	cxl_extent_get_offset;
++	cxl_extent_get_length;
++	cxl_extent_get_uuid;
+ } LIBECXL_8;
+ 
+ LIBCXL_10 {
+diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+index 37b7b06..c5f3bed 100644
+--- a/cxl/lib/private.h
++++ b/cxl/lib/private.h
+@@ -183,6 +183,7 @@ struct cxl_region {
+ 	struct cxl_decoder *decoder;
+ 	struct list_node list;
+ 	int mappings_init;
++	int extents_init;
+ 	struct cxl_ctx *ctx;
+ 	void *dev_buf;
+ 	size_t buf_len;
+@@ -200,6 +201,7 @@ struct cxl_region {
+ 	struct daxctl_region *dax_region;
+ 	struct kmod_module *module;
+ 	struct list_head mappings;
++	struct list_head extents;
+ };
+ 
+ struct cxl_memdev_mapping {
+@@ -209,6 +211,15 @@ struct cxl_memdev_mapping {
+ 	struct list_node list;
+ };
+ 
++#define CXL_REGION_EXTENT_TAG 0x10
++struct cxl_region_extent {
++	struct cxl_region *region;
++	u64 offset;
++	u64 length;
++	uuid_t uuid;
++	struct list_node list;
++};
++
+ enum cxl_cmd_query_status {
+ 	CXL_CMD_QUERY_NOT_RUN = 0,
+ 	CXL_CMD_QUERY_OK,
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index fd41122..a60509f 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -394,6 +394,17 @@ unsigned int cxl_mapping_get_position(struct cxl_memdev_mapping *mapping);
+              mapping != NULL; \
+              mapping = cxl_mapping_get_next(mapping))
+ 
++struct cxl_region_extent;
++struct cxl_region_extent *cxl_extent_get_first(struct cxl_region *region);
++struct cxl_region_extent *cxl_extent_get_next(struct cxl_region_extent *extent);
++#define cxl_extent_foreach(region, extent) \
++        for (extent = cxl_extent_get_first(region); \
++             extent != NULL; \
++             extent = cxl_extent_get_next(extent))
++unsigned long long cxl_extent_get_offset(struct cxl_region_extent *extent);
++unsigned long long cxl_extent_get_length(struct cxl_region_extent *extent);
++void cxl_extent_get_uuid(struct cxl_region_extent *extent, uuid_t uuid);
++
+ struct cxl_cmd;
+ const char *cxl_cmd_get_devname(struct cxl_cmd *cmd);
+ struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev, int opcode);
 -- 
 2.43.0
 
