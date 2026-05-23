@@ -1,63 +1,63 @@
-Received: from mail-dl1-f42.google.com (mail-dl1-f42.google.com [74.125.82.42])
+Received: from mail-dl1-f41.google.com (mail-dl1-f41.google.com [74.125.82.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2FA386C31
-	for <linux-cxl@vger.kernel.org>; Sat, 23 May 2026 09:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDBD387345
+	for <linux-cxl@vger.kernel.org>; Sat, 23 May 2026 09:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779529426; cv=none; b=AykHkYgz3izQhyqL2ugsOFmhMM+j9Js0+VdfDZAJ3etSYvfSbDKbRSqTbdB1GMfMJxrIA92JMyI3HjZM4W0TrSSSm9utJCYoiCFyXZrtwQ0LX6QGocPnswykuds7utKQ+Ii/E3vNcA2XIY9v1xOOoBhyIGqcNQ37lHcAaRac1Mg=
+	t=1779529428; cv=none; b=j8vVFa6hYtBdwOyxFnkD+qlm6VLx+lgmEs4/ZeiYhXk1XKf3n66YDsrmtQZXikkCGqo8DtfDMu/l61QXYe4wnLR3EzsznwGJ6LTuAxPaxxVWPyXFZ/rwPVmiySxrf8Hx9v/qqutmH5SF9Uou62HYPBXnwIEBJ6BT6mHDKQ14iuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779529426; c=relaxed/simple;
-	bh=mimTWYFTaHY+FLSmEscwRLS2qecNH3JETIBfD4afc9g=;
+	s=arc-20240116; t=1779529428; c=relaxed/simple;
+	bh=lUv0SjAAaw3E/kgV1KeDK72Wh6iLEtGftRf81Pn66SM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k+n1thxybUoj6K7tM6+WB/ubs727ag89Rw8ostEKq4HyHMPnLQShM6hrLh2meg7J7X0Q84zRURUq603MwRr8Cg/zkjVpDTr+qve3nzSVmgJRYOBoP/GWDtWH+hsmA2DYJ+9QUjING+XZZiIQnv1du6YBo1OO19Y+YLwIW47IzG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JyLJGjlN; arc=none smtp.client-ip=74.125.82.42
+	 MIME-Version; b=C4vDYR+VxUFM9YKP+BpYfe/pi6pJWwOtCl72yfSXh9wedaT3zIVLq/y++uTrcByKBLC6DghgDBkaPH9l6qF+uUAn6F1BooASnm2OTnYGt6ucRf2fzstN0KVTtwufvr51eVM7w5+l8Y/7hklOebP8Nqn84FAbgwpmB5Ny1dCCBtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=df+sGys1; arc=none smtp.client-ip=74.125.82.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JyLJGjlN"
-Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-135e7f4a295so2841067c88.0
-        for <linux-cxl@vger.kernel.org>; Sat, 23 May 2026 02:43:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="df+sGys1"
+Received: by mail-dl1-f41.google.com with SMTP id a92af1059eb24-1329fc4bf77so2963476c88.1
+        for <linux-cxl@vger.kernel.org>; Sat, 23 May 2026 02:43:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1779529424; x=1780134224; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1779529426; x=1780134226; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=snhhVzpNXLnSXNel0j3XIF8QPv37i0IqA2Elwz6NcMg=;
-        b=JyLJGjlN9X1A6O8HY253x6SRS7KuoeOyc/Hj7DrMbsHappKVNozN4SyMKsYfCEUXuu
-         /GXO67ZFG/HphCHoxfl0itJ2O5TEdt722iw8V9/GRt3IXywMDUjW0P1IqfLkXRZYPlnd
-         uo9TVdyaoRCLxVBNLjW0N38uBsldANdCP6UlXIo0HOH/Gx6e8IwppfkoZVWtaM0YK1Yv
-         9gR5dIEnAvMNCLs5LMcPDYXuZPywMQKzikH8AU2LkXB8pZgqqEmyL8SUCqzRp2ZzkMSw
-         xJMbR/CwPIiyptlb9VN9UrGZK+smI28Y1Iat7jvbBCjEeYfJ0iF1V83Y+v9i2dqUKjun
-         SeKg==
+        bh=w6Dz9TYOBwWg06fFUo8qqEZEgSQ6r/8vuvT8PbFJpKY=;
+        b=df+sGys1ryH7n92a6gZy18seyR/BDtNlIMQgrh+qGruMH00QyOjHHL2yC1AIoDQ4yG
+         qg33blVD6/NzWdj1p4ZOfgJEz92vBs/9p4+8uocSmN3vQqY3QUyUZ2iu+skpi4sYtQSL
+         oxMGIboZC0Oyv446KNZEYOmSZk9696XwJYim6ajYaTbIX02Zi6pToUmvuSFfZwaarGXn
+         STdg5vIVxC/GOoPcVe3VDJhnFEC6PIJsc2ENoTI0RHa9r5UW5MuRiOBRuUPzWiaaK5AE
+         rSWqVEb2Fz+YtBkxMGpW/Zfg04AG/WW4CiKgcwO6mgqiIYyAegUwdzSc4rxQptVmOOMf
+         ZphQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779529424; x=1780134224;
+        d=1e100.net; s=20251104; t=1779529426; x=1780134226;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=snhhVzpNXLnSXNel0j3XIF8QPv37i0IqA2Elwz6NcMg=;
-        b=TBEk0b5Kesz4wPMxaLsGoskDAk7ViURzamW6qmbbsiDrUK6kyzv7XeYISEFJ88z5mK
-         4iaJ99cqSvDp+zzLEkTgpQfdBijRq38tYgq5+lOCA7GUks8xRNx79J2fPDY0CfqHBrsx
-         tPMt6mRx9lNSWwizCkEHFuVUpnlJVpULYlRXcotTOMSVkhVMcPuaZ6YJNF2CxUnz167H
-         sndP7e8R/WTPvzdKlxz4N+i+zXfmRdhcHfHCZnMcZjDeZZQNlwGOnvSuS0qy2QW6tK6v
-         WjtjCrxdedqFAxxM2MdjjXIkebOiDs6QknrERuNSwJihStFjXMav721oYeGhsd75J2H9
-         McsA==
-X-Gm-Message-State: AOJu0Yw3VXYvbmP4KEM9CLmz9xCtzGOmdWDlEuXEkdv9aSVppomqm2JP
-	b5x0PhQXRyqmiOgqAy76b+CWvEeXSgUq3NVOsCxO2fwbiBmNPv5aqWWHGx+zMA==
-X-Gm-Gg: Acq92OFBo7vlMkyjmNgA5vRmpqV0iXuwrCYyoKSg3QNh4egkaQYrfoAbBGx+ctyMUjM
-	RVcPgLQqSqx0uelI08Wup9FpN470AkAzkbSAygR46NPzZv7xni7JsuOzSPfIL89uDGyCnKVwyap
-	7QBfqvsfoHEioMJxurIAiZl2lDN/8Xkq22FtpFge6BJIOcyzxuTnNPtAJvPgTwj0KTjKNzbwxAw
-	Lq1SjZB6mMhL1ENTkAxHc1qnitBWAelilGcVrQcS7WecuqTWuW+zgC37C75oMXLZGESwnqta9sX
-	RIdj2iJi/vOnRtwSvPW72M3AmrtmGCJ2IPUg7dHRh1ILgB6Z4ciXzMocedyXn/GVSZUd+PlSDPl
-	FAWVKKkZVg/SiHUeZfTgn9kK64gXbULqC32RXx4ZP9rUCzrEp9P4Q0H8RDhByBJWlumVm0csbL+
-	zkAIcOz2veRwLGrC8robXQaadshiBqfUqAJGo2+S8oHkcb1iI8UF4gT+6C+t59N1HYqBI9a2cpu
-	fNToYM=
-X-Received: by 2002:a05:7022:609c:b0:11a:fb0a:ceca with SMTP id a92af1059eb24-13633eb60b4mr3619709c88.16.1779529424123;
-        Sat, 23 May 2026 02:43:44 -0700 (PDT)
+        bh=w6Dz9TYOBwWg06fFUo8qqEZEgSQ6r/8vuvT8PbFJpKY=;
+        b=gmxfv7V+2xdN9uWHcZfmYYp0dtsUMv91Neki4eNxHiqrNNfd39zATxvSGxj1bKbVb8
+         pnHwR36hq8pOUdTHy+1Ossow4P+9tRwd9YwF1ISZalF0dlMSm96+okWxPku+EAYfEdBb
+         nXrOrilJdKIVqbjJ+9DNHaErpMQGeynE8d2U+RTHmeTM8LPvclIF0omdvswx7zcz9N8E
+         4uddpR+sL27dQHYs9LUi4nUVi3qYe571oPZb0P7TQohIdijcqv136PtBSl/DqcW7E3eY
+         Uxl/i5rTJgGf19C4G+P8h+iWTOb6EfKCH186t9X7Qx+onSmmWzxYaZRw/KqwxyTFvzrR
+         yAhg==
+X-Gm-Message-State: AOJu0YwFSi5yJlJDH6GEoUF8D8JeqKwHf1poJgIv1/trJP/LlqG4H/kG
+	kDPr9/szcq78om6h0chYD/Z/s9oF2JeJWwmaVKZxgJLLwx2wJslwOnk8S+N0FQ==
+X-Gm-Gg: Acq92OE/gzRrGH7xEaDa1MnpUMWY1Uyxd0g3IyOAhIey2gNk1epzxFUkULuPjJ8oyTY
+	eE1wT2nN89nvqpsmwvXQIGyWpkZR0Sp49uxRg2OAFEF5AjI4Qwtq76amB71uBMbXT72BuMpJfkD
+	0qdVkUA9mWpptaUxHQTS8kHFXhRN5iLjzkhAEw/RkT3c9uao1uLI0Mjff9nQ+IjzOEXMTvNPlm0
+	s2xKVuIS/chOhukmMvRw9CPIz50UQ6Agtg8HiuEOgbb/pJ//0zG5x5LNudJ6eXSGQ3g6p5dOscF
+	QBAQXPsTL2iRuAO4x5MMngV8fWsA0umLuLAnFw4nAKn4vvmmIs+wavzhnWjoVZ3GRcQixo3cCt1
+	XH/EuxDTz0qQ2BcpCeKPVpOSZaggYIZ0DEyR5iOghGdDK/8Dt7O2JDglGv99/ZP+NvYaYmSlmRD
+	AavGbGUpYhA04Uv8GCNd02Y82UEvRprPVHJmpJdAo/OS2HnXdh/6MngXmBMhjfbXXgEWt1VG44M
+	DM15hQ=
+X-Received: by 2002:a05:7022:258a:b0:12d:de3e:cc02 with SMTP id a92af1059eb24-1365fd80b13mr2830332c88.41.1779529425905;
+        Sat, 23 May 2026 02:43:45 -0700 (PDT)
 Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1366a40305csm2376358c88.7.2026.05.23.02.43.43
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1366a40305csm2376358c88.7.2026.05.23.02.43.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 23 May 2026 02:43:43 -0700 (PDT)
+        Sat, 23 May 2026 02:43:45 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
 To: linux-cxl@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: nvdimm@lists.linux.dev,
 	John Groves <John@Groves.net>,
 	Gregory Price <gourry@gourry.net>,
 	Ira Weiny <ira.weiny@intel.com>
-Subject: [PATCH v10 04/31] cxl/core: Enforce partition order/simplify partition calls
-Date: Sat, 23 May 2026 02:42:58 -0700
-Message-ID: <22ae445b8a99d26299520e2429c5bf4e64b0d9e6.1779528761.git.anisa.su@samsung.com>
+Subject: [PATCH v10 05/31] cxl/mem: Expose dynamic ram A partition in sysfs
+Date: Sat, 23 May 2026 02:42:59 -0700
+Message-ID: <45bc277b11c1aabf495132925c0d75c78e3b5a8a.1779528761.git.anisa.su@samsung.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1779528761.git.anisa.su@samsung.com>
 References: <cover.1779528761.git.anisa.su@samsung.com>
@@ -89,191 +89,154 @@ Content-Transfer-Encoding: 8bit
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-Device partitions have an implied order which is made more complex by
-the addition of a dynamic partition.
+To properly configure CXL regions user space will need to know the
+details of the dynamic ram partition.
 
-Remove the ram special case information calls in favor of generic calls
-with a check ahead of time to ensure the preservation of the implied
-partition order.
+Expose the first dynamic ram partition through sysfs.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
-Changes::
-[anisa: rebase]
-[davidlohr: core/hdm.c: return -EINVAL instead of 0 in cxl_dpa_setup
-if partitions are out of order]
+Changes:
+[anisa: Update kernel version to 7.0]
+[davidlohr: Remove "persistent" from description of
+/sys/bus/cxl/devices/memX/dynamic_ram_a/qos_class]
 ---
- drivers/cxl/core/hdm.c    | 11 ++++++++++-
- drivers/cxl/core/memdev.c | 32 +++++++++-----------------------
- drivers/cxl/cxlmem.h      |  9 +++------
- drivers/cxl/mem.c         |  2 +-
- 4 files changed, 23 insertions(+), 31 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-cxl | 24 +++++++++++
+ drivers/cxl/core/memdev.c               | 57 +++++++++++++++++++++++++
+ 2 files changed, 81 insertions(+)
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 28974adaab75..7a5812971f8f 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -464,6 +464,7 @@ static const char *cxl_mode_name(enum cxl_partition_mode mode)
- int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
- {
- 	struct device *dev = cxlds->dev;
-+	int i;
+diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
+index 16a9b3d2e2c0..3d95c325f6e0 100644
+--- a/Documentation/ABI/testing/sysfs-bus-cxl
++++ b/Documentation/ABI/testing/sysfs-bus-cxl
+@@ -89,6 +89,30 @@ Description:
+ 		and there are platform specific performance related
+ 		side-effects that may result. First class-id is displayed.
  
- 	guard(rwsem_write)(&cxl_rwsem.dpa);
- 
-@@ -476,9 +477,17 @@ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
- 		return 0;
- 	}
- 
-+	/* Verify partitions are in expected order. */
-+	for (i = 1; i < info->nr_partitions; i++) {
-+		if (cxlds->part[i].mode < cxlds->part[i-1].mode) {
-+			dev_err(dev, "Partition order mismatch\n");
-+			return -EINVAL;
-+		}
-+	}
++What:		/sys/bus/cxl/devices/memX/dynamic_ram_a/size
++Date:		May, 2025
++KernelVersion:	v7.0
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) The first Dynamic RAM partition capacity as bytes.
 +
- 	cxlds->dpa_res = DEFINE_RES_MEM(0, info->size);
++
++What:		/sys/bus/cxl/devices/memX/dynamic_ram_a/qos_class
++Date:		May, 2025
++KernelVersion:	v7.0
++Contact:	linux-cxl@vger.kernel.org
++Description:
++		(RO) For CXL host platforms that support "QoS Telemmetry"
++		this attribute conveys a comma delimited list of platform
++		specific cookies that identifies a QoS performance class
++		for the partition of the CXL mem device. These
++		class-ids can be compared against a similar "qos_class"
++		published for a root decoder. While it is not required
++		that the endpoints map their local memory-class to a
++		matching platform class, mismatches are not recommended
++		and there are platform specific performance related
++		side-effects that may result. First class-id is displayed.
++
  
--	for (int i = 0; i < info->nr_partitions; i++) {
-+	for (i = 0; i < info->nr_partitions; i++) {
- 		const struct cxl_dpa_part_info *part = &info->part[i];
- 		int rc;
- 
+ What:		/sys/bus/cxl/devices/memX/serial
+ Date:		January, 2022
 diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 80e65690eb77..71602820f896 100644
+index 71602820f896..064cfd628577 100644
 --- a/drivers/cxl/core/memdev.c
 +++ b/drivers/cxl/core/memdev.c
-@@ -75,20 +75,12 @@ static ssize_t label_storage_size_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(label_storage_size);
+@@ -101,6 +101,19 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
+ static struct device_attribute dev_attr_pmem_size =
+ 	__ATTR(size, 0444, pmem_size_show, NULL);
  
--static resource_size_t cxl_ram_size(struct cxl_dev_state *cxlds)
--{
--	/* Static RAM is only expected at partition 0. */
--	if (cxlds->part[0].mode != CXL_PARTMODE_RAM)
--		return 0;
--	return resource_size(&cxlds->part[0].res);
--}
--
- static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf)
++static ssize_t dynamic_ram_a_size_show(struct device *dev, struct device_attribute *attr,
++			      char *buf)
++{
++	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	unsigned long long len = cxl_part_size(cxlds, CXL_PARTMODE_DYNAMIC_RAM_A);
++
++	return sysfs_emit(buf, "%#llx\n", len);
++}
++
++static struct device_attribute dev_attr_dynamic_ram_a_size =
++	__ATTR(size, 0444, dynamic_ram_a_size_show, NULL);
++
+ static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
+ 			   char *buf)
  {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	unsigned long long len = cxl_ram_size(cxlds);
-+	unsigned long long len = cxl_part_size(cxlds, CXL_PARTMODE_RAM);
- 
- 	return sysfs_emit(buf, "%#llx\n", len);
- }
-@@ -101,7 +93,7 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
- {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
--	unsigned long long len = cxl_pmem_size(cxlds);
-+	unsigned long long len = cxl_part_size(cxlds, CXL_PARTMODE_PMEM);
- 
- 	return sysfs_emit(buf, "%#llx\n", len);
- }
-@@ -424,10 +416,11 @@ static struct attribute *cxl_memdev_attributes[] = {
+@@ -443,6 +456,25 @@ static struct attribute *cxl_memdev_pmem_attributes[] = {
  	NULL,
  };
  
--static struct cxl_dpa_perf *to_pmem_perf(struct cxl_dev_state *cxlds)
-+static struct cxl_dpa_perf *part_perf(struct cxl_dev_state *cxlds,
-+				      enum cxl_partition_mode mode)
- {
- 	for (int i = 0; i < cxlds->nr_partitions; i++)
--		if (cxlds->part[i].mode == CXL_PARTMODE_PMEM)
-+		if (cxlds->part[i].mode == mode)
- 			return &cxlds->part[i].perf;
- 	return NULL;
- }
-@@ -438,7 +431,7 @@ static ssize_t pmem_qos_class_show(struct device *dev,
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 
--	return sysfs_emit(buf, "%d\n", to_pmem_perf(cxlds)->qos_class);
-+	return sysfs_emit(buf, "%d\n", part_perf(cxlds, CXL_PARTMODE_PMEM)->qos_class);
- }
- 
- static struct device_attribute dev_attr_pmem_qos_class =
-@@ -450,20 +443,13 @@ static struct attribute *cxl_memdev_pmem_attributes[] = {
- 	NULL,
- };
- 
--static struct cxl_dpa_perf *to_ram_perf(struct cxl_dev_state *cxlds)
--{
--	if (cxlds->part[0].mode != CXL_PARTMODE_RAM)
--		return NULL;
--	return &cxlds->part[0].perf;
--}
--
++static ssize_t dynamic_ram_a_qos_class_show(struct device *dev,
++				   struct device_attribute *attr, char *buf)
++{
++	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++
++	return sysfs_emit(buf, "%d\n",
++			  part_perf(cxlds, CXL_PARTMODE_DYNAMIC_RAM_A)->qos_class);
++}
++
++static struct device_attribute dev_attr_dynamic_ram_a_qos_class =
++	__ATTR(qos_class, 0444, dynamic_ram_a_qos_class_show, NULL);
++
++static struct attribute *cxl_memdev_dynamic_ram_a_attributes[] = {
++	&dev_attr_dynamic_ram_a_size.attr,
++	&dev_attr_dynamic_ram_a_qos_class.attr,
++	NULL,
++};
++
  static ssize_t ram_qos_class_show(struct device *dev,
  				  struct device_attribute *attr, char *buf)
  {
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+@@ -519,6 +551,29 @@ static struct attribute_group cxl_memdev_pmem_attribute_group = {
+ 	.is_visible = cxl_pmem_visible,
+ };
  
--	return sysfs_emit(buf, "%d\n", to_ram_perf(cxlds)->qos_class);
-+	return sysfs_emit(buf, "%d\n", part_perf(cxlds, CXL_PARTMODE_RAM)->qos_class);
++static umode_t cxl_dynamic_ram_a_visible(struct kobject *kobj, struct attribute *a, int n)
++{
++	struct device *dev = kobj_to_dev(kobj);
++	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
++	struct cxl_dpa_perf *perf = part_perf(cxlmd->cxlds, CXL_PARTMODE_DYNAMIC_RAM_A);
++
++	if (a == &dev_attr_dynamic_ram_a_qos_class.attr &&
++	    (!perf || perf->qos_class == CXL_QOS_CLASS_INVALID))
++		return 0;
++
++	if (a == &dev_attr_dynamic_ram_a_size.attr &&
++	    (!cxl_part_size(cxlmd->cxlds, CXL_PARTMODE_DYNAMIC_RAM_A)))
++		return 0;
++
++	return a->mode;
++}
++
++static struct attribute_group cxl_memdev_dynamic_ram_a_attribute_group = {
++	.name = "dynamic_ram_a",
++	.attrs = cxl_memdev_dynamic_ram_a_attributes,
++	.is_visible = cxl_dynamic_ram_a_visible,
++};
++
+ static umode_t cxl_memdev_security_visible(struct kobject *kobj,
+ 					   struct attribute *a, int n)
+ {
+@@ -547,6 +602,7 @@ static const struct attribute_group *cxl_memdev_attribute_groups[] = {
+ 	&cxl_memdev_attribute_group,
+ 	&cxl_memdev_ram_attribute_group,
+ 	&cxl_memdev_pmem_attribute_group,
++	&cxl_memdev_dynamic_ram_a_attribute_group,
+ 	&cxl_memdev_security_attribute_group,
+ 	NULL,
+ };
+@@ -555,6 +611,7 @@ void cxl_memdev_update_perf(struct cxl_memdev *cxlmd)
+ {
+ 	sysfs_update_group(&cxlmd->dev.kobj, &cxl_memdev_ram_attribute_group);
+ 	sysfs_update_group(&cxlmd->dev.kobj, &cxl_memdev_pmem_attribute_group);
++	sysfs_update_group(&cxlmd->dev.kobj, &cxl_memdev_dynamic_ram_a_attribute_group);
  }
+ EXPORT_SYMBOL_NS_GPL(cxl_memdev_update_perf, "CXL");
  
- static struct device_attribute dev_attr_ram_qos_class =
-@@ -499,7 +485,7 @@ static umode_t cxl_ram_visible(struct kobject *kobj, struct attribute *a, int n)
- {
- 	struct device *dev = kobj_to_dev(kobj);
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
--	struct cxl_dpa_perf *perf = to_ram_perf(cxlmd->cxlds);
-+	struct cxl_dpa_perf *perf = part_perf(cxlmd->cxlds, CXL_PARTMODE_RAM);
- 
- 	if (a == &dev_attr_ram_qos_class.attr &&
- 	    (!perf || perf->qos_class == CXL_QOS_CLASS_INVALID))
-@@ -518,7 +504,7 @@ static umode_t cxl_pmem_visible(struct kobject *kobj, struct attribute *a, int n
- {
- 	struct device *dev = kobj_to_dev(kobj);
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
--	struct cxl_dpa_perf *perf = to_pmem_perf(cxlmd->cxlds);
-+	struct cxl_dpa_perf *perf = part_perf(cxlmd->cxlds, CXL_PARTMODE_PMEM);
- 
- 	if (a == &dev_attr_pmem_qos_class.attr &&
- 	    (!perf || perf->qos_class == CXL_QOS_CLASS_INVALID))
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index cee936fb3d03..10175ca3b7ee 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -383,14 +383,11 @@ struct cxl_security_state {
- 
- #define CXL_MAX_DC_PARTITIONS 8
- 
--static inline resource_size_t cxl_pmem_size(struct cxl_dev_state *cxlds)
-+static inline resource_size_t cxl_part_size(struct cxl_dev_state *cxlds,
-+					    enum cxl_partition_mode mode)
- {
--	/*
--	 * Static PMEM may be at partition index 0 when there is no static RAM
--	 * capacity.
--	 */
- 	for (int i = 0; i < cxlds->nr_partitions; i++)
--		if (cxlds->part[i].mode == CXL_PARTMODE_PMEM)
-+		if (cxlds->part[i].mode == mode)
- 			return resource_size(&cxlds->part[i].res);
- 	return 0;
- }
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index fcffe24dcb42..f19e08279ec7 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -114,7 +114,7 @@ static int cxl_mem_probe(struct device *dev)
- 		return -ENXIO;
- 	}
- 
--	if (cxl_pmem_size(cxlds) && IS_ENABLED(CONFIG_CXL_PMEM)) {
-+	if (cxl_part_size(cxlds, CXL_PARTMODE_PMEM) && IS_ENABLED(CONFIG_CXL_PMEM)) {
- 		rc = devm_cxl_add_nvdimm(dev, parent_port, cxlmd);
- 		if (rc) {
- 			if (rc == -ENODEV)
 -- 
 2.43.0
 
