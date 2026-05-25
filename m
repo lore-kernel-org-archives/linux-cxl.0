@@ -1,218 +1,191 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F4B1A6832
-	for <linux-cxl@vger.kernel.org>; Mon, 25 May 2026 02:03:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779674600; cv=none; b=FAq71qzedGRb06+yjSLc21kGM3EHGUb2Z0+Gkl9u8juXBZy00Ezuq2Jx9VWn9zdJdiPbB8zJDzZlwVZqbwumuVWROWHDIY3brvQGqICai8TXu7K7wqqMc5g2Yxl/siPMcOxcVgqzjMnQk9NVUot+DncmojiH1ppOlkCHRs+UaT8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779674600; c=relaxed/simple;
-	bh=tvbe4seE81VJXCS/sV64iAFa1bGbqBGMfj6eA3O0mQM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bgu53ohwlxlzfJgPNgzPxMn9oj1lsyeVEjdEQhVPkVdMXbB0MxdeWUwGkKh33ejnI8xiBQjK0QR/rAyH5bgybS5pGyUxxG3RUAh9kt6NaVBXxoi9xWnhfYXicc661t6EZgMykKnOGeujjpd8Qu1TshKHhqGmFdNVBVCgNLBIDAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=L4VqK2BM; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EC13AB29B;
+	Mon, 25 May 2026 06:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779692334; cv=fail; b=mopQe17jAd21zxJ+p7E93imzzdgD/JCd5BTbEZ+ArAqmJXdSnTo7usrS5QW8n9tynJnoqwg2SKhhu4ko9Uxf2eqPZTsfovdvSk97zIWs8NGYEh+GprdSMIk3Ouyg0Zdwm3yiR+eATyyjS64cF5puLpc5EUCwll91KGdPg4LX34M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779692334; c=relaxed/simple;
+	bh=AH/B48z5Hn8bry6vzk8Z0lVNLGQ5GEpkKUx4Hy5DIfI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=nLmf1AisQbWZBEJ1LMU77a/znB+0fFIBOq12m4xJbV7Bis5CdlR6NebtZ62bm3/IUlprO09+Qd/Sfbqe1NyMeD5MbOPvoM7NELrjp4zZdejoxEuWE7zHyyz+1vZmvH7ume4/dak83/q/PgkUmxd/J0OzoIRcUUFJWD+fJZ1CnYI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SwoyMorb; arc=fail smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="L4VqK2BM"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-90caad2e944so943833685a.2
-        for <linux-cxl@vger.kernel.org>; Sun, 24 May 2026 19:03:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1779674597; x=1780279397; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a1dR+qUQ11esis+j6Iq3N8urMnTyCI4LYg4f+Ph15u8=;
-        b=L4VqK2BMZjPaHALdciJSto99TlqA406nZSA0HxJiam/tbt6XUHJtszc+dEn/FdEMl5
-         f7rXTkY30+7rMsqwcEVCifanjHU/QhyDqzAbFaukFAqAMPdP78OTBUX6DQ9holIYAmpK
-         pSOxRATA/uSOpooB3BE2Nk9izHjxZ+LZcwP6EjkxF4oQ5BwnvKkFaLMjPOIGXxq+bCWa
-         spUSybEE+rsMIrccbB66CgxfkLHC4ZmLni5uwft6Dt7cqi6AobOyJ3cOX5OLqcbo9A6N
-         4ebRgzFMnf8cyNUa3HSMJ9A5yIIlnsZjwie19Yk/FU2ZxP0PQCTyayxyd2y7unfUDAOX
-         13qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779674597; x=1780279397;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a1dR+qUQ11esis+j6Iq3N8urMnTyCI4LYg4f+Ph15u8=;
-        b=gjFt5Vd4xviG4h/MeD6q2Jp7ixCZU/i8XD0yVak6FjPuiJ7H5duNp/ufIZbMDsd3LN
-         LsFePU5dcRmA0B671va2yVA4kX67hOkmqZpzry04vqzvGUGecsP5wQb2CEMLF5l3ndVr
-         txsvpAZgErrhK4ENKv+uQjifjdGJrJBPNaZo9WZVYO26/aii/gBl9YOEPQdNDff16fJN
-         g7CPK812H++JeKhEQTkCZFEt6CjuNcsyM9LJJnLSx5IfEBMSA7F4/WFXHIjpjMfwDi7+
-         22AEA/dAYKVKglkCYL2KYVwoNE7OvdrUg/TgwUwQDmUX3t78YHtj6Wo8TZ49vnTMD+WU
-         fNig==
-X-Forwarded-Encrypted: i=1; AFNElJ+DGliSG1F4A6JCsy/Jc/dANHK8RyYeUTo4KwcL2ixeOmT74jeeRgURC4cWh5rHBj8dxBzYr3MvMDQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym+OUmCE2wkfFYl928SIRUPugU9FPth+Z23wjcLZ8dV5zx1nH2
-	obvkDL3Iqp8Ic9jpvdWMqobx4Y14ddH4z7w3JDt/AMk/t5hDJ5FUELnd5inytP1oGlM=
-X-Gm-Gg: Acq92OGFdSj5sOQd/Kb/UWa2omlL+nCdLxJTjg68HcjaFjlYv4QUvhtdxZ4M10c4oT5
-	+fiIFKkyzaF36afDwcRIA4/SMzuHHiPDZrlzLtx2Fr3IrprmhBKIYAcniDYDlwPayLWBjsdewK+
-	1JJcsP16zsogczKmeO78/DRXUgyCv8Km7eKnYhWlow9xLb97TZZ2y4TWiai6NglUQ/Mp4oDKT34
-	A2qmedltbNOlBFEpJtSio8ucCzAIZUYO9ErdACx+avSTcbBDds8t9aNqSxSeSTvlX53nOlz/448
-	sehgGQCgB3EB2hT90hJXgmCRZsr5Ppfgu8MHakGVXAwpY/DS6a7Zn+CYLm4t8K9NGIactRlo5oB
-	WiCC1OVTzreh7muKy6dd4WSYW1xhdolLyGKU7JV6RDKAXIjSiHQ35IoNE1kFggZe0sTsDwmazF8
-	FhH1b3pnWpjf7ndGPvZyK1YwDEG1dz5lmznPXNgZP2II1I4oC5ZBdID8jXY2e0gQKKpjOJmHF0U
-	512ETY7i4Ef
-X-Received: by 2002:a05:620a:372a:b0:914:c100:6a0f with SMTP id af79cd13be357-914c10072a4mr1391916385a.23.1779674597141;
-        Sun, 24 May 2026 19:03:17 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-100-36-248-188.washdc.fios.verizon.net. [100.36.248.188])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-914bb8c8034sm892777285a.7.2026.05.24.19.03.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 May 2026 19:03:16 -0700 (PDT)
-Date: Sun, 24 May 2026 22:03:13 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Arun George/Arun George <arun.george@samsung.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
-	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com,
-	gost.dev@samsung.com, arungeorge05@gmail.com, cpgs@samsung.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <ahOt4Zw66ukww2On@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <CGME20260427123800epcas5p1e1a2fed257091b31e2e6c3a7d1b0c2b0@epcas5p1.samsung.com>
- <1983025922.01777297382206.JavaMail.epsvc@epcpadp2new>
- <ae_i9IlIndumJWN3@gourry-fedora-PF4VCD3F>
- <1891546521.01777455002601.JavaMail.epsvc@epcpadp1new>
- <afIKxG5mJZE6QgpR@gourry-fedora-PF4VCD3F>
- <1891546521.01777901881625.JavaMail.epsvc@epcpadp2new>
- <afmgJcFUjQLYxkb5@gourry-fedora-PF4VCD3F>
- <1891546521.01779449881859.JavaMail.epsvc@epcpadp2new>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SwoyMorb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779692331; x=1811228331;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=AH/B48z5Hn8bry6vzk8Z0lVNLGQ5GEpkKUx4Hy5DIfI=;
+  b=SwoyMorbnIQ/F2N1jsgEMTCbY7SkckvTR2SiJM2uommTpJ96uhb+ySAb
+   Oe6Ts0uIbfQAhFSHzI9ffvoB8/HlZ2jzP0GXQ3rqanZ/Y2SILK0KPwDHO
+   SZHQW7PUzj5CFK+CquEi1IQtwCAjxMGX8XjLOBwKNJw3h/0sZCdlFXo1G
+   6DgXelOy19rh1lkoco4P5ynGHTBp5krPft5bCuP5Gnljn/oIzjIEUF3ew
+   dI6M3qFdH/yN09jsVD9V7bqSjheAbt9cgkQm5w+NFLJ+khnmAWJma0kLU
+   GaIBONnO/38wI39T7zLwKPEXe5F9byrElRaOSb5VFZGcLB0voCDHMJVSG
+   A==;
+X-CSE-ConnectionGUID: Mpe2ExJASkKNuT33L95uFQ==
+X-CSE-MsgGUID: dKarJq/qQdanCb5cQpZ7MA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11796"; a="84132668"
+X-IronPort-AV: E=Sophos;i="6.24,167,1774335600"; 
+   d="scan'208";a="84132668"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2026 23:58:50 -0700
+X-CSE-ConnectionGUID: RS11pADtQjO/CH3cgN02aw==
+X-CSE-MsgGUID: j9rrAT7uRbCBL4hsLvpW0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,167,1774335600"; 
+   d="scan'208";a="279633910"
+Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2026 23:58:49 -0700
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Sun, 24 May 2026 23:58:48 -0700
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Sun, 24 May 2026 23:58:48 -0700
+Received: from BL0PR03CU003.outbound.protection.outlook.com (52.101.53.31) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Sun, 24 May 2026 23:58:47 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=izcWQ8MVImydRPdvGf4ruxNnEAIuB8prPCS/qONqIVnnMSm8+RxI6K2YEww45PUmlsihEevyZSrBVdrLNEWpURAUsIr7oKPY/PYQ7mGwBzcWYjpWebWwsNW5Sghl556aZE/glNcIp7uFjjxxebDVAtKKrqZdSlltj2LT4xX69WjbabQboqTIM8MIUrj7Fi6gp9g49S+3OxYwVABTRY8PyevCwvA5BgQtSTtHk13AJcyjVfT4f4V5JL3xydop5tnT5mcD09Rr7+5Ir487nCjOyu2mA49xBJbmCQYsvxNNEzPM3c+oxth2zQwgJh5nnIxG/BOopv7ALzQtGESF7BV/XA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AH/B48z5Hn8bry6vzk8Z0lVNLGQ5GEpkKUx4Hy5DIfI=;
+ b=PVXxH3ZOXpeRyBURqR7Eu2fxWYk9dawFHQ55qsfnfsGyxEhDa5dOaG8/1L8H+zOXuS745fcLFz+ET31EPS/vgLy381fnX4IA743RMgcrI+BOcsprFRH2bN8QPU6/thk5+hCRWLJqBAZigCYzdtXd7kaSx9JYbmcnTOm6j9z/pbLM14uShsiG0IOVwcxHgZU5GZedzz2eHc8D8E49b3oVDSNTsgAaA75W5/TNoh+thSlxjs0XYiaHKvtcAyFb3f7mng4jPl0Nx5OtHk96tNVhZUoW8QDYeJ7EH0dD+8QRJvV3eA65F+F6DSzkiebag2DMcwHvKtJ9TJSpp5NmCC0sZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by SA2PR11MB4825.namprd11.prod.outlook.com (2603:10b6:806:111::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.19; Mon, 25 May
+ 2026 06:58:39 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::f997:762f:f079:134f]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::f997:762f:f079:134f%5]) with mapi id 15.21.0048.016; Mon, 25 May 2026
+ 06:58:39 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Jason Gunthorpe <jgg@nvidia.com>, "Liu, Yi L" <yi.l.liu@intel.com>
+CC: Nicolin Chen <nicolinc@nvidia.com>, "will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>, "bhelgaas@google.com"
+	<bhelgaas@google.com>, "joro@8bytes.org" <joro@8bytes.org>,
+	"praan@google.com" <praan@google.com>, "baolu.lu@linux.intel.com"
+	<baolu.lu@linux.intel.com>, "miko.lenczewski@arm.com"
+	<miko.lenczewski@arm.com>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org"
+	<linux-pci@vger.kernel.org>, "dan.j.williams@intel.com"
+	<dan.j.williams@intel.com>, "jonathan.cameron@huawei.com"
+	<jonathan.cameron@huawei.com>, Vikram Sethi <vsethi@nvidia.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "nirmoyd@nvidia.com"
+	<nirmoyd@nvidia.com>
+Subject: RE: [PATCH v4 1/3] PCI: Allow ATS to be always on for CXL.cache
+ capable devices
+Thread-Topic: [PATCH v4 1/3] PCI: Allow ATS to be always on for CXL.cache
+ capable devices
+Thread-Index: AQHc1gpb1K2PMqLtpESSV+2LT0fAfbYXCIyAgAAW0ACAARxQAIAAXU8AgAXimdA=
+Date: Mon, 25 May 2026 06:58:39 +0000
+Message-ID: <BN9PR11MB5276D64268AFF7390D942E5C8C0A2@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <cover.1777269009.git.nicolinc@nvidia.com>
+ <f6734b9dad0050138676f11ecd14e9db1cf6b697.1777269009.git.nicolinc@nvidia.com>
+ <e8337102-aecd-48e8-9a2d-10f41ed43c5b@intel.com>
+ <20260520143410.GV3602937@nvidia.com>
+ <80e7e1be-c384-470f-9949-8c0dbad165ac@intel.com>
+ <20260521130544.GE3602937@nvidia.com>
+In-Reply-To: <20260521130544.GE3602937@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|SA2PR11MB4825:EE_
+x-ms-office365-filtering-correlation-id: 584b1aa5-8bb0-4c8b-0f88-08deba2b0cbc
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700021|11063799006|4143699003|22082099003|18002099003|56012099003;
+x-microsoft-antispam-message-info: oXSrExwg2izUuc7c7O/lLttTDje1S+Cu7QaprdYaRSBGAaRzsi3rZF7xmUVV9F45snoh2dxfIwZXQv4ZP7tTvsu5ks6L7cJtWnczmYpw6qMcyNHI91Jz2CZSEr5zjmWUHlELVpRTQWP34uHCEmQRPPO+x4Sno0yVZyZj+L8B9HYZwE5ogDMeguXvY+et14NcNfAYngB0Sy97/UNdfFzbJZ+oMyckMJeytxeQtG6xGxrJgE0JJY0btYdB5HfnBln83XxPuL9M7yeh3F+ax81PxA9aXhbARDhheKXZK5cVpLXRt5yPpds60SjhSvelw8CriMamZFBEGG3ngn45pkBXUThaiqd0vvRyYUL5Sf2lB3nzfM17GNZGQEdxP0OOqdYlG8Yi+InYj/r+SPEl6F7SQbHZKtlDIOqGheQtZMhWL3uzFZ1gBYUiK9N8vyXOnf4R2JpzVcAIHG2PubZ8aImvzEZAMWolC7cblQNfC/xOQeAwghI72KvCyoleow9UHqS92c3xy8Ykv7f8l6pr/k8CVlKgB0osD2sCau6V6jCxjbwPp1J0LL5Iihx6790+hNqpIaPVNk54p8KFffqF74qC1TXNMz+EgG97+B2GT9MWkj8qz0v1QbEhX5NTYhIyH+5VOhyhTBE6MJgVX7YxQ4fP0/ult2++cBUI1nK71LZmumtncM/7gfDv9koTavBt36nejGgO4dnpO17jWSWTxGoRpDUurWTblXvprUqgpR+YNdFLxOKkcxPyu0NxzMSSvZPn
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700021)(11063799006)(4143699003)(22082099003)(18002099003)(56012099003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?UDSb/ycZRnDsaiqXTVf1MhKYdOvEFbPZeA/SP/oycvjilaQ7ehKfVlYugQNp?=
+ =?us-ascii?Q?FPF4XnvjwfpOTB4OWzn+QFrQi3fLQf5aLWtfP08EgwHAdxmLYVR5v7k7DRq/?=
+ =?us-ascii?Q?mf2r40bcx83vlokSvNliQlndQHWgzjSQalmcK455umTZGgvGzIwqBdB+ALBW?=
+ =?us-ascii?Q?fjcUN/7vwrXW34e65PlnU2kYIAXkK5OJkc7OoMKWFvP1j4yLVdi16cqy0HWl?=
+ =?us-ascii?Q?ph+VL4CtjtZdIykUp50yaZw1uE63JHsmrnZPdoODRjS/4iW3INIJQ8pRYjeF?=
+ =?us-ascii?Q?F66b77isO3Ly3qYWR6K9Mp5L73LRCyIpt83bkjQgX68ICpZER63R1815uvAP?=
+ =?us-ascii?Q?wYsfIaqQrbTZX/2BKZr0XgyCThGN4OpxSXMbBd4QvgGVdi+UxXtvXuK7Kzz7?=
+ =?us-ascii?Q?9JJ6TLdo3ZVUGN8SC8hzLZapqmSzkXvk7KdOhSmP49r3TrkMjOTI+yqEdEaz?=
+ =?us-ascii?Q?L1mbUNiEWwdp6nm6iBYFZGkX7MUL/8AMEO+NXJzNXIED5w4YwHTWP0juzVQy?=
+ =?us-ascii?Q?WbUCn4Q23SDg941KReQ8WXjm2JF0IJD5fjb9ojXHNrNGojWBEZLvqRbiNYpk?=
+ =?us-ascii?Q?7rJXUBfEB4YkylbaQalmjk+GW5hrxGUZwMrF8ChxbL8uL1z9pEVuLiu/FMQe?=
+ =?us-ascii?Q?2z5pPJK6wgHkzWzBPq89lOGdhtZDMHNX8p4okdMYCxrCvcRYlEA5zL1UUqNg?=
+ =?us-ascii?Q?mg/Crn6aAe1TvD43JUumuiSA6uE0sjJBaz/+foVuccbBYhnkpQbqmjgWM6He?=
+ =?us-ascii?Q?lXNBXLGEUKwxfTVTLTMmN5ytXn2ydck91sdb8ZEyE9Z5+tzdhoQFa5vGC36F?=
+ =?us-ascii?Q?3fe2VfLJ0mbhlohKbOGU64PuKkTfJMyeGoNUNxMRcUwl2y5TWyuxjZTMhI+6?=
+ =?us-ascii?Q?18sr+0wAqJYVDXRR6HSHfMra9A9pcGBd2WqoQIDu4utMfbJ3olTk+AtOIL2X?=
+ =?us-ascii?Q?cFllzwe4c/Hu+tio/EdMFibOjuKsHweP99Gb7mWoRG0iWcIEy1F5eXVwArII?=
+ =?us-ascii?Q?KJmMuS3idD+ZEy0xOMmeR+58Q1o5B+uErDC5wkIUQozLth+5ggWeyOTcNG8/?=
+ =?us-ascii?Q?JyB1p9SZhq6VBeNR8lCykFOc8ajh37zgQn2YXjVCNczPSodqnkrIlLIUGAcO?=
+ =?us-ascii?Q?C4rgo1wvH4KyitqdKVdIqk/mI634OC/NEHEXH8Zsej7abLPmSMhIoPbkMdTU?=
+ =?us-ascii?Q?jA0/3CQyAAciK2WN1pN+8PLvVREVOUuZUbofVvcJ3O2y/AWhKa6+2wY2SK1Y?=
+ =?us-ascii?Q?LvC4OIiCBoWR8wgL61hUUzhTX+BSBj4yMyCHw8vX6AqiHkPokO+vGXj1DpPs?=
+ =?us-ascii?Q?2GLXKxC/Vj8XZbAskLfkk1oyuD9yz+ansewIVUEN6isUnE8am32Qqb/jLx5M?=
+ =?us-ascii?Q?ahJ9tBq6P99S2OpQMhKx7JTwTHG+XfiWigvwyqtZ+kA6FYIx7xp8VaSGRk/m?=
+ =?us-ascii?Q?c2wlZegy5ZH1qplcTQfzV0EE+/CdQJPAM+qyAP77Lf8gcyrCD5CFR0Un1pE1?=
+ =?us-ascii?Q?KQKNokhb1ApWlV5BrDji3hIB+N2JfcHPpnnYYijbL6T+J6JKCxC4+9zmmYXp?=
+ =?us-ascii?Q?8/LMjLsZGdht8vRyO/61FmdcusRgjUVtxNcAOg3z+9X+q5dk+u9rVQeactIg?=
+ =?us-ascii?Q?FpGSHXDKO7auitjTafEx2FpjIbn1EbD8MPYo+0WVA/F0Umr+XsaZVa/mpGal?=
+ =?us-ascii?Q?8sUfng6H8XhhkwMmT+WxcnUXup3Fp6bcYQQtDrMfyb6XRxDBUAl7+5EU2kdF?=
+ =?us-ascii?Q?P6A6ENqV4Q=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1891546521.01779449881859.JavaMail.epsvc@epcpadp2new>
+X-Exchange-RoutingPolicyChecked: J7FVoX+iAK3JLd1UEDu8c3ST8LM9xdr4Ez7lX3Qhw0Uv4Q27uuAoWkIXn+/aXlvCWimghnvyjXFlR+2Qd8xrP/OwodNopBEpIcrUqaoOj2AckG3OhOZsIWYDY++A+J7qxQZChDQGoSCZRoLbeeFFufVzpN4H0qur6pc2Kly2iu4F1uuiJVR/fHA6XKKRF/2lEA0Bw2FMLNXhHS89XgFHBUzZxWhJ5qAyTXcL38KnxKoVt9W0DuhrL1KfrCPAI8FYPpzf1baDH3KMw2fkhLg+gatU2nSjYTTiR3u6aY8Qvjowyu6QGlZgjROuAdYMQ3+RsPuLsqz56q7+6vXMASC8VA==
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 584b1aa5-8bb0-4c8b-0f88-08deba2b0cbc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 May 2026 06:58:39.3035
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: o5F1ZpaMZTCsnIQD27Zv1/Q/Avy2E6ORIge2jt2xCz03OrwIvzn2c464huae3fIoQtoM27Rv9FDdOgfpoze+QQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4825
+X-OriginatorOrg: intel.com
 
-On Fri, May 22, 2026 at 02:10:34PM +0530, Arun George/Arun George wrote:
-> Thanks.
-> 
-> On 05-05-2026 01:15 pm, Gregory Price wrote:
-> > In the scenario i'm talking about, a "write budget" is defined as a
-> > number of pages that are allows to be mapped writable in the page
-> > tables at any given time.
-> > Agree. I was also in the same context.
-> 
-> I am trying to bring the device perspective here, and would like to 
-> discuss a few corner cases and possible solutions.
-> 
-> As I see, solving the compressed memory problem statement has these 
-> aspects mainly:
-> 
-> 1) Allocation control: private/managed memory concept.
-> 2) Write control: write-protected PTEs, write-controlled use cases like 
-> ZSWAP
-> 3) Proactive reclaims: optional methods to ease back-pressure using 
-> memory shrinkers, ballooning, kswapd, promotion etc. These methods will 
-> be triggered based on notifications/interrupts from the device.
-> 
-> May be they are not enough to cover some corner cases for cram!
-> 
->   I believe that this thin-provisioned memory infra is susceptible to 
+> From: Jason Gunthorpe <jgg@nvidia.com>
+> Sent: Thursday, May 21, 2026 9:06 PM
+>=20
+> On Thu, May 21, 2026 at 03:31:46PM +0800, Yi Liu wrote:
+>=20
+> > Does this hardware behavior satisfy the security expectation you have i=
+n
+> > mind? Or do you still require that both the DTE bit and the PCI ATS
+> > capability be explicitly disabled when a blocking domain is in effect?
+>=20
+> If the HW rejects translated TLPs then you should be clearing the ATS
+> enable bit in the device config space prior to rejecting them
+>=20
+> But it does seem secure enough as-is.
+>=20
 
-I'm not understanding the "thin provisioned" terminology you're using
-here.  Can you help define what you mean by thin-provision in this case?
-
-> 'writes-above-media-capacity corner cases' (because of not handling 
-> device back-pressure notifications in time) whichever methods we use in 
-> the kernel. Even if we use write-controlled methods like ZSWAP and 
-> pro-active reclaims, there could be corner cases where the communication 
-> with the device could be broken and the write path is not aware of it 
-> immediately. Note that OCP spec [1] says the device should mark the 
-> memory location as 'poisoned' in 'over-capacity' writes.
-> 
-
-The intent is to use the low-watermark to prevent new allocations from
-occurring, and the write-controls prevent writing to the device without
-interposition.
-
-With a sufficient watermark such that the interrupt is delivered within
-some number of microseconds, that should be perfectly fine to prevent
-poison from ever occurring at all.
-
-Since poison is only delivered *on read*, the system can go a long,
-long time before poison is discovered. From the end-user perspective,
-this poison is basically unacceptable.
-
-So either we can prevent poison from always occurring, or the hardware
-is not viable to support in a scaled production.  
-
-If you think a sufficiently conservative watermark + write-protection is
-insufficient to defend against poison, then please let me know why.
-
-> So I have the following proposals / options for this scenario.
-> 
->     Option 1: Poisoned data management - This is about accepting that 
-> poisoning of memory locations can happen in much more regular frequency 
-> here than regular memories and we need to figure out potential recovery 
-> mechanisms in host (not recovery of data; but recovery from the poison 
-> situation). But I guess folks will not be okay with it in general, and I 
-> am not aware of any workloads where data poisoning is tolerated (may be 
-> caching workloads?).
-> 
-
-Given option 1, I would never put such a device into my production
-environment.  The only reasonable action for handling poison is killing
-the software, as the data is functionally corrupted.
-
->     Option 2 (preferred): Device assisted write budgeting - This is 
-> about a device aware / assisted mechanism for the write-controlled 
-> use-cases (Ex: ZSWAP) to know the 'safe number of  writes' that can be 
-> performed to the device (Or allows to be mapped writable in the page 
-> tables). This could be like a 'token bucket' algorithm, where the device 
-> provides a 'budget / set of tokens' to the host. And it need to be 
-> replenished periodically in the device communication code path; and if 
-> the host does not find the token, writes cannot go ahead.
-> 
-
-When I say budgeting, I mean literally a budget of writable pages,
-entirely controlled by software (mm/cram.c or zswap.c or whatever).
-
-This has nothing to do with device operation / throttling / bandwidth
-budgets etc.  It is simply a proposal of an optimization that allows the
-user to say:  X out of Y possible pages may be mapped writable.
-
-I don't think this would be part of an initial MVP for a compressed ram
-service (regardless of it's cram.c or zswap.c)
-
-> In short, the communication with the device has to be maintained to make 
-> pages mapped writable. For MVP, this could be a simple constraint of 
-> checking actual device capacity periodically to replenish write-budget 
-> for CRAM. For other users of private nodes (GPU memory?), this 
-> constraint may not be needed at all.
-> 
-> We are planning to send an RFC code which will fit into your CRAM infra 
-> to discuss this poison management approach further.
-> 
-
-I'll try to get a new version out this or next week, apologies for the
-lag on this series, I've had a number of disruptions and major movements
-on the patch set since I last updated it in February.
-
-~Gregory
+yeah we need disable ATS explicitly instead of relying on some implicit
+behavior...
