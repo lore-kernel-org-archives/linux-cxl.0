@@ -1,53 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773182E8B82;
-	Mon, 25 May 2026 15:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6E22E228D;
+	Tue, 26 May 2026 02:51:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779723207; cv=none; b=ImA/lWiwhBqqBAfi4qqo4c38q1/eOyvqY2B6YlZc2tKtVoXY4+PCBxS5PZX3xOLUjM0hRIzhNop4KxH6/dLfGYGlrLXE29FXCi278+ynj6OMHPnDOruEBoGjBqMNHeZQO3pEtVovfaiTbMwWiwShJnbPnngN9HMwANNRQKluqIA=
+	t=1779763900; cv=none; b=UTir2S0Y2PjQGFuTzzzN58rEXQJVxJjGA5O297Z7CfhFCl2bNqZm89t7gycyGcT6y6IGfRMiyjUo9rnvAOEEwlrjLRRR/RNp+hDy3yyuWnG+UrTIJAltuotmifRd+XLHh7aoQ7sAS1Irm/HgWJ319rFHNPd176qDdfFlu1Oa9Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779723207; c=relaxed/simple;
-	bh=V/mMUdKG7Dw2eSh64+XrQ9nf4Ts7EfkwSJK9b/P+Ml0=;
+	s=arc-20240116; t=1779763900; c=relaxed/simple;
+	bh=Q0SA1wahtXF7MigqavcZlTFDH5o/LWC7CLvHR5LJWZM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bl0si3Jr0buV/OICvwzjJYG9IKVupdtp351NUgVmJoHXwxTv1SEiqMgrRhGd6tLiezuc7YqpeKN9W0xIAhFaMPPgDsTtw7rI/fi7bN0Y2WuJWDMXlA9umXRcYPaSSJi+43NFuzRgJ58Jbh/u2P1uARyj40aSeF8ofLuct4J1Zv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h6N4GKRj; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=OjyYDMnIL4yp0la8hPTZtPtS6RlVy3W/TZsALX+Wg+K1lWVf7rdCnhNvnef1RuVn5+2pR8FPkUh64izZvJnqkBtmX9pGjunfJe8yPY/CLuf9Wcfjp+6iD+8jwbco08OIQrhcomNX4rr+RWeTNDDCoQGHNRD4t1qZHsFhjzS83RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=lshQjeDN; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6N4GKRj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C6F51F00A3E;
-	Mon, 25 May 2026 15:33:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779723205;
-	bh=q8Ikp1pIkOzEO2DqZfmRNUHDhWCAM595jcMat0Ka2jM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=h6N4GKRj/1LcuELFDVv3RmCDaA9pu4YzJGU/rW2uUphIpZLKjDJ0sW+Z++lH9iiBf
-	 LJnq5TknP0h9xFS85tVUkVbLTy5CN1CSu6fFCiNktnxpttnN8fR7lmTwo2NZ9+C4NO
-	 FOogDTBz14qc+MELfo7N1ja4YAIG08qaolLuS9sDPnKEkt/YzPrtWXxx/UwLCtVZUo
-	 X4yhrBHYDSCc0kasPoa9Svm5yPpxc4HK/huH1eLo1qCIZfx2aWGb2KSFmn79JhLgln
-	 1xTxY/TrstidfzjkPjctXMOMqwLS75X7Yq8RfrGvh6zL89UTGtq9YXQ/OxZykDMUy4
-	 Oiuk9EnLXEyBQ==
-From: Sasha Levin <sashal@kernel.org>
-To: gregkh@linuxfoundation.org,
-	stable@vger.kernel.org,
-	alison.schofield@intel.com
-Cc: Sasha Levin <sashal@kernel.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	ming.li@zohomail.com,
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="lshQjeDN"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1779763894; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=jpboweppnnvkz9bSP/WImjUak/uQCSkNUCSCMbQCCkM=;
+	b=lshQjeDNq4T1bFG60vwO4cvqah2iw+g4UpztSDtEFTgYkTA9BbNpatEsePYo4L3vUsuoKMpiN/4SxjlaJFyG4sR09VU5nP334wHlJQSomH83qo1p0YgUAEOxqIgp+9BU0w3g/SQmr34j+HkVk7AIGkzrnndBP3Q62dHDztJDl3M=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0X3egDr5_1779763893;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X3egDr5_1779763893 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 26 May 2026 10:51:33 +0800
+From: Chen Pei <cp0613@linux.alibaba.com>
+To: dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	djbw@kernel.org,
+	icheng@nvidia.com,
+	bhelgaas@google.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	guoren@kernel.org
+Cc: linux-pci@vger.kernel.org,
 	linux-cxl@vger.kernel.org,
-	Fang Wang <32840572@qq.com>
-Subject: Re: [PATCH 6.6.y] cxl/port: Fix use after free of parent_port in cxl_detach_ep()
-Date: Mon, 25 May 2026 11:33:10 -0400
-Message-ID: <20260525152512.agent5-0007@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <tencent_C9D9ED71D51B177EDF71B708417942F4F206@qq.com>
-References: <tencent_C9D9ED71D51B177EDF71B708417942F4F206@qq.com>
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Pei <cp0613@linux.alibaba.com>
+Subject: [PATCH 1/2] ACPI: PCI: Clear _DEP dependencies after PCI root bridge attach
+Date: Tue, 26 May 2026 10:51:17 +0800
+Message-ID: <20260526025118.38935-2-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260526025118.38935-1-cp0613@linux.alibaba.com>
+References: <20260526025118.38935-1-cp0613@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -56,41 +53,44 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Mon, May 25, 2026 at 03:44:54PM +0800, Fang Wang wrote:
-> From: Alison Schofield <alison.schofield@intel.com>
->
-> [ Upstream commit 19d2f0b97a131198efc2c4ca3eb7f980bba8c2b4 ]
->
-> @@ -527,6 +527,7 @@ static void cxl_port_release(struct device *dev)
->  	xa_destroy(&port->dports);
->  	xa_destroy(&port->regions);
->  	ida_free(&cxl_port_ida, port->id);
-> +	put_device(dev->parent);
->  	kfree(port);
->  }
->
-> @@ -657,6 +658,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
->  		struct cxl_port *iter;
->
->  		dev->parent = &parent_port->dev;
-> +		get_device(dev->parent);
->  		port->depth = parent_port->depth + 1;
->  		port->parent_dport = parent_dport;
+PCI root bridges enumerated by acpi_pci_root_add() can be the _DEP
+supplier for other ACPI consumers, most notably ACPI0017 CXL root
+devices whose probe path depends on acpi_pci_find_root() succeeding.
+Once the root bus has been added, those consumers can safely be
+enumerated, so notify them by clearing the dependency.
 
-This isn't safe as-is for 6.6. Upstream guards the put_device() in
-cxl_port_release() with is_cxl_root(port), and only does the matching
-get_device() on the child-port path. In 6.6, struct cxl_root does not
-exist yet (it was added in v6.8 by commit 26064b3641c4 ("cxl: introduce
-cxl_root")) and the is_cxl_root() helper is absent, so dropping the
-guard means cxl_port_release() unconditionally puts dev->parent.
+Call acpi_dev_clear_dependencies() at the end of acpi_pci_root_add(),
+after pci_bus_add_devices(), following the same pattern used by other
+ACPI suppliers such as the EC (drivers/acpi/ec.c) and the ACPI PCI
+Link device (drivers/acpi/pci_link.c). The clear is intentionally
+done only on the success path; on the error paths the supplier did
+not attach and consumers must keep dep_unmet set.
 
-cxl_port_alloc() in 6.6 only takes the new get_device(dev->parent) on
-the parent_dport != NULL branch; the root-port path still does
-`dev->parent = uport_dev` with no matching get. The result is an
-unbalanced put on the root port's uport_dev (typically the cxl_acpi
-host device) on every cxl_acpi unload, which is a fresh refcount
-underflow / UAF on 6.6.
+This is a prerequisite for honoring _DEP on ACPI0016 host bridges,
+which matters on architectures where the probe order of acpi_pci_root
+relative to cxl_acpi is not guaranteed (e.g. RISC-V).
 
+Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+Suggested-by: Dan Williams (nvidia) <djbw@kernel.org>
+---
+ drivers/acpi/pci_root.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index a0ba64e45e8a..4c06c3ffd0cb 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -755,6 +755,10 @@ static int acpi_pci_root_add(struct acpi_device *device,
+ 	pci_lock_rescan_remove();
+ 	pci_bus_add_devices(root->bus);
+ 	pci_unlock_rescan_remove();
++
++	/* Clear _DEP dependencies to allow consumers to enumerate */
++	acpi_dev_clear_dependencies(device);
++
+ 	return 1;
+ 
+ remove_dmar:
 -- 
-Thanks,
-Sasha
+2.50.1
+
