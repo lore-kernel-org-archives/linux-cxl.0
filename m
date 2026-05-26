@@ -1,120 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from a8-21.smtp-out.amazonses.com (a8-21.smtp-out.amazonses.com [54.240.8.21])
+	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228273D3D09;
-	Tue, 26 May 2026 15:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF89402B88;
+	Tue, 26 May 2026 17:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.8.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779807675; cv=none; b=NA2vKZzDL1j4kqZCvt8zoAZ8mvdtSA9Nt7wj32MH04803TDRJLDZS1aImrS+ceVDzOkuDcm+j3KJ6RFIMI+xAuHSL3tIBIQeMQ1/qYVAIyDWWMPkZXuXvTcfiaTLKu9HLrmmhiv2soh/MAUkiVqNsc1VeBOF/FTKy/I3yPDf6Ns=
+	t=1779814922; cv=none; b=k11sHoZzKgBtvvw8VaYjXaVDYRkpfuQC9oghVsCHLsNlC1VPdsZG+QvewiL4BnShNYAbZ1J0/1yhW5JwXVW0U5p2d1YeHb9yrkX/R0dJ8/qSKFkxmSl3mvsJ8i4g1IczWyy5hNJKbUY1FXLwlspncjnhuB+v0eg4+yTfyC7bfgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779807675; c=relaxed/simple;
-	bh=2bbe3fhv1+1tAyFtW2OCXIBsNiz7RMFwspwzHeTDrR4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Eru8458Wf/CvwKkl69ptye7bB7gJXt/hNeKPHWSXx8EACPfKKe5o2nDPjBkS6H0eYOGdQPunrRykwAWpnFKs+m/PLNOSXreH86JzhUp82aoUyq8s1Gkw5dekbpaOzoah1G6T6EF+U6b0IvyaJYBM+04jbFO08oTdS9iPNyt2FrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FgkFboK4; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1779814922; c=relaxed/simple;
+	bh=hHB5aw0VnqzK81PdB8lJTgAs1hZb4k+F5Y7zUXw+aOM=;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:References:
+	 Message-ID; b=M59ZtPEsF2RwOm1bXLYtNqHqzlQN5vMdJZWQhAbNz38h//DcpqcilMZkG9Mxe0TQ0PHNBU7aNktwmNpDQKFnbHZ/CRCVdhSSBWc6Cf3BlPH+RehxYzie8SBidAB12luxmAW4MkQSip0TC+CEOYH+c9pb1lAjPyCMJJVj+y8PKOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=J92hX2GI; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=okKbIcZj; arc=none smtp.client-ip=54.240.8.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FgkFboK4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779807674; x=1811343674;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2bbe3fhv1+1tAyFtW2OCXIBsNiz7RMFwspwzHeTDrR4=;
-  b=FgkFboK4eT5vPwmGNR4aFSLkJwj4NJk0IrXB0ufZEGHXrx2WPOpsjOBZ
-   FGqNfur2QHft2paJiaRZHm3WD2vnEMmtuL3xcwXmV9SweXoviOhm10CRu
-   HPkXY9WQiramtD6SqSQFgNVeJ12hW4kvNq3ng5xcQlP1ty04J6TVveRhq
-   360uPUNdB4N+j2x6SaphkLLFKBWGdL8+kIE3nGU7hMGqcnieHzr17RVyg
-   0KJkr/IQRp8xT7FcuQIdHEst5aDKMHba4vp6MTOCDYv8qObw8aWe8PHHr
-   7K3o+W9lfD7UZ8ZBf/jl+JTDgWnHgNzpAgy0qv97gi/98P23C64bBfeJR
-   A==;
-X-CSE-ConnectionGUID: GGseEGReSFCE3SsytNDyJA==
-X-CSE-MsgGUID: WPZLSbejSVumt71/YvS3Aw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11797"; a="80471331"
-X-IronPort-AV: E=Sophos;i="6.24,169,1774335600"; 
-   d="scan'208";a="80471331"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 08:01:14 -0700
-X-CSE-ConnectionGUID: Es7aSl05SO+fW5sldNnZCw==
-X-CSE-MsgGUID: 8XG4Vqd+Rg+obUY9Y3c/6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,169,1774335600"; 
-   d="scan'208";a="247025753"
-Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.110.201]) ([10.125.110.201])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 08:01:12 -0700
-Message-ID: <1c79454e-6988-402f-9b8d-e628e8600ed8@intel.com>
-Date: Tue, 26 May 2026 08:01:11 -0700
+	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="J92hX2GI";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="okKbIcZj"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1779814919;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id;
+	bh=hHB5aw0VnqzK81PdB8lJTgAs1hZb4k+F5Y7zUXw+aOM=;
+	b=J92hX2GIJXifVSLp4o7RFRp8m1ynrOm4OTDHgcwQXpk3isXAT1Uv7ao9ynL7oM7s
+	10XY18Ju7ZrmA4QVQfakB08aunCFxHnpUt1ZUvLreucnlnzK5KBnCW42Ta5E/DXk+rl
+	7e2Fr9hXlRVAEd/0V5fTM4pYFThEMycgsQtcZFR0=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1779814919;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id:Feedback-ID;
+	bh=hHB5aw0VnqzK81PdB8lJTgAs1hZb4k+F5Y7zUXw+aOM=;
+	b=okKbIcZjekxyy3ZraRJC99v5LCb5h0TmPoos+MKcQDUGbqePFtA9lZtbkwTnATIH
+	1Zuf/JWlHt+IttMvc7kVBb7t4gcXgu48R3T1bBVcpZc3zqn7GOwsEMbe9xDW34ONtfx
+	JjKtprGIb+cDSTN11TOaHhqGGxE8NH5YTkWUn2G4=
+Subject: [PATCH V6 0/2] daxctl: Add support for famfs mode
+From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
+To: =?UTF-8?Q?John_Groves?= <John@Groves.net>, 
+	=?UTF-8?Q?John_Groves?= <jgroves@fastmail.com>, 
+	=?UTF-8?Q?Dan_Williams?= <djbw@kernel.org>, 
+	=?UTF-8?Q?Alison_Schofield?= <alison.schofield@intel.com>
+Cc: =?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
+	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
+	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
+	=?UTF-8?Q?Jonathan_Cameron?= <Jonathan.Cameron@huawei.com>, 
+	=?UTF-8?Q?Aravind_Ramesh?= <arramesh@micron.com>, 
+	=?UTF-8?Q?Ajay_Joshi?= <ajayjoshi@micron.com>, 
+	=?UTF-8?Q?venkataravis=40micron=2Ecom?= <venkataravis@micron.com>, 
+	=?UTF-8?Q?dev=2Esrinivasulu=40gmail=2Ecom?= <dev.srinivasulu@gmail.com>, 
+	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2E?= =?UTF-8?Q?org?= <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?nvdimm=40lists=2E?= =?UTF-8?Q?linux=2Edev?= <nvdimm@lists.linux.dev>, 
+	=?UTF-8?Q?linux-cxl=40v?= =?UTF-8?Q?ger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
+	=?UTF-8?Q?John_Groves?= <john@groves.net>
+Date: Tue, 26 May 2026 17:01:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] ACPI/PCI/CXL: Enforce _DEP ordering between ACPI0016
- and ACPI0017
-To: Chen Pei <cp0613@linux.alibaba.com>, alison.schofield@intel.com,
- djbw@kernel.org, icheng@nvidia.com, bhelgaas@google.com, rafael@kernel.org,
- lenb@kernel.org, guoren@kernel.org
-Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260526025118.38935-1-cp0613@linux.alibaba.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260526025118.38935-1-cp0613@linux.alibaba.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+References: <20260526170148.56398-1-john@jagalactic.com>
+X-Mailer: Amazon WorkMail
+Thread-Index: AQHc7TFcILV7h5r+TK67r8Gpp/8CFw==
+Thread-Topic: [PATCH V6 0/2] daxctl: Add support for famfs mode
+X-Wm-Sent-Timestamp: 1779814917
+X-Original-Mailer: git-send-email 2.52.0
+Message-ID: <0100019e653c6c88-44f88088-8c87-4163-b88b-b3f3fc7aa726-000000@email.amazonses.com>
+Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
+X-SES-Outgoing: 2026.05.26-54.240.8.21
 
+From: John Groves <john@groves.net>
 
+This series adds famfs mode support to daxctl, alongside the existing
+devdax and system-ram modes.  A daxdev is in famfs mode when it is bound
+to fsdev_dax.ko (drivers/dax/fsdev.c).  famfs is a shared,
+memory-mappable filesystem for disaggregated and CXL memory; see
+https://famfs.org for more information.
 
-On 5/25/26 7:51 PM, Chen Pei wrote:
-> On platforms whose ACPI namespace exposes a CXL host bridge (ACPI0016)
-> with an ACPI0017 CXL root device declaring _DEP on the host bridge,
-> cxl_acpi can probe before acpi_pci_root has attached the PCI root.
-> acpi_pci_find_root() then returns NULL, decoder targets read as 0,
-> and no port/endpoint device shows up under /sys/bus/cxl/devices/.
-> 
-> The root cause is twofold:
-> 
->   1. acpi_pci_root_add() never calls acpi_dev_clear_dependencies(),
->      so _DEP suppliers downstream of a PCI root are never released.
-> 
->   2. ACPI0016 is not on acpi_honor_dep_ids[], so even when ACPI0017
->      declares _DEP on it, acpi_dev_ready_for_enumeration() bypasses
->      the dep_unmet check and lets cxl_acpi probe early.
-> 
-> On x86 the bug is usually masked by link order (acpi_pci_root is
-> built in and probed before cxl_acpi). On architectures like RISC-V
-> that ordering is not guaranteed, so the standard ACPI _DEP mechanism
-> must actually work.
-> 
-> This series fixes both sides and the two patches must be applied
-> together; applying only patch 2 would prevent cxl_acpi from ever
-> probing on ACPI0016 systems, because the supplier would never clear
-> the dependency.
-> 
->   Patch 1 makes acpi_pci_root_add() clear _DEP on the supplier once
->           the PCI root bus has been added.
->   Patch 2 adds ACPI0016 to acpi_honor_dep_ids[] so the dependency
->           declared by ACPI0017 is enforced.
-> 
-> The approach in this series follows the discussion of an earlier
-> posting:
-> https://lore.kernel.org/linux-cxl/20260514023238.49984-1-cp0613@linux.alibaba.com/
-> 
-> Chen Pei (2):
->   ACPI: PCI: clear _DEP dependencies after PCI root bridge attach
->   ACPI: scan: honor _DEP for ACPI0016 PCI/CXL host bridge
-> 
->  drivers/acpi/pci_root.c | 4 ++++
->  drivers/acpi/scan.c     | 1 +
->  2 files changed, 5 insertions(+)
-> 
+Patch 1 adds the library plumbing: mode detection helpers, an enable
+function, and the device.c reconfigure-device wiring.  Patch 2 adds a test
+that exercises mode transitions on the nfit_test emulated backend.
 
-For the series
+This series depends on the fsdev_dax kernel driver (which provides famfs
+mode) and on the famfs kernel patch series.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Changes since V5 (addressing Alison's review):
 
-Are Fixes tags needed?
+Patch 1 (daxctl: Add support for famfs mode):
+- Commit message: add an intro paragraph describing what famfs is, with a
+  link to https://famfs.org.
+- Documentation: document famfs mode in
+  Documentation/daxctl/daxctl-reconfigure-device.txt (DESCRIPTION, the
+  -m/--mode option list, and a reconfigure example).
+- Rename the local 'enum dev_mode' to 'enum reconfig_mode'
+  (RECONFIG_MODE_*) so it no longer shares member names with
+  enum daxctl_dev_mode.
+- Add daxctl_dev_get_mode(), which reports a device's current mode; the
+  three reconfig_mode_*() functions and json.c now switch on it instead
+  of repeating an if-else mode chain.  enum daxctl_dev_mode moves to the
+  public header and gains a DAXCTL_DEV_MODE_UNKNOWN sentinel;
+  daxctl_dev_get_mode() is exported.
+- Collapse disable_devdax_device() and disable_famfs_device() into a
+  single disable_mode_device() (the caller has already matched the mode).
+- Add daxctl_dev_is_system_ram_mode() as the preferred name for the
+  consistency with daxctl_dev_is_{famfs,devdax}_mode();
+  daxctl_dev_is_system_ram_capable() becomes a compatibility wrapper so
+  the existing ABI is preserved.
+- Move the "returns false for a disabled device" note onto the shared
+  daxctl_dev_bound_to_module() helper and drop the redundant per-predicate
+  comments.
+- Fix daxctl_dev_enable() to range-check mode before indexing
+  dax_modules[]; the lookup previously ran before the bounds check.
+- Remove the stray double space in the --mode=famfs parse branch.
+- Drop the Reviewed-by: Dave Jiang tag, given the amount of rework since
+  V5.
+
+Patch 2 (test):
+- Replace the V5 device-scanning test with test/daxctl-famfs-nfit.sh, which
+  builds its own dax device from the emulated ACPI.NFIT bus (nfit_test) so
+  it runs in the ndctl unit-test model.  Real DRAM backing means kmem
+  onlining works and the full devdax/famfs/system-ram matrix runs
+  end-to-end, including the system-ram -> famfs rejection.  Follows the
+  existing test style (set -x logging, err/cleanup traps, check_dmesg,
+  fixture teardown).  Based on a rewrite from Alison Schofield.
+- Per Alison's "pick a lane to start" feedback, only the nfit_test backend
+  is upstreamed here; a cxl_test-backed variant is held for a later
+  revision.
+
+John Groves (2):
+  daxctl: Add support for famfs mode
+  Add nfit_test famfs mode-transition test
+
+ .../daxctl/daxctl-reconfigure-device.txt      |  22 +-
+ daxctl/device.c                               | 113 ++++++---
+ daxctl/json.c                                 |  18 +-
+ daxctl/lib/libdaxctl-private.h                |   9 +-
+ daxctl/lib/libdaxctl.c                        |  73 +++++-
+ daxctl/lib/libdaxctl.sym                      |   9 +
+ daxctl/libdaxctl.h                            |  14 ++
+ test/daxctl-famfs-nfit.sh                     | 215 ++++++++++++++++++
+ test/meson.build                              |   2 +
+ 9 files changed, 432 insertions(+), 43 deletions(-)
+ create mode 100755 test/daxctl-famfs-nfit.sh
+
+-- 
+2.53.0
 
