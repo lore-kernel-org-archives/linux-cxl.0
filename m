@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1546425CE5
-	for <linux-cxl@vger.kernel.org>; Tue, 26 May 2026 14:56:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228273D3D09;
+	Tue, 26 May 2026 15:01:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779807420; cv=none; b=AY7skievLFVCwW/zGJBAiu7QfTeJ3oVl4Y0RBnbmxJB/aFPcQfPtcPgqyd98HtuN/4WzcE34+d7Gqj4LRuAz/0P5bp8N/rly7a1dO3seK6kfk35yNDLjC5K18BNeqiwxIDLp3aVNOPFRbYmts027mpMe+zfkehZMpM7jEvT6GKQ=
+	t=1779807675; cv=none; b=NA2vKZzDL1j4kqZCvt8zoAZ8mvdtSA9Nt7wj32MH04803TDRJLDZS1aImrS+ceVDzOkuDcm+j3KJ6RFIMI+xAuHSL3tIBIQeMQ1/qYVAIyDWWMPkZXuXvTcfiaTLKu9HLrmmhiv2soh/MAUkiVqNsc1VeBOF/FTKy/I3yPDf6Ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779807420; c=relaxed/simple;
-	bh=DKtt+0baJLc6dnYRZLami0ExHeJiSMln5C3zBvTnCuU=;
+	s=arc-20240116; t=1779807675; c=relaxed/simple;
+	bh=2bbe3fhv1+1tAyFtW2OCXIBsNiz7RMFwspwzHeTDrR4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C59yNZGmq6/8DS+zSz5jP7tDvxU3Ne3klKjDb7+HG2cHiy8bpTFPR20E72v5VlIDycD2MTjJz7d0Y8P6/K+Vdi0eRDgP5jhTMfU0E9faGZ0Xpc2e3VOWMPySemLor5Tz37qR4nqixOE8wV1B3bh4ZtrE6rTgA5Vwn/GQPdzJAe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FdkcCFdt; arc=none smtp.client-ip=192.198.163.17
+	 In-Reply-To:Content-Type; b=Eru8458Wf/CvwKkl69ptye7bB7gJXt/hNeKPHWSXx8EACPfKKe5o2nDPjBkS6H0eYOGdQPunrRykwAWpnFKs+m/PLNOSXreH86JzhUp82aoUyq8s1Gkw5dekbpaOzoah1G6T6EF+U6b0IvyaJYBM+04jbFO08oTdS9iPNyt2FrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FgkFboK4; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FdkcCFdt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FgkFboK4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779807418; x=1811343418;
+  t=1779807674; x=1811343674;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=DKtt+0baJLc6dnYRZLami0ExHeJiSMln5C3zBvTnCuU=;
-  b=FdkcCFdtCXBxyurYlU9U8HYQrOyvSJxce4ABxPN3HsQ8A3PYWbAAFLh7
-   u/dpOsXFXQ9pqg4Uh7AbIBhbafWpMDPtNYvA6WVj1/A5K/YjGkhoEWPcL
-   exYyPUcfxp3i5hr5qwTIYCgJ+YJkLn5UHwo2Hai8IxLHZ0SgW3zCRqJDS
-   0asbSACh66HTOAzePR7cRttfT45iMpQWjYmYWB+EivgCiWRpcriSp6AkM
-   U/R/EmWI9KBhEaXLt0b2wqXcGSFa8RXjEKHDpd+EYP1Yl6ngyVRkMf2As
-   i9qS2ycPP0l08/AyeVSk2JRSfmBdMj3NY8LaI4cNJBLpqVgjn5zYfFoyg
-   w==;
-X-CSE-ConnectionGUID: IRshYzNkRNujvD8R/7SQsA==
-X-CSE-MsgGUID: mRMJsPZ+QZC3JivHb6nJYA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11797"; a="80470885"
+  bh=2bbe3fhv1+1tAyFtW2OCXIBsNiz7RMFwspwzHeTDrR4=;
+  b=FgkFboK4eT5vPwmGNR4aFSLkJwj4NJk0IrXB0ufZEGHXrx2WPOpsjOBZ
+   FGqNfur2QHft2paJiaRZHm3WD2vnEMmtuL3xcwXmV9SweXoviOhm10CRu
+   HPkXY9WQiramtD6SqSQFgNVeJ12hW4kvNq3ng5xcQlP1ty04J6TVveRhq
+   360uPUNdB4N+j2x6SaphkLLFKBWGdL8+kIE3nGU7hMGqcnieHzr17RVyg
+   0KJkr/IQRp8xT7FcuQIdHEst5aDKMHba4vp6MTOCDYv8qObw8aWe8PHHr
+   7K3o+W9lfD7UZ8ZBf/jl+JTDgWnHgNzpAgy0qv97gi/98P23C64bBfeJR
+   A==;
+X-CSE-ConnectionGUID: GGseEGReSFCE3SsytNDyJA==
+X-CSE-MsgGUID: WPZLSbejSVumt71/YvS3Aw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11797"; a="80471331"
 X-IronPort-AV: E=Sophos;i="6.24,169,1774335600"; 
-   d="scan'208";a="80470885"
+   d="scan'208";a="80471331"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 07:56:57 -0700
-X-CSE-ConnectionGUID: p6h+xDvlR8GmyXIEAsNpWA==
-X-CSE-MsgGUID: J/lIfe19Rp+VpcGQMKy5Tg==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 08:01:14 -0700
+X-CSE-ConnectionGUID: Es7aSl05SO+fW5sldNnZCw==
+X-CSE-MsgGUID: 8XG4Vqd+Rg+obUY9Y3c/6Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,169,1774335600"; 
-   d="scan'208";a="247025148"
+   d="scan'208";a="247025753"
 Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.110.201]) ([10.125.110.201])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 07:56:56 -0700
-Message-ID: <7eca46c6-e8b2-4555-8ae6-0a423f16d5e5@intel.com>
-Date: Tue, 26 May 2026 07:56:55 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 08:01:12 -0700
+Message-ID: <1c79454e-6988-402f-9b8d-e628e8600ed8@intel.com>
+Date: Tue, 26 May 2026 08:01:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,198 +52,69 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [ndctl PATCH v2 2/2] daxctl, util/sysfs: skip module probe-insert
- when driver is builtin or live
+Subject: Re: [PATCH 0/2] ACPI/PCI/CXL: Enforce _DEP ordering between ACPI0016
+ and ACPI0017
 To: Chen Pei <cp0613@linux.alibaba.com>, alison.schofield@intel.com,
- jic23@kernel.org, nvdimm@lists.linux.dev
-Cc: linux-cxl@vger.kernel.org, guoren@kernel.org
-References: <20260526132251.254476-1-cp0613@linux.alibaba.com>
- <20260526132251.254476-3-cp0613@linux.alibaba.com>
+ djbw@kernel.org, icheng@nvidia.com, bhelgaas@google.com, rafael@kernel.org,
+ lenb@kernel.org, guoren@kernel.org
+Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260526025118.38935-1-cp0613@linux.alibaba.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260526132251.254476-3-cp0613@linux.alibaba.com>
+In-Reply-To: <20260526025118.38935-1-cp0613@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 5/26/26 6:22 AM, Chen Pei wrote:
-> kmod_module_probe_insert_module() is supposed to return 0 for builtin
-> modules, but only when libkmod can locate the modules.builtin index. If
-> the index is missing (e.g. a kernel built with the driver as builtin
-> but installed without running modules_install), libkmod falls through
-> to the real init_module() syscall and returns an error such as -ENOENT,
-> producing a spurious "insert failure" even though the driver is already
-> part of the running kernel.
+On 5/25/26 7:51 PM, Chen Pei wrote:
+> On platforms whose ACPI namespace exposes a CXL host bridge (ACPI0016)
+> with an ACPI0017 CXL root device declaring _DEP on the host bridge,
+> cxl_acpi can probe before acpi_pci_root has attached the PCI root.
+> acpi_pci_find_root() then returns NULL, decoder targets read as 0,
+> and no port/endpoint device shows up under /sys/bus/cxl/devices/.
 > 
-> Add a helper util_kmod_skip_probe_insert() that returns true when the
-> module state is KMOD_MODULE_BUILTIN or KMOD_MODULE_LIVE. As an
-> additional heuristic, treat KMOD_MODULE_COMING as builtin when
-> /sys/module/<name>/ exists but the initstate file does not - this is
-> the exact pattern libkmod's sysfs fallback emits for builtin drivers
-> when the modules.builtin index is unavailable. The pattern mirrors the
-> KMOD_MODULE_LIVE / KMOD_MODULE_BUILTIN check already used by ndctl's
-> own test/core.c (see test/core.c:218-236).
+> The root cause is twofold:
 > 
-> The helper also returns the observed libkmod state via an out parameter
-> so daxctl_insert_kmod_for_mode() can distinguish LIVE (retain the kmod
-> reference in dev->module) from BUILTIN (drop it, since builtin drivers
-> cannot be unloaded) without re-reading /sys/module/<name>/initstate.
-> __util_bind() passes NULL since it does not need the state.
+>   1. acpi_pci_root_add() never calls acpi_dev_clear_dependencies(),
+>      so _DEP suppliers downstream of a PCI root are never released.
 > 
-> Reported-by: Jonathan Cameron <jic23@kernel.org>
-> Suggested-by: Alison Schofield <alison.schofield@intel.com>
-> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+>   2. ACPI0016 is not on acpi_honor_dep_ids[], so even when ACPI0017
+>      declares _DEP on it, acpi_dev_ready_for_enumeration() bypasses
+>      the dep_unmet check and lets cxl_acpi probe early.
+> 
+> On x86 the bug is usually masked by link order (acpi_pci_root is
+> built in and probed before cxl_acpi). On architectures like RISC-V
+> that ordering is not guaranteed, so the standard ACPI _DEP mechanism
+> must actually work.
+> 
+> This series fixes both sides and the two patches must be applied
+> together; applying only patch 2 would prevent cxl_acpi from ever
+> probing on ACPI0016 systems, because the supplier would never clear
+> the dependency.
+> 
+>   Patch 1 makes acpi_pci_root_add() clear _DEP on the supplier once
+>           the PCI root bus has been added.
+>   Patch 2 adds ACPI0016 to acpi_honor_dep_ids[] so the dependency
+>           declared by ACPI0017 is enforced.
+> 
+> The approach in this series follows the discussion of an earlier
+> posting:
+> https://lore.kernel.org/linux-cxl/20260514023238.49984-1-cp0613@linux.alibaba.com/
+> 
+> Chen Pei (2):
+>   ACPI: PCI: clear _DEP dependencies after PCI root bridge attach
+>   ACPI: scan: honor _DEP for ACPI0016 PCI/CXL host bridge
+> 
+>  drivers/acpi/pci_root.c | 4 ++++
+>  drivers/acpi/scan.c     | 1 +
+>  2 files changed, 5 insertions(+)
+> 
+
+For the series
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-> ---
->  daxctl/lib/libdaxctl.c | 22 +++++++++++++++++++--
->  util/sysfs.c           | 44 +++++++++++++++++++++++++++++++++++++++++-
->  util/sysfs.h           | 16 +++++++++++++++
->  3 files changed, 79 insertions(+), 3 deletions(-)
-> 
-> diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
-> index ffc81eb..1596dc0 100644
-> --- a/daxctl/lib/libdaxctl.c
-> +++ b/daxctl/lib/libdaxctl.c
-> @@ -910,7 +910,7 @@ static int daxctl_insert_kmod_for_mode(struct daxctl_dev *dev,
->  	const char *devname = daxctl_dev_get_devname(dev);
->  	struct daxctl_ctx *ctx = daxctl_dev_get_ctx(dev);
->  	struct kmod_module *kmod;
-> -	int rc;
-> +	int state, rc;
->  
->  	rc = kmod_module_new_from_name(ctx->kmod_ctx, mod_name, &kmod);
->  	if (rc < 0) {
-> @@ -919,7 +919,25 @@ static int daxctl_insert_kmod_for_mode(struct daxctl_dev *dev,
->  		return rc;
->  	}
->  
-> -	/* if the driver is builtin, this Just Works */
-> +	/*
-> +	 * If the driver is builtin or already live, skip probe-insert.
-> +	 * For live modules retain the local reference in dev->module so
-> +	 * the module can be unreffed alongside the device; for builtin
-> +	 * drivers drop it because builtin modules cannot be unloaded.
-> +	 */
-> +	if (util_kmod_skip_probe_insert(kmod, ctx, &state)) {
-> +		if (state == KMOD_MODULE_LIVE) {
-> +			dbg(ctx, "%s: module %s already loaded\n", devname,
-> +				kmod_module_get_name(kmod));
-> +			dev->module = kmod;
-> +		} else {
-> +			dbg(ctx, "%s: module %s is builtin\n", devname,
-> +				kmod_module_get_name(kmod));
-> +			kmod_module_unref(kmod);
-> +		}
-> +		return 0;
-> +	}
-> +
->  	dbg(ctx, "%s inserting module: %s\n", devname,
->  		kmod_module_get_name(kmod));
->  	rc = kmod_module_probe_insert_module(kmod,
-> diff --git a/util/sysfs.c b/util/sysfs.c
-> index e027e38..eaf4b60 100644
-> --- a/util/sysfs.c
-> +++ b/util/sysfs.c
-> @@ -6,6 +6,7 @@
->  #include <stdarg.h>
->  #include <unistd.h>
->  #include <errno.h>
-> +#include <limits.h>
->  #include <string.h>
->  #include <ctype.h>
->  #include <fcntl.h>
-> @@ -168,6 +169,47 @@ struct kmod_module *__util_modalias_to_module(struct kmod_ctx *kmod_ctx,
->  	return mod;
->  }
->  
-> +bool __util_kmod_skip_probe_insert(struct kmod_module *module,
-> +				   struct log_ctx *ctx, int *state_out)
-> +{
-> +	const char *name = kmod_module_get_name(module);
-> +	int state = kmod_module_get_initstate(module);
-> +	char path[PATH_MAX];
-> +	struct stat st;
-> +
-> +	if (state_out)
-> +		*state_out = state;
-> +
-> +	if (state == KMOD_MODULE_BUILTIN || state == KMOD_MODULE_LIVE)
-> +		return true;
-> +
-> +	/*
-> +	 * When modules.builtin is missing (e.g. a kernel installed
-> +	 * without modules_install), libkmod's sysfs fallback returns
-> +	 * KMOD_MODULE_COMING for builtin drivers because /sys/module/<name>/
-> +	 * exists but the initstate file does not. Treat that pattern as
-> +	 * builtin to avoid a spurious "insert failure" message.
-> +	 */
-> +	if (state != KMOD_MODULE_COMING)
-> +		return false;
-> +
-> +	if (snprintf(path, sizeof(path), "/sys/module/%s/initstate", name)
-> +			>= (int)sizeof(path))
-> +		return false;
-> +	if (stat(path, &st) == 0 || errno != ENOENT)
-> +		return false;
-> +
-> +	if (snprintf(path, sizeof(path), "/sys/module/%s", name)
-> +			>= (int)sizeof(path))
-> +		return false;
-> +	if (stat(path, &st) != 0 || !S_ISDIR(st.st_mode))
-> +		return false;
-> +
-> +	log_dbg(ctx, "module %s appears builtin (no modules.builtin index)\n",
-> +			name);
-> +	return true;
-> +}
-> +
->  int __util_bind(const char *devname, struct kmod_module *module,
->  		const char *bus, struct log_ctx *ctx)
->  {
-> @@ -182,7 +224,7 @@ int __util_bind(const char *devname, struct kmod_module *module,
->  		return -EINVAL;
->  	}
->  
-> -	if (module) {
-> +	if (module && !__util_kmod_skip_probe_insert(module, ctx, NULL)) {
->  		rc = kmod_module_probe_insert_module(module,
->  						     KMOD_PROBE_APPLY_BLACKLIST,
->  						     NULL, NULL, NULL, NULL);
-> diff --git a/util/sysfs.h b/util/sysfs.h
-> index 4c95c70..e4f6115 100644
-> --- a/util/sysfs.h
-> +++ b/util/sysfs.h
-> @@ -3,6 +3,7 @@
->  #ifndef __UTIL_SYSFS_H__
->  #define __UTIL_SYSFS_H__
->  
-> +#include <stdbool.h>
->  #include <string.h>
->  
->  typedef void *(*add_dev_fn)(void *parent, int id, const char *dev_path);
-> @@ -36,6 +37,21 @@ struct kmod_module *__util_modalias_to_module(struct kmod_ctx *kmod_ctx,
->  #define util_modalias_to_module(ctx, buf)                                      \
->  	__util_modalias_to_module((ctx)->kmod_ctx, buf, &(ctx)->ctx)
->  
-> +/*
-> + * __util_kmod_skip_probe_insert - true when kmod_module_probe_insert_module()
-> + * should be skipped because @module is already part of the running kernel:
-> + * KMOD_MODULE_BUILTIN, KMOD_MODULE_LIVE, or KMOD_MODULE_COMING with
-> + * /sys/module/<name>/ existing but no initstate file (the fingerprint
-> + * libkmod's sysfs fallback emits for builtin drivers when the
-> + * modules.builtin index is missing). If @state_out is non-NULL, the
-> + * libkmod state actually observed is stored there so callers can avoid
-> + * an extra kmod_module_get_initstate() call.
-> + */
-> +bool __util_kmod_skip_probe_insert(struct kmod_module *module,
-> +				   struct log_ctx *ctx, int *state_out);
-> +#define util_kmod_skip_probe_insert(m, c, s)                                   \
-> +	__util_kmod_skip_probe_insert((m), &(c)->ctx, (s))
-> +
->  int __util_bind(const char *devname, struct kmod_module *module, const char *bus,
->  	      struct log_ctx *ctx);
->  #define util_bind(n, m, b, c) __util_bind(n, m, b, &(c)->ctx)
+Are Fixes tags needed?
 
