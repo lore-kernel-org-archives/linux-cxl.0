@@ -1,47 +1,45 @@
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8666833372A;
-	Tue, 26 May 2026 02:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E613D16E2
+	for <linux-cxl@vger.kernel.org>; Tue, 26 May 2026 09:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779763904; cv=none; b=deN1llcfI5EE1Qy8x15G+g3xv+gMGBVD6c3AUC46BsVi02YJh+aeRRopC7JguBg0ZsfxnnriaMIreuqaTjEEU37PSixekrITlMri1t8OG8Jz1WGgjf+To1Ce4NxpbL8K/gF9NCPO9M4wc7NM7YWdpyNR52Yoelc77wBM7CrAcOI=
+	t=1779786867; cv=none; b=grBBwimx5sE/c0fNMyrK8qSl9SZTuSusmsTFUofPVtFym1llN2Q0ixalwXlOEIljl4iOxcfA8jhWmRQ0DDHbZDtMe92YOUoiyyAkuZ4F59xRUqIK97x9f2+uB/DEBrwFw/2ZJVemMIB4vH4GxEiUSIOrqCg1iWoEffitU8kfDKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779763904; c=relaxed/simple;
-	bh=0EtKyD/kblfplZ2ON/Zvk+WGZXMH5s0IffCgBNJEHgs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pKATw+0t/eznmuWqCKGzjnEdPfCvpbfK2KCbSbj5HIxJrxVh5BfMPyo8wHg1XTpuFSbHgt6BQn/HjozvWePuY1yYyY7dIzKmf+98jWLhzWs2T1bgiyK0RWSuTNCOs35LZg9aW1xh4pXMoe+Iahaowm5/Hg1+i5DfPTP0z55lARo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=FItRGxoI; arc=none smtp.client-ip=115.124.30.131
+	s=arc-20240116; t=1779786867; c=relaxed/simple;
+	bh=EYYNU4ExJR7WZvmk5PwwgzVsvwFa6AqfTVfXEGquAWM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gmhykTnNDtwHnF5WteL81QrvQXcP+RO3vJo3KO9++VI9qUfGZt+HfgJPpq5DqlS/rt5DUFxA8QjVKfvsDRW24ycktQvhVUBDDxF9yl5iLgBEn/DxHMBreMecnsTob+vsuZmTD6RqdyCsVvXNS/wLHmvgBrmfVlhTPub5BpIHJtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Hz/NKIUt; arc=none smtp.client-ip=115.124.30.110
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="FItRGxoI"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Hz/NKIUt"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1779763893; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=LxYuBwN9AXRSucCAjyvV+41WLYlKfeEQW/OlC6lobtE=;
-	b=FItRGxoImaraFbsitFzSn8QW9sD3UmrrwECAOshTS8NC3KOCXEEr44iyOdBpMOFUuyE9kao8bedsvkuGJqasAtBVnaDoQTirS4nJh+Akp2EkA5t3zY7zhAPdxI7EvMF5rAqxlSi9UeO+Xjpch2R+ghnwYYkXX0Zg3fWUko//anY=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0X3egDpV_1779763887;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X3egDpV_1779763887 cluster:ay36)
+	t=1779786856; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=U4H6R3EAlEmptOXkSQ2rupqy0nAMW3NIYX1SmQ+InxQ=;
+	b=Hz/NKIUtcuN7dgjaNcDIhUvxEjjyr/Hx7GCkpDHDp0zjPHrtuQtVE0dpvGDkikeOfGs+t3BbOmfSxW0nxWOp2Iz36M9WhP86GiXo6JP3BoS9RUhsFg/RvP75NH1RaGUJl6dAt2lBZgZ2t3QJahAFSn25n7K2nmS0RbrFPF4+Qcc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R921e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0X3fq17T_1779786852;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X3fq17T_1779786852 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 26 May 2026 10:51:32 +0800
+          Tue, 26 May 2026 17:14:16 +0800
 From: Chen Pei <cp0613@linux.alibaba.com>
-To: dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	djbw@kernel.org,
-	icheng@nvidia.com,
-	bhelgaas@google.com,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	guoren@kernel.org
-Cc: linux-pci@vger.kernel.org,
+To: jic23@kernel.org
+Cc: alison.schofield@intel.com,
+	cp0613@linux.alibaba.com,
+	dave.jiang@intel.com,
+	guoren@kernel.org,
 	linux-cxl@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Pei <cp0613@linux.alibaba.com>
-Subject: [PATCH 0/2] ACPI/PCI/CXL: Enforce _DEP ordering between ACPI0016 and ACPI0017
-Date: Tue, 26 May 2026 10:51:16 +0800
-Message-ID: <20260526025118.38935-1-cp0613@linux.alibaba.com>
+	lucas.demarchi@intel.com,
+	nvdimm@lists.linux.dev
+Subject: Re: [ndctl PATCH 2/2] daxctl, util/sysfs: skip module probe-insert when driver is builtin or live
+Date: Tue, 26 May 2026 17:14:12 +0800
+Message-ID: <20260526091412.166618-1-cp0613@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260519124934.6bdda161@jic23-huawei>
+References: <20260519124934.6bdda161@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -50,48 +48,64 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On platforms whose ACPI namespace exposes a CXL host bridge (ACPI0016)
-with an ACPI0017 CXL root device declaring _DEP on the host bridge,
-cxl_acpi can probe before acpi_pci_root has attached the PCI root.
-acpi_pci_find_root() then returns NULL, decoder targets read as 0,
-and no port/endpoint device shows up under /sys/bus/cxl/devices/.
+On Tue, 19 May 2026 12:49:34 +0100, Jonathan Cameron wrote:
 
-The root cause is twofold:
+> Agreed. I'm curious why it was built that way.  I scraped an email address
+> that is hopefully the right Lucas from another thread. +CC
+>
+> [...]
+>
+> My suspicion is this is papering over a race condition that occurs in
+> a normal module load -  it may not be possible to tell the difference
+> between COMMING and BUILTIN reliably.
 
-  1. acpi_pci_root_add() never calls acpi_dev_clear_dependencies(),
-     so _DEP suppliers downstream of a PCI root are never released.
+I went and read through libkmod's code and history carefully on this,
+and your suspicion is correct -- the COMING return is deliberate, not
+incidental.
 
-  2. ACPI0016 is not on acpi_honor_dep_ids[], so even when ACPI0017
-     declares _DEP on it, acpi_dev_ready_for_enumeration() bypasses
-     the dep_unmet check and lets cxl_acpi probe early.
+The behavior was introduced in libkmod commit fd44a98 ("Fix race while
+loading modules", 2015), and Lucas spelled out the rationale in the
+commit message:
 
-On x86 the bug is usually masked by link order (acpi_pci_root is
-built in and probed before cxl_acpi). On architectures like RISC-V
-that ordering is not guaranteed, so the standard ACPI _DEP mechanism
-must actually work.
+  The problem is that the creation of /sys/module/<name> and
+  /sys/module/<name>/initstate are not atomic. There's a small window
+  in which the directory exists but the initstate file was still not
+  created.
+  [...]
+  We enforce mod->builtin to always be up-to-date when
+  kmod_module_get_initstate() is called. This way if the directory
+  exists but the initstate doesn't, we can be sure this is because the
+  module is in the "coming" state, i.e. kernel didn't create the file
+  yet, but since builtin modules were already handled by checking our
+  index the only reason for that to happen is that we hit the race
+  condition.
 
-This series fixes both sides and the two patches must be applied
-together; applying only patch 2 would prevent cxl_acpi from ever
-probing on ACPI0016 systems, because the supplier would never clear
-the dependency.
+So COMING on the sysfs fallback path is intentional: libkmod treats
+kmod_module_is_builtin() (i.e. the modules.builtin lookup) as the
+authoritative answer to "is this builtin", and assumes anything else
+hitting the dir-without-initstate window has to be a concurrent load
+race. When modules.builtin is missing, that assumption silently flips
+and a builtin driver looks exactly like a load-in-progress -- which
+is the COMING you saw.
 
-  Patch 1 makes acpi_pci_root_add() clear _DEP on the supplier once
-          the PCI root bus has been added.
-  Patch 2 adds ACPI0016 to acpi_honor_dep_ids[] so the dependency
-          declared by ACPI0017 is enforced.
+Given that, I don't think the right fix is in libkmod. Returning
+BUILTIN unconditionally on the dir-without-initstate fallback would
+re-open the very race fd44a98 set out to close: a parallel modprobe
+of a real loadable module that wins the directory creation but not
+yet the initstate write would be misreported as builtin, and callers
+waiting on it (the nls_cp437 / sd-card scenario in fd44a98) would
+skip the wait. That's a behavioral regression on a configuration
+libkmod has supported for ten years, in exchange for tidying up a
+no-modules_install setup that libkmod arguably never promised to
+handle. Lucas (CC'd) -- please correct me if I'm misreading the
+original intent.
 
-The approach in this series follows the discussion of an earlier
-posting:
-https://lore.kernel.org/linux-cxl/20260514023238.49984-1-cp0613@linux.alibaba.com/
+So I'll take Alison's suggestion and handle it on the ndctl side. v2
+will keep the BUILTIN/LIVE short-circuit and additionally treat
+KMOD_MODULE_COMING as builtin when /sys/module/<name>/ exists but the
+initstate file does not -- exactly the fingerprint your VM hits.
 
-Chen Pei (2):
-  ACPI: PCI: clear _DEP dependencies after PCI root bridge attach
-  ACPI: scan: honor _DEP for ACPI0016 PCI/CXL host bridge
+I'll post v2 shortly.
 
- drivers/acpi/pci_root.c | 4 ++++
- drivers/acpi/scan.c     | 1 +
- 2 files changed, 5 insertions(+)
-
--- 
-2.50.1
-
+Thanks,
+Pei
