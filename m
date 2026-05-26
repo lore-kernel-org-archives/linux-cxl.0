@@ -1,45 +1,44 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E613D16E2
-	for <linux-cxl@vger.kernel.org>; Tue, 26 May 2026 09:14:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4189C3DE45B
+	for <linux-cxl@vger.kernel.org>; Tue, 26 May 2026 13:23:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779786867; cv=none; b=grBBwimx5sE/c0fNMyrK8qSl9SZTuSusmsTFUofPVtFym1llN2Q0ixalwXlOEIljl4iOxcfA8jhWmRQ0DDHbZDtMe92YOUoiyyAkuZ4F59xRUqIK97x9f2+uB/DEBrwFw/2ZJVemMIB4vH4GxEiUSIOrqCg1iWoEffitU8kfDKk=
+	t=1779801792; cv=none; b=lgDBwjMq2Tb48HuGEB7EzeU8slt6STWqiVUlCHPJlZXNRAaJrBJ/B41didH2kMMnaFHK3b2okndiKFWlcxQa707XsU7k6LRinGjRR850v75WfICM8o0Z7DrRkD9y1nWGdZXzhQuvhPs/IHqAu3hVQNFu3+BGSO6OazNWtqulppE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779786867; c=relaxed/simple;
-	bh=EYYNU4ExJR7WZvmk5PwwgzVsvwFa6AqfTVfXEGquAWM=;
+	s=arc-20240116; t=1779801792; c=relaxed/simple;
+	bh=ypIlxypoo0MqcaKrHosmayFZQHxXp3vLyQP4418RW2E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gmhykTnNDtwHnF5WteL81QrvQXcP+RO3vJo3KO9++VI9qUfGZt+HfgJPpq5DqlS/rt5DUFxA8QjVKfvsDRW24ycktQvhVUBDDxF9yl5iLgBEn/DxHMBreMecnsTob+vsuZmTD6RqdyCsVvXNS/wLHmvgBrmfVlhTPub5BpIHJtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Hz/NKIUt; arc=none smtp.client-ip=115.124.30.110
+	 MIME-Version; b=uQ0N4elogUMeb6HSBAQvKDYhu0ol6I4vD6xwh6WK1KbLf5TzXQn3QW/PS3WO3r4svXJGRjSShsydks/srUxin4HvgpUi7otlCnQoXNXqb4noKGiKVwapOxyRH0/JG0LjipQuVviuSMyu+iQaeofiM4RGo7gRG1aQjXL6XDGSQmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=n6n9uNo6; arc=none smtp.client-ip=115.124.30.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Hz/NKIUt"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="n6n9uNo6"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1779786856; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=U4H6R3EAlEmptOXkSQ2rupqy0nAMW3NIYX1SmQ+InxQ=;
-	b=Hz/NKIUtcuN7dgjaNcDIhUvxEjjyr/Hx7GCkpDHDp0zjPHrtuQtVE0dpvGDkikeOfGs+t3BbOmfSxW0nxWOp2Iz36M9WhP86GiXo6JP3BoS9RUhsFg/RvP75NH1RaGUJl6dAt2lBZgZ2t3QJahAFSn25n7K2nmS0RbrFPF4+Qcc=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R921e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0X3fq17T_1779786852;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X3fq17T_1779786852 cluster:ay36)
+	t=1779801787; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=6Y4CYfAz1KoFTgmJe8Vs4uKVrzGyzI+O0j0kQAHxvyY=;
+	b=n6n9uNo6qJLamRWt11PZawlnv7ECT/wPF8vWSk8uxdxgs1wIptEMmPNRjYhlUGfy2hj2VquKvfDHYYCQaVoXNKmgfmf/ErolOXoohjb/sjAIkmK8ZU3sbX+Kiws1ro8MQgXyDGuIEX6hv+DRz1WFrlajaMDPkaAbyNwd9TdgGbE=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0X3gT8oL_1779801787;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X3gT8oL_1779801787 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 26 May 2026 17:14:16 +0800
+          Tue, 26 May 2026 21:23:07 +0800
 From: Chen Pei <cp0613@linux.alibaba.com>
-To: jic23@kernel.org
-Cc: alison.schofield@intel.com,
-	cp0613@linux.alibaba.com,
+To: alison.schofield@intel.com,
 	dave.jiang@intel.com,
-	guoren@kernel.org,
-	linux-cxl@vger.kernel.org,
-	lucas.demarchi@intel.com,
+	jic23@kernel.org,
 	nvdimm@lists.linux.dev
-Subject: Re: [ndctl PATCH 2/2] daxctl, util/sysfs: skip module probe-insert when driver is builtin or live
-Date: Tue, 26 May 2026 17:14:12 +0800
-Message-ID: <20260526091412.166618-1-cp0613@linux.alibaba.com>
+Cc: linux-cxl@vger.kernel.org,
+	guoren@kernel.org,
+	Chen Pei <cp0613@linux.alibaba.com>
+Subject: [ndctl PATCH v2 1/2] daxctl: fix kmod reference leak on probe-insert failure
+Date: Tue, 26 May 2026 21:22:50 +0800
+Message-ID: <20260526132251.254476-2-cp0613@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260519124934.6bdda161@jic23-huawei>
-References: <20260519124934.6bdda161@jic23-huawei>
+In-Reply-To: <20260526132251.254476-1-cp0613@linux.alibaba.com>
+References: <20260526132251.254476-1-cp0613@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -48,64 +47,33 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Tue, 19 May 2026 12:49:34 +0100, Jonathan Cameron wrote:
+daxctl_insert_kmod_for_mode() obtains a kmod reference via
+kmod_module_new_from_name() and only stores it in dev->module after a
+successful kmod_module_probe_insert_module() call. On the failure path
+the local reference was returned without being released, leaking one
+reference per failed enable attempt.
 
-> Agreed. I'm curious why it was built that way.  I scraped an email address
-> that is hopefully the right Lucas from another thread. +CC
->
-> [...]
->
-> My suspicion is this is papering over a race condition that occurs in
-> a normal module load -  it may not be possible to tell the difference
-> between COMMING and BUILTIN reliably.
+Drop the reference before returning the error code.
 
-I went and read through libkmod's code and history carefully on this,
-and your suspicion is correct -- the COMING return is deliberate, not
-incidental.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+---
+ daxctl/lib/libdaxctl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The behavior was introduced in libkmod commit fd44a98 ("Fix race while
-loading modules", 2015), and Lucas spelled out the rationale in the
-commit message:
+diff --git a/daxctl/lib/libdaxctl.c b/daxctl/lib/libdaxctl.c
+index 02ae7e5..ffc81eb 100644
+--- a/daxctl/lib/libdaxctl.c
++++ b/daxctl/lib/libdaxctl.c
+@@ -927,6 +927,7 @@ static int daxctl_insert_kmod_for_mode(struct daxctl_dev *dev,
+ 			NULL, NULL, NULL, NULL);
+ 	if (rc < 0) {
+ 		err(ctx, "%s: insert failure: %d\n", devname, rc);
++		kmod_module_unref(kmod);
+ 		return rc;
+ 	}
+ 	dev->module = kmod;
+-- 
+2.50.1
 
-  The problem is that the creation of /sys/module/<name> and
-  /sys/module/<name>/initstate are not atomic. There's a small window
-  in which the directory exists but the initstate file was still not
-  created.
-  [...]
-  We enforce mod->builtin to always be up-to-date when
-  kmod_module_get_initstate() is called. This way if the directory
-  exists but the initstate doesn't, we can be sure this is because the
-  module is in the "coming" state, i.e. kernel didn't create the file
-  yet, but since builtin modules were already handled by checking our
-  index the only reason for that to happen is that we hit the race
-  condition.
-
-So COMING on the sysfs fallback path is intentional: libkmod treats
-kmod_module_is_builtin() (i.e. the modules.builtin lookup) as the
-authoritative answer to "is this builtin", and assumes anything else
-hitting the dir-without-initstate window has to be a concurrent load
-race. When modules.builtin is missing, that assumption silently flips
-and a builtin driver looks exactly like a load-in-progress -- which
-is the COMING you saw.
-
-Given that, I don't think the right fix is in libkmod. Returning
-BUILTIN unconditionally on the dir-without-initstate fallback would
-re-open the very race fd44a98 set out to close: a parallel modprobe
-of a real loadable module that wins the directory creation but not
-yet the initstate write would be misreported as builtin, and callers
-waiting on it (the nls_cp437 / sd-card scenario in fd44a98) would
-skip the wait. That's a behavioral regression on a configuration
-libkmod has supported for ten years, in exchange for tidying up a
-no-modules_install setup that libkmod arguably never promised to
-handle. Lucas (CC'd) -- please correct me if I'm misreading the
-original intent.
-
-So I'll take Alison's suggestion and handle it on the ndctl side. v2
-will keep the BUILTIN/LIVE short-circuit and additionally treat
-KMOD_MODULE_COMING as builtin when /sys/module/<name>/ exists but the
-initstate file does not -- exactly the fingerprint your VM hits.
-
-I'll post v2 shortly.
-
-Thanks,
-Pei
