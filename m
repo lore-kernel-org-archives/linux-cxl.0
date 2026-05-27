@@ -1,91 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461E775809
-	for <linux-cxl@vger.kernel.org>; Wed, 27 May 2026 00:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F7B1A6807;
+	Wed, 27 May 2026 00:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779840802; cv=none; b=DsHtqwlcbT/DMht7A9nHM6fWkfKSTenaKb2cIeMKEPEc6u9I8HyKx/BsMLB6b8pl7EtkZbcfTHFNmPl1AokBwWHHjcPZwtGiM63oGY1ILukEZxpxagKDyED8ImE0MvwkfXG34uUcn3eaaArxfP4OXSjupaKJOK851cgw4UGkotA=
+	t=1779841000; cv=none; b=gDc07NRvlScWOzS0tpT1eEiq6qhqnM5uhHLDQ2i9lTseyPkjDAUhyvW5B6u+jwWLSj6Cy/GfemaX27ImQ/iABE0K6snE61FkQlewVI/pZXrFMYfpzNZBYhGAeVVDJfQpCLFUkry2leW0Jpwf6k0MCTDNPWuugL+NmNk0XlRsHCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779840802; c=relaxed/simple;
-	bh=VcGIvlb2Adx+fX2LRdOuWvBCAKMRVG8xLl2m4ldfMxE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=La/XpD8NUCj0CMU5fBnbjzS5Qb7CcC1814mSZs7PQprI1DSRz25kiUYTRI5l1e+Wi/Dflwa4osr+rgvXpKV/7nkF69XK+ijtxqLZgZz/hPC5+p1CAys3QOwZ4cPxhIWy33HMv7se5vErsHq4L/q5Ae8bJNqwqGluuQAjhfZ8plE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ODLcArcm; arc=none smtp.client-ip=198.175.65.19
+	s=arc-20240116; t=1779841000; c=relaxed/simple;
+	bh=qOqJqCGw20iqiS+sk9mqMlpQVA7enZ94rTTT/wcwRmA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YjzW0CQ1z02klubKX3svPz+wUaH/7R0IeffEs2CkLlOciKjP/lCCSdKln/sKqdnp9kPied8wTs9UC5qNJ6Y1q56zNG3nyU75gZlDKtgkBjcvoXPGK1gs5dRk82cOrfWTa1DgrQcWYdCseNv+t3DufTWUavws2bFuF/M8Q7clbVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kX/Axxge; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ODLcArcm"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kX/Axxge"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779840796; x=1811376796;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=VcGIvlb2Adx+fX2LRdOuWvBCAKMRVG8xLl2m4ldfMxE=;
-  b=ODLcArcmh4unL9WZ7gex3CT2XlTbu8KX+I9Xfw81bGAPMkV38aHf3SeP
-   q+GUgILyE75iFvGr2BRAafCTtZiFh9pWTKZc+LGTshfeLo6FcaNX5HlIF
-   FMaf7gMkm8XR2JtKqGb0GocTXaY8M6DFH6sr2YJsdy35fW4GMqfDVVnHW
-   w5bu3JMuENqwwkDmGC6vL6kZbVMNcy7qFgWKxtU/5/tYDr//Btm0n7ZTv
-   XxvK3JBkeIjJegDnk37l4hxmOen8/q+UrKO2N/r38lqCul7342Xxzv6Yb
-   hBe2v2N/08nfHC+vVeBrWZuyGs3OvbwEVJ3VrlN/U0q3GE+nyMe/1IkRE
+  t=1779840985; x=1811376985;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qOqJqCGw20iqiS+sk9mqMlpQVA7enZ94rTTT/wcwRmA=;
+  b=kX/AxxgelQdkJlBgp0KN3ofeWBi8bqME+am4opoVHad+lUc6U5lqIxSJ
+   JPa1NbNGmY0yN2ZtpXAnUsee++65b50Ak+vBLcFMhnY+Z4kfv0gkcDpo7
+   xrwdsZSyMe4ZFn3QeF+xHnq2yPUPqd+IL8AMk5eokSh1JrLmUreuV6VOP
+   Ytj0moAYAMFzzF051QbdoMBtNWZDKOQqcWgCH2EpRfXXodUT1o2HT/yFW
+   jpoQBOqvjl/Fgx+E9DE/0h1q0XRB8+XjlJ7sumNpHHL/zg2pWh5+iUCvj
+   wu5sMdLgQhX6g8dwQHca5ou38QamwRwaN1a/sT0riefle8duFWNvNcq93
    A==;
-X-CSE-ConnectionGUID: U6T92scnQE6ItV21V/RvWw==
-X-CSE-MsgGUID: H119jDqTSDWEorHS6Ta6BA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11798"; a="80637486"
+X-CSE-ConnectionGUID: RCavyTPnQj6ysc7kTM8r+g==
+X-CSE-MsgGUID: +HzKV0WlSnmQ/uKHFnXKFA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11798"; a="98092134"
 X-IronPort-AV: E=Sophos;i="6.24,170,1774335600"; 
-   d="scan'208";a="80637486"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 17:13:12 -0700
-X-CSE-ConnectionGUID: kLQpvq4CQuebeiW7xZzFHg==
-X-CSE-MsgGUID: 4WLCTXdyQmOZRx7X5MhCBg==
+   d="scan'208";a="98092134"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 17:16:21 -0700
+X-CSE-ConnectionGUID: p2VfEESbTmygnWmicb4QyQ==
+X-CSE-MsgGUID: 5AjUHhovQNqsTiJDNYCYQQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,170,1774335600"; 
-   d="scan'208";a="237898939"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.220.111])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 17:13:12 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Li Ming <ming.li@zohomail.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dan Williams <djbw@kernel.org>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: Add CXL reviewer
-Date: Tue, 26 May 2026 17:13:03 -0700
-Message-ID: <20260527001305.533170-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
+   d="scan'208";a="246101045"
+Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.110.201]) ([10.125.110.201])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 17:16:20 -0700
+Message-ID: <e7655b88-c56d-4d9a-8ae1-68eb9448bb87@intel.com>
+Date: Tue, 26 May 2026 17:16:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 5/7] dax: fix holder_ops race in fs_put_dax()
+To: John Groves <john@jagalactic.com>, John Groves <John@Groves.net>,
+ Dan Williams <djbw@kernel.org>
+Cc: John Groves <jgroves@micron.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Matthew Wilcox <willy@infradead.org>,
+ Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
+ Alison Schofield <alison.schofield@intel.com>, Ira Weiny
+ <iweiny@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+References: <0100019e511fb82e-1a444df3-8310-40ed-8380-72e1373d5da9-000000@email.amazonses.com>
+ <20260522191917.79204-1-john@jagalactic.com>
+ <0100019e5120c6c2-6fee7a58-7fb8-4c80-a229-4b5573e0e2c0-000000@email.amazonses.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <0100019e5120c6c2-6fee7a58-7fb8-4c80-a229-4b5573e0e2c0-000000@email.amazonses.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add Li Ming as CXL subsystem reviewer.
-
-Thanks to Li Ming for all the CXL bugs they've found and fixed,
-and looking forward to many more prevented!
 
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+On 5/22/26 12:19 PM, John Groves wrote:
+> From: John Groves <John@Groves.net>
+> 
+> Clear holder_ops before holder_data so that a concurrent fs_dax_get()
+> cannot have its newly installed holder_ops overwritten. Also add a
+> kerneldoc comment documenting that fs_put_dax() must only be called
+> by the current holder.
+> 
+> Fixes: eec38f5d86d27 ("dax: add fs_dax_get() for devdax")
+> Signed-off-by: John Groves <john@groves.net>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2fb1c75afd16..992e1fa57b72 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6428,6 +6428,7 @@ M:	Alison Schofield <alison.schofield@intel.com>
- M:	Vishal Verma <vishal.l.verma@intel.com>
- M:	Ira Weiny <ira.weiny@intel.com>
- M:	Dan Williams <djbw@kernel.org>
-+R:	Li Ming <ming.li@zohomail.com>
- L:	linux-cxl@vger.kernel.org
- S:	Maintained
- F:	Documentation/driver-api/cxl
--- 
-2.37.3
+Couple things from Claude that may be worth taking a look at:
+
+  1. Memory ordering is now load-bearing and missing
+
+  The whole correctness argument depends on the reader observing holder_ops =
+  NULL before observing holder_data = NULL. The patch uses a plain store
+  followed by cmpxchg. On x86 plain stores are ordered, but on arm64/ppc they
+  are not — the reader can observe cmpxchg's release of holder_data while still
+  seeing the old holder_ops. That puts us back in the dangerous (holder_data ==
+  NULL, holder_ops == old) state on weakly-ordered arches.
+
+  Required:
+
+  smp_store_release(&dax_dev->holder_ops, NULL);   /* publish ops=NULL first */
+  cmpxchg(&dax_dev->holder_data, holder, NULL);    /* then release holder_data
+  */
+
+  And the reader in dax_holder_notify_failure should use
+  smp_load_acquire/READ_ONCE because today it reads dax_dev->holder_ops twice
+  (line 334 and line 339), allowing tearing or stale-cache reads. Pre-existing
+  weakness, but this patch is what makes the ordering matter.
+
+  kill_dax (line 461-462) has the same naked-store pattern — it should be made
+  consistent.
+
+  2. Unconditional holder_ops = NULL is a behavior regression
+
+  Pre-patch was defensive: if a caller passed the wrong holder, the cmpxchg
+  failed and nothing got cleared.
+
+  Post-patch clears holder_ops unconditionally whenever dax_dev && holder is
+  truthy. A wrong-holder fs_put_dax() now actively damages the legitimate
+  holder's state — sets holder_ops to NULL while holder_data retains the
+  legitimate holder's pointer. From that point, all dax_holder_notify_failure()
+  calls return -EOPNOTSUPP, silently breaking the legitimate holder's
+  poison-recovery path.
+
+DJ
+
+
+> ---
+>  drivers/dax/super.c | 24 ++++++++++++++++++++++--
+>  1 file changed, 22 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+> index 25cf99dd9360b..fa1d2a6eb2408 100644
+> --- a/drivers/dax/super.c
+> +++ b/drivers/dax/super.c
+> @@ -116,11 +116,31 @@ EXPORT_SYMBOL_GPL(fs_dax_get_by_bdev);
+>  
+>  #if IS_ENABLED(CONFIG_FS_DAX)
+>  
+> +/**
+> + * fs_put_dax() - release holder ownership of a dax_device
+> + * @dax_dev: dax device to release (may be NULL)
+> + * @holder: the holder pointer previously passed to fs_dax_get() or
+> + *          fs_dax_get_by_bdev(); must match exactly, as it is used
+> + *          in a cmpxchg to atomically release ownership
+> + *
+> + * Must only be called by the current holder. Clears holder_ops before
+> + * holder_data to avoid a race where a concurrent fs_dax_get() could have
+> + * its newly installed holder_ops overwritten.
+> + */
+>  void fs_put_dax(struct dax_device *dax_dev, void *holder)
+>  {
+> -	if (dax_dev && holder &&
+> -	    cmpxchg(&dax_dev->holder_data, holder, NULL) == holder)
+> +	if (dax_dev && holder) {
+> +		/*
+> +		 * Clear holder_ops before holder_data so that a concurrent
+> +		 * fs_dax_get() cannot have its newly installed holder_ops
+> +		 * overwritten. holder_ops is only consulted when holder_data
+> +		 * is non-NULL, so clearing ops first is safe — any in-flight
+> +		 * holder_notify_failure() will see the old holder_data with
+> +		 * NULL ops (a no-op) rather than new ops with wrong context.
+> +		 */
+>  		dax_dev->holder_ops = NULL;
+> +		cmpxchg(&dax_dev->holder_data, holder, NULL);
+> +	}
+>  	put_dax(dax_dev);
+>  }
+>  EXPORT_SYMBOL_GPL(fs_put_dax);
 
