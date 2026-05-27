@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0B31D5146;
-	Wed, 27 May 2026 00:28:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B135B208D0;
+	Wed, 27 May 2026 00:31:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779841734; cv=none; b=qelYE4LspyDWL0lovZvT2PoHUUf2NIn2lRuVrGjSIHcrmtqw+iTfCrmqPq4a4ftX/dH/SgRw7hfWi7wRiq1IO5EnHaU4+5jDTvfCvnF0yi8kR51+AuJqZoLThqGU/8yIOM9sdxoWlxWaGSc45sohHitHnvlmxxhcdi2UmXhGikg=
+	t=1779841905; cv=none; b=KsAO/swZL5hQeGnJsOpfDF8eVNXeJousu13vI0HJRckzJWDk4VaTk7fG4cP7+hb4prVwUThwzF6CJzLQB7NQuvs7RV+jcaP+pO6fZHNhcWpy4aa2lr4aN8oXmZ9JxU1/SPus+mAPdABvD9lk2EMPG+X0Af39aC1Uh9WYLs8SHZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779841734; c=relaxed/simple;
-	bh=3gXWNxNB8VP6Ff2XMIG5SMf2eN1KNTcgsTeMdZkfKro=;
+	s=arc-20240116; t=1779841905; c=relaxed/simple;
+	bh=UCEpl2ldoOyCARtje0cO8ROZGrkrKkIhM58jOkVtcD0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tBP3pbM8WB69svO2x1dDOsZfznIRVWhPeKuAO3t2dTez1ARChBz/WkbNZZk6dnlrFQYsfPOX5HmxW1rX16N2sQGS+/ejjlxm9WgkSViSPszim8Ix03HKc6PV66Gi3HKeIFXCSLndWwJjIV9GWgRcet/6ANtM052rZLpQz4CD48o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E/qPSzR8; arc=none smtp.client-ip=192.198.163.9
+	 In-Reply-To:Content-Type; b=PRrbzxK9GS5VHj/eN6psDs2LEmfk+z+fgGau23bRfZ8kQsjYJc54yfonszOdqq0ng/xM9MYR4kKhXUHKZ12cq/mOxtICyLNduYegO8dAUt89fAafZ5Y0lKUCrJX7am/svTWKxopfqYgE+8fm0OTMfaIH6CZM2FujSqPV80vAphE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hncho/c+; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E/qPSzR8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hncho/c+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779841732; x=1811377732;
+  t=1779841904; x=1811377904;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=3gXWNxNB8VP6Ff2XMIG5SMf2eN1KNTcgsTeMdZkfKro=;
-  b=E/qPSzR8oTWyuSyXHxlvxX0k0MYp9I9KXyUCjR20g1tlSr+itH0/MP/M
-   JUoI4x3YOz9y3cYc1TzRu24YfCjwVoL7WK7249CQ20QxEZSzGToxLvI91
-   3DNlMz2XLEe0wnIUBVFCKtezVWkv0dEE3FmZsECkq9NAvGDNgc5E56jUk
-   gXVoE4aXGO7czN5KzWjgpl1Axw8RjVew93E6Fb3+4nFVtl32flSULojI2
-   Z+WyEXIrSPfk41zANEdO9qhcZa34NlTQ15Gg8wE0TEYoS8Eq4Z5msLVqb
-   NJ/E5szFeUUi2kw81l5JIrJxIeP2+byoW1Ab5hlG0P9tPgk1rPA6Yl2zF
-   Q==;
-X-CSE-ConnectionGUID: 0jveTt7fQniqrRn1jPiOjg==
-X-CSE-MsgGUID: zUcywItbT4qgiPF74TBUVg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11798"; a="91357824"
+  bh=UCEpl2ldoOyCARtje0cO8ROZGrkrKkIhM58jOkVtcD0=;
+  b=Hncho/c+IaQyLpS8mI513y78vyv8UhLlHnTrQ4nvwlJqBiNCRfUoS+Me
+   6MES7cPUHB8O8tFdBmqF+Bhm9wQIHmiIhP68mc2DsqAFapaCnCFR/yd/J
+   I2o0P1xlIADTTYLvkwEbc3bl8bS5/AQKDcWlTiOv55wY9adDhBSWRR8um
+   CqSBH6qfLJdtmuuujM2CWkrFOZxte6xkxMLLc7EbwBDyhximpgUmEQdLO
+   uA2YJc3d56IdU3TIKAs6EoABwLrKmcZhOpxqJBvZ47RESecAF7mv17kk3
+   iKM9typqcHFRhXDapiLOM7OGIFSsoJEzKUO9hNfksU1c6SpTq1c6j46+u
+   g==;
+X-CSE-ConnectionGUID: fPH2PnZsSaiaCP3QsNhnGg==
+X-CSE-MsgGUID: TJU6Vd6pTeOWZ/TzG8bUdA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11798"; a="91357952"
 X-IronPort-AV: E=Sophos;i="6.24,170,1774335600"; 
-   d="scan'208";a="91357824"
+   d="scan'208";a="91357952"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 17:28:51 -0700
-X-CSE-ConnectionGUID: nzFADZe7T1OkJAEa+OgaDQ==
-X-CSE-MsgGUID: QkIoZaUZTgiAtrQJakHGDg==
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 17:31:43 -0700
+X-CSE-ConnectionGUID: CxrNtg1MTceJ35zGdIKHRQ==
+X-CSE-MsgGUID: x3w93BQ3RjSI3HXoz85gqA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,170,1774335600"; 
-   d="scan'208";a="246335810"
+   d="scan'208";a="246336693"
 Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.110.201]) ([10.125.110.201])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 17:28:50 -0700
-Message-ID: <a7ea31ac-8aca-4ff5-adf1-7b3941eba5b4@intel.com>
-Date: Tue, 26 May 2026 17:28:48 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2026 17:31:42 -0700
+Message-ID: <eb4212d1-bea2-452a-a7f6-886d325301a5@intel.com>
+Date: Tue, 26 May 2026 17:31:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,8 +52,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 6/7] dax: replace exported dax_dev_get() with
- non-allocating dax_dev_find()
+Subject: Re: [PATCH V2 7/7] dax: fsdev.c minor formatting cleanup
 To: John Groves <john@jagalactic.com>, John Groves <John@Groves.net>,
  Dan Williams <djbw@kernel.org>
 Cc: John Groves <jgroves@micron.com>, Vishal Verma
@@ -67,122 +66,79 @@ Cc: John Groves <jgroves@micron.com>, Vishal Verma
  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
  "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
 References: <0100019e511fb82e-1a444df3-8310-40ed-8380-72e1373d5da9-000000@email.amazonses.com>
- <20260522191925.79227-1-john@jagalactic.com>
- <0100019e5120f45c-f2183035-0304-4601-87bc-85d933ce51e7-000000@email.amazonses.com>
+ <20260522191937.79247-1-john@jagalactic.com>
+ <0100019e512117cd-2a9b3b34-6f2c-42e3-9110-71aef0463358-000000@email.amazonses.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <0100019e5120f45c-f2183035-0304-4601-87bc-85d933ce51e7-000000@email.amazonses.com>
+In-Reply-To: <0100019e512117cd-2a9b3b34-6f2c-42e3-9110-71aef0463358-000000@email.amazonses.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
 On 5/22/26 12:19 PM, John Groves wrote:
 > From: John Groves <John@Groves.net>
 > 
-> This fix is in response to a Sashiko review, and some subsequent
-> analysis.
+> Address some comments from Jonathan that were missed in the merged
+> series. Fix line wrapping in fsdev_dax_recovery_write() and
+> fsdev_dax_zero_page_range() signatures.
 > 
-> dax_dev_get() uses iget5_locked() which creates a new inode if no
-> matching one exists. This is correct for the internal caller
-> (alloc_dax), but dangerous for external callers that look up devices
-> from user-supplied or metadata-supplied dev_t values:
-> 
-> 1. A new inode is created with DAXDEV_ALIVE set but no backing driver,
->    no ops, and no IDA-allocated minor number.
-> 
-> 2. On teardown, dax_destroy_inode() warns because kill_dax() was never
->    called, and dax_free_inode() calls ida_free() for a minor that was
->    never ida_alloc'd — potentially freeing the minor of a real device.
-> 
-> Add dax_dev_find() which uses ilookup5() for lookup-only semantics:
-> it returns an existing dax_device with an elevated inode reference, or
-> NULL if no device with the given dev_t exists. It never creates inodes.
-> 
-> Make dax_dev_get() static again (internal to super.c for alloc_dax),
-> export dax_dev_find() instead, and update the two external callers
-> (famfs_inode.c, famfs.c). Also add the missing CONFIG_DAX=n stub.
-> 
-> Fixes: 2ae624d5a555d ("dax: export dax_dev_get()")
+> Fixes: 099c81a1f0ab ("dax: Add dax_operations for use by fs-dax on fsdev dax")
+
+No need for fixes tag when addressing white space and text formatting issues. Not a bug fix.
+
 > Signed-off-by: John Groves <john@groves.net>
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+
 > ---
->  drivers/dax/super.c | 27 +++++++++++++++++++++++++--
->  include/linux/dax.h |  6 +++++-
->  2 files changed, 30 insertions(+), 3 deletions(-)
+>  drivers/dax/fsdev.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-> index fa1d2a6eb2408..79e5823d1010d 100644
-> --- a/drivers/dax/super.c
-> +++ b/drivers/dax/super.c
-> @@ -541,7 +541,7 @@ static int dax_set(struct inode *inode, void *data)
->  	return 0;
+> diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
+> index f74fd1bb7f4c5..dafa24761e8ff 100644
+> --- a/drivers/dax/fsdev.c
+> +++ b/drivers/dax/fsdev.c
+> @@ -45,8 +45,8 @@ static void fsdev_write_dax(void *addr, struct page *page,
 >  }
 >  
-> -struct dax_device *dax_dev_get(dev_t devt)
-> +static struct dax_device *dax_dev_get(dev_t devt)
+>  static long __fsdev_dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff,
+> -			long nr_pages, enum dax_access_mode mode, void **kaddr,
+> -			unsigned long *pfn)
+> +		long nr_pages, enum dax_access_mode mode, void **kaddr,
+> +		unsigned long *pfn)
 >  {
->  	struct dax_device *dax_dev;
->  	struct inode *inode;
-> @@ -564,7 +564,30 @@ struct dax_device *dax_dev_get(dev_t devt)
+>  	struct dev_dax *dev_dax = dax_get_private(dax_dev);
+>  	size_t size = nr_pages << PAGE_SHIFT;
+> @@ -90,7 +90,8 @@ static int fsdev_dax_zero_page_range(struct dax_device *dax_dev,
+>  	long rc;
 >  
->  	return dax_dev;
+>  	WARN_ONCE(nr_pages > 1, "%s: nr_pages > 1\n", __func__);
+> -	rc = __fsdev_dax_direct_access(dax_dev, pgoff, 1, DAX_ACCESS, &kaddr, NULL);
+> +	rc = __fsdev_dax_direct_access(dax_dev, pgoff, 1, DAX_ACCESS,
+> +				       &kaddr, NULL);
+>  	if (rc < 0)
+>  		return rc;
+>  	fsdev_write_dax(kaddr, ZERO_PAGE(0), 0, PAGE_SIZE);
+> @@ -98,15 +99,15 @@ static int fsdev_dax_zero_page_range(struct dax_device *dax_dev,
 >  }
-> -EXPORT_SYMBOL_GPL(dax_dev_get);
-> +
-> +/**
-> + * dax_dev_find - look up an existing dax_device by dev_t
-> + * @devt: the device number to find
-> + *
-> + * Returns a dax_device with an elevated inode reference, or NULL if no
-> + * device with the given dev_t exists. Unlike dax_dev_get(), this never
-> + * allocates a new inode — it is safe for external callers that are looking
-> + * up devices from user-supplied or metadata-supplied dev_t values.
-> + *
-> + * Caller must put_dax() the returned device when done.
-> + */
-> +struct dax_device *dax_dev_find(dev_t devt)
-> +{
-> +	struct inode *inode;
-> +
-> +	inode = ilookup5(dax_superblock, hash_32(devt + DAXFS_MAGIC, 31),
-> +			 dax_test, &devt);
-> +	if (!inode)
-> +		return NULL;
-> +
-
-Claude mentions that dax_alive() check may be a good idea after grabbing the inode ref. Otherwise famfs may get a dax_dev that may be racing with a teardown. Do something similar that fs_dax_get_by_dev() or fs_dax_get() do WRT dax_alive() check perhaps.
-
-DJ
-
-
-> +	return to_dax_dev(inode);
-> +}
-> +EXPORT_SYMBOL_GPL(dax_dev_find);
 >  
->  struct dax_device *alloc_dax(void *private, const struct dax_operations *ops)
+>  static long fsdev_dax_direct_access(struct dax_device *dax_dev,
+> -		  pgoff_t pgoff, long nr_pages, enum dax_access_mode mode,
+> -		  void **kaddr, unsigned long *pfn)
+> +		pgoff_t pgoff, long nr_pages, enum dax_access_mode mode,
+> +		void **kaddr, unsigned long *pfn)
 >  {
-> diff --git a/include/linux/dax.h b/include/linux/dax.h
-> index fe6c3ded1b50f..29113eb95e72d 100644
-> --- a/include/linux/dax.h
-> +++ b/include/linux/dax.h
-> @@ -54,7 +54,7 @@ struct dax_device *alloc_dax(void *private, const struct dax_operations *ops);
->  void *dax_holder(struct dax_device *dax_dev);
->  void put_dax(struct dax_device *dax_dev);
->  void kill_dax(struct dax_device *dax_dev);
-> -struct dax_device *dax_dev_get(dev_t devt);
-> +struct dax_device *dax_dev_find(dev_t devt);
->  void dax_write_cache(struct dax_device *dax_dev, bool wc);
->  bool dax_write_cache_enabled(struct dax_device *dax_dev);
->  bool dax_synchronous(struct dax_device *dax_dev);
-> @@ -92,6 +92,10 @@ static inline void put_dax(struct dax_device *dax_dev)
->  static inline void kill_dax(struct dax_device *dax_dev)
->  {
+>  	return __fsdev_dax_direct_access(dax_dev, pgoff, nr_pages, mode,
+>  					 kaddr, pfn);
 >  }
-> +static inline struct dax_device *dax_dev_find(dev_t devt)
-> +{
-> +	return NULL;
-> +}
->  static inline void dax_write_cache(struct dax_device *dax_dev, bool wc)
+>  
+> -static size_t fsdev_dax_recovery_write(struct dax_device *dax_dev, pgoff_t pgoff,
+> -		void *addr, size_t bytes, struct iov_iter *i)
+> +static size_t fsdev_dax_recovery_write(struct dax_device *dax_dev,
+> +		pgoff_t pgoff, void *addr, size_t bytes, struct iov_iter *i)
 >  {
+>  	return _copy_from_iter_flushcache(addr, bytes, i);
 >  }
 
