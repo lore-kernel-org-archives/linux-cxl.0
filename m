@@ -1,106 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C073F9A1B
-	for <linux-cxl@vger.kernel.org>; Wed, 27 May 2026 11:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779881912; cv=none; b=tn/xeDxgKTcG3lTiTMRwwWnv4y52rc5mxUYjKNLv90n4wVMF4oJcXojj/yRjflCbcgFc43W7WVRpCM77PFmeDfXILz60l416CoHB4AvVmJx1D2ZfjvKr/fNdG7YSddNmaQgE3jevAE5GDNEOo/Fx26NpYq5FHz/CUNLrUU74SH4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779881912; c=relaxed/simple;
-	bh=C/JDoMskpVNUsPhkPS1ppZP++rW/kUPM4ELPNhRx98k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QSdMe62V8MPB7hyRbEGf9HBUze9iemY1Wh2O7wT6japzUYKf1e8O7BB1OKJd3SAQR3H5CcVVUionzTw27baJBeI/cAwZZ1UAp4POQ8FvobgJRwHvznBDn1G5o8dFzwNWu+IBbhDgQz7WsRUY4QDdcosxA/dPzSRBM+C1v7J5qEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dw1LLbVc; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A0240B6E5
+	for <linux-cxl@vger.kernel.org>; Wed, 27 May 2026 13:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779887322; cv=pass; b=gmFkI6KPYsxS/lRGQbgTGOFJn+HGOE4+jgkXKumZkLiFPIN3JpeaNRwq/LV8RFnXpeav6rWaybOakiCSpXF9M17k1NPzeJrnqhr1Q5nbeY4/84t+xiDusKMA1s97NziOKSLSDB8heRpgP4rjrQN2vuGCB/1O8F5MWb3RlFZ/CbQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779887322; c=relaxed/simple;
+	bh=GtG1CxC5YIcWz73QGJTyczJSNPtYLG9fgVPfVnNcFrA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pngL8fQsfRE3/xG2EOztoPxRvh6tpFXU/0skrBiLjB0AJIeGnDIVvPH3KYTibr1iwGqhDJiVuHrv1F6gF2hE3MoHjYu33EGsPtetQ+uLuCJXP8HVCIVdk/LF+rVo6+PS5rk2RFWNAkCmM8NiaO+WAvDYa9SpmTbQQRGPwNgTbTM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=IM+H/jyo; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dw1LLbVc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 073A71F00A3C
-	for <linux-cxl@vger.kernel.org>; Wed, 27 May 2026 11:38:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779881910;
-	bh=DDPMa0fdpYJQTQJTQSaNefV6P/6fs1Q+aFlsuPZjNBc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=dw1LLbVcXywjKYCjPXZ2/WQpWvJn0ucy2t7lgvUtZhMLatIy27176C4BofkwkmN+B
-	 ypBpx04v3BPZtzRjuYjdfs++wjiL8dtrzo7dw/f+XJCs2QuVZ0w1hstznPcM2efuLr
-	 5ZY3Rk/FWvFH40g2THak4JohTOKE60WBJDwPXMcbE3OmFaySAoaHNuygBL1Bo7yZtv
-	 o4G0Tbx5cdHlAmIAuQ1Op3UUIOnTm+uwecZyNG6kx5BCBciVP/XRoboE0AzMGyEd/L
-	 H5Q5rT6mJ+rSri5DEiuT0Y2XDBGFrlaYkeOnJi5yLqIaIT9V6FI7fdO0mUlIQg0ijo
-	 19JAkItuXfA/Q==
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-95fa7cd1392so8840905241.2
-        for <linux-cxl@vger.kernel.org>; Wed, 27 May 2026 04:38:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AFNElJ/WlBBwjzMcjIVBFCnZEWgjaT07tzXk/lWT3gt38AH7hyroJYUMYijPaVXqo4XuzrNnkKkKjWSxrB4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2OzAelBOgJcfOfMywyWEtGDhptuBCxXfRc/GKBCuoi3YkQmPU
-	bG6ia5+iBF9UJpBI/Qf7X3dfWbFTdZSomrw1Cb6QRXRsdoGN2JIvsF+VpleYz8ehcg83k5X5f1K
-	n0PDoafRRT5AcDI5VYC4njLWCL9aykkM=
-X-Received: by 2002:a05:6122:4317:b0:576:1a8d:8989 with SMTP id
- 71dfb90a1353d-58658a3d6f0mr12430648e0c.0.1779881904343; Wed, 27 May 2026
- 04:38:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="IM+H/jyo"
+ARC-Seal: i=1; a=rsa-sha256; t=1779887306; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=j4oCHXpjTXLmvzkVWm/IG8YcRFkxsKQWq/J6Fu7g0FVhWgNHxJ3ihXDlp5OXQl0XBUMWSePbzLVTydNDaqaP5NBqyJYINAcw27E3n30+dIb26bXIukxbt6PJfqK+Qq+iszbGMfv+7uz8FPsu4fd6qhmwubWJA9rjrn3HVmyxCBg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1779887306; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=WwMgR8nAFbzrHaIOcoXXLD1rdyHGXUJOJBPbdUBq0Rw=; 
+	b=D5jZDcp+TiUceFC+CuPUUORSUwdlAmOKfm8M5hmxZ+MZ0qXkWpwD0waRfBG573mjb2CsYTV9dNF8YjbWdB4A+o46wi3rg5uL14s4gZXTZ8BYwRd2DPxZS+t6n82Hqfvka0MObfcYbnCTQYbj6r5shhtzAIJ3yNficcj5RC1+tO4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1779887306;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=WwMgR8nAFbzrHaIOcoXXLD1rdyHGXUJOJBPbdUBq0Rw=;
+	b=IM+H/jyo7Jg9Ds/hvSXwYDzshN/4LutTFRuawJJoO9xDlirSBAenliTTMM8hi+29
+	3qqScFj4lm6TNWKHarIGuVFJDBQB8XcMdi0hUazeLcPkcndcIbNwKLBIz6GZJ6m7j3p
+	mJ4lQW3A01/jbTgjlE7NpIrFRAQtEElPJQe1bXa4=
+Received: by mx.zohomail.com with SMTPS id 1779887302473811.8314878154824;
+	Wed, 27 May 2026 06:08:22 -0700 (PDT)
+Message-ID: <7da588a2-cbdc-4f63-aadb-9faf0125e90a@zohomail.com>
+Date: Wed, 27 May 2026 21:08:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260526025118.38935-1-cp0613@linux.alibaba.com> <20260526025118.38935-3-cp0613@linux.alibaba.com>
-In-Reply-To: <20260526025118.38935-3-cp0613@linux.alibaba.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 27 May 2026 13:38:08 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0guqiYf-7u-XOHARWZEYytYBZ=5XahXmtXzZ7Urv8bnJA@mail.gmail.com>
-X-Gm-Features: AVHnY4K470KiQWLSRdffFvGwoRgQxOZnZHDAqVE4J9GvFpSBp6vdb7nYMJ5CXEQ
-Message-ID: <CAJZ5v0guqiYf-7u-XOHARWZEYytYBZ=5XahXmtXzZ7Urv8bnJA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ACPI: scan: Honor _DEP for ACPI0016 PCI/CXL host bridge
-To: Chen Pei <cp0613@linux.alibaba.com>
-Cc: dave.jiang@intel.com, alison.schofield@intel.com, djbw@kernel.org, 
-	icheng@nvidia.com, bhelgaas@google.com, guoren@kernel.org, 
-	linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ira Weiny <ira.weiny@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: Add CXL reviewer
+To: Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>
+Cc: linux-cxl@vger.kernel.org
+References: <20260527001305.533170-1-alison.schofield@intel.com>
+ <27e15fda-2994-4fd4-9822-d0006b01a26e@intel.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <27e15fda-2994-4fd4-9822-d0006b01a26e@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Feedback-ID: zu08011227ca8df406df07c6c4c7474f370000cc916d08e08fad81b43c9118da18989fddf7f3f944a1b9e590:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-On Tue, May 26, 2026 at 4:51=E2=80=AFAM Chen Pei <cp0613@linux.alibaba.com>=
- wrote:
->
-> CXL root devices (ACPI0017) declare _DEP on their parent ACPI0016
-> PCI/CXL host bridge so that cxl_acpi probes only after acpi_pci_root
-> has attached the PCI root and registered it for acpi_pci_find_root().
-> However, acpi_dev_ready_for_enumeration() only consults dep_unmet
-> when the supplier's HID is on acpi_honor_dep_ids[]; otherwise the
-> dependency is silently ignored.
->
-> Without honoring the dependency, cxl_acpi can probe before the PCI
-> root is ready. The resulting CXL topology is broken: decoder targets
-> read as 0 and no port/endpoint devices appear under
-> /sys/bus/cxl/devices/.
->
-> Add ACPI0016 to acpi_honor_dep_ids[] so the _DEP declared by ACPI0017
-> is enforced. This relies on the preceding patch ("ACPI: PCI: clear
-> _DEP dependencies after PCI root bridge attach"), which releases the
-> dependency once the PCI root is fully enumerated; the two patches
-> must be applied together.
->
-> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
-> ---
->  drivers/acpi/scan.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 530547cda8b2..5f20e7748f36 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -866,6 +866,7 @@ static const char * const acpi_honor_dep_ids[] =3D {
->         "RSCV0005", /* RISC-V SBI MPXY MBOX */
->         "RSCV0006", /* RISC-V RPMI SYSMSI */
->         "PNP0C0F",  /* PCI Link Device */
-> +       "ACPI0016", /* CXL/PCIe host bridge: CXL root (ACPI0017) depends =
-on PCI root attach */
->         NULL
->  };
->
-> --
 
-If anyone has any objections or comments on this one, please let me
-know.  In the absence of any, it will be queued up (as 7.2 material)
-next week.
+在 2026/5/27 08:33, Dave Jiang 写道:
+>
+> On 5/26/26 5:13 PM, Alison Schofield wrote:
+>> Add Li Ming as CXL subsystem reviewer.
+>>
+>> Thanks to Li Ming for all the CXL bugs they've found and fixed,
+>> and looking forward to many more prevented!
+>>
+>>
+>> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> Acked-by: Dave Jiang <dave.jiang@intel.com>
 
-Thanks!
+Thank you all for trusting me as a reviewer for the CXL subsystem. I 
+truly appreciate this opportunity. I will keep learning, do my best to 
+help you to improve the CXL subsystem.
+
+Reviewed-by: Li Ming <ming.li@zohomail.com>
+
+>> ---
+>>   MAINTAINERS | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 2fb1c75afd16..992e1fa57b72 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -6428,6 +6428,7 @@ M:	Alison Schofield <alison.schofield@intel.com>
+>>   M:	Vishal Verma <vishal.l.verma@intel.com>
+>>   M:	Ira Weiny <ira.weiny@intel.com>
+>>   M:	Dan Williams <djbw@kernel.org>
+>> +R:	Li Ming <ming.li@zohomail.com>
+>>   L:	linux-cxl@vger.kernel.org
+>>   S:	Maintained
+>>   F:	Documentation/driver-api/cxl
