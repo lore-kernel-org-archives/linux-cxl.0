@@ -1,282 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822F83112A5;
-	Thu, 28 May 2026 16:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29D1346E44
+	for <linux-cxl@vger.kernel.org>; Thu, 28 May 2026 16:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779985324; cv=none; b=WZjeZ4118yw2aq/zuBgZhu5R8f7JqMmxWJ8hnvP4Sj91rPOGeogzmSr2n5oYg1p3Xj1Nvo2Kte/puH4uvMrqqWXPi9VLG0lPdwrHdkFg8QSr3OSOmhBxV7gp2kt1moO/IMAdnHRZrMlRQSrp26o31g1mywYMpAGlgHMWdxPLM30=
+	t=1779985952; cv=none; b=cyoYL7YqzOpaqq0H/BGIivGd+7iK0ceb2f2XG1XkxHwVr6E2awi+sgYjlAAND4KOdzWAuC12ICNQeqkc/nD1atfcWyd7JSNKXb/iJG/7NKY0EZ594aDw92VwbMynFB8IZuWr+fEv3KkNvw23ePYjKZkUjkfihgrYjAuS6BQLulw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779985324; c=relaxed/simple;
-	bh=zbqjW8REsnBmqT60l7bommfJAsVO25ana10RGh/GSGs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aP4T/kfEt4EPzJ75YV3MPu34FXrd6bwbbP7q4Q4YshNzrkOQ9PHB3HMVEEBwDL9yNvVxEaMzaKO646imjMLsMMRRdqjZQak3i+9CJA4EJVja9cjkPdikyHgvnPEMyABoAss7xVxCDVZb6VQyVzIa6eTZGUUYdYwszX3jDz0Bq6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eeBqXPs3; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1779985952; c=relaxed/simple;
+	bh=JifQjjeGTYkQYQF9OEClDLZwk6+0Cv5AfpxwRFxUgAo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RzoiJ0ZsD2ckpMeuuW/HkHLDglLeB76pEuHuvmM8X5KuDULODU5RmYb/cAzytcgKZPmbbA2OzrjN0xTwtVJcVNwdeiW3WDjzxVt1SrU+JXLvXj29bzRvL1teOGLG8icAcL21OFaMCoiSXr9ZyxWCinNYHFeQ/RzQScS5XescHFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D+LNozkZ; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eeBqXPs3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1779985321; x=1811521321;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=zbqjW8REsnBmqT60l7bommfJAsVO25ana10RGh/GSGs=;
-  b=eeBqXPs37AHLLxTD60P+tGtY8KSVfPOrnUolXeX7EDiMkFAvD1AEmkii
-   /7o+fXRIyPPiRGNOuj0e/JDEMNTo7jcAkILUmoqsR4hEWpjA23YafWlrN
-   k6Z8fxY6sGbIunA/MvtGFFQSxT6Sgsv8CeLtapuC6mh6/Ni2r1x1vg2vz
-   7Wqa95IH3DJCJOpGdwlZXgE4hYbUgkWNfsa0I7sTaJXglaQMsfFNsocNu
-   fJz7uU9UBVdSMzXQm0Bb6zuf9UefTaRe3wWv+R5cMNkk63u8Z5v+XC/N0
-   TgP/wxP519aEqALnwZ+t7bRNv66YS8lZVfpaQ3cqem5wMI4BNIgYvtuPV
-   g==;
-X-CSE-ConnectionGUID: rDUD7ddQQYaIouPKSXQROA==
-X-CSE-MsgGUID: l0LiNrfnTwKjbqguTGWMCQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="91943811"
-X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
-   d="scan'208";a="91943811"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 09:22:01 -0700
-X-CSE-ConnectionGUID: ZAZRLwGlQcedwz+nfUQcbw==
-X-CSE-MsgGUID: ayE+O1duTc2ZIWHHOljUeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,173,1774335600"; 
-   d="scan'208";a="241756860"
-Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.111.91]) ([10.125.111.91])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 09:22:00 -0700
-Message-ID: <28a8e58d-5bf8-438e-b337-76944d67e297@intel.com>
-Date: Thu, 28 May 2026 09:21:59 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D+LNozkZ"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2ba3b9bcf69so635ad.0
+        for <linux-cxl@vger.kernel.org>; Thu, 28 May 2026 09:32:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1779985951; x=1780590751; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lQXaLb9WZj3JY/dEJGlzcheRpxj78yrhQDEcCPB8cc4=;
+        b=D+LNozkZ7z8RclW3sK7QxICZlV1/2u+s7GXoX2Uo8ijedFsi7LX18lMvy73rHrDfrK
+         49s0Hnn+q60xtPG+P05y4rFJgrMwi2y8FmfV9TQdnO2BRcCpUC88zFi1Gm1w2FTyYgdk
+         14+iVNkEqIWLXyr8EY28jYPFMYJ/Ty1+HwVho4uy1oIynWBQpKwBEREtVFMT7bCojjRC
+         9hpMal3u6F9QdG0uKLOXC+3mFk3FslbjqKNyxV6tRZC3gTH8/dGYXKf9NmSz3AtdhQ4F
+         Se+T8tNdy6jPrw2VkAwxn4gySTVWa9WtpAceH3ok3gbWqNTtVMYoVSlQhjTn0ftEfSy6
+         owRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779985951; x=1780590751;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lQXaLb9WZj3JY/dEJGlzcheRpxj78yrhQDEcCPB8cc4=;
+        b=mTMymenDqRUt/7v4v0VdfoU4PgWgKb4S23m6bGO610zv+tFYz6zRuJZ/guGB1/XHwq
+         40KErKKtaAF3hc2Dk45LYtklPLlH5FWK5DRvsp9xWVKor46A1Fcuk35dyaPRVxU16n3I
+         pmnOKOVz95gAyddN05ELEfin6V9S1JGzpOLHK8HjRxf7yAGDQsmirQHiiBEwbc0zY4xc
+         IWUopcFog06+I+dXtFfSWsjScAAbeWLG/WPIn+eavKEp6eWKyV0jNRgAnaGV/9w23izD
+         Dls67oeXerV1dgmg4IMthXhPdpYMe1DlandMpyUxiLL9DeY+cSXLO8ZGo3fmbYs6GSNL
+         hxaQ==
+X-Forwarded-Encrypted: i=1; AFNElJ+tmeeTqQj8CdPNzNB3GQHPfHzYpaz5EfDANk58hlzeu+YaAwZ8IfCs1MS1FmvlCYf4+vDPnoOX5VE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3VyxhTjCS7GffYicrlpy44gg95Vq2t4Xg8jkdZMK4GQ0Dv/Tk
+	IbrtJP+s7mRgT2+9UII3100NCV8wAfLNu3k4fOhqiYXUA3RKqG9TuEnFS2pd2KKL4Q==
+X-Gm-Gg: Acq92OG7IxUafUnOvUAqoixLAzoPzJ854znSMZZKXQXXUS13+xJkDLP1BOnicdcUZ//
+	2PcxYSxQyL8b8nsLDqTYCUs60HPBLUdW4cy+fj5h91/h4qyDRKzBIDa99QnrtdNi5lCem6dwj64
+	XanX4xGFWsjqzVD3WH9PMVxlNixvZNSkFXpWEPZOpm3FYWLg919WF8gkO9i0TDSl8KMlJKR0d2d
+	xJ7SBdAxm4QtB2pHP9iwe12Qq5AM9JJnmHXrYAyKvGPLhhPlE4bdYv8E9hYLG6q/wchL+gZSdql
+	pW6KdCP752qcUjZ8rVsysRysckN8TfI6phmqfS0AVEZ5HTExAhIMqewS+VVKnLrj6xsKrdUkIf0
+	oSvFuFiBJYVAnHLDa6zU1kbQ6BExmlHP+NjusWbcKRcs3cuzUQlGhKHC8w4t6V/7DrqUXbTCG9/
+	Gp59qTf59K0Kwx1XUVe1p7/GRQIGIPz6lvlogV7fMNHr9GZG1QW+eRQ5uWsT3tT1AIJWobbSMPQ
+	w4ypl4=
+X-Received: by 2002:a17:902:d50f:b0:2bc:dc0b:ab29 with SMTP id d9443c01a7336-2bf0bb6f798mr1542415ad.0.1779985950617;
+        Thu, 28 May 2026 09:32:30 -0700 (PDT)
+Received: from google.com (44.234.124.34.bc.googleusercontent.com. [34.124.234.44])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-36b90c032fasm2002365a91.15.2026.05.28.09.32.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2026 09:32:29 -0700 (PDT)
+Date: Thu, 28 May 2026 16:32:23 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Nicolin Chen <nicolinc@nvidia.com>, will@kernel.org,
+	robin.murphy@arm.com, joro@8bytes.org, bhelgaas@google.com,
+	baolu.lu@linux.intel.com, kevin.tian@intel.com,
+	miko.lenczewski@arm.com, linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, dan.j.williams@intel.com,
+	jonathan.cameron@huawei.com, vsethi@nvidia.com,
+	linux-cxl@vger.kernel.org, nirmoyd@nvidia.com
+Subject: Re: [PATCH v6 3/3] iommu/arm-smmu-v3: Allow ATS to be always on
+Message-ID: <ahhuFw3ZJpy48xkH@google.com>
+References: <cover.1779392420.git.nicolinc@nvidia.com>
+ <18bb6f421b3be891caa8f1fb50f3a4d56b52d5be.1779392420.git.nicolinc@nvidia.com>
+ <ahheOF8L0aGMttcI@google.com>
+ <20260528152930.GA3195266@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 10/31] cxl/mem: Configure dynamic capacity interrupts
-To: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: nvdimm@lists.linux.dev, Dan Williams <djbw@kernel.org>,
- Jonathan Cameron <jic23@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>, John Groves
- <John@Groves.net>, Gregory Price <gourry@gourry.net>,
- Ira Weiny <ira.weiny@intel.com>, Anisa Su <anisa.su@samsung.com>
-References: <cover.1779528761.git.anisa.su@samsung.com>
- <7f2e4fe385415e0b77b58f4bd988bc5895557dcf.1779528761.git.anisa.su@samsung.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <7f2e4fe385415e0b77b58f4bd988bc5895557dcf.1779528761.git.anisa.su@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260528152930.GA3195266@nvidia.com>
 
-
-
-On 5/23/26 2:43 AM, Anisa Su wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On Thu, May 28, 2026 at 12:29:30PM -0300, Jason Gunthorpe wrote:
+> On Thu, May 28, 2026 at 03:24:40PM +0000, Pranjal Shrivastava wrote:
 > 
-> Dynamic Capacity Devices (DCD) support extent change notifications
-> through the event log mechanism.  The interrupt mailbox commands were
-> extended in CXL 3.1 to support these notifications.  Firmware can't
-> configure DCD events to be FW controlled but can retain control of
-> memory events.
+> > > +	master->ats_always_on = true;
+> > > +
+> > > +	return arm_smmu_alloc_cd_tables(master);
+> > 
+> > Nit: I'm not sure if I'm getting this right, are we saying we *need* to
+> > allocate CDs for CXL.cache cases in the probe itself because STE.EATS
+> > requires Config=Translate with S1DSS in bypass?
 > 
-> Configure DCD event log interrupts on devices supporting dynamic
-> capacity.  Disable DCD if interrupts are not supported.
+> Yeah, basically.
 > 
-> Care is taken to preserve the interrupt policy set by the FW if FW first
-> has been selected by the BIOS.
-> 
-> Accept the 4-byte CXL 2.0 reply on GET Event Interrupt Policy by setting
-> min_out to CXL_EVENT_INT_POLICY_BASE_SIZE; pre-CXL 3.1 firmware omits
-> dcd_settings and would otherwise fail the size check.
-> 
-> Based on an original patch by Navneet Singh.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> 
-> ---
-> Changes:
-> [anisa: rebase]
-> [anisa: accept 4-byte CXL 2.0 GET reply via min_out]
-> [anisa: drop Reviewed-by tags now that the patch carries new changes]
-> ---
->  drivers/cxl/cxlmem.h |  2 ++
->  drivers/cxl/pci.c    | 75 ++++++++++++++++++++++++++++++++++++--------
->  2 files changed, 64 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index 10175ca3b7ee..65c009b02da6 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -218,7 +218,9 @@ struct cxl_event_interrupt_policy {
->  	u8 warn_settings;
->  	u8 failure_settings;
->  	u8 fatal_settings;
-> +	u8 dcd_settings;
->  } __packed;
-> +#define CXL_EVENT_INT_POLICY_BASE_SIZE 4 /* info, warn, failure, fatal */
->  
->  /**
->   * struct cxl_event_state - Event log driver state
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 8d12c684d670..83617439bbd3 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -557,6 +557,8 @@ static int cxl_event_get_int_policy(struct cxl_memdev_state *mds,
->  		.opcode = CXL_MBOX_OP_GET_EVT_INT_POLICY,
->  		.payload_out = policy,
->  		.size_out = sizeof(*policy),
-> +		/* CXL 2.0 firmware omits dcd_settings; accept the shorter reply */
-> +		.min_out = CXL_EVENT_INT_POLICY_BASE_SIZE,
->  	};
->  	int rc;
->  
-> @@ -569,23 +571,34 @@ static int cxl_event_get_int_policy(struct cxl_memdev_state *mds,
->  }
->  
->  static int cxl_event_config_msgnums(struct cxl_memdev_state *mds,
-> -				    struct cxl_event_interrupt_policy *policy)
-> +				    struct cxl_event_interrupt_policy *policy,
-> +				    bool native_cxl)
->  {
->  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-> +	size_t size_in = CXL_EVENT_INT_POLICY_BASE_SIZE;
->  	struct cxl_mbox_cmd mbox_cmd;
->  	int rc;
->  
-> -	*policy = (struct cxl_event_interrupt_policy) {
-> -		.info_settings = CXL_INT_MSI_MSIX,
-> -		.warn_settings = CXL_INT_MSI_MSIX,
-> -		.failure_settings = CXL_INT_MSI_MSIX,
-> -		.fatal_settings = CXL_INT_MSI_MSIX,
-> -	};
-> +	/* memory event policy is left if FW has control */
-> +	if (native_cxl) {
-> +		*policy = (struct cxl_event_interrupt_policy) {
-> +			.info_settings = CXL_INT_MSI_MSIX,
-> +			.warn_settings = CXL_INT_MSI_MSIX,
-> +			.failure_settings = CXL_INT_MSI_MSIX,
-> +			.fatal_settings = CXL_INT_MSI_MSIX,
-> +			.dcd_settings = 0,
-> +		};
-> +	}
-> +
-> +	if (cxl_dcd_supported(mds)) {
-> +		policy->dcd_settings = CXL_INT_MSI_MSIX;
-> +		size_in += sizeof(policy->dcd_settings);
-> +	}
->  
->  	mbox_cmd = (struct cxl_mbox_cmd) {
->  		.opcode = CXL_MBOX_OP_SET_EVT_INT_POLICY,
->  		.payload_in = policy,
-> -		.size_in = sizeof(*policy),
-> +		.size_in = size_in,
->  	};
->  
->  	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-> @@ -632,6 +645,30 @@ static int cxl_event_irqsetup(struct cxl_memdev_state *mds,
->  	return 0;
->  }
->  
-> +static int cxl_irqsetup(struct cxl_memdev_state *mds,
-> +			struct cxl_event_interrupt_policy *policy,
-> +			bool native_cxl)
-> +{
-> +	struct cxl_dev_state *cxlds = &mds->cxlds;
-> +	int rc;
-> +
-> +	if (native_cxl) {
-> +		rc = cxl_event_irqsetup(mds, policy);
-> +		if (rc)
-> +			return rc;
-> +	}
-> +
-> +	if (cxl_dcd_supported(mds)) {
-> +		rc = cxl_event_req_irq(cxlds, policy->dcd_settings);
-> +		if (rc) {
-> +			dev_err(cxlds->dev, "Failed to get interrupt for DCD event log\n");
-> +			cxl_disable_dcd(mds);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static bool cxl_event_int_is_fw(u8 setting)
->  {
->  	u8 mode = FIELD_GET(CXLDEV_EVENT_INT_MODE_MASK, setting);
-> @@ -657,18 +694,26 @@ static bool cxl_event_validate_mem_policy(struct cxl_memdev_state *mds,
->  static int cxl_event_config(struct pci_host_bridge *host_bridge,
->  			    struct cxl_memdev_state *mds, bool irq_avail)
->  {
-> -	struct cxl_event_interrupt_policy policy;
-> +	struct cxl_event_interrupt_policy policy = { 0 };
-> +	bool native_cxl = host_bridge->native_cxl_error;
->  	int rc;
->  
->  	/*
->  	 * When BIOS maintains CXL error reporting control, it will process
->  	 * event records.  Only one agent can do so.
-> +	 *
-> +	 * If BIOS has control of events and DCD is not supported skip event
-> +	 * configuration.
->  	 */
-> -	if (!host_bridge->native_cxl_error)
-> +	if (!native_cxl && !cxl_dcd_supported(mds))
->  		return 0;
->  
->  	if (!irq_avail) {
->  		dev_info(mds->cxlds.dev, "No interrupt support, disable event processing.\n");
-> +		if (cxl_dcd_supported(mds)) {
-> +			dev_info(mds->cxlds.dev, "DCD requires interrupts, disable DCD\n");
-> +			cxl_disable_dcd(mds);
-> +		}
->  		return 0;
->  	}
->  
-> @@ -676,10 +721,10 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
->  	if (rc)
->  		return rc;
->  
-> -	if (!cxl_event_validate_mem_policy(mds, &policy))
-> +	if (native_cxl && !cxl_event_validate_mem_policy(mds, &policy))
->  		return -EBUSY;
->  
-> -	rc = cxl_event_config_msgnums(mds, &policy);
-> +	rc = cxl_event_config_msgnums(mds, &policy, native_cxl);
->  	if (rc)
->  		return rc;
->  
-> @@ -687,12 +732,16 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
->  	if (rc)
->  		return rc;
->  
-> -	rc = cxl_event_irqsetup(mds, &policy);
-> +	rc = cxl_irqsetup(mds, &policy, native_cxl);
->  	if (rc)
->  		return rc;
->  
->  	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
+> Effectively the ARM rules for enabling ATS and Bypass together require
+> a valid CD table pointer.
 
-Issue that was always there probably, should this check native_cxl so the BIOS owned events are not retrieved?
+Ack. But do we expect transactions before attach_dev? What'd happen if
+we don't allocate CDs here? Am I missing the fact that CXL hardware
+could be already active and using ATS after the device_probe succeeds?
 
-	if (native_cxl)
-		cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
-
-
-Also, CXLDEV_EVENT_STATUS_ALL is missing bit 4 (Dynamic Capcity Event Log). CXL r4.0 8.2.9.3.1 Table 8-203.
-
-
-DJ
-
-
->  
-> +	dev_dbg(mds->cxlds.dev, "Event config : %s DCD %s\n",
-> +		native_cxl ? "OS" : "BIOS",
-> +		cxl_dcd_supported(mds) ? "supported" : "not supported");
-> +
->  	return 0;
->  }
->  
-
+Thanks,
+Praan
