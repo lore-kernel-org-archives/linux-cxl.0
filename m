@@ -1,63 +1,369 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD81409602;
-	Fri, 29 May 2026 20:13:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F36347514;
+	Fri, 29 May 2026 21:30:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780085625; cv=none; b=lE8kA5tdqJ2LiJ3qLaZu3MYjyYCutL6sQnQ3pfrvPTsuaS5zannVlb7e6LBzDSpapais4avM61iWQR/LBQCKDsCtfy7HG/AYxIMYEe6tFVjpSns8XUxqmTX0aOhF5gFlajvaqY/TW1FRrrsZpX19q08g6dTxB8MUlFiele8TRTM=
+	t=1780090229; cv=none; b=pYUSfNxQqSzGofTk3zQCR4p0Ve1smNlfsDlRVFlSdRxys5QHo0Z4MG7bo/2jldyrza4a4WGkYLu4y/hLrlnGaZeF7RqRBOPpf2pZcpi01hSRfAcGh+w0CLKS+4wncpd9LzJaLp9Cw8cfNQFoGjS3dKl2YXGOo7p/7XJKsUsCHuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780085625; c=relaxed/simple;
-	bh=Xmth4Qqxc51mCgnqH00KLrb8w7Tp4AXmpc4cP/xuMrQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=HsJtOcVFKIeEZigD0v/LiM67luM9EbaWZsVPNqgzA9QfnnupHcrxT9xYT/m82GmwHv/r9S0PppA4r7Wu/Yr7Hf893+ZEL9D1tISQkRnmgTPRHBBFwEAybXPsq+kHFvesUr6/k7jWEfKXZseevB3sBZU4RW/DDHrthVbzMwynVN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhdNohNd; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780090229; c=relaxed/simple;
+	bh=GAXyvxkFtptxImTqBx3mzsd9cByGj0FWvvDoU48gjPs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nwqjlCVc8VuQUaDycwET9MnjXHsjAcrEJV69GKB0z4qSOLmdZim8qpTewSFLX9Sl2nVp6zvV69iBSRucN0LyZ1EVn/ob3w3RC1JdTE2zkgnLNoHBRiURyPDKjPn6gywfsQWqbohMPtKAImWmV7Lb+FCiIQK5F4ZYPOhDxbq61Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZCTc5wcN; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhdNohNd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 304AE1F00893;
-	Fri, 29 May 2026 20:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780085624;
-	bh=JJZb/7j+jFRum4BbSYghs9vGrT4Td2jiYnsfYpYJE7s=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc;
-	b=XhdNohNd/F6LXgM/qSJGsIgn5qClruBTLOsty47W9MnZOcS9lMg63A0g6NxuCJZB3
-	 58fUACmF+qmfebY3fNRou68jtbBGBnI3KtOEjdBYOASq5njtuYTonMkdUklPH+Pz2s
-	 Kv0sP2zS5nzZQBRjFux7Vek5cwYEAam4d3PdPF20ccmyQ96lIt7HrNawCW4XOITuvR
-	 SRFh12GYuTjGfo1zj2uX1Q+82mA3mUwlnVCga/Sx1JKPo/Xa4F9VNsRwswB770Esc2
-	 5c7WtVmIpMP7yd2TmaBzmMXMREjaUKY8I1smj/mzFc/lMcKF67lCXO8r4sZNJZoQA8
-	 K6lUz3l9Q+rdQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 19A9239301A0;
-	Fri, 29 May 2026 20:13:49 +0000 (UTC)
-Subject: Re: [GIT PULL] Compute Express Link (CXL) Fixes for 7.1-rc6
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <483677d6-0119-4c07-8cb1-3fa9cf7c42a3@intel.com>
-References: <483677d6-0119-4c07-8cb1-3fa9cf7c42a3@intel.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <483677d6-0119-4c07-8cb1-3fa9cf7c42a3@intel.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-7.1-rc6
-X-PR-Tracked-Commit-Id: d90f236f8b9e354848bd226f581db27755ab901d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3101173200b8ef6b725d7ab289e9508659b20d61
-Message-Id: <178008562777.1949175.480115832504906883.pr-tracker-bot@kernel.org>
-Date: Fri, 29 May 2026 20:13:47 +0000
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Dan Williams <djbw@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, Alison Schofield <alison.schofield@intel.com>, Ira Weiny <iweiny@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, linux-kernel <linux-kernel@vger.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZCTc5wcN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780090227; x=1811626227;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GAXyvxkFtptxImTqBx3mzsd9cByGj0FWvvDoU48gjPs=;
+  b=ZCTc5wcNvq27DQQKpS4x36/jEDP30983/Diok9s3XtoKf0Yxyu/N/gdJ
+   4C7cVieuZKphUWCp8MlQJVYkPBfb1GjkVCse+83vw3UPPvp+lKvimQso/
+   4rVIHBsOdTmXIGI7fEBzfKOLkeDaCwu+4FqEkR/4/5NIHnN7htnvZoqjn
+   yF6Bt85IM4im10GCBfviEBtrDNqX4rkKjw8idfGA6FV+p0F0ZM7ninv5d
+   x3s11Ryod8wC4W2AsAPWG3wRCxRUSGcw8w+B+TWwHmjHv1LTLvXp2vKuh
+   GXvqO6WOx3I9P/GCTJufdk5JmrcIsCdtWaOe48eDfu4m5Fc3pTEYw6OAy
+   Q==;
+X-CSE-ConnectionGUID: ISdnSZBtTgGFW1AUDhJyPg==
+X-CSE-MsgGUID: 1Woid/ytQym9gvfbS6uG8A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11801"; a="80801642"
+X-IronPort-AV: E=Sophos;i="6.24,176,1774335600"; 
+   d="scan'208";a="80801642"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 14:30:22 -0700
+X-CSE-ConnectionGUID: F0kvyui0Rq2cdrlYUkwYzA==
+X-CSE-MsgGUID: 1OEx2Kd2RPGZySS017hBSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,176,1774335600"; 
+   d="scan'208";a="244790221"
+Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.111.151]) ([10.125.111.151])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 14:30:21 -0700
+Message-ID: <a737d037-1331-46f4-b5c3-cf819690727d@intel.com>
+Date: Fri, 29 May 2026 14:30:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 27/31] cxl/region: Read existing extents on region
+ creation
+To: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: nvdimm@lists.linux.dev, Dan Williams <djbw@kernel.org>,
+ Jonathan Cameron <jic23@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>, John Groves
+ <John@Groves.net>, Gregory Price <gourry@gourry.net>,
+ Ira Weiny <ira.weiny@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, Fan Ni <fan.ni@samsung.com>
+References: <cover.1779528761.git.anisa.su@samsung.com>
+ <ec8d257b53053061d70ca0b30408be116d479a03.1779528761.git.anisa.su@samsung.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <ec8d257b53053061d70ca0b30408be116d479a03.1779528761.git.anisa.su@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Fri, 29 May 2026 09:17:24 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-fixes-7.1-rc6
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3101173200b8ef6b725d7ab289e9508659b20d61
+On 5/23/26 2:43 AM, Anisa Su wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> Dynamic capacity device extents may be left in an accepted state on a
+> device due to an unexpected host crash.  In this case it is expected
+> that the creation of a new region on top of a DC partition can read
+> those extents and surface them for continued use.
+> 
+> Once all endpoint decoders are part of a region and the region is being
+> realized, a read of the 'devices extent list' can reveal these
+> previously accepted extents.
+> 
+> CXL r3.1 specifies the mailbox call Get Dynamic Capacity Extent List for
+> this purpose.  The call returns all the extents for all dynamic capacity
+> partitions.  If the fabric manager is adding extents to any DCD
+> partition, the extent list for the recovered region may change.  In this
+> case the query must retry.  Upon retry the query could encounter extents
+> which were accepted on a previous list query.  Adding such extents is
+> ignored without error because they are entirely within a previous
+> accepted extent.  Instead warn on this case to allow for differentiating
+> bad devices from this normal condition.
+> 
+> Latch any errors to be bubbled up to ensure notification to the user
+> even if individual errors are rate limited or otherwise ignored.
+> 
+> The scan for existing extents races with the dax_cxl driver.  This is
+> synchronized through the region device lock.  Extents which are found
+> after the driver has loaded will surface through the normal notification
+> path while extents seen prior to the driver are read during driver load.
+> 
+> Based on an original patch by Navneet Singh.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Fan Ni <fan.ni@samsung.com>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  drivers/cxl/core/core.h       |   1 +
+>  drivers/cxl/core/mbox.c       | 116 ++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/region_dax.c |  27 ++++++++
+>  drivers/cxl/cxlmem.h          |  21 ++++++
+>  4 files changed, 165 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index c28e357c5817..f5b05de5ed83 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -28,6 +28,7 @@ cxled_to_mds(struct cxl_endpoint_decoder *cxled)
+>  	return container_of(cxlds, struct cxl_memdev_state, cxlds);
+>  }
+>  
+> +int cxl_process_extent_list(struct cxl_endpoint_decoder *cxled);
+>  int cxl_region_invalidate_memregion(struct cxl_region *cxlr);
+>  
+>  #ifdef CONFIG_CXL_REGION
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 8071c1ed1b36..486110e1c03d 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -2083,6 +2083,122 @@ int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_dev_dc_identify, "CXL");
+>  
+> +/* Return -EAGAIN if the extent list changes while reading */
+> +static int __cxl_process_extent_list(struct cxl_endpoint_decoder *cxled)
+> +{
+> +	u32 current_index, total_read, total_expected, initial_gen_num;
 
-Thank you!
+initial_gen_num should be initialized to something invalid?
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> +	struct cxl_memdev_state *mds = cxled_to_mds(cxled);
+> +	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+> +	struct device *dev = mds->cxlds.dev;
+> +	struct cxl_mbox_cmd mbox_cmd;
+> +	u32 max_extent_count;
+> +	int latched_rc = 0;
+> +	bool first = true;
+> +
+> +	struct cxl_mbox_get_extent_out *extents __free(kvfree) =
+> +				kvmalloc(cxl_mbox->payload_size, GFP_KERNEL);
+> +	if (!extents)
+> +		return -ENOMEM;
+> +
+> +	total_read = 0;
+> +	current_index = 0;
+> +	total_expected = 0;
+> +	max_extent_count = (cxl_mbox->payload_size - sizeof(*extents)) /
+> +				sizeof(struct cxl_extent);
+> +	do {
+> +		u32 nr_returned, current_total, current_gen_num;
+> +		struct cxl_mbox_get_extent_in get_extent;
+> +		int rc;
+> +
+> +		get_extent = (struct cxl_mbox_get_extent_in) {
+> +			.extent_cnt = cpu_to_le32(max(max_extent_count,
+> +						  total_expected - current_index)),
+
+Should be min() here right?
+
+> +			.start_extent_index = cpu_to_le32(current_index),
+> +		};
+> +
+> +		mbox_cmd = (struct cxl_mbox_cmd) {
+> +			.opcode = CXL_MBOX_OP_GET_DC_EXTENT_LIST,
+> +			.payload_in = &get_extent,
+> +			.size_in = sizeof(get_extent),
+> +			.size_out = cxl_mbox->payload_size,
+> +			.payload_out = extents,
+> +			.min_out = 1,
+> +		};
+> +
+> +		rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+> +		if (rc < 0)
+> +			return rc;
+> +
+> +		/* Save initial data */
+> +		if (first) {
+> +			total_expected = le32_to_cpu(extents->total_extent_count);
+> +			initial_gen_num = le32_to_cpu(extents->generation_num);
+> +			first = false;
+> +		}
+> +
+> +		nr_returned = le32_to_cpu(extents->returned_extent_count);
+> +		total_read += nr_returned;
+> +		current_total = le32_to_cpu(extents->total_extent_count);
+> +		current_gen_num = le32_to_cpu(extents->generation_num);
+> +
+> +		dev_dbg(dev, "Got extent list %d-%d of %d generation Num:%d\n",
+> +			current_index, total_read - 1, current_total, current_gen_num);
+> +
+> +		if (current_gen_num != initial_gen_num || total_expected != current_total) {
+> +			dev_warn(dev, "Extent list change detected; gen %u != %u : cnt %u != %u\n",
+> +				 current_gen_num, initial_gen_num,
+> +				 total_expected, current_total);
+> +			return -EAGAIN;
+> +		}
+> +
+> +		for (int i = 0; i < nr_returned ; i++) {
+> +			struct cxl_extent *extent = &extents->extent[i];
+> +
+> +			dev_dbg(dev, "Processing extent %d/%d\n",
+> +				current_index + i, total_expected);
+> +
+
+Should probably hold the mds->add_ctx->lock before calling add_to_pending_list()? handle_add_event() holds the lock before calling. Maybe also add a lock assert in add_to_pending_list().
+
+> +			rc = add_to_pending_list(&mds->add_ctx.pending_extents,
+> +						 extent);
+> +			if (rc) {
+> +				latched_rc = rc;
+
+Is the intention here to report the last found error and not the first error?
+
+> +			}
+
+{} not needed if single line
+
+> +		}
+> +
+> +		current_index += nr_returned;
+> +	} while (total_expected > total_read);
+> +
+> +	if (!latched_rc && !list_empty(&mds->add_ctx.pending_extents)) {
+> +		latched_rc = cxl_add_pending(mds);
+> +	}
+> +	clear_pending_extents(mds);
+> +
+> +	return latched_rc;
+> +}
+> +
+> +#define CXL_READ_EXTENT_LIST_RETRY 10
+> +
+> +/**
+> + * cxl_process_extent_list() - Read existing extents
+> + * @cxled: Endpoint decoder which is part of a region
+> + *
+> + * Issue the Get Dynamic Capacity Extent List command to the device
+> + * and add existing extents if found.
+> + *
+> + * A retry of 10 is somewhat arbitrary, however, extent changes should be
+> + * relatively rare while bringing up a region.  So 10 should be plenty.
+> + */
+> +int cxl_process_extent_list(struct cxl_endpoint_decoder *cxled)
+> +{
+> +	int retry = CXL_READ_EXTENT_LIST_RETRY;
+> +	int rc;
+> +
+> +	do {
+> +		rc = __cxl_process_extent_list(cxled);
+> +	} while (rc == -EAGAIN && retry--);
+
+I think it's retrying 11 times here.
+
+> +
+> +	return rc;
+> +}
+> +
+>  static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
+>  {
+>  	int i = info->nr_partitions;
+> diff --git a/drivers/cxl/core/region_dax.c b/drivers/cxl/core/region_dax.c
+> index 519e203c486a..e7a812e8b2e7 100644
+> --- a/drivers/cxl/core/region_dax.c
+> +++ b/drivers/cxl/core/region_dax.c
+> @@ -82,6 +82,26 @@ static void cxlr_dax_unregister(void *_cxlr_dax)
+>  	device_unregister(&cxlr_dax->dev);
+>  }
+>  
+> +static int cxlr_add_existing_extents(struct cxl_region *cxlr)
+> +{
+> +	struct cxl_region_params *p = &cxlr->params;
+> +	int i, latched_rc = 0;
+> +
+> +	for (i = 0; i < p->nr_targets; i++) {
+> +		struct device *dev = &p->targets[i]->cxld.dev;
+> +		int rc;
+> +
+> +		rc = cxl_process_extent_list(p->targets[i]);
+> +		if (rc) {
+> +			dev_err(dev, "Existing extent processing failed %d\n",
+> +				rc);
+> +			latched_rc = rc;
+> +		}
+> +	}
+> +
+> +	return latched_rc;
+> +}
+> +
+>  int devm_cxl_add_dax_region(struct cxl_region *cxlr)
+>  {
+>  	struct device *dev;
+> @@ -110,6 +130,13 @@ int devm_cxl_add_dax_region(struct cxl_region *cxlr)
+>  	dev_dbg(&cxlr->dev, "%s: register %s\n", dev_name(dev->parent),
+>  		dev_name(dev));
+>  
+> +	if (cxlr->mode == CXL_PARTMODE_DYNAMIC_RAM_A) {
+> +		rc = cxlr_add_existing_extents(cxlr);
+
+cxlr_add_existing_extents() -> cxl_process_extent_list() -> __cxl_process_extent_list() -> cxl_add_pending() -> CXL_MBOX_OP_ADD_DC_RESPONSE sent.
+
+CXL r4.0 8.2.10.9.9.3:
+Device shall report Invalid Physical Address if:
+One or more extents in the updated extent list specify a DPA range that has already been added with a previous call to the Add Dynamic Capacity Response.
+
+Aren't existing extents already been added previously and responded by ADD_DC_RESPONSE? For add existing extent path it seems like no response is needed to send to the device and can be skipped. Otherwise the software will receive error from the device when sending ADD_DC_RESPONSE.
+
+Would be good to get this tested on hw.
+
+
+> +		if (rc)
+> +			dev_err(&cxlr->dev,
+> +				"Existing extent processing failed %d\n", rc);
+
+No return on error?
+
+DJ
+
+> +	}
+> +
+>  	return devm_add_action_or_reset(&cxlr->dev, cxlr_dax_unregister,
+>  					no_free_ptr(cxlr_dax));
+>  }
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index d992cc9b7811..1ad3dc7e413c 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -564,6 +564,27 @@ struct cxl_mbox_dc_response {
+>  	} __packed extent_list[] __counted_by(extent_list_size);
+>  } __packed;
+>  
+> +/*
+> + * Get Dynamic Capacity Extent List; Input Payload
+> + * CXL rev 3.1 section 8.2.9.9.9.2; Table 8-166
+> + */
+> +struct cxl_mbox_get_extent_in {
+> +	__le32 extent_cnt;
+> +	__le32 start_extent_index;
+> +} __packed;
+> +
+> +/*
+> + * Get Dynamic Capacity Extent List; Output Payload
+> + * CXL rev 3.1 section 8.2.9.9.9.2; Table 8-167
+> + */
+> +struct cxl_mbox_get_extent_out {
+> +	__le32 returned_extent_count;
+> +	__le32 total_extent_count;
+> +	__le32 generation_num;
+> +	u8 rsvd[4];
+> +	struct cxl_extent extent[];
+> +} __packed;
+> +
+>  struct cxl_mbox_get_supported_logs {
+>  	__le16 entries;
+>  	u8 rsvd[6];
+
