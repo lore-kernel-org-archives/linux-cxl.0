@@ -1,73 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B86C43E8C45;
-	Fri, 29 May 2026 16:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE2B3ECBE5
+	for <linux-cxl@vger.kernel.org>; Fri, 29 May 2026 16:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780072631; cv=none; b=RMJxTO9R78UDsv+sSKRWCMRPFB4/DMlRNekW+wKkCysR/o7JoB9AmcqAelnmYhg/uvWVrc1eZoB84Fva8H4m5E4DXNk/ODrsT8PQgY092cmaQ2k0lIZKzLKXFZWWcTjNcZJPMo/oNYK9VCJzQcXd52q+/vsb8jQDshPsJS8zR6c=
+	t=1780072757; cv=none; b=mo6Wx/fQPKx7ZpQ1tiIEqIHkZ9JeFTZnhpZ5CaVIsPhlS0U3GzPbhNlng/Js4Oovmx+tfr3aOl6u7ld0BMe5v+e4TYD4XUaeWYsUhHNQFWb5uDpo5EVZdsLGuI7kEDFnTZ9m5sUchDCJgHsWZjM94VKa1+68IUVCpEYOg0aFUMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780072631; c=relaxed/simple;
-	bh=Er+CRp+/fzF6XP7lhBBmaTyKlQe5AEFZx4olmr5xIQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jsE1p4raTNtzCBThPLqBMzTpilmLLvrhI/M950ZdFCI2zk4D2HniOetcLWvIvVJI13Yrv0PI0RgIElp5jV2063PbkoCIMvg/F6y8i+bhOVadJgAY6pWr8Z9OmbBuc2wFhKwoplVWBxOb4jA1hPvcMx/wZ/IqpPQytfLcIZoFgpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DpJhVU3r; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780072757; c=relaxed/simple;
+	bh=rUCtVOzrXe4mJeFX5QjeoRb+rGoEXU6s0WomONT7Ln8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z5Lz/nPnhDwjVYQ1zcJKKkSiu/qIKuXj6+5NRbY5VY77O9lngPG74+8FnhPA2MGUr4z3fp101b+8J+JvuLYX4ioIV5LDhRafSimUUFkQquNGroX3dc2pzxUGY9i335ud1D1JwCg/WKy8YYulsxawbYMWRzKqo0e9oDXuvfKY1I0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PgFyUoE+; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DpJhVU3r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF4E71F00893;
-	Fri, 29 May 2026 16:36:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780072629;
-	bh=Er+CRp+/fzF6XP7lhBBmaTyKlQe5AEFZx4olmr5xIQ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=DpJhVU3rHJQc98K2nTljj478Xh+GZiF0GUfOrwna3KtBKLlr2LjxoQlGAGOl1YFYj
-	 JBYbOaE9746eYVP4RH2CqkzDMpk83yl26x5ckIrnbt4smT+ohvYdTsPlkFYVI1mTej
-	 EB0KqUUmrVx45MeOEZ5y7jdg7Lsd+RA3Snlz6IhJrxF4Iu5Nya8fgNgD4vxLhbNqjH
-	 KpmKdd5xCszMTY5cp16+JK/yjzYpX+MQt80DJQ5CJWKsYanZIszzTUQHokKsxNcmTq
-	 Sh9iw2+A5hUTvVNfA2MHfr0zoJwCpvO1wp44xDknFQUzawJM/USdYwTFXVanvDnM+M
-	 mqN0hjyHWFxgQ==
-Date: Fri, 29 May 2026 17:36:52 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Ahmed Tiba <ahmed.tiba@arm.com>
-Cc: will@kernel.org, xueshuai@linux.alibaba.com, saket.dumbre@intel.com,
- mchehab@kernel.org, dave@stgolabs.net, djbw@kernel.org, bp@alien8.de,
- tony.luck@intel.com, guohanjun@huawei.com, lenb@kernel.org,
- skhan@linuxfoundation.org, vishal.l.verma@intel.com, rafael@kernel.org,
- corbet@lwn.net, ira.weiny@intel.com, dave.jiang@intel.com,
- krzk+dt@kernel.org, robh@kernel.org, catalin.marinas@arm.com,
- alison.schofield@intel.com, conor+dt@kernel.org,
- linux-arm-kernel@lists.infradead.org, Michael.Zhao2@arm.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, Dmitry.Lamerov@arm.com,
- devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-edac@vger.kernel.org, acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v5 00/10] ACPI: APEI: share GHES CPER helpers and add DT
- FFH provider
-Message-ID: <20260529173652.25069d3b@jic23-huawei>
-In-Reply-To: <20260529-topics-ahmtib01-ras_ffh_arm_internal_review-v5-0-2e0500d42642@arm.com>
-References: <20260529-topics-ahmtib01-ras_ffh_arm_internal_review-v5-0-2e0500d42642@arm.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PgFyUoE+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780072755; x=1811608755;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rUCtVOzrXe4mJeFX5QjeoRb+rGoEXU6s0WomONT7Ln8=;
+  b=PgFyUoE+lGWvU7p7HxDYXxVIRcDJhKUEJ6iNsCq0BcO4wKEd5btuspYb
+   U/ftke0W/775mPhdgv6sfwL5vhEZmVYw9sn6JWloDYGsjcUsRNtWFrmMI
+   N3OdL6exKx5brgvWHQ7nQ8HeIRxblQwSW2a8vBwWDC6l/xLy20+V3I8Nz
+   3fHv/F62WyYrYjHeP/r1nNLtl0noii281WQOsq+JyalRI+QgjZNhkZpBb
+   RcvMj3ERWkF9xuxPrZwF/48Ik/kf5e+Cp8zJNtULWZzcBiakYLbdv9gAM
+   cN197fk1Hj8ycMWYSSasKmlyT05pJyTLB25SCM/pWwyrAi85MRsDrBIUZ
+   A==;
+X-CSE-ConnectionGUID: G367ksF/T6et+opm6VuQuA==
+X-CSE-MsgGUID: jwRAxGW6QCWuVJhaPTLUyw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11801"; a="80780816"
+X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
+   d="scan'208";a="80780816"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 09:39:15 -0700
+X-CSE-ConnectionGUID: 9fqlcfzzRYWk5pJEynW1lQ==
+X-CSE-MsgGUID: VJWArX4HTBmXUyxRxXOMKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
+   d="scan'208";a="244726103"
+Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.111.151]) ([10.125.111.151])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 09:39:14 -0700
+Message-ID: <ceeeb996-bf83-4562-9197-ac833f1b9dbf@intel.com>
+Date: Fri, 29 May 2026 09:39:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: Add CXL reviewer
+To: Alison Schofield <alison.schofield@intel.com>,
+ Li Ming <ming.li@zohomail.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>
+Cc: linux-cxl@vger.kernel.org
+References: <20260527001305.533170-1-alison.schofield@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260527001305.533170-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Fri, 29 May 2026 10:50:40 +0100
-Ahmed Tiba <ahmed.tiba@arm.com> wrote:
 
-> This is v5 of the GHES refactor series. Compared to v4, it only updates
-> the DT binding to address the latest review comments.
 
-https://sashiko.dev/#/patchset/20260529-topics-ahmtib01-ras_ffh_arm_internal_review-v5-0-2e0500d42642@arm.com
+On 5/26/26 5:13 PM, Alison Schofield wrote:
+> Add Li Ming as CXL subsystem reviewer.
+> 
+> Thanks to Li Ming for all the CXL bugs they've found and fixed,
+> and looking forward to many more prevented!
+> 
+> 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-It is mostly not happy with existing code, but there is one point where it notes
-a header that should be there (linux/cleanup.h)
+Applied to cxl/next
+43ad501987391948f41e72212eaee03a948f441c
 
-Given you are working with this code at the moment, maybe take a look at some
-of the reported issues whilst you are here!
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2fb1c75afd16..992e1fa57b72 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6428,6 +6428,7 @@ M:	Alison Schofield <alison.schofield@intel.com>
+>  M:	Vishal Verma <vishal.l.verma@intel.com>
+>  M:	Ira Weiny <ira.weiny@intel.com>
+>  M:	Dan Williams <djbw@kernel.org>
+> +R:	Li Ming <ming.li@zohomail.com>
+>  L:	linux-cxl@vger.kernel.org
+>  S:	Maintained
+>  F:	Documentation/driver-api/cxl
 
-Jonathan
