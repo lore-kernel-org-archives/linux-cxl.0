@@ -1,494 +1,553 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCAFE3CF661;
-	Fri, 29 May 2026 09:52:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEB283C4178;
+	Fri, 29 May 2026 11:05:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780048324; cv=none; b=ioMsJ5V4rc81JTFggo5vzaow6qTtkJhHqSgUPE7nSrOnkrgdATnijuZabJGvLCc/sb9EhT5s0fqh1KQQ3/HeMQxgWJlqD7XUVrxrbFrPvsM26lCuHaIdnpFsyJQdieOGpgqDhAf+GzZwsx2zk55yWOc2Vm5h9xdTMrB1tm58Lrs=
+	t=1780052737; cv=none; b=DB2F3nyB7H/ZdkobE8GjhaCvsc9XYygn4AH3+Tc8P99TwNwYy3tFo6eQXejDtl+mMy4UXy103P52D6SJECNEVmL/hgop96ttsYZ/IDD1L6YOZUu4JpRYlJ3CDB8zs5qY/ZzdQs5OzLhLksN6ha3ZqlFH1vouVMssFL89eZyoTKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780048324; c=relaxed/simple;
-	bh=3Vm+nt9+NrRY2BNeT6yqN54lwtE/pTm7P8uhemvSbxw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=daAm3p4QqSKBW/lVdpbKtE12kfjojy6yjcAPa6FtSOFMC2sBnLkVHRsAxg36VKLz8uW6hiRyKnkQEMjw9gZi7fDuw6+jCLi3zjtRKwrHyj77olM3i4TtorNXp1vM4NcbcflefA8Rg7+ERXXDh26TYFxk5JGAMqvpxfjTi8ezN6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=C7xg8XMz; arc=none smtp.client-ip=217.140.110.172
+	s=arc-20240116; t=1780052737; c=relaxed/simple;
+	bh=d3TvFloVjXp7jxtda0yZHPpM1vpYD1QTXYtlqXtjvGU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cS8zW/8N/KBK53KNqCuElOBOfZWnzqybUYj/LvYpP8ZETlhRQLMA/fgEDoCvO/F/c6fPa74FfRFiUHV/aNfG/HTUojoSkpcP0GgCn3kn2NdjphX4S6WCZbw+wPXUhqjec31rehRinM7xDcQ0//I4MvOZqa6lWIRR1/7Ws5UsgSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=DAsJR0Dw; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="C7xg8XMz"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="DAsJR0Dw"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75F0532E5;
-	Fri, 29 May 2026 02:51:56 -0700 (PDT)
-Received: from e134710.arm.com (e134710.arm.com [10.33.10.82])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 147B23F905;
-	Fri, 29 May 2026 02:51:56 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C4E22103;
+	Fri, 29 May 2026 04:05:28 -0700 (PDT)
+Received: from [10.57.37.50] (unknown [10.57.37.50])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CFF63F905;
+	Fri, 29 May 2026 04:05:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1780048321; bh=3Vm+nt9+NrRY2BNeT6yqN54lwtE/pTm7P8uhemvSbxw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=C7xg8XMzq5zTtGfFr5s/2WYQYt+gpieTU7iOBQhmMtsGT9GXHigWk02g3JisLNZDg
-	 EfrT3vAxG+K6+BkarPyGHy2JBMBbg5gRsupN9ig5hxDK/Ef7hbUap+i/mB3/6iaxka
-	 U9nGu5xRIHxBLhx7jgQU3+80wTtca/MbrCaWAopA=
-From: Ahmed Tiba <ahmed.tiba@arm.com>
-Date: Fri, 29 May 2026 10:50:50 +0100
-Subject: [PATCH v5 10/10] RAS: add firmware-first CPER provider
+	t=1780052733; bh=d3TvFloVjXp7jxtda0yZHPpM1vpYD1QTXYtlqXtjvGU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DAsJR0DwEuqwrcbbAhQKfEWRfrKoVIciblB1nygN1dpzf9G6PnfvRYPm32njy+OP1
+	 +a4/D5U4oWBimNcRm+3LXT04e1uGl1FV74M8e3WB+jGsZ/rAkFQC+ccIpiHHWZECuv
+	 eOISYfG5dhloA3ifmavJkgdFGKk8EOTtAHiafsYs=
+Message-ID: <7e980b99-1e4e-408b-8ebd-4d28116e7ad5@arm.com>
+Date: Fri, 29 May 2026 12:05:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 13/16] perf: Use sysfs_emit() for cpumask show callbacks
+To: Yury Norov <ynorov@nvidia.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Russell King <linux@armlinux.org.uk>, Frank Li <Frank.Li@nxp.com>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Madhavan Srinivasan
+ <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>,
+ "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Len Brown <lenb@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Danilo Krummrich <dakr@kernel.org>,
+ Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham
+ <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>,
+ Heiko Stuebner <heiko@sntech.de>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+ Moritz Fischer <mdf@kernel.org>, Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jic23@kernel.org>,
+ Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Dan Williams <djbw@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>,
+ Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Shuai Xue <xueshuai@linux.alibaba.com>,
+ Will Deacon <will@kernel.org>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Jing Zhang <renyu.zj@linux.alibaba.com>, Xu Yang <xu.yang_2@nxp.com>,
+ Linu Cherian <lcherian@marvell.com>,
+ Gowthami Thiagarajan <gthiagarajan@marvell.com>,
+ Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+ Khuong Dinh <khuong@os.amperecomputing.com>,
+ Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Yury Norov <yury.norov@gmail.com>,
+ Kees Cook <kees@kernel.org>,
+ =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Aboorva Devarajan <aboorvad@linux.ibm.com>,
+ "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+ Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+ Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
+ Chengwen Feng <fengchengwen@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-perf-users@vger.kernel.org, linux-acpi@vger.kernel.org,
+ driver-core@lists.linux.dev, linux-pm@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, linux-fpga@vger.kernel.org,
+ linux-rdma@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20260528183625.870813-1-ynorov@nvidia.com>
+ <20260528183625.870813-14-ynorov@nvidia.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20260528183625.870813-14-ynorov@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260529-topics-ahmtib01-ras_ffh_arm_internal_review-v5-10-2e0500d42642@arm.com>
-References: <20260529-topics-ahmtib01-ras_ffh_arm_internal_review-v5-0-2e0500d42642@arm.com>
-In-Reply-To: <20260529-topics-ahmtib01-ras_ffh_arm_internal_review-v5-0-2e0500d42642@arm.com>
-To: will@kernel.org, jic23@kernel.org, xueshuai@linux.alibaba.com, 
- saket.dumbre@intel.com, mchehab@kernel.org, dave@stgolabs.net, 
- djbw@kernel.org, bp@alien8.de, tony.luck@intel.com, guohanjun@huawei.com, 
- lenb@kernel.org, skhan@linuxfoundation.org, vishal.l.verma@intel.com, 
- rafael@kernel.org, corbet@lwn.net, ira.weiny@intel.com, 
- dave.jiang@intel.com, krzk+dt@kernel.org, robh@kernel.org, 
- catalin.marinas@arm.com, alison.schofield@intel.com, conor+dt@kernel.org
-Cc: Ahmed Tiba <ahmed.tiba@arm.com>, linux-arm-kernel@lists.infradead.org, 
- Michael.Zhao2@arm.com, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
- Dmitry.Lamerov@arm.com, devicetree@vger.kernel.org, 
- linux-acpi@vger.kernel.org, linux-edac@vger.kernel.org, 
- acpica-devel@lists.linux.dev
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780048269; l=12767;
- i=ahmed.tiba@arm.com; s=20260219; h=from:subject:message-id;
- bh=3Vm+nt9+NrRY2BNeT6yqN54lwtE/pTm7P8uhemvSbxw=;
- b=fJuzbuh5gHAUrlcRsuZoAdSAQnVi9D2NMEtR4k8a1eCtv2+bFccnL+0PmDxls6bHh0Ns0V/Ml
- OLwy/sSySYiAqqdGcScJ/ea+VtjIxNA6sBpX7CZX6tgab7fccOmfE7q
-X-Developer-Key: i=ahmed.tiba@arm.com; a=ed25519;
- pk=xVOtd+Qklh/4tuM3tB+BEZD4jj5a6W59C3KCNX6v7OE=
 
-Add a firmware-first CPER provider that reuses the shared
-GHES helpers, wire it into the RAS Kconfig/Makefile and
-document it in the admin guide.
+On 2026-05-28 7:36 pm, Yury Norov wrote:
+> These callbacks are sysfs show paths.
+> 
+> Use sysfs_emit() and cpumask_pr_args() to emit the masks.
+> 
+> This prepares for removing cpumap_print_to_pagebuf().
 
-Update MAINTAINERS now that the driver exists.
+TBH, looking at this diff I think it only shows the value of having a 
+helper to abstract the boilerplate...
 
-Signed-off-by: Ahmed Tiba <ahmed.tiba@arm.com>
----
- Documentation/admin-guide/RAS/main.rst |  18 +++
- MAINTAINERS                            |   1 +
- drivers/acpi/apei/apei-internal.h      |  10 +-
- drivers/acpi/apei/ghes_cper.c          |   2 +
- drivers/ras/Kconfig                    |  11 ++
- drivers/ras/Makefile                   |   1 +
- drivers/ras/cper-esource.c             | 257 +++++++++++++++++++++++++++++++++
- include/acpi/ghes_cper.h               |  10 ++
- 8 files changed, 301 insertions(+), 9 deletions(-)
+I'm not sure I agree with the argument of removing something entirely 
+just because it may occasionally be misused, but could we at least have 
+something like:
 
-diff --git a/Documentation/admin-guide/RAS/main.rst b/Documentation/admin-guide/RAS/main.rst
-index 5a45db32c49b..84219d25a072 100644
---- a/Documentation/admin-guide/RAS/main.rst
-+++ b/Documentation/admin-guide/RAS/main.rst
-@@ -205,6 +205,24 @@ Architecture (MCA)\ [#f3]_.
- .. [#f3] For more details about the Machine Check Architecture (MCA),
-   please read Documentation/arch/x86/x86_64/machinecheck.rst at the Kernel tree.
- 
-+Firmware-first CPER providers
-+-----------------------------
-+
-+Some systems expose Common Platform Error Record (CPER) data
-+through platform firmware instead of ACPI HEST tables.
-+Enable ``CONFIG_RAS_CPER_ESOURCE`` to build the ``drivers/ras/cper-esource.c``
-+driver. The current in-tree firmware description uses the
-+``Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml`` binding.
-+The driver reuses the GHES CPER helper object in
-+``drivers/acpi/apei/ghes_cper.c`` so the logging, notifier chains, and
-+memory failure handling match the ACPI GHES behaviour even when
-+ACPI is disabled.
-+
-+Once a platform describes a firmware-first provider, both ACPI GHES and the
-+firmware-described driver reuse the same code paths. This keeps the
-+behaviour consistent regardless of whether the error source is described
-+by ACPI tables or another firmware description.
-+
- EDAC - Error Detection And Correction
- *************************************
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8a9714603a7d..c14638cd97f6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22265,6 +22265,7 @@ RAS ERROR STATUS
- M:	Ahmed Tiba <ahmed.tiba@arm.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml
-+F:	drivers/ras/cper-esource.c
- 
- RAS INFRASTRUCTURE
- M:	Tony Luck <tony.luck@intel.com>
-diff --git a/drivers/acpi/apei/apei-internal.h b/drivers/acpi/apei/apei-internal.h
-index 77c10a7a7a9f..c16ac541f15b 100644
---- a/drivers/acpi/apei/apei-internal.h
-+++ b/drivers/acpi/apei/apei-internal.h
-@@ -8,6 +8,7 @@
- #define APEI_INTERNAL_H
- 
- #include <linux/acpi.h>
-+#include <acpi/ghes_cper.h>
- 
- struct apei_exec_context;
- 
-@@ -120,15 +121,6 @@ int apei_exec_collect_resources(struct apei_exec_context *ctx,
- struct dentry;
- struct dentry *apei_get_debugfs_dir(void);
- 
--static inline u32 cper_estatus_len(struct acpi_hest_generic_status *estatus)
--{
--	if (estatus->raw_data_length)
--		return estatus->raw_data_offset + \
--			estatus->raw_data_length;
--	else
--		return sizeof(*estatus) + estatus->data_length;
--}
--
- int apei_osc_setup(void);
- 
- int einj_get_available_error_type(u32 *type, int einj_action);
-diff --git a/drivers/acpi/apei/ghes_cper.c b/drivers/acpi/apei/ghes_cper.c
-index 0ff9d06eb78f..a7691aa5011c 100644
---- a/drivers/acpi/apei/ghes_cper.c
-+++ b/drivers/acpi/apei/ghes_cper.c
-@@ -46,7 +46,9 @@
- #include <asm/fixmap.h>
- #include <asm/tlbflush.h>
- 
-+#ifdef CONFIG_ACPI_APEI
- #include "apei-internal.h"
-+#endif
- 
- ATOMIC_NOTIFIER_HEAD(ghes_report_chain);
- 
-diff --git a/drivers/ras/Kconfig b/drivers/ras/Kconfig
-index fc4f4bb94a4c..3c1c63b2fefc 100644
---- a/drivers/ras/Kconfig
-+++ b/drivers/ras/Kconfig
-@@ -34,6 +34,17 @@ if RAS
- source "arch/x86/ras/Kconfig"
- source "drivers/ras/amd/atl/Kconfig"
- 
-+config RAS_CPER_ESOURCE
-+	bool "Firmware-first CPER error source block provider"
-+	select GHES_CPER_HELPERS
-+	help
-+	  Enable support for firmware-first Common Platform Error Record
-+	  (CPER) error source block providers. The current in-tree user is
-+	  described by the arm,ras-cper DeviceTree binding. The driver
-+	  reuses the existing GHES CPER helpers so the error processing
-+	  matches the ACPI code paths, but it can be built even when ACPI is
-+	  disabled.
-+
- config RAS_FMPM
- 	tristate "FRU Memory Poison Manager"
- 	default m
-diff --git a/drivers/ras/Makefile b/drivers/ras/Makefile
-index 11f95d59d397..0de069557f31 100644
---- a/drivers/ras/Makefile
-+++ b/drivers/ras/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_RAS)	+= ras.o
- obj-$(CONFIG_DEBUG_FS)	+= debugfs.o
- obj-$(CONFIG_RAS_CEC)	+= cec.o
-+obj-$(CONFIG_RAS_CPER_ESOURCE)	+= cper-esource.o
- 
- obj-$(CONFIG_RAS_FMPM)	+= amd/fmpm.o
- obj-y			+= amd/atl/
-diff --git a/drivers/ras/cper-esource.c b/drivers/ras/cper-esource.c
-new file mode 100644
-index 000000000000..83f7a910e50a
---- /dev/null
-+++ b/drivers/ras/cper-esource.c
-@@ -0,0 +1,257 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Firmware-first CPER error source provider.
-+ *
-+ * This driver shares the GHES CPER helpers so we keep the reporting and
-+ * notifier behaviour identical to ACPI GHES.
-+ *
-+ * Copyright (C) 2026 ARM Ltd.
-+ * Author: Ahmed Tiba <ahmed.tiba@arm.com>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/cleanup.h>
-+#include <linux/idr.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/panic.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+
-+#include <acpi/ghes.h>
-+#include <acpi/ghes_cper.h>
-+
-+static DEFINE_IDA(cper_esource_source_ids);
-+
-+struct cper_esource_ack {
-+	void __iomem *addr;
-+	u64 preserve;
-+	u64 set;
-+	u8 width;
-+	bool present;
-+};
-+
-+struct cper_esource {
-+	struct device *dev;
-+	void __iomem *status;
-+	size_t status_len;
-+
-+	struct cper_esource_ack ack;
-+
-+	struct acpi_hest_generic *generic;
-+	struct acpi_hest_generic_status *estatus;
-+
-+	bool sync;
-+	int irq;
-+
-+	/* Serializes access while firmware and the OS share the status buffer. */
-+	spinlock_t lock;
-+};
-+
-+static void cper_esource_release_source_id(void *data)
-+{
-+	struct acpi_hest_generic *generic = data;
-+
-+	ida_free(&cper_esource_source_ids, generic->header.source_id);
-+}
-+
-+static int cper_esource_init_pool(void)
-+{
-+	if (ghes_estatus_pool)
-+		return 0;
-+
-+	return ghes_estatus_pool_init(1);
-+}
-+
-+static int cper_esource_copy_status(struct cper_esource *ctx)
-+{
-+	memcpy_fromio(ctx->estatus, ctx->status, ctx->status_len);
-+	return 0;
-+}
-+
-+static void cper_esource_ack(struct cper_esource *ctx)
-+{
-+	u64 val;
-+
-+	if (!ctx->ack.present)
-+		return;
-+
-+	if (ctx->ack.width == 64) {
-+		val = readq(ctx->ack.addr);
-+		val &= ctx->ack.preserve;
-+		val |= ctx->ack.set;
-+		writeq(val, ctx->ack.addr);
-+	} else {
-+		val = readl(ctx->ack.addr);
-+		val &= (u32)ctx->ack.preserve;
-+		val |= (u32)ctx->ack.set;
-+		writel(val, ctx->ack.addr);
-+	}
-+}
-+
-+static void cper_esource_fatal(struct cper_esource *ctx)
-+{
-+	__ghes_print_estatus(KERN_EMERG, ctx->generic, ctx->estatus);
-+	add_taint(TAINT_MACHINE_CHECK, LOCKDEP_STILL_OK);
-+	panic("GHES: fatal firmware-first CPER record from %s\n",
-+	      dev_name(ctx->dev));
-+}
-+
-+static void cper_esource_process(struct cper_esource *ctx)
-+{
-+	int sev;
-+
-+	guard(spinlock_irqsave)(&ctx->lock);
-+
-+	if (cper_esource_copy_status(ctx))
-+		return;
-+
-+	sev = ghes_severity(ctx->estatus->error_severity);
-+	if (sev >= GHES_SEV_PANIC)
-+		cper_esource_fatal(ctx);
-+
-+	if (!ghes_estatus_cached(ctx->estatus) &&
-+	    ghes_print_estatus(NULL, ctx->generic, ctx->estatus))
-+		ghes_estatus_cache_add(ctx->generic, ctx->estatus);
-+
-+	ghes_cper_handle_status(ctx->dev, ctx->generic, ctx->estatus, ctx->sync);
-+	cper_esource_ack(ctx);
-+}
-+
-+static irqreturn_t cper_esource_irq(int irq, void *data)
-+{
-+	struct cper_esource *ctx = data;
-+
-+	cper_esource_process(ctx);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int cper_esource_init_ack(struct platform_device *pdev,
-+				 struct cper_esource *ctx)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	size_t size;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	if (!res)
-+		return 0;
-+
-+	ctx->ack.addr = devm_platform_get_and_ioremap_resource(pdev, 1, &res);
-+	if (IS_ERR(ctx->ack.addr))
-+		return PTR_ERR(ctx->ack.addr);
-+
-+	size = resource_size(res);
-+	switch (size) {
-+	case 4:
-+		ctx->ack.width = 32;
-+		ctx->ack.preserve = ~0U;
-+		break;
-+	case 8:
-+		ctx->ack.width = 64;
-+		ctx->ack.preserve = ~0ULL;
-+		break;
-+	default:
-+		return dev_err_probe(dev, -EINVAL,
-+				     "unsupported ack resource size %zu\n", size);
-+	}
-+
-+	ctx->ack.set = BIT_ULL(0);
-+	ctx->ack.present = true;
-+	return 0;
-+}
-+
-+static int cper_esource_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cper_esource *ctx;
-+	struct resource *res;
-+	int source_id;
-+	int rc;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&ctx->lock);
-+	ctx->dev = dev;
-+	ctx->sync = device_property_read_bool(dev, "arm,sea-notify");
-+
-+	ctx->status = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
-+	if (IS_ERR(ctx->status))
-+		return dev_err_probe(dev, PTR_ERR(ctx->status),
-+				     "failed to map status region\n");
-+
-+	ctx->status_len = resource_size(res);
-+	if (!ctx->status_len)
-+		return dev_err_probe(dev, -EINVAL, "status region has zero length\n");
-+
-+	rc = cper_esource_init_ack(pdev, ctx);
-+	if (rc)
-+		return rc;
-+
-+	rc = cper_esource_init_pool();
-+	if (rc)
-+		return rc;
-+
-+	ctx->estatus = devm_kzalloc(dev, ctx->status_len, GFP_KERNEL);
-+	if (!ctx->estatus)
-+		return -ENOMEM;
-+
-+	ctx->generic = devm_kzalloc(dev, sizeof(*ctx->generic), GFP_KERNEL);
-+	if (!ctx->generic)
-+		return -ENOMEM;
-+
-+	source_id = ida_alloc_min(&cper_esource_source_ids, 1, GFP_KERNEL);
-+	if (source_id < 0)
-+		return source_id;
-+
-+	ctx->generic->header.type = ACPI_HEST_TYPE_GENERIC_ERROR;
-+	ctx->generic->header.source_id = source_id;
-+
-+	rc = devm_add_action_or_reset(dev, cper_esource_release_source_id,
-+				      ctx->generic);
-+	if (rc)
-+		return rc;
-+
-+	ctx->generic->notify.type = ctx->sync ?
-+		ACPI_HEST_NOTIFY_SEA : ACPI_HEST_NOTIFY_EXTERNAL;
-+	ctx->generic->error_block_length = ctx->status_len;
-+
-+	ctx->irq = platform_get_irq(pdev, 0);
-+	if (ctx->irq < 0)
-+		return ctx->irq;
-+
-+	rc = devm_request_threaded_irq(dev, ctx->irq, NULL, cper_esource_irq,
-+				       IRQF_ONESHOT,
-+				       dev_name(dev), ctx);
-+	if (rc)
-+		return dev_err_probe(dev, rc, "failed to request interrupt\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cper_esource_of_match[] = {
-+	{ .compatible = "arm,ras-cper" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, cper_esource_of_match);
-+
-+static struct platform_driver cper_esource_driver = {
-+	.driver = {
-+		.name = "cper-esource",
-+		.of_match_table = cper_esource_of_match,
-+	},
-+	.probe = cper_esource_probe,
-+};
-+
-+module_platform_driver(cper_esource_driver);
-+
-+MODULE_AUTHOR("Ahmed Tiba <ahmed.tiba@arm.com>");
-+MODULE_DESCRIPTION("Firmware-first CPER provider");
-+MODULE_LICENSE("GPL");
-diff --git a/include/acpi/ghes_cper.h b/include/acpi/ghes_cper.h
-index 511b95b50911..a78d4a773129 100644
---- a/include/acpi/ghes_cper.h
-+++ b/include/acpi/ghes_cper.h
-@@ -80,6 +80,14 @@ static inline bool is_hest_sync_notify(struct ghes *ghes)
- 	return notify_type == ACPI_HEST_NOTIFY_SEA;
- }
- 
-+static inline u32 cper_estatus_len(struct acpi_hest_generic_status *estatus)
-+{
-+	if (estatus->raw_data_length)
-+		return estatus->raw_data_offset + estatus->raw_data_length;
-+	else
-+		return sizeof(*estatus) + estatus->data_length;
-+}
-+
- struct ghes_vendor_record_entry {
- 	struct work_struct work;
- 	int error_severity;
-@@ -108,6 +116,8 @@ int __ghes_read_estatus(struct acpi_hest_generic_status *estatus,
- int ghes_estatus_cached(struct acpi_hest_generic_status *estatus);
- void ghes_estatus_cache_add(struct acpi_hest_generic *generic,
- 			    struct acpi_hest_generic_status *estatus);
-+int ghes_register_vendor_record_notifier(struct notifier_block *nb);
-+void ghes_unregister_vendor_record_notifier(struct notifier_block *nb);
- void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
- 				   int sev);
- int ghes_severity(int severity);
+#define sysfs_emit_cpumask(buf, mask) \
+	sysfs_emit((buf), "%*pbl\n", cpumask_pr_args(mask))
 
--- 
-2.43.0
+to save the mess in all the many places where the current 
+cpumap_print_to_pagebuf() usage _is_ entirely appropriate?
+
+Thansk,
+Robin.
+
+> Signed-off-by: Yury Norov <ynorov@nvidia.com>
+> ---
+>   drivers/perf/alibaba_uncore_drw_pmu.c       | 2 +-
+>   drivers/perf/amlogic/meson_ddr_pmu_core.c   | 2 +-
+>   drivers/perf/arm-cci.c                      | 2 +-
+>   drivers/perf/arm-ccn.c                      | 2 +-
+>   drivers/perf/arm-cmn.c                      | 2 +-
+>   drivers/perf/arm-ni.c                       | 2 +-
+>   drivers/perf/arm_cspmu/arm_cspmu.c          | 2 +-
+>   drivers/perf/arm_dmc620_pmu.c               | 4 ++--
+>   drivers/perf/arm_dsu_pmu.c                  | 2 +-
+>   drivers/perf/arm_pmu.c                      | 2 +-
+>   drivers/perf/arm_smmuv3_pmu.c               | 2 +-
+>   drivers/perf/arm_spe_pmu.c                  | 2 +-
+>   drivers/perf/cxl_pmu.c                      | 2 +-
+>   drivers/perf/dwc_pcie_pmu.c                 | 2 +-
+>   drivers/perf/fsl_imx8_ddr_perf.c            | 2 +-
+>   drivers/perf/fsl_imx9_ddr_perf.c            | 2 +-
+>   drivers/perf/fujitsu_uncore_pmu.c           | 2 +-
+>   drivers/perf/hisilicon/hisi_pcie_pmu.c      | 2 +-
+>   drivers/perf/hisilicon/hisi_uncore_pmu.c    | 2 +-
+>   drivers/perf/marvell_cn10k_ddr_pmu.c        | 2 +-
+>   drivers/perf/marvell_cn10k_tad_pmu.c        | 2 +-
+>   drivers/perf/marvell_pem_pmu.c              | 2 +-
+>   drivers/perf/nvidia_t410_c2c_pmu.c          | 2 +-
+>   drivers/perf/nvidia_t410_cmem_latency_pmu.c | 2 +-
+>   drivers/perf/qcom_l2_pmu.c                  | 2 +-
+>   drivers/perf/qcom_l3_pmu.c                  | 2 +-
+>   drivers/perf/starfive_starlink_pmu.c        | 2 +-
+>   drivers/perf/thunderx2_pmu.c                | 2 +-
+>   drivers/perf/xgene_pmu.c                    | 2 +-
+>   kernel/events/core.c                        | 2 +-
+>   30 files changed, 31 insertions(+), 31 deletions(-)
+> 
+> diff --git a/drivers/perf/alibaba_uncore_drw_pmu.c b/drivers/perf/alibaba_uncore_drw_pmu.c
+> index ac49d3b2dad6..74786a5dd6a2 100644
+> --- a/drivers/perf/alibaba_uncore_drw_pmu.c
+> +++ b/drivers/perf/alibaba_uncore_drw_pmu.c
+> @@ -221,7 +221,7 @@ static ssize_t ali_drw_pmu_cpumask_show(struct device *dev,
+>   {
+>   	struct ali_drw_pmu *drw_pmu = to_ali_drw_pmu(dev_get_drvdata(dev));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(drw_pmu->cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(drw_pmu->cpu)));
+>   }
+>   
+>   static struct device_attribute ali_drw_pmu_cpumask_attr =
+> diff --git a/drivers/perf/amlogic/meson_ddr_pmu_core.c b/drivers/perf/amlogic/meson_ddr_pmu_core.c
+> index c1e755c356a3..f614aa3434a5 100644
+> --- a/drivers/perf/amlogic/meson_ddr_pmu_core.c
+> +++ b/drivers/perf/amlogic/meson_ddr_pmu_core.c
+> @@ -191,7 +191,7 @@ static ssize_t meson_ddr_perf_cpumask_show(struct device *dev,
+>   {
+>   	struct ddr_pmu *pmu = dev_get_drvdata(dev);
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(pmu->cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(pmu->cpu)));
+>   }
+>   
+>   static struct device_attribute meson_ddr_perf_cpumask_attr =
+> diff --git a/drivers/perf/arm-cci.c b/drivers/perf/arm-cci.c
+> index 1cc3214d6b6d..f0ef0a679e74 100644
+> --- a/drivers/perf/arm-cci.c
+> +++ b/drivers/perf/arm-cci.c
+> @@ -1351,7 +1351,7 @@ static ssize_t pmu_cpumask_attr_show(struct device *dev,
+>   	struct pmu *pmu = dev_get_drvdata(dev);
+>   	struct cci_pmu *cci_pmu = to_cci_pmu(pmu);
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(cci_pmu->cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(cci_pmu->cpu)));
+>   }
+>   
+>   static struct device_attribute pmu_cpumask_attr =
+> diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
+> index 8af3563fdf60..d5dcb4280434 100644
+> --- a/drivers/perf/arm-ccn.c
+> +++ b/drivers/perf/arm-ccn.c
+> @@ -538,7 +538,7 @@ static ssize_t arm_ccn_pmu_cpumask_show(struct device *dev,
+>   {
+>   	struct arm_ccn *ccn = pmu_to_arm_ccn(dev_get_drvdata(dev));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(ccn->dt.cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(ccn->dt.cpu)));
+>   }
+>   
+>   static struct device_attribute arm_ccn_pmu_cpumask_attr =
+> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+> index f5305c8fdca4..2187ba763b72 100644
+> --- a/drivers/perf/arm-cmn.c
+> +++ b/drivers/perf/arm-cmn.c
+> @@ -1326,7 +1326,7 @@ static ssize_t arm_cmn_cpumask_show(struct device *dev,
+>   {
+>   	struct arm_cmn *cmn = to_cmn(dev_get_drvdata(dev));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(cmn->cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(cmn->cpu)));
+>   }
+>   
+>   static struct device_attribute arm_cmn_cpumask_attr =
+> diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
+> index 66858c65215d..03a1c6bf9223 100644
+> --- a/drivers/perf/arm-ni.c
+> +++ b/drivers/perf/arm-ni.c
+> @@ -239,7 +239,7 @@ static ssize_t arm_ni_cpumask_show(struct device *dev,
+>   {
+>   	struct arm_ni *ni = cd_to_ni(pmu_to_cd(dev_get_drvdata(dev)));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(ni->cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(ni->cpu)));
+>   }
+>   
+>   static struct device_attribute arm_ni_cpumask_attr =
+> diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
+> index 80fb314d5135..e6292021f653 100644
+> --- a/drivers/perf/arm_cspmu/arm_cspmu.c
+> +++ b/drivers/perf/arm_cspmu/arm_cspmu.c
+> @@ -305,7 +305,7 @@ static ssize_t arm_cspmu_cpumask_show(struct device *dev,
+>   	default:
+>   		return 0;
+>   	}
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask);
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask));
+>   }
+>   
+>   static struct attribute *arm_cspmu_cpumask_attrs[] = {
+> diff --git a/drivers/perf/arm_dmc620_pmu.c b/drivers/perf/arm_dmc620_pmu.c
+> index 4f6b196160f8..467147a05eec 100644
+> --- a/drivers/perf/arm_dmc620_pmu.c
+> +++ b/drivers/perf/arm_dmc620_pmu.c
+> @@ -237,8 +237,8 @@ static ssize_t dmc620_pmu_cpumask_show(struct device *dev,
+>   {
+>   	struct dmc620_pmu *dmc620_pmu = to_dmc620_pmu(dev_get_drvdata(dev));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf,
+> -				       cpumask_of(dmc620_pmu->irq->cpu));
+> +	return sysfs_emit(buf, "%*pbl\n",
+> +			  cpumask_pr_args(cpumask_of(dmc620_pmu->irq->cpu)));
+>   }
+>   
+>   static struct device_attribute dmc620_pmu_cpumask_attr =
+> diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
+> index 32b0dd7c693b..bcbd19e075a5 100644
+> --- a/drivers/perf/arm_dsu_pmu.c
+> +++ b/drivers/perf/arm_dsu_pmu.c
+> @@ -157,7 +157,7 @@ static ssize_t dsu_pmu_cpumask_show(struct device *dev,
+>   	default:
+>   		return 0;
+>   	}
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask);
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask));
+>   }
+>   
+>   static struct attribute *dsu_pmu_format_attrs[] = {
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index 939bcbd433aa..51ab6cc52ca0 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -570,7 +570,7 @@ static ssize_t cpus_show(struct device *dev,
+>   			 struct device_attribute *attr, char *buf)
+>   {
+>   	struct arm_pmu *armpmu = to_arm_pmu(dev_get_drvdata(dev));
+> -	return cpumap_print_to_pagebuf(true, buf, &armpmu->supported_cpus);
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(&armpmu->supported_cpus));
+>   }
+>   
+>   static DEVICE_ATTR_RO(cpus);
+> diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
+> index 621f02a7f43b..8ce34e6bb82b 100644
+> --- a/drivers/perf/arm_smmuv3_pmu.c
+> +++ b/drivers/perf/arm_smmuv3_pmu.c
+> @@ -537,7 +537,7 @@ static ssize_t smmu_pmu_cpumask_show(struct device *dev,
+>   {
+>   	struct smmu_pmu *smmu_pmu = to_smmu_pmu(dev_get_drvdata(dev));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(smmu_pmu->on_cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(smmu_pmu->on_cpu)));
+>   }
+>   
+>   static struct device_attribute smmu_pmu_cpumask_attr =
+> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+> index dbd0da111639..9f786fd48cdd 100644
+> --- a/drivers/perf/arm_spe_pmu.c
+> +++ b/drivers/perf/arm_spe_pmu.c
+> @@ -343,7 +343,7 @@ static ssize_t cpumask_show(struct device *dev,
+>   {
+>   	struct arm_spe_pmu *spe_pmu = dev_get_drvdata(dev);
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, &spe_pmu->supported_cpus);
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(&spe_pmu->supported_cpus));
+>   }
+>   static DEVICE_ATTR_RO(cpumask);
+>   
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index 68a54d97d2a8..0735eb33f5f3 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -493,7 +493,7 @@ static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
+>   {
+>   	struct cxl_pmu_info *info = dev_get_drvdata(dev);
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(info->on_cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(info->on_cpu)));
+>   }
+>   static DEVICE_ATTR_RO(cpumask);
+>   
+> diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
+> index 5385401fa9cf..291e776d6f6a 100644
+> --- a/drivers/perf/dwc_pcie_pmu.c
+> +++ b/drivers/perf/dwc_pcie_pmu.c
+> @@ -117,7 +117,7 @@ static ssize_t cpumask_show(struct device *dev,
+>   {
+>   	struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(dev_get_drvdata(dev));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(pcie_pmu->on_cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(pcie_pmu->on_cpu)));
+>   }
+>   static DEVICE_ATTR_RO(cpumask);
+>   
+> diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
+> index bcdf5575d71c..3760ebe02674 100644
+> --- a/drivers/perf/fsl_imx8_ddr_perf.c
+> +++ b/drivers/perf/fsl_imx8_ddr_perf.c
+> @@ -237,7 +237,7 @@ static ssize_t ddr_perf_cpumask_show(struct device *dev,
+>   {
+>   	struct ddr_pmu *pmu = dev_get_drvdata(dev);
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(pmu->cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(pmu->cpu)));
+>   }
+>   
+>   static struct device_attribute ddr_perf_cpumask_attr =
+> diff --git a/drivers/perf/fsl_imx9_ddr_perf.c b/drivers/perf/fsl_imx9_ddr_perf.c
+> index 7050b48c0467..6fee5eb5087a 100644
+> --- a/drivers/perf/fsl_imx9_ddr_perf.c
+> +++ b/drivers/perf/fsl_imx9_ddr_perf.c
+> @@ -159,7 +159,7 @@ static ssize_t ddr_perf_cpumask_show(struct device *dev,
+>   {
+>   	struct ddr_pmu *pmu = dev_get_drvdata(dev);
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(pmu->cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(pmu->cpu)));
+>   }
+>   
+>   static struct device_attribute ddr_perf_cpumask_attr =
+> diff --git a/drivers/perf/fujitsu_uncore_pmu.c b/drivers/perf/fujitsu_uncore_pmu.c
+> index c3c6f56474ad..a07877632d53 100644
+> --- a/drivers/perf/fujitsu_uncore_pmu.c
+> +++ b/drivers/perf/fujitsu_uncore_pmu.c
+> @@ -374,7 +374,7 @@ static ssize_t cpumask_show(struct device *dev,
+>   {
+>   	struct uncore_pmu *uncorepmu = to_uncore_pmu(dev_get_drvdata(dev));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(uncorepmu->cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(uncorepmu->cpu)));
+>   }
+>   static DEVICE_ATTR_RO(cpumask);
+>   
+> diff --git a/drivers/perf/hisilicon/hisi_pcie_pmu.c b/drivers/perf/hisilicon/hisi_pcie_pmu.c
+> index c5394d007b61..0f55d871c67e 100644
+> --- a/drivers/perf/hisilicon/hisi_pcie_pmu.c
+> +++ b/drivers/perf/hisilicon/hisi_pcie_pmu.c
+> @@ -121,7 +121,7 @@ static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr, c
+>   {
+>   	struct hisi_pcie_pmu *pcie_pmu = to_pcie_pmu(dev_get_drvdata(dev));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(pcie_pmu->on_cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(pcie_pmu->on_cpu)));
+>   }
+>   static DEVICE_ATTR_RO(cpumask);
+>   
+> diff --git a/drivers/perf/hisilicon/hisi_uncore_pmu.c b/drivers/perf/hisilicon/hisi_uncore_pmu.c
+> index de71dcf11653..0ff2fdf4b3e2 100644
+> --- a/drivers/perf/hisilicon/hisi_uncore_pmu.c
+> +++ b/drivers/perf/hisilicon/hisi_uncore_pmu.c
+> @@ -56,7 +56,7 @@ static ssize_t hisi_associated_cpus_sysfs_show(struct device *dev,
+>   {
+>   	struct hisi_pmu *hisi_pmu = to_hisi_pmu(dev_get_drvdata(dev));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, &hisi_pmu->associated_cpus);
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(&hisi_pmu->associated_cpus));
+>   }
+>   static DEVICE_ATTR(associated_cpus, 0444, hisi_associated_cpus_sysfs_show, NULL);
+>   
+> diff --git a/drivers/perf/marvell_cn10k_ddr_pmu.c b/drivers/perf/marvell_cn10k_ddr_pmu.c
+> index 72ac17efd846..8681e8715cb3 100644
+> --- a/drivers/perf/marvell_cn10k_ddr_pmu.c
+> +++ b/drivers/perf/marvell_cn10k_ddr_pmu.c
+> @@ -364,7 +364,7 @@ static ssize_t cn10k_ddr_perf_cpumask_show(struct device *dev,
+>   {
+>   	struct cn10k_ddr_pmu *pmu = dev_get_drvdata(dev);
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(pmu->cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(pmu->cpu)));
+>   }
+>   
+>   static struct device_attribute cn10k_ddr_perf_cpumask_attr =
+> diff --git a/drivers/perf/marvell_cn10k_tad_pmu.c b/drivers/perf/marvell_cn10k_tad_pmu.c
+> index 51ccb0befa05..54909d0031b7 100644
+> --- a/drivers/perf/marvell_cn10k_tad_pmu.c
+> +++ b/drivers/perf/marvell_cn10k_tad_pmu.c
+> @@ -258,7 +258,7 @@ static ssize_t tad_pmu_cpumask_show(struct device *dev,
+>   {
+>   	struct tad_pmu *tad_pmu = to_tad_pmu(dev_get_drvdata(dev));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(tad_pmu->cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(tad_pmu->cpu)));
+>   }
+>   
+>   static DEVICE_ATTR(cpumask, 0444, tad_pmu_cpumask_show, NULL);
+> diff --git a/drivers/perf/marvell_pem_pmu.c b/drivers/perf/marvell_pem_pmu.c
+> index 29fbcd1848e4..cf1d8cdb1318 100644
+> --- a/drivers/perf/marvell_pem_pmu.c
+> +++ b/drivers/perf/marvell_pem_pmu.c
+> @@ -164,7 +164,7 @@ static ssize_t pem_perf_cpumask_show(struct device *dev,
+>   {
+>   	struct pem_pmu *pmu = dev_get_drvdata(dev);
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(pmu->cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(pmu->cpu)));
+>   }
+>   
+>   static struct device_attribute pem_perf_cpumask_attr =
+> diff --git a/drivers/perf/nvidia_t410_c2c_pmu.c b/drivers/perf/nvidia_t410_c2c_pmu.c
+> index 411987153ff3..bff875f4f625 100644
+> --- a/drivers/perf/nvidia_t410_c2c_pmu.c
+> +++ b/drivers/perf/nvidia_t410_c2c_pmu.c
+> @@ -658,7 +658,7 @@ static ssize_t nv_c2c_pmu_cpumask_show(struct device *dev,
+>   	default:
+>   		return 0;
+>   	}
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask);
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask));
+>   }
+>   
+>   #define NV_C2C_PMU_CPUMASK_ATTR(_name, _config)			\
+> diff --git a/drivers/perf/nvidia_t410_cmem_latency_pmu.c b/drivers/perf/nvidia_t410_cmem_latency_pmu.c
+> index acb8f5571522..6c8e41598ec1 100644
+> --- a/drivers/perf/nvidia_t410_cmem_latency_pmu.c
+> +++ b/drivers/perf/nvidia_t410_cmem_latency_pmu.c
+> @@ -501,7 +501,7 @@ static ssize_t cmem_lat_pmu_cpumask_show(struct device *dev,
+>   	default:
+>   		return 0;
+>   	}
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask);
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask));
+>   }
+>   
+>   #define NV_PMU_CPUMASK_ATTR(_name, _config)			\
+> diff --git a/drivers/perf/qcom_l2_pmu.c b/drivers/perf/qcom_l2_pmu.c
+> index ea8c85729937..c0c522b10b72 100644
+> --- a/drivers/perf/qcom_l2_pmu.c
+> +++ b/drivers/perf/qcom_l2_pmu.c
+> @@ -638,7 +638,7 @@ static ssize_t l2_cache_pmu_cpumask_show(struct device *dev,
+>   {
+>   	struct l2cache_pmu *l2cache_pmu = to_l2cache_pmu(dev_get_drvdata(dev));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, &l2cache_pmu->cpumask);
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(&l2cache_pmu->cpumask));
+>   }
+>   
+>   static struct device_attribute l2_cache_pmu_cpumask_attr =
+> diff --git a/drivers/perf/qcom_l3_pmu.c b/drivers/perf/qcom_l3_pmu.c
+> index 66e6cabd6fff..c8d259dd1f80 100644
+> --- a/drivers/perf/qcom_l3_pmu.c
+> +++ b/drivers/perf/qcom_l3_pmu.c
+> @@ -663,7 +663,7 @@ static ssize_t cpumask_show(struct device *dev,
+>   {
+>   	struct l3cache_pmu *l3pmu = to_l3cache_pmu(dev_get_drvdata(dev));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, &l3pmu->cpumask);
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(&l3pmu->cpumask));
+>   }
+>   
+>   static DEVICE_ATTR_RO(cpumask);
+> diff --git a/drivers/perf/starfive_starlink_pmu.c b/drivers/perf/starfive_starlink_pmu.c
+> index 964897c2baa9..222a0a34e211 100644
+> --- a/drivers/perf/starfive_starlink_pmu.c
+> +++ b/drivers/perf/starfive_starlink_pmu.c
+> @@ -131,7 +131,7 @@ cpumask_show(struct device *dev, struct device_attribute *attr, char *buf)
+>   {
+>   	struct starlink_pmu *starlink_pmu = to_starlink_pmu(dev_get_drvdata(dev));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, &starlink_pmu->cpumask);
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(&starlink_pmu->cpumask));
+>   }
+>   
+>   static DEVICE_ATTR_RO(cpumask);
+> diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
+> index 6ed4707bd6bb..a69c02d2d874 100644
+> --- a/drivers/perf/thunderx2_pmu.c
+> +++ b/drivers/perf/thunderx2_pmu.c
+> @@ -254,7 +254,7 @@ static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
+>   	struct tx2_uncore_pmu *tx2_pmu;
+>   
+>   	tx2_pmu = pmu_to_tx2_pmu(dev_get_drvdata(dev));
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(tx2_pmu->cpu));
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(cpumask_of(tx2_pmu->cpu)));
+>   }
+>   static DEVICE_ATTR_RO(cpumask);
+>   
+> diff --git a/drivers/perf/xgene_pmu.c b/drivers/perf/xgene_pmu.c
+> index 33b5497bdc06..e9e4871db08d 100644
+> --- a/drivers/perf/xgene_pmu.c
+> +++ b/drivers/perf/xgene_pmu.c
+> @@ -595,7 +595,7 @@ static ssize_t cpumask_show(struct device *dev,
+>   {
+>   	struct xgene_pmu_dev *pmu_dev = to_pmu_dev(dev_get_drvdata(dev));
+>   
+> -	return cpumap_print_to_pagebuf(true, buf, &pmu_dev->parent->cpu);
+> +	return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(&pmu_dev->parent->cpu));
+>   }
+>   
+>   static DEVICE_ATTR_RO(cpumask);
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 7935d5663944..61689d348abd 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -12657,7 +12657,7 @@ static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
+>   	struct cpumask *mask = perf_scope_cpumask(pmu->scope);
+>   
+>   	if (mask)
+> -		return cpumap_print_to_pagebuf(true, buf, mask);
+> +		return sysfs_emit(buf, "%*pbl\n", cpumask_pr_args(mask));
+>   	return 0;
+>   }
+>   
 
