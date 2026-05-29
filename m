@@ -1,318 +1,262 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3880F331A6D;
-	Thu, 28 May 2026 23:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130291A680F
+	for <linux-cxl@vger.kernel.org>; Fri, 29 May 2026 04:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780012444; cv=none; b=UwhJnHCs4cdjGI4jAWF3n7IYLH5kfUx/nhbXmrw1uDyRv+i+V1kyHdNVdFXE/fWIP3xpHfD69elI1V7Xwm86r5Ofxv/pk+dXM1aJlmdWGBDu83SxPbUFDgH/KQdru4Q3j1SVX8SeJt3rgZI/+MLR/R964HAdfIdYYDyhIcBbfl8=
+	t=1780030607; cv=none; b=AfcWmcJA7GjN5zvvF9844syFj8FodshIIukmFPi3n/ZwB5jsZGtJtLuEM3MAtcZaHP10fsJXYej3NyTUmxRwzjjTAy5N87Upexb6UlJv0G9VOgR4rqN8uG2bGLpaMTfywcQkElOSf2g0sr/GV0ReMNflNd+ITiNnUuOfhdAQAxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780012444; c=relaxed/simple;
-	bh=mYKqwkkUkQJLp87q4Qq6ZTxIFL18Ov7wXlF6oVqW39g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QIsAZ/M2N2SaTzsmNtyxI7IKO0WXxn+jRY5iegTOWBruoKAZACrclu0Nn/pg9n6EpLXhl9jkRo2FlkFJL6ONLzhYizgS0ypv1pq5DpDJANcD3v6BZzID8va36VBPYXzxsAFAwS1oRuc4D3ZMd2yOiFpA5DDEtUWG3Ua3tzawtj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jp6dLdvO; arc=none smtp.client-ip=192.198.163.12
+	s=arc-20240116; t=1780030607; c=relaxed/simple;
+	bh=h+Fp8TJfQhQIyBWgP+UpbJcF0jB2T8WJQqNPmbH7mS0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=nmSrCI2SVubasf4ZGfSKLGLtVvVjooal2+QHr1CTMttgA4nSPodIIWm1OvFWlxA8VffR9WPFDJPjKS2fsMWjPTDV8HhS6Yi1psB5JhtGPj9ErZAlrtPqLr3kVD+lDYDWNUNx2Kg7ymyeer3dZS8LgX74GxNIzjZJgTLE0ez98Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U84F3HFX; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jp6dLdvO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U84F3HFX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780012442; x=1811548442;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=mYKqwkkUkQJLp87q4Qq6ZTxIFL18Ov7wXlF6oVqW39g=;
-  b=Jp6dLdvOYMhBfiKTyEiZk8Smdhuv7tH7gAEzi5ekP07sB7OKRYrpdhyX
-   igZKhlRKsLKSfMnPPpydD07OrOJ4jx9+bS9ZsBhgX4USUnzs8BtBenWu4
-   +t9uttABZa+2EMGORrjLGtw+C5hBhdfZgrzTQrEkHlQQUG1+tRgfpFXqm
-   NhcoVoUSNzL1Kh+CW2Qw90C+N7krng5MBVcXeuqkfNMUihMgM26e/obWP
-   lCeoPbBlyQT/cg24/fPrPni6Hb+TathIkqygJtNiUOQ+CmNgBPtyJZHUw
-   gMv7AkdXv8Xcgv7L/bDdR94/I0oTEGiG0qESxZSOwwEW/Wz0BF8XxrmyV
+  t=1780030603; x=1811566603;
+  h=date:from:to:cc:subject:message-id;
+  bh=h+Fp8TJfQhQIyBWgP+UpbJcF0jB2T8WJQqNPmbH7mS0=;
+  b=U84F3HFXL0jrlJ/e0Cc7T7wRudOutEWmv0G4SHeQYtQbSuI6fLOZ2hc3
+   QBkSdVbXDtoAjYR7ye+GiBOMLjpO53H7fbTfQti/eRbjWk75v2EzRQhqG
+   Z3piQ9uwZlRVpDJD4Ke85LifF+hHWZnRPM+Q/o4ocevYc0ymu3BX+M3+b
+   33G+HuCmOd7WpEq/A3vBqH/h3z5zUOHMOO1s9TIBWHGZ9hk5vwMNbU/G3
+   wGKGzo2U4UKnqRrcPCS9e5QmbCtgNni6xRL7wJFCcOf/seiDvSxRKhsWy
+   I7ssVUfkjXykLquH8Xqjahvp4cpvZnRh8aZ1q0P/KQVc0+W1G9h2bhAB1
    Q==;
-X-CSE-ConnectionGUID: Mm8Maof+SzaTZnQMdIvumA==
-X-CSE-MsgGUID: qBl4nNe/SbqgDbjRLkFllA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="84722741"
+X-CSE-ConnectionGUID: MhsYU34XRHKX3XARpsl4rQ==
+X-CSE-MsgGUID: os+Fdz6lQbq9EAuljCXPUw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11800"; a="106330304"
 X-IronPort-AV: E=Sophos;i="6.24,174,1774335600"; 
-   d="scan'208";a="84722741"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 16:53:46 -0700
-X-CSE-ConnectionGUID: BDCcJaIWRj2UhBj6q8Kd+A==
-X-CSE-MsgGUID: L59EcbWQTPOMPCsrGjqmfg==
+   d="scan'208";a="106330304"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 21:56:42 -0700
+X-CSE-ConnectionGUID: m3jkEr17Q86AkTgVHYkZtA==
+X-CSE-MsgGUID: cFz4flZ+QuO5OuWalWBB0Q==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,174,1774335600"; 
-   d="scan'208";a="238505693"
-Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.111.91]) ([10.125.111.91])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2026 16:53:44 -0700
-Message-ID: <e5bd578c-15dc-4b69-9cd2-2eb3c3aa516a@intel.com>
-Date: Thu, 28 May 2026 16:53:43 -0700
+Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 28 May 2026 21:56:41 -0700
+Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wSpGw-000000006mk-0kgX;
+	Fri, 29 May 2026 04:56:38 +0000
+Date: Fri, 29 May 2026 12:55:48 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ 8850852b25f7884d9804f8de5591edb3881bd674
+Message-ID: <202605291237.17w5eRS3-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 22/31] cxl + dax: Release dax_resources on DCD Release
- Capacity events
-To: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: nvdimm@lists.linux.dev, Dan Williams <djbw@kernel.org>,
- Jonathan Cameron <jic23@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>, John Groves
- <John@Groves.net>, Gregory Price <gourry@gourry.net>,
- Anisa Su <anisa.su@samsung.com>, Ira Weiny <ira.weiny@intel.com>
-References: <cover.1779528761.git.anisa.su@samsung.com>
- <e6cea279dcb208684c08b756f6de65438529ad65.1779528761.git.anisa.su@samsung.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <e6cea279dcb208684c08b756f6de65438529ad65.1779528761.git.anisa.su@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: 8850852b25f7884d9804f8de5591edb3881bd674  cxl/test: Enforce PMD alignment for volatile mock regions
 
+elapsed time: 739m
 
-On 5/23/26 2:43 AM, Anisa Su wrote:
-> Implement the release path that mirrors the add path: when the
-> device asks for capacity back, the dax layer tears down the
-> per-extent resources for the whole tag group atomically.
-> 
-> If any extent in the group is still mapped by a dev_dax, the release
-> is refused with -EBUSY and no state changes; the cxl side then leaves
-> the tag group intact and the device retries.
-> 
-> Also add a rollback to the add path: if any per-extent registration
-> fails midway through a group, undo the ones already added so a
-> partial group never leaks into the dax region.
-> 
-> Based on an original patch by Navneet Singh.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Anisa Su <anisa.su@samsung.com>
+configs tested: 185
+configs skipped: 4
 
-Just a nit below
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+tested configs:
+alpha                             allnoconfig    gcc-15.2.0
+alpha                            allyesconfig    gcc-15.2.0
+alpha                               defconfig    gcc-15.2.0
+arc                              allmodconfig    gcc-15.2.0
+arc                               allnoconfig    gcc-15.2.0
+arc                              allyesconfig    gcc-15.2.0
+arc                                 defconfig    gcc-15.2.0
+arc                   randconfig-001-20260529    gcc-14.3.0
+arc                   randconfig-002-20260529    gcc-10.5.0
+arm                               allnoconfig    clang-23
+arm                               allnoconfig    gcc-15.2.0
+arm                              allyesconfig    gcc-15.2.0
+arm                                 defconfig    clang-23
+arm                   randconfig-001-20260529    gcc-14.3.0
+arm                   randconfig-002-20260529    gcc-8.5.0
+arm                   randconfig-003-20260529    gcc-13.4.0
+arm                   randconfig-004-20260529    clang-23
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.2.0
+arm64                               defconfig    gcc-15.2.0
+arm64                 randconfig-001-20260529    gcc-8.5.0
+arm64                 randconfig-002-20260529    clang-23
+arm64                 randconfig-003-20260529    clang-23
+arm64                 randconfig-004-20260529    gcc-15.2.0
+csky                             allmodconfig    gcc-15.2.0
+csky                              allnoconfig    gcc-15.2.0
+csky                                defconfig    gcc-15.2.0
+csky                  randconfig-001-20260529    gcc-15.2.0
+csky                  randconfig-002-20260529    gcc-15.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-23
+hexagon                           allnoconfig    gcc-15.2.0
+hexagon                             defconfig    clang-23
+hexagon               randconfig-001-20260529    clang-23
+hexagon               randconfig-001-20260529    gcc-8.5.0
+hexagon               randconfig-002-20260529    clang-23
+hexagon               randconfig-002-20260529    gcc-8.5.0
+i386                             allmodconfig    gcc-14
+i386                              allnoconfig    gcc-14
+i386                              allnoconfig    gcc-15.2.0
+i386                             allyesconfig    gcc-14
+i386        buildonly-randconfig-001-20260529    gcc-12
+i386        buildonly-randconfig-002-20260529    clang-20
+i386        buildonly-randconfig-003-20260529    gcc-12
+i386        buildonly-randconfig-004-20260529    gcc-14
+i386        buildonly-randconfig-005-20260529    gcc-14
+i386        buildonly-randconfig-006-20260529    gcc-14
+i386                                defconfig    clang-20
+i386                  randconfig-001-20260529    gcc-14
+i386                  randconfig-002-20260529    gcc-12
+i386                  randconfig-003-20260529    clang-20
+i386                  randconfig-004-20260529    clang-20
+i386                  randconfig-005-20260529    gcc-14
+i386                  randconfig-006-20260529    clang-20
+i386                  randconfig-007-20260529    gcc-12
+i386                  randconfig-011-20260529    clang-20
+i386                  randconfig-012-20260529    clang-20
+i386                  randconfig-013-20260529    clang-20
+i386                  randconfig-014-20260529    clang-20
+i386                  randconfig-015-20260529    gcc-14
+i386                  randconfig-016-20260529    clang-20
+i386                  randconfig-017-20260529    gcc-13
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-23
+loongarch                         allnoconfig    gcc-15.2.0
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20260529    gcc-15.2.0
+loongarch             randconfig-001-20260529    gcc-8.5.0
+loongarch             randconfig-002-20260529    gcc-15.2.0
+loongarch             randconfig-002-20260529    gcc-8.5.0
+m68k                             allmodconfig    gcc-15.2.0
+m68k                              allnoconfig    gcc-15.2.0
+m68k                             allyesconfig    gcc-15.2.0
+m68k                                defconfig    gcc-15.2.0
+m68k                          multi_defconfig    gcc-15.2.0
+microblaze                        allnoconfig    gcc-15.2.0
+microblaze                       allyesconfig    gcc-15.2.0
+microblaze                          defconfig    gcc-15.2.0
+mips                             allmodconfig    gcc-15.2.0
+mips                              allnoconfig    gcc-15.2.0
+mips                             allyesconfig    gcc-15.2.0
+nios2                            alldefconfig    gcc-11.5.0
+nios2                            allmodconfig    gcc-11.5.0
+nios2                             allnoconfig    clang-23
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20260529    gcc-8.5.0
+nios2                 randconfig-002-20260529    gcc-8.5.0
+openrisc                         allmodconfig    gcc-15.2.0
+openrisc                          allnoconfig    clang-23
+openrisc                          allnoconfig    gcc-15.2.0
+openrisc                            defconfig    gcc-15.2.0
+parisc                           allmodconfig    gcc-15.2.0
+parisc                            allnoconfig    clang-23
+parisc                            allnoconfig    gcc-15.2.0
+parisc                           allyesconfig    gcc-15.2.0
+parisc                              defconfig    gcc-15.2.0
+parisc                randconfig-001-20260529    clang-19
+parisc                randconfig-001-20260529    gcc-8.5.0
+parisc                randconfig-002-20260529    clang-19
+parisc                randconfig-002-20260529    gcc-8.5.0
+parisc64                            defconfig    gcc-15.2.0
+powerpc                           allnoconfig    clang-23
+powerpc                           allnoconfig    gcc-15.2.0
+powerpc               randconfig-001-20260529    clang-19
+powerpc               randconfig-001-20260529    gcc-12.5.0
+powerpc               randconfig-002-20260529    clang-19
+powerpc64             randconfig-001-20260529    clang-19
+powerpc64             randconfig-001-20260529    gcc-15.2.0
+powerpc64             randconfig-002-20260529    clang-19
+riscv                            allmodconfig    clang-23
+riscv                             allnoconfig    clang-23
+riscv                             allnoconfig    gcc-15.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-23
+riscv                               defconfig    gcc-15.2.0
+riscv                 randconfig-001-20260529    gcc-8.5.0
+riscv                 randconfig-002-20260529    gcc-9.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-23
+s390                             allyesconfig    gcc-15.2.0
+s390                                defconfig    clang-23
+s390                                defconfig    gcc-15.2.0
+s390                  randconfig-001-20260529    gcc-8.5.0
+s390                  randconfig-002-20260529    clang-23
+sh                               allmodconfig    gcc-15.2.0
+sh                                allnoconfig    clang-23
+sh                                allnoconfig    gcc-15.2.0
+sh                               allyesconfig    gcc-15.2.0
+sh                                  defconfig    gcc-15.2.0
+sh                    randconfig-001-20260529    gcc-15.2.0
+sh                    randconfig-002-20260529    gcc-15.2.0
+sparc                             allnoconfig    clang-23
+sparc                             allnoconfig    gcc-15.2.0
+sparc                               defconfig    gcc-15.2.0
+sparc                 randconfig-001-20260529    gcc-8.5.0
+sparc                 randconfig-002-20260529    gcc-15.2.0
+sparc64                          allmodconfig    clang-23
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20260529    gcc-11.5.0
+sparc64               randconfig-002-20260529    gcc-8.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-23
+um                               allyesconfig    gcc-14
+um                                  defconfig    clang-23
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20260529    gcc-14
+um                    randconfig-002-20260529    gcc-14
+um                           x86_64_defconfig    clang-23
+x86_64                           allmodconfig    clang-20
+x86_64                            allnoconfig    clang-20
+x86_64                            allnoconfig    clang-23
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20260529    gcc-14
+x86_64      buildonly-randconfig-002-20260529    gcc-14
+x86_64      buildonly-randconfig-003-20260529    gcc-14
+x86_64      buildonly-randconfig-004-20260529    clang-20
+x86_64      buildonly-randconfig-005-20260529    clang-20
+x86_64      buildonly-randconfig-006-20260529    gcc-14
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20260529    clang-20
+x86_64                randconfig-001-20260529    gcc-14
+x86_64                randconfig-002-20260529    clang-20
+x86_64                randconfig-003-20260529    clang-20
+x86_64                randconfig-003-20260529    gcc-14
+x86_64                randconfig-004-20260529    clang-20
+x86_64                randconfig-005-20260529    clang-20
+x86_64                randconfig-006-20260529    clang-20
+x86_64                randconfig-011-20260529    gcc-14
+x86_64                randconfig-012-20260529    gcc-14
+x86_64                randconfig-071-20260529    gcc-14
+x86_64                randconfig-072-20260529    clang-20
+x86_64                randconfig-073-20260529    clang-20
+x86_64                randconfig-074-20260529    gcc-14
+x86_64                randconfig-075-20260529    gcc-14
+x86_64                randconfig-076-20260529    gcc-14
+x86_64                               rhel-9.4    clang-20
+x86_64                          rhel-9.4-func    clang-20
+x86_64                    rhel-9.4-kselftests    clang-20
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    clang-23
+xtensa                            allnoconfig    gcc-15.2.0
+xtensa                randconfig-001-20260529    gcc-11.5.0
+xtensa                randconfig-002-20260529    gcc-8.5.0
 
-
-> 
-> ---
-> Changes:
-> [anisa: split out from the original "Surface dc_extents" commit;
->  fills in the RELEASE half of the bridge, moves the cxl-side RELEASE
->  notify into this commit, and adds the rollback path to ADD.]
-> ---
->  drivers/cxl/core/extent.c | 13 +++++++++
->  drivers/dax/bus.c         | 59 +++++++++++++++++++++++++++++++++++++++
->  drivers/dax/cxl.c         | 54 +++++++++++++++++++++++++++--------
->  drivers/dax/dax-private.h |  8 ++++--
->  4 files changed, 120 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/extent.c b/drivers/cxl/core/extent.c
-> index 3fc4b7292664..2c8edfe53c0a 100644
-> --- a/drivers/cxl/core/extent.c
-> +++ b/drivers/cxl/core/extent.c
-> @@ -532,6 +532,7 @@ int cxl_rm_extent(struct cxl_memdev_state *mds, struct cxl_extent *extent)
->  	struct range dpa_range;
->  	unsigned long idx;
->  	uuid_t tag;
-> +	int rc;
->  
->  	dpa_range = (struct range) {
->  		.start = start_dpa,
-> @@ -588,6 +589,18 @@ int cxl_rm_extent(struct cxl_memdev_state *mds, struct cxl_extent *extent)
->  		return -EINVAL;
->  	}
->  
-> +	rc = cxlr_notify_extent(cxlr, DCD_RELEASE_CAPACITY, group);
-> +	if (rc) {
-> +		/*
-> +		 * dax layer refused (-EBUSY) or failed (-ENOMEM, etc.).  Do
-> +		 * not proceed to tear down the tag group — leave its
-> +		 * dax_resources alive so we do not free them out from under
-> +		 * live dev_dax ranges.  The device will retry the release.
-> +		 */
-> +		return 0;
-> +	}
-> +
-> +	/* Release the entire tag group */
->  	rm_tag_group(group);
->  	return 0;
->  }
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index a6ee59f2d8a1..6368bdfdf93a 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -253,6 +253,65 @@ int dax_region_add_resource(struct dax_region *dax_region,
->  }
->  EXPORT_SYMBOL_GPL(dax_region_add_resource);
->  
-> +int dax_region_rm_resource(struct dax_region *dax_region,
-> +			   struct device *dev)
-> +{
-> +	struct dax_resource *dax_resource;
-> +
-> +	guard(rwsem_write)(&dax_region_rwsem);
-> +
-> +	dax_resource = dev_get_drvdata(dev);
-> +	if (!dax_resource)
-> +		return 0;
-> +
-> +	if (dax_resource->use_cnt)
-> +		return -EBUSY;
-> +
-> +	/*
-> +	 * release the resource under dax_region_rwsem to avoid races with
-> +	 * users trying to use the extent
-> +	 */
-> +	__dax_release_resource(dax_resource);
-> +	dev_set_drvdata(dev, NULL);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(dax_region_rm_resource);
-
-No reason to export. Seems only used within DAX.
-
-DJ
-
-> +
-> +/**
-> + * dax_region_rm_resources - atomically remove a set of dax_resources.
-> + *
-> + * Walk @devs twice under dax_region_rwsem.  First pass refuses the
-> + * operation if any member's use_cnt is non-zero; second pass releases
-> + * each.  This gives refuse-all-or-none semantics across the set, which
-> + * a tag group's atomic release relies on.  Devices with no
-> + * dax_resource attached are silently skipped.
-> + */
-> +int dax_region_rm_resources(struct dax_region *dax_region,
-> +			    struct device * const *devs, unsigned int n)
-> +{
-> +	unsigned int i;
-> +
-> +	guard(rwsem_write)(&dax_region_rwsem);
-> +
-> +	for (i = 0; i < n; i++) {
-> +		struct dax_resource *r = dev_get_drvdata(devs[i]);
-> +
-> +		if (r && r->use_cnt)
-> +			return -EBUSY;
-> +	}
-> +
-> +	for (i = 0; i < n; i++) {
-> +		struct dax_resource *r = dev_get_drvdata(devs[i]);
-> +
-> +		if (!r)
-> +			continue;
-> +		__dax_release_resource(r);
-> +		dev_set_drvdata(devs[i], NULL);
-> +	}
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(dax_region_rm_resources);
-> +
->  bool static_dev_dax(struct dev_dax *dev_dax)
->  {
->  	return is_static(dev_dax->region);
-> diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
-> index 690cf625e052..04b73315a8f2 100644
-> --- a/drivers/dax/cxl.c
-> +++ b/drivers/dax/cxl.c
-> @@ -44,19 +44,52 @@ static int cxl_dax_group_add(struct dax_region *dax_region,
->  
->  	xa_for_each(&group->dc_extents, index, dc_extent) {
->  		rc = __cxl_dax_add_resource(dax_region, dc_extent);
-> -		if (rc)
-> +		if (rc) {
-> +			/*
-> +			 * Unwind every dax_resource already added for this
-> +			 * group; one rm per owner suffices.
-> +			 */
-> +			struct dc_extent *u;
-> +			unsigned long uidx;
-> +
-> +			xa_for_each(&group->dc_extents, uidx, u) {
-> +				if (u == dc_extent)
-> +					break;
-> +				dax_region_rm_resource(dax_region, &u->dev);
-> +			}
->  			return rc;
-> +		}
->  	}
->  	return 0;
->  }
->  
-> -/*
-> - * RELEASE is still a stub here — the atomic dax_region_rm_resources API
-> - * and its wire-up land in the next commit.  An incoming RELEASE returns
-> - * success and the cxl side proceeds to rm_tag_group(), which device-
-> - * unregisters each dc_extent; the devm action armed by
-> - * dax_region_add_resource() then tears down each dax_resource.
-> - */
-> +static int cxl_dax_group_rm(struct dax_region *dax_region,
-> +			    struct cxl_dc_tag_group *group)
-> +{
-> +	struct dc_extent *dc_extent;
-> +	struct device **devs;
-> +	unsigned long index;
-> +	unsigned int n = 0;
-> +	int rc;
-> +
-> +	if (!group->nr_extents)
-> +		return 0;
-> +
-> +	devs = kmalloc_array(group->nr_extents, sizeof(*devs), GFP_KERNEL);
-> +	if (!devs)
-> +		return -ENOMEM;
-> +
-> +	xa_for_each(&group->dc_extents, index, dc_extent) {
-> +		if (n == group->nr_extents)
-> +			break;
-> +		devs[n++] = &dc_extent->dev;
-> +	}
-> +
-> +	rc = dax_region_rm_resources(dax_region, devs, n);
-> +	kfree(devs);
-> +	return rc;
-> +}
-> +
->  static int cxl_dax_region_notify(struct device *dev,
->  				 struct cxl_notify_data *notify_data)
->  {
-> @@ -68,10 +101,7 @@ static int cxl_dax_region_notify(struct device *dev,
->  	case DCD_ADD_CAPACITY:
->  		return cxl_dax_group_add(dax_region, group);
->  	case DCD_RELEASE_CAPACITY:
-> -		dev_dbg(&cxlr_dax->dev,
-> -			"DCD RELEASE notify (tag %pUb): no-op (stub)\n",
-> -			&group->uuid);
-> -		return 0;
-> +		return cxl_dax_group_rm(dax_region, group);
->  	case DCD_FORCED_CAPACITY_RELEASE:
->  	default:
->  		dev_err(&cxlr_dax->dev, "Unknown DC event %d\n",
-> diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-> index f2ae5918f94d..414813a6137f 100644
-> --- a/drivers/dax/dax-private.h
-> +++ b/drivers/dax/dax-private.h
-> @@ -146,13 +146,17 @@ struct dax_resource {
->  };
->  
->  /*
-> - * Similar to run_dax() dax_region_add_resource() is exported but is not
-> - * intended to be a generic operation outside the dax subsystem.  It is only
-> + * Similar to run_dax() dax_region_{add,rm}_resource() are exported but are not
-> + * intended to be generic operations outside the dax subsystem.  They are only
->   * generic between the dax layer and the dax drivers.
->   */
->  int dax_region_add_resource(struct dax_region *dax_region, struct device *dev,
->  			    resource_size_t start, resource_size_t length,
->  			    const uuid_t *tag, u16 seq_num);
-> +int dax_region_rm_resource(struct dax_region *dax_region,
-> +			   struct device *dev);
-> +int dax_region_rm_resources(struct dax_region *dax_region,
-> +			    struct device * const *devs, unsigned int n);
->  
->  static inline struct dev_dax *to_dev_dax(struct device *dev)
->  {
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
