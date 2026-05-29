@@ -1,198 +1,155 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011042.outbound.protection.outlook.com [52.101.52.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9D13C4B82;
-	Fri, 29 May 2026 09:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780047695; cv=fail; b=eshkJEvNdx3airb14ecjtXWg/lrwLvNq3gHtCEC+tuPLF6PMcWAX/pwYVmmKG6pIZtuXc6HceMQp/fBG4pEFrKlIPSm9VvXejj435XKfv6GBY0DPNlSzBdcB39hQZny/RcZtnhNk+oa9kP+kEBliVPys8G7VWHGAI06ZHHiMyH8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780047695; c=relaxed/simple;
-	bh=PuUxXUL9CJZIsRSrrC6tG1ruc0V+8V8ABD/l9zGTRlc=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ph0tBw7KrlSrx3bnBn2I798e5g+L4ImvsZnfB0eO7088EDQBRlCOteSfE/vCEwZmDLbuM6wUmvq1bHLqpaH/3PIVQNrFy0fSP+lKCZ5cHwZqOQhr2X69lo0k5JymW3iJzzs/p220XlYUuMUyoL/kZ0BldgZwXm1thsfADcD31Gk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BoalQm6/; arc=fail smtp.client-ip=52.101.52.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEC113B6376;
+	Fri, 29 May 2026 09:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780048276; cv=none; b=PH+PIqYrIKiYqI7axVC2GBvqE1t1JQ3F2ug7ox+GS5OIzn8aLVUJuqRKnUnOPoTEF4/Ve7Zrtg9T+XlBAYEPhA9HfH4o7YeZKz0S/QuuI1Ry+g/hxyOleUlujmW3rWoyymZzX3JUjzbVr/GSOTUo7S8MHwFrEtxUqj4A8Sxy+vQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780048276; c=relaxed/simple;
+	bh=PhsoWnNzKoot9QOeJqx67Uz0y4ZbixYdSGzdVAqeDi0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=owl/4LQ0pmM5Ym6vyUtBAKBcc5tWziVdLRKk/GrDZC3MRJdsMotlpO8ZdoIt4YHUEuV/DMrGaTvT0m+Nt5H/LrZde4bBF3UmjQLi0fKR3+jRVlhlbSgOelL8wZxI98YsczLj613csOPVnlHoV9adiBuWPMhwE/DMpJNx5JK0PnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=gUOu0QnP; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BoalQm6/"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rayc0bqtjmNhDJZ0Plg9K51HJe4WihuYqAJLIsPreoue0/PxE/6v6qlH0gS8vI/qB2z4fmTtFOodVUu1ajKtZmRmRu5C2xUxR3CGFN39DzS1nuinrPkIwNQczpU2QETku7H0aogqdSmnMBcGgjlDUo+CHA1Q67NTkpfWWNDDY1vefNVzcFjvfTjDz/jdjmyKq4+AqM7tqgbr43f7bYbnvR+MYM9+6LX38/p28WBKXKwJAW5wQ794iJc6sA7XnCBSjI97wQxjaAyC+4ARExvuGWyfMIfkwumhEc8gRAw+xcoRjc5nabkLOmI1dcgi4GEgVXMXuK5ZOHiJtuZB+3av8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uw1dHDelci5Hkm5EqhlGtpyEQ9gTCRMxw64nHiilJLg=;
- b=OxkcbCf5QNmVm7cbi3zBWHBHTWDHK1g6l0/d0DXYiAYIrCvPVtPkZ4Fo118WSAc+9hRqm7ErevomVKBUYX339GulClNqpXEX2OL3g7ZQm0YIWfJFilfKr0oUjOUYSNfJ+Ux1yOh3VxE+UgMBNbPvGBQa+ClLWyvfUVetV17JrCI9Z2nM2CRZn6PxOfJblZR/FDqjQ9oXJ1wSOfxBoLE/cD2WdeKLlyIsLUKSsWXgF8l+0u5Ilfz/uu408fZmOjO3CevmnMgEcJIf8avib5U4wivkRggz89O1t4M5IqJKLv+KlGIxT2aEYTNbGgxGXBTofXRaUQTDKL+ja1XPNx5KDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uw1dHDelci5Hkm5EqhlGtpyEQ9gTCRMxw64nHiilJLg=;
- b=BoalQm6/1b1Ygz6BR4abjYidk9x6/7Fm/rtPJZUamWMFOfHh8aSDfxk0LCsm+c5a5UctAwv3KeGC0cD772M7F9VTeIz9Mf6Xc4afk2PTFXqDW1NixO/XbCOJX2/S3w4nPvsxFQf8vWuEFSDLMZZS8+HZETF1PNGFC6ZM6oawtV0mdp74h2zpmvLOUo/R8180r2MKzMkP7YorcWYiITYJgxK6lgRu1+SE3W2KyB2XIBHjklioV5bz8KoIats+gVZzsJbhBgucM0sdox3WPIbnlsTMD0369gCS70WWDDieoZdt0/mDTh/a/q8fkkBANW+Nq5Z06hR+RwLiE3vai4TdNA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by BN7PPF7F4CD71A4.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6d6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.15; Fri, 29 May
- 2026 09:41:26 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0071.011; Fri, 29 May 2026
- 09:41:26 +0000
-From: Richard Cheng <icheng@nvidia.com>
-To: dave@stgolabs.net,
-	jic23@kernel.org,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	djbw@kernel.org
-Cc: fabio.m.de.francesco@linux.intel.com,
-	ming.li@zohomail.com,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	newtonl@nvidia.com,
-	kristinc@nvidia.com,
-	kaihengf@nvidia.com,
-	kobak@nvidia.com,
-	Richard Cheng <icheng@nvidia.com>
-Subject: [PATCH] tools/testing/cxl: Resolve auto-region decoder targets like real HW
-Date: Fri, 29 May 2026 17:41:19 +0800
-Message-ID: <20260529094119.49331-1-icheng@nvidia.com>
-X-Mailer: git-send-email 2.50.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TPYP295CA0023.TWNP295.PROD.OUTLOOK.COM (2603:1096:7d0:a::7)
- To BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="gUOu0QnP"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3470B22D7;
+	Fri, 29 May 2026 02:51:09 -0700 (PDT)
+Received: from e134710.arm.com (e134710.arm.com [10.33.10.82])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3A863F905;
+	Fri, 29 May 2026 02:51:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1780048274; bh=PhsoWnNzKoot9QOeJqx67Uz0y4ZbixYdSGzdVAqeDi0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=gUOu0QnPcKnD3bkA1MrT7ZF46sBfdAYOyiqCLYtu9YKupH+gOKBV+WOikGfSD9NcQ
+	 EPyArBAnrs+zw4i2tVQ4C1KCeaoa/ywBKG7Mi7aECBgI1J9G4MC+3NCyl8dGpwyuCV
+	 QSmJIfizE8sI4oShP3gADl3ZjiMbrYnnl/Ctoo6E=
+From: Ahmed Tiba <ahmed.tiba@arm.com>
+Subject: [PATCH v5 00/10] ACPI: APEI: share GHES CPER helpers and add DT
+ FFH provider
+Date: Fri, 29 May 2026 10:50:40 +0100
+Message-Id: <20260529-topics-ahmtib01-ras_ffh_arm_internal_review-v5-0-2e0500d42642@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|BN7PPF7F4CD71A4:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2df1e8ca-25a4-4f6b-125a-08debd6673f6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|18002099003|6133799003|56012099006|11063799006|3023799007;
-X-Microsoft-Antispam-Message-Info:
-	nRLoT+RKdU9o90IetsE6mY/wdFgGf/xEqaK+2fiITg1c5gauRLOOjOS9qu7hLJ9vAjb81BT8erFgQgiPNJglohPDozo8dQY/9XtfoQhhyOPMv/ngBPyN+7hcX5ZA5Ah7eyU0DiiusQx2MXUSCk0+vaaodE+a9/yQwrlMRNF2xYahvan0pCIaqzWqJRAnt3/EgXvRo0z3qzSYccDF+6T3KisZIC8l1gu535dQDwbisz30sMh4heGl0Y2w2R9lN1IbqZS04cyd/oeNzvLjKWOX84NvdXg9cb8Ldi1qt7IjxIt7AMqZPfmdAZnVWStTohNkfFZNAQ7TOniae4MC3gJ7oWFENZq8/vRO4HQRVo7yVRETzINaEOUvdwPuz/ufAQeWgqT0ximZ1S56dX6Jn94R2v2yp1/rDTWbwowUkgxTupjibz2XBHtbDnyk/A5v+VGEHXK+7px1IXn7Im5MGQcMuYlpjcCRtUZTPGlEHhWqninCK/iznUWorqArKynVeCOI2J7HvO2PxqwU1AvNpetfia5q92fSkJO6rVnj0sjJHcnn+CjX4hLGXuPBrjWTiysXrhW4EK7uJyEJsbZcvNGMnM6qCLulmlO0aW4JLq7CHPfDGCzJ4/9z8phaBjDYw5Bj82ZlsA29HDEj9WfMmz+U4/0jxwO4R1/Dhy0maeo0RsRuUNabg9yH/ENqS4sufrE3w/YRLUW6zzp9DhP3iBf/EQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(18002099003)(6133799003)(56012099006)(11063799006)(3023799007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eh6C+bvjyn8JrwM9O4XrquE2MG6T6b3QKPPctyExmZyiNomrmr6ZHggXt6s2?=
- =?us-ascii?Q?pdXbcGfEXPi6d5zsEAyNhLyWSd3ycPu2xNgO5ny4pPsDZ13UTvgyFzI7i5Yl?=
- =?us-ascii?Q?E6v9TepL/IdIhnnfJ4FWbaSSwJFxDq8CoTEUlr2CS4P93Zdbt7otTDFkVK9s?=
- =?us-ascii?Q?kuhasK4GHjG+5AWGXj21weNjiFDi53zeNLAAsqMqBXJpUEKgoEt210uFkwgf?=
- =?us-ascii?Q?jQxWhIn7CTLvQ0Y5m5FF2cleqjD55H8J17YaTeRP6fETg4Hf7XUoL+V1B6iF?=
- =?us-ascii?Q?GnELFlgkA9kXILn7a5cGJdw1xPZXUNlnS3b2mXulYnYdmRQvcwDFiECOHYt2?=
- =?us-ascii?Q?5ul1d1TocujisTjvjqreJ7ktKRG3+xNwgNL/k2Ob7zyxFELSU3xvvFCylxID?=
- =?us-ascii?Q?P0IFRvtxCHKbQ9+PvC44+d7yRlrzahIj2gQ/bMQ0PHq1W8CHfUekqS2r8nvU?=
- =?us-ascii?Q?uvDq3c6McHvE2l2AWI16I28aTyFS2BCumXZcwT8VASbJuUPyiMLIqXe78f94?=
- =?us-ascii?Q?Y6WBl+XT+TqAj6NGw9t+rsBBCm5Sb3pr+0mPuKw3RsI9Eec7yxBELqv+hyIT?=
- =?us-ascii?Q?RE7DQNbCd7+YRRgUICC9fQIYJh0RjrcII5Mq4mJiDipao0nHIPx3rOkzSgkX?=
- =?us-ascii?Q?db1+zTNhxEh2vH/ooACdXXbDw9fsF9N58Mh8YBYhbloaS+M1FsTcC2RKxxFb?=
- =?us-ascii?Q?oj6AGvkQ9/FHJ49R4DnbnXtIR+Dz+/+wnvfAGryHZcME+fCVj563I84S+/g+?=
- =?us-ascii?Q?Z1cGJoDDIG4sf/RuRvVzmxsHe/qPWmd/Fqy8+TRR+Q5465g433mhiMW/NYsr?=
- =?us-ascii?Q?OcRE8sqcBcoe1u4R1t34g4U7CqeyEKwUbeR+jhyyPKDrvQslyCJR76JOitIm?=
- =?us-ascii?Q?/9X4b9wzSnqZZW+nSBqbbvC2o2pM6FrfPkPb5mtZQMzltGtdtgqych3g27M9?=
- =?us-ascii?Q?IylvG11vVRW8xIwtjdF/kW6/6nbBXO2PAzEwfts1QjHB65ZQDx9Lf0FuGH17?=
- =?us-ascii?Q?w228F8fehLpY7fXYqLJTL2btm6u89AtkSM1cz94C0vcRyOUF//4PuUGb2JtA?=
- =?us-ascii?Q?EMcs93Y3sxWKFo7q6FRaYWJGPhiggBcyXiMJ+JK4G4l/T+WEksqKrspX/J6v?=
- =?us-ascii?Q?Vb8Kqf0dy1atafWapXME/Bi7u6bZC02FKMisClzsSDTRglVLC3F/u5m1oMdv?=
- =?us-ascii?Q?Ulm7zmEOIup3mXoUQaIfA+Rdk/Vr9RQ8prEauk9eaAOlW2xHMkoQVRYeDoG2?=
- =?us-ascii?Q?81/mcFI/Lo8j57DMV7AaM6nds4qLfusYGtzzPLiERJVsuKouLCBjpgrZusEC?=
- =?us-ascii?Q?3Uydrr8EwAX4CzttxwKkPgtZvHsKRHBPXLBXnheoCHAUG+fWYeYR4O/MLJ1z?=
- =?us-ascii?Q?/cZmnaLwxNs9rw0JgZu4pAKkzQ9WkEFAQyj8TlQqz/93O6l1cNKl5A/0CTu5?=
- =?us-ascii?Q?eVpZYR2O246sU1OCGn49gazDTA7a3dLZTQZV4ZZ8MaxzmjfTFRJ8vUKM27cc?=
- =?us-ascii?Q?DalFcTDSbkcgFj+PkYIbe5vgrkSJ6V98GsrS4MU31j/CkTNBgIE3+WkhYPM0?=
- =?us-ascii?Q?Tufa2fL6TJilOjQL/C5Be/K575dICUvg5y/yoX6mYopbfpuF+ZRjaFKxNiwI?=
- =?us-ascii?Q?eQSDCbFN/AhvFo7iRnkgrM0iocR13zvD2ZOo7G5b8TzVkQTulsoAScO/xWC3?=
- =?us-ascii?Q?7Us6Ybjp/226pkqkzuVafLlJdRkJK/P9MKJlYQedVXiMehIftIYc9HGLgb8l?=
- =?us-ascii?Q?xrmGsMfqtQ=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2df1e8ca-25a4-4f6b-125a-08debd6673f6
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2026 09:41:26.6235
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wIfVX8h2pivgXG4fA88RbL5p5gN7WMWpGAbOUyRPzgoRa95RRDxl/Ksn6D/AuAooz43reHlZ94Km335X3LP/WQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPF7F4CD71A4
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHBhGWoC/5XOzYrCMBSG4VuRrE3JOSZNdTX3MUjJ7/SAbSUpd
+ QbpvZsIIrN0+R3I8+bOckgUMjvt7iyFlTLNUxlqv2NuMNNP4OTLZiiwFYiCL/OVXOZmGBeyAng
+ yuY9x6E0ae5qWkCZz6asUbtxG752OTjtjWRGvKUT6fda+z2UPlJc5/T3jK9Rr7ShA0ADYSdVAB
+ xLgyKEGg29K03yVVOPmkVVixdezz7+3Ihf8IHU06PVBgf0vy7esoPtMlkWW2B67VitrWnjL27Y
+ 9ACF2UCN1AQAA
+To: will@kernel.org, jic23@kernel.org, xueshuai@linux.alibaba.com, 
+ saket.dumbre@intel.com, mchehab@kernel.org, dave@stgolabs.net, 
+ djbw@kernel.org, bp@alien8.de, tony.luck@intel.com, guohanjun@huawei.com, 
+ lenb@kernel.org, skhan@linuxfoundation.org, vishal.l.verma@intel.com, 
+ rafael@kernel.org, corbet@lwn.net, ira.weiny@intel.com, 
+ dave.jiang@intel.com, krzk+dt@kernel.org, robh@kernel.org, 
+ catalin.marinas@arm.com, alison.schofield@intel.com, conor+dt@kernel.org
+Cc: Ahmed Tiba <ahmed.tiba@arm.com>, linux-arm-kernel@lists.infradead.org, 
+ Michael.Zhao2@arm.com, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
+ Dmitry.Lamerov@arm.com, devicetree@vger.kernel.org, 
+ linux-acpi@vger.kernel.org, linux-edac@vger.kernel.org, 
+ acpica-devel@lists.linux.dev
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780048269; l=4273;
+ i=ahmed.tiba@arm.com; s=20260219; h=from:subject:message-id;
+ bh=PhsoWnNzKoot9QOeJqx67Uz0y4ZbixYdSGzdVAqeDi0=;
+ b=4LZk0RIa3vVsPfok70Bkk0nn/tFW90OcgFipoA9qmlu1DTjOsn7/XsxWtMrCF3t0hdeWKsRDG
+ qK1VHPix0lxCheY5fBK53z7Wxo4MMrJ6qkbFDhJk0TCcZZ+6/6wcgg7
+X-Developer-Key: i=ahmed.tiba@arm.com; a=ed25519;
+ pk=xVOtd+Qklh/4tuM3tB+BEZD4jj5a6W59C3KCNX6v7OE=
 
-The mock auto-region created at module load wrote switch and host-bridge
-decoder target[] directly, in addition to target_map[]. Real HW programs
-only target_map[] and resolves target[] as dports enumerate, via
-update_decoder_targets(). Region replay already follows that ordering,
-the initial auto-region did not.
+This is v5 of the GHES refactor series. Compared to v4, it only updates
+the DT binding to address the latest review comments.
 
-Drop the direct target[] writes and call
-cxl_port_update_decoder_targets() so target[] is resolved the same way
-as real HW and region replay, exercising more of the auto-region driver
-path.
+Changes in v5:
+- Dropped the `oneOf` from `memory-region` and described it as a plain
+  list with `minItems: 1`.
+- Simplified the DT example to keep only the `arm,ras-cper` device node.
+- Link to v4: https://lore.kernel.org/r/20260518-topics-ahmtib01-ras_ffh_arm_internal_review-v4-0-42698675ba61@arm.com
 
-This is inspired by the discussion [1] below:
+Signed-off-by: Ahmed Tiba <ahmed.tiba@arm.com>
 
-[1]: https://lore.kernel.org/all/20260521084806.28232-1-icheng@nvidia.com/
-Suggested-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Richard Cheng <icheng@nvidia.com>
+Changes in v4:
+- Reworded the ghes_cper.h header comment and kept the original copyrights.
+- Fixed the ghes_cper.h W=1 warnings by limiting the ACPI
+  fixmap-based declarations to the ACPI build path.
+- Updated the DT binding to describe the CPER buffer
+  as firmware-owned shared memory.
+- Described the optional ack area as a second memory-region entry.
+- Updated the DT example accordingly.
+- Link to v3: https://lore.kernel.org/r/20260318-topics-ahmtib01-ras_ffh_arm_internal_review-v3-0-48e6a1c249ef@arm.com
+
+Changes in v3:
+- Fixed the new ghes_cper.h header comment and kept the original
+  copyrights.
+- Added <linux/bitfield.h> to fix the kernel test robot build failure.
+- Renamed the binding/compatible and DT-side naming to ras-cper.
+- Switched the DT provider to generic firmware property accessors.
+- Replaced atomic source IDs with IDA.
+- Updated IRQ/error/resource handling as suggested in review
+  (platform_get_irq(), dev_err_probe(), devm platform ioremap
+  helpers).
+- Removed the ARM64 dependency and fixed Kconfig/build coverage.
+- Clarified comments and kept the early move patches mechanical.
+- Link to v2: https://lore.kernel.org/r/20260220-topics-ahmtib01-ras_ffh_arm_internal_review-v2-0-347fa2d7351b@arm.com
+
+Changes in v2:
+- Dropped the proposed "estatus core" and kept GHES naming/flow intact
+  (per Borislav Petkov).
+- Re-sliced the series into smaller mechanical steps (per Mauro Carvalho Chehab).
+- Minor DT binding fixes based on Krzysztof Kozlowski's feedback.
+- Removed fixmap slot usage from the DT FFH driver (per Will Deacon).
+
+Series structure:
+- Patches 1-8 are mechanical moves only and do not change behavior.
+- Patch 9 wires the shared helpers back into GHES.
+- The DT firmware-first CPER buffer provider is added in the final patches.
+- "ACPI: APEI: introduce GHES helper" is internal build glue only
+  and does not introduce a new user-visible configuration option.
+
+- Link to v1: https://lore.kernel.org/r/20251217112845.1814119-1-ahmed.tiba@arm.com
+
 ---
-cxl_mock_mem didn't load together when I manually modprobe cxl_test
-module, should we make them loaded together automatically for better
-user experience?
+Ahmed Tiba (10):
+      ACPI: APEI: GHES: share macros via a private header
+      ACPI: APEI: GHES: move CPER read helpers
+      ACPI: APEI: GHES: move GHESv2 ack and alloc helpers
+      ACPI: APEI: GHES: move estatus cache helpers
+      ACPI: APEI: GHES: move vendor record helpers
+      ACPI: APEI: GHES: move CXL CPER helpers
+      ACPI: APEI: introduce GHES helper
+      ACPI: APEI: share GHES CPER helpers
+      dt-bindings: firmware: add arm,ras-cper
+      RAS: add firmware-first CPER provider
+
+ Documentation/admin-guide/RAS/main.rst             |   18 +
+ .../devicetree/bindings/firmware/arm,ras-cper.yaml |   54 +
+ MAINTAINERS                                        |    6 +
+ drivers/Makefile                                   |    1 +
+ drivers/acpi/Kconfig                               |    4 +
+ drivers/acpi/apei/Kconfig                          |    1 +
+ drivers/acpi/apei/apei-internal.h                  |   10 +-
+ drivers/acpi/apei/ghes.c                           | 1025 +------------------
+ drivers/acpi/apei/ghes_cper.c                      | 1027 ++++++++++++++++++++
+ drivers/ras/Kconfig                                |   11 +
+ drivers/ras/Makefile                               |    1 +
+ drivers/ras/cper-esource.c                         |  257 +++++
+ include/acpi/ghes.h                                |   10 +-
+ include/acpi/ghes_cper.h                           |  151 +++
+ include/cxl/event.h                                |    2 +-
+ 15 files changed, 1542 insertions(+), 1036 deletions(-)
+---
+base-commit: 8fde5d1d47f69db6082dfa34500c27f8485389a5
+change-id: 20260220-topics-ahmtib01-ras_ffh_arm_internal_review-bfddc7fc7cab
 
 Best regards,
-Richard Cheng.
----
- tools/testing/cxl/test/cxl.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
-
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 418669927fb0..5266aa3733cb 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -1181,15 +1181,11 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 		cxlsd = to_cxl_switch_decoder(dev);
- 		if (i == 0) {
- 			/* put cxl_mem.4 second in the decode order */
--			if (pdev->id == 4) {
--				cxlsd->target[1] = dport;
-+			if (pdev->id == 4)
- 				cxlsd->cxld.target_map[1] = dport->port_id;
--			} else {
--				cxlsd->target[0] = dport;
-+			else
- 				cxlsd->cxld.target_map[0] = dport->port_id;
--			}
- 		} else {
--			cxlsd->target[0] = dport;
- 			cxlsd->cxld.target_map[0] = dport->port_id;
- 		}
- 		cxld = &cxlsd->cxld;
-@@ -1212,6 +1208,16 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 		cxld->commit = mock_decoder_commit;
- 		cxld->reset = mock_decoder_reset;
- 
-+		/*
-+		 * Only target_map[] is programmed above, mimicking
-+		 * firmware. On real hardware target[] is populated as
-+		 * dports enumerate, via update_decoder_targets(). The
-+		 * mock's dports are already bound by now, so fire that
-+		 * resolution explicitly here rather than stamping
-+		 * target[] directly.
-+		 */
-+		cxl_port_update_decoder_targets(iter, dport);
-+
- 		cxld_registry_update(cxld);
- 		put_device(dev);
- 	}
 -- 
-2.43.0
+Ahmed Tiba <ahmed.tiba@arm.com>
 
