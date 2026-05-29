@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0000B37B3F9;
-	Fri, 29 May 2026 17:07:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1FC381B0A;
+	Fri, 29 May 2026 17:16:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780074453; cv=none; b=Tqdjd8e5Z5MfaPe16l2vUmYlvl1cly2ZUs9CezCfsc7SX3TzepRbKgnBS3iEHJmrW6j068M3x9QNv1j02vGH5vuBJQayz4ShV2T8OvN+Ga+fTMJixjk52EZm2a4KXKeTw8BgdnmlxqhHhW5jMCf1MgrEE0YLHdPUPl38hl+k1n4=
+	t=1780074979; cv=none; b=CJMAwhYZOm+K+7N33e96n+XwUZyj6CsiXWxm2eDsbqOFWBCDcysLWLWv/D7YjQIJ3aY+58BmmT3XVATHjKQ1+MPyJlCf9lqBEWINbJ8ok9EJvx+v4cioOypFjxoHMZKiPW5jLLLbQUO+FjIPwxYGY+nn4vaDVDh0fzjWpDLH4Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780074453; c=relaxed/simple;
-	bh=tXNp0g3W9JDleKH3mGUCK15MwBH0BMR204B9RWHLpy4=;
+	s=arc-20240116; t=1780074979; c=relaxed/simple;
+	bh=oPZqw0KciWLf4R1JxiyGNTd9Vvsqd2t6e/uTw1nf/Hw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K80iOzjmEucB2MdCg5Il8LZQgMLftb6SaR3EQQnnKYrHzTcLGkDaipKcAY5nbCZPKFF2FTHwLn1KU9HeJYtI5G+Xu/bcBbRiJsg3LHsijZ58N8Y0nV3ZbO4N8D5IEgao1ukVamChyhYy0/pxYivLozZyI5mCH7W7Qb/13co3Alc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SAaCXSHW; arc=none smtp.client-ip=198.175.65.14
+	 In-Reply-To:Content-Type; b=hQ3jATXI7iFYaMPE2Om9dIFYSUVxD0XwnzqpNKJFpcZ0CJwq9hqd+iMoE3sKFltu9CsxiXgqIAIq8h6+U/0Oz8GsIIF6wDvXR9wJk9SCh9Q+Jl+UhBq23nkSHH2tsK/KoaiixyTC/CzT8+bPkKb04pjC8aqQZYTl82jt9e3TZxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cnj4i0cS; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SAaCXSHW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cnj4i0cS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780074451; x=1811610451;
+  t=1780074977; x=1811610977;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=tXNp0g3W9JDleKH3mGUCK15MwBH0BMR204B9RWHLpy4=;
-  b=SAaCXSHWMXMPRot+S0qumc0eaXU5axs9Gr2thzrAOHbVVXd2EJuDgZNt
-   sV/uJ7b9va57aV7DU6osklmTD6T0U5NIaabZUVhsj3vy7M1X36CH9ypWW
-   gMO1TXWlJ9yz27+4zVymnQtA5tIvv4CUOP/Zrs98DL8FUAkWjyrDGTOem
-   p2sL1x67I1HT9La3RAk6y09NuMFTVHzZvQnTMC3g1iM0eLwhS6UtlrZJP
-   /KuUCXV4UifhcM/rOzxWyoboh/7mHmwXiQ+Cssx5JV4gmmEOv2tBzfxfZ
-   TPvyj6BQZrsxYxZ6VR1RYqSOtMztUiMY3J5LUdea5gJLbbd/v218FpSV1
-   g==;
-X-CSE-ConnectionGUID: 1EtuYcB3QUmEZqgC1ehk1w==
-X-CSE-MsgGUID: mvpMH3Q6Q7+Fhkt0HY1TcQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11801"; a="84818577"
+  bh=oPZqw0KciWLf4R1JxiyGNTd9Vvsqd2t6e/uTw1nf/Hw=;
+  b=Cnj4i0cSRYU6f3ae1MficpjVPZjCrWlxGl4ZieOgfL8cZ1qx/FK1v8ED
+   ieFmd2jxDTCRSHLDtw720As+73K2ECgZppHpluygJE3VuvqDzejhtB5Rt
+   LXd2rfRvgLudowVx+D7aYNrvoG4RfYhXhJxStWyGVf1rYBMEt2jjUkkJ1
+   B48cFZi4ZTZA9MqToMZqR/cc7TqGZYRc0hMb6snaKDEP54leU7+Ymhwss
+   KbjqoN8PgqVNOV6qxoHLH6AKalnSWYL00K1pjm+VkyVnjmdRHSgPe6FtV
+   zNHQzakcjMwwJKHjWaAyuguNG6Psprvbv+GAeg217lrSz2cdm1+7sA5yf
+   w==;
+X-CSE-ConnectionGUID: vgH6uiajTimv0QHTVJ876Q==
+X-CSE-MsgGUID: e3mCuFb9RBWj0Qbz4JyvCA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11801"; a="84819144"
 X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="84818577"
+   d="scan'208";a="84819144"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 10:07:30 -0700
-X-CSE-ConnectionGUID: G5PilY2TRVCbhtb15yLkqg==
-X-CSE-MsgGUID: vzlt7mksQS+P4+at1bzt3Q==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 10:16:16 -0700
+X-CSE-ConnectionGUID: IxlzC5tGQm6ruh/ReIaA0w==
+X-CSE-MsgGUID: 5fGA1fj6SZW0cbNmhOIL4g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,175,1774335600"; 
-   d="scan'208";a="236543663"
+   d="scan'208";a="236545870"
 Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.111.151]) ([10.125.111.151])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 10:07:29 -0700
-Message-ID: <19e89881-0969-4305-859a-f8120198b783@intel.com>
-Date: Fri, 29 May 2026 10:07:27 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 10:16:12 -0700
+Message-ID: <8de1e66c-14a2-4933-9c34-be1d1335a36c@intel.com>
+Date: Fri, 29 May 2026 10:16:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 24/31] dax/bus: Add uuid sysfs attribute to dax
- devices
+Subject: Re: [PATCH v10 25/31] dax/bus: Reject resize on DC dax devices and
+ enforce 0-size creation
 To: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
  linux-kernel@vger.kernel.org
 Cc: nvdimm@lists.linux.dev, Dan Williams <djbw@kernel.org>,
@@ -61,98 +61,183 @@ Cc: nvdimm@lists.linux.dev, Dan Williams <djbw@kernel.org>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
  Alison Schofield <alison.schofield@intel.com>, John Groves
  <John@Groves.net>, Gregory Price <gourry@gourry.net>,
- Anisa Su <anisa.su@samsung.com>
+ Anisa Su <anisa.su@samsung.com>, Ira Weiny <ira.weiny@intel.com>
 References: <cover.1779528761.git.anisa.su@samsung.com>
- <00e5da991afc1c96ca1074152ec10d0d8484b673.1779528761.git.anisa.su@samsung.com>
+ <9c73377182f19e86e2cc939ddf0184d5d85581f9.1779528761.git.anisa.su@samsung.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <00e5da991afc1c96ca1074152ec10d0d8484b673.1779528761.git.anisa.su@samsung.com>
+In-Reply-To: <9c73377182f19e86e2cc939ddf0184d5d85581f9.1779528761.git.anisa.su@samsung.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
 
 On 5/23/26 2:43 AM, Anisa Su wrote:
-> Introduce a read-write 'uuid' sysfs entry at
-> /sys/bus/dax/devices/daxX.Y/ with stubbed handlers: show returns "0"
-> and store returns -EOPNOTSUPP.  A follow-on patch wires both
-> directions to dax_resource tracking.
+> A DC dax device's size is determined by the extents that back it, not by
+> the user.  DCD extents are all-or-nothing, so partial shrink is just as
+> illegal as growing.  Enforce that on the size and creation paths:
 > 
-> Document the attribute in the dax sysfs ABI.
+>   * size_store: any non-zero resize on a DC region returns -EOPNOTSUPP.
+>     The sole exception is size=0, which daxctl destroy-device writes to
+>     return every claimed extent to the region's available pool before
+>     the device's name is written to the region's 'delete' attribute.
+>   * __devm_create_dev_dax: a DC dax device must be created at size 0.
+>     Non-zero data->size on a DC region returns -EINVAL with a clear
+>     message.
 > 
+> The resize machinery (dev_dax_shrink, adjust_ok, dev_dax_resize_static,
+> dev_dax_resize) learns to walk the right parent — dax_region->res for
+> static regions, the dax_resource->res for DC regions claimed via
+> uuid_store — so shrink-to-0 correctly releases each extent's child
+> resource rather than the region's.
+> 
+> Based on an original patch by Navneet Singh.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> ---
->  Documentation/ABI/testing/sysfs-bus-dax | 18 ++++++++++++++++++
->  drivers/dax/bus.c                       | 14 ++++++++++++++
->  2 files changed, 32 insertions(+)
+
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+Just a nit below.
+
+
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-dax b/Documentation/ABI/testing/sysfs-bus-dax
-> index b34266bfae49..23400824073b 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-dax
-> +++ b/Documentation/ABI/testing/sysfs-bus-dax
-> @@ -59,6 +59,24 @@ Description:
->  		backing device for this dax device, emit the CPU node
->  		affinity for this device.
->  
-> +What:		/sys/bus/dax/devices/daxX.Y/uuid
-> +Date:		May, 2026
-> +KernelVersion:	v6.16
-
-update
-
-> +Contact:	nvdimm@lists.linux.dev
-> +Description:
-> +		(RW) On read, reports the uuid identifying the capacity
-> +		backing this dax device.  A value of "0" indicates that the
-> +		device has no associated uuid — either it is not backed by
-> +		DCD capacity, or the backing extents are untagged.
-> +
-> +		Writes are accepted only on dax devices in sparse (DCD)
-> +		regions; writes to non-sparse devices return -EOPNOTSUPP.
-> +		Writing a non-null uuid claims every dax_resource in the
-> +		parent region whose tag matches the written uuid, consuming
-> +		any available capacity in each matching resource.  Writing
-> +		"0" is shorthand for the null uuid and claims a single
-> +		untagged dax_resource.
-> +
->  What:		/sys/bus/dax/devices/daxX.Y/target_node
->  Date:		February, 2019
->  KernelVersion:	v5.1
+> ---
+> Changes:
+> [anisa: split out from the original "Surface dc_extents" commit;
+>  DC-aware resize policy only.]
+> ---
+>  drivers/dax/bus.c | 46 +++++++++++++++++++++++++++++++++++-----------
+>  1 file changed, 35 insertions(+), 11 deletions(-)
+> 
 > diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index 5c1b93890d30..1d6f82920be6 100644
+> index 1d6f82920be6..c030eb103ad0 100644
 > --- a/drivers/dax/bus.c
 > +++ b/drivers/dax/bus.c
-> @@ -1526,6 +1526,19 @@ static ssize_t numa_node_show(struct device *dev,
+> @@ -1136,7 +1136,8 @@ static int dev_dax_shrink(struct dev_dax *dev_dax, resource_size_t size)
+>  	int i;
+>  
+>  	for (i = dev_dax->nr_range - 1; i >= 0; i--) {
+> -		struct range *range = &dev_dax->ranges[i].range;
+> +		struct dev_dax_range *dev_range = &dev_dax->ranges[i];
+> +		struct range *range = &dev_range->range;
+>  		struct dax_mapping *mapping = dev_dax->ranges[i].mapping;
+>  		struct resource *adjust = NULL, *res;
+>  		resource_size_t shrink;
+> @@ -1152,6 +1153,10 @@ static int dev_dax_shrink(struct dev_dax *dev_dax, resource_size_t size)
+>  			continue;
+>  		}
+>  
+> +		/*
+> +		 * Partial shrink: forbidden on DC regions, so dev_range
+> +		 * here must belong to a static device.
+> +		 */
+>  		for_each_dax_region_resource(dax_region, res)
+>  			if (strcmp(res->name, dev_name(dev)) == 0
+>  					&& res->start == range->start) {
+> @@ -1195,19 +1200,21 @@ static bool adjust_ok(struct dev_dax *dev_dax, struct resource *res)
 >  }
->  static DEVICE_ATTR_RO(numa_node);
 >  
-> +static ssize_t uuid_show(struct device *dev,
-> +		struct device_attribute *attr, char *buf)
-> +{
-> +	return sysfs_emit(buf, "%d\n", 0);
-
-Should it just emit null UUID instead of 0 to not screw up user apps?
-
-return sysfs_emit(buf, "%pUb\n", &uuid_null);
-
-> +}
-> +
-> +static ssize_t uuid_store(struct device *dev, struct device_attribute *attr,
-> +			  const char *buf, size_t len)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +static DEVICE_ATTR_RW(uuid);
-> +
->  static ssize_t memmap_on_memory_show(struct device *dev,
->  				     struct device_attribute *attr, char *buf)
+>  /**
+> - * dev_dax_resize_static - Expand the device into the unused portion of the
+> - * region. This may involve adjusting the end of an existing resource, or
+> - * allocating a new resource.
+> + * __dev_dax_resize - Expand the device into the unused portion of the region.
+> + * This may involve adjusting the end of an existing resource, or allocating a
+> + * new resource.
+>   *
+>   * @parent: parent resource to allocate this range in
+>   * @dev_dax: DAX device to be expanded
+>   * @to_alloc: amount of space to alloc; must be <= space available in @parent
+> + * @dax_resource: if dc; the parent resource
+>   *
+>   * Return the amount of space allocated or -ERRNO on failure
+>   */
+> -static ssize_t dev_dax_resize_static(struct resource *parent,
+> -				     struct dev_dax *dev_dax,
+> -				     resource_size_t to_alloc)
+> +static ssize_t __dev_dax_resize(struct resource *parent,
+> +				struct dev_dax *dev_dax,
+> +				resource_size_t to_alloc,
+> +				struct dax_resource *dax_resource)
 >  {
-> @@ -1597,6 +1610,7 @@ static struct attribute *dev_dax_attributes[] = {
->  	&dev_attr_resource.attr,
->  	&dev_attr_numa_node.attr,
->  	&dev_attr_memmap_on_memory.attr,
-> +	&dev_attr_uuid.attr,
->  	NULL,
->  };
+>  	struct resource *res, *first;
+>  	int rc;
+> @@ -1215,7 +1222,8 @@ static ssize_t dev_dax_resize_static(struct resource *parent,
+>  	first = parent->child;
+>  	if (!first) {
+>  		rc = alloc_dev_dax_range(parent, dev_dax,
+> -					   parent->start, to_alloc, NULL);
+> +					   parent->start, to_alloc,
+> +					   dax_resource);
+>  		if (rc)
+>  			return rc;
+>  		return to_alloc;
+> @@ -1229,7 +1237,8 @@ static ssize_t dev_dax_resize_static(struct resource *parent,
+>  		if (res == first && res->start > parent->start) {
+>  			alloc = min(res->start - parent->start, to_alloc);
+>  			rc = alloc_dev_dax_range(parent, dev_dax,
+> -						 parent->start, alloc, NULL);
+> +						 parent->start, alloc,
+> +						 dax_resource);
+>  			if (rc)
+>  				return rc;
+>  			return alloc;
+> @@ -1253,7 +1262,8 @@ static ssize_t dev_dax_resize_static(struct resource *parent,
+>  				return rc;
+>  			return alloc;
+>  		}
+> -		rc = alloc_dev_dax_range(parent, dev_dax, res->end + 1, alloc, NULL);
+> +		rc = alloc_dev_dax_range(parent, dev_dax, res->end + 1, alloc,
+> +					 dax_resource);
+>  		if (rc)
+>  			return rc;
+>  		return alloc;
+> @@ -1264,6 +1274,13 @@ static ssize_t dev_dax_resize_static(struct resource *parent,
+>  	return 0;
+>  }
 >  
+> +static ssize_t dev_dax_resize_static(struct dax_region *dax_region,
+> +				     struct dev_dax *dev_dax,
+> +				     resource_size_t to_alloc)
+> +{
+> +	return __dev_dax_resize(&dax_region->res, dev_dax, to_alloc, NULL);
+> +}
+> +
+>  static ssize_t dev_dax_resize(struct dax_region *dax_region,
+>  		struct dev_dax *dev_dax, resource_size_t size)
+>  {
+> @@ -1277,6 +1294,8 @@ static ssize_t dev_dax_resize(struct dax_region *dax_region,
+>  		return -EBUSY;
+>  	if (size == dev_size)
+>  		return 0;
+> +	if (size != 0 && is_dynamic(dax_region))
+> +		return -EOPNOTSUPP;
+>  	if (size > dev_size && size - dev_size > avail)
+>  		return -ENOSPC;
+>  	if (size < dev_size)
+> @@ -1288,7 +1307,7 @@ static ssize_t dev_dax_resize(struct dax_region *dax_region,
+>  		return -ENXIO;
+>  
+>  retry:
+> -	alloc = dev_dax_resize_static(&dax_region->res, dev_dax, to_alloc);
+> +	alloc = dev_dax_resize_static(dax_region, dev_dax, to_alloc);
+>  	if (alloc <= 0)
+>  		return alloc;
+>  	to_alloc -= alloc;
+> @@ -1674,6 +1693,11 @@ static struct dev_dax *__devm_create_dev_dax(struct dev_dax_data *data)
+>  	struct device *dev;
+>  	int rc;
+>  
+> +	if (is_dynamic(dax_region) && data->size) {
+> +		dev_err(parent, "DC DAX region devices must be created initially with 0 size");
+
+Needs \n
+
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+>  	dev_dax = kzalloc_obj(*dev_dax);
+>  	if (!dev_dax)
+>  		return ERR_PTR(-ENOMEM);
 
