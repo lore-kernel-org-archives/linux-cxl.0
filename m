@@ -1,171 +1,188 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E82631F98D
-	for <linux-cxl@vger.kernel.org>; Sat, 30 May 2026 18:08:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B7C284690
+	for <linux-cxl@vger.kernel.org>; Sat, 30 May 2026 18:20:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780164540; cv=none; b=RVnLN2xl1v5SIN+vzNWVGkIWdk1Cp8YFj2dG391G//KZQNhOhiwF/ll+8XJWvAT8Y1DJR6ObHSvqJa842/vFYCJOebQtfjOyXuDBrkIWJdn2sGdlHld4LZvalDJFBGmMosN7xc94ZE0Vyo23IArai8RxLc0QrFqwN0UgxlEw6Wc=
+	t=1780165242; cv=none; b=h6Q+S5L7eR0TUnLqJ6HxUNN/meUvg+VyPGlAg2q4vG0nEU3UMxlSwFEJn33qjFsb0Tgf66vwLvp0yk3yg30EQzJwNNDjpnNnf8yHQg6fVFkAgtMZMVTuZjMGe7q7UIJGHoyQtnYc/dzv5OlBjd1DfS9pt3BurqWOG8AtjnJc/nE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780164540; c=relaxed/simple;
-	bh=OPcSptPsGl3rBK9H+QXy4FgmVb/R8tWMYBWUkw5xkA0=;
+	s=arc-20240116; t=1780165242; c=relaxed/simple;
+	bh=ofwxILM2MFxRQ7Awt6/cV/DF/WcbiWwRbaIjcV4BXAU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=HOCPoiQ2wkllAVBfp8o4MDtxzalIFLhSz479Q3DqfENf9AilUIQFMR7Oz8J9RxIz0bQ2A1Waab1iwPue2mmVBDt020v0SdGfGvC3JujYZENrQeEXEA3ZlJ2qtLBXRQNoTqdL4P9nbb7coxyktkyjOSKoQyyYdo5qikgjevP6lZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KekNXRN9; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=AEt0MprlGaeJs1pxLecuwGgU5nmq/RdX2WSMFYuhT7eUESwUlmGWCeoNgx3oMxExd2i0A9wM7lZL8BXAGWVVxswYm1JMzMfjJTzTmbJaMSjLuBrhoU0X8wz5A+4uA7elLMlJ82sw1IyqZYxWPwfgmcwchLtoxkB2H9E4Sc1kHNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVsgcn/g; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KekNXRN9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 420861F00893;
-	Sat, 30 May 2026 18:08:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVsgcn/g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7406B1F00893;
+	Sat, 30 May 2026 18:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780164539;
-	bh=fX4zFbsLQ2hD0yM9KUUMH7VcGeFXE/SbpRbZtf+rLrM=;
+	s=k20260515; t=1780165239;
+	bh=WGGwaALPfY1MGxQ0yeGeA65Clj/nry6LEQ5yXajFnXY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KekNXRN9H9Pnk2iY+JYHH6ZU8AKrwN5dQmqTg64Q9DgsA0/6JBXcZemMde5VT4zlt
-	 IMrS3hhIb7PEpdqoZbOEvNd0nHFB/JyKacpAu0WH29rPwH5ViPztN/5haZZwkYdb6X
-	 Uaddiq/askhGFrSBQiBDrYmOBqCJ39Gsn2b1iXN55/9Q/qx9nhxdJoCT6jHsyfnsaD
-	 O1+exb7S9K1Bze7Wv22lWiBQ+kd4Z0FJ8Ws2q8nVbPlqFZVUQaTQDUcQz69v8DYTOl
-	 Bg6wuXhIPPmKR9uPv1GsFSLHk49gJaCEte5w3ZYTHXnVzX7pQW/hmybhinapVFPzQO
-	 0HsaUQj/FxMBQ==
+	b=mVsgcn/gCLLUZTdbUxgFxer/kOM+/+krgowkn3zl1iPggxMukluGOZayHLRiaIO03
+	 z7YX0EUTXxU4HVYmiz+zsQwBrqmpCUll7YOMtxyUDwNUxzuL0rD9EF8Oy8dcQ/7YSA
+	 sF6SqWMgHt+zvZ6PDUTQrwKmgYba8SR/AXSOeIv66+OFO6wnqRiRGaMDgYyt+LZD+k
+	 H9HUj7aGV+e0h5nmjzSaF6wjgWfhji8nF4d3pg4n1Q8ya0b6NuqVVxfhYvsSlByBoO
+	 SQ4soc9A9ZCIMql/LoM6T3ERzuoUruLl77eURG4a/5zfdCECcrbRBQle03b3mn5v6b
+	 qei/4HxTtta6w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V3 7/9] dax: fix holder_ops race in fs_put_dax()
+Subject: Re: [PATCH V3 8/9] dax: replace exported dax_dev_get() with
+ non-allocating dax_dev_find()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "John Groves" <john@jagalactic.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <0100019e79cc1d9e-d39ff70d-4f1d-4a02-8b8e-e01c70272c0c-000000@email.amazonses.com>
-References: <0100019e79cc1d9e-d39ff70d-4f1d-4a02-8b8e-e01c70272c0c-000000@email.amazonses.com>
+In-Reply-To: <0100019e79cc4e0f-26041b0e-3c38-4641-9e36-c8964a7f0e89-000000@email.amazonses.com>
+References: <0100019e79cc4e0f-26041b0e-3c38-4641-9e36-c8964a7f0e89-000000@email.amazonses.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 30 May 2026 18:08:58 +0000
-Message-Id: <20260530180859.420861F00893@smtp.kernel.org>
+Date: Sat, 30 May 2026 18:20:39 +0000
+Message-Id: <20260530182039.7406B1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
 
-New issues:
-- [High] The `WARN_ON` in `fs_put_dax()` will falsely trigger during normal=
- filesystem unmount if the DAX device was hot-unplugged.
-- [High] Unconditional clear of `holder_ops` in `fs_put_dax()` before valid=
-ating ownership can corrupt the state of concurrent valid holders.
-
 Pre-existing issues:
-- [High] Lockless double-fetch of `dax_dev->holder_ops` in `dax_holder_noti=
-fy_failure()` can lead to a NULL pointer dereference.
-- [High] Missing SRCU synchronization in `fs_put_dax()` allows use-after-fr=
-ee and module use-after-unload during unmount.
-- [High] Inode reference leak in `fs_dax_get_by_bdev()` when a concurrent h=
-older already owns the DAX device.
+- [High] Recycled `dax_device` objects inherit stale flags and operations d=
+ue to lack of zero-initialization.
+- [High] `alloc_dax()` exposes a partially initialized `dax_device` to conc=
+urrent lookups before `ops` and `private` are configured.
+- [High] `dax_core_init()` incorrectly returns 0 on failure, leading to use=
+-after-free panics during delayed DAX device allocations.
 --
 
-commit 182e9ccdc90a15375d69ff8ae0ad8f75bda03aed
+commit d84f23ffdf147bc18ecb76242e383acc9eb6cbc0
 Author: John Groves <John@Groves.net>
 
-dax: fix holder_ops race in fs_put_dax()
+dax: replace exported dax_dev_get() with non-allocating dax_dev_find()
 
-Clear holder_ops before holder_data so that a concurrent fs_dax_get()
-cannot have its newly installed holder_ops overwritten.
+This commit introduces dax_dev_find() for lookup-only semantics and makes
+dax_dev_get() static. It resolves teardown warnings and potential minor
+number corruption caused by allocating inodes without backing drivers.
 
 > diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-> index 25cf99dd9360b..4c56ac2faacdb 100644
+> index 4c56ac2faacdb..6cb271e034a70 100644
 > --- a/drivers/dax/super.c
 > +++ b/drivers/dax/super.c
-
 [ ... ]
-
->  void fs_put_dax(struct dax_device *dax_dev, void *holder)
->  {
-> -	if (dax_dev && holder &&
-> -	    cmpxchg(&dax_dev->holder_data, holder, NULL) =3D=3D holder)
-> -		dax_dev->holder_ops =3D NULL;
-> +	if (dax_dev && holder) {
-
-[ ... ]
-
-> +		WRITE_ONCE(dax_dev->holder_ops, NULL);
-[Severity: High]
-Could this unconditional write corrupt the state of concurrent valid holder=
-s?
-
-By clearing dax_dev->holder_ops unconditionally before checking ownership
-with cmpxchg(), a caller passing the wrong holder could inadvertently
-overwrite the holder_ops installed by a legitimate subsystem that just
-acquired the DAX device.
-
-> +		WARN_ON(cmpxchg(&dax_dev->holder_data, holder, NULL) !=3D holder);
-[Severity: High]
-Will this WARN_ON falsely trigger during a normal filesystem unmount if the
-DAX device was hot-unplugged?
-
-When a DAX device is hot-unplugged, the driver calls kill_dax(), which sets
-dax_dev->holder_data =3D NULL.
-
-If the user subsequently unmounts the filesystem, fs_put_dax() is called, b=
-ut
-the cmpxchg will see NULL instead of the expected holder. This would cause
-the WARN_ON to fire and potentially panic systems configured with
-panic_on_warn during normal administrative operations.
-
-> +	}
->  	put_dax(dax_dev);
-[Severity: High]
-This isn't a bug introduced by this patch, but does fs_put_dax() need SRCU
-synchronization before returning?
-
-dax_holder_notify_failure() runs asynchronously under the dax_read_lock()
-SRCU critical section. Since fs_put_dax() clears the holder registration but
-returns immediately without calling synchronize_srcu(&dax_srcu), could a
-filesystem unmount proceed, destroying in-memory structures and unloading
-the module while the notify_failure callback is still actively executing?
-
+> @@ -573,7 +573,41 @@ struct dax_device *dax_dev_get(dev_t devt)
+> =20
+>  	return dax_dev;
 >  }
+> -EXPORT_SYMBOL_GPL(dax_dev_get);
+> +
+> +/**
+> + * dax_dev_find - look up an existing dax_device by dev_t
+[ ... ]
+> +struct dax_device *dax_dev_find(dev_t devt)
+> +{
+[ ... ]
+> +	dax_dev =3D to_dax_dev(inode);
+> +	id =3D dax_read_lock();
+> +	if (!dax_alive(dax_dev)) {
+> +		dax_read_unlock(id);
+> +		iput(inode);
+> +		return NULL;
+> +	}
+> +	dax_read_unlock(id);
+> +
+> +	return dax_dev;
+> +}
+> +EXPORT_SYMBOL_GPL(dax_dev_find);
+> =20
+>  struct dax_device *alloc_dax(void *private, const struct dax_operations =
+*ops)
+>  {
+>  	struct dax_device *dax_dev;
+[ ... ]
+>  	dax_dev =3D dax_dev_get(devt);
+>  	if (!dax_dev)
+>  		goto err_dev;
+> =20
+>  	dax_dev->ops =3D ops;
+>  	dax_dev->private =3D private;
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does fs_dax_get_by_bdev() le=
-ak
-an inode reference when a concurrent holder already owns the DAX device?
+This is a pre-existing issue, but does setting the operations pointer here
+create a race condition with concurrent lookups?
 
-drivers/dax/super.c:fs_dax_get_by_bdev() {
+Looking at dax_dev_get(), it calls unlock_new_inode() which makes the
+inode globally visible in the VFS cache before alloc_dax() configures
+these critical fields:
+
+drivers/dax/super.c:dax_dev_get() {
     ...
-	else if (holder) {
-		if (!cmpxchg(&dax_dev->holder_data, NULL, holder))
-			dax_dev->holder_ops =3D ops;
-		else
-			dax_dev =3D NULL;
-	}
+    if (inode_state_read_once(inode) & I_NEW) {
+        set_bit(DAXDEV_ALIVE, &dax_dev->flags);
+        ...
+        unlock_new_inode(inode);
+    }
+    return dax_dev;
+}
+
+Could a concurrent thread calling the newly introduced dax_dev_find()
+observe dax_alive() returning true, but dereference an uninitialized or=20
+stale ops pointer when performing DAX operations?
+
+>  	return dax_dev;
+> =20
+>   err_dev:
+[ ... ]
+
+
+While reviewing this patch, I also noticed a couple of other pre-existing=20
+issues in drivers/dax/super.c that might be worth investigating:
+
+[Severity: High]
+This is a pre-existing issue, but can recycled dax_device objects inherit
+stale flags?
+
+In dax_alloc_inode(), the dax_device is allocated from the slab without
+clearing the outer fields:
+
+drivers/dax/super.c:dax_alloc_inode() {
+    ...
+    dax_dev =3D alloc_inode_sb(sb, dax_cache, GFP_KERNEL);
     ...
 }
 
-When a dax_dev is found, its inode reference count is incremented via
-igrab(&dax_dev->inode). If cmpxchg() fails because the device is already
-held, dax_dev is set to NULL, but the function appears to return without
-calling iput(&dax_dev->inode) to release the reference.
+The init_once() function only clears the memory on the initial slab creatio=
+n:
 
-[Severity: High]
-This isn't a bug introduced by this patch, but is there a potential lockless
-double-fetch of dax_dev->holder_ops in dax_holder_notify_failure() that cou=
-ld
-lead to a NULL pointer dereference?
-
-drivers/dax/super.c:dax_holder_notify_failure() {
+drivers/dax/super.c:init_once() {
     ...
-	if (!dax_dev->holder_ops) {
-		rc =3D -EOPNOTSUPP;
-		goto out;
-	}
-
-	rc =3D dax_dev->holder_ops->notify_failure(dax_dev, off, len, mf_flags);
+    memset(dax_dev, 0, sizeof(*dax_dev));
     ...
 }
 
-Since dax_dev->holder_ops is checked for NULL and then immediately
-dereferenced without READ_ONCE(), the compiler might load the value twice.
-If a concurrent fs_put_dax() executes WRITE_ONCE(dax_dev->holder_ops, NULL)
-between these two loads, the second load could fetch NULL and cause a crash.
+Since bits like DAXDEV_SYNC and DAXDEV_WRITE_CACHE are set but never cleared
+on teardown, could a newly allocated DAX device erroneously inherit these
+states and skip required CPU cache flushes?
+
+
+[Severity: High]
+This is a pre-existing issue, but does dax_core_init() hide initialization
+failures?
+
+If subsystem initialization fails, the error path destroys critical global
+structures but explicitly returns 0:
+
+drivers/dax/super.c:dax_core_init() {
+    ...
+err_chrdev:
+    dax_fs_exit();
+    return 0;
+}
+
+Would this hide the failure from the kernel's init system, causing delayed
+DAX device allocations via alloc_dax() or dax_dev_find() to attempt=20
+accessing the destroyed dax_cache or unmounted dax_superblock and panic?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0100019e79caead2-57=
-95328c-af48-4a93-b147-c11df7446e1a-000000@email.amazonses.com?part=3D7
+95328c-af48-4a93-b147-c11df7446e1a-000000@email.amazonses.com?part=3D8
