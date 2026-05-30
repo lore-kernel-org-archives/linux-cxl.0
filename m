@@ -1,416 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8324F768EA
-	for <linux-cxl@vger.kernel.org>; Sat, 30 May 2026 00:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFF5768EA
+	for <linux-cxl@vger.kernel.org>; Sat, 30 May 2026 00:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780100337; cv=none; b=DfUx+6KRX5FpoBL5ZpVPqPmc1alP6hm9Ghn5jvAW36H2pqEHQqcBycmpcbO8ufpDPSaQvqEVEE1LQ5MeNPa0pW1Nf8d4aAthL+9jADW/5HP3G+9wH+noHdcwfyAHIo5kqYSKELnepTbxci6DiEWrDLe0HPAGeaauUdI1EZOOzfA=
+	t=1780100357; cv=none; b=Ybekz4qau+qiseuJJqJXJfGNlkoDT1tdrpB5f6Xo/4POEXq3Bj1FXLjGmlzCQMt+evL8qBHlDet9JJAfF67V+3ScSPHd7FlWcb2p7vl3Go5rcim7G5KoWN512V82oAPgArRc/b4QqgYMGIglMwhaTy1rSSkCsCvuKwIwldJPJGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780100337; c=relaxed/simple;
-	bh=ZIhbPLRAHBSR6MzQO2ziLr+PYlcCP3hFw9C3qfXiVis=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mFSY6jBP8n9IRNLDOg/rV1SK6XMfDUoZosU1PBUzmXvYqxhXvCvKi2w1Jw//o+JQoS4lNIP5TT8pfJl3DHDi7HM1XS6+1UFuRfVjBualQ4uPPjHgrlA4ITv6XEgqbipp2ph/WiGDfZXC0kaHgRBCWFsnT68nXKX9Az6pWX3xsy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Snlz38sI; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1780100357; c=relaxed/simple;
+	bh=GMNTJQva76zlOzaWl0GHyiX/KYx13CZx6ChAAg/yN/M=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=eLkhABC5l3cZgHIc2YMVBiyQ0J3Ap3lPMaPFJlVH7ffvWrZY77EjDYPnPKB/fgX4q2fsDNdyebAzcLaVwjDkyqxx+YwvXsrf0qxZJ80+sa3vGpJ3OmUjdRvH9lIdIz8q4aAEae4Wjd4lnI/6bdPI3Kbu5vzYBSFdi7/fzx472b0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mZPf7KJU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Snlz38sI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780100335; x=1811636335;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZIhbPLRAHBSR6MzQO2ziLr+PYlcCP3hFw9C3qfXiVis=;
-  b=Snlz38sIyNCoQRo3qyvZ+q0x4dIZz57J1FscLZnex0PDxR9Q662HDMDQ
-   zzUOeiubKT6GAmaz7XMO0vLoTGis297rH6AozH7id5L63K6doRlRMv8k5
-   Ops5cz+Y/OIBi2lMdkrKDZAi893fPY3YXj3FNH9OE3QbR4VKTlOnN3Peb
-   QjZ1nVc1v4sSdrFyYAsiUq/qNDLVUTzvGIsqpKPIsk/kuVC82+1OA0311
-   zXgD+TcHpGixynZNzR5K1OLrh6sDu7v4/lo/gal42fEo3Dj4uEA4KEtTj
-   hW4J1VsjVOtXiuLzkEmL174JR32kJZE8MhZEH2vQL0WWjfxrR7MC71E1s
-   A==;
-X-CSE-ConnectionGUID: IIIaOtI+TRCHqEFfNh0D7A==
-X-CSE-MsgGUID: e+FccCnhSR+DmEeEy4G3bg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11801"; a="92339074"
-X-IronPort-AV: E=Sophos;i="6.24,176,1774335600"; 
-   d="scan'208";a="92339074"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 17:18:53 -0700
-X-CSE-ConnectionGUID: RMh+HU4zSN2o0VA8uFkJuQ==
-X-CSE-MsgGUID: UOZz7+1mSIebW2jeU/Nj7Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,176,1774335600"; 
-   d="scan'208";a="247264556"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.60])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 17:18:53 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org
-Cc: Alison Schofield <alison.schofield@intel.com>
-Subject: [ndctl PATCH 2/2] test/cxl-region-mixed.sh: test mixed-granularity region creation
-Date: Fri, 29 May 2026 17:18:47 -0700
-Message-ID: <7cc5ae46d895bf9e1bdf54b93a10a5c46b0c3488.1780099216.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <fa5c109f08824180f58341ebd9055545a2ff3142.1780099216.git.alison.schofield@intel.com>
-References: <fa5c109f08824180f58341ebd9055545a2ff3142.1780099216.git.alison.schofield@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mZPf7KJU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A7B21F00893;
+	Sat, 30 May 2026 00:19:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780100355;
+	bh=JOLQDEH4aoDuBHa79Y8+4Z+4GxjPLkEjQcWMPSP3vog=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=mZPf7KJUZsTSVEJzbpExXpCroXjztlgBJStCEmzfyzCbqCU08WRyjyMc1ONDoNbm/
+	 1L5AhlR3n5uiY6XWl1xXRl3gWkVs3lAl7AMkaxWUANcd5JRQtd/DVXiU4zHzVIGdW5
+	 gGDgpv5Yvd+FDTH104CXWiyBtF4uxCJUy46ArinNPwDM8Fa1/fvPC3OjqfQLwRkDD4
+	 KyjM1UMvRqLMBSKbWWv6HfQffKohycnJiIqKxhVC8ll2RGtPGdYmhOSMP6OaXz7IIF
+	 N3wE5RnDAkD5HkWFwKgN2H/yCjnXMaP46/Xq3ReNVkfwdkiF953WmxQV3XtRIXlcN5
+	 y24znkNVHQlBg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/6] cxl/region: Validate interleave selector bits
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Alison Schofield" <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <1a8a115cee9eddf5511e4a75f6dcb86783f0fa1e.1780095671.git.alison.schofield@intel.com>
+References: <1a8a115cee9eddf5511e4a75f6dcb86783f0fa1e.1780095671.git.alison.schofield@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 30 May 2026 00:19:14 +0000
+Message-Id: <20260530001915.7A7B21F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Exercise mixed-granularity region configurations against the
-mixed_gran_regions=1 cxl_test topology.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] The patch removes interleave granularity validation for auto-disco=
+vered regions, leaving the current port's granularity completely unvalidate=
+d.
+--
 
-The mixed_gran_regions topology presents two root decoders over a
-12-endpoint pool:
-  - 2-way @ 4KB across 2 host bridges
-  - 3-way @ 512B across 3 host bridges
+commit a2adec3549842d4a09c81232586828cb3b57099d
+Author: Alison Schofield <alison.schofield@intel.com>
 
-Positive cases run replay_regions to round-trip through the auto
-create path. The auto path reads decoder values back from the
-topology and runs them through the same selector walk and position
-arithmetic the user-create path uses. A region that creates
-successfully but fails replay usually indicates a position
-arithmetic bug, so replay coverage is the strongest correctness
-check we have at this layer.
+cxl/region: Validate interleave selector bits
 
-The test cases are listed near the top of the script.
+This commit updates multi-level interleave validation to account for
+selector bits from the root toward the current port. It accumulates
+selector bits, rejects overlaps, and removes the auto-region granularity
+equality check, relying on the new selector walk instead.
 
-Assisted-by: Claude Opus 4.7
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- test/cxl-region-mixed.sh | 297 +++++++++++++++++++++++++++++++++++++++
- test/meson.build         |   2 +
- 2 files changed, 299 insertions(+)
- create mode 100644 test/cxl-region-mixed.sh
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index e50dc716d4e82..87fb1a9f2683f 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
 
-diff --git a/test/cxl-region-mixed.sh b/test/cxl-region-mixed.sh
-new file mode 100644
-index 000000000000..ffc3f86919af
---- /dev/null
-+++ b/test/cxl-region-mixed.sh
-@@ -0,0 +1,297 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2026 Intel Corporation. All rights reserved.
-+
-+# shellcheck disable=SC1091,SC2034
-+. "$(dirname "$0")"/common
-+rc=77
-+set -ex
-+trap 'err $LINENO' ERR
-+check_prereq "jq"
-+
-+modinfo cxl_test | grep -q '^parm:.*mixed_gran_regions' ||
-+	do_skip "cxl_test mixed_gran_regions module param not available"
-+
-+modprobe -r cxl_test
-+modprobe cxl_test mixed_gran_regions=1
-+rc=1
-+
-+expect_fail() {
-+	"$@" || true
-+}
-+
-+# Test mixed-granularity region configurations
-+#
-+# Topology: modprobe cxl_test mixed_gran_regions=1
-+#   - 2-way pmem @ 4KB across 2 HBs (cfmws9)
-+#   - 3-way pmem @ 512B across 3 HBs (cfmws10)
-+#   with 12 endpoints total.
-+#
-+# Cases (in execution order). Positive cases also replay through
-+# the auto-create path to round-trip the configuration; a region that
-+# creates but fails replay indicates a position bug. Negative cases
-+# verify rejection.
-+#
-+# Positive:
-+#   1. 3-way same-gran on 3-way root, all switches passthrough
-+#   2. 4-way p2 mixed-gran on 2-way root @ 4KB
-+#   3. 4-way mixed-gran, L2 switches passthrough on 2-way root
-+#   4. 6-way mixed-gran on 3-way root @ 512B
-+#   5. 8-way multi-level mixed-gran on 2-way root @ 4KB
-+# Negative:
-+#   6. 6-way same-gran on 3-way root
-+#   7. 8-way @ 512B on 2-way root @ 4KB
-+#   8. region_gran > root_gran rejected at sysfs write
-+
-+create_region() {
-+	[[ $decoder && $ways && $region_ig && $memdevs ]] || err "$LINENO"
-+	region=$($CXL create-region -d "$decoder" -w "$ways" -g "$region_ig" \
-+		-m "$memdevs" | jq -r ".region")
-+	[[ $region ]] || err "$LINENO"
-+}
-+
-+find_x2_root() {
-+	decoder=$($CXL list -b cxl_test -D -d root | jq -r ".[] |
-+		select(.pmem_capable == true) |
-+		select(.nr_targets == 2) |
-+		select(.interleave_granularity == 4096) |
-+		.decoder")
-+	[[ $decoder ]] || err "$LINENO"
-+}
-+
-+find_x3_root() {
-+	decoder=$($CXL list -b cxl_test -D -d root | jq -r ".[] |
-+		select(.pmem_capable == true) |
-+		select(.nr_targets == 3) |
-+		select(.interleave_granularity == 512) |
-+		.decoder")
-+	[[ $decoder ]] || err "$LINENO"
-+}
-+
-+# Return the port device that backs the given target position of a root
-+# decoder. Usage: target_port <decoder> <position>
-+target_port() {
-+	"$CXL" list -T -d "$1" |
-+		jq -r ".[] | .targets | .[] | select(.position == $2) | .target"
-+}
-+
-+# Sanity check on the mixed_gran_regions topology.
-+test_mix_gran_topology_sanity() {
-+	local nr_mem
-+	local x2 x3
-+
-+	nr_mem=$($CXL list -b cxl_test -M | jq length)
-+	[[ $nr_mem -eq 12 ]] || {
-+		echo "expected 12 memdevs, got $nr_mem" >&2
-+		err "$LINENO"
-+	}
-+
-+	x2=$($CXL list -b cxl_test -D -d root | jq -r ".[] |
-+		select(.pmem_capable == true) |
-+		select(.nr_targets == 2) |
-+		select(.interleave_granularity == 4096) | .decoder")
-+	[[ $x2 ]] || {
-+		echo "expected x2 @ 4KB pmem root decoder" >&2
-+		err "$LINENO"
-+	}
-+
-+	x3=$($CXL list -b cxl_test -D -d root | jq -r ".[] |
-+		select(.pmem_capable == true) |
-+		select(.nr_targets == 3) |
-+		select(.interleave_granularity == 512) | .decoder")
-+	[[ $x3 ]] || {
-+		echo "expected x3 @ 512B pmem root decoder" >&2
-+		err "$LINENO"
-+	}
-+}
-+
-+# 3-way root setup: discover the 3 ports beneath it and the memdevs
-+# visible under each. Each HB hosts a 3-level switch tree (L1 + L2)
-+# but for the 3-way tests only L1 (or no level) interleaves; tests
-+# select endpoints accordingly.
-+setup_x3_topology() {
-+	find_x3_root
-+
-+	port_dev0=$(target_port "$decoder" 0)
-+	port_dev1=$(target_port "$decoder" 1)
-+	port_dev2=$(target_port "$decoder" 2)
-+
-+	readarray -t hb0 < <("$CXL" list -M -p "$port_dev0" | jq -r '.[].memdev')
-+	readarray -t hb1 < <("$CXL" list -M -p "$port_dev1" | jq -r '.[].memdev')
-+	readarray -t hb2 < <("$CXL" list -M -p "$port_dev2" | jq -r '.[].memdev')
-+}
-+
-+# 2-way root setup: discover the 2 ports beneath the x2 @ 4KB pmem
-+# root and the memdevs visible under each. Used by all 2-way root
-+# tests including multi-level cases.
-+setup_x2_topology() {
-+	find_x2_root
-+
-+	root_ig=$(cat "/sys/bus/cxl/devices/$decoder/interleave_granularity")
-+	port_dev0=$(target_port "$decoder" 0)
-+	port_dev1=$(target_port "$decoder" 1)
-+
-+	readarray -t hb0 < <("$CXL" list -M -p "$port_dev0" | jq -r '.[].memdev')
-+	readarray -t hb1 < <("$CXL" list -M -p "$port_dev1" | jq -r '.[].memdev')
-+}
-+
-+# Positive: 3-way same-gran on 3-way root, all switches passthrough
-+setup_x3_same_gran_passthrough() {
-+	setup_x3_topology
-+
-+	memdevs="${hb0[0]} ${hb1[0]} ${hb2[0]}"
-+	ways=3
-+	region_ig=512
-+}
-+
-+# Positive: 4-way p2 mixed-gran on 2-way root @ 4KB.
-+setup_x4_p2_mixed_gran() {
-+	setup_x2_topology
-+
-+	region_ig=$((root_ig / 2))
-+	[[ $region_ig -ge 256 ]] || err "$LINENO"
-+
-+	memdevs="${hb0[0]} ${hb0[1]} ${hb1[0]} ${hb1[1]}"
-+	ways=4
-+}
-+
-+# Positive: 4-way mixed-gran, L2 switches passthrough on 2-way root.
-+setup_x4_l2_passthrough() {
-+	setup_x2_topology
-+
-+	region_ig=2048
-+
-+	local -a l2_ports_hb0 l2_ports_hb1
-+	readarray -t l2_ports_hb0 < <("$CXL" list -P -p "$port_dev0" |
-+		jq -r '.. | objects | select(.depth == 3) | .host')
-+	readarray -t l2_ports_hb1 < <("$CXL" list -P -p "$port_dev1" |
-+		jq -r '.. | objects | select(.depth == 3) | .host')
-+
-+	local m0 m1 m2 m3
-+	m0=$("$CXL" list -M -p "${l2_ports_hb0[0]}" | jq -r ".[0].memdev")
-+	m1=$("$CXL" list -M -p "${l2_ports_hb0[1]}" | jq -r ".[0].memdev")
-+	m2=$("$CXL" list -M -p "${l2_ports_hb1[0]}" | jq -r ".[0].memdev")
-+	m3=$("$CXL" list -M -p "${l2_ports_hb1[1]}" | jq -r ".[0].memdev")
-+	memdevs="$m0 $m1 $m2 $m3"
-+	ways=4
-+}
-+
-+# Positive: 6-way mixed-gran on 3-way root @ 512B.
-+# Section 9.13.1.1 Table 9-7 row 2: 2-way HB beneath each root target
-+setup_x6_mixed_gran() {
-+	setup_x3_topology
-+
-+	memdevs="${hb0[0]} ${hb0[1]} ${hb1[0]} ${hb1[1]} ${hb2[0]} ${hb2[1]}"
-+	ways=6
-+	region_ig=256
-+}
-+
-+# Positive: 8-way multi-level mixed-gran on 2-way root @ 4KB.
-+# Root @ 4KB, L1 @ 2KB, L2 @ 1KB. Positions 0..3 under HB[0], 4..7
-+# under HB[1]. Memdev order follows position math requirements.
-+setup_x8_multi_level() {
-+	setup_x2_topology
-+
-+	region_ig=$((root_ig / 4))
-+	[[ $region_ig -ge 256 ]] || err "$LINENO"
-+
-+	local -a l2_ports_hb0 l2_ports_hb1
-+	readarray -t l2_ports_hb0 < <("$CXL" list -P -p "$port_dev0" |
-+		jq -r '.. | objects | select(.depth == 3) | .host')
-+	readarray -t l2_ports_hb1 < <("$CXL" list -P -p "$port_dev1" |
-+		jq -r '.. | objects | select(.depth == 3) | .host')
-+
-+	local -a br0 br1 br2 br3
-+	readarray -t br0 < <("$CXL" list -M -p "${l2_ports_hb0[0]}" | jq -r '.[].memdev')
-+	readarray -t br1 < <("$CXL" list -M -p "${l2_ports_hb0[1]}" | jq -r '.[].memdev')
-+	readarray -t br2 < <("$CXL" list -M -p "${l2_ports_hb1[0]}" | jq -r '.[].memdev')
-+	readarray -t br3 < <("$CXL" list -M -p "${l2_ports_hb1[1]}" | jq -r '.[].memdev')
-+
-+	memdevs="${br0[0]} ${br1[0]} ${br0[1]} ${br1[1]} ${br2[0]} ${br3[0]} ${br2[1]} ${br3[1]}"
-+	ways=8
-+}
-+
-+# Negative: 6-way same-gran on 3-way root
-+# 6*512 != 3*512 — span identity violated
-+setup_x6_same_gran_span_violation() {
-+	setup_x3_topology
-+
-+	memdevs="${hb0[0]} ${hb0[1]} ${hb1[0]} ${hb1[1]} ${hb2[0]} ${hb2[1]}"
-+	ways=6
-+	region_ig=512
-+}
-+
-+# Negative: 8-way @ 512B on 2-way root @ 4KB.
-+# Selector walk rejects: root selector bit lands outside the region
-+# selector mask (containment fails).
-+setup_gran_too_small() {
-+	setup_x2_topology
-+
-+	region_ig=512
-+	memdevs="${hb0[*]} ${hb1[*]}"
-+	ways=8
-+}
-+
-+# Negative: region_gran > root_gran rejected at sysfs write.
-+# Bypasses CLI to confirm the kernel gate, not the CLI, is the rejector.
-+test_ig_gt_root_rejected() {
-+	find_x2_root
-+
-+	root_ig=$(cat "/sys/bus/cxl/devices/$decoder/interleave_granularity")
-+	bad_ig=$((root_ig * 2))
-+
-+	region=$(cat "/sys/bus/cxl/devices/$decoder/create_pmem_region")
-+	echo "$region" >"/sys/bus/cxl/devices/$decoder/create_pmem_region"
-+
-+	if echo "$bad_ig" >"/sys/bus/cxl/devices/$region/interleave_granularity" \
-+		2>/dev/null; then
-+		err "$LINENO"
-+	fi
-+
-+	echo "$region" >"/sys/bus/cxl/devices/$decoder/delete_region"
-+}
-+
-+# Execution
-+
-+test_mix_gran_topology_sanity
-+
-+setup_x3_same_gran_passthrough
-+create_region
-+replay_regions || err "$LINENO"
-+$CXL destroy-region -f -b cxl_test "$region"
-+
-+setup_x4_p2_mixed_gran
-+create_region
-+replay_regions || err "$LINENO"
-+$CXL destroy-region -f -b cxl_test "$region"
-+
-+setup_x4_l2_passthrough
-+create_region
-+replay_regions || err "$LINENO"
-+$CXL destroy-region -f -b cxl_test "$region"
-+
-+setup_x6_mixed_gran
-+create_region
-+replay_regions || err "$LINENO"
-+$CXL destroy-region -f -b cxl_test "$region"
-+
-+setup_x8_multi_level
-+create_region
-+replay_regions || err "$LINENO"
-+$CXL destroy-region -f -b cxl_test "$region"
-+
-+setup_x6_same_gran_span_violation
-+region=$(expect_fail "$CXL" create-region -d "$decoder" -w "$ways" \
-+	-g "$region_ig" -m "$memdevs" | jq -r ".region")
-+[[ ! $region ]] || err "$LINENO"
-+
-+setup_gran_too_small
-+region=$(expect_fail "$CXL" create-region -d "$decoder" -w "$ways" \
-+	-g "$region_ig" -m "$memdevs" | jq -r ".region")
-+[[ ! $region ]] || err "$LINENO"
-+
-+test_ig_gt_root_rejected
-+
-+check_dmesg "$LINENO"
-+
-+modprobe -r cxl_test
-diff --git a/test/meson.build b/test/meson.build
-index e0e2193bfd51..67eb815db529 100644
---- a/test/meson.build
-+++ b/test/meson.build
-@@ -171,6 +171,7 @@ cxl_translate = find_program('cxl-translate.sh')
- cxl_elc = find_program('cxl-elc.sh')
- cxl_dax_hmem = find_program('cxl-dax-hmem.sh')
- cxl_region_replay = find_program('cxl-region-replay.sh')
-+cxl_region_mixed = find_program('cxl-region-mixed.sh')
- 
- tests = [
-   [ 'libndctl',               libndctl,		  'ndctl' ],
-@@ -207,6 +208,7 @@ tests = [
-   [ 'cxl-elc.sh',             cxl_elc,            'cxl'   ],
-   [ 'cxl-dax-hmem.sh',        cxl_dax_hmem,       'cxl'   ],
-   [ 'cxl-region-replay.sh',   cxl_region_replay,  'cxl'   ],
-+  [ 'cxl-region-mixed.sh',    cxl_region_mixed,   'cxl'   ],
- ]
- 
- if get_option('destructive').enabled()
--- 
-2.37.3
+[ ... ]
 
+> @@ -1452,28 +1475,69 @@ static int cxl_port_setup_targets(struct cxl_port=
+ *port,
+>  	}
+> =20
+>  	cxlsd =3D to_cxl_switch_decoder(&cxld->dev);
+> -	if (cxl_rr->nr_targets_set) {
+> -		int i, distance =3D 1;
+> -		struct cxl_region_ref *cxl_rr_iter;
+> +	iw =3D cxl_rr->nr_targets;
+
+[ ... ]
+
+> +	/* Accumulated bits must fit within the region selector */
+> +	cxlr_sel =3D get_selector(p->interleave_ways, p->interleave_granularity=
+);
+> +	if ((cxlr_sel & selector) !=3D selector) {
+> +		dev_dbg(&cxlr->dev,
+> +			"%s:%s: invalid selectors: cxlr %#llx accum %#llx\n",
+> +			dev_name(port->uport_dev), dev_name(&port->dev),
+> +			cxlr_sel, selector);
+> +		return -ENXIO;
+> +	}
+> =20
+> -		for (i =3D 0; i < cxl_rr->nr_targets_set; i++)
+> +	/* Selector bits still available to this port. */
+> +	selector =3D cxlr_sel & ~selector;
+
+[Severity: High]
+Does this code leave the current port's granularity unvalidated?
+
+The available selector bits are calculated here, but the selector variable
+appears to act as a dead store and is never used to validate the current
+port's granularity.
+
+I understand this is fixed in a later patch in the series (commit
+0b56c23b98964cba7ba9487773eeb9e989d957d3 cxl/region: Derive port
+granularity from selector bits). However, shouldn't each patch in the
+series be self-contained to avoid introducing temporary regressions
+during bisection?
+
+> +
+> +	if (cxl_rr->nr_targets_set) {
+> +		for (int i =3D 0; i < cxl_rr->nr_targets_set; i++)
+
+[ ... ]
+
+> @@ -1484,87 +1548,20 @@ static int cxl_port_setup_targets(struct cxl_port=
+ *port,
+>  		goto add_target;
+>  	}
+
+[ ... ]
+
+> -	if (iw > 8 || iw > cxlsd->nr_targets) {
+> -		dev_dbg(&cxlr->dev,
+> -			"%s:%s:%s: ways: %d overflows targets: %d\n",
+> -			dev_name(port->uport_dev), dev_name(&port->dev),
+> -			dev_name(&cxld->dev), iw, cxlsd->nr_targets);
+> -		return -ENXIO;
+> -	}
+> -
+>  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
+>  		if (cxld->interleave_ways !=3D iw ||
+> -		    (iw > 1 && cxld->interleave_granularity !=3D ig) ||
+>  		    !spa_maps_hpa(p, &cxld->hpa_range) ||
+>  		    ((cxld->flags & CXL_DECODER_F_ENABLE) =3D=3D 0)) {
+>  			dev_err(&cxlr->dev,
+
+[Severity: High]
+Is the removal of this explicit granularity check intentional before the
+functional replacement using the selector mask is fully implemented?
+
+By removing this check and not using the calculated selector mask
+for the current port in cxl_port_setup_targets(), the lowest switch port's
+firmware-programmed granularity goes completely unvalidated.
+
+Could this silently accept overlapping or mismatched interleave
+granularities, potentially causing incorrect CXL memory region routing?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1780095671.gi=
+t.alison.schofield@intel.com?part=3D1
