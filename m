@@ -1,149 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B6227874F
-	for <linux-cxl@vger.kernel.org>; Sat, 30 May 2026 05:06:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7999F2E7394
+	for <linux-cxl@vger.kernel.org>; Sat, 30 May 2026 05:17:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780117611; cv=none; b=kGfYy3mCJsHFyKquR/YNMSlHIjqqpMiz8OHycD8dviWmXxXX2JNIjVZup9JVVNlCksQGblsfwaTEeOFKs9VmmLHlQKBEv56AYbc3K0shh6YowJ3k4nB2NP0akQGeVFx50DeF+fMI7FStC/1O7oD7jg7VhBU6nDU2mheppUwJbAE=
+	t=1780118253; cv=none; b=GWNOhY3ohOCTV2GqcjxLQ61FpbGdRgAilF63lTi3pqXAi+E+6FmVvWc4phH4t2vyrCFyjoygmX71u5WDOhMc/1Hda9xR4CBX3g2JU8iwErg8twNMlS3jzfBMQPjqWK4houiyDwdvRAMSyDOIk2uDcPZENFesWVjsA+YNf750C/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780117611; c=relaxed/simple;
-	bh=AcfzCNI/gkJUdDY268NTsfDuCGVG03qLFwgi/naoIyM=;
+	s=arc-20240116; t=1780118253; c=relaxed/simple;
+	bh=VgRZ1zNt+qIJPs0WzjpRdWKRhWobBn2J1o6P+L8VkmA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=du+Fi7Sktorn9DnxEK3jmvLYjDhxqhi+kK132vnny/xeifG2oNBUx5i0OxnvluQr0eO1Lbr+UUuno8037sMs6gmYM3Mqkd9xBbe16N8bhdBtNixH84DbyDnaxa79HpgZjQaqGl4KmQ6j4rF8UbIewyan4lfeo8yhxxtmJAFY2kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gEf7KIhN; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ssr+d3KaFdmgvl1T/xDyD6Nz0GNEWc09NRKqM1KUGBHDjtoOIz7pdpoLO86UpjCsXAw7gHTpsXrnQZFu1sv+faIYigyGo1ShxYLFDdwcTt/kTMpo+LjZVgZ77atkNhSL1hsbVDO79entYeFm3foTUG1zHBBHUbHuGpAodBqt26c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BRXp60xP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gEf7KIhN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBFCD1F00893;
-	Sat, 30 May 2026 05:06:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BRXp60xP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A75D1F00898;
+	Sat, 30 May 2026 05:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780117610;
-	bh=CggDyxca9J60prNoGA0jm0e0fgt1qsIK93ycznIUSb8=;
+	s=k20260515; t=1780118251;
+	bh=99Ai/0zwwFDVL8RgphHe1K2sUnKGpAC+BjdH9n1XLCI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gEf7KIhNrKUzeBkuMWady1FiHAGaOHIjxFFNXkE5+4/W9tBRxZhK3SRSUBJFAGJqJ
-	 mYfVwoI6whp/pdbwUbgzZpsyEpqS5HGCFfiSDg1WNTzl7OWTzcKhlbEpiNYlILftdc
-	 1FjvdfoA64MiUkmZ8/0fLUlk6+LQBGh6k3OFc9X9cmplBL1SdZYHK7FybuiKiVjZgM
-	 2JGUJSDYXcchmaV87SOiPsHw0MKNdQN+B2HS+UrnjfL3YzQqfOKEhUVZi8K+TiT6kK
-	 wNyVoFEgqHGjXkvpa8ctFgVDykW3oD9fV+fGtE/ZRnaD6XBTY2IvIQ6jjLb+eieFX4
-	 FaQuYdBJWmkyQ==
+	b=BRXp60xPymfpuhaGHKC4jMKS/5w7MUeVljQ6OvTT9JeKDvypBvLIkfjclJchrk82B
+	 SImasHnbGrxaTGQEoO10cXzldrYHgWtlfr767C+zNSEgJwVqwo5gBg06wfRa7pCzum
+	 7jmeWonGTC0yH2CSQk64mnO8Ys7Thfrzcb4TfK1RjJdD8Ibw2YM79qcFouUbp9HkfW
+	 7RDmpWxI1Lra+7lRqr0xYuXwu9uDWy8xluECCB3BJb0b3+tvV/TbcMjI7PZPPlwkoX
+	 nby69T7xgd4RK2AyQYIJb661HF74Hn2fDN/stzhr2fyz9k0CFrlFy9eLx+dCDWl/3u
+	 TqJLEjUut/Yvw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] cxl/region: Fix NULL pointer within p->targets[]
+Subject: Re: [PATCH 5/6] cxl/test: Add a topology to test mixed-granularity
+ regions
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Li Ming" <ming.li@zohomail.com>
+To: "Alison Schofield" <alison.schofield@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260530-fix_null_in_targets_array-v1-1-312c3bf1fe0f@zohomail.com>
-References: <20260530-fix_null_in_targets_array-v1-1-312c3bf1fe0f@zohomail.com>
+In-Reply-To: <2ab2466fafa96f07df65ee5f6b4f8511240f4c93.1780095671.git.alison.schofield@intel.com>
+References: <2ab2466fafa96f07df65ee5f6b4f8511240f4c93.1780095671.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 30 May 2026 05:06:49 +0000
-Message-Id: <20260530050649.EBFCD1F00893@smtp.kernel.org>
+Date: Sat, 30 May 2026 05:17:31 +0000
+Message-Id: <20260530051731.9A75D1F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] __cxl_decoder_detach() suffers from the exact same p->targets hole=
- vulnerability for fully assembled auto-discovered regions, which will caus=
-e a NULL pointer dereference upon re-attachment.
-- [High] Failed auto-discovery decoders are left in the region targets arra=
-y if failure occurs after endpoint port attachment, leading to a Use-After-=
-Free (UAF).
+- [Medium] Evaluating `&array[i]->dev` on uninitialized legacy topology arr=
+ays causes Undefined Behavior when `mixed_gran_regions=3D1`.
 --
 
-commit 8beb15c55def2c0ba7cda46a708f6b3d2ab5e643
-Author: Li Ming <ming.li@zohomail.com>
+commit 8ff651f212fbb657c03e4fc54d032f721af040e6
+Author: Alison Schofield <alison.schofield@intel.com>
 
-cxl/region: Fix NULL pointer within p->targets[]
+cxl/test: Add a topology to test mixed-granularity regions
 
-This patch fixes a NULL pointer issue in p->targets[] during endpoint
-decoder removal. It ensures the last valid endpoint decoder pointer is
-swapped into the removed slot, avoiding gaps in the valid targets array.
+This commit adds a cxl_test topology for mixed-granularity region coverage.
+Setting the module parameter mixed_gran_regions=3D1 creates three host brid=
+ges
+with two switch levels below each bridge and twelve endpoints total.
 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e90c024c80365..54018db87a4c9 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -2220,7 +2220,15 @@ static int cxl_region_remove_target(struct device =
-*dev, void *data)
->  			p->nr_targets--;
->  			cxled->state =3D CXL_DECODER_STATE_AUTO;
->  			cxled->pos =3D -1;
-> -			p->targets[i] =3D NULL;
-> +
-> +			/*
-> +			 * Swap the last valid target into the slot to
-> +			 * ensure no invalid target in p->nr_targets range.
-> +			 * The targets array will be re-sorted during the
-> +			 * last endpoint decoder attaching again.
-> +			 */
-> +			p->targets[i] =3D p->targets[p->nr_targets];
-> +			p->targets[p->nr_targets] =3D NULL;
+> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> index 418669927fb00..b44db749873f3 100644
+> --- a/tools/testing/cxl/test/cxl.c
+> +++ b/tools/testing/cxl/test/cxl.c
 
-[Severity: High]
-This isn't a bug introduced by this patch, but does __cxl_decoder_detach()
-suffer from the exact same p->targets hole vulnerability for fully assembled
-auto-discovered regions?
+[ ... ]
 
-When a target is detached from an auto-discovered region:
+> @@ -130,6 +172,9 @@ static bool is_mock_dev(struct device *dev)
+>  	for (i =3D 0; i < ARRAY_SIZE(cxl_rcd); i++)
+>  		if (dev =3D=3D &cxl_rcd[i]->dev)
+>  			return true;
 
-drivers/cxl/core/region.c:__cxl_decoder_detach() {
-    ...
-	p->targets[cxled->pos] =3D NULL;
-	p->nr_targets--;
-    ...
-}
+[Severity: Medium]
+When mixed_gran_regions is enabled, cxl_test_init() skips initializing the
+legacy topology arrays by jumping to the topo_done label. Could evaluating
+&cxl_rcd[i]->dev (and similar legacy arrays like cxl_mem, cxl_host_bridge)
+cause undefined behavior here since those arrays are now left filled with
+NULL pointers?
 
-For auto-discovered regions, new targets are appended at
-p->targets[p->nr_targets] by cxl_region_attach_auto(). This leaves the NULL
-hole intact while overwriting a valid endpoint pointer that was previously
-positioned at the end of the array. Once p->nr_targets reaches
-p->interleave_ways again, cxl_region_sort_targets() iterates through the
-array and attempts to dereference the NULL pointer, which could cause a
-kernel panic.
+> +	for (i =3D 0; i < ARRAY_SIZE(cxl_mem_mix_gran); i++)
+> +		if (cxl_mem_mix_gran[i] && dev =3D=3D &cxl_mem_mix_gran[i]->dev)
+> +			return true;
 
-
-[Severity: High]
-This isn't a bug introduced by this patch, but are failed auto-discovery
-decoders left in the region targets array if failure occurs after endpoint
-port attachment, leading to a Use-After-Free?
-
-cxl_rr_ep_add() correctly upgrades an endpoint's staging state to
-CXL_DECODER_STATE_AUTO:
-
-drivers/cxl/core/region.c:cxl_rr_ep_add() {
-    ...
-		if (cxld =3D=3D &cxled->cxld &&
-		    cxled->state =3D=3D CXL_DECODER_STATE_AUTO_STAGED)
-			cxled->state =3D CXL_DECODER_STATE_AUTO;
-    ...
-}
-
-However, if subsequent topology validation fails, the error path calls
-cxl_port_detach_region(), which clears the region pointer but neglects to
-restore the endpoint's state back to CXL_DECODER_STATE_AUTO_STAGED. Because
-of this, when __cxl_decoder_detach() invokes cxl_cancel_auto_attach(), it
-silently skips removal due to the state mismatch:
-
-drivers/cxl/core/region.c:cxl_cancel_auto_attach() {
-    ...
-	if (cxled->state !=3D CXL_DECODER_STATE_AUTO_STAGED)
-		return;
-    ...
-}
-
-The endpoint decoder remains in the p->targets array and is subsequently
-freed upon removal, resulting in a persistent Use-After-Free vulnerability
-when the sysfs region targets are read or the array is otherwise accessed.
-
-> =20
->  			return 1;
->  		}
+The new arrays correctly check for NULL before evaluating the dev pointer
+offset, but the legacy array loops preceding it in is_mock_dev(),
+is_mock_bridge(), and is_mock_port() do not. This also affects functions
+like mock_init_hdm_decoder() which unconditionally checks against
+&cxl_host_bridge[0]->dev.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260530-fix_null_i=
-n_targets_array-v1-1-312c3bf1fe0f@zohomail.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1780095671.gi=
+t.alison.schofield@intel.com?part=3D5
