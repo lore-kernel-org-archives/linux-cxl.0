@@ -1,122 +1,149 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B542F0C45;
-	Sat, 30 May 2026 04:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780115118; cv=pass; b=GkWkbqRLmvcG/50d+o6Rq5dkxaf/gMQYPqlE21S1v5NWXMUnUMEWnZkF7fT8SPBdTWAiU1aGS81vKXUX3CKklAKc1mhsc8qCl8LnH9+/Ssfdz8R/mRdv63enfZWm3jE4PMOJuCBCJGySWf8KToG+oEYo/+Kf30cFK05pPQ36QxM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780115118; c=relaxed/simple;
-	bh=UjwcannNSEYVNXGty0gSxUl3thcJiAJ/CmY6vhpklso=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XgmBfyxOKG0gzCaTLU2Mcz9ozB8QiVYxY05omOH0BqCX0LIfe1BgW2kzMKixUS14w8MoJF0RAYLSMEi4fENwPnfgwU7jqyNazrZUe9G5255hBvxrV5EfQn1V+EicqcE8+SIAU0GFypFkovPlZbLlOIgm/LE1egZa/A/nrHpEZkc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Zg+ydXfs; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B6227874F
+	for <linux-cxl@vger.kernel.org>; Sat, 30 May 2026 05:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780117611; cv=none; b=kGfYy3mCJsHFyKquR/YNMSlHIjqqpMiz8OHycD8dviWmXxXX2JNIjVZup9JVVNlCksQGblsfwaTEeOFKs9VmmLHlQKBEv56AYbc3K0shh6YowJ3k4nB2NP0akQGeVFx50DeF+fMI7FStC/1O7oD7jg7VhBU6nDU2mheppUwJbAE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780117611; c=relaxed/simple;
+	bh=AcfzCNI/gkJUdDY268NTsfDuCGVG03qLFwgi/naoIyM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=du+Fi7Sktorn9DnxEK3jmvLYjDhxqhi+kK132vnny/xeifG2oNBUx5i0OxnvluQr0eO1Lbr+UUuno8037sMs6gmYM3Mqkd9xBbe16N8bhdBtNixH84DbyDnaxa79HpgZjQaqGl4KmQ6j4rF8UbIewyan4lfeo8yhxxtmJAFY2kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gEf7KIhN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Zg+ydXfs"
-ARC-Seal: i=1; a=rsa-sha256; t=1780115112; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=S26u6RLz0Vu56m8xmD0jO1jui3BiY5sJapMDZRwaDlAMT6BcUvl3enJIbJ/0VUX6ExpGpNLXZi6RSpx/IGf5bGff1tIvGYtXUodaxNcPEzRNs+uwnkGu1++YteCwDNLSda7Ys9mPqJzRcLrZHAaIa/DK0Zkc1Fl2M0jFQgERfnE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1780115112; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=b8+nupdxKvvqds2fj4gfOE755touuhcMWKZpjgM0S3k=; 
-	b=GeoxjCrVF08xma6OyYe9XP7QDGo/82j7awIbeYy/FTXW7PO0hGO4kqYEyoSAEppNyJpMl37EBhNaPFCT1Umnk6d9SdVE9KjafJZbvAi0fs8ffdbOq7gPYNYu0cmZE/bt+bWBhK1H+0dWlenr/K9oHzn/mTdwEfZSpZCSlfzW8dU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1780115112;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Feedback-ID:Reply-To;
-	bh=b8+nupdxKvvqds2fj4gfOE755touuhcMWKZpjgM0S3k=;
-	b=Zg+ydXfssCsVhyD92BJO0d1IFNjNfUTEJoJWOgV9eShRgHl0XAT58oa7oyLArXyr
-	8zm9R4Sr1LjnJKxCgUZrc7kO2T7Q9KH+ywTaGn987oMfLVpqT3zrSeXc8k6GR5+M0s4
-	dOvvXkWau9OZcR6Ntael6/FAjtJlL2CqlHut/xXE=
-Received: by mx.zohomail.com with SMTPS id 1780115110079392.9237621240293;
-	Fri, 29 May 2026 21:25:10 -0700 (PDT)
-From: Li Ming <ming.li@zohomail.com>
-Date: Sat, 30 May 2026 12:24:40 +0800
-Subject: [PATCH] cxl/region: Fix NULL pointer within p->targets[]
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gEf7KIhN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBFCD1F00893;
+	Sat, 30 May 2026 05:06:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780117610;
+	bh=CggDyxca9J60prNoGA0jm0e0fgt1qsIK93ycznIUSb8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=gEf7KIhNrKUzeBkuMWady1FiHAGaOHIjxFFNXkE5+4/W9tBRxZhK3SRSUBJFAGJqJ
+	 mYfVwoI6whp/pdbwUbgzZpsyEpqS5HGCFfiSDg1WNTzl7OWTzcKhlbEpiNYlILftdc
+	 1FjvdfoA64MiUkmZ8/0fLUlk6+LQBGh6k3OFc9X9cmplBL1SdZYHK7FybuiKiVjZgM
+	 2JGUJSDYXcchmaV87SOiPsHw0MKNdQN+B2HS+UrnjfL3YzQqfOKEhUVZi8K+TiT6kK
+	 wNyVoFEgqHGjXkvpa8ctFgVDykW3oD9fV+fGtE/ZRnaD6XBTY2IvIQ6jjLb+eieFX4
+	 FaQuYdBJWmkyQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] cxl/region: Fix NULL pointer within p->targets[]
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Li Ming" <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260530-fix_null_in_targets_array-v1-1-312c3bf1fe0f@zohomail.com>
+References: <20260530-fix_null_in_targets_array-v1-1-312c3bf1fe0f@zohomail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 30 May 2026 05:06:49 +0000
+Message-Id: <20260530050649.EBFCD1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260530-fix_null_in_targets_array-v1-1-312c3bf1fe0f@zohomail.com>
-X-B4-Tracking: v=1; b=H4sIAIdmGmoC/x2M0QqDMAwAf6Xk2ULaTpH9ypCSbVEDpRupyob03
- 1f2eHB3JxRW4QJXc4LyIUVeuYHrDDxWygtbeTYGj37APqCd5RPznlKUHDfShbcSSZW+1vlLwED
- jnXCG1r+Vm/x/36Zaf/wyPjNrAAAA
-X-Change-ID: 20260530-fix_null_in_targets_array-124303a8ba0f
-To: Davidlohr Bueso <dave@stgolabs.net>, 
- Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
- Dan Williams <djbw@kernel.org>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Li Ming <ming.li@zohomail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780115105; l=1901;
- i=ming.li@zohomail.com; s=20260210; h=from:subject:message-id;
- bh=UjwcannNSEYVNXGty0gSxUl3thcJiAJ/CmY6vhpklso=;
- b=vcBV/FRlCHttoVZBNhNCOArClKLASoTumfU2KBvJ4KsURa9qvHMiBlsMqJ/Iky3Zr+EJMzBxe
- j6x5YFS09fWDV8j5FK7EBayb2iu8tCLm2JKsh1RGenRL0qMrntTV8Ub
-X-Developer-Key: i=ming.li@zohomail.com; a=ed25519;
- pk=JfhrdHjyYJMXt47Hy8d/fsqZuhGPD4Z3whV5lTfVvhE=
-Feedback-ID: zu08011227ca6dec2f92bf7be4e933af6c0000e89cf5fb483ae4325a9f8609425d090ca0198f81b12ed86e84:ZohoMail
-X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
-X-ZohoMailClient: External
 
-cxl_region_remove_target() leaves a NULL pointer in the slot of the
-removable endpoint decoder in p->targets array. However, p->targets
-array replies on p->nr_targets to determine validity, which means when
-p->nr_targets == p->interleave_ways, driver assumes all elements from
-index 0 to (p->nr_targets - 1) are valid. The stale NULL pointer
-violates this assumption and causes the driver to treat a NULL pointer
-as a valid endpoint decoder.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-To fix this issue, when a endpoint decoder is removed by
-cxl_region_remove_target(), always swap the last valid endpoint decoder
-pointer into the slot of removal endpoint decoder to ensure all pointers
-before p->targets[p->nr_targets] are valid.
+Pre-existing issues:
+- [High] __cxl_decoder_detach() suffers from the exact same p->targets hole=
+ vulnerability for fully assembled auto-discovered regions, which will caus=
+e a NULL pointer dereference upon re-attachment.
+- [High] Failed auto-discovery decoders are left in the region targets arra=
+y if failure occurs after endpoint port attachment, leading to a Use-After-=
+Free (UAF).
+--
 
-Fixes: 809ccef5385f ("cxl/region: Fix out-of-bounds access in cxl_cancel_auto_attach()")
-Suggested-by: Alison Schofield <alison.schofield@intel.com>
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
- drivers/cxl/core/region.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+commit 8beb15c55def2c0ba7cda46a708f6b3d2ab5e643
+Author: Li Ming <ming.li@zohomail.com>
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index e90c024c8036..54018db87a4c 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2220,7 +2220,15 @@ static int cxl_region_remove_target(struct device *dev, void *data)
- 			p->nr_targets--;
- 			cxled->state = CXL_DECODER_STATE_AUTO;
- 			cxled->pos = -1;
--			p->targets[i] = NULL;
-+
-+			/*
-+			 * Swap the last valid target into the slot to
-+			 * ensure no invalid target in p->nr_targets range.
-+			 * The targets array will be re-sorted during the
-+			 * last endpoint decoder attaching again.
-+			 */
-+			p->targets[i] = p->targets[p->nr_targets];
-+			p->targets[p->nr_targets] = NULL;
- 
- 			return 1;
- 		}
+cxl/region: Fix NULL pointer within p->targets[]
 
----
-base-commit: 809ccef5385fa1779c7db3de43272f3fc6a87a45
-change-id: 20260530-fix_null_in_targets_array-124303a8ba0f
+This patch fixes a NULL pointer issue in p->targets[] during endpoint
+decoder removal. It ensures the last valid endpoint decoder pointer is
+swapped into the removed slot, avoiding gaps in the valid targets array.
 
-Best regards,
--- 
-Li Ming <ming.li@zohomail.com>
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index e90c024c80365..54018db87a4c9 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2220,7 +2220,15 @@ static int cxl_region_remove_target(struct device =
+*dev, void *data)
+>  			p->nr_targets--;
+>  			cxled->state =3D CXL_DECODER_STATE_AUTO;
+>  			cxled->pos =3D -1;
+> -			p->targets[i] =3D NULL;
+> +
+> +			/*
+> +			 * Swap the last valid target into the slot to
+> +			 * ensure no invalid target in p->nr_targets range.
+> +			 * The targets array will be re-sorted during the
+> +			 * last endpoint decoder attaching again.
+> +			 */
+> +			p->targets[i] =3D p->targets[p->nr_targets];
+> +			p->targets[p->nr_targets] =3D NULL;
 
+[Severity: High]
+This isn't a bug introduced by this patch, but does __cxl_decoder_detach()
+suffer from the exact same p->targets hole vulnerability for fully assembled
+auto-discovered regions?
+
+When a target is detached from an auto-discovered region:
+
+drivers/cxl/core/region.c:__cxl_decoder_detach() {
+    ...
+	p->targets[cxled->pos] =3D NULL;
+	p->nr_targets--;
+    ...
+}
+
+For auto-discovered regions, new targets are appended at
+p->targets[p->nr_targets] by cxl_region_attach_auto(). This leaves the NULL
+hole intact while overwriting a valid endpoint pointer that was previously
+positioned at the end of the array. Once p->nr_targets reaches
+p->interleave_ways again, cxl_region_sort_targets() iterates through the
+array and attempts to dereference the NULL pointer, which could cause a
+kernel panic.
+
+
+[Severity: High]
+This isn't a bug introduced by this patch, but are failed auto-discovery
+decoders left in the region targets array if failure occurs after endpoint
+port attachment, leading to a Use-After-Free?
+
+cxl_rr_ep_add() correctly upgrades an endpoint's staging state to
+CXL_DECODER_STATE_AUTO:
+
+drivers/cxl/core/region.c:cxl_rr_ep_add() {
+    ...
+		if (cxld =3D=3D &cxled->cxld &&
+		    cxled->state =3D=3D CXL_DECODER_STATE_AUTO_STAGED)
+			cxled->state =3D CXL_DECODER_STATE_AUTO;
+    ...
+}
+
+However, if subsequent topology validation fails, the error path calls
+cxl_port_detach_region(), which clears the region pointer but neglects to
+restore the endpoint's state back to CXL_DECODER_STATE_AUTO_STAGED. Because
+of this, when __cxl_decoder_detach() invokes cxl_cancel_auto_attach(), it
+silently skips removal due to the state mismatch:
+
+drivers/cxl/core/region.c:cxl_cancel_auto_attach() {
+    ...
+	if (cxled->state !=3D CXL_DECODER_STATE_AUTO_STAGED)
+		return;
+    ...
+}
+
+The endpoint decoder remains in the p->targets array and is subsequently
+freed upon removal, resulting in a persistent Use-After-Free vulnerability
+when the sysfs region targets are read or the array is otherwise accessed.
+
+> =20
+>  			return 1;
+>  		}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260530-fix_null_i=
+n_targets_array-v1-1-312c3bf1fe0f@zohomail.com?part=3D1
