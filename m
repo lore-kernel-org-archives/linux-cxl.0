@@ -1,111 +1,112 @@
-Received: from a10-18.smtp-out.amazonses.com (a10-18.smtp-out.amazonses.com [54.240.10.18])
-	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CAA23403F3;
-	Sat, 30 May 2026 16:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.10.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123843016E1
+	for <linux-cxl@vger.kernel.org>; Sat, 30 May 2026 17:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780159905; cv=none; b=olk3ClwTDuy4Vh8AEGTqT6im3frft6IETFi099shQ1SSqHnHhg6N9aduFXa5TBOlduO7pg9kBRopao9qALgYSxblSxp5TSeLsxrzLYODKSL0ajXajo66fj0Bk2B/b7S9sbOPSffolUhI7fZLeGkve+PLofJ8GV8GXiTGf+xYMvo=
+	t=1780161227; cv=none; b=daHmJJh8qW9G+Y+c3h6m9KOWIyvbZLbeTdYWu+J7P4Ob0jsdiM7Xpr8FJrvIOgei3GRO9P/IHso1pEX6w2Z6O0RuGThpWk1gkepU2S2aCFNzrHuo5125kliKZ8GRlYUA8WOdwjz1GdlYgzx4cAszqF3c2yJ9fXG5uo5bo0GjYhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780159905; c=relaxed/simple;
-	bh=L5xYVi2QZJv44xJcmbAbXnoFRFwbN/tCZvKiAg6bt9w=;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:In-Reply-To:
-	 References:Message-ID; b=qAJs+Hw7Z9jWxXSw6ZrldvH0akOPK/B+uvVwYUjAOy5qVieRWSdP1ld80gxfaoiqGGRrXTd6QKIcb9hQdtMyCOI+zNOAgkFiJFzxiY9peWXrvBZvS/FQOwbU7NjjY4PQKfHdKrrrasHWEX36tV3b0mUgBVFEV9XBxBDW9oj9aKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=fo7w1DY5; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=C+NYdSiv; arc=none smtp.client-ip=54.240.10.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
+	s=arc-20240116; t=1780161227; c=relaxed/simple;
+	bh=LL5IXhki/urQRS0LZ8ru6pRJhc/1ldc23Rwq6KNpKxs=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=W9QaWNdrpJVq0+2vwQmTNY0Q/kGa5aaRlarD8rmWVde+HlV9+UiJCmjb97wbKhu/6cELBEYxpYrmtz/WdnZa9qq1KYH+SPf4fcl79mrZvxlM5s69KTm7Ae9VqU0+btUQDp+4uRpCBEanluBLnWVqwbzLew1ahzmKAYdW+T/6FdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NTs9+ozL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="fo7w1DY5";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="C+NYdSiv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1780159903;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id;
-	bh=L5xYVi2QZJv44xJcmbAbXnoFRFwbN/tCZvKiAg6bt9w=;
-	b=fo7w1DY5Ru77Q3X3xW8h9vBe9m72LF1O/6upWA2XGktOPFUsCQRMh/CbXLVOaUsk
-	zeeGJyVZZ/HUxnmauoAmi7UUXVZFeVRj9/OK2463n+sKbiRmiE53CeqzNZ5+YvsTdzn
-	cweYAcWm6dwok8bVbxaEx30xSCz5jpDB32bcxYwM=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1780159903;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:In-Reply-To:References:Message-Id:Feedback-ID;
-	bh=L5xYVi2QZJv44xJcmbAbXnoFRFwbN/tCZvKiAg6bt9w=;
-	b=C+NYdSivpdt7Atb30UXWZYz3STP2eiDMgA5xWXccNgq42tVaakvzs/0fD+udFe01
-	98wgaIEyeMKRABZ6aSVD4jNmza14bFk/tpGSZMZHKGPChuSIAJCrc6INWNfC+PCOzGH
-	dsFOWGZtsFh8NKrxh/OBFeQXYGZh4rWD5QlKbc6s=
-Subject: [PATCH V3 9/9] dax: fsdev.c minor formatting cleanup
-From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
-To: =?UTF-8?Q?John_Groves?= <John@Groves.net>, 
-	=?UTF-8?Q?Dan_Williams?= <djbw@kernel.org>
-Cc: =?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
-	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
-	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
-	=?UTF-8?Q?Matthew_Wilcox?= <willy@infradead.org>, 
-	=?UTF-8?Q?Jan_Kara?= <jack@suse.cz>, 
-	=?UTF-8?Q?Alexander_Viro?= <viro@zeniv.linux.org.uk>, 
-	=?UTF-8?Q?Christian_Brauner?= <brauner@kernel.org>, 
-	=?UTF-8?Q?Miklos_Szeredi?= <miklos@szeredi.hu>, 
-	=?UTF-8?Q?Alison_Schofiel?= =?UTF-8?Q?d?= <alison.schofield@intel.com>, 
-	=?UTF-8?Q?Ira_Weiny?= <iweiny@kernel.org>, 
-	=?UTF-8?Q?Jonathan_Cameron?= <jic23@kernel.org>, 
-	=?UTF-8?Q?nvdimm=40lists=2Elinux=2Edev?= <nvdimm@lists.linux.dev>, 
-	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
-	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
-	=?UTF-8?Q?linux-fsdevel=40vger=2Ekernel=2Eorg?= <linux-fsdevel@vger.kernel.org>, 
-	=?UTF-8?Q?John_Groves?= <john@groves.net>
-Date: Sat, 30 May 2026 16:51:43 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NTs9+ozL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B380F1F00893;
+	Sat, 30 May 2026 17:13:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780161225;
+	bh=b+p4J93vLa0hgXzpKfBPkPJisnkhHFqHo+k9shXQR1o=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=NTs9+ozLNkB0n26c04sP9ClSdBINKDThJjAVCYX3Z9ccVw+hMVkgwSK6xJBL6419C
+	 MMlONHIZFTWjt+/VkNrooQNqErK/xuf4hdDIz515r9yxq4t2ufqkuwgplQga02pYje
+	 15ZKtzNxhpO4ogAy6ZcP8psbHCkiZSwX8bOiYd7dueoTQBzyyUzG6v4qR0pT3MiqTB
+	 9id9SbxPYksuZx8tE/2jRnci/qF9E0Q8qImPZ8o1HPhtWSXtBzB2sp57bjVeUARX/X
+	 5t5KtN4GnuJFmEsMdBxWlyDoTa8N0IPKudJqXt36pJ00NRh4s1EpO/h01TxAlrPAr6
+	 MsMbGFKH+H8Sw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH V3 2/9] dax/fsdev: fix multi-range offset in
+ memory_failure handler
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "John Groves" <john@jagalactic.com>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <0100019e79cb8953-e505a8dc-63a4-4bc3-a9bd-3b86ec081838-000000@email.amazonses.com>
+References: <0100019e79cb8953-e505a8dc-63a4-4bc3-a9bd-3b86ec081838-000000@email.amazonses.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 30 May 2026 17:13:45 +0000
+Message-Id: <20260530171345.B380F1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: 
- <0100019e79caead2-5795328c-af48-4a93-b147-c11df7446e1a-000000@email.amazonses.com>
-References: 
- <0100019e79caead2-5795328c-af48-4a93-b147-c11df7446e1a-000000@email.amazonses.com> 
- <20260530165135.6738-1-john@jagalactic.com>
-X-Mailer: Amazon WorkMail
-Thread-Index: AQHc8FRa7vroVK8USxmz3hlONeiu3QAADzrI
-Thread-Topic: [PATCH V3 9/9] dax: fsdev.c minor formatting cleanup
-X-Wm-Sent-Timestamp: 1780159902
-X-Original-Mailer: git-send-email 2.52.0
-Message-ID: <0100019e79cc759d-7a962ed0-0f9f-4ab6-b6d3-08c171fc6558-000000@email.amazonses.com>
-Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
-X-SES-Outgoing: 2026.05.30-54.240.10.18
 
-From: John Groves <John@Groves.net>=0D=0A=0D=0AAddress some comments from=
- Jonathan that were missed in the merged=0D=0Aseries. Fix line wrapping i=
-n fsdev_dax_recovery_write() and=0D=0Afsdev_dax_zero_page_range() signatu=
-res.=0D=0A=0D=0AReviewed-by: Dave Jiang <dave.jiang@intel.com>=0D=0ASigne=
-d-off-by: John Groves <john@groves.net>=0D=0A---=0D=0A drivers/dax/fsdev.=
-c | 15 ++++++++-------=0D=0A 1 file changed, 8 insertions(+), 7 deletions=
-(-)=0D=0A=0D=0Adiff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c=0D=0A=
-index aac0130ab2833..ff936021d7aec 100644=0D=0A--- a/drivers/dax/fsdev.c=0D=
-=0A+++ b/drivers/dax/fsdev.c=0D=0A@@ -45,8 +45,8 @@ static void fsdev_wri=
-te_dax(void *addr, struct page *page,=0D=0A }=0D=0A=20=0D=0A static long =
-__fsdev_dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff,=0D=0A=
--=09=09=09long nr_pages, enum dax_access_mode mode, void **kaddr,=0D=0A-=09=
-=09=09unsigned long *pfn)=0D=0A+=09=09long nr_pages, enum dax_access_mode=
- mode, void **kaddr,=0D=0A+=09=09unsigned long *pfn)=0D=0A {=0D=0A =09str=
-uct dev_dax *dev_dax =3D dax_get_private(dax_dev);=0D=0A =09size_t size =3D=
- nr_pages << PAGE_SHIFT;=0D=0A@@ -80,7 +80,8 @@ static int fsdev_dax_zero=
-_page_range(struct dax_device *dax_dev,=0D=0A =09long rc;=0D=0A=20=0D=0A =
-=09WARN_ONCE(nr_pages > 1, "%s: nr_pages > 1\n", __func__);=0D=0A-=09rc =3D=
- __fsdev_dax_direct_access(dax_dev, pgoff, 1, DAX_ACCESS, &kaddr, NULL);=0D=
-=0A+=09rc =3D __fsdev_dax_direct_access(dax_dev, pgoff, 1, DAX_ACCESS,=0D=
-=0A+=09=09=09=09       &kaddr, NULL);=0D=0A =09if (rc < 0)=0D=0A =09=09re=
-turn rc;=0D=0A =09fsdev_write_dax(kaddr, ZERO_PAGE(0), 0, PAGE_SIZE);=0D=0A=
-@@ -88,15 +89,15 @@ static int fsdev_dax_zero_page_range(struct dax_devic=
-e *dax_dev,=0D=0A }=0D=0A=20=0D=0A static long fsdev_dax_direct_access(st=
-ruct dax_device *dax_dev,=0D=0A-=09=09  pgoff_t pgoff, long nr_pages, enu=
-m dax_access_mode mode,=0D=0A-=09=09  void **kaddr, unsigned long *pfn)=0D=
-=0A+=09=09pgoff_t pgoff, long nr_pages, enum dax_access_mode mode,=0D=0A+=
-=09=09void **kaddr, unsigned long *pfn)=0D=0A {=0D=0A =09return __fsdev_d=
-ax_direct_access(dax_dev, pgoff, nr_pages, mode,=0D=0A =09=09=09=09=09 ka=
-ddr, pfn);=0D=0A }=0D=0A=20=0D=0A-static size_t fsdev_dax_recovery_write(=
-struct dax_device *dax_dev, pgoff_t pgoff,=0D=0A-=09=09void *addr, size_t=
- bytes, struct iov_iter *i)=0D=0A+static size_t fsdev_dax_recovery_write(=
-struct dax_device *dax_dev,=0D=0A+=09=09pgoff_t pgoff, void *addr, size_t=
- bytes, struct iov_iter *i)=0D=0A {=0D=0A =09return _copy_from_iter_flush=
-cache(addr, bytes, i);=0D=0A }=0D=0A--=20=0D=0A2.53.0=0D=0A=0D=0A
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+
+Pre-existing issues:
+- [High] Lockless iteration over `dev_dax->ranges` in `fsdev_pfn_to_offset`=
+ causes a Use-After-Free.
+--
+
+commit 104845be5fb1300e103dae52129fee9336fbed14
+Author: John Groves <John@Groves.net>
+dax/fsdev: fix multi-range offset in memory_failure handler
+
+This commit fixes the memory_failure offset calculation for multi-range
+devices by introducing fsdev_pfn_to_offset() to walk the range list and
+compute the correct device-linear byte offset.
+
+> diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
+> index 188b2526bee45..f315533b299e9 100644
+> --- a/drivers/dax/fsdev.c
+> +++ b/drivers/dax/fsdev.c
+[ ... ]
+> @@ -135,11 +135,26 @@ static void fsdev_clear_ops(void *data)
+>   * The core mm code in free_zone_device_folio() handles the wake_up_var()
+>   * directly for this memory type.
+>   */
+> +static u64 fsdev_pfn_to_offset(struct dev_dax *dev_dax, unsigned long pf=
+n)
+> +{
+> +	phys_addr_t phys =3D PFN_PHYS(pfn);
+> +	u64 offset =3D 0;
+> +
+> +	for (int i =3D 0; i < dev_dax->nr_range; i++) {
+> +		struct range *range =3D &dev_dax->ranges[i].range;
+
+[Severity: High]
+This is a pre-existing issue, but does iterating over dev_dax->ranges here
+without locks expose us to a use-after-free?
+
+Because fsdev_pfn_to_offset() is called asynchronously by the memory_failure
+handler, it seems possible for it to race with root writing to the mapping
+sysfs attribute to append ranges. That write invokes mapping_store().
+
+Unlike size_store(), mapping_store() does not check if the DAX device is
+currently bound to a driver before calling alloc_dev_dax_range(). That func=
+tion
+uses krealloc() to expand the dev_dax->ranges array, freeing the old memory.
+
+If fsdev_pfn_to_offset() executes concurrently with this sysfs write, could=
+ it
+dereference the freed array pointer?
+
+Would it be safer to pass the pgmap parameter down from the memory failure
+handler and iterate over pgmap->ranges instead, since it contains a stable,
+immutable snapshot of the ranges created during driver probe?
+
+> +
+> +		if (phys >=3D range->start && phys <=3D range->end)
+> +			return offset + (phys - range->start);
+> +		offset +=3D range_len(range);
+> +	}
+> +	return -1ULL;
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0100019e79caead2-57=
+95328c-af48-4a93-b147-c11df7446e1a-000000@email.amazonses.com?part=3D2
