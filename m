@@ -1,594 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA6C920ED
-	for <linux-cxl@vger.kernel.org>; Sat, 30 May 2026 00:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA5B17555;
+	Sat, 30 May 2026 00:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780099262; cv=none; b=Fo1ksD5EaL7WBRVWILPjUNd5osqtcFWR19QFK1Mez/JobQcrG1SykzeLtuGiWvPvsNmnAaWzE8tJMPJfvF8XbDiuu+VqJlsYFUnxysRTyhlzP/l+qX1sAoWQmktg9e8r5/hsxeSQv1ttNeAiVsYOZYyPCPYCrNRKJBMyGOwB2ho=
+	t=1780099479; cv=none; b=i9UeD1URvweue1MNwL3Q5QFhVZrAnMoXv3tRLCLP+LqnoHxb20Cb873bQSaZ5eByeNPCYrHQTAoptDagzEKj/S/NVBuYZBUdD+4+dBs/iNbbbf91F4r2l31upFereeUIab/ExTQRE9uRsu83ea4hX/hKQeqJyyRRg5ggHBqvrkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780099262; c=relaxed/simple;
-	bh=qgMKHBxX4hSns1EyUPRyBT1Wpkyvw7yH/l1tRrXq+MA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nQohjhCCkgXSiMKk1wHPFtvQpflItAI5l3Q722cTz9i7UlJyEeF0Lm076wS6kCejtzr/tqlQTtPHDL87JtODQHjUWWlWFfGeppnHDdMHTBFFdgiw8l4hzNkU6TxJabXjSJ3YyNHwwzXt0eCIG93fcRfyTQ/cKkD//jAgsQOCCmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j7G7Mdrk; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j7G7Mdrk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780099259; x=1811635259;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qgMKHBxX4hSns1EyUPRyBT1Wpkyvw7yH/l1tRrXq+MA=;
-  b=j7G7MdrkKX/sh65fejK191QyZW8riqWF3ZG2Z7ollJkfkbtXYzmo+W/r
-   vBWXLbUUmoiiXffUDHrdYqgAzpXM12EqyH2iXXKAnvj3hRj1cKQHBjapn
-   GBOpUVoHBb9A1WPV5a/sgb2Uh+LDgqJ3ZGpkBCbVprOzUGZNTrOxbcLmW
-   qeBMi8afyfHrx8iu2LjiqI0Fna50X3TeTAjO0kbj6GCoPItnyACZSv40G
-   hQ4df4Chre+JtIafSbBdv/DEkMJu6sdEnO4GmbyYbiKMgEPiij0AmKYe3
-   E4eXwxIh4N88iv271RJJ+ZCsAc//0oeN3b6ea0vrRm0WwPqVtstFxaPYZ
-   A==;
-X-CSE-ConnectionGUID: W7UAdEwGRPe34wFQHXQHzg==
-X-CSE-MsgGUID: gfjwhEODQuWSLa2i97S1Sw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11801"; a="91530564"
-X-IronPort-AV: E=Sophos;i="6.24,176,1774335600"; 
-   d="scan'208";a="91530564"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 17:00:59 -0700
-X-CSE-ConnectionGUID: jKidlri7ST67/cRjiNsdKg==
-X-CSE-MsgGUID: oeUYfA7jTbOS9N6eydcJrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,176,1774335600"; 
-   d="scan'208";a="238804379"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.60])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2026 17:00:58 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Dan Williams <djbw@kernel.org>,
-	Li Ming <ming.li@zohomail.com>,
-	Robert Richter <rrichter@amd.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH 6/6] Documentation/cxl: Add region granularity and multi-level interleave guide
-Date: Fri, 29 May 2026 17:00:45 -0700
-Message-ID: <ef2ba341a7ed6f754012e11110750d57929575b2.1780095671.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1780095671.git.alison.schofield@intel.com>
-References: <cover.1780095671.git.alison.schofield@intel.com>
+	s=arc-20240116; t=1780099479; c=relaxed/simple;
+	bh=W+eSIK2s1c9SlFH0SBZ70mCj0LzhyiVL/pvn+0kKIiE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nG+Xf0Y87keMyYihm7t9Osdlws+lRoHYav+yJe+mbPpljKcKcvyT2JPJbow9d2CK6DCOHR9MdAgLtquS1TSQ9KWtTWmlphCFExErATBTKgPHkLlykH24G/n4QSRebKWfXuBhgwVf3J7A7xGqEWec5K+Q82GaoHSgJz+QrSVAvV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
+Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id BF018C0680;
+	Sat, 30 May 2026 00:04:35 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf03.hostedemail.com (Postfix) with ESMTPA id DB7D06000B;
+	Sat, 30 May 2026 00:04:31 +0000 (UTC)
+Date: Fri, 29 May 2026 19:04:30 -0500
+From: John Groves <John@groves.net>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: John Groves <john@jagalactic.com>, Dan Williams <djbw@kernel.org>, 
+	John Groves <jgroves@micron.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Alison Schofield <alison.schofield@intel.com>, 
+	Ira Weiny <iweiny@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V2 3/7] dax/fsdev: fix kaddr for multi-range and fail
+ probe on invalid pgmap offset
+Message-ID: <ahopdHYhO2x9E5-_@groves.net>
+References: <0100019e511fb82e-1a444df3-8310-40ed-8380-72e1373d5da9-000000@email.amazonses.com>
+ <20260522191859.79167-1-john@jagalactic.com>
+ <0100019e51208026-d62e0ffa-73d4-4cac-b950-dbbbb13ab38c-000000@email.amazonses.com>
+ <1aa37178-4d36-4a4c-8b36-bf2789ce9655@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1aa37178-4d36-4a4c-8b36-bf2789ce9655@intel.com>
+X-Stat-Signature: fktne5rgu9jqyndra1htdmubhsxhofiy
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: DB7D06000B
+X-Session-Marker: 6A6F686E4067726F7665732E6E6574
+X-Session-ID: U2FsdGVkX18uDUuCppJvPq2aWc5YSXzIQdPFIXrOEYs=
+X-HE-Tag: 1780099471-924468
+X-HE-Meta: U2FsdGVkX19MRAxqPWBREwjd+kVfmw7Ed45/YJU/VxhqGuNHyl7/ejBlhm+GvPp2lJGB3NfLaY9rCV6Vbv1pWXGw9jqZ/z6mwmW8C3bGm1f2QHeyde4wAFOMBZOGEUMWzJUFH0yzVbGRhWLTdNVp9BBtq2A/IAcQr8GadHZNNoeviW7A8lI0Ya81wFA0faLMTvrhD+r1KUWImPgXkODJkYoP8qySnhrZj468Od6wEzqZiOS5ATbdgoeUqlyIUXhCeBwCjmGIzjRQxFyKrlfCWgI0BFqDaaeu/oJRXu6bDn1CAYjKTXvNtVTN45weZjGEJkkXGGCOW1MI9yM2zUyGJAegCKZnAx/2aYj7axLW20I7IVZdxGZPd8uaX/vf4GU9
 
-Document how region and root decoder granularities interact for
-same-granularity, power-of-2 mixed-granularity, and 3-way-family
-interleaves.
+On 26/05/26 04:31PM, Dave Jiang wrote:
+> 
+> 
+> On 5/22/26 12:19 PM, John Groves wrote:
+> > From: John Groves <John@Groves.net>
+> > 
+> > Two fixes for virtual address handling in fsdev:
+> > 
+> > 1. Use __va(phys) instead of virt_addr + linear_offset for the kaddr
+> >    return in __fsdev_dax_direct_access(). The previous code added a
+> >    device-linear byte offset to virt_addr (which is __va of ranges[0]),
+> >    but for multi-range devices with physical gaps between ranges, this
+> >    linear arithmetic crosses the gap and produces a wrong kernel virtual
+> >    address. Using __va(phys) where phys comes from dax_pgoff_to_phys()
+> >    is correct for any range layout because the direct map translates
+> >    each physical address independently.
+> > 
+> > 2. Convert the WARN_ON to a fatal error when pgmap_phys > phys. This
+> >    condition means the remapped region starts after the device's data
+> >    region, which is an impossible state. Previously the probe continued
+> >    with data_offset=0, leaving virt_addr silently misaligned. Now probe
+> >    returns -EINVAL with a diagnostic message.
+> 
+> Split to 2 different patches I'd say.
+> 
+> DJ
 
-Explain the selector-bit model used by the CXL specification, the
-legal layouts that result from it, the additional span constraint
-required by 3-way-family roots, and how the Linux driver validates
-those rules for both auto and user-created regions.
+Agree - done. Thanks!
 
-Assisted-by: Claude Opus 4.7
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- Documentation/driver-api/cxl/index.rst        |   1 +
- .../cxl/linux/region-granularity.rst          | 486 ++++++++++++++++++
- 2 files changed, 487 insertions(+)
- create mode 100644 Documentation/driver-api/cxl/linux/region-granularity.rst
+John
 
-diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-index 3dfae1d310ca..1ae193ea4020 100644
---- a/Documentation/driver-api/cxl/index.rst
-+++ b/Documentation/driver-api/cxl/index.rst
-@@ -42,6 +42,7 @@ that have impacts on each other.  The docs here break up configurations steps.
-    linux/dax-driver
-    linux/memory-hotplug
-    linux/access-coordinates
-+   linux/region-granularity
- 
- .. toctree::
-    :maxdepth: 2
-diff --git a/Documentation/driver-api/cxl/linux/region-granularity.rst b/Documentation/driver-api/cxl/linux/region-granularity.rst
-new file mode 100644
-index 000000000000..7d0d12e6e2bd
---- /dev/null
-+++ b/Documentation/driver-api/cxl/linux/region-granularity.rst
-@@ -0,0 +1,486 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==============================================
-+Region Granularity and Multi-Level Interleave
-+==============================================
-+
-+CXL memory regions stripe accesses across one or more endpoints by
-+routing transactions through a tree of decoders: a root decoder, zero
-+or more switch decoders, and an endpoint decoder at each leaf. Each
-+decoder in that path uses a contiguous range of HPA address bits to
-+pick its target. This document describes how those bit ranges combine
-+across levels, the constraints CXL Spec 4.0 places on legal
-+combinations, and how the Linux CXL driver validates and programs
-+them.
-+
-+The relevant spec material is CXL Spec 4.0 Section 9.13.1, especially
-+Section 9.13.1.1 ("Legal Interleaving Configurations") and CXL Spec
-+4.0 Tables 9-6, 9-7, and 9-8. CXL Spec 4.0 Figure 9-17 (two-level)
-+and Figure 9-18 (three-level) illustrate the bit-routing intuition
-+this document builds on.
-+
-+
-+HPA Selector Bits
-+=================
-+
-+For a single interleave level with ``W`` ways and granularity ``G``
-+bytes, the **selector bits** are the ``log2(W)`` HPA bits the decoder
-+inspects to choose among its ``W`` targets. The lowest of those bits
-+sits at position ``log2(G)``, so the selector spans
-+``[log2(G) + log2(W) - 1 : log2(G)]``. Equivalently, the bitmask is
-+``(W - 1) * G``.
-+
-+A few examples make the geometry concrete::
-+
-+   2-way at  256B  ->  selector bit 8         (one bit)
-+   4-way at  1KB   ->  selector bits[11:10]   (two bits)
-+   2-way at  4KB   ->  selector bit 12        (one bit)
-+   8-way at  1KB   ->  selector bits[12:10]   (three bits)
-+
-+Throughout this document "inner bit" means a lower-numbered HPA bit
-+(smaller stride, faster cycling among targets) and "outer bit" means
-+a higher-numbered HPA bit (larger stride, slower cycling). HPA[8] is
-+the innermost legal CXL selector bit; HPA[14] is the outermost.
-+
-+
-+The Multi-Level Rule
-+====================
-+
-+When a region's interleave is split across multiple decoder levels,
-+CXL Spec 4.0 Section 9.13.1 requires that:
-+
-+   "all the levels use different, but consecutive, HPA bits to
-+   select the target and no Interleave Set has more than eight
-+   devices."
-+
-+Two requirements live in that sentence:
-+
-+* **Disjoint** - each level's selector bits must not overlap any
-+  other level's bits.
-+* **Consecutive** - the union of all level selectors must be a single
-+  contiguous run of HPA bits with no gap.
-+
-+The union of level selectors is the **region selector**, and it must
-+equal ``(region_ways - 1) * region_gran``. Because that mask is itself
-+a contiguous run by construction, the levels just need to partition
-+it cleanly.
-+
-+The seven legal interleave granularity values split into two groups
-+(see CXL Spec 4.0 Section 9.13.1 and Table 8-116):
-+
-+* **Group 1** - 256B, 512B, 1024B, 2048B (interleaving on HPA[8..11])
-+* **Group 2** - 4096B, 8192B, 16384B (interleaving on HPA[12..14])
-+
-+CXL host bridges and switches must support every value in both
-+groups. CXL memory devices must support at least one group, advertised
-+through their HDM Decoder Capability register.
-+
-+
-+Same-Granularity Interleave
-+===========================
-+
-+The simplest case is ``region_gran == root_gran``. Each level's
-+granularity equals the next inner level's IG times that level's
-+ways. The region selector bits stack inside-out from the root.
-+
-+Example: 4-way region on a 2-way root, 256B everywhere::
-+
-+   Level    Ways   Granularity   Selector bits
-+   ------   ----   -----------   -------------
-+   Root     2      256B          bit 8
-+   Switch   2      512B          bit 9
-+   Region   4      256B          bits[9:8]
-+
-+Each level's IG sits one bit position above the next inner level's
-+selector. The region's effective selector spans ``[9:8]``, two bits,
-+matching ``(4 - 1) * 256``.
-+
-+
-+Mixed-Granularity Interleave (Power-of-2)
-+=========================================
-+
-+A region's granularity may be **less than** the root decoder's
-+granularity. In that case the root claims an outer selector bit and
-+the switches beneath it claim inner bits. The arrangement is legal
-+whenever both granularities are powers of 2 and the resulting bits
-+remain disjoint and consecutive.
-+
-+Two-Level Example (CXL Spec 4.0 Figure 9-17)
-+--------------------------------------------
-+
-+8-way region, 2-way root at 4KB, 4-way switch at 1KB::
-+
-+   Level    Ways   Granularity   Selector bits
-+   ------   ----   -----------   -------------
-+   Root     2      4KB           bit 12
-+   Switch   4      1KB           bits[11:10]
-+   Region   8      1KB           bits[12:10]
-+
-+The host bridge bisects the address range at 4KB granularity, sending
-+one half to each root port. Beneath each root port a 4-way switch
-+splits its half into four 1KB chunks. To each endpoint the region
-+appears as an 8-way interleave at 1KB based on bits[12:10]; the
-+leftmost endpoint receives 1KB chunks at HPA bases 0, 8KB, 16KB, ...
-+
-+Three-Level Example (CXL Spec 4.0 Figure 9-18)
-+----------------------------------------------
-+
-+8-way region across cross-HB / HB / switch, all 2-way::
-+
-+   Level         Ways   Granularity   Selector bits
-+   -----------   ----   -----------   -------------
-+   Cross-HB      2      4KB           bit 12
-+   Host bridge   2      2KB           bit 11
-+   Switch        2      1KB           bit 10
-+   Region        8      1KB           bits[12:10]
-+
-+Three levels of 2-way interleave each contribute one bit. Total
-+endpoints: ``2 * 2 * 2 = 8``. Selector union:
-+``bit 12 | bit 11 | bit 10`` = ``bits[12:10]``. Disjoint and
-+consecutive.
-+
-+General Power-of-2 Rules
-+------------------------
-+
-+For power-of-2 ways at every level:
-+
-+* ``region_gran <= root_gran`` is allowed; ``region_gran > root_gran``
-+  is not (the root's selector would land inside one region stride).
-+* Both granularities must be powers of 2.
-+* The ratio ``root_gran / region_gran`` is the number of inner
-+  position slots packed beneath one root target. Endpoint position is
-+  partitioned by root target rather than interleaved across them.
-+* Mixed-granularity is always optional for power-of-2 topologies. A
-+  same-granularity arrangement always exists for the same set of
-+  endpoints. Firmware may prefer mixed-granularity to expose a finer
-+  switch-level interleave to the CPU.
-+
-+
-+3-Way Family Interleave
-+=======================
-+
-+CXL Spec 4.0 Section 9.13.1.1 defines a non-power-of-2 family of
-+interleave widths: 3, 6, and 12. These are not pure bit selectors.
-+A 3-way root divides the address by 3 in value-space (modulo or XOR
-+arithmetic, see CXL Spec 4.0 Section 9.18) rather than picking a
-+target from a contiguous bit range. As a consequence:
-+
-+* A strict 3-way root consumes **zero** HPA selector bits of its own.
-+* Only the power-of-2 component of the region width contributes
-+  selector bits. For a 6-way region, the bit-selector component is
-+  2-way; for 12-way, 4-way.
-+* Mixed-granularity is **required** for any 6-way or 12-way region on
-+  a 3-way root. There is no same-granularity alternative.
-+
-+Legal 3-Way-Family Configurations
-+---------------------------------
-+
-+CXL Spec 4.0 Tables 9-6, 9-7, and 9-8 enumerate the legal
-+configurations. IGB is the device-level interleave granularity.
-+
-+Table 9-6: 12-way device-level interleave at IGB::
-+
-+   Cross-host bridge   Root complex     CXL switch
-+   -----------------   --------------   --------------
-+   12-way at IGB       no interleave    no interleave
-+   6-way  at 2*IGB     2-way at IGB     no interleave
-+   6-way  at 2*IGB     no interleave    2-way at IGB
-+   3-way  at 4*IGB     4-way at IGB     no interleave
-+   3-way  at 4*IGB     no interleave    4-way at IGB
-+   3-way  at 4*IGB     2-way at IGB     2-way at 2*IGB
-+   3-way  at 4*IGB     2-way at 2*IGB   2-way at IGB
-+
-+Table 9-7: 6-way device-level interleave at IGB::
-+
-+   Cross-host bridge   CXL host bridge   CXL switch
-+   -----------------   ---------------   --------------
-+   6-way  at IGB       no interleave     no interleave
-+   3-way  at 2*IGB     2-way at IGB      no interleave
-+   3-way  at 2*IGB     no interleave     2-way at IGB
-+
-+Table 9-8: 3-way device-level interleave at IGB::
-+
-+   Cross-host bridge   CXL host bridge   CXL switch
-+   -----------------   ---------------   --------------
-+   3-way  at IGB       no interleave     no interleave
-+
-+Span Identity for 3-Way-Family Roots
-+------------------------------------
-+
-+For a 3-way (or 6-way, 12-way) root, the region must occupy exactly
-+one full cycle of the root's divide-by-3 pattern::
-+
-+   region_ways * region_gran == root_ways * root_gran
-+
-+Every legal row of CXL Spec 4.0 Tables 9-6, 9-7, and 9-8 satisfies
-+this identity.
-+
-+Why power-of-2 roots do not need this check explicitly, and why
-+3-way roots do, comes down to how each cycles through its targets:
-+
-+* A power-of-2 root selects targets purely by HPA bits. The bits it
-+  owns are part of the region selector mask
-+  ``(region_ways - 1) * region_gran``. The disjoint and containment
-+  checks on selector bits inside the region selector force
-+  ``root_ways * root_gran`` to be a power-of-2 divisor of
-+  ``region_ways * region_gran``, and the region size constraint
-+  forces it to be exactly one such divisor. Span equality is a
-+  by-product of bit accounting.
-+
-+* A 3-way root divides the address by 3 in value-space. It cycles
-+  through three targets at every ``root_gran``-byte stride, but
-+  consumes no HPA selector bits at all. The selector mask returned
-+  by ``get_selector()`` for a strict 3-way is zero. Selector bit
-+  accounting cannot see the address space the root reserves at
-+  ``log2(root_gran)``, so it cannot rule out arrangements where
-+  ``region_ways * region_gran`` is some multiple of
-+  ``root_ways * root_gran`` other than one. (For example, a
-+  same-granularity 6-way region on a 3-way root would pass selector
-+  checks while failing to cover one root cycle.)
-+
-+The span identity restores that constraint for non-power-of-2 roots.
-+The driver enforces it as a pre-flight check in
-+``cxl_region_attach()``, before the per-port selector walk runs.
-+A failed span check is rejected with the dmesg message
-+``region ways*gran (W*G) != root ways*gran (W*G)``.
-+
-+Mixed-Granularity Rules for 3-Way Roots
-+---------------------------------------
-+
-+The general power-of-2 mixed-gran rules apply to the 3-way family
-+with two adjustments:
-+
-+* ``region_gran <= root_gran`` is allowed; ``region_gran > root_gran``
-+  is not. (Same as power-of-2.)
-+* Both granularities must be powers of 2. (Same as power-of-2; the
-+  3-way component is in the *ways*, not the granularity.)
-+* The ratio ``root_gran / region_gran`` is the number of inner
-+  position slots packed beneath one root target. (Same as
-+  power-of-2; the value-space root advances by ``root_gran``
-+  whether or not it consumes selector bits.)
-+* ``region_ways * region_gran == root_ways * root_gran`` must hold.
-+  (3-way only. Power-of-2 roots get this for free from selector
-+  containment.)
-+* Mixed-granularity is **required** for any 6-way or 12-way region
-+  on a 3-way root, because no same-granularity arrangement can hold
-+  the span identity. (3-way only; for power-of-2 mixed-gran is
-+  optional.)
-+
-+
-+Position Arithmetic
-+===================
-+
-+Position is the index ``[0, region_ways)`` that orders an endpoint
-+within the region. The driver derives an endpoint's position by
-+walking the topology from endpoint up to root.
-+
-+For same-granularity regions the standard recurrence applies at every
-+level::
-+
-+   pos = pos * parent_ways + parent_pos
-+
-+The root's targets cycle at the innermost selector bit, so the root
-+contributes the position MSBs naturally.
-+
-+For mixed-granularity regions the root's targets cycle more slowly
-+than the switches' targets - by exactly ``stride = root_gran /
-+region_gran`` inner positions per root target. Endpoint positions
-+within one root target are packed consecutively, so the root's
-+contribution is rescaled at the root boundary::
-+
-+   pos = pos + stride * parent_pos     (root iteration only)
-+
-+For a 3-way root the same packing applies; ``stride`` is still
-+``root_gran / region_gran`` whenever the granularities differ.
-+
-+Peer-Distance and the check_last_peer Walk
-+------------------------------------------
-+
-+When two endpoints share a downstream port at some intermediate
-+level, ``check_last_peer()`` verifies that the peer at
-+``pos - peer_distance`` lives behind the same dport as the endpoint
-+being attached. ``peer_distance`` is the number of region positions
-+between two consecutive endpoints that share a dport at the port
-+under inspection.
-+
-+The seed of ``peer_distance`` depends on the layout the position
-+recurrence builds:
-+
-+* Same-granularity layout (``stride == 1``) is multiplicative at the
-+  root: ``pos = pos * root_ways + parent_pos``. Changing the root's
-+  ``parent_pos`` by 1 shifts each inner-position group by ``root_ways``
-+  region positions, so peer distance at any sub-root port carries a
-+  factor of ``root_ways``. Seed: ``root_ways``.
-+
-+* Mixed-granularity layout (``stride > 1``) is additive at the root:
-+  ``pos = pos + stride * parent_pos``. Changing the root's
-+  ``parent_pos`` shifts every endpoint by the same constant ``stride``;
-+  peer distances among endpoints under one root target do not depend
-+  on ``root_ways``. Seed: ``1``.
-+
-+Inner ports contribute their ``nr_targets`` multiplicatively as the
-+walk descends, and the current port's ``iw`` folds in at the end.
-+
-+Example: 6-way region on a 3-way root (CXL Spec 4.0 Table 9-7)
-+--------------------------------------------------------------
-+
-+Configuration: ``root_ways = 3`` at ``2*IGB``, ``region_ways = 6``
-+at ``IGB``, with a 2-way host-bridge interleave at ``IGB`` beneath
-+each root target. ``stride = 2*IGB / IGB = 2``.
-+
-+Position layout::
-+
-+   slot:    0     1     2     3     4     5
-+   target:  H0,a  H0,b  H1,a  H1,b  H2,a  H2,b
-+
-+Positions {0,1} share root target H0, {2,3} share H1, {4,5} share
-+H2. ``cxl_calc_interleave_pos()`` produces these directly via the
-+mixed-gran root branch ``pos = pos + stride * parent_pos``: for the
-+endpoint at H1 inner-slot ``b`` (HB-position 1), the recurrence
-+yields ``pos = 1 + 2 * 1 = 3``.
-+
-+The 3-way root consumes zero HPA selector bits; the host-bridge
-+2-way interleave contributes the region's only selector bit. The
-+span identity ``6 * IGB == 3 * 2*IGB`` holds.
-+
-+Example: 8-way mixed-gran region on a 4-way power-of-2 root
-+-----------------------------------------------------------
-+
-+Configuration: ``root_ways = 4``, ``root_gran = 4096``,
-+``region_ways = 8``, ``region_gran = 2048``, with a 2-way
-+host-bridge interleave at 2KB beneath each root target.
-+``stride = 4096 / 2048 = 2``.
-+
-+Position layout (one root cycle covers 16KB)::
-+
-+   HPA byte:  0     2KB   4KB   6KB   8KB   10KB  12KB  14KB
-+   position:  0     1     2     3     4     5     6     7
-+   target:    H0,a  H0,b  H1,a  H1,b  H2,a  H2,b  H3,a  H3,b
-+
-+Positions {0,1} share host bridge H0, {2,3} share H1, and so on.
-+For the endpoint at H2 inner-slot ``b`` (HB-position 1), the
-+recurrence yields ``pos = 1 + 2 * 2 = 5``.
-+
-+A same-granularity 8-way region on the same root would use the
-+standard multiplicative recurrence at every level. The additive
-+root branch is what places endpoints correctly when the root sits
-+at outer HPA bits and switches beneath it interleave at finer
-+granularity.
-+
-+
-+Linux Driver Implementation
-+===========================
-+
-+Region geometry validation lives in ``drivers/cxl/core/region.c``.
-+The helpers and enforcement points below implement the rules
-+described in the preceding sections.
-+
-+``get_selector(ways, gran)``
-+  Each interleave level consumes a contiguous range of HPA bits to
-+  pick its target. ``get_selector()`` models that range as a bitmask:
-+  ``(ways - 1) * gran`` for power-of-2 interleaves. A strict 3-way
-+  interleave consumes no HPA bits and the helper returns zero;
-+  6-way and 12-way are folded to expose only their power-of-2
-+  component.
-+
-+  Kernel-doc: :c:func:`get_selector`.
-+
-+``root_pos_stride(cxlr)``
-+  When ``region_gran < root_gran``, each root target owns more than
-+  one region position. The number of positions packed under one root
-+  target is ``root_gran / region_gran``: the root advances by
-+  ``root_gran`` bytes per target, while region positions advance by
-+  ``region_gran`` bytes. Same-granularity regions have a stride of
-+  one because the root advances on every region position.
-+
-+  ``root_pos_stride()`` returns this ratio for the position walk and
-+  the peer-distance computation. The same value applies to 3-way
-+  family roots: in value space they advance by ``root_gran`` per
-+  target whether or not they consume HPA selector bits.
-+
-+  Kernel-doc: :c:func:`root_pos_stride`.
-+
-+``is_ig_allowed(cxlrd, ig)``
-+  The region granularity must not exceed the root granularity.
-+  ``region_gran > root_gran`` would place the root selector inside a
-+  single region stride, leaving the root no address bits to choose
-+  among its targets. ``region_gran <= root_gran`` is required for
-+  every legal layout.
-+
-+  ``is_ig_allowed()`` enforces that geometric rule. It returns true
-+  when the root is not interleaving, or when ``ig`` does not exceed
-+  the root granularity. Endpoint capability (the IG groups a memdev
-+  advertises) is checked separately at attach time via
-+  ``check_interleave_cap()``.
-+
-+  Kernel-doc: :c:func:`is_ig_allowed`.
-+
-+``cxl_port_setup_targets()``
-+  This is the per-port enforcement point for the multi-level rule.
-+  For each level between the current port and the root the function:
-+
-+  * Rejects overlap. Two levels that share a selector bit fail the
-+    disjoint requirement.
-+  * Rejects escapes. The accumulated selector must fit within the
-+    region selector. A level whose claimed bits land outside the
-+    region selector fails the containment requirement.
-+  * Derives the granularity to program at the current port for
-+    user-created regions. Each interleaving level claims the lowest
-+    selector bit still available within the region selector;
-+    passthrough levels consume no selector bit and inherit a scaled
-+    granularity from their ancestors.
-+
-+  Auto regions reuse the same selector checks but trust the
-+  granularity firmware already programmed at each level.
-+
-+``cxl_region_attach()``
-+  Pre-flight gates that run once per region attach, before the
-+  per-port selector walk.
-+
-+  * Auto regions bypass the sysfs granularity gate, so
-+    ``is_ig_allowed()`` is applied here to give them the same
-+    geometric check as user-created regions.
-+  * 3-way-family roots require an explicit span check. A strict
-+    3-way root consumes no HPA selector bits, so selector containment
-+    cannot prove that the root and region cover the same address
-+    span. The span identity
-+    ``region_ways * region_gran == root_ways * root_gran`` restores
-+    that constraint. Power-of-2 roots get the equivalent constraint
-+    from selector containment and are not affected by this check.
-+    See `Span Identity for 3-Way-Family Roots`_ for the full
-+    derivation.
-+
-+Position calculations use ``root_pos_stride()`` so that both
-+same-granularity and mixed-granularity regions produce the correct
-+endpoint ordering. The position walk itself lives in
-+``cxl_calc_interleave_pos()``.
-+
-+Kernel-doc: :c:func:`cxl_calc_interleave_pos`.
-+
-+
-+Auto vs User-Created Regions
-+============================
-+
-+**Auto regions** are reconstructed at boot from the decoder values
-+firmware programmed. The driver reads each decoder's ``ways`` and
-+``granularity``, runs them through the selector walk, and accepts
-+the configuration if it passes the disjoint and containment checks
-+(plus the span identity for 3-way roots). Firmware is the source of
-+truth for the granularity at each level.
-+
-+**User-created regions** specify ``interleave_ways`` and
-+``interleave_granularity`` through sysfs; the driver derives each
-+intermediate decoder's granularity. The sysfs path runs
-+``is_ig_allowed()`` at granularity-write time, ``set_interleave_ways()``
-+at ways-write time, and the full selector walk when the region is
-+attached and committed.
-+
-+Both paths converge on the same geometry validation rules.
-+Differences between the paths are limited to how region parameters
-+are obtained and when they are validated.
-+
-+* Whether each intermediate decoder's granularity is read from
-+  hardware (auto) or derived (user).
-+* Whether the membership of the region is established by walking
-+  firmware-programmed decoders (auto) or by user writes to ``targetN``
-+  attributes (user).
--- 
-2.37.3
+<snip>
 
