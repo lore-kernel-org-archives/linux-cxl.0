@@ -1,232 +1,137 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from a11-73.smtp-out.amazonses.com (a11-73.smtp-out.amazonses.com [54.240.11.73])
+	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20A730F523
-	for <linux-cxl@vger.kernel.org>; Sat, 30 May 2026 14:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780152887; cv=pass; b=WUQXbSJCReEVW7pDup49gcESZW84EqicYsuUMjnf53VynwLoDyU7kBj9fIoR9/YUiR5CkS5QncGvyAWRHRwLifdoR+6F2IzyLY3vDuh8ytBt60YCoRBrt2d7PzzEvhyUf1T+33wnduu9xzW0E70Oaq/dIzEpmP3iA7ISQEHfXPs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780152887; c=relaxed/simple;
-	bh=NEWOlMAu410uV1hUmN0g180JTqrHYGhQLVPTbISijB4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WQv+aF3Lum9P9TG5smhUyNlK6qC82UQND0/jwso2h1fATIglOUDtWDJnIsaaNkzVunAnFVaTBE0y+T79SVG1QVRKiEp3OUzY5a8Jilcsh5ZtqxlVQHPlT2sUfPfjNB6yLdIm26jfeXGDMbyyefge16s4HX9WU72bQMdf+GcTi+8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=AyZTCWKC; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613A33998B1;
+	Sat, 30 May 2026 16:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.11.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780159804; cv=none; b=FKYDegnm/Vrl01BfAxmnQdF277DI/yBcR9y6148BxKzSPqf7x9CZOcHOp79PAD4BT6+/OHWtFCUiX10nzInHtL7xw+i0yIuvA9Y5IciPbzf8IxR+uIrP51g0YrgLrt6FvDvpN7NlZ3HpdU/wrCXRI9Xt64NDlZHCxFQZdiwzMsw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780159804; c=relaxed/simple;
+	bh=aJgpOXWo6TMioWluhbVYAPCxFneaCuvwJria7OxLR5k=;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:References:
+	 Message-ID; b=rmda3tnIH7Y71snjbFQ1TitW1DiAGXO0WggvLn2UV6b/3c+QXyMN2R7ncRbPJkqiAyJTsVjjJxwY2bxdA1lomjAVnn8vKaa2GdIS0Ub9Ge2dbUizGcSTqU3i900TTt1FM++aSr5Ct5m/C5hY7vFNMlKGd2cZf3uHtbCaqbxzfIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=h90A0QNT; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=OkI37pKe; arc=none smtp.client-ip=54.240.11.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="AyZTCWKC"
-ARC-Seal: i=1; a=rsa-sha256; t=1780152878; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=B4OlXL4fkxx9ufpJOKroumUR6W/gqi4R7ULff0OO8HYCwdW070LccWTpNX3IK+FCtjHgclKERDnvQgpWRhC5PWXgDepMI8Zgd95JYDDbE+gJco6TUAwMUXQw59c56dpZMFwQSCGcYBXhqn+hFyZDtwoHxOAaKgQM96q8ENC4dLs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1780152878; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Ynwi3+7XRbORpJmPigiF/fOJS108lYUUrR2cq2JUGsg=; 
-	b=RL7VbQpCzKPIwnVCbxrTcJ4agH6s/TlFkLGMmxCvZ+5mTbHGwUJsLGsqmPpazUZdwp2HAof/nJQyUsjQjwTKZN7wj3hvi9bTQGyXJs/BRVbrVwygIg6OxvzT5WV/WATZXCN1v4DRQ0ymk6JBz/3Ngeyupa0nxcmXGHh9gW9FeIc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1780152878;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=Ynwi3+7XRbORpJmPigiF/fOJS108lYUUrR2cq2JUGsg=;
-	b=AyZTCWKCU6lg0lH0EvgrW/5UqjYcAYmMY0XnKAVAConwgby5PCUQtrsdCe4wDjUC
-	lIqXmcZNmf9Wg3okuwS1TZ9Fi2d3uNQa4RMOOftz7bC31mcuyiWPYlVSag4dqdpyzue
-	yrU5t4KXblNCqg+WP/zmWjxmvhD8nc926fP7M8Hs=
-Received: by mx.zohomail.com with SMTPS id 1780152876273530.2144817260835;
-	Sat, 30 May 2026 07:54:36 -0700 (PDT)
-Message-ID: <42e1dbc3-58f2-434d-b83e-388855160369@zohomail.com>
-Date: Sat, 30 May 2026 22:54:31 +0800
+	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="h90A0QNT";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="OkI37pKe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1780159802;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id;
+	bh=aJgpOXWo6TMioWluhbVYAPCxFneaCuvwJria7OxLR5k=;
+	b=h90A0QNTUKrVpM/EtaiOYn5NwXxEYOgL3P0cqSb0qfBqeGLcEUDfMTH51Qdp3b+n
+	WekDuqK40cLROCYNNEZZYXEihvE4ojfi2A/IcHYe1z/gXyZ1BD+Vs2AKimZDNt8Z5ir
+	d0nTevn+/8OddjROP0K1qGz/x67V2oTLyacFRDLQ=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1780159802;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id:Feedback-ID;
+	bh=aJgpOXWo6TMioWluhbVYAPCxFneaCuvwJria7OxLR5k=;
+	b=OkI37pKeVgOCAayjXeo/igJ1He2jMNPetOf6LkhcCJrRC4SqL6z21+PdIUwB3S+r
+	FiaMFoPU/HrkHT1xe9aetjF2c0HwDBklAaAzq4R9aM5TWg5UILNW7ZMoA8ATGcg2AU8
+	Tcm/JKKt+YMnIJ8y3eWHKgyflow62BgzJwnGFgOI=
+Subject: [PATCH V3 0/9] Fixes to the previously-merged drivers/dax/fsdev
+ series
+From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
+To: =?UTF-8?Q?John_Groves?= <John@Groves.net>, 
+	=?UTF-8?Q?Dan_Williams?= <djbw@kernel.org>
+Cc: =?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
+	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
+	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
+	=?UTF-8?Q?Matthew_Wilcox?= <willy@infradead.org>, 
+	=?UTF-8?Q?Jan_Kara?= <jack@suse.cz>, 
+	=?UTF-8?Q?Alexander_Viro?= <viro@zeniv.linux.org.uk>, 
+	=?UTF-8?Q?Christian_Brauner?= <brauner@kernel.org>, 
+	=?UTF-8?Q?Miklos_Szeredi?= <miklos@szeredi.hu>, 
+	=?UTF-8?Q?Alison_Schofiel?= =?UTF-8?Q?d?= <alison.schofield@intel.com>, 
+	=?UTF-8?Q?Ira_Weiny?= <iweiny@kernel.org>, 
+	=?UTF-8?Q?Jonathan_Cameron?= <jic23@kernel.org>, 
+	=?UTF-8?Q?nvdimm=40lists=2Elinux=2Edev?= <nvdimm@lists.linux.dev>, 
+	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
+	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?linux-fsdevel=40vger=2Ekernel=2Eorg?= <linux-fsdevel@vger.kernel.org>, 
+	=?UTF-8?Q?John_Groves?= <john@groves.net>
+Date: Sat, 30 May 2026 16:50:02 +0000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/region: Fix NULL pointer within p->targets[]
-To: "alison.schofield" <alison.schofield@intel.com>,
- "dave.jiang" <dave.jiang@intel.com>, Dan Williams <djbw@kernel.org>,
- Jonathan Cameron <jic23@kernel.org>, dave <dave@stgolabs.net>,
- "vishal.l.verma" <vishal.l.verma@intel.com>, "ira.weiny"
- <ira.weiny@intel.com>
-Cc: linux-cxl@vger.kernel.org, sashiko-reviews@lists.linux.dev
-References: <20260530-fix_null_in_targets_array-v1-1-312c3bf1fe0f@zohomail.com>
- <20260530050649.EBFCD1F00893@smtp.kernel.org>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20260530050649.EBFCD1F00893@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Feedback-ID: zu08011227b91e9adc0f72173a6bfc15cd0000ee3c728238e0f88fc7e76f733379c11a76a825e238468692ca:ZohoMail
-X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
-X-ZohoMailClient: External
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <20260530164953.6578-1-john@jagalactic.com>
+X-Mailer: Amazon WorkMail
+Thread-Index: AQHc8FRa7vroVK8USxmz3hlONeiu3Q==
+Thread-Topic: [PATCH V3 0/9] Fixes to the previously-merged drivers/dax/fsdev
+ series
+X-Wm-Sent-Timestamp: 1780159800
+X-Original-Mailer: git-send-email 2.52.0
+Message-ID: <0100019e79caead2-5795328c-af48-4a93-b147-c11df7446e1a-000000@email.amazonses.com>
+Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
+X-SES-Outgoing: 2026.05.30-54.240.11.73
 
+From: John Groves <john@groves.net>
 
-在 2026/5/30 13:06, sashiko-bot@kernel.org 写道:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
->
-> Pre-existing issues:
-> - [High] __cxl_decoder_detach() suffers from the exact same p->targets hole vulnerability for fully assembled auto-discovered regions, which will cause a NULL pointer dereference upon re-attachment.
+This series applies bug fixes (mostly found via sashiko) to the dax/fsdev 
+series. This has been soaking in the famfs CI pipeline for 2+ weeks and
+1) won't affect anything that doesn't use drivers/dax/fsdev.c, and 2)
+doesn't affect any known workloads - although the bugs would have 
+manifested when multi-range DCD dax devices are a thing (soon-ish).
 
-I can reproduce it by the following sequence.
+Changes since V2:
 
-Environment: CFMWS lock flag is set, interleave_ways of an 
-auto-discovery region is 4.
+* Patch 1 (comment fix): No change. Responded to Dave's question about
+  the dropped precondition -- the new comment correctly covers both
+  callers; fsdev_clear_folio_state() does not guarantee share==0 before
+  calling, so the old precondition was no longer universally true.
+* V2 patch 2 (three fixes): Split into three separate patches (patches
+  2-4) per Dave's review.
+* V2 patch 3 (two fixes): Split into two separate patches (patches 5-6)
+  per Dave's review.
+* V2 patch 4 (clamp direct_access / remove cached_size): Dropped.
+  Dave's analysis correctly showed the claimed bug does not exist --
+  dax_pgoff_to_phys() already enforces that the full requested size fits
+  within a single range before returning, making the clamp a no-op in
+  every reachable path.
+* V2 patch 5 (holder_ops race): Use WRITE_ONCE() for the holder_ops
+  store; add WARN_ON() on the cmpxchg result to catch wrong-holder and
+  double-put API contract violations; fix the inline comment, which
+  incorrectly claimed dax_holder_notify_failure() consults holder_ops
+  only when holder_data is non-NULL.
+* V2 patch 6 (dax_dev_find): Add dax_alive() check under dax_read_lock()
+  after ilookup5() to prevent returning a device that is concurrently
+  being torn down by kill_dax().
+* V2 patch 7 (formatting cleanup): Drop incorrect Fixes: tag; add
+  Dave's Reviewed-by.
+* The series grows from 7 to 9 patches.
 
-1. echo -n {one of cxl device} > /sys/bus/pci/drivers/cxl_pci/unbind
+Changes since v1:
+* Dropped modes from patch 6 to fs/fuse/famfs.c and 
+  fs/famfs/famfs_inode.c, which are not upstream so it broke
+  attempts to apply the series. Oops...
+* Added patch 7, which addresses a previously-missed review comment
+  from Jonathan - minor cleanup
 
-2. echo -n {same device} > /sys/bus/pci/drivers/cxl_pci/bind
+John Groves (9):
+  dax: fix misleading comment about share/index union in
+    dax_folio_reset_order()
+  dax/fsdev: fix multi-range offset in memory_failure handler
+  dax/fsdev: clear vmemmap_shift when binding static pgmap
+  dax/fsdev: clear dev_dax->pgmap on probe failure
+  dax/fsdev: use __va(phys) for kaddr in direct_access
+  dax/fsdev: fail probe on invalid pgmap offset
+  dax: fix holder_ops race in fs_put_dax()
+  dax: replace exported dax_dev_get() with non-allocating dax_dev_find()
+  dax: fsdev.c minor formatting cleanup
 
-Will see something like
+ drivers/dax/fsdev.c | 81 +++++++++++++++++++++++++++++++--------------
+ drivers/dax/super.c | 73 +++++++++++++++++++++++++++++++++++++---
+ fs/dax.c            | 12 +++----
+ include/linux/dax.h |  6 +++-
+ 4 files changed, 136 insertions(+), 36 deletions(-)
 
-[  113.444191] Oops: general protection fault, probably for 
-non-canonical address 0xdffffc0000000008: 0000 [#1] SMP KASAN PTI
-[  113.444506] KASAN: null-ptr-deref in range 
-[0x0000000000000040-0x0000000000000047]
-[  113.444506] RIP: 0010:cxl_calc_interleave_pos+0x26/0x810 [cxl_core]
-[  113.444506] Call Trace:
-[  113.444506]  <TASK>
-[  113.444506]  cxl_region_attach+0xc50/0x2140 [cxl_core]
-[  113.444506]  cxl_add_to_region+0x321/0x2310 [cxl_core]
-[  113.444506]  discover_region+0x92/0x150 [cxl_port]
+-- 
+2.53.0
 
-
-Seems like we also need to compact p->targets array in that case, but I 
-believe it will trigger below warning aftaer compacting.
-
-__cxl_decoder_detach():
-
-   ...
-
-   if (cxled->pos < 0 || cxled->pos >= p->interleave_ways ||
-       p->targets[cxled->pos] != cxled) {
-     struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-
-     dev_WARN_ONCE(&cxlr->dev, 1, "expected %s:%s at position %d\n",
-                                dev_name(&cxlmd->dev), 
-dev_name(&cxled->cxld.dev),
-                                cxled->pos);
-     return NULL;
-   }
-
-   ...
-
-I think maybe we can also walk p->targets array to confirm if the given 
-cxled belongs to the region?
-
-
-> - [High] Failed auto-discovery decoders are left in the region targets array if failure occurs after endpoint port attachment, leading to a Use-After-Free (UAF).
-
-For this issue, my understanding is that we need a separate patch to 
-reset cxled->state to CXL_DECODER_STATE_AUTO in cxl_rr_free_decoder(). 
-like that
-
-@@ -1068,6 +1068,12 @@ static void cxl_rr_free_decoder(struct 
-cxl_region_ref *cxl_rr)
-
-         dev_WARN_ONCE(&cxlr->dev, cxld->region != cxlr, "region 
-mismatch\n");
-         if (cxld->region == cxlr) {
-+               if (is_endpoint_decoder(&cxld->dev)) {
-+                       struct cxl_endpoint_decoder *cxled = 
-to_cxl_endpoint_decoder(&cxld->dev);
-+
-+                       if (cxled->state == CXL_DECODER_STATE_AUTO_STAGED)
-+                               cxled->state = CXL_DECODER_STATE_AUTO;
-+               }
-                 cxld->region = NULL;
-                 put_device(&cxlr->dev);
-         }
-
-
-Ming
-
-> --
->
-> commit 8beb15c55def2c0ba7cda46a708f6b3d2ab5e643
-> Author: Li Ming <ming.li@zohomail.com>
->
-> cxl/region: Fix NULL pointer within p->targets[]
->
-> This patch fixes a NULL pointer issue in p->targets[] during endpoint
-> decoder removal. It ensures the last valid endpoint decoder pointer is
-> swapped into the removed slot, avoiding gaps in the valid targets array.
->
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index e90c024c80365..54018db87a4c9 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -2220,7 +2220,15 @@ static int cxl_region_remove_target(struct device *dev, void *data)
->>   			p->nr_targets--;
->>   			cxled->state = CXL_DECODER_STATE_AUTO;
->>   			cxled->pos = -1;
->> -			p->targets[i] = NULL;
->> +
->> +			/*
->> +			 * Swap the last valid target into the slot to
->> +			 * ensure no invalid target in p->nr_targets range.
->> +			 * The targets array will be re-sorted during the
->> +			 * last endpoint decoder attaching again.
->> +			 */
->> +			p->targets[i] = p->targets[p->nr_targets];
->> +			p->targets[p->nr_targets] = NULL;
-> [Severity: High]
-> This isn't a bug introduced by this patch, but does __cxl_decoder_detach()
-> suffer from the exact same p->targets hole vulnerability for fully assembled
-> auto-discovered regions?
->
-> When a target is detached from an auto-discovered region:
->
-> drivers/cxl/core/region.c:__cxl_decoder_detach() {
->      ...
-> 	p->targets[cxled->pos] = NULL;
-> 	p->nr_targets--;
->      ...
-> }
->
-> For auto-discovered regions, new targets are appended at
-> p->targets[p->nr_targets] by cxl_region_attach_auto(). This leaves the NULL
-> hole intact while overwriting a valid endpoint pointer that was previously
-> positioned at the end of the array. Once p->nr_targets reaches
-> p->interleave_ways again, cxl_region_sort_targets() iterates through the
-> array and attempts to dereference the NULL pointer, which could cause a
-> kernel panic.
->
->
-> [Severity: High]
-> This isn't a bug introduced by this patch, but are failed auto-discovery
-> decoders left in the region targets array if failure occurs after endpoint
-> port attachment, leading to a Use-After-Free?
->
-> cxl_rr_ep_add() correctly upgrades an endpoint's staging state to
-> CXL_DECODER_STATE_AUTO:
->
-> drivers/cxl/core/region.c:cxl_rr_ep_add() {
->      ...
-> 		if (cxld == &cxled->cxld &&
-> 		    cxled->state == CXL_DECODER_STATE_AUTO_STAGED)
-> 			cxled->state = CXL_DECODER_STATE_AUTO;
->      ...
-> }
->
-> However, if subsequent topology validation fails, the error path calls
-> cxl_port_detach_region(), which clears the region pointer but neglects to
-> restore the endpoint's state back to CXL_DECODER_STATE_AUTO_STAGED. Because
-> of this, when __cxl_decoder_detach() invokes cxl_cancel_auto_attach(), it
-> silently skips removal due to the state mismatch:
->
-> drivers/cxl/core/region.c:cxl_cancel_auto_attach() {
->      ...
-> 	if (cxled->state != CXL_DECODER_STATE_AUTO_STAGED)
-> 		return;
->      ...
-> }
->
-> The endpoint decoder remains in the p->targets array and is subsequently
-> freed upon removal, resulting in a persistent Use-After-Free vulnerability
-> when the sysfs region targets are read or the array is otherwise accessed.
->
->>   
->>   			return 1;
->>   		}
