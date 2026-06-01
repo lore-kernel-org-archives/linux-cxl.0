@@ -1,45 +1,45 @@
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010009.outbound.protection.outlook.com [52.101.61.9])
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010055.outbound.protection.outlook.com [52.101.46.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D714634B410;
-	Mon,  1 Jun 2026 06:28:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7803806D8;
+	Mon,  1 Jun 2026 07:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780295332; cv=fail; b=JB5fOfBNYQ92EabS09MIKk4DHdnq+bWcrMpVcgtEGLp0vLYkSb1YdzsZn6JWOPA/6rLE/zFN0EMbXNO5TMNbqMLcBlPyG1hyc0WvDMxpk4B97jpb52T1Xlez3OEFQAhQcd5zbakzwD8FNi6KjBJ/fCvnyTiX+v18Vk9jiGYm7Ao=
+	t=1780297327; cv=fail; b=MipRWiDgHIQVV5CmtS6LMfdxC8FPlf567ptzext0L+EC+4+edQyu10HCZ8yvpQXgn+N8dikb8gWQWUCjzfrhYy8aylabjhx2TlGnEHggP3a29nuZrTSRy7hubK4LWKtcSJlzy0E6/UCOXbWOJsKRVIaa21K0SW5JdtlSxClfkUk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780295332; c=relaxed/simple;
-	bh=bR5IUNbZq1EO5NU1YHJxABMHx8ucdQSY3QkpjvwWvMQ=;
+	s=arc-20240116; t=1780297327; c=relaxed/simple;
+	bh=8sRi+MxF1xSpXOlDcr7huXaV/OnJaxBwQ/KPhg+Cy+Y=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZuMQf2AXAF/Db+2XF2YT/xMCXglT+VAbwPr6bLCiSXfJnPndtasbyXPc1LrOT5ViL8w4Ynp98goNxFfOA23GsNmu/YPgx3vfHyPJRHjzJg/x1nLe5ZnGS8cV65y5loAIKgh9SnkP2ZXQT15dN3Z1rqvvqXHMNDT0/42WzgLrErs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GNzcngSD; arc=fail smtp.client-ip=52.101.61.9
+	 Content-Type:MIME-Version; b=Q64eIUsvM3Q9CHkkjxBYLS7YP9lHYg/ir3GJFb6iLvErnMKIBirtBdWASoXa8YPiz6J30kQ8P82Cs2Se1LFS9vzHvLNrOECLaEFgNW1n8jmhvbD9ODDAJjWC/HPEUTMzvLPorEdHK6bylNie1pRxzn1TA8hXFIyklWffIZ+6u44=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=i4mn+AJp; arc=fail smtp.client-ip=52.101.46.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GNzcngSD"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="i4mn+AJp"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yC3ZYR6NIWzgPxYf45K5/eMDeMxjc8XNpLVfDltrQVLt6+XdUJViJ0FjWSa1UHCu5LemWmtHyR2suLm/FSvr9DEhHvfXV66sZqA40e6r3krJvbWFbW0rBjXiTSryJvl2LMSCJAwzTiY47rNiZU0jprlsFGtw9KpgooqYgTnX+DRpbsD7MUWY7DxGgQh18V/Jav/9C5XcVTzS5DNgCLa6xK9mLQOhJaikCHWp/PGwEUaEqFuz0wNtzb6YPVNm1xu+TAlPWYdMWVMnq8bYQlh5H+UTR2tis3dcN675VzefynNOi2mlH3nJeOFyP792nD8Rv0tBGs/qFuodhK8fkIABUw==
+ b=gWWqTYK4yB47NxdA5NomKfl320QyWg+dZVpq+GTJRkZCjrTrzW5DXTKIwq+iphOrYpXultTqdXNBc0LcZ/wPl19OXpLQmDvTc9MSLhmve8EBsLcOriSTNxnr95J9AhPXYhfW/tATk9phOmrmAeLxqzP1GGScyCTsIU+u2SvJ5fxWwdj7IkJwor3sBdQjwB1U67TjeUg3JgXZAX6PdesllHfwASFw9VAFlNH+GoRJEjFrCpz/ESS3g+jaOZeN/pqe8F7JSZpZcLL9r4vjPgPCgKRhW2oyR/q0L8DDgxzUSLbezKMJqbKvYmbiRKeypeN9FpBM3Fu3zAsOCCfcHfvlLQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yrj6KsOuOCo5I41mM20N+6MAGsN7DqHFEfYUL+FpZtw=;
- b=llMuUHYobSX/Tdr2gQ4w/kVC4QLqcFDSbtXeXMmMBrWXciLZ25kTzJyHtSWASK41JGk9B/p+fhbi27kA26kzBq+nymUXjtsTb0GUNSZvbA+ulY6HfHhc1MKy5nBxK+9Of1PQFuBK8Mq9bGszSXcS/cYPK4EhEi2kX9MnEhuYw5fnbxgEeV6OKFpovIOkBL8xgs6UhwnxFFjxOa4t4kGSBlO0P/TPaBRqqHer3Keq63gDrz2Zuio9G57Ts9EY3qgGojqSmfvcE1nqQm5FVeZY4tVjSebeF4uxAqc/G0h82ffQXfS3Xm+noLe3pABMZqJgRE/9O+S37HAC0r+t7wprSA==
+ bh=zRd0M1UOFkb1tjIiizfPZU4O4TKzgUPAHV5FPF+lzvE=;
+ b=GbqDkf1kIJTnu2Prt6r5eqYashz1dLPkW5a/CVFuFTSGfrQoNhqACRHVDgFn/oAiPYzsFzM/zAnUqkxFW3akWs3xA19FvXXYu65TN1yI7GF1Zlf0x4YL/OsVXAz7ZYD9G7GbWQEfWBiZleXUpKv1YHeoNVwYECWNJpuKZUJMDXyPxJMTFgXXin08rDR9/lEKhyd5VHoaGhp1dt5yWKb7vuQvLNXljOUQlZSQcxmiMTPGocxMTi06hhG6lRoYEfL+OGd1FiFgNMhUZH2W1GJyy5V6COm9rXYLeAygJ7M/WKnH1k2wTJb4f7Wxu3eWJ5Z0aYoTsWGoggYoLk8n4gvlPQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yrj6KsOuOCo5I41mM20N+6MAGsN7DqHFEfYUL+FpZtw=;
- b=GNzcngSDqfIJvSo/piH+9hwH7Xck0OACPTRFCqgCcBC+SmnUshbCceGVYKPDtNV1/3+Hb3t4eUgEddE16XejP7WN4397oShIlPHBS7hSYtO7zRY/c0qgwGNuKQcRoYCNvkGmS1YltX7YTMOdOjy1d/wi909WDS02Q3iOCleKowGbGWsOKdPb+OmimcQmC5Nn0Rza02lecFOm+s2qEJdWEQ4xbNkh1SOS49vhWFEQ+AhiQSRmVvJnDYL7SZQGUYUx1RGQXWhfatsYkO9nDtR6Jlv09vYH3VzAUCNsLYqQMW1I3VMjVJq4DVfbovVZoWvZxEYFN4WZIVtkP/Ace9IApg==
+ bh=zRd0M1UOFkb1tjIiizfPZU4O4TKzgUPAHV5FPF+lzvE=;
+ b=i4mn+AJpN1Ws4urnuButXRoWzDXSmQCyZkRhvyV7u4+wEqEoz3+qEtWYOsYckSvlAJP2tbjOfkvadpr8fe5RcbGqU4ycxgoxHAxWwz0HaSRLzltoW7yA86LHR2MpTwGZUq1NH+Sl451LQPD1OQABaLekhGdik+tL84tWrSXiS5ZkxwTt0lg8PV9pmIJtFog/ESwfQ3nwwyBa5xy9DUAC1egD0oayN/PcZk4jZ4Ff/lrzeX0MlPZMnLfedvX6VWbptAfCfkW5QON5h7pL5K6aP9YdpVzO27ZXZUv64tXjCt1Q+gP888Ns0ljkPZoQ8eRl2dCklV6PWluWt7rgC/aQVw==
 Received: from IA1PR12MB9030.namprd12.prod.outlook.com (2603:10b6:208:3f2::22)
- by MN2PR12MB4255.namprd12.prod.outlook.com (2603:10b6:208:198::12) with
+ by PH7PR12MB7892.namprd12.prod.outlook.com (2603:10b6:510:27e::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.17; Mon, 1 Jun 2026
- 06:28:42 +0000
+ 07:02:01 +0000
 Received: from IA1PR12MB9030.namprd12.prod.outlook.com
  ([fe80::2c1d:ed27:b53a:97d2]) by IA1PR12MB9030.namprd12.prod.outlook.com
  ([fe80::2c1d:ed27:b53a:97d2%6]) with mapi id 15.21.0071.014; Mon, 1 Jun 2026
- 06:28:42 +0000
+ 07:02:01 +0000
 From: Manish Honap <mhonap@nvidia.com>
 To: Jonathan Cameron <jic23@kernel.org>
 CC: Alex Williamson <alwilliamson@nvidia.com>, Shameer Kolothum Thodi
@@ -62,16 +62,18 @@ CC: Alex Williamson <alwilliamson@nvidia.com>, Shameer Kolothum Thodi
 	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "qemu-devel@nongnu.org"
 	<qemu-devel@nongnu.org>, "qemu-arm@nongnu.org" <qemu-arm@nongnu.org>, Manish
  Honap <mhonap@nvidia.com>
-Subject: RE: [RFC 2/9] cxl: Add preserve_config to pxb-cxl OSC method
-Thread-Topic: [RFC 2/9] cxl: Add preserve_config to pxb-cxl OSC method
-Thread-Index: AQHc1nGmOdYwxa1l7kS1zoyMfuq8T7YVbeeAgBQEMzA=
-Date: Mon, 1 Jun 2026 06:28:42 +0000
+Subject: RE: [RFC 7/9] hw/vfio+cxl: Program HDM decoder 0 at machine_done for
+ firmware-committed devices
+Thread-Topic: [RFC 7/9] hw/vfio+cxl: Program HDM decoder 0 at machine_done for
+ firmware-committed devices
+Thread-Index: AQHc1nG4jkRxZqV5Xk+1suvmucEul7YVcxoAgBQD5JA=
+Date: Mon, 1 Jun 2026 07:02:01 +0000
 Message-ID:
- <IA1PR12MB9030650957A9F939AD8F59A7BD152@IA1PR12MB9030.namprd12.prod.outlook.com>
+ <IA1PR12MB90304A1604F3C41C211F44DEBD152@IA1PR12MB9030.namprd12.prod.outlook.com>
 References: <20260427181235.3003865-1-mhonap@nvidia.com>
-	<20260427181235.3003865-3-mhonap@nvidia.com>
- <20260519134539.1b11ace4@jic23-huawei>
-In-Reply-To: <20260519134539.1b11ace4@jic23-huawei>
+	<20260427181235.3003865-8-mhonap@nvidia.com>
+ <20260519140416.02a793ce@jic23-huawei>
+In-Reply-To: <20260519140416.02a793ce@jic23-huawei>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
@@ -79,47 +81,47 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA1PR12MB9030:EE_|MN2PR12MB4255:EE_
-x-ms-office365-filtering-correlation-id: 1f44f341-0a3e-420b-5b33-08debfa70676
+x-ms-traffictypediagnostic: IA1PR12MB9030:EE_|PH7PR12MB7892:EE_
+x-ms-office365-filtering-correlation-id: 739a885f-3ec2-49c8-ba90-08debfabae1f
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014|56012099006|4143699003|3023799007|5023799004|18002099003|22082099003|11063799006|6133799003|38070700021;
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|22082099003|18002099003|3023799007|11063799006|4143699003|56012099006|38070700021;
 x-microsoft-antispam-message-info:
- RNgXKcdGURFgYofSRFDkd+lrVMfiQG+jT/10IcYNx4CVVDf3JjvGxCa2YhreqnzQZzj7oKS0Aqmph3kOSSRr6qzSi4NE3hK1Q1PY52/iZyAfT5Yzj/PUlbDYVhSzUogwu1it95AZPbibpkE1M2WE6kgwPgUMxsEf1VytLk/xJrbXXzQmJob14dkXsQfXFCEDROVT7mPTX6dPAjvaC5N9DI6g+iUqFSDIGWouUGOP1KszWSTtY/VP2L+BQ3m7AtoFV6TiYic0NQZAM1C8EnsxwJT+wpVlBoQdU8nqwpWvqEmYHm40bhxiynx85cnBfbMiAsak2abuOMHwrTIJp7vFUzfCJd3txkTFhH45DseaBnlj7YwoGIl7jdBX8bqhDihVNYbYOpDD4+8Q2P9anQgavtgepsGX9CRt4WdNgNwV+3/F9nJ3JeejUJGIDGczRv7r8cITWxbZV0ITnY4nB0AQMMJva9JVBeFMUiDMv6BP0SDxN9E/2uhQohcIJ9508Yj9OIRb0vwlyyqV3K6wU+NEOY3+IRGAPm3Q/UOAItvag3nXGvnKEyDizucZ+4fo63HqzaRoqPUvkZMl/PGhIcCraLLvaelP550/bZJbVF6nZ65UWUdNSZvF5ST/ywiPbhbyWncDup4iH2AM7PsDhAEynkA6JIfaS8JonU4c4al9wdu6ygCbttSYIDnR6v6EKx4AsTxdxvam5bqZ9deJwGiTm7y+kgGNoHinv6zONxU+k6339w0PdTyHPZpXVpaDYKav
+ BeKuS8X+aVNVEIBVbk+bKVAKmg4lbDsby/jKxMeQcaB7AcOngSkMv/bwuSNFJ9tODeOWy7+zVoRL3kBbwup3hhGxImp3kerVflWxxlEr7yELA0qBVaC9r2FGzgh1i3oM0Q4GBZY0XnkRYbnbiLJLzfd1JROYuSHlg0dQrXFtXkp9Mc+HeL0780J3ndVHZVwYUjKfwzkFaPPhUlLq1Al/tUsUBjfJdyw5LEYPlh1oS4xiovsdntbxD0YnvEax0YT8cqBbRcXLY7JCify345wuoP/siJfTnkODoxT//Nnyn6NLvZP3PH1o5xkiF+dYTKgBSTIsC1FeLjpAM+bHsjEspJBVBrXvACSqy+PE6NOD76koSedVVpHGEY43gcV3FO26Tiynqvz/xZBtzJvG5mSCtOXn5/eWBmpI8VRdvUN0HMEhGkXxVD3wgXK6Iv9ykB0wu3i7rscSwYdyYFkpRlnp46DeM5H9GJOAYcKbuc6FMlDIDS2+Wq8bw4bgIipK1d2svWsoAe/xspWQtleq6AkcVi9xrWRCu7VZUnY0B+aBiTD/zUOFkl4kFFDGbPu5thHNvGaFgOrEbbcKmgaZp/tQlr2a+CO4srUNLvD23ltb9HSz2chUyTQlLoFkVv6rEkPHOesK+wIfKPj2PEIt5v1y1DY8jbtAE+WU5qA789v/49M1GvxklqC4NZ6cE01J7Yp22a2iedrg+TTI+eQxRNoQjzmUH8ePEdJtKe2Scd7bQgJVBhzSvb52w+hCHDgIuRe4
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9030.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(56012099006)(4143699003)(3023799007)(5023799004)(18002099003)(22082099003)(11063799006)(6133799003)(38070700021);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9030.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(22082099003)(18002099003)(3023799007)(11063799006)(4143699003)(56012099006)(38070700021);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?7ID71DWHUmIaUI5OfHyVC9C6ar2clSgUuaUb4ceLNcgieJKH4IFVBKhpTz+P?=
- =?us-ascii?Q?QY1iuVO0qCIOJrZatGuEYHGH2niMkezv/R1uViWhfWmts0trxgMhiq6tSBEG?=
- =?us-ascii?Q?0t7PPO776oWPLcDgyOv1jHea6f6grfeERpECjlW8B5dJd+Y0VMR8cuXNTrB5?=
- =?us-ascii?Q?Yt37tgxQgbdMiVZ7v3UBW0C3vFvLfhFOY+rWTnjcqgB9keixcZMTb9mUnC38?=
- =?us-ascii?Q?6esgLmE5hRZYftMyq6d0MCeRrxfffaA5SKAfgw8Cuo5tLW75G/YepAR3kh0C?=
- =?us-ascii?Q?p5BVdRi234g1HI8f/cklMMfoxcDAzp1frEz49V98biIGwm4jwIGPYLPRkjbq?=
- =?us-ascii?Q?K/1vSTsrPFzgIpfYG62IxpSmAR3nOxjualUKpg4w2xtWTPeaUh+kUYD7Tbhy?=
- =?us-ascii?Q?I2i/RQvNx9PuERR4sLFi/sNoDasTIsSbindIQqDbPfVXrQDDoO47oI7iRB6T?=
- =?us-ascii?Q?m2snmJ4Q9HFfzQdwF3cBgS1xHBg65xvwa+Drz1eGpqntafnbpA5jyhELNP5q?=
- =?us-ascii?Q?xsVqa5AyBlfJQVTLygEbqCrtJuyKJH7w4lmjDbAMhHSKexgh273TOrNhwxBg?=
- =?us-ascii?Q?XU8IrTkfl8NQycol2VT/S8fyGSeBSgyjV3S8/OuI4Jx/pL+6Xiv5qIUfOi3S?=
- =?us-ascii?Q?BH344KByqc09DT6m6d/TtqKdgNiT/7trMVknMiDy/5byNzom+6DGGnhVSHwJ?=
- =?us-ascii?Q?HSL1i0t2n/g8aQCKJKqtIi8axKrPXvBHBCHtZwDaJsQlAVMZO/VfTrFQr1fF?=
- =?us-ascii?Q?MbCl63NbCw4UGdXmvpLVgbxPELoz7R2WCjgomfVRgZcfT6D7uO8WOx112Ln6?=
- =?us-ascii?Q?Ib/7mqICu17PfG7X9qwmb7vxZJsUesEhP9tsIFyvdA6W93JOX+Xxzs+QZoJe?=
- =?us-ascii?Q?M2nMCCjbwN8MWSUQLYffTsdGka9iO0uuq+kbfFyEX9r/qVylHwcEbjNtc5IZ?=
- =?us-ascii?Q?1/0lewAi87HevTC0FXf5REBlL7ocM00uum8NRuI1ZhHY4MU/V0Lpi6qVH8Xz?=
- =?us-ascii?Q?tkmQCODilzIXt/TH1VP140XSNhhiQX09GqmkO0kZYTqLT55DKwvLojmaTv1i?=
- =?us-ascii?Q?qTipcyB6YHwB0vla+O8of6QtDwfIA2p3xWwTeJD+TnJaZixmLgWITm3ySLFd?=
- =?us-ascii?Q?5X3OMHeSVnibGxvDgmibQkzxlB4jjTV4sJE8mzjIPXTGYtpIOTDR/8HHqLrQ?=
- =?us-ascii?Q?p1HErG1BMP/eGm7lN4C79ZQR4TGvTpWr0LZrJ3IEe6GABRVKZTDxrEElpfPR?=
- =?us-ascii?Q?sxupajg/+Kp6Q8oWwjSoEmec3xgHvymOMC7evfUBpZW1UyqHFMB0HUFjKB+9?=
- =?us-ascii?Q?7eilqpuogXJXH+XRTA17Hu+QjWb5Eh9+mRymUE8DGZXspak5TMaIe9E7ykwn?=
- =?us-ascii?Q?3btPPu/7yRnY0L4TtPjgBR0J2xKTJHlTwlXZpk864bGfw1g+wT9Fso+pgzSI?=
- =?us-ascii?Q?AAtwb2QdncVuMwhWtFoBju3V5IwNKEqZ6UyJ8VP+H/samkLRAS4qxrKHgD60?=
- =?us-ascii?Q?5EXSPYLii4UaqSvH9NxfMqJrSoF3Je0jKGRIauMsBE2gA69cNaZSCUj9Zt78?=
- =?us-ascii?Q?Tvrnzdx+uBLzi3+W+LHrnag9VhStTtQibZusPWD+Ig8kLUKPaLm+CloqLP57?=
- =?us-ascii?Q?IEzjKq3Z7feSYzFq+Dq+Z8lhJIYtFNfcZ6zFQUoeEBuNEGDuzeSn+WI4jchR?=
- =?us-ascii?Q?0qZ+Yx3prl+Sgp2YkUW2SmcHBfDv9G1SA/58tGp9vVI6JBCd?=
+ =?us-ascii?Q?abmaNeqOM5gLjlRFWGA23n/klxdL2tm0K1GXDWtJFuFe5OdsGcG6gcU2q9RT?=
+ =?us-ascii?Q?ixmucTGo+agJn6qhWzk50x3A7DfmwASKhv/CvRdeCYFefmp8xdD3lwCEJG35?=
+ =?us-ascii?Q?9pzbNnqdEhkkVhNM4BeUwb69l7O8zCjXyGSvjcXSP886u8DdNFYWplLVpKaQ?=
+ =?us-ascii?Q?QesclMgDRSXg3J1Ck4j1kd3Wmrtnw1WhvJgDIDnP7Ylj5a7hrunL7BA6/8AB?=
+ =?us-ascii?Q?YFBeQM0F/PLuYt/Q/GkdTiL573mtymu3lT4d/FPpHyLVVIOy7jDccMT03cAh?=
+ =?us-ascii?Q?q7/rQGCeV+u5ghhzT3753Qb8kWy9gLDwOg0lSZcczHcl/A3L6BOi0wIcPRh/?=
+ =?us-ascii?Q?yfslR6/6d+og91jsAeqUmdtChnXm7yaBM1DqgMqzXMuJkHj906gGc0Y9wage?=
+ =?us-ascii?Q?F+BqnDlNy1CBuDd7TPLiev1ZBI++ZL2Tdg1dIiwfFXQwIWOJ/1s2ZlxRm+G4?=
+ =?us-ascii?Q?I196r/SttH4Ojf5+KanB7T+1Gs1DgeEWK8n3BxocKxpvqiIoFQ7lLqP7P3G3?=
+ =?us-ascii?Q?UKo8okQgX55TrPR7sFhMTukcoj/3R13+y9e7+rb2J2ME76KHMaKlrbPd2luB?=
+ =?us-ascii?Q?hbGOHDf7Eai3v1RIUIEqBOWeO402DYitOHAaHqMKz/vbBMORaSXMEg1t5OQ+?=
+ =?us-ascii?Q?ZamL5yIpU5mw+HojiUYF2mHOM/F7QkK8roEIzEaneNc0ZyXQrfqIOKwi+1Wv?=
+ =?us-ascii?Q?sBTNLWGBC7wEPFOPqym3EABxUBrUhQpuFs6qXzd9EnT+6K7mD1V9LEtrnqAb?=
+ =?us-ascii?Q?shArYvHgU/S433YlfMlRnYm57+hcHVSRTNyerMd78O5TRORf5i7+yxkvPCI+?=
+ =?us-ascii?Q?MW36HXeg2oxr1PaOpAwowy62kPNE7Rh996w8C3JFdKWcNOMf5q1CB9HnR5nC?=
+ =?us-ascii?Q?ie3mmGmjLlJmiJwqRv8PSjEy2suIfzkLabu6wtuMkwr/VpGByhqoJKyrWTvg?=
+ =?us-ascii?Q?0IeRWDaIsz15Qne1/rSOu7PTuN3XGD1c2PkvBGmsDDiXR4tZx21lQ/o6VD8+?=
+ =?us-ascii?Q?xJGEoJA6KWiB3BqBDopkr8FBq/s5luLbJqSEEFl4UsnAvfevOBTaA4N0AAT6?=
+ =?us-ascii?Q?5zHwEKX+GJnmyc3X2RB19CvF/JwZXL1CEqXz859jFA2U94BE9fuvVGmwvK3F?=
+ =?us-ascii?Q?FKUtmsvRX6ime6RPpqTzswdOiLFW7Pi8zHvjj96FGoSRu3VNwIPUQsZM5KwS?=
+ =?us-ascii?Q?cWAIp0/JelGlYNDyHTGitFBaJi/95YceJFUpi+9BOtQQwZ5YNQfTdAYt7bY+?=
+ =?us-ascii?Q?C1ihwznIkHLDyz149bIaO7pUFiOFvDsXsxH8a3NWu11SEF5iwkhpWUqHScDU?=
+ =?us-ascii?Q?AQkO4WLD8KY2XqgQv6Jd23iY04oi4tUNwyjUUPyDM0BmEqJyyhiZF8U9xMh0?=
+ =?us-ascii?Q?5CNsDH5GoxVpe8rDSpTiBD5FDJkwyq04gg0aeAmxszLXeWOjhkz4fTHGF1Mt?=
+ =?us-ascii?Q?fuKdgtjKrqrmxvlFVNX0F+lN5hB0pkTOo6LDlFxe+KtDPghvMavHD5GKwTP/?=
+ =?us-ascii?Q?ZcwraxUzyPNIAzSf23Ozjdhi3K+cqvs4CSFN2AZXwcyVlk5RVzGGGqmMl7/Q?=
+ =?us-ascii?Q?6/qn9RK7aEFawcx3HVHyWm8J43BIumUFqSUQAaYlLcgVEU9fkAV/pEcB7uQt?=
+ =?us-ascii?Q?RMT2hnQWqdXdF+14ig7lzpUBw1YdAGeW9RK9KY0FugAC2q2T4zlcRYE9gF4r?=
+ =?us-ascii?Q?eS6uIQNHJAtNdUPYEkgcTxdzEPWO9ze+HqtdqAcAQr7JGonK?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -131,20 +133,20 @@ MIME-Version: 1.0
 X-OriginatorOrg: Nvidia.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9030.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1f44f341-0a3e-420b-5b33-08debfa70676
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2026 06:28:42.1218
+X-MS-Exchange-CrossTenant-Network-Message-Id: 739a885f-3ec2-49c8-ba90-08debfabae1f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2026 07:02:01.4317
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1QW9M7zfK87FEL2jhDw9jEavOt+m/xCcRF52I2iEAM0Kg/rDK9T9G2I5YR++cUerfMkZ6f3Pjf0bUYB02FCQew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4255
+X-MS-Exchange-CrossTenant-userprincipalname: P0xIeBXZeu76c0hwrXrh/nzpatuaM1te0GtDs7bLxGD2pmVgj2zSguU2b7pvTNVdLzoXxS66XR6p4iu8jWuLig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7892
 
 
 
 > -----Original Message-----
 > From: Jonathan Cameron <jic23@kernel.org>
-> Sent: 19 May 2026 18:16
+> Sent: 19 May 2026 18:34
 > To: Manish Honap <mhonap@nvidia.com>
 > Cc: Alex Williamson <alwilliamson@nvidia.com>; Shameer Kolothum Thodi
 > <skolothumtho@nvidia.com>; Ankit Agrawal <ankita@nvidia.com>;
@@ -159,175 +161,143 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4255
 > <zhiw@nvidia.com>; Krishnakant Jaju <kjaju@nvidia.com>; linux-
 > cxl@vger.kernel.org; kvm@vger.kernel.org; qemu-devel@nongnu.org; qemu-
 > arm@nongnu.org
-> Subject: Re: [RFC 2/9] cxl: Add preserve_config to pxb-cxl OSC method
+> Subject: Re: [RFC 7/9] hw/vfio+cxl: Program HDM decoder 0 at machine_done
+> for firmware-committed devices
 >=20
 > External email: Use caution opening links or attachments
 >=20
 >=20
-> On Mon, 27 Apr 2026 23:42:28 +0530
+> On Mon, 27 Apr 2026 23:42:33 +0530
 > <mhonap@nvidia.com> wrote:
 >=20
 > > From: Manish Honap <mhonap@nvidia.com>
 > >
-> > Before this patch, pxb-cxl bridges had no _DSM method at all. When the
-> > OS called _DSM on a CXL host bridge, ACPI returned an error and the OS
-> > defaulted to reassigning resources across suspend/resume. On machines
-> > where firmware pre-commits the HDM decoder, that reassignment breaks
-> > the DPA mapping.
+> > setup_locked_hdm() runs as a machine_done notifier after all devices
+> > have been realized. It programs HDM decoder 0 with the CFMWS base
 >=20
-> Ah. Ok. So it's suspend / resume that is causing trouble. I wasn't aware
-> PCI reenumerated on that as opposed to boot. I surprised more doesn't
-> break.  Make sure to call that out in the cover letter as the impression =
-I
-> got was the problem was initial enumeration.
+> Be more specific on this.  Which HDM Decoder?  i.e. what device is it in.
+> Ultimately there may be several in the path.  Are you supporting that?
+> The reference to FLR() later would only apply to an endpoint (can't FLR a
+> host bridge) + the code is clearly operating on the shadow registers for
+> the EP.
 >=20
-> Mind you I'm still confused. Why is CXL.mem path affected?  That's nothin=
-g
-> to do with PCI enumeration.
+> I guess maybe you are relying on pass through host bridge decoders?
+> If you are - you need to go check those - or better yet program and lock
+> them as well.
 
-Yes, agreed, the FMWS region is described by CEDT already, no CRS entry
-needed. I'll drop the CRS insertion in v2.
+Yes, for current RFC I had restricted the scope to endpoint decoders with t=
+he
+setup having default value for hdm_for_passthrough. You are correct, this
+assumption was not enforced in the code.
+
+For next V2, I will add realize-time checks in vfio_cxl_setup() that refuse=
+ to
+start unless:
+    - cxl_get_hb_passthrough(hb) is true
+    - pcie_count_ds_ports(hb->bus) =3D=3D 1
+    - no switch is present between the cxl-rp and the vfio-pci
 
 >=20
-> Jonathan
+> > address so the guest can fault into device memory from the first
+> > instruction.
+> >
+> > The notifier is only registered when the kernel reports the device as
+> > firmware-committed (VFIO_CXL_CAP_FIRMWARE_COMMITTED). The host is
+> > responsible for HDM decoder programming; the guest has no mechanism to
+> > remap host physical address mappings.
+>=20
+> Maybe say why this matters.  Presumably because only thing we can program
+> from the guest is GPA to HPA mappings so linear ranges remain linear etc
+> (more or less anyway given constraints on how many regions we can plug
+> into qemu!)
+
+okay, I will add the details for this in v2.
+
 >=20
 > >
-> > Wire preserve_config through GPEXConfig into build_cxl_osc_method() so
-> > pxb-cxl host bridges get a _DSM method that signals the OS to keep
-> > resource assignments stable when needed. The _DSM function 5 (preserve
-> > firmware PCI configuration) is the mechanism used to convey this.
+> > The function uses cxl->fmws_base (set by the optional cxl-fmws-base
+> > device property) if non-zero; otherwise it falls back to the
+>=20
+> Why is that property needed?  If it is add it in a separate patch where
+> you can explain the need to force it. Smells like a hack so far.
+
+Yes, I will update in v2 so that this part is handled by the value provided
+by CFMWS setting.
+
+>=20
+> > cxl_fmws_base global captured by cxl_fmws_set_memmap() during machine
+> > memory-map init. If neither is set, it warns and returns without
+> > programming anything.
+>=20
+> Which CFMWS is that base in?  How is that controlled?  We may well have
+> some type 3 devices in same VM and probably want those in different CFMWs
+> (we'll need to actually upstream the patch to control constraints so the
+> kernel won't try using your CFMWS for those - currently all CFMWS are
+> entirely flexible).
+>=20
+>=20
 > >
-> > build_pci_host_bridge_dsm_method() is promoted from static to exported
-> > so cxl.c can call it without duplicating the AML.
+> > If COMMIT_LOCK is set in decoder 0 CTRL at machine_done time
+> > (left-over from a prior FLR?), it is cleared before writing BASE so
+> > the subsequent write is not blocked. COMMIT_LOCK is re-set after
+> > programming so the hardware enforces the committed base.
+>=20
+> Hmm. We should look into whether there is a correct way to reset that.
+> Though as above from the description I'm not sure which decoder this is
+> resetting.
+
+Yes, I will rectify this in V2. This is referring to endpoint decoder.
+
+>=20
 > >
-> > The x86 build_cxl_osc_method() call site passes false since x86 does
-> > not use firmware-committed HDM decoders.
+> > read_region() return is checked; failure aborts programming rather
+> > than leaving ctrl uninitialized. All write_region() failures are
+> propagated.
+> > The function exits cleanly rather than leaving the decoder half-
+> programmed.
 > >
-> > build_cxl_osc_method is renamed to
-> > acpi_dsdt_add_cxl_host_bridge_methods
-> > The function now appends both the CXL _OSC method and the _DSM method,
-> > so its old name is misleading. Renamed it to match the pxb-pcie
-> > analogue acpi_dsdt_add_host_bridge_methods(), making the two root
-> > bridge code paths symmetric. No AML change.
+> > Add cxl_fmws_base as a hwaddr global in cxl-host.c (and a stub in
+> > cxl-host-stubs.c). It is set once by cxl_fmws_set_memmap() and read
+> > later at machine_done time.
 > >
-> > Signed-off-by: Shameer Kolothum <skolothumtho@nvidia.com>
+> > Signed-off-by: Zhi Wang <zhiw@nvidia.com>
 > > Signed-off-by: Manish Honap <mhonap@nvidia.com>
-> > ---
-> >  hw/acpi/cxl-stub.c         | 2 +-
-> >  hw/acpi/cxl.c              | 4 +++-
-> >  hw/i386/acpi-build.c       | 2 +-
-> >  hw/pci-host/gpex-acpi.c    | 5 +++--
-> >  include/hw/acpi/cxl.h      | 2 +-
-> >  include/hw/pci-host/gpex.h | 1 +
-> >  6 files changed, 10 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/hw/acpi/cxl-stub.c b/hw/acpi/cxl-stub.c index
-> > 15bc21076b..d7c6731975 100644
-> > --- a/hw/acpi/cxl-stub.c
-> > +++ b/hw/acpi/cxl-stub.c
-> > @@ -6,7 +6,7 @@
-> >  #include "hw/acpi/aml-build.h"
-> >  #include "hw/acpi/cxl.h"
-> >
-> > -void build_cxl_osc_method(Aml *dev)
-> > +void acpi_dsdt_add_cxl_host_bridge_methods(Aml *dev, bool
-> > +preserve_config)
-> >  {
-> >      g_assert_not_reached();
-> >  }
-> > diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c index
-> > f92f7fa3d5..b32740a3e3 100644
-> > --- a/hw/acpi/cxl.c
-> > +++ b/hw/acpi/cxl.c
-> > @@ -23,6 +23,7 @@
-> >  #include "hw/pci/pci_host.h"
-> >  #include "hw/cxl/cxl.h"
-> >  #include "hw/cxl/cxl_host.h"
-> > +#include "hw/pci-host/gpex.h"
-> >  #include "hw/mem/memory-device.h"
-> >  #include "hw/acpi/acpi.h"
-> >  #include "hw/acpi/aml-build.h"
-> > @@ -320,11 +321,12 @@ static Aml *__build_cxl_osc_method(void)
-> >      return method;
-> >  }
-> >
-> > -void build_cxl_osc_method(Aml *dev)
-> > +void acpi_dsdt_add_cxl_host_bridge_methods(Aml *dev, bool
-> > +preserve_config)
-> >  {
-> >      aml_append(dev, aml_name_decl("SUPP", aml_int(0)));
-> >      aml_append(dev, aml_name_decl("CTRL", aml_int(0)));
-> >      aml_append(dev, aml_name_decl("SUPC", aml_int(0)));
-> >      aml_append(dev, aml_name_decl("CTRC", aml_int(0)));
-> >      aml_append(dev, __build_cxl_osc_method());
-> > +    aml_append(dev,
-> > + build_pci_host_bridge_dsm_method(preserve_config));
-> >  }
-> > diff --git a/hw/i386/acpi-build.c b/hw/i386/acpi-build.c index
-> > f622b91b76..f66ec8ed24 100644
-> > --- a/hw/i386/acpi-build.c
-> > +++ b/hw/i386/acpi-build.c
-> > @@ -1013,7 +1013,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker=
-,
-> >                  aml_append(aml_pkg, aml_eisaid("PNP0A08"));
-> >                  aml_append(aml_pkg, aml_eisaid("PNP0A03"));
-> >                  aml_append(dev, aml_name_decl("_CID", aml_pkg));
-> > -                build_cxl_osc_method(dev);
-> > +                acpi_dsdt_add_cxl_host_bridge_methods(dev, false);
-> >              } else if (pci_bus_is_express(bus)) {
-> >                  aml_append(dev, aml_name_decl("_HID",
-> aml_eisaid("PNP0A08")));
-> >                  aml_append(dev, aml_name_decl("_CID",
-> > aml_eisaid("PNP0A03"))); diff --git a/hw/pci-host/gpex-acpi.c
-> > b/hw/pci-host/gpex-acpi.c index 7de57bbc46..247bd78152 100644
-> > --- a/hw/pci-host/gpex-acpi.c
-> > +++ b/hw/pci-host/gpex-acpi.c
-> > @@ -52,7 +52,7 @@ static void acpi_dsdt_add_pci_route_table(Aml *dev,
-> uint32_t irq,
-> >      }
-> >  }
-> >
-> > -static Aml *build_pci_host_bridge_dsm_method(bool preserve_config)
-> > +Aml *build_pci_host_bridge_dsm_method(bool preserve_config)
-> >  {
-> >      Aml *method =3D aml_method("_DSM", 4, AML_NOTSERIALIZED);
-> >      Aml *UUID, *ifctx, *ifctx1, *buf; @@ -204,7 +204,8 @@ void
-> > acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg)
-> >              aml_append(dev, aml_name_decl("_CRS", crs));
-> >
-> >              if (is_cxl) {
-> > -                build_cxl_osc_method(dev);
-> > +                acpi_dsdt_add_cxl_host_bridge_methods(dev,
+>=20
+>=20
+> > @@ -3486,6 +3646,18 @@ static bool vfio_cxl_setup(VFIOPCIDevice *vdev,
+> Error **errp)
+> >      trace_vfio_cxl_setup_params(vbasedev->name, cxl-
+> >hdm_regs_bar_index,
+> >                                   cxl->hdm_regs_offset, cxl-
+> >hdm_regs_size,
+> >                                   cxl->dpa_size);
 > > +
-> > + cfg->preserve_config);
-> >              } else {
-> >                  /* pxb bridges do not have ACPI PCI Hot-plug enabled *=
-/
-> >                  acpi_dsdt_add_host_bridge_methods(dev, true, diff
-> > --git a/include/hw/acpi/cxl.h b/include/hw/acpi/cxl.h index
-> > 8f22c71530..6fe6c9c58d 100644
-> > --- a/include/hw/acpi/cxl.h
-> > +++ b/include/hw/acpi/cxl.h
-> > @@ -24,7 +24,7 @@
-> >  void cxl_build_cedt(GArray *table_offsets, GArray *table_data,
-> >                      BIOSLinker *linker, const char *oem_id,
-> >                      const char *oem_table_id, CXLState *cxl_state);
-> > -void build_cxl_osc_method(Aml *dev);
-> > +void acpi_dsdt_add_cxl_host_bridge_methods(Aml *dev, bool
-> > +preserve_config);
-> >  void build_cxl_dsm_method(Aml *dev);
+> > +    /*
+> > +     * Only pre-program the HDM decoder if the kernel reported the
+> device as
+> > +     * firmware-committed.  Non-committed devices need guest driver
+> > + involvement
+>=20
+> For wording these can we be very clear which kernel.  Though I'm also
+> unsure what FIRMWARE_COMMITTED means here.  Does it actually mean host
+> firmware, or does it mean something running on the host pre guest boot
+> (e.g. could it be qemu?)
+
+yes, this is referring to HOST_FIRMWARE. Sorry for the bad wording.
+I will update this flag name in the kernel-v3 and qemu-v2
+
+>=20
+> > +     * to commit the decoder; registering the notifier for them would
+> write an
+> > +     * uncommitted BASE value that the hardware ignores.
+> > +     */
+> > +    if (cap->flags & VFIO_CXL_CAP_FIRMWARE_COMMITTED) {
+> > +        cxl->machine_done.notify =3D setup_locked_hdm;
+> > +        qemu_add_machine_init_done_notifier(&cxl->machine_done);
+> > +    }
+> > +
+> >      return true;
+> >  }
 > >
-> >  #endif
-> > diff --git a/include/hw/pci-host/gpex.h b/include/hw/pci-host/gpex.h
-> > index a7c2e2edf3..e5c2ebef78 100644
-> > --- a/include/hw/pci-host/gpex.h
-> > +++ b/include/hw/pci-host/gpex.h
-> > @@ -73,6 +73,7 @@ struct GPEXHost {
-> >  int gpex_set_irq_num(GPEXHost *s, int index, int gsi);
-> >
-> >  void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg);
-> > +Aml *build_pci_host_bridge_dsm_method(bool preserve_config);
-> >  void acpi_dsdt_add_gpex_host(Aml *scope, uint32_t irq);
-> >
-> >  #define PCI_HOST_PIO_BASE               "x-pio-base"
+>=20
 
