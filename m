@@ -1,429 +1,520 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11012025.outbound.protection.outlook.com [52.101.43.25])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3423876D5;
-	Mon,  1 Jun 2026 07:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780300584; cv=fail; b=ilZo54sFpGNR1i2peg4zsi/WjZkVhcPAx4mQZwA95ruFVOmiozgW1tmg2EfyNFp4LQweq7jpiuahb2Tl/z5TLZYCDubomf2g1+4QssSGM3IAhiKqqRCsbt8Rc7a/H6kXHjAIM3ZYn7TF02ppusEceO36qVIgHUy2z4jrhm+71to=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780300584; c=relaxed/simple;
-	bh=CipCXj7+L5siK0UHVyeLr6E72tNKFmddAror4z/Yr5g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=U9pWuWjO/DTd5pU7JjQrGoIJljSBrlz8Qnb/OpFEwbzW4a7OUicW/8WwZCeykqEdD5hb3bnw9x95Lw0sxhKRVRc8Iqr9dj0L0e0wKm7RmRwwkE9NGa0DkfJ/rG8M4Q1HehIn1i2W/w11AmaGwIXgJbw8cyAgdsXUkYXkZmznCxA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GAkKP45n; arc=fail smtp.client-ip=52.101.43.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6345019C556;
+	Mon,  1 Jun 2026 15:23:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780327437; cv=none; b=Emj/pGWTpBRDeSJnApwQ4cmZapdcZcx5iY3VkRUpzQSksW7zhM9oBSqcj/a755Gu4HpUYI0wCKWmjI7fNpfWDsFy82hxJ8YaCYw0DtVWPr2J5syPImuirZwxDx90iR2sKhLsU+ZHu6cJ5BpR9zAwA2SazFtDdwpBKdbAXmY8BA8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780327437; c=relaxed/simple;
+	bh=kUIDZ5V0CpGfqDkmEtTuZsGuwsgP0jXyrKczUF84Zp0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aTnM7XPAVUjMdNZviudl5z4L6BqttKZUSQsj/zLd6LPhd23HOGdgZuG7vdu+4Q6d6rYPCehe+rRJ7QRISZZTLuwIJNUPyIk+lnFgviBdjN6oH2dSI6UaUmlpgFZsZQywVNwiVgEjbDE0+ClM1o71hHrtnQw1n+l6whBm3VjkveQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ndJFOZZG; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GAkKP45n"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iKviC51swj+JrHjbdLeEz6dsliu0GI0F5mMwLa5wTn1nshldbEU7NUnToB+v/Hb+MUrAn/woi0MqmLULhDhs0sT0AQUiWBagktukK/vqbjX5l1zJPBJ/B3oKrIpbem4R28gqPTfmHx9hTlBG788NRhKlpyICm0OrreagvMFQ+l/pBAz5B4K7GUqbL3fLupV39qF+ND2lFd1Mq6q8dApbjKR/ixV7w6SjuvSxFk+U8/6ogf6B88O8I2q/SyvwEUOPSQ6lnD27c4vE7y8PyLFGhDFFrED0u4kHz9X6WqVd5rW7K5gBPmgxt0zP3qVxhS4GZNWjYnHvh/V2IaGlICESqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9OZNYZIMLflo2tvbQ5s+yfYmIu8VzhNHTvJZZ1WekPM=;
- b=niOYXGdESi/QHZc/FcKktQoEsqZ96NV1HWB2dVwIFq98T81TiaEjO6o01KnR4lYfSZrOb3Bdx5xsA3ldwPIkKf6VHxW8Zvg/wI6iswBCvzgWaoSkjwo9w0zlA8kqvT3MsDtB+TRobL+myRmn5DInFH9kN2N/2KBxv9r7XbqRtMdtcaCEwQNW6HGyA8ZiSYhJbNHoRnvw52DAx+Zs1v+ZYCFD/IraAtMUZSxtDeBJsY49hlIPB4wCBKXkjvo/prh83KxSoSW+z/yrKxcQmAVYaQAllcFwuvU1TSkmM22+W5bIJASZgcpHvx9ydMjT0lcOt+s7PSI2bjqegh+io/By0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9OZNYZIMLflo2tvbQ5s+yfYmIu8VzhNHTvJZZ1WekPM=;
- b=GAkKP45nJKCIf58bh8OEIpO5DBI9RWrP+x8p/zeocrr5mGEKIBByfN7IJqlHJZkEDbPg8yKuLWK/lE6ir5kf0jWDVVF4dKLahyjMTIewsgVrxBWp5WtVATis4LtDNLae02D1XkM/JYwLt18/hsqF7H+4jAYZM8JboUpBNpLp5T/L2h9k5qxQCydlNYCa5pxQUsdydJeKAiK0gq5dHeModEdq/zR3BfQXTITv+oIT/i8wZhhEdolQHZLmxLiL25YWI2v49rq5oWu2kuhQUvwA336ylQ1BEazrJYspyM1GRkLnKO/4y2YMEymrd44pOUjf1kUeyMyVeGRZZdpXV9G3xg==
-Received: from IA1PR12MB9030.namprd12.prod.outlook.com (2603:10b6:208:3f2::22)
- by CH1PR12MB9621.namprd12.prod.outlook.com (2603:10b6:610:2b2::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.14; Mon, 1 Jun 2026
- 07:56:15 +0000
-Received: from IA1PR12MB9030.namprd12.prod.outlook.com
- ([fe80::2c1d:ed27:b53a:97d2]) by IA1PR12MB9030.namprd12.prod.outlook.com
- ([fe80::2c1d:ed27:b53a:97d2%6]) with mapi id 15.21.0071.014; Mon, 1 Jun 2026
- 07:56:15 +0000
-From: Manish Honap <mhonap@nvidia.com>
-To: Jonathan Cameron <jic23@kernel.org>
-CC: Alex Williamson <alwilliamson@nvidia.com>, Shameer Kolothum Thodi
-	<skolothumtho@nvidia.com>, Ankit Agrawal <ankita@nvidia.com>,
-	"mst@redhat.com" <mst@redhat.com>, "imammedo@redhat.com"
-	<imammedo@redhat.com>, "anisinha@redhat.com" <anisinha@redhat.com>,
-	"eric.auger@redhat.com" <eric.auger@redhat.com>, "peter.maydell@linaro.org"
-	<peter.maydell@linaro.org>, "shannon.zhaosl@gmail.com"
-	<shannon.zhaosl@gmail.com>, "jonathan.cameron@huawei.com"
-	<jonathan.cameron@huawei.com>, "fan.ni@samsung.com" <fan.ni@samsung.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "richard.henderson@linaro.org"
-	<richard.henderson@linaro.org>, "marcel.apfelbaum@gmail.com"
-	<marcel.apfelbaum@gmail.com>, "clg@redhat.com" <clg@redhat.com>,
-	"cohuck@redhat.com" <cohuck@redhat.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alejandro.lucero-palau@amd.com"
-	<alejandro.lucero-palau@amd.com>, Vikram Sethi <vsethi@nvidia.com>, Neo Jia
-	<cjia@nvidia.com>, "Tarun Gupta (SW-GPU)" <targupta@nvidia.com>, Zhi Wang
-	<zhiw@nvidia.com>, Krishnakant Jaju <kjaju@nvidia.com>,
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "qemu-devel@nongnu.org"
-	<qemu-devel@nongnu.org>, "qemu-arm@nongnu.org" <qemu-arm@nongnu.org>, Manish
- Honap <mhonap@nvidia.com>
-Subject: RE: [RFC 0/9] QEMU: CXL Type-2 device passthrough via vfio-pci
-Thread-Topic: [RFC 0/9] QEMU: CXL Type-2 device passthrough via vfio-pci
-Thread-Index: AQHc1nGWa4JdJckdaUeXWwvR6hvQ9rYVdZwAgBQGnVA=
-Date: Mon, 1 Jun 2026 07:56:15 +0000
-Message-ID:
- <IA1PR12MB90303161DD09A1E248852728BD152@IA1PR12MB9030.namprd12.prod.outlook.com>
-References: <20260427181235.3003865-1-mhonap@nvidia.com>
- <20260519141314.3eda68bc@jic23-huawei>
-In-Reply-To: <20260519141314.3eda68bc@jic23-huawei>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: IA1PR12MB9030:EE_|CH1PR12MB9621:EE_
-x-ms-office365-filtering-correlation-id: f67409cb-b1b8-4802-5fe1-08debfb34192
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|376014|7416014|366016|22082099003|18002099003|38070700021|6133799003|11063799006|5023799004|4143699003|3023799007|56012099006;
-x-microsoft-antispam-message-info:
- DJUkWj6BUuMp3EebUZlcFhFieJ128sz4Jzn8SfNv/VuGhcSYK91+ASwhuRBQ0vJoUw0RHsW1M2hp4jJrCjHviHOvd7ZW10P7Nb17gf2sLL9pi20PLtAAfH9YTKdwdadTrIHcVNvvxlR/MG031zbjuU4vvfdumCN00f/fxm5q4yHJp7QbjA1fDYsGOdH8luCbt58TXDgfOgx+sdSwIqK/KzCJuTecF+ZBhjHs0/gztXJ2sBnNNVHHyrqIHfFXz/G/doEB4kRaaQy5VZOMKUbzOAavlfN3R/bDEmv7bs6kzuiA55KKTbwjZZEpzwt8TCWFyIAekfw3rdG52G589x7WjJhH8nDRGnnnVa8cJfNoKzeGcaoLmqJ8pM3mylX+Zk015/yirlV9mrVEXYUXRxqqyA+iBdfzB6DellbxtrqbRZnPNheW73uztFwebJI9EA2izVjBh/D3AUrJbOg9GKh6CLtqTeqfdBZug20LCtahHGqZch5P7txbObf9tX+tCzH6UAypLryq72yL/zbH3/fhK/2Y4EHAvHSgwsIe9IBRyScef5lCSfHp7eklfbO13o0ybs6Ie5ah3WjAOkmCeV2zdOHE6yObzU7EqK+6DLi/agOxjNd6BvH+VUGkJegfhqaeHADTvvMg+UIDfBoAPpb/83QkekljD19CSEU6vWlYPmQZHrnal3SczyPCACM8EiQpXZgA6bmMnSuXmhfeRkdFgih4P4SrF/kFhiaLFnwLkSrpOCUHk1+xUOqq6ezZIYZc
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB9030.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(22082099003)(18002099003)(38070700021)(6133799003)(11063799006)(5023799004)(4143699003)(3023799007)(56012099006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Wbpw85ujMaXJmMj/RrG5+GAe4fvhoB1DvgiEecNldHsEFBAloHutAxy54HOd?=
- =?us-ascii?Q?hc/bzb5JxRh6+pjDRS3nRgnytphzR2pVRXIU/DWmiau+7rTw2by9eCk/rFe7?=
- =?us-ascii?Q?fe9MbBUDuF3ifvy+VuD5gGz4rZ6SkCEeDek2FcGbJeC3tPjMmIlmG5IOsjXw?=
- =?us-ascii?Q?kxVZVLaSp1adAlV+l63ekQDOnrcijZGOx2gZ0kwLlsbEwRblZ7p8PV2cPyc1?=
- =?us-ascii?Q?aJaRKOaRi7cqsafHnPERANEvO3wGBQDz+GRQ7RU0ZRnASUu1t08eETsw6HuV?=
- =?us-ascii?Q?auqcl+c38HpfsuaRavZUVA+ahI8S4x6gBXXj7NmlNfNqQMmP1GtQYbUZwI+m?=
- =?us-ascii?Q?q319S92M6lhY8YsfGa8rZozv5Y3XMDg2XALOlk5TyrZvF142Z1kx+l2xFldt?=
- =?us-ascii?Q?6yK4t2LACMDLtB5CxY5BoYpX4P5aeL2LN+2ncCQrC3tShQQFNT/o1sqGLGiD?=
- =?us-ascii?Q?yUD3V/eZ10y8ojbPMsPTm3/u9uQmcWFZ6oA83aepqAjkp2akffvjtJUfEdj2?=
- =?us-ascii?Q?l9rpA1ALrw4atTfbKP2bg16rWZqmsAmPaa20ojp90ZSpYoF/SlkL2vO+IlAa?=
- =?us-ascii?Q?tb2hIwwfN7CJhSb4V+OqWOBCQ+bMfcLm+cyVzDy7fGErs6DJjsllFhtvRvDG?=
- =?us-ascii?Q?cNKhrPjbXV8nghx5aKm7eHht3sI3VkAMwY+thg690MCIRkKndvHWF5mVJzLS?=
- =?us-ascii?Q?EDuiksCSR4NCuIJHYsDwuDPfVhpinHB7tSPPnx2J+xwnQVPM+QiOzr5pkeRI?=
- =?us-ascii?Q?aVyY1ZFkLTUFh4GSpuR/217moJ8yUGTEUE67c/YhCMNFnsLESQmgGGT9YjgY?=
- =?us-ascii?Q?+ZyFL9bHVcKjTlhE87K9Bck3ZRacNVP7PWhdO1LLlRwn8ntxb8/OK6LYBr8H?=
- =?us-ascii?Q?Q9akk3Gnt5bs5FbUJ3ML66vBN10TNQdw27ly07wfa/jzJNUKoWeYpdhn2zcL?=
- =?us-ascii?Q?YinNzoqVxkFM4KmiOqS2DruJHtiuGAII0ZuoCk/eIfZNVAH21oVa8AEV42IX?=
- =?us-ascii?Q?+LBbqyy+mh2eA0SYS0ekQQRvLfntHEpcLin0t7ZGNt/gLK8q4+MezqMH/8he?=
- =?us-ascii?Q?IkMh0ZkVwRf6VvUUbo3Al9Qwz4DBVjhyboidc4dBaYof9MYjjdA1Vo5E6AJ2?=
- =?us-ascii?Q?jCPXPAN0Pm+xP9Hq2MKGmu2/kj+NOMZEp3c/+p1JAeMSe/kyfsTcApkvTwS5?=
- =?us-ascii?Q?WANIhwGxtRfD5gbXK2UEkwdi2nqdghFTu4v3mi/6/774rj3o9oW6jnivnoLv?=
- =?us-ascii?Q?ChzgerbAa4IHW/e6wRePSBuZikofNZ1uVFAgNroPqnI34FILm7uzzk/5j9cR?=
- =?us-ascii?Q?z/leasyX6186dXpZc2+S/iIM4AJhOy0jpZloNa8IRlufipr5eVIFfC+itwhI?=
- =?us-ascii?Q?B1PQeiqbKhm4mm9HoX/re1H01y3edwzlYB1N68mDQcBtq0ctbBas00f1gIZC?=
- =?us-ascii?Q?r4/4hF31SEDi42zmgFYT15WEEwxFjKqCPRDziV37uEGnnklOMIqsr4J47gKU?=
- =?us-ascii?Q?6lSMT8+pgY1dD8SOh0YzeIxn0EbLfwHrua6LXgdxAH0QobGfscahAsIjbro9?=
- =?us-ascii?Q?RilmYs554QYWjGwFPVL8t3ghzJS2qMWwi6OJnSAreqiPqVeB3ihyXWoX9zCu?=
- =?us-ascii?Q?Lq6H+rs0YmEroNF42EB5PsRqDIsC0ATOwm1S/pAulxg0Z1PrmDa+k6z8/PpX?=
- =?us-ascii?Q?Wzhj/fwDIR2RnGMY86JBKjgMQ6gdS2yDOKySjpKW6nVaxsP5?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ndJFOZZG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780327429; x=1811863429;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=kUIDZ5V0CpGfqDkmEtTuZsGuwsgP0jXyrKczUF84Zp0=;
+  b=ndJFOZZG1cPlIKY/gVYV8cRC6oyPVoY03G0/HYNP8UJMvwlxlJtqo2dJ
+   NoAapf3kEZq9G9w0tQHXUDdCdbZqXQIWRszEHAL/iP/I1j9pZ9X6wFD+X
+   mE4za18E61OauqoJX31R+u+fQW1/3jCA5/6EWPNBJ3FcvAH3c8FmodStN
+   hmL2/a18e4Rumk6PVDxRvAGEr6/nnxqBaRHmX1liYIEQJIoZ5g6M6I/Sx
+   Sl3h8L+PLSLmsRELNRBgWeWmmbW5r4q9H4zjSeccLStOscN0mWFHGS1hU
+   wFgLAww6znzBp8Ey2hvYBayP/5GkD6yMcahkkpMiafMyKQXZxmDtdjG9L
+   w==;
+X-CSE-ConnectionGUID: jHdjLXKLSKi0EfwTEDP8tQ==
+X-CSE-MsgGUID: 1Ms8GAOkSOC+LjSCgUsoEg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="80937098"
+X-IronPort-AV: E=Sophos;i="6.24,181,1774335600"; 
+   d="scan'208";a="80937098"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 08:23:48 -0700
+X-CSE-ConnectionGUID: ZN7JzgG2RJaPF4npdxEsHQ==
+X-CSE-MsgGUID: Z2kix0ZaT5eqv676/j1Wcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,181,1774335600"; 
+   d="scan'208";a="248695104"
+Received: from rfrazer-mobl3.amr.corp.intel.com (HELO [10.125.111.248]) ([10.125.111.248])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 08:23:47 -0700
+Message-ID: <5def25f1-58ee-4bac-bc10-93492c1b1109@intel.com>
+Date: Mon, 1 Jun 2026 08:23:46 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB9030.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f67409cb-b1b8-4802-5fe1-08debfb34192
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2026 07:56:15.3281
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CHrVNYHbwMLYbH8iKjXYmT1x1XylI9eENIUjc77lFM+xwv6eLp99KhT9Difzjn913ILLKDTkYkqNZTBycmhINA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PR12MB9621
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 02/31] cxl/mem: Read dynamic capacity configuration
+ from the device
+To: Anisa Su <anisa.su887@gmail.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ nvdimm@lists.linux.dev, Dan Williams <djbw@kernel.org>,
+ Jonathan Cameron <jic23@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>, John Groves
+ <John@groves.net>, Gregory Price <gourry@gourry.net>,
+ Ira Weiny <ira.weiny@intel.com>
+References: <cover.1779528761.git.anisa.su@samsung.com>
+ <692890d6934d844cbbe90596499b28833e45f4f5.1779528761.git.anisa.su@samsung.com>
+ <c250bffc-005c-4ce5-bf46-94219a7ba5b2@intel.com>
+ <ahqGcScEzplyVSqw@AnisaLaptop.localdomain>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <ahqGcScEzplyVSqw@AnisaLaptop.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
 
-> -----Original Message-----
-> From: Jonathan Cameron <jic23@kernel.org>
-> Sent: 19 May 2026 18:43
-> To: Manish Honap <mhonap@nvidia.com>
-> Cc: Alex Williamson <alwilliamson@nvidia.com>; Shameer Kolothum Thodi
-> <skolothumtho@nvidia.com>; Ankit Agrawal <ankita@nvidia.com>;
-> mst@redhat.com; imammedo@redhat.com; anisinha@redhat.com;
-> eric.auger@redhat.com; peter.maydell@linaro.org;
-> shannon.zhaosl@gmail.com; jonathan.cameron@huawei.com;
-> fan.ni@samsung.com; pbonzini@redhat.com; richard.henderson@linaro.org;
-> marcel.apfelbaum@gmail.com; clg@redhat.com; cohuck@redhat.com;
-> dan.j.williams@intel.com; dave.jiang@intel.com; alejandro.lucero-
-> palau@amd.com; Vikram Sethi <vsethi@nvidia.com>; Neo Jia
-> <cjia@nvidia.com>; Tarun Gupta (SW-GPU) <targupta@nvidia.com>; Zhi Wang
-> <zhiw@nvidia.com>; Krishnakant Jaju <kjaju@nvidia.com>; linux-
-> cxl@vger.kernel.org; kvm@vger.kernel.org; qemu-devel@nongnu.org; qemu-
-> arm@nongnu.org
-> Subject: Re: [RFC 0/9] QEMU: CXL Type-2 device passthrough via vfio-pci
->=20
-> External email: Use caution opening links or attachments
->=20
->=20
-> On Mon, 27 Apr 2026 23:42:26 +0530
-> <mhonap@nvidia.com> wrote:
->=20
-> > From: Manish Honap <mhonap@nvidia.com>
-> >
-> > This series adds QEMU-side support for passing CXL Type-2 devices
-> > (GPUs and accelerators with host-managed device memory) to VMs via
-> > vfio-pci.
-> Hi Manish,
->=20
-> Having read this description I'm not sure I really understand all the
-> constraints this is operating under.
->=20
-> There are two basic paths to getting safe virtualisation of CXL.mem.
-> 1) Lock down decoders etc against preconfigured mappings.
-> 2) Constrain the more insane stuff via topology care - basically direct
-> connect
->    only for now and let the guest program stuff appropriately.
->=20
-> One possible constraint is making it all look like early CXL host stuff
-> where the bios does the heavy lifting.  I don't mind if we have to do
-> that today but I'd like to understand if it's a long term requirement or
-> not.
->=20
-> I think this is currently doing a mix of 1 and 2.  You lock endpoint
-> decoders but ignore host bridge ones.  I think we need to handle those.
-> Maybe I'm missing a check that a pass through decoder is in use (there
-> is a commandline control to turn that on / off for single RP HB).
->=20
->=20
-> >
-> > It pairs with the kernel series "vfio/pci: CXL Type-2 passthrough"[1]
-> > posted to the vfio mailing list. Patches 3-7 need that kernel series
-> > present to do anything useful. I am new to QEMU development, so please
-> > forgive and point me in the right direction for correct infrastructure
-> > decisions.
-> >
-> > Background
-> > ----------
-> >
-> > CXL Type-2 devices expose device memory (CXL.mem) through HDM
-> decoders.
-> > The kernel vfio-pci driver shadows the HDM Decoder Capability
-> > registers so userspace can observe and control decoder commits without
-> > touching the hardware register page directly.
-> >
-> > Without this series, the guest never sees the device memory range and
-> > the HDM decoder goes unconfigured. The device shows up but its memory
-> > is unreachable.
-> >
-> > Design decisions
-> > ----------------
-> >
-> > CXL.mem is exposed to the guest as a dedicated GPA window declared in
-> > ACPI
-> > (CEDT/CFMWS) rather than a PCI BAR. The HDM decoder BASE must match
-> > the CFMWS base and remain stable; BAR assignment is not stable.
->=20
-> Note a lot of my thinking here is based on the related but not identical
-> question of how to do CXL type 3 emulation for virtualization cases.
->=20
-> My thinking for type 2 is we'd do similar tricks to for memory in
-> constraining the topology so things like interleave don't cause us
-> problems and CFMWS to particular device mappings are fixed (though in
-> theory offsets with in CFMWS could change).
->=20
-> I may be missing the point entirely but why does HDM decoder base (here
-> the GPA address where the routing is configured to put the DPA of the
-> EP) need to match the CFMWS base or for that matter remain stable (i.e.
-> Guest forced to put it in the same place)? Is it just so the type 2
-> driver knows where to find it?  (There are easy ways around that - or is
-> this something baked into an existing driver?)
->=20
-> There are a few easy ways to constrain things to reduce flexibility
-> (e.g.
-> we don't want interleave to be possible etc).  If we absolutely have to
-> we can also lock decoders. The only reason I was avoiding that for type
-> 3 device was that it isn't needed + can get complex fast!
->=20
-> I think you are constraining the topology for this to work to PXB with
-> 1 RP with pass through HDM decoders and no switches etc.
-> That's fine for now but I didn't immediately spot the checks that
-> enforce that.
->=20
-> Can we have a command line example in this cover letter.
+On 5/29/26 11:40 PM, Anisa Su wrote:
+> On Wed, May 27, 2026 at 03:28:56PM -0700, Dave Jiang wrote:
+>>
+>>
+>> On 5/23/26 2:42 AM, Anisa Su wrote:
+>>> From: Ira Weiny <ira.weiny@intel.com>
+>>>
+>>> Devices which optionally support Dynamic Capacity (DC) are configured
+>>> via mailbox commands.  CXL 3.2 section 9.13.3 requires the host to issue
+>>
+>> 4.0
+>>
+> done
+>>> the Get DC Configuration command in order to properly configure DCDs.
+>>> Without the Get DC Configuration command DCD can't be supported.
+>>>
+>>> Implement the DC mailbox commands as specified in CXL 3.2 section
+>>
+>> 4.0
+>>
+> done :)
+>>> 8.2.10.9.9 (opcodes 48XXh) to read and store the DCD configuration
+>>> information.  Disable DCD if an invalid configuration is found.
+>>>
+>>> Linux has no support for more than one dynamic capacity partition.  Read
+>>> and validate all the partitions but configure only the first partition
+>>> as 'dynamic ram A'.  Additional partitions can be added in the future if
+>>> such a device ever materializes.  Additionally is it anticipated that no
+>>> skips will be present from the end of the pmem partition.  Check for an
+>>> disallow this configuration as well.
+>>>
+>>> Linux has no use for the trailing fields of the Get Dynamic Capacity
+>>> Configuration Output Payload (Total number of supported extents, number
+>>> of available extents, total number of supported tags, and number of
+>>> available tags).  Avoid defining those fields to use the more useful
+>>> dynamic C array.
+>>>
+>>> Based on an original patch by Navneet Singh.
+>>>
+>>> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+>>
+>> Missing Anisa sign off
+>>
+> Added
+>>>
+>>> ---
+>>> Changes:
+>>> [anisa: rebase]
+>>> [jonathan: mbox.c: use max possible size for get_dc_config command to
+>>> avoid vmalloc]
+>>> [jonathan & fan: cxlmem.h: remove unused struct cxl_mem_dev_info]
+>>> ---
+>>>  drivers/cxl/core/hdm.c  |   2 +
+>>>  drivers/cxl/core/mbox.c | 182 ++++++++++++++++++++++++++++++++++++++++
+>>>  drivers/cxl/cxlmem.h    |  47 +++++++++++
+>>>  drivers/cxl/pci.c       |   3 +
+>>>  include/cxl/cxl.h       |   3 +-
+>>>  5 files changed, 236 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+>>> index 3930e130d6b6..28974adaab75 100644
+>>> --- a/drivers/cxl/core/hdm.c
+>>> +++ b/drivers/cxl/core/hdm.c
+>>> @@ -453,6 +453,8 @@ static const char *cxl_mode_name(enum cxl_partition_mode mode)
+>>>  		return "ram";
+>>>  	case CXL_PARTMODE_PMEM:
+>>>  		return "pmem";
+>>> +	case CXL_PARTMODE_DYNAMIC_RAM_A:
+>>> +		return "dynamic_ram_a";
+>>>  	default:
+>>>  		return "";
+>>>  	};
+>>> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+>>> index 7ef5708bf210..71b29cd6abfe 100644
+>>> --- a/drivers/cxl/core/mbox.c
+>>> +++ b/drivers/cxl/core/mbox.c
+>>> @@ -1351,6 +1351,156 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
+>>>  	return -EBUSY;
+>>>  }
+>>>  
+>>> +static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part_array,
+>>> +			u8 index, struct cxl_dc_partition *dev_part)
+>>> +{
+>>> +	size_t blk_size = le64_to_cpu(dev_part->block_size);
+>>> +	size_t len = le64_to_cpu(dev_part->length);
+>>> +
+>>> +	part_array[index].start = le64_to_cpu(dev_part->base);
+>>> +	part_array[index].size = le64_to_cpu(dev_part->decode_length);
+>>> +	part_array[index].size *= CXL_CAPACITY_MULTIPLIER;
+>>> +
+>>> +	/* Check partitions are in increasing DPA order */
+>>> +	if (index > 0) {
+>>> +		struct cxl_dc_partition_info *prev_part = &part_array[index - 1];
+>>> +
+>>> +		if ((prev_part->start + prev_part->size) >
+>>> +		     part_array[index].start) {
+>>> +			dev_err(dev,
+>>> +				"DPA ordering violation for DC partition %d and %d\n",
+>>> +				index - 1, index);
+>>> +			return -EINVAL;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	if (!IS_ALIGNED(part_array[index].start, SZ_256M) ||
+>>> +	    !IS_ALIGNED(part_array[index].start, blk_size)) {
+>>> +		dev_err(dev, "DC partition %d invalid start %zu blk size %zu\n",
+>>> +			index, part_array[index].start, blk_size);
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	if (part_array[index].size == 0 || len == 0 ||
+>>> +	    part_array[index].size < len || !IS_ALIGNED(len, blk_size)) {
+>>> +		dev_err(dev, "DC partition %d invalid length; size %zu len %zu blk size %zu\n",
+>>> +			index, part_array[index].size, len, blk_size);
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	if (blk_size == 0 || blk_size % CXL_DCD_BLOCK_LINE_SIZE ||
+>>> +	    !is_power_of_2(blk_size)) {
+>>> +		dev_err(dev, "DC partition %d invalid block size; %zu\n",
+>>
+>> size: instead of size;
+>>
+> fixed!
+>>> +			index, blk_size);
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	dev_dbg(dev, "DC partition %d start %zu start %zu size %zu\n",
+>>
+>> should it be "DC partition %d start %zu size %zu blk_size: %zu\n"?
+>>
+> yep, fixed! Also I changed the type of
+> struct cxl_dc_partition_info->start/size from size_t to u64 so
+> the print specifier uses %llu now. Unless it's better to stick with
+> size_t?
 
-Restating the paths for CXL.mem virtualization for v2 scope
+I think u64 would be explicit and better. I can just see the kbot complaining about 32bit systems and size_t....
 
-Path 1: lock down decoders against preconfigured mappings.
-Path 2: constrain topology (direct-connect only, no switches,
-          no interleave) and let the guest program decoders.
+> 
+>>> +		index, part_array[index].start, part_array[index].size,
+>>> +		blk_size);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +/* Returns the number of partitions in dc_resp or -ERRNO */
+>>> +static int cxl_get_dc_config(struct cxl_mailbox *mbox, u8 start_partition,
+>>> +			     struct cxl_mbox_get_dc_config_out *dc_resp,
+>>> +			     size_t dc_resp_size)
+>>> +{
+>>> +	struct cxl_mbox_get_dc_config_in get_dc = (struct cxl_mbox_get_dc_config_in) {
+>>> +		.partition_count = CXL_MAX_DC_PARTITIONS,
+>>> +		.start_partition_index = start_partition,
+>>> +	};
+>>> +	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
+>>> +		.opcode = CXL_MBOX_OP_GET_DC_CONFIG,
+>>> +		.payload_in = &get_dc,
+>>> +		.size_in = sizeof(get_dc),
+>>> +		.size_out = dc_resp_size,
+>>> +		.payload_out = dc_resp,
+>>> +		.min_out = 8,
+>>> +	};
+>>> +	int rc;
+>>> +
+>>> +	rc = cxl_internal_send_cmd(mbox, &mbox_cmd);
+>>> +	if (rc < 0)
+>>> +		return rc;
+>>> +
+>>> +	dev_dbg(mbox->host, "Read %d/%d DC partitions\n",
+>>> +		dc_resp->partitions_returned, dc_resp->avail_partition_count);
+>>> +	return dc_resp->partitions_returned;
+>>> +}
+>>> +
+>>> +/**
+>>> + * cxl_dev_dc_identify() - Reads the dynamic capacity information from the
+>>> + *                         device.
+>>> + * @mbox: Mailbox to query
+>>> + * @dc_info: The dynamic partition information to return
+>>> + *
+>>> + * Read Dynamic Capacity information from the device and return the partition
+>>> + * information.
+>>> + *
+>>> + * Return: 0 if identify was executed successfully, -ERRNO on error.
+>>> + *         on error only dynamic_bytes is left unchanged.
+>>> + */
+>>> +int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+>>> +			struct cxl_dc_partition_info *dc_info)
+>>> +{
+>>> +	struct cxl_dc_partition_info partitions[CXL_MAX_DC_PARTITIONS];
+>>> +	struct device *dev = mbox->host;
+>>> +	size_t dc_resp_size =
+>>> +		sizeof(struct cxl_mbox_get_dc_config_out) + sizeof(partitions);
+>>
+>> I think it needs to be something like below because of the 'partition' flex array:
+>> size_t dc_resp_size = struct_size(dc_resp, partition, CXL_MAX_DC_PARTITIONS);
+>>
+>> partitions is type 'struct cxl_dc_partition_info'. and dc_resp->partition is type 'struct cxl_dc_partition'. So the size calucation is wrong. It should at least be:
+>> size_t dc_resp_size = sizeof(struct cxl_mbox_get_dc_config_out) + sizeof(struct cxl_dc_partition) * CXL_MAX_DC_PARTITIONS;
+>>
+> Fixed!
+>>
+>>> +	u8 start_partition;
+>>> +	u8 num_partitions;
+>>> +
+>>> +	struct cxl_mbox_get_dc_config_out *dc_resp __free(kfree) =
+>>> +					kmalloc(dc_resp_size, GFP_KERNEL);
+>>> +	if (!dc_resp)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	/**
+>>
+>> /*
+>>
+>>> +	 * Read and check all partition information for validity and potential
+>>> +	 * debugging; see debug output in cxl_dc_check()
+>>> +	 */
+>>> +	start_partition = 0;
+>>> +	num_partitions = 0;
+>>> +	do {
+>>> +		int rc, i, j;
+>>> +
+>>> +		rc = cxl_get_dc_config(mbox, start_partition, dc_resp, dc_resp_size);
+>>> +		if (rc < 0) {
+>>> +			dev_err(dev, "Failed to get DC config: %d\n", rc);
+>>> +			return rc;
+>>> +		}
+>>> +
+> 		if (rc == 0) {
+> 			dev_err(dev,
+> 				"Device reported %u partitions available but returned none at index %u\n",
+> 				dc_resp->avail_partition_count, start_partition);
+> 			return -EIO;
+> 		}
+>>> +		num_partitions += rc;
+>>
+>> Would cxl_get_dc_config() keep returning 0 be a problem? Not likely to happen unless device is malicious.
+>>
+> Not sure but I added a check anyway. ^ See above. It prohibits
+> cxl_get_dc_config() returning 0 at all though. But could be changed to
+> err only if 0 partitions are returned X amount of times...?
 
-For V2, I will:
-  (a) Document the Path 1 / Path 2 split explicitly in the cover
-      letter, and state that this series implements Path 1 for the
-      endpoint inside a Path-2-constrained topology.
-  (b) Add a command-line example to the cover letter (you asked for
-      this on patch 7/9 as well).
-  (c) Add realize-time checks in vfio_cxl_setup() that refuse to
-      start unless:
-        - cxl_get_hb_passthrough(hb) is true
-        - pcie_count_ds_ports(hb->bus) =3D=3D 1
-        - no switch is present between the cxl-rp and the vfio-pci
-  (d) Use existing CFMWS infrastructure and drop VIRT_HIGH_CXL_MMIO
- =20
->=20
-> > A separate
-> > VIRT_HIGH_CXL_MMIO window in the ARM virt memory map carries this GPA
-> > range, independent of the existing PCIe MMIO slots.
->=20
-> I'm not immediately understanding why the CXL.mem path isn't via exiting
-> CFMWS support.  Why do we need a new memory window?  Ultimately you seem
-> to map to normal CFMWS regions.  Also note you need to be very careful
-> adding stuff to the memory map as bunch of other stuff above that will
-> move - so it must simply not be there by default to avoid breaking
-> migration of existing VMs.  Maybe that is fine, I didn't check carefully
->=20
-> >
-> > The Component Register BAR contains two distinct ranges. Accelerator
-> > register windows are passed through as direct hardware mmaps via
-> > VFIO_REGION_INFO_CAP_SPARSE_MMAP. The HDM Decoder Capability block is
-> > excluded from that sparse list by the kernel and must be intercepted
-> > by QEMU to track decoder state. A single priority-1 COMP_REGS overlay
-> > placed at hdm_regs_offset inside the BAR container wins over any
-> > hardware-backed alias at the same offset, with no per-window aliasing
-> > required.
-> >
-> > The guest has no mechanism to remap host physical mappings. QEMU
-> > programs decoder 0 with the CFMWS base through the kernel's COMP_REGS
-> > shadow at machine_done time, after all devices are realized and before
-> the guest starts.
->=20
-> Ah so this is locking down the decoder?  I'm not necessarily against
-> that but would like to understand what the constraints are that lead to
-> that being necessary as opposed to guest programming them later (and
-> late set up of the MemoryRegion like we do for type 3)
+I think as long as we have a way to detect that we aren't moving forward in this loop and need to get out at some point.
 
-Decoder locking is required for this series because the kernel-side endpoin=
-t
-driver expects a committed decoder before vfio-cxl probe completes.
-The host CXL stack commits the endpoint HDM decoder before vfio binds; QEMU
-then locks it again at machine_done with the GPA so the guest cannot move i=
-t.
+DJ
 
->=20
-> > The notifier is registered only for devices the kernel reports as
-> > firmware-committed (VFIO_CXL_CAP_FIRMWARE_COMMITTED).
-> >
-> > The CXL.mem MemoryRegion is a mmap-backed RAM-device region backed by
-> > a VM_IO|VM_PFNMAP VMA. The VFIO MemoryListener would attempt an IOMMU
-> > DMA mapping for it when it is added to system_memory, which always
-> > fails: pin_user_pages() refuses VM_IO pages. No IOMMU mapping is
-> > needed for these regions - CPU access goes via KVM Stage-2 page faults
-> > and device DMA to RAM uses separate per-RAM-section IOMMU entries. The
-> > listener is extended to skip the mapping attempt for VFIO-owned
-> > RAM-device regions.
-> >
-> > pxb-cxl bridges had no _DSM method. Without _DSM function 5 the OS
-> > defaults to treating PCI configuration as reassignable.
->=20
-> That one is annoyingly controversial. I see you have Shameer's patch so
-> he can go into history of why. I tried to land that in the past and I
-> was far from the first.
-
-okay, I will check this part for additional details.
-
->=20
-> > On machines with firmware-committed HDM decoders that reassignment
-> > breaks the CXL.mem mapping, so the _DSM is added with
-> > preserve_config=3Dtrue for ARM and false for x86.
->=20
-> What has that got to do with CXL.mem mapping?  It can move the BARs
-> around but those aren't related to the CXL.mem mapping.
->=20
-> Can we break this description up into two separate parts as it feels
-> like BAR mappings and CXL.mem mappings are getting confused.
->=20
-> 1) Deal with how the configuration stuff works - bars etc.
-> 2) Deal with the CXL.mem mapping into a CFMWS.
->=20
-
-Yes, agreed these two are independent.
-For v2, I will split the cover-letter narrative accordingly and reorder
-patches so the CXL.mem story (HDM decoder, FMWS, decoder lock) sits
-in one block and the PCI/BAR story (_DSM preserve_config) sits in
-another.
-
-> >
-> > Known issues:
-> > - The bios-tables test will fail due to the _DSM addition.
-> >   A fix will be provided in a follow-up round.
->=20
-> Unless I'm missing some checks, a whole load more than that will fail as
-> device memory / memory hotplug region + probably the CFMWS regions all
-> move.
->=20
-> > - VFIO_CXL_CAP_CACHE_CAPABLE will require additional handling.
-> > - Devices with multiple firmware-committed HDM decoders are not fully
-> >   supported.
-> > - Non-firmware-committed devices are not supported.
-> > - linux-headers sync is manual and temporary; once the kernel series
-> is
-> >   merged, this patch will be replaced with script generated update.
-> >
-> > [1]
-> > https://lore.kernel.org/linux-cxl/20260401143917.108413-1-mhonap@nvidi
-> > a.com
-> >
-> Anyhow, seems like a good starting point for discussion.
-
-Thank you for your suggestions.
-
->=20
-> As we evolve the CXL support into including real virtualization use
-> cases I'm sure we'll also throw up random corners around resetting etc.
->=20
-> Note I mostly skipped the VFIO stuff on basis others know a lot more on
-> that side of things than I do!
->=20
+>>> +
+>>> +		if (num_partitions < 1 || num_partitions > CXL_MAX_DC_PARTITIONS) {
+>>> +			dev_err(dev, "Invalid num of dynamic capacity partitions %d\n",
+>>> +				num_partitions);
+>>> +			return -EINVAL;
+>>> +		}
+>>> +
+>>> +		for (i = start_partition, j = 0; i < num_partitions; i++, j++) {
+>>> +			rc = cxl_dc_check(dev, partitions, i,
+>>> +					  &dc_resp->partition[j]);
+>>> +			if (rc)
+>>> +				return rc;
+>>> +		}
+>>> +
+>>> +		start_partition = num_partitions;
+>>> +
+>>> +	} while (num_partitions < dc_resp->avail_partition_count);
+>>> +
+>>> +	/* Return 1st partition */
+>>> +	dc_info->start = partitions[0].start;
+>>> +	dc_info->size = partitions[0].size;
+>>> +	dev_dbg(dev, "Returning partition 0 %zu size %zu\n",
+>>> +		dc_info->start, dc_info->size);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_NS_GPL(cxl_dev_dc_identify, "CXL");
+>>> +
+>>>  static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
+>>>  {
+>>>  	int i = info->nr_partitions;
+>>> @@ -1421,6 +1571,38 @@ int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count)
+>>>  }
+>>>  EXPORT_SYMBOL_NS_GPL(cxl_get_dirty_count, "CXL");
+>>>  
+>>> +void cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+>>> +{
+>>> +	struct cxl_dc_partition_info dc_info = { 0 };
+>>> +	struct device *dev = mds->cxlds.dev;
+>>> +	size_t skip;
+>>> +	int rc;
+>>> +
+>>> +	rc = cxl_dev_dc_identify(&mds->cxlds.cxl_mbox, &dc_info);
+>>> +	if (rc) {
+>>> +		dev_warn(dev,
+>>> +			 "Failed to read Dynamic Capacity config: %d\n", rc);
+>>> +		cxl_disable_dcd(mds);
+>>> +		return;
+>>> +	}
+>>> +
+>>> +	/* Skips between pmem and the dynamic partition are not supported */
+>>> +	skip = dc_info.start - info->size;
+>>> +	if (skip) {
+>>
+>> Would this be sufficient?
+>>
+>> if (dc_info.start != info->size)
+>>
+> Fixed!
+>> DJ
 > Thanks,
->=20
-> Jonathan
->=20
-> > Manish Honap (9):
-> >   hw/arm/virt: Add CXL FMWS PA window for device memory
-> >   cxl: Add preserve_config to pxb-cxl OSC method
-> >   linux-headers: Update vfio.h for CXL Type-2 device passthrough
-> >   hw/vfio/region: Add vfio_region_setup_with_ops() for custom region
-> ops
-> >   hw/vfio/pci: Add CXL Type-2 device detection and region setup
-> >   hw/vfio/pci: Wire CXL component-register BAR with COMP_REGS overlay
-> >   hw/vfio+cxl: Program HDM decoder 0 at machine_done for
-> >     firmware-committed devices
-> >   hw/arm/smmu-common: Allow pxb-cxl as SMMUv3 primary bus
-> >   vfio/listener: Skip DMA mapping for VFIO-owned RAM-device regions
-> >
-> >  hw/acpi/cxl-stub.c         |   2 +-
-> >  hw/acpi/cxl.c              |   4 +-
-> >  hw/arm/smmu-common.c       |  17 +-
-> >  hw/arm/virt-acpi-build.c   |   5 +
-> >  hw/arm/virt.c              |   7 +
-> >  hw/cxl/cxl-host-stubs.c    |   2 +
-> >  hw/cxl/cxl-host.c          |   8 +
-> >  hw/i386/acpi-build.c       |   2 +-
-> >  hw/pci-host/gpex-acpi.c    |  43 +++-
-> >  hw/vfio/listener.c         |  14 ++
-> >  hw/vfio/pci.c              | 411
-> +++++++++++++++++++++++++++++++++++++
-> >  hw/vfio/pci.h              |  15 ++
-> >  hw/vfio/region.c           |  15 +-
-> >  hw/vfio/trace-events       |   6 +
-> >  hw/vfio/vfio-region.h      |   3 +
-> >  include/hw/acpi/cxl.h      |   2 +-
-> >  include/hw/arm/virt.h      |   2 +
-> >  include/hw/cxl/cxl_host.h  |  10 +
-> >  include/hw/pci-host/gpex.h |   2 +
-> >  linux-headers/linux/vfio.h |  18 ++
-> >  20 files changed, 570 insertions(+), 18 deletions(-)
-> >
-> > --
-> > 2.25.1
-> >
-> >
+> Anisa
+>>> +		dev_warn(dev,
+>>> +			 "Dynamic Capacity skip from pmem not supported: %zu\n",
+>>> +			 skip);
+>>> +		cxl_disable_dcd(mds);
+>>> +		return;
+>>> +	}
+>>> +
+>>> +	info->size += dc_info.size;
+>>> +	dev_dbg(dev, "Adding dynamic ram partition A; %zu size %zu\n",
+>>> +		dc_info.start, dc_info.size);
+>>> +	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_A);
+>>> +}
+>>> +EXPORT_SYMBOL_NS_GPL(cxl_configure_dcd, "CXL");
+>>> +
+>>>  int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds)
+>>>  {
+>>>  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+>>> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+>>> index 53444af448d7..87386488ad10 100644
+>>> --- a/drivers/cxl/cxlmem.h
+>>> +++ b/drivers/cxl/cxlmem.h
+>>> @@ -380,6 +380,8 @@ struct cxl_security_state {
+>>>  	struct kernfs_node *sanitize_node;
+>>>  };
+>>>  
+>>> +#define CXL_MAX_DC_PARTITIONS 8
+>>> +
+>>>  static inline resource_size_t cxl_pmem_size(struct cxl_dev_state *cxlds)
+>>>  {
+>>>  	/*
+>>> @@ -664,6 +666,31 @@ struct cxl_mbox_set_shutdown_state_in {
+>>>  	u8 state;
+>>>  } __packed;
+>>>  
+>>> +/* See CXL 3.2 Table 8-178 get dynamic capacity config Input Payload */
+>>> +struct cxl_mbox_get_dc_config_in {
+>>> +	u8 partition_count;
+>>> +	u8 start_partition_index;
+>>> +} __packed;
+>>> +
+>>> +/* See CXL 3.2 Table 8-179 get dynamic capacity config Output Payload */
+>>> +struct cxl_mbox_get_dc_config_out {
+>>> +	u8 avail_partition_count;
+>>> +	u8 partitions_returned;
+>>> +	u8 rsvd[6];
+>>> +	/* See CXL 3.2 Table 8-180 */
+>>> +	struct cxl_dc_partition {
+>>> +		__le64 base;
+>>> +		__le64 decode_length;
+>>> +		__le64 length;
+>>> +		__le64 block_size;
+>>> +		__le32 dsmad_handle;
+>>> +		u8 flags;
+>>> +		u8 rsvd[3];
+>>> +	} __packed partition[] __counted_by(partitions_returned);
+>>> +	/* Trailing fields unused */
+>>> +} __packed;
+>>> +#define CXL_DCD_BLOCK_LINE_SIZE 0x40
+>>> +
+>>>  /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
+>>>  struct cxl_mbox_set_timestamp_in {
+>>>  	__le64 timestamp;
+>>> @@ -787,9 +814,18 @@ enum {
+>>>  int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
+>>>  			  struct cxl_mbox_cmd *cmd);
+>>>  int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+>>> +
+>>> +struct cxl_dc_partition_info {
+>>> +	size_t start;
+>>> +	size_t size;
+>>> +};
+>>> +
+>>> +int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+>>> +			struct cxl_dc_partition_info *dc_info);
+>>>  int cxl_await_media_ready(struct cxl_dev_state *cxlds);
+>>>  int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
+>>>  int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
+>>> +void cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
+>>>  struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
+>>>  						 u16 dvsec);
+>>>  void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+>>> @@ -803,6 +839,17 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+>>>  			    const uuid_t *uuid, union cxl_event *evt);
+>>>  int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count);
+>>>  int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds);
+>>> +
+>>> +static inline bool cxl_dcd_supported(struct cxl_memdev_state *mds)
+>>> +{
+>>> +	return mds->dcd_supported;
+>>> +}
+>>> +
+>>> +static inline void cxl_disable_dcd(struct cxl_memdev_state *mds)
+>>> +{
+>>> +	mds->dcd_supported = false;
+>>> +}
+>>> +
+>>>  int cxl_set_timestamp(struct cxl_memdev_state *mds);
+>>>  int cxl_poison_state_init(struct cxl_memdev_state *mds);
+>>>  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+>>> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+>>> index bace662dc988..60f9fa05d9ef 100644
+>>> --- a/drivers/cxl/pci.c
+>>> +++ b/drivers/cxl/pci.c
+>>> @@ -870,6 +870,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+>>>  	if (rc)
+>>>  		return rc;
+>>>  
+>>> +	if (cxl_dcd_supported(mds))
+>>> +		cxl_configure_dcd(mds, &range_info);
+>>> +
+>>>  	rc = cxl_dpa_setup(cxlds, &range_info);
+>>>  	if (rc)
+>>>  		return rc;
+>>> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+>>> index fa7269154620..bb1df0cef863 100644
+>>> --- a/include/cxl/cxl.h
+>>> +++ b/include/cxl/cxl.h
+>>> @@ -133,6 +133,7 @@ struct cxl_dpa_perf {
+>>>  enum cxl_partition_mode {
+>>>  	CXL_PARTMODE_RAM,
+>>>  	CXL_PARTMODE_PMEM,
+>>> +	CXL_PARTMODE_DYNAMIC_RAM_A,
+>>>  };
+>>>  
+>>>  /**
+>>> @@ -147,7 +148,7 @@ struct cxl_dpa_partition {
+>>>  	enum cxl_partition_mode mode;
+>>>  };
+>>>  
+>>> -#define CXL_NR_PARTITIONS_MAX 2
+>>> +#define CXL_NR_PARTITIONS_MAX 3
+>>>  
+>>>  /**
+>>>   * struct cxl_dev_state - The driver device state
+>>
 
