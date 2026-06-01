@@ -1,90 +1,297 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C033133AD99;
-	Mon,  1 Jun 2026 22:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7667E344DBD;
+	Mon,  1 Jun 2026 23:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780354031; cv=none; b=fb71XQfRayR8LfqQ7WXXWRRyTKjVI54KRjxagYkX6uAw5F/Q+kamGlnX2/kMJsvnXObsnhn2qDrYQiVg9xCMwXuK4QPhnjjE2GsdGlzNwNJmZt0asPOPLdh7IS+fMo2L3bNJjlKOly3rmqnUjcK2QKfomndIznKJ4o9dxOimqdk=
+	t=1780355444; cv=none; b=RmESF5Uu69w5XKez/2QUh2fazTU6nTvwLPnF7/7vaS/5nWBU5WFsU3S5m/1ebjXcjaDqEViS9eQi2rnDxVrP+vjn392kNzCT7AHkTsGQBugdDAqVRtaVsE6WtgKH9ihDLiMSP5RvsA+uJ2ymn+msWIl09Jrsj2mu7WKRHHNrLe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780354031; c=relaxed/simple;
-	bh=BygBbCOAOI7ov7eJDxV9YtWjZUBzRtNzeqw4B2lbFQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IKkpLDAd8vo8j+8dcm5xcya7mQ+6N4V205arGAkiQ76Q4Yz/odOpVNAs42hugGy1TOVy4ZGuz7Ahsq1e/VZ0ZM2JheafN2XzsMxLVvHLHD3BomKL6Imsz6Kt0/XMFVCBy7tefAgHONoLOwk3eg1a7Ua/ML+hAE30I11/2rQizwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=OKToZ5+3; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1780355444; c=relaxed/simple;
+	bh=QkDDYHL1L9uH/stCYZ+/QN6adgi29Br4Kiq31HwRUV4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cf6WCV/C6E0jWPmjgp6RBnl8YpSiwJofJiosytNI7yBS6OG0shwNFculUiAHihbetG1FxTpxyh5rbDXcs3Ijgzouu+hpKc3sgVyAFQlSEZeV/FxUtkfPwdXDCNHCtuBe3fv/AxRHG0GqZUbhD4e1da+29hUeqPkXhvlxb2DL6+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iyxi5jgy; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="OKToZ5+3"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 85AAB40E00BA;
-	Mon,  1 Jun 2026 22:47:07 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id WKoz_Vm_KwY2; Mon,  1 Jun 2026 22:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1780354017; bh=9Y4m2W3vRcXKEArbYqkHQd441LGB27Du4H5ZrkX5CSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OKToZ5+3gGYJPCMAps1wKEkuLcXumWvlhTdWMIlfG1ADqMef5UBqaGfQKKl3yKTh+
-	 cEs3M+PIleKF8G36t5n69E4IaZ7XYcWqKC0mvOg6/x4tPQxhpYS75qqUmbLQMOSTe1
-	 GqIgRonTFa/IZCYOV9zeKeHOcgXzv20upCjkkg4ZhHpAFd6lwiYlA6jIy7CwXGCZ6f
-	 HWnl7JIcFQJ2NjeUOmXiILSe4OqZWiSTr3Ko8uEYSuNLPhIlQzh3ofhOqmoBP3Udq0
-	 f1a0dt/fwKsIxaDBePUlTdh+yhwPSi4mbJ05BDApKZrvYlE3A+tARDICCoaXKyzVQS
-	 VzXOmpt2ZR92kE03CxEk8A05gOqzCXL8tmYH0CJE+9WC0dWQSGt2EPhS9p1HasKlBs
-	 eGTUYOuzNNofWGsqWewDE76CHwDIaQhXRJxKLIK7P96u1Vph3b1KR5wemcNkCGCJ87
-	 re8s6+lRlu/FCeaVw/cdv90bjywZEaCyvF7K83wNaWya1biZPyzeMeLTQeGGZB0gzM
-	 qDC6U+0FPIcXBO/ja3BK1n+mdPkedublg9EhRzoczftYcjopk4nWsoePN05bccbZQX
-	 m44F7z+Pvulj/uYm7Yy2fuYxrwECgnmoY1XKUfRuoCn5osJUTZ/rq/6GuOjtmtuSme
-	 Kr2SlJ34d6K0v0p1gFb2FGio=
-Received: from stx.tnic (unknown [IPv6:2600:1700:38ca:c00::30])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 86AF340E0032;
-	Mon,  1 Jun 2026 22:46:24 +0000 (UTC)
-Date: Mon, 1 Jun 2026 15:46:08 -0700
-From: Borislav Petkov <bp@alien8.de>
-To: Ahmed Tiba <ahmed.tiba@arm.com>
-Cc: will@kernel.org, jic23@kernel.org, xueshuai@linux.alibaba.com,
-	saket.dumbre@intel.com, mchehab@kernel.org, dave@stgolabs.net,
-	djbw@kernel.org, tony.luck@intel.com, guohanjun@huawei.com,
-	lenb@kernel.org, skhan@linuxfoundation.org,
-	vishal.l.verma@intel.com, rafael@kernel.org, corbet@lwn.net,
-	ira.weiny@intel.com, dave.jiang@intel.com, krzk+dt@kernel.org,
-	robh@kernel.org, catalin.marinas@arm.com,
-	alison.schofield@intel.com, conor+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org, Michael.Zhao2@arm.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, Dmitry.Lamerov@arm.com,
-	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-edac@vger.kernel.org, acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v5 01/10] ACPI: APEI: GHES: share macros via a private
- header
-Message-ID: <20260601224608.GCah4LsNGp3aLjy-xE@fat_crate.local>
-References: <20260529-topics-ahmtib01-ras_ffh_arm_internal_review-v5-0-2e0500d42642@arm.com>
- <20260529-topics-ahmtib01-ras_ffh_arm_internal_review-v5-1-2e0500d42642@arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iyxi5jgy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780355442; x=1811891442;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=QkDDYHL1L9uH/stCYZ+/QN6adgi29Br4Kiq31HwRUV4=;
+  b=iyxi5jgyrueXTSzCq2LW2Ase6HvwxE6h206k0i22JpN9gazvHzX0CRt5
+   xjw5Gg90bwQAv4FxIKpuhjeZbJKrSKTP1GhWiPwkJurxZeEdCc/akSymB
+   JnywNtRllQ7R9eBBfOQh7Y0AR65HFbohKqoT+VYpElqlgeZLsMny6ASgc
+   yXcjPRb1cnLbqdmfhFf1VdDKN4IWMZPKeC9C+73ZaCTMnSCu1tYvTVYZR
+   /N8XzseFo5nGwjT6KY07pjBKjX2IP/Ayf8/JGpgUVI6Tvyg+2WLK74cSJ
+   YJiArMF6urD1lxnof0SuFEzrqT2nWgZsgAHrHp23cSwF/nR0c2fqA4t3j
+   g==;
+X-CSE-ConnectionGUID: 5vbD5aaoTkKyZSm4px8tiQ==
+X-CSE-MsgGUID: lJYidNxMRBqbe84IDolZnA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11804"; a="84750059"
+X-IronPort-AV: E=Sophos;i="6.24,182,1774335600"; 
+   d="scan'208";a="84750059"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 16:10:41 -0700
+X-CSE-ConnectionGUID: z0Lr6ZjySLGR0UFlVJ1g6g==
+X-CSE-MsgGUID: vEbU0vCUSgOHdbGEdh433A==
+X-ExtLoop1: 1
+Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.108.24]) ([10.125.108.24])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2026 16:10:38 -0700
+Message-ID: <26189ee7-1fba-49c2-94f5-0902a77772ba@intel.com>
+Date: Mon, 1 Jun 2026 16:10:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260529-topics-ahmtib01-ras_ffh_arm_internal_review-v5-1-2e0500d42642@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 4/9] dax/fsdev: clear dev_dax->pgmap on probe failure
+To: John Groves <john@jagalactic.com>, John Groves <John@Groves.net>,
+ Dan Williams <djbw@kernel.org>
+Cc: John Groves <jgroves@micron.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Matthew Wilcox <willy@infradead.org>,
+ Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
+ Alison Schofield <alison.schofield@intel.com>, Ira Weiny
+ <iweiny@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+References: <0100019e79caead2-5795328c-af48-4a93-b147-c11df7446e1a-000000@email.amazonses.com>
+ <20260530165053.6653-1-john@jagalactic.com>
+ <0100019e79cbc3fa-cdb45b69-de84-4cc0-8aeb-71d0673c1a9c-000000@email.amazonses.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <0100019e79cbc3fa-cdb45b69-de84-4cc0-8aeb-71d0673c1a9c-000000@email.amazonses.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 29, 2026 at 10:50:41AM +0100, Ahmed Tiba wrote:
-> Carve the CPER helper macros out of ghes.c and place them in a private
-> header so they can be shared with upcoming helper files. This is a
-> mechanical include change with no functional differences.
 
-What Sashiko said.
 
--- 
-Regards/Gruss,
-    Boris.
+On 5/30/26 9:50 AM, John Groves wrote:
+> From: John Groves <John@Groves.net>
+> 
+> Clear dev_dax->pgmap on probe failure for dynamic devices. After the dynamic
+> path sets dev_dax->pgmap, if a later probe step fails, devres frees the
+> devm_kzalloc'd pgmap but leaves dev_dax->pgmap dangling.  Subsequent probe
+> attempts would hit the "dynamic-dax with pre-populated page map" check and fail
+> permanently. Use a goto cleanup to NULL dev_dax->pgmap on error.
+> 
+> Fixes: d5406bd458b0a ("dax: add fsdev.c driver for fs-dax on character dax")
+> Signed-off-by: John Groves <john@groves.net>
+> ---
+>  drivers/dax/fsdev.c | 32 +++++++++++++++++++++++---------
+>  1 file changed, 23 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
+> index dbd722ed7ab05..42aac7e952516 100644
+> --- a/drivers/dax/fsdev.c
+> +++ b/drivers/dax/fsdev.c
+> @@ -223,6 +223,7 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
+>  {
+>  	struct dax_device *dax_dev = dev_dax->dax_dev;
+>  	struct device *dev = &dev_dax->dev;
+> +	bool pgmap_allocated = false;
+>  	struct dev_pagemap *pgmap;
+>  	struct inode *inode;
+>  	u64 data_offset = 0;
+> @@ -253,6 +254,7 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
+>  
+>  		pgmap->nr_range = dev_dax->nr_range;
+>  		dev_dax->pgmap = pgmap;
+> +		pgmap_allocated = true;
+>  
+>  		for (i = 0; i < dev_dax->nr_range; i++) {
+>  			struct range *range = &dev_dax->ranges[i].range;
+> @@ -268,7 +270,8 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
+>  					range_len(range), dev_name(dev))) {
+>  			dev_warn(dev, "mapping%d: %#llx-%#llx could not reserve range\n",
+>  				 i, range->start, range->end);
+> -			return -EBUSY;
+> +			rc = -EBUSY;
+> +			goto err_pgmap;
+>  		}
+>  	}
+>  
+> @@ -288,8 +291,10 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
+>  	pgmap->owner = dev_dax;
+>  
+>  	addr = devm_memremap_pages(dev, pgmap);
+> -	if (IS_ERR(addr))
+> -		return PTR_ERR(addr);
+> +	if (IS_ERR(addr)) {
+> +		rc = PTR_ERR(addr);
+> +		goto err_pgmap;
+> +	}
+>  
+>  	/*
+>  	 * Clear any stale compound folio state left over from a previous
+> @@ -301,7 +306,7 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
+>  	rc = devm_add_action_or_reset(dev, fsdev_clear_folio_state_action,
+>  				      dev_dax);
+>  	if (rc)
+> -		return rc;
+> +		goto err_pgmap;
+>  
+>  	/* Detect whether the data is at a non-zero offset into the memory */
+>  	if (pgmap->range.start != dev_dax->ranges[0].range.start) {
+> @@ -323,23 +328,32 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
+>  	cdev_set_parent(cdev, &dev->kobj);
+>  	rc = cdev_add(cdev, dev->devt, 1);
+>  	if (rc)
+> -		return rc;
+> +		goto err_pgmap;
+>  
+>  	rc = devm_add_action_or_reset(dev, fsdev_cdev_del, cdev);
+>  	if (rc)
+> -		return rc;
+> +		goto err_pgmap;
+>  
+>  	/* Set the dax operations for fs-dax access path */
+>  	rc = dax_set_ops(dax_dev, &dev_dax_ops);
+>  	if (rc)
+> -		return rc;
+> +		goto err_pgmap;
+>  
+>  	rc = devm_add_action_or_reset(dev, fsdev_clear_ops, dev_dax);
+>  	if (rc)
+> -		return rc;
+> +		goto err_pgmap;
+>  
+>  	run_dax(dax_dev);
+> -	return devm_add_action_or_reset(dev, fsdev_kill, dev_dax);
+> +	rc = devm_add_action_or_reset(dev, fsdev_kill, dev_dax);
+> +	if (rc)
+> +		goto err_pgmap;
+> +
+> +	return 0;
+> +
+> +err_pgmap:
+> +	if (pgmap_allocated)
+> +		dev_dax->pgmap = NULL;
+> +	return rc;
+>  }
+>  
+>  static struct dax_device_driver fsdev_dax_driver = {
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
+How about something like this to ditch the gotos?
+
+---
+
+diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
+index dbd722ed7ab0..cb309847e685 100644
+--- a/drivers/dax/fsdev.c
++++ b/drivers/dax/fsdev.c
+@@ -219,6 +219,41 @@ static const struct file_operations fsdev_fops = {
+ 	.release = fsdev_release,
+ };
+ 
++static struct dev_pagemap *fsdev_acquire_pgmap(struct dev_dax *dev_dax)
++{
++	struct device *dev = &dev_dax->dev;
++	struct dev_pagemap *pgmap;
++	size_t pgmap_size;
++
++	if (static_dev_dax(dev_dax)) {
++		if (dev_dax->nr_range > 1) {
++			dev_warn(dev,
++				 "static vs multi-range device conflict\n");
++			return ERR_PTR(-EINVAL);
++		}
++
++		pgmap = dev_dax->pgmap;
++		pgmap->vmemmap_shift = 0;
++		return pgmap;
++	}
++
++	if (dev_dax->pgmap) {
++		dev_warn(dev, "dynamic-dax with pre-populated page map\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	pgmap_size = struct_size(pgmap, ranges, dev_dax->nr_range - 1);
++	pgmap = devm_kzalloc(dev, pgmap_size, GFP_KERNEL);
++	if (!pgmap)
++		return ERR_PTR(-ENOMEM);
++
++	pgmap->nr_range = dev_dax->nr_range;
++	for (int i = 0; i < dev_dax->nr_range; i++)
++		pgmap->ranges[i] = dev_dax->ranges[i].range;
++
++	return pgmap;
++}
++
+ static int fsdev_dax_probe(struct dev_dax *dev_dax)
+ {
+ 	struct dax_device *dax_dev = dev_dax->dax_dev;
+@@ -230,36 +265,9 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
+ 	void *addr;
+ 	int rc, i;
+ 
+-	if (static_dev_dax(dev_dax)) {
+-		if (dev_dax->nr_range > 1) {
+-			dev_warn(dev, "static pgmap / multi-range device conflict\n");
+-			return -EINVAL;
+-		}
+-
+-		pgmap = dev_dax->pgmap;
+-		pgmap->vmemmap_shift = 0;
+-	} else {
+-		size_t pgmap_size;
+-
+-		if (dev_dax->pgmap) {
+-			dev_warn(dev, "dynamic-dax with pre-populated page map\n");
+-			return -EINVAL;
+-		}
+-
+-		pgmap_size = struct_size(pgmap, ranges, dev_dax->nr_range - 1);
+-		pgmap = devm_kzalloc(dev, pgmap_size, GFP_KERNEL);
+-		if (!pgmap)
+-			return -ENOMEM;
+-
+-		pgmap->nr_range = dev_dax->nr_range;
+-		dev_dax->pgmap = pgmap;
+-
+-		for (i = 0; i < dev_dax->nr_range; i++) {
+-			struct range *range = &dev_dax->ranges[i].range;
+-
+-			pgmap->ranges[i] = *range;
+-		}
+-	}
++	pgmap = fsdev_acquire_pgmap(dev_dax);
++	if (IS_ERR(pgmap))
++		return PTR_ERR(pgmap);
+ 
+ 	for (i = 0; i < dev_dax->nr_range; i++) {
+ 		struct range *range = &dev_dax->ranges[i].range;
+@@ -306,7 +314,7 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
+ 	/* Detect whether the data is at a non-zero offset into the memory */
+ 	if (pgmap->range.start != dev_dax->ranges[0].range.start) {
+ 		u64 phys = dev_dax->ranges[0].range.start;
+-		u64 pgmap_phys = dev_dax->pgmap[0].range.start;
++		u64 pgmap_phys = pgmap[0].range.start;
+ 
+ 		if (!WARN_ON(pgmap_phys > phys))
+ 			data_offset = phys - pgmap_phys;
+@@ -339,7 +347,12 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
+ 		return rc;
+ 
+ 	run_dax(dax_dev);
+-	return devm_add_action_or_reset(dev, fsdev_kill, dev_dax);
++	rc = devm_add_action_or_reset(dev, fsdev_kill, dev_dax);
++	if (rc)
++		return rc;
++
++	dev_dax->pgmap = pgmap;
++	return 0;
+ }
+ 
+ static struct dax_device_driver fsdev_dax_driver = {
+
