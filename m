@@ -1,131 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34573EFFC8
-	for <linux-cxl@vger.kernel.org>; Tue,  2 Jun 2026 14:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12583EFFC6;
+	Tue,  2 Jun 2026 15:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780411088; cv=none; b=NVMgTIEfE8KKeo59GCDhnJp/dSsCUVQ7TuefpUrtBASBoH07ZngNYTplnpuhk/wNYSSiLo2Om2PFbuveNwqKqV/pgdfwHTJdX/x4r4NVR5VH8Ce9Q1X/CrqmWyE7j2od7cJEJ5qqr1WA9C6rySS+HXrmfEztBOEf4uk3rsrMHro=
+	t=1780414954; cv=none; b=eJsbI5uBHFeqYYTnETIZ7V59Td7W4mpZplkYd9HppPvREuiBDZq4WgYMiyrjbV60qdTUJVnnzlDn8uxifGZbzec7LANsexxn8mDnQeUkl1RtkXWtK5tGv9rQrF/wBi0lGoyC1FDpolRJc0VL2AzoxYNASdNP/g96LAqE9PuNsmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780411088; c=relaxed/simple;
-	bh=UszHQAFwH/u+inOuF7+ZusVKaCVjvvUfkqVfCaBTeRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KjGU+IxH1lKf2l3hs11dJD7Or8RglJ9/SZGOYBk+dd4juA/H5QXvQkDPzN7ioKyf1kGGQDjfGunaP4/HfezPV68f4Z8QfBXcPO+Goy+67ooqYyKkaJMb2ODojdBWNTOhioHCDj5+7tkLshP5Lu7knLpFFl/EHMzi3J5Jbx88EKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lE3q/get; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780414954; c=relaxed/simple;
+	bh=3vw6WldVcC3t0KlASCJAiPE04OBikYIn6v0PhOEtTqU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iXvra0vTzazyJu9YqJrBcAR+SHn5QI6yi5CLYIHqYt67c/reUHOQFvXFslMhfxjYyhbQAwHqmEgRSl7yiBLOgMG4hc8XG2U31ZuNiOEg7GftUikvwJjOGBLzbQov8vBoe7mjlulnkpw5OCtHxX8EsKQfa4mKMkVh9JQ11poBF1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QGfXLYcn; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lE3q/get"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90AF01F00893;
-	Tue,  2 Jun 2026 14:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780411087;
-	bh=v1WMeXKskUaXSuwNsyVzxqgC4aNDlUoxHgrmCj9WRr8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=lE3q/getv2Zn+jRRgHrGVtRcE6BxO68oWoxXqgQEaMYdav+sXbpTmhkBzXobArSVq
-	 lXmXM+phLLaeOnPEbtCMXvkeHGIt1Y9HIvhIEoZPyxVXL7q5jVWg7EqFaXaycdFs7g
-	 LSWDV8q8zz11KtvUsUgLj1zZWgkj6VBQfKsIeLSlm5qhVmqlD0Ixl2NOjIIVJkxb0a
-	 X3VauI3bpZHMMbl4kOwCDUo4bMGHrDCjSS+0rOnbukD62Q0LW4OMq2V/Z6oHhR2sfm
-	 mPHycdpWnYBhMzgrS4VC5liYS+otnuxMrZmMGHZSOcmqm9y+fMy/PqcJouBBGjlF4V
-	 eI82gga7dlxqA==
-Date: Tue, 2 Jun 2026 15:38:03 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org, qemu-devel@nongnu.org
-Subject: Re: [PATCH -qemu] hw/cxl: Use host-only coherency for default CFMW
- restrictions
-Message-ID: <20260602153803.322bf993@jic23-huawei>
-In-Reply-To: <20260602043029.2341246-1-dave@stgolabs.net>
-References: <20260602043029.2341246-1-dave@stgolabs.net>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QGfXLYcn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780414950; x=1811950950;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3vw6WldVcC3t0KlASCJAiPE04OBikYIn6v0PhOEtTqU=;
+  b=QGfXLYcnsPWQDldz1eN/X+TCX0TGVbce/hCbFnioM2chFm4lG8/Ku+/r
+   PnG4ZNo8ATNDrcuWGaX1bitOHAJAJsI42M9eGWOAMH1O8SqR3tDSlrei7
+   ji+2p4SJVQo7muf6o6h/9loUMCwccJELuQGkyw3NFcYyLcMzTyV1Xqfxv
+   PZ4AyajoL2EkpeO7eEkkjtSVW0jbCteVljeuR/G84QXNQElsUarUT8lmV
+   UXAY9foWwNdNPeyk6ybFQXV3uoUZsCIs4kE9Vjd97Omg78A8DCJJ6m9R6
+   v84Sj1bAyYKQzyilGdOQeYu4ShMLnzNJdfOQSPfCqYmiV2IPeIvNQMaXh
+   w==;
+X-CSE-ConnectionGUID: oXxhsG8BSbGJiwVj5l3bNg==
+X-CSE-MsgGUID: NCk4oDx2Q6658dIvuCkNIw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="81175636"
+X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
+   d="scan'208";a="81175636"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 08:42:29 -0700
+X-CSE-ConnectionGUID: u7epIAsgRvmFKRuDfJGT3A==
+X-CSE-MsgGUID: 0jQ7uDHfQgi8b8mvnFkEpw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
+   d="scan'208";a="239499157"
+Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.108.56]) ([10.125.108.56])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 08:42:27 -0700
+Message-ID: <aeb0ac8a-346b-4bc5-a836-76682e692fcf@intel.com>
+Date: Tue, 2 Jun 2026 08:42:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 07/31] cxl/region: Add DC DAX region support
+To: Anisa Su <anisa.su887@gmail.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ nvdimm@lists.linux.dev, Dan Williams <djbw@kernel.org>,
+ Jonathan Cameron <jic23@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>, John Groves
+ <John@groves.net>, Gregory Price <gourry@gourry.net>,
+ Ira Weiny <ira.weiny@intel.com>
+References: <cover.1779528761.git.anisa.su@samsung.com>
+ <9f0e0b3deeb1825ad113d7aebe7056dcf2bbc5f9.1779528761.git.anisa.su@samsung.com>
+ <f55e49bb-5032-448f-9550-69282b38b1c0@intel.com>
+ <ah6g4il0GtXKoclr@AnisaLaptop.localdomain>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <ah6g4il0GtXKoclr@AnisaLaptop.localdomain>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Mon,  1 Jun 2026 21:30:29 -0700
-Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> Change the default CXL Fixed Memory Window restrictions from
-> 0x2f to 0xe, dropping Device Coherent and Back-Invalidate,
-> which are considered spec violations when using in combination
-> with host-only.
+
+On 6/2/26 2:22 AM, Anisa Su wrote:
+> On Wed, May 27, 2026 at 05:16:44PM -0700, Dave Jiang wrote:
+>>
+>>
+>> On 5/23/26 2:43 AM, Anisa Su wrote:
+>>> From: Ira Weiny <ira.weiny@intel.com>
+
+< --snip -->
+
+>>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+>>> index a7f71f36531f..2d33001dac26 100644
+>>> --- a/drivers/cxl/core/port.c
+>>> +++ b/drivers/cxl/core/port.c
+>>> @@ -337,6 +337,7 @@ static struct attribute *cxl_decoder_root_attrs[] = {
+>>>  	&dev_attr_qos_class.attr,
+>>>  	SET_CXL_REGION_ATTR(create_pmem_region)
+>>>  	SET_CXL_REGION_ATTR(create_ram_region)
+>>> +	SET_CXL_REGION_ATTR(create_dynamic_ram_a_region)
+>>
+>> With this add, may need to add checks in cxl_root_decoder_visible() for dynamic_ram for create and also delete. 
+>>
+> So for this check, since there's no CXL_DECODER_F_ bit defined for DCD, I considered
+> traversing through all endpoints and seeing if they have a DYNAMIC_RAM_A
+> partition, but that traversal already happens in the store_targetN() path,
+> which also includes the mode mismatch check.
 > 
-> For HDM-D and HDM-DB models, the user will need to explicitly
-> pass the correct restrictions bitmask.
+> Specifically, in cxl_region_attach:
 > 
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-
-So this only applies on my staging qemu tree (as the
-restrictions control patch is not upstream yet). Would you mind
-also doing a fix for mainline qemu as we need to change the default
-prior to that restrictions patch?
-
-For anyone wondering why that isn't upstream yet - it is mostly
-a question of working out a better command line than writing the 
-bitmap.  Probably as set of flags for each thing with checks
-to ensure we don't end up with impossible combinations.
-
-If you have time to look at that Davidlohr, would be much appreciated.
-Without it the BI stuff in upstream qemu will be untestable.
-
-Jonathan
-
-> ---
->  docs/system/devices/cxl.rst | 5 +++--
->  hw/cxl/cxl-host.c           | 2 +-
->  qapi/machine.json           | 2 +-
->  3 files changed, 5 insertions(+), 4 deletions(-)
+> if (cxlds->part[cxled->part].mode != cxlr->mode) {
+> 	dev_dbg(&cxlr->dev, "%s region mode: %d mismatch\n",
+> 		dev_name(&cxled->cxld.dev), cxlr->mode);
+> 	return -EINVAL;
+> }
 > 
-> diff --git a/docs/system/devices/cxl.rst b/docs/system/devices/cxl.rst
-> index 32b1b5d7733b..079f65660dc3 100644
-> --- a/docs/system/devices/cxl.rst
-> +++ b/docs/system/devices/cxl.rst
-> @@ -385,7 +385,8 @@ An example of 4 devices below a switch suitable for 1, 2 or 4 way interleave::
->    -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
->  
->  An example of 4 type3 devices with volatile memory below a switch. Two of the devices
-> -use HDM-DB for coherence, which requires operating in Flit mode::
-> +use HDM-DB for coherence, which requires operating in Flit mode with the CXL Window
-> +configured with Back-Invalidate restrictions::
->  
->    qemu-system-x86_64 -M q35,cxl=on -m 4G,maxmem=8G,slots=8 -smp 4 \
->    ...
-> @@ -405,7 +406,7 @@ use HDM-DB for coherence, which requires operating in Flit mode::
->    -device cxl-type3,bus=swport2,volatile-memdev=cxl-mem2,id=cxl-mem2,sn=0x3 \
->    -device cxl-downstream,port=3,bus=us0,id=swport3,chassis=0,slot=7 \
->    -device cxl-type3,bus=swport3,volatile-memdev=cxl-mem3,id=cxl-mem3,sn=0x4 \
-> -  -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
-> +  -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k,cxl-fmw.0.restrictions=0x2d
->  
->  A simple arm/virt example featuring a single direct connected CXL Type 3
->  Volatile Memory device::
-> diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
-> index 11a455b28ab8..a2595633ff0c 100644
-> --- a/hw/cxl/cxl-host.c
-> +++ b/hw/cxl/cxl-host.c
-> @@ -64,7 +64,7 @@ static void cxl_fixed_memory_window_config(CXLFixedMemoryWindowOptions *object,
->      if (object->has_restrictions) {
->          fw->restrictions = object->restrictions;
->      } else {
-> -        fw->restrictions = 0x2f; /* No restrictions */
-> +        fw->restrictions = 0xe; /* host-only coherent, volatile, pmem */
->      }
->  
->      fw->targets = g_malloc0_n(fw->num_targets, sizeof(*fw->targets));
-> diff --git a/qapi/machine.json b/qapi/machine.json
-> index 11ce0457d2f1..f832f0b84a53 100644
-> --- a/qapi/machine.json
-> +++ b/qapi/machine.json
-> @@ -558,7 +558,7 @@
->  #     BIT(3) - Persistent
->  #     BIT(4) - Fixed Device Config
->  #     BIT(5) - BI
-> -#     Default is 0x2F
-> +#     Default is 0xE
->  #
->  # @targets: Target root bridge IDs from -device ...,id=<ID> for each
->  #     root bridge.
+> Is it sufficient here to prohibit creating a dynamic ram region if the root
+> decoder does not support ram?
+> 
+> if (a == CXL_REGION_ATTR(create_dynamic_ram_a_region) && !can_create_ram(cxlrd))
+> 	return 0;
+> 
 
+I think so.
+
+>>>  	SET_CXL_REGION_ATTR(delete_region)
+>>>  	NULL,
+>>>  };
+>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>>> index edc267c6cf77..7561bf3d8af8 100644
+>>> --- a/drivers/cxl/core/region.c
+>>> +++ b/drivers/cxl/core/region.c
+>>> @@ -493,6 +493,11 @@ static int set_interleave_ways(struct cxl_region *cxlr, int val)
+>>>  	int save, rc;
+>>>  	u8 iw;
+>>>  
+>>> +	if (cxlr->mode == CXL_PARTMODE_DYNAMIC_RAM_A && val != 1) {
+>>> +		dev_err(&cxlr->dev, "Interleaving and DCD not supported\n");
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>>  	rc = ways_to_eiw(val, &iw);
+>>>  	if (rc)
+>>>  		return rc;
+>>> @@ -2389,6 +2394,7 @@ static size_t store_targetN(struct cxl_region *cxlr, const char *buf, int pos,
+>>>  	if (sysfs_streq(buf, "\n"))
+>>>  		rc = detach_target(cxlr, pos);
+>>>  	else {
+>>> +		struct cxl_endpoint_decoder *cxled;
+>>>  		struct device *dev;
+>>>  
+>>>  		dev = bus_find_device_by_name(&cxl_bus_type, NULL, buf);
+>>> @@ -2400,8 +2406,14 @@ static size_t store_targetN(struct cxl_region *cxlr, const char *buf, int pos,
+>>>  			goto out;
+>>>  		}
+>>>  
+>>> -		rc = attach_target(cxlr, to_cxl_endpoint_decoder(dev), pos,
+>>> -				   TASK_INTERRUPTIBLE);
+>>> +		cxled = to_cxl_endpoint_decoder(dev);
+>>> +		if (cxlr->mode == CXL_PARTMODE_DYNAMIC_RAM_A &&
+>>> +		    !cxl_dcd_supported(cxled_to_mds(cxled))) {
+>>
+>> cxled_to_mds() can return NULL with the earlier change suggested. Need to handle that
+>>
+> Fixed
+>> DJ
+>>
+> Thanks,
+> Anisa
+> 
+> Also, for potential future support for multiple DC partitions not to be awkward, I
+> think it would make sense to rename dynamic_ram_a to dynamic_ram_1. Any
+> objections?
+
+No objections from me. Seems reasonable.
