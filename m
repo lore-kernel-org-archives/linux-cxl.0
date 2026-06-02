@@ -1,182 +1,350 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A03386C10;
-	Tue,  2 Jun 2026 21:55:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780437348; cv=fail; b=PCxH5R8McnxOCwRnNwIGqQ4MfzA6/Xfvmm/gwMYT0a7xBZt/8tSfVvCfPnnZ3xPW/KlGoW5QkteWTcjC0y12cVr/epNnQJtBFprigCmsejUZ16yy8ToRiszFroG6hsq4DX+ETZRsGlyBEhWPyWSn2gH13BUE6LyUIRB2srvEVOo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780437348; c=relaxed/simple;
-	bh=I6s0LHge9A/tP2BDH/5aBF/s+G6tWBUgvfdNHFeH1Lc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=iNmpAf57p524Qm3GDNHdXdN+lSjbl19ePjysUcTI9oePheNk6viCI1crlC9E4ajQPMRKQ5SVLkhUPWzilVjJIDWcjm3BY7Q9OMKcFha8vp2o5dV7D6189xropt+2/TtN0hrjbm/3NfwZIAxAREegovqSuGZnWJT92REeLkhLkZc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SFYSIz6W; arc=fail smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FDB387566;
+	Tue,  2 Jun 2026 22:10:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780438257; cv=none; b=X5oUIe0wg53xsclaFo3MPkVQeRCH77llfSpC37miVFH13Pj/loWXQH/AZvo/qS9wL05J/oTrwp0JVoH7NqSJ1XZm+86lsLY7XSwDtJvpeswQGhJaJa4Mcylz14QIytYMsj+O5dKBf/+1Z1qt1PMgbwNHyh7jZSiEgoSTOvCOGM0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780438257; c=relaxed/simple;
+	bh=Uq+vN5govkehHLvBwr0MpcwboOqfdHLYWbgkEji+IsE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ktXP3Q74GzQuzxMFeZ2YR/hWwEdZk4uf4Xc2fTKRSe+wqIuacBp2wLyQxsXBXJy8E8T0XUbKDR1amO+n7211T+UAtfEXpgD1QSKX6/ggQ0cCuPCkhgpXoTnIZsJsQaq7Z5gLKe48muNQZ8Ji+Qm+SC9fEKprUGsIX/yG6ZlW2ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FYj+1kX5; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SFYSIz6W"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FYj+1kX5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780437347; x=1811973347;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=I6s0LHge9A/tP2BDH/5aBF/s+G6tWBUgvfdNHFeH1Lc=;
-  b=SFYSIz6WzHvQU05Q98S9YjMEbTiiP56ZOGlHJARun9fLX1l+dvNpP9Bq
-   MxrjciP2CYdFxkKaLrhQN0WGo8img9IC2NNkGAGBZjZ/HEWFnEPXP8b9p
-   OvtaxkCNncpdjT1uTuNHstRR/mKiKQUXqDMVu31q3Y+fetvG3HpO92GbQ
-   ibqniMDd2HEYXfIjy+EVB3VA8iL5+EVI0VxHTWc6aLQWNYPvl65sEPhOo
-   TNAmTODddIaNmDNFX9UvSjdT8Wwfwkm1HU4vMKVHGBFHTjvr3oKWZXfrQ
-   vvIuSB5iP6ZD0fBDqrH0Lq9tE4Mp4PWdQ+hJ3kWzEKqo309/g8h2qWp4/
-   Q==;
-X-CSE-ConnectionGUID: 6Ljxe5/LQkiUBF2XcT3NiQ==
-X-CSE-MsgGUID: 4cNgaV8rRbGmceKtEm5SoA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="98800489"
-X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="98800489"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 14:55:46 -0700
-X-CSE-ConnectionGUID: Ia9YIUCgTSmJjZeVFKBoyg==
-X-CSE-MsgGUID: 8l+3FntWQ+yqHt7HPtnHkw==
+  t=1780438256; x=1811974256;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Uq+vN5govkehHLvBwr0MpcwboOqfdHLYWbgkEji+IsE=;
+  b=FYj+1kX5lRvjXwEKXhKARi1GceAhiLOWRio1yJPgdjYtOn8e/gDPJV5K
+   YY7gKcoRlbnSzkyNQHBFmkEwRKjo08h3HT6THuFcxeomBqkjry/Xd4VAk
+   SdEPHk14SeXF73z+hl6/zh1gz2MEYaI4zKq2WFqkbqbzVLTKpbaLdtldu
+   maKvTc6PaU0+osq3A/ORXyivygynxA//ZrsrZL1tYuCiCIEEfJXRhR8BP
+   UWtdUjrTHcG4Qm8N0n4jgl7oWzxjwGqvUxIqBzJQV6EjQMZbgCzpndck2
+   /pKETipdVI/Uay8jFQN8QAGXtMzduAEHgv6XDkUmPX9q3oHo9/xxhQYUa
+   w==;
+X-CSE-ConnectionGUID: DFMtHhqJRdeZhEeucMCWiQ==
+X-CSE-MsgGUID: 8U+T64s8TdugnJO/D1mILQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="81418626"
+X-IronPort-AV: E=Sophos;i="6.24,184,1774335600"; 
+   d="scan'208";a="81418626"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 15:10:56 -0700
+X-CSE-ConnectionGUID: a5zdfxwYS2ekStnqgOuGQg==
+X-CSE-MsgGUID: EhwZebTJTIiNVYeBGUNJ7w==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="244116182"
-Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 14:55:45 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 2 Jun 2026 14:55:44 -0700
-Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Tue, 2 Jun 2026 14:55:44 -0700
-Received: from CY3PR05CU001.outbound.protection.outlook.com (40.93.201.32) by
- edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 2 Jun 2026 14:55:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=epiJCL5VjJxAprrwqo8XSr/i/cvQpHENxzSmMMbnMAWNECS8m0KjW+BWA6e7+3iDXX1JiurTmljmg0RmnceMydoniORS84XXqyDPTra4JOxHNfHigI2yFXp5/mIDNPI73SghYTI2J303qFdhshHbNSl5l5f9jAkCLFtpyx1xFaxMPPiRirobFGJifgkp2gSoBbC4PB6PoXsyL51uAW3yJVwNJxdQ26l+ZIc+M3wJxubXMAxnifK2sYRyB4RXZWn9TIY7zDvjbJ4YAI4Ucn1zeKfAC4vt8cZHJ+4Aji6KGtVHsHUeVYIz2kZ80qjif9MdUyvARDqo7WYpqMC9trPL3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uBrnlnzseVv0l/NmePiWxeYZ8+8vtJz6xQkgVHXty7Y=;
- b=gamG/hj4PZt4wc6Sn8vIn6SAuLzIDh5w/tVKRsBrxxRSZ1wvP20FLn98fVDaf9rHwhEDs7dgFNG+bzNG6MeBQoO9o6SF81dPJTZKjww6xl7ubRLyr4HMd93OaJtN67/0hThfthS5kATJIyPNs1IFuV+JCBQMw08qladU2gHkf3xA8eKBnSVG6TGRgBI0l/DDEhmpakQzf1zVLJdDQaS8+nofLuJaNW+31fF9CI8Ux6PuOv1xkaOXE5K2UsN/SRa6crTiQcsQkrMKxt3huaMaYKncVY1xp4aYXu/PxZ5WCrQaMRoCFNZY47bke1pCM8dTHfNjtJvg+KkgwXFCpqrRxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- (2603:10b6:a0f:fc02::80b) by DM3PPF4C5964328.namprd11.prod.outlook.com
- (2603:10b6:f:fc00::f1e) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Tue, 2 Jun 2026
- 21:55:40 +0000
-Received: from SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- ([fe80::d35b:e3ac:6d53:bb3c]) by SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- ([fe80::d35b:e3ac:6d53:bb3c%8]) with mapi id 15.21.0092.006; Tue, 2 Jun 2026
- 21:55:37 +0000
-Date: Tue, 2 Jun 2026 14:55:34 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: John Groves <john@jagalactic.com>
-CC: John Groves <John@groves.net>, John Groves <jgroves@fastmail.com>, "Dan
- Williams" <djbw@kernel.org>, John Groves <jgroves@micron.com>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Jonathan
- Cameron" <Jonathan.Cameron@huawei.com>, Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>, "venkataravis@micron.com"
-	<venkataravis@micron.com>, "dev.srinivasulu@gmail.com"
-	<dev.srinivasulu@gmail.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev"
-	<nvdimm@lists.linux.dev>, "linux-cxl@vger.kernel.org"
-	<linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH V6 0/2] daxctl: Add support for famfs mode
-Message-ID: <ah9RVik9fE4H8Uxx@aschofie-mobl2.lan>
-References: <20260526170148.56398-1-john@jagalactic.com>
- <0100019e653c6c88-44f88088-8c87-4163-b88b-b3f3fc7aa726-000000@email.amazonses.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <0100019e653c6c88-44f88088-8c87-4163-b88b-b3f3fc7aa726-000000@email.amazonses.com>
-X-ClientProxiedBy: SJ0PR03CA0285.namprd03.prod.outlook.com
- (2603:10b6:a03:39e::20) To SJ5PPF0D43D62C4.namprd11.prod.outlook.com
- (2603:10b6:a0f:fc02::80b)
+X-IronPort-AV: E=Sophos;i="6.24,184,1774335600"; 
+   d="scan'208";a="247983312"
+Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.108.56]) ([10.125.108.56])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 15:10:55 -0700
+Message-ID: <b26107b2-a722-4c28-9df8-6e11eec3c7d4@intel.com>
+Date: Tue, 2 Jun 2026 15:10:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PPF0D43D62C4:EE_|DM3PPF4C5964328:EE_
-X-MS-Office365-Filtering-Correlation-Id: 216b672f-57bb-4d2a-700a-08dec0f1ae49
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016|56012099006|4143699003|11063799006|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info: vETLbIudNroJnJUJA7JKO12Ch2xPr6U3rIObSBlUsVx+CGpkb8lfCjLicWNaMapSbrfViggbXhawOLekTXNHq04oXAnkSxhpmEezQc3jDD1/+OfDNFNtWENw9fpllL3xAoAuQsbA49ACWH1eC04xxkOcN6PlO0mINWs8/mtQknRoh4EtvnfJyp1ExF0J3Eub+87OugYJ7vfGL1fgdfFQAl2Qiw8dLz3Px1yCDMq5mOtDqnoeli8PzsXnQxa0AHjD9k4qmQglfdXod86Rb01zX7kwf+aJ972ibOg04ONO+xGMzYU2UFtMuiuEWrVj+BA/ooJkqA6bwTXm5raa5JicbyM3xEBajTh0a13grM9qbYufmrUDr5sG0sXPB7h6knTjHAUp20msjE20ELGh/U4EIKLR230xIteEYFSWmQJFLOarYs838X7nnc6Qbp8spaGPENQHH2oFhUs1LxSofk85V3zhYCKdykUtK+IZyU7k54bZoMwbNqBNbw/cVY6jWEJ1pW9JGq/KUjKIeXMZMgaZ35sVOIzijS8dpFmuVfc2TQCol1fcOzeXhCNQXdHtAxKapCDaoGS1nJtBbosW4bP8sFQ2r8Ujn/BJ6Zg/KmKOxrOc67+eiP7QTP0g3uZzAmsT
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ5PPF0D43D62C4.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(56012099006)(4143699003)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?EeyMpCxBlgeGq6dviZF4f0GkQ8lQNdKS7WERpeCDY5ePX2oi9oWFf3yNvieC?=
- =?us-ascii?Q?sQjY8rOpLKh4N96bSIRndKCzuT23Xx5mwpqpJQHBuoF1VRsQVf5gCu4ZFsIn?=
- =?us-ascii?Q?Y6Z3lRohtYqGXnLdjlkYvx4UO48U4IafbeFWgF/ReCbLvWIg9XyzDibi4XSk?=
- =?us-ascii?Q?q3aJkWND1NcorL5pKI1NpsR0/IXvUdysigvHljcaVNt76LdLhPgZ9dnH+BzJ?=
- =?us-ascii?Q?E33TKeMvy1DajiKeCBeJHW0JxcAeTxwbDlZAR97qyLqNct7VyONcJ6vSttaN?=
- =?us-ascii?Q?1GcZ5foPmImdwy1CDIooeGGG20xdMmWtX/5hIu6zfQLyaLcfASEqbsrh/Tae?=
- =?us-ascii?Q?Fm4vbKyv5sEMXQxpFejIkh8tLemGorBUxv5M79iLTVbjU2OBqVGRvvHxB/dt?=
- =?us-ascii?Q?HxbvRj0t8NAVBR+LOqQURFyFNPcV+Cy1htcHYXj4bP+tDpidElUa81/pRaG4?=
- =?us-ascii?Q?MZ/rCxokdqtpd9dm6maNE0i/UwKcv4O9RewSh1lW/RL371z/R/QFvdMSt155?=
- =?us-ascii?Q?L2mddj+IIRc1TPOUAAxd5NK8sgsW74+T4J3+LXS1tVtZaqizUIQTGmdjZc+w?=
- =?us-ascii?Q?6EQ94zkD+0VA4uwRKNb15jKZLkBHn6+rzKq+eYXSIlUU+qOaHWirwSCsI+0D?=
- =?us-ascii?Q?Kh+XsVftdoqN6aK3JZSZqkMFMMqXPfIs+fRCjvVah2BsT82eZuaa6FDgw7vD?=
- =?us-ascii?Q?sv3o3Gb7BFhRKmHMFuPku6vEiolb04zSHlVDacg++lzGfA+AD+XxVBtAYgjb?=
- =?us-ascii?Q?6Qa6r/LpcxBPGLk9fsP5u11Y5SQGJVRtonuLpS9s/bu+fe9tS/y4z1tNQGAG?=
- =?us-ascii?Q?fAmg9kVhf/eXllxZO1wlmIJdwYzLY9dfRNqARr/P0n9MC2wnXjXLdzVCtMKd?=
- =?us-ascii?Q?zRB+krMwaX9P5aPFURoK//Bd4AlBjgSb0hyX3OkCRKsvgL/iEZaekPjtsWV8?=
- =?us-ascii?Q?OlKN7S2WXvNhRhjNY585YMcMHgSYhmguTsolHZe1XbpoqqoFHR4sysGqKsL3?=
- =?us-ascii?Q?UaTfFyxzKTqXWb6AP/iaYbXnlYvUWGNG30/fLQeqvZSIarBlFafmVkV1JfK3?=
- =?us-ascii?Q?rHhPUGNZq9o1VJPTwqSh7JEtW/BoB40VVDG9ACiMHq9y4vq2/6MjMT3csnQP?=
- =?us-ascii?Q?L/hywmw4tJN0Ds/gDmIF7sFxinrP2sg4CBveHrF2PXbscO55wLn9PVZvBWo+?=
- =?us-ascii?Q?sJHGgOqZ1T+GXS3jtXturEtylV7JnfJGUnAQ5A7ynSwiHjwANTDc2jfV/14E?=
- =?us-ascii?Q?5NwCmtjJgvpzyyVCEw5xSG839gD76rHeMNO7+UMX4iV49z6EIbgRNBzPNXZ/?=
- =?us-ascii?Q?VnwFHCJCACFAndMpZd/AqxKygefSLyybntgUMK292eZCj9BIWVhLLTD3OXgp?=
- =?us-ascii?Q?WnBRCr5aPwF2e3BBg9obfddaBTBiXgDj4n3qvub2rR+/AmC5Uqiy00xjAOgU?=
- =?us-ascii?Q?aFvlM7a224+x/SwvrXFT6ncKtFI/7ZNy+e+BoEvTpcTku2jejfqTthaFK0xL?=
- =?us-ascii?Q?wIXPSv6YuUhaL13yReHXlI4mqAnbN4hJ/POQxhWlVsKCWtovL8BrGfmVaMKd?=
- =?us-ascii?Q?hiAvkr4mKDdvxQPVH6nuPBjAqelcmIg9XnoEtlee2LkcSDt/BEEG6056da+j?=
- =?us-ascii?Q?QXJP2aoGmfTNc1YtbhOOFwXvTuelwcRPH1yUBxOQM9JNiSbmgj1LnhB1nWGc?=
- =?us-ascii?Q?BJmUDZHJhf+1qJlpW4c7Ut/MznO9ewrFokjiv0fzT9dHNbRybTynhwSqcUo/?=
- =?us-ascii?Q?oHf9QOAWmgOqfzl/PFZe8hovwKGPZZo=3D?=
-X-Exchange-RoutingPolicyChecked: RNKEZ1pZdtvPi3HTc9hS+WyY2UKEEUj4TNmBEYBwaCNkgYBUusSf6CXYYGCp1BwmP/YcwGpE/T2cVBpEdw1bCCbMptHBmyivc9p/LGnDYTszdo5B+IUe6femV4zixcRHb2EE/RQb8zurCWBZbFmWCHyfPmI/dPd1kr+CvVEJgiN/teAOIZNiUHbXnYidZrLl1XJrnyiUMJ9i09r5vnkuGosIGduPgR1bbJJwJPm9V/o3p/i7QONkKgp934e4jvpWysIxgDk6LGpPg4+zK8ySxTGYW1E2I+Tysd7NCwtmnK8C99Z1x/PDOwGv7EaqXJGmdDmuA6wduxy0bOOtQDuYIg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 216b672f-57bb-4d2a-700a-08dec0f1ae49
-X-MS-Exchange-CrossTenant-AuthSource: SJ5PPF0D43D62C4.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2026 21:55:37.8119
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W9RuCqtkb/xu+YiVboY+k6Pm/Jhnhy2yP+gZAKGtXegCvDL2LFe0guf085Vaf1XNDGwUoFAF+bvQHGcP4U+QGjDsIjTUBLpVnfcIH6WTyCg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF4C5964328
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/9] PCI/CXL: Add sibling function coordination for
+ reset
+To: Srirangan Madhavan <smadhavan@nvidia.com>, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: vsethi@nvidia.com, alwilliamson@nvidia.com,
+ Dan Williams <danwilliams@nvidia.com>,
+ Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
+ Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
+ Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
+ linux-tegra@vger.kernel.org
+References: <20260528083154.137979-1-smadhavan@nvidia.com>
+ <20260528083154.137979-5-smadhavan@nvidia.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260528083154.137979-5-smadhavan@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 26, 2026 at 05:01:59PM +0000, John Groves wrote:
-> From: John Groves <john@groves.net>
-> 
-> This series adds famfs mode support to daxctl, alongside the existing
-> devdax and system-ram modes.  A daxdev is in famfs mode when it is bound
-> to fsdev_dax.ko (drivers/dax/fsdev.c).  famfs is a shared,
-> memory-mappable filesystem for disaggregated and CXL memory; see
-> https://famfs.org for more information.
-> 
-> Patch 1 adds the library plumbing: mode detection helpers, an enable
-> function, and the device.c reconfigure-device wiring.  Patch 2 adds a test
-> that exercises mode transitions on the nfit_test emulated backend.
-> 
-> This series depends on the fsdev_dax kernel driver (which provides famfs
-> mode) and on the famfs kernel patch series.
 
-Thanks!
-Applied to: https://github.com/pmem/ndctl/tree/pending
 
-with minor touchup to the unit test patch:
-[ as: drop -nfit suffix on test name, wrap commit lines at 70 columns ]
+On 5/28/26 1:31 AM, Srirangan Madhavan wrote:
+> Add helpers to collect CXL sibling PCI functions affected by a CXL reset
+> and prepare them for reset by saving and disabling them. Restore those
+> siblings and drop their references when reset coordination completes.
+> 
+> Use the Non-CXL Function Map DVSEC to exclude non-CXL functions, and
+> filter remaining siblings to functions that advertise CXL.cache or
+> CXL.mem capability.
+> 
+> Use pci_dev_trylock() for sibling locking and unwind on contention or
+> allocation failure, so competing reset paths fail with an errno.
+> 
+> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+> ---
+>  drivers/cxl/core/pci.c        | 207 ++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/pci_regs.h |   2 +
+>  2 files changed, 209 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 318744695f62..01effbb4e7cd 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -1,9 +1,11 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright(c) 2021 Intel Corporation. All rights reserved. */
+>  #include <linux/units.h>
+> +#include <linux/bitmap.h>
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+>  #include <linux/device.h>
+>  #include <linux/delay.h>
+> +#include <linux/iommu.h>
+>  #include <linux/memregion.h>
+>  #include <linux/pci.h>
+>  #include <linux/pci-doe.h>
+> @@ -15,6 +17,10 @@
+>  #include "core.h"
+>  #include "trace.h"
+>  
+> +#define CXL_RESET_MAX_FUNCTIONS		256
+
+Can use MAX_NR_DEVFNS defined by PCI
+
+DJ
+
+> +#define CXL_RESET_FUNCTION_MAP_REGS	(CXL_RESET_MAX_FUNCTIONS / 32)
+> +#define CXL_RESET_SIBLINGS_INIT		8
+> +
+>  /**
+>   * DOC: cxl core pci
+>   *
+> @@ -1096,3 +1102,204 @@ cxl_reset_flush_cpu_caches(struct cxl_reset_region_context *ctx)
+>  
+>  	return 0;
+>  }
+> +
+> +struct cxl_reset_context {
+> +	struct pci_dev *target;
+> +	struct pci_dev **siblings;
+> +	int nr_siblings;
+> +	int sibling_capacity;
+> +	int nr_siblings_prepared;
+> +};
+> +
+> +struct cxl_reset_walk_ctx {
+> +	struct cxl_reset_context *ctx;
+> +	unsigned long *non_cxl_func_map;
+> +	int rc;
+> +};
+> +
+> +static void
+> +cxl_reset_read_non_cxl_func_map(struct pci_dev *pdev,
+> +				unsigned long *non_cxl_func_map)
+> +{
+> +	u32 map[CXL_RESET_FUNCTION_MAP_REGS] = {};
+> +	u16 dvsec;
+> +	int rc, i;
+> +
+> +	bitmap_zero(non_cxl_func_map, CXL_RESET_MAX_FUNCTIONS);
+> +
+> +	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+> +					  PCI_DVSEC_CXL_FUNCTION_MAP);
+> +	if (!dvsec)
+> +		return;
+> +
+> +	for (i = 0; i < CXL_RESET_FUNCTION_MAP_REGS; i++) {
+> +		rc = pci_read_config_dword(pdev,
+> +					   dvsec + PCI_DVSEC_CXL_FUNCTION_MAP_REG +
+> +					   i * sizeof(map[i]), &map[i]);
+> +		if (rc) {
+> +			pci_warn(pdev,
+> +				 "failed to read CXL Function Map; treating all siblings as CXL: %d\n",
+> +				 rc);
+> +			bitmap_zero(non_cxl_func_map, CXL_RESET_MAX_FUNCTIONS);
+> +			return;
+> +		}
+> +	}
+> +
+> +	bitmap_from_arr32(non_cxl_func_map, map, CXL_RESET_MAX_FUNCTIONS);
+> +}
+> +
+> +static bool cxl_reset_is_cxl_sibling(struct pci_dev *pdev,
+> +				     struct pci_dev *sibling,
+> +				     unsigned long *non_cxl_func_map)
+> +{
+> +	if (sibling == pdev || sibling->bus != pdev->bus)
+> +		return false;
+> +
+> +	if (pci_ari_enabled(pdev->bus))
+> +		return !test_bit(sibling->devfn, non_cxl_func_map);
+> +
+> +	if (PCI_SLOT(sibling->devfn) != PCI_SLOT(pdev->devfn))
+> +		return false;
+> +
+> +	return !test_bit(PCI_FUNC(sibling->devfn) * 32 +
+> +			 PCI_SLOT(sibling->devfn), non_cxl_func_map);
+> +}
+> +
+> +static bool cxl_reset_has_cache_or_mem(struct pci_dev *pdev)
+> +{
+> +	u16 dvsec, cap;
+> +
+> +	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
+> +					  PCI_DVSEC_CXL_DEVICE);
+> +	if (!dvsec)
+> +		return false;
+> +
+> +	if (pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CAP, &cap))
+> +		return false;
+> +
+> +	return cap & (PCI_DVSEC_CXL_CACHE_CAPABLE | PCI_DVSEC_CXL_MEM_CAPABLE);
+> +}
+> +
+> +static int cxl_reset_add_sibling(struct cxl_reset_context *ctx,
+> +				 struct pci_dev *sibling)
+> +{
+> +	struct pci_dev **siblings;
+> +	int capacity;
+> +
+> +	if (ctx->nr_siblings < ctx->sibling_capacity)
+> +		goto add;
+> +
+> +	capacity = ctx->sibling_capacity ? ctx->sibling_capacity * 2 :
+> +		   CXL_RESET_SIBLINGS_INIT;
+> +	siblings = krealloc(ctx->siblings, capacity * sizeof(*siblings),
+> +			    GFP_KERNEL);
+> +	if (!siblings)
+> +		return -ENOMEM;
+> +
+> +	ctx->siblings = siblings;
+> +	ctx->sibling_capacity = capacity;
+> +
+> +add:
+> +	pci_dev_get(sibling);
+> +	ctx->siblings[ctx->nr_siblings++] = sibling;
+> +	return 0;
+> +}
+> +
+> +static int cxl_reset_collect_sibling(struct pci_dev *sibling, void *data)
+> +{
+> +	struct cxl_reset_walk_ctx *wctx = data;
+> +	struct cxl_reset_context *ctx = wctx->ctx;
+> +	struct pci_dev *pdev = ctx->target;
+> +
+> +	if (!cxl_reset_is_cxl_sibling(pdev, sibling, wctx->non_cxl_func_map))
+> +		return 0;
+> +
+> +	if (!cxl_reset_has_cache_or_mem(sibling))
+> +		return 0;
+> +
+> +	wctx->rc = cxl_reset_add_sibling(ctx, sibling);
+> +	return wctx->rc;
+> +}
+> +
+> +static int cxl_reset_collect_siblings(struct cxl_reset_context *ctx)
+> +{
+> +	DECLARE_BITMAP(non_cxl_func_map, CXL_RESET_MAX_FUNCTIONS);
+> +	struct cxl_reset_walk_ctx wctx = {
+> +		.ctx = ctx,
+> +		.non_cxl_func_map = non_cxl_func_map,
+> +	};
+> +
+> +	cxl_reset_read_non_cxl_func_map(ctx->target, non_cxl_func_map);
+> +	pci_walk_bus(ctx->target->bus, cxl_reset_collect_sibling, &wctx);
+> +	return wctx.rc;
+> +}
+> +
+> +static void cxl_pci_functions_reset_done(struct cxl_reset_context *ctx)
+> +{
+> +	int i;
+> +
+> +	for (i = ctx->nr_siblings_prepared - 1; i >= 0; i--) {
+> +		struct pci_dev *sibling = ctx->siblings[i];
+> +
+> +		pci_dev_reset_iommu_done(sibling);
+> +		pci_dev_restore(sibling);
+> +		pci_dev_unlock(sibling);
+> +	}
+> +
+> +	for (i = 0; i < ctx->nr_siblings; i++)
+> +		pci_dev_put(ctx->siblings[i]);
+> +
+> +	kfree(ctx->siblings);
+> +	ctx->siblings = NULL;
+> +	ctx->nr_siblings = 0;
+> +	ctx->sibling_capacity = 0;
+> +	ctx->nr_siblings_prepared = 0;
+> +}
+> +
+> +static int __maybe_unused
+> +cxl_pci_functions_reset_prepare(struct cxl_reset_context *ctx)
+> +{
+> +	int rc, i;
+> +
+> +	ctx->siblings = NULL;
+> +	ctx->nr_siblings = 0;
+> +	ctx->sibling_capacity = 0;
+> +	ctx->nr_siblings_prepared = 0;
+> +
+> +	rc = cxl_reset_collect_siblings(ctx);
+> +	if (rc)
+> +		goto err;
+> +
+> +	for (i = 0; i < ctx->nr_siblings; i++) {
+> +		struct pci_dev *sibling = ctx->siblings[i];
+> +
+> +		if (!pci_dev_trylock(sibling)) {
+> +			rc = -EAGAIN;
+> +			goto err;
+> +		}
+> +
+> +		pci_dev_save_and_disable(sibling);
+> +		rc = pci_dev_reset_iommu_prepare(sibling);
+> +		if (rc) {
+> +			pci_err(sibling,
+> +				"failed to block IOMMU for CXL reset: %d\n",
+> +				rc);
+> +			/*
+> +			 * Undo save_and_disable() for this sibling. IOMMU
+> +			 * prepare failed, so this sibling is not counted in
+> +			 * nr_siblings_prepared and must not get iommu_done().
+> +			 */
+> +			pci_dev_restore(sibling);
+> +			pci_dev_unlock(sibling);
+> +			goto err;
+> +		}
+> +
+> +		ctx->nr_siblings_prepared++;
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	cxl_pci_functions_reset_done(ctx);
+> +	return rc;
+> +}
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index 14f634ab9350..fa1fcd26af01 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -1349,6 +1349,7 @@
+>  /* CXL r4.0, 8.1.3: PCIe DVSEC for CXL Device */
+>  #define PCI_DVSEC_CXL_DEVICE				0
+>  #define  PCI_DVSEC_CXL_CAP				0xA
+> +#define   PCI_DVSEC_CXL_CACHE_CAPABLE			_BITUL(0)
+>  #define   PCI_DVSEC_CXL_MEM_CAPABLE			_BITUL(2)
+>  #define   PCI_DVSEC_CXL_HDM_COUNT			__GENMASK(5, 4)
+>  #define  PCI_DVSEC_CXL_CTRL				0xC
+> @@ -1366,6 +1367,7 @@
+>  
+>  /* CXL r4.0, 8.1.4: Non-CXL Function Map DVSEC */
+>  #define PCI_DVSEC_CXL_FUNCTION_MAP			2
+> +#define  PCI_DVSEC_CXL_FUNCTION_MAP_REG			0x0C
+>  
+>  /* CXL r4.0, 8.1.5: Extensions DVSEC for Ports */
+>  #define PCI_DVSEC_CXL_PORT				3
 
