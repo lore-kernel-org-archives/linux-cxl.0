@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C383033DE
-	for <linux-cxl@vger.kernel.org>; Tue,  2 Jun 2026 16:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB59232A3E5;
+	Tue,  2 Jun 2026 18:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780417216; cv=none; b=J50jAQYcGHB+yMNg/S64ECHlqjCGB8ixN4obwdvFdzLvsOY/FuqwIQJUSOQwvqPwmuJQffTc/BJ466+21j8xEFo9OuBeQbMKU3PfbHEi7rGjypH51jC+mFn3KL/tFOJ2cljsyHV/514X2qWo3N9xTbsUlSDUqCvl9CCLh0NLd4k=
+	t=1780423966; cv=none; b=gqBQrK5sLuwch3I5MDa5ghfskQ7obF85Zur0G4r72oAL15kk5bFEslhsrwHM7YYbqW1N1LQDlDVw3R9nCHMSS3PlHqSaJmscGZ/iOZc6YdAAITJwVt7uGbRP5SmJXsWgeIHqaf3bNkFVi0/P6rbA3rAOd6GGagUTI2O12nd4JO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780417216; c=relaxed/simple;
-	bh=mHmflXwuLEdSrh7dPnPIBJ7HReleEwBfQC9ZPT0VK0c=;
+	s=arc-20240116; t=1780423966; c=relaxed/simple;
+	bh=IFRDbioFrCISGrGSj3nN4AnKWbV8EKm1kjCrdO+x5i0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C1dom+WWG/ErqvQ3MDPFLzV+wu2ZJ6YSLrxqQGd0iHXfPFDdxQy6P4yWfzW1f5fcsXbQmeIbytgNxHWTfzs0hgI45ve/sD25ATDIDn1/qQaMgIqswPuBvktmCGOD9v8fTydd3XxGz9H/DPJZRugqbSFb3F9nK04/K1A5nDjyPo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G6K3oNzR; arc=none smtp.client-ip=192.198.163.18
+	 In-Reply-To:Content-Type; b=cZAAJQIWDlHxwFCGDAof/Vc5XuJuXRNKfyUPUJTeYUckgYeMU7L/jZknoB04fHSPI5TPfnho1lr98SeTuqNyfw0EgxbwyExAEnGqPBlyUiUiMREqKqGyCLhnkhfQ81jE3NXbhU/KYEV3JnLHqbOichYtSU1UvJifofTMmmXW8cA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kExEhRNV; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G6K3oNzR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kExEhRNV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780417215; x=1811953215;
+  t=1780423965; x=1811959965;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=mHmflXwuLEdSrh7dPnPIBJ7HReleEwBfQC9ZPT0VK0c=;
-  b=G6K3oNzRzfg8LvJJzq8BkJuJ79dNxl49YDBitP94F1ZyNeaBjE410fqD
-   LgFNRle9ngk2iBCYX0MX2dffyve1uy72xkYA9bWxtubZ/39A+eVXg/By4
-   0CnllSpBSJWgfEeloZTUmCZ3U6nESaeyK6fMBndVNXkE0p/c33hTTPN7W
-   fUELDr0pTbmDjuPHLFXVbSZOTJoMGC3OVXZ0Y0SY7ys/vPqOZozVWhM1q
-   Q0WKym5Q2qNi4Ne1JWCtmqovX9c9MFHjlq3EIZDDcmtVLSrJIoX8rWouj
-   MMFmAjdzKyWLledA4AYwXf4/KhBP1ZDFoCAa5fsTFNdnSGKZ6EkSBcaBC
+  bh=IFRDbioFrCISGrGSj3nN4AnKWbV8EKm1kjCrdO+x5i0=;
+  b=kExEhRNVD9KvF1QUnGkn7iRNGZDOqFhEre1WlG7qbBgjn78A2ruITto7
+   vVPSWR38J91hjclkUhT2ABe9mQOwq1ypt23OtyNsDFp2DaWcBbWy4IQpV
+   MkgpxNpjxWoOZJ5nt6vWZh5VbMNKwCpjC8yMr+5j/9wj58jFW/caoJFDw
+   Rt0xuLB7heYr7EAu8QYo2NFrhzWDbm6YKnsHA1CmsoeOCL9zMtUMTmkO8
+   7NBW1cL/zCtecV+1ZTG3Dqm8KPMkrUrWG57AFDKiNWUbQkMnAvgD9r+mk
+   TxV7RzvxQU2walhhLCT4z5yFqmBI9cUwW3xXiYN6rz4YXqx0gR9+qWax9
    g==;
-X-CSE-ConnectionGUID: W/gV2TYxTeWIK0ytHPILCg==
-X-CSE-MsgGUID: 2/OWENKWQpWmbB9hl9eWnw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="80350349"
+X-CSE-ConnectionGUID: p6xkbeNTTASSPilCAZJxcQ==
+X-CSE-MsgGUID: U/1jBsdeQwiT0niigd1t/g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="81250059"
 X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="80350349"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 09:20:15 -0700
-X-CSE-ConnectionGUID: 5Lfxn24YRlmJD+H5lK4W7w==
-X-CSE-MsgGUID: ZlhsmGabRBek9d4AbR3haQ==
+   d="scan'208";a="81250059"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 11:12:44 -0700
+X-CSE-ConnectionGUID: pmgZQr/0ST66+Q6hWzO60Q==
+X-CSE-MsgGUID: P3AgbKtIRZ+ufTqBgJiT+A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="282064804"
+   d="scan'208";a="243135761"
 Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.108.56]) ([10.125.108.56])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 09:20:14 -0700
-Message-ID: <bbfc1e4b-5eaa-43d1-b804-9259b711160b@intel.com>
-Date: Tue, 2 Jun 2026 09:20:13 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 11:12:43 -0700
+Message-ID: <79fbf3fc-81ce-45c3-9889-be4c3867bfb8@intel.com>
+Date: Tue, 2 Jun 2026 11:12:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,39 +52,63 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] cxl: fortify string fixups
-To: Dan Williams <djbw@kernel.org>, linux-cxl@vger.kernel.org
-Cc: alison.schofield@intel.com
-References: <20260519221204.1517773-1-djbw@kernel.org>
+Subject: Re: [PATCH v6 1/9] cxl/hdm: Add helpers to restore and commit memdev
+ decoders
+To: Richard Cheng <icheng@nvidia.com>,
+ Srirangan Madhavan <smadhavan@nvidia.com>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, vsethi@nvidia.com, alwilliamson@nvidia.com,
+ Dan Williams <danwilliams@nvidia.com>,
+ Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
+ Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
+ Jiandi An <jan@nvidia.com>, linux-tegra@vger.kernel.org
+References: <20260528083154.137979-1-smadhavan@nvidia.com>
+ <20260528083154.137979-2-smadhavan@nvidia.com> <ahghCNiphEn6X8gn@MWDK4CY14F>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260519221204.1517773-1-djbw@kernel.org>
+In-Reply-To: <ahghCNiphEn6X8gn@MWDK4CY14F>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 5/19/26 3:12 PM, Dan Williams wrote:
-> It seems nobody is running cxl_test with CONFIG_FORTIFY_SOURCE=y. A
-> couple instances of __fortify_panic can be triggered.
-> 
-> Move some counted_by initialization before associated buffer /
-> object-array access so that it does not falsely assume a buffer overflow
-> is occurring.
-> 
-> Dan Williams (2):
->   cxl/fwctl: Fix __fortify_panic
->   cxl/test: Fix __fortify_panic
-> 
->  drivers/cxl/core/features.c            | 2 +-
->  tools/testing/cxl/test/cxl_translate.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> 
-> base-commit: 5200f5f493f79f14bbdc349e402a40dfb32f23c8
+On 5/28/26 4:06 AM, Richard Cheng wrote:
+> On Thu, May 28, 2026 at 08:31:46AM +0800, Srirangan Madhavan wrote:
 
-Applied to cxl/next with commit 2 commit log fixed up.
+<-- snip -->
 
-b882b0ca9bf8
-5c00984479bb
-
+>> +static int cxl_restore_dvsec_range(struct cxl_memdev *cxlmd,
+>> +				   struct cxl_endpoint_decoder *cxled)
+>> +{
+>> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>> +	struct cxl_decoder *cxld = &cxled->cxld;
+>> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+>> +	u64 base = cxld->hpa_range.start;
+>> +	u64 size = range_len(&cxld->hpa_range);
+>> +	u32 lo;
+>> +	int dvsec = cxlds->cxl_dvsec;
+>> +	int id = cxld->id;
+>> +	int rc;
+>> +
+>> +	if (!dvsec)
+>> +		return 0;
+>> +
+>> +	if (id >= CXL_DVSEC_RANGE_MAX)
+>> +		return 0;
+>> +
+>> +	rc = pci_write_config_dword(pdev, dvsec + PCI_DVSEC_CXL_RANGE_BASE_HIGH(id),
+>> +				    upper_32_bits(base));
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	rc = pci_read_config_dword(pdev, dvsec + PCI_DVSEC_CXL_RANGE_BASE_LOW(id),
+>> +				   &lo);
+>> +	if (rc)
+>> +		return rc;
+> 
+> Here pci_read/write* returns positive values on failure, and you pass the value up.
+> Eventually surfacing through cxl_reset_store to userspace where sysfs thinks positive
+> values as "bytes written".
+> 
+> I think this might need a fix ?
+Great catch! Not something I ever thought about before WRT pci_read/write*. I think to get errno it needs pcibios_err_to_errno() wrapper called. The sysfs exposure definitely needs to be audited.
