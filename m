@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12583EFFC6;
-	Tue,  2 Jun 2026 15:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C383033DE
+	for <linux-cxl@vger.kernel.org>; Tue,  2 Jun 2026 16:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780414954; cv=none; b=eJsbI5uBHFeqYYTnETIZ7V59Td7W4mpZplkYd9HppPvREuiBDZq4WgYMiyrjbV60qdTUJVnnzlDn8uxifGZbzec7LANsexxn8mDnQeUkl1RtkXWtK5tGv9rQrF/wBi0lGoyC1FDpolRJc0VL2AzoxYNASdNP/g96LAqE9PuNsmM=
+	t=1780417216; cv=none; b=J50jAQYcGHB+yMNg/S64ECHlqjCGB8ixN4obwdvFdzLvsOY/FuqwIQJUSOQwvqPwmuJQffTc/BJ466+21j8xEFo9OuBeQbMKU3PfbHEi7rGjypH51jC+mFn3KL/tFOJ2cljsyHV/514X2qWo3N9xTbsUlSDUqCvl9CCLh0NLd4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780414954; c=relaxed/simple;
-	bh=3vw6WldVcC3t0KlASCJAiPE04OBikYIn6v0PhOEtTqU=;
+	s=arc-20240116; t=1780417216; c=relaxed/simple;
+	bh=mHmflXwuLEdSrh7dPnPIBJ7HReleEwBfQC9ZPT0VK0c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iXvra0vTzazyJu9YqJrBcAR+SHn5QI6yi5CLYIHqYt67c/reUHOQFvXFslMhfxjYyhbQAwHqmEgRSl7yiBLOgMG4hc8XG2U31ZuNiOEg7GftUikvwJjOGBLzbQov8vBoe7mjlulnkpw5OCtHxX8EsKQfa4mKMkVh9JQ11poBF1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QGfXLYcn; arc=none smtp.client-ip=198.175.65.19
+	 In-Reply-To:Content-Type; b=C1dom+WWG/ErqvQ3MDPFLzV+wu2ZJ6YSLrxqQGd0iHXfPFDdxQy6P4yWfzW1f5fcsXbQmeIbytgNxHWTfzs0hgI45ve/sD25ATDIDn1/qQaMgIqswPuBvktmCGOD9v8fTydd3XxGz9H/DPJZRugqbSFb3F9nK04/K1A5nDjyPo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G6K3oNzR; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QGfXLYcn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G6K3oNzR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780414950; x=1811950950;
+  t=1780417215; x=1811953215;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=3vw6WldVcC3t0KlASCJAiPE04OBikYIn6v0PhOEtTqU=;
-  b=QGfXLYcnsPWQDldz1eN/X+TCX0TGVbce/hCbFnioM2chFm4lG8/Ku+/r
-   PnG4ZNo8ATNDrcuWGaX1bitOHAJAJsI42M9eGWOAMH1O8SqR3tDSlrei7
-   ji+2p4SJVQo7muf6o6h/9loUMCwccJELuQGkyw3NFcYyLcMzTyV1Xqfxv
-   PZ4AyajoL2EkpeO7eEkkjtSVW0jbCteVljeuR/G84QXNQElsUarUT8lmV
-   UXAY9foWwNdNPeyk6ybFQXV3uoUZsCIs4kE9Vjd97Omg78A8DCJJ6m9R6
-   v84Sj1bAyYKQzyilGdOQeYu4ShMLnzNJdfOQSPfCqYmiV2IPeIvNQMaXh
-   w==;
-X-CSE-ConnectionGUID: oXxhsG8BSbGJiwVj5l3bNg==
-X-CSE-MsgGUID: NCk4oDx2Q6658dIvuCkNIw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="81175636"
+  bh=mHmflXwuLEdSrh7dPnPIBJ7HReleEwBfQC9ZPT0VK0c=;
+  b=G6K3oNzRzfg8LvJJzq8BkJuJ79dNxl49YDBitP94F1ZyNeaBjE410fqD
+   LgFNRle9ngk2iBCYX0MX2dffyve1uy72xkYA9bWxtubZ/39A+eVXg/By4
+   0CnllSpBSJWgfEeloZTUmCZ3U6nESaeyK6fMBndVNXkE0p/c33hTTPN7W
+   fUELDr0pTbmDjuPHLFXVbSZOTJoMGC3OVXZ0Y0SY7ys/vPqOZozVWhM1q
+   Q0WKym5Q2qNi4Ne1JWCtmqovX9c9MFHjlq3EIZDDcmtVLSrJIoX8rWouj
+   MMFmAjdzKyWLledA4AYwXf4/KhBP1ZDFoCAa5fsTFNdnSGKZ6EkSBcaBC
+   g==;
+X-CSE-ConnectionGUID: W/gV2TYxTeWIK0ytHPILCg==
+X-CSE-MsgGUID: 2/OWENKWQpWmbB9hl9eWnw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11805"; a="80350349"
 X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="81175636"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 08:42:29 -0700
-X-CSE-ConnectionGUID: u7epIAsgRvmFKRuDfJGT3A==
-X-CSE-MsgGUID: 0jQ7uDHfQgi8b8mvnFkEpw==
+   d="scan'208";a="80350349"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 09:20:15 -0700
+X-CSE-ConnectionGUID: 5Lfxn24YRlmJD+H5lK4W7w==
+X-CSE-MsgGUID: ZlhsmGabRBek9d4AbR3haQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,183,1774335600"; 
-   d="scan'208";a="239499157"
+   d="scan'208";a="282064804"
 Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.108.56]) ([10.125.108.56])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 08:42:27 -0700
-Message-ID: <aeb0ac8a-346b-4bc5-a836-76682e692fcf@intel.com>
-Date: Tue, 2 Jun 2026 08:42:25 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2026 09:20:14 -0700
+Message-ID: <bbfc1e4b-5eaa-43d1-b804-9259b711160b@intel.com>
+Date: Tue, 2 Jun 2026 09:20:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,117 +52,39 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 07/31] cxl/region: Add DC DAX region support
-To: Anisa Su <anisa.su887@gmail.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- nvdimm@lists.linux.dev, Dan Williams <djbw@kernel.org>,
- Jonathan Cameron <jic23@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>, John Groves
- <John@groves.net>, Gregory Price <gourry@gourry.net>,
- Ira Weiny <ira.weiny@intel.com>
-References: <cover.1779528761.git.anisa.su@samsung.com>
- <9f0e0b3deeb1825ad113d7aebe7056dcf2bbc5f9.1779528761.git.anisa.su@samsung.com>
- <f55e49bb-5032-448f-9550-69282b38b1c0@intel.com>
- <ah6g4il0GtXKoclr@AnisaLaptop.localdomain>
+Subject: Re: [PATCH 0/2] cxl: fortify string fixups
+To: Dan Williams <djbw@kernel.org>, linux-cxl@vger.kernel.org
+Cc: alison.schofield@intel.com
+References: <20260519221204.1517773-1-djbw@kernel.org>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <ah6g4il0GtXKoclr@AnisaLaptop.localdomain>
+In-Reply-To: <20260519221204.1517773-1-djbw@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 6/2/26 2:22 AM, Anisa Su wrote:
-> On Wed, May 27, 2026 at 05:16:44PM -0700, Dave Jiang wrote:
->>
->>
->> On 5/23/26 2:43 AM, Anisa Su wrote:
->>> From: Ira Weiny <ira.weiny@intel.com>
+On 5/19/26 3:12 PM, Dan Williams wrote:
+> It seems nobody is running cxl_test with CONFIG_FORTIFY_SOURCE=y. A
+> couple instances of __fortify_panic can be triggered.
+> 
+> Move some counted_by initialization before associated buffer /
+> object-array access so that it does not falsely assume a buffer overflow
+> is occurring.
+> 
+> Dan Williams (2):
+>   cxl/fwctl: Fix __fortify_panic
+>   cxl/test: Fix __fortify_panic
+> 
+>  drivers/cxl/core/features.c            | 2 +-
+>  tools/testing/cxl/test/cxl_translate.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> 
+> base-commit: 5200f5f493f79f14bbdc349e402a40dfb32f23c8
 
-< --snip -->
+Applied to cxl/next with commit 2 commit log fixed up.
 
->>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->>> index a7f71f36531f..2d33001dac26 100644
->>> --- a/drivers/cxl/core/port.c
->>> +++ b/drivers/cxl/core/port.c
->>> @@ -337,6 +337,7 @@ static struct attribute *cxl_decoder_root_attrs[] = {
->>>  	&dev_attr_qos_class.attr,
->>>  	SET_CXL_REGION_ATTR(create_pmem_region)
->>>  	SET_CXL_REGION_ATTR(create_ram_region)
->>> +	SET_CXL_REGION_ATTR(create_dynamic_ram_a_region)
->>
->> With this add, may need to add checks in cxl_root_decoder_visible() for dynamic_ram for create and also delete. 
->>
-> So for this check, since there's no CXL_DECODER_F_ bit defined for DCD, I considered
-> traversing through all endpoints and seeing if they have a DYNAMIC_RAM_A
-> partition, but that traversal already happens in the store_targetN() path,
-> which also includes the mode mismatch check.
-> 
-> Specifically, in cxl_region_attach:
-> 
-> if (cxlds->part[cxled->part].mode != cxlr->mode) {
-> 	dev_dbg(&cxlr->dev, "%s region mode: %d mismatch\n",
-> 		dev_name(&cxled->cxld.dev), cxlr->mode);
-> 	return -EINVAL;
-> }
-> 
-> Is it sufficient here to prohibit creating a dynamic ram region if the root
-> decoder does not support ram?
-> 
-> if (a == CXL_REGION_ATTR(create_dynamic_ram_a_region) && !can_create_ram(cxlrd))
-> 	return 0;
-> 
+b882b0ca9bf8
+5c00984479bb
 
-I think so.
-
->>>  	SET_CXL_REGION_ATTR(delete_region)
->>>  	NULL,
->>>  };
->>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->>> index edc267c6cf77..7561bf3d8af8 100644
->>> --- a/drivers/cxl/core/region.c
->>> +++ b/drivers/cxl/core/region.c
->>> @@ -493,6 +493,11 @@ static int set_interleave_ways(struct cxl_region *cxlr, int val)
->>>  	int save, rc;
->>>  	u8 iw;
->>>  
->>> +	if (cxlr->mode == CXL_PARTMODE_DYNAMIC_RAM_A && val != 1) {
->>> +		dev_err(&cxlr->dev, "Interleaving and DCD not supported\n");
->>> +		return -EINVAL;
->>> +	}
->>> +
->>>  	rc = ways_to_eiw(val, &iw);
->>>  	if (rc)
->>>  		return rc;
->>> @@ -2389,6 +2394,7 @@ static size_t store_targetN(struct cxl_region *cxlr, const char *buf, int pos,
->>>  	if (sysfs_streq(buf, "\n"))
->>>  		rc = detach_target(cxlr, pos);
->>>  	else {
->>> +		struct cxl_endpoint_decoder *cxled;
->>>  		struct device *dev;
->>>  
->>>  		dev = bus_find_device_by_name(&cxl_bus_type, NULL, buf);
->>> @@ -2400,8 +2406,14 @@ static size_t store_targetN(struct cxl_region *cxlr, const char *buf, int pos,
->>>  			goto out;
->>>  		}
->>>  
->>> -		rc = attach_target(cxlr, to_cxl_endpoint_decoder(dev), pos,
->>> -				   TASK_INTERRUPTIBLE);
->>> +		cxled = to_cxl_endpoint_decoder(dev);
->>> +		if (cxlr->mode == CXL_PARTMODE_DYNAMIC_RAM_A &&
->>> +		    !cxl_dcd_supported(cxled_to_mds(cxled))) {
->>
->> cxled_to_mds() can return NULL with the earlier change suggested. Need to handle that
->>
-> Fixed
->> DJ
->>
-> Thanks,
-> Anisa
-> 
-> Also, for potential future support for multiple DC partitions not to be awkward, I
-> think it would make sense to rename dynamic_ram_a to dynamic_ram_1. Any
-> objections?
-
-No objections from me. Seems reasonable.
