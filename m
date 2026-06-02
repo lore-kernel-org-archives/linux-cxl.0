@@ -1,114 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from rusty.tulip.relay.mailchannels.net (rusty.tulip.relay.mailchannels.net [23.83.218.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C1A393DE3
-	for <linux-cxl@vger.kernel.org>; Tue,  2 Jun 2026 05:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5681DC1AB
+	for <linux-cxl@vger.kernel.org>; Tue,  2 Jun 2026 06:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.218.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780379856; cv=none; b=rAj9Evbm04I6aSCc9CvrRCIX3DrW7NKgb/QM/2b8uOIZQRBDdTC3Y+CibP1GjTyZA5nHVaRO80zzwmWQGBhoHtQmktdphp86KoA8Twjgell5lw2j+C0kBk7P1IGGdxN6EXsl3Rf0OUkkZZX0FkACprRR9LlxlABkx9GrCFDNWEo=
+	t=1780383024; cv=none; b=XiviMwtN/4/Vj8dAcs7tzH0ZKqM1KN5ka+oZdfFumG6UW9vH7RjlAvu4su56A5EYAWw79rZKqQQNXZ9iLdzJzjLO2BPMQBWi/OeEycpeurzIv7wCPlU/IQSGMGOw8VF2MW1TYC6l1seE6icR29tTRmX2UkjgF7YUWNrJ4LXaOPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780379856; c=relaxed/simple;
-	bh=ToaRmMI6wIBjwzKgDTlir9GRmFzVRDGeb/GiiN2koOI=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=CkNvMfcQJWbWbttZge/Zf5d7M7DLvMPOJTHhjJNwO7PmEvACTGymvyhgU5/ofKqQFsYEOk2aDWs1iiD7eeZgl/Dfb96Aafdb1UqMD+hnByxuqLwQoJCoyJ+LffJq7dklSO5eaMhX4sBYW5SmtpIxmS3LlsRE/2otBhOMekQtyb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WzD3tk11; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780383024; c=relaxed/simple;
+	bh=WzYJQt3ki0AtMwZa+zi/yxL+12zDAFJW+L+Awh8FH00=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Xz0S421zyiTco2PX4d2PjlQJzaLOEWqxZbEWPBxmypSQjqCQX0kh7Da2Ibk+3xYhMzOTzRinNY7bwBtXa+I1rxenXp88Ez7ovyWMAX5u1y9L3h/0+GpsmHeRvmSF4jpsbBBRlfmWRqC+IzaIa+urACtczXTPcPJAk2Pgpc7ImYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=olgfPA0x; arc=none smtp.client-ip=23.83.218.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WzD3tk11"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6392E1F00893;
-	Tue,  2 Jun 2026 05:57:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780379855;
-	bh=ymXy8yPs+VAw3ZvvBKht4IxKcZdSAzR0KZJr2DNo9hE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WzD3tk11/0GbQ3PaZ9ojEgE9/Z9Y8Lb8qCZ0OmPPLQfaY/cErp4ABtm7gkekNH9yr
-	 VbdKFwXkM7Cj96bL/b1E8nM2re7Miog2tzDpKwijLzrhL1zUhTI6TD0Ix73zFsJ505
-	 frH4VNG0ZkyzkGD4YZi9Oj2IHxo6JE86qdqRTU46s6E8i6egFN93t6sQYvZj1E3mW9
-	 7tFsiyrypyEETS8z22C/oOkOQe1LnIw07A9aRZILeIxoFYKV2embRFqG4x0SGmD4eT
-	 nveCZSgKM/RLgXEf+DQlZRRGAA/cmQjoYVTBKk78/9glN2m8ZsH+7WqeKyXumTsVNx
-	 jtiJ2SivXE5QA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/2] cxl/hdm: Allow zero sized HDM decoders
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Richard Cheng" <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <c743dde11ad652a65b84d206085d09d7e56b9183.1779957270.git.icheng@nvidia.com>
-References: <c743dde11ad652a65b84d206085d09d7e56b9183.1779957270.git.icheng@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 02 Jun 2026 05:57:34 +0000
-Message-Id: <20260602055735.6392E1F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="olgfPA0x"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 827074027C;
+	Tue, 02 Jun 2026 04:30:51 +0000 (UTC)
+Received: from pdx1-sub0-mail-a207.dreamhost.com (trex-green-2.trex.outbound.svc.cluster.local [100.109.200.72])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id E2D8C41AE4;
+	Tue, 02 Jun 2026 04:30:50 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Skirt-Society: 3daaed3a31903071_1780374651354_34399279
+X-MC-Loop-Signature: 1780374651354:361391816
+X-MC-Ingress-Time: 1780374651353
+Received: from pdx1-sub0-mail-a207.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.109.200.72 (trex/7.1.5);
+	Tue, 02 Jun 2026 04:30:51 +0000
+Received: from localhost.localdomain (unknown [181.212.92.203])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a207.dreamhost.com (Postfix) with ESMTPSA id 4gTyZ13Yllz18l;
+	Mon,  1 Jun 2026 21:30:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1780374650;
+	bh=B3WfiMD2XseJxICu1hT/rD9vHKRHNKodtQMwLZ2U56M=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=olgfPA0x0R+jfcs9qqBn1mkgyUtEA39D4DeNgirTi9y5UyGmlxPciFK4xIgzjQ4+Q
+	 pNmLZlpFReBcoPI7RGkb48k73iQPdZw/byf6v1BoQNETCDLizmG/A8VMdaKqslC2Sw
+	 PoeM7m1vBPVoM1eUmK8UtC+yiXb1XTwK4I/zy7te66/d/xWkkQ7Gz0g4Qzdke6zBRB
+	 NtDLrEvxWfZSzBOmqa3ai7jSMUNO7ezijqJS1BZQ+zV+bzeETp5DWWKPn8pX+apOyi
+	 U+iIv4XEG4S5FGfQRpamMApIpAM4jXhuA8625ZjDoZibjXJsesc+VAmPZ3rKLXAugR
+	 X8ahA65sqE+RQ==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: jic23@kernel.org
+Cc: linux-cxl@vger.kernel.org,
+	qemu-devel@nongnu.org,
+	dave@stgolabs.net
+Subject: [PATCH -qemu] hw/cxl: Use host-only coherency for default CFMW restrictions
+Date: Mon,  1 Jun 2026 21:30:29 -0700
+Message-Id: <20260602043029.2341246-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Skipping devm_cxl_dpa_reserve() for zero-size decoders leaves port=
-->hdm_end un-incremented, causing the out-of-order DPA allocation check to =
-fail unconditionally for subsequent decoders.
---
+Change the default CXL Fixed Memory Window restrictions from
+0x2f to 0xe, dropping Device Coherent and Back-Invalidate,
+which are considered spec violations when using in combination
+with host-only.
 
-commit 413b72f0366d77ee154e5fec85ab5deab385b5af
-Author: Richard Cheng <icheng@nvidia.com>
+For HDM-D and HDM-DB models, the user will need to explicitly
+pass the correct restrictions bitmask.
 
-cxl/hdm: Allow zero sized HDM decoders
-   =20
-This commit allows committing an HDM decoder with a size of 0 to support BI=
-OS
-configurations that burn slots for Trusted Computing Base devices. It sets
-port->commit_end before checking for a zero size and skips
-devm_cxl_dpa_reserve() for these decoders since they have no DPA range to
-reserve.
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ docs/system/devices/cxl.rst | 5 +++--
+ hw/cxl/cxl-host.c           | 2 +-
+ qapi/machine.json           | 2 +-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 0c80b76a5f9b4..467ac45bee553 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
+diff --git a/docs/system/devices/cxl.rst b/docs/system/devices/cxl.rst
+index 32b1b5d7733b..079f65660dc3 100644
+--- a/docs/system/devices/cxl.rst
++++ b/docs/system/devices/cxl.rst
+@@ -385,7 +385,8 @@ An example of 4 devices below a switch suitable for 1, 2 or 4 way interleave::
+   -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
+ 
+ An example of 4 type3 devices with volatile memory below a switch. Two of the devices
+-use HDM-DB for coherence, which requires operating in Flit mode::
++use HDM-DB for coherence, which requires operating in Flit mode with the CXL Window
++configured with Back-Invalidate restrictions::
+ 
+   qemu-system-x86_64 -M q35,cxl=on -m 4G,maxmem=8G,slots=8 -smp 4 \
+   ...
+@@ -405,7 +406,7 @@ use HDM-DB for coherence, which requires operating in Flit mode::
+   -device cxl-type3,bus=swport2,volatile-memdev=cxl-mem2,id=cxl-mem2,sn=0x3 \
+   -device cxl-downstream,port=3,bus=us0,id=swport3,chassis=0,slot=7 \
+   -device cxl-type3,bus=swport3,volatile-memdev=cxl-mem3,id=cxl-mem3,sn=0x4 \
+-  -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
++  -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k,cxl-fmw.0.restrictions=0x2d
+ 
+ A simple arm/virt example featuring a single direct connected CXL Type 3
+ Volatile Memory device::
+diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
+index 11a455b28ab8..a2595633ff0c 100644
+--- a/hw/cxl/cxl-host.c
++++ b/hw/cxl/cxl-host.c
+@@ -64,7 +64,7 @@ static void cxl_fixed_memory_window_config(CXLFixedMemoryWindowOptions *object,
+     if (object->has_restrictions) {
+         fw->restrictions = object->restrictions;
+     } else {
+-        fw->restrictions = 0x2f; /* No restrictions */
++        fw->restrictions = 0xe; /* host-only coherent, volatile, pmem */
+     }
+ 
+     fw->targets = g_malloc0_n(fw->num_targets, sizeof(*fw->targets));
+diff --git a/qapi/machine.json b/qapi/machine.json
+index 11ce0457d2f1..f832f0b84a53 100644
+--- a/qapi/machine.json
++++ b/qapi/machine.json
+@@ -558,7 +558,7 @@
+ #     BIT(3) - Persistent
+ #     BIT(4) - Fixed Device Config
+ #     BIT(5) - BI
+-#     Default is 0x2F
++#     Default is 0xE
+ #
+ # @targets: Target root bridge IDs from -device ...,id=<ID> for each
+ #     root bridge.
+-- 
+2.39.5
 
-[ ... ]
-
-> @@ -1096,6 +1095,10 @@ static int init_hdm_decoder(struct cxl_port *port,=
- struct cxl_decoder *cxld,
->  	if (!committed)
->  		return 0;
-> =20
-> +	/* Committed zero-size decoder has nothing to reserve in DPA. */
-> +	if (size =3D=3D 0)
-> +		return 0;
-> +
-
-[Severity: High]
-Does skipping devm_cxl_dpa_reserve() here prevent port->hdm_end from being
-incremented for the zero-size decoder?
-
-If port->hdm_end is not updated, won't subsequent decoders fail the DPA
-reservation path?
-
-drivers/cxl/core/hdm.c:__cxl_dpa_reserve() {
-    ...
-	if (port->hdm_end + 1 !=3D cxled->cxld.id) {
-		/*
-		 * Assumes alloc and commit order is always in hardware instance
-		 * order...
-		 */
-		dev_dbg(dev, "decoder%d.%d: expected decoder%d.%d\n", port->id,
-			cxled->cxld.id, port->id, port->hdm_end + 1);
-		return -EBUSY;
-	}
-    ...
-}
-
-If a zero-size decoder (e.g. ID N) skips the reserve step, port->hdm_end st=
-ays
-at N-1. When decoder N+1 tries to reserve DPA, port->hdm_end + 1 is N, which
-does not match N+1, causing an unconditional -EBUSY.
-
->  	dpa_size =3D div_u64_rem(size, cxld->interleave_ways, &remainder);
->  	if (remainder) {
->  		dev_err(&port->dev,
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1779957270.gi=
-t.icheng@nvidia.com?part=3D1
