@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514243B585D
-	for <linux-cxl@vger.kernel.org>; Wed,  3 Jun 2026 23:51:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFA21C5F27
+	for <linux-cxl@vger.kernel.org>; Wed,  3 Jun 2026 23:55:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780530710; cv=none; b=iNJwpTp44ag8oEgbKCheWMrn6jjGuuq2jCwUA17W8h/NY3ay1yH6uaaPshS7uMCYdXXf1r89JgiSnlWvqBRhQ1F1MT0K/GevyKYlU3d/bN3IDr0Y03WJ5Q0nRmqAjF4SKOFlXrp9DzEV4aL+8Bf8oo5qpC1f0cnJ8O18cBikEgY=
+	t=1780530934; cv=none; b=YxpDDhDE38eyQrOOeOZF97QN/H8efjlCoUNn0nwBiyJSIJBSghMAQd8QuDSmyXMKv//WPvWPGOY5KfyGJsl3d+3cHPwBhJ3qShJWz6DSFAMqFUF6WDW5FeotKDuvviRAYOoUmfhvQSuLN3G7OMTnYM+j6fwwczKatHVnmT9HJ9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780530710; c=relaxed/simple;
-	bh=a55Sp0bEwy2iXBVC537GUD9qVZfHCqmaA3j0BjTCCE8=;
+	s=arc-20240116; t=1780530934; c=relaxed/simple;
+	bh=qqWvtV5zIshjWamEC7ri0y/1sSFXs/zo4uLIjRRBqzo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fqrpJlxEIO60Fp6f8Uk0PvM4oYJIlwm5/a6Vlz46IEh7GJfbwledkSVbXz2AUe2zh8vauZ+94ZPZg/pFO1IzInbyrzYkrnsMb2p9eGkJOsFYvA2tp571v6Lo97snwemgWxZ1bhR8B4w8Lvv9IO7m6/RtaC4i7m9bF1gpBux4qgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m59gtTdq; arc=none smtp.client-ip=198.175.65.19
+	 In-Reply-To:Content-Type; b=FEXmEZWQ0Dekc3cq/RoFbOXzcU4xm7bUfknQWrJzjn+dPiMEUBID87tHsOC8zZ1HXW1YAygHjXT/K03w0Yp21rBb0rRQZU5yNUyM5XQgLkBVlOPO+Ry/5wQQbZUXb9OUltkgIpRpVvWw73D2ncGG6iLQm8U68TerKwyL0OQpQe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E7CbfsZF; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m59gtTdq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E7CbfsZF"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780530709; x=1812066709;
+  t=1780530933; x=1812066933;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=a55Sp0bEwy2iXBVC537GUD9qVZfHCqmaA3j0BjTCCE8=;
-  b=m59gtTdqD8fsmOUDV0C9kZ/f76SGJw+buj3GeWIyBo2qye9oGSLLZTiD
-   gWRhXWX74inxK9ECHrNrLz8AY6Dhh1u5EUlc36YHEvtNcFpdV8g4xtYhN
-   hnOyXRX07zL47oFR/8CAm8tENMyTuLGPIN15yfUcwEBhrz59rgW/o9lvn
-   NZ+/I2sBexBrNMi0Pt2Y9YMzwcQnpT0dpHinDMpTqxxkiAeGYKxMwtT2Y
-   efYWFFDS1x7/wu1fZB1VvZL3lhXB1Qg6nI557/2xXb+8CGnbPg2g+62Sc
-   mtGvDDAisn6XOYHJ+ifTi8+wrXCABrH9W0UfIW0esjYxZ1TmVS/Hb9EDV
-   Q==;
-X-CSE-ConnectionGUID: aAVPNLDbR2KBVT4E/O8bOw==
-X-CSE-MsgGUID: LhaWmXYETWSENCiwMWZARg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11806"; a="81330067"
+  bh=qqWvtV5zIshjWamEC7ri0y/1sSFXs/zo4uLIjRRBqzo=;
+  b=E7CbfsZF7cNCq5/3kApxoDFtYoU4vcZ3eqSkicnMtcVias9Nr0c27b01
+   RtEVyPPr/aXmZXScrPGq0qBGjwQlJIEIl7i+7jiU/urME+QW2M9QT3U4I
+   vAfLe5rIf4kBIIM/GuBv1Q5g/oW4DXKFd2/QUy363YwoX6eYSOXVkZZFH
+   fGDO1jD+fhDCl9ASZv/I+kcdeMrKmmQ+TbryvJdpgzdgDOUjCkS8xZzJ/
+   TCwJguLuSuAzJNdBmRjrYFZ58FWh7PUk7WWzrzmNVohE6X+47+tv4w3Ln
+   f8TArezeAnNSWzzLjYAXrCoJgva6Joa6qmXgJMQfJj9ccSTm8LiozkHR3
+   g==;
+X-CSE-ConnectionGUID: HBeqdNHTSvW8LTOIQQpiVQ==
+X-CSE-MsgGUID: iYi9LLamQJOw7C/hKYntgw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11806"; a="81330214"
 X-IronPort-AV: E=Sophos;i="6.24,186,1774335600"; 
-   d="scan'208";a="81330067"
+   d="scan'208";a="81330214"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 16:51:48 -0700
-X-CSE-ConnectionGUID: OENa2ydwSIK1xjpL3VY6QQ==
-X-CSE-MsgGUID: uFY+S4ZTR0uR2Ws/USY8pA==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 16:55:32 -0700
+X-CSE-ConnectionGUID: fo8u9W7sR6OboH1PKdL8Sg==
+X-CSE-MsgGUID: vKfPDu5rTeiq274gAYxPgg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,186,1774335600"; 
-   d="scan'208";a="244499457"
+   d="scan'208";a="244500649"
 Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.108.116]) ([10.125.108.116])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 16:51:47 -0700
-Message-ID: <d9601c6e-b2a5-43fd-9cbd-641bda575dad@intel.com>
-Date: Wed, 3 Jun 2026 16:51:46 -0700
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 16:55:31 -0700
+Message-ID: <94fb1064-b476-4990-ba5d-b03a7245395a@intel.com>
+Date: Wed, 3 Jun 2026 16:55:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] cxl/region: Derive port granularity from selector
- bits
+Subject: Re: [PATCH 4/6] cxl/region: Validate mixed-granularity at sysfs and
+ attach gates
 To: Alison Schofield <alison.schofield@intel.com>,
  Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
@@ -61,87 +61,133 @@ To: Alison Schofield <alison.schofield@intel.com>,
  Robert Richter <rrichter@amd.com>
 Cc: linux-cxl@vger.kernel.org
 References: <cover.1780095671.git.alison.schofield@intel.com>
- <4feca2a522e1e380495f22742551dec230ff0618.1780095671.git.alison.schofield@intel.com>
+ <aad9e586a2184f1e9a1ebec04c3809edc6268cbe.1780095671.git.alison.schofield@intel.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <4feca2a522e1e380495f22742551dec230ff0618.1780095671.git.alison.schofield@intel.com>
+In-Reply-To: <aad9e586a2184f1e9a1ebec04c3809edc6268cbe.1780095671.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 5/29/26 5:00 PM, Alison Schofield wrote:
-> Selector-bit validation uses a single same-granularity formula
-> for user-created regions. Mixed-granularity layouts need the
-> programmed granularity to depend on the type of decoder being
-> configured.
+> User-created regions are validated at sysfs write through
+> set_interleave_granularity(). Auto regions skip that path. Both
+> need the same mixed-granularity rule applied before the per-port
+> selector walk runs.
 > 
-> Derive port granularity from the selector state:
+> Replace the same-granularity sysfs check with is_ig_allowed(),
+> which permits any region granularity not greater than the root
+> granularity. Call the same helper at attach time so auto regions
+> get the same rule.
 > 
->   AUTO:    keep the firmware-programmed value; the walk validated it.
->   iw == 1: passthrough; consume no selector bits and span the parent
->            stride.
->   iw > 1:  claim the lowest selector bit still available to this
->            level.
+> 3-way-family roots (3, 6, and 12 ways) need an additional check.
+> A 3-way interleave consumes no selector bits, so selector containment
+> alone cannot prove that the root and region cover the same address
+> span. Add an explicit ways*gran span equality check in
+> cxl_region_attach() for these roots.
 > 
-> This lets an interleaving switch beneath a mixed-granularity root
-> claim an inner selector bit instead of colliding with the outer bit
-> already owned by the root.
+> Endpoint decoder capability is still checked at attach time by
+> check_interleave_cap().
 > 
-> Add a final check that the derived selector fits within the
-> remaining selector bits.
-> 
-> Originally-by: Robert Richter <rrichter@amd.com>
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
+A nit below.
+
 > ---
->  drivers/cxl/core/region.c | 26 +++++++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
+>  drivers/cxl/core/region.c | 57 ++++++++++++++++++++++++++++++++-------
+>  1 file changed, 47 insertions(+), 10 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 87fb1a9f2683..9d310287d48d 100644
+> index cc8ab2ad5228..61e6bb73249e 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -1548,7 +1548,23 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  		goto add_target;
->  	}
+> @@ -559,10 +559,29 @@ static ssize_t interleave_granularity_show(struct device *dev,
+>  	return sysfs_emit(buf, "%d\n", p->interleave_granularity);
+>  }
 >  
-> -	ig = p->interleave_granularity * parent_distance;
-> +	/*
-> +	 * Auto regions keep the firmware value, passthrough decoders consume
-> +	 * no selector bits, interleaving decoders claim the lowest available
-> +	 * selector bit.
-> +	 */
-> +	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-> +		ig = cxld->interleave_granularity;
-> +	} else if (iw == 1) {
-> +		ig = p->interleave_granularity * parent_distance;
-> +	} else if (selector) {
-> +		ig = 1ULL << __ffs64(selector);
-> +	} else {
-> +		dev_dbg(&cxlr->dev,
-> +			"%s:%s: no selector bits available for iw %d\n",
-> +			dev_name(port->uport_dev), dev_name(&port->dev), iw);
-> +		return -ENXIO;
-> +	}
->  
->  	rc = ways_to_eiw(iw, &eiw);
->  	if (!rc)
-> @@ -1560,6 +1576,14 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+> +/**
+> + * is_ig_allowed() - Validate region interleave granularity
+> + * @cxlrd: root decoder
+> + * @ig: proposed region interleave granularity in bytes
+> + *
+> + * Callers must have validated @ig through granularity_to_eig() first.
+> + *
+> + * Return: true for a non-interleaving root or any region granularity
+> + * not larger than the root granularity.
+> + */
+> +static inline bool is_ig_allowed(struct cxl_root_decoder *cxlrd, int ig)
+> +{
+> +	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+> +
+> +	if (cxld->interleave_ways <= 1)
+> +		return true;
+> +
+> +	return ig <= cxld->interleave_granularity;
+> +}
+> +
+>  static int set_interleave_granularity(struct cxl_region *cxlr, int val)
+>  {
+>  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
+> -	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+>  	struct cxl_region_params *p = &cxlr->params;
+>  	int rc;
+>  	u16 ig;
+> @@ -571,15 +590,7 @@ static int set_interleave_granularity(struct cxl_region *cxlr, int val)
+>  	if (rc)
 >  		return rc;
+>  
+> -	/*
+> -	 * When the host-bridge is interleaved, disallow region granularity !=
+> -	 * root granularity. Regions with a granularity less than the root
+> -	 * interleave result in needing multiple endpoints to support a single
+> -	 * slot in the interleave (possible to support in the future). Regions
+> -	 * with a granularity greater than the root interleave result in invalid
+> -	 * DPA translations (invalid to support).
+> -	 */
+> -	if (cxld->interleave_ways > 1 && val != cxld->interleave_granularity)
+> +	if (!is_ig_allowed(cxlrd, val))
+>  		return -EINVAL;
+>  
+>  	lockdep_assert_held_write(&cxl_rwsem.region);
+> @@ -2128,6 +2139,32 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>  		return -ENXIO;
 >  	}
 >  
-> +	if (iw > 1 && (~selector & get_selector(iw, ig))) {
+> +	/* Apply the sysfs granularity rule to auto regions too. */
+> +	if (!is_ig_allowed(cxlrd, p->interleave_granularity)) {
 > +		dev_dbg(&cxlr->dev,
-> +			"%s:%s: derived selector %#llx exceeds remaining %#llx (iw %d ig %d)\n",
-> +			dev_name(port->uport_dev), dev_name(&port->dev),
-> +			get_selector(iw, ig), selector, iw, ig);
+> +			"ig %d incompatible with root ways %d ig %d\n",
+> +			p->interleave_granularity,
+> +			cxlrd->cxlsd.cxld.interleave_ways,
+> +			cxlrd->cxlsd.cxld.interleave_granularity);
 > +		return -ENXIO;
 > +	}
 > +
->  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
->  		if (cxld->interleave_ways != iw ||
->  		    !spa_maps_hpa(p, &cxld->hpa_range) ||
+> +	/*
+> +	 * Selector containment cannot prove span equality for 3-way family
+> +	 * roots because a 3-way interleave consumes no selector bits.
+> +	 */
+> +	if (!is_power_of_2(cxlrd->cxlsd.cxld.interleave_ways) &&
+> +	    (u64)p->interleave_ways * p->interleave_granularity !=
+> +	    (u64)cxlrd->cxlsd.cxld.interleave_ways *
+> +		    cxlrd->cxlsd.cxld.interleave_granularity) {
+
+Looks like cxlrd->cxlsd.cxld.interleave_ways and interleave_granularity used in a few different places. Maybe use a local var to not having to keep referencing them?
+
+DJ
+
+> +		dev_dbg(&cxlr->dev,
+> +			"region ways*gran (%d*%d) != root ways*gran (%d*%d)\n",
+> +			p->interleave_ways, p->interleave_granularity,
+> +			cxlrd->cxlsd.cxld.interleave_ways,
+> +			cxlrd->cxlsd.cxld.interleave_granularity);
+> +		return -ENXIO;
+> +	}
+> +
+>  	if (p->nr_targets >= p->interleave_ways) {
+>  		dev_dbg(&cxlr->dev, "region already has %d endpoints\n",
+>  			p->nr_targets);
 
