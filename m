@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389D634214A
-	for <linux-cxl@vger.kernel.org>; Thu,  4 Jun 2026 10:17:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A028364EA4
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Jun 2026 10:20:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780568272; cv=none; b=bXDurcdhlu6RI9NyCtq5WHKHqDjZwUUh8XUtE8c/GkYQNAvykIuagKkN8W3exvm+z7/5B4Qtl4ZgwgW6iiwaQ52T7QBRZhgr5hT2ZrxpmbESDVxQzHciIFrMzHjE1D0JE3emOAD8OZkKWSJsp8EqN5Y3ILSgwG4w/FIELVT+NWE=
+	t=1780568443; cv=none; b=g5iOikmGwQi7KSpCzv3/Y2Q4xBnpTlyGByJ+Ds3ROwDerajxoUJtpnbCvs1pA2Eq3LiA2xDf6ZJtle471Nfam73AJe2m0TrNffO43JJF3r+TFy/AjlfdmkFzW8VkVbXppt+QfTMmN05b/h4wAhjVIK10pFOVQSjiNpa9rGzyuXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780568272; c=relaxed/simple;
-	bh=ywtcx/osVVCJLvbXCEZLAa8QkBYQg2q9l0py+bbasV8=;
+	s=arc-20240116; t=1780568443; c=relaxed/simple;
+	bh=sU/p62WNhcrFsz/wU6hSTPWO3PLa9j9ArZIohIvNQLU=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IJn/0RXUpxFo1J0+wurm8HE25cm3YH0SmeV7xOJDM5jni9SbYKRfcjL1OZ+g2CLja1kmQcFeKVWJpHYvljq6ujrw7YvLLhVtx+73BJuaiq+1i1MjAcJktgpEHrUfKyV0K18d+xyqpw8oPqCM+vHdjKcfZYF7c7Lt971goyfE9rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wgc/PTW3; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=JI/tz0db6q4FAInFzB0F5brKJij8Zt+xkOCGC4O/1Taz0Dhwkyd4QISd4OygOYw94gdEwJ6hFyz2Wh90+CgomOFPDh8v67wUeAeE4BrwLrsKNiYdgmnMztz5yikdI1CP3w5A+IkfQNC96vVSv+VESV3/vzsg/HbFRXxI9jL7tvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ds1zq22u; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wgc/PTW3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE0DA1F00898;
-	Thu,  4 Jun 2026 10:17:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ds1zq22u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30EA31F00893;
+	Thu,  4 Jun 2026 10:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780568271;
-	bh=VtViK+NdIGcUenqAqM9sD8velgWeyxkI3fFaV0E6y7Y=;
+	s=k20260515; t=1780568442;
+	bh=t32UCcdqzr85sSwnUwG9VfbZyyVpZARBWfAm1PwHlpU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Wgc/PTW3WCRrNdjaiox8cdnB72on4azw52uMhPW5uKT15qlBokL3k2icLsBWJY4sV
-	 X8lOnfOaTsz01hyvtHfRJyQvlXgtWGOfmCWG8ezNr7aEpHyOuu/4o/SblFSRsdXp+W
-	 RPDKzjhil/rG+PfcwJ+EirKSDZ5QQwjWi5dJSJIjvktYanWaYlycEDNYVIopDjJpSM
-	 TvgGG+i130FhLQ8DDvorz0fHgh1at0+ci1Sl+A/b+37BloCPqlnF0692gLb9JvXlYT
-	 ti0qgOPi0ZwjJg5tEcecf7DMWOVDtKTHmE0Fa6j+o38B3sd3K4ffL5tl4KNBceQv9h
-	 9C3KHqTyOjB9g==
-Date: Thu, 4 Jun 2026 11:17:44 +0100
+	b=Ds1zq22uddwxA6eU1OayKfdHhp7IB2AQCbsMRREymJWDw1X9TcZEX6J0EOSTc8g7I
+	 ETdITDVYP9sFJs1KgpzoVXxtm/B0CxvMoZkr1hRWrGOm/H302LrOQRluBniS9wpc7K
+	 3YFnejchP2/O2eYE+U8Rd91hs+0UWpig7ZZ3LFt29VERonOIDvI2LDJhHuOz1wx/xK
+	 6LVxKVIlSU0GorCR9cOYzdQqzvc6hOlJlGMbAzVNUCtR11/60J4FbZSqFhnXv9xt+7
+	 89e0ozeIDOEeq7gsO+8OC8JNDS16CblspU+bvWFSIK+SaRSfoX6iZ7jnotr8KFEm3J
+	 xGHlct1mcqfww==
+Date: Thu, 4 Jun 2026 11:20:35 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, dave@stgolabs.net,
- alison.schofield@intel.com, djbw@kernel.org
-Subject: Re: [PATCH 0/2] cxl/pci: Fix the incorrect check of
- pci_config_read/write*() returns
-Message-ID: <20260604111744.74cfc2bb@jic23-huawei>
-In-Reply-To: <20260603185752.4149725-1-dave.jiang@intel.com>
-References: <20260603185752.4149725-1-dave.jiang@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: linux-cxl@vger.kernel.org, qemu-devel@nongnu.org
+Subject: Re: [PATCH 2/4] hw/cxl: Use host-only coherency for default CFMW
+ restrictions
+Message-ID: <20260604112035.4a0ba93d@jic23-huawei>
+In-Reply-To: <20260602231806.2469011-3-dave@stgolabs.net>
+References: <20260602231806.2469011-1-dave@stgolabs.net>
+	<20260602231806.2469011-3-dave@stgolabs.net>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -46,25 +46,45 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed,  3 Jun 2026 11:57:50 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Tue,  2 Jun 2026 16:18:04 -0700
+Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> The patches are inspired by comments from Richard Cheng WRT pci config
-> accessors return PCIBIOS errors that are positive integers rather than
-> negative errnos. I went and audited the cxl PCI code and found a few
-> locations that need to be fixed. There are other locations that may
-> trigger issues, but at this point we'll fix them as they happen.
+> Change the default CXL Fixed Memory Window restrictions from 0x2f to
+> 0xe, dropping Device Coherent and Back-Invalidate.
 > 
-Reviewed-by: Jonathan Cameron <jic23@kernel.org>
+> host-only coherent combined with Back-Invalidate is undefined behavior.
+
+That one I'm fine with.
+
+> Device Coherent alongside host-only coherent is permitted by the spec
+> (multiple restriction bits may be set) but advertises conflicting
+> coherency modes; neither belongs in the host-only default.
+
+Why not in the default?  Software should be fine with it and it
+means the default emulation is slightly more likely to function for
+simple cases.  I don't feel that strongly about it given we don't
+have an device coherent devices emulated in QEMU, but wanted to understand
+your reasoning a little more.
+
+Jonathan
 
 > 
-> Dave Jiang (2):
->   cxl/pci: Fix the incorrect check of pci_read_config_word() return
->   cxl/pci: Convert PCIBIOS errors to errno on DVSEC config accesses
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> ---
+>  hw/acpi/cxl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->  drivers/cxl/core/pci.c | 22 +++++++++++-----------
->  1 file changed, 11 insertions(+), 11 deletions(-)
-> 
-> 
-> base-commit: e43ffb69e0438cddd72aaa30898b4dc446f664f8
+> diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
+> index f92f7fa3d558..5ce5e8e083ba 100644
+> --- a/hw/acpi/cxl.c
+> +++ b/hw/acpi/cxl.c
+> @@ -172,7 +172,7 @@ static void cedt_build_cfmws(CXLFixedWindow *fw, Aml *cedt)
+>      build_append_int_noprefix(table_data, fw->enc_int_gran, 4);
+>  
+>      /* Window Restrictions */
+> -    build_append_int_noprefix(table_data, 0x2f, 2);
+> +    build_append_int_noprefix(table_data, 0xe, 2);
+>  
+>      /* QTG ID */
+>      build_append_int_noprefix(table_data, 0, 2);
 
