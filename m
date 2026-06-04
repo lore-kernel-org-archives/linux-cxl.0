@@ -1,87 +1,102 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013048.outbound.protection.outlook.com [40.93.196.48])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBCA231A41;
-	Thu,  4 Jun 2026 01:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E205B21A;
+	Thu,  4 Jun 2026 02:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780537408; cv=fail; b=YDqmTn+oH8J2aF72HTdtL/9b99lNEJ5DYy+lJmvAZqcUj5x49xK5MXQKycm0LfJ2+wcKuIm5CZipB8sJoZglt/1upvvf72pc4OlvHj/31RYXhcG1+t1hgiX6EEQLk2uiORDT8+NpITbmsTqJ93mKqE7ZZJSo5j8MkPFSW+4SxH0=
+	t=1780541085; cv=fail; b=lZPI2eMLqeYdC29/SBBB0bqQt4w5649yNhiZDuY8vuWu586Zj1htFAzqrOOGCCqltPlLNxyaXcvtvQVlBwCyFMDpQfY+EpTslinGJOKAcfOmzoam2GKbWsXQke8NYIKXqCwEp02nDDdB6K2Ci6ac9Zth60mp1pWVkO2D9pVQVaw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780537408; c=relaxed/simple;
-	bh=lUwCNh+Zq29m/lRctKyH5Jq2EhDL7+1rZ66N+Y8nRbA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Rwc3p+Nxc2q6+6mgZiv623Yc/UBaewFNE1hG4RHX6anXPHmhul5WBGWhRUOLQrEugaxsCyrR7ioYrqC3Cb2Wj407SwNCNI5zdnkn+CiIV/KruGWPqQ8SPpo85Tr5srRp37+0ITVPEWLgIx/ku8UYv1QmMCmmNcfLI35HneLlxqs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ibvvBfvT; arc=fail smtp.client-ip=40.93.196.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1780541085; c=relaxed/simple;
+	bh=rkqLE9qqUvoFbU4jESWrlpJp8jmZG7sQEkpZDEt5KIE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=XeAz2RuQ45jjbzkszq9M1Sl8Ob6+799z5k3swBZWcYBICKfgmqakslHMCL0z9RmOszdWcZfJIfMvsVnQPyCg6vpGzMZi2TB3FLZ6lVf6rdOsnWPtC/rkMLJA1PkLW26HKHAinsDn+8YGbdSBE8gfjNcbBVDG7e2gdOTSDp3rDIs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DJIOmKFa; arc=fail smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ibvvBfvT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DJIOmKFa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780541084; x=1812077084;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=rkqLE9qqUvoFbU4jESWrlpJp8jmZG7sQEkpZDEt5KIE=;
+  b=DJIOmKFaDnfkLcNedVZbabIP6Sho70dwUGbVzPJzngwCSXLaKi6+R7SR
+   gbeAtdWRcv/T2EBolVupwEFbdcRJcZSLFN9CekLQSVnoItsii+nfIVmIf
+   1+eNUHJxN6cv7dxo7SO8NLUX1q9SIoWrrs3jiPblTpChn0GLxkGBxbYkD
+   NWLBdhESkcfwKwCEuf6jMvSzqaWRMYdoxVKKMtayk32K8wRLS/dVnQOZn
+   YdhbtpQe47r0cKcGn5nbi5OtA8+t9jtbX34rwBQ6nW72Hzu9+8AoZotAY
+   KSxNMgQSgEe2j7MPp2kjEHjed3fT9SdZHFwuaaWLMuZPTyzfag6+VyZqh
+   Q==;
+X-CSE-ConnectionGUID: fWDIxpDGRUCBxKx48zPP6g==
+X-CSE-MsgGUID: l+X4RBWnTUWhOJDlCv6VnQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11806"; a="85215455"
+X-IronPort-AV: E=Sophos;i="6.24,186,1774335600"; 
+   d="scan'208";a="85215455"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 19:44:43 -0700
+X-CSE-ConnectionGUID: x9s3a2qVTuKOaT8Tya+Uxg==
+X-CSE-MsgGUID: Bd+dqEI0QvGh0ucvK87h7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,186,1774335600"; 
+   d="scan'208";a="249340454"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 19:44:43 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Wed, 3 Jun 2026 19:44:42 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Wed, 3 Jun 2026 19:44:42 -0700
+Received: from BL0PR03CU003.outbound.protection.outlook.com (52.101.53.2) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Wed, 3 Jun 2026 19:44:41 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XyWyt4/VI9a+DkOgF4yFUxMyytPQKSLwigvicWZ1z1FhrAOTLIr/qDRy7CYEKDsXQizUVlmOtkH64yS/NQCxsLCpTOJl+dqgZdxcL5WBHs/wQnvgc+FXeMTgezvKG9u6tTYCy0uWWFh7Nz9RNdoUwi+yrmNr3/jp7FNw5ak/ZJBnbO7lp3n+MVEos+o5A11PRvpxgwNvl/XYgJMId56Vnqq29g5Z/k1qWw4Vd/MUE36f8S6EHi1ZDhHatuPqErytuVV5LnVpj+cKQhQepuPwOeniyxd6RhMZOtkKvd4AK/Y7YsS4qVAJ9o4R8n8JN7pwSggxO6yI77hYp/YuQC787w==
+ b=kz2Ss4/udZ/gagxBblTVaYA+1nKMf9/GscYqMzUjy3aW45Mc2v4v9gHFe2XVVIeEJ5Y7d6IncUkqtipMsbmlZvxiMaQgk7E2thWvtT08zYqHLjhwGrdPnzfuLZwXt88aPOyJ57Qq71vm6ik0EggolpKRSIWLKpdvnRuj8ZS788ncjiu9pJA9GtmiakMzs5Zjwri2I1SFxalmOuxaZKYuJlPUXbu6LYNUCROZqV6thcVM3jZahsS41nSZHQVuY1nP6MQ7guEI2Hf70M6mzeJOoDHYMHGfbQmHRSeZ1E4ODeFVF9gQXqqrynnnoaqFUmJQ1IruXCWL2tgXlo+FL66Qrg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6nkZUkQQY75abwRcFAevjWlmiNxL2qEN2LxclDIQW/E=;
- b=G9Lvxon9Fu0E/B63O3VYAfqwsMIFqnydsaFLMW4TQXdySRE0dstT4Z3eCzEMGEC++7rLCtMxVOu0fKuQYbv04R1a72L6pSf4PlXCbgrmY+F0a//cf/abvEL3/APiGqkbRdgtoWRPWk6mcEl+b/q4WYpo9IPccH6NQxOzz1y12S9m4SpOYBmAymTda9bF+DXecYg8drXwEp14qu8yGc5RY/cb6FgdN34uulYxb2PBblDlyGnb0Bbnk/iBWFTWPAgQ8gWJM7i1MGDFEeIXtmqG330XtYKDtYEr5/ZTeJz9Q8MYBlsgIxVeVNRtdTvXlHD1WOKq1iL7QxHtKlAi/AoMjA==
+ bh=rA1QJYAeFqrrT1t8p6OYckNUHj0Cdu2QHoDUcCI4Rxs=;
+ b=mtQGRoVOncf+8hbnV6x3tnOcraDdWwOc5LBIHWYUcjmlyoDxSkpG+619nZVY/kmLG5aP/gYPmC02CbfIs7ZB0rgaO+y/iuuNw1qR5sRNYNT3zW3A2viPI/GWCjjoTdS30dxDutYaYii5B5vR3lLLAS/HXDbFa638lewdQUd0g3br8LmZHMSrRYcKvCP+6+xFFxpXfnEWI9YIv8UQlvaBa/P8gapyVBmTuvhU17HhVHMsTumJBPkdpOANSRw+/E052CfbVVdmqOC8f/IpdwPFFBjxv0zjk4vw0e2znuOsVVuulCQ0ktF8LntbPyXCogz3m0NrTei1wEG2yNaS68Z/fw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6nkZUkQQY75abwRcFAevjWlmiNxL2qEN2LxclDIQW/E=;
- b=ibvvBfvTYKixNHi1/2CRJUVPxoSAV4P4OGmJ91U6vutChk6pichsld+CCiQanC9JAnKFatkqqzuDBwzvwAYG0BhRv6EocCGET/foUVQKc8cmlSQrpnxzLsBH+FWx2Sg+Bjew0dFw6M+SYlUP6eNC4w95L1Ait3MgwMOZpLlZRzin0flHWpKIgkiwkqEkmmcjmVFEDf9trvvuOy0P3Hqnd+13d/I8qI4lnNO+sl/AQMTEq84oQ9+999VtSB0mCFdnVwpptdExKXmWm4Xr6zGAFcKlnO2hJGuQoJR6yW+QHTSWX5cin7ZNht+ndoz5cYlI4itA5gPBOyBA0NccOwBXMQ==
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH8PR12MB7277.namprd12.prod.outlook.com (2603:10b6:510:223::13)
- by MN0PR12MB5809.namprd12.prod.outlook.com (2603:10b6:208:375::7) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by SA7PR11MB9595.namprd11.prod.outlook.com (2603:10b6:806:4d0::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Thu, 4 Jun 2026
- 01:43:19 +0000
-Received: from PH8PR12MB7277.namprd12.prod.outlook.com
- ([fe80::2920:e6d9:4461:e2b4]) by PH8PR12MB7277.namprd12.prod.outlook.com
- ([fe80::2920:e6d9:4461:e2b4%5]) with mapi id 15.21.0071.015; Thu, 4 Jun 2026
- 01:43:19 +0000
-Date: Thu, 4 Jun 2026 11:43:14 +1000
-From: Balbir Singh <balbirs@nvidia.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev, kernel-team@meta.com, 
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, dave@stgolabs.net, 
-	jonathan.cameron@huawei.com, dave.jiang@intel.com, alison.schofield@intel.com, 
-	vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com, 
-	longman@redhat.com, akpm@linux-foundation.org, david@kernel.org, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, 
-	surenb@google.com, mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, 
-	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, 
-	ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com, 
-	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org, 
-	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com, sj@kernel.org, 
-	baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, 
-	baohua@kernel.org, lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn, 
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com, 
-	pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev, riel@surriel.com, 
-	harry.yoo@oracle.com, cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org, 
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
-	zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aiDVMgu0viTIml8H@parvat>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <ag6XyvxR-NU5rGn-@parvat>
- <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
- <ah47NNhuiClgGCdn@parvat>
- <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
- <ah-0CyZurn5D1ezY@parvat>
- <ah_RcTU8SpQG7hab@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=us-ascii
+ 02:44:34 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891%4]) with mapi id 15.21.0092.006; Thu, 4 Jun 2026
+ 02:44:34 +0000
+Date: Wed, 3 Jun 2026 19:44:30 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Richard Cheng <icheng@nvidia.com>
+CC: <dave@stgolabs.net>, <jonathan.cameron@huawei.com>,
+	<dave.jiang@intel.com>, <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+	<dan.j.williams@intel.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <newtonl@nvidia.com>, <kristinc@nvidia.com>,
+	<kaihengf@nvidia.com>, <kobak@nvidia.com>, <vaslot@nvidia.com>,
+	<smadhavan@nvidia.com>
+Subject: Re: [PATCH v2 2/2] tools/testing/cxl: Enable zero sized decoders
+ under hb0
+Message-ID: <aiDmjgdEfBn7fDaO@aschofie-mobl2.lan>
+References: <cover.1779957270.git.icheng@nvidia.com>
+ <5c52cc06c27ab3754e4c046a3a9d361af89f0361.1779957270.git.icheng@nvidia.com>
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <ah_RcTU8SpQG7hab@gourry-fedora-PF4VCD3F>
-X-ClientProxiedBy: MEWPR01CA0107.ausprd01.prod.outlook.com
- (2603:10c6:220:1e0::15) To PH8PR12MB7277.namprd12.prod.outlook.com
- (2603:10b6:510:223::13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5c52cc06c27ab3754e4c046a3a9d361af89f0361.1779957270.git.icheng@nvidia.com>
+X-ClientProxiedBy: SJ0PR03CA0216.namprd03.prod.outlook.com
+ (2603:10b6:a03:39f::11) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -89,310 +104,235 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR12MB7277:EE_|MN0PR12MB5809:EE_
-X-MS-Office365-Filtering-Correlation-Id: 33912cb6-9c6c-4dcf-cbdc-08dec1daa726
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SA7PR11MB9595:EE_
+X-MS-Office365-Filtering-Correlation-Id: 66841bc6-41a8-482f-d1a8-08dec1e33640
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|22082099003|18002099003|56012099006|4143699003|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	A5hig0+gyLvGpAB+yMGRtSTET6gDMgqGuwA9v4L1joMkUQc+EomarQA040n550vPq+ygzs6caQblO9ulgnmLC469f01KRyU+lOsusqJxGEMOqH4I9DbumqYQlUFFyzpyiPoJ+cVosyqOMDQn86/9oHqUX/nvC3/x/64HT+4BUGtOD81w6ZJpSaNxKLIgDa8GNPC1ww00I5RA5PAnlF2uVvBa+h3JG0JDe9kZYTPzWPJlOJGTWgVEJWA7mWm395+OwvEI47EFFTN54Xlgo8p7yuLqakjaTzbItsDl9Jy9zyVJ91FP90TG7fDT/5k83h1awq4h3eBlKQ7d8mgVnLI8eI8lXdJjPwz6lxViJOfpTz7yV6xrw+ndkbZSoRA4VHHdkV77VRwQ0gjkp12qK2CSZC0cwiCyYq0edvMtzQjSkrNSRzGcLxuUXsZ7D/SvAnznT8fypt2FIMmlSFpAvLK8ulVvHDX/B0TTduR9+3cHUxIYnsr2R63CaLVpZYUW6wJf9XwB+2giBF9QvELdmTU984SD0m24wzn3+LDk0kq0QlaGVnJwHls0OZ1EFQszgy5a3Rjxd3OXVlIoJtVtHyQ0NGXQcaFuB0Mp93hFnGlxOrGv0IgI48F7bm1EOOzza2uCRtL7pTEdmT7oQZtgw6xDg9EDLV9cb6YWHKsXpcP+PZH11OK4oSdOx+BWkq2iluVR
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7277.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(22082099003)(18002099003)(56012099006)(4143699003)(11063799006);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|56012099006|11063799006|4143699003|6133799003|22082099003|18002099003|3023799007;
+X-Microsoft-Antispam-Message-Info: E+adN1jivW808QMdd8JD3pRILlSKnt+SgckWFNIqSRL/Snmh57ZV5hOQpXG3jfhJJ59lu/8BUOsPyhifP3VoqSXO1H9NM/g8WHEM3V6Lx04qA8WioBe2PKcrdUNmrd9qtcGRsttVpyxBAe3agSSjfZihsqVQUyyXGgIpFkjo8ASbS87awd3fwYNYYbpV6d5YfrczezgEHoDQogH/V29ktjh5dw3i+AFmUnYQQV7BUFyLC4MZGTmsMQT9xYxH2VWgkVfH18N7frQ8fwhWo82wH+ZmtadAb+wrjt/4ibLuedQXS1VRgL2r9JJ6XDP5GZdGIiktAHw0eN6okf6CHfLl2jER8GhgA2oH0WvJsKGQN6udXmUAkemTOcTBMvzJvwTPLSoCwSsDW1reXryBcMRVObIhPsaKZ23bU/BzdPptCJXpuPYLs5EbrgCo9ewkVW+XuwgyJZ9Te+099Vum6gFXIFKjZS8/XHPK1ORpkrj/LFrHe9u+2rF69NQ9eZflQhrJgn8VZtuduh6qvV8NJf8UZv4aYhXy/PxUq6SNWm/FL+eKIFhenGLmIWTQWxt6O1w9gU57M/g5qvKuKG+jNkjCLnbLRn2OVM+4Wrde8xJEzCZBMOgdHq4HybfeMuw332SPakiJZhGGBYVE4DtEg5h6gKaar/Q6smc6T1d9go6+6M6fgKzCBn7Q3D2War7PxUL0
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(56012099006)(11063799006)(4143699003)(6133799003)(22082099003)(18002099003)(3023799007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?obterRFykq57MBL/78g/C8QQr5Yj12YkEAm751+6P+4WJINl06btfe//MQ6N?=
- =?us-ascii?Q?86JifpIXgrctjkgmlLMtcQvcZyH5pphE7kC87rsOV0ea7a0Qu0O1rrFUnbeU?=
- =?us-ascii?Q?Ns1EF/NZlvT46g9AWfd8Q5MZ6hUfvHGGayDn1U1uyq2mLgNgRlioHMSlOsWr?=
- =?us-ascii?Q?KUkJgRV9FI0uKqNjv7sHJaemgZWmyeGk2P7Qz9aPAv+/E1f/aSzDSL75G5wM?=
- =?us-ascii?Q?rWNYWINOGEXuI54d2Wj67hmB9QU848urvjrTRcigZR2HrB5/IGTlkJFrBMVC?=
- =?us-ascii?Q?DGEYlGDViPvsAINp6KgRSfe6kSEckwQDiIpoynhTwWou19nX7KxqZkb95r8D?=
- =?us-ascii?Q?CwMVCVl5yhbcRmmXIeyk7iE+AMLnoG1V0ZVPfKaJiRytFksSAMWxzmaWlc5c?=
- =?us-ascii?Q?aTTSChFRZGOpcUHVaH46vcJS4YdpA5yXg4Fj7Lp2QGWHlsrzjQ8XnboTFJbk?=
- =?us-ascii?Q?ueaXXb8nEbTjZo6A/Dp3Tug1vz+y2SdvtyLcSZMJGTFvd6r1yksOEszjpXyE?=
- =?us-ascii?Q?Wzifnq8njemd6iIzzCXgQ3DysM3t4BleMHUwZb1mklk2753OZXxdv/c78RNf?=
- =?us-ascii?Q?TSlU/g1WjZ5WgkTmMWwd8MvNop1O/kllppCOw5jR6CLLhKsaTQ8eanU2aAC5?=
- =?us-ascii?Q?voyarK9PDHHur7CoUg9wp/U/ChOFN6ekvUin/yH3yElBWJ08g16iik1HcN7U?=
- =?us-ascii?Q?KGZ46q+VOWezJcnmd3j4H770xrog5vIzr/+4LmmUIyRueyG/5WTMh3AHG1kX?=
- =?us-ascii?Q?/JHhFVD6yHkupDoXzzH5PHegJInTG94Yra63nevXpsfgYXbkX6JlhQm7nloc?=
- =?us-ascii?Q?tc2R1EP6JxpLelc7HCWr47fWQMKzWlh5jMH7u0V+ZAzWQWesquETW78socqH?=
- =?us-ascii?Q?IZNHwkBmCmzYxU9jjKL5ydtwLLZVfduHHT8uRYQ3bB3VbmyY8IL/H22Kp4gb?=
- =?us-ascii?Q?P2/VufZz1xGeWXJLUeH6Z+utFC4VDQMuUxP4JuchGC4oR8Odqt2kGazrrJVQ?=
- =?us-ascii?Q?wTmezgjxOTz9m8OOQom8DCMN2mEBxUnGXWmdg+F9Z711KxHTU6HwhRlB99Ox?=
- =?us-ascii?Q?H/6B/shMdzGPDc/RUSj1bHz2k4Byc0VzKffIfibvNgLIQ8Oe8fBB3gIT+FVf?=
- =?us-ascii?Q?42gW2cQx1rDd6Z9Co9Q0TXk/nF3b0tR63VWk/lbLWi101jq40mLhoqCMGK2m?=
- =?us-ascii?Q?cKAw3shsJRywcZ2KboblLV1BTlub2cNysfbEnx+F0y76CCa8X76T86k56EcF?=
- =?us-ascii?Q?D0u9TzH1GAgNOPe4CKwbESeGul+NRw/ymHR1pNXg//t0AFUTdft2/nRLfoSB?=
- =?us-ascii?Q?2a1dBxbKiER8u/Q6G4m+U0wfJxd8XYFaTdwCt+Rkar8GDkp4JnaIsUDueu6a?=
- =?us-ascii?Q?SDTJgqKReQjRefI7iOKrO7R3dJgfXitBNASMkvKc6JEIksGJNABcnMW+rGeJ?=
- =?us-ascii?Q?/Ck8ERHuY3PqZUNFU1r0vplITbggP1pXsGIXVpMPQBy6+Av6UMA7R4s0rnM3?=
- =?us-ascii?Q?b8gpeYjSRnxGFhkEkmL2V/guEDw379g+bDY/uzw32EFe1isPjShodgI0uWuN?=
- =?us-ascii?Q?FPWydpi5TGORK00YUZBIEuHBloiTLW68SejsaOKR1VfsnfI4vKqJTwtE5Gyl?=
- =?us-ascii?Q?ezqwDLaBi0JECA8FpZOcTfHZxOQ7iO/fjPHUR9Gh15VBiUQ89pvTTpH9Ffr2?=
- =?us-ascii?Q?/S2iMabxWgKMwFbSZIsZFfrTxzgyHw3QLuB8+1O8UE/DgHfO5SqkG3KVyH4p?=
- =?us-ascii?Q?XJUGVA1LGg=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33912cb6-9c6c-4dcf-cbdc-08dec1daa726
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7277.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?KjAhEGCByy7Hk7P7AfbBE60+v9hZkwHHcpP+q2QM5s6bs/v2UieJIA8wbQ?=
+ =?iso-8859-1?Q?SCUXffDZERj9oktFUyoMasaHfymaRWlSrChRfkAhzFr/91+qk0N69iwpkC?=
+ =?iso-8859-1?Q?WMAFC2Qj+Q9rfqrri2R5hRzz1Dl7hRpHpttTHZOaBGMU/eJPYfrlzsi2EX?=
+ =?iso-8859-1?Q?fqlGkay7JnXvoLwNFX7MHsLzz1klvHn0/S2gAW8puPShd2MvtwH78I6d0i?=
+ =?iso-8859-1?Q?uVx5eMyIRulTsG8kntzls/C7vJp49UE2WljXge3eMDkJob3mqJz9qU+rfY?=
+ =?iso-8859-1?Q?ja+8HmbNooB4Y2ankuX1lhILmza2Fm2f7Z/fVhChdwJKwLLjdRqXKuyDC4?=
+ =?iso-8859-1?Q?/PE3TjH6QryRxEBW1miUEwL2jugZxUcr0w7cspr3h2Dk8yk/1a5k3WMayu?=
+ =?iso-8859-1?Q?g4NGu6rxa89szXu95lYdRWanMmlOoucgMtHzdcLvybizVrxGz7Dy1Sf2yg?=
+ =?iso-8859-1?Q?NCwoqH86x9dCZ06lExeAgh6TB3Vl3U5LYvS3n2iHBqzakL5jJHL3rpm/qs?=
+ =?iso-8859-1?Q?4lZUqgGMIUDsEOL80HzHInHw+nb3MrrCjcwEx9XgtmlQYKGZ2jsguOAwV2?=
+ =?iso-8859-1?Q?R08pcyHK6qTyOWX8UVmi4TQvp612ZFOo53W3CARtjmWTLaW1z3bgPZ/Ptv?=
+ =?iso-8859-1?Q?pqNvIv4oc+5g3ihbiU21FsGJoXdCz8ngapj/NyItQuyP+qU+CyLHFbbI6a?=
+ =?iso-8859-1?Q?sTHfjqQCH2gbJ9Pc9uT8UXiRMtICwdcWcTAvxVZXkQ79Bf7qx7DKF3cHLx?=
+ =?iso-8859-1?Q?bVXnj4qnumVa/U+rwzO+iPirSG/DKPJeRfCYpfwsPP9bQ9MhRtqRrr3Lsm?=
+ =?iso-8859-1?Q?UbnRZD5cQ8AW3GDiXrPLtOkOOzMwoXDmF869nahuVtBQf3vpe+2RRWkn+t?=
+ =?iso-8859-1?Q?a09zpU6IrQGbbdpVrqder+cusha899uiUQr0N8BlygezqsCYemiF3hE17Q?=
+ =?iso-8859-1?Q?tcYeQHA1nZNPKjZfNHbC73i7KK16TKwfeHiLmqnAmGdoOviPHFmMIm4WRf?=
+ =?iso-8859-1?Q?iFYYh2tx3aWpePyaTe8z9jTeDH6bF42pRxizABnD1gTdkm8fxdSpTWVe7Q?=
+ =?iso-8859-1?Q?UFILoMMh3asF6YzyQ2MTimhg5A60GZGCDZyiUArx8YvI3J6pJSYwICShDt?=
+ =?iso-8859-1?Q?pgw/nJ2yBZwFQ0r/6VqFvikPaWuj0csqZYaDWRBCRCKx0dCDLq5V8sbTwI?=
+ =?iso-8859-1?Q?BXihnuPK3ZoEF2Iu7PFx+fw6tV/oy+qGlSw0+dkcUgf/yLSRTeVrYI8w6Q?=
+ =?iso-8859-1?Q?KABHbUpX9JQ7ym4Q0gkO4sDcOIOy++3EB37ZjTTFcdy5jicqg1WiFD1F/k?=
+ =?iso-8859-1?Q?3wNba0Pu4QWsENB/4j1ToVIXLmGxd0td7dzA8oJZoOgxCHj/jc6ltYqe1C?=
+ =?iso-8859-1?Q?qFYuDCntg609XLJFAkJNdHjeyK5i9+epwDxeizILO0GOzhqHtUwvoNbgzN?=
+ =?iso-8859-1?Q?idJ1goDpTkHb1Ssqn2I24+vIv4832bV8mkv/mDFGXTz5FlOThrLt9UgHje?=
+ =?iso-8859-1?Q?t5QUg3L55+Bp3b8kIyvUZIwh+xT6M4GirI39fr/7bRyYAm7UN3FEk15lSb?=
+ =?iso-8859-1?Q?XWLB3c8DT2SzpCtcxt/NMSBlROWWEjP513rUFDIAThfKudYo1gRyhPVfM1?=
+ =?iso-8859-1?Q?iINJpKd/FNx6FMnpvjmybs1qM0nGXrXtpFprrz61FuGxUAmD8woiwcNOae?=
+ =?iso-8859-1?Q?ng+nHlRJqosO55giEbCx9LYcre5UBbbElgS4DQlYc166S2mvfMhmob8h3T?=
+ =?iso-8859-1?Q?Ia7/CpTMBfZsBGNR1/cUAgD5SDlqHEh34qP0swiyig+Xo5ctMCZ9nwjNsg?=
+ =?iso-8859-1?Q?zBDFUXOK/eDz18bwNFRfyyHAzk2gNnA=3D?=
+X-Exchange-RoutingPolicyChecked: DR3V6Twvmk1gZDssYsGdgIybbV9TPj3fKR+DzG/uSNfM1IszVTAydu9I1sML3BQ9Luo+xnetgk6ICNB7JSyVBbEGqhyHhuPlzx5ZbZ9m1LHN7IcNgjIw/QXoTZ/ChSS3R6hitxmHGjkDWxQVHQobFt/eS1s6FJeepUKYohW/7T9a++QPuoV5nia8aO2q+GS88nn/un/j2SvSJlr4K5EcFXVVVj93gNo6jMe2B+rc8Db+B7zeyDBSuzJrjDGHEr3Cp3PreSw34m/n65+cWcthpPykvZQDx/BFGmjMFV+RHkipFlTGxU0kqzXai8FoFhDjLefbwN6gKrMSRBl/48nO/Q==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66841bc6-41a8-482f-d1a8-08dec1e33640
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2026 01:43:18.8261
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2026 02:44:34.7266
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: s/sb409tFYo/7o1wndzo62ERdIKE5y95+FY+Ptk3CIuKznrUEb7rNsjPEc57mnHwc8ilfXEzUr8tEk0fRoi62g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5809
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0av3U5ClvArQqGoEySfe/iSe1POa8HQWuX96v8VkuqcIzZqdmJUjWCt/n7o4KW/D09ipDkdp07wTBC25o3qDI3Rs0P0lq2cBFp4IjztWRNA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA7PR11MB9595
+X-OriginatorOrg: intel.com
 
-On Wed, Jun 03, 2026 at 08:02:09AM +0100, Gregory Price wrote:
-> On Wed, Jun 03, 2026 at 03:00:01PM +1000, Balbir Singh wrote:
-> > On Tue, Jun 02, 2026 at 09:57:48AM +0100, Gregory Price wrote:
-> > > On Tue, Jun 02, 2026 at 12:16:50PM +1000, Balbir Singh wrote:
-> > > > 
-> > > > I was think we wouldn't need explicit flags and that allocations would
-> > > > happen from user space using __GFP_THISNODE to the node or via a nodemask
-> > > > based on nodes of interest. Is there a reason to add this flag, a system
-> > > > might have more than one source of N_MEMORY_PRIVATE?
-> > > > 
-> > > 
-> > > There's a few things to unpack here.  I discussed this many times on
-> > > list and at LSF, but to reiterate.
-> > > 
-> > > 1) __GFP_THISNODE is insufficient to enforce isolation and otherwise
-> > >    not particularly useful.  Additionally, from userland, it's not
-> > >    something you can actually set.
-> > 
-> > I was thinking mbind()/mempolicy() is how we get to it. It already
-> > accepts a nodemask.
-> >
+On Tue, Jun 02, 2026 at 01:40:53PM +0800, Richard Cheng wrote:
+> The kernel now allows committed HDM decoders of zero size so BIOS can
+> burn slots with LOCK. Without cxl_test coverage the new path goes
+> unexercised.
 > 
-> First let me say:  I want to enable mbind access to these nodes.
-> 
-> But let me caveat:  I think that needs more time to develop, and
-> in the meantime, we can enable the /dev/xxx pattern somewhat trivially.
-> 
-> First let me address a few things about mbind/mempolicy and how it
-> interacts with page_alloc.c, I gave this overview at LSF but I don't
-> remember if I posted it in any of my follow ups.
-> 
-> 
-> 1) Fallback lists are filtered by nodemask, the nodemask does not replace
->    the fallback list.
-> 
-> Here is how the page allocator fallback lists and nodemasks interact:
-> 
->    Fallbacks A:  A B 
->    Fallbacks B:  B A
->    Fallbacks C:  C A B   (Private)
->    Fallbacks D:  D B A   (Private)
+> For the special endpoints under host-bridge 0, e.g. cxl_mem.0 and
+> cxl_mem.4, commit decoders 1 and 2 as zero-size + locked alongside the
+> existing autoregion at decoder[0]. Mirro the same shape on the parent
+> switch and host bridge via the walk-up that already builds the
+> autoregion path.
 > 
 
-Do we want regular memory (N_MEMORY) in the fallback list of device private nodes?
-The assumption is that we have ATS translation enabled? Assumiung A and
-B are N_MEMORY here or am I misreading your illustraion?
+With these patches I've got 7 of 17 cxl unit tests failing.
+cxl-region-sysfs, cxl-create-region, cxl-xor-region,
+cxl-destroy-region, cxl-qos-class, cxl-region-replay,
+cxl-poison
 
-> Lets say you pass:
-> 
->    alloc_pages_node(C, ..., nodemask(A,C,D))
-> 
-> So we get
-> 
->   Fallback(C,A,B) & nodemask(A,C,D) -> iterate(C,A)
-> 
-> If we wanted to change this behavior, realistically we'd be looking for
-> a way to add specific nodes to certain fallback lists - rather than
-> modify the nodemask interaction in some way.
+I think all of them are failing for the at least one reason, the 'burned'
+slots sit on the auto region endpoints that the suite reuses. So how we test
+this needs to be reconsidered.
 
-Yes, that is what we did with CDM, control the fallback for
-N_MEMORY_PRIVATE, but there is a design decision to be made here.
+cxl-poison is actually failing for a second reason, and that
+is an issue in patch 1. It gets to a point where 4 poison records
+are expected and only 2 are found. That is because commit_end
+points at a decoder wihtout a dpa_resource so cxl_get_poison_unmapped()
+gets skipped, meaning we don't get the tail end of the possible poison.
 
-> 
-> I think this is out of scope for the first iteration - so supporting
-> anything other than mbind() from the start is just pointless.
-> 
-> The only feasible mempolicy you can apply is single-node bind, so
-> realistically you can only support mbind.
-> 
-> 
-> 2) full mempolicy support doesn't really make sense
-> 
->    task mempolicy PROBABLY should never really touch private nodes,
->    while VMA policy certainly can.  Assuming we're able to support
->    multi-private-node masks, none of the non-bind mempolicies even
->    make sense for most private nodes (interleave? weighted interleave?)
-> 
-
-Yes, mostly, but is that baked into the design? If so, why?
-
->    I haven't worked through all the implications of a task policy having
->    a private node attached, but the longer I think about it, the less it
->    makes sense to just support this outright.
-> 
-> 
-> 3) Introducing mbind support is not just a simple nodemask on a VMA,
->    It also implies migration, cgroup/cpuset, and UAPI interactions.
-> 
->    a) migration:
->       
->       mbind/mempolicy can and will engage migration when it is called
->       with certain flags.  Migration has subtle LRU interactions, but
->       the patch set I have at least allows this to work.
-> 
->    b) cgroup/cpuset:
->    
->       cpuset.mems rebinding will cause private nodes to be quietly
->       rebound to non-private nodes within a nodemask.
-> 
->    c) between A and B - we really want MPOL_F_STATIC to be required
->       for mbind to be applied to private node so that it is never
->       forcefully remapped.
-> 
->       That's a UAPI semantic change specific for private nodes we
->       should really take time to consider.
-> 
-> 
-> 4) File VMA interactions don't entirely make sense with mbind
-> 
->    In theory you might want:
-> 
->    fd = open("somefile", ...);
->    mem = mmap(fd, ...);
->    mbind(mem, ..., private_node);
->    for page in mem:
->       mem[page_off] /* fault file into private memory */
-> 
->    In reality: This does not work the way you want.
-
-Why not? Just curious about what you found?
-
-> 
->    I went digging and we need a few mild extensions to allow
->    migration on mbind to work for pagecache pages, and the fault
->    path does not necessarily respect the vma mempolicy always.
-> 
->    You also start getting into the question of "what happens when
->    the node is out of memory and you don't have reclaim support?".
-
-Yes, we should discuss reclaim support, I think we should allow for
-reclaim. It allows you to overcommit private memory the way we can
-with regular memory.
-
->    The OOM implications jump out at you pretty aggressively.
-> 
->    Moreover other tasks can force the page cache pages to be moved
->    as well.  So the programming model here just kind of sucks.
-> 
->    Works great for anon memory though :]
-> 
-> For all these reasons, I think the be mbind/mempolicy support with
-> private nodes needs to be brought in with follow up work - not
-> introduced as part of the baseline set.
-> 
-
-I am not opposed to the follow up work, but I feel mbind() should
-be the fundamental work and user space API.
-
-> > > 
-> > >    for node in possible_nodes:
-> > >        alloc_pages_node(private_node, __GFP_THISNODE)
-> > > 
-> > >    In fact it's the opposite semantic of what we want.
-> > >    THISNODE says: "Do not fallback back to OTHER nodes".
-> > > 
-> > 
-> > That's why we need to control the fallback nodes carefully for
-> > N_MEMORY_PRIVATE
-> >
-> 
-> My point is that __GFP_THISNODE is not actually useful.
-> 
-> If we go by nodemask, submitting a single-node nodemask is the
-> equivalent of an empty fallback list.
-> 
-> If we gate access to a private node by __GFP_THISNODE... this is the
-> same as just providing a single-node nodelist (putting aside the OOM
-> implications for a moment).
-> 
-> And it doesn't even buy you any new filtering ability against existing
-> nodemask iterators that may already utilize __GFP_THISNODE.  i.e.
-> 
->    for node in online_nodes:
->        alloc_pages_node(node, __GFP_THISNODE, ...)
->        /* Alloc per-node resources */
-> 
->    This pattern is undesirable, but completely valid.
-> 
-> So overloading/requiring __GFP_THISNODE is just not useful.
-> 
-> I will follow up soon with a new version that limits the private node
-> interface to just nodemask and fallback list controls.
-> 
-> I need to test a few more things related to removing normal nodes from
-> private node fallbacks before I feel comfortable shipping without
-> __GFP_PRIVATE.
-> 
-> > >    The semantic we want is "Do not allow allocations from private
-> > >    nodes UNLESS we specifically request" (__GFP_PRIVATE).
-> > > 
-> > >    __GFP_THISNODE does not actually buy you anything here, AND it's
-> > >    worse, in the scenario where a private node makes its way into the
-> > >    preferred slot (via possible_nodes or some other nodemask), the
-> > >    allocator cannot fall back to a node it can access.
-> > > 
-> > >    __GFP_THISNODE cannot be overloaded to do anything useful here.
-> > 
-> > Let me clarify, I meant to say, let's use a nodemask for allocation
-> > and __GFP_THISNODE gets us to the node we desire, if that is the only
-> > node. My earlier comment might not have been clear.
-> >
-> 
-> My point was that __GFP_THISNODE is pointless and reduces to providing a
-> single node nodemask anyway.
-> 
-> The contention over __GFP_PRIVATE is a bit ideological - do we want:
-> 
->   1) A hard guarantee that allocations to a private node are controlled
->      (__GFP_PRIVATE implies the caller knows what it's doing)
-> 
->   or
-> 
->   2) A soft guarantee (fallback list isolation only), and needing to
->      deal with undesired behavior that's "not technically a bug"
->      associated with existing users of global nodemasks (possible,
->      online, etc).
-> 
-> I am arguing for #1 - the community has argued for #2 and "fixing
-> existing nodemask users".  I think we can ship #2 and pivot to #1 if we
-> find fixing existing users is infeasible or too much of a maintenance
-> burden.
-
-Again happy to discuss this, I'd like to make sure we agree on the
-design. I am wondering if there is any experimental data to choose
-between 1 and 2.
-
-> 
-> > 
-> > Why not use mbind() API's? Do we want to gate allocation/privileges
-> > via a /dev?
-> >
-> 
-> We want to eventually enable it, but we really need to treat these
-> extensions as a separate step from the base so that the UAPI
-> implications are given proper scrutiny.
-> 
-> In the short term, /dev/xxx and driver-local/service-local control
-> of a node is still very useful.
-> 
-> For example, for my compressed memory work, I have found that if
-> implemented as a swap backend - the kernel can manage the node without
-> any UAPI implications at all :].
-> 
-> A driver managing memory on a private node could do the same.
-> 
-> ~Gregory
+I'll jump back to patch 1 and point that out next.
 
 
-Thanks for the detailed answers, happy to iterate and experiment on
-the design with you, my opinions come from way back when we tried
-to do CDM (in it's first iteration)
-
-Balbir
+> Signed-off-by: Vishal Aslot <vaslot@nvidia.com>
+> Signed-off-by: Richard Cheng <icheng@nvidia.com>
+> ---
+> Changelog:
+> 
+> v1->v2:
+>     - Replace second_decoder(), third_decoder() with a single
+>       match_decoder_by_index() helper, so all lookups share one matcher.
+>     - Use DEFINE_RANGE() for the empty range instread of an open-coded
+>       struct
+>     - Set cxled->state = CXL_DECODER_STATE_MANUAL rather than STATE_AUTO
+>     - Set CXL_DECODER_F_LOCK on the mock zero-size decoders to model the
+>       BIOS-burns-slots case
+> ---
+>  tools/testing/cxl/test/cxl.c | 79 +++++++++++++++++++++++++++++++-----
+>  1 file changed, 69 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> index 418669927fb0..1ae0290a9221 100644
+> --- a/tools/testing/cxl/test/cxl.c
+> +++ b/tools/testing/cxl/test/cxl.c
+> @@ -1041,16 +1041,41 @@ static void default_mock_decoder(struct cxl_decoder *cxld)
+>  	WARN_ON_ONCE(!cxld_registry_new(cxld));
+>  }
+>  
+> -static int first_decoder(struct device *dev, const void *data)
+> +static int match_decoder_by_index(struct device *dev, const void *data)
+>  {
+> +	int target_id = *(const int *)data;
+>  	struct cxl_decoder *cxld;
+>  
+>  	if (!is_switch_decoder(dev))
+>  		return 0;
+>  	cxld = to_cxl_decoder(dev);
+> -	if (cxld->id == 0)
+> -		return 1;
+> -	return 0;
+> +	return cxld->id == target_id;
+> +}
+> +
+> +static void size_zero_mock_decoder_ep(struct cxl_decoder *cxld, u64 base)
+> +{
+> +	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(&cxld->dev);
+> +
+> +	cxld->hpa_range = DEFINE_RANGE(base, base - 1);
+> +	cxld->interleave_ways = 2;
+> +	cxld->interleave_granularity = 4096;
+> +	cxld->target_type = CXL_DECODER_HOSTONLYMEM;
+> +	cxld->flags = CXL_DECODER_F_ENABLE | CXL_DECODER_F_LOCK;
+> +	cxled->state = CXL_DECODER_STATE_MANUAL;
+> +	cxld->commit = mock_decoder_commit;
+> +	cxld->reset = mock_decoder_reset;
+> +}
+> +
+> +static void size_zero_mock_decoder_sw(struct cxl_decoder *cxld, u64 base,
+> +				      int level)
+> +{
+> +	cxld->flags = CXL_DECODER_F_ENABLE | CXL_DECODER_F_LOCK;
+> +	cxld->target_type = CXL_DECODER_HOSTONLYMEM;
+> +	cxld->interleave_ways = level == 0 ? 2 : 1;
+> +	cxld->interleave_granularity = 4096;
+> +	cxld->hpa_range = DEFINE_RANGE(base, base - 1);
+> +	cxld->commit = mock_decoder_commit;
+> +	cxld->reset = mock_decoder_reset;
+>  }
+>  
+>  /*
+> @@ -1123,15 +1148,17 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
+>  	}
+>  
+>  	/*
+> -	 * The first decoder on the first 2 devices on the first switch
+> -	 * attached to host-bridge0 mock a fake / static RAM region. All
+> -	 * other decoders are default disabled. Given the round robin
+> -	 * assignment those devices are named cxl_mem.0, and cxl_mem.4.
+> +	 * On the first 2 devices on the first switch attached to
+> +	 * host-bridge0, decoder[0] mocks a fake / static RAM region and
+> +	 * decoders 1 and 2 mock BIOS-burnt zero-size + locked slots
+> +	 * (CXL r3.2 §8.2.4.20.12, §14.13.10). All other decoders are
+> +	 * default disabled. Given the round robin assignment those
+> +	 * devices are named cxl_mem.0 and cxl_mem.4.
+>  	 *
+>  	 * See 'cxl list -BMPu -m cxl_mem.0,cxl_mem.4'
+>  	 */
+>  	if (!is_endpoint_decoder(&cxld->dev) || !hb0 || pdev->id % 4 ||
+> -	    pdev->id > 4 || cxld->id > 0) {
+> +	    pdev->id > 4 || cxld->id > 2) {
+>  		default_mock_decoder(cxld);
+>  		return false;
+>  	}
+> @@ -1145,6 +1172,18 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
+>  	base = window->base_hpa;
+>  	if (extended_linear_cache)
+>  		base += mock_auto_region_size;
+> +
+> +	/*
+> +	 * Decoders 1 and 2 of the special endpoints under host-bridge0
+> +	 * are committed as zero-size + locked to mock BIOS burning
+> +	 * decoder slots (CXL r3.2 §8.2.4.20.12, §14.13.10).
+> +	 */
+> +	if (cxld->id == 1 || cxld->id == 2) {
+> +		size_zero_mock_decoder_ep(cxld, base);
+> +		port->commit_end = cxld->id;
+> +		WARN_ON_ONCE(!cxld_registry_new(cxld));
+> +		return false;
+> +	}
+>  	cxld->hpa_range = (struct range) {
+>  		.start = base,
+>  		.end = base + mock_auto_region_size - 1,
+> @@ -1168,9 +1207,12 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
+>  	 */
+>  	iter = port;
+>  	for (i = 0; i < 2; i++) {
+> +		int id;
+> +
+>  		dport = iter->parent_dport;
+>  		iter = dport->port;
+> -		dev = device_find_child(&iter->dev, NULL, first_decoder);
+> +		id = 0;
+> +		dev = device_find_child(&iter->dev, &id, match_decoder_by_index);
+>  		/*
+>  		 * Ancestor ports are guaranteed to be enumerated before
+>  		 * @port, and all ports have at least one decoder.
+> @@ -1214,6 +1256,23 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
+>  
+>  		cxld_registry_update(cxld);
+>  		put_device(dev);
+> +
+> +		/*
+> +		 * Mirror the endpoint: also commit the next two switch
+> +		 * decoders as zero-size + locked so the hierarchy looks
+> +		 * like a BIOS post-lock layout end-to-end.
+> +		 */
+> +		for (id = 1; id <= 2; id++) {
+> +			dev = device_find_child(&iter->dev, &id,
+> +						match_decoder_by_index);
+> +			if (WARN_ON(!dev))
+> +				continue;
+> +			cxld = to_cxl_decoder(dev);
+> +			size_zero_mock_decoder_sw(cxld, base, i);
+> +			iter->commit_end = id;
+> +			cxld_registry_update(cxld);
+> +			put_device(dev);
+> +		}
+>  	}
+>  
+>  	return false;
+> -- 
+> 2.43.0
+> 
