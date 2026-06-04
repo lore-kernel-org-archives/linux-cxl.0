@@ -1,327 +1,209 @@
-Received: from dragonfly.birch.relay.mailchannels.net (dragonfly.birch.relay.mailchannels.net [23.83.209.51])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D3A375F8B
-	for <linux-cxl@vger.kernel.org>; Thu,  4 Jun 2026 15:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.209.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11023812E4;
+	Thu,  4 Jun 2026 15:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780587795; cv=none; b=cRY01ywJ//JXaHKZCJUQrjNjWoUnF3AQa7d/Y1grYQq9Tozc6TQCJf3LRvqPPB9Em9yvhMbE1mfLsmgLPnKv0Cmbso2BIunkOl028baldwgOK4nZWnJzrXF3a5lUb45sRhZwAjhVrKP3bgN+l7ce8767T7T+RDGckACutZ/+WoI=
+	t=1780587945; cv=none; b=jRFWT5sBShXUNo7w4Ysn3A7KU+apZA0da4zUXJ06Au82apfOn1KujUcepWXQOXZ3VZZUOgQssMkyDolRjVWnJ0J6c85Ag6kYrC/6YWVGndothf8WA8dU98wUsJ9WvZ+krRxuFQXH8XpQR0AP5jKpVwZR/aucIFVB3CFD8enZnX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780587795; c=relaxed/simple;
-	bh=TfU8eWsopyUPqUS8n7ep+elRM90mEbrUfkJjtmfnAGY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PVyZdkfR/w3RRogu1xEbLhIAPkHEhHQ93jYRm4TM1xV1d8jzsK90nGlkT02B1Jd6tU5LOuQb1Wvwt3rEuJeAdrmdfSy0yZLS899jTawNVr8/0nwzcDNP95hvQL2G67ARfh7S+jiIT9ryqrPqAgZ1gvANIrkdBE7VbcDOwRTCWxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=cKGTuKUx; arc=none smtp.client-ip=23.83.209.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1780587945; c=relaxed/simple;
+	bh=5fTfTeDePnUCU8NeGBX71SY280ubMI052UIveZM2QEM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uwp3cBsBG6HtuRFqq8kMcRInl9Qz4FlVU8GB+yhhf0UYq9r/n1T/0IyTG1O4UY9c2B/b2jhXuT2IplBoAnkxQ36/J5xWD6skg5+VLhg98CGiWz3Ck1IuJQ9yBcILtfB//7JsGYz5iJrdLLf0lBvR+7tZyesG/ygWBPnP4dqQ46o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iRLvAx/0; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="cKGTuKUx"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 9B7CA8C225A;
-	Thu, 04 Jun 2026 15:43:07 +0000 (UTC)
-Received: from pdx1-sub0-mail-a255.dreamhost.com (trex-green-3.trex.outbound.svc.cluster.local [100.101.207.57])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id D23BD8C2523;
-	Thu, 04 Jun 2026 15:43:06 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Tank-Shrill: 100bfbb97eb750aa_1780587787280_215337007
-X-MC-Loop-Signature: 1780587787280:3302998281
-X-MC-Ingress-Time: 1780587787280
-Received: from pdx1-sub0-mail-a255.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.101.207.57 (trex/7.1.5);
-	Thu, 04 Jun 2026 15:43:07 +0000
-Received: from offworld (186-79-219-2.fo.baf.movistar.cl [186.79.219.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a255.dreamhost.com (Postfix) with ESMTPSA id 4gWTNn1L4Dz106x;
-	Thu,  4 Jun 2026 08:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1780587786;
-	bh=BiUh1GmdwC8xpMfpZF6bAU1Jo1Gj33DdkRpRcym3KoM=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=cKGTuKUxmZEWV8nt8Bpr2Kxv7ns2bRYb3kwyPa9EFbGrQC9TcDs50LyYWOYzKYNDW
-	 F0ONoBK5l3aqwN87Jd5gbYYuE6KCmhZtKaOuCKR+Dsr4E9+8SENiI6jqLNbU8lZvp7
-	 Y44raRBEBFD3hTE9AC5NytS9N+TPHSdthHgqTNTGNpfLYIkAtcKfHjXQON6wK17GVb
-	 b2oyCAKYPlQpMXowt6FSkVKuOdXrW4h5BNMUD2ND+34c8JwHotV+HTFAfdgQM2czTg
-	 d6hnLmEmrxi8v1uPZioUSptugV+QTm0ImGLKSSZ9ekpfQuUKEm96iUxG3ZDN5VWP/c
-	 nJ/q19euvJ4nw==
-Date: Thu, 4 Jun 2026 08:42:59 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: linux-cxl@vger.kernel.org, qemu-devel@nongnu.org
-Subject: Re: [PATCH 4/4] hw/cxl: Add per-capability CXL Fixed Memory Window
- restriction flags
-Message-ID: <20260604154259.tq7vnnzuc74jif2m@offworld>
-References: <20260602231806.2469011-1-dave@stgolabs.net>
- <20260602231806.2469011-5-dave@stgolabs.net>
- <20260604113426.206c4d39@jic23-huawei>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iRLvAx/0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780587944; x=1812123944;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5fTfTeDePnUCU8NeGBX71SY280ubMI052UIveZM2QEM=;
+  b=iRLvAx/0n9ATzN00AJHPb/k7RU+WH5TRKbKY9iK540e+QsgHvzZ4HgPH
+   vvfwBU6vvcldAYY27Rn7SFytjUgM8LK4Dsqi2jrLtI6sv1cf9yq2QJNAM
+   WM1IlylLJbrMhGuW4VLCvmaEexgMYOqG1KmLWFSG9cYNiPMCQ9BjRFvuo
+   MqJ/+3JmYAhL8oSUOmRvb2qk75Je+78PMB4oBzIhkyZZ7gUymrovTR2Ll
+   gph25tYS0Rv3tLTvUZoRcXsSq5WE/Q5o98NfHqZ7DHsxCncKWjqEpnHKv
+   bTaVAbv4TBUPf0zCu1ivBIiefhy7fH36dZ8ANmZJo98IJCfcwppgvFSdr
+   w==;
+X-CSE-ConnectionGUID: qj/a4vi6QeCexg7fC+sXBA==
+X-CSE-MsgGUID: oBtVD/4wRWOC0WRdwbQYuQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="92901189"
+X-IronPort-AV: E=Sophos;i="6.24,187,1774335600"; 
+   d="scan'208";a="92901189"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 08:45:43 -0700
+X-CSE-ConnectionGUID: Fp9d8JheTney8gWxTn9qdQ==
+X-CSE-MsgGUID: +Kl4Ba+zTWCZwitII1EcPg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,187,1774335600"; 
+   d="scan'208";a="238230776"
+Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.108.206]) ([10.125.108.206])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jun 2026 08:45:42 -0700
+Message-ID: <e5c36677-c4e1-4622-9a9c-d056d2a266ba@intel.com>
+Date: Thu, 4 Jun 2026 08:45:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260604113426.206c4d39@jic23-huawei>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/region: Fix NULL pointer within p->targets[]
+To: Li Ming <ming.li@zohomail.com>,
+ Alison Schofield <alison.schofield@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <djbw@kernel.org>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260530-fix_null_in_targets_array-v1-1-312c3bf1fe0f@zohomail.com>
+ <aiCtet61qSddQ-Pr@aschofie-mobl2.lan>
+ <09a534c2-3dc2-4fd9-a69b-c26771af45f1@zohomail.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <09a534c2-3dc2-4fd9-a69b-c26771af45f1@zohomail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 04 Jun 2026, Jonathan Cameron wrote:
 
->On Tue,  2 Jun 2026 16:18:06 -0700
->Davidlohr Bueso <dave@stgolabs.net> wrote:
->
->> Expose the CFMWS Window Restrictions as named per-capability machine
->> properties (device-coherent, host-only, volatile, persistent,
->> fixed-config, back-invalidate), making the advertised restrictions
->> configurable per window.
+
+On 6/4/26 6:28 AM, Li Ming wrote:
+> 
+> 在 2026/6/4 06:40, Alison Schofield 写道:
+>> On Sat, May 30, 2026 at 12:24:40PM +0800, Li Ming wrote:
+>>> cxl_region_remove_target() leaves a NULL pointer in the slot of the
+>>> removable endpoint decoder in p->targets array. However, p->targets
+>>> array replies on p->nr_targets to determine validity, which means when
+>>> p->nr_targets == p->interleave_ways, driver assumes all elements from
+>>> index 0 to (p->nr_targets - 1) are valid. The stale NULL pointer
+>>> violates this assumption and causes the driver to treat a NULL pointer
+>>> as a valid endpoint decoder.
+>>>
+>>> To fix this issue, when a endpoint decoder is removed by
+>>> cxl_region_remove_target(), always swap the last valid endpoint decoder
+>>> pointer into the slot of removal endpoint decoder to ensure all pointers
+>>> before p->targets[p->nr_targets] are valid.
+>>>
+>>> Fixes: 809ccef5385f ("cxl/region: Fix out-of-bounds access in cxl_cancel_auto_attach()")
+>>> Suggested-by: Alison Schofield <alison.schofield@intel.com>
+>>> Signed-off-by: Li Ming <ming.li@zohomail.com>
+>>> ---
+>>>   drivers/cxl/core/region.c | 10 +++++++++-
+>>>   1 file changed, 9 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>>> index e90c024c8036..54018db87a4c 100644
+>>> --- a/drivers/cxl/core/region.c
+>>> +++ b/drivers/cxl/core/region.c
+>>> @@ -2220,7 +2220,15 @@ static int cxl_region_remove_target(struct device *dev, void *data)
+>>>               p->nr_targets--;
+>>>               cxled->state = CXL_DECODER_STATE_AUTO;
+>>>               cxled->pos = -1;
+>>> -            p->targets[i] = NULL;
+>>> +
+>>> +            /*
+>>> +             * Swap the last valid target into the slot to
+>>> +             * ensure no invalid target in p->nr_targets range.
+>>> +             * The targets array will be re-sorted during the
+>>> +             * last endpoint decoder attaching again.
+>>> +             */
+>>> +            p->targets[i] = p->targets[p->nr_targets];
+>>> +            p->targets[p->nr_targets] = NULL;
+>>>                 return 1;
+>>>           }
+>> Hi Ming,
 >>
->> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
->Hi Davidlohr, looks good in general.
->
->Maybe I need more coffee but I don't thing the documented constraints
->are exactly the same as the ones in the code.
-
-Sorry, I'm not sure I follow here.
-
->
->Thanks again for doing this!
-
-No problem, thanks for reviewing.
-
->
->Jonathan
->
->> ---
->>  docs/system/devices/cxl.rst | 13 +++------
->>  hw/acpi/cxl.c               |  2 +-
->>  hw/cxl/cxl-host.c           | 55 +++++++++++++++++++++++++++++++++++++
->>  include/hw/cxl/cxl.h        | 12 ++++++++
->>  qapi/machine.json           | 29 +++++++++++++++++++
->>  5 files changed, 101 insertions(+), 10 deletions(-)
+>> I'm replying to top post here, but I have read the Sashiko response
+>> and your response to that.
 >>
->> diff --git a/docs/system/devices/cxl.rst b/docs/system/devices/cxl.rst
->> index 9d0771cdfd73..cf3f2c81785c 100644
->> --- a/docs/system/devices/cxl.rst
->> +++ b/docs/system/devices/cxl.rst
->> @@ -384,15 +384,14 @@ An example of 4 devices below a switch suitable for 1, 2 or 4 way interleave::
->>    -device cxl-type3,bus=swport3,persistent-memdev=cxl-mem3,lsa=cxl-lsa3,id=cxl-pmem3,sn=0x4 \
->>    -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
+>> I'm offering review on the target list holes, but deferring on the
+>> issue with cxl_rr_free_decoder because I think it's a narrow window
+>> and it would not belong in *this* patch. (and maybe I'm running
+>> out of steam too ;))
 >>
->> -An example of 4 type3 devices with volatile memory below a switch. Two of the devices
->> -use HDM-DB for coherence, which requires operating in Flit mode::
->> +An example of 2 type3 devices with volatile memory below a switch. The devices
->> +use HDM-DB for coherence, which requires operating in Flit mode and a CXL window
->> +configured to permit device-coherent Back-Invalidate model::
->
->Thanks for doing this!.  I wonder if the example should gain a second FMW to accommodate
->the original mixed device config. I'm fairly sure that should work and good to indicate
->that the mixed case is real.
-
-I can do that.
-
->
+>> For the target list holes. I think there may be a single change
+>> that can fix both the site you've fixed in this patch, and the
+>> decoder detach site that Sashiko calls out.
 >>
->>    qemu-system-x86_64 -M q35,cxl=on -m 4G,maxmem=8G,slots=8 -smp 4 \
->>    ...
->>    -object memory-backend-ram,id=cxl-mem0,share=on,size=256M \
->>    -object memory-backend-ram,id=cxl-mem1,share=on,size=256M \
->> -  -object memory-backend-ram,id=cxl-mem2,share=on,size=256M \
->> -  -object memory-backend-ram,id=cxl-mem3,share=on,size=256M \
->>    -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
->>    -device cxl-rp,port=0,bus=cxl.1,id=root_port0,chassis=0,slot=0 \
->>    -device cxl-rp,port=1,bus=cxl.1,id=root_port1,chassis=0,slot=1 \
->> @@ -401,11 +400,7 @@ use HDM-DB for coherence, which requires operating in Flit mode::
->>    -device cxl-type3,bus=swport0,volatile-memdev=cxl-mem0,id=cxl-mem0,sn=0x1,x-256b-flit=on,hdm-db=on \
->>    -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5 \
->>    -device cxl-type3,bus=swport1,volatile-memdev=cxl-mem1,id=cxl-mem1,sn=0x2,x-256b-flit=on,hdm-db=on \
->> -  -device cxl-downstream,port=2,bus=us0,id=swport2,chassis=0,slot=6 \
->> -  -device cxl-type3,bus=swport2,volatile-memdev=cxl-mem2,id=cxl-mem2,sn=0x3 \
->> -  -device cxl-downstream,port=3,bus=us0,id=swport3,chassis=0,slot=7 \
->> -  -device cxl-type3,bus=swport3,volatile-memdev=cxl-mem3,id=cxl-mem3,sn=0x4 \
->> -  -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
->> +  -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k,cxl-fmw.0.back-invalidate=on
+>> Rather than add compaction at each removal site, make the AUTO
+>> 'appender' insert the decoder in the first free slot instead of
+>> blindly at p->targets[p->nr_targets].
 >>
->>  A simple arm/virt example featuring a single direct connected CXL Type 3
->>  Volatile Memory device::
->> diff --git a/hw/acpi/cxl.c b/hw/acpi/cxl.c
->> index 5ce5e8e083ba..77c1db6561b4 100644
->> --- a/hw/acpi/cxl.c
->> +++ b/hw/acpi/cxl.c
->> @@ -172,7 +172,7 @@ static void cedt_build_cfmws(CXLFixedWindow *fw, Aml *cedt)
->>      build_append_int_noprefix(table_data, fw->enc_int_gran, 4);
+>>      /* Use first free slot. Do not assume nr_targets is dense */
+>>      for (pos = 0; pos < p->interleave_ways; pos++)
+>>              if (!p->targets[pos])
+>>                      break;
+>>      ...
+>>      p->targets[pos] = cxled;
+>>      cxled->pos = pos;
+> Yes, I think it can solve the problem, I will take a try.
 >>
->>      /* Window Restrictions */
->> -    build_append_int_noprefix(table_data, 0xe, 2);
->> +    build_append_int_noprefix(table_data, fw->restrictions, 2);
 >>
->>      /* QTG ID */
->>      build_append_int_noprefix(table_data, 0, 2);
->> diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
->> index f3479b19914f..7af431bf1555 100644
->> --- a/hw/cxl/cxl-host.c
->> +++ b/hw/cxl/cxl-host.c
->> @@ -61,6 +61,61 @@ static void cxl_fixed_memory_window_config(CXLFixedMemoryWindowOptions *object,
->>          fw->enc_int_gran = 0;
->>      }
+>> My reasoning, that you'll need to prove -
 >>
->> +    if (object->device_coherent) {
->> +        fw->restrictions |= CXL_FMW_DEVICE_COHERENT;
->> +    }
->> +    if (object->back_invalidate) {
->> +        if (object->has_device_coherent && !object->device_coherent) {
->> +            error_setg(errp, "CFMW BI requires device-coherent");
->> +            return;
->> +        }
->> +        fw->restrictions |= CXL_FMW_DEVICE_COHERENT | CXL_FMW_BI;
->> +    }
->> +    if (object->host_only) {
->> +        fw->restrictions |= CXL_FMW_HOST_ONLY;
->> +    } else if (!object->has_host_only &&
->> +               !(fw->restrictions & CXL_FMW_DEVICE_COHERENT)) {
->> +        /* host-only coherent is the default when no model is requested. */
->> +        fw->restrictions |= CXL_FMW_HOST_ONLY;
->> +    }
->> +
->> +    if (!(fw->restrictions & (CXL_FMW_DEVICE_COHERENT | CXL_FMW_HOST_ONLY))) {
->> +        error_setg(errp, "CFMW coherency model required");
->> +        return;
->> +    }
->> +
->> +    /*
->> +     * Reject the undefined and conflicting coherency combinations,
->> +     * per CXL r4.0 9.18.1.3.
->> +     */
->> +    if ((fw->restrictions & CXL_FMW_HOST_ONLY) &&
->> +        (fw->restrictions & CXL_FMW_BI)) {
->> +        error_setg(errp, "CFMW host-only coherency + BI is undefined behavior");
->> +        return;
->> +    }
->> +    if ((fw->restrictions & CXL_FMW_DEVICE_COHERENT) &&
->> +        (fw->restrictions & CXL_FMW_HOST_ONLY)) {
->> +        error_setg(errp,
->> +                   "CFMW device and host-only coherency are mutually exclusive");
->
->I'm confused. I thought this one was allowed by the spec?  Without a spec
->clarification I'm reluctant to prevent it.
-
-The text is not clear, I agree. However, per Dan's pushback in the kernel series,
-I took this as bit1 (host only) cannot be combined with anything dev coherent.
-This is also why I drop the bit0 in the default restrictions. I am fine removing
-this check here for now, but also have a kernel equivalent which fails the cfmw
-parsing if any of the above is seen (maybe the failure could be downgraded to
-a warning).
-
->
->> +        return;
->> +    }
->> +
->> +    if (object->fixed_config) {
->> +        fw->restrictions |= CXL_FMW_FIXED_CONFIG; /* no-op */
->> +    }
->> +
->> +    /* Volatile and persistent are permitted unless explicitly disabled. */
->> +    if (!object->has_q_volatile || object->q_volatile) {
->> +        fw->restrictions |= CXL_FMW_VOLATILE;
->> +    }
->> +    if (!object->has_persistent || object->persistent) {
->> +        fw->restrictions |= CXL_FMW_PERSISTENT;
->> +    }
->> +    if (!(fw->restrictions & (CXL_FMW_VOLATILE | CXL_FMW_PERSISTENT))) {
->> +        error_setg(errp, "CFMW volatile and/or persistent memory required");
->> +        return;
->> +    }
->> +
->>      fw->targets = g_malloc0_n(fw->num_targets, sizeof(*fw->targets));
->>      for (i = 0, target = object->targets; target; i++, target = target->next) {
->>          /* This link cannot be resolved yet, so stash the name for now */
->
->> diff --git a/qapi/machine.json b/qapi/machine.json
->> index 685e4e29b87d..a5be531403a1 100644
->> --- a/qapi/machine.json
->> +++ b/qapi/machine.json
->> @@ -551,15 +551,44 @@
->>  #     accesses will go to a given interleave target.  Accepted values
->>  #     [256, 512, 1k, 2k, 4k, 8k, 16k]
->>  #
->> +# @device-coherent: Window permits device-coherent (minimally HDM-D)
->> +#     accesses.  (since 11.0)
->
->Will be at least 11.1 as that's the cycle we are in now I think.
-
-ack
-
->
->> +#
->> +# @host-only: Window permits host-only coherent (HDM-H) accesses.
->> +#     (since 11.0)
->> +#
->> +# @volatile: Window permits volatile memory.  (since 11.0)
->> +#
->> +# @persistent: Window permits persistent memory.  (since 11.0)
->> +#
->> +# @fixed-config: Window has a fixed device configuration.  Advertised
->> +#     in the CEDT only; not otherwise emulated.  (since 11.0)
->> +#
->> +# @back-invalidate: Window permits Back-Invalidate (HDM-DB).  Implies
->> +#     @device-coherent.  (since 11.0)
->If I read the code above right you check for device coherent. So
->I'd argue, should say Requires @device_coherent.
-
-The intent here is to explain that we allow the user not to have to
-explicitly pass both device-coherent=on and back-invalidate=on options
-when do BI.
-
-+    if (object->back_invalidate) {
-+        if (object->has_device_coherent && !object->device_coherent) {
-+            error_setg(errp, "CFMW BI requires device-coherent");
-+            return;
-+        }
-+        fw->restrictions |= CXL_FMW_DEVICE_COHERENT | CXL_FMW_BI;
-+    }
-
->
->> +#
->>  # @targets: Target root bridge IDs from -device ...,id=<ID> for each
->>  #     root bridge.
->>  #
->> +# Coherency defaults to host-only coherent; request a device model
->> +# with @device-coherent or @back-invalidate instead.  @volatile and
->
->@device-coherent and/or @back-invalidate instead.
-
-Yes.
-
-Thanks,
-Davidlohr
-
->
->> +# @persistent are permitted unless set to false, and at least one is
->> +# required.  Clearing @host-only with no device model is rejected, as
->> +# are host-only coherent + back-invalidate and device-coherent +
->> +# host-only coherent.
->> +#
->>  # Since: 7.1
->>  ##
->>  { 'struct': 'CXLFixedMemoryWindowOptions',
->>    'data': {
->>        'size': 'size',
->>        '*interleave-granularity': 'size',
->> +      '*device-coherent': 'bool',
->> +      '*host-only': 'bool',
->> +      '*volatile': 'bool',
->> +      '*persistent': 'bool',
->> +      '*fixed-config': 'bool',
->> +      '*back-invalidate': 'bool',
->>        'targets': ['str'] }}
+>> - Removal only leaves a hole. The damage happens later in the appender
+>> Fix the appender and the hole becomes harmless no matter who created it.
 >>
->>  ##
->
+>> - It covers the cancel-auto site because a hole left by the staging
+>> cancel is skipped by the next append, so the swap-compaction in this
+>> patch is no longer needed.
+> 
+> Yes, if we use finding the first free slot for a decoder attachment, we will not need swap-compaction. But we should reuse p->interleave_ways instead of p->nr_targets for walking p->targets array in cxl_region_remove_target(), consecutive detach will have problem without that. Like this:
+> 
+> p->nr_targets = 4
+> 
+> [-1, 1, 2, 3]    # __cxl_decoder_detach() called for pos 1, remove it.
+> 
+> 
+> p->nr_targets = 3
+> 
+> [-1, NULL, 2, 3] # __cxl_decoder_detach() called for pos 3, but it have no chance to be accessed by cxl_region_remove_target().
+> 
+> 
+> Maybe Dave could drop the OOB fix, I will send out a patchset that includes both the "insert decoder in the first free slot" and the OOB fix.
+> 
+
+OOB fix dropped from cxl/next
+
+DJ
+
+> 
+>>
+>> - It covers the decoder detach site similarly (per Sashiko). The NULL
+>> left by __cxl_decoder_detach() is filled on re-attach instead of being
+>> appended past. Your reproduce seems like it would verify that.
+>>
+>> - It needs no manual-vs-auto special case. An AUTO region has exactly
+>> interleave_ways slots and interleave_ways members, so first-free-slot
+>> keeps the array dense whenever it is full. The manual path is
+>> untouched.
+>>
+>> I'd probably rename to something like:
+>> cxl/region: Fill first free targets[] slot during auto-discovery
+> Will do
+>>
+>> BTW the fixes tag is not the OOB fix but is the original commit,
+>> the same one you used in the OOB fix. 87805c32e6ad
+> 
+> Sure, Will fix it, thanks.
+> 
+> 
+> Ming
+> 
+>>
+>> -- Alison
+>>
+>>
+>>> ---
+>>> base-commit: 809ccef5385fa1779c7db3de43272f3fc6a87a45
+>>> change-id: 20260530-fix_null_in_targets_array-124303a8ba0f
+>>>
+>>> Best regards,
+>>> -- 
+>>> Li Ming <ming.li@zohomail.com>
+>>>
+>>>
+
