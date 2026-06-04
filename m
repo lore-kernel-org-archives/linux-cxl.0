@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1690447DFA8
-	for <linux-cxl@vger.kernel.org>; Wed,  3 Jun 2026 23:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EA710F1
+	for <linux-cxl@vger.kernel.org>; Thu,  4 Jun 2026 00:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780531057; cv=none; b=sFD9tGMD/ATKe+0TRM8oUna9FLSDaaC6SOg2GF8B7yoKO/Ep7fhTBDDeVQxvdu+hbRsNd9CSmGWVrRE8qGSV8uHFQtduQKcM711BMnCfAhFt8gVBs8XcMgz3bBmT8U8Bv+8YlBtC1pqTtWr5toA2JoalaJANcu/hSE82doTLYg4=
+	t=1780531463; cv=none; b=XatBRClGM5Bc7xH3I6p/T+N0io5bZvw3GfyeviRVBEN/fQZw/Z4xBbpHwomv2U/ViZ7LOlW/1GwHrZmTqm2g8ul7JOR81FX1inqvg9fd4fIv3eEW3wW+ltYUs58osGHqFb43Juzs4rRC6aw2DH14916CfPdM3RWd/0sBGtqItgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780531057; c=relaxed/simple;
-	bh=yRcemuVUXSEKZDC6et6ZqbHvNBqUBjZ47s68H/v/lnE=;
+	s=arc-20240116; t=1780531463; c=relaxed/simple;
+	bh=szg1Gyc1GaY3s5k24Fha6h5bQ740hCKlneec0jsDI1I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XZSFd5QjkrgNQuSV3l/vOGTKuuUQsTdid4Ewyobf9bUQyu22j2gHgGIUxdOds9r44kCtrc/uIEoGpCq9BfeKunsj00Gq/PM3YBrDsuAoTTALllD5qrOdvxVlpNRhuN9vFcl8xISPdzIJiPqW/HoNe9Kt7uoiNeCWLn4Sc2zc2ks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j1M98cIM; arc=none smtp.client-ip=198.175.65.10
+	 In-Reply-To:Content-Type; b=Bw/GCQhEmOoMR4VtgiF/EEUyTnTMmj4BVJJuILmdWRbyVCYw2XeYmyk5ISGS1zYZwsLTJEshcLaZMdyyKVGwkIR6t/43q5EW0Dpuex8F7rT7dxbjOwUEjEIEt4OWoY+MfIg2ONQid9DIkFmI2y98idL3tLz8ZSxauD/Z8WdS250=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kAt4Td9h; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j1M98cIM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kAt4Td9h"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780531055; x=1812067055;
+  t=1780531462; x=1812067462;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=yRcemuVUXSEKZDC6et6ZqbHvNBqUBjZ47s68H/v/lnE=;
-  b=j1M98cIM2WjJ2tyQ4kcRlbVlFroAkuQUqv0+BNfyftal77lIo4dOkkht
-   zF8LAMWtCrzpsJkKGMITIaVNb9CNs0mdNIEC0f/sDi+hx0kTJNCM/H/I4
-   GdY54g/d+EsowrnqbCPcL9qMh0AnBpsjlC3H1ctPvpWkZw6fpenXC7Hym
-   o6pTCNU55UljdDnhbloh8VkSaJbODXJr5oBhLXuUftbDC6rxy6alG2U+P
-   U9dqkyxBjxXS4tmXGJAeb3lF1luj/iLEWVfGrA6IcgVe4WmmvdlclZRxk
-   84rqVx35vTyTVCiNs81CmtpyMUbkUEcb/210aeAUjh99Bp5SZ6hhw6KSq
-   A==;
-X-CSE-ConnectionGUID: UfMkPbZ6ReCzCYkfMC/FNQ==
-X-CSE-MsgGUID: d+PgPEG2TjS0daAumXIOTw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11806"; a="98776536"
+  bh=szg1Gyc1GaY3s5k24Fha6h5bQ740hCKlneec0jsDI1I=;
+  b=kAt4Td9hJk1/jYENd2CyZNFoWKsFEnEl3jqGoz31pU/HOZFuECy/qOw2
+   0/j/V/vm/JC8d0XsbRVtcdxy013etjpMiaHNVnzq1/RUMyVeGi9fdWhGv
+   LI9IMfLOaF88CdF0snmPIdDgQC1lzE8eDgJQKBaKVyBnQLZu4Hvitfdzr
+   ufjsuBZWjJJv0QLhptrH8IG/WG8+JQn1dfj0LBKbLnX0yvPQETKFPkH4a
+   SKjt4ffJqprUyLZtmRmCkukSTPRx1gSDtLmJ9D5NC+F44v93NNlvSpyZq
+   WgaXtVR0n2vFtIfAREjLkWqkGIoO0lMwNmoHLIjpO5V3oSyMZVj3bA0Nu
+   Q==;
+X-CSE-ConnectionGUID: KowNcW/wQKm3RhJcLx2G8Q==
+X-CSE-MsgGUID: yaZScrgHRp2LAvG2QhydkQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11806"; a="80495658"
 X-IronPort-AV: E=Sophos;i="6.24,186,1774335600"; 
-   d="scan'208";a="98776536"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 16:57:35 -0700
-X-CSE-ConnectionGUID: iFzxfmsiTw2tHttEr/IZrg==
-X-CSE-MsgGUID: HQICAl5lRxaHcnTLIOXsqA==
+   d="scan'208";a="80495658"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 17:04:21 -0700
+X-CSE-ConnectionGUID: xSlByfF3Sdyg89r2TfTB+A==
+X-CSE-MsgGUID: g4xtTF/bQAe/plxsrqU/Rw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,186,1774335600"; 
-   d="scan'208";a="238048880"
+   d="scan'208";a="248719587"
 Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.108.116]) ([10.125.108.116])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 16:57:33 -0700
-Message-ID: <6c9b6436-712e-4a2d-a044-45fe62f94718@intel.com>
-Date: Wed, 3 Jun 2026 16:57:32 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 17:04:20 -0700
+Message-ID: <7532ffb1-fe3f-4033-bd38-79f5dee150ef@intel.com>
+Date: Wed, 3 Jun 2026 17:04:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] Documentation/cxl: Add region granularity and
- multi-level interleave guide
+Subject: Re: [PATCH 5/6] cxl/test: Add a topology to test mixed-granularity
+ regions
 To: Alison Schofield <alison.schofield@intel.com>,
  Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
@@ -61,538 +61,711 @@ To: Alison Schofield <alison.schofield@intel.com>,
  Robert Richter <rrichter@amd.com>
 Cc: linux-cxl@vger.kernel.org
 References: <cover.1780095671.git.alison.schofield@intel.com>
- <ef2ba341a7ed6f754012e11110750d57929575b2.1780095671.git.alison.schofield@intel.com>
+ <2ab2466fafa96f07df65ee5f6b4f8511240f4c93.1780095671.git.alison.schofield@intel.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <ef2ba341a7ed6f754012e11110750d57929575b2.1780095671.git.alison.schofield@intel.com>
+In-Reply-To: <2ab2466fafa96f07df65ee5f6b4f8511240f4c93.1780095671.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
 On 5/29/26 5:00 PM, Alison Schofield wrote:
-> Document how region and root decoder granularities interact for
-> same-granularity, power-of-2 mixed-granularity, and 3-way-family
-> interleaves.
+> Add a cxl_test topology for mixed-granularity region coverage.
 > 
-> Explain the selector-bit model used by the CXL specification, the
-> legal layouts that result from it, the additional span constraint
-> required by 3-way-family roots, and how the Linux driver validates
-> those rules for both auto and user-created regions.
+> modprobe cxl_test mixed_gran_regions=1 creates three host bridges
+> with two switch levels below each bridge and twelve endpoints total.
+> The topology advertises one 2-way root CFMWS for power-of-2
+> mixed-granularity tests and one 3-way root CFMWS for 3-way-family
+> tests.
 > 
-> Assisted-by: Claude Opus 4.7
+> Leave the default and existing specialty topologies unchanged.
+> 
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+$ make -j `nproc` M=tools/testing/cxl
+make[1]: Entering directory '/home/djiang5/git/kernel-review/tools/testing/cxl'
+  CC [M]  test/cxl.o
+test/cxl.c: In function ‘cxl_test_init’:
+test/cxl.c:2358:17: error: label ‘err_rch’ used but not defined
+ 2358 |                 goto err_rch;
+      |
+
+Applied against 7.1-rc6.
 
 > ---
->  Documentation/driver-api/cxl/index.rst        |   1 +
->  .../cxl/linux/region-granularity.rst          | 486 ++++++++++++++++++
->  2 files changed, 487 insertions(+)
->  create mode 100644 Documentation/driver-api/cxl/linux/region-granularity.rst
+>  tools/testing/cxl/test/cxl.c | 474 +++++++++++++++++++++++++++++++++--
+>  1 file changed, 452 insertions(+), 22 deletions(-)
 > 
-> diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-> index 3dfae1d310ca..1ae193ea4020 100644
-> --- a/Documentation/driver-api/cxl/index.rst
-> +++ b/Documentation/driver-api/cxl/index.rst
-> @@ -42,6 +42,7 @@ that have impacts on each other.  The docs here break up configurations steps.
->     linux/dax-driver
->     linux/memory-hotplug
->     linux/access-coordinates
-> +   linux/region-granularity
+> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> index 418669927fb0..b44db749873f 100644
+> --- a/tools/testing/cxl/test/cxl.c
+> +++ b/tools/testing/cxl/test/cxl.c
+> @@ -17,6 +17,7 @@
+>  static int interleave_arithmetic;
+>  static bool extended_linear_cache;
+>  static bool fail_autoassemble;
+> +static bool mixed_gran_regions;
 >  
->  .. toctree::
->     :maxdepth: 2
-> diff --git a/Documentation/driver-api/cxl/linux/region-granularity.rst b/Documentation/driver-api/cxl/linux/region-granularity.rst
-> new file mode 100644
-> index 000000000000..7d0d12e6e2bd
-> --- /dev/null
-> +++ b/Documentation/driver-api/cxl/linux/region-granularity.rst
-> @@ -0,0 +1,486 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +==============================================
-> +Region Granularity and Multi-Level Interleave
-> +==============================================
-> +
-> +CXL memory regions stripe accesses across one or more endpoints by
-> +routing transactions through a tree of decoders: a root decoder, zero
-> +or more switch decoders, and an endpoint decoder at each leaf. Each
-> +decoder in that path uses a contiguous range of HPA address bits to
-> +pick its target. This document describes how those bit ranges combine
-> +across levels, the constraints CXL Spec 4.0 places on legal
-> +combinations, and how the Linux CXL driver validates and programs
-> +them.
-> +
-> +The relevant spec material is CXL Spec 4.0 Section 9.13.1, especially
-> +Section 9.13.1.1 ("Legal Interleaving Configurations") and CXL Spec
-> +4.0 Tables 9-6, 9-7, and 9-8. CXL Spec 4.0 Figure 9-17 (two-level)
-> +and Figure 9-18 (three-level) illustrate the bit-routing intuition
-> +this document builds on.
-> +
-> +
-> +HPA Selector Bits
-> +=================
-> +
-> +For a single interleave level with ``W`` ways and granularity ``G``
-> +bytes, the **selector bits** are the ``log2(W)`` HPA bits the decoder
-> +inspects to choose among its ``W`` targets. The lowest of those bits
-> +sits at position ``log2(G)``, so the selector spans
-> +``[log2(G) + log2(W) - 1 : log2(G)]``. Equivalently, the bitmask is
-> +``(W - 1) * G``.
-> +
-> +A few examples make the geometry concrete::
-> +
-> +   2-way at  256B  ->  selector bit 8         (one bit)
-> +   4-way at  1KB   ->  selector bits[11:10]   (two bits)
-> +   2-way at  4KB   ->  selector bit 12        (one bit)
-> +   8-way at  1KB   ->  selector bits[12:10]   (three bits)
-> +
-> +Throughout this document "inner bit" means a lower-numbered HPA bit
-> +(smaller stride, faster cycling among targets) and "outer bit" means
-> +a higher-numbered HPA bit (larger stride, slower cycling). HPA[8] is
-> +the innermost legal CXL selector bit; HPA[14] is the outermost.
-> +
-> +
-> +The Multi-Level Rule
-> +====================
-> +
-> +When a region's interleave is split across multiple decoder levels,
-> +CXL Spec 4.0 Section 9.13.1 requires that:
-> +
-> +   "all the levels use different, but consecutive, HPA bits to
-> +   select the target and no Interleave Set has more than eight
-> +   devices."
-> +
-> +Two requirements live in that sentence:
-> +
-> +* **Disjoint** - each level's selector bits must not overlap any
-> +  other level's bits.
-> +* **Consecutive** - the union of all level selectors must be a single
-> +  contiguous run of HPA bits with no gap.
-> +
-> +The union of level selectors is the **region selector**, and it must
-> +equal ``(region_ways - 1) * region_gran``. Because that mask is itself
-> +a contiguous run by construction, the levels just need to partition
-> +it cleanly.
-> +
-> +The seven legal interleave granularity values split into two groups
-> +(see CXL Spec 4.0 Section 9.13.1 and Table 8-116):
-> +
-> +* **Group 1** - 256B, 512B, 1024B, 2048B (interleaving on HPA[8..11])
-> +* **Group 2** - 4096B, 8192B, 16384B (interleaving on HPA[12..14])
-> +
-> +CXL host bridges and switches must support every value in both
-> +groups. CXL memory devices must support at least one group, advertised
-> +through their HDM Decoder Capability register.
-> +
-> +
-> +Same-Granularity Interleave
-> +===========================
-> +
-> +The simplest case is ``region_gran == root_gran``. Each level's
-> +granularity equals the next inner level's IG times that level's
-> +ways. The region selector bits stack inside-out from the root.
-> +
-> +Example: 4-way region on a 2-way root, 256B everywhere::
-> +
-> +   Level    Ways   Granularity   Selector bits
-> +   ------   ----   -----------   -------------
-> +   Root     2      256B          bit 8
-> +   Switch   2      512B          bit 9
-> +   Region   4      256B          bits[9:8]
-> +
-> +Each level's IG sits one bit position above the next inner level's
-> +selector. The region's effective selector spans ``[9:8]``, two bits,
-> +matching ``(4 - 1) * 256``.
-> +
-> +
-> +Mixed-Granularity Interleave (Power-of-2)
-> +=========================================
-> +
-> +A region's granularity may be **less than** the root decoder's
-> +granularity. In that case the root claims an outer selector bit and
-> +the switches beneath it claim inner bits. The arrangement is legal
-> +whenever both granularities are powers of 2 and the resulting bits
-> +remain disjoint and consecutive.
-> +
-> +Two-Level Example (CXL Spec 4.0 Figure 9-17)
-> +--------------------------------------------
-> +
-> +8-way region, 2-way root at 4KB, 4-way switch at 1KB::
-> +
-> +   Level    Ways   Granularity   Selector bits
-> +   ------   ----   -----------   -------------
-> +   Root     2      4KB           bit 12
-> +   Switch   4      1KB           bits[11:10]
-> +   Region   8      1KB           bits[12:10]
-> +
-> +The host bridge bisects the address range at 4KB granularity, sending
-> +one half to each root port. Beneath each root port a 4-way switch
-> +splits its half into four 1KB chunks. To each endpoint the region
-> +appears as an 8-way interleave at 1KB based on bits[12:10]; the
-> +leftmost endpoint receives 1KB chunks at HPA bases 0, 8KB, 16KB, ...
-> +
-> +Three-Level Example (CXL Spec 4.0 Figure 9-18)
-> +----------------------------------------------
-> +
-> +8-way region across cross-HB / HB / switch, all 2-way::
-> +
-> +   Level         Ways   Granularity   Selector bits
-> +   -----------   ----   -----------   -------------
-> +   Cross-HB      2      4KB           bit 12
-> +   Host bridge   2      2KB           bit 11
-> +   Switch        2      1KB           bit 10
-> +   Region        8      1KB           bits[12:10]
-> +
-> +Three levels of 2-way interleave each contribute one bit. Total
-> +endpoints: ``2 * 2 * 2 = 8``. Selector union:
-> +``bit 12 | bit 11 | bit 10`` = ``bits[12:10]``. Disjoint and
-> +consecutive.
-> +
-> +General Power-of-2 Rules
-> +------------------------
-> +
-> +For power-of-2 ways at every level:
-> +
-> +* ``region_gran <= root_gran`` is allowed; ``region_gran > root_gran``
-> +  is not (the root's selector would land inside one region stride).
-> +* Both granularities must be powers of 2.
-> +* The ratio ``root_gran / region_gran`` is the number of inner
-> +  position slots packed beneath one root target. Endpoint position is
-> +  partitioned by root target rather than interleaved across them.
-> +* Mixed-granularity is always optional for power-of-2 topologies. A
-> +  same-granularity arrangement always exists for the same set of
-> +  endpoints. Firmware may prefer mixed-granularity to expose a finer
-> +  switch-level interleave to the CPU.
-> +
-> +
-> +3-Way Family Interleave
-> +=======================
-> +
-> +CXL Spec 4.0 Section 9.13.1.1 defines a non-power-of-2 family of
-> +interleave widths: 3, 6, and 12. These are not pure bit selectors.
-> +A 3-way root divides the address by 3 in value-space (modulo or XOR
-> +arithmetic, see CXL Spec 4.0 Section 9.18) rather than picking a
-> +target from a contiguous bit range. As a consequence:
-> +
-> +* A strict 3-way root consumes **zero** HPA selector bits of its own.
-> +* Only the power-of-2 component of the region width contributes
-> +  selector bits. For a 6-way region, the bit-selector component is
-> +  2-way; for 12-way, 4-way.
-> +* Mixed-granularity is **required** for any 6-way or 12-way region on
-> +  a 3-way root. There is no same-granularity alternative.
-> +
-> +Legal 3-Way-Family Configurations
-> +---------------------------------
-> +
-> +CXL Spec 4.0 Tables 9-6, 9-7, and 9-8 enumerate the legal
-> +configurations. IGB is the device-level interleave granularity.
-> +
-> +Table 9-6: 12-way device-level interleave at IGB::
-> +
-> +   Cross-host bridge   Root complex     CXL switch
-> +   -----------------   --------------   --------------
-> +   12-way at IGB       no interleave    no interleave
-> +   6-way  at 2*IGB     2-way at IGB     no interleave
-> +   6-way  at 2*IGB     no interleave    2-way at IGB
-> +   3-way  at 4*IGB     4-way at IGB     no interleave
-> +   3-way  at 4*IGB     no interleave    4-way at IGB
-> +   3-way  at 4*IGB     2-way at IGB     2-way at 2*IGB
-> +   3-way  at 4*IGB     2-way at 2*IGB   2-way at IGB
-> +
-> +Table 9-7: 6-way device-level interleave at IGB::
-> +
-> +   Cross-host bridge   CXL host bridge   CXL switch
-> +   -----------------   ---------------   --------------
-> +   6-way  at IGB       no interleave     no interleave
-> +   3-way  at 2*IGB     2-way at IGB      no interleave
-> +   3-way  at 2*IGB     no interleave     2-way at IGB
-> +
-> +Table 9-8: 3-way device-level interleave at IGB::
-> +
-> +   Cross-host bridge   CXL host bridge   CXL switch
-> +   -----------------   ---------------   --------------
-> +   3-way  at IGB       no interleave     no interleave
-> +
-> +Span Identity for 3-Way-Family Roots
-> +------------------------------------
-> +
-> +For a 3-way (or 6-way, 12-way) root, the region must occupy exactly
-> +one full cycle of the root's divide-by-3 pattern::
-> +
-> +   region_ways * region_gran == root_ways * root_gran
-> +
-> +Every legal row of CXL Spec 4.0 Tables 9-6, 9-7, and 9-8 satisfies
-> +this identity.
-> +
-> +Why power-of-2 roots do not need this check explicitly, and why
-> +3-way roots do, comes down to how each cycles through its targets:
-> +
-> +* A power-of-2 root selects targets purely by HPA bits. The bits it
-> +  owns are part of the region selector mask
-> +  ``(region_ways - 1) * region_gran``. The disjoint and containment
-> +  checks on selector bits inside the region selector force
-> +  ``root_ways * root_gran`` to be a power-of-2 divisor of
-> +  ``region_ways * region_gran``, and the region size constraint
-> +  forces it to be exactly one such divisor. Span equality is a
-> +  by-product of bit accounting.
-> +
-> +* A 3-way root divides the address by 3 in value-space. It cycles
-> +  through three targets at every ``root_gran``-byte stride, but
-> +  consumes no HPA selector bits at all. The selector mask returned
-> +  by ``get_selector()`` for a strict 3-way is zero. Selector bit
-> +  accounting cannot see the address space the root reserves at
-> +  ``log2(root_gran)``, so it cannot rule out arrangements where
-> +  ``region_ways * region_gran`` is some multiple of
-> +  ``root_ways * root_gran`` other than one. (For example, a
-> +  same-granularity 6-way region on a 3-way root would pass selector
-> +  checks while failing to cover one root cycle.)
-> +
-> +The span identity restores that constraint for non-power-of-2 roots.
-> +The driver enforces it as a pre-flight check in
-> +``cxl_region_attach()``, before the per-port selector walk runs.
-> +A failed span check is rejected with the dmesg message
-> +``region ways*gran (W*G) != root ways*gran (W*G)``.
-> +
-> +Mixed-Granularity Rules for 3-Way Roots
-> +---------------------------------------
-> +
-> +The general power-of-2 mixed-gran rules apply to the 3-way family
-> +with two adjustments:
-> +
-> +* ``region_gran <= root_gran`` is allowed; ``region_gran > root_gran``
-> +  is not. (Same as power-of-2.)
-> +* Both granularities must be powers of 2. (Same as power-of-2; the
-> +  3-way component is in the *ways*, not the granularity.)
-> +* The ratio ``root_gran / region_gran`` is the number of inner
-> +  position slots packed beneath one root target. (Same as
-> +  power-of-2; the value-space root advances by ``root_gran``
-> +  whether or not it consumes selector bits.)
-> +* ``region_ways * region_gran == root_ways * root_gran`` must hold.
-> +  (3-way only. Power-of-2 roots get this for free from selector
-> +  containment.)
-> +* Mixed-granularity is **required** for any 6-way or 12-way region
-> +  on a 3-way root, because no same-granularity arrangement can hold
-> +  the span identity. (3-way only; for power-of-2 mixed-gran is
-> +  optional.)
-> +
-> +
-> +Position Arithmetic
-> +===================
-> +
-> +Position is the index ``[0, region_ways)`` that orders an endpoint
-> +within the region. The driver derives an endpoint's position by
-> +walking the topology from endpoint up to root.
-> +
-> +For same-granularity regions the standard recurrence applies at every
-> +level::
-> +
-> +   pos = pos * parent_ways + parent_pos
-> +
-> +The root's targets cycle at the innermost selector bit, so the root
-> +contributes the position MSBs naturally.
-> +
-> +For mixed-granularity regions the root's targets cycle more slowly
-> +than the switches' targets - by exactly ``stride = root_gran /
-> +region_gran`` inner positions per root target. Endpoint positions
-> +within one root target are packed consecutively, so the root's
-> +contribution is rescaled at the root boundary::
-> +
-> +   pos = pos + stride * parent_pos     (root iteration only)
-> +
-> +For a 3-way root the same packing applies; ``stride`` is still
-> +``root_gran / region_gran`` whenever the granularities differ.
-> +
-> +Peer-Distance and the check_last_peer Walk
-> +------------------------------------------
-> +
-> +When two endpoints share a downstream port at some intermediate
-> +level, ``check_last_peer()`` verifies that the peer at
-> +``pos - peer_distance`` lives behind the same dport as the endpoint
-> +being attached. ``peer_distance`` is the number of region positions
-> +between two consecutive endpoints that share a dport at the port
-> +under inspection.
-> +
-> +The seed of ``peer_distance`` depends on the layout the position
-> +recurrence builds:
-> +
-> +* Same-granularity layout (``stride == 1``) is multiplicative at the
-> +  root: ``pos = pos * root_ways + parent_pos``. Changing the root's
-> +  ``parent_pos`` by 1 shifts each inner-position group by ``root_ways``
-> +  region positions, so peer distance at any sub-root port carries a
-> +  factor of ``root_ways``. Seed: ``root_ways``.
-> +
-> +* Mixed-granularity layout (``stride > 1``) is additive at the root:
-> +  ``pos = pos + stride * parent_pos``. Changing the root's
-> +  ``parent_pos`` shifts every endpoint by the same constant ``stride``;
-> +  peer distances among endpoints under one root target do not depend
-> +  on ``root_ways``. Seed: ``1``.
-> +
-> +Inner ports contribute their ``nr_targets`` multiplicatively as the
-> +walk descends, and the current port's ``iw`` folds in at the end.
-> +
-> +Example: 6-way region on a 3-way root (CXL Spec 4.0 Table 9-7)
-> +--------------------------------------------------------------
-> +
-> +Configuration: ``root_ways = 3`` at ``2*IGB``, ``region_ways = 6``
-> +at ``IGB``, with a 2-way host-bridge interleave at ``IGB`` beneath
-> +each root target. ``stride = 2*IGB / IGB = 2``.
-> +
-> +Position layout::
-> +
-> +   slot:    0     1     2     3     4     5
-> +   target:  H0,a  H0,b  H1,a  H1,b  H2,a  H2,b
-> +
-> +Positions {0,1} share root target H0, {2,3} share H1, {4,5} share
-> +H2. ``cxl_calc_interleave_pos()`` produces these directly via the
-> +mixed-gran root branch ``pos = pos + stride * parent_pos``: for the
-> +endpoint at H1 inner-slot ``b`` (HB-position 1), the recurrence
-> +yields ``pos = 1 + 2 * 1 = 3``.
-> +
-> +The 3-way root consumes zero HPA selector bits; the host-bridge
-> +2-way interleave contributes the region's only selector bit. The
-> +span identity ``6 * IGB == 3 * 2*IGB`` holds.
-> +
-> +Example: 8-way mixed-gran region on a 4-way power-of-2 root
-> +-----------------------------------------------------------
-> +
-> +Configuration: ``root_ways = 4``, ``root_gran = 4096``,
-> +``region_ways = 8``, ``region_gran = 2048``, with a 2-way
-> +host-bridge interleave at 2KB beneath each root target.
-> +``stride = 4096 / 2048 = 2``.
-> +
-> +Position layout (one root cycle covers 16KB)::
-> +
-> +   HPA byte:  0     2KB   4KB   6KB   8KB   10KB  12KB  14KB
-> +   position:  0     1     2     3     4     5     6     7
-> +   target:    H0,a  H0,b  H1,a  H1,b  H2,a  H2,b  H3,a  H3,b
-> +
-> +Positions {0,1} share host bridge H0, {2,3} share H1, and so on.
-> +For the endpoint at H2 inner-slot ``b`` (HB-position 1), the
-> +recurrence yields ``pos = 1 + 2 * 2 = 5``.
-> +
-> +A same-granularity 8-way region on the same root would use the
-> +standard multiplicative recurrence at every level. The additive
-> +root branch is what places endpoints correctly when the root sits
-> +at outer HPA bits and switches beneath it interleave at finer
-> +granularity.
-> +
-> +
-> +Linux Driver Implementation
-> +===========================
-> +
-> +Region geometry validation lives in ``drivers/cxl/core/region.c``.
-> +The helpers and enforcement points below implement the rules
-> +described in the preceding sections.
-> +
-> +``get_selector(ways, gran)``
-> +  Each interleave level consumes a contiguous range of HPA bits to
-> +  pick its target. ``get_selector()`` models that range as a bitmask:
-> +  ``(ways - 1) * gran`` for power-of-2 interleaves. A strict 3-way
-> +  interleave consumes no HPA bits and the helper returns zero;
-> +  6-way and 12-way are folded to expose only their power-of-2
-> +  component.
-> +
-> +  Kernel-doc: :c:func:`get_selector`.
-> +
-> +``root_pos_stride(cxlr)``
-> +  When ``region_gran < root_gran``, each root target owns more than
-> +  one region position. The number of positions packed under one root
-> +  target is ``root_gran / region_gran``: the root advances by
-> +  ``root_gran`` bytes per target, while region positions advance by
-> +  ``region_gran`` bytes. Same-granularity regions have a stride of
-> +  one because the root advances on every region position.
-> +
-> +  ``root_pos_stride()`` returns this ratio for the position walk and
-> +  the peer-distance computation. The same value applies to 3-way
-> +  family roots: in value space they advance by ``root_gran`` per
-> +  target whether or not they consume HPA selector bits.
-> +
-> +  Kernel-doc: :c:func:`root_pos_stride`.
-> +
-> +``is_ig_allowed(cxlrd, ig)``
-> +  The region granularity must not exceed the root granularity.
-> +  ``region_gran > root_gran`` would place the root selector inside a
-> +  single region stride, leaving the root no address bits to choose
-> +  among its targets. ``region_gran <= root_gran`` is required for
-> +  every legal layout.
-> +
-> +  ``is_ig_allowed()`` enforces that geometric rule. It returns true
-> +  when the root is not interleaving, or when ``ig`` does not exceed
-> +  the root granularity. Endpoint capability (the IG groups a memdev
-> +  advertises) is checked separately at attach time via
-> +  ``check_interleave_cap()``.
-> +
-> +  Kernel-doc: :c:func:`is_ig_allowed`.
-> +
-> +``cxl_port_setup_targets()``
-> +  This is the per-port enforcement point for the multi-level rule.
-> +  For each level between the current port and the root the function:
-> +
-> +  * Rejects overlap. Two levels that share a selector bit fail the
-> +    disjoint requirement.
-> +  * Rejects escapes. The accumulated selector must fit within the
-> +    region selector. A level whose claimed bits land outside the
-> +    region selector fails the containment requirement.
-> +  * Derives the granularity to program at the current port for
-> +    user-created regions. Each interleaving level claims the lowest
-> +    selector bit still available within the region selector;
-> +    passthrough levels consume no selector bit and inherit a scaled
-> +    granularity from their ancestors.
-> +
-> +  Auto regions reuse the same selector checks but trust the
-> +  granularity firmware already programmed at each level.
-> +
-> +``cxl_region_attach()``
-> +  Pre-flight gates that run once per region attach, before the
-> +  per-port selector walk.
-> +
-> +  * Auto regions bypass the sysfs granularity gate, so
-> +    ``is_ig_allowed()`` is applied here to give them the same
-> +    geometric check as user-created regions.
-> +  * 3-way-family roots require an explicit span check. A strict
-> +    3-way root consumes no HPA selector bits, so selector containment
-> +    cannot prove that the root and region cover the same address
-> +    span. The span identity
-> +    ``region_ways * region_gran == root_ways * root_gran`` restores
-> +    that constraint. Power-of-2 roots get the equivalent constraint
-> +    from selector containment and are not affected by this check.
-> +    See `Span Identity for 3-Way-Family Roots`_ for the full
-> +    derivation.
-> +
-> +Position calculations use ``root_pos_stride()`` so that both
-> +same-granularity and mixed-granularity regions produce the correct
-> +endpoint ordering. The position walk itself lives in
-> +``cxl_calc_interleave_pos()``.
-> +
-> +Kernel-doc: :c:func:`cxl_calc_interleave_pos`.
-> +
-> +
-> +Auto vs User-Created Regions
-> +============================
-> +
-> +**Auto regions** are reconstructed at boot from the decoder values
-> +firmware programmed. The driver reads each decoder's ``ways`` and
-> +``granularity``, runs them through the selector walk, and accepts
-> +the configuration if it passes the disjoint and containment checks
-> +(plus the span identity for 3-way roots). Firmware is the source of
-> +truth for the granularity at each level.
-> +
-> +**User-created regions** specify ``interleave_ways`` and
-> +``interleave_granularity`` through sysfs; the driver derives each
-> +intermediate decoder's granularity. The sysfs path runs
-> +``is_ig_allowed()`` at granularity-write time, ``set_interleave_ways()``
-> +at ways-write time, and the full selector walk when the region is
-> +attached and committed.
-> +
-> +Both paths converge on the same geometry validation rules.
-> +Differences between the paths are limited to how region parameters
-> +are obtained and when they are validated.
-> +
-> +* Whether each intermediate decoder's granularity is read from
-> +  hardware (auto) or derived (user).
-> +* Whether the membership of the region is established by walking
-> +  firmware-programmed decoders (auto) or by user writes to ``targetN``
-> +  attributes (user).
+>  #define FAKE_QTG_ID	42
+>  
+> @@ -26,7 +27,26 @@ static bool fail_autoassemble;
+>  #define NR_CXL_ROOT_PORTS 2
+>  #define NR_CXL_SWITCH_PORTS 2
+>  #define NR_CXL_PORT_DECODERS 8
+> -#define NR_BRIDGES (NR_CXL_HOST_BRIDGES + NR_CXL_SINGLE_HOST + NR_CXL_RCH)
+> +
+> +/*
+> + * mixed_gran_regions=1: three host bridges, two switch levels, and
+> + * twelve endpoints for power-of-2 and 3-way-family region layouts.
+> + */
+> +#define NR_CXL_MIX_GRAN_HB 3
+> +#define NR_CXL_MIX_GRAN_ROOT_PORTS NR_CXL_MIX_GRAN_HB	/* 1 per HB */
+> +#define NR_CXL_MIX_GRAN_L1_DPORTS  (NR_CXL_MIX_GRAN_HB * 2)
+> +#define NR_CXL_MIX_GRAN_L2_SWITCHES NR_CXL_MIX_GRAN_L1_DPORTS
+> +#define NR_CXL_MIX_GRAN_L2_DPORTS  (NR_CXL_MIX_GRAN_L2_SWITCHES * 2)
+> +
+> +#define NR_DEFAULT_BRIDGES \
+> +	(NR_CXL_HOST_BRIDGES + NR_CXL_SINGLE_HOST + NR_CXL_RCH)
+> +#define NR_BRIDGES (NR_DEFAULT_BRIDGES + NR_CXL_MIX_GRAN_HB)
+> +
+> +/* CHBS index ranges within mock_cedt.chbs[] */
+> +#define CHBS_DEFAULT_START 0
+> +#define CHBS_DEFAULT_END (NR_DEFAULT_BRIDGES - 1)
+> +#define CHBS_MIX_GRAN_START NR_DEFAULT_BRIDGES
+> +#define CHBS_MIX_GRAN_END (NR_BRIDGES - 1)
+>  
+>  #define MOCK_AUTO_REGION_SIZE_DEFAULT SZ_512M
+>  static int mock_auto_region_size = MOCK_AUTO_REGION_SIZE_DEFAULT;
+> @@ -52,6 +72,15 @@ struct platform_device *cxl_mem_single[NR_MEM_SINGLE];
+>  static struct platform_device *cxl_rch[NR_CXL_RCH];
+>  static struct platform_device *cxl_rcd[NR_CXL_RCH];
+>  
+> +/* Dedicated mixed-granularity topology */
+> +static struct platform_device *cxl_mix_gran_hb[NR_CXL_MIX_GRAN_HB];
+> +static struct platform_device *cxl_mix_gran_root_port[NR_CXL_MIX_GRAN_ROOT_PORTS];
+> +static struct platform_device *cxl_mix_gran_l1_uport[NR_CXL_MIX_GRAN_ROOT_PORTS];
+> +static struct platform_device *cxl_mix_gran_l1_dport[NR_CXL_MIX_GRAN_L1_DPORTS];
+> +static struct platform_device *cxl_mix_gran_l2_uport[NR_CXL_MIX_GRAN_L2_SWITCHES];
+> +static struct platform_device *cxl_mix_gran_l2_dport[NR_CXL_MIX_GRAN_L2_DPORTS];
+> +static struct platform_device *cxl_mem_mix_gran[NR_CXL_MIX_GRAN_L2_DPORTS];
+> +
+>  /*
+>   * Decoder registry
+>   *
+> @@ -115,6 +144,19 @@ static struct acpi_device host_bridge[NR_BRIDGES] = {
+>  		.handle = &host_bridge[3],
+>  		.pnp.unique_id = "3",
+>  	},
+> +	/* Dedicated mixed-granularity topology */
+> +	[4] = {
+> +		.handle = &host_bridge[4],
+> +		.pnp.unique_id = "4",
+> +	},
+> +	[5] = {
+> +		.handle = &host_bridge[5],
+> +		.pnp.unique_id = "5",
+> +	},
+> +	[6] = {
+> +		.handle = &host_bridge[6],
+> +		.pnp.unique_id = "6",
+> +	},
+>  };
+>  
+>  static bool is_mock_dev(struct device *dev)
+> @@ -130,6 +172,9 @@ static bool is_mock_dev(struct device *dev)
+>  	for (i = 0; i < ARRAY_SIZE(cxl_rcd); i++)
+>  		if (dev == &cxl_rcd[i]->dev)
+>  			return true;
+> +	for (i = 0; i < ARRAY_SIZE(cxl_mem_mix_gran); i++)
+> +		if (cxl_mem_mix_gran[i] && dev == &cxl_mem_mix_gran[i]->dev)
+> +			return true;
+>  	if (dev == &cxl_acpi->dev)
+>  		return true;
+>  	return false;
+> @@ -188,6 +233,14 @@ static struct {
+>  		struct acpi_cedt_cfmws cfmws;
+>  		u32 target[3];
+>  	} cfmws8;
+> +	struct {
+> +		struct acpi_cedt_cfmws cfmws;
+> +		u32 target[2];
+> +	} cfmws9;
+> +	struct {
+> +		struct acpi_cedt_cfmws cfmws;
+> +		u32 target[3];
+> +	} cfmws10;
+>  	struct {
+>  		struct acpi_cedt_cxims cxims;
+>  		u64 xormap_list[2];
+> @@ -232,6 +285,31 @@ static struct {
+>  		.uid = 3,
+>  		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL11,
+>  	},
+> +	/* Dedicated mixed-granularity topology */
+> +	.chbs[4] = {
+> +		.header = {
+> +			.type = ACPI_CEDT_TYPE_CHBS,
+> +			.length = sizeof(mock_cedt.chbs[0]),
+> +		},
+> +		.uid = 4,
+> +		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
+> +	},
+> +	.chbs[5] = {
+> +		.header = {
+> +			.type = ACPI_CEDT_TYPE_CHBS,
+> +			.length = sizeof(mock_cedt.chbs[0]),
+> +		},
+> +		.uid = 5,
+> +		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
+> +	},
+> +	.chbs[6] = {
+> +		.header = {
+> +			.type = ACPI_CEDT_TYPE_CHBS,
+> +			.length = sizeof(mock_cedt.chbs[0]),
+> +		},
+> +		.uid = 6,
+> +		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
+> +	},
+>  	.cfmws0 = {
+>  		.cfmws = {
+>  			.header = {
+> @@ -371,6 +449,36 @@ static struct {
+>  		},
+>  		.target = { 0, 1, 2, },
+>  	},
+> +	.cfmws9 = {
+> +		.cfmws = {
+> +			.header = {
+> +				.type = ACPI_CEDT_TYPE_CFMWS,
+> +				.length = sizeof(mock_cedt.cfmws9),
+> +			},
+> +			.interleave_ways = 1,
+> +			.granularity = 4,
+> +			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+> +					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+> +			.qtg_id = FAKE_QTG_ID,
+> +			.window_size = SZ_512M * 4UL,
+> +		},
+> +		.target = { 4, 5, },
+> +	},
+> +	.cfmws10 = {
+> +		.cfmws = {
+> +			.header = {
+> +				.type = ACPI_CEDT_TYPE_CFMWS,
+> +				.length = sizeof(mock_cedt.cfmws10),
+> +			},
+> +			.interleave_ways = 8,
+> +			.granularity = 1,
+> +			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
+> +					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
+> +			.qtg_id = FAKE_QTG_ID,
+> +			.window_size = SZ_512M * 6UL,
+> +		},
+> +		.target = { 4, 5, 6, },
+> +	},
+>  	.cxims0 = {
+>  		.cxims = {
+>  			.header = {
+> @@ -395,6 +503,9 @@ struct acpi_cedt_cfmws *mock_cfmws[] = {
+>  	[6] = &mock_cedt.cfmws6.cfmws,
+>  	[7] = &mock_cedt.cfmws7.cfmws,
+>  	[8] = &mock_cedt.cfmws8.cfmws,
+> +	/* Dedicated mixed-granularity topology */
+> +	[9] = &mock_cedt.cfmws9.cfmws,
+> +	[10] = &mock_cedt.cfmws10.cfmws,
+>  };
+>  
+>  static int cfmws_start;
+> @@ -403,6 +514,8 @@ static int cfmws_end;
+>  #define CFMWS_MOD_ARRAY_END   5
+>  #define CFMWS_XOR_ARRAY_START 6
+>  #define CFMWS_XOR_ARRAY_END   8
+> +#define CFMWS_MIX_GRAN_ARRAY_START 9
+> +#define CFMWS_MIX_GRAN_ARRAY_END   10
+>  
+>  struct acpi_cedt_cxims *mock_cxims[1] = {
+>  	[0] = &mock_cedt.cxims0.cxims,
+> @@ -475,9 +588,18 @@ static void cfmws_elc_update(struct acpi_cedt_cfmws *window, int index)
+>  static int populate_cedt(void)
+>  {
+>  	struct cxl_mock_res *res;
+> +	int chbs_lo, chbs_hi;
+>  	int i;
+>  
+> -	for (i = 0; i < ARRAY_SIZE(mock_cedt.chbs); i++) {
+> +	if (mixed_gran_regions) {
+> +		chbs_lo = CHBS_MIX_GRAN_START;
+> +		chbs_hi = CHBS_MIX_GRAN_END;
+> +	} else {
+> +		chbs_lo = CHBS_DEFAULT_START;
+> +		chbs_hi = CHBS_DEFAULT_END;
+> +	}
+> +
+> +	for (i = chbs_lo; i <= chbs_hi; i++) {
+>  		struct acpi_cedt_chbs *chbs = &mock_cedt.chbs[i];
+>  		resource_size_t size;
+>  
+> @@ -531,12 +653,23 @@ static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
+>  	if (!is_mock_port(dev) && !is_mock_dev(dev))
+>  		return acpi_table_parse_cedt(id, handler_arg, arg);
+>  
+> -	if (id == ACPI_CEDT_TYPE_CHBS)
+> -		for (i = 0; i < ARRAY_SIZE(mock_cedt.chbs); i++) {
+> +	if (id == ACPI_CEDT_TYPE_CHBS) {
+> +		int chbs_lo, chbs_hi;
+> +
+> +		if (mixed_gran_regions) {
+> +			chbs_lo = CHBS_MIX_GRAN_START;
+> +			chbs_hi = CHBS_MIX_GRAN_END;
+> +		} else {
+> +			chbs_lo = CHBS_DEFAULT_START;
+> +			chbs_hi = CHBS_DEFAULT_END;
+> +		}
+> +
+> +		for (i = chbs_lo; i <= chbs_hi; i++) {
+>  			h = (union acpi_subtable_headers *)&mock_cedt.chbs[i];
+>  			end = (unsigned long)&mock_cedt.chbs[i + 1];
+>  			handler_arg(h, arg, end);
+>  		}
+> +	}
+>  
+>  	if (id == ACPI_CEDT_TYPE_CFMWS)
+>  		for (i = cfmws_start; i <= cfmws_end; i++) {
+> @@ -568,6 +701,9 @@ static bool is_mock_bridge(struct device *dev)
+>  	for (i = 0; i < ARRAY_SIZE(cxl_rch); i++)
+>  		if (dev == &cxl_rch[i]->dev)
+>  			return true;
+> +	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_hb); i++)
+> +		if (cxl_mix_gran_hb[i] && dev == &cxl_mix_gran_hb[i]->dev)
+> +			return true;
+>  
+>  	return false;
+>  }
+> @@ -603,6 +739,31 @@ static bool is_mock_port(struct device *dev)
+>  		if (dev == &cxl_swd_single[i]->dev)
+>  			return true;
+>  
+> +	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_root_port); i++)
+> +		if (cxl_mix_gran_root_port[i] &&
+> +		    dev == &cxl_mix_gran_root_port[i]->dev)
+> +			return true;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_l1_uport); i++)
+> +		if (cxl_mix_gran_l1_uport[i] &&
+> +		    dev == &cxl_mix_gran_l1_uport[i]->dev)
+> +			return true;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_l1_dport); i++)
+> +		if (cxl_mix_gran_l1_dport[i] &&
+> +		    dev == &cxl_mix_gran_l1_dport[i]->dev)
+> +			return true;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_l2_uport); i++)
+> +		if (cxl_mix_gran_l2_uport[i] &&
+> +		    dev == &cxl_mix_gran_l2_uport[i]->dev)
+> +			return true;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_l2_dport); i++)
+> +		if (cxl_mix_gran_l2_dport[i] &&
+> +		    dev == &cxl_mix_gran_l2_dport[i]->dev)
+> +			return true;
+> +
+>  	if (is_cxl_memdev(dev))
+>  		return is_mock_dev(dev->parent);
+>  
+> @@ -671,7 +832,15 @@ static struct acpi_pci_root mock_pci_root[ARRAY_SIZE(mock_pci_bus)] = {
+>  	[3] = {
+>  		.bus = &mock_pci_bus[3],
+>  	},
+> -
+> +	[4] = {
+> +		.bus = &mock_pci_bus[4],
+> +	},
+> +	[5] = {
+> +		.bus = &mock_pci_bus[5],
+> +	},
+> +	[6] = {
+> +		.bus = &mock_pci_bus[6],
+> +	},
+>  };
+>  
+>  static bool is_mock_bus(struct pci_bus *bus)
+> @@ -1229,6 +1398,8 @@ static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+>  
+>  	if (is_cxl_endpoint(port))
+>  		target_count = 0;
+> +	else if (mixed_gran_regions && is_cxl_root(parent_port))
+> +		target_count = NR_CXL_MIX_GRAN_ROOT_PORTS / NR_CXL_MIX_GRAN_HB;
+>  	else if (is_cxl_root(parent_port))
+>  		target_count = NR_CXL_ROOT_PORTS;
+>  	else
+> @@ -1328,6 +1499,27 @@ static int get_port_array(struct cxl_port *port,
+>  	struct platform_device **array;
+>  	int array_size;
+>  
+> +	if (mixed_gran_regions) {
+> +		if (port->depth == 1) {
+> +			array_size = ARRAY_SIZE(cxl_mix_gran_root_port);
+> +			array = cxl_mix_gran_root_port;
+> +		} else if (port->depth == 2) {
+> +			array_size = ARRAY_SIZE(cxl_mix_gran_l1_dport);
+> +			array = cxl_mix_gran_l1_dport;
+> +		} else if (port->depth == 3) {
+> +			array_size = ARRAY_SIZE(cxl_mix_gran_l2_dport);
+> +			array = cxl_mix_gran_l2_dport;
+> +		} else {
+> +			dev_WARN_ONCE(&port->dev, 1, "unexpected depth %d\n",
+> +				      port->depth);
+> +			return -ENXIO;
+> +		}
+> +
+> +		*port_array = array;
+> +		*port_array_size = array_size;
+> +		return 0;
+> +	}
+> +
+>  	if (port->depth == 1) {
+>  		if (is_multi_bridge(port->uport_dev)) {
+>  			array_size = ARRAY_SIZE(cxl_root_port);
+> @@ -1709,10 +1901,190 @@ static void cxl_single_topo_exit(void)
+>  	}
+>  }
+>  
+> +#define MIX_GRAN_RP_ID_BASE	(NR_MULTI_ROOT + NR_CXL_SINGLE_HOST)
+> +#define MIX_GRAN_L1U_ID_BASE	MIX_GRAN_RP_ID_BASE
+> +#define MIX_GRAN_L1D_ID_BASE	(NR_MEM_MULTI + NR_MEM_SINGLE)
+> +#define MIX_GRAN_L2U_ID_BASE	MIX_GRAN_L1D_ID_BASE
+> +#define MIX_GRAN_L2D_ID_BASE	\
+> +	(MIX_GRAN_L1D_ID_BASE + NR_CXL_MIX_GRAN_L1_DPORTS)
+> +#define MIX_GRAN_MEM_ID_BASE	(NR_MEM_MULTI + NR_MEM_SINGLE + NR_CXL_RCH)
+> +
+> +static void cxl_mix_gran_topo_exit(void)
+> +{
+> +	int i;
+> +
+> +	for (i = NR_CXL_MIX_GRAN_L2_DPORTS - 1; i >= 0; i--)
+> +		platform_device_unregister(cxl_mix_gran_l2_dport[i]);
+> +	for (i = NR_CXL_MIX_GRAN_L2_SWITCHES - 1; i >= 0; i--)
+> +		platform_device_unregister(cxl_mix_gran_l2_uport[i]);
+> +	for (i = NR_CXL_MIX_GRAN_L1_DPORTS - 1; i >= 0; i--)
+> +		platform_device_unregister(cxl_mix_gran_l1_dport[i]);
+> +	for (i = NR_CXL_MIX_GRAN_ROOT_PORTS - 1; i >= 0; i--)
+> +		platform_device_unregister(cxl_mix_gran_l1_uport[i]);
+> +	for (i = NR_CXL_MIX_GRAN_ROOT_PORTS - 1; i >= 0; i--)
+> +		platform_device_unregister(cxl_mix_gran_root_port[i]);
+> +	for (i = NR_CXL_MIX_GRAN_HB - 1; i >= 0; i--) {
+> +		struct platform_device *pdev = cxl_mix_gran_hb[i];
+> +
+> +		if (!pdev)
+> +			continue;
+> +		sysfs_remove_link(&pdev->dev.kobj, "physical_node");
+> +		platform_device_unregister(pdev);
+> +	}
+> +}
+> +
+> +static __init int cxl_mix_gran_topo_init(void)
+> +{
+> +	int i, rc;
+> +
+> +	/* 3 host bridges */
+> +	for (i = 0; i < NR_CXL_MIX_GRAN_HB; i++) {
+> +		struct acpi_device *adev = &host_bridge[NR_DEFAULT_BRIDGES + i];
+> +		struct platform_device *pdev;
+> +
+> +		pdev = platform_device_alloc("cxl_host_bridge",
+> +					     NR_DEFAULT_BRIDGES + i);
+> +		if (!pdev) {
+> +			rc = -ENOMEM;
+> +			goto err;
+> +		}
+> +
+> +		mock_companion(adev, &pdev->dev);
+> +		rc = platform_device_add(pdev);
+> +		if (rc) {
+> +			platform_device_put(pdev);
+> +			goto err;
+> +		}
+> +
+> +		cxl_mix_gran_hb[i] = pdev;
+> +		mock_pci_bus[NR_DEFAULT_BRIDGES + i].bridge = &pdev->dev;
+> +		rc = sysfs_create_link(&pdev->dev.kobj, &pdev->dev.kobj,
+> +				       "physical_node");
+> +		if (rc)
+> +			goto err;
+> +	}
+> +
+> +	/* 1 root port per host bridge */
+> +	for (i = 0; i < NR_CXL_MIX_GRAN_ROOT_PORTS; i++) {
+> +		struct platform_device *bridge = cxl_mix_gran_hb[i];
+> +		struct platform_device *pdev;
+> +
+> +		pdev = platform_device_alloc("cxl_root_port",
+> +					     MIX_GRAN_RP_ID_BASE + i);
+> +		if (!pdev) {
+> +			rc = -ENOMEM;
+> +			goto err;
+> +		}
+> +		pdev->dev.parent = &bridge->dev;
+> +
+> +		rc = platform_device_add(pdev);
+> +		if (rc) {
+> +			platform_device_put(pdev);
+> +			goto err;
+> +		}
+> +		cxl_mix_gran_root_port[i] = pdev;
+> +	}
+> +
+> +	/* L1 switch uport under each root port */
+> +	for (i = 0; i < NR_CXL_MIX_GRAN_ROOT_PORTS; i++) {
+> +		struct platform_device *pdev;
+> +
+> +		pdev = platform_device_alloc("cxl_switch_uport",
+> +					     MIX_GRAN_L1U_ID_BASE + i);
+> +		if (!pdev) {
+> +			rc = -ENOMEM;
+> +			goto err;
+> +		}
+> +		pdev->dev.parent = &cxl_mix_gran_root_port[i]->dev;
+> +
+> +		rc = platform_device_add(pdev);
+> +		if (rc) {
+> +			platform_device_put(pdev);
+> +			goto err;
+> +		}
+> +		cxl_mix_gran_l1_uport[i] = pdev;
+> +	}
+> +
+> +	/* 2 L1 dports per L1 switch */
+> +	for (i = 0; i < NR_CXL_MIX_GRAN_L1_DPORTS; i++) {
+> +		struct platform_device *uport =
+> +			cxl_mix_gran_l1_uport[i / NR_CXL_SWITCH_PORTS];
+> +		struct platform_device *pdev;
+> +
+> +		pdev = platform_device_alloc("cxl_switch_dport",
+> +					     MIX_GRAN_L1D_ID_BASE + i);
+> +		if (!pdev) {
+> +			rc = -ENOMEM;
+> +			goto err;
+> +		}
+> +		pdev->dev.parent = &uport->dev;
+> +
+> +		rc = platform_device_add(pdev);
+> +		if (rc) {
+> +			platform_device_put(pdev);
+> +			goto err;
+> +		}
+> +		cxl_mix_gran_l1_dport[i] = pdev;
+> +	}
+> +
+> +	/* L2 switch uport under each L1 dport */
+> +	for (i = 0; i < NR_CXL_MIX_GRAN_L2_SWITCHES; i++) {
+> +		struct platform_device *pdev;
+> +
+> +		pdev = platform_device_alloc("cxl_switch_uport",
+> +					     MIX_GRAN_L2U_ID_BASE + i);
+> +		if (!pdev) {
+> +			rc = -ENOMEM;
+> +			goto err;
+> +		}
+> +		pdev->dev.parent = &cxl_mix_gran_l1_dport[i]->dev;
+> +
+> +		rc = platform_device_add(pdev);
+> +		if (rc) {
+> +			platform_device_put(pdev);
+> +			goto err;
+> +		}
+> +		cxl_mix_gran_l2_uport[i] = pdev;
+> +	}
+> +
+> +	/* 2 L2 dports per L2 switch */
+> +	for (i = 0; i < NR_CXL_MIX_GRAN_L2_DPORTS; i++) {
+> +		struct platform_device *uport =
+> +			cxl_mix_gran_l2_uport[i / NR_CXL_SWITCH_PORTS];
+> +		struct platform_device *pdev;
+> +
+> +		pdev = platform_device_alloc("cxl_switch_dport",
+> +					     MIX_GRAN_L2D_ID_BASE + i);
+> +		if (!pdev) {
+> +			rc = -ENOMEM;
+> +			goto err;
+> +		}
+> +		pdev->dev.parent = &uport->dev;
+> +
+> +		rc = platform_device_add(pdev);
+> +		if (rc) {
+> +			platform_device_put(pdev);
+> +			goto err;
+> +		}
+> +		cxl_mix_gran_l2_dport[i] = pdev;
+> +	}
+> +
+> +	return 0;
+> +err:
+> +	cxl_mix_gran_topo_exit();
+> +	return rc;
+> +}
+> +
+>  static void cxl_mem_exit(void)
+>  {
+>  	int i;
+>  
+> +	if (mixed_gran_regions) {
+> +		for (i = NR_CXL_MIX_GRAN_L2_DPORTS - 1; i >= 0; i--)
+> +			platform_device_unregister(cxl_mem_mix_gran[i]);
+> +		return;
+> +	}
+> +
+>  	for (i = ARRAY_SIZE(cxl_rcd) - 1; i >= 0; i--)
+>  		platform_device_unregister(cxl_rcd[i]);
+>  	for (i = ARRAY_SIZE(cxl_mem_single) - 1; i >= 0; i--)
+> @@ -1721,10 +2093,46 @@ static void cxl_mem_exit(void)
+>  		platform_device_unregister(cxl_mem[i]);
+>  }
+>  
+> +static int cxl_mem_mix_gran_init(void)
+> +{
+> +	int i, rc;
+> +
+> +	for (i = 0; i < NR_CXL_MIX_GRAN_L2_DPORTS; i++) {
+> +		struct platform_device *dport = cxl_mix_gran_l2_dport[i];
+> +		struct platform_device *pdev;
+> +
+> +		pdev = platform_device_alloc("cxl_mem",
+> +					     MIX_GRAN_MEM_ID_BASE + i);
+> +		if (!pdev) {
+> +			rc = -ENOMEM;
+> +			goto err;
+> +		}
+> +		pdev->dev.parent = &dport->dev;
+> +		set_dev_node(&pdev->dev, i % 2);
+> +
+> +		cxl_mem_mix_gran[i] = pdev;
+> +		rc = platform_device_add(pdev);
+> +		if (rc) {
+> +			platform_device_put(pdev);
+> +			cxl_mem_mix_gran[i] = NULL;
+> +			goto err;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +err:
+> +	for (i = NR_CXL_MIX_GRAN_L2_DPORTS - 1; i >= 0; i--)
+> +		platform_device_unregister(cxl_mem_mix_gran[i]);
+> +	return rc;
+> +}
+> +
+>  static int cxl_mem_init(void)
+>  {
+>  	int i, rc;
+>  
+> +	if (mixed_gran_regions)
+> +		return cxl_mem_mix_gran_init();
+> +
+>  	for (i = 0; i < ARRAY_SIZE(cxl_mem); i++) {
+>  		struct platform_device *dport = cxl_switch_dport[i];
+>  		struct platform_device *pdev;
+> @@ -1848,7 +2256,10 @@ static __init int cxl_test_init(void)
+>  	if (rc)
+>  		goto err_gen_pool_add;
+>  
+> -	if (interleave_arithmetic == 1) {
+> +	if (mixed_gran_regions) {
+> +		cfmws_start = CFMWS_MIX_GRAN_ARRAY_START;
+> +		cfmws_end = CFMWS_MIX_GRAN_ARRAY_END;
+> +	} else if (interleave_arithmetic == 1) {
+>  		cfmws_start = CFMWS_XOR_ARRAY_START;
+>  		cfmws_end = CFMWS_XOR_ARRAY_END;
+>  	} else {
+> @@ -1860,6 +2271,13 @@ static __init int cxl_test_init(void)
+>  	if (rc)
+>  		goto err_populate;
+>  
+> +	if (mixed_gran_regions) {
+> +		rc = cxl_mix_gran_topo_init();
+> +		if (rc)
+> +			goto err_populate;
+> +		goto topo_done;
+> +	}
+> +
+>  	for (i = 0; i < ARRAY_SIZE(cxl_host_bridge); i++) {
+>  		struct acpi_device *adev = &host_bridge[i];
+>  		struct platform_device *pdev;
+> @@ -1945,9 +2363,10 @@ static __init int cxl_test_init(void)
+>  	if (rc)
+>  		goto err_single;
+>  
+> +topo_done:
+>  	cxl_acpi = platform_device_alloc("cxl_acpi", 0);
+>  	if (!cxl_acpi)
+> -		goto err_rch;
+> +		goto err_topo;
+>  
+>  	mock_companion(&acpi0017_mock, &cxl_acpi->dev);
+>  	acpi0017_mock.dev.bus = &platform_bus_type;
+> @@ -1971,7 +2390,11 @@ static __init int cxl_test_init(void)
+>  	cxl_mem_exit();
+>  err_root:
+>  	platform_device_put(cxl_acpi);
+> -err_rch:
+> +err_topo:
+> +	if (mixed_gran_regions) {
+> +		cxl_mix_gran_topo_exit();
+> +		goto err_populate;
+> +	}
+>  	cxl_rch_topo_exit();
+>  err_single:
+>  	cxl_single_topo_exit();
+> @@ -2020,21 +2443,25 @@ static __exit void cxl_test_exit(void)
+>  	hmem_test_exit();
+>  	cxl_mem_exit();
+>  	platform_device_unregister(cxl_acpi);
+> -	cxl_rch_topo_exit();
+> -	cxl_single_topo_exit();
+> -	for (i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--)
+> -		platform_device_unregister(cxl_switch_dport[i]);
+> -	for (i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--)
+> -		platform_device_unregister(cxl_switch_uport[i]);
+> -	for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--)
+> -		platform_device_unregister(cxl_root_port[i]);
+> -	for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
+> -		struct platform_device *pdev = cxl_host_bridge[i];
+> +	if (mixed_gran_regions) {
+> +		cxl_mix_gran_topo_exit();
+> +	} else {
+> +		cxl_rch_topo_exit();
+> +		cxl_single_topo_exit();
+> +		for (i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--)
+> +			platform_device_unregister(cxl_switch_dport[i]);
+> +		for (i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--)
+> +			platform_device_unregister(cxl_switch_uport[i]);
+> +		for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--)
+> +			platform_device_unregister(cxl_root_port[i]);
+> +		for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
+> +			struct platform_device *pdev = cxl_host_bridge[i];
+>  
+> -		if (!pdev)
+> -			continue;
+> -		sysfs_remove_link(&pdev->dev.kobj, "physical_node");
+> -		platform_device_unregister(cxl_host_bridge[i]);
+> +			if (!pdev)
+> +				continue;
+> +			sysfs_remove_link(&pdev->dev.kobj, "physical_node");
+> +			platform_device_unregister(cxl_host_bridge[i]);
+> +		}
+>  	}
+>  	depopulate_all_mock_resources();
+>  	gen_pool_destroy(cxl_mock_pool);
+> @@ -2049,6 +2476,9 @@ module_param(extended_linear_cache, bool, 0444);
+>  MODULE_PARM_DESC(extended_linear_cache, "Enable extended linear cache support");
+>  module_param(fail_autoassemble, bool, 0444);
+>  MODULE_PARM_DESC(fail_autoassemble, "Simulate missing member of an auto-region");
+> +module_param(mixed_gran_regions, bool, 0444);
+> +MODULE_PARM_DESC(mixed_gran_regions,
+> +		 "Topology supporting mixed granularity regions");
+>  module_init(cxl_test_init);
+>  module_exit(cxl_test_exit);
+>  MODULE_LICENSE("GPL v2");
 
