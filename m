@@ -1,771 +1,398 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013048.outbound.protection.outlook.com [40.93.196.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EA710F1
-	for <linux-cxl@vger.kernel.org>; Thu,  4 Jun 2026 00:04:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780531463; cv=none; b=XatBRClGM5Bc7xH3I6p/T+N0io5bZvw3GfyeviRVBEN/fQZw/Z4xBbpHwomv2U/ViZ7LOlW/1GwHrZmTqm2g8ul7JOR81FX1inqvg9fd4fIv3eEW3wW+ltYUs58osGHqFb43Juzs4rRC6aw2DH14916CfPdM3RWd/0sBGtqItgc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780531463; c=relaxed/simple;
-	bh=szg1Gyc1GaY3s5k24Fha6h5bQ740hCKlneec0jsDI1I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bw/GCQhEmOoMR4VtgiF/EEUyTnTMmj4BVJJuILmdWRbyVCYw2XeYmyk5ISGS1zYZwsLTJEshcLaZMdyyKVGwkIR6t/43q5EW0Dpuex8F7rT7dxbjOwUEjEIEt4OWoY+MfIg2ONQid9DIkFmI2y98idL3tLz8ZSxauD/Z8WdS250=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kAt4Td9h; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCBCA231A41;
+	Thu,  4 Jun 2026 01:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780537408; cv=fail; b=YDqmTn+oH8J2aF72HTdtL/9b99lNEJ5DYy+lJmvAZqcUj5x49xK5MXQKycm0LfJ2+wcKuIm5CZipB8sJoZglt/1upvvf72pc4OlvHj/31RYXhcG1+t1hgiX6EEQLk2uiORDT8+NpITbmsTqJ93mKqE7ZZJSo5j8MkPFSW+4SxH0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780537408; c=relaxed/simple;
+	bh=lUwCNh+Zq29m/lRctKyH5Jq2EhDL7+1rZ66N+Y8nRbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Rwc3p+Nxc2q6+6mgZiv623Yc/UBaewFNE1hG4RHX6anXPHmhul5WBGWhRUOLQrEugaxsCyrR7ioYrqC3Cb2Wj407SwNCNI5zdnkn+CiIV/KruGWPqQ8SPpo85Tr5srRp37+0ITVPEWLgIx/ku8UYv1QmMCmmNcfLI35HneLlxqs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ibvvBfvT; arc=fail smtp.client-ip=40.93.196.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kAt4Td9h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780531462; x=1812067462;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=szg1Gyc1GaY3s5k24Fha6h5bQ740hCKlneec0jsDI1I=;
-  b=kAt4Td9hJk1/jYENd2CyZNFoWKsFEnEl3jqGoz31pU/HOZFuECy/qOw2
-   0/j/V/vm/JC8d0XsbRVtcdxy013etjpMiaHNVnzq1/RUMyVeGi9fdWhGv
-   LI9IMfLOaF88CdF0snmPIdDgQC1lzE8eDgJQKBaKVyBnQLZu4Hvitfdzr
-   ufjsuBZWjJJv0QLhptrH8IG/WG8+JQn1dfj0LBKbLnX0yvPQETKFPkH4a
-   SKjt4ffJqprUyLZtmRmCkukSTPRx1gSDtLmJ9D5NC+F44v93NNlvSpyZq
-   WgaXtVR0n2vFtIfAREjLkWqkGIoO0lMwNmoHLIjpO5V3oSyMZVj3bA0Nu
-   Q==;
-X-CSE-ConnectionGUID: KowNcW/wQKm3RhJcLx2G8Q==
-X-CSE-MsgGUID: yaZScrgHRp2LAvG2QhydkQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11806"; a="80495658"
-X-IronPort-AV: E=Sophos;i="6.24,186,1774335600"; 
-   d="scan'208";a="80495658"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 17:04:21 -0700
-X-CSE-ConnectionGUID: xSlByfF3Sdyg89r2TfTB+A==
-X-CSE-MsgGUID: g4xtTF/bQAe/plxsrqU/Rw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,186,1774335600"; 
-   d="scan'208";a="248719587"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.108.116]) ([10.125.108.116])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jun 2026 17:04:20 -0700
-Message-ID: <7532ffb1-fe3f-4033-bd38-79f5dee150ef@intel.com>
-Date: Wed, 3 Jun 2026 17:04:19 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ibvvBfvT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XyWyt4/VI9a+DkOgF4yFUxMyytPQKSLwigvicWZ1z1FhrAOTLIr/qDRy7CYEKDsXQizUVlmOtkH64yS/NQCxsLCpTOJl+dqgZdxcL5WBHs/wQnvgc+FXeMTgezvKG9u6tTYCy0uWWFh7Nz9RNdoUwi+yrmNr3/jp7FNw5ak/ZJBnbO7lp3n+MVEos+o5A11PRvpxgwNvl/XYgJMId56Vnqq29g5Z/k1qWw4Vd/MUE36f8S6EHi1ZDhHatuPqErytuVV5LnVpj+cKQhQepuPwOeniyxd6RhMZOtkKvd4AK/Y7YsS4qVAJ9o4R8n8JN7pwSggxO6yI77hYp/YuQC787w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6nkZUkQQY75abwRcFAevjWlmiNxL2qEN2LxclDIQW/E=;
+ b=G9Lvxon9Fu0E/B63O3VYAfqwsMIFqnydsaFLMW4TQXdySRE0dstT4Z3eCzEMGEC++7rLCtMxVOu0fKuQYbv04R1a72L6pSf4PlXCbgrmY+F0a//cf/abvEL3/APiGqkbRdgtoWRPWk6mcEl+b/q4WYpo9IPccH6NQxOzz1y12S9m4SpOYBmAymTda9bF+DXecYg8drXwEp14qu8yGc5RY/cb6FgdN34uulYxb2PBblDlyGnb0Bbnk/iBWFTWPAgQ8gWJM7i1MGDFEeIXtmqG330XtYKDtYEr5/ZTeJz9Q8MYBlsgIxVeVNRtdTvXlHD1WOKq1iL7QxHtKlAi/AoMjA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6nkZUkQQY75abwRcFAevjWlmiNxL2qEN2LxclDIQW/E=;
+ b=ibvvBfvTYKixNHi1/2CRJUVPxoSAV4P4OGmJ91U6vutChk6pichsld+CCiQanC9JAnKFatkqqzuDBwzvwAYG0BhRv6EocCGET/foUVQKc8cmlSQrpnxzLsBH+FWx2Sg+Bjew0dFw6M+SYlUP6eNC4w95L1Ait3MgwMOZpLlZRzin0flHWpKIgkiwkqEkmmcjmVFEDf9trvvuOy0P3Hqnd+13d/I8qI4lnNO+sl/AQMTEq84oQ9+999VtSB0mCFdnVwpptdExKXmWm4Xr6zGAFcKlnO2hJGuQoJR6yW+QHTSWX5cin7ZNht+ndoz5cYlI4itA5gPBOyBA0NccOwBXMQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH8PR12MB7277.namprd12.prod.outlook.com (2603:10b6:510:223::13)
+ by MN0PR12MB5809.namprd12.prod.outlook.com (2603:10b6:208:375::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Thu, 4 Jun 2026
+ 01:43:19 +0000
+Received: from PH8PR12MB7277.namprd12.prod.outlook.com
+ ([fe80::2920:e6d9:4461:e2b4]) by PH8PR12MB7277.namprd12.prod.outlook.com
+ ([fe80::2920:e6d9:4461:e2b4%5]) with mapi id 15.21.0071.015; Thu, 4 Jun 2026
+ 01:43:19 +0000
+Date: Thu, 4 Jun 2026 11:43:14 +1000
+From: Balbir Singh <balbirs@nvidia.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev, kernel-team@meta.com, 
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, dave@stgolabs.net, 
+	jonathan.cameron@huawei.com, dave.jiang@intel.com, alison.schofield@intel.com, 
+	vishal.l.verma@intel.com, ira.weiny@intel.com, dan.j.williams@intel.com, 
+	longman@redhat.com, akpm@linux-foundation.org, david@kernel.org, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, 
+	surenb@google.com, mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, 
+	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, 
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com, 
+	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org, 
+	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com, sj@kernel.org, 
+	baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, 
+	baohua@kernel.org, lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn, 
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com, 
+	pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev, riel@surriel.com, 
+	harry.yoo@oracle.com, cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org, 
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com, 
+	zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <aiDVMgu0viTIml8H@parvat>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <ag6XyvxR-NU5rGn-@parvat>
+ <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat>
+ <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+ <ah-0CyZurn5D1ezY@parvat>
+ <ah_RcTU8SpQG7hab@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ah_RcTU8SpQG7hab@gourry-fedora-PF4VCD3F>
+X-ClientProxiedBy: MEWPR01CA0107.ausprd01.prod.outlook.com
+ (2603:10c6:220:1e0::15) To PH8PR12MB7277.namprd12.prod.outlook.com
+ (2603:10b6:510:223::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] cxl/test: Add a topology to test mixed-granularity
- regions
-To: Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
- Dan Williams <djbw@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Robert Richter <rrichter@amd.com>
-Cc: linux-cxl@vger.kernel.org
-References: <cover.1780095671.git.alison.schofield@intel.com>
- <2ab2466fafa96f07df65ee5f6b4f8511240f4c93.1780095671.git.alison.schofield@intel.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <2ab2466fafa96f07df65ee5f6b4f8511240f4c93.1780095671.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR12MB7277:EE_|MN0PR12MB5809:EE_
+X-MS-Office365-Filtering-Correlation-Id: 33912cb6-9c6c-4dcf-cbdc-08dec1daa726
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|22082099003|18002099003|56012099006|4143699003|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	A5hig0+gyLvGpAB+yMGRtSTET6gDMgqGuwA9v4L1joMkUQc+EomarQA040n550vPq+ygzs6caQblO9ulgnmLC469f01KRyU+lOsusqJxGEMOqH4I9DbumqYQlUFFyzpyiPoJ+cVosyqOMDQn86/9oHqUX/nvC3/x/64HT+4BUGtOD81w6ZJpSaNxKLIgDa8GNPC1ww00I5RA5PAnlF2uVvBa+h3JG0JDe9kZYTPzWPJlOJGTWgVEJWA7mWm395+OwvEI47EFFTN54Xlgo8p7yuLqakjaTzbItsDl9Jy9zyVJ91FP90TG7fDT/5k83h1awq4h3eBlKQ7d8mgVnLI8eI8lXdJjPwz6lxViJOfpTz7yV6xrw+ndkbZSoRA4VHHdkV77VRwQ0gjkp12qK2CSZC0cwiCyYq0edvMtzQjSkrNSRzGcLxuUXsZ7D/SvAnznT8fypt2FIMmlSFpAvLK8ulVvHDX/B0TTduR9+3cHUxIYnsr2R63CaLVpZYUW6wJf9XwB+2giBF9QvELdmTU984SD0m24wzn3+LDk0kq0QlaGVnJwHls0OZ1EFQszgy5a3Rjxd3OXVlIoJtVtHyQ0NGXQcaFuB0Mp93hFnGlxOrGv0IgI48F7bm1EOOzza2uCRtL7pTEdmT7oQZtgw6xDg9EDLV9cb6YWHKsXpcP+PZH11OK4oSdOx+BWkq2iluVR
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR12MB7277.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(22082099003)(18002099003)(56012099006)(4143699003)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?obterRFykq57MBL/78g/C8QQr5Yj12YkEAm751+6P+4WJINl06btfe//MQ6N?=
+ =?us-ascii?Q?86JifpIXgrctjkgmlLMtcQvcZyH5pphE7kC87rsOV0ea7a0Qu0O1rrFUnbeU?=
+ =?us-ascii?Q?Ns1EF/NZlvT46g9AWfd8Q5MZ6hUfvHGGayDn1U1uyq2mLgNgRlioHMSlOsWr?=
+ =?us-ascii?Q?KUkJgRV9FI0uKqNjv7sHJaemgZWmyeGk2P7Qz9aPAv+/E1f/aSzDSL75G5wM?=
+ =?us-ascii?Q?rWNYWINOGEXuI54d2Wj67hmB9QU848urvjrTRcigZR2HrB5/IGTlkJFrBMVC?=
+ =?us-ascii?Q?DGEYlGDViPvsAINp6KgRSfe6kSEckwQDiIpoynhTwWou19nX7KxqZkb95r8D?=
+ =?us-ascii?Q?CwMVCVl5yhbcRmmXIeyk7iE+AMLnoG1V0ZVPfKaJiRytFksSAMWxzmaWlc5c?=
+ =?us-ascii?Q?aTTSChFRZGOpcUHVaH46vcJS4YdpA5yXg4Fj7Lp2QGWHlsrzjQ8XnboTFJbk?=
+ =?us-ascii?Q?ueaXXb8nEbTjZo6A/Dp3Tug1vz+y2SdvtyLcSZMJGTFvd6r1yksOEszjpXyE?=
+ =?us-ascii?Q?Wzifnq8njemd6iIzzCXgQ3DysM3t4BleMHUwZb1mklk2753OZXxdv/c78RNf?=
+ =?us-ascii?Q?TSlU/g1WjZ5WgkTmMWwd8MvNop1O/kllppCOw5jR6CLLhKsaTQ8eanU2aAC5?=
+ =?us-ascii?Q?voyarK9PDHHur7CoUg9wp/U/ChOFN6ekvUin/yH3yElBWJ08g16iik1HcN7U?=
+ =?us-ascii?Q?KGZ46q+VOWezJcnmd3j4H770xrog5vIzr/+4LmmUIyRueyG/5WTMh3AHG1kX?=
+ =?us-ascii?Q?/JHhFVD6yHkupDoXzzH5PHegJInTG94Yra63nevXpsfgYXbkX6JlhQm7nloc?=
+ =?us-ascii?Q?tc2R1EP6JxpLelc7HCWr47fWQMKzWlh5jMH7u0V+ZAzWQWesquETW78socqH?=
+ =?us-ascii?Q?IZNHwkBmCmzYxU9jjKL5ydtwLLZVfduHHT8uRYQ3bB3VbmyY8IL/H22Kp4gb?=
+ =?us-ascii?Q?P2/VufZz1xGeWXJLUeH6Z+utFC4VDQMuUxP4JuchGC4oR8Odqt2kGazrrJVQ?=
+ =?us-ascii?Q?wTmezgjxOTz9m8OOQom8DCMN2mEBxUnGXWmdg+F9Z711KxHTU6HwhRlB99Ox?=
+ =?us-ascii?Q?H/6B/shMdzGPDc/RUSj1bHz2k4Byc0VzKffIfibvNgLIQ8Oe8fBB3gIT+FVf?=
+ =?us-ascii?Q?42gW2cQx1rDd6Z9Co9Q0TXk/nF3b0tR63VWk/lbLWi101jq40mLhoqCMGK2m?=
+ =?us-ascii?Q?cKAw3shsJRywcZ2KboblLV1BTlub2cNysfbEnx+F0y76CCa8X76T86k56EcF?=
+ =?us-ascii?Q?D0u9TzH1GAgNOPe4CKwbESeGul+NRw/ymHR1pNXg//t0AFUTdft2/nRLfoSB?=
+ =?us-ascii?Q?2a1dBxbKiER8u/Q6G4m+U0wfJxd8XYFaTdwCt+Rkar8GDkp4JnaIsUDueu6a?=
+ =?us-ascii?Q?SDTJgqKReQjRefI7iOKrO7R3dJgfXitBNASMkvKc6JEIksGJNABcnMW+rGeJ?=
+ =?us-ascii?Q?/Ck8ERHuY3PqZUNFU1r0vplITbggP1pXsGIXVpMPQBy6+Av6UMA7R4s0rnM3?=
+ =?us-ascii?Q?b8gpeYjSRnxGFhkEkmL2V/guEDw379g+bDY/uzw32EFe1isPjShodgI0uWuN?=
+ =?us-ascii?Q?FPWydpi5TGORK00YUZBIEuHBloiTLW68SejsaOKR1VfsnfI4vKqJTwtE5Gyl?=
+ =?us-ascii?Q?ezqwDLaBi0JECA8FpZOcTfHZxOQ7iO/fjPHUR9Gh15VBiUQ89pvTTpH9Ffr2?=
+ =?us-ascii?Q?/S2iMabxWgKMwFbSZIsZFfrTxzgyHw3QLuB8+1O8UE/DgHfO5SqkG3KVyH4p?=
+ =?us-ascii?Q?XJUGVA1LGg=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33912cb6-9c6c-4dcf-cbdc-08dec1daa726
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR12MB7277.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jun 2026 01:43:18.8261
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: s/sb409tFYo/7o1wndzo62ERdIKE5y95+FY+Ptk3CIuKznrUEb7rNsjPEc57mnHwc8ilfXEzUr8tEk0fRoi62g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5809
 
-
-
-On 5/29/26 5:00 PM, Alison Schofield wrote:
-> Add a cxl_test topology for mixed-granularity region coverage.
+On Wed, Jun 03, 2026 at 08:02:09AM +0100, Gregory Price wrote:
+> On Wed, Jun 03, 2026 at 03:00:01PM +1000, Balbir Singh wrote:
+> > On Tue, Jun 02, 2026 at 09:57:48AM +0100, Gregory Price wrote:
+> > > On Tue, Jun 02, 2026 at 12:16:50PM +1000, Balbir Singh wrote:
+> > > > 
+> > > > I was think we wouldn't need explicit flags and that allocations would
+> > > > happen from user space using __GFP_THISNODE to the node or via a nodemask
+> > > > based on nodes of interest. Is there a reason to add this flag, a system
+> > > > might have more than one source of N_MEMORY_PRIVATE?
+> > > > 
+> > > 
+> > > There's a few things to unpack here.  I discussed this many times on
+> > > list and at LSF, but to reiterate.
+> > > 
+> > > 1) __GFP_THISNODE is insufficient to enforce isolation and otherwise
+> > >    not particularly useful.  Additionally, from userland, it's not
+> > >    something you can actually set.
+> > 
+> > I was thinking mbind()/mempolicy() is how we get to it. It already
+> > accepts a nodemask.
+> >
 > 
-> modprobe cxl_test mixed_gran_regions=1 creates three host bridges
-> with two switch levels below each bridge and twelve endpoints total.
-> The topology advertises one 2-way root CFMWS for power-of-2
-> mixed-granularity tests and one 3-way root CFMWS for 3-way-family
-> tests.
+> First let me say:  I want to enable mbind access to these nodes.
 > 
-> Leave the default and existing specialty topologies unchanged.
+> But let me caveat:  I think that needs more time to develop, and
+> in the meantime, we can enable the /dev/xxx pattern somewhat trivially.
 > 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-
-
-$ make -j `nproc` M=tools/testing/cxl
-make[1]: Entering directory '/home/djiang5/git/kernel-review/tools/testing/cxl'
-  CC [M]  test/cxl.o
-test/cxl.c: In function ‘cxl_test_init’:
-test/cxl.c:2358:17: error: label ‘err_rch’ used but not defined
- 2358 |                 goto err_rch;
-      |
-
-Applied against 7.1-rc6.
-
-> ---
->  tools/testing/cxl/test/cxl.c | 474 +++++++++++++++++++++++++++++++++--
->  1 file changed, 452 insertions(+), 22 deletions(-)
+> First let me address a few things about mbind/mempolicy and how it
+> interacts with page_alloc.c, I gave this overview at LSF but I don't
+> remember if I posted it in any of my follow ups.
 > 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 418669927fb0..b44db749873f 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -17,6 +17,7 @@
->  static int interleave_arithmetic;
->  static bool extended_linear_cache;
->  static bool fail_autoassemble;
-> +static bool mixed_gran_regions;
->  
->  #define FAKE_QTG_ID	42
->  
-> @@ -26,7 +27,26 @@ static bool fail_autoassemble;
->  #define NR_CXL_ROOT_PORTS 2
->  #define NR_CXL_SWITCH_PORTS 2
->  #define NR_CXL_PORT_DECODERS 8
-> -#define NR_BRIDGES (NR_CXL_HOST_BRIDGES + NR_CXL_SINGLE_HOST + NR_CXL_RCH)
-> +
-> +/*
-> + * mixed_gran_regions=1: three host bridges, two switch levels, and
-> + * twelve endpoints for power-of-2 and 3-way-family region layouts.
-> + */
-> +#define NR_CXL_MIX_GRAN_HB 3
-> +#define NR_CXL_MIX_GRAN_ROOT_PORTS NR_CXL_MIX_GRAN_HB	/* 1 per HB */
-> +#define NR_CXL_MIX_GRAN_L1_DPORTS  (NR_CXL_MIX_GRAN_HB * 2)
-> +#define NR_CXL_MIX_GRAN_L2_SWITCHES NR_CXL_MIX_GRAN_L1_DPORTS
-> +#define NR_CXL_MIX_GRAN_L2_DPORTS  (NR_CXL_MIX_GRAN_L2_SWITCHES * 2)
-> +
-> +#define NR_DEFAULT_BRIDGES \
-> +	(NR_CXL_HOST_BRIDGES + NR_CXL_SINGLE_HOST + NR_CXL_RCH)
-> +#define NR_BRIDGES (NR_DEFAULT_BRIDGES + NR_CXL_MIX_GRAN_HB)
-> +
-> +/* CHBS index ranges within mock_cedt.chbs[] */
-> +#define CHBS_DEFAULT_START 0
-> +#define CHBS_DEFAULT_END (NR_DEFAULT_BRIDGES - 1)
-> +#define CHBS_MIX_GRAN_START NR_DEFAULT_BRIDGES
-> +#define CHBS_MIX_GRAN_END (NR_BRIDGES - 1)
->  
->  #define MOCK_AUTO_REGION_SIZE_DEFAULT SZ_512M
->  static int mock_auto_region_size = MOCK_AUTO_REGION_SIZE_DEFAULT;
-> @@ -52,6 +72,15 @@ struct platform_device *cxl_mem_single[NR_MEM_SINGLE];
->  static struct platform_device *cxl_rch[NR_CXL_RCH];
->  static struct platform_device *cxl_rcd[NR_CXL_RCH];
->  
-> +/* Dedicated mixed-granularity topology */
-> +static struct platform_device *cxl_mix_gran_hb[NR_CXL_MIX_GRAN_HB];
-> +static struct platform_device *cxl_mix_gran_root_port[NR_CXL_MIX_GRAN_ROOT_PORTS];
-> +static struct platform_device *cxl_mix_gran_l1_uport[NR_CXL_MIX_GRAN_ROOT_PORTS];
-> +static struct platform_device *cxl_mix_gran_l1_dport[NR_CXL_MIX_GRAN_L1_DPORTS];
-> +static struct platform_device *cxl_mix_gran_l2_uport[NR_CXL_MIX_GRAN_L2_SWITCHES];
-> +static struct platform_device *cxl_mix_gran_l2_dport[NR_CXL_MIX_GRAN_L2_DPORTS];
-> +static struct platform_device *cxl_mem_mix_gran[NR_CXL_MIX_GRAN_L2_DPORTS];
-> +
->  /*
->   * Decoder registry
->   *
-> @@ -115,6 +144,19 @@ static struct acpi_device host_bridge[NR_BRIDGES] = {
->  		.handle = &host_bridge[3],
->  		.pnp.unique_id = "3",
->  	},
-> +	/* Dedicated mixed-granularity topology */
-> +	[4] = {
-> +		.handle = &host_bridge[4],
-> +		.pnp.unique_id = "4",
-> +	},
-> +	[5] = {
-> +		.handle = &host_bridge[5],
-> +		.pnp.unique_id = "5",
-> +	},
-> +	[6] = {
-> +		.handle = &host_bridge[6],
-> +		.pnp.unique_id = "6",
-> +	},
->  };
->  
->  static bool is_mock_dev(struct device *dev)
-> @@ -130,6 +172,9 @@ static bool is_mock_dev(struct device *dev)
->  	for (i = 0; i < ARRAY_SIZE(cxl_rcd); i++)
->  		if (dev == &cxl_rcd[i]->dev)
->  			return true;
-> +	for (i = 0; i < ARRAY_SIZE(cxl_mem_mix_gran); i++)
-> +		if (cxl_mem_mix_gran[i] && dev == &cxl_mem_mix_gran[i]->dev)
-> +			return true;
->  	if (dev == &cxl_acpi->dev)
->  		return true;
->  	return false;
-> @@ -188,6 +233,14 @@ static struct {
->  		struct acpi_cedt_cfmws cfmws;
->  		u32 target[3];
->  	} cfmws8;
-> +	struct {
-> +		struct acpi_cedt_cfmws cfmws;
-> +		u32 target[2];
-> +	} cfmws9;
-> +	struct {
-> +		struct acpi_cedt_cfmws cfmws;
-> +		u32 target[3];
-> +	} cfmws10;
->  	struct {
->  		struct acpi_cedt_cxims cxims;
->  		u64 xormap_list[2];
-> @@ -232,6 +285,31 @@ static struct {
->  		.uid = 3,
->  		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL11,
->  	},
-> +	/* Dedicated mixed-granularity topology */
-> +	.chbs[4] = {
-> +		.header = {
-> +			.type = ACPI_CEDT_TYPE_CHBS,
-> +			.length = sizeof(mock_cedt.chbs[0]),
-> +		},
-> +		.uid = 4,
-> +		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
-> +	},
-> +	.chbs[5] = {
-> +		.header = {
-> +			.type = ACPI_CEDT_TYPE_CHBS,
-> +			.length = sizeof(mock_cedt.chbs[0]),
-> +		},
-> +		.uid = 5,
-> +		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
-> +	},
-> +	.chbs[6] = {
-> +		.header = {
-> +			.type = ACPI_CEDT_TYPE_CHBS,
-> +			.length = sizeof(mock_cedt.chbs[0]),
-> +		},
-> +		.uid = 6,
-> +		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
-> +	},
->  	.cfmws0 = {
->  		.cfmws = {
->  			.header = {
-> @@ -371,6 +449,36 @@ static struct {
->  		},
->  		.target = { 0, 1, 2, },
->  	},
-> +	.cfmws9 = {
-> +		.cfmws = {
-> +			.header = {
-> +				.type = ACPI_CEDT_TYPE_CFMWS,
-> +				.length = sizeof(mock_cedt.cfmws9),
-> +			},
-> +			.interleave_ways = 1,
-> +			.granularity = 4,
-> +			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-> +					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-> +			.qtg_id = FAKE_QTG_ID,
-> +			.window_size = SZ_512M * 4UL,
-> +		},
-> +		.target = { 4, 5, },
-> +	},
-> +	.cfmws10 = {
-> +		.cfmws = {
-> +			.header = {
-> +				.type = ACPI_CEDT_TYPE_CFMWS,
-> +				.length = sizeof(mock_cedt.cfmws10),
-> +			},
-> +			.interleave_ways = 8,
-> +			.granularity = 1,
-> +			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-> +					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-> +			.qtg_id = FAKE_QTG_ID,
-> +			.window_size = SZ_512M * 6UL,
-> +		},
-> +		.target = { 4, 5, 6, },
-> +	},
->  	.cxims0 = {
->  		.cxims = {
->  			.header = {
-> @@ -395,6 +503,9 @@ struct acpi_cedt_cfmws *mock_cfmws[] = {
->  	[6] = &mock_cedt.cfmws6.cfmws,
->  	[7] = &mock_cedt.cfmws7.cfmws,
->  	[8] = &mock_cedt.cfmws8.cfmws,
-> +	/* Dedicated mixed-granularity topology */
-> +	[9] = &mock_cedt.cfmws9.cfmws,
-> +	[10] = &mock_cedt.cfmws10.cfmws,
->  };
->  
->  static int cfmws_start;
-> @@ -403,6 +514,8 @@ static int cfmws_end;
->  #define CFMWS_MOD_ARRAY_END   5
->  #define CFMWS_XOR_ARRAY_START 6
->  #define CFMWS_XOR_ARRAY_END   8
-> +#define CFMWS_MIX_GRAN_ARRAY_START 9
-> +#define CFMWS_MIX_GRAN_ARRAY_END   10
->  
->  struct acpi_cedt_cxims *mock_cxims[1] = {
->  	[0] = &mock_cedt.cxims0.cxims,
-> @@ -475,9 +588,18 @@ static void cfmws_elc_update(struct acpi_cedt_cfmws *window, int index)
->  static int populate_cedt(void)
->  {
->  	struct cxl_mock_res *res;
-> +	int chbs_lo, chbs_hi;
->  	int i;
->  
-> -	for (i = 0; i < ARRAY_SIZE(mock_cedt.chbs); i++) {
-> +	if (mixed_gran_regions) {
-> +		chbs_lo = CHBS_MIX_GRAN_START;
-> +		chbs_hi = CHBS_MIX_GRAN_END;
-> +	} else {
-> +		chbs_lo = CHBS_DEFAULT_START;
-> +		chbs_hi = CHBS_DEFAULT_END;
-> +	}
-> +
-> +	for (i = chbs_lo; i <= chbs_hi; i++) {
->  		struct acpi_cedt_chbs *chbs = &mock_cedt.chbs[i];
->  		resource_size_t size;
->  
-> @@ -531,12 +653,23 @@ static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
->  	if (!is_mock_port(dev) && !is_mock_dev(dev))
->  		return acpi_table_parse_cedt(id, handler_arg, arg);
->  
-> -	if (id == ACPI_CEDT_TYPE_CHBS)
-> -		for (i = 0; i < ARRAY_SIZE(mock_cedt.chbs); i++) {
-> +	if (id == ACPI_CEDT_TYPE_CHBS) {
-> +		int chbs_lo, chbs_hi;
-> +
-> +		if (mixed_gran_regions) {
-> +			chbs_lo = CHBS_MIX_GRAN_START;
-> +			chbs_hi = CHBS_MIX_GRAN_END;
-> +		} else {
-> +			chbs_lo = CHBS_DEFAULT_START;
-> +			chbs_hi = CHBS_DEFAULT_END;
-> +		}
-> +
-> +		for (i = chbs_lo; i <= chbs_hi; i++) {
->  			h = (union acpi_subtable_headers *)&mock_cedt.chbs[i];
->  			end = (unsigned long)&mock_cedt.chbs[i + 1];
->  			handler_arg(h, arg, end);
->  		}
-> +	}
->  
->  	if (id == ACPI_CEDT_TYPE_CFMWS)
->  		for (i = cfmws_start; i <= cfmws_end; i++) {
-> @@ -568,6 +701,9 @@ static bool is_mock_bridge(struct device *dev)
->  	for (i = 0; i < ARRAY_SIZE(cxl_rch); i++)
->  		if (dev == &cxl_rch[i]->dev)
->  			return true;
-> +	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_hb); i++)
-> +		if (cxl_mix_gran_hb[i] && dev == &cxl_mix_gran_hb[i]->dev)
-> +			return true;
->  
->  	return false;
->  }
-> @@ -603,6 +739,31 @@ static bool is_mock_port(struct device *dev)
->  		if (dev == &cxl_swd_single[i]->dev)
->  			return true;
->  
-> +	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_root_port); i++)
-> +		if (cxl_mix_gran_root_port[i] &&
-> +		    dev == &cxl_mix_gran_root_port[i]->dev)
-> +			return true;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_l1_uport); i++)
-> +		if (cxl_mix_gran_l1_uport[i] &&
-> +		    dev == &cxl_mix_gran_l1_uport[i]->dev)
-> +			return true;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_l1_dport); i++)
-> +		if (cxl_mix_gran_l1_dport[i] &&
-> +		    dev == &cxl_mix_gran_l1_dport[i]->dev)
-> +			return true;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_l2_uport); i++)
-> +		if (cxl_mix_gran_l2_uport[i] &&
-> +		    dev == &cxl_mix_gran_l2_uport[i]->dev)
-> +			return true;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_l2_dport); i++)
-> +		if (cxl_mix_gran_l2_dport[i] &&
-> +		    dev == &cxl_mix_gran_l2_dport[i]->dev)
-> +			return true;
-> +
->  	if (is_cxl_memdev(dev))
->  		return is_mock_dev(dev->parent);
->  
-> @@ -671,7 +832,15 @@ static struct acpi_pci_root mock_pci_root[ARRAY_SIZE(mock_pci_bus)] = {
->  	[3] = {
->  		.bus = &mock_pci_bus[3],
->  	},
-> -
-> +	[4] = {
-> +		.bus = &mock_pci_bus[4],
-> +	},
-> +	[5] = {
-> +		.bus = &mock_pci_bus[5],
-> +	},
-> +	[6] = {
-> +		.bus = &mock_pci_bus[6],
-> +	},
->  };
->  
->  static bool is_mock_bus(struct pci_bus *bus)
-> @@ -1229,6 +1398,8 @@ static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
->  
->  	if (is_cxl_endpoint(port))
->  		target_count = 0;
-> +	else if (mixed_gran_regions && is_cxl_root(parent_port))
-> +		target_count = NR_CXL_MIX_GRAN_ROOT_PORTS / NR_CXL_MIX_GRAN_HB;
->  	else if (is_cxl_root(parent_port))
->  		target_count = NR_CXL_ROOT_PORTS;
->  	else
-> @@ -1328,6 +1499,27 @@ static int get_port_array(struct cxl_port *port,
->  	struct platform_device **array;
->  	int array_size;
->  
-> +	if (mixed_gran_regions) {
-> +		if (port->depth == 1) {
-> +			array_size = ARRAY_SIZE(cxl_mix_gran_root_port);
-> +			array = cxl_mix_gran_root_port;
-> +		} else if (port->depth == 2) {
-> +			array_size = ARRAY_SIZE(cxl_mix_gran_l1_dport);
-> +			array = cxl_mix_gran_l1_dport;
-> +		} else if (port->depth == 3) {
-> +			array_size = ARRAY_SIZE(cxl_mix_gran_l2_dport);
-> +			array = cxl_mix_gran_l2_dport;
-> +		} else {
-> +			dev_WARN_ONCE(&port->dev, 1, "unexpected depth %d\n",
-> +				      port->depth);
-> +			return -ENXIO;
-> +		}
-> +
-> +		*port_array = array;
-> +		*port_array_size = array_size;
-> +		return 0;
-> +	}
-> +
->  	if (port->depth == 1) {
->  		if (is_multi_bridge(port->uport_dev)) {
->  			array_size = ARRAY_SIZE(cxl_root_port);
-> @@ -1709,10 +1901,190 @@ static void cxl_single_topo_exit(void)
->  	}
->  }
->  
-> +#define MIX_GRAN_RP_ID_BASE	(NR_MULTI_ROOT + NR_CXL_SINGLE_HOST)
-> +#define MIX_GRAN_L1U_ID_BASE	MIX_GRAN_RP_ID_BASE
-> +#define MIX_GRAN_L1D_ID_BASE	(NR_MEM_MULTI + NR_MEM_SINGLE)
-> +#define MIX_GRAN_L2U_ID_BASE	MIX_GRAN_L1D_ID_BASE
-> +#define MIX_GRAN_L2D_ID_BASE	\
-> +	(MIX_GRAN_L1D_ID_BASE + NR_CXL_MIX_GRAN_L1_DPORTS)
-> +#define MIX_GRAN_MEM_ID_BASE	(NR_MEM_MULTI + NR_MEM_SINGLE + NR_CXL_RCH)
-> +
-> +static void cxl_mix_gran_topo_exit(void)
-> +{
-> +	int i;
-> +
-> +	for (i = NR_CXL_MIX_GRAN_L2_DPORTS - 1; i >= 0; i--)
-> +		platform_device_unregister(cxl_mix_gran_l2_dport[i]);
-> +	for (i = NR_CXL_MIX_GRAN_L2_SWITCHES - 1; i >= 0; i--)
-> +		platform_device_unregister(cxl_mix_gran_l2_uport[i]);
-> +	for (i = NR_CXL_MIX_GRAN_L1_DPORTS - 1; i >= 0; i--)
-> +		platform_device_unregister(cxl_mix_gran_l1_dport[i]);
-> +	for (i = NR_CXL_MIX_GRAN_ROOT_PORTS - 1; i >= 0; i--)
-> +		platform_device_unregister(cxl_mix_gran_l1_uport[i]);
-> +	for (i = NR_CXL_MIX_GRAN_ROOT_PORTS - 1; i >= 0; i--)
-> +		platform_device_unregister(cxl_mix_gran_root_port[i]);
-> +	for (i = NR_CXL_MIX_GRAN_HB - 1; i >= 0; i--) {
-> +		struct platform_device *pdev = cxl_mix_gran_hb[i];
-> +
-> +		if (!pdev)
-> +			continue;
-> +		sysfs_remove_link(&pdev->dev.kobj, "physical_node");
-> +		platform_device_unregister(pdev);
-> +	}
-> +}
-> +
-> +static __init int cxl_mix_gran_topo_init(void)
-> +{
-> +	int i, rc;
-> +
-> +	/* 3 host bridges */
-> +	for (i = 0; i < NR_CXL_MIX_GRAN_HB; i++) {
-> +		struct acpi_device *adev = &host_bridge[NR_DEFAULT_BRIDGES + i];
-> +		struct platform_device *pdev;
-> +
-> +		pdev = platform_device_alloc("cxl_host_bridge",
-> +					     NR_DEFAULT_BRIDGES + i);
-> +		if (!pdev) {
-> +			rc = -ENOMEM;
-> +			goto err;
-> +		}
-> +
-> +		mock_companion(adev, &pdev->dev);
-> +		rc = platform_device_add(pdev);
-> +		if (rc) {
-> +			platform_device_put(pdev);
-> +			goto err;
-> +		}
-> +
-> +		cxl_mix_gran_hb[i] = pdev;
-> +		mock_pci_bus[NR_DEFAULT_BRIDGES + i].bridge = &pdev->dev;
-> +		rc = sysfs_create_link(&pdev->dev.kobj, &pdev->dev.kobj,
-> +				       "physical_node");
-> +		if (rc)
-> +			goto err;
-> +	}
-> +
-> +	/* 1 root port per host bridge */
-> +	for (i = 0; i < NR_CXL_MIX_GRAN_ROOT_PORTS; i++) {
-> +		struct platform_device *bridge = cxl_mix_gran_hb[i];
-> +		struct platform_device *pdev;
-> +
-> +		pdev = platform_device_alloc("cxl_root_port",
-> +					     MIX_GRAN_RP_ID_BASE + i);
-> +		if (!pdev) {
-> +			rc = -ENOMEM;
-> +			goto err;
-> +		}
-> +		pdev->dev.parent = &bridge->dev;
-> +
-> +		rc = platform_device_add(pdev);
-> +		if (rc) {
-> +			platform_device_put(pdev);
-> +			goto err;
-> +		}
-> +		cxl_mix_gran_root_port[i] = pdev;
-> +	}
-> +
-> +	/* L1 switch uport under each root port */
-> +	for (i = 0; i < NR_CXL_MIX_GRAN_ROOT_PORTS; i++) {
-> +		struct platform_device *pdev;
-> +
-> +		pdev = platform_device_alloc("cxl_switch_uport",
-> +					     MIX_GRAN_L1U_ID_BASE + i);
-> +		if (!pdev) {
-> +			rc = -ENOMEM;
-> +			goto err;
-> +		}
-> +		pdev->dev.parent = &cxl_mix_gran_root_port[i]->dev;
-> +
-> +		rc = platform_device_add(pdev);
-> +		if (rc) {
-> +			platform_device_put(pdev);
-> +			goto err;
-> +		}
-> +		cxl_mix_gran_l1_uport[i] = pdev;
-> +	}
-> +
-> +	/* 2 L1 dports per L1 switch */
-> +	for (i = 0; i < NR_CXL_MIX_GRAN_L1_DPORTS; i++) {
-> +		struct platform_device *uport =
-> +			cxl_mix_gran_l1_uport[i / NR_CXL_SWITCH_PORTS];
-> +		struct platform_device *pdev;
-> +
-> +		pdev = platform_device_alloc("cxl_switch_dport",
-> +					     MIX_GRAN_L1D_ID_BASE + i);
-> +		if (!pdev) {
-> +			rc = -ENOMEM;
-> +			goto err;
-> +		}
-> +		pdev->dev.parent = &uport->dev;
-> +
-> +		rc = platform_device_add(pdev);
-> +		if (rc) {
-> +			platform_device_put(pdev);
-> +			goto err;
-> +		}
-> +		cxl_mix_gran_l1_dport[i] = pdev;
-> +	}
-> +
-> +	/* L2 switch uport under each L1 dport */
-> +	for (i = 0; i < NR_CXL_MIX_GRAN_L2_SWITCHES; i++) {
-> +		struct platform_device *pdev;
-> +
-> +		pdev = platform_device_alloc("cxl_switch_uport",
-> +					     MIX_GRAN_L2U_ID_BASE + i);
-> +		if (!pdev) {
-> +			rc = -ENOMEM;
-> +			goto err;
-> +		}
-> +		pdev->dev.parent = &cxl_mix_gran_l1_dport[i]->dev;
-> +
-> +		rc = platform_device_add(pdev);
-> +		if (rc) {
-> +			platform_device_put(pdev);
-> +			goto err;
-> +		}
-> +		cxl_mix_gran_l2_uport[i] = pdev;
-> +	}
-> +
-> +	/* 2 L2 dports per L2 switch */
-> +	for (i = 0; i < NR_CXL_MIX_GRAN_L2_DPORTS; i++) {
-> +		struct platform_device *uport =
-> +			cxl_mix_gran_l2_uport[i / NR_CXL_SWITCH_PORTS];
-> +		struct platform_device *pdev;
-> +
-> +		pdev = platform_device_alloc("cxl_switch_dport",
-> +					     MIX_GRAN_L2D_ID_BASE + i);
-> +		if (!pdev) {
-> +			rc = -ENOMEM;
-> +			goto err;
-> +		}
-> +		pdev->dev.parent = &uport->dev;
-> +
-> +		rc = platform_device_add(pdev);
-> +		if (rc) {
-> +			platform_device_put(pdev);
-> +			goto err;
-> +		}
-> +		cxl_mix_gran_l2_dport[i] = pdev;
-> +	}
-> +
-> +	return 0;
-> +err:
-> +	cxl_mix_gran_topo_exit();
-> +	return rc;
-> +}
-> +
->  static void cxl_mem_exit(void)
->  {
->  	int i;
->  
-> +	if (mixed_gran_regions) {
-> +		for (i = NR_CXL_MIX_GRAN_L2_DPORTS - 1; i >= 0; i--)
-> +			platform_device_unregister(cxl_mem_mix_gran[i]);
-> +		return;
-> +	}
-> +
->  	for (i = ARRAY_SIZE(cxl_rcd) - 1; i >= 0; i--)
->  		platform_device_unregister(cxl_rcd[i]);
->  	for (i = ARRAY_SIZE(cxl_mem_single) - 1; i >= 0; i--)
-> @@ -1721,10 +2093,46 @@ static void cxl_mem_exit(void)
->  		platform_device_unregister(cxl_mem[i]);
->  }
->  
-> +static int cxl_mem_mix_gran_init(void)
-> +{
-> +	int i, rc;
-> +
-> +	for (i = 0; i < NR_CXL_MIX_GRAN_L2_DPORTS; i++) {
-> +		struct platform_device *dport = cxl_mix_gran_l2_dport[i];
-> +		struct platform_device *pdev;
-> +
-> +		pdev = platform_device_alloc("cxl_mem",
-> +					     MIX_GRAN_MEM_ID_BASE + i);
-> +		if (!pdev) {
-> +			rc = -ENOMEM;
-> +			goto err;
-> +		}
-> +		pdev->dev.parent = &dport->dev;
-> +		set_dev_node(&pdev->dev, i % 2);
-> +
-> +		cxl_mem_mix_gran[i] = pdev;
-> +		rc = platform_device_add(pdev);
-> +		if (rc) {
-> +			platform_device_put(pdev);
-> +			cxl_mem_mix_gran[i] = NULL;
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +err:
-> +	for (i = NR_CXL_MIX_GRAN_L2_DPORTS - 1; i >= 0; i--)
-> +		platform_device_unregister(cxl_mem_mix_gran[i]);
-> +	return rc;
-> +}
-> +
->  static int cxl_mem_init(void)
->  {
->  	int i, rc;
->  
-> +	if (mixed_gran_regions)
-> +		return cxl_mem_mix_gran_init();
-> +
->  	for (i = 0; i < ARRAY_SIZE(cxl_mem); i++) {
->  		struct platform_device *dport = cxl_switch_dport[i];
->  		struct platform_device *pdev;
-> @@ -1848,7 +2256,10 @@ static __init int cxl_test_init(void)
->  	if (rc)
->  		goto err_gen_pool_add;
->  
-> -	if (interleave_arithmetic == 1) {
-> +	if (mixed_gran_regions) {
-> +		cfmws_start = CFMWS_MIX_GRAN_ARRAY_START;
-> +		cfmws_end = CFMWS_MIX_GRAN_ARRAY_END;
-> +	} else if (interleave_arithmetic == 1) {
->  		cfmws_start = CFMWS_XOR_ARRAY_START;
->  		cfmws_end = CFMWS_XOR_ARRAY_END;
->  	} else {
-> @@ -1860,6 +2271,13 @@ static __init int cxl_test_init(void)
->  	if (rc)
->  		goto err_populate;
->  
-> +	if (mixed_gran_regions) {
-> +		rc = cxl_mix_gran_topo_init();
-> +		if (rc)
-> +			goto err_populate;
-> +		goto topo_done;
-> +	}
-> +
->  	for (i = 0; i < ARRAY_SIZE(cxl_host_bridge); i++) {
->  		struct acpi_device *adev = &host_bridge[i];
->  		struct platform_device *pdev;
-> @@ -1945,9 +2363,10 @@ static __init int cxl_test_init(void)
->  	if (rc)
->  		goto err_single;
->  
-> +topo_done:
->  	cxl_acpi = platform_device_alloc("cxl_acpi", 0);
->  	if (!cxl_acpi)
-> -		goto err_rch;
-> +		goto err_topo;
->  
->  	mock_companion(&acpi0017_mock, &cxl_acpi->dev);
->  	acpi0017_mock.dev.bus = &platform_bus_type;
-> @@ -1971,7 +2390,11 @@ static __init int cxl_test_init(void)
->  	cxl_mem_exit();
->  err_root:
->  	platform_device_put(cxl_acpi);
-> -err_rch:
-> +err_topo:
-> +	if (mixed_gran_regions) {
-> +		cxl_mix_gran_topo_exit();
-> +		goto err_populate;
-> +	}
->  	cxl_rch_topo_exit();
->  err_single:
->  	cxl_single_topo_exit();
-> @@ -2020,21 +2443,25 @@ static __exit void cxl_test_exit(void)
->  	hmem_test_exit();
->  	cxl_mem_exit();
->  	platform_device_unregister(cxl_acpi);
-> -	cxl_rch_topo_exit();
-> -	cxl_single_topo_exit();
-> -	for (i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--)
-> -		platform_device_unregister(cxl_switch_dport[i]);
-> -	for (i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--)
-> -		platform_device_unregister(cxl_switch_uport[i]);
-> -	for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--)
-> -		platform_device_unregister(cxl_root_port[i]);
-> -	for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
-> -		struct platform_device *pdev = cxl_host_bridge[i];
-> +	if (mixed_gran_regions) {
-> +		cxl_mix_gran_topo_exit();
-> +	} else {
-> +		cxl_rch_topo_exit();
-> +		cxl_single_topo_exit();
-> +		for (i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--)
-> +			platform_device_unregister(cxl_switch_dport[i]);
-> +		for (i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--)
-> +			platform_device_unregister(cxl_switch_uport[i]);
-> +		for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--)
-> +			platform_device_unregister(cxl_root_port[i]);
-> +		for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
-> +			struct platform_device *pdev = cxl_host_bridge[i];
->  
-> -		if (!pdev)
-> -			continue;
-> -		sysfs_remove_link(&pdev->dev.kobj, "physical_node");
-> -		platform_device_unregister(cxl_host_bridge[i]);
-> +			if (!pdev)
-> +				continue;
-> +			sysfs_remove_link(&pdev->dev.kobj, "physical_node");
-> +			platform_device_unregister(cxl_host_bridge[i]);
-> +		}
->  	}
->  	depopulate_all_mock_resources();
->  	gen_pool_destroy(cxl_mock_pool);
-> @@ -2049,6 +2476,9 @@ module_param(extended_linear_cache, bool, 0444);
->  MODULE_PARM_DESC(extended_linear_cache, "Enable extended linear cache support");
->  module_param(fail_autoassemble, bool, 0444);
->  MODULE_PARM_DESC(fail_autoassemble, "Simulate missing member of an auto-region");
-> +module_param(mixed_gran_regions, bool, 0444);
-> +MODULE_PARM_DESC(mixed_gran_regions,
-> +		 "Topology supporting mixed granularity regions");
->  module_init(cxl_test_init);
->  module_exit(cxl_test_exit);
->  MODULE_LICENSE("GPL v2");
+> 
+> 1) Fallback lists are filtered by nodemask, the nodemask does not replace
+>    the fallback list.
+> 
+> Here is how the page allocator fallback lists and nodemasks interact:
+> 
+>    Fallbacks A:  A B 
+>    Fallbacks B:  B A
+>    Fallbacks C:  C A B   (Private)
+>    Fallbacks D:  D B A   (Private)
+> 
 
+Do we want regular memory (N_MEMORY) in the fallback list of device private nodes?
+The assumption is that we have ATS translation enabled? Assumiung A and
+B are N_MEMORY here or am I misreading your illustraion?
+
+> Lets say you pass:
+> 
+>    alloc_pages_node(C, ..., nodemask(A,C,D))
+> 
+> So we get
+> 
+>   Fallback(C,A,B) & nodemask(A,C,D) -> iterate(C,A)
+> 
+> If we wanted to change this behavior, realistically we'd be looking for
+> a way to add specific nodes to certain fallback lists - rather than
+> modify the nodemask interaction in some way.
+
+Yes, that is what we did with CDM, control the fallback for
+N_MEMORY_PRIVATE, but there is a design decision to be made here.
+
+> 
+> I think this is out of scope for the first iteration - so supporting
+> anything other than mbind() from the start is just pointless.
+> 
+> The only feasible mempolicy you can apply is single-node bind, so
+> realistically you can only support mbind.
+> 
+> 
+> 2) full mempolicy support doesn't really make sense
+> 
+>    task mempolicy PROBABLY should never really touch private nodes,
+>    while VMA policy certainly can.  Assuming we're able to support
+>    multi-private-node masks, none of the non-bind mempolicies even
+>    make sense for most private nodes (interleave? weighted interleave?)
+> 
+
+Yes, mostly, but is that baked into the design? If so, why?
+
+>    I haven't worked through all the implications of a task policy having
+>    a private node attached, but the longer I think about it, the less it
+>    makes sense to just support this outright.
+> 
+> 
+> 3) Introducing mbind support is not just a simple nodemask on a VMA,
+>    It also implies migration, cgroup/cpuset, and UAPI interactions.
+> 
+>    a) migration:
+>       
+>       mbind/mempolicy can and will engage migration when it is called
+>       with certain flags.  Migration has subtle LRU interactions, but
+>       the patch set I have at least allows this to work.
+> 
+>    b) cgroup/cpuset:
+>    
+>       cpuset.mems rebinding will cause private nodes to be quietly
+>       rebound to non-private nodes within a nodemask.
+> 
+>    c) between A and B - we really want MPOL_F_STATIC to be required
+>       for mbind to be applied to private node so that it is never
+>       forcefully remapped.
+> 
+>       That's a UAPI semantic change specific for private nodes we
+>       should really take time to consider.
+> 
+> 
+> 4) File VMA interactions don't entirely make sense with mbind
+> 
+>    In theory you might want:
+> 
+>    fd = open("somefile", ...);
+>    mem = mmap(fd, ...);
+>    mbind(mem, ..., private_node);
+>    for page in mem:
+>       mem[page_off] /* fault file into private memory */
+> 
+>    In reality: This does not work the way you want.
+
+Why not? Just curious about what you found?
+
+> 
+>    I went digging and we need a few mild extensions to allow
+>    migration on mbind to work for pagecache pages, and the fault
+>    path does not necessarily respect the vma mempolicy always.
+> 
+>    You also start getting into the question of "what happens when
+>    the node is out of memory and you don't have reclaim support?".
+
+Yes, we should discuss reclaim support, I think we should allow for
+reclaim. It allows you to overcommit private memory the way we can
+with regular memory.
+
+>    The OOM implications jump out at you pretty aggressively.
+> 
+>    Moreover other tasks can force the page cache pages to be moved
+>    as well.  So the programming model here just kind of sucks.
+> 
+>    Works great for anon memory though :]
+> 
+> For all these reasons, I think the be mbind/mempolicy support with
+> private nodes needs to be brought in with follow up work - not
+> introduced as part of the baseline set.
+> 
+
+I am not opposed to the follow up work, but I feel mbind() should
+be the fundamental work and user space API.
+
+> > > 
+> > >    for node in possible_nodes:
+> > >        alloc_pages_node(private_node, __GFP_THISNODE)
+> > > 
+> > >    In fact it's the opposite semantic of what we want.
+> > >    THISNODE says: "Do not fallback back to OTHER nodes".
+> > > 
+> > 
+> > That's why we need to control the fallback nodes carefully for
+> > N_MEMORY_PRIVATE
+> >
+> 
+> My point is that __GFP_THISNODE is not actually useful.
+> 
+> If we go by nodemask, submitting a single-node nodemask is the
+> equivalent of an empty fallback list.
+> 
+> If we gate access to a private node by __GFP_THISNODE... this is the
+> same as just providing a single-node nodelist (putting aside the OOM
+> implications for a moment).
+> 
+> And it doesn't even buy you any new filtering ability against existing
+> nodemask iterators that may already utilize __GFP_THISNODE.  i.e.
+> 
+>    for node in online_nodes:
+>        alloc_pages_node(node, __GFP_THISNODE, ...)
+>        /* Alloc per-node resources */
+> 
+>    This pattern is undesirable, but completely valid.
+> 
+> So overloading/requiring __GFP_THISNODE is just not useful.
+> 
+> I will follow up soon with a new version that limits the private node
+> interface to just nodemask and fallback list controls.
+> 
+> I need to test a few more things related to removing normal nodes from
+> private node fallbacks before I feel comfortable shipping without
+> __GFP_PRIVATE.
+> 
+> > >    The semantic we want is "Do not allow allocations from private
+> > >    nodes UNLESS we specifically request" (__GFP_PRIVATE).
+> > > 
+> > >    __GFP_THISNODE does not actually buy you anything here, AND it's
+> > >    worse, in the scenario where a private node makes its way into the
+> > >    preferred slot (via possible_nodes or some other nodemask), the
+> > >    allocator cannot fall back to a node it can access.
+> > > 
+> > >    __GFP_THISNODE cannot be overloaded to do anything useful here.
+> > 
+> > Let me clarify, I meant to say, let's use a nodemask for allocation
+> > and __GFP_THISNODE gets us to the node we desire, if that is the only
+> > node. My earlier comment might not have been clear.
+> >
+> 
+> My point was that __GFP_THISNODE is pointless and reduces to providing a
+> single node nodemask anyway.
+> 
+> The contention over __GFP_PRIVATE is a bit ideological - do we want:
+> 
+>   1) A hard guarantee that allocations to a private node are controlled
+>      (__GFP_PRIVATE implies the caller knows what it's doing)
+> 
+>   or
+> 
+>   2) A soft guarantee (fallback list isolation only), and needing to
+>      deal with undesired behavior that's "not technically a bug"
+>      associated with existing users of global nodemasks (possible,
+>      online, etc).
+> 
+> I am arguing for #1 - the community has argued for #2 and "fixing
+> existing nodemask users".  I think we can ship #2 and pivot to #1 if we
+> find fixing existing users is infeasible or too much of a maintenance
+> burden.
+
+Again happy to discuss this, I'd like to make sure we agree on the
+design. I am wondering if there is any experimental data to choose
+between 1 and 2.
+
+> 
+> > 
+> > Why not use mbind() API's? Do we want to gate allocation/privileges
+> > via a /dev?
+> >
+> 
+> We want to eventually enable it, but we really need to treat these
+> extensions as a separate step from the base so that the UAPI
+> implications are given proper scrutiny.
+> 
+> In the short term, /dev/xxx and driver-local/service-local control
+> of a node is still very useful.
+> 
+> For example, for my compressed memory work, I have found that if
+> implemented as a swap backend - the kernel can manage the node without
+> any UAPI implications at all :].
+> 
+> A driver managing memory on a private node could do the same.
+> 
+> ~Gregory
+
+
+Thanks for the detailed answers, happy to iterate and experiment on
+the design with you, my opinions come from way back when we tried
+to do CDM (in it's first iteration)
+
+Balbir
