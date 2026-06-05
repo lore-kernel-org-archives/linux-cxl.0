@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC50E224F3;
-	Fri,  5 Jun 2026 15:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6753B38AF
+	for <linux-cxl@vger.kernel.org>; Fri,  5 Jun 2026 15:37:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780673459; cv=none; b=OdPpELJxB1EAoVZ7DvxmOQ14EIpJcsNOaJWl/bTRnNAIBdgUMt+leZHEco1Yf+Pq1X2ECuvIo8bgIY+GfHyd2D36zlURrDXE9fvsNyoX/0je9J1vZ4y05vx3yb0N4XTM3obpOGS324M6emnH24KOzVD6+gCe+rnDx2fhacqMMbQ=
+	t=1780673860; cv=none; b=e8IeqvdFIrRIMi6hljWbBDM3RHVyuNvDrwcC8lWAxFziI6mFrfKnhYSO2dd9mytPIe7vRfvZqqiTmjMQ0ZDXQqB5amHxsyfQBlXLYAX4oNAi2W6XVtLvlnn08tOH/MT3umLFXo25vbgR3mPd1I4aT3MrbR6GJNusizjocjmkSvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780673459; c=relaxed/simple;
-	bh=HBcrq+sbr4SBnxlTvGfguCT9R+SSAPjCdf42JmOk/qs=;
+	s=arc-20240116; t=1780673860; c=relaxed/simple;
+	bh=F4HhXeMx9Pr8Jq+vemDQhP8q8tffNpKVscaHJCz/peE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cl5xuEONZWhYbziYzKbaNSMUZx4vig7N1NiUxYoT6jyQBl6rdPfC+AN92IKGON1de427n+a4l1R6qPnMRwVf66LiNfcfaolJkOag649m8OoBq0U/Ga3MK4BGZO5u8kMxPOkF/ySuXk+8vrmSEp4aqaE051xDOKvw6bNfSyJuwsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bp1fciTC; arc=none smtp.client-ip=192.198.163.14
+	 In-Reply-To:Content-Type; b=O5aQKuXul7Lu62fh+mgYJsdrl6aRqpxnv373ykKS92KYiD/Q1ZhPpxiis0V5HaXnRX4sQMW81ABcavmNzs02lwfjGSNuGTPPA9b57kWX4YgvTMntSNpqA1ZT1T5pthlPK90VzNgqQRXvhr3WBWj41k9nZ4tHLZla0wkv8rqYEz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XcMmfcYu; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bp1fciTC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XcMmfcYu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1780673458; x=1812209458;
+  t=1780673859; x=1812209859;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=HBcrq+sbr4SBnxlTvGfguCT9R+SSAPjCdf42JmOk/qs=;
-  b=Bp1fciTC2q0YhuzGWOW4h+Tksr16Cs3b3DMBzuTUkDGJg/5pVQMiACzE
-   uL6Zwl0X0vAQcUYGCdGGGsxHvaFvYEnyt33Erd1TloOOL+jY7vTCCW6Er
-   9uimjPqF/6jnagI3a2CMFgXMLYFXQ7KaOoCy25YWNJfCC4tBlp45xAwj6
-   42eWSEQLISCz5DYN078TD2ztXtR98PCfWOA2ufYfyHo5YbDoerEPg0E4d
-   i3VXVY3Rq4ctE7Yaeq/nnyFOfFq3hOjUdLUIDbdM+XLXIJZMT/+5qgeVT
-   uA//x5WDHHX36dDelS9ScjxrJ6NUR//R3GkXfahl2GLPlkmXLIrj7GmCf
-   Q==;
-X-CSE-ConnectionGUID: JUenrUO+Ra2bYj4iakcGtA==
-X-CSE-MsgGUID: +8MOBrNLTDS4YH57i8UqnQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11807"; a="81542340"
+  bh=F4HhXeMx9Pr8Jq+vemDQhP8q8tffNpKVscaHJCz/peE=;
+  b=XcMmfcYuNtveaMuGVnve+zYm5dDwhUiTbrtYXBBCU8oC629eVXJdlMfq
+   GUa0nflOJyBSfKIqu8vaoGxPZvblyDC22dn5qRc3MMpcSzA8sK/htV9rK
+   tQBtY5ReqcO8w9QSZCxUweTi7/0lWq8Vh1L0tkZwr85HhBVRd46lIEo+E
+   jTKFwJZbJ8q5xCzJR2/f0N2LSJeN4h3rcEvh32qbspI6UHYCXwPoLa/ys
+   ZR8qlEXPbgekWxt/Rx/7zirJ/8rp/nq/RfCnb7gGKYxxLHidpWKYBsNd5
+   FW3ZNqSV2F/B/i+LVz9JylYR2nzrncX7VV5f5zmS/4nG/CPlZ/vw5zp4X
+   A==;
+X-CSE-ConnectionGUID: xhjJUaYaTD+vea8UlB564Q==
+X-CSE-MsgGUID: Mri1k3MbSTqpqHUJKocHRw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11808"; a="91822033"
 X-IronPort-AV: E=Sophos;i="6.24,189,1774335600"; 
-   d="scan'208";a="81542340"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2026 08:30:57 -0700
-X-CSE-ConnectionGUID: oZQm9QfiR7epOcnkAhfUkg==
-X-CSE-MsgGUID: D8AE27UPTKSUEoPrT5iBJQ==
+   d="scan'208";a="91822033"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2026 08:37:38 -0700
+X-CSE-ConnectionGUID: vajNv5FMT4KmOyfP3vRAgg==
+X-CSE-MsgGUID: mML2yDJKRbaISTGYG/todw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,189,1774335600"; 
-   d="scan'208";a="244932408"
+   d="scan'208";a="275106665"
 Received: from jmaxwel1-mobl.amr.corp.intel.com (HELO [10.125.109.36]) ([10.125.109.36])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2026 08:30:56 -0700
-Message-ID: <951d3e9b-f9f4-4d16-8119-1543ed9e44f1@intel.com>
-Date: Fri, 5 Jun 2026 08:30:55 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2026 08:37:38 -0700
+Message-ID: <5eecc964-6a06-48d5-8d61-57857ee80e29@intel.com>
+Date: Fri, 5 Jun 2026 08:37:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,135 +52,167 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/pci: Fix out-of-bounds read of the RAS Header Log
-To: Richard Cheng <icheng@nvidia.com>, dave@stgolabs.net, jic23@kernel.org,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- djbw@kernel.org
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- newtonl@nvidia.com, kristinc@nvidia.com, kaihengf@nvidia.com,
- kobak@nvidia.com, smadhavan@nvidia.com, vaslot@nvidia.com
-References: <20260605041602.37944-1-icheng@nvidia.com>
+Subject: Re: [PATCH] cxl: Align interleave decode/encode helpers with their
+ callers
+To: Alison Schofield <alison.schofield@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
+ Dan Williams <djbw@kernel.org>, Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org, Purva Yeshi <purvayeshi550@gmail.com>
+References: <20260605040801.865965-1-alison.schofield@intel.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260605041602.37944-1-icheng@nvidia.com>
+In-Reply-To: <20260605040801.865965-1-alison.schofield@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 6/4/26 9:16 PM, Richard Cheng wrote:
-> The CXL RAS Header Log is 64 bytes, but CXL_HEADERLOG_SIZE is SZ_512,
-> which is 512 bytes, not 512 bits, so the kernel treats it as 8x times
-> bigger.
+On 6/4/26 9:07 PM, Alison Schofield wrote:
+> The interleave conversion helpers translate between encoded HDM
+> interleave values and the granularity and way values used by the
+> driver.
 > 
-> header_log_copy() reads 448 bytes of MMIO past the register, and
-> cxl_*_aer_uncorrectable_error() tracepoints memcpy 512 bytes from the
-> 64-byte header log. On the CPER path the source is a heap object, so the
-> copy runs 448 bytes past it and leaks kernel memory into a trace record
-> that userspace can read:
+> These helpers have been a recurring source of static analysis
+> complaints that expose type mismatches and potentially uninitialized
+> outputs. Fix those issues in the helpers so callers inherit the
+> consistent behavior automatically.
+> 
+> The decode and encode helpers have different interface issues.
+> 
+> The decode helpers return values through unsigned int pointers, but
+> the decoded values are ultimately represented as int throughout the
+> driver. Align the helper interfaces with their callers by changing
+> the out-parameters to int * and updating the handful of affected
+> locals to match.
+> 
+> The encode helpers leave their out-parameters unchanged on error. That
+> means callers that ignore the return value may observe uninitialized
+> encoded values. Initialize the outputs so failed conversions leave
+> defined values. This issue was originally reported by Purva and the
+> helper-side fix was suggested by Dan [1].
+> 
+> Tidy up a related, pre-existing, printk format specifier mismatch in
+> cxl_validate_translation_params().
+> 
+> No functional change for valid interleave parameters.
+> 
+> [1] https://lore.kernel.org/linux-cxl/20250419203530.45594-1-purvayeshi550@gmail.com/
+> 
+> Reported-by: Purva Yeshi <purvayeshi550@gmail.com>
+> Suggested-by: Dan Williams <djbw@kernel.org>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-I think Terry raised the same issue and this [1] is what Dan suggested for the fix as there's rasdaemon (user) impact.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-[1]: https://lore.kernel.org/linux-cxl/6a0e33507e961_1717cc100f6@djbw-dev.notmuch/
-
-DJ
-
-> 
-> """
-> [  297.704020] BUG: KASAN: slab-out-of-bounds in trace_event_raw_event_cxl_port_aer_uncorrectable_error+0x318/0x4b0
-> [  297.704032] Read of size 512 at addr ffff0000dd6ee118 by task bash/3078
-> 
-> [  297.704038] CPU: 116 UID: 0 PID: 3078 Comm: bash Not tainted 7.1.0-rc6+ #1 PREEMPT(full)
-> [  297.704041] Hardware name:  , BIOS buildbrain-gcid-sbios-45660680 Wed May 27 08:27:58 AM UTC 2026
-> [  297.704042] Call trace:
-> [  297.704043]  show_stack+0x24/0x50 (C)
-> [  297.704049]  dump_stack_lvl+0x80/0x140
-> [  297.704053]  print_report+0x100/0x630
-> [  297.704057]  kasan_report+0xb8/0x130
-> [  297.704059]  kasan_check_range+0x15c/0x240
-> [  297.704061]  __asan_memcpy+0x40/0xc8
-> [  297.704064]  trace_event_raw_event_cxl_port_aer_uncorrectable_error+0x318/0x4b0
-> [  297.704066]  __traceiter_cxl_port_aer_uncorrectable_error+0x90/0x108
-> [  297.704068]  cxl_ras_inject_set+0x278/0x3d0
-> [  297.704070]  simple_attr_write_xsigned.isra.0+0x198/0x298
-> [  297.704074]  simple_attr_write+0x44/0x88
-> [  297.704076]  debugfs_attr_write+0x78/0xd0
-> [  297.704080]  vfs_write+0x1f4/0x960
-> [  297.704083]  ksys_write+0x100/0x220
-> [  297.704085]  __arm64_sys_write+0x78/0xc8
-> [  297.704087]  invoke_syscall.constprop.0+0x150/0x200
-> [  297.704090]  do_el0_svc+0xd0/0x210
-> [  297.704091]  el0_svc+0x44/0x138
-> [  297.704095]  el0t_64_sync_handler+0xc0/0x108
-> [  297.704097]  el0t_64_sync+0x1b8/0x1c0
-> 
-> [  297.704100] Allocated by task 3078:
-> [  297.704102]  kasan_save_stack+0x40/0x80
-> [  297.704104]  kasan_save_track+0x24/0x58
-> [  297.704105]  kasan_save_alloc_info+0x44/0x88
-> [  297.704107]  __kasan_kmalloc+0x108/0x110
-> [  297.704108]  __kmalloc_cache_noprof+0x1bc/0x588
-> [  297.704111]  cxl_ras_inject_set+0xcc/0x3d0
-> [  297.704112]  simple_attr_write_xsigned.isra.0+0x198/0x298
-> [  297.704114]  simple_attr_write+0x44/0x88
-> [  297.704116]  debugfs_attr_write+0x78/0xd0
-> [  297.704117]  vfs_write+0x1f4/0x960
-> [  297.704119]  ksys_write+0x100/0x220
-> [  297.704120]  __arm64_sys_write+0x78/0xc8
-> [  297.704122]  invoke_syscall.constprop.0+0x150/0x200
-> [  297.704123]  do_el0_svc+0xd0/0x210
-> [  297.704124]  el0_svc+0x44/0x138
-> [  297.704125]  el0t_64_sync_handler+0xc0/0x108
-> [  297.704127]  el0t_64_sync+0x1b8/0x1c0
-> 
-> [  297.704129] The buggy address belongs to the object at ffff0000dd6ee100
->                 which belongs to the cache kmalloc-rnd-09-96 of size 96
-> [  297.704132] The buggy address is located 24 bytes inside of
->                 allocated 88-byte region [ffff0000dd6ee100, ffff0000dd6ee158)
-> 
-> [  297.704135] The buggy address belongs to the physical page:
-> [  297.704138] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x15d6e
-> [  297.704140] flags: 0x17fffc000000000(node=0|zone=2|lastcpupid=0x1ffff)
-> [  297.704143] page_type: f5(slab)
-> [  297.704147] raw: 017fffc000000000 ffff00008001c1c0 dead000000000100 dead000000000122
-> [  297.704148] raw: 0000000000000000 0000000802000200 00000000f5000000 0000000000000000
-> [  297.704149] page dumped because: kasan: bad access detected
-> 
-> [  297.704150] Memory state around the buggy address:
-> [  297.704151]  ffff0000dd6ee000: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> [  297.704152]  ffff0000dd6ee080: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> [  297.704153] >ffff0000dd6ee100: 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc
-> [  297.704154]                                                     ^
-> [  297.704155]  ffff0000dd6ee180: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> [  297.704155]  ffff0000dd6ee200: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> [  297.704156] =================================================================
-> """
-> 
-> Define CXL_HEADERLOG_SIZE as SZ_64. The trace record's header_log field
-> shrinks from 128 to 16 dwords, but only those 16 were ever real data,
-> the rest was always junk.
-> 
-> Fixes: 2f6e9c305127 ("cxl/pci: add tracepoint events for CXL RAS")
-> Signed-off-by: Richard Cheng <icheng@nvidia.com>
 > ---
->  drivers/cxl/cxl.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/cxl/acpi.c        | 10 +++++-----
+>  drivers/cxl/core/region.c |  4 ++--
+>  drivers/cxl/cxl.h         |  6 ++++--
+>  3 files changed, 11 insertions(+), 9 deletions(-)
 > 
+> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+> index 127537628817..3b818adbd38b 100644
+> --- a/drivers/cxl/acpi.c
+> +++ b/drivers/cxl/acpi.c
+> @@ -101,8 +101,8 @@ static int cxl_parse_cxims(union acpi_subtable_headers *header, void *arg,
+>  	struct cxl_decoder *cxld = &cxlrd->cxlsd.cxld;
+>  	struct device *dev = ctx->dev;
+>  	struct cxl_cxims_data *cximsd;
+> -	unsigned int hbig, nr_maps;
+> -	int rc;
+> +	unsigned int nr_maps;
+> +	int hbig, rc;
+>  
+>  	rc = eig_to_granularity(cxims->hbig, &hbig);
+>  	if (rc)
+> @@ -160,7 +160,7 @@ static int cxl_acpi_cfmws_verify(struct device *dev,
+>  				 struct acpi_cedt_cfmws *cfmws)
+>  {
+>  	int rc, expected_len;
+> -	unsigned int ways;
+> +	int ways;
+>  
+>  	if (cfmws->interleave_arithmetic != ACPI_CEDT_CFMWS_ARITHMETIC_MODULO &&
+>  	    cfmws->interleave_arithmetic != ACPI_CEDT_CFMWS_ARITHMETIC_XOR) {
+> @@ -405,7 +405,7 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+>  	struct cxl_cxims_context cxims_ctx;
+>  	struct device *dev = ctx->dev;
+>  	struct cxl_decoder *cxld;
+> -	unsigned int ways, i, ig;
+> +	int ways, i, ig;
+>  	int rc;
+>  
+>  	rc = cxl_acpi_cfmws_verify(dev, cfmws);
+> @@ -464,7 +464,7 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+>  			if (rc < 0)
+>  				return rc;
+>  			if (!cxlrd->platform_data) {
+> -				dev_err(dev, "No CXIMS for HBIG %u\n", ig);
+> +				dev_err(dev, "No CXIMS for HBIG %d\n", ig);
+>  				return -EINVAL;
+>  			}
+>  		}
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index e50dc716d4e8..61877483cbcd 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -3060,7 +3060,7 @@ int cxl_validate_translation_params(u8 eiw, u16 eig, int pos)
+>  		return -EINVAL;
+>  	}
+>  	if (pos < 0 || pos >= ways) {
+> -		pr_debug("%s: invalid pos=%d for ways=%u\n", __func__, pos,
+> +		pr_debug("%s: invalid pos=%d for ways=%d\n", __func__, pos,
+>  			 ways);
+>  		return -EINVAL;
+>  	}
+> @@ -3106,7 +3106,7 @@ EXPORT_SYMBOL_FOR_MODULES(cxl_calculate_dpa_offset, "cxl_translate");
+>  
+>  int cxl_calculate_position(u64 hpa_offset, u8 eiw, u16 eig)
+>  {
+> -	unsigned int ways = 0;
+> +	int ways = 0;
+>  	u64 shifted, rem;
+>  	int pos, ret;
+>  
 > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 1297594beaec..f322d7c79ed2 100644
+> index 1297594beaec..66cb2293fec1 100644
 > --- a/drivers/cxl/cxl.h
 > +++ b/drivers/cxl/cxl.h
-> @@ -158,8 +158,8 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
->  #define CXL_RAS_CAP_CONTROL_FE_MASK GENMASK(5, 0)
->  #define CXL_RAS_HEADER_LOG_OFFSET 0x18
->  #define CXL_RAS_CAPABILITY_LENGTH 0x58
-> -#define CXL_HEADERLOG_SIZE SZ_512
-> -#define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
-> +#define CXL_HEADERLOG_SIZE SZ_64
-> +#define CXL_HEADERLOG_SIZE_U32 (CXL_HEADERLOG_SIZE / sizeof(u32))
+> @@ -91,7 +91,7 @@ static inline int cxl_hdm_decoder_count(u32 cap_hdr)
+>  }
 >  
->  /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
->  #define CXLDEV_CAP_ARRAY_OFFSET 0x0
+>  /* Encode defined in CXL 2.0 8.2.5.12.7 HDM Decoder Control Register */
+> -static inline int eig_to_granularity(u16 eig, unsigned int *granularity)
+> +static inline int eig_to_granularity(u16 eig, int *granularity)
+>  {
+>  	if (eig > CXL_DECODER_MAX_ENCODED_IG)
+>  		return -EINVAL;
+> @@ -100,7 +100,7 @@ static inline int eig_to_granularity(u16 eig, unsigned int *granularity)
+>  }
+>  
+>  /* Encode defined in CXL ECN "3, 6, 12 and 16-way memory Interleaving" */
+> -static inline int eiw_to_ways(u8 eiw, unsigned int *ways)
+> +static inline int eiw_to_ways(u8 eiw, int *ways)
+>  {
+>  	switch (eiw) {
+>  	case 0 ... 4:
+> @@ -118,6 +118,7 @@ static inline int eiw_to_ways(u8 eiw, unsigned int *ways)
+>  
+>  static inline int granularity_to_eig(int granularity, u16 *eig)
+>  {
+> +	*eig = 0;
+>  	if (granularity > SZ_16K || granularity < CXL_DECODER_MIN_GRANULARITY ||
+>  	    !is_power_of_2(granularity))
+>  		return -EINVAL;
+> @@ -127,6 +128,7 @@ static inline int granularity_to_eig(int granularity, u16 *eig)
+>  
+>  static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+>  {
+> +	*eiw = 0;
+>  	if (ways > 16)
+>  		return -EINVAL;
+>  	if (is_power_of_2(ways)) {
 > 
-> base-commit: 6f3ed7fec72fc8979b2a8c7219c0a9fcfc8d07b5
+> base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
 
