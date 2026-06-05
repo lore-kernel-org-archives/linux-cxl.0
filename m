@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C6430566F
-	for <linux-cxl@vger.kernel.org>; Fri,  5 Jun 2026 21:30:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D4230566F
+	for <linux-cxl@vger.kernel.org>; Fri,  5 Jun 2026 21:31:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780695038; cv=none; b=BQEN+qqXu3br4E25k1vPoOxC26UZ6mNU1mLRc2yI7k3YgdKC2Zh7MMAmRYFiel+oYd0Qt9QpNpKrvjI9ltgD78SWaNHxZjrGFGQVAqZYp6ryELB+AYiYPhH/Hs2rXIMiuYzWBFw0B9SxWy1fdANkY+CEDw8PlLOk5BPMFFGw7pM=
+	t=1780695105; cv=none; b=Gsh3x5RUtlY2YgLdtA2HQizDhz8pn6gbblzbx+v6Nu2k4w4OaSGoT3fEhOCLKzYJbt3RasoDafd4iNPDoF8fmLCRabJKJmQTb/zLiHHmBsiQF6yQyqGKP+AuQbD9BqF1lFo8smB9hRBsHODXvVQ0IuunSWuroiSWclqhEdAd+a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780695038; c=relaxed/simple;
-	bh=QqaHK/JYDe4z6MZLaxMDsS0i4WFgBpA9JvEogTV74MY=;
+	s=arc-20240116; t=1780695105; c=relaxed/simple;
+	bh=TvbYZ0hhqMvFQEaI8b+Qz6GGk+4Mu/hdU4o9P47DNAw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=C8M6LstNI/GLSZPlRyOcw90VykiWwtpd77Urm7HRcGU5UPX0fveIK9XB0CD1RFke7NhCTKOX05ekFey/KI9gU2bGjBgPUmyOYzTJxVWpzjncOUDFFgXC4aLZTXaQf4tqzf3iCh0h2M1CmwvviHeJU2mouK31QElHJ8gwOGC1Rgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Igfy61Wk; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=oO2HG05+G90vHKRnPQLTLhIEHjD9ln0+EsV7BBXD02Ua0yCrjUwBN2Ctwsvj+HQWNS2hmfjCpasMfYZqJ97tAMrQvQAAR84zbZsyg+DmwLvdcsKO0v3aT7Abh2GJV86YH77BpsD1gkSialg6ADL8EvMgTOHTTRE/nhHvifdqr9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AH9eH+/1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Igfy61Wk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46CA71F00898;
-	Fri,  5 Jun 2026 21:30:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AH9eH+/1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A18F01F00893;
+	Fri,  5 Jun 2026 21:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780695037;
-	bh=cFnvNi0i55W0aFh18onNlOBrw8ZMaGcGgUwsJusvAwo=;
+	s=k20260515; t=1780695103;
+	bh=QmTGlJD57Selri8f6eP+cUldQWCyPxPjglD2hTDtCDk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Igfy61WkNlayQc5iHRSvZUZZw6TGak9QQ0GT0ekUgYu4qKq+EwWUIeR8udARe+HY0
-	 a+zeFBbhbNoGOok7jIG+/La8NleDe8GtshvDIU2EgFZuhF0YFtmz0fsGozGEKKX1Ne
-	 Ahe5mKIt3YiokIZKxnnTJDyTTkHOX8f5y05u4OxzqJfDmj4A3ib6ajvwvKnAMUBt5j
-	 1RuA+PgCQUDGAFjJ/5ToBzXKkvUHvzKgWJ3t/QZvMzNj1LktU6Vc8ILhupRAxiAU8g
-	 J2lPOFrJlwACVh6n1wDYC6MOoFvYJkWBZCLE9ZAYbJ2LZ1nSotJafzKnG4ei9CtKKW
-	 EielFq/ro0fLw==
+	b=AH9eH+/14uAdzKgmWvGOIrq8Dtsp44hPpO25TNcAArEHD39JnefxzlQMSGSUHR02a
+	 8mxJSDDdLJJrNbbunc0oe95x1JEhhowdM/VXJDK2u2+3clPto5pwRYJvv2I+F2zWSi
+	 RlPtyShJzaTflQvvj7zYZp/FhtKewnFvT5iwnoqs45VOeTfZkW2nvIQlfzLFhHqfUR
+	 ZbKGSV6jbGv1sQcNcaSz2RZuAXKXCEKvGt6KFkD0wLbV3a3UJqiovGopJNQxyUhwPR
+	 Q/uLmgxMMAhecwQyWpWezGm+48auKnual2MPqBiY6wlPh2YHbL4bLK0UZyw5KaGqz8
+	 axWSNBe5hT9xg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 5/9] mm/memory_hotplug: add multi-range hotunplug
+Subject: Re: [PATCH v4 6/9] dax: plumb hotplug online_type through dax
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Gregory Price" <gourry@gourry.net>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260605211911.2160954-6-gourry@gourry.net>
-References: <20260605211911.2160954-6-gourry@gourry.net>
+In-Reply-To: <20260605211911.2160954-7-gourry@gourry.net>
+References: <20260605211911.2160954-7-gourry@gourry.net>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 21:30:36 +0000
-Message-Id: <20260605213037.46CA71F00898@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 21:31:43 +0000
+Message-Id: <20260605213143.A18F01F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,90 +45,69 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] If `try_remove_memory()` fails during Phase 2, the rollback phase =
-irrevocably corrupts the state array and breaks the 'all-or-nothing' guaran=
-tee.
+- [High] The default auto-online policy is captured at DAX device creation =
+time rather than at driver bind time, breaking dynamic sysfs policy changes.
 --
 
-commit 8e30dd8a7c852dc51179b28a0c0a3841cc1be525
+commit d528bb5263ccfd880f3665a7e5e92516c3faabd8
 Author: Gregory Price <gourry@gourry.net>
 
-mm/memory_hotplug: add multi-range hotunplug
+dax: plumb hotplug online_type through dax
 
-This commit adds offline_and_remove_memory_ranges() to offline and remove
-multiple memory ranges atomically. It offlines all ranges in phase 1, and
-removes them in phase 2, falling back to restoring online types if failures
-occur.
+This commit adds an online_type field to the DAX device creation path to
+allow drivers to specify an auto-online policy when using the kmem driver.
+Existing callers are updated to initialize this field to the system default
+policy.
 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 7d145217adc6b..e486d35c22b2c 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
+> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
+> index 492573b47f662..6611fe399f59e 100644
+> --- a/drivers/dax/bus.c
+> +++ b/drivers/dax/bus.c
+> @@ -394,6 +395,7 @@ static ssize_t create_store(struct device *dev, struc=
+t device_attribute *attr,
+>  			.size =3D 0,
+>  			.id =3D -1,
+>  			.memmap_on_memory =3D false,
+> +			.online_type =3D mhp_get_default_online_type(),
+>  		};
+>  		struct dev_dax *dev_dax =3D __devm_create_dev_dax(&data);
 
 [ ... ]
 
-> +	/*
-> +	 * Phase 2: only once everything is offline, remove it.  This cannot
-> +	 * fail as the memory can no longer be onlined in the meantime.
-> +	 */
-> +	if (!rc) {
-> +		for (i =3D 0; i < nr_ranges; i++) {
-> +			rc =3D try_remove_memory(ranges[i].start,
-> +					       range_len(&ranges[i]));
-> +			if (rc) {
-> +				pr_err("%s: Failed to remove memory: %d",
-> +				       __func__, rc);
-> +				break;
-> +			}
-> +		}
-> +	}
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index 592171ec10f49..41ccb618a1464 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
+> @@ -172,8 +172,9 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+>  		 * Ensure that future kexec'd kernels will not treat
+>  		 * this as RAM automatically.
+>  		 */
+> -		rc =3D add_memory_driver_managed(data->mgid, range.start,
+> -				range_len(&range), kmem_name, mhp_flags);
+> +		rc =3D __add_memory_driver_managed(data->mgid, range.start,
+> +				range_len(&range), kmem_name, mhp_flags,
+> +				dev_dax->online_type);
 
 [Severity: High]
-The comment states that this cannot fail, but try_remove_memory() can return
-errors, for example if memory_blocks_have_altmaps() returns -EINVAL.
+Does capturing the auto-online policy at device creation time break dynamic
+sysfs policy changes?
 
-If try_remove_memory() succeeds for the first range but fails for a subsequ=
-ent
-range, the blocks for the first range are irrevocably removed. Does this le=
-ave
-the system in a partially removed state, breaking the all-or-nothing guaran=
-tee?
+DAX devices are typically created early during boot, when the global
+auto-online policy is still the kernel default. Previously,
+add_memory_driver_managed() dynamically evaluated the policy when the dax_k=
+mem
+driver was bound. This allowed userspace to configure the auto-online policy
+dynamically before binding the driver.
 
-> +
-> +	/*
-> +	 * Roll back the offlining if anything failed.  Blocks we never offlined
-> +	 * are marked MMOP_OFFLINE and skipped by try_reonline_memory_block().
-> +	 */
-> +	if (rc) {
-> +		tmp =3D online_types;
-> +		for (i =3D 0; i < nr_ranges; i++)
-> +			walk_memory_blocks(ranges[i].start,
-> +					   range_len(&ranges[i]), &tmp,
-> +					   try_reonline_memory_block);
-> +	}
+By caching the policy during device creation in create_store() (and other
+creation paths) and consuming it later in dev_dax_kmem_probe(), the kmem dr=
+iver
+might use a stale policy and ignore runtime changes to the global policy.
 
-[Severity: High]
-If we enter this rollback path after a partial failure in phase 2, will the
-state array tracking become corrupted?
-
-Since the first range was physically removed, memory_block_get() inside
-walk_memory_blocks() will return NULL and skip try_reonline_memory_block().
-Because the callback is skipped, the tmp pointer will not be advanced for
-those blocks.
-
-When the rollback loop moves to the next range, it will read from the begin=
-ning
-of tmp, incorrectly applying the saved states of the first range to the blo=
-cks
-of the second range. Can this desynchronization be avoided?
-
-> +	unlock_device_hotplug();
-> +
-> +	kfree(online_types);
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_GPL(offline_and_remove_memory_ranges);
+Will this cause memory blocks to unintentionally remain offline if the poli=
+cy
+was changed after device creation?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605211911.2160=
-954-1-gourry@gourry.net?part=3D5
+954-1-gourry@gourry.net?part=3D6
