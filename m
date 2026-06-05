@@ -1,138 +1,174 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5734734D394
-	for <linux-cxl@vger.kernel.org>; Fri,  5 Jun 2026 21:34:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4273B3CB91C
+	for <linux-cxl@vger.kernel.org>; Fri,  5 Jun 2026 21:36:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780695272; cv=none; b=Osq3CgkIEO5ATtc0ecUju1ctrSc8+FlZ8doOOhi2M8jct+Mskjf0xNFRj3fzu7/IUVs7RQUGbT99HBZ4tHvt9a7+Q4hstZXyz8uQGErvAlFFvLQBJO9eAUyECxLOv72tQ/DY/f0BE90goZk6rO0pf5a8DJwPEZJUKplkKx0PAC8=
+	t=1780695363; cv=none; b=lzRn25PjZ1nzDtg4HkY8MbvVZqVBgs0zQvVfOYHF1WB8Jx3ZBaE7Uy0jU+1es4bgeEFdVoS5vg/wq0eI4mnD5lhurQyGgC28VSKasZL5zrcGk/2zHuACrGWiZJ0tDDd0MFqGcou4WUCS/Ntp+oT3RwrpU/44Fj0IGyBS7M9qMvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780695272; c=relaxed/simple;
-	bh=6AzyZBQiadleFZxzNOrjMYPT5+hRKVNNTGME5TJpXf4=;
+	s=arc-20240116; t=1780695363; c=relaxed/simple;
+	bh=N4zCn+81MclTWG81CSwGF+13c22LpP2ueTq8kzKVKuM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ki+LWo7siJx1cZg12q4bGAURqBPM8fBXEAqc12xnxoF4AnBmjIvMvIHerIStEC/dLLeQzitU7tPYLhuu+hCTWU5ewKnr+Rv/dd56cJM5s5uwp+6Ld2lAtE+d7Z+wdMvzd/19ICbUrLAS3AWxd14vB3wPyGMSE1jvM1RPUC2iFqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FPEQoJYf; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ooox4oo1OatTTjCqcnaEScB8Bw0IQa0xRLaEiougZkPrJ5M8J07W0miuu3HtNMNcxUuKY+K8RFllnTpeQiyE1JKbrRttDvSm/VW5ZzHIzESQJKscZFZ/+cwgPnrjaxq86sAhQkh3QbVMJMgTN6PZM+gDs0wYvrHlyvt1fqp0hcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PttezATW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FPEQoJYf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5CBC1F00893;
-	Fri,  5 Jun 2026 21:34:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PttezATW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10D1E1F00893;
+	Fri,  5 Jun 2026 21:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780695271;
-	bh=MB8nKkFUroiBvxqM/HwnkOMdiNHYCPhMLy/85pEoCZg=;
+	s=k20260515; t=1780695362;
+	bh=fNHY73BIoUTzQEHu86zApsLGIC/ZfnFqMVwv+K0oNkc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FPEQoJYfKlml1DXQgbhRQHc7GBg8YLcRWhxGmglfHHZmieTpX+jqgdZdV6eaQ1Pju
-	 QxDO59Qws0V/EbB1FlBlfMPGR5YCLLfwaXwL7/eaDtzrjYZRZcvpgNXY+NPe4xQVKG
-	 Oxih0JLIk+d7d473/SzjGNBLdiEEVivREg3cDBB+5uIcfX73au1JpukOH7qvOYiJ+p
-	 782hY9PbEq6d9ynhII7C856D7DyP3FleB/tfvAWnfvJ+akmKl073gwq/ksy1P6sWx+
-	 MBzMcw2MZ4opTqdxsbZQHGM6+72TCAFXtDnj3I6wZ6WwpqblQCFYgxITKzuPDbAiDN
-	 chMKkSlDxDtPQ==
+	b=PttezATW5txrSoVhnSny89AO9QLj2eI921hd8Gz2ifqkC4bj03XgCm7JO1rsNAiw4
+	 E81G9FqgACkarvRfknBHd2P44iIhwkwShqo7/jMIHQ8GQyMA20o0qGlDPt5jMAsxDo
+	 rBqTwYgbaH2YwcN7my6Cmp6oV8M1KZOapLxUUKVirBMcEhwlXHiuN1983ZADJFxCGa
+	 w93W5XKPotReOSUMCzB3agh+H3IbQi+fy2OCwCflVLL+gDNFBa7y5Aw5WE3JX+Hg5c
+	 SyauD6afj0QacYCWuO6038CLA/g3owIdK2VlrXOEV7dF1hAhBfMVOEiQKaCEg4VkjK
+	 80f8wNrunJC5g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 9/9] selftests/dax: add dax/kmem hotplug sysfs
- regression test
+Subject: Re: [PATCH v4 7/9] dax/kmem: extract hotplug/hotremove helper
+ functions
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Gregory Price" <gourry@gourry.net>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260605211911.2160954-10-gourry@gourry.net>
-References: <20260605211911.2160954-10-gourry@gourry.net>
+In-Reply-To: <20260605211911.2160954-8-gourry@gourry.net>
+References: <20260605211911.2160954-8-gourry@gourry.net>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jun 2026 21:34:30 +0000
-Message-Id: <20260605213430.D5CBC1F00893@smtp.kernel.org>
+Date: Fri, 05 Jun 2026 21:36:01 +0000
+Message-Id: <20260605213602.10D1E1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Skipped unplug test causes a cascading spurious failure in the s=
-ubsequent `online_kernel` test.
-- [Medium] The test script modifies system-wide DAX device hotplug state bu=
-t lacks a `trap` to ensure restoration on unexpected termination.
+- [High] dax_kmem_do_hotplug() unconditionally attempts to add memory for a=
+ll ranges, missing a check for successfully reserved I/O resources, leading=
+ to unsafe hotplug and a permanent memory leak on removal.
 --
 
-commit eaf4726251fa25a05d2dfac099a7956bef58a48a
+commit 9aae29a4ee0b2d84bab7e3e062cb31c70f75bf67
 Author: Gregory Price <gourry@gourry.net>
 
-selftests/dax: add dax/kmem hotplug sysfs regression test
+dax/kmem: extract hotplug/hotremove helper functions
 
-This commit adds a kselftest to validate the whole-device hotplug sysfs
-attribute for dax/kmem devices. It verifies transitions between unplugged,
-online, and online_movable states, ensuring memory is properly added and
-removed.
+Refactor kmem _probe() _remove() by extracting init, cleanup, hotplug,
+and hot-remove logic into separate helper functions.
 
-> diff --git a/tools/testing/selftests/dax/dax-kmem-hotplug.sh b/tools/test=
-ing/selftests/dax/dax-kmem-hotplug.sh
-> new file mode 100755
-> index 0000000000000..e43cda8ba1274
-> --- /dev/null
-> +++ b/tools/testing/selftests/dax/dax-kmem-hotplug.sh
-
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index 41ccb618a1464..5bf36ab73f867 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
 [ ... ]
-
-> +DAX=3D$(find_kmem_dax)
-> +if [ -z "$DAX" ]; then
-> +	ktap_skip_all "no kmem-bound dax device with a hotplug attribute"
-> +	exit "$KSFT_SKIP"
-> +fi
-> +HP=3D$DAX_BASE/$DAX/hotplug
-> +ORIG=3D$(get_state)
-
-[Severity: Medium]
-Does this script ensure the original state is restored if execution is
-aborted early?
-
-Since the original state is recorded here but no shell trap is established,
-an unexpected exit or user interrupt could bypass the manual restoration
-at the end of the script. Would adding an exit trap handler right after
-recording the state ensure reliable cleanup?
-
+> @@ -63,14 +63,195 @@ static void kmem_put_memory_types(void)
+>  	mt_put_memory_types(&kmem_memory_types);
+>  }
+> =20
+> +/**
+> + * dax_kmem_do_hotplug - hotplug memory for dax kmem device
 [ ... ]
-
-> +# The online -> unplug -> online_movable -> unplug cycle once regressed:=
- a
-> +# re-online failed to re-reserve the per-range resources, so this final =
-unplug
-> +# reported success while leaving the memory online.  Assert it is really=
- freed.
-> +set_state unplugged; rc=3D$?
-> +mt=3D$(memtotal_kb)
-> +if [ "$rc" !=3D 0 ]; then
-> +	ktap_test_skip "unplug from movable not accepted (memory in use?) rc=3D=
-$rc"
-> +elif [ "$(get_state)" =3D unplugged ] && [ "$mt" -lt "$mt_mov" ]; then
-> +	ktap_test_pass "unplug from online_movable removed memory: $mt_mov -> $=
-mt kB"
-> +else
-> +	ktap_test_fail "unplug success but memory remained: $(get_state) $mt_mo=
-v -> $mt kB"
-> +fi
+> +static int dax_kmem_do_hotplug(struct dev_dax *dev_dax,
+> +			       struct dax_kmem_data *data,
+> +			       int online_type)
+> +{
+> +	struct device *dev =3D &dev_dax->dev;
+> +	int i, rc, onlined =3D 0;
+> +	mhp_t mhp_flags;
 > +
-> +set_state online_kernel; rc=3D$?
+> +	for (i =3D 0; i < dev_dax->nr_range; i++) {
+> +		struct range range;
+> +
+> +		rc =3D dax_kmem_range(dev_dax, i, &range);
+> +		if (rc)
+> +			continue;
+> +
+> +		mhp_flags =3D MHP_NID_IS_MGID;
+> +		if (dev_dax->memmap_on_memory)
+> +			mhp_flags |=3D MHP_MEMMAP_ON_MEMORY;
+> +
+> +		/*
+> +		 * Ensure that future kexec'd kernels will not treat
+> +		 * this as RAM automatically.
+> +		 */
+> +		rc =3D __add_memory_driver_managed(data->mgid, range.start,
+> +				range_len(&range), kmem_name, mhp_flags,
+> +				online_type);
 
-[Severity: Medium]
-If the preceding unplug transition fails and execution enters the skip
-branch, will this subsequent state transition fail spuriously?
+[Severity: High]
+Should this loop verify if the resource was actually reserved before
+adding the memory?
 
-Because the driver rejects direct transitions between different online stat=
-es
-without an intervening unplug, falling through to the online_kernel test
-while the device is still in the online_movable state seems like it will
-unconditionally fail instead of safely skipping the rest of the checks.
+In dax_kmem_init_resources(), if request_mem_region() fails for a range
+but a previous range succeeded (mapped > 0), the failure is bypassed and
+data->res[i] is left as NULL.
 
-> +mt=3D$(memtotal_kb)
-> +if [ "$rc" =3D 0 ] && [ "$(get_state)" =3D online_kernel ] && [ "$mt" -g=
-t "$mt_unplugged" ]; then
-> +	ktap_test_pass "online_kernel: MemTotal $mt_unplugged -> $mt kB"
-> +else
-> +	ktap_test_fail "online_kernel: rc=3D$rc state=3D$(get_state) MemTotal=
-=3D$mt"
-> +fi
-> +set_state unplugged
+If we don't check for !data->res[i] here, does this unconditionally call
+__add_memory_driver_managed() and hot-add memory for physical ranges that
+failed reservation?
+
+> +
+> +		if (rc) {
+> +			dev_warn(dev, "mapping%d: %#llx-%#llx memory add failed\n",
+[ ... ]
+> +static int dax_kmem_init_resources(struct dev_dax *dev_dax,
+> +				   struct dax_kmem_data *data)
+> +{
+[ ... ]
+> +		/* Region is permanently reserved if hotremove fails. */
+> +		res =3D request_mem_region(range.start, range_len(&range),
+> +					 data->res_name);
+> +		if (!res) {
+> +			dev_warn(dev, "mapping%d: %#llx-%#llx could not reserve region\n",
+> +				 i, range.start, range.end);
+> +			/*
+> +			 * Once some memory has been onlined we can't
+> +			 * assume that it can be un-onlined safely.
+> +			 */
+> +			if (mapped)
+> +				continue;
+> +			return -EBUSY;
+> +		}
+> +		data->res[i] =3D res;
 
 [ ... ]
+> +#ifdef CONFIG_MEMORY_HOTREMOVE
+> +/**
+> + * dax_kmem_do_hotremove - hot-remove memory for dax kmem device
+[ ... ]
+> +static int dax_kmem_do_hotremove(struct dev_dax *dev_dax,
+> +				 struct dax_kmem_data *data)
+> +{
+> +	struct device *dev =3D &dev_dax->dev;
+> +	int i, success =3D 0;
+> +
+> +	for (i =3D 0; i < dev_dax->nr_range; i++) {
+> +		struct range range;
+> +		int rc;
+> +
+> +		rc =3D dax_kmem_range(dev_dax, i, &range);
+> +		if (rc)
+> +			continue;
+> +
+> +		/* range was never added during probe, count as removed */
+> +		if (!data->res[i]) {
+> +			success++;
+> +			continue;
+> +		}
+
+[Severity: High]
+If dax_kmem_do_hotplug() erroneously added memory for a range with a
+NULL data->res[i], will this check cause us to skip remove_memory()
+for that range?
+
+Does this strand the memory block online permanently?
+
+> +
+> +		rc =3D remove_memory(range.start, range_len(&range));
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605211911.2160=
-954-1-gourry@gourry.net?part=3D9
+954-1-gourry@gourry.net?part=3D7
