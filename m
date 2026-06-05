@@ -1,164 +1,205 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011062.outbound.protection.outlook.com [52.101.62.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1724D276038;
-	Fri,  5 Jun 2026 18:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780683634; cv=fail; b=RNBhbZvaNWj2p2EHCiEnQiwaWeLO7PL2rDRKiBbQIaKarohnFIq1TW7zFRB6NJQF6d9lutH6E/XsVVSpBokdqH6qMP6vK9cs+aniTsJR3ATOVCbnWWfUvWKQAuLr7JD1FyaNg0CgG9B8aPEWr81gjZmFq1pm7obTbRi+ez2BAXA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780683634; c=relaxed/simple;
-	bh=DRe7oNzuCA6WfvoBReKVUXtzENKostYJa8+2/l65lXs=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=scqCEnPeBGPbPTw8gyZR6iVXAj/7YzF24sUGXtAUgo0KaxxFETJ2Dd1wd/RqlkAM8MjjUad5M60dyOcJJRxm5KFA17g2AEEkxElr5tCHkwe8PdvpJqi79CXH1wQONHZmCcR/qtWEd/XNSJzqgZCun8d2LBYlj+OJulK5YbqyrJU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MuYopQ2u; arc=fail smtp.client-ip=52.101.62.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305713B0AC4
+	for <linux-cxl@vger.kernel.org>; Fri,  5 Jun 2026 18:32:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780684326; cv=none; b=GrqxDQ81YvX6N1LQyCnn1lGcIntFoap7U6ZmVSQDkpCQQpHkjRDAJqnyz1mZRAQ5LqfmH5ifqmuuCVz2cIDxI1NUGBasxMWmwETi/jxbDHYDKQiQAxUNasxOoKGtHG2CL5KmysVjdtkPGbYCW1M5JSd+O3EtWBOdaetyIv1q6s8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780684326; c=relaxed/simple;
+	bh=spyqNEtrZIz0DkILpN1L2VqKMvQ3xvACliVKGAIvBAo=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=LSHOwfpnCndNZB3fFc6nfOsNumkgQJUbD/1iCM7ekEK0Z0Y7l3/EHCDl5c53pHzqaLQoMV230nooxUwmARfuF5CzJxBPc6sQeAAVllO5iyjrpg8/62h427ESPGDcNfc6teND/q66n+Ju+5N9DYXpiSwdh2dJ8zohvW4YIVelnbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nPomTD0X; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MuYopQ2u"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=i3pytIHUIbyA3yRC1g+z3D5lM+EL8UEdK47lUHrltGPSeFrWfW1KeXTAXZjQUBj/NUcsXlQktHtTSxjpzEYPb1OXQLX1ZifMX4PHViZmBBm3D7cQMpSzNsSChi6yI7g861OBqp5F24MDenHHQWlGX8qVKD9dFgcVXVyMscwLnPeAnkLXvNbAIqceV86Lz5earF8bqTzuulM6VjnYuBfiog8vmFGSac04qA+8GtTQjLN6Bchsz3W5VFN5YKx+JnHEfj1fIonV95fkIQXN75SIXWJ7S5LRMaDz4IeX+hhvwRFq3jXY6lfSWkTOHNbpQyOVZovKLfOrZkuMDocIO63Whg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=h3+bSBh9F8MbjGaT8JDae0GnxE3mI0ftdaRtlx/NiI0=;
- b=swnRCZ6xZHGDM+1S7hhKoKPt4A+QIFFj5QnbbEQpt9LETQg8ohBHg5fwcJouqJS8RsPtzXxwZ7+GS5xy/KwACdGYPH4VJJFT3uQiPnPN3/JioNngnLa3UfFzrdA4K7TjB38IehiqwXMb8nlAxO1QdBQWwexWdz5LD1UHZf1KpMhZBheEiiiLhTfx9+SkPdCmh4jiK3tz+4xeVHy7QNv2UAvX++jJRiOirmt7hx2Qtd+Lnk/gaHPFGu9rcDTnqnPA31Ue/KHyf0uDrq4lOlq33Fysry7rSMdJxaHDqRtS87gL6hvpREP5zfx7Ulg1gKGDOo8q9nhVZ/QluH+wA4UYFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=stgolabs.net smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h3+bSBh9F8MbjGaT8JDae0GnxE3mI0ftdaRtlx/NiI0=;
- b=MuYopQ2uGeMrF9ylOkSXXkNLB+9/2Xz5Gzh+uJzrtdH944MRsseAxDDpgKkagCcKdnUWtB5Sma+pVzdikv0PXmj158puVZgc+EzfG6o2SslrP8F+phKAm+drRb1nvQqPIxJD+g72vw7Q6+CMMWECJsjqQ3731PVMSULLwixyUEA=
-Received: from PH8PR15CA0019.namprd15.prod.outlook.com (2603:10b6:510:2d2::21)
- by PH7PR12MB6860.namprd12.prod.outlook.com (2603:10b6:510:1b6::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.8; Fri, 5 Jun 2026
- 18:20:22 +0000
-Received: from CY4PEPF0000EE39.namprd03.prod.outlook.com
- (2603:10b6:510:2d2:cafe::88) by PH8PR15CA0019.outlook.office365.com
- (2603:10b6:510:2d2::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.92.9 via Frontend Transport; Fri, 5
- Jun 2026 18:20:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- CY4PEPF0000EE39.mail.protection.outlook.com (10.167.242.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.92.5 via Frontend Transport; Fri, 5 Jun 2026 18:20:22 +0000
-Received: from ethanolx7ea3host.amd.com (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Fri, 5 Jun
- 2026 13:20:20 -0500
-From: Terry Bowman <terry.bowman@amd.com>
-To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
- Weiny" <ira.weiny@intel.com>, Dan Williams <djb@kernel.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>, <Benjamin.Cheatham@amd.com>,
-	<rrichter@amd.com>
-CC: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	"Fabio M . De Francesco" <fabio.m.de.francesco@linux.intel.com>, Shiju Jose
-	<shiju.jose@huawei.com>, Smita Koralahalli
-	<Smita.KoralahalliChannabasappa@amd.com>, Li Ming <ming.li@zohomail.com>,
-	Tony Luck <tony.luck@intel.com>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <terry.bowman@amd.com>,
-	<stable@vger.kernel.org>
-Subject: [PATCH] cxl/port: Fix missing port lock in cxl_dport_remove()
-Date: Fri, 5 Jun 2026 13:20:14 -0500
-Message-ID: <20260605182014.2254410-1-terry.bowman@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nPomTD0X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 502971F00893;
+	Fri,  5 Jun 2026 18:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780684321;
+	bh=sO4FOUaXd1hSDgqrZxgO4Ucg81IMT2ckMdMgn7SlNsg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=nPomTD0X0pqj/3I8mspw4e3GwgD0IAsIFfVohWcbuMSMe2qB4qu/Ei2Fo5/6h7gV0
+	 /X64tKEwItIOnylOjJEiuY0fFlmyTi/6EQElYCoWkXRXr0rTy34SPJAxC4Dni9UOkB
+	 zK9qfdMT/pR1nm7hlT9ySL9cjJbs8DmEgoGGtDyXMYYAxFqBz9EvKcR9MwV7t1MO/C
+	 xzJvHsaErNDKukBxcXf+3WLnenwXt6M+2LCBgag/TPs7YepSDHIa+9celcVDLNqJxT
+	 1fAlUjZHyvpQyPkwIUyHo3lHcYScirOcbx0yboL3yRDU8MGM4E9xCtQQQRX+TupI2d
+	 warm5/9vS73kg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2] cxl/test: Verify cmd->size_in before accessing
+ payload
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Dave Jiang" <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260605181508.3981107-1-dave.jiang@intel.com>
+References: <20260605181508.3981107-1-dave.jiang@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 05 Jun 2026 18:32:00 +0000
+Message-Id: <20260605183201.502971F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
-X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE39:EE_|PH7PR12MB6860:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0f54b008-665f-47d1-de63-08dec32f1b4a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|7416014|1800799024|376014|36860700016|18002099003|921020|56012099006|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	pcJrzI1CNFhEbP6X5xhku3vR/+4bJo3f4Ql7H7Dk7tN7DsGMVRbn9qd8J+jI9aaz2bXMJsaYshUCOAdExpdHhZO6a6Ff9r2ruBLhkdnDYe3QG+eydYE74Du7MhHL1yHJMETXofZ7z7J3567qGASKtowbKVMjZKYjfI7dv+52J9smifPTPP80Z0HhBik5R8rngBRjKt3AUzB3jO1StmiKFBXUjoagDXqNfPDX2qhh4irISle7/HIQumC/eybY/OfxFw1b47dxBITWq3PPwtLjksx6DugeMgEnbKPw/UEix5WFl2vQsskTJwaF6oWcD1Vj9qBbNQVszHzACPnpNey9N0JyJzBM9PqojTF1viVA4spVlFzM9HILeQM1pfCMUHSixLSTGkIiU4bXAvobplP08lZ7lT/TM0Phx4EmQFzkHsYyr9XnjQC+HM+tGziLSSj0mil92w7G1THioMTm7SsKXFJ/CySECRG4wk3mKp2gSOxwuQDRVp4hrMeAysYPbdUMs3DxsJ1ndzHjXGsZKfAIJZCzJgf8BCOA9WpIILYI8EuJYXM0zy6z9f6vZo4+h5oerMqKZGAWZKFq2KJXayrnZj7L+FQMyQ1QMYzyF3L8MOSknHgSCCRUoJJBjYvnxKiHZARKzV3aAUv5qoQWM+pKrKxNOtaKvJfkohMAHdyWDysOPITooYzv9xMD+8cP6UCHzKenF6imJg3OsDy7tqXq07EyprIyv9N03d7JlVRHWBYcrlvuSezVh6RFyIInP4zGX78N1Rsvbzm/+KKDEPKrcA==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(1800799024)(376014)(36860700016)(18002099003)(921020)(56012099006)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	Sqfe5UTeYttTZygwSdBDCjh15rDWi4z/W4YNxpyGWGeFro+SMVYG6/OSJy6K3a7YANszkJDaeFmFsUnqXp+tvdDSd2DUC0RFdJu9vEF6c7DDLoeUH1ETetT0bYZiLOHpA7jpSgnctcvzwJr0hpuO9pPY/BDZxG3WBjLOaCOLFm8p5xMrzJBlT8mHkoagX0LolrzTy0agatXHWHRWLlHE7pXg/rqxRN+kJNky6NYbbNNMCLK8WX0aPQXtBbimk0YPXPXlZLUmBMvXkyd41E8Y0DT9tYrIG67WonHT35uRf5qMCQouMX//IpzHjFA5AcBzH8tNkIZHxIID8hJyCAvY1F7LkezZQO3Zy/vyNyl+8rgl1K1497/fZC3KxALY4R6vnGkQtRgR5nXRZpblemBdwP/FR+x+B9TkIfxJ6lmrlQvBGi08vq1Dhjjig82/geYe
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2026 18:20:22.1079
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f54b008-665f-47d1-de63-08dec32f1b4a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE39.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6860
 
-xa_erase() in cxl_dport_remove() runs without the port device lock,
-creating a race with any caller that does xa_load() on port->dports
-and then dereferences the returned dport pointer. A concurrent
-cxl_dport_remove() can erase and free the dport between the xa_load()
-and the caller acquiring the port lock, causing a use-after-free.
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
 
-For non-root ports the port lock is already held by the caller on two
-paths:
+Pre-existing issues:
+- [High] Incomplete bounds check in mock_clear_event leads to an out-of-bou=
+nds read vulnerability.
+- [High] NULL pointer dereferences in mock feature handlers due to bounds c=
+hecks being placed too late or missing entirely.
+- [High] Out-of-bounds write on the heap in mock handlers due to missing or=
+ inadequate output bounds validation.
+- [High] Integer overflow in mock_get_log bypasses bounds checks and causes=
+ a massive out-of-bounds read.
+--
 
-1. Driver unbind: devres_release_all() is called from
-   __device_release_driver() which holds port->dev.mutex.
+commit 95b18e396910f0c346a2bf6b9e8a26169223eef2
+Author: Dave Jiang <dave.jiang@intel.com>
+cxl/test: Verify cmd->size_in before accessing payload
 
-2. Dynamic endpoint removal: cxl_detach_ep() takes the port lock
-   before calling del_dports() -> del_dport() -> devres_release_group(),
-   which synchronously runs cxl_dport_remove().
+Add a check for cmd->size_in before accessing the payload. This prevents
+potential dereferencing of a null pointer if size_in is zero.
 
-Use cond_cxl_root_lock/unlock(), which only acquires the port lock when
-the port is a root port and the lock is therefore not already held.
-This matches the pattern used in __devm_cxl_add_dport() for the same
-reason.
+Link: https://lore.kernel.org/linux-cxl/20260605143748.235271F00893@smtp.ke=
+rnel.org/
 
-Reported-by: Sashiko
-Fixes: 391785859e7e ("cxl/port: Move dport tracking to an xarray")
-Signed-off-by: Terry Bowman <terry.bowman@amd.com>
----
- drivers/cxl/core/port.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> index 271c7ad8cc32c..2e9a5f151e983 100644
+> --- a/tools/testing/cxl/test/mem.c
+> +++ b/tools/testing/cxl/test/mem.c
+> @@ -312,12 +312,17 @@ static int mock_get_event(struct device *dev, struc=
+t cxl_mbox_cmd *cmd)
+> =20
+>  static int mock_clear_event(struct device *dev, struct cxl_mbox_cmd *cmd)
+>  {
+[ ... ]
+> +
+> +	if (cmd->size_in < sizeof(*pl))
+> +		return -EINVAL;
+> +
+> +	pl =3D cmd->payload_in;
+> +	log_type =3D pl->event_log;
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 0c5957d1d329..80ce7c4d357c 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1088,8 +1088,17 @@ static void cxl_dport_remove(void *data)
- 	struct cxl_dport *dport = data;
- 	struct cxl_port *port = dport->port;
- 
-+	/*
-+	 * For non-root ports the port lock is already held by the caller
-+	 * (driver unbind via devres_release_all(), or cxl_detach_ep() via
-+	 * devres_release_group()).  Acquiring it again unconditionally would
-+	 * deadlock.  Use cond_cxl_root_lock() which only acquires when the
-+	 * port is a root port and the lock is therefore not yet held.
-+	 */
-+	cond_cxl_root_lock(port);
- 	port->nr_dports--;
- 	xa_erase(&port->dports, (unsigned long) dport->dport_dev);
-+	cond_cxl_root_unlock(port);
- 	put_device(dport->dport_dev);
- }
- 
--- 
-2.34.1
+[Severity: High]
+This isn't a bug introduced by this patch, but since we are adding a bounds
+check here, does it fully protect against out-of-bounds reads?
 
+Later in this function, there is a loop:
+
+tools/testing/cxl/test/mem.c:mock_clear_event() {
+    ...
+    for (nr =3D 0, handle =3D event_get_clear_handle(log);
+         nr < pl->nr_recs;
+         nr++, handle++) {
+        if (handle !=3D le16_to_cpu(pl->handles[nr])) {
+    ...
+}
+
+If the user provides a payload where size_in only covers the header (exactly
+sizeof(*pl)) but sets nr_recs > 0, won't this loop read past the end of the
+cmd->payload_in buffer?
+
+[ ... ]
+> @@ -574,14 +579,19 @@ static int mock_gsl(struct cxl_mbox_cmd *cmd)
+>  static int mock_get_log(struct cxl_memdev_state *mds, struct cxl_mbox_cm=
+d *cmd)
+>  {
+[ ... ]
+> +
+> +	gl =3D cmd->payload_in;
+> +	offset =3D le32_to_cpu(gl->offset);
+> +	length =3D le32_to_cpu(gl->length);
+> +
+>  	if (length > cxl_mbox->payload_size)
+>  		return -EINVAL;
+>  	if (offset + length > sizeof(mock_cel))
+
+[Severity: High]
+This isn't a bug introduced by this patch, but is there an integer overflow
+in this bounds check?
+
+Both offset and length are u32 variables controlled by the user. If offset =
+is
+very large and length is small, could offset + length wrap around to a small
+number and bypass this check?
+
+This might lead to an out-of-bounds read in the subsequent memcpy():
+
+tools/testing/cxl/test/mem.c:mock_get_log() {
+    ...
+    memcpy(cmd->payload_out, data + offset, length);
+    ...
+}
+
+[ ... ]
+> @@ -1415,11 +1429,18 @@ static int mock_get_test_feature(struct cxl_mockm=
+em_data *mdata,
+>  				 struct cxl_mbox_cmd *cmd)
+>  {
+[ ... ]
+> +	if (cmd->size_in < sizeof(*input))
+> +		return -EINVAL;
+> +
+> +	input =3D cmd->payload_in;
+> +	offset =3D le16_to_cpu(input->offset);
+> +	count =3D le16_to_cpu(input->count);
+> +
+
+[Severity: High]
+This isn't a bug introduced by this patch, but while this check prevents nu=
+ll
+pointer dereferences within mock_get_test_feature(), its caller
+mock_get_feature() appears to unconditionally dereference cmd->payload_in
+before getting here:
+
+tools/testing/cxl/test/mem.c:mock_get_feature() {
+    ...
+    struct cxl_mbox_get_feat_in *input =3D cmd->payload_in;
+
+    if (uuid_equal(&input->uuid, &CXL_VENDOR_FEATURE_TEST))
+    ...
+}
+
+If userspace sends a command with size_in =3D 0, will it trigger a panic be=
+fore
+ever reaching this new check? Similar omissions appear to exist in
+mock_set_feature() and mock_get_supported_features().
+
+[Severity: High]
+This isn't a bug introduced by this patch, but while looking at bounds
+validation in these mock handlers, is there an out-of-bounds write on the
+heap in other functions?
+
+For example, mock_get_supported_features() writes to cmd->payload_out witho=
+ut
+validating that cmd->size_out is large enough:
+
+tools/testing/cxl/test/mem.c:mock_get_supported_features() {
+    ...
+    out->supported_feats =3D cpu_to_le16(MAX_CXL_TEST_FEATS);
+    cmd->return_code =3D 0;
+    if (count < struct_size(out, ents, MAX_CXL_TEST_FEATS)) {
+        out->num_entries =3D 0;
+        return 0;
+    }
+
+    out->num_entries =3D cpu_to_le16(MAX_CXL_TEST_FEATS);
+    feat =3D out->ents;
+    fill_feature_vendor_test(feat);
+    ...
+}
+
+This function checks the requested input count instead of the actual alloca=
+ted
+cmd->size_out before writing 48 bytes to the flexible array out->ents.
+Similarly, mock_get_poison() copies dynamically sized poison records to
+payload_out without checking if cmd->size_out is large enough.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260605181508.3981=
+107-1-dave.jiang@intel.com?part=3D1
