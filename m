@@ -1,242 +1,119 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013020.outbound.protection.outlook.com [40.93.201.20])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D4C303C97
-	for <linux-cxl@vger.kernel.org>; Sat,  6 Jun 2026 06:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47CAB26A08A;
+	Sat,  6 Jun 2026 07:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780728532; cv=fail; b=OPS7aLEbWWyD5fgYxip5cZOYn3gtAAajRpYd0tEH5zuHa1F7iFvQIprZOjv6Y8e9X/+XtGPTegjsh0GORj1LIsiiiiKXl71s7K6H9xjqPAt/AI+Nj7MN+n15DHIe1umRQ+snPz20maNjD16lj5sUiT7XjO2883b731I4oPfXS4I=
+	t=1780732299; cv=pass; b=rZ50xRcZonrW2sl9/M4bWPkVxotqSKGnIwQFaqN0DUUY9tbBh0Kwd8DCyMjDDLQuT2zbctIyiOekLmv/q8EMtoqXOIb3y28G4XvUz7tsRU1CnTwz99hqDeH9MThRgXmI9hrG//bpqUQbpu0R8rkVB3OwrMuWrghRhdinBxU3tQM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780728532; c=relaxed/simple;
-	bh=Er+3jMrX+KYxBUcfRi/jIcve9y+J7xTSzbd8e40TRgk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=CCBv/l8pach4a7WdPmLHElIIj+FqEE/Dda7oO9+onsG09C2mcytkBhs9sEWoHDApW1e31HC6VXmqX5ILf2MRK5eF5CEblvtsD+XCuUn15iKgxpKFis1bl8sJwk6+7TFf4/EaL3ipMoh7rJ1c1dk1pw0JPXH0HMVI2yXpy4NJI0E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=in9O1Jrq; arc=fail smtp.client-ip=40.93.201.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1780732299; c=relaxed/simple;
+	bh=fCrWzVfgo7b+dQu0uIZyRPfOEuYxmdy3dhwU10MtZE4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Sjq4M9OaVrl78MPd7byQO8L07FbiDLhqatj6I3h7tqdnCHispMsCm+xT2bZfdFM8vWcRE6E/VHBiHdf04q9odl3IoEUGH8E0iO992fBry8SK6mP8agxi9zgtvojsu5eWkOIRMLR0/gihziFwbJEjITFddVnqBqfmUjKFiODi/4A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Fo45Ezt0; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="in9O1Jrq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w/qSiIfyMR2UEePjWUe5YvAcGMvyrCVYySYPTcKRORUxnqLTQqQX6G6/KM14C/l8ezVZmcSm2TZ75WhlWCfrrt9weWcXRJ8YeMQyw+3Op9CvdyxugJidSoDozGAkIzVnSg/0NPBVZf8z4/YYuxyHmVvRvlKG29LyZIlfr+mCdxf7owkjVfC+PL/jsWr/SK6W1TibRiKZ+nqjaZHVF9nBT9z3IDwBKtyYk2/3heS7HmThDiYzdWVWmhdZdrrmdrw6juQG/DkBmjTn1jqLD6QQJIVJftaNkMims7MqaGOetkFtPLmtG2dJ0kABtqSkw+FwcK+k+jt+Pi/OttrsWllFPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=06qYNqua3xbC25r2wnIhELCQMCoSZnZrSJzfrmaGPa8=;
- b=lOhvl8EBNrLVMTdeOpEC6xe2NXcogVFraZWvNJtHdcdaWApokXAcuECJkhMpFxXIIfjrMzmfUtH8IY5Llk1sl33giq4+6nJXYCSqV+Z+NakPy1E3gAMCMGNn3RDBnRvRg58YCAb6oEWw3FpXoM5rkSJTgUp41nV5isjs/oWIod/ERpC2VUgkhfd3/YnISuYKMeOFW0wb0Pxzzd6ar/CLTSeZtTlB9RnYauga/cXJj+Fd5nQd87+A/qNBdPQgjrcmNLv8ZXYtRZ5AdG4iDH6EZYNNgFvOL/nL9z0O8qEeEYCs8IcpNIT5JRB/kMThllIhW5y/w/mGaz6e9WMGOsQqLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=06qYNqua3xbC25r2wnIhELCQMCoSZnZrSJzfrmaGPa8=;
- b=in9O1Jrq1aYe+Yy1VEeUOODoALyVZYMqECs/utPRnwfqIbEaZKDTbmg+xFOi+/75EM1ddPPg65mmGTpefSi9T3HR9PnuN5QMhWYvAfp+QQSF7floUE1692Vr45eJd8KL+MccZucgXATlTkZvOZoyA6iKAPL6DGZFsvkPkJcc/C0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
- IA1PR12MB8336.namprd12.prod.outlook.com (2603:10b6:208:3fc::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.9; Sat, 6 Jun 2026
- 06:48:47 +0000
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1%6]) with mapi id 15.21.0092.007; Sat, 6 Jun 2026
- 06:48:47 +0000
-Message-ID: <138239a6-8392-4a47-807b-ec0334d24b0b@amd.com>
-Date: Sat, 6 Jun 2026 07:48:42 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] cxl: Introduce devm_cxl_probe_mem() and fix region
- deletion
-Content-Language: en-US
-To: Dave Jiang <dave.jiang@intel.com>, Dan Williams <djbw@kernel.org>,
- linux-cxl@vger.kernel.org
-Cc: alejandro.lucero-palau@amd.com, jic23@kernel.org,
- Sungwoo Kim <iam@sung-woo.kim>
-References: <20260519210158.1499795-1-djbw@kernel.org>
- <9e85d980-4a44-4f27-aa18-8d01630a05e6@amd.com>
- <2a9791d4-e091-4452-af92-3601253bc748@amd.com>
- <5f399564-7efe-444d-a6cf-2c6176e57ad9@intel.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <5f399564-7efe-444d-a6cf-2c6176e57ad9@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PR3P189CA0063.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:102:b4::8) To DM4PR12MB6254.namprd12.prod.outlook.com
- (2603:10b6:8:a5::17)
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Fo45Ezt0"
+ARC-Seal: i=1; a=rsa-sha256; t=1780732293; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Anc7G3IaxQKPiVNT3+4lEAOkk/ndjXFGYuHxl4QTeZMjNmNW5ebPiPV5OZvh0KADlCJELETxvBjlREkyzzwqTkYZEkjFmcU/wjyOc5k0ilhDS+kKYQ9knMwPhcNWjpjxaqzkParU0mRQCTvTB4F1yNlCpf/Vbuq3NvPpuqPtSfc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1780732293; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=huNdBBJgwSSKU/TONAlpEvDTVsm/VMEu6t/cT25utbw=; 
+	b=TkhN387ING+g1KEmwdPykU2PagHXF7rvMBrft0IE9vWHQmSBSBM2PiGXqaANK7dMvrckJQ6FXDygCWVGBljlvAIiAvCxPnt0PSX0/TcCU1ewapGdeIIpDG9PnvjqgTxvThwynWNWvXFf16DEAAmMbLvIJ8BKDAirN5f2nUaWvmc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1780732293;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Feedback-ID:Reply-To;
+	bh=huNdBBJgwSSKU/TONAlpEvDTVsm/VMEu6t/cT25utbw=;
+	b=Fo45Ezt0wX/av0X97oN272Dj/ZLdbWuOT0m7dnzIZdF/1lCA0FuQxAu+Qdsu5W2Z
+	AmXwBvELFUEKruAY/r4qbYTCCK0lcBQWbljgKjYDtGVmk4kGGGElYGhVUDOVsHkM4wo
+	ukAJzmRPmbFGHMxYRS+giHhXioyJHGpRUT7UfySE=
+Received: by mx.zohomail.com with SMTPS id 1780732291030737.946463374025;
+	Sat, 6 Jun 2026 00:51:31 -0700 (PDT)
+From: Li Ming <ming.li@zohomail.com>
+Subject: [PATCH 0/2] cxl/region: Fix two decoder attach/detach issues for
+ auto-assembly region
+Date: Sat, 06 Jun 2026 15:50:59 +0800
+Message-Id: <20260606-fix_two_issues_introduced_by_cxl_cancel_auto_attach-v1-0-5d94ca06c4e4@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|IA1PR12MB8336:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3f9ec70f-1c86-41c3-3407-08dec397a868
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|1800799024|56012099006|11063799006|4143699003|6133799003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	3JFZBrP+aUBmwVJZ6l5JBJ+v55f02RwP5tKdop2cX75zf5jKspas9tsyptkueW9hpj2kDLffiQNVBRX8c6NlhhKI64jG2hR+7UPRQ+nMQNNvcRq/ghxp9F84r1+Nt52tX2S62+gdoc7cp5Mg6inWomdI6QGMg+e/UkGa8TFJPsiNfLP4Jvhe2unN5TUg01nW+9mitsNEX6Lik5+/qm0UYZojU/fGoqpysFZ2nqakst0+Bdy+tH37+Ty0yeAx49Igf3yR1rWPuHlVZNbkqvFCptlz4NMrXLzdKS4Ui7iKYb2qjgJsykxEI8CPHEwjM2Sm590QPXDfFfSuxhO1Bfc7IWgfP/RQKvTcaN90+FKJ4eWs4bFL975SiFLIuwsZCGHQEiKKdZf3nefwckxZuNhgcUko+U1t9U6S3/FKBy0DPZ402xVGAZ705W8lEpDXxDCJccd97PERGunGWwMuLOz4ZlWVnvd55E+rFHlS8GIXA9NHdNK7Vox2w0H1jnyJ3fpXpMDwwOwLPDIoWDiaWY5YPIlvSqjGoo003kZhWmv6Z8Zti5U6X0mTNnL96QwWVPM5gLxKReStrWro7mdv5zt80N3XCURYGMHn7otM6dxlkNI55Dpp4/8G2RkJOFBNvngmQ9EpCErtPARTQR/wPDjcCAZHwNJb0ohjQX4ThqUwAppIt9Q+U/KlA+J0LcMupytx
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(56012099006)(11063799006)(4143699003)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YnBFTVFSaGkrU204dU0zZkI2RitEbHl3Y2VETFpvVllKbjNPL3AwT0xDSVpU?=
- =?utf-8?B?WDQyYnRVa2kvS2swa1NJVmcxeUlGOXpZWG1uQm40K0FDbTZEVndXOHFYZllr?=
- =?utf-8?B?ZVhHNFhnZ2N2SFRpOVhmWnZ5ZldXYk12R3hVQlhVQmxRNEZEWnJGNU1EakUz?=
- =?utf-8?B?TDFHYU5VVFVyeXdzY0hsY0xYZFgxV0VOTG8weEZoMHlaREM2bStRVjA0Yzh5?=
- =?utf-8?B?dndRbTNVTlRhUlFRNTJ1Y0g5VnlUZXFBd01xQWJrSncvYkpVNlZuS21RYzFp?=
- =?utf-8?B?QUNpWGhQcm9yQm5iMUpqQzY3d0tNZklLbURzcVN1UGdycU1sZnRYUTlDQXUr?=
- =?utf-8?B?bWxOaFZUVzNOWTV6NXFTNHRpQXk5SWphS3hpSEJoYTdSSWsxdE05UlZheGlM?=
- =?utf-8?B?QVBzWG9GcXd2UFNDbEtqakQxS1p3NitQb0p1OVNaVFdFWlNPL3hTekNNRlc3?=
- =?utf-8?B?VlFlYkNqQ0hNK0pRWURKWlNVcXBqUU5WNlhQQmJLMGVIQXBCcHdraFRaZG5Q?=
- =?utf-8?B?Y1FrMHVLWXAzK1dvR29MUXZmdzFwMjV3Y2w2VThPMmtXaHRWZzhsM0ZQdkF4?=
- =?utf-8?B?azFoVDVlOWsxd01EdGdndG1jL1ZpT1FmRllEbThQUVRYdkMrbi9RQ0piQU4r?=
- =?utf-8?B?M09BUTJSdDFLMHB5V1ZYZFJ2b3BvRWpFZDkrY29yRzU0Rm01aGxRUGg2RXg1?=
- =?utf-8?B?MFU4ZDhtc1VnZk9CendiWVArV0J1S2JDR25vZ0FUZWUxWjhzZ0Mxd3hnRGtW?=
- =?utf-8?B?SzdGNkxwcUVJTUJYZkN0UmM2ZDlleVhya2FYbEtRZTFQa2lmUGJ0ZUtianBM?=
- =?utf-8?B?WnZsSXdWWi9VbWVOck9CSkFIM09MaVZwdXBEdXQ4TWtYdlB3ZnVpSHBCbWRE?=
- =?utf-8?B?VlZwY1hWcHppVUZWbEs0bERGODR0L1d1bUt6Rk40ZmZTKzdQRGRmcWlENEtr?=
- =?utf-8?B?YXpGYTZvQTJsNE5NMGh3am1JQXBCYWtGbmpURGMrTy9lY1d6RnRTQzc3eStD?=
- =?utf-8?B?SUZzdERLNzBpNXU2d2w3aS8venpCeFhVUGVrWVNhNFpPN0xPSzd6TzdHZ1li?=
- =?utf-8?B?dm0yUkhqSS9UZVByRDdSWTBaVitMMHJlM1R4QnpPOXlpM2VZNmltSkdoZUdG?=
- =?utf-8?B?cjNlNVFIdFUwVW9ZOENCMk90MnBuOVl5Vnc1K1NURDlYOGpvQk1qK1RqWWF2?=
- =?utf-8?B?U0MvZ0FoVzFIYlcyeis0S014eWU5d3orOUxsUEhGVm9Oc3NSMHpyTzQya3J5?=
- =?utf-8?B?c1NoaUNQQVAzallrZWs2S0tvTEpMQ2lEVFYxT2s3Y1FnUXVkdVFhRENBTVJS?=
- =?utf-8?B?YzkyMzY5YzFHUStyTUt1QUE4TTVDVEVoeFFzbHRuOTJrNFFzV2ZWTHBNTkNx?=
- =?utf-8?B?ZjVqTVArdEJzQXcwMFBkM0c4UUFOdkpLcE8weHlmR0MyVGlsUjlSdkEwMHlp?=
- =?utf-8?B?b2I2d3ppNmQwei9ReUZaOWZFZW8wdUZ4Yk5FSWxUYzdnYmhTbUNXVXVVM3Jh?=
- =?utf-8?B?S2NRTnpjZS9xMDFtQWNmQ0dHbW42U3k4STFOZzdwelJGUUl1WjY2UXpjcXRC?=
- =?utf-8?B?QWZyTkRqYUVQOWcrdGh2eFhPWmlLTWczZ2JLNWdRemJ0bFkvZ3JUNEdybTFZ?=
- =?utf-8?B?a0FzV0pSbkd1a0hCRGhUaWkrMUNNU1FhU0FIM2lEOGU4ejhCdUxqOFZzZjZI?=
- =?utf-8?B?ODhjczNUaUVBNWhnMHpSTEJjTmxXWkpBRnB4TjJNSkR1YjZ1N0ZselJzZStp?=
- =?utf-8?B?RVI4U1hRY3NHVkNydjlFT2pNNEFubEhzcDRYVFFVWi9NdWorcVZHWVNJejAz?=
- =?utf-8?B?Rjk0UGVxSUJ2TnVnNGIrM0szeUEzVkNBdWxpczVYajVOV1FTN0N3emJlTnBN?=
- =?utf-8?B?Z0dhckVaMHBtNmFTWExQNzVtck4xem5WK0RUbG4yVE5hcCtERFhsb1ZzVE9s?=
- =?utf-8?B?R1AvNitPVnliSForYksreGtYVTZ5U2NKeEVRc3hEbEhMeXo1eDhKNi9CMmtV?=
- =?utf-8?B?Q01KdlJHNXdnUzdDa1ppd0lWd05TbVkvMGI1cGFkUXljeHBwbC8rK3hQSmlv?=
- =?utf-8?B?bGp5U0VBY0pjdXNTS0kzczI4WDA4NXE5emJEYWtEUHl4TndiR2VuNUIrZnBu?=
- =?utf-8?B?VklUZFZKUHRmaGYvdlZUZVV0VUQrVHJCdWVHWmpMc0YzS2hYbmE4NmErVkJi?=
- =?utf-8?B?bWR3WE05QzhwanBKejlDSUdWL0I1a21NS2ZjYVVRdURybFJqYWQ2TlhrU1lO?=
- =?utf-8?B?RFRMbmt0b1Z4TE12YmJDUWNBR2pIUkU3bWJLbjBKTzRkMFQrRnIxVURmY0N3?=
- =?utf-8?B?ZVJxczdUWG9Ob2k5N1oxSWgwamVUMXlrRk9NUnZWNXhsSDAzeWMxZz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f9ec70f-1c86-41c3-3407-08dec397a868
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2026 06:48:46.9669
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nRbiw2Go1qdz/IneHcrevk1qvIJD56dsE8F2S9JTOOg7GPSHwZFH0NqlyfHTdUYVVw0Syv7s3xBfZTCskrPlYA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8336
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGTRI2oC/x2NQQrDIBAAvxL2XCGVYKBfKWWx69osBC2utikhf
+ 4+UOc1lZgflIqxwG3Yo/BGVnLpcLwPQ4tOLjYTuYEfrxo6JsmH9ZhTVxoqSasmhEQd8/pC2Fck
+ n4hV9qxl9rZ4W46yb4xQDsZ2hl9+Fe+Z/vT+O4wS2sV+OhQAAAA==
+X-Change-ID: 20260606-fix_two_issues_introduced_by_cxl_cancel_auto_attach-6267f4fdce27
+To: Davidlohr Bueso <dave@stgolabs.net>, 
+ Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+ Dan Williams <djbw@kernel.org>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Li Ming <ming.li@zohomail.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780732288; l=1977;
+ i=ming.li@zohomail.com; s=20260210; h=from:subject:message-id;
+ bh=fCrWzVfgo7b+dQu0uIZyRPfOEuYxmdy3dhwU10MtZE4=;
+ b=6lR/yqd7sDMxxrI+eVSndVTVnK3nBrThtsegyyHny3v/KsQfWPR2nS54XHYbLlI6FBQSp9R1d
+ fKEv8nzKeOBACZEZK2uFiL2jG3eTVvFluyInjI3YwidGaoOyDJqKB2t
+X-Developer-Key: i=ming.li@zohomail.com; a=ed25519;
+ pk=JfhrdHjyYJMXt47Hy8d/fsqZuhGPD4Z3whV5lTfVvhE=
+Feedback-ID: zu08011227c031c2f29f2799c2048ea5fd0000b719a94c0174692ff86da999cbd2ab4822f3d6ad59b466424c:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
+This patchset includes two fixes for endpoint decoder attach/detach for
+auto-assembly region.
 
-On 6/5/26 16:20, Dave Jiang wrote:
->
-> On 6/5/26 12:56 AM, Alejandro Lucero Palau wrote:
->> On 5/21/26 15:31, Alejandro Lucero Palau wrote:
->>> Hi Dan,
->>>
->>> On 5/19/26 22:01, Dan Williams wrote:
->>>> The devm_cxl_probe_mem() helper creates a memdev and retrieves a mapped
->>>> HPA range for the device. At present the retrieved region information is
->>>> expected to be established by platform firmware. A future update will
->>>> auto-establish a region if one is not already present. This arranges for a
->>>> simple CXL topology detach == Accelerator driver detach scheme.
->>>
->>> I have successfully  tested this with sfc and it indeed simplifies the accelerator driver. Removing cxl_acpi or unbinding the related memdev works as expected removing the sfc driver as well.
->>>
->>>
->>> I'm quite happy with this approach and I hope this is the last building block for the simplified (only with autodiscovered regions) type2 series.
->>>
->>>
->> No updates or comment for two weeks. I wonder if this is being superseded somehow and I did not notice.
-> Are you not integrating this series with yours? At least that's my understanding given you are happy with the approach.
->
-> DJ
+Patch #1 fixes OOB access in cxl_cancel_auto_attach().
 
+Patch #2 fixes NULL endpoint pointers hole in p->targets[]. CXL driver
+does not allow any NULL pointer hole in p->targets[], it will cause
+NULL pointer dereference issue. However, if an assigned endpoint decoder
+is removed from an auto-assembly region, it could make it happen.
 
-Hi Dave,
+The following operations can always trigger NULL pointer hole issue.
+Precondition:
+an auto-assembly region with LOCK flags or its assigned endpoint
+decoders with LOCK flags. This means these assigned endpoint decoders
+could be re-attached to the region after being detached.
 
+echo {one of cxl pci BDF} > /sys/bus/pci/drivers/cxl_pci/unbind
+echo {one of cxl pci BDF} > /sys/bus/pci/drivers/cxl_pci/bind
 
-This series got your review tags plus my tested and review ones. It has 
-not been merged and and not received further comments either.
+it will trigger the NUll pointer dereference issuse fixed by patch #2.
 
+Note: Patch #2 only fixes NULL pointer dereference issue, re-attaching
+a removal endpoint decoder to the auto-assembly region still fails
+with the patch, because there are other issues blocking re-attachment
+flow. One of them is that re-attachment will trigger calling
+cxl_region_attach_position() for each targets in p->targets[] again, but
+the function fails on the targets which have been attached. I am not
+sure whether re-attachment is a valid user usage, if yes, I will work on
+that later.
 
-If Dan wants me to integrate this with type2, fine, but I think it 
-should go first. The final type2 bits along sfc using this new type2 
-support should keep simple and they will be even simpler after this 
-patchset from Dan.
+Signed-off-by: Li Ming <ming.li@zohomail.com>
+---
+Li Ming (2):
+      cxl/region: Fix out-of-bounds access in cxl_cancel_auto_attach()
+      cxl/region: Fill first free targets[] slot during auto-discovery
 
+ drivers/cxl/core/region.c | 55 ++++++++++++++++++++++++++++-------------------
+ 1 file changed, 33 insertions(+), 22 deletions(-)
+---
+base-commit: a1516711b95490ad6c9f05b61500e73d4f603d28
+change-id: 20260606-fix_two_issues_introduced_by_cxl_cancel_auto_attach-6267f4fdce27
 
-After 26 versions, I do not want to send new versions as soon as there 
-exists a new possibility ... As I said, this series are promising and I 
-hope they are the final step setting the way for my type2, but I guess 
-you understand my precautions approach ...
+Best regards,
+-- 
+Li Ming <ming.li@zohomail.com>
 
-
-In any case, if Dan or you want me to integrate this with my type2 
-series, please tell me.
-
-
-Thank you,
-
-Alejandro
-
-
-
->>
->>> Just a minor comment in patch 5 and a suggestion for maybe changing the devm_cxl_probe_mem interface call.
->>>
->>>
->>> Cheers
->>>
->>>
->>>
->>>
->>>> Now, automatic region establishment on behalf of an accelerator driver
->>>> also requires automatic region teardown. The existing scheme of
->>>> triggering devm_release_action() of a cxl root device to destroy a
->>>> region is racy [1].  There is no path to coordinate multiple devres
->>>> actions, or conflicting devres actions, without using the
->>>> devm_remove_action_nowarn() workaround.
->>>>
->>>> Instead, move final region cleanup responsibility to the root decoder
->>>> teardown path (devres action cxld_unregister()). Expand the root decoder
->>>> @range_lock, renamed @regions_lock, to coordinate region creation, sysfs
->>>> manageability, and deletion. The @regions_lock also prevents regions
->>>> from disappearing mid-auto-assembly.
->>>>
->>>> Changes from the initial RFC [2]:
->>>> * tested with Dave's type2 cxl_test
->>>> * fix region remove by endpoints (Dave, Alejandro)
->>>> * fix user triggered region remove (Sungwoo)
->>>> * fix lifetime of the @attach ops (Alison, sashiko)
->>>> * hide @attach details inside the CXL core
->>>>
->>>> [1]: http://lore.kernel.org/20260427032010.916681-2-iam@sung-woo.kim
->>>> [2]: http://lore.kernel.org/20260403210050.1058650-1-dan.j.williams@intel.com
->>>>
->>>> Dan Williams (5):
->>>>     cxl/region: Block region delete during region creation
->>>>     cxl/region: Resolve region deletion races
->>>>     cxl/memdev: Pin parents for entire memdev lifetime
->>>>     cxl/memdev: Introduce cxl_class_memdev_type
->>>>     cxl/region: Introduce devm_cxl_probe_mem()
->>>>
->>>>    drivers/cxl/core/core.h      |   2 +
->>>>    drivers/cxl/cxl.h            |   8 +-
->>>>    drivers/cxl/cxlmem.h         |  27 +++--
->>>>    include/cxl/cxl.h            |   3 +
->>>>    drivers/cxl/core/memdev.c    |  20 +++-
->>>>    drivers/cxl/core/port.c      |   7 +-
->>>>    drivers/cxl/core/region.c    | 194 ++++++++++++++++++++++++++++++-----
->>>>    drivers/cxl/mem.c            |  95 +++++++++++++----
->>>>    drivers/cxl/pci.c            |   2 +-
->>>>    tools/testing/cxl/test/mem.c |   2 +-
->>>>    10 files changed, 297 insertions(+), 63 deletions(-)
->>>>
->>>>
->>>> base-commit: 5d6919055dec134de3c40167a490f33c74c12581
