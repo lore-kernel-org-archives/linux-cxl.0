@@ -1,121 +1,270 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DBC30E0EC
-	for <linux-cxl@vger.kernel.org>; Sat,  6 Jun 2026 08:11:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA0F271464
+	for <linux-cxl@vger.kernel.org>; Sat,  6 Jun 2026 23:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780733510; cv=none; b=TwtbInTArM2u8Nx3SX10i+ixnADg6FEXKlP5PI2H6f8b+Fi5krTV5ofrV049DbuMRkNH9f6mbXxPSjY5E+AMgx5g/mq/AhxotEGWPvADuijsAf55BunK0bw9Rlxkfa8Mj8MTdzGkzr+sjgkJ5TvGOgn7LdtGD4dE0DlEaOD3Xfw=
+	t=1780788967; cv=none; b=uueh2jVAqiJ70/FZP+IqxAM/OpNk2bKMiaEuY5ooqQ3V+jgidN+d0GVYg3V7oFs6wr+gdSZGR4klJYTTxX81PbpvlIGDIrQ3wkaXJ+t4/qi27PDdqMsssI4XwknRqBW/+8I9H7AnIizs3EiPN4PUs6xcHJvuc9EsLI+ycKPpmbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780733510; c=relaxed/simple;
-	bh=jG641CZFro19rTlXChEw6/BDwqZW1H+/Fylu5LHr/gs=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=tGEfI6EygzgHJXs671Go0fNsiHslD1ynqECtkbbUBVfeGa62ZXqPAdTUd9fWBVzWntmA65vP2zH3DLil1mwkrsoU//4Nab/Ds4hiYDPB6sxW3Qw7ex9W5KAeUSPlf2egdLcuz6h5F8NKMcAbh77O2KGIUrLi41M3ZVC1dKWVEYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uw/SRmX8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780788967; c=relaxed/simple;
+	bh=tRxwLXPpCSXLf6nlFXTzHKiLh6zaRumOlvuTyVJ6lGY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=U2dVPlhuTYfUZvHWha4SNChOEWzzggDu4fNzPpjk3KKIo+OKwQ+7YF3ARxl8PAm5x+4HJPOemk4aSCSWBYXlDOQsm3/OYHWQ/igLDDZWNXRAtdQaR0Fz0prHULxwUn48NcvvMmZ6sN1DqxBg7Gf0fJ9sg1qdDHcrB3PsE3qkn6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YM1zBzhB; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uw/SRmX8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B0F11F00893;
-	Sat,  6 Jun 2026 08:11:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780733509;
-	bh=Z3xoU09nf2wys86COvUvcBFmDphTFS4wGzcVkn0PoUc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Uw/SRmX86NHB5QfxlrEthcIWm9s1lITHZwzJEXNUPJBjrbmDX+MdP2U9rDezoRDbD
-	 eVR5P4xdRz+Q9kskZCKyNE1q0CXQJWnElbRDZv6gOMerc9oKcxMq6biZg/G4nxFvQY
-	 Jd61DFkAOWWNNu0Cvz62Tq/pxUm7hFB5Zh5qfEQNRRX87fbGMUeVCJGnOMMkUNHtjn
-	 uA3woV2Wg+8aRoGPacQA6awAgqLKM1eaFXD1ReC9+38W/hIQIpFE1EfNa4UPWDFzug
-	 INozGn0mG9xVamDtanwO4WqAaPM5Ev4dPqndIAlJJYBDmwCVRktohqL3t54fmv7zp2
-	 X5aqaLD/Xg96A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/2] cxl/region: Fill first free targets[] slot during
- auto-discovery
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Li Ming" <ming.li@zohomail.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260606-fix_two_issues_introduced_by_cxl_cancel_auto_attach-v1-2-5d94ca06c4e4@zohomail.com>
-References: <20260606-fix_two_issues_introduced_by_cxl_cancel_auto_attach-v1-2-5d94ca06c4e4@zohomail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 06 Jun 2026 08:11:48 +0000
-Message-Id: <20260606081149.1B0F11F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YM1zBzhB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1780788965; x=1812324965;
+  h=date:from:to:cc:subject:message-id;
+  bh=tRxwLXPpCSXLf6nlFXTzHKiLh6zaRumOlvuTyVJ6lGY=;
+  b=YM1zBzhBCqzGDZ8lgLAu8Luv4LP3sk0Xo7h7PLYyi97wWqQ9vtmlKmug
+   YV1Jp4eAhKONoqwkZ4BOGeOOSgYEv97qvs2nucew53XnakgCASByifKUs
+   ZM3VgCcTvCnOvD7xGrw/q2xT5pv5S/S1hWCPgFBwa3ukDwwTkLib1davG
+   m0ugjTGG0sCeFVJmLIXgs5IcLtV7td1ZWLsgvphkIGebE3JxNAJNzzTWv
+   4v2xp3QI4YJEVHb2vcCBW0WU+7S31NlxI6aJys0M5vUSyIsqbF/L0ZQ8X
+   f3uChPcEyMkUc571G8Fo49dCUJxr6IK9u5TIylqkJ3Nj6IzGiYsDY2us5
+   Q==;
+X-CSE-ConnectionGUID: 9+3CILaEQKeW7hZXrMQsRw==
+X-CSE-MsgGUID: 8fkjqE+eT6SRx1gYJETOQg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11809"; a="92958220"
+X-IronPort-AV: E=Sophos;i="6.24,191,1774335600"; 
+   d="scan'208";a="92958220"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2026 16:36:05 -0700
+X-CSE-ConnectionGUID: O9XraBnzQM+SSFXHMKrMKg==
+X-CSE-MsgGUID: PNzONtCtRb2DRMov/q0Zbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,191,1774335600"; 
+   d="scan'208";a="242706365"
+Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 06 Jun 2026 16:36:02 -0700
+Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wW0Ya-00000000HRq-2CTT;
+	Sat, 06 Jun 2026 23:36:00 +0000
+Date: Sun, 07 Jun 2026 07:35:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:next] BUILD SUCCESS
+ a1516711b95490ad6c9f05b61500e73d4f603d28
+Message-ID: <202606070757.fmSpklTy-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
+branch HEAD: a1516711b95490ad6c9f05b61500e73d4f603d28  Merge branch 'for-7.2/cxl-pci-fixes' into cxl-for-next
 
-Pre-existing issues:
-- [High] Loops iterating over the `p->targets` array up to `p->nr_targets` =
-unconditionally dereference elements, leading to NULL pointer dereferences =
-because the array can be sparse.
+elapsed time: 2901m
+
+configs tested: 191
+configs skipped: 4
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-15.2.0
+alpha                            allyesconfig    gcc-15.2.0
+alpha                               defconfig    gcc-16.1.0
+arc                              allmodconfig    clang-17
+arc                               allnoconfig    gcc-15.2.0
+arc                                 defconfig    gcc-16.1.0
+arc                   randconfig-001-20260606    clang-23
+arc                   randconfig-002-20260606    clang-23
+arm                               allnoconfig    gcc-15.2.0
+arm                              allyesconfig    clang-17
+arm                                 defconfig    gcc-16.1.0
+arm                   randconfig-001-20260606    clang-23
+arm                   randconfig-002-20260606    clang-23
+arm                   randconfig-003-20260606    clang-23
+arm                   randconfig-004-20260606    clang-23
+arm64                             allnoconfig    gcc-15.2.0
+arm64                               defconfig    gcc-16.1.0
+arm64                          randconfig-001    clang-23
+arm64                 randconfig-001-20260606    clang-23
+arm64                          randconfig-002    clang-23
+arm64                 randconfig-002-20260606    clang-23
+arm64                          randconfig-003    clang-23
+arm64                 randconfig-003-20260606    clang-23
+arm64                          randconfig-004    clang-23
+arm64                 randconfig-004-20260606    clang-23
+csky                             allmodconfig    gcc-15.2.0
+csky                              allnoconfig    gcc-15.2.0
+csky                                defconfig    gcc-16.1.0
+csky                           randconfig-001    clang-23
+csky                  randconfig-001-20260606    clang-23
+csky                           randconfig-002    clang-23
+csky                  randconfig-002-20260606    clang-23
+hexagon                          allmodconfig    gcc-15.2.0
+hexagon                           allnoconfig    gcc-15.2.0
+hexagon                             defconfig    gcc-16.1.0
+hexagon                        randconfig-001    gcc-11.5.0
+hexagon               randconfig-001-20260606    gcc-11.5.0
+hexagon                        randconfig-002    gcc-11.5.0
+hexagon               randconfig-002-20260606    gcc-11.5.0
+i386                             allmodconfig    clang-20
+i386                              allnoconfig    gcc-15.2.0
+i386                             allyesconfig    clang-20
+i386        buildonly-randconfig-001-20260606    gcc-13
+i386        buildonly-randconfig-002-20260606    gcc-13
+i386        buildonly-randconfig-003-20260606    gcc-13
+i386        buildonly-randconfig-004-20260606    gcc-13
+i386        buildonly-randconfig-005-20260606    gcc-13
+i386        buildonly-randconfig-006-20260606    gcc-13
+i386                                defconfig    gcc-16.1.0
+i386                  randconfig-001-20260606    clang-20
+i386                  randconfig-002-20260606    clang-20
+i386                  randconfig-003-20260606    clang-20
+i386                  randconfig-004-20260606    clang-20
+i386                  randconfig-005-20260606    clang-20
+i386                  randconfig-006-20260606    clang-20
+i386                  randconfig-007-20260606    clang-20
+i386                           randconfig-011    clang-20
+i386                  randconfig-011-20260606    clang-20
+i386                           randconfig-012    clang-20
+i386                  randconfig-012-20260606    clang-20
+i386                           randconfig-013    clang-20
+i386                  randconfig-013-20260606    clang-20
+i386                           randconfig-014    clang-20
+i386                  randconfig-014-20260606    clang-20
+i386                           randconfig-015    clang-20
+i386                  randconfig-015-20260606    clang-20
+i386                           randconfig-016    clang-20
+i386                  randconfig-016-20260606    clang-20
+i386                           randconfig-017    clang-20
+i386                  randconfig-017-20260606    clang-20
+loongarch                        allmodconfig    clang-23
+loongarch                         allnoconfig    gcc-15.2.0
+loongarch                           defconfig    clang-23
+loongarch                      randconfig-001    gcc-11.5.0
+loongarch             randconfig-001-20260606    gcc-11.5.0
+loongarch                      randconfig-002    gcc-11.5.0
+loongarch             randconfig-002-20260606    gcc-11.5.0
+m68k                             allmodconfig    gcc-15.2.0
+m68k                              allnoconfig    gcc-15.2.0
+m68k                             allyesconfig    clang-17
+m68k                                defconfig    clang-23
+microblaze                        allnoconfig    gcc-15.2.0
+microblaze                       allyesconfig    gcc-15.2.0
+microblaze                          defconfig    clang-23
+mips                             allmodconfig    gcc-15.2.0
+mips                              allnoconfig    gcc-15.2.0
+mips                             allyesconfig    gcc-15.2.0
+mips                      malta_kvm_defconfig    gcc-16.1.0
+nios2                            allmodconfig    clang-23
+nios2                             allnoconfig    clang-17
+nios2                               defconfig    clang-23
+nios2                          randconfig-001    gcc-11.5.0
+nios2                 randconfig-001-20260606    gcc-11.5.0
+nios2                          randconfig-002    gcc-11.5.0
+nios2                 randconfig-002-20260606    gcc-11.5.0
+openrisc                         allmodconfig    clang-23
+openrisc                          allnoconfig    clang-17
+openrisc                            defconfig    gcc-16.1.0
+parisc                           allmodconfig    gcc-15.2.0
+parisc                            allnoconfig    clang-17
+parisc                           allyesconfig    clang-19
+parisc                              defconfig    gcc-16.1.0
+parisc                randconfig-001-20260606    gcc-8.5.0
+parisc                randconfig-002-20260606    gcc-8.5.0
+parisc64                            defconfig    clang-23
+powerpc                          allmodconfig    gcc-15.2.0
+powerpc                           allnoconfig    clang-17
+powerpc               randconfig-001-20260606    gcc-8.5.0
+powerpc               randconfig-002-20260606    gcc-8.5.0
+powerpc64             randconfig-001-20260606    gcc-8.5.0
+powerpc64             randconfig-002-20260606    gcc-8.5.0
+riscv                            allmodconfig    clang-23
+riscv                             allnoconfig    clang-17
+riscv                            allyesconfig    clang-17
+riscv                               defconfig    gcc-16.1.0
+riscv                          randconfig-001    gcc-8.5.0
+riscv                 randconfig-001-20260606    gcc-8.5.0
+riscv                          randconfig-002    gcc-8.5.0
+riscv                 randconfig-002-20260606    gcc-8.5.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-17
+s390                             allyesconfig    gcc-15.2.0
+s390                                defconfig    gcc-16.1.0
+s390                           randconfig-001    gcc-8.5.0
+s390                  randconfig-001-20260606    gcc-8.5.0
+s390                           randconfig-002    gcc-8.5.0
+s390                  randconfig-002-20260606    gcc-8.5.0
+sh                               allmodconfig    gcc-15.2.0
+sh                                allnoconfig    clang-17
+sh                               allyesconfig    clang-19
+sh                                  defconfig    gcc-14
+sh                             randconfig-001    gcc-8.5.0
+sh                    randconfig-001-20260606    gcc-8.5.0
+sh                             randconfig-002    gcc-8.5.0
+sh                    randconfig-002-20260606    gcc-8.5.0
+sparc                             allnoconfig    clang-17
+sparc                               defconfig    gcc-16.1.0
+sparc                 randconfig-001-20260606    gcc-11.5.0
+sparc                 randconfig-002-20260606    gcc-11.5.0
+sparc64                          allmodconfig    clang-23
+sparc64                             defconfig    gcc-14
+sparc64               randconfig-001-20260606    gcc-11.5.0
+sparc64               randconfig-002-20260606    gcc-11.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-17
+um                               allyesconfig    gcc-15.2.0
+um                                  defconfig    gcc-14
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20260606    gcc-11.5.0
+um                    randconfig-002-20260606    gcc-11.5.0
+um                           x86_64_defconfig    gcc-14
+x86_64                           allmodconfig    clang-20
+x86_64                            allnoconfig    clang-17
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20260606    gcc-14
+x86_64      buildonly-randconfig-002-20260606    gcc-14
+x86_64      buildonly-randconfig-003-20260606    gcc-14
+x86_64      buildonly-randconfig-004-20260606    gcc-14
+x86_64      buildonly-randconfig-005-20260606    gcc-14
+x86_64      buildonly-randconfig-006-20260606    gcc-14
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-22
+x86_64                randconfig-001-20260606    gcc-14
+x86_64                randconfig-002-20260606    gcc-14
+x86_64                randconfig-003-20260606    gcc-14
+x86_64                randconfig-004-20260606    gcc-14
+x86_64                randconfig-005-20260606    gcc-14
+x86_64                randconfig-006-20260606    gcc-14
+x86_64                randconfig-011-20260606    gcc-14
+x86_64                randconfig-012-20260606    gcc-14
+x86_64                randconfig-013-20260606    gcc-14
+x86_64                randconfig-014-20260606    gcc-14
+x86_64                randconfig-015-20260606    gcc-14
+x86_64                randconfig-016-20260606    gcc-14
+x86_64                randconfig-071-20260607    clang-22
+x86_64                randconfig-072-20260607    clang-22
+x86_64                randconfig-073-20260607    clang-22
+x86_64                randconfig-074-20260607    clang-22
+x86_64                randconfig-075-20260607    clang-22
+x86_64                randconfig-076-20260607    clang-22
+x86_64                               rhel-9.4    clang-22
+x86_64                           rhel-9.4-bpf    gcc-14
+x86_64                          rhel-9.4-func    clang-22
+x86_64                    rhel-9.4-kselftests    clang-22
+x86_64                         rhel-9.4-kunit    gcc-14
+x86_64                           rhel-9.4-ltp    gcc-14
+x86_64                          rhel-9.4-rust    clang-20
+xtensa                            allnoconfig    clang-17
+xtensa                           allyesconfig    clang-23
+xtensa                randconfig-001-20260606    gcc-11.5.0
+xtensa                randconfig-002-20260606    gcc-11.5.0
+
 --
-
-commit bf78125f1b0b7a811b9b200d37ed57cc96619a00
-Author: Li Ming <ming.li@zohomail.com>
-
-cxl/region: Fill first free targets[] slot during auto-discovery
-
-This commit adjusts the cxl_region_attach_auto logic to find the first free
-target slot for endpoint decoder attachment, rather than appending to the t=
-ail.
-This ensures NULL holes in the target array are filled to avoid accessing an
-endpoint decoder via a NULL pointer and miscounting valid endpoint decoders.
-
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index c4335ebf19f7f..532dac77bd003 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1848,8 +1848,21 @@ static int cxl_region_attach_auto(struct cxl_regio=
-n *cxlr,
->  	 * this means that userspace can view devices in the wrong position
->  	 * before the region activates, and must be careful to understand when
->  	 * it might be racing region autodiscovery.
-> +	 *
-> +	 * The endpoint decoder will be recorded into the first free slot of
-> +	 * the target array.
->  	 */
-> -	pos =3D p->nr_targets;
-> +	for (pos =3D 0; pos < p->interleave_ways; pos++) {
-> +		if (!p->targets[pos])
-> +			break;
-> +	}
-> +
-> +	if (pos =3D=3D p->interleave_ways) {
-> +		dev_err(&cxlr->dev, "%s: unable to find a free target slot\n",
-> +			dev_name(&cxled->cxld.dev));
-> +		return -ENXIO;
-> +	}
-> +
->  	p->targets[pos] =3D cxled;
-
-[Severity: High]
-This is a pre-existing issue, but since __cxl_decoder_detach() can leave
-sparse holes in p->targets without compacting the array, are the loops
-that iterate up to p->nr_targets still susceptible to NULL pointer
-dereferences?
-
-For instance, in drivers/cxl/core/region.c:cxl_dpa_to_hpa():
-
-    for (int i =3D 0; i < p->nr_targets; i++) {
-        if (cxlmd =3D=3D cxled_to_memdev(p->targets[i])) {
-
-If there is a hole at an index less than p->nr_targets, wouldn't
-cxled_to_memdev() dereference a NULL pointer?
-
-Similar unprotected iterations seem to exist in
-cxl_scrub_get_attrbs_region(), unaligned_region_offset_to_dpa_result(),
-and region_offset_to_dpa_result().
-
-Does the array need to be compacted upon detach, or should these loops be
-updated to check for NULL pointers before dereferencing p->targets[i]?
-
->  	cxled->pos =3D pos;
->  	cxled->state =3D CXL_DECODER_STATE_AUTO_STAGED;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260606-fix_two_is=
-sues_introduced_by_cxl_cancel_auto_attach-v1-0-5d94ca06c4e4@zohomail.com?pa=
-rt=3D2
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
