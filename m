@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40332224D6
-	for <linux-cxl@vger.kernel.org>; Sun,  7 Jun 2026 19:45:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A611A262D
+	for <linux-cxl@vger.kernel.org>; Sun,  7 Jun 2026 19:49:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780861555; cv=none; b=VlZXEXyX7fWtdgd1E+1fIrQIrItVXOe2QZA+gizMWm5/rdW2qrf/mkpbavJ6hnk9Xqa+S0xWbSNMOM+cRjSz+k5O1XjxUfq1oITmFJ9516EDRT4fscqPi5Ctc7jFYcrN1rTL3k3YGGun85RUp26tsrlQcJw1QJrR4lupw7+dsUM=
+	t=1780861742; cv=none; b=k0jATW7MN8rifDGYt2K/gABcaerp4DBxjk9vUc6swbZHHINpP5M5cpniu3SZjTB90ki1sETdhVydRP6+8tCxVzFCWE+dNkgI+9ihAfAYGLzgZ+V9HO0dN3BcxALjzNFjK4obbewseUlEmlhDpVOaAJOfWEKQuxMlKogOpNOjWAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780861555; c=relaxed/simple;
-	bh=+jzhfDFaPAEzYqHVxSZzoahMvLDkggXKfPbretKhEi0=;
+	s=arc-20240116; t=1780861742; c=relaxed/simple;
+	bh=Amm7tx3+jjW0vP09GnfCPt3oQle2q22/FWBmAsz+G84=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=PJUJnvYdYGqQMMQrpGTCx8tcMAinSKb0CW3/8coTjHK6OkcXSI6LNOUgtYt8ts/QowyrK3q0mO8HilgKuyqWx6il6jUBJvg5spSs0fZSAHxeyhWPj8ldUTP4LCWHoHPWgxWIXsA7JWjgIoLlzg8UGYYBgtDrK2es7O5kBHxaXLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZU2JKDBH; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=L3S6t2f/RSU/h8G07Xjz6EwNqPb/ubeiITvnCVGAB0VQoX/sou3cJVMy60A3xLf2p8S9mPKIshkPmFEYbZwoCScLUCttspBnFXtgdkf7gYAzrHhGebP/KJIX4bAUUdKVhFtrshenrW9SVcaf0wbEWy2vbe+4NO8ZIvX7thd6bIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jXxpM/6F; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZU2JKDBH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C62291F00893;
-	Sun,  7 Jun 2026 19:45:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jXxpM/6F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC061F00893;
+	Sun,  7 Jun 2026 19:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780861554;
-	bh=rz2NOxto2ywS3m87homLrb2MoW6x2qpycWHVVNXWrCY=;
+	s=k20260515; t=1780861741;
+	bh=RhaMdjBl5RbS2GJVJPVVm7ukktjmxK/ayYo5HtfnFQE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ZU2JKDBH/u/mdnrwIJePimoLzLUctLenpEtwgUYofXZeahWm0+l/upRNyj0EulKU6
-	 pmXB3AxBObEs7HaPZnuk/Ql9s6ulALP9kHFXJ/gEDm1yJxc2fOYc5/a3muabdK5qxk
-	 Bf8E0jBnLrckhQQf39VfeZ3+jTWQ7GJBjkX0OItybz9+iyoGLxn/7rFf8YtuGdUydJ
-	 NcC2EA66d/pQ4xtmYUd3aYEgFko+uyexOCAlNzSwVNnAfz/QIFGDBCmagnZoyQHtai
-	 MobQZOefTRguA+u3ukrYZZD3RLTu8sxM0Yo2Rgaig9AUOcZJOA/PxmWqgaOO4uLNZ6
-	 0FVjsS9BC/f6Q==
+	b=jXxpM/6Fh9spcxi6mYvF4a3cAFfjXUw1qK8EBtiaDqdbvPip12agCHeZDDopZczhS
+	 61eBarVbgp8ct5nnrzyltvzUV5U2CR2cQmztB2iATI864hmT1XzfMYM94UfC5Wnun+
+	 gdUduL2xFTfPKLDL+B4VIDbd2Ne29hGdlAx/IPBICr+8Jh6frv8bxlJ8J3U4spJAef
+	 becZ7HNe8bdFgH53aM+dgYM91L6VGkDNDtmMGk7fnfI3OS+YoX5RQLo99L3MHuIzDa
+	 sWvYlMbYg/oxjzQZPLGLH9Lr/cveMV/BzFeq0TtZu2HvCPfUltPU0ItZ9GgSHRohEU
+	 kiEzat7wQF81A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V4 1/9] dax: fix misleading comment about share/index
- union in dax_folio_reset_order()
+Subject: Re: [PATCH V4 2/9] dax/fsdev: fix multi-range offset in
+ memory_failure handler
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "John Groves" <john@jagalactic.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <0100019ea3932c9b-91164474-4e3f-48ee-844a-be310f330793-000000@email.amazonses.com>
-References: <0100019ea3932c9b-91164474-4e3f-48ee-844a-be310f330793-000000@email.amazonses.com>
+In-Reply-To: <0100019ea3934be1-ce7c2c13-b9fd-40b2-9284-14bc42d5cb08-000000@email.amazonses.com>
+References: <0100019ea3934be1-ce7c2c13-b9fd-40b2-9284-14bc42d5cb08-000000@email.amazonses.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 07 Jun 2026 19:45:53 +0000
-Message-Id: <20260607194553.C62291F00893@smtp.kernel.org>
+Date: Sun, 07 Jun 2026 19:49:00 +0000
+Message-Id: <20260607194900.CAC061F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -48,70 +48,68 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Incorrect PFN advancement in `fsdev_clear_folio_state()` when star=
-ting from a tail page of a stale compound folio.
+- [High] Lockless iteration over the dynamically reallocated `dev_dax->rang=
+es` array can cause a Use-After-Free or out-of-bounds access.
 --
 
-commit eb3e25245bdf433dc92d71266558b877ef6655c1
+commit f367744bc128642b975efbceb84c1bfc7d8fa44a
 Author: John Groves <John@Groves.net>
-dax: fix misleading comment about share/index union in dax_folio_reset_orde=
-r()
 
-This commit updates a misleading comment in dax_folio_reset_order() to
-accurately describe the aliasing of folio->share and folio->index in the
-union. It clarifies that the assignment safely clears whichever interpretat=
-ion
-is active, as both fields should be zeroed when the folio is released.
+dax/fsdev: fix multi-range offset in memory_failure handler
 
-> diff --git a/fs/dax.c b/fs/dax.c
-> index 6d175cd47a99b..df19c9317d10e 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -392,12 +392,12 @@ int dax_folio_reset_order(struct folio *folio)
->  	int order =3D folio_order(folio);
-> =20
->  	/*
-> -	 * DAX maintains the invariant that folio->share !=3D 0 only when
-> -	 * folio->mapping =3D=3D NULL (enforced by dax_folio_make_shared()).
-> -	 * Equivalently: folio->mapping !=3D NULL implies folio->share =3D=3D 0.
-> -	 * Callers ensure share has been decremented to zero before
-> -	 * calling here, so unconditionally clearing both fields is
-> -	 * correct.
-> +	 * Clear the mapping and the index/share union word. folio->share
-> +	 * and folio->index occupy the same union in struct folio. For
-> +	 * non-shared folios (mapping !=3D NULL), the union holds folio->index
-> +	 * (file page offset); for shared folios (mapping =3D=3D NULL), it holds
-> +	 * folio->share (reference count). Either way, we are releasing the
-> +	 * folio and both fields should be zeroed.
->  	 */
->  	folio->mapping =3D NULL;
+This commit fixes the memory failure offset calculation for multi-range
+devices. It introduces fsdev_pfn_to_offset to walk the range list and
+compute the correct device-linear byte offset instead of relying on the
+start of the first range.
+
+> diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
+> index 188b2526bee45..f315533b299e9 100644
+> --- a/drivers/dax/fsdev.c
+> +++ b/drivers/dax/fsdev.c
+[ ... ]
+> @@ -135,11 +135,26 @@ static void fsdev_clear_ops(void *data)
+>   * The core mm code in free_zone_device_folio() handles the wake_up_var()
+>   * directly for this memory type.
+>   */
+> +static u64 fsdev_pfn_to_offset(struct dev_dax *dev_dax, unsigned long pf=
+n)
+> +{
+> +	phys_addr_t phys =3D PFN_PHYS(pfn);
+> +	u64 offset =3D 0;
+> +
+> +	for (int i =3D 0; i < dev_dax->nr_range; i++) {
+> +		struct range *range =3D &dev_dax->ranges[i].range;
 
 [Severity: High]
-This isn't a bug introduced by this patch, but looking at how callers use
-dax_folio_reset_order():
+This is a pre-existing issue, but does lockless iteration over
+dev_dax->ranges expose us to a use-after-free here?
 
-drivers/dax/fsdev.c:fsdev_clear_folio_state() {
-...
-		while (pfn < end_pfn) {
-			struct folio *folio =3D pfn_folio(pfn);
-			int order =3D dax_folio_reset_order(folio);
+If a privileged user writes to the sysfs mapping attribute concurrently,
+it can trigger an array reallocation:
 
-			pfn +=3D 1UL << order;
-		}
-...
-}
+mapping_store()
+  alloc_dev_dax_range()
+    krealloc()
 
-Does this loop incorrectly advance the pfn if the range start falls within a
-previously initialized compound page (a tail page)?
+Since this iteration in fsdev_pfn_to_offset() does not hold a synchronizati=
+on
+lock like dax_dev_rwsem, a concurrent krealloc() could free the array while
+it is being walked during a memory failure event. The previous code
+locklessly accessed the first index, but the new loop extends the window
+where this could occur.
 
-Since pfn_folio() returns the head folio, advancing by 1UL << order from the
-current pfn might skip over the beginning of the next contiguous memory
-region. This could leave stale compound metadata on those skipped pages.
+Would it be safer to iterate over the immutable snapshot stored in
+pgmap->ranges instead, since that is populated during probe and passed into
+the memory failure handler?
 
-Should the pfn advancement account for the page's index within the folio?
-
->  	folio->share =3D 0;
+> +
+> +		if (phys >=3D range->start && phys <=3D range->end)
+> +			return offset + (phys - range->start);
+> +		offset +=3D range_len(range);
+> +	}
+> +	return -1ULL;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0100019ea3929225-a0=
-f8e6f7-30ae-4f8e-ae6f-19129666c4c3-000000@email.amazonses.com?part=3D1
+f8e6f7-30ae-4f8e-ae6f-19129666c4c3-000000@email.amazonses.com?part=3D2
