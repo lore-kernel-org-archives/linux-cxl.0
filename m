@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FB24071CA
-	for <linux-cxl@vger.kernel.org>; Sun,  7 Jun 2026 19:44:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8AB4071CA
+	for <linux-cxl@vger.kernel.org>; Sun,  7 Jun 2026 19:44:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780861488; cv=none; b=lpqpODCMTwa3rCh9BxACEUVsIfn7cIrV+zb4jsTEkzxU9yPBIoRWr1IeWT0K8OkOnLEQm6SPqapK4h4jYO4jR4EOtT/PvFPrUWdQa3SUN0UVLxLHXNDcvfGb24YFEk6NTKFjSNcxsrOclnU2k8kpDIl1u4e7I6Hu1mGtBEynVtM=
+	t=1780861494; cv=none; b=QdYmukI63nGSqXgiLbvc6HWC/OII0EslKMTWXPXY0MJ2JmDhAlTB50sZ1KZ7WwiUp0K1rHyvJ4y74V/ginMQMMqiFYrObd53ObsHyf7CWlQybVJXdsHpIBA+7HsuBp8IaI2prF+rOQT68si70gZ3reTedcWqx0kg/L4oqOZOSOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780861488; c=relaxed/simple;
-	bh=a6rn8TCAXwYCP0Oec1HtLn8T8oUwVOgURrgNZcNjqZI=;
+	s=arc-20240116; t=1780861494; c=relaxed/simple;
+	bh=Fptr++djseQYnfZQr0tTyZ5BTSlmZ6Aw/M2wHj7s+cQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=gZrN2oP0hfSdwx4g5t7oK/xiJalKDKEhgYBwK+TsspShtZ9MbdxbdwaIiPj8pc63e+IYdAfU5bN5nJHzykgVFYQHX3NE8GFqARAt6nLbMNbukPRUb3dk5GowAyRs0BTBv2eZthQs2lZBiNKPoFAXd4/5wUqP+Ccm+PFoAJ5iKbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IAGCyv+q; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=gn70bv0vayrvpwbjEbBTnQdTriujnUaG7p7MkCSSqIPOIaIvvgHiEHzweJWxXNM6+reGhf+kBdrvWFq2fBX74sBAhRsdBQhwobxW0HTY+38cVahSqQeJMsf0OHMCW2Is9bVw7UE7v7ThPg6tbPgCNqKFj5K8tLVMgt1dnD2tECE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YhCcpYPq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IAGCyv+q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 134E41F00893;
-	Sun,  7 Jun 2026 19:44:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YhCcpYPq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B29941F00893;
+	Sun,  7 Jun 2026 19:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780861487;
-	bh=1cY08D5M3TMn7sNd1wUrQTJxI4nF8UQlGOR5QLQpYq8=;
+	s=k20260515; t=1780861492;
+	bh=GMCN4eAmAN3SIy2TBnCUxDTDklx34cJfxNFhEO9K3vw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=IAGCyv+qRKjRb+vfp4Otm+t+hph2R9se+Zgem8JA5GJtyvlkW60G4+2xlHFoes+s1
-	 TkrkxD0P8EDgP7PsyFqs/N/MkoP1AizlqfmLVo+7O13yoVAYc1rUvQaOFOMl+opKfx
-	 cl+AJDYQ6sjuhE1fvJOgGGLV/Xs4qLHnohBRO+ZN2HHYH9xDftBQZfcPIijiNDHbwD
-	 AT4YXtswadwd0oMf9DtnnOF/6FnEJoozvVnoFpKXvf6l2WIJyDUrmltZnD+1QUkEo/
-	 APEDntSx07Eo+9SdBukv20lWB6Cc9qbNaMXO8vCnYmj/4/UBJr+/wNitWeAU8vzyRV
-	 aTyMlPkzvCEhA==
+	b=YhCcpYPq+iP4mco5iKV3XgbwCeyXPLGHLzkIw0P6wKLVZRlFlS4foKr9v8mbWIScF
+	 tdTXR5/0pOcmwS0APOlXTHkwtHOletXcc19V7brch8wr4Bk35l2c/C7Uq8FJL6PChs
+	 7R9TTsUhl7QSRT14D6TOcqoe0Bnurml91AsqmTxPb9WiLjvO3eMgMW2rgYuVN/OPd9
+	 eO25LW1iZqWxKMA+yOfbYiVQdjXyD1gUs/LoNn9XD2GK1P7KitsHxM4ojbknmUH0vS
+	 i2PxHFVD6tlnkabueQO9C/vKiSYElp2MyCar3eINgfdow0D2bHpKlEBzcGHZxMcrO3
+	 oFj8jnNSdjgRA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V4 4/9] dax/fsdev: don't leave a dangling dev_dax->pgmap
- on probe failure
+Subject: Re: [PATCH V4 5/9] dax/fsdev: use __va(phys) for kaddr in
+ direct_access
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "John Groves" <john@jagalactic.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <0100019ea3939aab-4a2fe020-b29c-4648-ad01-08b091ef9627-000000@email.amazonses.com>
-References: <0100019ea3939aab-4a2fe020-b29c-4648-ad01-08b091ef9627-000000@email.amazonses.com>
+In-Reply-To: <0100019ea393c83d-bf39998e-bd40-4c7b-8f84-a60c26d2efa6-000000@email.amazonses.com>
+References: <0100019ea393c83d-bf39998e-bd40-4c7b-8f84-a60c26d2efa6-000000@email.amazonses.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 07 Jun 2026 19:44:46 +0000
-Message-Id: <20260607194447.134E41F00893@smtp.kernel.org>
+Date: Sun, 07 Jun 2026 19:44:52 +0000
+Message-Id: <20260607194452.B29941F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -48,65 +48,52 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] The identical dangling pointer bug that causes permanent probe fai=
-lure and was fixed in `fsdev.c` still exists in `dev_dax_probe` within `dri=
-vers/dax/device.c`.
+- [High] `__fsdev_dax_direct_access()` returns `-EFAULT` instead of truncat=
+ing the returned size when a request crosses a multi-range physical boundar=
+y.
 --
 
-commit 4bfae7ab5cd902255b5838eb3c590fffc93926ef
+commit 25e7e6c7d5f413efd9eb57096b8df2c8803d235a
 Author: John Groves <John@Groves.net>
 
-dax/fsdev: don't leave a dangling dev_dax->pgmap on probe failure
+dax/fsdev: use __va(phys) for kaddr in direct_access
 
-This commit fixes a bug in fsdev.c where dev_dax->pgmap was left dangling
-if a probe failed after allocation. It defers assigning dev_dax->pgmap
-until the probe can no longer fail.
+This commit updates __fsdev_dax_direct_access() to use __va(phys) for the
+kaddr return, fixing an issue where multi-range devices with physical gaps
+resulted in an incorrect kernel virtual address. It also removes the now
+unused virt_addr field from struct dev_dax.
 
 > diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
-> index dbd722ed7ab05..0fd5e1293d725 100644
+> index 0fd5e1293d725..af9ef80c05c6d 100644
 > --- a/drivers/dax/fsdev.c
 > +++ b/drivers/dax/fsdev.c
-[ ... ]
-> @@ -339,7 +354,13 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
->  		return rc;
+> @@ -51,9 +51,7 @@ static long __fsdev_dax_direct_access(struct dax_device=
+ *dax_dev, pgoff_t pgoff,
+>  	struct dev_dax *dev_dax =3D dax_get_private(dax_dev);
+>  	size_t size =3D nr_pages << PAGE_SHIFT;
+>  	size_t offset =3D pgoff << PAGE_SHIFT;
+> -	void *virt_addr =3D dev_dax->virt_addr + offset;
+>  	phys_addr_t phys;
+> -	unsigned long local_pfn;
 > =20
->  	run_dax(dax_dev);
-> -	return devm_add_action_or_reset(dev, fsdev_kill, dev_dax);
-> +	rc =3D devm_add_action_or_reset(dev, fsdev_kill, dev_dax);
-> +	if (rc)
-> +		return rc;
-> +
-> +	/* Probe can no longer fail; expose the pgmap via dev_dax */
-> +	dev_dax->pgmap =3D pgmap;
-> +	return 0;
->  }
+>  	phys =3D dax_pgoff_to_phys(dev_dax, pgoff, size);
+>  	if (phys =3D=3D -1) {
 
 [Severity: High]
-This is a pre-existing issue, but does the same dangling pointer bug still
-exist in dev_dax_probe() in drivers/dax/device.c?
+This isn't a bug introduced by this patch, but it appears to be a pre-exist=
+ing
+issue. If a direct_access request spans across a physical gap into the next
+DAX range, dax_pgoff_to_phys() returns -1 because it checks if the entire
+requested size fits within a single contiguous physical range.
 
-The identical pattern of assigning dev_dax->pgmap immediately after the
-devm_kzalloc() allocation appears to be present there:
+This causes __fsdev_dax_direct_access() to fail the entire operation with
+-EFAULT. Should it instead truncate the returned size to the boundary of the
+available contiguous length, allowing the caller to safely issue subsequent
+requests for the remainder of the pages? Failing completely with -EFAULT
+might spuriously break valid I/O accesses on multi-range DAX devices.
 
-drivers/dax/device.c:dev_dax_probe() {
-        ...
-        pgmap =3D devm_kzalloc(dev, ...);
-        if (!pgmap)
-                return -ENOMEM;
-       =20
-        dev_dax->pgmap =3D pgmap;
-        ...
-}
-
-If a later step in the probe fails (such as devm_request_mem_region() or
-devm_memremap_pages()), the devres framework automatically frees the
-allocated pgmap. Since the cleanup action is only registered at the end of
-a successful probe, the error paths leave the pointer dangling.
-
-Would subsequent attempts to probe the driver then hit the check for
-dev_dax->pgmap and erroneously fail with -EINVAL, permanently preventing
-successful device binding? Does device.c need a similar fix?
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0100019ea3929225-a0=
-f8e6f7-30ae-4f8e-ae6f-19129666c4c3-000000@email.amazonses.com?part=3D4
+f8e6f7-30ae-4f8e-ae6f-19129666c4c3-000000@email.amazonses.com?part=3D5
