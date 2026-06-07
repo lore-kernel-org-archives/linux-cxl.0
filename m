@@ -1,115 +1,149 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A611A262D
-	for <linux-cxl@vger.kernel.org>; Sun,  7 Jun 2026 19:49:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039CC27FD6D
+	for <linux-cxl@vger.kernel.org>; Sun,  7 Jun 2026 19:49:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780861742; cv=none; b=k0jATW7MN8rifDGYt2K/gABcaerp4DBxjk9vUc6swbZHHINpP5M5cpniu3SZjTB90ki1sETdhVydRP6+8tCxVzFCWE+dNkgI+9ihAfAYGLzgZ+V9HO0dN3BcxALjzNFjK4obbewseUlEmlhDpVOaAJOfWEKQuxMlKogOpNOjWAg=
+	t=1780861748; cv=none; b=JJV2xsXP4QqldwP9EH33gpmaaZOL095AzJj0OxSPU4x4nbjtBXnsrboRi4n5A4vYXnecRJn1lwmWtpN+0kjhBXDPHgq9APVQJnHOflTWqJ5Nazojp+Mxj8wiEy9cbzxVmbhEE2wMGkt16fmLODJ7plFkii4y4M53I3yfxkOGy+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780861742; c=relaxed/simple;
-	bh=Amm7tx3+jjW0vP09GnfCPt3oQle2q22/FWBmAsz+G84=;
+	s=arc-20240116; t=1780861748; c=relaxed/simple;
+	bh=aXnJRGJeDdnzP5P2W+TF+qW1p6SpEd8hjq9/AUGAA3I=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=L3S6t2f/RSU/h8G07Xjz6EwNqPb/ubeiITvnCVGAB0VQoX/sou3cJVMy60A3xLf2p8S9mPKIshkPmFEYbZwoCScLUCttspBnFXtgdkf7gYAzrHhGebP/KJIX4bAUUdKVhFtrshenrW9SVcaf0wbEWy2vbe+4NO8ZIvX7thd6bIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jXxpM/6F; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=jIk6G156neTb19pTjLwnLqSQfruOHEmu81C3pDaQNHYosoJfFjbYb+VEwZeQ/cE07cDg12YmL56YY7TwgtOiFFYKG6I3cemLML4U7tpxzKqFS5bWRRjUxYn0c2gptTK0S98J8kP7rjS3j8ngLfOsUGXe+MewJELhpY/YseBIGcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K1pu9zvK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jXxpM/6F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC061F00893;
-	Sun,  7 Jun 2026 19:49:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K1pu9zvK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 711901F00893;
+	Sun,  7 Jun 2026 19:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780861741;
-	bh=RhaMdjBl5RbS2GJVJPVVm7ukktjmxK/ayYo5HtfnFQE=;
+	s=k20260515; t=1780861746;
+	bh=m8BDB1yX8JxxgqJ84fkhYrOVIyEx9ZtIyvTKpgGpZyk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jXxpM/6Fh9spcxi6mYvF4a3cAFfjXUw1qK8EBtiaDqdbvPip12agCHeZDDopZczhS
-	 61eBarVbgp8ct5nnrzyltvzUV5U2CR2cQmztB2iATI864hmT1XzfMYM94UfC5Wnun+
-	 gdUduL2xFTfPKLDL+B4VIDbd2Ne29hGdlAx/IPBICr+8Jh6frv8bxlJ8J3U4spJAef
-	 becZ7HNe8bdFgH53aM+dgYM91L6VGkDNDtmMGk7fnfI3OS+YoX5RQLo99L3MHuIzDa
-	 sWvYlMbYg/oxjzQZPLGLH9Lr/cveMV/BzFeq0TtZu2HvCPfUltPU0ItZ9GgSHRohEU
-	 kiEzat7wQF81A==
+	b=K1pu9zvKyG+ht3rMWLNx5A/2iHKcRiji2AVCUtV4FLH1eTo+7KGG3S+FkhNDXlPke
+	 udd0HD0ShrklZk62wGnfWh8APUVg6mcicjGl4oUALnNi/7uy6A9U0EAj7emh3Bn+9K
+	 LqNBur6acmQObim93mpPK7X0h8KrHSJ4bOVvv244P+XQ38FSPPpNND+Td5maFa/nKC
+	 wShec2fWAlljGro4mIpapBT1dk/tFaMQ32Tv9FTr5lm2pzlka32vKTUkmne/SAPO/3
+	 jY7VHrp1o96dhnA9vccP3I3WpNW5rO7KHfDEdb3RRbBbjhJKnTuWyaem4IToeKs4GM
+	 1HlXLMiB2Z3Yg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V4 2/9] dax/fsdev: fix multi-range offset in
- memory_failure handler
+Subject: Re: [PATCH V4 8/9] dax: replace exported dax_dev_get() with
+ non-allocating dax_dev_find()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "John Groves" <john@jagalactic.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <0100019ea3934be1-ce7c2c13-b9fd-40b2-9284-14bc42d5cb08-000000@email.amazonses.com>
-References: <0100019ea3934be1-ce7c2c13-b9fd-40b2-9284-14bc42d5cb08-000000@email.amazonses.com>
+In-Reply-To: <0100019ea3943a9d-3724a539-97c6-46f9-a3bb-c7b9a51d3889-000000@email.amazonses.com>
+References: <0100019ea3943a9d-3724a539-97c6-46f9-a3bb-c7b9a51d3889-000000@email.amazonses.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 07 Jun 2026 19:49:00 +0000
-Message-Id: <20260607194900.CAC061F00893@smtp.kernel.org>
+Date: Sun, 07 Jun 2026 19:49:06 +0000
+Message-Id: <20260607194906.711901F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
+New issues:
+- [Medium] The patch introduces an exported symbol `dax_dev_find` but does =
+not include the claimed caller updates, resulting in zero in-tree users.
+
 Pre-existing issues:
-- [High] Lockless iteration over the dynamically reallocated `dev_dax->rang=
-es` array can cause a Use-After-Free or out-of-bounds access.
+- [High] A race condition allows `dax_dev_find()` to return a partially ini=
+tialized `dax_device` with stale or uninitialized `ops` and `private` point=
+ers, leading to a Use-After-Free or NULL pointer dereference.
 --
 
-commit f367744bc128642b975efbceb84c1bfc7d8fa44a
+commit 4db396b1477c7ac48536ccf90d47d3c4adb9e2d3
 Author: John Groves <John@Groves.net>
 
-dax/fsdev: fix multi-range offset in memory_failure handler
+dax: replace exported dax_dev_get() with non-allocating dax_dev_find()
 
-This commit fixes the memory failure offset calculation for multi-range
-devices. It introduces fsdev_pfn_to_offset to walk the range list and
-compute the correct device-linear byte offset instead of relying on the
-start of the first range.
+This commit replaces the exported dax_dev_get with a new dax_dev_find
+function that performs lookup-only semantics. It also makes dax_dev_get
+static again to prevent external callers from accidentally creating new
+unbacked DAX inodes.
 
-> diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
-> index 188b2526bee45..f315533b299e9 100644
-> --- a/drivers/dax/fsdev.c
-> +++ b/drivers/dax/fsdev.c
+> Make dax_dev_get() static again (internal to super.c for alloc_dax),
+> export dax_dev_find() instead, and update the two external callers
+> (famfs_inode.c, famfs.c). Also add the missing CONFIG_DAX=3Dn stub.
+
+[Severity: Medium]
+The commit message mentions updating external callers in famfs_inode.c
+and famfs.c, but these files are not included in the patch and do not
+exist in the upstream tree.
+
+Is it possible the updates for these files were left out of the patch,
+or are they out-of-tree? Exporting a symbol without any in-tree users
+typically goes against upstream guidelines.
+
+> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+> index 96f778dcde50b..b37ae79c084bb 100644
+> --- a/drivers/dax/super.c
+> +++ b/drivers/dax/super.c
 [ ... ]
-> @@ -135,11 +135,26 @@ static void fsdev_clear_ops(void *data)
->   * The core mm code in free_zone_device_folio() handles the wake_up_var()
->   * directly for this memory type.
->   */
-> +static u64 fsdev_pfn_to_offset(struct dev_dax *dev_dax, unsigned long pf=
-n)
+> +struct dax_device *dax_dev_find(dev_t devt)
 > +{
-> +	phys_addr_t phys =3D PFN_PHYS(pfn);
-> +	u64 offset =3D 0;
+> +	struct dax_device *dax_dev;
+> +	struct inode *inode;
+> +	int id;
 > +
-> +	for (int i =3D 0; i < dev_dax->nr_range; i++) {
-> +		struct range *range =3D &dev_dax->ranges[i].range;
+> +	inode =3D ilookup5(dax_superblock, hash_32(devt + DAXFS_MAGIC, 31),
+> +			 dax_test, &devt);
+> +	if (!inode)
+> +		return NULL;
+> +
+> +	dax_dev =3D to_dax_dev(inode);
+> +	id =3D dax_read_lock();
+> +	if (!dax_alive(dax_dev)) {
 
 [Severity: High]
-This is a pre-existing issue, but does lockless iteration over
-dev_dax->ranges expose us to a use-after-free here?
+This is a pre-existing issue, but does adding dax_dev_find expose a race
+condition where a partially initialized device can be returned to external
+callers?
 
-If a privileged user writes to the sysfs mapping attribute concurrently,
-it can trigger an array reallocation:
+When a new DAX device is created, alloc_dax calls dax_dev_get. Inside
+dax_dev_get, the new inode is unlocked and DAXDEV_ALIVE is set:
 
-mapping_store()
-  alloc_dev_dax_range()
-    krealloc()
+    if (inode_state_read_once(inode) & I_NEW) {
+        set_bit(DAXDEV_ALIVE, &dax_dev->flags);
+        ...
+        unlock_new_inode(inode);
+    }
 
-Since this iteration in fsdev_pfn_to_offset() does not hold a synchronizati=
-on
-lock like dax_dev_rwsem, a concurrent krealloc() could free the array while
-it is being walked during a memory failure event. The previous code
-locklessly accessed the first index, but the new loop extends the window
-where this could occur.
+However, alloc_dax initializes the ops and private pointers after
+dax_dev_get returns:
 
-Would it be safer to iterate over the immutable snapshot stored in
-pgmap->ranges instead, since that is populated during probe and passed into
-the memory failure handler?
+    dax_dev =3D dax_dev_get(devt);
+    if (!dax_dev)
+        goto err_dev;
 
-> +
-> +		if (phys >=3D range->start && phys <=3D range->end)
-> +			return offset + (phys - range->start);
-> +		offset +=3D range_len(range);
+    dax_dev->ops =3D ops;
+    dax_dev->private =3D private;
+
+Since dax_device is allocated via alloc_inode_sb with GFP_KERNEL (no
+__GFP_ZERO), could a concurrent call to dax_dev_find successfully look up
+the inode via ilookup5 and see DAXDEV_ALIVE set before alloc_dax sets
+the ops and private pointers?
+
+If an external caller invokes DAX operations on the returned device, could
+it dereference dangling ops or private pointers from a previous slab object
+lifecycle? Is it possible to defer unlock_new_inode or setting
+DAXDEV_ALIVE until after ops and private are fully initialized?
+
+> +		dax_read_unlock(id);
+> +		iput(inode);
+> +		return NULL;
 > +	}
-> +	return -1ULL;
+> +	dax_read_unlock(id);
+> +
+> +	return dax_dev;
 > +}
+> +EXPORT_SYMBOL_GPL(dax_dev_find);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0100019ea3929225-a0=
-f8e6f7-30ae-4f8e-ae6f-19129666c4c3-000000@email.amazonses.com?part=3D2
+f8e6f7-30ae-4f8e-ae6f-19129666c4c3-000000@email.amazonses.com?part=3D8
