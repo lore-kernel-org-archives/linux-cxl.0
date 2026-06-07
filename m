@@ -1,158 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34522EEE7E
-	for <linux-cxl@vger.kernel.org>; Sun,  7 Jun 2026 08:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C20189F20;
+	Sun,  7 Jun 2026 15:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780821042; cv=none; b=PrtTMdZGc031OVe4Sh9ArUyw2zNdwVh/B3FGoIoK/h0tUXBKmPIM8tQOnwkzgTyWkA7ArdGcqg7UYNLbyOf9Nqeavr6XT5oy6tWjTQlu6wtmQJL0QNlvtPbANk1UeNc1Q3UHmwcyYwi2EPESZO9SqKKX9wOajPn5K0CV/xH+j64=
+	t=1780846676; cv=none; b=QRlC23fPH4E5E82szRtO1KtAXXLb0DbFhX4tFjlK0/jI76jaJIPnv8nuB4btx2ZaMRotMmUswUCaqlzurg+9hE9CjLHynK2ODI/fXjkKWBjmXNbpO4QEWOcFEtEW4Ee9EXwBLN1ySnWULwE3P8JlgeVef0ODpC+eowWFXgOPmsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780821042; c=relaxed/simple;
-	bh=fIrxGLc+kX7FzTqmvwoqPkyInPYfVj4InBqpiGgGMSQ=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=BExyNSDJueeQVzJU5hoMVJHwWMvlX4Do9ypIAues+qB477N4x/hIPy5y/hFIDSZe8T0E8/T/CHsVoPffNSPDwr07pIoZF1M0Qnhyj57g87+yW9f4xUcEXIXLZj+WEpf63F8tWL5fY1TEaw1oPDZb1/OW6b1yYjLp8IH9wL0GZf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N+/pYfEd; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N+/pYfEd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70A0B1F00893;
-	Sun,  7 Jun 2026 08:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780821040;
-	bh=Ly4gp4Km9NraTvxjIxdOTVrkzBv3Z8G85MtOyihUVYk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=N+/pYfEd0NK2CSIJVEJgJvCA5RpKkn8Wp2s45lrl6sDIBciY7jM6O7/EB+Jc9hK/3
-	 dBf+6J4kNpoTHOzDHQ51jKxaIt1J5Q/vPegL/lKAwF1Pl8Q2I6q2cBWIhZR0w1HH/Q
-	 8PQEjZjbOqe1dJsOfIe+0PvtGSOdSR582p68Op0AO3vHLfNYnGvXKpgdJDJhtk0WxO
-	 aBZCp9rVEPgQtYA4adnXOP4FPbrTt32oqMjzWMEUYQqYpthYso96NC1wSgfYVVJsSx
-	 idsAVwv1XKAvV2lwQ3+jT/bWN9xE1mEfWOx7n99HNnZXd3eflANV65ANLNG9Cp02p4
-	 lnIgbeofM0TRA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 1/2] cxl/hdm: Allow zero sized HDM decoders
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Richard Cheng" <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260607081345.61954-2-icheng@nvidia.com>
-References: <20260607081345.61954-2-icheng@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 07 Jun 2026 08:30:39 +0000
-Message-Id: <20260607083040.70A0B1F00893@smtp.kernel.org>
+	s=arc-20240116; t=1780846676; c=relaxed/simple;
+	bh=I3xpqGki/jVPTkKMeUkNacqBa7plK+wPJFwglEmxa88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jkkA05CwCdYpuuqQcb17xOYlRK2g2LAagDPrI+VMhlPiauOVzXxabXyJ330MOJaQXVwefMJf0VZeEphdoGx9rieHYiPmnCaBMAEjQhTV+6vH85nsLxBpHlz8/q4BdA8fZy0Hz3WVCAxyN7/ncnBjHPzl8gvS1a1Hy2YGff4CijU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
+Received: from omf09.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 2AEDE1C2592;
+	Sun,  7 Jun 2026 15:37:46 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf09.hostedemail.com (Postfix) with ESMTPA id 780A420025;
+	Sun,  7 Jun 2026 15:37:42 +0000 (UTC)
+Date: Sun, 7 Jun 2026 10:37:41 -0500
+From: John Groves <John@groves.net>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: John Groves <john@jagalactic.com>, Dan Williams <djbw@kernel.org>, 
+	John Groves <jgroves@micron.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Alison Schofield <alison.schofield@intel.com>, 
+	Ira Weiny <iweiny@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V3 7/9] dax: fix holder_ops race in fs_put_dax()
+Message-ID: <aiWPXOoL-6mfSEOd@groves.net>
+References: <0100019e79caead2-5795328c-af48-4a93-b147-c11df7446e1a-000000@email.amazonses.com>
+ <20260530165115.6704-1-john@jagalactic.com>
+ <0100019e79cc1d9e-d39ff70d-4f1d-4a02-8b8e-e01c70272c0c-000000@email.amazonses.com>
+ <2908dc0f-5790-4801-89b8-7f53dff9e320@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2908dc0f-5790-4801-89b8-7f53dff9e320@intel.com>
+X-Stat-Signature: z6m3m34hptqmnxwks3nrj8144in4stgh
+X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: 780A420025
+X-Session-Marker: 6A6F686E4067726F7665732E6E6574
+X-Session-ID: U2FsdGVkX1+4Ju3Xb9EQCjeqwDKDhGjI3Xal/MDOaMg=
+X-HE-Tag: 1780846662-22245
+X-HE-Meta: U2FsdGVkX19zE8k8f1FytdjNS3WINRUHJys33eeNON9fdgzVh2CV+5EIQOmDp0rS8lodbee0ho4cqwrIzTqKM0bhTCEjUgE0AKRunfm+bN0YIbV/zAXPD1xVQHX9/WQ4neSInouXw1bdQfh1ToJslBtYdriVu0KxNODem/JgStYLoOcloxYPy9fffE+Eu4GlLOO2KjeG6ncHcH9fuueDqSTkuu4YisAFlw36ZFoOqLetGlnh2KG4cCbE0kle4U7e61d3QIfRAMRh3jI6fFcrUuHxDNzq4IFK+6zRpUdRHEHOqhqChOvQIliS1loVFUFUWZFa9iVUWDRK84G2F+GvCC5cswaqHy4ZyAalXO3/YHcykw2384yarXhaVI2mw9L3t0G8IkSQIg9VQBUIWoPv9Q==
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+On 26/06/01 05:03PM, Dave Jiang wrote:
+> 
+> 
+> On 5/30/26 9:51 AM, John Groves wrote:
+> > From: John Groves <John@Groves.net>
+> > 
+> > Clear holder_ops before holder_data so that a concurrent fs_dax_get()
+> > cannot have its newly installed holder_ops overwritten. cmpxchg()
+> > provides release ordering on weakly-ordered architectures, ensuring the
+> > WRITE_ONCE(holder_ops, NULL) store is visible to any CPU that observes
+> > the holder_data release.
+> > 
+> > Add WARN_ON() on the cmpxchg result to catch two API contract
+> > violations: fs_put_dax() called by a non-holder, or called twice by
+> > the same holder (double-put). Either way holder_ops has already been
+> > cleared, so WARN_ON() does not prevent the damage but makes the bug
+> > visible. (Note: "damage" is only if a non-holder causes holder_ops
+> > to be cleared)
+> > 
+> > Also add a kerneldoc comment documenting that fs_put_dax() must only
+> > be called by the current holder.
+> > 
+> > Fixes: eec38f5d86d27 ("dax: Add fs_dax_get() func to prepare dax for fs-dax usage")
+> > Signed-off-by: John Groves <john@groves.net>
+> > ---
+> >  drivers/dax/super.c | 35 ++++++++++++++++++++++++++++++++---
+> >  1 file changed, 32 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+> > index 25cf99dd9360b..4c56ac2faacdb 100644
+> > --- a/drivers/dax/super.c
+> > +++ b/drivers/dax/super.c
+> > @@ -116,11 +116,40 @@ EXPORT_SYMBOL_GPL(fs_dax_get_by_bdev);
+> >  
+> >  #if IS_ENABLED(CONFIG_FS_DAX)
+> >  
+> > +/**
+> > + * fs_put_dax() - release holder ownership of a dax_device
+> > + * @dax_dev: dax device to release (may be NULL)
+> > + * @holder: the holder pointer previously passed to fs_dax_get() or
+> > + *          fs_dax_get_by_bdev(); must match exactly, as it is used
+> > + *          in a cmpxchg to atomically release ownership
+> > + *
+> > + * Must only be called by the current holder. Clears holder_ops before
+> > + * holder_data to avoid a race where a concurrent fs_dax_get() could have
+> > + * its newly installed holder_ops overwritten.
+> > + */
+> >  void fs_put_dax(struct dax_device *dax_dev, void *holder)
+> >  {
+> > -	if (dax_dev && holder &&
+> > -	    cmpxchg(&dax_dev->holder_data, holder, NULL) == holder)
+> > -		dax_dev->holder_ops = NULL;
+> > +	if (dax_dev && holder) {
+> > +		/*
+> > +		 * Clear holder_ops before releasing holder_data. A concurrent
+> > +		 * dax_holder_notify_failure() that sees NULL ops returns
+> > +		 * -EOPNOTSUPP cleanly. A concurrent fs_dax_get() that acquires
+> > +		 * holder_data after the cmpxchg below is guaranteed to observe
+> > +		 * holder_ops=NULL first (cmpxchg provides release ordering), so
+> > +		 * its subsequent store of new ops will not be overwritten.
+> > +		 *
+> > +		 * Two cases will trigger the WARN_ON():
+> > +		 * - Caller is not the current holder; this is an API contract
+> > +		 *   violation, and the holder will no longer get callbacks
+> > +		 * - Holder calls this function twice; also a contract violation
+> > +		 *
+> > +		 * A lock would be necessary to guard against the contract
+> > +		 * violations, but we WARN_ON() instead since violating the
+> > +		 * contract is a bug
+> > +		 */
+> > +		WRITE_ONCE(dax_dev->holder_ops, NULL);
+> > +		WARN_ON(cmpxchg(&dax_dev->holder_data, holder, NULL) != holder);
+> > +	}
+> >  	put_dax(dax_dev);
+> >  }
+> >  EXPORT_SYMBOL_GPL(fs_put_dax);
+> 
+> 
+> This is what Claude Opus 4.8 said:
+> 
+>   The added WARN_ON(cmpxchg(...) != holder) fires on the supported
+>   device-removal-while-mounted path. kill_dax() (super.c:457) clears holder_data
+>   = NULL while a holder is still attached — it explicitly tests holder_data !=
+>   NULL to deliver MF_MEM_PRE_REMOVE first. For xfs on pmem:
+> 
+>   1. pmem_remove() → kill_dax() → MF_MEM_PRE_REMOVE →
+>   xfs_force_shutdown(SHUTDOWN_FORCE_UMOUNT); the handler does not call
+>   fs_put_dax. kill_dax then clears holder_data.
+>   2. Forced unmount → xfs_free_buftarg() → fs_put_dax(bt_daxdev, mp).
+>   3. cmpxchg(&holder_data, mp, NULL) returns NULL (already cleared) != mp → WARN
+>   fires, despite xfs being the legitimate holder doing a single put.
+> 
+>   The old == holder form skipped silently in this case. On panic_on_warn systems
+>   this turns a supported device removal into a panic.
+> 
+>   The commit message's claim that the WARN catches only "non-holder" or
+>   "double-put" contract violations is incomplete — it also catches the holder
+>   racing with kill_dax(), which is not a contract violation.
+> 
+> This is the suggested fix:
+>   void fs_put_dax(struct dax_device *dax_dev, void *holder)
+>   {
+>         if (dax_dev && holder) {
+>                 void *prev;
+> 
+>                 /*
+>                  * Clear holder_ops before releasing holder_data so a
+>                  * concurrent fs_dax_get() that wins holder_data observes
+>                  * holder_ops == NULL and its store is not overwritten.
+>                  */
+>                 WRITE_ONCE(dax_dev->holder_ops, NULL);
+>                 prev = cmpxchg(&dax_dev->holder_data, holder, NULL);
+> 
+>                 /*
+>                  * prev == holder: normal release.
+>                  * prev == NULL:   already released by kill_dax() when the
+>                  *                 device was removed under a live holder;
+>                  *                 not a bug.
+>                  * prev != holder (non-NULL): fs_put_dax() called by something
+>                  *                 that is not the current holder.
+>                  */
+>                 WARN_ON(prev && prev != holder);
+>         }
+>         put_dax(dax_dev);
+>   }
+> 
+> 
 
-New issues:
-- [High] Logic error in poison_by_decoder silently skips unmapped DPA poiso=
-n collection for endpoints with a zero-sized first decoder.
+Looks good - going with this approach.
 
-Pre-existing issues:
-- [High] Stack buffer over-read in init_hdm_decoder leaks kernel stack memo=
-ry to userspace.
---
+Thanks!
+John
 
-commit b5ef0cd71d8dea661d93a7fc863b0b6ecc394576
-Author: Richard Cheng <icheng@nvidia.com>
-
-cxl/hdm: Allow zero sized HDM decoders
-
-CXL r3.2 8.2.4.20.12 and 14.13.10 permit committing an HDM decoder with
-size 0. This patch allows init_hdm_decoder() to enumerate these decoders
-with their hardware LOCK state instead of aborting the port. It also
-modifies poison_by_decoder() to scan the unmapped DPA tail when a
-decoder has no DPA resource.
-
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 0c80b76a5f9b4..b61f51134551d 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-
-[ ... ]
-
-> @@ -1096,6 +1100,13 @@ static int init_hdm_decoder(struct cxl_port *port,=
- struct cxl_decoder *cxld,
->  	if (!committed)
->  		return 0;
-> =20
-> +	/*
-> +	 * A committed zero-size decoder reserves no DPA. Leave port->hdm_end
-> +	 * untouched.
-> +	 */
-> +	if (size =3D=3D 0)
-> +		return 0;
-> +
->  	dpa_size =3D div_u64_rem(size, cxld->interleave_ways, &remainder);
-
-[Severity: High]
-This is a pre-existing issue, but does the interleave ways configuration
-here allow reading out of bounds of the target_list union higher up in
-init_hdm_decoder()?
-
-drivers/cxl/core/hdm.c:init_hdm_decoder() {
-    ...
-    union {
-        u64 value;
-        unsigned char target_id[8];
-    } target_list;
-    ...
-    if (!cxled) {
-        ...
-        for (i =3D 0; i < cxld->interleave_ways; i++)
-            cxld->target_map[i] =3D target_list.target_id[i];
-        return 0;
-    }
-    ...
-}
-
-Since CXL 3.0 supports up to 16-way interleaving, if interleave_ways is
-greater than 8, will this loop read past the 8-byte target_list.target_id
-array and copy uninitialized kernel stack memory into target_map?
-
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e50dc716d4e82..a353d8e7489d3 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-
-[ ... ]
-
-> @@ -2907,38 +2907,38 @@ static int poison_by_decoder(struct device *dev, =
-void *arg)
-
-[ ... ]
-
-> -	/* Iterate until commit_end is reached */
-> -	if (cxled->cxld.id =3D=3D ctx->port->commit_end) {
->  		ctx->offset =3D cxled->dpa_res->end + 1;
->  		ctx->part =3D cxled->part;
-> -		return 1;
->  	}
-> =20
-> +	/* Iterate until commit_end is reached */
-> +	if (cxled->cxld.id =3D=3D ctx->port->commit_end)
-> +		return 1;
-
-[Severity: High]
-If this decoder is zero-sized and has no DPA resource, we skip updating
-ctx->part and return 1 here.
-
-If this is the first decoder on the device, ctx->part remains -1. Will
-this cause cxl_get_poison_unmapped() to immediately return 0 when it
-checks for part < 0:
-
-drivers/cxl/core/region.c:cxl_get_poison_unmapped() {
-    ...
-    if (ctx->part < 0)
-        return 0;
-    ...
-}
-
-Could this result in silently skipping the poison collection for the entire
-unmapped DPA space instead of scanning it as intended?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260607081345.6195=
-4-1-icheng@nvidia.com?part=3D1
