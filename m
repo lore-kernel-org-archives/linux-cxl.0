@@ -1,162 +1,272 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from bumble.maple.relay.mailchannels.net (bumble.maple.relay.mailchannels.net [23.83.214.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C853AFCE1
-	for <linux-cxl@vger.kernel.org>; Mon,  8 Jun 2026 22:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D60B37267A
+	for <linux-cxl@vger.kernel.org>; Mon,  8 Jun 2026 23:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.214.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780959251; cv=none; b=DpSlDxZ+L9OmeCg7JJm1Jg2ORhUm6XqkmLdkimG551t3QOxRj/B/riM1gs+gSygVG16RFM9RgOG4zq3RUCc4KHtP6fnPskSkXkoqQH9kw56D8CFHca83hEw3NUtKTsJARQcIQDjKOhRwp7jrMNZQTv6+lfuWR3T+an+Hj0tzI44=
+	t=1780960404; cv=none; b=nnlMr0s+qLBGPfktcGEO9mFp8J/PqrQAFdrH0HsTAtVbhPxcsKIY65OcVo2YLRG+EL9WWV9c3Yr/lUeYOHtkwd24eW/K+lrmyW+xUfrN/Zw0mKg60L/R3aaYQUAk+JGxULU77dsZL+cRavrFmSRbF80DwCAJJJffjRGlPTsyq+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780959251; c=relaxed/simple;
-	bh=OimtFzkI2Mvz0JSE6xMOICroBKjbcZpYZP3kwdei9w8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=otNddooFKV7/b8GZXMFpGnoP5yS14Bjlpij7D/uvtNRRI508aBpoFmMNQ4W28g62iQsz3fqgxXlrPib4Rah2/4l+9/Xoavan2IqE32ylTUxOsAPkPrEtdRCmTa6xuNfI4pg5ds0A0+IIw/LAcGc7I+bSlfJR0YKfXBZh0kvomPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJRhIG1T; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1780960404; c=relaxed/simple;
+	bh=FZwk0SZ7ite0RSAxUH4GY2KUn6hkE5IB827TmqQrLak=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rDzGnUeMPcylMdQ+hRTtfg/Y28uz/aEBcajKtFH7VOZY+3FpBdBaMnnB8mJ6bwlHqoyBnELeE0igydiJAnEX2oz5oPL8VbrFbFi0QNX3aRD2pVoTuxgiNdwy/eKgdy6wNDshIThFCb5wa6nio78VLUhjKh3n1iFx4Wc/ctbosN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=FV9vKU9C; arc=none smtp.client-ip=23.83.214.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJRhIG1T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 330311F00893;
-	Mon,  8 Jun 2026 22:54:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780959250;
-	bh=p2eo4tQ8unwIxyUmkJ44g/I0swuEO7Ke5h5isSTT9xE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nJRhIG1TIUXfiVb+n6Fm4gQuekwpntg/WGuCD3KSe5+ztSE26RutE58GaetpnMfMq
-	 KK0KH/bUBayalTUiZA4pQw0T6SILU6eBODfycC+5OL6tpu2c82mi3XvisIY33kkRC7
-	 nUS/iYIEN3NTxkcxDt7sqY87s+UaREhoCUxERj13FDen9qQFzq4GmK4XVPTxKDdLB+
-	 mnMoSyo5FB4NOIGRIIOt8FCYLkhw8Pgh4bjOc/XPS94MHX6CYNy8ZZWRUmC9GjV0sn
-	 5kVRQEStf0qHZRgQl+BbqMEUCNfPmPC6eHWgAO5Ife1h3e3skRHgL4MfhPpGg6lmjD
-	 L++M8of4afiQQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] cxl/port: Fix missing port lock in
- cxl_dport_remove()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Terry Bowman" <terry.bowman@amd.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260608223533.583278-1-terry.bowman@amd.com>
-References: <20260608223533.583278-1-terry.bowman@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 08 Jun 2026 22:54:09 +0000
-Message-Id: <20260608225410.330311F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="FV9vKU9C"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 491634137F;
+	Mon, 08 Jun 2026 22:54:41 +0000 (UTC)
+Received: from pdx1-sub0-mail-a202.dreamhost.com (trex-green-6.trex.outbound.svc.cluster.local [100.116.149.191])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id D2E364127A;
+	Mon, 08 Jun 2026 22:54:40 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Macabre-Arithmetic: 53fd3b29429a743f_1780959281134_1428887124
+X-MC-Loop-Signature: 1780959281134:1900875057
+X-MC-Ingress-Time: 1780959281134
+Received: from pdx1-sub0-mail-a202.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.116.149.191 (trex/7.1.5);
+	Mon, 08 Jun 2026 22:54:41 +0000
+Received: from offworld (186-79-212-212.fo.baf.movistar.cl [186.79.212.212])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a202.dreamhost.com (Postfix) with ESMTPSA id 4gZ6ms2dZKz1y;
+	Mon,  8 Jun 2026 15:54:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1780959280;
+	bh=L3Akzxddr0CC27BCUP9FKiwuLuwZkkdRWtnaAI5g9ss=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=FV9vKU9Cq59i/QQNqYgyG6m0E4WCiVFoLvq456pxm8TYxZFMaUsZj7hAa4L7r47ST
+	 eGu4/DcCnuavzTcOSt0s9EGj+gu7aKIXNjri2HLk35N0IDiTvmZPtUnrcOsVUc/FFu
+	 BJjrk3L5iYSMFGab9WJqKMMQuRm0PprlwYjHVbtieyGjRckxc19pq1BSpRRtiynOnc
+	 82j3MRzxQPGu7fQDFXw9bGxnUp1zkZpo5dz7x3XY2acNFKKFplDJrbDAr4fmoagvE4
+	 hj25gQRnaLzBRaOjcH6oiSXQMhFtK+DNv8lZkBsFk/B4NkdtPtSHnNn4TWh2+mR4S5
+	 qgBhKdXIoAz8Q==
+Date: Mon, 8 Jun 2026 15:54:31 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
+Cc: dave.jiang@intel.com, djbw@kernel.org, jic23@kernel.org,
+	alucerop@amd.com, alison.schofield@intel.com, gourry@gourry.net,
+	dongjoo.seo1@samsung.com, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 2/5] cxl/pci: Add BI topology enable/disable
+Message-ID: <20260608225431.zvgrwk2kfqwr2usq@offworld>
+References: <20260605003329.2584012-1-dave@stgolabs.net>
+ <20260605003329.2584012-3-dave@stgolabs.net>
+ <c15c6902-3d3f-4e9b-8dc2-2e95cf0719f2@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <c15c6902-3d3f-4e9b-8dc2-2e95cf0719f2@amd.com>
+User-Agent: NeoMutt/20220429
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+On Mon, 08 Jun 2026, Cheatham, Benjamin wrote:
 
-Pre-existing issues:
-- [High] Incomplete fix for use-after-free vulnerabilities. The patch fixes=
- use-after-free races in `cxl_mem_probe()` and `rcd_pcie_cap_emit()` by avo=
-iding the dereference of locklessly-obtained `dport` pointers. However, it =
-missed identical vulnerabilities in `cxl_pci_setup_regs()` and `cxl_handle_=
-rdport_errors()`. Both functions use `cxl_pci_find_port()` to locklessly ca=
-pture a `dport` pointer (via `xa_load`) and then immediately dereference it=
- without holding a device lock (such as `uport_dev->mutex`) that would excl=
-ude concurrent devres teardown. A concurrent surprise removal could cause `=
-cxl_dport_remove()` and `free_dport()` to free the `dport` structure while =
-these functions are dereferencing it, leading to a Use-After-Free.
-- [High] Use-After-Free in the error path of `devm_cxl_add_nvdimm()` due to=
- a cleanup ordering violation. The function holds the device lock via `guar=
-d(device)(&cxl_nvb->dev)`. On the `err_alloc` failure path, it manually cal=
-ls `put_device(&cxl_nvb->dev)`. If this is the last reference to the device=
-, the object is immediately freed. Upon returning, the `guard` goes out of =
-scope and calls `device_unlock(&cxl_nvb->dev)` on the already-freed memory,=
- resulting in a use-after-free.
---
+>On 6/4/2026 7:33 PM, Davidlohr Bueso wrote:
+>> +/* BI RT only exists on switch upstream ports. */
+>> +static int __cxl_bi_commit_rt(struct device *dev, void __iomem *bi)
+>> +{
+>> +	u32 status, ctrl;
+>> +	unsigned int scale, base;
+>> +
+>> +	if (!bi)
+>> +		return 0;
+>
+>Don't need this check since we already checked at the call site(s).
+>> +
+>> +	if (!FIELD_GET(CXL_BI_RT_CAPS_EXPLICIT_COMMIT_REQ,
+>> +		       readl(bi + CXL_BI_RT_CAPS_OFFSET)))
+>> +		return 0;
+>> +
+>> +	ctrl = readl(bi + CXL_BI_RT_CTRL_OFFSET);
+>> +	writel(ctrl & ~CXL_BI_RT_CTRL_BI_COMMIT, bi + CXL_BI_RT_CTRL_OFFSET);
+>> +	writel(ctrl | CXL_BI_RT_CTRL_BI_COMMIT, bi + CXL_BI_RT_CTRL_OFFSET);
+>> +
+>> +	status = readl(bi + CXL_BI_RT_STATUS_OFFSET);
+>> +	scale = FIELD_GET(CXL_BI_RT_STATUS_BI_COMMIT_TM_SCALE, status);
+>> +	base = FIELD_GET(CXL_BI_RT_STATUS_BI_COMMIT_TM_BASE, status);
+>> +
+>> +	return __cxl_bi_wait_commit(dev, bi + CXL_BI_RT_STATUS_OFFSET,
+>> +				    CXL_BI_RT_STATUS_BI_COMMITTED,
+>> +				    CXL_BI_RT_STATUS_BI_ERR_NOT_COMMITTED,
+>> +				    scale, base);
+>> +}
+>> +
+>> +static int __cxl_bi_commit_decoder(struct device *dev, void __iomem *bi)
+>> +{
+>> +	u32 status, ctrl;
+>> +	unsigned int scale, base;
+>> +
+>> +	if (!bi)
+>> +		return -EINVAL;
+>
+>Same thing here.
 
-commit 643083e519043c77cd0a30288dae3823f932ab9f
-Author: Terry Bowman <terry.bowman@amd.com>
+So this one is redundant yes, but not the bi_rt one, as it is optional.
 
-cxl/port: Fix missing port lock in cxl_dport_remove()
+I went with this:
 
-This commit addresses a use-after-free race condition in cxl_dport_remove()
-by properly managing the port lock for root ports. It also updates callers
-to re-fetch the dport pointer under the appropriate locks.
+@@ -1003,9 +1003,6 @@ static int __cxl_bi_commit_rt(struct device *dev, void __iomem *bi)
+         u32 status, ctrl;
+         unsigned int scale, base;
+  
+-       if (!bi)
+-               return 0;
+-
+         if (!FIELD_GET(CXL_BI_RT_CAPS_EXPLICIT_COMMIT_REQ,
+                        readl(bi + CXL_BI_RT_CAPS_OFFSET)))
+                 return 0;
+@@ -1029,9 +1026,6 @@ static int __cxl_bi_commit_decoder(struct device *dev, void __iomem *bi)
+         u32 status, ctrl;
+         unsigned int scale, base;
+  
+-       if (!bi)
+-               return -EINVAL;
+-
+         if (!FIELD_GET(CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ,
+                        readl(bi + CXL_BI_DECODER_CAPS_OFFSET)))
+                 return 0;
+@@ -1111,7 +1105,9 @@ static int __cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable)
+                 if (rc)
+                         return rc;
+  
+-               return __cxl_bi_commit_rt(&port->dev, port->regs.bi_rt);
++               if (port->regs.bi_rt)
++                       return __cxl_bi_commit_rt(&port->dev, port->regs.bi_rt);
++               return 0;
+         default:
+                 return -EINVAL;
+         }
 
-Link: https://lore.kernel.org/linux-cxl/20260505173029.2718246-1-terry.bowm=
-an@amd.com/
+>
+>> +
+>> +	if (!FIELD_GET(CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ,
+>> +		       readl(bi + CXL_BI_DECODER_CAPS_OFFSET)))
+>> +		return 0;
+>> +
+>> +	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
+>> +	writel(ctrl & ~CXL_BI_DECODER_CTRL_BI_COMMIT,
+>> +	       bi + CXL_BI_DECODER_CTRL_OFFSET);
+>> +	writel(ctrl | CXL_BI_DECODER_CTRL_BI_COMMIT,
+>> +	       bi + CXL_BI_DECODER_CTRL_OFFSET);
+>> +
+>> +	status = readl(bi + CXL_BI_DECODER_STATUS_OFFSET);
+>> +	scale = FIELD_GET(CXL_BI_DECODER_STATUS_BI_COMMIT_TM_SCALE, status);
+>> +	base = FIELD_GET(CXL_BI_DECODER_STATUS_BI_COMMIT_TM_BASE, status);
+>> +
+>> +	return __cxl_bi_wait_commit(dev, bi + CXL_BI_DECODER_STATUS_OFFSET,
+>> +				    CXL_BI_DECODER_STATUS_BI_COMMITTED,
+>> +				    CXL_BI_DECODER_STATUS_BI_ERR_NOT_COMMITTED,
+>> +				    scale, base);
+>> +}
+>> +
+>
+>[snip]
+>
+>> +
+>> +int cxl_bi_setup(struct cxl_dev_state *cxlds)
+>> +{
+>> +	struct cxl_port *endpoint = cxlds->cxlmd->endpoint;
+>> +	struct cxl_dport *dport_iter, *dport, *failed;
+>> +	struct cxl_port *port_iter;
+>> +	struct pci_dev *pdev;
+>> +	int rc;
+>> +
+>> +	if (!dev_is_pci(cxlds->dev))
+>> +		return 0;
+>> +
+>> +	pdev = to_pci_dev(cxlds->dev);
+>> +	struct cxl_port *port __free(put_cxl_port) =
+>> +		cxl_pci_find_port(pdev, &dport);
+>> +
+>> +	if (!port)
+>> +		return -EINVAL;
+>> +
+>> +	if (!cxl_is_bi_capable(pdev, endpoint->regs.bi_decoder))
+>> +		return 0;
+>
+>I'd return -ENXIO here since we only report the error with a dev_dbg() later on.
 
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index ab88eaa31d1db..419ae58acce81 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-[ ... ]
-> @@ -133,21 +132,57 @@ static int cxl_mem_probe(struct device *dev)
-[ ... ]
-> +	if (rch) {
-> +		struct device *uport_dev =3D parent_port->uport_dev;
-> +
-> +		scoped_guard(device, uport_dev) {
-> +			if (!uport_dev->driver) {
-> +				dev_err(dev, "CXL port topology %s not enabled\n",
-> +					dev_name(uport_dev));
-> +				return -ENXIO;
-> +			}
-> +			/*
-> +			 * Re-fetch dport under uport_dev lock.  uport_dev->mutex
-> +			 * is held for the full devres teardown sequence including
-> +			 * free_dport()/kfree(), so this excludes concurrent
-> +			 * hotplug removal through the entire dereference.
-> +			 */
-> +			dport =3D cxl_find_dport_by_dev(parent_port, cxlmd->dev.parent->paren=
-t);
-> +			if (!dport) {
-> +				dev_err(dev, "CXL RCH dport not found\n");
-> +				return -ENXIO;
-> +			}
-> +			rc =3D devm_cxl_add_endpoint(uport_dev, cxlmd, dport);
-> +			if (rc)
-> +				return rc;
-> +		}
->  	}
+But this is not considered an error.
 
-[Severity: High]
-This is a pre-existing issue, but while this patch fixes use-after-free
-races here and in rcd_pcie_cap_emit() by avoiding the dereference of
-locklessly-obtained dport pointers, could similar vulnerabilities still
-exist in other functions?
+>
+>> +
+>> +	/* walkup the topology twice, first to check, then to enable */
+>> +	port_iter = port;
+>> +	dport_iter = dport;
+>> +	while (!is_cxl_root(port_iter)) {
+>> +		/* check rp, dsp */
+>> +		if (!cxl_is_bi_capable(to_pci_dev(dport_iter->dport_dev),
+>> +				       dport_iter->regs.bi_decoder))
+>> +			return -EINVAL;
+>> +
+>> +		/* check usp */
+>> +		if (dev_is_pci(port_iter->uport_dev) &&
+>> +		    pci_pcie_type(to_pci_dev(port_iter->uport_dev)) ==
+>> +			    PCI_EXP_TYPE_UPSTREAM)
+>> +			if (!cxl_is_bi_capable(to_pci_dev(port_iter->uport_dev),
+>> +					       port_iter->regs.bi_rt))
+>> +				return -EINVAL;
+>
+>This can be one if statement: if (... && !cxl_is_bi-capable(...))> +
 
-For example, in drivers/cxl/core/pci.c:cxl_pci_setup_regs():
+Sure.
 
-    rc =3D cxl_rcrb_get_comp_regs(pdev, map, dport);
-    ...
-    rc =3D cxl_dport_map_rcd_linkcap(pdev, dport);
+>> +		dport_iter = port_iter->parent_dport;
+>> +		port_iter = dport_iter->port;
+>> +	}
+>> +
+>> +	port_iter = port;
+>> +	dport_iter = dport;
+>> +	while (!is_cxl_root(port_iter)) {
+>> +		rc = cxl_bi_ctrl_dport_enable(dport_iter);
+>> +		if (rc)
+>> +			goto err_rollback;
+>> +
+>> +		dport_iter = port_iter->parent_dport;
+>> +		port_iter = dport_iter->port;
+>> +	}
+>> +
+>> +	/* finally, enable BI on the device */
+>> +	rc = cxl_bi_ctrl_endpoint_enable(cxlds);
+>> +	if (rc)
+>> +		goto err_rollback;
+>> +
+>> +	return devm_add_action_or_reset(&cxlds->cxlmd->dev,
+>> +					cxl_bi_dealloc, cxlds);
+>> +
+>> +err_rollback:
+>> +	/*
+>> +	 * Undo all dports enabled so far, including the failed one.
+>> +	 */
+>> +	failed = dport_iter;
+>> +	dport_iter = dport;
+>> +	port_iter = port;
+>> +	while (!is_cxl_root(port_iter)) {
+>> +		cxl_bi_ctrl_dport_disable(dport_iter);
+>> +		if (dport_iter == failed)
+>> +			break;
+>
+>Nit: you can move this into the while statement check above. The extra overhead
+>is worth the readability IMO.
 
-And in drivers/cxl/core/ras_rch.c:cxl_handle_rdport_errors():
+We still need to account for the failing dport-iter, so moving that check will
+still require another flag. I'd rather leave as is.
 
-    if (!cxl_rch_get_aer_info(dport->regs.dport_aer, &aer_regs))
-
-Both functions appear to use cxl_pci_find_port() to locklessly capture a
-dport pointer (via xa_load) and dereference it without holding a device
-lock (like uport_dev->mutex) that would exclude concurrent devres
-teardown. Could a concurrent surprise removal cause cxl_dport_remove()
-and free_dport() to free the dport structure while these functions are
-dereferencing it?
-
-[Severity: High]
-This is a pre-existing issue, but I noticed a potential use-after-free
-in the error path of devm_cxl_add_nvdimm(), which is called during
-cxl_mem_probe().
-
-In drivers/cxl/core/pmem.c:devm_cxl_add_nvdimm():
-
-    guard(device)(&cxl_nvb->dev);
-    ...
-    err_alloc:
-        cxlmd->cxl_nvb =3D NULL;
-        cxlmd->cxl_nvd =3D NULL;
-        put_device(&cxl_nvb->dev);
-   =20
-        return rc;
-
-Since guard() releases the device lock when returning, and the error path
-manually calls put_device(&cxl_nvb->dev) before returning, wouldn't
-device_unlock() be called on the already-freed memory if this was the
-last reference, causing a use-after-free and lockdep crash?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260608223533.5832=
-78-1-terry.bowman@amd.com?part=3D1
+Thanks,
+Davidlohr
