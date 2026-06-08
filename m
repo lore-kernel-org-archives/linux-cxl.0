@@ -1,99 +1,135 @@
-Received: from panther.cherry.relay.mailchannels.net (panther.cherry.relay.mailchannels.net [23.83.223.141])
+Received: from sender4-pp-o92.zoho.com (sender4-pp-o92.zoho.com [136.143.188.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8781F1C5799
-	for <linux-cxl@vger.kernel.org>; Mon,  8 Jun 2026 00:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.223.141
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780879822; cv=none; b=riHEMoeGFBWti2xAQaLem4ISbbzyEdVxQb1RpO7gaKygJ90vhCbMBAJP2dul6Zh9eZfPKQu5OBDuzrF261xJsktJT2kUkABGOixJ/IN/P732dXBxQ8WV3RZyKOV1rc2tyLRE/A8RHKiSIuVRGkji17xRuOOfXNjK5EGN6xNmAV4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780879822; c=relaxed/simple;
-	bh=Nzc7ZRB72BRQgibHILx95SmXkJ6wwSRvRHTwptDAmJM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iL+JMwGLcExgWrg2cxGdKQPpySIxDMSFHOd9QS0/YlJTG28joSLCrear+DNgg450u7l/qQCd6aI85Y89FrVQcS4FE+HwakuQ2vMSCAiU407gSTAqs8H9xCwIpNK9qkuzQX5ag3jY7Z6PNl5pIUkxQmx9XRQ9+94wkCGY1m6Uyew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=fIXQb9aD; arc=none smtp.client-ip=23.83.223.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8D131578E
+	for <linux-cxl@vger.kernel.org>; Mon,  8 Jun 2026 04:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.92
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780893509; cv=pass; b=USN1kyEWCJEJshROm2MUgFrDgN08ekBWImxeFM+u+OoKrURA0bV0hcoSpKbWg5ifNJSRu6Zj2RFOi8b8UJZb+ZCCx5c/7U175uU1ALnPGK+C3JX8DTxQS4oFS7Kzgu5cfjraoDLD238+MVNKV6XJyRK6utSclPXZbXkJuNgLuf0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780893509; c=relaxed/simple;
+	bh=Mx33IJ/v+pEW113ZfX248ab0SX6Nrubq1z8uLCPfd0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QXxNqLrpig48608CdenFS0GoBngbUoh8hG84Vnytqcngp62oC/Z02Q33h+VrlbTzafzjhHFFxEOocqOpE6n4Gaw0W91/Zpj+vyUCeUJijlXqX/FowKgJuPM9+XRcUx7iZcRUtWaRM8VaPXPAeqgIna+jFpnLcJ+mI067T+Zr8qs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=JzrGUuir; arc=pass smtp.client-ip=136.143.188.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="fIXQb9aD"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 9AE957E2806;
-	Mon, 08 Jun 2026 00:41:43 +0000 (UTC)
-Received: from pdx1-sub0-mail-a252.dreamhost.com (100-105-225-54.trex-nlb.outbound.svc.cluster.local [100.105.225.54])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 2FD687E1DFA;
-	Mon, 08 Jun 2026 00:41:43 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Chief-Abiding: 4d7be9db57e0b7e8_1780879303477_3418800092
-X-MC-Loop-Signature: 1780879303477:1002946274
-X-MC-Ingress-Time: 1780879303476
-Received: from pdx1-sub0-mail-a252.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.105.225.54 (trex/7.1.5);
-	Mon, 08 Jun 2026 00:41:43 +0000
-Received: from offworld (186-79-212-212.fo.baf.movistar.cl [186.79.212.212])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a252.dreamhost.com (Postfix) with ESMTPSA id 4gYYBq66ldzyrG;
-	Sun,  7 Jun 2026 17:41:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1780879302;
-	bh=Nzc7ZRB72BRQgibHILx95SmXkJ6wwSRvRHTwptDAmJM=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=fIXQb9aDX6G2FYZXNYfyjl4d0sa3aqL5AUJJzuou9yagA2Qtlrxvjmk2yYwrk24Wr
-	 uEDYLxyXIbB6bN7NToV6uvWMcE5Mv4tjyD+lbgzV1dQBqis0e9nFBGex54mD9S5oI/
-	 +Ftyi5zlZntIt0qxMKTrk9HmROoxXv+506O58os9DSYgGrcEOUk7lvElMeW+j8w2Sk
-	 bwpj+Zr71GZpDE8eG/OFvIzzJuPTUPNlI1GGuqmzEg9PW+eeFGdt/32kG5YBuFVvXF
-	 bA2Zq15RCJnDC/gGnqxOS6+vfcSSilH6NZmwwIwZsfYSPQy7po0Thf3Wpc1evIi/Yw
-	 rGnb8Um+dNblA==
-Date: Sun, 7 Jun 2026 17:41:34 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: dave.jiang@intel.com, djbw@kernel.org, jic23@kernel.org,
-	benjamin.cheatham@amd.com, alucerop@amd.com,
-	alison.schofield@intel.com, gourry@gourry.net,
-	dongjoo.seo1@samsung.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v4 0/5] cxl: Support Back-Invalidate
-Message-ID: <20260608004134.y2vivyghfvggcw6x@offworld>
-References: <20260605003329.2584012-1-dave@stgolabs.net>
- <aiI2Y6su1iAmOXxL@MWDK4CY14F>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="JzrGUuir"
+ARC-Seal: i=1; a=rsa-sha256; t=1780893504; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Q6toTLqYkcUQnmgBanVVFtfx4Gv+PLNTTV7ik0AbP6sXmE4/uRQoPe/M3LDMI48zdoC+vK8cH6pRFHY6MozWHy2UR8Sdp9tco3nuvf5oJYoIxiF4TodNsnS6V9yDN6qgueAupTvqCJHhMDtpB7MYGRTDRwMyoFMgSDOPAWMazB4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1780893504; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=UV2OxS8LSBNLw354gLnXg6nAqXQiurzgRxBXW8iX6oY=; 
+	b=IOD2Jx3zefheYF5PBRxvgp6iuxMJsZKLr+gV5k/F6Y3Icy4hBdv7Lb/BvyrrjWzKg7T5YkKQK7NpE91ScD9pJvF67UZpmzJNAyjHZHqdPpakjEuvQyDHvJA+HKpqoY19j8xzLPPKcD/atx1PbweA3ZynKvJ2l1IcWvwoUSWRweU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1780893504;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=UV2OxS8LSBNLw354gLnXg6nAqXQiurzgRxBXW8iX6oY=;
+	b=JzrGUuirQz4MhOIPuPaPjRvSDQLbGv5aWH1JlmK0qyoVR1nnyAA7Z6D5o/FdeaD0
+	gHcb75EgYEtLqc8Ab2f7txI3WnxVKM/iDEIYeS9hq8YWTUq4HLQQtcWPgKkMV1oTsFM
+	Aazgf9pShWc+p98/2dlJRsif40I3SwToUTueAJSE=
+Received: by mx.zohomail.com with SMTPS id 1780893500415473.532958800497;
+	Sun, 7 Jun 2026 21:38:20 -0700 (PDT)
+Message-ID: <0df43a4c-cdb1-443e-a424-33ecc63d6c1d@zohomail.com>
+Date: Mon, 8 Jun 2026 12:38:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <aiI2Y6su1iAmOXxL@MWDK4CY14F>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] cxl/region: Fill first free targets[] slot during
+ auto-discovery
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org
+References: <20260606-fix_two_issues_introduced_by_cxl_cancel_auto_attach-v1-2-5d94ca06c4e4@zohomail.com>
+ <20260606081149.1B0F11F00893@smtp.kernel.org>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20260606081149.1B0F11F00893@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: zu08011227762968533e82e869e7c03ddc00002b035325a71c627281c0e950ac19c35042611989f912061156:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-Hi Richard,
-
-On Fri, 05 Jun 2026, Richard Cheng wrote:
-
->On Thu, Jun 04, 2026 at 05:33:24PM +0800, Davidlohr Bueso wrote:
+On 6/6/2026 4:11 PM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
 >
->Hi Davidlohr,
->All the above patches lacks of v4 tag,
->small nit pick but it confuses me at first,
->maybe add the tags to every patches in the patch series.
+> Pre-existing issues:
+> - [High] Loops iterating over the `p->targets` array up to `p->nr_targets` unconditionally dereference elements, leading to NULL pointer dereferences because the array can be sparse.
+> --
+>
+> commit bf78125f1b0b7a811b9b200d37ed57cc96619a00
+> Author: Li Ming <ming.li@zohomail.com>
+>
+> cxl/region: Fill first free targets[] slot during auto-discovery
+>
+> This commit adjusts the cxl_region_attach_auto logic to find the first free
+> target slot for endpoint decoder attachment, rather than appending to the tail.
+> This ensures NULL holes in the target array are filled to avoid accessing an
+> endpoint decoder via a NULL pointer and miscounting valid endpoint decoders.
+>
+>> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+>> index c4335ebf19f7f..532dac77bd003 100644
+>> --- a/drivers/cxl/core/region.c
+>> +++ b/drivers/cxl/core/region.c
+>> @@ -1848,8 +1848,21 @@ static int cxl_region_attach_auto(struct cxl_region *cxlr,
+>>  	 * this means that userspace can view devices in the wrong position
+>>  	 * before the region activates, and must be careful to understand when
+>>  	 * it might be racing region autodiscovery.
+>> +	 *
+>> +	 * The endpoint decoder will be recorded into the first free slot of
+>> +	 * the target array.
+>>  	 */
+>> -	pos = p->nr_targets;
+>> +	for (pos = 0; pos < p->interleave_ways; pos++) {
+>> +		if (!p->targets[pos])
+>> +			break;
+>> +	}
+>> +
+>> +	if (pos == p->interleave_ways) {
+>> +		dev_err(&cxlr->dev, "%s: unable to find a free target slot\n",
+>> +			dev_name(&cxled->cxld.dev));
+>> +		return -ENXIO;
+>> +	}
+>> +
+>>  	p->targets[pos] = cxled;
+> [Severity: High]
+> This is a pre-existing issue, but since __cxl_decoder_detach() can leave
+> sparse holes in p->targets without compacting the array, are the loops
+> that iterate up to p->nr_targets still susceptible to NULL pointer
+> dereferences?
+>
+> For instance, in drivers/cxl/core/region.c:cxl_dpa_to_hpa():
+>
+>     for (int i = 0; i < p->nr_targets; i++) {
+>         if (cxlmd == cxled_to_memdev(p->targets[i])) {
+>
+> If there is a hole at an index less than p->nr_targets, wouldn't
+> cxled_to_memdev() dereference a NULL pointer?
+>
+> Similar unprotected iterations seem to exist in
+> cxl_scrub_get_attrbs_region(), unaligned_region_offset_to_dpa_result(),
+> and region_offset_to_dpa_result().
+>
+> Does the array need to be compacted upon detach, or should these loops be
+> updated to check for NULL pointers before dereferencing p->targets[i]?
 
-Its rather common in lkml for only the cover letter to have the
-version; but sure I can label all of the patches, specially
-since I labeled v3 (but that was my script misfiring).
+It is not a bug here.
 
-Anyway, thanks a lot for going through Sashiko reviews and
-verifying some issues. At this point I have addressed all your
-feedback, but will wait a little longer before sending a v5
-to see if anyone else has comments on the series.
+cxl driver always calls cxl_dpa_to_region() for a cxl region checking before involving cxl_dpa_to_hpa(), but if a cxl region is not bound to cxl region driver, driver will not involve cxl_dpa_to_hpa().
 
-Thanks,
-Davidlohr
+But maybe adding cxlr->driver checking in cxl_dpa_to_hpa() is a choice.
+
+>
+>>  	cxled->pos = pos;
+>>  	cxled->state = CXL_DECODER_STATE_AUTO_STAGED;
+
+
