@@ -1,287 +1,725 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D3B347BA7;
-	Tue,  9 Jun 2026 17:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9424968FF
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 17:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781026390; cv=none; b=l8TFem8oKfAhWo2teDtcT0qqvIcEOqvu95iYAEJqKHMhfJV+yE3OKXeT9hcT8RJoy/SIZVANF8DIz2q1ogWhrB1Mxp0wF4Qk+N2A4F0CqSeiUjggnX4G2tTPyIOGeKSv80HT9l6yBm6i9M0KsK6gGq0EXgna8blHyeOhihBo4jE=
+	t=1781026473; cv=none; b=SXWubtmmQiQ/CaaCFt8svQEdohtyOAh7YB3W7qOpuIi1OtotisbjnytVxny3tpIkaqHGOtTL9KLe6wKV0o+HmtfX9CKdfGmGEoWJS1ZF0xUfjy03op5kQiI662IPo28bENB5Tbc08PVzsZzIBveiRHttdxEg2S6HfohBgRyUXK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781026390; c=relaxed/simple;
-	bh=bz5FL3gacye4tkbSvtGK3gA0W4lfd8x2bxnnAQfS2C0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=anBHvrIUKW5v7+r7/PDDAqkp0tTELBeEjk+Fwo4HYJpc2DwDg5eQtzSC/APtse1icH5NmZcRgJCY/tjJmCkNeIYo9nhbWPZu+b74VH/m5TDJCKAgvrhARl1OuJvODsjmc2pVgw6EmIFECWks86TxfvyL86CkROXw51U9519Fh8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mdWy9Fd7; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1781026473; c=relaxed/simple;
+	bh=3v/Fb/IdJAJ4WJD8DAcO5jrchdFOw4A2ervzCJm8bws=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O3u/7u3b/Vp1I9ha82xz6eanWphCEqAyKWkq2W/owVceovbZlUz19QKr3MCNgIQnzeaXBZyUbKpqswfOoBZotcMnkLOvkF3zCUBvw9FOx/1HyN0OcSKSN25crXLLlNhlvMACxOPBbyFvkvvejLKGyLLzVngqMKWtKBYHRSEvDMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kl3d0iv4; arc=none smtp.client-ip=74.125.82.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mdWy9Fd7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781026388; x=1812562388;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=bz5FL3gacye4tkbSvtGK3gA0W4lfd8x2bxnnAQfS2C0=;
-  b=mdWy9Fd7su+9HXytbR480QnfkvdwYkhcS7+AmfIC48mwQEDHe0rICiQH
-   ScXLa9FSqJIXjgoR2fHtVNUgA/tYilQ+9s/j0Q881uWljiF1B9BLmOAzA
-   5qVXWCWTB7ZcDgOZb2MIx+XzmK0S8b27/Y29ID+C1I1DQb+xKYbsMFltz
-   74UFSBdv9ZkTW3SUntmy9KUTrLN8ycOALoouWaUXC70bMHQjt8T+Usyzq
-   AIDBL9StMLeXUQXMueM0tHgK/3RvZPCm2NMsXNACoClTmfRpnLTx8wqoE
-   gjXfP0/6nbOBcRZ33Hshvk2Mc7YaN0Q94qnk1yJlAHJbHV7d9Yy7vaxQo
-   Q==;
-X-CSE-ConnectionGUID: X4/9QbphScWaIEhLT2GBig==
-X-CSE-MsgGUID: vVS+4KYXQPuqojg8O9R2Cw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="81650169"
-X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
-   d="scan'208";a="81650169"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 10:33:07 -0700
-X-CSE-ConnectionGUID: SVkBX4sTT+KZpozeyaZ1YQ==
-X-CSE-MsgGUID: P0lMJ4wCRX+G9f7ktE9xSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
-   d="scan'208";a="245782937"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.109.206]) ([10.125.109.206])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 10:33:06 -0700
-Message-ID: <4418ce71-7236-44b3-ba53-a047cc55eb75@intel.com>
-Date: Tue, 9 Jun 2026 10:33:05 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kl3d0iv4"
+Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-304fb780deaso5821086eec.1
+        for <linux-cxl@vger.kernel.org>; Tue, 09 Jun 2026 10:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781026470; x=1781631270; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=PNcgh7fGtgchSHOCp/UHSC2h7jb5bVA/2YWi8U5mXqg=;
+        b=Kl3d0iv47e/EzMCzb7VMhikR4uh1IFZmH5vjqxxcuypMO57OWRVQe3RhFKaUEvy1mB
+         fOvzmcJZSduzvg82lMCtFlv+62UbxkfG+sFr0U1lv11+kZZc9ubSevNRdt+MqUXydnHB
+         lfQ0Lm0QVkOmwAETc3aEuCLYGLprcGyDEsFjYiyImiDJXFeI5Fuh87dkm5ERUKNJtBin
+         PQQF5snXQV6+4SaxIc6bF+M1lL/6hYpH0QJisukKxcb3EItUA+FI/4Y0UWmRKgWDFy1k
+         g0AHhGjhC2soKw7PVTJDBM5Ql2JtZCaOrH9ea9tzqgeGza6+DXkjhpJ4p41V/z8GVhw6
+         dKOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781026470; x=1781631270;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PNcgh7fGtgchSHOCp/UHSC2h7jb5bVA/2YWi8U5mXqg=;
+        b=joJQ6nMnBkxItV8r82abXfqFlpfF0kSwgdcfdi2A8k7FkAXSY/v/PcefaxpXhEwOT1
+         SPFpt8cl+KxCqy2+xxlFdZI2qOYVAm2MFMReir1u1mJen3myv7HoEUj+RkOfYllSgN3J
+         ZbRwkPhktOEnyk9A1+kIgzRXviFl5O28ERlK53uCdm9i0JmWFu+av77tlADN/WJbrtBG
+         /mpktUgU6O1JgqZ15Rg8uRiZGgZzQv51vMCJqlUcGKiDGcfJbnxK0nmmHaqc3Yqvc3Pk
+         lFmnptVwPeoufKZX3fT/lRRFTjQlMhXKj0gR5nh6aVRTZ2qHyM57XY37PNmUXxAiaMzh
+         SmOg==
+X-Forwarded-Encrypted: i=1; AFNElJ+3v2dj8PgnAs/Erv/+sZIGqfUIX0OLYX2SsqcZw4OfzIEzZmdVNyfIvbgvozliFUYgFc/E6j8glp0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJlrIBRc4gcAvSDHwhjAZiQhdVJx+3XrPj0gVRnedEAPlhe/S2
+	dJ+PImQbD9F9vOJmMNK0Wjp3HBZ8jS9N/3Ictr2kbwFvkM0Qzv5NpReE
+X-Gm-Gg: Acq92OE3AtlR5CYi+wE2zkme8uhhU3NHqb8KNqNdf6kFKPKF9iBe/YOPQFWak3shL8t
+	RlMKz1wskUYXga5w4dvPQcjFgyfO2FUiKio4KULc3KJ+F1Y+7OJNQZWQT1g/AO2CGeU3YhR3Gca
+	hBaP2cb2rzakkHMI4Tt/hDLRcT2sHKDl1KJnCzwwRz5XIIZ2P5uK9BRcTc1OuSC1i3ghUDaU+Rp
+	HrThdjP7/kPXeyU1ylBNa3n7aA3acxAEb6bnUF7vRZQc7U7tL+2BZpnZqU3S/6BfkFtGc+uX//Y
+	N1Hjt54suZiLP5OAY77uk5lcRYc55KzJMXz4/eFKf80gwkTm+Nx7NDPpWFi6F0TrmAyTfBC9nQ5
+	knTJxBMooi4txolThdrdYVPIF1Ukub6+16ERgIV17xK3VktD3ECfaeIPeownRP0L8s0A3JdjBDJ
+	93PX6t4xQyhANsk2iuMegF0q15L2Y1Dcd/wjpxQTVZf1KzHMRY24IUX1GkaskEYBQsqqfcUx5ou
+	Cc3i38ZcsTMid5mEBGufybp8G3r
+X-Received: by 2002:a05:7300:8190:b0:2ef:8b72:1b9 with SMTP id 5a478bee46e88-3077abcee73mr13780930eec.0.1781026469768;
+        Tue, 09 Jun 2026 10:34:29 -0700 (PDT)
+Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3074dea8e8csm21662588eec.16.2026.06.09.10.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2026 10:34:29 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Tue, 9 Jun 2026 10:34:27 -0700
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	Dan Williams <djbw@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	John Groves <John@groves.net>, Gregory Price <gourry@gourry.net>,
+	Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH v10 12/31] cxl/mem: Set up framework for handling DC
+ Events
+Message-ID: <aihOo_sEwJPR9jWz@AnisaLaptop.localdomain>
+References: <cover.1779528761.git.anisa.su@samsung.com>
+ <e11ff26899d6714878d955fcc2724732fb4a3d29.1779528761.git.anisa.su@samsung.com>
+ <a0ca12be-8c50-4904-83f6-a55e1f6c6a27@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl: Fix CXL_HEADERLOG_SIZE to match RAS Capability size
-To: Terry Bowman <terry.bowman@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jic23@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <djb@kernel.org>, PradeepVineshReddy.Kodamati@amd.com,
- Benjamin.Cheatham@amd.com, rrichter@amd.com
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
- "Fabio M . De Francesco" <fabio.m.de.francesco@linux.intel.com>,
- Shiju Jose <shiju.jose@huawei.com>,
- Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
- Li Ming <ming.li@zohomail.com>, Tony Luck <tony.luck@intel.com>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20260605180610.2249458-1-terry.bowman@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260605180610.2249458-1-terry.bowman@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a0ca12be-8c50-4904-83f6-a55e1f6c6a27@intel.com>
 
-
-
-On 6/5/26 11:06 AM, Terry Bowman wrote:
-> The CXL r4.0 8.2.4.17.7 RAS Capability Structure has total length 0x58
-> bytes (CXL_RAS_CAPABILITY_LENGTH); the Header Log occupies the trailing
-> 64 bytes at offset 0x18.  CXL_HEADERLOG_SIZE was defined as SZ_512,
-> eight times the actual on-device size.
+On Thu, May 28, 2026 at 09:40:22AM -0700, Dave Jiang wrote:
 > 
-> header_log_copy() reads CXL_HEADERLOG_SIZE_U32 (128) dwords from the
-> RAS capability iomap, overrunning the 88-byte mapping by 448 bytes.
-> The cxl_aer_uncorrectable_error trace event memcpy()s CXL_HEADERLOG_SIZE
-> (512) bytes from its source.  For the CPER caller the source is
-> struct cxl_ras_capability_regs::header_log[16] (64 bytes) embedded in a
-> stack-local cxl_cper_prot_err_work_data, so the memcpy reads 448 bytes
-> of kernel stack into the trace event ring buffer where userspace can
-> read it via tracefs.
 > 
-> Set CXL_HEADERLOG_SIZE to 64 and derive CXL_HEADERLOG_SIZE_U32 from it,
-> bringing all iomap readers into agreement on 16 dwords.  Userspace tools
-> such as rasdaemon have grown a dependency on the buggy 512-byte (128 u32)
-> header_log layout in the cxl_aer_uncorrectable_error trace event.  Add
-> CXL_HEADERLOG_TRACE_SIZE_U32 = 128 and use it for the trace event
-> __array and its memcpy to preserve that ABI.  Both callers now pass a
-> zero-filled u32[CXL_HEADERLOG_TRACE_SIZE_U32] staging buffer with only
-> the first CXL_HEADERLOG_SIZE_U32 (16) entries populated from hardware;
-> the remaining 112 u32s are zero-padded, keeping the 512-byte trace ring
-> buffer layout intact.
+> On 5/23/26 2:43 AM, Anisa Su wrote:
+> > Adds the support for receiving DC event records but defers
+> > the real add/release logic to subsequent commits. Simply refuse all
+> > extents for DC_ADD and ack all DC_RELEASE events for now. Forced
+> > release is currently unsupported.
+> > 
+> > In order, this commit adds the following:
+> > 
+> > 1. Learn about DC Event Records and how to respond to them
+> > 
+> >   * cxl_mem_get_event_records() learns about the DC Event record.
+> >     Records of that type are routed to cxl_handle_dcd_event_records().
+> > 
+> >   * cxl_handle_dcd_event_records() switches on event_type:
+> >       - DCD_ADD_CAPACITY     -> handle_add_event()
+> >       - DCD_RELEASE_CAPACITY -> cxl_rm_extent()
+> >       - DCD_FORCED_CAPACITY_RELEASE is logged and ignored (FM/device-only).
+> > 
+> >   * cxl_send_dc_response() sends the reply mailbox commands
+> >     ADD_DC_RESPONSE / RELEASE_DC
+> > 
+> > 2. Add stubs for DC_ADD and DC_RELEASE logic
+> > 
+> >   * handle_add_event() stages incoming extents onto
+> >     mds->add_ctx.pending_extents and, when More=0 closes the chain,
+> >     replies with an empty ADD_DC_RESPONSE — refusing all extents for now
+> > 
+> >   * cxl_rm_extent() acks the release via memdev_release_extent() so the
+> >     device's view stays consistent; we can ack all releases because
+> >     we currently don't accept/use any extents offered.
+> > 
+> > 3. Structural setup for later commits:
+> > 
+> >   * struct dc_extent, struct cxl_dc_tag_group, and pending_add_ctx
+> >     set up the stage for the real DC_ADD path, which will enforce
+> >     tag/grouping semantics
+> > 
+> > Based on an original patch by Navneet Singh.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > Signed-off-by: Anisa Su <anisa.su@samsung.com>
+> > 
+> > ---
+> > Changes:
+> > [anisa: restructured from the original "Process dynamic partition
+> >  events" monolith; this commit lands only the wire-level intake and
+> >  dispatches the add/release logic to stubbed handlers. The handlers
+> >  are fleshed out in subsequent commits.]
+> > ---
+> >  drivers/cxl/core/mbox.c | 246 +++++++++++++++++++++++++++++++++++++++-
+> >  drivers/cxl/cxl.h       |  73 +++++++++++-
+> >  drivers/cxl/cxlmem.h    |  45 ++++++++
+> >  include/cxl/event.h     |  38 +++++++
+> >  4 files changed, 400 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > index 01b1a318f34f..1b38f34538f3 100644
+> > --- a/drivers/cxl/core/mbox.c
+> > +++ b/drivers/cxl/core/mbox.c
+> > @@ -5,6 +5,7 @@
+> >  #include <linux/ktime.h>
+> >  #include <linux/mutex.h>
+> >  #include <linux/unaligned.h>
+> > +#include <linux/list.h>
+> >  #include <cxlpci.h>
+> >  #include <cxlmem.h>
+> >  #include <cxl.h>
+> > @@ -1102,6 +1103,238 @@ static int cxl_clear_event_record(struct cxl_memdev_state *mds,
+> >  	return rc;
+> >  }
+> >  
+> > +static int send_one_response(struct cxl_mailbox *cxl_mbox,
+> > +			     struct cxl_mbox_dc_response *response,
+> > +			     int opcode, u32 extent_list_size, u8 flags)
+> > +{
+> > +	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
+> > +		.opcode = opcode,
+> > +		.size_in = struct_size(response, extent_list, extent_list_size),
+> > +		.payload_in = response,
+> > +	};
+> > +
+> > +	response->extent_list_size = cpu_to_le32(extent_list_size);
+> > +	response->flags = flags;
+> > +	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+> > +}
+> > +
+> > +static int cxl_send_dc_response(struct cxl_memdev_state *mds, int opcode,
+> > +				struct list_head *extent_list, int cnt)
+> > +{
+> > +	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+> > +	struct cxl_mbox_dc_response *p;
+> > +	struct cxl_extent_list_node *pos, *tmp;
+> > +	struct cxl_extent *extent;
+> > +	u32 pl_index;
+> > +
+> > +	size_t pl_size = struct_size(p, extent_list, cnt);
+> > +	u32 max_extents = cnt;
+> > +
+> > +	/* May have to use more bit on response. */
+> > +	if (pl_size > cxl_mbox->payload_size) {
+> > +		max_extents = (cxl_mbox->payload_size - sizeof(*p)) /
+> > +			      sizeof(struct updated_extent_list);
+> > +		pl_size = struct_size(p, extent_list, max_extents);
+> > +	}
+> > +
+> > +	struct cxl_mbox_dc_response *response __free(kfree) =
+> > +						kzalloc(pl_size, GFP_KERNEL);
+> > +	if (!response)
+> > +		return -ENOMEM;
+> > +
+> > +	if (cnt == 0)
+> > +		return send_one_response(cxl_mbox, response, opcode, 0, 0);
+> > +
+> > +	pl_index = 0;
+> > +	list_for_each_entry_safe(pos, tmp, extent_list, list) {
+> > +		extent = pos->extent;
+> > +		response->extent_list[pl_index].dpa_start = extent->start_dpa;
+> > +		response->extent_list[pl_index].length = extent->length;
+> > +		pl_index++;
+> > +
+> > +		if (pl_index == max_extents) {
+> > +			u8 flags = 0;
+> > +			int rc;
+> > +
+> > +			if (pl_index < cnt)
+> > +				flags |= CXL_DCD_EVENT_MORE;
+> > +			rc = send_one_response(cxl_mbox, response, opcode,
+> > +					       pl_index, flags);
+> > +			if (rc)
+> > +				return rc;
+> > +			cnt -= pl_index;
+> > +			if (cnt < max_extents)
+> > +				max_extents = cnt;
+> > +			pl_index = 0;
+> > +		}
+> > +	}
+> > +
+> > +	if (!pl_index) /* nothing more to do */
+> > +		return 0;
+> > +	return send_one_response(cxl_mbox, response, opcode, pl_index, 0);
+> > +}
+> > +
+> > +static void delete_extent_node(struct cxl_extent_list_node *node)
+> > +{
+> > +	list_del(&node->list);
+> > +	kfree(node->extent);
+> > +	kfree(node);
+> > +}
+> > +
+> > +static void memdev_release_extent(struct cxl_memdev_state *mds, struct range *range)
+> > +{
+> > +	struct device *dev = mds->cxlds.dev;
+> > +	struct cxl_extent_list_node *node;
+> > +	LIST_HEAD(extent_list);
+> > +
+> > +	dev_dbg(dev, "Release response dpa %pra\n", range);
+> > +
+> > +	node = kzalloc(sizeof(*node), GFP_KERNEL);
+> > +	if (!node)
+> > +		return;
+> > +
+> > +	node->extent = kzalloc(sizeof(*node->extent), GFP_KERNEL);
+> > +	if (!node->extent) {
+> > +		kfree(node);
+> > +		return;
+> > +	}
+> > +
+> > +	node->extent->start_dpa = cpu_to_le64(range->start);
+> > +	node->extent->length = cpu_to_le64(range_len(range));
+> > +	list_add_tail(&node->list, &extent_list);
+> > +
+> > +	if (cxl_send_dc_response(mds, CXL_MBOX_OP_RELEASE_DC, &extent_list, 1))
+> > +		dev_dbg(dev, "Failed to release %pra\n", range);
+> > +
+> > +	delete_extent_node(node);
+> > +}
+> > +
+> > +static void clear_pending_extents(void *_mds)
+> > +{
+> > +	struct cxl_memdev_state *mds = _mds;
+> > +	struct cxl_extent_list_node *pos, *tmp;
+> > +
+> > +	list_for_each_entry_safe(pos, tmp, &mds->add_ctx.pending_extents, list)
+> > +		delete_extent_node(pos);
+> > +	mds->add_ctx.group = NULL;
+> > +}
+> > +
+> > +static int add_to_pending_list(struct list_head *pending_list,
+> > +			       struct cxl_extent *to_add)
+> > +{
+> > +	struct cxl_extent_list_node *node;
+> > +	struct cxl_extent *extent;
+> > +
+> > +	node = kzalloc(sizeof(*node), GFP_KERNEL);
+> > +	if (!node)
+> > +		return -ENOMEM;
+> > +	extent = kmemdup(to_add, sizeof(*extent), GFP_KERNEL);
+> > +	if (!extent)
+> > +		return -ENOMEM;
 > 
-> Fixes: 36f257e3b0ba ("acpi/ghes, cxl/pci: Process CXL CPER Protocol Errors")
-> Fixes: 2905cb5236cb ("cxl/pci: Add (hopeful) error handling support")
-> Cc: stable@vger.kernel.org
-> Reported-by: Sashiko
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Leaking node here. Maybe convert to using __free()?
 
-Applied to cxl/next with change suggested from Richard.
-
-c268f949e219f9e179558e836f457f6c5fbec416
-
-> ---
->  drivers/cxl/core/ras.c   | 27 ++++++++++++++++++++-------
->  drivers/cxl/core/trace.h | 24 ++++++++++++++++--------
->  drivers/cxl/cxl.h        | 14 ++++++++++++--
->  3 files changed, 48 insertions(+), 17 deletions(-)
+Yep, done!
+> > +
+> > +	node->extent = extent;
+> > +	list_add_tail(&node->list, pending_list);
+> > +	return 0;
+> > +}
+> > +
+> > +/*
+> > + * Stub: stage extents on the pending list and reply with an empty
+> > + * ADD_DC_RESPONSE on More=0 (refuse all).  A later commit replaces
+> > + * the no-op tail with the real Add pipeline that surfaces a dax
+> > + * device per accepted extent.
+> > + */
+> > +static int handle_add_event(struct cxl_memdev_state *mds,
+> > +			    struct cxl_event_dcd *event)
+> > +{
+> > +	struct device *dev = mds->cxlds.dev;
+> > +	int rc;
+> > +
+> > +	rc = add_to_pending_list(&mds->add_ctx.pending_extents, &event->extent);
+> > +	if (rc)
+> > +		return rc;
 > 
-> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index 006c6ffc2f56..99fb00949c2f 100644
-> --- a/drivers/cxl/core/ras.c
-> +++ b/drivers/cxl/core/ras.c
-> @@ -8,6 +8,10 @@
->  #include <cxlpci.h>
->  #include "trace.h"
->  
-> +/* Check that UCE header definition is maintained to keep ABI intact  */
-> +static_assert(CXL_HEADERLOG_TRACE_SIZE_U32 == 128,
-> +	      "rasdaemon ABI requires exactly 128 u32s");
-> +
->  static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
->  					      struct cxl_ras_capability_regs ras_cap)
->  {
-> @@ -19,6 +23,7 @@ static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
->  static void cxl_cper_trace_uncorr_port_prot_err(struct pci_dev *pdev,
->  						struct cxl_ras_capability_regs ras_cap)
->  {
-> +	u32 hl[CXL_HEADERLOG_TRACE_SIZE_U32] = {};
->  	u32 status = ras_cap.uncor_status & ~ras_cap.uncor_mask;
->  	u32 fe;
->  
-> @@ -28,8 +33,8 @@ static void cxl_cper_trace_uncorr_port_prot_err(struct pci_dev *pdev,
->  	else
->  		fe = status;
->  
-> -	trace_cxl_port_aer_uncorrectable_error(&pdev->dev, status, fe,
-> -					       ras_cap.header_log);
-> +	memcpy(hl, ras_cap.header_log, CXL_HEADERLOG_SIZE);
-> +	trace_cxl_port_aer_uncorrectable_error(&pdev->dev, status, fe, hl);
->  }
->  
->  static void cxl_cper_trace_corr_prot_err(struct cxl_memdev *cxlmd,
-> @@ -44,6 +49,7 @@ static void
->  cxl_cper_trace_uncorr_prot_err(struct cxl_memdev *cxlmd,
->  			       struct cxl_ras_capability_regs ras_cap)
->  {
-> +	u32 hl[CXL_HEADERLOG_TRACE_SIZE_U32] = {};
->  	u32 status = ras_cap.uncor_status & ~ras_cap.uncor_mask;
->  	u32 fe;
->  
-> @@ -53,8 +59,15 @@ cxl_cper_trace_uncorr_prot_err(struct cxl_memdev *cxlmd,
->  	else
->  		fe = status;
->  
-> -	trace_cxl_aer_uncorrectable_error(cxlmd, status, fe,
-> -					  ras_cap.header_log);
-> +	/*
-> +	 * ras_cap.header_log[] holds CXL_HEADERLOG_SIZE_U32 (16) hardware
-> +	 * dwords.  Copy them into the front of a zero-filled
-> +	 * CXL_HEADERLOG_TRACE_SIZE_U32 (128) u32 staging buffer so the trace
-> +	 * event memcpy sees a full 512-byte source and the userspace ABI
-> +	 * (rasdaemon) is preserved.
-> +	 */
-> +	memcpy(hl, ras_cap.header_log, CXL_HEADERLOG_SIZE);
-> +	trace_cxl_aer_uncorrectable_error(cxlmd, status, fe, hl);
->  }
->  
->  static int match_memdev_by_parent(struct device *dev, const void *uport)
-> @@ -204,12 +217,12 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
->  {
->  	void __iomem *addr;
->  	u32 *log_addr;
-> -	int i, log_u32_size = CXL_HEADERLOG_SIZE / sizeof(u32);
-> +	int i;
->  
->  	addr = ras_base + CXL_RAS_HEADER_LOG_OFFSET;
->  	log_addr = log;
->  
-> -	for (i = 0; i < log_u32_size; i++) {
-> +	for (i = 0; i < CXL_HEADERLOG_SIZE_U32; i++) {
->  		*log_addr = readl(addr);
->  		log_addr++;
->  		addr += sizeof(u32);
-> @@ -222,7 +235,7 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
->   */
->  bool cxl_handle_ras(struct device *dev, void __iomem *ras_base)
->  {
-> -	u32 hl[CXL_HEADERLOG_SIZE_U32];
-> +	u32 hl[CXL_HEADERLOG_TRACE_SIZE_U32] = {};
->  	void __iomem *addr;
->  	u32 status;
->  	u32 fe;
-> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> index a972e4ef1936..d37876096dd7 100644
-> --- a/drivers/cxl/core/trace.h
-> +++ b/drivers/cxl/core/trace.h
-> @@ -56,7 +56,7 @@ TRACE_EVENT(cxl_port_aer_uncorrectable_error,
->  		__string(host, dev_name(dev->parent))
->  		__field(u32, status)
->  		__field(u32, first_error)
-> -		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
-> +		__array(u32, header_log, CXL_HEADERLOG_TRACE_SIZE_U32)
->  	),
->  	TP_fast_assign(
->  		__assign_str(device);
-> @@ -64,10 +64,14 @@ TRACE_EVENT(cxl_port_aer_uncorrectable_error,
->  		__entry->status = status;
->  		__entry->first_error = fe;
->  		/*
-> -		 * Embed the 512B headerlog data for user app retrieval and
-> -		 * parsing, but no need to print this in the trace buffer.
-> +		 * Embed headerlog data for user app retrieval and parsing,
-> +		 * but no need to print in the trace buffer. Only
-> +		 * CXL_HEADERLOG_SIZE_U32 (16) dwords are hardware data;
-> +		 * the remaining entries preserve the 512-byte ABI layout
-> +		 * rasdaemon depends on and are zero-filled by the caller.
->  		 */
-> -		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
-> +		memcpy(__entry->header_log, hl,
-> +			CXL_HEADERLOG_TRACE_SIZE_U32 * sizeof(u32));
->  	),
->  	TP_printk("device=%s host=%s status: '%s' first_error: '%s'",
->  		  __get_str(device), __get_str(host),
-> @@ -85,7 +89,7 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
->  		__field(u64, serial)
->  		__field(u32, status)
->  		__field(u32, first_error)
-> -		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
-> +		__array(u32, header_log, CXL_HEADERLOG_TRACE_SIZE_U32)
->  	),
->  	TP_fast_assign(
->  		__assign_str(memdev);
-> @@ -94,10 +98,14 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
->  		__entry->status = status;
->  		__entry->first_error = fe;
->  		/*
-> -		 * Embed the 512B headerlog data for user app retrieval and
-> -		 * parsing, but no need to print this in the trace buffer.
-> +		 * Embed headerlog data for user app retrieval and parsing,
-> +		 * but no need to print in the trace buffer. Only
-> +		 * CXL_HEADERLOG_SIZE_U32 (16) dwords are hardware data;
-> +		 * the remaining entries preserve the 512-byte ABI layout
-> +		 * rasdaemon depends on and are zero-filled by the caller.
->  		 */
-> -		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
-> +		memcpy(__entry->header_log, hl,
-> +			CXL_HEADERLOG_TRACE_SIZE_U32 * sizeof(u32));
->  	),
->  	TP_printk("memdev=%s host=%s serial=%lld: status: '%s' first_error: '%s'",
->  		  __get_str(memdev), __get_str(host), __entry->serial,
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 9b947286eb9b..906fb480dad5 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -148,8 +148,18 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
->  #define CXL_RAS_CAP_CONTROL_FE_MASK GENMASK(5, 0)
->  #define CXL_RAS_HEADER_LOG_OFFSET 0x18
->  #define CXL_RAS_CAPABILITY_LENGTH 0x58
-> -#define CXL_HEADERLOG_SIZE SZ_512
-> -#define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
-> +#define CXL_HEADERLOG_SIZE 64
-> +#define CXL_HEADERLOG_SIZE_U32 (CXL_HEADERLOG_SIZE / sizeof(u32))
-> +
-> +/*
-> + * The RAS UCE trace event header array was originally sized at SZ_512/sizeof(u32)
-> + * = 128 u32s due to a bug. Userspace tools (rasdaemon) have grown a dependency
-> + * on that 512-byte layout. Keep the trace array at 128 u32s to preserve the
-> + * ABI; only CXL_HEADERLOG_SIZE_U32 (16) dwords are valid hardware data, the
-> + * remainder are zero-filled.
-> + */
-> +#define CXL_HEADERLOG_TRACE_SIZE SZ_512
-> +#define CXL_HEADERLOG_TRACE_SIZE_U32 (CXL_HEADERLOG_TRACE_SIZE / sizeof(u32))
->  
->  /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
->  #define CXLDEV_CAP_ARRAY_OFFSET 0x0
+> Should clear_pending_extents() be called before return to clean up previously staged extents?
+> 
+Yes I think so. Done!
 
+> DJ
+> 
+Thanks,
+Anisa
+> > +
+> > +	if (event->flags & CXL_DCD_EVENT_MORE) {
+> > +		dev_dbg(dev, "more bit set; delay the surfacing of extent\n");
+> > +		return 0;
+> > +	}
+> > +
+> > +	rc = cxl_send_dc_response(mds, CXL_MBOX_OP_ADD_DC_RESPONSE,
+> > +				  &mds->add_ctx.pending_extents, 0);
+> > +	clear_pending_extents(mds);
+> > +	return rc;
+> > +}
+> > +
+> > +/*
+> > + * Stub: ack the release back to the device so it knows we are not
+> > + * using the range.  A later commit replaces this with the real
+> > + * teardown that walks the region's tag group and tears down the
+> > + * member dc_extent devices.
+> > + */
+> > +static int cxl_rm_extent(struct cxl_memdev_state *mds,
+> > +			 struct cxl_extent *extent)
+> > +{
+> > +	u64 start_dpa = le64_to_cpu(extent->start_dpa);
+> > +	struct range dpa_range = {
+> > +		.start = start_dpa,
+> > +		.end = start_dpa + le64_to_cpu(extent->length) - 1,
+> > +	};
+> > +
+> > +	memdev_release_extent(mds, &dpa_range);
+> > +	return 0;
+> > +}
+> > +
+> > +static char *cxl_dcd_evt_type_str(u8 type)
+> > +{
+> > +	switch (type) {
+> > +	case DCD_ADD_CAPACITY:
+> > +		return "add";
+> > +	case DCD_RELEASE_CAPACITY:
+> > +		return "release";
+> > +	case DCD_FORCED_CAPACITY_RELEASE:
+> > +		return "force release";
+> > +	default:
+> > +		break;
+> > +	}
+> > +
+> > +	return "<unknown>";
+> > +}
+> > +
+> > +static void cxl_handle_dcd_event_records(struct cxl_memdev_state *mds,
+> > +					 struct cxl_event_record_raw *raw_rec)
+> > +{
+> > +	struct cxl_event_dcd *event = &raw_rec->event.dcd;
+> > +	struct cxl_extent *extent = &event->extent;
+> > +	struct device *dev = mds->cxlds.dev;
+> > +	uuid_t *id = &raw_rec->id;
+> > +	int rc;
+> > +
+> > +	if (!uuid_equal(id, &CXL_EVENT_DC_EVENT_UUID))
+> > +		return;
+> > +
+> > +	dev_dbg(dev, "DCD event %s : DPA:%#llx LEN:%#llx\n",
+> > +		cxl_dcd_evt_type_str(event->event_type),
+> > +		le64_to_cpu(extent->start_dpa), le64_to_cpu(extent->length));
+> > +
+> > +	switch (event->event_type) {
+> > +	case DCD_ADD_CAPACITY:
+> > +		rc = handle_add_event(mds, event);
+> > +		break;
+> > +	case DCD_RELEASE_CAPACITY:
+> > +		rc = cxl_rm_extent(mds, &event->extent);
+> > +		break;
+> > +	case DCD_FORCED_CAPACITY_RELEASE:
+> > +		dev_err_ratelimited(dev, "Forced release event ignored.\n");
+> > +		rc = 0;
+> > +		break;
+> > +	default:
+> > +		rc = -EINVAL;
+> > +		break;
+> > +	}
+> > +
+> > +	if (rc)
+> > +		dev_err_ratelimited(dev, "dcd event failed: %d\n", rc);
+> > +}
+> > +
+> >  static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> >  				    enum cxl_event_log_type type)
+> >  {
+> > @@ -1138,9 +1371,13 @@ static void cxl_mem_get_records_log(struct cxl_memdev_state *mds,
+> >  		if (!nr_rec)
+> >  			break;
+> >  
+> > -		for (i = 0; i < nr_rec; i++)
+> > +		for (i = 0; i < nr_rec; i++) {
+> >  			__cxl_event_trace_record(cxlmd, type,
+> >  						 &payload->records[i]);
+> > +			if (type == CXL_EVENT_TYPE_DCD)
+> > +				cxl_handle_dcd_event_records(mds,
+> > +							&payload->records[i]);
+> > +		}
+> >  
+> >  		if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
+> >  			trace_cxl_overflow(cxlmd, type, payload);
+> > @@ -1172,6 +1409,8 @@ void cxl_mem_get_event_records(struct cxl_memdev_state *mds, u32 status)
+> >  {
+> >  	dev_dbg(mds->cxlds.dev, "Reading event logs: %x\n", status);
+> >  
+> > +	if (cxl_dcd_supported(mds) && (status & CXLDEV_EVENT_STATUS_DCD))
+> > +		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_DCD);
+> >  	if (status & CXLDEV_EVENT_STATUS_FATAL)
+> >  		cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_FATAL);
+> >  	if (status & CXLDEV_EVENT_STATUS_FAIL)
+> > @@ -1769,6 +2008,11 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
+> >  	}
+> >  
+> >  	mutex_init(&mds->event.log_lock);
+> > +	INIT_LIST_HEAD(&mds->add_ctx.pending_extents);
+> > +
+> > +	rc = devm_add_action_or_reset(dev, clear_pending_extents, mds);
+> > +	if (rc)
+> > +		return ERR_PTR(rc);
+> >  
+> >  	rc = devm_cxl_register_mce_notifier(dev, &mds->mce_notifier);
+> >  	if (rc == -EOPNOTSUPP)
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index 1297594beaec..5ef2cf4d005b 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -12,6 +12,7 @@
+> >  #include <linux/node.h>
+> >  #include <linux/io.h>
+> >  #include <linux/range.h>
+> > +#include <linux/xarray.h>
+> >  #include <cxl/cxl.h>
+> >  
+> >  extern const struct nvdimm_security_ops *cxl_security_ops;
+> > @@ -180,11 +181,13 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+> >  #define CXLDEV_EVENT_STATUS_WARN		BIT(1)
+> >  #define CXLDEV_EVENT_STATUS_FAIL		BIT(2)
+> >  #define CXLDEV_EVENT_STATUS_FATAL		BIT(3)
+> > +#define CXLDEV_EVENT_STATUS_DCD			BIT(4)
+> >  
+> >  #define CXLDEV_EVENT_STATUS_ALL (CXLDEV_EVENT_STATUS_INFO |	\
+> >  				 CXLDEV_EVENT_STATUS_WARN |	\
+> >  				 CXLDEV_EVENT_STATUS_FAIL |	\
+> > -				 CXLDEV_EVENT_STATUS_FATAL)
+> > +				 CXLDEV_EVENT_STATUS_FATAL |	\
+> > +				 CXLDEV_EVENT_STATUS_DCD)
+> >  
+> >  /* CXL rev 3.0 section 8.2.9.2.4; Table 8-52 */
+> >  #define CXLDEV_EVENT_INT_MODE_MASK	GENMASK(1, 0)
+> > @@ -306,6 +309,41 @@ enum cxl_decoder_state {
+> >  	CXL_DECODER_STATE_AUTO_STAGED,
+> >  };
+> >  
+> > +struct cxl_dc_tag_group;
+> > +
+> > +/**
+> > + * struct dc_extent - A single dynamic-capacity extent surfaced to the host.
+> > + *
+> > + * One per device-stamped extent.  Multiple dc_extents that share a tag
+> > + * (see &struct cxl_dc_tag_group) form a single logical allocation, but
+> > + * each dc_extent has its own HPA range and is the unit that the DAX
+> > + * layer sees as a backing dax_resource.
+> > + *
+> > + * @dev: device representing this extent; child of cxlr_dax->dev.
+> > + * @group: containing tag group (allocation); shared across siblings.
+> > + * @cxled: endpoint decoder backing the DPA range.
+> > + * @dpa_range: DPA range this extent covers within @cxled.
+> > + * @hpa_range: HPA range that @dpa_range decodes to, relative to
+> > + *	       cxlr_dax->hpa_range.start.
+> > + * @uuid: tag uuid (matches @group->uuid; kept for the release-path log).
+> > + * @seq_num: 1..n assembly-order index within the tag group.  For extents
+> > + *	     from a sharable partition this equals the device-stamped
+> > + *	     shared_extn_seq (CXL 3.1 Table 8-51).  For extents from a
+> > + *	     non-sharable partition the device leaves shared_extn_seq == 0
+> > + *	     and the host assigns @seq_num in event arrival order at
+> > + *	     cxl_add_pending() time.  Used by the dax layer to assemble
+> > + *	     ranges in the right order regardless of source.
+> > + */
+> > +struct dc_extent {
+> > +	struct device dev;
+> > +	struct cxl_dc_tag_group *group;
+> > +	struct cxl_endpoint_decoder *cxled;
+> > +	struct range dpa_range;
+> > +	struct range hpa_range;
+> > +	uuid_t uuid;
+> > +	u16 seq_num;
+> > +};
+> > +
+> >  /**
+> >   * struct cxl_endpoint_decoder - Endpoint  / SPA to DPA decoder
+> >   * @cxld: base cxl_decoder_object
+> > @@ -518,12 +556,45 @@ struct cxl_pmem_region {
+> >  	struct cxl_pmem_region_mapping mapping[];
+> >  };
+> >  
+> > +/* See CXL 3.1 8.2.9.2.1.6 */
+> > +enum dc_event {
+> > +	DCD_ADD_CAPACITY,
+> > +	DCD_RELEASE_CAPACITY,
+> > +	DCD_FORCED_CAPACITY_RELEASE,
+> > +	DCD_REGION_CONFIGURATION_UPDATED,
+> > +};
+> > +
+> >  struct cxl_dax_region {
+> >  	struct device dev;
+> >  	struct cxl_region *cxlr;
+> >  	struct range hpa_range;
+> >  };
+> >  
+> > +/**
+> > + * struct cxl_dc_tag_group - A tagged dynamic-capacity allocation.
+> > + *
+> > + * Container for the &struct dc_extent siblings that share a tag.  The
+> > + * group has no sysfs identity; userspace sees the individual dc_extents
+> > + * directly under the parent dax_region device.  The group exists to
+> > + * keep tag-scoped invariants (atomic add, atomic release, ordered carve
+> > + * by seq_num) in one place.
+> > + *
+> > + * @cxlr_dax: back reference to parent region device.
+> > + * @uuid: tag identifying this allocation; same across all member dc_extents.
+> > + * @dc_extents: xarray of &struct dc_extent in this group, indexed by the
+> > + *		dc_extent's @seq_num (1..n, dense).  See &struct dc_extent
+> > + *		for how seq_num is sourced for sharable vs non-sharable
+> > + *		allocations.
+> > + * @nr_extents: live count of dc_extents in the group; the group is freed
+> > + *		when the last dc_extent device is released.
+> > + */
+> > +struct cxl_dc_tag_group {
+> > +	struct cxl_dax_region *cxlr_dax;
+> > +	uuid_t uuid;
+> > +	struct xarray dc_extents;
+> > +	unsigned int nr_extents;
+> > +};
+> > +
+> >  /**
+> >   * struct cxl_port - logical collection of upstream port devices and
+> >   *		     downstream port devices to construct a CXL memory
+> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > index 65c009b02da6..592c8e3b611c 100644
+> > --- a/drivers/cxl/cxlmem.h
+> > +++ b/drivers/cxl/cxlmem.h
+> > @@ -7,6 +7,7 @@
+> >  #include <linux/cdev.h>
+> >  #include <linux/uuid.h>
+> >  #include <linux/node.h>
+> > +#include <linux/list.h>
+> >  #include <cxl/event.h>
+> >  #include <cxl/mailbox.h>
+> >  #include "cxl.h"
+> > @@ -399,6 +400,23 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
+> >  	return dev_get_drvdata(cxl_mbox->host);
+> >  }
+> >  
+> > +/**
+> > + * struct pending_add_ctx - Staging state for an in-progress
+> > + *			    DCD_ADD_CAPACITY event chain
+> > + * @pending_extents: extents received so far in the chain; flushed when
+> > + *		     the chain closes (More=0)
+> > + * @group: tag group being assembled from the chain
+> > + *
+> > + * A DCD_ADD_CAPACITY notification can span multiple event records
+> > + * stitched together by the CXL_DCD_EVENT_MORE flag.  Records are staged
+> > + * here until the device clears More, at which point the staged batch is
+> > + * processed and responded to as a single Add_DC_Response.
+> > + */
+> > +struct pending_add_ctx {
+> > +	struct list_head pending_extents;
+> > +	struct cxl_dc_tag_group *group;
+> > +};
+> > +
+> >  /**
+> >   * struct cxl_memdev_state - Generic Type-3 Memory Device Class driver data
+> >   *
+> > @@ -417,6 +435,8 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
+> >   * @active_volatile_bytes: sum of hard + soft volatile
+> >   * @active_persistent_bytes: sum of hard + soft persistent
+> >   * @dcd_supported: all DCD commands are supported
+> > + * @add_ctx: state for an in-progress DCD_ADD_CAPACITY chain
+> > + *	     (see &struct pending_add_ctx)
+> >   * @event: event log driver state
+> >   * @poison: poison driver state info
+> >   * @security: security driver state info
+> > @@ -437,6 +457,7 @@ struct cxl_memdev_state {
+> >  	u64 active_volatile_bytes;
+> >  	u64 active_persistent_bytes;
+> >  	bool dcd_supported;
+> > +	struct pending_add_ctx add_ctx;
+> >  
+> >  	struct cxl_event_state event;
+> >  	struct cxl_poison_state poison;
+> > @@ -513,6 +534,21 @@ enum cxl_opcode {
+> >  	UUID_INIT(0x5e1819d9, 0x11a9, 0x400c, 0x81, 0x1f, 0xd6, 0x07, 0x19,     \
+> >  		  0x40, 0x3d, 0x86)
+> >  
+> > +/*
+> > + * Add Dynamic Capacity Response
+> > + * CXL rev 3.1 section 8.2.9.9.9.3; Table 8-168 & Table 8-169
+> > + */
+> > +struct cxl_mbox_dc_response {
+> > +	__le32 extent_list_size;
+> > +	u8 flags;
+> > +	u8 reserved[3];
+> > +	struct updated_extent_list {
+> > +		__le64 dpa_start;
+> > +		__le64 length;
+> > +		u8 reserved[8];
+> > +	} __packed extent_list[] __counted_by(extent_list_size);
+> > +} __packed;
+> > +
+> >  struct cxl_mbox_get_supported_logs {
+> >  	__le16 entries;
+> >  	u8 rsvd[6];
+> > @@ -583,6 +619,14 @@ struct cxl_mbox_identify {
+> >  	UUID_INIT(0xe71f3a40, 0x2d29, 0x4092, 0x8a, 0x39, 0x4d, 0x1c, 0x96, \
+> >  		  0x6c, 0x7c, 0x65)
+> >  
+> > +/*
+> > + * Dynamic Capacity Event Record
+> > + * CXL rev 3.1 section 8.2.9.2.1; Table 8-43
+> > + */
+> > +#define CXL_EVENT_DC_EVENT_UUID                                             \
+> > +	UUID_INIT(0xca95afa7, 0xf183, 0x4018, 0x8c, 0x2f, 0x95, 0x26, 0x8e, \
+> > +		  0x10, 0x1a, 0x2a)
+> > +
+> >  /*
+> >   * Get Event Records output payload
+> >   * CXL rev 3.0 section 8.2.9.2.2; Table 8-50
+> > @@ -608,6 +652,7 @@ enum cxl_event_log_type {
+> >  	CXL_EVENT_TYPE_WARN,
+> >  	CXL_EVENT_TYPE_FAIL,
+> >  	CXL_EVENT_TYPE_FATAL,
+> > +	CXL_EVENT_TYPE_DCD,
+> >  	CXL_EVENT_TYPE_MAX
+> >  };
+> >  
+> > diff --git a/include/cxl/event.h b/include/cxl/event.h
+> > index ff97fea718d2..fa3cd895f656 100644
+> > --- a/include/cxl/event.h
+> > +++ b/include/cxl/event.h
+> > @@ -6,6 +6,7 @@
+> >  #include <linux/types.h>
+> >  #include <linux/uuid.h>
+> >  #include <linux/workqueue_types.h>
+> > +#include <linux/list.h>
+> >  
+> >  /*
+> >   * Common Event Record Format
+> > @@ -141,12 +142,49 @@ struct cxl_event_mem_sparing {
+> >  	u8 reserved2[0x25];
+> >  } __packed;
+> >  
+> > +/*
+> > + * CXL rev 3.1 section 8.2.9.2.1.6; Table 8-51
+> > + */
+> > +struct cxl_extent {
+> > +	__le64 start_dpa;
+> > +	__le64 length;
+> > +	u8 uuid[UUID_SIZE];
+> > +	__le16 shared_extn_seq;
+> > +	u8 reserved[0x6];
+> > +} __packed;
+> > +
+> > +struct cxl_extent_list_node {
+> > +	struct cxl_extent *extent;
+> > +	struct list_head list;
+> > +	int rid;
+> > +};
+> > +
+> > +/*
+> > + * Dynamic Capacity Event Record
+> > + * CXL rev 3.1 section 8.2.9.2.1.6; Table 8-50
+> > + */
+> > +#define CXL_DCD_EVENT_MORE			BIT(0)
+> > +struct cxl_event_dcd {
+> > +	struct cxl_event_record_hdr hdr;
+> > +	u8 event_type;
+> > +	u8 validity_flags;
+> > +	__le16 host_id;
+> > +	u8 partition_index;
+> > +	u8 flags;
+> > +	u8 reserved1[0x2];
+> > +	struct cxl_extent extent;
+> > +	u8 reserved2[0x18];
+> > +	__le32 num_avail_extents;
+> > +	__le32 num_avail_tags;
+> > +} __packed;
+> > +
+> >  union cxl_event {
+> >  	struct cxl_event_generic generic;
+> >  	struct cxl_event_gen_media gen_media;
+> >  	struct cxl_event_dram dram;
+> >  	struct cxl_event_mem_module mem_module;
+> >  	struct cxl_event_mem_sparing mem_sparing;
+> > +	struct cxl_event_dcd dcd;
+> >  	/* dram & gen_media event header */
+> >  	struct cxl_event_media_hdr media_hdr;
+> >  } __packed;
+> 
