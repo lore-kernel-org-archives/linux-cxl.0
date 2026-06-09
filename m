@@ -1,120 +1,345 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6203A47DD6C
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 15:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDE8348C62;
+	Tue,  9 Jun 2026 16:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781019351; cv=none; b=k4ApVbwLWabKeR/IKeYDKzv++kPRLvJEly4YTMABVU1Ndw23oq2JVLnz3kxhZJeCKiB5TBdvM92P4PZGAD09SCAUhl5NOJxz0GGNyKtaLz8t53rl3+ROScaufWeoxG+g45EriS/25TJFClLOtqhTaMENgh+6ixRV3gi7r0r6YIs=
+	t=1781021007; cv=none; b=AwFKGXsBlU6YGVCRcJbPHbCYtAYQr3OJSPbRL1yDVKLK//+cAuWE+Bzqdd0wDbWkKoQSsyLKkWzGTqp9LNnkouXunWmeWiM7ecw5WR2jtDiRVGrYGP7dCSDUUDfCWbjh3UFKvbLO8f0a/w7y/mG/CDei4+h2H4fUgRD2qeBS+Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781019351; c=relaxed/simple;
-	bh=/TgtOuaONvsUnR+aXOPnuRF8ZAqdZP8tr7TwdKuIOt4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rrVEKByVy+j78rmMmjv3JynhfHJkTXzTpuGoXBY7j1MDcq/ZSo2UtfTs9LqQKqG3jDz+KDTSAFYOU7Iulcu6+yMEHMVwlYoeaC6gZc6naMDNJg+0oUXnesbL3+v+pzfEECWXH5JYRbpM2y8jdOktYfKCAvVVLbhvh+20U+mxpbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=j576Jndo; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1781021007; c=relaxed/simple;
+	bh=5IuwQtfXtA0KtCEm1Ja9ZmmwjOicS0jkKfQuSYPRk80=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jh52HDA7sqMf35WimI5EgqfH7939TxjDeBsTIbqEQ+7MxTRmKWoIjxb/+r6E8WFHhrCpyeyS7h0anntGfNUcMWItTZhjztXD7mmEcL8m5p3HiqNxrexVSrRtZKICpROha7sVm/WB+EabSnoKtMCqujrP6CDQDRqDj7jb5Rww2n4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M7dP1E/d; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="j576Jndo"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-9156b74006aso411970885a.0
-        for <linux-cxl@vger.kernel.org>; Tue, 09 Jun 2026 08:35:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1781019349; x=1781624149; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fMNVrJ+zylUZaoWsNGMkq8FYpb2q8Its7Sc70f0OoMM=;
-        b=j576JndoQRbFIwumnPu2agxfJTry9gN3fd65VC3AxO6na6iEv2DVDWijxUmR2wpLme
-         EcozNL+7l1PsxsSJcKgwrJeIrVVlsd8htTKxY5UiJrai+IYyjjBiH0WOmYoa98bpLlhD
-         Lk7xBVgMuTbNv84+leerCaS2ruXmo9RiR5wGfemDasCJ8tfGuyDHpP27D1m9STYO2l1g
-         mjyQbInRQcq+I0hFXL2nzCp0TVBXMInEuLKbaktsz5JWGPXn5unH4q7zBhQAFRN/qe3+
-         2tOLCvVtqY5+8S+lj9UF744BrkKLfWWkXBy+M147GFsNR2rzE0a41gCEJdlzQF+9rTcY
-         pETA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781019349; x=1781624149;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fMNVrJ+zylUZaoWsNGMkq8FYpb2q8Its7Sc70f0OoMM=;
-        b=P1AM+tm7uszVoXGQmQQJ9PNc1UqaN/iqfsvSsJJGGVV0NqLRJ4QZTx/0Qtr0ZN3FmC
-         uFyGDN+0nndpxTLBrsQSddIQbc7ft4BW7AkniLUD8uwrFN/RwWYdi4xovDW34fuPqHNO
-         ajnaIoDVl8Eo698q4jBcTUn6OamHYYL4MzzKwk1mpMFYxM7its95/xtYtUQeLSUA0BfP
-         jHT8klsZY6ggbE23MK05cCFgzMwArzkrNuMHvK2fOJdWTjNpT9R8YP6S1T/z69kzWFMn
-         5gWuXH+8tozlFyqbaHv+XRAv1JG9h1LqMZguO5TDZX3orJ6sAssbKeg+FfP/W/SKff0b
-         Z+Hw==
-X-Forwarded-Encrypted: i=1; AFNElJ/dUqSfT/sx9IRfjSDVpJDn/ZXizgbI/7UTW/xJegynoPC7EG59oxDOQwXa1bX242kCfQpNdONwHS0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQGFxxYdVyeWrUvCFzK7WeBjWTVwX0e3Nra5VKXFKUKjrk6+2P
-	BpJ41obgb73NCmeJw7pL1OnmahrLd9Kt5ggro2qB6s2pPjtbrmFGRSBE2an40Ym5eEc=
-X-Gm-Gg: Acq92OFR/CM887gmTJ0aC2lIpz06B9fbsfkUtKP0Nh8hvnAWf48liuQBSQPERGH4DdJ
-	WumcGToDnIqsWVd44Q1xE8cf828nYe/yf87XPY0S8a3/HwnHg12fjuA2uvzVWoLvzUuFJ9mM0IG
-	tOqxJrnynzG8XvW1U93tfpRxNVO4pv98uADotescZTlCrfeM3KSiYEUgAihGgx4IEZ5qvgMXnk6
-	1iQbPJHaM+Kz0CM3l+/ZwRZYBHqSHwAfdu2AcT947/icbdgGK87OxuLAGO8wwypWDcqX9lFcYq/
-	h0WYvZUa5XN7sruFAqjJZftycLldWrGOfHac4FrZSQspgJMn8HNh9cGOhEipUmrYCe5ggLSuSTO
-	yxp9J4I7yDO1oBWwK0oiyyMoqMsw4QBKVT5YY+QeMefscdIC52hzx2LcEamBxxkhmwMW0HmnlLQ
-	/JbW0VgYyAxhrADfkbiNfoq7BeHVF8xji4nDjZz57vq/jPVUqdL09glzIXzwHe9IecbZWdMgEjK
-	0MTGLQQGdjtKEeFAQ==
-X-Received: by 2002:a05:620a:454b:b0:915:7732:ea7c with SMTP id af79cd13be357-915a9da3801mr3475555585a.43.1781019349028;
-        Tue, 09 Jun 2026 08:35:49 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-9158a3bf5f9sm2173658385a.35.2026.06.09.08.35.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 08:35:48 -0700 (PDT)
-Date: Tue, 9 Jun 2026 11:35:46 -0400
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: linux-mm@kvack.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	linux-cxl@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	djbw@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-	akpm@linux-foundation.org, ljs@kernel.org, liam@infradead.org,
-	vbabka@kernel.org, rppt@kernel.org, surenb@google.com,
-	mhocko@suse.com, osalvador@suse.de, shuah@kernel.org,
-	alison.schofield@intel.com, Smita.KoralahalliChannabasappa@amd.com,
-	ira.weiny@intel.com, apopple@nvidia.com,
-	Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH v4 8/9] dax/kmem: add sysfs interface for atomic hotplug
-Message-ID: <aigy0ut410TItkgB@gourry-fedora-PF4VCD3F>
-References: <20260605211911.2160954-1-gourry@gourry.net>
- <20260605211911.2160954-9-gourry@gourry.net>
- <1cb0514b-c753-411e-8ff8-80fa29837441@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M7dP1E/d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781021005; x=1812557005;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5IuwQtfXtA0KtCEm1Ja9ZmmwjOicS0jkKfQuSYPRk80=;
+  b=M7dP1E/d+DG6ezPcJqL999o7IH+HhcX1iE5Up00juxnYlm5WTRVy6uHc
+   OsLYH1P9AtPUtkXL273RDMN0tOrl32zHYMmAMsteJkXrPTPdVN2li1ubP
+   UPNlsPVM8wkts2BUuyTCwtxwb+4SHL1k4mZhg6IxqklcS2EFL8Bksw0bq
+   fBksmXQV3klK9n2zzwPfNdaYhfUA6vM1eYZT+VwaEk2yEJHMcWgKQi6oZ
+   mfsU2dBI+DtvFZsU7CMPmRnRXrVJOlwOq41UdO5ePpnoEQKYSPDkAd07u
+   ZxrWsaHLykKGPy8f8e5bqNfCA6j4nqM1vOsqjsu4fWZVA+CBIPmPyWBKm
+   Q==;
+X-CSE-ConnectionGUID: wz7o9nn6SWK4khDmLgjEAw==
+X-CSE-MsgGUID: p6GSkxr5RQSI21YSMG2X/A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="80807870"
+X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
+   d="scan'208";a="80807870"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 09:03:25 -0700
+X-CSE-ConnectionGUID: 95wVR3UBSCSrGg5jZi2bIQ==
+X-CSE-MsgGUID: 5AHaJ7d2TimmDG162EHV+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
+   d="scan'208";a="249823938"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.109.206]) ([10.125.109.206])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 09:03:22 -0700
+Message-ID: <d9888ab0-c91d-4d29-84b4-51c0b56a4305@intel.com>
+Date: Tue, 9 Jun 2026 09:03:21 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1cb0514b-c753-411e-8ff8-80fa29837441@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] cxl/port: Fix missing port lock in cxl_dport_remove()
+To: "Bowman, Terry" <terry.bowman@amd.com>, Richard Cheng <icheng@nvidia.com>
+Cc: dave@stgolabs.net, jic23@kernel.org, alison.schofield@intel.com,
+ vishal.l.verma@intel.com, ira.weiny@intel.com, djbw@kernel.org,
+ ming.li@zohomail.com, rrichter@amd.com, Benjamin.Cheatham@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com, stable@vger.kernel.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ PradeepVineshReddy.Kodamati@amd.com
+References: <20260608223533.583278-1-terry.bowman@amd.com>
+ <be149ddc-702b-46c2-b6a7-d9195aee0eee@intel.com>
+ <aifBp346jcVZ6sgi@MWDK4CY14F> <2e24ba30-83df-490f-8a1f-5b80d832cb3b@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <2e24ba30-83df-490f-8a1f-5b80d832cb3b@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 09, 2026 at 12:26:07PM +0200, David Hildenbrand (Arm) wrote:
-> On 6/5/26 23:19, Gregory Price wrote:
+
+
+On 6/9/26 8:12 AM, Bowman, Terry wrote:
+> On 6/9/2026 2:40 AM, Richard Cheng wrote:
+>> On Mon, Jun 08, 2026 at 05:35:23PM +0800, Dave Jiang wrote:
+>>>
+>>>
+>>> On 6/8/26 3:35 PM, Terry Bowman wrote:
+>>>> xa_erase() in cxl_dport_remove() runs without the port device lock,
+>>>> creating a race with any caller that does xa_load() on port->dports
+>>>> and then dereferences the returned dport pointer. A concurrent
+>>>> cxl_dport_remove() can erase and free the dport between the xa_load()
+>>>> and the caller acquiring the port lock, causing a use-after-free.
+>>>>
+>>>> For non-root ports the port lock is already held by the caller on two
+>>>> paths:
+>>>>
+>>>> 1. Driver unbind: devres_release_all() is called from
+>>>>    __device_release_driver() which holds port->dev.mutex.
+>>>>
+>>>> 2. Dynamic endpoint removal: cxl_detach_ep() takes the port lock
+>>>>    before calling del_dports() -> del_dport() -> devres_release_group(),
+>>>>    which synchronously runs cxl_dport_remove().
+>>>>
+>>>> Use cond_cxl_root_lock/unlock(), which only acquires the port lock when
+>>>> the port is a root port and the lock is therefore not already held.
+>>>> This matches the pattern used in __devm_cxl_add_dport() for the same
+>>>> reason.
+>>>>
+>>>> The write-side fix to cxl_dport_remove() is necessary but not
+>>>> sufficient. Callers that obtain a dport pointer via cxl_mem_find_port()
+>>>> use a lockless xa_load() and must not dereference that pointer until a
+>>>> lock that excludes free_dport()/kfree() is held.
+>>>>
+>>
+>> Hi Terry,
+>>
+>> I think the mechanism is right, cond_cxl_root_lock() in cxl_dport_remove()
+>> is a no-op for non-root ports and a real qcquire only for root dports, so
+>> no deadlock.
+>>
+>> But this only cover the 2 cxl_mem_find_port() callers. The sibling
+>> cxl_pci_find_port() has similar lockless xa_load() plus deref, and those
+>> callers aren't fied.
+>>
+>> Could you either extend the same fix in this series?
+>> I'm happy to send a follow-up for other readers if that's easier for you.
+>>
 > 
-> >  
-> > +static int dax_kmem_parse_state(const char *buf)
-> > +{
-> > +	if (sysfs_streq(buf, "unplugged"))
-> > +		return DAX_KMEM_UNPLUGGED;
-> > +	if (sysfs_streq(buf, "online"))
-> > +		return MMOP_ONLINE;
-> > +	if (sysfs_streq(buf, "online_kernel"))
-> > +		return MMOP_ONLINE_KERNEL;
-> > +	if (sysfs_streq(buf, "online_movable"))
-> > +		return MMOP_ONLINE_MOVABLE;
-> > +	return -EINVAL;
+> Youre right there are other callsites requiring similar changes. You're follow-up 
+> would helpful. It will allow me to return to the error handling series.
+> Thanks.
+
+Richard,
+Do you mind just bundle Terry's fix with your series and we can apply it all together? Thanks!
+
+DJ
+
 > 
-> Should we try making use of mhp_online_type_from_str()/online_type_to_str()
-> [possibly a nicer exported function for the latter] to avoid duplicating this ...
+>>>> For root ports, dport_to_host() returns uport_dev, so all three devres
+>>>> actions (free_dport, cxl_dport_remove, cxl_dport_unlink) are registered
+>>>> on uport_dev. __device_release_driver() holds uport_dev->mutex for the
+>>>> full teardown sequence including kfree(dport). Holding uport_dev->mutex
+>>>> on the read side therefore excludes concurrent dport freeing.
+>>>>
+>>>> Fix rcd_pcie_cap_emit() by passing NULL to cxl_mem_find_port() to avoid
+>>>> capturing a lockless dport pointer, then re-fetching dport inside the
+>>>> uport_dev guard via cxl_find_dport_by_dev(). The previous guard on
+>>>> root->dev was wrong: cxl_dport_remove() releases root->dev before
+>>>> free_dport() runs, so root->dev does not protect against concurrent
+>>>> kfree(dport).
+>>>>
+>>>> Fix cxl_mem_probe() similarly: pass NULL to cxl_mem_find_port(), then
+>>>> re-fetch dport inside scoped_guard(device, &parent_port->dev) for the
+>>>> VH path, and re-fetch again inside scoped_guard(device, uport_dev) for
+>>>> the RCH path. This closes both the TOCTOU window between the lockless
+>>>> xa_load() and the guard acquisition, and the window between the two
+>>>> sequential guards in the RCH path where a concurrent surprise removal
+>>>> could free dport before devm_cxl_add_endpoint() dereferences it.
+>>>>
+>>>> Reported-by: Sashiko
+>>>> Fixes: 391785859e7e ("cxl/port: Move dport tracking to an xarray")
+>>>> Link: https://lore.kernel.org/linux-cxl/20260505173029.2718246-1-terry.bowman@amd.com/
+>>>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>>>> Reviewed-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+>>>> ---
+>>>>  drivers/cxl/core/port.c | 10 +++++++
+>>>>  drivers/cxl/mem.c       | 65 +++++++++++++++++++++++++++++++----------
+>>>>  drivers/cxl/pci.c       | 17 +++++++----
+>>>>  3 files changed, 72 insertions(+), 20 deletions(-)
+>>>>
+>>>> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+>>>> index c5aacd7054f1..0b8f144596e8 100644
+>>>> --- a/drivers/cxl/core/port.c
+>>>> +++ b/drivers/cxl/core/port.c
+>>>> @@ -1092,8 +1092,18 @@ static void cxl_dport_remove(void *data)
+>>>>  	struct cxl_dport *dport = data;
+>>>>  	struct cxl_port *port = dport->port;
+>>>>  
+>>>> +	/*
+>>>> +	 * For non-root ports the port lock is already held by the caller
+>>>> +	 * via devres_release_all() during driver unbind, which holds
+>>>> +	 * port->dev.mutex throughout.  Acquiring it again unconditionally
+>>>> +	 * would deadlock.  Use cond_cxl_root_lock() which only acquires
+>>>> +	 * when the port is a root port and the lock is therefore not yet
+>>>> +	 * held.
+>>>> +	 */
+>>>> +	cond_cxl_root_lock(port);
+>>>>  	port->nr_dports--;
+>>>>  	xa_erase(&port->dports, (unsigned long) dport->dport_dev);
+>>>> +	cond_cxl_root_unlock(port);
+>>
+>> In the comment above, maybe worth adding some contents about this is
+>> also what makes the RCH reads safe. It's no obvious for me.
+>>
+>> Best regards,
+>> Richard Cheng.
+>>
+> 
+> For RCH/RCD case, the cond_cxl_root_lock() only synchronizes accesses to the 
+> xarray. The RP in the RCH/RCD context is a SW construct. We need to hold the 
+> port->uport_dev->mutex to prevent kfree().
+> 
+> - Terry
+> 
+> 
+>>>>  	put_device(dport->dport_dev);
+>>>>  }
+>>>>  
+>>>> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+>>>> index fcffe24dcb42..345b56f215ff 100644
+>>>> --- a/drivers/cxl/mem.c
+>>>> +++ b/drivers/cxl/mem.c
+>>>> @@ -70,9 +70,9 @@ static int cxl_mem_probe(struct device *dev)
+>>>>  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+>>>>  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
+>>>>  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>>>> -	struct device *endpoint_parent;
+>>>>  	struct cxl_dport *dport;
+>>>>  	struct dentry *dentry;
+>>>> +	bool rch = false;
+>>>>  	int rc;
+>>>>  
+>>>>  	if (!cxlds->media_ready)
+>>>> @@ -107,8 +107,7 @@ static int cxl_mem_probe(struct device *dev)
+>>>>  	if (rc)
+>>>>  		return rc;
+>>>>  
+>>>> -	struct cxl_port *parent_port __free(put_cxl_port) =
+>>>> -		cxl_mem_find_port(cxlmd, &dport);
+>>>> +	struct cxl_port *parent_port __free(put_cxl_port) = cxl_mem_find_port(cxlmd, NULL);
+>>>>  	if (!parent_port) {
+>>>>  		dev_err(dev, "CXL port topology not found\n");
+>>>>  		return -ENXIO;
+>>>> @@ -123,21 +122,57 @@ static int cxl_mem_probe(struct device *dev)
+>>>>  		}
+>>>>  	}
+>>>>  
+>>>> -	if (dport->rch)
+>>>> -		endpoint_parent = parent_port->uport_dev;
+>>>> -	else
+>>>> -		endpoint_parent = &parent_port->dev;
+>>>> -
+>>>> -	scoped_guard(device, endpoint_parent) {
+>>>> -		if (!endpoint_parent->driver) {
+>>>> -			dev_err(dev, "CXL port topology %s not enabled\n",
+>>>> -				dev_name(endpoint_parent));
+>>>> +	scoped_guard(device, &parent_port->dev) {
+>>>> +		/*
+>>>> +		 * Re-fetch dport under the port lock to close the TOCTOU
+>>>> +		 * window between cxl_mem_find_port()'s lockless xa_load() and
+>>>> +		 * this guard acquisition.  A concurrent surprise removal can
+>>>> +		 * free the dport in that window.
+>>>> +		 */
+>>>> +		dport = cxl_find_dport_by_dev(parent_port, cxlmd->dev.parent->parent);
+>>>> +		if (!dport) {
+>>>> +			dev_err(dev, "CXL port topology %s not found\n",
+>>>> +				dev_name(&parent_port->dev));
+>>>>  			return -ENXIO;
+>>>>  		}
+>>>> +		rch = dport->rch;
+>>>> +
+>>>> +		if (!rch) {
+>>>> +			if (!parent_port->dev.driver) {
+>>>> +				dev_err(dev, "CXL port topology %s not enabled\n",
+>>>> +					dev_name(&parent_port->dev));
+>>>> +				return -ENXIO;
+>>>> +			}
+>>>> +			rc = devm_cxl_add_endpoint(&parent_port->dev, cxlmd, dport);
+>>>> +			if (rc)
+>>>> +				return rc;
+>>>> +		}
+>>>> +	}
+>>>>  
+>>>> -		rc = devm_cxl_add_endpoint(endpoint_parent, cxlmd, dport);
+>>>> -		if (rc)
+>>>> -			return rc;
+>>>> +	if (rch) {
+>>>> +		struct device *uport_dev = parent_port->uport_dev;
+>>>> +
+>>>> +		scoped_guard(device, uport_dev) {
+>>>> +			if (!uport_dev->driver) {
+>>>> +				dev_err(dev, "CXL port topology %s not enabled\n",
+>>>> +					dev_name(uport_dev));
+>>>> +				return -ENXIO;
+>>>> +			}
+>>>> +			/*
+>>>> +			 * Re-fetch dport under uport_dev lock.  uport_dev->mutex
+>>>> +			 * is held for the full devres teardown sequence including
+>>>> +			 * free_dport()/kfree(), so this excludes concurrent
+>>>> +			 * hotplug removal through the entire dereference.
+>>>> +			 */
+>>>> +			dport = cxl_find_dport_by_dev(parent_port, cxlmd->dev.parent->parent);
+>>>> +			if (!dport) {
+>>>> +				dev_err(dev, "CXL RCH dport not found\n");
+>>>> +				return -ENXIO;
+>>>> +			}
+>>>> +			rc = devm_cxl_add_endpoint(uport_dev, cxlmd, dport);
+>>>> +			if (rc)
+>>>> +				return rc;
+>>>> +		}
+>>>
+>>> Still reviewing the patch, but thoughts on moving the two new big blocks to a helper function?
+>>>
+>>> DJ
+>>>
+>>>>  	}
+>>>>  
+>>>>  	if (cxlmd->attach) {
+>>>> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+>>>> index bace662dc988..710a62a66429 100644
+>>>> --- a/drivers/cxl/pci.c
+>>>> +++ b/drivers/cxl/pci.c
+>>>> @@ -708,10 +708,10 @@ static ssize_t rcd_pcie_cap_emit(struct device *dev, u16 offset, char *buf, size
+>>>>  {
+>>>>  	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
+>>>>  	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+>>>> -	struct device *root_dev;
+>>>>  	struct cxl_dport *dport;
+>>>> +	struct device *root_dev;
+>>>>  	struct cxl_port *root __free(put_cxl_port) =
+>>>> -		cxl_mem_find_port(cxlmd, &dport);
+>>>> +		cxl_mem_find_port(cxlmd, NULL);
+>>>>  
+>>>>  	if (!root)
+>>>>  		return -ENXIO;
+>>>> @@ -720,13 +720,20 @@ static ssize_t rcd_pcie_cap_emit(struct device *dev, u16 offset, char *buf, size
+>>>>  	if (!root_dev)
+>>>>  		return -ENXIO;
+>>>>  
+>>>> -	if (!dport->regs.rcd_pcie_cap)
+>>>> -		return -ENXIO;
+>>>> -
+>>>>  	guard(device)(root_dev);
+>>>>  	if (!root_dev->driver)
+>>>>  		return -ENXIO;
+>>>>  
+>>>> +	/*
+>>>> +	 * Fetch dport under uport_dev lock to protect against concurrent
+>>>> +	 * hotplug removal. uport_dev->mutex is held for the entire devres
+>>>> +	 * teardown sequence including free_dport(), so holding it here
+>>>> +	 * excludes concurrent kfree(dport).
+>>>> +	 */
+>>>> +	dport = cxl_find_dport_by_dev(root, cxlmd->dev.parent->parent);
+>>>> +	if (!dport || !dport->regs.rcd_pcie_cap)
+>>>> +		return -ENXIO;
+>>>> +
+>>>>  	switch (width) {
+>>>>  	case 2:
+>>>>  		return sysfs_emit(buf, "%#x\n",
+>>>
+>>>
 > 
 
-In patch 6 response i point out adding MMOP_UNPLUGGED
-
-If we add MMOP_UNPLUGGED as a state that is only use by callers of
-memory hotplug to represent the current state - but not as a valid input
-to memory_hotplug.c - then we can simply this as you request.
-
-Although we'll need to add a couple lines to memoryN/state parsing code
-to disallow MMOP_UNPLUGGED as a valid input (otherwise you could
-permanently unplug memory without the ability to get it back... unless
-you want that?  Seems useless to me.)
-
-~Gregory
