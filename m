@@ -1,143 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726EA3655CD;
-	Tue,  9 Jun 2026 18:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9B3331EAB
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 18:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781029349; cv=none; b=RDSL0ff8JnuJEnt/IsJoZ85fDR+6vYT5EXIKJLmpl7K9xAosOixBoCaCMAgST0iZizda1JlUnBXox58lHszkbDoffz7LD0dwIbxOezLqzWzRWczdZpITzKmViJDF7QGuEqvjOSUoCqAweyMF4lKs7KL4WJ8quKCxQSq9v/N33YA=
+	t=1781030039; cv=none; b=NWiyn+OamCzn/1skkggSGpmzj48ism87cWm/SGPyfEK0bI1V5/T9jqq+E+CvrxnrCU4fDRFLGxccfnmoP9vq9GLQWy51ZUmmqIwav8Wf96fgVPjixf4abWLk1Ff846Lgs0Czmrlrs/oeavHX8VL6zT/8Bs7n9c0NhRl+jQbPVfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781029349; c=relaxed/simple;
-	bh=e0h+X06kugdyWYkaiaBUKi7+NV31ZVgucZ3ES2VMSiE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e9osXNbM4cwSuXid6yU0GoN0OeaPHEPeoKjO9pO2dNOyIEXmYmkzZZdfNVUAi9JiLGj9woBR1ENE9nl4cLji60Rujzz9IPe4WXakqgrNTNsSWAZ+jMBMR+PbXXptoMuzfgJr9IJd8OwOph+W9Spy1ANzADU5IqNZT1qVsK7tkz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iXvK1xwQ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781030039; c=relaxed/simple;
+	bh=YPBILIJB/sXgdKpxBDocoTsa5FDZwh7jmpWEGCgXIzg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZnUmJzLUH5ImpuaLjxB7REuqa6skMiXAr3P9Rkmn7f02of54H1ZmHG1b/w8Ux0uR2Kq6yxM+2OkiF5u5y1s1G8sile6Rqe5hEEgDfhuH10KYFFFFZbu6vTV31V64oDPhTBeId+7rbruxWhYmZYjr+NjNKhpK+v+7e9C/3nA4eA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=cmEBbWi9; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iXvK1xwQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A22C51F00893;
-	Tue,  9 Jun 2026 18:22:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781029348;
-	bh=cFTtvbP2Sp1fiHY7s9iXXbHLzrRLp2nhEH1gNK/PItM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=iXvK1xwQeG/DeqCC1tllTKg2SB9yf/3QZ3iJ8CwZx801jmHoZRjFWyoiNwt+tif7e
-	 fmETAG9YKLrN+BlA5jdt1RyYSy5Rmts9v3yKep8aE/P6uwiQEY0HAXs3r5k5xTWxAd
-	 cnmvU+1CwucMHtSK3poz4hZBj7gonlC/64awt2wBvWiaHXr0a7JZig/3TBXwWg4KzI
-	 5bLf0rpPQpfw6TIFklfjqCsRYVjMeFJsXoeRwAlqcWw5YdloE+jilpnEMbrP51CDeT
-	 b3zAlRPQHreaJSFk8BC9UOAmJTM0R1pbmeiiSrZRh6GEp7rnNy/BCU2YepJCXpFcnH
-	 GdukEOQ7ZKkAw==
-Message-ID: <06bcee07-5e56-4a82-95ff-2a8e75b7154d@kernel.org>
-Date: Tue, 9 Jun 2026 20:22:20 +0200
-Precedence: bulk
-X-Mailing-List: linux-cxl@vger.kernel.org
-List-Id: <linux-cxl.vger.kernel.org>
-List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="cmEBbWi9"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-91587626a3eso683473885a.2
+        for <linux-cxl@vger.kernel.org>; Tue, 09 Jun 2026 11:33:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1781030038; x=1781634838; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OySD+ExhHPCEiw9aOnLHfgmqMe+Ca/7oT+zDoVBuOjM=;
+        b=cmEBbWi92Wbz522rBYJQGkJPku6c/7g5/AvRQqFIQopotI2vvtpnI5NTKyrfqxNuIR
+         Kdi7/zeqjL4VSHNr9BNcxZzN4FBX2/pXaJSn5WSlPI+ntggWDxeAUDSHOWNhZhfntfTB
+         x5HTZlcoVSPhA8BIdK6b0+QiGGsK3sZdyopSb0CMvtdlvjDKiuZgc57I3nKrPdurzxKs
+         zSoKv5WA42KbXP3dCdfef09GbK28iVTi05SyC6vTACKHVFw6WuY72QXHwUDJE6uaUh/X
+         RLxl44lBi9+lk5biFRE6TftERtjCAqVkXeQU/Pf7W0UoTZRLIvnkwv9day/rRUmyr3SZ
+         DwUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781030038; x=1781634838;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OySD+ExhHPCEiw9aOnLHfgmqMe+Ca/7oT+zDoVBuOjM=;
+        b=cdrvUe/6UNUzgnSLqQlBi6e8PuqcayRzBM6OMcrAuyiwNNTFKGrT3cvSsfssDDuPjq
+         9aiYX5SOB4BUvMY2+furcv5g2A1il3kfKfYZs1yaRnY15ZNd7l7X6UNlw3xfD+Ox815q
+         UxCYesoO4lMXocP8ZA/FsMxslYwsSf/3ojROA5OfXk2VcBe4jcb8KGxOOMN/ErhPN8bh
+         5vXgUmHlX68UDQrC4xbAbpwf3ao+q82wPdI1j6I+Bbwv9dwuWzjPYzlCzLSDnr0hiLXD
+         vWOLR/qaQ/T91MCaknvDrK1JU2qhTDoFmoHLxLbO4t0WDpmcL/w++1yjId9cv8C30bEu
+         i7OA==
+X-Forwarded-Encrypted: i=1; AFNElJ+pt87kBhLCg4GARBH26ic6RGQc3xC/MT0LL5L0vtMAj3iLF6s76Xodv8Fj53PXibpbboL9AD9bpjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQppxgV/2OGyEm/+rzMJkGoFyBu8IEZm9quLIwtyoqk1saih6s
+	ryvlSGSKYtlgPGMxM6OewcBpH9AxdIlUHZQB6Y8q8ukk/rz59/mI32skifNz58tjins=
+X-Gm-Gg: Acq92OFLNBgg03ZAydQR4f8mZ+vMFRURUNImgBiBTBgbdjxUnto83R+5axRC0QqRCo8
+	4ClV7FfcOGtuzi3LdOwlfUWUth0qDBtHu/XBITpfgxnLemBGLsF2npsgXzu37dK5BPw75tDtq/U
+	I6qdFMZoHTwCyCwjrjSS9aZ7IYP8L2gJr4LU3In+BwgCv6Hd/oNQUb/5Dt+STnC05PE6vdIQ4J9
+	beyBmbY2lb/7KQ95CK3+GNFJzloiskCTIn+C9KFqxFQaPBRBDV+JItf/yzsIq1623n/uqqQ190m
+	+pH+pn+pAcjDyYkLrsQqVTDJs5LIsxMAPyRylbuyZ3teGU1LkXG25jF1FFAxfttzKUk43vzKMXv
+	JKCeVZfovlUJKsmsfqNdoL1zlFgeAPoTQhK4c+gjEpxY6YNIVNnYvVqIsyEKLzPeG97k0h6KOlk
+	Jf9Cx5rqKigafA8KGWvkyclPU/yDhgVMNwvcLi2EBjtrMwSbd8YdrXlDNk0sDvUBBMyq+8XZEZZ
+	rXbPBxhAb1W5F/b6A==
+X-Received: by 2002:a05:620a:1d01:b0:915:9e84:85ee with SMTP id af79cd13be357-915a9ca7655mr3263727985a.15.1781030037611;
+        Tue, 09 Jun 2026 11:33:57 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9158a3eea49sm2158492985a.44.2026.06.09.11.33.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jun 2026 11:33:57 -0700 (PDT)
+Date: Tue, 9 Jun 2026 14:33:55 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-mm@kvack.org, nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	linux-cxl@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	djbw@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
+	akpm@linux-foundation.org, ljs@kernel.org, liam@infradead.org,
+	vbabka@kernel.org, rppt@kernel.org, surenb@google.com,
+	mhocko@suse.com, osalvador@suse.de, shuah@kernel.org,
+	alison.schofield@intel.com, Smita.KoralahalliChannabasappa@amd.com,
+	ira.weiny@intel.com, apopple@nvidia.com,
+	Hannes Reinecke <hare@suse.de>
 Subject: Re: [PATCH v4 8/9] dax/kmem: add sysfs interface for atomic hotplug
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-mm@kvack.org, nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, linux-cxl@vger.kernel.org,
- linux-kselftest@vger.kernel.org, djbw@kernel.org, vishal.l.verma@intel.com,
- dave.jiang@intel.com, akpm@linux-foundation.org, ljs@kernel.org,
- liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, osalvador@suse.de, shuah@kernel.org,
- alison.schofield@intel.com, Smita.KoralahalliChannabasappa@amd.com,
- ira.weiny@intel.com, apopple@nvidia.com, Hannes Reinecke <hare@suse.de>
+Message-ID: <aihck-U9nyne98H0@gourry-fedora-PF4VCD3F>
 References: <20260605211911.2160954-1-gourry@gourry.net>
  <20260605211911.2160954-9-gourry@gourry.net>
  <1cb0514b-c753-411e-8ff8-80fa29837441@kernel.org>
  <aigy0ut410TItkgB@gourry-fedora-PF4VCD3F>
  <e6e7453a-d2af-4f1a-8930-5e5e5c5879cd@kernel.org>
  <aihZG8WKVSvA86mA@gourry-fedora-PF4VCD3F>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <aihZG8WKVSvA86mA@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <06bcee07-5e56-4a82-95ff-2a8e75b7154d@kernel.org>
+Precedence: bulk
+X-Mailing-List: linux-cxl@vger.kernel.org
+List-Id: <linux-cxl.vger.kernel.org>
+List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06bcee07-5e56-4a82-95ff-2a8e75b7154d@kernel.org>
 
-On 6/9/26 20:19, Gregory Price wrote:
-> On Tue, Jun 09, 2026 at 08:11:42PM +0200, David Hildenbrand (Arm) wrote:
->> On 6/9/26 17:35, Gregory Price wrote:
->>>
->>> In patch 6 response i point out adding MMOP_UNPLUGGED
->>>
->>> If we add MMOP_UNPLUGGED as a state that is only use by callers of
->>> memory hotplug to represent the current state - but not as a valid input
->>> to memory_hotplug.c - then we can simply this as you request.
->>>
->>> Although we'll need to add a couple lines to memoryN/state parsing code
->>> to disallow MMOP_UNPLUGGED as a valid input (otherwise you could
->>> permanently unplug memory without the ability to get it back... unless
->>> you want that?  Seems useless to me.)
->>
->> I would just special-case your KMEM-special value, and then branch off to the
->> core helpers?
->>
->> static int dax_kmem_parse_state(const char *buf)
->> {
->> 	if (sysfs_streq(buf, "unplugged"))
->> 		return DAX_KMEM_UNPLUGGED;
->> 	return mhp_online_type_from_str(...);
->> }
->>
->> So there is no need to add a value to MM core?
->>
+On Tue, Jun 09, 2026 at 08:22:20PM +0200, David Hildenbrand (Arm) wrote:
+> On 6/9/26 20:19, Gregory Price wrote:
+> > On Tue, Jun 09, 2026 at 08:11:42PM +0200, David Hildenbrand (Arm) wrote:
+> >> On 6/9/26 17:35, Gregory Price wrote:
+> > 
+> > Was going to propose this, but then I thought... well if CXL detactes
+> > itself from dax and does this same pattern, maybe MMOP_UNPLUGGED makes
+> > sense.
+> > 
+> > But i'll leave that for another day and do as you suggest.
 > 
-> Was going to propose this, but then I thought... well if CXL detactes
-> itself from dax and does this same pattern, maybe MMOP_UNPLUGGED makes
-> sense.
+> Let me sleep over it :)
 > 
-> But i'll leave that for another day and do as you suggest.
 
-Let me sleep over it :)
+Have some other sets i'm trying to break out of private-nodes anyway,
+i'll let this bake for the week.
 
--- 
-Cheers,
-
-David
+~Gregory
