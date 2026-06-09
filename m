@@ -1,147 +1,259 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E985F3AEB2D
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 10:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483AD416D18
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 12:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781001938; cv=none; b=NijY/ce3Nu1cI/hqq3R3PmqjE7ncREpPDhLiGgzmvLGSDoQnbhXbDnb/Jre2i9xozZDIlYY8RSBDofzKNW+8lqfrrzx+RefOmF7u1zVItxl+TKx5q77F9NxqP74wS+fkwvkfEXaIKE0fM6G20UukR7GQhbwwSJbcmJAn4izi2PU=
+	t=1781008603; cv=none; b=XbXWxxbqlrkhcJqvilMtnNHayuwc2W7k7PZm+xCntlOJ+8qRgd0IR3+lg2YGzgiBgm3eHOuA36aAkCbCQ6weBdAk9VU6xA8pU+UQ/zT0kjgp+gV0+rvnuClAdFOEcC1ilIY/RrR4KEfKBmUW/jZJMkrEIRtC2Wn1RY6U9DmptG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781001938; c=relaxed/simple;
-	bh=jbT4TeIu5qLYRlUa6VwPmhNjxvOAClqnJbxP67TxUz0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=Kg8jHslg5P/XfXEdaBhTla7/2S0JCMW699Z4eiMHlfiECzoRPYyucN6772hMXHau/LzTMdwGAywOLH5NO23SJxrQJHP6jXNqf7F0oRIPAwoUyVmYA6BjP23y2/iwWwCA8Yv6SgOgFpr90ZYKqSG6jqY+0eIt6ItNHbNVKaymyEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=P8wvDtyo; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1781008603; c=relaxed/simple;
+	bh=0yP6MF3gE/BfgY5Xm8w9RZgDEaJIlvEEClg/QEFVDUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bUys0QW02CywM5VLUQZjyncuntGHkX/O7RhNB8Z6kQ9ZhKtvbyS/rbnBXNtmwRXVBl5Pmt0eCODu7y4WDBCIfG32QzZhtHrWLxn2AbAHPTECJwQ4HudogMn0Rm7xJlrLa6XF/tXXLbjh8UIHfAnFcKWEMvkIFZUGf20SNvnaDc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tg4RzaL9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="P8wvDtyo"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20260609104535epoutp02ae0e39b32f21480d9cac2f71435f1df2~3Y9LrUxpI2804728047epoutp02l
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 10:45:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20260609104535epoutp02ae0e39b32f21480d9cac2f71435f1df2~3Y9LrUxpI2804728047epoutp02l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1781001935;
-	bh=jIahGxVrHix7BsYtz5UoC9vsS7ivK+HEKtPzcVjyb0o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P8wvDtyoVTVifaa0peeZc3a2YbUZyI1UoU0okqfQdKAYBSdu4fCvKJQVpF5cC54Rj
-	 Zl4cgm79GoQZY0wVVNb1MaOicc9g7ufurIOl1+HbLAuHH+JcL96oa5FkWqbNOawkGn
-	 uDjGBkPhhKaj2sq+9MpM/tAqIGfAnUVNXcazUlKQ=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20260609104534epcas5p3030dfc01d01081fc1a4863f303080048~3Y9LVaxB_1375213752epcas5p3o;
-	Tue,  9 Jun 2026 10:45:34 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.95]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4gZQYB13wbz6B9m7; Tue,  9 Jun
-	2026 10:45:34 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260609104533epcas5p2b80ad53ed807018b3bb4316e4984f89a~3Y9KNcdAB0412104121epcas5p2h;
-	Tue,  9 Jun 2026 10:45:33 +0000 (GMT)
-Received: from unvme-SYS-221H-TN24R.samsungds.net (unknown [107.99.40.127])
-	by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20260609104531epsmtip128242981e16a2a3d2eb67e16690c8c80~3Y9IqBKnV2355923559epsmtip1o;
-	Tue,  9 Jun 2026 10:45:31 +0000 (GMT)
-From: Shrihari E S <shrihari.s@samsung.com>
-To: jic23@kernel.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-	qemu-devel@nongnu.org, cpgs@samsung.com
-Cc: arun.george@samsung.com, vikash.k5@samsung.com, s.neeraj@samsung.com,
-	shrihari.s@samsung.com, dongjoo.seo1@samsung.com, dave@stgolabs.net,
-	gost.dev@samsung.com
-Subject: [RFC 8/8] cxl: Add documentation for UIO-enabled CXL devices
-Date: Tue,  9 Jun 2026 16:28:36 +0530
-Message-Id: <20260609105836.3702787-9-shrihari.s@samsung.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260609105836.3702787-1-shrihari.s@samsung.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tg4RzaL9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 576411F00893;
+	Tue,  9 Jun 2026 12:36:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781008601;
+	bh=sDtzMRMvAl0fvlAZBIDiq1O2az4YurxD2A7Q83AuB9s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=Tg4RzaL9TzyeNTB8+6WRXvmYrF7nLlxg4r3xEeHMedZaDYuxyjDbihoXkaCL4KTyQ
+	 9wiiNDiYis7mlcD9N8udqC6oJwBLSNZ2hOkgLk67pQLOBmeCYh28ebvsww9EY1IajZ
+	 RbQ1yKfDaJ01XNL85ge1Y6gB+F0TR0GnCwwKPCl8p2Cx59tqPLKWtw6TFwEEjwC/1K
+	 fYaJVpMaJOqhJbgD43UN/iAR7jsG43Bj989MHNpd2MCIrEw1Lv9POR/BQo7GTGw+jV
+	 GWWF7QKddK7XtGj3AVJ37ZZbNRqd0ksKsejtlpCEe3PMBl4rD7aeK5sR/Zn7H40nhm
+	 yR1yCq4eZ56LA==
+Date: Tue, 9 Jun 2026 13:36:34 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Chen Pei <cp0613@linux.alibaba.com>
+Cc: pbonzini@redhat.com, palmer@dabbelt.com, alistair.francis@wdc.com,
+ liwei1518@gmail.com, daniel.barboza@oss.qualcomm.com,
+ zhiwei_liu@linux.alibaba.com, chao.liu.zevorn@gmail.com,
+ sunilvl@ventanamicro.com, jonathan.cameron@huawei.com, fan.ni@samsung.com,
+ guoren@kernel.org, qemu-riscv@nongnu.org, qemu-devel@nongnu.org,
+ linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 4/4] hw/cxl: Map committed HDM decoder ranges as RAM for
+ direct DMA
+Message-ID: <20260609133634.7dbb892c@jic23-huawei>
+In-Reply-To: <20260602074127.63819-5-cp0613@linux.alibaba.com>
+References: <20260602074127.63819-1-cp0613@linux.alibaba.com>
+	<20260602074127.63819-5-cp0613@linux.alibaba.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260609104533epcas5p2b80ad53ed807018b3bb4316e4984f89a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20260609104533epcas5p2b80ad53ed807018b3bb4316e4984f89a
-References: <20260609105836.3702787-1-shrihari.s@samsung.com>
-	<CGME20260609104533epcas5p2b80ad53ed807018b3bb4316e4984f89a@epcas5p2.samsung.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add a command-line example demonstrating a topology with three CXL Type-3
-devices connected via a switch. This example enables Unordered I/O (UIO) on
-all ports and endpoints to illustrate the correct usage of UIO-related
-properties.
+On Tue,  2 Jun 2026 15:41:27 +0800
+Chen Pei <cp0613@linux.alibaba.com> wrote:
 
-Signed-off-by: Shrihari E S <shrihari.s@samsung.com>
----
- docs/system/devices/cxl.rst | 50 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+> The CXL Fixed Memory Window (CFMW) is registered with
+> memory_region_init_io() and has no backing ram_block.  As a result
+> address_space_map() on a guest physical address inside the CFMW
+> takes the bounce-buffer path and is bounded by
+> DEFAULT_MAX_BOUNCE_BUFFER_SIZE (4 KiB by default for the system
+> AddressSpace).  Once a Type-3 device is brought online as system RAM
+> (daxctl online-memory), the kernel happily allocates DMA buffers from
+> the CFMW range and any virtio operation whose scatter list exceeds
+> 4 KiB or that overlaps with another in-flight transfer fails with:
+> 
+>     qemu-system-riscv64: virtio: bogus descriptor or out of resources
 
-diff --git a/docs/system/devices/cxl.rst b/docs/system/devices/cxl.rst
-index 32b1b5d773..c39721b3f9 100644
---- a/docs/system/devices/cxl.rst
-+++ b/docs/system/devices/cxl.rst
-@@ -407,6 +407,56 @@ use HDM-DB for coherence, which requires operating in Flit mode::
-   -device cxl-type3,bus=swport3,volatile-memdev=cxl-mem3,id=cxl-mem3,sn=0x4 \
-   -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
- 
-+Unordered I/O (UIO) Support
-+---------------------------
-+
-+CXL 3.2 and PCIe 6.1 introduce Unordered I/O (UIO), which allows memory
-+transactions to bypass strict ordering requirements, potentially improving
-+performance for certain workloads. UIO support requires:
-+
-+1. **256-byte Flit Mode**: Enabled via ``x-256b-flit=on`` on all ports and devices
-+2. **Streamlined Virtual Channel (SVC)**: A PCIe 6.1 extended capability that
-+   provides dedicated virtual channels for UIO traffic
-+
-+The SVC capability defines two paths for UIO traffic:
-+
-+- **SVC3 (Mandatory)**: Dedicated VC for UIO traffic only (``x-uio-svc=on``)
-+- **SVC4 (Optional)**: Shared VC for both UIO and non-UIO traffic
-+  (``x-uio-svc-opt=on``)
-+
-+Both paths require 256B flit mode. The CXL Type 3 device uses the ``x-uio=on``
-+property to advertise UIO capability, which is then reflected in the HDM decoder
-+capability registers.
-+
-+**Note**: Per the CXL specification, downstream switch ports do not track UIO
-+capability separately; only root ports and upstream ports maintain the UIO
-+capability.
-+
-+An example of 3 type3 devices with volatile memory below a switch. All the devices
-+and ports support Unordered IO (UIO) feature which requires Streamlined Virtual Channel
-+(SVC) capability and Flit mode::
-+
-+  qemu-system-x86_64 -M q35,cxl=on -m 4G,maxmem=8G,slots=8 -smp 4 \
-+  ...
-+  -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-+  -device cxl-rp,port=0,bus=cxl.1,id=rp13,chassis=0,slot=2,x-uio-svc=on,
-+   x-uio-svc-opt=on,x-256b-flit=on,x-speed=64,x-width=32 \
-+  -device cxl-upstream,port=2,sn=1234,bus=rp13,id=us0,x-uio-svc=on,
-+   x-uio-svc-opt=on,x-256b-flit=on,x-speed=64,x-width=32 \
-+  -device cxl-downstream,port=0,bus=us0,id=swport0,chassis=0,slot=4,
-+   x-uio-svc=on,x-uio-svc-opt=on,x-256b-flit=on,x-speed=64,x-width=32 \
-+  -device cxl-downstream,port=1,bus=us0,id=swport1,chassis=0,slot=5,
-+   x-uio-svc=on,x-uio-svc-opt=on,x-256b-flit=on,x-speed=64,x-width=32  \
-+  -device cxl-downstream,port=3,bus=us0,id=swport2,chassis=0,slot=6,
-+   x-uio-svc=on,x-uio-svc-opt=on,x-256b-flit=on,x-speed=64,x-width=32  \
-+  -object memory-backend-ram,id=target-mem1,size=512M \
-+  -object memory-backend-ram,id=target-mem2,size=512M \
-+  -object memory-backend-ram,id=target-mem3,size=512M \
-+  -device cxl-type3,id=mem1,bus=swport0,volatile-memdev=target-mem1,x-uio=on,x-256b-flit=on,sn=1233 \
-+  -device cxl-type3,id=mem2,bus=swport1,volatile-memdev=target-mem2,x-uio=on,x-256b-flit=on,sn=1234 \
-+  -device cxl-type3,id=mem3,bus=swport2,volatile-memdev=target-mem3,x-uio=on,x-256b-flit=on,sn=1235 \
-+  -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=4k
-+
- A simple arm/virt example featuring a single direct connected CXL Type 3
- Volatile Memory device::
- 
--- 
-2.34.1
+This is half the bug if you are running without the stuff I talk about
+below - you can't run instructions out of that memory either.
+
+As to the bonce buffer that should be larger anyway - there has
+been some discussion in the past on how to do that for the global one
+(there is support for PCI specific cases) but we never got to a
+standard solution.
+
+> 
+> The bug is not RISC-V specific: CFMW registration and the bounce
+> buffer limit are both arch-agnostic, so any guest that onlines CXL
+> memory and issues DMA larger than 4 KiB into it is affected.  It
+> shows up first on RISC-V virt because that is where the rest of
+> this series enables the daxctl + virtio path end-to-end.
+> 
+> Reproduce on RISC-V virt with cxl=on and a single Type-3 device:
+> 
+>     cxl create-region -m -t ram -d decoder0.0 -w 1 mem0 -s 4G
+>     daxctl online-memory dax0.0
+>     free -h    # triggers the error and stalls the guest
+> 
+> Fix it by overlaying a RAM alias of the device's memory backend
+> (hostvmem / hostpmem) at the committed HDM decoder's HPA range, with
+> higher priority than the CFMW I/O region.  flatview_translate() then
+> hits the alias, address_space_map() returns a direct host pointer,
+> and DMA proceeds without bouncing.  This mirrors the existing QEMU
+> pattern of PCI BAR and IOMMU MR overlays.  The alias is torn down on
+> hdm_decoder_uncommit() so subsequent region tear-down + re-creation
+> works.
+> 
+
++CC linux-cxl as that's where you are more likely to get feedback on 
+CXL aspects.
+
+For this one there is a more comprehensive solution that restricts this
+to the cases that are valid (no interleaving going on).
+https://lore.kernel.org/qemu-devel/20260318171918.146-1-alireza.sanaee@huawei.com/#t
+It is rather more complex as a result.
+
+For other cases we have always intentionally left it as not supporting
+what you have here because we want the interleave to be correct and testable.
+
+As far as I'm concerned that series of Alireza's has been ready to merge for
+a while. I've been a bit busy with other things so haven't been poking
+for that though.  Might be a week or two before I get back on top of things.
+
+Anyhow, please give Ali's series a go and see if that works for you.
+There may well be other corners we haven't thought of!
+
+Jonathan
+
+
+
+> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+
+
+
+> ---
+>  hw/mem/cxl_type3.c          | 81 +++++++++++++++++++++++++++++++++++++
+>  include/hw/cxl/cxl_device.h |  4 ++
+>  2 files changed, 85 insertions(+)
+> 
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index 4739239da3..f962bce66a 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -24,6 +24,7 @@
+>  #include "qemu/module.h"
+>  #include "qemu/pmem.h"
+>  #include "qemu/range.h"
+> +#include "system/address-spaces.h"
+>  #include "qemu/rcu.h"
+>  #include "qemu/guest-random.h"
+>  #include "system/hostmem.h"
+> @@ -420,6 +421,11 @@ static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
+>      ComponentRegisters *cregs = &ct3d->cxl_cstate.crb;
+>      uint32_t *cache_mem = cregs->cache_mem_registers;
+>      uint32_t ctrl;
+> +    uint32_t low, high;
+> +    uint64_t decoder_base, decoder_size;
+> +    MemoryRegion *mr = NULL;
+> +    uint64_t dpa_offset = 0;
+> +    char *alias_name;
+>  
+>      ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + which * hdm_inc);
+>      /* TODO: Sanity checks that the decoder is possible */
+> @@ -427,6 +433,73 @@ static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
+>      ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
+>  
+>      stl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + which * hdm_inc, ctrl);
+> +
+> +    /*
+> +     * Create a RAM alias in system memory for the committed decoder range.
+> +     * This enables direct DMA mapping (address_space_map) for devices like
+> +     * virtio that need to DMA to/from CXL memory.  Without this, the CFMW
+> +     * I/O region would require bounce buffering which is limited to 4KB.
+> +     */
+> +    low = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_BASE_LO + which * hdm_inc);
+> +    high = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_BASE_HI + which * hdm_inc);
+> +    decoder_base = ((uint64_t)high << 32) | (low & 0xf0000000);
+> +
+> +    low = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_SIZE_LO + which * hdm_inc);
+> +    high = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_SIZE_HI + which * hdm_inc);
+> +    decoder_size = ((uint64_t)high << 32) | (low & 0xf0000000);
+> +
+> +    if (!decoder_base || !decoder_size) {
+> +        return;
+> +    }
+> +
+> +    /* Calculate DPA offset by summing sizes of preceding decoders */
+> +    for (int i = 0; i < which; i++) {
+> +        uint32_t prev_low, prev_high;
+> +        uint64_t prev_size;
+> +        uint32_t prev_ctrl;
+> +
+> +        prev_ctrl = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL +
+> +                             i * hdm_inc);
+> +        if (!FIELD_EX32(prev_ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED)) {
+> +            continue;
+> +        }
+> +        prev_low = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_SIZE_LO +
+> +                            i * hdm_inc);
+> +        prev_high = ldl_le_p(cache_mem + R_CXL_HDM_DECODER0_SIZE_HI +
+> +                             i * hdm_inc);
+> +        prev_size = ((uint64_t)prev_high << 32) | (prev_low & 0xf0000000);
+> +        dpa_offset += prev_size;
+> +    }
+> +
+> +    /* Determine which memory backend to alias */
+> +    if (ct3d->hostvmem) {
+> +        MemoryRegion *vmr = host_memory_backend_get_memory(ct3d->hostvmem);
+> +        uint64_t vmr_size = memory_region_size(vmr);
+> +
+> +        if (dpa_offset < vmr_size) {
+> +            mr = vmr;
+> +        }
+> +    }
+> +    if (!mr && ct3d->hostpmem) {
+> +        MemoryRegion *pmr = host_memory_backend_get_memory(ct3d->hostpmem);
+> +        uint64_t vmr_size = ct3d->hostvmem ?
+> +            memory_region_size(
+> +                host_memory_backend_get_memory(ct3d->hostvmem)) : 0;
+> +        mr = pmr;
+> +        dpa_offset -= vmr_size;
+> +    }
+> +
+> +    if (!mr) {
+> +        return;
+> +    }
+> +
+> +    alias_name = g_strdup_printf("cxl-hdm%d-ram-alias", which);
+> +    memory_region_init_alias(&ct3d->hdm_ram_alias[which], OBJECT(ct3d),
+> +                             alias_name, mr, dpa_offset, decoder_size);
+> +    memory_region_add_subregion_overlap(get_system_memory(), decoder_base,
+> +                                        &ct3d->hdm_ram_alias[which], 1);
+> +    ct3d->hdm_ram_alias_valid[which] = true;
+> +    g_free(alias_name);
+>  }
+>  
+>  static void hdm_decoder_uncommit(CXLType3Dev *ct3d, int which)
+> @@ -442,6 +515,14 @@ static void hdm_decoder_uncommit(CXLType3Dev *ct3d, int which)
+>      ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED, 0);
+>  
+>      stl_le_p(cache_mem + R_CXL_HDM_DECODER0_CTRL + which * hdm_inc, ctrl);
+> +
+> +    /* Remove the RAM alias if it was added during commit */
+> +    if (ct3d->hdm_ram_alias_valid[which]) {
+> +        memory_region_del_subregion(get_system_memory(),
+> +                                    &ct3d->hdm_ram_alias[which]);
+> +        object_unparent(OBJECT(&ct3d->hdm_ram_alias[which]));
+> +        ct3d->hdm_ram_alias_valid[which] = false;
+> +    }
+>  }
+>  
+>  static int ct3d_qmp_uncor_err_to_cxl(CxlUncorErrorType qmp_err)
+> diff --git a/include/hw/cxl/cxl_device.h b/include/hw/cxl/cxl_device.h
+> index 393f312217..07deef2e2c 100644
+> --- a/include/hw/cxl/cxl_device.h
+> +++ b/include/hw/cxl/cxl_device.h
+> @@ -714,6 +714,10 @@ struct CXLType3Dev {
+>      /* State */
+>      AddressSpace hostvmem_as;
+>      AddressSpace hostpmem_as;
+> +
+> +    /* RAM aliases for HDM decoders - enables direct DMA mapping */
+> +    MemoryRegion hdm_ram_alias[CXL_HDM_DECODER_COUNT];
+> +    bool hdm_ram_alias_valid[CXL_HDM_DECODER_COUNT];
+>      CXLComponentState cxl_cstate;
+>      CXLDeviceState cxl_dstate;
+>      CXLCCI cci; /* Primary PCI mailbox CCI */
 
