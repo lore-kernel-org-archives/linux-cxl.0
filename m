@@ -1,68 +1,66 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013015.outbound.protection.outlook.com [40.93.201.15])
+Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011052.outbound.protection.outlook.com [52.101.62.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0423CF205;
-	Tue,  9 Jun 2026 07:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F21C39AD34;
+	Tue,  9 Jun 2026 07:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.52
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780988893; cv=fail; b=eX3g2C8S1JZCvuBP7ejrgPbG2oGTVLiLpirFHvgofnKaqNKtg72xP6QuH2F5hysfyPKy2o/72NnhtQX+bADiJbFpdI8VRBEkROgy6LBEirwyH0Q+cm6XrtqzntbNRsecVaAKKOgHZmaxUrTnVyAD6W4OzLnRgjQrwlxLg5vGKZ4=
+	t=1780990865; cv=fail; b=QKPsUIbjpCCB1ry2ioC9vBNUXmnK+eyI4oK+KMUkQIkges3GA6L/uo330Oqth4YzX9DWgTHtPJKq55YqjeUYmP2W0qDZfGSsO6Unebjg0u/1EnsgRNhvkPrnghUzmI5y3rk8MDvFZGJABvCq04hEr0PYA1G+ypgk51jBToEZfXo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780988893; c=relaxed/simple;
-	bh=GqtThMscBIu1FkhM1iVu76vxnOvPq89RsmSjEF6eYEg=;
+	s=arc-20240116; t=1780990865; c=relaxed/simple;
+	bh=rqojo1/glrZqWngFKZRlDotE/dwZLEiOAkCWJoAVV/w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=pjoU3E3SimGDpWGDsnn12QuX1vKmjE/rJWru1++jvOctQR6HHrp9YuxOgDOagY50L8DEq5/hOc+1YACCxKcCuW5SClNxIN8DW2E28GmAtenU8e7dBerzUu4MSgtNEDO5eakXwexTGNePQ6su5ddbNeO6CZH1Qkf2zvIx4sy6hC0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nIaXSIb4; arc=fail smtp.client-ip=40.93.201.15
+	 Content-Disposition:In-Reply-To:MIME-Version; b=STquVzjSOzg4Hl7Tjoc+cIpy1pX5isjC2Qk9vLAU/qXbeQGPBhpNBPJXhjkcwy6xIGZO6xY0FZ69P42qhglKh9UpbCvgqsXeWl/o3+aqiSuqP9K7ktg8eJfGOVSZ6kRHOJWRfY2FAHraH4JxhXGE/QR2jKoVKU/5Io8eEuap9sg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=crOVYHCM; arc=fail smtp.client-ip=52.101.62.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nIaXSIb4"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="crOVYHCM"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lhd08zzROgelZ/WRUBlQLlZ5tq82pnuxqXkHLRTZa05yHzjXW/1p+V4MO26k8m1yj3+/Ex0aJucXd8pzoBtjc1259LkWl5pgyVMnRSKxQ3K/PwP5eOFaLlw1T5U1hontxJsdBgabG3tItxMaIEW7dmTwORS7s2CfxHsGlag3vR/InKwZa/wiVSe/BbfQx7x67r1Tj9Q9c9GkDwdQyi/2tvjoh0tXvYw/LbGQI1pq/TIpJ49OFW2kPVdj0TRS7slwbT8DcKM+Xyc60JeH/6bAM6vM8MQVui5E5UBy0op/RdA41QxSXsFp37Y1CISXPHfZwfKIxYP2Q5FxxS5U2giJkg==
+ b=hueLzOQguL86l7vknZNcJOWTPA/SMy6pMP7KcTFipRY3SZQELBKZ+kA8gz1FywcrjpxZzl0DTiYOqjVTE0M8Kt7DP1+WcM0nUuhFTKCm0ZF94m6da1YKiRluZLV9Z/a2LdVXPovbchzUO/xdUEuiuP30ADBohbdATae/0bx2yd24wpOdi0QxNCwMcpS3+Ba+DUEgkfdSGMhbh5Pj5UfMRe7Syn56teXu+vRAKl9ikv2dePLInH3YUY85zLzyc6UoJrLjzPjFaSeTSrnlk0nAT0DQkJF1+FhITLLRcTF1nHYcSmd5WeyYCbdBF+ig845gU4y2SO6Fw2h2vT8JDXrdjQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aZSjVX3ApNNp3H/U7sKRVNaas8yAmnovyU4SUxhtiGg=;
- b=SDiH5HNW0bClKGLIqr92KP+n5YrN/DBH8370MqXhYxTZSIttXWmpLkahj1k3nbVTdE5cnG25+Rcnck3QggnIMnNWk8pf/nbZESn8Z3VkdHr8puV3Hps8WWrGM60H44ctFk4rNmr9mps9clyGUzUze210Q/G3YUpj1TCQweEu/rZQmByv1deqZEzl7FlqcecPhBZiYrGsNEzwadShv2mrtmbvWT7Y/BO5DkVgCCsU6KybLo/uDkLFjPGGJIMtX4QHHxhMbjERtrMouj/iYgtcOSilF2anopfzdjPzYL6hZjZ6R9B3Ezjztge0BkdaLdGTTl5RaEkwrTGN/xx1mPtwpg==
+ bh=CGMYDTfvbCDH4IaE/E8I1xTd9QvgU/7yx+gkxrY1TzI=;
+ b=LZPUTwoSXT0OWbs21Qjn2kH7Jba39Dq4iMcR8WrI2FYCEIKA/QzqOedGAIfUGrTvXWV3avgjocrAsUqlbI/PefaOWsApWs8yd4HP8i9OoSG99htuX8A/z304x4OXxRJLdyUUTa6oI53kXULqpuQ1uCdA8gwEzp8uub/AIj+tS+mpv0kOaoDW4PvqBklvXLCMDX/qQa5GAQ57lvDg/HH6GswFS8eOuTvfYdzvZT19s+SxY9YHT2iSfPV7Xbjg1u/F7dzepN1N55Q+2LifFZ3XJpu9vKtZCemjyUhFMNraudC0fH+euKYZp/z/utVSiZSifh8EJL2+vZqNnUl/ZLb4Gg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aZSjVX3ApNNp3H/U7sKRVNaas8yAmnovyU4SUxhtiGg=;
- b=nIaXSIb4uNP+tRzJaXRBtq22om2dbmIYic3ssADnZf9MmEpid3E9RrU8abN+c/DgvoJwLg7bu+NDegv1qP4M+hx2Blpqt01fkx4WC17QDI4lqUEprTUkuslMLkDNLT3kzJ5gWPT6j3q8cxDFjKlKf+Us/8jRAUyIRc2WBeIq//Ci6NXwikdk35D+/WRA6TScLiUIeMuNItshYiC5ova9/yE7WSIOeoQs5LpPQuc3QtYjxaNtuQqum1u7a0DWU8ghBzUO3yeVnP70TFAtWYQNb8lxPnEKJgwxdLE3nHwgWfmvvkg361LpE7eB7vE+fjPAivQSfq1b16wQGbQkitF+Wg==
+ bh=CGMYDTfvbCDH4IaE/E8I1xTd9QvgU/7yx+gkxrY1TzI=;
+ b=crOVYHCMxwPJkqrXJ7uEGv8a/nuld71pGqjsfJwIvhazdGKgzMMAbkaYiF5u8C5d43tTc+QZMYNVahcWNlINm5ZS1TKeJw8pl1k4QHo6BtHfnziAaliUqMLywlf4XpRor/bCg7xnzNWG6Vs2Wog8v+faqRLANb/TeE8wRBVDWOe2q1DpKkxklFsWs7lrpRqHIgzvy29XkO31pXnp6jVpUPCdY3BSnwoH/qtct58J0z30cIOn5ZMJ6sDgEGVqQM+QuRr8rUX5GcXnDk//FBAKzRCt3yFDihwraeDQT7VxVbwww4lD4Qctcx0bRi72TmBEeLAoa5heeSky1YrGSPDkOA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by MN2PR12MB4392.namprd12.prod.outlook.com (2603:10b6:208:264::24) with
+ by DM4PR12MB7741.namprd12.prod.outlook.com (2603:10b6:8:103::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.8; Tue, 9 Jun 2026
- 07:08:07 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.13; Tue, 9 Jun 2026
+ 07:40:55 +0000
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0092.011; Tue, 9 Jun 2026
- 07:08:07 +0000
-Date: Tue, 9 Jun 2026 15:07:59 +0800
+ 07:40:55 +0000
+Date: Tue, 9 Jun 2026 15:40:45 +0800
 From: Richard Cheng <icheng@nvidia.com>
 To: Dave Jiang <dave.jiang@intel.com>
-Cc: Terry Bowman <terry.bowman@amd.com>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <djb@kernel.org>, 
-	PradeepVineshReddy.Kodamati@amd.com, Benjamin.Cheatham@amd.com, rrichter@amd.com, 
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, "Fabio M . De Francesco" <fabio.m.de.francesco@linux.intel.com>, 
-	Shiju Jose <shiju.jose@huawei.com>, Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>, 
-	Li Ming <ming.li@zohomail.com>, Tony Luck <tony.luck@intel.com>, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] cxl: Fix CXL_HEADERLOG_SIZE to match RAS Capability size
-Message-ID: <aie4BQ-Kd_YPwGUg@MWDK4CY14F>
-References: <20260605180610.2249458-1-terry.bowman@amd.com>
- <b91e5e09-34d5-49e6-85dd-28d4a5eb3014@intel.com>
+Cc: Terry Bowman <terry.bowman@amd.com>, dave@stgolabs.net, 
+	jic23@kernel.org, alison.schofield@intel.com, vishal.l.verma@intel.com, 
+	ira.weiny@intel.com, djbw@kernel.org, ming.li@zohomail.com, rrichter@amd.com, 
+	Benjamin.Cheatham@amd.com, Smita.KoralahalliChannabasappa@amd.com, stable@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	PradeepVineshReddy.Kodamati@amd.com
+Subject: Re: [PATCH v2] cxl/port: Fix missing port lock in cxl_dport_remove()
+Message-ID: <aifBp346jcVZ6sgi@MWDK4CY14F>
+References: <20260608223533.583278-1-terry.bowman@amd.com>
+ <be149ddc-702b-46c2-b6a7-d9195aee0eee@intel.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b91e5e09-34d5-49e6-85dd-28d4a5eb3014@intel.com>
-X-ClientProxiedBy: SG2P153CA0044.APCP153.PROD.OUTLOOK.COM (2603:1096:4:c6::13)
- To BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+In-Reply-To: <be149ddc-702b-46c2-b6a7-d9195aee0eee@intel.com>
+X-ClientProxiedBy: SG2PR01CA0182.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:189::20) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -70,280 +68,306 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|MN2PR12MB4392:EE_
-X-MS-Office365-Filtering-Correlation-Id: 32d9839b-0280-4d75-2053-08dec5f5db5b
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|DM4PR12MB7741:EE_
+X-MS-Office365-Filtering-Correlation-Id: 329c1268-2d29-4fb3-fb71-08dec5fa7013
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|7416014|56012099006|4143699003|11063799006|6133799003|3023799007|22082099003|18002099003;
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|6133799003|18002099003|22082099003|11063799006|4143699003|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	8Ts7UwqKUouyDNIJ3KKhBnt/dZ36hq4oD6GRKHb+i5lcaeFHalEor/z8+fX4VcZlEmNCZzig3duvUI6qIXAttcIIf2wx9W1+Qt4Uxys6/cY45oktbsKSANA6tGlzT51WHEnl5+THrOHJe49zdKfDMLVg8GVqnHc2m3SG2bEAmiyQ8KHA5edMMxfAvs7Bm5tSQmWO8MmOxgm9Q+5HyIeLeTcCyEftjuPcgquGoqWOFZcivKTJjHNdh+8Lvr8+jT0cnLRkkxuGHz83pOEDKBAjjAFLTfUgEqha1wYSyITKBXGdXxl3f4mxEWhwCbzwrBBthw2kIlGic2r35aU0srrqfS7XFqEttDN9ZyB3aGrywPxiW8ZqT/G5XttdDV0+pP48KsB5psiccPIalw1Sc8Aq8UubGivD37BWCkLNwbPnZYIDbn1T2IWg+F0IYriudLWmxYIDkT4BhEobX/KyBRLkZ/1vkJk5kKz9ioV0tHcwVOtpkSmjbtODbGNoRsDUCbNmLtiCLV+/AUh3HuMLhSs9UEvJVyuREboye4TaMhooBGR76t3obzJrjCQ2E3QAHG1cMDEaOv1dqz5wu7BS3YzjTMuCsqM/Lrg/sYhWrE9B+bD++VFiwd3lTn1FcWSeV9z4fqO+L0MnyodY6o34kZ3kPlaX5PB/TAP5OnaebNXiH4a7sQzlZRLKt9ST5Ch4HEIT
+	LqOTxQtRGIRDQ620Mfcu1i7skoZAhV4iVJQdSum8+VPXvBuGb1RSW3yXFJPrGYE81i0T7rg2GdAAhyABfZmJd3+PzGuGtILJB7nCsAZDVYbKMLecF9XEiX0Wa7a17U7izLDAzfCOycsHaO9yFWTQMGO3fvqE4SQSVy4X65pQ64BAwFwjUCZsCozdyS2UBxvmS7Dc9v/v+hds3s0PvfO7k8T2Y9cmZRCV0FPnzjfITLaYPAVu0/ukX+wZ4krq+TVnNfpFwASTumJp0X0yew/0rRTeVzK3JjbGqsxef5i5VGsVhAInvKXvSFGw1DaY2FjQAYPUTjWdmlW0OKSd165sK8Ld/MTpQRi44VA5ur5zWak4yLMKbsrTsdEhsAXV4l0jaBv1Vh1pU7MSHzghP87vO6G13VKs2YQDnN4Wol/WkNRzcB2FZFCe+DAQrcskUstXLiVNw08CMAyYIUdOMF7QirLH7bIhhp05dhihoU8wQliTiOTvItIZqpyKwTGx9ubp3Y6bXDyb7TCRBNiVDQ71FJoeieS7nL1ix7E2HDZWsnOojx40QqdAO341wSQFeiSwQX5YJJXseBJgpqK7PDh1wUJdkASWo4vVCK/5mFArw7BKxrAq4MELLLWpjX5hylZvIrZQhJJSDR/pzYwGdD0SodCCWuU64kV5Nipr82Uwt+Oyl5D6cFByWpySCCsIvo5I0rvz4OQ3pkC/Hb4uiUQn8g==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(56012099006)(4143699003)(11063799006)(6133799003)(3023799007)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(6133799003)(18002099003)(22082099003)(11063799006)(4143699003)(56012099006);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?mHnHgqdZZy4l6TXIEOewIwuF+U9q3P2JwYpwa/rhUzaN9iTgvQ/BSx+8xvYD?=
- =?us-ascii?Q?HeBhBIzq/mg9yBjVYqdDdeIpPkfoYf45knMPcbq1209JLdDXOBb83zOy+ifj?=
- =?us-ascii?Q?My4dL/R7ALapjqxUlQmEQrwmu2KrQeasfXXv99fsmRFx3LHL0sTGJwRDYURf?=
- =?us-ascii?Q?AqpvhhEIujJlCejB3AXsS687L/1/sDJkFmNi86Wf0ylI1/A1mUkUxbbvH++V?=
- =?us-ascii?Q?ZaDE4UMotMhawyju/o0C+l4pbzYTwSNPKP66x08qU0fOlw6tdwB5mhhZuCUG?=
- =?us-ascii?Q?nmxjisWnEgoiuJ5skN1CTioKeoe/BW8Aa6guduWMgeI5CuX/aJ2Yw57N2k2I?=
- =?us-ascii?Q?0N87zjF6cQee83omEcy3+RtDVTfVNTL+MJgbGeIW0EApQz2OtCXSOveyEpZ6?=
- =?us-ascii?Q?cmrWHvHvl5ZoHH2XsGaOaq+xh+ytlatCqSIYnMeuhOfmX7maniiBDjG5n9+W?=
- =?us-ascii?Q?mFOzEDZVLQUP6pBZZShVAhaWE6++VC9UUxKFK3fitZkpDlVjcRsbCUkmHYtT?=
- =?us-ascii?Q?Ui0bxvQYpfDUMoCGagenfq5nhUcsIIOOzI+FoOpTyDy+HWAP/wKDMnoOep9U?=
- =?us-ascii?Q?f/to1K0VyhLciiZGI2mvRPVuB8/TLBVBeDk3Ya5E7FY2mY59hNspgQKNIC7g?=
- =?us-ascii?Q?yiuNuGIdduYEmGcAPOyraTDgcUa6MVcChYlTLhTo9Ojc2k5gZfqIwzsqKxa2?=
- =?us-ascii?Q?x6TzDjnL0mYyOOhOvAEHbtTByQ/cKoryoMciHxqIouboyGrf2dYB8iNi1EuC?=
- =?us-ascii?Q?tPxTsT0lP41cqfkBdwp2xENbalDI9E3bpv3Tq5UGGkFEedFMDCPutua9X2EJ?=
- =?us-ascii?Q?pW1GYabnq/3cuWNPiNYREeAWastkWZMrIH0zHPdx2AVlLnm31tCa8PVJ8Dov?=
- =?us-ascii?Q?QPo3Vky0HhronJc9o2c5tHr4t4MjXnOdRU7QTti72J3Z9LB5CHHYcOEM2I3t?=
- =?us-ascii?Q?CNNeWj5RGvGilwnOIkgfc1BPmMMA3p+oxEHxOUlJyL6viN+vLb40qeX064TK?=
- =?us-ascii?Q?R+aVBxGlSXsK7UcQUBnPNAMkyy3P33RpfnU0hW0LhTlunf7rChOEEurCKzi2?=
- =?us-ascii?Q?9WJ0QOffh5+mWoQzLccIqOrPqJZSSB2YOmwPvveIgY7lw62A1IA8KcY6t87A?=
- =?us-ascii?Q?yFqwf+phE/+kEFgHbixlK6N7GUKSonQdww8cOeNAnTWyI3Xx7Mw1IZuKw4lY?=
- =?us-ascii?Q?cS3dxarfkxYuf4uwejdLFM2eAtMBguIbj/sMeQmNe8CPJSgXnULSaxjHGkRE?=
- =?us-ascii?Q?oYEvp3w8/8j44NokiJBCpctvTwaIZMYXJJFTbVR+qFOyFcm+xfGphcfY502a?=
- =?us-ascii?Q?uqPMJOJRT9HiIpSFqquuH45weGjdYoL4dK1CjCWdNfnw9ijEdr1D9iItichd?=
- =?us-ascii?Q?BNyClLI1kFTz4Zm8vwXrTEviBMhru+m3KuaeqCuY4YSTQRyojwNA99FodPFJ?=
- =?us-ascii?Q?+2tiPVfcL0gA1XESHPN32Z0yRpBKyaSrwJ3U+moK8j9CatR0qMwwEvO1mZEU?=
- =?us-ascii?Q?fC8dJ/tZdve3DAfiDoDlW0voJ8SX1KA3fwA++O2j2Fq7YTVFUwI+rH7NLvh5?=
- =?us-ascii?Q?IrrtiAfqDiLl9v5WSX1OURFGf8lPgfUPxp7RAFEjuTDng/cTFdV2w1UEu3UF?=
- =?us-ascii?Q?x2Eh5LiVDa2Irvsm738yR2VpwzTCxfhSFalqIsu+iq89zEEC1XuqdvsKMwOY?=
- =?us-ascii?Q?nESgK4o2tizEBnYScm4cJFQgt6oNv1CZVeWVv5ND2QW2IHZuI5cQdcywOjPG?=
- =?us-ascii?Q?2q1LNvlm/Q=3D=3D?=
+	=?us-ascii?Q?SkRJn9eoYcNeEOAZ1dudXqbG7B4HV/vZmmF9lPJ8dV6p7F9F45Trvs3ufkWA?=
+ =?us-ascii?Q?tSvJbfdkgTnAgsDh3JuDSvwUQ12PZjHmcuNK9DNKqS3GLMzJge4wu1jl6GxR?=
+ =?us-ascii?Q?pg7cn4srVehbPmkbXBOLQCs9MHZSSC8SyFw7ggHaDT88BQhGeuTcf20Olkj6?=
+ =?us-ascii?Q?PwKPeP9MtCK1YBqJi0HRbNNe45gB/scxIFJD1gShwBwIFmDTphdFYUGYJD5n?=
+ =?us-ascii?Q?gGCDmFupFJnmEO5lYG4p37VoVUQx41szYYCoWQKAnCu43BD35CqmZotUXmq5?=
+ =?us-ascii?Q?6Y+yHOh4DMWVNt1dzup4ujuOqfJPHv36GLytO5Tu6d6KuVGSYekaw7jk9buK?=
+ =?us-ascii?Q?Mb9f9tOEXsEUg1drpETdYaGP+nxPXjo/u28Ex5VQmUClFYKyZyfIyeo01bjk?=
+ =?us-ascii?Q?wtlYEr/yjYVPITMqprOeL5UbY8ZpzSdC3JokrLX1JRD811AzL0zLmoreCNKH?=
+ =?us-ascii?Q?dv+e3mSqsWynO4EMZn5dADIBdhB7qx1iFLwASwEvd4EziEeRFsqjoU6xmwV3?=
+ =?us-ascii?Q?US4u+lpZR0JhZy8bBvtxLsExFI/sp4cdvBA4HRAXU37efTwQLOxsN9SK36yr?=
+ =?us-ascii?Q?TlpAp194S6mqVFjA3LdkCzbr87yyiNd+KpBEPrYKIOfKhxsqu4sNI7kmVa9k?=
+ =?us-ascii?Q?AFoXWwiSrwE9ZCtNhAntvFk5Q3C5JQLu2aC3n+Ka3K8woRT1/B9OCvnSlYk5?=
+ =?us-ascii?Q?0GMLzlRhQmi575i0wjKUmizioVe+DS+M3WJe6EbEjORqccjNJrYEdfs6zl33?=
+ =?us-ascii?Q?odM4hQ+SBllvWKDtdnN/ynQxOpG7d7uPDA9DzfScLKgDzvND7brQql+G6ax1?=
+ =?us-ascii?Q?uWdFnsnWewROSG/AqVCzlelrFLfdKxHMbDq8ZvsgUQnDFsrZZuHUUXhywG3Y?=
+ =?us-ascii?Q?gxZ4vVQQxjmD0EO2GIF7B0HSn+He+m3r1v/6PUrsW4zhe/vwXEBmwPY6T94s?=
+ =?us-ascii?Q?Vkyft/eLe5gt3axhyxK7sHT58OKKzRzh7S9a2vw2C1cn8gezwsXvxsn8dxeT?=
+ =?us-ascii?Q?Y885DLqPqVhHVeHEocpxtSa23jYBX6AdSOdM1rHMiCv413K6vEqkC3a8XfaX?=
+ =?us-ascii?Q?CWnYUpqYF17/TY6Q2FaLi+EXfK469R7cGtNgJSrEZfj726sCkw4nWGp4qlwI?=
+ =?us-ascii?Q?sSG8Y2Yu5OkdShjA7+x9WDk0oYFvhoaKnQJ9KfUF4HQFE341B6pxNvzbRLo2?=
+ =?us-ascii?Q?PhitqTuJsDAmf/VCSy2gSX5ukDq6aSWVqmBv3ioO4Q06thjOtlE2/k3eR241?=
+ =?us-ascii?Q?gTRWNtbz7cO3Q6itpPEZrtBHFlun1AUla9DwOPQIdIXUI2JRpblilyFDRW0m?=
+ =?us-ascii?Q?DICvuXOocH03paqVrjiNCZ+dQBEXbO2Cv9sc5lU2IqRAsuBF2GRJ1lI5tVeh?=
+ =?us-ascii?Q?lt49VAuVr6F+UgrOijOgHpLGVAvE2oHAelFiOVpuq4WQgwP1hxjpheyMZH89?=
+ =?us-ascii?Q?Ckey4kJimNO+uDwGtRGjP1cZBc3CqA5I2KLw0C7+QYmF8lrZfwoTnHvp51Cg?=
+ =?us-ascii?Q?GiVdf58fsVCGKlVYR4gAonvvCblbtD9JiRD7VGMXAIllyz8i0VIEPVdZSvzh?=
+ =?us-ascii?Q?9xhg2pK3Fs+xbaGmOy/OhPevqKTolYCzC2s9ZTObJP5KwIP8F0K/VmsE8XMo?=
+ =?us-ascii?Q?0B8ZkWICZiMQfNd4l09EA8oCTULMSDq6PJyEuY5rmDeN61AC18DhzLtz4I0q?=
+ =?us-ascii?Q?A2gFDEMO/7k0hfwdJ7mnOLemFAKIRuFxSflvlw8bcpAisXlUpbRqKMHyKRtt?=
+ =?us-ascii?Q?FXrHDvEQmg=3D=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32d9839b-0280-4d75-2053-08dec5f5db5b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 329c1268-2d29-4fb3-fb71-08dec5fa7013
 X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2026 07:08:07.7320
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2026 07:40:55.2628
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WFlAL3hU+BR3TgWlFpvsFQilR+EmVifEtxCahJNuxsZAGhy0ODXebectRh0Qb5Kt12O/McWanf/8/x1DYOq4xw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4392
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6amRl60KRv3bOiZFBP73NX8ik1B5YhO3PQIkP1qDUULiJYf1G5XlWf/cn6aY/r0r5cMTEMDYQJqQUIlbjAiVEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7741
 
-On Fri, Jun 05, 2026 at 02:28:01PM +0800, Dave Jiang wrote:
+On Mon, Jun 08, 2026 at 05:35:23PM +0800, Dave Jiang wrote:
 > 
 > 
-> On 6/5/26 11:06 AM, Terry Bowman wrote:
-> > The CXL r4.0 8.2.4.17.7 RAS Capability Structure has total length 0x58
-> > bytes (CXL_RAS_CAPABILITY_LENGTH); the Header Log occupies the trailing
-> > 64 bytes at offset 0x18.  CXL_HEADERLOG_SIZE was defined as SZ_512,
-> > eight times the actual on-device size.
+> On 6/8/26 3:35 PM, Terry Bowman wrote:
+> > xa_erase() in cxl_dport_remove() runs without the port device lock,
+> > creating a race with any caller that does xa_load() on port->dports
+> > and then dereferences the returned dport pointer. A concurrent
+> > cxl_dport_remove() can erase and free the dport between the xa_load()
+> > and the caller acquiring the port lock, causing a use-after-free.
 > > 
-> > header_log_copy() reads CXL_HEADERLOG_SIZE_U32 (128) dwords from the
-> > RAS capability iomap, overrunning the 88-byte mapping by 448 bytes.
-> > The cxl_aer_uncorrectable_error trace event memcpy()s CXL_HEADERLOG_SIZE
-> > (512) bytes from its source.  For the CPER caller the source is
-> > struct cxl_ras_capability_regs::header_log[16] (64 bytes) embedded in a
-> > stack-local cxl_cper_prot_err_work_data, so the memcpy reads 448 bytes
-> > of kernel stack into the trace event ring buffer where userspace can
-> > read it via tracefs.
+> > For non-root ports the port lock is already held by the caller on two
+> > paths:
 > > 
-> > Set CXL_HEADERLOG_SIZE to 64 and derive CXL_HEADERLOG_SIZE_U32 from it,
-> > bringing all iomap readers into agreement on 16 dwords.  Userspace tools
-> > such as rasdaemon have grown a dependency on the buggy 512-byte (128 u32)
-> > header_log layout in the cxl_aer_uncorrectable_error trace event.  Add
-> > CXL_HEADERLOG_TRACE_SIZE_U32 = 128 and use it for the trace event
-> > __array and its memcpy to preserve that ABI.  Both callers now pass a
-> > zero-filled u32[CXL_HEADERLOG_TRACE_SIZE_U32] staging buffer with only
-> > the first CXL_HEADERLOG_SIZE_U32 (16) entries populated from hardware;
-> > the remaining 112 u32s are zero-padded, keeping the 512-byte trace ring
-> > buffer layout intact.
+> > 1. Driver unbind: devres_release_all() is called from
+> >    __device_release_driver() which holds port->dev.mutex.
 > > 
-> > Fixes: 36f257e3b0ba ("acpi/ghes, cxl/pci: Process CXL CPER Protocol Errors")
-> > Fixes: 2905cb5236cb ("cxl/pci: Add (hopeful) error handling support")
-> > Cc: stable@vger.kernel.org
+> > 2. Dynamic endpoint removal: cxl_detach_ep() takes the port lock
+> >    before calling del_dports() -> del_dport() -> devres_release_group(),
+> >    which synchronously runs cxl_dport_remove().
+> > 
+> > Use cond_cxl_root_lock/unlock(), which only acquires the port lock when
+> > the port is a root port and the lock is therefore not already held.
+> > This matches the pattern used in __devm_cxl_add_dport() for the same
+> > reason.
+> > 
+> > The write-side fix to cxl_dport_remove() is necessary but not
+> > sufficient. Callers that obtain a dport pointer via cxl_mem_find_port()
+> > use a lockless xa_load() and must not dereference that pointer until a
+> > lock that excludes free_dport()/kfree() is held.
+> >
+
+Hi Terry,
+
+I think the mechanism is right, cond_cxl_root_lock() in cxl_dport_remove()
+is a no-op for non-root ports and a real qcquire only for root dports, so
+no deadlock.
+
+But this only cover the 2 cxl_mem_find_port() callers. The sibling
+cxl_pci_find_port() has similar lockless xa_load() plus deref, and those
+callers aren't fied.
+
+Could you either extend the same fix in this series?
+I'm happy to send a follow-up for other readers if that's easier for you.
+
+> > For root ports, dport_to_host() returns uport_dev, so all three devres
+> > actions (free_dport, cxl_dport_remove, cxl_dport_unlink) are registered
+> > on uport_dev. __device_release_driver() holds uport_dev->mutex for the
+> > full teardown sequence including kfree(dport). Holding uport_dev->mutex
+> > on the read side therefore excludes concurrent dport freeing.
+> > 
+> > Fix rcd_pcie_cap_emit() by passing NULL to cxl_mem_find_port() to avoid
+> > capturing a lockless dport pointer, then re-fetching dport inside the
+> > uport_dev guard via cxl_find_dport_by_dev(). The previous guard on
+> > root->dev was wrong: cxl_dport_remove() releases root->dev before
+> > free_dport() runs, so root->dev does not protect against concurrent
+> > kfree(dport).
+> > 
+> > Fix cxl_mem_probe() similarly: pass NULL to cxl_mem_find_port(), then
+> > re-fetch dport inside scoped_guard(device, &parent_port->dev) for the
+> > VH path, and re-fetch again inside scoped_guard(device, uport_dev) for
+> > the RCH path. This closes both the TOCTOU window between the lockless
+> > xa_load() and the guard acquisition, and the window between the two
+> > sequential guards in the RCH path where a concurrent surprise removal
+> > could free dport before devm_cxl_add_endpoint() dereferences it.
+> > 
 > > Reported-by: Sashiko
+> > Fixes: 391785859e7e ("cxl/port: Move dport tracking to an xarray")
+> > Link: https://lore.kernel.org/linux-cxl/20260505173029.2718246-1-terry.bowman@amd.com/
 > > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->
-
-Reviewed-by: Richard Cheng <icheng@nvidia.com>
- 
-Just a little nit below.
-
+> > Reviewed-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
 > > ---
-> >  drivers/cxl/core/ras.c   | 27 ++++++++++++++++++++-------
-> >  drivers/cxl/core/trace.h | 24 ++++++++++++++++--------
-> >  drivers/cxl/cxl.h        | 14 ++++++++++++--
-> >  3 files changed, 48 insertions(+), 17 deletions(-)
+> >  drivers/cxl/core/port.c | 10 +++++++
+> >  drivers/cxl/mem.c       | 65 +++++++++++++++++++++++++++++++----------
+> >  drivers/cxl/pci.c       | 17 +++++++----
+> >  3 files changed, 72 insertions(+), 20 deletions(-)
 > > 
-> > diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> > index 006c6ffc2f56..99fb00949c2f 100644
-> > --- a/drivers/cxl/core/ras.c
-> > +++ b/drivers/cxl/core/ras.c
-> > @@ -8,6 +8,10 @@
-> >  #include <cxlpci.h>
-> >  #include "trace.h"
+> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> > index c5aacd7054f1..0b8f144596e8 100644
+> > --- a/drivers/cxl/core/port.c
+> > +++ b/drivers/cxl/core/port.c
+> > @@ -1092,8 +1092,18 @@ static void cxl_dport_remove(void *data)
+> >  	struct cxl_dport *dport = data;
+> >  	struct cxl_port *port = dport->port;
 > >  
-> > +/* Check that UCE header definition is maintained to keep ABI intact  */
-> > +static_assert(CXL_HEADERLOG_TRACE_SIZE_U32 == 128,
-> > +	      "rasdaemon ABI requires exactly 128 u32s");
-> > +
-> >  static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
-> >  					      struct cxl_ras_capability_regs ras_cap)
-> >  {
-> > @@ -19,6 +23,7 @@ static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
-> >  static void cxl_cper_trace_uncorr_port_prot_err(struct pci_dev *pdev,
-> >  						struct cxl_ras_capability_regs ras_cap)
-> >  {
-> > +	u32 hl[CXL_HEADERLOG_TRACE_SIZE_U32] = {};
-> >  	u32 status = ras_cap.uncor_status & ~ras_cap.uncor_mask;
-> >  	u32 fe;
-> >  
-> > @@ -28,8 +33,8 @@ static void cxl_cper_trace_uncorr_port_prot_err(struct pci_dev *pdev,
-> >  	else
-> >  		fe = status;
-> >  
-> > -	trace_cxl_port_aer_uncorrectable_error(&pdev->dev, status, fe,
-> > -					       ras_cap.header_log);
-> > +	memcpy(hl, ras_cap.header_log, CXL_HEADERLOG_SIZE);
-> > +	trace_cxl_port_aer_uncorrectable_error(&pdev->dev, status, fe, hl);
-> >  }
-> >  
-> >  static void cxl_cper_trace_corr_prot_err(struct cxl_memdev *cxlmd,
-> > @@ -44,6 +49,7 @@ static void
-> >  cxl_cper_trace_uncorr_prot_err(struct cxl_memdev *cxlmd,
-> >  			       struct cxl_ras_capability_regs ras_cap)
-> >  {
-> > +	u32 hl[CXL_HEADERLOG_TRACE_SIZE_U32] = {};
-> >  	u32 status = ras_cap.uncor_status & ~ras_cap.uncor_mask;
-> >  	u32 fe;
-> >  
-> > @@ -53,8 +59,15 @@ cxl_cper_trace_uncorr_prot_err(struct cxl_memdev *cxlmd,
-> >  	else
-> >  		fe = status;
-> >  
-> > -	trace_cxl_aer_uncorrectable_error(cxlmd, status, fe,
-> > -					  ras_cap.header_log);
 > > +	/*
-> > +	 * ras_cap.header_log[] holds CXL_HEADERLOG_SIZE_U32 (16) hardware
-> > +	 * dwords.  Copy them into the front of a zero-filled
-> > +	 * CXL_HEADERLOG_TRACE_SIZE_U32 (128) u32 staging buffer so the trace
-> > +	 * event memcpy sees a full 512-byte source and the userspace ABI
-> > +	 * (rasdaemon) is preserved.
+> > +	 * For non-root ports the port lock is already held by the caller
+> > +	 * via devres_release_all() during driver unbind, which holds
+> > +	 * port->dev.mutex throughout.  Acquiring it again unconditionally
+> > +	 * would deadlock.  Use cond_cxl_root_lock() which only acquires
+> > +	 * when the port is a root port and the lock is therefore not yet
+> > +	 * held.
 > > +	 */
-> > +	memcpy(hl, ras_cap.header_log, CXL_HEADERLOG_SIZE);
-> > +	trace_cxl_aer_uncorrectable_error(cxlmd, status, fe, hl);
-> >  }
-> >  
-> >  static int match_memdev_by_parent(struct device *dev, const void *uport)
-> > @@ -204,12 +217,12 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
-> >  {
-> >  	void __iomem *addr;
-> >  	u32 *log_addr;
-> > -	int i, log_u32_size = CXL_HEADERLOG_SIZE / sizeof(u32);
-> > +	int i;
-> >  
-> >  	addr = ras_base + CXL_RAS_HEADER_LOG_OFFSET;
-> >  	log_addr = log;
-> >  
-> > -	for (i = 0; i < log_u32_size; i++) {
-> > +	for (i = 0; i < CXL_HEADERLOG_SIZE_U32; i++) {
-> >  		*log_addr = readl(addr);
-> >  		log_addr++;
-> >  		addr += sizeof(u32);
-> > @@ -222,7 +235,7 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
-> >   */
-> >  bool cxl_handle_ras(struct device *dev, void __iomem *ras_base)
-> >  {
-> > -	u32 hl[CXL_HEADERLOG_SIZE_U32];
-> > +	u32 hl[CXL_HEADERLOG_TRACE_SIZE_U32] = {};
-> >  	void __iomem *addr;
-> >  	u32 status;
-> >  	u32 fe;
-> > diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> > index a972e4ef1936..d37876096dd7 100644
-> > --- a/drivers/cxl/core/trace.h
-> > +++ b/drivers/cxl/core/trace.h
-> > @@ -56,7 +56,7 @@ TRACE_EVENT(cxl_port_aer_uncorrectable_error,
-> >  		__string(host, dev_name(dev->parent))
-> >  		__field(u32, status)
-> >  		__field(u32, first_error)
-> > -		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
-> > +		__array(u32, header_log, CXL_HEADERLOG_TRACE_SIZE_U32)
-> >  	),
-> >  	TP_fast_assign(
-> >  		__assign_str(device);
-> > @@ -64,10 +64,14 @@ TRACE_EVENT(cxl_port_aer_uncorrectable_error,
-> >  		__entry->status = status;
-> >  		__entry->first_error = fe;
-> >  		/*
-> > -		 * Embed the 512B headerlog data for user app retrieval and
-> > -		 * parsing, but no need to print this in the trace buffer.
-> > +		 * Embed headerlog data for user app retrieval and parsing,
-> > +		 * but no need to print in the trace buffer. Only
-> > +		 * CXL_HEADERLOG_SIZE_U32 (16) dwords are hardware data;
-> > +		 * the remaining entries preserve the 512-byte ABI layout
-> > +		 * rasdaemon depends on and are zero-filled by the caller.
-> >  		 */
-> > -		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
-> > +		memcpy(__entry->header_log, hl,
-> > +			CXL_HEADERLOG_TRACE_SIZE_U32 * sizeof(u32));
-> >  	),
-> >  	TP_printk("device=%s host=%s status: '%s' first_error: '%s'",
-> >  		  __get_str(device), __get_str(host),
-> > @@ -85,7 +89,7 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
-> >  		__field(u64, serial)
-> >  		__field(u32, status)
-> >  		__field(u32, first_error)
-> > -		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
-> > +		__array(u32, header_log, CXL_HEADERLOG_TRACE_SIZE_U32)
-> >  	),
-> >  	TP_fast_assign(
-> >  		__assign_str(memdev);
-> > @@ -94,10 +98,14 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
-> >  		__entry->status = status;
-> >  		__entry->first_error = fe;
-> >  		/*
-> > -		 * Embed the 512B headerlog data for user app retrieval and
-> > -		 * parsing, but no need to print this in the trace buffer.
-> > +		 * Embed headerlog data for user app retrieval and parsing,
-> > +		 * but no need to print in the trace buffer. Only
-> > +		 * CXL_HEADERLOG_SIZE_U32 (16) dwords are hardware data;
-> > +		 * the remaining entries preserve the 512-byte ABI layout
-> > +		 * rasdaemon depends on and are zero-filled by the caller.
-> >  		 */
-> > -		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
-> > +		memcpy(__entry->header_log, hl,
-> > +			CXL_HEADERLOG_TRACE_SIZE_U32 * sizeof(u32));
-> >  	),
-> >  	TP_printk("memdev=%s host=%s serial=%lld: status: '%s' first_error: '%s'",
-> >  		  __get_str(memdev), __get_str(host), __entry->serial,
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 9b947286eb9b..906fb480dad5 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -148,8 +148,18 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
-> >  #define CXL_RAS_CAP_CONTROL_FE_MASK GENMASK(5, 0)
-> >  #define CXL_RAS_HEADER_LOG_OFFSET 0x18
-> >  #define CXL_RAS_CAPABILITY_LENGTH 0x58
-> > -#define CXL_HEADERLOG_SIZE SZ_512
-> > -#define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
-> > +#define CXL_HEADERLOG_SIZE 64
+> > +	cond_cxl_root_lock(port);
+> >  	port->nr_dports--;
+> >  	xa_erase(&port->dports, (unsigned long) dport->dport_dev);
+> > +	cond_cxl_root_unlock(port);
 
-Should we make it consistent as SZ_64 ?
+In the comment above, maybe worth adding some contents about this is
+also what makes the RCH reads safe. It's no obvious for me.
 
 Best regards,
 Richard Cheng.
 
-> > +#define CXL_HEADERLOG_SIZE_U32 (CXL_HEADERLOG_SIZE / sizeof(u32))
-> > +
-> > +/*
-> > + * The RAS UCE trace event header array was originally sized at SZ_512/sizeof(u32)
-> > + * = 128 u32s due to a bug. Userspace tools (rasdaemon) have grown a dependency
-> > + * on that 512-byte layout. Keep the trace array at 128 u32s to preserve the
-> > + * ABI; only CXL_HEADERLOG_SIZE_U32 (16) dwords are valid hardware data, the
-> > + * remainder are zero-filled.
-> > + */
-> > +#define CXL_HEADERLOG_TRACE_SIZE SZ_512
-> > +#define CXL_HEADERLOG_TRACE_SIZE_U32 (CXL_HEADERLOG_TRACE_SIZE / sizeof(u32))
+> >  	put_device(dport->dport_dev);
+> >  }
 > >  
-> >  /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
-> >  #define CXLDEV_CAP_ARRAY_OFFSET 0x0
+> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+> > index fcffe24dcb42..345b56f215ff 100644
+> > --- a/drivers/cxl/mem.c
+> > +++ b/drivers/cxl/mem.c
+> > @@ -70,9 +70,9 @@ static int cxl_mem_probe(struct device *dev)
+> >  	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+> >  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlmd->cxlds);
+> >  	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> > -	struct device *endpoint_parent;
+> >  	struct cxl_dport *dport;
+> >  	struct dentry *dentry;
+> > +	bool rch = false;
+> >  	int rc;
+> >  
+> >  	if (!cxlds->media_ready)
+> > @@ -107,8 +107,7 @@ static int cxl_mem_probe(struct device *dev)
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > -	struct cxl_port *parent_port __free(put_cxl_port) =
+> > -		cxl_mem_find_port(cxlmd, &dport);
+> > +	struct cxl_port *parent_port __free(put_cxl_port) = cxl_mem_find_port(cxlmd, NULL);
+> >  	if (!parent_port) {
+> >  		dev_err(dev, "CXL port topology not found\n");
+> >  		return -ENXIO;
+> > @@ -123,21 +122,57 @@ static int cxl_mem_probe(struct device *dev)
+> >  		}
+> >  	}
+> >  
+> > -	if (dport->rch)
+> > -		endpoint_parent = parent_port->uport_dev;
+> > -	else
+> > -		endpoint_parent = &parent_port->dev;
+> > -
+> > -	scoped_guard(device, endpoint_parent) {
+> > -		if (!endpoint_parent->driver) {
+> > -			dev_err(dev, "CXL port topology %s not enabled\n",
+> > -				dev_name(endpoint_parent));
+> > +	scoped_guard(device, &parent_port->dev) {
+> > +		/*
+> > +		 * Re-fetch dport under the port lock to close the TOCTOU
+> > +		 * window between cxl_mem_find_port()'s lockless xa_load() and
+> > +		 * this guard acquisition.  A concurrent surprise removal can
+> > +		 * free the dport in that window.
+> > +		 */
+> > +		dport = cxl_find_dport_by_dev(parent_port, cxlmd->dev.parent->parent);
+> > +		if (!dport) {
+> > +			dev_err(dev, "CXL port topology %s not found\n",
+> > +				dev_name(&parent_port->dev));
+> >  			return -ENXIO;
+> >  		}
+> > +		rch = dport->rch;
+> > +
+> > +		if (!rch) {
+> > +			if (!parent_port->dev.driver) {
+> > +				dev_err(dev, "CXL port topology %s not enabled\n",
+> > +					dev_name(&parent_port->dev));
+> > +				return -ENXIO;
+> > +			}
+> > +			rc = devm_cxl_add_endpoint(&parent_port->dev, cxlmd, dport);
+> > +			if (rc)
+> > +				return rc;
+> > +		}
+> > +	}
+> >  
+> > -		rc = devm_cxl_add_endpoint(endpoint_parent, cxlmd, dport);
+> > -		if (rc)
+> > -			return rc;
+> > +	if (rch) {
+> > +		struct device *uport_dev = parent_port->uport_dev;
+> > +
+> > +		scoped_guard(device, uport_dev) {
+> > +			if (!uport_dev->driver) {
+> > +				dev_err(dev, "CXL port topology %s not enabled\n",
+> > +					dev_name(uport_dev));
+> > +				return -ENXIO;
+> > +			}
+> > +			/*
+> > +			 * Re-fetch dport under uport_dev lock.  uport_dev->mutex
+> > +			 * is held for the full devres teardown sequence including
+> > +			 * free_dport()/kfree(), so this excludes concurrent
+> > +			 * hotplug removal through the entire dereference.
+> > +			 */
+> > +			dport = cxl_find_dport_by_dev(parent_port, cxlmd->dev.parent->parent);
+> > +			if (!dport) {
+> > +				dev_err(dev, "CXL RCH dport not found\n");
+> > +				return -ENXIO;
+> > +			}
+> > +			rc = devm_cxl_add_endpoint(uport_dev, cxlmd, dport);
+> > +			if (rc)
+> > +				return rc;
+> > +		}
+> 
+> Still reviewing the patch, but thoughts on moving the two new big blocks to a helper function?
+> 
+> DJ
+> 
+> >  	}
+> >  
+> >  	if (cxlmd->attach) {
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index bace662dc988..710a62a66429 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -708,10 +708,10 @@ static ssize_t rcd_pcie_cap_emit(struct device *dev, u16 offset, char *buf, size
+> >  {
+> >  	struct cxl_dev_state *cxlds = dev_get_drvdata(dev);
+> >  	struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> > -	struct device *root_dev;
+> >  	struct cxl_dport *dport;
+> > +	struct device *root_dev;
+> >  	struct cxl_port *root __free(put_cxl_port) =
+> > -		cxl_mem_find_port(cxlmd, &dport);
+> > +		cxl_mem_find_port(cxlmd, NULL);
+> >  
+> >  	if (!root)
+> >  		return -ENXIO;
+> > @@ -720,13 +720,20 @@ static ssize_t rcd_pcie_cap_emit(struct device *dev, u16 offset, char *buf, size
+> >  	if (!root_dev)
+> >  		return -ENXIO;
+> >  
+> > -	if (!dport->regs.rcd_pcie_cap)
+> > -		return -ENXIO;
+> > -
+> >  	guard(device)(root_dev);
+> >  	if (!root_dev->driver)
+> >  		return -ENXIO;
+> >  
+> > +	/*
+> > +	 * Fetch dport under uport_dev lock to protect against concurrent
+> > +	 * hotplug removal. uport_dev->mutex is held for the entire devres
+> > +	 * teardown sequence including free_dport(), so holding it here
+> > +	 * excludes concurrent kfree(dport).
+> > +	 */
+> > +	dport = cxl_find_dport_by_dev(root, cxlmd->dev.parent->parent);
+> > +	if (!dport || !dport->regs.rcd_pcie_cap)
+> > +		return -ENXIO;
+> > +
+> >  	switch (width) {
+> >  	case 2:
+> >  		return sysfs_emit(buf, "%#x\n",
 > 
 > 
