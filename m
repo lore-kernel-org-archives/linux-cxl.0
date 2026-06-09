@@ -1,64 +1,64 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7401047DD76
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 15:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE87D48125B
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 15:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781017960; cv=none; b=UGLhA47nhFTPpzoKr+v8FxBiB5OYGk82PYBYMWrGcpyIy/1KSggrbSjOSkZ4OmoZwZT84btwFFGMbVyDGUmWWvRje6KLI2Trq0Y9E2/nmyoFwppC/tBOHdlrQfsJ3GnCQ9liSCl6X5320/tu4rdi/eMDeQhS2WKEeqJmv7L+fPE=
+	t=1781018146; cv=none; b=Tfcauoi77TJqk3jXXXeuPINX3kn4KSSSz9LGvMgRqZj9qoks9SdIDS5SqQNRENbIsjPrj7VtuKAxvAG0Z9Tq1TGTwH7kK0/HwcGTA+hCHpNrkBzZKrvHalhI+1JyMtf/ygeR2us0aaWi0PYRuUOLhLy7zRNnr9Qxqp1NE8gD2ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781017960; c=relaxed/simple;
-	bh=0bY3+VnKsZDDkii4NqRrIp5qMNrkGIBYkCIcna1PA6U=;
+	s=arc-20240116; t=1781018146; c=relaxed/simple;
+	bh=4Q3lUCN/K5ogiGNFPWtDLaQVmKDt2aFt3PTUh0S3qXM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s1e9ZMuEMA+RrWvFUrKRZ66wbXNtGLeXAb/lR6TaYhV2u/xFopoGWVTLv5cgF1J2BZeDTccFiA+tJfRGisNI3hIdA7GxAe8aOh8shj7IddXrJ0vQofNC7/MCMufMC4J3gHy5NcZ5nq1YD8zxVyU/NZISE0+nKn9SEzbnpyUZC+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=SPIeTAfq; arc=none smtp.client-ip=209.85.222.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=TYpDxCVlMmocznlGDVDAXRInqzJIksjF6AAIYbywVrf41Ph1wW7v6a/MBDW7skavVbW7laf8JEnd53lTdlRN04GEv5JV+m/OtTumlIz3Dr4uWhKBLzrpYae8xZE16btkSlw42N7ffOLLmfTQdNlUxPgWOR1xmsHYdr+EVa/uBiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=QYKlEwp1; arc=none smtp.client-ip=209.85.222.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="SPIeTAfq"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-915d17e2721so284241485a.3
-        for <linux-cxl@vger.kernel.org>; Tue, 09 Jun 2026 08:12:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="QYKlEwp1"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-9156b74006aso410251285a.0
+        for <linux-cxl@vger.kernel.org>; Tue, 09 Jun 2026 08:15:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1781017952; x=1781622752; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1781018142; x=1781622942; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PSHte4tw4Fe/hwOe0BydbVQDJ1bfJM9PJbtvHiFr8Bw=;
-        b=SPIeTAfq/uVTl/qWnURHgq9vcM2ig2PCso96nfK+CWLcDp9CeWt9zpIcjt/7ZRItjv
-         PYzMsTe7GwbPRNzwPXWnqKM5QzYM8fSP9nIZfjKs2jq9vn0W3XF4fZKRzos6e0H4K3oK
-         8TS5794ywJKGemb4SgIr87Lb2mNB7ZmzFv/gROITpCWvzJRppDBxsT86OSDYMHXjSNO0
-         aL48CnI69GtNAF6Z7KMOY5HdF/BwUiMPmFhbY8hxhWVUAfFJ/f/AcTjQTpQKXKr65AuF
-         bHkV679q6101p+i3Jbkk9hSr3LNPI+8CKDGk3Na/uF5cWitQeBwWihsImNRsiLTwXlE2
-         6qcw==
+        bh=01y5Yp7Lv2fsZ0TiFN6M9m/RLD3dl7/dyTYKRdYu1dc=;
+        b=QYKlEwp1NAeKXFH14vu88N/Jn3kbwlP3nN9KftlyUwc0sVPeNHbrFcKvdMCfxsTZwZ
+         7/utzHEww1ziDVO16OsAdJvAz6tNgEc1ODsGpNhP4TPipcWA59mg3UyV6JlsmIaSZv4u
+         2YbMRZ7LzVxll6mm4gBXF24O7wvKumb25xSRVDzQCBvvEQpoifN9VjHJmJeJsapmrbQk
+         GB1xfENxYm8wHIAYyLTXx5++1Ise24d1xQECru8Qzx2O1GxkDlUAMg3/r3l7DY+w/cnK
+         ZLRt1jVYnLZ+KpKEneVxmUrXNgglHlFV5MLkhbs9hke5TB4lybkrgoj6Zak8biTtcxHa
+         v5Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781017952; x=1781622752;
+        d=1e100.net; s=20251104; t=1781018142; x=1781622942;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PSHte4tw4Fe/hwOe0BydbVQDJ1bfJM9PJbtvHiFr8Bw=;
-        b=Y+Hftt6a98yIjn1y+zjGwTJrFSl8pXamNXgMZ7bhGRNjVH1p54ZGL2Bl80HY0lpSfz
-         q6N2anHxyRq/yjO82UaO2uIdcEdycU8qZhuIc0z5NBCII8u3UVhyWL2P+UUhO2wdvy1i
-         6YdyIsqogI1Lj0CbVWHF0OWv98qNXys8ckl7ePw7OIdi+DHYPM6hD5BdAl9s5hf6GACr
-         2G7l2OsInfWhAUTpEoaVLKvJfB+VHyyB1A9mpylA71Zui0VqMYqWKXsF5HSo4QDCWxxG
-         XR2Z5v1KVtQKuKl4ic31DsSJ7ONfyJs9K5M+9QFckaOvxo4MtFKoaCulhzabae0lGidX
-         i5Ew==
-X-Forwarded-Encrypted: i=1; AFNElJ+J1MdgF2T9gnLiLPDMF7jCWYeCJ+4GnGya0aYXWhlb7GXLr9Qd81xNItCSIU5fWAFibzPZ3RCU6mI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc68ebmjUuyFAyOYT92e4zhLOHPgpQy/5UEMBcJ/k/nw0KxrQJ
-	sZfHGiFYHWvHsuXqwRLIpvY813Cn9B9U1L5B70BNY/+WefM1dzbDZhA/szxd00MoYfU=
-X-Gm-Gg: Acq92OEQQxCv4nhLItN4W3EIXJN6vspCFOxk0mKnbl8tZyfLUq+mtsirECKCipdc/2m
-	xPeklZ5QijPB9QhKx1rIKitK3Y2+Oz13EXSbJ+Sgv3IJtGAMVnWvI1YBMWqk8ajQ4X9JMmfbZy6
-	lXXerY+PTKICn8VpbVjXUTZEJAH5+fXbZio9IGia2cTVRU4N0htrz3TMDdV5CVaPeu1gPEFAyJj
-	Llq+D5Oj3LlYm7PjIP3JECRKzKGQsDLc3ZJwUmy5F985fnGrZnPoccQvAqzzrdNWPMQncphQWEo
-	AB+cszMqFum7lbMnJkNkOanEicK1tjbyJ9lVGFUt/noMKulPxNOYnfVUIdETrvXoO3gwp2ILzwE
-	eX+3tnQXXa8sGcD+F29cpCMdu/HdY7TXp5cY34kqgJFu2xSdgQWGcTtQY9/eonpocix+aTvDDK7
-	quTXzH49LO/OfB99w7RTZGRCsrdR/3UrKJzB9j5MIlNWz8W6xdz7ZI38HUoX5dfvGH7q/Kx2Fpy
-	QGj3azqa0B6weWBHg==
-X-Received: by 2002:a05:620a:2587:b0:915:9c4b:fdae with SMTP id af79cd13be357-915a9cb2d33mr3324652285a.21.1781017952150;
-        Tue, 09 Jun 2026 08:12:32 -0700 (PDT)
+        bh=01y5Yp7Lv2fsZ0TiFN6M9m/RLD3dl7/dyTYKRdYu1dc=;
+        b=CMrNRLnhv8DZSyVz6lKlZ11ANgDDVgQLquqCCNJGphG8pctQKZpmD57OrP+iZGQgqJ
+         0eyxjXAnghKdx4o5qv+/LiVL4iwqmIX+tbpB9VuLTq6XF7I4eWTdxiL4RoPyklvECpjz
+         Hi6QcbeU0PoUoHPXrsjPoxLPIkDp5TZK3t/VPB7ztnW9MihoYq0vppqx5VY2dqXi0Vrs
+         QBJmSySLSW3XZ8Hds09+nhCfg/55v+1IskMNeEwcg7Dqt9jrSuyXh5iutRu32dBM9AoU
+         6q72KcGzxa2+mOpftddHvKmFmx42dP1ZiwieyO4lxVI/SKQWvnefuu/571K0bUsyJsR1
+         VFUA==
+X-Forwarded-Encrypted: i=1; AFNElJ+nxoBmPHLCj7ICJQsK5jvdlFxpeTW3i7XdhDFlBLXJjcFatRSKsL/nDGGntme7I/AFEkll7NIUaUs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3ir6FrIdHOi2liNtXyM4mZgVdiB5H/fQ1cMILAlonnGczfDL4
+	+b5QejfNXqJlEOb0EEd+aSOWcagmpy3r9JOnIU+T5C0TVHzdKLPldnngOOpoC0JCpZM=
+X-Gm-Gg: Acq92OECIm7FHdQFtt1fZ2iGYagkydef2pEbpXAVxQmUP+ajdjshbMUgJ+Zf+OeeICE
+	ODTbcWKXzWAe0yGlxv4+czW7MZ1bztDG6VZRVAYvQQzozr8hS8wUXqT1ax5SODaaPxK0xZgPRwy
+	y2D47ffMZ4jo8i6UYCCW2C/p7c8j+Bm7ATlY11MPtX/HC08I80l0Z4kuPd83PBcx8ATNhF8BfEa
+	FUdhDFmSiyrp3otiJYks3IfV8IYckXVGpNj3FMTJPkXGtZaWuu6dvVriSNuTy0mcQSwUbjtxfzv
+	ZGzjIkzLcsaTcphBcrwB+dBbOX/zQAT00EuPaPEM25VfrXDHFxQnN6boikEB108DeZrlZ9H0PJG
+	SUwWoa5uHPWvtg/9vISNag1Sb30WDFgzNHXcovH08jCIuBmEz8/6W/V/NOgVB/G9Ql5SgTObFqU
+	6uB1cRwvzOyc0Gch1UboGfgorl3NaUZzmZD5YcZcP547bm0N8YeVYiMjdDobR0NMMtLZURFA4xR
+	aBrtjhdKCloL3uz6Q==
+X-Received: by 2002:a05:620a:2547:b0:915:9972:cfc with SMTP id af79cd13be357-915a9c7bba3mr3335701585a.19.1781018139752;
+        Tue, 09 Jun 2026 08:15:39 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-9158a411333sm2261055685a.46.2026.06.09.08.12.31
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-91589ea0bcfsm2153439585a.0.2026.06.09.08.15.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 08:12:31 -0700 (PDT)
-Date: Tue, 9 Jun 2026 11:12:29 -0400
+        Tue, 09 Jun 2026 08:15:39 -0700 (PDT)
+Date: Tue, 9 Jun 2026 11:15:37 -0400
 From: Gregory Price <gourry@gourry.net>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: linux-mm@kvack.org, nvdimm@lists.linux.dev,
@@ -70,12 +70,11 @@ Cc: linux-mm@kvack.org, nvdimm@lists.linux.dev,
 	mhocko@suse.com, osalvador@suse.de, shuah@kernel.org,
 	alison.schofield@intel.com, Smita.KoralahalliChannabasappa@amd.com,
 	ira.weiny@intel.com, apopple@nvidia.com
-Subject: Re: [PATCH v4 4/9] mm/memory_hotplug: add
- __add_memory_driver_managed() with online_type arg
-Message-ID: <aigtXQsFhJ4SB39t@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH v4 5/9] mm/memory_hotplug: add multi-range hotunplug
+Message-ID: <aiguGeKKfSOu8haT@gourry-fedora-PF4VCD3F>
 References: <20260605211911.2160954-1-gourry@gourry.net>
- <20260605211911.2160954-5-gourry@gourry.net>
- <9361f783-5af4-4380-a901-8d330370491a@kernel.org>
+ <20260605211911.2160954-6-gourry@gourry.net>
+ <b62e071b-9dec-423f-9b4b-e3c34ea0a409@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -84,35 +83,40 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9361f783-5af4-4380-a901-8d330370491a@kernel.org>
+In-Reply-To: <b62e071b-9dec-423f-9b4b-e3c34ea0a409@kernel.org>
 
-On Tue, Jun 09, 2026 at 11:55:24AM +0200, David Hildenbrand (Arm) wrote:
-> On 6/5/26 23:19, Gregory Price wrote:
-> > 
-> > diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> > index f059025f8f8b..d3edeb80aadb 100644
-> > --- a/include/linux/memory_hotplug.h
-> > +++ b/include/linux/memory_hotplug.h
-> > @@ -294,6 +294,9 @@ extern int __add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags);
-> >  extern int add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags);
-> >  extern int add_memory_resource(int nid, struct resource *resource,
-> >  			       mhp_t mhp_flags);
-> > +int __add_memory_driver_managed(int nid, u64 start, u64 size,
-> > +				const char *resource_name, mhp_t mhp_flags,
-> > +				enum mmop online_type);
+On Tue, Jun 09, 2026 at 12:06:38PM +0200, David Hildenbrand (Arm) wrote:
 > 
-> We prefer two-tab indent on second parameter line while touching code / adding
-> new code.
+> >  EXPORT_SYMBOL_GPL(offline_and_remove_memory);
+> > +
+> > +/**
+> > + * offline_and_remove_memory_ranges - offline and remove multiple memory ranges
+> > + * @ranges: array of physical address ranges to offline and remove
+> > + * @nr_ranges: number of entries in @ranges
+> > + *
+> > + * Offline and remove several memory ranges as one operation, serialized
+> > + * against other hotplug operations by a single lock_device_hotplug().
+> > + *
+> > + * Unlike calling offline_and_remove_memory() in a loop, this offlines *all*
+> > + * ranges before removing any of them.  If offlining any range fails, the
+> > + * offlining of the ranges processed so far is reverted and nothing is
+> > + * removed, leaving every range online as it was before the call.  This gives
+> > + * callers all-or-nothing semantics for the offline step, so a failed unplug
+> > + * does not leave a device split between online and removed ranges.
+> > + *
+> > + * Each range must be memory-block aligned in start and size.
+> > + *
+> > + * Return: 0 on success, negative errno otherwise.  On failure no range has
+> > + * been removed.
+> > + */
+> > +int offline_and_remove_memory_ranges(const struct range *ranges, int nr_ranges)
+> > +{
 > 
-> Same applies to the other instances below.
+> Is there a way to just generalize the logic in offline_and_remove_memory() to
+> multiple ranges, making offline_and_remove_memory() then a simple wrapper around
+> the new offline_and_remove_memory_ranges(), providing only a single range?
 > 
 
-Will fix on next spin, thanks!
+Yeah that's reasonable, I'll look at what can be done.
 
-> 
-> Apart from that (still) LGTM.
-> 
-> -- 
-> Cheers,
-> 
-> David
+~Gregory
