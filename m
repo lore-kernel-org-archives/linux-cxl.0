@@ -1,110 +1,86 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9B3331EAB
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 18:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD32360EFF
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 18:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781030039; cv=none; b=NWiyn+OamCzn/1skkggSGpmzj48ism87cWm/SGPyfEK0bI1V5/T9jqq+E+CvrxnrCU4fDRFLGxccfnmoP9vq9GLQWy51ZUmmqIwav8Wf96fgVPjixf4abWLk1Ff846Lgs0Czmrlrs/oeavHX8VL6zT/8Bs7n9c0NhRl+jQbPVfI=
+	t=1781030679; cv=none; b=aCfJtJLi7MCeF6jUuIOKE+TOG08DOAIcVIMUAwEk5yYHojBpOujO1+MBxoVzxwOQIGZ1RnjUU5tLPhgaR6XaHsviVz5Q9VJsQuQeCxD4PkeFrcqF6uYVaJFQIF7jVmLx5kgfpCR7qotHpSlwA8BhpVIHwzWgODB4g8k5WW4u7Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781030039; c=relaxed/simple;
-	bh=YPBILIJB/sXgdKpxBDocoTsa5FDZwh7jmpWEGCgXIzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZnUmJzLUH5ImpuaLjxB7REuqa6skMiXAr3P9Rkmn7f02of54H1ZmHG1b/w8Ux0uR2Kq6yxM+2OkiF5u5y1s1G8sile6Rqe5hEEgDfhuH10KYFFFFZbu6vTV31V64oDPhTBeId+7rbruxWhYmZYjr+NjNKhpK+v+7e9C/3nA4eA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=cmEBbWi9; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1781030679; c=relaxed/simple;
+	bh=E0T9B6iRfL4m2DwBmD7KhHWbCh/A2Ttarazh+eo3n54=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=k2WRdkuRCGdjO2Xl1AFpYE6KTZ3nOEKTU8pUxQy1GqlnvevLQDksll/5IIg1TK0FCzZpGrkij9lQHw7rquu68GLW3r2bmIQV5CGEzLbS0smO4EAwRuiG5xXUkAChkpx8uA/NX3FaUR2SL4s+Koivxq2iZRYZNHPFBeonyKr6fBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xcoogfs4; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="cmEBbWi9"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-91587626a3eso683473885a.2
-        for <linux-cxl@vger.kernel.org>; Tue, 09 Jun 2026 11:33:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1781030038; x=1781634838; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OySD+ExhHPCEiw9aOnLHfgmqMe+Ca/7oT+zDoVBuOjM=;
-        b=cmEBbWi92Wbz522rBYJQGkJPku6c/7g5/AvRQqFIQopotI2vvtpnI5NTKyrfqxNuIR
-         Kdi7/zeqjL4VSHNr9BNcxZzN4FBX2/pXaJSn5WSlPI+ntggWDxeAUDSHOWNhZhfntfTB
-         x5HTZlcoVSPhA8BIdK6b0+QiGGsK3sZdyopSb0CMvtdlvjDKiuZgc57I3nKrPdurzxKs
-         zSoKv5WA42KbXP3dCdfef09GbK28iVTi05SyC6vTACKHVFw6WuY72QXHwUDJE6uaUh/X
-         RLxl44lBi9+lk5biFRE6TftERtjCAqVkXeQU/Pf7W0UoTZRLIvnkwv9day/rRUmyr3SZ
-         DwUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781030038; x=1781634838;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OySD+ExhHPCEiw9aOnLHfgmqMe+Ca/7oT+zDoVBuOjM=;
-        b=cdrvUe/6UNUzgnSLqQlBi6e8PuqcayRzBM6OMcrAuyiwNNTFKGrT3cvSsfssDDuPjq
-         9aiYX5SOB4BUvMY2+furcv5g2A1il3kfKfYZs1yaRnY15ZNd7l7X6UNlw3xfD+Ox815q
-         UxCYesoO4lMXocP8ZA/FsMxslYwsSf/3ojROA5OfXk2VcBe4jcb8KGxOOMN/ErhPN8bh
-         5vXgUmHlX68UDQrC4xbAbpwf3ao+q82wPdI1j6I+Bbwv9dwuWzjPYzlCzLSDnr0hiLXD
-         vWOLR/qaQ/T91MCaknvDrK1JU2qhTDoFmoHLxLbO4t0WDpmcL/w++1yjId9cv8C30bEu
-         i7OA==
-X-Forwarded-Encrypted: i=1; AFNElJ+pt87kBhLCg4GARBH26ic6RGQc3xC/MT0LL5L0vtMAj3iLF6s76Xodv8Fj53PXibpbboL9AD9bpjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQppxgV/2OGyEm/+rzMJkGoFyBu8IEZm9quLIwtyoqk1saih6s
-	ryvlSGSKYtlgPGMxM6OewcBpH9AxdIlUHZQB6Y8q8ukk/rz59/mI32skifNz58tjins=
-X-Gm-Gg: Acq92OFLNBgg03ZAydQR4f8mZ+vMFRURUNImgBiBTBgbdjxUnto83R+5axRC0QqRCo8
-	4ClV7FfcOGtuzi3LdOwlfUWUth0qDBtHu/XBITpfgxnLemBGLsF2npsgXzu37dK5BPw75tDtq/U
-	I6qdFMZoHTwCyCwjrjSS9aZ7IYP8L2gJr4LU3In+BwgCv6Hd/oNQUb/5Dt+STnC05PE6vdIQ4J9
-	beyBmbY2lb/7KQ95CK3+GNFJzloiskCTIn+C9KFqxFQaPBRBDV+JItf/yzsIq1623n/uqqQ190m
-	+pH+pn+pAcjDyYkLrsQqVTDJs5LIsxMAPyRylbuyZ3teGU1LkXG25jF1FFAxfttzKUk43vzKMXv
-	JKCeVZfovlUJKsmsfqNdoL1zlFgeAPoTQhK4c+gjEpxY6YNIVNnYvVqIsyEKLzPeG97k0h6KOlk
-	Jf9Cx5rqKigafA8KGWvkyclPU/yDhgVMNwvcLi2EBjtrMwSbd8YdrXlDNk0sDvUBBMyq+8XZEZZ
-	rXbPBxhAb1W5F/b6A==
-X-Received: by 2002:a05:620a:1d01:b0:915:9e84:85ee with SMTP id af79cd13be357-915a9ca7655mr3263727985a.15.1781030037611;
-        Tue, 09 Jun 2026 11:33:57 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-9158a3eea49sm2158492985a.44.2026.06.09.11.33.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jun 2026 11:33:57 -0700 (PDT)
-Date: Tue, 9 Jun 2026 14:33:55 -0400
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: linux-mm@kvack.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	linux-cxl@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	djbw@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-	akpm@linux-foundation.org, ljs@kernel.org, liam@infradead.org,
-	vbabka@kernel.org, rppt@kernel.org, surenb@google.com,
-	mhocko@suse.com, osalvador@suse.de, shuah@kernel.org,
-	alison.schofield@intel.com, Smita.KoralahalliChannabasappa@amd.com,
-	ira.weiny@intel.com, apopple@nvidia.com,
-	Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH v4 8/9] dax/kmem: add sysfs interface for atomic hotplug
-Message-ID: <aihck-U9nyne98H0@gourry-fedora-PF4VCD3F>
-References: <20260605211911.2160954-1-gourry@gourry.net>
- <20260605211911.2160954-9-gourry@gourry.net>
- <1cb0514b-c753-411e-8ff8-80fa29837441@kernel.org>
- <aigy0ut410TItkgB@gourry-fedora-PF4VCD3F>
- <e6e7453a-d2af-4f1a-8930-5e5e5c5879cd@kernel.org>
- <aihZG8WKVSvA86mA@gourry-fedora-PF4VCD3F>
- <06bcee07-5e56-4a82-95ff-2a8e75b7154d@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xcoogfs4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781030679; x=1812566679;
+  h=date:from:to:cc:subject:message-id;
+  bh=E0T9B6iRfL4m2DwBmD7KhHWbCh/A2Ttarazh+eo3n54=;
+  b=Xcoogfs4N9T+EDS6+5JfTNPtpCn4oOl4myyyFqSaS2ZUS+aVcaFJODIS
+   ma6rVS2DvwS+rEDOjNuqnCLSDN057u//rPfEiybJKalm8APDHqbeKkiLu
+   XSDSNfYgqmEViVJOA8Fp7fU86eQQwzTDGHiOVIvD0HAtgqeyAj37TO4t/
+   vMr06iW7/EYWJEv7A3wMj8hxf8SW6UYwwcrXQ//bC5aEdhSKewtXcyHuS
+   IcOoLrN7W9s97jMeW68dEGle3UFzLfSG6hmyW1UzUHS1hpdUJ+ti+DHQH
+   LIBsskVU7nXVbAjOX592vTXr1aio0+SmEAPrCe2fYz7RVJuqeAN3WLlbA
+   A==;
+X-CSE-ConnectionGUID: aRaIseLLQzeHrbVqQGIcOQ==
+X-CSE-MsgGUID: 57RqIb80StqC2kRes4u0wg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="104471526"
+X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
+   d="scan'208";a="104471526"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 11:44:38 -0700
+X-CSE-ConnectionGUID: bYxm0/ddT8ShE816GSHk0g==
+X-CSE-MsgGUID: UiEJVtHmQeCB/Ki284r+Xw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
+   d="scan'208";a="247797032"
+Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 09 Jun 2026 11:44:35 -0700
+Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wX1RA-00000000KRe-3lP9;
+	Tue, 09 Jun 2026 18:44:32 +0000
+Date: Wed, 10 Jun 2026 02:44:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dan Williams <djbw@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org,
+ Dave Jiang <dave.jiang@intel.com>, Alejandro Lucero <alucerop@amd.com>
+Subject: [cxl:for-7.3/cxl-type2-enabling 5/5] ld.lld: error:
+ undefined symbol: cxl_memdev_attach_region
+Message-ID: <202606100235.1ur3Z4YQ-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <06bcee07-5e56-4a82-95ff-2a8e75b7154d@kernel.org>
 
-On Tue, Jun 09, 2026 at 08:22:20PM +0200, David Hildenbrand (Arm) wrote:
-> On 6/9/26 20:19, Gregory Price wrote:
-> > On Tue, Jun 09, 2026 at 08:11:42PM +0200, David Hildenbrand (Arm) wrote:
-> >> On 6/9/26 17:35, Gregory Price wrote:
-> > 
-> > Was going to propose this, but then I thought... well if CXL detactes
-> > itself from dax and does this same pattern, maybe MMOP_UNPLUGGED makes
-> > sense.
-> > 
-> > But i'll leave that for another day and do as you suggest.
-> 
-> Let me sleep over it :)
-> 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-7.3/cxl-type2-enabling
+head:   9b1e70e8f9ec4b5c6ce7fa774a0023bb6894c686
+commit: 9b1e70e8f9ec4b5c6ce7fa774a0023bb6894c686 [5/5] cxl/region: Introduce devm_cxl_probe_mem()
+config: i386-buildonly-randconfig-004-20260609 (https://download.01.org/0day-ci/archive/20260610/202606100235.1ur3Z4YQ-lkp@intel.com/config)
+compiler: clang version 22.1.3 (https://github.com/llvm/llvm-project e9846648fd6183ee6d8cbdb4502213fcf902a211)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260610/202606100235.1ur3Z4YQ-lkp@intel.com/reproduce)
 
-Have some other sets i'm trying to break out of private-nodes anyway,
-i'll let this bake for the week.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202606100235.1ur3Z4YQ-lkp@intel.com/
 
-~Gregory
+All errors (new ones prefixed by >>):
+
+>> ld.lld: error: undefined symbol: cxl_memdev_attach_region
+   >>> referenced by mem.c:227 (drivers/cxl/mem.c:227)
+   >>>               drivers/cxl/mem.o:(devm_cxl_probe_mem) in archive vmlinux.a
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
