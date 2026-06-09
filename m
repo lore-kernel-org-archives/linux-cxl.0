@@ -1,56 +1,57 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393363F8EC7
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 10:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED631296BCB
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 10:45:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781001913; cv=none; b=W1yCAm4XXBpnXcXXnbQJhjB8eA8lncZvkelmPEHO9KC+uyhECQB3lku6TnPAupHf2/zr59mU4K9CG2hlbzg9WrUU3mgeCQoQKyMUaNvBZxzOKsNL6tn5avNi1nSdtazR+SY+L+Y+KlipL7pgWSHpiIRnWZs6cgQHCYbmreg3oWw=
+	t=1781001923; cv=none; b=HRu6K+DaIt0/kIVsuFFCZRdn7Y6WsWimpDGCaAXkqWMTskFWNJki03t7opMRHEGI8ygQdd5NNk73Wj7mXlzXBXSM8e3fp4R/z4FwVy3cjypF4ONxUcVHeYhbCpPuYnPLbAWZ8gGLi7pkR3fZhAOzV2HC01nYAfeGwpMxHSaECFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781001913; c=relaxed/simple;
-	bh=Tght1ycO2jvAvC1Iv7YOBj7MKPCtqVc0UwPZMDX2AWw=;
+	s=arc-20240116; t=1781001923; c=relaxed/simple;
+	bh=T3FTcojiPIBomOQlvS+euF2sZ6W3unWMwLGtPcelSNQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=HN3n8CTYGdjdgCCb4VcdxakYXuyvIGQ4cvF38SHU2zC5FCu5MD7jOPG6gv44qxk5uxQ2UWq4+xVlxYfpTWWhRmhdBxVHXR9qArs2hN/Ruea/mKzEhTR2FtrpX6bqltkeqtclQeyS6H56L78fW2qf1fI9xj1hJKzk/mHWMELkYRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=q8rynW1K; arc=none smtp.client-ip=203.254.224.33
+	 Content-Type:References; b=bWL+4WWLvi76vo58KIyoIWkGR603zAKPPTPk/yDoM1i1I0PGImQBw5nCsmpDLY3d53QXZD0CucQBPodb1/K9ApUmibpVEL2JniN09HaX9IY+QKMbENo45rlLixN43zu92exJd7K40N3f4iy9O+iEgqWw3/Vw9jkId6RQ3oSkKnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=eNuBI1Eg; arc=none smtp.client-ip=203.254.224.24
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="q8rynW1K"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20260609104506epoutp034334e3491793a537582717bc685690cc~3Y8wlNxEe3187331873epoutp034
-	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 10:45:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20260609104506epoutp034334e3491793a537582717bc685690cc~3Y8wlNxEe3187331873epoutp034
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="eNuBI1Eg"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20260609104514epoutp01ee545dbf9b1076af4667af1f2b51f47b~3Y84ViNJw0138201382epoutp01F
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 10:45:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20260609104514epoutp01ee545dbf9b1076af4667af1f2b51f47b~3Y84ViNJw0138201382epoutp01F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1781001906;
-	bh=TVQhRc8dDekoMA1OaYDeOudEU0aw2a7ljZsV7Lahev0=;
+	s=mail20170921; t=1781001914;
+	bh=SQXj/9l+rMnTTINxJGJSqKcLnI0ozzZ6odUUtMvj6p4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=q8rynW1K25DYDtd5HTDNkCDh6nEAdnvYnmY4Rj54EwGJlc77aeERtFctxPOooW8sD
-	 3s/ENHjsZUhWTVkB/uCPpkVxSGKu61pseun1ktgc/w4aSHfQIdhZ0TYv9S9j4200Le
-	 YAPvbmGSi0P++CxbJRblmmdAFyBHzQIWO5MULDZA=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20260609104504epcas5p1308772014546eb7371d7b142a4326203~3Y8vhycwn0554305543epcas5p16;
-	Tue,  9 Jun 2026 10:45:04 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.88]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4gZQXc241xz6B9m6; Tue,  9 Jun
-	2026 10:45:04 +0000 (GMT)
+	b=eNuBI1EgznepIqPaV2U1I3Nkz8DQ4/AsV9jE8ZgpMNIL5qJnkFlCRLyoUkkKENgZ8
+	 kYRGWdzuYHaiwbiBi4PL1bke/a1myLGhiXYxZ1mAVrE5RIIeGRswcMKLR8R2wBsAL4
+	 xXc2D9Gf6TJYORAEq17oMZ4u/IRqTKoz6Fm6EUl0=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20260609104514epcas5p29e026fbda4c91c8ad0f28faee4321cf7~3Y84ABFH12641426414epcas5p2L;
+	Tue,  9 Jun 2026 10:45:14 +0000 (GMT)
+Received: from epcas5p3.samsung.com (unknown [182.195.38.91]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4gZQXn0m60z6B9mH; Tue,  9 Jun
+	2026 10:45:13 +0000 (GMT)
 Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20260609104503epcas5p12628cd89d0ef9210c856d2518dc790cb~3Y8uSH2Fc0554305543epcas5p1k;
-	Tue,  9 Jun 2026 10:45:03 +0000 (GMT)
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20260609104512epcas5p37f4a75a633dd8e5bb22f51e9660ee454~3Y82snguL0826308263epcas5p3i;
+	Tue,  9 Jun 2026 10:45:12 +0000 (GMT)
 Received: from unvme-SYS-221H-TN24R.samsungds.net (unknown [107.99.40.127])
 	by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20260609104501epsmtip12bdcceb0bf7d0b7fce7b04526feba867~3Y8sscY8B2355923559epsmtip1G;
-	Tue,  9 Jun 2026 10:45:01 +0000 (GMT)
+	20260609104510epsmtip1ef1e7c0a14ad2159e301bcc1daba8e5a~3Y81HtHiv2354323543epsmtip1Z;
+	Tue,  9 Jun 2026 10:45:10 +0000 (GMT)
 From: Shrihari E S <shrihari.s@samsung.com>
 To: jic23@kernel.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
 	qemu-devel@nongnu.org, cpgs@samsung.com
 Cc: arun.george@samsung.com, vikash.k5@samsung.com, s.neeraj@samsung.com,
 	shrihari.s@samsung.com, dongjoo.seo1@samsung.com, dave@stgolabs.net,
 	gost.dev@samsung.com
-Subject: [RFC 1/8] hw/pci: Refactor flitmode from PCIESlot to PCIEPort.
-Date: Tue,  9 Jun 2026 16:28:29 +0530
-Message-Id: <20260609105836.3702787-2-shrihari.s@samsung.com>
+Subject: [RFC 2/8] hw/pci: Move 'x-256b-flit' property from cxl_root_port to
+ pcie_root_port.
+Date: Tue,  9 Jun 2026 16:28:30 +0530
+Message-Id: <20260609105836.3702787-3-shrihari.s@samsung.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260609105836.3702787-1-shrihari.s@samsung.com>
 Precedence: bulk
@@ -60,131 +61,52 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20260609104503epcas5p12628cd89d0ef9210c856d2518dc790cb
+X-CMS-MailID: 20260609104512epcas5p37f4a75a633dd8e5bb22f51e9660ee454
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
 X-CPGSPASS: Y
 cpgsPolicy: CPGSC10-542,Y
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20260609104503epcas5p12628cd89d0ef9210c856d2518dc790cb
+X-CMS-RootMailID: 20260609104512epcas5p37f4a75a633dd8e5bb22f51e9660ee454
 References: <20260609105836.3702787-1-shrihari.s@samsung.com>
-	<CGME20260609104503epcas5p12628cd89d0ef9210c856d2518dc790cb@epcas5p1.samsung.com>
+	<CGME20260609104512epcas5p37f4a75a633dd8e5bb22f51e9660ee454@epcas5p3.samsung.com>
 
-Move the 'flitmode' property from PCIESlot to PCIEPort. This change
-allows all the derived ports (PCIe ports or CXL ports) to use this
-property.
+Relocate 'x-256b-flit' property from cxl_root_port to its parent
+pcie_root_port so that both can utilize this property.
 
-This is a structural refactor only. There is no functional change in
-existing behavior.
-
-Note: This property was added from Davidlohr's BI patch series[1].
-
-[1]: https://lore.kernel.org/all/20251103195209.1319917-2-dave@stgolabs.net/
+This is a pure refactor and does not impact any existing behavior.
 
 Signed-off-by: Shrihari E S <shrihari.s@samsung.com>
 ---
- hw/pci-bridge/cxl_downstream.c | 6 +++---
- hw/pci-bridge/cxl_root_port.c  | 6 +++---
- hw/pci/pcie.c                  | 2 +-
- include/hw/pci/pcie_port.h     | 2 +-
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ hw/pci-bridge/cxl_root_port.c  | 1 -
+ hw/pci-bridge/pcie_root_port.c | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/hw/pci-bridge/cxl_downstream.c b/hw/pci-bridge/cxl_downstream.c
-index d1e27994a3..7c7a1d1221 100644
---- a/hw/pci-bridge/cxl_downstream.c
-+++ b/hw/pci-bridge/cxl_downstream.c
-@@ -118,7 +118,7 @@ static void cxl_dsp_reset(DeviceState *qdev)
- 
- static void build_dvsecs(PCIDevice *d, CXLComponentState *cxl)
- {
--    PCIESlot *s = PCIE_SLOT(d);
-+    PCIEPort *p = PCIE_PORT(d);
-     CXLDVSECRegisterLocator *regloc_dvsec;
-     uint8_t *dvsec;
-     int i;
-@@ -132,7 +132,7 @@ static void build_dvsecs(PCIDevice *d, CXLComponentState *cxl)
-     dvsec = (uint8_t *)&(CXLDVSECPortFlexBus){
-         .cap                     = 0x27, /* Cache, IO, Mem, non-MLD */
-         .ctrl                    = 0x02, /* IO always enabled */
--        .status                  = s->flitmode ? 0x6 : 0x26, /* lack of 68B */
-+        .status                  = p->flitmode ? 0x6 : 0x26, /* lack of 68B */
-         .rcvd_mod_ts_data_phase1 = 0xef, /* WTF? */
-     };
-     cxl_component_create_dvsec(cxl, CXL2_DOWNSTREAM_PORT,
-@@ -259,7 +259,7 @@ static const Property cxl_dsp_props[] = {
-                                 speed, PCIE_LINK_SPEED_64),
-     DEFINE_PROP_PCIE_LINK_WIDTH("x-width", PCIESlot,
-                                 width, PCIE_LINK_WIDTH_16),
--    DEFINE_PROP_BOOL("x-256b-flit", PCIESlot, flitmode, true),
-+    DEFINE_PROP_BOOL("x-256b-flit", PCIEPort, flitmode, true),
- };
- 
- static void cxl_dsp_class_init(ObjectClass *oc, const void *data)
 diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.c
-index 0ee18ef5c3..df69c5200f 100644
+index df69c5200f..e82685d1ab 100644
 --- a/hw/pci-bridge/cxl_root_port.c
 +++ b/hw/pci-bridge/cxl_root_port.c
-@@ -112,7 +112,7 @@ static void latch_registers(CXLRootPort *crp)
- 
- static void build_dvsecs(PCIDevice *d, CXLComponentState *cxl)
- {
--    PCIESlot *s = PCIE_SLOT(d);
-+    PCIEPort *p = PCIE_PORT(d);
-     CXLDVSECRegisterLocator *regloc_dvsec;
-     uint8_t *dvsec;
-     int i;
-@@ -135,7 +135,7 @@ static void build_dvsecs(PCIDevice *d, CXLComponentState *cxl)
-     dvsec = (uint8_t *)&(CXLDVSECPortFlexBus){
-         .cap                     = 0x26, /* IO, Mem, non-MLD */
-         .ctrl                    = 0x2,
--        .status                  = s->flitmode ? 0x6 : 0x26, /* lack of 68B */
-+        .status                  = p->flitmode ? 0x6 : 0x26, /* lack of 68B */
-         .rcvd_mod_ts_data_phase1 = 0xef,
-     };
-     cxl_component_create_dvsec(cxl, CXL2_ROOT_PORT,
-@@ -237,7 +237,7 @@ static const Property gen_rp_props[] = {
+@@ -237,7 +237,6 @@ static const Property gen_rp_props[] = {
                                  speed, PCIE_LINK_SPEED_64),
      DEFINE_PROP_PCIE_LINK_WIDTH("x-width", PCIESlot,
                                  width, PCIE_LINK_WIDTH_32),
--    DEFINE_PROP_BOOL("x-256b-flit", PCIESlot, flitmode, true),
-+    DEFINE_PROP_BOOL("x-256b-flit", PCIEPort, flitmode, true),
+-    DEFINE_PROP_BOOL("x-256b-flit", PCIEPort, flitmode, true),
  };
  
  static void cxl_rp_dvsec_write_config(PCIDevice *dev, uint32_t addr,
-diff --git a/hw/pci/pcie.c b/hw/pci/pcie.c
-index 1de0b1e4fd..d452199d85 100644
---- a/hw/pci/pcie.c
-+++ b/hw/pci/pcie.c
-@@ -217,7 +217,7 @@ static void pcie_cap_fill_slot_lnk(PCIDevice *dev)
-         /* the PCI_EXP_LNKSTA_DLLLA will be set in the hotplug function */
-     }
+diff --git a/hw/pci-bridge/pcie_root_port.c b/hw/pci-bridge/pcie_root_port.c
+index fe3ced5685..eeee24e042 100644
+--- a/hw/pci-bridge/pcie_root_port.c
++++ b/hw/pci-bridge/pcie_root_port.c
+@@ -152,6 +152,7 @@ static const Property rp_props[] = {
+     DEFINE_PROP_BIT(COMPAT_PROP_PCP, PCIDevice, cap_present,
+                     QEMU_PCIE_SLTCAP_PCP_BITNR, true),
+     DEFINE_PROP_BOOL("disable-acs", PCIESlot, disable_acs, false),
++    DEFINE_PROP_BOOL("x-256b-flit", PCIEPort, flitmode, true),
+ };
  
--    pcie_cap_fill_lnk(exp_cap, s->width, s->speed, s->flitmode);
-+    pcie_cap_fill_lnk(exp_cap, s->width, s->speed, s->parent_obj.flitmode);
- }
- 
- int pcie_cap_init(PCIDevice *dev, uint8_t offset,
-diff --git a/include/hw/pci/pcie_port.h b/include/hw/pci/pcie_port.h
-index 53cd64c5ed..1bcc734649 100644
---- a/include/hw/pci/pcie_port.h
-+++ b/include/hw/pci/pcie_port.h
-@@ -33,6 +33,7 @@ struct PCIEPort {
-     /*< private >*/
-     PCIBridge   parent_obj;
-     /*< public >*/
-+    bool flitmode;
- 
-     /* pci express switch port */
-     uint8_t     port;
-@@ -58,7 +59,6 @@ struct PCIESlot {
- 
-     PCIExpLinkSpeed speed;
-     PCIExpLinkWidth width;
--    bool flitmode;
- 
-     /* Disable ACS (really for a pcie_root_port) */
-     bool        disable_acs;
+ static void rp_instance_post_init(Object *obj)
 -- 
 2.34.1
 
