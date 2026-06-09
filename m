@@ -1,232 +1,287 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBA44B8DC7;
-	Tue,  9 Jun 2026 17:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781025039; cv=fail; b=sGEA4hokOx3pvJJwjw06SUdqDiLt1LzrCpTHM6GTH+Uz1/AaWy4c22qvSP+t+IvwpUpCQWhJ+bjsvarbYm3D8rFFBgxECAaGw5mYLKqs5sGj22IsLk2aeUYnt4fA8ExuReaEwkNMRUoPzXBGM5ZB6zGP7/3LCXGQOL7XfyzO9R8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781025039; c=relaxed/simple;
-	bh=mVxoHD88OblmxQGsQIY96LpvuL5oXYIEkLnB6AEQmi0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=SGi7FEcEzWD6aQZF6VQ1UAbeaLhvBcdM61wxvEZQ+QIyDF1Wjub9QE1H9pQeV2cxz7WNqIQy9CHQ4Q/lea4T5EWous975rKg0RC+7Oig+txyxv6QJCU4TJTN0XSrdo20dc7aVatyhtOP3TwNWGJT0ljRlxl+kj2j6cEvg9wSze8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lF16KEzn; arc=fail smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D3B347BA7;
+	Tue,  9 Jun 2026 17:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781026390; cv=none; b=l8TFem8oKfAhWo2teDtcT0qqvIcEOqvu95iYAEJqKHMhfJV+yE3OKXeT9hcT8RJoy/SIZVANF8DIz2q1ogWhrB1Mxp0wF4Qk+N2A4F0CqSeiUjggnX4G2tTPyIOGeKSv80HT9l6yBm6i9M0KsK6gGq0EXgna8blHyeOhihBo4jE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781026390; c=relaxed/simple;
+	bh=bz5FL3gacye4tkbSvtGK3gA0W4lfd8x2bxnnAQfS2C0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=anBHvrIUKW5v7+r7/PDDAqkp0tTELBeEjk+Fwo4HYJpc2DwDg5eQtzSC/APtse1icH5NmZcRgJCY/tjJmCkNeIYo9nhbWPZu+b74VH/m5TDJCKAgvrhARl1OuJvODsjmc2pVgw6EmIFECWks86TxfvyL86CkROXw51U9519Fh8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mdWy9Fd7; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lF16KEzn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mdWy9Fd7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781025036; x=1812561036;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=mVxoHD88OblmxQGsQIY96LpvuL5oXYIEkLnB6AEQmi0=;
-  b=lF16KEznslUONkqfmkH4MpXmCmbcys1OLf01r4HPyYiYnY+VICTAOfTf
-   ff9z9KL9hUJRVnY1AueHupUA1mYwaVIRcHKTh662CXfGHzctOFkeoht5X
-   PYU93aHyE2ijzlgIKNbtVOpBXNfyr83tcTGMMZ270oz/V9cfZM9zaAQKT
-   EiFEP3z1iKZGWOJIBlr2CBtr8KcOXGhSN7lYEpFuLDosi/nHlTQ5L23ay
-   YTfID1JqT/PDN2Akeni76QhntWm5+NvEHnYfDve6AAH/fu1sRsswXKM6X
-   z8/pq3j26FSQMEPPVdTAvmr52VBtzUcQSykXr+Gw0lXXusLKWudmGtB3F
-   A==;
-X-CSE-ConnectionGUID: zrhl2zhTSjy8EU8zHaW31Q==
-X-CSE-MsgGUID: fEHY76N/SoiQkrFgGDNM7Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="85643978"
+  t=1781026388; x=1812562388;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bz5FL3gacye4tkbSvtGK3gA0W4lfd8x2bxnnAQfS2C0=;
+  b=mdWy9Fd7su+9HXytbR480QnfkvdwYkhcS7+AmfIC48mwQEDHe0rICiQH
+   ScXLa9FSqJIXjgoR2fHtVNUgA/tYilQ+9s/j0Q881uWljiF1B9BLmOAzA
+   5qVXWCWTB7ZcDgOZb2MIx+XzmK0S8b27/Y29ID+C1I1DQb+xKYbsMFltz
+   74UFSBdv9ZkTW3SUntmy9KUTrLN8ycOALoouWaUXC70bMHQjt8T+Usyzq
+   AIDBL9StMLeXUQXMueM0tHgK/3RvZPCm2NMsXNACoClTmfRpnLTx8wqoE
+   gjXfP0/6nbOBcRZ33Hshvk2Mc7YaN0Q94qnk1yJlAHJbHV7d9Yy7vaxQo
+   Q==;
+X-CSE-ConnectionGUID: X4/9QbphScWaIEhLT2GBig==
+X-CSE-MsgGUID: vVS+4KYXQPuqojg8O9R2Cw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="81650169"
 X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
-   d="scan'208";a="85643978"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 10:10:35 -0700
-X-CSE-ConnectionGUID: eKyccvv+SQCdIaBvXLAwCA==
-X-CSE-MsgGUID: 9vBl9OepTuqjnvg15leZ6w==
+   d="scan'208";a="81650169"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 10:33:07 -0700
+X-CSE-ConnectionGUID: SVkBX4sTT+KZpozeyaZ1YQ==
+X-CSE-MsgGUID: P0lMJ4wCRX+G9f7ktE9xSw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
-   d="scan'208";a="242954095"
-Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 10:10:34 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 9 Jun 2026 10:10:33 -0700
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Tue, 9 Jun 2026 10:10:33 -0700
-Received: from CH4PR04CU002.outbound.protection.outlook.com (40.107.201.52) by
- edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Tue, 9 Jun 2026 10:10:33 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lE4qSqgC1+OfipHd+bb0yWjWW/fslxyqblUdkYX7lkk/1kINOllnGfeV2RkZ+NLaxvMszgXQoSz6nhViBR8eZuyj5AllS+gYf3LveYmweH2aBSXBz3jg7S0ROb+DCC4CisdI9D/r290hkW4+zfdqWNUybdRZV2kawC8xSQLrKDpd9ArrfigZnhA9sOwMdcvylQMT7XD4LgpXOnhLKIgEejOGBZTPPqt9dr2AkTacbImBOTqNfl6mq7WQqFKdY+OWproPXBB9lMNj/dv9P0ELwdmuhqTBriZNZ5J6zRKkQ4kocUh+xQzvPnWJ13GupgzGPvnUtXkfaZc89SJnDqdPKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=REMFs7X6EICJFc/P5kuP87FhlHwSaX8j7EGX651vBt0=;
- b=VSHCK+cKN6P4J1LJCAq2biVfZPdFoNZKenJqJ5x5QRNhRHd2fdxPaRNGPZyUb2N4fDO3koxuMFvhjEpEn+rOefgD85w7ZQr2efwGA1YfV10Ru5QOeKX0r5qZqP8LhOB5amKHT0h9L3NAW4skpHTX5+BkknvFnOS1nCEhAeawFQ7tTl97OOXIyHHVdXZrOhGtfnaOXg2ruURys6XwDWawx4ZWewWKUCwQkeaHbDFIhbf/snm2DTnE13Jx61JsvsU0ZIgFRPw/7ToqaysC4VqioApfEndHmAeuU4S2JGbljCrODNpATEpQ6AciKLeNlQGF72S4ZIy4/D8qEhuHs6Q46Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by SJ0PR11MB6696.namprd11.prod.outlook.com (2603:10b6:a03:44f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.12; Tue, 9 Jun 2026
- 17:10:29 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::a195:49d4:38c5:3891%4]) with mapi id 15.21.0092.011; Tue, 9 Jun 2026
- 17:10:29 +0000
-Date: Tue, 9 Jun 2026 10:10:13 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <dave@stgolabs.net>, <jic23@kernel.org>, <dave.jiang@intel.com>,
-	<vishal.l.verma@intel.com>, <ira.weiny@intel.com>, <djbw@kernel.org>,
-	<ming.li@zohomail.com>, <rrichter@amd.com>, <Benjamin.Cheatham@amd.com>,
-	<Smita.KoralahalliChannabasappa@amd.com>, <stable@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<PradeepVineshReddy.Kodamati@amd.com>
-Subject: Re: [PATCH] cxl/ras: Fix match_memdev_by_parent() pointer type
- mismatch
-Message-ID: <aihI9XAslh04a2T_@aschofie-mobl2.lan>
-References: <20260608224319.587614-1-terry.bowman@amd.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260608224319.587614-1-terry.bowman@amd.com>
-X-ClientProxiedBy: BY3PR04CA0007.namprd04.prod.outlook.com
- (2603:10b6:a03:217::12) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+   d="scan'208";a="245782937"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.109.206]) ([10.125.109.206])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 10:33:06 -0700
+Message-ID: <4418ce71-7236-44b3-ba53-a047cc55eb75@intel.com>
+Date: Tue, 9 Jun 2026 10:33:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SJ0PR11MB6696:EE_
-X-MS-Office365-Filtering-Correlation-Id: b6e58a3a-fc22-4f81-1a8b-08dec64a01bb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|11063799006|56012099006|3023799007|6133799003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info: o6HVkb3YgJu7ia3rg5BtBOerGfTNj5HLH1+LgO59wEEv+Xw/cvy49gU8PPVthXWwHDwneSJztj+0D1lsjz9rigxf2+XcTkcsFaA/klU0/iGC2lP9yBAYeHQpBA9LhRhosuStdT/tdER/lSC15zpHWPbKGHyhZsntbKeBIkopcGTVorpjQIlS+dJ/77mpcgcBc/Hqma/br3sxeX0Hg8t0QYQnD4tJjf0AoNB9G/ck29qxNbgNHNAEBPHo9epd6nluiyEhcAeXFl2DDA6cOsCeOfbDZxJjp9LwzUvm1SfFTvu+GfD3AlvpEASX95tkL3MFrresdrtfV7kQXcU4+K3+wxdeOcHw7cTaO1kM27lTGZj7XpHOcNAS2sXvJZ+PQphQ2Un55gggW8mPyGMuDm/g+nswCaBJUoT0JTdvQvOqcK+oPdNFlRlbRi0+0VlVZFz1e8MQsUKoii4jyp6ISAu7Vwmw+tUAUD1AVkMPD9Oa3Gp/SwQGdnSGqTEfLqJrXJ6tKbrQwSEKCyyQ5NZq4ZRvmgkSY4JuKpxueNkO/AgWnx7jViNuLrgK00YZe41b68/iyQ9Du4EWELkDoV8XyxZu2xmd/VaJA63Y33+e/etwNuYi9R1m0lFoJR1y0LS+ZWqBaHjbwg8X5U0KgWy4sZgW8RV1sY0y+22CQ1oyZMamOz5jJC1FwHBAY8zVS8MPVpmJ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(11063799006)(56012099006)(3023799007)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?jvtIEv/58CJm6FuW/qqteOTRbfksX7kh8j0VMey1s3j3OrFRTWGJc+5cBLoX?=
- =?us-ascii?Q?XVmgIBsvWSJU0lam67tXkTzbr5Akvw62H2eWy2Pv7aQk+n1Q6Uo5rwlQHJMZ?=
- =?us-ascii?Q?+jLkb0rhKsu6UX62nFbvLWbcWdkMwiYIzpD5/RcFPhwnWbPyMKRGpnFMvRys?=
- =?us-ascii?Q?I223gyCKcrr9FQEw1Du5H4AdTvvYtfno/cUrgB35LP2s4vc8NNMcTvKzU022?=
- =?us-ascii?Q?beCdE8fd0pRj6+HrQyAMt4iKa9aAEkSc9zkbKFZbCn2uvLwmCfgM9D6/RFgw?=
- =?us-ascii?Q?aa44ZPy4qiqPTCTywUTOWqeoKF0h2udxpBcF//eWnBk7hOwgyX6j2BnQMz9I?=
- =?us-ascii?Q?pzmTMGnyzRCJXlu4gzRzDcZAvgHrSBOARcsmxA5R6vR7nbcoJcFhu0kAJd8Z?=
- =?us-ascii?Q?ZmNqzFNf9BObWM5OcWyALDFqOCRgckvoisHrpkdYZ5XCzVbjKFet8TsewjsU?=
- =?us-ascii?Q?CUfVkEzVQccVDXKR954NMdspBLyzXclPq6Zc64sMxUkCdqs6sOx2X6opZ1Nf?=
- =?us-ascii?Q?zMyMJSEG8mlkrCl6urUgzYID2/5mTte3pbtQb+YRDsUuMYqgd1IElpEaDaVN?=
- =?us-ascii?Q?ISPQFL56lzk/bSIIC4zxhcOGHMYrx65/FjZbks4HJqWZC1/QMCsWVaW/Qs8w?=
- =?us-ascii?Q?G2f48XuBHm1oEjFVIvaGk5kYqkstk+QAxKf9c895ns5bWdDfpWq7TlLXROla?=
- =?us-ascii?Q?mh6O2By0f/Wp4llFkwqkQIX6aAXYoSEImsT6K6luHvvLfnVpgPQRhIlsChgv?=
- =?us-ascii?Q?nsvXNOL7uLXVXAddyChC5tkiubd/L3FLftZNTsmAmds7OdRJf93uo6ir0Y3A?=
- =?us-ascii?Q?XOwqaw5kp0Rh81RWyViepmBxwzcyAkpZo3CWh01jzjoOEnpOqGNSZg5hT4mt?=
- =?us-ascii?Q?tOEzOrnsJXkUH98HBDEYnRUiWl3tc0TnGiX/t0CwfDLRuynQyNWOaUr9Qe8a?=
- =?us-ascii?Q?1+SJY3Q4OO7WLq449BdFGWXPICZR98fFfWS05btSfiRhDmz+jZ/6p/aKuiOT?=
- =?us-ascii?Q?a68IBI0mPkS0QNPkRqnutw9VOvj/PRhm5+x1+2mVNAWZIkE/Z6saahK4DKKm?=
- =?us-ascii?Q?CS4bt3WciPH9DUGRoyI7zFEyG6qSRfWwi4/rfM8vIoUlp2fuB1gRJOloiPhc?=
- =?us-ascii?Q?8sGesDNMYR55lrpH0HR67/V8ZnPqOY8d5FeT/hXuvRsrd63GKHEimyvsQYEq?=
- =?us-ascii?Q?nGrJ4MEeSrRNZCAWwu0EVr6FHEjKPYFriw3jQLeTgOjMLXN345wDItKJjwKo?=
- =?us-ascii?Q?FRlvc7vl/TlyyByK8OjHGPD5tfx6mTsvad156mut8erdpAVCtzLByB35J6EN?=
- =?us-ascii?Q?EWGNv4LeuTUDG5H5hJZA0FKJ++BB1ErcnliHkEdyHex4VvKb4oFVOwrDgahO?=
- =?us-ascii?Q?Lbq4vaS7T1quVyCnKQAg0X7j0dC1c8SQmLvQOX7ANh3ELPDF4vIesF6qFffb?=
- =?us-ascii?Q?hcdxVf/BY82YNeECCKtG3zhjpHVPTQ5BrOtyzwD9G0QXHwoBzHWlhGEjpUXZ?=
- =?us-ascii?Q?wPMdfIxaBC8Q5mGVMAtcAD90qCdOCUURTgDNKl08HdMJYI1SJKwRZF3+/sEr?=
- =?us-ascii?Q?bEH+WGJOSXdoCb5L7oOP8QyUKdpCH5ICfBKTbHM+cc5FCfj+2s33q/4GfyA8?=
- =?us-ascii?Q?ygG22ab/+YyvTSpjhEhApVj7H12qa0vua6PPvuVsYkGxesWqzW/csKsCwJjt?=
- =?us-ascii?Q?9fA5WieMLfG810voAcRU4GZVELJtab19FjWphIh31keX8XeojwBAS5Xs80Aj?=
- =?us-ascii?Q?OD0GKiBZhEdfRJzJoiPgfg5vhX3LuSU=3D?=
-X-Exchange-RoutingPolicyChecked: aVpAAhW+pJy9xeOGhN6BHJo8vhuGMPgKdc85OSjDyXCt2UI0BB4UVaAS/j3vWaZ4Xoy1b2rL7tmANTaWfw9wu/oi43r197qpLffxpJp4f0qwK8jnGFMUuTh23GfxL4WhFSiNUQ8TFgYuerAxrVfTng/zdVhhKcgXHaCsEVojkB3FO6+Ldkl9eZ6/GIvxMRDyJouShx1OuHLOd40Of8yCcVsadfCRDsopof+xngCQjyhpGL6XOeJKs43K5PS+Zj5BH0IaHZpfTsv2HHYgwsoL2dJ05MP719hP2VnasR8brPYHqI4BP9Y8Z41LCVzatxT31LTTNzpvz6Ayuynl0481eg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6e58a3a-fc22-4f81-1a8b-08dec64a01bb
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jun 2026 17:10:29.4394
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3QeGQfOGc/WzGa1EbIcCZjw2Xd/nI/0b0P1zH/o2ox/SJwEMypkYrtfAqI834m914VeBv9SU7zmYbpXc4Md5gA802qBYz3/Sk3N6sqdC9UA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB6696
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl: Fix CXL_HEADERLOG_SIZE to match RAS Capability size
+To: Terry Bowman <terry.bowman@amd.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jic23@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <djb@kernel.org>, PradeepVineshReddy.Kodamati@amd.com,
+ Benjamin.Cheatham@amd.com, rrichter@amd.com
+Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ "Fabio M . De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Shiju Jose <shiju.jose@huawei.com>,
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+ Li Ming <ming.li@zohomail.com>, Tony Luck <tony.luck@intel.com>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20260605180610.2249458-1-terry.bowman@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260605180610.2249458-1-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 08, 2026 at 05:43:19PM -0500, Terry Bowman wrote:
-> bus_find_device() passes its data argument directly to the match
-> function as a const void *. match_memdev_by_parent() compares
-> dev->parent against this pointer:
+
+
+On 6/5/26 11:06 AM, Terry Bowman wrote:
+> The CXL r4.0 8.2.4.17.7 RAS Capability Structure has total length 0x58
+> bytes (CXL_RAS_CAPABILITY_LENGTH); the Header Log occupies the trailing
+> 64 bytes at offset 0x18.  CXL_HEADERLOG_SIZE was defined as SZ_512,
+> eight times the actual on-device size.
 > 
->     dev->parent == uport
+> header_log_copy() reads CXL_HEADERLOG_SIZE_U32 (128) dwords from the
+> RAS capability iomap, overrunning the 88-byte mapping by 448 bytes.
+> The cxl_aer_uncorrectable_error trace event memcpy()s CXL_HEADERLOG_SIZE
+> (512) bytes from its source.  For the CPER caller the source is
+> struct cxl_ras_capability_regs::header_log[16] (64 bytes) embedded in a
+> stack-local cxl_cper_prot_err_work_data, so the memcpy reads 448 bytes
+> of kernel stack into the trace event ring buffer where userspace can
+> read it via tracefs.
 > 
-> cxlmd->dev.parent is set in cxl_memdev_alloc() as:
+> Set CXL_HEADERLOG_SIZE to 64 and derive CXL_HEADERLOG_SIZE_U32 from it,
+> bringing all iomap readers into agreement on 16 dwords.  Userspace tools
+> such as rasdaemon have grown a dependency on the buggy 512-byte (128 u32)
+> header_log layout in the cxl_aer_uncorrectable_error trace event.  Add
+> CXL_HEADERLOG_TRACE_SIZE_U32 = 128 and use it for the trace event
+> __array and its memcpy to preserve that ABI.  Both callers now pass a
+> zero-filled u32[CXL_HEADERLOG_TRACE_SIZE_U32] staging buffer with only
+> the first CXL_HEADERLOG_SIZE_U32 (16) entries populated from hardware;
+> the remaining 112 u32s are zero-padded, keeping the 512-byte trace ring
+> buffer layout intact.
 > 
->     dev->parent = cxlds->dev;  /* cxlds->dev == &pdev->dev */
-> 
-> So cxlmd->dev.parent holds a struct device * pointing to &pdev->dev.
-> However, bus_find_device() is called with pdev (struct pci_dev *)
-> rather than &pdev->dev (struct device *). Since struct pci_dev does
-> not begin with struct device, the two pointer values differ, causing
-> the comparison to always evaluate false.
-> 
-> As a result, cxl_cper_handle_prot_err() silently drops every CPER
-> error report for CXL endpoint devices -- bus_find_device() always
-> returns NULL and the function returns early without emitting any
-> kernel trace event.
-> 
-> Fix by passing &pdev->dev instead of pdev.
-> 
-> Fixes: 3c70ec71abda ("cxl/ras: Fix CPER handler device confusion")
-> Reported-by: Sashiko <sashiko@linuxfoundation.org>
+> Fixes: 36f257e3b0ba ("acpi/ghes, cxl/pci: Process CXL CPER Protocol Errors")
+> Fixes: 2905cb5236cb ("cxl/pci: Add (hopeful) error handling support")
+> Cc: stable@vger.kernel.org
+> Reported-by: Sashiko
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 
-Hi Terry,
+Applied to cxl/next with change suggested from Richard.
 
-The commit log is burying the lead- no endpoint errors reported.
-
-There is no need for the full struct layout analysis in the
-changelog. The important part in the functional regression
-and the pointer mismatch as root cause.
-
-Please reframe the commit message along the lines of background,
-problem, cause, fix, and validation. Something like-
-
-    CXL endpoint CPER protocol errors are processed by ...
-
-    Following commit 3c70ec71abda, endpoint CPER protocol errors are
-    silently dropped and no trace events are emitted. This happens
-    because bus_find_device() is called with the wrong pointer type,
-    so the memdev parent match never succeeds.
-
-    Fix it by ...
-
-
-How do we know it works now?
-
--- Alison
-
-
-
+c268f949e219f9e179558e836f457f6c5fbec416
 
 > ---
->  drivers/cxl/core/ras.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/cxl/core/ras.c   | 27 ++++++++++++++++++++-------
+>  drivers/cxl/core/trace.h | 24 ++++++++++++++++--------
+>  drivers/cxl/cxl.h        | 14 ++++++++++++--
+>  3 files changed, 48 insertions(+), 17 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
-> index 006c6ffc2f56..7ec2dab152a7 100644
+> index 006c6ffc2f56..99fb00949c2f 100644
 > --- a/drivers/cxl/core/ras.c
 > +++ b/drivers/cxl/core/ras.c
-> @@ -94,8 +94,7 @@ void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
->  	if (!pdev->dev.driver)
->  		return;
+> @@ -8,6 +8,10 @@
+>  #include <cxlpci.h>
+>  #include "trace.h"
 >  
-> -	struct device *mem_dev __free(put_device) = bus_find_device(
-> -		&cxl_bus_type, NULL, pdev, match_memdev_by_parent);
-> +	struct device *mem_dev __free(put_device) = bus_find_device(&cxl_bus_type, NULL, &pdev->dev, match_memdev_by_parent);
->  	if (!mem_dev)
->  		return;
+> +/* Check that UCE header definition is maintained to keep ABI intact  */
+> +static_assert(CXL_HEADERLOG_TRACE_SIZE_U32 == 128,
+> +	      "rasdaemon ABI requires exactly 128 u32s");
+> +
+>  static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
+>  					      struct cxl_ras_capability_regs ras_cap)
+>  {
+> @@ -19,6 +23,7 @@ static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
+>  static void cxl_cper_trace_uncorr_port_prot_err(struct pci_dev *pdev,
+>  						struct cxl_ras_capability_regs ras_cap)
+>  {
+> +	u32 hl[CXL_HEADERLOG_TRACE_SIZE_U32] = {};
+>  	u32 status = ras_cap.uncor_status & ~ras_cap.uncor_mask;
+>  	u32 fe;
 >  
-> -- 
-> 2.34.1
-> 
+> @@ -28,8 +33,8 @@ static void cxl_cper_trace_uncorr_port_prot_err(struct pci_dev *pdev,
+>  	else
+>  		fe = status;
+>  
+> -	trace_cxl_port_aer_uncorrectable_error(&pdev->dev, status, fe,
+> -					       ras_cap.header_log);
+> +	memcpy(hl, ras_cap.header_log, CXL_HEADERLOG_SIZE);
+> +	trace_cxl_port_aer_uncorrectable_error(&pdev->dev, status, fe, hl);
+>  }
+>  
+>  static void cxl_cper_trace_corr_prot_err(struct cxl_memdev *cxlmd,
+> @@ -44,6 +49,7 @@ static void
+>  cxl_cper_trace_uncorr_prot_err(struct cxl_memdev *cxlmd,
+>  			       struct cxl_ras_capability_regs ras_cap)
+>  {
+> +	u32 hl[CXL_HEADERLOG_TRACE_SIZE_U32] = {};
+>  	u32 status = ras_cap.uncor_status & ~ras_cap.uncor_mask;
+>  	u32 fe;
+>  
+> @@ -53,8 +59,15 @@ cxl_cper_trace_uncorr_prot_err(struct cxl_memdev *cxlmd,
+>  	else
+>  		fe = status;
+>  
+> -	trace_cxl_aer_uncorrectable_error(cxlmd, status, fe,
+> -					  ras_cap.header_log);
+> +	/*
+> +	 * ras_cap.header_log[] holds CXL_HEADERLOG_SIZE_U32 (16) hardware
+> +	 * dwords.  Copy them into the front of a zero-filled
+> +	 * CXL_HEADERLOG_TRACE_SIZE_U32 (128) u32 staging buffer so the trace
+> +	 * event memcpy sees a full 512-byte source and the userspace ABI
+> +	 * (rasdaemon) is preserved.
+> +	 */
+> +	memcpy(hl, ras_cap.header_log, CXL_HEADERLOG_SIZE);
+> +	trace_cxl_aer_uncorrectable_error(cxlmd, status, fe, hl);
+>  }
+>  
+>  static int match_memdev_by_parent(struct device *dev, const void *uport)
+> @@ -204,12 +217,12 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
+>  {
+>  	void __iomem *addr;
+>  	u32 *log_addr;
+> -	int i, log_u32_size = CXL_HEADERLOG_SIZE / sizeof(u32);
+> +	int i;
+>  
+>  	addr = ras_base + CXL_RAS_HEADER_LOG_OFFSET;
+>  	log_addr = log;
+>  
+> -	for (i = 0; i < log_u32_size; i++) {
+> +	for (i = 0; i < CXL_HEADERLOG_SIZE_U32; i++) {
+>  		*log_addr = readl(addr);
+>  		log_addr++;
+>  		addr += sizeof(u32);
+> @@ -222,7 +235,7 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
+>   */
+>  bool cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+>  {
+> -	u32 hl[CXL_HEADERLOG_SIZE_U32];
+> +	u32 hl[CXL_HEADERLOG_TRACE_SIZE_U32] = {};
+>  	void __iomem *addr;
+>  	u32 status;
+>  	u32 fe;
+> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> index a972e4ef1936..d37876096dd7 100644
+> --- a/drivers/cxl/core/trace.h
+> +++ b/drivers/cxl/core/trace.h
+> @@ -56,7 +56,7 @@ TRACE_EVENT(cxl_port_aer_uncorrectable_error,
+>  		__string(host, dev_name(dev->parent))
+>  		__field(u32, status)
+>  		__field(u32, first_error)
+> -		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
+> +		__array(u32, header_log, CXL_HEADERLOG_TRACE_SIZE_U32)
+>  	),
+>  	TP_fast_assign(
+>  		__assign_str(device);
+> @@ -64,10 +64,14 @@ TRACE_EVENT(cxl_port_aer_uncorrectable_error,
+>  		__entry->status = status;
+>  		__entry->first_error = fe;
+>  		/*
+> -		 * Embed the 512B headerlog data for user app retrieval and
+> -		 * parsing, but no need to print this in the trace buffer.
+> +		 * Embed headerlog data for user app retrieval and parsing,
+> +		 * but no need to print in the trace buffer. Only
+> +		 * CXL_HEADERLOG_SIZE_U32 (16) dwords are hardware data;
+> +		 * the remaining entries preserve the 512-byte ABI layout
+> +		 * rasdaemon depends on and are zero-filled by the caller.
+>  		 */
+> -		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+> +		memcpy(__entry->header_log, hl,
+> +			CXL_HEADERLOG_TRACE_SIZE_U32 * sizeof(u32));
+>  	),
+>  	TP_printk("device=%s host=%s status: '%s' first_error: '%s'",
+>  		  __get_str(device), __get_str(host),
+> @@ -85,7 +89,7 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+>  		__field(u64, serial)
+>  		__field(u32, status)
+>  		__field(u32, first_error)
+> -		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
+> +		__array(u32, header_log, CXL_HEADERLOG_TRACE_SIZE_U32)
+>  	),
+>  	TP_fast_assign(
+>  		__assign_str(memdev);
+> @@ -94,10 +98,14 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+>  		__entry->status = status;
+>  		__entry->first_error = fe;
+>  		/*
+> -		 * Embed the 512B headerlog data for user app retrieval and
+> -		 * parsing, but no need to print this in the trace buffer.
+> +		 * Embed headerlog data for user app retrieval and parsing,
+> +		 * but no need to print in the trace buffer. Only
+> +		 * CXL_HEADERLOG_SIZE_U32 (16) dwords are hardware data;
+> +		 * the remaining entries preserve the 512-byte ABI layout
+> +		 * rasdaemon depends on and are zero-filled by the caller.
+>  		 */
+> -		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+> +		memcpy(__entry->header_log, hl,
+> +			CXL_HEADERLOG_TRACE_SIZE_U32 * sizeof(u32));
+>  	),
+>  	TP_printk("memdev=%s host=%s serial=%lld: status: '%s' first_error: '%s'",
+>  		  __get_str(memdev), __get_str(host), __entry->serial,
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 9b947286eb9b..906fb480dad5 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -148,8 +148,18 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+>  #define CXL_RAS_CAP_CONTROL_FE_MASK GENMASK(5, 0)
+>  #define CXL_RAS_HEADER_LOG_OFFSET 0x18
+>  #define CXL_RAS_CAPABILITY_LENGTH 0x58
+> -#define CXL_HEADERLOG_SIZE SZ_512
+> -#define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
+> +#define CXL_HEADERLOG_SIZE 64
+> +#define CXL_HEADERLOG_SIZE_U32 (CXL_HEADERLOG_SIZE / sizeof(u32))
+> +
+> +/*
+> + * The RAS UCE trace event header array was originally sized at SZ_512/sizeof(u32)
+> + * = 128 u32s due to a bug. Userspace tools (rasdaemon) have grown a dependency
+> + * on that 512-byte layout. Keep the trace array at 128 u32s to preserve the
+> + * ABI; only CXL_HEADERLOG_SIZE_U32 (16) dwords are valid hardware data, the
+> + * remainder are zero-filled.
+> + */
+> +#define CXL_HEADERLOG_TRACE_SIZE SZ_512
+> +#define CXL_HEADERLOG_TRACE_SIZE_U32 (CXL_HEADERLOG_TRACE_SIZE / sizeof(u32))
+>  
+>  /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
+>  #define CXLDEV_CAP_ARRAY_OFFSET 0x0
+
