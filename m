@@ -1,244 +1,359 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D623915C14F;
-	Tue,  9 Jun 2026 22:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDCC481A91
+	for <linux-cxl@vger.kernel.org>; Tue,  9 Jun 2026 22:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781043522; cv=none; b=hBf8xhy7nqQ3coSEB+VrB1cL8nPURZ2ZZDgnQW3GYdrL58NOi00oKb/0fwyBezmssqasG9mcsJ7g47jQuRO1SRF2ALNz0IJK9YzAYeJOdJghYvES+2T7LG9djdYDoffO4UF+3TsCmtUfkDtZSs0RMv45b4+sJ7BQzBQAMTqaLaY=
+	t=1781043613; cv=none; b=cn2kenlyVosptzUi56dM1kpbzyaDFgIfgwE4tlrAfW1w2IxQ6fCC05SLkQ7Ag16UQzPHhgUuNrvMEumJ9ann3T7mqRhN5hqml7QWb8BMz6rWWDXSDzeF2ZyERMicDU5E+tsav5dNYqIVvG1lz8YcjOuSYu07yuWXRuH1jEmJuX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781043522; c=relaxed/simple;
-	bh=ortTKqy2yA0lUmSdtfiwwMkPNmA2pjpSBDd8MwESzvg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qAZdTshgxsOfHwKM6CyfAOWqkhXqNnSGMqIO5R4WQYsv//Uv1BxP2lsYwnOFRJBloStlKdai77ChOoKZTsHsu5gfEGHaEO+8JChEouX2MfXehtSmWJl4pbBme1GKBU4WLg9v8E6rtEgevLU6kx7VOshSb8ypTtyksWP0DMFyUh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EouUsVm/; arc=none smtp.client-ip=192.198.163.18
+	s=arc-20240116; t=1781043613; c=relaxed/simple;
+	bh=YHdSsbOdHw/EkCCgBSDLo98VZ4SwelL+D7cTdD1JD5A=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=jc6bvYVRUJdNqX1iO6jE0dRG+wju9K/YDSri8Ig19XLmtlXnqJOnyvWvbiqd+17k9WbuKccFBr2yE3JTrTHz7WWoO87eRE841ACq3l4TEWslffR6pSS0SsS/IIFp7RNTCruodpzgH2wKuTGYYHfqZDjs/xg3KUWFj+NV54t3+jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fwI7mbOh; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EouUsVm/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fwI7mbOh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781043521; x=1812579521;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ortTKqy2yA0lUmSdtfiwwMkPNmA2pjpSBDd8MwESzvg=;
-  b=EouUsVm/IMcICcEIBDu7ww9JRqS7s5ki7oyVZTenIbzH/xNdjKBDUDGb
-   57jl5xECk+AeUanxZiz0wZC3dCXPBfeyrU9EzTFf8lTIL9oy39RE8/7Q7
-   7XPv7McCJ8/RMuWzVzoWabTieQdJa/FLTt8IowDUSnPd3ecUuKHtMCiv+
-   syVHyBmZlSdkfDgkFYr3DePvkt2Nyj1eGt6Uyf/3ExzEpzwNOc4TwfY+E
-   kDaQmGLrZ1/mw5cY+t+EaWb6su2hHdTkA3zEXtcaFJU8oNrUU1wTSymUZ
-   8Uz0xfh6q0H+QgugrUsDKufvs/P7j4c+CSOlFIQH0iID9DW0BoryJGzv2
-   w==;
-X-CSE-ConnectionGUID: GZg8GF1xS5WGYB/TjSQrwA==
-X-CSE-MsgGUID: hoY7O10+QvekMcI7h0ruDA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="80957031"
+  t=1781043612; x=1812579612;
+  h=date:from:to:cc:subject:message-id;
+  bh=YHdSsbOdHw/EkCCgBSDLo98VZ4SwelL+D7cTdD1JD5A=;
+  b=fwI7mbOhThZ+M0y7u9ZlhFgSQjD1v4vPfmFtyr+LdWSfVRdXg7C/U/lY
+   d5edfYJcFwBsdHUyyuQQDl3nb6qdCatmB6v57DnAu/D6RMn/2bKHGrhY9
+   QI7+T/kNlsDXNVHIyPE/SIrIGth6f4JgeyjDUVm4TtBKXX65hAPW2/VB4
+   vO/O926+ThV8pU/y/ajciTIGJe2DXUTmGtny8Cv4WINnVqoIvRwKYw8Oq
+   WspBQD2oKG0AZIE08+y9CVxxQWR6ftXtguoeo00s68M4LK6g/DyWpneWs
+   NbEiiYrQKR3R2PAkXX9YP7WEp/Vj2izM89YbBZs0WDkvmBNgS6g2DnHYg
+   A==;
+X-CSE-ConnectionGUID: Q79buWpVS4iOmDWLntim9g==
+X-CSE-MsgGUID: 2B3JkRVtTlu++YDQLl4yLw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11812"; a="92499318"
 X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
-   d="scan'208";a="80957031"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 15:18:40 -0700
-X-CSE-ConnectionGUID: MaEguQVlQomWeMf0KWjTJA==
-X-CSE-MsgGUID: mLNVlwYBTKenmEFbcxidAA==
+   d="scan'208";a="92499318"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 15:20:11 -0700
+X-CSE-ConnectionGUID: cdt6lvT0R9u3+/xd0hDNOA==
+X-CSE-MsgGUID: bRz3xKMOSzKXb+7jyMIquQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,196,1774335600"; 
-   d="scan'208";a="246017808"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.109.206]) ([10.125.109.206])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2026 15:18:38 -0700
-Message-ID: <5f3911d5-da9a-4ad7-a42d-765b27f3dfa0@intel.com>
-Date: Tue, 9 Jun 2026 15:18:37 -0700
+   d="scan'208";a="243014420"
+Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 09 Jun 2026 15:20:09 -0700
+Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wX4nn-00000000Kbm-1Cac;
+	Tue, 09 Jun 2026 22:20:07 +0000
+Date: Wed, 10 Jun 2026 06:19:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, linux-cxl@vger.kernel.org
+Subject: [cxl:for-7.3/cxl-type2-enabling] BUILD REGRESSION
+ 9b1e70e8f9ec4b5c6ce7fa774a0023bb6894c686
+Message-ID: <202606100636.hbI7dTJS-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v27 5/5] sfc: support pio mapping based on cxl
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, djbw@kernel.org, edward.cree@amd.com,
- davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com
-Cc: Alejandro Lucero <alucerop@amd.com>
-References: <20260609215755.8685-1-alejandro.lucero-palau@amd.com>
- <20260609215755.8685-6-alejandro.lucero-palau@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260609215755.8685-6-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-7.3/cxl-type2-enabling
+branch HEAD: 9b1e70e8f9ec4b5c6ce7fa774a0023bb6894c686  cxl/region: Introduce devm_cxl_probe_mem()
 
+Error/Warning (recently discovered and may have been fixed):
 
-On 6/9/26 2:57 PM, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> A PIO buffer is a region of device memory to which the driver can write a
-> packet for TX, with the device handling the transmit doorbell without
-> requiring a DMA for getting the packet data, which helps reducing latency
-> in certain exchanges. With CXL mem protocol this latency can be lowered
-> further.
-> 
-> With a device supporting CXL and successfully initialised, use the cxl
-> region to map the memory range and use this mapping for PIO buffers.
-> 
-> Add the disabling of those CXL-based PIO buffers if the callback for
-> potential cxl endpoint removal by the CXL core happens.
+    https://lore.kernel.org/oe-kbuild-all/202606100235.1ur3Z4YQ-lkp@intel.com
+    https://lore.kernel.org/oe-kbuild-all/202606100401.GOjzpKHo-lkp@intel.com
 
-^ This seems to be missing?
+    ld.lld: error: undefined symbol: cxl_memdev_attach_region
+    mem.c:(.text+0x66): undefined reference to `cxl_memdev_attach_region'
+    mem.c:(.text+0x69): undefined reference to `cxl_memdev_attach_region'
+    mem.c:(.text+0x9f): undefined reference to `cxl_memdev_attach_region'
 
+Error/Warning ids grouped by kconfigs:
 
-> 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> ---
->  drivers/net/ethernet/sfc/ef10.c       | 43 ++++++++++++++++++++++-----
->  drivers/net/ethernet/sfc/efx.h        |  1 -
->  drivers/net/ethernet/sfc/net_driver.h |  2 ++
->  drivers/net/ethernet/sfc/nic.h        |  3 ++
->  4 files changed, 41 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
-> index 7e04f115bbaa..b747411ffdd3 100644
-> --- a/drivers/net/ethernet/sfc/ef10.c
-> +++ b/drivers/net/ethernet/sfc/ef10.c
-> @@ -24,6 +24,7 @@
->  #include <linux/wait.h>
->  #include <linux/workqueue.h>
->  #include <net/udp_tunnel.h>
-> +#include "efx_cxl.h"
->  
->  /* Hardware control for EF10 architecture including 'Huntington'. */
->  
-> @@ -106,7 +107,7 @@ static int efx_ef10_get_vf_index(struct efx_nic *efx)
->  
->  static int efx_ef10_init_datapath_caps(struct efx_nic *efx)
->  {
-> -	MCDI_DECLARE_BUF(outbuf, MC_CMD_GET_CAPABILITIES_V4_OUT_LEN);
-> +	MCDI_DECLARE_BUF(outbuf, MC_CMD_GET_CAPABILITIES_V7_OUT_LEN);
->  	struct efx_ef10_nic_data *nic_data = efx->nic_data;
->  	size_t outlen;
->  	int rc;
-> @@ -177,6 +178,12 @@ static int efx_ef10_init_datapath_caps(struct efx_nic *efx)
->  			  efx->num_mac_stats);
->  	}
->  
-> +	if (outlen < MC_CMD_GET_CAPABILITIES_V7_OUT_LEN)
-> +		nic_data->datapath_caps3 = 0;
-> +	else
-> +		nic_data->datapath_caps3 = MCDI_DWORD(outbuf,
-> +						      GET_CAPABILITIES_V7_OUT_FLAGS3);
-> +
->  	return 0;
->  }
->  
-> @@ -1140,6 +1147,9 @@ static int efx_ef10_dimension_resources(struct efx_nic *efx)
->  	unsigned int channel_vis, pio_write_vi_base, max_vis;
->  	struct efx_ef10_nic_data *nic_data = efx->nic_data;
->  	unsigned int uc_mem_map_size, wc_mem_map_size;
-> +#ifdef CONFIG_SFC_CXL
-> +	struct efx_probe_data *probe_data;
-> +#endif
->  	void __iomem *membase;
->  	int rc;
->  
-> @@ -1263,8 +1273,25 @@ static int efx_ef10_dimension_resources(struct efx_nic *efx)
->  	iounmap(efx->membase);
->  	efx->membase = membase;
->  
-> -	/* Set up the WC mapping if needed */
-> -	if (wc_mem_map_size) {
-> +	if (!wc_mem_map_size)
-> +		goto skip_pio;
-> +
-> +	/* Set up the WC mapping */
-> +
-> +#ifdef CONFIG_SFC_CXL
-> +	probe_data = container_of(efx, struct efx_probe_data, efx);
-> +	if ((nic_data->datapath_caps3 &
-> +	    (1 << MC_CMD_GET_CAPABILITIES_V7_OUT_CXL_CONFIG_ENABLE_LBN)) &&
-> +	    probe_data->cxl_pio_initialised) {
-> +		/* Using PIO through CXL mapping */
-> +		nic_data->pio_write_base = probe_data->cxl->ctpio_cxl;
-> +		nic_data->pio_write_vi_base = pio_write_vi_base;
-> +
-> +		probe_data->cxl_pio_in_use = true;
+recent_errors
+|-- i386-allyesconfig
+|   `-- mem.c:(.text):undefined-reference-to-cxl_memdev_attach_region
+|-- i386-buildonly-randconfig-004-20260609
+|   `-- ld.lld:error:undefined-symbol:cxl_memdev_attach_region
+|-- s390-randconfig-001-20260609
+|   `-- ld.lld:error:undefined-symbol:cxl_memdev_attach_region
+|-- um-randconfig-002-20260609
+|   `-- mem.c:(.text):undefined-reference-to-cxl_memdev_attach_region
+`-- x86_64-buildonly-randconfig-005-20260610
+    `-- mem.c:(.text):undefined-reference-to-cxl_memdev_attach_region
 
-Don't think this is used anywhere.
+elapsed time: 1314m
 
-DJ
+configs tested: 259
+configs skipped: 2
 
-> +	} else
-> +#endif
-> +	{
-> +		/* Using legacy PIO BAR mapping */
->  		nic_data->wc_membase = ioremap_wc(efx->membase_phys +
->  						  uc_mem_map_size,
->  						  wc_mem_map_size);
-> @@ -1279,12 +1306,14 @@ static int efx_ef10_dimension_resources(struct efx_nic *efx)
->  			nic_data->wc_membase +
->  			(pio_write_vi_base * efx->vi_stride + ER_DZ_TX_PIOBUF -
->  			 uc_mem_map_size);
-> -
-> -		rc = efx_ef10_link_piobufs(efx);
-> -		if (rc)
-> -			efx_ef10_free_piobufs(efx);
->  	}
->  
-> +	rc = efx_ef10_link_piobufs(efx);
-> +	if (rc)
-> +		efx_ef10_free_piobufs(efx);
-> +
-> +skip_pio:
-> +
->  	netif_dbg(efx, probe, efx->net_dev,
->  		  "memory BAR at %pa (virtual %p+%x UC, %p+%x WC)\n",
->  		  &efx->membase_phys, efx->membase, uc_mem_map_size,
-> diff --git a/drivers/net/ethernet/sfc/efx.h b/drivers/net/ethernet/sfc/efx.h
-> index 45e191686625..057d30090894 100644
-> --- a/drivers/net/ethernet/sfc/efx.h
-> +++ b/drivers/net/ethernet/sfc/efx.h
-> @@ -236,5 +236,4 @@ static inline bool efx_rwsem_assert_write_locked(struct rw_semaphore *sem)
->  
->  int efx_xdp_tx_buffers(struct efx_nic *efx, int n, struct xdp_frame **xdpfs,
->  		       bool flush);
-> -
->  #endif /* EFX_EFX_H */
-> diff --git a/drivers/net/ethernet/sfc/net_driver.h b/drivers/net/ethernet/sfc/net_driver.h
-> index 3964b2c56609..bea4eecdf842 100644
-> --- a/drivers/net/ethernet/sfc/net_driver.h
-> +++ b/drivers/net/ethernet/sfc/net_driver.h
-> @@ -1207,6 +1207,7 @@ struct efx_cxl;
->   * @efx: Efx NIC details
->   * @cxl: details of related cxl objects
->   * @cxl_pio_initialised: cxl initialization outcome.
-> + * @cxl_pio_in_use: PIO using CXL mapping
->   */
->  struct efx_probe_data {
->  	struct pci_dev *pci_dev;
-> @@ -1214,6 +1215,7 @@ struct efx_probe_data {
->  #ifdef CONFIG_SFC_CXL
->  	struct efx_cxl *cxl;
->  	bool cxl_pio_initialised;
-> +	bool cxl_pio_in_use;
->  #endif
->  };
->  
-> diff --git a/drivers/net/ethernet/sfc/nic.h b/drivers/net/ethernet/sfc/nic.h
-> index ec3b2df43b68..7480f9995dfb 100644
-> --- a/drivers/net/ethernet/sfc/nic.h
-> +++ b/drivers/net/ethernet/sfc/nic.h
-> @@ -152,6 +152,8 @@ enum {
->   *	%MC_CMD_GET_CAPABILITIES response)
->   * @datapath_caps2: Further Capabilities of datapath firmware (FLAGS2 field of
->   * %MC_CMD_GET_CAPABILITIES response)
-> + * @datapath_caps3: Further Capabilities of datapath firmware (FLAGS3 field of
-> + * %MC_CMD_GET_CAPABILITIES response)
->   * @rx_dpcpu_fw_id: Firmware ID of the RxDPCPU
->   * @tx_dpcpu_fw_id: Firmware ID of the TxDPCPU
->   * @must_probe_vswitching: Flag: vswitching has yet to be setup after MC reboot
-> @@ -187,6 +189,7 @@ struct efx_ef10_nic_data {
->  	bool must_check_datapath_caps;
->  	u32 datapath_caps;
->  	u32 datapath_caps2;
-> +	u32 datapath_caps3;
->  	unsigned int rx_dpcpu_fw_id;
->  	unsigned int tx_dpcpu_fw_id;
->  	bool must_probe_vswitching;
+tested configs:
+alpha                             allnoconfig    gcc-16.1.0
+alpha                            allyesconfig    gcc-16.1.0
+alpha                               defconfig    gcc-16.1.0
+arc                              allmodconfig    gcc-16.1.0
+arc                               allnoconfig    gcc-16.1.0
+arc                              allyesconfig    gcc-16.1.0
+arc                                 defconfig    gcc-16.1.0
+arc                   randconfig-001-20260609    gcc-15.2.0
+arc                   randconfig-001-20260610    gcc-8.5.0
+arc                   randconfig-002-20260609    gcc-13.4.0
+arc                   randconfig-002-20260610    gcc-8.5.0
+arm                               allnoconfig    clang-23
+arm                               allnoconfig    gcc-16.1.0
+arm                              allyesconfig    gcc-16.1.0
+arm                                 defconfig    clang-23
+arm                                 defconfig    gcc-16.1.0
+arm                       imx_v6_v7_defconfig    clang-23
+arm                   randconfig-001-20260609    gcc-13.4.0
+arm                   randconfig-001-20260610    gcc-8.5.0
+arm                   randconfig-002-20260609    clang-23
+arm                   randconfig-002-20260610    gcc-8.5.0
+arm                   randconfig-003-20260609    clang-23
+arm                   randconfig-003-20260610    gcc-8.5.0
+arm                   randconfig-004-20260609    clang-23
+arm                   randconfig-004-20260610    gcc-8.5.0
+arm64                            allmodconfig    clang-23
+arm64                             allnoconfig    gcc-16.1.0
+arm64                               defconfig    gcc-16.1.0
+arm64                 randconfig-001-20260609    clang-23
+arm64                 randconfig-001-20260610    gcc-11.5.0
+arm64                          randconfig-002    gcc-8.5.0
+arm64                 randconfig-002-20260610    gcc-11.5.0
+arm64                          randconfig-003    clang-20
+arm64                 randconfig-003-20260610    gcc-11.5.0
+arm64                 randconfig-004-20260609    clang-23
+arm64                 randconfig-004-20260610    gcc-11.5.0
+csky                             allmodconfig    gcc-16.1.0
+csky                              allnoconfig    gcc-16.1.0
+csky                                defconfig    gcc-16.1.0
+csky                           randconfig-001    gcc-13.4.0
+csky                  randconfig-001-20260609    gcc-9.5.0
+csky                  randconfig-001-20260610    gcc-11.5.0
+csky                           randconfig-002    gcc-14.3.0
+csky                  randconfig-002-20260609    gcc-11.5.0
+csky                  randconfig-002-20260610    gcc-11.5.0
+hexagon                          allmodconfig    clang-23
+hexagon                          allmodconfig    gcc-16.1.0
+hexagon                           allnoconfig    clang-23
+hexagon                           allnoconfig    gcc-16.1.0
+hexagon                             defconfig    clang-23
+hexagon                             defconfig    gcc-16.1.0
+hexagon               randconfig-001-20260609    clang-18
+hexagon               randconfig-001-20260610    clang-22
+hexagon               randconfig-002-20260609    clang-23
+hexagon               randconfig-002-20260610    clang-22
+i386                             allmodconfig    clang-22
+i386                             allmodconfig    gcc-14
+i386                              allnoconfig    gcc-14
+i386                              allnoconfig    gcc-16.1.0
+i386                             allyesconfig    clang-22
+i386                             allyesconfig    gcc-14
+i386        buildonly-randconfig-001-20260609    gcc-14
+i386        buildonly-randconfig-001-20260610    gcc-14
+i386        buildonly-randconfig-002-20260609    gcc-14
+i386        buildonly-randconfig-002-20260610    gcc-14
+i386        buildonly-randconfig-003-20260609    clang-22
+i386        buildonly-randconfig-003-20260610    gcc-14
+i386        buildonly-randconfig-004-20260609    clang-22
+i386        buildonly-randconfig-004-20260610    gcc-14
+i386        buildonly-randconfig-005-20260609    gcc-14
+i386        buildonly-randconfig-005-20260610    gcc-14
+i386        buildonly-randconfig-006-20260609    clang-22
+i386        buildonly-randconfig-006-20260610    gcc-14
+i386                                defconfig    clang-22
+i386                                defconfig    gcc-16.1.0
+i386                  randconfig-001-20260609    gcc-14
+i386                  randconfig-002-20260609    gcc-14
+i386                  randconfig-007-20260609    gcc-14
+i386                  randconfig-011-20260609    clang-22
+i386                  randconfig-011-20260610    gcc-14
+i386                  randconfig-012-20260609    clang-22
+i386                  randconfig-012-20260610    gcc-14
+i386                  randconfig-013-20260609    clang-22
+i386                  randconfig-013-20260610    gcc-14
+i386                  randconfig-014-20260609    gcc-14
+i386                  randconfig-014-20260610    gcc-14
+i386                  randconfig-015-20260609    clang-22
+i386                  randconfig-015-20260610    gcc-14
+i386                  randconfig-016-20260609    clang-22
+i386                  randconfig-016-20260610    gcc-14
+i386                  randconfig-017-20260609    gcc-14
+i386                  randconfig-017-20260610    gcc-14
+loongarch                        allmodconfig    clang-19
+loongarch                         allnoconfig    clang-20
+loongarch                         allnoconfig    gcc-16.1.0
+loongarch                           defconfig    clang-23
+loongarch             randconfig-001-20260609    clang-23
+loongarch             randconfig-001-20260610    clang-22
+loongarch             randconfig-002-20260609    clang-23
+loongarch             randconfig-002-20260610    clang-22
+m68k                             allmodconfig    gcc-16.1.0
+m68k                              allnoconfig    gcc-16.1.0
+m68k                             allyesconfig    gcc-16.1.0
+m68k                                defconfig    gcc-16.1.0
+microblaze                        allnoconfig    gcc-16.1.0
+microblaze                       allyesconfig    gcc-16.1.0
+microblaze                          defconfig    gcc-16.1.0
+mips                             allmodconfig    gcc-16.1.0
+mips                              allnoconfig    gcc-16.1.0
+mips                             allyesconfig    gcc-16.1.0
+nios2                            allmodconfig    clang-20
+nios2                            allmodconfig    gcc-11.5.0
+nios2                             allnoconfig    clang-23
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20260609    gcc-11.5.0
+nios2                 randconfig-001-20260610    clang-22
+nios2                 randconfig-002-20260609    gcc-11.5.0
+nios2                 randconfig-002-20260610    clang-22
+openrisc                         allmodconfig    clang-20
+openrisc                         allmodconfig    gcc-16.1.0
+openrisc                          allnoconfig    clang-23
+openrisc                          allnoconfig    gcc-16.1.0
+openrisc                            defconfig    gcc-16.1.0
+parisc                           allmodconfig    gcc-16.1.0
+parisc                            allnoconfig    clang-23
+parisc                            allnoconfig    gcc-16.1.0
+parisc                           allyesconfig    gcc-16.1.0
+parisc                              defconfig    gcc-16.1.0
+parisc                randconfig-001-20260609    gcc-14.3.0
+parisc                randconfig-001-20260610    gcc-8.5.0
+parisc                randconfig-002-20260609    gcc-16.1.0
+parisc                randconfig-002-20260610    gcc-8.5.0
+parisc64                            defconfig    gcc-16.1.0
+powerpc                          allmodconfig    gcc-16.1.0
+powerpc                           allnoconfig    clang-23
+powerpc                           allnoconfig    gcc-16.1.0
+powerpc                   microwatt_defconfig    gcc-16.1.0
+powerpc               randconfig-001-20260609    clang-23
+powerpc               randconfig-001-20260610    gcc-8.5.0
+powerpc               randconfig-002-20260609    clang-23
+powerpc               randconfig-002-20260610    gcc-8.5.0
+powerpc                     tqm8548_defconfig    clang-23
+powerpc64             randconfig-001-20260609    gcc-8.5.0
+powerpc64             randconfig-001-20260610    gcc-8.5.0
+powerpc64             randconfig-002-20260609    gcc-13.4.0
+powerpc64             randconfig-002-20260610    gcc-8.5.0
+riscv                            allmodconfig    clang-23
+riscv                             allnoconfig    clang-23
+riscv                             allnoconfig    gcc-16.1.0
+riscv                            allyesconfig    clang-23
+riscv                               defconfig    clang-23
+riscv                               defconfig    gcc-16.1.0
+riscv                          randconfig-001    gcc-13.4.0
+riscv                 randconfig-001-20260610    gcc-16.1.0
+riscv                          randconfig-002    clang-23
+riscv                 randconfig-002-20260609    clang-23
+riscv                 randconfig-002-20260610    gcc-16.1.0
+s390                             allmodconfig    clang-23
+s390                              allnoconfig    clang-23
+s390                             allyesconfig    gcc-16.1.0
+s390                                defconfig    clang-18
+s390                                defconfig    gcc-16.1.0
+s390                           randconfig-001    gcc-15.2.0
+s390                  randconfig-001-20260609    clang-23
+s390                  randconfig-001-20260610    gcc-16.1.0
+s390                           randconfig-002    clang-18
+s390                  randconfig-002-20260609    gcc-16.1.0
+s390                  randconfig-002-20260610    gcc-16.1.0
+sh                               allmodconfig    gcc-16.1.0
+sh                                allnoconfig    clang-23
+sh                                allnoconfig    gcc-16.1.0
+sh                               allyesconfig    gcc-16.1.0
+sh                                  defconfig    gcc-14
+sh                                  defconfig    gcc-16.1.0
+sh                             randconfig-001    gcc-14.3.0
+sh                    randconfig-001-20260609    gcc-13.4.0
+sh                    randconfig-001-20260610    gcc-16.1.0
+sh                             randconfig-002    gcc-9.5.0
+sh                    randconfig-002-20260609    gcc-11.5.0
+sh                    randconfig-002-20260610    gcc-16.1.0
+sparc                             allnoconfig    clang-23
+sparc                             allnoconfig    gcc-16.1.0
+sparc                               defconfig    gcc-16.1.0
+sparc                 randconfig-001-20260609    gcc-16.1.0
+sparc                 randconfig-001-20260610    gcc-14.3.0
+sparc                 randconfig-002-20260609    gcc-16.1.0
+sparc                 randconfig-002-20260610    gcc-14.3.0
+sparc64                          allmodconfig    clang-20
+sparc64                             defconfig    clang-23
+sparc64                             defconfig    gcc-14
+sparc64               randconfig-001-20260609    clang-23
+sparc64               randconfig-001-20260610    gcc-14.3.0
+sparc64               randconfig-002-20260609    gcc-10.5.0
+sparc64               randconfig-002-20260610    gcc-14.3.0
+um                               allmodconfig    clang-23
+um                                allnoconfig    clang-16
+um                                allnoconfig    clang-23
+um                               allyesconfig    gcc-14
+um                               allyesconfig    gcc-16.1.0
+um                                  defconfig    clang-23
+um                                  defconfig    gcc-14
+um                             i386_defconfig    gcc-14
+um                    randconfig-001-20260609    gcc-14
+um                    randconfig-001-20260610    gcc-14.3.0
+um                    randconfig-002-20260609    gcc-12
+um                    randconfig-002-20260610    gcc-14.3.0
+um                           x86_64_defconfig    clang-23
+um                           x86_64_defconfig    gcc-14
+x86_64                           allmodconfig    clang-22
+x86_64                            allnoconfig    clang-22
+x86_64                            allnoconfig    clang-23
+x86_64                           allyesconfig    clang-22
+x86_64      buildonly-randconfig-001-20260609    clang-22
+x86_64      buildonly-randconfig-001-20260610    gcc-14
+x86_64      buildonly-randconfig-002-20260609    clang-22
+x86_64      buildonly-randconfig-002-20260610    gcc-14
+x86_64      buildonly-randconfig-003-20260609    clang-22
+x86_64      buildonly-randconfig-003-20260610    gcc-14
+x86_64      buildonly-randconfig-004-20260609    gcc-14
+x86_64      buildonly-randconfig-004-20260610    gcc-14
+x86_64      buildonly-randconfig-005-20260609    clang-22
+x86_64      buildonly-randconfig-005-20260610    gcc-14
+x86_64      buildonly-randconfig-006-20260609    gcc-14
+x86_64      buildonly-randconfig-006-20260610    gcc-14
+x86_64                              defconfig    gcc-14
+x86_64                                  kexec    clang-22
+x86_64                randconfig-001-20260609    gcc-14
+x86_64                randconfig-002-20260609    clang-22
+x86_64                randconfig-003-20260609    gcc-14
+x86_64                randconfig-004-20260609    clang-22
+x86_64                randconfig-005-20260609    clang-22
+x86_64                randconfig-006-20260609    clang-22
+x86_64                randconfig-011-20260609    gcc-14
+x86_64                randconfig-012-20260609    clang-22
+x86_64                randconfig-013-20260609    gcc-14
+x86_64                randconfig-014-20260609    gcc-14
+x86_64                randconfig-015-20260609    clang-22
+x86_64                randconfig-016-20260609    gcc-14
+x86_64                randconfig-071-20260609    clang-22
+x86_64                randconfig-072-20260609    clang-22
+x86_64                randconfig-073-20260609    clang-22
+x86_64                randconfig-074-20260609    gcc-14
+x86_64                randconfig-075-20260609    gcc-14
+x86_64                randconfig-076-20260609    clang-22
+x86_64                               rhel-9.4    clang-22
+x86_64                           rhel-9.4-bpf    gcc-14
+x86_64                          rhel-9.4-func    clang-22
+x86_64                    rhel-9.4-kselftests    clang-22
+x86_64                         rhel-9.4-kunit    gcc-14
+x86_64                           rhel-9.4-ltp    gcc-14
+x86_64                          rhel-9.4-rust    clang-22
+xtensa                            allnoconfig    clang-23
+xtensa                            allnoconfig    gcc-16.1.0
+xtensa                           allyesconfig    clang-20
+xtensa                randconfig-001-20260609    gcc-16.1.0
+xtensa                randconfig-001-20260610    gcc-14.3.0
+xtensa                randconfig-002-20260609    gcc-8.5.0
+xtensa                randconfig-002-20260610    gcc-14.3.0
 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
