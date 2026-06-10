@@ -1,104 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2C1286881
-	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 22:36:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E64331ED7
+	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 22:37:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781130966; cv=none; b=Hl2Vbgn/dy151WuLeS+aPahpyfIYM5UTYxF1yJUDV5Znyz1froCLbx75KNYWFg4rUihMRUWOTKsjiFYp5JsfliWHLtmTVhEGEBQNMvSXL+PvLY7kkrpGR+eX2zBrg4rblddOrahOoHZtGCDWY0huOtoG3ZQSiwnLWFFjY1kzb3Q=
+	t=1781131078; cv=none; b=Db24kGMdYXx1N+1aHtZDkCEuKqVAE3H1JYNYiuFm1fLPPJEILTTc0h0p1ObQA5leRSmy+lCHzFRufed7DWV2Wtnu+xYQwP72Wiyo5PWdIx5s5h753gCO+wgKpTT0u0mp9o7tJ1UxbzSHmhdN7TWaMwsmKhq99tCL9dizPtNPJIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781130966; c=relaxed/simple;
-	bh=Qlo7Abt7nT4NDubTai+OYsKZwWh3/x/NUydtN+qov4s=;
+	s=arc-20240116; t=1781131078; c=relaxed/simple;
+	bh=rpKLlPL8a70Z02C2vxZNvVwbcbEVdgToPuiwd8nH2NQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Scg4LDgHx21sQreCa2Hqxkx9wiY875df8qb67q4FEGz2zVq9SVfY9iJHIqnbo+OPVAhRO0TdzxUfMSHbGpxX7PHgmPBUuQJgihkg2eROI+M1gkrsRk/2vqxkvgrtcRCbVupvrPj+v/3cm4Oxi+VlDXr3hsFI/+Wi+Xk9ETLVsmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OR2yp6ZO; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=uZjGLUx8uI71J0JMZTkYv78YDswo4drSs2YCmI9gneYg92GdvQppbcK7t6EesDRq09hV3zAz+io6cbLR1N3ueZkgm/bcIjKILS/F5OdtA7AnsrulGiuuqwog0eYlCrDHIu7XkMf18W8ykOVVAZcU7cW5tacAgwKUW9dpfoMy0X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IUb/RFJ+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OR2yp6ZO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E3511F00893;
-	Wed, 10 Jun 2026 22:36:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IUb/RFJ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE53F1F00893;
+	Wed, 10 Jun 2026 22:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781130965;
-	bh=aD0bhJBCTljzQSQ1YDgdmQCPIaA0kezucQDJVuaPMKU=;
+	s=k20260515; t=1781131076;
+	bh=hFT+kEVVqsS3Y22ivBYE8HEPyENtPsQYLvdt2i7cIvg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OR2yp6ZOjlvecsZ1Gy8ZwGELS40uhzdMdx4VRKonbNn2DIThyzqwRxh/IaZoOLBCe
-	 BeI2wgBGzz1bvV80gCJMt7rj36/8vIUUMu2B4GUkg8TK8tZdFkLjmfNqjxqhv+mIOk
-	 v0Ylf6pkexc+zl0TXq+uP4tnhqh27sXlQrbW9447mz+Hro8/bsG7ruudbiavwRqz53
-	 DWCfrrK76lcC/en2gVoAFrT+ScrptNt1WCAEiyL1pc2gqI8bEqE+z9+I63A216tS0B
-	 uMepFmSPECoKOQSMVIfyD2EooPhl1tsS+gFI9RfNMa4Ue6JIcaq/+OTRtF2bF+bS7r
-	 zcIevdHi5c15A==
+	b=IUb/RFJ+kmDpA/DjroZqW6J62iZrco1XWBIyOn8ge9V7oeq4iBosdI0+LA+G3YWdn
+	 u7/trkrjYrHkOh0Jun73auDv+lEOSZhS0mLNrYWJFTjXu0CTeO902iVbkx5n+iFZ9I
+	 F8cYDt2n7DZ4jt0Xqr/8WJm8nTRYAU/zcFOZ8oDGlOk+kOnchI6UGEBPqxcFh4Gw0/
+	 8MZ61sZqtvvyk3uHo4eZMrFgyWKpqIfQ8CZmfiXGOMp8kYX5tG529siVS6MfCN9/zk
+	 LewIayIquVifcM13n5NfAhK4k9MES07I0buL6HQRgmPDJk1jjOOeWDBT8b0RggM390
+	 HFnLgzyTjAnzw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 4/6] cxl/test: Add hierarchy enumeration support for
- type2 device
+Subject: Re: [PATCH v3 6/6] cxl/test: Add cxl_test accelerator driver
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260610222328.2272427-5-dave.jiang@intel.com>
-References: <20260610222328.2272427-5-dave.jiang@intel.com>
+In-Reply-To: <20260610222328.2272427-7-dave.jiang@intel.com>
+References: <20260610222328.2272427-7-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 10 Jun 2026 22:36:04 +0000
-Message-Id: <20260610223605.0E3511F00893@smtp.kernel.org>
+Date: Wed, 10 Jun 2026 22:37:56 +0000
+Message-Id: <20260610223756.AE53F1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] Teardown loops iterate backwards but incorrectly use `break` whe=
-n encountering a NULL pointer, causing persistent resource leaks on error p=
-aths.
+- [Medium] Logic Error: Incorrect device ID field used for device serial nu=
+mber generation
+- [Low] Build Failure: Undefined functions `cxl_set_capacity` and `devm_cxl=
+_probe_mem`
 --
 
-commit 53bf17c5a72c46ea341694a714ad1ee38917639a
+commit 1221192460bb0724f4ff13dd01d1388c60a7fe54
 Author: Dave Jiang <dave.jiang@intel.com>
 
-cxl/test: Add hierarchy enumeration support for type2 device
+cxl/test: Add cxl_test accelerator driver
 
-Add enumeration of type2 device hierarchy in cxl-test. The type2 device
-is setup to be directly attached to a root port instead of rp -> switch
--> device that type3 hierarchy is setup..
+This commit adds a type2 accelerator mock driver for the platform device to
+simulate a CXL type2 device. It exercises the minimal API calls that a real
+CXL type2 driver would utilize.
 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index b29be2597064e..5186a13b20aa9 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
+> diff --git a/tools/testing/cxl/test/accel.c b/tools/testing/cxl/test/acce=
+l.c
+> new file mode 100644
+> index 0000000000000..6e1dd6c815102
+> --- /dev/null
+> +++ b/tools/testing/cxl/test/accel.c
+> @@ -0,0 +1,66 @@
+
 [ ... ]
-> +static int cxl_type2_mem_init(void)
+
+> +static int cxl_mock_accel_probe(struct platform_device *pdev)
 > +{
-> +	int i, rc;
-[ ... ]
-> +err_mem:
-> +	for (i =3D NR_CXL_TYPE2_ACCEL - 1; i >=3D 0; i--) {
-> +		struct platform_device *pdev =3D cxl_mem[i];
+> +	struct mock_cxl_accel *cxl_accel;
+> +	struct device *dev =3D &pdev->dev;
+> +	struct cxl_dev_state *cxlds;
+> +	struct cxl_memdev *cxlmd;
+> +	struct range mock_range;
+> +	int rc;
 > +
-> +		if (!pdev)
-> +			break;
-> +		platform_device_unregister(cxl_mem[i]);
-> +	}
-> +	return rc;
->  }
+> +	cxl_accel =3D devm_cxl_dev_state_create(&pdev->dev, CXL_DEVTYPE_DEVMEM,
+> +					      pdev->dev.id + 1, 0,
 
 [Severity: Medium]
-Will this teardown loop leak successfully allocated devices if an error
-occurs before all iterations complete?
+Is pdev->dev.id the correct field to use for the device serial number here?
 
-Because cxl_mem is populated sequentially starting from index 0, the higher
-indices remain NULL if initialization fails partway through. Since this
-teardown loop iterates backwards from the max index, it will immediately
-hit an uninitialized NULL pointer at the top and break. This skips the
-unregistration for any devices that were successfully allocated at lower
-indices.
+For dynamically allocated platform devices, pdev->dev.id is usually 0, while
+the actual instance identifier is stored in pdev->id. If pdev->dev.id always
+evaluates to 0, will all simulated Type 2 accelerator instances end up
+sharing the same serial number (1) and conflict during enumeration?
 
-Could this use continue instead of break? Alternatively, since
-platform_device_unregister() handles NULL pointers safely, could the check
-be omitted entirely?
+> +					      struct mock_cxl_accel, cxlds,
+> +					      false);
+> +	if (!cxl_accel)
+> +		return -ENOMEM;
+> +
+> +	cxlds =3D &cxl_accel->cxlds;
+> +	cxlds->media_ready =3D true;
+> +	rc =3D cxl_set_capacity(cxlds, SZ_512M);
 
-This same pattern appears in cxl_type2_mem_exit() and cxl_type3_mem_exit()
-in this patch, as well as in pre-existing teardown loops like
-cxl_usps_remove().
+[Severity: Low]
+Do cxl_set_capacity() and devm_cxl_probe_mem() below exist in the tree?
+
+It looks like these functions are not defined or declared anywhere, which
+might cause the module build to fail with implicit declaration and undefined
+symbol errors. Other mock drivers in the tree appear to use
+devm_cxl_add_memdev(). Could these function calls be leftovers from an
+earlier design?
+
+> +	if (rc)
+> +		return rc;
+> +
+> +	cxlmd =3D devm_cxl_probe_mem(cxlds, &mock_range);
+> +	if (IS_ERR(cxlmd))
+> +		return PTR_ERR(cxlmd);
+> +	cxl_accel->cxlmd =3D cxlmd;
+
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260610222328.2272=
-427-1-dave.jiang@intel.com?part=3D4
+427-1-dave.jiang@intel.com?part=3D6
