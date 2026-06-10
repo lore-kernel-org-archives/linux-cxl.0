@@ -1,139 +1,102 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5116440313D
-	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 10:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3631540D598
+	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 12:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781088129; cv=none; b=aamuzkwMc9b63I4R6Zvy3QgkDWFMPOpZjLI5ijAMjcR+9/9MhD4n2ekP5JH+dF+qQDaLGAUDoy5F4I9n5XJbjPkcsxCY0VP9LgF5d1xRnC6VQUWwNteV5Tiu0ZBCHGCwL+ptnsX4Phe+WCt/MHwTR7mu8qYI1/ivnJ+/omrOmek=
+	t=1781095758; cv=none; b=hf5yYz9yp1Xd2mTKda3GQpYithBZZryZ+st4W3QPdIcNG+gK2eXvGVzRlZxrnqefHizRVPAUU8+z6y5zLqet1j+2X9H2njWV6p7St244+VOSXcfwOgCahVN3BitHEBwq0R1kW+xSkdtbaCOsPZXb7RMZgUaWP5IvAnbOWz4l31Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781088129; c=relaxed/simple;
-	bh=rLAKx7oZEBl4l8VQ6/vsIVEV/nqRO6+w6w+1NuugFRI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sIz9OG+NQpQ8bxTmEdPJTXgmQdvqhAtQQ4tTnSxrIgRVkZN1KgPBGKLjv5dsm8XTaS2YFvGhFBIaAPzJggDMYOC36Jtb02jO1QKppxlqOOm1MKg4szLeDugOtJNH8kBJYRc17HI4HR5qKMiTtupffoXDA3OhlNF3jZdyXOUBWXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gpUTAXO7; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1781095758; c=relaxed/simple;
+	bh=gHh1v96fQMFdC550ynP6dgV5A1VaG0SSjvQDDFfUI4M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=J518n6Y82p6DQNpPZkxnl1DEpJQGGLBu2Xn5xxOdEA8yxOyc/BuveTtFXWSyCrpO6KUGZxYEDg9sMz+vX8rSUw8DFumu1qrDDUL1WN7bojBEBZThXqfh3DtvlZsmhXqkwbQOjknas3+FnL3DK8QhWsURLBKiStCa2HGL0rAcacY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jaWmKsUv; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gpUTAXO7"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-8cce77eb087so56514416d6.1
-        for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 03:42:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1781088121; x=1781692921; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pgx1xgYrFcSjqIUoyhFqGxYUzhtvYzBpQalCqkbKQaU=;
-        b=gpUTAXO7LYj55vqZytrIq49IGLWTJvLT+xAvLnjZFi7gjoGYGbTGjCIel1PHtM67TK
-         fKtSbxARYH8l3bdsI1eQaDqaPVFqfZgLqYp2Hdz3Q8F9NJfn1/AGnBpOnXQl8Xp6HqVM
-         fnpXPMJnuDMbGNyVvoklwWlIeAEsE40/bq+oK7DemyY/a4CJkZnYYCXzsxU6HbjjFEmF
-         yzdeFiW+XXjOVaS62j0zEFozPv75geuKQhBJ/bx6qUvXD7YWWOSsFxDd+UVh+le0AZBv
-         CIwPnI/Y91RzF+4pup0vWYBvUqDzBYJFSLPYs+DWujHYLHVfYs0K/EJP/e5pF7mytowE
-         sOXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781088121; x=1781692921;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pgx1xgYrFcSjqIUoyhFqGxYUzhtvYzBpQalCqkbKQaU=;
-        b=gXd6t1CJ7CbgyiLMv7yoG9gkY245MHB/uAK8XzIaS83K8EVYFrQHnKgoHgX4qkPOOx
-         mt2rUC5X6nhLdLHUfj4DNZFmrXmFM9DR4vrEPu5+QDE+dvo4WrSc3QzQE+ztLXbEotzA
-         SUWHMOzHNQ+CbFrU7O9oUwl6qn5UC3i/tXtzkQ6U87nLpZZDr1gRpefXt0wsISmxEPE9
-         8cCCbP6DQ5C981AytruD1npX2YUE7eR7Vt4NwnGbEBHIlArYC5ISpa7YWJLqq+v9CMIg
-         3Q3VmsvcF5IZCMmdzpuM+PNvZHGrlFOcncAZjW73O6QuyZQRbRH8a7beFOqaQp1NPK1M
-         pf3A==
-X-Forwarded-Encrypted: i=1; AFNElJ9nalenBuU9Hh2hkHFVXoWZvRsAV2UD/rBTEXubjFpSjbnEHMXjhM0Ia2Xd8goR3jN2Lrr0f37zJkg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxM16yaoGKPYO6AZ/J5HpUKk5jChj4L6GRrJMoWjlknmD58fmFJ
-	UKp4d6O/a+NWanl30cV/KEOGeb4Ht2dGEtzww6hiONs6zAKFpfnT2BzA3UfOPK0+vxQ=
-X-Gm-Gg: Acq92OGB98i+s6RBpYN6HCGJj0iyT4ByYc5TAZGMLKNrqmlNmlptJ/OBowPV80cJWtD
-	y/CpeCR+hyq6mW5WWS7z2ySkovwgfBHOeZsWRw0Z36V8+rbzei2K+2cqOMhVaE3ogcQhd4x2cJg
-	bSFjQTBw1H3xnuv37R7aKfh2urUb2cNssnZdi4r8vmLpiIC7/cRyHAOHH8UtmCozZutXFMb1gvj
-	aMpGMeKc3pm+E2kI5v42Z3XjRmUicF5xcHCVQahuorx3oAa9XbJSNP/iR1pBUmzo+DUy8F3mV80
-	VkqE9Y6oFs0bjY3ne0OO9MmfIRYaX9Y8R4O8vPTc8y56p2csYtjoL+X0D020aI6MXXW/vlZjZPK
-	5jC7sZRBGfnkm8LRhyugvPMSBBGuiHxwaXnvRKtpBDXrbXyUd2PPtCjyQNR7MoRhwCu0iH3MuN2
-	lxrQblxMXrBYLBgliD7m5z0cAnaEK8Vk2g8a1JrMFr6QV84WDG10ALnuJf/+s/6ukdjVOOY0krP
-	fOmZfPbLZhHX85LTA==
-X-Received: by 2002:a05:6214:c68:b0:8b5:6654:7556 with SMTP id 6a1803df08f44-8cee63e377emr394580386d6.42.1781088120984;
-        Wed, 10 Jun 2026 03:42:00 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cecd06e4d6sm231860136d6.36.2026.06.10.03.41.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 03:41:59 -0700 (PDT)
-Date: Wed, 10 Jun 2026 06:41:57 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Balbir Singh <balbirs@nvidia.com>
-Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, david@kernel.org,
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, apopple@nvidia.com,
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com,
-	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
-	mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
-	baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <ag6XyvxR-NU5rGn-@parvat>
- <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
- <ah47NNhuiClgGCdn@parvat>
- <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
- <ah-0CyZurn5D1ezY@parvat>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jaWmKsUv"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1781095751; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=VgwXepwFFsri2bY3lEgyRhohnclkVYpV0ZEn+hkeglA=;
+	b=jaWmKsUv8vNemmUypiebC5pTslXZJ05Qk23OBW6joyqOlyAMYLiv2eO7RlMtv8FiXYu3UyCiqJByj+uUFwWNaToetdnmmv3zzxUBtxsMPYhfzTpeqNq2uHzS7GHXF0CpspsDM1BCV9SLWKRD2aYqbMVICNGBx3u6m5uw6eA8RpY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0X4ahYAK_1781095746;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X4ahYAK_1781095746 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 10 Jun 2026 20:49:10 +0800
+From: Chen Pei <cp0613@linux.alibaba.com>
+To: jic23@kernel.org
+Cc: alistair.francis@wdc.com,
+	chao.liu.zevorn@gmail.com,
+	cp0613@linux.alibaba.com,
+	daniel.barboza@oss.qualcomm.com,
+	fan.ni@samsung.com,
+	guoren@kernel.org,
+	jonathan.cameron@huawei.com,
+	linux-cxl@vger.kernel.org,
+	liwei1518@gmail.com,
+	palmer@dabbelt.com,
+	pbonzini@redhat.com,
+	qemu-devel@nongnu.org,
+	qemu-riscv@nongnu.org,
+	sunilvl@ventanamicro.com,
+	zhiwei_liu@linux.alibaba.com
+Subject: Re: [PATCH 2/4] hw/riscv/virt-acpi-build: Add _DEP to ACPI0017 for CXL host bridge dependency
+Date: Wed, 10 Jun 2026 20:49:06 +0800
+Message-ID: <20260610124906.131956-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260609134659.3dc89b40@jic23-huawei>
+References: <20260609134659.3dc89b40@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ah-0CyZurn5D1ezY@parvat>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 03, 2026 at 03:00:01PM +1000, Balbir Singh wrote:
-> > 
-> >    __GFP_THISNODE cannot be overloaded to do anything useful here.
+On Tue, 9 Jun 2026 13:47:09 +0100, Jonathan Cameron <jic23@kernel.org> wrote:
+
+Hi Jonathan,
+
+Thanks for the detailed review!
+
+> It may be a good idea to add a bios tables test as well.
+
+Okay. I'll add a RISC-V ACPI bios tables test in v2 to cover
+the _DEP additions and prevent regressions.
+
+> Please also include an iasl -d dump of the relevant additions to DSDT
+> in the patch description. Much easier to review than the code that
+> generates it!
+
+Will do. I'll include the iasl -d decompiled output of the ACPI0017
+device (with _DEP) in the v2 commit message.
+
+> In general looks fine to me and great that you are clearing this up.
+> Seems it's luck that x86 and ARM64 worked without this (or strictly
+> speaking other things enforcing the ordering). Ultimately we probably
+> want to add this to those two architectures as well.
+
+Agreed. I can send a follow-up series to add _DEP for x86/ARM64
+once this lands on RISC-V.
+
+> > +        if (s->bus) {
+> > +            PCIBus *bus;
+> > +            uint32_t num_cxl_hbs = 0;
+> > +
+> > +            QLIST_FOREACH(bus, &s->bus->child, sibling) {
+> > +                if (pci_bus_is_root(bus) && pci_bus_is_cxl(bus)) {
+> > +                    num_cxl_hbs++;
 > 
-> Let me clarify, I meant to say, let's use a nodemask for allocation
-> and __GFP_THISNODE gets us to the node we desire, if that is the only
-> node. My earlier comment might not have been clear.
-> 
+> I think you only care if there is at least one. Instead of counting, just set
+> a bool and break out early if you find one.
 
-I've been tested an stripped back patch set where I drop all FALLBACK
-entries for private nodes (including for itself) and only keep the
-NOFALLBACK entry for private nodes.
+As Peter pointed out, the count is actually needed for
+aml_package(num_cxl_hbs) to set the correct number of elements.
+We'd need two loops regardless (one to count, one to populate), so
+I'll keep the current structure.
 
-This effectively isolates the nodes for any allocation without
-__GFP_THISNODE.
-
-This also precludes these nodes from ever using non-mbind mempolicies,
-which I think is a completely reasonable compromise and something I was
-already expecting we would do.
-
-Notably: slub.c injects __GFP_THISNODE internally on behalf of kmalloc,
-which causes spillage into private nodes because slub allows private
-nodes in its mask.  I think this is fixable.
-
-I have to inspect some other __GFP_THISNODE users (hugetlb, some arch
-code, etc), but it seems like fully dropping the FALLBACK entries and
-requiring __GFP_THISNODE might be sufficient.
-
-~Gregory
+Best,
+Pei
