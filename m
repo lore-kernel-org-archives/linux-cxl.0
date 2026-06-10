@@ -1,210 +1,311 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64EE778F59
-	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 18:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781115174; cv=fail; b=WFlZjmKSbbnpPm38UmAfgiACCvXwzq6ntUZQp0/LKHa5PSt5IdwCr0pVXgn8UM2EJkFQubb2FtNXLEz7cVLSegDGJACahY5WI2M+o6Njgxnoq158hqYkU9vZTKKPZJ/+Ibhu3c22r4NXfpmLf0kMK62Y15eorDotNlkpUq3BTTU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781115174; c=relaxed/simple;
-	bh=KhgrdXKHYKnb5BT3/YXuTVzbNH/XrVWr7yPjDJeP+Tg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=JLe+6f7Zo2c28o5eYP+J95XsZKBfk0wIC5V9k31TmXm5y3kMqias7/R4TY2sqG8Q38DnzjiAQgg9GjzefthKW/1yef79il1rwSrhT0dvTByx38IeTYQ89xAMWYn0dFvYj2JsO8T7Gj9+3OxqOecxihkVN3udIWJgdJLOMoyABHU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mHsdnz/d; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72293537EE;
+	Wed, 10 Jun 2026 19:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781118034; cv=none; b=PnOEuzm9COTU2WmHEfDH/Eztk1lPZklfWw6KDoycJ5j2QVspWJdxmTgSbBLo2cUzyqLvdkHMK2kzIRFvxRZvdf/n5wJKgVO1nduq0T6ZA2nYYfbA46RMVFLafSpq327Epckkkaf/j3mKfsEqfCHZ30zgplr7Rv7apBhWoXslf+Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781118034; c=relaxed/simple;
+	bh=YdJvFqMZf+8hD5/S7uuTonnbqreUR8JR149Ppecvyt0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Na5VvnWXeq/KvviuYVAbzAeFZJFZsL7lj1t7zmWdQZQD0Cprzuu/brqPCX6YGYzhWwmV148FVqxQZQmbsthxCoqoUDBZMuxSaaFCqnMhc4Pry+AC1DbNAW2nc1z1892bdsguoAF0tPxxJ39kkG0gNDNXFTcc3a5wH/Ki4z2jDKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7hYyMVS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mHsdnz/d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781115173; x=1812651173;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=KhgrdXKHYKnb5BT3/YXuTVzbNH/XrVWr7yPjDJeP+Tg=;
-  b=mHsdnz/d7hleUqrD7oUoXk5+u7cWum2Kc/EwQTNglRGNxOq6cS6/0Ygr
-   G6CNi8nfSqzgQlrwDKjctvDPNGJ3VwitkgTUfY3Af7c6vlt3i7YjXZ7NJ
-   BALSFxBFs44LgZbbniZRWUWuYIudbpGFrjZ78uN3POJ/mrPad/EjPZNmk
-   kc3sNvvKBUbvXC1TwjytgzMOagfRJroDxE85s5KYaUS5SlasNcr4J2vlo
-   R+XOMmQwn8SELoI8kGWeFtzPKiwGvgnNusnNkm6Fr3gfSSIlG4uCSfHfX
-   J7t8O+pl269wT6s+heaE73BAOvmAwdVKjepxomq/zyP3q9JS2PyFF5cI6
-   A==;
-X-CSE-ConnectionGUID: GXtoUsnQSg2IM5D/laWlyw==
-X-CSE-MsgGUID: UXKHZIlFTmWOYHvQZrDk3A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="85544292"
-X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
-   d="scan'208";a="85544292"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 11:12:52 -0700
-X-CSE-ConnectionGUID: 2Am7epYlSnaxMjiJpXlueQ==
-X-CSE-MsgGUID: rrLTD5fhQDCehWBtbikIeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
-   d="scan'208";a="251339400"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 11:12:52 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Wed, 10 Jun 2026 11:12:52 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37 via Frontend Transport; Wed, 10 Jun 2026 11:12:52 -0700
-Received: from CY7PR03CU001.outbound.protection.outlook.com (40.93.198.57) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.37; Wed, 10 Jun 2026 11:12:51 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fVaWS6w0SP9n4Hcby5j0WvT8KQc9q3lDB0rXrkAy0OnT5SIHLc5jAE1n128SVLmUxAvTLkHlv1YwU6b1zZLkxV4+/GhMK6NHHH8NN7+Vu7RndfndISygiCd9GhLnIrmwQDoFO+5c9ffvabdBSFXN+MMLBuKSdFpmbqeByjWwQz2uPPa0/HiFB0DLZVxFkwnhILsTeQT/LKI2+zbdWR3bknufe1chPK3N3p81NS794liHAIW0DUxVXjj1WYs2x14e1gZTwvc2pZw6eRkIEFtb9+jVVjS7r9dFTi6iUdZfXX4IFwym93UxoWeuqL4DqkeXBCpH2f/d9HDuTxCWWnshog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DAl8LGCqO+X0oEpW+NgjuNKdu24WRUTngetgKqiH7L8=;
- b=l6IVcwMF069OCTcM2HFVW1trUH+aJvqwbfTC7/W0H3bdpuqYRJJoRl5YzhjAXCNy15wKz19dCJ8Jzk3Rto3XwxS0iavgWbGOkpiWeWkMso9nqg0PH3LA8c44hUeMH6jjvfp4yJNEX6OtX41N5A2tsFFFNArwTe09IiFFICLgdPObvDbG2XhN4XvrPnthBnkn2282dBfp4z4xl7TgyNeX6owyROpb9PXk/1B8LC7Ld+YT0spmlDOkvO0CbVJSpDhOvPHsTRl9G3nzUTpRoPoPJk9Mzw5J0svFOI4AeWUV8d4fR84w+x7EdguFYzk5psHF9vzHJ1OFYGaxZeVhwHvWDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by IA0PR11MB7185.namprd11.prod.outlook.com (2603:10b6:208:432::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.13; Wed, 10 Jun
- 2026 18:12:48 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::a195:49d4:38c5:3891%4]) with mapi id 15.21.0092.011; Wed, 10 Jun 2026
- 18:12:45 +0000
-Date: Wed, 10 Jun 2026 11:12:42 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>, <jic23@kernel.org>,
-	<djbw@kernel.org>, <sam.moelius@trailofbits.com>
-Subject: Re: [PATCH] cxl/test: Fix integer overflow in mock LSA bounds checks
-Message-ID: <aimpGhLI-qCA5KM-@aschofie-mobl2.lan>
-References: <20260605171238.3857744-1-dave.jiang@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260605171238.3857744-1-dave.jiang@intel.com>
-X-ClientProxiedBy: SJ0PR05CA0044.namprd05.prod.outlook.com
- (2603:10b6:a03:33f::19) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7hYyMVS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A5AF1F00893;
+	Wed, 10 Jun 2026 19:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781118019;
+	bh=M0t4n3HCps7taaGU6Q6PrW/pQCZIXwS6BBGzfXojpIE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=X7hYyMVSI6Mi0sP+Grod1QWamTJ5Cd8C24A8xgEC34EpFhULVTmCXMEcNjvm50o8h
+	 fcMiuQtVWWpiPQW9UF2eKGnnv40bBYnqWwcyAZtpPv08RaHKg62L7w8ht2DO7Y7j+h
+	 XLCcETnYT1QGs6naP0FQ1tqTtFd3t1G4UsDeWTrEasWTQw841ToyAnfborKCuV2rZA
+	 CmJbbG8FZLRGzAbk7WrX8w5scBKfP+d9KQvQXX0notHqaVFA3JjWPmq7RsdC1UQBH1
+	 wf04lnmZQ4L7CcWxpS6J+jM2tMhthsvsUUpNx8qalHDVCyPsz3ErNSt5ixKoHCdgge
+	 MtDa3WiM+tqgA==
+Message-ID: <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
+Date: Wed, 10 Jun 2026 20:59:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|IA0PR11MB7185:EE_
-X-MS-Office365-Filtering-Correlation-Id: b3129780-b904-455d-1a83-08dec71bdf0a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|23010399003|6133799003|18002099003|22082099003|56012099006|11063799006;
-X-Microsoft-Antispam-Message-Info: y9WM1ptd9MJ0F9+QA5C6NwcraKY167ETdCtu6HBMPEuQOrdUGkhPHrH/NkQe+TuP1cF6GStacsoo1D6iHnX7bQ0ajb7QKO41X9n90Q7ORAbKwxJFWpe2ov+QTfFprssTMUsETEcoUf4OVhP7lbotescT8R1ATxS53zlHVrwWke6HeTDBgtgTNQVWiZvJw5LE6xHhEVZksivYaeQ7JOPVvltLZk9R91pxUNvR4+zNia1NAOfs/6Msm6YuND+P6eG1+Id6TnyKiQcfoWi/G1KkdXUPceNAmvebeIqng/YchYA3AIXg+MTzyX6Wfmj+CK2pVmtB0V1pnaPvqGD9C5g4O/XsvE3/cbdNfnmfbnvvi/igNlFILzHw13MfVfH3bBKhBVFXotsQ8FpqhLWd7jJEA5A8aJ2xiMr3ETSYkQbDbhc4nf8kXZseDWtGulmZVsg8D0muy1+2/zMQ1WLlI9A2maNkQx5SP4b2gPPe5klWAv+CjWXjCZturhbJRA/RxLZqDcrj9yZDsN459w3+5Wg6e2WNro/cjGq6fSmOZrzpN2FdsDPOwOWGeY2v0Y1YmZo4KTGAmKhJQp7I+deiPfmtYGNQYr5+d2V5D5sGzCk9JexOWP3fac6zoUlJpf6p3yeKS9z1ExEuNNXJcKtFtnltBm99IMA22hKp6HhZDwquqmcOaZLPIYMcinymq423oSExKP4P0uKX3yOntNEMuLmmFA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(23010399003)(6133799003)(18002099003)(22082099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Dd8PXO3CzeZVegusTyWzv/Bb9D5/n6H9QJ9iSRVX7eO5Cy+fZ83/UF7hjsr5?=
- =?us-ascii?Q?z6hACDthW3UDQ8YQtCp/slvK1dSu02LUudfTuUPZZbXemZcc5tn9CUSAOr8a?=
- =?us-ascii?Q?VYs/ueb4o2kGWHHQZxe/T8050FkYPNWX1BTJZ5Td33HLEFF1R5I1ftmZYeu9?=
- =?us-ascii?Q?hRQJtSwLxbjwVL7+4mXv9JS/AzoQ2iCP9VGx+75tz0hC+dlxPC7PIV/q4BFN?=
- =?us-ascii?Q?hVzf09STLjoRwoMQRhufZFpUoPbG12pwhESFNy8W8lCM/bsonOCGkMmC1srB?=
- =?us-ascii?Q?OnsWZFKNUaXOsWbP58U1T50MNl8Tl3fhndqDO/LvgFquCYdFhYcRB6+9wRR7?=
- =?us-ascii?Q?hB/phW43t+KhwCh6I/ePl6DGHBM5s/oZLhXbSCPpRmSRelOMWbcyYe4rp/43?=
- =?us-ascii?Q?o/V93AyWlqUHcFIvz5A/mfiYBGlIawWF9xOT6YUO2So381hbHaVcSBnlSpc9?=
- =?us-ascii?Q?J2g/Y1QyM+YPjS0/lebmjJf66aK6OLX6YQx97OTHwrgeNfye+sxY98ZCkazs?=
- =?us-ascii?Q?0RPKH3d0o+jHlj6CinhRqJaj2ifeJfd+3eB3dzzyitwz1iP4DanMrwkO6oeT?=
- =?us-ascii?Q?Cj0kx+1aWFDKODmVEqYI4XzAj0nY+otL+84asowgupXzvuioq1HwAupQNdB3?=
- =?us-ascii?Q?HIF74ikTaHSgM4s7TeLs0RHNEh9oVEUBBox4HUNg4YLrN7wLUAOdgnOBd6o1?=
- =?us-ascii?Q?Me5FyokaVCT7ARpeyX1+y+Tk3Rv8jxHsDiKEABy2v5A/7HG4SqgTVLQfBHlU?=
- =?us-ascii?Q?QHn2VU5gxc27IhN/tM6xqZn1q2rnq9+GcUE+gT9b0Iy4T30kOSgQqn6XPToo?=
- =?us-ascii?Q?YdrQLX57XQE5kjVYUrPgCIVMWr6OXDhM2ehgb8Pq6aQ64ID9mmPvUj7HuFm9?=
- =?us-ascii?Q?VTcbCsvFpvPxnAu85kGmQvBJ5rFyssU75+6YuVpUwCQfTRVajuVRMOdoeF1J?=
- =?us-ascii?Q?iwvSkp6NkvrNTnUJa/F+X3qDyVLW7/HFwTcsMfRlkDJftYC+BIUWywRtiRBE?=
- =?us-ascii?Q?49mn9nzvVMnIUVhPaFuV9lEjucm8B1kYbxzGaNqRoQDrqepujP3lx8JkAAjV?=
- =?us-ascii?Q?smklzBsBkpa0h9jqp2jc7nYzeOuowDl2zgEN3W7Fs/EqjAWiyCFy6mMWrIgB?=
- =?us-ascii?Q?N780oynm7/h+3bBzdITiVJKJUUSHaD5Of+E4W3phr4ZAk5ZSZx2hFYz8HGyz?=
- =?us-ascii?Q?mZSPJ19VO99cXynQAPf93CIhBdcEIbfUhJxtAXkaTgpRkzpsVxf3viNclRa5?=
- =?us-ascii?Q?3TkBXkkF0aO+ak00ji5RJL/XIMGhnIUf1Yt5MVd3Z3NVFF5wP9Q4SjtueHCl?=
- =?us-ascii?Q?ae5GkHcXZUqBigp20WWsRa3miM0GuesIQcfGR6DmVPHbCaP6lfHTb7dmjaNX?=
- =?us-ascii?Q?NHJ8SUdc6GPyzyschN6xHTuHziKZzoOV98wxLSDoCfbb0o0Bqbt9MxpT7KHH?=
- =?us-ascii?Q?wuLMqnO6yb9MwtbA5k+NJTD+sK7zQDpfNUWhkj/bR/IBZwGJmVzpZnLGCR8B?=
- =?us-ascii?Q?RAtlnu3XStD9dNq+li9pq6jQINyuCj0bHgU8tswd6MAPBKypEqHHRhhgslfa?=
- =?us-ascii?Q?Gl0jCFnXOMbRsmZu1ZjClKTCSM5WIQkdF/vXSsE+cSz7ZGIwuHgTb+v9oTNb?=
- =?us-ascii?Q?n5L3zC22/X1Dl7I+0SLs+2pGZ9JBBKhb5svMnYzyYmmz1Ma9VLaXHnwblv5r?=
- =?us-ascii?Q?DwvfvP5hPiBGWA7uWAZBpmaPds9l9dXQtDmV8NVo5wskFdOMPrAKj45C4EPD?=
- =?us-ascii?Q?i0s0N/EuH2dAXtrERLF5ndU7olFfdE4=3D?=
-X-Exchange-RoutingPolicyChecked: g9T++3u5W9OXacu4FBa/OmcQmQbEQilEyBhokYan7mC3U6P80LMbac+/93yhliXm3KiT5EQvXCkgKRLd3pVHk3R5zns5mqAYfXJyWRhMddliwHkyXs/ufSmKsa+HhsWNY+w86a/31tlVFxnF2oDar9pv3Ixp43KZGmMkCqgUSoa3/Zmzgy5Cs2neKSVKAJCiA6g1CUg6w0EaJdGn4rKiRUFJDVDn+GcIdQJqLFgYaD3gZX+4Q4LBOFwuZTTpgRXEQoOHFO8IfQpT4TGR15gZhgaekgsJryJCOMEfpSn1wWqQQLHEW4XskLnUYUg3//DHAxpMpGAN44WqQGo6RKPScw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3129780-b904-455d-1a83-08dec71bdf0a
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2026 18:12:45.5012
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sP6PM4eb/dRbyhYLerNH3lXQK1XKeL8/VrOumvFiJLGSXffyuq4m71AfWdfmm3psA2+jglPu0JOfBvbTLtrrL1BBOiXvPtiHIMzFwQgMLqM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7185
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+To: Gregory Price <gourry@gourry.net>
+Cc: Balbir Singh <balbirs@nvidia.com>, lsf-pc@lists.linux-foundation.org,
+ linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+ kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+ dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
+ akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+ joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+ ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
+ yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+ linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+ mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+ baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
+ dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
+ muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
+ jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
+ pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
+ riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
+ roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+ shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+ zhengqi.arch@bytedance.com, terry.bowman@amd.com
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <ag6XyvxR-NU5rGn-@parvat> <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat> <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+ <ah-0CyZurn5D1ezY@parvat> <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
+ <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
+ <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 05, 2026 at 10:12:38AM -0700, Dave Jiang wrote:
-> Pre-existing issue discovered by sashiko-bot.
+On 6/10/26 18:37, Gregory Price wrote:
+> On Wed, Jun 10, 2026 at 05:00:33PM +0200, David Hildenbrand (Arm) wrote:
+>> On 6/10/26 12:41, Gregory Price wrote:
+>>>
+>>> Notably: slub.c injects __GFP_THISNODE internally on behalf of kmalloc,
+>>> which causes spillage into private nodes because slub allows private
+>>> nodes in its mask.  I think this is fixable.
+>>>
+>>> I have to inspect some other __GFP_THISNODE users (hugetlb, some arch
+>>> code, etc), but it seems like fully dropping the FALLBACK entries and
+>>> requiring __GFP_THISNODE might be sufficient.
+>>
+>> Sorry, I haven't been able to follow up so far, and not sure if that's what you
+>> are discussing here ...
+>>
+>> After the LSF/MM session, I was wondering, whether if we focus on allowing only
+>> folios allocations to end up on private memory nodes for now: could the
+>> __GFP_THISNODE approach work there?
+>>
+>> Essentially, disallow any allocations on non-folio paths, and allow folio
+>> allocation only with __GFP_THISNODE set.
+>>
+>> I have to find time to read the other mails in this thread, on my todo list.
+>>
+>> So sorry if that is precisely what is being discussed here.
+>>
 > 
-> mock_get_lsa() and mock_set_lsa() validate the requested LSA range with
-> "offset + length > LSA_SIZE". Both offset and length are u32 and, in
-> mock_get_lsa(), both are taken directly from the user-supplied payload.
-> The addition is evaluated modulo 2^32, so a large offset combined with a
-> small length wraps around and passes the check.
+> So, I remember this being asked, and I didn't fully grok the request.
 > 
-> Rewrite the checks to compare offset and length against LSA_SIZE without
-> overflowing by subtracting offset from LSA_SIZE after bounding offset.
-
-Above is a mouthful, is it more simply...
-	Rewrite the checks to first bound offset, then compare length
-	against the remaining LSA size.
-
-
-With a commit msg update upon merge...
-
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-
-
+> I'm still not sure I fully understand the question, so apologies if I'm
+> answer the wrong things here.
 > 
-> Suggested-by: sashiko-bot
-> Fixes: 7d3eb23c4ccf ("tools/testing/cxl: Introduce a mock memory device + driver")
-> Link: https://lore.kernel.org/linux-cxl/20260605143748.235271F00893@smtp.kernel.org/
-> Assisted-by: Claude:claude-opus-4-8
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
->  tools/testing/cxl/test/mem.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> I understand this question in two ways:
 > 
-> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-> index 5d812b10fbc8..f9b11207ae60 100644
-> --- a/tools/testing/cxl/test/mem.c
-> +++ b/tools/testing/cxl/test/mem.c
-> @@ -1063,7 +1063,7 @@ static int mock_get_lsa(struct cxl_mockmem_data *mdata,
->  		return -EINVAL;
->  	offset = le32_to_cpu(get_lsa->offset);
->  	length = le32_to_cpu(get_lsa->length);
-> -	if (offset + length > LSA_SIZE)
-> +	if (offset > LSA_SIZE || length > LSA_SIZE - offset)
->  		return -EINVAL;
->  	if (length > cmd->size_out)
->  		return -EINVAL;
-> @@ -1083,7 +1083,7 @@ static int mock_set_lsa(struct cxl_mockmem_data *mdata,
->  		return -EINVAL;
->  	offset = le32_to_cpu(set_lsa->offset);
->  	length = cmd->size_in - sizeof(*set_lsa);
-> -	if (offset + length > LSA_SIZE)
-> +	if (offset > LSA_SIZE || length > LSA_SIZE - offset)
->  		return -EINVAL;
->  
->  	memcpy(lsa + offset, &set_lsa->data[0], length);
+>   1) Can we disallow PAGE allocation and limit this to FOLIO allocation
+
+Yes. Can we only allow folios to be allocated from private memory nodes. So let
+me reply to that one below.
+
+>   2) Can we disallow [Feature] (i.e. slab) allocation targeting the node.
 > 
-> base-commit: e43ffb69e0438cddd72aaa30898b4dc446f664f8
-> prerequisite-patch-id: 2230e8cb1f5da168992ad92776043f6632681665
-> -- 
-> 2.54.0
 > 
+> 1) Can we disallow page allocation and limit this to folios?
+> 
+> No, I don't think so.
+> 
+> Folio allocations are written in terms of page allocations, we would
+> have to rewrite folio allocation interfaces and introduce a bunch of
+> boilerplate for the sake of this.
+> 
+> struct page *__alloc_pages_noprof(gfp_t gfp, unsigned int order,
+>                 int preferred_nid, nodemask_t *nodemask)
+> {
+>         struct page *page;
+> 
+>         page = __alloc_frozen_pages_noprof(gfp, order, preferred_nid, nodemask);
+>         if (page)
+>                 set_page_refcounted(page);
+>         return page;
+> }
+> 
+> struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int preferred_nid,
+>                 nodemask_t *nodemask)
+> {
+>         struct page *page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
+>                                         preferred_nid, nodemask);
+> 	return page_rmappable_folio(page);
+> }
+
+At LSF/MM we talked about how GFP flags are bad and how deriving stuff from the
+context might be better. I think there was also talk about how the memalloc_*
+interface might be a better way forward. Maybe we would start giving the
+allocator more context ("we are allocating a folio").
+
+The following is incomplete (esp. hugetlb stuff I assume), just as some idea:
+
+From 64aaff5f40497201ecc089c3339df6576184c433 Mon Sep 17 00:00:00 2001
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Date: Wed, 10 Jun 2026 20:55:49 +0200
+Subject: [PATCH] tmp
+
+Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+---
+ include/linux/sched.h    |  2 +-
+ include/linux/sched/mm.h | 11 +++++++++++
+ mm/mempolicy.c           | 14 ++++++++++++--
+ mm/page_alloc.c          |  7 ++++++-
+ 4 files changed, 30 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index ee06cba5c6f5..9c850b7be6bf 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1778,7 +1778,7 @@ extern struct pid *cad_pid;
+ 						 * I am cleaning dirty pages from some other bdi. */
+ #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
+ #define PF_RANDOMIZE		0x00400000	/* Randomize virtual address space */
+-#define PF__HOLE__00800000	0x00800000
++#define PF__MEMALLOC_FOLIO	0x00800000	/* Allocating a folio that can end up on
+private memory nodes */
+ #define PF__HOLE__01000000	0x01000000
+ #define PF__HOLE__02000000	0x02000000
+ #define PF_NO_SETAFFINITY	0x04000000	/* Userland is not allowed to meddle with
+cpus_mask */
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index 95d0040df584..2101a447c084 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -471,6 +471,17 @@ static inline void memalloc_pin_restore(unsigned int flags)
+ 	memalloc_flags_restore(flags);
+ }
+
++static inline unsigned int memalloc_folio_save(void)
++{
++	return memalloc_flags_save(PF_MEMALLOC_FOLIO);
++}
++
++static inline void memalloc_folio_restore(unsigned int flags)
++{
++	memalloc_flags_restore(flags);
++}
++
++
+ #ifdef CONFIG_MEMCG
+ DECLARE_PER_CPU(struct mem_cgroup *, int_active_memcg);
+ /**
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 36699fabd3c2..a78b0e5a1fce 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -2506,8 +2506,13 @@ static struct page *alloc_pages_mpol(gfp_t gfp, unsigned
+int order,
+ struct folio *folio_alloc_mpol_noprof(gfp_t gfp, unsigned int order,
+ 		struct mempolicy *pol, pgoff_t ilx, int nid)
+ {
+-	struct page *page = alloc_pages_mpol(gfp | __GFP_COMP, order, pol,
++	struct page *page;
++	int flags;
++
++	flags = memalloc_folio_save();
++	page = alloc_pages_mpol(gfp | __GFP_COMP, order, pol,
+ 			ilx, nid);
++	memalloc_folio_restore(flags);
+ 	if (!page)
+ 		return NULL;
+
+@@ -2588,7 +2593,12 @@ EXPORT_SYMBOL(alloc_pages_noprof);
+
+ struct folio *folio_alloc_noprof(gfp_t gfp, unsigned int order)
+ {
+-	return page_rmappable_folio(alloc_pages_noprof(gfp | __GFP_COMP, order));
++	struct folio *folio;
++	int flags;
++
++	flags = memalloc_folio_save();
++	folio = page_rmappable_folio(alloc_pages_noprof(gfp | __GFP_COMP, order));
++	memalloc_folio_restore(flags);
++	return folio;
+ }
+ EXPORT_SYMBOL(folio_alloc_noprof);
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index ee902a468c2f..37434b37f7af 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5345,8 +5345,13 @@ EXPORT_SYMBOL(__alloc_pages_noprof);
+ struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int
+preferred_nid,
+ 		nodemask_t *nodemask)
+ {
+-	struct page *page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
++	struct page *page;
++	int flags;
++
++	flags = memalloc_folio_save();
++	page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
+ 					preferred_nid, nodemask);
++	memalloc_folio_restore(flags);
+ 	return page_rmappable_folio(page);
+ }
+ EXPORT_SYMBOL(__folio_alloc_noprof);
+-- 
+2.43.0
+
+
+-- 
+Cheers,
+
+David
