@@ -1,227 +1,166 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012059.outbound.protection.outlook.com [52.101.53.59])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BA325A359;
-	Wed, 10 Jun 2026 13:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781099818; cv=fail; b=PLkV9PhSsFII4BqJFqb3MGtAcM39rVMYp5mKEJmUj3AeVm6bzIDnnvztwojn6LP7oQhB1/uHpYOC4vmDBWuawBoDaAFPFe/8Uz1AXo+WyTS367Xn3PK2c+5Gf6VG59UjEEmJT/oMNXzlNOiINeHYnAe3X/XeJDu76pxeNyPXdqE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781099818; c=relaxed/simple;
-	bh=Kt9BJ51m02p7uoPmr9uCFOR786FSgZd+8z86gRvNJmg=;
-	h=Message-ID:Date:Subject:From:To:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=sw7GNRhPHJYe1QAOhnlGM5U8vB1KTnqP5B5NiW4FNDJPNz923/kkbpI+mpWxzZvjFLJEKE95rbi229N0YG/ORIrrmEiMKXVYEvFnJoF/wlY5f/lUDywkMAG8JioSk+hjxMfRiBMClTMnsylcOOYGz1qBIyPoJXfJtx7OaxvqiQE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vzsMgJ5k; arc=fail smtp.client-ip=52.101.53.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8290A4192F9;
+	Wed, 10 Jun 2026 15:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781103655; cv=none; b=hk+tFqXlLemceZQVYljgsG32yRsxJVqZZ+eRNCZca5VCmdBguVWnx0Z/GTYUCS0UZ2N36YYdoTDElL6eWk9mTixQa/FoI1fqg1u2kOX8VFQCjgZ58Y6fVud4p+4vcHhf9+6VH0KkxLdblEjKFreFOgrXYMc3s68dT1SBOMQpHs8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781103655; c=relaxed/simple;
+	bh=cdfu6a8174Wa007irlBxGZAyGscAfwNswZpYHIKVIrc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YH5J753uageGQEFrQ5ii/aGodSp2tc/lIxCl2d/XQB09YE5NAtqGcBDKZR54Mhri3g/4ARfq23MrRcrtZkQa3JuHVfj/SpllUywbl4vbl5ETzAtc6VsCzIF+x7rJG8+rJaSGmHd4i/SgfBZiB3cr79nsQ0QBJffpV9s9VWyzSUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lHjoTr7s; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vzsMgJ5k"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CHztYz5b74zwH8Rim6RvVlPK+PnI0eyRSFBXOD1PNyV588+WnxjzxsVxwfh8v+zIU6Vwi+ULiiILFdFFxMjlFEnBukN82uV5GHTNnB8c0IsJadwLVCauY68GaXZqnkRXs4gblRk6h+mR6L7fCAkU+Lo27wkM4f2kGb814lQYLSifcZKqN4mZ0N/ZCOoe/YEu9kqOETxj7H4/CCqikwPVaaeJA7Lff/7wuzP/kuyoCojb1gm9mGcRYQ4cmf/uBPsePVfRLcI0phqF4z8ysK9ake8qwQFOxlP/arP2JGhxtDRzQihL0QvG+au9sDWpTHKUxFJfmdtcZqAez8juWB9hcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wB3fNeUl3xvPStAJZIrf8G7LLrVCuuDVGyfIam83Q4I=;
- b=QE280jTdTbhLAg35SmYo+Y17FtQBl5sDraeoNopKXA4B3bCZxT3huex6EesXOre8cUUVE3peFFK5N+vwmlljMi1Y3ZG70ywqZqRxYoU3uA3B04rqDN1zV1mztQOhP2VcfKxLgDkyrLOE4KtrYpbtY30Ri1r2EAYEvB05umNvMxk0K1xwza/q9fZ5wT/XVIBpVQoaamFvIt7EOijnxa1OiQmSbRtdDR95/c+ERz1x4VLAHVianqiLd+RQ3xs0+aYwn8cxvVv+AIb/6L8wriG4yfaltHMKIDLKlwJrlQDZjU8nN+D3RhneRaHC4/Raz2HRHqKCKLp7DM1eIUqgyDPLgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wB3fNeUl3xvPStAJZIrf8G7LLrVCuuDVGyfIam83Q4I=;
- b=vzsMgJ5knMSvJ3ygiye0rT22/+nec1zH30vtlqv6lB4KHBIE/9QJfcqAlp6QbH5OgpiXCVvE2ftunoowXOGtVREkMIBXaY5yF5LbdmzdTRxd3r/wRtn63i/UFXGKaWnbSZ0eZHXRqjchi+y7v24F3yMV/zVWgLyt31YM8PSvDms=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
- CH3PR12MB7545.namprd12.prod.outlook.com (2603:10b6:610:146::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.15; Wed, 10 Jun
- 2026 13:56:53 +0000
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1%6]) with mapi id 15.21.0092.011; Wed, 10 Jun 2026
- 13:56:53 +0000
-Message-ID: <dcc502fa-1a06-465a-abab-9b039b9c2672@amd.com>
-Date: Wed, 10 Jun 2026 14:56:48 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v27 4/5] sfc: obtain and map cxl range using
- devm_cxl_probe_mem
-Content-Language: en-US
-From: Alejandro Lucero Palau <alucerop@amd.com>
-To: "Dan Williams (nvidia)" <djbw@kernel.org>,
- alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
- netdev@vger.kernel.org, edward.cree@amd.com, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
-References: <20260609215755.8685-1-alejandro.lucero-palau@amd.com>
- <20260609215755.8685-5-alejandro.lucero-palau@amd.com>
- <6a28a206bf61a_4fa78100e4@djbw-dev.notmuch>
- <96ee638f-3b10-4baa-a6df-5a79efee8b8f@amd.com>
-In-Reply-To: <96ee638f-3b10-4baa-a6df-5a79efee8b8f@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P265CA0219.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:33a::17) To DM4PR12MB6254.namprd12.prod.outlook.com
- (2603:10b6:8:a5::17)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lHjoTr7s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2B991F00898;
+	Wed, 10 Jun 2026 15:00:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781103654;
+	bh=RTuU9FrMu80USEPHZIsR86q72HI9h9O4g+u2c63dTjM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=lHjoTr7sIlcC9HNescoIpEPVQhPYNXrrn8kuYOlfh41Cd/1Outqp9FnHfcUeTMY0W
+	 iEkxlDCU3g121k8qL8QB4vVFyvlUqmahDpoM0wbD8edNTZvDyu4kC9L/+4efEQZRg9
+	 9ug6ej2V7Wp/wLNPpr+vhhwio/AUSHk/cMZ3X0VOJN7l2YevgVwJt4HvwPKD5azCJG
+	 3SsQehi0gO+JbVNmV9/lYMQEJp8KkZYPn1kJg0aUkJmJdAkjrHcgY+pbbeBIYzyBH6
+	 dVPiOO+/ZBtF/BOxpPF09c9LCbWa+wijIvDfgmdiu0fzJngBcN+9tIejaPyPefGGlK
+	 1ZJJoJQDTfZsg==
+Message-ID: <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
+Date: Wed, 10 Jun 2026 17:00:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|CH3PR12MB7545:EE_
-X-MS-Office365-Filtering-Correlation-Id: 81224c13-149a-45c3-11b3-08dec6f8206d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|22082099003|18002099003|921020|6133799003|11063799006|56012099006|4143699003;
-X-Microsoft-Antispam-Message-Info:
-	DB19Z10vRw1JxLUkPH09e8cvkhwgaFGL59FGXmspXli3vkH1IFOuKm/1lylpT8JirtBaSOcq9K4v8niGJ2wVONZvNssQt4SSFpP43BP4YAlojL3T9FKyjGxoEpSs099dFCpdjxKve8cdx9M8GQohrruKo5gvbzQKOaA0WWQ9bQWldGKse1rIcF08cRMGuBdrArOEz7RLglRC0k47hVuYjYgC1DUeTK05td+Z9gjdpcGikwEvQg1QQ0oe6rk+Pf7JweaehmDqe9VcPNELkMcMi7FWvXaYSv+t2Fop8Yujl3zG2tTlzb1qdydXzfjH4ZJHNducS/97r9VU9xA/aNENjpR6xB0s37KGyTbhSuXCOj7vBrTu5++MtZJAbJyfHb2YIE0A7p4JATeScpMKXwGZH+AV+DAblXts/xHuG2viFy+2nfpq5/+FZZJlb+1IO6lkFxLAO7qYcFW4sjqWqj5YJ6ZL5HaqXKXYzxJqoDo7ySR43ZU7wkucrPFS7OWItPr9poT+zSnxn52zCJOqYrtS3xr7nRhCCbfY40OXt++i638wt6IJWfUNeWxH9Yp3nJrxVtydG0qbKGPr4sxbOV43BYmn9T31+tLy2lLyY+QRYORkgCQk46Y20B+xN2hLILT+YsGnLJRuPW9hQhwsxQVUr/Q/tljsAdE44wqoIhdusw0MzO7ICDCf2g/lMo61gUMB/C9chmYgwTy+9d+i8NV2Yi6EfTVaS+NHq8g7/vpVwUNgNW2Tb0NdSt4mTqQhxA66
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(22082099003)(18002099003)(921020)(6133799003)(11063799006)(56012099006)(4143699003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WkYvWkNiVWtWL2wzOWk2Q3g3U1VLT3pPT0xyd2lSMzd5ckZGc2U3Q2g4aTc0?=
- =?utf-8?B?cEtSRDNUUEZaaTlhY0F4bmhsZkNOa1BDQWVpMER2SzQyL2lPTzVMbHNsYUQy?=
- =?utf-8?B?bW9kUDBTWHRTbGx1dkkzZUVoYXR5allFSUY0alp1MXhNanZ2NnRTRlpIYXJa?=
- =?utf-8?B?NlZqRlhtVC9qMVk2ZkI1ZmRodzFkdnI2V0RUZFl2MnhsVjc2TjVHVVlFZDZN?=
- =?utf-8?B?N0h2ZnFrVUs5bGROWVg1QmNHQVZpcmR1TzhWM2JCR1I2azFtQ1o3dnE3RS9t?=
- =?utf-8?B?T21wZC9BTzUrTDdFa0kwdlp0bHhEckE4YjV5dW5xNmlwNlpXcHBNK3B5RmhM?=
- =?utf-8?B?d3RVczl4bXllcG4xK3JaeUJCYlV4VmVMMTBPWFhPcmFUV2JFTjhHZjM1TW9x?=
- =?utf-8?B?YlZPdy9xVmdOcDBBajFjQlZkL2tLMDl0bXZCVmpwTEtOTjNKWENManNleXRV?=
- =?utf-8?B?Q3I3OWd5bDd6SFUwK1BNT1NVeVEvQXpZa0hyTndENzBXQUVIMGxIQmVOMi9h?=
- =?utf-8?B?cWhQem1ud251dWJ0cHpxSHgwRXRzajJQZUdrU2xlcHJMcHVJVUE5bitZcVIx?=
- =?utf-8?B?N3ovM0REaFBYdG8xYjRSTDV4WmxZY3R1N3RoNTVXRXcyVW9uTVpuNmQ2bzVK?=
- =?utf-8?B?RCtIay9YY1AwZnF2czRlSzIwSGlwbm4zejZIQjNxYmZHYWVBZURsY21uVUt3?=
- =?utf-8?B?eE45ZHJiWCtTdFZTMXN2c2hEby9qc01FWXM5TW1Gd1lnVUJrWTc4K0U5R3h2?=
- =?utf-8?B?NXk3ejZyeVB3cVI4azV6WW9PR24wQlh1emcxcXoxSGFkUXhiYncvaURnSk9P?=
- =?utf-8?B?dXZlTmtqaXp4Y3o5YUROSmN3R0FxSzlQanBLRDNYcVM0TEpLNWF2YXhqZmg5?=
- =?utf-8?B?RGoxc2JPQVZiNkptTm1zVWRpYWdqeE1Xc0FoUWcxRzRqekNkYWllMmRKeWhE?=
- =?utf-8?B?ZENkb0lQTFFxb1hFS0hLYktRaGRaTjZCS1lZaUpTQ0VDOVRZMWptcllSSitx?=
- =?utf-8?B?dXRTWkxMRXNFTkFvSE9TK1VxK3VxK1ZhNzhrWWpKMVNNd0oyQ29CUWJ5NFVi?=
- =?utf-8?B?amFsYjFqeFlQQWowc3ZOS2ZCc1FUbzlqdC9rL3Z1dkd2ck43ODluRXl1bFpG?=
- =?utf-8?B?eHg1cEJ5MFprT2QxdUQyNFZmejFVeGphaTR3VnFwQXRVZTZiVXY1bHpKUFY2?=
- =?utf-8?B?MTA1OEtKVUFCZG1PN0JYdWY1UGEzVHNuWDZ1WXVFUWdXMUJwSDZjMm13dGlE?=
- =?utf-8?B?ajBVNVR4VU9SQ0d0MnVYM1ZrSmM3ODVQS2dpY1FXZWorcHhLbVM1U2R6Nk1W?=
- =?utf-8?B?dWtCWlNWalVWL2ErclpxYmg2MG01V2FtWFJBWTVQUGxPZWZXcmY0UG5VT2Nl?=
- =?utf-8?B?TUY1c2ZlSkUrUUp4QXdRQlRPcnJLMGVWV0VNM0lLK1pOUGxhRjhxbVdJNDRF?=
- =?utf-8?B?WUtyQ2IzQm5CYXUrQWVjK3lEaTBDUUtJc0RnOGdzTHZFaFVOaXdadzE1YW9Q?=
- =?utf-8?B?OEdDVmppbmlyR0tGYysxdmZNVGtkZjhRVUpTUHNzM0pVa0kybHovRGFkMXNs?=
- =?utf-8?B?c3RrQWdocHc3RWhETUFnMjZZME42aDJVNmdrdE9yYkpBSUlRYjgwZE5IUFVn?=
- =?utf-8?B?Q3VmTlU5WnNiMWtmSzl2enZoZTdtb3RVa2Zna0R3ZC95S3dNQ0N5bjJZZ2RW?=
- =?utf-8?B?SFFhMGE4SWpaQU1ZdnlibVlHbWtVbXFlZG4yUnVteEZDL0haNWdhZ05BSXpj?=
- =?utf-8?B?bnNOUzh5aXZvVklxOENobUMvKzFpYnJKODU3eU8xcnFyUzZmb0hmR1NyNzcw?=
- =?utf-8?B?Z2tiM2ZSWWZLWkJnQ1ZQYzVhbysyQXRFMkI3QzdxdXc3b0tyeXB0KzJualZt?=
- =?utf-8?B?TkFiZjhNVDkyZ2RFYTFsS2pNNGZGaFhCN1JHSURxSXJqVC9FWG1KNnVhWWVo?=
- =?utf-8?B?dk12R05HdVdCS3NpNWxrTGJYUlVkMTVyaUZPSVpSaUY3amU3QUM5ZGpzWTRH?=
- =?utf-8?B?NktYN2MzSzVrTjZnbHBQTnJRVzhwTFYwT1R1cEgvSHlLVno2TDc0UHJaV3Q4?=
- =?utf-8?B?U2JhY1cycXJlL21YTmY2WTlCTXVMOHBqemwvOU5aaDNROEtXUUtRcFZxbHJi?=
- =?utf-8?B?WXh1c0RlOEl3dWJuOFA2QWI2dEJBNUpHTi9iaFVBSGdNbWdHVjl3VXVYQWR1?=
- =?utf-8?B?dlpzQS8ybU1qZjV0WnVSakt6Ky9JTEtmbS92aHBzUEVGVFZZMVhoZ292WVlt?=
- =?utf-8?B?SXorcUFyaUxJVitSSk0xelNub3pxamtYR2grSERtWXF5QVByRTY4RENBMHJJ?=
- =?utf-8?B?NDlVUjgybzBGeFd6TEZUanJjNzhINDl0VlJSTzFac3NYanhQanUxdz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81224c13-149a-45c3-11b3-08dec6f8206d
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2026 13:56:53.3760
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0BRvh0ZV+pNK7+QH+8AktnS3vOM6bHsBp4lUh5p60E0w39OEg85u1qwk1bCBO2oF5gC5iSmbyDnu75TG1Q+R4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7545
+User-Agent: Mozilla Thunderbird
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+To: Gregory Price <gourry@gourry.net>, Balbir Singh <balbirs@nvidia.com>
+Cc: lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+ kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+ dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
+ akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
+ joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
+ ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
+ yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
+ linux@rasmusvillemoes.dk, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
+ mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
+ baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
+ dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
+ muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
+ jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
+ pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
+ riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
+ roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
+ shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
+ zhengqi.arch@bytedance.com, terry.bowman@amd.com
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <ag6XyvxR-NU5rGn-@parvat> <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat> <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+ <ah-0CyZurn5D1ezY@parvat> <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-On 6/10/26 07:10, Alejandro Lucero Palau wrote:
->
-> On 6/10/26 00:30, Dan Williams (nvidia) wrote:
->> alejandro.lucero-palau@ wrote:
->>> From: Alejandro Lucero <alucerop@amd.com>
+On 6/10/26 12:41, Gregory Price wrote:
+> On Wed, Jun 03, 2026 at 03:00:01PM +1000, Balbir Singh wrote:
 >>>
->>> Use core API for safely obtain the CXL range linked to an HDM committed
->>> by the BIOS. Map such a range for being used as the ctpio buffer.
->>>
->>> A potential user space action through sysfs unbinding or core cxl
->>> modules remove will trigger sfc driver device detachment, with that 
->>> case
->>> not racing with this mapping as this is done during driver probe and
->>> therefore protected with device lock against those user space actions.
->>>
->>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->>> ---
->>>   drivers/net/ethernet/sfc/efx.c     |  1 +
->>>   drivers/net/ethernet/sfc/efx_cxl.c | 24 ++++++++++++++++++++++++
->>>   drivers/net/ethernet/sfc/efx_cxl.h |  3 +++
->>>   3 files changed, 28 insertions(+)
->>>
->>> diff --git a/drivers/net/ethernet/sfc/efx.c 
->>> b/drivers/net/ethernet/sfc/efx.c
->>> index 90ccbe310386..578054c21e79 100644
->>> --- a/drivers/net/ethernet/sfc/efx.c
->>> +++ b/drivers/net/ethernet/sfc/efx.c
->>> @@ -984,6 +984,7 @@ static void efx_pci_remove(struct pci_dev *pci_dev)
->>>       efx_fini_io(efx);
->>>         probe_data = container_of(efx, struct efx_probe_data, efx);
->>> +    efx_cxl_exit(probe_data);
->>>         pci_dbg(efx->pci_dev, "shutdown successful\n");
->>>   diff --git a/drivers/net/ethernet/sfc/efx_cxl.c 
->>> b/drivers/net/ethernet/sfc/efx_cxl.c
->>> index 4d55c08cf2a1..d5766a40e2cf 100644
->>> --- a/drivers/net/ethernet/sfc/efx_cxl.c
->>> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
->>> @@ -18,6 +18,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->>>   {
->>>       struct efx_nic *efx = &probe_data->efx;
->>>       struct pci_dev *pci_dev = efx->pci_dev;
->>> +    struct range cxl_pio_range;
->>>       struct efx_cxl *cxl;
->>>       u16 dvsec;
->>>       int rc;
->>> @@ -75,9 +76,32 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->>>           return -ENODEV;
->>>       }
->>>   +    cxl->cxlmd = devm_cxl_probe_mem(&cxl->cxlds, &cxl_pio_range);
->>> +    if (IS_ERR(cxl->cxlmd)) {
->>> +        pci_err(pci_dev, "CXL accel memdev creation failed\n");
->>> +        return PTR_ERR(cxl->cxlmd);
->>> +    }
->>> +
->>> +    cxl->ctpio_cxl = ioremap_wc(cxl_pio_range.start,
->>> +                    range_len(&cxl_pio_range));
->>> +    if (!cxl->ctpio_cxl) {
->>> +        pci_err(pci_dev, "CXL ioremap region (%pra) failed\n",
->>> +            &cxl_pio_range);
->>> +        return -ENOMEM;
->> Dave caught the iounmap leak, but another concern is since you want to
->> continue operation if efx_cxl_init() fails then you probably also want
->> to release the successful attachment to the CXL domain if this happens.
->
->
-> I will do that.
->
-
-Looking at this issue, I think an error when creating the memdev or 
-during the region attach triggers the memdev removal, but ...
-
-
->
->> Minor since something else is likely to fail if ioremap is not reliable.
-
-
-.. if we want to specifically do that with an unlikely (but possible) 
-ioremap error something else needs to be exported like 
-cxl_memdev_unregister(). Are you happy with that approach?
-
-
+>>>    __GFP_THISNODE cannot be overloaded to do anything useful here.
 >>
->> Otherwise this looks good and with those fixed up the Reviewed-by still
->> stands.
->
->
-> No Reviewed-by yet ... this is a new patch after your series removing 
-> previous functionality.
->
->
-> Thanks
->
+>> Let me clarify, I meant to say, let's use a nodemask for allocation
+>> and __GFP_THISNODE gets us to the node we desire, if that is the only
+>> node. My earlier comment might not have been clear.
+>>
+> 
+> I've been tested an stripped back patch set where I drop all FALLBACK
+> entries for private nodes (including for itself) and only keep the
+> NOFALLBACK entry for private nodes.
+> 
+> This effectively isolates the nodes for any allocation without
+> __GFP_THISNODE.
+> 
+> This also precludes these nodes from ever using non-mbind mempolicies,
+> which I think is a completely reasonable compromise and something I was
+> already expecting we would do.
+> 
+> Notably: slub.c injects __GFP_THISNODE internally on behalf of kmalloc,
+> which causes spillage into private nodes because slub allows private
+> nodes in its mask.  I think this is fixable.
+> 
+> I have to inspect some other __GFP_THISNODE users (hugetlb, some arch
+> code, etc), but it seems like fully dropping the FALLBACK entries and
+> requiring __GFP_THISNODE might be sufficient.
+
+Sorry, I haven't been able to follow up so far, and not sure if that's what you
+are discussing here ...
+
+After the LSF/MM session, I was wondering, whether if we focus on allowing only
+folios allocations to end up on private memory nodes for now: could the
+__GFP_THISNODE approach work there?
+
+Essentially, disallow any allocations on non-folio paths, and allow folio
+allocation only with __GFP_THISNODE set.
+
+I have to find time to read the other mails in this thread, on my todo list.
+
+So sorry if that is precisely what is being discussed here.
+
+-- 
+Cheers,
+
+David
