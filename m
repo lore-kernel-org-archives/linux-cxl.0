@@ -1,143 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DD2370D65
-	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 22:23:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0D240D567
+	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 22:32:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781130221; cv=none; b=INYvs12RBxq/2e7ksZmM2XM7ZGBkUcA8kIyG7bnX5f3sPKUyuMpRZCyYtF47bBhaR5kC9wzSYoY06KMKY3KX24lyt3328KLgHNujpjp7EEaS2Y0VanM2BFiCSxnYxenjeHn2QKMwkadYEX3fqRnVSOlzZiZPCF8Z+hS+7otzi+Y=
+	t=1781130727; cv=none; b=JKCu3yBMpc50WSUxLohDqyF/wNkarjgLKddQT/lqwVB4QKjQkHE1CAj7TpLXfWI0RbYRF52Orq9DQruN8Cz1nGMvDwCjwDdAwJlepO5x/fiaCDwWptVjIpQpZEqB7XXjHdWNlZJP3dgvidgMYh2cnnuIDIc8KB6cCgQZ00lJdcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781130221; c=relaxed/simple;
-	bh=E6FR/Y+fZ0SFbc9p7mb/TFZJ5bmzoZrsX7tH895dawc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LEXgtwPm8Bekr/FOYpf/1n4ZSjVTJmDzcYEcKm6b3BADDpGrfexwYEE9xJ+PNE8i6t9GMNl5+RB88SlR2u+0poPnuz82tCWNXnMihEFEs0BiYJ0J5rlrzzYwCpFwrtqZz6WwfVTeFKHKjXyJghVFdFkIyYBkkg4CTtrW73vnAFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61FE31F00898;
-	Wed, 10 Jun 2026 22:23:40 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: djbw@kernel.org,
-	dave@stgolabs.net,
-	jic23@kernel.org,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com
-Subject: [PATCH v3 6/6] cxl/test: Add cxl_test accelerator driver
-Date: Wed, 10 Jun 2026 15:23:28 -0700
-Message-ID: <20260610222328.2272427-7-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260610222328.2272427-1-dave.jiang@intel.com>
-References: <20260610222328.2272427-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1781130727; c=relaxed/simple;
+	bh=v+T2dcG5YSu0OQYsFlwz+KKeFiBedhjksFdnKDEjbx4=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=pj5ikZgRgkUpGoLZKz0hC97y9p+jtXP9afkflsbebiswuqXhHIumc3ywi4aT0ffkWqS6JNcwYP2HlGuGHACISXkXwLye+miOFSnMg2OoRDg1SZgRdcGqKgH8gzOYK/iGby1jMqloaX+N+9TAELx2acf9BnW3T0W5ORSd7czmBkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DcHBKgRB; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DcHBKgRB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DB451F00893;
+	Wed, 10 Jun 2026 22:32:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781130725;
+	bh=nQz5HnpI3n/7ljNsosiTJgfSezTqGCGH5dE83ZjpQ6I=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=DcHBKgRBu8YpoPWGaZ6hQwl9PJm8Q/7fJPNrwqIuDleqIrzjxkJW2I6gh8IeRV5pK
+	 3A2AuDzEJcpw3vQueChaBJs8O02mNsNtIwDLTkdDpQLrBUi9kq7DNdp3WBB9dN6tZi
+	 a2HRWCYVM5nJzr+9+7jdCjVNUF1vIl/Bs0O+QmbBPkfW2Em8JRFcrZS9hpe2sDwqXE
+	 aYdbrfl5PTwuuee+gClzD78v7I/B6EjOfYtEWRLYmzNVDWM2FDqaejzhq8GvnFgGiq
+	 AsCIHXhYPBdpvqSOgQB0s3jwVZ5tV+zcZidAofHdaSYAUS4uUM7IpRmsv2DwoLhtxw
+	 LvgtB6vjVWmXQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 1/6] cxl/test: Add test for module parameters
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Dave Jiang" <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260610222328.2272427-2-dave.jiang@intel.com>
+References: <20260610222328.2272427-2-dave.jiang@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 10 Jun 2026 22:32:05 +0000
+Message-Id: <20260610223205.9DB451F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Add a type2 accelerator mock driver for the platform device that
-simulates a CXL type2 device. The driver exercises the same
-minimal API calls that a real CXL type2 driver would utilize.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [Medium] The function `have_multiple_modparms()` fails to check the `hmem=
+_test` module parameter, allowing multiple test parameters to be activated =
+simultaneously.
+- [Low] The newly added function `have_multiple_modparms` is missing the `s=
+tatic` modifier, making it globally visible.
+--
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v3:
-- Updated to use devm_cxl_probe_mem()
----
- tools/testing/cxl/test/Kbuild  |  2 ++
- tools/testing/cxl/test/accel.c | 66 ++++++++++++++++++++++++++++++++++
- 2 files changed, 68 insertions(+)
- create mode 100644 tools/testing/cxl/test/accel.c
+commit a298e853a144eb87f633b800d6fcf071d2088371
+Author: Dave Jiang <dave.jiang@intel.com>
 
-diff --git a/tools/testing/cxl/test/Kbuild b/tools/testing/cxl/test/Kbuild
-index c168e3c998a7..9a24ddc28488 100644
---- a/tools/testing/cxl/test/Kbuild
-+++ b/tools/testing/cxl/test/Kbuild
-@@ -5,10 +5,12 @@ obj-m += cxl_test.o
- obj-m += cxl_mock.o
- obj-m += cxl_mock_mem.o
- obj-m += cxl_translate.o
-+obj-m += cxl_mock_accel.o
- 
- cxl_test-y := cxl.o
- cxl_test-y += hmem_test.o
- cxl_mock-y := mock.o
- cxl_mock_mem-y := mem.o
-+cxl_mock_accel-y := accel.o
- 
- KBUILD_CFLAGS := $(filter-out -Wmissing-prototypes -Wmissing-declarations, $(KBUILD_CFLAGS))
-diff --git a/tools/testing/cxl/test/accel.c b/tools/testing/cxl/test/accel.c
-new file mode 100644
-index 000000000000..6e1dd6c81510
---- /dev/null
-+++ b/tools/testing/cxl/test/accel.c
-@@ -0,0 +1,66 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+// Copyright(c) 2026 Intel Corporation. All rights reserved.
-+
-+#include <linux/platform_device.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/sizes.h>
-+#include <cxl/mailbox.h>
-+#include <cxlmem.h>
-+
-+struct mock_cxl_accel {
-+	struct cxl_dev_state cxlds;
-+	struct cxl_memdev *cxlmd;
-+};
-+
-+static int cxl_mock_accel_probe(struct platform_device *pdev)
-+{
-+	struct mock_cxl_accel *cxl_accel;
-+	struct device *dev = &pdev->dev;
-+	struct cxl_dev_state *cxlds;
-+	struct cxl_memdev *cxlmd;
-+	struct range mock_range;
-+	int rc;
-+
-+	cxl_accel = devm_cxl_dev_state_create(&pdev->dev, CXL_DEVTYPE_DEVMEM,
-+					      pdev->dev.id + 1, 0,
-+					      struct mock_cxl_accel, cxlds,
-+					      false);
-+	if (!cxl_accel)
-+		return -ENOMEM;
-+
-+	cxlds = &cxl_accel->cxlds;
-+	cxlds->media_ready = true;
-+	rc = cxl_set_capacity(cxlds, SZ_512M);
-+	if (rc)
-+		return rc;
-+
-+	cxlmd = devm_cxl_probe_mem(cxlds, &mock_range);
-+	if (IS_ERR(cxlmd))
-+		return PTR_ERR(cxlmd);
-+	cxl_accel->cxlmd = cxlmd;
-+
-+	dev_dbg(dev, "Probed mock accelerator with range %pra\n", &mock_range);
-+
-+	return 0;
-+}
-+
-+static const struct platform_device_id cxl_mock_accel_ids[] = {
-+	{ .name = "cxl_type2_accel", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(platform, cxl_mock_accel_ids);
-+
-+static struct platform_driver cxl_mock_accel_driver = {
-+	.probe = cxl_mock_accel_probe,
-+	.id_table = cxl_mock_accel_ids,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+};
-+
-+module_platform_driver(cxl_mock_accel_driver);
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("cxl_test: accelerator device mock module");
-+MODULE_IMPORT_NS("CXL");
--- 
-2.54.0
+cxl/test: Add test for module parameters
 
+This commit adds a test during module initialization to ensure that only
+a single module parameter is activated at a time.
+
+> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> index 296516eecfd6a..b00f5161b5f0c 100644
+> --- a/tools/testing/cxl/test/cxl.c
+> +++ b/tools/testing/cxl/test/cxl.c
+> @@ -1814,11 +1814,29 @@ static struct attribute *cxl_acpi_attrs[] =3D {
+>  };
+>  ATTRIBUTE_GROUPS(cxl_acpi);
+> =20
+> +bool __init have_multiple_modparms(void)
+
+[Severity: Low]
+Should this function be declared static? It appears to only be used locally
+within this file, and omitting the static keyword exports it to the global
+namespace, which might trigger missing-prototype compiler warnings.
+
+> +{
+> +	int count =3D 0;
+> +
+> +	if (interleave_arithmetic)
+> +		count++;
+> +	if (extended_linear_cache)
+> +		count++;
+> +	if (fail_autoassemble)
+> +		count++;
+
+[Severity: Medium]
+Does this check miss the hmem_test parameter? The cxl_test module is built
+from both cxl.c and hmem_test.c, and hmem_test.c defines its own parameter.
+It seems a user could load the module with hmem_test=3D1 and one of the loc=
+al
+parameters (like extended_linear_cache=3D1) concurrently, bypassing this ch=
+eck.
+
+> +
+> +	return count > 1;
+> +}
+> +
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260610222328.2272=
+427-1-dave.jiang@intel.com?part=3D1
