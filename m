@@ -1,128 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07E740D567
-	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 22:32:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D90C1C84BC
+	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 22:32:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781130742; cv=none; b=JQtDHmc+KUKjTdBChSRqh21k1mqIf0EFAlosK9jZo+M2VUVnm9lFtPxlQtsPhtu9uGmOeVO8ZJQ9odFxAW5qWp61nu2E7b+f3uuh7THxfocdXI+mcC6rwqYKexcmzT1fzNaPbjoKdTPa+ruPmkjULauHNsisNRXvRFmRfXv8IHI=
+	t=1781130763; cv=none; b=VdtZ12kz13BVhGJf8xonykreD7snVBQrx/ktaBXDogO0LdI8WXbTIKihHm9NQF+icLhp+yEc4fp/pXbey4shLRYMr7bEuYVypAMpoziiL59t4rL8pLjqQVh53f8SzYoQPk5xA2bF5Af5yhTFrZelBaAJF6HadSe65NLoisGbWDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781130742; c=relaxed/simple;
-	bh=K1/RlXXlNGvjpLj95IvbaGsT3YrznvdIsSZ1sq+GfxM=;
+	s=arc-20240116; t=1781130763; c=relaxed/simple;
+	bh=7VFrr2dqBG6oLXrPFhTOuLfLqNNlqCzkUAImqqAbR2E=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Dhtk8f3vrtqxjw5a8iL3ujwkd29fSrN77nHmIWnXhzgrdTj0mBzzOyAV8YzemrDFH/cBNZgM8OpLkIYdh7XFHWmHmwUC66bEDHna+IeOw3jZu6cPwcmoU6LdXrea8EXXY7DyoEu21G02haNJb/oRjV8XP/mjD6FhXRXmk98YAQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IWKwcNHk; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=i5a3TYupocn2uOytoOmZBRhod6+FrOF3L3X7ccgqFg+89HBoxsOLXT+tDpELS5hAT2oA+/ltiqOctFWO0eTpZzWJy43rSpf6mJ7mMnJzE2d9gqFKbG/84W8ym4HnScMN6KdQFGNR0dEnwvjYaglIg5FB0Gpw/ueMPS0wslJH9JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eANjCZV6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IWKwcNHk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B6DC1F00893;
-	Wed, 10 Jun 2026 22:32:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eANjCZV6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1C1A1F00893;
+	Wed, 10 Jun 2026 22:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781130741;
-	bh=C85QGUYI/5DE5PpIL+EWIeaUv6nHHGEq5VGT0B4NDXE=;
+	s=k20260515; t=1781130762;
+	bh=l30UNXmNVT1iDi1mGmfxv4rYs4AZg0jAfC6KZcdSj+U=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=IWKwcNHkp0m1TkLfqzLFFnOMR3SIJpF973TqAMJIRhIudRZernBkHaLne0Ktkc0E/
-	 mbt3HTRwpB2upEMYFuXYTFb8uUOlSDOQ1WtLumL3/Rh6vKMSdEeVbdUoHMZ3KbXNt+
-	 OavioIzhmVtEuzi34wN3KEYYQ4QDaDkNNukzQOdvYstXGKNSh/owOsrLml3UDmWbkg
-	 ciYOMV2pN9hDozWNdKa3jsco7/TG8RQMvjO01jakgnHY5Jab0d9MOUqFRkaAckhp0p
-	 1E45WBoFpIUFgdzbT2Rqkeog/vNEn8haGA3hZR+oXv93JU372IxTcQQp5yoNn+DeFr
-	 KEbGz7brvxq7w==
+	b=eANjCZV6Jb35wtCgeEvTw8gTSevrYrgLut9B1W5+O289c0UVE1Rga3w0rzqhNXGv+
+	 bSlBOldgXwvQITbV+jWftts/EtJ9Z5SRjEOSF01cVmbFb15Cz2JwJEkUlJs4/Fjkhg
+	 Z0BWetm596E7Q+I35QSPHpMGcRxHZ2rDu0G9zN4kwQoaaQwJfcX+huatX2B2zYPV3L
+	 ZjK5k1wsBSHSTtbZmXVrDXCKQXTVfEVmMwZfKS8+VdjNs+7AIeJkNeRzexZk2OgNsh
+	 lAf2R1HfDafBzZyXVnEEyVq1eYCKcNt8gxtgsyo8jgI7msPKvynku7sVLBZHe72NL2
+	 pG7iLfOM3PD1w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 3/6] cxl/test: Refactor platform device enumerations
+Subject: Re: [PATCH v3 2/6] cxl/test: Add type2 support for mock CFMWS0
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260610222328.2272427-4-dave.jiang@intel.com>
-References: <20260610222328.2272427-4-dave.jiang@intel.com>
+In-Reply-To: <20260610222328.2272427-3-dave.jiang@intel.com>
+References: <20260610222328.2272427-3-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 10 Jun 2026 22:32:20 +0000
-Message-Id: <20260610223221.3B6DC1F00893@smtp.kernel.org>
+Date: Wed, 10 Jun 2026 22:32:41 +0000
+Message-Id: <20260610223241.E1C1A1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Missing error code assignments on `platform_device_alloc` failure =
-cause populate helpers to falsely return success, leading to an invalid poi=
-nter dereference crash.
-- [Medium] Error handling cleanup loops mistakenly use `break` instead of `=
-continue` in reverse iteration array cleanup functions, causing resource le=
-aks on error paths.
+
+Pre-existing issues:
+- [High] Potential null pointer dereference if `kzalloc` fails in `alloc_mo=
+ck_res()`.
 --
 
-commit 166861bc24df0a0108568d617198fe4532f08924
+commit 93dc9b7df44c3fa959f67249d56eb6d830e6a336
 Author: Dave Jiang <dave.jiang@intel.com>
-cxl/test: Refactor platform device enumerations
 
-This commit refactors the platform device enumeration in the cxl test
-module by splitting host bridges, root ports, and switch port setups
-into separate helper functions.
+cxl/test: Add type2 support for mock CFMWS0
+
+This commit adds a module parameter to trigger type 2 test support in
+cxl_test and sets up the CFMWS0 configuration accordingly.
 
 > diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index e91c125d557d9..b29be2597064e 100644
+> index b00f5161b5f0c..e91c125d557d9 100644
 > --- a/tools/testing/cxl/test/cxl.c
 > +++ b/tools/testing/cxl/test/cxl.c
-[ ... ]
-> +static void host_bridges_remove(void)
-> +{
-> +	int i;
-> +
-> +	for (i =3D ARRAY_SIZE(cxl_host_bridge) - 1; i >=3D 0; i--) {
-> +		struct platform_device *pdev =3D cxl_host_bridge[i];
-> +
-> +		if (!pdev)
-> +			break;
-
-[Severity: Medium]
-Since this cleanup loop iterates backwards from the end of the array, won't
-a break here immediately terminate the loop on the first empty slot?
-
-In the original code, this used a continue to skip empty slots and
-successfully reach the populated devices at lower indices. Does this cause
-resource leaks when initialization fails partway through?
-
-This same pattern appears to be repeated in cxl_rootports_remove(),
-cxl_usps_remove(), and cxl_dsps_remove().
 
 [ ... ]
-> +static int host_bridges_populate(void)
-> +{
-> +	int rc =3D 0;
-> +
-> +	for (int i =3D 0; i < ARRAY_SIZE(cxl_host_bridge); i++) {
->  		struct acpi_device *adev =3D &host_bridge[i];
->  		struct platform_device *pdev;
+
+> @@ -493,10 +512,14 @@ static int populate_cedt(void)
+>  		chbs->length =3D size;
+>  	}
 > =20
-[ ... ]
-> +		pdev =3D platform_device_alloc("cxl_host_bridge", i);
-> +		if (!pdev)
-> +			goto err_bridge;
+> +	if (type2_test)
+> +		update_type2_cfmws();
+> +
+>  	for (i =3D cfmws_start; i <=3D cfmws_end; i++) {
+>  		struct acpi_cedt_cfmws *window =3D mock_cfmws[i];
+> =20
+> -		cfmws_elc_update(window, i);
+> +		if (i =3D=3D 0 && !type2_test)
+> +			cfmws_elc_update(window, i);
+>  		res =3D alloc_mock_res(window->window_size, SZ_256M);
 
 [Severity: High]
-If platform_device_alloc() fails here, does this function return 0
-instead of an error code?
+This isn't a bug introduced by this patch, but while reviewing the use of
+alloc_mock_res() here, I noticed a pre-existing issue in that function.
 
-Because rc is initialized to 0, returning 0 would cause the main init
-function to assume success and proceed.
+If kzalloc() fails in alloc_mock_res(), does it cause a NULL pointer
+dereference?
 
-If initialization proceeds to cxl_rootports_populate(), it will try to set
-the parent pointer using a NULL bridge device:
+tools/testing/cxl/test/cxl.c:alloc_mock_res() {
+	struct cxl_mock_res *res =3D kzalloc(sizeof(*res), GFP_KERNEL);
+	struct genpool_data_align data =3D {
+		.align =3D align,
+	};
+	unsigned long phys;
 
-cxl_rootports_populate()
-    bridge =3D cxl_host_bridge[...];
-    pdev->dev.parent =3D &bridge->dev;
+	INIT_LIST_HEAD(&res->list);
+	...
+}
 
-Could this cause an invalid pointer dereference when platform_device_add()
-is subsequently called? Should this set rc =3D -ENOMEM before jumping to
-the error label?
+Since list is the first member of the struct, &res->list evaluates to NULL
+when kzalloc() fails. INIT_LIST_HEAD() will then attempt to write to
+list->next and list->prev.=20
 
-This missing error code assignment also appears to happen in the new
-cxl_rootports_populate(), cxl_usps_populate(), and cxl_dsps_populate()
-helper functions.
+Should there be a NULL check before initializing the list head?
+
+>  		if (!res)
+>  			return -ENOMEM;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260610222328.2272=
-427-1-dave.jiang@intel.com?part=3D3
+427-1-dave.jiang@intel.com?part=3D2
