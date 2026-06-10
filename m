@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D90C1C84BC
-	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 22:32:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2C1286881
+	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 22:36:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781130763; cv=none; b=VdtZ12kz13BVhGJf8xonykreD7snVBQrx/ktaBXDogO0LdI8WXbTIKihHm9NQF+icLhp+yEc4fp/pXbey4shLRYMr7bEuYVypAMpoziiL59t4rL8pLjqQVh53f8SzYoQPk5xA2bF5Af5yhTFrZelBaAJF6HadSe65NLoisGbWDw=
+	t=1781130966; cv=none; b=Hl2Vbgn/dy151WuLeS+aPahpyfIYM5UTYxF1yJUDV5Znyz1froCLbx75KNYWFg4rUihMRUWOTKsjiFYp5JsfliWHLtmTVhEGEBQNMvSXL+PvLY7kkrpGR+eX2zBrg4rblddOrahOoHZtGCDWY0huOtoG3ZQSiwnLWFFjY1kzb3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781130763; c=relaxed/simple;
-	bh=7VFrr2dqBG6oLXrPFhTOuLfLqNNlqCzkUAImqqAbR2E=;
+	s=arc-20240116; t=1781130966; c=relaxed/simple;
+	bh=Qlo7Abt7nT4NDubTai+OYsKZwWh3/x/NUydtN+qov4s=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=i5a3TYupocn2uOytoOmZBRhod6+FrOF3L3X7ccgqFg+89HBoxsOLXT+tDpELS5hAT2oA+/ltiqOctFWO0eTpZzWJy43rSpf6mJ7mMnJzE2d9gqFKbG/84W8ym4HnScMN6KdQFGNR0dEnwvjYaglIg5FB0Gpw/ueMPS0wslJH9JI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eANjCZV6; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Scg4LDgHx21sQreCa2Hqxkx9wiY875df8qb67q4FEGz2zVq9SVfY9iJHIqnbo+OPVAhRO0TdzxUfMSHbGpxX7PHgmPBUuQJgihkg2eROI+M1gkrsRk/2vqxkvgrtcRCbVupvrPj+v/3cm4Oxi+VlDXr3hsFI/+Wi+Xk9ETLVsmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OR2yp6ZO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eANjCZV6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1C1A1F00893;
-	Wed, 10 Jun 2026 22:32:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OR2yp6ZO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E3511F00893;
+	Wed, 10 Jun 2026 22:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781130762;
-	bh=l30UNXmNVT1iDi1mGmfxv4rYs4AZg0jAfC6KZcdSj+U=;
+	s=k20260515; t=1781130965;
+	bh=aD0bhJBCTljzQSQ1YDgdmQCPIaA0kezucQDJVuaPMKU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=eANjCZV6Jb35wtCgeEvTw8gTSevrYrgLut9B1W5+O289c0UVE1Rga3w0rzqhNXGv+
-	 bSlBOldgXwvQITbV+jWftts/EtJ9Z5SRjEOSF01cVmbFb15Cz2JwJEkUlJs4/Fjkhg
-	 Z0BWetm596E7Q+I35QSPHpMGcRxHZ2rDu0G9zN4kwQoaaQwJfcX+huatX2B2zYPV3L
-	 ZjK5k1wsBSHSTtbZmXVrDXCKQXTVfEVmMwZfKS8+VdjNs+7AIeJkNeRzexZk2OgNsh
-	 lAf2R1HfDafBzZyXVnEEyVq1eYCKcNt8gxtgsyo8jgI7msPKvynku7sVLBZHe72NL2
-	 pG7iLfOM3PD1w==
+	b=OR2yp6ZOjlvecsZ1Gy8ZwGELS40uhzdMdx4VRKonbNn2DIThyzqwRxh/IaZoOLBCe
+	 BeI2wgBGzz1bvV80gCJMt7rj36/8vIUUMu2B4GUkg8TK8tZdFkLjmfNqjxqhv+mIOk
+	 v0Ylf6pkexc+zl0TXq+uP4tnhqh27sXlQrbW9447mz+Hro8/bsG7ruudbiavwRqz53
+	 DWCfrrK76lcC/en2gVoAFrT+ScrptNt1WCAEiyL1pc2gqI8bEqE+z9+I63A216tS0B
+	 uMepFmSPECoKOQSMVIfyD2EooPhl1tsS+gFI9RfNMa4Ue6JIcaq/+OTRtF2bF+bS7r
+	 zcIevdHi5c15A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 2/6] cxl/test: Add type2 support for mock CFMWS0
+Subject: Re: [PATCH v3 4/6] cxl/test: Add hierarchy enumeration support for
+ type2 device
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260610222328.2272427-3-dave.jiang@intel.com>
-References: <20260610222328.2272427-3-dave.jiang@intel.com>
+In-Reply-To: <20260610222328.2272427-5-dave.jiang@intel.com>
+References: <20260610222328.2272427-5-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 10 Jun 2026 22:32:41 +0000
-Message-Id: <20260610223241.E1C1A1F00893@smtp.kernel.org>
+Date: Wed, 10 Jun 2026 22:36:04 +0000
+Message-Id: <20260610223605.0E3511F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,69 +46,59 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Potential null pointer dereference if `kzalloc` fails in `alloc_mo=
-ck_res()`.
+- [Medium] Teardown loops iterate backwards but incorrectly use `break` whe=
+n encountering a NULL pointer, causing persistent resource leaks on error p=
+aths.
 --
 
-commit 93dc9b7df44c3fa959f67249d56eb6d830e6a336
+commit 53bf17c5a72c46ea341694a714ad1ee38917639a
 Author: Dave Jiang <dave.jiang@intel.com>
 
-cxl/test: Add type2 support for mock CFMWS0
+cxl/test: Add hierarchy enumeration support for type2 device
 
-This commit adds a module parameter to trigger type 2 test support in
-cxl_test and sets up the CFMWS0 configuration accordingly.
+Add enumeration of type2 device hierarchy in cxl-test. The type2 device
+is setup to be directly attached to a root port instead of rp -> switch
+-> device that type3 hierarchy is setup..
 
 > diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index b00f5161b5f0c..e91c125d557d9 100644
+> index b29be2597064e..5186a13b20aa9 100644
 > --- a/tools/testing/cxl/test/cxl.c
 > +++ b/tools/testing/cxl/test/cxl.c
-
 [ ... ]
-
-> @@ -493,10 +512,14 @@ static int populate_cedt(void)
->  		chbs->length =3D size;
->  	}
-> =20
-> +	if (type2_test)
-> +		update_type2_cfmws();
+> +static int cxl_type2_mem_init(void)
+> +{
+> +	int i, rc;
+[ ... ]
+> +err_mem:
+> +	for (i =3D NR_CXL_TYPE2_ACCEL - 1; i >=3D 0; i--) {
+> +		struct platform_device *pdev =3D cxl_mem[i];
 > +
->  	for (i =3D cfmws_start; i <=3D cfmws_end; i++) {
->  		struct acpi_cedt_cfmws *window =3D mock_cfmws[i];
-> =20
-> -		cfmws_elc_update(window, i);
-> +		if (i =3D=3D 0 && !type2_test)
-> +			cfmws_elc_update(window, i);
->  		res =3D alloc_mock_res(window->window_size, SZ_256M);
+> +		if (!pdev)
+> +			break;
+> +		platform_device_unregister(cxl_mem[i]);
+> +	}
+> +	return rc;
+>  }
 
-[Severity: High]
-This isn't a bug introduced by this patch, but while reviewing the use of
-alloc_mock_res() here, I noticed a pre-existing issue in that function.
+[Severity: Medium]
+Will this teardown loop leak successfully allocated devices if an error
+occurs before all iterations complete?
 
-If kzalloc() fails in alloc_mock_res(), does it cause a NULL pointer
-dereference?
+Because cxl_mem is populated sequentially starting from index 0, the higher
+indices remain NULL if initialization fails partway through. Since this
+teardown loop iterates backwards from the max index, it will immediately
+hit an uninitialized NULL pointer at the top and break. This skips the
+unregistration for any devices that were successfully allocated at lower
+indices.
 
-tools/testing/cxl/test/cxl.c:alloc_mock_res() {
-	struct cxl_mock_res *res =3D kzalloc(sizeof(*res), GFP_KERNEL);
-	struct genpool_data_align data =3D {
-		.align =3D align,
-	};
-	unsigned long phys;
+Could this use continue instead of break? Alternatively, since
+platform_device_unregister() handles NULL pointers safely, could the check
+be omitted entirely?
 
-	INIT_LIST_HEAD(&res->list);
-	...
-}
-
-Since list is the first member of the struct, &res->list evaluates to NULL
-when kzalloc() fails. INIT_LIST_HEAD() will then attempt to write to
-list->next and list->prev.=20
-
-Should there be a NULL check before initializing the list head?
-
->  		if (!res)
->  			return -ENOMEM;
+This same pattern appears in cxl_type2_mem_exit() and cxl_type3_mem_exit()
+in this patch, as well as in pre-existing teardown loops like
+cxl_usps_remove().
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260610222328.2272=
-427-1-dave.jiang@intel.com?part=3D2
+427-1-dave.jiang@intel.com?part=3D4
