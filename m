@@ -1,124 +1,309 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931273148DD
-	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 19:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781118234; cv=pass; b=R4gqV7WRnHizgAytE6JM1raw622k/GKiBHtiq20bYGYyFKODCcQ62n8TzrOwTUkECFM/yoz8lhKuwRqTV0LMSHL0Vc6kX1lQv3IlI7K64Mbt4/jQB2Qjo4nPtt9CCZ5TKT1gIHkbRw0v08IRVu+e3z6ovkAWmrMkmg7aCIdVEy8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781118234; c=relaxed/simple;
-	bh=rMQgEeQaYEw35gJBRAPq9USscfGFXh1c3oZpopkcKNU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QmTuwEfewhEC5ckughth9UN1A2pGysyGuAbmIQnYv/OmuicopfWrSpacp6lIuF5F8kQ0F2rXzxDg9nF+10gC2fcjVZPev/N8O2OaS5qw5b0Wbdvz7q9M3VshUFCTLfJ8wpfG/9fK1ax7wSOlBf7ErN0a2xSc5p6rQf8Xap9n0e8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com; spf=pass smtp.mailfrom=trailofbits.com; dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b=PO3MMMe6; arc=pass smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trailofbits.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28790403AE2
+	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 20:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781122384; cv=none; b=palZ5eRZfCZ2ZihLBGADKBuu5dYBeId3hitjklTEYGJ7JvpcqnFqA3mMP4qO9mrpEVTfq5iLQHX1NUvGPQGjORx4ofrPQRIMPVqHeHDj68Hcj/ss7z2smqdgvE+ton+VA5jhN6MhJyuBcY5gTCYO3p41zm1NEP3PzWZ3M1au5Iw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781122384; c=relaxed/simple;
+	bh=XCLXnOmTwKXh09FcYtQFFaA7Jpvehuih5/s/Esa9XgA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MwwOYg35a477Nz7RAZJHDtJjJmoaZW5ORIhqjHQlZL5i43K4PGw2Fbl/xTrm7t+S9Ra3hFYz2vQDYD2pBP518oAhFdAk+4X9C8NeSDipTrkJEGXAoU/JdbVwc2Ynk9fYAAi1FudFAjRZ7UP6RF4vPmldf0iknVtKvkQgVcvndeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=U89rvehF; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b="PO3MMMe6"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5aa68d7d757so7602434e87.0
-        for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 12:03:52 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781118231; cv=none;
-        d=google.com; s=arc-20240605;
-        b=gQ6/cfVpd4BBSuEM854/MJB8Nt2Wrr07gcWpsMSZwZB2cyn6LQWpcCiGJct5u5OFod
-         Lhv/4lnGZKx5zkXAlB7izr9QD2lvA9hM1FqcTNslVsL+G+X8zDpsJU3x7CFPoJR9rkgG
-         Gzq3zn1aJqrcuBVoOEqDC4sIbKKtThtKTuYJMbVFPeYOiC4AV7K+qbI4XsOOGAGfO2nh
-         vJWIIk9f5V+zBJC5xeEGUCPbNCKTQTcE7OUhujdjBCO4yP1uA2zILo1hNIlUynOgJFpf
-         R/dM43ZdkN0Mh/fQFg+2YA7EqaNynQRwkhOYbMeMlwc3yjCV+2Dy+E+KXY7cEp7QVE1l
-         AKYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=LPogc90PNi+rFFaOSgYldDbwSyXKlFYavPrUR+tyDBQ=;
-        fh=U/unuNwaE5oX0bcXyK4/fJiDwu9L4FcUm9hRnPZ0pSI=;
-        b=ETSwXVFHywZPFyu9COshNhUDjuYUyKQiIRL2qRiylCqG+lUcUgaXv/Xz5XIKHo7hZx
-         w9oim/gDH8/JxvxGCJnRODBHGlradMwPzHGqIx2M/bgUO6tfmuxPzEY2UDxzJLgpqLMy
-         BE2BcHSHnW+NocVcMI4OPJrAfgRGuLN649ViMW840cbFJaw5mPyp84PVN4IGq6qfmt/g
-         cXyClen5RXMHy3j2blSYA9PP3V7/z88PN1OqJUDFd4ruzHPnoAORvfPL2o9KR/9e+omp
-         polJjnRS1kxpaLwnGdbxwI1tWsG2dQ4gzmW4Up4xdu2LYoq9zeZ+A1NcX1h7bssmeiQV
-         s64Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="U89rvehF"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-8cceaacd07bso74320756d6.3
+        for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 13:12:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=trailofbits.com; s=google; t=1781118231; x=1781723031; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LPogc90PNi+rFFaOSgYldDbwSyXKlFYavPrUR+tyDBQ=;
-        b=PO3MMMe6GuoOeOR76U8iYaltOsiPk4kVFUAgD96nkSYqFD0jr5s9Xwq6fQJIw+c0ln
-         l/lPphBzAgLJTf6gbYk6juIkhNfl/LFtK8FfzXHwMKwA9cTMPK11IxrPrv0s+OKfMcz8
-         wwdXm2jhwPEvwbplClK5xPYkA7G4p5rPiUMITcqYLlrVwuX0Ez4pKyGixCMrI9038btR
-         YcVTaJnl7f7RqBQjESaCsmCjCpRNflHin86RIsTCStpzeE72kFiyJq3WklgfdSW46tnA
-         MKDVbB0X91h/BUr5ORsuQe/fiHanRSppAYkZBQemYZD/+ZTKmT0SpsRnm+35TKVhYfAR
-         tvwA==
+        d=gourry.net; s=google; t=1781122377; x=1781727177; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5/w5IO6RWAJnNghyz7HGZ8KjTibYl6mxc1wTK9gnS8M=;
+        b=U89rvehFEHxEMK7PFZYfFR18kWOCZanlPn7D/236dPmSgbe7z0Rd3TEztIDx1OlD5S
+         WyW1gy0UaLBCVLn8ykVE83DvMbZHrr5S8k1D3urbym10cvGs3BbGuG51gVbK7DPhnDYP
+         1Hp0Hkon7DdJ8AzAxskbDCU+y8x4C28hdT3TX6bZ53QS0YXGcPn3oetMo7UdYvMCXSDR
+         gDtH+u9bE5LYnhCWmWMMdbUUy3ZwAnuBWNit6YAIbqbyfZ8dbNvTY/Fhy46E7M164yjh
+         itKxUsar6LFAgPXEB1nDpvaZDIbFJ5Eae7CcrI1dQU5SxTE/9DtR+91S6Md/EC4RDx7T
+         Tu0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781118231; x=1781723031;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=LPogc90PNi+rFFaOSgYldDbwSyXKlFYavPrUR+tyDBQ=;
-        b=mFqJMWUIlCt6G7MmdbpG4kpZdPAe28LUNTV/BRkPYM7YHsplgTFsPBZM9vxWbmys4P
-         80RWIm4d8G9mejgyeFvs88Z2TtQK4aehD2WVFfcT9gzHRGc1QYXyEnyaj1/prhYuGG7r
-         k/ofEqXFJeMcAp70qXZWXki5l/op42+lUe2gJC2JZ3eTJ2rrhTZb7V1XRHuuaXogyywA
-         S0WGmyJteC4hqrUjSD0ozo5B0DrlBEY4TNapKwUqKKHkvCHAounPzJvEW5YaueF5N2he
-         dHWI3pJ9DS78n/B7UhWzJ0UZBwNLRD2ZOZp31n30NBRz4fWqtP1T7oO4H53QOez02HGg
-         kGEw==
-X-Forwarded-Encrypted: i=1; AFNElJ90D5yrHR2T3gnvZQd808ucz98f9bUznenpfgc5jaQ6GC/RxATHUYa+XLUXU+89rk4siYVjzSdnA+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yya9VJ4smA4dgJURcIP+arw0yBYx9gd0yZvJ6qq/Uj/rPuinT+K
-	xsFbThTm7/pd7HdBrxLIHfGK88G/+gG6DAdi4CnyYnOqIeo3oRpq2YbhG/VObIuZo0U7zThbPNc
-	6L91PJHkghqXT4DYgZtChTjTAaDblN6FBMk3vQzUHzw==
-X-Gm-Gg: Acq92OFsQ0xrHd0b7oyrTfdE0GjO4YBoquHQUEG1oTWmwi6Mp4Rw08SgydQBwbhgYDJ
-	P3Pv8vEhlSlb6I/rEDLIPsDEq3WSyG7zyMbjUIr1Wogy4nS2I6kmL7o1ToxkjumDCcVUPba0nyO
-	7FR0S64IxcLlygdcgJxv+P+bSGbU+pvxZlQQXOEc383jvJEr90UEnGr41kKh/Lh2j2CLntjCNlC
-	rQ6XHyIGeg5p57s3dcgsOO1aEgF67z3j6tEU5eIMw0ir6FRL10GXoreMN1fLCH3x8FKcEyAPMHs
-	ViWO2fXHIlaRgKee
-X-Received: by 2002:a05:6512:131e:b0:5aa:6ca8:9119 with SMTP id
- 2adb3069b0e04-5aa87b8a4f3mr8327296e87.1.1781118230719; Wed, 10 Jun 2026
- 12:03:50 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1781122377; x=1781727177;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5/w5IO6RWAJnNghyz7HGZ8KjTibYl6mxc1wTK9gnS8M=;
+        b=hDr5x16P3X52NLyrXfv7SHNWEG0vmvJ3HX0Y0M9orzgNxx84CP3sld6bexPKEkvy7O
+         ZpdYcGUzCnVPabpaENGQRJy3/H15HVPrUVHAyRJJGclNPTdZ/j+p4/oJmcHfZ5ADNa/i
+         7bncrS/8Dr9WS1enR3jprX8A/krBQ5lnuGLXw68F1SRIJB0qFDFNTOIYY5HmLYR7NTm/
+         2VCO1E/2JN5kHGcaY3eAxSB0NigNMKmBU65Rb19zVd300UdYNMQBiy109/R6zq+5feHX
+         QWzujKw8cIdW5A4tXxyyVDKijYDPiIFZI5k4xfogxymLgd7LhIrK4w3qSHblcyMLBCRC
+         oAag==
+X-Forwarded-Encrypted: i=1; AFNElJ+JxupmQ3uRFyc/azfrOwa8Lk5eEQOe8vmzdYBVtepjw46Ac6k1lJ/pZCiv/NS3ae8b9yAg6nmmkHE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuGxk0KEDPou9hAUO4wV+OssT5MZUOCdQSvVsxacsVeEnHCShk
+	ldmKjkQMOW1/3JEQzHruwQVFsKWts2E1t4qxB1VUuS3ri/NtZJ10/tBDFn21BiOx/Ts=
+X-Gm-Gg: Acq92OHDkbQH/IPd35vRtA5buHbsZJV0ocyiHS0bECEB0RFHaebeanmSynKENLp2ZR2
+	UpvG8yEj+x9JPFIIQYoZXdbND06iX9qUcYaetkYGazbIvuzPz5G5A65ne/Svjte+wTW0vNPzupT
+	fwXfYiOnSjiIF+2mk8C4MRmXjdZuFMy1lvAaIN0zC7eDSJ6yNQWoY70zgztISN15HeeR0mTO//X
+	9DM+W248i793yAQrO1PaDbuATqS6gJrTclsvvEpVBo82GFDJ8XZUvqR0QNPTdRdujlYvgc+DciK
+	BuX3QM5ZZ7SKWplVCJRWTwrOTQ0JXxezsRB7rhd70xx4Va025uRwfRKwZLQLzsuvcYFBmBGPc6h
+	hgU5aJG3Dc63rGTz3fZ7Jm3WC3AOLuds8t/vsSi/j9c0fbuSYD4rV6pRfincbLafBnzZZtbRVig
+	uNpYCN+2glAZSaxO5qavHDIf3uzQFIhP5HjvycW0kKNNEgOGD4CIv1Wky+Gt7l9Sls8Cdd/TK0E
+	6sPxzystWaxQVBBUQ==
+X-Received: by 2002:a05:6214:4586:b0:8ac:a6bd:503b with SMTP id 6a1803df08f44-8d187aef6a5mr16950546d6.15.1781122376601;
+        Wed, 10 Jun 2026 13:12:56 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cecd0535b0sm241706096d6.28.2026.06.10.13.12.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jun 2026 13:12:55 -0700 (PDT)
+Date: Wed, 10 Jun 2026 16:12:52 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Balbir Singh <balbirs@nvidia.com>, lsf-pc@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
+	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
+	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
+	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
+	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
+	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <ainFROZ3WrGioyuY@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <ag6XyvxR-NU5rGn-@parvat>
+ <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat>
+ <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+ <ah-0CyZurn5D1ezY@parvat>
+ <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
+ <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
+ <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
+ <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260605171238.3857744-1-dave.jiang@intel.com> <aimpGhLI-qCA5KM-@aschofie-mobl2.lan>
-In-Reply-To: <aimpGhLI-qCA5KM-@aschofie-mobl2.lan>
-From: Samuel Moelius <sam.moelius@trailofbits.com>
-Date: Wed, 10 Jun 2026 15:03:39 -0400
-X-Gm-Features: AVVi8CdLj4M1n5UsSGRpywSzlQV3hD1KWkl9HorGQnM0-PDkZ2qwEl4tqNc5DTs
-Message-ID: <CAE+C+Db57HpKxGd79ONZJHrzWbUtir_bPYgC07Jg9BNxM=UoVw@mail.gmail.com>
-Subject: Re: [PATCH] cxl/test: Fix integer overflow in mock LSA bounds checks
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org, dave@stgolabs.net, 
-	jic23@kernel.org, djbw@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
 
-On Wed, Jun 10, 2026 at 2:12=E2=80=AFPM Alison Schofield
-<alison.schofield@intel.com> wrote:
+On Wed, Jun 10, 2026 at 08:59:59PM +0200, David Hildenbrand (Arm) wrote:
+> On 6/10/26 18:37, Gregory Price wrote:
+> > On Wed, Jun 10, 2026 at 05:00:33PM +0200, David Hildenbrand (Arm) wrote:
+> >> On 6/10/26 12:41, Gregory Price wrote:
+> > 
+> > So, I remember this being asked, and I didn't fully grok the request.
+> > 
+> > I'm still not sure I fully understand the question, so apologies if I'm
+> > answer the wrong things here.
+> > 
+> > I understand this question in two ways:
+> > 
+> >   1) Can we disallow PAGE allocation and limit this to FOLIO allocation
+> 
+> Yes. Can we only allow folios to be allocated from private memory nodes. So let
+> me reply to that one below.
+> 
+... snip ...
+> 
+> At LSF/MM we talked about how GFP flags are bad and how deriving stuff from the
+> context might be better. I think there was also talk about how the memalloc_*
+> interface might be a better way forward. Maybe we would start giving the
+> allocator more context ("we are allocating a folio").
+> 
+> The following is incomplete (esp. hugetlb stuff I assume), just as some idea:
 >
-> On Fri, Jun 05, 2026 at 10:12:38AM -0700, Dave Jiang wrote:
-> > Pre-existing issue discovered by sashiko-bot.
-> >
-> > mock_get_lsa() and mock_set_lsa() validate the requested LSA range with
-> > "offset + length > LSA_SIZE". Both offset and length are u32 and, in
-> > mock_get_lsa(), both are taken directly from the user-supplied payload.
-> > The addition is evaluated modulo 2^32, so a large offset combined with =
-a
-> > small length wraps around and passes the check.
-> >
-> > Rewrite the checks to compare offset and length against LSA_SIZE withou=
-t
-> > overflowing by subtracting offset from LSA_SIZE after bounding offset.
->
-> Above is a mouthful, is it more simply...
->         Rewrite the checks to first bound offset, then compare length
->         against the remaining LSA size.
->
->
-> With a commit msg update upon merge...
->
-> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-I am getting ready to travel and I will address this when I return in
-about two weeks. Thank you for understanding.
+Ok, the mental gap I have is not knowing the full context behind
+memalloc.  I'll take this and do some reading / prototyping, but
+this looks entirely reasonable.
+
+I will still probably send the next RFC version tomorrow or friday,
+as I want to get some eyes on the __GFP_PRIVATE-less pattern.
+
+Also, I made a new `anondax` driver which enables userland testing
+of this functionality without any specialty hardware.
+
+tl;dr:
+
+fd = open("/dev/anondax0.0", ....);
+buf = mmap(fd, ...);
+buf[0] = 0xDEADBEEF; /* fault to anondax driver */
+
+static vm_fault_t anon_dax_fault(struct vm_fault *vmf)
+{
+        struct dev_dax *dev_dax = vmf->vma->vm_file->private_data;
+        vm_fault_t ret;
+        int id;
+
+        id = dax_read_lock();
+        if (!dax_alive(dev_dax->dax_dev))
+                ret = VM_FAULT_SIGBUS;
+        else
+                ret = do_anonymous_page_node(vmf, dev_dax->target_node);
+        dax_read_unlock(id);
+
+        if (ret & VM_FAULT_OOM)
+                return VM_FAULT_SIGBUS;
+        return ret ? ret : VM_FAULT_NOPAGE;
+}
+
+With:
+  qemu-system-x86_64 -m 5G \
+    -object memory-backend-ram,id=m0,size=4G -numa node,nodeid=0,memdev=m0 \
+    -object memory-backend-ram,id=m1,size=1G -numa node,nodeid=1,memdev=m1 \
+    -append "... memmap=0x40000000!0x140000000"
+
+Voila - buddy-managed private anonymous memory (1G region)
+
+No need to reinvent page_alloc.c or fault handling :]
+
+This can be used to hammer on reclaim/compaction/whatever support
+without needing any particular hardware setup, and in fact it gives
+some memory devices a path to support in userland while standards
+get worked out.
+
+do_anonymous_page_node is a bit of a bodge right now but I just haven't
+fleshed it out yet.  The idea is - don't reinvent the fault path, just
+provide the appropriate context to memory.c to do the right thing.
+
+If this is acceptable, I imagine whatever interface gets implemented
+will carry an in-tree driver export only, similar to hotplug/kmem.
+
+> From 64aaff5f40497201ecc089c3339df6576184c433 Mon Sep 17 00:00:00 2001
+> From: "David Hildenbrand (Arm)" <david@kernel.org>
+> Date: Wed, 10 Jun 2026 20:55:49 +0200
+> Subject: [PATCH] tmp
+> 
+> Signed-off-by: David Hildenbrand (Arm) <david@kernel.org>
+> ---
+>  include/linux/sched.h    |  2 +-
+>  include/linux/sched/mm.h | 11 +++++++++++
+>  mm/mempolicy.c           | 14 ++++++++++++--
+>  mm/page_alloc.c          |  7 ++++++-
+>  4 files changed, 30 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index ee06cba5c6f5..9c850b7be6bf 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1778,7 +1778,7 @@ extern struct pid *cad_pid;
+>  						 * I am cleaning dirty pages from some other bdi. */
+>  #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
+>  #define PF_RANDOMIZE		0x00400000	/* Randomize virtual address space */
+> -#define PF__HOLE__00800000	0x00800000
+> +#define PF__MEMALLOC_FOLIO	0x00800000	/* Allocating a folio that can end up on
+> private memory nodes */
+>  #define PF__HOLE__01000000	0x01000000
+>  #define PF__HOLE__02000000	0x02000000
+>  #define PF_NO_SETAFFINITY	0x04000000	/* Userland is not allowed to meddle with
+> cpus_mask */
+> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+> index 95d0040df584..2101a447c084 100644
+> --- a/include/linux/sched/mm.h
+> +++ b/include/linux/sched/mm.h
+> @@ -471,6 +471,17 @@ static inline void memalloc_pin_restore(unsigned int flags)
+>  	memalloc_flags_restore(flags);
+>  }
+> 
+> +static inline unsigned int memalloc_folio_save(void)
+> +{
+> +	return memalloc_flags_save(PF_MEMALLOC_FOLIO);
+> +}
+> +
+> +static inline void memalloc_folio_restore(unsigned int flags)
+> +{
+> +	memalloc_flags_restore(flags);
+> +}
+> +
+> +
+>  #ifdef CONFIG_MEMCG
+>  DECLARE_PER_CPU(struct mem_cgroup *, int_active_memcg);
+>  /**
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index 36699fabd3c2..a78b0e5a1fce 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -2506,8 +2506,13 @@ static struct page *alloc_pages_mpol(gfp_t gfp, unsigned
+> int order,
+>  struct folio *folio_alloc_mpol_noprof(gfp_t gfp, unsigned int order,
+>  		struct mempolicy *pol, pgoff_t ilx, int nid)
+>  {
+> -	struct page *page = alloc_pages_mpol(gfp | __GFP_COMP, order, pol,
+> +	struct page *page;
+> +	int flags;
+> +
+> +	flags = memalloc_folio_save();
+> +	page = alloc_pages_mpol(gfp | __GFP_COMP, order, pol,
+>  			ilx, nid);
+> +	memalloc_folio_restore(flags);
+>  	if (!page)
+>  		return NULL;
+> 
+> @@ -2588,7 +2593,12 @@ EXPORT_SYMBOL(alloc_pages_noprof);
+> 
+>  struct folio *folio_alloc_noprof(gfp_t gfp, unsigned int order)
+>  {
+> -	return page_rmappable_folio(alloc_pages_noprof(gfp | __GFP_COMP, order));
+> +	struct folio *folio;
+> +	int flags;
+> +
+> +	flags = memalloc_folio_save();
+> +	folio = page_rmappable_folio(alloc_pages_noprof(gfp | __GFP_COMP, order));
+> +	memalloc_folio_restore(flags);
+> +	return folio;
+>  }
+>  EXPORT_SYMBOL(folio_alloc_noprof);
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index ee902a468c2f..37434b37f7af 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5345,8 +5345,13 @@ EXPORT_SYMBOL(__alloc_pages_noprof);
+>  struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int
+> preferred_nid,
+>  		nodemask_t *nodemask)
+>  {
+> -	struct page *page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
+> +	struct page *page;
+> +	int flags;
+> +
+> +	flags = memalloc_folio_save();
+> +	page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
+>  					preferred_nid, nodemask);
+> +	memalloc_folio_restore(flags);
+>  	return page_rmappable_folio(page);
+>  }
+>  EXPORT_SYMBOL(__folio_alloc_noprof);
+> -- 
+> 2.43.0
+> 
+> 
+> -- 
+> Cheers,
+> 
+> David
