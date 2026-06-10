@@ -1,303 +1,189 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F94343894
-	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 16:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781109460; cv=none; b=EeWPwfe1jxI0rwyTHPXF3CHVtLN+/8XGc2vwjlZGvT9jF+R11XTdU8sDqElb/qHx0BXGJChKQgJ6iR0DbjwerXXrYiebkTn3WOJZVU9d9C7/+WxrXA2aab0QHfbrGdymQze1bDtEj4PQSZao/HUqs1zcmHXYtriol7iveHfqkCs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781109460; c=relaxed/simple;
-	bh=ubW61os22iPHl+RFlnY1FEaETS2knsxVWz5JYXskkiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QGW3ss0byKRqh8DD4ah9DKZDzIIQ0VqpsT5poBN2twJTtzpgMwJqTbv8DmNcBrBmMj6vcYzF/nL7YPW4h4cheFBzxs9P6OE02L0Ddnxo0SmeAkh3CTPtdQzA8JG0uEA2eko6FahyVPB4a7EWprjMs6ZlDF6D2blf9W3ADgpD0fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Si08fxas; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AC3342CBD
+	for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 16:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781109795; cv=fail; b=qu25JxWAZLZ4Brc2bRN8dIYK/wzP21zLaizB4m9LLRWGe59CZQDQZStBz1I8tf7XUF2+JwTQykNXHxelFS5SP32oeZpB834CbEoGFDuR4JCdcooHmbk4qrzMsd9zkQ57Wkf5j/jnrTuHYZVtfpZbMo3LJ6YIFnxvX45dPSg7fB8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781109795; c=relaxed/simple;
+	bh=kZ49dGWHP6BaaNeRgHk7iAcS8OiLgPnid85ijkvS8hs=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=OJHAqE9hIX0njQDh3s8HoW9p5VB6QbxZXD01RyJVu73EOc51O2A11FoxDbcoYHIP0fIpKvGEx/O24cVqnnyPjXEhRwLMVPtDsAdW4LjCfDNAreYmXMYxqAgXV55lDGil2Ga+GWMKC0fPPgABv32LjsXrB7IUic1aJF/84lr/G1I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LvXFGyor; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Si08fxas"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-5177945a279so74248391cf.0
-        for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 09:37:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1781109458; x=1781714258; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=SYADJHUyTsZxeNPAhkpfIZ+IyBSWkrAmnBG2JAxdu0A=;
-        b=Si08fxasUsSKrIUNrhXMH6CXbHcoEFhktudC6oZ0240dyaMqZNv0FW0WX2g8yhx8TB
-         UEsOhYwS8LuiLzQ1izZdNmWXwEeRL9u55IkBjfAgswpjmN2jFpob/KChuBai95agFYT4
-         YEiBeGRaV/P4SRIilkeE6ZfgUAcZbF50523Fsfq4Q6ulsWmJV+yulTqDS/VoQgnlbTfw
-         kuwptdqvvTdVJd/2qpACBxtenfHQnrDhzMWw+aTWlLlO+CdXtmV7pRLMY0ZImj3P9IRk
-         xPuKZQ/VAG1jXHR0LQ0xHYYoerwxQjt2oNGLXqR1tx64rB5Q9/diFuG6zNJJMyyuywfH
-         lxnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781109458; x=1781714258;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SYADJHUyTsZxeNPAhkpfIZ+IyBSWkrAmnBG2JAxdu0A=;
-        b=JpUMmBS6JAVP4S6WPE8dV7V7IZe9UqBqEf+ZYGo0AbLq8BhQdKGiZOcMzBsdJoP9TJ
-         wwHtAZwKzB+Y4K0rCwcrkgRa1m9sfhGl5qJGjKAZeFXt4dbK5k9M7Sq51ju2PWR5Nc2F
-         vj7wYONCmQ4SfMO9W0rno/nod7bT//fiXdBAxsh3M2QTafT8fALNQB8tAvp6CUKrCEwW
-         +8PZ9/mcc9H8nBoYNlM9w7pbuqKlzcM4tO4FRySjn5Sy8kuvFc3rUf3fE3LCPgt7tvg6
-         JWTKM3O/jz0fx95sX/ZJkfkSXTgkbnY5Ks8iAmt+IU1bDsL1TOwAzqfKTjCfz61e3SbQ
-         zfiA==
-X-Forwarded-Encrypted: i=1; AFNElJ87otdETPEYJONbPjI6Lo5tKKVXwEEbjULNHBYK2ztJq1UvA5yn2LpXZej5/KLuKH0rJ3slm42sSos=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6ror/MVMRybjrOHBP6QZzx/x9iyPl2+cWndNNo65n6CpNAqfz
-	Mi9uByB2U84TJYmxrE4UdK4jgS7BZjVgbx9Hn02XZm+Kw2GjPO3I9rmJIqFWDlhkGe8=
-X-Gm-Gg: Acq92OF5EQ71D4KLZVULTFFWOerJF3vogJ7OUJgb4upCtAh5KiQAvEBuN+2AXVjgb/S
-	CZOeps6oqVbYl7zdoKtbnKCs0FKkkHnxhgRJgeigDSZTYlZe/CrGEgRPl2sdB1DiUyAm1l865/X
-	BwH09xlK0iO7bfmacMj5KTcRgKft0GgosBr64g5xsgNBBSOkbmqlM8IflSDwqfzss8WxvzLmAwQ
-	jFSNKDOKOeDo9uZ0ENDOoTZbvJ4Me+miGabt8tfrKX+vQ+dSmyx95q8XHH19uyAeFjQDfj0I6re
-	h71syk4u5TIw3oQlFI/FgZ+FFL5kno8NdBFSqyFiFNzqvInzJ4pHhS4thrlD4o/AJLogdzdwHy8
-	nqehInjODfImAJOjUMLvjMNcUC7sv3QzYC2tWiq4f5TTD9y35GN2BTholsZ7pcawpMVNAvpSmNb
-	mv2N0yQPWnlBUKOFDplT3Alru7ppIVmlNmuNZlsP93M44MToMH/PGbjXSyXQ2K6KvuU67IfEe+7
-	ytETLtsoYysQ7CSQg==
-X-Received: by 2002:a05:622a:6205:b0:517:85e1:38a2 with SMTP id d75a77b69052e-51795c22a42mr365134121cf.31.1781109457374;
-        Wed, 10 Jun 2026 09:37:37 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8cecd06b701sm233484876d6.34.2026.06.10.09.37.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 09:37:36 -0700 (PDT)
-Date: Wed, 10 Jun 2026 12:37:34 -0400
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Balbir Singh <balbirs@nvidia.com>, lsf-pc@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	cgroups@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
-	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
-	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
-	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
-	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
-	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <ag6XyvxR-NU5rGn-@parvat>
- <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
- <ah47NNhuiClgGCdn@parvat>
- <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
- <ah-0CyZurn5D1ezY@parvat>
- <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
- <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LvXFGyor"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781109793; x=1812645793;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=kZ49dGWHP6BaaNeRgHk7iAcS8OiLgPnid85ijkvS8hs=;
+  b=LvXFGyorUNVRqysk3NouQsSfrz42xShQRc3e2UoJFXLVMuo7Id0zWCqW
+   8mb7mqgtubGkWw7+qXBlFbV0ZUfLpvN8XtSMDYeriuNr/apvWF6Q0HC9M
+   pfd/zgcy0ZV8UbgEGZjCX6PrbV0NZ2ByopqMy9/S1vuVSKzV2Iuf7DJWP
+   B7Ej7f+JSRDvHk3S4+rmdpeBu89uyC2bjzanI59+nlJLOpU8Qbe74KOts
+   zDwfvb6FX4EqD1NNhYnY4yRO/xUKhktSNUAhQirNGz/jukS4kUAABPDV8
+   SFZIrn2LV0fzhDKWI7KNII/MkACMivyf9u7jEZy8dzwh0S0rN521lXGA+
+   g==;
+X-CSE-ConnectionGUID: eDqzz18FR92D19gKdpwL1A==
+X-CSE-MsgGUID: VcXK/sXXThussVAAY3lfmw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="81757743"
+X-IronPort-AV: E=Sophos;i="6.24,197,1774335600"; 
+   d="scan'208";a="81757743"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 09:43:12 -0700
+X-CSE-ConnectionGUID: audNt/r2RSi5cZbb6CS4kQ==
+X-CSE-MsgGUID: 9YkiXnQkS7K/PQTrZvevOg==
+X-ExtLoop1: 1
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 09:41:36 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Wed, 10 Jun 2026 09:41:35 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Wed, 10 Jun 2026 09:41:35 -0700
+Received: from CH5PR02CU005.outbound.protection.outlook.com (40.107.200.53) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Wed, 10 Jun 2026 09:41:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CdxQ07dz+a4TLOHOGHfsjvXeo1oyKlz1XlV3yxZcOCNaCVwZBf/CBv7LohLxupxrktEdTnadnGdCDtlVS4ukoQ5t6G+uPU/Oaq8fVt1VSo7c3qAsOFiCWldvebmk4F7Nt2QGs5cxLcLdhce6qyBKt5Oy0rLaLi1wcw0Y0PnyjoRt0wcbeCgiTf04R/WZxk5fUOkOk4zaGw5BwyzxSj/VcHDXYN6cLA5TNF5+dLcREPxAc+lmWIDJQjeu0jVnl5g0dNelnM6g3DSReW/QjeioNHQuRDAAvaKBTOmoQNNqsQdPpxneKmdu6IzrbdqotdMipxrvQcX2dwlPabFA5Av2FA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2aKa5T/gl0K1vRKWKtB6P2tMqGedpoOgaRsw/JTjTIw=;
+ b=KhnUDhHntIzLKlmLNoSSGogWT9ofEloAd0knGQyRutDLpjQ95lknml5+L4t9ChZdFZHgfrrBQ5b1PEtAdgxN2SnYCYU8b8uWwy/iqRvwChPtZcEKDzZ3jq92sp6i7brDFgqvCkDRsxg4R7oFdeZw9OyK9CwMyL4nlBnXeNHuuyPzX+6fYLNi2f6z5vS7Ppkw5GqWcyUR74J2ZjOoG2nlu8ss4mFQ5dd4zPNG8JefItJUlbPKgf9lWYWH3GcfOMePsn2b2L6310F1KYGdLf/Kh7L2vxXlauw6Dceq35xiqLTgo4GtGolbdtTrZO/FBIfzpcDpEaGMGwv8w1OdzX9vUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by DM3PPFF3DEC9799.namprd11.prod.outlook.com (2603:10b6:f:fc00::f61) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.14; Wed, 10 Jun
+ 2026 16:41:27 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891%4]) with mapi id 15.21.0092.011; Wed, 10 Jun 2026
+ 16:41:27 +0000
+Date: Wed, 10 Jun 2026 09:41:23 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <dave@stgolabs.net>, <jic23@kernel.org>,
+	<djbw@kernel.org>
+Subject: Re: [PATCH] cxl/test: Zero out LSA backing memory to avoid leaking
+ to user
+Message-ID: <aimTs2o0CIISJy3S@aschofie-mobl2.lan>
+References: <20260605184426.4070913-1-dave.jiang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260605184426.4070913-1-dave.jiang@intel.com>
+X-ClientProxiedBy: SJ2PR07CA0001.namprd07.prod.outlook.com
+ (2603:10b6:a03:505::11) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DM3PPFF3DEC9799:EE_
+X-MS-Office365-Filtering-Correlation-Id: bc06aac0-1a96-4b33-a7fc-08dec70f1d8e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|366016|376014|1800799024|11063799006|56012099006|6133799003|22082099003|18002099003|3023799007;
+X-Microsoft-Antispam-Message-Info: a1QEdbO/0aktXLxW7HtcPgLql80FA8/PQhvRFVUCtDb+n+iq5vKJc60kH2PUSvSs0L5xQj9DyXwE21NrtqRCGPw3Oo9Zn2xwfiXO7dJN43szT+rH2DHcum0aDxOl0axwpxBnpdPnmoRGKEpgxbRNU+DE0mIQHO0581iavY9+0U04gYPZzcMVsyEMzJ3h86votTXkN6dFa3VxThPL0xYY+dMTI+TvH7FyHACh16X+gSVg6aalkymqYwi9FeOnL4bHTWTd+cmT6Qe+kLPThQJC15rhmo3ruGOA8zQxOdfosJLkkd+Yg5KFqPLdV74vsnDUkO4k22DZg3/7A0fgCl9uJuvd57zkYpv2Q4U8GQhAPmnR9XHL1A9j7FOxCLRJWRheMuZgy3nBVR1m+8Oqn2rcaEQf7dtYqhAVknEY+51yfE94OSGWn8zKqcJCLsEqp0b+DdQWIBK9yrTFIeo6mHZo/QvuGd5UDVSud/kqaUeMlSoK88IAqo0IIWCcrIiKc1VxPOrucEZS2D58XmuK4/WkOxKJOw9ntQmw9ACkl6VZ+f8+RjAjvj15pdx5ZYGKypxxyL+TAlCEOgobPwqmD5Ss+IRqgsZHzZhORX/Xn8gTGGoqKyXpyGuaxNfbmzX0RdNIRd7jjPPM9H6HwNfa4yNj4CiZIUMqL3kb9e2KA+o6HLz5bwJtO4NRfTPYPs9Qb+8svT3mAzajYs8eKiLVlrBOWQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(376014)(1800799024)(11063799006)(56012099006)(6133799003)(22082099003)(18002099003)(3023799007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XnNoI6KU1McqVdxapPZNfOF7RxRKbK+a6RihmCIN6cJqKAxB6Sjq1p9U/Hs9?=
+ =?us-ascii?Q?ps0TRQekMUbzmfrAWZZSkPkpOejLvJZ2EfYmyL/kbXSTG6nqhExa3T8Z0FsQ?=
+ =?us-ascii?Q?ruJ5rCUAx9KlanaR7DvSfO5TS/eIZgYzE9ccGNW4thAbkfavL/w8fNE7kEa6?=
+ =?us-ascii?Q?hYIq17QHCorUJUYRqVo4w4UU5tRqqk/vaV7VKNm/MRwTJC25D1uQLIIpDPbb?=
+ =?us-ascii?Q?PUCnN83vVRksAagAOHXC29RrW4CrsaWSs/qMP55rwgD/pGJsMNhAxOkDBgie?=
+ =?us-ascii?Q?UWzsqFzqM+JoJRvFCcjOZlVR4IMCEWgQu6BbCFW6HW+ABVAWuNVyH0xhnIM5?=
+ =?us-ascii?Q?O4WknPRBa7W9njbXN7mchO+7FgvTXLx0S82u3AGZfY24Ufk50o7ztD5YDADI?=
+ =?us-ascii?Q?wX0ySoBokz1gsyK9jaN5udcT6sVBsnFyJkEJ47zOBW8yT6+691SXg/1x6bQZ?=
+ =?us-ascii?Q?6IR0ZKzPulCzEpTrWoFOjfBFjs+4yebz6hN0fJFIdog8+UWrJY3TGysOtcZD?=
+ =?us-ascii?Q?/E+Vr+qhuC2+YPWkcIMFYunFhXWB+5OxUQapqn36NKAiCWrOyIIe3eiEKznC?=
+ =?us-ascii?Q?6MLWuUNStxI/0EI4Wy+A1NG67HXKTU3EJAZJyKnnLNhThi+qvW3byi+gqpjg?=
+ =?us-ascii?Q?A/EqQXLtRppujK0wwsu5c6yXAY+yQe8Hx6Zj60JgZxUJlVugqFuZWRz/5hgr?=
+ =?us-ascii?Q?SK5Gp6W0oMDQZwAYrz4vjDIvf8p1pxxvz9OFP3PUzj8BWMVRN1p+osHlsXr7?=
+ =?us-ascii?Q?m9p0xRBPNWiSNgvZosRU1ks2NwBLk1NfQjjZuVCmyaCs0XyXsHmSv0ftPIFj?=
+ =?us-ascii?Q?0doTEez6cZQbJBwUzjLaeOm6C/ns8bwvovU+8X4rMJpctk65Odo4EKfgQ9xA?=
+ =?us-ascii?Q?mUFWnzHE1mStYw9Cty/fN5XA2EeMcd4teIs8K6c0VxpRZ+EhdWbkLQH4e7+F?=
+ =?us-ascii?Q?xB+SH3VrnFnGMexpa+8oioWv8jLoyibADl3z/valdCEfXM1RUdGnr60EtpZ8?=
+ =?us-ascii?Q?l8UFuMABD17G14PS3aOk67t0abv+I0PAmkECh2SpL84VI+KTiTz21PaAhxUQ?=
+ =?us-ascii?Q?Y34n/iJCKDq17y6R6MpKrGYHurQGlkXRCqE8T/xll6FyxJVLIg9n5sHW3en2?=
+ =?us-ascii?Q?UWz6UkgCzCNY9mfxthM8UNenBlflexmtC82oPUxMsU9QkJm+eBtThzZOIsHh?=
+ =?us-ascii?Q?BQz+MbdIk6fKtuPEvUU2ahcF216ieHIaSDFZJ6isavCBdiKtG0MOIA1FWyhY?=
+ =?us-ascii?Q?nQP6oOJDktHtmCHx5mTJnm/XvTL+qBsE3y1wkSgLw2HJjuAOrC0tVbDMJQAz?=
+ =?us-ascii?Q?jWFAmOCyFfUJ1Hb+m8OTXiJTcNDN02iai3ob/xAUxCt6sVtn7bpWLjfmTN/o?=
+ =?us-ascii?Q?dLWYJtODBOcwEoYrMrV36DPeeKTi54cR6tFdNKBcQlEuoCHR0Ks4D5hrN7Hs?=
+ =?us-ascii?Q?XmPilM2a511y5CnEkEMf4PV+E6mD4Hyl07FDATszAHdc/xvjZLAiHidTKsaI?=
+ =?us-ascii?Q?ajFnyI1x1WNhuk5XGFEIIq04sn+HOiufKf/ilWE4f+x5kd767oy0/FSaZu08?=
+ =?us-ascii?Q?IFTiMqtCrH/uG6Ej9yM3bIWHfhOtMrF2xk6rVVa3kgbZZ/NtfZW83oAsXrJk?=
+ =?us-ascii?Q?dwPRfiXg4/Nj4QniAD9z56L3nfrLV3oOQmjWcMZxp12BYyDVi2Z1dlNjN1Be?=
+ =?us-ascii?Q?Pfi1MiYlGaJgSrhTzbMBW+F3nwdoKxB/s5sQ+891jn6SISQpcg37XpZqM54Z?=
+ =?us-ascii?Q?pcY0wnHMQLev92ZnKjuha6riljy3oDc=3D?=
+X-Exchange-RoutingPolicyChecked: B0c5hsPcUXSUQJjO9A0cF3NKdLRhsRY/x4yVaq1te4RHyzCNSKShcEctxck0fij5XD9OPBZkEMuPF+m830m0s4Kkqdhc+vKxA26l6Ue9b0AoWUtZ5A+hRgdGwhZf9tf8RVTSY9EmUkCEzjnJVRy3mCooDsxiU55syc5Pixz6n6XfXBcy6EmaWcL7fpejwazXV6YxV65G8QJQIlzY7GGrFOsRPQ3tKsowAtdFUuG0LYt4xYF1/+PdmAD2SB6ggtqRATAnbeZDxlTF6x6LxtHJfk0i3RhcbZrjg+rsYo2l/XPMQCj5ZrTInibIOz6zPMvUDzLWXjGUXlqKVhxhwkq0VA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc06aac0-1a96-4b33-a7fc-08dec70f1d8e
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2026 16:41:26.9906
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uMNwRcEWQBqw/OZa1StBRRBJieRdPSzi5QNJK3NeGXrkhIYFdcGUAphZL8RtN2HoqoYKIyM/YPW4CfAOMLdZrAvIU/mzehKczcEmptGg0S0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPFF3DEC9799
+X-OriginatorOrg: intel.com
 
-On Wed, Jun 10, 2026 at 05:00:33PM +0200, David Hildenbrand (Arm) wrote:
-> On 6/10/26 12:41, Gregory Price wrote:
-> > On Wed, Jun 03, 2026 at 03:00:01PM +1000, Balbir Singh wrote:
-> > 
-> > Notably: slub.c injects __GFP_THISNODE internally on behalf of kmalloc,
-> > which causes spillage into private nodes because slub allows private
-> > nodes in its mask.  I think this is fixable.
-> > 
-> > I have to inspect some other __GFP_THISNODE users (hugetlb, some arch
-> > code, etc), but it seems like fully dropping the FALLBACK entries and
-> > requiring __GFP_THISNODE might be sufficient.
+On Fri, Jun 05, 2026 at 11:44:26AM -0700, Dave Jiang wrote:
+> Memory through vmalloc() is not zeroed out. When this memory is copied
+> into output payload, it leaks memory content to user. Use vzalloc()
+> instead to zero out the memory.
 > 
-> Sorry, I haven't been able to follow up so far, and not sure if that's what you
-> are discussing here ...
+
+I had wondered if the mdata->fw allocation was a similar risk, and
+since it is not, this LGTM.
+
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+
+
+> Suggested-by: sashiko-bot
+> Link: https://lore.kernel.org/linux-cxl/20260605173146.2B9A31F00893@smtp.kernel.org/
+> Fixes: 7d3eb23c4ccf ("tools/testing/cxl: Introduce a mock memory device + driver")
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  tools/testing/cxl/test/mem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> After the LSF/MM session, I was wondering, whether if we focus on allowing only
-> folios allocations to end up on private memory nodes for now: could the
-> __GFP_THISNODE approach work there?
+> diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
+> index 9a7cd3f46a1e..739343cd5802 100644
+> --- a/tools/testing/cxl/test/mem.c
+> +++ b/tools/testing/cxl/test/mem.c
+> @@ -1724,7 +1724,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  	dev_set_drvdata(dev, mdata);
+>  
+> -	mdata->lsa = vmalloc(LSA_SIZE);
+> +	mdata->lsa = vzalloc(LSA_SIZE);
+>  	if (!mdata->lsa)
+>  		return -ENOMEM;
+>  	mdata->fw = vmalloc(FW_SIZE);
 > 
-> Essentially, disallow any allocations on non-folio paths, and allow folio
-> allocation only with __GFP_THISNODE set.
+> base-commit: e43ffb69e0438cddd72aaa30898b4dc446f664f8
+> prerequisite-patch-id: a09fa1bd37ae9ee663117e196f1b8c49c55365e4
+> prerequisite-patch-id: 75202ea281daa3b091090369ada6eabcaefc6671
+> -- 
+> 2.54.0
 > 
-> I have to find time to read the other mails in this thread, on my todo list.
-> 
-> So sorry if that is precisely what is being discussed here.
-> 
-
-So, I remember this being asked, and I didn't fully grok the request.
-
-I'm still not sure I fully understand the question, so apologies if I'm
-answer the wrong things here.
-
-I understand this question in two ways:
-
-  1) Can we disallow PAGE allocation and limit this to FOLIO allocation
-  2) Can we disallow [Feature] (i.e. slab) allocation targeting the node.
-
-
-1) Can we disallow page allocation and limit this to folios?
-
-No, I don't think so.
-
-Folio allocations are written in terms of page allocations, we would
-have to rewrite folio allocation interfaces and introduce a bunch of
-boilerplate for the sake of this.
-
-struct page *__alloc_pages_noprof(gfp_t gfp, unsigned int order,
-                int preferred_nid, nodemask_t *nodemask)
-{
-        struct page *page;
-
-        page = __alloc_frozen_pages_noprof(gfp, order, preferred_nid, nodemask);
-        if (page)
-                set_page_refcounted(page);
-        return page;
-}
-
-struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int preferred_nid,
-                nodemask_t *nodemask)
-{
-        struct page *page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
-                                        preferred_nid, nodemask);
-	return page_rmappable_folio(page);
-}
-
-At the end of the day, this all reduces to `get_pages_from_freelist`,
-and at that level we don't really care about folio vs page.
-
-__GFP_COMP is insufficient to differentiate between a non-folio compound
-page and a folio, and __GFP_COMP is passed into __alloc_pages_*
-interfaces all over the kernel.
-
-Trying to detach these paths things seems like a horrible rats nest /
-not feasible / will create a lot of boilerplate for little value.
-
-(I did not fully understand this request when it was asked, I do
- not fully understand this request not, please let me know if I
- have misunderstood what you were asking).
-
-
-
-2) Can we disallow SLAB allocation.
-
-Yeah, but I think a better question is whether there's a difference
-between alloc_pages_node() and kmalloc_node() when it all just sinks
-to the same fundamental code in mm/page_alloc.c
-
-Maybe there's an argument for something like NP_OPT_KMALLOC (allow slab
-allocations on the private node w/ __GFP_THISNODE)
-
-On my current set, I don't implement any explicit filtering at all in
-mm/page_alloc.c - the filtering is a function of the nodes not being
-present in the FALLBACK list and only having a NOFALLBACK list.
-
-What __GFP_THISNODE actually does under the hood is just switch
-which zone list (FALLBACK vs NOFALLBACK) is used for the target node.
-
-For isolation w/o __GFP_PRIVATE, we're removing N_MEMORY_PRIVATE nodes
-from *their own FALLBACK* list and only adding them to their NOFALLBACK
-list.  That means to reach a private node you MUST use __GFP_THISNODE.
-
-I realize this is confusing, but essentially we don't have to modify
-mm/page_alloc.c to get the __GFP_THISNODE filtering, we get this from
-the fallback/nofallback list construction.
-
-
-Ok, so how does this flush out in practice - and why do I call this
-filtering mechanism fragile?
-
-consider kmalloc_node() and __slab_alloc():
-
-kmalloc_node(...)
-  └─ ___slab_alloc()     mm/slub.c:4406   pc.flags |= __GFP_THISNODE
-      └─ new_slab(s, pc.flags, node)
-          └─ allocate_slab(s, flags, node)
-              └─ alloc_slab_page(flags, node, oo, …)
-                  └─ __alloc_frozen_pages(flags, order, node, NULL);
-
-Slab silently upgrades the page allocator flags here to include
-__GFP_THISNODE - even if the user didn't request that behavior.
-
-This is exactly the kind of "spillage" I said was hard to police at LSF.
-
-Without __GFP_PRIVATE, we have to keep an eye on what around the kernel
-is using __GFP_THISNODE and how.
-
-For mm/slub.c we can choose to do one of thwo things
-
-  1) 100% refuse slab allocations on private nodes, i.e.:
-
-     kmalloc_node(..., private_nid, __GFP_THISNODE)
-
-     And will fail (return NULL).
-
-  or
-
-  2) Do not upgrade private-node slab requests w/ __GFP_THISNODE
-     
-     This allows kmalloc_node() to work the same as folio_alloc()
-     or alloc_pages() interfaces (__GFP_THISNODE is the key), with
-     the understanding that any __GFP_THISNODE user
-
-We can opt these nodes into slab/kmalloc with a NP_OPT_SLAB
-if the owner wants kmalloc_node(), with the understanding that any
-caller using __GFP_THISNODE may get access.
-
-That's the kind of fragility I was trying to avoid.
-
-
-That said, in practice, I have found that basic kernel operations don't
-generally target use kmalloc_node() w/ __GFP_THISNODE - there's just
-nothing to prevent anyone from doing so.
-
-So this seems promising...
-And then theres arch/powerpc/platforms/powernv/memtrace.c
-
-static u64 memtrace_alloc_node(u32 nid, u64 size)
-{
-	... snip ...
-        page = alloc_contig_pages(nr_pages, GFP_KERNEL | __GFP_THISNODE |
-                                  __GFP_NOWARN | __GFP_ZERO, nid, NULL);
-	... snip ...
-}
-
-static int memtrace_init_regions_runtime(u64 size)
-{
-	... snip ...
-        for_each_online_node(nid) {
-                m = memtrace_alloc_node(nid, size);
-	... snip ...
-}
-
-static int memtrace_enable_set(void *data, u64 val)
-{
-	... snip ...
-        if (memtrace_init_regions_runtime(val))
-                goto out_unlock;
-	... snip ...
-}
-
-This is the *exact* pattern I said would be hard to police - and it
-doesn't look like a bug, just not informed that private nodes exist.
-
-This is why I'm concerned with trying to depend on __GFP_THISNODE as the
-filtering function.
-
-That said, the number of __GFP_THISNODE users is very limited
-kernel-wide, so maybe that's an acceptable maintenance burden?
-
-~Gregory
