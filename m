@@ -1,135 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072572EA754
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 15:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D1D408608
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 15:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781192312; cv=none; b=GjldDggJgk3bk6rLf4W5BAYFIKUc416Fxz2TqVAvRVJR4CNmiERJ1r+Ydyc0jAvJehrtMb4BW+wSAJ760zpgKhe1pEmhXUhKkH3+mRoypmwPeEPnVLlRytQhDgU2pVLS04Wzpbk2ImNUX+f018om58JCziaxts9JnvXaISp74EY=
+	t=1781192492; cv=none; b=HypuBpNllyUXfsFJG+7gSisDCCSUKly2+3q/bqPkOGm1vZo8kERMDt1vujUaGeABnSTn4kMT7uY43BLmGx/E5AwRE7pksP2tPAF6ggPz1vhCISNJNreiGzUOUu4rrbK3rJuFixCfV1B014mFFwN+OrEu8GgyWf3SRieKhdW0oSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781192312; c=relaxed/simple;
-	bh=4BmGvw8dpkzxwJ+UTq1r2eC7cw5K/T/IrqWiMU7H0OM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=IqlBXq4t5oJd7eVs8bUl+Uc0XhFXYIj+a+p4MTyUflCJMNRTMKyXaFBKilR7+EG4qZ6yTYhexNS3sMh4sp/S4ivKDgwDIhYfKC242P91csk3Pw1DRlOcp7VXjEJRd0o46rAw1qGDLwb4vkW61uhP6+B2cObG7Rscb+/lPR4AYNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZKJTblF; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781192492; c=relaxed/simple;
+	bh=8rapZTi8F+11Ci/kQ6UASbqnB6Wa+4Y3kaONLs2Y9Cg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IX+VAC6Q8zAlCvU59KV6aPrm/pgXWSBpv7SONksteJDMH4vWs+d4/yCm9vv2xxD5+wJdYfpRJ70L1hzdZLHCx8GT6Ns+tKTt/agEkGeq3FrhQSNOCup6jnKXhnYWUK3bPx4pJ1XPzD9ZPp2TSKp+ChvOuXdIvkzWktbhMNtl46M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PSmoV1hG; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZKJTblF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D5EE1F00898;
-	Thu, 11 Jun 2026 15:38:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781192310;
-	bh=avoYp7e1HFexGgdikMtyB2oinADwsByGeXykZpXpytU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fZKJTblFnpz1QcVnVi7ZVDusuGuAo6Z578700BllfVnCobY7tB5MbuyOcuIGCT6FH
-	 Msyak/bALJQVI7keajYRu2ok/p/K31KJwimo0HDw0uelAfPgG+m0zAj1Lk+/kRSehs
-	 UfslpvFp1zbv1hAfLmjlqEJxFJjD551aJcOgYRn1mM9mM4KlTSmFHJ5659E3X/IQZQ
-	 k8d2+K73hT42Ku8kyPeUApTJpqFz7rT1TdH3E8+cQZm3jn5HrNMbKRofumpZjh8XDV
-	 D2/5M7PX3pNwvMQ25skGXMXkfZ0aJTAWM6h/g9YY70ysSuGmOFJfe8An4q5ETOfLEQ
-	 //J+82vdfTpxw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 2/6] cxl/test: Add type2 support for mock CFMWS0
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dave Jiang" <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260611152124.3656434-3-dave.jiang@intel.com>
-References: <20260611152124.3656434-3-dave.jiang@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 11 Jun 2026 15:38:30 +0000
-Message-Id: <20260611153830.7D5EE1F00898@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PSmoV1hG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781192490; x=1812728490;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=8rapZTi8F+11Ci/kQ6UASbqnB6Wa+4Y3kaONLs2Y9Cg=;
+  b=PSmoV1hGj8+xDgaWoRUoVUDYym/rpySaPS+pEjtGcV8B0VFW/U67i3rE
+   oszUxjody3/VCICPSsFFm6MaQGSMqygYj5nqUEu8YfBQdCuaYDVaAw3rv
+   p+eDIFxilVU3YKc0O6WcoQQ/4vpwXixciO4M4OubZqgDe55Peraz3QPWJ
+   OIxUl8rxdYxd9gAXcJLXFYWznY46cMc1Q9n6amHOQlJs9LuMKoEn0/eZ7
+   pPMIh6QS9fCALDSu6iQK7YpPknqCGeTl2tpOAvkisfgvQu59++zxu2hCi
+   hRYSjN+x7DDj2wT7UrMUjuTOswGRaB0dsMwegpCSk26cq+nNG7UQBXw6l
+   A==;
+X-CSE-ConnectionGUID: O4iC6btPRD2SV5gukld2Ng==
+X-CSE-MsgGUID: ftNMd1AdQZywuG3YZqm/dQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="104676327"
+X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
+   d="scan'208";a="104676327"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 08:41:30 -0700
+X-CSE-ConnectionGUID: JRnlg7SmQwOg6Xz7ePJDIA==
+X-CSE-MsgGUID: 1AOTgHwoR3ia9IdwSzAFNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,199,1774335600"; 
+   d="scan'208";a="246598148"
+Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.110.105]) ([10.125.110.105])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 08:41:29 -0700
+Message-ID: <69ca9378-749e-43ce-afbe-435c66076b4d@intel.com>
+Date: Thu, 11 Jun 2026 08:41:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 6/6] cxl/test: Add cxl_test accelerator driver
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org
+References: <20260611152124.3656434-7-dave.jiang@intel.com>
+ <20260611153241.33B931F00898@smtp.kernel.org>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260611153241.33B931F00898@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
 
-Pre-existing issues:
-- [High] Improper teardown of `cxl_acpi` platform device in `cxl_test_init(=
-)` error path leads to double-put or stranded device.
-- [High] Missing NULL check after `kzalloc` in `alloc_mock_res` causes a NU=
-LL pointer dereference on allocation failure.
---
 
-commit 4122a7a4346775c8cc5370b036f6cfe7a92557ff
-Author: Dave Jiang <dave.jiang@intel.com>
+On 6/11/26 8:32 AM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Low] Undeclared API Usage / Build Failure due to missing functions `cxl_set_capacity` and `devm_cxl_probe_mem`.
 
-cxl/test: Add type2 support for mock CFMWS0
+False positive
 
-Add a module parameter 'type2_test' for triggering type2 test support
-in cxl_test. Setup the CFMWS0 configuration to be type2 when 'type2_test'
-is set.
+> --
+> 
+> commit fd0aec5a2701e0475907c9138fa0ea33cfb68569
+> Author: Dave Jiang <dave.jiang@intel.com>
+> 
+> cxl/test: Add cxl_test accelerator driver
+> 
+> This commit adds a mock platform driver simulating a CXL type 2 accelerator
+> device. It is designed to test minimal API calls required by real CXL type 2
+> drivers.
+> 
+>> diff --git a/tools/testing/cxl/test/accel.c b/tools/testing/cxl/test/accel.c
+>> new file mode 100644
+>> index 0000000000000..9c8235f9d97b7
+>> --- /dev/null
+>> +++ b/tools/testing/cxl/test/accel.c
+> [ ... ]
+>> +static int cxl_mock_accel_probe(struct platform_device *pdev)
+>> +{
+> [ ... ]
+>> +	cxlds = &cxl_accel->cxlds;
+>> +	cxlds->media_ready = true;
+>> +	rc = cxl_set_capacity(cxlds, SZ_512M);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	cxlmd = devm_cxl_probe_mem(cxlds, &mock_range);
+> 
+> [Severity: Low]
+> Are the cxl_set_capacity and devm_cxl_probe_mem functions defined anywhere in
+> the kernel source tree?
+> 
+> It appears these functions do not exist, which causes an implicit declaration
+> error and undefined references during compilation. Will this lead to an
+> immediate build failure for the test module?
+> 
 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 1c8ac8bdd8f7a..c5529cee482d4 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-[ ... ]
-> @@ -493,10 +512,14 @@ static int populate_cedt(void)
->  		chbs->length =3D size;
->  	}
-> =20
-> +	if (type2_test)
-> +		update_type2_cfmws();
-> +
->  	for (i =3D cfmws_start; i <=3D cfmws_end; i++) {
->  		struct acpi_cedt_cfmws *window =3D mock_cfmws[i];
-> =20
-> -		cfmws_elc_update(window, i);
-> +		if (i =3D=3D 0 && !type2_test)
-> +			cfmws_elc_update(window, i);
->  		res =3D alloc_mock_res(window->window_size, SZ_256M);
-
-[Severity: High]
-This is a pre-existing issue, but does alloc_mock_res() have a potential nu=
-ll
-pointer dereference on allocation failure?
-
-tools/testing/cxl/test/cxl.c:alloc_mock_res() {
-        struct cxl_mock_res *res =3D kzalloc(sizeof(*res), GFP_KERNEL);
-
-        INIT_LIST_HEAD(&res->list);
-        ...
-}
-
-If kzalloc() fails, INIT_LIST_HEAD() will unconditionally dereference the n=
-ull
-pointer. Could a check be added to handle the allocation failure before
-initializing the list head?
-
->  		if (!res)
->  			return -ENOMEM;
-[ ... ]
-> @@ -2050,6 +2075,8 @@ module_param(extended_linear_cache, bool, 0444);
->  MODULE_PARM_DESC(extended_linear_cache, "Enable extended linear cache su=
-pport");
->  module_param(fail_autoassemble, bool, 0444);
->  MODULE_PARM_DESC(fail_autoassemble, "Simulate missing member of an auto-=
-region");
-> +module_param(type2_test, bool, 0444);
-> +MODULE_PARM_DESC(type2_test, "Enable type 2 support testing");
->  module_init(cxl_test_init);
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does the error path in
-cxl_test_init() improperly tear down the cxl_acpi platform device?
-
-If cxl_mock_platform_device_add() fails, it already drops the reference, so
-calling platform_device_put(cxl_acpi) again in the err_root path would cause
-a double-put.
-
-Alternatively, if subsequent initialization fails, calling
-platform_device_put() instead of platform_device_unregister() leaves the
-device registered but drops the initial module reference, leading to a
-stranded device when the module unloads.
-
-Could this error path be updated to safely unregister the device?
-
->  module_exit(cxl_test_exit);
->  MODULE_LICENSE("GPL v2");
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611152124.3656=
-434-1-dave.jiang@intel.com?part=3D2
