@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DB1380FFA
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 23:56:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59B23D3306
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 23:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781222187; cv=none; b=FKv2x16MqptJpIIf3NgActjkcqFAXmFBQp49Na+4tNiotFOrrHk4kV7WVlu+p9Fg4+Dr7ld/qy1DsmDhfVP9fCwa5yNadHbp75Qd7jZV7N9J4t6cVsLhQROJGkryND+eYRADybhtVN1f1PBlS5//Gx3LvPstheNC+t0zDB0LJcs=
+	t=1781222290; cv=none; b=cmKhLN2dMDbj+bOrP3tSEsse2rRuqFguTgAK2FBPLvbcNbtCwy8pkuz2mNfZzl4XjnmweqzvO4gi1EiMmmXVE8rumNHOrasI4H4GKGQf7yHc9gI5dadMgZTP7qeukPkdgqWsBrHobmXOtafmIpBnXrQGDa4aEIcNnw5AFTLF7jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781222187; c=relaxed/simple;
-	bh=1+/fTv8Z4OSojLpOkQGt6RmDEv41cjBxlgtkGl3Jgt8=;
+	s=arc-20240116; t=1781222290; c=relaxed/simple;
+	bh=5KjEslF8hJ04qm3kMrLBWZe88GuBh31adj+jNnL1rRI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YGgstsoDjY625OnmPkkF65hVybD2J3NrWyvLN/nCYmsuRxo6CSNTHBagV1kHyT3NQnoLreUjoHjV4lxwQFSVEOLghh0WYw/l14O9w4Fyv889CXZ8FUZxQAGaAhNTFi/oruSElTvWPjTDULEi1xo8WAgnESH+6D1obDEWhqN2r2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAhBENTe; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=BVLAr9i49/L2QRgXpjn52W6/7622xzvu0UVgMsgnxDXV5KW9Qft6rPndZ0H4kY3/C7mUM66l0onPIFYqAgmxQWZlkIuoi+Qbw1VBddYJRA2ATBD/1I/XDHxmos+zbtNjrpMGMJM5CqfyrCYoQASIUX6Oe7ePAKieQycd1DpuYcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DLHZnmOt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAhBENTe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E1BA1F000E9;
-	Thu, 11 Jun 2026 23:56:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DLHZnmOt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 021F71F000E9;
+	Thu, 11 Jun 2026 23:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781222186;
-	bh=1RkTqYAz7hYC0lc4mFfauhO4PALxMCCST9Qbm5gJZmQ=;
+	s=k20260515; t=1781222286;
+	bh=ud/04mG1MC0xJ9AEjcqyf3IE6GixxDV+G4JuGslEFdw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lAhBENTe9Lq9K+r1XIqNoiRmeJlsqZsAgLWv/EOQcW/KkcAa+z8sCF7LGv6fqJ2tL
-	 jNGLsPv+vkqEWTuKNudN6bYge28wJB0Pz6ZrKpUqXwA5LvUlMN52iLCRh9tm8mbUhZ
-	 cFgMLWNgSBM7IrXASUcijpuTD4LSREeyXXHXSozLZcSUUpFRRrYHQ2RHtywMgXCmsE
-	 WNCtmrSiRMqpTHJRWlbLY62myYZUF+uNrpDOvcP/mDq9+tthqfNB5uOcDbwN0Hg/Ce
-	 JiD3F50A2/hMRC3Pb1pn5BJo+SX5kKrThtJeVqxEg1kv6vN9/Ua306H9xXmbd8zEoI
-	 YYC5h/KIf9CDw==
+	b=DLHZnmOtaRpp1u/jZrWNpB7AGXuWKVI2Ffwbtyrgx6gH8UEbqRNuqAf4pabqHMJjB
+	 Vt7gEqM6AFhSyIV5agqDBpC1DCxgv4fEfak55KPDoROmk6O96xb/TlLB/FVHkOi24I
+	 8qpi9AbAj90ulCUqOOBT7tUFPPjHueCAajtLtEn9nNgOfgjMVW5VUJGIZ2qi9NTwff
+	 wuZWGQ71BhdvU3wRA2SRR4PgRRKWsAObidbR4XJU1/7qwCrBcgYmGizBLQrFJ6O/EX
+	 haJ3X901qlu0mkNunYM7lFZjPllYtYIW+TmeGecTr041mFBcI3/caOBCA105SMi5Rw
+	 /ZTtXH5wmiTgw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 2/6] cxl/test: Add type2 support for mock CFMWS0
+Subject: Re: [PATCH v5 6/6] cxl/test: Add cxl_test accelerator driver
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260611234409.256765-3-dave.jiang@intel.com>
-References: <20260611234409.256765-3-dave.jiang@intel.com>
+In-Reply-To: <20260611234409.256765-7-dave.jiang@intel.com>
+References: <20260611234409.256765-7-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 11 Jun 2026 23:56:25 +0000
-Message-Id: <20260611235626.1E1BA1F000E9@smtp.kernel.org>
+Date: Thu, 11 Jun 2026 23:58:05 +0000
+Message-Id: <20260611235806.021F71F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,75 +45,48 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] alloc_mock_res() unconditionally dereferences `res` even if kzallo=
-c() fails, and leaks `res` if gen_pool_alloc_algo() fails.
+- [Low] The patch invokes non-existent functions `cxl_set_capacity()` and `=
+devm_cxl_probe_mem()`, resulting in a build failure.
 --
 
-commit e10eed6f5b8f0ab41fd5d070bd75f2b5f0d1bef4
+commit b886732115c0a94e1bae2a16b1299055ba5c99ea
 Author: Dave Jiang <dave.jiang@intel.com>
 
-cxl/test: Add type2 support for mock CFMWS0
+cxl/test: Add cxl_test accelerator driver
 
-This commit adds a type2_test module parameter for triggering type 2 test
-support in cxl_test. It also updates the CFMWS0 configuration to be type 2
-when the parameter is set.
+Add a type2 accelerator mock driver for the platform device that
+simulates a CXL type2 device.
 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 1c8ac8bdd8f7a..c5529cee482d4 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
+> diff --git a/tools/testing/cxl/test/accel.c b/tools/testing/cxl/test/acce=
+l.c
+> new file mode 100644
+> index 0000000000000..9c8235f9d97b7
+> --- /dev/null
+> +++ b/tools/testing/cxl/test/accel.c
 [ ... ]
-> @@ -493,10 +512,14 @@ static int populate_cedt(void)
->  		chbs->length =3D size;
->  	}
-> =20
-> +	if (type2_test)
-> +		update_type2_cfmws();
+> +static int cxl_mock_accel_probe(struct platform_device *pdev)
+> +{
+[ ... ]
+> +	cxlds =3D &cxl_accel->cxlds;
+> +	cxlds->media_ready =3D true;
+> +	rc =3D cxl_set_capacity(cxlds, SZ_512M);
+> +	if (rc)
+> +		return rc;
 > +
->  	for (i =3D cfmws_start; i <=3D cfmws_end; i++) {
->  		struct acpi_cedt_cfmws *window =3D mock_cfmws[i];
-> =20
-> -		cfmws_elc_update(window, i);
-> +		if (i =3D=3D 0 && !type2_test)
-> +			cfmws_elc_update(window, i);
->  		res =3D alloc_mock_res(window->window_size, SZ_256M);
+> +	cxlmd =3D devm_cxl_probe_mem(cxlds, &mock_range);
 
-[Severity: High]
-This is a pre-existing issue, but I noticed a potential problem in
-alloc_mock_res() which is called here.
+[Severity: Low]
+Does this code cause a build failure?=20
 
-Does alloc_mock_res() unconditionally dereference the allocation before=20
-checking for success? Looking at the function:
+It appears that cxl_set_capacity() and devm_cxl_probe_mem() are not defined=
+=20
+anywhere in the CXL core subsystem, which would lead to unresolved symbol=20
+errors during compilation.
 
-alloc_mock_res() {
-    struct cxl_mock_res *res =3D kzalloc(sizeof(*res), GFP_KERNEL);
-    ...
-    INIT_LIST_HEAD(&res->list);
-}
-
-If kzalloc() returns NULL, won't INIT_LIST_HEAD() cause an immediate NULL=20
-pointer dereference?
-
-Additionally, if the subsequent memory pool allocation fails:
-
-alloc_mock_res() {
-    ...
-    phys =3D gen_pool_alloc_algo(cxl_mock_pool, size,
-                               gen_pool_first_fit_align, &data);
-    if (!phys)
-        return NULL;
-}
-
-Does this leak the memory allocated for res by returning NULL without calli=
-ng
-kfree(res)?
-
->  		if (!res)
->  			return -ENOMEM;
-[ ... ]
+> +	if (IS_ERR(cxlmd))
+> +		return PTR_ERR(cxlmd);
+> +	cxl_accel->cxlmd =3D cxlmd;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611234409.2567=
-65-1-dave.jiang@intel.com?part=3D2
+65-1-dave.jiang@intel.com?part=3D6
