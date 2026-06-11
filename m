@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A97A409115
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 15:21:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019103DB309
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 15:21:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781191293; cv=none; b=g5yqcB4dmmKuBn/G1/LIDVMxjdeyhSgLuDjkSyLfqvmC+1N5tze7TXXbH4JDo1q0WhZ4ZE5kj+9hw5rU5SPzD0DAqlERuBiXBxjGBCw/tAWkyxkcpKs244L+lmRFNI4fwczTIWMFluOYQXMZbCX/PCYTmHHSJ1tORtZjAsCw1Is=
+	t=1781191295; cv=none; b=DYVYScMguAzfVyUoTj/JsfR2TH1f7EH7SRFN/zaGt3euHkR58iL5lLbqVKuRYC0uikZ/f0FIrtqdb5hAiujDZbNdA0Nj/hPQM7O+CbpfCIj8xphY84MrZSWxPpTwFcB4gQx+4r9ofFUiDghZ5+S2Y9ZsDBbO6e8n4tVq9378O2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781191293; c=relaxed/simple;
-	bh=plG5wCdQ6CZ7iekeH9re9SboeElo5yv29xJZi8CzTmo=;
+	s=arc-20240116; t=1781191295; c=relaxed/simple;
+	bh=wpQgS56H3mVRs2/zqhpLKI91mV33Vb4KgjBn5Sa6USw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KZ7jAWJi48xVAcXiiipl7lUukVjhjJkBQJHehrf8BChh9UZ6cGG6C4XSWjnNYaxWYtOf7v1ccTJGHm/2aYgJTtb5eEF3ZESKji3RF7VV0s4s9MJS66uDpt6exS2g3WZDe33rk14vLr27h2z3AVmp8JoI4YAF2KMsaEXSitFY5jo=
+	 MIME-Version; b=T+gteXNtsYEcBAGTLVsNZiDIGnjThTaHaq7H2B81zfv5AK6EO4hT94xLaT1wRp3B8kF6aeV+ZKkaRDFh+HpO8yRZSNDTgqs6kvF5nY9gWNcoSVxryqhchWzboqg27jNAlyZ3at/jaM9F06AZPLCtbT81VsjsfiuflV+VEGV5FWQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C361D1F00893;
-	Thu, 11 Jun 2026 15:21:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D8A1F00893;
+	Thu, 11 Jun 2026 15:21:33 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: djbw@kernel.org,
@@ -21,9 +21,9 @@ Cc: djbw@kernel.org,
 	jic23@kernel.org,
 	alison.schofield@intel.com,
 	vishal.l.verma@intel.com
-Subject: [PATCH v4 2/6] cxl/test: Add type2 support for mock CFMWS0
-Date: Thu, 11 Jun 2026 08:21:20 -0700
-Message-ID: <20260611152124.3656434-3-dave.jiang@intel.com>
+Subject: [PATCH v4 3/6] cxl/test: Refactor platform device enumerations
+Date: Thu, 11 Jun 2026 08:21:21 -0700
+Message-ID: <20260611152124.3656434-4-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260611152124.3656434-1-dave.jiang@intel.com>
 References: <20260611152124.3656434-1-dave.jiang@intel.com>
@@ -35,93 +35,376 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a module parameter 'type2_test' for triggering type2 test support
-in cxl_test. Setup the CFMWS0 configuration to be type2 when 'type2_test'
-is set.
+Split all the host bridges, rootports, upstream and downstream ports
+enumerations to separate helper functions. This should make adding
+type2 hierarchy easier later on.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- tools/testing/cxl/test/cxl.c | 29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
+v4:
+- Skip over null slots when removing devices. (sashiko)
+- Set rc with -NOMEM when platform device alloc fails. (sashiko)
+---
+ tools/testing/cxl/test/cxl.c | 312 ++++++++++++++++++++++++-----------
+ 1 file changed, 214 insertions(+), 98 deletions(-)
 
 diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 1c8ac8bdd8f7..c5529cee482d 100644
+index c5529cee482d..71b6203d2fcf 100644
 --- a/tools/testing/cxl/test/cxl.c
 +++ b/tools/testing/cxl/test/cxl.c
-@@ -17,6 +17,7 @@
- static int interleave_arithmetic;
- static bool extended_linear_cache;
- static bool fail_autoassemble;
-+static bool type2_test;
- 
- #define FAKE_QTG_ID	42
- 
-@@ -384,6 +385,19 @@ static struct {
- 	},
- };
- 
-+static struct acpi_cedt_cfmws type2_cfmws0 = {
-+	.header = {
-+		.type = ACPI_CEDT_TYPE_CFMWS,
-+		.length = sizeof(mock_cedt.cfmws0),
-+	},
-+	.interleave_ways = 0,
-+	.granularity = 4,
-+	.restrictions = ACPI_CEDT_CFMWS_RESTRICT_DEVMEM |
-+			ACPI_CEDT_CFMWS_RESTRICT_VOLATILE,
-+	.qtg_id = FAKE_QTG_ID,
-+	.window_size = SZ_256M * 4,
-+};
-+
- struct acpi_cedt_cfmws *mock_cfmws[] = {
- 	[0] = &mock_cedt.cfmws0.cfmws,
- 	[1] = &mock_cedt.cfmws1.cfmws,
-@@ -472,6 +486,11 @@ static void cfmws_elc_update(struct acpi_cedt_cfmws *window, int index)
- 	window->window_size = mock_auto_region_size * 2;
- }
- 
-+static void update_type2_cfmws(void)
-+{
-+	memcpy(&mock_cedt.cfmws0.cfmws, &type2_cfmws0, sizeof(type2_cfmws0));
-+}
-+
- static int populate_cedt(void)
- {
- 	struct cxl_mock_res *res;
-@@ -493,10 +512,14 @@ static int populate_cedt(void)
- 		chbs->length = size;
- 	}
- 
-+	if (type2_test)
-+		update_type2_cfmws();
-+
- 	for (i = cfmws_start; i <= cfmws_end; i++) {
- 		struct acpi_cedt_cfmws *window = mock_cfmws[i];
- 
--		cfmws_elc_update(window, i);
-+		if (i == 0 && !type2_test)
-+			cfmws_elc_update(window, i);
- 		res = alloc_mock_res(window->window_size, SZ_256M);
- 		if (!res)
- 			return -ENOMEM;
-@@ -1826,6 +1849,8 @@ static bool __init have_multiple_modparms(void)
- 		count++;
- 	if (hmem_test)
- 		count++;
-+	if (type2_test)
-+		count++;
- 
+@@ -1855,10 +1855,204 @@ static bool __init have_multiple_modparms(void)
  	return count > 1;
  }
-@@ -2050,6 +2075,8 @@ module_param(extended_linear_cache, bool, 0444);
- MODULE_PARM_DESC(extended_linear_cache, "Enable extended linear cache support");
- module_param(fail_autoassemble, bool, 0444);
- MODULE_PARM_DESC(fail_autoassemble, "Simulate missing member of an auto-region");
-+module_param(type2_test, bool, 0444);
-+MODULE_PARM_DESC(type2_test, "Enable type 2 support testing");
- module_init(cxl_test_init);
- module_exit(cxl_test_exit);
- MODULE_LICENSE("GPL v2");
+ 
++static void host_bridges_remove(void)
++{
++	int i;
++
++	for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
++		struct platform_device *pdev = cxl_host_bridge[i];
++
++		if (!pdev)
++			continue;
++
++		sysfs_remove_link(&pdev->dev.kobj, "physical_node");
++		platform_device_unregister(cxl_host_bridge[i]);
++	}
++}
++
++static int host_bridges_populate(void)
++{
++	int rc = 0;
++
++	for (int i = 0; i < ARRAY_SIZE(cxl_host_bridge); i++) {
++		struct acpi_device *adev = &host_bridge[i];
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_host_bridge", i);
++		if (!pdev) {
++			rc = -ENOMEM;
++			goto err_bridge;
++		}
++
++		mock_companion(adev, &pdev->dev);
++		rc = cxl_mock_platform_device_add(pdev, &cxl_host_bridge[i]);
++		if (rc)
++			goto err_bridge;
++
++		mock_pci_bus[i].bridge = &pdev->dev;
++		rc = sysfs_create_link(&pdev->dev.kobj, &pdev->dev.kobj,
++				       "physical_node");
++		if (rc)
++			goto err_bridge;
++	}
++
++	return 0;
++
++err_bridge:
++	host_bridges_remove();
++	return rc;
++}
++
++static void cxl_rootports_remove(void)
++{
++	for (int i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--) {
++		struct platform_device *pdev = cxl_root_port[i];
++
++		if (!pdev)
++			continue;
++
++		platform_device_unregister(pdev);
++	}
++}
++
++static int cxl_rootports_populate(void)
++{
++	int rc = 0;
++
++	for (int i = 0; i < ARRAY_SIZE(cxl_root_port); i++) {
++		struct platform_device *bridge =
++			cxl_host_bridge[i % ARRAY_SIZE(cxl_host_bridge)];
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_root_port", i);
++		if (!pdev) {
++			rc = -ENOMEM;
++			goto err_port;
++		}
++
++		pdev->dev.parent = &bridge->dev;
++
++		rc = cxl_mock_platform_device_add(pdev, &cxl_root_port[i]);
++		if (rc)
++			goto err_port;
++	}
++
++	return 0;
++
++err_port:
++	cxl_rootports_remove();
++	return rc;
++}
++
++static void cxl_usps_remove(void)
++{
++	for (int i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--) {
++		struct platform_device *pdev = cxl_switch_uport[i];
++
++		if (!pdev)
++			continue;
++
++		platform_device_unregister(cxl_switch_uport[i]);
++	}
++}
++
++static int cxl_usps_populate(void)
++{
++	int rc = 0;
++
++	for (int i = 0; i < ARRAY_SIZE(cxl_switch_uport); i++) {
++		struct platform_device *root_port = cxl_root_port[i];
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_switch_uport", i);
++		if (!pdev) {
++			rc = -ENOMEM;
++			goto err_uport;
++		}
++
++		pdev->dev.parent = &root_port->dev;
++
++		rc = cxl_mock_platform_device_add(pdev, &cxl_switch_uport[i]);
++		if (rc)
++			goto err_uport;
++	}
++
++	return 0;
++
++err_uport:
++	cxl_usps_remove();
++	return rc;
++}
++
++static void cxl_dsps_remove(void)
++{
++	for (int i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--) {
++		struct platform_device *pdev = cxl_switch_dport[i];
++
++		if (!pdev)
++			continue;
++
++		platform_device_unregister(cxl_switch_dport[i]);
++	}
++}
++
++
++static int cxl_dsps_populate(void)
++{
++	int rc = 0;
++
++	for (int i = 0; i < ARRAY_SIZE(cxl_switch_dport); i++) {
++		struct platform_device *uport =
++			cxl_switch_uport[i % ARRAY_SIZE(cxl_switch_uport)];
++		struct platform_device *pdev;
++
++		pdev = platform_device_alloc("cxl_switch_dport", i);
++		if (!pdev) {
++			rc = -ENOMEM;
++			goto err_dport;
++		}
++		pdev->dev.parent = &uport->dev;
++
++		rc = cxl_mock_platform_device_add(pdev, &cxl_switch_dport[i]);
++		if (rc)
++			goto err_dport;
++	}
++
++	return 0;
++
++err_dport:
++	cxl_dsps_remove();
++	return rc;
++}
++
++static void cxl_switches_remove(void)
++{
++	cxl_dsps_remove();
++	cxl_usps_remove();
++}
++
++static int cxl_switches_populate(void)
++{
++	int rc;
++
++	BUILD_BUG_ON(ARRAY_SIZE(cxl_switch_uport) != ARRAY_SIZE(cxl_root_port));
++	rc = cxl_usps_populate();
++	if (rc)
++		return rc;
++
++	rc = cxl_dsps_populate();
++	if (rc) {
++		cxl_usps_remove();
++		return rc;
++	}
++
++	return 0;
++}
++
+ static __init int cxl_test_init(void)
+ {
+-	int rc, i;
+ 	struct range mappable;
++	int rc;
+ 
+ 	/* Enforce a single module param active at a time */
+ 	if (have_multiple_modparms())
+@@ -1898,74 +2092,21 @@ static __init int cxl_test_init(void)
+ 	if (rc)
+ 		goto err_populate;
+ 
+-	for (i = 0; i < ARRAY_SIZE(cxl_host_bridge); i++) {
+-		struct acpi_device *adev = &host_bridge[i];
+-		struct platform_device *pdev;
++	rc = host_bridges_populate();
++	if (rc)
++		goto err_populate;
+ 
+-		pdev = platform_device_alloc("cxl_host_bridge", i);
+-		if (!pdev)
+-			goto err_bridge;
++	rc = cxl_rootports_populate();
++	if (rc)
++		goto err_host_bridges;
+ 
+-		mock_companion(adev, &pdev->dev);
+-		rc = cxl_mock_platform_device_add(pdev, &cxl_host_bridge[i]);
+-		if (rc)
+-			goto err_bridge;
+-
+-		mock_pci_bus[i].bridge = &pdev->dev;
+-		rc = sysfs_create_link(&pdev->dev.kobj, &pdev->dev.kobj,
+-				       "physical_node");
+-		if (rc)
+-			goto err_bridge;
+-	}
+-
+-	for (i = 0; i < ARRAY_SIZE(cxl_root_port); i++) {
+-		struct platform_device *bridge =
+-			cxl_host_bridge[i % ARRAY_SIZE(cxl_host_bridge)];
+-		struct platform_device *pdev;
+-
+-		pdev = platform_device_alloc("cxl_root_port", i);
+-		if (!pdev)
+-			goto err_port;
+-		pdev->dev.parent = &bridge->dev;
+-
+-		rc = cxl_mock_platform_device_add(pdev, &cxl_root_port[i]);
+-		if (rc)
+-			goto err_port;
+-	}
+-
+-	BUILD_BUG_ON(ARRAY_SIZE(cxl_switch_uport) != ARRAY_SIZE(cxl_root_port));
+-	for (i = 0; i < ARRAY_SIZE(cxl_switch_uport); i++) {
+-		struct platform_device *root_port = cxl_root_port[i];
+-		struct platform_device *pdev;
+-
+-		pdev = platform_device_alloc("cxl_switch_uport", i);
+-		if (!pdev)
+-			goto err_uport;
+-		pdev->dev.parent = &root_port->dev;
+-
+-		rc = cxl_mock_platform_device_add(pdev, &cxl_switch_uport[i]);
+-		if (rc)
+-			goto err_uport;
+-	}
+-
+-	for (i = 0; i < ARRAY_SIZE(cxl_switch_dport); i++) {
+-		struct platform_device *uport =
+-			cxl_switch_uport[i % ARRAY_SIZE(cxl_switch_uport)];
+-		struct platform_device *pdev;
+-
+-		pdev = platform_device_alloc("cxl_switch_dport", i);
+-		if (!pdev)
+-			goto err_dport;
+-		pdev->dev.parent = &uport->dev;
+-
+-		rc = cxl_mock_platform_device_add(pdev, &cxl_switch_dport[i]);
+-		if (rc)
+-			goto err_dport;
+-	}
++	rc = cxl_switches_populate();
++	if (rc)
++		goto err_root_ports;
+ 
+ 	rc = cxl_single_topo_init();
+ 	if (rc)
+-		goto err_dport;
++		goto err_switches;
+ 
+ 	rc = cxl_rch_topo_init();
+ 	if (rc)
+@@ -2001,24 +2142,12 @@ static __init int cxl_test_init(void)
+ 	cxl_rch_topo_exit();
+ err_single:
+ 	cxl_single_topo_exit();
+-err_dport:
+-	for (i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--)
+-		platform_device_unregister(cxl_switch_dport[i]);
+-err_uport:
+-	for (i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--)
+-		platform_device_unregister(cxl_switch_uport[i]);
+-err_port:
+-	for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--)
+-		platform_device_unregister(cxl_root_port[i]);
+-err_bridge:
+-	for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
+-		struct platform_device *pdev = cxl_host_bridge[i];
+-
+-		if (!pdev)
+-			continue;
+-		sysfs_remove_link(&pdev->dev.kobj, "physical_node");
+-		platform_device_unregister(cxl_host_bridge[i]);
+-	}
++err_switches:
++	cxl_switches_remove();
++err_root_ports:
++	cxl_rootports_remove();
++err_host_bridges:
++	host_bridges_remove();
+ err_populate:
+ 	depopulate_all_mock_resources();
+ err_gen_pool_add:
+@@ -2041,27 +2170,14 @@ static void free_decoder_registry(void)
+ 
+ static __exit void cxl_test_exit(void)
+ {
+-	int i;
+-
+ 	hmem_test_exit();
+ 	cxl_mem_exit();
+ 	platform_device_unregister(cxl_acpi);
+ 	cxl_rch_topo_exit();
+ 	cxl_single_topo_exit();
+-	for (i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--)
+-		platform_device_unregister(cxl_switch_dport[i]);
+-	for (i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--)
+-		platform_device_unregister(cxl_switch_uport[i]);
+-	for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--)
+-		platform_device_unregister(cxl_root_port[i]);
+-	for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
+-		struct platform_device *pdev = cxl_host_bridge[i];
+-
+-		if (!pdev)
+-			continue;
+-		sysfs_remove_link(&pdev->dev.kobj, "physical_node");
+-		platform_device_unregister(cxl_host_bridge[i]);
+-	}
++	cxl_switches_remove();
++	cxl_rootports_remove();
++	host_bridges_remove();
+ 	depopulate_all_mock_resources();
+ 	gen_pool_destroy(cxl_mock_pool);
+ 	unregister_cxl_mock_ops(&cxl_mock_ops);
 -- 
 2.54.0
 
