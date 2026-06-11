@@ -1,120 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A004928C869
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 15:34:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072572EA754
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 15:38:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781192082; cv=none; b=dybs3pH1qn1MYiRA0nYKnYRfGUD2AZe7hVUgMiix97qUaxiD1dneuTQKknkGK1p/9ffrka5mBavCUBCc0V/21EV++tsifeAKIP3n2Et9iYntpDYjFvO/K5hEC2vdHKHucg4tw6K6iuWcjDkjHw/TqCkHiwSovBpAHRltbIGUjdo=
+	t=1781192312; cv=none; b=GjldDggJgk3bk6rLf4W5BAYFIKUc416Fxz2TqVAvRVJR4CNmiERJ1r+Ydyc0jAvJehrtMb4BW+wSAJ760zpgKhe1pEmhXUhKkH3+mRoypmwPeEPnVLlRytQhDgU2pVLS04Wzpbk2ImNUX+f018om58JCziaxts9JnvXaISp74EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781192082; c=relaxed/simple;
-	bh=WqcXU2dJBQgoMk21kRXdFV5w8wM4j9IID5hvKkN8cds=;
+	s=arc-20240116; t=1781192312; c=relaxed/simple;
+	bh=4BmGvw8dpkzxwJ+UTq1r2eC7cw5K/T/IrqWiMU7H0OM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=cZ0kCxbOHIQaOdNTg4vdfHD9vxpaDwWsDnYQv9s3RICUe4/BqlFldDZqV9esZsz53mnPGGkb+LDpUYDVC+YdgFQ9pQGHKeW+hVbPYTTgDEsKdT7JaaKvNhJdUGhOYOL3scAgEHblnZn4MzSanGoyhTu+42TCoUB3fULep+EI2LY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4dFggeQ; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=IqlBXq4t5oJd7eVs8bUl+Uc0XhFXYIj+a+p4MTyUflCJMNRTMKyXaFBKilR7+EG4qZ6yTYhexNS3sMh4sp/S4ivKDgwDIhYfKC242P91csk3Pw1DRlOcp7VXjEJRd0o46rAw1qGDLwb4vkW61uhP6+B2cObG7Rscb+/lPR4AYNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZKJTblF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4dFggeQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2170E1F00893;
-	Thu, 11 Jun 2026 15:34:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZKJTblF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D5EE1F00898;
+	Thu, 11 Jun 2026 15:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781192081;
-	bh=MQNcwQBVJktM+UWXexmX/QqNRY45ZKBQqwzAsNhNepE=;
+	s=k20260515; t=1781192310;
+	bh=avoYp7e1HFexGgdikMtyB2oinADwsByGeXykZpXpytU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Q4dFggeQJQkV1YdAVeGtQMnTRhFEwaNspB1NeBV4rT0iBjIOqUIW4/6YKjwSgin1z
-	 rwF5kR7toT+Wp5kpYofXcR56TvrsF3mPl99QRBXEFOMyz5GO4AfSZWX0MvVykrYOij
-	 sP2Sw7y21+bkPcQYlPoFbpk1iC/Rlqm4g5OIjzyNc4TGY/IRSRweNw19KAgQIF7PSN
-	 Vgnaqe1HKSirLm8/54C8zFeLaWQDg3Lv2TelT66A/R6vwKFkaEbj6rImdNEODUlTf0
-	 dM+G/rUhBonuCuk6oLruh+e1uWxvxgd/sIILlUikt1f78EAMVzHtN6Rllajd0CFIgW
-	 K/bVV/OM+f8DQ==
+	b=fZKJTblFnpz1QcVnVi7ZVDusuGuAo6Z578700BllfVnCobY7tB5MbuyOcuIGCT6FH
+	 Msyak/bALJQVI7keajYRu2ok/p/K31KJwimo0HDw0uelAfPgG+m0zAj1Lk+/kRSehs
+	 UfslpvFp1zbv1hAfLmjlqEJxFJjD551aJcOgYRn1mM9mM4KlTSmFHJ5659E3X/IQZQ
+	 k8d2+K73hT42Ku8kyPeUApTJpqFz7rT1TdH3E8+cQZm3jn5HrNMbKRofumpZjh8XDV
+	 D2/5M7PX3pNwvMQ25skGXMXkfZ0aJTAWM6h/g9YY70ysSuGmOFJfe8An4q5ETOfLEQ
+	 //J+82vdfTpxw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 1/6] cxl/test: Add test for module parameters
+Subject: Re: [PATCH v4 2/6] cxl/test: Add type2 support for mock CFMWS0
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260611152124.3656434-2-dave.jiang@intel.com>
-References: <20260611152124.3656434-2-dave.jiang@intel.com>
+In-Reply-To: <20260611152124.3656434-3-dave.jiang@intel.com>
+References: <20260611152124.3656434-3-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 11 Jun 2026 15:34:40 +0000
-Message-Id: <20260611153441.2170E1F00893@smtp.kernel.org>
+Date: Thu, 11 Jun 2026 15:38:30 +0000
+Message-Id: <20260611153830.7D5EE1F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] The module unregisters `hmem_test_device` without flushing or canc=
-eling its pending work, leading to a use-after-free and execute-after-free =
-when the `cxl_test` module unloads.
+- [High] Improper teardown of `cxl_acpi` platform device in `cxl_test_init(=
+)` error path leads to double-put or stranded device.
+- [High] Missing NULL check after `kzalloc` in `alloc_mock_res` causes a NU=
+LL pointer dereference on allocation failure.
 --
 
-commit 25e58b40eb66000f930689ce58f1f38f11a8a5bd
+commit 4122a7a4346775c8cc5370b036f6cfe7a92557ff
 Author: Dave Jiang <dave.jiang@intel.com>
 
-cxl/test: Add test for module parameters
+cxl/test: Add type2 support for mock CFMWS0
 
-Add a test for module parameters during module init to make sure that
-only one is activated.
+Add a module parameter 'type2_test' for triggering type2 test support
+in cxl_test. Setup the CFMWS0 configuration to be type2 when 'type2_test'
+is set.
 
+> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> index 1c8ac8bdd8f7a..c5529cee482d4 100644
+> --- a/tools/testing/cxl/test/cxl.c
+> +++ b/tools/testing/cxl/test/cxl.c
 [ ... ]
-
-> diff --git a/tools/testing/cxl/test/hmem_test.c b/tools/testing/cxl/test/=
-hmem_test.c
-> index 3a1a089e1721b..0fa00f7e16db5 100644
-> --- a/tools/testing/cxl/test/hmem_test.c
-> +++ b/tools/testing/cxl/test/hmem_test.c
-> @@ -3,8 +3,9 @@
->  #include <linux/moduleparam.h>
->  #include <linux/workqueue.h>
->  #include "../../../drivers/dax/bus.h"
-> +#include "mock.h"
+> @@ -493,10 +512,14 @@ static int populate_cedt(void)
+>  		chbs->length =3D size;
+>  	}
 > =20
-> -static bool hmem_test;
-> +bool hmem_test;
+> +	if (type2_test)
+> +		update_type2_cfmws();
+> +
+>  	for (i =3D cfmws_start; i <=3D cfmws_end; i++) {
+>  		struct acpi_cedt_cfmws *window =3D mock_cfmws[i];
 > =20
->  static void hmem_test_work(struct work_struct *work)
->  {
+> -		cfmws_elc_update(window, i);
+> +		if (i =3D=3D 0 && !type2_test)
+> +			cfmws_elc_update(window, i);
+>  		res =3D alloc_mock_res(window->window_size, SZ_256M);
 
 [Severity: High]
-This is a pre-existing issue, but does the hmem_test module leak
-outstanding workqueue references upon unload?
+This is a pre-existing issue, but does alloc_mock_res() have a potential nu=
+ll
+pointer dereference on allocation failure?
 
-The module unregisters hmem_test_device in hmem_test_exit() without flushing
-or canceling its pending work:
+tools/testing/cxl/test/cxl.c:alloc_mock_res() {
+        struct cxl_mock_res *res =3D kzalloc(sizeof(*res), GFP_KERNEL);
 
-tools/testing/cxl/test/hmem_test.c:hmem_test_exit() {
-	if (hmem_test)
-		platform_device_unregister(&hmem_test_device.pdev);
+        INIT_LIST_HEAD(&res->list);
+        ...
 }
 
-Because hmem_test_device is statically allocated in the module:
+If kzalloc() fails, INIT_LIST_HEAD() will unconditionally dereference the n=
+ull
+pointer. Could a check be added to handle the allocation failure before
+initializing the list head?
 
-tools/testing/cxl/test/hmem_test.c:
-	static struct hmem_platform_device hmem_test_device =3D { ... };
+>  		if (!res)
+>  			return -ENOMEM;
+[ ... ]
+> @@ -2050,6 +2075,8 @@ module_param(extended_linear_cache, bool, 0444);
+>  MODULE_PARM_DESC(extended_linear_cache, "Enable extended linear cache su=
+pport");
+>  module_param(fail_autoassemble, bool, 0444);
+>  MODULE_PARM_DESC(fail_autoassemble, "Simulate missing member of an auto-=
+region");
+> +module_param(type2_test, bool, 0444);
+> +MODULE_PARM_DESC(type2_test, "Enable type 2 support testing");
+>  module_init(cxl_test_init);
 
-and its release function is in the module's text section:
+[Severity: High]
+This isn't a bug introduced by this patch, but does the error path in
+cxl_test_init() improperly tear down the cxl_acpi platform device?
 
-tools/testing/cxl/test/hmem_test.c:hmem_test_release() {
-	struct hmem_platform_device *hpdev =3D
-		container_of(dev, typeof(*hpdev), pdev.dev);
+If cxl_mock_platform_device_add() fails, it already drops the reference, so
+calling platform_device_put(cxl_acpi) again in the err_root path would cause
+a double-put.
 
-	memset(hpdev, 0, sizeof(*hpdev));
-}
+Alternatively, if subsequent initialization fails, calling
+platform_device_put() instead of platform_device_unregister() leaves the
+device registered but drops the initial module reference, leading to a
+stranded device when the module unloads.
 
-could the module unload, allowing its memory to be freed before the
-workqueue executes?
+Could this error path be updated to safely unregister the device?
 
-If the pending work executes after the module is unloaded, it would access =
-the
-freed hmem_test_device memory and trigger hmem_test_release() from the unlo=
-aded
-text section, causing a kernel crash. Should there be a call to cancel the
-work before unregistering the device?
+>  module_exit(cxl_test_exit);
+>  MODULE_LICENSE("GPL v2");
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611152124.3656=
-434-1-dave.jiang@intel.com?part=3D1
+434-1-dave.jiang@intel.com?part=3D2
