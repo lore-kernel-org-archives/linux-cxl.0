@@ -1,171 +1,243 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFF028C2BF
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 10:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D946B3CAA31;
+	Thu, 11 Jun 2026 10:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781172328; cv=none; b=bKKXXonea4d9h3fAFZqdiHUThPIt9SRn592FOe2weYBpTPfdUshHL1wMiHxY6HvtKj7HE0eNKDSDD+GF8bHg8tDXzxEz5JBTFcBqkvBm7PYV9MeT4U59J0dy+vMgZYMMSXsDbaUwX1uuoFEvVOMU9YXDKhp9iZk8KgUtenxifTo=
+	t=1781172482; cv=none; b=Zy4feud6eUu7QkM+VWvJUn7srFZRW0XoHEegDelC/uQCd9VI9ugu1fFu8tQ/OHj9w1lVZ3O1d5hmO2Z8CJZFQoFik9+qPAxGSe2WzrRNIugNw99ZZfdIgjf8KvDhWk2gQXcEfjPJOz71qS3Jc03Pp55Vn82OMA9/j/YGGKH+LRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781172328; c=relaxed/simple;
-	bh=a9frhMzxPI5jVMOyV/KO75nCkj7UROAodNAAuoFZKH4=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GIXPaOfQEr1NDPBw0UmBGDmZ6hqUtfXNn/fPzNqws5ahvX2ujoKi6U8SZHH7KkUH+eoJOJ7q95BcM6kjvA21ta/ZbnNQcO/fS20cIw38X3wBUUY2m1nZrVgR1+vAfWILOYV8qVPBFxdId3W3s7ajZ1UHcEere/ctH4e8M/EryzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBrl75R+; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781172482; c=relaxed/simple;
+	bh=dO49bB1U82I9NOj7iBCUPCZlEj0Bk6lEc/VkexmVjv8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GxmRPCSTG3ImDYqpBvZkQphiYElcuFAM55GrrBdSNMUU/B8X03qenUcesL5g7emUBNdyi+8YgEXpcztwJWcdQFxZM+KzK71rkVz1dUbmoQ7yDu7BbrYM62lFHTUQkRdVjV6doCnAj9DIFxELrD4lkUT5I3rWfxG6VeWRxosb/jE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I8SyMQnT; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBrl75R+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EB3A1F00898;
-	Thu, 11 Jun 2026 10:05:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781172327;
-	bh=ro6A90ugR0tc/tSK+xIhiMrJqGgNeX4niy8LmkWa0hE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dBrl75R+lCOj1I8nu8dOHM2gJQeEVxP3G4NdOxF5fuO21PERAw3OKLtISzSr3c2/V
-	 mjWdUfPJ3wRgU3gsa/zJrRZVL92rMPt2keDwOLROzNhzXxCq7HNMV8u1a396MMTeKx
-	 nD2z33hS8gz+ZyqBqGlleRyhCxjkytVjPNcXNnoiJXaBeo7dsjP4iOQMLaRj3vhMLs
-	 LgNHb2fZiyTcilX9Wn8Vi1jvp7Mf4T9hpPAd82WO7gLGeiNah5wII0dOd49Brlp5ZN
-	 0at6zXuvyKtkc6TmKSOumDPVHauEnBb2Vy9fKIl3ysf5TFSucnfU8gKUnKbs/EyPS5
-	 1v/k3sHbEZibw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] cxl/features: Bound Get Feature read count to the
- output buffer
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Richard Cheng" <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260611094944.31638-1-icheng@nvidia.com>
-References: <20260611094944.31638-1-icheng@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 11 Jun 2026 10:05:26 +0000
-Message-Id: <20260611100527.1EB3A1F00898@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I8SyMQnT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781172481; x=1812708481;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dO49bB1U82I9NOj7iBCUPCZlEj0Bk6lEc/VkexmVjv8=;
+  b=I8SyMQnTmLiv95X4TXzhi4ocrmyw1+x0c5JVFrD9Aj45vtk2VsQ1BtnA
+   t2E3UUE7riGO25UncCqf1Tq7WFZ2fV/ovqpU9Pvx48TmZY6fWdH7VaWAr
+   IGuR2E6B3tz9pMSNoIGRm9E6aSTQFjqmQCDPd7BuyaqGdHgyPEsMt1y4j
+   j+pkNUar09yHdd/DURjJWYoiJxG9pGVXl4dmpJEvWi0ryGh4th2u+oDJX
+   HRaCbYsXknM8Qov3WHJyCNFRsEM1vCRQmLVsT7in/Wt+4QZnhnbeekOBh
+   WSxHYGvKh9MjLwwtzpaARkhngu/x962cxGmLiQbd6iekin0X8zXUfpfmf
+   A==;
+X-CSE-ConnectionGUID: ctms7xStRW+MDAEOWft4tw==
+X-CSE-MsgGUID: wGwRCckUQZmwNgLFd3QtjQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="81961797"
+X-IronPort-AV: E=Sophos;i="6.24,198,1774335600"; 
+   d="scan'208";a="81961797"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 03:08:01 -0700
+X-CSE-ConnectionGUID: DOHW+5KbQMyubQMXOVKvWA==
+X-CSE-MsgGUID: NrbSc8hxRWa0wB2jZjosvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,198,1774335600"; 
+   d="scan'208";a="246459572"
+Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 11 Jun 2026 03:07:58 -0700
+Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wXcKJ-00000000MkY-1KqM;
+	Thu, 11 Jun 2026 10:07:55 +0000
+Date: Thu, 11 Jun 2026 18:07:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>, jic23@kernel.org, will@kernel.org,
+	mark.rutland@arm.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Harshal Thakkar <harshal.t@samsung.com>,
+	Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCH] perf/cxlpmu: Support Channel/Rank/Bank filter
+Message-ID: <202606111843.aJlNG96K-lkp@intel.com>
+References: <20260611010409.2776635-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260611010409.2776635-1-dave@stgolabs.net>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+Hi Davidlohr,
 
-Pre-existing issues:
-- [High] Lack of validation for the user-provided `in_len` allows a ZERO_SI=
-ZE_PTR dereference and out-of-bounds heap reads.
-- [High] Missing `out_size` boundary check in `cxlctl_set_feature()` allows=
- a ZERO_SIZE_PTR dereference or out-of-bounds heap write.
-- [High] Stale `mbox_cmd.size_out` in `cxl_get_feature()` loop allows a dev=
-ice-to-host heap buffer overflow.
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on arm-perf/for-next/perf]
+[also build test WARNING on cxl/next linus/master v7.1-rc7 next-20260610]
+[cannot apply to cxl/pending]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Davidlohr-Bueso/perf-cxlpmu-Support-Channel-Rank-Bank-filter/20260611-090512
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git for-next/perf
+patch link:    https://lore.kernel.org/r/20260611010409.2776635-1-dave%40stgolabs.net
+patch subject: [PATCH] perf/cxlpmu: Support Channel/Rank/Bank filter
+config: i386-buildonly-randconfig-001-20260611 (https://download.01.org/0day-ci/archive/20260611/202606111843.aJlNG96K-lkp@intel.com/config)
+compiler: clang version 22.1.3 (https://github.com/llvm/llvm-project e9846648fd6183ee6d8cbdb4502213fcf902a211)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260611/202606111843.aJlNG96K-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202606111843.aJlNG96K-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/perf/cxl_pmu.c:344:19: warning: shift count >= width of type [-Wshift-count-overflow]
+     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
+         |                ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/cxl_pmu.c:258:39: note: expanded from macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
+     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
+         |                                                 ^
+   include/linux/bits.h:51:24: note: expanded from macro 'GENMASK'
+      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
+         |                                 ^
+   include/linux/bits.h:48:20: note: expanded from macro 'GENMASK_TYPE'
+      48 |              (type_max(t) << (l) &                              \
+         |                           ^
+   note: (skipping 4 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/compiler_types.h:699:22: note: expanded from macro 'compiletime_assert'
+     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:687:23: note: expanded from macro '_compiletime_assert'
+     687 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:679:9: note: expanded from macro '__compiletime_assert'
+     679 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+>> drivers/perf/cxl_pmu.c:344:19: warning: shift count >= width of type [-Wshift-count-overflow]
+     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
+         |                ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/cxl_pmu.c:258:39: note: expanded from macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
+     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
+         |                                                 ^
+   include/linux/bits.h:51:24: note: expanded from macro 'GENMASK'
+      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
+         |                                 ^
+   include/linux/bits.h:49:20: note: expanded from macro 'GENMASK_TYPE'
+      49 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
+         |                           ^
+   note: (skipping 4 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/compiler_types.h:699:22: note: expanded from macro 'compiletime_assert'
+     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:687:23: note: expanded from macro '_compiletime_assert'
+     687 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:679:9: note: expanded from macro '__compiletime_assert'
+     679 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+>> drivers/perf/cxl_pmu.c:344:19: warning: shift count >= width of type [-Wshift-count-overflow]
+     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
+         |                ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/cxl_pmu.c:258:39: note: expanded from macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
+     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
+         |                                                 ^
+   include/linux/bits.h:51:24: note: expanded from macro 'GENMASK'
+      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
+         |                                 ^
+   include/linux/bits.h:48:20: note: expanded from macro 'GENMASK_TYPE'
+      48 |              (type_max(t) << (l) &                              \
+         |                           ^
+   note: (skipping 4 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/compiler_types.h:699:22: note: expanded from macro 'compiletime_assert'
+     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:687:23: note: expanded from macro '_compiletime_assert'
+     687 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:679:9: note: expanded from macro '__compiletime_assert'
+     679 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+>> drivers/perf/cxl_pmu.c:344:19: warning: shift count >= width of type [-Wshift-count-overflow]
+     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
+         |                ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/cxl_pmu.c:258:39: note: expanded from macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
+     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
+         |                                                 ^
+   include/linux/bits.h:51:24: note: expanded from macro 'GENMASK'
+      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
+         |                                 ^
+   include/linux/bits.h:49:20: note: expanded from macro 'GENMASK_TYPE'
+      49 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
+         |                           ^
+   note: (skipping 4 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/compiler_types.h:699:22: note: expanded from macro 'compiletime_assert'
+     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:687:23: note: expanded from macro '_compiletime_assert'
+     687 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:679:9: note: expanded from macro '__compiletime_assert'
+     679 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+>> drivers/perf/cxl_pmu.c:344:19: warning: shift count >= width of type [-Wshift-count-overflow]
+     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
+         |                ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/cxl_pmu.c:258:39: note: expanded from macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
+     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
+         |                                                 ^
+   include/linux/bits.h:51:24: note: expanded from macro 'GENMASK'
+      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
+         |                                 ^
+   include/linux/bits.h:48:20: note: expanded from macro 'GENMASK_TYPE'
+      48 |              (type_max(t) << (l) &                              \
+         |                           ^
+   note: (skipping 4 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/compiler_types.h:699:22: note: expanded from macro 'compiletime_assert'
+     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:687:23: note: expanded from macro '_compiletime_assert'
+     687 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:679:9: note: expanded from macro '__compiletime_assert'
+     679 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+>> drivers/perf/cxl_pmu.c:344:19: warning: shift count >= width of type [-Wshift-count-overflow]
+     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
+         |                ~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/perf/cxl_pmu.c:258:39: note: expanded from macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
+     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
+         |                                                 ^
+   include/linux/bits.h:51:24: note: expanded from macro 'GENMASK'
+      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
+         |                                 ^
+   include/linux/bits.h:49:20: note: expanded from macro 'GENMASK_TYPE'
+      49 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
+         |                           ^
+   note: (skipping 4 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+   include/linux/compiler_types.h:699:22: note: expanded from macro 'compiletime_assert'
+     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |         ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:687:23: note: expanded from macro '_compiletime_assert'
+     687 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/compiler_types.h:679:9: note: expanded from macro '__compiletime_assert'
+     679 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   6 warnings generated.
+
+
+vim +344 drivers/perf/cxl_pmu.c
+
+   341	
+   342	static u16 cxl_pmu_config2_get_crb(struct perf_event *event)
+   343	{
+ > 344		return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
+   345	}
+   346	
+
 --
-
-commit f6369408ffb978129833c743acee0df13ef51058
-Author: Richard Cheng <icheng@nvidia.com>
-
-cxl/features: Bound Get Feature read count to the output buffer
-
-This commit adds bounds checking to cxlctl_get_feature to ensure the
-requested read count does not exceed the available payload room in the
-output buffer. It prevents an out-of-bounds write when allocating the
-buffer via kvzalloc.
-
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index 3435db9ea6b11..3f949225da6de 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -471,6 +471,10 @@ static void *cxlctl_get_feature(struct cxl_features_=
-state *cxlfs,
->  	if (!count)
->  		return ERR_PTR(-EINVAL);
-> =20
-> +	if (out_size < offsetof(struct fwctl_rpc_cxl_out, payload) ||
-> +	    count > out_size - offsetof(struct fwctl_rpc_cxl_out, payload))
-> +		return ERR_PTR(-EINVAL);
-> +
->  	struct fwctl_rpc_cxl_out *rpc_out __free(kvfree) =3D
->  		kvzalloc(out_size, GFP_KERNEL);
->  	if (!rpc_out)
-
-[Severity: High]
-This isn't a bug introduced by this patch, but while reviewing this, I
-noticed a pre-existing issue with the validation of the user-provided
-in_len.
-
-In drivers/fwctl/main.c:fwctl_cmd_rpc(), inbuf is allocated using the
-completely user-controlled in_len:
-
-    void *inbuf __free(kvfree) =3D kvzalloc(cmd->in_len, GFP_KERNEL_ACCOUNT=
-);
-
-If in_len is 0, kvzalloc returns ZERO_SIZE_PTR.
-
-Then in drivers/cxl/core/features.c:cxlctl_fw_rpc(), the code blindly
-dereferences rpc_in without checking its size:
-
-    const struct fwctl_rpc_cxl *rpc_in =3D in;
-    u16 opcode =3D rpc_in->opcode;
-
-Furthermore, command handlers like cxlctl_set_feature() trust the embedded
-rpc_in->op_size field to determine how much data to copy:
-
-    data_size =3D rpc_in->op_size - sizeof(feat_in->hdr);
-    rc =3D cxl_set_feature(cxl_mbox, &feat_in->uuid, ... feat_in->feat_data,
-                         data_size, flags, offset, &return_code);
-
-Without validating that rpc_in->op_size <=3D in_len, could this allow a sma=
-ll
-in_len combined with a large op_size to read past the end of the inbuf
-allocation and leak kernel heap memory?
-
-
-[Severity: High]
-This is a pre-existing issue, but I noticed another similar missing
-boundary check.
-
-While this patch fixes the boundary check for cxlctl_get_feature(),
-cxlctl_set_feature() derives out_size directly from the user-controlled
-*out_len and passes it to kvzalloc():
-
-    out_size =3D *out_len;
-    ...
-    struct fwctl_rpc_cxl_out *rpc_out __free(kvfree) =3D
-        kvzalloc(out_size, GFP_KERNEL);
-    if (!rpc_out)
-        return ERR_PTR(-ENOMEM);
-   =20
-    rpc_out->size =3D 0;
-
-If out_len is 0, kvzalloc can return ZERO_SIZE_PTR which bypasses the
-!rpc_out NULL check. Would the subsequent rpc_out->size =3D 0 dereference
-ZERO_SIZE_PTR and cause a panic?
-
-Additionally, if out_size is very small (like 4 bytes), could setting
-rpc_out->retval (at offset 4) write past the allocated buffer?
-
-
-[Severity: High]
-This isn't a bug introduced by this patch, but I found a pre-existing
-issue in the cxl_get_feature() loop.
-
-In drivers/cxl/core/features.c:cxl_get_feature(), mbox_cmd.size_out is
-assigned the loop-invariant size_out instead of the correctly bounded
-data_to_rd_size:
-
-    mbox_cmd =3D (struct cxl_mbox_cmd) {
-        .opcode =3D CXL_MBOX_OP_GET_FEATURE,
-        .size_in =3D sizeof(pi),
-        .payload_in =3D &pi,
-        .size_out =3D size_out,
-        .payload_out =3D feat_out + data_rcvd_size,
-        .min_out =3D data_to_rd_size,
-    };
-
-In the final iterations of the loop, the remaining space in the host buffer
-(data_to_rd_size) may be strictly less than size_out. Because
-mbox_cmd.size_out is not updated to data_to_rd_size, the lower-level
-mailbox driver permits the device to return up to size_out bytes.
-
-If a CXL device returns more bytes than the requested data_to_rd_size,
-could memcpy_fromio() write past the end of the feat_out buffer, causing a
-device-to-host heap buffer overflow?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260611094944.3163=
-8-1-icheng@nvidia.com?part=3D1
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
