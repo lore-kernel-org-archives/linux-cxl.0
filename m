@@ -1,197 +1,107 @@
-Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D01E35B645
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 06:22:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35DF388397
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 06:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781158970; cv=none; b=erC2CEjpTQVWQ3vgdoorsk1+EkxxYctj+6Nqma4f+XUFqf6tHOyaBmpn6U/UXIWYidm0IuPy0fTdQM0JdxGD63DtP3z4RpLRl2aIuE73e6IO6Me4fqcbIxjrLLzZi/Dbk3mKFemIfIv4TGpISoQJDuH72Vn7D9BE/YL71XbX3bo=
+	t=1781160818; cv=none; b=cjEfSkW6NU9b9modBGJ0j4zBxZ6lTaqMBviMY9AEy9yXuzXoatydxso2QG40sSQIBl5tfTkZoNp8GsxqwGKbGD7qFPP2z06nQz2IsEFX62OX3iN9XwFVwPkKWRsvrisWVwh7gSkhQZCdP3UQ1FvX8OfADwa/gItgZZAGxZnajww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781158970; c=relaxed/simple;
-	bh=aOEGPw/vtOCxM66iJPQ6H7kLds48Kb65VpUxYO7XjUQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HtuB+AwUZPeZurcVKS7ZDp1krcUx6WyIkKubNpjCX7oXDh3Ss1fl+8sZLODy3RGdi6ZjQHukwQkjr3VfP8gmjyu9VOFEJ1lOZhBA8PNF+f6KKLYnrsqrHd2xfXUUYpTAxu1Z8OocSN71Wi9MrFS3u2Xxg9ZC4yqcYe2JwDz/OQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nMm7alMJ; arc=none smtp.client-ip=74.125.82.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781160818; c=relaxed/simple;
+	bh=w+NWyNCiA9FPJArTEmBIfUD57JuYWKayWZ3GY406jSg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mxYv4LT4RV23HGz56rThklUIFxBuh8am/GSh7ndeQn6+qxYVZy3id2du9+8HxrNZaODYl3WjniB65wLP2cfMuKMei8GCAd1d6kOWGZOZgYVRbyp6vEMS2dAcxETaloCT7P10/uOhMcSSPj+Ocm45HyJDOufsEJ/uFASCXYqr2LE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ep+R9K5i; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMm7alMJ"
-Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-30807ba471bso509344eec.1
-        for <linux-cxl@vger.kernel.org>; Wed, 10 Jun 2026 23:22:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781158968; x=1781763768; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Q+r5CsmNZ/qmFA19D/kuAvtdTU1zm5RqRVe0bN9E8Fk=;
-        b=nMm7alMJc6bs0g29ZG2cqiY28C0ekeyFcLs3AUjPI5fOQltvd8VCRV9S1zmNI9Ja2M
-         X7/X4UD2/LDyxes19WfF6swX4s/8hm29/dn8we97km5COPMbFtueFpFtS+wH41Z9XDWw
-         HjX0Tdz5lRmVc+i9NYIeRe7aHA7/zS3QZljCSU/7j1YWIDkv4Jl3nIRv5hBUPrEMxqvL
-         zegfHh0O7x7i7FlRe4sONKovjzq5jfVjKTht6T3zR4ulULBoGumvxrp2eHnZ4u72kVm9
-         VzgwmR2gt8gAhJWythq0fe6yPK6IR3tEJOhvHXmEA5rc4ylBtlCpb8bPOzDHJktsg3t1
-         nHwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781158968; x=1781763768;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q+r5CsmNZ/qmFA19D/kuAvtdTU1zm5RqRVe0bN9E8Fk=;
-        b=XZwaB3VDCahBjoc3rAvLMgKNbReNrTuO0uigDa7WO0U68sGenB7xkahU1N8nzznQtu
-         m9Qx3fPxhf8rXKOEk4D0l48k6vUKN00tavf/t5NZuJ2CdA0syKRk0qP9L/JSqu+UCVvp
-         pD2uXD2sqsuQvgBWoLdYxwidvYXYTtaIQ0N4BQeaI2Tg+mVUktW3D8aTN+RtczlKA2go
-         KGAi6QNlzZfy2w85plfKY0Gqu1Ssl9hwoAjp6tZGl9tOzfRuZwMxIl9Mn3HJcWsr7Or/
-         jAaRi+r1DgRZWsQ7GvM3zYPltYecXmsoRrwCEqEgicRWilStv8L3CkBtig7uh1956fWn
-         1bRA==
-X-Forwarded-Encrypted: i=1; AFNElJ/T2ZtEMkOdUZg6KAnSf7COtmfLAlNpSYmiaMAF0BzWHZ8Aa+yBo6v+4UoeaHFraH1FGcwrkegceF4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO/8D9/dYyHdQLPtQ8KmULVuM32h35nybrHeGsuToWDYcTpGDR
-	rV9wHzatRZ0t79b3WiLRcBwC1VatffG+xvzwJ0XPSAKyiWW1u4va8tqL4ah3DA==
-X-Gm-Gg: Acq92OGid7jDeiBnREeBRPq3dHwuMmd7a7Q5atw0l+LRGuneVlJFiJHKExErtLYxxP8
-	k04KG1KMMAUO2YfVVug4Rav9Qtq+56b/ePJDOjlJEwWRyAUGFwYTKrYsRyrlok9s+gS4fKKXRmT
-	SPTrv0/Yc9YRAT2nVIcnigdTrJW4GcxeUce7UZpkeXfhx7Qh1SoGl6BNqTNSv77SeEJf+Avn8st
-	ekc0nf77NjV0FKaR99xT8OWXKOglxN3bFe15I6KPwA+WmXSxJwCCdGFQ55Ph4BtU6PcmQjMya4A
-	oISE+g4aFPjZj77RSYii7oEhQs18gvg3CzSE9BHTbwrmejwUMzTec7xdPP1sNs6mXUnzBi+Oapf
-	qDVRH/uPB5UuJNou7zqiUj8eazG3ATDCVS0BO25anAG16F9NYMxOrSwUgiU5UXEka0v7lWudHfj
-	9ZH+LEDVxL0xoKmZRhsBH+ZAmTn3j6T+np8Q0snkVoo5LX22LE31D8lZjQDbgHk7NbrTu0oSkjF
-	e2RkXI9pRE8HJl4lQ==
-X-Received: by 2002:a05:7300:7305:b0:304:c520:4e0c with SMTP id 5a478bee46e88-3080479b610mr1200660eec.6.1781158967959;
-        Wed, 10 Jun 2026 23:22:47 -0700 (PDT)
-Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30806c2f3absm917761eec.5.2026.06.10.23.22.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2026 23:22:47 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Wed, 10 Jun 2026 23:22:45 -0700
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	Dan Williams <djbw@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	John Groves <John@groves.net>, Gregory Price <gourry@gourry.net>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH v10 15/31] cxl/mem: Drop misaligned DCD extent groups
-Message-ID: <aipUNZIxgAenJjLM@AnisaLaptop.localdomain>
-References: <cover.1779528761.git.anisa.su@samsung.com>
- <60e23199f7ef7dd3008bb3275c40d242334275c9.1779528761.git.anisa.su@samsung.com>
- <c09e9ae9-d5b9-48b6-9225-98f53022545d@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ep+R9K5i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781160815; x=1812696815;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=w+NWyNCiA9FPJArTEmBIfUD57JuYWKayWZ3GY406jSg=;
+  b=ep+R9K5iwai+ddE5rfHjCycmB3p0ShqVYe8kF4/IQKeZm2F+ADmzMLX1
+   nA0T47CNsSb0Cq905tfKiHtuws537lI7+AOmFwMkzijG8huPt02rOF3Dw
+   cgc6lf8QfrFy6lCVI8a4CM47IWfbpKxysOX9JFlGcp4xVhohk0A+HEV9X
+   unqi732FUJkNnVF7xHQlMTMqEaKcmnbhCbLS9sDeMnjkInG7lKy8Dlcb1
+   wWTMaAWGLYRPMQ6jsiY2v8YYENLSkltC8g/rUHH280RAXnNcZr/Klt1Ja
+   aDZxt0czcarMm/L5WxZgzH4U45mGpGEhXoEJWDPAHN0ODaRJWWIHtWv2r
+   A==;
+X-CSE-ConnectionGUID: 2MMPefGiQ9KEZ4/xA3YE3g==
+X-CSE-MsgGUID: EXeSQvogSFitJqpE35rzeQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="85595412"
+X-IronPort-AV: E=Sophos;i="6.24,198,1774335600"; 
+   d="scan'208";a="85595412"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 23:53:34 -0700
+X-CSE-ConnectionGUID: kUOFblCmREWuBer6+Y8LLA==
+X-CSE-MsgGUID: oUJ7Vc7BTCiksKvtspAqvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,198,1774335600"; 
+   d="scan'208";a="246469695"
+Received: from junjie-desk-dev.bj.intel.com ([10.238.152.71])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jun 2026 23:53:32 -0700
+From: Junjie Cao <junjie.cao@intel.com>
+To: jic23@kernel.org
+Cc: fan.ni@samsung.com,
+	qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org,
+	junjie.cao@intel.com
+Subject: [PATCH v2 0/5] hw/cxl: add trace-events coverage
+Date: Thu, 11 Jun 2026 14:30:22 +0800
+Message-ID: <20260611063027.1166493-1-junjie.cao@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c09e9ae9-d5b9-48b6-9225-98f53022545d@intel.com>
 
-On Thu, May 28, 2026 at 02:03:12PM -0700, Dave Jiang wrote:
-> 
-> 
-> On 5/23/26 2:43 AM, Anisa Su wrote:
-> > Add an alignment gate to cxl_add_pending(): every extent in a tag group
-> > must have its start_dpa and length aligned to CXL_DCD_EXTENT_ALIGN (SZ_2M,
-> > the minimum device-dax mapping granularity on every architecture that
-> > enables CXL DCD).  A misaligned extent makes the resulting dax device
-> > unusable, so drop the whole group rather than accept a partial allocation
-> > that would surface a broken dax_resource.
-> > 
-> > Based on patches by John Groves.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: John Groves <John@Groves.net>
-> > Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> > 
-> > ---
-> > Changes:
-> > [anisa: split out as a separate validation step]
-> > ---
-> >  drivers/cxl/core/mbox.c | 39 +++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 39 insertions(+)
-> > 
-> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> > index e5edc3975e8f..421bd716a273 100644
-> > --- a/drivers/cxl/core/mbox.c
-> > +++ b/drivers/cxl/core/mbox.c
-> > @@ -7,6 +7,7 @@
-> >  #include <linux/unaligned.h>
-> >  #include <linux/list.h>
-> >  #include <linux/list_sort.h>
-> > +#include <linux/sizes.h>
-> >  #include <cxlpci.h>
-> >  #include <cxlmem.h>
-> >  #include <cxl.h>
-> > @@ -1280,6 +1281,24 @@ static int add_to_pending_list(struct list_head *pending_list,
-> >  	return 0;
-> >  }
-> >  
-> > +/*
-> > + * Device-dax requires extent boundaries aligned to its mapping granularity.
-> > + * Use SZ_2M as a conservative default; a tighter check that queries the
-> > + * cxl_dax_region / cxl_endpoint_decoder for its actual alignment would be
-> > + * strictly more correct, but SZ_2M is the minimum device-dax supports on
-> > + * every architecture that enables CXL DCD today.
-> > + */
-> > +#define CXL_DCD_EXTENT_ALIGN	SZ_2M
-> 
-> Wonder if this would cause issues in DAX on ARM64 with 64k page size since its PMD size is 512M. 
-> 
-Changed to use PMD_SIZE
+The CXL subsystem in QEMU currently has no trace coverage.  Debugging
+mailbox commands, HDM decoder programming, event log activity, and
+CFMWS address decoding relies on temporary printf or qemu_log_mask.
 
-> DJ
-> > +
-> > +static bool cxl_extent_dcd_aligned(const struct cxl_extent *extent)
-> > +{
-> > +	u64 start = le64_to_cpu(extent->start_dpa);
-> > +	u64 len = le64_to_cpu(extent->length);
-> > +
-> > +	return IS_ALIGNED(start, CXL_DCD_EXTENT_ALIGN) &&
-> > +	       IS_ALIGNED(len, CXL_DCD_EXTENT_ALIGN);
-> > +}
-> > +
-> >  /*
-> >   * Compare two extents by shared_extn_seq (ascending).  list_sort is
-> >   * stable so when shared_extn_seq is 0 for every entry (non-sharable
-> > @@ -1352,6 +1371,26 @@ static int cxl_add_pending(struct cxl_memdev_state *mds)
-> >  		extract_tag_group(pending, &tag, &group);
-> >  		list_sort(NULL, &group, extent_seq_compare);
-> >  
-> > +		/* Alignment gate — abort the group if any member fails */
-> > +		bool aligned = true;
-> 
-> declaring var in middle of code
-> 
-Moved up
-> > +		list_for_each_entry(pos, &group, list) {
-> > +			if (!cxl_extent_dcd_aligned(pos->extent)) {
-> > +				dev_warn(dev,
-> > +					 "Tag %pUb: dropping group, extent DPA:%#llx LEN:%#llx not %u-aligned\n",
-> > +					 &tag,
-> > +					 le64_to_cpu(pos->extent->start_dpa),
-> > +					 le64_to_cpu(pos->extent->length),
-> > +					 CXL_DCD_EXTENT_ALIGN);
-> > +				aligned = false;
-> > +				break;
-> > +			}
-> > +		}
-> > +		if (!aligned) {
-> > +			list_for_each_entry_safe(pos, tmp, &group, list)
-> > +				delete_extent_node(pos);
-> > +			continue;
-> > +		}
-> > +
-> >  		u16 logical_seq = 1;
-> 
-> Looks like this one came from a previous patch.
-> 
-Moved up in prev patch
+This series introduces trace-events infrastructure for the CXL
+subsystem and adds 11 trace points covering the above paths.  All
+events use the cxl_ prefix so -trace 'cxl_*' captures everything.
 
-Thanks,
-Anisa
-> 
-> >  		list_for_each_entry_safe(pos, tmp, &group, list) {
-> >  			u16 raw = le16_to_cpu(pos->extent->shared_extn_seq);
-> 
+Changes since v1:
+  - Split patch 2 into HDM-only; dropped CDAT traces -- source is
+    commandline-controlled (Jonathan)
+  - Split patch 3 into separate event-log and CFMWS patches (Jonathan)
+  - Pass set and cmd as separate uint8_t parameters instead of a
+    combined opcode (Jonathan)
+  - Cover all 21 CXL_MBOX_INVALID_PAYLOAD_LENGTH return sites, not
+    just the centralised entry check (Jonathan)
+  - Rename depth -> occupancy in event log trace (Jonathan)
+  - Defer passthrough-specific trace pending upstream support (Jonathan)
+  - Add cxl_hdm_decoder_uncommit for commit/uncommit symmetry
+
+v1: https://lore.kernel.org/qemu-devel/20260603013420.904749-1-junjie.cao@intel.com/
+
+Junjie Cao (5):
+  hw/cxl: introduce trace-events infrastructure
+  hw/cxl: trace mailbox command dispatch and payload errors
+  hw/cxl: trace HDM decoder write, commit and uncommit
+  hw/cxl: trace event log insertion, overflow and clear
+  hw/cxl: trace CFMWS address-to-device routing
+
+ hw/cxl/cxl-events.c         | 13 +++++--
+ hw/cxl/cxl-host.c           |  4 +++
+ hw/cxl/cxl-mailbox-utils.c  | 71 +++++++++++++++++++++++++++++++++++--
+ hw/cxl/trace-events         | 15 ++++++++
+ hw/cxl/trace.h              |  2 ++
+ hw/mem/cxl_type3.c          | 19 +++++++++-
+ hw/mem/trace-events         |  5 +++
+ include/hw/cxl/cxl_device.h |  1 +
+ meson.build                 |  1 +
+ 9 files changed, 126 insertions(+), 5 deletions(-)
+ create mode 100644 hw/cxl/trace-events
+ create mode 100644 hw/cxl/trace.h
+
+-- 
+2.43.0
+
