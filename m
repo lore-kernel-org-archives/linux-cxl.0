@@ -1,199 +1,141 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B76F34BA53
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 18:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A279A3FE667
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 18:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781201995; cv=none; b=lhoiiPQBcyP6haldf24Z9Wp824yBlPu+E8EUxauF0FvXqv4itruV+VfCwaaASYPDcx0M02lphQyLOsPUg0Tp2La9yScC1Vl+Sx30nL3ItRd7xSUEBvY/8xl6VtWqwrlCHNjUhYk0Th6L0hFrf+5MmCa/vfBcEqcEKVlbxMdAAPw=
+	t=1781202515; cv=none; b=IPV6IK6tKvf20frMzbYziO8G7x8f3zKgx2yiyf+7W4HhbDcGD8nOW5nyVfNce6O7mLH7jmbHHjzt0o59+aEL7K9Iwb0jqbMfHtJgE/2hYEjE/bPv8AlIG5BgLv1N4PQDWXWFOovyU40N2PnqHbksyRUTcVA/TuKfbYZnkRGx9jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781201995; c=relaxed/simple;
-	bh=1omX2rC5hpD8TszoQX/iIoOUdNYlcNz3F7LNrVXmo3Y=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tsOpI+nCh2J8x8wsP2c3lFf0132+tAapyw74dSXFkKeOetExI6lOW16dI3hwauR4JITXVM0hWEDDXWjZS1coE5N0xthmShWzZ5VKD6JC0jDJnixMIGtGSNUyCjDhBdUXUfPAWTdB8VPv5FfQ/n/wv1IQTpw/jOQOJwhLZ9tbBmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qFbuFGDq; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1781202515; c=relaxed/simple;
+	bh=FPvqk4jwwsDIJUjsvO0RLkzgbNAqu7LmW0K+mG6Es3M=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=DFZ7tRmu9P/1y9iuw533v4rhkJyzgXhNq2vhSyVM21GDkjJ1tULH2YMddOfaBMTVfMOAhj9krZHsbRR/Szu1JGRZOzm9S3l4LiZwGcVQGgVMQ6Hal5YczijiKVrYhfWyLhRn/VhTSvNU9O0puwcrdLtWvqb8oHQgWXwb1rQxTtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMnYdslm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qFbuFGDq"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-7dc6fbf3e86so1901617b3.3
-        for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 11:19:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781201993; x=1781806793; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ddH+eXH24NtmehhRI7L/9GO3TOPMJUuuZMHBikOY13M=;
-        b=qFbuFGDqoJKOcpMZ2Ham0lBi5yKdvkYgiLMbE1efwDo2BEIvM1wR3A3TFVNE1f9LKS
-         BZfVnQkqsa0Umh8RWTbY7UG6a6xHFNyCmZiVnnh/jflGZa97+AmrCyt0Yp/BcXJdQLtr
-         13yiyG4NuCVN4Nbq4Yel1Q6emDLgKDArRmCkpR3hthzy3qbXmR6zmIELcgJUpCfMkmej
-         fIZpDQk8Dlaw/H7icpNDrzHurBKEQz0wguVjAN5++dWphaasP641ZwMBq1OeF1VNm44a
-         Q6jVGZVl2iHzD4s7xpwM9d6FxtSc3A0hyBMCStQB/XpLXFKL8q37Pn3G6mDv/bmuI+7s
-         bA2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781201993; x=1781806793;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ddH+eXH24NtmehhRI7L/9GO3TOPMJUuuZMHBikOY13M=;
-        b=RYrJDZ7FIEFETIZqx0JNh4EvobQqNOQ0ba1hLZ85GmHMjxyfeqiuMjjXB7P06u96wV
-         doZieJa/alo1NgZLb+LIHo4gSjRYnV1IFrx/C30pSy+gxnk60RoyZJjUHwYYsQWorE1R
-         JNMTIpCZXmmxUCoJUKrdf1zLNcuvoFZC9ZUUaZvnJPNSfab+8KMXUT2s7UVNvMWQKrUx
-         t3Sj9qi1RoUqtQFi1Mo2yDLPXn9jW9slCvxiaO9LY+izDh0MbcYy0o6+03OEtfSPu9bE
-         GhDNFgW3Jul6tXuhz6KdhHYw2SWs+paVxCmy5v5Th0FxupK4JkVPLynTUYTQ/vSw919K
-         tLdA==
-X-Forwarded-Encrypted: i=1; AFNElJ95bt5S/nmwQkSDEwR//KGeg+24hDCA7OaYHg5J+wzRiiDmpzCndM1ThL2coPuj6dr/U5C+8SAWL7Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFOK8c6PpOz8CKJeCVfyrsVZ5E7hyqxF/fWZUt52CWW5PNUuEU
-	Yi5jUY+J3u0UJ33IPyx8O/6BNzrXgFGJaP23s9PNVC6GPAW7hSnp8nbU
-X-Gm-Gg: Acq92OH8CqBch8owAhfSfmNrSUl2KEqFQIS1VHDAfDezgUqdyfNLvgiQFeeFDj0T7uk
-	64xV95ivLad3+4XyOvTIupWxUWnceWbF7bIUPbQAlKzx49hSur3GWBbYN9kmsxf/CDQSULwbKWd
-	YqcH/JHBSuTKZGMPeIQJmqZidIlai1aqyGuTSPlq17F1LOoA8tP31QvpYHNPhRPwfF6XXb7GT78
-	hqz5gux6IAl8e2iZrJYqJpkiZbem4Z4V9AoSLWYe0koasyMwAVBjX1FKb3k/x/aAul5315nXK2F
-	ETKgGz6+D+h1o2v6PnAts1sMnyqsF3a5iK/9i2jJhZ067wQiTlsoqey/78pPrlNgf5s/MJ3GrNQ
-	eLfPXItr5dG6PhcQa0REey2lTUBrRvKgXQtoCEBg85DA2Hlz4GKt+Iq4FVa/VytZ2f18V1yvzOd
-	Si2JvEf30FDgxKf4nmxZPYAuo09idXEXL9+pslqSLYTQ==
-X-Received: by 2002:a05:690c:e3ef:b0:7dc:a5a8:8b8 with SMTP id 00721157ae682-7f6553fa56amr44840507b3.7.1781201992856;
-        Thu, 11 Jun 2026 11:19:52 -0700 (PDT)
-Received: from 4470NRD-ASU.ssi.samsung.com ([50.205.20.42])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-7f76e2b5564sm1275747b3.6.2026.06.11.11.19.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2026 11:19:52 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Thu, 11 Jun 2026 11:19:50 -0700
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	Dan Williams <djbw@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	John Groves <John@groves.net>, Gregory Price <gourry@gourry.net>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH v10 10/31] cxl/mem: Configure dynamic capacity interrupts
-Message-ID: <air8RktfkGYm2fHp@4470NRD-ASU.ssi.samsung.com>
-References: <cover.1779528761.git.anisa.su@samsung.com>
- <7f2e4fe385415e0b77b58f4bd988bc5895557dcf.1779528761.git.anisa.su@samsung.com>
- <28a8e58d-5bf8-438e-b337-76944d67e297@intel.com>
- <aiZ6TLUwI11Yg1jh@AnisaLaptop.localdomain>
- <9c3ab868-27b7-4d33-865b-9308269f764f@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hMnYdslm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A8221F000E9;
+	Thu, 11 Jun 2026 18:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781202512;
+	bh=2Mh4x20LCmqvxOMb8+zb9/Kb4hzh7ab/1MVGI9UcVas=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=hMnYdslmg2mMyVcK1BivMX1I/lFGsQGXnSZkWkxjvG1yR1thfMUeIcI0jYS/+H4Jz
+	 Li8VY0k1R2VpNHHrKsziv/FjUM7I1SOLXSz26Hch0mWlH48D+ZwC4ftWYsxIdrCZS9
+	 TVvpHeFAA3fDMc/JF56hy8MeIaIXAv40MWirKlOYARDACIpc0GycwbOXpUx4zLCUXA
+	 dp7xIuPcxkIYBmKVfHVgTXtVEKIYC+h0Ts0HbjNtsbwCqjCvXAUf2AbSNd5VnpphzP
+	 jMZq9w9nJbCm+3MPae9/L5KWiTNqYjjhUxL29WU25jUdXa3v66ESosnW8SsacSC5++
+	 AfctHLn0xorRg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH V5 8/9] dax: fix holder_ops race in fs_put_dax()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "John Groves" <john@jagalactic.com>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <0100019eb7be77a8-aa9a8781-e2b8-4c7b-92ba-63a0f7017d1a-000000@email.amazonses.com>
+References: <0100019eb7be77a8-aa9a8781-e2b8-4c7b-92ba-63a0f7017d1a-000000@email.amazonses.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 11 Jun 2026 18:28:31 +0000
+Message-Id: <20260611182832.1A8221F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9c3ab868-27b7-4d33-865b-9308269f764f@intel.com>
 
-On Wed, Jun 10, 2026 at 09:57:35AM -0700, Dave Jiang wrote:
-> 
-> 
-> On 6/8/26 1:16 AM, Anisa Su wrote:
-> > On Thu, May 28, 2026 at 09:21:59AM -0700, Dave Jiang wrote:
-> >>
-> >>
-> >> On 5/23/26 2:43 AM, Anisa Su wrote:
-> >>> From: Ira Weiny <ira.weiny@intel.com>
-> >>>
-> >>> Dynamic Capacity Devices (DCD) support extent change notifications
-> >>> through the event log mechanism.  The interrupt mailbox commands were
-> >>> extended in CXL 3.1 to support these notifications.  Firmware can't
-> >>> configure DCD events to be FW controlled but can retain control of
-> >>> memory events.
-> >>>
-> >>> Configure DCD event log interrupts on devices supporting dynamic
-> >>> capacity.  Disable DCD if interrupts are not supported.
-> >>>
-> >>> Care is taken to preserve the interrupt policy set by the FW if FW first
-> >>> has been selected by the BIOS.
-> >>>
-> >>> Accept the 4-byte CXL 2.0 reply on GET Event Interrupt Policy by setting
-> >>> min_out to CXL_EVENT_INT_POLICY_BASE_SIZE; pre-CXL 3.1 firmware omits
-> >>> dcd_settings and would otherwise fail the size check.
-> >>>
-> >>> Based on an original patch by Navneet Singh.
-> >>>
-> >>> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> >>> Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> >>>
-> >>> ---
-> >>> Changes:
-> >>> [anisa: rebase]
-> >>> [anisa: accept 4-byte CXL 2.0 GET reply via min_out]
-> >>> [anisa: drop Reviewed-by tags now that the patch carries new changes]
-> >>> ---
-[snip]
-> >>>  static int cxl_event_config(struct pci_host_bridge *host_bridge,
-> >>>  			    struct cxl_memdev_state *mds, bool irq_avail)
-> >>>  {
-> >>> -	struct cxl_event_interrupt_policy policy;
-> >>> +	struct cxl_event_interrupt_policy policy = { 0 };
-> >>> +	bool native_cxl = host_bridge->native_cxl_error;
-> >>>  	int rc;
-> >>>  
-> >>>  	/*
-> >>>  	 * When BIOS maintains CXL error reporting control, it will process
-> >>>  	 * event records.  Only one agent can do so.
-> >>> +	 *
-> >>> +	 * If BIOS has control of events and DCD is not supported skip event
-> >>> +	 * configuration.
-> >>>  	 */
-> >>> -	if (!host_bridge->native_cxl_error)
-> >>> +	if (!native_cxl && !cxl_dcd_supported(mds))
-> >>>  		return 0;
-> >>>  
-> >>>  	if (!irq_avail) {
-> >>>  		dev_info(mds->cxlds.dev, "No interrupt support, disable event processing.\n");
-> >>> +		if (cxl_dcd_supported(mds)) {
-> >>> +			dev_info(mds->cxlds.dev, "DCD requires interrupts, disable DCD\n");
-> >>> +			cxl_disable_dcd(mds);
-> >>> +		}
-> >>>  		return 0;
-> >>>  	}
-> >>>  
-> >>> @@ -676,10 +721,10 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
-> >>>  	if (rc)
-> >>>  		return rc;
-> >>>  
-> >>> -	if (!cxl_event_validate_mem_policy(mds, &policy))
-> >>> +	if (native_cxl && !cxl_event_validate_mem_policy(mds, &policy))
-> >>>  		return -EBUSY;
-> >>>  
-> >>> -	rc = cxl_event_config_msgnums(mds, &policy);
-> >>> +	rc = cxl_event_config_msgnums(mds, &policy, native_cxl);
-> >>>  	if (rc)
-> >>>  		return rc;
-> >>>  
-> >>> @@ -687,12 +732,16 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
-> >>>  	if (rc)
-> >>>  		return rc;
-> >>>  
-> >>> -	rc = cxl_event_irqsetup(mds, &policy);
-> >>> +	rc = cxl_irqsetup(mds, &policy, native_cxl);
-> >>>  	if (rc)
-> >>>  		return rc;
-> >>>  
-> >>>  	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
-> >>
-> >> Issue that was always there probably, should this check native_cxl so the BIOS owned events are not retrieved?
-> >>
-> >> 	if (native_cxl)
-> >> 		cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
-> >>
-> >>
-> > That makes sense. Would you prefer the fix as a separate patch?
-> 
-> Yes please.
-> 
-> DJ
-> 
-Oops I was wrong; the issue wasn't there before. This function used to return 0
-if !native_cxl at the top of the function but this patchset added
-&& !cxl_dcd_supported() to the condition.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Added the fix to this commit.
+New issues:
+- [High] Unconditional `WRITE_ONCE()` in `fs_put_dax()` corrupts `holder_op=
+s` of concurrent mounts due to a pre-existing race in `fs_dax_get()`.
 
-Thanks,
-Anisa
+Pre-existing issues:
+- [High] Lack of SRCU synchronization in `fs_put_dax()` leads to NULL point=
+er dereference or use-after-free in memory failure handlers.
+--
+
+commit 4554a08ddf0ff95891c1710cb432fdf796290f3d
+Author: John Groves <John@Groves.net>
+
+dax: fix holder_ops race in fs_put_dax()
+
+This patch clears holder_ops before holder_data in fs_put_dax() to
+prevent a concurrent fs_dax_get() from having its newly installed
+operations overwritten. It adds a WARN_ON for API contract violations.
+
+> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+> index 6b5ee6589e39b..af5c1e14f7e39 100644
+> --- a/drivers/dax/super.c
+> +++ b/drivers/dax/super.c
+> @@ -116,11 +116,47 @@ EXPORT_SYMBOL_GPL(fs_dax_get_by_bdev);
+> =20
+>  #if IS_ENABLED(CONFIG_FS_DAX)
+> =20
+[ ... ]
+>  void fs_put_dax(struct dax_device *dax_dev, void *holder)
+>  {
+> -	if (dax_dev && holder &&
+> -	    cmpxchg(&dax_dev->holder_data, holder, NULL) =3D=3D holder)
+> -		dax_dev->holder_ops =3D NULL;
+> +	if (dax_dev && holder) {
+> +		void *prev;
+> +
+> +		/*
+> +		 * Clear holder_ops before releasing holder_data. A concurrent
+[ ... ]
+> +		 * its subsequent store of new ops will not be overwritten.
+> +		 */
+> +		WRITE_ONCE(dax_dev->holder_ops, NULL);
+
+[Severity: High]
+Does this unconditional write corrupt concurrent mounts?
+
+Because the SRCU lock is dropped in fs_dax_get() before claiming
+holder_data, kill_dax() can run concurrently and clear the device state.
+This allows fs_dax_get() to mount a new filesystem on a dead device.
+
+If the original filesystem performs a forced unmount and calls
+fs_put_dax(), this WRITE_ONCE() unconditionally destroys the new
+filesystem's holder_ops before verifying ownership via cmpxchg().
+
+> +		prev =3D cmpxchg(&dax_dev->holder_data, holder, NULL);
+
+[Severity: High]
+This is a pre-existing issue, but does the lack of SRCU synchronization
+here lead to use-after-free or NULL pointer dereferences in memory failure
+handlers?
+
+dax_holder_notify_failure() executes under an SRCU read lock and reads
+holder_ops before calling the filesystem's callback. If fs_put_dax()
+clears holder_data and completes the unmount without waiting for an SRCU
+grace period, it can cause problems if a hardware memory failure runs
+concurrently.
+
+For instance, looking at xfs_dax_notify_failure():
+
+    struct xfs_mount *mp =3D dax_holder(dax_dev);
+    if (!(mp->m_super->s_flags & SB_BORN)) {
+        ...
+
+If holder_data is cleared right after holder_ops is checked, can the
+callback read a cleared holder_data, resulting in a NULL mp dereference
+when accessing mp->m_super, or access a fully freed mp if the filesystem
+has finished unmounting?
+
+> +
+> +		/*
+> +		 * prev =3D=3D holder: normal release.
+[ ... ]
+> +		 *                 instead since violating the contract is
+> +		 *                 a bug.
+> +		 */
+> +		WARN_ON(prev && prev !=3D holder);
+> +	}
+>  	put_dax(dax_dev);
+>  }
+>  EXPORT_SYMBOL_GPL(fs_put_dax);
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0100019eb7bcda4b-3f=
+8edae9-d7a4-4bfa-aaea-fcef77fdbbc3-000000@email.amazonses.com?part=3D8
