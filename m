@@ -1,890 +1,278 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from GVXPR05CU001.outbound.protection.outlook.com (mail-swedencentralazon11013066.outbound.protection.outlook.com [52.101.83.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA823B9DAB;
-	Thu, 11 Jun 2026 10:20:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781173206; cv=none; b=JE/917XPmhfn5tyVLzz1LZOdD6VT/B3fjL2YJI1gcjXuP6o3n+WIvB4ByjDvyCJUihXbqsoKaVdao7J/tJKrFeTjcbyL99Abpl90/uY4L8C0C1+cSGwLe70v8mHigkWfXCUTQBNsENuPmeZxLBBWPuJ5P9QOfPExaayogGrUPh8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781173206; c=relaxed/simple;
-	bh=9ZinSF2ZYGYkw58iY2LdpTRq3kAEK2U0A8kdLA78wgc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I8/VnIpO8ib8HQzNSjJNyEHvERuhYJkpLCMN1dzigk+S7QkEQN9ElFbabqRSQDAtSFD15z2jT74zPWuELZq11KABY/VaqVZ+IFZeUoYLaMdHMQYJNlS0bBlykjOpwrc4wLwnzDQNkE2mgZ7q17W6wqkkMNqkp9v8DcmbCbJaL7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lm9IVYr0; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F8835AC33;
+	Thu, 11 Jun 2026 12:44:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.83.66
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781181855; cv=fail; b=n1NTr11hO02r1spIlRpJVvJugjc9nbP4urrquXEdwyO1AHYttrhXhCzTHPqCqonxF8tY0gZokmLHGPfS4wMv8gTVQYjRGQLhlwHlz2eQvTwH+LLCTq9KElthATTTPvzI3bXnxrNxUo+rYkp7+BAvQBEjsCQUSaBJ+6eOWXAh8dc=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781181855; c=relaxed/simple;
+	bh=EYZsP7iBxWFTl7K1KvX0pD7T7NLikWBzK/cTtT9UVKI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=vCCYCQkqjKnCIudCuyGGhDFw8Ui8zvGrEGsKf9eGdxcoOFVRVUlRqbY5iAoicoOY11TDCl4qTYT+3oTE9cIHV+7gkK1Mt4S34iFexWu00MULMbavpKnIP10NzX7W7n8XFw99BMh5Xy4XomeAOawdX0x4IZW1Xr0lZ8SqeeBBG3s=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=TDXtJhLy; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=TDXtJhLy; arc=fail smtp.client-ip=52.101.83.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lm9IVYr0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781173203; x=1812709203;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9ZinSF2ZYGYkw58iY2LdpTRq3kAEK2U0A8kdLA78wgc=;
-  b=Lm9IVYr0BwxoDMTX+qwJcrAuMdTUGBp11O8Zk/UK5s7jduJ/+Va7tOPW
-   begs6xSWFjieIQ7WFZo7DessZVY6KlDa/jq7qL/WiWlZYD+99nDsnBlbx
-   ipbamXoIEDZBLHktVCVqvWCAsOoWytoIOFko3oYLCme32DOu277IHtqED
-   x1ca+PqB+saMEp6/I9vfRiFiylErDE+96Osmh6i4CelzEt7Lg3GqNURb9
-   WY5f19bRBoN5u59GQ1NXEfTNGsl4At5/8QqWJ2bJRyeU7Y7JdcIMwRU8Y
-   NnO75CGmPSDtgKa8bd6fSvYv17TzYEkjMS5bgWLSFpu5Grom4Sqw4fRpt
-   Q==;
-X-CSE-ConnectionGUID: AtlvUe4OT5+RxgwQqPEjxQ==
-X-CSE-MsgGUID: Ns0aUm51Q56Pq7R5rA+hJw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11813"; a="85880705"
-X-IronPort-AV: E=Sophos;i="6.24,198,1774335600"; 
-   d="scan'208";a="85880705"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2026 03:20:02 -0700
-X-CSE-ConnectionGUID: 2XxlcGYgSrW3wSB7Yy6WeQ==
-X-CSE-MsgGUID: 3TzXXz5CTGizn4sfHUeXlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,198,1774335600"; 
-   d="scan'208";a="248316614"
-Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 11 Jun 2026 03:19:59 -0700
-Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wXcVw-00000000Mly-28Xa;
-	Thu, 11 Jun 2026 10:19:56 +0000
-Date: Thu, 11 Jun 2026 18:19:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>, jic23@kernel.org, will@kernel.org,
-	mark.rutland@arm.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Harshal Thakkar <harshal.t@samsung.com>,
-	Davidlohr Bueso <dave@stgolabs.net>
-Subject: Re: [PATCH] perf/cxlpmu: Support Channel/Rank/Bank filter
-Message-ID: <202606111835.kj0nhZ5e-lkp@intel.com>
-References: <20260611010409.2776635-1-dave@stgolabs.net>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="TDXtJhLy";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="TDXtJhLy"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=JSuosJXWsqIi7e5bleHdB/EO6ywfhTg7ktNzENURwTgcJq6M5qvtNBqa1Ve4kx0YatRgdwylnpsABluvq8s4z1HuKuLJSj2KmoDbBx2rjpJHBcejDTVNW4d7I4zL1zKMJHjjSGcWZ/a/rLyoR1/c/KtW1pCV8TScSa1nQ5jppBmtV1spVpfLVM49cU3DbSqG7rsXfr1FlKUMGLX/DACEZ/eZVrqj45SHzQ69fDeyKlX7bYkjajvEg8aMHBNgyKPv8f8JxDb/dYgyAh5jZi93eQ66O5YxeLcPHBePq04u3glNTel6GyNltnBvPLldggX9e0fey6w/acu6L864Mw2yPQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ywsnunz5O4sx7NPH+J2HUpV+L5yYIn3iyeiVua0NrOQ=;
+ b=dGIbbe/oEhdhlWz6WGB5YA0s5Sf5ui+lmR6aiZoukXV/MbFd8Pzd6yid2ieG9lZNxeXAX+ie730+PHONHXmIkNkShZglx/s8TfKBgNj4S3MtQLs4JAHaNZ6ips1X542RzbIDGOUmVEeABbvXu0QtgAxu2tO6OK91GiRBqpIfgatgx1bjAPh+Cde+tFqyDg/q8aeamcqoDYBLs5nNLzHVLPqcSB6SIXrDKGChikkre6lrJMyTtOoF+dAxMlu5KZn9/y/Z3gojAHJ+RsSjBGPqI1aw2X9U0SIs+YCGVCPZLq3V3l2M8qD+bEK9giwuj0tRW4eSdkiwL/mXgklhR8jsQA==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=kernel.org smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ywsnunz5O4sx7NPH+J2HUpV+L5yYIn3iyeiVua0NrOQ=;
+ b=TDXtJhLyVpF5izBjVtouGQUmlcrwmB8GIj03PjXhm+wg5cnL+o6On4My4uYBUFFz4kUApvRLXjJrI+ofgp6XJb+SzR2kng/9xjjZF+c0nMzbFNhhf803/e5c/Lu4dbyA7O/PjyjHX1Zi9EJZP4qt2Teq9p/7SMBlqBi7AveU0yI=
+Received: from DUZP191CA0006.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:4f9::16)
+ by VI0PR08MB11668.eurprd08.prod.outlook.com (2603:10a6:800:30c::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.11; Thu, 11 Jun
+ 2026 12:44:04 +0000
+Received: from DB1PEPF000509F6.eurprd02.prod.outlook.com
+ (2603:10a6:10:4f9:cafe::7a) by DUZP191CA0006.outlook.office365.com
+ (2603:10a6:10:4f9::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.113.13 via Frontend Transport; Thu,
+ 11 Jun 2026 12:44:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ DB1PEPF000509F6.mail.protection.outlook.com (10.167.242.152) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.113.7
+ via Frontend Transport; Thu, 11 Jun 2026 12:44:03 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UzXoOB6N5XaQUkllNRYEINF1eYYg1NDF19GC3UYyItqgn+BBxsKrTxSIpVnCHsF3UMxHXGHfMj+wF5TyKmPuIgutbfMeQXrtK3VPthTDsHF7WYDluVerVcJXMNBnK9h9JbsG8WuDpj7Rh/WkYJjLwAkUX9QCRDj8dmqaJh3javWb/C3TEWGJQiG35VRrwLkyqHrowVaIB01pfnd2DfwDOrgUxwxJuhXd1kJ1OKRm3VzwY8jfhfjGVxNhTlE7jiLSNZosNSCM8tYKk6RSYMPtHwpUjR7OyI6EygfzvSpgK4BYRhvn5VxECLekRMeDz9Bz2HnWsOGcU9D+Sb+Fy4RUow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ywsnunz5O4sx7NPH+J2HUpV+L5yYIn3iyeiVua0NrOQ=;
+ b=bToh8ihN3yWJFx4gh9MFcCN/LmbGLRXR8Mjfhs/9CW/D9Qy+XAfvwb5sZziQ2XgGg89HSoFYP8dz/VonGTgKo3xzUFqpoU5RByrFjo8pkxMFqyIlt9JqEH0QqN1sSQ0EvAot98ZfUDJFl+adzsI7+j8x9ndjm7OnpOIeaa9fEyRPBMB7RBh6zrbtcNeL63TmcUNgF4beLlMjhvXEnhop+QYjtMOVlrYrfa1AHJe7823sey3TReAwKg16i9XbdapFcZ/5kgJMLyL4iLA9RkJFvI31NYIgkrZMubjLf3WqryiV5/R1d5OvWsQpaO7M5TPwR2aqj4IrMRpQxPguCg4hLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ywsnunz5O4sx7NPH+J2HUpV+L5yYIn3iyeiVua0NrOQ=;
+ b=TDXtJhLyVpF5izBjVtouGQUmlcrwmB8GIj03PjXhm+wg5cnL+o6On4My4uYBUFFz4kUApvRLXjJrI+ofgp6XJb+SzR2kng/9xjjZF+c0nMzbFNhhf803/e5c/Lu4dbyA7O/PjyjHX1Zi9EJZP4qt2Teq9p/7SMBlqBi7AveU0yI=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from MRWPR08MB11806.eurprd08.prod.outlook.com (2603:10a6:501:9a::22)
+ by AS4PR08MB8024.eurprd08.prod.outlook.com (2603:10a6:20b:587::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.17; Thu, 11 Jun
+ 2026 12:42:56 +0000
+Received: from MRWPR08MB11806.eurprd08.prod.outlook.com
+ ([fe80::20ea:c85e:c8c9:a8d4]) by MRWPR08MB11806.eurprd08.prod.outlook.com
+ ([fe80::20ea:c85e:c8c9:a8d4%4]) with mapi id 15.21.0113.013; Thu, 11 Jun 2026
+ 12:42:56 +0000
+Message-ID: <84b929cd-f726-4422-9b1a-1f0edf68e163@arm.com>
+Date: Thu, 11 Jun 2026 13:42:54 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 08/10] ACPI: APEI: share GHES CPER helpers
+Content-Language: en-GB
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: will@kernel.org, xueshuai@linux.alibaba.com, saket.dumbre@intel.com,
+ mchehab@kernel.org, dave@stgolabs.net, djbw@kernel.org, bp@alien8.de,
+ tony.luck@intel.com, guohanjun@huawei.com, lenb@kernel.org,
+ skhan@linuxfoundation.org, vishal.l.verma@intel.com, rafael@kernel.org,
+ corbet@lwn.net, ira.weiny@intel.com, dave.jiang@intel.com,
+ krzk+dt@kernel.org, robh@kernel.org, catalin.marinas@arm.com,
+ alison.schofield@intel.com, conor+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, Michael.Zhao2@arm.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, Dmitry.Lamerov@arm.com,
+ devicetree@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-edac@vger.kernel.org, acpica-devel@lists.linux.dev
+References: <20260529-topics-ahmtib01-ras_ffh_arm_internal_review-v5-0-2e0500d42642@arm.com>
+ <20260529-topics-ahmtib01-ras_ffh_arm_internal_review-v5-8-2e0500d42642@arm.com>
+ <20260529173229.18843384@jic23-huawei>
+From: Ahmed Tiba <ahmed.tiba@arm.com>
+In-Reply-To: <20260529173229.18843384@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO6P265CA0020.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2ff::11) To MRWPR08MB11806.eurprd08.prod.outlook.com
+ (2603:10a6:501:9a::22)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260611010409.2776635-1-dave@stgolabs.net>
+X-MS-TrafficTypeDiagnostic:
+	MRWPR08MB11806:EE_|AS4PR08MB8024:EE_|DB1PEPF000509F6:EE_|VI0PR08MB11668:EE_
+X-MS-Office365-Filtering-Correlation-Id: 61007ce0-fc7c-47ec-94e9-08dec7b71ea5
+X-LD-Processed: f34e5979-57d9-4aaa-ad4d-b122a662184d,ExtAddr,ExtAddr
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|366016|23010399003|376014|7416014|1800799024|56012099006|11063799006|4143699003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info-Original:
+ YwTWCEDhAXizuvd4NNmTgkcCv+/TYRlFg54Xa1yk0vNtO+l7uivMsnhmQ+NFp7vJjHizVb+oBmkV7/z8mWsREPk+S9p8ibr8ect7HW7+7576tiuEThdKUiKVkpQZ9T5kZT8pYUy2LV0MHSm9IviNSH0k36oP/gJT0O9NrTxEA19DV059L0X7QuMb47UVCion1nLB6NRELrOdpC0whYfYVbRl7vFw6PdMAwy6qQNwkHnPe+GqlRHx4QGVW7J4Ho3e7Gqs6H8kuTwi067qtOmKQp8vv3wIBZpLLDhK10ofBPu9hcI6eutqGyky+Q2Cx+IbavqVtY7V4N5fasqIo0PpwBJ9o9mj56RcqYdozRkQx85414BEXgetMCj1OBiP91Er3N0A1cZzrUsgQCSnj+79FAPv+//Jcr8kWgvl8djxg6ge8JnGHNl4MdyF2K+V4kh7beYckqBB/PU8TU3LVPofPsgtTL9yvU5AiEaDlvOrElQsICn4TA3vvm3tU892DS3AXTrNJHyEehLz0LBK5rh1a0CrlfV4e3Y9q9qbZYEUOE+kMKvRSrm3bY4TZvHqMbqQ7FjQylQp5Vmbpr0aN2nuCNIuw+cXLhKTRMmIfQ7a60pqElBLiY9Vijj3+xZzbURRCGZ3wTjt4zCH0sGds3NCQyV+hf6QqFv8mji031rQNyk8CyVYJMwXzqwqlOh70wvn
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRWPR08MB11806.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(376014)(7416014)(1800799024)(56012099006)(11063799006)(4143699003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-Exchange-RoutingPolicyChecked:
+ Jgh3s5cMsIMk12FJzs0jUj2ogbXRritogNb627O0rjxwIp1/3hUXFukYZSycs8Qs1u0tFmYwMuUT/4lXz2szCiLQGsdRn2h9pKI2CZf7Q1huEXpI4jj7DY7DHrQaS3jKqByLxH7YDbgSaHV81zl0rgvXBn4LmC/+nGHuRMWQPMPaO6DVgPcAPVLSm6Hdn1A8eT/ybLCB90G0KmmGRCiHCdoEoe3+oX/nhViMzD7Il81Ic8r1ZDd+WcWEPSzFhNUnwmwztVSW5Mn25pp+WEkVniQs/7GCmNhF1x6/KRWbuux1TfPfpzOvGcZ8Nt3gooZqY05CkagF2jh/AptfCfJRdg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR08MB8024
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ DB1PEPF000509F6.eurprd02.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	8807fba9-b2c3-405d-ff6c-08dec7b6f5f5
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|35042699022|376014|36860700016|7416014|14060799003|82310400026|23010399003|1800799024|11063799006|56012099006|4143699003|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	w5EVhT1YexDFpFb1NcgPH/vbyqVb9YsfDfjIq6LXOYfBjv/K0oNbzWa32G5ndYqBIV0y8sb7KDGQ6yKO32CHWa5TK0d5990Ik96twMlQYhPVbRJjD9jQbmJO5LN2RFMKrYW8DENw2bSQjcadxTbV7eRdA3jkWpcJUphbbw2S6hM8teFp/nIVOnqjk3NfC1/Gzn6uZ7bAcApWefyg5kELN09SGlmcVbo/3ti+1cLJZMsn8CzWm6Vc/GIFPdwzjq5q7jtVvWeF+8ZLxymX5I4KHvhHyAklqC/3DbwDbNyzj7WFqVZg35vBV7Mg76OcjTM59VwnOSF826NDkwNFnj6x+MW9GjV5vn5cBkBETgp/h8Ddigu5VDFzST6b09qvyMkY2crkju2sz3f4DBW3QMkY8aEyXPl9mUSCTovdZM8+nr2txBET5lOYEXEfkW0y0vT2ERh4VYWZlDWAoAzTwQQn9HePQ63abQ5NKkfQhvCz9Fe85autWK6el9xqYgkDoxEwE/HTvjHfX+pSIxljXOHmdtSTGLUHunOqiwoGw57pera+2+kWfUBZPW1hFJVYd5xP03fA2mAdnFx6kWwyKEBS9kOCZHF9X6R+GPSzVjPfOHgK8tyhGf5qkJ51/kzuecuAI3Yt/rxxhMjvTyMcOSvJT7mrsg5sbER/29QQyW9oDPxUovR3lMQvdPA/vCQ+EO1SAmk4GMlVw9MtRtUAweFEYHBJ0EE+heITd1KO2/VxvxE=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(35042699022)(376014)(36860700016)(7416014)(14060799003)(82310400026)(23010399003)(1800799024)(11063799006)(56012099006)(4143699003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	WKbZOjkcCARuhbiICuw9OKPyURxsLU7PJcQ3tp2Zu4BzZ+Ia9CWlCrHwuGu9hnVnjNJz2YKGwcBOBRn2z23bA1sQ6CqE2mTVPK0o53kRDfl7l6Ad02p20EDQGr4EOcdSNhQdhKaBNhPlpRDmU0YtrJY8WmacfU8fvPhxs4ZKU47utJod6kB043NnKjfrH6pppafbCWR0i/qA9LWnGlQaBgw3POqQJdjPCzWJmLOgVwkcp9LUdy0GVFSd45KxIEW+BkYbf0xpcI+sMeLGtQ9YNjEHGcRjz0y7lowH7XUztYraWtDNbFjzlYVPv0gTmETyeX0N7pAm8qJS8oGXFIRSMH9yM1OFL3Nxg11dXxCanq1+1N033wYjpl7vDHPVxmJ3l3r+GDNcZQK3P7TwrfSGhovb6MQ8Lp1o34HTy4Xd8nyAHLg30aTHps2jF8F5Wn03
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2026 12:44:03.9088
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 61007ce0-fc7c-47ec-94e9-08dec7b71ea5
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DB1PEPF000509F6.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR08MB11668
 
-Hi Davidlohr,
+On 29/05/2026 17:32, Jonathan Cameron wrote:
+> On Fri, 29 May 2026 10:50:48 +0100
+> Ahmed Tiba <ahmed.tiba@arm.com> wrote:
+> 
+>> Wire GHES up to the helper routines in ghes_cper.c and remove the local
+>> copies from ghes.c. This keeps the control flow identical while letting
+>> the helpers be shared with other firmware-first providers.
+>>
+>> Signed-off-by: Ahmed Tiba <ahmed.tiba@arm.com>
+> Mostly looks fine.  The one bit that rather makes this exercise of breaking
+> out generic code look dodgy is the ifdefs in the generic file.
+> 
 
-kernel test robot noticed the following build errors:
+As below.
 
-[auto build test ERROR on arm-perf/for-next/perf]
-[also build test ERROR on cxl/next linus/master v7.1-rc7 next-20260610]
-[cannot apply to cxl/pending]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+>> ---
+>>   drivers/acpi/apei/ghes.c      | 416 +--------------------------------------
+>>   drivers/acpi/apei/ghes_cper.c | 438 +++++++++++++++++++++++++++++++++++++++++-
+>>   include/acpi/ghes_cper.h      |  20 ++
+>>   3 files changed, 459 insertions(+), 415 deletions(-)
+>>
+>> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+>> index 85be2ebf4d3e..f85b97c4db4c 100644
+>> --- a/drivers/acpi/apei/ghes.c
+>> +++ b/drivers/acpi/apei/ghes.c
+> 
+>>   
+>>   static void __ghes_panic(struct ghes *ghes,
+>> diff --git a/drivers/acpi/apei/ghes_cper.c b/drivers/acpi/apei/ghes_cper.c
+>> index d7a666a163c3..0ff9d06eb78f 100644
+>> --- a/drivers/acpi/apei/ghes_cper.c
+>> +++ b/drivers/acpi/apei/ghes_cper.c
+>> @@ -13,22 +13,32 @@
+> 
+>>   
+>>   #include "apei-internal.h"
+>>   
+>> +ATOMIC_NOTIFIER_HEAD(ghes_report_chain);
+>> +
+>> +#ifndef CONFIG_ACPI_APEI
+>> +void __weak arch_apei_report_mem_error(int sev, struct cper_sec_mem_err *mem_err) { }
+>> +#endif
+> This is non obvious enough that the reasoning for a new weak function should be mentioned in
+> the patch description.  Why not stub it in include/acpi/apei.h?
+> 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Davidlohr-Bueso/perf-cxlpmu-Support-Channel-Rank-Bank-filter/20260611-090512
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git for-next/perf
-patch link:    https://lore.kernel.org/r/20260611010409.2776635-1-dave%40stgolabs.net
-patch subject: [PATCH] perf/cxlpmu: Support Channel/Rank/Bank filter
-config: arc-allmodconfig (https://download.01.org/0day-ci/archive/20260611/202606111835.kj0nhZ5e-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 16.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260611/202606111835.kj0nhZ5e-lkp@intel.com/reproduce)
+Agreed. I should have explained that in the changelog.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202606111835.kj0nhZ5e-lkp@intel.com/
+The weak arch_apei_report_mem_error() fallback was only meant to keep
+the shared helper buildable when GHES_CPER_HELPERS is enabled without
+ACPI_APEI, while preserving the current GHES behaviour when ACPI_APEI
+is enabled.
 
-All error/warnings (new ones prefixed by >>):
+I kept it local because this fallback is only needed by this helper 
+split and I did not want to widen the APEI header API for that.
 
-   In file included from <command-line>:
-   drivers/perf/cxl_pmu.c: In function 'cxl_pmu_config2_get_crb':
->> include/linux/bits.h:48:27: warning: left shift count >= width of type [-Wshift-count-overflow]
-      48 |              (type_max(t) << (l) &                              \
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:79:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      79 |         BUILD_BUG_ON_MSG(__bf_cast_unsigned(mask, mask) >               \
-         |         ^~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:79:26: note: in expansion of macro '__bf_cast_unsigned'
-      79 |         BUILD_BUG_ON_MSG(__bf_cast_unsigned(mask, mask) >               \
-         |                          ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:177:17: note: in expansion of macro '__BF_FIELD_CHECK_REG'
-     177 |                 __BF_FIELD_CHECK_REG(_mask, _reg, "FIELD_GET: ");       \
-         |                 ^~~~~~~~~~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:49:27: warning: right shift count >= width of type [-Wshift-count-overflow]
-      49 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:79:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      79 |         BUILD_BUG_ON_MSG(__bf_cast_unsigned(mask, mask) >               \
-         |         ^~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:79:26: note: in expansion of macro '__bf_cast_unsigned'
-      79 |         BUILD_BUG_ON_MSG(__bf_cast_unsigned(mask, mask) >               \
-         |                          ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:177:17: note: in expansion of macro '__BF_FIELD_CHECK_REG'
-     177 |                 __BF_FIELD_CHECK_REG(_mask, _reg, "FIELD_GET: ");       \
-         |                 ^~~~~~~~~~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:48:27: warning: left shift count >= width of type [-Wshift-count-overflow]
-      48 |              (type_max(t) << (l) &                              \
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:67:17: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      67 |                 BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),          \
-         |                 ^~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:49:27: warning: right shift count >= width of type [-Wshift-count-overflow]
-      49 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:67:17: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      67 |                 BUILD_BUG_ON_MSG(!__builtin_constant_p(_mask),          \
-         |                 ^~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:48:27: warning: left shift count >= width of type [-Wshift-count-overflow]
-      48 |              (type_max(t) << (l) &                              \
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:69:17: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      69 |                 BUILD_BUG_ON_MSG((_mask) == 0, _pfx "mask is zero");    \
-         |                 ^~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:49:27: warning: right shift count >= width of type [-Wshift-count-overflow]
-      49 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:69:17: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      69 |                 BUILD_BUG_ON_MSG((_mask) == 0, _pfx "mask is zero");    \
-         |                 ^~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:48:27: warning: left shift count >= width of type [-Wshift-count-overflow]
-      48 |              (type_max(t) << (l) &                              \
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:70:17: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      70 |                 BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
-         |                 ^~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:49:27: warning: right shift count >= width of type [-Wshift-count-overflow]
-      49 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:70:17: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      70 |                 BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
-         |                 ^~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:48:27: warning: left shift count >= width of type [-Wshift-count-overflow]
-      48 |              (type_max(t) << (l) &                              \
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:70:17: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      70 |                 BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
-         |                 ^~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:71:47: note: in expansion of macro '__bf_shf'
-      71 |                                  ~((_mask) >> __bf_shf(_mask)) &        \
-         |                                               ^~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:49:27: warning: right shift count >= width of type [-Wshift-count-overflow]
-      49 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:70:17: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      70 |                 BUILD_BUG_ON_MSG(__builtin_constant_p(_val) ?           \
-         |                 ^~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:71:47: note: in expansion of macro '__bf_shf'
-      71 |                                  ~((_mask) >> __bf_shf(_mask)) &        \
-         |                                               ^~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:48:27: warning: left shift count >= width of type [-Wshift-count-overflow]
-      48 |              (type_max(t) << (l) &                              \
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:51:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      51 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-         |         ^~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:21:9: note: in expansion of macro 'BUILD_BUG_ON'
-      21 |         BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
-         |         ^~~~~~~~~~~~
-   include/linux/bitfield.h:74:17: note: in expansion of macro '__BUILD_BUG_ON_NOT_POWER_OF_2'
-      74 |                 __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +                 \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:49:27: warning: right shift count >= width of type [-Wshift-count-overflow]
-      49 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:51:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      51 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-         |         ^~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:21:9: note: in expansion of macro 'BUILD_BUG_ON'
-      21 |         BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
-         |         ^~~~~~~~~~~~
-   include/linux/bitfield.h:74:17: note: in expansion of macro '__BUILD_BUG_ON_NOT_POWER_OF_2'
-      74 |                 __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +                 \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:48:27: warning: left shift count >= width of type [-Wshift-count-overflow]
-      48 |              (type_max(t) << (l) &                              \
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:51:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      51 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-         |         ^~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:21:9: note: in expansion of macro 'BUILD_BUG_ON'
-      21 |         BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
-         |         ^~~~~~~~~~~~
-   include/linux/bitfield.h:74:17: note: in expansion of macro '__BUILD_BUG_ON_NOT_POWER_OF_2'
-      74 |                 __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +                 \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:75:56: note: in expansion of macro '__bf_shf'
-      75 |                                               (1ULL << __bf_shf(_mask))); \
-         |                                                        ^~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:49:27: warning: right shift count >= width of type [-Wshift-count-overflow]
-      49 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:51:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      51 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-         |         ^~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:21:9: note: in expansion of macro 'BUILD_BUG_ON'
-      21 |         BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
-         |         ^~~~~~~~~~~~
-   include/linux/bitfield.h:74:17: note: in expansion of macro '__BUILD_BUG_ON_NOT_POWER_OF_2'
-      74 |                 __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +                 \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:75:56: note: in expansion of macro '__bf_shf'
-      75 |                                               (1ULL << __bf_shf(_mask))); \
-         |                                                        ^~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:48:27: warning: left shift count >= width of type [-Wshift-count-overflow]
-      48 |              (type_max(t) << (l) &                              \
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:51:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      51 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-         |         ^~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:21:9: note: in expansion of macro 'BUILD_BUG_ON'
-      21 |         BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
-         |         ^~~~~~~~~~~~
-   include/linux/bitfield.h:74:17: note: in expansion of macro '__BUILD_BUG_ON_NOT_POWER_OF_2'
-      74 |                 __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +                 \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:49:27: warning: right shift count >= width of type [-Wshift-count-overflow]
-      49 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:51:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      51 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-         |         ^~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:21:9: note: in expansion of macro 'BUILD_BUG_ON'
-      21 |         BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
-         |         ^~~~~~~~~~~~
-   include/linux/bitfield.h:74:17: note: in expansion of macro '__BUILD_BUG_ON_NOT_POWER_OF_2'
-      74 |                 __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +                 \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:48:27: warning: left shift count >= width of type [-Wshift-count-overflow]
-      48 |              (type_max(t) << (l) &                              \
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:51:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      51 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-         |         ^~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:21:9: note: in expansion of macro 'BUILD_BUG_ON'
-      21 |         BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
-         |         ^~~~~~~~~~~~
-   include/linux/bitfield.h:74:17: note: in expansion of macro '__BUILD_BUG_ON_NOT_POWER_OF_2'
-      74 |                 __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +                 \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:75:56: note: in expansion of macro '__bf_shf'
-      75 |                                               (1ULL << __bf_shf(_mask))); \
-         |                                                        ^~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:49:27: warning: right shift count >= width of type [-Wshift-count-overflow]
-      49 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
-         |                           ^~
-   include/linux/compiler_types.h:679:23: note: in definition of macro '__compiletime_assert'
-     679 |                 if (!(condition))                                       \
-         |                       ^~~~~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:51:9: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      51 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-         |         ^~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:21:9: note: in expansion of macro 'BUILD_BUG_ON'
-      21 |         BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
-         |         ^~~~~~~~~~~~
-   include/linux/bitfield.h:74:17: note: in expansion of macro '__BUILD_BUG_ON_NOT_POWER_OF_2'
-      74 |                 __BUILD_BUG_ON_NOT_POWER_OF_2((_mask) +                 \
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:75:56: note: in expansion of macro '__bf_shf'
-      75 |                                               (1ULL << __bf_shf(_mask))); \
-         |                                                        ^~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   In file included from drivers/perf/../cxl/cxl.h:8,
-                    from drivers/perf/../cxl/cxlpci.h:6,
-                    from drivers/perf/cxl_pmu.c:23:
->> include/linux/bits.h:48:27: warning: left shift count >= width of type [-Wshift-count-overflow]
-      48 |              (type_max(t) << (l) &                              \
-         |                           ^~
-   include/linux/bitfield.h:98:42: note: in definition of macro '__FIELD_GET'
-      98 |                 (typeof(mask))(((reg) & (mask)) >> __bf_shf(mask));     \
-         |                                          ^~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> include/linux/bits.h:49:27: warning: right shift count >= width of type [-Wshift-count-overflow]
-      49 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
-         |                           ^~
-   include/linux/bitfield.h:98:42: note: in definition of macro '__FIELD_GET'
-      98 |                 (typeof(mask))(((reg) & (mask)) >> __bf_shf(mask));     \
-         |                                          ^~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bits.h:48:27: warning: left shift count >= width of type [-Wshift-count-overflow]
-      48 |              (type_max(t) << (l) &                              \
-         |                           ^~
-   include/linux/bitfield.h:47:38: note: in definition of macro '__bf_shf'
-      47 | #define __bf_shf(x) (__builtin_ffsll(x) - 1)
-         |                                      ^
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/bits.h:49:27: warning: right shift count >= width of type [-Wshift-count-overflow]
-      49 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
-         |                           ^~
-   include/linux/bitfield.h:47:38: note: in definition of macro '__bf_shf'
-      47 | #define __bf_shf(x) (__builtin_ffsll(x) - 1)
-         |                                      ^
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-   include/linux/bits.h:51:33: note: in expansion of macro 'GENMASK_TYPE'
-      51 | #define GENMASK(h, l)           GENMASK_TYPE(unsigned long, h, l)
-         |                                 ^~~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:258:49: note: in expansion of macro 'GENMASK'
-     258 | #define CXL_PMU_ATTR_CONFIG2_CRB_MSK            GENMASK(63, 32)
-         |                                                 ^~~~~~~
-   drivers/perf/cxl_pmu.c:344:26: note: in expansion of macro 'CXL_PMU_ATTR_CONFIG2_CRB_MSK'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   In function 'cxl_pmu_config2_get_crb',
-       inlined from 'cxl_pmu_event_start' at drivers/perf/cxl_pmu.c:676:10:
-   include/linux/compiler_types.h:699:45: error: call to '__compiletime_assert_649' declared with attribute error: FIELD_GET: mask is zero
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |                                             ^
-   include/linux/compiler_types.h:680:25: note: in definition of macro '__compiletime_assert'
-     680 |                         prefix ## suffix();                             \
-         |                         ^~~~~~
-   include/linux/compiler_types.h:699:9: note: in expansion of macro '_compiletime_assert'
-     699 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-         |         ^~~~~~~~~~~~~~~~~~~
-   include/linux/build_bug.h:40:37: note: in expansion of macro 'compiletime_assert'
-      40 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-         |                                     ^~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:69:17: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-      69 |                 BUILD_BUG_ON_MSG((_mask) == 0, _pfx "mask is zero");    \
-         |                 ^~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:97:17: note: in expansion of macro '__BF_FIELD_CHECK_MASK'
-      97 |                 __BF_FIELD_CHECK_MASK(mask, 0U, pfx);                   \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/linux/bitfield.h:178:17: note: in expansion of macro '__FIELD_GET'
-     178 |                 __FIELD_GET(_mask, _reg, "FIELD_GET: ");                \
-         |                 ^~~~~~~~~~~
-   drivers/perf/cxl_pmu.c:344:16: note: in expansion of macro 'FIELD_GET'
-     344 |         return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-         |                ^~~~~~~~~
-..
+>> +
+>>   static struct ghes_estatus_cache __rcu *ghes_estatus_caches[GHES_ESTATUS_CACHES_SIZE];
+>>   static atomic_t ghes_estatus_cache_alloced;
+> 
+>> +void __ghes_print_estatus(const char *pfx,
+>> +			  const struct acpi_hest_generic *generic,
+>> +			  const struct acpi_hest_generic_status *estatus)
+>> +{
+>> +	static atomic_t seqno;
+>> +	unsigned int curr_seqno;
+>> +	char pfx_seq[64];
+>> +
+>> +	if (!pfx) {
+>> +		if (ghes_severity(estatus->error_severity) <=
+>> +		    GHES_SEV_CORRECTED)
+>> +			pfx = KERN_WARNING;
+>> +		else
+>> +			pfx = KERN_ERR;
+>> +	}
+>> +	curr_seqno = atomic_inc_return(&seqno);
+>> +	snprintf(pfx_seq, sizeof(pfx_seq), "%s{%u}" HW_ERR, pfx, curr_seqno);
+>> +	printk("%sHardware error from APEI Generic Hardware Error Source: %d\n",
+>> +	       pfx_seq, generic->header.source_id);
+>> +	cper_estatus_print(pfx_seq, estatus);
+>> +}
+>> +
+>> +int ghes_print_estatus(const char *pfx,
+>> +		       const struct acpi_hest_generic *generic,
+>> +		       const struct acpi_hest_generic_status *estatus)
+>> +{
+>> +	/* Not more than 2 messages every 5 seconds */
+>> +	static DEFINE_RATELIMIT_STATE(ratelimit_corrected, 5 * HZ, 2);
+>> +	static DEFINE_RATELIMIT_STATE(ratelimit_uncorrected, 5 * HZ, 2);
+>> +	struct ratelimit_state *ratelimit;
+>> +
+>> +	if (ghes_severity(estatus->error_severity) <= GHES_SEV_CORRECTED)
+>> +		ratelimit = &ratelimit_corrected;
+>> +	else
+>> +		ratelimit = &ratelimit_uncorrected;
+>> +	if (__ratelimit(ratelimit)) {
+>> +		__ghes_print_estatus(pfx, generic, estatus);
+>> +		return 1;
+>> +	}
+>> +	return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_ACPI_APEI
+> 
+> So after the effort to break the the generic stuff we end up with non generic
+> bits in the broken out file?  Is there no way to avoid this?
+> 
+The intent here was not to create a new generic estatus core
+but to keep the existing GHES control flow and lift the CPER helper flow
+for reuse by the DT provider.
 
+Splitting the remaining ACPI GHES specific read/clear path back out into
+ghes.c would break that flow across files again. The CONFIG_ACPI_APEI
+guard keeps that ACPI specific piece local while the DT side reuses the
+same CPER parsing and status-dispatch path.
 
-vim +/__compiletime_assert_649 +699 include/linux/compiler_types.h
-
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  685  
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  686  #define _compiletime_assert(condition, msg, prefix, suffix) \
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  687  	__compiletime_assert(condition, msg, prefix, suffix)
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  688  
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  689  /**
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  690   * compiletime_assert - break build and emit msg if condition is false
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  691   * @condition: a compile-time constant condition to check
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  692   * @msg:       a message to emit if condition is false
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  693   *
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  694   * In tradition of POSIX assert, this macro will break the build if the
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  695   * supplied condition is *false*, emitting the supplied error message if the
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  696   * compiler has support to do so.
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  697   */
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  698  #define compiletime_assert(condition, msg) \
-eb5c2d4b45e3d2 Will Deacon 2020-07-21 @699  	_compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-eb5c2d4b45e3d2 Will Deacon 2020-07-21  700  
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Ahmed
