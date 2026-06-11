@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE8244A739
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 17:55:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C43349AF6
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 18:01:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781200545; cv=none; b=PXvydSBgMep8E/ebQOTWpUB27dAc3MgNLzLzD0bKpnwjC/2mY9f0ub1kYm8B1IXI2VuL+YWVepX4mdPgq54UpXWpJuBetMElHbAZWVvrSJoC+l4zkr82CAT9/M9WNrbZZkE9zynPIIMIpW1wWrOQfRVKNVhA5U+URqtElSfkgyk=
+	t=1781200891; cv=none; b=YUIHePlJliSKm7t1hoZZuzzO/k0U6TwPIdnZOADIDLVDbCp+uYnB/nXZ7SHkyX1aTb3uo0JDcYf9h61NjQizhjDLx6EepzVox6VwX1O++mXPfGpoWHrImqbfbA/oCqup4vJItLu/ueDYpQMq1k81GYXZ1HCA7TQLNLF6fKMjxwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781200545; c=relaxed/simple;
-	bh=00M5Q9nOMOBhJn6s/jbTI5OOILt5wnroWrVX21PAU88=;
+	s=arc-20240116; t=1781200891; c=relaxed/simple;
+	bh=VCCOppYv+iox1XnweHrH7NuilRaa4YeJcCogN1mAoKM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UDxP6WWFybKBGkxc7drWuYhx30Kff9PiwqTlWWK4VMmBQo20wAYO4Rm+mC1KD01/UVZlxTXdAQBObInq0Mq0OuINdn1rvFKBGvGTxQVAOZo28TS9+fe7V/p4474PiUHWFB7Aq95ZJGkAL+yZnAGbdcjD/Is5glMINJbzECFZBHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P4jK7hAs; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=BlsS5YkwOjfyUA+83u7/YDQ/u2tov8Lfu6yJ0KnIMNk7TPoUz23rM4HtW8TYJ0dQCt3iQmXD4MGov9lOFMrevOrVJaWMtvmN2glfSVMe0lUwivfyR24NWe/0DJPdhj2du62gQEap5DXJaP7M/AjucCUUtqc1EdiJNOSv2JwFnsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqZf4g2g; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P4jK7hAs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10A811F00893;
-	Thu, 11 Jun 2026 17:55:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqZf4g2g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1016D1F00893;
+	Thu, 11 Jun 2026 18:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781200542;
-	bh=aya6xK9sPOoGdMpf5T3WYzfvY8qlzoNv0jVLr3533N4=;
+	s=k20260515; t=1781200890;
+	bh=sMx7R1KJKDuoZEr+z7A+EMd/5nMgFhO/WGiAeWQmKMo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=P4jK7hAsGSPKpDyp8ryiv8gQEbYHbdXOc7igRgcjmvBgCoA1f3WgEYHKM+/slTMR9
-	 0dbGpXKEqSL3+a4XomoVHCrkiP/hBOyDrsc4yFzkJIsyxBwItbZb13xGA4GS+qtWih
-	 sVLOxL1M2nlEsgyQJYiSYZVn0m6GiRyF3H8F5reAR14oKOQogkZmqJYZsD9niL/bwS
-	 eWXjzoE8cpYZ87fZrj5v7GDlTjuCgnlruqU4rcfgwttbJr6y0UEJGBsa52cVjUo5Hn
-	 2rPwyzg6zEbVJ3X4JQ9xBNcV/sk9AH+seFDDUfpuFiSXV85m6+7PZrlVPC0YMUPacH
-	 SssqTxOSAgEyA==
+	b=EqZf4g2gw3S8CsklQKzuVP1k1PAA0kKBW6C6BUPSHyOm2gxXJDILW5CYYHSkVTECF
+	 3QJOKDU/SiU2PQPFL1tdoiugHYQ1vgfAt9xhcm2v16swUEamR3OqEBvbZyLeOYjbXs
+	 i/UR6vXBWdWqSSlT9HTVMFevUWHTwlVzQIwe+aJP1rwUlBvSoIDzgFezGgJXDBSK8l
+	 FSBjMpyvQ/B3Potkde/C4D/uAFxrGAC3Opy69wZ8NoB294aeMIDJdVP9kXHkePeTvi
+	 xV2Wxt8LaQh1EjcvU6WYZQJjA570qNnwfCbdvkZtgF8UV3d3v6ad96Dntb+JyBb2cx
+	 zPbKafWFsma4Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V5 3/9] dax/fsdev: clear vmemmap_shift when binding
- static pgmap
+Subject: Re: [PATCH v2 3/6] cxl/region: Account for mixed-granularity in
+ position calculations
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "John Groves" <john@jagalactic.com>
+To: "Alison Schofield" <alison.schofield@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <0100019eb7bdc5a7-f15b011c-0aee-411f-8d7c-2996345048e4-000000@email.amazonses.com>
-References: <0100019eb7bdc5a7-f15b011c-0aee-411f-8d7c-2996345048e4-000000@email.amazonses.com>
+In-Reply-To: <94ec26d420e0e40a2a991c1a4205e9e93cab44de.1781199122.git.alison.schofield@intel.com>
+References: <94ec26d420e0e40a2a991c1a4205e9e93cab44de.1781199122.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 11 Jun 2026 17:55:41 +0000
-Message-Id: <20260611175542.10A811F00893@smtp.kernel.org>
+Date: Thu, 11 Jun 2026 18:01:29 +0000
+Message-Id: <20260611180130.1016D1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -46,77 +46,116 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-
-New issues:
-- [High] Rebinding a static DAX device from fsdev_dax to device_dax (or unl=
-oading the fsdev_dax module) leaves a dangling `pgmap->ops` pointer on the =
-persistent static `pgmap` structure, risking a use-after-free on hardware m=
-emory failure.
-
-Pre-existing issues:
-- [High] Probe functions in fsdev_dax re-initialize an embedded cdev via `c=
-dev_init()`, clobbering its kobject state if there are open file descriptor=
-s from a previous bind.
+- [High] Incorrect uniform `pos_distance` assumption in mixed-granularity r=
+egions leads to a kernel panic in `check_last_peer()`.
+- [High] Flawed arithmetic in `cxl_calc_interleave_pos()` breaks auto-disco=
+very for topologies with multiple interleave passes or interleaved downstre=
+am switches.
 --
 
-commit cfa8354a7e331532bf1a69e2ea2e854ab1b90742
-Author: John Groves <John@Groves.net>
+commit 9cd5598bf3a699e6fbc48008f0af90a4640e7218
+Author: Alison Schofield <alison.schofield@intel.com>
 
-dax/fsdev: clear vmemmap_shift when binding static pgmap
+cxl/region: Account for mixed-granularity in position calculations
 
-Clear pgmap->vmemmap_shift for static DAX devices. When rebinding a
-static device from device_dax to fsdev_dax, the stale vmemmap_shift
-persists on the shared pgmap. Explicitly zero it before
-devm_memremap_pages() so the vmemmap is built for order-0 folios.
+Mixed-granularity regions place the root decoder at outer HPA bits. A root
+target then owns root_gran / region_gran inner positions before advancing.
+This patch accounts for that stride in endpoint placement, position
+calculations, and peer-distance checks.
 
-> diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
-> index 2c5de3d80a618..52f46b3e245ea 100644
-> --- a/drivers/dax/fsdev.c
-> +++ b/drivers/dax/fsdev.c
-> @@ -237,6 +237,7 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
->  		}
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index d5d19ed621713..9fff538a9ce16 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+
+[ ... ]
+
+> @@ -1490,10 +1512,11 @@ static int cxl_port_setup_targets(struct cxl_port=
+ *port,
+>  				cxlrd->cxlsd.cxld.interleave_granularity);
 > =20
->  		pgmap =3D dev_dax->pgmap;
-> +		pgmap->vmemmap_shift =3D 0;
+>  	/* Track distances used in passthrough granularity and peer checks */
+> -	parent_distance =3D cxlrd->cxlsd.cxld.interleave_ways;
+> -	if (!is_power_of_2(parent_distance))
+> -		parent_distance /=3D 3;
+> -	distance =3D cxlrd->cxlsd.cxld.interleave_ways;
+> +	stride =3D root_pos_stride(cxlr);
+> +	sel_distance =3D cxlrd->cxlsd.cxld.interleave_ways;
+> +	if (!is_power_of_2(sel_distance))
+> +		sel_distance /=3D 3;
+> +	pos_distance =3D stride > 1 ? 1 : cxlrd->cxlsd.cxld.interleave_ways;
+> =20
+>  	for (iter =3D parent_port; !is_cxl_root(iter);
+>  	     iter =3D to_cxl_port(iter->dev.parent)) {
+
+[ ... ]
+
+> @@ -1540,7 +1563,7 @@ static int cxl_port_setup_targets(struct cxl_port *=
+port,
+>  		for (int i =3D 0; i < cxl_rr->nr_targets_set; i++)
+>  			if (ep->dport =3D=3D cxlsd->target[i]) {
+>  				rc =3D check_last_peer(cxled, ep, cxl_rr,
+> -						     distance);
+> +						     pos_distance);
 
 [Severity: High]
-Since we are fixing the stale vmemmap_shift on the shared pgmap here, do we
-also need to handle the pgmap->ops pointer?
+If stride > 1, pos_distance is initially 1 and then scaled by intermediate
+target counts. Does this uniform distance correctly account for the
+non-uniform gap between positions routed to the same downstream port in
+mixed-granularity topologies?
 
-If fsdev_dax unbinds or the module is unloaded, it doesn't appear that we
-clear pgmap->ops, which is set to &fsdev_pagemap_ops later in
-fsdev_dax_probe(). Additionally, if device_dax is bound to the same device
-instead, it appears to update pgmap->type but leave pgmap->ops unchanged.
+In check_last_peer(), it subtracts this distance to locate a peer endpoint:
 
-If a hardware memory error occurs on the region after unbind, will
-memory_failure_dev_pagemap() attempt to call the dangling
-pgmap->ops->memory_failure pointer:
+drivers/cxl/core/region.c:check_last_peer() {
+	...
+	cxled_peer =3D p->targets[pos - distance];
+	cxlmd_peer =3D cxled_to_memdev(cxled_peer);
+	ep_peer =3D cxl_ep_load(port, cxlmd_peer);
+	if (ep->dport !=3D ep_peer->dport) {
+	...
+}
 
-mm/memory-failure.c:memory_failure_dev_pagemap()
-    if (pgmap->ops && pgmap->ops->memory_failure) {
-        rc =3D pgmap->ops->memory_failure(pgmap, pfn, 1, flags);
+If the calculated distance is flawed, could this inspect a position
+belonging to a completely different root target's block? If so,
+cxl_ep_load() might return NULL since the peer endpoint isn't a
+descendant of the current intermediate switch port. This would lead
+to a NULL pointer dereference when accessing ep_peer->dport.
 
-and cause a use-after-free or panic?
+>  				if (rc)
+>  					return rc;
+>  				goto out_target_set;
+
+[ ... ]
+
+> @@ -2010,6 +2042,11 @@ static int cxl_calc_interleave_pos(struct cxl_endp=
+oint_decoder *cxled,
+>  		if (rc)
+>  			return rc;
+> =20
+> +		if (stride > 1 && is_cxl_root(parent_port_of(iter))) {
+> +			pos =3D pos + stride * parent_pos;
+> +			break;
+> +		}
+> +
+>  		pos =3D pos * parent_ways + parent_pos;
+>  	}
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does the embedded cdev
-initialization in this probe function clobber the kobject state?
+Does this position calculation properly handle interleave wrap-around and
+higher-order switch interleaving?
 
-If there are open file descriptors from a previous bind, and
-fsdev_dax_probe() re-initializes the embedded cdev later in the function:
+By using pos =3D pos + stride * parent_pos, it appears to assume that the r=
+oot
+target always provides the highest-order bits of the region position. In
+topologies where a root target owns more endpoints than the stride, or where
+downstream switches decode bits higher than the root decoder, could this
+result in local position collisions?
 
-drivers/dax/fsdev.c:fsdev_dax_probe()
-    cdev_init(cdev, &fsdev_fops);
-
-will cdev_init() destroy the active kobject's refcount and zero out the
-cdev->list? Could this cause list corruption when the stale file descriptors
-are later closed, or mismatched kobject refcounting that frees the cdev
-while the new driver instance is using it?
-
->  	} else {
->  		size_t pgmap_size;
->
+For example, if the 5th endpoint on a host bridge has a local pos of 4 and
+a stride of 4, this would calculate 4 + 4 * 0 =3D 4 instead of the correct
+region position 8. Would this cause cxl_region_attach_position() to reject
+otherwise valid auto-discovered CXL topologies?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0100019eb7bcda4b-3f=
-8edae9-d7a4-4bfa-aaea-fcef77fdbbc3-000000@email.amazonses.com?part=3D3
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1781199122.gi=
+t.alison.schofield@intel.com?part=3D3
