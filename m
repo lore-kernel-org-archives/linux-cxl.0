@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F079390C94
-	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 23:44:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107B4371D04
+	for <linux-cxl@vger.kernel.org>; Thu, 11 Jun 2026 23:44:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781221466; cv=none; b=OEdYprTB7yJjnT6/UUcCdaE54+5YfygI/EkkU9v/SKIy02fnDi3LK6ItQAt0oc5cIduSWoVMjt9KLxGIrJuQ3IIU+jOJlH8klCyhpfEweIqAAaQdz4byILwQSFKZUskCGDaKqYYjtlnoYtxlIvuBeBEY28356q6FkGlR7VP1pjg=
+	t=1781221468; cv=none; b=MA68HuzTNV0P4JRV4lcJpgDQVnbliE6QOA1MVOioMOyaaY5cnbuQkRPIBkLsXFRcAz8W4wi0PvU3dY051ncSiAhWPKfQDMeK8aol78X9WQhbR178auc+Vn0UdryzncGJ6B+BTjrzbiR4hNB7O957djlZ71xJxW67TVOl5SVTXMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781221466; c=relaxed/simple;
-	bh=1GI55Cb0t5lclXRTsxudgMeQWA4kF5umry+3m2izdV0=;
+	s=arc-20240116; t=1781221468; c=relaxed/simple;
+	bh=heAIxVv8upH0jeEcadAsN5YWH/mW2inaG5hRxrJ3F54=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ThcaC4DPBYxwE8A8CvGKLxUobZeFgjhBAaryttUpgZz6ncpamCdwFxf8JWI/+R5yjLC0trlTjQv/+qG4R/AuVUH3VoLAdq4hvYklUKB7WIfvbqfItg0HUhvtDSWRvWHdPa2oIC/6xVWQZkLVgH8wLgEZI9zlO6KWyL0+lrhrwVc=
+	 MIME-Version; b=EzSU2PGTqGhuykpwXCgCig5hu1YmnkXiTcWGoBkXHHAovLuRGCLk2Th3DAf3uXSOIPmasqnLIiuG8uH3JIurAzEsMRS6KLKpvR0ERBdMzjGSCbPQ68Rt06k+pjUcsxUWwS3/dkm9NA65FnTLsMxG6vVigBj39+qwVqVX1v2/HtE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B7F71F00A3F;
-	Thu, 11 Jun 2026 23:44:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2922A1F00ACA;
+	Thu, 11 Jun 2026 23:44:20 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: djbw@kernel.org,
@@ -21,9 +21,9 @@ Cc: djbw@kernel.org,
 	jic23@kernel.org,
 	alison.schofield@intel.com,
 	vishal.l.verma@intel.com
-Subject: [PATCH v5 4/6] cxl/test: Add hierarchy enumeration support for type2 device
-Date: Thu, 11 Jun 2026 16:44:07 -0700
-Message-ID: <20260611234409.256765-5-dave.jiang@intel.com>
+Subject: [PATCH v5 6/6] cxl/test: Add cxl_test accelerator driver
+Date: Thu, 11 Jun 2026 16:44:09 -0700
+Message-ID: <20260611234409.256765-7-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260611234409.256765-1-dave.jiang@intel.com>
 References: <20260611234409.256765-1-dave.jiang@intel.com>
@@ -35,350 +35,106 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add enumeration of type2 device hierarchy in cxl-test. The type2 device
-is setup to be directly attached to a root port instead of rp -> switch
--> device that type3 hierarchy is setup..
+Add a type2 accelerator mock driver for the platform device that
+simulates a CXL type2 device. The driver exercises the same
+minimal API calls that a real CXL type2 driver would utilize.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
-v5:
-- Reverse device teardown (sashiko)
-- Don't put device on platform device add. (sashiko)
----
- tools/testing/cxl/test/cxl.c | 238 ++++++++++++++++++++++++++++-------
- 1 file changed, 192 insertions(+), 46 deletions(-)
+ tools/testing/cxl/test/Kbuild  |  2 ++
+ tools/testing/cxl/test/accel.c | 66 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 68 insertions(+)
+ create mode 100644 tools/testing/cxl/test/accel.c
 
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 71b6203d2fcf..635d26993018 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -28,6 +28,7 @@ static bool type2_test;
- #define NR_CXL_SWITCH_PORTS 2
- #define NR_CXL_PORT_DECODERS 8
- #define NR_BRIDGES (NR_CXL_HOST_BRIDGES + NR_CXL_SINGLE_HOST + NR_CXL_RCH)
-+#define NR_CXL_TYPE2_ACCEL 1
+diff --git a/tools/testing/cxl/test/Kbuild b/tools/testing/cxl/test/Kbuild
+index c168e3c998a7..9a24ddc28488 100644
+--- a/tools/testing/cxl/test/Kbuild
++++ b/tools/testing/cxl/test/Kbuild
+@@ -5,10 +5,12 @@ obj-m += cxl_test.o
+ obj-m += cxl_mock.o
+ obj-m += cxl_mock_mem.o
+ obj-m += cxl_translate.o
++obj-m += cxl_mock_accel.o
  
- #define MOCK_AUTO_REGION_SIZE_DEFAULT SZ_512M
- static int mock_auto_region_size = MOCK_AUTO_REGION_SIZE_DEFAULT;
-@@ -1734,19 +1735,93 @@ static void cxl_single_topo_exit(void)
- 	}
- }
+ cxl_test-y := cxl.o
+ cxl_test-y += hmem_test.o
+ cxl_mock-y := mock.o
+ cxl_mock_mem-y := mem.o
++cxl_mock_accel-y := accel.o
  
-+static void cxl_type3_mem_exit(void)
+ KBUILD_CFLAGS := $(filter-out -Wmissing-prototypes -Wmissing-declarations, $(KBUILD_CFLAGS))
+diff --git a/tools/testing/cxl/test/accel.c b/tools/testing/cxl/test/accel.c
+new file mode 100644
+index 000000000000..9c8235f9d97b
+--- /dev/null
++++ b/tools/testing/cxl/test/accel.c
+@@ -0,0 +1,66 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Copyright(c) 2026 Intel Corporation. All rights reserved.
++
++#include <linux/platform_device.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/sizes.h>
++#include <cxl/mailbox.h>
++#include <cxlmem.h>
++
++struct mock_cxl_accel {
++	struct cxl_dev_state cxlds;
++	struct cxl_memdev *cxlmd;
++};
++
++static int cxl_mock_accel_probe(struct platform_device *pdev)
 +{
-+	struct platform_device *pdev;
-+	int i;
-+
-+	for (i = ARRAY_SIZE(cxl_rcd) - 1; i >= 0; i--) {
-+		pdev = cxl_rcd[i];
-+		if (!pdev)
-+			continue;
-+		platform_device_unregister(cxl_rcd[i]);
-+	}
-+
-+	for (i = ARRAY_SIZE(cxl_mem_single) - 1; i >= 0; i--) {
-+		pdev = cxl_mem_single[i];
-+		if (!pdev)
-+			continue;
-+		platform_device_unregister(cxl_mem_single[i]);
-+	}
-+
-+	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--) {
-+		pdev = cxl_mem[i];
-+		if (!pdev)
-+			continue;
-+		platform_device_unregister(pdev);
-+	}
-+}
-+
-+static void cxl_type2_mem_exit(void)
-+{
-+	for (int i = NR_CXL_TYPE2_ACCEL - 1; i >= 0; i--) {
-+		struct platform_device *pdev = cxl_mem[i];
-+
-+		if (!pdev)
-+			continue;
-+		platform_device_unregister(pdev);
-+	}
-+}
-+
- static void cxl_mem_exit(void)
- {
--	int i;
--
--	for (i = ARRAY_SIZE(cxl_rcd) - 1; i >= 0; i--)
--		platform_device_unregister(cxl_rcd[i]);
--	for (i = ARRAY_SIZE(cxl_mem_single) - 1; i >= 0; i--)
--		platform_device_unregister(cxl_mem_single[i]);
--	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--)
--		platform_device_unregister(cxl_mem[i]);
-+	if (type2_test) {
-+		cxl_type2_mem_exit();
-+		return;
-+	}
-+
-+	cxl_type3_mem_exit();
-+}
-+
-+static int cxl_type2_mem_init(void)
-+{
-+	int i, rc;
-+
-+	for (i = 0; i < NR_CXL_TYPE2_ACCEL; i++) {
-+		struct platform_device *dport = cxl_root_port[i];
-+		struct platform_device *pdev;
-+
-+		pdev = platform_device_alloc("cxl_type2_accel", i);
-+		if (!pdev) {
-+			rc = -ENOMEM;
-+			goto err_mem;
-+		}
-+		pdev->dev.parent = &dport->dev;
-+		set_dev_node(&pdev->dev, i % 2);
-+
-+		rc = platform_device_add(pdev);
-+		if (rc) {
-+			rc = -ENOMEM;
-+			platform_device_put(pdev);
-+			goto err_mem;
-+		}
-+		cxl_mem[i] = pdev;
-+	}
-+
-+	return 0;
-+
-+err_mem:
-+	for (i = NR_CXL_TYPE2_ACCEL - 1; i >= 0; i--) {
-+		struct platform_device *pdev = cxl_mem[i];
-+
-+		if (!pdev)
-+			continue;
-+		platform_device_unregister(pdev);
-+	}
-+	return rc;
- }
- 
--static int cxl_mem_init(void)
-+static int cxl_type3_mem_init(void)
- {
- 	int i, rc;
- 
-@@ -1755,8 +1830,10 @@ static int cxl_mem_init(void)
- 		struct platform_device *pdev;
- 
- 		pdev = platform_device_alloc("cxl_mem", i);
--		if (!pdev)
-+		if (!pdev) {
-+			rc = -ENOMEM;
- 			goto err_mem;
-+		}
- 		pdev->dev.parent = &dport->dev;
- 		set_dev_node(&pdev->dev, i % 2);
- 
-@@ -1770,8 +1847,10 @@ static int cxl_mem_init(void)
- 		struct platform_device *pdev;
- 
- 		pdev = platform_device_alloc("cxl_mem", NR_MEM_MULTI + i);
--		if (!pdev)
-+		if (!pdev) {
-+			rc = -ENOMEM;
- 			goto err_single;
-+		}
- 		pdev->dev.parent = &dport->dev;
- 		set_dev_node(&pdev->dev, i % 2);
- 
-@@ -1786,8 +1865,10 @@ static int cxl_mem_init(void)
- 		struct platform_device *pdev;
- 
- 		pdev = platform_device_alloc("cxl_rcd", idx);
--		if (!pdev)
-+		if (!pdev) {
-+			rc = -ENOMEM;
- 			goto err_rcd;
-+		}
- 		pdev->dev.parent = &rch->dev;
- 		set_dev_node(&pdev->dev, i % 2);
- 
-@@ -1810,6 +1891,13 @@ static int cxl_mem_init(void)
- 	return rc;
- }
- 
-+static int cxl_mem_init(void)
-+{
-+	if (type2_test)
-+		return cxl_type2_mem_init();
-+	return cxl_type3_mem_init();
-+}
-+
- static ssize_t
- decoder_reset_preserve_registry_show(struct device *dev,
- 				     struct device_attribute *attr, char *buf)
-@@ -2049,6 +2137,92 @@ static int cxl_switches_populate(void)
- 	return 0;
- }
- 
-+static void cxl_type2_topo_exit(void)
-+{
-+	cxl_rootports_remove();
-+	host_bridges_remove();
-+}
-+
-+static int cxl_type2_topo_init(void)
-+{
++	struct mock_cxl_accel *cxl_accel;
++	struct device *dev = &pdev->dev;
++	struct cxl_dev_state *cxlds;
++	struct cxl_memdev *cxlmd;
++	struct range mock_range;
 +	int rc;
 +
-+	rc = host_bridges_populate();
++	cxl_accel = devm_cxl_dev_state_create(&pdev->dev, CXL_DEVTYPE_DEVMEM,
++					      pdev->id + 1, 0,
++					      struct mock_cxl_accel, cxlds,
++					      false);
++	if (!cxl_accel)
++		return -ENOMEM;
++
++	cxlds = &cxl_accel->cxlds;
++	cxlds->media_ready = true;
++	rc = cxl_set_capacity(cxlds, SZ_512M);
 +	if (rc)
 +		return rc;
 +
-+	rc = cxl_rootports_populate();
-+	if (rc) {
-+		host_bridges_remove();
-+		return rc;
-+	}
++	cxlmd = devm_cxl_probe_mem(cxlds, &mock_range);
++	if (IS_ERR(cxlmd))
++		return PTR_ERR(cxlmd);
++	cxl_accel->cxlmd = cxlmd;
++
++	dev_dbg(dev, "Probed mock accelerator with range %pra\n", &mock_range);
 +
 +	return 0;
 +}
 +
-+static void cxl_type3_topo_exit(void)
-+{
-+	cxl_rch_topo_exit();
-+	cxl_single_topo_exit();
-+	cxl_switches_remove();
-+	cxl_rootports_remove();
-+	host_bridges_remove();
-+}
++static const struct platform_device_id cxl_mock_accel_ids[] = {
++	{ .name = "cxl_type2_accel", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(platform, cxl_mock_accel_ids);
 +
-+static int cxl_type3_topo_init(void)
-+{
-+	int rc;
++static struct platform_driver cxl_mock_accel_driver = {
++	.probe = cxl_mock_accel_probe,
++	.id_table = cxl_mock_accel_ids,
++	.driver = {
++		.name = KBUILD_MODNAME,
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
++	},
++};
 +
-+	rc = host_bridges_populate();
-+	if (rc)
-+		return rc;
-+
-+	rc = cxl_rootports_populate();
-+	if (rc)
-+		goto err_host_bridges;
-+
-+	rc = cxl_switches_populate();
-+	if (rc)
-+		goto err_root_ports;
-+
-+	rc = cxl_single_topo_init();
-+	if (rc)
-+		goto err_switches;
-+
-+	rc = cxl_rch_topo_init();
-+	if (rc)
-+		goto err_single;
-+
-+	return 0;
-+
-+err_single:
-+	cxl_single_topo_exit();
-+err_switches:
-+	cxl_switches_remove();
-+err_root_ports:
-+	cxl_rootports_remove();
-+err_host_bridges:
-+	host_bridges_remove();
-+	return rc;
-+}
-+
-+static void cxl_topo_exit(void)
-+{
-+	if (type2_test) {
-+		cxl_type2_topo_exit();
-+		return;
-+	}
-+
-+	cxl_type3_topo_exit();
-+}
-+
-+static int cxl_topo_init(void)
-+{
-+	if (type2_test)
-+		return cxl_type2_topo_init();
-+	return cxl_type3_topo_init();
-+}
-+
- static __init int cxl_test_init(void)
- {
- 	struct range mappable;
-@@ -2092,29 +2266,13 @@ static __init int cxl_test_init(void)
- 	if (rc)
- 		goto err_populate;
- 
--	rc = host_bridges_populate();
-+	rc = cxl_topo_init();
- 	if (rc)
- 		goto err_populate;
- 
--	rc = cxl_rootports_populate();
--	if (rc)
--		goto err_host_bridges;
--
--	rc = cxl_switches_populate();
--	if (rc)
--		goto err_root_ports;
--
--	rc = cxl_single_topo_init();
--	if (rc)
--		goto err_switches;
--
--	rc = cxl_rch_topo_init();
--	if (rc)
--		goto err_single;
--
- 	cxl_acpi = platform_device_alloc("cxl_acpi", 0);
- 	if (!cxl_acpi)
--		goto err_rch;
-+		goto err_topo;
- 
- 	mock_companion(&acpi0017_mock, &cxl_acpi->dev);
- 	acpi0017_mock.dev.bus = &platform_bus_type;
-@@ -2122,7 +2280,7 @@ static __init int cxl_test_init(void)
- 
- 	rc = cxl_mock_platform_device_add(cxl_acpi, NULL);
- 	if (rc)
--		goto err_rch;
-+		goto err_topo;
- 
- 	rc = cxl_mem_init();
- 	if (rc)
-@@ -2138,16 +2296,8 @@ static __init int cxl_test_init(void)
- 	cxl_mem_exit();
- err_root:
- 	platform_device_put(cxl_acpi);
--err_rch:
--	cxl_rch_topo_exit();
--err_single:
--	cxl_single_topo_exit();
--err_switches:
--	cxl_switches_remove();
--err_root_ports:
--	cxl_rootports_remove();
--err_host_bridges:
--	host_bridges_remove();
-+err_topo:
-+	cxl_topo_exit();
- err_populate:
- 	depopulate_all_mock_resources();
- err_gen_pool_add:
-@@ -2173,11 +2323,7 @@ static __exit void cxl_test_exit(void)
- 	hmem_test_exit();
- 	cxl_mem_exit();
- 	platform_device_unregister(cxl_acpi);
--	cxl_rch_topo_exit();
--	cxl_single_topo_exit();
--	cxl_switches_remove();
--	cxl_rootports_remove();
--	host_bridges_remove();
-+	cxl_topo_exit();
- 	depopulate_all_mock_resources();
- 	gen_pool_destroy(cxl_mock_pool);
- 	unregister_cxl_mock_ops(&cxl_mock_ops);
++module_platform_driver(cxl_mock_accel_driver);
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("cxl_test: accelerator device mock module");
++MODULE_IMPORT_NS("CXL");
 -- 
 2.54.0
 
