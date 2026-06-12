@@ -1,213 +1,170 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECF2331EC0
-	for <linux-cxl@vger.kernel.org>; Fri, 12 Jun 2026 15:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CB32EBDE9
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Jun 2026 15:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781278185; cv=none; b=BR7CIHnUQWeXiHuCTeYs9E1Br2VTlsQPGhzlvjJAieG29rRTnGbU62PS0oan/I8J2D3jjmU4UkMtuoS3EuZqAIYBHIOUjuOVRMZPeRDq+7ZyLQh6RcTSrrUbzTayryl3OeSNRo4rOmWkhUDyMHSBBDdWLTWmlqqrqzGAsxrsAxo=
+	t=1781278547; cv=none; b=U1+3nPHOzkbzMD+FYr59mQybaqpx2KWdbvkwj4SfZDIBORX1PloPz0W+jbI/Ay/9uyki9iuOEp15uhYWNkDgsOY+RfEIktOeEindHUHazIdgcPXzO25rtGub5+rfCEc3fN4slJyRk0edXNGMysGfvl0XijEA8UoMixyE/TqtZx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781278185; c=relaxed/simple;
-	bh=mVnLEdPsEZ4bwU/Ei3LWYtLLBe2x/ajf/pLUxSqCLVU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IffscQIzDT6vXBQ+effGVsNDnRhtE3vdo3/2i/L5ewCPk5gUgklGb5DsSBvPB/8TPztY88/rlyzZnweTmz3kvoYcVDqVsinRF2KCYZbgs//itidI/AC9KEaGGPYI7Rn0v36Rz4p5mbqpEHEFY8XoX5Xoj3PvKQ1lOoOauOALC40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=K1bIzaql; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1781278547; c=relaxed/simple;
+	bh=GZ0HucKEYHQX1M9VWiReyvvuKAUDmldWGQ92b75c2zg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qIWGcj2ziG/ehoAchKrezt5goYdhkh3/xxwKmI+dQfEjSrXY8rgvH0VT3h87s5XJUgq8fn4dMW0h74aWpOKKTTvK49VySx99sFJMSWaYFZLZexyCTlHKWTbtoadc+Asf+3nu+YQ9/kFDfTj/cAjfDWjwgDhD/o9+TY+pkiWzo2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z3YIfNxj; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="K1bIzaql"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-5176096116fso12000671cf.0
-        for <linux-cxl@vger.kernel.org>; Fri, 12 Jun 2026 08:29:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1781278183; x=1781882983; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dGTIoUK/OWYjJAAY1+ZmAOAhqsOqMD1OUbmAHjFef1Y=;
-        b=K1bIzaqleRmv6I9IUmhsv2jcoLba2fJJFC1vzoGElN4JNWQYZSY2iw6COwt9IpCVPi
-         HceY2zcM6PrcDrijB787Yg50WsXLzVDns/vEeg+pV1yiJHIhdEH2IxRuAI2XyCSw0ay8
-         gLUsl3pFsW5nPQx2MN48OeZrS+hC6A0brcTkSli0VejhkElL4j/FvIwGq6GlWhL114cC
-         EsnqwZLFOeT2xwgBInMmxMlB3z858KT+BMyNILpcdDJms151iSH79ih/dLELmVKzTGT2
-         KV9Ztq1twFuWtXoqOi7xa7+QBLAN6x4tc0oubXkXSdsrrFKn+Ol2HMVdH5CJBAX+wK6+
-         zv9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781278183; x=1781882983;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dGTIoUK/OWYjJAAY1+ZmAOAhqsOqMD1OUbmAHjFef1Y=;
-        b=Vmre6HpnhNpY5o9oym7zDdBRpKnpC31zvCLMR589iKzC6IlNFy28e2+T4dC9vxNW+a
-         34ROdwfy7o76oHg+OzX6hB69VKOiuQY2SFNdEsScLZScOlXqc/hjGRSmBXnWjmH6dCCh
-         4IIX7ssIA85J+o+BFHExz9Mjgk5EU4vfL0ta/qPHFF3apsou+0OVHnGIxyMQqmsw2NKj
-         LxZ0Cfqp4MP30o8mJeChxXaEx8XSZ0mwIt9Cs/0kK16BRBy2hv3Kpu4zZnlSZ8u4VCNJ
-         j3/07gG4Hp0VGxdsXoBcrWzmLsXn/hH7vAdPc00Mrck96vX7TyUHF8LUNEjXkixknyy5
-         VhCA==
-X-Forwarded-Encrypted: i=1; AFNElJ+fhMVp/yddaM30SqKleBcgaWU0rS5EiZMEXpCqFQdNh8L64kvM4H+TG17jRiH3E2DYJWZH7Z8QKBI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ3RHDSBFajKFW/6BNMmL3q1NYxio3UREjk+eZ6tstpb2977Ke
-	TtyYF5O0i6gc0lh5p9VGOe8ZLo0IxeBpwtXdvbJOz+LpnJ3iW/0h7S/INk8Td6x0R8E=
-X-Gm-Gg: Acq92OFgmLd6D5SdbIQFtnWnk49EuNhxfzxPeK9KxEhfjf5kB8jX7h9H/4nP6RJKvip
-	/NIU0OXKhyU0jjijnY7y3LSEaSh20PzQKzpD2CGnDmdq5FBvXjPtLQVLW2EP3lQAUawziQdZeYL
-	V7g1azaw7jATXQckTNdq2/2NuNZHEoq2Vr3+pmiq8ry+HupwsFYNavSclIXLnguum65UfJAilmH
-	xPdB6uVsvctnwzG9mGvLf7Ur775NsxeIDbusVted/1izriTZE9B98/aHxkFsA+HP6orZ6mbsb3u
-	LaTLhERdN2bjt4AfjolKNUgGc6DMOatzT+N7gWaJDezLoIu1wil6oQ4b8ZJRJVk91q94lbGPU7x
-	RvasioFxGxsNUquIGpGKORo4TowqG/gdC4Cvhc5yqx05AyjutAuHZ69PUbj2IyXxP1n3u0GxE+3
-	l9NtlPaZDHz7h0dUfJAdH4eSYBilyUsJd9eCd+XD/fKyK5gwcySKJiXcTnrbppZYT/ekXZKp6dD
-	ZiUq+k=
-X-Received: by 2002:a05:622a:1445:b0:516:ce43:f4ee with SMTP id d75a77b69052e-51953395db3mr1534991cf.20.1781278182636;
-        Fri, 12 Jun 2026 08:29:42 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-517fb7ec47asm23782211cf.24.2026.06.12.08.29.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2026 08:29:42 -0700 (PDT)
-Date: Fri, 12 Jun 2026 11:29:38 -0400
-From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Balbir Singh <balbirs@nvidia.com>, lsf-pc@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	cgroups@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
-	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
-	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
-	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
-	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
-	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <aiwl4kCG814dpX7L@gourry-fedora-PF4VCD3F>
-References: <ag6XyvxR-NU5rGn-@parvat>
- <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
- <ah47NNhuiClgGCdn@parvat>
- <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
- <ah-0CyZurn5D1ezY@parvat>
- <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
- <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
- <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
- <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
- <ainFROZ3WrGioyuY@gourry-fedora-PF4VCD3F>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z3YIfNxj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781278546; x=1812814546;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GZ0HucKEYHQX1M9VWiReyvvuKAUDmldWGQ92b75c2zg=;
+  b=Z3YIfNxjJhOKHW7bkEVQ0ha+FG/ZIIncfbwCPFAKYVlh0PWwORlVBxwd
+   7TrC0NICEzpVkCw04y73YqlWwu5LXcACmwo0psuCidYCmalOPzp8GkZGh
+   /YCpDVBeF8vsw8pkCpvOayO2+KQ8tgo04rkq1x0u2R0x68KIQHuCOZZgR
+   K4Jb1UnpxnM2+gqCkZUjxD1AhWUqaPO4bbvbXqq5WKksLCk7jF5Hq43Sw
+   cgyxcvomG/SfTjTDA2uNtvSTE4dKpxjDmupQLqebW2fcGBfCuMYL3o/JY
+   fdbCf8JHbmoK3xMOkEffDe3jAzdze9zg5qxtBBkSs35ldfomMm9FB57Y7
+   g==;
+X-CSE-ConnectionGUID: 9XQivX82T+C8Wol4nobZzw==
+X-CSE-MsgGUID: i/9E7/ddTzCzyF2PUj0mtw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11815"; a="92432287"
+X-IronPort-AV: E=Sophos;i="6.24,200,1774335600"; 
+   d="scan'208";a="92432287"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 08:35:45 -0700
+X-CSE-ConnectionGUID: CIQHs7MgTHW2EBqrF5r6tQ==
+X-CSE-MsgGUID: PIkdON8BSy+0P1UmaDQsbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,200,1774335600"; 
+   d="scan'208";a="270513180"
+Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.110.186]) ([10.125.110.186])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2026 08:35:45 -0700
+Message-ID: <5cf32fe7-da4a-46ab-b1ff-8cc5b0678dc3@intel.com>
+Date: Fri, 12 Jun 2026 08:35:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ainFROZ3WrGioyuY@gourry-fedora-PF4VCD3F>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/6] cxl/test: Add test for module parameters
+To: Richard Cheng <icheng@nvidia.com>
+Cc: linux-cxl@vger.kernel.org, djbw@kernel.org, dave@stgolabs.net,
+ jic23@kernel.org, alison.schofield@intel.com, vishal.l.verma@intel.com
+References: <20260611234409.256765-1-dave.jiang@intel.com>
+ <20260611234409.256765-2-dave.jiang@intel.com> <aittuDSmdIzR7X5U@MWDK4CY14F>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <aittuDSmdIzR7X5U@MWDK4CY14F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 10, 2026 at 04:12:52PM -0400, Gregory Price wrote:
-> On Wed, Jun 10, 2026 at 08:59:59PM +0200, David Hildenbrand (Arm) wrote:
-> > > 
-> > > I understand this question in two ways:
-> > > 
-> > >   1) Can we disallow PAGE allocation and limit this to FOLIO allocation
-> > 
-> > Yes. Can we only allow folios to be allocated from private memory nodes. So let
-> > me reply to that one below.
-> > 
-> ... snip ...
-> > 
-> > At LSF/MM we talked about how GFP flags are bad and how deriving stuff from the
-> > context might be better. I think there was also talk about how the memalloc_*
-> > interface might be a better way forward. Maybe we would start giving the
-> > allocator more context ("we are allocating a folio").
-> > 
-> > The following is incomplete (esp. hugetlb stuff I assume), just as some idea:
-> >
+
+
+On 6/11/26 7:33 PM, Richard Cheng wrote:
+> On Thu, Jun 11, 2026 at 04:44:04PM +0800, Dave Jiang wrote:
+>> Add a test for module paraters during module init to make sure that
+>> only one is activated.
 > 
-> I will still probably send the next RFC version tomorrow or friday,
-> as I want to get some eyes on the __GFP_PRIVATE-less pattern.
+> "paraters" -> "parameters".
+
+ok
+
 > 
-> Also, I made a new `anondax` driver which enables userland testing
-> of this functionality without any specialty hardware.
+>>
+>> Suggested-by: Alison Schofield <alison.schofield@intel.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>> v5:
+>> - Add test for hmem_test module parameters. (sashiko)
+>> ---
+>>  tools/testing/cxl/test/cxl.c       | 20 ++++++++++++++++++++
+>>  tools/testing/cxl/test/hmem_test.c |  3 ++-
+>>  tools/testing/cxl/test/mock.h      |  2 ++
+>>  3 files changed, 24 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+>> index 296516eecfd6..1c8ac8bdd8f7 100644
+>> --- a/tools/testing/cxl/test/cxl.c
+>> +++ b/tools/testing/cxl/test/cxl.c
+>> @@ -1814,11 +1814,31 @@ static struct attribute *cxl_acpi_attrs[] = {
+>>  };
+>>  ATTRIBUTE_GROUPS(cxl_acpi);
+>>  
+>> +static bool __init have_multiple_modparms(void)
+>> +{
+>> +	int count = 0;
+>> +
+>> +	if (interleave_arithmetic)
+>> +		count++;
 > 
+> Should we make it a boolean ?
+> It should only work with 0 or 1 right ?
 
-(apologies for the length of this email: this will all be covered in
-the coming cover letter, but I just wanted to share a bit of a preview)
+I don't follow. The intention is that if there are >1 parameters then it fails.
 
-===
+DJ
 
-Just another small update - I am planning to post the RFC today once i
-get some mild cleanup done.  It will be based on the dax atomic hotplug
+> 
+> --Richard
+> 
+>> +	if (extended_linear_cache)
+>> +		count++;
+>> +	if (fail_autoassemble)
+>> +		count++;
+>> +	if (hmem_test)
+>> +		count++;
+>> +
+>> +	return count > 1;
+>> +}
+>> +
+>>  static __init int cxl_test_init(void)
+>>  {
+>>  	int rc, i;
+>>  	struct range mappable;
+>>  
+>> +	/* Enforce a single module param active at a time */
+>> +	if (have_multiple_modparms())
+>> +		return -EINVAL;
+>> +
+>>  	cxl_acpi_test();
+>>  	cxl_core_test();
+>>  	cxl_mem_test();
+>> diff --git a/tools/testing/cxl/test/hmem_test.c b/tools/testing/cxl/test/hmem_test.c
+>> index 3a1a089e1721..0fa00f7e16db 100644
+>> --- a/tools/testing/cxl/test/hmem_test.c
+>> +++ b/tools/testing/cxl/test/hmem_test.c
+>> @@ -3,8 +3,9 @@
+>>  #include <linux/moduleparam.h>
+>>  #include <linux/workqueue.h>
+>>  #include "../../../drivers/dax/bus.h"
+>> +#include "mock.h"
+>>  
+>> -static bool hmem_test;
+>> +bool hmem_test;
+>>  
+>>  static void hmem_test_work(struct work_struct *work)
+>>  {
+>> diff --git a/tools/testing/cxl/test/mock.h b/tools/testing/cxl/test/mock.h
+>> index 4f57dc80ae7d..846d7c5d6eaa 100644
+>> --- a/tools/testing/cxl/test/mock.h
+>> +++ b/tools/testing/cxl/test/mock.h
+>> @@ -5,6 +5,8 @@
+>>  #include <linux/dax.h>
+>>  #include <cxl.h>
+>>  
+>> +extern bool hmem_test;
+>> +
+>>  struct cxl_mock_ops {
+>>  	struct list_head list;
+>>  	bool (*is_mock_adev)(struct acpi_device *dev);
+>> -- 
+>> 2.54.0
+>>
+>>
 
-https://lore.kernel.org/linux-mm/20260605211911.2160954-1-gourry@gourry.net/
-
-But a couple specific details regarding the memalloc pieces that i've
-learned the past couple of days playing with it.
-
-1) memalloc_folio is required to ensure non-folio allocations don't land
-   on the private node, even if it happens within a memalloc_private
-   context.  Since memalloc_folio may be useful in contexts outside of
-   private nodes, I kept this as a separate flag.
-
-   If we think there will *never* be additional users of memalloc_folio,
-   then we could fold _folio into _private to save the flag for now and
-   add it back when we actually need it.
-
-2) memalloc_private is needed to unlock private nodes, but in the
-   original NOFALLBACK-only design, you also needed __GFP_THISNODE.
-
-   This is *highly* restrictive.  I found when playing with mbind that
-   MPOL_BIND + __GFP_THISNODE generates a WARN (valid WARN, it normally
-   implies a bug). 
-
-   That leads me to #3
-
-3) If a private node is opted into something like Demotion (the node is
-   a demotion target) or mbind(), such that normal kernel operation can
-   place memory there - it's *pseudo-private*, and should actually land
-   in it's own FALLBACK list (reachable without __GFP_THISNODE, but not
-   reachable as a normal fallback allocation target).
-
-I'm still playing with this, but I think we can even omit the
-__GFP_THISNODE requirement (my initial feeling that __GFP_THISNODE
-didn't buy us anything in particular seems to have panned out).
-
-At the end of the day, this makes the whole memalloc_private_save()
-pattern a heck of a lot cleaner than trying fiddle with GFP.
-
-I think you will all enjoy how clean the code ends up, and how easily
-testable it is.
-
-As a testbed I've implement an anondax (we can discuss naming) that
-adds some sample NODE_PRIVATE_OPT_* flags so you can do the following.
-
-I'm including this in the next RFC - but we can hack the entire thing
-off (including the OPT flags) if we prefer to just get the base set in
-without a new driver as a start.
-
-echo 1 > dax0.0/reclaim   # kswapd and reclaim run normally on this node
-echo 1 > dax0.0/demotion  # it is a demotion target
-echo 1 > dax0.0/mbind     # mbind() can target this node for anon-vma's
-echo 1 > dax0.0/madvise   # allow madvise() to operate on its folios
-echo 1 > dax0.0/numa_balance  # allow numa balancing for this node
-echo 1 > dax0.0/ltpin     # allow GUP longterm pin to operate normally
-echo * > dax0.0/adistance # set the adistance for hotplug time
-echo * > dax0.0/hotplug   # same as kmem/hotplug
-
-This also means *existing hardware* can leverage private nodes if
-they're capable of generating a dax device.
-
-I've even gotten it such that you can put a private node above dram in
-the adistance heirarchy - which means demotion flows downward from
-device to CPU, but allocations don't default or fallback there.
-
-This seems *immediately* useful for a variety of use cases.
-
-~Gregory
