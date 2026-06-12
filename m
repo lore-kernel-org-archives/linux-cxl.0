@@ -1,141 +1,213 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E962303CAB
-	for <linux-cxl@vger.kernel.org>; Fri, 12 Jun 2026 14:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781275762; cv=pass; b=WYCkHEjHCqh5wMsatNpElT1aSTFcQLif4V3/ClQ7b6uuuXVBL9/t5r0cEqJidJeYWgtMlZetl672Sp4Y3NYCmb6L0gG+kmJBO0Myc9YgLEffvy3p+wFDVTGQndrouNnDr6gppOjSlR2dTrto9mscLBJQWA7RPJ/p/Mg99FH94xQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781275762; c=relaxed/simple;
-	bh=YvZbeodMtxNM4p+GxE8XiEE/76vFpjJx428pQsuE8ws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TlBmWTULLVRcS3NnXtbWR5kAGjIaITXHx6QoIZF4K7gmhw3WFkVnlXKIQEnAjhYmPH1MM2bonTLYgGhAOOPPEKC115pNtBdTgrv4ys+RaNPpwVJGdFSu7cRKCLLbHpMPF5VEc4wuiuKEfZotzLQUrxQylV7e5/pmI/EBxegLxqs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=FrmzYkbh; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECF2331EC0
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Jun 2026 15:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781278185; cv=none; b=BR7CIHnUQWeXiHuCTeYs9E1Br2VTlsQPGhzlvjJAieG29rRTnGbU62PS0oan/I8J2D3jjmU4UkMtuoS3EuZqAIYBHIOUjuOVRMZPeRDq+7ZyLQh6RcTSrrUbzTayryl3OeSNRo4rOmWkhUDyMHSBBDdWLTWmlqqrqzGAsxrsAxo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781278185; c=relaxed/simple;
+	bh=mVnLEdPsEZ4bwU/Ei3LWYtLLBe2x/ajf/pLUxSqCLVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IffscQIzDT6vXBQ+effGVsNDnRhtE3vdo3/2i/L5ewCPk5gUgklGb5DsSBvPB/8TPztY88/rlyzZnweTmz3kvoYcVDqVsinRF2KCYZbgs//itidI/AC9KEaGGPYI7Rn0v36Rz4p5mbqpEHEFY8XoX5Xoj3PvKQ1lOoOauOALC40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=K1bIzaql; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="FrmzYkbh"
-ARC-Seal: i=1; a=rsa-sha256; t=1781275753; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UT/6lVhm6WyfD/r5yHWQtPFaeZ/EkKRBetQaJ6Ii9udWyWmz2T7/DQyDdqMYXL6h7qf2A9Ok8qdgfO8U4fqFVDtaE5Lw+ZqJ2CjA0++LbxFqKjT/OUxceNKjcXdxm1gyqgGvy/u1UgxncK6KFDlKkfB9IQFTiZ75R7f/t6bYejs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1781275753; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=3QLITU0XWv/B2Tl3b3UeSW2f3daeM1nIj8RN+jR8r9A=; 
-	b=WJdsut+erDdwFEBVnWBikwdY3G3+AR8WSswn9CTrBXB9qlcSMUck0WOa6yMjCLiojzyVZprWAbnl03CgTnBC2ojJGGp3hs8YzYxcYqZyZzal+xvxK4sCzws5y3qRyl/PGkNgqANvvw9CWlIa28RFkbHQHY+yBcMEjHqNXVNCS88=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1781275753;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=3QLITU0XWv/B2Tl3b3UeSW2f3daeM1nIj8RN+jR8r9A=;
-	b=FrmzYkbhqNd8/f5/TmoXlZ8gCRyscOIHmkcYiNOkh2wSLTO25HeztvT9dPfxMRBU
-	jdJ80Kle5Y3v3h2EKia7+BuIhbXMEw+X8Hjy4Sefd0P33ITnVeRSWLmR/GT0e6zApBI
-	pC7lQe7Oxio2eWvA+2ZlU/619awewSW7vfMuWoOc=
-Received: by mx.zohomail.com with SMTPS id 1781275751791364.68982951426256;
-	Fri, 12 Jun 2026 07:49:11 -0700 (PDT)
-Message-ID: <b10a77ec-f321-4e95-9347-34df96064d64@zohomail.com>
-Date: Fri, 12 Jun 2026 22:49:06 +0800
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="K1bIzaql"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-5176096116fso12000671cf.0
+        for <linux-cxl@vger.kernel.org>; Fri, 12 Jun 2026 08:29:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1781278183; x=1781882983; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dGTIoUK/OWYjJAAY1+ZmAOAhqsOqMD1OUbmAHjFef1Y=;
+        b=K1bIzaqleRmv6I9IUmhsv2jcoLba2fJJFC1vzoGElN4JNWQYZSY2iw6COwt9IpCVPi
+         HceY2zcM6PrcDrijB787Yg50WsXLzVDns/vEeg+pV1yiJHIhdEH2IxRuAI2XyCSw0ay8
+         gLUsl3pFsW5nPQx2MN48OeZrS+hC6A0brcTkSli0VejhkElL4j/FvIwGq6GlWhL114cC
+         EsnqwZLFOeT2xwgBInMmxMlB3z858KT+BMyNILpcdDJms151iSH79ih/dLELmVKzTGT2
+         KV9Ztq1twFuWtXoqOi7xa7+QBLAN6x4tc0oubXkXSdsrrFKn+Ol2HMVdH5CJBAX+wK6+
+         zv9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781278183; x=1781882983;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dGTIoUK/OWYjJAAY1+ZmAOAhqsOqMD1OUbmAHjFef1Y=;
+        b=Vmre6HpnhNpY5o9oym7zDdBRpKnpC31zvCLMR589iKzC6IlNFy28e2+T4dC9vxNW+a
+         34ROdwfy7o76oHg+OzX6hB69VKOiuQY2SFNdEsScLZScOlXqc/hjGRSmBXnWjmH6dCCh
+         4IIX7ssIA85J+o+BFHExz9Mjgk5EU4vfL0ta/qPHFF3apsou+0OVHnGIxyMQqmsw2NKj
+         LxZ0Cfqp4MP30o8mJeChxXaEx8XSZ0mwIt9Cs/0kK16BRBy2hv3Kpu4zZnlSZ8u4VCNJ
+         j3/07gG4Hp0VGxdsXoBcrWzmLsXn/hH7vAdPc00Mrck96vX7TyUHF8LUNEjXkixknyy5
+         VhCA==
+X-Forwarded-Encrypted: i=1; AFNElJ+fhMVp/yddaM30SqKleBcgaWU0rS5EiZMEXpCqFQdNh8L64kvM4H+TG17jRiH3E2DYJWZH7Z8QKBI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQ3RHDSBFajKFW/6BNMmL3q1NYxio3UREjk+eZ6tstpb2977Ke
+	TtyYF5O0i6gc0lh5p9VGOe8ZLo0IxeBpwtXdvbJOz+LpnJ3iW/0h7S/INk8Td6x0R8E=
+X-Gm-Gg: Acq92OFgmLd6D5SdbIQFtnWnk49EuNhxfzxPeK9KxEhfjf5kB8jX7h9H/4nP6RJKvip
+	/NIU0OXKhyU0jjijnY7y3LSEaSh20PzQKzpD2CGnDmdq5FBvXjPtLQVLW2EP3lQAUawziQdZeYL
+	V7g1azaw7jATXQckTNdq2/2NuNZHEoq2Vr3+pmiq8ry+HupwsFYNavSclIXLnguum65UfJAilmH
+	xPdB6uVsvctnwzG9mGvLf7Ur775NsxeIDbusVted/1izriTZE9B98/aHxkFsA+HP6orZ6mbsb3u
+	LaTLhERdN2bjt4AfjolKNUgGc6DMOatzT+N7gWaJDezLoIu1wil6oQ4b8ZJRJVk91q94lbGPU7x
+	RvasioFxGxsNUquIGpGKORo4TowqG/gdC4Cvhc5yqx05AyjutAuHZ69PUbj2IyXxP1n3u0GxE+3
+	l9NtlPaZDHz7h0dUfJAdH4eSYBilyUsJd9eCd+XD/fKyK5gwcySKJiXcTnrbppZYT/ekXZKp6dD
+	ZiUq+k=
+X-Received: by 2002:a05:622a:1445:b0:516:ce43:f4ee with SMTP id d75a77b69052e-51953395db3mr1534991cf.20.1781278182636;
+        Fri, 12 Jun 2026 08:29:42 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-517fb7ec47asm23782211cf.24.2026.06.12.08.29.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2026 08:29:42 -0700 (PDT)
+Date: Fri, 12 Jun 2026 11:29:38 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Balbir Singh <balbirs@nvidia.com>, lsf-pc@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
+	kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
+	dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
+	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
+	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
+	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
+	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
+	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <aiwl4kCG814dpX7L@gourry-fedora-PF4VCD3F>
+References: <ag6XyvxR-NU5rGn-@parvat>
+ <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat>
+ <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+ <ah-0CyZurn5D1ezY@parvat>
+ <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
+ <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
+ <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
+ <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
+ <ainFROZ3WrGioyuY@gourry-fedora-PF4VCD3F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl: Align interleave decode/encode helpers with their
- callers
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, Purva Yeshi <purvayeshi550@gmail.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <iweiny@kernel.org>, Dan Williams <djbw@kernel.org>
-References: <20260605040801.865965-1-alison.schofield@intel.com>
- <01f42b02-e050-401d-9b0f-f2b0fc6b8d23@zohomail.com>
- <aitqeGQHdIfKz0j-@aschofie-mobl2.lan>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <aitqeGQHdIfKz0j-@aschofie-mobl2.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Feedback-ID: zu0801122783e3ad16d48135af4e6117a800007c5a2a2c0522468e606cd494b6b218d2d03c2d07a886b0dd50:ZohoMail
-X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ainFROZ3WrGioyuY@gourry-fedora-PF4VCD3F>
 
-On 6/12/2026 10:10 AM, Alison Schofield wrote:
-> On Sat, Jun 06, 2026 at 12:21:04AM +0800, Li Ming wrote:
->> 在 2026/6/5 12:07, Alison Schofield 写道:
->>> The interleave conversion helpers translate between encoded HDM
->>> interleave values and the granularity and way values used by the
->>> driver.
->>>
->>> These helpers have been a recurring source of static analysis
->>> complaints that expose type mismatches and potentially uninitialized
->>> outputs. Fix those issues in the helpers so callers inherit the
->>> consistent behavior automatically.
->>>
->>> The decode and encode helpers have different interface issues.
->>>
->>> The decode helpers return values through unsigned int pointers, but
->>> the decoded values are ultimately represented as int throughout the
->>> driver. Align the helper interfaces with their callers by changing
->>> the out-parameters to int * and updating the handful of affected
->>> locals to match.
->>>
->>> The encode helpers leave their out-parameters unchanged on error. That
->>> means callers that ignore the return value may observe uninitialized
->>> encoded values. Initialize the outputs so failed conversions leave
->>> defined values. This issue was originally reported by Purva and the
->>> helper-side fix was suggested by Dan [1].
->>>
->>> Tidy up a related, pre-existing, printk format specifier mismatch in
->>> cxl_validate_translation_params().
->>>
->>> No functional change for valid interleave parameters.
->>>
->>> [1] https://lore.kernel.org/linux-cxl/20250419203530.45594-1-purvayeshi550@gmail.com/
->>>
->>> Reported-by: Purva Yeshi <purvayeshi550@gmail.com>
->>> Suggested-by: Dan Williams <djbw@kernel.org>
->>> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
->> Reviewed-by: Li Ming <ming.li@zohomail.com>
->>
->> Since the types are changed from 'unsigned int' to 'int', maybe we should
->> drop the second parameter of these helpers in the future?
->>
->> A negative return value indicates failure, other value is valid.
-> Hi Ming,
->
-> Good catch and good idea. Thanks!
-> I'd like to address it now, probably turning this into a 2 patch series.
->
-> Not exactly as you suggested, see if you agree w this:
->
-> I'll convert the two decode helpers eig_to_granularity() and eiw_to_ways(),
-> to return the decoded value directly, while keeping out params for the encode
-> helpers ways_to_eiw(), granularity_to_eig().
->
-> Decode converts cleanly: results are small positives, so a negative return is
-> clear, and no caller is made worse. ie ones that must check already do.
->
-> Encode I'd leave as is. Those helpers run on two kinds of input: raw sysfs
-> values, where the return value must be checked, and already-validated values,
-> where the return code is legitimately ignored. Keeping the output param,
-> together with the *eiw = 0 / *eig = 0 initialization this patch adds, lets
-> both kinds of caller share the encode helpers.
->
-> I'll go ahead and code it up so you can see if you like it when you 
-> see it.
+On Wed, Jun 10, 2026 at 04:12:52PM -0400, Gregory Price wrote:
+> On Wed, Jun 10, 2026 at 08:59:59PM +0200, David Hildenbrand (Arm) wrote:
+> > > 
+> > > I understand this question in two ways:
+> > > 
+> > >   1) Can we disallow PAGE allocation and limit this to FOLIO allocation
+> > 
+> > Yes. Can we only allow folios to be allocated from private memory nodes. So let
+> > me reply to that one below.
+> > 
+> ... snip ...
+> > 
+> > At LSF/MM we talked about how GFP flags are bad and how deriving stuff from the
+> > context might be better. I think there was also talk about how the memalloc_*
+> > interface might be a better way forward. Maybe we would start giving the
+> > allocator more context ("we are allocating a folio").
+> > 
+> > The following is incomplete (esp. hugetlb stuff I assume), just as some idea:
+> >
+> 
+> I will still probably send the next RFC version tomorrow or friday,
+> as I want to get some eyes on the __GFP_PRIVATE-less pattern.
+> 
+> Also, I made a new `anondax` driver which enables userland testing
+> of this functionality without any specialty hardware.
+> 
 
-Hi Alison,
+(apologies for the length of this email: this will all be covered in
+the coming cover letter, but I just wanted to share a bit of a preview)
 
-These changes look good to me. Thanks.
+===
 
+Just another small update - I am planning to post the RFC today once i
+get some mild cleanup done.  It will be based on the dax atomic hotplug
 
-Ming
+https://lore.kernel.org/linux-mm/20260605211911.2160954-1-gourry@gourry.net/
 
->
-> -- Alison
->
+But a couple specific details regarding the memalloc pieces that i've
+learned the past couple of days playing with it.
 
+1) memalloc_folio is required to ensure non-folio allocations don't land
+   on the private node, even if it happens within a memalloc_private
+   context.  Since memalloc_folio may be useful in contexts outside of
+   private nodes, I kept this as a separate flag.
+
+   If we think there will *never* be additional users of memalloc_folio,
+   then we could fold _folio into _private to save the flag for now and
+   add it back when we actually need it.
+
+2) memalloc_private is needed to unlock private nodes, but in the
+   original NOFALLBACK-only design, you also needed __GFP_THISNODE.
+
+   This is *highly* restrictive.  I found when playing with mbind that
+   MPOL_BIND + __GFP_THISNODE generates a WARN (valid WARN, it normally
+   implies a bug). 
+
+   That leads me to #3
+
+3) If a private node is opted into something like Demotion (the node is
+   a demotion target) or mbind(), such that normal kernel operation can
+   place memory there - it's *pseudo-private*, and should actually land
+   in it's own FALLBACK list (reachable without __GFP_THISNODE, but not
+   reachable as a normal fallback allocation target).
+
+I'm still playing with this, but I think we can even omit the
+__GFP_THISNODE requirement (my initial feeling that __GFP_THISNODE
+didn't buy us anything in particular seems to have panned out).
+
+At the end of the day, this makes the whole memalloc_private_save()
+pattern a heck of a lot cleaner than trying fiddle with GFP.
+
+I think you will all enjoy how clean the code ends up, and how easily
+testable it is.
+
+As a testbed I've implement an anondax (we can discuss naming) that
+adds some sample NODE_PRIVATE_OPT_* flags so you can do the following.
+
+I'm including this in the next RFC - but we can hack the entire thing
+off (including the OPT flags) if we prefer to just get the base set in
+without a new driver as a start.
+
+echo 1 > dax0.0/reclaim   # kswapd and reclaim run normally on this node
+echo 1 > dax0.0/demotion  # it is a demotion target
+echo 1 > dax0.0/mbind     # mbind() can target this node for anon-vma's
+echo 1 > dax0.0/madvise   # allow madvise() to operate on its folios
+echo 1 > dax0.0/numa_balance  # allow numa balancing for this node
+echo 1 > dax0.0/ltpin     # allow GUP longterm pin to operate normally
+echo * > dax0.0/adistance # set the adistance for hotplug time
+echo * > dax0.0/hotplug   # same as kmem/hotplug
+
+This also means *existing hardware* can leverage private nodes if
+they're capable of generating a dax device.
+
+I've even gotten it such that you can put a private node above dram in
+the adistance heirarchy - which means demotion flows downward from
+device to CPU, but allocations don't default or fallback there.
+
+This seems *immediately* useful for a variety of use cases.
+
+~Gregory
