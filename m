@@ -1,112 +1,95 @@
-Received: from bird.cedar.relay.mailchannels.net (bird.cedar.relay.mailchannels.net [23.83.210.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C9E32A3FD
-	for <linux-cxl@vger.kernel.org>; Fri, 12 Jun 2026 19:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.210.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CD9392C5F
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Jun 2026 20:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781291553; cv=none; b=Kp7Ng/Zq8dGhDtr98jv/a39PVwDI5kk381m4VHUSrpUTfLKYh9Jtkk//0J1gGiwLwZESkpWReJZb3b4pICcjR5iwW0oLIdVoHNYSHxHA7zw4AbJKpaUitYb7/2FABqCEMXu1WH3c2+anwY5/lam/gioN5f3ewJH1CeEjNEdFx+w=
+	t=1781295544; cv=none; b=rxwNUB+TK285tpQbMhwFYV9Ia+DlyaM67apL1D8UYXMyYgDjuaIGr/1l7+kfV2g7UulQJ57cI5fQW4RemXkHcOysupJv59OL12A+EXyqthkNlWCHRa6OtQAXGgQirfVYceB3kNPu6g4YdbSy7ymmJfGKCMw9jTWcTsZQ3QLLF6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781291553; c=relaxed/simple;
-	bh=3hzEzV7pviVg8rXVmBnYgDk6YlNJfhjn3Grkd2FHN30=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H2Uh0wOL1pcVGYah/A/4V78tCLdiGP9ng4StmzrqktNaeq8+17QHTU1cbdyOt4oEGBLgVNQdMaMQDS9YhAYrf0JnryDMcC4FFwA0I/PvQ4RNjTiTbg5gytHzoDvuvBugoAzdiFfrOP2FZ5WFNnp6OSDrDla2e4EgVgx9L1IDPpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=ksd2Rm9S; arc=none smtp.client-ip=23.83.210.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1781295544; c=relaxed/simple;
+	bh=LWL0z6xDiuFPIzPmumSKJP0SOSglQ0UycF/yEZ2qTDw=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=Awi7dvxIr+q3K5Hpeq9Qz/tpPj8qnhYXOqCD2rVTAurGulHYuZXN5vziyFNGFJ8gleerxNfVcSj1DbRMgdg47wO2k3l4OL6uRxrzw1eJJbWnHuyoAhWpEgjU62G9E0iSr3U4lMyEEq3wCFzr625quwytwm6pA9QQzv9/6MQmDPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcBMIrkh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="ksd2Rm9S"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 31A8E62726;
-	Fri, 12 Jun 2026 18:54:50 +0000 (UTC)
-Received: from pdx1-sub0-mail-a209.dreamhost.com (100-105-228-80.trex-nlb.outbound.svc.cluster.local [100.105.228.80])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id BAC4061FDB;
-	Fri, 12 Jun 2026 18:54:49 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Junk
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Trouble-Spot: 5ebc9f2e18d71f7b_1781290490033_3254114912
-X-MC-Loop-Signature: 1781290490033:1733610305
-X-MC-Ingress-Time: 1781290490032
-Received: from pdx1-sub0-mail-a209.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.105.228.80 (trex/7.1.5);
-	Fri, 12 Jun 2026 18:54:50 +0000
-Received: from offworld (unknown [172.59.185.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a209.dreamhost.com (Postfix) with ESMTPSA id 4gcTGG3mSpz1db;
-	Fri, 12 Jun 2026 11:54:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1781290489;
-	bh=3hzEzV7pviVg8rXVmBnYgDk6YlNJfhjn3Grkd2FHN30=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=ksd2Rm9SkiUYAXOcPihLmUqcgs/QzIaAyGz6miVLHm8/htA1rPe5k7naR1ANcVsoq
-	 I4IonYxRCKiHX7DRSfGr/XSmlIOdm1rttBIPw+lKGqknHnzP3bt30HOHjN1/18XOvN
-	 JlgzsbHVG6n/ZJdPFMqB/sz7COu5P5dzTc04coVZ3KxqGdTiP10hSMUsV82DO3Puvx
-	 VJPj+uwtfEg8G+FcgMj14Ud6gRcNY7tUd7iiVuSWOUJVet1SWxuDfaRl752c1/cuns
-	 jxlm34u0GXumyyQlox3ho8NMhX88RmWFATBpf29Iqf4zXTUHr9OUayAQa5ziNI4JSv
-	 9zdRJtaS8Ammw==
-Date: Fri, 12 Jun 2026 11:54:42 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-Cc: dave.jiang@intel.com, djbw@kernel.org, jic23@kernel.org,
-	alucerop@amd.com, alison.schofield@intel.com, gourry@gourry.net,
-	dongjoo.seo1@samsung.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 3/5] cxl/hdm: Add BI coherency support for endpoint
- decoders
-Message-ID: <20260612185442.yljbcwz2xbjtt7jr@offworld>
-References: <20260605003329.2584012-1-dave@stgolabs.net>
- <20260605003329.2584012-4-dave@stgolabs.net>
- <fdbc0f06-cd3a-49db-8f86-3e856b97a0db@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcBMIrkh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D73B21F000E9;
+	Fri, 12 Jun 2026 20:19:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781295542;
+	bh=/VSKXzQl+Gx+JknyAWhZP4dN+pwTQTuWw+7fbCe5Rcg=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=BcBMIrkhxaXxPyw3gjK0Zujho4hbyBBuujPoVVY09Vj+xsDdlyRFKnh+AYZhYKils
+	 /YFbxZit/vo5S26bkMOq0FI6dXGpexrxXYuk8iRFZWmQ/e4pzQnHPhLrXkHr8Z+JqL
+	 yI+Fw0PHfS4FxDsFw1V9YQQa/5BCKGQd8Ny1qlaphkkJNAeyMDtLnn/WH6bZGfomuY
+	 rqLsdnQwwB9lWNo72j7Lso7uDkmF9eUAm0hK3eyHySSuUKFqbVe+G/21S8LegXCsaO
+	 kNwqvYHj5l/PqXeXbJiAydQfe/0oM0HnwW42kt+Fkr1gAkTpBzTumZ4kNJ82VKKkpq
+	 LieD5kpRRYRYw==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 03926F4007A;
+	Fri, 12 Jun 2026 16:19:01 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Fri, 12 Jun 2026 16:19:01 -0400
+X-ME-Sender: <xms:tGksaje5kWpj5hITzk6XCWocIZ0FGMJcMg93yhJV798Ej0cMsc1JgQ>
+    <xme:tGksagMHViCtyVDpEf4lEZFIjpoREUyfAwggcZoSgHEgVt63iORhOw3aU70l7Qhok
+    D55jXFO1djRgg7wHX6cBLYDSmGrYhZSduCjnVwMPhTs661kirsFcIjZ>
+X-ME-Received: <xmr:tGksahi8m41Xhs1J2NMFvJpIbvDsz0s5zbGRGWZ9wUE4mfTSmEUnnBHiXHh1Em-0-X9udnEkdimF77MD5XJd3l1lDyr64ecuSko>
+X-ME-Proxy-Cause: dmFkZTECi8DNOonHn7sN9gHdj8ax1Kx+RTO2kXhTzl8gBQr7vKCxNFchqzEfU8vhMdrHiL
+    IOpd8o9kmzPoMhk7u7A1yITYGS1Se/W/6PddvgqmCgmY0Lhy3SzFiQXDEF81abdB1HWTUk
+    a+3Rz50+dZQh5W2Hj3vQkErlc8IrFkdaRyKXYeORF9ZPaVHHHYqOGRaDKZSNh4mlu/ZDUD
+    SsLrID42pCPBMNFX+HgLkQI62aQSw6wmPvQJv3uxzZZz++EOrV/AwikIqVWMZ7TfDP2ZTp
+    eeviQElPpA+Rx6Sofs5ArlyfVFAuLuQIF0g8hyYMuMSLWE0scUdpHRy/+P9VtIf8vV1kNG
+    AvsAN8zXdW+Hph9UE8qs7M7zliJve8fmwy8vCoT/Xv1ujOmoKkJPjr6XtdDhI+rvX2Nu0h
+    LgbD/jtUpi7bCTtaMr/hKJ4nklxLmy+Pa3MkbJ5VxaXqkCsCKp6B9RRExMGxfQUhUw8GUg
+    zyovVkLNZVPWMgvB8UFtny5kj9RelLaKWw7QqZEMdixcZTqxt04RXRPxbsxFlbD4BO3l4R
+    nqorCf/0YZs+09h55vJEWf6wKIRoVukn/5ShNgTEaZcigwfzCRrsMJRI/CBes8QiaVc/SA
+    O1x7cjiPr+Uu9FGo5kv9sPcLolADB0VrrUoVqFWYaOCHy8LrF/nuy928PltQ
+X-ME-Proxy: <xmx:tGksaj20jEViS1RklRHJmzp6oUcztVlKZDNTzy-FTrytRdGeTFyJEA>
+    <xmx:tGksarjBVMJAlnCy7Xk7qC22zYizTeqYo34aFQjp_pSjbFGfgynyCQ>
+    <xmx:tGksajcZWFgAf89jcWfvjXPRfQTryj8GRh6FZ__qYgjcALvfidLAyg>
+    <xmx:tGksauk5yTwCFVdqWcdiuBkxs5npaKeYCtXS1itO2SAybsu5_ghvYQ>
+    <xmx:tGksasvkrTeNCsNZ3DW6Kg96KdDj61yiG6HcxuRZv6vEarbHOBmCvxiU>
+Feedback-ID: i67ae4b3e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 12 Jun 2026 16:19:00 -0400 (EDT)
+Date: Fri, 12 Jun 2026 13:18:59 -0700
+From: "Dan Williams (nvidia)" <djbw@kernel.org>
+To: Dave Jiang <dave.jiang@intel.com>, 
+ linux-cxl@vger.kernel.org
+Cc: djbw@kernel.org, 
+ kernel test robot <lkp@intel.com>
+Message-ID: <6a2c69b3480a5_9b855100be@djbw-dev.notmuch>
+In-Reply-To: <20260610001324.260268-1-dave.jiang@intel.com>
+References: <20260610001324.260268-1-dave.jiang@intel.com>
+Subject: Re: [PATCH] cxl: Add dummy function for cxl_memdev_attach_region for
+ !CONFIG_CXL_REGION
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <fdbc0f06-cd3a-49db-8f86-3e856b97a0db@amd.com>
-User-Agent: NeoMutt/20220429
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 08 Jun 2026, Cheatham, Benjamin wrote:
+Dave Jiang wrote:
+> Add a dummy function that returns -EOPNOTSUPP for cxl_memdev_attach_region
+> when CONFIG_CXL_REGION is not enabled. This allow sbuilding when
+> cxl/core/region.o isn't built.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Fixes: 9b1e70e8f9ec ("cxl/region: Introduce devm_cxl_probe_mem()")
+> https://lore.kernel.org/oe-kbuild-all/202606100401.GOjzpKHo-lkp@intel.com/
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+> 
+> Fix is against last patch of Dan's [1] series for Introduce
+> devm_cxl_probe_mem() and fix region deletion.
+> 
+> [1]: https://lore.kernel.org/linux-cxl/48834616-6e75-4936-89be-9224a6dedefa@intel.com/T/#t
 
->On 6/4/2026 7:33 PM, Davidlohr Bueso wrote:
->> Cache the HDM decoder's Supported Coherency Models on struct cxl_hdm.
->> Region attach consults this to verify the HDM supports the region's
->> coherency type.
->>
->> For uncommitted endpoint decoders, init_hdm_decoder() defaults
->> target_type from supported_coherency: Type 3 devices default to
->> HDM-DB when the HDM is device-coherent-only, HDM-H otherwise.
->>
->> Pre-committed decoders with the BI bit set are not supported because
->> endpoint and port enumerations are independent -- at decoder
->> enumeration cxlds->bi is not yet known, so the topology cannot be
->> verified.
->
->Would it be possible to allow unlocked pre-committed decoders and
->just disable CXL.mem on them until we verify the endpoint supports
->BI? It may be possible to just disable the endpoint decoder, but
->I don't know if that comes online before CXL.mem is enabled
->on the device.
+Looks good:
 
-This sounds very iffy (and imo most solutions around this are ugly
-and hacky). Maybe the kernel should not bend over backwards to
-accomodate auto-commited BI decoders on non-BI platforms/topology.
-So what if we trusted this case and then cxl_bi_setup() just WARNs
-if things are broken and let the user keep the pieces (and maybe
-just offline and try to do the HOSTONLY) ?
-
-Regardless, I would still like for this to be a follow up to this
-series.
-
-Thanks,
-Davidlohr
+Reviewed-by: Dan Williams <djbw@kernel.org>
