@@ -1,102 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C5924886E;
-	Fri, 12 Jun 2026 14:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781275752; cv=none; b=obDdfYmmv18HRn4PiO6Lp832JxM2LSWIzoNG76IGF5pFXxXmi7DGooWWEFUYsK9dnGCmgowcPjq592ptXtyYI9uOP9layRpYPA0IlgMzCXakmSCgqdcd/gJUW7O1GlABSH7B7SUEhUZSb2c6iaD1v5fLTDa+tZOT4Hlk/ziVGE4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781275752; c=relaxed/simple;
-	bh=BJFzGzOnd+wP2T3OXbmcSnUl6hlCrHcAS6mwQMT6zrM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZPE2YdBVMcS9MLX8rgH8LdOvVPHY+xqdTfzS65Jf8TAWx5n1R2S9CdOZDnQx7NkWDu697q7ndEZTeFW4/MQF5aNFtiYf+MR94enFAakbmsnqy1UCRFbv6Rg0iLBmHf8O9+DukgeBwUpbT36w5T8UC+W0kP+LaiW/ZnWve6X/Xy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqQ3m+ji; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E962303CAB
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Jun 2026 14:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781275762; cv=pass; b=WYCkHEjHCqh5wMsatNpElT1aSTFcQLif4V3/ClQ7b6uuuXVBL9/t5r0cEqJidJeYWgtMlZetl672Sp4Y3NYCmb6L0gG+kmJBO0Myc9YgLEffvy3p+wFDVTGQndrouNnDr6gppOjSlR2dTrto9mscLBJQWA7RPJ/p/Mg99FH94xQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781275762; c=relaxed/simple;
+	bh=YvZbeodMtxNM4p+GxE8XiEE/76vFpjJx428pQsuE8ws=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TlBmWTULLVRcS3NnXtbWR5kAGjIaITXHx6QoIZF4K7gmhw3WFkVnlXKIQEnAjhYmPH1MM2bonTLYgGhAOOPPEKC115pNtBdTgrv4ys+RaNPpwVJGdFSu7cRKCLLbHpMPF5VEc4wuiuKEfZotzLQUrxQylV7e5/pmI/EBxegLxqs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=FrmzYkbh; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqQ3m+ji"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDC861F000E9;
-	Fri, 12 Jun 2026 14:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781275751;
-	bh=qhPHLYbQyUfvef9/xCIIY8vt5USpJP7O50ve0Xr9Fco=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=KqQ3m+jibMcuY8vurw+rG7VdytA6Y6cMHo3roJQ8ImJswxu7g5OQsf6U9DmgKL9Ok
-	 tMoVfnttQQhbTRLujJvFm4Z3bZ7gZzKPvuegSKFNGFlYLiavZptALOMGNFohVAJBsU
-	 S2cf3GfT9s6pAt3G7PxxKl9WEcH0ikXnznL9+1kH7Dm5xiZa7amZAbjMwEevZ45B4a
-	 vJr8GleYk5liMgzbxAkB3mPRM5aQevk6Yqrzi9aFtqJTDnvJHo9OtiT8zww01quWWU
-	 JZFWZqvYd6+3/nlD+3b8S1gml9lQE6KMYyGi9pVigyovlwi1JcYwRC3L4eQz6SwZW2
-	 qxF4lWtteSQaQ==
-Date: Fri, 12 Jun 2026 09:49:10 -0500
-From: Rob Herring <robh@kernel.org>
-To: Ahmed Tiba <ahmed.tiba@arm.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, will@kernel.org,
-	xueshuai@linux.alibaba.com, saket.dumbre@intel.com,
-	mchehab@kernel.org, dave@stgolabs.net, djbw@kernel.org,
-	bp@alien8.de, tony.luck@intel.com, guohanjun@huawei.com,
-	lenb@kernel.org, skhan@linuxfoundation.org,
-	vishal.l.verma@intel.com, rafael@kernel.org, corbet@lwn.net,
-	ira.weiny@intel.com, dave.jiang@intel.com, krzk+dt@kernel.org,
-	catalin.marinas@arm.com, alison.schofield@intel.com,
-	conor+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-	Michael.Zhao2@arm.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	Dmitry.Lamerov@arm.com, devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-edac@vger.kernel.org,
-	acpica-devel@lists.linux.dev
-Subject: Re: [PATCH v5 09/10] dt-bindings: firmware: add arm,ras-cper
-Message-ID: <20260612144910.GA989816-robh@kernel.org>
-References: <20260529-topics-ahmtib01-ras_ffh_arm_internal_review-v5-0-2e0500d42642@arm.com>
- <20260529-topics-ahmtib01-ras_ffh_arm_internal_review-v5-9-2e0500d42642@arm.com>
- <20260529174407.7081ad0b@jic23-huawei>
- <ceb19cb6-7083-44ad-a262-a8198f489257@arm.com>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="FrmzYkbh"
+ARC-Seal: i=1; a=rsa-sha256; t=1781275753; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=UT/6lVhm6WyfD/r5yHWQtPFaeZ/EkKRBetQaJ6Ii9udWyWmz2T7/DQyDdqMYXL6h7qf2A9Ok8qdgfO8U4fqFVDtaE5Lw+ZqJ2CjA0++LbxFqKjT/OUxceNKjcXdxm1gyqgGvy/u1UgxncK6KFDlKkfB9IQFTiZ75R7f/t6bYejs=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1781275753; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=3QLITU0XWv/B2Tl3b3UeSW2f3daeM1nIj8RN+jR8r9A=; 
+	b=WJdsut+erDdwFEBVnWBikwdY3G3+AR8WSswn9CTrBXB9qlcSMUck0WOa6yMjCLiojzyVZprWAbnl03CgTnBC2ojJGGp3hs8YzYxcYqZyZzal+xvxK4sCzws5y3qRyl/PGkNgqANvvw9CWlIa28RFkbHQHY+yBcMEjHqNXVNCS88=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1781275753;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=3QLITU0XWv/B2Tl3b3UeSW2f3daeM1nIj8RN+jR8r9A=;
+	b=FrmzYkbhqNd8/f5/TmoXlZ8gCRyscOIHmkcYiNOkh2wSLTO25HeztvT9dPfxMRBU
+	jdJ80Kle5Y3v3h2EKia7+BuIhbXMEw+X8Hjy4Sefd0P33ITnVeRSWLmR/GT0e6zApBI
+	pC7lQe7Oxio2eWvA+2ZlU/619awewSW7vfMuWoOc=
+Received: by mx.zohomail.com with SMTPS id 1781275751791364.68982951426256;
+	Fri, 12 Jun 2026 07:49:11 -0700 (PDT)
+Message-ID: <b10a77ec-f321-4e95-9347-34df96064d64@zohomail.com>
+Date: Fri, 12 Jun 2026 22:49:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ceb19cb6-7083-44ad-a262-a8198f489257@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl: Align interleave decode/encode helpers with their
+ callers
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org, Purva Yeshi <purvayeshi550@gmail.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Ira Weiny <iweiny@kernel.org>, Dan Williams <djbw@kernel.org>
+References: <20260605040801.865965-1-alison.schofield@intel.com>
+ <01f42b02-e050-401d-9b0f-f2b0fc6b8d23@zohomail.com>
+ <aitqeGQHdIfKz0j-@aschofie-mobl2.lan>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <aitqeGQHdIfKz0j-@aschofie-mobl2.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Feedback-ID: zu0801122783e3ad16d48135af4e6117a800007c5a2a2c0522468e606cd494b6b218d2d03c2d07a886b0dd50:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-On Thu, Jun 11, 2026 at 03:22:21PM +0100, Ahmed Tiba wrote:
-> On 29/05/2026 17:44, Jonathan Cameron wrote:
-> > On Fri, 29 May 2026 10:50:49 +0100
-> > Ahmed Tiba<ahmed.tiba@arm.com> wrote:
-> > >   .../devicetree/bindings/firmware/arm,ras-cper.yaml | 54 ++++++++++++++++++++++
-> > >   MAINTAINERS                                        |  5 ++
-> > >   2 files changed, 59 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml b/Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml
-> > > new file mode 100644
-> > > index 000000000000..3d4de096093f
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml
-> > > @@ -0,0 +1,54 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id:http://devicetree.org/schemas/firmware/arm,ras-cper.yaml#
-> > > +$schema:http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Arm RAS CPER provider
-> > > +
-> > > +maintainers:
-> > > +  - Ahmed Tiba<ahmed.tiba@arm.com>
-> > > +
-> > > +description:
-> > > +  Arm Reliability, Availability and Serviceability (RAS) firmware can expose
-> > > +  a firmware-first CPER error source directly via DeviceTree. Firmware
-> > > +  provides the CPER Generic Error Status block and notifies the OS through
-> > > +  an interrupt.
-> > I'd like some spec references in here if possible.
-> I can add a reference to the UEFI CPER specification for the Generic
-> Error Status record format.
-> 
-> For the firmware-first DT description itself I do not have a more specific
-> public reference to cite.
+On 6/12/2026 10:10 AM, Alison Schofield wrote:
+> On Sat, Jun 06, 2026 at 12:21:04AM +0800, Li Ming wrote:
+>> 在 2026/6/5 12:07, Alison Schofield 写道:
+>>> The interleave conversion helpers translate between encoded HDM
+>>> interleave values and the granularity and way values used by the
+>>> driver.
+>>>
+>>> These helpers have been a recurring source of static analysis
+>>> complaints that expose type mismatches and potentially uninitialized
+>>> outputs. Fix those issues in the helpers so callers inherit the
+>>> consistent behavior automatically.
+>>>
+>>> The decode and encode helpers have different interface issues.
+>>>
+>>> The decode helpers return values through unsigned int pointers, but
+>>> the decoded values are ultimately represented as int throughout the
+>>> driver. Align the helper interfaces with their callers by changing
+>>> the out-parameters to int * and updating the handful of affected
+>>> locals to match.
+>>>
+>>> The encode helpers leave their out-parameters unchanged on error. That
+>>> means callers that ignore the return value may observe uninitialized
+>>> encoded values. Initialize the outputs so failed conversions leave
+>>> defined values. This issue was originally reported by Purva and the
+>>> helper-side fix was suggested by Dan [1].
+>>>
+>>> Tidy up a related, pre-existing, printk format specifier mismatch in
+>>> cxl_validate_translation_params().
+>>>
+>>> No functional change for valid interleave parameters.
+>>>
+>>> [1] https://lore.kernel.org/linux-cxl/20250419203530.45594-1-purvayeshi550@gmail.com/
+>>>
+>>> Reported-by: Purva Yeshi <purvayeshi550@gmail.com>
+>>> Suggested-by: Dan Williams <djbw@kernel.org>
+>>> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+>> Reviewed-by: Li Ming <ming.li@zohomail.com>
+>>
+>> Since the types are changed from 'unsigned int' to 'int', maybe we should
+>> drop the second parameter of these helpers in the future?
+>>
+>> A negative return value indicates failure, other value is valid.
+> Hi Ming,
+>
+> Good catch and good idea. Thanks!
+> I'd like to address it now, probably turning this into a 2 patch series.
+>
+> Not exactly as you suggested, see if you agree w this:
+>
+> I'll convert the two decode helpers eig_to_granularity() and eiw_to_ways(),
+> to return the decoded value directly, while keeping out params for the encode
+> helpers ways_to_eiw(), granularity_to_eig().
+>
+> Decode converts cleanly: results are small positives, so a negative return is
+> clear, and no caller is made worse. ie ones that must check already do.
+>
+> Encode I'd leave as is. Those helpers run on two kinds of input: raw sysfs
+> values, where the return value must be checked, and already-validated values,
+> where the return code is legitimately ignored. Keeping the output param,
+> together with the *eiw = 0 / *eig = 0 initialization this patch adds, lets
+> both kinds of caller share the encode helpers.
+>
+> I'll go ahead and code it up so you can see if you like it when you 
+> see it.
 
-Is there a platform actually using this with DT (FVP doesn't really 
-count)?
+Hi Alison,
 
-Rob
+These changes look good to me. Thanks.
+
+
+Ming
+
+>
+> -- Alison
+>
+
