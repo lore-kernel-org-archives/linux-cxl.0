@@ -1,361 +1,177 @@
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012055.outbound.protection.outlook.com [40.107.200.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69E134F24A
-	for <linux-cxl@vger.kernel.org>; Fri, 12 Jun 2026 06:21:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781245284; cv=fail; b=lbCi7oDRmYmyMaT6DYLj9hDu41csHP+piw75whqCIad4VMYfeCG6/LBf7gdHsMGO9Yz+6QpovdK4LUIKmua8M1YTKXcQKXlyodpygsuoTmEY114pLesqY/INJ493WU1fZgGE0cUJ58lS7qp2XrqjX7S96J3nitQIw95THurPhrk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781245284; c=relaxed/simple;
-	bh=XAv7ZjwS8zEcXD593l0TXQXO6qvirBwlUabSwu4ObTg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=QNA3n1Clg19NfuTyhANnrKbzxNAmzrUT64WOUIf34veS0/RIdHI7PECTiEaEsrnHyW0yNg13hD97SclwYNx48yFiPedvB1muwIE1TVd1WjGDBCgfp3zTKG4+xgcYCon6L5fYWMt7ec/LxvzjJoPUkpfu7mrHUPkKnfkHY6m+DHc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Qk/L/+tK; arc=fail smtp.client-ip=40.107.200.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA42F3C1F31
+	for <linux-cxl@vger.kernel.org>; Fri, 12 Jun 2026 11:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781263279; cv=none; b=kO6romNPVZnEZT7ZC0Nzp4xUusA92WPGhNZOQxx89Dgaj+2PuBj8Vkx1h2dVuhluec6tyhDa29J8C/0uVih4MOpSve0xg2EqWCCXkGdPdJTk0UeNfpiVN8nUi9MbOgzdu56p9yRE80rtzrkBsUDOPKBSvnZuxX1dv/GdeYdUKP4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781263279; c=relaxed/simple;
+	bh=BmwTLn9EjRkQmK9olPEMDQvMYaPtP4a2w40hQBeehAE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GAo5BKCnCeOHnGU+ebvL8lY4FZ+Cv5vmPP5gnCrLFiHREJHJQ8ITD3dChntmm91+trvl/sqpafGOBzfcotNV0c1XCxVWf4kc2kkMxsxJuJmOYoz0OlzBZc0O538e86R2E86w3rb6y8KKRtO+4Q9ZdrRtlLUI6DHdFg7FIyzJg90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FYPAsJ35; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Qk/L/+tK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Bj4DTxdR4bahLDAFLXN5bqajbMSFQ5U9WfrtNo8wU+ACMDC3NznCUg/9u3XcVjtfpOs754k6MF0XVfD0ZYicE0fPW4GKv9jAHfo3Xkl+fMVa/L+9tYmTjZ38GRg6d760uk03NPlhMRdKxccSYl0z5mDDaT8aEsaWZhiiMpDP9fpearsEgB5c87eCbCGWwCk3Jr90vw+KkaNXsNcLCAr8WuQWCOckFV9p2XxSI2OrqFZfddzgkjktPA9dUyjjtbcYfLRl66h/D02Qd1xlvoEXfWSK4uc9cWg9zsYs7wIO/2ZCbZljmvKeWQITKRx1Sm2csud6Uws/ccYOZhdQ1BOgtQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M7LiwpvY6+oelDxWCQDQTWXCCdzLr72IbqljkksOqko=;
- b=tqF9+7MnqR4iQzdeuqsSTQ/hohJ9marCPI9wmie3kc9bt+53xWCqM7AeurUzq2QkUnZSRcYt79+bb7OA0bS/35+5rZNjJ+BGhBZmJ6RrE28KRlcIGeoLNXnlfCbFs5F/jbW1KVVXg6ajcrLJqM5eDFSuVsFele8GCkf8jDvcMMazqNdxdGuK3zdFeHfF9HxhWjvC6LGKAeFaOaQ5u9TUDPwL1Jqat+vEiy7BXok3JjWGudqhzvq9324BEMGt3JZoDSFO0ev8IF+0VGfqhQUYWldlo8BedVjeu2tGZgFkLc9c3rlNum89UJ+dlRCnFtOF49a6/JKT9G5401YnBmYw+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M7LiwpvY6+oelDxWCQDQTWXCCdzLr72IbqljkksOqko=;
- b=Qk/L/+tKCy2J4jQaucD/1scMtWab+aKJ0yQ1b5BWGD1Shfe22847RHzeiGObtulNsw8H08vfU3IW3P03JGYymfJS1ueTVhJLEae740SoEt7lCTSfEsEmMpGzrB4hnxkYEufAu/ZcVLHdnxZs9M//0SjztJ5T4JiAAUpPtDgzNaxeuzy7/trW9rOHC4GuyenxmpJD8KbkAmXiJOtEF1CyheekS+eOM9GSIgyPSil9xcrUfQXzrhN8k6Xp0o916q2mjXCfpcoLoh0u7XMksS8uBEDBf6vaHM+2jCnrh9xDPVxvLjD61LTm87UmgsHCMkbzzrqoqvmicuqir5JmuZY2VQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by BL1PR12MB5970.namprd12.prod.outlook.com (2603:10b6:208:399::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.18; Fri, 12 Jun
- 2026 06:21:19 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0113.013; Fri, 12 Jun 2026
- 06:21:13 +0000
-Date: Fri, 12 Jun 2026 14:21:07 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, 
-	Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>, Dan Williams <djbw@kernel.org>, 
-	Li Ming <ming.li@zohomail.com>, Robert Richter <rrichter@amd.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] cxl/region: Account for mixed-granularity in
- position calculations
-Message-ID: <aiuhReNj4Q_-HMzF@MWDK4CY14F>
-References: <cover.1781199122.git.alison.schofield@intel.com>
- <94ec26d420e0e40a2a991c1a4205e9e93cab44de.1781199122.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <94ec26d420e0e40a2a991c1a4205e9e93cab44de.1781199122.git.alison.schofield@intel.com>
-X-ClientProxiedBy: TP0P295CA0026.TWNP295.PROD.OUTLOOK.COM (2603:1096:910:5::7)
- To BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FYPAsJ35"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781263274;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+9FlJSoQ1PrMv3NoMGU38Y/z2migVxYwYPcZc0DtbZI=;
+	b=FYPAsJ35VVzLRQfNBEBVKa6sLYo6TO2yPWUxb3RexhxygsmTcmkRw+xkkj0b4+b35zKgV5
+	xOZer9B1vgdJQ0q/+IH4P/d81tBixVOEhfM1igU8qTfWeFMQKKxuyagDgE4d0W87sbRhDO
+	lK1E4kOXIJn94KmRBUs26ApZpWzZXsU=
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
+ [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-493-rPbEZBcnNCOOyM-3DR-O6g-1; Fri, 12 Jun 2026 07:21:13 -0400
+X-MC-Unique: rPbEZBcnNCOOyM-3DR-O6g-1
+X-Mimecast-MFC-AGG-ID: rPbEZBcnNCOOyM-3DR-O6g_1781263272
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-7e9bb6a26d6so11529617b3.1
+        for <linux-cxl@vger.kernel.org>; Fri, 12 Jun 2026 04:21:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781263272; x=1781868072;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=+9FlJSoQ1PrMv3NoMGU38Y/z2migVxYwYPcZc0DtbZI=;
+        b=HBw8LV0xzxNcQdmO9n5NgHPMmiweLD+samJxFbg5QKWhC5HR0mCznH0hfNLiFVIUM3
+         aulTK8qI/FaF2ZDMON0Ww2EqqHwXDtvezL5yJ1oj7mmWIXxfoMDigOJyzPmJIY9D+Wid
+         4HTbTXUtpqI7967VYFK59xE0dNJXbkjA7pPS9UrowdP6YTJShVGdgsQaDVZ8rN9JRQdN
+         6QmMp1JtzwBMQ5CvbXAwCc35B2FWrkMACk1jHQTL+AqjS5Z1dnj4N7GdvdFoddsFxuVp
+         hBSnubunC6dtntSBv9Lok31tRFFehZfhyRzjq9rYPynWMrDqqmkOT0w1z1x7LA7Pc5J6
+         oMEA==
+X-Forwarded-Encrypted: i=1; AFNElJ8zc+zMNuXxhY3GUPIfMqHdXbMVUC0jeygRYFkJl2uhFw1OSHew7mFMnnjq/rtekXRi7jrMaOOywxU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR2XVgKL7uX90FFrpIJR2jCrVt3TohP497Op65dVL914sXatB4
+	4AWyLX+cUhrqDQ2qcMUYX27P4ZCEToMOnOWXkBVGaLQKnMrOUUTPEpHQU+g7RNgNK5dNGu9Cm2x
+	N1H4edUG3YTvjJqvy/Wlm65Et8d0dcipGXl5QBKP0Cs3A2a9GUwh0ET0PjiOp5OGbnUlU2OQqeM
+	feaYaIDGyzGfYtdiMPhkr7jIqxoWV25y3jOLKB
+X-Gm-Gg: Acq92OHEMKDMTG+hEuPW7CrJ8JHj2mX09TdXMJDNDjz5ZCWC14cZuqAxldja8P/RUt9
+	GNSgueJS17TOSRUVcl2jvof0a7AxVa4Gflf0/ZE5hHmzcXMh7uKGLCeP/ZgCPSzVOgUpVwA8mAK
+	FFa2HqMsp5cUOwy8PuDWWSdIq0e3jOmOYbUui9PObYyx7Zn0Hay0c9QM1toTzkoX4OfH07OPP3j
+	Kc9
+X-Received: by 2002:a05:690e:e86:b0:660:7a4f:9fe2 with SMTP id 956f58d0204a3-66278468075mr1653909d50.57.1781263272501;
+        Fri, 12 Jun 2026 04:21:12 -0700 (PDT)
+X-Received: by 2002:a05:690e:e86:b0:660:7a4f:9fe2 with SMTP id
+ 956f58d0204a3-66278468075mr1653865d50.57.1781263272001; Fri, 12 Jun 2026
+ 04:21:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|BL1PR12MB5970:EE_
-X-MS-Office365-Filtering-Correlation-Id: 198c2480-6065-455b-29d1-08dec84acd4b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|23010399003|6133799003|4143699003|18002099003|22082099003|5023799004|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	nARP8Tk+ywp7c0qa0XE0UOEUko3+ij/LotorSU3XGGIRNGUlOlBw4/vGYBcc+h08L9b7kwPkNJ9yYFh/oXAb/DpdbEbYVsMErx79fSBFO9kKZxGQCDxfro2Yvq5TtD+lrQsD5gsFs+AJfF2WNLn1VOnwA7e1NdHv19bWsnTAmpVFdymbvLLWjHsTDXA4sUChUFH2YZJjqlRc8WEHBwUiDSkiezW0eh1dlIOJ+H9FLdgnq7+gdX5qynuyFTbPyN2CH0LSqu0GVgmTO5CkWqF5wpytDMIT9798HIQdBvp3NFlk3tPv3xFoqjrRjGXb7oYWUL7NVl4B9WUdpDwqebxyFe4DXXoCucFX3JbnNRpKWcTnDLFf67RWPOL+j5J2ntIdTIFGzfZu/U1/2Qj4ACGsutpRJbfIitRBG8BR6UEXhWHE9UlxB5jnAgbZalB30hSk/HwRut6JBhQ3Mn47FHWoTSROOqM5QqnnWoiAnpsbxQzRHoQ64/TUB4xyVMGhJFfUgR4b2h5ZWxvYt3CPy0tRZHW3aaxbV9jv4Uqv4Or9AxLM8x+BIrUoFYEnsEoiWqafGfhI8j0lir000cFsHh6pyHxadSnNky0x2hd0NhJ5480bNYC+SWOIhrCNwcFVXhceOplwZmDgGjux3g9sQbPBqaAi3pSoXqNbBW9HLC0/411heP6Gydz7Bgyr+rMTbcaw
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(23010399003)(6133799003)(4143699003)(18002099003)(22082099003)(5023799004)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?QzN+18SEmFDnuEw/qncboF18hRQU0dsjonuxkIdwwBhYe0NsQfEmMneW7WG6?=
- =?us-ascii?Q?wLJTDnnnt/OT9fcBRdcTyv1b7esQiIgN/TPQz6Abv9USVLFiu4usZSq4BuDi?=
- =?us-ascii?Q?XJw/RM2dfwu9pro91MIFXnsjyYkewK1N6/Zx34aCuOKa1ingWEi4u8Z4ry/S?=
- =?us-ascii?Q?mZeI5FpRPsTfOcArO1d+UmfazbN+7P2Og4XvAHu9WsNcN6eqZFyxH4wAwEFj?=
- =?us-ascii?Q?zpEJUitfG5qjnBeFeYlvpf6bjU6VuX/hPPHALmiMoiEkZdQrvcx316e7bsrF?=
- =?us-ascii?Q?StrPSfXgTJ+QaqNDr/AUjRYCNVZRpWHb7Ye+jSzne6mzS9YnxIelycsed4/y?=
- =?us-ascii?Q?n49+LmcHzloKknqGvkPsTt00DKwJu/1q5uTM3HfLDZZRl8nnUGXcFcS+L0Ug?=
- =?us-ascii?Q?WNaoaarXhGiKs9Q6SRbPJPPEJEkt+2dzj4zPHWuwkNt9UQQHEEKHCbK0V6wj?=
- =?us-ascii?Q?WliJh4ov4vB6nVaps2opab/NKdIS6PraRilwGLZMrHXKHDAErMX0G4OAhArL?=
- =?us-ascii?Q?S/7KP4hlearbCBZx5wGUk8e0+Nlw82109jQIIkptK6EG5jffNAU5Ys96RGF5?=
- =?us-ascii?Q?cph+izwmUNND6oxDxjjPUNjB+gK85cUz5CDazdvFn4guSM31qjiOm7CGQenK?=
- =?us-ascii?Q?HTu//CTDbs3m+gjXIZ+LiZGWA3N29yr8eqvQjulKEwrYCWsqL0ST7iz4NzHM?=
- =?us-ascii?Q?+YASQmqg3cPirQJzNfC7AmXlP4KK8sFCqutcrt0YtnwwuKJ/0VHrsUT9rAc/?=
- =?us-ascii?Q?1aDycOWsoQeDKmsgsRCgsiyxk5iq432srZ+sx2r9gkv4UgKMqZ6HKR9Doxxr?=
- =?us-ascii?Q?KT2yCc4y2Uz0CNzGSqzARwgYt5Q7CDLg9VrIPvw/XzL+SmiJsW4gE/YH7dCW?=
- =?us-ascii?Q?Vz1J6fop2s2IGotMSWQm3RXw2zMR1/q1kFyUKD9DdKCsNjMoiACfwtnL2fJx?=
- =?us-ascii?Q?cvVWKNbWnBY6WpRUCC2UKJ5hbLDU70VwbjR/2wZctI1Id8CKY4YK34C+PFRK?=
- =?us-ascii?Q?3y400c7Zqz8oRKlQqVVW/ofw7Xfl0rsx3ZCkdXUcQASTdc4z3mhTXg26lEvh?=
- =?us-ascii?Q?tE+PdxxQLcVonp7TsyKAxubXwi8EsYpjbjtAtYmkKnIIQGlhgeBTTbpRW7rh?=
- =?us-ascii?Q?AJYsJD5yuzpRPF+UQvd63YZ68R6AactczJ9trFLst1Tqel0Zu81UOfeAUB6R?=
- =?us-ascii?Q?CHVPrif4mVbheHe8KQFqxGX5dKU4kV2qg9Bz/QsG1ZsoapmlT+neKgVjzIlB?=
- =?us-ascii?Q?SMJeCPO4X5QGqiYCu9sTB746kjU/TL8bcAEhS5Op6H/he7fRWRECVAxNBkWv?=
- =?us-ascii?Q?tfX9c+/MqZjxC8WGB+1lz4D4q0GqZpVpqt1CEOO/sLiNLnLDamsmKS++Ly3s?=
- =?us-ascii?Q?VsZpH5+cHs6sQ32YNXN5/EfaS7ZW0gj/DptdgBnuzV8tz7HPxY9lO0e04VW6?=
- =?us-ascii?Q?CP6cSzfuSHnDZpvQghSkAmf44twKf5X53rDE7JzRRCC67niLuQKey2ID6HAS?=
- =?us-ascii?Q?1/k160q61nQy8LB0a7Z18429Z1p9X/zRktwqupAXKQiYMNMHiCW8es6ginU5?=
- =?us-ascii?Q?fwRTx3QXHmNDNCDgu6KCFt3NmebrVJKS1mrZyJGhEoe/KQZqxxmmWwbXIhsI?=
- =?us-ascii?Q?Gc2iTmVHiLY3CecG92eog06IWhP64V9MoHzJjO1erBlGsihnwdZdShWCokqa?=
- =?us-ascii?Q?meIyDz57Qd7qZgc5AM/56vrjELz3g90pvbMiR84OtSve+ci5KwBBQpRcPtlC?=
- =?us-ascii?Q?5EFz7LvFJg=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 198c2480-6065-455b-29d1-08dec84acd4b
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2026 06:21:13.6427
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1hKKBXfoaDRFKfidDON2jWKkF/dtbWJuHZvYDV1g3XmSMeo1PMGAYAXGlKxCL9378VxO0Ds6mdx9p+36QMRGmA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5970
+References: <c5401e8d-0b46-4cc0-88b3-f438d610e73b@redhat.com> <7e7cbc60-e9c7-4a63-9d4b-4e8fcad7bfc0@kernel.org>
+In-Reply-To: <7e7cbc60-e9c7-4a63-9d4b-4e8fcad7bfc0@kernel.org>
+From: Nico Pache <npache@redhat.com>
+Date: Fri, 12 Jun 2026 05:22:01 -0600
+X-Gm-Features: AVVi8CdNLha-RR1qN40JSwbbQIn5r6XpUlj26RldKCxPkjYT8VOZtB96P7x2nAw
+Message-ID: <CAA1CXcDmE3G2K-V0VrzWy=xHUjOwnMcXDJjY+hBV1hxBZUGh+g@mail.gmail.com>
+Subject: Re: [Bug Report] Elevated PMD nr_anon after running selftests
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Linux MM <linux-mm@kvack.org>, linux-kselftest@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, linux-cxl@vger.kernel.org, 
+	"Lorenzo Stoakes (Oracle)" <ljs@kernel.org>, Oscar Salvador <osalvador@suse.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Zi Yan <ziy@nvidia.com>, 
+	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
+	Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
+	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: RL68p059ecUuHC7zA8JUVQ-dcgeOOYHOqjj7n8Pg3yY_1781263272
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 11, 2026 at 10:47:27AM +0800, Alison Schofield wrote:
-> Mixed-granularity regions place the root decoder at outer HPA bits.
-> A root target then owns root_gran / region_gran inner positions
-> before the root advances to the next target. That ratio becomes the
-> root target stride in region positions.
-> 
-> Account for that stride in endpoint placement, position calculation,
-> and peer-distance checks.
-> 
-> Remove the temporary mixed-granularity attach reject now that position
-> arithmetic matches the selector layout.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  drivers/cxl/core/region.c | 79 ++++++++++++++++++++++++++++-----------
->  1 file changed, 58 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index d5d19ed62171..9fff538a9ce1 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1444,12 +1444,34 @@ static inline u64 get_selector(int ways, int gran)
->  	return (u64)(ways - 1) * gran;
->  }
->  
-> +/**
-> + * root_pos_stride() - Return root target stride in region positions
-> + * @cxlr: region
-> + *
-> + * Return: root_gran / region_gran when the root granularity is larger
-> + * than the region granularity, or 1 otherwise.
-> + */
-> +static inline int root_pos_stride(struct cxl_region *cxlr)
-> +{
-> +	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
-> +	int root_gran = cxlrd->cxlsd.cxld.interleave_granularity;
-> +	int region_gran = cxlr->params.interleave_granularity;
-> +
-> +	if (cxlrd->cxlsd.cxld.interleave_ways <= 1)
-> +		return 1;
-> +
-> +	if (region_gran == 0 || root_gran <= region_gran)
-> +		return 1;
-> +
-> +	return root_gran / region_gran;
-> +}
-> +
+On Thu, Jun 11, 2026 at 10:09=E2=80=AFAM David Hildenbrand (Arm)
+<david@kernel.org> wrote:
+>
+> On 6/11/26 17:58, Nico Pache wrote:
+> > Hi,
+> >
+> > While testing my mTHP code I noticed that mm selftests caused an accoun=
+ting error in
+> > /sys/kernel/mm/transparent_hugepage/hugepages-2048kB/stats/nr_anon
+> >
+> > At first I thought I might have caused a regression, but when retesting=
+ with 7.1-rc5 (without my code), the issue was still present.
+> >
+> > This issue occurs in two mm selftests:
+> > 1) hmm test
+> > 2) migration - private_anon_htlb test
+> >
+> > I spoke to David about this and he suggested the following diff which s=
+eems to have solved both issues.
+> >
+> > David would you like to send a formal patch or patches?
+> >
+> > Cheers,
+> > -- Nico
+> >
+> > Diff for (1)
+> >
+> > diff --git a/mm/memremap.c b/mm/memremap.c
+> > index 053842d45cb1..683a77dd679d 100644
+> > --- a/mm/memremap.c
+> > +++ b/mm/memremap.c
+> > @@ -425,6 +425,7 @@ void free_zone_device_folio(struct folio *folio)
+> >         mem_cgroup_uncharge(folio);
+> >
+> >         if (folio_test_anon(folio)) {
+> > +               mod_mthp_stat(folio_order(folio), MTHP_STAT_NR_ANON, -1=
+);
+> >                 for (i =3D 0; i < nr; i++)
+> >                         __ClearPageAnonExclusive(folio_page(folio, i));
+> >         }
+>
+> Wasn't there another issue with hugetlb?
+>
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 8a64291ab5b4..0aec894266f2 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -590,7 +590,8 @@ static int __folio_migrate_mapping(struct address_spa=
+ce
+> *mapping,
+>                 /* No turning back from here */
+>                 newfolio->index =3D folio->index;
+>                 newfolio->mapping =3D folio->mapping;
+> -               if (folio_test_anon(folio) && folio_test_large(folio))
+> +               if (folio_test_anon(folio) && folio_test_large(folio) &&
+> +                   !folio_test_hugetlb(folio))
+>                         mod_mthp_stat(folio_order(folio), MTHP_STAT_NR_AN=
+ON, 1);
+>                 if (folio_test_swapbacked(folio))
+>                         __folio_set_swapbacked(newfolio);
+> @@ -623,7 +624,8 @@ static int __folio_migrate_mapping(struct address_spa=
+ce
+> *mapping,
+>          */
+>         newfolio->index =3D folio->index;
+>         newfolio->mapping =3D folio->mapping;
+> -       if (folio_test_anon(folio) && folio_test_large(folio))
+> +       if (folio_test_anon(folio) && folio_test_large(folio) &&
+> +           !folio_test_hugetlb(folio))
+>                 mod_mthp_stat(folio_order(folio), MTHP_STAT_NR_ANON, 1);
+>         folio_ref_add(newfolio, nr); /* add cache reference */
+>         if (folio_test_swapbacked(folio))
+>
+>
+> Yeah, if you have some capacity, please send patches (and figure out Fixe=
+s:) :)
 
-Hi Alison,
+Yeah ill spend some time next week trying to understand why these are
+happening and produce patches :)
 
-This helper computes stride from gran ratio, but nothing from downstream
-checks that the stride equals the number of endpoints actually fanned out
-under one root target.
-The patch assumes each root target each own stride consecutive region position,
-when that does not hold, the additive recurrence below and peer-distance seed
-both mis-account, and we walk off into a foreign endpoint.
+>
+>
+> --
+> Cheers,
+>
+> David
+>
 
->  static int cxl_port_setup_targets(struct cxl_port *port,
->  				  struct cxl_region *cxlr,
->  				  struct cxl_endpoint_decoder *cxled)
->  {
->  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
-> -	int distance, parent_distance;
-> +	int sel_distance, pos_distance, stride;
->  	int ig, iw, rc, pos = cxled->pos;
->  	struct cxl_port *parent_port = to_cxl_port(port->dev.parent);
->  	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
-> @@ -1490,10 +1512,11 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  				cxlrd->cxlsd.cxld.interleave_granularity);
->  
->  	/* Track distances used in passthrough granularity and peer checks */
-> -	parent_distance = cxlrd->cxlsd.cxld.interleave_ways;
-> -	if (!is_power_of_2(parent_distance))
-> -		parent_distance /= 3;
-> -	distance = cxlrd->cxlsd.cxld.interleave_ways;
-> +	stride = root_pos_stride(cxlr);
-> +	sel_distance = cxlrd->cxlsd.cxld.interleave_ways;
-> +	if (!is_power_of_2(sel_distance))
-> +		sel_distance /= 3;
-> +	pos_distance = stride > 1 ? 1 : cxlrd->cxlsd.cxld.interleave_ways;
->  
->  	for (iter = parent_port; !is_cxl_root(iter);
->  	     iter = to_cxl_port(iter->dev.parent)) {
-> @@ -1517,11 +1540,11 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  
->  		selector |= cxld_sel;
->  
-> -		parent_distance *= cxl_rr_iter->nr_targets;
-> -		distance *= cxl_rr_iter->nr_targets;
-> +		sel_distance *= cxl_rr_iter->nr_targets;
-> +		pos_distance *= cxl_rr_iter->nr_targets;
->  	}
->  
-> -	distance *= iw;
-> +	pos_distance *= iw;
->  
->  	/* Accumulated bits must fit within the region selector */
->  	cxlr_sel = get_selector(p->interleave_ways, p->interleave_granularity);
-> @@ -1540,7 +1563,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
->  			if (ep->dport == cxlsd->target[i]) {
->  				rc = check_last_peer(cxled, ep, cxl_rr,
-> -						     distance);
-> +						     pos_distance);
->  				if (rc)
->  					return rc;
->  				goto out_target_set;
-> @@ -1556,7 +1579,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
->  		ig = cxld->interleave_granularity;
->  	} else if (iw == 1) {
-> -		ig = p->interleave_granularity * parent_distance;
-> +		ig = p->interleave_granularity * sel_distance;
->  	} else if (selector) {
->  		ig = 1ULL << __ffs64(selector);
->  	} else {
-> @@ -1813,14 +1836,17 @@ static int cxl_region_attach_position(struct cxl_region *cxlr,
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->  	struct cxl_switch_decoder *cxlsd = &cxlrd->cxlsd;
->  	struct cxl_decoder *cxld = &cxlsd->cxld;
-> +	int stride = root_pos_stride(cxlr);
->  	int iw = cxld->interleave_ways;
->  	struct cxl_port *iter;
->  	int rc;
->  
-> -	if (dport != cxlrd->cxlsd.target[pos % iw]) {
-> -		dev_dbg(&cxlr->dev, "%s:%s invalid target position for %s\n",
-> +	/* Mixed-granularity roots advance every stride positions */
-> +	if (dport != cxlrd->cxlsd.target[pos / stride % iw]) {
-> +		dev_dbg(&cxlr->dev,
-> +			"%s:%s invalid target position for %s (stride %d, check root/region gran ratio)\n",
->  			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-> -			dev_name(&cxlrd->cxlsd.cxld.dev));
-> +			dev_name(&cxlrd->cxlsd.cxld.dev), stride);
->  		return -ENXIO;
->  	}
->  
-> @@ -1951,6 +1977,7 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
->   * cxl_calc_interleave_pos() - calculate an endpoint position in a region
->   * @cxled: endpoint decoder member of given region
->   * @hpa_range: translated HPA range of the endpoint
-> + * @stride: root target stride in region positions
->   *
->   * The endpoint position is calculated by traversing the topology from
->   * the endpoint to the root decoder and iteratively applying this
-> @@ -1960,11 +1987,16 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
->   *
->   * ...where @position is inferred from switch and root decoder target lists.
->   *
-> + * For mixed-granularity regions the root contributes outer position
-> + * bits, so the root step is:
-> + *
-> + *    position = position + stride * parent_pos
-> + *
->   * Return: position >= 0 on success
->   *	   -ENXIO on failure
->   */
->  static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
-> -				   struct range *hpa_range)
-> +				   struct range *hpa_range, int stride)
->  {
->  	struct cxl_port *iter, *port = cxled_to_port(cxled);
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-> @@ -2010,6 +2042,11 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
->  		if (rc)
->  			return rc;
->  
-> +		if (stride > 1 && is_cxl_root(parent_port_of(iter))) {
-> +			pos = pos + stride * parent_pos;
-> +			break;
-> +		}
-> +
->  		pos = pos * parent_ways + parent_pos;
->  	}
-> 
-
-I have a question here, on AUTO path, the check are bitwise and order-independent,
-so they accept it, then pos comes out d*2+u+4*hb where HPA decodes reads d+2*u+4*hb,
-so 6 of 12 endpoints get the wrong pos and the region is rejected or mis-mapped.
-
-If my inference is true, it contradicts the cover-letter's "every arrangement" claim.
-
---Richard
- 
-> @@ -2024,12 +2061,14 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
->  static int cxl_region_sort_targets(struct cxl_region *cxlr)
->  {
->  	struct cxl_region_params *p = &cxlr->params;
-> +	int stride = root_pos_stride(cxlr);
->  	int i, rc = 0;
->  
->  	for (i = 0; i < p->nr_targets; i++) {
->  		struct cxl_endpoint_decoder *cxled = p->targets[i];
->  
-> -		cxled->pos = cxl_calc_interleave_pos(cxled, &cxlr->hpa_range);
-> +		cxled->pos = cxl_calc_interleave_pos(cxled, &cxlr->hpa_range,
-> +						     stride);
->  		/*
->  		 * Record that sorting failed, but still continue to calc
->  		 * cxled->pos so that follow-on code paths can reliably
-> @@ -2056,6 +2095,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->  	struct cxl_port *ep_port, *root_port;
->  	struct cxl_dport *dport;
->  	int rc = -ENXIO;
-> +	int stride;
->  
->  	rc = check_interleave_cap(&cxled->cxld, p->interleave_ways,
->  				  p->interleave_granularity);
-> @@ -2088,11 +2128,6 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->  		return -ENXIO;
->  	}
->  
-> -	/* Keep this patch bisectable until position arithmetic is updated */
-> -	if (cxlrd->cxlsd.cxld.interleave_granularity >
-> -	    p->interleave_granularity)
-> -		return -ENXIO;
-> -
->  	if (p->nr_targets >= p->interleave_ways) {
->  		dev_dbg(&cxlr->dev, "region already has %d endpoints\n",
->  			p->nr_targets);
-> @@ -2214,11 +2249,13 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->  	 * A fail message here means that this interleave config
->  	 * will fail when presented as CXL_REGION_F_AUTO.
->  	 */
-> +	stride = root_pos_stride(cxlr);
->  	for (int i = 0; i < p->nr_targets; i++) {
->  		struct cxl_endpoint_decoder *cxled = p->targets[i];
->  		int test_pos;
->  
-> -		test_pos = cxl_calc_interleave_pos(cxled, &cxlr->hpa_range);
-> +		test_pos = cxl_calc_interleave_pos(cxled, &cxlr->hpa_range,
-> +						   stride);
->  		dev_dbg(&cxled->cxld.dev,
->  			"Test cxl_calc_interleave_pos(): %s test_pos:%d cxled->pos:%d\n",
->  			(test_pos == cxled->pos) ? "success" : "fail",
-> -- 
-> 2.37.3
-> 
-> 
