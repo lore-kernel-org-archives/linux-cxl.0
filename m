@@ -1,87 +1,159 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42071FC7FB;
-	Sun, 14 Jun 2026 17:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85222D1931
+	for <linux-cxl@vger.kernel.org>; Sun, 14 Jun 2026 19:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781457397; cv=none; b=tXQJysm2QsgK2V03ogKk1xpUk2dXl2l/emgF7aueF9g//1WehraExIyt9ohJW7EaWrRt1qJRZIxwekeX5qwjF7JZb1AkgRceyNaJJdppsLAZioxfyVUExJE4VWPyXDSmc3PwZIug5I+9V+LK81R7HfH2ElrzuP1Yyl7QEcgDm4o=
+	t=1781464198; cv=none; b=Sn1pF6wQkwme58SWUeHz5CpITIy/sqhMRlCZNp+mdBVgzGV23NSZHIfaH0ddnvZBu3UhmGTsy7E167itkIYGBzA5jB21utNUlq4B3UrN4rYE7G5zEoh5n00uCUthOLnQQZoBa/5JEZgcLpHxTJaQG5bhwntIczB8IzHuGwmpagE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781457397; c=relaxed/simple;
-	bh=qJou47e8RoHk5DXCRunJj/2PLa6xz8dYt6uW5R0RDD8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q2+DBQQPYfdeOx7FQkDwXCXI8dbBeyXXB21s+zDjuc+GWGh9BX+d6Txnrv1+too/+rPD8a5R444RoP3vlLlQqyMswJOvBJpyT6mvGeJptFSoYUw1z4g1q8hNc30mB5T5Tr2rx8zL5evi5c+zFaD/A0mDfJlK8I2TdmmJfh/bihM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=asGBXsvL; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1781464198; c=relaxed/simple;
+	bh=TJZrmbxdEFkLn7jegy74It55QwdIZflKJ1gUU34WXzI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=KX9EZm1vMDaCT16vX6iBlEZJq7BKqHLxkT0n1zkIcxDFoG8Zjtyb0jfL6C5nNxGVcNOD5OzYtDQaq+2K/GPxn5okEmEBCzKVpo5IkZIlwo0rB+1217iMbdXW6ArEh5hMFA85sWUyJrZBB7g6T+DO3gdFlyLwdVP3YNlnXAROzLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JuNqvZbS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="asGBXsvL"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=WmRDzJATWWXg/Un37W4yII5HPqB6i8FZk/7SmL2nMHU=; b=asGBXsvLJmylJCEcCmNqOgP3YE
-	ovB0pcgjuUWQ4v2/u2ZeSSxHqt8o6uGO2pFs7JBQ95Ru9nGrsaehad8fU5+zSryiRxPb4v34l+KK2
-	lMooCGdp2LH7nG/aUDovtyrGOQManmXTDgWcmicMsv5owtAtYal0cNzhcb44GndYtX2qRyGSPt8+y
-	8e5KcbSEAfO02rHlY7THkH7SD/VJvVySs9QUhs6E1Q+mQ45VzR9X5lODhlYVXhnd9ekdN/C9vEIKA
-	D9/xLJtxK4Edj5rvn2bzj3uMAzRfCW/2i7Dsy5kFiNy0vEFSYelV1vBLVtlTIOiMqUywpoUFIMfSi
-	7STZoUog==;
-Received: from [50.53.43.113] (helo=[192.168.254.34])
-	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wYoRk-0000000DD0a-0fyR;
-	Sun, 14 Jun 2026 17:16:32 +0000
-Message-ID: <b303fc4c-c765-47fd-8c8a-e8c211d48bc3@infradead.org>
-Date: Sun, 14 Jun 2026 10:16:29 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JuNqvZbS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1781464194;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bem3v21HI3Dj2XGuqU+Zt2bWvI5Rs5lCN0w9V2Qfknw=;
+	b=JuNqvZbSQZkwX6xWhDvJE9zxrvgkUSg7zTPRJa8TGjEIS6qvfdhxohSoFlFi1qNel5XN2A
+	RpGlq1oA/gpqtMgr2ZrCZt1LH2QNjCrs2kY4sgx2rgBN5Tak2bcAE68NMwv3yzJEbJQNR6
+	EiNFFSZWHkfOpOwjr/mfQDqk1I8Ffuw=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-18-_PXgqnJ2M0akRV1-EUgS2Q-1; Sun, 14 Jun 2026 15:09:53 -0400
+X-MC-Unique: _PXgqnJ2M0akRV1-EUgS2Q-1
+X-Mimecast-MFC-AGG-ID: _PXgqnJ2M0akRV1-EUgS2Q_1781464192
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-46010bc0f1eso1417758f8f.3
+        for <linux-cxl@vger.kernel.org>; Sun, 14 Jun 2026 12:09:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781464192; x=1782068992;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bem3v21HI3Dj2XGuqU+Zt2bWvI5Rs5lCN0w9V2Qfknw=;
+        b=BL9MqlZMMnU8yDlI2GvlriB0paY2AQfykrgQSTy7eXX7gSVekyMgpp2RpW0iIMPtUk
+         NwKqfft8uir3SaswAwFxC8lJMDDOtVZh7geEODcF435LiQ936hbl6zjMJQAjUM7Ce799
+         4vmdGIVeCw4ZuxbWu5owkNjUEWyZ3fJ8PSdpfbMe5rJ0DOdAzfy3BQhwAlPmpHKlmGjQ
+         /SrojDzd+0jx3gZ6BegMP9vllYKbKv7qepbaIMrD1FpWwes+lHvjll66H6pUvQsrEOj2
+         75LJdsxkE5nuUCni1zE848t446SujmGo3F3I441IOwd8MBUKEtIc4L3aCXwd7zM8S0z5
+         4oaw==
+X-Forwarded-Encrypted: i=1; AFNElJ+Cecr4VhMifjstOCDWjEm1CVAsJ7a2PIi4oQyyBmFQK6ernfm9kmfyReNX5QSl08H8JYxIUz3O4vk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8/8V3gCztHmqxaV9uNHVUdRStPbbPNP4vc1SlaK4DoY9ImNIb
+	s18dpJD3mvHSoAMbfyhoTs+zX9lgAOsdHGMoFancefvODctA8llsQjFjMgRtyK946Hbbf9B3EE5
+	9T+SS9omYPtrCEafjc/kO1sgFeRPAkr3gM8NkJAC7yRTelFYVW+uvF5kTSq422w==
+X-Gm-Gg: Acq92OHlhPy7Mwc/GSf0QwNfsrqKAMeN/CeskE5TjgAYYCb2/dKHwo0usbnKZv1s4sa
+	SSqt2F439KEVL87/ZEPbE5A9Ss57mhhAlplY05BMG5i6o+JuJHjRsTvwGtqp5tcjVVXtSyB6qIJ
+	liZiwJ7Tn3uR/e+M6OhZo2TPC8nzGtyhSANn+PEHblacAXb7wf8x+ZZV0H5Rhsj0R0gx5qL6N76
+	eWVB73FDHPv+bOj63Zuyd1P1C41KhZcXwsZf7dLvMPsOGAIfQb9urStYDpJ2XTVxPcicSXL4DlL
+	nZo8EQ73irXUFDGWPKNxek83ZedEO2421Ur05IiakJUSGl15dpRt0XE7qQF1QpeEKTdapuFVHah
+	73wuZmz8JWYZt4WkO/1VhlxqPRL/IG0LMCxKVoOQBNpo=
+X-Received: by 2002:a5d:5f44:0:b0:460:1c5b:f25f with SMTP id ffacd0b85a97d-4606db96c29mr16507312f8f.20.1781464191917;
+        Sun, 14 Jun 2026 12:09:51 -0700 (PDT)
+X-Received: by 2002:a5d:5f44:0:b0:460:1c5b:f25f with SMTP id ffacd0b85a97d-4606db96c29mr16507276f8f.20.1781464191434;
+        Sun, 14 Jun 2026 12:09:51 -0700 (PDT)
+Received: from redhat.com (IGLD-80-230-85-71.inter.net.il. [80.230.85.71])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606f2b1056sm27207478f8f.18.2026.06.14.12.09.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Jun 2026 12:09:51 -0700 (PDT)
+Date: Sun, 14 Jun 2026 15:09:49 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: qemu-devel@nongnu.org
+Cc: Peter Maydell <peter.maydell@linaro.org>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Jonathan Cameron <jic23@kernel.org>, linux-cxl@vger.kernel.org
+Subject: [PULL 099/106] hw/cxl: Fix handling of component ID to not assume it
+ is a string
+Message-ID: <91beb27a4851fe47fe68a5f715af5db456b9d37d.1781463125.git.mst@redhat.com>
+References: <cover.1781463125.git.mst@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl: docs/linux/dax-driver - fix typos
-To: Zenghui Yu <zenghui.yu@linux.dev>, linux-cxl@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- djbw@kernel.org, gourry@gourry.net, corbet@lwn.net, skhan@linuxfoundation.org
-References: <20260614161458.88942-1-zenghui.yu@linux.dev>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20260614161458.88942-1-zenghui.yu@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <cover.1781463125.git.mst@redhat.com>
+X-Mailer: git-send-email 2.51.2.2891.g4157995a80.dirty
+X-Mutt-Fcc: =sent
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: HyHFpomrii8NSlejovYL2jmo3ofT7OIE3Oy5fL5o0nw_1781464192
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+From: Shiju Jose <shiju.jose@huawei.com>
 
+Add following fixes,
+1. Coverity reports a warning (CID 1645325) for use of strncpy() in
+handling of component ID. In cxl_create_mem_sparing_event_records(),
+fix handling of component ID to not assume it is a string by replacing
+strncpy with memcpy to solve this warning and copy the entire component
+ID data, which is 16 bytes.
 
-On 6/14/26 9:14 AM, Zenghui Yu wrote:
-> Fix two obvious typos in the "kmem conversion" section.
-> 
-> Signed-off-by: Zenghui Yu <zenghui.yu@linux.dev>
+2. In cxl_maintenance_insert(),
+ - replace strncpy with memcpy to copy full data because component ID,
+   which is 16 bytes data.
+ - remove memset which is not required.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-Thanks.
+Closes ("https://lore.kernel.org/qemu-devel/CAFEAcA_CsVe4TUVm3o_-BA4hXvi2xAThGX5T97amgTQKW_kiYA@mail.gmail.com/")
 
-> ---
->  Documentation/driver-api/cxl/linux/dax-driver.rst | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/driver-api/cxl/linux/dax-driver.rst b/Documentation/driver-api/cxl/linux/dax-driver.rst
-> index 10d953a2167b..72c85a0f8606 100644
-> --- a/Documentation/driver-api/cxl/linux/dax-driver.rst
-> +++ b/Documentation/driver-api/cxl/linux/dax-driver.rst
-> @@ -35,9 +35,9 @@ will be exposed to the kernel page allocator in the user-selected memory
->  zone.
->  
->  The :code:`memmap_on_memory` setting (both global and DAX device local)
-> -dictates where the kernell will allocate the :code:`struct folio` descriptors
-> +dictates where the kernel will allocate the :code:`struct folio` descriptors
->  for this memory will come from.  If :code:`memmap_on_memory` is set, memory
->  hotplug will set aside a portion of the memory block capacity to allocate
->  folios. If unset, the memory is allocated via a normal :code:`GFP_KERNEL`
-> -allocation - and as a result will most likely land on the local NUM node of the
-> +allocation - and as a result will most likely land on the local NUMA node of the
->  CPU executing the hotplug operation.
+Fixes: 5e5a86bab830("hw/cxl: Add support for Maintenance command and Post Package Repair (PPR)")
+Reported-by: Peter Maydell <peter.maydell@linaro.org>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+Reviewed-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Message-Id: <20260306101423.986-2-shiju.jose@huawei.com>
+---
+ hw/cxl/cxl-mailbox-utils.c | 4 ++--
+ hw/mem/cxl_type3.c         | 4 +---
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index d8ba7e8625..6b16cc206f 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -1994,8 +1994,8 @@ static void cxl_create_mem_sparing_event_records(CXLType3Dev *ct3d,
+         stw_le_p(&event_rec.column, ent->column);
+         event_rec.sub_channel = ent->sub_channel;
+         if (ent->validity_flags & CXL_MSER_VALID_COMP_ID) {
+-            strncpy((char *)event_rec.component_id, (char *)ent->component_id,
+-                    sizeof(event_rec.component_id));
++            memcpy(event_rec.component_id, ent->component_id,
++                   sizeof(event_rec.component_id));
+         }
+     } else if (sparing_pi) {
+         event_rec.flags = CXL_MSER_FLAGS_QUERY_RESOURCES;
+diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+index 4739239da3..3cb1096e16 100644
+--- a/hw/mem/cxl_type3.c
++++ b/hw/mem/cxl_type3.c
+@@ -1767,7 +1767,6 @@ static void cxl_maintenance_insert(CXLType3Dev *ct3d, uint64_t dpa,
+         }
+     }
+     m = g_new0(CXLMaintenance, 1);
+-    memset(m, 0, sizeof(*m));
+     m->dpa = dpa;
+     m->validity_flags = 0;
+ 
+@@ -1804,8 +1803,7 @@ static void cxl_maintenance_insert(CXLType3Dev *ct3d, uint64_t dpa,
+         m->validity_flags |= CXL_MSER_VALID_SUB_CHANNEL;
+     }
+     if (component_id) {
+-        strncpy((char *)m->component_id, component_id,
+-                sizeof(m->component_id) - 1);
++        memcpy(m->component_id, component_id, sizeof(m->component_id));
+         m->validity_flags |= CXL_MSER_VALID_COMP_ID;
+         if (has_comp_id_pldm && is_comp_id_pldm) {
+             m->validity_flags |= CXL_MSER_VALID_COMP_ID_FORMAT;
 -- 
-~Randy
+MST
+
