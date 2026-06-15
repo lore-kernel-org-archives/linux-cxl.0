@@ -1,231 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F732F7F04
-	for <linux-cxl@vger.kernel.org>; Mon, 15 Jun 2026 17:34:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8982E2F7F04
+	for <linux-cxl@vger.kernel.org>; Mon, 15 Jun 2026 17:35:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781544870; cv=none; b=SioYhuOcoAnWZxv6ZsTbP4pZJoXqGWZOHr9DVtk8UUTbVW3x78B4UA349oseF3IAJR9YnqKxEDOWRSKf+JN46JRAYGTcVj/93tENoudWjCbYTRU6kj7dcUWxZzxiB4ZKYbS4dlq28EkqnlLYRjenWYlg53F7jl73U04puuqncqk=
+	t=1781544943; cv=none; b=BVV885EaNdRIf4saGkwc3PfzZRNk3pN54uGbvc5W/Xr3lbP8vTcYingYhktj0rXlsyc11Xsbj2j+uzXg8l0X9xNZfw3mE2xbhKpEDQPrUEHhV2IwNXcp7R4jedfmfvwkETaSaBx6cvOhaLKTXNdnh22Q9FH9QAIMB7XmcnNqRdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781544870; c=relaxed/simple;
-	bh=gMqjNIp8SrL5Pu30HOvxLaUj5mktAnNgjJJHaM/dzZo=;
+	s=arc-20240116; t=1781544943; c=relaxed/simple;
+	bh=v6F12hJfhTg5Q7BvV7xrI+Xq9HROc+1EPlTMaUlGG5w=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=C1Z9WdRZwt5M8vhPs667SzTZwsqLzDvgC/UXiDEcsYES82uKYBC9cd6vuO3tgDm7SKOxlXnruL5xrSLcDzxlVFfKitT1aiHHJ8xaSR2zubMQxFd2hpZNc2FRSxIZrU6bHbHLRqsCjxyE2WfKOxTnqc/IAUheMvGUhT+Ubl+7eUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mluH/snR; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=qResGQprfb28RAHEmLjhICEp8K7L1kTq95A5iDKCZEybilydYBrSssbtcNgHFeRg3wYquLZszOtY2EfHOFNyaF5IInATW8TFpm2fRJk0rYlftvkdXFWxBJhM7EB4ddmew/qzTMnR2cpJ/wsNJyzAKE5MwXnXIS+gOpr1jJYXE+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O69RnwHb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mluH/snR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CBB61F000E9;
-	Mon, 15 Jun 2026 17:34:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O69RnwHb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE49D1F000E9;
+	Mon, 15 Jun 2026 17:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781544869;
-	bh=jAgVBwBzMYXtP3/hab+OWp0BBfaCRvxNvVazDJnpEyo=;
+	s=k20260515; t=1781544942;
+	bh=p7FyGrV4AjKGIemBHq/uzWlOJK/wdu/Aplpz39gdpoY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mluH/snRewQ3+gDaJD2AWVryDVKHSJGAwfrQi/if0cliwIqZaUpF417lhfQZm6wF2
-	 CT453YHc5NVmCKFIUsjmUAs3W1kaZQ7jz10G0kZB0FehRpkn33zh5WIy4RPeBwElJE
-	 6/0oEXecicIrmjKnXiNDGBHWOLZl5nQ+sstrD7zTNp1CkNAmkOLINiqAWgtuVqUlkm
-	 bckBQTUeK0pjJVeSqwyOjtMtauVLXnqvJ2dt0GzRnu7dd2MLK4kbloixCD1mZiomWq
-	 82LVt2471DHloguQcjHA7pHCeeiZLAJokAolIcezCp35QQKpe23B6tKuLV4LHjqrXo
-	 ikUFGonDAXZ0w==
+	b=O69RnwHb1o1rp5wqe5L2mAiXSK7Hnug5mk6uP2DeXEI/rbBg4+pGQrhSUsC6cS66+
+	 zFMV09EBTyCKIKn/msUImPt8QiJuBYmjdfQ++4UTaq4xk4fWtIF7FI8CbEdTGfF3tl
+	 lemnlt/G1Oj2s79GbHbrqr8A9PUAbRbOpjGbeL2chLr73fVa6z1HfzMs7WZX44ig0S
+	 ePOPR2QhgZh6YFydxUJ8PwUkX5asFu66yuoOcXPiBGgzqkEvrtUh9LfJqShzdt51gG
+	 DW+CGIppVTYeXXOQ0if+zDeDNnX4AJJifxr9FfB0+pZqR1JVaW+RhUQHxFp52oVjB9
+	 RSPzyyVhUBJUQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 2/5] cxl/pci: Add BI topology enable/disable
+Subject: Re: [PATCH v5 1/5] cxl: Add BI register probing and port
+ initialization
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Davidlohr Bueso" <dave@stgolabs.net>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260615145529.13848-3-dave@stgolabs.net>
-References: <20260615145529.13848-3-dave@stgolabs.net>
+In-Reply-To: <20260615145529.13848-2-dave@stgolabs.net>
+References: <20260615145529.13848-2-dave@stgolabs.net>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 17:34:28 +0000
-Message-Id: <20260615173429.0CBB61F000E9@smtp.kernel.org>
+Date: Mon, 15 Jun 2026 17:35:41 +0000
+Message-Id: <20260615173541.BE49D1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Mixing `goto` error handling with `__free()` scope-based cleanup d=
-eclarations.
-- [High] Missing explicit commit for the Endpoint BI Decoder Control Regist=
-er.
-- [High] Root port BI enablement logic is unreachable and contradicts the c=
-ommit message.
-- [High] Missing reference counting (`nr_bi`) for shared downstream ports i=
-n cascaded switch topologies.
+- [High] devm mappings for dport BI registers leak on hotplug due to being =
+called outside the dport devres group in cxl_port_add_dport.
 --
 
-commit 31994c2bf9d14374bacdb07d505a19b18a761e35
+commit a836080fdf13fa334055f7f13a95491b66ef793f
 Author: Davidlohr Bueso <dave@stgolabs.net>
 
-cxl/pci: Add BI topology enable/disable
+cxl: Add BI register probing and port initialization
 
-This commit implements cxl_bi_setup() to walk the CXL port topology and ena=
-ble
-BI flows on the device and every component in the path. It also implements a
-teardown counterpart, cxl_bi_dealloc().
+This commit adds register probing for BI Route Table and BI Decoder capabil=
+ity
+structures. It introduces helpers to map the BI Decoder of a downstream port
+at dport-creation time and a port's own BI capability during port probe.
 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index d1f487b3d809a..b1b0f3eab90e8 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-
-[ ... ]
-
-> +static int __cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable)
-> +{
-> +	struct pci_dev *pdev =3D to_pci_dev(dport->dport_dev);
-> +	void __iomem *bi =3D dport->regs.bi_decoder;
-> +	struct cxl_port *port =3D dport->port;
-> +	u32 ctrl, value;
-> +	int rc;
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index ada51948d52fa..ca8d8c14b7876 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
 
 [ ... ]
 
-> +	case PCI_EXP_TYPE_DOWNSTREAM:
-> +		if (enable) {
-> +			value =3D ctrl & ~CXL_BI_DECODER_CTRL_BI_FW;
-> +			value |=3D CXL_BI_DECODER_CTRL_BI_ENABLE;
-> +		} else {
-> +			if (!FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl))
-> +				return 0;
-> +			value =3D ctrl & ~(CXL_BI_DECODER_CTRL_BI_FW |
-> +					 CXL_BI_DECODER_CTRL_BI_ENABLE);
-> +		}
+> @@ -261,6 +321,17 @@ static struct cxl_dport *cxl_port_add_dport(struct c=
+xl_port *port,
+>  	/* This group was only needed for early exit above */
+>  	devres_remove_group(&port->dev, no_free_ptr(port_dr_group));
+> =20
+> +	if (dev_is_pci(dport_dev)) {
+> +		switch (pci_pcie_type(to_pci_dev(dport_dev))) {
+> +		case PCI_EXP_TYPE_ROOT_PORT:
+> +		case PCI_EXP_TYPE_DOWNSTREAM:
+> +			cxl_dport_map_bi(dport);
 
 [Severity: High]
-In cascaded switch topologies, can this unconditionally clear the
-CXL_BI_DECODER_CTRL_BI_ENABLE bit while other endpoints below the switch
-are still actively using it?
+Does this leak devm mappings if the dport is hot-removed?
 
-Unlike the root port case which uses dport->nr_bi for reference counting,
-downstream ports appear to clear this bit as soon as the first endpoint
-unbinds. This might break BI routing for other active endpoints on a shared
-downstream port.
+Looking at cxl_port_add_dport(), devm_cxl_add_dport_by_dev() creates a
+devres group for the dport on the parent port's device. However,
+cxl_dport_map_bi() is called after devm_cxl_add_dport_by_dev() returns,
+meaning the devres group has already been closed.
 
-Does this need reference counting similar to the root port?
+Because cxl_dport_map_bi() calls devm_cxl_iomap_block() against the parent
+port device, these devm allocations bypass the dport group and attach
+directly to the parent port device.
 
-[ ... ]
+If the dport is hot-removed, the dport devres group is released, but the BI
+capability mappings appear to be left behind. If the dport is subsequently
+re-added, won't devm_request_mem_region() fail with -EBUSY due to the
+physical address region conflict, permanently breaking BI capabilities?
 
-> +static int __cxl_bi_ctrl_endpoint(struct cxl_dev_state *cxlds, bool enab=
-le)
-> +{
-
-[ ... ]
-
-> +	writel(val, bi + CXL_BI_DECODER_CTRL_OFFSET);
-> +	cxlds->bi =3D enable;
-> +
-> +	dev_dbg(cxlds->dev, "BI requests %s\n",
-> +		str_enabled_disabled(enable));
-> +
-> +	return 0;
-> +}
-
-[Severity: High]
-Is this missing an explicit commit for the Endpoint BI Decoder Control
-Register?
-
-The CXL 4.0 specification requires an explicit commit after changing
-BI_ENABLE for any BI Decoder via CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ.
-
-While __cxl_bi_ctrl_dport() correctly calls __cxl_bi_commit_decoder() after
-updating the downstream ports, __cxl_bi_ctrl_endpoint() omits this step.
-
-Could this cause the endpoint device to ignore the BI enablement state and
-silently fail to enable BI flows?
-
-[ ... ]
-
-> +int cxl_bi_setup(struct cxl_dev_state *cxlds)
-> +{
-> +	struct cxl_port *endpoint =3D cxlds->cxlmd->endpoint;
-> +	struct cxl_dport *dport_iter, *dport, *failed;
-> +	struct cxl_port *port_iter;
-> +	struct pci_dev *pdev;
-> +	int rc;
-> +
-> +	if (!dev_is_pci(cxlds->dev))
-> +		return 0;
-> +
-> +	pdev =3D to_pci_dev(cxlds->dev);
-> +	struct cxl_port *port __free(put_cxl_port) =3D
-> +		cxl_pci_find_port(pdev, &dport);
-> +
-> +	if (!port)
-> +		return -EINVAL;
-
-[ ... ]
-
-> +	port_iter =3D port;
-> +	dport_iter =3D dport;
-> +	while (!is_cxl_root(port_iter)) {
-> +		rc =3D cxl_bi_ctrl_dport_enable(dport_iter);
-> +		if (rc)
-> +			goto err_rollback;
-
-[Severity: High]
-The commit message states this will write BI Enable on each dport's BI
-Decoder Control register. However, doesn't this loop terminate before
-processing the root port?
-
-Since the loop condition is !is_cxl_root(port_iter), when port_iter reaches
-the CXL root, the loop exits and skips configuring the root port entirely.
-
-Additionally, if the loop did reach the PCI_EXP_TYPE_ROOT_PORT code inside
-__cxl_bi_ctrl_dport(), that code actually clears the enable bit:
-
-__cxl_bi_ctrl_dport() {
-    ...
-    case PCI_EXP_TYPE_ROOT_PORT:
-        ...
-        value &=3D ~CXL_BI_DECODER_CTRL_BI_ENABLE;
-}
-
-Should this loop include the root port, and should the root port logic actu=
-ally
-set the enable bit rather than clearing it?
-
-[ ... ]
-
-> +	/* finally, enable BI on the device */
-> +	rc =3D cxl_bi_ctrl_endpoint_enable(cxlds);
-> +	if (rc)
-> +		goto err_rollback;
-> +
-> +	return devm_add_action_or_reset(&cxlds->cxlmd->dev,
-> +					cxl_bi_dealloc, cxlds);
-> +
-> +err_rollback:
-> +	/*
-> +	 * Undo all dports enabled so far, including the failed one.
-> +	 */
-> +	failed =3D dport_iter;
-> +	dport_iter =3D dport;
-> +	port_iter =3D port;
-> +	while (!is_cxl_root(port_iter)) {
-> +		cxl_bi_ctrl_dport_disable(dport_iter);
-> +		if (dport_iter =3D=3D failed)
 > +			break;
-> +		dport_iter =3D port_iter->parent_dport;
-> +		port_iter =3D dport_iter->port;
+> +		default:
+> +			break;
+> +		}
 > +	}
-> +	return rc;
-> +}
-
-[Severity: High]
-Is it safe to mix goto-based error handling with scope-based cleanup in
-this function?
-
-This function declares struct cxl_port *port __free(put_cxl_port) at the
-top, but also uses a goto err_rollback pattern for failure paths.
-
-Mixing goto labels with __free() declarations in the same function creates
-confusing ownership semantics and violates subsystem cleanup guidelines.
-
-Should this be fully converted to scope-based cleanup, or avoid using
-__free() here?
+> +
+>  	cxl_switch_parse_cdat(dport);
+> =20
+>  	/* New dport added, update the decoder targets */
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615145529.1384=
-8-1-dave@stgolabs.net?part=3D2
+8-1-dave@stgolabs.net?part=3D1
