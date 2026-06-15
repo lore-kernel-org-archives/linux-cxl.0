@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABFCC3F99F2
-	for <linux-cxl@vger.kernel.org>; Mon, 15 Jun 2026 16:19:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC91340963E
+	for <linux-cxl@vger.kernel.org>; Mon, 15 Jun 2026 16:20:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781540349; cv=none; b=eR4PPmgHsHb9bFWTqo9y6KiOSmxSxWGUVKcZMdQuCLmLzr3hhF+nECBu86lL2td326BXRzbZCapyR+7/aTrAvHjUfVqp9wpRr4fmfQTz4yjCAH3ShdyVXtAaioCTqKG9mEeSbifQ9BggrCJL5GEIxglZpk2v2+k+xMnbl2OrjbQ=
+	t=1781540405; cv=none; b=sHBdVuJ0dPGHyGuanIYXct5kjmmXdjMc5VOI75z9CtCVOkQ6sVZ9KknzERD3mrjFoEyOM0hZaGNOCKBAY4UgJScNBzhuGgummqwwroyAqCTvOQxHLRfJdYxF4BdwRlkJC+mrS7wxybekYBGPpy77BTdUQYnJcrQ4XvUtSSV914I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781540349; c=relaxed/simple;
-	bh=oOVf5Q2c8ZxfzvyeyCOI4dviG0FnoFBEoqrkvGvS5gA=;
+	s=arc-20240116; t=1781540405; c=relaxed/simple;
+	bh=5Ty4RW2ZKsmNTy+0+SQ8AlSpY2zjoZKzBkaAGsCSfX4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ERBGwQBbeiK7K9ixREdS0QJsFj5KuJ7V5DbVs4nPcYtdhDQuBcepwZJ5xx+7WAKWxIw+TK9SppuWd9B3qIM9m/0GQ9GQDFPAJk+gIjacMGdues/SVbsLSvm+GoM6JVFvANDTbeTtQojvKbJ/n5B8Rdf8sJPFJQMUnGX6guvxQtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TY5r459c; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=tTMZAKqwLWfarzF18Nd+lxHWf8rqDdeVtBPQUx/dcJWmLLLNg1ZCIK5ooOO2BcuOhvZrS9tQt1mHme/0hln7KNtCpJwvNmEI1+8urPneFm6tnCvtDnZm8iOT72/nsXSWvDYcV+Y76k00T70X/ZQNxdmAOKrpzEOhg0eZGlV1U1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fm1e/Spi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TY5r459c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6005E1F000E9;
-	Mon, 15 Jun 2026 16:19:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fm1e/Spi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 658B51F00A3D;
+	Mon, 15 Jun 2026 16:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781540348;
-	bh=v1+WdThdQ6M0tyZF+/sT20m0JIQytES91L+AdkvpLJY=;
+	s=k20260515; t=1781540404;
+	bh=b2z6Nj4qXfWjKGbM3HymhXnkMVA5Tx1aLa9tAlm9/WE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TY5r459cLf69c6WVf6a/4F6Byp8LnH9Cq9/thaMisC/FDWM6b+XPhEfoaKnlN79fx
-	 S2DQCgxVWyMpgkcHvMHjqAVmLf9GFAYPWJCxGhDnD1WzwJbhI3atSyk1ivevCvcsZd
-	 HVuJzuZrrDXVRJ9W+g1CGOvdvsk9Ds/0O0bQfdmFIjJn6Q8WwNJm9H1eV2WvxMZtS/
-	 YkM4EZZyBSnKF25TSoUM9nDLUMooBXUg8VeUWd2+quv7phmwPRxA0/vNeUXJ7XzTKm
-	 YOPL/Fgm3swY1m0LS475GokB/VmE8pAZPnwi6xYOOhoY+eOAmZ8nOYVxo7/W4bsUar
-	 r+iEsAk9/WsqA==
+	b=Fm1e/Spi+f99zk1Rr28gSEEP5p7BH3VAI+vLAtLs5/fvunlJNMdinKpVVGFGG8a7g
+	 uYQ5bj7almBCPZErsiXzx9L0Gmc7SLRP/Sz/zOIUi8fNvdS5pLouhfZZIS9X/LTOBd
+	 5ZXSFxt0TpwGnftstVJpjbWTwq5YVAU+Yzpcqbn74/nnXLcQi1WvwEAow7JxXFMuDa
+	 9tJWCv3q0pif5u1oYGeHm3L7REifEhvNKOlEdEvgiDt8vlsORKE1YsADtXT+BTFElN
+	 9vwz+Qsardc5qPCPM0eGC5D64Epm2VO0h9PwZazuvhLT4TraeYjn1BWDzV/KHhxFQq
+	 wohQgm5tzLlzw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V6 06/10] dax/fsdev: use __va(phys) for kaddr in
- direct_access
+Subject: Re: [PATCH V6 08/10] dax: read holder_ops once in
+ dax_holder_notify_failure()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "John Groves" <john@jagalactic.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <0100019ecc096de8-8bc254a7-d2cc-44b6-82b1-1394fda8bb41-000000@email.amazonses.com>
-References: <0100019ecc096de8-8bc254a7-d2cc-44b6-82b1-1394fda8bb41-000000@email.amazonses.com>
+In-Reply-To: <0100019ecc09bb56-5ecc9c6b-35ba-44f8-b112-921b01b34478-000000@email.amazonses.com>
+References: <0100019ecc09bb56-5ecc9c6b-35ba-44f8-b112-921b01b34478-000000@email.amazonses.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 16:19:08 +0000
-Message-Id: <20260615161908.6005E1F000E9@smtp.kernel.org>
+Date: Mon, 15 Jun 2026 16:20:04 +0000
+Message-Id: <20260615162004.658B51F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -48,63 +48,90 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Multi-range dax_direct_access requests fail entirely instead of tr=
-uncating to the contiguous physical range.
+- [High] The patch uses READ_ONCE() to prevent a NULL pointer dereference o=
+n `holder_ops` but fails to address a critical race condition with `holder_=
+data`, leaving the code vulnerable to an immediate NULL pointer dereference=
+ or Use-After-Free in the filesystem callback.
 --
 
-commit c552716e20bf1f475210a52b517ec59a7c2e9fd1
+commit ee437cee4c275726ddf2ce4c7880e48e8f58eab5
 Author: John Groves <John@Groves.net>
 
-dax/fsdev: use __va(phys) for kaddr in direct_access
-   =20
-This commit changes __fsdev_dax_direct_access() to use __va(phys) instead of
-a linear offset to correctly calculate virtual addresses for multi-range
-devices. It also removes the now-unused virt_addr field from struct dev_dax.
+dax: read holder_ops once in dax_holder_notify_failure()
 
-> diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
-> --- a/drivers/dax/fsdev.c
-> +++ b/drivers/dax/fsdev.c
-> @@ -51,9 +51,7 @@ static long __fsdev_dax_direct_access(struct dax_device=
- *dax_dev, pgoff_t pgoff,
->  	struct dev_dax *dev_dax =3D dax_get_private(dax_dev);
->  	size_t size =3D nr_pages << PAGE_SHIFT;
->  	size_t offset =3D pgoff << PAGE_SHIFT;
-> -	void *virt_addr =3D dev_dax->virt_addr + offset;
->  	phys_addr_t phys;
-> -	unsigned long local_pfn;
-> =20
->  	phys =3D dax_pgoff_to_phys(dev_dax, pgoff, size);
->  	if (phys =3D=3D -1) {
->  		dev_dbg(&dev_dax->dev,
->  			"pgoff (%#lx) out of range\n", pgoff);
->  		return -EFAULT;
+This commit uses READ_ONCE() to fetch dax_dev->holder_ops exactly once in
+dax_holder_notify_failure(). This prevents a race condition where a concurr=
+ent
+fs_put_dax() clears holder_ops between the NULL check and the indirect call.
+
+> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+> index 25cf99dd9360b..433cd431a6c06 100644
+> --- a/drivers/dax/super.c
+> +++ b/drivers/dax/super.c
+> @@ -311,12 +312,19 @@ int dax_holder_notify_failure(struct dax_device *da=
+x_dev, u64 off,
+>  		goto out;
 >  	}
+> =20
+> -	if (!dax_dev->holder_ops) {
+> +	/*
+> +	 * Read holder_ops once: a concurrent fs_put_dax() can clear it without
+> +	 * synchronizing against readers. Without the single fetch the compiler
+> +	 * could reload between the NULL check and the call and dereference a
+> +	 * NULL ops.
+> +	 */
+> +	ops =3D READ_ONCE(dax_dev->holder_ops);
+> +	if (!ops) {
+>  		rc =3D -EOPNOTSUPP;
+>  		goto out;
+>  	}
+> =20
+> -	rc =3D dax_dev->holder_ops->notify_failure(dax_dev, off, len, mf_flags);
+> +	rc =3D ops->notify_failure(dax_dev, off, len, mf_flags);
 
 [Severity: High]
-This is a pre-existing issue, but does the current multi-range logic cause
-valid requests to fail outright if they span a physical boundary?
+This is a pre-existing issue, but does fixing the holder_ops race still lea=
+ve
+a race with holder_data?
 
-When __fsdev_dax_direct_access() is called with a size that crosses a
-physical range gap, dax_pgoff_to_phys() evaluates the full request size.
-Because it enforces phys + size - 1 <=3D range->end, it returns -1 when the
-request exceeds the current contiguous range.
+If a concurrent fs_put_dax() executes right after ops is fetched but before
+ops->notify_failure() executes, holder_data could be cleared to NULL because
+fs_put_dax() does not call synchronize_srcu(&dax_srcu) to wait for active
+readers:
 
-Instead of truncating the response length to the contiguous pages available
-in the current range (as the direct_access API contract requires),
-__fsdev_dax_direct_access() completely rejects the request and returns
--EFAULT.
+drivers/dax/super.c:fs_put_dax() {
+	if (dax_dev && holder) {
+		void *prev;
+		WRITE_ONCE(dax_dev->holder_ops, NULL);
+		prev =3D cmpxchg(&dax_dev->holder_data, holder, NULL);
+		WARN_ON(prev && prev !=3D holder);
+	}
+	put_dax(dax_dev);
+}
 
-Could this prevent chunked processing of large requests, such as I/O reads
-or huge page faults, that happen to cross a range gap?
+The filesystem callback in XFS retrieves holder_data via dax_holder() and
+expects it to be valid:
 
-Furthermore, the return value at the end of this function appears to ignore
-physical boundaries:
+fs/xfs/xfs_notify_failure.c:xfs_dax_notify_failure() {
+	struct xfs_mount	*mp =3D dax_holder(dax_dev);
 
-return PHYS_PFN(min(size, dev_dax->cached_size - offset));
+	if (!(mp->m_super->s_flags & SB_BORN)) {
+		xfs_warn(mp, "filesystem is not ready for notify_failure()!");
+...
+}
 
-If dax_pgoff_to_phys() didn't fail on requests spanning gaps, wouldn't this
-erroneously report non-contiguous memory as contiguous?
+Because xfs_dax_notify_failure() unconditionally dereferences the retrieved
+holder without a NULL check, could this result in an immediate NULL pointer
+dereference or a use-after-free as the unmount proceeds?
+
+A later patch in the series changes the ordering of how these pointers are
+cleared, but it appears to still lack synchronization with dax_read_lock()
+readers.
+
+>  out:
+>  	dax_read_unlock(id);
+>  	return rc;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0100019ecc080a68-8d=
-c0c99f-ab17-4aa9-83d9-490e9c97ac2e-000000@email.amazonses.com?part=3D6
+c0c99f-ab17-4aa9-83d9-490e9c97ac2e-000000@email.amazonses.com?part=3D8
