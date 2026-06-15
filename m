@@ -1,115 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from coral.ash.relay.mailchannels.net (coral.ash.relay.mailchannels.net [23.83.222.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C4F8F7D
-	for <linux-cxl@vger.kernel.org>; Mon, 15 Jun 2026 16:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46607413608
+	for <linux-cxl@vger.kernel.org>; Mon, 15 Jun 2026 17:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.222.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781540709; cv=none; b=hPOd84tYcQQw/HklTMSo4wORFpSuJXYz3SGnA5N7kfZXgZQI6ODYJMmRwzyF03zC/pklIL0QmODB4SbnKdmLMyQCKvakAdjU9GNgShzirVpdy6BsF2mRhN2FfrjJRiiMC/W4y5pttW+w8+6j7owhWez+iNAKOA1tcrKpyFJDddE=
+	t=1781544034; cv=none; b=gAgDovHP5P3PTxfuOI0bjdwp37ZTnekFAfqpvrh7KkvpiRcW9DFHiQLLu5dvqBWoT3pl+EyIUy/llgtaOKutVB5sNn+1QUdvC/VE9qYEHhWesGoN8vxMOpmISEps5Er1BAiKgUeOar/YODdsdNSdNPsjZaVz04Yl9Jewo2EXXKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781540709; c=relaxed/simple;
-	bh=IMRGg9qe1CTlixYFxw7fTJj51O/d2O9w2b9tppQgsbk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GdtPs1RRp7gHpB+xfOgjaa1AE6crVk5z1XF6dzH7d8AEQ+VK3rk5YEwl8tEob3o7MSStiLfwK3lzS3UwGZoZOiU4/IWKC9tjv0eUe5WUmh8vEb+j8tzHYnWK79Hdhg5zHtw75Eso6AXTzK3qS5uLeWQoKUqZf3OgqHzlnycfWBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mV1FFd7a; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781544034; c=relaxed/simple;
+	bh=79o1QlHiPzRhx89zXVNbcM7j0l7dJFz+93sTV9pn12g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZeY8ZmnzEJk3nUhWOv66abscrUajL4rkfjvt4AZ1BuhA/PgZOEV8QCgDn7D1vIcSjWJC/uwkYCjFW0zU6ayplzooyLnKaaX4wYpO7upgbZpo/06kKrZgOIPUKL4gje+Dbw6HUo04UyxzMc8jtzbGqXAVtdTNv1bv+oy1o6BoMkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=nO8/OA6g; arc=none smtp.client-ip=23.83.222.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mV1FFd7a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29F251F000E9;
-	Mon, 15 Jun 2026 16:25:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781540708;
-	bh=NIAX5DCUjQglXsJ6HQnC3EzjjAW2/qsW+2uty9SVlOk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mV1FFd7axvt0mtbWUCpxTLMy43FzaO9pEVoJN5hVfChm4M+mnYC0OMcfm8dGKBNeZ
-	 gEOqdiQEuIThksMvB6qVpo2Es9Q8UQmO67fO04teV0kgYauBSUWLF7ZmeIRIblpd3n
-	 eLa3pXiCMsfV/04JiSAjcQwQlRLGkBw+wZyLXi5zY6vTY1rEEDXyon6aO63MVjVz/E
-	 thQwVS1tztEcOu3NWzRFefdtf1FtZB9yo/TWDd7UyYJUZLyeMVOPJ62Je+rvOgbSGD
-	 Je/rgyGoAPdFMR3p41taem9eUh/E/9CnI13lAp03Tw+Sw1DOjTnSplUeB1t2XOFlBF
-	 PN7UO38Qlc6PQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V6 02/10] dax/fsdev: fix multi-range offset in
- memory_failure handler
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "John Groves" <john@jagalactic.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <0100019ecc08d74f-ec0d09b8-11e9-4e5b-af48-8c6d382af486-000000@email.amazonses.com>
-References: <0100019ecc08d74f-ec0d09b8-11e9-4e5b-af48-8c6d382af486-000000@email.amazonses.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 16:25:07 +0000
-Message-Id: <20260615162508.29F251F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="nO8/OA6g"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 8101D41DBD;
+	Mon, 15 Jun 2026 14:56:12 +0000 (UTC)
+Received: from pdx1-sub0-mail-a208.dreamhost.com (100-96-18-11.trex-nlb.outbound.svc.cluster.local [100.96.18.11])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 24BA841CB7;
+	Mon, 15 Jun 2026 14:56:12 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Little-Cooperative: 74d82d162ecf0f1f_1781535372444_3727923879
+X-MC-Loop-Signature: 1781535372444:2848760028
+X-MC-Ingress-Time: 1781535372444
+Received: from pdx1-sub0-mail-a208.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.96.18.11 (trex/7.1.5);
+	Mon, 15 Jun 2026 14:56:12 +0000
+Received: from offworld.lan (unknown [138.84.34.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a208.dreamhost.com (Postfix) with ESMTPSA id 4gfCqY2bHCz1dZ;
+	Mon, 15 Jun 2026 07:56:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1781535372;
+	bh=6hTItL5Yt5dSlwxgI5AYN2kF+cIfh4gJtceqnMSiv/E=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=nO8/OA6gdmBDIicVgx5zILcZCvWRguEbwSkf4dMjbYQU6+fo/fvUYCSuVNU9aUMm9
+	 6Nsz+XgasFZgvk3/umJPGyMgBwo9S/2Kz2CbkKulWdOhlIT6JD/fe8euRMoZGmYMBN
+	 cRwlSQhqpn0UZEktUYAJc83M+JjBB587wjfbenXg5rqd2NKPkzxs0xFWyOIdCZ2/Au
+	 74B4IDiYvlZztBKLxfqUUdxYb+JF/KKzFGTyTldkCWuC5gzCaGms8lTS6UgsEyhM+4
+	 vHp/cvwHtwQKy/QBN84O91JzTaXcK+33ifc37ruvx16YrhBSufXYHkL2zuxCp/p61r
+	 yrgV2oEd/oVjg==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dave.jiang@intel.com,
+	djbw@kernel.org
+Cc: jic23@kernel.org,
+	benjamin.cheatham@amd.com,
+	icheng@nvidia.com,
+	alucerop@amd.com,
+	alison.schofield@intel.com,
+	gourry@gourry.net,
+	dongjoo.seo1@samsung.com,
+	dave@stgolabs.net,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH v5 5/5] cxl/hdm: Rename decoder coherency flags
+Date: Mon, 15 Jun 2026 07:55:29 -0700
+Message-Id: <20260615145529.13848-6-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260615145529.13848-1-dave@stgolabs.net>
+References: <20260615145529.13848-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Data Race / Out-Of-Bounds Read / Use-After-Free: Lockless iteratio=
-n over mutable dev_dax->ranges causes new Out-Of-Bounds read
---
+Align with the ACPI CXL Window restriction naming and convert
+CXL_DECODER_F_TYPE2/F_TYPE3 to F_DEVMEM/F_HOSTONLY. Type2 and
+Type3 coherency models were named prior to Back-Invalidate.
 
-commit 41ef54df14f24d7b6da66ee222110e1acd13b89c
-Author: John Groves <John@Groves.net>
+Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/cxl/acpi.c      |  6 +++---
+ drivers/cxl/core/port.c | 12 ++++++------
+ drivers/cxl/cxl.h       |  4 ++--
+ 3 files changed, 11 insertions(+), 11 deletions(-)
 
-dax/fsdev: fix multi-range offset in memory_failure handler
+diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
+index 6a9ba82719e9..087dd1e86d40 100644
+--- a/drivers/cxl/acpi.c
++++ b/drivers/cxl/acpi.c
+@@ -143,9 +143,9 @@ static unsigned long cfmws_to_decoder_flags(int restrictions)
+ 	unsigned long flags = CXL_DECODER_F_ENABLE;
+ 
+ 	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_DEVMEM)
+-		flags |= CXL_DECODER_F_TYPE2;
++		flags |= CXL_DECODER_F_DEVMEM;
+ 	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM)
+-		flags |= CXL_DECODER_F_TYPE3;
++		flags |= CXL_DECODER_F_HOSTONLY;
+ 	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_VOLATILE)
+ 		flags |= CXL_DECODER_F_RAM;
+ 	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_PMEM)
+@@ -445,7 +445,7 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
+ 
+ 	cxld = &cxlrd->cxlsd.cxld;
+ 	cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
+-	cxld->target_type = (cxld->flags & CXL_DECODER_F_TYPE2) ?
++	cxld->target_type = (cxld->flags & CXL_DECODER_F_DEVMEM) ?
+ 		CXL_DECODER_DEVMEM : CXL_DECODER_HOSTONLYMEM;
+ 	cxld->hpa_range = (struct range) {
+ 		.start = cfmws->base_hpa,
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 71801dfd614b..63005cf0fa91 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -128,8 +128,8 @@ static DEVICE_ATTR_RO(name)
+ 
+ CXL_DECODER_FLAG_ATTR(cap_pmem, CXL_DECODER_F_PMEM);
+ CXL_DECODER_FLAG_ATTR(cap_ram, CXL_DECODER_F_RAM);
+-CXL_DECODER_FLAG_ATTR(cap_type2, CXL_DECODER_F_TYPE2);
+-CXL_DECODER_FLAG_ATTR(cap_type3, CXL_DECODER_F_TYPE3);
++CXL_DECODER_FLAG_ATTR(cap_type2, CXL_DECODER_F_DEVMEM);
++CXL_DECODER_FLAG_ATTR(cap_type3, CXL_DECODER_F_HOSTONLY);
+ CXL_DECODER_FLAG_ATTR(locked, CXL_DECODER_F_LOCK);
+ CXL_DECODER_FLAG_ATTR(cap_bi, CXL_DECODER_F_BI);
+ 
+@@ -357,8 +357,8 @@ static bool can_create_pmem(struct cxl_root_decoder *cxlrd)
+ 	unsigned long flags = cxlrd->cxlsd.cxld.flags;
+ 	unsigned long hdm_h, hdm_db;
+ 
+-	hdm_h = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_PMEM;
+-	hdm_db = CXL_DECODER_F_TYPE2 | CXL_DECODER_F_BI | CXL_DECODER_F_PMEM;
++	hdm_h = CXL_DECODER_F_HOSTONLY | CXL_DECODER_F_PMEM;
++	hdm_db = CXL_DECODER_F_DEVMEM | CXL_DECODER_F_BI | CXL_DECODER_F_PMEM;
+ 
+ 	return (flags & hdm_h) == hdm_h || (flags & hdm_db) == hdm_db;
+ }
+@@ -368,8 +368,8 @@ static bool can_create_ram(struct cxl_root_decoder *cxlrd)
+ 	unsigned long flags = cxlrd->cxlsd.cxld.flags;
+ 	unsigned long hdm_h, hdm_db;
+ 
+-	hdm_h = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_RAM;
+-	hdm_db = CXL_DECODER_F_TYPE2 | CXL_DECODER_F_BI | CXL_DECODER_F_RAM;
++	hdm_h = CXL_DECODER_F_HOSTONLY | CXL_DECODER_F_RAM;
++	hdm_db = CXL_DECODER_F_DEVMEM | CXL_DECODER_F_BI | CXL_DECODER_F_RAM;
+ 
+ 	return (flags & hdm_h) == hdm_h || (flags & hdm_db) == hdm_db;
+ }
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 29231d0db470..b0b4ea4ff8a5 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -282,8 +282,8 @@ int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
+  */
+ #define CXL_DECODER_F_RAM   BIT(0)
+ #define CXL_DECODER_F_PMEM  BIT(1)
+-#define CXL_DECODER_F_TYPE2 BIT(2)
+-#define CXL_DECODER_F_TYPE3 BIT(3)
++#define CXL_DECODER_F_DEVMEM BIT(2)
++#define CXL_DECODER_F_HOSTONLY BIT(3)
+ #define CXL_DECODER_F_LOCK  BIT(4)
+ #define CXL_DECODER_F_ENABLE    BIT(5)
+ #define CXL_DECODER_F_NORMALIZED_ADDRESSING BIT(6)
+-- 
+2.39.5
 
-This commit introduces fsdev_pfn_to_offset() to calculate the correct=20
-multi-range offset for a faulting PFN. It changes the calculation to walk=20
-the dev_dax->ranges[] array instead of just reading index 0 to account=20
-for physical gaps between ranges.
-
-> diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
-> --- a/drivers/dax/fsdev.c
-> +++ b/drivers/dax/fsdev.c
-> @@ -135,11 +135,26 @@ static void fsdev_clear_ops(void *data)
->   * The core mm code in free_zone_device_folio() handles the wake_up_var()
->   * directly for this memory type.
->   */
-> +static u64 fsdev_pfn_to_offset(struct dev_dax *dev_dax, unsigned long pf=
-n)
-> +{
-> +	phys_addr_t phys =3D PFN_PHYS(pfn);
-> +	u64 offset =3D 0;
-> +
-> +	for (int i =3D 0; i < dev_dax->nr_range; i++) {
-> +		struct range *range =3D &dev_dax->ranges[i].range;
-
-[Severity: High]
-Does this lockless iteration introduce an out-of-bounds read risk?
-
-The commit message notes that reading dev_dax->ranges[0] locklessly is a
-pre-existing exposure. However, looping over the array using nr_range
-adds a new issue.
-
-If this runs concurrently with alloc_dev_dax_range() in drivers/dax/bus.c,
-the ranges array can be reallocated and nr_range incremented:
-
-drivers/dax/bus.c:alloc_dev_dax_range() {
-        ranges =3D krealloc(dev_dax->ranges, ...);
-        ...
-        dev_dax->ranges =3D ranges;
-        ranges[dev_dax->nr_range++] =3D (struct dev_dax_range) {
-        ...
-}
-
-Without read memory barriers here in fsdev_pfn_to_offset(), could a CPU
-observe the updated dev_dax->nr_range but still see the old (freed)
-dev_dax->ranges pointer?
-
-If so, this loop could iterate past the bounds of the old freed allocation,
-causing an out-of-bounds read on the freed slab object.
-
-> +
-> +		if (phys >=3D range->start && phys <=3D range->end)
-> +			return offset + (phys - range->start);
-> +		offset +=3D range_len(range);
-> +	}
-> +	return -1ULL;
-> +}
-> +
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0100019ecc080a68-8d=
-c0c99f-ab17-4aa9-83d9-490e9c97ac2e-000000@email.amazonses.com?part=3D2
