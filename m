@@ -1,126 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628442FFF8D;
-	Mon, 15 Jun 2026 10:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43DB3F1ACA;
+	Mon, 15 Jun 2026 13:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781519391; cv=none; b=eJQA0kAPdQRpiRMNgEyFXtJOw1bXMD3oNmar7NdgBAPiCmEw1J0QPziwhrKWQsb8n+qpeWZvGcVJTSnhTU6RfzTsOaTMF72SlNzaK3jPz/bGrWzZL32G9kSFEC9guel1BkoM115xoi7Cs1BduhXVp8AXpeKZeXAetrdT00+ttOw=
+	t=1781529200; cv=none; b=r4jUkcYr61sz68+RETUrwFHptbIJ8TRJKEm0fbWgiBL6+do3vSesFohZXK7ZxKFV+L0kAUFXI4zYegDo4XCz/BM+nJcTqXpjxYHo4X1f9ZaN96iIeKIoOvR+JloNwZVYtTIVZiTraGbmDeWFk2R6gVwivAIZB+7/KNHuiLgZLbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781519391; c=relaxed/simple;
-	bh=95oikCD6bcqDfa/hPKgyJHYAikFQMLcqrex4GlXjGLk=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=AmrbbudHTtvjhltGfgPIIt973EZ8jF83FKRB7OE9aXFWZZdIblcxrqLMEUyoGLcweKnyIRFKgWmtg35j15KYjsN4ZSKMxQOQH2vSZU7Jvud5iOCgKsHwnEPUutnTfBFdrS7SI5Yl56FbMROt7e+HasTH7U3SJK322DxarxBTCIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cN9yJb4h; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cN9yJb4h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781519389; x=1813055389;
-  h=message-id:subject:from:to:cc:in-reply-to:references:
-   content-transfer-encoding:date:mime-version;
-  bh=95oikCD6bcqDfa/hPKgyJHYAikFQMLcqrex4GlXjGLk=;
-  b=cN9yJb4hJ4u+hOtaF4/14IRgn1rSPm5ogRFKsbshLJ1R/OaRIPTxWd/G
-   T1/DwId9ny86f4CMY76VhvdMQrknxij+mlUP+pxbxyTcTDxeSNflYtMY4
-   eUxpZ0GDyphlWCGwsxG55ORpIOqUqjNZXSQdrXzHK9C2TJ1YP7vSx5MhL
-   BJTbfdgGUDnH7gGRxcBeplSu4E5oX4ZeC+ZFKBnJc77C8HXS7e8trc2BI
-   4QjiZUVhXwa0Z/NveP4uqN2NYUXQAk/T6jfSMy+pzuxWeqfMjp+qUqBDp
-   EXTsAKDMLEXWdL9jU5Q0bfFE3Au82ZF3N6SC1YSRn86rUmj127XDRsDL3
-   g==;
-X-CSE-ConnectionGUID: Pk4RBvYuTtO3Gx8U09/lMA==
-X-CSE-MsgGUID: XQby1sgtTjSfOxXCsM+oTQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11817"; a="86154841"
-X-IronPort-AV: E=Sophos;i="6.24,206,1774335600"; 
-   d="scan'208";a="86154841"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2026 03:29:49 -0700
-X-CSE-ConnectionGUID: b1opete7TyStu6SmRrAh3w==
-X-CSE-MsgGUID: kvuXepRwSUmDqydFhXSoRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,206,1774335600"; 
-   d="scan'208";a="247309757"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO [10.245.246.140]) ([10.245.246.140])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2026 03:29:44 -0700
-Message-ID: <f2fea5d4e22b97c26424aba0e70bb1dd6d2b84b5.camel@linux.intel.com>
-Subject: Re: [PATCH 0/2] PCI/CXL: Recover CXL Downstream Ports from PM Init
- failure
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron	
- <jonathan.cameron@huawei.com>, Dave Jiang <dave.jiang@intel.com>, Alison
- Schofield <alison.schofield@intel.com>, Vishal Verma
- <vishal.l.verma@intel.com>, Ira Weiny	 <ira.weiny@intel.com>, Dan Williams
- <dan.j.williams@intel.com>, Bjorn Helgaas	 <bhelgaas@google.com>,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20260428182454.464655-1-fabio.m.de.francesco@linux.intel.com>
-References: <20260428182454.464655-1-fabio.m.de.francesco@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 12:29:21 +0200
+	s=arc-20240116; t=1781529200; c=relaxed/simple;
+	bh=JV5pPp6Ka8g+FtRyhYZAk+cFACXv8FmBu4KaMmweoIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JaJWu+yi5ZIYVWXK33YzjMLMWSTl79fJ/nGtefPTF3Aoc/v/RrakitobcVnyDBjcixkAmkCUOJkRJzyn8Am3NwX5bGBZhKd9JNwiXvzRA8v7XSneVEmtZMm/4N4yjdjYTAwkaJSWz4lECuvwsQwFKp8GHSc4cQnEL1wbChdltTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
+Received: from omf18.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id E56F11409A6;
+	Mon, 15 Jun 2026 13:13:09 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf18.hostedemail.com (Postfix) with ESMTPA id DA26F2F;
+	Mon, 15 Jun 2026 13:13:05 +0000 (UTC)
+Date: Mon, 15 Jun 2026 08:13:04 -0500
+From: John Groves <John@groves.net>
+To: Richard Cheng <icheng@nvidia.com>
+Cc: John Groves <john@jagalactic.com>, Dan Williams <djbw@kernel.org>, 
+	John Groves <jgroves@micron.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Alison Schofield <alison.schofield@intel.com>, 
+	Ira Weiny <iweiny@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH V5 2/9] dax/fsdev: fix multi-range offset in
+ memory_failure handler
+Message-ID: <ai_2FPTYQZGh8wRT@groves.net>
+References: <0100019eb7bcda4b-3f8edae9-d7a4-4bfa-aaea-fcef77fdbbc3-000000@email.amazonses.com>
+ <20260611173152.65905-1-john@jagalactic.com>
+ <0100019eb7bda506-6ba24207-b1c0-4eeb-9b04-61940cf3f80c-000000@email.amazonses.com>
+ <ait3Bg68J-NfOKhZ@MWDK4CY14F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Evolution 3.58.3 (3.58.3-1.fc43) 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ait3Bg68J-NfOKhZ@MWDK4CY14F>
+X-Rspamd-Queue-Id: DA26F2F
+X-Stat-Signature: br7gpe7ykxc87cnd5zdzixzizgipowo1
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 6A6F686E4067726F7665732E6E6574
+X-Session-ID: U2FsdGVkX190jmeGDiYtKH58RT+LXLFFeuhh4HjMp70=
+X-HE-Tag: 1781529185-789936
+X-HE-Meta: U2FsdGVkX188rpa2CmzJAY4dvaB8jkWkTYzEWLBg9f+m8UElArWHcq4cODM6EPVa6MnsDXqC+u35sfg4cdMyQnGSxc8VGzvf5lcrSKVHyxKKOj1/aPpjX345lfq3zaNCo2Y1T7m19mMZtzq/NnNHW85t9AWLOFEX894vIoO0uwG3S+KES034SZVA1xMOym5x5biW4FgQePDPJ40eUGKQNf9mQDN8vwKM9+ItHqFOhUL4Fpdvv5NIO2Qo9JGXfHtf3Ry4CHYKC55xrkmh9EN6fvHjcGvgkJl2uMTdnKBo9gzaEQi8SbEfOu55Tiz3PpS+zIhHuEEfSBzH9ty3wvH/PPkFYk8qqqzWXTYcgKKuW4E1sqeYdtRNWT5EKFr+lUr15mhl7HhKON4newnbjcUHflN1kr+MR9RwcTndfLTeJ5k=
 
-On Tue, 2026-04-28 at 20:24 +0200, Fabio M. De Francesco wrote:
-> Subject: [PATCH 0/2] PCI/CXL: Recover CXL Downstream Ports from PM Init
-> failure
->=20
-> CXL r4.0 sec 8.1.5.1 Implementation Note describes a scenario in which a
-> Secondary Bus Reset, a Link Down, or Downstream Port Containment on a
-> CXL Downstream Port prevents Port PM Init from completing when ACS
-> Source Validation is enabled on the Downstream Port. The spec states
-> that another SBR alone does not recover the port and describes a
-> software recovery sequence.=C2=A0=20
->=20
-> Patch 1 extends cxl_reset_bus_function(), the helper backing the cxl_bus
-> PCI/CXL reset method exposed to userspace via sysfs. It saves, clears,
-> and restores ACS Source Validation and Bus Master Enable on the CXL
-> Downstream Port around the SBR it issues. This keeps the userspace
-> cxl_bus reset path from leaving the port unable to complete PM Init.
->=20
-> Patch 2 adds a recovery pass during CXL enumeration. For each CXL
-> Downstream Port in a memdev's ancestry, the CXL core checks whether PM
-> Init has completed. If it has not, regardless of what caused the
-> failure, it invokes cxl_reset_bus_function() on the child below the port
-> in the hope of restoring the port to a usable state. CXL enumeration
-> re-runs after events that tear down and re-probe the memdev, including
-> DPC, AER, and Link Down, so those paths reach this recovery.
->=20
-> This small series is developed from an old RFC v3:
-> https://lore.kernel.org/linux-cxl/20260330193347.25072-1-fabio.m.de.franc=
-esco@linux.intel.com/
->=20
-> Fabio M. De Francesco (2):
-> =C2=A0 PCI/CXL: Allow PM Init to complete on cxl_bus reset if ACS SV enab=
-led
-> =C2=A0 cxl/core: Recover from PM Init failure via cxl_reset_bus_function(=
-)
->=20
-> drivers/cxl/core/pci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 30 +++=
-+++++++++++++++++
-> =C2=A0drivers/cxl/core/port.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 22 ++=
-+++++++++++++
-> =C2=A0drivers/cxl/cxlpci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 |=C2=A0 3 ++
-> =C2=A0drivers/pci/pci.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 | 52 ++++++++++++++++++++++++++++++++++-
-> =C2=A0include/linux/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 |=C2=A0 1 +=20
-> =C2=A0include/uapi/linux/pci_regs.h |=C2=A0 2 ++
-> =C2=A06 files changed, 109 insertions(+), 1 deletion(-)
+On 26/06/12 11:08AM, Richard Cheng wrote:
+> On Thu, Jun 11, 2026 at 05:31:59PM +0800, John Groves wrote:
+> > From: John Groves <John@Groves.net>
+> > 
+> > Fix memory_failure offset calculation for multi-range devices. The old code
+> > subtracted ranges[0].range.start from the faulting PFN's physical address,
+> > which produces an incorrect (inflated) logical offset when the PFN falls in
+> > ranges[1] or beyond due to physical gaps between ranges. Add
+> > fsdev_pfn_to_offset() to walk the range list and compute the correct
+> > device-linear byte offset.
+> > 
+> > Walk the pagemap's own range array (pgmap->ranges[]) rather than
+> > dev_dax->ranges[]. The pgmap copy is the immutable snapshot populated at
+> > probe and is never mutated afterwards, whereas dev_dax->ranges[] can be
+> > krealloc()'d by a concurrent sysfs mapping_store() (under dax_region_rwsem,
+> > which this ->memory_failure callback does not hold). For dynamic devices the
+> > two arrays are identical, so the reported offset is unchanged for the
+> > multi-range case this targets.
+> > 
+> > Fixes: d5406bd458b0a ("dax: add fsdev.c driver for fs-dax on character dax")
+> > 
+> > Suggested-by: Richard Cheng <icheng@nvidia.com>
+> > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+> > Signed-off-by: John Groves <john@groves.net>
+> > ---
+> >  drivers/dax/fsdev.c | 17 ++++++++++++++++-
+> >  1 file changed, 16 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
+> > index 188b2526bee45..2c5de3d80a618 100644
+> > --- a/drivers/dax/fsdev.c
+> > +++ b/drivers/dax/fsdev.c
+> > @@ -135,11 +135,26 @@ static void fsdev_clear_ops(void *data)
+> >   * The core mm code in free_zone_device_folio() handles the wake_up_var()
+> >   * directly for this memory type.
+> >   */
+> > +static u64 fsdev_pfn_to_offset(struct dev_pagemap *pgmap, unsigned long pfn)
+> > +{
+> > +	phys_addr_t phys = PFN_PHYS(pfn);
+> > +	u64 offset = 0;
+> > +
+> > +	for (int i = 0; i < pgmap->nr_range; i++) {
+> > +		struct range *range = &pgmap->ranges[i];
+> > +
+> > +		if (phys >= range->start && phys <= range->end)
+> > +			return offset + (phys - range->start);
+> > +		offset += range_len(range);
+> > +	}
+> > +	return -1ULL;
+> > +}
+> > +
+> >  static int fsdev_pagemap_memory_failure(struct dev_pagemap *pgmap,
+> >  		unsigned long pfn, unsigned long nr_pages, int mf_flags)
+> >  {
+> >  	struct dev_dax *dev_dax = pgmap->owner;
+> > -	u64 offset = PFN_PHYS(pfn) - dev_dax->ranges[0].range.start;
+> > +	u64 offset = fsdev_pfn_to_offset(pgmap, pfn);
+> 
+> Hi John,
+> 
+> I think this regresses static devices. pgmap->ranges[0].start can sit
+> data_offset below it on a static device, so the new offset = old + data_offset,
+> and XFS poisons the wrong blocks.
+> 
+> The gap walk only helps dynamic devices where data_offset ==0 . Maybe walking pgmap->ranges and
+> substract the probe's data_offset.
+> 
+> --Richard
 
-v2 of this series is under active development but its design has been heavi=
-ly
-reworked wrt v1. All comments that are still relevant to the new version ha=
-ve
-been taken into consideration.
+Ugh, right.
+
+Subtracting the data_offset would require newly stashing it somewhere the
+->memory_failure callback could reach.
+
+So I'm reverting to walking dev_dax->ranges[] -- the maybe-race there is the
+same one the pre-existing single-range code already had.
+
+I'd like to land this series before going too much farther down the suspected
+pre-existing issues rabbit hole :D
+
+Note: the current version of this patch (switching to pgmap->ranges) might 
+have been a bit much for keeping Dave and Alison's RB tags - but I'm 
+reverting back to what they reviewed for V6.
 
 Thanks,
+John
 
-Fabio=20
+<snip>
+
