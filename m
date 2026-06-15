@@ -1,143 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C69B40B36E
-	for <linux-cxl@vger.kernel.org>; Mon, 15 Jun 2026 16:22:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1007B40963B
+	for <linux-cxl@vger.kernel.org>; Mon, 15 Jun 2026 16:23:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781540552; cv=none; b=m6j/dnhYYhXhUv5DUF+J8hllSLaoxJxsSM77SN+45KBIHjIoVifAXyw2aMK26CMjbfsWISSoW6StpSz5NUrbKhew3Z/MQki9ZeFv3p7DWSDtyjaitGCbE+mTOzenbTl6vxMP0BllFC9175MAoh+krZk/gzBkSmVtDJ7TiIfZbGg=
+	t=1781540641; cv=none; b=bQXWQEo53DFO91gkgJJBNfQwIGQY9n07G3V2P8V9PU7aKj06FKCq/M3h9rvZVkIhc1dhS2xjVciByBjMcpSXg0ogkDKCoVnrRblkooKGVjVttWiqzMdu0DHSB8sPDpVcBzpZpYBenc1z/blPCb5vDHhCrECbxtuxgT3O2T8q1O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781540552; c=relaxed/simple;
-	bh=Tti0QoFn0uAn17yqwCIlksdusiJ1bXCa7YiDO1qhuZs=;
+	s=arc-20240116; t=1781540641; c=relaxed/simple;
+	bh=CEtX8CrY28fIZDUeOe7MoWYaAWVYHYf4cqx/FyNnnqY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=qbGBcKi4/Ovizw+4120CUVPmsTJpy9N8SZ8U0okvAwSK7P6IYqqq/p4hoSYS7b+f9Q5n0WT8IbTjmmkB/E26TE01Td9k4aEbpL3kG3G9QVUIjKODupqYyUwh9zYtLkroSV2uVoWug2j/9Og1nScFzXen5bIa4o35GEbeutEuIOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fPm9c5nB; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=IzG35bARWKevxOeWesrx+nNXVyd3n51xG65Pr+9d51+JsL9ltymelyaIBmeo0lbp2BNvnDqz0mKG5TyhCUYysW+wDOv7wriLoorO52Z/nls6UYWqlJPT/zosAy13/POSqmRnjxWlyCmXHANI5D2kkZx2l+49pKCadsBZdFFccLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HSIwU6gk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fPm9c5nB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F18F01F000E9;
-	Mon, 15 Jun 2026 16:22:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HSIwU6gk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AAA41F000E9;
+	Mon, 15 Jun 2026 16:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781540551;
-	bh=PGfo7RNd1w00NTrCxdZpNo3++pcVh0szu5o44LDACgs=;
+	s=k20260515; t=1781540639;
+	bh=ccalhYQp8AtTpLEHVVJFDSIBsgvuJ3stiUERmWA3ipA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fPm9c5nBt20eBMIWJFRL2GTIS273bCbz+FE+66dy1PxcvLEN70wmZ8JhgqmZApYTm
-	 ck3Ao7qYxerrUw9ykQL79+JLJXZ1osKCEXwo5sdsLMmtOWlYp5xBYKVO2YAYcPYW8G
-	 DUocl+Vx98NAu+iz48GWexkTd2Z11ApEA/JMRLMzTJ4NoJgz1drdEYw8fG1feUhXT2
-	 15K4ZKxyON5d0AJgjDz/nbJNBLa6CIMh1uKo7oP23DsQ6ACYrflhkRWr0mSD35MNDc
-	 oXcquTvI9ZBMhVKYQU33yDc21jj0sqy8bhVztFpYloacI99v3hvw/ORvWLytzbEJkQ
-	 t8OHwg0l/Glpw==
+	b=HSIwU6gk1/EZtVwOZjyerDkaYL7YsmpzMaRWp7zxxGHvV/r71Mq/RUdaFKZFLuYnj
+	 Qh6UfneR0HFigCYo5j+EI6SKzVEg4mM0gOApIJQpbzTsQl5dbBGPnskYHp5cKKbR3g
+	 Kfz6aJ0P1im504LfXfVkbau9wBRK3GTz7CzokIFZ41dsJFOnUAgr1C1o1xIycXAdJS
+	 44XBFtidpXpZcdeR58zoYwkczDe+me2BG89XtdxDIDCfPIcOu8fqAjespWupWltgSg
+	 J+GyRo0kpGc9iQhR7rLd626RKq4/JbYidEq59nPy8olO9MF8WVAQl0jeT55qlv/vB0
+	 mMO0QUFe+fHTw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V6 05/10] dax/fsdev: clear pgmap ops and owner on unbind
+Subject: Re: [PATCH V6 09/10] dax: fix holder_ops race in fs_put_dax()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "John Groves" <john@jagalactic.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <0100019ecc094b6e-fc163bde-0396-4a33-909f-fb88e740be27-000000@email.amazonses.com>
-References: <0100019ecc094b6e-fc163bde-0396-4a33-909f-fb88e740be27-000000@email.amazonses.com>
+In-Reply-To: <0100019ecc09dcab-2f4aa175-0b84-4b36-9e54-ebff302ebb0a-000000@email.amazonses.com>
+References: <0100019ecc09dcab-2f4aa175-0b84-4b36-9e54-ebff302ebb0a-000000@email.amazonses.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 16:22:30 +0000
-Message-Id: <20260615162230.F18F01F000E9@smtp.kernel.org>
+Date: Mon, 15 Jun 2026 16:23:58 +0000
+Message-Id: <20260615162359.8AAA41F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
-New issues:
-- [High] Incorrect devres registration order leaves an error path unprotect=
-ed and introduces a concurrent NULL pointer dereference during unbind.
-
 Pre-existing issues:
-- [High] Prematurely clearing folio state on unbind can corrupt memory for =
-concurrent users.
+- [High] Lack of synchronization between fs_put_dax() and dax_holder_notify=
+_failure() leads to a Use-After-Free or NULL pointer dereference in the fil=
+esystem notification callback.
 --
 
-commit 7c895b5292c660c81442978247753fce9d42653f
+commit a0977fb8b9025fac426e421985dcf37f0776980d
 Author: John Groves <John@Groves.net>
-Subject: dax/fsdev: clear pgmap ops and owner on unbind
 
-This commit registers a devm action to clear pgmap->ops and pgmap->owner
-on unbind. This prevents stale handlers from being executed if the static
-device is later rebound to another driver or if the module is unloaded.
+dax: fix holder_ops race in fs_put_dax()
 
-> diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
-> index 0fd5e1293d725..68a4369562f70 100644
-> --- a/drivers/dax/fsdev.c
-> +++ b/drivers/dax/fsdev.c
+This commit attempts to fix a race in fs_put_dax() by clearing holder_ops
+before releasing holder_data. It also introduces a warning to catch cases
+where fs_put_dax() is called by something other than the current holder,
+while intentionally tolerating NULL results during device removal.
+
+> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+> index 433cd431a6c06..45f84b0eb909a 100644
+> --- a/drivers/dax/super.c
+> +++ b/drivers/dax/super.c
+> @@ -116,11 +116,47 @@ EXPORT_SYMBOL_GPL(fs_dax_get_by_bdev);
+> =20
+>  #if IS_ENABLED(CONFIG_FS_DAX)
 
 [ ... ]
 
-> @@ -306,6 +323,11 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
->  	if (IS_ERR(addr))
->  		return PTR_ERR(addr);
-> =20
-> +	/* Drop fsdev's pgmap->ops/owner on unbind so no stale ops survive. */
-> +	rc =3D devm_add_action_or_reset(dev, fsdev_clear_pgmap_ops, pgmap);
-> +	if (rc)
-> +		return rc;
+>  void fs_put_dax(struct dax_device *dax_dev, void *holder)
+>  {
+> -	if (dax_dev && holder &&
+> -	    cmpxchg(&dax_dev->holder_data, holder, NULL) =3D=3D holder)
+> -		dax_dev->holder_ops =3D NULL;
+> +	if (dax_dev && holder) {
+> +		void *prev;
 > +
+> +		/*
+> +		 * Clear holder_ops before releasing holder_data. A concurrent
+> +		 * dax_holder_notify_failure() that sees NULL ops returns
+> +		 * -EOPNOTSUPP cleanly. A concurrent fs_dax_get() that acquires
+> +		 * holder_data after the cmpxchg below is guaranteed to observe
+> +		 * holder_ops=3DNULL first (cmpxchg provides release ordering), so
+> +		 * its subsequent store of new ops will not be overwritten.
+> +		 */
+> +		WRITE_ONCE(dax_dev->holder_ops, NULL);
+> +		prev =3D cmpxchg(&dax_dev->holder_data, holder, NULL);
 
 [Severity: High]
-Does registering this action after devm_memremap_pages() cause an issue with
-the devres LIFO unbind order?
+This is a pre-existing issue, but does this lack of synchronization lead to=
+ a
+Use-After-Free or NULL pointer dereference in the filesystem notification
+callback?
 
-Since devres unwinds in reverse order, fsdev_clear_pgmap_ops() will run
-before the memory is unmapped by the devm_memremap_pages() release action.
-This means pgmap->ops and pgmap->owner are set to NULL while the memory map
-is still active and its per-CPU refcount is alive.
+dax_holder_notify_failure() executes under srcu_read_lock(&dax_srcu) and re=
+ads
+dax_dev->holder_ops to invoke the filesystem callback. Concurrently, during
+unmount, fs_put_dax() clears holder_ops and holder_data but returns without
+calling synchronize_srcu(&dax_srcu).
 
-If a hardware error occurs concurrently during unbind, could memory_failure=
-()
-evaluate pgmap_has_memory_failure() as true, but then dereference a newly
-NULL pgmap->ops?
+This allows the filesystem tear-down to proceed and free the xfs_mount
+structure while the notification callback is still running.
 
-mm/memory-failure.c:memory_failure_dev_pagemap() {
-    ...
-    if (pgmap_has_memory_failure(pgmap)) {
-        rc =3D pgmap->ops->memory_failure(pgmap, pfn, 1, flags);
-    ...
+Inside xfs_dax_notify_failure(), dax_holder() is called:
+
+fs/xfs/xfs_notify_failure.c:xfs_dax_notify_failure() {
+	struct xfs_mount *mp =3D dax_holder(dax_dev);
+
+	if (!(mp->m_super->s_flags & SB_BORN)) {
+	...
 }
 
-Similarly, could fsdev_pagemap_memory_failure() dereference a NULL dev_dax
-pointer since the owner was cleared early?
+If it sees the cleared holder_data, it returns NULL, leading to an immediate
+NULL pointer dereference on mp->m_super. If it fetches the pointer before it
+is cleared, it will access a freed xfs_mount, leading to a Use-After-Free.
 
-Also, if devm_memremap_pages() returns an error, the function returns early
-before this devm action is registered. Will the shared static pgmap retain
-the stale ops and owner pointers on this error path?
-
-Would moving this registration before devm_memremap_pages() fix both issues?
-
->  	/*
->  	 * Clear any stale compound folio state left over from a previous
->  	 * driver (e.g., device_dax with vmemmap_shift). Also register this
->  	 * as a devm action so folio state is cleared on unbind, ensuring
->  	 * clean pages for subsequent drivers (e.g., kmem for system-ram).
->  	 */
->  	fsdev_clear_folio_state(dev_dax);
->  	rc =3D devm_add_action_or_reset(dev, fsdev_clear_folio_state_action,
->  				      dev_dax);
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does the preexisting
-fsdev_clear_folio_state_action registration suffer from the same LIFO
-devres ordering issue?
-
-Because it is registered after devm_memremap_pages(), this action will
-also execute before the active page map references drop during unbind.
-
-Since fsdev_clear_folio_state() calls dax_folio_reset_order() to zero out
-folio->mapping and folio->share, could this corrupt memory if threads are
-performing direct I/O pins (e.g., via get_user_pages) and actively hold
-valid references to these pages as compound folios?
-
-Modifying folio metadata while the pages are actively pinned could lead to
-refcount imbalances when concurrent users eventually unpin the folios.
-
-Should this action also be moved before devm_memremap_pages()?
+Is it necessary to add synchronize_srcu(&dax_srcu) here to wait for in-flig=
+ht
+SRCU readers before returning?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0100019ecc080a68-8d=
-c0c99f-ab17-4aa9-83d9-490e9c97ac2e-000000@email.amazonses.com?part=3D5
+c0c99f-ab17-4aa9-83d9-490e9c97ac2e-000000@email.amazonses.com?part=3D9
