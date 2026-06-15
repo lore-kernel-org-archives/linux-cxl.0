@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1007B40963B
-	for <linux-cxl@vger.kernel.org>; Mon, 15 Jun 2026 16:23:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327F0409630
+	for <linux-cxl@vger.kernel.org>; Mon, 15 Jun 2026 16:25:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781540641; cv=none; b=bQXWQEo53DFO91gkgJJBNfQwIGQY9n07G3V2P8V9PU7aKj06FKCq/M3h9rvZVkIhc1dhS2xjVciByBjMcpSXg0ogkDKCoVnrRblkooKGVjVttWiqzMdu0DHSB8sPDpVcBzpZpYBenc1z/blPCb5vDHhCrECbxtuxgT3O2T8q1O4=
+	t=1781540703; cv=none; b=CH4UrYQar9yGrYlogVuSekoSjaPXwEAU3rEguebOcsQ8g0lQj6Nuu9H0R8KKUN41q1HxDQWaWLBctJjcn/Dwyf1i5wsW94AcMXlXc9sJy30E8fYQWCVC4NpqrAaB9Id3c15J/VRz3MlhiwDs2598jUn13fhJGuXX8RLqgxjMtlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781540641; c=relaxed/simple;
-	bh=CEtX8CrY28fIZDUeOe7MoWYaAWVYHYf4cqx/FyNnnqY=;
+	s=arc-20240116; t=1781540703; c=relaxed/simple;
+	bh=AJV5RDAa7vxGroyRlgZKl/eMRDw/u9rZS3qCiYKzCIo=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=IzG35bARWKevxOeWesrx+nNXVyd3n51xG65Pr+9d51+JsL9ltymelyaIBmeo0lbp2BNvnDqz0mKG5TyhCUYysW+wDOv7wriLoorO52Z/nls6UYWqlJPT/zosAy13/POSqmRnjxWlyCmXHANI5D2kkZx2l+49pKCadsBZdFFccLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HSIwU6gk; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=KcJ9jyrMJg5MjEmuzY73ieODpuQFAtFrwD7UgkF2SlHwmkefAyO+u4Z50o4eWYLtx+KkzPHLLipEwIkupjVxDLJz89V2m9wx5oZeTAzreax1maJedBrcMhySfZnLdBAC+2OK8bK3HIYRZqopm1hfbykuKdmTuIcT0U0i7XsPvE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4Dl+XTm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HSIwU6gk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AAA41F000E9;
-	Mon, 15 Jun 2026 16:23:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4Dl+XTm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92D1C1F000E9;
+	Mon, 15 Jun 2026 16:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781540639;
-	bh=ccalhYQp8AtTpLEHVVJFDSIBsgvuJ3stiUERmWA3ipA=;
+	s=k20260515; t=1781540701;
+	bh=oe4NXm5c1ALTSzG+B4Jbj6aBAEAiJaeZGHBzWlFiUss=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HSIwU6gk1/EZtVwOZjyerDkaYL7YsmpzMaRWp7zxxGHvV/r71Mq/RUdaFKZFLuYnj
-	 Qh6UfneR0HFigCYo5j+EI6SKzVEg4mM0gOApIJQpbzTsQl5dbBGPnskYHp5cKKbR3g
-	 Kfz6aJ0P1im504LfXfVkbau9wBRK3GTz7CzokIFZ41dsJFOnUAgr1C1o1xIycXAdJS
-	 44XBFtidpXpZcdeR58zoYwkczDe+me2BG89XtdxDIDCfPIcOu8fqAjespWupWltgSg
-	 J+GyRo0kpGc9iQhR7rLd626RKq4/JbYidEq59nPy8olO9MF8WVAQl0jeT55qlv/vB0
-	 mMO0QUFe+fHTw==
+	b=S4Dl+XTmpp/rrCAW6zbn6N19NUMKydzAptvF4sC0Bn0YZ4UNgDI+myanQiwkXSUBb
+	 oZTkj6ptp37Xnd5VBFpW/wkJCWNYaeFupYaO6G4nkqLKyWlH86fg8xLUiorYNoyELy
+	 57+icuCy3+V9vzX3/U+euWDAwFIl7LSVE6lDsiNEcUI5sNyfmmJ/bwG53roSQu8KuD
+	 hCS4ObtyYXRSqNPt6f6b3d0AFm7aVCTg11tSKAWWymc9brLiAs2Ek0ga3jSoTJXhKx
+	 bLX854MdYnsk6jVlTCtstz7c9BeyrjO1a/XYmlPYyBL3ryEopZMEO2L179caUXCOpT
+	 96GXHbiFhyw6w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V6 09/10] dax: fix holder_ops race in fs_put_dax()
+Subject: Re: [PATCH V6 03/10] dax/fsdev: clear vmemmap_shift when binding
+ static pgmap
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "John Groves" <john@jagalactic.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <0100019ecc09dcab-2f4aa175-0b84-4b36-9e54-ebff302ebb0a-000000@email.amazonses.com>
-References: <0100019ecc09dcab-2f4aa175-0b84-4b36-9e54-ebff302ebb0a-000000@email.amazonses.com>
+In-Reply-To: <0100019ecc090eea-7c46f51e-5393-402c-850d-78059bb6d343-000000@email.amazonses.com>
+References: <0100019ecc090eea-7c46f51e-5393-402c-850d-78059bb6d343-000000@email.amazonses.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 16:23:58 +0000
-Message-Id: <20260615162359.8AAA41F000E9@smtp.kernel.org>
+Date: Mon, 15 Jun 2026 16:25:01 +0000
+Message-Id: <20260615162501.92D1C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -47,82 +48,81 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Lack of synchronization between fs_put_dax() and dax_holder_notify=
-_failure() leads to a Use-After-Free or NULL pointer dereference in the fil=
-esystem notification callback.
+- [High] Dangling pointer in `dev_dax->pgmap` on probe failure for dynamic =
+DAX devices permanently breaks subsequent driver binds.
 --
 
-commit a0977fb8b9025fac426e421985dcf37f0776980d
+commit fd456f28017271824ad7d531a3c134c95b20881f
 Author: John Groves <John@Groves.net>
 
-dax: fix holder_ops race in fs_put_dax()
+dax/fsdev: clear vmemmap_shift when binding static pgmap
 
-This commit attempts to fix a race in fs_put_dax() by clearing holder_ops
-before releasing holder_data. It also introduces a warning to catch cases
-where fs_put_dax() is called by something other than the current holder,
-while intentionally tolerating NULL results during device removal.
+This commit clears the vmemmap_shift on the shared pgmap for static DAX
+devices when rebinding from device_dax to fsdev_dax. This explicitly
+zeroes the shift before devm_memremap_pages() so the vmemmap is built
+for order-0 folios.
 
-> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
-> index 433cd431a6c06..45f84b0eb909a 100644
-> --- a/drivers/dax/super.c
-> +++ b/drivers/dax/super.c
-> @@ -116,11 +116,47 @@ EXPORT_SYMBOL_GPL(fs_dax_get_by_bdev);
+> diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
+> --- a/drivers/dax/fsdev.c
+> +++ b/drivers/dax/fsdev.c
+> @@ -237,6 +237,7 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
+>  		}
 > =20
->  #if IS_ENABLED(CONFIG_FS_DAX)
-
-[ ... ]
-
->  void fs_put_dax(struct dax_device *dax_dev, void *holder)
->  {
-> -	if (dax_dev && holder &&
-> -	    cmpxchg(&dax_dev->holder_data, holder, NULL) =3D=3D holder)
-> -		dax_dev->holder_ops =3D NULL;
-> +	if (dax_dev && holder) {
-> +		void *prev;
-> +
-> +		/*
-> +		 * Clear holder_ops before releasing holder_data. A concurrent
-> +		 * dax_holder_notify_failure() that sees NULL ops returns
-> +		 * -EOPNOTSUPP cleanly. A concurrent fs_dax_get() that acquires
-> +		 * holder_data after the cmpxchg below is guaranteed to observe
-> +		 * holder_ops=3DNULL first (cmpxchg provides release ordering), so
-> +		 * its subsequent store of new ops will not be overwritten.
-> +		 */
-> +		WRITE_ONCE(dax_dev->holder_ops, NULL);
-> +		prev =3D cmpxchg(&dax_dev->holder_data, holder, NULL);
+>  		pgmap =3D dev_dax->pgmap;
+> +		pgmap->vmemmap_shift =3D 0;
 
 [Severity: High]
-This is a pre-existing issue, but does this lack of synchronization lead to=
- a
-Use-After-Free or NULL pointer dereference in the filesystem notification
-callback?
+This is a pre-existing issue, but while reviewing the probe logic here,
+could a dangling pointer occur during probe failure for dynamic DAX
+devices in drivers/dax/device.c?
 
-dax_holder_notify_failure() executes under srcu_read_lock(&dax_srcu) and re=
-ads
-dax_dev->holder_ops to invoke the filesystem callback. Concurrently, during
-unmount, fs_put_dax() clears holder_ops and holder_data but returns without
-calling synchronize_srcu(&dax_srcu).
+Looking at dev_dax_probe() in drivers/dax/device.c, dev_dax->pgmap is
+assigned to a devm-managed allocation:
 
-This allows the filesystem tear-down to proceed and free the xfs_mount
-structure while the notification callback is still running.
-
-Inside xfs_dax_notify_failure(), dax_holder() is called:
-
-fs/xfs/xfs_notify_failure.c:xfs_dax_notify_failure() {
-	struct xfs_mount *mp =3D dax_holder(dax_dev);
-
-	if (!(mp->m_super->s_flags & SB_BORN)) {
-	...
+drivers/dax/device.c:dev_dax_probe() {
+    ...
+    dev_dax->pgmap =3D pgmap;
+    ...
 }
 
-If it sees the cleared holder_data, it returns NULL, leading to an immediate
-NULL pointer dereference on mp->m_super. If it fetches the pointer before it
-is cleared, it will access a freed xfs_mount, leading to a Use-After-Free.
+If a subsequent devm operation fails, such as:
 
-Is it necessary to add synchronize_srcu(&dax_srcu) here to wait for in-flig=
-ht
-SRCU readers before returning?
+drivers/dax/device.c:dev_dax_probe() {
+    ...
+    if (!devm_request_mem_region(dev, range->start,
+                                 range_len(range), dev_name(dev))) {
+        dev_warn(dev, "mapping%d: %#llx-%#llx could not reserve range\n",
+                 i, range->start, range->end);
+        return -EBUSY;
+    }
+    ...
+}
+
+The probe aborts and devres frees the pgmap. However, since dev_dax_kill
+has not yet been registered as a devm action, dev_dax->pgmap is not reset
+to NULL.
+
+If a subsequent probe attempt occurs, would it hit this earlier check and
+permanently fail by evaluating the dangling pointer?
+
+drivers/dax/device.c:dev_dax_probe() {
+    ...
+    if (dev_dax->pgmap) {
+        dev_warn(dev,
+                 "dynamic-dax with pre-populated page map\n");
+        return -EINVAL;
+    }
+    ...
+}
+
+Since the underlying dev_dax structure persists on the DAX bus, does this
+effectively block the dynamic DAX device from being bound until it is
+explicitly deleted and recreated?
+
+>  	} else {
+>  		size_t pgmap_size;
+>
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0100019ecc080a68-8d=
-c0c99f-ab17-4aa9-83d9-490e9c97ac2e-000000@email.amazonses.com?part=3D9
+c0c99f-ab17-4aa9-83d9-490e9c97ac2e-000000@email.amazonses.com?part=3D3
