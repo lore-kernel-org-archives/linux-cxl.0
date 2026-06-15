@@ -1,199 +1,589 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from rusty.tulip.relay.mailchannels.net (rusty.tulip.relay.mailchannels.net [23.83.218.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB935404BCE;
-	Mon, 15 Jun 2026 15:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25B8405C40
+	for <linux-cxl@vger.kernel.org>; Mon, 15 Jun 2026 15:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.218.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781537294; cv=none; b=lDjQzr5MJLz7xYuXnm0YKzmT8jyBkPuXQkgR6RzzXntuULZlAMQorN7rXe96wllJw02i/uQCu8pGSbqYVj20Krnw/Ts/uIh1MtaoLaLKtcERvdy8jLYabq7pOSagta/511VW2bX7yCSEV30C2r/OvFWp0VYL+tX8afHMrVTT4e0=
+	t=1781537561; cv=none; b=Xc71ffuxcesVtuull5uSg0J2QsmSDoFpnlnmw/W8/bOtFauskAx1nf3x795km4h2o/LuqTr9YojVfridbAKnmZd4SAsYF7C2T2TTInHBiOwq+TFgtwJ0w+MynDQ2ln6jB/gafFg/kpzuVrcK0ZvAxswuhS8DPb6QNPwzc/WDLko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781537294; c=relaxed/simple;
-	bh=BoTtY+5WFCKyM/nJth0Ri9/adaIwRPOC6uGO8MF3zLs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WQd0Wwtw2CD46QUbn3sKpcU13XCugA1EB2fTTl9Xa6OIROyqMtt5cVfBQ6+vMyGRfnPQRrUjI7txL1r2P+sjWbH3KlOrTvvot0Si6EpNMg62V1dHpnzy97zPtgT8xFH/f1MhQsONCn/Pp/QUm99oM88TxJP/XBP+P+MpXOnen+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y81Np9cz; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781537561; c=relaxed/simple;
+	bh=iaLdE1+SWyfLAaF3T/1SnnPGO/q3RI2wNK5KyJeRqhA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CVbZOzMcK+xLZLj3G16+hEmGPnC42STeezjEh/ls9s85YAO0x3NGEUPbTQrr3E8COu+8I62OE9vZD+gBKQuxUCIm4VQiEbUXLw7TAVOAibrpyogQvGv62gJoKr8u4+0jOPy9BIcowbpU3Yx/8TMCQU4oc3cX/n+ud2azr+RO8/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=DtqORRCs; arc=none smtp.client-ip=23.83.218.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y81Np9cz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 588391F000E9;
-	Mon, 15 Jun 2026 15:27:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781537293;
-	bh=BSNMJxqwkwoTqeJfSaHajKXGyp3UZ1tNKxLN3vqI2Ig=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Y81Np9czIc3cjUXPKriZfo/1HV+7/NUQLqsciOax4hLZKuRqaQ9npdqUJvefURjsu
-	 mZ6XBQ8zSK7d00EcnLrpjppbQD9ppVyP6sRo1WhHh4oGv8j/UkfTmY9dGaPwy34BjQ
-	 7OSQp4gPIA0UxkWes4k0VA6NOTw+5iAAAA/XOLntaxBnCPjCc0U7upqZk4mOHvxlEx
-	 VT0du4RCMg/ExAzkPcJjBE5cpmA5Fk/E5L7VJ4eaZ9gu8f3bWWJehegZ3r+4OC9QAX
-	 S+zcyQTg42FgB2nfy0zLoMlJSWkhFmxi6piZSbKw7bRPBtPQpzKDKTFTe6xsbWs1JP
-	 H6LOYFggYwoFg==
-Message-ID: <94d6c446-a8a6-485e-bb3c-ee809ebb1d3b@kernel.org>
-Date: Mon, 15 Jun 2026 17:27:57 +0200
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="DtqORRCs"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 2F9804C1DAA;
+	Mon, 15 Jun 2026 14:56:03 +0000 (UTC)
+Received: from pdx1-sub0-mail-a208.dreamhost.com (trex-green-0.trex.outbound.svc.cluster.local [100.96.6.86])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 1E3664C24AB;
+	Mon, 15 Jun 2026 14:56:02 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Plucky-Spot: 6eb77b8a24a1d68d_1781535363153_1042553860
+X-MC-Loop-Signature: 1781535363153:2546548895
+X-MC-Ingress-Time: 1781535363153
+Received: from pdx1-sub0-mail-a208.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.96.6.86 (trex/7.1.5);
+	Mon, 15 Jun 2026 14:56:03 +0000
+Received: from offworld.lan (unknown [138.84.34.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a208.dreamhost.com (Postfix) with ESMTPSA id 4gfCqM0sHlz1gK;
+	Mon, 15 Jun 2026 07:55:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1781535361;
+	bh=qlIFbAzBh2qnt0nMEWCH6bSkV4Vla2+4eCTbvGuIUmU=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=DtqORRCsQ7AyBQb5P+450YZC6aIGwT/ukQHOxNgu0GFGuoUPpzbeVa+Gfhxo7IaHD
+	 5gMvhxU8KY6VJqTYcfHkPOap/dyc0VvfykwOI3/5LTzs8DarbwiS+Ju6ISOZ2DYPvM
+	 VltxURRbkfRh3Hcy3s1snFpS8bMv4VJCFKa1vov4JKv5SfLzh2D6EYZ9xbo1ZcPfR9
+	 1zei8NnD4jcScsBCHRVxhlP1uMZcC0l7DmhRWSefBKdhFTedoRRfSPakSUMsqWfnhZ
+	 TqhhY7JoTNhcmDpXNHJchFGuh5mm2douDoBXTk8wt2WZR/bKKpQLKDVRIAnTBgiNXh
+	 7kGeRsMrrSJkw==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: dave.jiang@intel.com,
+	djbw@kernel.org
+Cc: jic23@kernel.org,
+	benjamin.cheatham@amd.com,
+	icheng@nvidia.com,
+	alucerop@amd.com,
+	alison.schofield@intel.com,
+	gourry@gourry.net,
+	dongjoo.seo1@samsung.com,
+	dave@stgolabs.net,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH v5 2/5] cxl/pci: Add BI topology enable/disable
+Date: Mon, 15 Jun 2026 07:55:26 -0700
+Message-Id: <20260615145529.13848-3-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260615145529.13848-1-dave@stgolabs.net>
+References: <20260615145529.13848-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Lsf-pc] [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory
- Nodes (w/ Compressed RAM)
-Content-Language: en-US
-To: "David Hildenbrand (Arm)" <david@kernel.org>,
- Gregory Price <gourry@gourry.net>
-Cc: Balbir Singh <balbirs@nvidia.com>, lsf-pc@lists.linux-foundation.org,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- cgroups@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
- kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
- dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
- akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
- joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
- ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
- yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
- linux@rasmusvillemoes.dk, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
- mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
- baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
- dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
- muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
- jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
- pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
- riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
- roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
- shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
- zhengqi.arch@bytedance.com, terry.bowman@amd.com,
- Matthew Wilcox <willy@infradead.org>
-References: <ag6XyvxR-NU5rGn-@parvat>
- <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F> <ah47NNhuiClgGCdn@parvat>
- <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F> <ah-0CyZurn5D1ezY@parvat>
- <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
- <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
- <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
- <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
- <ainFROZ3WrGioyuY@gourry-fedora-PF4VCD3F>
- <aiwl4kCG814dpX7L@gourry-fedora-PF4VCD3F>
- <9f1815b0-896b-44ab-9e6d-9316d8f11033@kernel.org>
- <fdbdc9f7-d142-4880-b429-065d5056cabb@kernel.org>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <fdbdc9f7-d142-4880-b429-065d5056cabb@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/15/26 17:18, David Hildenbrand (Arm) wrote:
-> On 6/15/26 16:38, Vlastimil Babka (SUSE) wrote:
->> On 6/12/26 17:29, Gregory Price wrote:
->>> On Wed, Jun 10, 2026 at 04:12:52PM -0400, Gregory Price wrote:
->>>> ... snip ...
->>>>
->>>> I will still probably send the next RFC version tomorrow or friday,
->>>> as I want to get some eyes on the __GFP_PRIVATE-less pattern.
->>>>
->>>> Also, I made a new `anondax` driver which enables userland testing
->>>> of this functionality without any specialty hardware.
->>>>
->>>
->>> (apologies for the length of this email: this will all be covered in
->>> the coming cover letter, but I just wanted to share a bit of a preview)
->>>
->>> ===
->>>
->>> Just another small update - I am planning to post the RFC today once i
->>> get some mild cleanup done.  It will be based on the dax atomic hotplug
->>>
->>> https://lore.kernel.org/linux-mm/20260605211911.2160954-1-gourry@gourry.net/
->>>
->>> But a couple specific details regarding the memalloc pieces that i've
->>> learned the past couple of days playing with it.
->>>
->>> 1) memalloc_folio is required to ensure non-folio allocations don't land
->>>    on the private node, even if it happens within a memalloc_private
->>>    context.  Since memalloc_folio may be useful in contexts outside of
->>>    private nodes, I kept this as a separate flag.
->>>
->>>    If we think there will *never* be additional users of memalloc_folio,
->>>    then we could fold _folio into _private to save the flag for now and
->>>    add it back when we actually need it.
->>>
->>> 2) memalloc_private is needed to unlock private nodes, but in the
->>>    original NOFALLBACK-only design, you also needed __GFP_THISNODE.
->>>
->>>    This is *highly* restrictive.  I found when playing with mbind that
->>>    MPOL_BIND + __GFP_THISNODE generates a WARN (valid WARN, it normally
->>>    implies a bug). 
->>>
->>>    That leads me to #3
->> 
->> I think the memalloc approach is dangerous due to unexpected nesting. There
->> might be nested page allocations in page allocation itself (due to some
->> debugging option). But also interrupts do not change what "current" points
->> to. Suddenly those could start requesting folios and/or private nodes and be
->> surprised, I'm afraid.
-> 
-> Yeah, we'd need some way to distinguish the main allocation from these other
-> (nested) allocations.
+Implement cxl_bi_setup(), which walks the CXL port topology to enable
+BI flows on the device and every component in the path between the
+device and the root port. The walk is two-pass: first to verify each
+component advertises BI capability, then to write BI Enable on each
+dport's BI Decoder Control register and on the device. On failure
+during the enable pass, partially-enabled dports are rolled back.
 
-That goes against the very principle of scopes. And I don't see how, except
-via a ... flag to the main allocation :D
+The teardown counterpart, cxl_bi_dealloc(), runs automatically on
+cxl_mem unbind.
 
->> 
->> The memalloc scopes only work well when they restrict the context wrt
->> reclaim, and allocations in IRQ have to be already restricted heavily
->> (atomic) so further memalloc restrictions don't do anything in practice. But
->> to make them change other aspects of the allocations like this won't work.
-> 
-> I was assuming that memalloc_pin_save() would already violate that, but really
-> it only restricts where movable allocations land, and that doesn't matter for
-> other kernel allocations.
+cxl_bi_setup() does not touch HDM decoder configuration -- the BI bit
+in each decoder is programmed separately at commit time. After a
+successful setup the device is BI-capable but not yet using BI for
+decode coherence.
 
-Hm yeah its suboptimal, as it can turn a movable allocation unmovable. But
-shouldn't cause outright bugs.
+Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/cxl/core/pci.c | 366 +++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h      |  28 ++++
+ drivers/cxl/mem.c      |   4 +
+ include/cxl/cxl.h      |   2 +
+ 4 files changed, 400 insertions(+)
 
-> Do you see any other way to make something like an allocation context work, and
-> avoid introducing more GFP flags?
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index e4338fd7e01b..cdb741d09b9e 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -2,11 +2,13 @@
+ /* Copyright(c) 2021 Intel Corporation. All rights reserved. */
+ #include <linux/units.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
++#include <linux/iopoll.h>
+ #include <linux/device.h>
+ #include <linux/delay.h>
+ #include <linux/pci.h>
+ #include <linux/pci-doe.h>
+ #include <linux/aer.h>
++#include <linux/string_choices.h>
+ #include <cxlpci.h>
+ #include <cxlmem.h>
+ #include <cxl.h>
+@@ -926,3 +928,367 @@ int cxl_port_get_possible_dports(struct cxl_port *port)
+ 
+ 	return ctx.count;
+ }
++
++/*
++ * BI requires 256B Flit operation on the link. RP/DSP/endpoint must
++ * also have the BI Decoder cap mapped (@bi); for USPs the BI RT cap
++ * is optional per CXL 4.0 8.2.4.26, so absent @bi is allowed.
++ */
++static bool cxl_is_bi_capable(struct pci_dev *pdev, void __iomem *bi)
++{
++	if (!cxl_pci_flit_256(pdev))
++		return false;
++	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_UPSTREAM && !bi) {
++		dev_dbg(&pdev->dev, "No BI Decoder registers.\n");
++		return false;
++	}
++	return true;
++}
++
++/* limit any insane timeouts from hw */
++#define CXL_BI_COMMIT_MAXTMO_US (5 * USEC_PER_SEC)
++
++static unsigned long __cxl_bi_get_timeout_us(struct device *dev,
++					     unsigned int scale,
++					     unsigned int base)
++{
++	static const unsigned long scale_tbl[] = {
++		1, 10, 100, 1000, 10000, 100000, 1000000, 10000000,
++	};
++
++	if (scale >= ARRAY_SIZE(scale_tbl) || !base) {
++		dev_dbg(dev, "Invalid BI commit timeout: scale=%u base=%u\n",
++			scale, base);
++		return CXL_BI_COMMIT_MAXTMO_US;
++	}
++
++	return scale_tbl[scale] * base;
++}
++
++static int __cxl_bi_wait_commit(struct device *dev, void __iomem *status_reg,
++				u32 committed_bit, u32 err_bit,
++				unsigned int scale, unsigned int base)
++{
++	unsigned long tmo_us, poll_us;
++	ktime_t start;
++	u32 status;
++	int rc;
++
++	tmo_us = min_t(unsigned long, CXL_BI_COMMIT_MAXTMO_US,
++		       __cxl_bi_get_timeout_us(dev, scale, base));
++	poll_us = max_t(unsigned long, tmo_us / 10, 1); /* ~10% */
++	start = ktime_get();
++
++	rc = readx_poll_timeout(readl, status_reg, status,
++				status & (committed_bit | err_bit),
++				poll_us, tmo_us);
++	if (rc) {
++		dev_err(dev, "BI-ID commit timed out (%luus)\n", tmo_us);
++		return rc; /* -ETIMEDOUT */
++	}
++
++	if (status & err_bit) {
++		dev_err(dev, "BI-ID commit rejected by hardware\n");
++		return -EIO;
++	}
++
++	dev_dbg(dev, "BI-ID commit wait took %lluus\n",
++		ktime_to_us(ktime_sub(ktime_get(), start)));
++	return 0;
++}
++
++/* BI RT only exists on switch upstream ports. */
++static int __cxl_bi_commit_rt(struct device *dev, void __iomem *bi)
++{
++	u32 status, ctrl;
++	unsigned int scale, base;
++
++	if (!FIELD_GET(CXL_BI_RT_CAPS_EXPLICIT_COMMIT_REQ,
++		       readl(bi + CXL_BI_RT_CAPS_OFFSET)))
++		return 0;
++
++	ctrl = readl(bi + CXL_BI_RT_CTRL_OFFSET);
++	writel(ctrl & ~CXL_BI_RT_CTRL_BI_COMMIT, bi + CXL_BI_RT_CTRL_OFFSET);
++	writel(ctrl | CXL_BI_RT_CTRL_BI_COMMIT, bi + CXL_BI_RT_CTRL_OFFSET);
++
++	status = readl(bi + CXL_BI_RT_STATUS_OFFSET);
++	scale = FIELD_GET(CXL_BI_RT_STATUS_BI_COMMIT_TM_SCALE, status);
++	base = FIELD_GET(CXL_BI_RT_STATUS_BI_COMMIT_TM_BASE, status);
++
++	return __cxl_bi_wait_commit(dev, bi + CXL_BI_RT_STATUS_OFFSET,
++				    CXL_BI_RT_STATUS_BI_COMMITTED,
++				    CXL_BI_RT_STATUS_BI_ERR_NOT_COMMITTED,
++				    scale, base);
++}
++
++static int __cxl_bi_commit_decoder(struct device *dev, void __iomem *bi)
++{
++	u32 status, ctrl;
++	unsigned int scale, base;
++
++	if (!FIELD_GET(CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ,
++		       readl(bi + CXL_BI_DECODER_CAPS_OFFSET)))
++		return 0;
++
++	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
++	writel(ctrl & ~CXL_BI_DECODER_CTRL_BI_COMMIT,
++	       bi + CXL_BI_DECODER_CTRL_OFFSET);
++	writel(ctrl | CXL_BI_DECODER_CTRL_BI_COMMIT,
++	       bi + CXL_BI_DECODER_CTRL_OFFSET);
++
++	status = readl(bi + CXL_BI_DECODER_STATUS_OFFSET);
++	scale = FIELD_GET(CXL_BI_DECODER_STATUS_BI_COMMIT_TM_SCALE, status);
++	base = FIELD_GET(CXL_BI_DECODER_STATUS_BI_COMMIT_TM_BASE, status);
++
++	return __cxl_bi_wait_commit(dev, bi + CXL_BI_DECODER_STATUS_OFFSET,
++				    CXL_BI_DECODER_STATUS_BI_COMMITTED,
++				    CXL_BI_DECODER_STATUS_BI_ERR_NOT_COMMITTED,
++				    scale, base);
++}
++
++/* Enable or dealloc BI-ID changes in the given level of the topology. */
++static int __cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable)
++{
++	struct pci_dev *pdev = to_pci_dev(dport->dport_dev);
++	void __iomem *bi = dport->regs.bi_decoder;
++	struct cxl_port *port = dport->port;
++	u32 ctrl, value;
++	int rc;
++
++	guard(device)(&port->dev);
++	if (!bi)
++		return -EINVAL;
++
++	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
++
++	switch (pci_pcie_type(pdev)) {
++	case PCI_EXP_TYPE_ROOT_PORT:
++		if (enable) {
++			/*
++			 * There is no point of failure from here on,
++			 * BI will be enabled on the endpoint device.
++			 */
++			dport->nr_bi++;
++
++			if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_FW, ctrl) &&
++			    !FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl))
++				return 0;
++
++			value = ctrl | CXL_BI_DECODER_CTRL_BI_FW;
++			value &= ~CXL_BI_DECODER_CTRL_BI_ENABLE;
++		} else {
++			if (WARN_ON_ONCE(dport->nr_bi == 0))
++				return -EINVAL;
++			if (--dport->nr_bi > 0)
++				return 0;
++
++			value = ctrl & ~(CXL_BI_DECODER_CTRL_BI_FW |
++					 CXL_BI_DECODER_CTRL_BI_ENABLE);
++		}
++
++		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
++		return 0;
++	case PCI_EXP_TYPE_DOWNSTREAM:
++		if (enable) {
++			value = ctrl & ~CXL_BI_DECODER_CTRL_BI_FW;
++			value |= CXL_BI_DECODER_CTRL_BI_ENABLE;
++		} else {
++			if (!FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl))
++				return 0;
++			value = ctrl & ~(CXL_BI_DECODER_CTRL_BI_FW |
++					 CXL_BI_DECODER_CTRL_BI_ENABLE);
++		}
++
++		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
++
++		rc = __cxl_bi_commit_decoder(dport->dport_dev, bi);
++		if (rc)
++			return rc;
++
++		if (port->regs.bi_rt)
++			return __cxl_bi_commit_rt(&port->dev, port->regs.bi_rt);
++		return 0;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int cxl_bi_ctrl_dport_enable(struct cxl_dport *dport)
++{
++	return __cxl_bi_ctrl_dport(dport, true);
++}
++
++static int cxl_bi_ctrl_dport_disable(struct cxl_dport *dport)
++{
++	return __cxl_bi_ctrl_dport(dport, false);
++}
++
++static int __cxl_bi_ctrl_endpoint(struct cxl_dev_state *cxlds, bool enable)
++{
++	struct cxl_port *endpoint = cxlds->cxlmd->endpoint;
++	void __iomem *bi = endpoint->regs.bi_decoder;
++	u32 ctrl, val;
++
++	if (!bi)
++		return -EINVAL;
++
++	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
++
++	if (enable) {
++		if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl)) {
++			if (cxlds->bi)
++				return 0;
++			dev_err(cxlds->dev,
++				"BI already enabled in hardware\n");
++			return -EBUSY;
++		}
++		val = ctrl | CXL_BI_DECODER_CTRL_BI_ENABLE;
++	} else {
++		if (!FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl)) {
++			if (!cxlds->bi)
++				return 0;
++			dev_err(cxlds->dev,
++				"BI already disabled in hardware\n");
++			return -EBUSY;
++		}
++		val = ctrl & ~CXL_BI_DECODER_CTRL_BI_ENABLE;
++	}
++
++	writel(val, bi + CXL_BI_DECODER_CTRL_OFFSET);
++	cxlds->bi = enable;
++
++	dev_dbg(cxlds->dev, "BI requests %s\n",
++		str_enabled_disabled(enable));
++
++	return 0;
++}
++
++static int cxl_bi_ctrl_endpoint_enable(struct cxl_dev_state *cxlds)
++{
++	return __cxl_bi_ctrl_endpoint(cxlds, true);
++}
++
++static int cxl_bi_ctrl_endpoint_disable(struct cxl_dev_state *cxlds)
++{
++	return __cxl_bi_ctrl_endpoint(cxlds, false);
++}
++
++/*
++ * devm teardown on cxl_mem unbind. Endpoint decoders may still be
++ * committed here (cxl_workqueue tears them down asynchronously), but
++ * memory access has been quiesced.
++ */
++static void cxl_bi_dealloc(void *data)
++{
++	struct cxl_dev_state *cxlds = data;
++	struct cxl_dport *dport_iter, *dport;
++	struct cxl_port *port_iter;
++
++	if (!dev_is_pci(cxlds->dev))
++		return;
++
++	struct cxl_port *port __free(put_cxl_port) =
++		cxl_pci_find_port(to_pci_dev(cxlds->dev), &dport);
++	if (!port || !cxlds->bi)
++		return;
++
++	scoped_guard(rwsem_read, &cxl_rwsem.region)
++		cxl_bi_ctrl_endpoint_disable(cxlds);
++
++	port_iter = port;
++	dport_iter = dport;
++	while (!is_cxl_root(port_iter)) {
++		int rc = cxl_bi_ctrl_dport_disable(dport_iter);
++
++		/* best effort */
++		if (rc)
++			dev_dbg(&port_iter->dev,
++				"BI dport disable failed: %d\n", rc);
++
++		dport_iter = port_iter->parent_dport;
++		port_iter = dport_iter->port;
++	}
++}
++
++int cxl_bi_setup(struct cxl_dev_state *cxlds)
++{
++	struct cxl_port *endpoint = cxlds->cxlmd->endpoint;
++	struct cxl_dport *dport_iter, *dport, *failed;
++	struct cxl_port *port_iter;
++	struct pci_dev *pdev;
++	int rc;
++
++	if (!dev_is_pci(cxlds->dev))
++		return 0;
++
++	pdev = to_pci_dev(cxlds->dev);
++	struct cxl_port *port __free(put_cxl_port) =
++		cxl_pci_find_port(pdev, &dport);
++
++	if (!port)
++		return -EINVAL;
++
++	if (!cxl_is_bi_capable(pdev, endpoint->regs.bi_decoder))
++		return 0;
++
++	/* walkup the topology twice, first to check, then to enable */
++	port_iter = port;
++	dport_iter = dport;
++	while (!is_cxl_root(port_iter)) {
++		/* check rp, dsp */
++		if (!cxl_is_bi_capable(to_pci_dev(dport_iter->dport_dev),
++				       dport_iter->regs.bi_decoder)) {
++			dev_dbg(cxlds->dev, "BI not supported by topology\n");
++			return 0;
++		}
++
++		/* check usp */
++		if (dev_is_pci(port_iter->uport_dev) &&
++		    pci_pcie_type(to_pci_dev(port_iter->uport_dev)) ==
++			    PCI_EXP_TYPE_UPSTREAM &&
++		    !cxl_is_bi_capable(to_pci_dev(port_iter->uport_dev),
++				       port_iter->regs.bi_rt)) {
++			dev_dbg(cxlds->dev, "BI not supported by USP\n");
++			return 0;
++		}
++
++		dport_iter = port_iter->parent_dport;
++		port_iter = dport_iter->port;
++	}
++
++	port_iter = port;
++	dport_iter = dport;
++	while (!is_cxl_root(port_iter)) {
++		rc = cxl_bi_ctrl_dport_enable(dport_iter);
++		if (rc)
++			goto err_rollback;
++
++		dport_iter = port_iter->parent_dport;
++		port_iter = dport_iter->port;
++	}
++
++	/* finally, enable BI on the device */
++	rc = cxl_bi_ctrl_endpoint_enable(cxlds);
++	if (rc)
++		goto err_rollback;
++
++	return devm_add_action_or_reset(&cxlds->cxlmd->dev,
++					cxl_bi_dealloc, cxlds);
++
++err_rollback:
++	/*
++	 * Undo all dports enabled so far, including the failed one.
++	 */
++	failed = dport_iter;
++	dport_iter = dport;
++	port_iter = port;
++	while (!is_cxl_root(port_iter)) {
++		cxl_bi_ctrl_dport_disable(dport_iter);
++		if (dport_iter == failed)
++			break;
++		dport_iter = port_iter->parent_dport;
++		port_iter = dport_iter->port;
++	}
++	return rc;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_bi_setup, "CXL");
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index 760f51b43891..89c0c6ce24a3 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -167,6 +167,31 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+ #define CXL_HEADERLOG_SIZE SZ_512
+ #define CXL_HEADERLOG_SIZE_U32 SZ_512 / sizeof(u32)
+ 
++/* CXL 4.0 8.2.4.26 CXL BI Route Table Capability Structure */
++#define CXL_BI_RT_CAPS_OFFSET 0x0
++#define   CXL_BI_RT_CAPS_EXPLICIT_COMMIT_REQ BIT(0)
++#define CXL_BI_RT_CTRL_OFFSET 0x4
++#define   CXL_BI_RT_CTRL_BI_COMMIT BIT(0)
++#define CXL_BI_RT_STATUS_OFFSET 0x8
++#define   CXL_BI_RT_STATUS_BI_COMMITTED BIT(0)
++#define   CXL_BI_RT_STATUS_BI_ERR_NOT_COMMITTED BIT(1)
++#define   CXL_BI_RT_STATUS_BI_COMMIT_TM_SCALE GENMASK(11, 8)
++#define   CXL_BI_RT_STATUS_BI_COMMIT_TM_BASE GENMASK(15, 12)
++
++/* CXL 4.0 8.2.4.27 CXL BI Decoder Capability Structure */
++#define CXL_BI_DECODER_CAPS_OFFSET 0x0
++#define   CXL_BI_DECODER_CAPS_HDMD_CAP BIT(0)
++#define   CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ BIT(1)
++#define CXL_BI_DECODER_CTRL_OFFSET 0x4
++#define   CXL_BI_DECODER_CTRL_BI_FW BIT(0)
++#define   CXL_BI_DECODER_CTRL_BI_ENABLE BIT(1)
++#define   CXL_BI_DECODER_CTRL_BI_COMMIT BIT(2)
++#define CXL_BI_DECODER_STATUS_OFFSET 0x8
++#define   CXL_BI_DECODER_STATUS_BI_COMMITTED BIT(0)
++#define   CXL_BI_DECODER_STATUS_BI_ERR_NOT_COMMITTED BIT(1)
++#define   CXL_BI_DECODER_STATUS_BI_COMMIT_TM_SCALE GENMASK(11, 8)
++#define   CXL_BI_DECODER_STATUS_BI_COMMIT_TM_BASE GENMASK(15, 12)
++
+ /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
+ #define CXLDEV_CAP_ARRAY_OFFSET 0x0
+ #define   CXLDEV_CAP_ARRAY_CAP_ID 0
+@@ -630,6 +655,7 @@ struct cxl_rcrb_info {
+  * @coord: access coordinates (bandwidth and latency performance attributes)
+  * @link_latency: calculated PCIe downstream latency
+  * @gpf_dvsec: Cached GPF port DVSEC
++ * @nr_bi: number of BI-enabled endpoints below this dport
+  */
+ struct cxl_dport {
+ 	struct device *dport_dev;
+@@ -642,6 +668,7 @@ struct cxl_dport {
+ 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
+ 	long link_latency;
+ 	int gpf_dvsec;
++	int nr_bi;
+ };
+ 
+ /**
+@@ -906,6 +933,7 @@ void cxl_coordinates_combine(struct access_coordinate *out,
+ 			     struct access_coordinate *c2);
+ 
+ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
++int cxl_bi_setup(struct cxl_dev_state *cxlds);
+ struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
+ 					    struct device *dport_dev);
+ 
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index ab88eaa31d1d..c40f482b7c14 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -160,6 +160,10 @@ static int cxl_mem_probe(struct device *dev)
+ 	if (rc)
+ 		dev_dbg(dev, "CXL memdev EDAC registration failed rc=%d\n", rc);
+ 
++	rc = cxl_bi_setup(cxlds);
++	if (rc)
++		dev_dbg(dev, "BI setup failed rc=%d\n", rc);
++
+ 	/*
+ 	 * The kernel may be operating out of CXL memory on this device,
+ 	 * there is no spec defined way to determine whether this device
+diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+index 8ce9b4e9ca73..4938e93edb63 100644
+--- a/include/cxl/cxl.h
++++ b/include/cxl/cxl.h
+@@ -168,6 +168,7 @@ struct cxl_dpa_partition {
+  * @regs: Parsed register blocks
+  * @cxl_dvsec: Offset to the PCIe device DVSEC
+  * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
++ * @bi: device is BI (Back-Invalidate) enabled
+  * @media_ready: Indicate whether the device media is usable
+  * @dpa_res: Overall DPA resource tree for the device
+  * @part: DPA partition array
+@@ -187,6 +188,7 @@ struct cxl_dev_state {
+ 	struct cxl_device_regs regs;
+ 	int cxl_dvsec;
+ 	bool rcd;
++	bool bi;
+ 	bool media_ready;
+ 	struct resource dpa_res;
+ 	struct cxl_dpa_partition part[CXL_NR_PARTITIONS_MAX];
+-- 
+2.39.5
 
-Yeah, the idea of augomenting gfp flags with alloc_flags that are no longer
-strictly internal to the page allocator, seems like a way to achieve what we
-need.
