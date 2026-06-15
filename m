@@ -1,239 +1,261 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011037.outbound.protection.outlook.com [40.107.208.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3DA2309AA;
-	Mon, 15 Jun 2026 14:38:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781534341; cv=none; b=ESRpUJ38jGXLZTUKFQf2mgW0RKXStj5RKNQcjjUJLo4PvbdIHXxzKqVI89cDoDSFajmyYwHlOBJPKuR0ZOkvGtRkMLrAQXrYqPb/X3P4ZuIhhkvkxJyer7PxqRuty7HYwYW8RQtx9fGr+u92W57riJYWT0WzKeW+TrB1EBNK4IA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781534341; c=relaxed/simple;
-	bh=2SyvoKljCiqDT7XAWLBQi18Nl5IGompSDj0xrvARkNU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jSIEsBjhmYvJeRQGFok6epv3WhCL2dPSKu3bmjvUOOFi/bFn5wcJRM8MFJwXAH2sFIycjSlHPRSXAYtTrb2gxxpkgyFCMTF20D2bN1Ts9Mi0DO+mw5exDyLvtZUtNVBywAgkwmaN8Ee4Q1wYiV2VJ/3MqNrUFzrHWFZxkCFeJtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tpe1s7W/; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2763F3F39C5;
+	Mon, 15 Jun 2026 14:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.37
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781534833; cv=fail; b=fSg8BzoLnZXOq3Ht6vO3hteuV4nFnd60yv8Qt8gU77Aq1bW9G08LQRUjRtrEZIVPjeqmjISfXNFp/+j8x5/OimTe247ZQ9N39XpEJXuye+s4ZL3x7J0KuuDWA2Oatvpvi0nKnxjigqyA/+avTl7khWYCVPbVayp1atPiSkV2fps=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781534833; c=relaxed/simple;
+	bh=sl6C//3rvKTf0YYNgDrZoFjFJVIek3PlLHeaOvG0PhU=;
+	h=Message-ID:Date:Subject:From:To:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=qXn95LTueH8X6TTdENco02I13DqeLWeDGZZ9CVQd4/n2ZTX34+iOPq6SSDgoeUzg6iuxzM7OxL+podJW09ix+aD1rw9DS7LUOCzloh41yGRJl7gLhgJyOKr1icCS5hBZEKbxTe+27MpZl1fW2ZvJWYp0kgR8JJIdZN/ujPmjCPM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mqk71ZP7; arc=fail smtp.client-ip=40.107.208.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tpe1s7W/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE9FA1F000E9;
-	Mon, 15 Jun 2026 14:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781534339;
-	bh=NLJ1HyaUGHk9FC6sPoHgRQivjZ9rWHzGujDQIgijU0E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Tpe1s7W/FGNaFy4435tVtHAd9EY3oIvVA4mf4Fb3YDtRFfntZdHFaKKi4f9CCh34Q
-	 N4xz+lIF98xwePPiI+ghawakdTdThDF5S3F8FV+xN0fCucATIu2Lx6YySlJwGbHNu+
-	 2QBbGn2rIZUR9hjHSmq7MQJFg7R6sG3rczMZlJrTSWeubKk3zLT+pforXagFL+Ylvn
-	 fpwfdemAo9uIZautm9dnwTWDKtjOgkD55tEAMcD9uHOTH9QQaMQFGigGXE9tDDkjfE
-	 8O+X25HAcTiNhHhq8UDLz8uu0M0ZPrB8HafAzb9Z3yU7oGpTq13M0aCIUq+uHxmTAc
-	 GX64SZo27dNAQ==
-Message-ID: <9f1815b0-896b-44ab-9e6d-9316d8f11033@kernel.org>
-Date: Mon, 15 Jun 2026 16:38:43 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mqk71ZP7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=u18W30bcjX5WKw4tmpt3u5xPbHdwlC5eUjYnZXAPUw2KLB/X/DsIwiZhyq28gCKi47ZM7J/rLyYwI9BebvUmo/XxGKodtCx+WwixK5oXlJ+1aeeWaRDJj5YS3lmI3CsQcr014YIra7SWjFD23kJN/foqhyzVc+7cGixX5T1tjKHM0PZug2U1GLn76FShNRVvMDMrmkaAgJfyaPL1RfQlpZhjiSFy/W0lqMpFRZtekxz0AH50l9FwEAJPn918Ox4jbHwb7D89HkRIF4d4oHFHrBNjMxYKO3kMoWvSGqS5gkNuIxJkK1K/OScRRNWurDrZoelp35FS5pnA8OBn7QaK5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vH6qDligeCpC3ae8Bh+RVor4nKDmW60ekcpA/KxJLBs=;
+ b=LNQZRpC+F+S9oDGw1Hp3r69dGCGzHhJGnXT47ALDocG2YT2yUWYAYnWBaImp+Jq1WMhGmN8Li/zsIG3nZsLRmwRELeTbJpleo1hKBOjj4H/rFEypoRT9OJqBz4QbpbTzGK2C67npF/Lb6bEqQ3iqX3L+9rdsHRUpGImlVSGLVDygIx9qaer1mb4CuxCiyGLNEk20tivAKCZGs9X8bbn2oP/45882cKq2kb1ahCBZMRXtXW7rQSqkMu4jwi+053hWy+8brlxvBsQ5LqgXMwY7FlXyTJ2lltM4xFNaPiSJKmmVWQfE36FETej6IGjfy04W6zc6adn/3pIlOp1V4ATpyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vH6qDligeCpC3ae8Bh+RVor4nKDmW60ekcpA/KxJLBs=;
+ b=mqk71ZP7NNvlAqYh7fdWbBA10FUmSuClKpclLbOYkTN9T7LuG9yaBwOE6lAtckckFTcdROPmZXYUAi6zZIcCfKBK8hUNkV6UKGNoLwTJrI1wPNTGhLEmh0X9CgpdwRmC95uIFC4tg2QRClDQTVu+3BGDhMg75WqxYNMGYL9ZUa8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
+ IA1PR12MB6554.namprd12.prod.outlook.com (2603:10b6:208:3a2::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.18; Mon, 15 Jun
+ 2026 14:47:06 +0000
+Received: from DM4PR12MB6254.namprd12.prod.outlook.com
+ ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
+ ([fe80::8211:9b5a:99d2:ffa1%6]) with mapi id 15.21.0113.015; Mon, 15 Jun 2026
+ 14:47:06 +0000
+Message-ID: <50d8e423-8248-4e26-901b-010d14d22e67@amd.com>
+Date: Mon, 15 Jun 2026 15:47:01 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v27 4/5] sfc: obtain and map cxl range using
+ devm_cxl_probe_mem
+Content-Language: en-US
+From: Alejandro Lucero Palau <alucerop@amd.com>
+To: "Dan Williams (nvidia)" <djbw@kernel.org>,
+ alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+ netdev@vger.kernel.org, edward.cree@amd.com, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
+References: <20260609215755.8685-1-alejandro.lucero-palau@amd.com>
+ <20260609215755.8685-5-alejandro.lucero-palau@amd.com>
+ <6a28a206bf61a_4fa78100e4@djbw-dev.notmuch>
+ <96ee638f-3b10-4baa-a6df-5a79efee8b8f@amd.com>
+ <dcc502fa-1a06-465a-abab-9b039b9c2672@amd.com>
+In-Reply-To: <dcc502fa-1a06-465a-abab-9b039b9c2672@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: PA7P264CA0246.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:102:371::13) To DM4PR12MB6254.namprd12.prod.outlook.com
+ (2603:10b6:8:a5::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Lsf-pc] [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory
- Nodes (w/ Compressed RAM)
-Content-Language: en-US
-To: Gregory Price <gourry@gourry.net>,
- "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Balbir Singh <balbirs@nvidia.com>, lsf-pc@lists.linux-foundation.org,
- linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- cgroups@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev,
- kernel-team@meta.com, gregkh@linuxfoundation.org, rafael@kernel.org,
- dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com,
- dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
- ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com,
- akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com,
- joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
- ying.huang@linux.alibaba.com, apopple@nvidia.com, axelrasmussen@google.com,
- yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
- linux@rasmusvillemoes.dk, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org,
- mkoutny@suse.com, jackmanb@google.com, sj@kernel.org,
- baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
- dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
- muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev,
- jannh@google.com, linmiaohe@huawei.com, nao.horiguchi@gmail.com,
- pfalcato@suse.de, rientjes@google.com, shakeel.butt@linux.dev,
- riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org,
- roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com,
- shikemeng@huaweicloud.com, nphamcs@gmail.com, bhe@redhat.com,
- zhengqi.arch@bytedance.com, terry.bowman@amd.com,
- Matthew Wilcox <willy@infradead.org>
-References: <ag6XyvxR-NU5rGn-@parvat>
- <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F> <ah47NNhuiClgGCdn@parvat>
- <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F> <ah-0CyZurn5D1ezY@parvat>
- <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
- <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
- <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
- <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
- <ainFROZ3WrGioyuY@gourry-fedora-PF4VCD3F>
- <aiwl4kCG814dpX7L@gourry-fedora-PF4VCD3F>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <aiwl4kCG814dpX7L@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|IA1PR12MB6554:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9198ba5f-5904-4f9f-95da-08decaecf895
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|23010399003|366016|22082099003|18002099003|921020|6133799003|56012099006|4143699003|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	62K4+6gQpGq5ccm2rENbzV/Ro+hNpxvPH+yIbgyeCu9kAU4inh1etGf3Ai4LsaQmLUK6/xTbDp18Y1NsszoGcDN301BsRdhlwKqVL3tkkOEwo+9oC6kL4RPWyHA8ZSmYvZ4vu628scRr9kEwWAr9DFwrlJzM5OnETWhiO+fqDnAf/bar+vlvYXmSuT0cx8N0pRJdkoP0s/fKH3KIQrx8yFfxPeInp2DSjntzlNsL+DSYFCXsYLg1vlbpKAklHCSglCgJ7BcA0V3M2ywlA3iHUSORhiF4f/7GwUoj2EWlK7F/63fDWKjbVNmi1NA+hiDJFQRfxSiEGytV0DB641hKUCXk9FITnUABaXk2xslDs4avxFxAQdJ+r0lYNs+y2LD3dvwMSM7vFg++fiFWZ+0C62c6aOEzWHcM1rDhjhEMnyWh+BCL8CMW/RQpADE2xdAZi8Vio7WA4p+aYdUL4Od2fX8Y5OrT1CLM91zbRWJIKoXSvdZtK0uIWdC7WtcXXGL/19ju0X2x/cABP7LsGS4XVeqDVH+qRT9PlQfDP5sACCoWkAp6PB5XT3tAKMgd9y6k6jeZvK90x+R27aMVfkXCPcV5ztJAsENqlqsLCuIT2OnlJz3/XEAQc/a+wlmgROV2cWfTj8HNke7wKIy0LFK8MlJy0OgwkvzNuKNljXkYCwQ3gqvLvds1AF+66isciubor3q3lFkKPFhYPqLhNJstdkeGm+EEbshmkbH5ahmerD0=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(23010399003)(366016)(22082099003)(18002099003)(921020)(6133799003)(56012099006)(4143699003)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?R000bjlkaHlEWDNXYjJRaXBkWWVqSXBsY2NLTVBBWWxKUEd3WU5IdktSZDBM?=
+ =?utf-8?B?azRZTG56R3BORjlCYlZ6UDhwa1BpZ29Ia0FsYkpJY0lHVElCc3M1NzZ4aStn?=
+ =?utf-8?B?Tm9DNFJzQ2prMVJPTzNiSzJFRDNZWWlWbUdvNjRCRC9sTkgwM3hiVGNvWmxR?=
+ =?utf-8?B?SDZFRkZ1ZVA0QlFpRkl6NUVmVWtHeWFMVXZKdkRrbGlKRDlzM05QQ3pHSmFE?=
+ =?utf-8?B?OWtPWTlJQUU3MmkzNm9nOS9Mekl1eDdvbzZ1a2o5ZlFvdEdsZGtTWkFodlBI?=
+ =?utf-8?B?eFk1SXFkampkbFo4YlVraXhXSExiSFVxWkg5MjR1eDZQNGFvYmo3TDFIcWJ4?=
+ =?utf-8?B?MFk5cHdGVitTQW5aY3NzYW0rMGNIb0xESnZud2tTNTFxMlNtWVpzUnNhSWlU?=
+ =?utf-8?B?ZDk2ZFVlTitsVEJxUGQ2Z0d5N2tmc05BMTVXL1FUUzVPMHM0b2lScUw1OFhU?=
+ =?utf-8?B?U2Q0cGZUaWxDb2ZuNytkN0hNNmZYakVmV2VzS294MDNtTGI2VmFEUnd4aFRz?=
+ =?utf-8?B?Z1l4cVVCZ1dkb1J1V3dkaUpBcUJOL29kd3Y2V3Yrbm5iSW9qNXJKQ2JySFA2?=
+ =?utf-8?B?Q3hMQlhySXZvQzZxa2ZTazFRSG1kYU9tOTI1MEtWUUFpWjEvMGhwNWtjaWZx?=
+ =?utf-8?B?YnRENVRXaTF0Zy9nejBHUnJ5OXRvYTJJSGpsSkUyaVV6R0E3N245L3JqS2Vz?=
+ =?utf-8?B?TDJJWVFlUVlEMkZocWxDZWd6Uzg4YU14M2taOFpXL3l5eUJNcm9YWVF1TmhV?=
+ =?utf-8?B?ZTRKTVdETG0vUHRKcUVRaE5iV21aZDZ5NzBzMDhaZU5vcVl3UHg3TmR3cVZw?=
+ =?utf-8?B?YWVUQlVDdlpwbDVxZHQ4NUNYc3VJMHRxd0pDQ3pMblpFdGRUVnpGRjh5REdR?=
+ =?utf-8?B?WW0vQkJGakFreE1RVnFNcktLNzROeUZzSlB0Tk9aM0llZjFsekZYMHl2L2dD?=
+ =?utf-8?B?eHlJZjBjNkFCWlYvK2pmR1U5aHkwV2FBRklCZHJpdjFoTXBPb1BJaWFYN0N4?=
+ =?utf-8?B?SnZEUS90SngwdkR5WkI5cXZRMmNPUURtTGIvNG9VVDh6R0o2OEp1c1hybzRD?=
+ =?utf-8?B?MHNxZEtJQkd4b2pYMHQ2Uk9wYWhVQnorcHFPb1RhUUFvcmJKZ3RXNi9RcC9K?=
+ =?utf-8?B?ZmllQVRSaE45cnU4SUF1b2RTU1ErSjZEdldPL3J6ZUJOSk84TWc2SjBxeVU3?=
+ =?utf-8?B?WklVWnVYYnJKT3RTSVFuS1o2WEpMckxXbzZSWTJxQ2paY2ZLb0VGSVNIWmtl?=
+ =?utf-8?B?TlZhUGdJWnVnWUNvNTJzZW9MdUE0b1F5bGxma2QrNTloaWRuSlVRZUMxVVZv?=
+ =?utf-8?B?ZmJsTTUyUEtZYWlFRUp1ME9IL2xnWDB5d1dCQ1N2bjJBK05WUklkeXkvOW1O?=
+ =?utf-8?B?NEJsRTcyUTRha2VkTjVVMW96T0xBaGdjYmMyNjVwVXdZeTMyZEUraXFpTUU3?=
+ =?utf-8?B?OUVNbGJaMlpxeWRaNWVzK09QTEMxNEU4WDRaMk9WNlovT21TcnBXVVZlYjdz?=
+ =?utf-8?B?NmppRG5td2lWWkQvVkwyajV3M2Y4YSt3WWROWGNJKytKRkdMZFFrZ0IzMnRO?=
+ =?utf-8?B?UEI1ZnU0aFplbi90cC9KWVNVT2dXNHdrTExmMGpWb0xBYmM5NkdJUXBFaG5V?=
+ =?utf-8?B?WEprZU1nd1l2dmRYVW9sQkw4dDFvaFcrVmFRcUU1ZmFMZHc2QUs5NVJmdUFL?=
+ =?utf-8?B?djM4QlVQeExQMm5QVHhKeTFiV3U3b0RLUEUvQVpKUkp5WnM4eGt1bUdybW1X?=
+ =?utf-8?B?bGszejVPbm9ONXJ6Y21IUE9zK21CaWRSeWhIMnovaTNvM3IzOU1Gdko3eG1F?=
+ =?utf-8?B?dy9ValF1dE1uWXJkdHduVGV3Y1pvMDdIVEJUQkdxR0JBS0dVMGVST1Z5QmVR?=
+ =?utf-8?B?QVlTR2VwR1FFVzI3L0JtZlk1VkRiMjhwamtjRFpKSnF5S3RlQ05BaDI4WTJU?=
+ =?utf-8?B?SnVTZC9EWW1VU2djS0tiZm50V0padDdKeEFkVzdIc09RUldsQnFSSDZkanFp?=
+ =?utf-8?B?RXF4NzJyc01XSDlzWVpxY2NYamU0ZUk1TzdsektXTVY4M2swZ05vQzYyZHZS?=
+ =?utf-8?B?YlRwaUZqQ2IxNTJwcG9FK2NFWDN6bUk4WFAxT0JIOFBMczE5UWkxdTBnaG4z?=
+ =?utf-8?B?YlcwMndlU2tsUFc1alJCdGxxYzBucllFTzZkZU5UeURZa3k3M3JkL2pLRHo1?=
+ =?utf-8?B?SmdRZUh0eERKUW1VeTg4Z0hhS0NFZXp5SDhFa1ZyNG1yZXJRQzZmWkRINmFI?=
+ =?utf-8?B?UGsyMWpjd3NxNm1oTzh6cmNHLytQd0crYmJFdmw1Y2hvVGF2NjNZSXRSTnJ5?=
+ =?utf-8?B?Q0t5TGhEclFGVnRLaGF3R2xPMWljQ25LOWROK1NnTzFWdEhLbUI1dz09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9198ba5f-5904-4f9f-95da-08decaecf895
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2026 14:47:06.6238
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eLp+hPHpD9GIjupeJhw/32ONUIkzMjVbFXGK/wwNE1Giu0NcB8PbSHpeNNzzmIbflrFwDyQCd0MPTKuBqICO6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6554
 
-On 6/12/26 17:29, Gregory Price wrote:
-> On Wed, Jun 10, 2026 at 04:12:52PM -0400, Gregory Price wrote:
->> On Wed, Jun 10, 2026 at 08:59:59PM +0200, David Hildenbrand (Arm) wrote:
->> > > 
->> > > I understand this question in two ways:
->> > > 
->> > >   1) Can we disallow PAGE allocation and limit this to FOLIO allocation
->> > 
->> > Yes. Can we only allow folios to be allocated from private memory nodes. So let
->> > me reply to that one below.
->> > 
->> ... snip ...
->> > 
->> > At LSF/MM we talked about how GFP flags are bad and how deriving stuff from the
->> > context might be better. I think there was also talk about how the memalloc_*
->> > interface might be a better way forward. Maybe we would start giving the
->> > allocator more context ("we are allocating a folio").
->> > 
->> > The following is incomplete (esp. hugetlb stuff I assume), just as some idea:
->> >
->> 
->> I will still probably send the next RFC version tomorrow or friday,
->> as I want to get some eyes on the __GFP_PRIVATE-less pattern.
->> 
->> Also, I made a new `anondax` driver which enables userland testing
->> of this functionality without any specialty hardware.
->> 
-> 
-> (apologies for the length of this email: this will all be covered in
-> the coming cover letter, but I just wanted to share a bit of a preview)
-> 
-> ===
-> 
-> Just another small update - I am planning to post the RFC today once i
-> get some mild cleanup done.  It will be based on the dax atomic hotplug
-> 
-> https://lore.kernel.org/linux-mm/20260605211911.2160954-1-gourry@gourry.net/
-> 
-> But a couple specific details regarding the memalloc pieces that i've
-> learned the past couple of days playing with it.
-> 
-> 1) memalloc_folio is required to ensure non-folio allocations don't land
->    on the private node, even if it happens within a memalloc_private
->    context.  Since memalloc_folio may be useful in contexts outside of
->    private nodes, I kept this as a separate flag.
-> 
->    If we think there will *never* be additional users of memalloc_folio,
->    then we could fold _folio into _private to save the flag for now and
->    add it back when we actually need it.
-> 
-> 2) memalloc_private is needed to unlock private nodes, but in the
->    original NOFALLBACK-only design, you also needed __GFP_THISNODE.
-> 
->    This is *highly* restrictive.  I found when playing with mbind that
->    MPOL_BIND + __GFP_THISNODE generates a WARN (valid WARN, it normally
->    implies a bug). 
-> 
->    That leads me to #3
 
-I think the memalloc approach is dangerous due to unexpected nesting. There
-might be nested page allocations in page allocation itself (due to some
-debugging option). But also interrupts do not change what "current" points
-to. Suddenly those could start requesting folios and/or private nodes and be
-surprised, I'm afraid.
+On 6/10/26 14:56, Alejandro Lucero Palau wrote:
+>
+> On 6/10/26 07:10, Alejandro Lucero Palau wrote:
+>>
+>> On 6/10/26 00:30, Dan Williams (nvidia) wrote:
+>>> alejandro.lucero-palau@ wrote:
+>>>> From: Alejandro Lucero <alucerop@amd.com>
+>>>>
+>>>> Use core API for safely obtain the CXL range linked to an HDM 
+>>>> committed
+>>>> by the BIOS. Map such a range for being used as the ctpio buffer.
+>>>>
+>>>> A potential user space action through sysfs unbinding or core cxl
+>>>> modules remove will trigger sfc driver device detachment, with that 
+>>>> case
+>>>> not racing with this mapping as this is done during driver probe and
+>>>> therefore protected with device lock against those user space actions.
+>>>>
+>>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>>>> ---
+>>>>   drivers/net/ethernet/sfc/efx.c     |  1 +
+>>>>   drivers/net/ethernet/sfc/efx_cxl.c | 24 ++++++++++++++++++++++++
+>>>>   drivers/net/ethernet/sfc/efx_cxl.h |  3 +++
+>>>>   3 files changed, 28 insertions(+)
+>>>>
+>>>> diff --git a/drivers/net/ethernet/sfc/efx.c 
+>>>> b/drivers/net/ethernet/sfc/efx.c
+>>>> index 90ccbe310386..578054c21e79 100644
+>>>> --- a/drivers/net/ethernet/sfc/efx.c
+>>>> +++ b/drivers/net/ethernet/sfc/efx.c
+>>>> @@ -984,6 +984,7 @@ static void efx_pci_remove(struct pci_dev 
+>>>> *pci_dev)
+>>>>       efx_fini_io(efx);
+>>>>         probe_data = container_of(efx, struct efx_probe_data, efx);
+>>>> +    efx_cxl_exit(probe_data);
+>>>>         pci_dbg(efx->pci_dev, "shutdown successful\n");
+>>>>   diff --git a/drivers/net/ethernet/sfc/efx_cxl.c 
+>>>> b/drivers/net/ethernet/sfc/efx_cxl.c
+>>>> index 4d55c08cf2a1..d5766a40e2cf 100644
+>>>> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+>>>> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+>>>> @@ -18,6 +18,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>>>>   {
+>>>>       struct efx_nic *efx = &probe_data->efx;
+>>>>       struct pci_dev *pci_dev = efx->pci_dev;
+>>>> +    struct range cxl_pio_range;
+>>>>       struct efx_cxl *cxl;
+>>>>       u16 dvsec;
+>>>>       int rc;
+>>>> @@ -75,9 +76,32 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>>>>           return -ENODEV;
+>>>>       }
+>>>>   +    cxl->cxlmd = devm_cxl_probe_mem(&cxl->cxlds, &cxl_pio_range);
+>>>> +    if (IS_ERR(cxl->cxlmd)) {
+>>>> +        pci_err(pci_dev, "CXL accel memdev creation failed\n");
+>>>> +        return PTR_ERR(cxl->cxlmd);
+>>>> +    }
+>>>> +
+>>>> +    cxl->ctpio_cxl = ioremap_wc(cxl_pio_range.start,
+>>>> +                    range_len(&cxl_pio_range));
+>>>> +    if (!cxl->ctpio_cxl) {
+>>>> +        pci_err(pci_dev, "CXL ioremap region (%pra) failed\n",
+>>>> +            &cxl_pio_range);
+>>>> +        return -ENOMEM;
+>>> Dave caught the iounmap leak, but another concern is since you want to
+>>> continue operation if efx_cxl_init() fails then you probably also want
+>>> to release the successful attachment to the CXL domain if this happens.
+>>
+>>
+>> I will do that.
+>>
+>
+> Looking at this issue, I think an error when creating the memdev or 
+> during the region attach triggers the memdev removal, but ...
+>
+>
+>>
+>>> Minor since something else is likely to fail if ioremap is not 
+>>> reliable.
+>
+>
+> .. if we want to specifically do that with an unlikely (but possible) 
+> ioremap error something else needs to be exported like 
+> cxl_memdev_unregister(). Are you happy with that approach?
+>
 
-The memalloc scopes only work well when they restrict the context wrt
-reclaim, and allocations in IRQ have to be already restricted heavily
-(atomic) so further memalloc restrictions don't do anything in practice. But
-to make them change other aspects of the allocations like this won't work.
+I have just tested with this:
 
-> 3) If a private node is opted into something like Demotion (the node is
->    a demotion target) or mbind(), such that normal kernel operation can
->    place memory there - it's *pseudo-private*, and should actually land
->    in it's own FALLBACK list (reachable without __GFP_THISNODE, but not
->    reachable as a normal fallback allocation target).
-> 
-> I'm still playing with this, but I think we can even omit the
-> __GFP_THISNODE requirement (my initial feeling that __GFP_THISNODE
-> didn't buy us anything in particular seems to have panned out).
-> 
-> At the end of the day, this makes the whole memalloc_private_save()
-> pattern a heck of a lot cleaner than trying fiddle with GFP.
-> 
-> I think you will all enjoy how clean the code ends up, and how easily
-> testable it is.
-> 
-> As a testbed I've implement an anondax (we can discuss naming) that
-> adds some sample NODE_PRIVATE_OPT_* flags so you can do the following.
-> 
-> I'm including this in the next RFC - but we can hack the entire thing
-> off (including the OPT flags) if we prefer to just get the base set in
-> without a new driver as a start.
-> 
-> echo 1 > dax0.0/reclaim   # kswapd and reclaim run normally on this node
-> echo 1 > dax0.0/demotion  # it is a demotion target
-> echo 1 > dax0.0/mbind     # mbind() can target this node for anon-vma's
-> echo 1 > dax0.0/madvise   # allow madvise() to operate on its folios
-> echo 1 > dax0.0/numa_balance  # allow numa balancing for this node
-> echo 1 > dax0.0/ltpin     # allow GUP longterm pin to operate normally
-> echo * > dax0.0/adistance # set the adistance for hotplug time
-> echo * > dax0.0/hotplug   # same as kmem/hotplug
-> 
-> This also means *existing hardware* can leverage private nodes if
-> they're capable of generating a dax device.
-> 
-> I've even gotten it such that you can put a private node above dram in
-> the adistance heirarchy - which means demotion flows downward from
-> device to CPU, but allocations don't default or fallback there.
-> 
-> This seems *immediately* useful for a variety of use cases.
-> 
-> ~Gregory
-> _______________________________________________
-> Lsf-pc mailing list
-> Lsf-pc@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/lsf-pc
++void cxl_memdev_remove(void *_cxlmd)
++{
++       struct cxl_memdev *cxlmd = _cxlmd;
++       struct device *dev = &cxlmd->dev;
++
++       devm_remove_action_nowarn(cxlmd->cxlds->dev, cxl_memdev_unregister,
++                                 cxlmd);
++
++       cdev_device_del(&cxlmd->cdev, dev);
++       cxl_memdev_shutdown(dev);
++       put_device(dev);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_memdev_remove, "CXL");
 
+
+only called if the ioremap fails.
+
+
+Please, let me know if you like this approach before sending another 
+version.
+
+
+Thank you
+
+
+>
+>>>
+>>> Otherwise this looks good and with those fixed up the Reviewed-by still
+>>> stands.
+>>
+>>
+>> No Reviewed-by yet ... this is a new patch after your series removing 
+>> previous functionality.
+>>
+>>
+>> Thanks
+>>
