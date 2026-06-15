@@ -1,198 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65BA40B397
-	for <linux-cxl@vger.kernel.org>; Mon, 15 Jun 2026 17:41:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A2331327A
+	for <linux-cxl@vger.kernel.org>; Mon, 15 Jun 2026 18:22:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781545285; cv=none; b=UyfJtbYsE2ABP7eohI7x/UXFDBuM8kenNsntiPPlZ/a3Jr8EhbZSeesa02xGlSZRdLwJiOwbtCmYB1sXZfFzYu+2OC7L6371mC4l93Z+LMYKWzMRVp3NMeoxXvW0Ymnpz5baMgI6sO92KfvqdACuJEAJlzIgjxFj//EmeAxEum8=
+	t=1781547765; cv=none; b=clDZpz0vui3D0IheaDAQet4F1R/5lyIIuWDTMe84X/fS2hTQtSpekta12s/zUmwZbb+fxqXfjczzTug98H2zX7iFRD/jtz3jLeWwTSiKhczCKmUR33YAx7R22AnDX0SMUmjqf0o9CxycHLUWgdKNaIlZ6mCPaa3niq0GRax5ELI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781545285; c=relaxed/simple;
-	bh=wLc3GZFTyl0gtbOx4yrqszVHd7GS9WjqjeBfGyR/omk=;
+	s=arc-20240116; t=1781547765; c=relaxed/simple;
+	bh=2ejbfMDuL0PNcCPvYRh3iPbYiB7iV7iyru/M3f1wxDg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=fdioXN+MIn5lXnaDTWa5kTy22ewKV2r6PUi7Nltabc/RiXIclBrfdR9yL5fO9HwJlwan6V+44uUE/ViOi+GcYOF6w77/ITmEP5PmE02DwPqGRAyF9FPpdSvn9ZoWxll5EWT6inX0u0J9F4rs+SEfpLR05qJKFwd5xR15UgmKjhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQIZlrrh; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=d+skdUcPcCqui9OTSpbaKLA3kSt4qlC9W0z7zMB70pfgUMHSGFguW3vaFnpIZa90Iny+1W2NPabID0nTLg+hWGqLZZn21ryrbNdZB53viz+7hRWoZOwBXjlrUJ/PK9POQvzAri1JJW0N+vzA5cCUXxYx8d7fHW0/NTqxB1JCzoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KuyMaV7D; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQIZlrrh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73B721F000E9;
-	Mon, 15 Jun 2026 17:41:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KuyMaV7D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA83B1F000E9;
+	Mon, 15 Jun 2026 18:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781545283;
-	bh=/HLCwxbCu+qwHcy6hdKGubNdHguRScgze9SYPF5NmGc=;
+	s=k20260515; t=1781547764;
+	bh=PteNdAadwszeUB5TBvuGrGeCg0Sm/f42CV48Z2ghWjw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=QQIZlrrhfRzZddLEj4lXwxhLZhwyV6UXtheK7Jiva9L4JWfXnZQamJCUyG+17GdrU
-	 LBmn4ZUm9wvPdjVTNUUazwOg7bIlFttRwRBm573MKgmQ6oNekm1+cHnWXWfmIrCQ9W
-	 oque/fPf5UV/LOUFTW259Rh0HRiWjnI3zturnwayrzvTTz4gn6GBy3ig7O8t8SIqS4
-	 NUHrHPgUNCY83r8g3fNvdJIk3RxhiKFobL2b7TheaAhJHXhqJW8xAt7I/pi/sp/jlE
-	 iBERmd9om7UQbJwuSxB5mYlDFlChDmSEZAUETLa+9oC31ycsPGaGz+pK0Fyyobpcuq
-	 lQkXAgruteOBA==
+	b=KuyMaV7D7S8R6Jwz5l/7tIRtyJR+Iq/Ob0j+MmO77u3HgXOFl6IWaR9bU32HZD5//
+	 9+pZjpNBkVTYoZGjv9pUg6/K0ECFfnJ+xcl2ev14TUglLzIsDpLjNC107DhE3Oel6O
+	 Bq64ZmjG4nKU3od8J1+dGbpBOtZalnFd5zO2iE8uIhFf0eVm2ne5wajR3vMY5VDrIV
+	 W/bIHs0/j4fZqCFO6QOKeKdIVr3p4/AeJb//iNYJdydMHypPL0RAU0ljmpjmXbrbnA
+	 nepqUa9yu8jym+A36QKgWcZLsiRz2/qBRP0edzk//isG5PjZucEcwBLyZ9koieKUHe
+	 BDJAH9BL2PpWg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 4/5] cxl: Add HDM-DB region creation
+Subject: Re: [PATCH V6 07/10] dax/fsdev: fail probe on invalid pgmap offset
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Davidlohr Bueso" <dave@stgolabs.net>
+To: "John Groves" <john@jagalactic.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260615145529.13848-5-dave@stgolabs.net>
-References: <20260615145529.13848-5-dave@stgolabs.net>
+In-Reply-To: <0100019ecc0999fa-97574544-8b6b-46cf-9f33-423abdbeee7f-000000@email.amazonses.com>
+References: <0100019ecc0999fa-97574544-8b6b-46cf-9f33-423abdbeee7f-000000@email.amazonses.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 15 Jun 2026 17:41:23 +0000
-Message-Id: <20260615174123.73B721F000E9@smtp.kernel.org>
+Date: Mon, 15 Jun 2026 18:22:43 +0000
+Message-Id: <20260615182243.EA83B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Auto-discovered regions fail to inherit their coherency type from =
-the root decoder, violating the design rule and potentially creating invali=
-d region configurations.
-- [Medium] Spurious `dev_WARN_ONCE` triggers in `cxl_rr_assign_decoder()` w=
-hen attaching an endpoint decoder with a stale `DEVMEM` target type to an H=
-DM-H (non-BI) region.
-- [Medium] `bi_show` incorrectly reports that an auto-discovered endpoint d=
-ecoder is configured for HDM-DB (BI=3D1) when it is operating with BI=3D0 i=
-n hardware.
+
+Pre-existing issues:
+- [High] The validation check for an impossible mapping state (`pgmap_phys =
+> phys`) is executed after iterating and modifying folio states, leading to=
+ a potential kernel panic or memory corruption before the error can be grac=
+efully caught.
+- [High] The devm action `fsdev_clear_folio_state_action` is registered aft=
+er `devm_memremap_pages`. On unbind, it executes before the release of memo=
+ry, violently clearing compound folio states while the folios might still b=
+e pinned by active users.
 --
 
-commit 913c2a59fed5b8381543ceb7345cd15ac2ea9d17
-Author: Davidlohr Bueso <dave@stgolabs.net>
+commit e4852035a220057fe89d87ee2e638d326fb3c8e1
+Author: John Groves <John@Groves.net>
 
-cxl: Add HDM-DB region creation
+dax/fsdev: fail probe on invalid pgmap offset
 
-A region inherits its coherency from the chosen root decoder: HDM-DB
-if the root has CXL_DECODER_F_BI, otherwise HDM-H.
+This commit converts a WARN_ON into a fatal error during device probe when
+the remapped region starts after the device's data region. If this invalid
+state is detected, the probe now returns -EINVAL instead of continuing with
+a misaligned address.
 
-[ ... ]
-
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index c5aacd7054f1d..71801dfd614b1 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-
-[ ... ]
-
-> @@ -233,6 +234,19 @@ static ssize_t mode_store(struct device *dev, struct=
- device_attribute *attr,
->  }
->  static DEVICE_ATTR_RW(mode);
+> diff --git a/drivers/dax/fsdev.c b/drivers/dax/fsdev.c
+> index 57c589e19b539..d50891d6dc135 100644
+> --- a/drivers/dax/fsdev.c
+> +++ b/drivers/dax/fsdev.c
+> @@ -342,8 +342,12 @@ static int fsdev_dax_probe(struct dev_dax *dev_dax)
+>  		u64 phys =3D dev_dax->ranges[0].range.start;
+>  		u64 pgmap_phys =3D pgmap[0].range.start;
 > =20
-> +static ssize_t bi_show(struct device *dev, struct device_attribute *attr,
-> +		       char *buf)
-> +{
-> +	struct cxl_endpoint_decoder *cxled =3D to_cxl_endpoint_decoder(dev);
-> +	struct cxl_memdev *cxlmd =3D cxled_to_memdev(cxled);
-> +	struct cxl_dev_state *cxlds =3D cxlmd->cxlds;
-> +
-> +	guard(rwsem_read)(&cxl_rwsem.region);
-> +	return sysfs_emit(buf, "%d\n", cxlds->bi && cxled->cxld.region &&
-> +			  cxled->cxld.target_type =3D=3D CXL_DECODER_DEVMEM);
-> +}
-
-[Severity: Medium]
-Will this attribute show '1' for an auto-discovered DEVMEM endpoint decoder
-even if it operates with BI=3D0 in hardware?
-
-If Linux auto-discovers a DEVMEM decoder that intrinsically supports BI
-(cxlds->bi is true), init_hdm_decoder() currently rejects it if the BI
-control bit is set, so the hardware must be operating with BI=3D0. However,
-this attribute seems to evaluate the state dynamically based on the device
-capability rather than the hardware's actual BI configuration, contradicting
-the sysfs documentation that says it shows '1' when "currently configured".
-
-> +static DEVICE_ATTR_RO(bi);
-
-[ ... ]
-
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e50dc716d4e82..6eb852b514d3a 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1132,11 +1132,13 @@ static int cxl_rr_assign_decoder(struct cxl_port =
-*port, struct cxl_region *cxlr,
->  	/*
->  	 * Endpoints should already match the region type, but backstop that
->  	 * assumption with an assertion. Switch-decoders change mapping-type
-> -	 * based on what is mapped when they are assigned to a region.
-> +	 * based on what is mapped when they are assigned to a region. HDM-DB
-> +	 * endpoint decoders inherit their type from cxlr->type below.
->  	 */
->  	dev_WARN_ONCE(&cxlr->dev,
->  		      port =3D=3D cxled_to_port(cxled) &&
-> -			      cxld->target_type !=3D cxlr->type,
-> +			      cxld->target_type !=3D cxlr->type &&
-> +			      !cxl_root_decoder_is_bi(cxlr->cxlrd),
->  		      "%s:%s mismatch decoder type %d -> %d\n",
->  		      dev_name(&cxled_to_memdev(cxled)->dev),
->  		      dev_name(&cxld->dev), cxld->target_type, cxlr->type);
-
-[Severity: Medium]
-Does this logic trigger a spurious dev_WARN_ONCE() when attaching an
-endpoint decoder with a stale DEVMEM target type to an HDM-H region?
-
-When a region is dismantled, __cxl_decoder_detach() clears the decoder's
-region assignment but doesn't reset its target_type, leaving it with a
-stale DEVMEM target type. If it is later attached to an HDM-H (non-BI)
-region, the check for cxld->target_type !=3D cxlr->type evaluates to true,
-and the !cxl_root_decoder_is_bi(cxlr->cxlrd) check also evaluates to true.
-
-Could this generate a spurious warning stack trace in dmesg during valid
-user reconfigurations, potentially causing a panic if panic_on_warn is set?
-
-[ ... ]
-
-> @@ -2772,6 +2796,7 @@ static ssize_t create_region_store(struct device *d=
-ev, const char *buf,
->  				   size_t len, enum cxl_partition_mode mode)
->  {
->  	struct cxl_root_decoder *cxlrd =3D to_cxl_root_decoder(dev);
-> +	enum cxl_decoder_type target_type;
->  	struct cxl_region *cxlr;
->  	int rc, id;
-> =20
-> @@ -2779,7 +2804,14 @@ static ssize_t create_region_store(struct device *=
-dev, const char *buf,
->  	if (rc !=3D 1)
->  		return -EINVAL;
-> =20
-> -	cxlr =3D __create_region(cxlrd, mode, id, CXL_DECODER_HOSTONLYMEM);
-> +	/*
-> +	 * The CFMWS dictates endpoint coherency: a BI-restricted Window
-> +	 * produces an HDM-DB region; otherwise HDM-H.
-> +	 */
-> +	target_type =3D cxl_root_decoder_is_bi(cxlrd) ?
-> +		CXL_DECODER_DEVMEM : CXL_DECODER_HOSTONLYMEM;
-> +
-> +	cxlr =3D __create_region(cxlrd, mode, id, target_type);
+> -		if (!WARN_ON(pgmap_phys > phys))
+> -			data_offset =3D phys - pgmap_phys;
+> +		if (pgmap_phys > phys) {
+> +			dev_err(dev, "pgmap start %#llx exceeds data start %#llx\n",
+> +				pgmap_phys, phys);
+> +			return -EINVAL;
+> +		}
+> +		data_offset =3D phys - pgmap_phys;
 
 [Severity: High]
-Does the auto-discovery path in construct_region() still blindly create
-regions using the endpoint decoder's type?
+This isn't a bug introduced by this patch, but does this check happen too
+late?
 
-The commit message dictates a strict design rule that a region inherits its
-coherency from the chosen root decoder. The sysfs creation path correctly
-enforces this here, but construct_region() appears to miss this update:
+Looking at fsdev_dax_probe(), fsdev_clear_folio_state() is called before th=
+is
+validation check occurs. fsdev_clear_folio_state() iterates over the ranges
+starting from phys. If pgmap_phys > phys, devm_memremap_pages() mapped the
+vmemmap starting from pgmap_phys.
 
-drivers/cxl/core/region.c:construct_region() {
-    ...
-		cxlr =3D __create_region(cxlrd, cxlds->part[part].mode,
-				       atomic_read(&cxlrd->region_id),
-				       cxled->cxld.target_type);
-    ...
-}
+Will accessing pfn_folio() for physical addresses before pgmap_phys access
+unpopulated vmemmap or memory belonging to someone else, leading to a kernel
+panic or memory corruption before we ever reach this return -EINVAL?
 
-If firmware incorrectly programs an endpoint decoder as DEVMEM under an HDM=
--H
-root decoder, could construct_region() create a DEVMEM region? Because both
-the region and the endpoint have target_type =3D=3D DEVMEM, the mismatch wa=
-rning
-in cxl_rr_assign_decoder() would be bypassed, resulting in an invalid HDM-DB
-region under a root decoder that cannot generate Back-Invalidates.
+[Severity: High]
+This is a pre-existing issue, but does the tear-down order of devm actions
+cause a race condition on unbind?
 
->  	if (IS_ERR(cxlr))
->  		return PTR_ERR(cxlr);
+In fsdev_dax_probe(), fsdev_clear_folio_state_action is registered via
+devm_add_action_or_reset() after devm_memremap_pages() is called.
+
+Since devm actions run in LIFO order, fsdev_clear_folio_state_action will
+execute on unbind before memunmap_pages() has a chance to wait for active
+folio references to drop. Can this violently clear compound folio states
+(like setting folio->share =3D 0 and splitting compound folios) while exter=
+nal
+subsystems might still be actively holding references, leading to refcount
+underflows and memory corruption?
+
+> =20
+>  		pr_debug("%s: offset detected phys=3D%llx pgmap_phys=3D%llx offset=3D%=
+llx\n",
+>  		       __func__, phys, pgmap_phys, data_offset);
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260615145529.1384=
-8-1-dave@stgolabs.net?part=3D4
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0100019ecc080a68-8d=
+c0c99f-ab17-4aa9-83d9-490e9c97ac2e-000000@email.amazonses.com?part=3D7
