@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A2D4502F;
-	Tue, 16 Jun 2026 17:22:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84DB46AF3C;
+	Tue, 16 Jun 2026 17:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781630529; cv=none; b=CLAqw5RvXB09UOKTpVXaLlpdyJ86HO0k06kjIzCieKOBQV5jWefvkQY67pQuFhdSTvzmsf57dJrD5MCXOZwe/+UWWNjnF+73JjLnU9idfHqnJTnIGuOBzogNdNwmZZoYnLrud4JV672TSA9BlbFoK97JRaoqBlt8DeTdaT5sr84=
+	t=1781631659; cv=none; b=RxHBbxtrZx6QvXj0rX3+j8T2seIGLBX4H9V3CYESnrwQZu2IVew/eUaQzEm8d3SrCum8QKC4IZXawmoI3F8dF4g83Ycv6P4O4a2n5N3StnuMKjeKLlqoXkAvMUK6mJ+rfMV+y8Q5mrLCZKjL1R13a+vcnI7WaRBjXjWE/Jv7q8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781630529; c=relaxed/simple;
-	bh=T3Q2rZptmBht2ce9WBcvy6iR2GKdgYbFKRTj/Nz+lmk=;
+	s=arc-20240116; t=1781631659; c=relaxed/simple;
+	bh=Tpohtpxv9OHbO2WPK3TOnUm7e7476omwD08g4hId1Z8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rbwaLy68OMap2r/YhcTI2gAwo7XkTwu+UbUiX7a2XTmwc0VhkAQZMnj9b54BpFwUIlqbVSYbOYkF0onhu7NGZ6Zva7yRInTNG5zocVPgEzoJGMRNoaboY2lw5e4Rk6e0581x88dwWz5K8xcIClJ9WRkK4YlTIoDne0z4NbivVZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Px2IsKNZ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=eW6e9FJ9q6Q40lWeSv8hUM8mOTVHUzgKRRKMvqe/BlAxnzGYc/m0hcKsc/Ds2zQ5+aeJuClcj7U2GJ5I+L/QUegzWeR2p4E9EA7wR+VALuc3nWBbQrF179dMZKItZcpAKdnmTDWh/BHSGvknxoen58V7UkJw24W2m8VmC4fjnsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BDmdCmdA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Px2IsKNZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4E281F000E9;
-	Tue, 16 Jun 2026 17:22:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BDmdCmdA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5795B1F00A3A;
+	Tue, 16 Jun 2026 17:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781630528;
-	bh=yAQBjErfWgKwY+rmANd6szMivaukHje+DeQu981RCrg=;
+	s=k20260515; t=1781631658;
+	bh=ccS/ln5QcVxJYWX2Zp4+48P7XLW+G+pWSQ75wMzkNZA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Px2IsKNZKDILQyYuYAEI04Zuhq2MnyRcOtsSTFX+w95yDaUX74SpOFSFpnQcmaE6M
-	 OfDkbi3VxwIBcoM8QZv8cTSFCpK0wQahVCDeZKYUiUBWD9Bq4ond8ZQkTXzPpUNxas
-	 81bR/5bv2junus46Pw2oecNulzaRor9OTN1qjinLZUL5AXcQk9esnGM2cC/i/6J71k
-	 aPsGRJ9ZyuNF6RZlVf1jcz2PN2/G1VV7XK9PR9+MTZelZpn6FF1YaT713/IaZOmYM+
-	 +AgcwONSHi4O8UnAiT3Fkk3vP5uP5mzg1uarku8AL25P8moCoalzEarL8Z9i/ahTkT
-	 YjYCtDXmtSXHw==
-Date: Tue, 16 Jun 2026 18:21:59 +0100
+	b=BDmdCmdAn/RjBLnELIa9yA/HPZNChARTcHrVzh6oqFfY7JI1gXx4y4pYIm+aiSzKB
+	 KaFglKfxfmsPdKYGanIc8jd7fy2FOyi/cEc/zLoo//8l+vG/cgHbDspOPe8due1HZ8
+	 3Jw+pk/BPRNY0X9F7AKAHLhdBB1Qi0NE4vwLJP2rgTpqMHWq3cDO9MhZC0itIeqdiX
+	 LKl21//RRFagrfw4Tx890RH/cbkV+iJYsigBdBeoMdsoGmxobLfOMwIZ7eUiRdzjJE
+	 cQr7llCLM9d1Vwc9BDFcH7/dIUuEcZ1Cwb99y55kWvdYmnVnsFKjDJShlQ6Fddr/14
+	 Lf1GPpHa62YWw==
+Date: Tue, 16 Jun 2026 18:40:49 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Shrihari E S <shrihari.s@samsung.com>
 Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
  qemu-devel@nongnu.org, cpgs@samsung.com, arun.george@samsung.com,
  vikash.k5@samsung.com, s.neeraj@samsung.com, dongjoo.seo1@samsung.com,
  dave@stgolabs.net, gost.dev@samsung.com
-Subject: Re: [RFC 4/8] hw/cxl: Add Streamlined Virtual Channel (SVC)
- property to CXL ports
-Message-ID: <20260616182159.6c618a75@jic23-huawei>
-In-Reply-To: <20260609105836.3702787-5-shrihari.s@samsung.com>
+Subject: Re: [RFC 5/8] hw/cxl: Wire UIO capability into HDM decoder
+ registers
+Message-ID: <20260616184049.42cdc02d@jic23-huawei>
+In-Reply-To: <20260609105836.3702787-6-shrihari.s@samsung.com>
 References: <20260609105836.3702787-1-shrihari.s@samsung.com>
-	<CGME20260609104521epcas5p1d91703d83cfe9fd9d38506a64fa276a7@epcas5p1.samsung.com>
-	<20260609105836.3702787-5-shrihari.s@samsung.com>
+	<CGME20260609104525epcas5p151a4e745f5303e79a2a92432180a6af7@epcas5p1.samsung.com>
+	<20260609105836.3702787-6-shrihari.s@samsung.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -50,80 +50,147 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue,  9 Jun 2026 16:28:32 +0530
+On Tue,  9 Jun 2026 16:28:33 +0530
 Shrihari E S <shrihari.s@samsung.com> wrote:
 
-> Add Unordered IO (UIO) dependent property SVC to CXL ports
-> (Root, Upstream and Downstream).
+> Plumb the 'uio_capable' flag to CXL HDM decoder capability and
+> control register interfaces. The UIO bit in the capability register
+> is now set for CXL Type3 devices and ports when UIO support is
+> advertised via 'x-uio-svc' property.
 > 
-> The following properties are added to CXL ports:
->     - x-uio-svc: Enable UIO traffic via SVC3 (mandatory path)
->     - x-uio-svc-opt: Enable UIO traffic via SVC4 (optional path)
+> Per CXL 4.0 specification Section 8.2.4.20.7, the decoder control
+> UIO bit is validated against the advertised capability during
+> HDM decoder commit operations.
 > 
-> Note: 256B flit mode property was already added in CXL ports, so reused it.
+> Additionally, replace hardcoded HDM decoder control write masks
+> with spec-aligned 'WRMASK' definitions.
+I think we should be modifying that depending on whether it is uio_capable
+rather than saying it is 'writeable' but 'not writetable' if not UIO capable.
+
+A few other comments inline.
+
 > 
 > Signed-off-by: Shrihari E S <shrihari.s@samsung.com>
 > Signed-off-by: Dongjoo Seo <dongjoo.seo1@samsung.com>
 > ---
->  hw/pci-bridge/cxl_downstream.c            | 2 ++
->  hw/pci-bridge/cxl_root_port.c             | 1 +
->  hw/pci-bridge/cxl_upstream.c              | 2 ++
->  include/hw/pci-bridge/cxl_upstream_port.h | 1 +
->  4 files changed, 6 insertions(+)
+>  hw/cxl/cxl-component-utils.c        | 29 +++++++++++++++++++++++------
+>  hw/mem/cxl_type3.c                  |  9 ++++++++-
+>  hw/pci-bridge/cxl_downstream.c      |  2 +-
+>  hw/pci-bridge/cxl_root_port.c       |  2 +-
+>  hw/pci-bridge/cxl_upstream.c        |  3 ++-
+>  hw/pci-bridge/pci_expander_bridge.c |  3 ++-
+>  include/hw/cxl/cxl_component.h      |  2 +-
+>  include/hw/cxl/cxl_device.h         |  2 ++
+>  8 files changed, 40 insertions(+), 12 deletions(-)
 > 
-> diff --git a/hw/pci-bridge/cxl_downstream.c b/hw/pci-bridge/cxl_downstream.c
-> index 7c7a1d1221..6f6f332c07 100644
-> --- a/hw/pci-bridge/cxl_downstream.c
-> +++ b/hw/pci-bridge/cxl_downstream.c
-> @@ -260,6 +260,8 @@ static const Property cxl_dsp_props[] = {
->      DEFINE_PROP_PCIE_LINK_WIDTH("x-width", PCIESlot,
->                                  width, PCIE_LINK_WIDTH_16),
->      DEFINE_PROP_BOOL("x-256b-flit", PCIEPort, flitmode, true),
-> +    DEFINE_PROP_BIT("x-uio-svc", PCIEPort, svc, UIO_MANDATORY_SVC, false),
-> +    DEFINE_PROP_BIT("x-uio-svc-opt", PCIEPort, svc, UIO_OPTIONAL_SVC, false),
->  };
+> diff --git a/hw/cxl/cxl-component-utils.c b/hw/cxl/cxl-component-utils.c
+> index 31bbedb502..9a5b382272 100644
+> --- a/hw/cxl/cxl-component-utils.c
+> +++ b/hw/cxl/cxl-component-utils.c
+> @@ -13,6 +13,19 @@
+>  #include "hw/pci/pci.h"
+>  #include "hw/cxl/cxl.h"
 >  
->  static void cxl_dsp_class_init(ObjectClass *oc, const void *data)
-> diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.c
-> index e82685d1ab..83fb5968b8 100644
-> --- a/hw/pci-bridge/cxl_root_port.c
-> +++ b/hw/pci-bridge/cxl_root_port.c
-> @@ -53,6 +53,7 @@ typedef struct CXLRootPort {
->      CPMUState cpmu;
->      MemoryRegion cpmu_registers;
->      PCIResReserve res_reserve;
-> +    bool uio_capable;
-I'd bring these in with a patch that uses them.
+> +/* CXL 4.0 specification 8.4.2.20.7 */
+> +#define CXL_HDM_DECODER_CTRL_WRMASK (    \
+> +    (0xfu << 0)   | /* IG */             \
+> +    (0xfu << 4)   | /* IW */             \
+> +    BIT(8)        | /* LOCK_ON_COMMIT */ \
+> +    BIT(9)        | /* COMMIT */         \
+> +    BIT(12)       | /* TYPE */           \
+> +    BIT(13)       | /* BI */             \
+> +    BIT(14)       | /* UIO */            \
+> +    (0xfu << 16)  | /* UIG */            \
+> +    (0xfu << 20)  | /* UIW */            \
+> +    (0xfu << 24))   /* ISP */
+Given the FIELD() macro defines appropriate masks, can we build this as
+	R_CXL_HDM_DECODER_0_CTRL_IG_MASK |
+	R_CXL_HDM_DECODER_0_CTRL_IW_MASK |
+etc
+That will make it both self documenting and ensure it aligns with the field
+defines.  If we get a bug at least it will only be in one place :)
 
-This whole thing is simple enough maybe just have it as part of a commit
-that uses the properties.
+> +
+>  /* CXL r3.1 Section 8.2.4.20.1 CXL HDM Decoder Capability Register */
+>  int cxl_decoder_count_enc(int count)
+>  {
+> @@ -305,7 +318,7 @@ static void ras_init_common(uint32_t *reg_state, uint32_t *write_msk)
+>  }
+>  
+>  static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
+> -                            enum reg_type type, bool bi)
+> +                            enum reg_type type, bool bi, bool uio)
+>  {
+>      int decoder_count = CXL_HDM_DECODER_COUNT;
+>      int hdm_inc = R_CXL_HDM_DECODER1_BASE_LO - R_CXL_HDM_DECODER0_BASE_LO;
+> @@ -325,9 +338,12 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
+>          ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, 3_6_12_WAY, 0);
+>          ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, 16_WAY, 0);
+>      }
+> -    ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, UIO, 0);
+> +    ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, UIO,
+> +                     (type == CXL2_TYPE3_DEVICE || CXL2_UPSTREAM_PORT) && uio);
+>      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY,
+> -                     UIO_DECODER_COUNT, 0);
+> +                     UIO_DECODER_COUNT,
+> +                     (type == CXL2_TYPE3_DEVICE || CXL2_UPSTREAM_PORT) && uio ?
+> +                     decoder_count : 0);
+>      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY, MEMDATA_NXM_CAP, 0);
+>      ARRAY_FIELD_DP32(reg_state, CXL_HDM_DECODER_CAPABILITY,
+>                       SUPPORTED_COHERENCY_MODEL,
+> @@ -341,7 +357,8 @@ static void hdm_init_common(uint32_t *reg_state, uint32_t *write_msk,
+>          write_msk[R_CXL_HDM_DECODER0_BASE_HI + i * hdm_inc] = 0xffffffff;
+>          write_msk[R_CXL_HDM_DECODER0_SIZE_LO + i * hdm_inc] = 0xf0000000;
+>          write_msk[R_CXL_HDM_DECODER0_SIZE_HI + i * hdm_inc] = 0xffffffff;
+> -        write_msk[R_CXL_HDM_DECODER0_CTRL + i * hdm_inc] = 0x13ff;
+> +        write_msk[R_CXL_HDM_DECODER0_CTRL + i * hdm_inc] =
+> +                                             CXL_HDM_DECODER_CTRL_WRMASK;
+I think file at least mostly aligns these long line wraps as
+        write_msk[R_CXL_HDM_DECODER0_CTRL + i * hdm_inc] =
+            CXL_HDM_DECODER_CTRL_WRMASK;
 
->  } CXLRootPort;
+Given i think this needs to be dependent on whether the device is uio_capable
+maybe just bring the mask defines suggested above down here, and modify the
+UIO bit to fit whether it should be writeable.
+
+
+>          if (type == CXL2_DEVICE ||
+>              type == CXL2_TYPE3_DEVICE ||
+>              type == CXL2_LOGICAL_DEVICE) {
+> @@ -391,7 +408,7 @@ static void bi_decoder_init_common(uint32_t *reg_state, uint32_t *write_msk,
+>  void cxl_component_register_init_common(uint32_t *reg_state,
+>                                          uint32_t *write_msk,
+>                                          enum reg_type type,
+> -                                        bool bi)
+> +                                        bool bi, bool uio)
+>  {
+>      int caps = 0;
 >  
->  #define TYPE_CXL_ROOT_PORT "cxl-rp"
-> diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
-> index ef5480b116..dadad3e15c 100644
-> --- a/hw/pci-bridge/cxl_upstream.c
-> +++ b/hw/pci-bridge/cxl_upstream.c
-> @@ -437,6 +437,8 @@ static const Property cxl_upstream_props[] = {
->      DEFINE_PROP_PCIE_LINK_WIDTH("x-width", CXLUpstreamPort,
->                                  width, PCIE_LINK_WIDTH_16),
->      DEFINE_PROP_BOOL("x-256b-flit", CXLUpstreamPort, flitmode, false),
-> +    DEFINE_PROP_BIT("x-uio-svc", PCIEPort, svc, UIO_MANDATORY_SVC, false),
-> +    DEFINE_PROP_BIT("x-uio-svc-opt", PCIEPort, svc, UIO_OPTIONAL_SVC, false),
->  };
->  
->  static void cxl_upstream_class_init(ObjectClass *oc, const void *data)
-> diff --git a/include/hw/pci-bridge/cxl_upstream_port.h b/include/hw/pci-bridge/cxl_upstream_port.h
-> index d4186234c8..d23541e23a 100644
-> --- a/include/hw/pci-bridge/cxl_upstream_port.h
-> +++ b/include/hw/pci-bridge/cxl_upstream_port.h
-> @@ -22,6 +22,7 @@ typedef struct CXLUpstreamPort {
->      PCIExpLinkSpeed speed;
->      PCIExpLinkWidth width;
->      bool flitmode;
-> +    bool uio_capable;
->  
->      DOECap doe_cdat;
->      uint64_t sn;
+> @@ -431,7 +448,7 @@ void cxl_component_register_init_common(uint32_t *reg_state,
+>      case CXL2_LOGICAL_DEVICE:
+>          /* + HDM */
+>          init_cap_reg(HDM, 5, 1);
+> -        hdm_init_common(reg_state, write_msk, type, bi);
+> +        hdm_init_common(reg_state, write_msk, type, bi, uio);
+>          /* fallthrough */
+>      case CXL2_DOWNSTREAM_PORT:
+>      case CXL2_DEVICE:
+> diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
+> index b7ad437cbc..4cdadc3e10 100644
+> --- a/hw/mem/cxl_type3.c
+> +++ b/hw/mem/cxl_type3.c
+> @@ -590,6 +590,11 @@ static void hdm_decoder_commit(CXLType3Dev *ct3d, int which)
+>      /* TODO: Sanity checks that the decoder is possible */
+>      ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, ERR, 0);
+>      ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, COMMITTED, 1);
+> +    if (ct3d->uio_capable) {
+> +        ct3d->uio_enabled = FIELD_EX32(ctrl, CXL_HDM_DECODER0_CTRL, UIO);
+> +    } else {
+> +        ctrl = FIELD_DP32(ctrl, CXL_HDM_DECODER0_CTRL, UIO, 0);
+
+If it's not supported, shouldn't the write mask stop it being written?  I think
+that would be cleaner than overriding any write to 0 here.
+
+
+> +    }
 
