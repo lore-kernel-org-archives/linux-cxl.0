@@ -1,295 +1,236 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8FA3A7F4B;
-	Tue, 16 Jun 2026 22:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781650163; cv=none; b=NNjDWzLHtZe5R5IPglfaqmf9i9H69ljYIhrge32k2RcDDprlf71OIv7R0+OnKuo3NhHaxk2ATTwexvlvfBXqPCvL39fFoOZ65hjDCUMfe1NjYUbb2XPdYZ4FDyKTBbcZXJ6a3dJ19zta/7NrIsVKhpqA1NMcwb/E9baBhD0y0m0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781650163; c=relaxed/simple;
-	bh=S20bU4hvD9Ax2g2IvNsmFgYXfPaY8NC2eZ2HPKYA06U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nfn1Ba61s2UJuAAkm7fH79hp+8ElohW5xuA9rscktQO/+ZA9xe1i3VzrOlUy6d1joCM0ql6cdhQr1vyzPAXN56R1XksqGWtSs33v/79kw8PyY1uJ/lyYRk+tLTXxYO1UeyQc9hnPzzMq9hl5KnoUluU9c8s2Srna6202KdPCWWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E49E61F000E9;
-	Tue, 16 Jun 2026 22:49:20 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: djbw@kernel.org,
-	dave@stgolabs.net,
-	jic23@kernel.org,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	flavien@nus.edu.sg,
-	stable@vger.kernel.org
-Subject: [PATCH v2] cxl/mce: Make the MCE notifier per-region
-Date: Tue, 16 Jun 2026 15:49:11 -0700
-Message-ID: <20260616224912.2567474-1-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.54.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 205163F23C5
+	for <linux-cxl@vger.kernel.org>; Tue, 16 Jun 2026 22:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781650341; cv=fail; b=tNGKuLY0v/qYZrTmrtDvjq2dcVncbIYt7Khmi2Xpvwn5blcPcE9oYwUT8Kb604tVHel56QMGqKMP3aRAalJqoIvaussUWhT137vFn2bZxXVNzYs/ajB0a0bXNnTt+nwSBVzajyMnVHVFbGafuqwnr1dYuz9Sf9ztwELdrz5pH7k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781650341; c=relaxed/simple;
+	bh=lTkQeSRAnbFPr39lqEmV3Geps7uhUn1S15NWuF9y9Jg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=TlLvxlLbZ8mdZd4XcexGGflpM1m/Vh5fsECR/a6c/rzSvpU/dPE7O1AFyfMAwXLXd3T2PJWwWUGlfykM2XTCrchYSI7DQx2ddmX+D+U1RDRAoHPuzMTU3pIrYNAXucStSrklNyowvrKzP6/Uon7gv54ATTOee6sDLDBJLn7ik/4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DlnQFAKH; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DlnQFAKH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781650340; x=1813186340;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=lTkQeSRAnbFPr39lqEmV3Geps7uhUn1S15NWuF9y9Jg=;
+  b=DlnQFAKHnX3rlVwrVWvdIDi9XeH2hjr+5qJTY9gzhMeuhaf1HpNuq+n0
+   l2GmQ9+N09wIu/HH8posq4u5ubIWANdw0UQV/SlUjvEpSCRwK7liPjw4j
+   bbfxa4+GL7QON7jhQB7VfOi94Mg8HOwpsZWmD091qCFR26mkEkVsxQfRh
+   qhDWpH8iA8/94Aqut1wKZKOX8KAL7+ZLdLOm6dfXaagBt7WooCEvjF2uw
+   26aB8cA/YjvmdHqnz9yPK/AXR8Qsmro+61yLgFyYbvwrIRIGJRX+p4NDV
+   ADVOhS2f1WTlEEBhpaUIHy58mhjTcaGJI1mTEFAlpmq9eUVLhD+COEeMQ
+   w==;
+X-CSE-ConnectionGUID: FmVBTee8QT2XD2druTXIaw==
+X-CSE-MsgGUID: 5lU1PPc+QDunUPVT2aTl3g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11819"; a="82293426"
+X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
+   d="scan'208";a="82293426"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 15:52:20 -0700
+X-CSE-ConnectionGUID: OHVVZU2JQ2Gghjq3tlOIZw==
+X-CSE-MsgGUID: ChCbtT9oT/CTHLu8s+Fw5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,208,1774335600"; 
+   d="scan'208";a="247014994"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2026 15:52:19 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Tue, 16 Jun 2026 15:52:19 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Tue, 16 Jun 2026 15:52:19 -0700
+Received: from BL2PR02CU003.outbound.protection.outlook.com (52.101.52.59) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Tue, 16 Jun 2026 15:52:19 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RNeGQYj07b6rTmb3NSz4kI9cBl8x4en4OefTtWZFZuymaF+l88l870Ap3NvawaZ5sOFephep8er+bIUj47dZDOTKVu3iZ8iadIK6w1spGelYwgrIGQYf5Sw5/3twXGhkjP6uuSM03M1JLIBWjjxoL+4+aK/3udcZdxlrNVgEeU0DU4AP+MvFi4WFuDT5Twc0D4/ly3qJWuUv25QmscURuEV/Muo55gcWyRBJVZfNBCluxWaAogiRRxZyYIWbP4BC56pEGkPbLHH3xo3rNufq0BISlhQ03ow9E+BMpDuqcV+3eoGip2d+3SPw20noTJ4rTia5c+YcsBW7mhjKXNbUPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=08ie25c4E3MLK3ecfFaLGjJODgKk3H52IWz2d0a2Z08=;
+ b=DxoN6/45/w7dlQ4ZbVotaPM0YDERdMHI/zYKa05yp9x1vjIqRGurRPHZcqdM1FYKkQH46ItfPRfJdEyJMgDGWe/uAdRGMt7hBaV0np88R5uKFJn8/DGG0K6yW0OXarjqwcZmwzJOvDt2O56jIb14tM+crDCC6TTyhW51SIsXn0pDO6d92wG+cUuIb424zD4mQACHG5cc4bdxmIq/qAqQleQy7hG7zpm4e6YyYJ/zz26cpZP7Nvjxqo+54dbMYJn9GNbVhPjvSgVvLy/OdFizgVWH0snFq8nkimT/mWbRKouZxSPO/rEVcRa2akMaU6H4cKIlr/a16Qykh1J0zTsnPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by DS4PPF75D68BA1B.namprd11.prod.outlook.com (2603:10b6:f:fc02::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.18; Tue, 16 Jun
+ 2026 22:52:11 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891%4]) with mapi id 15.21.0113.015; Tue, 16 Jun 2026
+ 22:52:11 +0000
+Date: Tue, 16 Jun 2026 15:52:08 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: <sashiko-reviews@lists.linux.dev>
+CC: <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2 4/6] cxl/region: Validate mixed-granularity at sysfs
+ and attach gates
+Message-ID: <ajHTmAuRUMTNcyu4@aschofie-mobl2.lan>
+References: <42da0b69d39207b712d7c27f1af6186febbeaa6f.1781199122.git.alison.schofield@intel.com>
+ <20260611180334.7EC6B1F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260611180334.7EC6B1F000E9@smtp.kernel.org>
+X-ClientProxiedBy: SJ0PR13CA0007.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c0::12) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DS4PPF75D68BA1B:EE_
+X-MS-Office365-Filtering-Correlation-Id: e668dec5-9628-4f76-405c-08decbf9e6a8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|376014|1800799024|11063799006|56012099006|4143699003|5023799004|22082099003|18002099003|3023799007;
+X-Microsoft-Antispam-Message-Info: oDS585dQp4+9vSTJvx1KXW4XdmHBr8VFzjX53KBS5+8/EmwRjywvZU7WgZpOkDMOE0IJP6QfyOoT3sFfkXrYDo41YKwnFcGM7OfrSTQOjjUCf55Knmp5zvSBoqy3ssz/k9A/VmWmw150e1PrDqiMcxlKfRZmVsCHcd2H3Kep1hzsGfKi3iwg1Ti+iJJLmx3PXjAvKWSHSlt7GGSBxAXDxcvH2pKCtCDyqVdaYXE+/QmZI7N4WNBFzYTrA4D83tK5lvO+uqZHEXI2wVWXE32dsKy8R5kv1CxB2KY3VJBxfHCGeOsDKLAyj3zH1gKkSw15l5ssQoYX87v9s9Os6P1ubcnvH7Q2zehM5us6PhxVmS6wsHlUFeHfn4MASt5n/6LXl9BjUHPaQFfazo7/jB0si1K6POSTgYUSxhW00Pp4tR9J8164tXKnJ+GOR4/9fX3r7zxfpd/VdcLPOYZjyYrMoD1DUjwLtWZBE+GhMTYhr7XDyfxIqNHav5KBhskCKYyPRiGSzhtBdUdZHQ0B/rKCFTiXQiERe3YZFVqB3bqeju6+mHK5ig5ofFY8Mar5Aht+CobraSIsHCoN7eAylbjpakZTNN3xcN2TaMgOD3JpGt8m/iUBlwkZJvgSROTv5ArsP4Lev6tSySfVKX+0Lcby+Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(376014)(1800799024)(11063799006)(56012099006)(4143699003)(5023799004)(22082099003)(18002099003)(3023799007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?QdEc4sR1ecHfQpS96GGuobREFsWr0ec3JnQCojid76/q4ziUBc3LzwVYmI?=
+ =?iso-8859-1?Q?5vRCW7m2xN00kobz6N2EKunuPeLMjxIQfNtvhnohi0KCT/6DLjv3pefQ0S?=
+ =?iso-8859-1?Q?8GLhriGIS/Ws0lIjJ7RGa63BC7+URjw+fpHme1+sR1hWEcUtVGtFHOaLaE?=
+ =?iso-8859-1?Q?Haf4PUeLiwq3AcQkJlpo2o/qV8gxeuutm7uIqAf+yqhNTNdq8x/FvUUAM5?=
+ =?iso-8859-1?Q?I7SwTWPv+R3Oblv8daSz1srIcT06+adAm3tYkYhRbMwirojkgXjrdNrvHc?=
+ =?iso-8859-1?Q?/gltkw5nBdiTD3OERfXvU2l+oj0fIeqerg6JnbGL3uAZIvKiwYQiWg5vY/?=
+ =?iso-8859-1?Q?4T99PmMIaqCqiyuPNKPu6d17GXFZ8K/WY8SRfy7jXq0oYVK/ifpPQdrCan?=
+ =?iso-8859-1?Q?eA2RhM276g6RNc1xaCEKbKgb0hxxOFp1HJR8b5TO25tRLf+x0WR9g9Ewdh?=
+ =?iso-8859-1?Q?YopBNYcaRYJxpxg84JYg7WSfCKWdknbpcF3u29OVc4dtXAqpic7Z592Iv/?=
+ =?iso-8859-1?Q?AFCLpwvfkM+Pp7emwF3qW08q4OG5nyCb87xYswhFSIK5rSmex6pWORbi64?=
+ =?iso-8859-1?Q?5In7my8Y8FRG2rNJQ50vNf2oInCdFMTIrW7VXO5iHAq5hrUUJAM/tsPz4P?=
+ =?iso-8859-1?Q?IbOLokXTVB2vrOCwgkWKZJ69LglL+yHfIfBX9QwwTkg9GbGoUOHOQhDjd3?=
+ =?iso-8859-1?Q?BAC5Umlm9uArHXfOCq/b7DRpqOH0I1gd1GtsxK9fnHrB2aV6Qn2T5v4HRP?=
+ =?iso-8859-1?Q?/x3WOeLQR069MTZxHzfFv7Ml8FwAp/SXcbloBZzmgp+pSaVoQmsE3WacRT?=
+ =?iso-8859-1?Q?DKGqR4rUPKcfWPcKvBnjeZwm07w7ZAcTs4RX8OvHMmvQl6cYvfvgah3D7q?=
+ =?iso-8859-1?Q?GyJS+leOhC2WUKqNpXr2R2F7ikuLxHjQsNRV+aQLH4WAGU7J1tIsvXZ75o?=
+ =?iso-8859-1?Q?gmiF7OxYAivTObf2T8m5zfl8GHX+nSj9m88EZfkCo0/mwoBMsNVaY4TBhN?=
+ =?iso-8859-1?Q?XLhA27vTLNAcwiMRY96QFPxcee3eBLzO2SSHqHjEX8NqIwtyRN8O/6DtHX?=
+ =?iso-8859-1?Q?UGfwW3PZMgumhLLQ5ZsGRYxdXVeAhALYu0hwAKZjMu/S2O8HDhOTPXWWZT?=
+ =?iso-8859-1?Q?NYfe5FG457H3BJJptWAHEj3l3LpTqlVXC7wXxX8geg1JeoDhBcrnp52mO1?=
+ =?iso-8859-1?Q?pxnhQasvOfS4KUtoLsxVRmYXs9xY9uzvdIYoH3R8msaibiPeUy7p6gwS7D?=
+ =?iso-8859-1?Q?bwB+IcENYF+uWsI4yyzS0c4SRKAHeUbOh9/ahAc2M3FWTR5wZV9Sm7kYgd?=
+ =?iso-8859-1?Q?YOvd+olTcpy6dZoLMqGIeXS5Z6vHZOE3pysk9OhFW9lxvoYh+PQ1ocIsBv?=
+ =?iso-8859-1?Q?UlS5p1qkWEf65JB40OqxeHCEr5W7+NwCYS6QIA6Are42bBgGDHuv1pb/tD?=
+ =?iso-8859-1?Q?CKf+EaCHdcm85o/cwc/XXuld57+Ggb/s0VdM9famHeF/OOLf7sR+15YgA5?=
+ =?iso-8859-1?Q?sZ3oJ6anNerdHKhVOmWDNVqbc1fgUvCz447FQRiqYE1ji0WB35fxQ537mn?=
+ =?iso-8859-1?Q?POc+4Q/iLV6AdWOGGdYkqMGXyFC67f1qV3DBHGvq7LOezn5kZxzE1sXo7n?=
+ =?iso-8859-1?Q?X9UatrO51Kuk+yEix1r1W5+t6aAq8HYdxAS2k9nT4rdY5kGF9YzOuNcDZq?=
+ =?iso-8859-1?Q?S7m8TI+DvnstwAJBl2fL1pnfIG2u96d0QVeYYRCymMR5dBq8R/8maoBhBx?=
+ =?iso-8859-1?Q?O/wGTDr+bgIFYvV8+2oHYReFBCRX3TCEMwNAygc4KzqJXrK3L2GTG+wvtf?=
+ =?iso-8859-1?Q?51S4MiQeZCvEdD+7BAIqyN2Y3C5pb2I=3D?=
+X-Exchange-RoutingPolicyChecked: cRItvwK8exdaTpIpWMxs+f4md8iHFf3hXH4ZvTplXdBZtKs3wa+N8QO/eKaUJszn90mt4uBdCGIUR/zrPqsgdzs38BWlU4gNzgmbDXl6SERRErR79z0vcXD4cKU14ix503Y1PnL/zFMJvQPWY7Sp72aEiOgCSpqpdw4LRifHJF2lCOu6yDVl4fGSdOJCN9cqyShn/D5GIk1j+La+eDiRiCzy7aW0DzIS5oqlGF8teVdc1fKTM3fobky23znDCDe+CbL3Up4+7Nnwnq5jsS0ifxY1iaubQ1aPjsuYHySrmydweiApKRAiANdrnjHFXEssgpjfSjnXR2zLdBVNs/4Dqg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: e668dec5-9628-4f76-405c-08decbf9e6a8
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2026 22:52:11.3020
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QvQw2Be8ZiSIcQ3lR8LKoXE7hE10GColTCeuPFY7i8HK70he2rGAwVTVUJDCbxjIPrz5wTDQ76YSzE8uLrGX16Md02W2ZA1EMZskfFQAJNc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PPF75D68BA1B
+X-OriginatorOrg: intel.com
 
-Flavien Solt reported lifetime issues with the CXL MCE notifier, which
-can lead to NULL dereferences and use-after-free in the MCE handler.
-The notifier was registered per memory device and stored in 'struct
-cxl_memdev_state', even though it only needs the region state (the
-region's SPA range and its extended linear cache size).
+On Thu, Jun 11, 2026 at 06:03:33PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> 
+> Pre-existing issues:
+> - [High] The function `check_interleave_cap()` ignores the return values of `ways_to_eiw()` and `granularity_to_eig()`, leading to the use of uninitialized stack variables (`eiw`, `eig`) in bitmask calculations.
+> --
+> 
+> commit 999caa321a85ce92543a94c3525b252f33aab308
+> Author: Alison Schofield <alison.schofield@intel.com>
+> 
+> cxl/region: Validate mixed-granularity at sysfs and attach gates
+> 
+> Replace the same-granularity sysfs check with is_ig_allowed() to permit valid
+> mixed-granularity regions. Call this helper at attach time to enforce the same
+> rules for auto regions, and add an explicit span equality check for
+> 3-way-family roots.
+> 
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index 9fff538a9ce16..311b5052bbc8f 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> 
+> [ ... ]
+> 
+> > @@ -2096,6 +2107,8 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+> >  	struct cxl_dport *dport;
+> >  	int rc = -ENXIO;
+> >  	int stride;
+> > +	int root_ways = cxlrd->cxlsd.cxld.interleave_ways;
+> > +	int root_gran = cxlrd->cxlsd.cxld.interleave_granularity;
+> >  
+> >  	rc = check_interleave_cap(&cxled->cxld, p->interleave_ways,
+> >  				  p->interleave_granularity);
+> 
+> [Severity: High]
+> This isn't a bug introduced by this patch, but check_interleave_cap() is
+> called here with potentially uninitialized (zero) values for interleave_ways
+> and interleave_granularity prior to state verification.
+> 
+> Inside check_interleave_cap() in drivers/cxl/core/region.c, ways_to_eiw() and
+> granularity_to_eig() are called but their return values are ignored:
+> 
+> 	ways_to_eiw(iw, &eiw);
+> 	if (eiw == 0 || eiw == 8)
+> 		return 0;
+> 
+> 	granularity_to_eig(ig, &eig);
+> 	if (eiw > 8)
+> 		high_pos = eiw + eig - 1;
+> 	else
+> 		high_pos = eiw + eig + 7;
+> 	low_pos = eig + 8;
+> 	interleave_mask = GENMASK(high_pos, low_pos);
+> 
+> If interleave_ways and interleave_granularity are 0, both ways_to_eiw() and
+> granularity_to_eig() return -EINVAL, leaving eiw and eig uninitialized.
+> Because eig is an uninitialized u16, low_pos can be as large as 65543.
+> 
+> Passing values greater than 64 to GENMASK() results in an out-of-bounds
+> bitwise shift.
+> 
+> On systems with CONFIG_UBSAN_TRAP enabled, could this lead to a kernel panic
+> if a privileged user misorders sysfs writes?
 
-Instead of keeping the memory device and endpoint alive, the correct fix
-is to move the notifier into 'struct cxl_region' and register it from
-cxl_region_probe() as it should be a per-region notifier. Setup the
-registration to only happen for regions that have an extended linear
-cache as that is the only current usage.
+This issue is already fixed for 7.2, sitting in cxl/next here:
 
-Remove cxl_port_get_spa_cache_alias() as it is now dead code.
+https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/commit/?h=next&id=661c092f9839
 
-Reported-by: Flavien Solt <flavien@nus.edu.sg>
-Suggested-by: Dan Williams <djbw@kernel.org>
-Fixes: 516e5bd0b6bf ("cxl: Add mce notifier to emit aliased address for extended linear cache")
-Cc: stable@vger.kernel.org
-Assisted-by: Claude:claude-opus-4-8
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v2:
-- First version for this code, but replaces the previous 2 patches
-  as the fix. Replaces the series "cxl: Fix ednpoint access issues with
-  CXL MCE notifier handler". (Dan)
----
- drivers/cxl/core/mbox.c   |  8 --------
- drivers/cxl/core/mce.c    | 27 ++++++++++++-------------
- drivers/cxl/core/region.c | 42 +++++++++++++--------------------------
- drivers/cxl/cxl.h         |  8 ++------
- drivers/cxl/cxlmem.h      |  2 --
- 5 files changed, 29 insertions(+), 58 deletions(-)
+cxl: Align interleave decode/encode helpers with their callers
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 7c6c5b7450a5..1fa1f78565e3 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -11,7 +11,6 @@
- 
- #include "core.h"
- #include "trace.h"
--#include "mce.h"
- 
- static bool cxl_raw_allow_all;
- 
-@@ -1526,7 +1525,6 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
- 						 u16 dvsec)
- {
- 	struct cxl_memdev_state *mds;
--	int rc;
- 
- 	mds = devm_cxl_dev_state_create(dev, CXL_DEVTYPE_CLASSMEM, serial,
- 					dvsec, struct cxl_memdev_state, cxlds,
-@@ -1538,12 +1536,6 @@ struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
- 
- 	mutex_init(&mds->event.log_lock);
- 
--	rc = devm_cxl_register_mce_notifier(dev, &mds->mce_notifier);
--	if (rc == -EOPNOTSUPP)
--		dev_warn(dev, "CXL MCE unsupported\n");
--	else if (rc)
--		return ERR_PTR(rc);
--
- 	return mds;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_memdev_state_create, "CXL");
-diff --git a/drivers/cxl/core/mce.c b/drivers/cxl/core/mce.c
-index ff8d078c6ca1..65fed913b221 100644
---- a/drivers/cxl/core/mce.c
-+++ b/drivers/cxl/core/mce.c
-@@ -4,16 +4,16 @@
- #include <linux/notifier.h>
- #include <linux/set_memory.h>
- #include <asm/mce.h>
--#include <cxlmem.h>
-+#include <cxl.h>
-+#include "core.h"
- #include "mce.h"
- 
- static int cxl_handle_mce(struct notifier_block *nb, unsigned long val,
- 			  void *data)
- {
--	struct cxl_memdev_state *mds = container_of(nb, struct cxl_memdev_state,
--						    mce_notifier);
--	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
--	struct cxl_port *endpoint = cxlmd->endpoint;
-+	struct cxl_region *cxlr = container_of(nb, struct cxl_region,
-+					       mce_notifier);
-+	struct cxl_region_params *p = &cxlr->params;
- 	struct mce *mce = data;
- 	u64 spa, spa_alias;
- 	unsigned long pfn;
-@@ -21,26 +21,25 @@ static int cxl_handle_mce(struct notifier_block *nb, unsigned long val,
- 	if (!mce || !mce_usable_address(mce))
- 		return NOTIFY_DONE;
- 
--	if (!endpoint)
--		return NOTIFY_DONE;
--
- 	spa = mce->addr & MCI_ADDR_PHYSADDR;
- 
--	pfn = spa >> PAGE_SHIFT;
--	if (!pfn_valid(pfn))
-+	if (!cxl_resource_contains_addr(p->res, spa))
- 		return NOTIFY_DONE;
- 
--	spa_alias = cxl_port_get_spa_cache_alias(endpoint, spa);
--	if (spa_alias == ~0ULL)
--		return NOTIFY_DONE;
-+	if (spa >= p->res->start + p->cache_size)
-+		spa_alias = spa - p->cache_size;
-+	else
-+		spa_alias = spa + p->cache_size;
- 
- 	pfn = spa_alias >> PAGE_SHIFT;
-+	if (!pfn_valid(pfn))
-+		return NOTIFY_DONE;
- 
- 	/*
- 	 * Take down the aliased memory page. The original memory page flagged
- 	 * by the MCE will be taken cared of by the standard MCE handler.
- 	 */
--	dev_emerg(mds->cxlds.dev, "Offlining aliased SPA address0: %#llx\n",
-+	dev_emerg(&cxlr->dev, "Offlining aliased SPA address0: %#llx\n",
- 		  spa_alias);
- 	if (!memory_failure(pfn, 0))
- 		set_mce_nospec(pfn);
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index e50dc716d4e8..79b497284a3f 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -15,6 +15,7 @@
- #include <cxlmem.h>
- #include <cxl.h>
- #include "core.h"
-+#include "mce.h"
- 
- /**
-  * DOC: cxl core region
-@@ -3809,34 +3810,6 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
- }
- EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, "CXL");
- 
--u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa)
--{
--	struct cxl_region_ref *iter;
--	unsigned long index;
--
--	if (!endpoint)
--		return ~0ULL;
--
--	guard(rwsem_write)(&cxl_rwsem.region);
--
--	xa_for_each(&endpoint->regions, index, iter) {
--		struct cxl_region_params *p = &iter->region->params;
--
--		if (cxl_resource_contains_addr(p->res, spa)) {
--			if (!p->cache_size)
--				return ~0ULL;
--
--			if (spa >= p->res->start + p->cache_size)
--				return spa - p->cache_size;
--
--			return spa + p->cache_size;
--		}
--	}
--
--	return ~0ULL;
--}
--EXPORT_SYMBOL_NS_GPL(cxl_port_get_spa_cache_alias, "CXL");
--
- static int is_system_ram(struct resource *res, void *arg)
- {
- 	struct cxl_region *cxlr = arg;
-@@ -4070,6 +4043,19 @@ static int cxl_region_probe(struct device *dev)
- 	if (rc)
- 		return rc;
- 
-+	/*
-+	 * Regions fronted by an extended linear cache need the MCE notifier to
-+	 * offline the aliased page on a memory error.
-+	 */
-+	if (p->cache_size) {
-+		rc = devm_cxl_register_mce_notifier(&cxlr->dev,
-+						    &cxlr->mce_notifier);
-+		if (rc == -EOPNOTSUPP)
-+			dev_warn(&cxlr->dev, "CXL MCE unsupported\n");
-+		else if (rc)
-+			return rc;
-+	}
-+
- 	rc = cxl_region_setup_poison(cxlr);
- 	if (rc)
- 		return rc;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 1297594beaec..a4c44b0cb3ae 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -462,6 +462,7 @@ struct cxl_region_params {
-  * @coord: QoS access coordinates for the region
-  * @node_notifier: notifier for setting the access coordinates to node
-  * @adist_notifier: notifier for calculating the abstract distance of node
-+ * @mce_notifier: notifier for MCE
-  */
- struct cxl_region {
- 	struct device dev;
-@@ -477,6 +478,7 @@ struct cxl_region {
- 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
- 	struct notifier_block node_notifier;
- 	struct notifier_block adist_notifier;
-+	struct notifier_block mce_notifier;
- };
- 
- struct cxl_nvdimm_bridge {
-@@ -854,7 +856,6 @@ bool is_cxl_pmem_region(struct device *dev);
- struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev);
- int cxl_add_to_region(struct cxl_endpoint_decoder *cxled);
- struct cxl_dax_region *to_cxl_dax_region(struct device *dev);
--u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint, u64 spa);
- bool cxl_region_contains_resource(const struct resource *res);
- #else
- static inline bool is_cxl_pmem_region(struct device *dev)
-@@ -873,11 +874,6 @@ static inline struct cxl_dax_region *to_cxl_dax_region(struct device *dev)
- {
- 	return NULL;
- }
--static inline u64 cxl_port_get_spa_cache_alias(struct cxl_port *endpoint,
--					       u64 spa)
--{
--	return 0;
--}
- static inline bool cxl_region_contains_resource(const struct resource *res)
- {
- 	return false;
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 776c50d1db51..a5c1820beb48 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -409,7 +409,6 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
-  * @poison: poison driver state info
-  * @security: security driver state info
-  * @fw: firmware upload / activation state
-- * @mce_notifier: MCE notifier
-  *
-  * See CXL 3.0 8.2.9.8.2 Capacity Configuration and Label Storage for
-  * details on capacity parameters.
-@@ -429,7 +428,6 @@ struct cxl_memdev_state {
- 	struct cxl_poison_state poison;
- 	struct cxl_security_state security;
- 	struct cxl_fw_state fw;
--	struct notifier_block mce_notifier;
- };
- 
- static inline struct cxl_memdev_state *
+which initializes the encode helper outputs (*eiw = 0, *eig = 0) before
+the -EINVAL returns. With that, the iw == 0 case reads a defined eiw == 0
+and takes the existing early return, so eig is never consumed and the
+shift is never reached.
 
-base-commit: 8cd9520d35a6c38db6567e97dd93b1f11f185dc6
--- 
-2.54.0
+ATM, I'm thinking the v3 of this series will appear rebased on 7.2-rc1
+(that has the fix) so nothing to see here.
 
+-- Alison
+
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/cover.1781199122.git.alison.schofield@intel.com?part=4
