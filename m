@@ -1,81 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053A3378822
-	for <linux-cxl@vger.kernel.org>; Tue, 16 Jun 2026 19:51:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F272314A98;
+	Tue, 16 Jun 2026 20:41:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781639501; cv=none; b=DUayJo0JUpW2j+UemV+kjti2JjCucZ43K34HceWVs92kXorp9DKgMoSLneb5fBi3RNXYxvNChyy58/hp4ESWfipjzsDDYzOG6O0RwS7rAiznkCl0xJ/+hV0ar4+QMv3JPtkN+ZB5OhLa8J8+ZECUyKc0A93rh6v3Vm9Qym0nt2g=
+	t=1781642513; cv=none; b=bNth/3l7jzz/1oWsgdke6To8X2OYnzY0okrSd4Dxwe8IBtNGNT8iF6EYTZviMJqZcRW9Yq/lKr54PPzXLMiuv3SHd4iAupJ0Tk3J3npkc5Go8CuyyzOPVktCpiMLOPOwFI1cJaWY82nCBV8X9u7wOFLwLnD51Kv9HB4rycZaVEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781639501; c=relaxed/simple;
-	bh=GX8N9trKYdtf49eD0j1+zVcA2b1DBWxetvDojTllNZk=;
-	h=Date:From:To:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=LA/KgxBum8srI4JUzKqwHMFVStHuG2lIhB/XEILNLeLnIH75TCQHEhv9c7V1ErgcMt/UE1LQ8jczc+clu8+1kOBIuTMJ8CglQdcr0GhCdpChW1aNxnwK9grnZ2Mlnpgr3TNBcs/XFtUrkN6nnq/JaH2aZYhf+7KSzmCyObLTQbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fF1DitCK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781642513; c=relaxed/simple;
+	bh=CDSdQFV3qioaHqPl0tpkEmOlvuCgJgIFMTWdM6MV6kI=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=DlavyKvwoc3DN34c9xuDR0YwzxXVyOnYK1Ci2/64PRg+9xtcgpGJv57N/fCRrKTIeC6IWbQk5zQVtqtEghh+ZPgif3GyEVHLPwy/kOl9zsxb+pgSb42WXDkZECeo/CMcdVaw++CpN3h6SrG9vS1ft8O5S9ZD3vbx7UiYpTHL1xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bpWJIZ+B; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fF1DitCK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 503951F000E9;
-	Tue, 16 Jun 2026 19:51:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bpWJIZ+B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9579F1F00A3A;
+	Tue, 16 Jun 2026 20:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781639499;
-	bh=g+d1VjQnWZ4F0rmbmwqYmuKkUshVGKY8qkV/N9ULV48=;
-	h=Date:From:To:In-Reply-To:References:Subject;
-	b=fF1DitCK8MRaotFhX9WswEPH5XfSSQBeIw5po/YXvTLiJE0WzpcSI6fKfbnxOojzj
-	 R4XrVxbRA/h/v1pRUvJ/bwD66XmPvh0cJsPmu8cBTV4FzewaJnOOQXF+rb+NugMIJh
-	 U5aYmxSdaQ+4Ppypx7TYLsaepIhCxwdUqEcHeimDEgsBokAUVtcEXxgyPeUC9Ft8kG
-	 RMJNhhV4Yslqka/KdXPLUzl/RDiqqOYbP865DT6m4W+WRn8cRJ8cSN111Ja+gNH3OV
-	 RbegXrMpYS78tUOObkclC62A/yOTa7vh86E3W9AlaY41Q66m2avlMRXvyJWTJBQ3vP
-	 +CB3JHsEwTlkQ==
-Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 9FEFBF40092;
-	Tue, 16 Jun 2026 15:51:38 -0400 (EDT)
+	s=k20260515; t=1781642512;
+	bh=LsRWMCQ172Nctdls4C+Bu9r4tkyZ2inZmMtjh4z7S2s=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=bpWJIZ+BuPMkR2J0vB/CZ3qF/MCuUfNObgKkcn0bKJVn+oV8m/VYALZLOnf0IrY8f
+	 a9BC1oCv37YK3wdxbF3FBDTKk4hUj9eeWnqZpMaB7phJ8V/pu7/lRnzrXKcLpzvTcY
+	 D2LOrBP4MHx9QM9qn4Dlkfv54z+L8pbSjVlCox3l4hZ/H3JNF5sd54cK0xxNedV0tT
+	 jk8qw8gMY9+AHi708scCcI2blC4YKM+IqKeVcimN6R/F/ue+CmaN1IdfvGVkWhk9/e
+	 0IUSDfZ0SneN+BlmJxUkpCyzD/WILtD7/GluO6MuPYDFzeVvo1yrLn6k4kX4I96gJE
+	 90OPcBDV3lHsQ==
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id D15ABF40075;
+	Tue, 16 Jun 2026 16:41:50 -0400 (EDT)
 Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-12.internal (MEProxy); Tue, 16 Jun 2026 15:51:38 -0400
-X-ME-Sender: <xms:Sqkxai62Cv2sOk_l4juhCT1ehdtjxijW960pZWGtDdgOsGS3p8fQpQ>
-    <xme:SqkxaqJrHZZFcHsdTI8SrEreMklja_bF5BnlGvFZF2lTTIlXcqinXWM4nKV6RElej
-    nmqJhDufo9Z0cdfWfI2dpq_DK3NXsecBZEQR1-x5jySwuk-CfLcVQ>
-X-ME-Received: <xmr:Sqkxaqyj4AU3jGrmFqveZsNKD73M_YrwWhxLnAd9kUHkg3RpZ36zJY8ZQeiVTlQfUD1VPLwEADtyZcBVkZ-7m4RPGJ5Y0p0nQ7Q>
-X-ME-Proxy-Cause: dmFkZTGzIRrfK5fMc/tJSSQmDxLsrUZpcJ7+yMLsmEFII1xd97HLysDFEx3D9J+MXzl4Eg
-    8P0Rn6yOupE2fK185tmaAKV2+rpBjZXsDPSD/+g+ZtK8smW+uLnNYfhUBFuB4sAa2jYrjt
-    P2fZl6cFVsOPZQ3lkjfs9B1GWyipsgcfhBm6bQ3Og5kEF7JjUwm7ox+McJk7U45tKL1Tse
-    3xSAzORzlccg6kn0qURYXaCEB/KQ7l4EqCt1R53U+6qsr+onKYj3L1zCL6eIUrkBsBXsrI
-    mf4gfYVvciHLI2AlutFxOLuy/zmiL+y80RvtbT7OKCg1sZbebMTBysaUJj8B+uRb30PLVX
-    QqOjrZ2t6h64RVPdKG/A4kcwM8M4MDBzpaxMnu7urNMD/W0n02pbLbII8JCgKnbjZyPoxo
-    H45XP7dqL3Dm3ee+LBuwBoVqEYFuxalFsRHVXPVk11FHUhTNfBdlGLb60Uk0p0xA02t2jI
-    dbUqL5tC2ciCM+WF4PpFKmQHWoNqcp5hzcZbT9RRRSFsoASQv96aUxIVOBpINzK/ND57Tl
-    lfBNd3WOZFLvLHP6zJVFSZE+lYF63cyvEm8zMmesy6Koa58KvucDvIPB3x4MUjZjWxSJGt
-    rDjIFbNZ+jV9Zo97qGKAQ93+XJzMlYABYjdckf0e4fl/K0P1r+PXK24FEY6g
-X-ME-Proxy: <xmx:SqkxaiILJ1WMDRk2nNJG4jWcZWkuQ3FUvPd-Vrz95vipjHeFxisFmQ>
-    <xmx:SqkxapVkw-R4aOQDvUyejVszyz6rWFnuaV2M1evt7SWy4FVuiUWgsA>
-    <xmx:SqkxalYcHaB3bLBNDoQMbxnsTPtMvM2iAmrlV4seuT_SyA_ZSmDEfQ>
-    <xmx:SqkxagyOc8_XUt1a6RnPjZn73QZQNCRAT1bOvsRhUmFLdrV3wIX-9w>
-    <xmx:Sqkxal2AkLMqrlIS8B3IoAR-e80R-oxBKkIOt0YVAGu5gg7_VDVdboIk>
+  by phl-compute-01.internal (MEProxy); Tue, 16 Jun 2026 16:41:50 -0400
+X-ME-Sender: <xms:DrUxah0cY6E79bhvw0oVb8_DhNzD6_8UvRV0uV08MTdFvTNgoLYXjQ>
+    <xme:DrUxakDFdRz-kuQYnQZgPCtbXMksyjJO6-jIhpnT3C0uaXbSmFuK1w68bOtTh48fi
+    yH2P3dkkHj_l4UWC6lkuVxIgmzTflHfnEaUoEC28CeLbKwyS9ng0A>
+X-ME-Received: <xmr:DrUxaoAYPgfkeaNSn0xwjTlj2jzyiID54EAvEmeslqbAbuAFl1uTsZtthyEavgqnB-nPPIdLKMmCAGVyWqCxZjqmOBB88YnVubg>
+X-ME-Proxy-Cause: dmFkZTGxjNUqEQ60KHr/fFpc4xYVhJD+L2nlX44w5XNMcuWuqDKG+MpaqNmPOgiEHlM1HA
+    /51Cc9M6RJwRRKyJShiZo1jnOtkmKXVZ1iCOFJMOz1OH5EFP+qQY2ilSVGGVzJZz7l8KNT
+    6NTqH2DMREMqq+BziRlbIJeZLTwcSiCe5bov77TMsj3k1CmOif5prpVjv67EioHXrgsFgK
+    F4ElZJstZqFi0e3ZwyY9U7Lv9ObxIVIp3+kXTnfFLjjNSeoBoPuAhTxkEnPAPOj0GXr7fs
+    WAlPdiBYN0Gu+XeViP4CF5uxzVY8bLUpeue3xr433h+3iuFLZ1SHUJFUauTgZ7niPUh4jD
+    2LDx3dTeMwvbzcAwBpMICyl3SDesVckJ4eIet9hIDiCqHBiJcn3yvJLZQBaL93O4xwm4tt
+    +AkGtUWNyHTJOfoCda1vvuClp53m9CHn+uPO5Vh29qR7J9cyr8nIpCycfo3aTIGTKNTiHE
+    7zEZXCfg5bz1OjfSoEucmRiedrSCscU8njOdkqjAXwa7RPCbih2u1smPuao9qdvTqP5+lD
+    PWt88bWCNoMgvVgU94FfBufD7QHVWeQZCt8bF2ov6kXQ6+Jh4b4g4g3mI2eO8FqGWwi9iw
+    c/7b8Y4DQpBbQZMqmEorz5dDUWrZKwi6MtLE8zeJ2NXk4t5U2IJ2qd7jQymw
+X-ME-Proxy: <xmx:DrUxalNHGZhaW2Gtw_oY7lM9vlGi8H2yA6s5pb9XzGGVO5gBfnH_yA>
+    <xmx:DrUxaiOjG0BmeicE4digQ5BEmu5yQitOdGKBEXG9iEbmZoOVIvVTRA>
+    <xmx:DrUxapuDwnu8T6reV99WSq8KWH7nofClnxyxj9XodiJKL8Nzd6ia5Q>
+    <xmx:DrUxan9qkns6VrPKHt0EpbdQofV_cePysEuFD53nEST0FeqXRBemQg>
+    <xmx:DrUxalEJNNoHcq7CanVFTHUsQHe4OAOiC6q3-DrMfiZE14aG_3o1u5RL>
 Feedback-ID: i67ae4b3e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 16 Jun 2026 15:51:38 -0400 (EDT)
-Date: Tue, 16 Jun 2026 12:51:36 -0700
+ 16 Jun 2026 16:41:50 -0400 (EDT)
+Date: Tue, 16 Jun 2026 13:41:49 -0700
 From: "Dan Williams (nvidia)" <djbw@kernel.org>
-To: Alejandro Lucero Palau <alucerop@amd.com>, 
- "Dan Williams (nvidia)" <djbw@kernel.org>, 
- alejandro.lucero-palau@amd.com, 
+To: Richard Cheng <icheng@nvidia.com>, 
+ dave@stgolabs.net, 
+ jic23@kernel.org, 
+ dave.jiang@intel.com, 
+ alison.schofield@intel.com, 
+ vishal.l.verma@intel.com, 
+ ira.weiny@intel.com, 
+ djbw@kernel.org
+Cc: shiju.jose@huawei.com, 
+ ming.li@zohomail.com, 
+ alucerop@amd.com, 
  linux-cxl@vger.kernel.org, 
- netdev@vger.kernel.org, 
- edward.cree@amd.com, 
- davem@davemloft.net, 
- kuba@kernel.org, 
- pabeni@redhat.com, 
- edumazet@google.com, 
- dave.jiang@intel.com
-Message-ID: <6a31a948d61f5_9b8551006b@djbw-dev.notmuch>
-In-Reply-To: <50d8e423-8248-4e26-901b-010d14d22e67@amd.com>
-References: <20260609215755.8685-1-alejandro.lucero-palau@amd.com>
- <20260609215755.8685-5-alejandro.lucero-palau@amd.com>
- <6a28a206bf61a_4fa78100e4@djbw-dev.notmuch>
- <96ee638f-3b10-4baa-a6df-5a79efee8b8f@amd.com>
- <dcc502fa-1a06-465a-abab-9b039b9c2672@amd.com>
- <50d8e423-8248-4e26-901b-010d14d22e67@amd.com>
-Subject: Re: [PATCH v27 4/5] sfc: obtain and map cxl range using
- devm_cxl_probe_mem
+ linux-kernel@vger.kernel.org, 
+ newtonl@nvidia.com, 
+ kristinc@nvidia.com, 
+ kaihengf@nvidia.com, 
+ kobak@nvidia.com, 
+ Richard Cheng <icheng@nvidia.com>
+Message-ID: <6a31b50d3d5da_9b855100d9@djbw-dev.notmuch>
+In-Reply-To: <20260611094546.31496-1-icheng@nvidia.com>
+References: <20260611094546.31496-1-icheng@nvidia.com>
+Subject: Re: [PATCH] cxl/mbox: Bound the output payload allocation to mailbox
+ payload size
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -84,197 +86,50 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain;
  charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Alejandro Lucero Palau wrote:
-> =
+Richard Cheng wrote:
+> CXL_MEM_SEND_COMMAND bounds the user's in.size to the mailbox payload
+> size but leaves out.size unbounded, then cxl_mbox_cmd_ctor() calls
+> kvzalloc(out.size). A large out.size drives a huge allocation, even
+> above INT_MAX it WARNS and taints, on kernel with panic_on_warn=1, it
+> will panic.
+> The transport __cxl_pci_mbox_send_cmd() already clamps the response copy
+> to min(out.size, payload_size, device len), so the bound buffer is never
+> written beyond payload_size. Clamp the allocation to payload_size too,
+> matching the RAW path.
 
-> On 6/10/26 14:56, Alejandro Lucero Palau wrote:
-> >
-> > On 6/10/26 07:10, Alejandro Lucero Palau wrote:
-> >>
-> >> On 6/10/26 00:30, Dan Williams (nvidia) wrote:
-> >>> alejandro.lucero-palau@ wrote:
-> >>>> From: Alejandro Lucero <alucerop@amd.com>
-> >>>>
-> >>>> Use core API for safely obtain the CXL range linked to an HDM =
+Patch looks good, just comments on Fixes and formatting:
 
-> >>>> committed
-> >>>> by the BIOS. Map such a range for being used as the ctpio buffer.
-> >>>>
-> >>>> A potential user space action through sysfs unbinding or core cxl
-> >>>> modules remove will trigger sfc driver device detachment, with tha=
-t =
+> With the following reproducer[1] , we'll get error logs [2].
+> [1]:
+> """
+[ .. snip reproducer, yes a new test would be welcome .. ]
+> """
+> [2]:
 
-> >>>> case
-> >>>> not racing with this mapping as this is done during driver probe a=
-nd
-> >>>> therefore protected with device lock against those user space acti=
-ons.
-> >>>>
-> >>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> >>>> ---
-> >>>> =C2=A0 drivers/net/ethernet/sfc/efx.c=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 1 +
-> >>>> =C2=A0 drivers/net/ethernet/sfc/efx_cxl.c | 24 +++++++++++++++++++=
-+++++
-> >>>> =C2=A0 drivers/net/ethernet/sfc/efx_cxl.h |=C2=A0 3 +++
-> >>>> =C2=A0 3 files changed, 28 insertions(+)
-> >>>>
-> >>>> diff --git a/drivers/net/ethernet/sfc/efx.c =
+Trim reports to the relevant information, I usually drop timestamps and
+all but the Call Trace:
 
-> >>>> b/drivers/net/ethernet/sfc/efx.c
-> >>>> index 90ccbe310386..578054c21e79 100644
-> >>>> --- a/drivers/net/ethernet/sfc/efx.c
-> >>>> +++ b/drivers/net/ethernet/sfc/efx.c
-> >>>> @@ -984,6 +984,7 @@ static void efx_pci_remove(struct pci_dev =
+>   WARNING: mm/slub.c:6841 at __kvmalloc_node_noprof+0x534/0x818,
+>   CPU#131: cxl_repro_outsi/4668
+>    Tainted: [W]=WARN
+>    Call trace:
+>     __kvmalloc_node_noprof+0x534/0x818 (P)
+>     cxl_send_cmd+0x514/0x7e0
+>     cxl_memdev_ioctl+0x7c/0xe0
+>     __arm64_sys_ioctl+0x4a4/0xbc8
+>     invoke_syscall.constprop.0+0xac/0x100
+>     do_el0_svc+0x4c/0x100
+>     el0_svc+0x50/0x2b0
+>     el0t_64_sync_handler+0xc0/0x108
+>     el0t_64_sync+0x1b8/0x1c0
+>    ---[ end trace 0000000000000000 ]---
+> 
+> Fixes: 4faf31b43468 ("cxl/mbox: Move mailbox and other non-PCI specific infrastructure to the core")
 
-> >>>> *pci_dev)
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 efx_fini_io(efx);
-> >>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 probe_data =3D container_of(=
-efx, struct efx_probe_data, efx);
-> >>>> +=C2=A0=C2=A0=C2=A0 efx_cxl_exit(probe_data);
-> >>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_dbg(efx->pci_dev, "shutd=
-own successful\n");
-> >>>> =C2=A0 diff --git a/drivers/net/ethernet/sfc/efx_cxl.c =
+Looks like the correct Fixes would be:
 
-> >>>> b/drivers/net/ethernet/sfc/efx_cxl.c
-> >>>> index 4d55c08cf2a1..d5766a40e2cf 100644
-> >>>> --- a/drivers/net/ethernet/sfc/efx_cxl.c
-> >>>> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> >>>> @@ -18,6 +18,7 @@ int efx_cxl_init(struct efx_probe_data *probe_da=
-ta)
-> >>>> =C2=A0 {
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct efx_nic *efx =3D &probe_data=
-->efx;
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pci_dev *pci_dev =3D efx->pc=
-i_dev;
-> >>>> +=C2=A0=C2=A0=C2=A0 struct range cxl_pio_range;
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct efx_cxl *cxl;
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u16 dvsec;
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int rc;
-> >>>> @@ -75,9 +76,32 @@ int efx_cxl_init(struct efx_probe_data *probe_d=
-ata)
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENO=
-DEV;
-> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> >>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 cxl->cxlmd =3D devm_cxl_probe_mem(&cxl-=
->cxlds, &cxl_pio_range);
-> >>>> +=C2=A0=C2=A0=C2=A0 if (IS_ERR(cxl->cxlmd)) {
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_err(pci_dev, "CXL =
-accel memdev creation failed\n");
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return PTR_ERR(cxl->cx=
-lmd);
-> >>>> +=C2=A0=C2=A0=C2=A0 }
-> >>>> +
-> >>>> +=C2=A0=C2=A0=C2=A0 cxl->ctpio_cxl =3D ioremap_wc(cxl_pio_range.st=
-art,
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 range_len(&cxl_pio_range=
-));
-> >>>> +=C2=A0=C2=A0=C2=A0 if (!cxl->ctpio_cxl) {
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_err(pci_dev, "CXL =
-ioremap region (%pra) failed\n",
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
- &cxl_pio_range);
-> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
-> >>> Dave caught the iounmap leak, but another concern is since you want=
- to
-> >>> continue operation if efx_cxl_init() fails then you probably also w=
-ant
-> >>> to release the successful attachment to the CXL domain if this happ=
-ens.
-> >>
-> >>
-> >> I will do that.
-> >>
-> >
-> > Looking at this issue, I think an error when creating the memdev or =
+Fixes: 583fa5e71cae ("cxl/mem: Add basic IOCTL interface")
 
-> > during the region attach triggers the memdev removal, but ...
-> >
-> >
-> >>
-> >>> Minor since something else is likely to fail if ioremap is not =
-
-> >>> reliable.
-> >
-> >
-> > .. if we want to specifically do that with an unlikely (but possible)=
- =
-
-> > ioremap error something else needs to be exported like =
-
-> > cxl_memdev_unregister(). Are you happy with that approach?
-> >
-> =
-
-> I have just tested with this:
-> =
-
-> +void cxl_memdev_remove(void *_cxlmd)
-> +{
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct cxl_memdev *cxlmd =3D _cxl=
-md;
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device *dev =3D &cxlmd->de=
-v;
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 devm_remove_action_nowarn(cxlmd->=
-cxlds->dev, cxl_memdev_unregister,
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cxlmd);
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cdev_device_del(&cxlmd->cdev, dev=
-);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cxl_memdev_shutdown(dev);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 put_device(dev);
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_memdev_remove, "CXL");
-> =
-
-> =
-
-> only called if the ioremap fails.
-> =
-
-> =
-
-> Please, let me know if you like this approach before sending another =
-
-> version.
-
-A devres group can automatically cleanup after devm_cxl_memdev_probe()
-in the error path with no new exports needed from the CXL core.
-Something like:
-
-        void *group =3D devres_open_group(cxl->cxlds.dev, NULL, GFP_KERNE=
-L);
-        int rc =3D 0;
-
-        if (!group)
-                return -ENOMEM;
-        =
-
-        cxl->cxlmd =3D devm_cxl_probe_mem(&cxl->cxlds, &cxl_pio_range);
-        if (IS_ERR(cxl->cxlmd)) {
-                pci_err(pci_dev, "CXL accel memdev creation failed\n");
-                rc =3D PTR_ERR(cxl->cxlmd);
-                goto out;
-        }
-
-        cxl->ctpio_cxl =3D
-                ioremap_wc(cxl_pio_range.start, range_len(&cxl_pio_range)=
-);
-        if (!cxl->ctpio_cxl) {
-                pci_err(pci_dev, "CXL ioremap region (%pra) failed\n",
-                        &cxl_pio_range);
-                rc =3D -ENOMEM;
-        }
-
-out:
-        if (rc)
-                devres_release_group(group);
-        else
-                devres_remove_group(group);
-        return rc;=
+...as unbounded input was mistakenly allowed from the outset.
