@@ -1,143 +1,209 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E134630B50F
-	for <linux-cxl@vger.kernel.org>; Tue, 16 Jun 2026 13:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368C21A6803;
+	Tue, 16 Jun 2026 17:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781617634; cv=none; b=n1tlTb2FU3L8EVl535lRqG5lb2VLGDEXW1Ge4NnBiyQWhHv/RQPElJ+SNBXq+9fJrANTYuWNBWnWjXDKIbi/LtVfGT/IwAj9PulEEAuGonfbxUO6ZmRjGa2fA5rgiod9qvkDJIoIZtfi84n7vtU72FssK6IxOlZ8c0LvTP0RIpQ=
+	t=1781630441; cv=none; b=DbXcCUWz1U4Rxj5lIy1TF5ZIZkG5Gf65/prZxifC/LZkVNT2ZVpwZwHvqC+J4cbmwFf1e+vu75tH7z03o51mHiJdsX4vj0LowExr+7UoV48wY14AImw/GNw9UW8XLPtj20z/X7flOSjnWt2hsZSwE8KEy5B1cfsqLw6HGMgHeQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781617634; c=relaxed/simple;
-	bh=ON5XRz8lHOpOJ8xktgKhULmQK7Hl4dNNx6xl4pP0U7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h4kUzNGniSJY5etw2pBfp3zxmOSdYnPUuLCMrrnzcmij9c1l+w0T5XD28z5DteZPNZ9SBdTgKM84n8GkGPzfku4nXei9bGMpWiFD/R1seGpQU3rGPLAEGrVuefC4QWieipGmzHPrNPTdqgFuzISErmltHp62hbE5EZieFJGD/uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=LCkTe2IB; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1781630441; c=relaxed/simple;
+	bh=Xw5VHzeHD3QQblqJsoJ4iLSB6ciMiIXw9zEKEK0UuO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bsHLUXAMHhCMfdoFBEyFXxgcSpZuTX71UaEGdr4FFd7bAxpjrwFIZUMvt2hwVQwoxVnPBvm2j6NzCrE4UUWIGud/W59rEDOPnCIoYICiz7L6uKKYIpKFe6KwCcIidytr+RRT32/q3tAQq33iwmx4lnGduehWbLtJ62Rf4jhoaBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jvRmL6wi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="LCkTe2IB"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-517863a2edfso36125381cf.1
-        for <linux-cxl@vger.kernel.org>; Tue, 16 Jun 2026 06:47:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1781617632; x=1782222432; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EvNzegJ7+heyexsBUGAQ0jwoVUjk7efTCiVuRf1VOy0=;
-        b=LCkTe2IBkv5qsv/rAmGrOexkI/ZfXf5q6AV8BqKMOOZ+sHg78vk69hSs+G8iRTCY5v
-         cBhcigAqcSSFuNUN6XPPFKundVuwRQFhop+/+/fUKrv3GG/rLB7va1VT2qASgn0EHkQH
-         fIHaDBVjEL5IiGHZs1jE6KCzQxaM+SSybNLhFBQj9Uwl3v/L2i+i6lch40EIrpPmaVFQ
-         c55fGSwNOIdqM4IPGd8JBp7QTkM8ULCKMIFgubmM5K7RtnuAWHk0qvXXik2UHAk/NcMx
-         SuBqjt0rDc3YlRFJu1MXZNOhDqTDk5tk3S0IND+cMCL74Nhq+x5UQ3pvsyhBUR8CUkD8
-         WwBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781617632; x=1782222432;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EvNzegJ7+heyexsBUGAQ0jwoVUjk7efTCiVuRf1VOy0=;
-        b=h11/dGVIesk/KAFw8fYReZA9t+iWBARe/AqN2ufldFDUdkA7NW3uF9ddIfHqZ0Fk6x
-         Z05DxVTKYB7a/Dd4BqOWHqpQM36TIQ9XGfQfFOcZOrUnkDegdzgq2Qh2PY4NDsdmpRcj
-         v8W8i/A5J06kQX+Au5ikI6Ou9JpsArth1pmPyJCNqrQ/N9N045N3effGg0r9yaJq8j6W
-         ezWSHV5kazF8PxT9zup8zud77LiQnNmgQSUMGNYNYgrz/q0HhAEqt3Ih9ic9aErWnNEX
-         5EyBzQmUMVZuueFEpZUvnA1MWYRFt+q20xUhWBJ1yFXi5cKPlysCNEpvol3tUXCsFV6q
-         UQ9A==
-X-Forwarded-Encrypted: i=1; AFNElJ+rYZoUXECJ1Wjq+G+IFuDEp6gy57cltlpzSNdCjp1LrHf7xxp4ZTmHwiaYAc/Fv3W0Yh1gJ6mCl+4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwD+T0S4YuHeFb2Ir90BPt2B3MXdIlnYScwOPUkhBtsQye3i0Vx
-	JW8khPIaWnvKBRIHQ9xxk8sK/rdLbZundrB4vNTsIB2XySaQxJTKPZ0rwKAuRnk1GEc=
-X-Gm-Gg: Acq92OFYr89uW+/gsdjqqPzXQtUAUVbD9/Sn11Y8VO6GebyTWwO0xyp3+eqnLsi6S3z
-	hUUlcIaTSgArPcQmQQbx1gojtvEWpnkXRkAVnCe+ctl63qUrrvYcEiODAp044OAIxNOP+p99hpJ
-	u7ctYnEV1CIhZu2LrpW8gQd+iYtkEPweyTw/PUDCp7wAUoJlZON8w6beKeaCd7yh7GkexGcIGf2
-	O9PC/JD+u+a8hNlQ3idfu5gaGOBoLaW1urUIlIKmGxnsodLDFioD0ZoM3Zwlr52vyRugHTJBKBS
-	ZBUtclkEYeHXOBt1GM7elBOctQrNGxanaMc4RZC3iiJZk2MMA3BBJ99nD1xrRgNQJLNkGY9a702
-	kSP/mM4XCsFjcoohuWHor20UM5WvbylGmTKeqCtZJ0KyR6YtPphJJb71Hh098C+800HIYPtevr+
-	HJn2Ty3t0JzfAwoXkpbZ1J
-X-Received: by 2002:a05:622a:a6d4:b0:517:7e3a:5ee1 with SMTP id d75a77b69052e-519916d65f2mr43449041cf.1.1781617631680;
-        Tue, 16 Jun 2026 06:47:11 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:500::3:437e])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-517fb84188asm150577021cf.29.2026.06.16.06.47.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jun 2026 06:47:10 -0700 (PDT)
-Date: Tue, 16 Jun 2026 09:47:07 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Brendan Jackman <brendan.jackman@linux.dev>
-Cc: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
-	"David Hildenbrand (Arm)" <david@kernel.org>,
-	Balbir Singh <balbirs@nvidia.com>,
-	lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	damon@lists.linux.dev, kernel-team@meta.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	dave@stgolabs.net, jonathan.cameron@huawei.com,
-	dave.jiang@intel.com, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com,
-	dan.j.williams@intel.com, longman@redhat.com,
-	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
-	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
-	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
-	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
-	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
-	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
-	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
-	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
-	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
-	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com,
-	Matthew Wilcox <willy@infradead.org>
-Subject: Re: [Lsf-pc] [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory
- Nodes (w/ Compressed RAM)
-Message-ID: <ajFT235iYsSJ7nbR@gourry-fedora-PF4VCD3F>
-References: <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
- <ah-0CyZurn5D1ezY@parvat>
- <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
- <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
- <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
- <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
- <ainFROZ3WrGioyuY@gourry-fedora-PF4VCD3F>
- <aiwl4kCG814dpX7L@gourry-fedora-PF4VCD3F>
- <9f1815b0-896b-44ab-9e6d-9316d8f11033@kernel.org>
- <DJAGEUY8S09F.3V3HF570G85OF@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jvRmL6wi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A204C1F000E9;
+	Tue, 16 Jun 2026 17:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781630438;
+	bh=P4BxE9Vk8Q70Zy9QJlxtVeh2hAdKmdkmaWSqUttmwJA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=jvRmL6wi3fiKnu6kdjeoHfE2CkcNoZCA9ofmUg+Qk2yhx55nNF4w1dQXBakshPoIg
+	 fIDIwJnWUIjUj0HUHWGVfezioaezykaujlBCNxsQzZQuTottEs49qxo1ZvBvlUuSQ0
+	 J9O0OnGyrlo0eviNszJEV7LdD7Ec3Cpk2RJ2FZpropiyaw/+xDqzjAuQUNPsrEre/E
+	 fLHiKo1Fdlu5odUfKJV7FWoM1JAXnayAo9QmONsnYrtP6abIBAsXMhh0lVHcGpzA0k
+	 l60enSXll9WGRRsaykXl4/tN0ud5v1bM8LeuHqOJVZLU2KrWiiTVocGrgWJHR12/TF
+	 h+jg/SG+Hmgtw==
+Date: Tue, 16 Jun 2026 18:20:29 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Shrihari E S <shrihari.s@samsung.com>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+ qemu-devel@nongnu.org, cpgs@samsung.com, arun.george@samsung.com,
+ vikash.k5@samsung.com, s.neeraj@samsung.com, dongjoo.seo1@samsung.com,
+ dave@stgolabs.net, gost.dev@samsung.com
+Subject: Re: [RFC 3/8] hw/pci: Add SVC capability and UIO properties to PCIe
+ ports
+Message-ID: <20260616182029.3dc0af33@jic23-huawei>
+In-Reply-To: <20260609105836.3702787-4-shrihari.s@samsung.com>
+References: <20260609105836.3702787-1-shrihari.s@samsung.com>
+	<CGME20260609104517epcas5p222b4fc4a5fd8671b47a68abc785a6422@epcas5p2.samsung.com>
+	<20260609105836.3702787-4-shrihari.s@samsung.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DJAGEUY8S09F.3V3HF570G85OF@linux.dev>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 16, 2026 at 11:57:42AM +0000, Brendan Jackman wrote:
-> On Mon Jun 15, 2026 at 2:38 PM UTC, Vlastimil Babka (SUSE) wrote:
-> > On 6/12/26 17:29, Gregory Price wrote:
-> >> On Wed, Jun 10, 2026 at 04:12:52PM -0400, Gregory Price wrote:
-> >>> On Wed, Jun 10, 2026 at 08:59:59PM +0200, David Hildenbrand (Arm) wrote:
-> >>> > > 
-> >
-> > I think the memalloc approach is dangerous due to unexpected nesting. There
-> > might be nested page allocations in page allocation itself (due to some
-> > debugging option). But also interrupts do not change what "current" points
-> > to. Suddenly those could start requesting folios and/or private nodes and be
-> > surprised, I'm afraid.
+On Tue,  9 Jun 2026 16:28:31 +0530
+Shrihari E S <shrihari.s@samsung.com> wrote:
+
+> From: Dongjoo Seo <dongjoo.seo1@samsung.com>
 > 
-> Minor side-note: couldn't we just define it such that the allocator
-> ignores the context when not in_task() (and warn if you try to enter the
-> context while not currently in_task())?
+> Implement the Streamlined Virtual Channel (SVC) extended capability
+> for PCIe ports (Root, Upstream, and Downstream). This capability is
+> mandatory for enabling Unordered IO (UIO) traffic as per PCIe 6.4
+> specification [1].
 > 
-> (Don't think this would change the conclusion very much, e.g. doesn't
-> help with the nesting issues. Mostly curious in case I'm missing a
-> detail here).
->
+> UIO functionality depends on two key prerequisites:
+>   1. SVC support (SVC3 mandatory, SVC4 optional)
+>   2. 256-byte Flit mode support
+> 
+> This patch adds the following experimental properties to PCIe ports:
+>   - x-uio-svc: Enable UIO traffic via SVC3 (mandatory path)
+>   - x-uio-svc-opt: Enable UIO traffic via SVC4 (optional path)
 
-I looked at this - only solves one issue and oh boy is that an obtuse
-confusing condition to understand.  We still suffer from recursion in
-reclaim.
+That doesn't feel like naming that will stand the test of time.
+I think it needs to mention svc4 in the name.  Or I suppose we could
+do something with a single x-uio-svc parameter taking values.
 
-~Gregory
+
+>   - x-256b-flit: Enable 256B flit mode required for UIO
+> 
+> Helper functions are included to manage UIO traffic gating and SVC
+> configuration. This change lays the groundwork for UIO emulation in
+> QEMU.
+> 
+> [1]: PCIe 6.4 Specification, Table 2-46 (Streamlined Virtual Channel)
+
+I'm currently out of the loop for PCIe specs. So if someone else could
+review against spec that would be great.
+
+> 
+> Signed-off-by: Dongjoo Seo <dongjoo.seo1@samsung.com>
+> Signed-off-by: Shrihari E S <shrihari.s@samsung.com>
+> ---
+>  hw/pci-bridge/pcie_root_port.c     |  2 ++
+>  hw/pci-bridge/xio3130_downstream.c |  3 +++
+>  hw/pci-bridge/xio3130_upstream.c   |  8 ++++++++
+>  include/hw/pci/pcie_port.h         | 21 +++++++++++++++++++++
+>  4 files changed, 34 insertions(+)
+> 
+> diff --git a/hw/pci-bridge/pcie_root_port.c b/hw/pci-bridge/pcie_root_port.c
+> index eeee24e042..20554bd854 100644
+> --- a/hw/pci-bridge/pcie_root_port.c
+> +++ b/hw/pci-bridge/pcie_root_port.c
+> @@ -153,6 +153,8 @@ static const Property rp_props[] = {
+>                      QEMU_PCIE_SLTCAP_PCP_BITNR, true),
+>      DEFINE_PROP_BOOL("disable-acs", PCIESlot, disable_acs, false),
+>      DEFINE_PROP_BOOL("x-256b-flit", PCIEPort, flitmode, true),
+> +    DEFINE_PROP_BIT("x-uio-svc", PCIEPort, svc, UIO_MANDATORY_SVC, false),
+> +    DEFINE_PROP_BIT("x-uio-svc-opt", PCIEPort, svc, UIO_OPTIONAL_SVC, false),
+>  };
+>  
+>  static void rp_instance_post_init(Object *obj)
+> diff --git a/hw/pci-bridge/xio3130_downstream.c b/hw/pci-bridge/xio3130_downstream.c
+> index 0c3fed3053..b0b297bb53 100644
+> --- a/hw/pci-bridge/xio3130_downstream.c
+> +++ b/hw/pci-bridge/xio3130_downstream.c
+> @@ -137,6 +137,9 @@ static void xio3130_downstream_exitfn(PCIDevice *d)
+>  static const Property xio3130_downstream_props[] = {
+>      DEFINE_PROP_BIT(COMPAT_PROP_PCP, PCIDevice, cap_present,
+>                      QEMU_PCIE_SLTCAP_PCP_BITNR, true),
+> +    DEFINE_PROP_BIT("x-uio-svc", PCIEPort, svc, UIO_MANDATORY_SVC, false),
+> +    DEFINE_PROP_BIT("x-uio-svc-opt", PCIEPort, svc, UIO_OPTIONAL_SVC, false),
+> +    DEFINE_PROP_BOOL("x-256b-flit", PCIEPort, flitmode, false),
+>  };
+>  
+>  static const VMStateDescription vmstate_xio3130_downstream = {
+> diff --git a/hw/pci-bridge/xio3130_upstream.c b/hw/pci-bridge/xio3130_upstream.c
+> index 40057b749b..925df5add3 100644
+> --- a/hw/pci-bridge/xio3130_upstream.c
+> +++ b/hw/pci-bridge/xio3130_upstream.c
+> @@ -24,6 +24,7 @@
+>  #include "hw/pci/msi.h"
+>  #include "hw/pci/pcie.h"
+>  #include "hw/pci/pcie_port.h"
+> +#include "hw/core/qdev-properties.h"
+>  #include "migration/vmstate.h"
+>  #include "qemu/module.h"
+>  
+> @@ -123,6 +124,12 @@ static const VMStateDescription vmstate_xio3130_upstream = {
+>      }
+>  };
+>  
+> +static const Property xio3130_upstream_props[] = {
+> +    DEFINE_PROP_BIT("x-uio-svc", PCIEPort, svc, UIO_MANDATORY_SVC, false),
+> +    DEFINE_PROP_BIT("x-uio-svc-opt", PCIEPort, svc, UIO_OPTIONAL_SVC, false),
+> +    DEFINE_PROP_BOOL("x-256b-flit", PCIEPort, flitmode, false),
+> +};
+> +
+>  static void xio3130_upstream_class_init(ObjectClass *klass, const void *data)
+>  {
+>      DeviceClass *dc = DEVICE_CLASS(klass);
+> @@ -138,6 +145,7 @@ static void xio3130_upstream_class_init(ObjectClass *klass, const void *data)
+>      dc->desc = "TI X3130 Upstream Port of PCI Express Switch";
+>      device_class_set_legacy_reset(dc, xio3130_upstream_reset);
+>      dc->vmsd = &vmstate_xio3130_upstream;
+> +    device_class_set_props(dc, xio3130_upstream_props);
+>  }
+>  
+>  static const TypeInfo xio3130_upstream_info = {
+> diff --git a/include/hw/pci/pcie_port.h b/include/hw/pci/pcie_port.h
+> index 1bcc734649..a6b1b8a6cf 100644
+> --- a/include/hw/pci/pcie_port.h
+> +++ b/include/hw/pci/pcie_port.h
+> @@ -37,8 +37,29 @@ struct PCIEPort {
+>  
+>      /* pci express switch port */
+>      uint8_t     port;
+> +
+> +    /*
+> +     * This field declares Streamlined Virtual Channel (SVC) capability.
+> +     * Per PCIe 6.4 specification section 7.9.29, a pcie port supports
+> +     * upto 8 SVCs, in that SVC0 is a default one, SVC3 is for UIO traffic
+> +     * and SVC 4 is shared by both UIO and non-UIO traffic.
+
+What actually goes in there?  Is this literally the SVC capability content?
+
+> +     */
+> +    uint32_t    svc;
+>  };
+>  
+> +#define UIO_MANDATORY_SVC 3
+> +#define UIO_OPTIONAL_SVC 4
+> +
+> +static inline bool get_uio_mandatory_svc(PCIEPort *port)
+> +{
+> +    return (port->svc >> UIO_MANDATORY_SVC) & 1;
+
+Could just define the field mask given I don't think you ever care about them
+being the numeric values themselves. If you need the value defines later, then
+fair enough.
+
+If you do switch to defining fields.
+	return port->svc & UIO_MANDATORY_SVC;
+and rely on boolean cast from non 0 to be true.
+
+Also, do we want to route those two defines through the kernel uapi/linux/pci_regs.h
+and then just make use of them in QEMU?
+
+I kind of assume you have some kernel patches as well as this qemu support so
+it would form part of that?
+
+> +}
+> +
+> +static inline bool get_uio_optional_svc(PCIEPort *port)
+> +{
+> +    return (port->svc >> UIO_OPTIONAL_SVC) & 1;
+> +}
+> +
+>  void pcie_port_init_reg(PCIDevice *d);
+>  
+>  PCIDevice *pcie_find_port_by_pn(PCIBus *bus, uint8_t pn);
+
