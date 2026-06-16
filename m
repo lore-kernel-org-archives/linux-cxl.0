@@ -1,59 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9B33DBD57
-	for <linux-cxl@vger.kernel.org>; Tue, 16 Jun 2026 19:35:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 053A3378822
+	for <linux-cxl@vger.kernel.org>; Tue, 16 Jun 2026 19:51:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781638520; cv=none; b=UNd238BH3UvUKqyNb8nZDOmmwsLEl1TTK4CG5igOQ270B+ctj2+OvUB9kTiXrmT4OKe9OGSKtznT0yhbiSCVaBEgGAqdAiiKUhzsl5jxRtTO7sWnMSo1G8x1G9sskX2xpcjZnvh+98TBzxvHRgFifmLWZc6oWyEopyU+cm7lla0=
+	t=1781639501; cv=none; b=DUayJo0JUpW2j+UemV+kjti2JjCucZ43K34HceWVs92kXorp9DKgMoSLneb5fBi3RNXYxvNChyy58/hp4ESWfipjzsDDYzOG6O0RwS7rAiznkCl0xJ/+hV0ar4+QMv3JPtkN+ZB5OhLa8J8+ZECUyKc0A93rh6v3Vm9Qym0nt2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781638520; c=relaxed/simple;
-	bh=MY2uIvhGYy/CfCwesRydbU3lcjiu5NG6iPQrb5kFAwE=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=NpK7Fe61lhZt2FIaBAXHIC4DyBjIlGaPWaZa4Otsi6fHdWZmgsl5yy+U5kJ6adMuL1dlS8WeeKxIsYlUF5Oe4PPXgOAAkAjhK2wWcORyi7hNC5g13yRc7tVjCQQZzHh22khcKxLFdWKBUm/pI0449AVpRY9eaZzfHq+YVIMNVJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BR43W/Os; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781639501; c=relaxed/simple;
+	bh=GX8N9trKYdtf49eD0j1+zVcA2b1DBWxetvDojTllNZk=;
+	h=Date:From:To:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=LA/KgxBum8srI4JUzKqwHMFVStHuG2lIhB/XEILNLeLnIH75TCQHEhv9c7V1ErgcMt/UE1LQ8jczc+clu8+1kOBIuTMJ8CglQdcr0GhCdpChW1aNxnwK9grnZ2Mlnpgr3TNBcs/XFtUrkN6nnq/JaH2aZYhf+7KSzmCyObLTQbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fF1DitCK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BR43W/Os"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEC541F00A3A;
-	Tue, 16 Jun 2026 19:35:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fF1DitCK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 503951F000E9;
+	Tue, 16 Jun 2026 19:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781638519;
-	bh=xc7q3CiyQ1xlsHbVpzwNHmz7OTOjIGdfzCQpxWYDYAQ=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=BR43W/Osjpyd2eOM8j3NK/o09+OD9qwp1RZgBtAKFSGCcTRGwr4qN3GB6LRpB0kBA
-	 in3oYPlwDlXvCcYPetAsJyyCOxEMj8uEiT3rAJDd6HEFXXfBgxJOBqCMxw4I+oMt+p
-	 q44mECa9NHLmnW0OHfGzAHx7l1jPAcyuRcqFm1EJlLGFpmaxkG7X5uMrebuAYnCKSf
-	 9z/kzH9xSiG1NO2+WG/q65MC8xEmGYB7rpr9txHG3uIlZamKqak7gJPWN1d2BoPviq
-	 rSM/ogyf7sCkyL5zpzpvTX9dtGl6d6QrPrdmftVip7tZCOSTqI32L1sGbnOf9VWfZr
-	 +5glPWePBRpkA==
-Received: from phl-compute-10.internal (phl-compute-10.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 09430F40076;
-	Tue, 16 Jun 2026 15:35:18 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-10.internal (MEProxy); Tue, 16 Jun 2026 15:35:18 -0400
-X-ME-Sender: <xms:daUxarsomvhDc1dUcWchGs59iZakPY9vQ7KAFK_NLCTMK97aijrUbQ>
-    <xme:daUxahqhH0HuF9sX_P0-EihBX_C4EyRFCSDjLNYMTeqY2mfJv0eQi9mTW8tao1FMb
-    akfJQJC_wyWnayYJ5rtlVjwInb8SBxgueN89k9kPOxPTdMSVU3cOw>
-X-ME-Received: <xmr:daUxaiJ8l1TgIW4mQY6zey-d-WDGjCG47u91RYR0bQxTJ_eGHLCNzBlwnoJcvw_T8qaZ0aJnyE2CvDEoUS2n_lPnHr3UQwnz4Cs>
-X-ME-Proxy-Cause: dmFkZTGT4fWcz8GiXUR15Vty2mK9nRAeRCRIMzTX/7Wr8CrObClROCZaHzFrP2gSBL0txg
-    i/yZurKP3Ms1ZHxSrmkAT/RPkMr+mCJPY6mw6/rLDKs7ftWj+AW1ATfhLw/NxaK0svhjQn
-    IMmA0UPUsW29MvvV4dcHkf5ka7QbGtM8mXSRBR5asTWk1WeveU15SagnzDOQ87wlThJ3q1
-    ec36EGBpgp1QUitKFc3T78AOKB3FfTPEK4kt5m68f2Ur/pCdt97X3q1t3UR/O6SXh34L69
-    TSelKDGIDDQ0HXi4+QPG9cEDcu9TBv/ntLYb1sN3krS3Vpni45on3Lmevd+Yv2fQ/VtIaQ
-    mTiJdveLv2fuIWIKGK7h/6sIDtg0fdttgJ1oOpnyl8Tavui9spBPySiHMjJwegfDLdFCz/
-    PrT6ukHLEYaR3IAM6c0rVmZSGRQzjSgwaVaedsgnWFI+a5GxF0LjSvgfWp5afl28pGmdTI
-    lzjDpNlR5G30USCWsEYdpWM1jBbzbkKJsg4U7na32SaZIgpBVxmCuIFk2T+riWYlMCoeGc
-    VoPIksZjfgRwZtD4hAuVnAU/FbAQqN/RXgZrq0RAuYOW8nslS6vKH6+EirSoK/ZZ8TsfnW
-    MMc+jseXiBVsjL2eMZT7ewU7eFFtRIFpzW062Vjgt5QOWmRyi03GLgE9IKqg
-X-ME-Proxy: <xmx:daUxapulfKeQpZH9gvJUIi5STlTAlezD16oTrpi16Hfmo69E_u-AEw>
-    <xmx:daUxanBYO0T5EzU4BWTN2T-M2ByQuVkBC-4mJo3Pt7wbRkHAsxO9SQ>
-    <xmx:daUxap7H2Uaegk-geLEE3dIPwtpbofcWnzaAkZ-WTPLLpMdFlCQ-lg>
-    <xmx:daUxanCDdSClmBZQnoYlOY_NYvUFsfgB5Nba3B3YXxpm6Da_oQ2D8Q>
-    <xmx:dqUxan6rlDhvI7runYI3TmTeuoKMCETKa3Tn8wiKss23Tsb25s6nfAO2>
+	s=k20260515; t=1781639499;
+	bh=g+d1VjQnWZ4F0rmbmwqYmuKkUshVGKY8qkV/N9ULV48=;
+	h=Date:From:To:In-Reply-To:References:Subject;
+	b=fF1DitCK8MRaotFhX9WswEPH5XfSSQBeIw5po/YXvTLiJE0WzpcSI6fKfbnxOojzj
+	 R4XrVxbRA/h/v1pRUvJ/bwD66XmPvh0cJsPmu8cBTV4FzewaJnOOQXF+rb+NugMIJh
+	 U5aYmxSdaQ+4Ppypx7TYLsaepIhCxwdUqEcHeimDEgsBokAUVtcEXxgyPeUC9Ft8kG
+	 RMJNhhV4Yslqka/KdXPLUzl/RDiqqOYbP865DT6m4W+WRn8cRJ8cSN111Ja+gNH3OV
+	 RbegXrMpYS78tUOObkclC62A/yOTa7vh86E3W9AlaY41Q66m2avlMRXvyJWTJBQ3vP
+	 +CB3JHsEwTlkQ==
+Received: from phl-compute-12.internal (phl-compute-12.internal [10.202.2.52])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 9FEFBF40092;
+	Tue, 16 Jun 2026 15:51:38 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Tue, 16 Jun 2026 15:51:38 -0400
+X-ME-Sender: <xms:Sqkxai62Cv2sOk_l4juhCT1ehdtjxijW960pZWGtDdgOsGS3p8fQpQ>
+    <xme:SqkxaqJrHZZFcHsdTI8SrEreMklja_bF5BnlGvFZF2lTTIlXcqinXWM4nKV6RElej
+    nmqJhDufo9Z0cdfWfI2dpq_DK3NXsecBZEQR1-x5jySwuk-CfLcVQ>
+X-ME-Received: <xmr:Sqkxaqyj4AU3jGrmFqveZsNKD73M_YrwWhxLnAd9kUHkg3RpZ36zJY8ZQeiVTlQfUD1VPLwEADtyZcBVkZ-7m4RPGJ5Y0p0nQ7Q>
+X-ME-Proxy-Cause: dmFkZTGzIRrfK5fMc/tJSSQmDxLsrUZpcJ7+yMLsmEFII1xd97HLysDFEx3D9J+MXzl4Eg
+    8P0Rn6yOupE2fK185tmaAKV2+rpBjZXsDPSD/+g+ZtK8smW+uLnNYfhUBFuB4sAa2jYrjt
+    P2fZl6cFVsOPZQ3lkjfs9B1GWyipsgcfhBm6bQ3Og5kEF7JjUwm7ox+McJk7U45tKL1Tse
+    3xSAzORzlccg6kn0qURYXaCEB/KQ7l4EqCt1R53U+6qsr+onKYj3L1zCL6eIUrkBsBXsrI
+    mf4gfYVvciHLI2AlutFxOLuy/zmiL+y80RvtbT7OKCg1sZbebMTBysaUJj8B+uRb30PLVX
+    QqOjrZ2t6h64RVPdKG/A4kcwM8M4MDBzpaxMnu7urNMD/W0n02pbLbII8JCgKnbjZyPoxo
+    H45XP7dqL3Dm3ee+LBuwBoVqEYFuxalFsRHVXPVk11FHUhTNfBdlGLb60Uk0p0xA02t2jI
+    dbUqL5tC2ciCM+WF4PpFKmQHWoNqcp5hzcZbT9RRRSFsoASQv96aUxIVOBpINzK/ND57Tl
+    lfBNd3WOZFLvLHP6zJVFSZE+lYF63cyvEm8zMmesy6Koa58KvucDvIPB3x4MUjZjWxSJGt
+    rDjIFbNZ+jV9Zo97qGKAQ93+XJzMlYABYjdckf0e4fl/K0P1r+PXK24FEY6g
+X-ME-Proxy: <xmx:SqkxaiILJ1WMDRk2nNJG4jWcZWkuQ3FUvPd-Vrz95vipjHeFxisFmQ>
+    <xmx:SqkxapVkw-R4aOQDvUyejVszyz6rWFnuaV2M1evt7SWy4FVuiUWgsA>
+    <xmx:SqkxalYcHaB3bLBNDoQMbxnsTPtMvM2iAmrlV4seuT_SyA_ZSmDEfQ>
+    <xmx:SqkxagyOc8_XUt1a6RnPjZn73QZQNCRAT1bOvsRhUmFLdrV3wIX-9w>
+    <xmx:Sqkxal2AkLMqrlIS8B3IoAR-e80R-oxBKkIOt0YVAGu5gg7_VDVdboIk>
 Feedback-ID: i67ae4b3e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 16 Jun 2026 15:35:17 -0400 (EDT)
-Date: Tue, 16 Jun 2026 12:35:16 -0700
+ 16 Jun 2026 15:51:38 -0400 (EDT)
+Date: Tue, 16 Jun 2026 12:51:36 -0700
 From: "Dan Williams (nvidia)" <djbw@kernel.org>
 To: Alejandro Lucero Palau <alucerop@amd.com>, 
  "Dan Williams (nvidia)" <djbw@kernel.org>, 
@@ -66,16 +66,16 @@ To: Alejandro Lucero Palau <alucerop@amd.com>,
  pabeni@redhat.com, 
  edumazet@google.com, 
  dave.jiang@intel.com
-Cc: Dan Williams <dan.j.williams@intel.com>, 
- Ben Cheatham <benjamin.cheatham@amd.com>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Message-ID: <6a31a5742e552_9b855100d5@djbw-dev.notmuch>
-In-Reply-To: <17b68fb1-768e-49f6-884d-49e0952621b8@amd.com>
+Message-ID: <6a31a948d61f5_9b8551006b@djbw-dev.notmuch>
+In-Reply-To: <50d8e423-8248-4e26-901b-010d14d22e67@amd.com>
 References: <20260609215755.8685-1-alejandro.lucero-palau@amd.com>
- <20260609215755.8685-4-alejandro.lucero-palau@amd.com>
- <6a28a0c349c9b_4fa7810099@djbw-dev.notmuch>
- <17b68fb1-768e-49f6-884d-49e0952621b8@amd.com>
-Subject: Re: [PATCH v27 3/5] cxl/sfc: Initialize dpa without a mailbox
+ <20260609215755.8685-5-alejandro.lucero-palau@amd.com>
+ <6a28a206bf61a_4fa78100e4@djbw-dev.notmuch>
+ <96ee638f-3b10-4baa-a6df-5a79efee8b8f@amd.com>
+ <dcc502fa-1a06-465a-abab-9b039b9c2672@amd.com>
+ <50d8e423-8248-4e26-901b-010d14d22e67@amd.com>
+Subject: Re: [PATCH v27 4/5] sfc: obtain and map cxl range using
+ devm_cxl_probe_mem
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -84,35 +84,197 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain;
  charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
 Alejandro Lucero Palau wrote:
-> 
-> On 6/10/26 00:24, Dan Williams (nvidia) wrote:
-> > alejandro.lucero-palau@ wrote:
-> >> From: Alejandro Lucero <alucerop@amd.com>
-> >>
-> >> Type3 relies on mailbox CXL_MBOX_OP_IDENTIFY command for initializing
-> >> memdev state params which end up being used for DPA initialization.
-> >>
-> >> Allow a Type2 driver to initialize DPA simply by giving the size of its
-> >> volatile hardware partition.
-> >>
-> >> Move related functions to memdev.
-> > The code movement is not strictly necessary. Just add cxl_set_capacity()
-> > and we can consider a move later if mbox.o and memdev.o are ever not
-> > both included in cxl_core.o by default.
-> 
-> 
-> I think it is the right thing to do as the new function uses add_part() 
-> (moved) and the other add_part() client is the other function moved, 
-> cxl_mem_dpa_fetch().
-> 
-> Note cxl_mem_get_partition() used by cxl_mem_dpa_fetch() is the one 
-> working with mbox commands and it remains in the same place inside 
-> core/mbox.c and the only cxl_mem_dpa_fetch() client is cxl/pci.c
-> 
-> 
-> This was reviewed and accepted so no reason for not doing it ...
+> =
 
-Sure, I am ok to let it go as is.
+> On 6/10/26 14:56, Alejandro Lucero Palau wrote:
+> >
+> > On 6/10/26 07:10, Alejandro Lucero Palau wrote:
+> >>
+> >> On 6/10/26 00:30, Dan Williams (nvidia) wrote:
+> >>> alejandro.lucero-palau@ wrote:
+> >>>> From: Alejandro Lucero <alucerop@amd.com>
+> >>>>
+> >>>> Use core API for safely obtain the CXL range linked to an HDM =
+
+> >>>> committed
+> >>>> by the BIOS. Map such a range for being used as the ctpio buffer.
+> >>>>
+> >>>> A potential user space action through sysfs unbinding or core cxl
+> >>>> modules remove will trigger sfc driver device detachment, with tha=
+t =
+
+> >>>> case
+> >>>> not racing with this mapping as this is done during driver probe a=
+nd
+> >>>> therefore protected with device lock against those user space acti=
+ons.
+> >>>>
+> >>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> >>>> ---
+> >>>> =C2=A0 drivers/net/ethernet/sfc/efx.c=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 1 +
+> >>>> =C2=A0 drivers/net/ethernet/sfc/efx_cxl.c | 24 +++++++++++++++++++=
++++++
+> >>>> =C2=A0 drivers/net/ethernet/sfc/efx_cxl.h |=C2=A0 3 +++
+> >>>> =C2=A0 3 files changed, 28 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/net/ethernet/sfc/efx.c =
+
+> >>>> b/drivers/net/ethernet/sfc/efx.c
+> >>>> index 90ccbe310386..578054c21e79 100644
+> >>>> --- a/drivers/net/ethernet/sfc/efx.c
+> >>>> +++ b/drivers/net/ethernet/sfc/efx.c
+> >>>> @@ -984,6 +984,7 @@ static void efx_pci_remove(struct pci_dev =
+
+> >>>> *pci_dev)
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 efx_fini_io(efx);
+> >>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 probe_data =3D container_of(=
+efx, struct efx_probe_data, efx);
+> >>>> +=C2=A0=C2=A0=C2=A0 efx_cxl_exit(probe_data);
+> >>>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_dbg(efx->pci_dev, "shutd=
+own successful\n");
+> >>>> =C2=A0 diff --git a/drivers/net/ethernet/sfc/efx_cxl.c =
+
+> >>>> b/drivers/net/ethernet/sfc/efx_cxl.c
+> >>>> index 4d55c08cf2a1..d5766a40e2cf 100644
+> >>>> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> >>>> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+> >>>> @@ -18,6 +18,7 @@ int efx_cxl_init(struct efx_probe_data *probe_da=
+ta)
+> >>>> =C2=A0 {
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct efx_nic *efx =3D &probe_data=
+->efx;
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pci_dev *pci_dev =3D efx->pc=
+i_dev;
+> >>>> +=C2=A0=C2=A0=C2=A0 struct range cxl_pio_range;
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct efx_cxl *cxl;
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u16 dvsec;
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int rc;
+> >>>> @@ -75,9 +76,32 @@ int efx_cxl_init(struct efx_probe_data *probe_d=
+ata)
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENO=
+DEV;
+> >>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> >>>> =C2=A0 +=C2=A0=C2=A0=C2=A0 cxl->cxlmd =3D devm_cxl_probe_mem(&cxl-=
+>cxlds, &cxl_pio_range);
+> >>>> +=C2=A0=C2=A0=C2=A0 if (IS_ERR(cxl->cxlmd)) {
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_err(pci_dev, "CXL =
+accel memdev creation failed\n");
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return PTR_ERR(cxl->cx=
+lmd);
+> >>>> +=C2=A0=C2=A0=C2=A0 }
+> >>>> +
+> >>>> +=C2=A0=C2=A0=C2=A0 cxl->ctpio_cxl =3D ioremap_wc(cxl_pio_range.st=
+art,
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 range_len(&cxl_pio_range=
+));
+> >>>> +=C2=A0=C2=A0=C2=A0 if (!cxl->ctpio_cxl) {
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_err(pci_dev, "CXL =
+ioremap region (%pra) failed\n",
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ &cxl_pio_range);
+> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
+> >>> Dave caught the iounmap leak, but another concern is since you want=
+ to
+> >>> continue operation if efx_cxl_init() fails then you probably also w=
+ant
+> >>> to release the successful attachment to the CXL domain if this happ=
+ens.
+> >>
+> >>
+> >> I will do that.
+> >>
+> >
+> > Looking at this issue, I think an error when creating the memdev or =
+
+> > during the region attach triggers the memdev removal, but ...
+> >
+> >
+> >>
+> >>> Minor since something else is likely to fail if ioremap is not =
+
+> >>> reliable.
+> >
+> >
+> > .. if we want to specifically do that with an unlikely (but possible)=
+ =
+
+> > ioremap error something else needs to be exported like =
+
+> > cxl_memdev_unregister(). Are you happy with that approach?
+> >
+> =
+
+> I have just tested with this:
+> =
+
+> +void cxl_memdev_remove(void *_cxlmd)
+> +{
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct cxl_memdev *cxlmd =3D _cxl=
+md;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct device *dev =3D &cxlmd->de=
+v;
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 devm_remove_action_nowarn(cxlmd->=
+cxlds->dev, cxl_memdev_unregister,
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cxlmd);
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cdev_device_del(&cxlmd->cdev, dev=
+);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cxl_memdev_shutdown(dev);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 put_device(dev);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_memdev_remove, "CXL");
+> =
+
+> =
+
+> only called if the ioremap fails.
+> =
+
+> =
+
+> Please, let me know if you like this approach before sending another =
+
+> version.
+
+A devres group can automatically cleanup after devm_cxl_memdev_probe()
+in the error path with no new exports needed from the CXL core.
+Something like:
+
+        void *group =3D devres_open_group(cxl->cxlds.dev, NULL, GFP_KERNE=
+L);
+        int rc =3D 0;
+
+        if (!group)
+                return -ENOMEM;
+        =
+
+        cxl->cxlmd =3D devm_cxl_probe_mem(&cxl->cxlds, &cxl_pio_range);
+        if (IS_ERR(cxl->cxlmd)) {
+                pci_err(pci_dev, "CXL accel memdev creation failed\n");
+                rc =3D PTR_ERR(cxl->cxlmd);
+                goto out;
+        }
+
+        cxl->ctpio_cxl =3D
+                ioremap_wc(cxl_pio_range.start, range_len(&cxl_pio_range)=
+);
+        if (!cxl->ctpio_cxl) {
+                pci_err(pci_dev, "CXL ioremap region (%pra) failed\n",
+                        &cxl_pio_range);
+                rc =3D -ENOMEM;
+        }
+
+out:
+        if (rc)
+                devres_release_group(group);
+        else
+                devres_remove_group(group);
+        return rc;=
