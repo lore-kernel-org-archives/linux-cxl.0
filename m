@@ -1,138 +1,278 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011029.outbound.protection.outlook.com [52.101.52.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF97E3BE644;
-	Wed, 17 Jun 2026 07:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781682244; cv=none; b=TQA6jkIARNAc0f3cOscyQZYwAKCdYpsrO27BPekOo9HY8axe6pdgl7kWq0hAkrAJwjWDqXFS8ZTjbe4dd87RwzFCZxcd7TYpW1gzF6w9U8HlkGiLOgHerJgWC+e1hUBgioKoEFh+ilv7feVPAWKsTa+YCzKaX0sA8hxEYwcPdNQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781682244; c=relaxed/simple;
-	bh=/EdeG20kEJzpkiORgoCE63qhp/Du+TBSDBWc2PyQuis=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g19+aCRvVsKP2nrj3QBcm5UJw1HBblp6XBjVE8FW12/uYxAmy6uzw6SqpPRuakPm9wQLTowDlrmIdGuBBWBURIL2SGyNm6GS3lGbfWRskC9Zt7aRLc3rSbn8vGFhwmgaIuoqwj/QeECRj/yHmfah1OmDD4+yDoTv2iKOGlh4sUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IOi7Qdfk; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A219839280C;
+	Wed, 17 Jun 2026 09:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.29
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781689357; cv=fail; b=OIu7a7Ortf8dSTJpDzB4ZOyowQ4TnHqYsoYCeucrZkRbsIw7hpMhZz/X+fiViKO6CRyXx+HaSwrkIT8zbx+lE61jgwyiEa1HAoZQG25y1k0EgJFwKnTV0AV2FFu758v+EQvCJxVLc6o5iQ0tMeAKdCZbytp0oJvt2cWQdW3kd+U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781689357; c=relaxed/simple;
+	bh=7wtAfOdHonqG5qmbPPo5J71jaJ+iPRO5d/JfQTDtyXI=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Dun5IwDDI7fWGgtGT5EwpDuOeZO03H/YrCt/hgC/1cRcx6KXw4Sy13vMmXgRWvESyGBXCslvLi1jd9eW+UiSImFy7cj9z4YRNyaRAIX3wJY7aNtOkhl19qRZsKg2MQkHLLfjC5PLwcy+hgqNHIb4aXBpExCsNrn07O/5rat7/xc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UMhTiNId; arc=fail smtp.client-ip=52.101.52.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IOi7Qdfk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781682243; x=1813218243;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/EdeG20kEJzpkiORgoCE63qhp/Du+TBSDBWc2PyQuis=;
-  b=IOi7QdfkFMhwmkSPTxmWLnlnI2gnA7j3TWssqjRuRrohbOdnd+fv1LSM
-   OlcXSBpz1o+P1zAjIcIkoFi3NWvrCXBq/ZOXY9Gph2b25cBv1o/hteh76
-   y1pL3NUtLvYda9+LTS624/YyqP4AVHuf3GW8wd4ULz/+Z/GNdON+W4mnh
-   oPXi9pHAXM2k9/Y7Tq6hl5FZpRUJr6VunGy1opTtYPiBXCUYRNdMpmWgY
-   Yn2mvB28fSWzWeGp2XuU+kZ9/fQ8aQ6CRZXdrshQE7uXQx1kE3Yl2DSoA
-   qOA+bRyRqc15fLrZtJNCJ/2OWYvgjEvNzUSietgxwYRCBG3QDvYZVEbOz
-   Q==;
-X-CSE-ConnectionGUID: RawRIFvpThqaq4PH1zding==
-X-CSE-MsgGUID: GRLQX7yERxym/5cSl+JAFQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11819"; a="93133623"
-X-IronPort-AV: E=Sophos;i="6.24,209,1774335600"; 
-   d="scan'208";a="93133623"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2026 00:44:03 -0700
-X-CSE-ConnectionGUID: QS8us01VRcSTU+PBtapD8g==
-X-CSE-MsgGUID: heGMeiy3SveOyifxnzjMCg==
-X-ExtLoop1: 1
-Received: from junjie-optiplex-micro-plus-7010.bj.intel.com ([10.238.152.98])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2026 00:43:59 -0700
-From: Junjie Cao <junjie.cao@intel.com>
-To: Shrihari E S <shrihari.s@samsung.com>
-Cc: Junjie Cao <junjie.cao@intel.com>,
-	jic23@kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	qemu-devel@nongnu.org,
-	cpgs@samsung.com,
-	arun.george@samsung.com,
-	vikash.k5@samsung.com,
-	s.neeraj@samsung.com,
-	dongjoo.seo1@samsung.com,
-	dave@stgolabs.net,
-	gost.dev@samsung.com
-Subject: Re: [RFC 7/8] hw/pci: hw/cxl: Wire SVC initialization into port realize functions.
-Date: Wed, 17 Jun 2026 23:45:19 +0800
-Message-ID: <20260617154521.520191-3-junjie.cao@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260609105836.3702787-8-shrihari.s@samsung.com>
-References: <20260609105836.3702787-1-shrihari.s@samsung.com> <20260609105836.3702787-8-shrihari.s@samsung.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UMhTiNId"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cOYnAX4ylGjj17Nj86xf8jTGGsiT0CuqTNbfDDi3l9aJce6bf4H1axshPytCgN8VV90kw68+Q5WBuXEWXV70UB0U9j4oaSOrYVHzo80NUVtC0GfCLEZZgAQdlGuDHM+WkX5RBdUIrfM5WLnw+HGyFt4Xoni2uLGnB1y5/HX9xuAo4r38R/JbpS6asD4IN7OoRBKRXWWTkvl3NdLM2/tdNqCqGdcrMSu/c/Z1/NGs3OWiFkTjBtgKJsuFLctX2riqMfytZU1eiuY7mOYwvf0vU/ZZWDoNduV0cpNWjYOcw3lkwADcIvdzKkAbQ/NUqJVZB0AzYBsowLDA4hottoOnUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3ne7aAlgdB+LiOZkPKzOxbp9QcbSTl7nWdCF0DDEoxo=;
+ b=HmvN94tD+nPidg3mr6Y+HM4CY+hPEX7D5EmZ08MGAyta0UI+0A9y5yit8i4SUXt69w/lkvZMiY2YKDfAPaojsHxJo4Rev2vXJ0835Zji6PpODmkW98v/Hys5SYuQhZCsP6BaC9WLIxVdUZ/aDJJHR2dU9DG/KScVfjPFwBfztUD+DLbmOgRZj3N60NrNGfmK+bZRhPNb2wdjGGhziWdF6yXffsD2gY1BeJjnVNW8vc0Kgaj/o5S0NQrWFCB8rs3/sSyJmILrtF9xO+YrL+J2g/i78vMT8IfnOr9Vuw7B6rWqTo0yJTbJH6Nkvrfj9L8nHZFDnFdX70Jl2ZhkiYVUbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3ne7aAlgdB+LiOZkPKzOxbp9QcbSTl7nWdCF0DDEoxo=;
+ b=UMhTiNIdY/qRG5F8d7MC8uQmDQpS5BBK4jo4u1VNmOoRhM/rWL6TPi0Qnsst0iCxsacmeUUbeKQXJ+ROrdeiYmYGJ4ts/lJIjm/SPd3DvTola1b+kRLSxmkcw/3lAPXidNBu2ttahoplMy/ZbgIKHGQWCtT0Jpd+MnCO+ZdOZYA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
+ DS0PR12MB6488.namprd12.prod.outlook.com (2603:10b6:8:c3::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.113.18; Wed, 17 Jun 2026 09:42:30 +0000
+Received: from DM4PR12MB6254.namprd12.prod.outlook.com
+ ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
+ ([fe80::8211:9b5a:99d2:ffa1%6]) with mapi id 15.21.0113.015; Wed, 17 Jun 2026
+ 09:42:29 +0000
+Message-ID: <a423702c-05f6-4b4b-9ad4-fcaec2e07957@amd.com>
+Date: Wed, 17 Jun 2026 10:42:25 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v27 4/5] sfc: obtain and map cxl range using
+ devm_cxl_probe_mem
+To: "Dan Williams (nvidia)" <djbw@kernel.org>,
+ alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
+ netdev@vger.kernel.org, edward.cree@amd.com, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com
+References: <20260609215755.8685-1-alejandro.lucero-palau@amd.com>
+ <20260609215755.8685-5-alejandro.lucero-palau@amd.com>
+ <6a28a206bf61a_4fa78100e4@djbw-dev.notmuch>
+ <96ee638f-3b10-4baa-a6df-5a79efee8b8f@amd.com>
+ <dcc502fa-1a06-465a-abab-9b039b9c2672@amd.com>
+ <50d8e423-8248-4e26-901b-010d14d22e67@amd.com>
+ <6a31a948d61f5_9b8551006b@djbw-dev.notmuch>
+Content-Language: en-US
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <6a31a948d61f5_9b8551006b@djbw-dev.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO3P265CA0015.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:bb::20) To DM4PR12MB6254.namprd12.prod.outlook.com
+ (2603:10b6:8:a5::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|DS0PR12MB6488:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8c5960c6-abc5-4bd7-ad8e-08decc54bf92
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|23010399003|18002099003|22082099003|921020|11063799006|4143699003|6133799003|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	cSQ3eXiZh+4tNjeZiycNCpobSFzVQlYMAGphCOn/DimLUd9DHNzE0y6jPR5IfujTGuKBnuvZCWlWsWGX2q2Fv+soPzXsyiu9wZl56azS8fqNFnwL5YCGwqXLdne1EPJWAX94jWYZ60jVaKqVLuYKaxZYQWS3OjGavikYIYtmWd8qt33wFD7cbpl2n2DXwTz8s+8wKItqtSX9qCfQjSeicnzfCOLf2d61tkOAQX3P2haZdMaGgW9bm7km3Fk27lFfMlo8c/IULcjCAiB2AUSf2QcH2QvnzW8tej3pmz9SNWC8NE9zwWxWKSlM6zXT7s6ecdHNisoB7FhmHor5cwqMIogUC12p4KFQbHa+K4neJt9z/VRXio4Ssq5y1o22yzeGjbPYVIRFxCZTaQgg+2U2i091dk50+ghCtBWvxySjxFl9oOtZm0f0tltl8TeuqamaDh9Ef1Z50cgdcwgYHYit2oP2ioX9dctY2ITUW6aaCUcPWRj2o2DxIm4YVe+MBFcQnGvI7skxxs1DEfEmcS1x3R+pa7z0BoH1psKq6OJeZrcnm2K9xW6h5aPOhexd0buD2DrQmYyk+q4pBJfK21ZuH4CIViE0FLDJKVpVQ5Yw8xMhHkxT+qpgGOuHiz1rCw8jy3Sx1C7swglRwCuh3x2PIRII6k+Z9X3cWZX+7fqvD3lZ/+yoB/F6EWjDVBTU098zUiGifkuPZXN6XFq1fP3/XYCQNdh2gVh/jXbLcmowbz4ZAYuLuNfiCya/BB32sfTv
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(23010399003)(18002099003)(22082099003)(921020)(11063799006)(4143699003)(6133799003)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OXBOVFBBUDg1M1JVMXlMYmd6bndzR09DQkRWSWRpdmJ3TUNZbTBSaHhoa3Jo?=
+ =?utf-8?B?dlBKUFk4K1pWL2NCN0QrOVVkSlAxSTFhekExVWp4NXZwK0hxdUUrR3lZT3Js?=
+ =?utf-8?B?aytSYllLTGxaakRjZWluM0ZsNUllSkJJSTlZMy9YckI3Wm5yYzFZWjJQSTg5?=
+ =?utf-8?B?LzdMWHhkcHJKRGUzTlVXLzZhOUZDZGxMY09VcCtoUmJrTU5WWmV1bURzT0tY?=
+ =?utf-8?B?c3ZOWCtTb3VwTC9lYTBheXNaRmJpaFkycHdwN3dzakFNbW9mOThMQnZYNGUx?=
+ =?utf-8?B?OVpqM21pcm9iZDNsZDg1MG0rZGo0VTR6WFdabnYzeVhnalpSaFczdHRaQXFh?=
+ =?utf-8?B?WUNxNzlRa216eURPeGhxUk4yNFNFTUhQYldST2dHMDhCc0xOdC9oT01tcmFQ?=
+ =?utf-8?B?bitXbCtIQllLNkp6aWlFUllYYmhQR3ducHJyVTZJaU1zT3NDVW12anR4MTVR?=
+ =?utf-8?B?MUw2akJUMlh3NnRYYlRBWG5OSVhXcU4zdzFGbkY5RTZwNUdoWTRlalhoUUU0?=
+ =?utf-8?B?bURrSTFwaFUvSGQyOCtWcmt4YURKT0p1MGI5NFg3VVM2OGsxOUlOWEowWmFj?=
+ =?utf-8?B?VTJQLy9WcG8rWlhLaVlDbTBLUEpmK3B2MDFzb09KRFRPblo2dnN2Rms1WER1?=
+ =?utf-8?B?RFhRT1ZxL052R2xNOXhtR01HVzFHUzkxV2JBa3dTZUIzcHFiY0pabEU4UnRY?=
+ =?utf-8?B?OXZJMTI4bUsrVmY0ay9RTEJMSFhEVENJaUVpaUd5blE5Ry9pTnRkaitDK0dx?=
+ =?utf-8?B?WkFrZzlHd1lqZjNFVWY5RkZ3QVdyZEpiNFBKck93ZDRxUWljaGt6VndiV1lQ?=
+ =?utf-8?B?QStLbGNFTlk2aW9tNEZZTEJIVzhkb2RNOEYxa0ZuYXF5RTVidXJkOEhaNm0x?=
+ =?utf-8?B?a2NNYVNCeVBEaWpzeHMxRFdxS2t3STV1TmFNeFphMGNCdmpYN2U0VTZMN1pQ?=
+ =?utf-8?B?VnlVQ3FlVFo3SXpGQi9ZSldQcHhjOFJTZ0JPejcwUllORVBxV0ZLdXYzWUFV?=
+ =?utf-8?B?c0lJb1FwWmxqbktOb09LK3NXUzQzYWtrWk04MnZqZXF2TXVRaElxdFdTME55?=
+ =?utf-8?B?VFhSa051anRDOUs2T2xwMjBQQmEyVzArajVyTXJRQWIrMTRJbkJrSzh1M0dw?=
+ =?utf-8?B?L3J2R0FJQ2Y2MlJhNXFST1Rvem9tVy9lN3ZxcEVwV0pMUS9MVy81N3J6UzRp?=
+ =?utf-8?B?TGpBdlJGVkMwaTMyTVJER1hJTFprZ3o5eHhyVmxKSDQvWVdSMUloUTBYVm9B?=
+ =?utf-8?B?TTBHTHlxK0ZKT2Z1S0V1M2c2VmFieVFQbEFzQnNta2o1cWgrV3ltQ1Q0aFBx?=
+ =?utf-8?B?Z3MwTks2SW1nL1JnZXZRZU1YNE5xTXBFL1pmbW9VMUxsV093SnE2SG5kWnFp?=
+ =?utf-8?B?V1VTTHhSbkVSbE9sTXVNYk1VMzVnL0lzcHd1dmRRQ2ZQWldzdm9JbElwcm5q?=
+ =?utf-8?B?T0R4T2FyMThrYkVHbU53dFlWdUptUFh4TlNuQzEydFRUY1pINURVSXMza0JP?=
+ =?utf-8?B?U2N0NUpaTkhpNFlIbXkzRURXNmRjZEQ1RTZCZEtYdkhBOGNqT3huaDlWVktM?=
+ =?utf-8?B?eWxsM0tNeXJxMFVnYmFmSUxNZlkzZDhaMC9Vci9hQUVmb1dnMXNOSTNYRkdN?=
+ =?utf-8?B?UkFJRU8wRlQ3Q0VSbURWSzlBbkV2WFZYcEU1ZkhHNnhtTW5TclhhTUJxaEor?=
+ =?utf-8?B?K1RxdUplemZlQ0l0dEp6bmV4bGlzVkxIamtJYVY3QmN4T1pRZTMvM2VDRUk3?=
+ =?utf-8?B?bWsyNjdCZU1wYjV0aFZmZGJMZVZHSEhwTHNTMHlJRW5OQndXdGpVWjR5eVpL?=
+ =?utf-8?B?WEc5bzZJUEZPRktyWjZUNkJacW9IbGJMVHQyZmR0Mm1iSHlOUUJqYTJnck9J?=
+ =?utf-8?B?Qk5TeEVQRkpjOG9FaXl4S3AyWm1CNnZXZU9CTEVaOE85bnFDb0pDRGh6MHVG?=
+ =?utf-8?B?N3dYWkUvZ3pzWTlvVUczeFd1OThZa2dUTlZZeG92WUNXc0lIQ1pYOXFPc2tQ?=
+ =?utf-8?B?WUZZb1JERjRvbUtrMTNLUjVMSlF0a0EvNFFYM2JEdEJGYjlVVWNkU3ZZUUNF?=
+ =?utf-8?B?QUVQYVVaT0dIWm5tc2IwV2tMckZyQkdiUGRmbGt3U1pqOWxZaFFCWkVTK3RB?=
+ =?utf-8?B?UG40TENCUzZIbk5BNGdtcVNRTy9yeVhXUGszdzdqVURJNzJLOWJqWGVBdDBM?=
+ =?utf-8?B?NnV4bGtjcWovN0NPRzlCNHl1NWZqMWUybiswcFNHcG9OL21hVTZkcTZFWTBE?=
+ =?utf-8?B?YnkxN1RqYkU0TWV2ajFvMlZ3MXpjcWl0dEpqY0MramFNRU8ydlBEcHMra21T?=
+ =?utf-8?B?TStMbGFIdFFMTVdBOXF4VFFlYU5ZMWhQU3JqdnVCcFJ4WjJXcnN0Zz09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c5960c6-abc5-4bd7-ad8e-08decc54bf92
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2026 09:42:29.7917
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: scohybuXKwtwoT9WKlB7j1+hUzWaxeSiGJh1A0e494QGd+vRaEo4IEQDNDs0JrmmvBovfBBZ7xfxpDTc1Zs9tg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6488
 
-Hi Shrihari,
 
-On Tue,  9 Jun 2026 16:28:35 +0530, Shrihari E S wrote:
-> +    pcie_config_uio_svc(d, errp);
->      pcie_cap_arifwd_init(d);
->      pcie_cap_deverr_init(d);
->      pcie_cap_slot_init(d, s);
+On 6/16/26 20:51, Dan Williams (nvidia) wrote:
+> Alejandro Lucero Palau wrote:
+>> On 6/10/26 14:56, Alejandro Lucero Palau wrote:
+>>> On 6/10/26 07:10, Alejandro Lucero Palau wrote:
+>>>> On 6/10/26 00:30, Dan Williams (nvidia) wrote:
+>>>>> alejandro.lucero-palau@ wrote:
+>>>>>> From: Alejandro Lucero <alucerop@amd.com>
+>>>>>>
+>>>>>> Use core API for safely obtain the CXL range linked to an HDM
+>>>>>> committed
+>>>>>> by the BIOS. Map such a range for being used as the ctpio buffer.
+>>>>>>
+>>>>>> A potential user space action through sysfs unbinding or core cxl
+>>>>>> modules remove will trigger sfc driver device detachment, with that
+>>>>>> case
+>>>>>> not racing with this mapping as this is done during driver probe and
+>>>>>> therefore protected with device lock against those user space actions.
+>>>>>>
+>>>>>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>>>>>> ---
+>>>>>>    drivers/net/ethernet/sfc/efx.c     |  1 +
+>>>>>>    drivers/net/ethernet/sfc/efx_cxl.c | 24 ++++++++++++++++++++++++
+>>>>>>    drivers/net/ethernet/sfc/efx_cxl.h |  3 +++
+>>>>>>    3 files changed, 28 insertions(+)
+>>>>>>
+>>>>>> diff --git a/drivers/net/ethernet/sfc/efx.c
+>>>>>> b/drivers/net/ethernet/sfc/efx.c
+>>>>>> index 90ccbe310386..578054c21e79 100644
+>>>>>> --- a/drivers/net/ethernet/sfc/efx.c
+>>>>>> +++ b/drivers/net/ethernet/sfc/efx.c
+>>>>>> @@ -984,6 +984,7 @@ static void efx_pci_remove(struct pci_dev
+>>>>>> *pci_dev)
+>>>>>>        efx_fini_io(efx);
+>>>>>>          probe_data = container_of(efx, struct efx_probe_data, efx);
+>>>>>> +    efx_cxl_exit(probe_data);
+>>>>>>          pci_dbg(efx->pci_dev, "shutdown successful\n");
+>>>>>>    diff --git a/drivers/net/ethernet/sfc/efx_cxl.c
+>>>>>> b/drivers/net/ethernet/sfc/efx_cxl.c
+>>>>>> index 4d55c08cf2a1..d5766a40e2cf 100644
+>>>>>> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+>>>>>> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+>>>>>> @@ -18,6 +18,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>>>>>>    {
+>>>>>>        struct efx_nic *efx = &probe_data->efx;
+>>>>>>        struct pci_dev *pci_dev = efx->pci_dev;
+>>>>>> +    struct range cxl_pio_range;
+>>>>>>        struct efx_cxl *cxl;
+>>>>>>        u16 dvsec;
+>>>>>>        int rc;
+>>>>>> @@ -75,9 +76,32 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>>>>>>            return -ENODEV;
+>>>>>>        }
+>>>>>>    +    cxl->cxlmd = devm_cxl_probe_mem(&cxl->cxlds, &cxl_pio_range);
+>>>>>> +    if (IS_ERR(cxl->cxlmd)) {
+>>>>>> +        pci_err(pci_dev, "CXL accel memdev creation failed\n");
+>>>>>> +        return PTR_ERR(cxl->cxlmd);
+>>>>>> +    }
+>>>>>> +
+>>>>>> +    cxl->ctpio_cxl = ioremap_wc(cxl_pio_range.start,
+>>>>>> +                    range_len(&cxl_pio_range));
+>>>>>> +    if (!cxl->ctpio_cxl) {
+>>>>>> +        pci_err(pci_dev, "CXL ioremap region (%pra) failed\n",
+>>>>>> +            &cxl_pio_range);
+>>>>>> +        return -ENOMEM;
+>>>>> Dave caught the iounmap leak, but another concern is since you want to
+>>>>> continue operation if efx_cxl_init() fails then you probably also want
+>>>>> to release the successful attachment to the CXL domain if this happens.
+>>>>
+>>>> I will do that.
+>>>>
+>>> Looking at this issue, I think an error when creating the memdev or
+>>> during the region attach triggers the memdev removal, but ...
+>>>
+>>>
+>>>>> Minor since something else is likely to fail if ioremap is not
+>>>>> reliable.
+>>>
+>>> .. if we want to specifically do that with an unlikely (but possible)
+>>> ioremap error something else needs to be exported like
+>>> cxl_memdev_unregister(). Are you happy with that approach?
+>>>
+>> I have just tested with this:
+>>
+>> +void cxl_memdev_remove(void *_cxlmd)
+>> +{
+>> +       struct cxl_memdev *cxlmd = _cxlmd;
+>> +       struct device *dev = &cxlmd->dev;
+>> +
+>> +       devm_remove_action_nowarn(cxlmd->cxlds->dev, cxl_memdev_unregister,
+>> +                                 cxlmd);
+>> +
+>> +       cdev_device_del(&cxlmd->cdev, dev);
+>> +       cxl_memdev_shutdown(dev);
+>> +       put_device(dev);
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_memdev_remove, "CXL");
+>>
+>>
+>> only called if the ioremap fails.
+>>
+>>
+>> Please, let me know if you like this approach before sending another
+>> version.
+> A devres group can automatically cleanup after devm_cxl_memdev_probe()
+> in the error path with no new exports needed from the CXL core.
+> Something like:
+>
+>          void *group = devres_open_group(cxl->cxlds.dev, NULL, GFP_KERNEL);
+>          int rc = 0;
+>
+>          if (!group)
+>                  return -ENOMEM;
+>          
+>          cxl->cxlmd = devm_cxl_probe_mem(&cxl->cxlds, &cxl_pio_range);
+>          if (IS_ERR(cxl->cxlmd)) {
+>                  pci_err(pci_dev, "CXL accel memdev creation failed\n");
+>                  rc = PTR_ERR(cxl->cxlmd);
+>                  goto out;
+>          }
+>
+>          cxl->ctpio_cxl =
+>                  ioremap_wc(cxl_pio_range.start, range_len(&cxl_pio_range));
+>          if (!cxl->ctpio_cxl) {
+>                  pci_err(pci_dev, "CXL ioremap region (%pra) failed\n",
+>                          &cxl_pio_range);
+>                  rc = -ENOMEM;
+>          }
+>
+> out:
+>          if (rc)
+>                  devres_release_group(group);
+>          else
+>                  devres_remove_group(group);
+>          return rc;
 
-In rp_realize() (and the two xio3130 ports) pcie_config_uio_svc() runs
-before pcie_aer_init().  pcie_svc_cap_init() falls back to offset 0x100
-when no extended capability exists yet, so SVC is placed at 0x100 at
-this point -- and then pcie_aer_init() puts AER at the same 0x100 and
-overwrites it, while dev->exp.svc_cap still points there.
 
-The visible effect is that "-device pcie-root-port,x-uio-svc=on" comes
-up with no SVC capability in the extended config space (the chain is
-just AER -> ACS), and no error is reported, so the request is silently
-dropped.  I reproduced this by walking the extended capability list of
-the root port over ECAM: SVC (0x35) never appears, even though the
-property was set.
+OK. I will use this in v28 instead of that export.
 
-> +    rc = pcie_config_uio_svc(pci_dev, errp);
-> +    if (p->flitmode && rc >= 0) {
-> +        crp->uio_capable = true;
-> +    }
 
-On cxl-rp this runs a second time: cxl_rp_realize() first calls the
-parent rp_realize() (which already calls pcie_config_uio_svc() per the
-hunk above) and then calls it again directly.  The first call collides
-with AER at 0x100 as above; the second runs after the extended caps
-exist, so SVC ends up correctly at 0x200.  So cxl-rp happens to work,
-but via a double init.
+Thanks
 
-Just moving the call to after pcie_aer_init() isn't quite enough on
-its own: the CXL ports (cxl-rp/usp/dsp) build their DVSECs at fixed
-offsets and then add SVC themselves at the end, so if the shared
-parent rp_realize() also adds SVC before those DVSECs are built, the
-cxl-rp ends up with its DVSECs off the chain.
-
-What worked for me was to move the SVC call after the ECAP inits in
-the pure-PCIe paths and skip it in the parent when the device is CXL,
-letting the CXL realize functions keep adding it last as they already
-do:
-
-  - rp_realize(): move pcie_config_uio_svc() to after pcie_acs_init(),
-    guarded by if (!pci_is_cxl(d)) so cxl-rp's own call (which runs
-    after build_dvsecs()) remains the one that places SVC.
-  - xio3130_upstream/downstream realize(): move the call to after
-    pcie_aer_init().
-  - cxl-rp/usp/dsp: unchanged, they already add it last.
-
-With that, plain pcie-root-port, the xio3130 switch ports and the CXL
-ports all come up with SVC at 0x200, and cxl-rp keeps its four DVSECs.
-
-One thing to note is that this only gets the capability enumerated --
-I haven't verified the SVC behaviour beyond that.  Looking at
-pcie_svc_cap_write_config()/pcie_svc_apply_gating(), writing the SVC
-Enable bit just copies ctrl/status into the shadow struct; no VC
-Resource Status bit (the per-VC negotiation bit, SVC_VC_NEGO) is ever
-set, and the SVC Status register stays zero.  So a guest that enables
-SVC and polls for negotiation wouldn't see anything change.  If the
-data-plane series on top is expected to drive that, fine -- I just
-wanted to flag that as things stand the enable is observationally a
-no-op, in case a driver is expected to key off it.
-
-Many thanks,
-Junjie
