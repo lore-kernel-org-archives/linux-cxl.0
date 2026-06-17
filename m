@@ -1,191 +1,234 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE0A3F4DF8;
-	Wed, 17 Jun 2026 14:10:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCA23AB460;
+	Wed, 17 Jun 2026 14:10:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781705402; cv=none; b=obGXX1Oky/3/1tapSmUyesRN3joed/TV2PMfoXE5HblBmWCk/y4UH+yofhXj+KZxzlq9WFEUpGvBLWf+3J56ISPghvziS3QApZGpd4U1h4GDQFEV7lGt1v1KHg2I6RmDKk/vTr6MLX3zS8ZdeoEEp8wigiVsDNP6/yf/mgV01zg=
+	t=1781705459; cv=none; b=Up6oRw/S16LvPTutH0dCEQqthmmh1Ubvu1OKwl6NASBzYKUI9IXQH4Fyzu7ncihkIA9eurHEp+jw4hFlCq0OF1WxV2xpcpRKBltAZJY9aggEFXhdGPcwQkQREzJpUYcNhwNTcqdha70CrQIVPhTyU1ZruBLZx64l6lwqjigaatQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781705402; c=relaxed/simple;
-	bh=Td1I54O4Oi0G4HxCNJQDwLqsyV8X6O4XJZGa6A0m/1s=;
+	s=arc-20240116; t=1781705459; c=relaxed/simple;
+	bh=tzs0QnWcRKujWGxzUNNfuq3zOMNv4/IKWRBoX6CFwXc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=E763DR2JAPWSANR8DVQ275zeVZrDlpEq6MZUUsPeLhEFOGyPH/YKRIgb97xFhkuHCRf2F35uQ/JD0z2EbULt35yKV7t22era3JdxrO4P0/AatjAK/iRw30E2sOj8dR0Wob38DQnF+zd7aXeXVZb2IIMLxa50bQA0YGrVnPKD70I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WOnYHsJE; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=lGApK2+vSUeNWqc9IHZp0Q6AnWT6MIYMAkI2mGt6aMqqx/pWPZH7fuLyVik+zZVIuqhMQLLKc3t8sDTyXNHhlSMX/JNH6d69tk7NB/i81UWTHPffXxHefThYOyCe4P37OWvrrWNIlffJFvBDr+oAaJA5Mnad/+K4yHMRB5ZeInI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eirwE3Vi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WOnYHsJE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8392A1F000E9;
-	Wed, 17 Jun 2026 14:10:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eirwE3Vi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75CAF1F000E9;
+	Wed, 17 Jun 2026 14:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781705400;
-	bh=4E6KjgoANui6U1nzZkMJS+DKQohQ8atHwtMi2KwHKkI=;
+	s=k20260515; t=1781705457;
+	bh=7JVuUmQYzVTqj6TbcDcOl4vf5etSCNQftFAAWwJC/L4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WOnYHsJETNL51gXgQLhtgD1B7oqAFJ7av4bOJvvpOQn2TOdYI61tFhXVo6Rjarr2W
-	 +/+bh7Hg1q3FIIVeBmu69Ev1f2lRNwUy4KWbJQj2ujxSKEbqbhuorUQMHpXRK3LY8U
-	 810Qc/FvR3kHG5L2OsRoMbvJoj7eqnX34H7o76XR+O3qDyo1jzLELLzB1VaO/ftrPf
-	 ukECQxuhzNMZZFet/Nhm5C7Gc4XuIcnfDYrX+WH5PdGxWy3wdAK3cMNNsEmyQLXEMO
-	 a/wW+9QyDZVN7eH09HbcQJPX4Cn+iL8UnljmRnZnFJbFwm7v1YYtr8SBN84SoZ4c5s
-	 pYyRdF4Q3MS4w==
+	b=eirwE3ViBtj9p4lN4KNGUonYxrzN2NQIvaruFYaqO6bugiF/t1roaZ4ncKdW1SEnv
+	 Xg2IOXopWEppnZDRUA00WtP6KEfkHf4u3iMfxeaJ5NmeS3VOuHhtgKPweUfPGQsPqE
+	 4ooxZwQ0OyKq8MLPbQ1tGUtZ07tYWSjGcUaUfdvnsLZc/xLx0+ZID75FCMbPNRcZZQ
+	 EdkXItB88iR3zuoJWhEpiMrSCBoJJCqIqO6TVdt9lMAJ2VF9vBYPeg/73i2AcjCp4W
+	 rB1sRH+qU3B49/+Ymc0rjVpjmX8ApqufrJbUF7Q2qgLFZxlgSxDQpsLHUgs1YunLr2
+	 0zL7mIhCZtTIg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 04/10] ACPI: APEI: GHES: move estatus cache helpers
+Subject: Re: [PATCH v6 10/10] RAS: add firmware-first CPER provider
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ahmed Tiba" <ahmed.tiba@arm.com>
-Cc: robh@kernel.org, devicetree@vger.kernel.org, linux-cxl@vger.kernel.org, conor+dt@kernel.org
-In-Reply-To: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-4-91f725174aa0@arm.com>
+Cc: conor+dt@kernel.org, robh@kernel.org, linux-cxl@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-10-91f725174aa0@arm.com>
 References: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com>
- <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-4-91f725174aa0@arm.com>
+ <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-10-91f725174aa0@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 17 Jun 2026 14:10:00 +0000
-Message-Id: <20260617141000.8392A1F000E9@smtp.kernel.org>
+Date: Wed, 17 Jun 2026 14:10:56 +0000
+Message-Id: <20260617141057.75CAF1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
 s) to consider:
 
+New issues:
+- [High] Unbounded memory leak of the global GHES estatus pool backing memo=
+ry on probe failure or repeated module bind/unbind.
+- [High] Unnecessary `spinlock_irqsave` entirely defeats the threaded IRQ h=
+andler and causes high interrupt latency.
+- [High] The threaded IRQ handler unconditionally returns `IRQ_HANDLED` eve=
+n when no error block is present, bypassing the kernel's spurious interrupt=
+ detector.
+- [Medium] Missing Kconfig dependency on `OF_RESERVED_MEM` causes guarantee=
+d probe failure.
+
 Pre-existing issues:
-- [High] Memory Leak / Resource Exhaustion in ghes_estatus_cache_add()
-- [High] Time-of-Check to Time-of-Use (TOCTOU) / Double Fetch in ghes_read_=
-estatus()
-- [High] Missing bounds checks on gdata->error_data_length causing Out-of-B=
-ounds Reads
+- [Critical] Integer overflow in `data_length` validation allows massive ou=
+t-of-bounds kernel memory read when `raw_data_length` is non-zero.
 --
 
-commit a78b7d6a2bbf24ad4d5f5d8876b30cdec8135faf
+commit d0750a54f0673f163ace66f8e9921ee0f1ba6bd4
 Author: Ahmed Tiba <ahmed.tiba@arm.com>
 
-ACPI: APEI: GHES: move estatus cache helpers
+RAS: add firmware-first CPER provider
 
-Relocate the estatus cache allocation and lookup helpers from ghes.c into
-ghes_cper.c. This code move keeps the logic intact while making the cache
-implementation available to forthcoming users.
+Add a firmware-first CPER provider that reuses the shared GHES helpers,
+wire it into the RAS Kconfig/Makefile and document it in the admin guide.
 
-> diff --git a/drivers/acpi/apei/ghes_cper.c b/drivers/acpi/apei/ghes_cper.c
-> index c6e20fdc6964e..5218fc57e5622 100644
-> --- a/drivers/acpi/apei/ghes_cper.c
-> +++ b/drivers/acpi/apei/ghes_cper.c
+> diff --git a/drivers/ras/Kconfig b/drivers/ras/Kconfig
+> index fc4f4bb94a4c6..3c1c63b2fefc3 100644
+> --- a/drivers/ras/Kconfig
+> +++ b/drivers/ras/Kconfig
+> @@ -34,6 +34,17 @@ if RAS
+>  source "arch/x86/ras/Kconfig"
+>  source "drivers/ras/amd/atl/Kconfig"
+> =20
+> +config RAS_CPER_ESOURCE
+> +	bool "Firmware-first CPER error source block provider"
+> +	select GHES_CPER_HELPERS
+
+[Severity: Medium]
+Will this fail to probe on configurations without OF_RESERVED_MEM?
+
+The driver calls of_reserved_mem_region_to_resource() unconditionally, but
+if CONFIG_OF_RESERVED_MEM is disabled, that function is an inline stub that
+always returns -ENOSYS. Should there be a "depends on OF_RESERVED_MEM" here
+so it doesn't build broken configurations?
+
+> +	help
+> +	  Enable support for firmware-first Common Platform Error Record
+
 [ ... ]
-> +void ghes_estatus_cache_add(struct acpi_hest_generic *generic,
-> +			    struct acpi_hest_generic_status *estatus)
+
+> diff --git a/drivers/ras/cper-esource.c b/drivers/ras/cper-esource.c
+> new file mode 100644
+> index 0000000000000..cc9f5f522400d
+> --- /dev/null
+> +++ b/drivers/ras/cper-esource.c
+
+[ ... ]
+
+> +static int cper_esource_validate_status(struct cper_esource *ctx)
 > +{
-> +	unsigned long long now, duration, period, max_period =3D 0;
-> +	struct ghes_estatus_cache *cache, *new_cache;
-> +	struct ghes_estatus_cache __rcu *victim;
-> +	int i, slot =3D -1, count;
+> +	size_t estatus_len;
 > +
-> +	new_cache =3D ghes_estatus_cache_alloc(generic, estatus);
-> +	if (!new_cache)
-> +		return;
+> +	if (!ctx->estatus->block_status)
+> +		return -ENOENT;
 > +
-> +	rcu_read_lock();
-> +	now =3D sched_clock();
-> +	for (i =3D 0; i < GHES_ESTATUS_CACHES_SIZE; i++) {
-> +		cache =3D rcu_dereference(ghes_estatus_caches[i]);
-> +		if (cache =3D=3D NULL) {
-> +			slot =3D i;
-> +			break;
-> +		}
-> +		duration =3D now - cache->time_in;
-> +		if (duration >=3D GHES_ESTATUS_IN_CACHE_MAX_NSEC) {
-> +			slot =3D i;
-> +			break;
-> +		}
-> +		count =3D atomic_read(&cache->count);
-> +		period =3D duration;
-> +		do_div(period, (count + 1));
-> +		if (period > max_period) {
-> +			max_period =3D period;
-> +			slot =3D i;
-> +		}
-> +	}
-> +	rcu_read_unlock();
+> +	if (cper_estatus_check_header(ctx->estatus))
+> +		return -EINVAL;
 > +
-> +	if (slot !=3D -1) {
+> +	if (ctx->estatus->raw_data_length &&
+> +	    (ctx->estatus->raw_data_offset > ctx->status_len ||
+> +	     ctx->estatus->raw_data_length >
+> +	     ctx->status_len - ctx->estatus->raw_data_offset))
+> +		return -EINVAL;
 
-[Severity: High]
-This isn't a bug introduced by this patch, but I noticed a potential memory
-leak here.
+[Severity: Critical]
+This isn't a bug introduced by this patch, but does the validation logic
+have an integer overflow vulnerability?
 
-If all slots are occupied and period <=3D max_period for all entries (e.g.,=
- if
-multiple errors occur in the same timer tick causing duration < count + 1,
-making period =3D 0), slot remains -1.
+When raw_data_length is non-zero, this function relies on
+cper_estatus_check_header() to validate data_length.
 
-In this case, the function skips the insertion block and returns without
-freeing new_cache or decrementing the ghes_estatus_cache_alloced counter.
-Since GHES_ESTATUS_CACHE_ALLOCED_MAX is only 6, could 6 occurrences of this
-condition permanently exhaust the pool and disable the deduplication mechan=
-ism?
+In drivers/firmware/efi/cper.c:cper_estatus_check_header():
+        if (estatus->raw_data_length &&
+            estatus->raw_data_offset < sizeof(*estatus) + estatus->data_len=
+gth)
+                return -EINVAL;
 
-> +		/*
-> +		 * Use release semantics to ensure that ghes_estatus_cached()
+If firmware provides a massive data_length (e.g., 0xFFFFFFF0), the addition
+wraps around to a very small integer, bypassing the check. The subsequent
+cper_estatus_check() will then iterate over this unvalidated length, allowi=
+ng
+a massive out-of-bounds kernel memory read past the ctx->estatus buffer.
+
+Should this driver independently verify that
+sizeof(*estatus) + data_length <=3D ctx->status_len to protect against this?
+
+> +
+> +	estatus_len =3D cper_esource_estatus_len(ctx->estatus);
+
 [ ... ]
 
-
-I also wanted to ask about a couple of other pre-existing issues.
-
-[Severity: High]
-This is a pre-existing issue, but is there a double-fetch vulnerability in
-ghes_read_estatus()?
-
-drivers/acpi/apei/ghes_cper.c:ghes_read_estatus() {
-    ...
-	rc =3D __ghes_peek_estatus(ghes, estatus, buf_paddr, fixmap_idx);
-	if (rc)
-		return rc;
-
-	rc =3D __ghes_check_estatus(ghes, estatus);
-	if (rc)
-		return rc;
-
-	return __ghes_read_estatus(estatus, *buf_paddr, fixmap_idx,
-				   cper_estatus_len(estatus));
-}
-
-The code peeks the error status header from physical memory and validates i=
-ts
-length via __ghes_check_estatus(). However, __ghes_read_estatus() then
-performs a second read from the same physical memory to copy the full block.
-
-If a hardware source modifies the data_length field between these two reads,
-could the newly copied header overwrite the validated length with an
-unvalidated size, leading to out-of-bounds heap reads during subsequent
-parsing?
-
+> +static void cper_esource_process(struct cper_esource *ctx)
+> +{
+> +	int rc;
+> +	int sev;
+> +
+> +	guard(spinlock_irqsave)(&ctx->lock);
 
 [Severity: High]
-This is a pre-existing issue, but are there missing bounds checks on
-gdata->error_data_length in ghes_handle_aer() and ghes_cper_handle_status()?
+Does this unnecessarily disable local interrupts?
 
-drivers/acpi/apei/ghes_cper.c:ghes_handle_aer() {
-    ...
-	struct cper_sec_pcie *pcie_err =3D acpi_hest_get_payload(gdata);
+The cper_esource_irq() handler is requested as a threaded IRQ with
+IRQF_ONESHOT, which naturally serializes execution. Disabling interrupts
+across this entire function defeats the purpose of delegating work to a
+threaded context and introduces high interrupt latency, especially since it
+contains memory copies and potentially blocking reporting helpers.
 
-	if (pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID &&
-    ...
-}
+> +
+> +	memcpy(ctx->estatus, ctx->status, ctx->status_len);
 
-And similarly in ghes_cper_handle_status():
+[ ... ]
 
-drivers/acpi/apei/ghes_cper.c:ghes_cper_handle_status() {
-    ...
-		} else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID)) {
-			struct cxl_cper_event_rec *rec =3D acpi_hest_get_payload(gdata);
+> +static irqreturn_t cper_esource_irq(int irq, void *data)
+> +{
+> +	struct cper_esource *ctx =3D data;
+> +
+> +	cper_esource_process(ctx);
+> +
+> +	return IRQ_HANDLED;
+> +}
 
-			cxl_cper_post_event(CXL_CPER_EVENT_GEN_MEDIA, rec);
-    ...
-}
+[Severity: High]
+If cper_esource_process() returns early without doing any work, shouldn't
+this propagate an IRQ_NONE return?
 
-The payload is cast and dereferenced without verifying that
-gdata->error_data_length is large enough to contain the expected structure
-size. If a valid section UUID is provided with a short error_data_length
-near the end of the estatus buffer, could this read past the end of the
-allocated kernel buffer?
+If the firmware hasn't set block_status, cper_esource_process() bails out
+early without clearing device state or acknowledging the interrupt. By
+always returning IRQ_HANDLED here, the spurious interrupt detector is
+bypassed. If this is a level-triggered interrupt, won't this result in an
+infinite loop of executing the threaded handler and cause a hard CPU lockup?
+
+> +
+> +static int cper_esource_init_ack(struct cper_esource *ctx)
+
+[ ... ]
+
+> +static int cper_esource_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct cper_esource *ctx;
+> +	size_t size;
+> +	int source_id;
+> +	int rc;
+
+[ ... ]
+
+> +	rc =3D cper_esource_init_ack(ctx);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc =3D cper_esource_init_pool();
+> +	if (rc)
+> +		return rc;
+
+[Severity: High]
+Does this cause an unbounded memory leak if the probe sequence fails or
+the module is repeatedly bound/unbound?
+
+cper_esource_init_pool() calls ghes_estatus_pool_init(1).
+
+In drivers/acpi/apei/ghes_cper.c:ghes_estatus_pool_init():
+        addr =3D (unsigned long)vmalloc(len);
+        ...
+        rc =3D gen_pool_add(ghes_estatus_pool, addr, len, -1);
+
+This dynamically allocates and adds memory to the global pool on every call,
+even if the pool already exists. If the driver is unbound and rebound, or if
+platform_get_irq() later returns -EPROBE_DEFER, the allocated memory is
+permanently leaked.
+
+> +
+> +	ctx->estatus =3D devm_kzalloc(dev, ctx->status_len, GFP_KERNEL);
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260617-topics-ahm=
-tib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com?part=3D4
+tib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com?part=3D10
