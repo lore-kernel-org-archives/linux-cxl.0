@@ -1,113 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C2237F735
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Jun 2026 15:24:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2194033A6EB
+	for <linux-cxl@vger.kernel.org>; Wed, 17 Jun 2026 17:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781709900; cv=none; b=q9g+/v3pW31MdkvaCYDdNB2AP8kdu67QD/i6x5hTPNjOs+KWlf2ynuNaYMPCTC1mrVZKBXgrBpLLgQ03mgmkhHcpDVeHsEbv8pQ2/MWms+akFPMu+gDr7vqu6JXFQ3DAyVmqp+BiwI2RJ7q/hooQwIsbJqAp5DS4hN3sOO0ufrw=
+	t=1781716678; cv=none; b=X1h0tkCMmC+rOwp45kgotXk/DsnjGPRsLi2W6Cx0sq7X1pbfM7V/h1mM4Z/JSszxuTa5cvXyFvUhO365UXeWSqn6cbgLxerVcDamkyFqdYJDpE95ycIDEfJslL6FDKVCsJLrlOx71+jnv/andl4KtKYgY2GMq2aOgQFpVYGZ4vE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781709900; c=relaxed/simple;
-	bh=1amRvsYCv6nvYrlnejddFl2I3r49QkddWCNLd9Tyrrw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=F7tLhQoHpIBD/p8FSGeQqLaR80AczvunRmTPn65Dsbwtafnsy7qav9jY7bsUSPN1NP0NzMoDEQjC/KHBvSPlolV0u8zWfcWzTM17Pzdt50+6j4A2ZByKqnIEQ01HNW6gCR8SKMA9KDJMv2i7qm2OtQkDYgk9qYL8dEtTjjt3p/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e0sYhnl4; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1781716678; c=relaxed/simple;
+	bh=V3CcxOLia9CY0H8zjb+ZTGSXWDv/g65LFKetUF1X0Sg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Be3m7z+z6gM4OoULgHa/IQKr3hYoROC2fJvvD72mRT0xuQvlhCyLfhBEw6FSodzKR0i43dhu3u9qBe8uH66Lhu1BU5OaJU8t94ajJ3extwox+IC5oEEZjMu7WOUCjyq97X6HaUuV9xH1d8djkd+m1w/xLbUiFL9ovWaC8IrOcGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fQrtBGsN; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e0sYhnl4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781709898; x=1813245898;
-  h=date:from:to:cc:subject:message-id;
-  bh=1amRvsYCv6nvYrlnejddFl2I3r49QkddWCNLd9Tyrrw=;
-  b=e0sYhnl4m75bIhZGuQi+nyOrJ+n5e4MaOPBKc6uxYw9clWPVpFpQ04Kz
-   G8Se+9rwa1Rmpjgu8kb6KQZCDJ+M9VhMrsdMTwGUUDbzx4xlWcwuSnVsN
-   Qawti22lTQT3m/hFzPePhpHSbeQ45tdFGppoYr/E+Gk7ww3Im94DBs/Nq
-   7Hce7bJaO1pBqwwlqznQyW/uJSwuXYgjut15ya2Wz2ZvMZkvhspQTQoGq
-   xR0tudzg45cP2O3EvoB5GMcMz/o+N07owkDgz1nBc1rMFiDMW/CJ+S8UJ
-   n2gpunvTa/pMKTL+vmhPm+BCm2271tpEVkWEtnyIrotKyZNWExPt+1h16
-   Q==;
-X-CSE-ConnectionGUID: ONAqKvUJQsSu4fhDnc91ZA==
-X-CSE-MsgGUID: v/b9zcwjQJGxl+VuHPqfBw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11820"; a="93625056"
-X-IronPort-AV: E=Sophos;i="6.24,209,1774335600"; 
-   d="scan'208";a="93625056"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2026 08:24:57 -0700
-X-CSE-ConnectionGUID: uekydynHSW2CvEpySJDNJQ==
-X-CSE-MsgGUID: 2s4qV2SIRv257WBeFqYECQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,209,1774335600"; 
-   d="scan'208";a="249989741"
-Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 17 Jun 2026 08:24:56 -0700
-Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wZs8K-00000000UfG-2PD7;
-	Wed, 17 Jun 2026 15:24:52 +0000
-Date: Wed, 17 Jun 2026 23:24:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Dan Williams <djbw@kernel.org>, linux-cxl@vger.kernel.org
-Subject: [cxl:for-7.2/cxl-pci-fixes] BUILD SUCCESS
- 26aa60e0276272ae61b843a05a91748dcb1130f9
-Message-ID: <202606172330.tAsCWwss-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQrtBGsN"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-490a76757e5so43818925e9.2
+        for <linux-cxl@vger.kernel.org>; Wed, 17 Jun 2026 10:17:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781716673; x=1782321473; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=DHkZUMk1sAqmgYkyu6MiPiSjqHXH7Sbq1n0RCyPRFfc=;
+        b=fQrtBGsNkl8jfhmhK2liKOfbaXsrqWGRmKfHP/5/oXW0UD7hJ3oahOR7qLAeo0OpBe
+         2e6X/h8jQJOlMdK45XemxG1KXwmVmdOdKR/3HW11AMVUuy2FDKhx6t1kO60FJocpgZDF
+         evkBG3W7V5BZARoJSX0atoEmHPrefGTeO35FOicNCIG5aM9OA1ql0InW0OLMoRJ8YDk5
+         F4FnkE0SVPSi73SuQwgeOTPBhIBLWh4kel/JQ82o5Kh0CRc9f/rmAmRv1x7q+mcCAL7K
+         8/0Be+VLTgQ+SA5VSHT4hBla88HOCJYiOJO6Jm6SRXG3FLP9Do007JkkLXKlE+Yr5EpJ
+         mzuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781716673; x=1782321473;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DHkZUMk1sAqmgYkyu6MiPiSjqHXH7Sbq1n0RCyPRFfc=;
+        b=g3qsmD380DJ0uobYSELi1VC2trfyIqebBuTlFq3ajf8ellHp1/dSdFNHzu+HUzu/Zi
+         h+NmJwyK1Le/mX87qGYW4WDRbjrw05U6hrfA1U0QXBCk20IogeLJO9hd5sHW03ieosRZ
+         EzVwUgWkXq71ZX3vLvAGYyzlvSbCQbUYjoU5q+/sL0kTwG7DSO3Nr1QpF9ZYyMUPfWv4
+         i8xczuMbT6kNtEC5swVYKu9jOTZMSg99vHf//Ub72jCEBZnGbGLpCBczfX2FSPRQ5mjV
+         x4wreWWI7ynNV7x6dywHQ/pGKMaOM5Q3/6luJn4Ab1mE8tujMzSa9R6cU7Ng2WflvoRW
+         9vOg==
+X-Forwarded-Encrypted: i=1; AFNElJ/2Ey7FLS18RDZe0VW9eJ1yZH6irxT5/mkoicreouZ8VlX020eLRfiYXb3oIlCVHgBFe1WvDtyhgB4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/gi2M+jV8jqu6BOtlpyUKaHnbatcz43wItTsXFHwEXtrfSDZ9
+	Aup7axZkHNoMkuxNDhoTSfIY4OHvrLbag7wcQs74eUkOhoK5IoWJqofU
+X-Gm-Gg: Acq92OF9LeoVvlYWHcTLAwnHwgkFMIR4J1kg/fEZnsGbAWpp2gFm3p8D9dYj02aYwQp
+	tGhcHAtxCrn4WwusL/1JFJbLoTvUng3UlB6ZO5Ut05i/9XXnbMjVOCWvN3kKXC6FdfaO+wCMd0q
+	O7ETIHNyxkhN4ZRQ2Q0e7bSD5yFs1sORmUET2yk/09OqJQfjUWo+aGIVLAr5Vjw9/paezLSyIIc
+	0O8F+A/Q0cJEQ1D9viXyJv7n8rbtO6T4nEtGzxzJ0MGoleK8buh2mobewQFJPCae3s1Ik9ikA0s
+	eiiK52iU8nIkPx079V2jpaqNTMASi04anVvIegsya8qjKiM5fy+HqN/3x2Lxr2NLwwVBJ40YrPK
+	KAr7qatBpWPwMqlHBldkv4NR2Ms7YpKODVjLyg1mA8v64Q6C1yI/fRTMFOfiU3J7bAPGbXKkD8x
+	FWA0GKLTycW/V6Duy5cDOpb3uAzPWZqC8SfTij8+fxk7UGSNIIUrV9G0ieCkmndiY/QHP7cm+pm
+	RQj9Z0=
+X-Received: by 2002:a05:600c:1394:b0:490:b8e6:be40 with SMTP id 5b1f17b1804b1-4923821bef1mr5753465e9.21.1781716672843;
+        Wed, 17 Jun 2026 10:17:52 -0700 (PDT)
+Received: from [10.128.11.42] (195-23-151-163.net.novis.pt. [195.23.151.163])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4606f2dbfb1sm58928836f8f.35.2026.06.17.10.17.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jun 2026 10:17:52 -0700 (PDT)
+Sender: Julian Braha <julian.braha@gmail.com>
+Message-ID: <58f7163f-2fce-41e9-bc35-d1d8e6f4a298@gmail.com>
+Date: Wed, 17 Jun 2026 18:17:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 07/10] ACPI: APEI: introduce GHES helper
+To: Ahmed Tiba <ahmed.tiba@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+ Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Shuai Xue <xueshuai@linux.alibaba.com>,
+ Len Brown <lenb@kernel.org>, Saket Dumbre <saket.dumbre@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <djbw@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Shuah Khan <skhan@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ acpica-devel@lists.linux.dev, linux-cxl@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-doc@vger.kernel.org, Dmitry.Lamerov@arm.com
+References: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com>
+ <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-7-91f725174aa0@arm.com>
+Content-Language: en-US
+From: Julian Braha <julianbraha@gmail.com>
+In-Reply-To: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-7-91f725174aa0@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-7.2/cxl-pci-fixes
-branch HEAD: 26aa60e0276272ae61b843a05a91748dcb1130f9  cxl/pci: Convert PCIBIOS errors to errno on DVSEC config accesses
+Hi Ahmed,
 
-elapsed time: 18250m
+On 6/17/26 14:54, Ahmed Tiba wrote:
 
-configs tested: 35
-configs skipped: 0
+> +config GHES_CPER_HELPERS
+> +	bool
+> +	select UEFI_CPER
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This config option should probably also depend on ACPI (could just move
+it into the if ACPI..endif block), or at least have a comment that
+selector options ensure ACPI is enabled.
 
-tested configs:
-alpha        allnoconfig    gcc-16.1.0
-arc         allmodconfig    gcc-16.1.0
-arc          allnoconfig    gcc-16.1.0
-arc         allyesconfig    gcc-16.1.0
-arm          allnoconfig    clang-23
-arm64        allnoconfig    gcc-16.1.0
-csky        allmodconfig    gcc-16.1.0
-csky         allnoconfig    gcc-16.1.0
-hexagon      allnoconfig    clang-23
-i386         allnoconfig    gcc-14
-loongarch    allnoconfig    clang-20
-m68k        allmodconfig    gcc-16.1.0
-m68k         allnoconfig    gcc-16.1.0
-m68k        allyesconfig    gcc-16.1.0
-microblaze   allnoconfig    gcc-16.1.0
-microblaze  allyesconfig    gcc-16.1.0
-mips         allnoconfig    gcc-16.1.0
-mips        allyesconfig    gcc-16.1.0
-nios2       allmodconfig    gcc-11.5.0
-nios2        allnoconfig    gcc-11.5.0
-openrisc    allmodconfig    gcc-16.1.0
-openrisc     allnoconfig    gcc-16.1.0
-parisc       allnoconfig    gcc-16.1.0
-parisc      allyesconfig    gcc-16.1.0
-powerpc      allnoconfig    gcc-16.1.0
-riscv        allnoconfig    gcc-16.1.0
-s390         allnoconfig    clang-23
-sh          allmodconfig    gcc-16.1.0
-sh           allnoconfig    gcc-16.1.0
-sh          allyesconfig    gcc-16.1.0
-sparc        allnoconfig    gcc-16.1.0
-sparc64     allmodconfig    clang-20
-um           allnoconfig    clang-16
-x86_64       allnoconfig    clang-22
-xtensa       allnoconfig    gcc-16.1.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- Julian Braha
