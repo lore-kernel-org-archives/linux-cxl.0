@@ -1,157 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF7743E488;
-	Wed, 17 Jun 2026 14:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBBD217F27
+	for <linux-cxl@vger.kernel.org>; Wed, 17 Jun 2026 14:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781705713; cv=none; b=k9NynVQhFgbvaF6PS0QRnDQGj8+aTqxBU2akVwExisuKQtgHa6+onnPY013ZcQYKW0gDk4sdLgqd1/tEKT0/KqfOmOeY9+7HR3qpnL7BGMcMaMSQB5hQoeg+blzFu+TtJZ//cUlziT/ebUd7V8dly/CmjTYZsSunBZ+lBMpMsLo=
+	t=1781706269; cv=none; b=nKijNewurwBYNEcEDGIAh8mLAC9WCJ7UBt9dPAjdi/up44WjrgRE7dagFIP8TW9DKmBm6zu32/WBIHUM2p0yDZbtq3mj5AdyMxsaEkTivxDRkbA3yp/3qMjJWnMiFLsxC87RGVtuCEP8UdTbHI76VqmwgW3aSr5tSySDepwF6Lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781705713; c=relaxed/simple;
-	bh=aT6EsMpyN2kHvIzzfOlMkl1tsxagZKfNG322pi4LTbs=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=DSpPMWDzySi8V0SiT3pAwrftQQFL9Ze6p2DclMpw+7+G6EXR3m95DnCnDsUxchyKf7Zm5KE94r7DOvOlfp0tSfXDrtR6P1iLhFId4NHvlykkdfvER/DM6yepkRP7n825o9vLbS40cfy4DiJjmsR+YwzxMK+N+1ZAbR1bmIsXHnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UI+ZGsDv; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1781706269; c=relaxed/simple;
+	bh=9FUKbmQ+PChBSVaaxCqei51y0yiEuSK2alJ0UJHfWUw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sqf4mn1HsCcRvmbuzTvvhotS9d7eIh5sZUU7ErkvXWa/3LWrmoPfD8tsTZLARj06FjOvy5HP2gIKV3pnYrpRP4BXFu7FYHW06yqJ0ZAj7d9ySUjb1hmOjgCHPJL7QLq/EU+9jnJYbfZIpphWUX5EyjS4nM3h0I3l8Mq5Q45Joto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=i8awV3fr; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UI+ZGsDv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F13231F000E9;
-	Wed, 17 Jun 2026 14:15:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781705712;
-	bh=l5idDmyMZHXtgRmJ3QAeMxDJzHsMw3e6bXX2hV5ODoo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UI+ZGsDvPiYTuVGh3UOjxOu6Nfy0nXYEra4zLomR1Z4D3I5FpP7oig20QuPvGJl1z
-	 kxv7W6GbADSPyqM7rgvcRoWwmB+Re7EzEycFhJgRNVUV1KIb6l3z9F1BgmH9LS7R23
-	 IH9jLsirvsCVL4ao5lvmloYaC91YRj0NzO9aab6RBDdH2ZQczLaKnySZH1yP9HDFgd
-	 C4TLeQqhaCKdc5VPyK0vs03C336+o3/rBY71l4tp+89QUQ6KrfMSPEvS9HQJd0NtQF
-	 YeCi3dACCoFDIKwaTTQEEwS4JkGdQnBer7SNNAu0wsrGHFRpduKxxla3trHS+pCHy6
-	 jAdUOgC57Dd+w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 02/10] ACPI: APEI: GHES: move CPER read helpers
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ahmed Tiba" <ahmed.tiba@arm.com>
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, linux-cxl@vger.kernel.org, robh@kernel.org
-In-Reply-To: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-2-91f725174aa0@arm.com>
-References: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com>
- <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-2-91f725174aa0@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 17 Jun 2026 14:15:11 +0000
-Message-Id: <20260617141511.F13231F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="i8awV3fr"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-490be29c1c5so61562085e9.2
+        for <linux-cxl@vger.kernel.org>; Wed, 17 Jun 2026 07:24:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1781706266; x=1782311066; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qQ2dIgGYiEosps8TepSobN48VXcZUJj8FKtvRmZVRa0=;
+        b=i8awV3frh+CV+n4or4FRiY5A0PxkdKNj07TRRxAzoyOiydjXVQXaOgMuR5u2qB13r0
+         1qsEDE2ZtqNrDTmqbkGD934KxSu2yZupe8fUWFckrbjdOz171v1BvPsxGPWdACsdt40d
+         21Fb8yGF1XvjSVil6JvI8GqNqHoRIoJ3kJctVGGqL+1fG5m9+Zjcv4kCYVKcBx5jQ9xo
+         9jM9umA5v78P5PxdAMUfQDFDNdc1DGY3GREbiAHuAOe+GPjekqpViW/ZSJGbtXTL9m3b
+         p3BdeAs2efSAgEtpkUDA7BLB5vbF4giV+dQGLWAdLdMla7NnJwIdpgqKGJ4ao5zvB1uo
+         9qmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781706266; x=1782311066;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qQ2dIgGYiEosps8TepSobN48VXcZUJj8FKtvRmZVRa0=;
+        b=cIuQ1JZ/S+E+7PtORdCjNE5KprrySQzpUBoOirl36KzwgIDQMEaKcbYNKIUXjpXw2y
+         EfU/Mae7RFTSPAhNkDQG/c6xEjHIitSwR0Xg1nv4EW0EC4sY2OC+yMzbBMCEr0Dy0pBY
+         gogc+vGuwrpJriyA1EkfQbadESW8QegUnjFc1mleHdkoYMJNM3aqxgV9qEJRWwn0YQ/k
+         Jg8syO1WF2yf80C0TXYlFXurWww+GPO1FI2Uy8OSaKhXhKyGT0oByOymNNX+hQ0R0Nos
+         skiAL2iVFb3K5U3OYB+6spML7QuJsxn3Wbu+taHC6SHF1lxrNNFWremwiudo9JM9QlkJ
+         rU/g==
+X-Gm-Message-State: AOJu0YxIpJ4hJsAkjrB23w8nnaquyBUrhaYoTwmtUQnqQI8nd/cttFy2
+	sbqDYYnYWAlVGooF7WrOw4m4SYPJwNZusWXLPgt+kLOHwXg5bdWRkUjIB5WNLXISYcY=
+X-Gm-Gg: Acq92OFjnmaSHn+StNvsPDDWB3x9/vEfWZTNNHVr47jXccBZplpWDJN4mFfyx2S/IYI
+	TreJ5tHh+I/QHem69O8EZXxqV0GHHzd4cJ+Rozn8CAgdU6YQpO+XFTNDFSrjhq1WamTD24Xq1Sn
+	jcbS9nfow8bioB7fRPtsGYOvCJ1buvACYkRW2EQYvdHvYnLKGGXuPfdCO43eIjAsJNunS+kYiAZ
+	Rjo4lh7yNVvo6JF7llddAnq6XnRSLAYuKJNvJO/HNWrvha2Pm+gRt5GdUwm5/frfd8cNftS2bLw
+	BV1C7tS1x1tcPvbMZPQ54Y+RZfzvRC1FiZBdNk4iSHkHK7exTdc0SHjDLOvsRuQtlAnpN7xcvlb
+	zL8MQs+HmeQ5H+PpX1+1my1ghK5bWfMMi+AQRs/K7Jgji5losoOEoalGjR6rU+jql49ANHR8esR
+	AXfDI+IW3PPbYi/Rj2cpbfzUiWmKZVCZCEKaAaZ2omFeRTF/2Gkui84unXRvjB4nGrOeL50Rncm
+	cj9
+X-Received: by 2002:a05:600c:608a:b0:490:b65f:8b1 with SMTP id 5b1f17b1804b1-492333ba1d1mr85648985e9.5.1781706265704;
+        Wed, 17 Jun 2026 07:24:25 -0700 (PDT)
+Received: from localhost (p200300f65f47db043b42891e8adbe9a5.dip0.t-ipconnect.de. [2003:f6:5f47:db04:3b42:891e:8adb:e9a5])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4922fa510e7sm198929775e9.7.2026.06.17.07.24.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2026 07:24:25 -0700 (PDT)
+Date: Wed, 17 Jun 2026 16:24:24 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, djbw@kernel.org, dave@stgolabs.net, 
+	jic23@kernel.org, alison.schofield@intel.com, vishal.l.verma@intel.com
+Subject: Re: [PATCH v5 6/6] cxl/test: Add cxl_test accelerator driver
+Message-ID: <ajKt3db8vA_SEvSX@monoceros>
+References: <20260611234409.256765-1-dave.jiang@intel.com>
+ <20260611234409.256765-7-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pi2w6gsufoqmi53e"
+Content-Disposition: inline
+In-Reply-To: <20260611234409.256765-7-dave.jiang@intel.com>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
 
-Pre-existing issues:
-- [High] A double fetch (TOCTOU) vulnerability when reading the CPER error =
-status block from firmware memory can lead to out-of-bounds reads.
-- [High] ghes_ack_error() incorrectly shifts read_ack_preserve and read_ack=
-_write by the register bit_offset, unconditionally clearing bits below bit_=
-offset and potentially clobbering other hardware state in the register.
---
+--pi2w6gsufoqmi53e
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v5 6/6] cxl/test: Add cxl_test accelerator driver
+MIME-Version: 1.0
 
-commit 6a836df1ccfeca08e11c00049d33e954958fa36f
-Author: Ahmed Tiba <ahmed.tiba@arm.com>
+Hello,
 
-ACPI: APEI: GHES: move CPER read helpers
+On Thu, Jun 11, 2026 at 04:44:09PM -0700, Dave Jiang wrote:
+> +static const struct platform_device_id cxl_mock_accel_ids[] = {
+> +	{ .name = "cxl_type2_accel", 0 },
 
-This commit relocates the CPER buffer mapping, peek, and clear helpers
-from ghes.c into ghes_cper.c so they can be shared with other
-firmware-first providers. It only shuffles code without changing
-behavior.
+Please drop the 0 here (and the comma before it).
 
-Reviewed-by: Jonathan Cameron <jic23@kernel.org>
-Signed-off-by: Ahmed Tiba <ahmed.tiba@arm.com>
+> +	{ }
+> +};
 
-> diff --git a/drivers/acpi/apei/ghes_cper.c b/drivers/acpi/apei/ghes_cper.c
-> new file mode 100644
-> index 0000000000000..b365c42efce49
-> --- /dev/null
-> +++ b/drivers/acpi/apei/ghes_cper.c
-> @@ -0,0 +1,196 @@
-[ ... ]
-> +static void ghes_ack_error(struct acpi_hest_generic_v2 *gv2)
-> +{
-> +	int rc;
-> +	u64 val =3D 0;
-> +
-> +	rc =3D apei_read(&val, &gv2->read_ack_register);
-> +	if (rc)
-> +		return;
-> +
-> +	val &=3D gv2->read_ack_preserve << gv2->read_ack_register.bit_offset;
-> +	val |=3D gv2->read_ack_write    << gv2->read_ack_register.bit_offset;
+Best regards
+Uwe
 
-[Severity: High]
-This is a pre-existing issue, but does this code unintentionally clobber the
-lower bits of the hardware register?
+--pi2w6gsufoqmi53e
+Content-Type: application/pgp-signature; name="signature.asc"
 
-When ghes_ack_error() masks val using:
+-----BEGIN PGP SIGNATURE-----
 
-val &=3D gv2->read_ack_preserve << gv2->read_ack_register.bit_offset;
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmoyrhUACgkQj4D7WH0S
+/k5vbggAkr3qUJzq+oCrMxtLxYIKM6aLJ09tvwdi0p8/WFOGE6YXpesnUHSNz5Ia
+uYYDJ8BLzUd/by+rafG4wWPZ29iB1PB0T6MuZiOxAvK9Ie6mMjvubTiPh8qfERi2
+rZlLPUT/rDoGuvlZoPZn8LsUwAlzECux9ghJXIkKZLMdi/yhSHAGqkWLi+6WbRm1
+FzrdorDslHx5UmspMXcdq5DnpvWuLOF09KriSRa/g4vXXU/x5OHFiuXGfnMto2xk
+cM8Bsh6znR1i4R6exRvRXqoi7Q1+fJW8jjxJGKyWfM9zX/aWlIEGaRCowQxDeVwg
+2jHMGtRNonsaYyoOj9oTpP7eRD1+Lw==
+=fA6j
+-----END PGP SIGNATURE-----
 
-Any bits in val below bit_offset are unconditionally cleared to zero.
-
-If there is hardware state in those lower bits, wouldn't writing back the
-modified val via apei_write() overwrite and destroy it?
-
-> +
-> +	apei_write(val, &gv2->read_ack_register);
-> +}
-[ ... ]
-> +int ghes_read_estatus(struct ghes *ghes,
-> +		      struct acpi_hest_generic_status *estatus,
-> +		      u64 *buf_paddr, enum fixed_addresses fixmap_idx)
-> +{
-> +	int rc;
-> +
-> +	rc =3D __ghes_peek_estatus(ghes, estatus, buf_paddr, fixmap_idx);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc =3D __ghes_check_estatus(ghes, estatus);
-> +	if (rc)
-> +		return rc;
-> +
-> +	return __ghes_read_estatus(estatus, *buf_paddr, fixmap_idx,
-> +				   cper_estatus_len(estatus));
-
-[Severity: High]
-This isn't a bug introduced by this patch, but is there a potential double
-fetch issue in the error status read path?
-
-Looking at the sequence in ghes_read_estatus(), we first fetch and validate=
- the
-header:
-
-__ghes_peek_estatus() copies the header from physical memory into estatus.
-
-__ghes_check_estatus() validates estatus->data_length.
-
-Then we call __ghes_read_estatus() which copies from the same physical memo=
-ry
-again, overwriting the previously validated estatus header:
-
-__ghes_read_estatus(...) {
-    ghes_copy_tofrom_phys(estatus, buf_paddr, buf_len, 1, fixmap_idx);
-    if (cper_estatus_check(estatus)) {
-    ...
-}
-
-If the underlying firmware memory is modified between the peek and the read,
-the local estatus will get a new, unvalidated data_length.
-
-Since cper_estatus_check() relies on data_length to iterate over the sectio=
-ns,
-could this new unvalidated length cause an out-of-bounds read?
-
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260617-topics-ahm=
-tib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com?part=3D2
+--pi2w6gsufoqmi53e--
