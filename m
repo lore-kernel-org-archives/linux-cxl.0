@@ -1,34 +1,34 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 979793EEAEB;
-	Wed, 17 Jun 2026 13:55:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5BBE13EDE6C;
+	Wed, 17 Jun 2026 13:55:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781704550; cv=none; b=Cg0ga50I5tmYwWxcIdJfWQ6hWhAVsinS6i+1glJOQoVtGMTk1Z2tsvuJvle+syxNNlrERyj9j2kpkPV/mlIw2BKESZUlvvmY68OPwi5Qdz7pzFpvBVYJpOpdoykK05gK94agMzfG6HO3f13JM7hx6rn1exMCz2psBy4a75L5p4s=
+	t=1781704553; cv=none; b=Xxy8Ch+F7lb61YbbNPylTMKsvdm+Czs4C0CWIHgvyfu3Y0KZatGhMOrGByPol5YNtaYTG4OZBaW8YQUZ0ORoLGVTyXOqxtd0r1trE8qn/AkvvSO+XrA3L4ZhK+x1XPtIan2cZ6jTFe5Jnndho5xrjqMWU9Wdha0N7nqpnfUageg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781704550; c=relaxed/simple;
-	bh=G6coLRg+HrSSMx5FLZXc+S7HLc/2kDZpQIaMt6WvUbc=;
+	s=arc-20240116; t=1781704553; c=relaxed/simple;
+	bh=gJtKRBMInrqR7T9rhsSURuylQA76dBUb/rtibQUuoLo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bROgmWouatfZ9mUwSzDll4q9RtU3D5hw+5VbpPqeIEH33+rLzj25y6Bx4/X1rRtARX7SzL7X3+WGDSscv30H2xZLjuFOt5OJRSNE0B+8ea3iV19gHvJtsikw36JiYhYmoE99k1KWAJqFk6mIz7DtZWNZNHPAypQ7Ph3uWJoPazo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=fSBp+SVg; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=HItHDG1SWtt8BKvCys6sn9Yhu2gIQ8vn9l/VANWkcJH5aL1AeUW0mxKAul3o0bVSbY7LdGmiir5AQaVnfwouioNyF6lbPhT/154H9eZLwCXeflT4MfIkEm5jEyq3Q2RubheeZV5m3S92HWIQ5QBIdAeXUIfi707HKCTnkXlJrcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=bMocOjhA; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="fSBp+SVg"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="bMocOjhA"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DB6D4800;
-	Wed, 17 Jun 2026 06:55:42 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1832132AB;
+	Wed, 17 Jun 2026 06:55:47 -0700 (PDT)
 Received: from e134710.arm.com (e134710.arm.com [10.33.10.82])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4ADEF3F915;
-	Wed, 17 Jun 2026 06:55:42 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45ED13F915;
+	Wed, 17 Jun 2026 06:55:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1781704546; bh=G6coLRg+HrSSMx5FLZXc+S7HLc/2kDZpQIaMt6WvUbc=;
+	t=1781704551; bh=gJtKRBMInrqR7T9rhsSURuylQA76dBUb/rtibQUuoLo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fSBp+SVgVlthvJ8XOlt9QaWNJAlBOhz56/JxLGtxEpjbt3lxzYaKrZsRDPDP0JOuM
-	 EoeUsjlY0GESsBbJ0TDV+7Clxwk5rzxEqTRpFkO1CbzaPwztC5HNk5KnzbqRVBSAsR
-	 vKLjbRYTCmOOySZgOTo3W/oQILHHU/+cqAOins6w=
+	b=bMocOjhAfW5Hpu2+DGPcTvSOmNuTE5bRRjOe347IfcfHhUVc4P28NwxwleVQPsLAv
+	 pT+MuwP1mYKkD1XMMQkb/d5WXmJr2fCTcc6PYFlyyQO0fYp+fWoAX9SMs+9PPtJc/a
+	 83sO0EGSUBsTKzb1yYQAFDkC+glaPidyK/tgA7H8=
 From: Ahmed Tiba <ahmed.tiba@arm.com>
-Date: Wed, 17 Jun 2026 14:54:42 +0100
-Subject: [PATCH v6 04/10] ACPI: APEI: GHES: move estatus cache helpers
+Date: Wed, 17 Jun 2026 14:54:43 +0100
+Subject: [PATCH v6 05/10] ACPI: APEI: GHES: move vendor record helpers
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -37,7 +37,7 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-4-91f725174aa0@arm.com>
+Message-Id: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-5-91f725174aa0@arm.com>
 References: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com>
 In-Reply-To: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com>
 To: "Rafael J. Wysocki" <rafael@kernel.org>, 
@@ -58,367 +58,201 @@ Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
  devicetree@vger.kernel.org, linux-edac@vger.kernel.org, 
  linux-doc@vger.kernel.org, Dmitry.Lamerov@arm.com
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781704522; l=11163;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1781704522; l=6442;
  i=ahmed.tiba@arm.com; s=20260219; h=from:subject:message-id;
- bh=G6coLRg+HrSSMx5FLZXc+S7HLc/2kDZpQIaMt6WvUbc=;
- b=UV6GRYnrYPatszyjZzuguelRlxkvFpsj+0v/JqRGEeefqRNOkDQL9yNyeFbneRDxLC6TCDbhp
- G8Z1dsQZuc6DCdBYH5/MmROy4UZuoUVO+Zf0GgG2fSvXUL18itS7eX9
+ bh=gJtKRBMInrqR7T9rhsSURuylQA76dBUb/rtibQUuoLo=;
+ b=OeCW+PNEPl03mgWI8jUYl8I9Rkt6ajV3Kiu6Bb1/91JPcq8gL7sdT3WW6jeHlBBVjZqKbcDEa
+ /p7lczTriM+DrhKcoOGv5zMJnPQGDG6x/WM2Yl6B0M0A5wOdSaSUnW0
 X-Developer-Key: i=ahmed.tiba@arm.com; a=ed25519;
  pk=xVOtd+Qklh/4tuM3tB+BEZD4jj5a6W59C3KCNX6v7OE=
 
-Relocate the estatus cache allocation and lookup helpers from ghes.c into
-ghes_cper.c. This code move keeps the logic intact while making the cache
-implementation available to forthcoming users.
+Shift the vendor record workqueue helpers into ghes_cper.c so both GHES
+and future DT-based providers can use the same implementation. The change
+is mechanical and keeps the notifier behavior identical.
 
-Reviewed-by: Jonathan Cameron <jic23@kernel.org>
 Signed-off-by: Ahmed Tiba <ahmed.tiba@arm.com>
 ---
- drivers/acpi/apei/ghes.c      | 138 +----------------------------------------
- drivers/acpi/apei/ghes_cper.c | 139 ++++++++++++++++++++++++++++++++++++++++++
- include/acpi/ghes_cper.h      |   5 ++
- 3 files changed, 145 insertions(+), 137 deletions(-)
+ drivers/acpi/apei/ghes.c      | 68 ------------------------------------------
+ drivers/acpi/apei/ghes_cper.c | 69 +++++++++++++++++++++++++++++++++++++++++++
+ include/acpi/ghes_cper.h      |  2 ++
+ 3 files changed, 71 insertions(+), 68 deletions(-)
 
 diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 91638ae7e05e..adab7404310e 100644
+index adab7404310e..9703c602a8c2 100644
 --- a/drivers/acpi/apei/ghes.c
 +++ b/drivers/acpi/apei/ghes.c
-@@ -113,10 +113,7 @@ static DEFINE_MUTEX(ghes_devs_mutex);
-  */
- static DEFINE_SPINLOCK(ghes_notify_lock_irq);
- 
--static struct gen_pool *ghes_estatus_pool;
--
--static struct ghes_estatus_cache __rcu *ghes_estatus_caches[GHES_ESTATUS_CACHES_SIZE];
--static atomic_t ghes_estatus_cache_alloced;
-+struct gen_pool *ghes_estatus_pool;
- 
- int ghes_estatus_pool_init(unsigned int num_ghes)
- {
-@@ -733,139 +730,6 @@ static int ghes_print_estatus(const char *pfx,
- 	return 0;
+@@ -383,74 +383,6 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
+ #endif
  }
  
--/*
-- * GHES error status reporting throttle, to report more kinds of
-- * errors, instead of just most frequently occurred errors.
-- */
--static int ghes_estatus_cached(struct acpi_hest_generic_status *estatus)
--{
--	u32 len;
--	int i, cached = 0;
--	unsigned long long now;
--	struct ghes_estatus_cache *cache;
--	struct acpi_hest_generic_status *cache_estatus;
+-static BLOCKING_NOTIFIER_HEAD(vendor_record_notify_list);
 -
--	len = cper_estatus_len(estatus);
--	rcu_read_lock();
--	for (i = 0; i < GHES_ESTATUS_CACHES_SIZE; i++) {
--		cache = rcu_dereference(ghes_estatus_caches[i]);
--		if (cache == NULL)
--			continue;
--		if (len != cache->estatus_len)
--			continue;
--		cache_estatus = GHES_ESTATUS_FROM_CACHE(cache);
--		if (memcmp(estatus, cache_estatus, len))
--			continue;
--		atomic_inc(&cache->count);
--		now = sched_clock();
--		if (now - cache->time_in < GHES_ESTATUS_IN_CACHE_MAX_NSEC)
--			cached = 1;
--		break;
--	}
--	rcu_read_unlock();
--	return cached;
+-int ghes_register_vendor_record_notifier(struct notifier_block *nb)
+-{
+-	return blocking_notifier_chain_register(&vendor_record_notify_list, nb);
+-}
+-EXPORT_SYMBOL_GPL(ghes_register_vendor_record_notifier);
+-
+-void ghes_unregister_vendor_record_notifier(struct notifier_block *nb)
+-{
+-	blocking_notifier_chain_unregister(&vendor_record_notify_list, nb);
+-}
+-EXPORT_SYMBOL_GPL(ghes_unregister_vendor_record_notifier);
+-
+-static void ghes_vendor_record_notifier_destroy(void *nb)
+-{
+-	ghes_unregister_vendor_record_notifier(nb);
 -}
 -
--static struct ghes_estatus_cache *ghes_estatus_cache_alloc(
--	struct acpi_hest_generic *generic,
--	struct acpi_hest_generic_status *estatus)
+-int devm_ghes_register_vendor_record_notifier(struct device *dev,
+-					      struct notifier_block *nb)
 -{
--	int alloced;
--	u32 len, cache_len;
--	struct ghes_estatus_cache *cache;
--	struct acpi_hest_generic_status *cache_estatus;
+-	int ret;
 -
--	alloced = atomic_add_return(1, &ghes_estatus_cache_alloced);
--	if (alloced > GHES_ESTATUS_CACHE_ALLOCED_MAX) {
--		atomic_dec(&ghes_estatus_cache_alloced);
--		return NULL;
--	}
--	len = cper_estatus_len(estatus);
--	cache_len = GHES_ESTATUS_CACHE_LEN(len);
--	cache = (void *)gen_pool_alloc(ghes_estatus_pool, cache_len);
--	if (!cache) {
--		atomic_dec(&ghes_estatus_cache_alloced);
--		return NULL;
--	}
--	cache_estatus = GHES_ESTATUS_FROM_CACHE(cache);
--	memcpy(cache_estatus, estatus, len);
--	cache->estatus_len = len;
--	atomic_set(&cache->count, 0);
--	cache->generic = generic;
--	cache->time_in = sched_clock();
--	return cache;
+-	ret = ghes_register_vendor_record_notifier(nb);
+-	if (ret)
+-		return ret;
+-
+-	return devm_add_action_or_reset(dev, ghes_vendor_record_notifier_destroy, nb);
 -}
+-EXPORT_SYMBOL_GPL(devm_ghes_register_vendor_record_notifier);
 -
--static void ghes_estatus_cache_rcu_free(struct rcu_head *head)
+-static void ghes_vendor_record_work_func(struct work_struct *work)
 -{
--	struct ghes_estatus_cache *cache;
+-	struct ghes_vendor_record_entry *entry;
+-	struct acpi_hest_generic_data *gdata;
 -	u32 len;
 -
--	cache = container_of(head, struct ghes_estatus_cache, rcu);
--	len = cper_estatus_len(GHES_ESTATUS_FROM_CACHE(cache));
--	len = GHES_ESTATUS_CACHE_LEN(len);
--	gen_pool_free(ghes_estatus_pool, (unsigned long)cache, len);
--	atomic_dec(&ghes_estatus_cache_alloced);
+-	entry = container_of(work, struct ghes_vendor_record_entry, work);
+-	gdata = GHES_GDATA_FROM_VENDOR_ENTRY(entry);
+-
+-	blocking_notifier_call_chain(&vendor_record_notify_list,
+-				     entry->error_severity, gdata);
+-
+-	len = GHES_VENDOR_ENTRY_LEN(acpi_hest_get_record_size(gdata));
+-	gen_pool_free(ghes_estatus_pool, (unsigned long)entry, len);
 -}
 -
--static void
--ghes_estatus_cache_add(struct acpi_hest_generic *generic,
--		       struct acpi_hest_generic_status *estatus)
+-static void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
+-					  int sev)
 -{
--	unsigned long long now, duration, period, max_period = 0;
--	struct ghes_estatus_cache *cache, *new_cache;
--	struct ghes_estatus_cache __rcu *victim;
--	int i, slot = -1, count;
+-	struct acpi_hest_generic_data *copied_gdata;
+-	struct ghes_vendor_record_entry *entry;
+-	u32 len;
 -
--	new_cache = ghes_estatus_cache_alloc(generic, estatus);
--	if (!new_cache)
+-	len = GHES_VENDOR_ENTRY_LEN(acpi_hest_get_record_size(gdata));
+-	entry = (void *)gen_pool_alloc(ghes_estatus_pool, len);
+-	if (!entry)
 -		return;
 -
--	rcu_read_lock();
--	now = sched_clock();
--	for (i = 0; i < GHES_ESTATUS_CACHES_SIZE; i++) {
--		cache = rcu_dereference(ghes_estatus_caches[i]);
--		if (cache == NULL) {
--			slot = i;
--			break;
--		}
--		duration = now - cache->time_in;
--		if (duration >= GHES_ESTATUS_IN_CACHE_MAX_NSEC) {
--			slot = i;
--			break;
--		}
--		count = atomic_read(&cache->count);
--		period = duration;
--		do_div(period, (count + 1));
--		if (period > max_period) {
--			max_period = period;
--			slot = i;
--		}
--	}
--	rcu_read_unlock();
+-	copied_gdata = GHES_GDATA_FROM_VENDOR_ENTRY(entry);
+-	memcpy(copied_gdata, gdata, acpi_hest_get_record_size(gdata));
+-	entry->error_severity = sev;
 -
--	if (slot != -1) {
--		/*
--		 * Use release semantics to ensure that ghes_estatus_cached()
--		 * running on another CPU will see the updated cache fields if
--		 * it can see the new value of the pointer.
--		 */
--		victim = xchg_release(&ghes_estatus_caches[slot],
--				      RCU_INITIALIZER(new_cache));
--
--		/*
--		 * At this point, victim may point to a cached item different
--		 * from the one based on which we selected the slot. Instead of
--		 * going to the loop again to pick another slot, let's just
--		 * drop the other item anyway: this may cause a false cache
--		 * miss later on, but that won't cause any problems.
--		 */
--		if (victim)
--			call_rcu(&unrcu_pointer(victim)->rcu,
--				 ghes_estatus_cache_rcu_free);
--	}
+-	INIT_WORK(&entry->work, ghes_vendor_record_work_func);
+-	schedule_work(&entry->work);
 -}
 -
- static void __ghes_panic(struct ghes *ghes,
- 			 struct acpi_hest_generic_status *estatus,
- 			 u64 buf_paddr, enum fixed_addresses fixmap_idx)
+ /* Room for 8 entries */
+ #define CXL_CPER_PROT_ERR_FIFO_DEPTH 8
+ static DEFINE_KFIFO(cxl_cper_prot_err_fifo, struct cxl_cper_prot_err_work_data,
 diff --git a/drivers/acpi/apei/ghes_cper.c b/drivers/acpi/apei/ghes_cper.c
-index c6e20fdc6964..5218fc57e562 100644
+index 5218fc57e562..b26943eafd79 100644
 --- a/drivers/acpi/apei/ghes_cper.c
 +++ b/drivers/acpi/apei/ghes_cper.c
-@@ -13,10 +13,14 @@
-  */
- 
- #include <linux/err.h>
-+#include <linux/genalloc.h>
- #include <linux/io.h>
+@@ -18,6 +18,7 @@
  #include <linux/kernel.h>
-+#include <linux/math64.h>
+ #include <linux/math64.h>
  #include <linux/mm.h>
++#include <linux/notifier.h>
  #include <linux/ratelimit.h>
-+#include <linux/rcupdate.h>
-+#include <linux/sched/clock.h>
- #include <linux/slab.h>
- 
- #include <acpi/apei.h>
-@@ -28,6 +32,9 @@
- 
- #include "apei-internal.h"
- 
-+static struct ghes_estatus_cache __rcu *ghes_estatus_caches[GHES_ESTATUS_CACHES_SIZE];
-+static atomic_t ghes_estatus_cache_alloced;
-+
- static void __iomem *ghes_map(u64 pfn, enum fixed_addresses fixmap_idx)
- {
- 	phys_addr_t paddr;
-@@ -259,3 +266,135 @@ void ghes_clear_estatus(struct ghes *ghes,
- 	if (is_hest_type_generic_v2(ghes))
+ #include <linux/rcupdate.h>
+ #include <linux/sched/clock.h>
+@@ -267,6 +268,74 @@ void ghes_clear_estatus(struct ghes *ghes,
  		ghes_ack_error(ghes->generic_v2);
  }
+ 
++static BLOCKING_NOTIFIER_HEAD(vendor_record_notify_list);
 +
-+/*
-+ * GHES error status reporting throttle, to report more kinds of
-+ * errors, instead of just most frequently occurred errors.
-+ */
-+int ghes_estatus_cached(struct acpi_hest_generic_status *estatus)
++int ghes_register_vendor_record_notifier(struct notifier_block *nb)
 +{
-+	u32 len;
-+	int i, cached = 0;
-+	unsigned long long now;
-+	struct ghes_estatus_cache *cache;
-+	struct acpi_hest_generic_status *cache_estatus;
++	return blocking_notifier_chain_register(&vendor_record_notify_list, nb);
++}
++EXPORT_SYMBOL_GPL(ghes_register_vendor_record_notifier);
 +
-+	len = cper_estatus_len(estatus);
-+	rcu_read_lock();
-+	for (i = 0; i < GHES_ESTATUS_CACHES_SIZE; i++) {
-+		cache = rcu_dereference(ghes_estatus_caches[i]);
-+		if (cache == NULL)
-+			continue;
-+		if (len != cache->estatus_len)
-+			continue;
-+		cache_estatus = GHES_ESTATUS_FROM_CACHE(cache);
-+		if (memcmp(estatus, cache_estatus, len))
-+			continue;
-+		atomic_inc(&cache->count);
-+		now = sched_clock();
-+		if (now - cache->time_in < GHES_ESTATUS_IN_CACHE_MAX_NSEC)
-+			cached = 1;
-+		break;
-+	}
-+	rcu_read_unlock();
-+	return cached;
++void ghes_unregister_vendor_record_notifier(struct notifier_block *nb)
++{
++	blocking_notifier_chain_unregister(&vendor_record_notify_list, nb);
++}
++EXPORT_SYMBOL_GPL(ghes_unregister_vendor_record_notifier);
++
++static void ghes_vendor_record_notifier_destroy(void *nb)
++{
++	ghes_unregister_vendor_record_notifier(nb);
 +}
 +
-+static struct ghes_estatus_cache *ghes_estatus_cache_alloc(
-+	struct acpi_hest_generic *generic,
-+	struct acpi_hest_generic_status *estatus)
++int devm_ghes_register_vendor_record_notifier(struct device *dev,
++					      struct notifier_block *nb)
 +{
-+	int alloced;
-+	u32 len, cache_len;
-+	struct ghes_estatus_cache *cache;
-+	struct acpi_hest_generic_status *cache_estatus;
++	int ret;
 +
-+	alloced = atomic_add_return(1, &ghes_estatus_cache_alloced);
-+	if (alloced > GHES_ESTATUS_CACHE_ALLOCED_MAX) {
-+		atomic_dec(&ghes_estatus_cache_alloced);
-+		return NULL;
-+	}
-+	len = cper_estatus_len(estatus);
-+	cache_len = GHES_ESTATUS_CACHE_LEN(len);
-+	cache = (void *)gen_pool_alloc(ghes_estatus_pool, cache_len);
-+	if (cache == NULL) {
-+		atomic_dec(&ghes_estatus_cache_alloced);
-+		return NULL;
-+	}
-+	cache_estatus = GHES_ESTATUS_FROM_CACHE(cache);
-+	memcpy(cache_estatus, estatus, len);
-+	cache->estatus_len = len;
-+	atomic_set(&cache->count, 0);
-+	cache->generic = generic;
-+	cache->time_in = sched_clock();
-+	return cache;
++	ret = ghes_register_vendor_record_notifier(nb);
++	if (ret)
++		return ret;
++
++	return devm_add_action_or_reset(dev, ghes_vendor_record_notifier_destroy, nb);
 +}
++EXPORT_SYMBOL_GPL(devm_ghes_register_vendor_record_notifier);
 +
-+static void ghes_estatus_cache_rcu_free(struct rcu_head *head)
++static void ghes_vendor_record_work_func(struct work_struct *work)
 +{
-+	struct ghes_estatus_cache *cache;
++	struct ghes_vendor_record_entry *entry;
++	struct acpi_hest_generic_data *gdata;
 +	u32 len;
 +
-+	cache = container_of(head, struct ghes_estatus_cache, rcu);
-+	len = cper_estatus_len(GHES_ESTATUS_FROM_CACHE(cache));
-+	len = GHES_ESTATUS_CACHE_LEN(len);
-+	gen_pool_free(ghes_estatus_pool, (unsigned long)cache, len);
-+	atomic_dec(&ghes_estatus_cache_alloced);
++	entry = container_of(work, struct ghes_vendor_record_entry, work);
++	gdata = GHES_GDATA_FROM_VENDOR_ENTRY(entry);
++
++	blocking_notifier_call_chain(&vendor_record_notify_list,
++				     entry->error_severity, gdata);
++
++	len = GHES_VENDOR_ENTRY_LEN(acpi_hest_get_record_size(gdata));
++	gen_pool_free(ghes_estatus_pool, (unsigned long)entry, len);
 +}
 +
-+void ghes_estatus_cache_add(struct acpi_hest_generic *generic,
-+			    struct acpi_hest_generic_status *estatus)
++void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
++				   int sev)
 +{
-+	unsigned long long now, duration, period, max_period = 0;
-+	struct ghes_estatus_cache *cache, *new_cache;
-+	struct ghes_estatus_cache __rcu *victim;
-+	int i, slot = -1, count;
++	struct acpi_hest_generic_data *copied_gdata;
++	struct ghes_vendor_record_entry *entry;
++	u32 len;
 +
-+	new_cache = ghes_estatus_cache_alloc(generic, estatus);
-+	if (!new_cache)
++	len = GHES_VENDOR_ENTRY_LEN(acpi_hest_get_record_size(gdata));
++	entry = (void *)gen_pool_alloc(ghes_estatus_pool, len);
++	if (!entry)
 +		return;
 +
-+	rcu_read_lock();
-+	now = sched_clock();
-+	for (i = 0; i < GHES_ESTATUS_CACHES_SIZE; i++) {
-+		cache = rcu_dereference(ghes_estatus_caches[i]);
-+		if (cache == NULL) {
-+			slot = i;
-+			break;
-+		}
-+		duration = now - cache->time_in;
-+		if (duration >= GHES_ESTATUS_IN_CACHE_MAX_NSEC) {
-+			slot = i;
-+			break;
-+		}
-+		count = atomic_read(&cache->count);
-+		period = duration;
-+		do_div(period, (count + 1));
-+		if (period > max_period) {
-+			max_period = period;
-+			slot = i;
-+		}
-+	}
-+	rcu_read_unlock();
++	copied_gdata = GHES_GDATA_FROM_VENDOR_ENTRY(entry);
++	memcpy(copied_gdata, gdata, acpi_hest_get_record_size(gdata));
++	entry->error_severity = sev;
 +
-+	if (slot != -1) {
-+		/*
-+		 * Use release semantics to ensure that ghes_estatus_cached()
-+		 * running on another CPU will see the updated cache fields if
-+		 * it can see the new value of the pointer.
-+		 */
-+		victim = xchg_release(&ghes_estatus_caches[slot],
-+				      RCU_INITIALIZER(new_cache));
-+
-+		/*
-+		 * At this point, victim may point to a cached item different
-+		 * from the one based on which we selected the slot. Instead of
-+		 * going to the loop again to pick another slot, let's just
-+		 * drop the other item anyway: this may cause a false cache
-+		 * miss later on, but that won't cause any problems.
-+		 */
-+		if (victim)
-+			call_rcu(&unrcu_pointer(victim)->rcu,
-+				 ghes_estatus_cache_rcu_free);
-+	}
++	INIT_WORK(&entry->work, ghes_vendor_record_work_func);
++	schedule_work(&entry->work);
 +}
++
+ /*
+  * GHES error status reporting throttle, to report more kinds of
+  * errors, instead of just most frequently occurred errors.
 diff --git a/include/acpi/ghes_cper.h b/include/acpi/ghes_cper.h
-index 4649e3140888..15305c8be9a7 100644
+index 15305c8be9a7..d9f9253d8de9 100644
 --- a/include/acpi/ghes_cper.h
 +++ b/include/acpi/ghes_cper.h
-@@ -55,6 +55,8 @@
- 	((struct acpi_hest_generic_data *)                              \
- 	((struct ghes_vendor_record_entry *)(vendor_entry) + 1))
- 
-+extern struct gen_pool *ghes_estatus_pool;
-+
- static inline bool is_hest_type_generic_v2(struct ghes *ghes)
- {
- 	return ghes->generic->header.type == ACPI_HEST_TYPE_GENERIC_ERROR_V2;
-@@ -99,5 +101,8 @@ int __ghes_read_estatus(struct acpi_hest_generic_status *estatus,
- 			u64 buf_paddr, enum fixed_addresses fixmap_idx,
- 			size_t buf_len);
- #endif
-+int ghes_estatus_cached(struct acpi_hest_generic_status *estatus);
-+void ghes_estatus_cache_add(struct acpi_hest_generic *generic,
-+			    struct acpi_hest_generic_status *estatus);
+@@ -104,5 +104,7 @@ int __ghes_read_estatus(struct acpi_hest_generic_status *estatus,
+ int ghes_estatus_cached(struct acpi_hest_generic_status *estatus);
+ void ghes_estatus_cache_add(struct acpi_hest_generic *generic,
+ 			    struct acpi_hest_generic_status *estatus);
++void ghes_defer_non_standard_event(struct acpi_hest_generic_data *gdata,
++				   int sev);
  
  #endif /* ACPI_APEI_GHES_CPER_H */
 
