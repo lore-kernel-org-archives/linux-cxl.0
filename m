@@ -1,116 +1,113 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBBD217F27
-	for <linux-cxl@vger.kernel.org>; Wed, 17 Jun 2026 14:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C2237F735
+	for <linux-cxl@vger.kernel.org>; Wed, 17 Jun 2026 15:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781706269; cv=none; b=nKijNewurwBYNEcEDGIAh8mLAC9WCJ7UBt9dPAjdi/up44WjrgRE7dagFIP8TW9DKmBm6zu32/WBIHUM2p0yDZbtq3mj5AdyMxsaEkTivxDRkbA3yp/3qMjJWnMiFLsxC87RGVtuCEP8UdTbHI76VqmwgW3aSr5tSySDepwF6Lw=
+	t=1781709900; cv=none; b=q9g+/v3pW31MdkvaCYDdNB2AP8kdu67QD/i6x5hTPNjOs+KWlf2ynuNaYMPCTC1mrVZKBXgrBpLLgQ03mgmkhHcpDVeHsEbv8pQ2/MWms+akFPMu+gDr7vqu6JXFQ3DAyVmqp+BiwI2RJ7q/hooQwIsbJqAp5DS4hN3sOO0ufrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781706269; c=relaxed/simple;
-	bh=9FUKbmQ+PChBSVaaxCqei51y0yiEuSK2alJ0UJHfWUw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sqf4mn1HsCcRvmbuzTvvhotS9d7eIh5sZUU7ErkvXWa/3LWrmoPfD8tsTZLARj06FjOvy5HP2gIKV3pnYrpRP4BXFu7FYHW06yqJ0ZAj7d9ySUjb1hmOjgCHPJL7QLq/EU+9jnJYbfZIpphWUX5EyjS4nM3h0I3l8Mq5Q45Joto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=i8awV3fr; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1781709900; c=relaxed/simple;
+	bh=1amRvsYCv6nvYrlnejddFl2I3r49QkddWCNLd9Tyrrw=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=F7tLhQoHpIBD/p8FSGeQqLaR80AczvunRmTPn65Dsbwtafnsy7qav9jY7bsUSPN1NP0NzMoDEQjC/KHBvSPlolV0u8zWfcWzTM17Pzdt50+6j4A2ZByKqnIEQ01HNW6gCR8SKMA9KDJMv2i7qm2OtQkDYgk9qYL8dEtTjjt3p/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e0sYhnl4; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="i8awV3fr"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-490be29c1c5so61562085e9.2
-        for <linux-cxl@vger.kernel.org>; Wed, 17 Jun 2026 07:24:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1781706266; x=1782311066; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qQ2dIgGYiEosps8TepSobN48VXcZUJj8FKtvRmZVRa0=;
-        b=i8awV3frh+CV+n4or4FRiY5A0PxkdKNj07TRRxAzoyOiydjXVQXaOgMuR5u2qB13r0
-         1qsEDE2ZtqNrDTmqbkGD934KxSu2yZupe8fUWFckrbjdOz171v1BvPsxGPWdACsdt40d
-         21Fb8yGF1XvjSVil6JvI8GqNqHoRIoJ3kJctVGGqL+1fG5m9+Zjcv4kCYVKcBx5jQ9xo
-         9jM9umA5v78P5PxdAMUfQDFDNdc1DGY3GREbiAHuAOe+GPjekqpViW/ZSJGbtXTL9m3b
-         p3BdeAs2efSAgEtpkUDA7BLB5vbF4giV+dQGLWAdLdMla7NnJwIdpgqKGJ4ao5zvB1uo
-         9qmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781706266; x=1782311066;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qQ2dIgGYiEosps8TepSobN48VXcZUJj8FKtvRmZVRa0=;
-        b=cIuQ1JZ/S+E+7PtORdCjNE5KprrySQzpUBoOirl36KzwgIDQMEaKcbYNKIUXjpXw2y
-         EfU/Mae7RFTSPAhNkDQG/c6xEjHIitSwR0Xg1nv4EW0EC4sY2OC+yMzbBMCEr0Dy0pBY
-         gogc+vGuwrpJriyA1EkfQbadESW8QegUnjFc1mleHdkoYMJNM3aqxgV9qEJRWwn0YQ/k
-         Jg8syO1WF2yf80C0TXYlFXurWww+GPO1FI2Uy8OSaKhXhKyGT0oByOymNNX+hQ0R0Nos
-         skiAL2iVFb3K5U3OYB+6spML7QuJsxn3Wbu+taHC6SHF1lxrNNFWremwiudo9JM9QlkJ
-         rU/g==
-X-Gm-Message-State: AOJu0YxIpJ4hJsAkjrB23w8nnaquyBUrhaYoTwmtUQnqQI8nd/cttFy2
-	sbqDYYnYWAlVGooF7WrOw4m4SYPJwNZusWXLPgt+kLOHwXg5bdWRkUjIB5WNLXISYcY=
-X-Gm-Gg: Acq92OFjnmaSHn+StNvsPDDWB3x9/vEfWZTNNHVr47jXccBZplpWDJN4mFfyx2S/IYI
-	TreJ5tHh+I/QHem69O8EZXxqV0GHHzd4cJ+Rozn8CAgdU6YQpO+XFTNDFSrjhq1WamTD24Xq1Sn
-	jcbS9nfow8bioB7fRPtsGYOvCJ1buvACYkRW2EQYvdHvYnLKGGXuPfdCO43eIjAsJNunS+kYiAZ
-	Rjo4lh7yNVvo6JF7llddAnq6XnRSLAYuKJNvJO/HNWrvha2Pm+gRt5GdUwm5/frfd8cNftS2bLw
-	BV1C7tS1x1tcPvbMZPQ54Y+RZfzvRC1FiZBdNk4iSHkHK7exTdc0SHjDLOvsRuQtlAnpN7xcvlb
-	zL8MQs+HmeQ5H+PpX1+1my1ghK5bWfMMi+AQRs/K7Jgji5losoOEoalGjR6rU+jql49ANHR8esR
-	AXfDI+IW3PPbYi/Rj2cpbfzUiWmKZVCZCEKaAaZ2omFeRTF/2Gkui84unXRvjB4nGrOeL50Rncm
-	cj9
-X-Received: by 2002:a05:600c:608a:b0:490:b65f:8b1 with SMTP id 5b1f17b1804b1-492333ba1d1mr85648985e9.5.1781706265704;
-        Wed, 17 Jun 2026 07:24:25 -0700 (PDT)
-Received: from localhost (p200300f65f47db043b42891e8adbe9a5.dip0.t-ipconnect.de. [2003:f6:5f47:db04:3b42:891e:8adb:e9a5])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4922fa510e7sm198929775e9.7.2026.06.17.07.24.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2026 07:24:25 -0700 (PDT)
-Date: Wed, 17 Jun 2026 16:24:24 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e0sYhnl4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781709898; x=1813245898;
+  h=date:from:to:cc:subject:message-id;
+  bh=1amRvsYCv6nvYrlnejddFl2I3r49QkddWCNLd9Tyrrw=;
+  b=e0sYhnl4m75bIhZGuQi+nyOrJ+n5e4MaOPBKc6uxYw9clWPVpFpQ04Kz
+   G8Se+9rwa1Rmpjgu8kb6KQZCDJ+M9VhMrsdMTwGUUDbzx4xlWcwuSnVsN
+   Qawti22lTQT3m/hFzPePhpHSbeQ45tdFGppoYr/E+Gk7ww3Im94DBs/Nq
+   7Hce7bJaO1pBqwwlqznQyW/uJSwuXYgjut15ya2Wz2ZvMZkvhspQTQoGq
+   xR0tudzg45cP2O3EvoB5GMcMz/o+N07owkDgz1nBc1rMFiDMW/CJ+S8UJ
+   n2gpunvTa/pMKTL+vmhPm+BCm2271tpEVkWEtnyIrotKyZNWExPt+1h16
+   Q==;
+X-CSE-ConnectionGUID: ONAqKvUJQsSu4fhDnc91ZA==
+X-CSE-MsgGUID: v/b9zcwjQJGxl+VuHPqfBw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11820"; a="93625056"
+X-IronPort-AV: E=Sophos;i="6.24,209,1774335600"; 
+   d="scan'208";a="93625056"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2026 08:24:57 -0700
+X-CSE-ConnectionGUID: uekydynHSW2CvEpySJDNJQ==
+X-CSE-MsgGUID: 2s4qV2SIRv257WBeFqYECQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,209,1774335600"; 
+   d="scan'208";a="249989741"
+Received: from lkp-server01.sh.intel.com (HELO f0d55cb201f0) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 17 Jun 2026 08:24:56 -0700
+Received: from kbuild by f0d55cb201f0 with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1wZs8K-00000000UfG-2PD7;
+	Wed, 17 Jun 2026 15:24:52 +0000
+Date: Wed, 17 Jun 2026 23:24:43 +0800
+From: kernel test robot <lkp@intel.com>
 To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, djbw@kernel.org, dave@stgolabs.net, 
-	jic23@kernel.org, alison.schofield@intel.com, vishal.l.verma@intel.com
-Subject: Re: [PATCH v5 6/6] cxl/test: Add cxl_test accelerator driver
-Message-ID: <ajKt3db8vA_SEvSX@monoceros>
-References: <20260611234409.256765-1-dave.jiang@intel.com>
- <20260611234409.256765-7-dave.jiang@intel.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Dan Williams <djbw@kernel.org>, linux-cxl@vger.kernel.org
+Subject: [cxl:for-7.2/cxl-pci-fixes] BUILD SUCCESS
+ 26aa60e0276272ae61b843a05a91748dcb1130f9
+Message-ID: <202606172330.tAsCWwss-lkp@intel.com>
+User-Agent: s-nail v14.9.25
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pi2w6gsufoqmi53e"
-Content-Disposition: inline
-In-Reply-To: <20260611234409.256765-7-dave.jiang@intel.com>
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-7.2/cxl-pci-fixes
+branch HEAD: 26aa60e0276272ae61b843a05a91748dcb1130f9  cxl/pci: Convert PCIBIOS errors to errno on DVSEC config accesses
 
---pi2w6gsufoqmi53e
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v5 6/6] cxl/test: Add cxl_test accelerator driver
-MIME-Version: 1.0
+elapsed time: 18250m
 
-Hello,
+configs tested: 35
+configs skipped: 0
 
-On Thu, Jun 11, 2026 at 04:44:09PM -0700, Dave Jiang wrote:
-> +static const struct platform_device_id cxl_mock_accel_ids[] = {
-> +	{ .name = "cxl_type2_accel", 0 },
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Please drop the 0 here (and the comma before it).
+tested configs:
+alpha        allnoconfig    gcc-16.1.0
+arc         allmodconfig    gcc-16.1.0
+arc          allnoconfig    gcc-16.1.0
+arc         allyesconfig    gcc-16.1.0
+arm          allnoconfig    clang-23
+arm64        allnoconfig    gcc-16.1.0
+csky        allmodconfig    gcc-16.1.0
+csky         allnoconfig    gcc-16.1.0
+hexagon      allnoconfig    clang-23
+i386         allnoconfig    gcc-14
+loongarch    allnoconfig    clang-20
+m68k        allmodconfig    gcc-16.1.0
+m68k         allnoconfig    gcc-16.1.0
+m68k        allyesconfig    gcc-16.1.0
+microblaze   allnoconfig    gcc-16.1.0
+microblaze  allyesconfig    gcc-16.1.0
+mips         allnoconfig    gcc-16.1.0
+mips        allyesconfig    gcc-16.1.0
+nios2       allmodconfig    gcc-11.5.0
+nios2        allnoconfig    gcc-11.5.0
+openrisc    allmodconfig    gcc-16.1.0
+openrisc     allnoconfig    gcc-16.1.0
+parisc       allnoconfig    gcc-16.1.0
+parisc      allyesconfig    gcc-16.1.0
+powerpc      allnoconfig    gcc-16.1.0
+riscv        allnoconfig    gcc-16.1.0
+s390         allnoconfig    clang-23
+sh          allmodconfig    gcc-16.1.0
+sh           allnoconfig    gcc-16.1.0
+sh          allyesconfig    gcc-16.1.0
+sparc        allnoconfig    gcc-16.1.0
+sparc64     allmodconfig    clang-20
+um           allnoconfig    clang-16
+x86_64       allnoconfig    clang-22
+xtensa       allnoconfig    gcc-16.1.0
 
-> +	{ }
-> +};
-
-Best regards
-Uwe
-
---pi2w6gsufoqmi53e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmoyrhUACgkQj4D7WH0S
-/k5vbggAkr3qUJzq+oCrMxtLxYIKM6aLJ09tvwdi0p8/WFOGE6YXpesnUHSNz5Ia
-uYYDJ8BLzUd/by+rafG4wWPZ29iB1PB0T6MuZiOxAvK9Ie6mMjvubTiPh8qfERi2
-rZlLPUT/rDoGuvlZoPZn8LsUwAlzECux9ghJXIkKZLMdi/yhSHAGqkWLi+6WbRm1
-FzrdorDslHx5UmspMXcdq5DnpvWuLOF09KriSRa/g4vXXU/x5OHFiuXGfnMto2xk
-cM8Bsh6znR1i4R6exRvRXqoi7Q1+fJW8jjxJGKyWfM9zX/aWlIEGaRCowQxDeVwg
-2jHMGtRNonsaYyoOj9oTpP7eRD1+Lw==
-=fA6j
------END PGP SIGNATURE-----
-
---pi2w6gsufoqmi53e--
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
