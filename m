@@ -1,194 +1,157 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE53E37F735;
-	Wed, 17 Jun 2026 14:14:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF7743E488;
+	Wed, 17 Jun 2026 14:15:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781705686; cv=none; b=dCXkWj5RPTaEwPe1AJvNwOcvrZPTf5P4r0AeBNkFC3sjLszlcaxi7FR1x18pGSNjflHZnPbsTBAwsQADS+nY8Os3VOKUVv8xKGC/WRjoEFCSQ7Me9xP36aKa/sG1Dep5nTUrQGajlG/tYQZ1/DfbX/IxxyCSWJDxqquIGi+VLkY=
+	t=1781705713; cv=none; b=k9NynVQhFgbvaF6PS0QRnDQGj8+aTqxBU2akVwExisuKQtgHa6+onnPY013ZcQYKW0gDk4sdLgqd1/tEKT0/KqfOmOeY9+7HR3qpnL7BGMcMaMSQB5hQoeg+blzFu+TtJZ//cUlziT/ebUd7V8dly/CmjTYZsSunBZ+lBMpMsLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781705686; c=relaxed/simple;
-	bh=bDKA5uVnGOhKpvgaV78zmV5TCN7LOJw1yhiqRK5NNRg=;
+	s=arc-20240116; t=1781705713; c=relaxed/simple;
+	bh=aT6EsMpyN2kHvIzzfOlMkl1tsxagZKfNG322pi4LTbs=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=otDtabmGOJBNGKI8EyqN8X0U2CIe3ABmBKV23SQ7LHgHN6TxJ/V31DLZYqiJKzUrv5qf4aKSnY0l7tWsE9HWASK6LFvJ5BjEMMNSVD76s6fg7li1YzH9RBQ9iRpxlThdSAH/5Blkitlmko65YROl2mYhNxKzrQHCGB3Is3mA4Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H0X4jx7K; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=DSpPMWDzySi8V0SiT3pAwrftQQFL9Ze6p2DclMpw+7+G6EXR3m95DnCnDsUxchyKf7Zm5KE94r7DOvOlfp0tSfXDrtR6P1iLhFId4NHvlykkdfvER/DM6yepkRP7n825o9vLbS40cfy4DiJjmsR+YwzxMK+N+1ZAbR1bmIsXHnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UI+ZGsDv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H0X4jx7K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 386901F000E9;
-	Wed, 17 Jun 2026 14:14:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UI+ZGsDv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F13231F000E9;
+	Wed, 17 Jun 2026 14:15:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781705685;
-	bh=3BL1znwxwyF+/w91p1vW3R6pP3XesgLUhUfFfV7/vrs=;
+	s=k20260515; t=1781705712;
+	bh=l5idDmyMZHXtgRmJ3QAeMxDJzHsMw3e6bXX2hV5ODoo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=H0X4jx7Keg2AA8bvmRknDU24m3M1F3lvtTdPecrGAeySPgufTJUHZVF/HYHzdx+rT
-	 D8YYW8PQEgpLb9D8kLK2MYV/cgGe+pgYT6HZ5kUE+2yX7GM8n92mrfy8uPnlRt/ewh
-	 YV/msCTia3/o+7Z+fiSr+Phgp44+blhGdPOBBWYiD/RpeK5/TyCJveu32LAfecP6LF
-	 XybR76u5N8Bic0rfF5RthkvWFrjOTuJgM85MXLH6BzsuxUeDJsscb+YqkzQueF73rO
-	 qisbmwminu8Ak1hKjZ30sYDL//jBU7dDfmzkoendVaO7z8Cd6zMkqH0czXjnTAm9f0
-	 Eu5ETF0uPaHgg==
+	b=UI+ZGsDvPiYTuVGh3UOjxOu6Nfy0nXYEra4zLomR1Z4D3I5FpP7oig20QuPvGJl1z
+	 kxv7W6GbADSPyqM7rgvcRoWwmB+Re7EzEycFhJgRNVUV1KIb6l3z9F1BgmH9LS7R23
+	 IH9jLsirvsCVL4ao5lvmloYaC91YRj0NzO9aab6RBDdH2ZQczLaKnySZH1yP9HDFgd
+	 C4TLeQqhaCKdc5VPyK0vs03C336+o3/rBY71l4tp+89QUQ6KrfMSPEvS9HQJd0NtQF
+	 YeCi3dACCoFDIKwaTTQEEwS4JkGdQnBer7SNNAu0wsrGHFRpduKxxla3trHS+pCHy6
+	 jAdUOgC57Dd+w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 06/10] ACPI: APEI: GHES: move CXL CPER helpers
+Subject: Re: [PATCH v6 02/10] ACPI: APEI: GHES: move CPER read helpers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ahmed Tiba" <ahmed.tiba@arm.com>
-Cc: robh@kernel.org, devicetree@vger.kernel.org, linux-cxl@vger.kernel.org, conor+dt@kernel.org
-In-Reply-To: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-6-91f725174aa0@arm.com>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org, linux-cxl@vger.kernel.org, robh@kernel.org
+In-Reply-To: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-2-91f725174aa0@arm.com>
 References: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com>
- <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-6-91f725174aa0@arm.com>
+ <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-2-91f725174aa0@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 17 Jun 2026 14:14:44 +0000
-Message-Id: <20260617141445.386901F000E9@smtp.kernel.org>
+Date: Wed, 17 Jun 2026 14:15:11 +0000
+Message-Id: <20260617141511.F13231F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Inconsistent spinlock usage between process context and interrupt =
-context for `cxl_cper_work_lock` and `cxl_cper_prot_err_work_lock` causes a=
- potential deadlock.
-- [High] Unconditional fixed-size copy leads to out-of-bounds read if the A=
-CPI payload is short.
-- [High] Lack of bounds checking for DVSEC length leads to out-of-bounds re=
-ad in CXL protocol error handling.
+- [High] A double fetch (TOCTOU) vulnerability when reading the CPER error =
+status block from firmware memory can lead to out-of-bounds reads.
+- [High] ghes_ack_error() incorrectly shifts read_ack_preserve and read_ack=
+_write by the register bit_offset, unconditionally clearing bits below bit_=
+offset and potentially clobbering other hardware state in the register.
 --
 
-commit bb34e6b6044e94825caae9bb7ad029942aef5c28
+commit 6a836df1ccfeca08e11c00049d33e954958fa36f
 Author: Ahmed Tiba <ahmed.tiba@arm.com>
 
-ACPI: APEI: GHES: move CXL CPER helpers
+ACPI: APEI: GHES: move CPER read helpers
 
-Move the CXL CPER handling paths out of ghes.c and into ghes_cper.c so the
-helpers can be reused. The code is moved as-is, with the public
-prototypes updated so GHES keeps calling into the new translation unit.
+This commit relocates the CPER buffer mapping, peek, and clear helpers
+from ghes.c into ghes_cper.c so they can be shared with other
+firmware-first providers. It only shuffles code without changing
+behavior.
 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-[ ... ]
+Reviewed-by: Jonathan Cameron <jic23@kernel.org>
+Signed-off-by: Ahmed Tiba <ahmed.tiba@arm.com>
+
 > diff --git a/drivers/acpi/apei/ghes_cper.c b/drivers/acpi/apei/ghes_cper.c
-> index b26943eafd792..66bf1af4db00b 100644
-> --- a/drivers/acpi/apei/ghes_cper.c
+> new file mode 100644
+> index 0000000000000..b365c42efce49
+> --- /dev/null
 > +++ b/drivers/acpi/apei/ghes_cper.c
+> @@ -0,0 +1,196 @@
 [ ... ]
-> @@ -336,6 +339,138 @@ void ghes_defer_non_standard_event(struct acpi_hest=
-_generic_data *gdata,
-[ ... ]
-> +void cxl_cper_post_prot_err(struct cxl_cper_sec_prot_err *prot_err,
-> +			    int severity)
+> +static void ghes_ack_error(struct acpi_hest_generic_v2 *gv2)
 > +{
-> +#ifdef CONFIG_ACPI_APEI_PCIEAER
-> +	struct cxl_cper_prot_err_work_data wd;
+> +	int rc;
+> +	u64 val =3D 0;
 > +
-> +	if (cxl_cper_sec_prot_err_valid(prot_err))
+> +	rc =3D apei_read(&val, &gv2->read_ack_register);
+> +	if (rc)
 > +		return;
 > +
-> +	guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
-> +
-> +	if (!cxl_cper_prot_err_work)
-> +		return;
-> +
-> +	if (cxl_cper_setup_prot_err_work_data(&wd, prot_err, severity))
+> +	val &=3D gv2->read_ack_preserve << gv2->read_ack_register.bit_offset;
+> +	val |=3D gv2->read_ack_write    << gv2->read_ack_register.bit_offset;
 
 [Severity: High]
-This is a pre-existing issue, but could this setup step read out of bounds?
+This is a pre-existing issue, but does this code unintentionally clobber the
+lower bits of the hardware register?
 
-The cxl_cper_setup_prot_err_work_data() function uses the firmware-provided
-dvsec_len to compute a pointer for copying the RAS capability registers:
+When ghes_ack_error() masks val using:
 
-ghes_helpers.c:cxl_cper_setup_prot_err_work_data() {
-        ...
-        cap_start =3D dvsec_start + prot_err->dvsec_len;
-        memcpy(&wd->ras_cap, cap_start, sizeof(wd->ras_cap));
+val &=3D gv2->read_ack_preserve << gv2->read_ack_register.bit_offset;
 
-Since cxl_cper_post_prot_err() and its callers do not validate that
-dvsec_len falls within the maximum bounds of the ACPI payload
-(gdata->error_data_length), could a malformed firmware record cause cap_sta=
-rt
-to point beyond the valid buffer?
+Any bits in val below bit_offset are unconditionally cleared to zero.
 
-> +		return;
+If there is hardware state in those lower bits, wouldn't writing back the
+modified val via apei_write() overwrite and destroy it?
+
 > +
-> +	if (!kfifo_put(&cxl_cper_prot_err_fifo, wd)) {
-> +		pr_err_ratelimited("CXL CPER kfifo overflow\n");
-> +		return;
-> +	}
-> +
-> +	schedule_work(cxl_cper_prot_err_work);
-> +#endif
-> +}
-> +
-> +int cxl_cper_register_prot_err_work(struct work_struct *work)
-> +{
-> +	if (cxl_cper_prot_err_work)
-> +		return -EINVAL;
-> +
-> +	guard(spinlock)(&cxl_cper_prot_err_work_lock);
-
-[Severity: High]
-This isn't a bug introduced by this patch, but is there a potential deadlock
-between process context and interrupt context here?
-
-The registration function acquires the lock with guard(spinlock), leaving
-local interrupts enabled.
-
-If a hardware interrupt occurs while this lock is held, and the interrupt
-handler calls cxl_cper_post_prot_err() which attempts to acquire the same
-lock using guard(spinlock_irqsave):
-
-cxl_cper_post_prot_err() {
-        ...
-        guard(spinlock_irqsave)(&cxl_cper_prot_err_work_lock);
-
-Could this cause the interrupt handler to spin forever on the local CPU?
-
-> +	cxl_cper_prot_err_work =3D work;
-> +	return 0;
+> +	apei_write(val, &gv2->read_ack_register);
 > +}
 [ ... ]
-> +void cxl_cper_post_event(enum cxl_event_type event_type,
-> +			 struct cxl_cper_event_rec *rec)
+> +int ghes_read_estatus(struct ghes *ghes,
+> +		      struct acpi_hest_generic_status *estatus,
+> +		      u64 *buf_paddr, enum fixed_addresses fixmap_idx)
 > +{
-> +	struct cxl_cper_work_data wd;
+> +	int rc;
 > +
-> +	if (rec->hdr.length <=3D sizeof(rec->hdr) ||
-> +	    rec->hdr.length > sizeof(*rec)) {
-> +		pr_err(FW_WARN "CXL CPER Invalid section length (%u)\n",
-> +		       rec->hdr.length);
-> +		return;
-> +	}
+> +	rc =3D __ghes_peek_estatus(ghes, estatus, buf_paddr, fixmap_idx);
+> +	if (rc)
+> +		return rc;
 > +
-> +	if (!(rec->hdr.validation_bits & CPER_CXL_COMP_EVENT_LOG_VALID)) {
-> +		pr_err(FW_WARN "CXL CPER invalid event\n");
-> +		return;
-> +	}
+> +	rc =3D __ghes_check_estatus(ghes, estatus);
+> +	if (rc)
+> +		return rc;
 > +
-> +	guard(spinlock_irqsave)(&cxl_cper_work_lock);
-> +
-> +	if (!cxl_cper_work)
-> +		return;
-> +
-> +	wd.event_type =3D event_type;
-> +	memcpy(&wd.rec, rec, sizeof(wd.rec));
+> +	return __ghes_read_estatus(estatus, *buf_paddr, fixmap_idx,
+> +				   cper_estatus_len(estatus));
 
 [Severity: High]
-This is a pre-existing issue, but can this copy read out of bounds if the
-ACPI payload is unexpectedly short?
+This isn't a bug introduced by this patch, but is there a potential double
+fetch issue in the error status read path?
 
-The memcpy unconditionally copies sizeof(wd.rec) bytes from the
-firmware-provided payload.
+Looking at the sequence in ghes_read_estatus(), we first fetch and validate=
+ the
+header:
 
-Since gdata->error_data_length is never verified to be at least the size
-of the record before being passed to this function by
-ghes_cper_handle_status(), would a malformed payload smaller than the
-struct cause an uncontrolled read of kernel memory?
+__ghes_peek_estatus() copies the header from physical memory into estatus.
 
-> +
-> +	if (!kfifo_put(&cxl_cper_fifo, wd)) {
-[ ... ]
+__ghes_check_estatus() validates estatus->data_length.
+
+Then we call __ghes_read_estatus() which copies from the same physical memo=
+ry
+again, overwriting the previously validated estatus header:
+
+__ghes_read_estatus(...) {
+    ghes_copy_tofrom_phys(estatus, buf_paddr, buf_len, 1, fixmap_idx);
+    if (cper_estatus_check(estatus)) {
+    ...
+}
+
+If the underlying firmware memory is modified between the peek and the read,
+the local estatus will get a new, unvalidated data_length.
+
+Since cper_estatus_check() relies on data_length to iterate over the sectio=
+ns,
+could this new unvalidated length cause an out-of-bounds read?
+
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260617-topics-ahm=
-tib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com?part=3D6
+tib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com?part=3D2
