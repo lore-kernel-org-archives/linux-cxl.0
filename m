@@ -1,132 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2827518871F;
-	Wed, 17 Jun 2026 21:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF473F8EB3;
+	Wed, 17 Jun 2026 21:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.212.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781730973; cv=none; b=YO/AtvieBozRw7QtHNfRyjg0lWMRFiKZ70ry7fBeOoF8QfPIvLlyUXLFd/jNLtu/wcaVyh+m6p1+hFIL2WMTqNnHIHsM46zo8xX6Q/c/IvWyQkc29Qp5HwEwty4HFAleSLKe1iv7jy3eux52e/O6a+ZXITJOuLifL3UQRwFjzuU=
+	t=1781731052; cv=none; b=Ic32NYhp+V87CglSb42hflZPdL5FhIjXd1bkLRdi7jVY70LKXI5bzyum2zNNjouiu25+ZT3FN9P/Vi51LAw2HR1XmoTCQxP3bzBxdGjMNhpJ8MDUut/U3ugRCJY9p5mlXk/baLyaDmhWHB68Ix9HO9Y3NJtocJHptW33V0jz4kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781730973; c=relaxed/simple;
-	bh=9rDzKU7VRPdbg9YIlTvrFyuimiBjwL7zcmflW30AtsM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nT1MBTnzS1kqz92XcaxXAQ1Usme69YTz8VU8c1cQTseLTJk1OlBIix7XIRegSfaYvgT4KsHKe3WoK2N13yB38DEe36if/A+jWNl3B21PK4DG/FIn7fTTO92Cj9v4BvWJrYtQ7RflcQiB34Ghh4RpkmGK/SAZomqD+PN9UuLaIVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SoY5OcKf; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1781731052; c=relaxed/simple;
+	bh=BxKm2lUZtFLbPvvvBNd2UiZNba5ze3AmI4ggBwWeLAA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KPWrf95SF8VxqfCJSGv2ZAJDEprGQCgiehLpI97NRtik8csOtexZttSH9406xCc7BjgEOlSwXZqm37yynWl6M8vjMjvTNvvrL0N9RJXf+Hin+YrjgxjFlAMsjRj+pPHUREqSjRAhIbpVEOwdyuYIIs7+V5kds5VXJvhMYd/NH0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=bX3T1Dm5; arc=none smtp.client-ip=23.83.212.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SoY5OcKf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781730971; x=1813266971;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9rDzKU7VRPdbg9YIlTvrFyuimiBjwL7zcmflW30AtsM=;
-  b=SoY5OcKfSGFP+cL2URpAy/ILeDDYFY0F471caO2COhxPc1n4lEu1kFEc
-   zmyPbOT3S+HkJ/9dfbf/62euoXPHkX2aJnkrdTML6EoQiLnmETSEQpF36
-   nSmRcbpZ+okblNF80QXVblDKg3kx+CjwWVK/n4SurpjGEWJJAo8LW1Ffs
-   yFzGHUbjvet0j7kzz2pxLZ9YTHuE6H8Tse2+qYqlOhBOuDG986Xjxx/M2
-   HEHR9qDP1tvD0u5/ujkFwaDmzuUhSROPEGVLWvJL1g8cVEi/3LuTOu7zp
-   taeZdQolTi91iZglVooe/u+2XKYRktVwbuc+CRX3OE3xnNvg2wm2jEyTx
-   w==;
-X-CSE-ConnectionGUID: jvAwI7U/QLSpTrdXrEqeuw==
-X-CSE-MsgGUID: +xAlxDJcTyK8ZTQ2+aOcqQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11820"; a="82658871"
-X-IronPort-AV: E=Sophos;i="6.24,210,1774335600"; 
-   d="scan'208";a="82658871"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2026 14:16:10 -0700
-X-CSE-ConnectionGUID: VHGTevYNRjqEMU2oxSsNhA==
-X-CSE-MsgGUID: Hd7Jz8meTRm+ILD0aWyhFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,210,1774335600"; 
-   d="scan'208";a="250062265"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.111.162]) ([10.125.111.162])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2026 14:16:09 -0700
-Message-ID: <48d47632-00b5-46e1-8719-f35f52413404@intel.com>
-Date: Wed, 17 Jun 2026 14:16:08 -0700
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="bX3T1Dm5"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 204E83815C9;
+	Wed, 17 Jun 2026 21:07:52 +0000 (UTC)
+Received: from pdx1-sub0-mail-a230.dreamhost.com (100-96-9-130.trex-nlb.outbound.svc.cluster.local [100.96.9.130])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id A17993813BC;
+	Wed, 17 Jun 2026 21:07:51 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Befitting-Tart: 1781dd1b22e67ec1_1781730471970_188924871
+X-MC-Loop-Signature: 1781730471970:4198865853
+X-MC-Ingress-Time: 1781730471970
+Received: from pdx1-sub0-mail-a230.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.96.9.130 (trex/7.1.5);
+	Wed, 17 Jun 2026 21:07:51 +0000
+Received: from offworld (unknown [148.222.205.92])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a230.dreamhost.com (Postfix) with ESMTPSA id 4ggbzS13qpz38;
+	Wed, 17 Jun 2026 14:07:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1781730471;
+	bh=RwUIUzhkl++Fa51/5JpfM5gXfnD2dh3OwMdESbRVa/I=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=bX3T1Dm5fZl4E/7WqNoDF+605bZ4uzpg5vKHBGDYjwwmw4TA131gkOmvPuitH8ER6
+	 g0PKoV3fCfaUPx/PaSOKAnXyE9hlailOhUnjXQw2iWhA6O3DO3RSFCla2SRlfK5ga1
+	 CY2QugELL7oIkwBPKvzKRH3uHut/amY6hOg68XWA6X+47z+ONzuI7usiz0LvjrpiW3
+	 4eZpNLZnITW/d9vlANiTFi4Md6OvVuik5QnIO65emp0t9mPmbw72xEkoWXpCbK8NwM
+	 W3QC2fUmJIPSUSxpTcWz8YR0q+dQq/zF0OUm5YbaH871kULXKOWSJi+U+Z2xBtbbDo
+	 dU2ZIAB7p9n8w==
+Date: Wed, 17 Jun 2026 14:07:45 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Richard Cheng <icheng@nvidia.com>
+Cc: jic23@kernel.org, dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com, djbw@kernel.org,
+	shiju.jose@huawei.com, ming.li@zohomail.com, alucerop@amd.com,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	newtonl@nvidia.com, kristinc@nvidia.com, kaihengf@nvidia.com,
+	kobak@nvidia.com
+Subject: Re: [PATCH] cxl/mbox: Bound the output payload allocation to mailbox
+ payload size
+Message-ID: <20260617210745.55uzogugkcjbosp7@offworld>
+References: <20260611094546.31496-1-icheng@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cxl/mce: Make the MCE notifier per-region
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>,
- linux-cxl@vger.kernel.org
-Cc: djbw@kernel.org, dave@stgolabs.net, jic23@kernel.org,
- alison.schofield@intel.com, vishal.l.verma@intel.com, flavien@nus.edu.sg,
- stable@vger.kernel.org
-References: <20260616224912.2567474-1-dave.jiang@intel.com>
- <4142d143-8bfe-4364-bfa7-73a48d214f25@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <4142d143-8bfe-4364-bfa7-73a48d214f25@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20260611094546.31496-1-icheng@nvidia.com>
+User-Agent: NeoMutt/20220429
 
+On Thu, 11 Jun 2026, Richard Cheng wrote:
 
+>CXL_MEM_SEND_COMMAND bounds the user's in.size to the mailbox payload
+>size but leaves out.size unbounded, then cxl_mbox_cmd_ctor() calls
+>kvzalloc(out.size). A large out.size drives a huge allocation, even
+>above INT_MAX it WARNS and taints, on kernel with panic_on_warn=1, it
+>will panic.
+>The transport __cxl_pci_mbox_send_cmd() already clamps the response copy
+>to min(out.size, payload_size, device len), so the bound buffer is never
+>written beyond payload_size. Clamp the allocation to payload_size too,
+>matching the RAW path.
+>
+>With the following reproducer[1] , we'll get error logs [2].
+>[1]:
+>"""
+>        #include <fcntl.h>
+>        #include <stdint.h>
+>        #include <stdio.h>
+>        #include <sys/ioctl.h>
+>
+>        #define CXL_MEM_SEND_COMMAND        _IOWR(0xCE, 2, struct cxl_send_comma
+>        #define CXL_MEM_COMMAND_ID_IDENTIFY 1
+>
+>        struct cxl_send_command {
+>                uint32_t id, flags;
+>                union { struct { uint16_t opcode, rsvd; } raw; uint32_t rsvd; };
+>                uint32_t retval;
+>                struct { uint32_t size, rsvd; uint64_t payload; } in;
+>                struct { uint32_t size, rsvd; uint64_t payload; } out;
+>        };
+>
+>        int main(void)
+>        {
+>                static unsigned char buf[512];
+>                struct cxl_send_command c = {
+>                        .id          = CXL_MEM_COMMAND_ID_IDENTIFY, /* any enabl
+>                        .out.size    = 0x80000000,                  /* > INT_MAX
+>                        .out.payload = (uint64_t)(uintptr_t)buf,
+>                };
+>                int fd = open("/dev/cxl/mem0", O_RDWR);
+>
+>                return ioctl(fd, CXL_MEM_SEND_COMMAND, &c);
+>        }
 
-On 6/17/26 1:19 PM, Cheatham, Benjamin wrote:
-> On 6/16/2026 5:49 PM, Dave Jiang wrote:
->> Flavien Solt reported lifetime issues with the CXL MCE notifier, which
->> can lead to NULL dereferences and use-after-free in the MCE handler.
->> The notifier was registered per memory device and stored in 'struct
->> cxl_memdev_state', even though it only needs the region state (the
->> region's SPA range and its extended linear cache size).
->>
->> Instead of keeping the memory device and endpoint alive, the correct fix
->> is to move the notifier into 'struct cxl_region' and register it from
->> cxl_region_probe() as it should be a per-region notifier. Setup the
->> registration to only happen for regions that have an extended linear
->> cache as that is the only current usage.
->>
->> Remove cxl_port_get_spa_cache_alias() as it is now dead code.
->>
->> Reported-by: Flavien Solt <flavien@nus.edu.sg>
->> Suggested-by: Dan Williams <djbw@kernel.org>
->> Fixes: 516e5bd0b6bf ("cxl: Add mce notifier to emit aliased address for extended linear cache")
->> Cc: stable@vger.kernel.org
->> Assisted-by: Claude:claude-opus-4-8
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
-> 
-> One nit below, but looks good otherwise:
-> 
-> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+Nit: Maybe not needed in the changelog.
 
-Thanks!
+>"""
+>[2]:
+>  [ 3675.127839] ------------[ cut here ]------------
+>  [ 3675.127841] WARNING: mm/slub.c:6841 at __kvmalloc_node_noprof+0x534/0x818,
+>  CPU#131: cxl_repro_outsi/4668
+>  [ 3675.127853] Modules linked in: nft_masq nft_ct nft_reject_ipv4
+>  nf_reject_ipv4 nft_reject act_csum cls_u32 sch_htb nft_chain_nat nf_nat
+>  nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_tables bridge stp llc qrtr
+>  cfg80211 binfmt_misc nls_iso8859_1 acpi_power_meter nvidia_cspmu acpi_ipmi
+>  ipmi_ssif coresight_trbe ipmi_devintf sbsa_gwdt dax_hmem arm_smmuv3_pmu
+>  coresight arm_cspmu_module arm_spe_pmu ast nvidia_t410_cmem_latency_pmu
+>  nvidia_t410_c2c_pmu ipmi_msghandler cppc_cpufreq mlx5_ib macsec ib_uverbs
+>  mlx5_fwctl mlx5_dpll sch_fq_codel dm_multipath nvme_fabrics efi_pstore
+>  nfnetlink dmi_sysfs ip_tables x_tables autofs4 ib_core btrfs libblake2b raid10
+>  raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor
+>  raid6_pq raid1 raid0 linear ghash_ce gf128mul sm4_ce_gcm mlx5_core nvme
+>  sm4_ce_ccm nvme_core mlxfw sm4_ce tls nvme_keyring igb sm4_ce_cipher sm4
+>  arm_smccc_trng i2c_algo_bit nvme_auth psample i2c_tegra aes_neon_bs aes_ce_blk
+>  [ 3675.127894] CPU: 131 UID: 0 PID: 4668 Comm: cxl_repro_outsi Tainted: G
+>    W           7.1.0-rc7-cxltest #1 PREEMPT(full)
+>  [ 3675.127897] Tainted: [W]=WARN
+>  [ 3675.127898] Hardware name:  , BIOS buildbrain-gcid-sbios-45820373-12 Fri
+>  Jun  5 07:54:44 AM UTC 2026
+>  [ 3675.127899] pstate: 23400009 (nzCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+>  [ 3675.127900] pc : __kvmalloc_node_noprof+0x534/0x818
+>  [ 3675.127902] lr : __kvmalloc_node_noprof+0x520/0x818
+>  [ 3675.127903] sp : ffff800102c2fb90
+>  [ 3675.127903] x29: ffff800102c2fbc0 x28: ffff0001911d5000 x27:
+>  d8eaa73777d13b74
+>  [ 3675.127905] x26: 0000000000000001 x25: ffffa73777d13b74 x24:
+>  0000000000000000
+>  [ 3675.127907] x23: 00000000ffffffff x22: 0000000000000dc0 x21:
+>  00000000000029c0
+>  [ 3675.127908] x20: 0000000000000000 x19: 0000000080000000 x18:
+>  ffff800125340040
+>  [ 3675.127910] x17: 0000000000000000 x16: 0000000000000000 x15:
+>  0000ffffd627bed8
+>  [ 3675.127911] x14: 0000000000000000 x13: 0000000000000000 x12:
+>  0000000000000000
+>  [ 3675.127913] x11: 0000000000000000 x10: 0000000000000000 x9 :
+>  0000000000000000
+>  [ 3675.127914] x8 : 0000000000000000 x7 : 0000000000000000 x6 :
+>  0000000000000000
+>  [ 3675.127916] x5 : 0000000000000000 x4 : 0000000000000000 x3 :
+>  0000000000000000
+>  [ 3675.127917] x2 : 0000000000000000 x1 : 0000000000000000 x0 :
+>  000000007fffffff
+>  [ 3675.127919] Call trace:
+>  [ 3675.127919]  __kvmalloc_node_noprof+0x534/0x818 (P)
+>  [ 3675.127921]  cxl_send_cmd+0x514/0x7e0
+>  [ 3675.127926]  cxl_memdev_ioctl+0x7c/0xe0
+>  [ 3675.127928]  __arm64_sys_ioctl+0x4a4/0xbc8
+>  [ 3675.127931]  invoke_syscall.constprop.0+0xac/0x100
+>  [ 3675.127934]  do_el0_svc+0x4c/0x100
+>  [ 3675.127935]  el0_svc+0x50/0x2b0
+>  [ 3675.127938]  el0t_64_sync_handler+0xc0/0x108
+>  [ 3675.127940]  el0t_64_sync+0x1b8/0x1c0
+>  [ 3675.127942] ---[ end trace 0000000000000000 ]---
 
-> 
-> [snip]
-> 
->>  static int is_system_ram(struct resource *res, void *arg)
->>  {
->>  	struct cxl_region *cxlr = arg;
->> @@ -4070,6 +4043,19 @@ static int cxl_region_probe(struct device *dev)
->>  	if (rc)
->>  		return rc;
->>  
->> +	/*
->> +	 * Regions fronted by an extended linear cache need the MCE notifier to
->> +	 * offline the aliased page on a memory error.
->> +	 */
->> +	if (p->cache_size) {
->> +		rc = devm_cxl_register_mce_notifier(&cxlr->dev,
->> +						    &cxlr->mce_notifier);
->> +		if (rc == -EOPNOTSUPP)
->> +			dev_warn(&cxlr->dev, "CXL MCE unsupported\n");
-> 
-> I would demote this to an info() or dbg() print. A warning print here is a bit overkill
-> for essentially having a config option disabled that's largely dependent on the platform.
-> 
-> If you think a warn() is warranted, I'd change the message to say the config is disabled instead
-> so that the end user is pointed to why it's unsupported.
+My cxl syzkaller also ran into this issue and I had a similar patch
+I never sent out.
 
-Given that it won't report expected MCE emits and handle dealing with the aliased address, warn is probably reasonable. I'll update the message. 
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 
-> 
-> Thanks,
-> Ben
-
+>
+>Fixes: 4faf31b43468 ("cxl/mbox: Move mailbox and other non-PCI specific infrastructure to the core")
+>Reviewed-by: Kai-Heng Feng <kaihengf@nvidia.com>
+>Reviewed-by: Koba Ko <kobak@nvidia.com>
+>Signed-off-by: Richard Cheng <icheng@nvidia.com>
+>---
