@@ -1,502 +1,146 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA61140BCD9;
-	Wed, 17 Jun 2026 13:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636193ED11D
+	for <linux-cxl@vger.kernel.org>; Wed, 17 Jun 2026 14:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781704578; cv=none; b=FYXUyN+4XgbGaZASI4HMV4m5qwyjdGDXqCMQWscnYEw+pBKYmahBPayFWGP9iBEfeNAr2Gu3+7MKYCCdV1E8AM2AqAE+zFxySyl0tf9ck/ObTZQ69FxZu0D1mjSpbODP0bfz7QrSfloYjFKDyZ1dvZcPZ4OKGws6KihKy7dXiXo=
+	t=1781705033; cv=none; b=EzE+wd6hbcSDGr3T6UGu3qTGTScEduKo2/W8TBn1mMq8DxqloBN7mWCNxOhrCW7tjXjUB/jQgNF5hiK++OrQ+1jNJRknzKwiytKf9PJLXYXr79T81NJaMVuCo5YGA52lvjj7bkZCQUM8eTQc1csUFUrzMoLiIRR963ZCJEstEGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781704578; c=relaxed/simple;
-	bh=OmCgA5BEOWiMGDGMNzGm6MDdEi0TrhHZpmSYaO2cLO8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S8ELGTLWLyOIZSCwVhYLVl5rMeUJs+L+2m/H1u4Rj8fHREIjPqJVQ/FuOQ3ee8Mho4L5AEgPNtD8Aue3p4gsWAi/HexXEkCTTV59n9JNQlRY1l9gnvRtv8IJj/8GStR3om/HKmGHgoQvj1AFKdbYikv8yeW1/V4Qfqv81o4ifE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=rIN3JAXZ; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1781705033; c=relaxed/simple;
+	bh=95TSTVQlWc9XEmLQ5CRQKISimsK3+z9mzOJYVfT8u2w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XiJRDw+wcAifpKCGK/r199tqZ/oCTQafPpugzSeE1gWPyX+KleCNBilglxo7pGnKCeLBVN+UuBMzftK2q6raVF7oU4dW16cxF6tD0tMaI9uUzbqVsLhRseHiuoDMcVegfhCtpRKCVCXNseJEbFGF8LgkV7fdAjK7+UEr5dG3mTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=VKY/uljc; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="rIN3JAXZ"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8230032AB;
-	Wed, 17 Jun 2026 06:56:11 -0700 (PDT)
-Received: from e134710.arm.com (e134710.arm.com [10.33.10.82])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D41C3F915;
-	Wed, 17 Jun 2026 06:56:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1781704576; bh=OmCgA5BEOWiMGDGMNzGm6MDdEi0TrhHZpmSYaO2cLO8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=rIN3JAXZ6jK2YOc1mhJGOHG+RGWgKXh551lNgQtGiAyrUnYBO7AaAUPQRaIthuKah
-	 vCyIjo550GEGkCCIhaJA2U2fKA1CnbcFNe1htgZDwz+oQFbKkf0vig1Anneuy58lRP
-	 277zPtvG8wGxxOAMlk+g+HWTXiwyyzbPAnXw9rso=
-From: Ahmed Tiba <ahmed.tiba@arm.com>
-Date: Wed, 17 Jun 2026 14:54:48 +0100
-Subject: [PATCH v6 10/10] RAS: add firmware-first CPER provider
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="VKY/uljc"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-51761d27612so69351991cf.3
+        for <linux-cxl@vger.kernel.org>; Wed, 17 Jun 2026 07:03:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1781705031; x=1782309831; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=21pxQXdsUMGW+bGknxxPyRxRyaJDV62jMRhp5DnWHkk=;
+        b=VKY/uljcfnKh99zo5ySSTpXVX7+PQXcN9dydeIP3wAjLilTe7GyGtIKsWKRXaqjfcj
+         V60zh+FXk43C01MtPyaBVrkkdpfCl05MVgB8i39okjylUDiUNSlSKaXk2ht/jc3PilPZ
+         HhjWrtpiTDxksxAS3zbmbcxNEToz6Ha9CTeE3/wQBXkraKZvoeYV3B9KQ5R6VSzel+xv
+         AdZ6a5EFmVMuU9exqmP7Cb3moiTHWGs8es23xSFCEbinplwlXICueJo9ReoXUb2Ee4nR
+         1tRIZrraIrLJCu/UJBEc9RMu9dylL1GP0EbKXIj5hprozLZDygg1KuOwmHEoAInY5eOX
+         yThQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781705031; x=1782309831;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=21pxQXdsUMGW+bGknxxPyRxRyaJDV62jMRhp5DnWHkk=;
+        b=bDKSNKq443oShKcipC1UCIIaUMdfqINKoLMEpKY7+HqABG/O+5NABFvzYbSVZv67Cy
+         ygqJ0Lrc+vhVXVBUMlYE06rXDY5ix9wGMjQ1uWCFXHQk2zIQBb0eiGuFJDR+AhZbMsWS
+         Sw9Zb5VfXAPNEcMq/D0/XW01y3u8i5iwy9j5tvlOf1lLqyDvD2i/derO8oRxCmXSou89
+         h/mz/UJ0VhGyK9DvDwjlcsscjpof4ulu9MWcZKqHWxlpxgnlMutiwS3uT5nn95a381jF
+         P1Ca6Hk1DofVQggc5D9uu9rWSpxlPe07Dp5DoWNPgcSZycqh6H7bgJGRq9iAkAVdsyBg
+         t8dw==
+X-Forwarded-Encrypted: i=1; AFNElJ8vtaI8/DxaRhAq0a5wEH4vQIbtuYyeO3t/IvmX1X5YBNy2TENK7tWA5+8dJ6/73wkEaRm/bSv2jw8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAsowPtUOg3FZKcWHNmlZdtxEgZHF6E5y1HRR8uLmforuBcgmp
+	3rWSAg7X0DH48YuZBB0AS5+4XxQbKnjW/KwE4M0h8LlvmsO+LB/4wkzzQ42a7XQqmHA=
+X-Gm-Gg: Acq92OHtaDwodWITf9qOV2sRyCDZzOFxolnL6ESsXqakp026R/vzRRiVO1xmuqApSpc
+	bpunl9C/O6+NpU3oiuB/74cuFfwWQrgB0UCU9qr3ZgwmqMbYjJ95yfROABEwP4Fb9fIp8J13qSF
+	xmobI7FeyYKT8NVkUTZx1YLVP4Kl2yR6EyH+wt1ZQ5v5droOphiPq6kxdfAZ7X7FfMfyjuWIyfo
+	Sr/RyKk86suuHfTRljUU/S/FYrHMthNXhsC9TXIZ2BUJvJjmR9cBzmiMDZNSAbNQUPnHuWnjGMu
+	xOzrCtotBCStEpbqYr/DzBu+c25kIZt0zZtMW2flSz0CydSvwQe23yB5U3jVi2PFu5EE8ofGiCR
+	A16clUzchq7ihPaUUrcedpgJSjD91sahufQW0E7BiNXjPZXaxqkojWdTy01YfvOF+wPTxZSkGju
+	/H8AdckRvHZceIxgLLmEuN
+X-Received: by 2002:a05:622a:4a89:b0:517:82a1:adf1 with SMTP id d75a77b69052e-519a8de2756mr65756641cf.15.1781705031230;
+        Wed, 17 Jun 2026 07:03:51 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F ([2620:10d:c091:500::3:ce0d])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51955b271fbsm134106091cf.22.2026.06.17.07.03.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2026 07:03:50 -0700 (PDT)
+Date: Wed, 17 Jun 2026 10:03:46 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Balbir Singh <balbirs@nvidia.com>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
+	lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	damon@lists.linux.dev, kernel-team@meta.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
+	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
+	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
+	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
+	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
+	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
+Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
+ Compressed RAM)
+Message-ID: <ajKpQgfimm-ztnHv@gourry-fedora-PF4VCD3F>
+References: <20260222084842.1824063-1-gourry@gourry.net>
+ <ag6XyvxR-NU5rGn-@parvat>
+ <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
+ <ah47NNhuiClgGCdn@parvat>
+ <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
+ <ah-0CyZurn5D1ezY@parvat>
+ <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
+ <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
+ <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
+ <ajIb4DJdLGPbMB4V@parvat>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-10-91f725174aa0@arm.com>
-References: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com>
-In-Reply-To: <20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
- Hanjun Guo <guohanjun@huawei.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Shuai Xue <xueshuai@linux.alibaba.com>, Len Brown <lenb@kernel.org>, 
- Saket Dumbre <saket.dumbre@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, 
- Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
- Dan Williams <djbw@kernel.org>, Ahmed Tiba <ahmed.tiba@arm.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
- acpica-devel@lists.linux.dev, linux-cxl@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-edac@vger.kernel.org, 
- linux-doc@vger.kernel.org, Dmitry.Lamerov@arm.com
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781704522; l=12455;
- i=ahmed.tiba@arm.com; s=20260219; h=from:subject:message-id;
- bh=OmCgA5BEOWiMGDGMNzGm6MDdEi0TrhHZpmSYaO2cLO8=;
- b=5OVw4jYsrP6zC9Ll05NrDCLE70iJwlsIqQyziu+EsyKZi7h9S2wqYgF+GIokplcXuEs5CIb6Y
- JaK6GylX+gTBcl3Ve8Ti2ynWFCvQLFtfrDIJ6u8aLH2ss1LnzqR4WQp
-X-Developer-Key: i=ahmed.tiba@arm.com; a=ed25519;
- pk=xVOtd+Qklh/4tuM3tB+BEZD4jj5a6W59C3KCNX6v7OE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ajIb4DJdLGPbMB4V@parvat>
 
-Add a firmware-first CPER provider that reuses the shared
-GHES helpers, wire it into the RAS Kconfig/Makefile and
-document it in the admin guide.
+On Wed, Jun 17, 2026 at 02:02:47PM +1000, Balbir Singh wrote:
+> On Wed, Jun 10, 2026 at 12:37:34PM -0400, Gregory Price wrote:
+> > On Wed, Jun 10, 2026 at 05:00:33PM +0200, David Hildenbrand (Arm) wrote:
+> > > On 6/10/26 12:41, Gregory Price wrote:
+> > > > On Wed, Jun 03, 2026 at 03:00:01PM +1000, Balbir Singh wrote:
+> > > > 
+> > 
+> > For mm/slub.c we can choose to do one of thwo things
+> > 
+> >   1) 100% refuse slab allocations on private nodes, i.e.:
+> > 
+> >      kmalloc_node(..., private_nid, __GFP_THISNODE)
+> > 
+> >      And will fail (return NULL).
+> > 
+> 
+> Doesn't this iterate through N_MEMORY only? N_MEMORY_PRIVATE should not
+> be in the regular for_each(...) loops
+> 
 
-Update MAINTAINERS now that the driver exists.
+If a node is in neither FALLBACK nor NOFALLBACK - it is *completely*
+unreachable in the current page allocator.
 
-Signed-off-by: Ahmed Tiba <ahmed.tiba@arm.com>
----
- Documentation/admin-guide/RAS/main.rst |  15 ++
- MAINTAINERS                            |   1 +
- drivers/acpi/apei/apei-internal.h      |   3 +-
- drivers/ras/Kconfig                    |  11 ++
- drivers/ras/Makefile                   |   1 +
- drivers/ras/cper-esource.c             | 322 +++++++++++++++++++++++++++++++++
- 6 files changed, 351 insertions(+), 2 deletions(-)
+Next RFC I've reduced this to create a ZONELIST_PRIVATE separate from
+the ZONELIST_FALLBACK and ZONELIST_NOFALLBACK, and an explicit folio
+allocation interface that selects which fallback list to use.
 
-diff --git a/Documentation/admin-guide/RAS/main.rst b/Documentation/admin-guide/RAS/main.rst
-index 5a45db32c49b..d4e3c8c1b92f 100644
---- a/Documentation/admin-guide/RAS/main.rst
-+++ b/Documentation/admin-guide/RAS/main.rst
-@@ -205,6 +205,21 @@ Architecture (MCA)\ [#f3]_.
- .. [#f3] For more details about the Machine Check Architecture (MCA),
-   please read Documentation/arch/x86/x86_64/machinecheck.rst at the Kernel tree.
- 
-+Firmware-first CPER providers
-+-----------------------------
-+
-+Some systems expose Common Platform Error Record (CPER) data through
-+platform firmware, with the error source described in DeviceTree.
-+Enable ``CONFIG_RAS_CPER_ESOURCE`` to support those providers. The
-+current in-tree binding is
-+``Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml``.
-+
-+The DeviceTree node describes the firmware-owned status buffer and ack
-+buffer used to exchange CPER data with the OS. The driver reuses the
-+shared GHES CPER handling helpers, so parsing, logging, notifier
-+delivery, and memory failure handling follow the same paths as ACPI
-+GHES whether the error source is described by ACPI or DeviceTree.
-+
- EDAC - Error Detection And Correction
- *************************************
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5aa495fdff72..00b9a1abab67 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22326,6 +22326,7 @@ RAS ERROR STATUS
- M:	Ahmed Tiba <ahmed.tiba@arm.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/firmware/arm,ras-cper.yaml
-+F:	drivers/ras/cper-esource.c
- 
- RAS INFRASTRUCTURE
- M:	Tony Luck <tony.luck@intel.com>
-diff --git a/drivers/acpi/apei/apei-internal.h b/drivers/acpi/apei/apei-internal.h
-index 77c10a7a7a9f..15d11f10d067 100644
---- a/drivers/acpi/apei/apei-internal.h
-+++ b/drivers/acpi/apei/apei-internal.h
-@@ -123,8 +123,7 @@ struct dentry *apei_get_debugfs_dir(void);
- static inline u32 cper_estatus_len(struct acpi_hest_generic_status *estatus)
- {
- 	if (estatus->raw_data_length)
--		return estatus->raw_data_offset + \
--			estatus->raw_data_length;
-+		return estatus->raw_data_offset + estatus->raw_data_length;
- 	else
- 		return sizeof(*estatus) + estatus->data_length;
- }
-diff --git a/drivers/ras/Kconfig b/drivers/ras/Kconfig
-index fc4f4bb94a4c..3c1c63b2fefc 100644
---- a/drivers/ras/Kconfig
-+++ b/drivers/ras/Kconfig
-@@ -34,6 +34,17 @@ if RAS
- source "arch/x86/ras/Kconfig"
- source "drivers/ras/amd/atl/Kconfig"
- 
-+config RAS_CPER_ESOURCE
-+	bool "Firmware-first CPER error source block provider"
-+	select GHES_CPER_HELPERS
-+	help
-+	  Enable support for firmware-first Common Platform Error Record
-+	  (CPER) error source block providers. The current in-tree user is
-+	  described by the arm,ras-cper DeviceTree binding. The driver
-+	  reuses the existing GHES CPER helpers so the error processing
-+	  matches the ACPI code paths, but it can be built even when ACPI is
-+	  disabled.
-+
- config RAS_FMPM
- 	tristate "FRU Memory Poison Manager"
- 	default m
-diff --git a/drivers/ras/Makefile b/drivers/ras/Makefile
-index 11f95d59d397..0de069557f31 100644
---- a/drivers/ras/Makefile
-+++ b/drivers/ras/Makefile
-@@ -2,6 +2,7 @@
- obj-$(CONFIG_RAS)	+= ras.o
- obj-$(CONFIG_DEBUG_FS)	+= debugfs.o
- obj-$(CONFIG_RAS_CEC)	+= cec.o
-+obj-$(CONFIG_RAS_CPER_ESOURCE)	+= cper-esource.o
- 
- obj-$(CONFIG_RAS_FMPM)	+= amd/fmpm.o
- obj-y			+= amd/atl/
-diff --git a/drivers/ras/cper-esource.c b/drivers/ras/cper-esource.c
-new file mode 100644
-index 000000000000..cc9f5f522400
---- /dev/null
-+++ b/drivers/ras/cper-esource.c
-@@ -0,0 +1,322 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Firmware-first CPER error source provider.
-+ *
-+ * This driver shares the GHES CPER helpers so we keep the reporting and
-+ * notifier behaviour identical to ACPI GHES.
-+ *
-+ * Copyright (C) 2026 ARM Ltd.
-+ * Author: Ahmed Tiba <ahmed.tiba@arm.com>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/cleanup.h>
-+#include <linux/cper.h>
-+#include <linux/idr.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of_reserved_mem.h>
-+#include <linux/panic.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+
-+#include <acpi/ghes.h>
-+#include <acpi/ghes_cper.h>
-+
-+static DEFINE_IDA(cper_esource_source_ids);
-+
-+struct cper_esource_ack {
-+	void *addr;
-+	u64 preserve;
-+	u64 set;
-+	u8 width;
-+	bool present;
-+};
-+
-+struct cper_esource {
-+	struct device *dev;
-+	void *status;
-+	size_t status_len;
-+
-+	struct cper_esource_ack ack;
-+
-+	struct acpi_hest_generic generic;
-+	struct acpi_hest_generic_status *estatus;
-+
-+	int irq;
-+
-+	/* Serializes access while firmware and the OS share the status buffer. */
-+	spinlock_t lock;
-+};
-+
-+static void *cper_esource_map_region(struct device *dev, unsigned int index,
-+				     size_t *size)
-+{
-+	struct resource res;
-+	void *addr;
-+
-+	if (of_reserved_mem_region_to_resource(dev->of_node, index, &res))
-+		return ERR_PTR(dev_err_probe(dev, -EINVAL,
-+					     "unable to resolve memory-region %u\n",
-+					     index));
-+
-+	*size = resource_size(&res);
-+	if (!*size)
-+		return ERR_PTR(dev_err_probe(dev, -EINVAL,
-+					     "memory-region %u has zero length\n",
-+					     index));
-+
-+	addr = devm_memremap(dev, res.start, *size, MEMREMAP_WB);
-+	if (!addr)
-+		return ERR_PTR(dev_err_probe(dev, -ENOMEM,
-+					     "failed to map memory-region %u\n",
-+					     index));
-+
-+	return addr;
-+}
-+
-+static void cper_esource_release_source_id(void *data)
-+{
-+	struct cper_esource *ctx = data;
-+
-+	ida_free(&cper_esource_source_ids, ctx->generic.header.source_id);
-+}
-+
-+static int cper_esource_init_pool(void)
-+{
-+	return ghes_estatus_pool_init(1);
-+}
-+
-+static u32 cper_esource_estatus_len(struct acpi_hest_generic_status *estatus)
-+{
-+	if (estatus->raw_data_length)
-+		return estatus->raw_data_offset + estatus->raw_data_length;
-+	else
-+		return sizeof(*estatus) + estatus->data_length;
-+}
-+
-+static int cper_esource_validate_status(struct cper_esource *ctx)
-+{
-+	size_t estatus_len;
-+
-+	if (!ctx->estatus->block_status)
-+		return -ENOENT;
-+
-+	if (cper_estatus_check_header(ctx->estatus))
-+		return -EINVAL;
-+
-+	if (ctx->estatus->raw_data_length &&
-+	    (ctx->estatus->raw_data_offset > ctx->status_len ||
-+	     ctx->estatus->raw_data_length >
-+	     ctx->status_len - ctx->estatus->raw_data_offset))
-+		return -EINVAL;
-+
-+	estatus_len = cper_esource_estatus_len(ctx->estatus);
-+	if (estatus_len < sizeof(*ctx->estatus) || estatus_len > ctx->status_len)
-+		return -EINVAL;
-+
-+	if (cper_estatus_check(ctx->estatus))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static void cper_esource_ack(struct cper_esource *ctx)
-+{
-+	if (!ctx->ack.present)
-+		return;
-+
-+	if (ctx->ack.width == 64) {
-+		u64 *addr = ctx->ack.addr;
-+		u64 val = READ_ONCE(*addr);
-+
-+		/* Publish status-buffer updates before raising the ack bit. */
-+		wmb();
-+		val &= ctx->ack.preserve;
-+		val |= ctx->ack.set;
-+		WRITE_ONCE(*addr, val);
-+	} else {
-+		u32 *addr = ctx->ack.addr;
-+		u32 val = READ_ONCE(*addr);
-+
-+		/* Publish status-buffer updates before raising the ack bit. */
-+		wmb();
-+		val &= (u32)ctx->ack.preserve;
-+		val |= (u32)ctx->ack.set;
-+		WRITE_ONCE(*addr, val);
-+	}
-+}
-+
-+static void cper_esource_clear_status(struct cper_esource *ctx)
-+{
-+	ctx->estatus->block_status = 0;
-+	WRITE_ONCE(((struct acpi_hest_generic_status *)ctx->status)->block_status, 0);
-+}
-+
-+static void cper_esource_fatal(struct cper_esource *ctx)
-+{
-+	__ghes_print_estatus(KERN_EMERG, &ctx->generic, ctx->estatus);
-+	add_taint(TAINT_MACHINE_CHECK, LOCKDEP_STILL_OK);
-+	panic("GHES: fatal firmware-first CPER record from %s\n",
-+	      dev_name(ctx->dev));
-+}
-+
-+static void cper_esource_process(struct cper_esource *ctx)
-+{
-+	int rc;
-+	int sev;
-+
-+	guard(spinlock_irqsave)(&ctx->lock);
-+
-+	memcpy(ctx->estatus, ctx->status, ctx->status_len);
-+
-+	rc = cper_esource_validate_status(ctx);
-+	if (rc == -ENOENT)
-+		return;
-+	if (rc) {
-+		dev_warn_ratelimited(ctx->dev, FW_WARN GHES_PFX
-+				     "Invalid error status block\n");
-+		cper_esource_clear_status(ctx);
-+		cper_esource_ack(ctx);
-+		return;
-+	}
-+
-+	sev = ghes_severity(ctx->estatus->error_severity);
-+	if (sev >= GHES_SEV_PANIC)
-+		cper_esource_fatal(ctx);
-+
-+	ghes_print_estatus(NULL, &ctx->generic, ctx->estatus);
-+
-+	ghes_cper_handle_status(ctx->dev, &ctx->generic, ctx->estatus, false);
-+	cper_esource_clear_status(ctx);
-+	cper_esource_ack(ctx);
-+}
-+
-+static irqreturn_t cper_esource_irq(int irq, void *data)
-+{
-+	struct cper_esource *ctx = data;
-+
-+	cper_esource_process(ctx);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int cper_esource_init_ack(struct cper_esource *ctx)
-+{
-+	struct device *dev = ctx->dev;
-+	size_t size;
-+
-+	ctx->ack.addr = cper_esource_map_region(dev, 1, &size);
-+	if (IS_ERR(ctx->ack.addr))
-+		return PTR_ERR(ctx->ack.addr);
-+
-+	switch (size) {
-+	case 4:
-+		ctx->ack.width = 32;
-+		ctx->ack.preserve = ~0U;
-+		break;
-+	case 8:
-+		ctx->ack.width = 64;
-+		ctx->ack.preserve = ~0ULL;
-+		break;
-+	default:
-+		return dev_err_probe(dev, -EINVAL,
-+				     "unsupported ack resource size %zu\n", size);
-+	}
-+
-+	ctx->ack.set = BIT_ULL(0);
-+	ctx->ack.present = true;
-+	return 0;
-+}
-+
-+static int cper_esource_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cper_esource *ctx;
-+	size_t size;
-+	int source_id;
-+	int rc;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&ctx->lock);
-+	ctx->dev = dev;
-+
-+	ctx->status = cper_esource_map_region(dev, 0, &size);
-+	if (IS_ERR(ctx->status))
-+		return PTR_ERR(ctx->status);
-+
-+	ctx->status_len = size;
-+	if (ctx->status_len < sizeof(*ctx->estatus))
-+		return dev_err_probe(dev, -EINVAL,
-+				     "status region is smaller than a CPER header\n");
-+
-+	rc = cper_esource_init_ack(ctx);
-+	if (rc)
-+		return rc;
-+
-+	rc = cper_esource_init_pool();
-+	if (rc)
-+		return rc;
-+
-+	ctx->estatus = devm_kzalloc(dev, ctx->status_len, GFP_KERNEL);
-+	if (!ctx->estatus)
-+		return -ENOMEM;
-+
-+	/* Keep source_id 0 unused so a zeroed header is never treated as valid. */
-+	source_id = ida_alloc_min(&cper_esource_source_ids, 1, GFP_KERNEL);
-+	if (source_id < 0)
-+		return source_id;
-+	if (source_id > U16_MAX) {
-+		ida_free(&cper_esource_source_ids, source_id);
-+		return -ENOSPC;
-+	}
-+
-+	ctx->generic.header.type = ACPI_HEST_TYPE_GENERIC_ERROR;
-+	ctx->generic.header.source_id = source_id;
-+
-+	rc = devm_add_action_or_reset(dev, cper_esource_release_source_id,
-+				      ctx);
-+	if (rc)
-+		return rc;
-+
-+	ctx->generic.notify.type = ACPI_HEST_NOTIFY_EXTERNAL;
-+	ctx->generic.error_block_length = ctx->status_len;
-+
-+	ctx->irq = platform_get_irq(pdev, 0);
-+	if (ctx->irq < 0)
-+		return ctx->irq;
-+
-+	rc = devm_request_threaded_irq(dev, ctx->irq, NULL, cper_esource_irq,
-+				       IRQF_ONESHOT,
-+				       dev_name(dev), ctx);
-+	if (rc)
-+		return dev_err_probe(dev, rc, "failed to request interrupt\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cper_esource_of_match[] = {
-+	{ .compatible = "arm,ras-cper" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, cper_esource_of_match);
-+
-+static struct platform_driver cper_esource_driver = {
-+	.driver = {
-+		.name = "cper-esource",
-+		.of_match_table = cper_esource_of_match,
-+	},
-+	.probe = cper_esource_probe,
-+};
-+
-+module_platform_driver(cper_esource_driver);
-+
-+MODULE_AUTHOR("Ahmed Tiba <ahmed.tiba@arm.com>");
-+MODULE_DESCRIPTION("Firmware-first CPER provider");
-+MODULE_LICENSE("GPL");
+the feedback in the past week has been helpful in honing in on a
+solution that I think is generalizable.  Have just been taking the time
+to test various behaviors to make sure I haven't been regressing any
+userland API/ABIs (mbind, mempolicy, etc).
 
--- 
-2.43.0
-
+~Gregory
