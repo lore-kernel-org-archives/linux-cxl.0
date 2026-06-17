@@ -1,90 +1,101 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013069.outbound.protection.outlook.com [40.93.201.69])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A3D2F8EB1;
-	Wed, 17 Jun 2026 04:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B0F394EBD;
+	Wed, 17 Jun 2026 07:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781668985; cv=fail; b=DsuD+3at9jyHEALVVNb6/Rj5pwi+j2K7QWe9jyJVHr41zM+CTS3+R2xYwthtte7r9E2cyPrBpfitcFfN8vEI8h1evCuMUwN12haNEa/p9lJSa40+l8X0zTN2Cde5PCz2i1IT/dpUhCwS7gvDWAbxsJkw8yJgCN0Ppt5CQyEJHDM=
+	t=1781680231; cv=fail; b=pV9KE2Ro6G01akrpPGiwlIeqQ/XODjbi2RZ6shaWgmcJzdJ16jf9fZtGDtf9D6rJ/QqLBJKQ/CY/j5O248AOUJpFGKZpGIODeeVru+NzIX3Q5llbBvgjI7IHnouWoL9B+HIy3sQOlm6GqH9Bvk68zOqF0s4FLpQ84wmCgwvnXOM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781668985; c=relaxed/simple;
-	bh=yV08sE2+LG9scfa9oj61C3SrmwPdC70yUH3kcF8gvdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=USYNGbpga3rNVS3bDK1v3hS0LQ9WyguPIzM6bnfnyLimKeo2TicasQ3hdpX9MPw2wgaEbO8N7f7qEBWfH1qvLtpkkoSNyJnH8PzqRpj9TuNdb0D+9jWSD3yNq5PuBuLRtYSFUbjYmBxJ5s0I2nzWUuQmSNoZlfu/82+2d+ae0oM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ozuDjcCh; arc=fail smtp.client-ip=40.93.201.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1781680231; c=relaxed/simple;
+	bh=v60NDLyap+Rsfe0wsPzbOhULHVbCOkZ6lhiDGjyFVrY=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=YmJzc7okYXSOMlEbRuWu4xhtiYrMEGJN8aqip6tos3zCUDzOAQdoQ1Vz7N1HF5PgHdvnrmhyzqUH2UqqudBldJW1srEGhTUOnGKhqaENVMLM7hn6t1r/L40/94WO6CImZJuc5FZ+CkRF0kcjz5J6+D8crEhO92bHktkuZn+JM9Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IRgt2cKH; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ozuDjcCh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IRgt2cKH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781680229; x=1813216229;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=v60NDLyap+Rsfe0wsPzbOhULHVbCOkZ6lhiDGjyFVrY=;
+  b=IRgt2cKHFHTG4IrnYP24pC88u8jFUGfXvEhKAEnVV+7Cu3u9uyhyTzn5
+   3zh5uaUtimoQPyE4D9ayBA7u7gGZcY34COV8Q5JqUORYHEMzyu62C28vd
+   d46IthA2XK5Mkals/y4f5hY2moaE2n/6tqECiIJa5f4uvivsVfnYeMv2v
+   gnsNgxo6yebSHGm/EWeWlUhhhsCi3b+8OZwAYSi8WFWacmE3uBa3ya348
+   UljyhIedz19CtC1Zpzj35ig97s0e1aIZzko0RRFckvlhWE++ApoHhpk+C
+   uuol4Xq9wrjBw50pLmQxcoiXd/X5PKoYubk4HWmlHuKjRb1PNXwA9LlLB
+   Q==;
+X-CSE-ConnectionGUID: RH21kNDHRQCqgI+rqybx7w==
+X-CSE-MsgGUID: bbVd5YdpRcK7swir3jgTFQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11819"; a="82474774"
+X-IronPort-AV: E=Sophos;i="6.24,209,1774335600"; 
+   d="scan'208";a="82474774"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2026 00:10:24 -0700
+X-CSE-ConnectionGUID: J/EJTEyKQCmNPLmQIXTGEw==
+X-CSE-MsgGUID: 9V3gfpxlTLKc2dX/EW4e9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,209,1774335600"; 
+   d="scan'208";a="248067921"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2026 00:10:25 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Wed, 17 Jun 2026 00:10:24 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37 via Frontend Transport; Wed, 17 Jun 2026 00:10:24 -0700
+Received: from MW6PR02CU001.outbound.protection.outlook.com (52.101.48.35) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.37; Wed, 17 Jun 2026 00:10:24 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=I8aeupI7OMtTdzJD7Uu+FSe8BbRdbBC6cTncg6d3luIg+JtSWjJSk0KhFf6UYZtEaEcLmyDcqnvz/cfVNi4Jo3n9Wm+Ps9iMX5zD8e++cKJ+5cblAlkv89cw8DIdI5Ww1ner2MI4hUa1oWoysWeFV8wQx46+Icp1ENDJH3XESSc8psgzRXzgUFEid2t9QXkq3ww4zvxkffeC0/LnPspCa74kb/FaTCs3+G+kf/+K4zMY9jiF3BW/qizJtmlojWwWw3JTkf3ZvUfjv+gnp2V8ZiPkSQ5QnzPx0t3teehaTQRQHPjtGudt9Mb4GlHMUVebt75JIBWn1HhwBxL/kHmjfw==
+ b=sRduJDCmck+hK/mI4CyWMNd0Raj1HnEpvNy/6H7mUh1U6l6rxLORwPmKcZN/DDP75O3gQkqfNOoIsOtxxsUAOZbq1WiaEz+EufK1UlfLobaJq7/+4Gad9KOb2q69uvf3c5BprGFGP+yKKbOc+UW+HGqSKLwbmBwVKOD72AM7NHTFG6upuDJW2Thi7ksLLgn5DbcY2rbVVCa+BYDoR23V92Js2O4TnsIIeYBRfmqTjyiBFJNuJeGNbWleTDXY1W1mBCzaIjDz1YzkHb+pI0TUsJVDiR1x8uOqHc5LJ0OHqJNAHSOKJNdR8dN8zFHqL3qt8NZMMz40pzy+2iZ8jBYLYg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FB69vVfVPBhIwbobVxhKuOXjePDausT/B1ctopKcIw0=;
- b=XmJtFVBcc2wBWeNJC0ru0+tO94lpyw3CQMl1lhFyh6tB0855gurwcTewVpmT8kn5nHrilpA5sEOFwuJdmZT9hKe/n+bOQJapdhj37BWsPeJpFHL0A5PmrSVVoJY61m3Cc1BfBQQL624z5U7wNr1CAVtdgPXKh0XwSnO3jsB9DQHiWo3Dxm8Y74MFkJu4tZ+90OgoikcoXPIqchNGgsBWnxX2QB515pnn6tguJuz8gvuUWR3yd3r3LV3ErBCVESUfxsmUC2ozOMSyytiKZG4AASSiWYvJXXQmBW8KfK9zaiNuaxdb37OWa1ewa86ddOHYNrj570Vyx58XxrlyX8QOnA==
+ bh=ggDOZTBpD3/rHtLisb73lFgf8LFHyds5MOsFhTUL2rk=;
+ b=B6YCka9zMoQCmqr6NpaDVH8eEuH2TGKkIcK9ay4RcK48VF7Njr+wJ3HC+RyzoqwrPFWe8cwYndY7S0F1z5kkcVg95wlHpFnu1014Ng6DhfIk3GOAaNXkdr7gwaeva8wqCni1SPqLYeqREQoM6dbiSvlQQiomTatwUjBpph8r/45BPuiFCGMq2fY2P48W5i9bQjInUZOEUU6I0kOL1YUp6QAnMzWzlSYitTkpo2odY399IYV06jzZGcU2etMJmRwOZIefW395yOsWHjepLOXap4AyU/XEeLwhaI+Lu6u7I3iT2nkr0IIR6Q6RL/lShaEfCKOa1qhl9SyzllQds7Ayqg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FB69vVfVPBhIwbobVxhKuOXjePDausT/B1ctopKcIw0=;
- b=ozuDjcChD6ZpuzEBokN8YLTk4A3jIhvRolGTz1MMuSw+OfeufQ5RHFiIfuToI8lh8W+uA5CHbw4V37w/zEFJZHLElwR90fSFTurCsJLFrlPI2OZEVyh5y6kjT1vwVO9/+/oZNR3XFiiBhsWdKwnfnUdPA+dENrUKln91iJpZB+EOQXIYXnnVcxHkbgy8yIeItopm+VROJMukjdLlbLDAkjtp6epTvytsyXMJpnx+MsF51X7Y/f/1XvIF0roLTce/D2vp8smPJdO72g++zoSuDX+9aCdMT8/gpOtbyz1CBL+AuX+wlRnWKKBps/IbVfyrkhtJmmwm0VR7F4STE/URlw==
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB5001.namprd12.prod.outlook.com (2603:10b6:610:61::18)
- by IA0PPF73BED5E32.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bd2) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by IA4PR11MB9279.namprd11.prod.outlook.com (2603:10b6:208:561::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.11; Wed, 17 Jun
- 2026 04:02:55 +0000
-Received: from CH2PR12MB5001.namprd12.prod.outlook.com
- ([fe80::89e3:6df0:de90:8dfe]) by CH2PR12MB5001.namprd12.prod.outlook.com
- ([fe80::89e3:6df0:de90:8dfe%5]) with mapi id 15.21.0139.009; Wed, 17 Jun 2026
- 04:02:54 +0000
-Date: Wed, 17 Jun 2026 14:02:47 +1000
-From: Balbir Singh <balbirs@nvidia.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
-	lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, 
-	cgroups@vger.kernel.org, linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	damon@lists.linux.dev, kernel-team@meta.com, gregkh@linuxfoundation.org, 
-	rafael@kernel.org, dakr@kernel.org, dave@stgolabs.net, jonathan.cameron@huawei.com, 
-	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com, 
-	ira.weiny@intel.com, dan.j.williams@intel.com, longman@redhat.com, 
-	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, 
-	vbabka@suse.cz, rppt@kernel.org, surenb@google.com, mhocko@suse.com, 
-	osalvador@suse.de, ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com, 
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com, 
-	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, 
-	yury.norov@gmail.com, linux@rasmusvillemoes.dk, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, tj@kernel.org, hannes@cmpxchg.org, mkoutny@suse.com, 
-	jackmanb@google.com, sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com, 
-	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev, 
-	muchun.song@linux.dev, xu.xin16@zte.com.cn, chengming.zhou@linux.dev, jannh@google.com, 
-	linmiaohe@huawei.com, nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com, 
-	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com, cl@gentwo.org, 
-	roman.gushchin@linux.dev, chrisl@kernel.org, kasong@tencent.com, shikemeng@huaweicloud.com, 
-	nphamcs@gmail.com, bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com
-Subject: Re: [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory Nodes (w/
- Compressed RAM)
-Message-ID: <ajIb4DJdLGPbMB4V@parvat>
-References: <20260222084842.1824063-1-gourry@gourry.net>
- <ag6XyvxR-NU5rGn-@parvat>
- <ahOqzpzAua96HVkn@gourry-fedora-PF4VCD3F>
- <ah47NNhuiClgGCdn@parvat>
- <ah6bDNxlB1zBUnzN@gourry-fedora-PF4VCD3F>
- <ah-0CyZurn5D1ezY@parvat>
- <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
- <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
- <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
-Content-Type: text/plain; charset=utf-8
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.18; Wed, 17 Jun
+ 2026 07:10:16 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891%4]) with mapi id 15.21.0139.009; Wed, 17 Jun 2026
+ 07:10:16 +0000
+Date: Wed, 17 Jun 2026 00:10:07 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Anisa Su <anisa.su887@gmail.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<nvdimm@lists.linux.dev>, Dan Williams <djbw@kernel.org>, Jonathan Cameron
+	<jic23@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang
+	<dave.jiang@intel.com>, Ira Weiny <iweiny@kernel.org>, John Groves
+	<John@groves.net>, Gregory Price <gourry@gourry.net>, Anisa Su
+	<anisa.su@samsung.com>
+Subject: Re: [PATCH v6 0/7] ndctl: Dynamic Capacity additions for cxl-cli
+Message-ID: <ajJITxBewsUuQGzp@aschofie-mobl2.lan>
+References: <20260523095043.471098-1-anisa.su@samsung.com>
+ <aiJh7vcs2u1fMDX4@aschofie-mobl2.lan>
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
-X-ClientProxiedBy: ME0PR01CA0080.ausprd01.prod.outlook.com
- (2603:10c6:220:233::23) To CH2PR12MB5001.namprd12.prod.outlook.com
- (2603:10b6:610:61::18)
+In-Reply-To: <aiJh7vcs2u1fMDX4@aschofie-mobl2.lan>
+X-ClientProxiedBy: SJ0PR13CA0028.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c0::33) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -92,266 +103,224 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB5001:EE_|IA0PPF73BED5E32:EE_
-X-MS-Office365-Filtering-Correlation-Id: ef50179a-2e7f-46fc-45e1-08decc254ded
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|IA4PR11MB9279:EE_
+X-MS-Office365-Filtering-Correlation-Id: bf4e8e03-4832-4ca6-9562-08decc3f7b9b
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|23010399003|1800799024|366016|56012099006|11063799006|5023799004|22082099003|18002099003|3023799007|4143699003;
-X-Microsoft-Antispam-Message-Info:
-	LX/0QUaZzdLTRoGjNspt9VKVAEJbth1SqxwFY/9ESxCysxQXkrLZz5JVjxQ4CTpxZ1W+ziH/cIqGRDtpfj6uFgpZUYsS/zATGcyzj6vvk+NlZ0mgprThl0l3EtTYeNO5t/aCPhzHCqPEHyxsGk9i7mfm3/XaXJSySYQzyWw+Mx/vub/n0TQnys4AtzXx9NpHJAmU5EidVXckol5lkaaNeownWOC9s6IPGzBFOvIMntV3I118RgCIAj99ITWFiHdwyTj1S/FXOEv5lgj69GnhTFDJLAtIwcfTAIrvqDjCnIuD82mMkWPtp6T99zfjwzX10ydPotFWAlEwQYiK7ctr3lhCDnzCC6txKs4lwd425vNxpcgqb3mPsP5wE2EA3Vz2yO56mUA3xOmEkGoGwNfOESMCSKimfGzAflYfOorCRJ4jdK7JDZORfXR7roVyruktanMytrSMFFGuFHvUoEwXHlPuMKoOpLunaVDINMvH//WGGZ5ddiwOcb5jjnMrkltNH3QQ3Byy8z9OFle0dd/QYk73Oe6/372gbBld00EC+ObUlh2y9s2A7cb6cwHVDpazKV1iyhDg9qV7/nGz7JMkyvwzaWlJdban0GKWPmX77veewzvD+QDtpIOh4BCikDeOKU3lMAd9fAuUJkxV+klnG5xtBP8Ucdlc2NItN9gxsIy/WaLeNUP9FCfP3C+xyGJW
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB5001.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(23010399003)(1800799024)(366016)(56012099006)(11063799006)(5023799004)(22082099003)(18002099003)(3023799007)(4143699003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|7416014|1800799024|23010399003|6133799003|56012099006|3023799007|5023799004|4143699003|11063799006|13003099007|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: UZ80/HxZ6Sd7n9o9D4Wbr+kzGXl8xL9E8i2wXj1yDSZGeFP7D5RzrOZo8m0yFknE4/76Q5cnLNBUCdBvUGGKG2XsB/GETW9Biro0Jy18nmxoaC1xujyQ6P/drygGD6cIU7Kv+WXTstaWrbGvFU618Tl+sqyot2DOGbZwqNYYLIq0M5+M+AKtkfRi+T60Ip5zjhIAWJjDV/p3SsT2hdMYOc37ercUEbQPhqXdhrQ8Cq1LamfxBqmkR/Vd+xAzVx+tGzwcXZeTCuqs7s/qUvB9kPoqnl3ga5tECa817zX66hi1N9Cokc93gFO2mqWcGuM68AS5NfwDsupdotYGiGi8yEWPnskCF4+FIpeT6XfbuD5hawyY9za5zn7Ff0gl4M7Tk6h4p2CtiA9g9TFJ6ahTv2KaI+MuikdKn30ww32w+szVvjHSnV4bXQ60XAOYCANgvOzg4hUYk6V2RP2Mjrd4PwJ2XaiBiuIfiYvK1Xs5a56phl0rzQSFaMU46RntlnknHfZ3PSQsKvP2TXVZ9ZmYGJlDa7amlKZ61y+6/GgtIvZ5vxZl9SVdk3OrXZIyllymatcFRzpzzlYBi1CMCnzhlCQ1e0kXhqL1/+Z4ExnLdbvFjWlj9qnj+66psyustvgS8yR884CRC0K7SnbA0klZNA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(7416014)(1800799024)(23010399003)(6133799003)(56012099006)(3023799007)(5023799004)(4143699003)(11063799006)(13003099007)(22082099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Y1gzM2c0TWhKbk00R1RUdERaM3dDeTNaVWpjY3VWb1AzTDJpQytBcWpYRTh2?=
- =?utf-8?B?aGNsQWV2OWN2OW5TRHl5M29PSVYxR0w0V1BsSVhUODJPT09sVXJtdGd4RFpj?=
- =?utf-8?B?cnRiZmpCcjlCYTBuaGI4T3lPd00wNmZRUHdtaHlQL3loTzNFMUZ1OFplODVX?=
- =?utf-8?B?Z3NsRHQxb2tUTitzZmw4UUhtZGxqUWdKbWE0OFhmYmNoUjVSTmk0aUw0ZmNp?=
- =?utf-8?B?ZSswYkl2dks4V2sraytzNGc4aG0yUWpBRktnTlhtQmk3NGFoRW1zV2FvVy91?=
- =?utf-8?B?S3BLMTdKMGJmR0I4bU53bHNSS3dFWFVsWGVFRWhmZU5oYU9pc3h0NmI3SWl4?=
- =?utf-8?B?eDZhaUtBWEUrM3BmczRFVkVLakRPSXFyVUlEblNsUmpMRWNhL21GaEM3Sjgx?=
- =?utf-8?B?VjFmdnUweTRZcG1WVnRFVE9jSWJmRGxkdkJDNHR2b2V6YXZXcDFoTlRFQmhG?=
- =?utf-8?B?QkN2Z2dzb2NKUjlPMVFTaS9NeTk4WDloek5mcmlXemJlRFQ4U25BMW5vbk55?=
- =?utf-8?B?T0ZOeTVyOS9ZL2tOTEdhL3Y4M2Z3Q3NvMDZraFFCTWNKL3F4NHlyRW9Ka3No?=
- =?utf-8?B?T1Z6R092d0tsVFRkYlFKVVBUaGJ1YXI2QU1YcVg3bWE5Qyt3MHdwZUNLWkFN?=
- =?utf-8?B?V091cFVIcWJnNmUwc1FLVFQrQ1RYWmNUbXFnSVJVa200eElaQmxtbGZjdCtE?=
- =?utf-8?B?cVRZdUNYMG1xWVNwZFR4WFkxTDlKNDJFaXBBaHM0bGFKUVpCRnEzdVNZdHlx?=
- =?utf-8?B?cS9qUUxsL2VIUGlvZGkyYjMyUmNRZWNYMTI4a0FjdGlqU0VyWjE2UTdtNm5X?=
- =?utf-8?B?NzRWVWhvQ0k0QllHS0FaNGUzalVPSVN4RWI3YUxQSEwrNGlEU2x3SGxQN0hw?=
- =?utf-8?B?WkJXU3pjditLelZPaHhYRmZTZVc0K2JWVnNWRGdhQlVGd3N1bGNRU0Y1cFpj?=
- =?utf-8?B?dG4zUVB2VnJsMXdRS08yNlFWVHg4RHZPS3l6c01EM3E2Q3VibENQTHdGVVZo?=
- =?utf-8?B?dlFyamFjWVEyTlhuT1ZvUTN4dkRqUUhaeno4clVHRHdBUDBJM3ArUUo1SjZP?=
- =?utf-8?B?a2dxelpwaGc1LzBEdHdIY3RJcWkwOWFYdkVCb2JSN044YjZDNkpJWWplZDRX?=
- =?utf-8?B?TnpaSlBEOHdkTDZkbms0dlJWbWVTYnA0eVpvWGpwbVRLWE84QmErM2dRSU5Q?=
- =?utf-8?B?bkpzWWRsQUc0RWdjYzcxbkhpZHRqUHNGZFNyc0pMRDEyV0lFT3dYdTZ1TVVt?=
- =?utf-8?B?VVpuOXphZllrOGVGd1NPSnJKT3lsUXZYcHVsR29QakV2STcwQ1oxaVd5U29h?=
- =?utf-8?B?WnZhbFhzdi9sSUdDL21PRFoxMnRPRzlMTlZRQmtqL3FHc0RPUDVyZytKT1c3?=
- =?utf-8?B?bk1lSitHUUp3VWJFM1NSWUN3VDE5MG45NmdOS0hLNTFrY2pOUk1tNzFnV3hX?=
- =?utf-8?B?NEVWSWlERDFvSmk4VGlBc3JwZUExS0xRYWZGZmpkWjRrQnpsWVcxVUxLN2xt?=
- =?utf-8?B?dXhxbjZ6VWdkME9vWlB2aWdlRFRvLzRGc1RjbXA2Wk0wdExPSWQwZkErZ2VD?=
- =?utf-8?B?V0VIUGl3UXpLR2pDMGh6SjgxZTR3S1oyQjI3SkhTWjUxZWg3Z0VtbFhJV2xq?=
- =?utf-8?B?RXFxdEdENXlLNmd6UGE3bW0vSHJEUTE4aHZkazdCeUlSSkJ6RVdPYXd3NWRr?=
- =?utf-8?B?UHFCb2hVdEdHUERtUDUwc0FQTHJYRTJhL1RGSjN1SEVsemZXc0xwblVjRllG?=
- =?utf-8?B?UXYrTTZRV0crcVVsSmUveDUrVEtuT3hzVFNHRG12UTNIOEhPNUtjdk01Tm9o?=
- =?utf-8?B?Ykh6REZxdkJ5U2dQSDJqcDYzQ3NNTVZBRjZST1hESk1aU0RnQWZRWUFjck1l?=
- =?utf-8?B?LzhGYjdnZWQvMXRHK3R6cEhWaUJmMlR3Y281SXVKNGJVeTZQSGllbjJBZGNk?=
- =?utf-8?B?YUtYRmgvaC9xMzNpT3ZnVzhvZXBlVGYrdStVU1h4Wi9WaWJBL2h6K1NGengx?=
- =?utf-8?B?TG85SlN6OU50M3UybUt0NFZkdEdjSGwzU1VZOXNUU1RmLzFTSVlsODJkVmFv?=
- =?utf-8?B?WjU4OFdFZkJGajd0N0ZDNFBjUXlBRHljWnZNdW93ekVvdDdScjdsQ3h1aFFK?=
- =?utf-8?B?L2JDcVFNUXN3YXF6bEIzaStBdEZ6eUIzRFFVRUZNcExGekJjSVlDaWQ0UURN?=
- =?utf-8?B?bUpWS2JIdmpZSGZNdWNrZk5HTDJ5MFpXajZiVUh3ZW5TLzFLTkFGc0dmay83?=
- =?utf-8?B?SVp3UHZuWDl3eXdQcjFmNGpNYk1MSEs4N29nSjI2QmNRUTVxL3NSdzdmcnh1?=
- =?utf-8?B?djJBRHdDbUVXNzJrSTFBcVJ3bDFRalBvL0VxWUJoaE5RUUw3cmROdz09?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef50179a-2e7f-46fc-45e1-08decc254ded
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB5001.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NG5JK2lUTXM1VTl2ZUFyT1B6VGVpc05tMFFQdmRza291N0FGWk9nT3ArK0hU?=
+ =?utf-8?B?WHdnK2pmZWIveVRlTlhsOElPYm5UOE00bEcwemZWZ2hKd0hxaW5jbmVDQWhr?=
+ =?utf-8?B?WHkwakRUd3p5SG1mZGRId1p4UWFxMFJBbGFOMU1JNElIV3p0YTlpL0lya2c1?=
+ =?utf-8?B?eWVudjhSTXJFL2Y1cGlUSDJuQUptUzlPdUJmMW9rOFBGdjZXSjNRTjF4SUhZ?=
+ =?utf-8?B?QzJXNW9EaEY0Y1M2a3prZDAvcEVLZGhnVE04VUtYV05PODlCbzZ0QXIva1Z6?=
+ =?utf-8?B?WjNDbzg3ZzA0TXUyd3BrSVBmOElGNXg1bVBlSUtKTTNvakJBSHZYVGN4Q3pJ?=
+ =?utf-8?B?S0N0c1VZTGx5bXFOdUZKTDFqQWgwRDROc2piQlNucHFCVUEvbDNiTi94NXdE?=
+ =?utf-8?B?U0lNd2g0VWZsbTFBMTZTdnYxWXFpd3l5cVZYU1FyaGZTSTNlRzVUUm52b3pM?=
+ =?utf-8?B?Wjd2MmRyL0VEZWN6OHo5UEVxVE0vbHJvVWtldFhGdzAyRTVHOWw3dTdJWVZX?=
+ =?utf-8?B?cXFCZlFnNXZyOThwQ05QY0wrVFMya1RZbFJrUmxBekFoUjUxcHhKUVhmOEpE?=
+ =?utf-8?B?RmYwamJEZ2RJWFJwNmsvTThYaHdRWFRjcThwYVFjQk1XSkxxWnJBN0tHV2FR?=
+ =?utf-8?B?ckNGNXFHVUgvQmNTUkVqRCtxbE8xSUZOVDhyR0JCa3llUDN5bldjNW50aktR?=
+ =?utf-8?B?aGZWTXRWazlXUGM4OGlFUWl2akQrM1FMYzJvaHJjaWR3OVF6QzhWdzhXa29F?=
+ =?utf-8?B?R0twR1BwVlFlNGx4Q2pRbnhqZk1CWnlJQ0plVU5wUXRDS1J5ZlV5cFh3eHZk?=
+ =?utf-8?B?RklkbDFtQ0V0cThnT0VzQVp2cXZiSTBKbUI2WHc5ajJQUlhYWGFkL0d5YVl6?=
+ =?utf-8?B?bTN2OVhETWdOT0FudER1T0xsMTgzdjJsSHl3akc5RUdrUDdFVE02TlZQRkE0?=
+ =?utf-8?B?em0vTHBXdGhCczAwaWpEZ2hweUVRWVNoUXFlcGo5WVdFVlpPMHRscmlzZ3dh?=
+ =?utf-8?B?R25JNk5YVDJWSlJxQVNOeTlPc0JaQllwMjJiMVRqUUJyelArSlVRSGJsYnA2?=
+ =?utf-8?B?R2hzdlIxdW1JNlpWUHhWcWJLNnovelo3MzkzMk03V1VGUlJjbjM1c3Qwazlq?=
+ =?utf-8?B?QmNwODFYUWVYMC9jSWxMWjJESHAxNEdyd1ZKOXdiRjF4bEJDZEFER0dGNHhk?=
+ =?utf-8?B?bjNjbk8wTXN5SGFTYURuMVlEMU9idHoyZzg5VXkrVm9qYkp3K3NtdlFncDRI?=
+ =?utf-8?B?b3dYWnF0aGtKSVFUOWlvc2FVSWErZTZqM2pOcjNMYzVBZXh5b3R0U0tWaWtL?=
+ =?utf-8?B?MnZ3TUR3ckVkWEdUVk1SaGZkVm1vM09DQlQ2M0NibStRS1RvcFh5UWV3YWFX?=
+ =?utf-8?B?dmhYL2FqU0MzbFZGYnNDbDhEKzBuN0dvQktQRTNWZjByaStoVEthRTFrRE5j?=
+ =?utf-8?B?c3gwbXRwL1JpVVpRMjFJL05yUUZNanlMYk8xNkdZcWg1UjJVaGIzTmlCcjNW?=
+ =?utf-8?B?dkYwWTZyRFFsZ2hyVHV6R2NJMlNZMUN2OFJlRzcyV0YyQ2xnaUpGazJEbGRi?=
+ =?utf-8?B?QWMwcVhIUmtSZFRNUVl2SDNYVkh1SVNjbFlocGlZaXVDZGVQUDVrZG1KYmhI?=
+ =?utf-8?B?UUhrRldWcFEwMFJjaXVMWFVDV0UvZHVlU3l6bEpCeDk0blJOaG5pM1BqMEJ6?=
+ =?utf-8?B?WUMrSWwwa2ZiRFlKR3M2VTNHeGprdyswK1JJdmFPUmM3NEdkdjYwdGs2eXc0?=
+ =?utf-8?B?TiswdjkvZE0wU3phWGJ0emw2SEx0TWtCd3dVYnhucGhhcnNza2J4dWwxcG9n?=
+ =?utf-8?B?MVVwL1VuQUNaWW80TmtSSmlOd0p1Y1NvVnlEdmhoWHJ6MGFCZnV4Z1g5MnRl?=
+ =?utf-8?B?QmY1aHpGaUlRMjVWbE5WMVBmV21VSXc0UmFhQXFFa2lmdGtBT0kraFpPWFF1?=
+ =?utf-8?B?dld3RSs1ekE5UEtYeXVQUGFQMVBqWFB5OTJiTWVZNVhBRGJGTlhSbkVRUzVp?=
+ =?utf-8?B?cktlZFJGMG52akMwVGE1NHl2N0V4dmtzMEV4V2V5Z0wveVlXTTc5dFVZVCth?=
+ =?utf-8?B?QlNWTUhmWWk4TGN1MzhpbVliWGtBWEZ5L09CWG9DT2N4K0pYamQzNnlRd0NU?=
+ =?utf-8?B?NlRkYkxGSUlDd0lTU3ZkQ29MMElZYkdVM2xyUE5PU1dGb2YwbFpQV0RuL21B?=
+ =?utf-8?B?TDgwQXpwWVRLN3UzOFFBL2Jxc1QxRjZJZytwVkgrNHJMMk5BM1hUZ2NHK09i?=
+ =?utf-8?B?QklUbXpmQTRlL3lXcWEzSm5yb1pkQ1JMRGVZYlZ0K0dtRUdqSEEvVE5pazJw?=
+ =?utf-8?B?NU5scmhLV1Z2SWJTOFYybXViVXR0ZEJPY2M2WjZPMm5rbWNIWWJhRnowdi90?=
+ =?utf-8?Q?wtIFmkzF/Lsn4ijQ=3D?=
+X-Exchange-RoutingPolicyChecked: jsWKVOEM12tELvYK+VOJ9YFxkl1pnFpKRm6yUjl4Lf9ceY8nBeq7CJmcHU1eOtVXIW3mPizyy6N6Xx5WM173lPj6VTxDyG6zhdeAHtU33TduDXPWcl7px5AvXjq26/S06Y7Pkc7HP5G8uCKONrshZhqp6i0VZlk+l8ryMSR6cNMpWi+FWsqdPnzf4Jml+/S/ba9Ju0AQvInpZ24bJtdi8b6PZ72uXoM8oPiUmIsI8wmf2uBq5GUREYgl1FyI6r8SiAKUepPZ7P85nbimHA+FQUj9RObMdTt7PovVYsQzcNgb5ULaWOd2naLeEBp4K2B6hn0wQgwcBrxADRc89NbmMg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf4e8e03-4832-4ca6-9562-08decc3f7b9b
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2026 04:02:54.4739
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2026 07:10:16.6372
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NpKV9YIpgmvq5DJ+8nn525AIpdnxq3cYhoBtCJ7MmnCSh1572oL6iYkzUecQ4LHu+q9swBJSAdlbL2Q4ys3e7g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF73BED5E32
+X-MS-Exchange-CrossTenant-UserPrincipalName: no3XwSDW749ZhSFJHHa0XB4VI3i8e8bCWyXd+oK+vHGCtYE7MfrHsnm0xo2WYkSTQXO9/CwcLenFz0lzdjqSkRgClKCwDTu+VutuyfGq2/M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB9279
+X-OriginatorOrg: intel.com
 
-On Wed, Jun 10, 2026 at 12:37:34PM -0400, Gregory Price wrote:
-> On Wed, Jun 10, 2026 at 05:00:33PM +0200, David Hildenbrand (Arm) wrote:
-> > On 6/10/26 12:41, Gregory Price wrote:
-> > > On Wed, Jun 03, 2026 at 03:00:01PM +1000, Balbir Singh wrote:
-> > > 
-> > > Notably: slub.c injects __GFP_THISNODE internally on behalf of kmalloc,
-> > > which causes spillage into private nodes because slub allows private
-> > > nodes in its mask.  I think this is fixable.
-> > > 
-> > > I have to inspect some other __GFP_THISNODE users (hugetlb, some arch
-> > > code, etc), but it seems like fully dropping the FALLBACK entries and
-> > > requiring __GFP_THISNODE might be sufficient.
+On Thu, Jun 04, 2026 at 10:43:10PM -0700, Alison Schofield wrote:
+> On Sat, May 23, 2026 at 02:50:35AM -0700, Anisa Su wrote:
+> > CXL Dynamic Capacity Device (DCD) support has continued to evolve in the
+> > upstream kernel since Ira's v5 posting [1].  The kernel side has settled
+> > on a uuid-driven claim model for sparse DAX devices: dax_resources carry
+> > the tag delivered with each extent, and userspace selects which ones to
+> > claim by writing a UUID to the dax device's sysfs 'uuid' attribute (or
+> > "0" to claim a single untagged resource).  Size on a sparse region is
+> > determined by the claim, not requested up-front.
 > > 
-> > Sorry, I haven't been able to follow up so far, and not sure if that's what you
-> > are discussing here ...
-> > 
-> > After the LSF/MM session, I was wondering, whether if we focus on allowing only
-> > folios allocations to end up on private memory nodes for now: could the
-> > __GFP_THISNODE approach work there?
-> > 
-> > Essentially, disallow any allocations on non-folio paths, and allow folio
-> > allocation only with __GFP_THISNODE set.
-> > 
-> > I have to find time to read the other mails in this thread, on my todo list.
-> > 
-> > So sorry if that is precisely what is being discussed here.
-> > 
+> > This series brings cxl-cli and daxctl in line with that model and
+> > extends cxl_test to exercise the new paths end-to-end.
 > 
-> So, I remember this being asked, and I didn't fully grok the request.
+> Hi Anisa,
 > 
-> I'm still not sure I fully understand the question, so apologies if I'm
-> answer the wrong things here.
+> I just now picked this up with the kernel side and took it for a quick
+> test drive. Based on what's been touched, first meaningful finding is
+> all the DAX unit tests pass, and then for CXL unit tests, all but these
+> 2 pass: cxl-security.sh and cxl-dcd.sh
 > 
-> I understand this question in two ways:
-> 
->   1) Can we disallow PAGE allocation and limit this to FOLIO allocation
->   2) Can we disallow [Feature] (i.e. slab) allocation targeting the node.
-> 
-> 
-> 1) Can we disallow page allocation and limit this to folios?
-> 
-> No, I don't think so.
-> 
-> Folio allocations are written in terms of page allocations, we would
-> have to rewrite folio allocation interfaces and introduce a bunch of
-> boilerplate for the sake of this.
-> 
-> struct page *__alloc_pages_noprof(gfp_t gfp, unsigned int order,
->                 int preferred_nid, nodemask_t *nodemask)
-> {
->         struct page *page;
-> 
->         page = __alloc_frozen_pages_noprof(gfp, order, preferred_nid, nodemask);
->         if (page)
->                 set_page_refcounted(page);
->         return page;
-> }
-> 
-> struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int preferred_nid,
->                 nodemask_t *nodemask)
-> {
->         struct page *page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
->                                         preferred_nid, nodemask);
-> 	return page_rmappable_folio(page);
-> }
-> 
-> At the end of the day, this all reduces to `get_pages_from_freelist`,
-> and at that level we don't really care about folio vs page.
-> 
-> __GFP_COMP is insufficient to differentiate between a non-folio compound
-> page and a folio, and __GFP_COMP is passed into __alloc_pages_*
-> interfaces all over the kernel.
-> 
-> Trying to detach these paths things seems like a horrible rats nest /
-> not feasible / will create a lot of boilerplate for little value.
-> 
-> (I did not fully understand this request when it was asked, I do
->  not fully understand this request not, please let me know if I
->  have misunderstood what you were asking).
-> 
+> Please let me know if there are known problems with either of those
+> before I explore further.
 
-I agree with this, any changes to folio only allocation could then be
-easily adapted for N_MEMORY_PRIVATE
+Hi Anisa,
+
+Good news, DCD exposed a long hidden bug that made cxl-security.sh
+fail. It is not an issue w DCD patches.
+
+Found that DCD set changes which mock memdev the test happens to
+land on, and that's enough to uncover a latent hex/decimal bug in
+CXL nvdimm code. We use to always land on id '1', but now this patch:
+
+tools/testing/cxl: Add DC Regions to mock mem data
+
+reorders the sorted dimm list, so the test selects a dimm with
+serial 10 (0xa), and there's the hex/decimal mismatch.
+
+The renumbering is harmless in itself but it just changed the
+serial the test exercises and tripped over the old bug.
+
+I'll send a separate fixup patch for the hex/dec cleanup.
+
+(No answer on cxl-dcd.sh yet)
+
+-- Alison
 
 > 
+> Question below about dependency....
 > 
-> 2) Can we disallow SLAB allocation.
+> > 
+> > The corresponding kernel patchset is here:
+> > https://lore.kernel.org/linux-cxl/cover.1779528761.git.anisa.su@samsung.com/T/#t
+> > 
+> > Picked up unchanged from v5 (Ira):
+> > 
+> >   libcxl: Add Dynamic RAM A partition mode support
+> >   cxl/region: Add cxl-cli support for dynamic RAM A
+> >   libcxl: Add extent functionality to DC regions
+> >   cxl/region: Add extent output to region query
+> > 
+> > New in v6:
+> > 
+> >   daxctl: Add --uuid option to create-device for DC DAX regions
+> >     - Plumbs writes to the new dax 'uuid' sysfs attribute through a new
+> >       daxctl_dev_set_uuid() helper (LIBDAXCTL_11).
+> >     - --uuid is mutually exclusive with --size; pass "0" to claim a
+> >       single untagged dax_resource.  An unmatched UUID surfaces ENOENT
+> >       from the kernel and leaves the device at size 0.
+> >     - Documents the option in the man page.
+> > 
+> >   cxl/test: Add Dynamic Capacity tests (rewritten on top of Ira's
+> >   original patch to track the post-redesign kernel)
+> >     - Routes untagged claims via --uuid "0" so daxctl exercises the
+> >       kernel uuid_store path; tagged claims use real UUID strings.
+> >     - Asserts that for DC regions, size-grow returns -EOPNOTSUPP (real grow is
+> >       --uuid only) and that tag reuse across More-chains is rejected
+> >       by the cross-More uniqueness gate.
+> >     - Adds coverage for the new validators: test_uuid_no_match,
+> >       test_uuid_no_match_seed_intact, test_uuid_show,
+> >       test_cross_more_uniqueness, test_alignment_rejection.
+> >     - Sharable-partition coverage (test_shared_extent_inject,
+> >       test_seq_integrity_gap) is routed at runtime to a dedicated mock
+> >       memdev that tools/testing/cxl stamps with serial 0xDCDC, so a
+> >       single cxl_test module load exercises both regimes.
+> >     - Localizes positional-arg assignments in every helper so functions
+> >       no longer clobber caller globals (the previous behavior leaked
+> >       the sharable memdev into later tests).
+> >     - test_reject_overlapping arithmetic now lands an actual overlap
+> >       inside the DC region (the prior math landed past the end).
+> > 
+> > Depends on the kernel DCD/sparse-DAX series; without it the new tests
+> > will skip and 'cxl list -r N -Nu' will simply report no extents.
 > 
-> Yeah, but I think a better question is whether there's a difference
-> between alloc_pages_node() and kmalloc_node() when it all just sinks
-> to the same fundamental code in mm/page_alloc.c
+> What is this dependency- DCD/sparse-DAX series ?
 > 
-> Maybe there's an argument for something like NP_OPT_KMALLOC (allow slab
-> allocations on the private node w/ __GFP_THISNODE)
+> > 
+> > The branch is also available at:
+> > 
+> >   https://github.com/anisa-su993/anisa-ndctl/tree/dcd-2026-05-21
+> > 
+> > Based on pmem/pending commit:
+> > 
+> >   bbd403a test/cxl-sanitize: avoid sanitize submit/wait race
+> > 
+> > [1] https://lore.kernel.org/nvdimm/20250413-dcd-region2-v5-0-fbd753a2e0e8@intel.com/
+> > 
+> > ---
+> > Changes in v6:
+> > - anisa: New patch — daxctl --uuid option + daxctl_dev_set_uuid() helper
+> > - anisa: Rewrite cxl/test DCD tests against the post-redesign kernel
+> >          (uuid sysfs claim, tag-group atomic release, cross-More
+> >          uniqueness, alignment rejection, DC size-grow refusal)
+> > - anisa: Rebase onto bbd403a (pmem/pending)
+> > - Link to v5: https://lore.kernel.org/nvdimm/20250413-dcd-region2-v5-0-fbd753a2e0e8@intel.com/
+> > 
+> > Changes in v5:
+> > - iweiny: Adjust all code to view only the dynamic RAM A partition
+> > - Alison: s/tag/uuid/ in region query extent output
+> > - Link to v4: https://patch.msgid.link/20241214-dcd-region2-v4-0-36550a97f8e2@intel.com
+> > 
+> > Anisa Su (1):
+> >   daxctl: Add --uuid option to create-device for DC regions
+> > 
+> > Ira Weiny (6):
+> >   ndctl: Dynamic Capacity additions for cxl-cli
+> >   libcxl: Add Dynamic RAM A partition mode support
+> >   cxl/region: Add cxl-cli support for dynamic RAM A
+> >   libcxl: Add extent functionality to DC regions
+> >   cxl/region: Add extent output to region query
+> >   cxl/test: Add Dynamic Capacity tests
+> > 
+> >  Documentation/cxl/cxl-list.txt                |   29 +
+> >  Documentation/cxl/lib/libcxl.txt              |   33 +-
+> >  Documentation/daxctl/daxctl-create-device.txt |   12 +
+> >  cxl/filter.h                                  |    3 +
+> >  cxl/json.c                                    |   67 +
+> >  cxl/json.h                                    |    3 +
+> >  cxl/lib/libcxl.c                              |  181 +++
+> >  cxl/lib/libcxl.sym                            |    9 +
+> >  cxl/lib/private.h                             |   14 +
+> >  cxl/libcxl.h                                  |   21 +-
+> >  cxl/list.c                                    |    3 +
+> >  cxl/memdev.c                                  |    4 +-
+> >  cxl/region.c                                  |   27 +-
+> >  daxctl/device.c                               |   72 +-
+> >  daxctl/lib/libdaxctl.c                        |   44 +
+> >  daxctl/lib/libdaxctl.sym                      |    5 +
+> >  daxctl/libdaxctl.h                            |    1 +
+> >  test/cxl-dcd.sh                               | 1267 +++++++++++++++++
+> >  test/meson.build                              |    2 +
+> >  util/json.h                                   |    1 +
+> >  20 files changed, 1771 insertions(+), 27 deletions(-)
+> >  create mode 100644 test/cxl-dcd.sh
+> > 
+> > 
+> > base-commit: bbd403a03fa2a1551c1a10bbf78f32027c718758
+> > -- 
+> > 2.43.0
+> > 
 > 
-> On my current set, I don't implement any explicit filtering at all in
-> mm/page_alloc.c - the filtering is a function of the nodes not being
-> present in the FALLBACK list and only having a NOFALLBACK list.
-> 
-> What __GFP_THISNODE actually does under the hood is just switch
-> which zone list (FALLBACK vs NOFALLBACK) is used for the target node.
-> 
-> For isolation w/o __GFP_PRIVATE, we're removing N_MEMORY_PRIVATE nodes
-> from *their own FALLBACK* list and only adding them to their NOFALLBACK
-> list.  That means to reach a private node you MUST use __GFP_THISNODE.
-> 
-> I realize this is confusing, but essentially we don't have to modify
-> mm/page_alloc.c to get the __GFP_THISNODE filtering, we get this from
-> the fallback/nofallback list construction.
-> 
-> 
-> Ok, so how does this flush out in practice - and why do I call this
-> filtering mechanism fragile?
-> 
-> consider kmalloc_node() and __slab_alloc():
-> 
-> kmalloc_node(...)
->   └─ ___slab_alloc()     mm/slub.c:4406   pc.flags |= __GFP_THISNODE
->       └─ new_slab(s, pc.flags, node)
->           └─ allocate_slab(s, flags, node)
->               └─ alloc_slab_page(flags, node, oo, …)
->                   └─ __alloc_frozen_pages(flags, order, node, NULL);
-> 
-> Slab silently upgrades the page allocator flags here to include
-> __GFP_THISNODE - even if the user didn't request that behavior.
-> 
-> This is exactly the kind of "spillage" I said was hard to police at LSF.
-> 
-> Without __GFP_PRIVATE, we have to keep an eye on what around the kernel
-> is using __GFP_THISNODE and how.
-> 
-> For mm/slub.c we can choose to do one of thwo things
-> 
->   1) 100% refuse slab allocations on private nodes, i.e.:
-> 
->      kmalloc_node(..., private_nid, __GFP_THISNODE)
-> 
->      And will fail (return NULL).
-> 
-
-Doesn't this iterate through N_MEMORY only? N_MEMORY_PRIVATE should not
-be in the regular for_each(...) loops
-
->   or
-> 
->   2) Do not upgrade private-node slab requests w/ __GFP_THISNODE
->      
->      This allows kmalloc_node() to work the same as folio_alloc()
->      or alloc_pages() interfaces (__GFP_THISNODE is the key), with
->      the understanding that any __GFP_THISNODE user
-> 
-> We can opt these nodes into slab/kmalloc with a NP_OPT_SLAB
-> if the owner wants kmalloc_node(), with the understanding that any
-> caller using __GFP_THISNODE may get access.
-> 
-> That's the kind of fragility I was trying to avoid.
-> 
-> 
-> That said, in practice, I have found that basic kernel operations don't
-> generally target use kmalloc_node() w/ __GFP_THISNODE - there's just
-> nothing to prevent anyone from doing so.
-> 
-> So this seems promising...
-> And then theres arch/powerpc/platforms/powernv/memtrace.c
-> 
-> static u64 memtrace_alloc_node(u32 nid, u64 size)
-> {
-> 	... snip ...
->         page = alloc_contig_pages(nr_pages, GFP_KERNEL | __GFP_THISNODE |
->                                   __GFP_NOWARN | __GFP_ZERO, nid, NULL);
-> 	... snip ...
-> }
-> 
-> static int memtrace_init_regions_runtime(u64 size)
-> {
-> 	... snip ...
->         for_each_online_node(nid) {
->                 m = memtrace_alloc_node(nid, size);
-> 	... snip ...
-> }
-> 
-> static int memtrace_enable_set(void *data, u64 val)
-> {
-> 	... snip ...
->         if (memtrace_init_regions_runtime(val))
->                 goto out_unlock;
-> 	... snip ...
-> }
-> 
-> This is the *exact* pattern I said would be hard to police - and it
-> doesn't look like a bug, just not informed that private nodes exist.
-> 
-> This is why I'm concerned with trying to depend on __GFP_THISNODE as the
-> filtering function.
-> 
-> That said, the number of __GFP_THISNODE users is very limited
-> kernel-wide, so maybe that's an acceptable maintenance burden?
-> 
-
-Balbir
