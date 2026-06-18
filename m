@@ -1,125 +1,255 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36232E7369
-	for <linux-cxl@vger.kernel.org>; Thu, 18 Jun 2026 02:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8994309DDF
+	for <linux-cxl@vger.kernel.org>; Thu, 18 Jun 2026 05:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781750507; cv=none; b=h663Nk2I5AVUP4OE1SmApEJuKshfG3CF/+d2Yd9GoX40yMVBxtPO+m1hcuJpXJYV2lYYBSPSMLE8oB5YoGcIZyPvypGQxXCM4VEe+3wuZWUSnbR9rqRg+9phtRd7hT+uPgtHw1QvB8vh+CPkT6M0spG0P+kyNTq+1rYkng8Vunw=
+	t=1781761929; cv=none; b=o3TK79G9e4Wuzpxv+CVH9UMnHppFXrlsr+TJA6y3D07lDgsBKFLZ2i98rn4+sEH1FIR0EW5O6gF17yh0+aXcVjTib8ZRJBpuCu6nZurAuz0bH5Onl+ZpjFF5cD2SR71rB+533HmRtd1msHHXmttG1xYBMH8cozsAftJQldJtQgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781750507; c=relaxed/simple;
-	bh=YrwcpQ0WvBz/1+z3tCzmFwH0nCWHbcXLoQuFZ9YQf+Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g2iP6rFoqm/jhIlFz0FDoVV+hujwjBx9/lNRMRom37P2BN499ekbugPNRUqodZHbRsQzXfFSxVMYmrSS+YZYop4Up1O+j84Q2amjdVLFSjqmMpIKVEsMiRha4GpO2ADjjt7pSdYIoj3OYsPXt/OJrxDNTIyQTGskAG74RaaGVqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=foIIT8Oj; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1781761929; c=relaxed/simple;
+	bh=Roc6jFBtRQ/L7AkcFCDl2Mo7X9RLH3mFsVpZO/wwArc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rYaYM9i1UdxWZKfnf4kr3y+2fk7bbB2eYzh+7hMPyRTpQqYLyf3YUW1BwGVUFQcUvLrCnvSwXFsE9MGoOQgm0Tadvt4qSJkBMI5NlXlpK9GunJxtPi1lfaeGr5kkzeH+f2l7IP/PUpI5quQduSsn2zbjgRQissG5ZW3ih3+2FP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VvMTiyV+; arc=none smtp.client-ip=74.125.82.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="foIIT8Oj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1781750506; x=1813286506;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=YrwcpQ0WvBz/1+z3tCzmFwH0nCWHbcXLoQuFZ9YQf+Y=;
-  b=foIIT8Ojx2ZvKXXgpOQo25f5yduqAQ5prENsdDQte8yUFw9v28citDLU
-   2Hu3x+m9dY0lRyljSwgx8uGjXf4ezRhTSHcVx73qSjkO3NjtPVWkdo3qE
-   2ICO6uiiN8sYjwqa0WA0tjDS9sLZBkTR4kyL+PcvRTLuUECUwnbwO4Q1M
-   umgmtUTFxHXmq5CwJ9vXZ0XfmtebRH2+EcGOjYsHZJuboqOZHcsEzizUO
-   MTFwTz5GfI2G6+CCTTdVHuc1E9C8e0czoKn7F4TESVCYoBoYzs3FnbWjg
-   aHx2V5fQXu22raaaN/Y+awdCM28B4mNzTg12BE6BVxu4pkGsZwI7Ovt3n
-   g==;
-X-CSE-ConnectionGUID: uPLX+UNgRAyjycA9ZajEXQ==
-X-CSE-MsgGUID: Zha26acoRauoO4yE7DnBfQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11820"; a="93229262"
-X-IronPort-AV: E=Sophos;i="6.24,210,1774335600"; 
-   d="scan'208";a="93229262"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2026 19:41:45 -0700
-X-CSE-ConnectionGUID: U2DXYIQjTNO4ofBf2UTmfQ==
-X-CSE-MsgGUID: SF09PBIgR5OaK1yi3UvOuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,210,1774335600"; 
-   d="scan'208";a="245302087"
-Received: from junjie-optiplex-micro-plus-7010.bj.intel.com ([10.238.152.98])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2026 19:41:43 -0700
-From: Junjie Cao <junjie.cao@intel.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: "Michael S . Tsirkin" <mst@redhat.com>,
-	qemu-devel@nongnu.org,
-	qemu-stable@nongnu.org,
-	linux-cxl@vger.kernel.org,
-	Junjie Cao <junjie.cao@intel.com>
-Subject: [PATCH] hw/cxl: Fix guest-triggerable QEMU exit on reserved interleave ways
-Date: Thu, 18 Jun 2026 18:43:16 +0800
-Message-ID: <20260618104316.557306-1-junjie.cao@intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VvMTiyV+"
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-304f590dd91so680464eec.0
+        for <linux-cxl@vger.kernel.org>; Wed, 17 Jun 2026 22:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1781761927; x=1782366727; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=RVcrgdyxAFY0JrdBQcLjQ6NN4IVLGqhuG6k48kJCsJI=;
+        b=VvMTiyV+V9GdEhbtQXUZD4BD7ZwcI+M7n9L0tTprht6ln93Qxfs87dECl9DR+jLFT/
+         afWGz7QNNdzsk3cIKeVhEGzKnOwU1l5DDl18kpryOq+14AohUoLDfbQsgTxOJ0MXVFdr
+         4VNzTxWX8wKymqqHF4PPtIP9jUjgdwbjXiiQJ1eev3VfcrmZd5mKlXya7rT78WnA/zls
+         DoOTlI7UNZxXgEDBoYPLJs+XWbXX9SdThBrD3lpYOK0PrBOUZdVVPiVlrVeMQM8AdBE2
+         bracEJAz7NuxxnxXZS0D3gPRTz9LHPYPSgKpp+5LfYpbMeSOX2MVzBW4CCW0dob4qc4Q
+         9GnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781761927; x=1782366727;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RVcrgdyxAFY0JrdBQcLjQ6NN4IVLGqhuG6k48kJCsJI=;
+        b=nDOjVoawpAZmuvpitVLty69MdBzMFSmLNxowIgJImrmYiAVTn5MUwX6Lo7WMIFZdgk
+         rFPS81yYQmmJ0NPTz48jAvvxitiSjOmfvAgVfTpjIgE7Dek14F/t0pMLRV4vz9v193uo
+         0FgTpo0FU2FO5/hikwvLfqS0PS3ZqqBBGZB8RfllpNt7D9Y62+2WMCd7FwWCwJEhvzMp
+         4veMfBxiIymgbrDyPvMqOHtozR7BxN0D/83gxlGaYn1iI3GLjTBDqliKUsnEB+Emyc84
+         sJVNxNVjPGbmyuFQBf0ggDS0M3MqZZsZFB8S/tuB+2tgkYRvtgmWlePOr4EILGHAoxnX
+         zi6A==
+X-Forwarded-Encrypted: i=1; AFNElJ/eu6SRx2iMUGizMtaHdruNDBNb+MXu5NVD7pp8n3jX5Vpe94W39hnBHYqjdfDZNnaIUWf2VZzYquU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKX7UP7CRZ1QppROG+6OoHZIMMbWqEeFEMJPNj/ak6EO055JoD
+	gpozTjx6dsX0PQ75YM+CIAhBzhEunmMKnrEJzKOZr9OfR438PelADf+1
+X-Gm-Gg: AfdE7cmxDkrf+KcQz9AHy27fn+MlG0fEC51Bq5+rnw3c0s/ScaNpGtoYr8B0oOBdTEV
+	weHm/o+5kDer/d5XEfdlJasdhjDLW3824pH/nfPZN8eHduLKICbOfwQ/SGqPsTiUfu9sB92A356
+	A0Zn3z/sw40m9sLQ1w3Qqkgehg8GYNQkLuJn6fJ065TXRnia/yWU0D30lQdg/kB8byQuo2Bu3ON
+	FIeMuePsZ4U7vu6lSzMSp9/KwpWGQSYTCgOkapIou71P889r0kF2NeJBJknIwR0wXhBQOSh42oF
+	+fSsHJhD4elA+tBEsYNOraYQRipkw39NEL/mQPohpYD787uddIEI0KNBimgwhQMvaaffPO8C9ag
+	VfILkUhjUPQ3KUD2n5ZSqp4Z3hdVlhNAzW6QH5Be50IGxssfMrJ57/1ZwgjwxK1UtZouYgKDbnR
+	oM0r9DtLdqybVbbwBJ90i8kuWIcMo9Ljg9ICMcGADeTgnoawnCwa/+6yIfJ97Tf2eqa600IMwUI
+	3+ZBcI=
+X-Received: by 2002:a05:7300:4356:b0:2da:2ec2:64fe with SMTP id 5a478bee46e88-30bca082050mr4530581eec.24.1781761926706;
+        Wed, 17 Jun 2026 22:52:06 -0700 (PDT)
+Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30bbbd636fasm7130687eec.22.2026.06.17.22.52.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2026 22:52:06 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Wed, 17 Jun 2026 22:52:04 -0700
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	Dan Williams <djbw@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <iweiny@kernel.org>,
+	John Groves <John@groves.net>, Gregory Price <gourry@gourry.net>
+Subject: Re: [PATCH v6 0/7] ndctl: Dynamic Capacity additions for cxl-cli
+Message-ID: <ajOHhP7hX8r2ptKC@AnisaLaptop.localdomain>
+References: <20260523095043.471098-1-anisa.su@samsung.com>
+ <aiJh7vcs2u1fMDX4@aschofie-mobl2.lan>
+ <ajJITxBewsUuQGzp@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ajJITxBewsUuQGzp@aschofie-mobl2.lan>
 
-A buggy or malicious guest can program a committed HDM decoder with a
-reserved Interleave Ways encoding (e.g. 0x5-0x7, 0xb-0xf).  Two call
-sites pass &error_fatal to cxl_interleave_ways_dec(), which calls
-exit(1) on the reserved encoding before the subsequent decoded_iw == 0
-guards can run:
+On Wed, Jun 17, 2026 at 12:10:07AM -0700, Alison Schofield wrote:
+> On Thu, Jun 04, 2026 at 10:43:10PM -0700, Alison Schofield wrote:
+> > On Sat, May 23, 2026 at 02:50:35AM -0700, Anisa Su wrote:
+> > > CXL Dynamic Capacity Device (DCD) support has continued to evolve in the
+> > > upstream kernel since Ira's v5 posting [1].  The kernel side has settled
+> > > on a uuid-driven claim model for sparse DAX devices: dax_resources carry
+> > > the tag delivered with each extent, and userspace selects which ones to
+> > > claim by writing a UUID to the dax device's sysfs 'uuid' attribute (or
+> > > "0" to claim a single untagged resource).  Size on a sparse region is
+> > > determined by the claim, not requested up-front.
+> > > 
+> > > This series brings cxl-cli and daxctl in line with that model and
+> > > extends cxl_test to exercise the new paths end-to-end.
+> > 
+> > Hi Anisa,
+> > 
+> > I just now picked this up with the kernel side and took it for a quick
+> > test drive. Based on what's been touched, first meaningful finding is
+> > all the DAX unit tests pass, and then for CXL unit tests, all but these
+> > 2 pass: cxl-security.sh and cxl-dcd.sh
+> > 
+> > Please let me know if there are known problems with either of those
+> > before I explore further.
+> 
+> Hi Anisa,
+> 
+> Good news, DCD exposed a long hidden bug that made cxl-security.sh
+> fail. It is not an issue w DCD patches.
+> 
+> Found that DCD set changes which mock memdev the test happens to
+> land on, and that's enough to uncover a latent hex/decimal bug in
+> CXL nvdimm code. We use to always land on id '1', but now this patch:
+> 
+> tools/testing/cxl: Add DC Regions to mock mem data
+> 
+> reorders the sorted dimm list, so the test selects a dimm with
+> serial 10 (0xa), and there's the hex/decimal mismatch.
+> 
+> The renumbering is harmless in itself but it just changed the
+> serial the test exercises and tripped over the old bug.
+> 
+> I'll send a separate fixup patch for the hex/dec cleanup.
+> 
+> (No answer on cxl-dcd.sh yet)
+> 
+> -- Alison
+> 
+Thanks for looking into this! I can also look into what might be going
+on with cxl-dcd.sh if you let me know the base commit you applied the
+dcd patches onto? :)
 
-  - cxl-host.c update_non_interleaved(): called at commit time from
-    hdm_decoder_commit() via cfmws_update_non_interleaved(), so a guest
-    writing COMMIT with a reserved IW terminates QEMU immediately.  This
-    is the primary trigger on the current tree.
+Thanks,
+Anisa
 
-  - cxl_type3.c cxl_type3_dpa(): called on memory access while iterating
-    past committed decoders to accumulate dpa_base.  Once the commit-time
-    exit is removed, the decoder stays committed with the reserved
-    encoding, so a later guest access outside that decoder's range would
-    otherwise hit this second &error_fatal; both are fixed here.
-
-Pass NULL instead of &error_fatal at both sites so that the reserved
-encoding returns zero and the existing guards handle it gracefully.
-
-This can be reproduced by writing the HDM Decoder 0 Control register
-with a reserved IW encoding and the COMMIT bit set (e.g. IW=0x5,
-COMMIT=1).
-
-Cc: qemu-stable@nongnu.org
-Fixes: 680935c9a6ff ("hw/cxl: Add a performant (and correct) path for the non interleaved cases")
-Fixes: 48461825af1b ("hw/mem/cxl_type3: Fix potential divide by zero reported by coverity")
-Signed-off-by: Junjie Cao <junjie.cao@intel.com>
----
- hw/cxl/cxl-host.c  | 2 +-
- hw/mem/cxl_type3.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
-index 7e744312f1..768fdadc29 100644
---- a/hw/cxl/cxl-host.c
-+++ b/hw/cxl/cxl-host.c
-@@ -442,7 +442,7 @@ static int update_non_interleaved(Object *obj, void *opaque)
-             }
-         }
- 
--        interleave_ways_dec = cxl_interleave_ways_dec(iw, &error_fatal);
-+        interleave_ways_dec = cxl_interleave_ways_dec(iw, NULL);
-         if (interleave_ways_dec == 0) {
-             return 0;
-         }
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index cba05ec57d..102afa1a19 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -1197,7 +1197,7 @@ static bool cxl_type3_dpa(CXLType3Dev *ct3d, hwaddr host_addr, uint64_t *dpa)
-         }
-         if (((uint64_t)host_addr < decoder_base) ||
-             (hpa_offset >= decoder_size)) {
--            int decoded_iw = cxl_interleave_ways_dec(iw, &error_fatal);
-+            int decoded_iw = cxl_interleave_ways_dec(iw, NULL);
- 
-             if (decoded_iw == 0) {
-                 return false;
--- 
-2.43.0
-
+> > 
+> > Question below about dependency....
+> > 
+> > > 
+> > > The corresponding kernel patchset is here:
+> > > https://lore.kernel.org/linux-cxl/cover.1779528761.git.anisa.su@samsung.com/T/#t
+> > > 
+> > > Picked up unchanged from v5 (Ira):
+> > > 
+> > >   libcxl: Add Dynamic RAM A partition mode support
+> > >   cxl/region: Add cxl-cli support for dynamic RAM A
+> > >   libcxl: Add extent functionality to DC regions
+> > >   cxl/region: Add extent output to region query
+> > > 
+> > > New in v6:
+> > > 
+> > >   daxctl: Add --uuid option to create-device for DC DAX regions
+> > >     - Plumbs writes to the new dax 'uuid' sysfs attribute through a new
+> > >       daxctl_dev_set_uuid() helper (LIBDAXCTL_11).
+> > >     - --uuid is mutually exclusive with --size; pass "0" to claim a
+> > >       single untagged dax_resource.  An unmatched UUID surfaces ENOENT
+> > >       from the kernel and leaves the device at size 0.
+> > >     - Documents the option in the man page.
+> > > 
+> > >   cxl/test: Add Dynamic Capacity tests (rewritten on top of Ira's
+> > >   original patch to track the post-redesign kernel)
+> > >     - Routes untagged claims via --uuid "0" so daxctl exercises the
+> > >       kernel uuid_store path; tagged claims use real UUID strings.
+> > >     - Asserts that for DC regions, size-grow returns -EOPNOTSUPP (real grow is
+> > >       --uuid only) and that tag reuse across More-chains is rejected
+> > >       by the cross-More uniqueness gate.
+> > >     - Adds coverage for the new validators: test_uuid_no_match,
+> > >       test_uuid_no_match_seed_intact, test_uuid_show,
+> > >       test_cross_more_uniqueness, test_alignment_rejection.
+> > >     - Sharable-partition coverage (test_shared_extent_inject,
+> > >       test_seq_integrity_gap) is routed at runtime to a dedicated mock
+> > >       memdev that tools/testing/cxl stamps with serial 0xDCDC, so a
+> > >       single cxl_test module load exercises both regimes.
+> > >     - Localizes positional-arg assignments in every helper so functions
+> > >       no longer clobber caller globals (the previous behavior leaked
+> > >       the sharable memdev into later tests).
+> > >     - test_reject_overlapping arithmetic now lands an actual overlap
+> > >       inside the DC region (the prior math landed past the end).
+> > > 
+> > > Depends on the kernel DCD/sparse-DAX series; without it the new tests
+> > > will skip and 'cxl list -r N -Nu' will simply report no extents.
+> > 
+> > What is this dependency- DCD/sparse-DAX series ?
+> > 
+> > > 
+> > > The branch is also available at:
+> > > 
+> > >   https://github.com/anisa-su993/anisa-ndctl/tree/dcd-2026-05-21
+> > > 
+> > > Based on pmem/pending commit:
+> > > 
+> > >   bbd403a test/cxl-sanitize: avoid sanitize submit/wait race
+> > > 
+> > > [1] https://lore.kernel.org/nvdimm/20250413-dcd-region2-v5-0-fbd753a2e0e8@intel.com/
+> > > 
+> > > ---
+> > > Changes in v6:
+> > > - anisa: New patch — daxctl --uuid option + daxctl_dev_set_uuid() helper
+> > > - anisa: Rewrite cxl/test DCD tests against the post-redesign kernel
+> > >          (uuid sysfs claim, tag-group atomic release, cross-More
+> > >          uniqueness, alignment rejection, DC size-grow refusal)
+> > > - anisa: Rebase onto bbd403a (pmem/pending)
+> > > - Link to v5: https://lore.kernel.org/nvdimm/20250413-dcd-region2-v5-0-fbd753a2e0e8@intel.com/
+> > > 
+> > > Changes in v5:
+> > > - iweiny: Adjust all code to view only the dynamic RAM A partition
+> > > - Alison: s/tag/uuid/ in region query extent output
+> > > - Link to v4: https://patch.msgid.link/20241214-dcd-region2-v4-0-36550a97f8e2@intel.com
+> > > 
+> > > Anisa Su (1):
+> > >   daxctl: Add --uuid option to create-device for DC regions
+> > > 
+> > > Ira Weiny (6):
+> > >   ndctl: Dynamic Capacity additions for cxl-cli
+> > >   libcxl: Add Dynamic RAM A partition mode support
+> > >   cxl/region: Add cxl-cli support for dynamic RAM A
+> > >   libcxl: Add extent functionality to DC regions
+> > >   cxl/region: Add extent output to region query
+> > >   cxl/test: Add Dynamic Capacity tests
+> > > 
+> > >  Documentation/cxl/cxl-list.txt                |   29 +
+> > >  Documentation/cxl/lib/libcxl.txt              |   33 +-
+> > >  Documentation/daxctl/daxctl-create-device.txt |   12 +
+> > >  cxl/filter.h                                  |    3 +
+> > >  cxl/json.c                                    |   67 +
+> > >  cxl/json.h                                    |    3 +
+> > >  cxl/lib/libcxl.c                              |  181 +++
+> > >  cxl/lib/libcxl.sym                            |    9 +
+> > >  cxl/lib/private.h                             |   14 +
+> > >  cxl/libcxl.h                                  |   21 +-
+> > >  cxl/list.c                                    |    3 +
+> > >  cxl/memdev.c                                  |    4 +-
+> > >  cxl/region.c                                  |   27 +-
+> > >  daxctl/device.c                               |   72 +-
+> > >  daxctl/lib/libdaxctl.c                        |   44 +
+> > >  daxctl/lib/libdaxctl.sym                      |    5 +
+> > >  daxctl/libdaxctl.h                            |    1 +
+> > >  test/cxl-dcd.sh                               | 1267 +++++++++++++++++
+> > >  test/meson.build                              |    2 +
+> > >  util/json.h                                   |    1 +
+> > >  20 files changed, 1771 insertions(+), 27 deletions(-)
+> > >  create mode 100644 test/cxl-dcd.sh
+> > > 
+> > > 
+> > > base-commit: bbd403a03fa2a1551c1a10bbf78f32027c718758
+> > > -- 
+> > > 2.43.0
+> > > 
+> > 
