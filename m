@@ -1,278 +1,191 @@
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010002.outbound.protection.outlook.com [52.101.56.2])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B1B280A56;
-	Thu, 18 Jun 2026 17:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.2
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781803482; cv=fail; b=pgWg3Zv/ins423/wb1zW3OWtkJX9Veh7gM73EKPLLed4AC5izY3zjV/FlczE7g+a2VrPL8NXKU0pkWkuUnhFY28DPTyeKq9K5NkeOnjRVJiAbe4IkwEupUqfENR4N5phRTf6/kJrY3DG63JDYR7dajfzH9g2X/jmywwAYlu57EI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781803482; c=relaxed/simple;
-	bh=BfzjSc63FwBZPueoci0VJ1WLLfFoV+txwsPw/Ssr+Xg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cWUl+9vQXJtoZvqhLPMdpX3empy824g1JwyaoA3/jO/I4ja8jGyLqBeLSHiOluL6qqWA/DOvmRVnZ5xSzzYAgYiCVBh0Avr65BzMhbTmrcSkVarAu2A8y5pK3WQfz0yBJugsM7IKMLyQAdmv1jbp2edKDtgG9Y73W+dk45ZqIZc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NFJOakan; arc=fail smtp.client-ip=52.101.56.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE07313E36
+	for <linux-cxl@vger.kernel.org>; Thu, 18 Jun 2026 18:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781807263; cv=none; b=BLCNvRuHry0nWVRSKZfc0o5HflN+SulaSuwEjoWJHx83wex+fXHdYLr9/Q4q7t3q1Bib7X3E4Ml48nYWxtsR3Ilwr8F1ackivrthqCagDCPILs4UcsN9wzHTFfINs3uoUF5wwAaGoahmR9ax6xaZJS2DJYHPz1S4MBDS0LHrlNY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781807263; c=relaxed/simple;
+	bh=tjzOfcF9ze7WuSoiKjrMVJXg284zMiNTYwFQE8chGSo=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=ClS1ad0j/v1i3nT5eui3xk2LqPt02SpLmdDfvYOrcpgmuknZM5CypiogvYhgX+vXZ8kJQh7TS65iJLDzY6sJxzZKatyO9HmKJoylm05TxXWczhuSMz/BIqhnzm+G/KV5DOn7pSjx6lxz5ql1Wgp4V9XRVNwvmjBq8EzFfINOBNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FIw/Su9M; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NFJOakan"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=R7F7YiyhxiVHbgE1qp7eDRqAGa3Fhecs5sfG6vJh6E2KjWljyv0532ynZKz06cMsnUAgUw5XrrkAMRAaW3Vt3UtzAFo19qGAvDxu9iKpIB09D2p1bBNCbr3vUtuPSj5nCBcHDwAvwDYd+b4UTXQWVxO7KgefhrMc8aJ9Mgvjt/G7kB39oisCvDxOh0amLiNUfULxAM08dU1XvsgWKlytKVliv7sPiteTNjr+RlNIOa3PIKvY2Aw49EWDzAo/E2g1j/yFLFpmOBQ9C+5HTXE1Fe5sjmqhpuLUFeKGNbINSiNv6tA30D5bU2YuGmk1E4IAskBs98C5BKyLU6d3D/MNCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QDQbikAnb7EG98f9l8ft7l3MvDMlev9j0KhpyYB3fBA=;
- b=UZzymi0lSuXTOqcoLn/hg69gJXfuQqDZ9/OJbPkH32mTc4FEUTFam+0KvElD9nj6KbnWHuEEOVtxvdATVuwVGpMewvlVWNkizdgyjmRe5R9JXsMaXAOuZPOwNuYo47eEWySLXIpqs+ryO1f5IE5ObV6zUBX87eAjtEzz7Az4x2w3CIYlc9cIdceHoCT+bXZ97yW7pqRG9NIVLATlFmQp8Us17WOT1pEYb8hkXBnmJyM8lv4vTtbBtZzzako6eQwzlnunzCunqyVGbzMPK4STffS3MNVXvjvRvsEld6tAFGrF7kSyMTK2YKnYaTwjMv7+8vwa2YYi9DXFXl4pGoYkMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QDQbikAnb7EG98f9l8ft7l3MvDMlev9j0KhpyYB3fBA=;
- b=NFJOakanaw4OyHXo6588Cm8sbOLcKPf0F2VOz16f/Gp3w3Pc6jIjpra7/C5OtGbnMkVfWm7GVxmFTpzZK53ahVLG/CGslYvA+U9Ch9zqBG3J4icjKIScq6KcFI1+EVPdWamz6bNYVE0Wp3NqIROl0L1DnEvIKfb7+GcACngMcgs=
-Received: from SA0PR11CA0123.namprd11.prod.outlook.com (2603:10b6:806:131::8)
- by SA3PR12MB8802.namprd12.prod.outlook.com (2603:10b6:806:314::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.12; Thu, 18 Jun
- 2026 17:24:32 +0000
-Received: from SA2PEPF00003AEA.namprd02.prod.outlook.com
- (2603:10b6:806:131:cafe::83) by SA0PR11CA0123.outlook.office365.com
- (2603:10b6:806:131::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.139.11 via Frontend Transport; Thu,
- 18 Jun 2026 17:24:32 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SA2PEPF00003AEA.mail.protection.outlook.com (10.167.248.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.139.8 via Frontend Transport; Thu, 18 Jun 2026 17:24:31 +0000
-Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 18 Jun
- 2026 12:24:31 -0500
-Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb10.amd.com
- (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 18 Jun
- 2026 12:24:31 -0500
-Received: from galena-46a8.xcblab.xilinx.com (10.180.168.240) by
- satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.41 via Frontend Transport; Thu, 18 Jun 2026 12:24:30 -0500
-From: <alejandro.lucero-palau@amd.com>
-To: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>, <djbw@kernel.org>,
-	<edward.cree@amd.com>, <davem@davemloft.net>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <edumazet@google.com>, <dave.jiang@intel.com>
-CC: Alejandro Lucero <alucerop@amd.com>
-Subject: [PATCH v28 5/5] sfc: support pio mapping based on cxl
-Date: Thu, 18 Jun 2026 19:18:06 +0100
-Message-ID: <20260618181806.118745-6-alejandro.lucero-palau@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260618181806.118745-1-alejandro.lucero-palau@amd.com>
-References: <20260618181806.118745-1-alejandro.lucero-palau@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FIw/Su9M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1781807261; x=1813343261;
+  h=message-id:date:mime-version:to:cc:from:subject:
+   content-transfer-encoding;
+  bh=tjzOfcF9ze7WuSoiKjrMVJXg284zMiNTYwFQE8chGSo=;
+  b=FIw/Su9MNbcwoOK7yXc3U6QawBJltxDrElvLjE96QAZw/yDIeDz6w+V5
+   6CrG64WRxLw8QFpt8G2WDKdUiUEF+MW9g/Jxx0F/u69vO5f2NNiI5Gps1
+   aYJaHkOIayyONKNinKYOdw/I/76hyoFlO99HzJPveZY26qe1M9PGffCYK
+   VpjLseTdRZKxEaUAR9ZsY1zqnd9/5WCOqocxXupOy5xrhNtrAmU1AFULv
+   /9mjt+sqNbj6t5xYvBJ6H/kRNI8dwtuw4P2K16meynNAR52EF8qdjG+1w
+   aOFj7Gkq5XCxduOvT+CjI+hZRnNR6Fq6L1kOAD/kw0WbH6WOxoR5fVAAE
+   Q==;
+X-CSE-ConnectionGUID: 2tR6nGh+REiY3o/Lx7LfTA==
+X-CSE-MsgGUID: qNiAP4PjSTCbmKKzYhKoWg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11821"; a="100081346"
+X-IronPort-AV: E=Sophos;i="6.24,212,1774335600"; 
+   d="scan'208";a="100081346"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2026 11:27:41 -0700
+X-CSE-ConnectionGUID: 9R7pDNTMRJCapJQ8wSo25Q==
+X-CSE-MsgGUID: BsfAqQZAQVeFDJnI4oEA3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,212,1774335600"; 
+   d="scan'208";a="244089229"
+Received: from lstrano-mobl6.amr.corp.intel.com (HELO [10.125.111.229]) ([10.125.111.229])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2026 11:27:40 -0700
+Message-ID: <a2506e5e-9159-4f8e-86de-4a11e88522a8@intel.com>
+Date: Thu, 18 Jun 2026 11:27:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003AEA:EE_|SA3PR12MB8802:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6192a44-4010-44fa-0a2a-08decd5e75ad
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|23010399003|1800799024|36860700016|82310400026|3023799007|18002099003|22082099003|56012099006|11063799006|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	Ovsd8M+DLCqedcXOvLjLWI0hArluq+4VXp6Z6jRPXFTQPleOVtSv8Hxw3BLbNYh0NR75u9M0jq5saJdkPXI3v8F9tM1M9NoUh15Tqjvbf2JQqeonxyUXB/hm5jKDI/PS0l3tMo2cybtOym9I2o+Eis+b70IM5E/mufvD8z78JpR84DcD7TyjIV2R/oHAqUJZ7vLHvd7r1va7mBtu1f++Ea4pOnZa0G6Difhtx89F2BCxpC2rujX2Wsm9rq6g0KKyCYedCqjPZ48RaEM0MlkHxDjcp+qPb5SCsUZu9UcQLKPkJ81iWt8LNPzD0uDEDbFbhr4+bcpDSyfqyyjz65Wl1aRVyti5xymBE0PWPDPrw9S6I6iCryPNtwnUgQJVoD8xh4C6q4euFwZkDF1vTEtbcIr++cIBovhTuFLV3/AbZGlYY5sRgglTyNTRwsIMJIi8jfhOOM3Nqg9Jz/yWigKiBcFUXZ6+U17CwMjoti9d5Gcx113ihxq+0CFJ4AmeqF9GY31ZyWf57ivFPWVBmSudQZEXSMqLF/+JIogVF/sCldPyD9CfpSiBOvLguGV6u2E9rBmd8t9g01B2E395fj0jdgu99bOmd4AVPB2eTObq9Bn2lPFvR1/luvRqajSkgLZBte5kynfbF2ZIPBjsXV/xYYZ1HSrOH5QhET05kxUZyovapl2UJ9uExXhKjWns/xQDlWEjSU/xgsb9L5ex44cke1veLVVeIL1KdZf+oi/U7eg=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(23010399003)(1800799024)(36860700016)(82310400026)(3023799007)(18002099003)(22082099003)(56012099006)(11063799006)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	xbsC3WJ+AGr8C4qI+afQo4ZdiWMsGH6DETBS1/G0hIqESrq+cPkgSGqRs4etd9TTpNPP49siCgIkKlUKvCnpihIY7jcTx0NqtYRrtRhtOuPff1jMvdpjucZA0jylvIa2vzdL9DSzb/395ELllDJISRYVybjm7PmzxmhJ7k3fg6Rdv8wKR8hBTZEzIm5nlJnkU4il9+rNrk2TcY/MoRDxo72fmQH8lZ/+Qf/cD7nVzp2EswXzNP0Rl9PbZUe5QM3pi2H2ha6vE9uyFqm4hikKUQLMGEP5lhy+uuzgm1KceHQv/hBcWM9pV4zfTCbGTsMcc9sBMIyZfgoUNgZcRbEQIvPX+wzt1X7Tb0/OGLNRjtpragNFjGpSlkKDLP1iW0uXWa9ZnSd1DhL4M13FewUTuuhNarBkMiCBcqt0AlRrUpGLI5WHf2Sm9X5z6IoqcQLZ
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2026 17:24:31.7721
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6192a44-4010-44fa-0a2a-08decd5e75ad
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003AEA.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8802
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ Dan Williams <djbw@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
+ Li Ming <ming.li@zohomail.com>
+From: Dave Jiang <dave.jiang@intel.com>
+Subject: [GIT PULL] Compute Express Link (CXL) changes for 7.2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Alejandro Lucero <alucerop@amd.com>
+Hi Linus, please pull from:
 
-A PIO buffer is a region of device memory to which the driver can write a
-packet for TX, with the device handling the transmit doorbell without
-requiring a DMA for getting the packet data, which helps reducing latency
-in certain exchanges. With CXL mem protocol this latency can be lowered
-further.
+git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-for-7.2
 
-With a device supporting CXL and successfully initialised, use the cxl
-region to map the memory range and use this mapping for PIO buffers.
+...to receive a collection of CXL fixes and changes, including an update to
+MAITAINERS to add Ming Li as a CXL subsystem reviewer. There's also a series
+to introduce devm_cxl_probe_mem() core API in order to pave the way for CXL
+type2 device drivers to setup and retrieve CXL region resource during probe.
 
-Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+These have all appeared in -next for a few days with no reported issues.
+
 ---
- drivers/net/ethernet/sfc/ef10.c       | 41 ++++++++++++++++++++++-----
- drivers/net/ethernet/sfc/efx.h        |  1 -
- drivers/net/ethernet/sfc/efx_cxl.c    |  1 +
- drivers/net/ethernet/sfc/net_driver.h |  1 +
- drivers/net/ethernet/sfc/nic.h        |  3 ++
- 5 files changed, 39 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
-index 7e04f115bbaa..73bc064929f6 100644
---- a/drivers/net/ethernet/sfc/ef10.c
-+++ b/drivers/net/ethernet/sfc/ef10.c
-@@ -24,6 +24,7 @@
- #include <linux/wait.h>
- #include <linux/workqueue.h>
- #include <net/udp_tunnel.h>
-+#include "efx_cxl.h"
- 
- /* Hardware control for EF10 architecture including 'Huntington'. */
- 
-@@ -106,7 +107,7 @@ static int efx_ef10_get_vf_index(struct efx_nic *efx)
- 
- static int efx_ef10_init_datapath_caps(struct efx_nic *efx)
- {
--	MCDI_DECLARE_BUF(outbuf, MC_CMD_GET_CAPABILITIES_V4_OUT_LEN);
-+	MCDI_DECLARE_BUF(outbuf, MC_CMD_GET_CAPABILITIES_V7_OUT_LEN);
- 	struct efx_ef10_nic_data *nic_data = efx->nic_data;
- 	size_t outlen;
- 	int rc;
-@@ -177,6 +178,12 @@ static int efx_ef10_init_datapath_caps(struct efx_nic *efx)
- 			  efx->num_mac_stats);
- 	}
- 
-+	if (outlen < MC_CMD_GET_CAPABILITIES_V7_OUT_LEN)
-+		nic_data->datapath_caps3 = 0;
-+	else
-+		nic_data->datapath_caps3 = MCDI_DWORD(outbuf,
-+						      GET_CAPABILITIES_V7_OUT_FLAGS3);
-+
- 	return 0;
- }
- 
-@@ -1140,6 +1147,9 @@ static int efx_ef10_dimension_resources(struct efx_nic *efx)
- 	unsigned int channel_vis, pio_write_vi_base, max_vis;
- 	struct efx_ef10_nic_data *nic_data = efx->nic_data;
- 	unsigned int uc_mem_map_size, wc_mem_map_size;
-+#ifdef CONFIG_SFC_CXL
-+	struct efx_probe_data *probe_data;
-+#endif
- 	void __iomem *membase;
- 	int rc;
- 
-@@ -1263,8 +1273,23 @@ static int efx_ef10_dimension_resources(struct efx_nic *efx)
- 	iounmap(efx->membase);
- 	efx->membase = membase;
- 
--	/* Set up the WC mapping if needed */
--	if (wc_mem_map_size) {
-+	if (!wc_mem_map_size)
-+		goto skip_pio;
-+
-+	/* Set up the WC mapping */
-+
-+#ifdef CONFIG_SFC_CXL
-+	probe_data = container_of(efx, struct efx_probe_data, efx);
-+	if ((nic_data->datapath_caps3 &
-+	    (1 << MC_CMD_GET_CAPABILITIES_V7_OUT_CXL_CONFIG_ENABLE_LBN)) &&
-+	    probe_data->cxl_pio_initialised) {
-+		/* Using PIO through CXL mapping */
-+		nic_data->pio_write_base = probe_data->cxl->ctpio_cxl;
-+		nic_data->pio_write_vi_base = pio_write_vi_base;
-+	} else
-+#endif
-+	{
-+		/* Using legacy PIO BAR mapping */
- 		nic_data->wc_membase = ioremap_wc(efx->membase_phys +
- 						  uc_mem_map_size,
- 						  wc_mem_map_size);
-@@ -1279,12 +1304,14 @@ static int efx_ef10_dimension_resources(struct efx_nic *efx)
- 			nic_data->wc_membase +
- 			(pio_write_vi_base * efx->vi_stride + ER_DZ_TX_PIOBUF -
- 			 uc_mem_map_size);
--
--		rc = efx_ef10_link_piobufs(efx);
--		if (rc)
--			efx_ef10_free_piobufs(efx);
- 	}
- 
-+	rc = efx_ef10_link_piobufs(efx);
-+	if (rc)
-+		efx_ef10_free_piobufs(efx);
-+
-+skip_pio:
-+
- 	netif_dbg(efx, probe, efx->net_dev,
- 		  "memory BAR at %pa (virtual %p+%x UC, %p+%x WC)\n",
- 		  &efx->membase_phys, efx->membase, uc_mem_map_size,
-diff --git a/drivers/net/ethernet/sfc/efx.h b/drivers/net/ethernet/sfc/efx.h
-index 45e191686625..057d30090894 100644
---- a/drivers/net/ethernet/sfc/efx.h
-+++ b/drivers/net/ethernet/sfc/efx.h
-@@ -236,5 +236,4 @@ static inline bool efx_rwsem_assert_write_locked(struct rw_semaphore *sem)
- 
- int efx_xdp_tx_buffers(struct efx_nic *efx, int n, struct xdp_frame **xdpfs,
- 		       bool flush);
--
- #endif /* EFX_EFX_H */
-diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-index 3e7c950f83e9..348d7404cd7a 100644
---- a/drivers/net/ethernet/sfc/efx_cxl.c
-+++ b/drivers/net/ethernet/sfc/efx_cxl.c
-@@ -88,6 +88,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
- 		return -ENOMEM;
- 	}
- 
-+	probe_data->cxl_pio_initialised = true;
- 	probe_data->cxl = cxl;
- 
- 	return 0;
-diff --git a/drivers/net/ethernet/sfc/net_driver.h b/drivers/net/ethernet/sfc/net_driver.h
-index de3fc9537662..3964b2c56609 100644
---- a/drivers/net/ethernet/sfc/net_driver.h
-+++ b/drivers/net/ethernet/sfc/net_driver.h
-@@ -1213,6 +1213,7 @@ struct efx_probe_data {
- 	struct efx_nic efx;
- #ifdef CONFIG_SFC_CXL
- 	struct efx_cxl *cxl;
-+	bool cxl_pio_initialised;
- #endif
- };
- 
-diff --git a/drivers/net/ethernet/sfc/nic.h b/drivers/net/ethernet/sfc/nic.h
-index ec3b2df43b68..7480f9995dfb 100644
---- a/drivers/net/ethernet/sfc/nic.h
-+++ b/drivers/net/ethernet/sfc/nic.h
-@@ -152,6 +152,8 @@ enum {
-  *	%MC_CMD_GET_CAPABILITIES response)
-  * @datapath_caps2: Further Capabilities of datapath firmware (FLAGS2 field of
-  * %MC_CMD_GET_CAPABILITIES response)
-+ * @datapath_caps3: Further Capabilities of datapath firmware (FLAGS3 field of
-+ * %MC_CMD_GET_CAPABILITIES response)
-  * @rx_dpcpu_fw_id: Firmware ID of the RxDPCPU
-  * @tx_dpcpu_fw_id: Firmware ID of the TxDPCPU
-  * @must_probe_vswitching: Flag: vswitching has yet to be setup after MC reboot
-@@ -187,6 +189,7 @@ struct efx_ef10_nic_data {
- 	bool must_check_datapath_caps;
- 	u32 datapath_caps;
- 	u32 datapath_caps2;
-+	u32 datapath_caps3;
- 	unsigned int rx_dpcpu_fw_id;
- 	unsigned int tx_dpcpu_fw_id;
- 	bool must_probe_vswitching;
--- 
-2.34.1
+The following changes since commit e43ffb69e0438cddd72aaa30898b4dc446f664f8:
 
+  Linux 7.1-rc6 (2026-05-31 15:14:24 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-for-7.2
+
+for you to fetch changes up to f72af41a43e16276c46d44cf8a833cc0f9ba9d48:
+
+  Merge branch 'for-7.2/cxl-type2-attach-region' into cxl-for-next (2026-06-12 13:47:53 -0700)
+
+----------------------------------------------------------------
+CXL changes for v7.2
+
+Introduce devm_cxl_probe_mem(), in prep for type2 basic enabling:
+cxl: Add dummy function for cxl_memdev_attach_region for !CONFIG_CXL_REGION
+cxl/region: Introduce devm_cxl_probe_mem()
+cxl/memdev: Introduce cxl_class_memdev_type
+cxl/memdev: Pin parents for entire memdev lifetime
+cxl/region: Resolve region deletion races
+cxl/region: Block region delete during region creation
+
+CXL Misc:
+cxl/region: Fill first free targets[] slot during auto-discovery
+cxl/region: Fix out-of-bounds access in cxl_cancel_auto_attach()
+tools/testing/cxl: Resolve auto-region decoder targets like real HW
+cxl: Align interleave decode/encode helpers with their callers
+cxl/test: Add check after kzalloc() memory in alloc_mock_res()
+cxl/test: Unregister cxl_acpi in cxl_test_init() error path
+cxl/test: Zero out LSA backing memory to avoid leaking to user
+cxl/test: Fix integer overflow in mock LSA bounds checks
+cxl/test: Verify cmd->size_in before accessing payload
+cxl/port: update reference to removed CONFIG_PROVE_CXL_LOCKING
+cxl/region: Avoid variable shadowing in region attach paths
+cxl: Fix CXL_HEADERLOG_SIZE to match RAS Capability size
+cxl/test: Fix __fortify_panic
+cxl/fwctl: Fix __fortify_panic
+MAINTAINERS: Add CXL reviewer
+cxl/test: Enforce PMD alignment for volatile mock regions
+cxl/region: Validate partition index before array access
+cxl/memdev: Hold memdev lock during memdev poison injection/clear
+
+CXL PCI fixes:
+cxl/pci: Convert PCIBIOS errors to errno on DVSEC config accesses
+cxl/pci: Fix the incorrect check of pci_read_config_word() return
+
+----------------------------------------------------------------
+Alison Schofield (3):
+      MAINTAINERS: Add CXL reviewer
+      cxl/region: Avoid variable shadowing in region attach paths
+      cxl: Align interleave decode/encode helpers with their callers
+
+Dan Williams (7):
+      cxl/fwctl: Fix __fortify_panic
+      cxl/test: Fix __fortify_panic
+      cxl/region: Block region delete during region creation
+      cxl/region: Resolve region deletion races
+      cxl/memdev: Pin parents for entire memdev lifetime
+      cxl/memdev: Introduce cxl_class_memdev_type
+      cxl/region: Introduce devm_cxl_probe_mem()
+
+Dave Jiang (10):
+      cxl/pci: Fix the incorrect check of pci_read_config_word() return
+      cxl/pci: Convert PCIBIOS errors to errno on DVSEC config accesses
+      cxl/test: Verify cmd->size_in before accessing payload
+      cxl/test: Fix integer overflow in mock LSA bounds checks
+      cxl/test: Zero out LSA backing memory to avoid leaking to user
+      cxl/test: Unregister cxl_acpi in cxl_test_init() error path
+      cxl/test: Add check after kzalloc() memory in alloc_mock_res()
+      Merge branch 'for-7.2/cxl-misc' into cxl-for-next
+      cxl: Add dummy function for cxl_memdev_attach_region for !CONFIG_CXL_REGION
+      Merge branch 'for-7.2/cxl-type2-attach-region' into cxl-for-next
+
+Ethan Nelson-Moore (1):
+      cxl/port: update reference to removed CONFIG_PROVE_CXL_LOCKING
+
+Koba Ko (1):
+      cxl/region: Validate partition index before array access
+
+Li Ming (3):
+      cxl/memdev: Hold memdev lock during memdev poison injection/clear
+      cxl/region: Fix out-of-bounds access in cxl_cancel_auto_attach()
+      cxl/region: Fill first free targets[] slot during auto-discovery
+
+Richard Cheng (2):
+      cxl/test: Enforce PMD alignment for volatile mock regions
+      tools/testing/cxl: Resolve auto-region decoder targets like real HW
+
+Terry Bowman (1):
+      cxl: Fix CXL_HEADERLOG_SIZE to match RAS Capability size
+
+ MAINTAINERS                            |   1 +
+ drivers/cxl/acpi.c                     |  10 +-
+ drivers/cxl/core/core.h                |   2 +
+ drivers/cxl/core/features.c            |   2 +-
+ drivers/cxl/core/memdev.c              |  20 ++-
+ drivers/cxl/core/pci.c                 |  26 ++--
+ drivers/cxl/core/port.c                |   7 +-
+ drivers/cxl/core/ras.c                 |  27 +++-
+ drivers/cxl/core/region.c              | 270 +++++++++++++++++++++++++--------
+ drivers/cxl/core/trace.h               |  24 ++-
+ drivers/cxl/cxl.h                      |  28 +++-
+ drivers/cxl/cxlmem.h                   |  34 ++++-
+ drivers/cxl/mem.c                      | 105 ++++++++++---
+ drivers/cxl/pci.c                      |   2 +-
+ drivers/cxl/port.c                     |   2 +-
+ include/cxl/cxl.h                      |   3 +
+ tools/testing/cxl/test/cxl.c           |  41 +++--
+ tools/testing/cxl/test/cxl_translate.c |   2 +-
+ tools/testing/cxl/test/mem.c           |  47 ++++--
+ 19 files changed, 495 insertions(+), 158 deletions(-)
