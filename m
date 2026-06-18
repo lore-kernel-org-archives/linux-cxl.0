@@ -1,172 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013065.outbound.protection.outlook.com [40.93.201.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F7245BE3;
-	Thu, 18 Jun 2026 17:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781803248; cv=none; b=EpKQ+HpqhTMDntI3etK7Oz1DetNpBC0dyjenu7VdR1gyw+vuSx8w+ylJRXR1Dv7VXhWNThB8AmOzJUXCOWx2ZrRiopyVx73xgkeIT4vVunhVgAY/xoYC2vcwuHufrV3xtix20s1rRWdFibXhCXO8nFfgyjD0i7MCLRsK6s0U8+M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781803248; c=relaxed/simple;
-	bh=TsUXD5p6U8oIvncABKXGmgWde+y60xdQXHMoTHTMARo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YF49/zcEE3U3ijyor2CCc5yRZ5N8WryXz3w5CXVjXEMDkqFO9zkzDT3jX0IDmih8ZKn6aSExTa9YdFVQWFhiP+TosuSfZ4nK/w5h9HgTRYCYfMRpC26IWocFGYsklpelL3GtDK3uHjfqWnr7FytE2ThpA6keVCCnp2aC8m1iEyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N18nluRd; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BC24D8CE;
+	Thu, 18 Jun 2026 17:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1781803473; cv=fail; b=L+4Mf/IMkSovR3kMHhIEoKFA9TbCDUO12EDtEbBWnlokHsHYkF0ho99vbO3TGEiwcHhVQZ4yzjJcBkSM/cajzJASeL0F1hLvsSdqlf1UWFF9xziHwFdEiIQOsafQVcs3oy5/pRV6I69Z9pAHvE7Cmsz+050KrauNcH1P9rE/IvE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1781803473; c=relaxed/simple;
+	bh=+6CwJlBptDeXFGCldN3wkTwBHQVaO8U64/w9xyZVy7g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PqkHF17VCgAWDzruF5zGp+hkjGNAjMj/I47xQHG+zruvSUKxetp7kYC89b5dYpWJICLetkSBLpeRbB9cKPVzMP48Cpw/9LMpzEN1otYb7mFNwp4NqMEUwNbXkd12osef3dpM7pFtgarfPCogZgZjg/VZWmXMsGoC/vTcwUnlv8A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mWcrFe7V; arc=fail smtp.client-ip=40.93.201.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N18nluRd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 535241F000E9;
-	Thu, 18 Jun 2026 17:20:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781803247;
-	bh=PFdKfR3A0il21s3EGvhymrAAeETR4xjznPYNJB5Nj3c=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=N18nluRdD0DM6mi9Z9AZWy+9wo2G0LZ/EL5uYoiik9LRIVQRyldrm9gawBr0GDB1O
-	 mC4AZuIKA29TBHUNkIk+AXucyMWe1HcahPj5qacJmW6SmUe1wwOrDOSvcqjqLjPbH9
-	 U5z0NoSxMJ6dDydZNvzVS7sRyVfQpQix/fPPJbOqcxNB+WB60vvPFG0i8EUsSsfSJL
-	 OpCleAKiYMP1coHIH+DFyS6+8ZK/ivDm3d9RMy8SITcRevi+ZXuNbG/EMLn1E5+uHk
-	 BDacktyPUCWrG+mFh3SPasaLcOAThfKr9i/ip7s+Lbtf+P63SDmzamn7EtXHZIdZbM
-	 eynpl+JS7pamQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v2 2/2] PCI/CXL: Enable usage of RDPAS to shortcut
- error device discovery
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dave Jiang" <dave.jiang@intel.com>
-Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
-In-Reply-To: <20260618170723.2010490-3-dave.jiang@intel.com>
-References: <20260618170723.2010490-1-dave.jiang@intel.com>
- <20260618170723.2010490-3-dave.jiang@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 18 Jun 2026 17:20:46 +0000
-Message-Id: <20260618172047.535241F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mWcrFe7V"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uh9FlxVgRwfoVVpeu6YwH95orFES61Afk+1iS14TTU97KroWMEmMEQk2rHrDyeMsHEY2mGr98OkSGSh+xHtA92QkxKG072ihltluK3Q7szlv8+pvWf2pmKBeJTcOvfd++srBaOgfbJDovF9Ji0V4JXHeXgTak/fewz35/6Yl1uNo2DA4fZHRGEy/V+JW3dL9NjxH2wG+V1bwBSZts8BDanDM1zW2eEMFi9DXKDoSYRq7Mfj5ymIcifnBEVD3obeKf1E0eIx5QAiKgk8zl20mQau2CnTZVQZiENTY/a/Nime3Uq6rgOS0x/nHlA2t5OwgnWwKlq6gcm3GZsJFUN1wig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ARRokEL9IP2EVu4sYSbmk3TC7pYOGiWnBDRZtGUJ9Uk=;
+ b=LtLYk0vQSATCVqyIN12fVPu4VvFHHTPa18qRwviJj+41AcdqLGlq6RPRhClJYqhvTchHkLWhZ473ubLzZlOsx0JQGPMh7t+ydW2TEurry3+Zp5F12Y1tjdlEM3xhbpGOqQTYB9w05qRHjhXwvLh+qMkJMUhrtfm5xKdz0mlOTyV9bzlYLpsBH2R9TO1r1VEb0VcXgJeM6ChK1JRLsvFmgU/nF5NBapCJNf8IpdFVRwkLcuNJ2rPlOK3g8UJ0eH43yFmGdXSpWc0qSOQOEf9Xpwf9B9M/E2GuH2LFXWukc5ukKkonB0fcw8h1TCIib7dsW5+wNTGDxy3zG6Gte2rHBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ARRokEL9IP2EVu4sYSbmk3TC7pYOGiWnBDRZtGUJ9Uk=;
+ b=mWcrFe7Vq9TYF9SwLpcjp4K9oc29eiSil92r8ziDyEIEx+RSMXX+2/j3UGUDEM2Gg0VxtwnAxsdbeyt9EsRZz/4TTdh6/3EncWELWpYvYEnEEWGcL7bd8wlh3tkX5AKOpjQp7YhglnJ3efTG2Y816KolodCeXl9PuuDiUgQFpeo=
+Received: from SJ0PR03CA0190.namprd03.prod.outlook.com (2603:10b6:a03:2ef::15)
+ by SJ2PR12MB8783.namprd12.prod.outlook.com (2603:10b6:a03:4d0::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.16; Thu, 18 Jun
+ 2026 17:24:25 +0000
+Received: from SJ5PEPF000001D4.namprd05.prod.outlook.com
+ (2603:10b6:a03:2ef:cafe::8b) by SJ0PR03CA0190.outlook.office365.com
+ (2603:10b6:a03:2ef::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.139.13 via Frontend Transport; Thu,
+ 18 Jun 2026 17:24:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ SJ5PEPF000001D4.mail.protection.outlook.com (10.167.242.56) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.139.8 via Frontend Transport; Thu, 18 Jun 2026 17:24:24 +0000
+Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 18 Jun
+ 2026 12:24:23 -0500
+Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb10.amd.com
+ (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 18 Jun
+ 2026 12:24:23 -0500
+Received: from galena-46a8.xcblab.xilinx.com (10.180.168.240) by
+ satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.41 via Frontend Transport; Thu, 18 Jun 2026 12:24:22 -0500
+From: <alejandro.lucero-palau@amd.com>
+To: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>, <djbw@kernel.org>,
+	<edward.cree@amd.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <edumazet@google.com>, <dave.jiang@intel.com>
+CC: Alejandro Lucero <alucerop@amd.com>
+Subject: [PATCH v28 0/5] Type2 device basic support
+Date: Thu, 18 Jun 2026 19:18:01 +0100
+Message-ID: <20260618181806.118745-1-alejandro.lucero-palau@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D4:EE_|SJ2PR12MB8783:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6e50c465-e56e-4594-3424-08decd5e71ac
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|23010399003|36860700016|376014|56012099006|11063799006|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	ROZoaU3/sw7Bl2svzulurbpNvdAfsEfEzd/KMfiX6sx9dt3BdhJp0Zhd5LqpooWjqBQTjtKKPh1jDbR4BSddWpzvBvi+wiP9raBke8WxpUU+x8F0JHgl/iQSQq7P6JgsoBtSoDEm9pd5aH4qee9LJAJXXlXJxKlixgyKOsPmnN+kjDGo69FYKi0U7C/ig8WBihneA6QbG9oUn2wWV2FUm8c+WMcyfp7d7Gqkp955lQFsgKH1LWueW0+0Z/MHIDx1IEUhuHK6eJUVEsfHYPXld745KrSAlX8fnxzOKC9vHnlNvysBpcDjYPFm03ZWdjTHiVgrlp2i/RcIasq/yARtN8p1/ysuySPJJE96wemH64eTGfIem6FJVGTlFlNStlGbzJBTPvDN4f0id0N15QWepNAgYcDFhVSjfKtkH9BDZ72PNweMjcPAwqNAyIxEYLtFSV7GwaE8adDUryA8OU0KV8bf18tr54uDsTWRP1sSNLKmWKrLhj6YkwD6XNoD+M6PXILMV84Y9pR1vRHWTMHjZxCOJxV5tOtl40IK41OLMvEDIj4fEOT35PKQN26uz4D1fW9bWI+RsccBRxjP+8w3eNXsSlvwF9qOrK8eNI8ZxLhdnHtJgWiV1TMAKOK3MoN76qx61vOfZTNv7RPYBWVops9rVFZIgCKmWfdXBbYSb72ns3w/Hpbv/ElX0XNXjOBD7V7GJo0QWakOw9NMiPQOHgGxg495/0e6KHq3YoLg4p4=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(23010399003)(36860700016)(376014)(56012099006)(11063799006)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	DOBoIrsy5Q/82O2A3XiJ742NUOg1a943xuxJyFiG0IDhAZIn08gIy4fHC0f3J2yrlRlX06wZWg6zF/tz2wWzvutLIXYqbNlHuMvTOEUkNpAc3hE5/2FwyhND2Bw4iVTEp6E32vxjq6ZRwTFLX9KRwdJANFjUsv1/bnOZgVGBb7oUYpvl0grcZfsSxRPkKotrtW6lkD+uXICVSKBbzt2pLYyWqA6FmPSvx9RtVvvCusY/qk7spaTQnQ0c5INoTZ2Tn/2qChs9SfHQG0QwB98clCmUcvKteWdGisnCyroj15O0oQdN2g0tDi+bwpBVIoMYbwQqxbXlnqSAsCeOICqV/DFigSB7e4T5uBy/Zgk9j6FRTy4/dKml9r23soKhp3XZOu4t7EM2TvO4cVrEJf062I+Jvd3fqhj1sqxdSt0QF+2r+8NpEVdrkMzPQEpPZIn2
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2026 17:24:24.9576
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e50c465-e56e-4594-3424-08decd5e71ac
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001D4.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8783
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] Incorrect fall-through logic in `cxl_rch_get_err_src_id()` extract=
-s and returns the wrong error source ID for correctable errors.
-- [High] The RDPAS list is built concurrently without locking and traversed=
- locklessly in the AER error handler, exposing readers to partially built l=
-ists or list corruption.
-- [Low] The function `cxl_forward_error` is invoked but is neither declared=
- nor defined anywhere in the kernel.
---
+From: Alejandro Lucero <alucerop@amd.com>
 
-commit e9dabb60b82f98b2295a3d242546827da2279bbf
-Author: Dave Jiang <dave.jiang@intel.com>
+This series adds the last bits for allowing a CXL Type2 driver to obtain
+a CXL region linked to the device HDM decoders committed by the BIOS,
+with the driver being the sfc network driver.
 
-PCI/CXL: Enable usage of RDPAS to shortcut error device discovery
+Changes from v27:
 
-This commit changes the CXL RCH error handler to probe the RCRB first to
-see if the error device can be discovered quickly, falling back to iterating
-through RCiEPs if needed. It introduces RDPAS parsing to directly locate the
-RCRB and determine the BDF of the error device.
+ - patch 1: make driver probe failing if error in efx_cxl_init (Dan)
+ - patch 4: add unmapping if error after efx_cxl_init (Dave)
+ - patch 4/5: move cxl_pio_initialised from patch 4 to patch 5 (Dave)
 
-diff --git a/drivers/pci/pcie/aer_cxl_rch.c b/drivers/pci/pcie/aer_cxl_rch.c
---- a/drivers/pci/pcie/aer_cxl_rch.c
-+++ b/drivers/pci/pcie/aer_cxl_rch.c
+Tested in the cxl_for_7.3 branch.
 
-[ ... ]
+Alejandro Lucero (5):
+  sfc: add cxl support
+  cxl/sfc: Map cxl regs
+  cxl/sfc: Initialize dpa without a mailbox
+  sfc: obtain and map cxl range using devm_cxl_probe_mem
+  sfc: support pio mapping based on cxl
 
-> +static u16 cxl_rch_get_err_src_id(u64 rcrb_base, struct aer_err_info *in=
-fo)
-> +{
-> +	u32 root_status, err_src;
+ drivers/cxl/core/core.h               |   2 +
+ drivers/cxl/core/mbox.c               |  51 +------------
+ drivers/cxl/core/memdev.c             |  67 ++++++++++++++++
+ drivers/cxl/core/pci.c                |   1 +
+ drivers/cxl/core/port.c               |   1 +
+ drivers/cxl/core/regs.c               |   1 +
+ drivers/cxl/cxlpci.h                  |  12 ---
+ drivers/cxl/pci.c                     |   1 +
+ drivers/net/ethernet/sfc/Kconfig      |   9 +++
+ drivers/net/ethernet/sfc/Makefile     |   1 +
+ drivers/net/ethernet/sfc/ef10.c       |  41 ++++++++--
+ drivers/net/ethernet/sfc/efx.c        |  18 ++++-
+ drivers/net/ethernet/sfc/efx.h        |   1 -
+ drivers/net/ethernet/sfc/efx_cxl.c    | 105 ++++++++++++++++++++++++++
+ drivers/net/ethernet/sfc/efx_cxl.h    |  32 ++++++++
+ drivers/net/ethernet/sfc/net_driver.h |  10 +++
+ drivers/net/ethernet/sfc/nic.h        |   3 +
+ include/cxl/cxl.h                     |   2 +
+ include/cxl/pci.h                     |  22 ++++++
+ 19 files changed, 309 insertions(+), 71 deletions(-)
+ create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
+ create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
+ create mode 100644 include/cxl/pci.h
 
-[ ... ]
 
-> +	if (info->severity =3D=3D AER_CORRECTABLE &&
-> +	    root_status & PCI_ERR_ROOT_COR_RCV)
-> +		return FIELD_GET(GENMASK(15, 0), err_src);
-> +
-> +	/* Assume at this point the info->severity points to UNCOR */
-> +	if (root_status & PCI_ERR_ROOT_UNCOR_RCV)
-> +		return FIELD_GET(GENMASK(31, 16), err_src);
-> +
-> +	return 0;
-> +}
+base-commit: 9b1e70e8f9ec4b5c6ce7fa774a0023bb6894c686
+-- 
+2.34.1
 
-[Severity: High]
-If this is handling a correctable error but PCI_ERR_ROOT_COR_RCV is not set,
-is it intentional to fall through to the uncorrectable error check?
-
-If an uncorrectable error is concurrently logged in the RCRB status, this
-would return the source ID of the uncorrectable error instead of 0, which
-might misroute the correctable error notification.
-
-Should these severity checks be mutually exclusive using an else block?
-
-> +static bool cxl_rch_forward_error_by_dsp(struct pci_dev *rcec, u64 rcrb_=
-base,
-> +					 struct aer_err_info *info)
-> +{
-
-[ ... ]
-
-> +	if (!is_cxl_mem_dev(pdev) || !cxl_error_is_native(pdev))
-> +		return false;
-> +
-> +	cxl_forward_error(pdev, info);
-
-[Severity: Low]
-Does cxl_forward_error() exist in the kernel tree?
-
-I'm having trouble finding its declaration or definition in the codebase,
-which seems like it might cause an implicit function declaration build fail=
-ure.
-
-> +	return true;
-> +}
-> +
-> +static bool cxl_rch_handled_error_by_rdpas(struct pci_dev *rcec,
-> +					   struct aer_err_info *info)
-> +{
-> +	struct cxl_rdpas_rcec *rdpas_rcec;
-> +	struct cxl_rdpas_entry *entry;
-> +	bool handled =3D false;
-> +
-> +	rdpas_rcec =3D cxl_get_rdpas_by_rcec(rcec);
-> +	if (!rdpas_rcec)
-> +		return false;
-> +
-> +	/*
-> +	 * The RCEC aggregates multiple downstream ports. Each CXL.io
-> +	 * downstream port associated with this RCEC exposes the RCRB at its
-> +	 * base address; walk them all and forward the error from every port
-> +	 * that reports a valid error source.
-> +	 */
-> +	list_for_each_entry(entry, &rdpas_rcec->ports, list) {
-
-[Severity: High]
-Could this lockless list traversal race with the initialization in
-__cxl_parse_rdpas()?
-
-If an asynchronous AER hardware event triggers cxl_rch_handle_error() while
-__cxl_parse_rdpas() is still running, it seems we might walk rdpas_rcec->po=
-rts
-using list_for_each_entry() while it is concurrently being mutated by
-list_add_tail().
-
-Since the rdpas_rcec container is published to the cxl_rdpas xarray before
-the list is fully populated, would this expose readers to partially built
-lists or use-after-free conditions? Additionally, would the lockless check
-of rdpas_parsed in cxl_rdpas_init() allow concurrent probes to race and
-corrupt the list?
-
-> +		if (entry->protocol !=3D ACPI_CEDT_RDPAS_PROTOCOL_IO)
-> +			continue;
-> +
-> +		if (cxl_rch_forward_error_by_dsp(rcec, entry->address, info))
-> +			handled =3D true;
-> +	}
-> +
-> +	return handled;
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260618170723.2010=
-490-1-dave.jiang@intel.com?part=3D2
