@@ -1,251 +1,238 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D0C343881
-	for <linux-cxl@vger.kernel.org>; Thu, 18 Jun 2026 09:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189EC3F166A
+	for <linux-cxl@vger.kernel.org>; Thu, 18 Jun 2026 11:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781775527; cv=none; b=Q+Je+C3HXsq2KvkfG/+JgMaja9jIOBOJ2sn0uTVU2PwUY8nzq0VLfHUmQG65yT5YVQ+TY309YGYgDf32VcheGZxymLkjeAvbSxvmEonU1r9bWT1I1JGdreaLunEXwU7CROQYFEcLrWtDCSvwfR4WsJhHy6IxaI0TIwfZquIGJEE=
+	t=1781781220; cv=none; b=EnufuwER7QmPzeh2Lhjd23TjzgKOklVIHGorKsQ4a3d2UiLAP7v+M5w8ynN537uTEBlvvkZEatW0yQrzw6J//eA4gYfjrxpq13JUELa9Bo2BbXby36WWYJCb9tXlxS/fw2eN+q6Q3w/74p8idsL0E61kTmKocqvVxLQUYW9j1zU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781775527; c=relaxed/simple;
-	bh=EVzJRY9ucbx+/cnsKLI9MjazyYaAtVRXYcBwi2a+rqQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N+KZ0haR71ZmnmBi0zj0yYB5fd6c9hfKMx6BYfSjD9e/fSdlZATnYXIkzf99u1XExZamEJg2w7/kHPdht6id3dj8gxzg9d51yfFXWkkuGZ8ZTz2WbSThpe1EL2KEcl0V1vaicMr1CBFiWDXfJsUMmtoR/UyGZZI/qtYEt5C853U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=WeJTiTaL; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1781781220; c=relaxed/simple;
+	bh=/ZthRalEH02k4ojVZ3SnfwbHBRAbkzip3FcZk3ai2ZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ie01AaP5q31r2XYNFmbx6GekXX0l1f3wlSudExqUNd367SDeVZawPjzfN8F+vs/dF4WtFdJkF5zcOYDnn3YGLbcvMeWJ9HpEYKrR1s0vnHWHTJo3b46ZzaLwrrueIKXNlqJiDaIj3KVTxg/of8kkEjHktDkLwXd2eriGXW1IqvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=qVrxGkqI; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="WeJTiTaL"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1781775517; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=3XQdS48sPXuJmO8K+dNMGNXxL97FmWYc63jMl0VUAiE=;
-	b=WeJTiTaLfT0uyPYt638xJUmfk1Y6ryuKkiMhh9Dd+y+X80xsiU/lxLnM6sHzoHjzhaSkjp4ZE0HmcRfgUa9MYsJIdarT+AqZOWWrelc+6KJBoua/kEihyFqO3Z0Lk3w0C76VW5WlF4mwFxv+MD9RJJ3K3D5+CFx0NJjORWJo01Q=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0X56RwN-_1781775516;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X56RwN-_1781775516 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 18 Jun 2026 17:38:37 +0800
-From: Chen Pei <cp0613@linux.alibaba.com>
-To: jic23@kernel.org,
-	pbonzini@redhat.com,
-	palmer@dabbelt.com,
-	alistair.francis@wdc.com,
-	liwei1518@gmail.com,
-	daniel.barboza@oss.qualcomm.com,
-	zhiwei_liu@linux.alibaba.com,
-	chao.liu.zevorn@gmail.com,
-	sunilvl@ventanamicro.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	imammedo@redhat.com,
-	mst@redhat.com,
-	guoren@kernel.org
-Cc: qemu-riscv@nongnu.org,
-	qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH v2 3/4] hw/riscv/virt,gpex: Provide 32-bit MMIO window for CXL host bridges
-Date: Thu, 18 Jun 2026 17:38:25 +0800
-Message-ID: <20260618093827.3507-4-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260618093827.3507-1-cp0613@linux.alibaba.com>
-References: <20260618093827.3507-1-cp0613@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="qVrxGkqI"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-9157b949fc7so94285585a.3
+        for <linux-cxl@vger.kernel.org>; Thu, 18 Jun 2026 04:13:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1781781218; x=1782386018; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VDILEybOTlA7pWxB3ZppyNLc60d4wQCyVXPTTIKX4iY=;
+        b=qVrxGkqIgKRti1WdVreLtmgf5H9xnscQMSlcHeNRFiazkoarSOS3zLeXdkKdcTIniP
+         ATcFvMqXt0WGc+7TlStzXdIJiTnU8q9n4tgWn3Zf3lMozrjevDF73oskW7Xs6nLa0aUN
+         ecd+GM+2qPz+cgR5G0bhOXCMtVNfgUWcIsusbiRPApzED7zq3vy43q1g4rCRwogII/iB
+         U+N4KIN5EDmo7ZhWKVGsBnOmCYFd3oNS/t6xGJYbs1YBCU1ly1GfU4ESiS16bFVs/eiz
+         Hkafrryp7uubgbW+0o+DQvJfzE+RTXpfAy5itxodFC9higJfgldWt+SRH9JkE1VeOGZu
+         ZbFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1781781218; x=1782386018;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VDILEybOTlA7pWxB3ZppyNLc60d4wQCyVXPTTIKX4iY=;
+        b=Fi//nfKMtB0grC6n+7uTeZsd3rze3ce34WEcKB/xRche+QgFa0t+u3Tu29aprtclbp
+         vP/TOsfO7sx3+IZTTbcSVOxDkhByBpBnMrR9ZnyKGONxIU4pRH0EOHCxAksRffXcVXE2
+         pKuyMOBxvCu/Ryabj/8PZaLd/dDp+k61pe+Dm/3KTPXN96NmyHG8ly3fwIcoSt273rdu
+         8SCTxL5FU6Xip0OeVeT4V9qAc/hw/mDm2agF+yUd1tEU39C7qA2LCe4MGNe9yq//M3Ni
+         qScdZkBGlZ4iFy4HaTDiHq34W50URxGcqlitbVfrHfNUeHFDPVRHZ0TheTg0RyqsLuUa
+         mvLw==
+X-Forwarded-Encrypted: i=1; AFNElJ9jmN6MDDTOLRaepAIyjpMHKTjNVR2hOQfW0MJgByMb33f4/JMebjDJl3wxS8L5rG1VUUMuzz+/bZ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0BwdXBbXCXuX6wlNvHyED0mGovc3hGTiq3zENPxY7tq4fZN7j
+	FyCaYp4apA4xCAb1m82nnc216HYBsod87PwNtJBjwIVhGxUJfpODeGxaAIFb8jb6O14=
+X-Gm-Gg: Acq92OHDmdO8D1E26HdLYpH521CaGbeeU1sJVMTIXtgErHeNAv2wCjZDS9GNQ1soO4R
+	FPkeqwv0YfmcGlb0FF5EeTeuhPP8i3fl8uBfa9H6AJidHNdfNd0Pnf/t2iHE2EQIpcOjKdtaDGx
+	3x8mFlYFX6ozZoiCNGZb/fFE5cAnjIaMLQ5UY3PUAnH9X2f3EHcLng3aLQaoIkuIBZFna7doQqu
+	QwZcuPBdmFDvyqLRee1KKkUXQR0b7zmMlpDofTq9yzzAr6nDW6sY07ukKRpnA2vzwD+XwsP1YXC
+	OsUUcIwwxQl8Os39M4QbzMEmsYg+JrG08VH44qrNHsg0l1qNMSv299qi0Ks5Z9SD89FgX9Vw5fX
+	52EvLvXrv4eWjM6zhdeo2kiAriykOyVusj4dM+7wyClxrTXdtfTA+1WDq1mTJzibvPgGYH/rKvQ
+	i2DIcVrKGQC1PUMObBYp8+rLJ3yMZJo5q2jPhQnoVhT9PS7l39DCxq4QZkBi3hvRTJ43xg
+X-Received: by 2002:a05:620a:278a:b0:915:9fba:878f with SMTP id af79cd13be357-91f8ba807ffmr224910185a.5.1781781217669;
+        Thu, 18 Jun 2026 04:13:37 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-91619ed7215sm1951269085a.7.2026.06.18.04.13.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jun 2026 04:13:37 -0700 (PDT)
+Date: Thu, 18 Jun 2026 07:13:32 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
+Cc: "David Hildenbrand (Arm)" <david@kernel.org>,
+	Balbir Singh <balbirs@nvidia.com>,
+	lsf-pc@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	damon@lists.linux.dev, kernel-team@meta.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+	dave@stgolabs.net, jonathan.cameron@huawei.com,
+	dave.jiang@intel.com, alison.schofield@intel.com,
+	vishal.l.verma@intel.com, ira.weiny@intel.com,
+	dan.j.williams@intel.com, longman@redhat.com,
+	akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
+	surenb@google.com, mhocko@suse.com, osalvador@suse.de,
+	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com,
+	apopple@nvidia.com, axelrasmussen@google.com, yuanchu@google.com,
+	weixugc@google.com, yury.norov@gmail.com, linux@rasmusvillemoes.dk,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, tj@kernel.org,
+	hannes@cmpxchg.org, mkoutny@suse.com, jackmanb@google.com,
+	sj@kernel.org, baolin.wang@linux.alibaba.com, npache@redhat.com,
+	ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+	lance.yang@linux.dev, muchun.song@linux.dev, xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev, jannh@google.com, linmiaohe@huawei.com,
+	nao.horiguchi@gmail.com, pfalcato@suse.de, rientjes@google.com,
+	shakeel.butt@linux.dev, riel@surriel.com, harry.yoo@oracle.com,
+	cl@gentwo.org, roman.gushchin@linux.dev, chrisl@kernel.org,
+	kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com,
+	bhe@redhat.com, zhengqi.arch@bytedance.com, terry.bowman@amd.com,
+	Matthew Wilcox <willy@infradead.org>
+Subject: Re: [Lsf-pc] [LSF/MM/BPF TOPIC][RFC PATCH v4 00/27] Private Memory
+ Nodes (w/ Compressed RAM)
+Message-ID: <ajPS3AKrZEbZbXBw@gourry-fedora-PF4VCD3F>
+References: <aik_ddHymus2DJ6D@gourry-fedora-PF4VCD3F>
+ <c1b66e7a-bb95-4295-8193-55ceadaaa578@kernel.org>
+ <aimSzvoJDrpeQsmM@gourry-fedora-PF4VCD3F>
+ <d01fb1ed-2418-42ee-aea2-37f9a5c5729c@kernel.org>
+ <ainFROZ3WrGioyuY@gourry-fedora-PF4VCD3F>
+ <aiwl4kCG814dpX7L@gourry-fedora-PF4VCD3F>
+ <9f1815b0-896b-44ab-9e6d-9316d8f11033@kernel.org>
+ <fdbdc9f7-d142-4880-b429-065d5056cabb@kernel.org>
+ <ajAcIwBAnqgEEWSD@gourry-fedora-PF4VCD3F>
+ <90418cd3-751f-439d-83ed-a0c33517c3bd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <90418cd3-751f-439d-83ed-a0c33517c3bd@kernel.org>
 
-CXL component register BAR (BAR0 on CXL Root Port and Type3 device)
-and the CXL device register BAR (BAR2 on Type3 device) are declared
-as 64-bit non-prefetchable memory.  Per the PCI-to-PCI Bridge
-Architecture Specification Rev 1.2 (PCI-SIG, 2003):
+On Thu, Jun 18, 2026 at 10:21:30AM +0200, Vlastimil Babka (SUSE) wrote:
+> On 6/15/26 17:37, Gregory Price wrote:
+> > 
+> > One thought would be a way to switch what fallback list is used, and
+> > then have specific fallback lists for certain contexts.
+> > 
+> > Right now there is a single example of this: __GFP_THISNODE
+> >   |= __GFP_THISNODE   =>  NOFALLBACK
+> >   &= ~__GFP_THISNODE  =>  FALLBACK
+> > 
+> > We could add an interface with the desired fallback list based as an
+> > argument, and let get_page_from_freelist to prefer that over the default
+> > global lists.
+> 
+> Does it mean a new argument in a number of functions in the page allocator,
+> or can it be mapped to alloc_flags (at least internally?), because the
+> number of possible fallback lists is small enough?
+>
 
-  - §3.2.5.8 (Memory Base/Limit): the non-prefetchable window covers
-    only 32-bit addresses (AD[31:20]); the Type 1 header defines no
-    upper-32-bit extension for it.
-  - §3.2.5.9 (Prefetchable Memory Base/Limit): the bottom 4 bits
-    encode 64-bit support (01h), but this applies exclusively to the
-    *prefetchable* window.
-  - §3.2.5.10 (Prefetchable Base/Limit Upper 32 Bits): optional
-    registers for AD[63:32] of the prefetchable range only.
+What I ended up with was adding a single page_alloc.c external interface
+that allows you define the zonelist via an enum, and then an internal
+selector resolution in prepare_alloc_pages() stored in alloc_context
 
-The architecture therefore allows a 64-bit window only when it is also
-prefetchable; there is no 64-bit non-prefetchable form.  PCIe inherits
-this Type 1 header layout unchanged.  Linux thus places 64-bit
-non-prefetchable BARs in the 32-bit non-prefetchable bridge window,
-which requires the bridge to own enough address space below 4 GiB.
+eg:
 
-On RISC-V virt the 32-bit PCIe MMIO range (1 GiB at 0x40000000) is
-currently consumed entirely by PCI0, so CXL host bridges (ACPI0016)
-have no non-prefetchable window and Linux fails to assign these BARs.
-Marking the BARs prefetchable would work around it, but the CXL
-component registers have read/write side effects and are not
-prefetchable per the PCIe specification.
+static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
+                int preferred_nid, nodemask_t *nodemask,
+                struct alloc_context *ac, gfp_t *alloc_gfp,
+                unsigned int *alloc_flags)
+{       
+        ac->highest_zoneidx = gfp_zone(gfp_mask);
+        ac->zonelist = select_zonelist(preferred_nid, gfp_mask, ac->zlsel);
+	... snip ...
+}
 
-Reserve the top 256 MiB of the 32-bit MMIO window exclusively for
-CXL host bridges:
-- Shrink PCI0's mmio32 window by 256 MiB in virt.c so that UEFI's
-  PciHostBridgeDxe and the ACPI _CRS for PCI0 never claim that range
-- Store the reserved range in a new gpex_cfg.cxl_mmio32 field
-- In gpex-acpi.c, emit the cxl_mmio32 range as the Memory resource
-  in the CXL host bridge _CRS instead of re-using build_crs() (which
-  returns an empty set when UEFI has not assigned resources yet)
-- Reduce the FDT 'ranges' for PCI0 by the same 256 MiB so that UEFI
-  firmware driven by device-tree also respects the reservation
+struct folio *__folio_alloc_zonelist_noprof(gfp_t gfp, unsigned int order,
+                int preferred_nid, nodemask_t *nodemask,
+                enum alloc_zonelist zlsel);
 
-Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
----
- hw/pci-host/gpex-acpi.c    | 36 +++++++++++++++++++++--
- hw/riscv/virt.c            | 58 +++++++++++++++++++++++++++++++-------
- include/hw/pci-host/gpex.h |  1 +
- 3 files changed, 83 insertions(+), 12 deletions(-)
 
-diff --git a/hw/pci-host/gpex-acpi.c b/hw/pci-host/gpex-acpi.c
-index d9820f9b41..d8b943b665 100644
---- a/hw/pci-host/gpex-acpi.c
-+++ b/hw/pci-host/gpex-acpi.c
-@@ -158,9 +158,41 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfig *cfg)
-              * Resources defined for PXBs are composed of the following parts:
-              * 1. The resources the pci-bridge/pcie-root-port need.
-              * 2. The resources the devices behind pxb need.
-+             *
-+             * For CXL host bridges on platforms where UEFI (driven by
-+             * FDT 'ranges') does not assign PCI resources for the CXL
-+             * root bridge before ACPI table construction, build_crs()
-+             * would return an empty resource set.  When the platform
-+             * has reserved a dedicated MMIO window for CXL host bridges
-+             * (cfg->cxl_mmio32), emit that window as a static _CRS
-+             * instead.  The platform is responsible for shrinking PCI0's
-+             * mmio32 window so the two do not overlap.
-              */
--            crs = build_crs(PCI_HOST_BRIDGE(BUS(bus)->parent), &crs_range_set,
--                            cfg->pio.base, 0, 0, 0);
-+            if (is_cxl && cfg->cxl_mmio32.size) {
-+                uint64_t cxl_base = cfg->cxl_mmio32.base;
-+                uint64_t cxl_size = cfg->cxl_mmio32.size;
-+
-+                crs = aml_resource_template();
-+
-+                /* 32-bit MMIO range for CXL devices */
-+                aml_append(crs,
-+                    aml_dword_memory(AML_POS_DECODE, AML_MIN_FIXED,
-+                                     AML_MAX_FIXED, AML_NON_CACHEABLE,
-+                                     AML_READ_WRITE, 0,
-+                                     cxl_base,
-+                                     cxl_base + cxl_size - 1,
-+                                     0, cxl_size));
-+
-+                /* Bus number range */
-+                aml_append(crs,
-+                    aml_word_bus_number(AML_MIN_FIXED, AML_MAX_FIXED,
-+                                       AML_POS_DECODE, 0,
-+                                       bus_num, bus_num + 15,
-+                                       0, 16));
-+            } else {
-+                crs = build_crs(PCI_HOST_BRIDGE(BUS(bus)->parent),
-+                                &crs_range_set, cfg->pio.base, 0, 0, 0);
-+            }
-             aml_append(dev, aml_name_decl("_CRS", crs));
- 
-             if (is_cxl) {
-diff --git a/hw/riscv/virt.c b/hw/riscv/virt.c
-index 84b91b4322..9c1a001553 100644
---- a/hw/riscv/virt.c
-+++ b/hw/riscv/virt.c
-@@ -113,6 +113,9 @@ static const MemMapEntry virt_memmap[] = {
- /* PCIe high mmio for RV64, size is fixed but base depends on top of RAM */
- #define VIRT64_HIGH_PCIE_MMIO_SIZE  (16 * GiB)
- 
-+/* 32-bit MMIO range carved out of VIRT_PCIE_MMIO for CXL host bridges */
-+#define VIRT_CXL_MMIO32_SIZE        (256 * MiB)
-+
- static MemMapEntry virt_high_pcie_memmap;
- 
- #define VIRT_FLASH_SECTOR_SIZE (256 * KiB)
-@@ -890,15 +893,28 @@ static void create_fdt_pcie(RISCVVirtState *s,
-     }
-     qemu_fdt_setprop_sized_cells(ms->fdt, name, "reg", 2,
-         s->memmap[VIRT_PCIE_ECAM].base, 2, s->memmap[VIRT_PCIE_ECAM].size);
--    qemu_fdt_setprop_sized_cells(ms->fdt, name, "ranges",
--        1, FDT_PCI_RANGE_IOPORT, 2, 0,
--        2, s->memmap[VIRT_PCIE_PIO].base, 2, s->memmap[VIRT_PCIE_PIO].size,
--        1, FDT_PCI_RANGE_MMIO,
--        2, s->memmap[VIRT_PCIE_MMIO].base,
--        2, s->memmap[VIRT_PCIE_MMIO].base, 2, s->memmap[VIRT_PCIE_MMIO].size,
--        1, FDT_PCI_RANGE_MMIO_64BIT,
--        2, virt_high_pcie_memmap.base,
--        2, virt_high_pcie_memmap.base, 2, virt_high_pcie_memmap.size);
-+    {
-+        /*
-+         * When CXL is enabled, reserve the last 256 MiB of the 32-bit
-+         * MMIO window for CXL host bridges and exclude it from the main
-+         * PCIe host bridge's FDT 'ranges' so UEFI's PciHostBridgeDxe
-+         * does not allocate that range to PCI0.  The CXL host bridge
-+         * _CRS declares this range independently.
-+         */
-+        hwaddr mmio32_size = s->memmap[VIRT_PCIE_MMIO].size;
-+        if (s->cxl_devices_state.is_enabled) {
-+            mmio32_size -= VIRT_CXL_MMIO32_SIZE;
-+        }
-+        qemu_fdt_setprop_sized_cells(ms->fdt, name, "ranges",
-+            1, FDT_PCI_RANGE_IOPORT, 2, 0,
-+            2, s->memmap[VIRT_PCIE_PIO].base, 2, s->memmap[VIRT_PCIE_PIO].size,
-+            1, FDT_PCI_RANGE_MMIO,
-+            2, s->memmap[VIRT_PCIE_MMIO].base,
-+            2, s->memmap[VIRT_PCIE_MMIO].base, 2, mmio32_size,
-+            1, FDT_PCI_RANGE_MMIO_64BIT,
-+            2, virt_high_pcie_memmap.base,
-+            2, virt_high_pcie_memmap.base, 2, virt_high_pcie_memmap.size);
-+    }
- 
-     if (virt_is_iommu_sys_enabled(s)) {
-         qemu_fdt_setprop_cells(ms->fdt, name, "iommu-map",
-@@ -1728,7 +1744,29 @@ static void virt_machine_init(MachineState *machine)
-             qdev_get_gpio_in(virtio_irqchip, VIRTIO_IRQ + i));
-     }
- 
--    gpex_pcie_init(system_memory, pcie_irqchip, s);
-+    DeviceState *pcie_dev = gpex_pcie_init(system_memory, pcie_irqchip, s);
-+
-+    /*
-+     * If CXL is enabled, reserve the last 256 MiB of the 32-bit MMIO
-+     * window for CXL host bridges so the bridge non-prefetchable window
-+     * can hold CXL device BARs (component registers and similar 64-bit
-+     * non-prefetchable BARs that need a < 4 GiB address).
-+     *
-+     * - Shrink PCI0's mmio32 advertised in the ACPI _CRS by the same
-+     *   256 MiB so the two ranges do not overlap (the FDT 'ranges'
-+     *   shrink happens in create_fdt_pcie()).
-+     * - Store the reserved range in cxl_mmio32 so gpex-acpi.c can emit
-+     *   a correct _CRS for the CXL host bridge (ACPI0016).
-+     */
-+    if (s->cxl_devices_state.is_enabled) {
-+        GPEXHost *gpex = GPEX_HOST(pcie_dev);
-+        gpex->gpex_cfg.cxl_mmio32.size = VIRT_CXL_MMIO32_SIZE;
-+        gpex->gpex_cfg.cxl_mmio32.base =
-+            s->memmap[VIRT_PCIE_MMIO].base +
-+            s->memmap[VIRT_PCIE_MMIO].size - VIRT_CXL_MMIO32_SIZE;
-+        /* Shrink PCI0's advertised 32-bit MMIO window to exclude CXL range */
-+        gpex->gpex_cfg.mmio32.size -= VIRT_CXL_MMIO32_SIZE;
-+    }
- 
-     create_platform_bus(s, mmio_irqchip);
- 
-diff --git a/include/hw/pci-host/gpex.h b/include/hw/pci-host/gpex.h
-index 1da9c85bce..d38fbbacd6 100644
---- a/include/hw/pci-host/gpex.h
-+++ b/include/hw/pci-host/gpex.h
-@@ -43,6 +43,7 @@ struct GPEXConfig {
-     MemMapEntry mmio32;
-     MemMapEntry mmio64;
-     MemMapEntry pio;
-+    MemMapEntry cxl_mmio32;
-     int         irq;
-     PCIBus      *bus;
-     bool        pci_native_hotplug;
--- 
-2.50.1
+The original __folio_alloc* functions just add a DEFAULT - which tells
+select_zonelist() to base the decision on __GFP_THISNODE.
 
+
+struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int preferred_nid,
+                nodemask_t *nodemask)
+{
+        return __folio_alloc_core(gfp, order, preferred_nid, nodemask,
+                                  ALLOC_ZONELIST_DEFAULT);
+}
+EXPORT_SYMBOL(__folio_alloc_noprof);
+
+
+This does a few things
+  - The isolation is structural, there is no way to accidentally
+    allocate private memory without passing ALLOC_ZONELIST_PRIVATE
+
+  - The isolation forces folios - there are no non-folio interfaces
+    which allow zonelist selection
+
+  - The zonelist selection is confined to this allocation context,
+    so no inheritence is possible.
+
+
+
+I tried to avoid using an ALLOC_ flag so we can avoid yet another flag
+crunch, but there certainly are few enough zonelists that we could
+encode it there and expose it.  I know Brendan was looking at plumbing
+alloc flags out to an interface, so i'm open to that.
+
+Externally the way I determine what zonelist to use is a lookup based on
+reason - letting the node filter.  This is really only needed in a
+couple spots:
+
+mm/khugepaged.c:  enum alloc_zonelist zlsel = alloc_zonelist_for_node(node, NODE_ALLOC_RECLAIM);
+mm/vmscan.c:      mtc->zlsel = alloc_zonelist_for_nodemask(mtc->nmask, NODE_ALLOC_TIERING);
+mm/migrate.c:     .zlsel = alloc_zonelist_for_node(node, NODE_ALLOC_USER_MIGRATE),
+
+static inline enum alloc_zonelist
+alloc_zonelist_for_node(int nid, enum node_alloc_reason reason)
+{
+        bool ok;
+
+        if (!node_state(nid, N_MEMORY_PRIVATE))
+                return ALLOC_ZONELIST_DEFAULT;
+        switch (reason) {
+        case NODE_ALLOC_RECLAIM:
+                ok = node_is_reclaimable(nid);
+                break;
+        case NODE_ALLOC_TIERING:
+                ok = node_allows_tiering(nid);
+                break;
+        case NODE_ALLOC_USER_MIGRATE:
+                ok = node_allows_user_migrate(nid);
+                break;
+        default:
+                ok = false;
+        }
+        return ok ? ALLOC_ZONELIST_PRIVATE : ALLOC_ZONELIST_DEFAULT;
+}
+
+Otherwise... everything is now a mempolicy w/ MPOL_F_BIND and all the
+handling goes through the normal fault-paths :]
+
+static struct page *__alloc_pages_mpol(gfp_t gfp, unsigned int order,
+                struct mempolicy *pol, pgoff_t ilx, int nid)
+{
+        nodemask_t *nodemask;
+        struct page *page;
+        enum alloc_zonelist zlsel = (pol->flags & MPOL_F_PRIVATE) ?
+                ALLOC_ZONELIST_PRIVATE : ALLOC_ZONELIST_DEFAULT;
+...
+        if (pol->mode == MPOL_PREFERRED_MANY)
+                return alloc_pages_preferred_many(gfp, order, nid, nodemask,
+                                                  zlsel);
+...
+}
+
+
+Switching to an alloc_flag would probably be trivially if that's really
+wanted
+
+~Gregory
