@@ -1,67 +1,67 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9E5388873
-	for <linux-cxl@vger.kernel.org>; Fri, 19 Jun 2026 13:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C2824B28
+	for <linux-cxl@vger.kernel.org>; Fri, 19 Jun 2026 13:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781875230; cv=none; b=OJRJWLJe8sARBs4EpljxQEkevywCN1RfFsEu0PjcOAd2kEJUJvSCmHiAWmJnmRjMK3MWaQT7L1DAZoI8cf9+aJ54hOj9Pat+JLQPIPwJzeg+rv6QX+RWIVGxWHPddVVR9qWEAMHUFGwsy/RxcJjKUHA/2vM791kwRVpjdrq7/sY=
+	t=1781875424; cv=none; b=H7XtFGGLScwxughwZ4HU+aGgVcEsPZBCrQgeiSRlpBmBvWY2+We/Nn04ocR4lKUtQUKBfPP+xGtod3cQvKMuHP8+u05dE3AcohofnDuAaxVjCIlfa9+MPqjULL9qpS0kIy8KcGnzLukvkEa/cE6FTe5mJUYvo0VRLLJPZGFZxac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781875230; c=relaxed/simple;
-	bh=ik6f+xiyVZf8p/ePmVvntAqGeuAewyuoZ9dkfDvrgnA=;
+	s=arc-20240116; t=1781875424; c=relaxed/simple;
+	bh=K3jeaS/iIPypjh/26v18Z066QlX+Adyq4Qa4KlmM+Es=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IZdCTqIaOG066yNnqInod4B9aWN6wWCuQOfPMVfx2qerFPnAEpIJuq4gqtfVIyNcNCL/hK5WNxMCyouEPIDGuB8XQRciw9rDG83N5viDMugTGg0nRXjITiq8ONnRpKHPHrH/SEF5p6Uov/+Ugi2AdV+hxylIKLyIlF/9cwu3zHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GHkIwS/w; arc=none smtp.client-ip=209.85.128.46
+	 In-Reply-To:Content-Type; b=gctNQCvgj8W1/837Lid+NGMdwWf01ym+2UKs5wYOuqBXBCrt79EKx0P8wn8hI9oCjg9T/PLP42KLU7Lp5HLYUwAaGGq+e6hpjVWyWZAA1RoLBxdkWj/6KKFVgNSENed6iDZfob4jes3bET6duxmgfX7Ojyv6kNtHTKizJ0GIkB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OpfGFZhn; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GHkIwS/w"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-490c0c92cffso14357385e9.2
-        for <linux-cxl@vger.kernel.org>; Fri, 19 Jun 2026 06:20:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OpfGFZhn"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-492329c5514so8929295e9.1
+        for <linux-cxl@vger.kernel.org>; Fri, 19 Jun 2026 06:23:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781875228; x=1782480028; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1781875421; x=1782480221; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=5jTtn7ASYwiZX3Iefg8PvDQB0Dcy98LO2xsckefXfQo=;
-        b=GHkIwS/wA7HB/axNPfimqmiOGF0o4dWPPiUJzm7aTieZB8Vzzp9ku9/IFsKLy0YexQ
-         TOcDVIYbsvgv7lXzMRiQtpltJXGFjtHJ+7DR0W3ywZkD1Z654BCZmRTEpYXsEjMpU5nY
-         zDZ4RVusc7T2KtJ6fVmX8gPDP4qcjW4hYtTptsePbmR6YqZ7724b8fdokpYPGE0IJwBv
-         nLrYcDOmU2Q0NCY4gxYhVPBOi/SgPPXPHGmhsrOfKlfzs4T6aAVNAKf6VKeR6v3zkt7I
-         oXPkQOZWqp79MbxANmCHqX/jsnTqU1xr40xGUekF9ApxHGyOve3ytdRzOB/U/f4cCmlE
-         2ANA==
+        bh=UAWPzn34y8CYq6O+CxhrxaMNgqNT+C5Jv3hz1Na7La8=;
+        b=OpfGFZhnCenTmcW5nkGIGj4IH7Qv0LpViSP4rTY+JJMHp1rRZ3m6nTD8s5LtVC0ajS
+         NQ6CJU0zLP0pvVVk2yEqc7CQTWTTc5jYxj7skLPxfdC47xstOhWCj2RxivGr8BvjvC27
+         kle05FPgr5+xz3BbdUqt+MqaQwe4VD/nStk2lXEkRrQuxbd4d8UH+3Y+WJ3s5xy0oEP0
+         fyPHrhK7MMUc5K/GE4SdQcnh/8MWRf+2UmPm1OnE4D6wOSDEyrzW/pi7F/LrACoJgR4S
+         W54EVinL8H2kXR4YMiZnagE69fASr0CcTNTDnQ/nSecRWP/BTL8nCq618HEl0MtP78my
+         CuHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781875228; x=1782480028;
+        d=1e100.net; s=20251104; t=1781875421; x=1782480221;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5jTtn7ASYwiZX3Iefg8PvDQB0Dcy98LO2xsckefXfQo=;
-        b=loRQ718ikcGY3QGPhC2QBQjZiDDouI03CPjaI6HwOc9sStt1yUhQAybqS7pV7PMj1T
-         wgZ4HjoqrOYKEeOl+7oUHZJMuJpucGjMGHvBkCXQDwmNAMoFp0eD6zeHLlhPGkAhW5kI
-         Fezvy6vwBTXlXuthKql2I0+anuT8zwIKAi1O1vMKOfmphtpIcKBMFRQnVGyv3O7meyzu
-         kNhD36EwAVp9MeteDWPFSeQBRZ1HyUbDsYWBjeXrhNTxevFpnaBB4pOLd04ciFNfMNMo
-         xZhnxCjIO2xjvdjbFFRCZ69v0nwGNg8BmpQVE/5spR+UeR2TdVs3mAnpdck7n50S5fWv
-         sr3A==
-X-Forwarded-Encrypted: i=1; AFNElJ+Qg24eQy6AAkQElU332XDwiL1MSJ4Ibe/DdslyP5qJfmH5ldjxvE4Yxr2ndCkA+GBoSYHj+VKaUKc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1mAWft8U+S84GO4v9FgHUBrj8eyNS6XUYk8q16X13IeLmEMy7
-	0PQlbZPGCVWn2GvznYhC4q3m23eFJ2FA3N7eHcYuH3sZVypTxoK+uhf0
-X-Gm-Gg: AfdE7ckfryV8g96CWhWDsicTdSDgCYHMQ0VkwSjc5KB3SO+ZMFLQphhZ76WVBr6NOVM
-	qjSCI9dspg7ukdV0u5P9uj1bg7uyMWg78C5o4fhJGB6TrvmjRAEYhKrDYIXB+e/pHAvI/PBmWLt
-	Zhzo2N1us+LTocoh1ACf48kurCS/XyvVIwTqb+dnyc4gxN9R6iTvn2JA6kgoscQWPHsrBHJsteY
-	GGOvbqGjkKuTMspZW0pTTzW655M+jIwoacRb0Q2TXJV8FBpCUdX+B5Cf3znQz9qEui1NFpF62TP
-	M80qFrvntv5V7uYrGa6XIRYkWWAeLj1N1SLUeoTDj1hrMZJ0m6NE1uIm4jovNNjSNpp4ZI/SUvG
-	rKE81lCgnhT90av9N88kgshMd3zk2lSMJbkzWEk8QByNx2TW3RtKXOH0m+wQQ67rx2oooetted2
-	M8uE5UIqs0FFYIe5wVn7LThb5OQg2Zf73jf4/2QE59H/sUGqfQg/kEPDc/bTsJs3hzdwJnicm7g
-	QTPD2YR95XQzQ==
-X-Received: by 2002:a7b:c456:0:b0:491:8043:5c4a with SMTP id 5b1f17b1804b1-49240e95431mr44754845e9.31.1781875227880;
-        Fri, 19 Jun 2026 06:20:27 -0700 (PDT)
+        bh=UAWPzn34y8CYq6O+CxhrxaMNgqNT+C5Jv3hz1Na7La8=;
+        b=UPYjI+7VNYQsKkGjjfQHZLJpROaF9NWuhUcFbM1jiIqTyOA7tBNu8qkoAuDYw6hNVl
+         L7lTJmEvssqbG46Y95r226p8Z8+EvAcAwPky/tXmL3fG/a2fyswoOjq1L7ikGbg+reKm
+         hfxskvluCTz6VvzpCSIXJ6Idn12TAgwuyqxBgfwr8IVIsl5voaVenntZccQaNghfkKTY
+         Lo8COtcDpCMQxAQoxEDXZIA6yLM/EHPZMISO2IPMegLL38tBhE9RDIxzthPfsyjedZw9
+         sxiaXvVR765f2SJC+1daQPDPOyI8SQN2LEOt9SK7V08nwU18tpwqhnOu55ihukCKvEwV
+         tHUA==
+X-Forwarded-Encrypted: i=1; AFNElJ9D8s8iR03kCbeNsk3KVhY2YLstiGDSMQI1FBlsfeqAi+sW1LJRdiFTx1en5uEt+L43mZDFg18L7YU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyEZCl5kP0NiyX7CvDTSaaej+2qIo/XdQ8sULFXBJWsEjHTz8o
+	iwO8u4SOMtf1bSCD/pkSVNuht8fmWInLrQhXMXoOuM0E2F8x7Vf/RB28zUiUrA==
+X-Gm-Gg: AfdE7cnPLTMbWMa+5OqqP/YRJG2PX/KVM9UBAaldZb5FqTov3jIyqBe20mHiAeK1gcJ
+	9xR4J2dG2H0tpw1gBGQeKbQ1wYyKFpGyhhL/YXm+rP2C0/Z1tlVkxaryfmrog7/lblj+aW9gps+
+	q6YJkZypW9VRQDLfjqPX8/Nc1Oz3dUqTNrAbmXn/xvfFgtNbLbFn+PhbnvTE4i/OV5sWkhd6ouo
+	XGtdyZz31iKRo4RjouW2pOs2KL1QsspjVLdK5ctpSFkClhZwXUHuEVp+8t3UP8STdLOfaXtS3NE
+	cjqZKtzWq7j3JeTp3AmL9dtiSj8US4sOXlO4t7KGa2w6SgYL+hSvq1qfzQkGsRUlMH9itFHFpwG
+	MukQVxJz7++RI6Hg6/EmJE91hMdSTIXdOhvjle+FDK7YdBkmYxpWZzeYorTL1A9Jdxb1+PpqrCN
+	8whjdDnOQkpx7ghYg67Y0SddIdu4NIWhAXlsclXtf3HCA5N/GNwrPis30/dnbNMvLASSuEuKsaB
+	OI=
+X-Received: by 2002:a05:600c:8218:b0:492:1e36:9a90 with SMTP id 5b1f17b1804b1-49240a598e5mr40232245e9.18.1781875421282;
+        Fri, 19 Jun 2026 06:23:41 -0700 (PDT)
 Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4923fd1ac18sm101853255e9.12.2026.06.19.06.20.26
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4923fd1fa34sm76157815e9.5.2026.06.19.06.23.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Jun 2026 06:20:27 -0700 (PDT)
-Message-ID: <175fccd9-5353-4675-aa2d-09a98433c37e@gmail.com>
-Date: Fri, 19 Jun 2026 14:20:26 +0100
+        Fri, 19 Jun 2026 06:23:40 -0700 (PDT)
+Message-ID: <5d131a91-f80d-419e-9b62-64ea0a1133c3@gmail.com>
+Date: Fri, 19 Jun 2026 14:23:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -69,32 +69,49 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v28 4/5] sfc: obtain and map cxl range using
- devm_cxl_probe_mem
+Subject: Re: [PATCH v28 5/5] sfc: support pio mapping based on cxl
 To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org,
  netdev@vger.kernel.org, djbw@kernel.org, edward.cree@amd.com,
  davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
  edumazet@google.com, dave.jiang@intel.com
 Cc: Alejandro Lucero <alucerop@amd.com>
 References: <20260618181806.118745-1-alejandro.lucero-palau@amd.com>
- <20260618181806.118745-5-alejandro.lucero-palau@amd.com>
+ <20260618181806.118745-6-alejandro.lucero-palau@amd.com>
 Content-Language: en-GB
 From: Edward Cree <ecree.xilinx@gmail.com>
-In-Reply-To: <20260618181806.118745-5-alejandro.lucero-palau@amd.com>
+In-Reply-To: <20260618181806.118745-6-alejandro.lucero-palau@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 18/06/2026 19:18, alejandro.lucero-palau@amd.com wrote:
 > From: Alejandro Lucero <alucerop@amd.com>
 > 
-> Use core API for safely obtain the CXL range linked to an HDM committed
-> by the BIOS. Map such a range for being used as the ctpio buffer.
+> A PIO buffer is a region of device memory to which the driver can write a
+> packet for TX, with the device handling the transmit doorbell without
+> requiring a DMA for getting the packet data, which helps reducing latency
+> in certain exchanges. With CXL mem protocol this latency can be lowered
+> further.
 > 
-> A potential user space action through sysfs unbinding or core cxl
-> modules remove will trigger sfc driver device detachment, with that case
-> not racing with this mapping as this is done during driver probe and
-> therefore protected with device lock against those user space actions.
+> With a device supporting CXL and successfully initialised, use the cxl
+> region to map the memory range and use this mapping for PIO buffers.
 > 
 > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
 
 Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+
+One nit:
+
+> diff --git a/drivers/net/ethernet/sfc/efx.h b/drivers/net/ethernet/sfc/efx.h
+> index 45e191686625..057d30090894 100644
+> --- a/drivers/net/ethernet/sfc/efx.h
+> +++ b/drivers/net/ethernet/sfc/efx.h
+> @@ -236,5 +236,4 @@ static inline bool efx_rwsem_assert_write_locked(struct rw_semaphore *sem)
+>  
+>  int efx_xdp_tx_buffers(struct efx_nic *efx, int n, struct xdp_frame **xdpfs,
+>  		       bool flush);
+> -
+>  #endif /* EFX_EFX_H */
+
+This looks like a stray changebar, clean it up if respinning.
+
+-ed
