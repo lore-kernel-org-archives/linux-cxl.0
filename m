@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC463BE645
-	for <linux-cxl@vger.kernel.org>; Fri, 19 Jun 2026 17:24:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568303C09E8
+	for <linux-cxl@vger.kernel.org>; Fri, 19 Jun 2026 17:24:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781889885; cv=none; b=XDVU39kg5vfl1guwSVPWhUs6L16IHUZHP7Th0T7tfkZXN+2u/sVnJb/JJtu0518Xp5op3LWQjAZGyhhI1wl1fcGifMi+J2bkR34V+Vp5M6Dgd/FcC2cptxRWANFL1M06wjYW+4r+ilWLtiMZ4r+RxTB2XWygvQlc/YIO284gXcA=
+	t=1781889886; cv=none; b=bL+bgnroJWrvfeV4wXzqTxYDaY037+x+TJ1CAzq3YIx+6IzWn/A7OSbxfqwYEv4AWX6iStSKb5z4+7OR4EdMBbut9OZQht+5HYIqih/KmzzWEalrNEvoOaOeWHZBjLI2a2eytv5SGHmBv2eJQAKpbZE+jRbbqY41PNmkAVFj0M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781889885; c=relaxed/simple;
-	bh=zZozOkYH9sDroy8pPwTvVlIcEGpUHtK8Lz85vzqFGIw=;
+	s=arc-20240116; t=1781889886; c=relaxed/simple;
+	bh=6PNSeOYJDs6BI2dzxdUVsgggPScZRd5wggFS2dr9ziw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=G9xp9GqPPL9u5cCc1MXPu+aKr6eOfyLDKgC+TEMMh2CER10awG/829vmut/vhkXg6JjCBCb5GjTHkCUjk4rnvoKHzBgzT7bS4xUarT6AyOvDF7dmzE4d0jENGeCPnPVz7UGVjD3v8xjfMLpKO+ZaKkYG6k4DgNbQbL3ynnGQqEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+9d/RoD; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=o7w7Euyo3999gHdt2WV/f0NsiKncbo2GZLdGsW7HSJiITo/9/9ZGNe4cqtQALp641TvrBm7u15cKS4zYQ6LP7viRIiiq3q6osf3WjzQFwm2V8WKL+0u8RmMGdWfTAGK8etXL/S4wj8AW0Pf6AaqEAswNMnaQEKvyRBUZZFXUEDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bnE4F8Es; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+9d/RoD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75ABB1F00A3D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bnE4F8Es"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF0EF1F00A3E;
 	Fri, 19 Jun 2026 17:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781889884;
-	bh=QD6cEwvSuXfJmaBKw84xovOD5TstYBMz9QvTeMxM0Z4=;
+	s=k20260515; t=1781889885;
+	bh=btmThH5ANi0m3okEevCJ8wwr4sWFeqq5gZuZUUX8YrM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=S+9d/RoD6JuS8EP3A6VkNDyq8CbLjwkM213aZA2OJNtnKNx1MqFTIekElT/QXOSew
-	 yqWlS18Ub/KdlJODPvHp92yPlzLRuVfvP/UicR5lkxL+LstFgkQnyBvaVYFAbiYBUz
-	 irwOlu0eV0GMJsobPeTCy2GWb2AEiMdoYRbIrJnu3WF2ngsD0MbwO7f1TGipqwES9e
-	 CGOwasPkdkjeUAXQHqgbJFvLpL7FNLtqpkGVAP/RjfEs7TNEZSHxj9HTg/JWwXA0LF
-	 bPEyTxYToNe0BrQRXPsh9/KezXDX92nqa61JkkIOroDKj2EesP/qJCoOespm8agWX0
-	 8XqEDn9Pvn2ww==
+	b=bnE4F8EsVzoTBaw2wPrAHNCjRe3qEztOglsMhsK9Ikl/DRDtpavJvtIojj4EiZeJp
+	 h788frx6FoMCKEQ39EnP7VAdnd8K+yekDzBgXvQD7W9nYmH5H5SWFxROd8JYXloFoj
+	 TJkMpOtq2k9AGgsHBNVqnC+MfWJNqjx66yQs0qAgIqrUG3wx3aqGjc0rc5nRLKMXcb
+	 VMSMWrYUBF/SnAvbTjHBd0BEJT8n232wyV7GS/JezTAElaRZuDOCTGoysDOmVrbKeB
+	 8s4cLgXTC7CP1qqrWdzKrygRmG/yi1AUOTFDuaux3E3ydj8G+8BPwDPKh8JG/kps6O
+	 4wXd5TbTHAoqA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v28 3/5] cxl/sfc: Initialize dpa without a mailbox
+Subject: Re: [PATCH v28 2/5] cxl/sfc: Map cxl regs
 Reply-To: sashiko-reviews@lists.linux.dev
 To: alejandro.lucero-palau@amd.com
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260618181806.118745-4-alejandro.lucero-palau@amd.com>
+In-Reply-To: <20260618181806.118745-3-alejandro.lucero-palau@amd.com>
 References: <20260618181806.118745-1-alejandro.lucero-palau@amd.com>
- <20260618181806.118745-4-alejandro.lucero-palau@amd.com>
+ <20260618181806.118745-3-alejandro.lucero-palau@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Date: Fri, 19 Jun 2026 17:24:44 +0000
-Message-Id: <20260619172444.75ABB1F00A3D@smtp.kernel.org>
+Message-Id: <20260619172444.EF0EF1F00A3E@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -46,48 +46,62 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] Malformed kernel-doc comment with a literal '+' character due to a =
-diff artifact.
+
+Pre-existing issues:
+- [High] `cxl_probe_component_regs()` performs unvalidated reads on the CXL=
+ component register block, which can cause a kernel panic if a malformed PC=
+Ie device exposes a small or truncated register block.
 --
 
-commit e64a1b07e5313555ece5e23f49237b31b36182be
+commit 0e4acdaa76943d29ebab4e0ccea9ab0230622629
 Author: Alejandro Lucero <alucerop@amd.com>
 
-cxl/sfc: Initialize dpa without a mailbox
+cxl/sfc: Map cxl regs
 
-This commit allows a Type2 driver to initialize DPA by giving the size of i=
-ts
-volatile hardware partition, avoiding reliance on a mailbox identify comman=
-d.
-It moves related functions to memdev and adds the sfc driver as a client.
+Export cxl core functions for a Type2 driver being able to discover and
+map the device registers.
 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 33a3d2e7b13af..500f077f935df 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
+Use it in sfc driver cxl initialization.
 
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sf=
+c/efx_cxl.c
+> index be252af972ab3..704b0ebae9374 100644
+> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
 [ ... ]
+> @@ -42,6 +45,29 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  	if (!cxl)
+>  		return -ENOMEM;
+> =20
+> +	rc =3D cxl_pci_setup_regs(pci_dev, CXL_REGLOC_RBI_COMPONENT,
+> +				&cxl->cxlds.reg_map);
 
-> @@ -594,6 +594,73 @@ bool is_cxl_memdev(const struct device *dev)
+[Severity: High]
+This is a pre-existing issue, but when discovering the CXL register blocks,
+cxl_decode_regblock() in drivers/cxl/core/regs.c computes the size of the
+block as:
 
-[ ... ]
+map->max_size =3D pci_resource_len(pdev, bar) - offset;
 
-> +/**
-> + * cxl_set_capacity: initialize dpa by a driver without a mailbox.
-> + *
-> ++ * @cxlds: pointer to cxl_dev_state
+If a malicious or buggy device presents a Register Locator DVSEC with an
+offset close to the end of the PCI BAR, map->max_size could be very small.
 
-[Severity: Low]
-This isn't a bug, but it looks like a literal + character was accidentally
-included in the kernel-doc block. Was this an artifact left over from a
-rebase resolution?
+Later, cxl_probe_component_regs() blindly advances the base pointer by
+CXL_CM_OFFSET (0x1000) and attempts to read the capability array:
 
-> + * @capacity: device volatile memory size
-> + */
-> +int cxl_set_capacity(struct cxl_dev_state *cxlds, u64 capacity)
-> +{
-> +	struct cxl_dpa_info range_info =3D {
+base +=3D CXL_CM_OFFSET;
+cap_array =3D readl(base + CXL_CM_CAP_HDR_OFFSET);
+
+Are there any bounds checks verifying that map->max_size is large enough
+before these reads occur, or can this cause an out-of-bounds I/O memory
+read and a kernel panic if a malformed PCIe device exposes a truncated
+register block?
+
+> +	if (rc) {
+> +		pci_err(pci_dev, "No component registers\n");
+> +		return rc;
+> +	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260618181806.1187=
-45-1-alejandro.lucero-palau@amd.com?part=3D3
+45-1-alejandro.lucero-palau@amd.com?part=3D2
