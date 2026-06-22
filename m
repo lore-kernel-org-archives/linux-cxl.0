@@ -1,331 +1,143 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010030.outbound.protection.outlook.com [52.101.46.30])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69563ABDB3;
-	Mon, 22 Jun 2026 12:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.30
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782132051; cv=fail; b=OuDFhTd4Xfd2Y4PJcWW67GcUKh8Zo/cfb2PmkLWu3ywNENAwWHO/QoVBmtarpTA5hlyI9tfsrGcwZFJc0uTy+ETZaiv335kELepF8IU5tpPj9wKd2GfptW8yCsrwcebacYIHJvNwlvRFJF7cJu4E6uBoqqjbvGQVNZygNp+0FnM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782132051; c=relaxed/simple;
-	bh=cDbxQRhPWteASecvVa/ymV7F+vBahvYx2M8SJQCwsQs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gG+u+kNF241+rPX04Lu9ccw3lv7jOLUQQA8i56Jxb3+XArpvQJubHgEvxsfsMTuQz0i5XVzKOImz/vASmAeZR7y5O302YxhbQG+wVUDC7zdRrJn2NmUXLyGwD/nxqASgXyaghOhudil650lSesnVy0hf0JqsEewRO8ZdzFh1ZOI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=X61qEEwb; arc=fail smtp.client-ip=52.101.46.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F481AE877;
+	Mon, 22 Jun 2026 16:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782145165; cv=none; b=bPvEu9vporY4WekEuGjMfGIAvyDTTC982deGIz9aF0ut1Y0oBbfBX5Ov+9Aflj67umZyJUIO4iLTgfJWbT9cCiML+o4M/VTChRKb+jvRw6lN4q5bXv1PUvOhkRROe+0PbCnaZrQBKpAoJBNr2LJ7hSj2j6jw3jN9tXoEJSAaTTM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782145165; c=relaxed/simple;
+	bh=6e/kdupA1vkNLp1w2IDFNbTNJDHcZByi2a9VZPxEgN8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ghR+cVkAwLK3ZIhe1qTR/OlXGCgol1KRT27IF1mZc0ytRabWLxvRKje2yr/F0Dvhkx6t6e1Qhnbk0mhXSQSGAW6vVw4+GErvbYJ3UZ2vPl55TCPp54D3FohCp/IIGza3rNHw6yDRZI9AuuVdIuSs6D1T2epCWgs23trCUv7MJNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PNz/jMqB; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="X61qEEwb"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QocvxMlVbm+T+V4FJI868wdtS9Ut4WWOe29MqcrkqFJb5Tcl4Ln4LM9UCbqwObGhCkA2vQ1f8HogjWNeJGjk10YV2k9X9tpTWiDPw8LOrLg5bdui4OmmGI59RDvfHTfR1zDQxOGdRjzGdjBxRksLbe9qzUZrehMXG2RHbYeg4NmAi3s8zP7FVzHfZ1c5ii4ONw3Si0nKVsf28jtbi/KfQBE4TW5BrhM4rmsRcgm3uW/78so5Mf7RTywhjHf6/KzFC2tyQuZ40LEy0BBn0sCkzXoZqLjI4m3zWp93eH2946B1JaFM2T8w9p3Dupim/ovzhx6y7GQJfkviytHIFRhoFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nR61nfSLfyR4I+Sh/ABnfHuSafOhGHOjNJMo9ylC5UQ=;
- b=YtfAgouQX85K7WGnNeJJB/uOKG+t8kIXnyBAsnQqnDU3Ypyd9Ppsq2E/x+zOm/iM8BTjRYKC7P9B6eOQZW1tVwVAy+OVeoI+tXWklqArvpnNRGMkohNNJGNVfAMlkCWOCIlEWZukwLJn1DkGB6AjjNp5q/MREzXVfyYqEXrmxu/6FXuZuSBYOypNVYB3I1rrgUaje9+1RwROMhoOC455zDmGWGlZuSpSLJ/hm8quhAFWCeitdNfY5fPOUaPhVyN0uHt5oVQvd/2P2GeSQCW8FFZeimBAWCVY/ybOWs5imLvQrrqRu5JXl7qSnZ4xIjp9zTXRNUg/ItVnPgKpx72feg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nR61nfSLfyR4I+Sh/ABnfHuSafOhGHOjNJMo9ylC5UQ=;
- b=X61qEEwbS3F0kyKERun2DMa4p0WRTCYSEwJeHi5B5RArTbNHKvgFm9Qw0VDoPFRqPerW0ncOj6lX+Y79iYymP3/KEZ57ltMHykFbe9tJCk1JAOIKWCc/15OvUJg5OffyJRCIKIzsxAZ3pmzW8sG4RPWPaVtwnDil6UlMMU8EXCA=
-Received: from BN9PR03CA0759.namprd03.prod.outlook.com (2603:10b6:408:13a::14)
- by DS0PR12MB7850.namprd12.prod.outlook.com (2603:10b6:8:146::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.19; Mon, 22 Jun
- 2026 12:40:38 +0000
-Received: from BN3PEPF0000B071.namprd04.prod.outlook.com
- (2603:10b6:408:13a:cafe::44) by BN9PR03CA0759.outlook.office365.com
- (2603:10b6:408:13a::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.139.13 via Frontend Transport; Mon,
- 22 Jun 2026 12:40:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- BN3PEPF0000B071.mail.protection.outlook.com (10.167.243.116) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.139.8 via Frontend Transport; Mon, 22 Jun 2026 12:40:38 +0000
-Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 22 Jun
- 2026 07:40:28 -0500
-Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb10.amd.com
- (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 22 Jun
- 2026 07:40:28 -0500
-Received: from xcbalucerop40x.xilinx.com (10.180.168.240) by
- satlexmb08.amd.com (10.181.42.217) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.41 via Frontend Transport; Mon, 22 Jun 2026 07:40:27 -0500
-From: <alejandro.lucero-palau@amd.com>
-To: <linux-cxl@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<dan.j.williams@kernel.org>, <edward.cree@amd.com>, <davem@davemloft.net>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <edumazet@google.com>,
-	<dave.jiang@intel.com>
-CC: Alejandro Lucero <alucerop@amd.com>, Dan Williams
-	<dan.j.williams@intel.com>, Ben Cheatham <benjamin.cheatham@amd.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Edward Cree
-	<ecree.xilinx@gmail.com>
-Subject: [PATCH v29 3/5] cxl/sfc: Initialize dpa without a mailbox
-Date: Mon, 22 Jun 2026 13:40:08 +0100
-Message-ID: <20260622124010.2192888-4-alejandro.lucero-palau@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260622124010.2192888-1-alejandro.lucero-palau@amd.com>
-References: <20260622124010.2192888-1-alejandro.lucero-palau@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PNz/jMqB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782145164; x=1813681164;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6e/kdupA1vkNLp1w2IDFNbTNJDHcZByi2a9VZPxEgN8=;
+  b=PNz/jMqBPQyxJZTDCS8AvlOa1GcCkK/xf4mr3F2v0XeX27iTSkg10yw1
+   DVmnbbiBIscmmZBosDW1HujfcrFnf1ZbvRTTe7CbDEsBWnh1fPvqZqKzT
+   FXbt5OnpTO58waYQqoxWGSKdW2rFCmJ0cMqxSjyKNlRoN9I1ZktvSZRTL
+   jRfn4Q3CLCQtJTgIiSjtvbVwxTc7QoxtIF9v068L9tjYrSVGg6yDjJB/H
+   fd9MO5B9PiMgsIWJuBsXq1qf5SPWAMM0mvPJT+evvpKxWdB/Y4lDr6eRD
+   cQE4JoqMX8uwgyqFO74bh2wFAGpKx5rWSSOVTfc9tIyT63qeZRUuR13rA
+   g==;
+X-CSE-ConnectionGUID: KRlZT1uyS+6OubIXK6oJUA==
+X-CSE-MsgGUID: QyG3SZzbQiiNzhS7mSBiBw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11825"; a="82765146"
+X-IronPort-AV: E=Sophos;i="6.24,219,1774335600"; 
+   d="scan'208";a="82765146"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 09:19:24 -0700
+X-CSE-ConnectionGUID: qvL3UTKPSHCMnwlKTWiW0A==
+X-CSE-MsgGUID: VRR1UXspTP+SDurSAMWAjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,219,1774335600"; 
+   d="scan'208";a="249315960"
+Received: from jmaxwel1-mobl.amr.corp.intel.com (HELO [10.125.108.100]) ([10.125.108.100])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2026 09:19:24 -0700
+Message-ID: <ddc1d44c-37ef-473e-9f87-efe207d8bcbf@intel.com>
+Date: Mon, 22 Jun 2026 09:19:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B071:EE_|DS0PR12MB7850:EE_
-X-MS-Office365-Filtering-Correlation-Id: d1d332b3-4836-44f3-2e14-08ded05b769b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|23010399003|82310400026|376014|7416014|36860700016|22082099003|18002099003|6133799003|3023799007|56012099006|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	htylqskYo37eyQVT4nUyC5Afoq141olAYPMM+on/y+bMBOo2OFxkg5GVGHWw5NUUJtVkT3Pd0JAkq9rDhj3xfOnwakKOhpyqfw7Lmo+kmMBbPNfjlv8iMTzBDclPySPU096UEYjUdA3ugMMA2i3R8poMDioOSq4r8/Uc5fYCegkdBL5/tXUyD2dQME6qlCcts7jCB2lJlgIEQbbZ7oDVby5yMiStuvB2d4fBp7XSTXCAKmPskM7TJGWSlx3QhkUgh1dmlsuIq30Lx3nHb424WTJKvJIkH2MtACSgjWppbWhf9ZYhvkminV/cWJ02eqsmo2q1zWdOV8ksiK7w9bqDhAPKKTEaLv4+dHUk5mKRw6xl+NGcuf1yj7dFQko+ldhKMFoGM6YG92Ro/edV9ngQL0fKcodsiV9owTsYbnuuFhf97QeAKGsez5zjnBK4zI3k5bdsoTfcMPeTHqw8pQGZ5BK1AGAquYI8Fzcla8Umjp+GLJqEaZNFgdrbGc1/96CMmlooKPdIl6V6n7hjFztMyuTBCoLsoRvf6x5tDWcrgd18MSbcMjpmwbFuYaztF8bq48q8XooOWYWudgy4mjJ3Ow6i0vEPUPKRQBXRyUlOSmDMOSF7hg37E/jEXAYvvVitLKFQP+16KApESi7PtyYAmdEpADxZr0Sbjsu0PmgB/TW9SYc8DfSZA0m8QR00c/P5Xsh0+4tXxeMTgQev9s8NIA==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(82310400026)(376014)(7416014)(36860700016)(22082099003)(18002099003)(6133799003)(3023799007)(56012099006)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	514o7D6dU8N0tWOhtIEWS21HdiwhOJylVw1J7EhqhO0QOo1rJAYY80e/pA4TB2UGRwnjcbgxCSYquTFlFnjhTzL6nkfMFmplhcL+mU8cqY1Q5pQ9Q60uHftVGM3+p6rA23ydlaYfflSEpox0eI8D+SqcIuu+Ahv1xuEz0mgqnnozyxNfaBNOeKzGU6QA9AYocMxELN2Mv1VawlAeBPz9ZCApoN6qlV04Pv1rZK8v2CtHpKn885WXR2cqqoQl2UWwL9vEuWrAOfdusvVCXwKMejmOEAU0dcNGNf7ZsaHk2LCyH4FFxJMXSgXMWKa6mK84LN/3azXGvnjwqOOWYcw+GR7ia1mPshkGYgCKoEhwcNCcyizYNElNB+qedCtM05LKZ1WwZ4wnFKuaQMslKZ9INsqSlHsYVHkOG6+IQR05sZbMSAoMddondfyZCW1OG8T+
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2026 12:40:38.3277
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d1d332b3-4836-44f3-2e14-08ded05b769b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B071.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7850
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/pmem: Format nvdimm serial numbers as decimal
+To: Alison Schofield <alison.schofield@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
+ Dan Williams <djbw@kernel.org>, Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org, Anisa Su <anisa.su@samsung.com>,
+ stable@vger.kernel.org
+References: <20260619055932.1354182-1-alison.schofield@intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260619055932.1354182-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Alejandro Lucero <alucerop@amd.com>
 
-Type3 relies on mailbox CXL_MBOX_OP_IDENTIFY command for initializing
-memdev state params which end up being used for DPA initialization.
 
-Allow a Type2 driver to initialize DPA simply by giving the size of its
-volatile hardware partition.
+On 6/18/26 10:59 PM, Alison Schofield wrote:
+> The CXL NVDIMM security passphrase key is looked up by the description
+> "nvdimm:" followed by the device serial string. For serial numbers of
+> 10 and above, the kernel auto-unlock path fails to find the key
+> because ndctl names it with a decimal serial and the kernel uses hex.
+> 
+> That means a passphrase-protected device cannot be unlocked after a
+> reboot, and the pmem namespaces it backs do not come up. Devices
+> without an enrolled passphrase are unaffected.
+> 
+> The mismatch occurs for any serial number of 10 and above. Since CXL
+> device serial numbers are vendor-assigned 64-bit values, that covers
+> essentially all real hardware once security is enabled.
+> 
+> The 'id' sysfs attribute is established ABI that ndctl consumes as
+> decimal, so format the kernel's serial string the same way. A u64
+> decimal string requires up to 20 digits plus a NUL byte, so grow
+> CXL_DEV_ID_LEN to fit it.
+> 
+> The issue was exposed by CXL unit test cxl-security.sh when cxl_test
+> mock serial numbers were recently extended to 10 and above.
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: b5807c80b5bc ("cxl: add dimm_id support for __nvdimm_create()")
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> ---
+>  drivers/cxl/core/pmem.c | 10 ++++++----
+>  drivers/cxl/cxl.h       |  3 ++-
+>  2 files changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+> index 68462e38a977..2ccdf04c1f43 100644
+> --- a/drivers/cxl/core/pmem.c
+> +++ b/drivers/cxl/core/pmem.c
+> @@ -219,12 +219,14 @@ static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_nvdimm_bridge *cxl_nvb,
+>  	dev->bus = &cxl_bus_type;
+>  	dev->type = &cxl_nvdimm_type;
+>  	/*
+> -	 * A "%llx" string is 17-bytes vs dimm_id that is max
+> -	 * NVDIMM_KEY_DESC_LEN
+> +	 * dev_id becomes the nvdimm dimm_id used for security key
+> +	 * lookups. Match the decimal serial emitted by the CXL 'id'
+> +	 * sysfs attribute. A u64 decimal string requires 20 digits
+> +	 * plus a NUL byte and must still fit in NVDIMM_KEY_DESC_LEN.
+>  	 */
+> -	BUILD_BUG_ON(sizeof(cxl_nvd->dev_id) < 17 ||
+> +	BUILD_BUG_ON(sizeof(cxl_nvd->dev_id) < 21 ||
 
-Move related functions to memdev.
+Can CXL_DEV_ID_LEN be used here?
 
-Add sfc driver as the client.
-
-Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Edward Cree <ecree.xilinx@gmail.com>
----
- drivers/cxl/core/core.h            |  2 +
- drivers/cxl/core/mbox.c            | 51 +----------------------
- drivers/cxl/core/memdev.c          | 67 ++++++++++++++++++++++++++++++
- drivers/net/ethernet/sfc/efx_cxl.c |  5 +++
- include/cxl/cxl.h                  |  2 +
- 5 files changed, 77 insertions(+), 50 deletions(-)
-
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 07555ae63859..f7cebb026552 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -101,6 +101,8 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
- struct dentry *cxl_debugfs_create_dir(const char *dir);
- int cxl_dpa_set_part(struct cxl_endpoint_decoder *cxled,
- 		     enum cxl_partition_mode mode);
-+struct cxl_memdev_state;
-+int cxl_mem_get_partition_info(struct cxl_memdev_state *mds);
- int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, u64 size);
- int cxl_dpa_free(struct cxl_endpoint_decoder *cxled);
- resource_size_t cxl_dpa_size(struct cxl_endpoint_decoder *cxled);
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 7c6c5b7450a5..97b1e61ad018 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1152,7 +1152,7 @@ EXPORT_SYMBOL_NS_GPL(cxl_mem_get_event_records, "CXL");
-  *
-  * See CXL @8.2.9.5.2.1 Get Partition Info
-  */
--static int cxl_mem_get_partition_info(struct cxl_memdev_state *mds)
-+int cxl_mem_get_partition_info(struct cxl_memdev_state *mds)
- {
- 	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
- 	struct cxl_mbox_get_partition_info pi;
-@@ -1308,55 +1308,6 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
- 	return -EBUSY;
- }
- 
--static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
--{
--	int i = info->nr_partitions;
--
--	if (size == 0)
--		return;
--
--	info->part[i].range = (struct range) {
--		.start = start,
--		.end = start + size - 1,
--	};
--	info->part[i].mode = mode;
--	info->nr_partitions++;
--}
--
--int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
--{
--	struct cxl_dev_state *cxlds = &mds->cxlds;
--	struct device *dev = cxlds->dev;
--	int rc;
--
--	if (!cxlds->media_ready) {
--		info->size = 0;
--		return 0;
--	}
--
--	info->size = mds->total_bytes;
--
--	if (mds->partition_align_bytes == 0) {
--		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM);
--		add_part(info, mds->volatile_only_bytes,
--			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM);
--		return 0;
--	}
--
--	rc = cxl_mem_get_partition_info(mds);
--	if (rc) {
--		dev_err(dev, "Failed to query partition information\n");
--		return rc;
--	}
--
--	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM);
--	add_part(info, mds->active_volatile_bytes, mds->active_persistent_bytes,
--		 CXL_PARTMODE_PMEM);
--
--	return 0;
--}
--EXPORT_SYMBOL_NS_GPL(cxl_mem_dpa_fetch, "CXL");
--
- int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count)
- {
- 	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 33a3d2e7b13a..2e457b1ebc7d 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -594,6 +594,73 @@ bool is_cxl_memdev(const struct device *dev)
- }
- EXPORT_SYMBOL_NS_GPL(is_cxl_memdev, "CXL");
- 
-+static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
-+{
-+	int i = info->nr_partitions;
-+
-+	if (size == 0)
-+		return;
-+
-+	info->part[i].range = (struct range) {
-+		.start = start,
-+		.end = start + size - 1,
-+	};
-+	info->part[i].mode = mode;
-+	info->nr_partitions++;
-+}
-+
-+int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
-+{
-+	struct cxl_dev_state *cxlds = &mds->cxlds;
-+	struct device *dev = cxlds->dev;
-+	int rc;
-+
-+	if (!cxlds->media_ready) {
-+		info->size = 0;
-+		return 0;
-+	}
-+
-+	info->size = mds->total_bytes;
-+
-+	if (mds->partition_align_bytes == 0) {
-+		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM);
-+		add_part(info, mds->volatile_only_bytes,
-+			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM);
-+		return 0;
-+	}
-+
-+	rc = cxl_mem_get_partition_info(mds);
-+	if (rc) {
-+		dev_err(dev, "Failed to query partition information\n");
-+		return rc;
-+	}
-+
-+	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM);
-+	add_part(info, mds->active_volatile_bytes, mds->active_persistent_bytes,
-+		 CXL_PARTMODE_PMEM);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_mem_dpa_fetch, "CXL");
-+
-+
-+/**
-+ * cxl_set_capacity: initialize dpa by a driver without a mailbox.
-+ *
-+ * @cxlds: pointer to cxl_dev_state
-+ * @capacity: device volatile memory size
-+ */
-+int cxl_set_capacity(struct cxl_dev_state *cxlds, u64 capacity)
-+{
-+	struct cxl_dpa_info range_info = {
-+		.size = capacity,
-+	};
-+
-+	add_part(&range_info, 0, capacity, CXL_PARTMODE_RAM);
-+	return cxl_dpa_setup(cxlds, &range_info);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_set_capacity, "CXL");
-+
- /**
-  * set_exclusive_cxl_commands() - atomically disable user cxl commands
-  * @mds: The device state to operate on
-diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-index 704b0ebae937..18b535b3ea40 100644
---- a/drivers/net/ethernet/sfc/efx_cxl.c
-+++ b/drivers/net/ethernet/sfc/efx_cxl.c
-@@ -68,6 +68,11 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
- 	 */
- 	cxl->cxlds.media_ready = true;
- 
-+	if (cxl_set_capacity(&cxl->cxlds, EFX_CTPIO_BUFFER_SIZE)) {
-+		pci_err(pci_dev, "dpa capacity setup failed\n");
-+		return -ENODEV;
-+	}
-+
- 	probe_data->cxl = cxl;
- 
- 	return 0;
-diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-index 016c74fb747c..802b143de83d 100644
---- a/include/cxl/cxl.h
-+++ b/include/cxl/cxl.h
-@@ -226,4 +226,6 @@ struct cxl_dev_state *_devm_cxl_dev_state_create(struct device *dev,
- 
- struct cxl_memdev *devm_cxl_probe_mem(struct cxl_dev_state *cxlds,
- 				      struct range *range);
-+
-+int cxl_set_capacity(struct cxl_dev_state *cxlds, u64 capacity);
- #endif /* __CXL_CXL_H__ */
--- 
-2.34.1
+>  		     sizeof(cxl_nvd->dev_id) > NVDIMM_KEY_DESC_LEN);
+> -	sprintf(cxl_nvd->dev_id, "%llx", cxlmd->cxlds->serial);
+> +	sprintf(cxl_nvd->dev_id, "%lld", cxlmd->cxlds->serial);
+>  
+>  	return cxl_nvd;
+>  }
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 1297594beaec..3463faeb8a15 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -487,7 +487,8 @@ struct cxl_nvdimm_bridge {
+>  	struct nvdimm_bus_descriptor nd_desc;
+>  };
+>  
+> -#define CXL_DEV_ID_LEN 19
+> +/* Holds a u64 serial as a decimal string: up to 20 digits + NUL */
+> +#define CXL_DEV_ID_LEN 21
+>  
+>  enum {
+>  	CXL_NVD_F_INVALIDATED = 0,
+> 
+> base-commit: 8cd9520d35a6c38db6567e97dd93b1f11f185dc6
 
