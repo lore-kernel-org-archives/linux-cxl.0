@@ -1,68 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48F33939B0
-	for <linux-cxl@vger.kernel.org>; Tue, 23 Jun 2026 19:55:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDE0393DC0;
+	Tue, 23 Jun 2026 20:13:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782244550; cv=none; b=nhuQm68t/6RyItk6b43feCNBm/91XrcrxaN8f8iCbm4pvTEGKVzG62tH0J5cNpa2CvmWtz/RiiGYmUmsirXNIlUBGu59YX3XlH7NzzvHv22dVz3QqV/ppIGexWuJMvgmjiC1bZ6hf4AZ4mijAsTH36xp+LMJfcrihMaLrevGKeU=
+	t=1782245624; cv=none; b=taJT9RUkIT9DE3Oz5btiLUpQxU3dR2RCdV9l2mW0RSECeEfx+dH/zYYVIpBfVVaHUH0T1gFhJcAuIFyCC2TBO2Zdry5O7CUkbjRk8o7xKqvocKPuKpHNO83ktTdUeVCDBK9M9JY8zJwCkq+H94BJIUiodv+EUAReBNBvYt5fs5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782244550; c=relaxed/simple;
-	bh=vPrIJqTnOv6bBWQ8lhFbwku9SNJ8NMBLFypflR7j2tw=;
+	s=arc-20240116; t=1782245624; c=relaxed/simple;
+	bh=PHGXJxOtvZv/2oM4oitNGgJriT6/viGTPr6wr/g0/HM=;
 	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=UaV3hMjdbrivww1ZimMs4Nq5hQ0jApakG8MiYR81IQMsmzNH7Pmb/wdD8Wy/ZcI3YoTXsTRo9vBAjeovfHvrZ3vvm+WF9u5JiLXZrue7kuOX5YAjk6VrCk5XlxkPDy8L2jZROgyWQ5Lk254hgjVJZWfok1kjaS+bmpivqt5yR0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OvuT1jp7; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=a5M+jnCy6T/bzMpIdWisJylkxyUW+F4fOmNNmfe/Hz/lAkCtVVUVhloojjsIQ1KiyrtlfPrLzRVPUtZwJOuTfAFTXWfzWk6MBfSuS2KEQlvCaphPml3wnlWwP6h2ZiZ3Ik4borlUvCbcWkwstdSvoe6guMUsW89MQDrPBbzFSYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ds3/5E0Z; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OvuT1jp7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85A261F00A3A
-	for <linux-cxl@vger.kernel.org>; Tue, 23 Jun 2026 19:55:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ds3/5E0Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C62D01F000E9;
+	Tue, 23 Jun 2026 20:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782244547;
-	bh=TamdkO/99lND0DyP2RW0Qyvn4QlOK30LgHVRZNI05Qg=;
+	s=k20260515; t=1782245623;
+	bh=+pTaiP9/XzZRkS43G4ANQ98/hCEbIOicBYmW2LYukrw=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=OvuT1jp75bN09jmBqpja++Url3k/OP3NRbrVPE++Sbav1zOkbR00QhgnRv7lBStCX
-	 1/8bYLQYlayOQBV8a1nnJ9CU0oUg3X0TvLEwGFPexPSHTrvmY4eGrnmmKKnhArLjRv
-	 wHG6XI72fr4X6RtlnQFH+e6kkDkrQrZeGuseGC3s0vj73wU2ZRIfb4sMd/fmQU06kX
-	 jv5sXWKS//Fljw/laCqxEhYjeHx6LYdrlzHJEf2sscZNcI9txueUyjcSEo+CwdhH+E
-	 jGEoZAMh/3qwDImQGT+0JX1zuGJsW6et7WioohVs6B6FjonQf2JiXnAtfVBd0r36WA
-	 GB/as6BhD46iw==
-Received: from phl-compute-03.internal (phl-compute-03.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id E4BF1F40085;
-	Tue, 23 Jun 2026 15:55:46 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Tue, 23 Jun 2026 15:55:46 -0400
-X-ME-Sender: <xms:wuQ6av0HzkR_mJsJgsZWWx29-0GumKOopex1nuxlPAqDHaBeyJ8-qQ>
-    <xme:wuQ6alis9NuxRys2aUp6TeWeh6vefW27n2C7O6w0waGbI_6X38K5qOWBCV4YetEP_
-    JyX-Bdi9DluTrtHGyhVUT-rrrIh_7qaILWGOPq-XgSz6Fl2fONWUA>
-X-ME-Received: <xmr:wuQ6atR5ot_wzNnnNouAZUjCM-v7vSKy32zhJU824pGunoh-goIKWulo6INqYXO4d4lQiZtiVvYnDUEiuC8yMSECNynpYPDLemk>
-X-ME-Proxy-Cause: dmFkZTFGfjdVKsCRjRg0NKjxM+yFWMNUvQhZskt0GjGIYBMUeSBr6bHMt1EqR9pbht6bzD
-    QcuX0bk6eWGrwm6knJRD/5k01KE0xuJ/IRCAvjDK9QR2AJifb6EmNCNX3Ngi5dBRMDG9sS
-    nXT4REIapiAwp6poKnqK3k7PtFcLLjH7UywMBygZGEJEaZIr/u+lq8DBMP3J0ZvaEKq6cB
-    iOUokWpB6gd/PSPKLeAEEHLrLTi2uqWOc03pWQ45NaIs8Z0VXOMqlb3pLQ6EuqhXmXtvu2
-    4Ecn6ntkhHY/Daj4MO+aD3isgrr0fDqqOFtkPwylu5jNd/PvOgI87EyRprbYKgkycobQCh
-    hCSneqX/FhHkpHKNYIQsGbsKOrtdaboe0BYU5SgaTTL3ne0sTKXGut3aBlaumHJ9S+4kMv
-    bguRGMqNvPytbt/gQA0nt63e8ffGNHUJuFuT8W6Fe951oUCnB0XxwB+XQoEqrSEl4gA2XI
-    zohJYMjkYv5bcIRMaG1eRo5creVcHVVe30GhBqQWOdmEAzYPPaG0gUtInAkz6c/jIJw4L2
-    5xffwujPPPb5DGNBSbL0Oo809GZQFo8dSyJZCJpBSGbNxbDz16USOlAwDObYRb/1pPQ3m0
-    9cZPrfOqqcRzKw3CWQcTKpenfuIl0hlDK7mWY/b+dp4RHzluyqSaEFvxJAsw
-X-ME-Proxy: <xmx:wuQ6auja3EExPcaS3bx0Wme3aLREhi6GFlYmUVe2ZR6DAo5DhwooRQ>
-    <xmx:wuQ6al4g998VPVwnMSPh-pcw1Lw_rrzURNPM88JNUvkX228w_XLISg>
-    <xmx:wuQ6ajC9hsiKNCTA4YJGiudYm0C4Noih3934GQ19L6xlt5SY9moEwg>
-    <xmx:wuQ6aka3auXJUIMRrXCqU5maSE946buJuaEKr5sM7po4uy_lNtKKZA>
-    <xmx:wuQ6amatz5qM6AiU0Xp9PTtGF-VXbhNO8J8ALwKMfWgXxzFY4nd8o2u_>
+	b=Ds3/5E0ZqCs08Ta8voqnBHbYrbGoKvZwn8BosUO2LNQRD1UPyAdWjR2rwDpPFSYP6
+	 TZqUG8I7vCsNpE+SUsU3Mrg03Ss/6wDAiGdn34DJUe4jKj3WoYQWtu3ttysG0nzKR2
+	 oG5RyO914PQ5vt52B/1xBmKUajIBzwE/Ed/G5+yJ1ziTF0JQZhZwJp0kI3rWGADGvy
+	 wrUcRl3eGkRrz9RqudU4Nr8N0qj//mesFPikyM3n+qTot+90adMthMNeq2QTTQsQTK
+	 Ez2N4RyGveyHIHFHkYMc3VQcPrjL15JHlS76FpIVUEMQ1FtQHDACP282l/tiSbADvh
+	 HYFVHjBj0+5vg==
+Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 2D7A9F40077;
+	Tue, 23 Jun 2026 16:13:42 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-02.internal (MEProxy); Tue, 23 Jun 2026 16:13:42 -0400
+X-ME-Sender: <xms:9ug6aoSv2FfJ0yPSQhLEO79HY3GmDUj7oigj4Bi4Z2Am6eKYnIhCgA>
+    <xme:9ug6akI9Fq5mxTbxdbzIjFz1MGKOpFpo3zfpSaL8K8Ge0G-DqgdkDdiAzDZdXQgPz
+    7AGquAHawBM8HFA1jP2DwZUVHmWnE_UNP-2J3y5Ijxdzp20Y25KbQ>
+X-ME-Received: <xmr:9ug6ah0axUrGdDA4esG9cdyTdGMUonC7kgMpoUGd-cL7Y4cZg-9OwIi3twOSCjEuxwL0FW_4EdKlmic44uwgT0pAKw-Q3A6tqXU>
+X-ME-Proxy-Cause: dmFkZTFFF1FA8dWde6p9MtEMMJ/U1T/qXIGOJdiBLeeFEUydWpKvaIWSXjvXcLYz5wTXmB
+    hDSEfag0Kjhc+mGiHTqsV/nAPaStvP+4hZvfxahEt35+eLPAljIFjX5yrdIJ7MFArc0ekS
+    wNHJWXpePtoX22SSrWaTkMRdZPY6t8FkfQRp5oxwZ1dlkAScECC3uFqXI7U5LAXl9Kb5Go
+    6pWqDz8iAtF41bTPp3ZIIJDpVftedree52Bt1FwJqTSgUak6qTm2z/hhi1/tTHnoGPI0Lm
+    5P8i02hALlJpHzoQ3smo1bANw5MaldRb1s9zHzs8o7bkUbCxdgojNCzx9TBKztP/gp2Bl0
+    DtjUjQY8LNYnIkkoL1tU6lvy6XojgJxEmIwdYyrQnsmzRQJHjwEhr7HvICwdydx214PMUq
+    mZOru+0uyAlpeRSURTGQWNmp5wmJo18sVZ2W06tONMH/h8JBxiUCwgBiVrd30GMHe0WIML
+    pTKetUlngBcl0htPPnIYC7tvJHIieRP7VxDOG2vFcSK5kO13x+rsjEHoMBnvGCMJnjXses
+    8SJEQCF2nZ7r17mln+TAv4yAVMbtwq8EBG9WCsCq/6KsNnpBtViH233aFR3J8rQtLTLTkw
+    NoGVZgaIhEGVQ7LMlNo/iQM8n2TstY/V6sURoWCI+as1I9JI907TgRxyzm0w
+X-ME-Proxy: <xmx:9ug6avLCeeRNK291jG2EMHSRIRcDtH64XK-1lGe5d7q3lpYbALXvNQ>
+    <xmx:9ug6apmO30nowumG4naJRNHRYJemUdqII8quyhhLGk26sD_A7WSlcw>
+    <xmx:9ug6alPhZzsWXQ2NNMVQ0-5vIK-oWJYvW5Qp3pwGj4A2iiSurTj5nA>
+    <xmx:9ug6agyQ6dD5v9sVntilcCsbgNlErpS4x-KrtsVt1wh4yw4K8yUUig>
+    <xmx:9ug6alnOvpt8dHfXcrnHe73dxIpX6gLT9ZcrioeUpyrC5agnvr-ejKSr>
 Feedback-ID: i67ae4b3e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 23 Jun 2026 15:55:46 -0400 (EDT)
-Date: Tue, 23 Jun 2026 12:55:45 -0700
+ 23 Jun 2026 16:13:41 -0400 (EDT)
+Date: Tue, 23 Jun 2026 13:13:40 -0700
 From: "Dan Williams (nvidia)" <djbw@kernel.org>
-To: sashiko-bot@kernel.org, 
- Richard Cheng <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org
-Message-ID: <6a3ae4c17f641_3c9f100b7@djbw-dev.notmuch>
-In-Reply-To: <20260623093738.6B2C11F000E9@smtp.kernel.org>
+To: Richard Cheng <icheng@nvidia.com>, 
+ dave@stgolabs.net, 
+ jic23@kernel.org, 
+ dave.jiang@intel.com, 
+ alison.schofield@intel.com, 
+ vishal.l.verma@intel.com, 
+ djbw@kernel.org, 
+ iweiny@kernel.org, 
+ danwilliams@nvidia.com
+Cc: ming.li@zohomail.com, 
+ terry.bowman@amd.com, 
+ alucerop@amd.com, 
+ linux-cxl@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ newtonl@nvidia.com, 
+ kristinc@nvidia.com, 
+ kaihengf@nvidia.com, 
+ kobak@nvidia.com, 
+ mochs@nvidia.com, 
+ Richard Cheng <icheng@nvidia.com>, 
+ Vishal Aslot <vaslot@nvidia.com>
+Message-ID: <6a3ae8f486d0e_3c9f100bd@djbw-dev.notmuch>
+In-Reply-To: <20260623091019.33417-2-icheng@nvidia.com>
 References: <20260623091019.33417-1-icheng@nvidia.com>
  <20260623091019.33417-2-icheng@nvidia.com>
- <20260623093738.6B2C11F000E9@smtp.kernel.org>
 Subject: Re: [PATCH v5 1/2] cxl/hdm: Allow zero sized HDM decoders
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -72,105 +89,73 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain;
  charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-sashiko-bot@ wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> 
-> New issues:
-> - [High] cxl_dpa_free() incorrectly bypasses teardown for zero-sized decoders, permanently locking hdm_end and breaking the LIFO DPA teardown sequence.
-> 
-> Pre-existing issues:
-> - [High] Pre-existing bug in cxl_get_poison_unmapped: prematurely breaking out of the partition loop skips poison scanning for unmapped partitions.
-> --
-> 
-> commit 66fbe5db5d8f3f27534b45af8c4ef71b88ab7f3e
-> Author: Richard Cheng <icheng@nvidia.com>
-> 
-> cxl/hdm: Allow zero sized HDM decoders
-> 
-> Treat empty decoders as first class instead of special casing them, back
-> them with a kmalloc'd resource, since the resource tree can't represent
+Richard Cheng wrote:
+> CXL r4.0 =C2=A78.2.4.20.12 ("Committing Decoder Programming") and =C2=A7=
+14.13.10
+> ("CXL HDM Decoder Zero Size Commit") permit committing an HDM decoder
+> with size 0. BIOS may commit and lock such decoders so the OS cannot
+> program regions through them, this is a design choice rather than a spe=
+c
+> requirement.
+> The kernel rejected these with -ENXIO during port enumeration and abort=
+ed
+> the whole port, so affected systems showed nothing under 'cxl list'.
+> =
+
+> Treat empty decoders as first class instead of special casing them, bac=
+k
+> them with a kmalloc'd resource, since the resource tree can't represent=
+
 > an empty range, and keep the skip and hdm_end accounting intact. Guard
-> the paths an empty decoder can't serve, e.g. region attach, DPA free, and
+> the paths an empty decoder can't serve, e.g. region attach, DPA free, a=
+nd
 > poison queries.
-> 
-> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> > index 0c80b76a5f9b4..ccbab2e21f060 100644
-> > --- a/drivers/cxl/core/hdm.c
-> > +++ b/drivers/cxl/core/hdm.c
-> [ ... ]
-> > @@ -545,7 +569,7 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
-> >  	struct device *dev = &cxled->cxld.dev;
-> >  
-> >  	guard(rwsem_write)(&cxl_rwsem.dpa);
-> > -	if (!cxled->dpa_res)
-> > +	if (cxled_empty(cxled))
-> >  		return 0;
-> 
-> [Severity: High]
-> Does this early return prevent decrementing port->hdm_end for zero-sized
-> decoders?
-> 
-> If an unlocked zero-sized decoder is freed by userspace (for example, by
-> writing 0 to dpa_size in sysfs), cxled_empty() returns true because
-> resource_size(dpa_res) is 0. The function then returns 0 early, skipping
-> devm_cxl_dpa_release().
-> 
-> Because hdm_end is decremented only inside __cxl_dpa_release(), bypassing it
-> leaves port->hdm_end permanently elevated. Would subsequent attempts to free
-> lower-indexed decoders fail the cxled->cxld.id != port->hdm_end check with
-> -EBUSY, preventing further dynamic DPA reconfiguration?
+> =
 
-This is blocked by the fact that there is no path to clear
-CXL_DECODER_F_ENABLE due to empty decoders not participating in any
-region. The permanent nature of empty decoders is ok for now.
+> Suggested-by: Dan Williams <djbw@kernel.org>
+> Signed-off-by: Vishal Aslot <vaslot@nvidia.com>
+> Signed-off-by: Richard Cheng <icheng@nvidia.com>
 
-Might be worth a comment to note that emtpy decoders are not manageable
-by userspace.
+Looks good, you added the cxled_empty() helper and dropped the dev_dbg()
+announcing the arrival of committed empty decoders like we chatted
+about.
 
-> >  	if (cxled->cxld.region) {
-> >  		dev_dbg(dev, "decoder assigned to: %s\n",
-> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> > index e50dc716d4e82..eeecb588821a4 100644
-> > --- a/drivers/cxl/core/region.c
-> > +++ b/drivers/cxl/core/region.c
-> [ ... ]
-> > @@ -2953,9 +2960,17 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port)
-> >  	};
-> >  
-> >  	rc = device_for_each_child(&port->dev, &ctx, poison_by_decoder);
-> > -	if (rc == 1)
-> > +	if (rc == 1) {
-> > +		/*
-> > +		 * No decoder with a sized DPA reservation was walked
-> > +		 * (every committed decoder is zero-size): scan all
-> > +		 * partitions in full.
-> > +		 */
-> > +		if (ctx.part < 0)
-> > +			ctx.part = 0;
-> >  		rc = cxl_get_poison_unmapped(to_cxl_memdev(port->uport_dev),
-> >  					     &ctx);
-> 
-> [Severity: High]
-> This is a pre-existing issue, but does cxl_get_poison_unmapped() prematurely
-> break out of its partition loop when encountering a fully mapped partition?
-> 
-> Looking at cxl_get_poison_unmapped() in drivers/cxl/core/region.c:
-> 
-> for (int i = ctx->part; i < cxlds->nr_partitions; i++) {
->         ...
->         length = res->end - offset + 1;
->         if (!length)
->                 break;
->         rc = cxl_mem_get_poison(...);
-> 
-> If it processes a partition that is fully mapped, length becomes 0, and the
-> break statement completely terminates the outer loop over the remaining
-> partitions instead of moving to the next one. Should this be a continue
-> instead of a break so that poison in subsequent unmapped partitions isn't
-> silently ignored?
+The comment on cxled_empty() could use come adjustment, but maybe Dave
+can fix that up on applying.
 
-This looks accurate. On entry for a fully mapped partition ctx->part
-will be initialized from the decoder for that partition. If there are
-more unmapped partitions they will be skipped.
+Reviewed-by: Dan Williams <djbw@kernel.org>
+
+[..]
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 1297594beaec..5231345ff78e 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -324,6 +324,15 @@ struct cxl_endpoint_decoder {
+>  	int pos;
+>  };
+>  =
+
+> +/*
+> + * Some BIOS use locked empty decoders to preclude HDM decode aliasing=
+
+> + * for TSP operation. Use cxled_empty() to handle that common case.
+> + */
+
+Hmm, that is not the "common case".
+
+/*
+ * The common case is decoders with no reservation, but also handle
+ * decoders with a zero-sized reservation that firmware may install for
+ * security lockdown purposes.
+ */
+
+> +static inline bool cxled_empty(struct cxl_endpoint_decoder *cxled)
+> +{
+> +	return !cxled->dpa_res || !resource_size(cxled->dpa_res);
+> +}
+> +
+>  /**
+>   * struct cxl_switch_decoder - Switch specific CXL HDM Decoder
+>   * @cxld: base cxl_decoder object=
