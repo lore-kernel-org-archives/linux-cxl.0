@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF89635F5E3
-	for <linux-cxl@vger.kernel.org>; Tue, 23 Jun 2026 09:37:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52663546CB
+	for <linux-cxl@vger.kernel.org>; Tue, 23 Jun 2026 12:40:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782207460; cv=none; b=i3twuXKMERk5F3A6eZQawnh8AoR/PQ5tuXLWfqXTX03orVkgJloHqRkjREIz9jUBzFdUx+hg7zytoS+2jKHUg8O5aPSXrOjXX/AsJbz6z6vbNd5zL9oOhA7h5IDURsOPmOjoq93caLSA8AlG2+A+NoXJx+gHbHlnXC25ML22l0Y=
+	t=1782218456; cv=none; b=ICAbOn767mqfyn19Racza8xTiBlQXDhfdSsToScKREbZVObx+zAIkx0r96GmeVP3LQDpCaaLHdNhldCeaoNreQdozP3KzdPbZEZ+LGgwYIma2vRud/KZvO3uUcZ0yzXTF9Q5ylz80xcrES3d00AcsbVCAfCqv/5UDdKuRuA2h+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782207460; c=relaxed/simple;
-	bh=uroWcFp8ewfMIkRYlE/RLybplKYBfN1v5Qzm0+xJUbk=;
+	s=arc-20240116; t=1782218456; c=relaxed/simple;
+	bh=dG4IF5QE7dmqwt873MWoKRTjsC86AEDQW1DO99aB/wc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=R3K5PyizpOynIJ3Hmo4sTBz3W22IDAvVFInQjGSYCLzbDUNunwXjSqfkKv6dVPqJ1u7OxzTYtTKlpyPXjXCFY88K7CBCww++7+nOyth14Pik5hr/EaRLMP8aXlh8RyYIOP03FzP5ci935bVfdiNE1sCc+Flu9f+ZXAtiBTlR3ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PYJv1cpA; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=PJ7TM1QwDis3o1JAI9pX5ae57H5pPOfWl2s6APKUYNpNxireKD4ZCmNv6MHQE1nEudY16CRKyuhmTZxJtsLIG8IOxsQiBFLq70OgE4k8hUTs0BFdqr48KSn6OGnhywAjTq5ea0ZO/TLdIQiE6Tm/UwYl5Y00Vo0B3gYFDVBsW6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHr7xrCk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PYJv1cpA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B2C11F000E9;
-	Tue, 23 Jun 2026 09:37:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHr7xrCk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 291BB1F000E9;
+	Tue, 23 Jun 2026 12:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782207458;
-	bh=HrLrourLon+70CVcQAJbM8mdsmjW/YJwSYGbT7VvZEo=;
+	s=k20260515; t=1782218455;
+	bh=mlMTCfU6VG+KuA1pfqDMlJsXnrQtZeUGXlEo8JdTajg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PYJv1cpAT40bP7odGnchOF/0FuFI1wdyp2kl0HrSoMyHLxbRr0Q5duU3r/KZYTfoj
-	 +Jh+c7FO6fDXBDcEYxLYYn5H04PxnZAEvIq8Vz5cYjZzIl/P5aezq39tcqQuHyx8cu
-	 ElA/V5q64BBZqEleYFL3dkTfUTplQW3K1ZtUDM+F3IO2xdb6kr2tff5SzQvFLljsVv
-	 Y8tSNzZJAGen6KEwPr33bAfIYqhIHQUjDF+mpNp23nUMBvxiqNzwA2swHbR2ONI2gx
-	 BNsKC79In7na8fe3ijdPvT2tDP7CBC0HTJP0/o0FtX05zgw49oC42MkKPlTR7ELqaR
-	 b6HGSMGD/8s6Q==
+	b=gHr7xrCk/uY6nMYpbgI386jKzipqFAx7UiO5VQhZvS0LpRJq/WcuyG30tH0il/bS+
+	 n/99MpL+rQSA7bMS2U/ZJoVRnIw/VOG7r1qhhkUBEEp6mIs735iKT8uVeqMz7w5KWN
+	 FXbPiil2MjzmgyzbQByz54MSvCFaAsKhGGq31YT2Vo7r+alvOSk6BSD/m9ogSldr7M
+	 6Mnl8KIVHQS/EORS1dNc9CqOrsmpZXcaFSGIk9oxdaVBXRRitijBRhZA5Y6muiVlk/
+	 1LgBC3y42nDGRPIqj+s1KvRQZTkNdf4rATv17GELyp2Mbt8ZJpI7umYY4gpxMVJP4M
+	 p+yMBmc9IaCAg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 1/2] cxl/hdm: Allow zero sized HDM decoders
+Subject: Re: [PATCH v29 4/5] sfc: obtain and map cxl range using
+ devm_cxl_probe_mem
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Richard Cheng" <icheng@nvidia.com>
+To: alejandro.lucero-palau@amd.com
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260623091019.33417-2-icheng@nvidia.com>
-References: <20260623091019.33417-1-icheng@nvidia.com>
- <20260623091019.33417-2-icheng@nvidia.com>
+In-Reply-To: <20260622124010.2192888-5-alejandro.lucero-palau@amd.com>
+References: <20260622124010.2192888-1-alejandro.lucero-palau@amd.com>
+ <20260622124010.2192888-5-alejandro.lucero-palau@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 23 Jun 2026 09:37:38 +0000
-Message-Id: <20260623093738.6B2C11F000E9@smtp.kernel.org>
+Date: Tue, 23 Jun 2026 12:40:54 +0000
+Message-Id: <20260623124055.291BB1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -46,102 +47,88 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-
-New issues:
-- [High] cxl_dpa_free() incorrectly bypasses teardown for zero-sized decode=
-rs, permanently locking hdm_end and breaking the LIFO DPA teardown sequence.
-
-Pre-existing issues:
-- [High] Pre-existing bug in cxl_get_poison_unmapped: prematurely breaking =
-out of the partition loop skips poison scanning for unmapped partitions.
+- [High] Resource Teardown Ordering Violation in efx_pci_remove
+- [High] Missing Hardware State Restoration for CXL HDM Decoders After FLR
 --
 
-commit 66fbe5db5d8f3f27534b45af8c4ef71b88ab7f3e
-Author: Richard Cheng <icheng@nvidia.com>
+commit cd561fb9993e195accb646b7a8524a13a2dd0b79
+Author: Alejandro Lucero <alucerop@amd.com>
+Subject: sfc: obtain and map cxl range using devm_cxl_probe_mem
 
-cxl/hdm: Allow zero sized HDM decoders
+This commit introduces CXL support to the sfc driver by creating a CXL
+memory device using devm_cxl_probe_mem() and mapping the CXL range for
+CTPIO buffer usage.
 
-Treat empty decoders as first class instead of special casing them, back
-them with a kmalloc'd resource, since the resource tree can't represent
-an empty range, and keep the skip and hdm_end accounting intact. Guard
-the paths an empty decoder can't serve, e.g. region attach, DPA free, and
-poison queries.
-
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 0c80b76a5f9b4..ccbab2e21f060 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-[ ... ]
-> @@ -545,7 +569,7 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
->  	struct device *dev =3D &cxled->cxld.dev;
+> diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/ef=
+x.c
+> --- a/drivers/net/ethernet/sfc/efx.c
+> +++ b/drivers/net/ethernet/sfc/efx.c
+> @@ -984,6 +984,7 @@ static void efx_pci_remove(struct pci_dev *pci_dev)
+>  	efx_fini_io(efx);
 > =20
->  	guard(rwsem_write)(&cxl_rwsem.dpa);
-> -	if (!cxled->dpa_res)
-> +	if (cxled_empty(cxled))
->  		return 0;
+>  	probe_data =3D container_of(efx, struct efx_probe_data, efx);
+> +	efx_cxl_exit(probe_data);
 
 [Severity: High]
-Does this early return prevent decrementing port->hdm_end for zero-sized
-decoders?
+Does this tear down resources in the correct order?
 
-If an unlocked zero-sized decoder is freed by userspace (for example, by
-writing 0 to dpa_size in sysfs), cxled_empty() returns true because
-resource_size(dpa_res) is 0. The function then returns 0 early, skipping
-devm_cxl_dpa_release().
+efx_fini_io() calls pci_disable_device() which disables memory decoding for
+the endpoint.
 
-Because hdm_end is decremented only inside __cxl_dpa_release(), bypassing it
-leaves port->hdm_end permanently elevated. Would subsequent attempts to free
-lower-indexed decoders fail the cxled->cxld.id !=3D port->hdm_end check with
--EBUSY, preventing further dynamic DPA reconfiguration?
+Because the CXL memdev and its sysfs interfaces are managed by devres
+(created via devm_cxl_probe_mem() during probe), they remain active until
+devres_release_all() runs after efx_pci_remove() returns.
 
->  	if (cxled->cxld.region) {
->  		dev_dbg(dev, "decoder assigned to: %s\n",
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index e50dc716d4e82..eeecb588821a4 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-[ ... ]
-> @@ -2953,9 +2960,17 @@ int cxl_get_poison_by_endpoint(struct cxl_port *po=
-rt)
->  	};
+If userspace (e.g., CXL utilities, udev) accesses the CXL sysfs attributes
+in this window, the CXL core will attempt to read memory-mapped component
+registers on the disabled device.
+
+Could this result in PCIe Unsupported Requests (UR) and a fatal AER fault or
+kernel panic?
+
 > =20
->  	rc =3D device_for_each_child(&port->dev, &ctx, poison_by_decoder);
-> -	if (rc =3D=3D 1)
-> +	if (rc =3D=3D 1) {
-> +		/*
-> +		 * No decoder with a sized DPA reservation was walked
-> +		 * (every committed decoder is zero-size): scan all
-> +		 * partitions in full.
-> +		 */
-> +		if (ctx.part < 0)
-> +			ctx.part =3D 0;
->  		rc =3D cxl_get_poison_unmapped(to_cxl_memdev(port->uport_dev),
->  					     &ctx);
+>  	pci_dbg(efx->pci_dev, "shutdown successful\n");
+
+[ ... ]
+
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sf=
+c/efx_cxl.c
+> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+
+[ ... ]
+
+> @@ -73,9 +74,31 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  		return -ENODEV;
+>  	}
+> =20
+> +	cxl->cxlmd =3D devm_cxl_probe_mem(&cxl->cxlds, &cxl_pio_range);
 
 [Severity: High]
-This is a pre-existing issue, but does cxl_get_poison_unmapped() prematurely
-break out of its partition loop when encountering a fully mapped partition?
+Is there a mechanism to restore the CXL HDM decoders after a Function Level
+Reset (FLR)?
 
-Looking at cxl_get_poison_unmapped() in drivers/cxl/core/region.c:
+When the driver performs a device reset via pci_reset_function() (e.g.,
+during efx_mcdi_reset() in drivers/net/ethernet/sfc/mcdi.c to recover from
+an MCDI timeout), the PCIe endpoint undergoes an FLR. This wipes the
+internal device state, including the CXL Component Registers and HDM
+decoders.
 
-for (int i =3D ctx->part; i < cxlds->nr_partitions; i++) {
-        ...
-        length =3D res->end - offset + 1;
-        if (!length)
-                break;
-        rc =3D cxl_mem_get_poison(...);
+While the PCI core automatically saves and restores standard configuration
+space, it does not restore the memory-mapped CXL HDM decoders.
 
-If it processes a partition that is fully mapped, length becomes 0, and the
-break statement completely terminates the outer loop over the remaining
-partitions instead of moving to the next one. Should this be a continue
-instead of a break so that poison in subsequent unmapped partitions isn't
-silently ignored?
+Without notifying the CXL core or manually re-initializing the CXL DPA
+capacity and reprogramming the HDM decoders, the device silently stops
+decoding the physical address range mapped to cxl->ctpio_cxl.
 
+Could subsequent PIO packet transmissions to the ctpio_cxl mapping trigger
+PCIe Unsupported Requests (UR) and lead to AER faults or kernel panics?
+
+> +	if (IS_ERR(cxl->cxlmd)) {
+> +		pci_err(pci_dev, "CXL accel memdev creation failed\n");
+> +		return PTR_ERR(cxl->cxlmd);
 > +	}
-> =20
->  	return rc;
->  }
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260623091019.3341=
-7-1-icheng@nvidia.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260622124010.2192=
+888-1-alejandro.lucero-palau@amd.com?part=3D4
