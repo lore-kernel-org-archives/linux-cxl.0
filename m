@@ -1,141 +1,156 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD1B322B8C;
-	Tue, 23 Jun 2026 16:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E04738886C
+	for <linux-cxl@vger.kernel.org>; Tue, 23 Jun 2026 17:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782233671; cv=none; b=nj98SBf3dWJQMbkZ+L7ebxtaXF/VyAX7KjXt0zAuhwlp1RLbH+VpJyVr/DTc9jmP7Gcw0QVB4iD5BujHbOAng0eeIZyddvDBW0BBAop0SYAFe61TJxSDWXIxqPgYcUl5fCLgiSiKk/EJbVrwVdk0qmytYDWeWtkPkMhGvE++4eI=
+	t=1782234083; cv=none; b=ELGL3qbRnFS3wm55WsTjtUw2pSEk3Pnil8zbaKtuS4cHlYqkKA1SR2NrG8B4WL53Ts7YytzmchOpLFzQIDWC4EqA4v6nlEVDC7xSt8to3BK0LMGagNnoSxUu3GIEjIF1wdyUfJBKQVzhEbzAeyzoH54Rn43Rb0PbGeo0I2uXTNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782233671; c=relaxed/simple;
-	bh=NRCdL7kylozZW8R4QZ6YNm8l63XyRIXOfYdrIUMB5oc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jz63EVCQ5xY5hoUCA0v1VCLgFMqVoWNZtRgFI8Rzw+ZP4/fb9IyceWBWd6/giT7EBgccYcQSeAYNyywwe3DLdmb3hPVb6Bfaq+P0LMcLk3hHtUZ/3uL04kqNGEKBV36tIyL7fWLFxCpUwaOaA97UxSsgngho4uFXFgItna7UmvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ao7r7wU5; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1782234083; c=relaxed/simple;
+	bh=drTPL+/4sCDq7xFfebBhZN9MFM/p9D5us+A1LEs9MHg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nAmKxdOI92IDzrhVbY6X2XougqxkyZaUqP/SfUfxnifX9WR8SbxGkKzNrxE+PWOsOzIMR7GSS1OHKeUZTKPxzXCwJNOvsiqXI7dgX2M71+WSIYt/ESMlp7HK+v3zM95GPwIgzghj2ANmG1mbN4yN0ttpb1XoeRn7toPBMpgKciw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=FEqdijxc; arc=none smtp.client-ip=209.85.221.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ao7r7wU5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782233669; x=1813769669;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=NRCdL7kylozZW8R4QZ6YNm8l63XyRIXOfYdrIUMB5oc=;
-  b=ao7r7wU5I7JovfzftPOTIHdGggVFF+53ApJBDJ3ocrWPc2ToP8r9SDpS
-   3glh4z1tkgoXDG7qDZNM3zioxMTvPFI/ICqSZW7OglHD8OKbAGcro5rZI
-   YwmuOu3L8NBXJ0NDeiqlltYwt/E+N6K2ceJH/VFeXNGHXVqLhg58vyJw+
-   i8nCHZktejwhLHo6E2ZfP/TycnS9Za/4lJPcUPi05p6OtbCpnKKN9k9xZ
-   1GzNBW8SlT9OQRU77YkagfrZHm7Z5VbDToXm4/y1orYhqga1Yj88kwP+J
-   5m8SSNrQ8kZoQuo1eGH8XuFa3QCf5hH4tcIjM5xPouCcPtHL+9Mch16f+
-   Q==;
-X-CSE-ConnectionGUID: shg7uQ+cQVa93l/qVtM2ew==
-X-CSE-MsgGUID: v7eMSh6NTq6FnWxE+V8qww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11826"; a="94374226"
-X-IronPort-AV: E=Sophos;i="6.24,221,1774335600"; 
-   d="scan'208";a="94374226"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2026 09:54:29 -0700
-X-CSE-ConnectionGUID: cpJ+aFK/Sne+PX+bEC7cHA==
-X-CSE-MsgGUID: +gawK/KGTAqXpF+lDNAFRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,221,1774335600"; 
-   d="scan'208";a="249596074"
-Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.108.151]) ([10.125.108.151])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2026 09:54:27 -0700
-Message-ID: <12abc0a8-6f1f-410c-91e7-479381e579ec@intel.com>
-Date: Tue, 23 Jun 2026 09:54:23 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="FEqdijxc"
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-59ebcbfb2b0so29854e0c.2
+        for <linux-cxl@vger.kernel.org>; Tue, 23 Jun 2026 10:01:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1782234081; x=1782838881; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xvgEVwQ8jfCIcJ0ba/B6osmLE2ZzPQbQhunldQ5OJKk=;
+        b=FEqdijxcJOXaYeegZW2MMFnBE3mkI8rzXD59lYgpIOwGvh61Rxt5ZrGQkDxfwNrQMU
+         HCA/HAzLxUOmTEFCUMaNlwAdjQxTZF/MX522fK+P9nZeJ9w1xfFm3FLXLTsatuaSjRV/
+         RE16PEHWdBvXn/LdxQGn1xMgVKVW4A/6nAP4Nl7ZpyqOy1ii/YeVIzc15XbI7Ck+BpMC
+         o6aakjzyiDANXbMf+h7k52ij+lguBMw4AAvDw1qPvn8u1VyOYEx5lljp6XwM4MTWK1XY
+         T0o+uz2L6/HLDCu9b0DIxT6ssCMJm4u99VP0B0GQ6BJz1kmYTj7vCpZM+xAvpMb5SQSG
+         8rFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782234081; x=1782838881;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xvgEVwQ8jfCIcJ0ba/B6osmLE2ZzPQbQhunldQ5OJKk=;
+        b=pvhdEowjFpMV62C1MyJ7VlBPFg2YExvWrNyNDpdyeZtbnLppt7mk4hU7SeV3dNdgxq
+         AbGsDb9P8LHBjN/11cTJq4aOHWK7yZemRBdR4GvQMxo9oVUAt9vVpXZmqibKu/LSYL+Z
+         5++Y3erUA9NvkMdaH47749bwtreRk0Ynl//OFbGnMEPaovHWxr26/WXkESVSnXe/mdR1
+         MPiwitoYDygQdPxjUSab7j57Wl0YgmX/Bg8/B3umFjx0xrkjOyplz056Tur5RtZdyq6T
+         472pQsSdFCeKqlK5Bxc3vShasonHl0E4mVstk0QOGxjm0SCwXaz6Jx9FIN7V2rtzewU2
+         g4qg==
+X-Forwarded-Encrypted: i=1; AFNElJ9i4Lf52FzCkOdp4kgGBfeSmBULRtKgiZfdCuATQPDjPxS0mwkcEjXDqwNe1byS2wi51bgnIxyfayM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvN00+lEUC17cEH3qyL/OvABfJlFKA/TrYY8N7Oe1ot2nKv05d
+	wKnC6jRo/VEPizxEOlcnr0HYJFNNTQhx4QDPZ2jCjblpKzpQoIx5EzPprjnnyX6htrg=
+X-Gm-Gg: AfdE7cl0aebrIfNtpfOFXCQyyXYBUOUjJnDURJBWvagNL17nNkXNYg6a83Ks3ncpFkj
+	z59i3xUDezmLWniHYNrPO/PNcKR5TBM/mjgJrjW+PbHbgREr3tnxvW8ac+BhTFRUFLDn3yZUOFP
+	WwAebpG+RsOPM9mjnM5LYzPs60+gjtW3jNbo1FDYaQdlymobowVA/c01T5aPD1lFb4qb0f4FlrM
+	N6iuI/oj5Oc2DFYYYlALyokQXMJdker5t24E4KYSa2M5aRNEizKgr324XWJJJRq/YESY3nvGGr/
+	cc7oTMFnX2nA0zmpJtrzezd3AYpTyh0CMxYqkZEM7qQSnd/XETuqbuctBVzwGFB+reiMtu/qy5+
+	eAeeufmEl+fL4jGUf466U9Wt7aF6Uq2TQTeFvMl4J7rffFxT7MJUldVHCbvKfx5zePYjHpDnuza
+	/WWoLQx9CeKxqHuZunGlCEd9MWJbV3iANNY9sh8BD594VP4MQNdVOShsAJvDodDHGKViCx
+X-Received: by 2002:a05:6102:8089:b0:631:e729:4575 with SMTP id ada2fe7eead31-72ff3f7fea1mr2054044137.5.1782234074396;
+        Tue, 23 Jun 2026 10:01:14 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-9260079070bsm327795185a.40.2026.06.23.10.01.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jun 2026 10:01:13 -0700 (PDT)
+Date: Tue, 23 Jun 2026 13:01:09 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "Dan Williams (nvidia)" <djbw@kernel.org>
+Cc: Richard Cheng <icheng@nvidia.com>, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	newtonl@nvidia.com, kristinc@nvidia.com, kaihengf@nvidia.com,
+	kobak@nvidia.com, vaslot@nvidia.com, smadhavan@nvidia.com
+Subject: Re: [PATCH v4 0/2] Support zero-sized HDM decoders
+Message-ID: <ajq71cLSc9kb0Ffd@gourry-fedora-PF4VCD3F>
+References: <20260607081345.61954-1-icheng@nvidia.com>
+ <6a289e3665fc5_4fa78100b1@djbw-dev.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cxl: Convert PCIBIOS errors to errno on remaining
- DVSEC/PCIe accesses
-To: Richard Cheng <icheng@nvidia.com>, dave@stgolabs.net, jic23@kernel.org,
- alison.schofield@intel.com, vishal.l.verma@intel.com, djbw@kernel.org,
- danwilliams@nvidia.com
-Cc: iweiny@kernel.org, ming.li@zohomail.com, terry.bowman@amd.com,
- alucerop@amd.com, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- newtonl@nvidia.com, kristinc@nvidia.com, kaihengf@nvidia.com,
- kobak@nvidia.com, mochs@nvidia.com
-References: <20260623062002.21447-1-icheng@nvidia.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260623062002.21447-1-icheng@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6a289e3665fc5_4fa78100b1@djbw-dev.notmuch>
 
-
-
-On 6/22/26 11:20 PM, Richard Cheng wrote:
-> Follow-up to Dav Jiang's commit 26aa60e02762 ("cxl/pci: Convert PCIBIOS
-> errors to errno on DVSEC config accesses") .
+On Tue, Jun 09, 2026 at 04:13:58PM -0700, Dan Williams (nvidia) wrote:
+> Richard Cheng wrote:
+> > Hello,
+> > 
+> > This v4 continues Vishal Aslot's "Support zero-sized decoders" series [1]
+> > and addresses the v3 review of patch 1's port->hdm_end handling [2].
+> > 
+> > CXL r3.2 §8.2.4.20.12 and §14.13.10 permit committing an HDM decoder with
+> > size 0. BIOS commits and LOCKs such decoders to burn the trailing, unused
+> > slots so the OS cannot program regions through them, e.g. a Type 3 device
+> > in a Trusted Computing Base (TCB) established via the Trusted Security
+> > Protocol (TSP). init_hdm_decoder() rejected these with -ENXIO during port
+> > enumeration and aborted the whole port, so affected systems showed nothing
+> > under 'cxl list'.
+> > 
+> > Patch 1 enumerates the decoder into the topology with its HW-reported LOCK
+> > state and skips the DPA reservation it does not need.
+> > 
+> > On port->hdm_end (the v3 review): v3 advanced the watermark for the
+> > zero-size decoder. sashiko correctly noted the write was outside
+> > cxl_rwsem.dpa, and that advancing it without a balanced release strands
+> > hdm_end -- cxl_dpa_free() returns early on !dpa_res, so it can never be
+> > decremented past the zero-size id, breaking LIFO teardown of lower
+> > decoders. v4 therefore does not touch hdm_end at all. The in-order check
+> > in __cxl_dpa_reserve() is its only consumer and is never legitimately
+> > reached past such a decoder: the burned slots are trailing, so enumeration
+> > reserves no committed decoder after one, and the OS must not program a
+> > region through a locked slot. hdm_end stays at the last sized reservation,
+> > which is accurate. IMHO, if a non-trailing zero-size layout ever needs
+> > support, the check should key off commit_end rather than hdm_end,
+> > out of scope here.
 > 
-> PCI config and PCIe capability accessors return positive PCIBIOS_*
-> status codes on failure, not negative errnos. update_gpf_port_dvsec()
-> and cxl_ras_unmask() still return the raw status on their accessor error
-> paths, inconsistent with the errno convention they otherwise use.
-> Convert it with pcibios_err_to_errno()
-> 
-> Signed-off-by: Richard Cheng <icheng@nvidia.com>
+> I am not comfortable with this outcome. It assumes that zero-sized
+> decoders are always committed. I would much rather keep the meaning of
+> hdm_end as the marker of the last decoder set aside for a reservation.
+>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+(pre: before a program[mable] decoder,   post: after ...)
 
-> ---
-> Changelog:
-> 
-> v1->v2:
->     - update_gpf_port_dvsec(): Also convert the pci_read_config_word()
->       failure path. v1 converted only the write path.
->     - Drop patch 2/2. On a failed config read the accessor returns ~0,
->       which cxl_decode_regblock() already rejects, so
-> __cxl_find_regblock_instance() already returns -ENODDEV with
-> map-resource cleared. There's no bug, so the change is dropped.
->     - Fix the commit message, the second call site is cxl_ras_unmask(),
->       not cxl_setup_parent_dport(), fix a "Convert" typo.
-> ---
->  drivers/cxl/core/pci.c | 4 ++--
->  drivers/cxl/port.c     | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index e4338fd7e01b..bf6d566b2d6b 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -838,7 +838,7 @@ static int update_gpf_port_dvsec(struct pci_dev *pdev, int dvsec, int phase)
->  
->  	rc = pci_read_config_word(pdev, dvsec + offset, &ctrl);
->  	if (rc)
-> -		return rc;
-> +		return pcibios_err_to_errno(rc);
->  
->  	if (FIELD_GET(base, ctrl) == GPF_TIMEOUT_BASE_MAX &&
->  	    FIELD_GET(scale, ctrl) == GPF_TIMEOUT_SCALE_MAX)
-> @@ -852,7 +852,7 @@ static int update_gpf_port_dvsec(struct pci_dev *pdev, int dvsec, int phase)
->  		pci_dbg(pdev, "Port GPF phase %d timeout: %d0 secs\n",
->  			phase, GPF_TIMEOUT_BASE_MAX);
->  
-> -	return rc;
-> +	return pcibios_err_to_errno(rc);
->  }
->  
->  int cxl_gpf_port_setup(struct cxl_dport *dport)
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index 99cf77b6b699..8db4d15e9427 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -92,7 +92,7 @@ static int cxl_ras_unmask(struct cxl_port *port)
->  
->  	rc = pcie_capability_read_word(pdev, PCI_EXP_DEVCTL, &cap);
->  	if (rc)
-> -		return rc;
-> +		return pcibios_err_to_errno(rc);
->  
->  	if (cap & PCI_EXP_DEVCTL_URRE) {
->  		addr = port->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
-> 
-> base-commit: ef0c9f75a19532d7675384708fc8621e10850104
+Pre-locked zero-sized decoders *must* be committed if the non-zero
+decoders are programmable.
 
+Post-locked zero-sized committed decoders *are not legal* if the
+non-zero decoders are programmable.  They can only be legal IFF the
+entire device came up with decoders programmed and locked.
+
+Violating either condition implies an out of order commit has
+occurred, and trying to deal with zero-sized decoders as a
+special class is just a giant footgun.
+
+Covered this here:
+https://lore.kernel.org/linux-cxl/aPeSqjqU6BH9gvcw@gourry-fedora-PF4VCD3F/
+https://lore.kernel.org/linux-cxl/aYynWqJ7u-v-6WsZ@gourry-fedora-PF4VCD3F/
+
+
+So,I agree that zero-sized decoders can't be assumed to be committed.
+
+Consider this case:
+
+            Pre-lock                     Post-lock
+decoder        0              1             2      ...     N
+------------------------------------------------------------------
+	  [zero-lock]    [programmed]   [zero-lock]    [zero-lock]
+          ^ must be committed            ^ must not be committed
+	                                   unless D1 is locked
+
+Anyway, agree, zero-sized decoders cannot be assumed to always be
+commited, and the spec (or at least my last reading) leaves it
+ambiguous what state a zero-sized decoder must be in.
+
+~Gregory
