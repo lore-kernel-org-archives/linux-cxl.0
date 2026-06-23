@@ -1,86 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BDE0393DC0;
-	Tue, 23 Jun 2026 20:13:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4399F32B13A;
+	Tue, 23 Jun 2026 23:00:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782245624; cv=none; b=taJT9RUkIT9DE3Oz5btiLUpQxU3dR2RCdV9l2mW0RSECeEfx+dH/zYYVIpBfVVaHUH0T1gFhJcAuIFyCC2TBO2Zdry5O7CUkbjRk8o7xKqvocKPuKpHNO83ktTdUeVCDBK9M9JY8zJwCkq+H94BJIUiodv+EUAReBNBvYt5fs5I=
+	t=1782255628; cv=none; b=Kg8QHwdAPgJ0aYc2xAZ1mT87VW3ZAk3NzVMIvdoLX6/wng7YPLPNBy+MTq5i351j5+6AqfA2RAJALfEzUXarHegiRH6/0eC6hHBGTctqLJ/b1dNH4eXEspqIr1BfgSUYqs62UZC+2s5qC6BAHMFAxb/YwConByXAZt/Nsvvf4aQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782245624; c=relaxed/simple;
-	bh=PHGXJxOtvZv/2oM4oitNGgJriT6/viGTPr6wr/g0/HM=;
+	s=arc-20240116; t=1782255628; c=relaxed/simple;
+	bh=EdiiKLjRD46vSb2CJ7dKQ9NTwgPB8vCd50Ii9AJM4dg=;
 	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=a5M+jnCy6T/bzMpIdWisJylkxyUW+F4fOmNNmfe/Hz/lAkCtVVUVhloojjsIQ1KiyrtlfPrLzRVPUtZwJOuTfAFTXWfzWk6MBfSuS2KEQlvCaphPml3wnlWwP6h2ZiZ3Ik4borlUvCbcWkwstdSvoe6guMUsW89MQDrPBbzFSYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ds3/5E0Z; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=iMQgBZOkVXVNiz6oy0AHZ/9zzbVQ8YfXL7cKCGM3z/Rx8z732OHuKosMUpSr5a7FXbvsE1L0U0l7cm/cPlMAEUoRm8U8Xrq/rmWM6UcmE3plPyqAwyFk+/MIZMY7Ep1iTaETKmb/bA4+UaFC8V0FIgij3hr3zIIAcqTMQEnXv3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MABGRBkj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ds3/5E0Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C62D01F000E9;
-	Tue, 23 Jun 2026 20:13:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MABGRBkj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EC9F1F000E9;
+	Tue, 23 Jun 2026 23:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782245623;
-	bh=+pTaiP9/XzZRkS43G4ANQ98/hCEbIOicBYmW2LYukrw=;
+	s=k20260515; t=1782255626;
+	bh=+ZprVd6hak79tT1yNBe6rbOrxYAvSnGiBcN53A2Yz+o=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=Ds3/5E0ZqCs08Ta8voqnBHbYrbGoKvZwn8BosUO2LNQRD1UPyAdWjR2rwDpPFSYP6
-	 TZqUG8I7vCsNpE+SUsU3Mrg03Ss/6wDAiGdn34DJUe4jKj3WoYQWtu3ttysG0nzKR2
-	 oG5RyO914PQ5vt52B/1xBmKUajIBzwE/Ed/G5+yJ1ziTF0JQZhZwJp0kI3rWGADGvy
-	 wrUcRl3eGkRrz9RqudU4Nr8N0qj//mesFPikyM3n+qTot+90adMthMNeq2QTTQsQTK
-	 Ez2N4RyGveyHIHFHkYMc3VQcPrjL15JHlS76FpIVUEMQ1FtQHDACP282l/tiSbADvh
-	 HYFVHjBj0+5vg==
-Received: from phl-compute-02.internal (phl-compute-02.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 2D7A9F40077;
-	Tue, 23 Jun 2026 16:13:42 -0400 (EDT)
+	b=MABGRBkjQS5itEmQ7r1TXaG/omXwaKlhwOSkTKkhvJ09MFRRlB8eJtTMyQZcPywbh
+	 GXcE3Ujf2q0pAfyeEaojtfJxHJdq0fL9Isue0Wp05VSy+gSJ9hWr2uOgICUkkmVOrH
+	 8h4x8DEesjW8g62z+Vx1TSnbbpqueFyxJl5q3hsWABrU4I+qRFfInZ5eWD7ga08RLl
+	 DPz26w0Rh5T/Nzql/RwEfoXAefnFsNng0h3Tx+CHq7is6L4JxLC+Eyqw3B/SOlDCCI
+	 GdeIAIVrUsgN6uTw8FQ2kNFR1XG7iyP90Z+8+G+x9n7h8lrf6nOjvICi96AhHimIv5
+	 N19pnroGDP/Xg==
+Received: from phl-compute-04.internal (phl-compute-04.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 9D18CF40080;
+	Tue, 23 Jun 2026 19:00:25 -0400 (EDT)
 Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-02.internal (MEProxy); Tue, 23 Jun 2026 16:13:42 -0400
-X-ME-Sender: <xms:9ug6aoSv2FfJ0yPSQhLEO79HY3GmDUj7oigj4Bi4Z2Am6eKYnIhCgA>
-    <xme:9ug6akI9Fq5mxTbxdbzIjFz1MGKOpFpo3zfpSaL8K8Ge0G-DqgdkDdiAzDZdXQgPz
-    7AGquAHawBM8HFA1jP2DwZUVHmWnE_UNP-2J3y5Ijxdzp20Y25KbQ>
-X-ME-Received: <xmr:9ug6ah0axUrGdDA4esG9cdyTdGMUonC7kgMpoUGd-cL7Y4cZg-9OwIi3twOSCjEuxwL0FW_4EdKlmic44uwgT0pAKw-Q3A6tqXU>
-X-ME-Proxy-Cause: dmFkZTFFF1FA8dWde6p9MtEMMJ/U1T/qXIGOJdiBLeeFEUydWpKvaIWSXjvXcLYz5wTXmB
-    hDSEfag0Kjhc+mGiHTqsV/nAPaStvP+4hZvfxahEt35+eLPAljIFjX5yrdIJ7MFArc0ekS
-    wNHJWXpePtoX22SSrWaTkMRdZPY6t8FkfQRp5oxwZ1dlkAScECC3uFqXI7U5LAXl9Kb5Go
-    6pWqDz8iAtF41bTPp3ZIIJDpVftedree52Bt1FwJqTSgUak6qTm2z/hhi1/tTHnoGPI0Lm
-    5P8i02hALlJpHzoQ3smo1bANw5MaldRb1s9zHzs8o7bkUbCxdgojNCzx9TBKztP/gp2Bl0
-    DtjUjQY8LNYnIkkoL1tU6lvy6XojgJxEmIwdYyrQnsmzRQJHjwEhr7HvICwdydx214PMUq
-    mZOru+0uyAlpeRSURTGQWNmp5wmJo18sVZ2W06tONMH/h8JBxiUCwgBiVrd30GMHe0WIML
-    pTKetUlngBcl0htPPnIYC7tvJHIieRP7VxDOG2vFcSK5kO13x+rsjEHoMBnvGCMJnjXses
-    8SJEQCF2nZ7r17mln+TAv4yAVMbtwq8EBG9WCsCq/6KsNnpBtViH233aFR3J8rQtLTLTkw
-    NoGVZgaIhEGVQ7LMlNo/iQM8n2TstY/V6sURoWCI+as1I9JI907TgRxyzm0w
-X-ME-Proxy: <xmx:9ug6avLCeeRNK291jG2EMHSRIRcDtH64XK-1lGe5d7q3lpYbALXvNQ>
-    <xmx:9ug6apmO30nowumG4naJRNHRYJemUdqII8quyhhLGk26sD_A7WSlcw>
-    <xmx:9ug6alPhZzsWXQ2NNMVQ0-5vIK-oWJYvW5Qp3pwGj4A2iiSurTj5nA>
-    <xmx:9ug6agyQ6dD5v9sVntilcCsbgNlErpS4x-KrtsVt1wh4yw4K8yUUig>
-    <xmx:9ug6alnOvpt8dHfXcrnHe73dxIpX6gLT9ZcrioeUpyrC5agnvr-ejKSr>
+  by phl-compute-04.internal (MEProxy); Tue, 23 Jun 2026 19:00:25 -0400
+X-ME-Sender: <xms:CRA7aiLzDt9yCcUiSmPF28u6Bgt1AEQ1jQtIUCdW7QqIxQbR5dnMUQ>
+    <xme:CRA7aqnYkiKv6-4NWsm6N7Fe9s56eM-8xvDmTaLkOJLpRHl4_-1ShlbhHEef-WOt1
+    cRIYHzeNCj-sZyLWSWc64PFVBtYz5cpNQ61VB0uXDlEuqwLbgFfQA>
+X-ME-Received: <xmr:CRA7aoJZuMXS8XwRsrDbXNT0tp__BkKVHyvLWVOwCF4-IKdkKtEY-EZi7asZtOL0jsfWjJELlJCCXsLZpISuJFFmlS7QRpH6WIw>
+X-ME-Proxy-Cause: dmFkZTEIzL0uJ2LqqIa9N1YVNmTbmTEQuSKhoCo5srAWzdz2Qh9Lv6qqFerEtRxPjFj13d
+    xuSy+S+66BBCv3PUtYIhVMHXFcJlpk8zxz5K+MyiQw5KstOV8mFHj8zGspb/jrv2YI+kbi
+    mbzShUzqzqZXw0WVQwqDoG/qG/vtXqLn1WJyvJA+qSeJlP+vKiN1MBsK3MIFDu6X58eehk
+    kj2ekIRtSDmYe6z/aaaZO+JoCX/AZZ3JYWGOHX8IQAgF533MqwOpoHo0r4x/nUI32py8Sk
+    z9pJlc8AwNQJ5aRTg0mSgnVQym4fdDiDFCW9IDGcWuFlD5caNCEKjRclC6WnpldfMQvfNn
+    fU2ogdtr6wR5YnOtsMu6xzP+iQYYmx/TIqjtDFD0z4XLihZsjlvdNko6XVtoWZt91e7hbO
+    dL6BNpzTTp98Xovcb3Iz6SzhbqGD/ug9Kcp5ulMnU9hbpSs3XqNQj+R67bXG6gBtHrZGyO
+    Ui7DkuPb4pOx2kJtq8xEnVv13cK/oA2kDEwtgZg3VGYUbAu6oaXa9mpez3Yf8KJ1xx/81U
+    mGOb535fD/w1lmDjzuwGypEKeiHTRSrs2JYLs8wt8juFdTsWZehE2V5iaYoXjsBcoUuwlH
+    AiBVStdUpXXImkOnrj/hC8T2cFqqJbQ3dkXRibVCYj6fnCoupJ8EJSoMER8Q
+X-ME-Proxy: <xmx:CRA7alU_-SWSGNiDP6xp82F28XG6yOjv6FX6tK2KlluWGVi68cI-mQ>
+    <xmx:CRA7atPNGSo1MPxVYtgOdWnoVKapsXHtjun7l4AFs_1tXlgk6-FHAw>
+    <xmx:CRA7ahk8Ner8-vcIxeIlNIfczJPJCrSN8yNpO9V8s6eDSTkrAQHO9A>
+    <xmx:CRA7agXydgi0WKGoFEaohVBUhknmUHaVnXh2Qe0ZJ0cPz7NPcx-xLQ>
+    <xmx:CRA7agIxw7DNTpg5Fxv-5Fxgj5xnMytBpZNgBXHa16tZRs62qZZBTCu0>
 Feedback-ID: i67ae4b3e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 23 Jun 2026 16:13:41 -0400 (EDT)
-Date: Tue, 23 Jun 2026 13:13:40 -0700
+ 23 Jun 2026 19:00:24 -0400 (EDT)
+Date: Tue, 23 Jun 2026 16:00:23 -0700
 From: "Dan Williams (nvidia)" <djbw@kernel.org>
-To: Richard Cheng <icheng@nvidia.com>, 
- dave@stgolabs.net, 
- jic23@kernel.org, 
- dave.jiang@intel.com, 
- alison.schofield@intel.com, 
- vishal.l.verma@intel.com, 
- djbw@kernel.org, 
- iweiny@kernel.org, 
- danwilliams@nvidia.com
-Cc: ming.li@zohomail.com, 
- terry.bowman@amd.com, 
- alucerop@amd.com, 
+To: Srirangan Madhavan <smadhavan@nvidia.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Dan Williams <djbw@kernel.org>, 
+ Dave Jiang <dave.jiang@intel.com>, 
+ Davidlohr Bueso <dave@stgolabs.net>, 
+ Ira Weiny <ira.weiny@intel.com>, 
+ Jonathan Cameron <jic23@kernel.org>, 
+ Vishal Verma <vishal.l.verma@intel.com>, 
  linux-cxl@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- newtonl@nvidia.com, 
- kristinc@nvidia.com, 
- kaihengf@nvidia.com, 
- kobak@nvidia.com, 
- mochs@nvidia.com, 
+ linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+Cc: vsethi@nvidia.com, 
+ alwilliamson@nvidia.com, 
+ Dan Williams <danwilliams@nvidia.com>, 
+ Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>, 
+ Vishal Aslot <vaslot@nvidia.com>, 
+ Manish Honap <mhonap@nvidia.com>, 
+ Jiandi An <jan@nvidia.com>, 
  Richard Cheng <icheng@nvidia.com>, 
- Vishal Aslot <vaslot@nvidia.com>
-Message-ID: <6a3ae8f486d0e_3c9f100bd@djbw-dev.notmuch>
-In-Reply-To: <20260623091019.33417-2-icheng@nvidia.com>
-References: <20260623091019.33417-1-icheng@nvidia.com>
- <20260623091019.33417-2-icheng@nvidia.com>
-Subject: Re: [PATCH v5 1/2] cxl/hdm: Allow zero sized HDM decoders
+ linux-tegra@vger.kernel.org, 
+ Srirangan Madhavan <smadhavan@nvidia.com>
+Message-ID: <6a3b100798704_3c9f100a9@djbw-dev.notmuch>
+In-Reply-To: <20260623032453.3404772-9-smadhavan@nvidia.com>
+References: <20260623032453.3404772-1-smadhavan@nvidia.com>
+ <20260623032453.3404772-9-smadhavan@nvidia.com>
+Subject: Re: [PATCH v7 08/11] cxl: Coordinate sibling functions for CXL reset
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -89,73 +90,36 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain;
  charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Richard Cheng wrote:
-> CXL r4.0 =C2=A78.2.4.20.12 ("Committing Decoder Programming") and =C2=A7=
-14.13.10
-> ("CXL HDM Decoder Zero Size Commit") permit committing an HDM decoder
-> with size 0. BIOS may commit and lock such decoders so the OS cannot
-> program regions through them, this is a design choice rather than a spe=
-c
-> requirement.
-> The kernel rejected these with -ENXIO during port enumeration and abort=
-ed
-> the whole port, so affected systems showed nothing under 'cxl list'.
-> =
+Srirangan Madhavan wrote:
+> CXL Device Reset affects all CXL.cache and CXL.mem functions in the reset
+> scope. Lock same-scope siblings with pci_dev_trylock(), save/disable them,
+> drain pending transactions, and hold IOMMU reset blocks until recovery.
+> 
+> Also include mem-capable siblings in HDM range validation and CPU cache
+> invalidation. Cache-only siblings are quiesced, but skipped for HDM range
+> handling.
 
-> Treat empty decoders as first class instead of special casing them, bac=
-k
-> them with a kmalloc'd resource, since the resource tree can't represent=
+PCI reset locking and ordering is already a source of some burden
+without adding this new sibling model to consider.
 
-> an empty range, and keep the skip and hdm_end accounting intact. Guard
-> the paths an empty decoder can't serve, e.g. region attach, DPA free, a=
-nd
-> poison queries.
-> =
+Is there evidence that multi-function CXL devices, where most of the
+functions are non-CXL, is going to be a common occurrence?
 
-> Suggested-by: Dan Williams <djbw@kernel.org>
-> Signed-off-by: Vishal Aslot <vaslot@nvidia.com>
-> Signed-off-by: Richard Cheng <icheng@nvidia.com>
+In other words if CXL reset borrowed the bus reset locking model:
 
-Looks good, you added the cxled_empty() helper and dropped the dev_dbg()
-announcing the arrival of committed empty decoders like we chatted
-about.
+    if (pci_bus_trylock(bus)) {
+        pci_bus_save_and_disable_locked(bus);
+        might_sleep();
+	rc = cxl_request_and_flush_hdm(bus);
+	if (rc == 0) {
+		rc = cxl_reset_execute(pdev);
+		cxl_release_and_flush_hdm(bus);
+	}
+        pci_bus_restore_locked(bus);
+        pci_bus_unlock(bus);
+    }
 
-The comment on cxled_empty() could use come adjustment, but maybe Dave
-can fix that up on applying.
-
-Reviewed-by: Dan Williams <djbw@kernel.org>
-
-[..]
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 1297594beaec..5231345ff78e 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -324,6 +324,15 @@ struct cxl_endpoint_decoder {
->  	int pos;
->  };
->  =
-
-> +/*
-> + * Some BIOS use locked empty decoders to preclude HDM decode aliasing=
-
-> + * for TSP operation. Use cxled_empty() to handle that common case.
-> + */
-
-Hmm, that is not the "common case".
-
-/*
- * The common case is decoders with no reservation, but also handle
- * decoders with a zero-sized reservation that firmware may install for
- * security lockdown purposes.
- */
-
-> +static inline bool cxled_empty(struct cxl_endpoint_decoder *cxled)
-> +{
-> +	return !cxled->dpa_res || !resource_size(cxled->dpa_res);
-> +}
-> +
->  /**
->   * struct cxl_switch_decoder - Switch specific CXL HDM Decoder
->   * @cxld: base cxl_decoder object=
+The cost is disturbing some non-CXL functions, the benefit is reusing an
+existing reset order / locking model.
