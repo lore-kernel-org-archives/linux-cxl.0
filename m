@@ -1,156 +1,117 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E04738886C
-	for <linux-cxl@vger.kernel.org>; Tue, 23 Jun 2026 17:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701283655EA
+	for <linux-cxl@vger.kernel.org>; Tue, 23 Jun 2026 18:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782234083; cv=none; b=ELGL3qbRnFS3wm55WsTjtUw2pSEk3Pnil8zbaKtuS4cHlYqkKA1SR2NrG8B4WL53Ts7YytzmchOpLFzQIDWC4EqA4v6nlEVDC7xSt8to3BK0LMGagNnoSxUu3GIEjIF1wdyUfJBKQVzhEbzAeyzoH54Rn43Rb0PbGeo0I2uXTNs=
+	t=1782241099; cv=none; b=F58MaMmTaRr3ygeQ0d+alDYXxSUD5RPPqCOkt/wHrl6U8dms41SrozWZWaBfxJRr73RygIhgNokfmEb3tnaK7mUhx9e+6ueAv9b0Ww2bVYSznKJSmcob4bufhJeQNHfNEiA6HL9fm+72eFdUsPLP9GIryqP6Z7GY2VLdpZ3ICnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782234083; c=relaxed/simple;
-	bh=drTPL+/4sCDq7xFfebBhZN9MFM/p9D5us+A1LEs9MHg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nAmKxdOI92IDzrhVbY6X2XougqxkyZaUqP/SfUfxnifX9WR8SbxGkKzNrxE+PWOsOzIMR7GSS1OHKeUZTKPxzXCwJNOvsiqXI7dgX2M71+WSIYt/ESMlp7HK+v3zM95GPwIgzghj2ANmG1mbN4yN0ttpb1XoeRn7toPBMpgKciw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=FEqdijxc; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1782241099; c=relaxed/simple;
+	bh=6sizoAgwRLvjCh7zqg/EnqZzQNrUHjNmth2MBnONupo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kb4ygNUdsSFwMuqpe5pQp8n47xqxG/M+Gk0TYNYSL34wpX9D/wgwcQFg0wR1lT4uRB53kECrKt6ehOrncdllLd2YUvhg4FKg30hDUYCEZAI/wKuGlWUTse+mQEvhX9P8d8/ixnvdSE9lkYx2v7kUErK6x2741RWpBpMm7a71jo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OBFa+vr7; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="FEqdijxc"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-59ebcbfb2b0so29854e0c.2
-        for <linux-cxl@vger.kernel.org>; Tue, 23 Jun 2026 10:01:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBFa+vr7"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-462bb734793so155838f8f.1
+        for <linux-cxl@vger.kernel.org>; Tue, 23 Jun 2026 11:58:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1782234081; x=1782838881; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xvgEVwQ8jfCIcJ0ba/B6osmLE2ZzPQbQhunldQ5OJKk=;
-        b=FEqdijxcJOXaYeegZW2MMFnBE3mkI8rzXD59lYgpIOwGvh61Rxt5ZrGQkDxfwNrQMU
-         HCA/HAzLxUOmTEFCUMaNlwAdjQxTZF/MX522fK+P9nZeJ9w1xfFm3FLXLTsatuaSjRV/
-         RE16PEHWdBvXn/LdxQGn1xMgVKVW4A/6nAP4Nl7ZpyqOy1ii/YeVIzc15XbI7Ck+BpMC
-         o6aakjzyiDANXbMf+h7k52ij+lguBMw4AAvDw1qPvn8u1VyOYEx5lljp6XwM4MTWK1XY
-         T0o+uz2L6/HLDCu9b0DIxT6ssCMJm4u99VP0B0GQ6BJz1kmYTj7vCpZM+xAvpMb5SQSG
-         8rFA==
+        d=gmail.com; s=20251104; t=1782241097; x=1782845897; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=2fiFg69bZvG7eLHGu12BMJgm2iLA1vS/lgB2cc2WLrE=;
+        b=OBFa+vr7LV6XYWQs/BbCkXg61dyzgwY+FE7mroZoDqF9yRQ/XL27w7KC1MfwLmwr4p
+         Ea9zjNSSrVTbiC4BL72Chf/hrlMUcFYZ33j0+aaDmHkymxJiCZm/529O2rnuB/4/WRAh
+         JapYutkIavZBvhIARtAvlr4rWPltl1dAdMEEJ7ClA6U9/iP2fLxf6GnUXpUxO8+VoeDt
+         o4IyThWskguQKptwuwQKDRsK4e4l23oEv826UyCykbq4Vu0/nOQRpwPfXVYyJNNEWinU
+         1kqelNVu2gVPWUBRjHpvEF37rCi7wQ9UB8dy4c9KllrZGo8XbmLq7zcIW5WAbt5zfGcV
+         4bjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782234081; x=1782838881;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xvgEVwQ8jfCIcJ0ba/B6osmLE2ZzPQbQhunldQ5OJKk=;
-        b=pvhdEowjFpMV62C1MyJ7VlBPFg2YExvWrNyNDpdyeZtbnLppt7mk4hU7SeV3dNdgxq
-         AbGsDb9P8LHBjN/11cTJq4aOHWK7yZemRBdR4GvQMxo9oVUAt9vVpXZmqibKu/LSYL+Z
-         5++Y3erUA9NvkMdaH47749bwtreRk0Ynl//OFbGnMEPaovHWxr26/WXkESVSnXe/mdR1
-         MPiwitoYDygQdPxjUSab7j57Wl0YgmX/Bg8/B3umFjx0xrkjOyplz056Tur5RtZdyq6T
-         472pQsSdFCeKqlK5Bxc3vShasonHl0E4mVstk0QOGxjm0SCwXaz6Jx9FIN7V2rtzewU2
-         g4qg==
-X-Forwarded-Encrypted: i=1; AFNElJ9i4Lf52FzCkOdp4kgGBfeSmBULRtKgiZfdCuATQPDjPxS0mwkcEjXDqwNe1byS2wi51bgnIxyfayM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvN00+lEUC17cEH3qyL/OvABfJlFKA/TrYY8N7Oe1ot2nKv05d
-	wKnC6jRo/VEPizxEOlcnr0HYJFNNTQhx4QDPZ2jCjblpKzpQoIx5EzPprjnnyX6htrg=
-X-Gm-Gg: AfdE7cl0aebrIfNtpfOFXCQyyXYBUOUjJnDURJBWvagNL17nNkXNYg6a83Ks3ncpFkj
-	z59i3xUDezmLWniHYNrPO/PNcKR5TBM/mjgJrjW+PbHbgREr3tnxvW8ac+BhTFRUFLDn3yZUOFP
-	WwAebpG+RsOPM9mjnM5LYzPs60+gjtW3jNbo1FDYaQdlymobowVA/c01T5aPD1lFb4qb0f4FlrM
-	N6iuI/oj5Oc2DFYYYlALyokQXMJdker5t24E4KYSa2M5aRNEizKgr324XWJJJRq/YESY3nvGGr/
-	cc7oTMFnX2nA0zmpJtrzezd3AYpTyh0CMxYqkZEM7qQSnd/XETuqbuctBVzwGFB+reiMtu/qy5+
-	eAeeufmEl+fL4jGUf466U9Wt7aF6Uq2TQTeFvMl4J7rffFxT7MJUldVHCbvKfx5zePYjHpDnuza
-	/WWoLQx9CeKxqHuZunGlCEd9MWJbV3iANNY9sh8BD594VP4MQNdVOShsAJvDodDHGKViCx
-X-Received: by 2002:a05:6102:8089:b0:631:e729:4575 with SMTP id ada2fe7eead31-72ff3f7fea1mr2054044137.5.1782234074396;
-        Tue, 23 Jun 2026 10:01:14 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-9260079070bsm327795185a.40.2026.06.23.10.01.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2026 10:01:13 -0700 (PDT)
-Date: Tue, 23 Jun 2026 13:01:09 -0400
-From: Gregory Price <gourry@gourry.net>
-To: "Dan Williams (nvidia)" <djbw@kernel.org>
-Cc: Richard Cheng <icheng@nvidia.com>, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	newtonl@nvidia.com, kristinc@nvidia.com, kaihengf@nvidia.com,
-	kobak@nvidia.com, vaslot@nvidia.com, smadhavan@nvidia.com
-Subject: Re: [PATCH v4 0/2] Support zero-sized HDM decoders
-Message-ID: <ajq71cLSc9kb0Ffd@gourry-fedora-PF4VCD3F>
-References: <20260607081345.61954-1-icheng@nvidia.com>
- <6a289e3665fc5_4fa78100b1@djbw-dev.notmuch>
+        d=1e100.net; s=20251104; t=1782241097; x=1782845897;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2fiFg69bZvG7eLHGu12BMJgm2iLA1vS/lgB2cc2WLrE=;
+        b=N9bkfSxFbBYHKzkOH9BmE6ISdfbuS4nb8c7Z3OJIZztb/9QVDkFNpMe5GIlb58cooO
+         NlhyxkuLkOwzN6MGnid3smDlqB9FkLiDv7oVqChOCAJHaW2kk68R66g0FuYQdJkw/yjE
+         oHuy6GlEhhJibDjjjv7MkZdVC7Jy0IlQgXQr4y39MTnYKjvmJwCA1oFzo8qMT+xT5G1k
+         WqH7RzV3F6H1+lFJSERZQFQpTU4pWPvVu/yXGTmjYjHrSFSlLaHCwY1SnhXGyQX2oxeh
+         C6fE42EPa8cywIVjwAF+dqSWudLDlGV16+b+3v6wepW0ZFThKsvYyXrKCFKVZdSPktH6
+         MgPg==
+X-Forwarded-Encrypted: i=1; AHgh+Rp231/YkhvpNZFe3yBjNih/i4HHCidMdBmot3oO1euYF3ikl26fkC65EjZ4jMsJAksufCgogfvlYLI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2VVN/VUhyADqKjmtFXBQq0CXqtMc83BZGrkuj07ichQdMxjy1
+	CVc3IAsZAod2YoBgSZKYSk+6QPzuU7cXUtsR1wbCChvwlUwUfxU4c8j/
+X-Gm-Gg: AfdE7cm5CqlPvgAZRCAmJwXQ0oOOlB/fSWOMRPWqYAb6ZD/dRJ/+A3x5t54I17lp/eX
+	AsCx017ChC4Q+r8wJ9hDsRyGlrpga7NeP/EfLEbryCtmJasoNRPgCot9iocBf7p6xia3/+cFiBX
+	6gxGciovuVcQ1pZBEc/1NJJXc37z0JFKQoVJQVnlVPscYd/ZQQwCNZZG+vfXgb6aJE4KA1nY7Tn
+	J+A8uUgVDvpN59jdH2XgrgujYqyUBVyrJio+JlI23Oj66fAkHUgJ08kKqfyp6PJsx7K7NFTwnYe
+	qSzmCk2BYXhXMB0VcuYi9Xz1/rBwD5Sc68uz8j8VnxbRxgjk0RF1gyxZ+I0edlMiMjq0LkTTlPe
+	Mdz42NLbWYHwuiFVRnzgYLwoH6F+aJUiMnGT1eBfLeQFQe93cZ/I1X9opxIJOxHXNtbNWWUWIIW
+	zaWnfA1Kv+Mmk2Mj3NaeCGMZOD50zzWSetjYnKykD/gDtTPE7CTb3ok8BgQhSgzNuSR61CVIroA
+	v/asMj6
+X-Received: by 2002:a5d:5f91:0:b0:462:1a7a:9846 with SMTP id ffacd0b85a97d-4666074429emr23730834f8f.8.1782241096893;
+        Tue, 23 Jun 2026 11:58:16 -0700 (PDT)
+Received: from [10.128.11.131] (195-23-151-163.net.novis.pt. [195.23.151.163])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46666c57ba0sm38525006f8f.32.2026.06.23.11.58.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jun 2026 11:58:15 -0700 (PDT)
+Sender: Julian Braha <julian.braha@gmail.com>
+Message-ID: <e48a5c7f-2d9d-4202-be59-2e84120dfe11@gmail.com>
+Date: Tue, 23 Jun 2026 19:58:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6a289e3665fc5_4fa78100b1@djbw-dev.notmuch>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 09/21] lib: rspdm: Initial commit of Rust SPDM
+To: alistair23@gmail.com, akpm@linux-foundation.org,
+ rust-for-linux@vger.kernel.org, linux-pci@vger.kernel.org, jic23@kernel.org,
+ bhelgaas@google.com, lukas@wunner.de, alistair@alistair23.me,
+ linux-cxl@vger.kernel.org, djbw@kernel.org, linux-kernel@vger.kernel.org,
+ Jonathan.Cameron@huawei.com
+Cc: boqun.feng@gmail.com, benno.lossin@proton.me, a.hindborg@kernel.org,
+ bjorn3_gh@protonmail.com, gary@garyguo.net, wilfred.mallawa@wdc.com,
+ aliceryhl@google.com, ojeda@kernel.org, alex.gaynor@gmail.com,
+ tmgross@umich.edu
+References: <20260623045406.2589547-1-alistair.francis@wdc.com>
+ <20260623045406.2589547-10-alistair.francis@wdc.com>
+Content-Language: en-US
+From: Julian Braha <julianbraha@gmail.com>
+In-Reply-To: <20260623045406.2589547-10-alistair.francis@wdc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 09, 2026 at 04:13:58PM -0700, Dan Williams (nvidia) wrote:
-> Richard Cheng wrote:
-> > Hello,
-> > 
-> > This v4 continues Vishal Aslot's "Support zero-sized decoders" series [1]
-> > and addresses the v3 review of patch 1's port->hdm_end handling [2].
-> > 
-> > CXL r3.2 §8.2.4.20.12 and §14.13.10 permit committing an HDM decoder with
-> > size 0. BIOS commits and LOCKs such decoders to burn the trailing, unused
-> > slots so the OS cannot program regions through them, e.g. a Type 3 device
-> > in a Trusted Computing Base (TCB) established via the Trusted Security
-> > Protocol (TSP). init_hdm_decoder() rejected these with -ENXIO during port
-> > enumeration and aborted the whole port, so affected systems showed nothing
-> > under 'cxl list'.
-> > 
-> > Patch 1 enumerates the decoder into the topology with its HW-reported LOCK
-> > state and skips the DPA reservation it does not need.
-> > 
-> > On port->hdm_end (the v3 review): v3 advanced the watermark for the
-> > zero-size decoder. sashiko correctly noted the write was outside
-> > cxl_rwsem.dpa, and that advancing it without a balanced release strands
-> > hdm_end -- cxl_dpa_free() returns early on !dpa_res, so it can never be
-> > decremented past the zero-size id, breaking LIFO teardown of lower
-> > decoders. v4 therefore does not touch hdm_end at all. The in-order check
-> > in __cxl_dpa_reserve() is its only consumer and is never legitimately
-> > reached past such a decoder: the burned slots are trailing, so enumeration
-> > reserves no committed decoder after one, and the OS must not program a
-> > region through a locked slot. hdm_end stays at the last sized reservation,
-> > which is accurate. IMHO, if a non-trailing zero-size layout ever needs
-> > support, the check should key off commit_end rather than hdm_end,
-> > out of scope here.
-> 
-> I am not comfortable with this outcome. It assumes that zero-sized
-> decoders are always committed. I would much rather keep the meaning of
-> hdm_end as the marker of the last decoder set aside for a reservation.
->
+Hi Alistair,
 
-(pre: before a program[mable] decoder,   post: after ...)
+On 6/23/26 05:53, alistair23@gmail.com wrote:
 
-Pre-locked zero-sized decoders *must* be committed if the non-zero
-decoders are programmable.
+> +config RSPDM
+> +	bool "Rust SPDM"
+> +	depends on RUST
+> +	select CRYPTO
+> +	select X509_CERTIFICATE_PARSER
+> +	help
+> +	  The Rust implementation of the Security Protocol and Data Model (SPDM)
+> +	  allows for device authentication, measurement, key exchange and
+> +	  encrypted sessions.
+> +
+> +	  Crypto algorithms negotiated with SPDM are limited to those enabled
+> +	  in .config.  Users of SPDM therefore need to also select
+> +	  any algorithms they deem mandatory.
+This patch introduces an unmet dependency bug when the user enables
+RSPDM without enabling ASYMMETRIC_PUBLIC_KEY_SUBTYPE:
 
-Post-locked zero-sized committed decoders *are not legal* if the
-non-zero decoders are programmable.  They can only be legal IFF the
-entire device came up with decoders programmed and locked.
+WARNING: unmet direct dependencies detected for X509_CERTIFICATE_PARSER
+  Depends on [n]: CRYPTO [=y] && ASYMMETRIC_KEY_TYPE [=n] &&
+ASYMMETRIC_PUBLIC_KEY_SUBTYPE [=n]
+  Selected by [y]:
+  - RSPDM [=y] && RUST [=y]
 
-Violating either condition implies an out of order commit has
-occurred, and trying to deal with zero-sized decoders as a
-special class is just a giant footgun.
-
-Covered this here:
-https://lore.kernel.org/linux-cxl/aPeSqjqU6BH9gvcw@gourry-fedora-PF4VCD3F/
-https://lore.kernel.org/linux-cxl/aYynWqJ7u-v-6WsZ@gourry-fedora-PF4VCD3F/
-
-
-So,I agree that zero-sized decoders can't be assumed to be committed.
-
-Consider this case:
-
-            Pre-lock                     Post-lock
-decoder        0              1             2      ...     N
-------------------------------------------------------------------
-	  [zero-lock]    [programmed]   [zero-lock]    [zero-lock]
-          ^ must be committed            ^ must not be committed
-	                                   unless D1 is locked
-
-Anyway, agree, zero-sized decoders cannot be assumed to always be
-commited, and the spec (or at least my last reading) leaves it
-ambiguous what state a zero-sized decoder must be in.
-
-~Gregory
+- Julian Braha
