@@ -1,849 +1,106 @@
-Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716CE3955EC
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 09:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CD22C11FE
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 12:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782292588; cv=none; b=UbDrEtoar+MXmnkl3S3vRvRIAU07AzxNoMGnDDWGiB0ivvQ3slLsEO2tzUw1t6g8S3L+43s5b+oUQsX0w0GbePD0ZAhj/VF67VJ1yR8YyagP/nvAS1NlOjkZI8lRw0plevXgaFhIbl6oTdTehU1UMCcVAA5hCmnAvRLzRlC6iLc=
+	t=1782304134; cv=none; b=YmwQY9UJ83itjVXW+XEuEj34Z243oKuZiFam9YNJ9LQYg+tXcphIVQk+YSbeclLdCZcstig2xxdnNXWiqEnfpl9+29tCFCeUTijBIEWxH9SYOXk3x1j4pc69lj4tbwSnO1oJXszdHtO3d6fpnRcR/ZtDOL0v1SKhq+bVOJRLAjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782292588; c=relaxed/simple;
-	bh=PnQrki8zmPEGr7jIEOE62vIN5Axm6X8O56JIyc9FcrU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BG4rieeYwNZ3CriMnixstv0T2kzmOI394RRPkf9mXcNnZzK8ag7B38f0OxwT+P/sXvZcn53Q+3YFzYDyJ+90YgEgkmkkdqWRKt6ANM1wplUDTP1fgJa8xECWz3rsmwztQ4BD1ER+HsnqVQxieb5tpoFct1GeCaPNqnKq7YXaqwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aX1gH5gY; arc=none smtp.client-ip=74.125.82.48
+	s=arc-20240116; t=1782304134; c=relaxed/simple;
+	bh=LmLICXKN4PxTt9E92rpl5LYBE/MbtV1Wyk/PPd5elW0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fs/MRU0HZ4OfVPvJ/Wa/dSmh1jAIDqgw+K76glbGE2eG/NcgkYHqTWrL45M6fHm/HU6gQbsZFOX/8Ea8L4q+qqcYnQyGT+sEUa+7CYa6SdQ8zHp9cbhHzBmkm4kQDbGuDXlhEz0DAz575HBPSYdOsFysOInJlyvKS0G5yf41Bos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AAEcc5A6; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aX1gH5gY"
-Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-1363fe80fe8so1550289c88.0
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 02:16:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAEcc5A6"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-7f69b71f7b2so11346857b3.1
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 05:28:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782292585; x=1782897385; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fa0fzIcExb2ZeERXgJ7fXcMbcenzEnPclEprNk5A3aM=;
-        b=aX1gH5gYVv6TBKcSFGLNGxjX/77BIvo4bNIDwBpdj/UL/Oyibrm/Ih0RFLo33oWJpR
-         5Z5Zt/MznboM+6QBw2nWykwwoQq4nQHkcwkp/O1KaUL97vbafNK+uyM2F7SGOGAul+7k
-         rraJIQpIrq0IF1KBBysC9tz0CaKbnA5PP4kx4Tc/vIqDxYfhWo9yr5HHm0P4eFwJixdf
-         TBdr2VzIylD1Ln+YAIAXsnnOQns+Ihm4RhDQ9Wi9vxfhQGV8aFtcRi3+j2cAQLhG6Iym
-         rP4ceFvfq5VeeuktoUt5CxY79B7DYTJ6tThovVb74DugGWQMPW/9p3kfW5wfdFcqZk7P
-         RLoA==
+        d=gmail.com; s=20251104; t=1782304131; x=1782908931; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fs/qtc/0ZBm1uHTvn8rnhciGjWqMDaTcX5LgeFuAVEU=;
+        b=AAEcc5A6hMnbcfStYJZKu8IPv8z+IoD2uFuYdCQBV7Mp/LdaxDt2/UaNRG7kJI8oAO
+         UXsd80Dfsj4MZ8lh8nTXgreK4krpKHM5qF6hrSXgEr7bs8T3gS+m0rZ/4p4UtZ3L+zhd
+         7Nh0Qh/4wBEQZaY89QULQxNPX2OsED3VrfFnxugp6+jXVg20u7ZWOuWY2/COVPl08jJr
+         Wr40tX6gefD8hklQAF0u6Ob6xVSjAB3dZnZrkVLmxhHosW9zJbHDcYDKiuBXF8lb58Ar
+         v3BAJd1GUkvW1iSNlqEyrtfDIb3ebcumv0D/QD1fJIBctZ3WZ04a2S0lYgw7u0ZbnWEY
+         /8RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782292585; x=1782897385;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fa0fzIcExb2ZeERXgJ7fXcMbcenzEnPclEprNk5A3aM=;
-        b=UPXgpLRbIoDVf3BElhYKq1BWZGeHFQrbbi8szjaWq2AccsDU2vy9X1OmhYo319b7pD
-         Z+x2s1jOv/5B9RX5kmTAmKTCp8c+HXUGYd7FgcpzhNqORBSu3kn5gPUL5TPQpyPwb2dG
-         OxpW7X6jnM8JO7tCeCABO3/T/Ux4WdmMckgDAuCDd9RoIujEkRor0E2zYzP+YMQhFp88
-         klfDhcRtd82tONXHsd1xxf0gp2JudoZXP0RDzk2wNXimOII0eW35dJAnFYLGSX9iWgME
-         XaD+g9+Vk17uwFoXr2pET2kSHS+uSiphY80jwdIYER7K67MZCOrwppWpsENGwLjL79yW
-         tZnQ==
-X-Gm-Message-State: AOJu0YyMX/muQFtmxoVayrAA03tPOoXXVMXJ5MjXzL9QEpa0tGY9xkK1
-	kn5xwMmn5YUBNO/sZVY85z2JF9XOnlSWJK5o+v8N4Y1d2K3qP+ToeaEE
-X-Gm-Gg: AfdE7clEinaTS2PzohxM99BWXrHHv1xW8He+FSVX1zBPuLcYu0DPDeJp6QAlpbMaW68
-	5isbsIjxguDgegQq0J+JTA8Uw07efSNzEnJDncholW3wHFUwF9BHoba5F0u/jfx2dwL098oKrO8
-	JP+c1pDWRipHKzlISYCK4j8Pk0Ciwq4ZNQR0qbdNaoWAC0KzrEOhXaXuAUcS42/8+FOJDFE5+70
-	Uv5RjXkONJ+PoSUdmysvqszBaKFHMXyIs7qb8ev0BT507cesWAIkNsV6nmS3YtotX1FPuNjj0oQ
-	yFk4OrHdDGmKC58w7oxVtYUxraWYBMrANSpRJ4wTMBVVqXLXRj/LGslpbstuVJVYF/Xc8ldIDTe
-	9Kkrnrrjlfgsb27nlfjHbXcBfqPLHU4BaIcKTgefIlNUD+QXue2ArVsEslPHws/QHKwCZSeYkTu
-	LMiTTTH8Atn5a2LXWTHtIsGo64+dzrf25HlnRsNf0Q1KzrRECWmdnKCOmLvSgNkxrJGCrN
-X-Received: by 2002:a05:7300:6ca8:b0:304:d75b:f5df with SMTP id 5a478bee46e88-30c69345fcemr2284400eec.19.1782292585224;
-        Wed, 24 Jun 2026 02:16:25 -0700 (PDT)
-Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c1be45a00sm22127647eec.25.2026.06.24.02.16.24
+        d=1e100.net; s=20251104; t=1782304131; x=1782908931;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fs/qtc/0ZBm1uHTvn8rnhciGjWqMDaTcX5LgeFuAVEU=;
+        b=Vg3VxqbvizK6x+qUFg56l2dFL+weq5nZ2i47g7XyAsgarZ2FYTilXT+5O2FqZiXvFh
+         C5OB3Cslq62KYZKRGKUiWmBT9nyodY16rL6d+wXH9qT0uHJZK6z2RXR3q4KQwQ9RSvkn
+         yzLgIHrSSA3hj5XuErIT9wj1RmK1sLkCSQUQiSR4TIQ1CLThoE71KbfZIZX884lHzCJm
+         y+u6mpIH8AIGhkKZAIcxk5qu6FY7YkSd1xn3UH6FOPhEvHKo2UbT5HEEmcIh0g72wVbk
+         qA6UDWduGv+hGyzvtYNd4m5+yXDTLRFT2Z4pcjsbe4h0NCFUthQJsEKVLCVCCaQl+/2u
+         PHKw==
+X-Forwarded-Encrypted: i=1; AHgh+RoVBYUBWKTDAykC4M1yfg1pTWTMcmDQFfhOoEUa9sOLVXClFapX52H1CL3mSlem0gxVgfC/Z1d83Wo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQF1rTn90m+hnpj0SdB9RKClhbY3hci9zIEhYa2Wl8SAs6vp2g
+	dUVoVixVuXCFZar6VxdOC17LIQBmhWtsILA1AbNtAhu7ZGgIq5MRiOUr
+X-Gm-Gg: AfdE7cmRNUzziX0kBTVhgg3rV1Ly1zEMLfiaPPEcOEPXTfgm4jPk3p8lvvAiUI3QZPe
+	89rYp//DiMpjzu4DS3mlzx/qdHvgHtva9+VEzQm3/hFEGd1uTD8huVUHUhxcmsLPbXO/npjDujF
+	RgmBjY6u686ISLK0QyXofBW3mljxqGfktmkZjlOWflCRHS+LUMedMJpRtdzNnf9GjWL1gPOXrPR
+	yz8hTFN7gkpYRF4VocgOnBs7bjk1dAaAbnyCuPseZQe4asz3eFgwwHRcUzPr5YfAEyM/oizZTWQ
+	XMyALume5brxKgz/l7kc3Ek3P05FzqEaK8kfSceTx69hsXNA5c0IJ/tMAB6kD93UOoPto9GHVcL
+	rJy6zV+qNO4HL5/XIzGSFokb2G3CUSopMcGG6ssfWHFif2D8qBXLPstBbwObZz0OQUegY5tH/us
+	K5I52hE2MWV01UU4R3lJs5u2SvYQMYDJFWc+OA
+X-Received: by 2002:a05:690c:6610:b0:7ff:28b1:d325 with SMTP id 00721157ae682-807ef24e577mr29657777b3.35.1782304131407;
+        Wed, 24 Jun 2026 05:28:51 -0700 (PDT)
+Received: from Dev-Null-MSI ([2a0d:3344:52ac:a808:98a4:4381:be45:536f])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8025ffc2730sm56689127b3.34.2026.06.24.05.28.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2026 02:16:24 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Wed, 24 Jun 2026 02:16:23 -0700
-To: Anisa Su <anisa.su887@gmail.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, Dan Williams <djbw@kernel.org>,
+        Wed, 24 Jun 2026 05:28:51 -0700 (PDT)
+From: Yousef Alhouseen <alhouseenyousef@gmail.com>
+To: Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dan Williams <djbw@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>,
 	Jonathan Cameron <jic23@kernel.org>,
 	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	John Groves <John@groves.net>, Gregory Price <gourry@gourry.net>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH v10 14/31] cxl/extent: Handle DC Add Capacity events
-Message-ID: <ajugZ_Ml4rOUMTW5@AnisaLaptop.localdomain>
-References: <cover.1779528761.git.anisa.su@samsung.com>
- <22f480966589928b457ed34ee291161c8cf5af75.1779528761.git.anisa.su@samsung.com>
+	Li Ming <ming.li@zohomail.com>,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yousef Alhouseen <alhouseenyousef@gmail.com>
+Subject: [PATCH] cxl: fix mailbox return code description typo
+Date: Wed, 24 Jun 2026 14:28:35 +0200
+Message-ID: <20260624122835.5656-1-alhouseenyousef@gmail.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <22f480966589928b457ed34ee291161c8cf5af75.1779528761.git.anisa.su@samsung.com>
 
-On Sat, May 23, 2026 at 02:43:08AM -0700, Anisa Su wrote:
-> Replace the empty-response stub in handle_add_event() with the real
-> add pipeline.
-> 
-> DC Event Records can be grouped together with the 'More' flag. The
-> previous commit completed the set up for holding onto extents in
-> the pending list until receiving the last event record of the group,
-> marked by 'More'=0.
-> 
-> This commit fills in the logic for processing the pending list and
-> adds basic validation for extents before they are added to the
-> device model as a child of the cxlr_dax region. More complete
-> checks for tags/sequence numbers/alignment is added in subsequent commits.
-> 
-> For each tag that appears in the pending list:
-> 1. Extract all extents in the pending list with that tag to a
->    local list.
-> 
-> 2. The spec requires that shareable extents are ordered by
->    shared extent sequence number, which "instructs each host
->    on the relative order these extents must be placed in adjacent
->    virtual address space" (r4.0 Section 9.13.3 Figure 9-23
->    Shared Extent List Example). Otherwise, retain arrival order.
-> 
->    Thus the tag group is stable-sorted by shared_extn_seq; for non-sharable
->    extents every key is 0 and the stable sort preserves arrival
->    order.
-> 
-> Individual extents are checked for the following:
-> 1. The extent's DPA range fully resolves to an endpoint decoder.
-> 
-> 2. Doesn't overlap with a previously accepted extent.
-> 
-> 3. Sequence number doesn't collide with others in the same
-> tag group
-> 
-> Upon passing these checks, extents are "onlined" together
-> as a tag group:
-> online_tag_group() registers a struct device per
-> dc_extent under cxlr_dax->dev so the dax layer can discover them
-> via device_for_each_child().
-> 
-> Once the pending list has been fully processed, send the
-> DC_ADD_RESPONSE.
-> 
-> Based on an original patch by Navneet Singh.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> 
-> ---
-> Changes:
-> [anisa: restructured from the original "Process dynamic partition
->  events" monolith; this commit fills in the Add path on top of the
->  previous commit's stubs. Further validation lands in subsequent
->  commits.]
-> ---
->  drivers/cxl/core/Makefile     |   2 +-
->  drivers/cxl/core/core.h       |  13 ++
->  drivers/cxl/core/extent.c     | 372 ++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/mbox.c       | 123 ++++++++++-
->  drivers/cxl/core/region_dax.c |   3 +
->  drivers/cxl/cxl.h             |  19 ++
->  tools/testing/cxl/Kbuild      |   5 +-
->  7 files changed, 528 insertions(+), 9 deletions(-)
->  create mode 100644 drivers/cxl/core/extent.c
-> 
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index ce7213818d3c..208917ad8aac 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -15,7 +15,7 @@ cxl_core-y += hdm.o
->  cxl_core-y += pmu.o
->  cxl_core-y += cdat.o
->  cxl_core-$(CONFIG_TRACING) += trace.o
-> -cxl_core-$(CONFIG_CXL_REGION) += region.o region_pmem.o region_dax.o
-> +cxl_core-$(CONFIG_CXL_REGION) += region.o region_pmem.o region_dax.o extent.o
->  cxl_core-$(CONFIG_CXL_MCE) += mce.o
->  cxl_core-$(CONFIG_CXL_FEATURES) += features.o
->  cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += edac.o
-> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-> index 14723cfd05f0..1bae80dbf991 100644
-> --- a/drivers/cxl/core/core.h
-> +++ b/drivers/cxl/core/core.h
-> @@ -65,12 +65,24 @@ u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
->  int devm_cxl_add_dax_region(struct cxl_region *cxlr);
->  int devm_cxl_add_pmem_region(struct cxl_region *cxlr);
->  
-> +int cxl_add_extent(struct cxl_memdev_state *mds, struct cxl_extent *extent,
-> +		   u16 seq_num);
-> +int online_tag_group(struct cxl_dc_tag_group *group);
->  #else
->  static inline u64 cxl_dpa_to_hpa(struct cxl_region *cxlr,
->  				 const struct cxl_memdev *cxlmd, u64 dpa)
->  {
->  	return ULLONG_MAX;
->  }
-> +static inline int cxl_add_extent(struct cxl_memdev_state *mds,
-> +				 struct cxl_extent *extent, u16 seq_num)
-> +{
-> +	return 0;
-> +}
-> +static inline int online_tag_group(struct cxl_dc_tag_group *group)
-> +{
-> +	return 0;
-> +}
->  static inline
->  struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa,
->  				     struct cxl_endpoint_decoder **cxled)
-> @@ -166,6 +178,7 @@ long cxl_pci_get_latency(struct pci_dev *pdev);
->  int cxl_pci_get_bandwidth(struct pci_dev *pdev, struct access_coordinate *c);
->  int cxl_port_get_switch_dport_bandwidth(struct cxl_port *port,
->  					struct access_coordinate *c);
-> +void memdev_release_extent(struct cxl_memdev_state *mds, struct range *range);
->  
->  static inline struct device *port_to_host(struct cxl_port *port)
->  {
-> diff --git a/drivers/cxl/core/extent.c b/drivers/cxl/core/extent.c
-> new file mode 100644
-> index 000000000000..94128d06f4ed
-> --- /dev/null
-> +++ b/drivers/cxl/core/extent.c
-> @@ -0,0 +1,372 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*  Copyright(c) 2024 Intel Corporation. All rights reserved. */
-> +
-> +#include <linux/device.h>
-> +#include <cxl.h>
-> +
-> +#include "core.h"
-> +
-> +
-> +static void cxled_release_extent(struct cxl_endpoint_decoder *cxled,
-> +				 struct dc_extent *dc_extent)
-> +{
-> +	struct cxl_memdev_state *mds = cxled_to_mds(cxled);
-> +	struct device *dev = &cxled->cxld.dev;
-> +
-> +	dev_dbg(dev, "Remove extent %pra (%pU)\n",
-> +		&dc_extent->dpa_range, &dc_extent->uuid);
-> +	memdev_release_extent(mds, &dc_extent->dpa_range);
-> +}
-> +
-> +static void free_tag_group(struct cxl_dc_tag_group *group)
-> +{
-> +	xa_destroy(&group->dc_extents);
-> +	kfree(group);
-> +}
-> +
-> +static void dc_extent_release(struct device *dev)
-> +{
-> +	struct dc_extent *dc_extent = to_dc_extent(dev);
-> +	struct cxl_dc_tag_group *group = dc_extent->group;
-> +
-> +	cxled_release_extent(dc_extent->cxled, dc_extent);
-> +	xa_erase(&group->cxlr_dax->dc_extents, dc_extent->dev.id);
-> +	xa_erase(&group->dc_extents, dc_extent->seq_num);
-> +	group->nr_extents--;
-> +	if (!group->nr_extents)
-> +		free_tag_group(group);
-> +	kfree(dc_extent);
-> +}
-> +
-> +static const struct device_type dc_extent_type = {
-> +	.name = "extent",
-> +	.release = dc_extent_release,
-> +};
-> +
-> +bool is_dc_extent(struct device *dev)
-> +{
-> +	return dev->type == &dc_extent_type;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(is_dc_extent, "CXL");
-> +
-> +static struct cxl_dc_tag_group *
-> +alloc_tag_group(struct cxl_dax_region *cxlr_dax, uuid_t *uuid)
-> +{
-> +	struct cxl_dc_tag_group *group __free(kfree) =
-> +				kzalloc(sizeof(*group), GFP_KERNEL);
-> +	if (!group)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	group->cxlr_dax = cxlr_dax;
-> +	uuid_copy(&group->uuid, uuid);
-> +	xa_init(&group->dc_extents);
-> +	return no_free_ptr(group);
-> +}
-> +
-> +/*
-> + * Stage 1 of the add pipeline: pure, no allocation.  Resolve the extent
-> + * to its region/endpoint decoder and ext_range, and verify the range
-> + * fits in the resolved endpoint decoder's DPA resource.  Further
-> + * per-extent invariants layer into this function in subsequent commits.
-> + *
-> + * Caller must hold cxl_rwsem.region for read (cxl_dpa_to_region()).
-> + * On success, @out_cxled / @out_cxlr_dax / @out_ext_range carry the
-> + * resolved handles consumed by the rest of the pipeline.
-> + */
-> +static int cxl_validate_extent(struct cxl_memdev_state *mds,
-> +			       struct cxl_extent *extent,
-> +			       struct cxl_endpoint_decoder **out_cxled,
-> +			       struct cxl_dax_region **out_cxlr_dax,
-> +			       struct range *out_ext_range)
-> +{
-> +	u64 start_dpa = le64_to_cpu(extent->start_dpa);
-> +	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_region *cxlr;
-> +	struct range ext_range = (struct range) {
-> +		.start = start_dpa,
-> +		.end = start_dpa + le64_to_cpu(extent->length) - 1,
-> +	};
-> +	struct range ed_range;
-> +
-> +	cxlr = cxl_dpa_to_region(cxlmd, start_dpa, &cxled);
-> +	if (!cxlr)
-> +		return -ENXIO;
-> +
-> +	ed_range = (struct range) {
-> +		.start = cxled->dpa_res->start,
-> +		.end = cxled->dpa_res->end,
-> +	};
-> +	if (!range_contains(&ed_range, &ext_range)) {
-> +		dev_err_ratelimited(&cxled->cxld.dev,
-> +				    "DC extent DPA %pra (%pU) is not fully in ED %pra\n",
-> +				    &ext_range, extent->uuid, &ed_range);
-> +		return -ENXIO;
-> +	}
-> +
-> +	*out_cxled = cxled;
-> +	*out_cxlr_dax = cxlr->cxlr_dax;
-> +	*out_ext_range = ext_range;
-> +	return 0;
-> +}
-> +
-> +enum cxl_extent_class {
-> +	CXL_EXT_NEW,
-> +	CXL_EXT_DUPLICATE,
-> +	CXL_EXT_OVERLAP,
-> +};
-> +
-> +/*
-> + * Stage 2: classify @ext_range against extents already accepted on this
-> + * cxlr_dax+cxled.  Walks cxlr_dax->dc_extents once: a stored extent that
-> + * fully contains @ext_range means a duplicate accept (idempotent, fine);
-> + * a stored extent that only overlaps means an inconsistent offer.
-> + */
-> +static enum cxl_extent_class
-> +cxlr_dax_classify_extent(struct cxl_dax_region *cxlr_dax,
-> +			 struct cxl_endpoint_decoder *cxled,
-> +			 const struct range *ext_range)
-> +{
-> +	struct dc_extent *entry;
-> +	unsigned long i;
-> +
-> +	xa_for_each(&cxlr_dax->dc_extents, i, entry) {
-> +		if (entry->cxled != cxled)
-> +			continue;
-> +		if (range_contains(&entry->dpa_range, ext_range))
-> +			return CXL_EXT_DUPLICATE;
-> +		if (range_overlaps(&entry->dpa_range, ext_range))
-> +			return CXL_EXT_OVERLAP;
-> +	}
-> +	return CXL_EXT_NEW;
-> +}
-> +
-> +/*
-> + * Stage 3: allocate and populate a dc_extent for an already-validated,
-> + * already-classified-as-new @ext_range.  Only -ENOMEM can fail here.
-> + */
-> +static struct dc_extent *
-> +dc_extent_build(struct cxl_endpoint_decoder *cxled,
-> +		struct cxl_dax_region *cxlr_dax,
-> +		struct cxl_extent *extent,
-> +		const struct range *ext_range, u16 seq_num)
-> +{
-> +	resource_size_t dpa_offset = ext_range->start - cxled->dpa_res->start;
-> +	resource_size_t hpa = cxled->cxld.hpa_range.start + dpa_offset;
-> +	struct dc_extent *dc_extent;
-> +
-> +	dc_extent = kzalloc(sizeof(*dc_extent), GFP_KERNEL);
-> +	if (!dc_extent)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	dc_extent->cxled = cxled;
-> +	dc_extent->dpa_range = *ext_range;
-> +	dc_extent->hpa_range.start = hpa - cxlr_dax->hpa_range.start;
-> +	dc_extent->hpa_range.end = dc_extent->hpa_range.start +
-> +				   range_len(ext_range) - 1;
-> +	dc_extent->seq_num = seq_num;
-> +	import_uuid(&dc_extent->uuid, extent->uuid);
-> +	return dc_extent;
-> +}
-> +
-> +/*
-> + * Stage 4: insert @dc_extent into the pending tag group.  All extents in
-> + * one More-chain group share a UUID — enforced here as the group is
-> + * either being created (first extent) or appended to.  On any failure
-> + * the dc_extent is freed.
-> + */
-> +static int cxlr_add_extent(struct cxl_memdev_state *mds,
-> +			   struct cxl_dax_region *cxlr_dax,
-> +			   struct dc_extent *dc_extent)
-> +{
-> +	struct cxl_dc_tag_group **group = &mds->add_ctx.group;
-> +	int rc;
-> +
-> +	if (*group && !uuid_equal(&(*group)->uuid, &dc_extent->uuid)) {
-> +		kfree(dc_extent);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!*group) {
-> +		dev_dbg(&cxlr_dax->dev, "Alloc new tag group\n");
-> +		*group = alloc_tag_group(cxlr_dax, &dc_extent->uuid);
-> +		if (IS_ERR(*group)) {
-> +			rc = PTR_ERR(*group);
-> +			*group = NULL;
-> +			kfree(dc_extent);
-> +			return rc;
-> +		}
-> +	} else {
-> +		dev_dbg(&cxlr_dax->dev, "Append dc_extent to tag group\n");
-> +	}
-> +
-> +	dc_extent->group = *group;
-> +
-> +	/*
-> +	 * Key by @seq_num so iteration order equals assembly order, in both
-> +	 * the sharable case (device-stamped 1..n) and the non-sharable case
-> +	 * (host-assigned arrival-order 1..n).  A collision here signals a
-> +	 * cxl-side validation gap.
-> +	 */
-> +	rc = xa_insert(&(*group)->dc_extents, dc_extent->seq_num,
-> +		       dc_extent, GFP_KERNEL);
-> +	if (rc) {
-> +		dev_WARN_ONCE(&cxlr_dax->dev, rc == -EBUSY,
-> +			"duplicate seq_num %u in tag %pUb\n",
-> +			dc_extent->seq_num, &dc_extent->uuid);
-> +		kfree(dc_extent);
-> +		return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int cxl_add_extent(struct cxl_memdev_state *mds, struct cxl_extent *extent,
-> +		   u16 seq_num)
-> +{
-> +	struct cxl_endpoint_decoder *cxled;
-> +	struct cxl_dax_region *cxlr_dax;
-> +	struct dc_extent *dc_extent;
-> +	struct range ext_range;
-> +	int rc;
-> +
-> +	guard(rwsem_read)(&cxl_rwsem.region);
-> +
-From Sashiko: https://sashiko.dev/#/patchset/cover.1779528761.git.anisa.su%40samsung.com?part=14
+Fix a typo in the CXL mailbox command return code description for the
+interrupted-command case.
 
-read lock is released when this function returns. cxl_validate_extent()
-returns pointer to cxlr_dax through the return param. Other functions
-dereference the pointer later, which could result in use-after-free if
-cxlr_dax is concurrently unbound and destroyed.
+Signed-off-by: Yousef Alhouseen <alhouseenyousef@gmail.com>
+---
+ drivers/cxl/cxlmem.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Fix: Pin cxlr_dax by refcount. On success in alloc_tag_group():
-get_device(&cxlr_dax->dev);
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index ed419d0c5..503ae2864 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -183,7 +183,7 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
+ 	C(MBUNSUPPORTED, -ENXIO, "unsupported on the mailbox it was issued on"),\
+ 	C(PAYLOADLEN, -ENXIO, "invalid payload length"),			\
+ 	C(LOG, -ENXIO, "invalid or unsupported log page"),			\
+-	C(INTERRUPTED, -ENXIO, "asynchronous event occured"),			\
++	C(INTERRUPTED, -ENXIO, "asynchronous event occurred"),			\
+ 	C(FEATUREVERSION, -ENXIO, "unsupported feature version"),		\
+ 	C(FEATURESELVALUE, -ENXIO, "unsupported feature selection value"),	\
+ 	C(FEATURETRANSFERIP, -ENXIO, "feature transfer in progress"),		\
+-- 
+2.54.0
 
-Then in free_tag_group():
-put_device(&group->cxlr_dax->dev);
-
-- Anisa
-> +	rc = cxl_validate_extent(mds, extent, &cxled, &cxlr_dax, &ext_range);
-> +	if (rc)
-> +		return rc;
-> +
-> +	switch (cxlr_dax_classify_extent(cxlr_dax, cxled, &ext_range)) {
-> +	case CXL_EXT_DUPLICATE:
-> +		/*
-> +		 * Idempotent accept simplifies the dax-side scan for existing
-> +		 * extents on region creation; reply success without duplicating.
-> +		 */
-> +		dev_warn_ratelimited(&cxled->cxld.dev,
-> +				     "Extent %pra exists; accept again\n",
-> +				     &ext_range);
-> +		return 0;
-> +	case CXL_EXT_OVERLAP:
-> +		return -ENXIO;
-> +	case CXL_EXT_NEW:
-> +		break;
-> +	}
-> +
-> +	dc_extent = dc_extent_build(cxled, cxlr_dax, extent, &ext_range,
-> +				    seq_num);
-> +	if (IS_ERR(dc_extent))
-> +		return PTR_ERR(dc_extent);
-> +
-> +	dev_dbg(&cxled->cxld.dev, "Add extent %pra (%pU)\n",
-> +		&dc_extent->dpa_range, &dc_extent->uuid);
-> +
-> +	return cxlr_add_extent(mds, cxlr_dax, dc_extent);
-> +}
-> +
-> +static void dc_extent_unregister(void *ext)
-> +{
-> +	struct dc_extent *dc_extent = ext;
-> +
-> +	dev_dbg(&dc_extent->dev, "DAX region rm extent HPA %pra\n",
-> +		&dc_extent->hpa_range);
-> +	device_unregister(&dc_extent->dev);
-> +}
-> +
-> +static void cleanup_pending_dc_extent(struct dc_extent *dc_extent)
-> +{
-> +	struct cxl_dc_tag_group *group = dc_extent->group;
-> +
-> +	cxled_release_extent(dc_extent->cxled, dc_extent);
-> +	xa_erase(&group->dc_extents, dc_extent->seq_num);
-> +	group->nr_extents--;
-> +	if (!group->nr_extents)
-> +		free_tag_group(group);
-> +	kfree(dc_extent);
-> +}
-> +
-> +int online_tag_group(struct cxl_dc_tag_group *group)
-> +{
-> +	struct cxl_dax_region *cxlr_dax = group->cxlr_dax;
-> +	struct dc_extent *dc_extent;
-> +	unsigned long index;
-> +	int rc = 0;
-> +
-> +	/*
-> +	 * Seed nr_extents with the full group size plus a +1 pin held by
-> +	 * this function.  The size counts every dc_extent that might
-> +	 * decrement nr_extents on cleanup; the pin keeps @group alive
-> +	 * across the body even if every dc_extent release fires inside
-> +	 * the loop (e.g. devm_add_action_or_reset failure on the only
-> +	 * pending extent).  The pin is dropped at the end of the function.
-> +	 */
-> +	xa_for_each(&group->dc_extents, index, dc_extent)
-> +		group->nr_extents++;
-> +	group->nr_extents++;
-> +
-> +	xa_for_each(&group->dc_extents, index, dc_extent) {
-> +		struct device *dev = &dc_extent->dev;
-> +		u32 id;
-> +
-> +		device_initialize(dev);
-> +		device_set_pm_not_required(dev);
-> +		dev->parent = &cxlr_dax->dev;
-> +		dev->type = &dc_extent_type;
-> +
-> +		rc = xa_alloc(&cxlr_dax->dc_extents, &id, dc_extent,
-> +			      xa_limit_32b, GFP_KERNEL);
-> +		if (rc < 0) {
-> +			put_device(dev);
-> +			break;
-> +		}
-> +		dev->id = id;
-> +
-> +		rc = dev_set_name(dev, "extent%d.%d", cxlr_dax->cxlr->id,
-> +				  dev->id);
-> +		if (rc) {
-> +			xa_erase(&cxlr_dax->dc_extents, dev->id);
-> +			put_device(dev);
-> +			break;
-> +		}
-> +
-> +		rc = device_add(dev);
-> +		if (rc) {
-> +			xa_erase(&cxlr_dax->dc_extents, dev->id);
-> +			put_device(dev);
-> +			break;
-> +		}
-> +
-> +		dev_dbg(dev, "dc_extent HPA %pra (%pU)\n",
-> +			&dc_extent->hpa_range, &group->uuid);
-> +
-> +		rc = devm_add_action_or_reset(&cxlr_dax->dev,
-> +					      dc_extent_unregister, dc_extent);
-> +		if (rc)
-> +			break;
-> +	}
-> +
-> +	if (rc) {
-> +		/*
-> +		 * Unwind every remaining dc_extent in the group.  The pin
-> +		 * above keeps @group alive across this walk.  Distinguish
-> +		 * onlined dc_extents (have a devm action) from pending ones
-> +		 * via devm_remove_action_nowarn(): a 0 return means the
-> +		 * action was installed and is now consumed, so we run the
-> +		 * unregister ourselves; -ENOENT means pending.
-> +		 */
-> +		xa_for_each(&group->dc_extents, index, dc_extent) {
-> +			int r = devm_remove_action_nowarn(&cxlr_dax->dev,
-> +							  dc_extent_unregister,
-> +							  dc_extent);
-> +			if (r == 0)
-> +				dc_extent_unregister(dc_extent);
-> +			else
-> +				cleanup_pending_dc_extent(dc_extent);
-> +		}
-> +	}
-> +
-> +	/* Drop the pin; if nothing else still references @group, free it. */
-> +	group->nr_extents--;
-> +	if (!group->nr_extents)
-> +		free_tag_group(group);
-> +	return rc;
-> +}
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index c376492fa166..e5edc3975e8f 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -6,6 +6,7 @@
->  #include <linux/mutex.h>
->  #include <linux/unaligned.h>
->  #include <linux/list.h>
-> +#include <linux/list_sort.h>
->  #include <cxlpci.h>
->  #include <cxlmem.h>
->  #include <cxl.h>
-> @@ -1181,7 +1182,7 @@ static void delete_extent_node(struct cxl_extent_list_node *node)
->  	kfree(node);
->  }
->  
-> -static void memdev_release_extent(struct cxl_memdev_state *mds, struct range *range)
-> +void memdev_release_extent(struct cxl_memdev_state *mds, struct range *range)
->  {
->  	struct device *dev = mds->cxlds.dev;
->  	struct cxl_extent_list_node *node;
-> @@ -1280,11 +1281,120 @@ static int add_to_pending_list(struct list_head *pending_list,
->  }
->  
->  /*
-> - * Stub: stage extents on the pending list and reply with an empty
-> - * ADD_DC_RESPONSE on More=0 (refuse all).  A later commit replaces
-> - * the no-op tail with the real Add pipeline that surfaces a dax
-> - * device per accepted extent.
-> + * Compare two extents by shared_extn_seq (ascending).  list_sort is
-> + * stable so when shared_extn_seq is 0 for every entry (non-sharable
-> + * partition) ties fall back to arrival order via list_add_tail() in
-> + * add_to_pending_list().
->   */
-> +static int extent_seq_compare(void *priv,
-> +			      const struct list_head *a,
-> +			      const struct list_head *b)
-> +{
-> +	const struct cxl_extent_list_node *ea =
-> +		list_entry(a, struct cxl_extent_list_node, list);
-> +	const struct cxl_extent_list_node *eb =
-> +		list_entry(b, struct cxl_extent_list_node, list);
-> +	u16 sa = le16_to_cpu(ea->extent->shared_extn_seq);
-> +	u16 sb = le16_to_cpu(eb->extent->shared_extn_seq);
-> +
-> +	if (sa < sb)
-> +		return -1;
-> +	if (sa > sb)
-> +		return 1;
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Move every pending extent whose tag matches @tag onto @group, preserving
-> + * the order they appear in @pending.
-> + */
-> +static void extract_tag_group(struct list_head *pending,
-> +			      const uuid_t *tag,
-> +			      struct list_head *group)
-> +{
-> +	struct cxl_extent_list_node *pos, *tmp;
-> +
-> +	list_for_each_entry_safe(pos, tmp, pending, list) {
-> +		uuid_t t;
-> +
-> +		import_uuid(&t, pos->extent->uuid);
-> +		if (uuid_equal(&t, tag))
-> +			list_move_tail(&pos->list, group);
-> +	}
-> +}
-> +
-> +/*
-> + * Drive the pending Add-Capacity records through cxl_add_extent(),
-> + * grouped by tag.  Per group: extract from pending, stable-sort by
-> + * shared_extn_seq, then attempt to add each extent.  Online the tag
-> + * group via online_tag_group() once all of its extents have been
-> + * realized.  Validation gates layer onto this loop in later commits.
-> + */
-> +static int cxl_add_pending(struct cxl_memdev_state *mds)
-> +{
-> +	struct device *dev = mds->cxlds.dev;
-> +	struct list_head *pending = &mds->add_ctx.pending_extents;
-> +	struct cxl_extent_list_node *pos, *tmp;
-> +	LIST_HEAD(accepted);
-> +	int total_accepted = 0;
-> +
-> +	while (!list_empty(pending)) {
-> +		LIST_HEAD(group);
-> +		struct cxl_dc_tag_group *tag_group;
-> +		int group_cnt = 0;
-> +		uuid_t tag;
-> +		int rc;
-> +
-> +		import_uuid(&tag,
-> +			list_first_entry(pending,
-> +					 struct cxl_extent_list_node,
-> +					 list)->extent->uuid);
-> +		extract_tag_group(pending, &tag, &group);
-> +		list_sort(NULL, &group, extent_seq_compare);
-> +
-> +		u16 logical_seq = 1;
-> +		list_for_each_entry_safe(pos, tmp, &group, list) {
-> +			u16 raw = le16_to_cpu(pos->extent->shared_extn_seq);
-> +			u16 seq = raw ? raw : logical_seq;
-> +
-> +			logical_seq++;
-> +
-> +			if (cxl_add_extent(mds, pos->extent, seq)) {
-> +				dev_dbg(dev,
-> +					"Tag %pUb: failed to add extent DPA:%#llx LEN:%#llx\n",
-> +					&tag,
-> +					le64_to_cpu(pos->extent->start_dpa),
-> +					le64_to_cpu(pos->extent->length));
-> +				delete_extent_node(pos);
-> +				continue;
-> +			}
-> +			group_cnt++;
-> +		}
-> +
-> +		tag_group = mds->add_ctx.group;
-> +		if (!tag_group)
-> +			continue;
-> +
-> +		rc = online_tag_group(tag_group);
-> +		if (rc) {
-> +			dev_warn(dev,
-> +				 "Tag %pUb: failed to online tag group (%d)\n",
-> +				 &tag, rc);
-> +			list_for_each_entry_safe(pos, tmp, &group, list)
-> +				delete_extent_node(pos);
-> +		} else {
-> +			list_splice_tail_init(&group, &accepted);
-> +			total_accepted += group_cnt;
-> +		}
-> +
-> +		mds->add_ctx.group = NULL;
-> +	}
-> +
-> +	list_splice(&accepted, pending);
-> +	return cxl_send_dc_response(mds, CXL_MBOX_OP_ADD_DC_RESPONSE,
-> +				    pending, total_accepted);
-> +}
-> +
->  static int handle_add_event(struct cxl_memdev_state *mds,
->  			    struct cxl_event_dcd *event)
->  {
-> @@ -1316,8 +1426,7 @@ static int handle_add_event(struct cxl_memdev_state *mds,
->  	ctx->armed = false;
->  	cancel_delayed_work(&ctx->timeout_work);
->  
-> -	rc = cxl_send_dc_response(mds, CXL_MBOX_OP_ADD_DC_RESPONSE,
-> -				  &mds->add_ctx.pending_extents, 0);
-> +	rc = cxl_add_pending(mds);
->  	clear_pending_extents(mds);
->  	return rc;
->  }
-> diff --git a/drivers/cxl/core/region_dax.c b/drivers/cxl/core/region_dax.c
-> index d6bf69155827..519e203c486a 100644
-> --- a/drivers/cxl/core/region_dax.c
-> +++ b/drivers/cxl/core/region_dax.c
-> @@ -13,6 +13,7 @@ static void cxl_dax_region_release(struct device *dev)
->  {
->  	struct cxl_dax_region *cxlr_dax = to_cxl_dax_region(dev);
->  
-> +	xa_destroy(&cxlr_dax->dc_extents);
->  	kfree(cxlr_dax);
->  }
->  
-> @@ -57,11 +58,13 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
->  	if (!cxlr_dax)
->  		return ERR_PTR(-ENOMEM);
->  
-> +	xa_init_flags(&cxlr_dax->dc_extents, XA_FLAGS_ALLOC);
->  	cxlr_dax->hpa_range.start = p->res->start;
->  	cxlr_dax->hpa_range.end = p->res->end;
->  
->  	dev = &cxlr_dax->dev;
->  	cxlr_dax->cxlr = cxlr;
-> +	cxlr->cxlr_dax = cxlr_dax;
->  	device_initialize(dev);
->  	lockdep_set_class(&dev->mutex, &cxl_dax_region_key);
->  	device_set_pm_not_required(dev);
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 5ef2cf4d005b..cbbfba92fea9 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -495,6 +495,7 @@ struct cxl_region_params {
->   * @type: Endpoint decoder target type
->   * @cxl_nvb: nvdimm bridge for coordinating @cxlr_pmem setup / shutdown
->   * @cxlr_pmem: (for pmem regions) cached copy of the nvdimm bridge
-> + * @cxlr_dax: (for DC regions) cached copy of CXL DAX bridge
->   * @flags: Region state flags
->   * @params: active + config params for the region
->   * @coord: QoS access coordinates for the region
-> @@ -510,6 +511,7 @@ struct cxl_region {
->  	enum cxl_decoder_type type;
->  	struct cxl_nvdimm_bridge *cxl_nvb;
->  	struct cxl_pmem_region *cxlr_pmem;
-> +	struct cxl_dax_region *cxlr_dax;
->  	unsigned long flags;
->  	struct cxl_region_params params;
->  	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
-> @@ -568,6 +570,15 @@ struct cxl_dax_region {
->  	struct device dev;
->  	struct cxl_region *cxlr;
->  	struct range hpa_range;
-> +	/*
-> +	 * dc_extents is keyed by an allocator-assigned u32 (see
-> +	 * online_tag_group()).  Tag groups have no first-class identity in
-> +	 * this xarray; siblings within a tag find each other via
-> +	 * dc_extent->group.  Tag-uniqueness lookup is a linear xa_for_each
-> +	 * walk, adequate at the bounded per-region extent counts the
-> +	 * driver handles.
-> +	 */
-> +	struct xarray dc_extents;
->  };
->  
->  /**
-> @@ -595,6 +606,14 @@ struct cxl_dc_tag_group {
->  	unsigned int nr_extents;
->  };
->  
-> +bool is_dc_extent(struct device *dev);
-> +static inline struct dc_extent *to_dc_extent(struct device *dev)
-> +{
-> +	if (!is_dc_extent(dev))
-> +		return NULL;
-> +	return container_of(dev, struct dc_extent, dev);
-> +}
-> +
->  /**
->   * struct cxl_port - logical collection of upstream port devices and
->   *		     downstream port devices to construct a CXL memory
-> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-> index 2be1df80fcc9..8941cf187462 100644
-> --- a/tools/testing/cxl/Kbuild
-> +++ b/tools/testing/cxl/Kbuild
-> @@ -63,7 +63,10 @@ cxl_core-y += $(CXL_CORE_SRC)/hdm.o
->  cxl_core-y += $(CXL_CORE_SRC)/pmu.o
->  cxl_core-y += $(CXL_CORE_SRC)/cdat.o
->  cxl_core-$(CONFIG_TRACING) += $(CXL_CORE_SRC)/trace.o
-> -cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o $(CXL_CORE_SRC)/region_pmem.o $(CXL_CORE_SRC)/region_dax.o
-> +cxl_core-$(CONFIG_CXL_REGION) += $(CXL_CORE_SRC)/region.o \
-> +				 $(CXL_CORE_SRC)/region_pmem.o \
-> +				 $(CXL_CORE_SRC)/region_dax.o \
-> +				 $(CXL_CORE_SRC)/extent.o
->  cxl_core-$(CONFIG_CXL_MCE) += $(CXL_CORE_SRC)/mce.o
->  cxl_core-$(CONFIG_CXL_FEATURES) += $(CXL_CORE_SRC)/features.o
->  cxl_core-$(CONFIG_CXL_EDAC_MEM_FEATURES) += $(CXL_CORE_SRC)/edac.o
-> -- 
-> 2.43.0
-> 
