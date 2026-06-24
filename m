@@ -1,328 +1,340 @@
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11013034.outbound.protection.outlook.com [40.107.201.34])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7295331A6E;
-	Wed, 24 Jun 2026 16:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.34
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782319292; cv=fail; b=MjzSXJAawQoyHP6EjV4vPNtDgurmuaR26aqZJl3UUaunpRVZIDHpfGCSaw48IdKsQHzrLUdRqVuZ7ni2XupFK4EfAo666XXKUijcFqvdB2M+XGfQLZKbpQxK4rK/6sZA1Z+Crw2ZUw0VB8cK4dKa1sx9/ZKXyCK2DHUSNkPboIk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782319292; c=relaxed/simple;
-	bh=/tjg02QZia2H3+AJ7qmmLX6QBcKFB1Cs7HtdyMcwBFY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=EVOPmhZlqp3LcWgKobugy5ZeZOIkP7AM4eSoVbkQCkSE1DxFwutMPiLJgdsVTXtTm1RM3zeT6gKyfcNOh8fgdSV5zJIb6u1h4nrf2UxzGegswBO+SswjFxhwBGu+TcrkFe/Uv4QmJbL1hywboU5rsWhXnPOsmUt3qdNDUiupHI0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Mgd8T2vf; arc=fail smtp.client-ip=40.107.201.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765DB332604
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 16:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782319382; cv=none; b=VM4Q+MszfigjJKteDDFHqAuTdEOuscudpE5g8M+IxR0lx2W7oKKnij8+Zlfk6Oda0bDPHd2qJQm23iZ+vbvj1Q5RgJkTx+RUC4C+zRd6EleC6n8VnQ21b1k5F5NW4nJcvF442NodJC0zCXytL6NhTUlvYRgVDNZoTMtNKx1d6LQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782319382; c=relaxed/simple;
+	bh=MWWd2KV9KNteSN3oNF32yn4mpN1qJSf0X1a0CIFcaYQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AbcrvEEaQJHzMb/TnBgPXJBmMFITAR9es4AGO6Q4jgD029RvfeJ3Lm9hE4XU8bE/P66fDQPmVaVmKCUqvZ4q8ssawOxQDEbzGWVx4az3oKtqMjNNwG0VkDADbBq9Uo2s3HnYEQJ7Yez+gpKUvw9XaBUZhIsBlAv80Fasmx7aBLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fui+YcFt; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=YLwSRTZP; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Mgd8T2vf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=o7gUQ3CT6u6eCvDIDUebPekqJOYuuDwwI7Q7gucdVscb+qhgxx6S9U4NHkpnWdO9ThdLP4mROGxYh39ARu1qtzww47kvVzcTm3wxKKbLZSlYz/V8Ihz2FqnT06+hP1XBOxUKK/5BzjdulWjUUBmDNjLAwLF86AcdccGb8UCQuWvoTxbFg8YkMIC3PxvJ6QFb1JAK9FjN2CSzOkoWgz9le3zeSoQ+ko/cLXyrURwJ/KppaNpWCeiSxpLm+yP+TZRRUF5UByZHoFGCrcZ0SkqR45sh1Je8WSUyoHnMQNvutrYNdIrNuNIOGZnD5/OFfZdWHqK6xZepKCgQLsh2MDVpOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IQC348/jjnpm3YhjFL5l5N3hsD6rHo9Z+kSh6eQelBQ=;
- b=Xrrhfmtccn3rDeSAKiPY2Qo7FCs291NbWWpjT/UCJSY1nbfw6DllJ+VWNw8bD/65TpPaEMJDCrwQld9hulgr3IhpIXuxasbPXraeSHrACslgVmsI+a26ciUcZxVwX3tItp/lJ1mc2VJ1GaI9pQykSrrcSYcTSxMt4EW9o6wA+nUKcu6VHyLFmvYExI1DWCQ3oLtsi4gtocb+8fvSqbReZ9oBhXu6FHoakuvJVjhS/VvT7vQB0C/1Rwg1bID3Pis+Ta4yvVmjIQwGnNidCs0Gy2dOsyIN6JZgMSKbFf1+oxWcel/cYNEQCCY9GltAAYYTFZwvkUFQCpdNrUn3FofcZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IQC348/jjnpm3YhjFL5l5N3hsD6rHo9Z+kSh6eQelBQ=;
- b=Mgd8T2vfrWwJSQNCOfZ8ZlJ8dcif7jpPMsZRksM9BczmoblF4sM8eY9vucAsRZBKA5oF2A3OP8KjNcG138ibM5QxbTvryiHoPbFuY9fgX9JXu1l32v2fhvqf13A2ZB/rJmZWFD/UXDUsFUWlW1K236oKKmTLYKoLJRVJ7QGjoTg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CY8PR12MB7433.namprd12.prod.outlook.com (2603:10b6:930:53::22)
- by SN7PR12MB7854.namprd12.prod.outlook.com (2603:10b6:806:32b::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.20; Wed, 24 Jun
- 2026 16:41:23 +0000
-Received: from CY8PR12MB7433.namprd12.prod.outlook.com
- ([fe80::faae:d638:bdc9:4bf6]) by CY8PR12MB7433.namprd12.prod.outlook.com
- ([fe80::faae:d638:bdc9:4bf6%3]) with mapi id 15.21.0159.012; Wed, 24 Jun 2026
- 16:41:23 +0000
-Message-ID: <5d3aa51c-d582-4989-a9f3-e46c95dcacb7@amd.com>
-Date: Wed, 24 Jun 2026 18:41:14 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/9] mm/memory_hotplug: add
- __add_memory_driver_managed() with online_type arg
-To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org,
- nvdimm@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- driver-core@lists.linux.dev, linux-kselftest@vger.kernel.org,
- kernel-team@meta.com, david@kernel.org, osalvador@suse.de,
- gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
- djbw@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
- akpm@linux-foundation.org, ljs@kernel.org, liam@infradead.org,
- vbabka@kernel.org, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
- shuah@kernel.org, alison.schofield@intel.com,
- Smita.KoralahalliChannabasappa@amd.com, ira.weiny@intel.com,
- apopple@nvidia.com
-References: <20260624145744.3532049-1-gourry@gourry.net>
- <20260624145744.3532049-5-gourry@gourry.net>
-Content-Language: en-US
-From: "Gupta, Pankaj" <pankaj.gupta@amd.com>
-In-Reply-To: <20260624145744.3532049-5-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0209.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1a5::16) To CY8PR12MB7433.namprd12.prod.outlook.com
- (2603:10b6:930:53::22)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fui+YcFt";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="YLwSRTZP"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 65OFfYTG3212448
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 16:43:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	08xMVtcPU9aNDwBr/6YtUFxpftYU+nnvK8OHIg9s0mk=; b=fui+YcFtBcrRvaZ9
+	SKYSbDMAFp/cM0zcwevjsWu89TN3LVkwZGTOoXvgp9KqwNR/4vLE25P71GHMaeLO
+	c1j+6K5pohkvx9QolAF0HMoYgw2NjB7DNJqRGLpeRT0Z220cJ7YLFAxZUH5FpvLH
+	2xNiIyeYxdvp2SR6bmquxUttZVf3ssqUR3oC5SiqZXkwN5xFUpCcsr6IWe+XwQCy
+	MoUT5pPQLh0xecRW1HKBuuNroWPU2k7xFPZLyDjYI8O/A6/5hhnueMgbYmWZNlph
+	Z0K04tcYdlzqFgh8H6f97r6MkOb3EAEqLEZ95sKEEWgd0o83M2nUM71g3cYh1/Tc
+	8VVlJg==
+Received: from mail-dy1-f199.google.com (mail-dy1-f199.google.com [74.125.82.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4f0d451n1h-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 16:42:59 +0000 (GMT)
+Received: by mail-dy1-f199.google.com with SMTP id 5a478bee46e88-30c17f62afdso44073eec.0
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 09:42:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oss.qualcomm.com; s=google; t=1782319379; x=1782924179; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=08xMVtcPU9aNDwBr/6YtUFxpftYU+nnvK8OHIg9s0mk=;
+        b=YLwSRTZPlZy80GrXYdoyp4u5Ue9GFrvSDrB3iC/AvoSGbBpFCHUGS4KumqrnOPoNAS
+         KbTmAoW9+GiN0aji/bINrW+8Umeu0EWKDSBa85AYsFMJid+WA0/W/ap004Qoo3PAHd+6
+         DFbTUm5ic2nNaNN2Dzl8mzfB2u2W7r3EYr6EnaJrBwwyZrNkL8SlqcQWtn3kkdTgWPbM
+         a0tLx18TTUFOiiqisi5PxafFGsaqNZljKdi3SmTMyNEMpEf8Rad2soyNyvI2GSlWOIWd
+         mdbPZPKvpmlF/vKbBW9EGGNKUJ+3x9zxL0OYkjGOiPbl7dXs7YWlhA3r1izjKBZW2ot8
+         iF3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782319379; x=1782924179;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=08xMVtcPU9aNDwBr/6YtUFxpftYU+nnvK8OHIg9s0mk=;
+        b=jTd6lo7HN1we0vSr7AuWmEQxTV4z8alsRoRRrOcHSLQJMfP3IEUQGd9+z/xZSjCbJR
+         Zqv9JXUkuPwxVQqSZxD80PtO2IQVno78prJMd78rR9yVVqN0m86WPdf0Pxlv46i1zX4q
+         RAdM+yh5k4XUTk9H1w8KTYHaFfitkD8hWY8+PYQMEtMNiYT7XlyBUxO8DhL729WEwZl1
+         j+iaaAWqai94a5/DBTXmzVTVvmPcWYQm+pbvULMtkDCwlGHB8YQau6Fs1KIwTIApSRZ4
+         uUupRxRyD2TfJ+w9h/6gU6DAK1XdC4OBoFUKsDB1q4pblUK7IRShuC7Ib7K3pbQL/JlG
+         i/yg==
+X-Forwarded-Encrypted: i=1; AHgh+RpF9N5uo5eSkAOpn57ratNdKFrhSd/1TA5XOsVDD1c6HGus6+EvNeRzRs/3Xu71fi1o39cMCYgnKCg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlH0/qI2nQXW2W/z/njRdhxO5dVmtE6FFiDWyIF2N3QGcKCBp/
+	pxX338mBOJH0K51xYOb+qZGJs9DJfJi5tCaTAdMNldXKZoUPuMbgly8z9pU83x5acR2bw0yfI4F
+	eAPLWtc5EjkqdzmLpSsQaeRjhasVqVdNQYSMQVO7p4kwtKaaTbLuZqofKtsV+EoU=
+X-Gm-Gg: AfdE7cko+PUpMibQ6oT7DeayNYjUc0t1iw7RPNdy1WDzHNCtUwBxiz+8UTJLxIwQYQZ
+	MQSR8i7AnRDQfuqSCGZshL/dK2XLJPBxrSejdrPo3t6FXLSu4R+p+JRdWUClwjAAIQ9oXaYlZFb
+	rIhdXXwkAjtdJQV0I/8U1zjXJfH5e8g0r+tJdOwv8HgSpUwC0bxEmvQa24pMI2rNMAfv4prblw0
+	CfQmRbvEgiit4bDyg/I1Dk9h1JLVIYW8ZogYchBgr/Te0ug98HvEFgab53IHg10fGiI0CZxaFsD
+	LuFyfzX2sEJsUYAbar2+k+ypUbfz4ZOGoLaPmOxo0WYP9YOzz9edAH8L/l0PSml26QkXS65QtZQ
+	1VDnP/Ap5kqXWuDhyqTjstDHNmePcUlp0hf5vjLHERgss
+X-Received: by 2002:a05:7301:7106:b0:2f4:d190:37bf with SMTP id 5a478bee46e88-30c5563f2e8mr4507528eec.16.1782319378808;
+        Wed, 24 Jun 2026 09:42:58 -0700 (PDT)
+X-Received: by 2002:a05:7301:7106:b0:2f4:d190:37bf with SMTP id 5a478bee46e88-30c5563f2e8mr4507498eec.16.1782319378075;
+        Wed, 24 Jun 2026 09:42:58 -0700 (PDT)
+Received: from [192.168.68.103] ([189.79.21.40])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c7c8b1ae5sm400755eec.16.2026.06.24.09.42.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jun 2026 09:42:57 -0700 (PDT)
+Message-ID: <9279723a-b079-4749-b3a5-e6e7ecfd2121@oss.qualcomm.com>
+Date: Wed, 24 Jun 2026 13:42:48 -0300
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY8PR12MB7433:EE_|SN7PR12MB7854:EE_
-X-MS-Office365-Filtering-Correlation-Id: fb6c6b04-6a26-44ac-288e-08ded20f6cad
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|23010399003|1800799024|366016|6133799003|3023799007|18002099003|22082099003|4143699003|11063799006|56012099006|20046099003;
-X-Microsoft-Antispam-Message-Info:
-	c+X/T02gLuMr3K0hHvzaDK+WYJCWpj6KdDvO8L6keb/m/JXGHGTgsj/kqrfOmT7hKfIIAUMnkqdvtGU8N+JZlGXWZN9M6SYWLCt5/vN886jberfhPrEY2va4QubAe+YKNPjENli9cKndG3N1L5qRsCnvU9vqQRi5qVSHPNA3445DeDEwx6G950ClwIAQM/Ci4TbW1ENKwuNdqDweoMXsO7FtJxx5Vk8vsjia/rJrhHouBEKTrpacPdbXGG+b3C7upC9SOpcFJRUe+b4x+AMXr9h0uxTKkgRQ6EFIjxpdIhD4K24tL/iT3XNRWeab9AVBUFLDLVa6zXU6yWjlRPbEaJGZXhbT77eNpUAqaG+zFDI8x9LPNMvCfebiPxSs40RZEqYLKlQ56VyDmodbRhWMqkUywA91JI6GHnsd48V/vcBpRdPXgAGFKp0wksrqVsAUwN1cGQhPQJCs2wGZVApJMh5BySKKToKTGv1ZQlfyenRLA9CxiTmaq/kZuEtJZwlANGZ0BR+gCZHHdn5zFqnPrn4MA431bzQy/85RCLmRTYwdhBGKfoWESuL1JOJoUiyCvWhYu6W8mgMZq5Z8Pb2yxxd1Lx03gURsSYiRwZQEecP3dFmwIxbpm+r5QyuqJSmvt+YnJfbKjTpvFyLwck6TvlOgPcPeeP5TSB15bii+ktI=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR12MB7433.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(23010399003)(1800799024)(366016)(6133799003)(3023799007)(18002099003)(22082099003)(4143699003)(11063799006)(56012099006)(20046099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?alhQUndhWFJPYkxwaGprRm54eHlqTTRnNVFCajRWQTBxNTVlVUJrS01jdHIr?=
- =?utf-8?B?MWVTbEMxdkhqMUZFZ1ljbldROGdLcjhDZ1dnMVpzT1VvS1NodUd6bFdYemI3?=
- =?utf-8?B?R2l1aW9QQ21Mait3L2pjZU80SHdqUFk5bDZkR0RsakxOSjFxcE9PQ3Q4ZlZO?=
- =?utf-8?B?eXVUWk9DUEc0YXBScGp2Ry8yWmVrNXVOK1E4MWlBOXN6Z1hidVEvUHJQUFFL?=
- =?utf-8?B?L0ZQdGxQU3VhQXhNM3BQSWNDcyt3THRKM0ExajdncVBheUhLYVVUWW9rNEc4?=
- =?utf-8?B?YWEzR2NLay9EZDcra0t2SVE1endFTmdZQWd6TjZXcHUzZmRBNWNkTGRxb09m?=
- =?utf-8?B?dDRReDRTdmxGOWhaZ2VyVXBseFBpNUxGaWRoWXZMZTRUOVR2RVNTc0E0V3ZN?=
- =?utf-8?B?T3ZtK0FVS0p3OVE1UlhGaldBTlZIN0ZWY1ZpN2Q0SDY3NDdSeHMxT0pCYUI3?=
- =?utf-8?B?KzJzWHJFOERnR1NjcVFHYTJMWDUyOW9oMHpYd25QTnNnVGFMbmo3bjBQUTNL?=
- =?utf-8?B?T3lhRE0xeFg1TURMdTlaUSs2T3J2UGxMOEp4a1g0d1lvbVYzcFl4VGl5dE1y?=
- =?utf-8?B?MDd5eFp5SWZzSy95dUhUVTFmTG9XTGhtamlTaWYvTHBab0FKUzNaNTh3ZlIx?=
- =?utf-8?B?WUFkRzlmdkg3VzlRVXgrSHhlRTFVK0hZN1ovQnkxY3JhOUV3c2NGL2tOclQr?=
- =?utf-8?B?blNXd1lYRXg2ZnFMeU9tYzdNOXhTdENRbUZZek93ZVJya01pcjlXeFpWV1hF?=
- =?utf-8?B?RkQyaWQ5MWU5TGRBV1VWY1hmOVJ4a20vTlppZ3IzanZvbTdFM3NqNGtIM1ZU?=
- =?utf-8?B?NUdxVnJHSUtuZFN5RmN1aFlRK0F2WU1yQUVUTnlDc2FReld6UWJ3V256eFc0?=
- =?utf-8?B?Y3Y2RFdVSU9LTU1qeVBnOG1aZlg2UGFSY2pHWGp4aHE2ZFQ2djV5a1hkSW9N?=
- =?utf-8?B?U0pZRG5RMytrNTdXNGZKNExCSVhCVGZhODN5RlNNeTgveEtteVhUQktCTFE4?=
- =?utf-8?B?THU2emNoVHlvR2VJa1BxYXBpYWEwZDlnczlHNnF3UlNUcStJV0RtMHliaUk1?=
- =?utf-8?B?bjRGSEFPc05FalhoeGxXLzFWa3BYZllCcUdVT0NGY2tsbEpqem03WWVvN3k5?=
- =?utf-8?B?RGpKUnJVbStUVjczWk0raE9BS1k3cHBpbEllQ0lCRWtRTFU4eUM2WHhDcjYv?=
- =?utf-8?B?SVdLbDJPdW5pRjl1aURscXp3VmlEZVRpQzIrRCthNnh1WWRCQTUwSjIwVkdU?=
- =?utf-8?B?QnV4Tmtia01ZbXlKR3ZWY1VwaSs4THkzdE1BaUpKam1HTDd4ckJ5Y2JsNjIr?=
- =?utf-8?B?WUcvNnZCWUVJdnYvekV4MmRFa3lxMVppRzV1dkhZTU4zNWtQMlBKZ0xldFJB?=
- =?utf-8?B?dzU5dTdIS3h1ZzdTSW0yeGh3RVI5bUlUN0h1ZDNwVzZjamQwVm9hZkpGeWpH?=
- =?utf-8?B?akVZVXJxclU3VDB2dUdHUGI0MHBWeXFuUGdZT3RUODVNNFUvbG1FNW1QQ2R3?=
- =?utf-8?B?U1NseFBJUm02TVpCWXdjMTFlRWNSVTVXWHgwRnF3WDRoRFlkclNRNHlxSW5J?=
- =?utf-8?B?ZzVvR2JWTHdyeVFQa2QxTkE0QzVkVE1FSlF3VFJRZ1Blek1vWTRDNVFjeERY?=
- =?utf-8?B?b2lSRFdkRm85Vng4VVozQWJycFdIQnhTYWh2Wmhhd2VoNXZHWFZjbFNHczlK?=
- =?utf-8?B?RVdHZUJjMlV6THRLV3BveDRrTXZaTWJ1WU5QckY5VGx1WG1ZU1JrOVJvMnpz?=
- =?utf-8?B?bFNsMTQ1alIrdjExakFOWW9zR3hvdEVYNUpMNEx0OTBZd0pHcWNidGJ1UkRJ?=
- =?utf-8?B?S1hzMEYzNHh0aXNBNkJSc1RkNmRIQW5HdlZEWXFRS0NnWDVJMlNvUi9ndGNQ?=
- =?utf-8?B?RzlXN29MRFgvZE9LbHMxYTdxZVVVUzgrWWdha1lWcXNwQ05pbXpNMnBucCs5?=
- =?utf-8?B?UmxpVDBHRVJuT0JGekpoWVFIOWlQa3lsT3RDVVB5RGdkekdnbStoaGpJSmpl?=
- =?utf-8?B?ZUFXK3BHaEExcW9OZE96aWJtUitHZVhRc1dKQTVFTjhhQ0pOSHNaU3ZRWlZn?=
- =?utf-8?B?a3U5UUFQRjFNWjh2eVBGRDVlaE5PLytwbTJITVZXMEZqVGJiVHV4WG5aY25n?=
- =?utf-8?B?ZlRIckxDd1czZDl4MnlXbnFMeVUyRlFSanZHOERVeXRnZFpLUThDYm1FaDl3?=
- =?utf-8?B?MVJvRWVTTGhUamRpRXZUcnY1RFVqVU9Qd3FQckJWRWJtY0YwbW9EZzQ5bnVo?=
- =?utf-8?B?RVpiQjdMVUZKRjZ2SHl3bkVwdC81WGFqY25TK0pDdzc4Tjh5eVJlSUhPa0Rh?=
- =?utf-8?Q?d/Z6Yerzu1/rmAi1qL?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fb6c6b04-6a26-44ac-288e-08ded20f6cad
-X-MS-Exchange-CrossTenant-AuthSource: CY8PR12MB7433.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2026 16:41:22.6887
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OiF1zzel0zrx4RpHLrwN1XRA3wcuh+twNapi2oW8Q3GrRmw5Vuh4TnGEg8ZRWA/kYOXALgmLMCZwVD6BPSjNow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7854
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] hw/riscv/virt: Add CXL support to the RISC-V virt
+ machine
+To: Chen Pei <cp0613@linux.alibaba.com>, jic23@kernel.org, pbonzini@redhat.com,
+        palmer@dabbelt.com, alistair.francis@wdc.com, liwei1518@gmail.com,
+        zhiwei_liu@linux.alibaba.com, chao.liu.zevorn@gmail.com,
+        sunilvl@ventanamicro.com, dave.jiang@intel.com,
+        alison.schofield@intel.com, imammedo@redhat.com, mst@redhat.com,
+        guoren@kernel.org
+Cc: qemu-riscv@nongnu.org, qemu-devel@nongnu.org, linux-cxl@vger.kernel.org
+References: <20260618093827.3507-1-cp0613@linux.alibaba.com>
+ <20260618093827.3507-2-cp0613@linux.alibaba.com>
+From: Daniel Henrique Barboza <daniel.barboza@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <20260618093827.3507-2-cp0613@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNjI0MDE0MCBTYWx0ZWRfXxuK7k/5x6BIx
+ G2pN5BUYAj1gxWFT8DLdx1nW1e346XtytEmAVGxsZfJh5LMXirMWQtzfXoC7npOYYpyRYAaDASa
+ 6k7n2ctNhdJAydOcAcLgX/a9z+yh7O0=
+X-Proofpoint-GUID: QWbhbMe1O8rumTw56qMizp-0w-wbZjHJ
+X-Authority-Analysis: v=2.4 cv=Ar7eGu9P c=1 sm=1 tr=0 ts=6a3c0913 cx=c_pps
+ a=cFYjgdjTJScbgFmBucgdfQ==:117 a=sHJf4AwOIoU3qjeHFPlg6Q==:17
+ a=IkcTkHD0fZMA:10 a=FelO9ux0wxsA:10 a=s4-Qcg_JpJYA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=DJpcGTmdVt4CTyJn9g5Z:22
+ a=SRrdq9N9AAAA:8 a=OKAgqmDqJgUB0MQQqyQA:9 a=QEXdDO2ut3YA:10
+ a=scEy_gLbYbu1JhEsrz4S:22
+X-Proofpoint-ORIG-GUID: QWbhbMe1O8rumTw56qMizp-0w-wbZjHJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNjI0MDE0MCBTYWx0ZWRfX1XbvoJ8MOrBw
+ +yyoB233FPrIMCR+9kGlLScFYmupw1NxhG+d9XbeM/6M7uIqvMt6YgSuzB3Ri7ISBQO2J+IyHRy
+ P6t/uPPS5FA62Oh0Fo/wUrkgppBCADpHS7BVcOzj+1CxuinCct2hC1kzFLRMveEIlpBCvlgtIY4
+ bHMCg7TYF1gSehOxNnDT9NaPrz5Sx7qdTk3ei2Jn9pGdzvXoygtdBdSfRY0PgVNPGU2ipcEyDhG
+ VW1ZVBgLY7JjIUNxDMf28P1qgJMdbEkeNNtWJHaeijqYLJ0Ihiy58vU2Bm4VhHsJTW7JzJFEGx1
+ /GwleCgIRmoSrKAl3yxHkohDyFtXfgiipKMjoAIPQEt5EbeSFmH9zQh1QJGPZmhphBPMb/HlFBC
+ hJS6mPUcjDkDXr53oYaExNiNwNHjWQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.125,FMLib:17.12.100.49
+ definitions=2026-06-24_03,2026-06-24_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 malwarescore=0 lowpriorityscore=0 phishscore=0 adultscore=0
+ spamscore=0 suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2606240140
 
+Hi,
 
-> Existing callers of add_memory_driver_managed cannot select the
-> preferred online type (ZONE_NORMAL vs ZONE_MOVABLE), requiring it to
-> hot-add memory as offline blocks, and then follow up by onlining each
-> memory block individually.
->
-> Most drivers prefer the system default, but the CXL driver wants to
-> plumb a preferred policy through the dax kmem driver.
->
-> Refactor APIs to add a new interface which allows the dax kmem module
-> to select a preferred policy.
->
-> Overriding the configured auto-online policy is only safe for known
-> in-tree modules, where we know the override reflects a different,
-> user-requested policy.  We do not want arbitrary out-of-tree drivers
-> silently overriding the system-wide onlining policy, so restrict the
-> new interface to the kmem module using EXPORT_SYMBOL_FOR_MODULES()
-> rather than a plain EXPORT_SYMBOL_GPL().  Other in-tree modules (e.g.
-> cxl_core) can be added to the allowed list as the need arises.
->
-> Refactor add_memory_driver_managed, extract __add_memory_driver_managed
-> - Add proper kernel-doc for add_memory_driver_managed while refactoring
-> - New helper accepts an explicit online_type.
-> - New helper validates online_type is between OFFLINE and ONLINE_MOVABLE
->
-> Refactor: add_memory_resource, extract __add_memory_resource
-> - new helper accepts an explicit online_type
->
-> Original APIs now explicitly pass the system-default to new helpers.
->
-> No functional change for existing users.
->
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
-> Signed-off-by: Gregory Price <gourry@gourry.net>
+On 6/18/2026 6:38 AM, Chen Pei wrote:
+> Enable CXL support on the RISC-V virt machine following the same
+> approach used by the ARM virt machine:
+> - Add PXB and ACPI_CXL Kconfig selections
+> - Add CXLState and PCIBus pointer to RISCVVirtState
+> - Register CXL machine properties via cxl_machine_init()
+> - Create CXL host register region above the PCIe high MMIO region
+> - Call cxl_hook_up_pxb_registers() and cxl_fmws_link_targets() at
+>    machine_done time
+> - Map Fixed Memory Windows above the CXL host register region
+> - Add ACPI0017 device in DSDT and build CEDT table in virt-acpi-build.c
+> 
+> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 > ---
->   include/linux/memory_hotplug.h |  3 ++
->   mm/memory_hotplug.c            | 61 +++++++++++++++++++++++++++++-----
->   2 files changed, 56 insertions(+), 8 deletions(-)
->
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index f059025f8f8b..d3edeb80aadb 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -294,6 +294,9 @@ extern int __add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags);
->   extern int add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags);
->   extern int add_memory_resource(int nid, struct resource *resource,
->   			       mhp_t mhp_flags);
-> +int __add_memory_driver_managed(int nid, u64 start, u64 size,
-> +				const char *resource_name, mhp_t mhp_flags,
-> +				enum mmop online_type);
->   extern int add_memory_driver_managed(int nid, u64 start, u64 size,
->   				     const char *resource_name,
->   				     mhp_t mhp_flags);
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 494257054095..a66346def504 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1494,10 +1494,10 @@ static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
->    *
->    * we are OK calling __meminit stuff here - we have CONFIG_MEMORY_HOTPLUG
->    */
-> -int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
-> +static int __add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags,
-> +				 enum mmop online_type)
->   {
->   	struct mhp_params params = { .pgprot = pgprot_mhp(PAGE_KERNEL) };
-> -	enum mmop online_type = mhp_get_default_online_type();
->   	enum memblock_flags memblock_flags = MEMBLOCK_NONE;
->   	struct memory_group *group = NULL;
->   	u64 start, size;
-> @@ -1585,7 +1585,7 @@ int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
->   		merge_system_ram_resource(res);
+>   hw/riscv/Kconfig           |  2 ++
+>   hw/riscv/virt-acpi-build.c | 20 +++++++++++++++++++
+>   hw/riscv/virt.c            | 40 ++++++++++++++++++++++++++++++++++++++
+>   include/hw/riscv/virt.h    |  3 +++
+>   4 files changed, 65 insertions(+)
+> 
+> diff --git a/hw/riscv/Kconfig b/hw/riscv/Kconfig
+> index 2518b04175..ebd0355f09 100644
+> --- a/hw/riscv/Kconfig
+> +++ b/hw/riscv/Kconfig
+> @@ -66,8 +66,10 @@ config RISCV_VIRT
+>       select VIRTIO_MMIO
+>       select FW_CFG_DMA
+>       select PLATFORM_BUS
+> +    select PXB
+>       select ACPI
+>       select ACPI_PCI
+> +    select ACPI_CXL
 >   
->   	/* online pages if requested */
-> -	if (mhp_get_default_online_type() != MMOP_OFFLINE)
-> +	if (online_type != MMOP_OFFLINE)
->   		walk_memory_blocks(start, size, &online_type,
->   				   online_memory_block);
+>   config SHAKTI_C
+>       bool
+> diff --git a/hw/riscv/virt-acpi-build.c b/hw/riscv/virt-acpi-build.c
+> index 413d47d70e..309d64b322 100644
+> --- a/hw/riscv/virt-acpi-build.c
+> +++ b/hw/riscv/virt-acpi-build.c
+> @@ -29,12 +29,16 @@
+>   #include "hw/acpi/aml-build.h"
+>   #include "hw/acpi/pci.h"
+>   #include "hw/acpi/utils.h"
+> +#include "hw/acpi/cxl.h"
+>   #include "hw/intc/riscv_aclint.h"
+>   #include "hw/nvram/fw_cfg_acpi.h"
+>   #include "hw/pci-host/gpex.h"
+> +#include "hw/pci/pci_bus.h"
+>   #include "hw/riscv/virt.h"
+>   #include "hw/riscv/numa.h"
+>   #include "hw/virtio/virtio-acpi.h"
+> +#include "hw/cxl/cxl.h"
+> +#include "hw/cxl/cxl_host.h"
+>   #include "kvm/kvm_riscv.h"
+>   #include "migration/vmstate.h"
+>   #include "qapi/error.h"
+> @@ -503,6 +507,17 @@ static void build_dsdt(GArray *table_data,
+>           acpi_dsdt_add_gpex_host(scope, PCIE_IRQ + VIRT_IRQCHIP_NUM_SOURCES * 2);
+>       }
 >   
-> @@ -1603,7 +1603,13 @@ int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
->   	return ret;
+> +    if (s->cxl_devices_state.is_enabled) {
+> +        Aml *cxl_dev = aml_device("CXLM");
+> +        aml_append(cxl_dev, aml_name_decl("_HID", aml_string("ACPI0017")));
+> +        Aml *method = aml_method("_STA", 0, AML_NOTSERIALIZED);
+> +        aml_append(method, aml_return(aml_int(0x0B)));
+> +        aml_append(cxl_dev, method);
+> +        build_cxl_dsm_method(cxl_dev);
+> +
+> +        aml_append(scope, cxl_dev);
+> +    }
+> +
+>       aml_append(dsdt, scope);
+>   
+>       /* copy AML table into ACPI tables blob and patch header there */
+> @@ -910,6 +925,11 @@ static void virt_acpi_build(RISCVVirtState *s, AcpiBuildTables *tables)
+>                      s->oem_table_id);
+>       }
+>   
+> +    if (s->cxl_devices_state.is_enabled) {
+> +        cxl_build_cedt(table_offsets, tables_blob, tables->linker,
+> +                       s->oem_id, s->oem_table_id, &s->cxl_devices_state);
+> +    }
+> +
+>       if (ms->numa_state->num_nodes > 0) {
+>           acpi_add_table(table_offsets, tables_blob);
+>           build_srat(tables_blob, tables->linker, s);
+> diff --git a/hw/riscv/virt.c b/hw/riscv/virt.c
+> index ce64eaaef7..84b91b4322 100644
+> --- a/hw/riscv/virt.c
+> +++ b/hw/riscv/virt.c
+> @@ -55,6 +55,8 @@
+>   #include "hw/pci/pci.h"
+>   #include "hw/pci-host/gpex.h"
+>   #include "hw/display/ramfb.h"
+> +#include "hw/cxl/cxl.h"
+> +#include "hw/cxl/cxl_host.h"
+>   #include "hw/acpi/aml-build.h"
+>   #include "qapi/qapi-visit-common.h"
+>   #include "hw/virtio/virtio-iommu.h"
+> @@ -1259,9 +1261,27 @@ static inline DeviceState *gpex_pcie_init(MemoryRegion *sys_mem,
+>       }
+>   
+>       GPEX_HOST(dev)->gpex_cfg.bus = PCI_HOST_BRIDGE(dev)->bus;
+> +    s->pci_bus = PCI_HOST_BRIDGE(dev)->bus;
+>       return dev;
 >   }
 >   
-> -/* requires device_hotplug_lock, see add_memory_resource() */
-> +int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+> +static void create_cxl_host_reg_region(RISCVVirtState *s)
 > +{
-> +	return __add_memory_resource(nid, res, mhp_flags,
-> +				     mhp_get_default_online_type());
+> +    MemoryRegion *sysmem = get_system_memory();
+> +    MemoryRegion *mr = &s->cxl_devices_state.host_mr;
+> +    hwaddr base;
+> +
+> +    if (!s->cxl_devices_state.is_enabled) {
+> +        return;
+> +    }
+> +
+> +    base = virt_high_pcie_memmap.base + virt_high_pcie_memmap.size;
+> +    base = ROUND_UP(base, 64 * KiB);
+> +
+> +    memory_region_init(mr, OBJECT(s), "cxl_host_reg", 64 * KiB * 16);
+> +    memory_region_add_subregion(sysmem, base, mr);
 > +}
 > +
-> +/* requires device_hotplug_lock, see __add_memory_resource() */
->   int __add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags)
+>   static FWCfgState *create_fw_cfg(const MachineState *ms, hwaddr base)
 >   {
->   	struct resource *res;
-> @@ -1631,7 +1637,15 @@ int add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags)
->   }
->   EXPORT_SYMBOL_GPL(add_memory);
->   
-> -/*
-> +/**
-> + * __add_memory_driver_managed - add driver-managed memory with explicit online_type
-> + * @nid: NUMA node ID where the memory will be added
-> + * @start: Start physical address of the memory range
-> + * @size: Size of the memory range in bytes
-> + * @resource_name: Resource name in format "System RAM ($DRIVER)"
-> + * @mhp_flags: Memory hotplug flags
-> + * @online_type: Auto-Online behavior (offline, online, kernel, movable)
-> + *
->    * Add special, driver-managed memory to the system as system RAM. Such
->    * memory is not exposed via the raw firmware-provided memmap as system
->    * RAM, instead, it is detected and added by a driver - during cold boot,
-> @@ -1639,6 +1653,7 @@ EXPORT_SYMBOL_GPL(add_memory);
->    *
->    * Reasons why this memory should not be used for the initial memmap of a
->    * kexec kernel or for placing kexec images:
-> + *
->    * - The booting kernel is in charge of determining how this memory will be
->    *   used (e.g., use persistent memory as system RAM)
->    * - Coordination with a hypervisor is required before this memory
-> @@ -1651,9 +1666,12 @@ EXPORT_SYMBOL_GPL(add_memory);
->    *
->    * The resource_name (visible via /proc/iomem) has to have the format
->    * "System RAM ($DRIVER)".
-> + *
-> + * Return: 0 on success, negative error code on failure.
->    */
-> -int add_memory_driver_managed(int nid, u64 start, u64 size,
-> -			      const char *resource_name, mhp_t mhp_flags)
-> +int __add_memory_driver_managed(int nid, u64 start, u64 size,
-> +		const char *resource_name, mhp_t mhp_flags,
-> +		enum mmop online_type)
->   {
->   	struct resource *res;
->   	int rc;
-> @@ -1663,6 +1681,9 @@ int add_memory_driver_managed(int nid, u64 start, u64 size,
->   	    resource_name[strlen(resource_name) - 1] != ')')
->   		return -EINVAL;
->   
-> +	if (online_type < MMOP_OFFLINE || online_type > MMOP_ONLINE_MOVABLE)
-> +		return -EINVAL;
+>       FWCfgState *fw_cfg;
+> @@ -1426,6 +1446,13 @@ static void virt_machine_done(Notifier *notifier, void *data)
+>                                        machine_done);
+>       MachineState *machine = MACHINE(s);
+>       hwaddr start_addr = s->memmap[VIRT_DRAM].base;
 > +
->   	lock_device_hotplug();
->   
->   	res = register_memory_resource(start, size, resource_name);
-> @@ -1671,7 +1692,7 @@ int add_memory_driver_managed(int nid, u64 start, u64 size,
->   		goto out_unlock;
->   	}
->   
-> -	rc = add_memory_resource(nid, res, mhp_flags);
-> +	rc = __add_memory_resource(nid, res, mhp_flags, online_type);
->   	if (rc < 0)
->   		release_memory_resource(res);
->   
-> @@ -1679,6 +1700,30 @@ int add_memory_driver_managed(int nid, u64 start, u64 size,
->   	unlock_device_hotplug();
->   	return rc;
->   }
-> +EXPORT_SYMBOL_FOR_MODULES(__add_memory_driver_managed, "kmem");
+> +    cxl_hook_up_pxb_registers(s->pci_bus, &s->cxl_devices_state,
+> +                              &error_fatal);
 > +
-> +/**
-> + * add_memory_driver_managed - add driver-managed memory
-> + * @nid: NUMA node ID where the memory will be added
-> + * @start: Start physical address of the memory range
-> + * @size: Size of the memory range in bytes
-> + * @resource_name: Resource name in format "System RAM ($DRIVER)"
-> + * @mhp_flags: Memory hotplug flags
-> + *
-> + * Add driver-managed memory with the system default online type set by
-> + * build config or kernel boot parameter.
-> + *
-> + * See __add_memory_driver_managed for more details.
-> + *
-> + * Return: 0 on success, negative error code on failure.
-> + */
-> +int add_memory_driver_managed(int nid, u64 start, u64 size,
-> +			      const char *resource_name, mhp_t mhp_flags)
-> +{
-> +	return __add_memory_driver_managed(nid, start, size, resource_name,
-> +			mhp_flags,
-> +			mhp_get_default_online_type());
-> +}
->   EXPORT_SYMBOL_GPL(add_memory_driver_managed);
+> +    if (s->cxl_devices_state.is_enabled) {
+> +        cxl_fmws_link_targets(&error_fatal);
+> +    }
+>       hwaddr firmware_end_addr;
+>       vaddr kernel_start_addr;
+>       const char *firmware_name = riscv_default_firmware_name(&s->soc[0]);
+> @@ -1663,6 +1690,17 @@ static void virt_machine_init(MachineState *machine)
+>               ROUND_UP(virt_high_pcie_memmap.base, virt_high_pcie_memmap.size);
+>       }
 >   
->   /*
+> +    create_cxl_host_reg_region(s);
+> +
+> +    if (s->cxl_devices_state.is_enabled) {
+> +        hwaddr cxl_base = virt_high_pcie_memmap.base +
+> +                          virt_high_pcie_memmap.size;
+> +        cxl_base += memory_region_size(&s->cxl_devices_state.host_mr);
+> +        cxl_base = ROUND_UP(cxl_base, 256 * MiB);
+> +        cxl_fmws_set_memmap(cxl_base, UINT64_MAX);
+> +        cxl_fmws_update_mmio();
+> +    }
+> +
 
-Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
+create_cxl_host_reg_region() is doing the same check:
 
+if (!s->cxl_devices_state.is_enabled) {
+(...)
+
+Maybe we could squash these update_mmio() lines in the same helper to have
+everything CXL related in the same place.  The helper would need to be
+renamed to something more appropriate (e.g. cxl_host_state_init() since we're
+at init time).
+
+
+Patch LGTM otherwise. Thanks,
+Daniel
+
+>       /* register system main memory (actual RAM) */
+>       memory_region_add_subregion(system_memory, s->memmap[VIRT_DRAM].base,
+>                                   machine->ram);
+> @@ -1769,6 +1807,8 @@ static void virt_machine_instance_init(Object *obj)
+>       s->oem_table_id = g_strndup(ACPI_BUILD_APPNAME8, 8);
+>       s->acpi = ON_OFF_AUTO_AUTO;
+>       s->iommu_sys = ON_OFF_AUTO_AUTO;
+> +
+> +    cxl_machine_init(obj, &s->cxl_devices_state);
+>   }
+>   
+>   static char *virt_get_aia_guests(Object *obj, Error **errp)
+> diff --git a/include/hw/riscv/virt.h b/include/hw/riscv/virt.h
+> index 18a2a323a3..7d559ac610 100644
+> --- a/include/hw/riscv/virt.h
+> +++ b/include/hw/riscv/virt.h
+> @@ -24,6 +24,7 @@
+>   #include "hw/core/sysbus.h"
+>   #include "hw/block/flash.h"
+>   #include "hw/intc/riscv_imsic.h"
+> +#include "hw/cxl/cxl.h"
+>   
+>   #define VIRT_CPUS_MAX_BITS             9
+>   #define VIRT_CPUS_MAX                  (1 << VIRT_CPUS_MAX_BITS)
+> @@ -64,6 +65,8 @@ struct RISCVVirtState {
+>       struct GPEXHost *gpex_host;
+>       OnOffAuto iommu_sys;
+>       uint16_t pci_iommu_bdf;
+> +    CXLState cxl_devices_state;
+> +    PCIBus *pci_bus;
+>   };
+>   
+>   enum {
 
