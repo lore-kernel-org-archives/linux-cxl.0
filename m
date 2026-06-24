@@ -1,64 +1,64 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7833D7D9C
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 14:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4E83D8133
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 14:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782313078; cv=none; b=GdHVlE6TyVlT4Bwg/kPt9+mpIkv3USNfapzeAJZwnPGugod8MgAz0+3tI8EiG9DLqfwiuCiU492fqGt16GJU+Nj9cHAJqjjL4vjGEpRD5Up9oNsDPWNKtF1XeW6YK5X5J7NnJzo0HO2TlTy1oZjXzvIepkAk0TtM2u62qV4lmRk=
+	t=1782313080; cv=none; b=nwHhK+bUEe9J3dtyISo8XztlH0rmlz7BtCfyI5nWKiaT/iWBnr20vWRN81tHgTPgqnCVu8LYVtPWSAMNGogp5O8QO0xLkiS0D6/jYlwn4GRLb8D7jS5/qaDQl3jTOHJbNe+sQcXQPcX6HKkR76//oMe9Rk03J71HqDX8K1oE9j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782313078; c=relaxed/simple;
-	bh=TDiA7zntPHCkesbe2HDhTkXNSMZ1tAv5vFsX39Fbk2g=;
+	s=arc-20240116; t=1782313080; c=relaxed/simple;
+	bh=cz/Kd5Fg1n6RVtyFBzJpN2apXZy9vJ9be28aEaW5jhc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oDFDCg/GNJLpv6QBWQiNucYj1zZq+LB3mhp49KJ4yBteXo1wmUntjZV/cBTr4dgaeCuB4C7Wf91XmKwE3Cdg2VKK3T2B89kH0SkWAzvZ+WjjoAHPNfq2Op3RkupP4DNUOLa5EhdGZ/g1frO/JyNVzPOzvfJ4Kd0kpAVNR3sNF9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=icD9x9AA; arc=none smtp.client-ip=209.85.160.170
+	 MIME-Version; b=I1WrJoGEmQZ5RhziW00GDlqGLo9tiigHa6kL5jGpoLv/MpLhxoJwM9glKk5Z2ulTuR5tAgXXrTYvuqMvIDEPIZfm1ejGOaf0o5RPTvfvj22R08uJrLSyQ1oZhj46gHPoLi7pmX5MoYjqB0+D/en1TYiahJE1Xf2h7wMq6E2uaEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gwSWxRJ/; arc=none smtp.client-ip=209.85.160.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="icD9x9AA"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-517b1f2c6adso9593931cf.2
-        for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 07:57:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gwSWxRJ/"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-519f9f13b06so9227631cf.0
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 07:57:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1782313076; x=1782917876; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1782313078; x=1782917878; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5N7tLwBQJv8x9qNdxv/vKv4Fda4fwQcQqQmjxm5j+/M=;
-        b=icD9x9AAsnjMRLwQlaVbVKR2YIG/J/2Gobflp64kTAim5oCNjpOAZYcj3fYEx9SaHF
-         5o894UPqPDQVkXSdxrhycf3o9zfRe3K9em3lNk14+LYCt5NIFKL24CwO/795uaTVIHAM
-         ih3YjgPkUEqEkIg+XBLACCVWP3ju9WZbEb6WA7VIAJ30OBmEwF4XxzwXPu3zW6jHyWJX
-         FILBkIPUCjln5XpcVQ7ad/lj831zHHNGFwrbsPU6ntLJbiFF+Yb/aDObwy/gyXpZbKdY
-         jAZRDm4S10hNONnsSYZeNHfSLZPGE0cFm09qTM7Fh7/w0x8ljlHHWvOiru5aACQ6j4Pd
-         P3Ug==
+        bh=UQoqst23Sd/uqsFRXXVKz4Ck7yyavMrD/eBg48X+nsY=;
+        b=gwSWxRJ/9hOo2kx43gdyE5gJacA7jTFLDluoTdWGhPNB3ahzdqbfCCwFu16yi57PBV
+         QwdHrQCMz9YcVQqDw8s33CaxXtaaVeePyhFn8drBndnIFqyZKEHsqiHV3JWPdbBCbi+L
+         V9gmanMdsLXh8CXpUWNmc9bWS23r+IVmLR8icUT6o0hFLNOxxSacBPq/VXzBsx5e28jP
+         Q1uDxQHI+2a4YA7iAGd6wX6Z7fxrUi2klZWr5WVXlZeXCV9DnETigX/hlAjk8lrk21WI
+         /pcCYdxvws2x48ez/OO5iJ1fIzbT/Gf2rJImHCFux27dee+gA1nbZ81AenUBpzRUrMAw
+         +AIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782313076; x=1782917876;
+        d=1e100.net; s=20251104; t=1782313078; x=1782917878;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=5N7tLwBQJv8x9qNdxv/vKv4Fda4fwQcQqQmjxm5j+/M=;
-        b=d7j8D6i1xnahp5WosULQEk16XJ2BTsSNqyujX66rF7i9ckijoUMIAPfodDNXWR7Ll6
-         A/wlxjWxhR7Pkv3GyipZpcCcEmELH0fRAXOSl/8Mc2uEdCtG89JRs6Edy3nJ+9UF4Ysu
-         8p5Va5pziV7unvvkGC1cUhOJKRuDtduomg+8J5yNgzrKCNPoUMHLj2qXW5ajPinDfIRp
-         n29KLw++Om+8VAjxCOLOgAN4DHKWGWHV0M4iOkUzTmduBg+8SKYS7HlgKQQqchJJmUav
-         3eJ+qSQNCJRSq2AMB/MVEgih1kFJH6LfJ0YFGMqhJNdSFY8ANRzTGILPi/OCqa83f3C5
-         aE/g==
-X-Forwarded-Encrypted: i=1; AFNElJ9FeuMNW+rYpn6RQ4dvSoosz7GXMudg1qmRJuom8kpIkIUJR3jCvfsdal1ezzPoYk7yo7sFuLC+3To=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD48HdWNJRRFfOlmorc17NXdeINpulUwdeA5DivPkq2IL8XaKO
-	nen2SEhWR7d0HrfA9u4quNICh7i+IO6JnQ14LAIb7TxUPffnWHwvc9pvmhEw6REbGUU=
-X-Gm-Gg: AfdE7cnI8JX7ct1wBmUDTder24HdKt1UIVayNMMvi5sBrbrNJ45nEK3iu3TfwZX+1ED
-	/Dw2OlvSLgrX/vVlxxH0eaOR6T0kOaUffqzPil0/a6CPmmv9sDOds2VVT+JZa++JRkmbYz9pUNB
-	xk8P9Yz0V8uLEJcmBelllMOm6beQM1d+urkqW+DRfgNmA6Bek09rnkElWPUfFg/iFi492lKAK9z
-	nuGeahRv4ynIb2EnDgLuNqA7lWOFdAhgdJmuge1b03Aq+iJQn7OrVwyL8b2VFkmyWJP+oFSnKpD
-	n39h99drPZ5s1aN32eLCiCaH97Ax3ERZ3MHUzfbFwJnR9WU1IeYEZXsVqRxHZFTfffN5j+ILhZg
-	08x8yRH/z+sYVCEW8af1iZNvLFyJOmbuA1CeHBGqkOvA72h22w6opQrrYZbI4DB2awd51WHkzji
-	EBWNYaITnxsDBSz04RJYOG3rtemkeWcPzpHkuJN2B2eHqEynbD+7t3sKAH6P9GpwOF79P3C3EYs
-	e4sLupMI5V9
-X-Received: by 2002:a05:622a:144f:b0:516:d84a:9f54 with SMTP id d75a77b69052e-51a5484ff5fmr102012121cf.38.1782313076353;
-        Wed, 24 Jun 2026 07:57:56 -0700 (PDT)
+        bh=UQoqst23Sd/uqsFRXXVKz4Ck7yyavMrD/eBg48X+nsY=;
+        b=c60l7h6JjAVdSy2aRvt0rCpIFYpFUq6qD8GNi8CvopHqnlyK/NfG2pEXaBaXAPD4Es
+         A1MKXyRqdu8yLuM4Yf57kqjA3tTSslWJlp9tEUar8cUP7zLOQ3zZOgTNPz403EB3x0NV
+         foxMgCSEVua+knjyGXGRbz4RyYwZO6Jj2dfCP2nidC7757pjLIKSSpeMmNI/OiPLEH/y
+         DQnWIQJebBCzsa35r8cVikaWO9TBpAJm24i2cszpsmacZQHX2GKpXgz4srKcfKtLZgdD
+         +lexYuspk6zx09cPDgvjq2BTK4vtykn9RG7xwEwcAXaYHFlwF8jZ3u++W/AkMg+LKm4/
+         sShg==
+X-Forwarded-Encrypted: i=1; AFNElJ/CLuIOmSpvXTapBJ52nPmW9Jv5HY6114ai/IqUL7GCemqYvmOanWy01BV+RUW01fzoi7j0iQkEY0E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywa6QIxX3StX53cc7w7jL2ol7UlSBsMi+sYsfMV64juouR4fRc7
+	8SW5QBj2IWQhSC+tOEvzNgbQvJ1CS7Td84AF5wkkrImH8ur/fYjeCv7OR86yy7vRF7M=
+X-Gm-Gg: AfdE7cn9dZtvNS5SvGofjb3SXbTbcmSLt6a7MlwkreE+UNtQjtnr8IgvWctoL23f4RD
+	tWsr8dQ/8YasFi3osqav1N+WsZjbRHUT5hB1NaCIMgTqZZRPEs+wKOftHIxdnRXhPP4s910NdjY
+	eKSgbaBPI7/FhfmPSLFOxM8WxsseVxvPzsDQJiC0OC6ExU6WYWz/FWTUf1N2+R3b3MgCBpGVixT
+	pUts/J82poc6ZjCY7V3TbKmhbVrq9pu9c8tCGGozez/xhmQXesVxwvxjrhGDiPSEyCawmgb+9iO
+	Z9mhBaOmG2Nc+ocxJRQbnwg1KCKcKUHjdTbfAoniE4NtXpWW2l/Gwb3G0jhUq33V2rQrQDGBDcO
+	QoNAsdTq7uthGjjHvBwNb9G1dzBqNFjLJW2lw5i1Vv/Rkh/LrLqi5xUo918U+ltsdMnbQaUvJEb
+	R+50P6sruD12d2pzQZETp6AKpGQuvIH1tyneEqMu69OWlsQU92T7tcWOfCOXRLFkRXmC9wwCwDI
+	A==
+X-Received: by 2002:ac8:7dce:0:b0:517:7e26:36a9 with SMTP id d75a77b69052e-51a5485b854mr12138801cf.39.1782313078372;
+        Wed, 24 Jun 2026 07:57:58 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51a51ae8ee7sm49502301cf.24.2026.06.24.07.57.55
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51a51ae8ee7sm49502301cf.24.2026.06.24.07.57.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2026 07:57:55 -0700 (PDT)
+        Wed, 24 Jun 2026 07:57:57 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org,
 	nvdimm@lists.linux.dev
@@ -88,9 +88,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Smita.KoralahalliChannabasappa@amd.com,
 	ira.weiny@intel.com,
 	apopple@nvidia.com
-Subject: [PATCH v5 1/9] mm/memory: add memory_block_aligned_range() helper
-Date: Wed, 24 Jun 2026 10:57:36 -0400
-Message-ID: <20260624145744.3532049-2-gourry@gourry.net>
+Subject: [PATCH v5 2/9] mm/memory_hotplug: pass online_type to online_memory_block() via arg
+Date: Wed, 24 Jun 2026 10:57:37 -0400
+Message-ID: <20260624145744.3532049-3-gourry@gourry.net>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260624145744.3532049-1-gourry@gourry.net>
 References: <20260624145744.3532049-1-gourry@gourry.net>
@@ -102,77 +102,55 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Memory hotplug operations require ranges aligned to memory block
-boundaries.  This is a generic operation for hotplug.
+Modify online_memory_block() to accept the online type through its arg
+parameter rather than calling mhp_get_default_online_type() internally.
 
-Add memory_block_aligned_range() as a common helper in <linux/memory.h>
-that aligns the start address up and end address down to memory block
-boundaries.
+This prepares for allowing callers to specify explicit online types.
 
-Update dax/kmem to use this helper.
+Update the caller in add_memory_resource() to pass the default online
+type via a local variable.
 
+No functional change.
+
+Acked-by: David Hildenbrand (Red Hat) <david@kernel.org>
 Signed-off-by: Gregory Price <gourry@gourry.net>
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 ---
- drivers/dax/kmem.c     |  4 +---
- include/linux/memory.h | 22 ++++++++++++++++++++++
- 2 files changed, 23 insertions(+), 3 deletions(-)
+ mm/memory_hotplug.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index a18e2b968e4d..592171ec10f4 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -33,9 +33,7 @@ static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r)
- 	struct dev_dax_range *dax_range = &dev_dax->ranges[i];
- 	struct range *range = &dax_range->range;
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 7ac19fab2263..6833208cc17c 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1337,7 +1337,9 @@ static int check_hotplug_memory_range(u64 start, u64 size)
  
--	/* memory-block align the hotplug range */
--	r->start = ALIGN(range->start, memory_block_size_bytes());
--	r->end = ALIGN_DOWN(range->end + 1, memory_block_size_bytes()) - 1;
-+	*r = memory_block_aligned_range(range);
- 	if (r->start >= r->end) {
- 		r->start = range->start;
- 		r->end = range->end;
-diff --git a/include/linux/memory.h b/include/linux/memory.h
-index 463dc02f6cff..9f5ef0309f77 100644
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -20,6 +20,7 @@
- #include <linux/compiler.h>
- #include <linux/mutex.h>
- #include <linux/memory_hotplug.h>
-+#include <linux/range.h>
- 
- #define MIN_MEMORY_BLOCK_SIZE     (1UL << SECTION_SIZE_BITS)
- 
-@@ -100,6 +101,27 @@ int arch_get_memory_phys_device(unsigned long start_pfn);
- unsigned long memory_block_size_bytes(void);
- int set_memory_block_size_order(unsigned int order);
- 
-+/**
-+ * memory_block_aligned_range - align a physical address range to memory blocks
-+ * @range: the input range to align
-+ *
-+ * Aligns the start address up and the end address down to memory block
-+ * boundaries. This is required for memory hotplug operations which must
-+ * operate on memory-block aligned ranges.
-+ *
-+ * Returns the aligned range. Callers should check that the returned
-+ * range is valid (aligned.start < aligned.end) before using it.
-+ */
-+static inline struct range memory_block_aligned_range(const struct range *range)
-+{
-+	struct range aligned;
+ static int online_memory_block(struct memory_block *mem, void *arg)
+ {
+-	mem->online_type = mhp_get_default_online_type();
++	enum mmop *online_type = arg;
 +
-+	aligned.start = ALIGN(range->start, memory_block_size_bytes());
-+	aligned.end = ALIGN_DOWN(range->end + 1, memory_block_size_bytes()) - 1;
-+
-+	return aligned;
-+}
-+
- struct memory_notify {
- 	unsigned long start_pfn;
- 	unsigned long nr_pages;
++	mem->online_type = *online_type;
+ 	return device_online(&mem->dev);
+ }
+ 
+@@ -1494,6 +1496,7 @@ static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
+ int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+ {
+ 	struct mhp_params params = { .pgprot = pgprot_mhp(PAGE_KERNEL) };
++	enum mmop online_type = mhp_get_default_online_type();
+ 	enum memblock_flags memblock_flags = MEMBLOCK_NONE;
+ 	struct memory_group *group = NULL;
+ 	u64 start, size;
+@@ -1582,7 +1585,8 @@ int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+ 
+ 	/* online pages if requested */
+ 	if (mhp_get_default_online_type() != MMOP_OFFLINE)
+-		walk_memory_blocks(start, size, NULL, online_memory_block);
++		walk_memory_blocks(start, size, &online_type,
++				   online_memory_block);
+ 
+ 	return ret;
+ error:
 -- 
 2.54.0
 
