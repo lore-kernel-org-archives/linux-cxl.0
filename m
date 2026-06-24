@@ -1,166 +1,111 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929A838A714
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 07:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9847D38C2C6
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 07:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782286211; cv=none; b=F7lqzlroXFqCXN+i5kv3dqj0YMSpyHZ4KivEHoQY/bk2d+t2vPrTER9uJkoSpiAP7IErcoHGuGYGkTfGmlF35JC3Z+uUXvHAAuCGakVEKfk3bWw44zV/t8X/3Zrq5BpsqHZVRFyi5c+Sb+I/yobyWz062NVLV3ZNmoK/rdvx5VM=
+	t=1782287401; cv=none; b=RfQq0Lr2XNMMDvQBZjF3G1i+AndrHHXsIiEMOwqcSeqOwgkWi+xV15XaTXY/fopRcq0z9DQvDAoeoS8gX2vt4KaYid8F11ygaP7n0Uksd/QA2Wv9DEj2MStFx8DoCUAjBzZ+wHaPY9oGR0DQTtHlurL9iXl6+71niIl34dkiPy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782286211; c=relaxed/simple;
-	bh=mIECLREcOOURCjBys9JaqEbp3tsHvBPYnC/wCHuNVDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=pNBMps022T68RuCBOBQ5pXFEbKBKuXJpcQdtHawvkWernWJkvQGKxn6PZikvUcUfO7/52hu80hUnG6m+nse5q7xUri+eG6QcBcqxHjXAQI2Twz/VG1LzGdYpJK95/fu73xj6RhI/4h42vbjpgEqQjcq9hgteLi9tgj3NAudzlkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=In14pfLI; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1782287401; c=relaxed/simple;
+	bh=48CBAiVLI24/iZduWhrvqOuRvaOxBYrMQGx5TphZKVI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A+NjpadXiR8InBF1RNVAtnYvjLNZrhrmWiqEGAFlwl8qcF0eGYbpsMloJ325BEFXoKhaX79QNFExKfd9md9vr3qmhJnD+9SVBYsBbsPPp8BSeYQ7U4KkjAkeW5RH81E6OunMMDsVFFHAdSoqEzYmQpKdr6lPkdcpIEgkq/27ghE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nEAqpHK6; arc=none smtp.client-ip=74.125.82.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="In14pfLI"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20260624073005epoutp02682de09a0d80912e57dd02d2bc377916~789xVaSN_2766427664epoutp02M
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 07:30:05 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20260624073005epoutp02682de09a0d80912e57dd02d2bc377916~789xVaSN_2766427664epoutp02M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1782286205;
-	bh=hxHXRaB9uyp+RYupYTlmB3j4pwxcxTCdmXxtRJMmgmg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=In14pfLIbs3g6klu9QE3UFELYMvaSqlmXBzwPrQuTuSy04Ph6Mk3/3HDQ5ouaHsrB
-	 Lzg8eyutigVvXsrXtT93Y5lOgGLr1IubxPjdVHnoyAViF98C/XlLjqAj2pUR/JakuG
-	 H0HKwbYlpzZO/2FCLK12DFImK79iM5sadwKMdkqQ=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20260624073004epcas5p179392006951924f87e3f7b29f26419e1~789w8n06X0504505045epcas5p1F;
-	Wed, 24 Jun 2026 07:30:04 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4glYVh5N15z3hhT4; Wed, 24 Jun
-	2026 07:30:04 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20260624072914epcas5p17ddfb515b6bce70cee2a2aa379225330~789Bur0l01803918039epcas5p1i;
-	Wed, 24 Jun 2026 07:29:14 +0000 (GMT)
-Received: from arun-B560M-DS3H-V2 (unknown [107.99.41.170]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20260624072912epsmtip17f7006cc99eb0ef6e7a229081f5a447f~788--YnKs1800818008epsmtip16;
-	Wed, 24 Jun 2026 07:29:12 +0000 (GMT)
-Date: Wed, 24 Jun 2026 20:48:21 +0530
-From: Shrihari E S <shrihari.s@samsung.com>
-To: Junjie Cao <junjie.cao@intel.com>
-Cc: jic23@kernel.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-	qemu-devel@nongnu.org, cpgs@samsung.com, arun.george@samsung.com,
-	vikash.k5@samsung.com, s.neeraj@samsung.com, dongjoo.seo1@samsung.com,
-	dave@stgolabs.net, gost.dev@samsung.com
-Subject: Re: [RFC 7/8] hw/pci: hw/cxl: Wire SVC initialization into port
- realize functions.
-Message-ID: <1316557528.121782286204742.JavaMail.epsvc@epcpadp1new>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nEAqpHK6"
+Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-30c09f29b64so583783eec.0
+        for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 00:50:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782287400; x=1782892200; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lnkemTVFtevu9LEJarGGlEd0BNgo1KPMK+RxKbsyiwU=;
+        b=nEAqpHK6NC1ydmPefqLhMHUh7AwrQzivNZM5d2bUJAZSSvAOgA05oD4IPnjvbzW2Xa
+         2COunjmMHkX1fJR0UHdnJDAT9a47PtjxZ//UfKEsdpbXNqyYAspL6V/6Zxxb9bycsxu+
+         1B3YPDyj5rkWnfg0hgF5suMrt8MOwSJpya0tiQ3cAJZP1TD+ZrOkuN7m0lWGf1xJ5lBn
+         0VJiBYBlNC80Cpgnm1Qsv5M7Ya2qd4KC+TveH4CqtwDbjLl+TlefbZY5txvzWDRlkC+O
+         FW6KF6pngrZ9aj8X8Njuhyl9vz9qs6o1fo1YQ3GX+QWUQH41Fvq82ikCkaAhUR4+tlmS
+         o8Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782287400; x=1782892200;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lnkemTVFtevu9LEJarGGlEd0BNgo1KPMK+RxKbsyiwU=;
+        b=T723xoJ0gdjXa+LjJVIznEVYqWtu66gGUfbi7OBtlN9MlZMiL5ZDPtsQSn+0ZfAqxx
+         b3j5UMj9CaPjd7rdblWi6073mBoy8Unu5GnDVNGCIJP6kvDdsFtofjfeiKb6aY5RlELd
+         tZg0Cfe3ngsHEXAomZ4r/SlFzU5lEh8iDgSWdTqmTuiChmTHR6ZhBm4VNnsvOwiOQUhU
+         GsHGX94sBWGE6Lj/IDAjdYCxn/5mmyPzYgDL5Wb0IUreM7cP8+zUYtJ/RDBc2h5oka2R
+         tzcjbEBt26Xhzg8eGv4goJ7WhS291j/yVSwfH+9iHET3sZubT67LyBl9KAtbDT1AWf9u
+         BA/A==
+X-Gm-Message-State: AOJu0YzP4BhZXN+KXG/2ZlEtppAvke9jHNmrMGXFg+HJPm9AoGlLmfCO
+	qRjdulTq1Dtf9owJ7kI/KGmocsiQdOMKlzBOn71qec1ZIE+MWBM49gP2
+X-Gm-Gg: AfdE7ck3PmLesGSKHL339oGPhS2uR3fguq0Hqpodcgs/+5pUAM7qDDn3/OwRgYyRJ2c
+	WlSiTixkN01KhH3LJJibJh+5caIhP3MwrB1rl1r21h16Nv7xo2McBAECayfWKMIVaEwEMZUeEaN
+	n/9/ZWgsc4lnN37eZRnr4hIZ0ecwEarPumbjWqrg1TzWbOEp/1+ruqg/LbQstzsEm1+HoCTq2D7
+	X8Gz5xITFbjbq4TxQX6+9ESoiPsnm0Fb+N4+E9gDFa7iPG2X5eXpfznfsZkn58ewydoCPU6YJKM
+	zviV18nMXTqEfgJwnb6uCMSjR+d9sSe7h3TcHWaF9K1JMKtIBt4tQKdKOCQWHh1J2CSm07CCcVx
+	vN2+/L7/P6q1zAaDkWbl+W8tq8ONb+X3/A+8i4U4trI8m7Y2tDOPN3UpRch5nl1H0lho4pyJPZV
+	4+uHeD23ZP/L72gyMBxN9K6GoRuZVzPi78WLbAH7alvVPr6zCu48FEAKYglRpZRERz46brN2Ek2
+	k5sNWc=
+X-Received: by 2002:a05:7300:1801:b0:2ed:a58c:942 with SMTP id 5a478bee46e88-30c5556303cmr6682109eec.8.1782287399572;
+        Wed, 24 Jun 2026 00:49:59 -0700 (PDT)
+Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c1ba57dc4sm21112608eec.9.2026.06.24.00.49.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jun 2026 00:49:59 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Wed, 24 Jun 2026 00:49:58 -0700
+To: Anisa Su <anisa.su887@gmail.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, Dan Williams <djbw@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	John Groves <John@groves.net>, Gregory Price <gourry@gourry.net>
+Subject: Re: [PATCH v10 00/31] DCD: Add support for Dynamic Capacity Devices
+ (DCD)
+Message-ID: <ajuMJi5nTQRB_ZP0@AnisaLaptop.localdomain>
+References: <cover.1779528761.git.anisa.su@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20260617154521.520191-3-junjie.cao@intel.com>
-X-CMS-MailID: 20260624072914epcas5p17ddfb515b6bce70cee2a2aa379225330
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----dRaRfFW49P0MWGzTWjnkSO4RdHzY68Yl_7ceN5kYWmJQ.fIX=_53877_"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20260624072914epcas5p17ddfb515b6bce70cee2a2aa379225330
-References: <20260609105836.3702787-1-shrihari.s@samsung.com>
-	<20260609105836.3702787-8-shrihari.s@samsung.com>
-	<20260617154521.520191-3-junjie.cao@intel.com>
-	<CGME20260624072914epcas5p17ddfb515b6bce70cee2a2aa379225330@epcas5p1.samsung.com>
-
-------dRaRfFW49P0MWGzTWjnkSO4RdHzY68Yl_7ceN5kYWmJQ.fIX=_53877_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <cover.1779528761.git.anisa.su@samsung.com>
 
-On 17/06/26 11:45PM, Junjie Cao wrote:
->Hi Shrihari,
->
->On Tue,  9 Jun 2026 16:28:35 +0530, Shrihari E S wrote:
->> +    pcie_config_uio_svc(d, errp);
->>      pcie_cap_arifwd_init(d);
->>      pcie_cap_deverr_init(d);
->>      pcie_cap_slot_init(d, s);
->
->In rp_realize() (and the two xio3130 ports) pcie_config_uio_svc() runs
->before pcie_aer_init().  pcie_svc_cap_init() falls back to offset 0x100
->when no extended capability exists yet, so SVC is placed at 0x100 at
->this point -- and then pcie_aer_init() puts AER at the same 0x100 and
->overwrites it, while dev->exp.svc_cap still points there.
->
->The visible effect is that "-device pcie-root-port,x-uio-svc=on" comes
->up with no SVC capability in the extended config space (the chain is
->just AER -> ACS), and no error is reported, so the request is silently
->dropped.  I reproduced this by walking the extended capability list of
->the root port over ECAM: SVC (0x35) never appears, even though the
->property was set.
->
->> +    rc = pcie_config_uio_svc(pci_dev, errp);
->> +    if (p->flitmode && rc >= 0) {
->> +        crp->uio_capable = true;
->> +    }
->
->On cxl-rp this runs a second time: cxl_rp_realize() first calls the
->parent rp_realize() (which already calls pcie_config_uio_svc() per the
->hunk above) and then calls it again directly.  The first call collides
->with AER at 0x100 as above; the second runs after the extended caps
->exist, so SVC ends up correctly at 0x200.  So cxl-rp happens to work,
->but via a double init.
->
->Just moving the call to after pcie_aer_init() isn't quite enough on
->its own: the CXL ports (cxl-rp/usp/dsp) build their DVSECs at fixed
->offsets and then add SVC themselves at the end, so if the shared
->parent rp_realize() also adds SVC before those DVSECs are built, the
->cxl-rp ends up with its DVSECs off the chain.
->
->What worked for me was to move the SVC call after the ECAP inits in
->the pure-PCIe paths and skip it in the parent when the device is CXL,
->letting the CXL realize functions keep adding it last as they already
->do:
->
->  - rp_realize(): move pcie_config_uio_svc() to after pcie_acs_init(),
->    guarded by if (!pci_is_cxl(d)) so cxl-rp's own call (which runs
->    after build_dvsecs()) remains the one that places SVC.
->  - xio3130_upstream/downstream realize(): move the call to after
->    pcie_aer_init().
->  - cxl-rp/usp/dsp: unchanged, they already add it last.
->
->With that, plain pcie-root-port, the xio3130 switch ports and the CXL
->ports all come up with SVC at 0x200, and cxl-rp keeps its four DVSECs.
->
+On Sat, May 23, 2026 at 02:42:54AM -0700, Anisa Su wrote:
+ 
+[snip] 
+> This series:
+> https://github.com/anisa-su993/anisa-linux-kernel/tree/dcd-v10-23-05-2026
+> 
+> The corresponding NDCTL branch:
+> https://github.com/anisa-su993/anisa-ndctl/tree/dcd-2026-05-21
+> 
+Making a note here that we were also able to validate a very basic
+case on real HW of adding a single extent on GNR-AP platform with the
+given kernel branch + NDCTL branch, create a DAX device from it, as well
+as run the FAMFS smoke tests on it.
 
-Hi Junjie,
+Since I've made a ton of changes based on feedback and plan to send out
+v11 by EOW, I will ask the team helping us with this task to try more
+cases on the next version and report findings as they become
+available :)
 
-     Thank you for pointing this bug, got missed in our testing. Will check
-     and move the svc_init() function properly in the next version of the patch.
+Anisa
 
->One thing to note is that this only gets the capability enumerated --
->I haven't verified the SVC behaviour beyond that.  Looking at
->pcie_svc_cap_write_config()/pcie_svc_apply_gating(), writing the SVC
->Enable bit just copies ctrl/status into the shadow struct; no VC
->Resource Status bit (the per-VC negotiation bit, SVC_VC_NEGO) is ever
->set, and the SVC Status register stays zero.  So a guest that enables
->SVC and polls for negotiation wouldn't see anything change.  If the
->data-plane series on top is expected to drive that, fine -- I just
->wanted to flag that as things stand the enable is observationally a
->no-op, in case a driver is expected to key off it.
->
->Many thanks,
->Junjie
-
-Yeah this patch series is meant for enumeration (probe) puprpose only
-and yes we have plan to add data plane support as well.
-
-Thanks,
-Shrihari
-
-
-------dRaRfFW49P0MWGzTWjnkSO4RdHzY68Yl_7ceN5kYWmJQ.fIX=_53877_
-Content-Type: text/plain; charset="utf-8"
-
-
-------dRaRfFW49P0MWGzTWjnkSO4RdHzY68Yl_7ceN5kYWmJQ.fIX=_53877_--
-
+[snip]
+ -- 
+> 2.43.0
+> 
