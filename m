@@ -1,241 +1,111 @@
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2824D2F691D
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 04:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17E1A3845C1
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 06:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782276696; cv=none; b=aGTgEuMb9ZZxGXH71ByoUAYmrCvPq9Y1oebz/+pJlI9TT2J3WCElOIxp8lv1Q8VoLrShBG1B2GInvwtzML9/Au7+ZPHq0BbTDhfjGKDgzL3L0RplLlQe0Y9adS4HxFhPTyjrNmpR/tUIVkay5zzXuk0BjSG8ZQUsd0ag8QBuBFA=
+	t=1782281558; cv=none; b=d3tWr2OdrlEE5JO9n9DIx1r+3LfZBCWfEQQkBFNPjMIphBV9gFHh4D5OZWsE8SVFBshrqpm8pfK2aP7pZexE2ephDy5a6RXdymLbwJAxkiYEbT7nmCcDnaV13RrKb+BLAqsqaw6gyUbozSpU06oTeGmMV0qH2n0pZ3FO6LMwF7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782276696; c=relaxed/simple;
-	bh=h4+WD6wGYCjtiMKMjhA5oE5Aky55y5CGv2aQ1EEGdZo=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JWSiCTRR+0iiRQyVUTakRahsJBOJWVcgerTUfPyCumGsnxVAjd9rBDcOsFj9HJ971XcICJpljSi2daakvZWQULVGO9Pxo7KXLf5yYNmlNvOdih2k6idCrvbgYVCHoYjXOCvpZQk/m7Uf0QSnNZ5nLMtGf2Lva/1a1XCCIMBJazg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iSeJBRGa; arc=none smtp.client-ip=74.125.82.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1782281558; c=relaxed/simple;
+	bh=ZSVr9Egr6ypjajhcXCckv+4xsGhUqTrg9LYYkcwVdeg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
+	 Content-Type:References; b=Q5RmBKvy8StNgLBxXZumnMqAnuvCNr6tNNu8bKVLH3OwQGkbeV2/TcMQ10hipHGg92KJbi69bl99wy4AQZmziWlyomYwISibzvNvE147r2TuoYOUfZdWGa1VSzTgwhgfM0MeknzrG+06g5s+gBapvzg/Uq2DIVVROJYA7BqYoqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oh3W1FeP; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSeJBRGa"
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-30b9e755555so1271674eec.1
-        for <linux-cxl@vger.kernel.org>; Tue, 23 Jun 2026 21:51:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782276694; x=1782881494; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/tl5h3JzKy69jcgHZtLXZFIs1eQB5U8ENwQAMJXVFE4=;
-        b=iSeJBRGaE04CPydoVBFYOx3QDWarJOBL9OgJ8hOiBmr8q81R9ujaoOYTTDdrBD+pah
-         WLSu8N2IlX/+0qtYRW6Dzl8XSP/95/LzctMdlOHP7/L8InW1SkR9t++W+7i8RjPp23CN
-         3SKJfFP469x/0A30sJKhE+bZ6uid0vqqm5LBpHHCc6UOTRm4s1Ky4toICcaT6UEiI2P8
-         SqqitZ9FTz6WPra1jwU8tw7f15S/XqnmiNeeBnG4hWA3Up3k1IWgOTyyUimGPg2JJxSv
-         Abysh2Z2qg2CvIcvbWIqk3IEV2RdoX/r2tZfaCaDgLY1K/R/JKl4O6Ln8mRfUPOK0A34
-         sREg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782276694; x=1782881494;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/tl5h3JzKy69jcgHZtLXZFIs1eQB5U8ENwQAMJXVFE4=;
-        b=QeHuwouZFfU9xMlKzGWCQAMx5gDt5SDAJQuhuXeqEnc9RFiygCWtImedU646v6gzJ6
-         hulqCuaOj6eO7uphoS3WGimqud91Q2sNuD+Y08O3GAHIqJ/7KRSjlfqqexSA9fH1pj0g
-         rD8RjPqDPkQ4E0j/N2ruQzm8Bk6v9ED9mmnc01Q3WWvy7jA/9BtlKQnCNCl4GKt1WNvK
-         zjAn2tw5ckrgn8uAvplc8CMFacDSw/qXGJjc6OsKG3w+oEVORsGmIu7JcqbK8Yw//7mt
-         v+NAz+hzGTAJ6xGYWtT2o7PKmMfDpUjOwKzR3qplcV4CsELsx0x4hWdj1EFnlqGH20pj
-         M85Q==
-X-Forwarded-Encrypted: i=1; AHgh+RpuSihuHVTJlJg/dzdvdmjjvi99u5XNWbo1tYQfoandNgrMcnXUvoTvacNeghhvUQK7CdQBjAfg454=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzACHBogCJ2yQxPI/JE5zHiI70PicefvPetiVMv9Akfo6w9P5zi
-	yZ9+ClTlVWSwrz2YYoZuPgAQIFhpxEvpUaAqZ9yAfsbhUDk7rbLre7Ys
-X-Gm-Gg: AfdE7cmtAuozphTqIfIIs3wa2BtjqQe5gu0qbDHK8auhKgQu7wESUcBSgc8HxGujHsi
-	k24W1OWymeTaSkd7ctZYZZaxp3zA6EjrTf3D+3/+S7RHeG5Og9Nvicf2ekrqQE1Q/yJLVGKtRBY
-	nzp/8VrfYIepQbHGp4CRhmS+BrvYfV4wGTwnsXHvY9anFoTvINr6dSPGVdllzl7U0r317uWgriv
-	XBEW5qyA31bqEpz5Nd7O76ViviiPkGBhJeE6klVKAjhHe1GyV6Zf5sez8k9e2R1IcaeWXto+eUE
-	QUjuDvGZD9Nl/p8/RKfsC0JuigB7FYLEyJKy5aTFMwxNjdlmz+JZ6YCW/w+Vd5OzmNMX7OEfvRp
-	muDAb7dHxYtCzUpgBW1eRYOFzgtUlGbuyMgzwp1FJ4zWIUFB8IPNBH1jRMXL3xuERqqetyz9DiX
-	I/bg9iCD5ZTI2XhRkKEzjCdKOH2dAxqfXvsNdU/BTE4I/GrdS1VzTOOTLqlG9LFpJ5fAmtd/p7m
-	0VCe6I=
-X-Received: by 2002:a05:7300:d518:b0:2c5:b23e:48a6 with SMTP id 5a478bee46e88-30c68dc9192mr1967871eec.23.1782276694184;
-        Tue, 23 Jun 2026 21:51:34 -0700 (PDT)
-Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c1bdffa83sm25860253eec.23.2026.06.23.21.51.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jun 2026 21:51:33 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Tue, 23 Jun 2026 21:51:31 -0700
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	Dan Williams <djbw@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <iweiny@kernel.org>,
-	John Groves <John@groves.net>, Gregory Price <gourry@gourry.net>
-Subject: Re: [PATCH v6 0/7] ndctl: Dynamic Capacity additions for cxl-cli
-Message-ID: <ajtiU92IWkvyQIgj@AnisaLaptop.localdomain>
-References: <20260523095043.471098-1-anisa.su@samsung.com>
- <aiJh7vcs2u1fMDX4@aschofie-mobl2.lan>
- <ajJITxBewsUuQGzp@aschofie-mobl2.lan>
- <ajOHhP7hX8r2ptKC@AnisaLaptop.localdomain>
- <ajSPiWGP_AiwYi23@aschofie-mobl2.lan>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oh3W1FeP"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20260624061232epoutp01716dc2afb7894cfc9296edc891671546~776EfcKdU1640716407epoutp01P
+	for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 06:12:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20260624061232epoutp01716dc2afb7894cfc9296edc891671546~776EfcKdU1640716407epoutp01P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1782281552;
+	bh=kY/dxQYx/wRPEf2qC748CpGM1a3g+t0/zv46gOr+qAY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oh3W1FePv07XnqAelEFW8Q1pHVwG+ADlorSBlcPlORMD+FT9ETvo7JJEYRgXh7OZY
+	 /8KS9rzeonXIOS8vWBeBr7bHSXW+q18fNtzf6aBmnAbpJyAafwRAeeA714I6TT2nZh
+	 ENonRAj6ASBEBOBgjGdLNn0mfaUlhLPOjKRQm05I=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20260624061232epcas5p43790b4403384ebc55187f2fb90e34c6c~776DwZAjB0689606896epcas5p4N;
+	Wed, 24 Jun 2026 06:12:32 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.89]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4glWnC1CKLz3hhTD; Wed, 24 Jun
+	2026 06:12:31 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20260624061230epcas5p419894dd4d2e612f7712f1ec7ae940ce0~776ChX7yz3046330463epcas5p4b;
+	Wed, 24 Jun 2026 06:12:30 +0000 (GMT)
+Received: from arun-B560M-DS3H-V2 (unknown [107.99.41.170]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20260624061228epsmtip1b208377c679fed6ea71d1c7e754271e5~776ACMl-O2928929289epsmtip1P;
+	Wed, 24 Jun 2026 06:12:27 +0000 (GMT)
+Date: Wed, 24 Jun 2026 19:31:03 +0530
+From: Shrihari E S <shrihari.s@samsung.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+	qemu-devel@nongnu.org, cpgs@samsung.com, arun.george@samsung.com,
+	vikash.k5@samsung.com, s.neeraj@samsung.com, dongjoo.seo1@samsung.com,
+	dave@stgolabs.net, gost.dev@samsung.com
+Subject: Re: [RFC 1/8] hw/pci: Refactor flitmode from PCIESlot to PCIEPort.
+Message-ID: <20260624140103.thavawn667tfs4tg@arun-B560M-DS3H-V2>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20260616142730.7fb0a465@jic23-huawei>
+X-CMS-MailID: 20260624061230epcas5p419894dd4d2e612f7712f1ec7ae940ce0
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----LzjFyProJtBlqpjpUA7CxzsXX7e_8S7ToqyYf_kYrViRiBfb=_5314c_"
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20260609104503epcas5p12628cd89d0ef9210c856d2518dc790cb
+References: <20260609105836.3702787-1-shrihari.s@samsung.com>
+	<CGME20260609104503epcas5p12628cd89d0ef9210c856d2518dc790cb@epcas5p1.samsung.com>
+	<20260609105836.3702787-2-shrihari.s@samsung.com>
+	<20260616142730.7fb0a465@jic23-huawei>
+
+------LzjFyProJtBlqpjpUA7CxzsXX7e_8S7ToqyYf_kYrViRiBfb=_5314c_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Disposition: inline
-In-Reply-To: <ajSPiWGP_AiwYi23@aschofie-mobl2.lan>
 
-On Thu, Jun 18, 2026 at 05:38:33PM -0700, Alison Schofield wrote:
-> On Wed, Jun 17, 2026 at 10:52:04PM -0700, Anisa Su wrote:
-> > On Wed, Jun 17, 2026 at 12:10:07AM -0700, Alison Schofield wrote:
-> > > On Thu, Jun 04, 2026 at 10:43:10PM -0700, Alison Schofield wrote:
-> > > > On Sat, May 23, 2026 at 02:50:35AM -0700, Anisa Su wrote:
-> > > > > CXL Dynamic Capacity Device (DCD) support has continued to evolve in the
-> > > > > upstream kernel since Ira's v5 posting [1].  The kernel side has settled
-> > > > > on a uuid-driven claim model for sparse DAX devices: dax_resources carry
-> > > > > the tag delivered with each extent, and userspace selects which ones to
-> > > > > claim by writing a UUID to the dax device's sysfs 'uuid' attribute (or
-> > > > > "0" to claim a single untagged resource).  Size on a sparse region is
-> > > > > determined by the claim, not requested up-front.
-> > > > > 
-> > > > > This series brings cxl-cli and daxctl in line with that model and
-> > > > > extends cxl_test to exercise the new paths end-to-end.
-> > > > 
-> > > > Hi Anisa,
-> > > > 
-> > > > I just now picked this up with the kernel side and took it for a quick
-> > > > test drive. Based on what's been touched, first meaningful finding is
-> > > > all the DAX unit tests pass, and then for CXL unit tests, all but these
-> > > > 2 pass: cxl-security.sh and cxl-dcd.sh
-> > > > 
-> > > > Please let me know if there are known problems with either of those
-> > > > before I explore further.
-> > > 
-> > > Hi Anisa,
-> > > 
-> > > Good news, DCD exposed a long hidden bug that made cxl-security.sh
-> > > fail. It is not an issue w DCD patches.
-> > > 
-> > > Found that DCD set changes which mock memdev the test happens to
-> > > land on, and that's enough to uncover a latent hex/decimal bug in
-> > > CXL nvdimm code. We use to always land on id '1', but now this patch:
-> > > 
-> > > tools/testing/cxl: Add DC Regions to mock mem data
-> > > 
-> > > reorders the sorted dimm list, so the test selects a dimm with
-> > > serial 10 (0xa), and there's the hex/decimal mismatch.
-> > > 
-> > > The renumbering is harmless in itself but it just changed the
-> > > serial the test exercises and tripped over the old bug.
-> > > 
-> > > I'll send a separate fixup patch for the hex/dec cleanup.
-> > > 
-> > > (No answer on cxl-dcd.sh yet)
-> > > 
-> > > -- Alison
-> > > 
-> > Thanks for looking into this! I can also look into what might be going
-> > on with cxl-dcd.sh if you let me know the base commit you applied the
-> > dcd patches onto? :)
-> 
-> The base commit was indeed the key to the cxl-dcd.sh failure.
-> 
-> I'm seeing a probe-ordering race that you may not see unless you're
-> using v7.1-rc1 or later. The branch linked in the kernel patchset does
-> not include this commit -
-> 
-> 39aa1d4be12b ("dax/cxl, hmem: Initialize hmem early and defer dax_cxl binding")
-> 
-> Dan changed cxl_dax_region to PROBE_PREFER_ASYNCHRONOUS in support the
-> DAX and HMEM synchronization, so I'm guessing that undoing that, is
-> not an option. Before that change, cxl_dax_region probed synchronously
-> and created the zero-sized seed dax device before cxlr_add_existing_extents()
-> ran, so no race existed.
-> 
-> Move to 7.1 and you *should* see cxl-dcd.sh start failing. Since it's a
-> timing issue, so you may need to dial down any dynamic debug and do
-> repeated runs.
-> 
-> The race is on the dax_region device's devres_head between-
-> (a) the asynchronous cxl_dax_region probe reaching really_probe()
-> and
-> (b) cxlr_add_existing_extents() attaching devres to the same device
-> 
-> really_probe() rejects probing devices that already have resources
-> attached. If (b) wins, probe fails with -EBUSY, cxl_dax_region never
-> binds, and the seed dax device is never created.
-> 
-> One possible fixup would be to move existing-extent processing into
-> cxl_dax_region_probe() so that the resource attachment happens
-> within the probe itself. That looked like more restructuring than I
-> could quickly test out, so I'm sending it back to you.
-> 
-> Below is a reproducer using cxl_test and cxl-cli. It creates a DC region
-> and checks immediately if its dax_region driver bound and a seed dax
-> device exists. An 'unbound' dax_region is the bug.
-> 
->     #!/bin/bash
->     set -u
->     CXL=${CXL:-cxl}; NDCTL=${NDCTL:-ndctl}; TRIALS=${1:-10}
->     bound=0 unbound=0
->     for t in $(seq 1 "$TRIALS"); do
->         $NDCTL disable-region -b cxl_test all >/dev/null 2>&1
->         modprobe -r cxl_test 2>/dev/null; modprobe cxl_test
->         udevadm settle 2>/dev/null; dmesg -C 2>/dev/null
->         # first non-sharable memdev with a dynamic_ram_a partition
->         # (serial 56540 == 0xDCDC is the mock's sharable fixture)
->         mem=$($CXL list -b cxl_test -Mi \
->             | jq -r '.[] | select(.dynamic_ram_a_size != null)
->                           | select(.serial != 56540) | .memdev' | head -1)
->         reg=$($CXL create-region -t dynamic_ram_a -d decoder0.0 -m "$mem" \
->             2>/dev/null | jq -r .region)
->         rnum=${reg#region}
->         # sample immediately, no sleep (what the test does via daxctl)
->         daxreg=$(readlink -f /sys/bus/cxl/devices/"$reg"/dax_region"$rnum" 2>/dev/null)
->         drv=$([ -e "$daxreg/driver" ] && echo bound || echo UNBOUND)
->         seed=$([ -e /sys/bus/dax/devices/dax"$rnum".0/uuid ] && echo yes || echo NO)
->         ebusy=$(dmesg 2>/dev/null | grep -c "Resources present before probing")
->         printf 'trial %2d: %s drv=%-7s seed=%-3s ebusy_msgs=%s\n' \
->             "$t" "$reg" "$drv" "$seed" "$ebusy"
->         [ "$drv" = bound ] && bound=$((bound+1)) || unbound=$((unbound+1))
->     done
->     echo "SUMMARY: bound=$bound unbound(FAIL)=$unbound of $TRIALS"
->     [ "$unbound" -eq 0 ] || exit 1
-> 
-> Sample output on a failing kernel-
->     trial  1: region9 drv=bound   seed=yes ebusy_msgs=0
->     trial  2: region9 drv=UNBOUND seed=NO  ebusy_msgs=1
->     trial  3: region9 drv=bound   seed=yes ebusy_msgs=0
->     trial  4: region9 drv=UNBOUND seed=NO  ebusy_msgs=1
->     ...
->     SUMMARY: bound=4 unbound(FAIL)=4 of 8
-> 
-Thank you so much for investigating. The fix you suggested works: I
-moved the processing of existing extents to cxl_dax_region_probe().
+>> diff --git a/hw/pci-bridge/cxl_root_port.c b/hw/pci-bridge/cxl_root_port.c
+>> index 0ee18ef5c3..df69c5200f 100644
+>> --- a/hw/pci-bridge/cxl_root_port.c
+>> +++ b/hw/pci-bridge/cxl_root_port.c
+>
+>>  static void cxl_rp_dvsec_write_config(PCIDevice *dev, uint32_t addr,
+>> diff --git a/hw/pci/pcie.c b/hw/pci/pcie.c
+>> index 1de0b1e4fd..d452199d85 100644
+>> --- a/hw/pci/pcie.c
+>> +++ b/hw/pci/pcie.c
+>> @@ -217,7 +217,7 @@ static void pcie_cap_fill_slot_lnk(PCIDevice *dev)
+>>          /* the PCI_EXP_LNKSTA_DLLLA will be set in the hotplug function */
+>>      }
+>>
+>> -    pcie_cap_fill_lnk(exp_cap, s->width, s->speed, s->flitmode);
+>> +    pcie_cap_fill_lnk(exp_cap, s->width, s->speed, s->parent_obj.flitmode);
+>
+>I think we should use a cast to the parent object type rather than going directly
+>into s->parent_obj.  PCIE_PORT(s)->flitmode.
 
-This solved the probe-race, but it deadlocked because after processing existing
-extents:
-cxlr_notify_extent() does guard(device)(dev) on &cxlr->cxlr_dax->dev.
-That lock is already held by probe.
+Hi Jonathan,
 
-To fix:
-cxlr_notify_extent() split into core __cxlr_notify_extent() and wrapper
-cxlr_notify_extent().
+Got your point and it makes sense, will change that in the next version of this patch series. Thanks for the suggestion.
 
-__cxlr_notify_extent() asserts device_lock_assert(dev) instead of
-acquiring the lock. Call this directly in the process existing extents
-path to skip trying to acquire lock again.
+>
+>>  }
+>
 
-cxlr_notify_extent() wrapper acquires the lock for the other case --
-extents added after driver loaded.
+------LzjFyProJtBlqpjpUA7CxzsXX7e_8S7ToqyYf_kYrViRiBfb=_5314c_
+Content-Type: text/plain; charset="utf-8"
 
-Thanks again for the thorough investigation! It was super helpful :)
-- Anisa
 
-> > 
-> > Thanks,
-> > Anisa
-> > 
-> 
-> snip
-> 
+------LzjFyProJtBlqpjpUA7CxzsXX7e_8S7ToqyYf_kYrViRiBfb=_5314c_--
