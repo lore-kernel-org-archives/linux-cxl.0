@@ -1,76 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 042E2314D15
-	for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 19:38:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234722E0B71
+	for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 20:34:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782416339; cv=none; b=W4Ib//W5xm8JvIXzgXwBYFtqoYLKy+L0T9pgHRaf9CI3g3WQj00XrXL4WoJlvTxRa1tjzjj4o7o5llsaHuA5aXCD3gmoUs1ORgIMXKFB76BSSJeqFo4j9gZqih4PAjEW6QzYm81oAzFP1sVKVQn5vHMLq2mVaueYBO/+wDO2Jeg=
+	t=1782419664; cv=none; b=SJLu4kbmL8bwm634mdtYz7QF6MB7W5T6M/0QQboyRQaUl9DMvfgT23hs8X6Hsi6dxAkB7Oj9rE7QMWdC6SoO1YaCvePQjNQ8GnWLh0d0ObpoqNQhlaOSMg0hkBW4uO+UBUtX8bvu+Az30eH8KscLv4jeX35J840CTAuO7nkwW3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782416339; c=relaxed/simple;
-	bh=7/8RCEkUMYwUf/IJNQzM/95RFtF6Kuq8j1WRmuAmYy4=;
+	s=arc-20240116; t=1782419664; c=relaxed/simple;
+	bh=AriwsaM6suT1eAmIWEleERv96n9MOQrVF9D9frMAO0E=;
 	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=c89haA62kxjlkZgGjeqQ8UCbVVBJ9+92da34X7F+V1JJDQWE5kHHLl4GM7VAOr7ANS/CY5gVAgrx8pF5JnUUr3vO6uEEO0I9zKOGI8e2EL3qOxC3tl6uO+WndsynhsZfCOz6iEnI6SolO887VT8eaipAOjhrb0gFqScrv9H1ZmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JCHiIEab; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=OIsqlw2ezK976pcuVUTLLs/Q+7inJqFB4OjBtb5n9MapExPaHVtsphFJJn+5UITNuRzZqMX7Pw7GGW1sbVlBNS166ApfI0wYpg8NIzfqKp9fL9YvJG7RGZB66KNnwTaqAvNc94JSCyWFsfTjX+vM9PrwQKpav7DXAFjCZexfCAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MKlPw8L7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JCHiIEab"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CCB61F00A3A;
-	Thu, 25 Jun 2026 19:38:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MKlPw8L7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60F601F00A3D;
+	Thu, 25 Jun 2026 20:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782416338;
-	bh=xLQcCAMEOvQdcLv3+MzAbVm2HFmzZFExyG15mB0wLCM=;
+	s=k20260515; t=1782419662;
+	bh=CrnZsQKdS7AAoGkjVlyYp03N5EaC8cZoPjFmjktE5jQ=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=JCHiIEabKjQQPJQdsdwZj7fhnuqGop1QeyjrrOCRHdV3B6w/tX9ZnZLkD7LIq3u3j
-	 0tAq37MlFjz0Y9X6RNpPGI979ncY7Ff/L+6I6/mldOZqo5jz0OiNTP/udYnrU1gRno
-	 oKw9PlvQateha5VFFMpfQVDZJmyMyfsjf9q0u6Lu9H341P/5gAcNOC9ktX4o0xpb5z
-	 GJbnCtTIMx+b0Ce50U/Szpfh3oox2hUSYGECZDV6jRBkjqq/YYu3Oizkf4JC5X5vnz
-	 l8g0Siew3u0EgvgTnB949ykTJiiNRBR2mpqwtePwkW/4iZ382ooEMAV0wEZrrCwo0E
-	 EyQSekkLMaabw==
-Received: from phl-compute-06.internal (phl-compute-06.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id A297CF40074;
-	Thu, 25 Jun 2026 15:38:57 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-06.internal (MEProxy); Thu, 25 Jun 2026 15:38:57 -0400
-X-ME-Sender: <xms:0YM9ai2S82dlX67lRbY5rN6bQdJj4ZDP_RKGTCLCaOknpPgZ6079Hg>
-    <xme:0YM9amroMxKbPxc7dJ3vOoEsbVs74qBImX585isnkbQcLaM6Ka0VCgclmfs-bG6G0
-    vo1FjP2xvEf1r8L2tqBxz6rGSQTFCSzcANY7H0qaf5khwcQo_K2YUE>
-X-ME-Received: <xmr:0YM9aqLHK9f4KGQkquODK7geOzWKeSBxts85MajOFzFh63JywSwfr8qfH7uFyIALrGi46Iq0wq1gRqe_GFUS2Lq1G_70KiCdP0Y>
-X-ME-Proxy-Cause: dmFkZTEscVxItEhJ/0BB4j3QdsvuuL7z5cnLZXlhkLDQtYVZXScP3IMKt0Z/oqjjUoxp7S
-    mzaHS480dtsIO7W7Ej3+aH0wt13aw6QpzcYhw6gDqLAHIBpL+Ls31IbXXuDbGIzTJA9kGn
-    BLDEDW7ykgnfDpDN/9zgMEzADoEHU3VDZZY03jw1lRuV5sYJD99sC4WusfgCEvNSoU8se5
-    Kk/c8G3ZEeKrYDJaWGtFOcez9j/itiUa+cGysbVumeGE22M1bJ6scqNKY1ojd5j2B4QrqQ
-    /wsMn8vY7t4a68tWb31WbeufPgvceIMWlrQqw96Pa5i2FwY2yls2DeoNhJikEOGJRRn0Qx
-    pwuHJ+Ee4FbNgr/eCg2Eudy4oI5oaAXEDdKvb0Lm8/uFEJ6aquBln5q6j6teplDlvQm3ZR
-    5069vnlkl81v7ZSq8W0St+X6gK0YK8zkTTcZX5Ais2KELYwMidqgEpEc9Srxfjx7V2aiZN
-    tKuitf9gaGUDCT7BpNv2VniP4wfArao5BksVe5ea0uUrGrconk81p/yb0EDcbKus3Blsdm
-    UXxBNkCD0S1VOp9sxXn177yQ1EuoX7P95t+9JIsWEXRTSKBO9DOsnk9t4v0EHA1KAlTisf
-    2M1DLnCT3MkFWg1PrKPihMGpVe0iBVhuWgg/TiSZURm2tCfXmo5NKESa801A
-X-ME-Proxy: <xmx:0YM9aqRdVqMmrwJcz17mgLQfmoqCYz4v4cfK2NUHCMk59gE548pFWQ>
-    <xmx:0YM9aqNEsHgC2FYETgbF5WlPh8EJtWqO-QWy8WD7u8xMeyhD--s62Q>
-    <xmx:0YM9avUpZrNvJAww_J1FrVVM3Un_dbRfsmYbV68it6OxRRY--em99w>
-    <xmx:0YM9atgc_sw_886SkioXQrW7QyKX2OFKDAe9HteSx85EoBZf01pWXg>
-    <xmx:0YM9aoj3qeLw2REFEdfTfhQlOZ5NSXjjH12CntRd1XRw1ImOX-f49axq>
+	b=MKlPw8L7auHUeGJcwc/p2yVWrAzmNTGCISd85pr/c05y2znMT7FBokSrAPUbdzjgk
+	 pk/fo5ES30aCRAk/O/RGwzpRnvhsXMEzxyYa9EX0wD8OcGITYlSaXnQW0kjX7TsitS
+	 11JHId9ZhBTnuuZOGHHc7NQyaOeRXhSKmygFr/mEI5ZAroL0/e9Tm/cuFP6AUCSqLD
+	 NKFL2ooqweAfNu9y5yOKHOqzcO5CsOAi9YZcV/1AoxVkeSrHZlCf0DKsjFpOLcxhd5
+	 pe4xn8e0TS3D4dBVH+/mVxJI4b9bzYQUBTB+MG2QNy0R4JzmhmHQXPjrzDalBWp52T
+	 aivqw7rbDtQfQ==
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id B17C9F40085;
+	Thu, 25 Jun 2026 16:34:21 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Thu, 25 Jun 2026 16:34:21 -0400
+X-ME-Sender: <xms:zZA9auiNddFkDUacL1n-OZCnXn8IExBTNqnjjEyOtiRUunexrGzuHw>
+    <xme:zZA9alh72TPtsUsGrIYlpGhqq9fMhcb2HZjV0gd81EUEA8rf9LVZJSlHs_TnUrdni
+    Go2pX-4FRoxDJuvEEaZLUuOxawHgL6Rr2Q3X-GsGbms3E_ZPZRsUdc>
+X-ME-Received: <xmr:zZA9akGfdBYmedOk4MlfeaVdkLSU2gN0XsRzN1toHHH468TNPOn4igGTiWBmhXk4Ya5VBRzsh0WRYOSCadNqgzscCpu0fsfrbao>
+X-ME-Proxy-Cause: dmFkZTG1Rtwr/kj/aowLQ7EpBqqFteEV5bqwvGXyYuaw+PPIqcqsVof71imww+EIjZgbtN
+    V2PpvQ0EREPhB/DRvbf8QBoTq6zb2fd1cT3yV8NXUpo2+uG0D8SVsOrix0W/f0J5mepRCP
+    U2IBSeUTpYmfFLG+T6APBX9JZbftoOt8X3kNDBy17M86BqXiFe6CFd+Wh759lR7wt1sWVw
+    27jStPFb70rWmHYKOZqddmMH0L6AxAvv1NEMcv7J5w+Uqeskt+t/dAFFZp2R8YqG55z0O2
+    p3jK29rqZqiaBAj9IcHvqHWeR9O064SaUeuR+phimsf3sOz+YUoht9QdO1kROSxIogVzjb
+    6V+cJCY2uuGpll0rjohUE6mGJiwLONd2rnKSovNTPg4UzBq63tpGm+P4XfRHUrFiIG/NJV
+    jRgTvralUYLHgSbdKDOaiUxRdSNPbETlJnltGhIaPQzEKdO2XHj2HRp3dxsf7LTV1wqkxx
+    HdSxzbk9LLDhWxipO7dk09Fw6IvLCPk7zOqbWXvfCMWgAGcrMamGErxotN3BxykcErPZsI
+    WpK+kj71SG+uIG/ztK9y2U+qsDXpOFQJ5iipzolEebwSDuN99ASYXAk04gBKdvbCup7C6+
+    jaex2wl1sE7DZbXREDw+SoNX5Q4B73+iYO0DHanaQSTYdUfWEZM3QRcbLCZQ
+X-ME-Proxy: <xmx:zZA9aqCAUpI1ZfFFZE6ho79u24Gg9EqcRCUsXag5nOIef-lQ7rWprw>
+    <xmx:zZA9aiBnHjpjjg7IHxGbgwGPySquzyQa5VmP7mP5p18jufcWqwRHjQ>
+    <xmx:zZA9agOc3n4darwMNheIDrchnYhfW8My6jbVmfn9hD6bD8zmjQlrwg>
+    <xmx:zZA9auNsLjnd3_UdRmO1uzHG4-yuTeNFUrFnRX1Ve6XZVMcsOqI5pg>
+    <xmx:zZA9aiKWXHrPIN_K7a2WCK9_d8-Na6LWu_gW3EkiaV0aOQ3hewF_qbK6>
 Feedback-ID: i67ae4b3e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 25 Jun 2026 15:38:56 -0400 (EDT)
-Date: Thu, 25 Jun 2026 12:38:55 -0700
+ 25 Jun 2026 16:34:21 -0400 (EDT)
+Date: Thu, 25 Jun 2026 13:34:20 -0700
 From: "Dan Williams (nvidia)" <djbw@kernel.org>
-To: Alison Schofield <alison.schofield@intel.com>, 
- Davidlohr Bueso <dave@stgolabs.net>, 
- Jonathan Cameron <jic23@kernel.org>, 
- Dave Jiang <dave.jiang@intel.com>, 
- Alison Schofield <alison.schofield@intel.com>, 
- Vishal Verma <vishal.l.verma@intel.com>, 
- Ira Weiny <iweiny@kernel.org>, 
- Dan Williams <djbw@kernel.org>, 
- Li Ming <ming.li@zohomail.com>
-Cc: linux-cxl@vger.kernel.org, 
- Anisa Su <anisa.su@samsung.com>, 
- stable@vger.kernel.org
-Message-ID: <6a3d83cf9ee43_164f9d10042@djbw-dev.notmuch>
-In-Reply-To: <20260619055932.1354182-1-alison.schofield@intel.com>
-References: <20260619055932.1354182-1-alison.schofield@intel.com>
-Subject: Re: [PATCH] cxl/pmem: Format nvdimm serial numbers as decimal
+To: Alejandro Lucero Palau <alucerop@amd.com>, 
+ "Dan Williams (nvidia)" <djbw@kernel.org>, 
+ alejandro.lucero-palau@amd.com, 
+ linux-cxl@vger.kernel.org, 
+ netdev@vger.kernel.org, 
+ dan.j.williams@kernel.org, 
+ edward.cree@amd.com, 
+ davem@davemloft.net, 
+ kuba@kernel.org, 
+ pabeni@redhat.com, 
+ edumazet@google.com, 
+ dave.jiang@intel.com
+Cc: Edward Cree <ecree.xilinx@gmail.com>
+Message-ID: <6a3d90cc4913_164f9d10070@djbw-dev.notmuch>
+In-Reply-To: <b0a45e85-f42c-4a52-8223-f8318da10649@amd.com>
+References: <20260622124010.2192888-1-alejandro.lucero-palau@amd.com>
+ <20260622124010.2192888-5-alejandro.lucero-palau@amd.com>
+ <6a3c55eea91d0_f12301008f@djbw-dev.notmuch>
+ <b0a45e85-f42c-4a52-8223-f8318da10649@amd.com>
+Subject: Re: [PATCH v29 4/5] sfc: obtain and map cxl range using
+ devm_cxl_probe_mem
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -81,38 +86,73 @@ Content-Type: text/plain;
  charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-Alison Schofield wrote:
-> The CXL NVDIMM security passphrase key is looked up by the description
-> "nvdimm:" followed by the device serial string. For serial numbers of
-> 10 and above, the kernel auto-unlock path fails to find the key
-> because ndctl names it with a decimal serial and the kernel uses hex.
+Alejandro Lucero Palau wrote:
+[..]
+> >> +{
+> > If you are going to have an explicit efx_cxl_exit() then I would also
+> > add an explicit unregistration of the memdev.
 > 
-> That means a passphrase-protected device cannot be unlocked after a
-> reboot, and the pmem namespaces it backs do not come up. Devices
-> without an enrolled passphrase are unaffected.
 > 
-> The mismatch occurs for any serial number of 10 and above. Since CXL
-> device serial numbers are vendor-assigned 64-bit values, that covers
-> essentially all real hardware once security is enabled.
+> This is necessary for undoing the mmap. Nothing else happens there 
+> because it is all relying on devm ...
 > 
-> The 'id' sysfs attribute is established ABI that ndctl consumes as
-> decimal, so format the kernel's serial string the same way. A u64
-> decimal string requires up to 20 digits plus a NUL byte, so grow
-> CXL_DEV_ID_LEN to fit it.
 > 
-> The issue was exposed by CXL unit test cxl-security.sh when cxl_test
-> mock serial numbers were recently extended to 10 and above.
+> I could change the ioremap_wc call to devm_ioremap_wc, but
+> 
+> 
+> > This would also fix the
+> > Sashiko report about pci_disable_device() running while the cxl_memdev
+> > is still registered. Unfortunately, mixing devm and explicit unwind is
+> > always fraught.
+> 
+> 
+> I do not think there is a problem here. The cxl core does not need what 
+> a type2 driver can do regarding PCI BAR mappings, or at least it is not 
+> the case for sfc.
+> 
+> Any action through sysfs cxl will go through cxl core and the only thing 
+> linked to the type device is the CXL registers which are mapped inside 
+> cxl_map_component_regs() and those are managed resources.
+> 
+> 
+> So, I can not see why this change is needed. If it is really necessary, 
+> please describe the problem with more detail.
+> 
+> 
+> It looks like you need reasons for delaying this further ...
 
-Good find!
+What? Help with Sashiko reports is an act of malice? I assumed you
+wanted help with those so that other maintainers would proceed with
+these patches. 
 
-This is a good fix for folks with new kernels and old tooling, but
-leaves folks with old kernels in the lurch.
+I did do another run through to see if there are any paths that the CXL
+core can reach if someone tried to fuzz the CXL ABIs or kernel paths
+while SFC is unloading. I think Sashiko is hallucinating a sysfs path to
+the BAR mapping given there is no mailbox and the EDAC capabilities are
+usually not present on a type-2 device. The RAS path looks valid, but
+that may also get lucky that most (all?) of the RAS use cases lock the
+device before accessing the registers, so devres_release_all() would
+become consistent with pci_disable_device() before any access attempt.
+That does not seem like a clean design, but it is also does not appear
+to be immediately exploitable.
 
-Not sure of the priority of doing this additional work given it is not
-clear the CXL PMEM devices with security commands ever shipped, but
-userspace tooling can workaround this problem by always injecting both
-an nvdimm:%llx and nvdimm:%lld formatted key descriptor.
+If you believe the patches are ready and the Sashiko reports are
+invalid, please do say so, no more comments from me on this set from
+this point forward.
 
-For the kernel change:
+> > Let me know if this passes your testing, and I can send it out as a
+> > standalone patch. You could also use it to unwind if the ioremap()
+> > fails.
+> 
+> 
+> You did not read my comments on v28 ...
+> 
+> 
+> I changed efx_cxl_init to make the driver probe to fail if cxl is 
+> supported and enabled but the cxl initialization fails, including 
+> ioremap_wc(). What you proposed to do, explicitly undo cxl 
+> initialization bits, has the same outcome: device detached from the driver.
 
-Acked-by: Dan Williams <djbw@kernel.org>
+Right, I did read that and that motivated the devm_cxl_remove_mem()
+helper to undo the memdev creation without unloading the driver. You are
+free to ignore that helper.
