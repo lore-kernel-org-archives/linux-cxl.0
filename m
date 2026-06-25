@@ -1,245 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A000288C30
-	for <linux-cxl@vger.kernel.org>; Wed, 24 Jun 2026 22:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7683C09F8
+	for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 06:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782339058; cv=none; b=daJ1vVBhkGHnwCCRehjRrlKVGJPexbceji159Q9xC4cilTyVGTmgXDheGWGPFhpDqsKOPKFdWPZ1zHIWPssFyK6zQ1ll+78UqNygb0AHELHrmovHBUfPOLXPDIG0l7kDhnuX+KIkAkqH9JRyOOhHMy+ccmfwwAFJodkjKWbBq5k=
+	t=1782368260; cv=none; b=aV1YhIWzeBHDrf2RMVrEKo4Da6Nhk49N9/Mylek+Ld2FYyMOIdCgPqGcSn4DPDEBfl/T3m82cvoxb9S6/azm6sCnn/5I2/LsKMqlW7Y9nOpUodFHerVHbuW1L+imCuWnYVa+gZn4PgDkb12PLUdVNdVSdH0Nkiwu6ZuiiNb5Lok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782339058; c=relaxed/simple;
-	bh=+qcaSEjsBGY0hfxGQAac9FZCSg+r6O3gmoiaDeZc9b8=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=qV0LCELkDXraDCufggby5WX+2sd851jRLUcXpejFr3LaWLJvF5qdRATNSvmXj6X1tG9Dw/AGTI/G3TiYCQd8+0DHyG4t+YEyya062/vmbTvCdwV9i7obc3Us0zW6PnneNL0plogJbpMfNE0lWL4Ln5l5B9S/lm+rDl4rL6qOkqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kTF6YpxH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782368260; c=relaxed/simple;
+	bh=MjrRvZfIQlTaSIsENJMumq0U/x+Pmcq/letq6s5ydTE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QPo0YhqBbqw6qu8nvNT4Xgr+MBb3GY1y3XBjhrMG3fYzDC7rGZgF3He3U2qgkbidZ1QdExDuH3Fc3oBugoDHjGj/Kz0Bif/l65t63waCbTIS3gIwE3Dw7RO95mnbsJ031Hpw2xrd+dXy0sbVvq52zPj7szpzT80B91iZpRRpJMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qbcZ4cUo; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YkCJXl0Q; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=n5GkZTym; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SxiLqY4c; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kTF6YpxH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAB461F00A3A;
-	Wed, 24 Jun 2026 22:10:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782339057;
-	bh=2zDeOvPena4qlSxGBMWoQ/GeMf6iu2rEhQfYk/kmj8Q=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=kTF6YpxHbCRBNyLhjZIBEHLDUxNmaF9rCQtZWDwx28bzGNmtzeVA0NChYBguxf169
-	 vgbXcI1yReX+DovftnbDhToikdzLBVhsom8X04oz2kTcaZC4so2JwQOUa93vUTvWMX
-	 5le6N8ViIDB6caUyCMIJtbhw6hSe5izfuFOKszTqAW4mP/9h+mBI8iVh+u8Ce97fdJ
-	 FrcSLlTSAp6Eh3yfBZr+yYVsSNkxiGwis9qeqCAHY8tfo3u4FebGqSeKR9KNE65m2U
-	 ZlBfsCB2+vazOzmuvnLM53KKf3TMuB0rQvu4UnPRORzuXBHzWhqXPPhGs6Fysv40XR
-	 riuCGUpJsIxrg==
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 5131DF40088;
-	Wed, 24 Jun 2026 18:10:56 -0400 (EDT)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Wed, 24 Jun 2026 18:10:56 -0400
-X-ME-Sender: <xms:8FU8aiME317O9D-ZFxSWrSyQzIias2JSQOcoGtydlMAvCu6vZ9tisg>
-    <xme:8FU8aihynh8JXZBgkQo-8a4MHIx0XI2AxtNLJkGdZqEvsKOTflxvvpzFdApOpmiDy
-    Li9wwXRqnEyQgZMWgd24nrKoSMJqCqpexmmteufkgomxTJl3cz2n9Lm>
-X-ME-Received: <xmr:8FU8aoghcQQKtP-3Z3J9gPq0gWu6wqPfLsWlYRY_bVlJ0Ppqg-qTwTo_c1UgIWMMU60GpTe4FvC6DI7ynErQafLp89NO7Sqdj7A>
-X-ME-Proxy-Cause: dmFkZTF3zlzLBzyKjCAA6Cea2zlqBSqAMAQCqXaPu05Ub4Ydgfd8fyShASWLMBR4wT+YMG
-    UcPBGsHqJxZJy8fX3hIF5Jzl0g8EowykA7Jy613efCgfGn1XxpcjT6osgdQkpc57steuEk
-    9T4HXnYjXfCX1JRV8f7uW4pjeX7REeW5+eUwZdMprmX3OIdWMnNLG42vXdPO0Dr4fPRa34
-    4PMRLgpm3YAACIU+F7mzvGzCYOIfDn8YdGIIUa+3GxABJcyjdMMGuPQ2qCJsg0g1Iwxq/E
-    Tk/6H3iC+oO1TsNt1Lz0UGhCXp1t7GxV5AGSTqCJTxHNZBKlbPuwdlS3RHUT4BpFSt4wLJ
-    8rawabeRnaKendPHMoFLJ55MVQdQ47RrzL7syVw2djYIyH65LihPi1nxXQOTIR4TYm/5CF
-    7B3lKuzL6tgTpPrs/Kw/Ro25YaZIN59BpSlT1dyFBHCjT2dg98TLABqMGpsyUT9AM5fE4g
-    uHOJBIkaP8fg+C5RmVBktVI4bXmPXWLh0yvMl75wEFcO2RqftwSxoaZtMSxSAbE0/4/PFh
-    4xWKUd6gCPxk9tA0ADA27F0Eoyefqm1i6hncwE+tHqzYnRzfTMCtcbyLk6FOUJ+3CkLGbs
-    CsvJz8jF6M2X5VMVD1Ji/TBGOdELUx6qxvWNOpkKXYz9ydApNu0RAabLb7Yw
-X-ME-Proxy: <xmx:8FU8apJIqowhus-XKQ6rF5FpLH23yGvVlV-_oF3wdhuhnFcIqdJRAQ>
-    <xmx:8FU8avkf5S1z8fy8bFwUAC8a8DE6CuyVCKJAxKA-szyysQ-OU6S83g>
-    <xmx:8FU8apPRPh-9iqI63DESH3c8YocBVSAaT_Mbt-E0OoF-K7B9zV8HKw>
-    <xmx:8FU8ah5vfegxnX7PARtXxRKrEGtStvPLaJLVUAaL-_GpuD9nWgSN7A>
-    <xmx:8FU8albjUoi-G9B67uEzJXlvqnmE1RS668bbjvxo4aAEkQaNpw0mi4sx>
-Feedback-ID: i67ae4b3e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 24 Jun 2026 18:10:55 -0400 (EDT)
-Date: Wed, 24 Jun 2026 15:10:54 -0700
-From: "Dan Williams (nvidia)" <djbw@kernel.org>
-To: alejandro.lucero-palau@amd.com, 
- linux-cxl@vger.kernel.org, 
- netdev@vger.kernel.org, 
- dan.j.williams@kernel.org, 
- edward.cree@amd.com, 
- davem@davemloft.net, 
- kuba@kernel.org, 
- pabeni@redhat.com, 
- edumazet@google.com, 
- dave.jiang@intel.com
-Cc: Alejandro Lucero <alucerop@amd.com>, 
- Edward Cree <ecree.xilinx@gmail.com>
-Message-ID: <6a3c55eea91d0_f12301008f@djbw-dev.notmuch>
-In-Reply-To: <20260622124010.2192888-5-alejandro.lucero-palau@amd.com>
-References: <20260622124010.2192888-1-alejandro.lucero-palau@amd.com>
- <20260622124010.2192888-5-alejandro.lucero-palau@amd.com>
-Subject: Re: [PATCH v29 4/5] sfc: obtain and map cxl range using
- devm_cxl_probe_mem
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qbcZ4cUo";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YkCJXl0Q";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="n5GkZTym";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SxiLqY4c"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3017271833;
+	Thu, 25 Jun 2026 06:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1782368257; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lsDZDuDxKlvNW8EPVPGqWeW6c2wLvDVP/aYJ1SGOw1s=;
+	b=qbcZ4cUoNNNrBS8sol12QF8a20XBCri1pgE/tbEdP9ig/UFZv6rgUEzcBD7fEqjllibg/M
+	2DamV6U48sRwmzWWHVtfG5yBHYzRzIrN4YjYuL+/AZ/KZYMdJnh7KqsYUnsiNmlqVqw+sd
+	xs8bhKwszOVTMgmzHEbqt9qbD0w9zis=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1782368257;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lsDZDuDxKlvNW8EPVPGqWeW6c2wLvDVP/aYJ1SGOw1s=;
+	b=YkCJXl0QMcZ5eO9Wh0jGxv+7rTwJYQzwe9ARpYn0YEXCxC4d23jhg0GVTLww7bCO2z3BAO
+	DxQ5Hxdo5cGHW9DA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1782368256; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lsDZDuDxKlvNW8EPVPGqWeW6c2wLvDVP/aYJ1SGOw1s=;
+	b=n5GkZTymO0+yOwrypTZxvOLlmvqBerJvEj15XaIGob78rgtYBHPQ1psIEuTOvqOsRNcc3t
+	ohqU2GpqweS7euy88WjypV8xCKCpPj4fJ5M7hInIC9kC9l8FefQfnH7SkHxPDLO4KU+es9
+	tjCrQN6zsPu1BSEV2Uf6LN3Wm+Fmorc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1782368256;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lsDZDuDxKlvNW8EPVPGqWeW6c2wLvDVP/aYJ1SGOw1s=;
+	b=SxiLqY4czk0sQSzuZDu3RT6Wr3/E4Up9OPuVaJflrlwJbTYsGooecfrd8fqUtk8oos1KTM
+	3Fc5qxS9lcGZmaAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4B2A4779A8;
+	Thu, 25 Jun 2026 06:17:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id uH2uEP/HPGp0PQAAD6G6ig
+	(envelope-from <hare@suse.de>); Thu, 25 Jun 2026 06:17:35 +0000
+Message-ID: <8e42587a-d614-4259-ae6b-5bca1479b425@suse.de>
+Date: Thu, 25 Jun 2026 08:17:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 8/9] dax/kmem: add sysfs interface for atomic
+ whole-device hotplug
+To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org,
+ nvdimm@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ driver-core@lists.linux.dev, linux-kselftest@vger.kernel.org,
+ kernel-team@meta.com, david@kernel.org, osalvador@suse.de,
+ gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+ djbw@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
+ akpm@linux-foundation.org, ljs@kernel.org, liam@infradead.org,
+ vbabka@kernel.org, rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+ shuah@kernel.org, alison.schofield@intel.com,
+ Smita.KoralahalliChannabasappa@amd.com, ira.weiny@intel.com,
+ apopple@nvidia.com
+References: <20260624145744.3532049-1-gourry@gourry.net>
+ <20260624145744.3532049-9-gourry@gourry.net>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20260624145744.3532049-9-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[28];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RL7dfuuh4jrqtijtc3c3mfetss)];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[gourry.net:email,suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-alejandro.lucero-palau@ wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
+On 6/24/26 4:57 PM, Gregory Price wrote:
+> There is no atomic mechanism to offline and remove an entire
+> multi-block DAX kmem device.  This is presently done in two steps:
+>      1. offline all
+>      2. remove all).
 > 
-> Use core API for safely obtain the CXL range linked to an HDM committed
-> by the BIOS. Map such a range for being used as the ctpio buffer.
+> This creates a race condition where another entity operates directly
+> on the memory blocks and can cause hot-unplug to fail / unbind to
+> deadlock.
 > 
-> A potential user space action through sysfs unbinding or core cxl
-> modules remove will trigger sfc driver device detachment, with that case
-> not racing with this mapping as this is done during driver probe and
-> therefore protected with device lock against those user space actions.
+> Add a new 'state' sysfs attribute that enables an atomic whole-device
+> hotplug operation across its entire memory region.
 > 
-> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+> daxX.Y/state mirrors the per-block memoryX/state ABI:
+>    - [offline, online, online_kernel, online_movable]
+>    - "unplugged" - is added specifically for dax0.0/state
+> 
+> The valid writable states include:
+>    - "unplugged":      memory blocks are not present
+>    - "online":         memory is online, zone chosen by the kernel
+>    - "online_kernel":  memory is online in ZONE_NORMAL
+>    - "online_movable": memory is online in ZONE_MOVABLE
+> 
+> Valid transitions:
+>    - unplugged                -> online[_kernel|_movable]
+>    - online[_kernel|_movable] -> unplugged
+>    - offline                  -> unplugged
+> 
+> A device can only be onlined from "unplugged", so it must be returned
+> there before being onlined into a different state.
+> 
+> For backwards compatibility the memory blocks are always created at
+> probe - existing tools expect them to be present after kmem binds.
+> 
+> "offline" is therefore a reportable state but is not writable: it only
+> arises from the legacy auto_online_blocks=offline policy.  Onlining
+> such a device through this attribute requires unplugging it first in
+> an effort to get drivers creating DAX devices to set a default.
+> 
+> Unplug is atomic across the whole device: dax_kmem_do_hotremove()
+> collects every added range and offlines/removes them in one operation.
+> Either the operation succeeds or is entirely rolled back.
+> 
+> Unbind Note:
+>    We used to call remove_memory() during unbind, which would fire a
+>    BUG() if any of the memory blocks were online at that time.  We lift
+>    this into a WARN in the cleanup routine and don't attempt hotremove
+>    if ->state is not DAX_KMEM_UNPLUGGED or MMOP_OFFLINE.
+> 
+>    An offline dax device memory is removed on unbind as before.
+> 
+>    If online at unbind, the resources are leaked (as before), but now
+>    we prevent deadlock if a memory region is impossible to hotremove.
+> 
+> Suggested-by: Hannes Reinecke <hare@suse.de>
+> Suggested-by: David Hildenbrand <david@kernel.org>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
 > ---
->  drivers/net/ethernet/sfc/efx.c     |  2 ++
->  drivers/net/ethernet/sfc/efx_cxl.c | 23 +++++++++++++++++++++++
->  drivers/net/ethernet/sfc/efx_cxl.h |  3 +++
->  3 files changed, 28 insertions(+)
+>   Documentation/ABI/testing/sysfs-bus-dax |  26 +++
+>   drivers/base/memory.c                   |   9 +
+>   drivers/dax/kmem.c                      | 224 ++++++++++++++++++++----
+>   include/linux/memory_hotplug.h          |   1 +
+>   4 files changed, 224 insertions(+), 36 deletions(-)
 > 
-> diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
-> index 61cbb6cfc360..3806cd3dd7f4 100644
-> --- a/drivers/net/ethernet/sfc/efx.c
-> +++ b/drivers/net/ethernet/sfc/efx.c
-> @@ -984,6 +984,7 @@ static void efx_pci_remove(struct pci_dev *pci_dev)
->  	efx_fini_io(efx);
->  
->  	probe_data = container_of(efx, struct efx_probe_data, efx);
-> +	efx_cxl_exit(probe_data);
->  
->  	pci_dbg(efx->pci_dev, "shutdown successful\n");
->  
-> @@ -1242,6 +1243,7 @@ static int efx_pci_probe(struct pci_dev *pci_dev,
->  	return 0;
->  
->   fail3:
-> +	efx_cxl_exit(probe_data);
->  	efx_fini_io(efx);
->   fail2:
->  	efx_fini_struct(efx);
-> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
-> index 18b535b3ea40..3e7c950f83e9 100644
-> --- a/drivers/net/ethernet/sfc/efx_cxl.c
-> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -18,6 +18,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  {
->  	struct efx_nic *efx = &probe_data->efx;
->  	struct pci_dev *pci_dev = efx->pci_dev;
-> +	struct range cxl_pio_range;
->  	struct efx_cxl *cxl;
->  	u16 dvsec;
->  	int rc;
-> @@ -73,9 +74,31 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  		return -ENODEV;
->  	}
->  
-> +	cxl->cxlmd = devm_cxl_probe_mem(&cxl->cxlds, &cxl_pio_range);
-> +	if (IS_ERR(cxl->cxlmd)) {
-> +		pci_err(pci_dev, "CXL accel memdev creation failed\n");
-> +		return PTR_ERR(cxl->cxlmd);
-> +	}
-> +
-> +	cxl->ctpio_cxl = ioremap_wc(cxl_pio_range.start,
-> +				    range_len(&cxl_pio_range));
-> +	if (!cxl->ctpio_cxl) {
-> +		pci_err(pci_dev, "CXL ioremap region (%pra) failed\n",
-> +			&cxl_pio_range);
-> +		return -ENOMEM;
-> +	}
-> +
->  	probe_data->cxl = cxl;
->  
->  	return 0;
->  }
->  
-> +void efx_cxl_exit(struct efx_probe_data *probe_data)
-> +{
+That looks good, but question remains:
 
-If you are going to have an explicit efx_cxl_exit() then I would also
-add an explicit unregistration of the memdev. This would also fix the
-Sashiko report about pci_disable_device() running while the cxl_memdev
-is still registered. Unfortunately, mixing devm and explicit unwind is
-always fraught.
+Why do we need to treat the 'unbind' call as a given thing?
+If we know that we cannot handle online memory during unbind,
+can't we just disallow unbind in that case?
+I don't think it's too much to ask from an admin to offline
+the memory first, _especially_ as now we have a simple knob
+to do that ...
 
-Let me know if this passes your testing, and I can send it out as a
-standalone patch. You could also use it to unwind if the ioremap()
-fails.
+Cheers,
 
--- 8< --
-From 47940f7d6de6dd1039d0e445eb944ca96ad5eb3a Mon Sep 17 00:00:00 2001
-From: Dan Williams <djbw@kernel.org>
-Date: Wed, 24 Jun 2026 11:47:24 -0700
-Subject: [PATCH] cxl: Add devm_cxl_remove_mem()
-
-Undo devm_cxl_probe_mem() without causing the host driver to unload.
-
-The expectation of devm_cxl_probe_mem() is that upon attach the caller
-depends on the CXL topology not being torn down. If it is then it is
-escalated to a 'remove' event on the caller. However, if the caller wants
-to cancel their interest in CXL operation, they should be able to do so
-without that side effect.
-
-This is useful for setup scenarios where CXL successfully attaches, but
-some other event precludes CXL operation.
-
-Cc: Alejandro Lucero <alucerop@amd.com>
-Signed-off-by: Dan Williams <djbw@kernel.org>
----
- include/cxl/cxl.h         |  1 +
- drivers/cxl/core/memdev.c | 25 +++++++++++++++++++++++++
- 2 files changed, 26 insertions(+)
-
-diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-index 016c74fb747c..cff2922b0d4a 100644
---- a/include/cxl/cxl.h
-+++ b/include/cxl/cxl.h
-@@ -226,4 +226,5 @@ struct cxl_dev_state *_devm_cxl_dev_state_create(struct device *dev,
- 
- struct cxl_memdev *devm_cxl_probe_mem(struct cxl_dev_state *cxlds,
- 				      struct range *range);
-+void devm_cxl_remove_mem(struct cxl_memdev *cxlmd);
- #endif /* __CXL_CXL_H__ */
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 33a3d2e7b13a..aa35876f0067 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -1185,6 +1185,31 @@ struct cxl_memdev *__devm_cxl_add_memdev(struct cxl_dev_state *cxlds,
- }
- EXPORT_SYMBOL_FOR_MODULES(__devm_cxl_add_memdev, "cxl_mem");
- 
-+static struct cxl_attach_region *cancel_probe_mem_teardown(struct cxl_memdev *cxlmd)
-+{
-+	struct cxl_attach_region *attach;
-+
-+	guard(device)(&cxlmd->dev);
-+	attach = container_of(cxlmd->attach, typeof(*attach), attach);
-+	cxlmd->attach = NULL;
-+	return attach;
-+}
-+
-+void devm_cxl_remove_mem(struct cxl_memdev *cxlmd)
-+{
-+	struct cxl_attach_region *attach;
-+	struct cxl_dev_state *cxlds;
-+
-+	if (IS_ERR(cxlmd))
-+		return;
-+
-+	attach = cancel_probe_mem_teardown(cxlmd);
-+	cxlds = cxlmd->cxlds;
-+	devm_release_action(cxlds->dev, cxl_memdev_unregister, cxlmd);
-+	devm_kfree(cxlds->dev, attach);
-+}
-+EXPORT_SYMBOL_NS_GPL(devm_cxl_remove_mem, "CXL");
-+
- static void sanitize_teardown_notifier(void *data)
- {
- 	struct cxl_memdev_state *mds = data;
+Hannes
 -- 
-2.54.0
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
