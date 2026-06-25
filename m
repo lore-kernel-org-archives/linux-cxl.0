@@ -1,189 +1,382 @@
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011016.outbound.protection.outlook.com [40.107.208.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f48.google.com (mail-dl1-f48.google.com [74.125.82.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F6A17A31E;
-	Thu, 25 Jun 2026 08:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782375057; cv=fail; b=stRAMjcEAO+R2XnCAzW8ffmO1xTq6Tfb2fpi96HYKE0dzPGOuZVmhYV8zrmxUnOiDYfEbEN37pqQ1xwmIACPbiZycXCe2Api44fg1MoAXFRuM/rnL8LpHWwFHNDsCNEjAEN6DcY60Q9h0e3quxagNCDEe5meb9SOTc71hRNeLy4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782375057; c=relaxed/simple;
-	bh=IoGBy70MP6qjz7HhqcaUvPHwkzhEzjVY1ypGAqD6mX4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rArRSzIvXzDS5rRMMcQaggr5A3/UnO84O/YdSICuJt+wecid5IOcWt1wGqtCX4TXFRfGcuJbdTY2/vESb2YBwSbzCBxEJLvjxoQhNoWGX42MvcAK3KkeMtw7Bo5PHNcNtOh8pdX3KGagEgBKb/ulLTCIDkiJOqp3EzXcG/QNHvc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=phmJ23Ov; arc=fail smtp.client-ip=40.107.208.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE58384CFB
+	for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 09:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782378442; cv=none; b=tKlCi9OLfDuQEpGCBmaXSsLMXAhmny2V0mP2v2wSlLTN8rM3KeXYiAtxsW+jx48Og5wAYvMAER7UWpWkkDuhHDMGsiNHDDQLEA5OJdDGDjEUGuuXjlav0lP7VfmCBLbvfJ46EixEkrDKJHowkav1mBkrBZe6lhXkrUR1YLkVd10=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782378442; c=relaxed/simple;
+	bh=/Bz3//frR7PzFv+V/Is7JQZUdgG0lfqLZcHeUftIcVI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QAUlQ6wwtZtJmU0EVFI59QrpQYBJtTxzt10s4N/qxFgAFjGLmL7M6G51dezlvvwam9BoqlQHZPWM2qbUKpbSKMzrRJot/PW77/ZlNS19t94ZnrZejtvMdsJBKqXswJ1MF4HJz6e9X+ksgkSWwAG6DLW77ik6KQ4EWhLGV1qlcRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N0MGBDP7; arc=none smtp.client-ip=74.125.82.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="phmJ23Ov"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=q8MWWSefW2SrvtQQc2lwe+4QBPBT5pXaHY4gB6aGi5DJDbWT5Vcxlx4YGfcOcGBqB8m9Qp6VYYuA5djiEP7GNnfN8E1To1UbSBk9Y3Uh5WV5QAPoKR/M8w7SuZ0JPS6vzfSxxePbEXCQemJfkU+1T/6JHF+w0G60clPacRNbDQI0p+W37M6ikzt4fPoApqppKG+kclcNwjf297/IqefrLDpBTtYVtHZpQi4ZV2S43y1FgEMt+X/FN5HkEC5KmwoVjF7h5dT5GO4YJvo+VCNpMEcEBw+HLLaxFi7fdkiXyS/8Y5Z831x7SJwsUzbrc3KZwMCNiJ3sp1PtLGwnrYPiGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FgFmfOqrFSMaoe7AYX2xYzq6WQlcNwSFBHsMo3pTh38=;
- b=xQUGmTetT+cnZiIyPhInu0+L8nDF7DGCphdRJ9VrkWYKPitHSp4LrDxFVMNJE3WZ1IYQPLukiP9ARfg9GxWVRXkbD58iW0wFTTr69hXrB0euSlGwbjImbuX4SfDPz8X6mhXO5uBkhwOrFhBvF69EB8CqJowSxj3ikAK/q62RA0Tokb8Rkx/B3WJ+NnY8Q56ueymgu1fHo0EYm1h+Xj7Achqghy+2XxUbJpcno9L6g9f0hiCEDefNSi9ZfMeHER0hHRYc2Fk2euCPR1L6ckAweD3Tji0UQtn70LgQ0fM8XPGrc1JouwZakY1RWo0RYvM18PDEfH2/uipQkXyLf7XmBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FgFmfOqrFSMaoe7AYX2xYzq6WQlcNwSFBHsMo3pTh38=;
- b=phmJ23OvJwr8ENE08C9+Ovmdp/Bu8qjgbbM6PQu3nn9jSy8VDutMWp19WYYuI1YT8DLb9PwAjqQXA/T9IN7WZwflzFqoVg2vBX3uldLo2yjE626uVzmX84gYa7zEP4Y3HOTit2gFAX3cVrggUUobQsg7OoyJINCTwC811+Ky438Gt7eiElJPMqDyTSSsTHgpiL8cP7OgHohEHbBQ6rEd+Nxm6wRYJKphTZ3aA3m1hrPMwR2HpIlHAgONbzQJD41v13GPusjnSjx3NviePi85QY4Ah7mcVNU8F8o2m8q0iPZKalaV4hiLNAszVt+kUcrGUUAL8WTerka7HjrX65zv9g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by MW4PR12MB7118.namprd12.prod.outlook.com (2603:10b6:303:213::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.13; Thu, 25 Jun
- 2026 08:10:50 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0159.012; Thu, 25 Jun 2026
- 08:10:50 +0000
-Date: Thu, 25 Jun 2026 16:10:45 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: Wei Hou <wei.hou@scaleflux.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>, 
-	Dan Williams <djbw@kernel.org>, alison.schofield@intel.com, vishal.l.verma@intel.com, 
-	iweiny@kernel.org, ming.li@zohomail.com, linux-kernel@vger.kernel.org, 
-	kobak@nvidia.com, kaihengf@nvidia.com, newtonl@nvidia.com, kristinc@nvidia.com, 
-	mochs@nvidia.com, danwilliams@nvidia.com
-Subject: Re: [PATCH] cxl/pci: Remove incorrect mbox.valid check in
- cxl_pci_type3_init_mailbox()
-Message-ID: <ajzhsubot_PSYtHQ@MWDK4CY14F>
-References: <20260618170356.25382-1-wei.hou@scaleflux.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260618170356.25382-1-wei.hou@scaleflux.com>
-X-ClientProxiedBy: TPYP295CA0035.TWNP295.PROD.OUTLOOK.COM (2603:1096:7d0:7::7)
- To BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0MGBDP7"
+Received: by mail-dl1-f48.google.com with SMTP id a92af1059eb24-1390f75d8bbso4790645c88.0
+        for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 02:07:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782378434; x=1782983234; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uh7d155bzMOSDs17477DXsdTjJFjvRv+PsFNr/CxwV0=;
+        b=N0MGBDP7+a9SM4BWsCFs3IS9Bf8Z65c7wniHxj2uW62WBoxJFTEPRuodLc8w+kFn6n
+         LfsNbqbzmgj021P84VUXkaVXhAiN+MgTiP1ugodPGEJDzQVvtiCglXOffjLpA0t6omV0
+         cnV8Xe4gS2kYNnuJZjnIIkGPVHdOPPdzqDa75KyHN94rFu5ehauwYrXyqAODs8ntKRCi
+         sxgmqJ+PgVsUM9uesIJqmd9Z9SrT3S1FXtOJCAii9JRRkq0M+7ZJQvVUaaiddrl9t/Hg
+         8Y+Oh/yTCphkFUS5a753af6Vwp0TuhSiru5vtnN9vf+21QAfI1x9UZEVCuCk2OBjT6CW
+         8G4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782378434; x=1782983234;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uh7d155bzMOSDs17477DXsdTjJFjvRv+PsFNr/CxwV0=;
+        b=aAWrrAuqWRT0orAUrldPVqBXfZXCjDit/+koykI6SBYRUDo/Kzvs/0rulQkcomnlWL
+         gri6rlJnnW9+UI4HQfw7jvVZc6bJK5QY5jq2UZk1kLVKFtJmEv93HTq0TK1cxywYzhPE
+         SMjMn3ItMKP4TwN0GBjUwrBtOPU4uQyqxlF+lBjPY/W9NcHuEgQzqdzOmteH3kmaepuX
+         2Iz337QZCMIZCEuhHc/U5lkHZq0IR39gcvhth48g/bMSkm57mRHm5stqd4lduQiQSa48
+         lrw6LT+Utsg8QbvBxb5AaDA+PpYhrxdech8VyaMAYz4zIflaaQzNaDpBkclrPg53yt6E
+         W8zA==
+X-Forwarded-Encrypted: i=1; AFNElJ/+7EYpR21T7QTG2SCtb/1a3M9qHVpBHUXReaQule06vXysz1OstwcNyCfXyDECpgYJ3xRkGRKpXsg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxibNG+8k8mfSDGUXI0Bc5fiqu7Sa2VPloY7289eW7Ajs5A0/N
+	GEMMjt2V/9jymDqiqRotduUMmAvxoe8qTlHPjhOxpAz0rslCcN8u73Eh
+X-Gm-Gg: AfdE7cmHmFR/kof+Fld2nsU7ilnUDcs9bONFPCh08OjXVwKnbFAGfhAxvGxXjgL45pX
+	HEzr2oQrxQ4gwyMXxk6cuNZkaPKcr4XZbt4aHBXyLLd2rjQIzvilCHHHpcN1S/4pMuBca3TIz2F
+	mgnAJveMGOkGoi6bnCdDUxRxq1CqaALiAwHvkvCsTjm7UmrYJhqKr9AaM8Fc/UmgtdmBBHtkFM+
+	lhbdm+Og8+U1m3ynazXWbdTVQxbWHP8OWHBdRrOW+1njWMmkSuBFeQLFA38wL6VVNqMxHLT7EJt
+	naBlFHniijHAh+qnK/wqHeZ8F5O6SvV1LfWx9nuHz1BmNvR3Dz4ZsY69jeKgc/7B+df166riIxw
+	aHMbW6cuYI5cUGXYqjh2p6ZJHzBQwgOfvc0eAOab2lx/3B7fMzobdscIdhbDwUtpxPtHNmtkIF9
+	oIMhAr3Eun1dV8RYQKSX3VPJOE6SUtwl5UY+90roKvqRUowJQOU1h14Hfgyvh6zjBhLOs+
+X-Received: by 2002:a05:7022:619:b0:139:8674:e45b with SMTP id a92af1059eb24-139dbaf24a5mr1883935c88.14.1782378434168;
+        Thu, 25 Jun 2026 02:07:14 -0700 (PDT)
+Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-139d912197bsm10031291c88.15.2026.06.25.02.07.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2026 02:07:13 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Thu, 25 Jun 2026 02:07:12 -0700
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	Dan Williams <djbw@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <iweiny@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	John Groves <John@groves.net>, Gregory Price <gourry@gourry.net>,
+	Ira Weiny <ira.weiny@intel.com>
+Subject: Re: [PATCH v6 2/7] libcxl: Add Dynamic RAM A partition mode support
+Message-ID: <ajzvwEXGxfMQNhSt@AnisaLaptop.localdomain>
+References: <20260523095043.471098-1-anisa.su@samsung.com>
+ <20260523095043.471098-3-anisa.su@samsung.com>
+ <06747633-ed22-48a2-b8d0-c9b544a682f8@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|MW4PR12MB7118:EE_
-X-MS-Office365-Filtering-Correlation-Id: ea2df539-a70e-4d48-4838-08ded29144be
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|23010399003|366016|376014|3023799007|56012099006|18002099003|22082099003|6133799003|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	HA8IFC5xWwhASgY8jJyq6j6d3NdyddvVjU7DZOVixbM5Z/8BbhHEcFyRJt4PJc961w7dCBtuuVEWG4rGjqw7nNNJQHeH5TgLILhb8UNdbgZiKAqpFCWYDHRo64ROPkevTVVOxM6ZTJ7AOWY4MfXwgyoC/vJ52COxNCTNDFZ5AsrD63HpNF74tMLsNdByciJ76qJfebU83nr+Ll77DP9KsCFKkLdyI3CQX605Xo21ocoeNyWuQYjmumVOMLkFN4iOtZ7qiqeYPYFyyMMoLTVM0eH8kxkN7T7Yi6RZXma34pzlYES7RCFmGSk3NHjjR0ElnRdcZPHmjSH+OMRJR4NF6znrZbi4i1jd3CWKLJjZQTq7aCDCaKTDou5xvm0lSWadb40FtXWz6cmJVal4ZqMxcAToOKGYvqH4cwrtJdvdewOqeEBHmQ8k9eG59XsPljtw4Tc9ATGZ35/TDAkO8MSF2X+fwJgLQ0IeOSYWXZ9oEvkZXzPeFYYzYU9k5MlhruMtekb9TWIHmjhFWOOBLMsvYoCxdNShoIrrVdgterXTeA4WYyVUsI478AEiZA9H3Mi3bW0KiG9frUaqEASXbH6DUKVGdWO9aMvMwgwGGx47vOughqfuzQB0GFYtnl6dj8vt8mMSR47zr4H+ofbkteFUYH/OKgYq8FK3f8VyeLkl1Hk=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(23010399003)(366016)(376014)(3023799007)(56012099006)(18002099003)(22082099003)(6133799003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?3ldiZwxiIIIXgKGvoeUgQW45xOc9IpuI+d0DXkANxi7qIndTQZaKjrfJXNlL?=
- =?us-ascii?Q?K9vIbIfnBCbwT76OBq4P01QwvgdLaNMlvlfcCOCF9452no9ssMq632Ih+RoJ?=
- =?us-ascii?Q?PNpAEja6OXN13TidBXVdpTvd3CXxzGBGHE3J6+PK5lmSE3ilAH986CQamlJL?=
- =?us-ascii?Q?EdlFTyy1W5QJ/6slcNdpsry66edrKFU4xzUm3Yw1I+6KEbs8QgDKyUpjAalc?=
- =?us-ascii?Q?ydQ9R/4Mw6GHhdsRPYsN6t01oNzezGdBTkTJ63K+ZEDWyvJBg9vZHXVwmw+Y?=
- =?us-ascii?Q?fd7pT8uk+hqIvYpQNitg+Jg/C+KiE/1UIXNGXNaW913ftzm0eh3ggiNir1xl?=
- =?us-ascii?Q?csLjDt/wcmwcNC6NLELtGWIUxdZICpWxglG3agYGfv2w65IPbGKH73SCdG4j?=
- =?us-ascii?Q?e16UwXC5y7sUgdz8mcde2p7HIVPcCS8z8SUKzvmAbDYFYVKLuQQprLY+arA4?=
- =?us-ascii?Q?QQSZ9XKfoaFIxjQ6RNSNFuzfIpfVSJ1SkWcbjGRAso4GYcPuxTRxzO4GThYa?=
- =?us-ascii?Q?zTbf/qWNcL/jKU3oWcWG8l0s/xQMVYNyeBR83yvQ/o871Tz/gf3/yEzGHXK6?=
- =?us-ascii?Q?gGz6IL0hvyVtMX+jagDtU0P2zri4PCTgjXLUHECcn0Y9lA4sFcflRAYmC3EW?=
- =?us-ascii?Q?Z/j4YN6tuOzjhSV0sRFqlNdCnOlZiBqoTR91/f+BycFAIiGwFPD6LvAO6SN9?=
- =?us-ascii?Q?cKmIe+IqqNCVaG5O18PGz9u0viXuri4vdi4RyDvARoKYzirWZ2lySjIEg/C7?=
- =?us-ascii?Q?QBDCOL4pa5YYCylYlTviaDsp+LpQ7qYJWXZZu4jZHV82YYL7H4uN2+cV8QNn?=
- =?us-ascii?Q?NTqLNzSoluVzyTlcoXLgF0MdXHGFQtSslW2zGsTAdlwV4C/MPmvyXRqOC9gp?=
- =?us-ascii?Q?47SNJ6GNcfriIWHivNK8MOA8j/TA0L7uARnDUNyW7M4fbCcRMlbT26ehp0NG?=
- =?us-ascii?Q?AKLkYjBahfMkj5unm1sl9N7H12QmkeXqr2ETwMO+38HkL575e+IgKB1UQCRW?=
- =?us-ascii?Q?NljMddMsspKIxRD7olOnZ69cOeNzRsisDl4O99oLec5CHX/1yz+V3/7TEnEM?=
- =?us-ascii?Q?oq9UVzt3nV/y0dHOfH01vb9hz/kYth90dnHpAfJ0RG4d/6w71PKBtRcAOzwk?=
- =?us-ascii?Q?1NkffV1T5OlcT1qCfRyFgIbhtBhbliRL03VeYuz9X9/qmb1FfpMNNaqPfxsR?=
- =?us-ascii?Q?XB3/nNgKg5LxUv/+HhXC4HSuI7Ipc/5BxxlH+eUMp2caRLbfVSyakp7ml+Nl?=
- =?us-ascii?Q?hVICKuChS0T4xoVBZkvSbZkZ5xiqmzZBnRhUiVGKn0EgKii8QzYQyzAaKteV?=
- =?us-ascii?Q?BmXoon15iHR5sFSCE1ydJeFbd2ELXtMAP7ls71ObfuNaNESnS5DbxAuBh9K2?=
- =?us-ascii?Q?xzEgNBwPqQA5Fgfu9OrrIf47NG6hkv1SRjTujz2SwDILSogZW3WIaZ1C1tJN?=
- =?us-ascii?Q?V6eRq75qL831TdwT+pkowXlx6z/uQHOSi0deM+yzV9NOs5n2c8hN7AYCJzt1?=
- =?us-ascii?Q?bn3HQf+xMAgLFBIPOMXEsi/5JKu2XkRoaLGD8yPjZ8D/LiVlmRk+QTmu76cc?=
- =?us-ascii?Q?Jxy/DlUiWMk6Pu8wpXhYICag1Ahf51JXFYq/6SgAJq5ORl/a/DX5vUrAOU3K?=
- =?us-ascii?Q?tXjofC2k2RFocwXPaQWScODwpSpRLvSe9olDtPc5EVBr+zT/7Qm0paXHt0/p?=
- =?us-ascii?Q?bIT29d/A28dO4vkkAOD72vVryH7F2d2Q+m2/pPYAWnlqH9vnObflHBloxjZk?=
- =?us-ascii?Q?Ibh3Nv/lMg=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea2df539-a70e-4d48-4838-08ded29144be
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2026 08:10:50.4675
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dXHOkMzGTti0T5oEbQvvj1D7ae8ZipaekMhbZv2Qc3BHsWSmav162XLr98lLou6rNDxyXzYK7Y4PFvoO73JSPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7118
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06747633-ed22-48a2-b8d0-c9b544a682f8@intel.com>
 
-On Fri, Jun 19, 2026 at 01:03:56AM +0800, Wei Hou wrote:
-> The driver's design intent is that missing or malformed component
-> registers should not prevent mailbox initialization. cxl_pci_probe()
-> already reflects this: the CXL_REGLOC_RBI_COMPONENT setup path only
-> emits a dev_warn() and continues when component registers are absent,
-> rather than returning an error.
+On Mon, Jun 08, 2026 at 04:19:47PM -0700, Dave Jiang wrote:
 > 
-> The check 'if (!cxlds->reg_map.device_map.mbox.valid)' violates this
-> intent and is also technically incorrect for two reasons:
 > 
-> 1. Wrong struct: the MEMDEV register block is enumerated into a local
->    variable 'map', not into 'cxlds->reg_map'. The device_map.mbox.valid
->    field inside cxlds->reg_map is never written by the MEMDEV probe and
->    will always read as zero regardless of actual hardware capability.
+> On 5/23/26 2:50 AM, Anisa Su wrote:
+> > From: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > Dynamic capacity partitions are exposed as a singular dynamic ram
+> > partition.
+> > 
+> > Add CXL library support to read this partition information.
+> > 
+> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > 
-> 2. Already validated: cxl_pci_setup_regs(CXL_REGLOC_RBI_MEMDEV) calls
->    cxl_probe_regs() which explicitly checks mbox.valid and returns
->    -ENXIO if the mailbox is absent. If that check passes, the mailbox is
->    guaranteed to be present by the time cxl_pci_type3_init_mailbox() is
->    called.
+> Missing Anisa sign off.
 > 
-> The value that the check actually reads is component_map.ras.valid,
-> which aliases device_map.mbox.valid in the union. This is populated by
-> the COMPONENT probe, not the MEMDEV probe. On devices where the
-> component register BAR does not implement a CXL Component Capability
-> Array (e.g. certain DCD devices), cxl_probe_component_regs() returns
-> early leaving ras.valid=false. Through the union, this makes mbox.valid
-> read as false, causing cxl_pci_type3_init_mailbox() to return -ENODEV
-> (-19) even though the mailbox hardware is fully functional.
+> Can probably squash this and the next commit so the usage is shown for the reviewer.
 > 
-> Remove the check. Mailbox presence has already been validated by
-> cxl_pci_setup_regs(CXL_REGLOC_RBI_MEMDEV). The presence or absence of
-> component registers is irrelevant to mailbox initialization.
-> 
-> Signed-off-by: Wei Hou <wei.hou@scaleflux.com>
-> ---
->  drivers/cxl/pci.c | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index bace662dc988..e44e5d209900 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -691,12 +691,6 @@ static int cxl_pci_type3_init_mailbox(struct cxl_dev_state *cxlds)
->  {
->  	int rc;
->  
-> -	/*
-> -	 * Fail the init if there's no mailbox. For a type3 this is out of spec.
-> -	 */
-> -	if (!cxlds->reg_map.device_map.mbox.valid)
-> -		return -ENODEV;
-> -
->  	rc = cxl_mailbox_init(&cxlds->cxl_mbox, cxlds->dev);
->  	if (rc)
->  		return rc;
-> -- 
-> 2.24.1
-> 
->
+Added my signoff. Also squashed next commit. I added your review tag to the
+combined commit since it was on the next commit.
 
-Btw,
+Richard's point about moving new exported symbols to LIBCXL_13 is also
+applied.
 
-You missed to sent this one to many people, I'll add them this time for you
+> DJ
 
---Richard 
+Thanks,
+Anisa
+> 
+> > ---
+> >  Documentation/cxl/lib/libcxl.txt |  6 +++--
+> >  cxl/lib/libcxl.c                 | 43 ++++++++++++++++++++++++++++++++
+> >  cxl/lib/libcxl.sym               |  4 +++
+> >  cxl/lib/private.h                |  3 +++
+> >  cxl/libcxl.h                     | 10 +++++++-
+> >  5 files changed, 63 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
+> > index 5c3ebd4..9921ac1 100644
+> > --- a/Documentation/cxl/lib/libcxl.txt
+> > +++ b/Documentation/cxl/lib/libcxl.txt
+> > @@ -74,6 +74,7 @@ int cxl_memdev_get_major(struct cxl_memdev *memdev);
+> >  int cxl_memdev_get_minor(struct cxl_memdev *memdev);
+> >  unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev);
+> >  unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
+> > +unsigned long long cxl_memdev_get_dynamic_ram_a_size(struct cxl_memdev *memdev);
+> >  const char *cxl_memdev_get_firmware_version(struct cxl_memdev *memdev);
+> >  size_t cxl_memdev_get_label_size(struct cxl_memdev *memdev);
+> >  int cxl_memdev_nvdimm_bridge_active(struct cxl_memdev *memdev);
+> > @@ -93,8 +94,8 @@ The character device node for command submission can be found by default
+> >  at /dev/cxl/mem%d, or created with a major / minor returned from
+> >  cxl_memdev_get_{major,minor}().
+> >  
+> > -The 'pmem_size' and 'ram_size' attributes return the current
+> > -provisioning of DPA (Device Physical Address / local capacity) in the
+> > +The 'pmem_size', 'ram_size', and 'dynamic_ram_a_size' attributes return the
+> > +current provisioning of DPA (Device Physical Address / local capacity) in the
+> >  device.
+> >  
+> >  cxl_memdev_get_numa_node() returns the affinitized CPU node number if
+> > @@ -453,6 +454,7 @@ enum cxl_decoder_mode {
+> >  	CXL_DECODER_MODE_MIXED,
+> >  	CXL_DECODER_MODE_PMEM,
+> >  	CXL_DECODER_MODE_RAM,
+> > +	CXL_DECODER_MODE_DYNAMIC_RAM_A,
+> >  };
+> >  enum cxl_decoder_mode cxl_decoder_get_mode(struct cxl_decoder *decoder);
+> >  int cxl_decoder_set_mode(struct cxl_decoder *decoder, enum cxl_decoder_mode mode);
+> > diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
+> > index e55a7b4..be0bc03 100644
+> > --- a/cxl/lib/libcxl.c
+> > +++ b/cxl/lib/libcxl.c
+> > @@ -501,6 +501,9 @@ CXL_EXPORT bool cxl_region_qos_class_mismatch(struct cxl_region *region)
+> >  		} else if (region->mode == CXL_DECODER_MODE_PMEM) {
+> >  			if (root_decoder->qos_class != memdev->pmem_qos_class)
+> >  				return true;
+> > +		} else if (region->mode == CXL_DECODER_MODE_DYNAMIC_RAM_A) {
+> > +			if (root_decoder->qos_class != memdev->dynamic_ram_a_qos_class)
+> > +				return true;
+> >  		}
+> >  	}
+> >  
+> > @@ -1426,6 +1429,10 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
+> >  	if (sysfs_read_attr(ctx, path, buf) == 0)
+> >  		memdev->ram_size = strtoull(buf, NULL, 0);
+> >  
+> > +	sprintf(path, "%s/dynamic_ram_a/size", cxlmem_base);
+> > +	if (sysfs_read_attr(ctx, path, buf) == 0)
+> > +		memdev->dynamic_ram_a_size = strtoull(buf, NULL, 0);
+> > +
+> >  	sprintf(path, "%s/pmem/qos_class", cxlmem_base);
+> >  	if (sysfs_read_attr(ctx, path, buf) < 0)
+> >  		memdev->pmem_qos_class = CXL_QOS_CLASS_NONE;
+> > @@ -1438,6 +1445,12 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
+> >  	else
+> >  		memdev->ram_qos_class = atoi(buf);
+> >  
+> > +	sprintf(path, "%s/dynamic_ram_a/qos_class", cxlmem_base);
+> > +	if (sysfs_read_attr(ctx, path, buf) < 0)
+> > +		memdev->dynamic_ram_a_qos_class = CXL_QOS_CLASS_NONE;
+> > +	else
+> > +		memdev->dynamic_ram_a_qos_class = atoi(buf);
+> > +
+> >  	sprintf(path, "%s/payload_max", cxlmem_base);
+> >  	if (sysfs_read_attr(ctx, path, buf) == 0) {
+> >  		memdev->payload_max = strtoull(buf, NULL, 0);
+> > @@ -1685,6 +1698,11 @@ CXL_EXPORT unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev)
+> >  	return memdev->ram_size;
+> >  }
+> >  
+> > +CXL_EXPORT unsigned long long cxl_memdev_get_dynamic_ram_a_size(struct cxl_memdev *memdev)
+> > +{
+> > +	return memdev->dynamic_ram_a_size;
+> > +}
+> > +
+> >  CXL_EXPORT int cxl_memdev_get_pmem_qos_class(struct cxl_memdev *memdev)
+> >  {
+> >  	return memdev->pmem_qos_class;
+> > @@ -1695,6 +1713,11 @@ CXL_EXPORT int cxl_memdev_get_ram_qos_class(struct cxl_memdev *memdev)
+> >  	return memdev->ram_qos_class;
+> >  }
+> >  
+> > +CXL_EXPORT int cxl_memdev_get_dynamic_ram_a_qos_class(struct cxl_memdev *memdev)
+> > +{
+> > +	return memdev->dynamic_ram_a_qos_class;
+> > +}
+> > +
+> >  CXL_EXPORT const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev)
+> >  {
+> >  	return memdev->firmware_version;
+> > @@ -2465,6 +2488,8 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
+> >  			decoder->mode = CXL_DECODER_MODE_MIXED;
+> >  		else if (strcmp(buf, "none") == 0)
+> >  			decoder->mode = CXL_DECODER_MODE_NONE;
+> > +		else if (strcmp(buf, "dynamic_ram_a") == 0)
+> > +			decoder->mode = CXL_DECODER_MODE_DYNAMIC_RAM_A;
+> >  		else
+> >  			decoder->mode = CXL_DECODER_MODE_MIXED;
+> >  	} else
+> > @@ -2504,6 +2529,7 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
+> >  	case CXL_PORT_SWITCH:
+> >  		decoder->pmem_capable = true;
+> >  		decoder->volatile_capable = true;
+> > +		decoder->dynamic_ram_a_capable = true;
+> >  		decoder->mem_capable = true;
+> >  		decoder->accelmem_capable = true;
+> >  		sprintf(path, "%s/locked", cxldecoder_base);
+> > @@ -2528,6 +2554,7 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
+> >  			{ "cap_type3", &decoder->mem_capable },
+> >  			{ "cap_ram", &decoder->volatile_capable },
+> >  			{ "cap_pmem", &decoder->pmem_capable },
+> > +			{ "cap_dynamic_ram_a", &decoder->dynamic_ram_a_capable },
+> >  			{ "locked", &decoder->locked },
+> >  		};
+> >  
+> > @@ -2778,6 +2805,9 @@ CXL_EXPORT int cxl_decoder_set_mode(struct cxl_decoder *decoder,
+> >  	case CXL_DECODER_MODE_RAM:
+> >  		sprintf(buf, "ram");
+> >  		break;
+> > +	case CXL_DECODER_MODE_DYNAMIC_RAM_A:
+> > +		sprintf(buf, "dynamic_ram_a");
+> > +		break;
+> >  	default:
+> >  		err(ctx, "%s: unsupported mode: %d\n",
+> >  		    cxl_decoder_get_devname(decoder), mode);
+> > @@ -2829,6 +2859,11 @@ CXL_EXPORT bool cxl_decoder_is_volatile_capable(struct cxl_decoder *decoder)
+> >  	return decoder->volatile_capable;
+> >  }
+> >  
+> > +CXL_EXPORT bool cxl_decoder_is_dynamic_ram_a_capable(struct cxl_decoder *decoder)
+> > +{
+> > +	return decoder->dynamic_ram_a_capable;
+> > +}
+> > +
+> >  CXL_EXPORT bool cxl_decoder_is_mem_capable(struct cxl_decoder *decoder)
+> >  {
+> >  	return decoder->mem_capable;
+> > @@ -2903,6 +2938,8 @@ static struct cxl_region *cxl_decoder_create_region(struct cxl_decoder *decoder,
+> >  		sprintf(path, "%s/create_pmem_region", decoder->dev_path);
+> >  	else if (mode == CXL_DECODER_MODE_RAM)
+> >  		sprintf(path, "%s/create_ram_region", decoder->dev_path);
+> > +	else if (mode == CXL_DECODER_MODE_DYNAMIC_RAM_A)
+> > +		sprintf(path, "%s/create_dynamic_ram_a_region", decoder->dev_path);
+> >  
+> >  	rc = sysfs_read_attr(ctx, path, buf);
+> >  	if (rc < 0) {
+> > @@ -2954,6 +2991,12 @@ cxl_decoder_create_ram_region(struct cxl_decoder *decoder)
+> >  	return cxl_decoder_create_region(decoder, CXL_DECODER_MODE_RAM);
+> >  }
+> >  
+> > +CXL_EXPORT struct cxl_region *
+> > +cxl_decoder_create_dynamic_ram_a_region(struct cxl_decoder *decoder)
+> > +{
+> > +	return cxl_decoder_create_region(decoder, CXL_DECODER_MODE_DYNAMIC_RAM_A);
+> > +}
+> > +
+> >  CXL_EXPORT int cxl_decoder_get_nr_targets(struct cxl_decoder *decoder)
+> >  {
+> >  	return decoder->nr_targets;
+> > diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
+> > index ed4429f..258bdd3 100644
+> > --- a/cxl/lib/libcxl.sym
+> > +++ b/cxl/lib/libcxl.sym
+> > @@ -294,6 +294,10 @@ global:
+> >  	cxl_memdev_get_fwctl;
+> >  	cxl_fwctl_get_major;
+> >  	cxl_fwctl_get_minor;
+> > +	cxl_memdev_get_dynamic_ram_a_size;
+> > +	cxl_memdev_get_dynamic_ram_a_qos_class;
+> > +	cxl_decoder_is_dynamic_ram_a_capable;
+> > +	cxl_decoder_create_dynamic_ram_a_region;
+> >  } LIBECXL_8;
+> >  
+> >  LIBCXL_10 {
+> > diff --git a/cxl/lib/private.h b/cxl/lib/private.h
+> > index d2d71fc..37b7b06 100644
+> > --- a/cxl/lib/private.h
+> > +++ b/cxl/lib/private.h
+> > @@ -52,8 +52,10 @@ struct cxl_memdev {
+> >  	struct list_node list;
+> >  	unsigned long long pmem_size;
+> >  	unsigned long long ram_size;
+> > +	unsigned long long dynamic_ram_a_size;
+> >  	int ram_qos_class;
+> >  	int pmem_qos_class;
+> > +	int dynamic_ram_a_qos_class;
+> >  	int payload_max;
+> >  	size_t lsa_size;
+> >  	struct kmod_module *module;
+> > @@ -159,6 +161,7 @@ struct cxl_decoder {
+> >  	unsigned int interleave_granularity;
+> >  	bool pmem_capable;
+> >  	bool volatile_capable;
+> > +	bool dynamic_ram_a_capable;
+> >  	bool mem_capable;
+> >  	bool accelmem_capable;
+> >  	bool locked;
+> > diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+> > index e91af90..fd41122 100644
+> > --- a/cxl/libcxl.h
+> > +++ b/cxl/libcxl.h
+> > @@ -75,8 +75,10 @@ struct cxl_fwctl *cxl_memdev_get_fwctl(struct cxl_memdev *memdev);
+> >  struct cxl_ctx *cxl_memdev_get_ctx(struct cxl_memdev *memdev);
+> >  unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev);
+> >  unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
+> > +unsigned long long cxl_memdev_get_dynamic_ram_a_size(struct cxl_memdev *memdev);
+> >  int cxl_memdev_get_pmem_qos_class(struct cxl_memdev *memdev);
+> >  int cxl_memdev_get_ram_qos_class(struct cxl_memdev *memdev);
+> > +int cxl_memdev_get_dynamic_ram_a_qos_class(struct cxl_memdev *memdev);
+> >  const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev);
+> >  bool cxl_memdev_fw_update_in_progress(struct cxl_memdev *memdev);
+> >  size_t cxl_memdev_fw_update_get_remaining(struct cxl_memdev *memdev);
+> > @@ -210,6 +212,7 @@ enum cxl_decoder_mode {
+> >  	CXL_DECODER_MODE_MIXED,
+> >  	CXL_DECODER_MODE_PMEM,
+> >  	CXL_DECODER_MODE_RAM,
+> > +	CXL_DECODER_MODE_DYNAMIC_RAM_A,
+> >  };
+> >  
+> >  static inline const char *cxl_decoder_mode_name(enum cxl_decoder_mode mode)
+> > @@ -219,9 +222,10 @@ static inline const char *cxl_decoder_mode_name(enum cxl_decoder_mode mode)
+> >  		[CXL_DECODER_MODE_MIXED] = "mixed",
+> >  		[CXL_DECODER_MODE_PMEM] = "pmem",
+> >  		[CXL_DECODER_MODE_RAM] = "ram",
+> > +		[CXL_DECODER_MODE_DYNAMIC_RAM_A] = "dynamic_ram_a",
+> >  	};
+> >  
+> > -	if (mode < CXL_DECODER_MODE_NONE || mode > CXL_DECODER_MODE_RAM)
+> > +	if (mode < CXL_DECODER_MODE_NONE || mode > CXL_DECODER_MODE_DYNAMIC_RAM_A)
+> >  		mode = CXL_DECODER_MODE_NONE;
+> >  	return names[mode];
+> >  }
+> > @@ -235,6 +239,8 @@ cxl_decoder_mode_from_ident(const char *ident)
+> >  		return CXL_DECODER_MODE_RAM;
+> >  	else if (strcmp(ident, "pmem") == 0)
+> >  		return CXL_DECODER_MODE_PMEM;
+> > +	else if (strcmp(ident, "dynamic_ram_a") == 0)
+> > +		return CXL_DECODER_MODE_DYNAMIC_RAM_A;
+> >  	return CXL_DECODER_MODE_NONE;
+> >  }
+> >  
+> > @@ -264,6 +270,7 @@ cxl_decoder_get_target_type(struct cxl_decoder *decoder);
+> >  bool cxl_decoder_is_pmem_capable(struct cxl_decoder *decoder);
+> >  bool cxl_decoder_is_volatile_capable(struct cxl_decoder *decoder);
+> >  bool cxl_decoder_is_mem_capable(struct cxl_decoder *decoder);
+> > +bool cxl_decoder_is_dynamic_ram_a_capable(struct cxl_decoder *decoder);
+> >  bool cxl_decoder_is_accelmem_capable(struct cxl_decoder *decoder);
+> >  bool cxl_decoder_is_locked(struct cxl_decoder *decoder);
+> >  unsigned int
+> > @@ -272,6 +279,7 @@ unsigned int cxl_decoder_get_interleave_ways(struct cxl_decoder *decoder);
+> >  struct cxl_region *cxl_decoder_get_region(struct cxl_decoder *decoder);
+> >  struct cxl_region *cxl_decoder_create_pmem_region(struct cxl_decoder *decoder);
+> >  struct cxl_region *cxl_decoder_create_ram_region(struct cxl_decoder *decoder);
+> > +struct cxl_region *cxl_decoder_create_dynamic_ram_a_region(struct cxl_decoder *decoder);
+> >  struct cxl_decoder *cxl_decoder_get_by_name(struct cxl_ctx *ctx,
+> >  					    const char *ident);
+> >  struct cxl_memdev *cxl_decoder_get_memdev(struct cxl_decoder *decoder);
+> 
