@@ -1,62 +1,62 @@
-Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+Received: from mail-dy1-f179.google.com (mail-dy1-f179.google.com [74.125.82.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CC43DCD8A
-	for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 11:29:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A773DCD94
+	for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 11:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782386945; cv=none; b=uubhmp/3OfGMy9si0Ir5+/6gEJAgt0xDP1yoUN/mUdhAKS1FMrD92xiCfD+4hOYHdXeoFnpUWo0HCSN468YuKvlm2rW8NIxsqJr7IcCUhS0itnyPZ8yQZY9dw5uKsMJgWEvmQOvXEhKuLyLywx12m5O60uoI/EerFc9pbNNy4S0=
+	t=1782386946; cv=none; b=c5+e5DQxo4z5PKMkB8iU3ZOBYFr7Zxliim/pA2y7DbI34ZDdBU2GczlYvRfsYxk1z62JzvZdhQVmZGQeu+cV04hDErZBxUHQCR0NftdRj7dH1swteZM06yABNQdjtsokDMuEK66isaDYC6s+rhAaaycNhG/oapubyfnrUm7yMgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782386945; c=relaxed/simple;
-	bh=8y9XlZUAuI8NH7j1agX1tPhJRts5Om/MPtrpPoaJtiU=;
+	s=arc-20240116; t=1782386946; c=relaxed/simple;
+	bh=soQnFMGvbmItdJspxhnlC/+mXbDswaSYeoXIXlQqP8w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uQjA+p9PMXpFNAQecryODpL6cO36Eq7oExQgwVdkk3gtRbIrPZ80t87rAV5yGK1nRtL68/DLUt/jF6PQa+04QipwSVqCRmB61qR340O6etZZZT4M51TaggAQ/z5EuI/Cji065gfDyVij+zY3XEAzJiJ8t+g/DuPTri5l7SXS07k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ihswcFrf; arc=none smtp.client-ip=74.125.82.175
+	 MIME-Version:Content-Type; b=dTMuXSGw5d1Y77B26rHAIkbCky52Cj1NU4SZPkkFWj5b2JUVL6PAGpFyWMsca7eqEkyLYDy/tf8HoXBQghWx/NFtofHb4emigBYp3+pTk5TPxctqBQ1kt3R/ZxIwA7RG7un9sVrpn80Cmn0s2UPJ385yc3VledgVNvdvI+lPUgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KwDLxyrB; arc=none smtp.client-ip=74.125.82.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ihswcFrf"
-Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-30b6dad2382so3820999eec.0
-        for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 04:29:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwDLxyrB"
+Received: by mail-dy1-f179.google.com with SMTP id 5a478bee46e88-30bbe98c3f0so5161745eec.0
+        for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 04:29:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782386943; x=1782991743; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1782386944; x=1782991744; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rxcP66AgOs2IFf6onVo3lGQfXzZAlPR/1RJXrn4HKEw=;
-        b=ihswcFrfZEqaaWcWHbXP35kQ065+iS8ixwvCVmyFqpTTOCp1jhb+McWpY7SgB8puvN
-         uyc4n/XYi5ICiAWK5PMx5iRLgo/PDQBjipU4owV3HWE440hHuY8tQKpmy/nMjQcNKz9m
-         kuYFCPwl7hLdsezpYm3gNFfvOQHN0z/DD3FrtcAR++x+kLW9FJ/Do3CG2Oy/7Rlhq8Me
-         S51P1XLan+V7t2pSyQWwQ+JlAMxGx0iXGZkIK5NLfKh/aQ3pRsGhChNYB4QGfWaSu1uD
-         Sll+W6tqJ9fw8MmvkpMXSpeGVoVnfsIwr3O4ut50Cd/Ug2K3ey+PwgX1DVYzDe4e8PwJ
-         8yww==
+        bh=dAB2AFKTJqJsskQ8IKMyTeb3zPPHWQfTV+Ihw2RdXIE=;
+        b=KwDLxyrBm8Pt8WLdzaw9SDu9U1cmt8c3T0sOT/7YZWTlA2VPjUvFfW9QIy1xeD9eYt
+         T6Xfo1oT2RA+fZLNCxbBoj7DpjXPPfY+Y3QXuoIJbD9DnnR+H3A0tkw0AP4pHFo5BABX
+         kn1OtcTny6SVHXyernJzPccsDoqvlE+BZ6ztQr8ejNEAJbDcDPf6OPCdTcqc1T8fgMf3
+         7TE3iiIrr3WtNZVF1R2Z3P3A2kET/DNCypuqkPLz2C3w3WKZXjTckfXgcR4prR5Y2D4M
+         JoZQn5RdaEi3DcLMPn7MNFgziIuh/3fnGHYX8/QCiiXXbcYo4zGArqIAuUbcMEsJR8+p
+         g4eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782386943; x=1782991743;
+        d=1e100.net; s=20251104; t=1782386944; x=1782991744;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=rxcP66AgOs2IFf6onVo3lGQfXzZAlPR/1RJXrn4HKEw=;
-        b=cnNybe1cw6cTyiucDwOjdexNNmIPBo2AnOXeMpHKkHCrYafh0p58CsHfEjS3fgELH/
-         4WNV51x91n+mvH00UePajYiYSPH+Aelwv5us6XtT0ARSE0Ayc6CNrHFzM+9dDaIuICR3
-         sWC0b0NwYOlaLFTES+tKUC6Xv4WOdVqscEEQ2n6WY2E8y39pUCTG4QQkUKYmVowLStY6
-         Yk7bPsiMYh4ptWy1l+/5h98usmyxrz75VY3ImieADtixq+INofcu98Trrxj7Egl8pJRX
-         dFKfrEP+7YPi8KmZXpVlIMSSQZ4ryiHXjoS6/iEDLfllPh1/AE2DTpzlZD8fyPLXZGTI
-         NUQg==
-X-Gm-Message-State: AOJu0YwGz9ITidGwaoa6Klu5BnTi8ySlT065DL4w4ZZEZwthbBNSAT8B
-	0UTUYdPIT2acEuIUv8G+vPmB1WdGhP+dk2pJ1DFGi+Xd/VbipGoYlflBQQmxFA==
-X-Gm-Gg: AfdE7cm8ouWejQOmEQCCh3nSMyU57DLDB2yYFvm2Kd2M5MAzLgLb8hLpTVjOYfrlaG3
-	PI6asFMKZ7pyr9oIYtOhjHjzSgJ6fMWxVV5W0fvJExuV1YToiek/iocE259Dd1q0FM1MGtjjj/2
-	pNbc1L/cMpQgnWDk8pMy3cnZhj/fCFdUk8Xbzrq2KHWz06jsoQxymeR2ReZr1bpyTZuddUTRxhA
-	N5n7hS/KJySjmfv2RR/mEetxmOEHuHs3LTVTEvx2gLNTOaVRX7NdeE+8w5o2PxOz2gwCF8MQdQG
-	baZ6YtAHVHY+ICzpwKJltqSB4zZSqpJeiMfAdKI75samLyxMesjhGAR3gb0tcdU3QsYPYrhjQim
-	6yAXgc6Cej3k0NeQuruHVVROpyu1tM2zuKoqI37Ucocl36mKCOagWSeIyzBymdAYF5z+9CybcrL
-	ULFc+Tv/55s8l2ojeyvudDS3y9PGDNESvK7NVYSY7+w3qPTyj0T2XtsibPQBwaYK/gu2vg
-X-Received: by 2002:a05:7301:624c:b0:30b:e4a3:44d2 with SMTP id 5a478bee46e88-30c84b64c90mr2513452eec.8.1782386942512;
-        Thu, 25 Jun 2026 04:29:02 -0700 (PDT)
+        bh=dAB2AFKTJqJsskQ8IKMyTeb3zPPHWQfTV+Ihw2RdXIE=;
+        b=cuYS2pUGbUd+8Gv8GyKMiThcu2r84VpZF/SAd7fa+W3qJXScIPV3BOGzQDYOwRwQD1
+         ES/XrdE6HjRleJ1GbBIA2HcFy2Yvy9fqDDbeZk8xFhlqdU+WihshEAz3klgG/ZvO99Gc
+         yJ8yhU7N2YeOD0OYU+NqzgbsBBIJH7kHke/+mBoCRyuD0MhE4OlEfU8ricRUK6tncYNj
+         ftI/rY7/22H/n9i2vwhi8WNKIOmzaKOixJBl9Hw/XnVcX/J5TE75A+HtFc/xqKYGQZ/Z
+         FZthJ1+/TfmfcR0wmktPNOY+zGrletNsi52lokk1o3gVTw65kd8pqFg/cr6tZBhOockA
+         rTaA==
+X-Gm-Message-State: AOJu0YyOj1T+oa6MnQ1z7+Nip2goq8snbi/P2QzPCDRJFpZ6NuyG7BYW
+	i/N6PoDPoiJ26OfyfWyOmTdY/HXUKAzdsuG+Q8U35ccWOeVr0be2wWL0E+8qgQ==
+X-Gm-Gg: AfdE7cldIsJQE5j0I1k9DsqMB7+tQv/6+xH/moEoJ8LoUHc5QvXvUQbV0unAka35egT
+	3oHMlc+BxDKevckSi9Sd94lrqxV0UmAiREbARvbvPL899qb4B37CNIlEstVRy+KHx4BaoNTQ0KY
+	ElZOG/MrLBn/T8ptvJvPvES1Qq+JPYid7rut5CsPLojteU0tDT8KZ2MmJlkX5rA1fTHU5bpijFa
+	xW1SAoWCgeVYnTWvLdlSFPi3lrE+dHBZE4xGWQ8Ozqi/uWuj+kEwryyM4mwf84hRIwmxf4OGPsX
+	ZfU6l0vgs2p85bsQRk6LhsnIQVT3TZv00qCFTX9Db6LkFj+eVqsMYfLe9Ozi26UmLnuGtvuDaKh
+	ehPLteKTNJGSOooGxo7ugpYq2QryE6Fl8xYSjsVSOAtKcWH6MShrLLwjLzBhl/ZsIgjKWgSNPIa
+	9P7LNy80U2URcuzDBoXQJCo83eFcaUdzyaPF/2plaHblC7C4r3JcyBh7gtDa2zcCeEvWjf
+X-Received: by 2002:a05:7300:188b:b0:2d1:d434:cfe3 with SMTP id 5a478bee46e88-30c848b8eedmr3169777eec.0.1782386944144;
+        Thu, 25 Jun 2026 04:29:04 -0700 (PDT)
 Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c7cab08c2sm8744614eec.29.2026.06.25.04.29.01
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c7cab08c2sm8744614eec.29.2026.06.25.04.29.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2026 04:29:02 -0700 (PDT)
+        Thu, 25 Jun 2026 04:29:03 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
 To: linux-cxl@vger.kernel.org,
@@ -72,9 +72,9 @@ Cc: nvdimm@lists.linux.dev,
 	John Groves <John@Groves.net>,
 	Gregory Price <gourry@gourry.net>,
 	Anisa Su <anisa.su@samsung.com>
-Subject: [PATCH v11 23/31] dax/bus: Factor out dev dax resize logic
-Date: Thu, 25 Jun 2026 04:05:00 -0700
-Message-ID: <20260625112638.550691-24-anisa.su@samsung.com>
+Subject: [PATCH v11 24/31] dax/bus: Add uuid sysfs attribute to dax devices
+Date: Thu, 25 Jun 2026 04:05:01 -0700
+Message-ID: <20260625112638.550691-25-anisa.su@samsung.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260625112638.550691-1-anisa.su@samsung.com>
 References: <20260625112638.550691-1-anisa.su@samsung.com>
@@ -87,235 +87,85 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Ira Weiny <iweiny@kernel.org>
+Introduce a read-write 'uuid' sysfs entry at
+/sys/bus/dax/devices/daxX.Y/ with stubbed handlers: show returns the
+null uuid and store returns -EOPNOTSUPP.  A follow-on patch wires both
+directions to dax_resource tracking.
 
-Dynamic Capacity (DC) DAX regions back their dax devices with per-extent
-resource children of the region, rather than carving from a single
-contiguous dax_region->res.  Allocating space for a DC dax device — on
-initial uuid claim of its backing extents and on shrink-to-0 during
-destroy — needs the same allocator the static case uses, but pointed at
-a different parent resource.
+Document the attribute in the dax sysfs ABI.
 
-In preparation for this change, factor out the dev_dax_resize logic.
-For static regions use dax_region->res as the parent to find space for
-the dax ranges.  Future patches will use the same algorithm with
-individual extent resources as the parent.
-
-Signed-off-by: Ira Weiny <iweiny@kernel.org>
 Signed-off-by: Anisa Su <anisa.su@samsung.com>
-Reviewed-by: Jonathan Cameron <jic23@kernel.org>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 ---
 Changes:
-1. dev_dax_resize(): change resource_size_t alloc (unsigned) to signed
-   ssize_t to correctly capture -errno
+- uuid_show() emits the null uuid ("%pUb" of uuid_null) instead of "0".
+- ABI: describe the no-uuid read value as a null uuid instead of "0";
+  bump Date to June, 2026 and KernelVersion to v7.3.
 ---
- drivers/dax/bus.c | 133 +++++++++++++++++++++++++++++-----------------
- 1 file changed, 83 insertions(+), 50 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-dax | 18 ++++++++++++++++++
+ drivers/dax/bus.c                       | 14 ++++++++++++++
+ 2 files changed, 32 insertions(+)
 
+diff --git a/Documentation/ABI/testing/sysfs-bus-dax b/Documentation/ABI/testing/sysfs-bus-dax
+index b34266bfae49..3219c09dea01 100644
+--- a/Documentation/ABI/testing/sysfs-bus-dax
++++ b/Documentation/ABI/testing/sysfs-bus-dax
+@@ -59,6 +59,24 @@ Description:
+ 		backing device for this dax device, emit the CPU node
+ 		affinity for this device.
+ 
++What:		/sys/bus/dax/devices/daxX.Y/uuid
++Date:		June, 2026
++KernelVersion:	v7.3
++Contact:	nvdimm@lists.linux.dev
++Description:
++		(RW) On read, reports the uuid identifying the capacity
++		backing this dax device.  A null uuid (all-zeroes) indicates
++		that the device has no associated uuid — either it is not
++		backed by DCD capacity, or the backing extents are untagged.
++
++		Writes are accepted only on dax devices in sparse (DCD)
++		regions; writes to non-sparse devices return -EOPNOTSUPP.
++		Writing a non-null uuid claims every dax_resource in the
++		parent region whose tag matches the written uuid, consuming
++		any available capacity in each matching resource.  Writing
++		"0" is shorthand for the null uuid and claims a single
++		untagged dax_resource.
++
+ What:		/sys/bus/dax/devices/daxX.Y/target_node
+ Date:		February, 2019
+ KernelVersion:	v5.1
 diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index 95683dc8fcd0..ffa6b303fc9b 100644
+index ffa6b303fc9b..f61309a6f934 100644
 --- a/drivers/dax/bus.c
 +++ b/drivers/dax/bus.c
-@@ -1057,11 +1057,10 @@ static int devm_register_dax_mapping(struct dev_dax *dev_dax, int range_id)
- 	return 0;
+@@ -1573,6 +1573,19 @@ static ssize_t numa_node_show(struct device *dev,
  }
+ static DEVICE_ATTR_RO(numa_node);
  
--static int alloc_dev_dax_range(struct dev_dax *dev_dax, u64 start,
--		resource_size_t size, struct dax_resource *dax_resource)
-+static int alloc_dev_dax_range(struct resource *parent, struct dev_dax *dev_dax,
-+			       u64 start, resource_size_t size,
-+			       struct dax_resource *dax_resource)
- {
--	struct dax_region *dax_region = dev_dax->region;
--	struct resource *res = &dax_region->res;
- 	struct device *dev = &dev_dax->dev;
- 	struct dev_dax_range *ranges;
- 	unsigned long pgoff = 0;
-@@ -1079,14 +1078,14 @@ static int alloc_dev_dax_range(struct dev_dax *dev_dax, u64 start,
- 		return 0;
- 	}
- 
--	alloc = __request_region(res, start, size, dev_name(dev), 0);
-+	alloc = __request_region(parent, start, size, dev_name(dev), 0);
- 	if (!alloc)
- 		return -ENOMEM;
- 
- 	ranges = krealloc(dev_dax->ranges, sizeof(*ranges)
- 			* (dev_dax->nr_range + 1), GFP_KERNEL);
- 	if (!ranges) {
--		__release_region(res, alloc->start, resource_size(alloc));
-+		__release_region(parent, alloc->start, resource_size(alloc));
- 		return -ENOMEM;
- 	}
- 
-@@ -1240,50 +1239,45 @@ static bool adjust_ok(struct dev_dax *dev_dax, struct resource *res)
- 	return true;
- }
- 
--static ssize_t dev_dax_resize(struct dax_region *dax_region,
--		struct dev_dax *dev_dax, resource_size_t size)
-+/**
-+ * dev_dax_resize_static - Expand the device into the unused portion of the
-+ * region. This may involve adjusting the end of an existing resource, or
-+ * allocating a new resource.
-+ *
-+ * @parent: parent resource to allocate this range in
-+ * @dev_dax: DAX device to be expanded
-+ * @to_alloc: amount of space to alloc; must be <= space available in @parent
-+ *
-+ * Return the amount of space allocated or -ERRNO on failure
-+ */
-+static ssize_t dev_dax_resize_static(struct resource *parent,
-+				     struct dev_dax *dev_dax,
-+				     resource_size_t to_alloc)
- {
--	resource_size_t avail = dax_region_avail_size(dax_region), to_alloc;
--	resource_size_t dev_size = dev_dax_size(dev_dax);
--	struct resource *region_res = &dax_region->res;
--	struct device *dev = &dev_dax->dev;
- 	struct resource *res, *first;
--	resource_size_t alloc = 0;
- 	int rc;
- 
--	if (dev->driver)
--		return -EBUSY;
--	if (size == dev_size)
--		return 0;
--	if (size > dev_size && size - dev_size > avail)
--		return -ENOSPC;
--	if (size < dev_size)
--		return dev_dax_shrink(dev_dax, size);
--
--	to_alloc = size - dev_size;
--	if (dev_WARN_ONCE(dev, !alloc_is_aligned(dev_dax, to_alloc),
--			"resize of %pa misaligned\n", &to_alloc))
--		return -ENXIO;
--
--	/*
--	 * Expand the device into the unused portion of the region. This
--	 * may involve adjusting the end of an existing resource, or
--	 * allocating a new resource.
--	 */
--retry:
--	first = region_res->child;
--	if (!first)
--		return alloc_dev_dax_range(dev_dax, dax_region->res.start, to_alloc, NULL);
-+	first = parent->child;
-+	if (!first) {
-+		rc = alloc_dev_dax_range(parent, dev_dax,
-+					   parent->start, to_alloc, NULL);
-+		if (rc)
-+			return rc;
-+		return to_alloc;
-+	}
- 
--	rc = -ENOSPC;
- 	for (res = first; res; res = res->sibling) {
- 		struct resource *next = res->sibling;
-+		resource_size_t alloc;
- 
- 		/* space at the beginning of the region */
--		if (res == first && res->start > dax_region->res.start) {
--			alloc = min(res->start - dax_region->res.start, to_alloc);
--			rc = alloc_dev_dax_range(dev_dax, dax_region->res.start, alloc, NULL);
--			break;
-+		if (res == first && res->start > parent->start) {
-+			alloc = min(res->start - parent->start, to_alloc);
-+			rc = alloc_dev_dax_range(parent, dev_dax,
-+						 parent->start, alloc, NULL);
-+			if (rc)
-+				return rc;
-+			return alloc;
- 		}
- 
- 		alloc = 0;
-@@ -1292,21 +1286,58 @@ static ssize_t dev_dax_resize(struct dax_region *dax_region,
- 			alloc = min(next->start - (res->end + 1), to_alloc);
- 
- 		/* space at the end of the region */
--		if (!alloc && !next && res->end < region_res->end)
--			alloc = min(region_res->end - res->end, to_alloc);
-+		if (!alloc && !next && res->end < parent->end)
-+			alloc = min(parent->end - res->end, to_alloc);
- 
- 		if (!alloc)
- 			continue;
- 
- 		if (adjust_ok(dev_dax, res)) {
- 			rc = adjust_dev_dax_range(dev_dax, res, resource_size(res) + alloc);
--			break;
-+			if (rc)
-+				return rc;
-+			return alloc;
- 		}
--		rc = alloc_dev_dax_range(dev_dax, res->end + 1, alloc, NULL);
--		break;
-+		rc = alloc_dev_dax_range(parent, dev_dax, res->end + 1, alloc, NULL);
-+		if (rc)
-+			return rc;
-+		return alloc;
- 	}
--	if (rc)
--		return rc;
-+
-+	/* available was already calculated and should never be an issue */
-+	dev_WARN_ONCE(&dev_dax->dev, 1, "space not found?");
-+	return 0;
++static ssize_t uuid_show(struct device *dev,
++		struct device_attribute *attr, char *buf)
++{
++	return sysfs_emit(buf, "%pUb\n", &uuid_null);
 +}
 +
-+static ssize_t dev_dax_resize(struct dax_region *dax_region,
-+		struct dev_dax *dev_dax, resource_size_t size)
++static ssize_t uuid_store(struct device *dev, struct device_attribute *attr,
++			  const char *buf, size_t len)
 +{
-+	resource_size_t avail = dax_region_avail_size(dax_region);
-+	resource_size_t dev_size = dev_dax_size(dev_dax);
-+	struct device *dev = &dev_dax->dev;
-+	resource_size_t to_alloc;
-+	ssize_t alloc;
++	return -EOPNOTSUPP;
++}
++static DEVICE_ATTR_RW(uuid);
 +
-+	if (dev->driver)
-+		return -EBUSY;
-+	if (size == dev_size)
-+		return 0;
-+	if (size > dev_size && size - dev_size > avail)
-+		return -ENOSPC;
-+	if (size < dev_size)
-+		return dev_dax_shrink(dev_dax, size);
-+
-+	to_alloc = size - dev_size;
-+	if (dev_WARN_ONCE(dev, !alloc_is_aligned(dev_dax, to_alloc),
-+			"resize of %pa misaligned\n", &to_alloc))
-+		return -ENXIO;
-+
-+retry:
-+	alloc = dev_dax_resize_static(&dax_region->res, dev_dax, to_alloc);
-+	if (alloc < 0)
-+		return alloc;
-+	if (alloc == 0)
-+		return -ENOSPC;
- 	to_alloc -= alloc;
- 	if (to_alloc)
- 		goto retry;
-@@ -1412,7 +1443,8 @@ static ssize_t mapping_store(struct device *dev, struct device_attribute *attr,
- 
- 	to_alloc = range_len(&r);
- 	if (alloc_is_aligned(dev_dax, to_alloc))
--		rc = alloc_dev_dax_range(dev_dax, r.start, to_alloc, NULL);
-+		rc = alloc_dev_dax_range(&dax_region->res, dev_dax, r.start,
-+					 to_alloc, NULL);
- 	up_write(&dax_dev_rwsem);
- 	up_write(&dax_region_rwsem);
- 
-@@ -1700,7 +1732,8 @@ static struct dev_dax *__devm_create_dev_dax(struct dev_dax_data *data)
- 	device_initialize(dev);
- 	dev_set_name(dev, "dax%d.%d", dax_region->id, dev_dax->id);
- 
--	rc = alloc_dev_dax_range(dev_dax, dax_region->res.start, data->size, NULL);
-+	rc = alloc_dev_dax_range(&dax_region->res, dev_dax, dax_region->res.start,
-+				 data->size, NULL);
- 	if (rc)
- 		goto err_range;
+ static ssize_t memmap_on_memory_show(struct device *dev,
+ 				     struct device_attribute *attr, char *buf)
+ {
+@@ -1644,6 +1657,7 @@ static struct attribute *dev_dax_attributes[] = {
+ 	&dev_attr_resource.attr,
+ 	&dev_attr_numa_node.attr,
+ 	&dev_attr_memmap_on_memory.attr,
++	&dev_attr_uuid.attr,
+ 	NULL,
+ };
  
 -- 
 2.43.0
