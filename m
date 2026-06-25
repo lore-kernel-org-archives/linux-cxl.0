@@ -1,62 +1,62 @@
-Received: from mail-dy1-f172.google.com (mail-dy1-f172.google.com [74.125.82.172])
+Received: from mail-dy1-f181.google.com (mail-dy1-f181.google.com [74.125.82.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3CAA3DA5A9
-	for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 11:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FB63D9DD1
+	for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 11:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782386903; cv=none; b=ucrVaKBxrgTUVlHB2EXP8uFTUZrDbaoKTxiG9MJui7d+cTOyRDq89MZt2lOPj76KmAXRJz0wFzK0Z81o60ancUblJLplaFzqQA104gndl3y0BHI863X6JhQCuAa6r0u2b5h+OSSIBY/u18xEAmWizKXDAzii64Z7SmsFr00cumI=
+	t=1782386907; cv=none; b=TrCjDK1t4py5/HnnbMgRDv+StpJw9mXbZ0TOX1ZeHZFgJZFkwnxkeZ0fPwzxfEf3YiLFnsLA9UxBnKGkwD00FrceW1/Y6Tf77jPY9oJ+BMvStNvjjrucR5bYMXMF4fG9GagbxL03cXG3W9TnwmEwBGP3XQD5oaIDMksKPNVzXtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782386903; c=relaxed/simple;
-	bh=tjT37CKHkQzk1mZPeRLdWqaOh00Z0Ysvk+ibtkF4IIY=;
+	s=arc-20240116; t=1782386907; c=relaxed/simple;
+	bh=b/Rqlb7CRq2lHk7bPAK4VQjGp6d+BXhYLUx1wMMJHzM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lBWShRoOf1MzfXRYXZk9VYR238zSzSaZiVo0FewwFRAuzGADmbcN6L+75FPMC8I9d6FNdPWLzYBFAF9qM59mCCQT7TLlzDUHrlvzhFbRPujqi2JyVmNZpinLTs6q5P3U4MAy9z8BHSje+GP0MVpAb6TQ+1A1dgrOsaqpRWrewgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UihrRrv1; arc=none smtp.client-ip=74.125.82.172
+	 MIME-Version; b=CAp4E8YU/gkLBqbzz3DgXBMq1dEImFSU/K6ayE4ponISdsxRCJS+YTogSH4mp4MEBHF9i2vCQBQ9tdbDIA4O0lYCPrdZvCEMInUDi99qkn+4wZ0KS/arqc41VOPXgHIQ7CpitFkyWmSM9TJ8K6hU08gXM3aWWOzuIv1Zh40GVII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MNQ+Xf3Q; arc=none smtp.client-ip=74.125.82.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UihrRrv1"
-Received: by mail-dy1-f172.google.com with SMTP id 5a478bee46e88-30bf8b2bd20so4518585eec.0
-        for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 04:28:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MNQ+Xf3Q"
+Received: by mail-dy1-f181.google.com with SMTP id 5a478bee46e88-30c52f96f60so4046238eec.1
+        for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 04:28:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782386897; x=1782991697; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1782386905; x=1782991705; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0cctbDn0bKJrpipt/Q5Krps24ZDBvBskpS5doONeHyE=;
-        b=UihrRrv1OR8oPuTgbI+zT0Pi7bBeykRHzTitwslXcml2wIqBkW9yiBUmOc6KvcRdeZ
-         jXuiw+TYospJ7mXXLNgdzXB6SLKaov4QKrHiVPULpKRbLYIhGLJtHVJLmTAY4+vyzlMk
-         3kduTul9xYdVikWGDcUxI0fy2x2aKdi9f2WsdpGiVTTEgVmZNVy5rNMtRqeZnY+f902y
-         5aHPuWdo5DeMzuRJM1+27VSwF0+6ZmzF9oKjUirRfI6l5snKNGJisy2xBqCm5dSdRmS4
-         0dcbEdsQ7IKfF5T3Gktf5yfPectN/kFr6YnrxkxKqjINUQ4hcbVmcDXMgrE3rBZnS5i+
-         cCVw==
+        bh=2jKp/0nhQptqz/M2+wfNC1AREQXAADTJq6niusW0KQg=;
+        b=MNQ+Xf3Qj5HPerI8p2tggBCrYMbdBkVs8BcRSR6kx9qza4LlbmpTqn1O5PAlki+YMP
+         DUf5SaXsYJ7xFZSH7PAO3yQr+z8kx5tTN72zSgW8vOZ1Jd847kHyCjcWHYlDuw+vGNas
+         8l6+gxW+WCvZ+lCfa9MDNV3kgYiR7/G16XLkE6SzZ/8tx0kRZV4hgc1uKmeLEYPPw0lQ
+         YAqHXwdskFLHW0ZCpXsIGza5YWbmUgH0+Nu6RS9a/zaAY/MyZNUa6OU4fNtlMB8oTBtw
+         GLvguP+jboVlMImmXFVwm0FMC1l26Wi6rcrG6ndHko9oppye7B8B3g/+SsL2rDCCAOKB
+         m7xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782386897; x=1782991697;
+        d=1e100.net; s=20251104; t=1782386905; x=1782991705;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=0cctbDn0bKJrpipt/Q5Krps24ZDBvBskpS5doONeHyE=;
-        b=NL1iW/3vGd3Vp7uVhzzq+U557KCANQ6IJeCMcYSHRH6EJOHS3tbTauH253pqAOV7/A
-         Sg5FByr8R5hIjJ/W7G2AyHtjVm27K1mCc4HK823GQzSPXuBPejhH5Ss5nivr8jDA1Myc
-         Sfk90ySxWJgz1E5Sj6DOganJ023S6z9wq9xGHMRZwxQJjOp12gxo/fs4ovX5dB+FRgp7
-         AL5SQv5NJj2mCPHGXNhSi7h3+dAQRt5ymVc83PkBXxWHQRvVMaUiMtN6GdWKkwXsBsuh
-         MFsCEsQeYdKfAfyKJBuWYSvs7ZiGiCNS08wx3P+nKxwRhXITBIWkxFT+KQdJQG9lintT
-         4eOw==
-X-Gm-Message-State: AOJu0YymAB14er+Y1wZ3VD38cOm5QL3jmN+Ax+N9T4drcnc1RcV4sPtA
-	4znutsYS4KcCirAVksxgGFihmIKM1A0ORFeM2osOjHjYf8CIIl+/4Y5T8eNXgA==
-X-Gm-Gg: AfdE7clzhQX6F5s1S4LnmBMj3C1wKF4LdD38TZiBKY/oQnP7rcRBpRf5VALqFGilNNc
-	SP/29S7wOzOiTzN666rDRVN93YFBCrSwwVYYyh9htkoVvVdP48lwdVOz80tgzutI3xgMUpHmiKu
-	AUpYnmd4E6ZNuqiWu1PLvl93qiCEcj4CnK5L8fTcVMHWLppwWfSpc2PIJVns7LR15yqQht8gDjD
-	3XsIZpAsFnN/1NA7EGcRe8RYxo56gLa76J8DHqvv+6/zF3kKNZx9e0NnIJvQG7h+am8Pz7WMxyg
-	mJeqeDCV3lvMEuWgOa6BFXgWE49TSeT0VU4Wi52ib6IsS55BNQnYmuWDPPPNFJLCCOR+z12ihgY
-	hgF0Nf1Ic+Xs0BiaAMpaQ6DLWx5tC83PH5ySHQeNcqBTx88n9OdzfvSfnnq3tJlAo/ohhC7ZweB
-	ToiU4kSNdL5ZU95b7bASH/g0Vo6sof4sIfaazQbZu0fL3DstaE6TK+W6YYVV/kAt75PjmZ
-X-Received: by 2002:a05:7300:1912:b0:30c:5456:d9cf with SMTP id 5a478bee46e88-30c84b50b42mr2655990eec.1.1782386896628;
-        Thu, 25 Jun 2026 04:28:16 -0700 (PDT)
+        bh=2jKp/0nhQptqz/M2+wfNC1AREQXAADTJq6niusW0KQg=;
+        b=jbvEVhuphGFgzMaGo7NuW7EuatA4k1PNMr9tleK2k0CM/IEbiW+cjxAnCLP5v/kFsJ
+         oImqGbLlZkJVLC9Fz6oMksIkxM6+ZIlb4vV5STYFmLcYmRXUs7CWP320wuW16BViaEYr
+         REKkNKxFyzWeCwFgYGbSYz2AnHeW2Xec8VomtntbF5CoKalvVjoSldFwQgDl/LOIHEIu
+         +ldd1DVAX/NPmRFAwDt3bcCJhX1/BBVmnAWGBWMGoHNicb41MV5ZE5IlO/4u+UyfpSHa
+         5BMy/yAHJp99M8h6MC3+C8Z6p50G2N4OOmylWxv7WOIueDM5Apuozin8BBJT73VDvoIf
+         SAYQ==
+X-Gm-Message-State: AOJu0YxYSJQ7bHTW87Cu/DejF5N+6GN4cvrs/WClVLYAm0DVtRcYamOE
+	PgjZuj4swUqIqu7sNOAzgp7PQrSdzBo0sTfSA3Gg5xnUJdcPBnmEQljTds4T0w==
+X-Gm-Gg: AfdE7clBkJDndbfBH7fUmH2WQ1zzRy5lJgk35H/vqQB3aBMImMC0dKqoLdmeaHNjxc2
+	aG8UAhbt01ARy0rqmejSDNdZGbCX0Bg1BQFl0sVKZ96HHzWktvz3KWbKMHigW1Xo+9p4DHlpMRH
+	zWPZUitX2Wh0sH2BUJBUbiBot0eP+1K9TlXDfPBH7ZD/MJeddExi/SXTgY+OumrlSjG+l/icEUA
+	W9mc2eNFbMCc/zhZfAkyRtfTVGJzJ41cAx3Xm0GP71kHeL+EI172CipfQ+DgStK3LrnECAFZ1Y1
+	fqfOVBirrpx2Ogf6Mm6oL9TByW5jsg09UizMOUtcRctti3yDhFV/NZPabBhbnv81tbeUNA7FngE
+	wrBxhsyj5rhroDVVpBkIO3HADs/AllpRXKTcNETmLTD4L84admqv94lEfwKFqVhf3qxhYEcUlPO
+	Tu1DyQxlOZ9XJFoBDdQEx58wL7W1dtuz3ExZwMghwVFYo48tFXLTyXD5oXSbSVfQdcjcbZ
+X-Received: by 2002:a05:7300:8184:b0:2ed:e16:6b4a with SMTP id 5a478bee46e88-30c84df4aadmr2221250eec.32.1782386904999;
+        Thu, 25 Jun 2026 04:28:24 -0700 (PDT)
 Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c7cab08c2sm8744614eec.29.2026.06.25.04.28.15
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c7cab08c2sm8744614eec.29.2026.06.25.04.28.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2026 04:28:16 -0700 (PDT)
+        Thu, 25 Jun 2026 04:28:24 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
 To: linux-cxl@vger.kernel.org,
@@ -71,10 +71,12 @@ Cc: nvdimm@lists.linux.dev,
 	Alison Schofield <alison.schofield@intel.com>,
 	John Groves <John@Groves.net>,
 	Gregory Price <gourry@gourry.net>,
-	Anisa Su <anisa.su@samsung.com>
-Subject: [PATCH v11 07/31] cxl/region: Add DC DAX region support
-Date: Thu, 25 Jun 2026 04:04:44 -0700
-Message-ID: <20260625112638.550691-8-anisa.su@samsung.com>
+	Anisa Su <anisa.su@samsung.com>,
+	Fan Ni <nifan.cxl@gmail.com>,
+	Li Ming <ming.li@zohomail.com>
+Subject: [PATCH v11 09/31] cxl/pci: Factor out interrupt policy check
+Date: Thu, 25 Jun 2026 04:04:46 -0700
+Message-ID: <20260625112638.550691-10-anisa.su@samsung.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260625112638.550691-1-anisa.su@samsung.com>
 References: <20260625112638.550691-1-anisa.su@samsung.com>
@@ -88,347 +90,67 @@ Content-Transfer-Encoding: 8bit
 
 From: Ira Weiny <iweiny@kernel.org>
 
-DC DAX regions must allow memory to be added or removed dynamically.
-In addition to the quantity of memory available the,
-location of the memory within a DC partition is dynamic, based on the
-extents offered by a device.  CXL DAX regions must accommodate the
-dynamic movement of this memory in the management of DAX regions and devices.
+Dynamic Capacity Devices (DCD) require event interrupts to process
+memory addition or removal.  BIOS may have control over non-DCD event
+processing.  DCD interrupt configuration needs to be separate from
+memory event interrupt configuration.
 
-Introduce the concept of a dynamic DAX region. Introduce
-create_dynamic_ram_1_region() sysfs entry to create such regions.
-Special case DC-capable regions to create a 0 sized seed DAX device
-to maintain compatibility which requires a default DAX device to hold a
-region reference.
+Factor out event interrupt setting validation.
 
-Indicate 0 byte available capacity until such time that capacity is
-added.
-
-Dynamic regions complicate the range mapping of dax devices.  There is no
-known use case for range mapping on dynamic regions.  Avoid the
-complication by preventing range mapping of dax devices on dynamic
-regions.
-
-Interleaving is deferred for now.  Add checks.
-
-Based on an original patch by Navneet Singh.
-
+Link: https://lore.kernel.org/all/663922b475e50_d54d72945b@dwillia2-xfh.jf.intel.com.notmuch/ [1]
+Suggested-by: Dan Williams <djbw@kernel.org>
 Signed-off-by: Ira Weiny <iweiny@kernel.org>
 Signed-off-by: Anisa Su <anisa.su@samsung.com>
-
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Jonathan Cameron <jic23@kernel.org>
+Reviewed-by: Fan Ni <nifan.cxl@gmail.com>
+Reviewed-by: Li Ming <ming.li@zohomail.com>
 ---
-Changes:
-1. Documentation: bump kver to 7.3 and date to June 2026
-2. port.c: use helper function to_cxl_memdev_state() in cxled_to_mds()
-3. region.c: cxled_to_mds() can return NULL with ^ above change.
-   Handle properly in store_targetN()
-4. port.c: check if the root decoder supports ram regions before
-   exposing create_dynamic_ram_1_region attribute in
-   cxl_root_decoder_visible()
-5. Rename dynamic_ram_a to dynamic_ram_1
-6. Add dynamic_ram_1 to mode_show()
----
- Documentation/ABI/testing/sysfs-bus-cxl | 22 ++++++-------
- drivers/cxl/core/core.h                 |  9 ++++++
- drivers/cxl/core/port.c                 |  5 +++
- drivers/cxl/core/region.c               | 43 +++++++++++++++++++++++--
- drivers/cxl/core/region_dax.c           |  6 ++++
- drivers/dax/bus.c                       | 10 ++++++
- drivers/dax/bus.h                       |  1 +
- drivers/dax/cxl.c                       | 17 ++++++++--
- 8 files changed, 98 insertions(+), 15 deletions(-)
+ drivers/cxl/pci.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 499741cbb899..00b98bbe0ff3 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -434,20 +434,20 @@ Description:
- 		interleave_granularity).
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 35942b2ace53..8d12c684d670 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -639,6 +639,21 @@ static bool cxl_event_int_is_fw(u8 setting)
+ 	return mode == CXL_INT_FW;
+ }
  
- 
--What:		/sys/bus/cxl/devices/decoderX.Y/create_{pmem,ram}_region
--Date:		May, 2022, January, 2023
--KernelVersion:	v6.0 (pmem), v6.3 (ram)
-+What:		/sys/bus/cxl/devices/decoderX.Y/create_{pmem,ram,dynamic_ram_1}_region
-+Date:		May, 2022, January, 2023, June 2026
-+KernelVersion:	v6.0 (pmem), v6.3 (ram), v7.3 (dynamic_ram_1)
- Contact:	linux-cxl@vger.kernel.org
- Description:
- 		(RW) Write a string in the form 'regionZ' to start the process
--		of defining a new persistent, or volatile memory region
--		(interleave-set) within the decode range bounded by root decoder
--		'decoderX.Y'. The value written must match the current value
--		returned from reading this attribute. An atomic compare exchange
--		operation is done on write to assign the requested id to a
--		region and allocate the region-id for the next creation attempt.
--		EBUSY is returned if the region name written does not match the
--		current cached value.
-+		of defining a new persistent, volatile, or dynamic RAM memory
-+		region (interleave-set) within the decode range bounded by root
-+		decoder 'decoderX.Y'. The value written must match the current
-+		value returned from reading this attribute.  An atomic compare
-+		exchange operation is done on write to assign the requested id
-+		to a region and allocate the region-id for the next creation
-+		attempt.  EBUSY is returned if the region name written does not
-+		match the current cached value.
- 
- 
- What:		/sys/bus/cxl/devices/decoderX.Y/delete_region
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 82ca3a476708..9ed141fa1334 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -6,6 +6,7 @@
- 
- #include <cxl/mailbox.h>
- #include <linux/rwsem.h>
-+#include <cxlmem.h>
- 
- extern const struct device_type cxl_nvdimm_bridge_type;
- extern const struct device_type cxl_nvdimm_type;
-@@ -18,6 +19,13 @@ enum cxl_detach_mode {
- 	DETACH_INVALIDATE,
- };
- 
-+static inline struct cxl_memdev_state *
-+cxled_to_mds(struct cxl_endpoint_decoder *cxled)
++static bool cxl_event_validate_mem_policy(struct cxl_memdev_state *mds,
++					  struct cxl_event_interrupt_policy *policy)
 +{
-+	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
-+	return to_cxl_memdev_state(cxlmd->cxlds);
-+}
-+
- #ifdef CONFIG_CXL_REGION
- 
- struct cxl_region_context {
-@@ -29,6 +37,7 @@ struct cxl_region_context {
- 
- extern struct device_attribute dev_attr_create_pmem_region;
- extern struct device_attribute dev_attr_create_ram_region;
-+extern struct device_attribute dev_attr_create_dynamic_ram_1_region;
- extern struct device_attribute dev_attr_delete_region;
- extern struct device_attribute dev_attr_region;
- extern const struct device_type cxl_pmem_region_type;
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 57d0fc72023f..279279f544d8 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -337,6 +337,7 @@ static struct attribute *cxl_decoder_root_attrs[] = {
- 	&dev_attr_qos_class.attr,
- 	SET_CXL_REGION_ATTR(create_pmem_region)
- 	SET_CXL_REGION_ATTR(create_ram_region)
-+	SET_CXL_REGION_ATTR(create_dynamic_ram_1_region)
- 	SET_CXL_REGION_ATTR(delete_region)
- 	NULL,
- };
-@@ -366,6 +367,10 @@ static umode_t cxl_root_decoder_visible(struct kobject *kobj, struct attribute *
- 	if (a == CXL_REGION_ATTR(create_ram_region) && !can_create_ram(cxlrd))
- 		return 0;
- 
-+	if (a == CXL_REGION_ATTR(create_dynamic_ram_1_region) &&
-+	    !can_create_ram(cxlrd))
-+		return 0;
-+
- 	if (a == CXL_REGION_ATTR(delete_region) &&
- 	    !(can_create_pmem(cxlrd) || can_create_ram(cxlrd)))
- 		return 0;
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index e50dc716d4e8..ba03ec5e27c3 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -493,6 +493,11 @@ static int set_interleave_ways(struct cxl_region *cxlr, int val)
- 	int save, rc;
- 	u8 iw;
- 
-+	if (cxlr->mode == CXL_PARTMODE_DYNAMIC_RAM_1 && val != 1) {
-+		dev_err(&cxlr->dev, "Interleaving and DCD not supported\n");
-+		return -EINVAL;
++	if (cxl_event_int_is_fw(policy->info_settings) ||
++	    cxl_event_int_is_fw(policy->warn_settings) ||
++	    cxl_event_int_is_fw(policy->failure_settings) ||
++	    cxl_event_int_is_fw(policy->fatal_settings)) {
++		dev_err(mds->cxlds.dev,
++			"FW still in control of Event Logs despite _OSC settings\n");
++		return false;
 +	}
 +
- 	rc = ways_to_eiw(val, &iw);
++	return true;
++}
++
+ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+ 			    struct cxl_memdev_state *mds, bool irq_avail)
+ {
+@@ -661,14 +676,8 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
  	if (rc)
  		return rc;
-@@ -642,6 +647,8 @@ static ssize_t mode_show(struct device *dev, struct device_attribute *attr,
- 		desc = "ram";
- 	else if (cxlr->mode == CXL_PARTMODE_PMEM)
- 		desc = "pmem";
-+	else if (cxlr->mode == CXL_PARTMODE_DYNAMIC_RAM_1)
-+		desc = "dynamic_ram_1";
- 	else
- 		desc = "";
  
-@@ -2389,6 +2396,8 @@ static size_t store_targetN(struct cxl_region *cxlr, const char *buf, int pos,
- 	if (sysfs_streq(buf, "\n"))
- 		rc = detach_target(cxlr, pos);
- 	else {
-+		struct cxl_endpoint_decoder *cxled;
-+		struct cxl_memdev_state *mds;
- 		struct device *dev;
+-	if (cxl_event_int_is_fw(policy.info_settings) ||
+-	    cxl_event_int_is_fw(policy.warn_settings) ||
+-	    cxl_event_int_is_fw(policy.failure_settings) ||
+-	    cxl_event_int_is_fw(policy.fatal_settings)) {
+-		dev_err(mds->cxlds.dev,
+-			"FW still in control of Event Logs despite _OSC settings\n");
++	if (!cxl_event_validate_mem_policy(mds, &policy))
+ 		return -EBUSY;
+-	}
  
- 		dev = bus_find_device_by_name(&cxl_bus_type, NULL, buf);
-@@ -2400,8 +2409,21 @@ static size_t store_targetN(struct cxl_region *cxlr, const char *buf, int pos,
- 			goto out;
- 		}
- 
--		rc = attach_target(cxlr, to_cxl_endpoint_decoder(dev), pos,
--				   TASK_INTERRUPTIBLE);
-+		cxled = to_cxl_endpoint_decoder(dev);
-+		if (cxlr->mode == CXL_PARTMODE_DYNAMIC_RAM_1) {
-+			mds = cxled_to_mds(cxled);
-+			if (!mds) {
-+				dev_dbg(dev, "No memdev state\n");
-+				rc = -ENODEV;
-+				goto out;
-+			}
-+			if (!cxl_dcd_supported(mds)) {
-+				dev_dbg(dev, "DCD unsupported\n");
-+				rc = -EINVAL;
-+				goto out;
-+			}
-+		}
-+		rc = attach_target(cxlr, cxled, pos, TASK_INTERRUPTIBLE);
- out:
- 		put_device(dev);
- 	}
-@@ -2750,6 +2772,7 @@ static struct cxl_region *__create_region(struct cxl_root_decoder *cxlrd,
- 	switch (mode) {
- 	case CXL_PARTMODE_RAM:
- 	case CXL_PARTMODE_PMEM:
-+	case CXL_PARTMODE_DYNAMIC_RAM_1:
- 		break;
- 	default:
- 		dev_err(&cxlrd->cxlsd.cxld.dev, "unsupported mode %d\n", mode);
-@@ -2802,6 +2825,21 @@ static ssize_t create_ram_region_store(struct device *dev,
- }
- DEVICE_ATTR_RW(create_ram_region);
- 
-+static ssize_t create_dynamic_ram_1_region_show(struct device *dev,
-+						struct device_attribute *attr,
-+						char *buf)
-+{
-+	return __create_region_show(to_cxl_root_decoder(dev), buf);
-+}
-+
-+static ssize_t create_dynamic_ram_1_region_store(struct device *dev,
-+						 struct device_attribute *attr,
-+						 const char *buf, size_t len)
-+{
-+	return create_region_store(dev, buf, len, CXL_PARTMODE_DYNAMIC_RAM_1);
-+}
-+DEVICE_ATTR_RW(create_dynamic_ram_1_region);
-+
- static ssize_t region_show(struct device *dev, struct device_attribute *attr,
- 			   char *buf)
- {
-@@ -4083,6 +4121,7 @@ static int cxl_region_probe(struct device *dev)
- 
- 		return devm_cxl_add_pmem_region(cxlr);
- 	case CXL_PARTMODE_RAM:
-+	case CXL_PARTMODE_DYNAMIC_RAM_1:
- 		rc = devm_cxl_region_edac_register(cxlr);
- 		if (rc)
- 			dev_dbg(&cxlr->dev, "CXL EDAC registration for region_id=%d failed\n",
-diff --git a/drivers/cxl/core/region_dax.c b/drivers/cxl/core/region_dax.c
-index de04f78f6ad8..3865961c4301 100644
---- a/drivers/cxl/core/region_dax.c
-+++ b/drivers/cxl/core/region_dax.c
-@@ -84,6 +84,12 @@ int devm_cxl_add_dax_region(struct cxl_region *cxlr)
- 	struct device *dev;
- 	int rc;
- 
-+	if (cxlr->mode == CXL_PARTMODE_DYNAMIC_RAM_1 &&
-+	    cxlr->params.interleave_ways != 1) {
-+		dev_err(&cxlr->dev, "Interleaving DC not supported\n");
-+		return -EINVAL;
-+	}
-+
- 	struct cxl_dax_region *cxlr_dax __free(put_cxl_dax_region) =
- 		cxl_dax_region_alloc(cxlr);
- 	if (IS_ERR(cxlr_dax))
-diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-index ccfe65004888..7356aaaffe57 100644
---- a/drivers/dax/bus.c
-+++ b/drivers/dax/bus.c
-@@ -177,6 +177,11 @@ static bool is_static(struct dax_region *dax_region)
- 	return (dax_region->res.flags & IORESOURCE_DAX_STATIC) != 0;
- }
- 
-+static bool is_dynamic(struct dax_region *dax_region)
-+{
-+	return (dax_region->res.flags & IORESOURCE_DAX_DCD) != 0;
-+}
-+
- bool static_dev_dax(struct dev_dax *dev_dax)
- {
- 	return is_static(dev_dax->region);
-@@ -300,6 +305,9 @@ static unsigned long long dax_region_avail_size(struct dax_region *dax_region)
- 
- 	lockdep_assert_held(&dax_region_rwsem);
- 
-+	if (is_dynamic(dax_region))
-+		return 0;
-+
- 	for_each_dax_region_resource(dax_region, res)
- 		size -= resource_size(res);
- 	return size;
-@@ -1385,6 +1393,8 @@ static umode_t dev_dax_visible(struct kobject *kobj, struct attribute *a, int n)
- 		return 0;
- 	if (a == &dev_attr_mapping.attr && is_static(dax_region))
- 		return 0;
-+	if (a == &dev_attr_mapping.attr && is_dynamic(dax_region))
-+		return 0;
- 	if ((a == &dev_attr_align.attr ||
- 	     a == &dev_attr_size.attr) && is_static(dax_region))
- 		return 0444;
-diff --git a/drivers/dax/bus.h b/drivers/dax/bus.h
-index 5909171a4428..6e739bfab932 100644
---- a/drivers/dax/bus.h
-+++ b/drivers/dax/bus.h
-@@ -15,6 +15,7 @@ struct dax_region;
- /* dax bus specific ioresource flags */
- #define IORESOURCE_DAX_STATIC BIT(0)
- #define IORESOURCE_DAX_KMEM BIT(1)
-+#define IORESOURCE_DAX_DCD BIT(2)
- 
- struct dax_region *alloc_dax_region(struct device *parent, int region_id,
- 		struct range *range, int target_node, unsigned int align,
-diff --git a/drivers/dax/cxl.c b/drivers/dax/cxl.c
-index 3ab39b77843d..cedd974c2d0c 100644
---- a/drivers/dax/cxl.c
-+++ b/drivers/dax/cxl.c
-@@ -13,19 +13,32 @@ static int cxl_dax_region_probe(struct device *dev)
- 	struct cxl_region *cxlr = cxlr_dax->cxlr;
- 	struct dax_region *dax_region;
- 	struct dev_dax_data data;
-+	resource_size_t dev_size;
-+	unsigned long flags;
- 
- 	if (nid == NUMA_NO_NODE)
- 		nid = memory_add_physaddr_to_nid(cxlr_dax->hpa_range.start);
- 
-+	if (cxlr->mode == CXL_PARTMODE_DYNAMIC_RAM_1)
-+		flags = IORESOURCE_DAX_DCD;
-+	else
-+		flags = IORESOURCE_DAX_KMEM;
-+
- 	dax_region = alloc_dax_region(dev, cxlr->id, &cxlr_dax->hpa_range, nid,
--				      PMD_SIZE, IORESOURCE_DAX_KMEM);
-+				      PMD_SIZE, flags);
- 	if (!dax_region)
- 		return -ENOMEM;
- 
-+	if (cxlr->mode == CXL_PARTMODE_DYNAMIC_RAM_1)
-+		/* Add empty seed dax device */
-+		dev_size = 0;
-+	else
-+		dev_size = range_len(&cxlr_dax->hpa_range);
-+
- 	data = (struct dev_dax_data) {
- 		.dax_region = dax_region,
- 		.id = -1,
--		.size = range_len(&cxlr_dax->hpa_range),
-+		.size = dev_size,
- 		.memmap_on_memory = true,
- 	};
- 
+ 	rc = cxl_event_config_msgnums(mds, &policy);
+ 	if (rc)
 -- 
 2.43.0
 
