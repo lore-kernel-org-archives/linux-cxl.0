@@ -1,206 +1,287 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011019.outbound.protection.outlook.com [52.101.62.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1183EC2F6;
-	Thu, 25 Jun 2026 16:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782406604; cv=fail; b=jLoxGndYy7XHDjhUZXf7+LJbcd8JuWfmWFml5SQR7p66w6Nq4/maa8YtRoCpsZshf0ifC9EtjEXYmpuPQFv5Ulyrqr/sgSxW7kMNmgziNHGCbhAKEY1/xsmEk++c+Dx7Q0EYqi/Kv3S9F5Z0gflqaqoGUFAQinYxA0X0MDZF1O0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782406604; c=relaxed/simple;
-	bh=3/fkxY9UrCu5Fjr/pSIsPH1ttUJ1QtOpAAC7tmRPc04=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mqN4zEoIhCioCalSzf+sGw5QirDXjJ6sIupv5yqp8eqGj04dF51PYkyWVIghW7cjpVu1utu8RUThv+AWS4Yp6+wqnx/hQznl8e5eWGSo6EsLRaludZOmiiUnqy4ciI0km+kFrCncpLcJOm8V5CTmMcqAwNbGDJQMhi2C2R6gPww=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=QUiPtG2e; arc=fail smtp.client-ip=52.101.62.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF0EDF59
+	for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 18:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782410440; cv=none; b=RSIORl5DTwn1lfEOF1n4WFURoe4YKlt3W+HU92Bz1/u9XIp3C68YVUK56XcdX7ZDPVvDaO6CxS4Lt4bjyNdLl9/Nm+vjZUF8Vnu0OvHmzttLK1mWWFzYLd5BY7Zp969PwfiKUbYNpfShbG+NK3kMOCbXalR5pfqz+t1V3Ndb1fg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782410440; c=relaxed/simple;
+	bh=pXskB7V/BiUpPqw9qe3Kk5Vjo3SgTVD5AFV76qhpkLA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gn3IXsyqFoXTAMJoK4aVImN5hLBvw0wSqpikvHMgVSOfdWXYjof9xhOLPWBVmPk3zevDIs9R4bHbR/kFc1hRREZYka1fsoq3SOsIkT3aRj5NuY+EeyK9piC0baZvvXHIoAFsLhmy1uzp4mNR+LKS6O+RfRoFMa4TFY1dxFlycwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OBE9Bhr6; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="QUiPtG2e"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vRMc92bhI7KbsTGM4MSb/SbMk/xb/tecNKAeJDJoJftj5Hbncnq4DIfnVc0jjiDCmChg3r7ZLPXudwX3N/94nPcQ9jyD9aRRoEqNrTWp9TYIjYdJ5MEk/PHq4ng5LEzyVwDTuyZxZ3+FoTK2ib22fA7Qwln0qTDMWPUPEgr0AeqE0JyqsI20LzZK9mrpJnKQ+VTpMT7KxzWDyDBmRtEDhWOf8CtOHdHJ7eeIcZ+z5z1/AXS9LY0YKisu6spaz0SJ436ovaHbJsdgi4ZstV7mFhkgKu2BmsUmZfKayGIjfhLy8W0SaQBqmWCYgp7QaEFaNt1hDvHsRTNf0e1bksDNmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=14lhtxV58ZOG8RVlPCjyTYJmvBT8SJ3Zs8SLNuR3zO4=;
- b=OYfFmFUbv92r/FJQohECIZzh9KCP00MWnyxm9xIjZZ9TU/IQX0tT4ygPFDTP4G19xbDMM9BT2z0STkl8rk9vpN5FKYKbseUYTBhJgb2pUrrlul4DL+PF+KbV5uDknoeTAOmZM7jJapzvh5utTrqnlEceazDL31dPu+XiFk0iUyzehVraPiByg3PxSUykeBCQfs9EsZJRHwEN8yLnWU+2TGbdD5zTSYEzxsfKhLO0C3kqXNfn5sD5JsHWlaKe2QyhpCAcdYbTeSTzJDykGJ8xjoedmYWDCjtCsqMuvMV35QUC2n7X2g4y4LlXR1eoTMCUC6ry5+r1B+g8j2Mq1O5eTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=14lhtxV58ZOG8RVlPCjyTYJmvBT8SJ3Zs8SLNuR3zO4=;
- b=QUiPtG2eNMGd0aO0Bv3kLxkh4G3/6rtMrUV2Nhxb9qTuwo3wPgBXr5O/kxdx85ZIgLJ7J4BlBRQS3o07uCCMRUeIAnOujaMUsftL5y6vVSEqPXqvLbjyoFlV9lef2cY5ltTvzso+wSIKyYMYWwXe61hqmr8AWr8o8C156G8gMRyqYec8Nt5cIbygr3ztsj9u/dM/vV/J6I5YQRxOqDCn2j8N0soAKXDFeSPCA8QhmFoftLEeoJt2PkTm2aQMFMhQ1qpug3FTth5RSbrIviZ+bFynl2Se/9RPSM16ws3Y3/0BjZatEYS5wVq0JwdBPrpM1Yn4dKpUPF5ladZ0xYG1ZQ==
-Received: from BLAPR03CA0052.namprd03.prod.outlook.com (2603:10b6:208:32d::27)
- by SA0PR12MB4384.namprd12.prod.outlook.com (2603:10b6:806:9f::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.17; Thu, 25 Jun
- 2026 16:56:39 +0000
-Received: from BN3PEPF0000B078.namprd04.prod.outlook.com
- (2603:10b6:208:32d:cafe::10) by BLAPR03CA0052.outlook.office365.com
- (2603:10b6:208:32d::27) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.159.13 via Frontend Transport; Thu,
- 25 Jun 2026 16:56:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN3PEPF0000B078.mail.protection.outlook.com (10.167.243.123) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.181.6 via Frontend Transport; Thu, 25 Jun 2026 16:56:38 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 25 Jun
- 2026 09:56:10 -0700
-Received: from nvidia-4028GR-scsim.nvidia.com (10.126.230.37) by
- rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.20; Thu, 25 Jun 2026 09:56:02 -0700
-From: <mhonap@nvidia.com>
-To: <djbw@kernel.org>, <alex@shazbot.org>, <jgg@ziepe.ca>, <jic23@kernel.org>,
-	<dave.jiang@intel.com>, <ankita@nvidia.com>,
-	<alejandro.lucero-palau@amd.com>, <alison.schofield@intel.com>,
-	<dave@stgolabs.net>, <dmatlack@google.com>, <gourry@gourry.net>,
-	<ira.weiny@intel.com>
-CC: <cjia@nvidia.com>, <kjaju@nvidia.com>, <vsethi@nvidia.com>,
-	<zhiw@nvidia.com>, <mhonap@nvidia.com>, <kvm@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-Subject: [PATCH v3 11/11] vfio/pci: Provide opt-out for CXL Type-2 extensions
-Date: Thu, 25 Jun 2026 22:24:07 +0530
-Message-ID: <20260625165407.1769572-12-mhonap@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260625165407.1769572-1-mhonap@nvidia.com>
-References: <20260625165407.1769572-1-mhonap@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OBE9Bhr6"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-7fd8446a1cdso2197637b3.1
+        for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 11:00:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782410437; x=1783015237; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WfaXLqKxjt5Wx4fK3p1hZTD/ltdo7YYhn5wzBTFnlbE=;
+        b=OBE9Bhr6eODbyGoSUWNvn6Q49BU7BwqNm33Cm1QQSkIq/N15Ex0kC/MRHjqbm0uCYS
+         lNMPr4BmXBkriyddzlBWVrqCI14mAsOUhjWNmPcL1O2XJLtsXR6GPmz5zmiuwQYcFfZ3
+         VaSq1bRKUq3GZqaaNdnbM/V5TG7alCxl06n/aKk5k7cWil3kP309drzRwu9fy3oCpM3w
+         uXArUwhVDHLHgD8QOg1mYtcJN/LNcqSzw57eZNtfAcq8SlXNOr3Xcxuf0yLvJBNMaUKj
+         QLFclIQuJQB0IYtKbNmCi1vpML2LyxaXOVAcSpwyPiYQKmPbSvdpShO9nbiSlMvakZyo
+         nsfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782410437; x=1783015237;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=WfaXLqKxjt5Wx4fK3p1hZTD/ltdo7YYhn5wzBTFnlbE=;
+        b=GrA8cs5+2Ssyl0Cj1NWbnAkkeLshT3zZ5nquwAkp35W3VQDcGeXALWja+aFEaq3xB/
+         sQOwS0qUYtmb27P1ZgBC4YqbhsAF3jH14QwMHtIsJJYJ7+5S33dIdiaHwARPE4jQtle4
+         JMvsOW6zBJrRAWI8dDRAx8yyhU9yeIesOONUOtZIIHLnC+SD9tf6gErYUFtZEHKARuZB
+         n4ycLdseEbTNLaLY2i5c5KZeExSLvDNGqXRBegnFY2qQe3o+W7Lkp0LaXR5EsFx1Ew5Q
+         z7rIJUTYcWTzJzbtdB9dwjHOjinwsFMDEdV8P1F52cJNXAauZHiQx3PIcYKbxzncuhob
+         OZfg==
+X-Gm-Message-State: AOJu0YyHVoPNvOYGmQ7p9kFOeon9oXm0vkKh2BbMydbAjLqTRdV6dgjq
+	ieh+HKFJD0fyE5LzxbEcOXgOH5q2KbtVgB/gKZy/eWOFevDxC44nJTT9W2CmgQ==
+X-Gm-Gg: AfdE7cm2iQMek9J0hietNHaxVilpSdy0EugUbqFHgppDD1lqkvoqLXSx8HgJ5DmRJfO
+	1/cQnmfRIvrRwQKU8/+2ZK11lVCAiFiB1QVYgN95F2njaor0tN0/dBAp5aO0hjZi+gXFhGJfyyg
+	8dozkLrlXHxcZvNpnKQaMW8McxiDEvG1GDC3WQcilix3TXTgz9OajkjYJcunL9wb99GcmSkAwQy
+	i+DfwrHRhQN9Nw5tdT6dEqaSCixESf3WrExr2MqUdbrJHne7GvC+8V85mjuTwNJtYtit+1GIN8I
+	LI9wvxdYOb44Qws8ao6RyoC8jP+hL6UyRS16L35TGPzmUFnkdJFWRKrhC/JhnM4uvsY8ggJIOf4
+	f7P8+nyJxSLIJ91Sl5Yd6SJITJvnk1vmH9cewCcK5E/f1jUACMJA2ZpuEJ5HEHoDBE1SLeuYaJL
+	s4NgakGd7SV7iE9pizY7H6Fe8tPZTCoz0=
+X-Received: by 2002:a05:690c:604:b0:7dc:f7b3:8e08 with SMTP id 00721157ae682-80a6af938c8mr39725327b3.23.1782410436320;
+        Thu, 25 Jun 2026 11:00:36 -0700 (PDT)
+Received: from 4470NRD-ASU.ssi.samsung.com ([50.205.20.42])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-80259d20d84sm74353767b3.0.2026.06.25.11.00.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jun 2026 11:00:36 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+To: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: nvdimm@lists.linux.dev,
+	djbw@kernel.org,
+	jic23@kernel.org,
+	dave@stgolabs.net,
+	dave.jiang@intel.com,
+	vishal.l.verma@intel.com,
+	iweiny@kernel.org,
+	alison.schofield@intel.com,
+	gourry@gourry.net,
+	anisa.su@samsung.com
+Subject: [PATCH v11 03/31] cxl/cdat: Gather DSMAS data for DCD partitions
+Date: Thu, 25 Jun 2026 11:00:12 -0700
+Message-ID: <20260625180028.965-1-anisa.su@samsung.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260625112638.550691-1-anisa.su@samsung.com>
+References: <20260625112638.550691-1-anisa.su@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN3PEPF0000B078:EE_|SA0PR12MB4384:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5d9ca088-2353-4a7a-cde2-08ded2dab955
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|82310400026|1800799024|36860700016|7416014|376014|3122999024|22082099003|18002099003|11063799006|56012099006|921020;
-X-Microsoft-Antispam-Message-Info:
-	+HVNrroEXGNp+/LLUkC2RFDc0nFYwpOJkjGnrNEFL8NaP+8b1oN/BPjez1L8OU/aCCDET0DU0MMv07RJaZy/MH7OzoNn111VbT4mSNfoEV/l6eeJtiRbt2YD2aCu+VVtdDHg9p9qnGAqb1AWeBqSdTNks3VEIW+/J2dzdaRzZBNRqW3BvX07OpJtCXDDjKA9iE/rQ9J7ajQCdum03V8NseDgXWcFbB2nOqvuAOat8f/BtLSOtj3LHOYPdnidHkg8UnUXvpGII2Fjh6sdZ2B8mBsWDmuv7F3qBeIy8+BQ8hykuhu+mifOghPe5O1XywXNN+F+p1UsPHOhkvmq74RznLdBOFIfkRu03l53S4hsyUYQNY8Ty6ljrxjiwsqvdj57YhlrodRRUIbjXNawGZiyteRdsu2sehuGzxi/LhmeU8hIuAFaivqZDsaS9zlyFSzFNqabPNx3fE9kfQ0eN9R8b0Lx1+vEKpUii0w/BRGcdC914ob3Fa3l/lVTm9IqiJHCS730EALwhNEe53P2qLJEkNK53gvIJc/j51UjrOYSZu9K4CGM8h2dYXb6gey4K13sW6UZYEpVd/IXTjBB/5KU5MeCKaKo7lne6p3Attg3tPbty3JmgGFVb9lQsXvAudQ4Ti5JQLAetbGun/6bCSoQfkwDF2IEWDbtr3sAkH3HG645RhyOJAcmaF7qB43Xu/eTq2VP+W693O/f7UiwMJapbKsCdGX7ay+Stu7lZekrJM2oYudgPDyOBikdDuepREM5
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(23010399003)(82310400026)(1800799024)(36860700016)(7416014)(376014)(3122999024)(22082099003)(18002099003)(11063799006)(56012099006)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	5XnCEvrXuLp/0CHy8T5ExK5+SLkntbloq8W8Y8gGIl3NXyAF7FVKcTkCMPeeyr5IJC3CSYTjnI9BMAal571Xkn19f/RAL/qDZ13UaIgnJF5w3x3S9bQefuhKxL63jmuIo9uMmVdBucopsbyY80cc6+97p682O4rceA9j5BoBj/TTv0xWSQGpMVut1pidfUz0GvDq76sJ4v6HdhZ9zh0Dsk91CNdqRty4vLLrQqOl3CvGxXa4QqEz4266ZgBaeYGdStv81/cX1BHDySBPaQ7BqDT9beG0i8rY9PGpEKY9rEvZkkDHIN07CF35pL6xEei1IALbA8fCxswe1vr7lSOxaeFkP/0+QrooBMa/HH9vAPuf98NXmpBRkJr4hZRnVmAdgk903u01zfL6oqeMiAg+daurQmzRguuhsOOb+3GnUY9HyGzz/ukTPUs5v9eVSDZI
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2026 16:56:38.1386
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d9ca088-2353-4a7a-cde2-08ded2dab955
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN3PEPF0000B078.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4384
 
-From: Manish Honap <mhonap@nvidia.com>
+From: Ira Weiny <iweiny@kernel.org>
 
-Add an opt-out so users can keep vfio-pci's CXL extensions out of the
-path for individual devices or for an entire vfio-pci instance.  The
-build-time gate is CONFIG_VFIO_PCI_CXL; the runtime gates are:
+Additional DCD partition (AKA region) information is contained in the
+DSMAS CDAT tables, including performance, read only, and shareable
+attributes.
 
-  - Module parameter vfio_pci.disable_cxl (bool, 0444).  Setting
-    disable_cxl=1 at modprobe time makes vfio_pci_probe() set
-    vdev->disable_cxl on every device it binds.
+Match DCD partitions with DSMAS tables and store the meta data.
 
-  - Variant drivers (mlx5, pds, hisi, nvgrace, xe, etc.) may set
-    vdev->disable_cxl=true in their own probe for per-device control
-    without needing the module parameter.  The bit lives on
-    struct vfio_pci_core_device so it's reachable from any variant.
-
-vfio_pci_cxl_acquire() consults vdev->disable_cxl as the very first
-check and returns -ENODEV when set, which makes vfio-pci-core treat
-the device as a plain (non-CXL) PCI passthrough — no CAP_CXL, no HDM
-or COMP_REGS VFIO regions, no DVSEC clipping shim.
-
-This mirrors the long-standing disable_denylist opt-out shape.
-
-Signed-off-by: Manish Honap <mhonap@nvidia.com>
+Signed-off-by: Ira Weiny <iweiny@kernel.org>
+Signed-off-by: Anisa Su <anisa.su@samsung.com>
 ---
- drivers/vfio/pci/cxl/vfio_cxl_core.c | 9 +++++++++
- drivers/vfio/pci/vfio_pci.c          | 9 +++++++++
- include/linux/vfio_pci_core.h        | 1 +
- 3 files changed, 19 insertions(+)
+ drivers/cxl/core/cdat.c | 12 ++++++++++++
+ drivers/cxl/core/hdm.c  |  1 +
+ drivers/cxl/core/mbox.c | 22 ++++++++++++++++------
+ drivers/cxl/cxlmem.h    |  2 ++
+ include/cxl/cxl.h       |  4 ++++
+ 5 files changed, 35 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-index 8a00b776d7c7..905f74f4e725 100644
---- a/drivers/vfio/pci/cxl/vfio_cxl_core.c
-+++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-@@ -234,6 +234,15 @@ int vfio_pci_cxl_acquire(struct vfio_pci_core_device *vdev)
- 	u16 dvsec;
- 	int rc;
+diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+index 5c9f07262513..a280039e4cd1 100644
+--- a/drivers/cxl/core/cdat.c
++++ b/drivers/cxl/core/cdat.c
+@@ -17,6 +17,7 @@ struct dsmas_entry {
+ 	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
+ 	int entries;
+ 	int qos_class;
++	bool shareable;
+ };
  
-+	/*
-+	 * Honour the per-device opt-out (set by vfio-pci's module
-+	 * parameter disable_cxl, or by a variant driver before
-+	 * registration).  Returning -ENODEV here makes the caller
-+	 * treat this device as plain vfio-pci.
-+	 */
-+	if (vdev->disable_cxl)
-+		return -ENODEV;
-+
- 	if (!pcie_is_cxl(pdev))
- 		return -ENODEV;
+ static u32 cdat_normalize(u16 entry, u64 base, u8 type)
+@@ -74,6 +75,7 @@ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
+ 		return -ENOMEM;
  
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 0c771064c0b8..fd226cb65d8b 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -60,6 +60,12 @@ static bool disable_denylist;
- module_param(disable_denylist, bool, 0444);
- MODULE_PARM_DESC(disable_denylist, "Disable use of device denylist. Disabling the denylist allows binding to devices with known errata that may lead to exploitable stability or security issues when accessed by untrusted users.");
+ 	dent->handle = dsmas->dsmad_handle;
++	dent->shareable = dsmas->flags & ACPI_CDAT_DSMAS_SHAREABLE;
+ 	dent->dpa_range.start = le64_to_cpu((__force __le64)dsmas->dpa_base_address);
+ 	dent->dpa_range.end = le64_to_cpu((__force __le64)dsmas->dpa_base_address) +
+ 			      le64_to_cpu((__force __le64)dsmas->dpa_length) - 1;
+@@ -266,15 +268,25 @@ static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
+ 		bool found = false;
  
-+#if IS_ENABLED(CONFIG_VFIO_PCI_CXL)
-+static bool disable_cxl;
-+module_param(disable_cxl, bool, 0444);
-+MODULE_PARM_DESC(disable_cxl, "Disable CXL Type-2 extensions for all devices bound to vfio-pci. Variant drivers may instead set vdev->disable_cxl in their probe for per-device control without needing this parameter.");
-+#endif
-+
- static bool vfio_pci_dev_in_denylist(struct pci_dev *pdev)
+ 		for (int i = 0; i < cxlds->nr_partitions; i++) {
++			enum cxl_partition_mode mode = cxlds->part[i].mode;
+ 			struct resource *res = &cxlds->part[i].res;
++			u8 handle = cxlds->part[i].handle;
+ 			struct range range = {
+ 				.start = res->start,
+ 				.end = res->end,
+ 			};
+ 
+ 			if (range_contains(&range, &dent->dpa_range)) {
++				if (mode == CXL_PARTMODE_DYNAMIC_RAM_1 &&
++				    dent->handle != handle) {
++					dev_warn(dev,
++						"Dynamic RAM perf mismatch; %pra (%u) vs %pra (%u)\n",
++						&range, handle, &dent->dpa_range, dent->handle);
++					continue;
++				}
+ 				update_perf_entry(dev, dent,
+ 						  &cxlds->part[i].perf);
++				cxlds->part[i].shareable = dent->shareable;
+ 				found = true;
+ 				break;
+ 			}
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 0ef076c08ed2..7f63b86887f4 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -477,6 +477,7 @@ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
+ 
+ 		cxlds->part[i].perf.qos_class = CXL_QOS_CLASS_INVALID;
+ 		cxlds->part[i].mode = part->mode;
++		cxlds->part[i].handle = part->handle;
+ 
+ 		/* Require ordered + contiguous partitions */
+ 		if (i) {
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 2932bbd67e55..bdb908c6e7f3 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -1352,10 +1352,16 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part_a
  {
- 	switch (pdev->vendor) {
-@@ -166,6 +172,9 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 		return PTR_ERR(vdev);
+ 	u64 blk_size = le64_to_cpu(dev_part->block_size);
+ 	u64 len = le64_to_cpu(dev_part->length);
++	u32 handle = le32_to_cpu(dev_part->dsmad_handle);
  
- 	dev_set_drvdata(&pdev->dev, vdev);
-+#if IS_ENABLED(CONFIG_VFIO_PCI_CXL)
-+	vdev->disable_cxl = disable_cxl;
-+#endif
- 	vdev->pci_ops = &vfio_pci_dev_ops;
- 	ret = vfio_pci_core_register_device(vdev);
- 	if (ret)
-diff --git a/include/linux/vfio_pci_core.h b/include/linux/vfio_pci_core.h
-index 541c1911e090..20e9599b3bd7 100644
---- a/include/linux/vfio_pci_core.h
-+++ b/include/linux/vfio_pci_core.h
-@@ -127,6 +127,7 @@ struct vfio_pci_core_device {
- 	bool			needs_pm_restore:1;
- 	bool			pm_intx_masked:1;
- 	bool			pm_runtime_engaged:1;
-+	bool			disable_cxl:1;
- 	struct pci_saved_state	*pci_saved_state;
- 	struct pci_saved_state	*pm_save;
- 	int			ioeventfds_nr;
+ 	part_array[index].start = le64_to_cpu(dev_part->base);
+ 	part_array[index].size = le64_to_cpu(dev_part->decode_length);
+ 	part_array[index].size *= CXL_CAPACITY_MULTIPLIER;
++	if (handle & ~0xFF) {
++		dev_warn(dev, "DSMAD handle 0x%x has non-zero reserved bits\n", handle);
++		return -EINVAL;
++	}
++	part_array[index].handle = handle;
+ 
+ 	/* Check partitions are in increasing DPA order */
+ 	if (index > 0) {
+@@ -1522,6 +1528,7 @@ int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+ 	/* Return 1st partition */
+ 	dc_info->start = partitions[0].start;
+ 	dc_info->size = partitions[0].size;
++	dc_info->handle = partitions[0].handle;
+ 	dev_dbg(dev, "Returning partition 0 %llu size %llu\n",
+ 		dc_info->start, dc_info->size);
+ 
+@@ -1529,7 +1536,8 @@ int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_dev_dc_identify, "CXL");
+ 
+-static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
++static void add_part(struct cxl_dpa_info *info, u64 start, u64 size,
++		     enum cxl_partition_mode mode, u8 handle)
+ {
+ 	int i = info->nr_partitions;
+ 
+@@ -1541,6 +1549,7 @@ static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_pa
+ 		.end = start + size - 1,
+ 	};
+ 	info->part[i].mode = mode;
++	info->part[i].handle = handle;
+ 	info->nr_partitions++;
+ }
+ 
+@@ -1558,9 +1567,9 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+ 	info->size = mds->total_bytes;
+ 
+ 	if (mds->partition_align_bytes == 0) {
+-		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM);
++		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM, 0);
+ 		add_part(info, mds->volatile_only_bytes,
+-			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM);
++			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM, 0);
+ 		return 0;
+ 	}
+ 
+@@ -1570,9 +1579,9 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+ 		return rc;
+ 	}
+ 
+-	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM);
++	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM, 0);
+ 	add_part(info, mds->active_volatile_bytes, mds->active_persistent_bytes,
+-		 CXL_PARTMODE_PMEM);
++		 CXL_PARTMODE_PMEM, 0);
+ 
+ 	return 0;
+ }
+@@ -1624,7 +1633,8 @@ void cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+ 	info->size += dc_info.size;
+ 	dev_dbg(dev, "Adding dynamic ram partition 1; %llu size %llu\n",
+ 		dc_info.start, dc_info.size);
+-	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_1);
++	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_1,
++		 dc_info.handle);
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_configure_dcd, "CXL");
+ 
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 6b548a1ec1e9..b29fb16725b4 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -118,6 +118,7 @@ struct cxl_dpa_info {
+ 	struct cxl_dpa_part_info {
+ 		struct range range;
+ 		enum cxl_partition_mode mode;
++		u8 handle;
+ 	} part[CXL_NR_PARTITIONS_MAX];
+ 	int nr_partitions;
+ };
+@@ -823,6 +824,7 @@ int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+ struct cxl_dc_partition_info {
+ 	u64 start;
+ 	u64 size;
++	u8 handle;
+ };
+ 
+ int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+index e8a0899960d4..502d8333318b 100644
+--- a/include/cxl/cxl.h
++++ b/include/cxl/cxl.h
+@@ -141,11 +141,15 @@ enum cxl_partition_mode {
+  * @res: shortcut to the partition in the DPA resource tree (cxlds->dpa_res)
+  * @perf: performance attributes of the partition from CDAT
+  * @mode: operation mode for the DPA capacity, e.g. ram, pmem, dynamic...
++ * @handle: DSMAS handle intended to represent this partition
++ * @shareable: Is the partition sharable (from its CDAT DSMAS entry)
+  */
+ struct cxl_dpa_partition {
+ 	struct resource res;
+ 	struct cxl_dpa_perf perf;
+ 	enum cxl_partition_mode mode;
++	u8 handle;
++	bool shareable;
+ };
+ 
+ #define CXL_NR_PARTITIONS_MAX 3
 -- 
-2.25.1
+2.43.0
 
