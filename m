@@ -1,63 +1,63 @@
-Received: from mail-dl1-f42.google.com (mail-dl1-f42.google.com [74.125.82.42])
+Received: from mail-dy1-f178.google.com (mail-dy1-f178.google.com [74.125.82.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA6F3DEFF1
-	for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 12:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE903D9DC1
+	for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 12:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782389595; cv=none; b=bPbgYAdmVu/3FyjfCw31FR2Gnm4G8xF2bvffr27sSSRnx+BvkszRrSDKvN+zbZl7SDguUbxipRuJLQYyLO7ESqMLUo8d6eAeU3m2ptjP2F8XCxBXz+CQr+fHU7WDBHxBsN031UUOS72HGbvnCsGzhIRb7DgsUYnh6X90NMQ4hvw=
+	t=1782389598; cv=none; b=YGTiwT++4aNq/hvOU0ys20iDxZ0R/XILLffsDkUaMHiJaR6wY52sGbzP63uY3+mKaq9aiNnFeNy4a8LZJ0nM0WyQ5a/TZbxJ/E0Gkp+8NBWEbHmoJMOuoCWSUD1RwPDXK4nAtZNvIUW1BFVL0y0u6WLK76pKT50kCM1tFIg2Sh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782389595; c=relaxed/simple;
-	bh=2D6xc9SycrC04lloJjB6w/v/AZZZvN9W5SslKmmceFo=;
+	s=arc-20240116; t=1782389598; c=relaxed/simple;
+	bh=xJ/ICNkWheqKSMaG5TDZjQwBthEvf+tjk2YxwbB3SGc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nC5EVisDHk2MIfGbCbm6ji18Rh4bKg3VLzaxrxA4hVVpOPY9UTm+NrkpvqHiclGGY7LmnLoZVuQQXq1v8iSxrpdYrvvYDwhSBeCQzylEtO7I4VhNF8qVScghceQb5LV84l5OAmDbNMvq1v8WkeqYlvj8eSW5+hIV8d/uH7DH4wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e6NF9kBG; arc=none smtp.client-ip=74.125.82.42
+	 MIME-Version; b=RVLzHyA+89ugr367iwH0oT7GvVoHexbcACsjFr+luel1cuCg7G2K2X8AD94XYuVzwAFCgZ7kFduAHPYPclGvVxUWXDN6IcEfdu3nUqvX8jS01LIabD4TW0oEXPDbTaeFVAfhzH8nCLSQED7Ov6axTZlzo/4WBk390LVyWhKX2bM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=qUIjSdpo; arc=none smtp.client-ip=74.125.82.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6NF9kBG"
-Received: by mail-dl1-f42.google.com with SMTP id a92af1059eb24-1397e093f90so6206298c88.1
-        for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 05:13:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qUIjSdpo"
+Received: by mail-dy1-f178.google.com with SMTP id 5a478bee46e88-30c713f37c2so776440eec.0
+        for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 05:13:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782389592; x=1782994392; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1782389595; x=1782994395; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XWUBgEux9E0/I6IOMEuEJOaOIVVa2o9RZjpWSR82UuY=;
-        b=e6NF9kBGuJpcHb/pWZWnQXubNeY5vTWUL1XWAuFVwg6BhNGJsbHc9wPrhVZ31CYMGc
-         U/5UpFZ97CTd2LHTRHFXa2fHXJ8gv1hGm9rM2tb9oMrg5uTKqoF3BwmHRNIPFqSitpm4
-         Pk8qMaQvjy277Op3O2lQ4ZfmCqHqdC+Zms99gCv529LAGTQxs1wejjvUrhK46H5TNXpK
-         AtHn08unXajDyT0VvKNiUGQB4g8KVNqkJuuakC6QRAshVl/NB/SyfornjbGooEFAfKib
-         o+rFdaW9KKld+9sz3nrWmcspULdJcDRJZLaMX5yZRvvJ7Zi1LrVEkOBlh0L6eexFinAH
-         IZgQ==
+        bh=G18zehfJH2C51qiLFUBVCY46IetjGTIchA+W2VJTLjM=;
+        b=qUIjSdpob75k6Af5AXRACsPY6XYT+WFcQIKY/3JkceAjtlFNn45Pr6x/lSiByNpvJy
+         66nFKv2ghxPexRpK9Mf2JcyHpKowFyrl08y3U4FmPgPYgV6Ah9eH0dDj44Kh/4QQOHiU
+         Kl04pYX/X+dvoP8D2rUXg9bKuotHWJJ5HguoLZG4jz06Y7sUxnkYlSUcYK9atvQlRtce
+         d4haeV19Rwtp/eAERLCHCtNyuPojQSWh7YY9D/j+19Hpt193Te6SiAtTKfOdm4JkMSCU
+         f2DH9nOQ8WXD6q4vYpv8Fo5nS7pf7ZqqBte4XCTNhEC3TKXFNqwwDxlJKUB4s5XfZ6nV
+         l7JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782389592; x=1782994392;
+        d=1e100.net; s=20251104; t=1782389595; x=1782994395;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=XWUBgEux9E0/I6IOMEuEJOaOIVVa2o9RZjpWSR82UuY=;
-        b=P8JhJzjFNRwuS77rT87bupnOInlqsVVTiBmnrI+ErJ0U6vY06y96ZP5nDH6+z+cvX6
-         ijNPOkbqti8K6LZGJ7cWX96EbA/uCGY372qRvGNoLN5qPHXYiGPltKaWZbw2jy4UigqR
-         LCPIb0Vcze+L0BJQ128W9UMsNIfxu7mdAk9Ktl2roBHopp+/k8Tb2m2icqtm1HgPWItW
-         mm+KqkhocgNtCxRDCfrjgfC8BMFANDBwrgy80EVRh7RKvTk4AhwCOG5KHsU0QLZeUM3+
-         0yD2J/7is9k6EAqom/VNuBXTgp2fL8HbP+GZ5kj7FFw06h2+gnOBZ2UOhGL71dVvucag
-         TkEg==
-X-Gm-Message-State: AOJu0YzJFv2vCT0JYyN3RcL9zmIkrDO6959DSbsDF38C6pOm1QtlppTI
-	BuG4JPPejdFH9em1jRdktdJw/Si96/teQWURHl04dUe/2V3ep6qdWQJoyVQ6Jw==
-X-Gm-Gg: AfdE7cni+FMUADFJ/q//piN/FTbr7GotE5SX3u7i4T4ccqgPsOQ+GJL3yCXtKjeLLOf
-	ByJ/69L+Jskg8lwUbYorn/tl/eoyVqW8pOlvZQGCoUUHxjKp2ouXMXgoNEQavRgOFdaT+ScOs5K
-	0DBxI/Wp+L0Os+aCRrZKTRXV9JPUVDoTim2oXgselDfP077CpKq8Lw7rFlSiy81mfMV3nlNNmce
-	Heq+dKXIWc1xHsv0AxDGV9PqdwZ/42kTy8AhzsAA8zAY4cZ8Uc/aj8pG+PTFcc0AJEeM8FIAqxT
-	q0yEmRwqD+BxHjUPdd9BY3GT+nKgjVGSuhf5KOZh0SF7tYO1GdU+GJdWdipauHhrK+LWbxbhzA1
-	5zH/futktNqw1CUK/er4eyTxYfIQZW3QttzZG1wQZjjhRn1HiJSE1Nf/iW5bGopGoFOrkZ5fWLi
-	5N4DkPhSHtiohydcXx8ZVCYGmtMc1quIlNUa/nu0wu7Y49fCJU6ah48U/tGgz7BttZNleLzzVpm
-	fCMzDo=
-X-Received: by 2002:a05:7022:2591:b0:134:feba:3fd with SMTP id a92af1059eb24-139dbb05756mr2505123c88.37.1782389592207;
-        Thu, 25 Jun 2026 05:13:12 -0700 (PDT)
+        bh=G18zehfJH2C51qiLFUBVCY46IetjGTIchA+W2VJTLjM=;
+        b=cgbjZsTfEK2RPW7ozeTsbBHCqjjGue2qR2p8x7d24Qvta10IDXeCgR6qkPXdwJN8KC
+         bW01WLQEw6yVLnsHD0Z40UvZ1jOy+NOqEIsT2NeeX0WkIvJ9mQI6W/pxjf3s5Hv04yHR
+         fYw2TQh65GV7nuOilf1PNu3s+qi9Tox+6Vq1DyLBqWEdDzfsdwmVGEL0jpQy8dcbAssj
+         K86nszQ9IAJ/vOjZa+VlGtKBI9JrbiIfs2R7+sRDxFHmttz378k0Skw6fXaePCGQmGL4
+         5OwxWE0cG6RPQNHqsLjwoqIxuDDuwldj0vAHIB2EO4gBe7GTNDpyac0h72JnJCR9dZRu
+         I46A==
+X-Gm-Message-State: AOJu0Yz4EPqjPWbn1kQIVSmliSJLT8ORsRcJdvkJ/o/18ROHWm98YAKz
+	dUnJSBopF9M1qGvYqzIzCMb9FwgWeSiPnZrGicYeRfvKUvdh4Zv3NX53WiGOhw==
+X-Gm-Gg: AfdE7cmFP7PNXLARr/Iri+egmPp47vNcdfH0rFZkjIMo60P7KwEW8ONYrqNVDuoqtgE
+	/NYFoJlIjz/jj32dm0oY/gYCbN5o8ELMgHV/4o499W2U7+G9+ocq8lG+6Css0N78RSpTxUbjDKd
+	NuygJsCWUQ2q4kx0MZpEw7B7sYlE/bQ0LPNcw7EHdeaPlK6d83SaVm1OmgZxUwH0kzSGwM0lOHi
+	q75/iMbtAQAc9VsMUzjiHIbvMkdx4eUwKpO3isUoNrN3eYXOEWkCJvoFrQPwcnSPo/yY6ousa1e
+	H9po71K62DBmHp+Tbymu3dcRot6k9mxg0LJ0DwgOgwySnSCGMNZC0L0v74aZ0a9yQEGhP/LLdRo
+	bOwr2L/q94JdXfQQ7+ZpFLEuyuLv07lairnqRbiHJq9NLgQVmT9E2PtuiT3yj0R/7Dl6hrc7/oE
+	3sAhalcd5XyAqxPaDTip9iqW8KMtJWhFQradIiZ+9xp9HtjHU8XXQZowmyby6olVrSxCD/Ag0Hr
+	iUeA5k=
+X-Received: by 2002:a05:7022:f112:b0:135:e781:74af with SMTP id a92af1059eb24-139db9f5507mr2036970c88.18.1782389594744;
+        Thu, 25 Jun 2026 05:13:14 -0700 (PDT)
 Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-139d8f77602sm7422206c88.8.2026.06.25.05.13.11
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-139d8f77602sm7422206c88.8.2026.06.25.05.13.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2026 05:13:11 -0700 (PDT)
+        Thu, 25 Jun 2026 05:13:14 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
 To: linux-cxl@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc: nvdimm@lists.linux.dev,
 	John Groves <John@Groves.net>,
 	Gregory Price <gourry@gourry.net>,
 	Anisa Su <anisa.su@samsung.com>
-Subject: [NDCTL PATCH v7 1/5] libcxl, cxl/region: Add Dynamic RAM 1 partition mode support
-Date: Thu, 25 Jun 2026 05:09:35 -0700
-Message-ID: <20260625121242.603807-2-anisa.su@samsung.com>
+Subject: [NDCTL PATCH v7 2/5] libcxl: Add extent functionality to DC regions
+Date: Thu, 25 Jun 2026 05:09:36 -0700
+Message-ID: <20260625121242.603807-3-anisa.su@samsung.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260625121242.603807-1-anisa.su@samsung.com>
 References: <20260625121242.603807-1-anisa.su@samsung.com>
@@ -89,417 +89,307 @@ Content-Transfer-Encoding: 8bit
 
 From: Ira Weiny <iweiny@kernel.org>
 
-Dynamic capacity partitions are exposed as a singular dynamic ram
-partition.
+DCD regions have 0 or more extents.  The ability to list those and their
+properties is useful to end users.
 
-Add CXL library support to read this partition information, and use the
-new partition in cxl-cli.
+Add extent scanning and reporting functionality to libcxl.
 
 Signed-off-by: Ira Weiny <iweiny@kernel.org>
 Signed-off-by: Anisa Su <anisa.su@samsung.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
 ---
- Documentation/cxl/lib/libcxl.txt |  6 +++--
- cxl/json.c                       | 20 +++++++++++++++
- cxl/lib/libcxl.c                 | 43 ++++++++++++++++++++++++++++++++
- cxl/lib/libcxl.sym               |  8 ++++++
- cxl/lib/private.h                |  3 +++
- cxl/libcxl.h                     | 10 +++++++-
- cxl/memdev.c                     |  4 ++-
- cxl/region.c                     | 27 +++++++++++++++++---
- 8 files changed, 114 insertions(+), 7 deletions(-)
+Changes:
+1. s/tag/uuid/ for extents
+---
+ Documentation/cxl/lib/libcxl.txt |  27 ++++++
+ cxl/lib/libcxl.c                 | 143 +++++++++++++++++++++++++++++++
+ cxl/lib/libcxl.sym               |   5 ++
+ cxl/lib/private.h                |  10 +++
+ cxl/libcxl.h                     |  11 +++
+ 5 files changed, 196 insertions(+)
 
 diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
-index 5c3ebd4..59163e4 100644
+index 59163e4..7eca5eb 100644
 --- a/Documentation/cxl/lib/libcxl.txt
 +++ b/Documentation/cxl/lib/libcxl.txt
-@@ -74,6 +74,7 @@ int cxl_memdev_get_major(struct cxl_memdev *memdev);
- int cxl_memdev_get_minor(struct cxl_memdev *memdev);
- unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev);
- unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
-+unsigned long long cxl_memdev_get_dynamic_ram_1_size(struct cxl_memdev *memdev);
- const char *cxl_memdev_get_firmware_version(struct cxl_memdev *memdev);
- size_t cxl_memdev_get_label_size(struct cxl_memdev *memdev);
- int cxl_memdev_nvdimm_bridge_active(struct cxl_memdev *memdev);
-@@ -93,8 +94,8 @@ The character device node for command submission can be found by default
- at /dev/cxl/mem%d, or created with a major / minor returned from
- cxl_memdev_get_{major,minor}().
+@@ -635,6 +635,33 @@ where its properties can be interrogated by daxctl. The helper
+ cxl_region_get_daxctl_region() returns an 'struct daxctl_region *' that
+ can be used with other libdaxctl APIs.
  
--The 'pmem_size' and 'ram_size' attributes return the current
--provisioning of DPA (Device Physical Address / local capacity) in the
-+The 'pmem_size', 'ram_size', and 'dynamic_ram_1_size' attributes return the
-+current provisioning of DPA (Device Physical Address / local capacity) in the
- device.
- 
- cxl_memdev_get_numa_node() returns the affinitized CPU node number if
-@@ -453,6 +454,7 @@ enum cxl_decoder_mode {
- 	CXL_DECODER_MODE_MIXED,
- 	CXL_DECODER_MODE_PMEM,
- 	CXL_DECODER_MODE_RAM,
-+	CXL_DECODER_MODE_DYNAMIC_RAM_1,
- };
- enum cxl_decoder_mode cxl_decoder_get_mode(struct cxl_decoder *decoder);
- int cxl_decoder_set_mode(struct cxl_decoder *decoder, enum cxl_decoder_mode mode);
-diff --git a/cxl/json.c b/cxl/json.c
-index a925488..e832982 100644
---- a/cxl/json.c
-+++ b/cxl/json.c
-@@ -620,6 +620,20 @@ struct json_object *util_cxl_memdev_to_json(struct cxl_memdev *memdev,
- 		}
- 	}
- 
-+	size = cxl_memdev_get_dynamic_ram_1_size(memdev);
-+	if (size) {
-+		jobj = util_json_object_size(size, flags);
-+		if (jobj)
-+			json_object_object_add(jdev, "dynamic_ram_1_size", jobj);
++EXTENTS
++-------
 +
-+		qos_class = cxl_memdev_get_dynamic_ram_1_qos_class(memdev);
-+		if (qos_class != CXL_QOS_CLASS_NONE) {
-+			jobj = json_object_new_int(qos_class);
-+			if (jobj)
-+				json_object_object_add(jdev, "dynamic_ram_1_qos_class", jobj);
-+		}
-+	}
++=== EXTENT: Enumeration
++----
++struct cxl_region_extent;
++struct cxl_region_extent *cxl_extent_get_first(struct cxl_region *region);
++struct cxl_region_extent *cxl_extent_get_next(struct cxl_region_extent *extent);
++#define cxl_extent_foreach(region, extent) \
++        for (extent = cxl_extent_get_first(region); \
++             extent != NULL; \
++             extent = cxl_extent_get_next(extent))
 +
- 	if (flags & UTIL_JSON_HEALTH) {
- 		jobj = util_cxl_memdev_health_to_json(memdev, flags);
- 		if (jobj)
-@@ -917,6 +931,12 @@ struct json_object *util_cxl_decoder_to_json(struct cxl_decoder *decoder,
- 				json_object_object_add(
- 					jdecoder, "volatile_capable", jobj);
- 		}
-+		if (cxl_decoder_is_dynamic_ram_1_capable(decoder)) {
-+			jobj = json_object_new_boolean(true);
-+			if (jobj)
-+				json_object_object_add(
-+					jdecoder, "dynamic_ram_1_capable", jobj);
-+		}
- 	}
++----
++
++=== EXTENT: Attributes
++----
++unsigned long long cxl_extent_get_offset(struct cxl_region_extent *extent);
++unsigned long long cxl_extent_get_length(struct cxl_region_extent *extent);
++void cxl_extent_get_uuid(struct cxl_region_extent *extent, uuid_t uuid);
++----
++
++Extents represent available memory within a dynamic capacity region.  Extent
++objects are available for informational purposes to aid in allocation of
++memory.
++
++
+ include::../../copyright.txt[]
  
- 	if (cxl_port_is_root(port) &&
+ SEE ALSO
 diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-index e55a7b4..240ed75 100644
+index 240ed75..c211687 100644
 --- a/cxl/lib/libcxl.c
 +++ b/cxl/lib/libcxl.c
-@@ -501,6 +501,9 @@ CXL_EXPORT bool cxl_region_qos_class_mismatch(struct cxl_region *region)
- 		} else if (region->mode == CXL_DECODER_MODE_PMEM) {
- 			if (root_decoder->qos_class != memdev->pmem_qos_class)
- 				return true;
-+		} else if (region->mode == CXL_DECODER_MODE_DYNAMIC_RAM_1) {
-+			if (root_decoder->qos_class != memdev->dynamic_ram_1_qos_class)
-+				return true;
- 		}
+@@ -110,11 +110,16 @@ static void free_target(struct cxl_target *target, struct list_head *head)
+ static void free_region(struct cxl_region *region, struct list_head *head)
+ {
+ 	struct cxl_memdev_mapping *mapping, *_m;
++	struct cxl_region_extent *extent, *_e;
+ 
+ 	list_for_each_safe(&region->mappings, mapping, _m, list) {
+ 		list_del_from(&region->mappings, &mapping->list);
+ 		free(mapping);
  	}
++	list_for_each_safe(&region->extents, extent, _e, list) {
++		list_del_from(&region->extents, &extent->list);
++		free(extent);
++	}
+ 	if (head)
+ 		list_del_from(head, &region->list);
+ 	kmod_module_unref(region->module);
+@@ -635,6 +640,7 @@ static void *add_cxl_region(void *parent, int id, const char *cxlregion_base)
+ 	region->ctx = ctx;
+ 	region->decoder = decoder;
+ 	list_head_init(&region->mappings);
++	list_head_init(&region->extents);
  
-@@ -1426,6 +1429,10 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
- 	if (sysfs_read_attr(ctx, path, buf) == 0)
- 		memdev->ram_size = strtoull(buf, NULL, 0);
- 
-+	sprintf(path, "%s/dynamic_ram_1/size", cxlmem_base);
-+	if (sysfs_read_attr(ctx, path, buf) == 0)
-+		memdev->dynamic_ram_1_size = strtoull(buf, NULL, 0);
-+
- 	sprintf(path, "%s/pmem/qos_class", cxlmem_base);
- 	if (sysfs_read_attr(ctx, path, buf) < 0)
- 		memdev->pmem_qos_class = CXL_QOS_CLASS_NONE;
-@@ -1438,6 +1445,12 @@ static void *add_cxl_memdev(void *parent, int id, const char *cxlmem_base)
- 	else
- 		memdev->ram_qos_class = atoi(buf);
- 
-+	sprintf(path, "%s/dynamic_ram_1/qos_class", cxlmem_base);
-+	if (sysfs_read_attr(ctx, path, buf) < 0)
-+		memdev->dynamic_ram_1_qos_class = CXL_QOS_CLASS_NONE;
-+	else
-+		memdev->dynamic_ram_1_qos_class = atoi(buf);
-+
- 	sprintf(path, "%s/payload_max", cxlmem_base);
- 	if (sysfs_read_attr(ctx, path, buf) == 0) {
- 		memdev->payload_max = strtoull(buf, NULL, 0);
-@@ -1685,6 +1698,11 @@ CXL_EXPORT unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev)
- 	return memdev->ram_size;
+ 	region->dev_path = strdup(cxlregion_base);
+ 	if (!region->dev_path)
+@@ -1257,6 +1263,143 @@ cxl_mapping_get_next(struct cxl_memdev_mapping *mapping)
+ 	return list_next(&region->mappings, mapping, list);
  }
  
-+CXL_EXPORT unsigned long long cxl_memdev_get_dynamic_ram_1_size(struct cxl_memdev *memdev)
++static void cxl_extents_init(struct cxl_region *region)
 +{
-+	return memdev->dynamic_ram_1_size;
++	const char *devname = cxl_region_get_devname(region);
++	struct cxl_ctx *ctx = cxl_region_get_ctx(region);
++	char *extent_path, *dax_region_path;
++	struct dirent *de;
++	DIR *dir = NULL;
++
++	if (region->extents_init)
++		return;
++	region->extents_init = 1;
++
++	dax_region_path = calloc(1, strlen(region->dev_path) + 64);
++	if (!dax_region_path) {
++		err(ctx, "%s: allocation failure\n", devname);
++		return;
++	}
++
++	extent_path = calloc(1, strlen(region->dev_path) + 100);
++	if (!extent_path) {
++		err(ctx, "%s: allocation failure\n", devname);
++		free(dax_region_path);
++		return;
++	}
++
++	sprintf(dax_region_path, "%s/dax_region%d",
++		region->dev_path, region->id);
++	dir = opendir(dax_region_path);
++	if (!dir) {
++		err(ctx, "no extents found (%s): %s\n",
++			strerror(errno), dax_region_path);
++		free(extent_path);
++		free(dax_region_path);
++		return;
++	}
++
++	while ((de = readdir(dir)) != NULL) {
++		struct cxl_region_extent *extent;
++		char buf[SYSFS_ATTR_SIZE];
++		u64 offset, length;
++		int id, region_id;
++
++		if (sscanf(de->d_name, "extent%d.%d", &region_id, &id) != 2)
++			continue;
++
++		sprintf(extent_path, "%s/extent%d.%d/offset",
++			dax_region_path, region_id, id);
++		if (sysfs_read_attr(ctx, extent_path, buf) < 0) {
++			err(ctx, "%s: failed to read extent%d.%d/offset\n",
++				devname, region_id, id);
++			continue;
++		}
++
++		offset = strtoull(buf, NULL, 0);
++		if (offset == ULLONG_MAX) {
++			err(ctx, "%s extent%d.%d: failed to read offset\n",
++				devname, region_id, id);
++			continue;
++		}
++
++		sprintf(extent_path, "%s/extent%d.%d/length",
++			dax_region_path, region_id, id);
++		if (sysfs_read_attr(ctx, extent_path, buf) < 0) {
++			err(ctx, "%s: failed to read extent%d.%d/length\n",
++				devname, region_id, id);
++			continue;
++		}
++
++		length = strtoull(buf, NULL, 0);
++		if (length == ULLONG_MAX) {
++			err(ctx, "%s extent%d.%d: failed to read length\n",
++				devname, region_id, id);
++			continue;
++		}
++
++		sprintf(extent_path, "%s/extent%d.%d/uuid",
++			dax_region_path, region_id, id);
++		buf[0] = '\0';
++		if (sysfs_read_attr(ctx, extent_path, buf) != 0)
++			dbg(ctx, "%s extent%d.%d: failed to read uuid\n",
++				devname, region_id, id);
++
++		extent = calloc(1, sizeof(*extent));
++		if (!extent) {
++			err(ctx, "%s extent%d.%d: allocation failure\n",
++				devname, region_id, id);
++			continue;
++		}
++		if (strlen(buf) && uuid_parse(buf, extent->uuid) < 0)
++			err(ctx, "%s:%s\n", extent_path, buf);
++		extent->region = region;
++		extent->offset = offset;
++		extent->length = length;
++
++		list_node_init(&extent->list);
++		list_add(&region->extents, &extent->list);
++		dbg(ctx, "%s added extent%d.%d\n", devname, region_id, id);
++	}
++	free(dax_region_path);
++	free(extent_path);
++	closedir(dir);
 +}
 +
- CXL_EXPORT int cxl_memdev_get_pmem_qos_class(struct cxl_memdev *memdev)
- {
- 	return memdev->pmem_qos_class;
-@@ -1695,6 +1713,11 @@ CXL_EXPORT int cxl_memdev_get_ram_qos_class(struct cxl_memdev *memdev)
- 	return memdev->ram_qos_class;
- }
- 
-+CXL_EXPORT int cxl_memdev_get_dynamic_ram_1_qos_class(struct cxl_memdev *memdev)
++CXL_EXPORT struct cxl_region_extent *
++cxl_extent_get_first(struct cxl_region *region)
 +{
-+	return memdev->dynamic_ram_1_qos_class;
++	cxl_extents_init(region);
++
++	return list_top(&region->extents, struct cxl_region_extent, list);
 +}
 +
- CXL_EXPORT const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev)
- {
- 	return memdev->firmware_version;
-@@ -2465,6 +2488,8 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
- 			decoder->mode = CXL_DECODER_MODE_MIXED;
- 		else if (strcmp(buf, "none") == 0)
- 			decoder->mode = CXL_DECODER_MODE_NONE;
-+		else if (strcmp(buf, "dynamic_ram_1") == 0)
-+			decoder->mode = CXL_DECODER_MODE_DYNAMIC_RAM_1;
- 		else
- 			decoder->mode = CXL_DECODER_MODE_MIXED;
- 	} else
-@@ -2504,6 +2529,7 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
- 	case CXL_PORT_SWITCH:
- 		decoder->pmem_capable = true;
- 		decoder->volatile_capable = true;
-+		decoder->dynamic_ram_1_capable = true;
- 		decoder->mem_capable = true;
- 		decoder->accelmem_capable = true;
- 		sprintf(path, "%s/locked", cxldecoder_base);
-@@ -2528,6 +2554,7 @@ static void *add_cxl_decoder(void *parent, int id, const char *cxldecoder_base)
- 			{ "cap_type3", &decoder->mem_capable },
- 			{ "cap_ram", &decoder->volatile_capable },
- 			{ "cap_pmem", &decoder->pmem_capable },
-+			{ "cap_dynamic_ram_1", &decoder->dynamic_ram_1_capable },
- 			{ "locked", &decoder->locked },
- 		};
- 
-@@ -2778,6 +2805,9 @@ CXL_EXPORT int cxl_decoder_set_mode(struct cxl_decoder *decoder,
- 	case CXL_DECODER_MODE_RAM:
- 		sprintf(buf, "ram");
- 		break;
-+	case CXL_DECODER_MODE_DYNAMIC_RAM_1:
-+		sprintf(buf, "dynamic_ram_1");
-+		break;
- 	default:
- 		err(ctx, "%s: unsupported mode: %d\n",
- 		    cxl_decoder_get_devname(decoder), mode);
-@@ -2829,6 +2859,11 @@ CXL_EXPORT bool cxl_decoder_is_volatile_capable(struct cxl_decoder *decoder)
- 	return decoder->volatile_capable;
- }
- 
-+CXL_EXPORT bool cxl_decoder_is_dynamic_ram_1_capable(struct cxl_decoder *decoder)
++CXL_EXPORT struct cxl_region_extent *
++cxl_extent_get_next(struct cxl_region_extent *extent)
 +{
-+	return decoder->dynamic_ram_1_capable;
++	struct cxl_region *region = extent->region;
++
++	return list_next(&region->extents, extent, list);
 +}
 +
- CXL_EXPORT bool cxl_decoder_is_mem_capable(struct cxl_decoder *decoder)
- {
- 	return decoder->mem_capable;
-@@ -2903,6 +2938,8 @@ static struct cxl_region *cxl_decoder_create_region(struct cxl_decoder *decoder,
- 		sprintf(path, "%s/create_pmem_region", decoder->dev_path);
- 	else if (mode == CXL_DECODER_MODE_RAM)
- 		sprintf(path, "%s/create_ram_region", decoder->dev_path);
-+	else if (mode == CXL_DECODER_MODE_DYNAMIC_RAM_1)
-+		sprintf(path, "%s/create_dynamic_ram_1_region", decoder->dev_path);
- 
- 	rc = sysfs_read_attr(ctx, path, buf);
- 	if (rc < 0) {
-@@ -2954,6 +2991,12 @@ cxl_decoder_create_ram_region(struct cxl_decoder *decoder)
- 	return cxl_decoder_create_region(decoder, CXL_DECODER_MODE_RAM);
- }
- 
-+CXL_EXPORT struct cxl_region *
-+cxl_decoder_create_dynamic_ram_1_region(struct cxl_decoder *decoder)
++CXL_EXPORT unsigned long long
++cxl_extent_get_offset(struct cxl_region_extent *extent)
 +{
-+	return cxl_decoder_create_region(decoder, CXL_DECODER_MODE_DYNAMIC_RAM_1);
++	return extent->offset;
 +}
 +
- CXL_EXPORT int cxl_decoder_get_nr_targets(struct cxl_decoder *decoder)
++CXL_EXPORT unsigned long long
++cxl_extent_get_length(struct cxl_region_extent *extent)
++{
++	return extent->length;
++}
++
++CXL_EXPORT void
++cxl_extent_get_uuid(struct cxl_region_extent *extent, uuid_t uuid)
++{
++	memcpy(uuid, extent->uuid, sizeof(uuid_t));
++}
++
+ CXL_EXPORT struct cxl_decoder *
+ cxl_mapping_get_decoder(struct cxl_memdev_mapping *mapping)
  {
- 	return decoder->nr_targets;
 diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-index ed4429f..4a8443c 100644
+index 4a8443c..4d7da17 100644
 --- a/cxl/lib/libcxl.sym
 +++ b/cxl/lib/libcxl.sym
-@@ -320,3 +320,11 @@ LIBCXL_12 {
- global:
- 	cxl_region_locked_state;
- } LIBCXL_11;
-+
-+LIBCXL_13 {
-+global:
-+	cxl_memdev_get_dynamic_ram_1_size;
-+	cxl_memdev_get_dynamic_ram_1_qos_class;
-+	cxl_decoder_is_dynamic_ram_1_capable;
-+	cxl_decoder_create_dynamic_ram_1_region;
-+} LIBCXL_12;
+@@ -327,4 +327,9 @@ global:
+ 	cxl_memdev_get_dynamic_ram_1_qos_class;
+ 	cxl_decoder_is_dynamic_ram_1_capable;
+ 	cxl_decoder_create_dynamic_ram_1_region;
++	cxl_extent_get_first;
++	cxl_extent_get_next;
++	cxl_extent_get_offset;
++	cxl_extent_get_length;
++	cxl_extent_get_uuid;
+ } LIBCXL_12;
 diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-index d2d71fc..fb45e15 100644
+index fb45e15..cac0cd1 100644
 --- a/cxl/lib/private.h
 +++ b/cxl/lib/private.h
-@@ -52,8 +52,10 @@ struct cxl_memdev {
+@@ -183,6 +183,7 @@ struct cxl_region {
+ 	struct cxl_decoder *decoder;
  	struct list_node list;
- 	unsigned long long pmem_size;
- 	unsigned long long ram_size;
-+	unsigned long long dynamic_ram_1_size;
- 	int ram_qos_class;
- 	int pmem_qos_class;
-+	int dynamic_ram_1_qos_class;
- 	int payload_max;
- 	size_t lsa_size;
+ 	int mappings_init;
++	int extents_init;
+ 	struct cxl_ctx *ctx;
+ 	void *dev_buf;
+ 	size_t buf_len;
+@@ -200,6 +201,7 @@ struct cxl_region {
+ 	struct daxctl_region *dax_region;
  	struct kmod_module *module;
-@@ -159,6 +161,7 @@ struct cxl_decoder {
- 	unsigned int interleave_granularity;
- 	bool pmem_capable;
- 	bool volatile_capable;
-+	bool dynamic_ram_1_capable;
- 	bool mem_capable;
- 	bool accelmem_capable;
- 	bool locked;
-diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-index e91af90..8ee6937 100644
---- a/cxl/libcxl.h
-+++ b/cxl/libcxl.h
-@@ -75,8 +75,10 @@ struct cxl_fwctl *cxl_memdev_get_fwctl(struct cxl_memdev *memdev);
- struct cxl_ctx *cxl_memdev_get_ctx(struct cxl_memdev *memdev);
- unsigned long long cxl_memdev_get_pmem_size(struct cxl_memdev *memdev);
- unsigned long long cxl_memdev_get_ram_size(struct cxl_memdev *memdev);
-+unsigned long long cxl_memdev_get_dynamic_ram_1_size(struct cxl_memdev *memdev);
- int cxl_memdev_get_pmem_qos_class(struct cxl_memdev *memdev);
- int cxl_memdev_get_ram_qos_class(struct cxl_memdev *memdev);
-+int cxl_memdev_get_dynamic_ram_1_qos_class(struct cxl_memdev *memdev);
- const char *cxl_memdev_get_firmware_verison(struct cxl_memdev *memdev);
- bool cxl_memdev_fw_update_in_progress(struct cxl_memdev *memdev);
- size_t cxl_memdev_fw_update_get_remaining(struct cxl_memdev *memdev);
-@@ -210,6 +212,7 @@ enum cxl_decoder_mode {
- 	CXL_DECODER_MODE_MIXED,
- 	CXL_DECODER_MODE_PMEM,
- 	CXL_DECODER_MODE_RAM,
-+	CXL_DECODER_MODE_DYNAMIC_RAM_1,
+ 	struct list_head mappings;
++	struct list_head extents;
  };
  
- static inline const char *cxl_decoder_mode_name(enum cxl_decoder_mode mode)
-@@ -219,9 +222,10 @@ static inline const char *cxl_decoder_mode_name(enum cxl_decoder_mode mode)
- 		[CXL_DECODER_MODE_MIXED] = "mixed",
- 		[CXL_DECODER_MODE_PMEM] = "pmem",
- 		[CXL_DECODER_MODE_RAM] = "ram",
-+		[CXL_DECODER_MODE_DYNAMIC_RAM_1] = "dynamic_ram_1",
- 	};
+ struct cxl_memdev_mapping {
+@@ -209,6 +211,14 @@ struct cxl_memdev_mapping {
+ 	struct list_node list;
+ };
  
--	if (mode < CXL_DECODER_MODE_NONE || mode > CXL_DECODER_MODE_RAM)
-+	if (mode < CXL_DECODER_MODE_NONE || mode > CXL_DECODER_MODE_DYNAMIC_RAM_1)
- 		mode = CXL_DECODER_MODE_NONE;
- 	return names[mode];
- }
-@@ -235,6 +239,8 @@ cxl_decoder_mode_from_ident(const char *ident)
- 		return CXL_DECODER_MODE_RAM;
- 	else if (strcmp(ident, "pmem") == 0)
- 		return CXL_DECODER_MODE_PMEM;
-+	else if (strcmp(ident, "dynamic_ram_1") == 0)
-+		return CXL_DECODER_MODE_DYNAMIC_RAM_1;
- 	return CXL_DECODER_MODE_NONE;
- }
++struct cxl_region_extent {
++	struct cxl_region *region;
++	u64 offset;
++	u64 length;
++	uuid_t uuid;
++	struct list_node list;
++};
++
+ enum cxl_cmd_query_status {
+ 	CXL_CMD_QUERY_NOT_RUN = 0,
+ 	CXL_CMD_QUERY_OK,
+diff --git a/cxl/libcxl.h b/cxl/libcxl.h
+index 8ee6937..d18a18b 100644
+--- a/cxl/libcxl.h
++++ b/cxl/libcxl.h
+@@ -394,6 +394,17 @@ unsigned int cxl_mapping_get_position(struct cxl_memdev_mapping *mapping);
+              mapping != NULL; \
+              mapping = cxl_mapping_get_next(mapping))
  
-@@ -264,6 +270,7 @@ cxl_decoder_get_target_type(struct cxl_decoder *decoder);
- bool cxl_decoder_is_pmem_capable(struct cxl_decoder *decoder);
- bool cxl_decoder_is_volatile_capable(struct cxl_decoder *decoder);
- bool cxl_decoder_is_mem_capable(struct cxl_decoder *decoder);
-+bool cxl_decoder_is_dynamic_ram_1_capable(struct cxl_decoder *decoder);
- bool cxl_decoder_is_accelmem_capable(struct cxl_decoder *decoder);
- bool cxl_decoder_is_locked(struct cxl_decoder *decoder);
- unsigned int
-@@ -272,6 +279,7 @@ unsigned int cxl_decoder_get_interleave_ways(struct cxl_decoder *decoder);
- struct cxl_region *cxl_decoder_get_region(struct cxl_decoder *decoder);
- struct cxl_region *cxl_decoder_create_pmem_region(struct cxl_decoder *decoder);
- struct cxl_region *cxl_decoder_create_ram_region(struct cxl_decoder *decoder);
-+struct cxl_region *cxl_decoder_create_dynamic_ram_1_region(struct cxl_decoder *decoder);
- struct cxl_decoder *cxl_decoder_get_by_name(struct cxl_ctx *ctx,
- 					    const char *ident);
- struct cxl_memdev *cxl_decoder_get_memdev(struct cxl_decoder *decoder);
-diff --git a/cxl/memdev.c b/cxl/memdev.c
-index 6e44d15..c9a1d0c 100644
---- a/cxl/memdev.c
-+++ b/cxl/memdev.c
-@@ -269,8 +269,10 @@ static int __reserve_dpa(struct cxl_memdev *memdev,
- 
- 	if (mode == CXL_DECODER_MODE_RAM)
- 		avail_dpa = cxl_memdev_get_ram_size(memdev);
--	else
-+	else if (mode == CXL_DECODER_MODE_PMEM)
- 		avail_dpa = cxl_memdev_get_pmem_size(memdev);
-+	else
-+		avail_dpa = cxl_memdev_get_dynamic_ram_1_size(memdev);
- 
- 	cxl_decoder_foreach(port, decoder) {
- 		size = cxl_decoder_get_dpa_size(decoder);
-diff --git a/cxl/region.c b/cxl/region.c
-index 85d4d9b..0a62a8e 100644
---- a/cxl/region.c
-+++ b/cxl/region.c
-@@ -303,7 +303,8 @@ static int parse_create_options(struct cxl_ctx *ctx, int count,
- 
- 	if (param.type) {
- 		p->mode = cxl_decoder_mode_from_ident(param.type);
--		if (p->mode == CXL_DECODER_MODE_RAM && param.uuid) {
-+		if ((p->mode == CXL_DECODER_MODE_RAM ||
-+		     p->mode == CXL_DECODER_MODE_DYNAMIC_RAM_1) && param.uuid) {
- 			log_err(&rl,
- 				"can't set UUID for ram / volatile regions");
- 			goto err;
-@@ -417,6 +418,9 @@ static void collect_minsize(struct cxl_ctx *ctx, struct parsed_params *p)
- 		case CXL_DECODER_MODE_PMEM:
- 			size = cxl_memdev_get_pmem_size(memdev);
- 			break;
-+		case CXL_DECODER_MODE_DYNAMIC_RAM_1:
-+			size = cxl_memdev_get_dynamic_ram_1_size(memdev);
-+			break;
- 		default:
- 			/* Shouldn't ever get here */ ;
- 		}
-@@ -448,8 +452,10 @@ static int create_region_validate_qos_class(struct parsed_params *p)
- 
- 		if (p->mode == CXL_DECODER_MODE_RAM)
- 			qos_class = cxl_memdev_get_ram_qos_class(memdev);
--		else
-+		else if (p->mode == CXL_DECODER_MODE_PMEM)
- 			qos_class = cxl_memdev_get_pmem_qos_class(memdev);
-+		else
-+			qos_class = cxl_memdev_get_dynamic_ram_1_qos_class(memdev);
- 
- 		/* No qos_class entries. Possibly no kernel support */
- 		if (qos_class == CXL_QOS_CLASS_NONE)
-@@ -488,6 +494,12 @@ static int validate_decoder(struct cxl_decoder *decoder,
- 			return -EINVAL;
- 		}
- 		break;
-+	case CXL_DECODER_MODE_DYNAMIC_RAM_1:
-+		if (!cxl_decoder_is_dynamic_ram_1_capable(decoder)) {
-+			log_err(&rl, "%s is not dynamic_ram_1 capable\n", devname);
-+			return -EINVAL;
-+		}
-+		break;
- 	default:
- 		log_err(&rl, "unknown type: %s\n", param.type);
- 		return -EINVAL;
-@@ -509,9 +521,11 @@ static void set_type_from_decoder(struct cxl_ctx *ctx, struct parsed_params *p)
- 		return;
- 
- 	/*
--	 * default to pmem if both types are set, otherwise the single
-+	 * default to pmem if all types are set, otherwise the single
- 	 * capability dominates.
- 	 */
-+	if (cxl_decoder_is_dynamic_ram_1_capable(p->root_decoder))
-+		p->mode = CXL_DECODER_MODE_DYNAMIC_RAM_1;
- 	if (cxl_decoder_is_volatile_capable(p->root_decoder))
- 		p->mode = CXL_DECODER_MODE_RAM;
- 	if (cxl_decoder_is_pmem_capable(p->root_decoder))
-@@ -699,6 +713,13 @@ static int create_region(struct cxl_ctx *ctx, int *count,
- 				param.root_decoder);
- 			return -ENXIO;
- 		}
-+	} else if (p->mode == CXL_DECODER_MODE_DYNAMIC_RAM_1) {
-+		region = cxl_decoder_create_dynamic_ram_1_region(p->root_decoder);
-+		if (!region) {
-+			log_err(&rl, "failed to create region under %s\n",
-+				param.root_decoder);
-+			return -ENXIO;
-+		}
- 	} else {
- 		log_err(&rl, "region type '%s' is not supported\n",
- 			param.type);
++struct cxl_region_extent;
++struct cxl_region_extent *cxl_extent_get_first(struct cxl_region *region);
++struct cxl_region_extent *cxl_extent_get_next(struct cxl_region_extent *extent);
++#define cxl_extent_foreach(region, extent) \
++        for (extent = cxl_extent_get_first(region); \
++             extent != NULL; \
++             extent = cxl_extent_get_next(extent))
++unsigned long long cxl_extent_get_offset(struct cxl_region_extent *extent);
++unsigned long long cxl_extent_get_length(struct cxl_region_extent *extent);
++void cxl_extent_get_uuid(struct cxl_region_extent *extent, uuid_t uuid);
++
+ struct cxl_cmd;
+ const char *cxl_cmd_get_devname(struct cxl_cmd *cmd);
+ struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev, int opcode);
 -- 
 2.43.0
 
