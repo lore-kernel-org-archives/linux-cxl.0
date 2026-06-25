@@ -1,469 +1,162 @@
-Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+Received: from mail-dy1-f170.google.com (mail-dy1-f170.google.com [74.125.82.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BF83DB63C
-	for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 11:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B0E3CF02E
+	for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 11:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782386962; cv=none; b=XG8Xv36QZpozg4+PV0U3LveUr7kS0QNBicHjpvqGuqwSwuOgR6mg0eKqHHB4UaWGJGrNlc9EgcYyC1wrn4F3owMRgTSj5JojmTyS72neqEZ5ffEP65jzVCKj1PfUSXmKHxwvFcG4ZvxrJQRBUieeLCgsWfJn7NVKzHpt0JypfdA=
+	t=1782387429; cv=none; b=Lx/lKwK7a5P007D5jdxar1b2qIWjycWwU7iAKHnGysOZ+gbsmZc4jY8WvY/pQaiADqePjPqYFdhXOxIbXN9au1lvsvCGaO0Oahx3l/fQVaS1zWHJmOOaGolesfeTRCTxKvylvdsWuxLrZSr6fdtjgYJ0QiLOyJQG+iyDFgcXLNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782386962; c=relaxed/simple;
-	bh=phNb/Cv7MIb+nqtCqQ1+NhpCPbZrQpgvxiP2mqsDqT0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pHi8yazLdP7sing/tapzS0bBmLwrF3sbuctqUbINbZIys9XdppBbt3qtf3hwANiq+iY2iaZSe2jPU7iraAvkMWca5mI+iSZzNUHWIQszc3CQbMvHOlTeyoRespPpb2M5v47yz+DXDDhmzN0RD9uMJCA9YqaiJaw/o7oVVSA6fVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TgYl1GZs; arc=none smtp.client-ip=74.125.82.175
+	s=arc-20240116; t=1782387429; c=relaxed/simple;
+	bh=HnlHQXGsvp+6F/r93fDYilMWTToRwzIzL5ppp6nRv0w=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rc1ppIGdh+CHTT4bAIuCtc0HnvtWxsEg7uFS9Wnly5DMK1UUTslXYOevWDSTEof21k7RP97WTcTfSpJ0E3MmUMzw7hYviXcm7xReDwS3SJwc8OXTa83U0+Zdmnyq9mxSoGHRGNq6awfpIRiSDJbPSuTex3YWyxxarLuz88zVtzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SsfTEt1e; arc=none smtp.client-ip=74.125.82.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TgYl1GZs"
-Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-30c23abc62eso2419832eec.1
-        for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 04:29:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsfTEt1e"
+Received: by mail-dy1-f170.google.com with SMTP id 5a478bee46e88-30c8f2d93baso461735eec.0
+        for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 04:37:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782386959; x=1782991759; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V8DekyuZFm8kNJKd8ijojgD5FjCszYptkn1mojUsymk=;
-        b=TgYl1GZszNBP1FQhBx2yuWqRFvUi/nqeySPDDDpttuGKZA35IbO1O4OniWD+Byu2PS
-         O1KE7b5RU3aJZZVi0nzOuigNNy1xNbMowgZZ4BuTzlq/leDA5DOZ/4tZsE3Fd/MaTPle
-         1QDOFtsYrE9qVVrHRlins6wS3Mvy7H4JMHWWXXAyMlG6fuka0kvwoAkj03t3Y2RrsCX3
-         fivXzvjmqG07+D4PILxS+jNdMTK2/SxJG7GEXJbF05xdBKJk5xP6KJKNssRpLixRZvQQ
-         2EcUk/m1pOr5fVySQGsqkb/4svBoUAmX8c/qL+kzE0UI1m8JfyIqXBrYf+vrImB2dprv
-         95eg==
+        d=gmail.com; s=20251104; t=1782387427; x=1782992227; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gnK/0+TnvTsU7klFGLefqowugiRNUuGQYFS44xmyZM8=;
+        b=SsfTEt1eiU9wKiTsdXHaTP3upWuApWjXizLY7yaJ2rcXEzzQoIiSo2QctACj3zPRym
+         NnS6SBmBnFlf3ZYS6Gv1A8GlgdgkOlDjdsbJWHU4yCnyIj641KeJbi2lhyxVRgHv2hNQ
+         QH4147Ggfmsjcccq+PCfBDkVAhHs8XwM5LD0o7Zx8tRF2GH1gYFaMoA/bz3E3gkkljmZ
+         KDbuHwCJB5DGK0GaRh/bZSvtjVCqApi7etFt68UyU607711YiV9RDVEgJOP+HnmXFDT3
+         5v/gWIOvrh2KUl/vzhyxZYpAiDGeFWW/rYjrLduW6UXALXrBy0587iAmnrfMGr1KRhYJ
+         A3Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782386959; x=1782991759;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=V8DekyuZFm8kNJKd8ijojgD5FjCszYptkn1mojUsymk=;
-        b=L5msUhRkhv9OuNPbMQLi95CwUJLOPqGsrMnxVIW8poAry1RcIatS+AxitAnIFMvCQV
-         G9Su55OlQkPoAq9Iklp/1aRPNWk4AyFXYxhUr6r5WWeusyNOZnEUlxyhq3myPDMpseb2
-         2bgFp0pEOH6Hw+ZCr2hsfEweXzWwKcrj55mAxUc1df6oPy66xRoRb8F1T9Cy74hF2Ul/
-         gxOQwhJ2ZCjo2N+IKsMYZqyG/ZveXrRt95DH5JiNVOv5smnjAQWql4AJR+E+k/BtITK4
-         M6wF0rkXghxV9luH6UiGKzKlQaziVKLqKhPFicj4Tkiuk5rEWsXg+a6eywcDFLex41JV
-         HIUA==
-X-Gm-Message-State: AOJu0YzpfmN9aYAnDqqb1gff4PS6RRh2XOLupYlks6aGkBBBIRqf+3X6
-	49a2WgkXW+5x8lOcnu59tuMW8reBshjZio8m3iQ5pSG0heF5jqJVekHhpUPo/w==
-X-Gm-Gg: AfdE7cki/Yt4Hw7b1NSTVJSw82GH2ERrcYKCUD2XpmUBMn0DyBt7mFlqrJQ6sB4Xhy4
-	sXLc5/wEQdXmszX25d+qKBNFUpakPZJnhu12PYIxJ9g69LPQ5zpwT+tJNqP6NgT3vAdSIB7PycJ
-	TXV/Nb2aivRHpaLRVJMMIDEkC4ZfupM1qsPnTiB84TbJs8gmNmD9BEV8zhfPGy3wb9qniQqynXo
-	eioQdjiVaycX3ps7vn6+8p/0hHRkq08FRkeuFV4DhspBpN9VzmCkPh7+BfpVyI0iiKQ+f2oHJqa
-	ftA4DzwTCm8+GweOIbDSi0AlkXKPTp1IFZHo3EyLMCjjdCUun0DlrszruSIxu3mLGnV2U1Je4BO
-	eD0VbTG6lypWsfyUOpjFM8xPYMUMZLU+U2ik9ejMbRxm/LgEX7xpPU+sca9Y276VuLCWIyu6zPT
-	Ynj/ytwuyw65P8WfgS3WMgJ84w69Lx9HzXo1G+cTFs2jebuYFqNsEfnwxL2M3IkEBSk2sKW47y7
-	oyYz2Y=
-X-Received: by 2002:a05:7301:2a08:b0:307:e4fa:894b with SMTP id 5a478bee46e88-30c84ba3223mr2722276eec.8.1782386958440;
-        Thu, 25 Jun 2026 04:29:18 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1782387427; x=1782992227;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gnK/0+TnvTsU7klFGLefqowugiRNUuGQYFS44xmyZM8=;
+        b=A/jtd4MYVErSzzZTJ0QUZCAFtkguWowtWyZN7ngL+nL/LyG8uvaaXTZm//LxKqinAO
+         ZuX3Y0IpQnNpVHNRI475WeEinRA6HQLI7XFm6YMhTS8Ryd1SWSpIBuyha4mYf5RIbQW5
+         K245p0YBOENuzPtMpwnVthDIo03/pNgKUqsgdMKW9K1rIv987gcIAAl2R5AWytXli9t6
+         2mUiXnobCanuVHcemQa9d5Yw4Y9K50BiX2AI/dpy2Gzht7VzdJlWFpuRSJCKML460vT1
+         kzOBctR89yUQ7NeLAVqjNhfSQH7vQlS2TJXqEZRbW1sbHKWOE/6IYb5Q+tk3eoV87ITM
+         GHAA==
+X-Forwarded-Encrypted: i=1; AHgh+RogmA/mFwklfCJc2wOuylxoZ/36SBzu41kNEw1c4mn1MS68gLX054wknH6Ylp9RyknoVZMKZUNwTqY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxmd+yhYBxi1XfG1toIwPR3XkB5Ipl7OiaYKSfmWCHPNGb75NLD
+	M1OgglbbKt+sTWP8GIEZ/atw0qeQQQgDA+iwqHWECTJBwYSsJj5+FvjG
+X-Gm-Gg: AfdE7cnzWyRFZOO9JB61Y8Tzrh5GgexAnZclaBpgFaFMOMqB4xRbeocQHrlPrHkNIkO
+	s/58TZIT3vYqBAFWFB46eFh/amq3u3uxc+64FHaRclbRoIiFW/bBwTxquDRBNAQeHCgYrLY+jnC
+	8F88AYvl8Dyd/3KS+mdGb16h5NFbSRmEh4CfbngarD4kIE3cIn+jMJjJ+r3ngG345xPMJlegYt4
+	Kx5rhHYchqQBl4FkroF3R45IRrXrWgtKWQLk8HnOZJrUWOxyOLXA9k0jp8MDf2oYQxXQrwMQd6O
+	rRpMQodPGCnX3fqpVIxcN6XiQf4G6tPZ9wv/aTlbL8LnSynVuRhTahufHOfKx1AndX9eeHwHiwK
+	DaBYrjMs/dE/tiykllplkqyYrT5JRUeqNqOXassiL5AYJCeApsZKCKLPlLEr6zAKarbVxyBAd7c
+	L4tzWpA+tI6Y2XAewVg3JLzbpanBLjS83QmHRvB4BMaGJCNK8Y2S32uMOervSJIa67pH5zAVdis
+	ZViR8Y=
+X-Received: by 2002:a05:7300:7c21:b0:30c:6847:c2ec with SMTP id 5a478bee46e88-30c850a9096mr2615045eec.32.1782387427005;
+        Thu, 25 Jun 2026 04:37:07 -0700 (PDT)
 Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c7cab08c2sm8744614eec.29.2026.06.25.04.29.17
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c7ca69c8asm9061887eec.26.2026.06.25.04.37.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2026 04:29:18 -0700 (PDT)
+        Thu, 25 Jun 2026 04:37:06 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-To: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: nvdimm@lists.linux.dev,
-	Dan Williams <djbw@kernel.org>,
+Date: Thu, 25 Jun 2026 04:37:04 -0700
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
 	Dave Jiang <dave.jiang@intel.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	John Groves <John@Groves.net>,
-	Gregory Price <gourry@gourry.net>,
-	Anisa Su <anisa.su@samsung.com>
-Subject: [PATCH v11 31/31] Documentation/cxl: Document DCD extent handling and DC-backed DAX regions
-Date: Thu, 25 Jun 2026 04:05:08 -0700
-Message-ID: <20260625112638.550691-32-anisa.su@samsung.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260625112638.550691-1-anisa.su@samsung.com>
-References: <20260625112638.550691-1-anisa.su@samsung.com>
+	Ira Weiny <iweiny@kernel.org>, Dan Williams <djbw@kernel.org>,
+	Li Ming <ming.li@zohomail.com>, linux-cxl@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] cxl/pmem: Format nvdimm serial numbers as decimal
+Message-ID: <aj0S4AW-V6IMayd-@AnisaLaptop.localdomain>
+References: <20260619055932.1354182-1-alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260619055932.1354182-1-alison.schofield@intel.com>
 
-Extend the CXL and DAX driver-api documentation to cover Dynamic
-Capacity Devices.
+On Thu, Jun 18, 2026 at 10:59:29PM -0700, Alison Schofield wrote:
+> The CXL NVDIMM security passphrase key is looked up by the description
+> "nvdimm:" followed by the device serial string. For serial numbers of
+> 10 and above, the kernel auto-unlock path fails to find the key
+> because ndctl names it with a decimal serial and the kernel uses hex.
+> 
+> That means a passphrase-protected device cannot be unlocked after a
+> reboot, and the pmem namespaces it backs do not come up. Devices
+> without an enrolled passphrase are unaffected.
+> 
+> The mismatch occurs for any serial number of 10 and above. Since CXL
+> device serial numbers are vendor-assigned 64-bit values, that covers
+> essentially all real hardware once security is enabled.
+> 
+> The 'id' sysfs attribute is established ABI that ndctl consumes as
+> decimal, so format the kernel's serial string the same way. A u64
+> decimal string requires up to 20 digits plus a NUL byte, so grow
+> CXL_DEV_ID_LEN to fit it.
+> 
+> The issue was exposed by CXL unit test cxl-security.sh when cxl_test
+> mock serial numbers were recently extended to 10 and above.
+> 
+> Cc: <stable@vger.kernel.org>
+> Fixes: b5807c80b5bc ("cxl: add dimm_id support for __nvdimm_create()")
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-cxl-driver.rst gains a "Dynamic Capacity Extents" section describing
-the conditions under which the CXL core accepts an offered extent
-(per-extent: region resolution, full ED-range containment,
-no-overlap, duplicate tolerance; per-tag-group: host-wide tag-uuid
-uniqueness, sequence-number integrity, partition equality,
-alignment) and the conditions under which a release request is
-honoured (DPA-range containment in some member, tag match,
-DAX-layer EBUSY deferral, whole-tag-group release).  The host-wide
-uniqueness gate is enforced by the cxl_tag_register registry in
-drivers/cxl/core/extent.c.  For sequence numbers the doc spells out
-both regimes — device-stamped 0..n-1 on sharable allocations and
-host-assigned arrival-order 0..n-1 (assigned by cxl_realize_group())
-on non-sharable allocations — and notes that the DAX layer sees one
-unified 0..n-1 dense invariant.
+Thanks for the fix! Can confirm from my ndctl-test runner runs
+that cxl-security.sh passes when applied on top of DCD v11 patches
 
-dax-driver.rst gains a "Dynamic Capacity (DC) Regions" section
-that lays out the four-object layering device extent → dc_extent →
-dax_resource → DAX device, with cardinalities: one tagged
-allocation maps to one cxl_dc_tag_group containing N dc_extents and
-N dax_resources, claimed into one DAX device with N range entries
-in seq_num order; an untagged Add delivery becomes its own
-single-member group.  Each dc_extent carries its own hpa_range —
-there is no aggregated bounding-box range across siblings.
-Tag-based DAX device creation, DC-only sizing rules (no non-zero
-resize, size=0 to destroy), and the uuid attribute semantics are
-documented alongside.
+https://github.com/anisa-su993/ndctl-test-runner/actions/workflows/main.yml
 
-Signed-off-by: Anisa Su <anisa.su@samsung.com>
----
- .../driver-api/cxl/linux/cxl-driver.rst       | 149 +++++++++++++++
- .../driver-api/cxl/linux/dax-driver.rst       | 169 ++++++++++++++++++
- 2 files changed, 318 insertions(+)
-
-diff --git a/Documentation/driver-api/cxl/linux/cxl-driver.rst b/Documentation/driver-api/cxl/linux/cxl-driver.rst
-index dd6dd17dc536..581dca271749 100644
---- a/Documentation/driver-api/cxl/linux/cxl-driver.rst
-+++ b/Documentation/driver-api/cxl/linux/cxl-driver.rst
-@@ -619,6 +619,155 @@ from HPA to DPA.  This is why they must be aware of the entire interleave set.
- Linux does not support unbalanced interleave configurations.  As a result, all
- endpoints in an interleave set must have the same ways and granularity.
- 
-+Dynamic Capacity Extents
-+========================
-+
-+A `Dynamic Capacity Device (DCD)` advertises capacity in `DC partitions`
-+and surfaces individual chunks of that capacity to the host as `extents`.
-+The device may add an extent at any time (a `pending add`) and may
-+request that a previously accepted extent be released (a `pending
-+release`).  Each transition is mediated by a mailbox handshake whose
-+state machine the CXL driver enforces in
-+:code:`drivers/cxl/core/{mbox.c,extent.c}`.
-+
-+Extents that share a non-null tag form one logical allocation.  Each
-+surviving member becomes its own :code:`struct dc_extent` (per-extent
-+sysfs device, per-extent HPA range); their containing tag group is an
-+internal-only :code:`struct cxl_dc_tag_group` keyed by UUID with no
-+sysfs identity.  Each :code:`dc_extent` becomes one
-+:code:`dax_resource` on the DAX side, and a tagged DAX device is built
-+by claiming every :code:`dax_resource` that carries the tag.
-+
-+For DAX-side semantics — how accepted extents materialize into
-+:code:`dax_resource` objects and DAX devices — see
-+:doc:`dax-driver`.
-+
-+Accepting Extents
-+-----------------
-+Extents are made available to the host from the device through DC ADD events.
-+Event records contain extents, which may be tagged or untagged, shared or
-+not shared. Multiple event records can by chained together by the `More` flag.
-+
-+The unit of allocation is a `tag`.  All extents
-+sharing a tag form one allocation; the More flag is a delivery boundary
-+only, meaning when the More chain ends, the host can assume that all extents
-+have been collected for each tag.
-+A tag may be the null UUID (an `untagged` allocation, valid in
-+non-sharable regions) or a non-null UUID identifying a sharable or
-+non-sharable allocation.
-+
-+When a `More`-terminated chain of pending adds closes, the driver
-+processes the pending list one tag group at a time.  A group is
-+committed only if it passes every gate below; failing any gate drops
-+the entire group with a firmware-bug warning, and the dropped extents
-+do not appear in the :code:`ADD_DC_RESPONSE`.  There is no
-+partial-extent acceptance — either an offered extent is accepted whole
-+or it is dropped whole.
-+
-+Per-extent gates (applied in :code:`cxl_add_extent`,
-+:code:`drivers/cxl/core/extent.c`):
-+
-+* The extent's DPA range must resolve to a CXL region via
-+  :code:`cxl_dpa_to_region()`.  An extent with no owning region is
-+  dropped; the device sees the omission from :code:`ADD_DC_RESPONSE`.
-+* The extent's DPA range must be `fully contained` in the endpoint
-+  decoder's DPA range.  An extent that straddles the decoder boundary
-+  is rejected with :code:`-ENXIO`; the driver never clips an extent to
-+  fit.
-+* The extent must not overlap an extent already present in the same
-+  region.  Overlap classification is done in
-+  :code:`cxlr_dax_classify_extent()` using :code:`range_overlaps()`.
-+  Exact duplicates of a previously-accepted range are tolerated —
-+  accepting the same range twice is a no-op, which simplifies
-+  probe-time scans of the device's existing accepted list.
-+
-+Per-group gates (applied in :code:`cxl_add_pending`,
-+:code:`drivers/cxl/core/mbox.c`):
-+
-+* `Host-wide tag uniqueness`: a non-null tag must not already
-+  correspond to a live :code:`cxl_dc_tag_group` anywhere on this host.
-+  The orchestrator (FM) owns tag-UUID allocation per spec; the
-+  registry in :code:`drivers/cxl/core/extent.c`
-+  (:code:`cxl_tag_register` / :code:`cxl_tag_already_committed`)
-+  catches firmware bugs and orchestrator misbehavior across every
-+  region and memdev.  Skipped for the null UUID, which has no
-+  cross-chain identity.
-+* `Sequence-number integrity`: every member must carry the wire
-+  field :code:`shared_extn_seq == 0` (non-sharable allocation), or
-+  the group's sorted sequence numbers must be exactly
-+  :code:`0, 1, …, n-1` (sharable allocation).  Mixed, gapped,
-+  duplicate, or sets that do not start at 0 are rejected.
-+* `Partition equality`: every tagged extent in the group must
-+  resolve to the same DC partition.  A single allocation cannot span
-+  partitions because CDAT describes sharable / writable / coherency
-+  attributes per-partition.  Skipped for the null UUID.
-+* `Alignment`: every extent's :code:`start_dpa` and :code:`length`
-+  must be :code:`PMD_SIZE`-aligned.  Partial acceptance
-+  of an aligned subset would leave an unusable DAX device, so the
-+  group is dropped instead.
-+
-+Surviving extents are sorted by the wire field
-+:code:`shared_extn_seq` — stable, so arrival order is preserved for
-+the all-zero non-sharable case — and each becomes a
-+:code:`dc_extent` inserted into a fresh :code:`cxl_dc_tag_group`
-+keyed by the group's UUID.  Each :code:`dc_extent` carries its own
-+:code:`hpa_range`; the tag group itself has no aggregate range.
-+
-+As each surviving extent is attached the host assigns it a 0..n-1
-+:code:`seq_num`: for sharable allocations this equals the
-+device-stamped :code:`shared_extn_seq` directly; for non-sharable
-+allocations the device sends :code:`shared_extn_seq == 0` and the
-+host fills in the arrival-order position (assigned in
-+:code:`cxl_realize_group`).  The DAX layer enforces the same
-+:code:`0..n-1` dense invariant in both cases.
-+
-+The tag group is brought online via :code:`online_tag_group()`,
-+which registers every member :code:`dc_extent` as an
-+:code:`extentX.Y` child of :code:`cxlr_dax->dev`, the DAX layer is
-+notified with :code:`DCD_ADD_CAPACITY`, and the accepted extents are
-+spliced into the response list for a single :code:`ADD_DC_RESPONSE`
-+mailbox per More-chain.
-+
-+Releasing Extents
-+-----------------
-+
-+A release may be initiated by the device (a pending release
-+notification) or by the host (when destroying a DAX device or tearing
-+down a region).  Both paths converge on :code:`cxl_rm_extent`
-+(:code:`drivers/cxl/core/extent.c`).
-+
-+Per-extent gates:
-+
-+* The DPA range must resolve to a CXL region.  If it does not — for
-+  example, an extent left over from a host crash that has not yet
-+  been re-claimed, or a duplicate release racing region teardown —
-+  the release is acknowledged via :code:`memdev_release_extent()` so
-+  the device knows the host is not using the capacity, and the
-+  operation returns :code:`-ENXIO`.
-+* The DPA range must be `fully contained` in some member
-+  :code:`dc_extent`'s :code:`dpa_range` on the region's
-+  :code:`cxlr_dax`, and the tag (UUID) on that member's
-+  :code:`cxl_dc_tag_group` must match the release request.  Releases
-+  are keyed by :code:`(DPA range, tag)` rather than by pointer
-+  because the device, not the host, supplies the identity.  A
-+  request that matches no :code:`dc_extent` is rejected with
-+  :code:`-EINVAL`.
-+
-+If those gates pass, the DAX layer is notified with
-+:code:`DCD_RELEASE_CAPACITY` and consulted for permission to proceed.
-+If the DAX layer returns :code:`-EBUSY` — the capacity is still mapped
-+or otherwise in use — the release is deferred and
-+:code:`cxl_rm_extent` returns success without unregistering anything.
-+When the DAX layer ultimately grants release,
-+:code:`rm_tag_group()` invalidates the backing memregion once for the
-+whole group, then unregisters every member :code:`dc_extent` device,
-+which cascades through the DAX layer to drop the corresponding
-+:code:`dax_resource`\ s.
-+
-+The release path is always whole-tag-group: tagged allocations
-+release atomically, and the kernel does not split a group in response
-+to a sub-range release request.
-+
- Example Configurations
- ======================
- .. toctree::
-diff --git a/Documentation/driver-api/cxl/linux/dax-driver.rst b/Documentation/driver-api/cxl/linux/dax-driver.rst
-index 10d953a2167b..d869bcad41f4 100644
---- a/Documentation/driver-api/cxl/linux/dax-driver.rst
-+++ b/Documentation/driver-api/cxl/linux/dax-driver.rst
-@@ -27,6 +27,175 @@ CXL capacity in the task's page tables.
- Users wishing to manually handle allocation of CXL memory should use this
- interface.
- 
-+Dynamic Capacity (DC) Regions
-+=============================
-+A region backed by a CXL `Dynamic Capacity Device (DCD)` is a `DC region`:
-+its HPA window is fixed at probe time, but the DPA capacity that fills the
-+window arrives and departs at runtime as the device offers and reclaims
-+`extents`.  DC regions are distinguished from static regions by the
-+:code:`IORESOURCE_DAX_DCD` flag on the :code:`dax_region`.
-+
-+For the CXL-side rules governing when an offered extent is accepted or a
-+release request is honoured, see :doc:`cxl-driver`.  This section covers
-+the DAX-side mapping between accepted extents and DAX devices.
-+
-+The Extent Layering Model
-+-------------------------
-+Four objects sit between the wire-level CXL extent and the
-+user-visible DAX device.  Understanding the cardinality between them
-+is the key to the DC-region model.
-+
-+::
-+
-+    device extents     dc_extent           dax_resource         DAX device
-+    (CXL device)       (CXL core)          (DAX bus)            (/dev/daxN.Y)
-+    -------------      -------------       -------------        ------------
-+    e1 ─┐                ┌─► dc_e1 ──►     res_1 (seq=0) ──┐
-+    e2 ─┼─── tag A ──►   ┼─► dc_e2 ──►     res_2 (seq=1) ──┼──►  daxN.0
-+    e3 ─┘                └─► dc_e3 ──►     res_3 (seq=2) ──┘     (claimed by tag A,
-+                                                                   size = Σ |e_i|)
-+
-+    e4 ─── tag B ────►     dc_e4 ──►       res_4 (seq=0) ────►   daxN.1
-+
-+    e5 ─── null tag ─►     dc_e5 ──►       res_5 (seq=0) ────►   daxN.2
-+    e6 ─── null tag ─►     dc_e6 ──►       res_6 (seq=0) ────►   daxN.3
-+
-+The CXL core groups extents sharing a non-null tag into a single
-+:code:`cxl_dc_tag_group` (internal-only, no sysfs identity), but each
-+member extent stays a distinct :code:`dc_extent` with its own HPA
-+range.  The DAX bridge creates one :code:`dax_resource` per
-+:code:`dc_extent`, and userspace claims a DAX device by writing the
-+tag's UUID to the seed device's :code:`uuid` attribute, which carves
-+every matching :code:`dax_resource` (in :code:`seq_num` order) into
-+the device's :code:`ranges[]` array.
-+
-+`Device extent`
-+  The unit the CXL device delivers over the mailbox: a
-+  :code:`(DPA, length, tag, shared_extn_seq)` tuple inside an
-+  Add-Capacity event.  The tag is either a non-null UUID (a
-+  `tagged allocation`) or the null UUID (`untagged`).
-+
-+:code:`dc_extent`
-+  The CXL core's per-extent object, one per surviving device extent.
-+  Each :code:`dc_extent` is registered as its own :code:`extentX.Y`
-+  sysfs device under :code:`cxlr_dax->dev` and carries its own
-+  :code:`hpa_range` — there is no aggregated / bounding-box HPA
-+  range across siblings.  Members of one tag group point at a
-+  shared :code:`cxl_dc_tag_group` (which holds the UUID and a
-+  manual refcount on the surviving siblings) but otherwise exist as
-+  independent kernel objects.
-+
-+  For a `non-null tag`, the host-wide tag-uniqueness gate
-+  (:doc:`cxl-driver`) guarantees there is at most one
-+  :code:`cxl_dc_tag_group` per UUID on the host, so the set of
-+  :code:`dc_extent`\ s sharing that UUID is a single allocation.
-+
-+  For the `null tag` there is no cross-event identity — the spec is
-+  silent on aggregating untagged extents across Add-Capacity events.
-+  Each untagged device extent becomes its own :code:`dc_extent` in
-+  its own single-member tag group; two untagged extents delivered
-+  separately are two distinct allocations.
-+
-+:code:`dax_resource`
-+  The DAX bus's per-extent view, one-to-one with :code:`dc_extent`.
-+  When the CXL DAX driver receives a :code:`DCD_ADD_CAPACITY`
-+  notification it iterates the tag group and calls
-+  :code:`dax_region_add_resource()` once per member, creating one
-+  :code:`dax_resource` per :code:`dc_extent`.  Each
-+  :code:`dax_resource` carries that member's HPA range, the tag
-+  UUID (copied from :code:`dc_extent->group->uuid`), and a 0..n-1
-+  :code:`seq_num` so :code:`uuid_claim_tagged` can carve the matched
-+  set into the device's :code:`ranges[]` array in the right order
-+  (see :code:`drivers/dax/bus.c`).
-+
-+`DAX device` (:code:`/dev/daxN.Y`)
-+  Created by userspace claiming a set of :code:`dax_resource`\ s via
-+  the :code:`uuid` sysfs attribute.  Each DAX device corresponds to
-+  exactly one allocation:
-+
-+  * A `tagged` DAX device is built from every :code:`dax_resource`
-+    carrying the tag — one per :code:`dc_extent` in the allocation
-+    — carved into the device's :code:`ranges[]` in :code:`seq_num`
-+    order.  Its size equals the sum of every member's size.
-+  * An `untagged` DAX device is built from one untagged
-+    :code:`dax_resource` and its size equals that one extent.
-+
-+So the end-to-end rule is: **one tagged allocation = one
-+cxl_dc_tag_group = N dc_extents = N dax_resources = one DAX device
-+with N range entries**.  An untagged device extent becomes its own
-+:code:`dc_extent` / :code:`dax_resource` / single-range DAX device,
-+claimed one at a time.
-+
-+Release follows the same layering in reverse.  When the CXL core
-+calls :code:`rm_tag_group()` (after the device asks for release and
-+the DAX layer consents), the DAX bridge collects every matching
-+:code:`dax_resource` and removes them as a set via
-+:code:`dax_region_rm_resources()`.  The removal is refuse-all-or-none
-+under :code:`dax_region_rwsem`: if any member is in use, the whole
-+group stays.  When removal commits, the HPA capacity returns to the
-+region's free pool and any DAX device that had claimed it is left
-+with no backing capacity.  Userspace tears the DAX device down via
-+:code:`daxctl destroy-device` (size=0, then write the device name to
-+the region's :code:`delete` attribute).
-+
-+UUID-Based DAX Device Creation
-+------------------------------
-+A DAX device on a DC region is created by writing a UUID to the
-+seed device's :code:`uuid` attribute
-+(:code:`/sys/bus/dax/devices/daxN.Y/uuid`).  The seed starts at
-+size 0; writing :code:`uuid` is a `claim` operation that resolves
-+the layering above and populates the device:
-+
-+* A `non-null UUID` claims `every` :code:`dax_resource` whose tag
-+  matches.  :code:`uuid_claim_tagged` (in
-+  :code:`drivers/dax/bus.c`) collects them, sorts by
-+  :code:`seq_num`, enforces the dense :code:`0..n-1` invariant, and
-+  carves each via :code:`__dev_dax_resize` in :code:`seq_num` order
-+  so the device's :code:`ranges[]` array is dense and ordered.
-+  The resulting DAX device represents exactly the tagged
-+  allocation: its size equals the sum of every member extent's
-+  size.
-+
-+  The dense :code:`0..n-1` invariant is the unified rule the CXL
-+  side maintains for both sharable and non-sharable allocations
-+  (see :doc:`cxl-driver`); the match set has exactly one entry per
-+  :code:`dc_extent` in the tag group.
-+
-+* The value :code:`"0"` is shorthand for the null UUID and claims
-+  exactly `one` untagged :code:`dax_resource`.  Untagged
-+  :code:`dax_resource`\ s correspond to independent untagged
-+  allocations; collapsing several into one device would aggregate
-+  unrelated capacity, so each :code:`uuid` write consumes a single
-+  untagged resource.
-+
-+* A write that matches no :code:`dax_resource` returns
-+  :code:`-ENOENT` and the device remains at size 0.
-+
-+* Writes to the :code:`uuid` attribute on non-DC regions return
-+  :code:`-EOPNOTSUPP`; the attribute itself is read-only (0444) on
-+  non-DC devices.
-+
-+The device's size is determined entirely by the backing allocation:
-+users do not choose a size on DC regions.  Accordingly, the
-+:code:`size` attribute on a DC DAX device rejects any non-zero resize
-+(grow or partial shrink) with :code:`-EOPNOTSUPP`.  Writing :code:`0`
-+is still permitted and is
-+how :code:`daxctl destroy-device` returns each claimed extent to the
-+region's available pool before the device's name is written to the
-+region's :code:`delete` attribute.
-+
-+Reads of :code:`uuid` report the tag identifying the capacity
-+backing the device:
-+
-+* For a non-null-UUID-claimed DC DAX device, :code:`uuid` reads
-+  back the claimed UUID.
-+* For a DC DAX device claimed via :code:`"0"`, or for any
-+  non-DCD DAX device, :code:`uuid` reads back the null UUID
-+  (:code:`00000000-0000-0000-0000-000000000000`).
-+
-+See :code:`Documentation/ABI/testing/sysfs-bus-dax` for the
-+authoritative attribute contracts.
-+
- kmem conversion
- ===============
- The :code:`dax_kmem` driver converts a `DAX Device` into a series of `hotplug
--- 
-2.43.0
-
+> ---
+>  drivers/cxl/core/pmem.c | 10 ++++++----
+>  drivers/cxl/cxl.h       |  3 ++-
+>  2 files changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+> index 68462e38a977..2ccdf04c1f43 100644
+> --- a/drivers/cxl/core/pmem.c
+> +++ b/drivers/cxl/core/pmem.c
+> @@ -219,12 +219,14 @@ static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_nvdimm_bridge *cxl_nvb,
+>  	dev->bus = &cxl_bus_type;
+>  	dev->type = &cxl_nvdimm_type;
+>  	/*
+> -	 * A "%llx" string is 17-bytes vs dimm_id that is max
+> -	 * NVDIMM_KEY_DESC_LEN
+> +	 * dev_id becomes the nvdimm dimm_id used for security key
+> +	 * lookups. Match the decimal serial emitted by the CXL 'id'
+> +	 * sysfs attribute. A u64 decimal string requires 20 digits
+> +	 * plus a NUL byte and must still fit in NVDIMM_KEY_DESC_LEN.
+>  	 */
+> -	BUILD_BUG_ON(sizeof(cxl_nvd->dev_id) < 17 ||
+> +	BUILD_BUG_ON(sizeof(cxl_nvd->dev_id) < 21 ||
+>  		     sizeof(cxl_nvd->dev_id) > NVDIMM_KEY_DESC_LEN);
+> -	sprintf(cxl_nvd->dev_id, "%llx", cxlmd->cxlds->serial);
+> +	sprintf(cxl_nvd->dev_id, "%lld", cxlmd->cxlds->serial);
+>  
+>  	return cxl_nvd;
+>  }
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 1297594beaec..3463faeb8a15 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -487,7 +487,8 @@ struct cxl_nvdimm_bridge {
+>  	struct nvdimm_bus_descriptor nd_desc;
+>  };
+>  
+> -#define CXL_DEV_ID_LEN 19
+> +/* Holds a u64 serial as a decimal string: up to 20 digits + NUL */
+> +#define CXL_DEV_ID_LEN 21
+>  
+>  enum {
+>  	CXL_NVD_F_INVALIDATED = 0,
+> 
+> base-commit: 8cd9520d35a6c38db6567e97dd93b1f11f185dc6
+> -- 
+> 2.37.3
+> 
