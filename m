@@ -1,406 +1,196 @@
-Received: from mail-dy1-f177.google.com (mail-dy1-f177.google.com [74.125.82.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013050.outbound.protection.outlook.com [40.93.201.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0349379EE1
-	for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 09:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782379118; cv=none; b=BVGaUQfY3fEU651UozZH4ZaB8tO6A1A0tFQ5x7uvBuymXFF+gcRrueS7DNfbQVGTCJEA/PL+lyiYihujTdXd28G6Qcpqo1OZHW/05VFHmpF2CIFVi70/qVr5Kc0e78JMi/k1xZySARHjxrDl8hwrqNuKRG+4HxIVvQOLHW93D/k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782379118; c=relaxed/simple;
-	bh=FAA7Aq1RPu7EhVQFkK71XMxM6eTTiNWxUSJXK1kKY8M=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QG9jR0hgPQ4scxMQijquGdKZiWFKf/lC+qfElZWrSh/WNNieFonlLwhzpzRQpEwE6S0GOcbyIUykXRog3GBTzuqYCnBG5QYSQHDivgEajBm9ZJyDLHTpVpronQgNML2yPPoOE14pJTREpCLI3IofDLtGERvUVM1g6tIUcy/Sedc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7F1B1hw; arc=none smtp.client-ip=74.125.82.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4272346AC3;
+	Thu, 25 Jun 2026 09:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782379501; cv=fail; b=jQYuznxrOg7rTPJ0HDwRvCDZM9jhz9YFv4fnJUcX6FryrgzLup9sw+mnXtjex2jUpk1BHvnTcY/Y1AtuYPyGEEqUJhvoB79TW+kpi7msWiu3PG3zp+MHbxOwZQFkMgjcKyVIoSl/d1eLT5yEyiPh0UEzjeAYO7ZjvZ3hZG2SMso=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782379501; c=relaxed/simple;
+	bh=amVpaaQ/FON4RuO7vffD0AQvdSLxr6rtytY57DJpwnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=E650S0Bkj4gnOhqIjqT83VTzYa44xnI9OJOLIXTkGkXIsJX0rzxmKE+QjUNlchysOwuHZXAEFPH09xkkDosHOSSUrzMjTmLnymLkFtpAh4HeLR4JPQsIShINFAArrfSximch6PyAT0P46Gz88g8P8Hzg66Jt+HOUM/dFsx7ties=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=fail (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hzMfE9tt reason="signature verification failed"; arc=fail smtp.client-ip=40.93.201.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7F1B1hw"
-Received: by mail-dy1-f177.google.com with SMTP id 5a478bee46e88-30c591fb1cbso2979951eec.1
-        for <linux-cxl@vger.kernel.org>; Thu, 25 Jun 2026 02:18:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782379116; x=1782983916; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+qesORQ0kTh5e8tzkV0G9+zKZSg59oQupwNKCuTss8Y=;
-        b=W7F1B1hwjM2ZRu4I5WxV5lBpUheeNYw8gVKaviaIVrruLBHgABe1AIBtykr0eRzmv4
-         Dib1GOqd7rvJiHL3DrmOlm10i1NJmPSQBrcPBsU6NyWn00DsLBgOZrWJm5RPtGwhHj/p
-         +dMGlBhBxOzMWAcaNlVdKvvhKHu+XTNSL4Uqpl2vScKHp4YxRV72+Y2lWt+XxuFXwn0F
-         5jvDPuiicWdYbxOMdOJmPNrcvSL31Bhbqhow9iXBiTX9xZK8pecs+Hz2EHZ505B69xhf
-         FxxF2WySSGvn08khNI5ixIsbpD8suvAk3LSveAFjY3AoFSwFTT01/IPOTq2BYEyzz6Xw
-         pudA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782379116; x=1782983916;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+qesORQ0kTh5e8tzkV0G9+zKZSg59oQupwNKCuTss8Y=;
-        b=ilw57b1SO6EkYrjj9PoZpVScrfbzZrK9LsT5EJY6N8A9G9veALfOcENBuWlIP1Fe84
-         tAU8Kd0+mKZE+cxtiSyz7COunsYgOFsf1KOYmm2pG7SGxSbizKkzkBeBEMbTHP+VHYEU
-         teRi+vmPwBwGEYQgt5EuxL84xyWv3V6yUge1dKAf0+lMJf15kWnBC54OpeU2wRqclIwe
-         vL2rWwCJ1bV+Bf9M4YPGlB1/pBcFdAKTwJqTg/FWovRCTGhotVfMcyAqiJdQ+93kCB4S
-         tvyL7+s5vcyPaj4F4ry11x2HQTrQgdTtD4E1JY3TvdBjCwWku9Nc7D15TStVgV7e4Qi2
-         FIVA==
-X-Forwarded-Encrypted: i=1; AHgh+Rr4tCo3eKozc9cPdv+bCYFYloFoycm8geuTkhtxjB1QBVeWa9pB709QGCyrFtzWDvFlNQNApVuhcZ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyY6eVh4bmT64avEExk8lAXSVr3X9qu3WJonVrkxSdX1DWJsEeC
-	VRgMR5FwYS5cilhn+yLs/9oEa3JZOxkB1WRFy50TRtnIU7gQxg5yMDCd
-X-Gm-Gg: AfdE7cm4kpm8IoNnVV+yEx1Q1CVNuxs+CPuQyX+VU/cmYU41kePMGJIQim0foWbKLNE
-	NpGOrQRH6SRm67hz78GmrIPl+m3wdPvQU74Zjp0V3eAIr+Lnd2HKXqUt99M4Oj84ZAoCo4zQRr2
-	cZjsIFZkOB8yo8x0Fl+F+4ueHJyjV7cBZbrowzjoTEAYbDu+rz1QdZKD1VQ4IUD5G7ol1hakBIS
-	ychu8SBOaQ0p7ziYfJeJg1+A2cPdMG7tFSssz20GsGLdWd/zQuISwE0ES/hJ0HNCdsNq5n8GcdM
-	bxHLslmhxKuMiT4854nsgU2NtXS+DNHZIP5+S00+S7MOs99fd57IyfrBDcyqAOcgS9Fmy6aFPtm
-	jQJSkk8MuPgfHQ/LAHYZ6VkpF/wDAEKiGWHNEqxjFsf10f0R40ePokJ9nGlH0FvK73KBShJhgM4
-	o0scczdNHiVjaYO6VQoum69bJKSsoS/OqHoELkQb/ABebWhoQEvywqNpXEQ0Y7QsV9KHlDjwvRU
-	lKyv/k=
-X-Received: by 2002:a05:7300:e801:b0:2f2:6dde:df54 with SMTP id 5a478bee46e88-30c84e0bb70mr1849264eec.33.1782379115492;
-        Thu, 25 Jun 2026 02:18:35 -0700 (PDT)
-Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30c7c4c9dafsm8496136eec.1.2026.06.25.02.18.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jun 2026 02:18:35 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Thu, 25 Jun 2026 02:18:34 -0700
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	Dan Williams <djbw@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <iweiny@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	John Groves <John@groves.net>, Gregory Price <gourry@gourry.net>,
-	Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH v6 4/7] libcxl: Add extent functionality to DC regions
-Message-ID: <ajzyail9KEDk59XZ@AnisaLaptop.localdomain>
-References: <20260523095043.471098-1-anisa.su@samsung.com>
- <20260523095043.471098-5-anisa.su@samsung.com>
- <7ef3859e-2140-4daf-a9d5-ca7816fe9a4e@intel.com>
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hzMfE9tt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TWxf0feqyEy9xOa/jXEpIpbm6qw2VXl8do1EI1ZZ6bt5sUbqYoFzL1c9cDPFOxwEnRgdRbmFAf+LoHh0H7J8sODYliX7VBFEqcq1jMzNyrISTZeE8fpXocbY2QXR7y5cleUTbzZwWMpj1Llo/lb5yL+RRXq63Y3KuSDTKfd/5b752BYu7Crry0zV079c3sVA3gqHqOsD9GSJIa9GX9jzeiqcRh9lBc4XkBbnRRXz6rr0K7JuttCtGPsI/sWkop3wN9UM3cFviWj5CgpjDz4D0mOX883UvHc9fGZEOOSDoo2FgreocnCxN75RsizHzbrKMdOYxKspBZoTk6OuS5Fpqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZZw8wdDSN3Y0+aqOHcXEZAjsmk/DZdX+BFQDi2FjCAY=;
+ b=RwL8B2SG1wxWKWYPaviWG827ks+riue3z+zKh+kUGsw/v514z+wLrs0Q28TSceY+7RY22h9oqkQcWY5fpZhST2AxdUNyQrDnR/fy/4JZykgM7Xdnj+359ReyCkaKDLvA2nwSU/tzB70xGP2mDcxmgGcRlD1LoAlL/K2lgKEP3am67lZse8wZ8Fgd5We2GdLvn6KdtTPxtEL9tG7lvoIz7xJBesqkP88zzUR/ONNd/LlCsfY1ZuoTLA9vcVuKxH/QiVdUkXS3ppOHTKuH7r+aXATgPSrHDFE0EJt6GXTKHRhiCBfffOdKTY7ZtnS0GND8+cmEGREYctA6STEaJFB9bQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZZw8wdDSN3Y0+aqOHcXEZAjsmk/DZdX+BFQDi2FjCAY=;
+ b=hzMfE9ttAIBHpYCT7xKmk4CkJJTCsktTnNFnFQyThYjwjxmkJ/HjkwtRf9Mz0+3fLWNrlfKtAot94R7kuoh0gWwvJuTsdCrOVL9sb/iyHN915EI0+mmfgLwbLDtd+7mblLx2hKp/zi5qpBZ43ADDoaiGHD81E+r0M4qDPvNHG4k/M2EqA9pd//B5ji16dMVIG//aBCPsde3irrPS4MaCXWWQI9qgdX5nEGiw0LrRe0h4JHrKhQskxmdS0LouoMl2JkRBTE1LH4WHJIRIVEt3SL+u+mhG2N/Bo/3P4PYz/LWBOymKY71BG2LVGkr7GJNGfPzrBIJcR5yw5Ifoxv3Yow==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by SN7PR12MB6862.namprd12.prod.outlook.com (2603:10b6:806:265::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.12; Thu, 25 Jun
+ 2026 09:24:47 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0159.012; Thu, 25 Jun 2026
+ 09:24:47 +0000
+Date: Thu, 25 Jun 2026 17:24:40 +0800
+From: Richard Cheng <icheng@nvidia.com>
+To: "Dan Williams (nvidia)" <djbw@kernel.org>
+Cc: dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com, 
+	alison.schofield@intel.com, vishal.l.verma@intel.com, iweiny@kernel.org, 
+	danwilliams@nvidia.com, ming.li@zohomail.com, terry.bowman@amd.com, alucerop@amd.com, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, newtonl@nvidia.com, 
+	kristinc@nvidia.com, kaihengf@nvidia.com, kobak@nvidia.com, mochs@nvidia.com, 
+	Vishal Aslot <vaslot@nvidia.com>
+Subject: Re: [PATCH v5 1/2] cxl/hdm: Allow zero sized HDM decoders
+Message-ID: <ajzzeU5IbdUY37uG@MWDK4CY14F>
+References: <20260623091019.33417-1-icheng@nvidia.com>
+ <20260623091019.33417-2-icheng@nvidia.com>
+ <6a3ae8f486d0e_3c9f100bd@djbw-dev.notmuch>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6a3ae8f486d0e_3c9f100bd@djbw-dev.notmuch>
+X-ClientProxiedBy: SI3PR01CA0012.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:296::11) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7ef3859e-2140-4daf-a9d5-ca7816fe9a4e@intel.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|SN7PR12MB6862:EE_
+X-MS-Office365-Filtering-Correlation-Id: 07ebafad-757a-4b61-f981-08ded29b995d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|366016|23010399003|1800799024|5023799004|4143699003|11063799006|56012099006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	nJnV4Taq0NZRo1LowaFJLJDZi4NzGX9fPEanVa15DviOxWNY3nSGIqQURVZmvlI4B4XZOiAiEFLCAPUIz9Nq9yJStMLmICsuxubj9eEfUThEYzfgShlEXQnLqpcedacLgq4z2Wxx4VZBGHohQXT9XTSOZruTEQ/uMip4N08VSBXMX/BTawEfsy2iKkISDY/LKBl/Ni71K7MPszaNAmpfFBQjCut0WB6yre5Qm1QzZHIumAzd4CevunOBBzK+M/gWny35WD2GAgnHBSD3+TADDtq2sgj/wAYq6FxkaeZOLKS4SUNdqZp21wem6DJ1VqhTKH/FRycrk6T8hjMYj6ix4XvRWBeSjHWklVYRso2zu0H58f5q3Ed6Rlp3tAAE0BLtXGktruLBPC+5ESUlnULHfnyt1So/MHJ8i11jZKiHjOPg8+d3gXciR9CvIwr8Kvj2Wwio2lJ468tf6FDyXWO7vJYrpF47hQB94svHh+bRK8udaz78g0pn+jZORq/8CAJ9qv6v9E+28v1oW3y06MM9DWjhvGMNulWBHLRlnwDDtYW0fMuBV6x9iGNBr/4CuzCoLrexEtnRebVi0M1yr65Hh0hxgRqcUg8z3GBBxgYOTC7mFTymh7n3RikZ+k2LkhVJyu6aJy0oIsrJgqtCn5HGWtvA3Kq+FEXSYB99rl04nRA=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(23010399003)(1800799024)(5023799004)(4143699003)(11063799006)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?iso-8859-1?Q?GikIFpTMnvL2Dp3aye16ArearqxZed8Qsffc8R6ndDmBEzyTxzXdaEqhWs?=
+ =?iso-8859-1?Q?mBff95FZ5/Eb7dc235jiwDtJaLMtU/IXM5yLUENtiOyIySp90P++ws/Dhh?=
+ =?iso-8859-1?Q?D4Z3PYCFv7+UIf5A0XEA8WjiP8vbel6VDNJLedJ/q2sBsZWqR7vWX8yODt?=
+ =?iso-8859-1?Q?2OksVNoq/XIlofVKQHWUOLQyGrq1pjxjM3ujLD5wJWjOj5p2pt+rLmG3x5?=
+ =?iso-8859-1?Q?pHyL9LKsWP1mVDJDxBirApdLGzBPt/Az4Fjcx4GLGOVQwo2vty6KFjJkwa?=
+ =?iso-8859-1?Q?oimhvQfmmVYbnLrWuxx2vUKEqwXlf0BqqnsFZPvIgd2EZgElmmbn3+IT37?=
+ =?iso-8859-1?Q?+jBmNVLPUPivB1xepRYb3foGihA0UN8qg6ohUsuYc+c0g9wEboB5uIBVmU?=
+ =?iso-8859-1?Q?1dwHBSLrhpgj/Iqpx4IO+RaNkipSlWgk7FCf9Xctw6o1uYoKDoBLeoW01v?=
+ =?iso-8859-1?Q?gqUvGCZkNHhh0pMCB45xSsQQCQd3aPeDOOR5tEN7KcFRNy+FaxmftBHaHE?=
+ =?iso-8859-1?Q?44KVBVzGFWr1NJbpwqAyJ+7CRs0t0HPZ7ryKy6oz6/MUTR/KEPqrOiJiOq?=
+ =?iso-8859-1?Q?tkoH3+iEbePjObt0kqcYyuVf4cnhQFleyCNvhGNeM27BcZwTNkYRqX/GmM?=
+ =?iso-8859-1?Q?K1horKGTXkW/yzlAGXl9y6NzKcoPTWAnTvDWgeYfJ2zSLqviIPNoaLxQMt?=
+ =?iso-8859-1?Q?V1jKAyW4V1gDpPX8rkRPQmkuvZCwvjI5Qpvuqb6OynpDF11Ro6K9Qhn1lw?=
+ =?iso-8859-1?Q?1xXOjDFDobqMW1+2mXu2Wc4ft94pV/TCa70KkxEYFd9fKz8tSBS2ZTaWid?=
+ =?iso-8859-1?Q?McW1Tiwl3k0mrNi1O/TtwqfabdKov3jD7PgvMgBorru7x75CgKuvX2dvf5?=
+ =?iso-8859-1?Q?SRtcV3kPLJm4FHPC8wrFIN/mkSEh/VMx9XT2zbu6wmv/l/egyjZpmp0gGE?=
+ =?iso-8859-1?Q?nnrw7N0zvJea2RQGHL2fDZ/CTK+04LN1B59tEX/1k1MHhGbAbXwxTb1mPL?=
+ =?iso-8859-1?Q?+g5xHZkWHFUDOqdeLqOv7+kp+A9MeAakz4oxAYzp2w0pmJzKVEkz0GYsZ5?=
+ =?iso-8859-1?Q?c+G4xoZwzOTeVkrq77i2a0eHpwC+rse6zmOh6lTAK8Flsbg7YymeliH7E3?=
+ =?iso-8859-1?Q?JWXmT663sG3Kd45xB8RU0LOfyGgTdLI1iYg0pMY2B6SqZ5WAFUH8dA4Vvn?=
+ =?iso-8859-1?Q?yuPIBVajjUm2d3YWXJ9FWjxyOO2ome4PcPGyB1WP+RFA9vLSyRUtq230FR?=
+ =?iso-8859-1?Q?uNLakhZkp2tlOwOGlgOynpqfHYp0f5Z9w5oPt8zXUGGcdiXYc8e1mZeAIG?=
+ =?iso-8859-1?Q?3JKqZeJBQIMgOZ1bBrdK1iCuoexQTiwENoA/8/qRAFFqa8xcin+h//pMwy?=
+ =?iso-8859-1?Q?IG2tTyNQB17ZUxcpK4yANM8O3q+qQFL5pAPa0xBc9B+GetLiCx26zaBCYb?=
+ =?iso-8859-1?Q?Y8lGYA//ErHCmwpNBNM1rqaNaSBZQ+ZIg6bkiruiKJuazXILfSi7D1cP2v?=
+ =?iso-8859-1?Q?AHen4+qb4eQfsUqhYIWklj9sW2SbVXz5BqAA+I1iSpDvauCl7PtC9/xWGk?=
+ =?iso-8859-1?Q?4+79PEQwVM5jIQ9KnJK4vmUi2Qa17HvoRIHcp2lxRXBKadoT0Q6LPY/lf7?=
+ =?iso-8859-1?Q?iwFaRXhPU5A6qaID0BwsKXr3mY4IClAH2OJQUVPmarWMS1TGMVSyL3giZN?=
+ =?iso-8859-1?Q?L4XlpiXQ4P8HSEw0JOxQfQiUspdgCGq+f8CtHXtzMkq88jmGrRI5oK8wqX?=
+ =?iso-8859-1?Q?2ifNJ6sYUYKkIQHE0t+13tGlGSTjXz3AN/q+TA7/F8UmOn6zupnWnhHx+4?=
+ =?iso-8859-1?Q?ouZ0lrpFgw=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07ebafad-757a-4b61-f981-08ded29b995d
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2026 09:24:47.1895
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bJaES48QC8W85GZpigtpcS/ROmZFwkfEU8HKl8nZ9ncNX2j/cmuvO947NDIBHwYH+9Y/B2g6QnkHzeXdOivJ7A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6862
 
-On Mon, Jun 08, 2026 at 05:05:58PM -0700, Dave Jiang wrote:
-> 
-> 
-> On 5/23/26 2:50 AM, Anisa Su wrote:
-> > From: Ira Weiny <ira.weiny@intel.com>
+On Tue, Jun 23, 2026 at 01:13:40PM +0800, Dan Williams (nvidia) wrote:
+> Richard Cheng wrote:
+> > CXL r4.0 §8.2.4.20.12 ("Committing Decoder Programming") and §14.13.10
+> > ("CXL HDM Decoder Zero Size Commit") permit committing an HDM decoder
+> > with size 0. BIOS may commit and lock such decoders so the OS cannot
+> > program regions through them, this is a design choice rather than a spec
+> > requirement.
+> > The kernel rejected these with -ENXIO during port enumeration and aborted
+> > the whole port, so affected systems showed nothing under 'cxl list'.
 > > 
-> > DCD regions have 0 or more extents.  The ability to list those and their
-> > properties is useful to end users.
+> > Treat empty decoders as first class instead of special casing them, back
+> > them with a kmalloc'd resource, since the resource tree can't represent
+> > an empty range, and keep the skip and hdm_end accounting intact. Guard
+> > the paths an empty decoder can't serve, e.g. region attach, DPA free, and
+> > poison queries.
 > > 
-> > Add extent scanning and reporting functionality to libcxl.
-> > 
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> > Suggested-by: Dan Williams <djbw@kernel.org>
+> > Signed-off-by: Vishal Aslot <vaslot@nvidia.com>
+> > Signed-off-by: Richard Cheng <icheng@nvidia.com>
 > 
-> Missing Anisa sign-off
+> Looks good, you added the cxled_empty() helper and dropped the dev_dbg()
+> announcing the arrival of committed empty decoders like we chatted
+> about.
 > 
-Added
+> The comment on cxled_empty() could use come adjustment, but maybe Dave
+> can fix that up on applying.
 > 
-> > 
-> > ---
-> > Changes:
-> > [alison: s/tag/uuid/ for extents]
-> > ---
-> >  Documentation/cxl/lib/libcxl.txt |  27 ++++++
-> >  cxl/lib/libcxl.c                 | 138 +++++++++++++++++++++++++++++++
-> >  cxl/lib/libcxl.sym               |   5 ++
-> >  cxl/lib/private.h                |  11 +++
-> >  cxl/libcxl.h                     |  11 +++
-> >  5 files changed, 192 insertions(+)
-> > 
-> > diff --git a/Documentation/cxl/lib/libcxl.txt b/Documentation/cxl/lib/libcxl.txt
-> > index 9921ac1..0ad294c 100644
-> > --- a/Documentation/cxl/lib/libcxl.txt
-> > +++ b/Documentation/cxl/lib/libcxl.txt
-> > @@ -635,6 +635,33 @@ where its properties can be interrogated by daxctl. The helper
-> >  cxl_region_get_daxctl_region() returns an 'struct daxctl_region *' that
-> >  can be used with other libdaxctl APIs.
-> >  
-> > +EXTENTS
-> > +-------
-> > +
-> > +=== EXTENT: Enumeration
-> > +----
-> > +struct cxl_region_extent;
-> > +struct cxl_region_extent *cxl_extent_get_first(struct cxl_region *region);
-> > +struct cxl_region_extent *cxl_extent_get_next(struct cxl_region_extent *extent);
-> > +#define cxl_extent_foreach(region, extent) \
-> > +        for (extent = cxl_extent_get_first(region); \
-> > +             extent != NULL; \
-> > +             extent = cxl_extent_get_next(extent))
-> > +
-> > +----
-> > +
-> > +=== EXTENT: Attributes
-> > +----
-> > +unsigned long long cxl_extent_get_offset(struct cxl_region_extent *extent);
-> > +unsigned long long cxl_extent_get_length(struct cxl_region_extent *extent);
-> > +void cxl_extent_get_uuid(struct cxl_region_extent *extent, uuid_t uuid);
-> > +----
-> > +
-> > +Extents represent available memory within a dynamic capacity region.  Extent
-> > +objects are available for informational purposes to aid in allocation of
-> > +memory.
-> > +
-> > +
-> >  include::../../copyright.txt[]
-> >  
-> >  SEE ALSO
-> > diff --git a/cxl/lib/libcxl.c b/cxl/lib/libcxl.c
-> > index be0bc03..c096666 100644
-> > --- a/cxl/lib/libcxl.c
-> > +++ b/cxl/lib/libcxl.c
-> > @@ -635,6 +635,7 @@ static void *add_cxl_region(void *parent, int id, const char *cxlregion_base)
-> >  	region->ctx = ctx;
-> >  	region->decoder = decoder;
-> >  	list_head_init(&region->mappings);
-> > +	list_head_init(&region->extents);
-> >  
-> >  	region->dev_path = strdup(cxlregion_base);
-> >  	if (!region->dev_path)
-> > @@ -1257,6 +1258,143 @@ cxl_mapping_get_next(struct cxl_memdev_mapping *mapping)
-> >  	return list_next(&region->mappings, mapping, list);
-> >  }
-> >  
-> > +static void cxl_extents_init(struct cxl_region *region)
-> > +{
-> > +	const char *devname = cxl_region_get_devname(region);
-> > +	struct cxl_ctx *ctx = cxl_region_get_ctx(region);
-> > +	char *extent_path, *dax_region_path;
-> > +	struct dirent *de;
-> > +	DIR *dir = NULL;
-> > +
-> > +	if (region->extents_init)
-> > +		return;
-> > +	region->extents_init = 1;
-> > +
-> > +	dax_region_path = calloc(1, strlen(region->dev_path) + 64);
-> > +	if (!dax_region_path) {
-> > +		err(ctx, "%s: allocation failure\n", devname);
-> > +		return;
-> > +	}
-> > +
-> > +	extent_path = calloc(1, strlen(region->dev_path) + 100);
-> > +	if (!extent_path) {
-> > +		err(ctx, "%s: allocation failure\n", devname);
-> > +		free(dax_region_path);
-> > +		return;
-> > +	}
-> > +
-> > +	sprintf(dax_region_path, "%s/dax_region%d",
-> > +		region->dev_path, region->id);
-> > +	dir = opendir(dax_region_path);
-> > +	if (!dir) {
-> > +		err(ctx, "no extents found (%s): %s\n",
-> > +			strerror(errno), dax_region_path);
-> > +		free(extent_path);
-> > +		free(dax_region_path);
-> > +		return;
-> > +	}
-> > +
-> > +	while ((de = readdir(dir)) != NULL) {
-> > +		struct cxl_region_extent *extent;
-> > +		char buf[SYSFS_ATTR_SIZE];
-> > +		u64 offset, length;
-> > +		int id, region_id;
-> > +
-> > +		if (sscanf(de->d_name, "extent%d.%d", &region_id, &id) != 2)
-> > +			continue;
-> > +
-> > +		sprintf(extent_path, "%s/extent%d.%d/offset",
-> > +			dax_region_path, region_id, id);
-> > +		if (sysfs_read_attr(ctx, extent_path, buf) < 0) {
-> > +			err(ctx, "%s: failed to read extent%d.%d/offset\n",
-> > +				devname, region_id, id);
-> > +			continue;
-> > +		}
-> > +
-> > +		offset = strtoull(buf, NULL, 0);
-> > +		if (offset == ULLONG_MAX) {
-> > +			err(ctx, "%s extent%d.%d: failed to read offset\n",
-> > +				devname, region_id, id);
-> > +			continue;
-> > +		}
-> > +
-> > +		sprintf(extent_path, "%s/extent%d.%d/length",
-> > +			dax_region_path, region_id, id);
-> > +		if (sysfs_read_attr(ctx, extent_path, buf) < 0) {
-> > +			err(ctx, "%s: failed to read extent%d.%d/length\n",
-> > +				devname, region_id, id);
-> > +			continue;
-> > +		}
-> > +
-> > +		length = strtoull(buf, NULL, 0);
-> > +		if (length == ULLONG_MAX) {
-> > +			err(ctx, "%s extent%d.%d: failed to read length\n",
-> > +				devname, region_id, id);
-> > +			continue;
-> > +		}
-> > +
-> > +		sprintf(extent_path, "%s/extent%d.%d/tag",
-> > +			dax_region_path, region_id, id);
-> > +		buf[0] = '\0';
-> > +		if (sysfs_read_attr(ctx, extent_path, buf) != 0)
-> > +			dbg(ctx, "%s extent%d.%d: failed to read uuid\n",
-> > +				devname, region_id, id);
-> > +
-> > +		extent = calloc(1, sizeof(*extent));
-> > +		if (!extent) {
-> > +			err(ctx, "%s extent%d.%d: allocation failure\n",
-> > +				devname, region_id, id);
-> > +			continue;
-> > +		}
-> > +		if (strlen(buf) && uuid_parse(buf, extent->uuid) < 0)
-> > +			err(ctx, "%s:%s\n", extent_path, buf);
-> > +		extent->region = region;
-> > +		extent->offset = offset;
-> > +		extent->length = length;
-> > +
-> > +		list_node_init(&extent->list);
-> > +		list_add(&region->extents, &extent->list);
-> 
-> free_region() never frees any of the extents allocated and added here and thus leak the memory when region is freed.
-> 
-added loop to free extents in free_region():
+> Reviewed-by: Dan Williams <djbw@kernel.org>
+>
 
-list_for_each_safe(&region->extents, extent, _e, list) {
-	list_del_from(&region->extents, &extent->list);
-	free(extent);
-}
-> 
-> > +		dbg(ctx, "%s added extent%d.%d\n", devname, region_id, id);
-> > +	}
-> > +	free(dax_region_path);
-> > +	free(extent_path);
-> > +	closedir(dir);
-> > +}
-> > +
-> > +CXL_EXPORT struct cxl_region_extent *
-> > +cxl_extent_get_first(struct cxl_region *region)
-> > +{
-> > +	cxl_extents_init(region);
-> > +
-> > +	return list_top(&region->extents, struct cxl_region_extent, list);
-> > +}
-> > +
-> > +CXL_EXPORT struct cxl_region_extent *
-> > +cxl_extent_get_next(struct cxl_region_extent *extent)
-> > +{
-> > +	struct cxl_region *region = extent->region;
-> > +
-> > +	return list_next(&region->extents, extent, list);
-> > +}
-> > +
-> > +CXL_EXPORT unsigned long long
-> > +cxl_extent_get_offset(struct cxl_region_extent *extent)
-> > +{
-> > +	return extent->offset;
-> > +}
-> > +
-> > +CXL_EXPORT unsigned long long
-> > +cxl_extent_get_length(struct cxl_region_extent *extent)
-> > +{
-> > +	return extent->length;
-> > +}
-> > +
-> > +CXL_EXPORT void
-> > +cxl_extent_get_uuid(struct cxl_region_extent *extent, uuid_t uuid)
-> > +{
-> > +	memcpy(uuid, extent->uuid, sizeof(uuid_t));
-> > +}
-> > +
-> >  CXL_EXPORT struct cxl_decoder *
-> >  cxl_mapping_get_decoder(struct cxl_memdev_mapping *mapping)
-> >  {
-> > diff --git a/cxl/lib/libcxl.sym b/cxl/lib/libcxl.sym
-> > index 258bdd3..dcfe242 100644
-> > --- a/cxl/lib/libcxl.sym
-> > +++ b/cxl/lib/libcxl.sym
-> > @@ -298,6 +298,11 @@ global:
-> >  	cxl_memdev_get_dynamic_ram_a_qos_class;
-> >  	cxl_decoder_is_dynamic_ram_a_capable;
-> >  	cxl_decoder_create_dynamic_ram_a_region;
-> > +	cxl_extent_get_first;
-> > +	cxl_extent_get_next;
-> > +	cxl_extent_get_offset;
-> > +	cxl_extent_get_length;
-> > +	cxl_extent_get_uuid;
-> >  } LIBECXL_8;
+Hi Dan,
 
-Now in LIBCXL_13
-
-> >  
-> >  LIBCXL_10 {
-> > diff --git a/cxl/lib/private.h b/cxl/lib/private.h
-> > index 37b7b06..c5f3bed 100644
-> > --- a/cxl/lib/private.h
-> > +++ b/cxl/lib/private.h
-> > @@ -183,6 +183,7 @@ struct cxl_region {
-> >  	struct cxl_decoder *decoder;
-> >  	struct list_node list;
-> >  	int mappings_init;
-> > +	int extents_init;
-> >  	struct cxl_ctx *ctx;
-> >  	void *dev_buf;
-> >  	size_t buf_len;
-> > @@ -200,6 +201,7 @@ struct cxl_region {
-> >  	struct daxctl_region *dax_region;
-> >  	struct kmod_module *module;
-> >  	struct list_head mappings;
-> > +	struct list_head extents;
+I'll send v6 to tweak these comments for easier work for Dave.
+ 
+> [..]
+> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> > index 1297594beaec..5231345ff78e 100644
+> > --- a/drivers/cxl/cxl.h
+> > +++ b/drivers/cxl/cxl.h
+> > @@ -324,6 +324,15 @@ struct cxl_endpoint_decoder {
+> >  	int pos;
 > >  };
 > >  
-> >  struct cxl_memdev_mapping {
-> > @@ -209,6 +211,15 @@ struct cxl_memdev_mapping {
-> >  	struct list_node list;
-> >  };
-> >  
-> > +#define CXL_REGION_EXTENT_TAG 0x10
+> > +/*
+> > + * Some BIOS use locked empty decoders to preclude HDM decode aliasing
+> > + * for TSP operation. Use cxled_empty() to handle that common case.
+> > + */
 > 
-> defined but never used
+> Hmm, that is not the "common case".
 > 
-thanks for the catch! deleted
+> /*
+>  * The common case is decoders with no reservation, but also handle
+>  * decoders with a zero-sized reservation that firmware may install for
+>  * security lockdown purposes.
+>  */
+> 
 
-> DJ
-> 
-Thanks,
-Anisa
-> > +struct cxl_region_extent {
-> > +	struct cxl_region *region;
-> > +	u64 offset;
-> > +	u64 length;
-> > +	uuid_t uuid;
-> > +	struct list_node list;
-> > +};
+No problem, amend it.
+
+--Richard
+
+> > +static inline bool cxled_empty(struct cxl_endpoint_decoder *cxled)
+> > +{
+> > +	return !cxled->dpa_res || !resource_size(cxled->dpa_res);
+> > +}
 > > +
-> >  enum cxl_cmd_query_status {
-> >  	CXL_CMD_QUERY_NOT_RUN = 0,
-> >  	CXL_CMD_QUERY_OK,
-> > diff --git a/cxl/libcxl.h b/cxl/libcxl.h
-> > index fd41122..a60509f 100644
-> > --- a/cxl/libcxl.h
-> > +++ b/cxl/libcxl.h
-> > @@ -394,6 +394,17 @@ unsigned int cxl_mapping_get_position(struct cxl_memdev_mapping *mapping);
-> >               mapping != NULL; \
-> >               mapping = cxl_mapping_get_next(mapping))
-> >  
-> > +struct cxl_region_extent;
-> > +struct cxl_region_extent *cxl_extent_get_first(struct cxl_region *region);
-> > +struct cxl_region_extent *cxl_extent_get_next(struct cxl_region_extent *extent);
-> > +#define cxl_extent_foreach(region, extent) \
-> > +        for (extent = cxl_extent_get_first(region); \
-> > +             extent != NULL; \
-> > +             extent = cxl_extent_get_next(extent))
-> > +unsigned long long cxl_extent_get_offset(struct cxl_region_extent *extent);
-> > +unsigned long long cxl_extent_get_length(struct cxl_region_extent *extent);
-> > +void cxl_extent_get_uuid(struct cxl_region_extent *extent, uuid_t uuid);
-> > +
-> >  struct cxl_cmd;
-> >  const char *cxl_cmd_get_devname(struct cxl_cmd *cmd);
-> >  struct cxl_cmd *cxl_cmd_new_raw(struct cxl_memdev *memdev, int opcode);
-> 
+> >  /**
+> >   * struct cxl_switch_decoder - Switch specific CXL HDM Decoder
+> >   * @cxld: base cxl_decoder object
