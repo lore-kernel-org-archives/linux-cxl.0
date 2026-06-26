@@ -1,197 +1,135 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010045.outbound.protection.outlook.com [52.101.193.45])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF962BD5A8;
-	Fri, 26 Jun 2026 03:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782446232; cv=fail; b=k2kvBEgIdZzkY+hnSc3QR9MKT/8ZvU42+CPoURuhs1uA7995yySk3+23rC1fM/scRcPLB3VkPUPPAE8Zx2Tq2SuPOlp8U6YL5ssG2GuMfJR09TyFKxfRJkjldoEqVxyqvPDBJNqCR9/4ozAsZYShLZXODcr7Do88MhEff8l9VXM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782446232; c=relaxed/simple;
-	bh=IG9cWY7lE2rTB+RGWHYOVBSrxyp2d74NaejiZSLrYXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=W8J1zZrnwQSQmbtdDsP3cV746CTyJ/rH538P+Bsmxhl7GqXQwMFrfcKs8ax8mgeshaOs79EbVxMu7FbPp6if1y+yBwRKXfxlfeQNZMxtLUlRzlFL5B4W5j4qE5FLZ1MYfLy28hDDJS5aagnMbyKhB0ZTFgQ7dV3p+P7XS7QgfTQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FhMRmz9o; arc=fail smtp.client-ip=52.101.193.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4823BB118
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jun 2026 06:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782456960; cv=none; b=W4BwvmaOH+dWNLtxt4PYxMhr9pQ9uBlsgAOaxIWZ/EMB2GynIAlsnQt0N6cdztJ+sAoI4g3/zY9wFto+waQhtkcsUS6iN2WU67If5a5eqXUP5OHnHkDrjhSZwaYzAgdQk2S4cD6QyT73dn9KU7EjxqSBLMfisGAAhpNVOTnCFd4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782456960; c=relaxed/simple;
+	bh=iARy3cRYNassfTGD4WkDMHzE6Bdi/ddDojiWpPiYACA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tX6xEOZDIRV8EfcpSS10XCQgkY5UI6S+9DVNsZoyWoasBkAind7B/HBNpgIlCl3Tmo+Ko3/RIUWVRdDk0rwpzTxer5+e+9IueN9Cz5bUjX3FeDXhztleuK7xnKTdW4HVyXfzz4JKkXlPYeuMXnqfjMvXw0RC28nMoP2CWy5y7GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hpiLx8Pw; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FhMRmz9o"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wfZrIx9x1sjfG6W7Orfy/mavWKVb8YHxRDTnWqTjxS9f5nM/IDe4Ov4L5y/lY+WmZcpxlkdqaTle57WciVeJl+WuTR7oLBQ0/N7Bnc9YeJR4+hg1HG7GIL5PQvCYSN4+1/rt5a4EkdyUN4TsBZ8zDt3KLnPlGg0yM2kxc5XfBkekoW35Ri3MgZcTBvs9gqnxCRlr3i7ZVwIOI8txcJwSs8FafFXvVQFhn3WKGbYmpCXfqv2yAAdd2GMz3NO3hHqRZUwanEKw4Ud7G02Js/eDRc6B7Hx7vOe6QYS8jZ2vp+OQc0xeoXvG/x8m6s0AGhgmAK/SZe4wCPyg2LBuca/l/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aMajQ2Y+KyWa5MU1ffqY9sbh19mayXfpYn2g8RzX9Xo=;
- b=mVtQkPMB+m9X/Oq30v5cxKrGNpCLc5PK5OHBDfUt9RZYMpJ/wSOx4USEDM5j6YY30VA8EUazDU+uzai54MAS1PuYf7FEhgL7M1NvcfihTrUodbJVdVSB/cRVjfbYgnZRtWtB+82Ck8Dz1kSSB+BbRO5j7Yd6YI9YvIsDAplZNjmJVharNFK4+A/pwu3wQA+x+oceitLuoyhgTxHhWWPZZUy4vrjpvrnQI7dh6uakGpI8UV41sm3ScyQNtl/SgYX+uPYGD8Ar+CUT08om4K4YIRCmxz7hkstxlotcQuqP/ZeEYKGN7+piJ9DpQNZ62wxW3k2kEjFe7FHeereQZPz9qw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aMajQ2Y+KyWa5MU1ffqY9sbh19mayXfpYn2g8RzX9Xo=;
- b=FhMRmz9orVUimb1maSL62wrJAiXlBSqADSFcK2a+8AItON6R3bMHXKz2EjBGU3odY00fhpbM0bTKAGlwXFjInndAZzAf3VOmEjxRvGUWL2uXAl6TlntUTkelfS6iV3oglvOwdaLhb2J3spipw+mNXxRSYuFaiKBKfREOHGYsK4d/vzaq/FFmYrKanPrBGjSgn8Z3NQMqArRSQ0AJLy9+afyxpkJtrRskFYzqQCbayNGonBf7bxHe49o9A6HSdu1BpihX8quDH9N0LaY8pGvhjoUpyv10yHM6F3gih15c4IGE30MOrxPaNKg6YnPNltOqb9++RSstrIgscrxFHfXNHw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MW2PR12MB2380.namprd12.prod.outlook.com (2603:10b6:907:4::32)
- by CH3PR12MB8354.namprd12.prod.outlook.com (2603:10b6:610:12f::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.17; Fri, 26 Jun
- 2026 03:57:05 +0000
-Received: from MW2PR12MB2380.namprd12.prod.outlook.com
- ([fe80::90d:c5c:6a5e:94a5]) by MW2PR12MB2380.namprd12.prod.outlook.com
- ([fe80::90d:c5c:6a5e:94a5%6]) with mapi id 15.21.0159.015; Fri, 26 Jun 2026
- 03:57:05 +0000
-Date: Fri, 26 Jun 2026 11:56:21 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org, 
-	dan.j.williams@kernel.org, edward.cree@amd.com, davem@davemloft.net, kuba@kernel.org, 
-	pabeni@redhat.com, edumazet@google.com, dave.jiang@intel.com, 
-	Alejandro Lucero <alucerop@amd.com>
-Subject: Re: [PATCH v29 0/5] Type2 device basic support
-Message-ID: <aj33zZ_19GzRcRTn@MWDK4CY14F>
-References: <20260622124010.2192888-1-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260622124010.2192888-1-alejandro.lucero-palau@amd.com>
-X-ClientProxiedBy: SI2P153CA0011.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:140::14) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hpiLx8Pw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782456959; x=1813992959;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=iARy3cRYNassfTGD4WkDMHzE6Bdi/ddDojiWpPiYACA=;
+  b=hpiLx8PwLbIsV8GfBsfP0PNusnzteDvotwzuSZqwoluFxOJQYz4jhoOp
+   v5mC9nzGP0qel48BIlnAKc6FN6lZP8CIO9+0JW4i4hIh4VCzT2SK6xHIv
+   SW/ETgK6Lj65THfK6G2KP1prQ2V06uqppmENdf/mjolkHK5Dj5ftLBzGd
+   MQmaOlU/uTKtsDy+vHEt6dCAxxapKwb+FMV2Z4VVsZH5Skz0mu8geKLyd
+   2NIawbRZzXyqN//jfaeBbr9zQKDE1vV5INzbJNsdXrPC520npD5ao4zql
+   2f6/ErsXF69BfvyeRk2hCLPOmqffNm6gOtQ2GZgDbcA93fQ/1SSeMIojM
+   g==;
+X-CSE-ConnectionGUID: gugx6Kw7TfW2vW0OEn2TaQ==
+X-CSE-MsgGUID: zYTQzqY1R/a5h0WlJt4bUg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11828"; a="85802325"
+X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
+   d="scan'208";a="85802325"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 23:55:58 -0700
+X-CSE-ConnectionGUID: eTBD9Fi/RIS+SZEmscM+1g==
+X-CSE-MsgGUID: yF5XFUvrS3SubeOL5hvcsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
+   d="scan'208";a="244865865"
+Received: from junjie-desk-dev.bj.intel.com ([10.238.152.71])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 23:55:56 -0700
+From: Junjie Cao <junjie.cao@intel.com>
+To: qemu-devel@nongnu.org
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	linux-cxl@vger.kernel.org,
+	junjie.cao@intel.com
+Subject: [PATCH 0/6] hw/cxl: fix Type-3 device reset resource leaks and convert to three-phase
+Date: Fri, 26 Jun 2026 14:21:43 +0800
+Message-ID: <20260626062149.1844334-1-junjie.cao@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW2PR12MB2380:EE_|CH3PR12MB8354:EE_
-X-MS-Office365-Filtering-Correlation-Id: 630c4124-55c7-4473-ed94-08ded336e73b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|1800799024|376014|7416014|366016|18002099003|22082099003|56012099006|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	UfYghTp+y3VhVisyaefY5UV6UqAmFe8/5vJlaJEZJRoO7BW2qHr1FSfqER/Y+mERakFGAkvjfVkgC0fZ5agWdJozWEKJNZfatYoEC5pSZOuXCReukc/Low6SpzoaUrbaSqoqlLYPqjG7vmoOetAVY2gwiwiOqoWUzsk6B3282bYD4W01Fhbh/SgicWEomlyrhBxIRxg8bKxqYFSISb6XsVBF3y9Vg0Irpov6Y4iKq57CTeRb4vVEwUkB3AiZ4ss5V8sj6LrdP3FhpubyETxtUD1e2yWKTRX3Teo2UJAj+v0MIydr7f7m2f24ZxpuVPMY41+gMHWBRsZrl1gDfqt4Zef4f9KOuwOzXd1RBLj/Jn17eky2zxL0bAkLvG60CIt+O9DVYrhtCvq5CfGhly22CnsxvuIL66T40NhHteSVNmwMAowH3ozQP/JDwkuTp4Rb7aBkEZENYcnqlbdjCc5nKu+l0syuetxHhk8rkWxKIrqGL+6RO9yk+oCm8uW8M+xohqPnxlfkgAh9FxDnCSp3azfZQ5zNhtstNyuA2UlPS48lwHSfQjU8GjCNRA/DJjRJBsOejDEiTXlKyo6OSAcmEC4hEP8gZH3C77Dsgn7NvONycb2fKmD+Wunji7+QePW//ENgOuQ81FzmUxk0fHXae+2pbjxNw0fEDvTSTehY5Dc=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB2380.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(376014)(7416014)(366016)(18002099003)(22082099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?U9hyj4XnrRX8X7IApY3VjgLDELNm/xQ7l7GKEvI+i6jfmQLpQuqLJ1BJEmQ1?=
- =?us-ascii?Q?9bSCGnNjTvvKqIMDnbm2a/+VNMDHV/E2XECVT7wIlTwuRmOvevP0nZnZ1jSk?=
- =?us-ascii?Q?crfHSJ2Qo3BW8wTC4da7lJNgGzafwd/Lf3iTKhtnp8a0bfry4IjhwGciHJI9?=
- =?us-ascii?Q?jT/bqKjhsxGmp6igmX1y5KDnD8erqcVjjNCp0GHQiVeHipBV6WR8/i8n18BU?=
- =?us-ascii?Q?cA9wvjGTohVOS2U14Vy9lSL7Xfb0GbtC6OabDcFl030M5ALthTvLjmWrwcgC?=
- =?us-ascii?Q?3Q8B4O2RwERhsnDJ1oBk/FD92qPsxB7WJxnH7MbuxFI7hj4xr9V07Sqnn3Aa?=
- =?us-ascii?Q?o+tLzonJh23W1NKiwBvGk2RKc4DwjGLQpfJ7jQ9BITuuYYoMKCE+G4gIHl+G?=
- =?us-ascii?Q?r1A0lRZQwTQGrGl7fH9HM0zV+o0qcKicOOzm++XNrjqcLAMz0a3I9gbNfLmI?=
- =?us-ascii?Q?xX/ipFznqn5sFJ83VwKPZLtAMROLTukAN2aZ3MtJ2knlssRXoAjOkMONrV90?=
- =?us-ascii?Q?HkkMTTMB5dPO+dpnwXSTltGQuHnN/fr5oWBW2IZ4aDOJDNIRjRgSlqJqDTLv?=
- =?us-ascii?Q?iMBWc61onYr1EMs6qUVEyDtwnlnsE8piU3hMvlgGNoTF586Qke7WhjPIllRq?=
- =?us-ascii?Q?Jofv+cJDzjvZsj7QSpo5CkwR49a1km3qPBc+VqRBCmDWXwAfrtrfcPJd/JTZ?=
- =?us-ascii?Q?V3umFW+mk3nuJHCYEj2Ub/nEDV2ZeNKuA2bXd03TtGCW6aopJrsq1Ms81s7j?=
- =?us-ascii?Q?J0mSutZt8bHBX7ebUvGBb0QTb5NcRr9jiNrXC0JfC+7F7rEGKCigoZvC0JMl?=
- =?us-ascii?Q?8fJur55QX9JurRwI30ITwQuUprYO5ToFOxGQs1K7cf3HNbSTGLkI9YkNdF5E?=
- =?us-ascii?Q?2wPIMSYWBB/9NnVpLIIqRdZ8CG/mWvI94ga8SNwJepGMv87TrUehT+VEXcLB?=
- =?us-ascii?Q?ry339sru3foyZ/TReZXda9Ih56DauEFpj/LhLJuXfxnkit+8j9c0OxfV7yKu?=
- =?us-ascii?Q?I1czI/g+444Ji7yw81M2hfSxdbvHA6Efsakh1x4DoxoVIxPgTCYueog/WDD1?=
- =?us-ascii?Q?0jmhpir87Ec3pMF+tH7ZyWOnVqrjqi+a7c3F5hgZFW+ACf5YVzxI3Hd1rwIb?=
- =?us-ascii?Q?7JAVUaxeFSgFhad/TipdLhpR08OmkmIU21FlXJbAFzE0Zfm2nxKioz/2oE33?=
- =?us-ascii?Q?kAjJFjvbjeVOHcBaCEoj0q5jANM3cNQNRjPVpkfbtaz+3HiAQKYD0wEqQrC0?=
- =?us-ascii?Q?tpDgqgx25z1eEQFn3XvL0U6+rSdNLZ64sIewvc0lfyP6S1DwpZYiii/f/kYA?=
- =?us-ascii?Q?Z4l1i45EUcOokmm0M9LZYpSUs/qWGmyw5cVb0zeD+wQhdBg0vLCAfbFFRKpd?=
- =?us-ascii?Q?f/1n2UxN8N6DMk32fwQrbi6tOu07jFiZptLRjpIkhAJscPoo3x7koL8EWSES?=
- =?us-ascii?Q?MEZuNUUs1vthc53Kz2aO0+tK8uFl1NG81cGdI7K173HWb8PowCCXL/htgJpr?=
- =?us-ascii?Q?Hu4RF3t0eLVDo+yd2kgXYapeJ/jIu5q2ElwQHfq7sk8FUXG5meniPTXxCgIE?=
- =?us-ascii?Q?41akCq1+kmTsFQMfcuBTQuPKQpARnqU2d8CWneK7pVUPFOmgyLjIKSRi9LVr?=
- =?us-ascii?Q?NR+j84PtD7/uf43Ty4r3Qurbv6oa7YStfyc+03SPtrCCm5f/ZcorV6bfpAH/?=
- =?us-ascii?Q?jdAoKJqtZd/nm931V9Ge7tOOSFtUFSnf9J3qan/y1cVTK6G9V9Zjz7kGz07L?=
- =?us-ascii?Q?sAiOEM16ig=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 630c4124-55c7-4473-ed94-08ded336e73b
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2026 03:57:05.7855
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0NNhmicpqLo6v6/LUBoYbMfsnv4nit05tcZsfzK1L+oZln2Y8xMICFZnW9hvQmynL9IYLVzeJdhLat7qsu1GbA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8354
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 22, 2026 at 01:40:05PM +0800, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> This series adds the last bits for allowing a CXL Type2 driver to obtain
-> a CXL region linked to the device HDM decoders committed by the BIOS,
-> with the driver being the sfc network driver.
-> 
-> Changes from v28:
-> 
->  - patch 1: 
-> 	fix doc (Ed Cree)
-> 	fix error path (Sashiko)
-> 
->  - patch 3:
-> 	removing extra + char (sashiko)
-> 
->  - path5:
-> 	remove stray change (Ed Cree)
-> 
-> Changes from v27:
-> 
->  - patch 1: make driver probe failing if error in efx_cxl_init (Dan)
->  - patch 4: add unmapping if error after efx_cxl_init (Dave)
->  - patch 4/5: move cxl_pio_initialised from patch 4 to patch 5 (Dave)
-> 
-> Tested in the cxl_for_7.3 branch.
->
+The CXL Type-3 device reset path (ct3d_reset) has several issues:
 
-Hi Alejandro,
+1) Resource leaks:
+   - cxl_destroy_cci() never frees the QEMUTimer allocated by
+     cxl_init_cci(), leaking a timer on each destroy/reinit cycle.
+   - The primary CCI (ct3d->cci) is re-initialized through
+     cxl_device_register_init_t3() without being destroyed first,
+     leaking the timer and leaving the mutex undestroyed on every
+     reset.
+   - The secondary CCIs are never destroyed at device exit time,
+     leaking their timers and mutexes on device removal.
 
-The series looks fine to me with one small question in patch 4.
-I don't have the required NIC to test it, and not enough knowledge to
-give a deep enough review, I can just say it LGTM at this point.
-I'll leave for other guru to give tags.
+2) Incomplete state cleanup:
+   - Background commands do not survive Conventional Resets (CXL r4.0
+     Section 8.2.9.4), yet the in-flight sanitize state is never freed.
+   - Scan media results are explicitly invalidated after reset (Section
+     8.2.10.9.4.6), yet scan_media_hasrun is never cleared.
+   - Event interrupt settings shall be reset to 00b on Conventional
+     Reset (Section 8.2.10.2.5), yet irq_enabled is never cleared.
+   - When "Injects Persistent Poison" is 0 (the QEMU default), injected
+     poison shall be automatically cleared on reset (Table 8-309), yet
+     the poison lists are never drained.
+   - Stale event records remain in the queues across reset even though
+     the Event Status register (Table 8-203) is non-sticky.
 
-Thanks for this.
+3) Deprecated API usage:
+   - Uses device_class_set_legacy_reset() instead of the three-phase
+     resettable interface, preventing reset-type-aware behavior.
 
-Best regards,
-Richard Cheng.
- 
-> Alejandro Lucero (5):
->   sfc: add cxl support
->   cxl/sfc: Map cxl regs
->   cxl/sfc: Initialize dpa without a mailbox
->   sfc: obtain and map cxl range using devm_cxl_probe_mem
->   sfc: support pio mapping based on cxl
-> 
->  drivers/cxl/core/core.h               |   2 +
->  drivers/cxl/core/mbox.c               |  51 +------------
->  drivers/cxl/core/memdev.c             |  67 ++++++++++++++++
->  drivers/cxl/core/pci.c                |   1 +
->  drivers/cxl/core/port.c               |   1 +
->  drivers/cxl/core/regs.c               |   1 +
->  drivers/cxl/cxlpci.h                  |  12 ---
->  drivers/cxl/pci.c                     |   1 +
->  drivers/net/ethernet/sfc/Kconfig      |   9 +++
->  drivers/net/ethernet/sfc/Makefile     |   1 +
->  drivers/net/ethernet/sfc/ef10.c       |  41 ++++++++--
->  drivers/net/ethernet/sfc/efx.c        |  18 ++++-
->  drivers/net/ethernet/sfc/efx_cxl.c    | 105 ++++++++++++++++++++++++++
->  drivers/net/ethernet/sfc/efx_cxl.h    |  32 ++++++++
->  drivers/net/ethernet/sfc/net_driver.h |  10 +++
->  drivers/net/ethernet/sfc/nic.h        |   3 +
->  include/cxl/cxl.h                     |   2 +
->  include/cxl/pci.h                     |  22 ++++++
->  18 files changed, 309 insertions(+), 70 deletions(-)
->  create mode 100644 drivers/net/ethernet/sfc/efx_cxl.c
->  create mode 100644 drivers/net/ethernet/sfc/efx_cxl.h
->  create mode 100644 include/cxl/pci.h
-> 
-> 
-> base-commit: 9b1e70e8f9ec4b5c6ce7fa774a0023bb6894c686
-> -- 
-> 2.34.1
-> 
-> 
+This series fixes the issues incrementally:
+  - Patches 1-2: fix resource leaks (deterministic bugs)
+  - Patch 3: mechanical conversion to three-phase reset
+  - Patches 4-6: clean up device state on reset
+
+The state cleanup in patches 4-6 is gated on reset type:
+RESET_TYPE_WAKEUP returns early (patch 5) since a resume from S3 is
+not a Conventional or CXL Reset.  The CCI re-initialization and the
+in-flight sanitize free run unconditionally regardless of type.
+
+Not addressed here:
+
+  - Committed Feature attributes and alert thresholds (Table 8-276
+    Deepest Reset Persistence = None) are not reverted to defaults.
+    Factoring the realize-time defaults into a reset helper is left
+    for a follow-up.
+
+  - Dynamic Capacity extent lifecycle across reset.
+
+  - The Media Disabled latch after an interrupted Sanitize (Section
+    8.2.10.9.5.1); patch 4 addresses only the resource leak.
+
+Tested: per-commit build clean; qtest passes.  Differential
+LeakSanitizer (5x system_reset): pre-series leaks 720 B / 15 allocs
+in cxl_init_cci -> timer_new_ms; post-series zero.  Poison inject ->
+reset -> re-inject same DPAs succeeds (no stale "Overlap" rejection).
+20x inject+reset stress cycles with no crash.
+
+Junjie Cao (6):
+  hw/cxl: fix timer leak in cxl_destroy_cci()
+  hw/cxl: destroy primary CCI before re-initialization on reset
+  hw/cxl: convert cxl-type3 to three-phase reset
+  hw/cxl: free in-flight sanitize state on reset
+  hw/cxl: clear event logs, scan media and interrupt policy on reset
+  hw/cxl: clear poison lists and feature transfer state on reset
+
+ hw/cxl/cxl-mailbox-utils.c  |  2 +
+ hw/mem/cxl_type3.c          | 74 ++++++++++++++++++++++++++++++++++---
+ include/hw/cxl/cxl_device.h |  2 +
+ 3 files changed, 73 insertions(+), 5 deletions(-)
+
+--
+2.43.0
+
