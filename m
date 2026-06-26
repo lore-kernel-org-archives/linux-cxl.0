@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C643DB327
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jun 2026 10:52:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122993EE1C0
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jun 2026 10:54:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782471177; cv=none; b=nq0K/t33GijL45yZ5p85OQ5tRpeRA2JMoT0sUiM4wkGBw1Z7t83QvK6ZPC8Lny4pBS9fRjEXkwI+xhJcN+Ixb4ArSrdsFuxarKuWVV/Mdz6Fj+psaO+aTUBUIOm8nb2vUkca4AlkdLmgT/T8vKYvq+Tg1cCL0v+LT4pCZubK42I=
+	t=1782471249; cv=none; b=gzCJt/j2DpwLGNFPLQLhDHyAyxHy4AMAs4fJJVQHASoBjE4VPEWN1vlzRCog9Wn1/I5d6Kgw0ZILtl+xmtc7xm1B0vGozI+HJ5bpA/rd6rfBBRqipuOxNrI+a4cdFv00LBRyu/z80x6oPgSqzWf1rkyKzVa0/21aTrf+lR7td+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782471177; c=relaxed/simple;
-	bh=mXNhmBeyIPzeMh7g2sbCFp6N8PjTuqUSlTg75FdjMoo=;
+	s=arc-20240116; t=1782471249; c=relaxed/simple;
+	bh=OUvHV3fMlW/hVwpNpdaIOVuylhGyPYHrncJMPCqUVRM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ppMcKsk2jMr8nPWWl/is+HfHXQXTQq7zqsEXbg2yyJRT7OSd8INLBBQrDDBIxQtYlazQrBH63nPkSdGxoIhFlsHyV7Yy9QyjimVKdRCYGBvjexc8kvvIcb3u9jdtzmjCrjlYJJTq4cfBPEQWRpBcFALRGJ6mYD2dYIIdZNtuM4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hwNDNOsb; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Fj/P0/oO057fs7Npi0tt6IzrRozyxfmWR3Rbc/wwnpvxawX/4BQ6XFe5ZW/S5opMI/C6IrUpQkgYSPNOaJDmNN3C/9z+wzG8qNY1KImyBWsaYjaeZSI86Q2zOEJZ38C7jWp1Zpbt8BaN49qd+GTeMQDCKHLTcb3tJAnnH6GorII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QwbE3DRG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hwNDNOsb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D37A41F000E9;
-	Fri, 26 Jun 2026 10:52:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QwbE3DRG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 909B31F000E9;
+	Fri, 26 Jun 2026 10:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782471176;
-	bh=xLULgvUjTGPi5AZZ3qM1+xmo4kZhIy3YFFsLDpuom6w=;
+	s=k20260515; t=1782471247;
+	bh=je52HL5nH/7UhgrU3LV73BayizzjyDzy5i2/I4vzK1I=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hwNDNOsbTUYZW2cOllvDpz7NnRHSn1Pu+/9e8d/k0QSfPQpaaG/su9GiH4X2/+E9u
-	 Cy72FvCcUIUcUimtq9APvbbZH5VXShYk/8u+dAygmj0KlTFBlNZu5Dvp+pNq/lW4WC
-	 VkaiHWcjH/tEUqQGv2IiLrd/jQQG8Fl2GxkeI8opl5klTZWXlTsjRqaBH8sKG9X3+6
-	 EgTVb1dWF8YG41l7z2qOonkXU4rdDBsWLMa4Q11i9NKKyzKIgSFKVpnRjSAaIbJuOz
-	 ehpV1uB0bDcIE+nj5UvfkUpgBNas/ARcEsJMRrIHOWrX3Jkav02L+QodY3QEXZUtUG
-	 NaAU7ouDK11DQ==
+	b=QwbE3DRGZ1ZGwBu9SncSZeWhQbZfz1bVURZ9B+9ypnoG7MrsMm49gQHtyIBC66DjZ
+	 CaFi4X9YBtq6foTlmK6Dy21rbHVq98u/Av2iWTXqnjwmrKUIdYKSBI8Lnr9HykHTi8
+	 fYAwx1jomwVC0kVxd48dXjixyDGAISl1atbhvwoT4K43/NQwgVtB3SPK21jjDhnlmk
+	 HmDDdGaItHUnK975t64Gw5A22pM9wWbYZCftzduqiHEHjIEfDPPet0nJLJbLKYFH5y
+	 a/AD03aGqdMRNPwDnvQrw691Ff7Gcxm9Txc1E9ozjHbjKPJKxMS75kyWe68rQvZyiq
+	 VCaPBpRp7zaaQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 3/3] cxl/features: Clamp Get Feature output size to
- the remaining buffer
+Subject: Re: [PATCH v3 1/3] cxl/features: Reject Get Feature count larger
+ than the output buffer
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Richard Cheng" <icheng@nvidia.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260626104102.53892-4-icheng@nvidia.com>
+In-Reply-To: <20260626104102.53892-2-icheng@nvidia.com>
 References: <20260626104102.53892-1-icheng@nvidia.com>
- <20260626104102.53892-4-icheng@nvidia.com>
+ <20260626104102.53892-2-icheng@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 26 Jun 2026 10:52:55 +0000
-Message-Id: <20260626105255.D37A41F000E9@smtp.kernel.org>
+Date: Fri, 26 Jun 2026 10:54:07 +0000
+Message-Id: <20260626105407.909B31F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -49,64 +49,57 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Silent 16-bit offset wrap-around in CXL feature commands allows de=
-vice state corruption.
+- [Critical] Missing bounds checks on user-provided input length in `cxlctl=
+_fw_rpc()` and `cxlctl_set_feature()`, leading to out-of-bounds reads and p=
+otential ZERO_SIZE_PTR crashes.
 --
 
-commit 55606972e1fe115ff716307a2dad0a662361b0c3
+commit 1f7098b182e4cdaf480b19545ca818cbf043bd29
 Author: Richard Cheng <icheng@nvidia.com>
 
-cxl/features: Clamp Get Feature output size to the remaining buffer
+cxl/features: Reject Get Feature count larger than the output buffer
 
-cxl_get_feature() reads a feature in a loop but passes a fixed size_out
-as the output capacity every iteration. This commit changes size_out
-to use the remaining per-iter size, preventing a device from overflowing
-feat_out on the last partial iteration.
+cxlctl_get_feature() sizes its output buffer from the user's
+fwctl_rpc.out_len, but the device is told to write count bytes into
+rpc_out->payload. This adds bounds checking against out_size to prevent
+overflowing the allocated buffer.
 
 > diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index ed18ccb5e236e..e52371f873006 100644
+> index 85185af46b72d..9c714ee42a411 100644
 > --- a/drivers/cxl/core/features.c
 > +++ b/drivers/cxl/core/features.c
-[ ... ]
-> @@ -237,7 +237,6 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, =
-const uuid_t *feat_uuid,
->  	if (!feat_out || !feat_out_size)
->  		return 0;
+> @@ -471,6 +471,10 @@ static void *cxlctl_get_feature(struct cxl_features_=
+state *cxlfs,
+>  	if (!count)
+>  		return ERR_PTR(-EINVAL);
 > =20
-> -	size_out =3D min(feat_out_size, cxl_mbox->payload_size);
->  	uuid_copy(&pi.uuid, feat_uuid);
->  	pi.selection =3D selection;
->  	do {
-> @@ -250,7 +249,7 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, =
-const uuid_t *feat_uuid,
+> +	if (out_size < offsetof(struct fwctl_rpc_cxl_out, payload) ||
+> +	    count > out_size - offsetof(struct fwctl_rpc_cxl_out, payload))
+> +		return ERR_PTR(-EINVAL);
+> +
 
-[Severity: High]
-This is a pre-existing issue, but does pi.offset silently overflow during
-the loop if offset + data_rcvd_size exceeds 65535?
+[Severity: Critical]
+This is a pre-existing issue, but while we are adding bounds checks for
+the output buffer here, does cxlctl_fw_rpc() also need to validate the
+user-provided in_len?
 
-Looking at cxl_get_feature(), pi.offset is updated right before this=20
-struct initialization:
+If the ioctl is called with an in_len of 0, could dereferencing
+rpc_in->opcode in cxlctl_fw_rpc() lead to a zero-size pointer crash?
 
-    pi.offset =3D cpu_to_le16(offset + data_rcvd_size);
+Similarly, in cxlctl_set_feature(), the operation size is calculated without
+verifying in_len:
 
-Here offset is a u16 and data_rcvd_size is a size_t, but pi.offset
-is __le16. If a user requests a large operation through the fwctl
-interface that sums to greater than 65535, the offset will wrap around and
-truncate the value.
+    data_size =3D rpc_in->op_size - sizeof(feat_in->hdr);
 
-Could this cause the device to read from (or in the case of
-cxl_set_feature(), write to) the wrong offset, silently corrupting hardware
-feature data?
+Could a small in_len combined with a large rpc_in->op_size result in an
+out-of-bounds read, copying adjacent kernel heap memory into the hardware
+mailbox? Would validating in_len against op_size in cxlctl_fw_rpc() prevent
+this?
 
->  			.opcode =3D CXL_MBOX_OP_GET_FEATURE,
->  			.size_in =3D sizeof(pi),
->  			.payload_in =3D &pi,
-> -			.size_out =3D size_out,
-> +			.size_out =3D data_to_rd_size,
->  			.payload_out =3D feat_out + data_rcvd_size,
->  			.min_out =3D data_to_rd_size,
->  		};
+>  	struct fwctl_rpc_cxl_out *rpc_out __free(kvfree) =3D
+>  		kvzalloc(out_size, GFP_KERNEL);
+>  	if (!rpc_out)
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260626104102.5389=
-2-1-icheng@nvidia.com?part=3D3
+2-1-icheng@nvidia.com?part=3D1
