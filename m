@@ -1,46 +1,47 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012057.outbound.protection.outlook.com [40.107.209.57])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010013.outbound.protection.outlook.com [52.101.61.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937B63F23A1
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jun 2026 12:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.57
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0500837B020
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jun 2026 15:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782475776; cv=fail; b=sbQ4NAYcGqgFZqN3YkD7WUzAMT0uw/ber46Eq6+zBNKNEeGhQL1fdqFK2P1yaLBMKHuUaSkf3jHD2pZA9dUJGj7qpMg8F0apwzYUPG7H7Mhoy1SiC/lPWvs0bSORGFdwJbtM6SbPRvacGsTwWGB1EjlYigaMM8PsECEvuVY+ris=
+	t=1782487281; cv=fail; b=kag/BhmbtnCxQlAtoz58m9d/PNilDvur0YmeAiBp77k9fn0FxVgX/bsqBl5TV1n6NO4f6aTwlVohiMqrlSHuIWjYJqjQcyD8HyKkAPOM7BCxBJsBXRya2oH7IQtZqsFZjgHS4FNrk8vjF9lZTBFR/Jtv5/mHSBcDnFWLKaGK5uQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782475776; c=relaxed/simple;
-	bh=caH9OgKPiVz14Qz1W/vwPG13xfa7Af0Us4RIlAR0XJI=;
+	s=arc-20240116; t=1782487281; c=relaxed/simple;
+	bh=LBhbRBrWToFkmM90hAMcgXzgZyYWYK/cWJosLIbN+Ec=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=t/DAwaFwafwyUQKFIhhXKDFt2c+vaud5mOR2quLVMboXJw7M/NEV0RH5mjR3UfLNRmFX8LcSd/miybgeJAM2a/usq3oKqRV6ftPfgeVC3+qxbHVQ4SqGtVHiqAi9sDAoGCBcdgoKZxfvTQtYzg9wJufFoIC+WVN/uQfgNrRdOg4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Mv3AOkoa; arc=fail smtp.client-ip=40.107.209.57
+	 Content-Disposition:In-Reply-To:MIME-Version; b=HFiVD1bmjWau3fCXUPrGrGO7ogv/m8uNvCvEpSY75e8cpVOz5G9nFYp/9ZhIkG8/Q9y8dEcUecjtC5i6eU1QlByYXn51A+pWx+CRVnwNgPxD+CXGDS6axCoiClHVAoFYCHz+QhPJ8hbJVFT84j7eJBVQS3hjdgMKGDUv6mix5oU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ykBd2x2p; arc=fail smtp.client-ip=52.101.61.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Mv3AOkoa"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ykBd2x2p"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Y89wiR4ulu/lmOoNF9YzKegylWBR0z0N5qlQTJyvAmhqinRd3BBFBrcohOzn1m4cJqMbnxL/47+ySjGzEBKx1n1wa9HiDeCv9TismcP6sP50R/VEyEXhDQLUeBq/a1JmTCQtqqpHQUdcY7PCj3gpT+Yhfz6K+UKH7IaSrM7EoNnge3TjzEGNLxR3A5EBSj2BRC0ERI+s/0VPNGydMrRB3S6gu+zVPdhR5sM1wPaTi01xcVRiV5DPAplJzvDoCiA15Gosro8oMGuHSUDrJDh/TLCYL/ZWep9GmCEE/dpJDLJpK76JarUrm5+pGX8aFIWeXr+EPNiaZiXlLYRFwa7Ipw==
+ b=dJIQ6vjXJaQPGkBi6bBijLyKVkwicnp+CsAdUtZuxtdNMJlioDyD6f45kqSHxJBrwcIdqUidwy+aeAHJDkbH+95hoXhasmQk7NPmnnYytnwRhXD80KiJ/83QOOu2UBsc31gB7Q1o/PSXyNOnK0VAvGjMMTGPbF/gEeX3TR6RhFqBeVaGAcIS87FF0xWd2jRLg/TsNqJ7T5uvUBSN1p4mReEUDNebwz7VaZVAU9dh4syoRvFJIkuc3aXauZMzEyFUTEIk58mDLbO53VQJTSSumkNUiP1j3K4eIcuc9iU94+c+n3EQS4Y2b/t/0jcl6Bass5k2Z0SphMwsTWhUCRZZ5A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Pm3RKQEgK9cmeo4QhYpYiouLc/X95o2ce6g32aDEQT0=;
- b=k3CG14GcAoimmKo72aglOMH0Zbcx/wegecjl1RneN9XzeacEmbq/VTSOILdWmklLEra4KqqudSzKrrsrdmoyAwa3mLS2761JDa/fhNkLIThNPa74TOBjeehDqJm7t3icu2g9lH+zSYX5C22l1XXeqxA/YPm3Mqvw6xVB8Bz397tshBZMckpRJItCuedvhuzi1TZw1DOoG97kQfdKsbWPQankL3sI8tRy/VwL+mN38nXMaz/3kRJprGBrcrTHg59B3xjCY37tVwJBnsJi7pFvSVobl7S2Ra3ShvGiXIfS979V6nabGAgIJIaMSXdyqDJHd94YNWxwfm8kURux/pFruA==
+ bh=A+hLkEITCQFmrn8vLmQpo4j06eesTu56nxh5C0itNZY=;
+ b=J72aie/6d58/1EishJUOyqKdTqjleL4nmLD0vF3Xb7Nsh28w0tzNW92fSCUO+/Ch98cXGFpINJu/cp3nVAY8uPeacCfeYpVsuqAaLTaimydDSFIKMUsRCQMTxx/0CM3XuU+yRFTx38j2DBSRRFZsZ4xeyXRDHjhFqWpyuzpDGvQ88rjAd/8mQOfrJZXsMu0kY+1cOf9k8f4aWOBarTINEvSrBe8t+VULejff1bWyKQ6AtK6a+4GjC2Z0JgeZwpE7gsIwtsjzHm2byYahKrUpzoTfcicD4Fm1blXWmqwrwZa+21ObpUVxGaTL2eDZFql/iTX3r0E/LA2KKfJkC76I0A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pm3RKQEgK9cmeo4QhYpYiouLc/X95o2ce6g32aDEQT0=;
- b=Mv3AOkoa+ZTrbXIuUGLK3M3+4uM0bNhDzaODoyE16xyZnwgKDzsJC9ifadPydoYSj2IFE+xQXnDxuZzISAnxiJFtmXAKbrl//A3A4YpFVrHmxmEN284VnK/2CcE5v+2zPaTKu2I+Piu4q5B5ABdMsU9TsfehW6Xdgwd4qKkEH1E=
+ bh=A+hLkEITCQFmrn8vLmQpo4j06eesTu56nxh5C0itNZY=;
+ b=ykBd2x2preQrYFCZbGfOXczLs2GW2kBn4ZcY+IP8pRK+C0CTs92Wo69Ewhm/Z8LoNTvwI8VB2q9Z6fjMckKVW6Z6fppuYE0YjhXEQdGRBQdOeQxXx5qSOCMTmaclc1MBAHjtVMmFKmUp22/AYjqfy1rEKoxJ09uJyqgG8aLu6XU=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16) by
- CYXPR12MB9387.namprd12.prod.outlook.com (2603:10b6:930:e6::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.159.16; Fri, 26 Jun 2026 12:09:27 +0000
-Received: from DM4PR12MB6085.namprd12.prod.outlook.com
- ([fe80::9d84:7eb1:a785:bda1]) by DM4PR12MB6085.namprd12.prod.outlook.com
- ([fe80::9d84:7eb1:a785:bda1%5]) with mapi id 15.21.0159.016; Fri, 26 Jun 2026
- 12:09:27 +0000
-Date: Fri, 26 Jun 2026 14:09:22 +0200
+Received: from SJ1PR12MB6074.namprd12.prod.outlook.com (2603:10b6:a03:45f::14)
+ by LV3PR12MB9233.namprd12.prod.outlook.com (2603:10b6:408:194::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.13; Fri, 26 Jun
+ 2026 15:21:16 +0000
+Received: from SJ1PR12MB6074.namprd12.prod.outlook.com
+ ([fe80::3dee:b690:a008:1bf5]) by SJ1PR12MB6074.namprd12.prod.outlook.com
+ ([fe80::3dee:b690:a008:1bf5%4]) with mapi id 15.21.0159.016; Fri, 26 Jun 2026
+ 15:21:12 +0000
+Date: Fri, 26 Jun 2026 17:21:05 +0200
 From: Robert Richter <rrichter@amd.com>
 To: Alison Schofield <alison.schofield@intel.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>,
@@ -49,17 +50,16 @@ Cc: Davidlohr Bueso <dave@stgolabs.net>,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	Ira Weiny <iweiny@kernel.org>, Dan Williams <djbw@kernel.org>,
 	Li Ming <ming.li@zohomail.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] cxl/region: Derive port granularity from selector
- bits
-Message-ID: <aj5r8tTFW0LJrqAi@rric.localdomain>
+Subject: Re: [PATCH v2 1/6] cxl/region: Validate interleave selector bits
+Message-ID: <aj6Y4VLUdPjF-pAP@rric.localdomain>
 References: <cover.1781199122.git.alison.schofield@intel.com>
- <8958317c8d2a02f021f34712b69846a709f702f8.1781199122.git.alison.schofield@intel.com>
+ <5ac370e484caeb49c334d5a586a7ec8fc1b3dc38.1781199122.git.alison.schofield@intel.com>
+ <aj5kbdsqLPge-rkT@rric.localdomain>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8958317c8d2a02f021f34712b69846a709f702f8.1781199122.git.alison.schofield@intel.com>
-X-ClientProxiedBy: BE1P281CA0197.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:b10:89::10) To DM4PR12MB6085.namprd12.prod.outlook.com
- (2603:10b6:8:b3::16)
+In-Reply-To: <aj5kbdsqLPge-rkT@rric.localdomain>
+X-ClientProxiedBy: CPBP307CA0019.DNKP307.PROD.OUTLOOK.COM (2603:10a6:380:2::7)
+ To SJ1PR12MB6074.namprd12.prod.outlook.com (2603:10b6:a03:45f::14)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -67,165 +67,82 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6085:EE_|CYXPR12MB9387:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3bc8310c-67f3-4fcc-6326-08ded37bc492
+X-MS-TrafficTypeDiagnostic: SJ1PR12MB6074:EE_|LV3PR12MB9233:EE_
+X-MS-Office365-Filtering-Correlation-Id: fea2c6c2-9296-491f-eb3f-08ded3968e44
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|366016|23010399003|22082099003|18002099003|56012099006|11063799006|4143699003;
+	BCL:0;ARA:13230040|1800799024|376014|366016|23010399003|18002099003|56012099006|22082099003|11063799006|4143699003;
 X-Microsoft-Antispam-Message-Info:
-	yJuYhCjk0lYHxIzorVgTarYhPgHOHVf2xXX8VkDb1Fv6AgBHCVhK8wgeSg571uLPZUEbocehir+PN2seZfZEgcaDSYphm/piyOG04ckn2LyvTQTAa5mXvN6rlMC8LLBfBXz0ULPAQMj/8JG9fZvuXnKjbKfs2Ruh89Owm4IKMFhH3b2CNSRdxDipN/3rS7Al8DkFUnPTBDcekxnzZHJX4EzRvjQKGiTEVNw67eR5GOy06Rm7cU9ZObXVna9KkKA6yc8OuWegxbecwaTr4T8Hr8ypU4w6UlwCLSgN3eeGgdv4Of1VaX7muPNuEdbXxNnZmNoHnx7tUfk2bTOZOht4Cz2T0WH+fk90zemdnWZ+YkE4fBX2i+NFka2RVNgAXWdKW5icx7s0f18yVJ0w6sRvPwwlGBeqWDn0K6HpeXJgdOUpHav57c6qPT7J1cr3qeYg0QHMsYn37vA3qqI1dBtwtsLmEOBwMH4rqja5ogdVFXLYFGaUb0qZDYYahgLJn7uuVZkqRakEeSgcPmFFXn78/g2m5d2Fm5nAO70yjN6HOONfNy7yImmkYSE6krY2eeOZ2WFWKPdcitqELkoOKSAdgxUyufFgcOTMKPTf/5tUnkKavFpDKv2KobG3d4KKoEOF6EaiQ9ZfQrhxe/P7CN66z7nM6VnYKhupGp4HKu4LSyE=
+	+PzAEWI1Jt/H7wh82nh9Y0luGgoB7diQSE3f+Gp6hpYI5W8gfEfrJvcJkdnOgHYaZ1P54M04SmIF5dVJjzaHbGTeG3JnXjHCmM6VqLTE0nVLFXtmNClyiL1dbko55kEwdXRVMkffNs2kmBpiT1LbigFMQWzgZIl595Mbs4UfGpe2Jfk46kUECLR5ZDWp64+Qp34M9ssGkuGgNtKbzvM98+6esTT+Fw/minC27SDXnk7VjxaL0woFyN2VOJvkBlYeEcDIMfuVKgeBpc3FjZ9BOZv2LwiyKCGcMoGl5QeU7AW2941qfWY0+ESNA/XQK36IQaJSucVZjcKaTSXkkQdS18+rZNMDTq8wqR0kdMqAnIVkAXG1FNRLzGxUCXUCezXetOaT9tBeYHVIdHhEhsU2N6L2BSbpOcfXXs1RuqZ0kXqCjhb8wodworuvEmuhyA2p2Xb3IfU7QJn003xl1HNsS7ABHuHBCFfuLhLcbnryBWM3LB0V3GautxstPEC9HICGgqh5EWjxm22TWUnu9sSmQxpIWVf8ksO/+9rWg5I0GxYf9RSoPuk1rKtFZViJL06Kj4PBcLRNENm4yy0W5z8ElQbOVsBuys8GgN9ZK4fAymlxLc+cCtw7/Fz64MmU2QtwIhCJKAxS5p4GR15u6FJ2FfGBiZzXCwWyoyIVwMHBvZM=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6085.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(23010399003)(22082099003)(18002099003)(56012099006)(11063799006)(4143699003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR12MB6074.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(23010399003)(18002099003)(56012099006)(22082099003)(11063799006)(4143699003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?C7ykke7kZ1qycDXfwC1CyOJdBrAQ9VJkFVLZ7AEj//myZue3bPs2Jw6I3kPU?=
- =?us-ascii?Q?R0m1oYE0egvAGt2WcoYzDkcbtohvZZ/09IhsyeR7QDORHs/ZLeM9JowDsrvV?=
- =?us-ascii?Q?UiVXcw1XEg0N5Gf3YBHtscfqhJEcmpsca4rorx8ElJTdJSRlpua2SbSYAwmw?=
- =?us-ascii?Q?0Q+sXv+kieYPwYtff8a9QL7jhtVmJ6iXGjhG4cJlfSLjklTM5Rr+Lf8I4ukO?=
- =?us-ascii?Q?8ypY2LXSWbpTiWLPvgjcUATMTltDT9Yg0gT99uUggIgOQIrTT5jGKPk0f+5p?=
- =?us-ascii?Q?7KUzrLv7jJ0GxG1RbQsS5xhCr9w+cbOzJPTSFBrnS4dY1Y3I8Se6uOj6x0MZ?=
- =?us-ascii?Q?H6HV5ckCdBY8KfGpsCGFXdv5tQfm0Nt1Kp9OOseT5N4rLniQvelYJ/QI6aXh?=
- =?us-ascii?Q?AoJ+scGvzzJMiaZHMEcnxTX4qCoEgmQTo6T35NN46k7nra059DVman8XL9nM?=
- =?us-ascii?Q?AEMDVIJ5WP2PzJZEdfT4/2H3OAZ7nYPbEJzyETvO+YOAj30QSsQtx9qjCdhG?=
- =?us-ascii?Q?T8BFRxB2c3oZ9Xm1WX6nsz261BN3MvM8+q305dxN/bDMBg5FA31GkCi3YaRj?=
- =?us-ascii?Q?qjFatN8Kmx0ZVhluIIMUlXjweBmpU9v806+ILc1VVNH/JyDhphSiCPROuCmY?=
- =?us-ascii?Q?+L8/jTPtRUV1oB71KqinhPHenu6nS/EPPNhRB7lFmemunejFquq4yzmxrAZ9?=
- =?us-ascii?Q?58/aK+cH4/sDZgXxL8EOb+y2wUj2pzXv0mQGghrb3Q7GmDoauKySQwto2eWB?=
- =?us-ascii?Q?F42uUsWAFE2bvAFUeUBtpvrJb+u4MqzLkqZVHJuhVd7PUZt1cre2gR4MnCIB?=
- =?us-ascii?Q?Aq9ofPuqsjWwrOVRhzpn+dFaiUxZgcYj8cnf60kgOErZRYjpUZ2ouA7yKHY0?=
- =?us-ascii?Q?DsZzaPzEt/pTf0VcYgycLMGf7VE1jaqSu2AaZXhe1HWvFK9VrE62dBv6qqRc?=
- =?us-ascii?Q?awtvdYYO93+DoQEe20jb7Xo67RFJjM5QWdfiikoEZWjrtyYyz4ce5iKrTIT1?=
- =?us-ascii?Q?jw/ps4VUplMBlOqpwNmSi9BJxHqrymCMwjs2cJqIXwPLn840Fu/Wi1s9+388?=
- =?us-ascii?Q?aVRYkOAdtc39yWBD7decz2YZwJqa8gJZZu/8lr+gTDNy2gFOrKwmNwE0b0el?=
- =?us-ascii?Q?NukZhSojFl+1mc1UUmaujT23xs+d1reiFu2dJEWvbwTrzy2GpMPbPKcMXVw6?=
- =?us-ascii?Q?XlMLGSroaCFmxQYEuLYeTkjKjK56ggUVBdd7g/dVuW0QGuNShRyYJiU9mHLx?=
- =?us-ascii?Q?r2fZMwAjDSNEaUsWh3tHefw3rZZtR4+0kALGU2LAiFHvlaSQHn8yPPHz6uwa?=
- =?us-ascii?Q?K1uy8qsKB+qqeLqbvPlgiicTJQ7XjFFOncGh42Vl7FbatlpOOulKI1wDIj+Z?=
- =?us-ascii?Q?BnE493vxw0vSgYbTH9zaWiV8jjGqBDEYq2I3mLmU3v86jwP9japE3iII1Ltd?=
- =?us-ascii?Q?pBObPe2rryFBSGnvWJH180YZU63/anr5HfSeAGLDXkgSxAT7/GAZMAjuK7C+?=
- =?us-ascii?Q?1uYd/nGEYGAtyO8lJKjD5yuzBAQ7vroRiPl1qRxjMBb0WIfN1U+97cH/mJwZ?=
- =?us-ascii?Q?s6P6wljrR4JqJtMZFd6cqS+UuUen7QecyM64n/efCVrZKWGlXoEqR6O2H+mW?=
- =?us-ascii?Q?L25Yd1Dp8LftP8lJ2ziN2iubjVuD4omjpDmcPdzPKyPBlmBUOy2/ItdMNsIf?=
- =?us-ascii?Q?lVLY5YsodmatgR80kZILMXG3mzNKJ9y0GrCt+ZlFJkrP8Fom?=
+	=?us-ascii?Q?eol2yE5TM6evrxQY6cF48l+9wnOu1i9WSw8stoC5+W3QVRjhTEYgdvqIosIk?=
+ =?us-ascii?Q?k/6yT0+2AYeWkU9ljBnLM8/fJVwCuIOQvb9G2CQonZ5knbw9jJNMsuB3fDE1?=
+ =?us-ascii?Q?Ycbvbe1W8wnHB9xDAEW0r2jFvhBGi5HSz8bvz0f3Rn8/nmbGSJRkjZ7pONWr?=
+ =?us-ascii?Q?rFrnW5sQ3PHKokIavd/NcBbPhW6MPMDixQ5KjRG+7jJffE/qFwpn3D2l4CfE?=
+ =?us-ascii?Q?tEHrqxLcgPCNK+BYC9+cv7ljQKd3XJXJJOug81zZEdhVDwtDloxJ+LWKP7Tv?=
+ =?us-ascii?Q?iUqt3wsF8o1fxHyMmB09R+zeSa/drG6vmavvTn24nBlz2EH3rnXlxH5hjY/t?=
+ =?us-ascii?Q?ACGBnxCh0uh9at0YDa62Zl3zmTeMv3bwAYIbMQW07eLwrifNTcrcsV0TdtxP?=
+ =?us-ascii?Q?MY3pNa43VXF4ZP8BBWJtGEtV8G3ZQ2xz02s6VqFkRXaywPRK6SE7U1cFOf4Z?=
+ =?us-ascii?Q?Dnt7MngjX0Ve2/hNWIpVgGmghfe2YTidhsBuMPjmMU3JGEOao+Cb4ZXXY8Rt?=
+ =?us-ascii?Q?ynd4mTxeLMg4Zel6wqMZZkYM2nueDNJDCsSXdMrfdxI29aB1p1Kbx4MdSfP+?=
+ =?us-ascii?Q?Alpu6x7KHYL5d+P4Mi09EsHzRA4+zESHSksilqqoByLeUmklruqFloiC8xoL?=
+ =?us-ascii?Q?rz+dEFbaomfT7bZkEY0pKj/CImwN7EclBhv38KZnXwLaxueA05geOG0ANU/d?=
+ =?us-ascii?Q?5wXe04f1YOrUDrWJki69VwDM/CKAa8CyhNLJ64+JIxkIqm27bHSqM/kvKLip?=
+ =?us-ascii?Q?7lKm/xg2rUI4mUyJdIGY6Rh0Opf74FObJPxZe/2GgO8fQQReo35N/lWXDfEn?=
+ =?us-ascii?Q?Rd+GIy9KENGUiHWT6oSC+R6/g93cQWHwb26nFehuYmYIuA3UcRrp+q2R7wQz?=
+ =?us-ascii?Q?zngeom91Q4vYW2yOkBpbEtjUFzbt9cKggaRVr6n7DP5sL/XoRRwF8B4K1Lts?=
+ =?us-ascii?Q?uwrhPpX4+j7LGkZNyKXD45ytdfHdOnmBp84er8pEYjSvHZGPwsGIErZJ0TOj?=
+ =?us-ascii?Q?MYBWM4fVTt0aOmcJAH39pWRZLcAyMbmquxc1F9GayMUUGuApFDKbubMv+2NM?=
+ =?us-ascii?Q?va6Rm/TKm8mS3BuG8vdDtfaLtHHUh4xVUpYN2mCJU7ctKsOVwjSgR4hMFWLM?=
+ =?us-ascii?Q?8slylQSh+jfJajnNwP/YDNzeALMhrjN9xQt/cK2J6nLlN5OY2iXrYGbPA4Bj?=
+ =?us-ascii?Q?RcBX+ybHG4K4LThDkdGZVue3lPbF6mGNZJDytt3tAF6wch/4byGnW7ueA1dz?=
+ =?us-ascii?Q?B0NspLmxl6VVvNAUh6jBp0TJAK4lrRPciou3gfTMKi0UmxFltReud2Tt147g?=
+ =?us-ascii?Q?vDxe81FeQvqvCOHVRTBhKvJrVTMSFCuvVrPz+DHftGkeFUBxrVRsmoy5BjTC?=
+ =?us-ascii?Q?ENGlxB7OVSBpNPzg9QuepqJ+Ba8He2jiKA86Ci/V7O03//SU4A57YO8NqDF9?=
+ =?us-ascii?Q?pvZRJMR/SGlYtroAT0J1VCEpnZ1AZ/P/K0IOGq3teZj1uzTaMXBl7UUP8v8J?=
+ =?us-ascii?Q?ilZFxEooLkJ2oI7dS/VL6zpI+p9HGTzoMKs0QM1F80G5krzxAhpQNZZzZ5Ed?=
+ =?us-ascii?Q?tE/6OQpfzeu9FIj/mr79dxbh6N3rxPnLT9gg9fNV9d4mJfrTFv0PYLAM7Row?=
+ =?us-ascii?Q?tqx/Z2ZOOl7xejT6/4XGPrESXrk4KTe8XQAeUkeHJktPXQW5okEK1Ec1YAN4?=
+ =?us-ascii?Q?Nh44z9T9hatvGdi8Yh86XBSnGxQt5Z3KV1spv2aLzQv5UkzO?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3bc8310c-67f3-4fcc-6326-08ded37bc492
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6085.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fea2c6c2-9296-491f-eb3f-08ded3968e44
+X-MS-Exchange-CrossTenant-AuthSource: SJ1PR12MB6074.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2026 12:09:26.9122
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2026 15:21:12.4683
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /8GTieejvhk/n62aiq2cJ6xBBu0VraiKj21rvg87MSwiKMxz6+jbkIQ4e00ncTTPsXJ7/Fq8JhkYFJzrAukhUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR12MB9387
+X-MS-Exchange-CrossTenant-UserPrincipalName: BHPqWAsUL20r9HOLVp+QV8wNgLGLTcswLT/JdEbA8TKpwxXc0qGpM7QIR4oEChbl79b1t7ygmaLs9xOigucZsA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9233
 
-On 11.06.26 10:47:26, Alison Schofield wrote:
-> Selector-bit validation uses a single same-granularity formula
-> for user-created regions. Mixed-granularity layouts need the
-> programmed granularity to depend on the type of decoder being
-> configured.
+On 26.06.26 13:37:22, Robert Richter wrote:
+> On 11.06.26 10:47:25, Alison Schofield wrote:
+
+> > @@ -2067,6 +2062,11 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+> >  		return -ENXIO;
+> >  	}
+> >  
+> > +	/* Keep this patch bisectable until position arithmetic is updated */
+> > +	if (cxlrd->cxlsd.cxld.interleave_granularity >
+> > +	    p->interleave_granularity)
+> > +		return -ENXIO;
+> > +
 > 
-> Derive port granularity from the selector state:
-> 
->   AUTO:    keep the firmware-programmed value; the walk validated it.
->   iw == 1: passthrough; consume no selector bits and span the parent
->            stride.
->   iw > 1:  claim the lowest selector bit still available to this
->            level.
+> Hmm, that looks odd, even if it's only temporary. Could you explain
+> why that is needed here.
 
-If we change the implementation to use selector bits, this patch may
-change again. Anyway, see below.
+Ok, I missed the point that the iterator stops at !is_cxl_root(iter)
+and thus does not consider the cfmws interleaving configs of the root
+decoders here, which are not part of the parent selector bit mask
+then.
 
-> 
-> This lets an interleaving switch beneath a mixed-granularity root
-> claim an inner selector bit instead of colliding with the outer bit
-> already owned by the root.
-> 
-> Add a final check that the derived selector fits within the
-> remaining selector bits.
-> 
-> Remove the auto-region granularity equality check that duplicated
-> the old ordering rule. The selector walk now validates auto region
-> granularities.
-> 
-> Originally-by: Robert Richter <rrichter@amd.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  drivers/cxl/core/region.c | 30 ++++++++++++++++++++++++++++--
->  1 file changed, 28 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index c859c8661281..d5d19ed62171 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1533,6 +1533,9 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  		return -ENXIO;
->  	}
->  
-> +	/* Selector bits still available to this port. */
-> +	selector = cxlr_sel & ~selector;
+That creates a 4th selector bit mask for the root decoders to keep
+track of. With that added I think all the stride handling in patch #3
+to calculate the endpoint positions can be simplified.
 
-This is only used to calculate ig for the non-auto case. Can be moved
-there.
-
-> +
->  	if (cxl_rr->nr_targets_set) {
->  		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
->  			if (ep->dport == cxlsd->target[i]) {
-> @@ -1545,7 +1548,23 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  		goto add_target;
->  	}
->  
-> -	ig = p->interleave_granularity * parent_distance;
-> +	/*
-> +	 * Auto regions keep the firmware value, passthrough decoders consume
-> +	 * no selector bits, interleaving decoders claim the lowest available
-> +	 * selector bit.
-> +	 */
-> +	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-> +		ig = cxld->interleave_granularity;
-
-Move that to the CXL_REGION_F_AUTO section later below.
-
-> +	} else if (iw == 1) {
-> +		ig = p->interleave_granularity * parent_distance;
-> +	} else if (selector) {
-> +		ig = 1ULL << __ffs64(selector);
-> +	} else {
-> +		dev_dbg(&cxlr->dev,
-> +			"%s:%s: no selector bits available for iw %d\n",
-> +			dev_name(port->uport_dev), dev_name(&port->dev), iw);
-> +		return -ENXIO;
-> +	}
-
-That can be moved to non-auto only part.
-
->  
->  	rc = ways_to_eiw(iw, &eiw);
->  	if (!rc)
-> @@ -1557,9 +1576,16 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  		return rc;
->  	}
->  
-> +	if (iw > 1 && (~selector & get_selector(iw, ig))) {
-> +		dev_dbg(&cxlr->dev,
-> +			"%s:%s: derived selector %#llx exceeds remaining %#llx (iw %d ig %d)\n",
-> +			dev_name(port->uport_dev), dev_name(&port->dev),
-> +			get_selector(iw, ig), selector, iw, ig);
-> +		return -ENXIO;
-> +	}
-> +
-
-Same with this check, should go to non-auto.
-
->  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
->  		if (cxld->interleave_ways != iw ||
-> -		    (iw > 1 && cxld->interleave_granularity != ig) ||
->  		    !spa_maps_hpa(p, &cxld->hpa_range) ||
->  		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
->  			dev_err(&cxlr->dev,
-> -- 
-> 2.37.3
-> 
+-Robert
