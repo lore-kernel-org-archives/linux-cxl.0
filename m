@@ -1,56 +1,56 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837A63C5856
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jun 2026 06:56:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520D43C81B6
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jun 2026 06:56:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782456978; cv=none; b=rj907v0AwT5dc6487WtIUvGVlutBlgoBOkC8uBbpJ7t/NfnejIivlYG6fl9apnsK+J6vEEuOkdUg3C5xwWHaC7EvtXDT89Y1oRS/dduwuhpyfWULSuPgXA8oRSMGWDPM91/q6Ia6kXCquxE++BElRNBNqa7/VEzGu0T7hSVud60=
+	t=1782456981; cv=none; b=X4esXAvb6ZBavaSi6VCeMk3WXhzis5WMXQc6wQVN+0E3HeYSGG/vwyaSX8Yjb/u81Iu3pwYxlJItLeRkKseqp5dW7mOeYufONDHDNPREyHMLBk5Am2fSEuLRtaPnRpOWsub8eJADCzTKweSCsqm62WfNTkHPzK1dRqmNKE01WHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782456978; c=relaxed/simple;
-	bh=msD/IOsgmuLyQHdlEUt3k5JKbV4W8J9VzDhB5nHKV2I=;
+	s=arc-20240116; t=1782456981; c=relaxed/simple;
+	bh=LFZDeluVb0jYrFBCNzRihUZyA/8sIedwSTGxxS78Gns=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Krqqky+bpafKkb4AR4fpC5lPAb4qIqky/90IzhPyjGzrmbQy+amo+nq0q523i2hWMuQVEyBy7aOz7AGP/0Hh+nEOEcIDoeEQx1Bxg75uP56Avqi4Hv5s4otfR8GuqAnrMfq53R4sEKII/ZZeUPeheFEOBdpFRvLqLaOcJ3g99jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BC8XyDXR; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version; b=XH9FYrKQRiDudLo31LSQx7+dHcCCRknS9zUXbDz8TzVLCUcIiHCyh+pvNNQCviRifinLBc/sDBBpSv7mi0H7NZpWeMjp5HIl3MhYjKXi0qtEJ/NUnKprNIesXpFV+niDCsnTDm2kndpCdAJRW43ZZsPOfRnH+qNZZo5Wa8w7z48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hfxUme5r; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BC8XyDXR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hfxUme5r"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782456977; x=1813992977;
+  t=1782456981; x=1813992981;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=msD/IOsgmuLyQHdlEUt3k5JKbV4W8J9VzDhB5nHKV2I=;
-  b=BC8XyDXRLZHuOB22Zm26yBr5KGbghObsZynVPgsahEa/F9q+Mg3a6dtr
-   raVYNBwdl3i5JE3ux+I68O760vQ5Y/r/nabVocdJn9gIrCDlAxFYtlG8+
-   n9QSXwGH2BtA669BO5Qc0MCuJyYWwo9+VujitSiCpeOwn163v56R8pNr8
-   YjW3r0Rbhid4nfHDG2N4qjEHH3uQIIBNK7Mx//WPQzJ8Bu6gKKor2fX8m
-   LbIgGcBvy1qOZlKxuBhI1rOwVuLuMSSYhYj+FyyUd2uqoYqVxCJG/3PbQ
-   24pIZDquk1HEvUNCnQn5zT4VgtznKUcod9+AIkrS69ubJQdiFRXHhNGaV
-   A==;
-X-CSE-ConnectionGUID: M4WpJPUKSX6d1GWCw2UZlQ==
-X-CSE-MsgGUID: P00MPK71QjmqKJGM3VydbA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11828"; a="85802346"
+  bh=LFZDeluVb0jYrFBCNzRihUZyA/8sIedwSTGxxS78Gns=;
+  b=hfxUme5r6748hnqci+D158gDWHlh87s27xFtXbNI4ixYyobejJucwCq0
+   M44tQE15PxVEtiAyHIPW3dWGZO9nOX9cUBmZU9IvSYUu4aoB86hMv2s4c
+   2OP18mPlNEQW0X2Raz8IMeODbEaiZSWRQyCxZlc9JTJV2Jd8BhcvlmgTe
+   /fm9yeK3tG/aqg+CmoX5uRFLoKLcn2h0eyR9koJyYwd0whwzNJUf0evyn
+   ifcgzJ4JT4w9kr8bFws8WEh780YpITJDMmpT4M2E9L1urrEWUxLquB5I6
+   39l7zm6EldLfSw3SdPfrUXKtGHFNHWlkfVB/KASwiWgEAKyaoWPtJU04c
+   w==;
+X-CSE-ConnectionGUID: UVaXwpStSgWuSgV42WuTJg==
+X-CSE-MsgGUID: HSa7EQwIQyO23cker0y4BQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11828"; a="85802356"
 X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
-   d="scan'208";a="85802346"
+   d="scan'208";a="85802356"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 23:56:17 -0700
-X-CSE-ConnectionGUID: RE1eX4R+QEm8ZMh339y7FA==
-X-CSE-MsgGUID: pYhZOP3aTlmyINgEoZUj/Q==
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 23:56:20 -0700
+X-CSE-ConnectionGUID: ZsEt5uf4TjWAgb5WATCW/g==
+X-CSE-MsgGUID: xxUVM1IpSFaUxXRvE21K9Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
-   d="scan'208";a="244865887"
+   d="scan'208";a="244865896"
 Received: from junjie-desk-dev.bj.intel.com ([10.238.152.71])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 23:56:15 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 23:56:18 -0700
 From: Junjie Cao <junjie.cao@intel.com>
 To: qemu-devel@nongnu.org
 Cc: Jonathan Cameron <jic23@kernel.org>,
 	linux-cxl@vger.kernel.org,
 	junjie.cao@intel.com
-Subject: [PATCH 4/6] hw/cxl: free in-flight sanitize state on reset
-Date: Fri, 26 Jun 2026 14:21:47 +0800
-Message-ID: <20260626062149.1844334-5-junjie.cao@intel.com>
+Subject: [PATCH 5/6] hw/cxl: clear event logs, scan media and interrupt policy on reset
+Date: Fri, 26 Jun 2026 14:21:48 +0800
+Message-ID: <20260626062149.1844334-6-junjie.cao@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260626062149.1844334-1-junjie.cao@intel.com>
 References: <20260626062149.1844334-1-junjie.cao@intel.com>
@@ -62,48 +62,69 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Per CXL r4.0 Section 8.2.9.4, "Background commands do not continue to
-execute across Conventional Resets."  If a sanitize or media operation
-is in progress when the device is reset, the background timer is already
-cancelled and freed via cxl_destroy_cci(), but the per-operation state
-(media_op_sanitize) is heap-allocated separately and would otherwise be
-leaked.
+Event records, scan media results and event interrupt settings are
+device-internal dynamic state that should not survive a device reset.
 
-Free it unconditionally at the end of the reset hold phase.  The timer
-that advances the operation lives in the CCI that was just destroyed and
-re-initialized, so the operation can never complete after a reset of any
-type; preserving the heap state across reset has no benefit and would
-leak it the next time media_op_sanitize is assigned.
+Per CXL r4.0 Section 8.2.10.9.4.6 (Get Scan Media Results), "If the
+Scan Media command has not been called since the last Conventional
+Reset, the device shall return the Unsupported return code."  This
+explicitly invalidates scan media results across reset, so clear the
+scan_media_hasrun flag.
 
-Note that Section 8.2.10.9.5.1 additionally requires a device whose
-Sanitize was interrupted by reset to remain in the Media Disabled state
-until a successful Sanitize completes.  That latch is not modelled here
-(reset re-enables media via memdev_reg_init_common()) and is left for
-future work; this patch only addresses the resource leak.
+Per CXL r4.0 Section 8.2.10.2.5 (Set Event Interrupt Policy), "All
+event log interrupt settings shall be reset to 00b (No Interrupts) by
+the device on Conventional Reset."  Clear irq_enabled for every event
+log accordingly.
+
+For the event records there is no direct spec mandate to drop the
+stored records on reset; the Event Status register (Table 8-203) is
+non-sticky and resets to zero per Section 9.7, and no reset flavor
+requires the already-reported records to persist.  Draining the queues
+is therefore a reasonable modelling choice that keeps the records
+consistent with the freshly-reset status register, rather than a spec
+requirement.  Call the existing cxl_discard_all_event_records() helper
+to drain all event queues.  The event log infrastructure itself
+(mutexes, IRQ vectors) remains intact as it is initialized once during
+device realize.
+
+This is also where reset-type gating begins: a wakeup from suspend-to-RAM
+(RESET_TYPE_WAKEUP) is not a Conventional or CXL Reset and must retain
+device-internal state, so the hold phase returns early for that type
+before discarding any records.  This mirrors the RESET_TYPE_WAKEUP
+shortcut in virtio-mem and virtio-balloon.  Only the unconditional
+mailbox interface re-initialization and the in-flight sanitize free
+(whose backing timer was already destroyed) run on a wakeup.
 
 Signed-off-by: Junjie Cao <junjie.cao@intel.com>
 ---
- hw/mem/cxl_type3.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ hw/mem/cxl_type3.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index b842e71c66..a5e6df3033 100644
+index a5e6df3033..5bf0cffb72 100644
 --- a/hw/mem/cxl_type3.c
 +++ b/hw/mem/cxl_type3.c
-@@ -1361,6 +1361,16 @@ static void ct3d_reset_hold(Object *obj, ResetType type)
-     }
-     cxl_initialize_t3_ld_cci(&ct3d->ld0_cci, DEVICE(ct3d), DEVICE(ct3d),
-                              512); /* Max payload made up */
+@@ -1371,6 +1371,23 @@ static void ct3d_reset_hold(Object *obj, ResetType type)
+      */
+     g_free(ct3d->media_op_sanitize);
+     ct3d->media_op_sanitize = NULL;
 +
 +    /*
-+     * Free any in-flight sanitize state unconditionally.  The background
-+     * timer that would advance it lives in the CCI just torn down and
-+     * re-initialized above, so the operation can never complete after this
-+     * point regardless of the reset type; keeping the heap state would only
-+     * leak it on the next allocation.
++     * A wakeup from suspend-to-RAM is not a Conventional or CXL Reset.  The
++     * device-internal dynamic state cleared below (event logs, scan media
++     * results, and the poison/feature-transfer state cleared in subsequent
++     * patches) must be preserved across resume, so stop here for a wakeup.
++     * virtio-mem and virtio-balloon take the same RESET_TYPE_WAKEUP shortcut.
 +     */
-+    g_free(ct3d->media_op_sanitize);
-+    ct3d->media_op_sanitize = NULL;
++    if (type == RESET_TYPE_WAKEUP) {
++        return;
++    }
++
++    cxl_discard_all_event_records(&ct3d->cxl_dstate);
++    for (int i = 0; i < CXL_EVENT_TYPE_MAX; i++) {
++        ct3d->cxl_dstate.event_logs[i].irq_enabled = false;
++    }
++    ct3d->scan_media_hasrun = false;
  }
  
  static const Property ct3_props[] = {
