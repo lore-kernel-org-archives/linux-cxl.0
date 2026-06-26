@@ -1,135 +1,102 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4823BB118
-	for <linux-cxl@vger.kernel.org>; Fri, 26 Jun 2026 06:55:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F0F33BA220
+	for <linux-cxl@vger.kernel.org>; Fri, 26 Jun 2026 06:56:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782456960; cv=none; b=W4BwvmaOH+dWNLtxt4PYxMhr9pQ9uBlsgAOaxIWZ/EMB2GynIAlsnQt0N6cdztJ+sAoI4g3/zY9wFto+waQhtkcsUS6iN2WU67If5a5eqXUP5OHnHkDrjhSZwaYzAgdQk2S4cD6QyT73dn9KU7EjxqSBLMfisGAAhpNVOTnCFd4=
+	t=1782456963; cv=none; b=NBRa9fawCEsrI7G9NJXOkwY/PJ/5EnLUA2vWWo5xfftImiy5GamsxikeHnOZ2TK/pyLG3sHZ0l9DA8tcCcIkbHZbzOFWXpwODhpNpWXIC5tM4K1VtsWancIK6A4/XY+jcFZiXF2WbN/Dj5cKIUbn8dXCaEf9eJNG6nu5otOWbnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782456960; c=relaxed/simple;
-	bh=iARy3cRYNassfTGD4WkDMHzE6Bdi/ddDojiWpPiYACA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tX6xEOZDIRV8EfcpSS10XCQgkY5UI6S+9DVNsZoyWoasBkAind7B/HBNpgIlCl3Tmo+Ko3/RIUWVRdDk0rwpzTxer5+e+9IueN9Cz5bUjX3FeDXhztleuK7xnKTdW4HVyXfzz4JKkXlPYeuMXnqfjMvXw0RC28nMoP2CWy5y7GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hpiLx8Pw; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1782456963; c=relaxed/simple;
+	bh=KBu100xg1Txpv8RJacu5T0T7HrIl9c2cdIu5LTVA4PE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cy9yYtSAy146Et+wkoVayF9roLRiysJT9S2ILi35H3cpcSIhDsUS80AB/1jgtiltqWhLKdkH4MRNJCDfWy9XGSVaNkARhXCnqmlRfGmW6p5yMJSObNro0y2fRf9PFg0UrJgeGfF2650NP5Sw5/Hc4117YBuHM/NflPQ6XJSIozk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n4Bk4kTj; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hpiLx8Pw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n4Bk4kTj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782456959; x=1813992959;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=iARy3cRYNassfTGD4WkDMHzE6Bdi/ddDojiWpPiYACA=;
-  b=hpiLx8PwLbIsV8GfBsfP0PNusnzteDvotwzuSZqwoluFxOJQYz4jhoOp
-   v5mC9nzGP0qel48BIlnAKc6FN6lZP8CIO9+0JW4i4hIh4VCzT2SK6xHIv
-   SW/ETgK6Lj65THfK6G2KP1prQ2V06uqppmENdf/mjolkHK5Dj5ftLBzGd
-   MQmaOlU/uTKtsDy+vHEt6dCAxxapKwb+FMV2Z4VVsZH5Skz0mu8geKLyd
-   2NIawbRZzXyqN//jfaeBbr9zQKDE1vV5INzbJNsdXrPC520npD5ao4zql
-   2f6/ErsXF69BfvyeRk2hCLPOmqffNm6gOtQ2GZgDbcA93fQ/1SSeMIojM
-   g==;
-X-CSE-ConnectionGUID: gugx6Kw7TfW2vW0OEn2TaQ==
-X-CSE-MsgGUID: zYTQzqY1R/a5h0WlJt4bUg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11828"; a="85802325"
+  t=1782456963; x=1813992963;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=KBu100xg1Txpv8RJacu5T0T7HrIl9c2cdIu5LTVA4PE=;
+  b=n4Bk4kTjv3ns/X7MXxH1+v4wqA9F6kEsoJHNMRNNGZ/X0MH6rah76AUb
+   gtUvray8UnXrOqyr1bVyaLpgj2hKQds5WMqgt2x6AK48O4rKbwY00cNCp
+   jMhfFiTLljItro8ZBMAHJI9Pgo/f7wAyycFG/pgoJc8zv97PySJnHSYhI
+   DZBISxmMBxr2TaimMUj34IZjv8GsK7dJcrWj7VVcQ2ZBJyMKrfkE7ObkX
+   B8wo0KDLA0X9qA0yI3jSlfdy/GNgSjDxggK3qg9e02A7s28mR6X5n5qjw
+   aO83fPtygqZumevHOx1d7GIeWT4fNHTeeogOZeP0zt+nPDdMDbzHeOHCW
+   w==;
+X-CSE-ConnectionGUID: l6e9zeQ+S6mIOdydIZuUkA==
+X-CSE-MsgGUID: x5lyMZ1UReShnAezOp/h6g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11828"; a="85802331"
 X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
-   d="scan'208";a="85802325"
+   d="scan'208";a="85802331"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 23:55:58 -0700
-X-CSE-ConnectionGUID: eTBD9Fi/RIS+SZEmscM+1g==
-X-CSE-MsgGUID: yF5XFUvrS3SubeOL5hvcsQ==
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 23:56:02 -0700
+X-CSE-ConnectionGUID: Anq9gpsGSSiR2V1+eDjgnQ==
+X-CSE-MsgGUID: 4iJqnzP2T7WXbdJTS1ZPRA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
-   d="scan'208";a="244865865"
+   d="scan'208";a="244865870"
 Received: from junjie-desk-dev.bj.intel.com ([10.238.152.71])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 23:55:56 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2026 23:56:00 -0700
 From: Junjie Cao <junjie.cao@intel.com>
 To: qemu-devel@nongnu.org
 Cc: Jonathan Cameron <jic23@kernel.org>,
 	linux-cxl@vger.kernel.org,
-	junjie.cao@intel.com
-Subject: [PATCH 0/6] hw/cxl: fix Type-3 device reset resource leaks and convert to three-phase
-Date: Fri, 26 Jun 2026 14:21:43 +0800
-Message-ID: <20260626062149.1844334-1-junjie.cao@intel.com>
+	junjie.cao@intel.com,
+	qemu-stable@nongnu.org
+Subject: [PATCH 1/6] hw/cxl: fix timer leak in cxl_destroy_cci()
+Date: Fri, 26 Jun 2026 14:21:44 +0800
+Message-ID: <20260626062149.1844334-2-junjie.cao@intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260626062149.1844334-1-junjie.cao@intel.com>
+References: <20260626062149.1844334-1-junjie.cao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The CXL Type-3 device reset path (ct3d_reset) has several issues:
+cxl_init_cci() allocates a QEMUTimer via timer_new_ms() but
+cxl_destroy_cci() never frees it.  This leaks a timer object on every
+device exit path and, more critically, on every device reset cycle since
+the secondary CCIs (vdm_fm_owned_ld_mctp_cci, ld0_cci) are destroyed
+and re-initialized each time ct3d_reset() runs.
 
-1) Resource leaks:
-   - cxl_destroy_cci() never frees the QEMUTimer allocated by
-     cxl_init_cci(), leaking a timer on each destroy/reinit cycle.
-   - The primary CCI (ct3d->cci) is re-initialized through
-     cxl_device_register_init_t3() without being destroyed first,
-     leaking the timer and leaving the mutex undestroyed on every
-     reset.
-   - The secondary CCIs are never destroyed at device exit time,
-     leaking their timers and mutexes on device removal.
+Free the timer with timer_free(), which cancels any pending expiry via
+timer_del() internally and tolerates a NULL pointer, then clear the
+field so that a repeated timer_free() on the same CCI is a safe no-op.
+(The function as a whole is not idempotent: it also calls
+qemu_mutex_destroy(), which asserts on an already-destroyed mutex.
+Callers must not invoke cxl_destroy_cci() twice; the .initialized guard
+added in the next patch enforces that.)
 
-2) Incomplete state cleanup:
-   - Background commands do not survive Conventional Resets (CXL r4.0
-     Section 8.2.9.4), yet the in-flight sanitize state is never freed.
-   - Scan media results are explicitly invalidated after reset (Section
-     8.2.10.9.4.6), yet scan_media_hasrun is never cleared.
-   - Event interrupt settings shall be reset to 00b on Conventional
-     Reset (Section 8.2.10.2.5), yet irq_enabled is never cleared.
-   - When "Injects Persistent Poison" is 0 (the QEMU default), injected
-     poison shall be automatically cleared on reset (Table 8-309), yet
-     the poison lists are never drained.
-   - Stale event records remain in the queues across reset even though
-     the Event Status register (Table 8-203) is non-sticky.
+Fixes: 98cbac128f1c ("hw/cxl: Support aborting background commands")
+Cc: qemu-stable@nongnu.org
+Signed-off-by: Junjie Cao <junjie.cao@intel.com>
+---
+ hw/cxl/cxl-mailbox-utils.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-3) Deprecated API usage:
-   - Uses device_class_set_legacy_reset() instead of the three-phase
-     resettable interface, preventing reset-type-aware behavior.
-
-This series fixes the issues incrementally:
-  - Patches 1-2: fix resource leaks (deterministic bugs)
-  - Patch 3: mechanical conversion to three-phase reset
-  - Patches 4-6: clean up device state on reset
-
-The state cleanup in patches 4-6 is gated on reset type:
-RESET_TYPE_WAKEUP returns early (patch 5) since a resume from S3 is
-not a Conventional or CXL Reset.  The CCI re-initialization and the
-in-flight sanitize free run unconditionally regardless of type.
-
-Not addressed here:
-
-  - Committed Feature attributes and alert thresholds (Table 8-276
-    Deepest Reset Persistence = None) are not reverted to defaults.
-    Factoring the realize-time defaults into a reset helper is left
-    for a follow-up.
-
-  - Dynamic Capacity extent lifecycle across reset.
-
-  - The Media Disabled latch after an interrupted Sanitize (Section
-    8.2.10.9.5.1); patch 4 addresses only the resource leak.
-
-Tested: per-commit build clean; qtest passes.  Differential
-LeakSanitizer (5x system_reset): pre-series leaks 720 B / 15 allocs
-in cxl_init_cci -> timer_new_ms; post-series zero.  Poison inject ->
-reset -> re-inject same DPAs succeeds (no stale "Overlap" rejection).
-20x inject+reset stress cycles with no crash.
-
-Junjie Cao (6):
-  hw/cxl: fix timer leak in cxl_destroy_cci()
-  hw/cxl: destroy primary CCI before re-initialization on reset
-  hw/cxl: convert cxl-type3 to three-phase reset
-  hw/cxl: free in-flight sanitize state on reset
-  hw/cxl: clear event logs, scan media and interrupt policy on reset
-  hw/cxl: clear poison lists and feature transfer state on reset
-
- hw/cxl/cxl-mailbox-utils.c  |  2 +
- hw/mem/cxl_type3.c          | 74 ++++++++++++++++++++++++++++++++++---
- include/hw/cxl/cxl_device.h |  2 +
- 3 files changed, 73 insertions(+), 5 deletions(-)
-
---
+diff --git a/hw/cxl/cxl-mailbox-utils.c b/hw/cxl/cxl-mailbox-utils.c
+index 20e0b7e476..18a455e89c 100644
+--- a/hw/cxl/cxl-mailbox-utils.c
++++ b/hw/cxl/cxl-mailbox-utils.c
+@@ -4770,6 +4770,8 @@ void cxl_init_cci(CXLCCI *cci, size_t payload_max)
+ 
+ void cxl_destroy_cci(CXLCCI *cci)
+ {
++    timer_free(cci->bg.timer);
++    cci->bg.timer = NULL;
+     qemu_mutex_destroy(&cci->bg.lock);
+     cci->initialized = false;
+ }
+-- 
 2.43.0
 
