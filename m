@@ -1,166 +1,181 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4129037C90F;
-	Fri, 26 Jun 2026 16:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1169A37DAAA;
+	Fri, 26 Jun 2026 17:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782490629; cv=none; b=VM3YwbyPOUtZX0iJG0Bzz2iiWh8bWmJkFMV+wx0YEAMccLumBUmCL2E4omOLY9HlYxJEFZVNVrrYYR5TRkQrwcwAfT2n3lGLhha0R92hBXIv0o+Mi9mn0XqKuArt3wg2128Tv6Fb0WQCM6ptOW982OW2HYipC7abmQkxy/DZYlg=
+	t=1782493802; cv=none; b=coecbsh9m24uDr6qonys9eeunwJGboTRn/mWBKv4aNAe1bAWOII9wKd4Rv9g5PNmf22qCksyOx7OEOQqj+LVIN0eM9OKaT15sjfDFCLrSYmIzN5WJFj5uVwv2i0pS99qM/AShLkbNPFTouAhUbETFqm59xLcwAETxuSJdFAEiiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782490629; c=relaxed/simple;
-	bh=Sj0GmlGTM+/ztv+2EJ6a82JwG1UUKq/y0yaNrf9HdcU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DpD0/WMtZGx3N/MCHuyv/oLXkPtDJXUo5JIWhaZioxiHfsnBmwkp7cOULHBnbSEhRbE+TjOprKcr7817jjIvJHY0evM/Z3aJpgZKkUf2sErmLIVaNGFdlU4M3u74omztLDi9ZS+/c0/uHb22u6VSktH08OdankBBzEjAfMisFw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KSdKdAG8; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KSdKdAG8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782490627; x=1814026627;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Sj0GmlGTM+/ztv+2EJ6a82JwG1UUKq/y0yaNrf9HdcU=;
-  b=KSdKdAG8WSfpggAxOrRLDNIdUUHUZrjcflLu7kAKJGf9BkW9Iazup+Ft
-   kQqFAivsUw33Jp+kNDIFBkRXTgauUOFxHbBRGydV2mWixkwqUAO824Axf
-   bvRJ30LvUtJKUY/rqOy5+8o6rFljqpys03iU99wNjfgXUI/oQVf39921g
-   lDml9hxkbhFJY+eF1nIUNr0iw+Iguq5NTSQX2mHRhUxdFAGv3AmS8UIs4
-   rcGTsOeMRmcyT7MH22lGUFpLXdS7nS/AlPajRPYT2Hg3DOHPSAyusa8dC
-   cD2JtULk2ML1/zvMhsU+euIZpD1s0El4I6Xp2b8WmJ5/spvDudGGCEF9A
-   g==;
-X-CSE-ConnectionGUID: Imily9hKR4eeykV77DjAvQ==
-X-CSE-MsgGUID: fRVP5mLRTvKMYTcJ/7oI4g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11829"; a="83295288"
-X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
-   d="scan'208";a="83295288"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2026 09:17:06 -0700
-X-CSE-ConnectionGUID: VX6xha95ShKH8tsYlKqAdw==
-X-CSE-MsgGUID: /31sroTDSPSfPdiI7kA6KQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,226,1774335600"; 
-   d="scan'208";a="256258229"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.109.96]) ([10.125.109.96])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2026 09:17:05 -0700
-Message-ID: <e97b6cfb-f6e9-4be4-aac2-121330b6c56d@intel.com>
-Date: Fri, 26 Jun 2026 09:17:03 -0700
+	s=arc-20240116; t=1782493802; c=relaxed/simple;
+	bh=SoAJgLlEOnUchXjHYkJ+yVUN1P37jkym3o4Ur8qAwY8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FX6jMkQ2NqwIlztlRf/12qfICMjaBYaAhbCKbNZR0UgWf2ECbLdKhv7TubfdmvpRsNE1Azp5SgVWBUwZFoCiGRfj7TVyxyCC2rZdLzOzevfX/IN2J0IGiCWmjOI792r/2+YcvKTQ+j1Ow/+p1OS/5QR5JXmD7umfQMx9DgjN0CY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81A591F000E9;
+	Fri, 26 Jun 2026 17:10:00 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev
+Cc: alison.schofield@intel.com
+Subject: [NDCTL PATCH v3] cxl: Add CXL type2 accelerator unit test
+Date: Fri, 26 Jun 2026 10:09:59 -0700
+Message-ID: <20260626170959.1416017-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cxl/features: Reject Get Feature count larger than the
- output buffer
-To: Richard Cheng <icheng@nvidia.com>,
- Alison Schofield <alison.schofield@intel.com>
-Cc: Zhenhao Wan <whi4ed0g@gmail.com>, dave@stgolabs.net, jic23@kernel.org,
- vishal.l.verma@intel.com, djbw@kernel.org, danwilliams@nvidia.com,
- iweiny@kernel.org, ming.li@zohomail.com, kobak@nvidia.com,
- kaihengf@nvidia.com, kees@kernel.org, newtonl@nvidia.com,
- kristinc@nvidia.com, mochs@nvidia.com, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20260624134737.49166-1-icheng@nvidia.com>
- <ajxEGmGxOhryENl4@aschofie-mobl2.lan> <ajxHwh3s2lM98aed@aschofie-mobl2.lan>
- <aj4pYfg51dWr__mw@MWDK4CY14F>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <aj4pYfg51dWr__mw@MWDK4CY14F>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+CXL type2 hierachy can be setup via the cxl_test. Add a regression test
+unit to CXL CLI to verify the type2 loading/unloading. Test include
+removing the root port and bringing it back, unbinding the type2 mock
+device driver and bringing it back, and checking to see if a region
+can be destroyed and a memdev can be disabled.
 
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+v3:
+- Add //empty to all jq quiries (Alison)
+---
+ test/cxl-type2.sh | 103 ++++++++++++++++++++++++++++++++++++++++++++++
+ test/meson.build  |   2 +
+ 2 files changed, 105 insertions(+)
+ create mode 100644 test/cxl-type2.sh
 
-On 6/26/26 12:27 AM, Richard Cheng wrote:
-> On Wed, Jun 24, 2026 at 02:10:26PM +0800, Alison Schofield wrote:
->> On Wed, Jun 24, 2026 at 01:54:50PM -0700, Alison Schofield wrote:
->>> On Wed, Jun 24, 2026 at 09:47:37PM +0800, Richard Cheng wrote:
->>>> cxlctl_get_feature() sizes its output buffer from the user's
->>>> fwctl_rpc.out_len, but the device is told to write
->>>> cxl_mbox_get_feat_in.count bytes into rpc_out->payload, which is a
->>>> separate user-controlled value. Nothing bounds count against out_len, so
->>>> a small out_len with a large count overflows the kvzalloc()'d buffer.
->>>> A heap OOB write reachable from FWCTL_RPC.
->>>>
->>>> Reject requests where count exceeds the available payload room, before
->>>> allocating.
->>>>
->>>> Fixes: 5908f3ed6dc2 ("cxl: Add support to handle user feature commands for get feature")
->>>> Reviewed-by: Kai-Heng Feng <kaihengf@nvidia.com>
->>>> Reviewed-by: Koba Ko <kobak@nvidia.com>
->>>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->>>> Signed-off-by: Richard Cheng <icheng@nvidia.com>
->>>> ---
->>>> Changelog:
->>>>
->>>> v1 -> v2:
->>>>     - Drop the reproducer and trim the KASAN splat in the commit message
->>>>     - Sent the reproducer as a regression test in ndctl separately.
->>>
->>> This patch itself looks good. Looking at the other bounds checks
->>> Sashiko suggests, I'd rather see this all fixed up in one patch or
->>> patchset, rather than dribble in as multiple patches.
->>>
->>> Maybe it all fits into one patch, like this:
->>> cxl/features; Add bounds checking for get/set feature commands
->>> or maybe it works better as a set.
->>>
->>> Either way, doing in one swoop would be nice!
->>
->> Oh, seems I'm reading patches out of order.
->>
->> Now I see this: 
->> https://lore.kernel.org/linux-cxl/20260620-cxl-fwctl-oob-v1-1-5758e34d784a@gmail.com/
->> which looks like it covers one of Sashikos's complaints.
->>
-> 
-> Hi Alison,
-> 
-> Thanks for pointing this out.
-> 
-> Then that would be no problem for me, I'll append my fixes with Zhenhao's patch.
-> 
-> so my original fix + sashiko's complain about cxlctl_set_feature() and cxl_get_feature().
-> I'll put them in my work and send as a serie.
+diff --git a/test/cxl-type2.sh b/test/cxl-type2.sh
+new file mode 100644
+index 000000000000..8c5321e6bf8c
+--- /dev/null
++++ b/test/cxl-type2.sh
+@@ -0,0 +1,103 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2026 Intel Corporation. All rights reserved.
++
++. "$(dirname "$0")"/common
++
++rc=77
++set -ex
++trap 'err $LINENO' ERR
++check_prereq "jq"
++
++remove_kmod() {
++	modprobe -r cxl_test
++}
++
++load_kmod() {
++	modprobe cxl_test type2_test=1
++}
++
++init_check() {
++	load_kmod
++	[ -f /sys/module/cxl_test/parameters/type2_test ] || \
++		do_skip "cxl_test type2_test module param not available"
++	region=$("$CXL" list -b "$CXL_TEST_BUS" -R | jq -r '.[0].region // empty')
++	[ -n "$region" ] || err "$LINENO"
++}
++
++# Test rootport disable/enable case
++cycle_root_port() {
++	echo "Testing root port disable/enable"
++	memdev=$("$CXL" list -b "$CXL_TEST_BUS" -M | jq -r '.[0].memdev // empty')
++	[ -n "$memdev" ] || err "$LINENO"
++	port=$("$CXL" list -b "$CXL_TEST_BUS" -m "$memdev" -P | jq -r '.[0].port // empty')
++	[ -n "$port" ] || err "$LINENO"
++
++	"$CXL" disable-port "$port" -f
++	region=$("$CXL" list -b "$CXL_TEST_BUS" -R | jq -r '.[0].region // empty')
++	[ -z "$region" ] || err "$LINENO"
++
++	"$CXL" enable-port "$port"
++	echo cxl_type2_accel.0 > /sys/bus/platform/drivers/cxl_mock_accel/bind
++	region=$("$CXL" list -b "$CXL_TEST_BUS" -R | jq -r '.[0].region // empty')
++	[ -n "$region" ] || err "$LINENO"
++}
++
++# Test rebind device driver
++cycle_pdev_driver() {
++	echo "Testing device driver unbind/bind"
++	region=$("$CXL" list -b "$CXL_TEST_BUS" -R | jq -r '.[0].region // empty')
++	[ -n "$region" ] || err "$LINENO"
++	echo cxl_type2_accel.0 > /sys/bus/platform/drivers/cxl_mock_accel/unbind
++	region=$("$CXL" list -b "$CXL_TEST_BUS" -R | jq -r '.[0].region // empty')
++	[ -z "$region" ] || err "$LINENO"
++	echo cxl_type2_accel.0 > /sys/bus/platform/drivers/cxl_mock_accel/bind
++	region=$("$CXL" list -b "$CXL_TEST_BUS" -R | jq -r '.[0].region // empty')
++	[ -n "$region" ] || err "$LINENO"
++}
++
++# Test memdev removal with CXL CLI
++test_dev_removal() {
++	echo "Testing device removal with CXL CLI"
++	region=$("$CXL" list -b "$CXL_TEST_BUS" -R | jq -r '.[0].region // empty')
++	[ -n "$region" ] || err "$LINENO"
++	"$CXL" disable-region "$region"
++	region=$("$CXL" list -b "$CXL_TEST_BUS" -R | jq -r '.[0].region // empty')
++	[ -z "$region" ] || err "$LINENO"
++
++	# type2 region is auto region and cannot be destroyed
++	region=$("$CXL" list -b "$CXL_TEST_BUS" -Ri | jq -r '.[0].region // empty')
++	[ -n "$region" ] || err "$LINENO"
++	"$CXL" destroy-region "$region" || true
++	region=$("$CXL" list -b "$CXL_TEST_BUS" -Ri | jq -r '.[0].region // empty')
++	[ -n "$region" ] || err "$LINENO"
++
++	# Do it directly via sysfs since CXL CLI has checks that will skip sysfs
++	echo "0" | tee /sys/bus/cxl/devices/"$region"/commit || true
++	region=$("$CXL" list -b "$CXL_TEST_BUS" -Ri | jq -r '.[0].region // empty')
++	[ -n "$region" ] || err "$LINENO"
++
++	# Make sure there's no delete_region for a type2 root decoder
++	rd=$("$CXL" list -b "$CXL_TEST_BUS" -r"$region" -D | jq -r '.[0]."root decoders"[0].decoder')
++	[ -n "$rd" ] || err "$LINENO"
++	[ ! -f /sys/bus/cxl/devices/"$rd"/delete_region ] || err "$LINENO"
++
++	memdev=$("$CXL" list -b "$CXL_TEST_BUS" -M | jq -r '.[0].memdev // empty')
++	[ -n "$memdev" ] || err "$LINENO"
++
++	# memdev is not expected to be removed because region can't be destroyed
++	"$CXL" disable-memdev "$memdev" || true
++	memdev=$("$CXL" list -b "$CXL_TEST_BUS" -M | jq -r '.[0].memdev // empty')
++	[ -n "$memdev" ] || err "$LINENO"
++}
++
++remove_kmod
++init_check
++rc=1
++
++cycle_root_port
++cycle_pdev_driver
++test_dev_removal
++
++check_dmesg "$LINENO"
++remove_kmod
+diff --git a/test/meson.build b/test/meson.build
+index 56aed9cc3c9d..7bc972d4943e 100644
+--- a/test/meson.build
++++ b/test/meson.build
+@@ -171,6 +171,7 @@ cxl_translate = find_program('cxl-translate.sh')
+ cxl_elc = find_program('cxl-elc.sh')
+ cxl_dax_hmem = find_program('cxl-dax-hmem.sh')
+ cxl_region_replay = find_program('cxl-region-replay.sh')
++cxl_type2 = find_program('cxl-type2.sh')
+ 
+ tests = [
+   [ 'libndctl',               libndctl,		  'ndctl' ],
+@@ -207,6 +208,7 @@ tests = [
+   [ 'cxl-elc.sh',             cxl_elc,            'cxl'   ],
+   [ 'cxl-dax-hmem.sh',        cxl_dax_hmem,       'cxl'   ],
+   [ 'cxl-region-replay.sh',   cxl_region_replay,  'cxl'   ],
++  [ 'cxl-type2.sh',           cxl_type2,          'cxl'   ],
+ ]
+ 
+ if get_option('destructive').enabled()
 
-Hi Richard, I see sashiko pointed out some existing issues on the series. Will you create fixes for them or should I go do that?
-
-DJ
-
-> 
-> --Richard
->  
->>>
->>> -- Alison
->>>
->>>>
->>>> Best regards,
->>>> Richard Cheng
->>>> ---
->>>>  drivers/cxl/core/features.c | 4 ++++
->>>>  1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
->>>> index 85185af46b72..9c714ee42a41 100644
->>>> --- a/drivers/cxl/core/features.c
->>>> +++ b/drivers/cxl/core/features.c
->>>> @@ -471,6 +471,10 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
->>>>  	if (!count)
->>>>  		return ERR_PTR(-EINVAL);
->>>>  
->>>> +	if (out_size < offsetof(struct fwctl_rpc_cxl_out, payload) ||
->>>> +	    count > out_size - offsetof(struct fwctl_rpc_cxl_out, payload))
->>>> +		return ERR_PTR(-EINVAL);
->>>> +
->>>>  	struct fwctl_rpc_cxl_out *rpc_out __free(kvfree) =
->>>>  		kvzalloc(out_size, GFP_KERNEL);
->>>>  	if (!rpc_out)
->>>>
->>>> base-commit: ef0c9f75a19532d7675384708fc8621e10850104
->>>> -- 
->>>> 2.43.0
->>>>
->>>
+base-commit: 5fcbbee57319e718bf522436ea6595bd0f71296c
+-- 
+2.54.0
 
