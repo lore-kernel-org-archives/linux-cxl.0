@@ -1,175 +1,132 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEA121A42D
-	for <linux-cxl@vger.kernel.org>; Sat, 27 Jun 2026 07:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA14D9463
+	for <linux-cxl@vger.kernel.org>; Sat, 27 Jun 2026 07:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782545475; cv=none; b=r0wouLJ34v0dCTj99OI/f2XFEHMrB0Hge2MiTaye1aqBU1EIrQPjC9uv2cUjcIMv1osrek0t7MD5soYLlmz3/rihJdPYuqG6HJw91a4jVCtAmVxaCPEA4OwJFGzWQQ36NV5pUG+x+HhekHdzn3Hwve8Epip1APXlbZXPVHe8Ctw=
+	t=1782546111; cv=none; b=OeZ7kTnWQRxx8W8e/9iU42hLJFkWR3fE9mAMrWaWkWjwZIVzB+8Vv1x5QoUx5QCnnV3z/5mtO7nqKlhNGlIDzeuBvRKhoCpxAl8cOQqtHbkrkyjJ4yBMWzU+spah5NihZQQRvNLkK9BbC5zM3MaEmRgbnlBnQVaDExBBHmfHpsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782545475; c=relaxed/simple;
-	bh=so4ToMrba/4u4JURXcQ5YjcHpRWPbvKB5biE2mDggBo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n2dVEh9ytUkZJQWjBcDC6e6Q85AhxqDJyw3ja+Wn3TRvOjueVvNvzrFzgK4CsKffM3FdFBOUmiWus2ju0amuSA5FMUS4aRWTqux42l9JiA5heRmAqI5M5IHIoJxl3RSUavVwK5fs4cUIMN6Ll8jTU2zztlma4yMlQubPyHcRVPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=dhelsaAg; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1782546111; c=relaxed/simple;
+	bh=kyS2JW/fT0oBSgPRU8AjQ3rqpFmJSD5dHk1iyp/e7Po=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=a5Cr/SJx9bEN99+4x6h4KH3x0e1TWGnsxwMnYoa/V+u3aNGtICTBonZc6/FocLjr+9vhwZV2LcDvcSaWF6rsOTFMffQfvjy84qEpXGLQGVVHZ4eS7z5Iz7NlUygAnhhNN8DLBtkPTAQKBdinReY6vpky0tqpUrABRT+pSfzKDTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YK7ygzpH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="dhelsaAg"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-9157d3f2098so178771585a.3
-        for <linux-cxl@vger.kernel.org>; Sat, 27 Jun 2026 00:31:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1782545473; x=1783150273; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1WE84pD+Jyu5g3XDhg98oT1h9UPEuFUTiMELgYk7rrE=;
-        b=dhelsaAgEJKYSohTL2KeugiacwZ3n8SrgMq+Pi+a0TnDBZuv1GSWz7nSh6VQPp169D
-         9aTOOSgsvcWuFPVbikpjobO2UHH84ukYVGmpW4jhB/LRyoZGBTTjpQAjS8nw5kRObt8V
-         Mcf8iuZPSnZz74TyIVhzSUxeDjCmMck0alQj2jkXhM2W+6cIJmTrp8mRheEA+xEJQFJw
-         7LN7p44wmNItGd0O0uwNvqVMPx3X5pEmOI6YpSTZ/+OO6BB4Mk5ypTmRqHNFodE+gURA
-         ZQD+E76+5K0qJr7GqAokOyX0K4e8YyRd1xvtsb2W8bxh4pDtL3t91D9Oe4t890HLvW1d
-         0D/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782545473; x=1783150273;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1WE84pD+Jyu5g3XDhg98oT1h9UPEuFUTiMELgYk7rrE=;
-        b=PyTO/mguXMS/qlLnPyvPvr//n1uy7AFJWj9LEfv5Iamotx2nwnCmReW7ote7K2axfO
-         G4XyiojZuzmO9CKch2AilsblASd0RnRX2yjDZF6zcvtCNOw5TnIc0mD4N9GVXaZ67ySN
-         0UnhxW4PIdMqcK4lIxeeV4vN67ZY7FF2wOUzkFV87fXUxeOdtGb+z66Zi1Mrfe6fKqJV
-         rKEMY0OHQ5O+8ybn7nYQ604ApFmVIy9pp+cO7hIGi9OUygkip3B8hYLaEtyDPFX4EDEW
-         p3ZNlvGqG4SREBBkiyALJiMWQU5aavYbU4+eAtM8beC56XArGT4ljYgN/qM4FElklGGF
-         /q7Q==
-X-Forwarded-Encrypted: i=1; AFNElJ88wJqa+HJ8BmMsgQSLVvfehI9nkyDHMptVENJ4sCY+ab5Fk5niTwZKR/+D/5ehFillXwt/1o/nIv8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxd7n56uZSh9D6Mt/eDQ13qcqeyN1590rWvRQaGfoFWNkszRPP/
-	heVykM+1M5EL1zkwnXSWdQ6ooenq3k0aqK91bV4yxiGRV+IKXebtsZ5tTVr+enhPm/8=
-X-Gm-Gg: AfdE7cmKqjMYPjxFLIosYL7HetK2B7TMsJcftrEZe1of222hd1O2Fz/6634QXHsa9Pg
-	d3IeoDf3CcyowFCMDhEOescH8mFwIZU9MjOpsRFGFoeTuErOtjWeuDaXb9/i9Xm4Mmy7lNVn+le
-	ksBCKP1G2weJHwbcNo/hXDd+mRwYjbq6/hxYHuDr7lhOFQocBaOMQehcpmQIkkIXE2NKpmb7CDZ
-	jpRvWa1j9WUTKF5vCkXa8pHsZ8xC3K5ivk/CqcMqZJhAlt9joEXv5xhN5UEZCTMHRo5Kqfge7Uv
-	NAcvsLSQtz7oPLFvuGRb/pmw81SaofufCHkPneuJOkT24EUvLjym9ILb34bzgoTcb0EVfYm+6tG
-	Md+xVQcCcwY+CQFEtexBxY+KTWMyuuk6uFUKArORD9ZjUHO+Y4+SkInoFZ9y5cmxa/2aKNOlUud
-	Ex765bbPCeVSnw4eUhAz/AxezHTooczI1/Ovz0jFMuHi2WNSlMPESJ6sZjqr277aQrZ5O8nvyub
-	Q==
-X-Received: by 2002:a05:620a:2911:b0:915:f360:e97b with SMTP id af79cd13be357-9293a6b0834mr1579336085a.6.1782545472672;
-        Sat, 27 Jun 2026 00:31:12 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-92b2affb45bsm296627885a.12.2026.06.27.00.31.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jun 2026 00:31:12 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	kernel-team@meta.com,
-	akpm@linux-foundation.org,
-	david@kernel.org,
-	ljs@kernel.org,
-	liam@infradead.org,
-	vbabka@kernel.org,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	osalvador@suse.de,
-	hannes@cmpxchg.org,
-	mgorman@techsingularity.net,
-	stable@vger.kernel.org
-Subject: [PATCH] mm/vmstat: flush per-cpu node stats when a node goes offline
-Date: Sat, 27 Jun 2026 03:31:07 -0400
-Message-ID: <20260627073107.523499-1-gourry@gourry.net>
-X-Mailer: git-send-email 2.54.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YK7ygzpH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66F9E1F000E9;
+	Sat, 27 Jun 2026 07:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782546109;
+	bh=xTqcS06Quoww3+NLCj+C2MguAzQyREC46jlaauznJOw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=YK7ygzpHS5AbiT/hgCISuPQ3d6NkVSaD1oDfve8QXB+qF+zEuaEzB9Plv8lwSuZhB
+	 S9USiPs/5aFIlEgRaXzP4vJ1RMIWj2MZaBXz5U+v3VtKGg2Xxs8Dumls7/qK0zw82V
+	 FUsj1bTxisdpN4E5DGE3aVbZtNAt63Ty++DjbxShjhXO2OtGSYmeKb5vfquH2vdeCk
+	 Xigz4q0XWzSkyTFsz/E7SSrHtq5N6Dgq5c2JoiQWQkU85S/SLkuka9xe1/ylKlA6GA
+	 TO1YZJeT2r6YPWkI6xYQRRt4X5ZwANCSYXNLSQWuUDeY0+RRHY4WuWNKcmPBkuk5Ao
+	 N1s/Lj4Zrr2/g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] mm/vmstat: flush per-cpu node stats when a node goes
+ offline
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Gregory Price" <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260627073107.523499-1-gourry@gourry.net>
+References: <20260627073107.523499-1-gourry@gourry.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 27 Jun 2026 07:41:48 +0000
+Message-Id: <20260627074149.66F9E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-A per-node vmstat counter is pgdat->vm_stat[] plus per-cpu deltas.
-A balanced counter can sit split as global=+N / per-cpu=-N.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] Recursive acquisition of `cpus_read_lock()` causes a wait-die (AB-=
+BA) reader-writer deadlock with CPU hotplug operations.
+- [Medium] Ignoring the `-ENOMEM` return value of `schedule_on_each_cpu()` =
+causes a silent failure, leaving stats permanently orphaned under memory pr=
+essure.
+--
 
-The folds reconciling the split only walk online nodes, so when
-try_offline_node() marks a node offline - per-cpu deltas are stranded.
+commit 195f8756c6e31f6d21c338743702f407e4ff93d1
+Author: Gregory Price <gourry@gourry.net>
 
-A subsequent online zeroes the per-cpu area but not pgdat->vm_stat[],
-orphaning the +N permanently. All NR_VM_NODE_STAT_ITEMS are affected.
+mm/vmstat: flush per-cpu node stats when a node goes offline
 
-Flush the deltas before the node leaves the online set.  A remote
-fold races the periodic per-cpu fold, so do it as per-cpu work.
+This patch flushes per-cpu vmstat deltas to global counters before a node
+is offlined. It aims to prevent orphaned statistics that cause throttling
+issues by using per-cpu work to synchronize the stats.
 
-Discovered when a node/compact call hung for a nearly empty node, as
-the math to determine throttling broke. Reproduced by repeated memory
-hotplug/unplug cycles on a node under pressure. NR_ISOLATED_ANON
-ratchets up and never returns to zero.
+> diff --git a/mm/vmstat.c b/mm/vmstat.c
+> index f534972f517de..ad77343212d37 100644
+> --- a/mm/vmstat.c
+> +++ b/mm/vmstat.c
+> @@ -941,6 +941,16 @@ void cpu_vm_stats_fold(int cpu)
+>  	fold_diff(global_zone_diff, global_node_diff);
+>  }
+> =20
+> +static void vmstat_fold_work(struct work_struct *w)
+> +{
+> +	refresh_cpu_vm_stats(false);
+> +}
+> +
+> +void sync_vm_stats(void)
+> +{
+> +	schedule_on_each_cpu(vmstat_fold_work);
 
-Fixes: 75ef71840539 ("mm, vmstat: add infrastructure for per-node vmstats")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- include/linux/vmstat.h |  2 ++
- mm/memory_hotplug.c    |  5 ++++-
- mm/vmstat.c            | 10 ++++++++++
- 3 files changed, 16 insertions(+), 1 deletion(-)
+[Severity: High]
+Can this cause a reader-writer deadlock with CPU hotplug operations?
 
-diff --git a/include/linux/vmstat.h b/include/linux/vmstat.h
-index 3c9c266cf782..ea1017427811 100644
---- a/include/linux/vmstat.h
-+++ b/include/linux/vmstat.h
-@@ -293,6 +293,7 @@ extern void __dec_node_state(struct pglist_data *, enum node_stat_item);
- 
- void quiet_vmstat(void);
- void cpu_vm_stats_fold(int cpu);
-+void sync_vm_stats(void);
- void refresh_zone_stat_thresholds(void);
- 
- void drain_zonestat(struct zone *zone, struct per_cpu_zonestat *);
-@@ -397,6 +398,7 @@ static inline void __dec_node_page_state(struct page *page,
- 
- static inline void refresh_zone_stat_thresholds(void) { }
- static inline void cpu_vm_stats_fold(int cpu) { }
-+static inline void sync_vm_stats(void) { }
- static inline void quiet_vmstat(void) { }
- static inline void vmstat_flush_workqueue(void) { }
- 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 7d60a7dd1e7b..10f676566f56 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -2338,8 +2338,11 @@ void try_offline_node(int nid)
- 
- 	/*
- 	 * all memory/cpu of this node are removed, we can offline this
--	 * node now.
-+	 * node now.  Fold any pending per-cpu vmstat diffs into the global
-+	 * counters first: once the node leaves the online set the periodic
-+	 * fold skips it, orphaning the residual on a later online.
- 	 */
-+	sync_vm_stats();
- 	node_set_offline(nid);
- 	unregister_node(nid);
- }
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index f534972f517d..ad77343212d3 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -941,6 +941,16 @@ void cpu_vm_stats_fold(int cpu)
- 	fold_diff(global_zone_diff, global_node_diff);
- }
- 
-+static void vmstat_fold_work(struct work_struct *w)
-+{
-+	refresh_cpu_vm_stats(false);
-+}
-+
-+void sync_vm_stats(void)
-+{
-+	schedule_on_each_cpu(vmstat_fold_work);
-+}
-+
- /*
-  * this is only called if !populated_zone(zone), which implies no other users of
-  * pset->vm_stat_diff[] exist.
--- 
-2.53.0-Meta
+In the memory hot-remove path, try_remove_memory() acquires the
+cpu_hotplug_lock for read via mem_hotplug_begin() before calling
+try_offline_node():
 
+mm/memory_hotplug.c:try_remove_memory() {
+        mem_hotplug_begin();
+        ...
+        try_offline_node(nid);
+}
+
+Then try_offline_node() calls sync_vm_stats(), which bridges into
+schedule_on_each_cpu(). The issue is that schedule_on_each_cpu()
+unconditionally attempts to acquire the cpu_hotplug_lock for read again:
+
+kernel/workqueue.c:schedule_on_each_cpu() {
+        ...
+        cpus_read_lock();
+}
+
+If a concurrent CPU hotplug operation takes the lock for write between the
+first and second read lock acquisitions, it sets the writer-pending flag.
+The second read lock attempt will then block waiting for the writer, while
+the writer is blocked indefinitely waiting for the first read lock to be
+released.
+
+[Severity: Medium]
+Does this silently ignore allocation failures?
+
+Under memory pressure, schedule_on_each_cpu() can fail to allocate
+the per-cpu work items and return -ENOMEM:
+
+kernel/workqueue.c:schedule_on_each_cpu() {
+        works =3D alloc_percpu(struct work_struct);
+        if (!works)
+                return -ENOMEM;
+        ...
+}
+
+Since sync_vm_stats() returns void, this failure is swallowed. If this
+allocation fails during try_offline_node(), the stats will not be flushed
+and the per-CPU deltas will be permanently orphaned on a later online,
+which is the original bug this patch aims to fix.
+
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260627073107.5234=
+99-1-gourry@gourry.net?part=3D1
