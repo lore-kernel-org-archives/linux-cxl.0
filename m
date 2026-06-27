@@ -1,132 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA14D9463
-	for <linux-cxl@vger.kernel.org>; Sat, 27 Jun 2026 07:41:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24F91D5CD1
+	for <linux-cxl@vger.kernel.org>; Sat, 27 Jun 2026 08:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782546111; cv=none; b=OeZ7kTnWQRxx8W8e/9iU42hLJFkWR3fE9mAMrWaWkWjwZIVzB+8Vv1x5QoUx5QCnnV3z/5mtO7nqKlhNGlIDzeuBvRKhoCpxAl8cOQqtHbkrkyjJ4yBMWzU+spah5NihZQQRvNLkK9BbC5zM3MaEmRgbnlBnQVaDExBBHmfHpsg=
+	t=1782548640; cv=none; b=rT/xlpePG115eYbQae9I7msHXvM0fQyEiPIug3x4GxgEMOiTE0cd/iUcIr4Cjm38SyQ9MjYrGyhaPVFWIU3UVBMPFv3Q/qBtSj7EK/VDWESy0DtMXuuxPJNHhMED6umwJe+fMJV96F7Bn3bjslw9+Jx5lsxn9Uldmv5cTEzSteI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782546111; c=relaxed/simple;
-	bh=kyS2JW/fT0oBSgPRU8AjQ3rqpFmJSD5dHk1iyp/e7Po=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=a5Cr/SJx9bEN99+4x6h4KH3x0e1TWGnsxwMnYoa/V+u3aNGtICTBonZc6/FocLjr+9vhwZV2LcDvcSaWF6rsOTFMffQfvjy84qEpXGLQGVVHZ4eS7z5Iz7NlUygAnhhNN8DLBtkPTAQKBdinReY6vpky0tqpUrABRT+pSfzKDTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YK7ygzpH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782548640; c=relaxed/simple;
+	bh=pHyJuhYl/jaNnPl2SnkFl+8Jum7fL0oJDja08WRHig4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P2p5iME+ZsSh7dC7BRKhLIPpyN3ysDtTFTzcJVNn2++FAAH9YLljIEqgAJyIZo4q2KmZ1CAhcKTezqPfpnaS0qWjpFyAQHoiYlUNaSTzNuAKrGV9to/MRQprKMkwey3F5OAHk5vdLKj3owuT/iqAJ1n6AoTKz0DII8OlfNy3i94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=H0gmiNq9; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YK7ygzpH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66F9E1F000E9;
-	Sat, 27 Jun 2026 07:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782546109;
-	bh=xTqcS06Quoww3+NLCj+C2MguAzQyREC46jlaauznJOw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YK7ygzpHS5AbiT/hgCISuPQ3d6NkVSaD1oDfve8QXB+qF+zEuaEzB9Plv8lwSuZhB
-	 S9USiPs/5aFIlEgRaXzP4vJ1RMIWj2MZaBXz5U+v3VtKGg2Xxs8Dumls7/qK0zw82V
-	 FUsj1bTxisdpN4E5DGE3aVbZtNAt63Ty++DjbxShjhXO2OtGSYmeKb5vfquH2vdeCk
-	 Xigz4q0XWzSkyTFsz/E7SSrHtq5N6Dgq5c2JoiQWQkU85S/SLkuka9xe1/ylKlA6GA
-	 TO1YZJeT2r6YPWkI6xYQRRt4X5ZwANCSYXNLSQWuUDeY0+RRHY4WuWNKcmPBkuk5Ao
-	 N1s/Lj4Zrr2/g==
-From: sashiko-bot@kernel.org
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="H0gmiNq9"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-92120eb916aso183576585a.1
+        for <linux-cxl@vger.kernel.org>; Sat, 27 Jun 2026 01:23:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1782548638; x=1783153438; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qcCGwXLwtMV8RI4Wg+2Z1TCVKqOFak4eb3FLVCz7QhM=;
+        b=H0gmiNq9AqOzXQOuybjVrCS0AKwAZb5Jqy+zMpxbmye02eq4Z8XXqpfaGCq9/ZX4Ei
+         j+nrZlQJG0fU54EudXDJ6UGxCHG+CVViqhcDa691/nae0XsboPhYRqmFbOE+LwAqx1aR
+         MSpd01uUr/2w4Y131lwNGqT3PXh6XfezPAhsjgEjh/cHvYSOtjbX7M+r7hOuhccEt2Mw
+         icWwrdGQFol8w8fLemh+IuIUgANtMJgrr2i+NhbSDYjBnPZK3TdeC+pd+9SE5Fbcpwq3
+         GzMTl0aHPk9jPBpX0hWStkHZOaadWWKU26ePs/CaXZXXY/N1NJ5nwu+iv5J/U0A8mCV3
+         /BNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782548638; x=1783153438;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qcCGwXLwtMV8RI4Wg+2Z1TCVKqOFak4eb3FLVCz7QhM=;
+        b=HZmrD6RIBa+whl52UdvAgOq+awYzRqZa7gNUkqcIO5V47CtLx/Bv9SK+8o5DavHj3S
+         uhB0i8lHU16jmgKescj9tJVaUpM4VqsDLthHLl+dK2yhjekSkNau8kpe1xUVd4w93ran
+         s0FPdwetVYwPksn9fFa4MheQxPd2aRPMpyjJ0knaDzxrpItH+PLQn2DKaJbZFmwRYv0A
+         QXW52sUaBDf+cq1AXUvqiLZYT0dqZmLicXwhyvFJrsKeB6aHztvAbeFkEfgkoCvOz9AV
+         Ul71ELHWQcAOkGU9ZH9w0PJLDZCPsulCkf2y6s6xe4qKU8Lq1oIb9t+I81gzD2uslYLI
+         dS+A==
+X-Forwarded-Encrypted: i=1; AFNElJ8k5BM+f2cy8gohKJBJQOGU28vPWWqzErDAFcdpG1EX5M/rWUPfxcJcMOqnVICFSgLEl59jDkJf4+o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIe/XF+MNyCLJBvg3TPhCH9ko32/8p2+NqWcsivOqcj0DDzHnA
+	Rwf0deRL3t1RulxrcyWqL8sUyI8PCPbvGoDHMwG9Zx7HYuAAoLDoEpnsWLkdKNcnrPg=
+X-Gm-Gg: AfdE7cm9QdAbWXx4kQMmPrPvcpCzISEA/b+zeGkO17udNl4InLlrpU0nQ85viffSog4
+	tJquxl/lGhb8HJhQU8Wb9rU+FLHFMaVxtzwJa01LEPlnA+z110D7RpBiv0dBW3Kweb9cJu+j26X
+	8Lt72ENEZtwq88ryUWUek3QgTwb/Quh+YlKcxWXHvZpildRlxD89TYdo4GChr9BKrsd6ayYRxHD
+	oTj1TOfEYoOfPwTJJIFEmKSQPqx37G+Q5a3DsPZ3fqoksIJTOg1/4msxF0jl7CZJEH3fuyM8rY6
+	2ZodO/Z40GHvIaJUc4lSWGX8InRIa2jmoZmToaxi/bJpE98VypPRwJ3+Td2xmrhHUxt+Drhpeyr
+	K2Uyp4JQGZ8QAZeG7iayBhKFjAxCHwptXl7SREDt2usG9JaqmHDapupAKHNtD1YnPvhfl2Gsvy4
+	r70aMrlY8wsNK+KSoZrqEkYriuQy8ZAvLcQna0jtrcRzCz2aE4jii1J8pctua1iyI4Icr2JJQGR
+	YU9euA=
+X-Received: by 2002:a05:620a:28d3:b0:915:f163:a8 with SMTP id af79cd13be357-9293d0ba9a5mr1471270785a.53.1782548637840;
+        Sat, 27 Jun 2026 01:23:57 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-926004ac1b8sm1375302685a.36.2026.06.27.01.23.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jun 2026 01:23:56 -0700 (PDT)
+Date: Sat, 27 Jun 2026 04:23:52 -0400
+From: Gregory Price <gourry@gourry.net>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	kernel-team@meta.com, akpm@linux-foundation.org, david@kernel.org,
+	ljs@kernel.org, liam@infradead.org, vbabka@kernel.org,
+	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+	osalvador@suse.de, hannes@cmpxchg.org, mgorman@techsingularity.net,
+	stable@vger.kernel.org
 Subject: Re: [PATCH] mm/vmstat: flush per-cpu node stats when a node goes
  offline
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Gregory Price" <gourry@gourry.net>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260627073107.523499-1-gourry@gourry.net>
+Message-ID: <aj-ImLdFnKk7K6Fc@gourry-fedora-PF4VCD3F>
 References: <20260627073107.523499-1-gourry@gourry.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 27 Jun 2026 07:41:48 +0000
-Message-Id: <20260627074149.66F9E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260627073107.523499-1-gourry@gourry.net>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] Recursive acquisition of `cpus_read_lock()` causes a wait-die (AB-=
-BA) reader-writer deadlock with CPU hotplug operations.
-- [Medium] Ignoring the `-ENOMEM` return value of `schedule_on_each_cpu()` =
-causes a silent failure, leaving stats permanently orphaned under memory pr=
-essure.
---
+On Sat, Jun 27, 2026 at 03:31:07AM -0400, Gregory Price wrote:
+>  
+>  	/*
+>  	 * all memory/cpu of this node are removed, we can offline this
+> -	 * node now.
+> +	 * node now.  Fold any pending per-cpu vmstat diffs into the global
+> +	 * counters first: once the node leaves the online set the periodic
+> +	 * fold skips it, orphaning the residual on a later online.
+>  	 */
+> +	sync_vm_stats();
 
-commit 195f8756c6e31f6d21c338743702f407e4ff93d1
-Author: Gregory Price <gourry@gourry.net>
+Sashiko points out this can deadlock on concurrent cpu hotplug, which
+after a quick look seems accurate.
 
-mm/vmstat: flush per-cpu node stats when a node goes offline
+Has also made me realize the sync code is also racy with cpu hotplug
+as well as it iterates per-online-cpu.
 
-This patch flushes per-cpu vmstat deltas to global counters before a node
-is offlined. It aims to prevent orphaned statistics that cause throttling
-issues by using per-cpu work to synchronize the stats.
+There are probably more races like this out there.
 
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index f534972f517de..ad77343212d37 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -941,6 +941,16 @@ void cpu_vm_stats_fold(int cpu)
->  	fold_diff(global_zone_diff, global_node_diff);
+Will need to give this a little more thought.
+
+>  	node_set_offline(nid);
+>  	unregister_node(nid);
 >  }
-> =20
-> +static void vmstat_fold_work(struct work_struct *w)
-> +{
-> +	refresh_cpu_vm_stats(false);
-> +}
-> +
-> +void sync_vm_stats(void)
-> +{
-> +	schedule_on_each_cpu(vmstat_fold_work);
-
-[Severity: High]
-Can this cause a reader-writer deadlock with CPU hotplug operations?
-
-In the memory hot-remove path, try_remove_memory() acquires the
-cpu_hotplug_lock for read via mem_hotplug_begin() before calling
-try_offline_node():
-
-mm/memory_hotplug.c:try_remove_memory() {
-        mem_hotplug_begin();
-        ...
-        try_offline_node(nid);
-}
-
-Then try_offline_node() calls sync_vm_stats(), which bridges into
-schedule_on_each_cpu(). The issue is that schedule_on_each_cpu()
-unconditionally attempts to acquire the cpu_hotplug_lock for read again:
-
-kernel/workqueue.c:schedule_on_each_cpu() {
-        ...
-        cpus_read_lock();
-}
-
-If a concurrent CPU hotplug operation takes the lock for write between the
-first and second read lock acquisitions, it sets the writer-pending flag.
-The second read lock attempt will then block waiting for the writer, while
-the writer is blocked indefinitely waiting for the first read lock to be
-released.
-
-[Severity: Medium]
-Does this silently ignore allocation failures?
-
-Under memory pressure, schedule_on_each_cpu() can fail to allocate
-the per-cpu work items and return -ENOMEM:
-
-kernel/workqueue.c:schedule_on_each_cpu() {
-        works =3D alloc_percpu(struct work_struct);
-        if (!works)
-                return -ENOMEM;
-        ...
-}
-
-Since sync_vm_stats() returns void, this failure is swallowed. If this
-allocation fails during try_offline_node(), the stats will not be flushed
-and the per-CPU deltas will be permanently orphaned on a later online,
-which is the original bug this patch aims to fix.
-
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260627073107.5234=
-99-1-gourry@gourry.net?part=3D1
