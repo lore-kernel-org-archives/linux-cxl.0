@@ -1,180 +1,225 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D94F12F585;
-	Sat, 27 Jun 2026 13:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103A2315D43
+	for <linux-cxl@vger.kernel.org>; Sat, 27 Jun 2026 17:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782567423; cv=none; b=jFHzsxp6WE2eaFH782GDJFkT+LVDgKXKzOpkCE57qNJR+HoAQzFaXf/Qh92pmgLv7h6UeMfUI7Ys7nLDcWCiPQw0NEQgIqkDfApLfzUswvLFUy5M43tfYUxzQj+0MgrfyYx5mqCVjzq+UBfH3cK53ubcO0qHviLInLPMjAbz7Mw=
+	t=1782582571; cv=none; b=fe3uH/KvGV0fMYFsMr66A/bnoiIW4a08Te/i5qesVgH/5Li0+sveBwQKtGyyMhEVaL1IRjteYkVV+FBs4ajgmew9X5MRYVNTHq2RyTzN5L+ieOqv7eRR5ufimJms9JhMd5hcy4SLHB3ZV7y0KhA2t2aoLtq1uDFO38z48t1RiYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782567423; c=relaxed/simple;
-	bh=uUTYL+XiY6nbZ0YUir4XMg22YbfTVMU7jfHFV+vOYwc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Wa2aza/y73B/WOv5IOkCQbJEty6zwinPM7gqeM042m6P15sAT7YiiOFJidSa97rouwonuOF+w8eE0ZYimLuZMChpMFJJT0KvrPKRp+XGkzlx7JArxhZEqf0CbYw2BFKxHtIHq5K65rpIAjq+kY64G45tgzsPlWShAwEGk92sSbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=YJaTGbBC; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
+	s=arc-20240116; t=1782582571; c=relaxed/simple;
+	bh=YA+1i/UnBYMi612cEFEOy+3MzER+Xfj7iA6l8jGXb4M=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uqBWml+sZkZLyg3tgy3QWUrv+O87pvRvuZ80rDtczf5Wgo6yto2O9I/3FkFj/I+vhxgFODDK2NfOTzrlCZA2Jf6Ma0Q2cxq0emG7r4fRbVPkP/4UBoQKuhzsPUWPYpC5apcJmHKqjk27WwGuY+hwyQUVSRZrQ70/uoTpSELuNvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D+APVrVB; arc=none smtp.client-ip=209.85.217.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="YJaTGbBC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
-	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
-	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=uUTYL+XiY6nbZ0YUir4XMg22YbfTVMU7jfHFV+vOYwc=; b=YJaTGbBCAVkVuPVOSxUJ2kyeYa
-	46ME1ttXik+l5W/4OaXgsFFRgNxoTXOJSK9N8VJ+c/+QrIfMDCzUE2fJ4GAkPb7p3H0fc8JDQdYcf
-	kxGge3hiO4PZ6LpBE3ofT5oqUu/Rnnwn/foxEhnSgeZM4nVCrVAWDZqJZaiUAfsiA8a5CX3uLPzBN
-	r+DZp2wjEQcTBiLwDbHh0eDvbOH4wBM0AmEQmchQpavFxPzudC489W+mjUYDlbAoiI0e0dfdnBKI/
-	rrqtnG+L8Vvh2CgwhahdXjZDSVs5uXIiefETS5PJUZeHRreYtb4s5n1eh9ab5nIEMB80rdg6igmk4
-	ZhzQ7/9w==;
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@surriel.com>)
-	id 1wdTDI-000000001nG-0Ciu;
-	Sat, 27 Jun 2026 09:36:52 -0400
-Message-ID: <528e3a5fbc27c9dc7a098121c32b7679b4c9962a.camel@surriel.com>
-Subject: Re: [RFC PATCH 00/40] mm: reliable 1GB page allocation
-From: Rik van Riel <riel@surriel.com>
-To: Lorenzo Stoakes <ljs@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, linux-mm@kvack.org, 
-	david@kernel.org, willy@infradead.org, surenb@google.com,
- hannes@cmpxchg.org, 	ziy@nvidia.com, usama.arif@linux.dev, fvdl@google.com,
- Andrew Morton	 <akpm@linux-foundation.org>, Jonathan Corbet
- <corbet@lwn.net>, Chris Mason	 <clm@fb.com>, David Sterba
- <dsterba@suse.com>, Vlastimil Babka <vbabka@kernel.org>,  Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, "Rafael J.
- Wysocki"	 <rafael@kernel.org>, Oscar Salvador <osalvador@suse.de>, Mike
- Rapoport	 <rppt@kernel.org>, linux-doc@vger.kernel.org,
- linux-btrfs@vger.kernel.org, 	linux-trace-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, 	linux-cxl@vger.kernel.org, Linus Torvalds
- <torvalds@linux-foundation.org>
-Date: Sat, 27 Jun 2026 09:36:51 -0400
-In-Reply-To: <aj9yrlB0TrlYCLlf@lucifer>
-References: <20260520150018.2491267-1-riel@surriel.com>
-	 <aj9yrlB0TrlYCLlf@lucifer>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D+APVrVB"
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-734478b19f7so1484048137.0
+        for <linux-cxl@vger.kernel.org>; Sat, 27 Jun 2026 10:49:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1782582569; x=1783187369; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+uflCN5dEoFADXWjqBtV9JZXNhAeBkbLG/4dD0z7b4I=;
+        b=D+APVrVB7sDaioieVdmISDPXpLFAuW6Z8ACka+jIwp7ns0TQdWs5MEy+Z/dxvn8VAa
+         e29T4yf7lV++S7Zg1KPGSJLqvjfqzUAvUEu7tSGmqaCsQogJoe9MO5ZfM/HH/GhY8ux0
+         YW6ZINIMDlm8qugBnJpjrCnTOHTSXKlAPJF11MzR2txP/MrDTMvFDy0oCu+HsC/1rWic
+         5RnQmKwAXJpxLkTmgZLfBFUKtZnCgcM2yM4bDprDEVL6jHCMPi1e3zAqIe9XmKpm9HEA
+         GY5jXZXmdNMNEJwgCkWWPPLSrpsmhX+cbfcTpaZTE+Q/IJm4Gxe+tsxjkBwBxlPFhi9j
+         4y8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782582569; x=1783187369;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+uflCN5dEoFADXWjqBtV9JZXNhAeBkbLG/4dD0z7b4I=;
+        b=qA7PKgsuVsN9Sh7EmNMF1PIl0xv6YCB0nAUSj0bh0aUZ96SnOZ/522qrWCA2yyLMzn
+         lg4QRgYJSBAVAKQC3HWH2GvaJRJpadwspFF/BsEg7AaMHUtneO/QhXhytRnmmtJoQk5z
+         +LMOtUlmrA2ZH/NXnyR81OTmIA2WcRt5ruKbr5GXQWw82tW98DtxR+oGGiOz9Mtg7yap
+         Bg6pR8ykVXKdO9ILP0T2hYT/iyfbVaBsa71cykzlTEMWrdtEIkyKD0IR6BCfuz1Ra4GZ
+         7WzdnSR0DfagBMCVoRzpUIQayATjxetmP4lASOzSsWFbTUH+7YGw8lF/bvp622Fmhy7K
+         DOGA==
+X-Forwarded-Encrypted: i=1; AHgh+RoPhDfNX3ZK//6XSGgeR/FRYEMwvIE5MC7SoQBPbqPyDiPBzuTG8fD0EuWkzX55k+pEi1KLJaOKzLU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGT6NVqIKDE/df0BLEE0z3KLceDCksjBk25ojFQYMhuwMVn5wv
+	ZQIlUMVLWdF7X54PFgENK5fILfAWDzUGiXp5rgDBwpvUhLRFtccHblBn
+X-Gm-Gg: AfdE7cmv9pQWXbAJV97ca9rIq/d89GX/bA9UGvA88DcNjj0CKtbU2vKxjSsWEk/ZkGc
+	Axwuq0k7G1EKpwAeNvK4hkTN4iWQPkZwsQocTjyxrLcJ+fMHYNDfUDswFS82L4bAlVRfvl5pWLK
+	OsLlds5tDaqMx/uqO5QuEQpTle/D/UO+cRWvtHI1PLWO4u/sxxRb/oHyGYn8szzNxEgkyzR8svj
+	C48IwsZlUVyxYeJLUfcJPmqvZWts9PfcHrFPnjmHxh0KR6n83RKcJvxyjh1Xj4p3SQM/NusISEl
+	d8Y2zkmpH7n9B8u0EdrbkraZNYkYHcCCJZ1/K86G89UefTiOhVVx2NUihUZWKC6E/9WnwA27cm+
+	nZQ1kHlhNQcbirdHBL1N6qlMcY1cIq1Iqk21cr3PzUmZKTTtzqRLDBcvyWf4avbU6XQmnNox8GZ
+	Z7aXu90S2u3DKMhzd6vQibCB+MbiMdSgX8De+sOgW+P7jr
+X-Received: by 2002:a05:6102:440f:b0:730:db02:1d08 with SMTP id ada2fe7eead31-73434452fd5mr5471882137.10.1782582569056;
+        Sat, 27 Jun 2026 10:49:29 -0700 (PDT)
+Received: from localhost (d-24-145-72-22.fl.cpe.atlanticbb.net. [24.145.72.22])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-96916e5b10dsm2811280241.4.2026.06.27.10.49.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 27 Jun 2026 10:49:28 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+X-Google-Original-From: Yury Norov <ynorov@nvidia.com>
+Date: Sat, 27 Jun 2026 13:49:27 -0400
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Robin Murphy <robin.murphy@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>, Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+	Moritz Fischer <mdf@kernel.org>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Dan Williams <djbw@kernel.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Will Deacon <will@kernel.org>,
+	Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Xu Yang <xu.yang_2@nxp.com>, Linu Cherian <lcherian@marvell.com>,
+	Gowthami Thiagarajan <gthiagarajan@marvell.com>,
+	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>,
+	Daniel Lezcano <daniel.lezcano@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
+	Chengwen Feng <fengchengwen@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-perf-users@vger.kernel.org, linux-acpi@vger.kernel.org,
+	driver-core@lists.linux.dev, linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, linux-fpga@vger.kernel.org,
+	linux-rdma@vger.kernel.org, nvdimm@lists.linux.dev,
+	linux-pci@vger.kernel.org, linux-amlogic@lists.infradead.org,
+	linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 13/16] perf: Use sysfs_emit() for cpumask show callbacks
+Message-ID: <akANJ-AT7nHpRMq-@yury>
+References: <20260528183625.870813-1-ynorov@nvidia.com>
+ <20260528183625.870813-14-ynorov@nvidia.com>
+ <7e980b99-1e4e-408b-8ebd-4d28116e7ad5@arm.com>
+ <20260529130619.12f24264@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260529130619.12f24264@pumpkin>
 
-On Sat, 2026-06-27 at 10:28 +0100, Lorenzo Stoakes wrote:
->=20
-> So really, you need to start again, from scratch, and without the use
-> of an
-> LLM for generating code, or at least with it kept on a (very very
-> short)
-> leash.
->=20
-> And to be clear, I _want_ this concept of GB superpageblocks to land.
-> It's
-> a really exciting concept.
+On Fri, May 29, 2026 at 01:06:19PM +0100, David Laight wrote:
+> On Fri, 29 May 2026 12:05:08 +0100
+> Robin Murphy <robin.murphy@arm.com> wrote:
+> 
+> > On 2026-05-28 7:36 pm, Yury Norov wrote:
+> > > These callbacks are sysfs show paths.
+> > > 
+> > > Use sysfs_emit() and cpumask_pr_args() to emit the masks.
+> > > 
+> > > This prepares for removing cpumap_print_to_pagebuf().  
+> > 
+> > TBH, looking at this diff I think it only shows the value of having a 
+> > helper to abstract the boilerplate...
+> > 
+> > I'm not sure I agree with the argument of removing something entirely 
+> > just because it may occasionally be misused, but could we at least have 
+> > something like:
+> > 
+> > #define sysfs_emit_cpumask(buf, mask) \
+> > 	sysfs_emit((buf), "%*pbl\n", cpumask_pr_args(mask))
+> >
+> > to save the mess in all the many places where the current 
+> > cpumap_print_to_pagebuf() usage _is_ entirely appropriate?
 
-That is the one reason I sent out RFC code before it
-is ready. I am looking for feedback on the concepts
-in this series.
+This way you have to add 2 wrappers:
 
-How do people feel about splitting up the free lists,
-so each gigabyte (well, PUD sized) chunk of memory
-has its own free lists?
+ #define sysfs_emit_cpulist(buf, mask) \
+ 	sysfs_emit((buf), "%*pbl\n", cpumask_pr_args(mask))
 
-How can we balance the desire for higher-order kernel
-allocations, against the desire to preserve gigabyte
-sized chunks of memory that can be used for user space?
+ and
 
->=20
-> Pulling compaction kicking and screaming into 2026 stands to
-> significantly
-> benefit linux users and developers.
+ #define sysfs_emit_cpumask(buf, mask) \
+ 	sysfs_emit((buf), "%*pb\n", cpumask_pr_args(mask))
 
-That's another big question. How do we balance the
-desire to keep compaction overhead low with the desire
-to do higher order allocations almost everywhere?
+There are people who complain even about DIV_ROUND_UP(), how hard it is
+to keep all that helpers in memory, and all that things.
 
->=20
-> But the execution has to be _completely_ rethought.
+https://lore.kernel.org/all/20260304124805.GB2277644@noisy.programming.kicks-ass.net/
 
-There's no argument there.
+Disagree about DIV_ROUND_UP() (because yeah, I'm bad in math), but
+this sysfs_emit_cpumask() is a complete syntax redundancy.
 
-I am just hoping to figure out what I should be
-doing on a conceptual level, before figuring out
-how to do it cleanly.
+Once we have it, people will do this type of things:
 
-The mess in the RFC is the result of trying something
-that seemed right, watching it fail in some subtle
-way, and trying to fix it up.
+        tmp = kmalloc(PAGE_SIZE);
+        sysfs_emit_cpumask(tmp, mask);
+        sysfs_emit(buf, "my prefix: %s\n", tmp);
+        kfree(tmp);
 
-Once I know what I need to do, coming up with a
-cleaner implementation is very doable.
+Patch #1 in this series is one example. My series that removes
+bitmap_print_to_pagebuf() will give you more:
 
->=20
-> IOW I say we take off and nuke the entire site from orbit. It's the
-> only
-> way to be sure :)
->=20
-BOOM?
+https://lore.kernel.org/all/20260303200842.124996-2-ynorov@nvidia.com/
 
-> Another issue here is maintainer time - even this _extremely_ light-
-> touch
-> review has taken me a few hours (of my weekend :). To review it in
-> detail
-> would take probably DAYS of dedicated work.
+It doesn't mean that *you* will misuse the API. It means that *I* will
+have to inspect the codebase for that type of bugs periodically.
 
-I suspect there is a mismatch in expectations here.
+So, the overall state is simple: we've got well-established
+printf()-like functions that people know and understand, and we also
+have exotic APIs here and there with a non-standard interface and a
+clear potential to misuse. In this case, they have historical roots,
+but now we don't need them.
 
-I already knew this code has to be totally redone.
+> That has the advantage of letting you change how it is done (again)
+> without having to find all the callers.
 
-I was looking for feedback on the basic concepts
-and design in the patch series, but failed to
-clearly communicate that.
+You mean things like silencing the prints or adding a prefix?
 
-You provided some detailed feedback on the code,
-but as of yet nobody has really provided any
-opinions on things like whether it is desirable
-at all to have the free lists per gigablock,
-or whether we need to come up with some totally
-different approach.
+If you believe that perf subsystem would benefit from it - that's
+OK. Just please keep it local. The kernel globally doesn't need to
+'change how it is done' beyond the lib/vsprintf.  The kernel really
+needs people to use something that the other people are familiar with.
 
-How do we better communicate that kind of thing
-in the future?
-
-Is that something to spell out more clearly in
-the cover letter?
-
-Is that kind of feedback something developers
-could even reasonably ask for? (if not, how do
-we figure out what maintainers want?)
-
-
---=20
-All Rights Reversed.
+Thanks,
+Yury
