@@ -1,110 +1,170 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38FD02EFD95
-	for <linux-cxl@vger.kernel.org>; Sat, 27 Jun 2026 20:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782592944; cv=none; b=osfI61AbdoIDNX5RhzlwCbioGOob5CKr0YUyPTQaphgDftOr/S4LhtrKlWC6qFZgmnkrlUtPJkqLz8tA6xU0krVHtG2Auk7Jz9a7GzEZnpEDoKJEQ/p5a7H2v0UMXOvmCfQpgH9XcTCsRSQzc+yIMhqxyn/7nBauwvkG3wPg8jA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782592944; c=relaxed/simple;
-	bh=7vb4snxpMOpyUr0gr4AhCLWmvUzZ8GqvNt/munNwM6s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z03lA61+0VZvkoUjMZ5wSsgVtsKP/dk9FK1whb4FMHjNcJNrM4VKD8ORvLIOZsXev6r57D/rnlbqOpPevPobtqRmuyi9alZVhUj76UZtIFP/W9DgLFe9L2Kg0ax2egbL4v+T3Er+V6yYH6ER3zCRrYF6Nmf00Yld011CsR+L7sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=NHaOIZ59; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2D626ED2D
+	for <linux-cxl@vger.kernel.org>; Sun, 28 Jun 2026 15:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782661545; cv=pass; b=B+NzLVhvjSmu67f8F51CcGSifCkJPxF06iQ2MYhSFXrWgNlBxW+t5dBF7+zZqgVfrUs0pClAcpupEkMud8z2Vt7EEs5gW/qHLNi/Z5zG8gbDt7t2fLS+UTt9kWtZhsD0/w6BZXWCotsK+x3GRrThGsgVqai+nidLu+L60TyGOxw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782661545; c=relaxed/simple;
+	bh=w2qzCKFrG19FjLt17SN7hSVzHqdC4wps9eEQlWGAd4g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RjXBb4qBNz3pU8+ad4dzvwmaj9chTqd9CEywL6nNvZVpRlfA7L0DS9AdXVT595ypwAcvErLVT+YRdURbUaL0G8Blo/AC8867XVVlsFeAucJl9mgvWc/3t0AWEReRJiTx4cSm1b1g2NY4kdgBLIgwFI36nBrAV7z8zpeIPMN55TI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com; spf=pass smtp.mailfrom=trailofbits.com; dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b=cLUg5Uvq; arc=pass smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trailofbits.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="NHaOIZ59"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-92e0980fa96so38114285a.1
-        for <linux-cxl@vger.kernel.org>; Sat, 27 Jun 2026 13:42:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b="cLUg5Uvq"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5ad54546171so1541533e87.0
+        for <linux-cxl@vger.kernel.org>; Sun, 28 Jun 2026 08:45:43 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1782661542; cv=none;
+        d=google.com; s=arc-20260327;
+        b=FC0ywB5nRdQRRLn5BLmeC1+leb7QBtItPk+M7NE7NkvtELq00ixcjhOWw98s2pXpoJ
+         JmSNtwlU2nbnuqmz3jM9oz5D5sgrLlE/uYmdHxI+tStM++hnQWvmDZYUE33fkdTHhKvs
+         zK4owcjpCZUH8u01XmDnrOEU+0TwoTODjdS3+ijd1iruAX+H9OtY8mWJiOvmXYmPGENa
+         vR2LugmRJh9MD0Q6TFIBvicX3LPqbh+WUM7HX5Fu4OCDg6ocB7h8hsmzpi3vBq/hK0Bw
+         Ds2fRd1QB0JG/JZTGzcJev/+uY+CjjjIoHuAFLcdMngAvvnz9CXazLatN7ClaBeQhQc2
+         q4gA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=GAv9lBpwJ9ygLTg/j3vYZQS+xwu0/dkisJeUZL+Xgq4=;
+        fh=TWQEC1oEaS260EcG6YawJMxGX7J7mAPZRFA7rxYqIPg=;
+        b=ZHKJzJ+27u7z3mGIdS5kh/k13lmRsL5K+8txbZ0hycp16UppTw1n4lNpzIMs/zjfvh
+         Ei+RFc/9B7B1bZqhFnYGhUj+lKMh+1NJPR5lPFFvahz5NzRlq5L8raT4a5l67D5se4Rt
+         +HhazCxyxgV4uAuMFyH9XIFW95UfJkoTuUBMAJAffkao4Et574mXn7PeUSGOs0jxr9hT
+         5NuiwJJBO5+E1sEvUxpuqE0VVA8sHqB7MHqsy0fyxmR/zU7nZ0BblypLF8Yv7+RpQcV7
+         tmX1YTvPhP6yEDVlLQHmciNXVAs6/xvzVjVGQ+Ldryri2HdjXcwapqMaBI9BKGftIG7t
+         NC4Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1782592941; x=1783197741; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UvBTXqN1MAazPmYZrbZsf15Ac2BOg/NxzUUoaLCPN5k=;
-        b=NHaOIZ59u8gKxw7npgJ6bR4dLFwGJYTa+D2IEvUChuZhhRbtlxjFVaihWazirK8tqB
-         h0e2mZHv3rb4GABo7X4d3muhLOPW+4bCmgqYzinavKkC0t8mDSHPYeZfW5yUftcGxNoA
-         e9KvQXhqzNgpWFYypJHlqUT9p7d0+18DERE/e2w6Ds95+pZTYAjpSlxfomUR5IQcZ7tY
-         WOai7NFh1FZROUmTLeFrCdvTYILzrsfCL+/wEOwUzNLXm7bD3LQ+1K0jC/B0w/rRRQKZ
-         3BgJUdk72ayOSAQsAo50s4MqJj4IzrwX6IRjB3QB/cJSTmlP25+7+CGgKW0ftyltfmdH
-         /30g==
+        d=trailofbits.com; s=google; t=1782661542; x=1783266342; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GAv9lBpwJ9ygLTg/j3vYZQS+xwu0/dkisJeUZL+Xgq4=;
+        b=cLUg5UvqOdhM8ZAsIaUAbbmgRfvn42ePhn5g3dMuZ4oXsMWkz2q8Gvbn8P073wKnPO
+         qMuFrw/meiy+iewb4fGP8wwlCki4pkK+VskBRY9qW+9d8gP08bf2VyeWBm7mjHy1rxo/
+         XkiRe7B1z5znr+narhmZZWl7x2efUrPxsWCetzdCcTpTpNFj8AhkkIG8TfDseKwysKct
+         U+ee5DTWNqWgGio6i6EVW4NvuQRIJ6LzP2MmltcG6kcTL42xGuGMBQE4q1ikLTO2UPcI
+         EAyYs+5hDJajXSZrlZTVHHv1pJvw4q+7ovLRu15LdfuRbomP0PXRVmBuBWk+dJCt0pYo
+         Nw/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782592941; x=1783197741;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UvBTXqN1MAazPmYZrbZsf15Ac2BOg/NxzUUoaLCPN5k=;
-        b=KujRiYhLsZ1Morx1THM02ZHVcOp6RRJUVoi4h0t+/O8/Yd9f4YsTvE4TXWaCntKtQ1
-         faXmAodgp7/Bnj/aicYMHLbh240zXA3wwb74R6NM4hIUx+RmUKh5Kol1gNQyOcWjYJCe
-         +nTRYTRmyUDkZBHfZ4tEqUDDaemMXAar+nLEMc7TiDxwX96D2OgA8wfTZvwhMUci8f3z
-         bRXb3kW8ppGW40huotxfX+rFcQ01cEIBjSj0vpIi//WlWVMEXG7aBs8Cv0NakuuyZpG3
-         xUpkWy01yIswdVoFNplA2HDVK2ChkXmeNNK4Bot4gmStZqd8Dk2HM1cIdGFYlRbmIYD1
-         9D4A==
-X-Forwarded-Encrypted: i=1; AFNElJ9MB9LqTZqSl4G37SkQoapyQukkTncYmLA3p979lzSXc3oI7ByVvZMxNiVxEftENriAshqTcbDi4rI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx11Kj7cxTzydoDOG4zNQrgz/IVP5C+ei/TsGjzWbjlK1RH/15L
-	a9h8qpM64BU/Ni0/1YUlO/+jRkty0HnHxGRC09O0aN3iOIDKIQ0jBJRxX9ZrrbDQ6E4=
-X-Gm-Gg: AfdE7cn4CET025XO0T01TXmhubuRZ72YXkx5ruykK3G+BfU67pC34HJx/6vrQAUD3oo
-	jQCedhO2c3h9IQP5N8YN76ncmOBM8cMgll38UWaWDjHKwffWmGkEPaeToGY0Vpox+4OTjkhKITl
-	jkX7NPschqLkklOc+ftQPDV1sViBRLOuaXPA852JePqq7vCoCyoAzfFVTGytoHRlJ07kuFvok+S
-	PKDIL1mY9vt4d2ZPt9ZUyK+GdYGd2dnUNNyFLZJh1Ls1ZzFkIMEAEuZaBZcybtfthJhIqD7jUeq
-	VqswWNiWQtLkabVgIehJAPA1KOV3v9VjRNFDgzn9SC9nymF/0tnK/boVPfGL9AoU6n1+Nc4FgWD
-	2oL89fr8orVuUf8V9ReyedqUcsFEm71NOnQx072+gM64XbMY5UvMpXbBlcnHdZepRVgvETjVC4o
-	4hQIjDizEcMTIXsKrBOfSEGEKqlaJYX2JRQY/I82gUYCww4cwFw5KOZxdYgvckNrzxeAALWFXpr
-	Npponw=
-X-Received: by 2002:a05:620a:2915:b0:922:2baf:d757 with SMTP id af79cd13be357-9293d4a105fmr1727191785a.58.1782592940972;
-        Sat, 27 Jun 2026 13:42:20 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-925fda626b9sm1585236085a.14.2026.06.27.13.42.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jun 2026 13:42:20 -0700 (PDT)
-Date: Sat, 27 Jun 2026 16:42:15 -0400
-From: Gregory Price <gourry@gourry.net>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	kernel-team@meta.com, akpm@linux-foundation.org, david@kernel.org,
-	ljs@kernel.org, liam@infradead.org, vbabka@kernel.org,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	osalvador@suse.de, hannes@cmpxchg.org, mgorman@techsingularity.net,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] mm/vmstat: flush per-cpu node stats when a node goes
- offline
-Message-ID: <akA1p_scgVk5FTmA@gourry-fedora-PF4VCD3F>
-References: <20260627073107.523499-1-gourry@gourry.net>
+        d=1e100.net; s=20251104; t=1782661542; x=1783266342;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=GAv9lBpwJ9ygLTg/j3vYZQS+xwu0/dkisJeUZL+Xgq4=;
+        b=mg5hz+JvQWN6XX+zsvFU+FmvThR2F7nc8msZwntaihfon/rLqcQtOkvEo+yje4Qq53
+         RRs39iDJ1EX6Gec6MxeYUOdOdcjZnl234wTgaBCMZhQGbuwFWd23AjCCAAVesccIxCBy
+         3I04xtqDo7RLdX2Lc/1YGVvfbZYnD9y+8+TTgVU1twzrD1tXMgd0l8tYiQU/IKy72Hkn
+         XzQ9tr1mC6KSwB9F0FetGapnhiHxYJSlnRrIborr+aj53YQ6puZ08Oo6YEtV0lAjKn47
+         wZNIElfySQNxrweuiuINacEAbBht0DkGZSa1avxpRU9k8lRgZbMYoZp6MvAOMRhs5hML
+         aKbA==
+X-Forwarded-Encrypted: i=1; AHgh+Rp//CSazB7lAZTscSCo0CIoOABOs7yCfFz/UDyBSk9BbWG3ZSXp7/8mZjBNY6cbUegy1fb0mI3BdOk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGOP/oH9+EXCFRPIz//bCRcvqj1NrXFhKa0INUWcKhknsGKI4j
+	8R2SaeQ2/L5KA/x84A/BIGyCqqdq94HG7TmRPFL0IiXFI/u+ld+25zd707FtK2hXCk1e7ncfb6c
+	ToLxANhMs8moKnRhdQwx3X19DKLvZWq4wt3qmK/RNKw==
+X-Gm-Gg: AfdE7cmgtWCVa3vKqKKwovp8IxBInG2p6RKlZCM9xgSE/hdwRnGGqfHSG/vManXWUnk
+	JOi+tYeOzlzSEwEHpB1b7VE5FDdd3LIcFCW65pzQAK1K761eVx0A1pBnkF5ZMFn7XhHqma7Dxi4
+	ZqgyTwXI/aDyozupNSyTXo3xl/JinV1G1/nB5enFkqLKJkThlO7HKr6iHwkjAs8J+I/Gi8ZYCBy
+	3nycm/UgeCCnujF/MZNrUypc+kzTgfsdF1hDyaoEVAJ5soFBrOswpomTFG5Q6I8IBfem0c=
+X-Received: by 2002:a05:6512:420b:b0:5ae:b7d1:1627 with SMTP id
+ 2adb3069b0e04-5aeb7d116bemr194278e87.35.1782661541572; Sun, 28 Jun 2026
+ 08:45:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260627073107.523499-1-gourry@gourry.net>
+References: <20260605142036.2062347-1-sam.moelius@trailofbits.com> <aimmfgWS6IPtwLVA@aschofie-mobl2.lan>
+In-Reply-To: <aimmfgWS6IPtwLVA@aschofie-mobl2.lan>
+From: Samuel Moelius <sam.moelius@trailofbits.com>
+Date: Sun, 28 Jun 2026 11:45:29 -0400
+X-Gm-Features: AVVi8CdnfscTBrE6mgVXhCFi71iOVNGWSd9eLKz04ut2brkiv_wEmc-9eF7BrNo
+Message-ID: <CAE+C+DYnidq7ZFoyxeL54YCT=JF5-Q-NkGFTgoAaW9EztwwaGQ@mail.gmail.com>
+Subject: Re: [PATCH] cxl/test: reject wrapped GET_LOG offsets
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>, 
+	Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, Dan Williams <djbw@kernel.org>, 
+	Eric Biggers <ebiggers@kernel.org>, Alejandro Lucero <alucerop@amd.com>, 
+	"open list:COMPUTE EXPRESS LINK (CXL)" <linux-cxl@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 27, 2026 at 03:31:07AM -0400, Gregory Price wrote:
-> A per-node vmstat counter is pgdat->vm_stat[] plus per-cpu deltas.
-> A balanced counter can sit split as global=+N / per-cpu=-N.
-> 
-> The folds reconciling the split only walk online nodes, so when
-> try_offline_node() marks a node offline - per-cpu deltas are stranded.
-> 
-> A subsequent online zeroes the per-cpu area but not pgdat->vm_stat[],
-> orphaning the +N permanently. All NR_VM_NODE_STAT_ITEMS are affected.
-> 
-> Flush the deltas before the node leaves the online set.  A remote
-> fold races the periodic per-cpu fold, so do it as per-cpu work.
-> 
-> Discovered when a node/compact call hung for a nearly empty node, as
-> the math to determine throttling broke. Reproduced by repeated memory
-> hotplug/unplug cycles on a node under pressure. NR_ISOLATED_ANON
-> ratchets up and never returns to zero.
-> 
-> Fixes: 75ef71840539 ("mm, vmstat: add infrastructure for per-node vmstats")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gregory Price <gourry@gourry.net>
+On Wed, Jun 10, 2026 at 2:01=E2=80=AFPM Alison Schofield
+<alison.schofield@intel.com> wrote:
+>
+> On Fri, Jun 05, 2026 at 02:20:31PM +0000, Samuel Moelius wrote:
+> > The CXL mock mailbox GET_LOG handler validates the requested CEL slice
+> > with `offset + length > sizeof(mock_cel)`.  Both fields come from the
+> > userspace CXL_MEM_SEND_COMMAND payload and are 32-bit values, so an
+> > offset near U32_MAX can wrap the addition to a small value and pass the
+> > bounds check.
+> >
+> > The wrapped request then uses the original large offset as the source
+> > address for memcpy(), reading far outside the mock CEL array.
+> >
+> > Validate the offset first and compare the length against the remaining
+> > CEL size so the check cannot wrap.
+> >
+> > Assisted-by: Codex:gpt-5.5-cyber-preview
+> > Signed-off-by: Samuel Moelius <sam.moelius@trailofbits.com>
+>
+> Hi Samuel,
+>
+> I'd suggest keeping the commit log focused on the broken property and
+> how the fix restores it, rather than tracing the individual arithmetic
+> operations and later accesses, which are already evident from the code.
+>
+> The GET_LOG handler is intended to reject requests that describe a CEL
+> range extending beyond the available data. The current validation can
+> incorrectly accept some malformed requests because of arithmetic
+> wraparound, and the fix restores that property by validating the
+> requested range in a way that cannot overflow.
+>
+> The discussion of the subsequent memcpy() access leaves me wondering
+> what the observable effect actually is. Does this return bogus CEL
+> data, trigger KASAN, crash the test module, or something else? If there
+> is a demonstrated failure, please describe it. Otherwise, I think the
+> property being restored is the more important aspect to capture in the
+> commit log.
 
-Realized I changed the title on v2:
-https://lore.kernel.org/linux-mm/20260627073107.523499-1-gourry@gourry.net/
+A longer explanation appears below, but the bug can cause the kernel
+to panic with an out-of-bounds copy. So highlight that fact in the
+commit message?
 
-Core issue was the zeroing at online time causing the skew, just have to
-do the fold there instead.  disregard this version please
+---
+
+The bug was validated with a PoC that deliberately invalidates the CXL
+mailbox GET_LOG command to the mock CXL memory device.
+
+The vulnerable code checked the requested log slice like this:
+
+  if (offset + length > sizeof(mock_cel))
+  return -EINVAL;
+
+Both offset and length are 32-bit fields supplied by userspace. The PoC set=
+s:
+
+  in.offset =3D UINT32_MAX;
+  in.length =3D 1;
+
+So the vulnerable expression wraps:
+
+  UINT32_MAX + 1 =3D=3D 0
+
+That makes the range check pass, because 0 > sizeof(mock_cel) is false.
+
+After that, the mock GET_LOG handler still uses the original huge offset:
+
+  memcpy(cmd->payload_out, data + offset, length);
+
+So it tries to copy 1 byte from far past the mock CEL buffer. In QEMU
+pre-fix, that caused a kernel page fault in memcpy_orig, through
+cxl_mock_mbox_send, and then a panic because the test kernel used
+oops=3Dpanic.
