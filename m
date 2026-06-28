@@ -1,170 +1,220 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11021117.outbound.protection.outlook.com [40.93.194.117])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2D626ED2D
-	for <linux-cxl@vger.kernel.org>; Sun, 28 Jun 2026 15:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782661545; cv=pass; b=B+NzLVhvjSmu67f8F51CcGSifCkJPxF06iQ2MYhSFXrWgNlBxW+t5dBF7+zZqgVfrUs0pClAcpupEkMud8z2Vt7EEs5gW/qHLNi/Z5zG8gbDt7t2fLS+UTt9kWtZhsD0/w6BZXWCotsK+x3GRrThGsgVqai+nidLu+L60TyGOxw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782661545; c=relaxed/simple;
-	bh=w2qzCKFrG19FjLt17SN7hSVzHqdC4wps9eEQlWGAd4g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RjXBb4qBNz3pU8+ad4dzvwmaj9chTqd9CEywL6nNvZVpRlfA7L0DS9AdXVT595ypwAcvErLVT+YRdURbUaL0G8Blo/AC8867XVVlsFeAucJl9mgvWc/3t0AWEReRJiTx4cSm1b1g2NY4kdgBLIgwFI36nBrAV7z8zpeIPMN55TI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com; spf=pass smtp.mailfrom=trailofbits.com; dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b=cLUg5Uvq; arc=pass smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trailofbits.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605DC61FCE;
+	Sun, 28 Jun 2026 16:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.117
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782662426; cv=fail; b=OlNvFLAXJUnWlrmOXUyiGP2QLEwSzGq9FC3opPq5/fydjVOJ/BVgKoIv+7suwQSH6PmNJIgIDFpeotfhmvk1b9R8Lv/xISGxozgW76p0LizeNwwTFa+i+DqFNRMvl7at0htJZXTz5KbSmB30t/VgEC72fdqW8bEaSCGvos94eNY=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782662426; c=relaxed/simple;
+	bh=GCDqNLVwSBZ3jjtJFOzZBjYJwzXVFoKn14rAcnERhTs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gQpArHQbkzZCra3BKC6r5tSSTumHN7eKF+DEwcn4oboMyZo8BFf7Wa+ZyQ1Zxo8qCsRsfN/OMUjg3RdDxlnYKo5hZ5v7XM7wvKYVGgmbBaoMFWD4/QhWJEEsVk/cdUsjUy0/MaDJTPmfMzq4wAkURrA7LGw4xfzygR2OWSlCyEY=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=scaleflux.com; spf=pass smtp.mailfrom=scaleflux.com; dkim=pass (1024-bit key) header.d=scaleflux.com header.i=@scaleflux.com header.b=UNbklsRp; dkim=pass (1024-bit key) header.d=scaleflux.com header.i=@scaleflux.com header.b=UNbklsRp; arc=fail smtp.client-ip=40.93.194.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=scaleflux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=scaleflux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b="cLUg5Uvq"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5ad54546171so1541533e87.0
-        for <linux-cxl@vger.kernel.org>; Sun, 28 Jun 2026 08:45:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782661542; cv=none;
-        d=google.com; s=arc-20260327;
-        b=FC0ywB5nRdQRRLn5BLmeC1+leb7QBtItPk+M7NE7NkvtELq00ixcjhOWw98s2pXpoJ
-         JmSNtwlU2nbnuqmz3jM9oz5D5sgrLlE/uYmdHxI+tStM++hnQWvmDZYUE33fkdTHhKvs
-         zK4owcjpCZUH8u01XmDnrOEU+0TwoTODjdS3+ijd1iruAX+H9OtY8mWJiOvmXYmPGENa
-         vR2LugmRJh9MD0Q6TFIBvicX3LPqbh+WUM7HX5Fu4OCDg6ocB7h8hsmzpi3vBq/hK0Bw
-         Ds2fRd1QB0JG/JZTGzcJev/+uY+CjjjIoHuAFLcdMngAvvnz9CXazLatN7ClaBeQhQc2
-         q4gA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=GAv9lBpwJ9ygLTg/j3vYZQS+xwu0/dkisJeUZL+Xgq4=;
-        fh=TWQEC1oEaS260EcG6YawJMxGX7J7mAPZRFA7rxYqIPg=;
-        b=ZHKJzJ+27u7z3mGIdS5kh/k13lmRsL5K+8txbZ0hycp16UppTw1n4lNpzIMs/zjfvh
-         Ei+RFc/9B7B1bZqhFnYGhUj+lKMh+1NJPR5lPFFvahz5NzRlq5L8raT4a5l67D5se4Rt
-         +HhazCxyxgV4uAuMFyH9XIFW95UfJkoTuUBMAJAffkao4Et574mXn7PeUSGOs0jxr9hT
-         5NuiwJJBO5+E1sEvUxpuqE0VVA8sHqB7MHqsy0fyxmR/zU7nZ0BblypLF8Yv7+RpQcV7
-         tmX1YTvPhP6yEDVlLQHmciNXVAs6/xvzVjVGQ+Ldryri2HdjXcwapqMaBI9BKGftIG7t
-         NC4Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=trailofbits.com; s=google; t=1782661542; x=1783266342; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GAv9lBpwJ9ygLTg/j3vYZQS+xwu0/dkisJeUZL+Xgq4=;
-        b=cLUg5UvqOdhM8ZAsIaUAbbmgRfvn42ePhn5g3dMuZ4oXsMWkz2q8Gvbn8P073wKnPO
-         qMuFrw/meiy+iewb4fGP8wwlCki4pkK+VskBRY9qW+9d8gP08bf2VyeWBm7mjHy1rxo/
-         XkiRe7B1z5znr+narhmZZWl7x2efUrPxsWCetzdCcTpTpNFj8AhkkIG8TfDseKwysKct
-         U+ee5DTWNqWgGio6i6EVW4NvuQRIJ6LzP2MmltcG6kcTL42xGuGMBQE4q1ikLTO2UPcI
-         EAyYs+5hDJajXSZrlZTVHHv1pJvw4q+7ovLRu15LdfuRbomP0PXRVmBuBWk+dJCt0pYo
-         Nw/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782661542; x=1783266342;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=GAv9lBpwJ9ygLTg/j3vYZQS+xwu0/dkisJeUZL+Xgq4=;
-        b=mg5hz+JvQWN6XX+zsvFU+FmvThR2F7nc8msZwntaihfon/rLqcQtOkvEo+yje4Qq53
-         RRs39iDJ1EX6Gec6MxeYUOdOdcjZnl234wTgaBCMZhQGbuwFWd23AjCCAAVesccIxCBy
-         3I04xtqDo7RLdX2Lc/1YGVvfbZYnD9y+8+TTgVU1twzrD1tXMgd0l8tYiQU/IKy72Hkn
-         XzQ9tr1mC6KSwB9F0FetGapnhiHxYJSlnRrIborr+aj53YQ6puZ08Oo6YEtV0lAjKn47
-         wZNIElfySQNxrweuiuINacEAbBht0DkGZSa1avxpRU9k8lRgZbMYoZp6MvAOMRhs5hML
-         aKbA==
-X-Forwarded-Encrypted: i=1; AHgh+Rp//CSazB7lAZTscSCo0CIoOABOs7yCfFz/UDyBSk9BbWG3ZSXp7/8mZjBNY6cbUegy1fb0mI3BdOk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGOP/oH9+EXCFRPIz//bCRcvqj1NrXFhKa0INUWcKhknsGKI4j
-	8R2SaeQ2/L5KA/x84A/BIGyCqqdq94HG7TmRPFL0IiXFI/u+ld+25zd707FtK2hXCk1e7ncfb6c
-	ToLxANhMs8moKnRhdQwx3X19DKLvZWq4wt3qmK/RNKw==
-X-Gm-Gg: AfdE7cmgtWCVa3vKqKKwovp8IxBInG2p6RKlZCM9xgSE/hdwRnGGqfHSG/vManXWUnk
-	JOi+tYeOzlzSEwEHpB1b7VE5FDdd3LIcFCW65pzQAK1K761eVx0A1pBnkF5ZMFn7XhHqma7Dxi4
-	ZqgyTwXI/aDyozupNSyTXo3xl/JinV1G1/nB5enFkqLKJkThlO7HKr6iHwkjAs8J+I/Gi8ZYCBy
-	3nycm/UgeCCnujF/MZNrUypc+kzTgfsdF1hDyaoEVAJ5soFBrOswpomTFG5Q6I8IBfem0c=
-X-Received: by 2002:a05:6512:420b:b0:5ae:b7d1:1627 with SMTP id
- 2adb3069b0e04-5aeb7d116bemr194278e87.35.1782661541572; Sun, 28 Jun 2026
- 08:45:41 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=scaleflux.com header.i=@scaleflux.com header.b="UNbklsRp";
+	dkim=pass (1024-bit key) header.d=scaleflux.com header.i=@scaleflux.com header.b="UNbklsRp"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=TdwPONvgB1kR1HL4TjVRdu6PaCUBQ5V1xGuF1hZxcrqTF9w3mMxHEJtWLtKlMloxH3BMduu20ItxMF8FfOdfzs0MgTd9zZRxb1EjzHJWPC4p7TDL2wMg2RrwgwhE12T+iCU+tQ8WdNb38sGXiW6bd48qiKGpoLHAiD4ZVPUtguot+SE979sQnwoy4LT7YmS4IbTTmmx6xG5L+BzTkiHavvDw9soPy3o/4jXd0dXGMD47iAUGp521YQPH3ld4FBNt8p2beJ4xv2HtI1GgOkVypi/ivSFWTkdk7OYuwTHT6g96tB9Jcp1X1jv7udqhmZNQmRGyOVp3u9Uv/Vh86r+UzQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IfDvV4d4viS25J/nwxWBysu3meKA1qxkMV9SPQBVogY=;
+ b=ic+9mFovwcBUxVXlF9Ee5c6LquhfehqhSjUFqpFtT/kSeYpusUchi6FliGrYyPJ1fQSvc76dLvYR4WEFzY1rQv3SMutca2AJvEWgXKChoBrfwVu5BdRISS/sI0kbqSVLp0y1Xbc+yUf4OodtuGJFoE0bDajiwuSWyNKmQZUNih9hsFLk3Pk/DH0zOSa3QCA930WnbQuzigAHj2ivuf7NiIwfXdA98/NnKXUqrnvlax6afzDaGZx1ma1pD5i61kcaMrJxPNfeFuS75teKPYaP7ZIWK9IUUb52moE9pDQFEg4KpkVFExqqyLoyRt6+2I0EOyMaqERLK6G2hOieS8xfwg==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=fail (sender ip is
+ 51.8.25.87) smtp.rcpttodomain=intel.com smtp.mailfrom=scaleflux.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=scaleflux.com; dkim=pass (signature was verified)
+ header.d=scaleflux.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=scaleflux.com] dkim=[1,1,header.d=scaleflux.com]
+ dmarc=[1,1,header.from=scaleflux.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=scaleflux.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IfDvV4d4viS25J/nwxWBysu3meKA1qxkMV9SPQBVogY=;
+ b=UNbklsRpt9fmTijGMx/gBJSOSrR0FKIYwAyxqq3B3deem33wutB++N7ATOvWSH3nAK8hdyDUUgDgfhD3RKHfmLWOUrOX2DL7NQg+TCI16ds0XJqJ7RHJ90obhVlbh2aRVfY6+DxdMmYxaqWbqDLEdyrwhke276fnYN+IxN5edJ8=
+Received: from BY3PR05CA0032.namprd05.prod.outlook.com (2603:10b6:a03:39b::7)
+ by PH0PR03MB989098.namprd03.prod.outlook.com (2603:10b6:510:3ae::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.19; Sun, 28 Jun
+ 2026 16:00:21 +0000
+Received: from SJ5PEPF000001F0.namprd05.prod.outlook.com
+ (2603:10b6:a03:39b:cafe::2a) by BY3PR05CA0032.outlook.office365.com
+ (2603:10b6:a03:39b::7) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.181.8 via Frontend Transport; Sun, 28
+ Jun 2026 16:00:21 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 51.8.25.87)
+ smtp.mailfrom=scaleflux.com; dkim=pass (signature was verified)
+ header.d=scaleflux.com;dmarc=pass action=none header.from=scaleflux.com;
+Received-SPF: Fail (protection.outlook.com: domain of scaleflux.com does not
+ designate 51.8.25.87 as permitted sender) receiver=protection.outlook.com;
+ client-ip=51.8.25.87; helo=outbound-us1.az.dlp.m.darktrace.com;
+Received: from outbound-us1.az.dlp.m.darktrace.com (51.8.25.87) by
+ SJ5PEPF000001F0.mail.protection.outlook.com (10.167.242.68) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.181.6
+ via Frontend Transport; Sun, 28 Jun 2026 16:00:20 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cPrWcpj8enwY+olUz7sAN4CuJjmSFCCckIqJRyoVzqarxe50Z2+21U8/2Iojth55CJLZKkqiibGdFrSGKiDI6Tja/FU02/ciirSl7ErZnffdICFcoSwa1AYklSWRRLjU2q+ZA5FlTBtO+DQcUycOpnBy3o48t7C5QI5SyohFPuRRLN1U+hJi2Deh/oxwk7WUGKVRV59yuvJY7SoBe7F7sURJ0hBhY4HQF4fqNFtWEtaDViRox097wmPsmTW9Dj3GpTCP5K/QOG+Z2QfFv8DZjgf5SwkNew4TdhiFCHiLjtaepy7VT5a+Cce6TzfmYofDuw7dlsB3zry8PNNtuRn9iQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IfDvV4d4viS25J/nwxWBysu3meKA1qxkMV9SPQBVogY=;
+ b=vldO4Lj6pBSHH2ztuxmj3HkGJokFn/Ol0aemkLBM0XmzaJDp7R7YySOzR5Z9zNjyxbPc+v7f/BOgnz9XxWYoC6HeBwH9xWiJCu32UvZ8ft58VAxOWsW0S8IzlzXFIvYxBWnPhHXnUA8G9i1MjQefsPBu7WPMhpm69jNQjIUxwS73LNj0uMrWDTlOJaZ9tHWtPS67kPdI8hGyhwucECVkIHO7U15u3FnDytxnXbrAthPWXjefUiWRK6F8MLRtIkcSoO1L2Z0ni3TeMAvpJGremIeK+grrccwGqg/Zy01Rka8vhUX6Exfg/cExRUMCjjbDarRoKJqQtr6DhjHNhyy61g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=scaleflux.com; dmarc=pass action=none
+ header.from=scaleflux.com; dkim=pass header.d=scaleflux.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=scaleflux.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IfDvV4d4viS25J/nwxWBysu3meKA1qxkMV9SPQBVogY=;
+ b=UNbklsRpt9fmTijGMx/gBJSOSrR0FKIYwAyxqq3B3deem33wutB++N7ATOvWSH3nAK8hdyDUUgDgfhD3RKHfmLWOUrOX2DL7NQg+TCI16ds0XJqJ7RHJ90obhVlbh2aRVfY6+DxdMmYxaqWbqDLEdyrwhke276fnYN+IxN5edJ8=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=scaleflux.com;
+Received: from MW4PR03MB6537.namprd03.prod.outlook.com (2603:10b6:303:124::13)
+ by DS1PR03MB7944.namprd03.prod.outlook.com (2603:10b6:8:21d::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.19; Sun, 28 Jun
+ 2026 15:59:47 +0000
+Received: from MW4PR03MB6537.namprd03.prod.outlook.com
+ ([fe80::52db:7790:8726:4540]) by MW4PR03MB6537.namprd03.prod.outlook.com
+ ([fe80::52db:7790:8726:4540%5]) with mapi id 15.21.0139.018; Sun, 28 Jun 2026
+ 15:59:47 +0000
+From: Wei Hou <wei.hou@scaleflux.com>
+To: Dave Jiang <dave.jiang@intel.com>,
+	Dan Williams <djbw@kernel.org>
+Cc: linux-cxl@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Ming Li <ming.li@zohomail.com>,
+	linux-kernel@vger.kernel.org,
+	Kobayashi <koba@nvidia.com>,
+	Kaiheng Feng <kaihengf@nvidia.com>,
+	Newton Liu <newtonl@nvidia.com>,
+	Kristin Chen <kristinc@nvidia.com>,
+	Mochs <mochs@nvidia.com>,
+	Dan Williams <danwilliams@nvidia.com>,
+	Richard Cheng <icheng@nvidia.com>,
+	Wei Hou <wei.hou@scaleflux.com>
+Subject: [PATCH v2] cxl/pci: Remove incorrect mbox.valid check in  cxl_pci_type3_init_mailbox()
+Date: Sun, 28 Jun 2026 23:58:57 +0800
+Message-ID: <20260628155857.239866-1-wei.hou@scaleflux.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260618170356.25382-1-wei.hou@scaleflux.com>
+References: <20260618170356.25382-1-wei.hou@scaleflux.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TPYP295CA0056.TWNP295.PROD.OUTLOOK.COM (2603:1096:7d0:8::7)
+ To MW4PR03MB6537.namprd03.prod.outlook.com (2603:10b6:303:124::13)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260605142036.2062347-1-sam.moelius@trailofbits.com> <aimmfgWS6IPtwLVA@aschofie-mobl2.lan>
-In-Reply-To: <aimmfgWS6IPtwLVA@aschofie-mobl2.lan>
-From: Samuel Moelius <sam.moelius@trailofbits.com>
-Date: Sun, 28 Jun 2026 11:45:29 -0400
-X-Gm-Features: AVVi8CdnfscTBrE6mgVXhCFi71iOVNGWSd9eLKz04ut2brkiv_wEmc-9eF7BrNo
-Message-ID: <CAE+C+DYnidq7ZFoyxeL54YCT=JF5-Q-NkGFTgoAaW9EztwwaGQ@mail.gmail.com>
-Subject: Re: [PATCH] cxl/test: reject wrapped GET_LOG offsets
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>, 
-	Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <djbw@kernel.org>, 
-	Eric Biggers <ebiggers@kernel.org>, Alejandro Lucero <alucerop@amd.com>, 
-	"open list:COMPUTE EXPRESS LINK (CXL)" <linux-cxl@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-TrafficTypeDiagnostic:
+	MW4PR03MB6537:EE_|DS1PR03MB7944:EE_|SJ5PEPF000001F0:EE_|PH0PR03MB989098:EE_
+X-MS-Office365-Filtering-Correlation-Id: d3742e10-249d-4a71-05a0-08ded52e5b77
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|42112799006|1800799024|376014|7416014|52116014|366016|23010399003|56012099006|6133799003|38350700014|3023799007|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info-Original:
+ uraCOt8jTZxFh3cy6/bd5WDeRPkr6N+nJR8anhrQDcx84562Dv44Rry03a5P7o6Q1d44OSxrCOb4o5jMHLcrmWJitxYrCSahZ97Em2J6ZwS8cl2el01g0jaYCKa2gKTrNEmvDH4nevWE/8RakXqYSPLg5ifXityNB41s8z8UIJYIe83gtWAZHLYsrcPJTwZEmSWu7CFRvVpHwOeUgASfFvKFgcdhe8IdJyMWjN0sCz4bmYg0U0LsgcaHWZwIFmTUmitzXtGRwUwdpPwqlhT4vhHp4zqKqkCe1LO1cThxThZt/oMYaeic6W4U2jWb5rbiV7iDJRLJziW4VYSHSL+CAhJxNk3ACHKbanSHhWohRJ3O5cMU+APEKK77tsqbKagn8qfHjI8WESOdXRfWIIX1d/hMaICvp7LWuvtDjnZk9kQjxVVNeuVTb904h5oLZPR8CWmUI4RkThG/ac9PR1jkCx4iCEeHtDh7vzU2OtcR3qvVEUfEfnJ8exTuttbbigwThXz3a2h5IAlfZW8PudUziLq4SzynBwD6bHZ5466d2tR4csGkPw4WFlimCVwx+ovgsOGrkZ8faiv0UV1Bjsl59JHTgldTWGN2s2aiKjf0/KLK7mqiS0tJIgxjbGarz95m7KYXvMGbsvkXfE1YM+zor93jXVm4vkQApBOOjHo2Bd9+40OSP9lFYkzF6knnq4QlcEQfU6YMO/HQUP8+BX6vLLT/1lsvXfoRZrLj0jZG0KM=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR03MB6537.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(42112799006)(1800799024)(376014)(7416014)(52116014)(366016)(23010399003)(56012099006)(6133799003)(38350700014)(3023799007)(22082099003)(18002099003);DIR:OUT;SFP:1102;
+X-Exchange-RoutingPolicyChecked:
+ DM7oEORdP9LfcUzKzj9gFDwclxdLwYU4m8WYlGXFGo00VlulWASvd9QXzMNp6YIkmPAsgnbT4QX9hK8nAdqzgyf88rWhCnmoMCTT6VhEWlpHSu8UxyxJ7/V2tf5RrFJSmmjiU7/DQGL2s7vm64nf4bHIk7pljlXyilZQJh/y6OClHSAfw80cJclgZQiaxPODF2NW8CBa6nmjIvh0pFSt9SMQCHGqFvnoc1U0MEEvf8PM+HglXcAIFf6hzIVHRPH2vkUWcoPQPy0KJ1D6phqpVflxCFFSFMfWlfOvAZeUxMai5bWHZji8TdUF5nXunlx22Z3YUobpbP5ZCm4T1Vg3zQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS1PR03MB7944
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ SJ5PEPF000001F0.namprd05.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	15d55747-d069-4201-0412-08ded52e46b8
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|7416014|35042699022|14060799003|376014|82310400026|36860700016|42112799006|1800799024|18002099003|22082099003|3023799007|6133799003|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	9flVlI5TxIOAqP1YNflnpzubRvMY5inQrQRuzuUkgFJoiGjz+LdBmaf87KYoiDRcnYBrlLIVJOaeAp/dDGSy4PL3gpbcgF1UQknRAyQFq488Qsj0muv1rmsIOvMwH1ROMQO6RXsk0FNQq5WSoYYItPE322HmBUEP3g/I1X9JGfAdlRRCT0/c/cdNvJ9Cclqc8BX4HS7zyVUXMIztF8s8pjxZJLdiySH4yJ+C7cJQ5QMiNWiHq31i4fLrt9KYvZRPrtnSd/2XGPwKIj7TOpNG+rpCGwRkXcliaZsSvGm8gW8wXxsCthND4MzncZPAGijohplti44KXGfGSrOxhVPV0x8vuCh29NZ1bQPuyE/+cza/RIBZuby85CspSuwzlhy0gHEB45LlY+xEh6dExkEcwKEngHftRkXJlQTRAXwyLCbKYVV7qdIZCtj5zsLGs8BmcXX0fnKaKoZrpZLa6nnTodTX2GAff/H1VdY0FHVRvKT+CLoCjYij0o8jDC6OlWC6JvwJqRAQM+1j8xjQ6dayNHThUnny0GQAAKdoioOh/VnqOFkcsV/AxrqTix5gjHRU5gLqzrFIpcf0GgHI2GXI+sCCo+TP2mvQNlCQYg+qXr3x2iuZlvzNrixFBEBRcghcdm10ZVOv7+e38oYIgCtc+i+tQIj5f4HQS7HPNsCEcEnCWbKi3cnZXilG+DGsDzjRWjmTNsvpu0wScwcPpwNU0A==
+X-Forefront-Antispam-Report:
+	CIP:51.8.25.87;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-us1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(35042699022)(14060799003)(376014)(82310400026)(36860700016)(42112799006)(1800799024)(18002099003)(22082099003)(3023799007)(6133799003)(56012099006);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	rphCLmGA9y9qgeCyX5eUNSTZ18gKOsORdrT67qEoQYq3zSQSRJ/Cme+Q7OPlxTndHsMd49QAPUVoF+kq3gg5ixXdsdjATzdTJ0fifuNPiICHcTLr2TTP7dwrun6TOSsQvNUreLOtTpuBjgKTYQdU3RaObsdmHa1qqieXNJKTI7Co5ZPR15hHtIz1rkiP2UeSXHkJEPL4ROCuY/F1K4eK7SOgyc1M1b0T+wkfYRGykjpct7wFjuL/nwVrbSS2ZqiXiQD4W1WV8SvWvUpvzY1bq3OfM2tEFoeKkxnpgn/2IGT7ME6BP11xD5pc5b3d9DrOhs1+SlqusorN7+43PSK9MJNPdXQpxrkSKCt6XhWPAp7eqGBr4BTy0+2Twq036P0XGGG6tjsaMY/LaejP+CMJd8H40dzphyf6qnMQ2BPpBb2IVNM7laDu+SjHTpV1b7oF
+X-OriginatorOrg: scaleflux.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jun 2026 16:00:20.9096
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3742e10-249d-4a71-05a0-08ded52e5b77
+X-MS-Exchange-CrossTenant-Id: 97919b17-0f1d-40f3-bb57-8fc93387f861
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=97919b17-0f1d-40f3-bb57-8fc93387f861;Ip=[51.8.25.87];Helo=[outbound-us1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001F0.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR03MB989098
 
-On Wed, Jun 10, 2026 at 2:01=E2=80=AFPM Alison Schofield
-<alison.schofield@intel.com> wrote:
->
-> On Fri, Jun 05, 2026 at 02:20:31PM +0000, Samuel Moelius wrote:
-> > The CXL mock mailbox GET_LOG handler validates the requested CEL slice
-> > with `offset + length > sizeof(mock_cel)`.  Both fields come from the
-> > userspace CXL_MEM_SEND_COMMAND payload and are 32-bit values, so an
-> > offset near U32_MAX can wrap the addition to a small value and pass the
-> > bounds check.
-> >
-> > The wrapped request then uses the original large offset as the source
-> > address for memcpy(), reading far outside the mock CEL array.
-> >
-> > Validate the offset first and compare the length against the remaining
-> > CEL size so the check cannot wrap.
-> >
-> > Assisted-by: Codex:gpt-5.5-cyber-preview
-> > Signed-off-by: Samuel Moelius <sam.moelius@trailofbits.com>
->
-> Hi Samuel,
->
-> I'd suggest keeping the commit log focused on the broken property and
-> how the fix restores it, rather than tracing the individual arithmetic
-> operations and later accesses, which are already evident from the code.
->
-> The GET_LOG handler is intended to reject requests that describe a CEL
-> range extending beyond the available data. The current validation can
-> incorrectly accept some malformed requests because of arithmetic
-> wraparound, and the fix restores that property by validating the
-> requested range in a way that cannot overflow.
->
-> The discussion of the subsequent memcpy() access leaves me wondering
-> what the observable effect actually is. Does this return bogus CEL
-> data, trigger KASAN, crash the test module, or something else? If there
-> is a demonstrated failure, please describe it. Otherwise, I think the
-> property being restored is the more important aspect to capture in the
-> commit log.
+The driver's design intent is that missing or malformed component
+registers should not prevent mailbox initialization. cxl_pci_probe()
+already reflects this: the CXL_REGLOC_RBI_COMPONENT setup path only
+emits a dev_warn() and continues when component registers are absent,
+rather than returning an error.
 
-A longer explanation appears below, but the bug can cause the kernel
-to panic with an out-of-bounds copy. So highlight that fact in the
-commit message?
+The check 'if (!cxlds->reg_map.device_map.mbox.valid)' violates this
+intent and is also technically incorrect for two reasons:
 
+1. Wrong struct: the MEMDEV register block is enumerated into a local
+   variable 'map', not into 'cxlds->reg_map'. The device_map.mbox.valid
+   field inside cxlds->reg_map is never written by the MEMDEV probe and
+   will always read as zero regardless of actual hardware capability.
+
+2. Already validated: cxl_pci_setup_regs(CXL_REGLOC_RBI_MEMDEV) calls
+   cxl_probe_regs() which explicitly checks mbox.valid and returns
+   -ENXIO if the mailbox is absent. If that check passes, the mailbox is
+   guaranteed to be present by the time cxl_pci_type3_init_mailbox() is
+   called.
+
+The value that the check actually reads is component_map.ras.valid,
+which aliases device_map.mbox.valid in the union. This is populated by
+the COMPONENT probe, not the MEMDEV probe. On devices where the
+component register BAR does not implement a CXL Component Capability
+Array (e.g. certain DCD devices), cxl_probe_component_regs() returns
+early leaving ras.valid=false. Through the union, this makes mbox.valid
+read as false, causing cxl_pci_type3_init_mailbox() to return -ENODEV
+(-19) even though the mailbox hardware is fully functional.
+
+Remove the check. Mailbox presence has already been validated by
+cxl_pci_setup_regs(CXL_REGLOC_RBI_MEMDEV). The presence or absence of
+component registers is irrelevant to mailbox initialization.
+
+Fixes: 8d8081cecfb9 ("cxl: Move mailbox related bits to the same context")
+Reviewed-by: Richard Cheng <icheng@nvidia.com>
+Signed-off-by: Wei Hou <wei.hou@scaleflux.com>
 ---
+ drivers/cxl/pci.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-The bug was validated with a PoC that deliberately invalidates the CXL
-mailbox GET_LOG command to the mock CXL memory device.
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index bace662dc988..e44e5d209900 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -691,12 +691,6 @@ static int cxl_pci_type3_init_mailbox(struct cxl_dev_state *cxlds)
+ {
+ 	int rc;
+ 
+-	/*
+-	 * Fail the init if there's no mailbox. For a type3 this is out of spec.
+-	 */
+-	if (!cxlds->reg_map.device_map.mbox.valid)
+-		return -ENODEV;
+-
+ 	rc = cxl_mailbox_init(&cxlds->cxl_mbox, cxlds->dev);
+ 	if (rc)
+ 		return rc;
+-- 
+2.43.0
 
-The vulnerable code checked the requested log slice like this:
-
-  if (offset + length > sizeof(mock_cel))
-  return -EINVAL;
-
-Both offset and length are 32-bit fields supplied by userspace. The PoC set=
-s:
-
-  in.offset =3D UINT32_MAX;
-  in.length =3D 1;
-
-So the vulnerable expression wraps:
-
-  UINT32_MAX + 1 =3D=3D 0
-
-That makes the range check pass, because 0 > sizeof(mock_cel) is false.
-
-After that, the mock GET_LOG handler still uses the original huge offset:
-
-  memcpy(cmd->payload_out, data + offset, length);
-
-So it tries to copy 1 byte from far past the mock CEL buffer. In QEMU
-pre-fix, that caused a kernel page fault in memcpy_orig, through
-cxl_mock_mbox_send, and then a panic because the test kernel used
-oops=3Dpanic.
