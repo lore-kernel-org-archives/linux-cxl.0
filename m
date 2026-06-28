@@ -1,69 +1,69 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B1EA348C47
-	for <linux-cxl@vger.kernel.org>; Sun, 28 Jun 2026 21:45:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B823B895D
+	for <linux-cxl@vger.kernel.org>; Sun, 28 Jun 2026 21:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782683139; cv=none; b=Q088v1YVtuCUaBDxCeQkPQUYvm2c7ZuIK3BOJgoIzNUZx4EKBDp+KmXduek6nyhrCXOs4+MxKKTJJAp3yCUB7h6Aa4NDlrL/Hvrt7J9LUA0stpT14nreKWUHWShxehxtu9nh+/N7fUZ4l0S2NbCk4wUOeXfzLnV0JIwneAZ0Hh4=
+	t=1782683144; cv=none; b=Z+cS4ofBIHPzkUfEH/+jxOdkgWugNCZL+Th13YUJuYoX5kHavnWAq2IIiPjj+1t49+Zkbp71hpdR5/HvZofhfCz8tElBRNOvU+qgl1oq7Esm+pw0Fi0xMk4hBxHEAKSr/nL5Kb3ylyFH90dyN8hYnTEjn83T5Vi4u13U895sJSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782683139; c=relaxed/simple;
-	bh=BZC0rGREYDdz8ACkjyFyW5Qa+P9wYb1QujVYCeT996o=;
+	s=arc-20240116; t=1782683144; c=relaxed/simple;
+	bh=5CwmCIIwBRF4rJtSkO3fSv7EygQhsTSRrEO6W+X+9sU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=YpZqsp7TSlORdd0SXzHjsYdFQK/uiQL8okF1YqeqFdTuFQPnG60ltiXFXugC5nhDA+kaGmq5kYliqQ1CKFNvVXat4up37cQyyeGLpDlAq45C6LaNlMDbXIwGsEZjXRBXFvt+HnjghqQO9l8Q2E68LnbD2VjpKU4ECnPWemE78vE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gHA3IEK4; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type:Content-Disposition; b=pHZL3giWQ79iwaxe1Ipfa1BKkqAL1o5Xs9Q7lPHA0xUOmFCVt0Vxcy9HKEMgng7VVDhiULPlQb3A4jylwMXU0kevqjS6ifiZ2ZDq82RRxwGFSlnGwzTmsG+lolcoss1Px+e0bSFk9IOC+/YGrFxTisPqjnBZ6zRbC0bicg/HbX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E+ENvOwz; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gHA3IEK4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E+ENvOwz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1782683137;
+	s=mimecast20190719; t=1782683141;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SiJhyXhNBfsAzo8nGoH5kDNlW+30TFjfN78Hcf1BrTc=;
-	b=gHA3IEK4nW/kLHy4m7C70726+gjXBOo5plDktHdwuOJnh0wnnppSgcMffqBFMH04fF/h0R
-	ZDxkXKLQ/VPZDftBZEE0NyJc6m8qeAXdztPT8adcv+LRmiupvc3eM833mL9uNkQ7iUMUZ5
-	iyN9NycYZL/jFsFAFk+rh5PbpuoQi/M=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=O2PF+qcJ3m8N9rKs3G2/wBo9RivbDKiHiu3dT3I/elw=;
+	b=E+ENvOwzwwUUMafu8CTREtaI9oKS2lE91NVC07mdf6HT5lt7gnT3UlUdcQS3f0D24njkwp
+	J12jQ01Cf4KVleqbLcVFHHmCGZmGQ7LTcjopghu5tXcHeLHuQneb28rbntQ/2PAWlFPkr1
+	W+7OB3xtETwkJ313qqb+iTMPobN1Epo=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-303-JMfSuul7OYuoqsJ0NNPzTw-1; Sun, 28 Jun 2026 17:45:33 -0400
-X-MC-Unique: JMfSuul7OYuoqsJ0NNPzTw-1
-X-Mimecast-MFC-AGG-ID: JMfSuul7OYuoqsJ0NNPzTw_1782683133
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-469218e618dso1541207f8f.2
-        for <linux-cxl@vger.kernel.org>; Sun, 28 Jun 2026 14:45:33 -0700 (PDT)
+ us-mta-201-OqHviVyfOpmHu38Rq3eESw-1; Sun, 28 Jun 2026 17:45:38 -0400
+X-MC-Unique: OqHviVyfOpmHu38Rq3eESw-1
+X-Mimecast-MFC-AGG-ID: OqHviVyfOpmHu38Rq3eESw_1782683137
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-4740be00302so66893f8f.2
+        for <linux-cxl@vger.kernel.org>; Sun, 28 Jun 2026 14:45:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782683132; x=1783287932;
+        d=1e100.net; s=20251104; t=1782683137; x=1783287937;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SiJhyXhNBfsAzo8nGoH5kDNlW+30TFjfN78Hcf1BrTc=;
-        b=o+cvLN+v7iiOIJL2+G9DJuzyDc5ZmxujcWBqXEnnRjTvLoGsqXmFPm+bc2Qp8JKM7d
-         zIIEoe0tiAgitHEwE/oirMo4M4p3D/vTlIE+eKtCTcz704JS6D101ghxR/bh805TrbnQ
-         lp1wWHDS1JIaf4nUHC2dzavxQshVywoADZU+VebE+MXHz7nnPAuhbz5TRpTftoMvGeZ3
-         IuLvdhjpre51Vz99psWvJLQzbavyLqDwUhG9IeQSWW8pvyt6ksbKEb3YNYOE1wFtOmJ8
-         d0oSzR6CNUsPwaOH/4Tg/pTDyVvyyXe2Q6XSMc7ITZXmYwIuEeAXFmzZOoogw3f9t98e
-         vHPA==
-X-Forwarded-Encrypted: i=1; AHgh+Ro4AUAFrN3yjrZYN4SJMAMxA3jQ5xB0dDPcF8uFsytNJpSlOtnhXHYgVV6clANcfAFnbx/mzuP2C9Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs6iNFCQ3Iw0Z1yt0Ix16EJ5UCGZhWRHanGhhphdl1QRgeF5F1
-	zTK4YUDv9+2XJz2rvJGL2kEJFaVmbG5yFBQPPpwolhX0LO3Dvpsi2uAXIM41VC38mwvdcgVvQMj
-	JlTjXIfNAHU2mo+0FCAIASWRx+1BCj9h+JKVcGCTSxtc+x6ixxEO04XY0Mjb2ug==
-X-Gm-Gg: AfdE7cn/TLFDJZYpjO1IH9zI9XCz5gVXuuB9AmZOb1jlppLJFPl8vRUpdxY+Sxw6T/H
-	5W0J1Etb3h27AvMFbv8SVQGOfip+C2rvTzvs7DCsCQz0oqSfkS4TKqrA9sR385oJcH6B5HpoHSc
-	0D0e+62lwGO7R+dFIVXrjIXmxyp9ndZGdBMLxgkphoVfCTjS/ZhSkna9ETJncSXAGNlnFoYA70t
-	3rm66p19qy8xLKr7Q6wQ6of9StB3lPcM9tsvblF9QtXbZG2e2zDMybfyxOO1eCZ5zwtLPjNWL3V
-	JGLTr89yWA2058JxNsd7meQb1cfYvQOAJJtt8LsB9FUOKh526X3VaCwrH9jIr50JLPPYZUY8+Um
-	L
-X-Received: by 2002:a05:6000:4285:b0:45e:fa7b:a7d2 with SMTP id ffacd0b85a97d-46fb6bf2caamr14037858f8f.7.1782683132489;
-        Sun, 28 Jun 2026 14:45:32 -0700 (PDT)
-X-Received: by 2002:a05:6000:4285:b0:45e:fa7b:a7d2 with SMTP id ffacd0b85a97d-46fb6bf2caamr14037797f8f.7.1782683131891;
-        Sun, 28 Jun 2026 14:45:31 -0700 (PDT)
+        bh=O2PF+qcJ3m8N9rKs3G2/wBo9RivbDKiHiu3dT3I/elw=;
+        b=svnqQ/kOXfVH8qS/2UhSo1xVOY2x9Qn1ho2uFx9DNS1/MEdwCLVR4zY300kUoWCLka
+         hKkyhTC4fzQlxTmqpi4vgCRQmIDBtQuvnAyfyGLUDrgU/eeBlPITvzA0STCrEOPQlzxq
+         yaedsTsr+CsxsXSX2/1yQPmgl2sY8m1Cng/HCz5WgiM8ncKhZGllr1hPharWa+GWM9Mt
+         RMI1ziusnAKwbw1POKAnaespjFG9Fg/wZbnB+owriic3dcX6Q+zHjOeEujq3DqNoT5PT
+         zLG9B2vxiG0PTWbrWNRc45SezFaQ7C9gDOK9GUGuSMDWtQlErs968E3vZ0Ir26UxeTh9
+         OTOA==
+X-Forwarded-Encrypted: i=1; AHgh+RoMeriAFTha58OM2lx7cPN+KZGWlh3N7vq+z2FWxnxAA1I5qqNkGh2GJZFXMG887GbzsFRdAMVHkOU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywoe2W96OJFEFB2inWwLvTOF/2tVH/9Ggbi3u/Ooy+/FweR6M2J
+	gPwPjZ8vuanLyjWpgXDhOPU9lt4ed0T5kzK/LeUC+cF897vr/lohEeaYcbgogz+VcPe49Gx0mLH
+	3JhTgJWtT5DqbbHr7svh5W2fl+748ESD+Hkot1cacw2BM6bJr+/uEuUHumeySiw==
+X-Gm-Gg: AfdE7cmmIPvPtUH0b28PKDapoTufdiPTEFWUJaInBuEWwBvlWzAsRQlGRiYC6R4W1tj
+	hDtJi0MPh5q7QfFUtiALW8d9zC37aI3EAsGaSWXgi81SoKdbJBeW3KWUpgd5R/pZFpfkV/EIC0i
+	pLgq5cGQQ2vEUBGkIhwhNBLmamPhSBgkcuIwpXY1QRqNVjG4t//bhtO60DjQSs+JgCtOAs9/Dzf
+	V5nOwWsfEoCeTR+LsJA2h9PmhoahmAc7HIwdWi2Sbpg0FpS/5EBZyZC+VOAOpdGfvXUG7a8QbON
+	7W2F4tUlaDNsaCMCs9CNyk1JfGNKcVaNIg3Kpv57C7k9cqA68pKB80Nvf1hq+4S0Glc6wJc2jKD
+	Q
+X-Received: by 2002:a05:6000:5c8:b0:472:8343:7f5b with SMTP id ffacd0b85a97d-472834380bcmr5815599f8f.17.1782683136878;
+        Sun, 28 Jun 2026 14:45:36 -0700 (PDT)
+X-Received: by 2002:a05:6000:5c8:b0:472:8343:7f5b with SMTP id ffacd0b85a97d-472834380bcmr5815569f8f.17.1782683136320;
+        Sun, 28 Jun 2026 14:45:36 -0700 (PDT)
 Received: from redhat.com ([31.187.78.70])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-46f978dc0a9sm20747231f8f.15.2026.06.28.14.45.28
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-473563c2df7sm5812233f8f.24.2026.06.28.14.45.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2026 14:45:31 -0700 (PDT)
-Date: Sun, 28 Jun 2026 17:45:27 -0400
+        Sun, 28 Jun 2026 14:45:35 -0700 (PDT)
+Date: Sun, 28 Jun 2026 17:45:32 -0400
 From: "Michael S. Tsirkin" <mst@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: David Hildenbrand <david@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
@@ -91,8 +91,9 @@ Cc: David Hildenbrand <david@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
 	Kiryl Shutsemau <kas@kernel.org>, Byungchul Park <byungchul@sk.com>,
 	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
 	David Hildenbrand <david@redhat.com>
-Subject: [PATCH 1/2] mm: memory-failure: use RCU to fix HWPoison flag race
-Message-ID: <e2d32b6bd7322f855ec8ae4ddda4b5ced27f261d.1782676497.git.mst@redhat.com>
+Subject: [PATCH 2/2] mm: wrap non-atomic page flag ops in RCU for HWPoison
+ safety
+Message-ID: <bc054e5b94ba75fd1c044eece47b8cf6a9fec75d.1782676497.git.mst@redhat.com>
 References: <cover.1782676497.git.mst@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -104,166 +105,323 @@ In-Reply-To: <cover.1782676497.git.mst@redhat.com>
 X-Mailer: git-send-email 2.51.2.2891.g4157995a80.dirty
 X-Mutt-Fcc: =sent
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: -PFPvdnhTYfXt0v61WIiTnSWRiXo3GIxBV9eKCCiFiY_1782683133
+X-Mimecast-MFC-PROC-ID: GO_hclyv39MLVvNekB4Cge2UxIJ4HDc1mGDL7TVmZZQ_1782683137
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Non-atomic page flag operations (page->flags.f &= ~mask, __set_bit,
-__clear_bit) can race with atomic TestSetPageHWPoison() in
-memory_failure().  The non-atomic RMW reads flags, memory_failure()
-atomically sets HWPoison, then the RMW writes back the old value
-without HWPoison - clobbering the bit.
+Wrap all non-atomic page flag operations in rcu_read_lock/rcu_read_unlock
+so that synchronize_rcu() in memory_failure() can drain in-flight
+callers.  This completes the RCU-based protection introduced in the
+previous patch.
 
-Add synchronize_rcu() + retry helpers for setting and clearing
-HWPoison, and convert all memory_failure() call sites to use them.
-Follow-up patches wrap non-atomic page flag operations in
-rcu_read_lock/rcu_read_unlock so that synchronize_rcu() drains
-in-flight callers.
+Add hwpoison_safe_set_bit/clear_bit wrappers in page-flags.h that
+bracket __set_bit/__clear_bit with rcu_read_lock/rcu_read_unlock.
+Convert all __SETPAGEFLAG/__CLEARPAGEFLAG macros and direct flag
+manipulation sites (page_alloc.c, huge_memory.c, memremap.c,
+mm_init.c, slub.c, mm.h) to use these wrappers.
 
-Note: the MCE handler in arch/x86/kernel/cpu/mce/core.c also calls
-SetPageHWPoison() and is subject to the same race.  It cannot use
-the drain helpers (MCE context cannot call synchronize_rcu()).
-For recoverable MCE errors, memory_failure() is queued via work
-items (kill_me_maybe/kill_me_never) and will re-set the bit via
-test_and_set_hwpoison_drain_rcu() if it was clobbered.  The
-mce_panic() path sets HWPoison for kdump right before panic() so
-the race should not matter there.  The MCG_STATUS_SEAM_NR path does
-not queue memory_failure(), but the affected page belongs to a
-TDX guest whose CPU core has already been marked dead - the page
-is not subject to concurrent non-atomic flag operations in the
-buddy allocator, so the race does not trigger.
+For batched flag clearing paths (page_alloc.c order > 0), use
+hwpoison_rcu_lock/unlock around the entire loop rather than
+per-operation locking.
 
-Fixes: 6a46079cf57a ("HWPOISON: The high level memory error handler in the VM v7")
+When !CONFIG_MEMORY_FAILURE, all wrappers compile to the bare
+operations with no overhead.
+
 Suggested-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Assisted-by: Claude:claude-opus-4-6
 Assisted-by: Cursor:gpt-5.4-xhigh-fast
 ---
- mm/memory-failure.c | 54 ++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 46 insertions(+), 8 deletions(-)
+ include/linux/mm.h         |  7 ++++
+ include/linux/page-flags.h | 81 +++++++++++++++++++++++++++++++++++---
+ mm/huge_memory.c           |  2 +
+ mm/memremap.c              |  6 ++-
+ mm/mm_init.c               |  2 +
+ mm/page_alloc.c            |  4 ++
+ mm/slub.c                  |  2 +-
+ 7 files changed, 97 insertions(+), 7 deletions(-)
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index ee42d4361309..351f8bbda248 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -76,6 +76,44 @@ static int sysctl_enable_soft_offline __read_mostly = 1;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 06bbe9eba636..d52a5e90cad6 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2341,6 +2341,7 @@ static inline int folio_last_cpupid(struct folio *folio)
  
- atomic_long_t num_poisoned_pages __read_mostly = ATOMIC_LONG_INIT(0);
+ int folio_xchg_last_cpupid(struct folio *folio, int cpupid);
+ 
++/* Caller must hold hwpoison_rcu_lock() */
+ static inline void page_cpupid_reset_last(struct page *page)
+ {
+ 	page->flags.f |= LAST_CPUPID_MASK << LAST_CPUPID_PGSHIFT;
+@@ -2503,8 +2504,10 @@ static inline struct zone *folio_zone(const struct folio *folio)
+ #ifdef SECTION_IN_PAGE_FLAGS
+ static inline void set_page_section(struct page *page, unsigned long section)
+ {
++	hwpoison_rcu_lock_flags(&page->flags.f);
+ 	page->flags.f &= ~(SECTIONS_MASK << SECTIONS_PGSHIFT);
+ 	page->flags.f |= (section & SECTIONS_MASK) << SECTIONS_PGSHIFT;
++	hwpoison_rcu_unlock_flags(&page->flags.f);
+ }
+ 
+ static inline unsigned long memdesc_section(memdesc_flags_t mdf)
+@@ -2719,14 +2722,18 @@ static inline bool folio_is_longterm_pinnable(struct folio *folio)
+ 
+ static inline void set_page_zone(struct page *page, enum zone_type zone)
+ {
++	hwpoison_rcu_lock_flags(&page->flags.f);
+ 	page->flags.f &= ~(ZONES_MASK << ZONES_PGSHIFT);
+ 	page->flags.f |= (zone & ZONES_MASK) << ZONES_PGSHIFT;
++	hwpoison_rcu_unlock_flags(&page->flags.f);
+ }
+ 
+ static inline void set_page_node(struct page *page, unsigned long node)
+ {
++	hwpoison_rcu_lock_flags(&page->flags.f);
+ 	page->flags.f &= ~(NODES_MASK << NODES_PGSHIFT);
+ 	page->flags.f |= (node & NODES_MASK) << NODES_PGSHIFT;
++	hwpoison_rcu_unlock_flags(&page->flags.f);
+ }
+ 
+ static inline void set_page_links(struct page *page, enum zone_type zone,
+diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+index 7223f6f4e2b4..25eb5a77c92f 100644
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -9,6 +9,7 @@
+ #include <linux/types.h>
+ #include <linux/bug.h>
+ #include <linux/mmdebug.h>
++#include <linux/rcupdate.h>
+ #ifndef __GENERATING_BOUNDS_H
+ #include <linux/mm_types.h>
+ #include <generated/bounds.h>
+@@ -404,6 +405,68 @@ static unsigned long *folio_flags(struct folio *folio, unsigned n)
+ #define FOLIO_HEAD_PAGE		0
+ #define FOLIO_SECOND_PAGE	1
  
 +/*
-+ * Drain any in-flight non-atomic page flag operations that could
-+ * clobber a concurrently set HWPoison bit.  Retries until the bit sticks.
++ * Non-atomic page flag operations (__set_bit, __clear_bit, flags &= ~mask)
++ * can race with atomic TestSetPageHWPoison() in memory_failure().
++ * Wrap non-atomic ops in rcu_read_lock/rcu_read_unlock so that
++ * synchronize_rcu() in memory_failure() drains in-flight callers.
 + */
-+static void set_hwpoison_drain_rcu(struct page *p)
++#ifdef CONFIG_MEMORY_FAILURE
++static __always_inline void
++hwpoison_safe_set_bit(unsigned long nr, unsigned long *addr)
 +{
-+	do {
-+		synchronize_rcu();
-+	} while (!TestSetPageHWPoison(p));
++	rcu_read_lock();
++	__set_bit(nr, addr);
++	rcu_read_unlock();
 +}
 +
-+/*
-+ * Drain any in-flight non-atomic page flag operations that could
-+ * restore the HWPoison bit from stale data.  Retries until it stays clear.
-+ */
-+static void clear_hwpoison_drain_rcu(struct page *p)
++static __always_inline void
++hwpoison_safe_clear_bit(unsigned long nr, unsigned long *addr)
 +{
-+	do {
-+		synchronize_rcu();
-+	} while (TestClearPageHWPoison(p));
++	rcu_read_lock();
++	__clear_bit(nr, addr);
++	rcu_read_unlock();
 +}
 +
-+static bool test_and_set_hwpoison_drain_rcu(struct page *p)
++static __always_inline void hwpoison_rcu_lock_flags(unsigned long *addr)
 +{
-+	bool was_set = TestSetPageHWPoison(p);
-+
-+	set_hwpoison_drain_rcu(p);
-+	return was_set;
++	rcu_read_lock();
 +}
 +
-+static bool test_and_clear_hwpoison_drain_rcu(struct page *p)
++static __always_inline void hwpoison_rcu_unlock_flags(unsigned long *addr)
 +{
-+	bool was_set = TestClearPageHWPoison(p);
-+
-+	clear_hwpoison_drain_rcu(p);
-+	return was_set;
++	rcu_read_unlock();
 +}
 +
- static bool hw_memory_failure __read_mostly = false;
++static __always_inline void hwpoison_rcu_lock(void)
++{
++	rcu_read_lock();
++}
++
++static __always_inline void hwpoison_rcu_unlock(void)
++{
++	rcu_read_unlock();
++}
++
++#else /* !CONFIG_MEMORY_FAILURE */
++static inline void
++hwpoison_safe_set_bit(unsigned long nr, unsigned long *addr)
++{
++	__set_bit(nr, addr);
++}
++
++static inline void
++hwpoison_safe_clear_bit(unsigned long nr, unsigned long *addr)
++{
++	__clear_bit(nr, addr);
++}
++
++static inline void hwpoison_rcu_lock_flags(unsigned long *addr) { }
++static inline void hwpoison_rcu_unlock_flags(unsigned long *addr) { }
++static inline void hwpoison_rcu_lock(void) { }
++static inline void hwpoison_rcu_unlock(void) { }
++#endif
++
+ /*
+  * Macros to create function definitions for page flags
+  */
+@@ -421,11 +484,11 @@ static __always_inline void folio_clear_##name(struct folio *folio)	\
  
- static DEFINE_MUTEX(mf_mutex);
-@@ -211,7 +249,7 @@ static bool page_handle_poison(struct page *page, bool hugepage_or_freepage, boo
+ #define __FOLIO_SET_FLAG(name, page)					\
+ static __always_inline void __folio_set_##name(struct folio *folio)	\
+-{ __set_bit(PG_##name, folio_flags(folio, page)); }
++{ hwpoison_safe_set_bit(PG_##name, folio_flags(folio, page)); }
+ 
+ #define __FOLIO_CLEAR_FLAG(name, page)					\
+ static __always_inline void __folio_clear_##name(struct folio *folio)	\
+-{ __clear_bit(PG_##name, folio_flags(folio, page)); }
++{ hwpoison_safe_clear_bit(PG_##name, folio_flags(folio, page)); }
+ 
+ #define FOLIO_TEST_SET_FLAG(name, page)					\
+ static __always_inline bool folio_test_set_##name(struct folio *folio)	\
+@@ -458,12 +521,12 @@ static __always_inline void ClearPage##uname(struct page *page)		\
+ #define __SETPAGEFLAG(uname, lname, policy)				\
+ __FOLIO_SET_FLAG(lname, FOLIO_##policy)					\
+ static __always_inline void __SetPage##uname(struct page *page)		\
+-{ __set_bit(PG_##lname, &policy(page, 1)->flags.f); }
++{ hwpoison_safe_set_bit(PG_##lname, &policy(page, 1)->flags.f); }
+ 
+ #define __CLEARPAGEFLAG(uname, lname, policy)				\
+ __FOLIO_CLEAR_FLAG(lname, FOLIO_##policy)				\
+ static __always_inline void __ClearPage##uname(struct page *page)	\
+-{ __clear_bit(PG_##lname, &policy(page, 1)->flags.f); }
++{ hwpoison_safe_clear_bit(PG_##lname, &policy(page, 1)->flags.f); }
+ 
+ #define TESTSETFLAG(uname, lname, policy)				\
+ FOLIO_TEST_SET_FLAG(lname, FOLIO_##policy)				\
+@@ -806,7 +869,7 @@ static inline bool PageUptodate(const struct page *page)
+ static __always_inline void __folio_mark_uptodate(struct folio *folio)
+ {
+ 	smp_wmb();
+-	__set_bit(PG_uptodate, folio_flags(folio, 0));
++	hwpoison_safe_set_bit(PG_uptodate, folio_flags(folio, 0));
+ }
+ 
+ static __always_inline void folio_mark_uptodate(struct folio *folio)
+@@ -1166,6 +1229,14 @@ static __always_inline void ClearPageAnonExclusive(struct page *page)
+ }
+ 
+ static __always_inline void __ClearPageAnonExclusive(struct page *page)
++{
++	VM_BUG_ON_PGFLAGS(!PageAnon(page), page);
++	VM_BUG_ON_PGFLAGS(PageHuge(page) && !PageHead(page), page);
++	hwpoison_safe_clear_bit(PG_anon_exclusive, &PF_ANY(page, 1)->flags.f);
++}
++
++/* Caller must hold hwpoison_rcu_lock() */
++static __always_inline void ___ClearPageAnonExclusive(struct page *page)
+ {
+ 	VM_BUG_ON_PGFLAGS(!PageAnon(page), page);
+ 	VM_BUG_ON_PGFLAGS(PageHuge(page) && !PageHead(page), page);
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 970e077019b7..99f600459964 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -3624,6 +3624,7 @@ static void __split_folio_to_order(struct folio *folio, int old_order,
+ 		 * unreferenced sub-pages of an anonymous THP: we can simply drop
+ 		 * PG_anon_exclusive (-> PG_mappedtodisk) for these here.
+ 		 */
++		hwpoison_rcu_lock_flags(&new_folio->flags.f);
+ 		new_folio->flags.f &= ~PAGE_FLAGS_CHECK_AT_PREP;
+ 		new_folio->flags.f |= (folio->flags.f &
+ 				((1L << PG_referenced) |
+@@ -3643,6 +3644,7 @@ static void __split_folio_to_order(struct folio *folio, int old_order,
+ #endif
+ 				 (1L << PG_dirty) |
+ 				 LRU_GEN_MASK | LRU_REFS_MASK));
++		hwpoison_rcu_unlock_flags(&new_folio->flags.f);
+ 
+ 		if (handle_hwpoison &&
+ 		    page_range_has_hwpoisoned(new_head, new_nr_pages))
+diff --git a/mm/memremap.c b/mm/memremap.c
+index 053842d45cb1..5c769dc4930c 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -425,8 +425,10 @@ void free_zone_device_folio(struct folio *folio)
+ 	mem_cgroup_uncharge(folio);
+ 
+ 	if (folio_test_anon(folio)) {
++		hwpoison_rcu_lock();
+ 		for (i = 0; i < nr; i++)
+-			__ClearPageAnonExclusive(folio_page(folio, i));
++			___ClearPageAnonExclusive(folio_page(folio, i));
++		hwpoison_rcu_unlock();
+ 	}
+ 
+ 	/*
+@@ -494,7 +496,9 @@ void zone_device_page_init(struct page *page, struct dev_pagemap *pgmap,
+ 		 * blindly clear bits which could have set my order field here,
+ 		 * including page head.
+ 		 */
++		hwpoison_rcu_lock_flags(&new_page->flags.f);
+ 		new_page->flags.f &= ~0xffUL;	/* Clear possible order, page head */
++		hwpoison_rcu_unlock_flags(&new_page->flags.f);
+ 
+ #ifdef NR_PAGES_IN_LARGE_FOLIO
+ 		/*
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index f9f8e1af921c..881574dd14da 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -596,7 +596,9 @@ void __meminit __init_single_page(struct page *page, unsigned long pfn,
+ 	set_page_links(page, zone, nid, pfn);
+ 	init_page_count(page);
+ 	atomic_set(&page->_mapcount, -1);
++	hwpoison_rcu_lock_flags(&page->flags.f);
+ 	page_cpupid_reset_last(page);
++	hwpoison_rcu_unlock_flags(&page->flags.f);
+ 	page_kasan_tag_reset(page);
+ 
+ 	INIT_LIST_HEAD(&page->lru);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index d49c254174da..60a4697ecb9a 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1358,6 +1358,7 @@ __always_inline bool __free_pages_prepare(struct page *page,
+ 	if (unlikely(order)) {
+ 		int i;
+ 
++		hwpoison_rcu_lock();
+ 		if (compound) {
+ 			page[1].flags.f &= ~PAGE_FLAGS_SECOND;
+ #ifdef NR_PAGES_IN_LARGE_FOLIO
+@@ -1375,6 +1376,7 @@ __always_inline bool __free_pages_prepare(struct page *page,
+ 			}
+ 			(page + i)->flags.f &= ~PAGE_FLAGS_CHECK_AT_PREP;
+ 		}
++		hwpoison_rcu_unlock();
+ 	}
+ 	if (folio_test_anon(folio)) {
+ 		mod_mthp_stat(order, MTHP_STAT_NR_ANON, -1);
+@@ -1391,8 +1393,10 @@ __always_inline bool __free_pages_prepare(struct page *page,
  			return false;
  	}
  
--	SetPageHWPoison(page);
-+	set_hwpoison_drain_rcu(page);
- 	if (release)
- 		put_page(page);
- 	page_ref_inc(page);
-@@ -1756,7 +1794,7 @@ static int mf_generic_kill_procs(unsigned long long pfn, int flags,
- 	 * Use this flag as an indication that the dax page has been
- 	 * remapped UC to prevent speculative consumption of poison.
- 	 */
--	SetPageHWPoison(&folio->page);
-+	set_hwpoison_drain_rcu(&folio->page);
++	hwpoison_rcu_lock_flags(&page->flags.f);
+ 	page_cpupid_reset_last(page);
+ 	page->flags.f &= ~PAGE_FLAGS_CHECK_AT_PREP;
++	hwpoison_rcu_unlock_flags(&page->flags.f);
+ 	page->private = 0;
+ 	reset_page_owner(page, order);
+ 	page_table_check_free(page, order);
+diff --git a/mm/slub.c b/mm/slub.c
+index a2bf3756ca7d..fdfb3019b562 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -617,7 +617,7 @@ static inline void slab_set_pfmemalloc(struct slab *slab)
  
- 	/*
- 	 * Unlike System-RAM there is no possibility to swap in a
-@@ -1801,7 +1839,7 @@ int mf_dax_kill_procs(struct address_space *mapping, pgoff_t index,
- 			goto unlock;
+ static inline void __slab_clear_pfmemalloc(struct slab *slab)
+ {
+-	__clear_bit(SL_pfmemalloc, &slab->flags.f);
++	hwpoison_safe_clear_bit(SL_pfmemalloc, &slab->flags.f);
+ }
  
- 		if (!pre_remove)
--			SetPageHWPoison(page);
-+			set_hwpoison_drain_rcu(page);
- 
- 		/*
- 		 * The pre_remove case is revoking access, the memory is still
-@@ -1878,7 +1916,7 @@ static unsigned long __folio_free_raw_hwp(struct folio *folio, bool move_flag)
- 	head = llist_del_all(raw_hwp_list_head(folio));
- 	llist_for_each_entry_safe(p, next, head, node) {
- 		if (move_flag)
--			SetPageHWPoison(p->page);
-+			set_hwpoison_drain_rcu(p->page);
- 		else
- 			num_poisoned_pages_sub(page_to_pfn(p->page), 1);
- 		kfree(p);
-@@ -2390,7 +2428,7 @@ int memory_failure(unsigned long pfn, int flags)
- 	if (hugetlb)
- 		goto unlock_mutex;
- 
--	if (TestSetPageHWPoison(p)) {
-+	if (test_and_set_hwpoison_drain_rcu(p)) {
- 		res = -EHWPOISON;
- 		if (flags & MF_ACTION_REQUIRED)
- 			res = kill_accessing_process(current, pfn, flags);
-@@ -2420,7 +2458,7 @@ int memory_failure(unsigned long pfn, int flags)
- 			} else {
- 				/* We lost the race, try again */
- 				if (retry) {
--					ClearPageHWPoison(p);
-+					clear_hwpoison_drain_rcu(p);
- 					retry = false;
- 					goto try_again;
- 				}
-@@ -2441,7 +2479,7 @@ int memory_failure(unsigned long pfn, int flags)
- 	/* filter pages that are protected from hwpoison test by users */
- 	folio_lock(folio);
- 	if (hwpoison_filter(p)) {
--		ClearPageHWPoison(p);
-+		clear_hwpoison_drain_rcu(p);
- 		folio_unlock(folio);
- 		folio_put(folio);
- 		res = -EOPNOTSUPP;
-@@ -2761,7 +2799,7 @@ int unpoison_memory(unsigned long pfn)
- 		}
- 
- 		folio_put(folio);
--		if (TestClearPageHWPoison(p)) {
-+		if (test_and_clear_hwpoison_drain_rcu(p)) {
- 			folio_put(folio);
- 			ret = 0;
- 		}
+ /*
 -- 
 MST
 
