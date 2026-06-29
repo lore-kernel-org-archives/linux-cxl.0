@@ -1,210 +1,186 @@
-Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010C133EB06
-	for <linux-cxl@vger.kernel.org>; Mon, 29 Jun 2026 18:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.218.24
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782756765; cv=none; b=A3Xgec9wKKJOoyr6om1Ah+c6h5pMfCfTwUsM727zDI/Q4jiS2TUl2ewyVDOjJQlWPeBmCbZ/r9S0YbVZ2XWGzlt36Q5wk+MhQhkEynwxGLDvg3XcRSraTbpdjXUpIQObwllOMplFUuHTtphMr6K2S55ebcRljGSgu/1HmgQWn9U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782756765; c=relaxed/simple;
-	bh=bETxppE7r2zaDQBmNRICozZJzwQhrE9wCcmGlg6Qckw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qM4UWB+96LUp2TJjyMeCKIZZEWJ7wO0SE5ijnSkow3/pde/FbEUX8hHyS33iZKYgYqH6yh4V3KXVwChBtasqb7oCq0O01YiC+9JSdHsfVGlpXXxwK8ZEtbCZEYCqaIna0Bo0b/BuBSylfJ2VPiNN38m3YGyFGzD6Wur6Lvb8yMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=ClG7FqVg; arc=none smtp.client-ip=23.83.218.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB1C28000F
+	for <linux-cxl@vger.kernel.org>; Mon, 29 Jun 2026 19:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782762441; cv=fail; b=SzH+HHpkZvb+z79ETt8Nq93l4r5fMvmd5pQYyBDxZw7+M4dvbv+ledMm1NuyzY+GM9MzXRsHT9dibmLL2FJVYj3FXaTsQ/32toUmRQ18HkAqkkqYvKwynh3YvVj/ySuTbpTP7K1JjzreuCwxXm8JfcS3UdFLBHZRHzmGT2qiGlM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782762441; c=relaxed/simple;
+	bh=Ne1KVgJit0CxyZtPLc4ZQKYApsNErqOsvukhmok/YCE=;
+	h=Date:From:To:Subject:Message-ID:Content-Type:Content-Disposition:
+	 MIME-Version; b=TLUloreklIkMDE2DYIAb8ISQKi0A2f+FBx2L9bXvxYyVj6QIUZNU//lrWgCG1Nu9eU45J/HdetQSG3AoAcGjluutIxl3w9wcX274fL8cC5YIP2CRkhjSqMmgqELy7Vr82NBsiwpp/VbMbR/5QgyFoWfjuSGwsIDKpmCxM2fY+JA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QgeUEkI0; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="ClG7FqVg"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 230DD943086;
-	Mon, 29 Jun 2026 14:44:10 +0000 (UTC)
-Received: from pdx1-sub0-mail-a254.dreamhost.com (trex-green-0.trex.outbound.svc.cluster.local [100.98.255.9])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 982BA9435C2;
-	Mon, 29 Jun 2026 14:44:09 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Dime-Cure: 7f473c85584cb72d_1782744250019_321482182
-X-MC-Loop-Signature: 1782744250019:3095423882
-X-MC-Ingress-Time: 1782744250018
-Received: from pdx1-sub0-mail-a254.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.98.255.9 (trex/7.1.5);
-	Mon, 29 Jun 2026 14:44:10 +0000
-Received: from offworld (181-161-142-22.fo.baf.movistar.cl [181.161.142.22])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a254.dreamhost.com (Postfix) with ESMTPSA id 4gppvD3thFz105D;
-	Mon, 29 Jun 2026 07:44:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1782744249;
-	bh=92OdsPY/wMiJiP7SJGn/dV/PeVTcGI8OzmVFRfTqX/s=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=ClG7FqVghwvjhI1QriwIGLoA7czLtSWsxcLoNqOS0gjIbmAaZQXQhhZdoTfdes8zK
-	 PvxYTaxdI+3JISo6mTs9ZRSkz2Rm2JUrn9e+ZbdntuKUh5VGn9AogdDGdceglaXcXZ
-	 E7UwBk/OzN8QCgEhX0/tIt0CnQTX0hWjoJJL8QdQnpOq1G481loW//rCR8evKFLFNs
-	 rhP/HHEb/crtm60wyQddcs3ZYvKumgex91xDTAIzfoLo8JaXt3A/L6O7cWPftc9Z0x
-	 9zOEIuukPy3NX3O/Mw+MF/bs+SRNYB1P/pNRCtVisZ34r5Emt/M8Hmt8Qa9XMbHL25
-	 gxleVjSezD2+g==
-Date: Mon, 29 Jun 2026 07:44:03 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: sashiko-reviews@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v5 1/5] cxl: Add BI register probing and port
- initialization
-Message-ID: <20260629144403.wuwhbqpfimdg524a@offworld>
-References: <20260615145529.13848-2-dave@stgolabs.net>
- <20260615173541.BE49D1F000E9@smtp.kernel.org>
- <ajo8nZVglGsutdpg@MWDK4CY14F>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QgeUEkI0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782762439; x=1814298439;
+  h=date:from:to:subject:message-id:mime-version;
+  bh=Ne1KVgJit0CxyZtPLc4ZQKYApsNErqOsvukhmok/YCE=;
+  b=QgeUEkI0I6ErrHTpamX/nN3bthNN/kxjoC15izL6w69WVJvIUKpoqhUD
+   QW7hnK0uggJI65wLrTOFD5hm8Q8OfCvvgqkQlEqEPUJPpv2HK9tGrBgLb
+   TN0tGzEM8qP7HnB9aI8w+hk2NJrq6r7TTFluH0uUW2JlUJGpVyPqYP88Y
+   uI9wPDRx41H6dlF+mdJQNknuYuEiNado2PkzI/fs5t7SiYzKnIGPWoZTZ
+   Nm0gY3M+iXeMvcf5v8MNiGA9YoXujqbPWXkyT+j0M0HfHoW1/XvL6w8K8
+   R9B9BmhKUKZYOL+1TfVrtnvUwkvhSsF6CWRJanw73mf33NW22gfXxHHuo
+   Q==;
+X-CSE-ConnectionGUID: HLbCijJATu2dbWMsGUoA+w==
+X-CSE-MsgGUID: 8iGekS1ZR6aHEk/WihquAQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="94965795"
+X-IronPort-AV: E=Sophos;i="6.24,232,1774335600"; 
+   d="scan'208";a="94965795"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 12:47:18 -0700
+X-CSE-ConnectionGUID: FJ75jRh9T76hIjq+VcPvog==
+X-CSE-MsgGUID: POf8l016RxuP/uPU0mAkYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,232,1774335600"; 
+   d="scan'208";a="255646305"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 12:47:19 -0700
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43; Mon, 29 Jun 2026 12:47:17 -0700
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43 via Frontend Transport; Mon, 29 Jun 2026 12:47:17 -0700
+Received: from BYAPR05CU005.outbound.protection.outlook.com (52.101.85.68) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43; Mon, 29 Jun 2026 12:47:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Rc4NTJNLPMdpidi3GApwpcXQQGcHuMuwam3PFUBvX6Z4R6rRN+Ai6egJel9NkSgB0ACGO/hfubjZkIRMdM+E2Z7CTUDveYsCG+hbWduCD1Cn7m6mg+X2s783mc7VZglajJur7G/uAYEd00mCHPR8E1eWH1z7jca1x6sfGJbMJGZvn+TRfH/MNLX6pdtUzevioMYzmCxQykk6mOz8lgLXygtoikv6DdPCrhTDf3dXs6BTgcPKe8N71QoFEzAZNHy+RlfLDA07etey9FL/bXYdFAmZ05mLLUqGTiDKa20RK591/wLMoZGllHPjiZBmcJNgzoXFh9aB5qPYo1FGlQK1Ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pv5NAuE8sb1rhmhtqaeewrOEP4Wmfwh2fKFTnMsCtn4=;
+ b=L9besyWX6scGbmz0sBH0nmkrlWD9zNWdzIGxWgRWerULtV0u5X69ak7GouJibDBhsQv7NEZsf4CVHI+/4Q4NyKPJORKuAjR24gxqS+XCOjMzoT+pl00pgLq2zvVdVrbz9D/gcarAU2DMx4aIg0JaoDJKs1YnWHYZALAnWyukh6jhtwwx62VuDBqKqwbNzffDPwgK6XmKYbKFsFkHapLT2cxQEhPgbWaSwljMa1g05jL8XWvJ4idJu0rJWqdbWzhJogkdNCcKxekW7DHY/Ifvkib3vpdebeGlQCYw5aTKy2hjofJZWz7ewqieWgCgPs2KoKRoMfBjz5+dXpbNigmfAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by PH7PR11MB7076.namprd11.prod.outlook.com (2603:10b6:510:20f::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.139.18; Mon, 29 Jun
+ 2026 19:47:13 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891%4]) with mapi id 15.21.0159.018; Mon, 29 Jun 2026
+ 19:47:13 +0000
+Date: Mon, 29 Jun 2026 12:47:10 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: <nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>
+Subject: [ANNOUNCE] ndctl v85
+Message-ID: <akLLvn_yqxyr1mRq@aschofie-mobl2.lan>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: BY3PR05CA0002.namprd05.prod.outlook.com
+ (2603:10b6:a03:254::7) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <ajo8nZVglGsutdpg@MWDK4CY14F>
-User-Agent: NeoMutt/20220429
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|PH7PR11MB7076:EE_
+X-MS-Office365-Filtering-Correlation-Id: 762efbc1-cedc-44c5-9032-08ded6173755
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|23010399003|366016|376014|18002099003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info: 4NpV6oGDlsFYFlaC2etpR9cailqi0b9GmjjhY63t3GrTgSHmOnYecF1eueQ4jaHkAQj2jInb5JDPXCV4l3TD0iFYFP4/ajU4fZfwLOB8hX2tb04ovJGbtxOfPTeS3GKjTni4h/xm8S/2OdIwLu0hPjoXlYte6kCWCuJQ4xocYAAuRbwVtjQdEmAP8aHKcgeqKoX5YbILlBS73Fj8kIbvS83BF3R1Kp/ktXPKUbYkOIFivUH+AXC6Py8LP9osIJRiskFe6J+00scOm9FvYIkwiVAexTnhw06kc90927xI1FKGPViUljfHO8F7KzzzlrHb1uKUa8MLjzyqhan7eBEGUdqESOvqvXXTn8m+I3WyvbYieO66o5dOFvlPR/WS9ZiJe56NgGFTsGjECzgjEf9MUow62LeFoowiH0MDOaANsaIl5DEKhzZi9NRMSHTvAkKmSgMvFQxjOclrM75HvUnPKQUEHDVut9ayjs3ffvgTwZ+hy6mGGSIUeya68ivKJbU4P/HTAWqee5wfdVgoOsHmEHoi2ma9C1X7B/yIvbDklnTNlD2fSaD10VmEXeYcaCxCblm6WEB3INtJsmhkYNpdPaKA0oj/DyrCLCNbFk9dIW3YJueh5LlDFAuuytnqqFwHN9WqCeoq837QKrVla27/+jQmfvVMgTCLaoIf/ZHVnXM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(366016)(376014)(18002099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?m7zMQGJ9RfAj62uNR+63I+rCnRipEQPmsuhtXCFoUNt1Rv3B+Xt8I7B8+kZ0?=
+ =?us-ascii?Q?w/Z6WeOnOo/eOtbZqgFLRF8f966rRhOJSOn6QgYgKTTc7kSRV71jzrigHHcC?=
+ =?us-ascii?Q?2RN2K2I6glUw0oMmpRDlwMcS1vClx/u4xQr5PlsdyECWAg9m0VekvczEsx2D?=
+ =?us-ascii?Q?jrl4rsZmjkBfqFmtWp6gMf2zksHs6dIHCkJmO6CA01brcFVZtVMRreT9SdOg?=
+ =?us-ascii?Q?y9DFH+kR6QXhx7ocblIbUOEXRm9DuIgnBxLV7e477oIFt5Bdldjo/+Fl78Ko?=
+ =?us-ascii?Q?Y+h89JgcIdG4bNJIMjVWmso2VZGLMDT0GzFQ686AyxTJcXnSlmf8PvAfFbAu?=
+ =?us-ascii?Q?m3M6++U+GP+rUCsiB6TnfX4/jx6+4WkJ2pRlLjJbtN3bNPp5geBpH+taN466?=
+ =?us-ascii?Q?KwVAE4QHxSIyRzuC0evCDGwA1/qF+rNfqt4GgoD8Za1iGk4LOHsVjieFsBQW?=
+ =?us-ascii?Q?gm5oyPCs16zlBfC2sdJ2XcBOt6hrNVJZ97OTV5HQC9Zyvr6QoJNGmFAE+zzR?=
+ =?us-ascii?Q?/pL0OtCLweIhLzFOOyQSmqt0/5w97Ej8uW6bu0n6KNQlmY2VWrGWLG8NGV4m?=
+ =?us-ascii?Q?4NY7ziO6lqFUsEB/yfvfEC8iuYod2m/7JV7CM5eBfhAQOIsSMz1ssTjpRpEM?=
+ =?us-ascii?Q?kXGlmVgv33Bz/mWMV7pcbBbF4OWOC+yvCoJurBIhvH3QJRb7VjNeaPgWMG7z?=
+ =?us-ascii?Q?z+2oGS7tOmbVbZGwFn6MVh7yiKLfguCcoQ+v54tX1X1irrgEl3iVqw2EeGaX?=
+ =?us-ascii?Q?4yxPMrdIMnP4jIKjQb8XkUZkNANPLlLB0f9zZiczxXIZ/SejJvCfhVyGk3wH?=
+ =?us-ascii?Q?DtwCeo5YTp+WxbEnm+XkKR2/M3iSeK6Ayk1f7QsP3O74xRMqLY3Awj/V0vAz?=
+ =?us-ascii?Q?x05n4waZzbYWdjJ1j7466IVwIpQopkk79ct3/O2OBaZLAZxKSRik1OxV9lEG?=
+ =?us-ascii?Q?8mQsqtuQfowEJWc/hZa5TVeGoz5yJxoztu91LeKIezMNEE/FmhKI0Pw1ER5F?=
+ =?us-ascii?Q?EIf0UkInurl3dE5SnVqHS5amWpQRNONsSKTG7e5VJweDkDo/tVyVCvpGTtZE?=
+ =?us-ascii?Q?Z0vmFZwA8V8rS6bfJEramdt9XUypQ7oaJ+n838VsAe7n5nm6koZwAjNdytlJ?=
+ =?us-ascii?Q?wuRHdTzhBERDfVwy4wroblhTxHTY3Y3+HDfKgWonNkD18zkNaY2rhlAy/EaZ?=
+ =?us-ascii?Q?CBxtswZBdFBSgyeFxaKemthc0eW+E/olbPjilKdz8EmdC0nir0XnPP1J3OUa?=
+ =?us-ascii?Q?CeV4Os0R+u/tugm3mvjnjyquNf4WmjgWYaV/Wh6Nahgo9L2yoAiueHg5bksA?=
+ =?us-ascii?Q?DKWbpLkGX83a1VpO/57QT1791JPdBMLn5JGWi+UW+DJR4x9bT+qCwqYBVqf3?=
+ =?us-ascii?Q?VVsaZPLfx1suTYizv5YAGDxCESxgBFFMtKuTYOp77GM5SAl3G+YQ5cnkQ/2R?=
+ =?us-ascii?Q?pn0a7ev2DzR3yLgfext5Fe9JvtOK7xlYG9bXcIktcbFCX5r0eowgVnV+6goG?=
+ =?us-ascii?Q?ASmVw1eXP+A1dnUPU5SKbff7rHx3m45GiUfzFKMKskpnvpTDKE5BAzq0RRNG?=
+ =?us-ascii?Q?XAsDC9PSOQvYlmVECbQIqE0LgDUD06h/LKpqinJH4JRcNYEggtSnHfeXjKlG?=
+ =?us-ascii?Q?xk8rCqBopHw6o+r8FpYzt7t5uhdjwehuQX4wh9SoiKIt5dvxozZYHdbMVzwF?=
+ =?us-ascii?Q?ML3rsPlaGxjxzsnB/BUV/JbDVgIGzIs36M+iUpGE2LmjpjBUKSPJ2IJA8PHV?=
+ =?us-ascii?Q?vqzfvflhJSb5QgJCcUY4wucHeoBJdtw=3D?=
+X-Exchange-RoutingPolicyChecked: byGfCzIzNlvu0JaTvJXS6A5c7zK0MQqGUmkvmEzQ8mibLZcZZFUbsTZaOxOJ9rwLAVhh+JWVSVArzWcEIqYRwakxOefXzs2SRlCfpp9dcta6os5vIeyD0e/hsRlrN5kPyF13/GjQ8Xl4/3WfwjVT6FSPVenl2Sgjy0VGBKyPtrM3XdMJGmsgJTWP6jfDYlYT/ntIQOj5kbTkhXzzJlIH4yDP1y1QO/iC+zbIMQPuAlo9mABNF9Nl7ZVpADh/o/P2xrjiNipV2NB9I99ZxNpD/9Qbs+mxS8QiqSditMD301cLjhxxVUbgVbJtuYBvS4pmQPIK9fgUJcCJp2paQ605Mg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 762efbc1-cedc-44c5-9032-08ded6173755
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2026 19:47:13.6250
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: X6Bs+F4Xzz3XUJi81oUyOLE3UGS8poJgBMLyXnn7vmVse+v/wGxvMIry5Q/ijTNHN1mylosGfpHMsvIgOv3UmUZZalFecQSVnboQ0VWKfno=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB7076
+X-OriginatorOrg: intel.com
 
-On Tue, 23 Jun 2026, Richard Cheng wrote:
+A new NDCTL release is available:
+    https://github.com/pmem/ndctl/releases/tag/v85
 
->On Mon, Jun 15, 2026 at 05:35:41PM +0800, sashiko-bot@kernel.org wrote:
->> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
->> - [High] devm mappings for dport BI registers leak on hotplug due to being called outside the dport devres group in cxl_port_add_dport.
->> --
->>
->> commit a836080fdf13fa334055f7f13a95491b66ef793f
->> Author: Davidlohr Bueso <dave@stgolabs.net>
->>
->> cxl: Add BI register probing and port initialization
->>
->> This commit adds register probing for BI Route Table and BI Decoder capability
->> structures. It introduces helpers to map the BI Decoder of a downstream port
->> at dport-creation time and a port's own BI capability during port probe.
->>
->> > diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
->> > index ada51948d52fa..ca8d8c14b7876 100644
->> > --- a/drivers/cxl/port.c
->> > +++ b/drivers/cxl/port.c
->>
->> [ ... ]
->>
->> > @@ -261,6 +321,17 @@ static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
->> >  	/* This group was only needed for early exit above */
->> >  	devres_remove_group(&port->dev, no_free_ptr(port_dr_group));
->> >
->> > +	if (dev_is_pci(dport_dev)) {
->> > +		switch (pci_pcie_type(to_pci_dev(dport_dev))) {
->> > +		case PCI_EXP_TYPE_ROOT_PORT:
->> > +		case PCI_EXP_TYPE_DOWNSTREAM:
->> > +			cxl_dport_map_bi(dport);
->>
->> [Severity: High]
->> Does this leak devm mappings if the dport is hot-removed?
->>
->> Looking at cxl_port_add_dport(), devm_cxl_add_dport_by_dev() creates a
->> devres group for the dport on the parent port's device. However,
->> cxl_dport_map_bi() is called after devm_cxl_add_dport_by_dev() returns,
->> meaning the devres group has already been closed.
->>
->> Because cxl_dport_map_bi() calls devm_cxl_iomap_block() against the parent
->> port device, these devm allocations bypass the dport group and attach
->> directly to the parent port device.
->>
->> If the dport is hot-removed, the dport devres group is released, but the BI
->> capability mappings appear to be left behind. If the dport is subsequently
->> re-added, won't devm_request_mem_region() fail with -EBUSY due to the
->> physical address region conflict, permanently breaking BI capabilities?
->>
->
->Hi Davidlohr,
->
->I think sashiko-bot's is right on this part, this part runs after devm_cxl_add_dport_by_dev()
->has already closed the dport's devres group, so the BI request_mem_region()/ioremap() land on
->the port's devres list outside that group. On runtime dport removal the group release won't free
->them, and re-adding the dport then fails the BI region request with -EBUSY.
->
->The dport RAS mapping is done inside __devm_cxl_add_dport() while the group is still open for
->this reason.
->I would suggest mapping BI the same way which is to move cxl_dport_map_bi() into __devm_cxl_add_dport()
->next to the RAS setup, and set map->host like RAS does.
+This release adds userspace support for new features introduced in
+the 7.1 kernel. Highlights include support for the Fabric-Attached
+Memory File System (FAMFS) in daxctl, a new FAMFS unit test, a new
+Soft Reserved range handling test (cxl-dax-hmem.sh), and test access
+to the cxl_test module's new region replay capability.
 
-I went with this adding a new devm_cxl_dport_bi_setup() helper and calling it from
-__devm_cxl_add_dport():
+Users will also see region locked status in cxl-list, more robust
+handling of cxl-destroy-region requests, and additional updates that
+improve overall quality and unit test coverage.
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index cdb741d09b9e..5511a8b33062 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -929,6 +929,44 @@ int cxl_port_get_possible_dports(struct cxl_port *port)
-  	return ctx.count;
-  }
-  
-+static void cxl_dport_map_bi(struct cxl_dport *dport)
-+{
-+	struct cxl_register_map *map = &dport->reg_map;
-+	struct device *dev = dport->dport_dev;
-+
-+	if (!map->component_map.bi_decoder.valid) {
-+		dev_dbg(dev, "BI Decoder registers not found\n");
-+		return;
-+	}
-+
-+	if (cxl_map_component_regs(map, &dport->regs.component,
-+				   BIT(CXL_CM_CAP_CAP_ID_BI_DECODER)))
-+		dev_dbg(dev, "Failed to map BI Decoder capability\n");
-+}
-+
-+/**
-+ * devm_cxl_dport_bi_setup - Map BI Decoder registers on a CXL dport
-+ * @dport: the cxl_dport that needs to be initialized
-+ *
-+ * Must be called while the dport's devres group is open so iomap
-+ * allocations are released on dport removal.
-+ */
-+void devm_cxl_dport_bi_setup(struct cxl_dport *dport)
-+{
-+	if (!dev_is_pci(dport->dport_dev))
-+		return;
-+
-+	switch (pci_pcie_type(to_pci_dev(dport->dport_dev))) {
-+	case PCI_EXP_TYPE_ROOT_PORT:
-+	case PCI_EXP_TYPE_DOWNSTREAM:
-+		dport->reg_map.host = dport_to_host(dport);
-+		cxl_dport_map_bi(dport);
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
-  /*
-   * BI requires 256B Flit operation on the link. RP/DSP/endpoint must
-   * also have the BI Decoder cap mapped (@bi); for USPs the BI RT cap
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 63005cf0fa91..74bbc195d624 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1264,8 +1264,10 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
-  
-  	cxl_debugfs_create_dport_dir(dport);
-  
--	if (!dport->rch)
-+	if (!dport->rch) {
-  		devm_cxl_dport_ras_setup(dport);
-+		devm_cxl_dport_bi_setup(dport);
-+	}
-  
-  	/* keep the group, and mark the end of devm actions */
-  	cxl_dport_close_dr_group(dport, no_free_ptr(dport_dr_group));
+Shortlog:
 
-Thanks,
-Davidlohr
+Alison Schofield (11):
+    test/cxl-topology.sh: verify dax device creation for auto region
+    test/cxl-destroy-region.sh: prevent false pass when no decoder found
+    cxl/region: prevent partial teardown on out-of-order destroy-region
+    test/cxl-destroy-region.sh: test out-of-order destroy-region handling
+    test/mmap.c: check mmap() result against MAP_FAILED
+    test/mmap: move detailed tracing behind -v option
+    test/mmap.sh: reduce fallocate size from 1GiB to 256MiB
+    test/common: add helpers for CXL region replay testing
+    test/cxl-region-replay.sh: add test of region replay workflow
+    cxl/list: apply bus and port filters to anonymous memdevs
+    test/cxl-sanitize: avoid sanitize submit/wait race
+
+Chen Pei (2):
+    ndctl/test: make fwctl dependency conditional in meson tests
+    ndctl: add key_type parameter to ndctl_dimm_remove_key stub
+
+Dan Williams (1):
+    test/cxl-dax-hmem.sh: validate dax_hmem vs CXL collisions
+
+John Groves (2):
+    daxctl: Add support for famfs mode
+    test/daxctl-famfs.sh: Add nfit_test famfs mode-transition test
+
+Li Ming (1):
+    cxl/list: show region locked status to user
