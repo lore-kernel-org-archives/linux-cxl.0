@@ -1,130 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0895E37DAC2
-	for <linux-cxl@vger.kernel.org>; Mon, 29 Jun 2026 20:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FF138B14C
+	for <linux-cxl@vger.kernel.org>; Mon, 29 Jun 2026 20:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782765819; cv=none; b=qA4n9dEXnjzr5BnktQqLqoU586bvW02eEXfDSlTR40p6fyf7BqkAdGLz4fwUmf/XeSdVKvs2uQHPq2Ibx52UFgBbQST0H3/kAxz7qAv0tRhpSFBZLwak3+qrBN1cCCjKGVN0J7X8YDYYgTyn/u/ortY5/kwS4zkaZuPC1JcfRbw=
+	t=1782765866; cv=none; b=M+ym4+kZnP/j+lJYJ9PdwUCtKsMtW0/oBVReCEaGNONOFzs//JwVkvgTwecohADxtGoP9vjq3/VeyVIlrx8MCVPDOY2DSwY/zkkgm5VfJBqyoxVqU57aSGQNdvnXzWUB9sJh363BNW9Iw073IkfG+OrnJoYeeiQvIjJ/Zjy/mMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782765819; c=relaxed/simple;
-	bh=M6STihrQUAklYR6JBrtb/7y3R/LgCadWhCefU+9ViUA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BZXWvYNU0iEbjKkYjTfDZxNsyPaJuwzd1RwboS6DNC1gI5mW14rSYxofxee674nUo3vW2sbKtSYeiawrXXzC4zuee6ByWva4OMq5xTt86jRzliivqL/VZ0LTC0hY/58fd/hlPoxJ2Ei05dDCtSq2Wa7yeq3PiI2JKe1R6H161fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TZf9Nl0A; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1782765866; c=relaxed/simple;
+	bh=8vU9Enikwm2aJC0sPAErMK2X1JZkxrkRDio+9c/Jiwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=fXj1ABaFCCLB3kfnke08NBlzFDx+5AGaG3lEOGt9XqAE9if915eSSItyv20S7e7v9CCxBDUmVsKW9fNZzvVYyhNifgyNtVvYStamseRJkuTRTwjyflNs5dRBaclYOAiiwyls9Wd/5mkWTUcop9Gzv05bS53HEy2KvPOwXve0HLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XmAyMmMw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TZf9Nl0A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782765818; x=1814301818;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=M6STihrQUAklYR6JBrtb/7y3R/LgCadWhCefU+9ViUA=;
-  b=TZf9Nl0AD/pwpc0ot9vwdjRPt4IJrpVlaKhm7B4ap+K1c4YN5vsuzXZX
-   NDDwki4d+T1TXS9SI36bqk6FVb3ZHscLwLumWGqr5UI69SJPu3NLKB0ca
-   vKgDyQJ1fLt5Aw88yO1CO6v4BypZ1bs/X8IKGztLsx2LBIa4PVFBDWS7E
-   +x9F3OTEkQcG94jZtcVY1rB/KgePy6T4NMP3PZhhKCjKEFa1C8tUKxrDn
-   CWRq8yCVHGeQIPIGmil+TI03Z3L6iFggYJ0+H5KnGsptg9x8l8K8H1Np+
-   5XABAhWp+6R2FxuuNXc9grgz1YC7ATkbit0ixTGePVEWSd0U+fJwCWlHl
-   Q==;
-X-CSE-ConnectionGUID: LaplPQjiSVmVmwFX1Q64Tg==
-X-CSE-MsgGUID: HJM27D1QTv21PJssLGcabg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="70995063"
-X-IronPort-AV: E=Sophos;i="6.24,232,1774335600"; 
-   d="scan'208";a="70995063"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 13:43:37 -0700
-X-CSE-ConnectionGUID: 1JXOif9jR0Cn33IDnjEJtw==
-X-CSE-MsgGUID: Ez2gSDiRSJOzKSQKFEMm5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,232,1774335600"; 
-   d="scan'208";a="252716060"
-Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.109.194]) ([10.125.109.194])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 13:43:37 -0700
-Message-ID: <93e19eb7-0691-47c1-bbf8-838af84b5c89@intel.com>
-Date: Mon, 29 Jun 2026 13:43:36 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XmAyMmMw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782765864;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TOQpLe5g2es+HuSRD8vnoaoM9ObrVUNQWd1XrTtB+E4=;
+	b=XmAyMmMwmftSK49Agi47OtWX5GZNhuw9l6LW1rjMEa2OwC2biKy2S2MgT337avMjg2md1Q
+	/cF/zPPWGsZhPcO1fbhfw+J02HOtkB9TEuVHA9smdE6+YAlValOUS63tmp6Tq62+sJGvE0
+	DD30B9PZ3OAdl/qUK3b0tvJPYMEHxmc=
+Received: from mail-dy1-f198.google.com (mail-dy1-f198.google.com
+ [74.125.82.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-657-_01V1ChOP2SYfZ3de9YGOA-1; Mon, 29 Jun 2026 16:44:23 -0400
+X-MC-Unique: _01V1ChOP2SYfZ3de9YGOA-1
+X-Mimecast-MFC-AGG-ID: _01V1ChOP2SYfZ3de9YGOA_1782765862
+Received: by mail-dy1-f198.google.com with SMTP id 5a478bee46e88-30ec59471a3so1271018eec.0
+        for <linux-cxl@vger.kernel.org>; Mon, 29 Jun 2026 13:44:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782765862; x=1783370662;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TOQpLe5g2es+HuSRD8vnoaoM9ObrVUNQWd1XrTtB+E4=;
+        b=WPQ0CB6bv1Q2I3GWX0kt/Tkr2NIIKaZaPOmkSl6i4B1+2MDoDbckIF3jMPO5lEefJM
+         q1iHCk+aWF3IiNQ5FEEocPxCdwuJ7A80DJWHCeA4UBkfHnm/KxDdYUktJjlLk6iLI+fv
+         SPH1+WcPwChYKPNiEoYXnTT7tjEx2c6G4TrSHEt7Xc4E7YM6IaVx2fs/+l+J8yGX3gkD
+         0pgoYPAK/0W4JpNgeJY0R5h+T3pxfMuSQlKDw1qQoX6IN00rMEWUzXEOYSC6xkQUzZml
+         L4kMXbNP77yptx1LYBUyDxIeP3zLj3qteB2tRmY3m+5LwtV1L/xG1ejjGMoJUGt9J/Ro
+         2YgA==
+X-Forwarded-Encrypted: i=1; AHgh+RpslBXduAt40wGruVJRX0kyi2OiCY9RMXBiKhaO5S1nKq7ic0eygMUzQ080b09fZIrusOAnBITdixQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKFUMyA8QxMjWLatrltW97SlIcprTEFhy5pJmbj9qROMKg6gNx
+	jY6sbI8GawB+U10Q4f5ekM241yzdXH9GRHhtHLu7boWyOxXp0LL3jfHwDW0+NWh/6okKNA/vd8R
+	G0+Qua2xeJHoZq02AUfGHpZNlCrMTAqApzx26YzzMWU5ft26vY0lrqfjyMsfy/g==
+X-Gm-Gg: AfdE7cno3qsLP7rwaMaj9t3deHXpm/GNhnXK+fyr/7Z9kXL2cfEkIotJDWzaY6kroEK
+	p+z/ku1MC89jN9G9FGz19owrgNyEVo8rkt4ScsCVigOdq2tDxb6wK8+xg5MEiVX/++YkQFxuHjP
+	JwJTnuP/dfgiCzqKhHDsTEwA1pVLx+W1B625sUFnwTIq1KSbvC3tS7HfsRLBeMZrIaUO3TdSkhJ
+	AGxIHjgn6rcG1oxbIPCOv3+qhHXcLZ0H1VQxP5XA+W8w6AT0VYLrR61o0jOacGNwK7UMYCbdfLB
+	txTR21MfJdjr9Y0LMMCnI3H6zG3RE9OyBof9iYLV4QcCzlzvHzyqBfkRupkHSPPQ7ympKwxYAM7
+	79QnF6nSR4nd0ocO3tt4V4ziSrqYHSpq1
+X-Received: by 2002:a05:693c:8948:20b0:30c:ab96:7307 with SMTP id 5a478bee46e88-30ee18ba288mr436358eec.22.1782765861527;
+        Mon, 29 Jun 2026 13:44:21 -0700 (PDT)
+X-Received: by 2002:a05:693c:8948:20b0:30c:ab96:7307 with SMTP id 5a478bee46e88-30ee18ba288mr436310eec.22.1782765860825;
+        Mon, 29 Jun 2026 13:44:20 -0700 (PDT)
+Received: from redhat.com (IGLD-80-230-85-71.inter.net.il. [80.230.85.71])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30ee2f5e4dcsm857053eec.5.2026.06.29.13.44.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2026 13:44:20 -0700 (PDT)
+Date: Mon, 29 Jun 2026 16:43:56 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andi Kleen <andi@firstfloor.org>, linux-kernel@vger.kernel.org,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <nao.horiguchi@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>,
+	Rik van Riel <riel@redhat.com>, Vlastimil Babka <vbabka@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+	Lance Yang <lance.yang@linux.dev>,
+	Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry@kernel.org>, Hao Li <hao.li@linux.dev>,
+	Kiryl Shutsemau <kas@kernel.org>, Byungchul Park <byungchul@sk.com>,
+	linux-mm@kvack.org, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 0/2] mm: memory-failure: fix HWPoison flag race with
+ non-atomic page flag ops
+Message-ID: <20260629164258-mutt-send-email-mst@kernel.org>
+References: <cover.1782676497.git.mst@redhat.com>
+ <akHUboUaYi-OJHFu@firstfloor.org>
+ <20260629033608-mutt-send-email-mst@kernel.org>
+ <20260629043417-mutt-send-email-mst@kernel.org>
+ <akKjOG6iFhGNTFYC@firstfloor.org>
+ <20a5dfd4-b3c7-450a-8a70-08d0345aade4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 4/6] cxl/test: Add hierarchy enumeration support for
- type2 device
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-cxl@vger.kernel.org
-References: <20260629202720.3658117-1-dave.jiang@intel.com>
- <20260629202720.3658117-5-dave.jiang@intel.com>
- <20260629203658.574A51F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260629203658.574A51F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20a5dfd4-b3c7-450a-8a70-08d0345aade4@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: x_p2r0nrNNNAm-ziapNXy6sULYUrcmYVczotaI-638M_1782765862
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Jun 29, 2026 at 07:04:25PM +0200, David Hildenbrand (Arm) wrote:
+> On 6/29/26 18:54, Andi Kleen wrote:
+> >> However, this was a basic test, when allocating 4k pages. With 2M hugepages:
+> >>
+> >>                                    insns/iter    cycles/iter
+> >>      -------------------------------------------------------
+> >>        base                       20758 +/- 12.5   191208 +/-1946.6
+> >>        rcu                        20785 +/-  3.7   197108 +/- 132.1
+> >>        atomic                     20727 +/-  6.4   204591 +/- 160.2
+> >>
+> >>        rcu vs base                  +27 (+0.13%)     +5900 (+3.09%)
+> >>        atomic vs base               -31 (-0.15%)    +13383 (+7.00%)
+> >>
+> >> and even with THP:
+> >>
+> >>                                    insns/iter    cycles/iter
+> >>      -------------------------------------------------------
+> >>        base                       27220 +/-  2.8   192151 +/- 483.3
+> >>        rcu                        27248 +/- 30.1   194159 +/-2746.6
+> >>        atomic                     27186 +/-  3.2   200526 +/- 746.2
+> >>
+> >>        rcu vs base                  +28 (+0.10%)     +2008 (+1.04%)
+> >>        atomic vs base               -34 (-0.12%)     +8374 (+4.36%)
+> >>
+> >>
+> >> needs more thought.
+> > 
+> > Well the alternative is to not bother with RCU, but just wait a bit and
+> > check if the bit stuck and repeat if needed. While that could in theory
+> > livelock it is extremely unlikely (especially if you add a bit of randomization 
+> > to the sleep)
+> 
+> We discussed that a bit already. Hypervisors make it fairly unpredictable how
+> long you would actually have to spin.
+
+
+Way I see it, this is not the issue. The issue is it does not fix the
+race:
+
+
+CPU1:
+
+read flags
+
+CPU2:
+
+test and set
+
+test and set #2 - sees it is set
+
+CPU1:
+
+write flags clearing the bit
 
 
 
-On 6/29/26 1:36 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] The error path for cxl_test_init() incorrectly replaces platform_device_unregister() with platform_device_put() for cxl_acpi, leading to a resource leak and potential use-after-free.
-> --
 
-Uck. Merge error when doing the rebase. I'll get that fixed up.
-
-
+> -- 
+> Cheers,
 > 
-> commit 74917ddebbac04cd137d2f935b0132cdc7d979fe
-> Author: Dave Jiang <dave.jiang@intel.com>
-> cxl/test: Add hierarchy enumeration support for type2 device
-> 
-> This commit adds enumeration of type2 device hierarchy in cxl-test. The type2 
-> device is configured to be directly attached to a root port instead of the 
-> rp -> switch -> device setup used for type3 hierarchy.
-> 
->> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
->> index 8abe066080bc8..1eac06ad46601 100644
->> --- a/tools/testing/cxl/test/cxl.c
->> +++ b/tools/testing/cxl/test/cxl.c
-> [ ... ]
->> @@ -2156,17 +2314,9 @@ static __init int cxl_test_init(void)
->>  err_mem:
->>  	cxl_mem_exit();
->>  err_root:
->> -	platform_device_unregister(cxl_acpi);
->> -err_rch:
->> -	cxl_rch_topo_exit();
->> -err_single:
->> -	cxl_single_topo_exit();
->> -err_switches:
->> -	cxl_switches_remove();
->> -err_root_ports:
->> -	cxl_rootports_remove();
->> -err_host_bridges:
->> -	host_bridges_remove();
->> +	platform_device_put(cxl_acpi);
-> 
-> [Severity: High]
-> Does this error path properly tear down the device if cxl_mem_init() or
-> hmem_test_init() fails?
-> 
-> Since cxl_acpi was already successfully registered with the driver core via
-> cxl_mock_platform_device_add() earlier in cxl_test_init(), it seems
-> platform_device_unregister() should be used instead of platform_device_put().
-> 
-> Using platform_device_put() here only drops the initial allocation reference,
-> leaving the device actively linked in the platform bus and sysfs hierarchies.
-> 
-> Because the module unload upon initialization failure will free its memory,
-> could any subsequent access to the device's sysfs files dereference invalid
-> memory and cause a use-after-free?
-> 
->> +err_topo:
->> +	cxl_topo_exit();
->>  err_populate:
->>  	depopulate_all_mock_resources();
->>  err_gen_pool_add:
-> 
+> David
 
