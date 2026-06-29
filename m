@@ -1,143 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E9622E7364
-	for <linux-cxl@vger.kernel.org>; Mon, 29 Jun 2026 20:27:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3840A38E5D4
+	for <linux-cxl@vger.kernel.org>; Mon, 29 Jun 2026 20:36:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782764852; cv=none; b=XXeI4cI/a6rN4Xzwr2C75SkdY0RIoJgO2qzNMKEgo1f7eVjetQYApv5+gjgvGbGR6isXCQBfFTVrJnCgIeqKO3AcSjUftH1nSmLRe14cGk0pHSjvJtBC5woYyaP4uEWzMy7xiL6iiv7LjSjUUarX5T+TQDdp20jl9ZmBfFNCnbM=
+	t=1782765422; cv=none; b=rPHRGkLo4dd+/8Q48Em5cxqVckRvJJMU15MPYFjQw5X0HkRvyLKlirBrNcBI1Qp6eWNfoh1+9pMGrKTSyinDU82jkYAi7Fzt1IBAs6CkV3GDiJW5m/rlM8HvEfsIBOXMvFedGOR8zH2wusNxnsKdtW9oWlnkfnkh0sQqdiYHkp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782764852; c=relaxed/simple;
-	bh=44S8YWlzRadMJNYkzDz1Me/f7LKP4tqpTgB/cxIpgjo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q43kW7bgkSvRJ4qM6b2I06B/3/31ahfwA2iTicmaQw58FUc7GojzA8zohZO7ssjnuNAwr4dSvahEay1Ifk095aMvu8AAaLeUpt3aqUKVzIAjv8v4VApDus+2ygTEZ0nab6adjecvlp3Pgcf4b7jwxp7tTRK1NOMmv7QtfBT3e2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 140681F000E9;
-	Mon, 29 Jun 2026 20:27:30 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org
-Cc: djbw@kernel.org,
-	dave@stgolabs.net,
-	jic23@kernel.org,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com
-Subject: [PATCH v6 6/6] cxl/test: Add cxl_test accelerator driver
-Date: Mon, 29 Jun 2026 13:27:20 -0700
-Message-ID: <20260629202720.3658117-7-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260629202720.3658117-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1782765422; c=relaxed/simple;
+	bh=IUPBtV92RrzqU0S3/m/DDs4Y0ZxapPNweyr7HCXPY/w=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=LUjgtEUWGUHnBEFEvv8RYKhX0AjQ9CdjHlGP4ZEZOVDousHILMPX+9rXWRi1b3iCEuA3Sjyp4YtiNVe5/StbLGfZF1nlN8rnRxM/oVHBAEPDRhn4Bq4cHRMVsoxNKfsyi0O7z4oA34MVkUkQ2dfFsBYFkpoHyJAeIvSig/Hjn6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OXOBODH0; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OXOBODH0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 574A51F000E9;
+	Mon, 29 Jun 2026 20:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782765418;
+	bh=C6BMtpS1lbCKRuTZkT0fxFWN1hIgcrDkPP3KNm1e02E=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=OXOBODH0A2Vxo4qpupyi31sU79iPSTi7i212em6ITMYzOYfPeOfYLw3ixVKDUsp7J
+	 y1ElrzEG9HWH4ldH5HaJMokATcKRrP6LDG+8fz9z6TgAbqeMrY5yKzxOInmqKX9C4M
+	 E0T9IDFCg1DCYW6TudwFuXentRpbBK5KS0/++0J7fo+Cd2U24lCB71SB0tdtPC2kLP
+	 shey5S4xsGZ6RucVWzlhmv17itEZ1E51EHxZydHqjkRc6wvEpSSSjj/K4LsoUtnUjl
+	 KZD6aCC4XzwBWnAcNEufwn5vcMnGAhKs6yDVQA1nFkezJV1xK6cWJ3SCfXYtp7AfMF
+	 Pw9ucqftddUgw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 4/6] cxl/test: Add hierarchy enumeration support for
+ type2 device
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Dave Jiang" <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260629202720.3658117-5-dave.jiang@intel.com>
 References: <20260629202720.3658117-1-dave.jiang@intel.com>
+ <20260629202720.3658117-5-dave.jiang@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 29 Jun 2026 20:36:57 +0000
+Message-Id: <20260629203658.574A51F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Add a type2 accelerator mock driver for the platform device that
-simulates a CXL type2 device. The driver exercises the same
-minimal API calls that a real CXL type2 driver would utilize.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] The error path for cxl_test_init() incorrectly replaces platform_d=
+evice_unregister() with platform_device_put() for cxl_acpi, leading to a re=
+source leak and potential use-after-free.
+--
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v6:
-- drop extra init member in platform_device_id init. (Uwe)
----
- tools/testing/cxl/test/Kbuild  |  2 ++
- tools/testing/cxl/test/accel.c | 66 ++++++++++++++++++++++++++++++++++
- 2 files changed, 68 insertions(+)
- create mode 100644 tools/testing/cxl/test/accel.c
+commit 74917ddebbac04cd137d2f935b0132cdc7d979fe
+Author: Dave Jiang <dave.jiang@intel.com>
+cxl/test: Add hierarchy enumeration support for type2 device
 
-diff --git a/tools/testing/cxl/test/Kbuild b/tools/testing/cxl/test/Kbuild
-index c168e3c998a7..9a24ddc28488 100644
---- a/tools/testing/cxl/test/Kbuild
-+++ b/tools/testing/cxl/test/Kbuild
-@@ -5,10 +5,12 @@ obj-m += cxl_test.o
- obj-m += cxl_mock.o
- obj-m += cxl_mock_mem.o
- obj-m += cxl_translate.o
-+obj-m += cxl_mock_accel.o
- 
- cxl_test-y := cxl.o
- cxl_test-y += hmem_test.o
- cxl_mock-y := mock.o
- cxl_mock_mem-y := mem.o
-+cxl_mock_accel-y := accel.o
- 
- KBUILD_CFLAGS := $(filter-out -Wmissing-prototypes -Wmissing-declarations, $(KBUILD_CFLAGS))
-diff --git a/tools/testing/cxl/test/accel.c b/tools/testing/cxl/test/accel.c
-new file mode 100644
-index 000000000000..8e6f4687ca02
---- /dev/null
-+++ b/tools/testing/cxl/test/accel.c
-@@ -0,0 +1,66 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+// Copyright(c) 2026 Intel Corporation. All rights reserved.
-+
-+#include <linux/platform_device.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/sizes.h>
-+#include <cxl/mailbox.h>
-+#include <cxlmem.h>
-+
-+struct mock_cxl_accel {
-+	struct cxl_dev_state cxlds;
-+	struct cxl_memdev *cxlmd;
-+};
-+
-+static int cxl_mock_accel_probe(struct platform_device *pdev)
-+{
-+	struct mock_cxl_accel *cxl_accel;
-+	struct device *dev = &pdev->dev;
-+	struct cxl_dev_state *cxlds;
-+	struct cxl_memdev *cxlmd;
-+	struct range mock_range;
-+	int rc;
-+
-+	cxl_accel = devm_cxl_dev_state_create(&pdev->dev, CXL_DEVTYPE_DEVMEM,
-+					      pdev->id + 1, 0,
-+					      struct mock_cxl_accel, cxlds,
-+					      false);
-+	if (!cxl_accel)
-+		return -ENOMEM;
-+
-+	cxlds = &cxl_accel->cxlds;
-+	cxlds->media_ready = true;
-+	rc = cxl_set_capacity(cxlds, SZ_512M);
-+	if (rc)
-+		return rc;
-+
-+	cxlmd = devm_cxl_probe_mem(cxlds, &mock_range);
-+	if (IS_ERR(cxlmd))
-+		return PTR_ERR(cxlmd);
-+	cxl_accel->cxlmd = cxlmd;
-+
-+	dev_dbg(dev, "Probed mock accelerator with range %pra\n", &mock_range);
-+
-+	return 0;
-+}
-+
-+static const struct platform_device_id cxl_mock_accel_ids[] = {
-+	{ .name = "cxl_type2_accel" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(platform, cxl_mock_accel_ids);
-+
-+static struct platform_driver cxl_mock_accel_driver = {
-+	.probe = cxl_mock_accel_probe,
-+	.id_table = cxl_mock_accel_ids,
-+	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+};
-+
-+module_platform_driver(cxl_mock_accel_driver);
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("cxl_test: accelerator device mock module");
-+MODULE_IMPORT_NS("CXL");
--- 
-2.54.0
+This commit adds enumeration of type2 device hierarchy in cxl-test. The typ=
+e2=20
+device is configured to be directly attached to a root port instead of the=
+=20
+rp -> switch -> device setup used for type3 hierarchy.
 
+> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+> index 8abe066080bc8..1eac06ad46601 100644
+> --- a/tools/testing/cxl/test/cxl.c
+> +++ b/tools/testing/cxl/test/cxl.c
+[ ... ]
+> @@ -2156,17 +2314,9 @@ static __init int cxl_test_init(void)
+>  err_mem:
+>  	cxl_mem_exit();
+>  err_root:
+> -	platform_device_unregister(cxl_acpi);
+> -err_rch:
+> -	cxl_rch_topo_exit();
+> -err_single:
+> -	cxl_single_topo_exit();
+> -err_switches:
+> -	cxl_switches_remove();
+> -err_root_ports:
+> -	cxl_rootports_remove();
+> -err_host_bridges:
+> -	host_bridges_remove();
+> +	platform_device_put(cxl_acpi);
+
+[Severity: High]
+Does this error path properly tear down the device if cxl_mem_init() or
+hmem_test_init() fails?
+
+Since cxl_acpi was already successfully registered with the driver core via
+cxl_mock_platform_device_add() earlier in cxl_test_init(), it seems
+platform_device_unregister() should be used instead of platform_device_put(=
+).
+
+Using platform_device_put() here only drops the initial allocation referenc=
+e,
+leaving the device actively linked in the platform bus and sysfs hierarchie=
+s.
+
+Because the module unload upon initialization failure will free its memory,
+could any subsequent access to the device's sysfs files dereference invalid
+memory and cause a use-after-free?
+
+> +err_topo:
+> +	cxl_topo_exit();
+>  err_populate:
+>  	depopulate_all_mock_resources();
+>  err_gen_pool_add:
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260629202720.3658=
+117-1-dave.jiang@intel.com?part=3D4
