@@ -1,275 +1,284 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011015.outbound.protection.outlook.com [40.107.208.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B841407583;
-	Mon, 29 Jun 2026 13:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782738329; cv=none; b=PrDGRNKwGV980c9caKd2Tjk5lLqAq0mKrBoX8YGg0r8QzNHa6DNdNV7/UaiCoRGzUxSI61jxhMBafFADE98Im7jEUW4fwNmlq4gLl73qF3uIJRBreniF0SjH7MGtkhMjky2yT2fszR3cMwPXOCOK6HFo4WjhIMaPZPyfQvP4VV4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782738329; c=relaxed/simple;
-	bh=YKHuCUKYK4knjUHKZAMQJPJt5qHTng1+YmhLkIvHzv0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tVbzxShCcXXkIXfaWrIsVQ2RHRVFOuqU55uO7SW4zGaq5VOQjDofBGK6xH5cB0bRql5sZyIS2YUDAykrVbb6sriqmjJUqKkwKnWLocqt9xC6UTMhFxNjhYWl8xUMHJTg9tBWLpy25kqLbYgZQgYEqafQyBKxd6NOipkunpofCmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XzdiCuRH; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1122240B396;
+	Mon, 29 Jun 2026 13:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782739214; cv=fail; b=jszpv7PVOAG1973cUX/gE7+DbxUswKnAsGD5yTCdF+SxlyRisT8Tj5gyK5Xxb5LsijODm72Ll12Erg4E8dLBgOp58Zgr/TVXXCP7t5tthGIP5dC5m6Yie5gplHqVFSjqfvKw+jPhbJWGZI654pM5sz3uP7zvhF5LNrToBlMqKnQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782739214; c=relaxed/simple;
+	bh=DLV3JzX9UJZyiMDnpO3GELl4Q6iOpXs4Ogpath2wiig=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=XOOtETaEAdyukpOUbmoWUJCsMskuFrw7TMIQXuqPGJTSDh5C/I6fr1Zj/iyRVAcQSNeYz9952A5vYAlctkaDmHkuVJasdVxrH7CcvwewUkRlwI3V9lff2OucyZiq0HumEOJrUB6bgzsScXrP+jO0tGpd9jRrddUT4sf3YGvdMnA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PwMnYTaX; arc=fail smtp.client-ip=40.107.208.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XzdiCuRH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B74811F000E9;
-	Mon, 29 Jun 2026 13:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782738327;
-	bh=E0pTUxBevAAspoZyX6GTvYiy1fBE6MhwHahBRwP6f2Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=XzdiCuRHyahjePaQr9MJfRElVmEehhKYCYspSV2sAx8tS6EDgv4H5vP4AWnBmLY+o
-	 zEl7qBheoyaAheX8zxLP+YjXoKFL0AS61LRPy5WentvrRTAMUUEO/s3nq+UZFsEBri
-	 NuzG4ITo6mOlLgVw+SN3fScThQjMYH308DzaxZiUAcw/Vf1c0IfZHTByd+YoSCYHGi
-	 dnbFbe0f3+iggkyZPn/fZZlEUZoOXvQpZLeWKkn1IFL+xAQu3DejB50Ky57MDAYZ7N
-	 HEnQxrbgJFg1eIFhYvWoazRb8F6PgXlPyWjF4Jsb+lp0o+4TpqzXisJFqSYbBy7VKI
-	 dzOtr6UCPRKSA==
-Message-ID: <4f5ba5d6-246c-4430-9737-e8dd8e4c5142@kernel.org>
-Date: Mon, 29 Jun 2026 15:05:18 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PwMnYTaX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=anIhbUTyhH8n3HnHuFtwZzrqsgfV4TeudHOwhHe+idBYQ82fSDgjpKQkqacRpS3VAV9sndc+aOjSLrOoz6yAEYicTIMk2ir7sYJOpA++LMNbE2kZluxCFh3a0VXCkxviHXbsuSb1RV1Hfg4Vf6CkPa4eseFD8PuDTRRRSd2e2mkQK+JkqxpRd3m55VLigLnvMArmPTbqoaFBW/6JhN/5xLkOS6F3OviSl3/mEQboj1vK/7Es0ilMuIDfD0onZTesHRo07qmIdWQMK2tuiV2QiRlfpoNl5hdmqlJADms08KGpG/rGujHDPsF2Ey5RKCQ5Wy9VVo4eLCBGyfP7hIkosw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xCG3b3wdI8k1jerGSUp6nKeRq+GU5pmXN0n5e6b5e5A=;
+ b=Krv0et91KqvEOJosqlH16pl2r8R2Sqrmm4XOtvdxLtU7hVcrZ6Io01kVLFeZH9PqMu/QqRSr/L2Ti/ccAEUriZSs7q0GaP/9wfq2YtL01chss1uWOWiG/ORmAY4ZLDC8goGohQAS2Ps8RR5U3Czmr6+K+6BE7+BuTgKt9p3eRv7YaVrDHhypAkKW3DDS0xfxJZVzpqNXWm0FkJSMCT+naTjH0ep3bCWLK14Qz29xaEMBFO6hD9VD7fXY0SiFzQCfw8qgDLJblYGFuyvvj2royHt9VumT/+Ep6OjMtnghJvYFRVpwlNGRplA2eBeEOItn37gzlGW4wHjdoM25Eo4ZPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xCG3b3wdI8k1jerGSUp6nKeRq+GU5pmXN0n5e6b5e5A=;
+ b=PwMnYTaX/wLTf6x9gCa7U9NXulrCI//oy1MNzodUEyQaQHI5X8KTvnNOi/2U/6vDPYca45M17HfM+ojrt8OmJxwoG0DfIyu34xuWUzH3+oBDnfIMSDNb6X6E92dx1BYspM81COCE5rgsTfQ8c4DhKsXkk7yRCGo5Q3eObG0cggs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
+ SAVPR12MB999119.namprd12.prod.outlook.com (2603:10b6:806:4e9::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.19; Mon, 29 Jun
+ 2026 13:20:10 +0000
+Received: from DM4PR12MB6254.namprd12.prod.outlook.com
+ ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
+ ([fe80::8211:9b5a:99d2:ffa1%6]) with mapi id 15.21.0159.018; Mon, 29 Jun 2026
+ 13:20:09 +0000
+Message-ID: <bde77dd7-fa7b-4d28-9a7b-3f0ce6587bf4@amd.com>
+Date: Mon, 29 Jun 2026 14:20:03 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v29 4/5] sfc: obtain and map cxl range using
+ devm_cxl_probe_mem
+To: Richard Cheng <icheng@nvidia.com>, alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
+ dan.j.williams@kernel.org, edward.cree@amd.com, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
+ dave.jiang@intel.com, Edward Cree <ecree.xilinx@gmail.com>
+References: <20260622124010.2192888-1-alejandro.lucero-palau@amd.com>
+ <20260622124010.2192888-5-alejandro.lucero-palau@amd.com>
+ <aj32gUuoZuTUODry@MWDK4CY14F>
+Content-Language: en-US
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <aj32gUuoZuTUODry@MWDK4CY14F>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO3P123CA0010.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:ba::15) To DM4PR12MB6254.namprd12.prod.outlook.com
+ (2603:10b6:8:a5::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] mm: memory-failure: fix HWPoison flag race with
- non-atomic page flag ops
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, Oscar Salvador
- <osalvador@suse.de>, Andi Kleen <andi@firstfloor.org>,
- Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>,
- Rik van Riel <riel@redhat.com>, Vlastimil Babka <vbabka@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Brendan Jackman <jackmanb@google.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
- Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry@kernel.org>,
- Hao Li <hao.li@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Byungchul Park <byungchul@sk.com>, linux-mm@kvack.org,
- linux-cxl@vger.kernel.org
-References: <cover.1782676497.git.mst@redhat.com>
- <0b5f8b4b-d7dc-4b79-9555-a5b36265f3a9@kernel.org>
- <20260629030657-mutt-send-email-mst@kernel.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260629030657-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|SAVPR12MB999119:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8316450c-bea4-40f3-6140-08ded5e124bc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|23010399003|6133799003|18002099003|22082099003|4143699003|11063799006|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	YhColWN98ey4UOLOxOByOo9g8TFWol1eX/WEo0W9EVDw/fv9IjN98YFFoTs5AN0fpiVOiU5Yi4uJfINKH1WRlPZfkOJc8N5v6eklCZkYkSRSNxmF02LOtsALkRBzN69a3YXbb07TRC0tGCcZIWv0ojhXlXEI3CJuZ46xXsbDqMrQSLKscp+KXv8mc/loq+OOuXrvo1hHM+D2vs78Q66ptR46Ah0cHKffuSIooNLf90wd4ONVaUfNTkOIluIytR4kuAUqQt04n1aE1vHJk/nhRmcf/QzdeaXgcAoUK7UwAXKqrIjXMw+uMgINkpTKOZpiF89x/SFXsIHgyRYzOqqZbYSLUMqR6bE0x55AsrxIBAQ65TFt87DEBkdJUCrUnWywju1iu4tGl0FNGOTO/WipER9bSJDJSkRzp8xKwti4oZYA43SbkvOl4hnhv6mowDA60h6xQ6ImC05FlR1zAP2WHLdEXTawulMKsv4cdnQiWQ2EipIKgXD2BxFYiuCVRk+2GxxM2WZCXiGYsdR/AHpf8TirBplXEujmCoXM7hB+Yyb9FmaapooNSiMe5emhncOMK834cL07mvmXn9+M4JSCLfbZaEGkVdeoDVcDTIHsZCLrbGNZojHFOPEXfRg5zMfhIi3y9qkR4H3sTjuXeGBAbZuMWkd6hksbSO10NJ+Obek=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(23010399003)(6133799003)(18002099003)(22082099003)(4143699003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RHZzQXdtdnBrdnlVL3FMcjVGdkt3M3JzeVQ2SmRuWCtsQTIwaUtJSTFUTEVI?=
+ =?utf-8?B?L3Jmb1VLVlVPSWszTjB3VzFBd0Q2Y3NmMkY1RXhSK2ZnZStjeGlLa1lUT0Jr?=
+ =?utf-8?B?b3hTQ0d5ZDdPOUtSMHUrNXozazYvcTBPYVBtS2QzSlhTbkM0N3BhZkhqRXVD?=
+ =?utf-8?B?S2VwZCtvMmUwdVVCTUZFZDQxNnhUd2tqVFJkcEZ1ZjM1RFlNSUJWaGhUVHBk?=
+ =?utf-8?B?dkV3TWkybS9qT3RMTFd0SHB4Mm9LL0N5cTBvVW95NEcyK051YTFKblNuYUMx?=
+ =?utf-8?B?aWVKRDEraXUxOFRaa00wcjM2LzhMU1Z2SGUrRjloZi9zYnEwUHVmbElEamND?=
+ =?utf-8?B?Vk40a29KOXZKSnR2QzNpTVltQlJieHo0QW13aWMrbGlIdFhJRVlHZ2pQOTFH?=
+ =?utf-8?B?MHh1c3Mzd0pmL3RQU1VnQUFjYmhtd0xFYnJTZ2FJcEg4TW9nU3JsaDM0cDdB?=
+ =?utf-8?B?aWNDRXBkZ1JPZXRiT0F2cmg2UU55WUZlQ3NtaUcrZkJBcWQ0Z0ZrLzNmbW5m?=
+ =?utf-8?B?bnBYaW4veHNhQ1ovcEtMc3Y1Mi8rMVdIUlhCLzVYZkdGUkFySUp2R3ZPZjJL?=
+ =?utf-8?B?cnlFS0VBalJIK24ySWZLZGVLVmxhY1RzRU44TDBNdjN0V3VWL2VqeisrOElO?=
+ =?utf-8?B?THJyWW80ZU1vRFg5UDZSaStOaVl6dmxPMDI2RXN2Q3M2YzdoenErTkJFWVcy?=
+ =?utf-8?B?U1hxelpEcm55UW9UNlVhM3hWVGZxVnFHOXkvSldQRnpnUG83WUtSWUVUamsw?=
+ =?utf-8?B?enhLY0ZYQndRYmltM25XemZ4WUduWkk0YUNHeE1vSlpreUhZZ2EzUVhzemVj?=
+ =?utf-8?B?U2tkakNJcjE2ZDQzSjN6cEdqWVRQQUxsalNmdjVsSy9SUy9GRVlhZkd2cGV1?=
+ =?utf-8?B?bHdodXUycnBUVGR2QmVVY3hFenEvYTg4a0J6T2tzNk8rU3pCeG9vMWZVTThn?=
+ =?utf-8?B?cjg2SzNzbTJzNEZ1ZzZjWkVRWHRreDJ2YWg5UitiVjFtRmNEeWQ5cEk0SHZD?=
+ =?utf-8?B?NDZNNEN6T3YyL1V4dEFSS3VxcTFoSmR2R1VZdjRxV1lQQUFVLy9KeVhoYmJG?=
+ =?utf-8?B?VEhJV3VrbHVJRERnOHgwWU0yM040RHgvRTVUcVZ4N3dmS0E5ZWhzQlhSb1Qz?=
+ =?utf-8?B?ZGo2dThuYm9PaS95WnhldlJKdC91cmpsVE00bDYyVVZtMy94QnRKMzd1WW9C?=
+ =?utf-8?B?Y2Jsd1RBU0YwODJNelYxUlBCbGQ2eUdvalBGZ0tUQkRFYVY4MG8yU3hwU1BR?=
+ =?utf-8?B?dDlRaDRXaFNrWVVkc0UrbVNRamFmZEVWTnc2bE91U0ptRlVxTDhiZy9mRnJa?=
+ =?utf-8?B?Rm80TEloUFlSYmpUT2FlTmdIL0l3R2N4VGx4Z2Z0bDlxZjNZL2RWbWV0L2Jl?=
+ =?utf-8?B?dmZiNnVRb2tJeGZYNFpLeXkyTmRDYnpTZDczWGNqZWxoZGJYeHh2RHJhcXdJ?=
+ =?utf-8?B?RG9jUVd1VzNUaDIzWjZrby8xMnNCN0pSaXNwampKNjh2MUozblM4YjBTSlFt?=
+ =?utf-8?B?Nmdkdk8zblNoblIwb1I2eGwzZmF2cEFCZ2FCWnZmNHF4and4emt0dGVQeUZu?=
+ =?utf-8?B?YmI5MW56aDBHTnJvRWg0RDJGOW5KUG5kNFRQMWZ3SEFQblhHVlpOT2Iwallo?=
+ =?utf-8?B?Y0tZeEpiamF1ZlZ2ekorZWQxZUVOWHA2a3lnNEVrekFudHRhbDFORlVZTW9X?=
+ =?utf-8?B?eXpxNVpBT0M5d24vUVFoZkdPTWxkUUYwTk5GazZPMVE4Ykd5ZklpdEs4dUZz?=
+ =?utf-8?B?M2lSL3RwbE01cllCNUFzNmxtSVdEM2ZQL0R0YXkvdmpnQ3gzUWJNY2dZdzFT?=
+ =?utf-8?B?OU5kbG5uZTJDNG93dUhROGhNYjJkZkFFQUF6Y0tmeUEwV1JWQjh6TGJTS3Fa?=
+ =?utf-8?B?ZkI2RTEwb1N5c0R6ZWM4eE1OVU04aTFFd1dkQ0RZVGdiZkFkKzluWWtpeXNu?=
+ =?utf-8?B?SjFCeGlUWVlIVGwydWlCQndXRndUWmtkaVV6cDdsT2VBSEtRbTRSZ0dVeExS?=
+ =?utf-8?B?MkxwRERiaGZ1QVMycDFZWlAvYTZ3NlppOXFCSk5uTDZicUNEZlVpd1BLTG1P?=
+ =?utf-8?B?OEtjY3VFcjJqRHBLdk8rYkwwOTc5SnJUOGlBQnhZS2MxREx3R002SUl5OHFT?=
+ =?utf-8?B?TXdmY0t6OXBqYS9oZGtlazNUQkZiVmdsRVE5TWtQZXY1YlRqcXhlSDRGUXBh?=
+ =?utf-8?B?RjJnWmxQQXVIa3NTaVk5STh2dThJY1VUZDBEdWpGYmhDMkpRY2lWRXpKSFZS?=
+ =?utf-8?B?eGNhWm9ZQVpPajAwSzQzRGd0ME9LNDBOQ2UzWHNmbUJoeWo4S05GZUVuVldn?=
+ =?utf-8?B?S2NQWE9aWFprRjNjRnlxV3N2SmsxYzJqTTl5RkF6R2lsUllUQnNIQT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8316450c-bea4-40f3-6140-08ded5e124bc
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2026 13:20:09.6863
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RNsBmMYC3WhKvWnNdSUFjJJtIalIy+wxcEpCDqdOLntxCNu3EfmGx9I4wNwXk6QNMHmmowd7cHAqzxDaFxjq1A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SAVPR12MB999119
 
-On 6/29/26 09:34, Michael S. Tsirkin wrote:
-> On Mon, Jun 29, 2026 at 08:49:37AM +0200, David Hildenbrand (Arm) wrote:
->> On 6/28/26 23:45, Michael S. Tsirkin wrote:
->>> I don't like it that we are adding overhead to the good path for
->>> the benefit of memory failure, which never triggers on many systems,
->>> but I don't have a better idea. Pls take a look.
+
+On 6/26/26 04:52, Richard Cheng wrote:
+> On Mon, Jun 22, 2026 at 01:40:09PM +0800, alejandro.lucero-palau@amd.com wrote:
+>> From: Alejandro Lucero <alucerop@amd.com>
 >>
->> As I said on Friday.
+>> Use core API for safely obtain the CXL range linked to an HDM committed
+>> by the BIOS. Map such a range for being used as the ctpio buffer.
 >>
->> "It's also doesn't address the mf_mutex implications and the x86 thingies I
->> mentioned.
-> 
-> Well I did attempt addressing this.  These would be these two:
-> 
-> 	(a) We don't hold the mf_mutex on all call paths, but we really need it so a
-> 	page_test_set_hwpoison() cannot race in weird ways with the other primitives I think.
-> 
-> page_test_set_hwpoison was this code you wrote:
-> 
-> +static void page_set_hwpoison(struct page *page)
-> +{
-> +       lockdep_assert_held(&mf_mutex);
-> +
-> +       while (!PageHWPoison(page)) {
-> +               SetPageHWPoison(page);
-> +
-> +               /* Make sure concurrent non-atomic writers completed. */
-> +               synchronize_rcu();
-> +       }
-> +}
-> 
-> and indeed the test+set combination seems racy.  But consider the version I posted, for example:
-> 
-> +/*
-> + * Drain any in-flight non-atomic page flag operations that could
-> + * clobber a concurrently set HWPoison bit.  Retries until the bit sticks.
-> + */
-> +static void set_hwpoison_drain_rcu(struct page *p)
-> +{
-> +       do {
-> +               synchronize_rcu();
-> +       } while (!TestSetPageHWPoison(p));
-> +}
-> +
-> 
-> ...
-> 
-> +static bool test_and_set_hwpoison_drain_rcu(struct page *p)
-> +{
-> +       bool was_set = TestSetPageHWPoison(p);
-> +
-> +       set_hwpoison_drain_rcu(p);
-> +       return was_set;
-> +}
-> 
-> 
-> 
-> does not seem racy without a lock. But maybe I don't get it.
+>> A potential user space action through sysfs unbinding or core cxl
+>> modules remove will trigger sfc driver device detachment, with that case
+>> not racing with this mapping as this is done during driver probe and
+>> therefore protected with device lock against those user space actions.
+>>
+>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>> Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+>> ---
+>>   drivers/net/ethernet/sfc/efx.c     |  2 ++
+>>   drivers/net/ethernet/sfc/efx_cxl.c | 23 +++++++++++++++++++++++
+>>   drivers/net/ethernet/sfc/efx_cxl.h |  3 +++
+>>   3 files changed, 28 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
+>> index 61cbb6cfc360..3806cd3dd7f4 100644
+>> --- a/drivers/net/ethernet/sfc/efx.c
+>> +++ b/drivers/net/ethernet/sfc/efx.c
+>> @@ -984,6 +984,7 @@ static void efx_pci_remove(struct pci_dev *pci_dev)
+>>   	efx_fini_io(efx);
+>>   
+>>   	probe_data = container_of(efx, struct efx_probe_data, efx);
+>> +	efx_cxl_exit(probe_data);
+>>   
+>>   	pci_dbg(efx->pci_dev, "shutdown successful\n");
+>>   
+>> @@ -1242,6 +1243,7 @@ static int efx_pci_probe(struct pci_dev *pci_dev,
+>>   	return 0;
+>>   
+>>    fail3:
+>> +	efx_cxl_exit(probe_data);
+>>   	efx_fini_io(efx);
+>>    fail2:
+>>   	efx_fini_struct(efx);
+>> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+>> index 18b535b3ea40..3e7c950f83e9 100644
+>> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+>> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+>> @@ -18,6 +18,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>>   {
+>>   	struct efx_nic *efx = &probe_data->efx;
+>>   	struct pci_dev *pci_dev = efx->pci_dev;
+>> +	struct range cxl_pio_range;
+>>   	struct efx_cxl *cxl;
+>>   	u16 dvsec;
+>>   	int rc;
+>> @@ -73,9 +74,31 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>>   		return -ENODEV;
+>>   	}
+>>   
+>> +	cxl->cxlmd = devm_cxl_probe_mem(&cxl->cxlds, &cxl_pio_range);
+>> +	if (IS_ERR(cxl->cxlmd)) {
+>> +		pci_err(pci_dev, "CXL accel memdev creation failed\n");
+>> +		return PTR_ERR(cxl->cxlmd);
+>> +	}
+>> +
+>> +	cxl->ctpio_cxl = ioremap_wc(cxl_pio_range.start,
+>> +				    range_len(&cxl_pio_range));
+> Hi Alejandro,
+>
+> A small question here,
+> Is it possible that the FW would commit a region bigger than the range ?
 
 
-Staring at your implementation, just think about two concurrent invocations of
-test_and_set_hwpoison_drain() in your code:
-
-Assume HWPoison flag is not set.
-
-Thread 1: test_and_set_hwpoison_drain_rcu() -> TestSetPageHWPoison()
-	-> was_set = false
-
-Thread 2: update that overwrites page->flags. HWPoison accidentally cleared.
-
-Thread 3: test_and_set_hwpoison_drain_rcu() -> TestSetPageHWPoison()
-	-> was_set = false
-
-Thread 1: does RCU sync and returns "!was_set"
-thread 2: does RCU sync and returns "!was_set"
-
-So you could end up with two thread believing that they atomically cleared the
-flag, and you really need to lock.
-
-We really have to document and enforce that the mutex is involved.
+Hi Richard,
 
 
-And I fear there are more nasty details to be uncovered while we rework some of
-this properly, mandating a detailed look.
+Not really. We are using the minimum size for CXL mem, 256MB, and it is 
+not configurable. If CXL is enabled by the sfc device firmware, this is 
+the only possibility.
 
-For example, TestClearPageHWPoison() in put_page_back_buddy() likely needs a
-proper treatment as well. Likely that code should be reworked entirely to not
-have arbitrary hwpoison page flag modifications throughout the codebase.
+It could be a good sanity check though, but I prefer to keep v29 as it 
+is now ... Dan Williams is happy enough with it, so I expect Dave to 
+merge it soon ...
 
-> 
-> 
-> 
-> 	(b) There are some leftover SetPageHWPoison etc. instances. The ones in
-> 	arch/x86/kernel/cpu/mce/core.c likely cannot grab the mutex, but maybe they are
-> 	corner cases either way and we can document the situation.
-> 
-> Well, I did try to document the situation - it's in the commit log for
-> patch 1:
-> 
->     Note: the MCE handler in arch/x86/kernel/cpu/mce/core.c also calls
->     SetPageHWPoison() and is subject to the same race.  It cannot use
->     the drain helpers (MCE context cannot call synchronize_rcu()).
->     For recoverable MCE errors, memory_failure() is queued via work
->     items (kill_me_maybe/kill_me_never) and will re-set the bit via
->     test_and_set_hwpoison_drain_rcu() if it was clobbered.  The
->     mce_panic() path sets HWPoison for kdump right before panic() so
->     the race is irrelevant there.  The MCG_STATUS_SEAM_NR path does
->     not queue memory_failure(), but the affected page belongs to a
->     TDX guest whose CPU core has already been marked dead - the page
->     is not subject to concurrent non-atomic flag operations in the
->     buddy allocator, so the race does not apply.
-> 
 
-We should have a central mechanism in place to document this and avoid future
-mistakes.
+Maybe as a follow up path.
 
-I am not even sure if we should clearly document for SetPageHWPoison() when and
-how they can be used, or if we need a completely new set of helpers.
 
-And that's something to figure out (e.g., interaction with the mutex) by looking
-into all of the details, so I expect this to take a lot more time.
+Thank you,
 
-[...]
+Alejandro
 
->> This is nothing to vibe-code. This needs a real expert.
-> 
-> Well I had this sitting on the disk anyway, so I thought I'd post.
 
-It would be good to coordinate here.
-
-Like a reply to my mail, asking whether you should post a new version that you
-have already in place.
-
-> 
-> I wouldn't call this vibe-code - a bunch of manual work went into this,
-> llms mostly as a grep/sed replacement.  
-
-The version you posted earlier had real AI vibes to it, so I can only speculate.
-I know that you did some manual work on this, but the details are really ugly in
-this code.
-
-> But hey.  I don't object to
-> someone taking over, for sure. Was fun, and maybe these patches will be
-> helpful as a starting point.
-> 
-> In particular, maybe I should have been more explicit about how your
-> points from Friday are addressed.
-
-Yes.
-
-> 
-> If you want to add a bit more to explain the exact concerns here, for
-> whoever works on this next, feel free to do so.
-
-I raised some above. I'll try to find someone to take a closer look and see to
-which degree we could optimize this.
-
-Or if there are actually more performant alternatives that we could use. (I
-still doubt that using atomics is ok in general)
-
--- 
-Cheers,
-
-David
+> The committed CXL region length is never validated against the PIO window size.
+> The legacy patch sizes wc_mem_map_size to cover the VI-strided PIO offset, but
+> here we ioremap whatever the BIOS comitted and assume it's EFX_CTPIO_BUFFER_SIZE.
+>
+> Maybe adding
+> """
+> if (range_len(&cxl_pio_range) < EFX_CTPIO_BUFFER_SIZE)
+>      return -EINVAL;
+> """
+> Would be worthy ?
+>
+> Let me know what you think.
+>
+> Best regards,
+> Richard Cheng
+>
+>> +	if (!cxl->ctpio_cxl) {
+>> +		pci_err(pci_dev, "CXL ioremap region (%pra) failed\n",
+>> +			&cxl_pio_range);
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>>   	probe_data->cxl = cxl;
+>>   
+>>   	return 0;
+>>   }
+>>   
+>> +void efx_cxl_exit(struct efx_probe_data *probe_data)
+>> +{
+>> +	if (!probe_data->cxl)
+>> +		return;
+>> +
+>> +	iounmap(probe_data->cxl->ctpio_cxl);
+>> +}
+>> +
+>>   MODULE_IMPORT_NS("CXL");
+>> diff --git a/drivers/net/ethernet/sfc/efx_cxl.h b/drivers/net/ethernet/sfc/efx_cxl.h
+>> index 04e46278464d..3e2705cb063f 100644
+>> --- a/drivers/net/ethernet/sfc/efx_cxl.h
+>> +++ b/drivers/net/ethernet/sfc/efx_cxl.h
+>> @@ -20,10 +20,13 @@ struct efx_probe_data;
+>>   struct efx_cxl {
+>>   	struct cxl_dev_state cxlds;
+>>   	struct cxl_memdev *cxlmd;
+>> +	void __iomem *ctpio_cxl;
+>>   };
+>>   
+>>   int efx_cxl_init(struct efx_probe_data *probe_data);
+>> +void efx_cxl_exit(struct efx_probe_data *probe_data);
+>>   #else
+>>   static inline int efx_cxl_init(struct efx_probe_data *probe_data) { return 0; }
+>> +static inline void efx_cxl_exit(struct efx_probe_data *probe_data) {}
+>>   #endif
+>>   #endif
+>> -- 
+>> 2.34.1
+>>
+>>
