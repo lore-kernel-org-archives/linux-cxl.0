@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DAC36C592;
-	Mon, 29 Jun 2026 15:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB58944BCA1;
+	Mon, 29 Jun 2026 16:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782747450; cv=none; b=cwKwA5R7rCK7TREjDN+JvYv/bvPvStQC4H4+h/gmO6JKOtX3G24va2qDEDIjvOJ1A3JTzjHIgkd5JPuWWv2dGowT98OBU+cyhyadJKgFbpfNTvRwinkHmzHVa6V+cKt/UhkgVf8nKSlnroh/p69o4gMtuIlDSJPppAXG58Sh4DU=
+	t=1782749112; cv=none; b=LI+EOznvIinX9Y2uTYsDvW3yaggGAmHr6cMuVnur70ZxwdtM/nlP8o8O44WRaWYR1I4+jmKLhL4KXoSpSNi10Rqh7CAXx0Vci5HegtN0JL+CE32w7P0ArzSt/4BD0P1irJb8B4Jlf08PdG81YYm/rFn2vFX+6dmslimiF+8J3eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782747450; c=relaxed/simple;
-	bh=WVyPy43w4WK+B4xHT92zyLgIAMj2MJGMMJ9hEp5clM8=;
+	s=arc-20240116; t=1782749112; c=relaxed/simple;
+	bh=Tf3pNDOaGQX3fSS4yLYMyAKXRyAB+gUHE/PPajsX/xA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D7LPV6f6uoDP+pFcjlDerar3Y//LH316vxWEtvxkt4/zYWMrZdXJjxW5poBCHZTo8hL3ukh5aAuYLlj8vXqf5a5shxO1MvJQBmEisLpQl31TFiWx6cwGNQcKnURQk8NU8nR7MIS/fLhQ4q6MI27k5jUWRxQ0S5yC0x4KZvrI3pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ekD8zKMv; arc=none smtp.client-ip=198.175.65.17
+	 In-Reply-To:Content-Type; b=V2RtJ93CbfrsyHQ8zD/wsnYV8iC2ePmmLgx4kpvtb+hr+HThcQdhfCm9WwoLL2FOsVSkPaTX2UGcxDIQO/Jqq2nHoFAV2TR9IAtD0NmRDKd30rd9zRzbS/Zy+NcVa6wKMtvVlIaMyH6w1o/2u/fvxQa0DltoVrZX0gbf+/HDCXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gVizzjCh; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ekD8zKMv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gVizzjCh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782747448; x=1814283448;
+  t=1782749111; x=1814285111;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=WVyPy43w4WK+B4xHT92zyLgIAMj2MJGMMJ9hEp5clM8=;
-  b=ekD8zKMvMENVZBKJNIOMVhd+Z47RMNsLUjicVq1Gq7mpfm5EUbXBd3HU
-   2+frhUvBv2IqhUh5iUNDwugq1VyIUSnwK8XcAA1RAMa6Rpns8gGsSas+q
-   FtTgja5Xi+f+Kx+aDejqNye3NG6a1dbYhGFRmjChiEK8ykDANlh3OVnZs
-   Oy+TCi3o6C7nbi4kQffl89WHt84C5ADnXmShCQzOy3iFRIGXygZ6zMBqN
-   yUfNktjfwtX8ypjBE63Yyhr/q3nX0oHnt0xvobHdLan6Q+jLMVQSRal5K
-   haJfOURrauKa4nmieYV8hwvcr6zsvWX7H7H3WTzsMk1lfgMNhLxv4QLG9
-   g==;
-X-CSE-ConnectionGUID: YZi3560OS12HWmF1aJaqtA==
-X-CSE-MsgGUID: p/cOhee0TS+yqHk3sxrTng==
-X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="83470677"
+  bh=Tf3pNDOaGQX3fSS4yLYMyAKXRyAB+gUHE/PPajsX/xA=;
+  b=gVizzjChFTEy/+zxZz4xuMeoYJHXqkylFv6KuxFyLOxEVJfw2bRLzuVU
+   Gecng5GLFAbpc1bILJbzyNeossVumQg0IiANH+tXYtWmF9DsAQA/w9MtG
+   S5uxtL5pb+nlTYww5NwBX2sVHlWxtkft+IUtIAvYN9LUQiZKxL6HiNF3a
+   VxcI3H2mrTpx8rd6c1bDmq0fM1Tz30hTE5ph7BTQSOAhgKoZ6TQeMlgEk
+   oXqpJ0bLb5IKKI9ccl4EaTWJZLZhuIsq/HTQEhx2dWScKumXiO5kl0kp2
+   M3gTGpbEYPiXcqXUebGNuZbGz75sVBTLeRXsGnmwEmsNe/PRqmqk7otaG
+   w==;
+X-CSE-ConnectionGUID: q3qiBELSTiqBWLV+OgwUUQ==
+X-CSE-MsgGUID: yNY8mhLVTMWBS6FG3C7lGA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="87284831"
 X-IronPort-AV: E=Sophos;i="6.24,232,1774335600"; 
-   d="scan'208";a="83470677"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 08:37:28 -0700
-X-CSE-ConnectionGUID: oM2pl2hlR/id9VZwIupaCQ==
-X-CSE-MsgGUID: od85TOSZRQm6wB2wgyfaAw==
+   d="scan'208";a="87284831"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 09:05:10 -0700
+X-CSE-ConnectionGUID: JV9fMw1wTLCZZx8RvZ9u9A==
+X-CSE-MsgGUID: jqGgIdi9SieCM5eq8rPw/g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.24,232,1774335600"; 
-   d="scan'208";a="248625928"
+   d="scan'208";a="256917214"
 Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.109.194]) ([10.125.109.194])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 08:37:26 -0700
-Message-ID: <e9df1bb6-29fa-423c-9fc8-96c048fcb668@intel.com>
-Date: Mon, 29 Jun 2026 08:37:25 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 09:05:09 -0700
+Message-ID: <e6106387-9884-4dc5-9b5b-d135f32cfc3a@intel.com>
+Date: Mon, 29 Jun 2026 09:05:07 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,147 +52,76 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cxl/features: Reject Get Feature count larger than the
- output buffer
-To: Richard Cheng <icheng@nvidia.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Zhenhao Wan <whi4ed0g@gmail.com>, dave@stgolabs.net, jic23@kernel.org,
- vishal.l.verma@intel.com, djbw@kernel.org, danwilliams@nvidia.com,
- iweiny@kernel.org, ming.li@zohomail.com, kobak@nvidia.com,
+Subject: Re: [PATCH v2] cxl/mbox: Clamp mailbox output allocation to the
+ payload size
+To: Richard Cheng <icheng@nvidia.com>, dave@stgolabs.net, jic23@kernel.org,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, djbw@kernel.org,
+ danwilliams@nvidia.com
+Cc: iweiny@kernel.org, ming.li@zohomail.com, kobak@nvidia.com,
  kaihengf@nvidia.com, kees@kernel.org, newtonl@nvidia.com,
  kristinc@nvidia.com, mochs@nvidia.com, linux-cxl@vger.kernel.org,
  linux-kernel@vger.kernel.org
-References: <20260624134737.49166-1-icheng@nvidia.com>
- <ajxEGmGxOhryENl4@aschofie-mobl2.lan> <ajxHwh3s2lM98aed@aschofie-mobl2.lan>
- <aj4pYfg51dWr__mw@MWDK4CY14F>
- <e97b6cfb-f6e9-4be4-aac2-121330b6c56d@intel.com>
- <akHUATTw75mXrjWn@MWDK4CY14F>
+References: <20260624144147.53997-1-icheng@nvidia.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <akHUATTw75mXrjWn@MWDK4CY14F>
+In-Reply-To: <20260624144147.53997-1-icheng@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 6/28/26 7:12 PM, Richard Cheng wrote:
-> On Fri, Jun 26, 2026 at 09:17:03AM +0800, Dave Jiang wrote:
->>
->>
->> On 6/26/26 12:27 AM, Richard Cheng wrote:
->>> On Wed, Jun 24, 2026 at 02:10:26PM +0800, Alison Schofield wrote:
->>>> On Wed, Jun 24, 2026 at 01:54:50PM -0700, Alison Schofield wrote:
->>>>> On Wed, Jun 24, 2026 at 09:47:37PM +0800, Richard Cheng wrote:
->>>>>> cxlctl_get_feature() sizes its output buffer from the user's
->>>>>> fwctl_rpc.out_len, but the device is told to write
->>>>>> cxl_mbox_get_feat_in.count bytes into rpc_out->payload, which is a
->>>>>> separate user-controlled value. Nothing bounds count against out_len, so
->>>>>> a small out_len with a large count overflows the kvzalloc()'d buffer.
->>>>>> A heap OOB write reachable from FWCTL_RPC.
->>>>>>
->>>>>> Reject requests where count exceeds the available payload room, before
->>>>>> allocating.
->>>>>>
->>>>>> Fixes: 5908f3ed6dc2 ("cxl: Add support to handle user feature commands for get feature")
->>>>>> Reviewed-by: Kai-Heng Feng <kaihengf@nvidia.com>
->>>>>> Reviewed-by: Koba Ko <kobak@nvidia.com>
->>>>>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->>>>>> Signed-off-by: Richard Cheng <icheng@nvidia.com>
->>>>>> ---
->>>>>> Changelog:
->>>>>>
->>>>>> v1 -> v2:
->>>>>>     - Drop the reproducer and trim the KASAN splat in the commit message
->>>>>>     - Sent the reproducer as a regression test in ndctl separately.
->>>>>
->>>>> This patch itself looks good. Looking at the other bounds checks
->>>>> Sashiko suggests, I'd rather see this all fixed up in one patch or
->>>>> patchset, rather than dribble in as multiple patches.
->>>>>
->>>>> Maybe it all fits into one patch, like this:
->>>>> cxl/features; Add bounds checking for get/set feature commands
->>>>> or maybe it works better as a set.
->>>>>
->>>>> Either way, doing in one swoop would be nice!
->>>>
->>>> Oh, seems I'm reading patches out of order.
->>>>
->>>> Now I see this: 
->>>> https://lore.kernel.org/linux-cxl/20260620-cxl-fwctl-oob-v1-1-5758e34d784a@gmail.com/
->>>> which looks like it covers one of Sashikos's complaints.
->>>>
->>>
->>> Hi Alison,
->>>
->>> Thanks for pointing this out.
->>>
->>> Then that would be no problem for me, I'll append my fixes with Zhenhao's patch.
->>>
->>> so my original fix + sashiko's complain about cxlctl_set_feature() and cxl_get_feature().
->>> I'll put them in my work and send as a serie.
->>
->> Hi Richard, I see sashiko pointed out some existing issues on the series. Will you create fixes for them or should I go do that?
->>
->> DJ
->>
+On 6/24/26 7:41 AM, Richard Cheng wrote:
+> CXL_MEM_SEND_COMMAND bounds the user's in.size to the mailbox payload
+> size but leaves out.size unbounded, then cxl_mbox_cmd_ctor() calls
+> kvzalloc(out.size). A large out.size drives a huge allocation, above
+> INT_MAX it WARNs and taints, and with panic_on_warn=1 it panics.
 > 
-> Hi Dave,
+> The transport __cxl_pci_mbox_send_cmd() already clamps the response copy
+> to min(out.size, payload_size, device len), so the output buffer is
+> never written beyond payload_size. Clamp the allocation to payload_size
+> too, matching the RAW path.
 > 
-> I've sent out v3 of this here.
-> 
-> https://lore.kernel.org/all/20260626104102.53892-1-icheng@nvidia.com/
-> 
-> I've made the fixes of the bug sashiko-bot pointed out here in that serie.
-> 
-> I also see it's mentioning more pre-existing bugs on v3, I'll do them in seperate patches,
-> or are you refering to the issue in this one ? if you're talking about the latter, I've
-> included them in v3.
+> Fixes: 583fa5e71cae ("cxl/mem: Add basic IOCTL interface")
+> Reviewed-by: Kai-Heng Feng <kaihengf@nvidia.com>
+> Reviewed-by: Koba Ko <kobak@nvidia.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+> Signed-off-by: Richard Cheng <icheng@nvidia.com>
 
+Applied to next
+8a13db9f899d
 
-I'm talking about the complaint of pre-existing issues.
-
-DJ
-
+> ---
+> Changelog:
 > 
-> Please take a look while you're available, thanks.
+> v1 -> v2:
+>     - Correct the Fixes tag to 583fa5e71cae ("cxl/mem: Add basic IOCTL
+>       interface")
+>     - Drop the reproducer and sent it as a regression test in ndctl
 > 
 > Best regards,
 > Richard Cheng.
+> ---
+>  drivers/cxl/core/mbox.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
 > 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 7c6c5b7450a5..d9cb02c9f72c 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -380,11 +380,7 @@ static int cxl_mbox_cmd_ctor(struct cxl_mbox_cmd *mbox_cmd,
+>  		}
+>  	}
 >  
->>>
->>> --Richard
->>>  
->>>>>
->>>>> -- Alison
->>>>>
->>>>>>
->>>>>> Best regards,
->>>>>> Richard Cheng
->>>>>> ---
->>>>>>  drivers/cxl/core/features.c | 4 ++++
->>>>>>  1 file changed, 4 insertions(+)
->>>>>>
->>>>>> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
->>>>>> index 85185af46b72..9c714ee42a41 100644
->>>>>> --- a/drivers/cxl/core/features.c
->>>>>> +++ b/drivers/cxl/core/features.c
->>>>>> @@ -471,6 +471,10 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
->>>>>>  	if (!count)
->>>>>>  		return ERR_PTR(-EINVAL);
->>>>>>  
->>>>>> +	if (out_size < offsetof(struct fwctl_rpc_cxl_out, payload) ||
->>>>>> +	    count > out_size - offsetof(struct fwctl_rpc_cxl_out, payload))
->>>>>> +		return ERR_PTR(-EINVAL);
->>>>>> +
->>>>>>  	struct fwctl_rpc_cxl_out *rpc_out __free(kvfree) =
->>>>>>  		kvzalloc(out_size, GFP_KERNEL);
->>>>>>  	if (!rpc_out)
->>>>>>
->>>>>> base-commit: ef0c9f75a19532d7675384708fc8621e10850104
->>>>>> -- 
->>>>>> 2.43.0
->>>>>>
->>>>>
->>
+> -	/* Prepare to handle a full payload for variable sized output */
+> -	if (out_size == CXL_VARIABLE_PAYLOAD)
+> -		mbox_cmd->size_out = cxl_mbox->payload_size;
+> -	else
+> -		mbox_cmd->size_out = out_size;
+> +	mbox_cmd->size_out = min_t(size_t, out_size, cxl_mbox->payload_size);
+>  
+>  	if (mbox_cmd->size_out) {
+>  		mbox_cmd->payload_out = kvzalloc(mbox_cmd->size_out, GFP_KERNEL);
+> 
+> base-commit: ef0c9f75a19532d7675384708fc8621e10850104
 
