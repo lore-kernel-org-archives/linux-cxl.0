@@ -1,284 +1,210 @@
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011015.outbound.protection.outlook.com [40.107.208.15])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1122240B396;
-	Mon, 29 Jun 2026 13:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782739214; cv=fail; b=jszpv7PVOAG1973cUX/gE7+DbxUswKnAsGD5yTCdF+SxlyRisT8Tj5gyK5Xxb5LsijODm72Ll12Erg4E8dLBgOp58Zgr/TVXXCP7t5tthGIP5dC5m6Yie5gplHqVFSjqfvKw+jPhbJWGZI654pM5sz3uP7zvhF5LNrToBlMqKnQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782739214; c=relaxed/simple;
-	bh=DLV3JzX9UJZyiMDnpO3GELl4Q6iOpXs4Ogpath2wiig=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=XOOtETaEAdyukpOUbmoWUJCsMskuFrw7TMIQXuqPGJTSDh5C/I6fr1Zj/iyRVAcQSNeYz9952A5vYAlctkaDmHkuVJasdVxrH7CcvwewUkRlwI3V9lff2OucyZiq0HumEOJrUB6bgzsScXrP+jO0tGpd9jRrddUT4sf3YGvdMnA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PwMnYTaX; arc=fail smtp.client-ip=40.107.208.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B86F41B36D;
+	Mon, 29 Jun 2026 14:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782743971; cv=none; b=gzUnWHfJMOCGsVnk7mlwYGHxhlr7+KMq+Inj7FNB9nF8rz12sGgX6Kh3gAgUOhuXsTTwKpsbDn9JVnOZpxwFKSnHOtqXlfUaIdRWnsQxVJa3YFd4MrGp8nlrc21Xu0HoMpkLIpZ2/LoKNJM1gSlyrBP427cj1yNIMwx3h1yh0AY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782743971; c=relaxed/simple;
+	bh=tIgmvkbVGgsAFw9O5XEwFGKEfBQkgY3RT+doQ9R/e5A=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dXGvES5WJc5ep0IbhSg/FJW/Pdkav1ZAfGTwSZdQ+EO7y6rbfeJ8FXzeytV3Qcfr0SmX3lihSCJHlvzjq+A//WPwprmKDPhrxeZsFkkX+3bd0ujE4W/xn5mElnfWlveVw3SJrhEGOhnHJMLAh4Q+ZpHYqMGDcukf9elzER85uew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=BlIR7eoq; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PwMnYTaX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=anIhbUTyhH8n3HnHuFtwZzrqsgfV4TeudHOwhHe+idBYQ82fSDgjpKQkqacRpS3VAV9sndc+aOjSLrOoz6yAEYicTIMk2ir7sYJOpA++LMNbE2kZluxCFh3a0VXCkxviHXbsuSb1RV1Hfg4Vf6CkPa4eseFD8PuDTRRRSd2e2mkQK+JkqxpRd3m55VLigLnvMArmPTbqoaFBW/6JhN/5xLkOS6F3OviSl3/mEQboj1vK/7Es0ilMuIDfD0onZTesHRo07qmIdWQMK2tuiV2QiRlfpoNl5hdmqlJADms08KGpG/rGujHDPsF2Ey5RKCQ5Wy9VVo4eLCBGyfP7hIkosw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xCG3b3wdI8k1jerGSUp6nKeRq+GU5pmXN0n5e6b5e5A=;
- b=Krv0et91KqvEOJosqlH16pl2r8R2Sqrmm4XOtvdxLtU7hVcrZ6Io01kVLFeZH9PqMu/QqRSr/L2Ti/ccAEUriZSs7q0GaP/9wfq2YtL01chss1uWOWiG/ORmAY4ZLDC8goGohQAS2Ps8RR5U3Czmr6+K+6BE7+BuTgKt9p3eRv7YaVrDHhypAkKW3DDS0xfxJZVzpqNXWm0FkJSMCT+naTjH0ep3bCWLK14Qz29xaEMBFO6hD9VD7fXY0SiFzQCfw8qgDLJblYGFuyvvj2royHt9VumT/+Ep6OjMtnghJvYFRVpwlNGRplA2eBeEOItn37gzlGW4wHjdoM25Eo4ZPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xCG3b3wdI8k1jerGSUp6nKeRq+GU5pmXN0n5e6b5e5A=;
- b=PwMnYTaX/wLTf6x9gCa7U9NXulrCI//oy1MNzodUEyQaQHI5X8KTvnNOi/2U/6vDPYca45M17HfM+ojrt8OmJxwoG0DfIyu34xuWUzH3+oBDnfIMSDNb6X6E92dx1BYspM81COCE5rgsTfQ8c4DhKsXkk7yRCGo5Q3eObG0cggs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
- SAVPR12MB999119.namprd12.prod.outlook.com (2603:10b6:806:4e9::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.19; Mon, 29 Jun
- 2026 13:20:10 +0000
-Received: from DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
- ([fe80::8211:9b5a:99d2:ffa1%6]) with mapi id 15.21.0159.018; Mon, 29 Jun 2026
- 13:20:09 +0000
-Message-ID: <bde77dd7-fa7b-4d28-9a7b-3f0ce6587bf4@amd.com>
-Date: Mon, 29 Jun 2026 14:20:03 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v29 4/5] sfc: obtain and map cxl range using
- devm_cxl_probe_mem
-To: Richard Cheng <icheng@nvidia.com>, alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org, netdev@vger.kernel.org,
- dan.j.williams@kernel.org, edward.cree@amd.com, davem@davemloft.net,
- kuba@kernel.org, pabeni@redhat.com, edumazet@google.com,
- dave.jiang@intel.com, Edward Cree <ecree.xilinx@gmail.com>
-References: <20260622124010.2192888-1-alejandro.lucero-palau@amd.com>
- <20260622124010.2192888-5-alejandro.lucero-palau@amd.com>
- <aj32gUuoZuTUODry@MWDK4CY14F>
-Content-Language: en-US
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <aj32gUuoZuTUODry@MWDK4CY14F>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO3P123CA0010.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:ba::15) To DM4PR12MB6254.namprd12.prod.outlook.com
- (2603:10b6:8:a5::17)
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="BlIR7eoq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
+	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=tIgmvkbVGgsAFw9O5XEwFGKEfBQkgY3RT+doQ9R/e5A=; b=BlIR7eoqUhI1rLk2ZjKvXK65XF
+	ul1b3Jicl/kzWBqFFYfTW2921ScvcTwoLQ7D7BoW0xono/v0ezOQgDtoxXPq8xKg9MqyJQHmaTZhG
+	3N1FL0vYN2X8TFLjAVPYDdDvGPGx1uft0Pa7GoBvSEuiVgDaK3EgcJG8dImxaUrlrgvLYWMIxQyn1
+	mqWkLM7qeLR9Typ4qRZCwCK3lq9Oq4RFiCgyZ2raRaTMiE9Vts5062yaD5qjjHcCL8sVUyeLo3GWz
+	+cuYSucxEx9Gj/nM3pCzyJgsqsJA+OZVuo9vlhAoQJX3s1SIwfIZUWajLmBCV7g8w4yjJ5+x20fez
+	cWgAlFmw==;
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@surriel.com>)
+	id 1weD8d-000000007rY-1v7G;
+	Mon, 29 Jun 2026 10:39:07 -0400
+Message-ID: <ec4d1acc0d01cd9d9b6f4c9da4033f8591f9436a.camel@surriel.com>
+Subject: Re: [RFC PATCH 00/40] mm: reliable 1GB page allocation
+From: Rik van Riel <riel@surriel.com>
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>, Lorenzo Stoakes
+	 <ljs@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com, linux-mm@kvack.org, 
+	david@kernel.org, willy@infradead.org, surenb@google.com,
+ hannes@cmpxchg.org, 	ziy@nvidia.com, usama.arif@linux.dev, fvdl@google.com,
+ Andrew Morton	 <akpm@linux-foundation.org>, Jonathan Corbet
+ <corbet@lwn.net>, Chris Mason	 <clm@fb.com>, David Sterba
+ <dsterba@suse.com>, Steven Rostedt	 <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Oscar
+ Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>, 
+	linux-doc@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 29 Jun 2026 10:39:07 -0400
+In-Reply-To: <361fd2e5-a5f9-42fe-90fc-bc0af109553e@kernel.org>
+References: <20260520150018.2491267-1-riel@surriel.com>
+	 <aj9yrlB0TrlYCLlf@lucifer>
+	 <528e3a5fbc27c9dc7a098121c32b7679b4c9962a.camel@surriel.com>
+	 <akIjA_dqh4OHAYo4@lucifer>
+	 <361fd2e5-a5f9-42fe-90fc-bc0af109553e@kernel.org>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-2.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|SAVPR12MB999119:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8316450c-bea4-40f3-6140-08ded5e124bc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|23010399003|6133799003|18002099003|22082099003|4143699003|11063799006|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	YhColWN98ey4UOLOxOByOo9g8TFWol1eX/WEo0W9EVDw/fv9IjN98YFFoTs5AN0fpiVOiU5Yi4uJfINKH1WRlPZfkOJc8N5v6eklCZkYkSRSNxmF02LOtsALkRBzN69a3YXbb07TRC0tGCcZIWv0ojhXlXEI3CJuZ46xXsbDqMrQSLKscp+KXv8mc/loq+OOuXrvo1hHM+D2vs78Q66ptR46Ah0cHKffuSIooNLf90wd4ONVaUfNTkOIluIytR4kuAUqQt04n1aE1vHJk/nhRmcf/QzdeaXgcAoUK7UwAXKqrIjXMw+uMgINkpTKOZpiF89x/SFXsIHgyRYzOqqZbYSLUMqR6bE0x55AsrxIBAQ65TFt87DEBkdJUCrUnWywju1iu4tGl0FNGOTO/WipER9bSJDJSkRzp8xKwti4oZYA43SbkvOl4hnhv6mowDA60h6xQ6ImC05FlR1zAP2WHLdEXTawulMKsv4cdnQiWQ2EipIKgXD2BxFYiuCVRk+2GxxM2WZCXiGYsdR/AHpf8TirBplXEujmCoXM7hB+Yyb9FmaapooNSiMe5emhncOMK834cL07mvmXn9+M4JSCLfbZaEGkVdeoDVcDTIHsZCLrbGNZojHFOPEXfRg5zMfhIi3y9qkR4H3sTjuXeGBAbZuMWkd6hksbSO10NJ+Obek=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(23010399003)(6133799003)(18002099003)(22082099003)(4143699003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RHZzQXdtdnBrdnlVL3FMcjVGdkt3M3JzeVQ2SmRuWCtsQTIwaUtJSTFUTEVI?=
- =?utf-8?B?L3Jmb1VLVlVPSWszTjB3VzFBd0Q2Y3NmMkY1RXhSK2ZnZStjeGlLa1lUT0Jr?=
- =?utf-8?B?b3hTQ0d5ZDdPOUtSMHUrNXozazYvcTBPYVBtS2QzSlhTbkM0N3BhZkhqRXVD?=
- =?utf-8?B?S2VwZCtvMmUwdVVCTUZFZDQxNnhUd2tqVFJkcEZ1ZjM1RFlNSUJWaGhUVHBk?=
- =?utf-8?B?dkV3TWkybS9qT3RMTFd0SHB4Mm9LL0N5cTBvVW95NEcyK051YTFKblNuYUMx?=
- =?utf-8?B?aWVKRDEraXUxOFRaa00wcjM2LzhMU1Z2SGUrRjloZi9zYnEwUHVmbElEamND?=
- =?utf-8?B?Vk40a29KOXZKSnR2QzNpTVltQlJieHo0QW13aWMrbGlIdFhJRVlHZ2pQOTFH?=
- =?utf-8?B?MHh1c3Mzd0pmL3RQU1VnQUFjYmhtd0xFYnJTZ2FJcEg4TW9nU3JsaDM0cDdB?=
- =?utf-8?B?aWNDRXBkZ1JPZXRiT0F2cmg2UU55WUZlQ3NtaUcrZkJBcWQ0Z0ZrLzNmbW5m?=
- =?utf-8?B?bnBYaW4veHNhQ1ovcEtMc3Y1Mi8rMVdIUlhCLzVYZkdGUkFySUp2R3ZPZjJL?=
- =?utf-8?B?cnlFS0VBalJIK24ySWZLZGVLVmxhY1RzRU44TDBNdjN0V3VWL2VqeisrOElO?=
- =?utf-8?B?THJyWW80ZU1vRFg5UDZSaStOaVl6dmxPMDI2RXN2Q3M2YzdoenErTkJFWVcy?=
- =?utf-8?B?U1hxelpEcm55UW9UNlVhM3hWVGZxVnFHOXkvSldQRnpnUG83WUtSWUVUamsw?=
- =?utf-8?B?enhLY0ZYQndRYmltM25XemZ4WUduWkk0YUNHeE1vSlpreUhZZ2EzUVhzemVj?=
- =?utf-8?B?U2tkakNJcjE2ZDQzSjN6cEdqWVRQQUxsalNmdjVsSy9SUy9GRVlhZkd2cGV1?=
- =?utf-8?B?bHdodXUycnBUVGR2QmVVY3hFenEvYTg4a0J6T2tzNk8rU3pCeG9vMWZVTThn?=
- =?utf-8?B?cjg2SzNzbTJzNEZ1ZzZjWkVRWHRreDJ2YWg5UitiVjFtRmNEeWQ5cEk0SHZD?=
- =?utf-8?B?NDZNNEN6T3YyL1V4dEFSS3VxcTFoSmR2R1VZdjRxV1lQQUFVLy9KeVhoYmJG?=
- =?utf-8?B?VEhJV3VrbHVJRERnOHgwWU0yM040RHgvRTVUcVZ4N3dmS0E5ZWhzQlhSb1Qz?=
- =?utf-8?B?ZGo2dThuYm9PaS95WnhldlJKdC91cmpsVE00bDYyVVZtMy94QnRKMzd1WW9C?=
- =?utf-8?B?Y2Jsd1RBU0YwODJNelYxUlBCbGQ2eUdvalBGZ0tUQkRFYVY4MG8yU3hwU1BR?=
- =?utf-8?B?dDlRaDRXaFNrWVVkc0UrbVNRamFmZEVWTnc2bE91U0ptRlVxTDhiZy9mRnJa?=
- =?utf-8?B?Rm80TEloUFlSYmpUT2FlTmdIL0l3R2N4VGx4Z2Z0bDlxZjNZL2RWbWV0L2Jl?=
- =?utf-8?B?dmZiNnVRb2tJeGZYNFpLeXkyTmRDYnpTZDczWGNqZWxoZGJYeHh2RHJhcXdJ?=
- =?utf-8?B?RG9jUVd1VzNUaDIzWjZrby8xMnNCN0pSaXNwampKNjh2MUozblM4YjBTSlFt?=
- =?utf-8?B?Nmdkdk8zblNoblIwb1I2eGwzZmF2cEFCZ2FCWnZmNHF4and4emt0dGVQeUZu?=
- =?utf-8?B?YmI5MW56aDBHTnJvRWg0RDJGOW5KUG5kNFRQMWZ3SEFQblhHVlpOT2Iwallo?=
- =?utf-8?B?Y0tZeEpiamF1ZlZ2ekorZWQxZUVOWHA2a3lnNEVrekFudHRhbDFORlVZTW9X?=
- =?utf-8?B?eXpxNVpBT0M5d24vUVFoZkdPTWxkUUYwTk5GazZPMVE4Ykd5ZklpdEs4dUZz?=
- =?utf-8?B?M2lSL3RwbE01cllCNUFzNmxtSVdEM2ZQL0R0YXkvdmpnQ3gzUWJNY2dZdzFT?=
- =?utf-8?B?OU5kbG5uZTJDNG93dUhROGhNYjJkZkFFQUF6Y0tmeUEwV1JWQjh6TGJTS3Fa?=
- =?utf-8?B?ZkI2RTEwb1N5c0R6ZWM4eE1OVU04aTFFd1dkQ0RZVGdiZkFkKzluWWtpeXNu?=
- =?utf-8?B?SjFCeGlUWVlIVGwydWlCQndXRndUWmtkaVV6cDdsT2VBSEtRbTRSZ0dVeExS?=
- =?utf-8?B?MkxwRERiaGZ1QVMycDFZWlAvYTZ3NlppOXFCSk5uTDZicUNEZlVpd1BLTG1P?=
- =?utf-8?B?OEtjY3VFcjJqRHBLdk8rYkwwOTc5SnJUOGlBQnhZS2MxREx3R002SUl5OHFT?=
- =?utf-8?B?TXdmY0t6OXBqYS9oZGtlazNUQkZiVmdsRVE5TWtQZXY1YlRqcXhlSDRGUXBh?=
- =?utf-8?B?RjJnWmxQQXVIa3NTaVk5STh2dThJY1VUZDBEdWpGYmhDMkpRY2lWRXpKSFZS?=
- =?utf-8?B?eGNhWm9ZQVpPajAwSzQzRGd0ME9LNDBOQ2UzWHNmbUJoeWo4S05GZUVuVldn?=
- =?utf-8?B?S2NQWE9aWFprRjNjRnlxV3N2SmsxYzJqTTl5RkF6R2lsUllUQnNIQT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8316450c-bea4-40f3-6140-08ded5e124bc
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2026 13:20:09.6863
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RNsBmMYC3WhKvWnNdSUFjJJtIalIy+wxcEpCDqdOLntxCNu3EfmGx9I4wNwXk6QNMHmmowd7cHAqzxDaFxjq1A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SAVPR12MB999119
 
+On Mon, 2026-06-29 at 12:03 +0200, Vlastimil Babka (SUSE) wrote:
+> On 6/29/26 11:29, Lorenzo Stoakes wrote:
+> >=20
+> > So to be concrete, if you send really rough code, Use [pre-RFC] or
+> > [DO NOT
+> > MERGE] (on the series as a whole) to make that clear and say so in
+> > the
+> > cover letter VERY VERY clearly.
+>=20
+> Yes please. [POC NOT-FOR-MERGE] perhaps?
+>=20
+> > Or, you can put it in a repo somewhere and link it in an email
+> > discussing
+> > the concepts (like I did with scalable CoW for instance).
+>=20
+> Indeed.
 
-On 6/26/26 04:52, Richard Cheng wrote:
-> On Mon, Jun 22, 2026 at 01:40:09PM +0800, alejandro.lucero-palau@amd.com wrote:
->> From: Alejandro Lucero <alucerop@amd.com>
->>
->> Use core API for safely obtain the CXL range linked to an HDM committed
->> by the BIOS. Map such a range for being used as the ctpio buffer.
->>
->> A potential user space action through sysfs unbinding or core cxl
->> modules remove will trigger sfc driver device detachment, with that case
->> not racing with this mapping as this is done during driver probe and
->> therefore protected with device lock against those user space actions.
->>
->> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
->> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->> Acked-by: Edward Cree <ecree.xilinx@gmail.com>
->> ---
->>   drivers/net/ethernet/sfc/efx.c     |  2 ++
->>   drivers/net/ethernet/sfc/efx_cxl.c | 23 +++++++++++++++++++++++
->>   drivers/net/ethernet/sfc/efx_cxl.h |  3 +++
->>   3 files changed, 28 insertions(+)
->>
->> diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
->> index 61cbb6cfc360..3806cd3dd7f4 100644
->> --- a/drivers/net/ethernet/sfc/efx.c
->> +++ b/drivers/net/ethernet/sfc/efx.c
->> @@ -984,6 +984,7 @@ static void efx_pci_remove(struct pci_dev *pci_dev)
->>   	efx_fini_io(efx);
->>   
->>   	probe_data = container_of(efx, struct efx_probe_data, efx);
->> +	efx_cxl_exit(probe_data);
->>   
->>   	pci_dbg(efx->pci_dev, "shutdown successful\n");
->>   
->> @@ -1242,6 +1243,7 @@ static int efx_pci_probe(struct pci_dev *pci_dev,
->>   	return 0;
->>   
->>    fail3:
->> +	efx_cxl_exit(probe_data);
->>   	efx_fini_io(efx);
->>    fail2:
->>   	efx_fini_struct(efx);
->> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
->> index 18b535b3ea40..3e7c950f83e9 100644
->> --- a/drivers/net/ethernet/sfc/efx_cxl.c
->> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
->> @@ -18,6 +18,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->>   {
->>   	struct efx_nic *efx = &probe_data->efx;
->>   	struct pci_dev *pci_dev = efx->pci_dev;
->> +	struct range cxl_pio_range;
->>   	struct efx_cxl *cxl;
->>   	u16 dvsec;
->>   	int rc;
->> @@ -73,9 +74,31 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->>   		return -ENODEV;
->>   	}
->>   
->> +	cxl->cxlmd = devm_cxl_probe_mem(&cxl->cxlds, &cxl_pio_range);
->> +	if (IS_ERR(cxl->cxlmd)) {
->> +		pci_err(pci_dev, "CXL accel memdev creation failed\n");
->> +		return PTR_ERR(cxl->cxlmd);
->> +	}
->> +
->> +	cxl->ctpio_cxl = ioremap_wc(cxl_pio_range.start,
->> +				    range_len(&cxl_pio_range));
-> Hi Alejandro,
->
-> A small question here,
-> Is it possible that the FW would commit a region bigger than the range ?
+I'll do that for the next version.
 
+I suspect it will take a while to beat this thing
+into shape.
+>=20
+> > And _you have already done this_ in your reply here:
+> >=20
+> > * "How do people feel about splitting up the free lists, so each
+> > gigabyte
+> > =C2=A0=C2=A0 (well, PUD sized) chunk of memory has its own free lists?"
+>=20
+> My immediate response is that now we'd need to search multiple sets
+> of lists
+> instead of a single one? What about the overhead?
 
-Hi Richard,
+The current code is clearly not good enough. It
+has to try several gigablocks almost blindly,
+because there is no efficient way to find the
+right gigablock.
 
+I have an idea on how to fix that with bitmaps.
 
-Not really. We are using the minimum size for CXL mem, 256MB, and it is 
-not configurable. If CXL is enabled by the sfc device firmware, this is 
-the only possibility.
+We could have one bitmap per order, indicating which
+gigablocks have order 0 pages, order 1 pages, etc
 
-It could be a good sanity check though, but I prefer to keep v29 as it 
-is now ... Dan Williams is happy enough with it, so I expect Dave to 
-merge it soon ...
+Then a second set of bitmaps indicating which gigablocks
+have unmovable / reclaimable pages.
 
+At that point, finding a good gigablock to allocate
+from can be done with a bitmap_and and a search.
 
-Maybe as a follow up path.
+These bitmaps would only need to be changed when the
+status of a gigablock changes, eg. going from having
+order 0 pages free, to not having any order 0 pages
+free.
 
+Does that seem like a workable approach?
 
-Thank you,
+Once we can quickly pinpoint a gigablock for the
+page allocator to grab pages from, we can also
+split out the "pick a gigablock" code from the
+"allocate a page" code.
 
-Alejandro
+>=20
+> > * "How can we balance the desire for higher-order kernel
+> > allocations,
+> > =C2=A0 against the desire to preserve gigabyte sized chunks of memory
+> > that can
+> > =C2=A0 be used for user space?"
+> >=20
+> > * "How do we balance the desire to keep compaction overhead low
+> > with the
+> > =C2=A0=C2=A0 desire to do higher order allocations almost everywhere?"
+>=20
+> How can we have a cake and eat it too? :)
 
+Pretty much :/
 
-> The committed CXL region length is never validated against the PIO window size.
-> The legacy patch sizes wc_mem_map_size to cover the VI-strided PIO offset, but
-> here we ioremap whatever the BIOS comitted and assume it's EFX_CTPIO_BUFFER_SIZE.
->
-> Maybe adding
-> """
-> if (range_len(&cxl_pio_range) < EFX_CTPIO_BUFFER_SIZE)
->      return -EINVAL;
-> """
-> Would be worthy ?
->
-> Let me know what you think.
->
-> Best regards,
-> Richard Cheng
->
->> +	if (!cxl->ctpio_cxl) {
->> +		pci_err(pci_dev, "CXL ioremap region (%pra) failed\n",
->> +			&cxl_pio_range);
->> +		return -ENOMEM;
->> +	}
->> +
->>   	probe_data->cxl = cxl;
->>   
->>   	return 0;
->>   }
->>   
->> +void efx_cxl_exit(struct efx_probe_data *probe_data)
->> +{
->> +	if (!probe_data->cxl)
->> +		return;
->> +
->> +	iounmap(probe_data->cxl->ctpio_cxl);
->> +}
->> +
->>   MODULE_IMPORT_NS("CXL");
->> diff --git a/drivers/net/ethernet/sfc/efx_cxl.h b/drivers/net/ethernet/sfc/efx_cxl.h
->> index 04e46278464d..3e2705cb063f 100644
->> --- a/drivers/net/ethernet/sfc/efx_cxl.h
->> +++ b/drivers/net/ethernet/sfc/efx_cxl.h
->> @@ -20,10 +20,13 @@ struct efx_probe_data;
->>   struct efx_cxl {
->>   	struct cxl_dev_state cxlds;
->>   	struct cxl_memdev *cxlmd;
->> +	void __iomem *ctpio_cxl;
->>   };
->>   
->>   int efx_cxl_init(struct efx_probe_data *probe_data);
->> +void efx_cxl_exit(struct efx_probe_data *probe_data);
->>   #else
->>   static inline int efx_cxl_init(struct efx_probe_data *probe_data) { return 0; }
->> +static inline void efx_cxl_exit(struct efx_probe_data *probe_data) {}
->>   #endif
->>   #endif
->> -- 
->> 2.34.1
->>
->>
+I suspect it's going to require some fun interactions=C2=A0
+between allocation, reclaim, and compaction.
+
+However, with everybody from networking, to filesystems,
+to anonymous memory wanting to use higher order allocations
+of differing sizes, it seems like we're going to have to=C2=A0
+tackle this somehow.
+
+>=20
+> > I'd also very strongly suggest (as I did in my original reply)
+> > breaking out
+> > parts that can be broken out as prerequisite series.
+> >=20
+> > If you're doing something good or useful _anyway_ then just send
+> > that
+> > separately first, and have later work rely on the earlier work.
+>=20
+That becomes cleaner with the "post a link to
+a tree" thing, as well.
+
+The pcpbuddy stuff is likely to go in separately.
+Johannes is still working on that code.
+
+The "make btrfs inode cache pages movable" thing
+already went in.
+
+I think I have a few more things in the tree that
+can go in separately, but hopefully that will grow
+as this code solidifies.
+
+On the flip side, things like "making compaction
+scale" may well end up depending on the gigablock
+stuff, because lack of targeting data seems like a
+likely cause for why compaction has to try so hard.
+
+I'll make sure to go over every point raised by
+you guys before writing the next version of the
+code, and again before posting a link to the
+tree.
+
+--=20
+All Rights Reversed.
