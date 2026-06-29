@@ -1,127 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from buffalo.tulip.relay.mailchannels.net (buffalo.tulip.relay.mailchannels.net [23.83.218.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04EF282F3B
-	for <linux-cxl@vger.kernel.org>; Mon, 29 Jun 2026 18:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010C133EB06
+	for <linux-cxl@vger.kernel.org>; Mon, 29 Jun 2026 18:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.218.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782756015; cv=none; b=LpT8Yqo/u6KcQG1MhK6CHFvpY9LKzY5vEVgP2FhNddHcg+IwWl45kjnNtuXKhortvKFIK7hmHvJIHIpsY1vpYRLfSYZRt8X1dDs+RjQkgQXLctJJGeOmZ7aePv/tAKGPj7bsY5SOTyQZ1rkT1bf5UUiRKpnuOwJ3MyfXNL6HSnU=
+	t=1782756765; cv=none; b=A3Xgec9wKKJOoyr6om1Ah+c6h5pMfCfTwUsM727zDI/Q4jiS2TUl2ewyVDOjJQlWPeBmCbZ/r9S0YbVZ2XWGzlt36Q5wk+MhQhkEynwxGLDvg3XcRSraTbpdjXUpIQObwllOMplFUuHTtphMr6K2S55ebcRljGSgu/1HmgQWn9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782756015; c=relaxed/simple;
-	bh=GgjoCr0XZew2P+fEafCKkHSU/t8kvwCinu0GLqk4O9M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FccJ0aBz/aFeIHFo5ixYHj2bIXgNBZhtmfencUeTG9l20HigqAcfnWUVhRWc+1bGe8Fe/7Na7sJYAjKnYvTp0W33UJD2THQKgQnal5Zuf/s+CcSpsdY6g34YYaTaTfYB62KtnCAuavoZyha370jVz1jY9EyiS1438wztDD6v2X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IdM0v+Gi; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1782756765; c=relaxed/simple;
+	bh=bETxppE7r2zaDQBmNRICozZJzwQhrE9wCcmGlg6Qckw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qM4UWB+96LUp2TJjyMeCKIZZEWJ7wO0SE5ijnSkow3/pde/FbEUX8hHyS33iZKYgYqH6yh4V3KXVwChBtasqb7oCq0O01YiC+9JSdHsfVGlpXXxwK8ZEtbCZEYCqaIna0Bo0b/BuBSylfJ2VPiNN38m3YGyFGzD6Wur6Lvb8yMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=ClG7FqVg; arc=none smtp.client-ip=23.83.218.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IdM0v+Gi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782756013; x=1814292013;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GgjoCr0XZew2P+fEafCKkHSU/t8kvwCinu0GLqk4O9M=;
-  b=IdM0v+GiJ4r8b5xwNdgwFcjZq3KHqqVxFIiRkz7krfMbg7lQpixVUe/k
-   IbYq/5eoceZngChMhwnacq0saAb7hk2QeedzqWe0LX9qlQUqEzeJ9k+oh
-   qoYV6DYFFoTuoL4KosvJY89n9uaC8uYsKYUV3K3IhQ+d/PDsXOO6QKZu8
-   1K+7EaI2JC4tX9C8olA+raGYzDuWCN7+uIuJOlk9IfzN48OKbNwjpDT+x
-   GjxuCsea84PpFca8q6jCxxPq7qqDrHLoXHMCAWWNt+dlJSekO7bGyaxM/
-   L0pABB/ncBNfDao3IjV2wPF2vb1Z8nANebQrvHSxg/jmn66zN0pzH7fc6
-   g==;
-X-CSE-ConnectionGUID: E2YB/kSjSKKNpAK9QGuC9w==
-X-CSE-MsgGUID: lNMRnaE7SfWWvSm930fVBw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11832"; a="94607907"
-X-IronPort-AV: E=Sophos;i="6.24,232,1774335600"; 
-   d="scan'208";a="94607907"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 11:00:12 -0700
-X-CSE-ConnectionGUID: ukhMGeh4QTanLUa8dXEaLA==
-X-CSE-MsgGUID: tmD2zBYjQEajZaf6AGntMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,232,1774335600"; 
-   d="scan'208";a="245674192"
-Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.109.194]) ([10.125.109.194])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2026 11:00:11 -0700
-Message-ID: <b36448e7-134f-4dce-ba00-e7d3e97792be@intel.com>
-Date: Mon, 29 Jun 2026 11:00:09 -0700
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="ClG7FqVg"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 230DD943086;
+	Mon, 29 Jun 2026 14:44:10 +0000 (UTC)
+Received: from pdx1-sub0-mail-a254.dreamhost.com (trex-green-0.trex.outbound.svc.cluster.local [100.98.255.9])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 982BA9435C2;
+	Mon, 29 Jun 2026 14:44:09 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Dime-Cure: 7f473c85584cb72d_1782744250019_321482182
+X-MC-Loop-Signature: 1782744250019:3095423882
+X-MC-Ingress-Time: 1782744250018
+Received: from pdx1-sub0-mail-a254.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.98.255.9 (trex/7.1.5);
+	Mon, 29 Jun 2026 14:44:10 +0000
+Received: from offworld (181-161-142-22.fo.baf.movistar.cl [181.161.142.22])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a254.dreamhost.com (Postfix) with ESMTPSA id 4gppvD3thFz105D;
+	Mon, 29 Jun 2026 07:44:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1782744249;
+	bh=92OdsPY/wMiJiP7SJGn/dV/PeVTcGI8OzmVFRfTqX/s=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=ClG7FqVghwvjhI1QriwIGLoA7czLtSWsxcLoNqOS0gjIbmAaZQXQhhZdoTfdes8zK
+	 PvxYTaxdI+3JISo6mTs9ZRSkz2Rm2JUrn9e+ZbdntuKUh5VGn9AogdDGdceglaXcXZ
+	 E7UwBk/OzN8QCgEhX0/tIt0CnQTX0hWjoJJL8QdQnpOq1G481loW//rCR8evKFLFNs
+	 rhP/HHEb/crtm60wyQddcs3ZYvKumgex91xDTAIzfoLo8JaXt3A/L6O7cWPftc9Z0x
+	 9zOEIuukPy3NX3O/Mw+MF/bs+SRNYB1P/pNRCtVisZ34r5Emt/M8Hmt8Qa9XMbHL25
+	 gxleVjSezD2+g==
+Date: Mon, 29 Jun 2026 07:44:03 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Richard Cheng <icheng@nvidia.com>
+Cc: sashiko-reviews@lists.linux.dev, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v5 1/5] cxl: Add BI register probing and port
+ initialization
+Message-ID: <20260629144403.wuwhbqpfimdg524a@offworld>
+References: <20260615145529.13848-2-dave@stgolabs.net>
+ <20260615173541.BE49D1F000E9@smtp.kernel.org>
+ <ajo8nZVglGsutdpg@MWDK4CY14F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v30 0/2] Type2 device basic support
-To: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org, djbw@kernel.org
-Cc: Alejandro Lucero <alucerop@amd.com>
-References: <20260629183727.51502-1-alejandro.lucero-palau@amd.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260629183727.51502-1-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <ajo8nZVglGsutdpg@MWDK4CY14F>
+User-Agent: NeoMutt/20220429
 
+On Tue, 23 Jun 2026, Richard Cheng wrote:
 
+>On Mon, Jun 15, 2026 at 05:35:41PM +0800, sashiko-bot@kernel.org wrote:
+>> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+>> - [High] devm mappings for dport BI registers leak on hotplug due to being called outside the dport devres group in cxl_port_add_dport.
+>> --
+>>
+>> commit a836080fdf13fa334055f7f13a95491b66ef793f
+>> Author: Davidlohr Bueso <dave@stgolabs.net>
+>>
+>> cxl: Add BI register probing and port initialization
+>>
+>> This commit adds register probing for BI Route Table and BI Decoder capability
+>> structures. It introduces helpers to map the BI Decoder of a downstream port
+>> at dport-creation time and a port's own BI capability during port probe.
+>>
+>> > diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+>> > index ada51948d52fa..ca8d8c14b7876 100644
+>> > --- a/drivers/cxl/port.c
+>> > +++ b/drivers/cxl/port.c
+>>
+>> [ ... ]
+>>
+>> > @@ -261,6 +321,17 @@ static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
+>> >  	/* This group was only needed for early exit above */
+>> >  	devres_remove_group(&port->dev, no_free_ptr(port_dr_group));
+>> >
+>> > +	if (dev_is_pci(dport_dev)) {
+>> > +		switch (pci_pcie_type(to_pci_dev(dport_dev))) {
+>> > +		case PCI_EXP_TYPE_ROOT_PORT:
+>> > +		case PCI_EXP_TYPE_DOWNSTREAM:
+>> > +			cxl_dport_map_bi(dport);
+>>
+>> [Severity: High]
+>> Does this leak devm mappings if the dport is hot-removed?
+>>
+>> Looking at cxl_port_add_dport(), devm_cxl_add_dport_by_dev() creates a
+>> devres group for the dport on the parent port's device. However,
+>> cxl_dport_map_bi() is called after devm_cxl_add_dport_by_dev() returns,
+>> meaning the devres group has already been closed.
+>>
+>> Because cxl_dport_map_bi() calls devm_cxl_iomap_block() against the parent
+>> port device, these devm allocations bypass the dport group and attach
+>> directly to the parent port device.
+>>
+>> If the dport is hot-removed, the dport devres group is released, but the BI
+>> capability mappings appear to be left behind. If the dport is subsequently
+>> re-added, won't devm_request_mem_region() fail with -EBUSY due to the
+>> physical address region conflict, permanently breaking BI capabilities?
+>>
+>
+>Hi Davidlohr,
+>
+>I think sashiko-bot's is right on this part, this part runs after devm_cxl_add_dport_by_dev()
+>has already closed the dport's devres group, so the BI request_mem_region()/ioremap() land on
+>the port's devres list outside that group. On runtime dport removal the group release won't free
+>them, and re-adding the dport then fails the BI region request with -EBUSY.
+>
+>The dport RAS mapping is done inside __devm_cxl_add_dport() while the group is still open for
+>this reason.
+>I would suggest mapping BI the same way which is to move cxl_dport_map_bi() into __devm_cxl_add_dport()
+>next to the RAS setup, and set map->host like RAS does.
 
-On 6/29/26 11:37 AM, alejandro.lucero-palau@amd.com wrote:
-> From: Alejandro Lucero <alucerop@amd.com>
-> 
-> This series adds the last bits for allowing a CXL Type2 driver to obtain
-> a CXL region linked to the device HDM decoders committed by the BIOS.
-> 
-> For the sake of merging those changes and the driver using them, this
-> version only adds the changes without a client. A later series will
-> include sfc netdev driver as the client.
-> 
-> Changes from v29:
-> 
->  - Only cxl core changes.
-> 
-> Changes from v28:
-> 
->  - patch 1:
->         fix doc (Ed Cree)
->         fix error path (Sashiko)
-> 
->  - patch 3:
->         removing extra + char (sashiko)
-> 
->  - path5:
->         remove stray change (Ed Cree)
-> 
-> Changes from v27:
-> 
->  - patch 1: make driver probe failing if error in efx_cxl_init (Dan)
->  - patch 4: add unmapping if error after efx_cxl_init (Dave)
->  - patch 4/5: move cxl_pio_initialised from patch 4 to patch 5 (Dave)
-> 
-> Tested in the cxl_for_7.3 branch.
-> 
-> 
-> Alejandro Lucero (2):
->   cxl: Support Type2 cxl regs mapping
->   cxl: Support dpa without a mailbox
-> 
->  drivers/cxl/core/core.h   |  2 ++
->  drivers/cxl/core/mbox.c   | 51 +----------------------------
->  drivers/cxl/core/memdev.c | 67 +++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/core/pci.c    |  1 +
->  drivers/cxl/core/port.c   |  1 +
->  drivers/cxl/core/regs.c   |  1 +
->  drivers/cxl/cxlpci.h      | 12 -------
->  drivers/cxl/pci.c         |  1 +
->  include/cxl/cxl.h         |  2 ++
->  include/cxl/pci.h         | 22 +++++++++++++
->  10 files changed, 98 insertions(+), 62 deletions(-)
->  create mode 100644 include/cxl/pci.h
-> 
-> 
-> base-commit: 9b1e70e8f9ec4b5c6ce7fa774a0023bb6894c686
+I went with this adding a new devm_cxl_dport_bi_setup() helper and calling it from
+__devm_cxl_add_dport():
 
-Immutable branch created:
-https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=for-7.3/cxl-type2-support
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index cdb741d09b9e..5511a8b33062 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -929,6 +929,44 @@ int cxl_port_get_possible_dports(struct cxl_port *port)
+  	return ctx.count;
+  }
+  
++static void cxl_dport_map_bi(struct cxl_dport *dport)
++{
++	struct cxl_register_map *map = &dport->reg_map;
++	struct device *dev = dport->dport_dev;
++
++	if (!map->component_map.bi_decoder.valid) {
++		dev_dbg(dev, "BI Decoder registers not found\n");
++		return;
++	}
++
++	if (cxl_map_component_regs(map, &dport->regs.component,
++				   BIT(CXL_CM_CAP_CAP_ID_BI_DECODER)))
++		dev_dbg(dev, "Failed to map BI Decoder capability\n");
++}
++
++/**
++ * devm_cxl_dport_bi_setup - Map BI Decoder registers on a CXL dport
++ * @dport: the cxl_dport that needs to be initialized
++ *
++ * Must be called while the dport's devres group is open so iomap
++ * allocations are released on dport removal.
++ */
++void devm_cxl_dport_bi_setup(struct cxl_dport *dport)
++{
++	if (!dev_is_pci(dport->dport_dev))
++		return;
++
++	switch (pci_pcie_type(to_pci_dev(dport->dport_dev))) {
++	case PCI_EXP_TYPE_ROOT_PORT:
++	case PCI_EXP_TYPE_DOWNSTREAM:
++		dport->reg_map.host = dport_to_host(dport);
++		cxl_dport_map_bi(dport);
++		break;
++	default:
++		break;
++	}
++}
++
+  /*
+   * BI requires 256B Flit operation on the link. RP/DSP/endpoint must
+   * also have the BI Decoder cap mapped (@bi); for USPs the BI RT cap
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 63005cf0fa91..74bbc195d624 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -1264,8 +1264,10 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+  
+  	cxl_debugfs_create_dport_dir(dport);
+  
+-	if (!dport->rch)
++	if (!dport->rch) {
+  		devm_cxl_dport_ras_setup(dport);
++		devm_cxl_dport_bi_setup(dport);
++	}
+  
+  	/* keep the group, and mark the end of devm actions */
+  	cxl_dport_close_dr_group(dport, no_free_ptr(dport_dr_group));
 
-96ddf1af34f5 cxl: Support dpa without a mailbox
-2c599da8231f cxl: Support Type2 cxl regs mapping
-
+Thanks,
+Davidlohr
