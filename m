@@ -1,150 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010004.outbound.protection.outlook.com [52.101.193.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9D8453498;
-	Mon, 29 Jun 2026 17:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782752676; cv=none; b=Wtw0ZgzrIaV5tmg2Vx4+wrIK3C0uWuoZImGLNXbAuYT/1AznWfpL2SnoWjtrW3iys8bVQcb/ppz61K2JP2sys0BptBgBqwrAWMGlo7GkzMI8K18cynTftYPMq9QgcSNEjLUaeHuIkKg077ds41qjKsYzgD7NBJWGYfvbSoX1mng=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782752676; c=relaxed/simple;
-	bh=0lvofKxQEu5HrATFBWK8ji+zwyW4uri9cfpNPClL8DA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VHrCI2abILhihwJACIKgtHnn1+CTyYI0frhvqSQnomKkOx+eaVzIg1QHJGLCQOv1w/7yd2Do+b2nuSenEIG94eSKsAIJeS+jhpeWLwfIqAKtwCGqVDnrzO3UWo40AgzYiOYZi15H7wDGu5NFbtMGZBnsbisL6BW9d1OWH9WMyzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KR+HDkX/; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC1927C162
+	for <linux-cxl@vger.kernel.org>; Mon, 29 Jun 2026 17:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.4
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782754869; cv=fail; b=BIvMEDzoQuJVudrmzVS3x9IEZ61qwXMt2IVd8kbr70xhFZ9NTkY60orvTmrTS9UyZqHB+QowP8FlsOhmfEJtIwgNJYkyZcZ/m6HFEImR9OY3gCPDvF5amNRCGLTI1JMqecUzlZNjWDSMvsaQh3VVMokD+eYEBVBb+dEsW+U6Kr4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782754869; c=relaxed/simple;
+	bh=xkqbT/3g1qgTdlZGZExyhDu7qiSAhhAYg4aHQzIwSp8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TEU/JL5S0oW6TqPaLpdgV9jLK1Z4eFSIZEqG6D+vY0rm2Pt1CY8znwvpeI+UNJ4/rbb/gfQyHf92Yj+HDz7beZ1G1bUwH5gQCLj7eO5W8eEHjbfxIalTwHm6oYcMgXQxEvVFMON1smygDdBCXeoPpSp4K0vA7o+IeKWCCz/0fKc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=14+uDmEn; arc=fail smtp.client-ip=52.101.193.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KR+HDkX/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E80491F000E9;
-	Mon, 29 Jun 2026 17:04:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782752674;
-	bh=Ul6f7sQKvd0dorXycCkumAOsgczpxyVqCRrPVWEZxzE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=KR+HDkX/e+DWcI70K4NbnOWmimZctb8DsZesFzOfoRbt2YiJJd5ywFThe+vJUJZdh
-	 p63fxw//X5QEMiVKFfh+/Xo7AbACmQSqVfULumqMNXeqwt7oYJdiswxglOvpvm+gYP
-	 RuBv/kqyqTbU50PT22VB7eCTe1A12DHVqVdOoo56Y4B6UyZeBUUWz9OKlMZ8FyaPhJ
-	 +LLqVW339hEBK/8pv6fsO0HBTB4ZgQT69C7X+n022la3K8wqD1ZFVfO0XvoFWTY1AS
-	 pq3oPNKGNHJOSTzC5LxbaMmsFi/5xTr02h+zqPvJgtGu4vb69ixMJRmkmRaMkE8uxw
-	 NltG1ROyCmuVw==
-Message-ID: <20a5dfd4-b3c7-450a-8a70-08d0345aade4@kernel.org>
-Date: Mon, 29 Jun 2026 19:04:25 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="14+uDmEn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=b2a9Pw3HVfNB29pvq7bCF+xkoE7zmykmcsm6YJdA5ZMbAtN1gCgh5uOAeEuveTsRV6hmL2UFUMeCm6Q2O6USQwKK2gv1GSwPWZJuk2WleySCW6cA0e9KWS94YcNn7CG8exZLwz0euGCNo5N091y+NB4qxdG1Wpj3SCFmTQDbhMQDrMpTNDSVfcrVw2E4dUO0XvmdmhquQ9ta4w6ZE/2Li3vgDcwc0gg/S1TGLMgW/K3+LnnhucwUjk0vFa33Ppr7FOHSC4ZwWP8nzvTYkJTjA8Ho2fprQqp6v+MGmPzBnXJv6wqAfrFemvbvjr7xsJU6o0nJ9IePJR5Q14QY8kUqeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aHKFOWIqyZL4d6COxcsMWGwLRXURDNlh4tB4eBqtsa0=;
+ b=a0ZlLFBCOePI93YkpxqTi+hyzazfUF7Mgb9Rup4Q/zjefbKs5IPH5yT8l1I7m4sKlXiILs7CXmftcc0M5IB5yutLw4fTZgdmxN2mIeKUyPMkotasnT19O2XE4cD02HH6YTtm5gVrxE0f7mCydy2Ld/1LulbAgXP1Y4K61dse3KBxWfILFoqRYCxk2i1ZODXK0PCt+AAXl0MOu+dDXE4Uju/BsHKIky635LJG/HSdUvELX/tERIZO8JbiaC3PXfIzBEBY/dyfwaUwsANt6J2OXHrt/6IMjs2yu2LMBV7QrKujdKWGWWJiu/dXy2s2gyvawAleWfQjBoCo8Ci5StJz7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aHKFOWIqyZL4d6COxcsMWGwLRXURDNlh4tB4eBqtsa0=;
+ b=14+uDmEnWKvKfStSPTjwB5RAaqFbIjrP7Lx0LcF1uBIIMmpga2NKobxC2Gi5AahwxBjX1noxx5WJQ6UfDujxSOhVbQqJKdITyvxgwyzaVnuWrbilTGxbi1r8ipGGS4UH5bpj+4Vd6tVon6xlvuCy/vUwQGDK6BclNJrzUlTYJJI=
+Received: from CH2PR18CA0027.namprd18.prod.outlook.com (2603:10b6:610:4f::37)
+ by MW4PR12MB6999.namprd12.prod.outlook.com (2603:10b6:303:20a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.18; Mon, 29 Jun
+ 2026 17:41:03 +0000
+Received: from DS3PEPF000099E0.namprd04.prod.outlook.com
+ (2603:10b6:610:4f:cafe::13) by CH2PR18CA0027.outlook.office365.com
+ (2603:10b6:610:4f::37) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.159.19 via Frontend Transport; Mon,
+ 29 Jun 2026 17:41:03 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ DS3PEPF000099E0.mail.protection.outlook.com (10.167.17.203) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.6 via Frontend Transport; Mon, 29 Jun 2026 17:41:03 +0000
+Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Mon, 29 Jun
+ 2026 12:41:02 -0500
+Received: from galena-46a8.xcblab.xilinx.com (10.180.168.240) by
+ satlexmb07.amd.com (10.181.42.216) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.41 via Frontend Transport; Mon, 29 Jun 2026 12:41:02 -0500
+From: <alejandro.lucero-palau@amd.com>
+To: <linux-cxl@vger.kernel.org>, <djbw@kernel.org>, <dave.jiang@intel.com>
+CC: Alejandro Lucero <alucerop@amd.com>
+Subject: [PATCH v30 0/2] Type2 device basic support
+Date: Mon, 29 Jun 2026 19:37:25 +0100
+Message-ID: <20260629183727.51502-1-alejandro.lucero-palau@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] mm: memory-failure: fix HWPoison flag race with
- non-atomic page flag ops
-To: Andi Kleen <andi@firstfloor.org>, "Michael S. Tsirkin" <mst@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, Oscar Salvador
- <osalvador@suse.de>, Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>,
- Rik van Riel <riel@redhat.com>, Vlastimil Babka <vbabka@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Brendan Jackman <jackmanb@google.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
- Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry@kernel.org>,
- Hao Li <hao.li@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Byungchul Park <byungchul@sk.com>, linux-mm@kvack.org,
- linux-cxl@vger.kernel.org
-References: <cover.1782676497.git.mst@redhat.com>
- <akHUboUaYi-OJHFu@firstfloor.org>
- <20260629033608-mutt-send-email-mst@kernel.org>
- <20260629043417-mutt-send-email-mst@kernel.org>
- <akKjOG6iFhGNTFYC@firstfloor.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <akKjOG6iFhGNTFYC@firstfloor.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099E0:EE_|MW4PR12MB6999:EE_
+X-MS-Office365-Filtering-Correlation-Id: 166675f4-a3b5-4ee9-3615-08ded6059744
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|23010399003|82310400026|36860700016|376014|18002099003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	LDiGejnAgPiePpicXRNDGq6Aps/aLI8dI+tNZecwjCU9VSzPX0c26OzXHWTqiZTofw0jok9yQn55SISwNs0TvHaeASyGPiNE8gui344fpQD1+Pm7e9tSgsysBZM+t/QjrQ3X1IOzcM7TthsDeESEWVugeshmgAnP3dqxrQZTEmrezvbfjekIgLp5GvALqk0hg0Psli2oBJkJuzgqGik0etQfE4ytL1VZNJSlBpKlaFkytsr/VNNSmngR0Vnu+0xSmTCoY0ZCMLCVOihfAIlhNLQz8wQazMGvUR0OuBjdTDk3Tm5nRA67Rly10ZGT80/p+oNJ9sEF1VZj6sdqUfXUwj8z4qvFE6xf75NG333Q5x3DnDQsAhXARtNbx6+Wttbb0NSj4dmJIqlHpqRvHxbP9OqmTMDZnOOC1EWzl4WHcfZZZQ26guPsVcElyQTePCeQxxrmcXeAgqguqydOZSZ8x6nrk3Y8gtHg6bV5wIzsaThHEqmjXlbqUYsBYy27F5aEWznPUGAFm1wiYb0Zrr43VCVRlWww8ebwThebnZ7RiiRL3ro5PL9HPdZRGUrqL8+uAydSVU9zsgwKXjKvn9D1QBPiOeiLZ1JYdHEbeVPQ7dtUIlLda7NX9iWH9qA7gOqfiXlkqUq4dlfdKINCodDz6kTRK/Ucj94vmn/ixnLajLy1KEduvFlNfZ4+m6hoit8JsVQkeIwu9V+RF8thTNH1Dw==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(82310400026)(36860700016)(376014)(18002099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	8v8zVhEJf9Bh/hcfmWhj20h5NMdnNRWz4eGF251jyQ3RCgyEUJxFZt7qdRy0Yze9ro52cg985SxhpVGNJGYTxMRITZ+085cV/EWWMpOuIuYlkhChlzNjylNzdqCZmimWasR0TqIZZdcZv/IvIfu9LyBSn4Wws73j1FzDrCviEBbB1Vj5neu0pmgf4zLKAhYzepsnZ3G+0qdxltWXY/+r/BDgWwF/peE+Sas3c9CiWR/bPp5nJEwD9+ulX2cCVNX/2laqJBXzhjHPqCiRaMeOQwLFLuQ89R7a1FvuXDz1wdEn3Aw9ndSm7Kj8tmX+o0ieyruwEFsFpq1qKit9/rzbD0+PSWRe5OERQmqLd6A4jqzgUtt/hd3Qu29MMOyzsrXt+AwJE1fjEeUwqy248LtB09MkOakFPIYE1Ewiw8kQBFfdSG9CaqIL0Rp1hnx3LUDb
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2026 17:41:03.3394
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 166675f4-a3b5-4ee9-3615-08ded6059744
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099E0.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6999
 
-On 6/29/26 18:54, Andi Kleen wrote:
->> However, this was a basic test, when allocating 4k pages. With 2M hugepages:
->>
->>                                    insns/iter    cycles/iter
->>      -------------------------------------------------------
->>        base                       20758 +/- 12.5   191208 +/-1946.6
->>        rcu                        20785 +/-  3.7   197108 +/- 132.1
->>        atomic                     20727 +/-  6.4   204591 +/- 160.2
->>
->>        rcu vs base                  +27 (+0.13%)     +5900 (+3.09%)
->>        atomic vs base               -31 (-0.15%)    +13383 (+7.00%)
->>
->> and even with THP:
->>
->>                                    insns/iter    cycles/iter
->>      -------------------------------------------------------
->>        base                       27220 +/-  2.8   192151 +/- 483.3
->>        rcu                        27248 +/- 30.1   194159 +/-2746.6
->>        atomic                     27186 +/-  3.2   200526 +/- 746.2
->>
->>        rcu vs base                  +28 (+0.10%)     +2008 (+1.04%)
->>        atomic vs base               -34 (-0.12%)     +8374 (+4.36%)
->>
->>
->> needs more thought.
-> 
-> Well the alternative is to not bother with RCU, but just wait a bit and
-> check if the bit stuck and repeat if needed. While that could in theory
-> livelock it is extremely unlikely (especially if you add a bit of randomization 
-> to the sleep)
+From: Alejandro Lucero <alucerop@amd.com>
 
-We discussed that a bit already. Hypervisors make it fairly unpredictable how
-long you would actually have to spin.
+This series adds the last bits for allowing a CXL Type2 driver to obtain
+a CXL region linked to the device HDM decoders committed by the BIOS.
 
+For the sake of merging those changes and the driver using them, this
+version only adds the changes without a client. A later series will
+include sfc netdev driver as the client.
+
+Changes from v29:
+
+ - Only cxl core changes.
+
+Changes from v28:
+
+ - patch 1:
+        fix doc (Ed Cree)
+        fix error path (Sashiko)
+
+ - patch 3:
+        removing extra + char (sashiko)
+
+ - path5:
+        remove stray change (Ed Cree)
+
+Changes from v27:
+
+ - patch 1: make driver probe failing if error in efx_cxl_init (Dan)
+ - patch 4: add unmapping if error after efx_cxl_init (Dave)
+ - patch 4/5: move cxl_pio_initialised from patch 4 to patch 5 (Dave)
+
+Tested in the cxl_for_7.3 branch.
+
+
+Alejandro Lucero (2):
+  cxl: Support Type2 cxl regs mapping
+  cxl: Support dpa without a mailbox
+
+ drivers/cxl/core/core.h   |  2 ++
+ drivers/cxl/core/mbox.c   | 51 +----------------------------
+ drivers/cxl/core/memdev.c | 67 +++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/pci.c    |  1 +
+ drivers/cxl/core/port.c   |  1 +
+ drivers/cxl/core/regs.c   |  1 +
+ drivers/cxl/cxlpci.h      | 12 -------
+ drivers/cxl/pci.c         |  1 +
+ include/cxl/cxl.h         |  2 ++
+ include/cxl/pci.h         | 22 +++++++++++++
+ 10 files changed, 98 insertions(+), 62 deletions(-)
+ create mode 100644 include/cxl/pci.h
+
+
+base-commit: 9b1e70e8f9ec4b5c6ce7fa774a0023bb6894c686
 -- 
-Cheers,
+2.34.1
 
-David
