@@ -1,123 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBE0285CAE
-	for <linux-cxl@vger.kernel.org>; Tue, 30 Jun 2026 15:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D00B349CCF;
+	Tue, 30 Jun 2026 15:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782832938; cv=none; b=pteS8FV0R7IKgFDLSZeKfo5kbKBQZTbUsVixuPmCN0prZHBsQQkMrQqM39IlqaZKaxm7D+Ia935X4dwDaTWXv7fYyJP/J1C5FW+bRj2Lx/wfj/h3QhL+O7jnkrrQimAbSRgBC7HoYp7ZUXSIlcJgE2dw5GA38ixW/7/xmvLKBZM=
+	t=1782834873; cv=none; b=o5aWB0CGDVGPIylyDEDlSzQYYyKRiEWtJSPnpiab8p0cM7HmWSqRTD98EzgXNCIu2zxrJapDtKMFgdsxdPGVWcx+mQIZaN6oBixxXdaMd9pDBBFFfyXGWfurfg+0qRJiGGeSIsygfulLEAZocApCabubDDuU9HYRgGro4sLd5DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782832938; c=relaxed/simple;
-	bh=O6D/D26p3Agqno4RwVn18jQgxFAg/80qO7ai+y0vjmw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=RLMngyd9u6f+mx55thPEfrTUmIO/jLK+zURT01G0H8leSa3GT3K4L/AmnQfqqz3Tjc9BNw2IDNp374mu8zASH0ntHlgtEKbN1N7bq4fx6e4gZXkbHuNM50oDa31K8fPdmIkiqlSPP9q1czNOnNe2maTdsIumlsKipZFjNJ1FRcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fE9+sYwi; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782834873; c=relaxed/simple;
+	bh=i8jo1o5u3WhYTUBiZ/Qh6t+Wk7/nEALqzBb1P1i+TqI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OwYLGeVzEGHyPKU4+UKS7TASs5xTkewnxDu6PL1MELiPHxsRMNSE8FQKt5ukH/6cFU+ILT+h/5IkU4kZg6EVW4YPj1GAPcVC3pVHZWSJc0HmF7X8RSGID28Hemjs9/TZFnVJtcXIfKqCkkJJ5uzHvs55Uv0rhPsttFx5SuKL78w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eLHAi/g8; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fE9+sYwi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C2811F000E9;
-	Tue, 30 Jun 2026 15:22:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782832937;
-	bh=SvLQMun4tJq8YvLN2AVJsUEdqn5zk2ii1ftoVRQk4YU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fE9+sYwiBOeW/iY/TnPo0vzodUe63141dNGZSanKPSDifBcVbFLLVn/sRrPgu/hkx
-	 dAKdxqEfT4ZgZcaMgqupma/AVguxdMGhwDQ1k2QZRAQm+W7TzvmnYMmJkWo48vjbco
-	 71PHOQ6BV3mUGslOGmxOOp6ROLsMCV7E82H5OMCTcZjEw/GezPaByUuuJAxR0aBVzm
-	 24AQ++GneYxIuL41rvnj/uJDJgLx2Fjhl9IOt00OuJORxLDPkeopING86oZWQ0T9/5
-	 xlJWrkMZzKfgVX34jkdk20wwG5v9A2opP93KaHnlgfEpDIv0Iv5YRQLLiCE9QqO+GZ
-	 g1y/LDYRFPC5Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v31 5/5] sfc: support pio mapping based on cxl
-Reply-To: sashiko-reviews@lists.linux.dev
-To: alejandro.lucero-palau@amd.com
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260630151346.31201-6-alejandro.lucero-palau@amd.com>
-References: <20260630151346.31201-1-alejandro.lucero-palau@amd.com>
- <20260630151346.31201-6-alejandro.lucero-palau@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 30 Jun 2026 15:22:17 +0000
-Message-Id: <20260630152217.8C2811F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eLHAi/g8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782834873; x=1814370873;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=i8jo1o5u3WhYTUBiZ/Qh6t+Wk7/nEALqzBb1P1i+TqI=;
+  b=eLHAi/g8X7fNQujs2fzU+V2AATIXOyGSSSbEx23aS3MUiq/fUtBSc8ff
+   fq4s0V1yXEd7huqhhC9kKBi19OXgBPQiwv8QdfkVkxnIaxYcWAym1oyOL
+   C0J7dQo1zgvsZHzbBuFVNHgi27pWRTbLZpuRqjUY5ohhoaHkaTkMGPnPG
+   tKmOSKy2tt4JGeVJjBkJdCSF4opDjWhfIkeutNTM5a+fP5dj3AvOXwSj8
+   uW4iQmTMGZce3RvDw5CI1Vfm4+jOpjBbVlbwwD5KA4U1Hm24z/+OvLONM
+   589im5K7V38s5gyTDt66lge7kLm8Qlz1ofHi5Vn7qFzCofxXgoVPiqzWB
+   g==;
+X-CSE-ConnectionGUID: 5qIP366FQ4+GsQia2PaIkg==
+X-CSE-MsgGUID: ITm2jDNTSTKGcOrQkbn00A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11833"; a="83425862"
+X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
+   d="scan'208";a="83425862"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 08:54:33 -0700
+X-CSE-ConnectionGUID: h7Vpqlt/TsWjYJEYK4iLvA==
+X-CSE-MsgGUID: 5+UAC1FFReqoiNjpKOyEVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
+   d="scan'208";a="247828413"
+Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.109.254]) ([10.125.109.254])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 08:54:30 -0700
+Message-ID: <3cdc48ca-5c39-42aa-8853-e5e3a7884bbe@intel.com>
+Date: Tue, 30 Jun 2026 08:54:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] cxl/features: Reject feature offset that overflows
+ 16-bit field
+To: Richard Cheng <icheng@nvidia.com>, dave@stgolabs.net, jic23@kernel.org,
+ alison.schofield@intel.com, vishal.l.verma@intel.com, djbw@kernel.org,
+ danwilliams@nvidia.com
+Cc: iweiny@kernel.org, ming.li@zohomail.com, gourry@gourry.net,
+ rrichter@amd.com, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kees@kernel.org, newtonl@nvidia.com, kristinc@nvidia.com, mochs@nvidia.com,
+ kaihengf@nvidia.com, kobak@nvidia.com
+References: <20260630074657.43077-1-icheng@nvidia.com>
+ <20260630074657.43077-2-icheng@nvidia.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260630074657.43077-2-icheng@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Critical] Missing VI base and PIO register offsets in CXL PIO mapping, l=
-eading to hardware register corruption
---
 
-commit 125e7b168b7494938907570e29acc3c906cb9a0a
-Author: Alejandro Lucero <alucerop@amd.com>
 
-sfc: support pio mapping based on cxl
+On 6/30/26 12:46 AM, Richard Cheng wrote:
+> cxl_get_feature() and cxl_set_feature() build the mailbox command's
+> offset as cpu_to_le16(offset + data_rcvd_size/data_sent_size), but never
+> check the sum fits in the 16-bit field. Via fwctl, a user-supplied
+> offset plus count/op_size summing over 65535 silently wraps, steering
+> the device to the wrong feature offset.
+> 
+> Fixes: 5e5ac21f629d ("cxl/mbox: Add GET_FEATURE mailbox command")
+> Fixes: 14d502cc2718 ("cxl/mbox: Add SET_FEATURE mailbox command")
+> Signed-off-by: Richard Cheng <icheng@nvidia.com>
+> ---
+>  drivers/cxl/core/features.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> index 85185af46b72..db5964ea184f 100644
+> --- a/drivers/cxl/core/features.c
+> +++ b/drivers/cxl/core/features.c
+> @@ -237,6 +237,9 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>  	if (!feat_out || !feat_out_size)
+>  		return 0;
+>  
+> +	if (offset + feat_out_size > U16_MAX)
+> +		return 0;
 
-This patch adds support for mapping PIO buffers using CXL memory if the dev=
-ice
-supports it and is successfully initialized. Using CXL for the PIO buffer r=
-egion
-can help further reduce latency during TX packet exchanges.
+Should this return -EINVAL?
 
-> diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/e=
-f10.c
-> index 7e04f115bbaaa..73bc064929f63 100644
-> --- a/drivers/net/ethernet/sfc/ef10.c
-> +++ b/drivers/net/ethernet/sfc/ef10.c
-[ ... ]
-> @@ -1263,8 +1273,23 @@ static int efx_ef10_dimension_resources(struct efx=
-_nic *efx)
->  	iounmap(efx->membase);
->  	efx->membase =3D membase;
-> =20
-> -	/* Set up the WC mapping if needed */
-> -	if (wc_mem_map_size) {
-> +	if (!wc_mem_map_size)
-> +		goto skip_pio;
 > +
-> +	/* Set up the WC mapping */
+>  	size_out = min(feat_out_size, cxl_mbox->payload_size);
+>  	uuid_copy(&pi.uuid, feat_uuid);
+>  	pi.selection = selection;
+> @@ -287,6 +290,9 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
+>  	if (return_code)
+>  		*return_code = CXL_MBOX_CMD_RC_INPUT;
+>  
+> +	if (offset + feat_data_size > U16_MAX)
+> +		return -EINVAL;
 > +
-> +#ifdef CONFIG_SFC_CXL
-> +	probe_data =3D container_of(efx, struct efx_probe_data, efx);
-> +	if ((nic_data->datapath_caps3 &
-> +	    (1 << MC_CMD_GET_CAPABILITIES_V7_OUT_CXL_CONFIG_ENABLE_LBN)) &&
-> +	    probe_data->cxl_pio_initialised) {
-> +		/* Using PIO through CXL mapping */
-> +		nic_data->pio_write_base =3D probe_data->cxl->ctpio_cxl;
+>  	struct cxl_mbox_set_feat_in *pi __free(kfree) =
+>  			kzalloc(cxl_mbox->payload_size, GFP_KERNEL);
+>  	if (!pi)
 
-[Severity: Critical]
-Does this assignment miss the required hardware offsets for the VI base and=
- PIO
-buffer register?
-
-In the legacy PIO BAR mapping path just below, the base is calculated with
-these offsets:
-
-    pio_write_vi_base * efx->vi_stride + ER_DZ_TX_PIOBUF - uc_mem_map_size
-
-When efx_ef10_link_piobufs() sets up the TX queue, it computes the pointer
-using this base:
-
-    tx_queue->piobuf =3D
-        nic_data->pio_write_base +
-        index * efx->vi_stride + offset;
-
-Without adding the VI base and PIO register offsets to the CXL mapping,
-will the calculated pointer target the doorbell registers at offset 0
-(e.g., ER_DZ_EVQ_RPTR, ER_DZ_TX_DESC_UPD) instead of the PIO buffers,
-causing packet data writes to corrupt hardware state?
-
-> +		nic_data->pio_write_vi_base =3D pio_write_vi_base;
-> +	} else
-> +#endif
-> +	{
-> +		/* Using legacy PIO BAR mapping */
->  		nic_data->wc_membase =3D ioremap_wc(efx->membase_phys +
->  						  uc_mem_map_size,
->  						  wc_mem_map_size);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260630151346.3120=
-1-1-alejandro.lucero-palau@amd.com?part=3D5
