@@ -1,188 +1,202 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010058.outbound.protection.outlook.com [52.101.201.58])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C694722A817
-	for <linux-cxl@vger.kernel.org>; Tue, 30 Jun 2026 02:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782788241; cv=fail; b=KBA9TQVsm2J8qAKcayyJE7xmOk0ovAJw+xVUP1wj03mG0N2NidFzOs+ysaGH94ARw7fK2UlbMlL+z9qo9Evc+012UHex72IwUFCI8FOJnfQEI8OmuzOz6KABHl/df5lxFxNxNqzlXS7/t/3kicIkfZr0rLX4kFB2Ybo3Jxb25AY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782788241; c=relaxed/simple;
-	bh=1geIeZUcgq3wq2az8uXFHDkI2OibzEwi+rBLL8t0a2o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=XcFNoFG5VTc+Kw4Sw4h4P56bX3Eb1T/QGZneE20gc0G4Myfn1t4DdTUEinL/H8HnHOZw7hFCbIYoAfej/j5AO2/RKD/GXKMYxHPfUVYe0IqAXa0IXRW48RXA6rJ2K+qDkXNqWWa+SpFSxQyiSmVqeBxYq7hNacjOKLdnx/hCgJ4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=fail (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=h1RqqXJD reason="signature verification failed"; arc=fail smtp.client-ip=52.101.201.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FCF388E4F;
+	Tue, 30 Jun 2026 06:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782800271; cv=none; b=fqU+VC/36g4BKGD+2qaWftPMoeXOOORbKggcBGJXFE4Mwhn2K881KOMtGs6TFREwATZTGP0QAQwwG+B1jGaSAlOAKbpBXGRfYv9D4Gy6oRCRAHMgAZwbUYatYMnotoHRVIY93syZGmqAc1Hscq2nXpZ81HeLSEp9I36Q1/gJucU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782800271; c=relaxed/simple;
+	bh=ETWc1jRGfBL8eM3/M+HJ72GXk1nddAIST0gQ+VwtGfk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n0E/icmzQY2SuSpu8CGYIDFqfzPujuxgg8OHAQkcjLkOCYPl3UNoRQ+msdAiqgqkycAaZWwUMnRIchMJ9LsOQkWezqJ3EFztQelLG8FgS219CNZg9jB5yIKj3p7RWpYTOy7iH8BZODTKQNSYEM6nDsacMxEKgIqkv78oAASij6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NTSJiOpY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="h1RqqXJD"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=trEm6jf3Cbny0Ecklw16/ILwPtvSG8ZGDv2hIjJokFBNIkoD8q8ailGeufxS6WkxVtMOiYFhr7TYc8XlN9uGRzNoNUAXIdFZKYV7WunIaG0dC5ZkgeeXLmBgnDZ6SlgiUTih5kK2hNqdegMiZQxplF64nz0JBN95Q121A5bK0UH5A7bTToWzGCrwvKKV26DMRtweB2FxyImppM90y9HtFDpQdZyy7el69NPqjPdKYLWGT+8t7iDrHeUbapOU0fZzzwTcSHk98JenhshAzGauY1BkXr6qfWNfpeUQkILPOuJNNr8zI3lLJQ8dsETNQAGxVNkmUp0K6QY7TKsEJ/kyow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EbKipaJ0hvZdtmMeK8Ak6zv6mzsXLi1lIB+zJ94EXjk=;
- b=WtEZcEiVzKZwuh7qzw86cawCPNjF2XI7RFdYZwQ+op3bv/RFgBEx7wcortjJoJrQxLlksGuzO0ToJhAe4F0arFzk8CgOL51Ha3unvg1WJkXF3UOlKA6OMVo6pYL/yzQcySgRPZcOqL6ByS2ATm6Du3Ta7EQ0TKXkhX3HTxrmZRFPkXvC0WpV1MjsvYn6y/+o21ZDaqzt+lgGj1LExVcpTLak+6PphM7zKJkrwH2DSOiOZW6LFiAfJOJ6LCajuhNk46zRueJ/vuz5/+fQoIqt3Oi6tZ4nH92JulkcHLXCoRtgIAHQ1pHyt9ujFYjVjRDFs/EQ2GFMaL/ZhwkfW8XNaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EbKipaJ0hvZdtmMeK8Ak6zv6mzsXLi1lIB+zJ94EXjk=;
- b=h1RqqXJDz0SWqa3sSXWvjAKVsbf1nlhnpegJGIqovPm4eMh59imNvBRyVfhXuPR9kDG5U/P7Abc6Fyqd6TPu+oVSiYzCOOjAHLsYOJwUl1j8agpeneVXaV3w5f04a8MjgcqoljFEJXdEXDrH289jGIVsPON+S15sqFha2NNz7ykPovE0lg5UEahdQcE00h/xteecIewNId3NfJFWMIe02bQefmD9a5nskyixi4XV49FFjOylq+IBJKfyFkj1PXtyHAVCM7rUNBSz6hKC8TP1qmU+yJBAAD9yyrbw1HQcZ7xPevB/1E84tLOExju0KvngmJXO1NwUjtyAnklLJHMWCA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by CH1PPFC8B3B7859.namprd12.prod.outlook.com (2603:10b6:61f:fc00::622) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.19; Tue, 30 Jun
- 2026 02:57:17 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0159.018; Tue, 30 Jun 2026
- 02:57:16 +0000
-Date: Tue, 30 Jun 2026 10:57:08 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] cxl/features: Clamp Get Feature output size to
- the remaining buffer
-Message-ID: <akMvS64DmsltxxQ0@MWDK4CY14F>
-References: <20260626104102.53892-1-icheng@nvidia.com>
- <20260626104102.53892-4-icheng@nvidia.com>
- <20260626105255.D37A41F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260626105255.D37A41F000E9@smtp.kernel.org>
-X-ClientProxiedBy: KU0P306CA0031.MYSP306.PROD.OUTLOOK.COM
- (2603:1096:d10:29::14) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NTSJiOpY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED701F000E9;
+	Tue, 30 Jun 2026 06:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782800269;
+	bh=F/zuaToZgsUAAf92e9UcfIYMTDUyYKGDMg/03yABotE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=NTSJiOpY8OZf/2rbPcXkoa2mJoqTdGaqiQiv84Y1gbuMh46I9vnDK61ISSo1wLdBk
+	 xLX9mGhoeiLya5LC9Lu5SLqtCn1x0ir3AFnknxSGo+NYJKpw73LemWZ0le6X6Dbp+V
+	 eVZjRT85EpQrZlHDk/75OsCJ0lx0BmhLEjo3zgcu8Xj3O2PNi7KuSE5sjOlxSeLWMN
+	 JQNqc01ALvmpWFKSViX+XJwmUdgEVApBApgttP+uA4l0JTF42QIpAnZuH4WWngj2qy
+	 crmaOlyXYwj2Wxb72ExEPn9YsHw220PcBpMuyHnE+J1nybVa9lOlKrazUpOswEw8hv
+	 oa9HejB/972OA==
+Message-ID: <5c8ca96b-381a-4fd3-a218-6aaa87a9a3b7@kernel.org>
+Date: Tue, 30 Jun 2026 08:17:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|CH1PPFC8B3B7859:EE_
-X-MS-Office365-Filtering-Correlation-Id: 522aeb80-a30a-42f0-3906-08ded6534b34
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|23010399003|366016|22082099003|18002099003|3023799007|56012099006|6133799003|4143699003|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	wuyZpHbjbcimfhu8eDMEooYiR4m32Pb15ztFk1iWbdG8rj153izBB8SG4Q5aWF/rhim2/ozAVBpyqyZDvnk74Mv/+l+RCRCUExUjbk1lm9z7fymSeKxMJjtzuSrdkWKsTeqzA7O3I5pxvuDapKZzZFAe89jRypQaUWCAuicYBR6RL3prCoD0P5TiDjzLG0Rc7rVkubf5SWictl34DzzKiU1Atrtqu24gtpcYjlG6zRiQWoj+x2m3my/vgLyF7FikWIA8hDoHk3OgEohfG1KwP8gNjtL4yAFkrnt01lTyeJ8ZrFeNiX3bKjVdBvljr7YwUvcLhjU141Vnw/w/ayG27bNZDXAkKK+/M4z8HGdbWHKmKPA5G39oV0pxBLgXB+bJXGgoYjGzfyQlL+GQv5/Oql0VfZYeomg8alv/FcPRn7MAHQaXs1a3is83VgwqGlyADdG0Y34BIXyJ9edVscJ92WAx4Uz6l/stCXfl3SKCJ1aGPufYX6jbaoToDm+ENoYuiQfhS97B/CMLTIxovuwR0calsuSZeC3I206Ki+eQ/bMSAJLoFW5N8G3pz7xkxrrULQ9cnTtEuM44iGotQCtYZ7rp4txgKHIIFetwnHtqhQio1YwwPeV9EGeIXMXW7rie3JcUWlr3uM5Xg3Iszn2j+zmaWoDSDPmc/7o6wJf+/Kw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(23010399003)(366016)(22082099003)(18002099003)(3023799007)(56012099006)(6133799003)(4143699003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?3iQ+jL1G/Jl7LVFm7WIIlXsqFGzRed700RgT1hNXbG1aoPq0DVkTLrZCc8?=
- =?iso-8859-1?Q?DzATdgArTI3zJUX1cPLR+cDh/LOcSQHUTPzCwntfz508E5Et5AflQ4/wPn?=
- =?iso-8859-1?Q?dKlftKeD7foJq/xArTxBbvqQZT5p7yWfPqnJEdWN1+pJYkDzqIisaDBQGH?=
- =?iso-8859-1?Q?tJXkW/wX3bS/3NdBqkslySEL+PVGgYbaP/d83qiAEYQfvKORdfgl7DJV1n?=
- =?iso-8859-1?Q?p3u9GRFJ4vi/RQXsKfRN/q7nH/aepJnKshK5WHXm3P3fLApxr8iE5yeEMe?=
- =?iso-8859-1?Q?dp5bIj4gHAv4ex14FxMuY46mBmbPeRoPRoVfCv7LOE6oBM4MnhVrSAHVNG?=
- =?iso-8859-1?Q?6mFjWby7PW8b+Amg6oOaLP+S9Toh5S2uJHcj5PTsu6H/ekvQ3F6oNGlGch?=
- =?iso-8859-1?Q?yNkhynADGSjE/m/cwnFbt5l3vMRxOEs2bB0osrG18r0YkjdhoCKne7JzJk?=
- =?iso-8859-1?Q?DWHeMmNr2xSwMLa5AgAqyV5osR5RMbtlFhDKjj/y+Q+YKmijCYswuC+H+I?=
- =?iso-8859-1?Q?ALz98ymBGHZnJcJ5kMoI53ncUyNJTxDX490YVHmaDBu6h/xa+UNHqxIAWw?=
- =?iso-8859-1?Q?7esZe4NRTYfxwT1WUqOKXZYJzjFDIO8zMH0Ri7FtmvsjvNK8OOdZLxYkdJ?=
- =?iso-8859-1?Q?aF03BKed/FrHbhojUReCsFOhpTWuI6Phie30Qdr5AnG+VbUhxGOJsGF3e+?=
- =?iso-8859-1?Q?uTalo+cNYLExmwKjD75FWRYNXNUe80JQN4BYtZ2cWFWv+PV6bud/zsIHJV?=
- =?iso-8859-1?Q?xSq6OPq9XN10oJR1ygfL1d2MTyV+tGRVu34UZCpB34Gvglesx9KyoguEpy?=
- =?iso-8859-1?Q?XdtwLBXnpf5pYkSUfHxenDo9u5+ZUPCigq2bMYVO3ftRpAPwS2+5rJ7zQ2?=
- =?iso-8859-1?Q?uzmgWexrqoPqzJx3H61v3JKRdcqqwGEhSGBE6e8utWfE7jf3dq5UjB92W+?=
- =?iso-8859-1?Q?virMXNrRWtIW4qmEDVZ7D4ac30xKcWKOhVlubFgzNwkRD/r7RmbdoIPAE4?=
- =?iso-8859-1?Q?/5CQe8AcqyoT551LQm69C6YzgT7TaCaghJItsSUNiEpLzpPCjQuA/6KyXg?=
- =?iso-8859-1?Q?G636isO7EL83ghi6CVkCqIN2sxEI1pZwbEOBo8QXajGZTXBsi8d6lB3K0v?=
- =?iso-8859-1?Q?xK/6MgHH07wvXHK7lxV/1EisM1XJ+7Bh0F/cPqN74eyRz+SkGu/CewXo98?=
- =?iso-8859-1?Q?YBqwHigJ4pOA3w6QOSGBBel5xJiMJNvsAqu6HFnOHKiYll+b+H9OQnhVl2?=
- =?iso-8859-1?Q?dPvR2JUL0ehhFETo3IxzqGwrPj7sXHMgwokFzgYpL+GslYqB8rj2B+rUS8?=
- =?iso-8859-1?Q?6/zaGSgPGq9+3Srcis0VuE92WoOHtoqOZCOwrbyO0mzZ9nH3aVbuzDw87L?=
- =?iso-8859-1?Q?0wtHG8hiDebwZlp0aRtOXfcVIBlxtRn8ByY3kB/X+xdHc2gjU704r08aVS?=
- =?iso-8859-1?Q?UiOgD1yc2hCIXYncDxj5pEHxkGpD+euk5K+tSDsz/uAAgFtfv8XboFeYu4?=
- =?iso-8859-1?Q?2rc8gLKxbfUN/ek/QQGNP/YoRmZnBjkqocpxOBVZdJ4WuSmdxlt9s9Xa6C?=
- =?iso-8859-1?Q?oQnqFvj1qvyxlJNMJCfRyIVfW7d48qx9qquMlodj+BDek4p3CKseLqvpL8?=
- =?iso-8859-1?Q?S2ixSgXqKQ5J3gNMXeXuUWY5BU8pRx/oC2En/fseLjDX0s4LBmo6SBgXlx?=
- =?iso-8859-1?Q?GiOK3FacUZUXjLTGx5gu60Ls0iksd7b0nr9maV10NtN7niUHma3Ivnzp3N?=
- =?iso-8859-1?Q?yCr/RJotiJ7uz+RxxrrBJd3oIRUeVZ8S4gp9XJa9AST1tF47Xbp2ZtQ3MB?=
- =?iso-8859-1?Q?9Ji678mqhw=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 522aeb80-a30a-42f0-3906-08ded6534b34
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2026 02:57:16.8814
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JDurPBKTsfziM5rl3/r5tJ9Dxp/s+48ePuFgikQvmKCi4tPA0PjkI2Rb1nv/K86789lUFyfV+OfO5zb4driK6A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPFC8B3B7859
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] mm: memory-failure: fix HWPoison flag race with
+ non-atomic page flag ops
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+ Naoya Horiguchi <nao.horiguchi@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Oscar Salvador
+ <osalvador@suse.de>, Andi Kleen <andi@firstfloor.org>,
+ Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>,
+ Rik van Riel <riel@redhat.com>, Vlastimil Babka <vbabka@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Brendan Jackman <jackmanb@google.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+ Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry@kernel.org>,
+ Hao Li <hao.li@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Byungchul Park <byungchul@sk.com>, linux-mm@kvack.org,
+ linux-cxl@vger.kernel.org
+References: <cover.1782676497.git.mst@redhat.com>
+ <0b5f8b4b-d7dc-4b79-9555-a5b36265f3a9@kernel.org>
+ <20260629030657-mutt-send-email-mst@kernel.org>
+ <4f5ba5d6-246c-4430-9737-e8dd8e4c5142@kernel.org>
+ <20260629092856-mutt-send-email-mst@kernel.org>
+ <54c8cbee-9b26-458c-93ba-5aa594f5d1e8@kernel.org>
+ <0a309ed3-378e-4d88-95a0-65bf47c5496d@kernel.org>
+ <20260629193347-mutt-send-email-mst@kernel.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzS5EYXZpZCBIaWxk
+ ZW5icmFuZCAoQ3VycmVudCkgPGRhdmlkQGtlcm5lbC5vcmc+wsGQBBMBCAA6AhsDBQkmWAik
+ AgsJBBUKCQgCFgICHgUCF4AWIQQb2cqtc1xMOkYN/MpN3hD3AP+DWgUCaYJt/AIZAQAKCRBN
+ 3hD3AP+DWriiD/9BLGEKG+N8L2AXhikJg6YmXom9ytRwPqDgpHpVg2xdhopoWdMRXjzOrIKD
+ g4LSnFaKneQD0hZhoArEeamG5tyo32xoRsPwkbpIzL0OKSZ8G6mVbFGpjmyDLQCAxteXCLXz
+ ZI0VbsuJKelYnKcXWOIndOrNRvE5eoOfTt2XfBnAapxMYY2IsV+qaUXlO63GgfIOg8RBaj7x
+ 3NxkI3rV0SHhI4GU9K6jCvGghxeS1QX6L/XI9mfAYaIwGy5B68kF26piAVYv/QZDEVIpo3t7
+ /fjSpxKT8plJH6rhhR0epy8dWRHk3qT5tk2P85twasdloWtkMZ7FsCJRKWscm1BLpsDn6EQ4
+ jeMHECiY9kGKKi8dQpv3FRyo2QApZ49NNDbwcR0ZndK0XFo15iH708H5Qja/8TuXCwnPWAcJ
+ DQoNIDFyaxe26Rx3ZwUkRALa3iPcVjE0//TrQ4KnFf+lMBSrS33xDDBfevW9+Dk6IISmDH1R
+ HFq2jpkN+FX/PE8eVhV68B2DsAPZ5rUwyCKUXPTJ/irrCCmAAb5Jpv11S7hUSpqtM/6oVESC
+ 3z/7CzrVtRODzLtNgV4r5EI+wAv/3PgJLlMwgJM90Fb3CB2IgbxhjvmB1WNdvXACVydx55V7
+ LPPKodSTF29rlnQAf9HLgCphuuSrrPn5VQDaYZl4N/7zc2wcWM7BTQRVy5+RARAA59fefSDR
+ 9nMGCb9LbMX+TFAoIQo/wgP5XPyzLYakO+94GrgfZjfhdaxPXMsl2+o8jhp/hlIzG56taNdt
+ VZtPp3ih1AgbR8rHgXw1xwOpuAd5lE1qNd54ndHuADO9a9A0vPimIes78Hi1/yy+ZEEvRkHk
+ /kDa6F3AtTc1m4rbbOk2fiKzzsE9YXweFjQvl9p+AMw6qd/iC4lUk9g0+FQXNdRs+o4o6Qvy
+ iOQJfGQ4UcBuOy1IrkJrd8qq5jet1fcM2j4QvsW8CLDWZS1L7kZ5gT5EycMKxUWb8LuRjxzZ
+ 3QY1aQH2kkzn6acigU3HLtgFyV1gBNV44ehjgvJpRY2cC8VhanTx0dZ9mj1YKIky5N+C0f21
+ zvntBqcxV0+3p8MrxRRcgEtDZNav+xAoT3G0W4SahAaUTWXpsZoOecwtxi74CyneQNPTDjNg
+ azHmvpdBVEfj7k3p4dmJp5i0U66Onmf6mMFpArvBRSMOKU9DlAzMi4IvhiNWjKVaIE2Se9BY
+ FdKVAJaZq85P2y20ZBd08ILnKcj7XKZkLU5FkoA0udEBvQ0f9QLNyyy3DZMCQWcwRuj1m73D
+ sq8DEFBdZ5eEkj1dCyx+t/ga6x2rHyc8Sl86oK1tvAkwBNsfKou3v+jP/l14a7DGBvrmlYjO
+ 59o3t6inu6H7pt7OL6u6BQj7DoMAEQEAAcLBfAQYAQgAJgIbDBYhBBvZyq1zXEw6Rg38yk3e
+ EPcA/4NaBQJonNqrBQkmWAihAAoJEE3eEPcA/4NaKtMQALAJ8PzprBEXbXcEXwDKQu+P/vts
+ IfUb1UNMfMV76BicGa5NCZnJNQASDP/+bFg6O3gx5NbhHHPeaWz/VxlOmYHokHodOvtL0WCC
+ 8A5PEP8tOk6029Z+J+xUcMrJClNVFpzVvOpb1lCbhjwAV465Hy+NUSbbUiRxdzNQtLtgZzOV
+ Zw7jxUCs4UUZLQTCuBpFgb15bBxYZ/BL9MbzxPxvfUQIPbnzQMcqtpUs21CMK2PdfCh5c4gS
+ sDci6D5/ZIBw94UQWmGpM/O1ilGXde2ZzzGYl64glmccD8e87OnEgKnH3FbnJnT4iJchtSvx
+ yJNi1+t0+qDti4m88+/9IuPqCKb6Stl+s2dnLtJNrjXBGJtsQG/sRpqsJz5x1/2nPJSRMsx9
+ 5YfqbdrJSOFXDzZ8/r82HgQEtUvlSXNaXCa95ez0UkOG7+bDm2b3s0XahBQeLVCH0mw3RAQg
+ r7xDAYKIrAwfHHmMTnBQDPJwVqxJjVNr7yBic4yfzVWGCGNE4DnOW0vcIeoyhy9vnIa3w1uZ
+ 3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
+ CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
+ qIws/H2t
+In-Reply-To: <20260629193347-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 26, 2026 at 10:52:55AM +0800, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+On 6/30/26 01:34, Michael S. Tsirkin wrote:
+> On Mon, Jun 29, 2026 at 11:43:32PM +0200, David Hildenbrand (Arm) wrote:
+>> On 6/29/26 23:22, David Hildenbrand (Arm) wrote:
+>>> [...]
+>>>
+>>>
+>>> Fully agreed. I was hoping RCU was cheaper (I mean, we were once told that RCU
+>>> read side locking is essentially for free ... well in some configs :) )
+>>>
+>>> The question if we could optimize it reasonably enough ...
+>>>
+>>>
+>>> ... for example, by doing the rcu read lock + unlock around the
+>>>
+>>> 	for (i = 1; i < (1 << order); i++) {
+>>>
+>>> loop on the alloc path. But I suspect it's not going to make that much of a
+>>> difference.
+>>>
+>>> I concluded, similar to Andi, that stop_machine() is too big of a hammer.
+>>>
+>>> I wonder if something could be built out of preempt_disable() and sync SMP
+>>> calls. hmm :(
+>>
+>> Scrap that, shouldn't work I think ...
+>>
 > 
-> Pre-existing issues:
-> - [High] Silent 16-bit offset wrap-around in CXL feature commands allows device state corruption.
-> --
-> 
-> commit 55606972e1fe115ff716307a2dad0a662361b0c3
-> Author: Richard Cheng <icheng@nvidia.com>
-> 
-> cxl/features: Clamp Get Feature output size to the remaining buffer
-> 
-> cxl_get_feature() reads a feature in a loop but passes a fixed size_out
-> as the output capacity every iteration. This commit changes size_out
-> to use the remaining per-iter size, preventing a device from overflowing
-> feat_out on the last partial iteration.
-> 
-> > diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> > index ed18ccb5e236e..e52371f873006 100644
-> > --- a/drivers/cxl/core/features.c
-> > +++ b/drivers/cxl/core/features.c
-> [ ... ]
-> > @@ -237,7 +237,6 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
-> >  	if (!feat_out || !feat_out_size)
-> >  		return 0;
-> >  
-> > -	size_out = min(feat_out_size, cxl_mbox->payload_size);
-> >  	uuid_copy(&pi.uuid, feat_uuid);
-> >  	pi.selection = selection;
-> >  	do {
-> > @@ -250,7 +249,7 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
-> 
-> [Severity: High]
-> This is a pre-existing issue, but does pi.offset silently overflow during
-> the loop if offset + data_rcvd_size exceeds 65535?
-> 
-> Looking at cxl_get_feature(), pi.offset is updated right before this 
-> struct initialization:
-> 
->     pi.offset = cpu_to_le16(offset + data_rcvd_size);
-> 
-> Here offset is a u16 and data_rcvd_size is a size_t, but pi.offset
-> is __le16. If a user requests a large operation through the fwctl
-> interface that sums to greater than 65535, the offset will wrap around and
-> truncate the value.
-> 
-> Could this cause the device to read from (or in the case of
-> cxl_set_feature(), write to) the wrong offset, silently corrupting hardware
-> feature data?
-> 
-> >  			.opcode = CXL_MBOX_OP_GET_FEATURE,
-> >  			.size_in = sizeof(pi),
-> >  			.payload_in = &pi,
-> > -			.size_out = size_out,
-> > +			.size_out = data_to_rd_size,
-> >  			.payload_out = feat_out + data_rcvd_size,
-> >  			.min_out = data_to_rd_size,
-> >  		};
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260626104102.53892-1-icheng@nvidia.com?part=3
+> Wait a sec, what about call_rcu_tasks? Use that and re-check the bit is
+> still set?
 
-This is a different one , I'll include it in another series.
+So, in essence the idea I had yestarday when it was late was the following:
 
---Richard
+Assume we
+
+1) Can have a way to guarantee that a function on a CPU cannot execute within
+our critical section (while updating the flags)
+
+2) We can request to execute a function on each CPU and wait for completion
+
+I think we could just let each CPU execute our desired action (e.g., try setting
+the bit).
+
+E.g.,
+
+	local_irq_save(flags);
+	page->flags &= whatever;
+	local_irq_restore(flags);
+
+And assume we want to set the bit, do a
+
+	SetPageHWPoison(page);
+	smp_call_function(set_hwpoison_smp_sync, page, 1);
+
+whereby
+
+	static void set_hwpoison_smp_sync(void *info)
+	{
+		SetPageHWPoison(page);
+	}
+
+
+The idea is (that needs double checking) that a CPU will execute the
+SetPageHWPoison() either before the local_irq_save() or after the
+local_irq_restore(). So it's own non-atomic update cannot get interrupted.
+
+Now, IIUC when it comes to "how expensive is this" I think we have (cheap to
+expensive):
+
+1) preempt_disable()
+2) rcu_read_lock()
+3) local_irq_save()
+
+
+So the above wouldn't be better than an rcu-based approach we have right now.
+We'd need something that relies on disabled preemption only.
+
+Huh, but I read that "anything that disables preemption also marks an RCU-sched
+read-side critical section including preempt_disable() and preempt_enable()".
+
+So for our use case we should be able to use preempt_disable() instead of
+local_irq_save(). That should already work for your existing implementation.
+
+-- 
+Cheers,
+
+David
