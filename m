@@ -1,130 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC02328690;
-	Tue, 30 Jun 2026 21:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDEB3233ED
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Jun 2026 21:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782855139; cv=none; b=JKRGV9kRy2zh6R0AyERuW7BFaH8n7rC6txZ0zs2mkFpsszHNgdtcIu8c9wseClNIUT7wwgv8f8TljHxwm2dP2uoGqH89HShukmhqt9mIGUcdscETMTDtUC6jgROSKnGGJVEcUO2n/20BghDyF6QUbVoDjpVNwwWOlHYY/VIRg50=
+	t=1782855656; cv=none; b=kK6p8F5QjmLlVyVg2OcST5TE0v6P08r1/nOKoYs3d/+mOlCuMt/WR7P5rvQ/iqFR1xRs4w04zr8IsfIhXwjE6Rg4yNPQXoIR6QjNbITdVUzexZgDuLQjTplhW+qtbJ6pAUScjIpAQZUeWaoMPtzCDYOPV647/rUC1AMIWzSONZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782855139; c=relaxed/simple;
-	bh=0Nakuy9n1y9QhcfHiYEVjfE2qiV8v4cY3/dCPv77iwU=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=OOhpwORmUEF/GBZ/U1t7wAu7nFcyzry+63B0VVMMnVOfJAz97IPOS8CVjui8n+Ll/h0Kk3KJ8AM99ey4LFg7v8+xjPb173Bzna51L7FIVxN1H4hj8cRzGojAlaYit5h6kNxBUJaq8PNQfXnooWDMld2M1ZeuaSEw4T+KrcAsgNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mcO3qVVl; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782855656; c=relaxed/simple;
+	bh=gl6pGyqjKJOJpLp8kEKuzbbJQXexplF0ywI3xT1S1Xo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GUtq7SJbfC67eEv8NLIgMTMr+c/iDaVmpr+RcNwtndVBf09oSuwoCA+xmwPxKFTHApWTmhCxF+sAF7zKhmAxuWGh4fK8o+NmpWoh6rdYX0U/K7q1JAx7NzIShoyIYYuLVJnw9UtbHnXjkCHWZvepmAq3aFfb0pDjP3n4urqYPKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=EIlEvuNQ; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mcO3qVVl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A90E1F000E9;
-	Tue, 30 Jun 2026 21:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782855138;
-	bh=D9Mc2bdI7ErsBSIFnTArjJEckjDk8zvGkqW0gWYE+UU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mcO3qVVlQjCCo/FRS8HGioaoh1mQ+OkznpxEiMWeaYuXsPAUjA5YcqdzSLI/4OzP2
-	 OdjHF2heg1D6eqVRwJr2F8VDy25EKHz95ZGk1mMYtKOlZ8Nb3SvFAFjyuO6RvxNo8P
-	 hZvBqQskS4ghZUcend7u0Kv0nlTrUEdmmKD1/qwQxt8F+oF5pe/JKxYuPu8vBSJ1CZ
-	 UFlBc/PMcLXUAu3+LWATifF/g8T7222gx4GCVOWEydlEmEBEsHrE5lHEyRUd1Rdc3u
-	 PoyCmcseALHyIvrQper0ygCtfWuotsSp/AySN5vLuycl9PecTJRVvLWRnVer4CLMw/
-	 igpuwsWvrLVdQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 09/10] dax/kmem: add sysfs interface for atomic
- whole-device hotplug
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Gregory Price" <gourry@gourry.net>
-Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-In-Reply-To: <20260630211842.2252800-10-gourry@gourry.net>
-References: <20260630211842.2252800-1-gourry@gourry.net>
- <20260630211842.2252800-10-gourry@gourry.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 30 Jun 2026 21:32:17 +0000
-Message-Id: <20260630213218.4A90E1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="EIlEvuNQ"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-51c1d487f2cso6937391cf.1
+        for <linux-cxl@vger.kernel.org>; Tue, 30 Jun 2026 14:40:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1782855654; x=1783460454; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=mHInMxAaQ2bUuLOe5OFmxM2p3fvBID4+2UNGvlrGK4E=;
+        b=EIlEvuNQQx9Eby0Dg7ocHgYotRf58Te2Xw9jFaCYc6uVPd6Pvoe3U6z0qek/2wJJ+N
+         EyjQPzVw0TdDAuKrVrLHe7ZHs/+iK//rbAGEyytGMUZfGpyBEpUnApDnLO3wDiena/kf
+         /tJHqDqQa7JpDIrizMDK/+FAgpHqji83tWHJiXXC0pgDYtEqWjcGXBSNGDUkhlxdqQsG
+         f+LEhlOTSJcZxXo6TfKuUdfbfaMpg/Iivx+BWRLu5bB5gdyNvTM+GxLOs70jVB2W1DRR
+         BwVkCssYTemkaCsPkgJX3fHHQEo9ZcalUrdjjv+yxGJ/XeSkgruNBQoK6Vbz7KOdPU22
+         45dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782855654; x=1783460454;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=mHInMxAaQ2bUuLOe5OFmxM2p3fvBID4+2UNGvlrGK4E=;
+        b=fVLwyZpvGfmTMbe3h2qt8PTmjUoWAaPgY0G+Nk+c9v9MElMrum7Qcu9mCJe0g5sOXZ
+         IYEgnKeq1x0EbntUvD7cCbUobP+tTRfrzukPleWeJ/nHdpcA/swsOOeYtDRfgC4P3iDD
+         Yzy5veYoODErbA/aKbM0a1tQc+pqR8cCbD78n2T+nrfXupbv398T43ZVmDMkKDEPY6cH
+         J1fODNr9P7sHMdv9hGpT+tAyI1mxBHrFbCIFD1plgpsxMa3Dmz1Q8d6Bq5YgU4uJOyGj
+         kevfQZYAHlAwfBK+bEwgz0WeJNEbCtztzdZvhz5UkeZEvl6Lyk6pzuVkRgOICaB78Bbp
+         MF2w==
+X-Forwarded-Encrypted: i=1; AFNElJ/C7kK2iqZa48YnNmqFfhMKRRnL1NZS8WmmPjuLM+n2xGh0LToyLtYBA0t1j4Dnw7nSRp4K49naxVo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnjK3fxrGRPwcvHnVfZEz+pLTmGtxhe23oTA+bgXuRR+3rt8eG
+	g9q6ekey6XtPp/PosQ0TX2meCzzK5E242t89z8pt+LTJsS1V0L7gajjSVuI00KKeRng=
+X-Gm-Gg: AfdE7clR7AqdSW1LFe/iDka7zY0SPS4Fw7mSsPGr4Kb4y3AxeQ32fd0uYS/qwZwlyTj
+	J3HJGtk7POR8JgdsZ+mOzbJh7ig9c/Lzict72+hR/uOzjQaLc+VdbnW7p5pnp/DOXJtH4PbTy2m
+	eGA4Qq/bDZORfew7c8TdHq3XO6SmS+jBNWHfUBprTYmTx5qDr4RspKqD9exjJm93UH0+RRzNAUH
+	fAI0qbxdrLkgPGfsAf78zxsO+hRTWLj1c6B7LFaGOWxP2Qbvj8Nr/iA6f+o33yBtDJkSuMFwMzR
+	h+M3vCoh6Ef10U0v2nH51vvwLKJtDJAEXZC+no349ziYSGKI4FGipjXOTUGEkZu8mIpa9i51fG3
+	Ildb//X1q3dpkE4B0vzjMaalozLJCff+Ff0rUv+fwlThiKS9U0jwapFAu/IVeSMBgmLMtnpEVhq
+	3tuIJeigZwiaEyJAaE9t3scDrOxhVVCz4TPHuTOOKP5QkrLfbdHUjtyKXcIZXljqvvA2y0Z2isQ
+	0b1BT22/NIA
+X-Received: by 2002:a05:622a:1f0f:b0:51a:8c97:fb93 with SMTP id d75a77b69052e-51c1090a30amr70785981cf.60.1782855654010;
+        Tue, 30 Jun 2026 14:40:54 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51c10a0eb16sm27011331cf.25.2026.06.30.14.40.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2026 14:40:53 -0700 (PDT)
+From: Gregory Price <gourry@gourry.net>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	kernel-team@meta.com,
+	david@kernel.org,
+	osalvador@suse.de,
+	akpm@linux-foundation.org,
+	rppt@kernel.org,
+	mgorman@techsingularity.net,
+	hannes@cmpxchg.org,
+	vbabka@kernel.org
+Subject: [PATCH] mm/mm_init: handle alloc_percpu failure in free_area_init_core_hotplug
+Date: Tue, 30 Jun 2026 17:40:39 -0400
+Message-ID: <20260630214039.2263562-1-gourry@gourry.net>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Missing error cleanup in state_store() leaks resource reservations=
- and corrupts state for subsequent unplug operations if dax_kmem_do_hotplug=
-() fails.
---
+We miss a failed allocation check for pgdat->per_cpu_nodestats, which
+results in a NULL deref when we offset into the per-cpu area.
 
-commit 48ff7b34b13219e34e3823e263b700c3183a5d86
-Author: Gregory Price <gourry@gourry.net>
+Propagate -ENOMEM up the stack and leave per_cpu_nodestats pointing
+at boot_nodestats so a later online can retry the allocation.
 
-dax/kmem: add sysfs interface for atomic whole-device hotplug
+hotadd_init_pgdat() returns NULL on failure, which __try_online_node()
+already maps to -ENOMEM.
 
-Adds a new 'state' sysfs attribute to daxX.Y devices that allows an atomic
-whole-device hotplug operation across its entire memory region. The device
-can be transitioned between unplugged, online, online_kernel, and
-online_movable states.
+Assisted-by: Sashiko:unknown-model
+Fixes: 75ef71840539 ("mm, vmstat: add infrastructure for per-node vmstats")
+Signed-off-by: Gregory Price <gourry@gourry.net>
+---
+ include/linux/memory_hotplug.h |  2 +-
+ mm/memory_hotplug.c            |  3 ++-
+ mm/mm_init.c                   | 14 +++++++++++---
+ 3 files changed, 14 insertions(+), 5 deletions(-)
 
-> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> index 72dcccee41e16..19effe0da3dce 100644
-> --- a/drivers/dax/kmem.c
-> +++ b/drivers/dax/kmem.c
-[ ... ]
-> @@ -123,14 +145,14 @@ static int dax_kmem_do_hotplug(struct dev_dax *dev_=
-dax,
->  				kfree(data->res[i]);
->  				data->res[i] =3D NULL;
->  			}
-> -			if (onlined)
-> +			if (added)
->  				continue;
->  			return rc;
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index 7c9d66729c60..f04b915678db 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -289,7 +289,7 @@ static inline void __remove_memory(u64 start, u64 size) {}
+ /* Default online_type (MMOP_*) when new memory blocks are added. */
+ extern enum mmop mhp_get_default_online_type(void);
+ extern void mhp_set_default_online_type(enum mmop online_type);
+-extern void __ref free_area_init_core_hotplug(struct pglist_data *pgdat);
++extern int __ref free_area_init_core_hotplug(struct pglist_data *pgdat);
+ extern int __add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags);
+ extern int add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags);
+ extern int add_memory_resource(int nid, struct resource *resource,
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 7ac19fab2263..8b137328dcf0 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1263,7 +1263,8 @@ static pg_data_t *hotadd_init_pgdat(int nid)
+ 	pgdat = NODE_DATA(nid);
+ 
+ 	/* init node's zones as empty zones, we don't have any present pages.*/
+-	free_area_init_core_hotplug(pgdat);
++	if (free_area_init_core_hotplug(pgdat))
++		return NULL;
+ 
+ 	/*
+ 	 * The node we allocated has no zone fallback lists. For avoiding
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 306ea5c13f54..37fd64ce144d 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -1536,7 +1536,7 @@ void __init set_pageblock_order(void)
+  * NOTE: this function is only called during memory hotplug
+  */
+ #ifdef CONFIG_MEMORY_HOTPLUG
+-void __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
++int __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
+ {
+ 	int nid = pgdat->node_id;
+ 	enum zone_type z;
+@@ -1544,8 +1544,14 @@ void __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
+ 
+ 	pgdat_init_internals(pgdat);
+ 
+-	if (pgdat->per_cpu_nodestats == &boot_nodestats)
+-		pgdat->per_cpu_nodestats = alloc_percpu(struct per_cpu_nodestat);
++	if (pgdat->per_cpu_nodestats == &boot_nodestats) {
++		struct per_cpu_nodestat __percpu *p;
++
++		p = alloc_percpu(struct per_cpu_nodestat);
++		if (!p)
++			return -ENOMEM;
++		pgdat->per_cpu_nodestats = p;
++	}
+ 
+ 	/*
+ 	 * Reset the nr_zones, order and highest_zoneidx before reuse.
+@@ -1583,6 +1589,8 @@ void __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
+ 		zone->present_pages = 0;
+ 		zone_init_internals(zone, z, nid, 0);
+ 	}
++
++	return 0;
+ }
+ #endif
+ 
+-- 
+2.53.0-Meta
 
-[Severity: High]
-If this fails on the first range (added =3D=3D 0), it returns immediately.
-Since dax_kmem_init_resources() reserves all ranges beforehand, doesn't this
-leave reservations for subsequent ranges (i+1 to N) allocated in data->res?
-
->  		}
-> -		onlined++;
-> +		added++;
->  	}
-> =20
-> -	return onlined;
-> +	return added;
->  }
-[ ... ]
-> @@ -256,6 +309,85 @@ static void dax_kmem_cleanup_resources(struct dev_da=
-x *dev_dax,
-[ ... ]
-> +static ssize_t state_store(struct device *dev, struct device_attribute *=
-attr,
-> +			     const char *buf, size_t len)
-> +{
-[ ... ]
-> +	/* Re-acquire resources if previously unplugged, otherwise no-op */
-> +	rc =3D dax_kmem_init_resources(dev_dax, data);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	rc =3D dax_kmem_do_hotplug(dev_dax, data, online_type);
-> +	if (rc < 0)
-> +		return rc;
-
-[Severity: High]
-If dax_kmem_do_hotplug() returns an error here, state_store() returns
-directly without calling dax_kmem_cleanup_resources().
-
-If the first range fails to hotplug, does this leave the remaining ranges
-reserved but not added?
-
-If the user later writes "unplugged" to sysfs, would dax_kmem_do_hotremove()
-attempt to offline and remove memory that was never successfully added to t=
-he
-hotplug subsystem?
-
-> +
-> +	data->state =3D online_type;
-> +	return len;
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260630211842.2252=
-800-1-gourry@gourry.net?part=3D9
