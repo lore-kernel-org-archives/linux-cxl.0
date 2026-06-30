@@ -1,145 +1,65 @@
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDE03F4107
-	for <linux-cxl@vger.kernel.org>; Tue, 30 Jun 2026 10:30:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB323F39EF;
+	Tue, 30 Jun 2026 10:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782815401; cv=none; b=U+PBO+8DPEdGzyTkETayS28rUi7p3jitvNGd9pFTUHHvLPQGdBxFSwe5nhBawBqZtnTIhc0TMAW/gF67iSScTtYfvjTC9O4ObGxLklWVl4q/NT14CuigbDbTarbKtR3iBPj6jOB0UM7DvDDd8pRsK+Cjfxdpm4dEUDnns/Re5Dg=
+	t=1782816088; cv=none; b=qqJN/JncmAmC/TbJp/P2I0n9tOt26CDM5Bt/kBgeX8hxqB5q4L/CIfT+oD3QCBbCyKEYVhrzPuh4I66X4dqi/t2eC0tdVAzqG6PuNeIAoatWvtgmq9/uvm0s31+ZEFXqChZlvhXeMCnwyhPGbyxa4d+VsUg4Xt550E2hbHw4uG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782815401; c=relaxed/simple;
-	bh=+7+4O5fexn2P7o7P9QxEX5lg+4piQeI+90SQQp56hLM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j4aE/GpSE6dr7Hn0wKC5Bl7gXJnShMYR7Iw1Ns5tTQvF1blyDQCBh9m/xy/96M9UynNWwsQ5H9GRQ7NsUOtqqyELjLRawRiSJUzp6d14ws8tAbpu9jxzgz4iPg5FuffKwZJkDf9smKzAjsXJaNuxGHP4wjQ8ZJ5aiy3Rr2626tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=asQfwexg; arc=none smtp.client-ip=185.171.202.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1782816088; c=relaxed/simple;
+	bh=2L1jOfu5YesDUETK0YRNmFyeIwX2aEFrVTujk8IWPnY=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=vAtMDMoHGp8zoK44m8WQtbKIoposXxg/BhI87iYETdlsekdIV5bdeMZIevOVDbPDe36aR2S8stFhsZYj2gJ0Bw7AbM/iZFNXhp7o99oF6MN8AMObgqAzw7N6OcWJ1sSlZlLdAOtef+km+kGwzXQ/gmnlH3w6+2Ygjq8viaIYXOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DIVGh0bt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="asQfwexg"
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id C481DC5CD47;
-	Tue, 30 Jun 2026 10:30:09 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 4DADC6025A;
-	Tue, 30 Jun 2026 10:29:59 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 26334106F1D9C;
-	Tue, 30 Jun 2026 12:29:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1782815397; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=ea/m19/1/A2BviwgniEPZ+okOOHte+59EBY28mb5F+I=;
-	b=asQfwexgwCbRCz0qq0VFUBqHnxQUnvDfv1O6eQE8Kcp0x9EV1vVr+PHBXCDLItOUdxnQxc
-	/HadkvEpUjiiRhBtpLbs6c9LOMNm21gqVCla/wpIq7CJYWhl4V4qSe1m/Uj+i8oBCDXmMD
-	B8s1P+4G0xVB8GrivpOXvYo1WAM/boqlZ+YepvlTYc3mZ1abtna4X3/V9Nv0YqOaLqdoOf
-	Z8Y12TawfMbO9PsWNxdmyHRARp7opaEJeZwtfG13vPCVJ3UIO3BvJ40k7R8YmuiS7RQ6C7
-	WSgSEtZGbXRV7OTQ40qCCpNv/JmnhSBLkC8ehbLzNrhFZVJ4dWofj+U8QeOFug==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	David Rhodes <david.rhodes@cirrus.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Linus Walleij <linusw@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dan Williams <djbw@kernel.org>,
-	Ira Weiny <iweiny@kernel.org>,
-	Li Ming <ming.li@zohomail.com>,
-	Lizhi Hou <lizhi.hou@amd.com>,
-	Herve Codina <herve.codina@bootlin.com>
-Cc: driver-core@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	Allan Nielsen <allan.nielsen@microchip.com>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	Steen Hegelund <steen.hegelund@microchip.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v8 8/8] PCI: of: Remove fwnode_dev_initialized() call for a PCI root bridge node
-Date: Tue, 30 Jun 2026 12:28:02 +0200
-Message-ID: <20260630102804.413563-9-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260630102804.413563-1-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DIVGh0bt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A64F1F000E9;
+	Tue, 30 Jun 2026 10:41:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782816086;
+	bh=2L1jOfu5YesDUETK0YRNmFyeIwX2aEFrVTujk8IWPnY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=DIVGh0bt9XtAMzDs6NVJdkuVLA32r0IQwbBzqJ7LqxByMKsojAzRGpVh2ch0I4sUp
+	 lMxPQ00sA/Bp9jvK+UP/CIsarolU0pCsGXdSCGSVRepRQCuPgp9jTLOcsy5gegskwY
+	 b9QfqW/ZRESZqWxZ/6wia9kJJLN3vJ9dZ8C5J1uztDh8i1NjBXHjqpwLL/cyOX0E10
+	 i/Z/cGs52wl1u9NeColbhF1V+8UO85oWL5FDu3oNgGYS6d1hDEdWuEklYgK8pagk4V
+	 RmRGWlbuuq39q5kFWKayNCqgqMgdrMPlAoZidO8SIx2G7HtqtAfAgHV0LQKnc1Bh4D
+	 v8jgsq9nf22UA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v8 1/8] driver core: fw_devlink: Introduce
+ fw_devlink_set_device()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Herve Codina" <herve.codina@bootlin.com>
+Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
+In-Reply-To: <20260630102804.413563-2-herve.codina@bootlin.com>
 References: <20260630102804.413563-1-herve.codina@bootlin.com>
+ <20260630102804.413563-2-herve.codina@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 30 Jun 2026 10:41:25 +0000
+Message-Id: <20260630104126.5A64F1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-During the instantiation of devices described by a device-tree overlay
-applied on a PCI device, devlink displays the following kind of debug
-messages instead of creating the expected links:
-   'Not linking xxxx - might never become dev'
+> Setting fwnode->dev is specific to fw_devlink.
+>=20
+> In order to avoid having a direct 'fwnode->dev =3D dev;' in several
+> place in the kernel, introduce fw_devlink_set_device() helper to perform
+> this operation.
+>=20
+> Having this helper allows to hide the fwnode devlink related stuff
+> behind the helper.
+>=20
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 
-Without those expected links, the device removal order cannot be
-correct.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-Those debug traces are printed by fw_devlink_create_devlink(). In our
-use case, they are all printed because the supplier of the link has at
-least one of its ancestor with its fwnode flag FWNODE_FLAG_INITIALIZED
-set.
-
-The culprit ancestor is the PCI root bridge.
-
-The fwnode related to the PCI root bridge is created dynamically by the
-of_pci_make_host_bridge_node() function. During this creation
-fwnode_dev_initialized() is called which set the FWNODE_FLAG_INITIALIZED
-flag.
-
-Calling fwnode_dev_initialized() tells devlink that the device related
-to this node is handled out of the driver core. This is not correct in
-our case. Indeed the device related to this firmware node is handled
-using driver core mechanisms and is fully compliant devlink
-expectations.
-
-Simply remove the fwnode_dev_initialized() call. With that done, the
-devlink debug messages are no more displayed and links that were missing
-are correctly created.
-
-Fixes: 1f340724419e ("PCI: of: Create device tree PCI host bridge node")
-Cc: stable@vger.kernel.org
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/of.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index eda14cefca5e..3e12f70fe538 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -811,7 +811,6 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
- 	 */
- 	of_node_set_flag(np, OF_POPULATED);
- 	fw_devlink_set_device(&np->fwnode, &bridge->dev);
--	fwnode_dev_initialized(&np->fwnode, true);
- 
- 	ret = of_changeset_apply(cset);
- 	if (ret)
--- 
-2.54.0
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260630102804.4135=
+63-1-herve.codina@bootlin.com?part=3D1
 
