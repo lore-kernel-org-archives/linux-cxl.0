@@ -1,67 +1,66 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010018.outbound.protection.outlook.com [52.101.201.18])
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012017.outbound.protection.outlook.com [40.107.209.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1003E92AC;
-	Tue, 30 Jun 2026 09:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E605231842;
+	Tue, 30 Jun 2026 09:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782811664; cv=fail; b=lt6Qm9f9Ftlh3NLXWp62GbVsshpecbDN2nJo1+cD/7R1VijaAy1bQil5IPuEv1HvYVrQ6AoilYSBFjCicspWob7aIbCI9l2atrci5nKb/dUknDK2y3IQiJ+UCVw1U0SmsmYCq0JHLn6Zui+CzjkpbjaEnQ0prRIg5qDU4ugC8ME=
+	t=1782811875; cv=fail; b=Oq0qsy8FfakfnW5Wg0J9jIz7Ok5TZCfifPTLQ6D1vaC15fB1cz1QRArvYIkbZUl3fzf9oA6V7NtOpNXfMrBsCwL90HgiFYtTdAPvWuw5dQ0+jay/3QjaX4GPejOz34Pui0Hi98CGmGci2OhjpXa0z6ApSYtBhnd1vC7suWDJUQI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782811664; c=relaxed/simple;
-	bh=ksnekUj0m/dpSS1XPxCq8QYgeYYiOn1vm/BgTowslOw=;
+	s=arc-20240116; t=1782811875; c=relaxed/simple;
+	bh=1TTwfQvoGiPGJz458j1LKmagvc93nFj8jWNiwfHZAi0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ny+YWKGt21ieaskasyJglHgEHaSYqx4KV3E6acHHxlplBpiZ+CAfTD0/yRBbR+3/FDV15vfjKGxG7QtrUyFVEiELLJJRIsTToTD9J4tsXvQ8mtHNnBE7rPd0BWPTeDCapjemXVZOfk4v7NQ6u9JMcNOwY5FI57tv7xxjLVGupJY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=LnbdATPn; arc=fail smtp.client-ip=52.101.201.18
+	 Content-Disposition:In-Reply-To:MIME-Version; b=P1z2rbCFpIpqlOy94c765WCKUN4UDlIhaUTa66GOiipaJo9SGrj7rGndjGLZWHG3zffOS6Xt1jMmbxCDRpIEhP8RoDSknXkfiPOti0qRWaXghzfnyxLJWIvFkSkq46kv4cwYPql3ziyNVdGDdxU2fyTqo3kKD0W/VCHTU9zBgKA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=TzBthXtw; arc=fail smtp.client-ip=40.107.209.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="LnbdATPn"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="TzBthXtw"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rpdSWusxho//T6g36XO1zwaWZeuD0mcbR7ItJeXcVA8s9HUQTNAZ4itI/p++/Qw90zf/OhuiCfq2UYHtgiVhZ6KTlvwJilReDHPi1gy2EL9uitQnD+pqZuf0NDk8ct2N/fgTTDVfakXjW5XfOJhYGZ8skL6m4reBbktu2WOBoX+KO2vytIZdLNouQkG/goUhGUCGh8PemELSFThHq93LsWpX3SE3dWc5SIdqaWBbURsP5juzgZQO82UPAj6iWq1AFNRpgPH9Z8mRPJNkXcYJtiCgwqyQnJU9l6Z3rTfCWYA4HY2omPI42yr3SlLRKp93/N2WRgmRBT9iVc9PLBG2IQ==
+ b=kQU7PL8206Ykc+Gs92VTdm5jGhiI9VRN3uSXOiledgsBfVeOBViCUzOcTISuOBOOGOC14TWDncYC1gLNaSPrA/Mk1sd11GcBXRpqNCvFiopgCWTdsnu8HgJL5MGqu4GCNDVwFrqmsDyfYh2W2rie9Ra2OC83TZyMvSrDk+g5iaLzjCXyNAC4wDcEMeaXaPH/W1SI58vCxf1jwFbizrUtF+vJQb5eOL5VSkXe1WWQa1XxhEL+rnX6gZBUfKTgslFl74EwPqtdxE0Uoc046lBh8S7D+2yhEaGI9g56CzbW6T/eataXWM8gTf7LJy/H5itmzrUZnaELEvdvVZuWYqKBXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+nMpcyJQTisbWdDlomUqIIlkgmj9OJF1SSlmKMt4L4c=;
- b=XboFCpDMfksLnX2MIpOLkjFh9pZpZWAJwq57JxUPSEQoP8zU9U1/ujSX/xnckSCeLyweQ1VCcjTEIPpxfsf1y07CNJWs2ICmnIC2aSHN6A9Vkzpyp+mxLLv9iKs1F+JRXXNywBFpNPajZyfh3ftfQq6shYLYCL21z4/3Jz1PIillc8TtNP3/fK8PnT5QD8RQPIe2fsJzaRj5RdupjhZQws4aIrVfE+vLF0P5kRXyaLkE8UfhztlZHitSRE/APvpvXftDE8bXr3G/ejbWYm5F2IeDps7Ur9Ju5McdFFq7Wze5ZO/6/JPqGGUHtRIEnG75jWrboTjMATFvqBHwkbIwYg==
+ bh=ARWaE9abOEwX56BQJjSbqJEP+pTLmZ6pjC770Pjs89Q=;
+ b=BXT/LB+9Aha0csfAxgkA1bf6hI/Pg8SeSLkPtjQo+umsfpJivEJ8W0t7QYBsgFAbYJu7cRZB0ldRL/YTQtkhk9m5PIpucE6bgy5jsqwOjfQPiC12AFZhep/xRD2toXTgEzaXo6WDGPdZq1+BQyrUCQWeXfrkJe+3hf8D8MzXn94dJs6pELUFQLHhvfCI/Csu1LhzlgXIBDDvh2Ft6tS8RQaGlW5123Azk6gUQIE///scTfMJ3HTNQBpUngLNRWe1NWVJ0BkaR3lZjRjYDLAQF0DaTTuRHXNK89dnf7FbfUVu5XYKORtKUVErGB/UDh5JB35IlyNP+KrY5ZlkRw41ZQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+nMpcyJQTisbWdDlomUqIIlkgmj9OJF1SSlmKMt4L4c=;
- b=LnbdATPn3UASCmCVpGjkp1za+KqAMfaR77tbhOg0ksn4KqN01sYSr0Dy5zEREzUJ0SPqttGi/L9v6PNm68TtwB6mzUG+PA5y5oEVwNctULZ7f9P8RPKngYzICWB9lJDBNDra0IvFzYhGXIj4NKTC25U5Ix8De4xOHmQ111s6ZKTdsiBoNICUwr6oMDPJhOaeMTXzMXQds58HVF7K42zdmfXK0eLATSLx3wBeELzS28k5xpxLCsjjOnIbNYGbk+56qL2zdZlfZAL6Dalij7c5mzaopt5u48RiQf3PevnE8j1uWmMaFXlMYL+nf6ZtaFpybgN1jFt3/0ysFOitQJIINw==
+ bh=ARWaE9abOEwX56BQJjSbqJEP+pTLmZ6pjC770Pjs89Q=;
+ b=TzBthXtwYGZjolGJ2hhE+YiXVLDgYIMT87IEDKAnplG+MtdGMkcZGC+sPxJsjCGZeqc0UuE8jUE1hO7XBe6AXrfqY13JW7carpBF1Q682J5qKrBE4TtHeOKrhFGa3Fxmj9NQ2f7ovp+vuYpUGLe6DiaHJNpVq4XD3qZKWAu5UNL/I5xF4sntNSEmVjLILNDgh2tKJmlpBuGaLpIfrYeaU29VXPGmbaLQPLx/pJbAQ3Usxgvzlj6rx+FPKvnvUzdtnDugnqzMHiGoil9vZxSBmAMbxLyEJk0Jgm0jNudi4gBavN67eHbzDy4aT41/iTGlhtZuuhSItmkJzx0AUa5EtQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
  by BL3PR12MB6450.namprd12.prod.outlook.com (2603:10b6:208:3b9::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Tue, 30 Jun
- 2026 09:27:38 +0000
+ 2026 09:31:10 +0000
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0181.008; Tue, 30 Jun 2026
- 09:27:38 +0000
-Date: Tue, 30 Jun 2026 17:27:31 +0800
+ 09:31:10 +0000
+Date: Tue, 30 Jun 2026 17:31:05 +0800
 From: Richard Cheng <icheng@nvidia.com>
-To: Samuel Moelius <sam.moelius@trailofbits.com>
-Cc: Alison Schofield <alison.schofield@intel.com>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>, 
-	Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Ira Weiny <ira.weiny@intel.com>, Dan Williams <djbw@kernel.org>, 
-	Eric Biggers <ebiggers@kernel.org>, Alejandro Lucero <alucerop@amd.com>, 
-	"open list:COMPUTE EXPRESS LINK (CXL)" <linux-cxl@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cxl/test: reject wrapped GET_LOG offsets
-Message-ID: <akOLH861twsGqEFM@MWDK4CY14F>
-References: <20260605142036.2062347-1-sam.moelius@trailofbits.com>
- <aimmfgWS6IPtwLVA@aschofie-mobl2.lan>
- <CAE+C+DYnidq7ZFoyxeL54YCT=JF5-Q-NkGFTgoAaW9EztwwaGQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+To: Alejandro Lucero Palau <alucerop@amd.com>
+Cc: alejandro.lucero-palau@amd.com, linux-cxl@vger.kernel.org, 
+	netdev@vger.kernel.org, dan.j.williams@kernel.org, edward.cree@amd.com, 
+	davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, edumazet@google.com, 
+	dave.jiang@intel.com, Edward Cree <ecree.xilinx@gmail.com>
+Subject: Re: [PATCH v29 4/5] sfc: obtain and map cxl range using
+ devm_cxl_probe_mem
+Message-ID: <akOMnchDu6Y_Nr_L@MWDK4CY14F>
+References: <20260622124010.2192888-1-alejandro.lucero-palau@amd.com>
+ <20260622124010.2192888-5-alejandro.lucero-palau@amd.com>
+ <aj32gUuoZuTUODry@MWDK4CY14F>
+ <bde77dd7-fa7b-4d28-9a7b-3f0ce6587bf4@amd.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAE+C+DYnidq7ZFoyxeL54YCT=JF5-Q-NkGFTgoAaW9EztwwaGQ@mail.gmail.com>
-X-ClientProxiedBy: SI1PR02CA0012.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::8) To BL0PR12MB2370.namprd12.prod.outlook.com
+In-Reply-To: <bde77dd7-fa7b-4d28-9a7b-3f0ce6587bf4@amd.com>
+X-ClientProxiedBy: TP0P295CA0043.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:910:4::18) To BL0PR12MB2370.namprd12.prod.outlook.com
  (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -71,163 +70,208 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|BL3PR12MB6450:EE_
-X-MS-Office365-Filtering-Correlation-Id: d334c579-df89-4501-e15f-08ded689d360
+X-MS-Office365-Filtering-Correlation-Id: 351d98e5-3aad-45f0-30eb-08ded68a51bb
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|23010399003|56012099006|11063799006|4143699003|22082099003|18002099003|6133799003;
 X-Microsoft-Antispam-Message-Info:
-	tUt+Q6W+3S+zg6yp8g4o7+fQTMvfXrrmYOlFUOzgfgwRnVRJOmQxcXn0/2kxYjiF4c5dfetU2QhMPukaXuB7/hWmG8wFRDgISyeGNQNrZCsNiBIwQUmprs4mQvpwhqfhrNMdAw4tY/64fuis5V2FRARwgdCW4SAV+cz0mYGdX/BisijXkDPY3cbqJ5tnvtK2C7zLsQkM3eUWSDddLXnxnbBDq6f6vyLtaSam2FGQt2uVpMzsEEQS7lKX1zg/muEbbniXMSHagUj92Wpu3sDmDXfLnliJdwKgnp6iicjAEOQHQEf+2uKvdAsYM2e4qoSkPlBUYo+PZD2jUvidNXlOwmuV6RlqAU0bDH3nJk53E2ckwL9w8mQSKuFGOtrQQIuQckl1/sz++I8SMICQsiIhTbUmppafKifBfSXaH+OE4qzYV298c8ED2Zu3qp7pgMxSqTA2UubgT5l9SlP9iAeN3bb44fZJbecbor3qRnzYAU6HRcsOUMMTftYmo4viBQGIEbDQ40vf+fE8bvLrnsSBVItyYXCpHNgIccug2tWBfdCt+COtkKfkIvyAZ2+eKIlNACECUoodOqyYDAgvEQeL1kPXy3r3IWOuh3aBfVZPuavD1O4VTszANdmCMQbVHHUdS1UQlCNMw1/q9cEW6NT8DMux1tzsa00ocIDvlRv/UHQ=
+	6lOt+RtQdAAvK3tbE9qYZMFPxXxxiMTj1dPoMvUIQ0eaIkvbT8aaTmXVhq9X3H42xTaKLHZgzdNV9jEGLRE6jTQV2mzF2toXI3XnDo8WGClck+iV0lj+SzCMmGuZRpo5KeDyNtZmifv7pNtFVXq6OvQ/ouQtLfoM6ZuzH8FmNfjugR0z9rwCzipSBrjSlhAiGYoRrNIMpl84GMrU4I0tzu0qg++NYuKn5k2vjlZqfzm1Hq5RtlvGS1WGM+JzuUo0W4zzKPvudrd+iZRK5Em9924zwv61lgbxPeiipypFX0z1gekYwiZa2gNRXQjhs6Ca2+HGaAsj/ZU0h7Mkoa1/wmZXUgP8V7YrvpEJntOHDtkfCjBiGxgeQz2z51BNHqscwcXJnwLID5z6ZH/rlEkidHFizEWd/wNrRoug/GbZuaNqoSAcImU7Pato4QMeC7CDt1H3pUtPKkcrweqq6qrDUHb1JiK1InE9ukWhCxgxupBFbQYYOHp8UMaNj3Ja95WS6ngu3W7sRcGlL6qOisPoSDv1HZVvj/I9MTW0XKJbARHpmBRjk347I0VKVGpfmwmc+4mLAhg8I6ksrom0yfPeol3I3sfl111SK5cjc9dYisNgupvvp5B84Wv1AO4qkVofXVsmNB+H8/nHj/vLg3oppABmAjWwbPsdLt0VT+8IPg8=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(23010399003)(56012099006)(11063799006)(4143699003)(22082099003)(18002099003)(6133799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VlNQeTg1U3BNQzVuOEZqdisvbnVkemZQbW9ON3dOa01aRkVYcDQ5cDgxV0hi?=
- =?utf-8?B?S3drWmo3QmxPZjQvTVBuNFlvMXp0aGZRZ3k2UmtUR3c4ei8ybmd5eVlwZTdr?=
- =?utf-8?B?cUlGSWcwdTBQY2hWNFo3ZEU3N2tCME9LRi9JMGJXMjR5WHIwQUtUKzRGWDBL?=
- =?utf-8?B?MUZKRDlzSmx5Mm5vZ215OUFkdUMzUUVFWnMyWER2UzFqNldIN1Zxb1BOcmVy?=
- =?utf-8?B?UWNUVGZBMjBpRmNiMU1veUNHUUxSNW1VamVjZ1ppZjcwR0llV0E5UW5iOFZj?=
- =?utf-8?B?WmxiWUt3T25Pb0dNTFRNVDBUakZmVXBLeHl6eVFudEp5UGlIK09wOVZoRUVq?=
- =?utf-8?B?SjB6dlJMM0J5ZmduODZRQUdQRFlUSmd0NUhEQ3RrSy8xUjdoM3ZRdi9DRGtD?=
- =?utf-8?B?UXlhRzhFbmhWakJtbmwweGRqeVgyN2h6SGRLMDE2YnVBVzZLanpBQndRTWZK?=
- =?utf-8?B?OGg3dTBWMXV6QzJwZHdFSEpqWE9PdTYxSzlyekZOWFFPajRUeU1RaG5lWlJm?=
- =?utf-8?B?RHJ4cC9MazhFQzQrWUpOVWlNTHVWRzlGOWdnVUc1K2VISjFLNUNXSGpUNTB0?=
- =?utf-8?B?b2tqb1phYVFhTVFGekFubUtWV2pmRXJtNUZrQ2JjRVZTNUVoVmErUW9LT0Ji?=
- =?utf-8?B?UnZ0cWhNemhBNTgxU3lKZ1FKN1Nrczl6V25TWE1PUmRhKytrWEZWVzhxV2pU?=
- =?utf-8?B?enphSnd5ZzRCM3Iwd0Z4UzAxZWcxS2R4S2lZTzJkb3ZRSzJpbmx5TjJkaDBJ?=
- =?utf-8?B?djFhU1VHeXJ1UkRDc2xnWE1BZFkzN01VTE9RS2o5TC80TmMrSVMzb3hNa3dz?=
- =?utf-8?B?V3RnS1dMVG5ZTllaTVBHRDhoamlVSUE3eThsRDUvSWV6dkZEN2ljU0V1QlUx?=
- =?utf-8?B?NVlPY1RWU0VxSjc1NVBzWXlpeG9NaWQ5UCtMNmp6VmdUZVJYdTVxaUtLWk5x?=
- =?utf-8?B?a1ArMTkwRCtxTVBtUEFialJQNkpWdHRyNFBMRno0MHFicjhUc1NCRzBkODJy?=
- =?utf-8?B?RlNvMEFmZ3AxcGNlN3p4dEppSU5xNUVmYlVZb2xQZlZKWG1DSWtVblZoL3Bl?=
- =?utf-8?B?MGVMR05rSi9Ybkl2cWE1THA1U29BU3JHemp6UVRBdElWYUFsZHFpVTZ4bURa?=
- =?utf-8?B?cW0xdVNRVUw2MGtHTi9IWUFiMmRDbER6akpiV0xYeVpmWkhSWFlyN3JIWG01?=
- =?utf-8?B?NGVVdzBuY1hlT1NKS3F0NlRXR1V5cStZWlBKWis3T0sxb2V3UVZTWGVHY0Z6?=
- =?utf-8?B?RmdMb3Y3RDBHNTZERnpaYVhyZ2dqU0hGTU9HVG8zcE95cWVXVURreldtVzhS?=
- =?utf-8?B?NU4rR3Ruc0VBc0xGYXdvQWhablUyNHJKYlRtRHdkSnVhOUhISENocnNrcVN5?=
- =?utf-8?B?MkRzM0ZKQjlKVHo0SnFtZXh2YTVXZy8vVThwdUFtdnFQM0JEYWJ1RjZvWW9u?=
- =?utf-8?B?dHpEMkZzSFNjdXZ2MmgvTTVwNmRiVmtwSjVLd2Y2bGZBa3RuWDF1QTk2cllX?=
- =?utf-8?B?bFF0enVPUDdBc01SNDg4OVZpWStua2M1RnhiaUFTQTJSb2lIbEtkUzVIYk53?=
- =?utf-8?B?K3ZEY2tnOWVtSVEvYUlHOHZ5ckhLNEJLNkhubEgycE9sdWliMExtQ0svZ1h4?=
- =?utf-8?B?ZVhMSjZUVE1TT2lTQ3Rod1pCWXlBOW5mWFJqbWM4c1drNzMxRmQwYldpamdz?=
- =?utf-8?B?QmpiQ1JCdHA3TklGeW1FZFozeVNBN1hzMUZGNWQvenhoTFZUMDRsMU5udkJu?=
- =?utf-8?B?V1VxVEM4cnhLVWNpUUhGUGUxNS84SzVrTlFzMWgrUkduQzd2czhKdmE2cTgv?=
- =?utf-8?B?MFpWWVU4RXF3TkJuWG5YQ3JTUi96RDA0NVJiQm9pdHQ5YkZIczVyU2ZsL044?=
- =?utf-8?B?K3NpNUd5NmlpNGxEZ0Q5OXdOQnNqWkk4ME5YbGNFWVJzNnFZVm0vcTNsYXNn?=
- =?utf-8?B?SWlvRVZOcjVSMlZoMSsvSlBkTjB0WCtCNHh5RHBOZ3lzN3Y0YmNFSjJMVjlM?=
- =?utf-8?B?RldKN3p5T0NQWWVPR3h5bit1N05OamdTaEV2QU1YcTBpNnRCNzRIeGpYWUJH?=
- =?utf-8?B?Wlh4b2pjOE54TzBGT1FoVmxNT2J0eXpEbUhQL3BmdDlaNFN1aFhzdk04WVBN?=
- =?utf-8?B?bURueUFCYXBVTE9YOGNNQjdoYTJHTGZNSE4zTWpzdEh4SUFzWVpIa3RoRXRU?=
- =?utf-8?B?OGZpVGdpMU5mSlR4QjluVXVjajA1R2txaVV6RFVZUTJBK3NkNm1hWUd5d0Ev?=
- =?utf-8?B?VjE5czcwRXVCc0tzcWJrcDFCT0trUDl5a0x2U2JQZUVSc095UzNadWs3eVFp?=
- =?utf-8?Q?GgKob251nj6uc0pLzZ?=
+	=?us-ascii?Q?riVVRcY4DhNfqDv0n/LmWdJKWBY5WdLMJYSUJfFbnz3kzn4+ffPMay034hzP?=
+ =?us-ascii?Q?nukOTu88c4GIhF9HeTAipohxRFo0OAYiEVlcuZXCWKZ1o0z4wtumw5+DOVKj?=
+ =?us-ascii?Q?BO8x9dbtt5yU6VGPYBQGwlVTAUmMWoyXkB4LxvhjMePu3KscgCHWqeUS0m89?=
+ =?us-ascii?Q?naJU5uphHs4hzhLfrcInOW4G6dt/KhhxtAIjDFXKemwNPcgvKLrqBRuqrTqH?=
+ =?us-ascii?Q?UrMztFsj5vtL50f/YUM/AaG8Zyt24lYPHObYqMzEygJU8T4/0ZSFgQVMqkYk?=
+ =?us-ascii?Q?3KSdX2J3J5x6CjK1Vw5bujPOcMnG00fYapVaIlu0UkSpUCIhTLdJr0duEt4c?=
+ =?us-ascii?Q?xVn5RkFvf3zmIalq6egPPZvQxV8k40Z7sObgfO0Fna+xmQdMyYLnyWr2knJ6?=
+ =?us-ascii?Q?qG/PWIGhmg3mVQEVRscgSRovuDy+tlgxk1ZJv6LojIMnVBTopZTR+uw4T/qH?=
+ =?us-ascii?Q?7MPDOj66QQHueDNDEhSKN6tSO6h1tbK1quOzlfp+WQyDYn6LqGlf6SduM0Yx?=
+ =?us-ascii?Q?DiHWi78+U9HJxFG62eS5AQsqRnfOIezzmDLxb4zqR4sa9Pf7ayoubT+3Mabh?=
+ =?us-ascii?Q?UlXbUMleuns3GvtHpTVSB6fm5lQTBedzraep5T6uLmHXstHDfZw+BcS5WeB7?=
+ =?us-ascii?Q?34JpiUi2K0HEDZdDeH9H6zFsRkr5GwzgkXV52BgmFq7UY4lFIykmWDHMQGwJ?=
+ =?us-ascii?Q?AXGoj0K5XkT93CvPNomsn4FToU7uFHRiGFgHyRVDpihbiH1ACPWr1Dqg9WZ4?=
+ =?us-ascii?Q?deIc+mnOTG230fHH2NyuBRN3lKi/0QuOBhJ6Hdj9rVD9rncQijcRC8PrJQSt?=
+ =?us-ascii?Q?BjvNmyJGLo3CpAw/bweuXAx+HXjg/JLVOr4UKOKE7ZekgFcnZt8qo3cioZDS?=
+ =?us-ascii?Q?O7ZzSSr5/KJC9Q+mj1Tby3atm04uo6tdp26Q5xHiwrrWN+cXl1RK8Hb+COb1?=
+ =?us-ascii?Q?9DMnQLFXD7FSZMcxDZ+HGME7N0p2mPN+rcVGk7+zJjP4mD8XqZK5IBbKo0OX?=
+ =?us-ascii?Q?Xudm64EwdnYo3rQo16I7hSCYvlZxJpcTLVwuwxOHhLPk93IOuwSXjFsFzftl?=
+ =?us-ascii?Q?OhgP+QuIers4Z3iVqqAy9VxaC6zDwH70M10VvLlIXyCJAjnRWSRItfkoNyAn?=
+ =?us-ascii?Q?lhfLOUmRK11oEJKEeGH/zYxrD7v6AIyEJHlhYPQ87rsi9P2EIDW//zfhTTp3?=
+ =?us-ascii?Q?LDWXd0lEvcSuhUOoC5aqS5h22uLQYM1imtJuJNHFKu/67zQvOWkSIo6aLezv?=
+ =?us-ascii?Q?v4JI/WtrbqCzKIJFsXScBZb0zOkrQy86/0cBnAGBqA18+3rqGrrznp2QW0dH?=
+ =?us-ascii?Q?HsMuSx2eh8nrqhB9UOtmnTtzznpAYdYERKd4OKxfGAglL49zD6l6EfP6T0gl?=
+ =?us-ascii?Q?jnFGDzp+GEk4z8G/a8v0ZLb0RZiSMn3NjOnlhVljptBC+TQPUDmyt/9K8fog?=
+ =?us-ascii?Q?cq3Y728vHgSHz3Qpo9W5NXgdUipJfUiZrcrEr3kQ5+Ho2dPBcw/BmLgy25pv?=
+ =?us-ascii?Q?fR/fyGpGmBUEV3QRP6BrN2Hk4pyTXUtNQt4WT1vBDwKonX313YgVVhipeJ/9?=
+ =?us-ascii?Q?RqO5sFnfJ4/iWTBRtTsUKsaWeBvkUi/dhwI4HNT7h2K0HxEvPpG/1Pj7+8Cf?=
+ =?us-ascii?Q?EPTVfnbQ5miFwiEZU47o4C5UXxZglvXFca41yjvWM5Ov6lfY1GF7gHTms7bt?=
+ =?us-ascii?Q?9234MUxPT5/W7J6CwjhlPo4TyIWmw2H9D12/Cgh04USIKtIBNwnIF6osWp98?=
+ =?us-ascii?Q?/2oVlCXD0w=3D=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d334c579-df89-4501-e15f-08ded689d360
+X-MS-Exchange-CrossTenant-Network-Message-Id: 351d98e5-3aad-45f0-30eb-08ded68a51bb
 X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2026 09:27:38.2344
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2026 09:31:10.1228
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KDQgzNh0Fvc12EjwRl/M35Y1hJ078eRM7oSr1wkAGHbtczFACJxrJyWG0dWdnCf44wpqcH1/Dc14Kg0Xp/L0/w==
+X-MS-Exchange-CrossTenant-UserPrincipalName: B5roCaQCop5iiQaoDOoIwIWbvNRFZQEf9xSrUHkCFtM8UyJrvoDhWRUD4G2p68UdL/E1zY3rqsMCsES230fe7Q==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6450
 
-On Sun, Jun 28, 2026 at 11:45:29AM +0800, Samuel Moelius wrote:
-> On Wed, Jun 10, 2026 at 2:01 PM Alison Schofield
-> <alison.schofield@intel.com> wrote:
-> >
-> > On Fri, Jun 05, 2026 at 02:20:31PM +0000, Samuel Moelius wrote:
-> > > The CXL mock mailbox GET_LOG handler validates the requested CEL slice
-> > > with `offset + length > sizeof(mock_cel)`.  Both fields come from the
-> > > userspace CXL_MEM_SEND_COMMAND payload and are 32-bit values, so an
-> > > offset near U32_MAX can wrap the addition to a small value and pass the
-> > > bounds check.
-> > >
-> > > The wrapped request then uses the original large offset as the source
-> > > address for memcpy(), reading far outside the mock CEL array.
-> > >
-> > > Validate the offset first and compare the length against the remaining
-> > > CEL size so the check cannot wrap.
-> > >
-> > > Assisted-by: Codex:gpt-5.5-cyber-preview
-> > > Signed-off-by: Samuel Moelius <sam.moelius@trailofbits.com>
-> >
-> > Hi Samuel,
-> >
-> > I'd suggest keeping the commit log focused on the broken property and
-> > how the fix restores it, rather than tracing the individual arithmetic
-> > operations and later accesses, which are already evident from the code.
-> >
-> > The GET_LOG handler is intended to reject requests that describe a CEL
-> > range extending beyond the available data. The current validation can
-> > incorrectly accept some malformed requests because of arithmetic
-> > wraparound, and the fix restores that property by validating the
-> > requested range in a way that cannot overflow.
-> >
-> > The discussion of the subsequent memcpy() access leaves me wondering
-> > what the observable effect actually is. Does this return bogus CEL
-> > data, trigger KASAN, crash the test module, or something else? If there
-> > is a demonstrated failure, please describe it. Otherwise, I think the
-> > property being restored is the more important aspect to capture in the
-> > commit log.
+On Mon, Jun 29, 2026 at 02:20:03PM +0800, Alejandro Lucero Palau wrote:
 > 
-> A longer explanation appears below, but the bug can cause the kernel
-> to panic with an out-of-bounds copy. So highlight that fact in the
-> commit message?
+> On 6/26/26 04:52, Richard Cheng wrote:
+> > On Mon, Jun 22, 2026 at 01:40:09PM +0800, alejandro.lucero-palau@amd.com wrote:
+> > > From: Alejandro Lucero <alucerop@amd.com>
+> > > 
+> > > Use core API for safely obtain the CXL range linked to an HDM committed
+> > > by the BIOS. Map such a range for being used as the ctpio buffer.
+> > > 
+> > > A potential user space action through sysfs unbinding or core cxl
+> > > modules remove will trigger sfc driver device detachment, with that case
+> > > not racing with this mapping as this is done during driver probe and
+> > > therefore protected with device lock against those user space actions.
+> > > 
+> > > Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+> > > Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> > > Acked-by: Edward Cree <ecree.xilinx@gmail.com>
+> > > ---
+> > >   drivers/net/ethernet/sfc/efx.c     |  2 ++
+> > >   drivers/net/ethernet/sfc/efx_cxl.c | 23 +++++++++++++++++++++++
+> > >   drivers/net/ethernet/sfc/efx_cxl.h |  3 +++
+> > >   3 files changed, 28 insertions(+)
+> > > 
+> > > diff --git a/drivers/net/ethernet/sfc/efx.c b/drivers/net/ethernet/sfc/efx.c
+> > > index 61cbb6cfc360..3806cd3dd7f4 100644
+> > > --- a/drivers/net/ethernet/sfc/efx.c
+> > > +++ b/drivers/net/ethernet/sfc/efx.c
+> > > @@ -984,6 +984,7 @@ static void efx_pci_remove(struct pci_dev *pci_dev)
+> > >   	efx_fini_io(efx);
+> > >   	probe_data = container_of(efx, struct efx_probe_data, efx);
+> > > +	efx_cxl_exit(probe_data);
+> > >   	pci_dbg(efx->pci_dev, "shutdown successful\n");
+> > > @@ -1242,6 +1243,7 @@ static int efx_pci_probe(struct pci_dev *pci_dev,
+> > >   	return 0;
+> > >    fail3:
+> > > +	efx_cxl_exit(probe_data);
+> > >   	efx_fini_io(efx);
+> > >    fail2:
+> > >   	efx_fini_struct(efx);
+> > > diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sfc/efx_cxl.c
+> > > index 18b535b3ea40..3e7c950f83e9 100644
+> > > --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> > > +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+> > > @@ -18,6 +18,7 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+> > >   {
+> > >   	struct efx_nic *efx = &probe_data->efx;
+> > >   	struct pci_dev *pci_dev = efx->pci_dev;
+> > > +	struct range cxl_pio_range;
+> > >   	struct efx_cxl *cxl;
+> > >   	u16 dvsec;
+> > >   	int rc;
+> > > @@ -73,9 +74,31 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+> > >   		return -ENODEV;
+> > >   	}
+> > > +	cxl->cxlmd = devm_cxl_probe_mem(&cxl->cxlds, &cxl_pio_range);
+> > > +	if (IS_ERR(cxl->cxlmd)) {
+> > > +		pci_err(pci_dev, "CXL accel memdev creation failed\n");
+> > > +		return PTR_ERR(cxl->cxlmd);
+> > > +	}
+> > > +
+> > > +	cxl->ctpio_cxl = ioremap_wc(cxl_pio_range.start,
+> > > +				    range_len(&cxl_pio_range));
+> > Hi Alejandro,
+> > 
+> > A small question here,
+> > Is it possible that the FW would commit a region bigger than the range ?
 > 
-> ---
 > 
-> The bug was validated with a PoC that deliberately invalidates the CXL
-> mailbox GET_LOG command to the mock CXL memory device.
+> Hi Richard,
 > 
-> The vulnerable code checked the requested log slice like this:
 > 
->   if (offset + length > sizeof(mock_cel))
->   return -EINVAL;
+> Not really. We are using the minimum size for CXL mem, 256MB, and it is not
+> configurable. If CXL is enabled by the sfc device firmware, this is the only
+> possibility.
 > 
-> Both offset and length are 32-bit fields supplied by userspace. The PoC sets:
+> It could be a good sanity check though, but I prefer to keep v29 as it is
+> now ... Dan Williams is happy enough with it, so I expect Dave to merge it
+> soon ...
 > 
->   in.offset = UINT32_MAX;
->   in.length = 1;
 > 
-> So the vulnerable expression wraps:
+> Maybe as a follow up path.
 > 
->   UINT32_MAX + 1 == 0
 > 
-> That makes the range check pass, because 0 > sizeof(mock_cel) is false.
+> Thank you,
 > 
-> After that, the mock GET_LOG handler still uses the original huge offset:
+> Alejandro
 > 
->   memcpy(cmd->payload_out, data + offset, length);
-> 
-> So it tries to copy 1 byte from far past the mock CEL buffer. In QEMU
-> pre-fix, that caused a kernel page fault in memcpy_orig, through
-> cxl_mock_mbox_send, and then a panic because the test kernel used
-> oops=panic.
 >
 
-Hi Samuel,
+Hi Alejandro,
 
-The substrction range check looks right to me, it also matches the existing mock
-LSA checks.
+I see, thanks for the head up .
 
-I would suggest a small regression test if you have time for it.
-Now in-mind only a pseudo-code version, maybe something like that following
+Np for me then, thanks.
 
-"""
-/* Use a cxl_test memdev and the valid CEL UUID/advertised CEL size. */
-ASSERT_EQ(send_get_log(fd, cel_uuid, UINT32_MAX, 1, out, 1), -EINVAL);
-
-/* Preserve valid boundaries. */
-ASSERT_EQ(send_get_log(fd, cel_uuid, cel_size - 1, 1, out, 1), 0);
-ASSERT_EQ(send_get_log(fd, cel_uuid, cel_size, 0, NULL, 0), 0);
-"""
-
-The first case captures the overflow regression, the latter 2 document the
-intended inclusive end-of-buffer behavior.
-
-What do you think ?
-
-Best regards,
-Richard Cheng. 
+--Richard
+ 
+> > The committed CXL region length is never validated against the PIO window size.
+> > The legacy patch sizes wc_mem_map_size to cover the VI-strided PIO offset, but
+> > here we ioremap whatever the BIOS comitted and assume it's EFX_CTPIO_BUFFER_SIZE.
+> > 
+> > Maybe adding
+> > """
+> > if (range_len(&cxl_pio_range) < EFX_CTPIO_BUFFER_SIZE)
+> >      return -EINVAL;
+> > """
+> > Would be worthy ?
+> > 
+> > Let me know what you think.
+> > 
+> > Best regards,
+> > Richard Cheng
+> > 
+> > > +	if (!cxl->ctpio_cxl) {
+> > > +		pci_err(pci_dev, "CXL ioremap region (%pra) failed\n",
+> > > +			&cxl_pio_range);
+> > > +		return -ENOMEM;
+> > > +	}
+> > > +
+> > >   	probe_data->cxl = cxl;
+> > >   	return 0;
+> > >   }
+> > > +void efx_cxl_exit(struct efx_probe_data *probe_data)
+> > > +{
+> > > +	if (!probe_data->cxl)
+> > > +		return;
+> > > +
+> > > +	iounmap(probe_data->cxl->ctpio_cxl);
+> > > +}
+> > > +
+> > >   MODULE_IMPORT_NS("CXL");
+> > > diff --git a/drivers/net/ethernet/sfc/efx_cxl.h b/drivers/net/ethernet/sfc/efx_cxl.h
+> > > index 04e46278464d..3e2705cb063f 100644
+> > > --- a/drivers/net/ethernet/sfc/efx_cxl.h
+> > > +++ b/drivers/net/ethernet/sfc/efx_cxl.h
+> > > @@ -20,10 +20,13 @@ struct efx_probe_data;
+> > >   struct efx_cxl {
+> > >   	struct cxl_dev_state cxlds;
+> > >   	struct cxl_memdev *cxlmd;
+> > > +	void __iomem *ctpio_cxl;
+> > >   };
+> > >   int efx_cxl_init(struct efx_probe_data *probe_data);
+> > > +void efx_cxl_exit(struct efx_probe_data *probe_data);
+> > >   #else
+> > >   static inline int efx_cxl_init(struct efx_probe_data *probe_data) { return 0; }
+> > > +static inline void efx_cxl_exit(struct efx_probe_data *probe_data) {}
+> > >   #endif
+> > >   #endif
+> > > -- 
+> > > 2.34.1
+> > > 
+> > > 
