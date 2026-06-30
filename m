@@ -1,92 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98EDC22424C
-	for <linux-cxl@vger.kernel.org>; Tue, 30 Jun 2026 14:39:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E9643CEE9
+	for <linux-cxl@vger.kernel.org>; Tue, 30 Jun 2026 14:52:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782830362; cv=none; b=YKv/nvZqbFiHIeWk1ZtSsfrM5WH29t0y7X3rXkb/MKucEP0/OuW3zCQq7+NwjO6Pkiznz7R7PY5tw6aRCz+Ecdys8C4Cn358bEozYtx1JQ2cHYAR4HLJwhzYqBW88kY9eG1vIYMPPADjd/YBEdK2OwzzRdtlwDj+S9dAziir7NY=
+	t=1782831157; cv=none; b=o0nOv1ZPlJW9624stMVAXL/YTptjMdUN3u0k4m6BTvvh6ztlMI//x1ezs+1k4ACdq2MFYhxxVaEFkCcSWPzbvc65U+NUplhmOw4foV10pFJqLZZDDM5Z0arPwWxS/HfR5qGstIkS+WyMHUrL12yq3XqVVLiZVBoyMJHu7vjEwX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782830362; c=relaxed/simple;
-	bh=Xkwsv5Ej52KKUnn+o4Rhob8fYe+NGBulGOHwCpttoiY=;
+	s=arc-20240116; t=1782831157; c=relaxed/simple;
+	bh=IPAjdMG47RlnuQGcjGfFcaDWdXXUyM3VbDraR6cvBWM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=TWqTdfiCQoVfRYO4ywJwDnm1FYSmgSzvLTqEvuMiy2wST9ZVvZ82hqIZCugGQagUZxCM2qxTzp6/xVu8/2j8jUqh/0eJmqlau0Ki6DMU4WEI3hyjpbreZJxaEgl/kRI4jZT3jEfu0yPE5wLYSfYydBU/9MvWJ0rrhDKrjVObPH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADEleIdG; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=L2GetHBf/SyNwisbhVJbz/L/pQYd6fVFjS5oiANDGFWp4gD/Texs/iYYmGNQMat6MTu/yjMIqn1uXWvpCZnO6C0EIKr4+85iEFjzPLhbeh11rE9a8OfhGcfUztbQf6ywsYRr/P/5jWXIpEvCd/GJO1GQLw2RIlNutX/6NlkH1PE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AQ9KV7JY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADEleIdG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF7C1F000E9;
-	Tue, 30 Jun 2026 14:39:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AQ9KV7JY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9A0B1F000E9;
+	Tue, 30 Jun 2026 14:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782830361;
-	bh=JyLviq3tOycnpGCwc2zW03In/fXLsHtHxP8aVwH4Mc0=;
+	s=k20260515; t=1782831154;
+	bh=jhJr6abuzEjDZMjnSrijJ/7iNhPj7s2IiddkHCF8PeU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ADEleIdGb1UeUKlFqftzgzC+2VQxKG6jwA5qjulK3oAv6t/UMxtZKnmicB3cLUjNL
-	 K0rrhVu05fmLTDWk6DvjQ06nAmcv+pLU6Oz1Cx7iSy0ibK3ERR8hj6Ue5uc7K9aVR2
-	 lbocExqdmgmCAnHMZqHd83bNhN4U8OKRKXeTm2VaXEYOez2TD1svn0DzIRfAQdM+lN
-	 ltOgljmaKGN+Fxge6qCRqkrxV4Wa/nRjTH4O2a+f6izyZbCobAobYhtles8cbxW2++
-	 5A5ozAL5BAgtnI8zr9Gna7ANV4ZldlMSCKparycN1BL4LZOhYs8QKWLMbUm1RjreJh
-	 QoSDbyTZUuRaA==
+	b=AQ9KV7JYe/IaVlcWte9ebQR3EPvuEcEGxcRPtCPZ9ZFwyDMgOJH2+T3WA9VC36H6y
+	 q5KSZUlmFP8oZIuGI6o6zMV3iZmQMWoqba/MsLjb7UoFz8Y7pQnmenc81AEPBqX3oR
+	 6fgJ/QADVxqFyg2RuHNl2eF/sTewTSIzdwBgsrSJol4/8eoLvYEl7ztkhzJ7zC6a5Z
+	 gz9xB41Bf0IjmEBmyc3ZtPi5XouQUod7HRz8oDJgRMKYm0WBMU4ZbkXwnWg1grytAl
+	 ePbr7hU4i3d7TrSqLuuAiI/ozs46HNiLe9p9GLBNn2taS4Ss3eUTzi1ILYsHQWJKf6
+	 qFNKweKHDqwQw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v31 2/5] sfc: Map cxl regs
+Subject: Re: [PATCH v31 3/5] sfc: Initialize cxl dpa
 Reply-To: sashiko-reviews@lists.linux.dev
 To: alejandro.lucero-palau@amd.com
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260630151346.31201-3-alejandro.lucero-palau@amd.com>
+In-Reply-To: <20260630151346.31201-4-alejandro.lucero-palau@amd.com>
 References: <20260630151346.31201-1-alejandro.lucero-palau@amd.com>
- <20260630151346.31201-3-alejandro.lucero-palau@amd.com>
+ <20260630151346.31201-4-alejandro.lucero-palau@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 30 Jun 2026 14:39:20 +0000
-Message-Id: <20260630143920.BCF7C1F000E9@smtp.kernel.org>
+Date: Tue, 30 Jun 2026 14:52:33 +0000
+Message-Id: <20260630145233.E9A0B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Low] The commit adds `#include <cxl/pci.h>`, but `include/cxl/pci.h` doe=
-s not exist in the kernel tree, resulting in a fatal compilation error.
+- [Low] The patch adds a call to an undefined function `cxl_set_capacity()`=
+, which will cause a build failure.
+- [Low] The file includes `<cxl/pci.h>` which does not exist in the source =
+tree, causing a build failure.
 --
 
-commit fd1792aaa5cf6782d5137f23ed3db63b260303d5
+commit 658adf5bd8fde62f9bb534a3960bfeef69a61055
 Author: Alejandro Lucero <alucerop@amd.com>
 
-sfc: Map cxl regs
+sfc: Initialize cxl dpa
 
-This commit introduces CXL core functions to the SFC driver for discovering
-and mapping CXL device registers. It sets up the component registers and
-verifies the presence of HDM and RAS capabilities.
+Use cxl_set_capacity() for DPA initialization as no mailbox is
+available.
 
 > diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sf=
 c/efx_cxl.c
-> index be252af972ab3..704b0ebae9374 100644
+> index 704b0ebae9374..18b535b3ea405 100644
 > --- a/drivers/net/ethernet/sfc/efx_cxl.c
 > +++ b/drivers/net/ethernet/sfc/efx_cxl.c
-> @@ -7,6 +7,8 @@
+> @@ -68,6 +68,11 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  	 */
+>  	cxl->cxlds.media_ready =3D true;
 > =20
->  #include <linux/pci.h>
-> =20
-> +#include <cxl/cxl.h>
-> +#include <cxl/pci.h>
+> +	if (cxl_set_capacity(&cxl->cxlds, EFX_CTPIO_BUFFER_SIZE)) {
 
 [Severity: Low]
-Is this the correct header path? The cxl/pci.h file doesn't appear to exist
-in the kernel tree. The cxl_pci_setup_regs() function and the
-CXL_REGLOC_RBI_COMPONENT enum seem to be defined in drivers/cxl/cxlpci.h,
-which is internal to the CXL subsystem and not exposed to other drivers.
-Will this cause a build failure when compiling the sfc driver?
+Are we calling an undefined function here? cxl_set_capacity() is neither
+declared nor defined anywhere in the kernel source tree, which causes a bui=
+ld
+failure.
 
-[ ... ]
-
-> @@ -42,6 +45,29 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
->  	if (!cxl)
->  		return -ENOMEM;
+> +		pci_err(pci_dev, "dpa capacity setup failed\n");
+> +		return -ENODEV;
+> +	}
+> +
+>  	probe_data->cxl =3D cxl;
 > =20
-> +	rc =3D cxl_pci_setup_regs(pci_dev, CXL_REGLOC_RBI_COMPONENT,
-> +				&cxl->cxlds.reg_map);
+>  	return 0;
+
+[Severity: Low]
+Is there a missing header file in this file? It includes <cxl/pci.h> which
+does not exist in the kernel tree, causing a fatal compilation error:
+
+drivers/net/ethernet/sfc/efx_cxl.c:
+    ...
+    #include <linux/pci.h>
+
+    #include <cxl/cxl.h>
+    #include <cxl/pci.h>
+    #include "net_driver.h"
+    ...
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260630151346.3120=
-1-1-alejandro.lucero-palau@amd.com?part=3D2
+1-1-alejandro.lucero-palau@amd.com?part=3D3
