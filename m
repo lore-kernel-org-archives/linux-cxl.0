@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DAB2D0C9D;
-	Tue, 30 Jun 2026 06:30:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872B33E51F6;
+	Tue, 30 Jun 2026 06:34:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782801021; cv=none; b=kVGgB+TWugybHUXrK21lfCtDKU8S0j5p4r3HW0AgamF16BKoIn/3kkUsBSJBQ4QPRhAwqSLGk1WLrsE4txkQafd78YgrrP98rKbZghGnMcunhxUKoSJNpXQbS0LwMQmgEkgf82JRb2+5uvA7NC+syDQtt2872tMNrXCdFTLqmjE=
+	t=1782801298; cv=none; b=kS3Jla2IAHuFRECozepUnGFaUmLm7EWjkvCYwV+oNo/tihzmXXD9lNkFJMITNOBHPi67blZssQrVkkGHwgnbdHfVkN9XkteLEgRy+nzNBuGYF4w/UrCUKRkcvNplG2bL6Dl+JFcIn2XyPN54UI2E+/OxU7fFiB43yP2w0lJIUeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782801021; c=relaxed/simple;
-	bh=G95ka56ZMRyBgc7ORwonB9OfWhKqOobGYHh4OfSjvkI=;
+	s=arc-20240116; t=1782801298; c=relaxed/simple;
+	bh=1Gz43i5+WG+MMG3zujDlJb7MhzjXgnTmZy0pFsi9ZbA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QWwWHUclahJNa5JhF7W7JE9wihtZhhdVdPDIi/hG6LBNdSFQZh2lFpaHnvtUySiIxhlNPd0tJoJ36oMYCxPaNzfMzhdhky/J7vlzGCDFZMBM/WHBWLbeR9jR3mUNsG5u9Jn9WxMCVoOuvPFI5wqUWcJ5NGS1DB81qcutvKQOri0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ftiz5Kz6; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=o1BTp8LuTvZsYEhdw8vddqemDDd4S2l2ioaOYxFn/5peStfbbQO0EFIeDL56h4rWwuabLw6HkvYu/gWBUhpoJmJ+2Hypbp/LQ/D2YgGjonRCzDkDNJM1tiT39raKnzywSUE9Ph5mLGdR+rN/LZSGo5LgYaF8mYmPQD3UJJ0mbUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zb9fiMxH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ftiz5Kz6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E041F000E9;
-	Tue, 30 Jun 2026 06:30:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zb9fiMxH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ADC21F00A3A;
+	Tue, 30 Jun 2026 06:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782801019;
-	bh=KOV37TH76GArpnwbguSBuDZgeS0U+NTFaarv2sWby3M=;
+	s=k20260515; t=1782801295;
+	bh=EGuQzeJmx9gOrE/eY6AwUnnp4ycjaahX6HSrGeOyFuw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=ftiz5Kz61TgJ9Z1X5mAqhTLE3tOs3XuQ1Rr4KSSWFuOuVlK7xUruIm7ycl2jg5JRE
-	 SDacCiXIvEURjJE+Z0rC6xCDqxC8uFR2rHCDSJTrUv2diaedaU7gJedwjzl+rMPZq0
-	 1703isnm/mhq8236+fb+8QwQKLfiLdJJHAwN3G5+GfSnhDJIoAbJ4zupTAKrtmvhLt
-	 Pe30hMlArDdkJGVJB2A5JlZ5trPl8lDZXW4V/3N/hqg7zygXEeGOQCbLbRKeQxbH6/
-	 F20w52pdxXvcHCK6QvOwOFD+LTjbggQZnnOJ+JpYEx1Ts4dsNHnEixC0RgCiYuCufI
-	 D6xPtHSoDGzQw==
-Message-ID: <cbab829a-3e65-4b4f-a2e2-704e88a611a0@kernel.org>
-Date: Tue, 30 Jun 2026 08:30:12 +0200
+	b=Zb9fiMxH2dvarKbg54RXe2oUt4rjfGoix58RvskFE5wWfyBEPQvVAVKlQHM5rtixK
+	 3orrHnZxiULC3ZcUBJLyygEt1xlw6l8ADBF3V9IYDrpRtDoM8gMd6jvPK0DZmme+Xe
+	 YOlwEWui+bN/KlsjVpP74HPd/WxX4UwvnHszTQZt5INNMaGEfKcG1g9pDQMfLbmvDZ
+	 Hiy4cr1SRubbCj6NvkR6GClyJSmgybIDWamJ+CYPAymsoYgTzflQsPFB4stlyh3rAk
+	 gse5TSzFAPzwq3YNNuLTpViT51z9eq6cBOlRkGENXhxZLY15R7xN8qZYQGw2X8VrGR
+	 J/kMltGia6Utw==
+Message-ID: <0fb36931-9097-43db-98bb-d087b7b0fa12@kernel.org>
+Date: Tue, 30 Jun 2026 08:34:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -62,7 +62,10 @@ References: <cover.1782676497.git.mst@redhat.com>
  <4f5ba5d6-246c-4430-9737-e8dd8e4c5142@kernel.org>
  <20260629092856-mutt-send-email-mst@kernel.org>
  <54c8cbee-9b26-458c-93ba-5aa594f5d1e8@kernel.org>
- <20260629174225-mutt-send-email-mst@kernel.org>
+ <0a309ed3-378e-4d88-95a0-65bf47c5496d@kernel.org>
+ <20260629193347-mutt-send-email-mst@kernel.org>
+ <5c8ca96b-381a-4fd3-a218-6aaa87a9a3b7@kernel.org>
+ <20260630022129-mutt-send-email-mst@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -109,67 +112,124 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260629174225-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20260630022129-mutt-send-email-mst@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/29/26 23:50, Michael S. Tsirkin wrote:
-> On Mon, Jun 29, 2026 at 11:22:11PM +0200, David Hildenbrand (Arm) wrote:
->> [...]
->>
+On 6/30/26 08:27, Michael S. Tsirkin wrote:
+> On Tue, Jun 30, 2026 at 08:17:42AM +0200, David Hildenbrand (Arm) wrote:
+>> On 6/30/26 01:34, Michael S. Tsirkin wrote:
 >>>
->>> And again, I'm really not sure fixing a theoretical race when memory
->>> is failing is worth slowing the world by 0.1-1% for.
->>>
+>>> Wait a sec, what about call_rcu_tasks? Use that and re-check the bit is
+>>> still set?
 >>
->> Fully agreed. I was hoping RCU was cheaper (I mean, we were once told that RCU
->> read side locking is essentially for free ... well in some configs :) )
+>> So, in essence the idea I had yestarday when it was late was the following:
 >>
->> The question if we could optimize it reasonably enough ...
+>> Assume we
 >>
->>>
->>> From what I saw in my testing, if we allocate 4k pages
->>> it's hidden by the overhead. With hp and thp it's measureably
->>> worse than rcu on !preempt config.
+>> 1) Can have a way to guarantee that a function on a CPU cannot execute within
+>> our critical section (while updating the flags)
 >>
->> ... for example, by doing the rcu read lock + unlock around the
+>> 2) We can request to execute a function on each CPU and wait for completion
 >>
->> 	for (i = 1; i < (1 << order); i++) {
+>> I think we could just let each CPU execute our desired action (e.g., try setting
+>> the bit).
 >>
->> loop on the alloc path.
+>> E.g.,
+>>
+>> 	local_irq_save(flags);
+>> 	page->flags &= whatever;
+>> 	local_irq_restore(flags);
+>>
+>> And assume we want to set the bit, do a
+>>
+>> 	SetPageHWPoison(page);
+>> 	smp_call_function(set_hwpoison_smp_sync, page, 1);
+>>
+>> whereby
+>>
+>> 	static void set_hwpoison_smp_sync(void *info)
+>> 	{
+>> 		SetPageHWPoison(page);
+>> 	}
+>>
+>>
+>> The idea is (that needs double checking) that a CPU will execute the
+>> SetPageHWPoison() either before the local_irq_save() or after the
+>> local_irq_restore(). So it's own non-atomic update cannot get interrupted.
+>>
+>> Now, IIUC when it comes to "how expensive is this" I think we have (cheap to
+>> expensive):
+>>
+>> 1) preempt_disable()
+>> 2) rcu_read_lock()
+>> 3) local_irq_save()
+>>
+>>
+>> So the above wouldn't be better than an rcu-based approach we have right now.
+>> We'd need something that relies on disabled preemption only.
+>>
+>> Huh, but I read that "anything that disables preemption also marks an RCU-sched
+>> read-side critical section including preempt_disable() and preempt_enable()".
+>>
+>> So for our use case we should be able to use preempt_disable() instead of
+>> local_irq_save(). That should already work for your existing implementation.
+>>
+>> -- 
+>> Cheers,
+>>
+>> David
 > 
-> Is this different from what this patch is doing?
+> We have:
+> 
+> #else /* #ifdef CONFIG_PREEMPT_RCU */
+> 
+> 
+> static inline void __rcu_read_lock(void)
+> {
+>         preempt_disable();
+> }
+> 
+> ...
+> 
+> 
+> static __always_inline void rcu_read_lock(void)
+>         __acquires_shared(RCU)
+> {
+>         __rcu_read_lock();
+>         __acquire_shared(RCU);
+>         rcu_lock_acquire(&rcu_lock_map);
+>         RCU_LOCKDEP_WARN(!rcu_is_watching(),
+>                          "rcu_read_lock() used illegally while idle");
+> }
+> 
+> 
+> 
+> So on non-debug build witout CONFIG_PREEMPT_RCU (what I tested), rcu_lock
+> is exactly same as preempt_disable.  It's relatively cheap but not free.
+> 
+> 
+> preempt_disable is not going to be cheaper.
 
-Ah, I missed that we batch this already. We could make it include the
+Well, it will be cheaper in the general case (CONFIG_PREEMPT_RCU) :)
 
-page_cpupid_reset_last(page);
-page->flags.f &= ~PAGE_FLAGS_CHECK_AT_PREP;
-
-As well, to reduce from 3 to 1 locks.
-
-So I guess there is potential for optimization.
-
-[...]
+But yes, not for this case.
 
 > 
->> I concluded, similar to Andi, that stop_machine() is too big of a hammer.
->>
->> I wonder if something could be built out of preempt_disable() and sync SMP
->> calls. hmm :(
+> I can test if you want but it seems clear.
 > 
-> rcu_lock is basically same as preempt_disable if rcu is non preemptible,
-> no?
 
-Yes. See my other mail, I learned that preempt_disable() should likely just do
-for our use case. So the preemptible RCU case would not matter.
+If you measured only !CONFIG_PREEMPT_RCU, then yes, it won't change a thing for
+that scenario.
 
-I assume that's as good as it gets.
+> 
+> But IIUC task rcu might be cheaper - IIUC it does not need rcu
+> lock/unlock at all, it relies on readers to invoke the scheduler
+> instead.
+> No?
 
-1) Use preempt_disable/preempt_enable to protect
-2) Batch as good as possible in the page allocator
-
-If the overhead is then still noticeable, there is not a lot we can do to handle
-this cleanly I'm afraid.
+I thought that still requires protection of sorts (preempt_disable /
+rcu_read_lock), because it might fire whenever the task is preempted?
 
 -- 
 Cheers,
