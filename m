@@ -1,159 +1,217 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from purple.birch.relay.mailchannels.net (purple.birch.relay.mailchannels.net [23.83.209.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD932E739D;
-	Tue, 30 Jun 2026 23:21:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA7B33B6F4;
+	Tue, 30 Jun 2026 23:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.209.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782861717; cv=none; b=aUcfwSjxSVTBKxXyMppk54G59UqjYnkjMkhlF5STMivXxMcwvXdisI60JIF03n3S2xsh5q/8kMfvcyUKV4SrcdSXo0DLSCJhbtm4FxS1mBaBazZ5jnTbkM61nBvXEwLGtBdPMBZcizy76WU9vmJoMTUv9ZY2lJrc4Ed2Ac3o07Y=
+	t=1782863432; cv=none; b=kx9SVB6Q/t5iESMPt9yRiyRXbChakojGEKsIcswpYR3COOSwkMJdbzvZ1fKS70tf4rOnP12SHkVYJHD3D0Lbb6WqCyc8XvOIQWdqsSj1x/WfkiN3MuWX+kwAd3z4OEKp9XKu7ZtEziG85W2AfDRaOiJrSKoD4Dw0WTifbqnmsVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782861717; c=relaxed/simple;
-	bh=UhW8eWzfFW6yrzeJ7hIRACnPmZRODtxNX3+GshGuBGk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lSNBqq8eT4GyB1apeD07G1afXTvHZ39npHXxV7i40HcCdfkNqdmbY/A4nb3OHjb+Azn6gzAE6QCFVbgaK++H75mET6HWpOhOKfAhYFWqSFyXHdn6huxjB1zsMMgnsCCMzF7M5zChJll5gTYy9R/agOJzAL16elFmuozVxpbVTdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GepNzVPo; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1782863432; c=relaxed/simple;
+	bh=dPTdlFuucTSIL5fGSAtctzItzeHxcP5UwQ6aVtQDrcA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=lCWBTiZuXPzxScHNOCoL/eFmGEsVVllTdgiu9sVUVdjnuSMCe0/y5fO+Ho8XJ2K3IxMwczfFXmCmYVs15L6FZdFdz5R8nUhbGz8Y7Igj6jexeZrb58WrT0rENYA6A0azu/couxmoSCICPbfbEXK9rGl5d6IHAqby6AXKXAKx6fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Poj7fGRt; arc=none smtp.client-ip=23.83.209.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GepNzVPo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782861715; x=1814397715;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=UhW8eWzfFW6yrzeJ7hIRACnPmZRODtxNX3+GshGuBGk=;
-  b=GepNzVPosCecrZLiMI+YY+Mw7nwOxe1GI7UtcxM0RXiurHmg3ke/813q
-   XoxV7KyfsKmi2v9LQB/xKvkRM5GEyCd/J6FMnGCr2sYeFujx3uwQp83LC
-   44CninziwJ8D2+0hgC6XBJfh22/jw9OFjTHccRktkrfpr4HDcrDMtNnWt
-   fuOjf2Eu5zcBg6tT0ECC5MMZmrOCIoxzhE4rhHDd6Fc/askEj8e/3bL3r
-   yZF9VOAUmtlNFHc2IETNXOLAnitb9xAGjRdEnTp0/qHYLmo04UwnyVpDJ
-   ChM74wHyjUZ8OrzL2E9egJ2yA2zWjaTb8vWR8N/qVbhXZFLf0ATz3V5yk
-   A==;
-X-CSE-ConnectionGUID: OXxyTuC6RsGa3FFz+5YJzA==
-X-CSE-MsgGUID: hId57meqS1WWLHSPz2U5PA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11833"; a="87268629"
-X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
-   d="scan'208";a="87268629"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 16:21:54 -0700
-X-CSE-ConnectionGUID: BRv9+SekRy6PGEe3aCN1dQ==
-X-CSE-MsgGUID: mNSifp1dQgycAKonsWS+Hg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.24,234,1774335600"; 
-   d="scan'208";a="250683981"
-Received: from vverma7-desk1.amr.corp.intel.com (HELO [10.125.110.30]) ([10.125.110.30])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 16:21:53 -0700
-Message-ID: <23e0d98f-e2ba-452e-8266-1d09fb61b7ba@intel.com>
-Date: Tue, 30 Jun 2026 16:21:52 -0700
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Poj7fGRt"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 4D86E4616BF;
+	Tue, 30 Jun 2026 23:50:25 +0000 (UTC)
+Received: from pdx1-sub0-mail-a210.dreamhost.com (trex-green-2.trex.outbound.svc.cluster.local [100.99.151.174])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id E47A9461B74;
+	Tue, 30 Jun 2026 23:50:24 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Abaft-Battle: 4d9318ba61d5bf65_1782863425221_1149217560
+X-MC-Loop-Signature: 1782863425221:2721502128
+X-MC-Ingress-Time: 1782863425221
+Received: from pdx1-sub0-mail-a210.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.99.151.174 (trex/7.1.5);
+	Tue, 30 Jun 2026 23:50:25 +0000
+Received: from offworld.lan (unknown [138.84.33.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a210.dreamhost.com (Postfix) with ESMTPSA id 4gqfz26ZMCzNt;
+	Tue, 30 Jun 2026 16:50:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1782863424;
+	bh=5wOeSNusik4R6WWBjpE+tzZU45Suz1KoBaagtv9J1Kw=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=Poj7fGRt73/1k70qg7CGad/JHOAIlWHOCu1wi2OD6GZmMLSTmWPnL4ZF++uOspgjS
+	 I3+4Ntgi6n2/bwlCvsUGjGo81ZSmhWk7YXI25beCBIrgC2TGn1l9TgfbkTIJqg/HXb
+	 FCMeqYzwNk88s4XG4UN2z2uH9t3LWjxwYxXq9mKVtBR6IiyE9oRj84ZEtwqd0Kkcl1
+	 246dZ2nb9xU7vvSLOdp5EogLwTiInoyWiM1pj0RFpFmcuf36ENV0v4SACRaQYc8pfZ
+	 sLOjMeehhKqQEWfFcBh1G7IxvQgT4qzwobpZMTKDRrLWeaeRGxrE3At8HxVVWeQzIa
+	 L8Y6UwHhGKwjA==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: jic23@kernel.org,
+	will@kernel.org,
+	mark.rutland@arm.com
+Cc: harshal.t@samsung.com,
+	linux-cxl@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>
+Subject: [PATCH v2 1/2] perf/cxlpmu: Support Channel/Rank/Bank filter
+Date: Tue, 30 Jun 2026 16:50:01 -0700
+Message-Id: <20260630235002.253297-2-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260630235002.253297-1-dave@stgolabs.net>
+References: <20260630235002.253297-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 24/31] dax/bus: Add uuid sysfs attribute to dax
- devices
-To: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: nvdimm@lists.linux.dev, Dan Williams <djbw@kernel.org>,
- Jonathan Cameron <jic23@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>, John Groves
- <John@Groves.net>, Gregory Price <gourry@gourry.net>,
- Anisa Su <anisa.su@samsung.com>
-References: <20260625112638.550691-1-anisa.su@samsung.com>
- <20260625112638.550691-25-anisa.su@samsung.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260625112638.550691-25-anisa.su@samsung.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+From: Harshal Thakkar <harshal.t@samsung.com>
 
+Implement CRB filtering per CXL 4.0 8.2.7.2.2, and extend the
+current filtering support beyond HDM. These filters are only for
+DDR Interface events.
 
-On 6/25/26 4:05 AM, Anisa Su wrote:
-> Introduce a read-write 'uuid' sysfs entry at
-> /sys/bus/dax/devices/daxX.Y/ with stubbed handlers: show returns the
-> null uuid and store returns -EOPNOTSUPP.  A follow-on patch wires both
-> directions to dax_resource tracking.
-> 
-> Document the attribute in the dax sysfs ABI.
-> 
-> Signed-off-by: Anisa Su <anisa.su@samsung.com>
+Placing the 32-bit CRB value at config2:32-63 leaves the
+existing HDM value at config2:0-15 untouched and avoids needing
+a new config3.
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Harshal Thakkar <harshal.t@samsung.com>
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/perf/cxl_pmu.c | 47 +++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 44 insertions(+), 3 deletions(-)
 
-> 
-> ---
-> Changes:
-> - uuid_show() emits the null uuid ("%pUb" of uuid_null) instead of "0".
-> - ABI: describe the no-uuid read value as a null uuid instead of "0";
->   bump Date to June, 2026 and KernelVersion to v7.3.
-> ---
->  Documentation/ABI/testing/sysfs-bus-dax | 18 ++++++++++++++++++
->  drivers/dax/bus.c                       | 14 ++++++++++++++
->  2 files changed, 32 insertions(+)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-dax b/Documentation/ABI/testing/sysfs-bus-dax
-> index b34266bfae49..3219c09dea01 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-dax
-> +++ b/Documentation/ABI/testing/sysfs-bus-dax
-> @@ -59,6 +59,24 @@ Description:
->  		backing device for this dax device, emit the CPU node
->  		affinity for this device.
->  
-> +What:		/sys/bus/dax/devices/daxX.Y/uuid
-> +Date:		June, 2026
-> +KernelVersion:	v7.3
-> +Contact:	nvdimm@lists.linux.dev
-> +Description:
-> +		(RW) On read, reports the uuid identifying the capacity
-> +		backing this dax device.  A null uuid (all-zeroes) indicates
-> +		that the device has no associated uuid — either it is not
-> +		backed by DCD capacity, or the backing extents are untagged.
-> +
-> +		Writes are accepted only on dax devices in sparse (DCD)
-> +		regions; writes to non-sparse devices return -EOPNOTSUPP.
-> +		Writing a non-null uuid claims every dax_resource in the
-> +		parent region whose tag matches the written uuid, consuming
-> +		any available capacity in each matching resource.  Writing
-> +		"0" is shorthand for the null uuid and claims a single
-> +		untagged dax_resource.
-> +
->  What:		/sys/bus/dax/devices/daxX.Y/target_node
->  Date:		February, 2019
->  KernelVersion:	v5.1
-> diff --git a/drivers/dax/bus.c b/drivers/dax/bus.c
-> index ffa6b303fc9b..f61309a6f934 100644
-> --- a/drivers/dax/bus.c
-> +++ b/drivers/dax/bus.c
-> @@ -1573,6 +1573,19 @@ static ssize_t numa_node_show(struct device *dev,
->  }
->  static DEVICE_ATTR_RO(numa_node);
->  
-> +static ssize_t uuid_show(struct device *dev,
-> +		struct device_attribute *attr, char *buf)
-> +{
-> +	return sysfs_emit(buf, "%pUb\n", &uuid_null);
-> +}
-> +
-> +static ssize_t uuid_store(struct device *dev, struct device_attribute *attr,
-> +			  const char *buf, size_t len)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +static DEVICE_ATTR_RW(uuid);
-> +
->  static ssize_t memmap_on_memory_show(struct device *dev,
->  				     struct device_attribute *attr, char *buf)
->  {
-> @@ -1644,6 +1657,7 @@ static struct attribute *dev_dax_attributes[] = {
->  	&dev_attr_resource.attr,
->  	&dev_attr_numa_node.attr,
->  	&dev_attr_memmap_on_memory.attr,
-> +	&dev_attr_uuid.attr,
->  	NULL,
->  };
->  
+diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+index 68a54d97d2a8..58c15680f299 100644
+--- a/drivers/perf/cxl_pmu.c
++++ b/drivers/perf/cxl_pmu.c
+@@ -106,6 +106,7 @@ struct cxl_pmu_info {
+ 	int on_cpu;
+ 	struct hlist_node node;
+ 	bool filter_hdm;
++	bool filter_chan_rank_bank;
+ 	int irq;
+ };
+ 
+@@ -142,6 +143,8 @@ static int cxl_pmu_parse_caps(struct device *dev, struct cxl_pmu_info *info)
+ 	info->num_event_capabilities = FIELD_GET(CXL_PMU_CAP_NUM_EVN_CAP_REG_SUP_MSK, val) + 1;
+ 
+ 	info->filter_hdm = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) & CXL_PMU_FILTER_HDM;
++	info->filter_chan_rank_bank = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) &
++		CXL_PMU_FILTER_CHAN_RANK_BANK;
+ 	if (FIELD_GET(CXL_PMU_CAP_INT, val))
+ 		info->irq = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
+ 	else
+@@ -225,6 +228,8 @@ enum {
+ 	cxl_pmu_edge_attr,
+ 	cxl_pmu_hdm_filter_en_attr,
+ 	cxl_pmu_hdm_attr,
++	cxl_pmu_crb_filter_en_attr,
++	cxl_pmu_crb_attr,
+ };
+ 
+ static struct attribute *cxl_pmu_format_attr[] = {
+@@ -236,6 +241,8 @@ static struct attribute *cxl_pmu_format_attr[] = {
+ 	[cxl_pmu_edge_attr] = CXL_PMU_FORMAT_ATTR(edge, "config1:17"),
+ 	[cxl_pmu_hdm_filter_en_attr] = CXL_PMU_FORMAT_ATTR(hdm_filter_en, "config1:18"),
+ 	[cxl_pmu_hdm_attr] = CXL_PMU_FORMAT_ATTR(hdm, "config2:0-15"),
++	[cxl_pmu_crb_filter_en_attr] = CXL_PMU_FORMAT_ATTR(crb_filter_en, "config1:19"),
++	[cxl_pmu_crb_attr] = CXL_PMU_FORMAT_ATTR(crb, "config2:32-63"),
+ 	NULL
+ };
+ 
+@@ -246,7 +253,9 @@ static struct attribute *cxl_pmu_format_attr[] = {
+ #define CXL_PMU_ATTR_CONFIG1_INVERT_MSK		BIT(16)
+ #define CXL_PMU_ATTR_CONFIG1_EDGE_MSK		BIT(17)
+ #define CXL_PMU_ATTR_CONFIG1_FILTER_EN_MSK	BIT(18)
++#define CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK	BIT(19)
+ #define CXL_PMU_ATTR_CONFIG2_HDM_MSK		GENMASK(15, 0)
++#define CXL_PMU_ATTR_CONFIG2_CRB_MSK		GENMASK_ULL(63, 32)
+ 
+ static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
+ 					 struct attribute *attr, int a)
+@@ -263,6 +272,11 @@ static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
+ 	     attr == cxl_pmu_format_attr[cxl_pmu_hdm_attr]))
+ 		return 0;
+ 
++	if (!info->filter_chan_rank_bank &&
++	    (attr == cxl_pmu_format_attr[cxl_pmu_crb_filter_en_attr] ||
++	     attr == cxl_pmu_format_attr[cxl_pmu_crb_attr]))
++		return 0;
++
+ 	return attr->mode;
+ }
+ 
+@@ -319,6 +333,17 @@ static u16 cxl_pmu_config2_get_hdm_decoder(struct perf_event *event)
+ 	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_HDM_MSK, event->attr.config2);
+ }
+ 
++static u16 cxl_pmu_config1_crb_filter_en(struct perf_event *event)
++{
++	return FIELD_GET(CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK,
++			 event->attr.config1);
++}
++
++static u32 cxl_pmu_config2_get_crb(struct perf_event *event)
++{
++	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
++}
++
+ static ssize_t cxl_pmu_event_sysfs_show(struct device *dev,
+ 					struct device_attribute *attr, char *buf)
+ {
+@@ -571,6 +596,14 @@ static int cxl_pmu_event_init(struct perf_event *event)
+ 		return -EOPNOTSUPP;
+ 	/* TODO: Validation of any filter */
+ 
++	if (cxl_pmu_config1_crb_filter_en(event)) {
++		if (!info->filter_chan_rank_bank)
++			return -EINVAL;
++		/* only valid for DDR Interface events */
++		if (cxl_pmu_config_get_gid(event) != CXL_PMU_GID_DDR)
++			return -EINVAL;
++	}
++
+ 	/*
+ 	 * Verify that it is possible to count what was requested. Either must
+ 	 * be a fixed counter that is a precise match or a configurable counter
+@@ -627,15 +660,23 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
+ 	hwc->state = 0;
+ 
+ 	/*
+-	 * Currently only hdm filter control is implemented, this code will
+-	 * want generalizing when more filters are added.
++	 * Filter ID=0: HDM decoder filter
++	 * Filter ID=1: Channel/Rank/Bank (CRB) filter
+ 	 */
+ 	if (info->filter_hdm) {
+ 		if (cxl_pmu_config1_hdm_filter_en(event))
+ 			cfg = cxl_pmu_config2_get_hdm_decoder(event);
+ 		else
+ 			cfg = GENMASK(31, 0); /* No filtering if 0xFFFF_FFFF */
+-		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
++		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
++	}
++
++	if (info->filter_chan_rank_bank) {
++		if (cxl_pmu_config1_crb_filter_en(event))
++			cfg = cxl_pmu_config2_get_crb(event);
++		else
++			cfg = GENMASK(31, 0); /* no filtering if 0xFFFF_FFFF */
++		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 1));
+ 	}
+ 
+ 	cfg = readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
+-- 
+2.39.5
 
