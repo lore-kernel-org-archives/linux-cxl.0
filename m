@@ -1,199 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E2835F179
-	for <linux-cxl@vger.kernel.org>; Wed,  1 Jul 2026 14:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DA240F8D5
+	for <linux-cxl@vger.kernel.org>; Wed,  1 Jul 2026 15:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782917626; cv=none; b=qlcTQml7t8fPZkngTmWqv8h1zrAWxEFugbhD+Io3KqHTCJT/o52MVXnaUFyE222tmbwR8asi9PdN0/afbUwiApnyL0OmAuavjn6aD6rX8dYbmkYYRcxTBEwgkFuel4/cUbFZqtIUGvDa/0zKDnRx0angTTWXkGqbiS0SR/aWEFU=
+	t=1782918358; cv=none; b=I1rqCorNsO4cREM1Wv6zxbLeD8TrG2BMMD5msE21Y1t/dum0XlEQH824ACVoqEmbjFwTr5oPBqvp+JoXvu0J4J75hfvzmRxXuA0PcayO1NmMz5IcoTOMsCKRnRJlIC7OhOGuJ9AaloJUztCupjD/Mu5TH3m5uBrNj0fYYrSdQIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782917626; c=relaxed/simple;
-	bh=Z4UEkkisuysiM+uplBuybXQVfR+ozEZlcDfe7arlmcM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cDt4RMCsXPwgBOykH5RIRLG4Kc94swAqI5gForf7CeA3NT123ZUL2+bDWrA6j0clx7pEodSki0IllxXt/039KIhTT31LXV0SwgUvWQdOQn+t6hMDYE+cmR0lfvJhPZThKfJPUY03TkuQIQEF0FPi3DuyZ8Fdh3Mk7XWzZGgO0i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hgsff2GA; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1782918358; c=relaxed/simple;
+	bh=O0/sSc5djxu9BW4d0paJyrvzS2rEhgQcnkyzbEMKO70=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FqVyQbZN1EuYWsKExD7sY6YUp2GVy6j7m17jWKr/+baYY+MmBB6JnQ+gaVxqm1n3Dq6RSPqGvhPhgXmGaUnIuvvPK7fv5wJDm0LjPszGJ8DlAKOboI+YtrelY3PbZeGCaQ5SG93ZocLlzgnP4Ms+kSApsdCk0y97anwODcbSnoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=NmFKauRv; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hgsff2GA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782917624; x=1814453624;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Z4UEkkisuysiM+uplBuybXQVfR+ozEZlcDfe7arlmcM=;
-  b=Hgsff2GA5bNiYBJ6rGFlv3Nilgb6kR5tR3fH8Q6VX+Ojyzghj0sS++th
-   R70M1BRCBwmdpMSeUUQcemT/tokfLLHcrsyZgRDM+fdpm7UWSAJEGI7M2
-   YqXifwlWlgnFvOWS/GKlg1pKUFqTtLmgvUp/WoRWGzzKrdI43g/s/TozD
-   vYPUQm/MYLv/T15JzAWRCLRt2M/JyJnnBlqFm6hI8yiPY3NPKI8OiDPnE
-   bW/Qsqi5MRHERKLhYEG0VNV33HELDgTQgDk1K4t0c16GbiX3Md/yUV1VZ
-   6iRE+de+kClE7bNpbqPxt+LaTxoCTVtR6bbu/h43le57qfBE2kPLbgqEc
-   w==;
-X-CSE-ConnectionGUID: wocdIXBLQMqwse6pcf6fhA==
-X-CSE-MsgGUID: bFOIZQMEST2bQb3rmbK9mA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11834"; a="87333896"
-X-IronPort-AV: E=Sophos;i="6.25,141,1779174000"; 
-   d="scan'208";a="87333896"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 07:53:44 -0700
-X-CSE-ConnectionGUID: YkLeFMbhR9uA0tBaCU8smw==
-X-CSE-MsgGUID: T6sTOTxFQ2inyevfQr7RdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,141,1779174000"; 
-   d="scan'208";a="282665602"
-Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.110.66]) ([10.125.110.66])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 07:53:43 -0700
-Message-ID: <f44dc381-01b6-4992-ba94-f77b3a5e35c8@intel.com>
-Date: Wed, 1 Jul 2026 07:53:22 -0700
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="NmFKauRv"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-7fe36f1be74so11199237b3.2
+        for <linux-cxl@vger.kernel.org>; Wed, 01 Jul 2026 08:05:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1782918354; x=1783523154; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wpcsb0+VdxshQ15XkMHrH6lVO/I8qddArljRZWvFEt8=;
+        b=NmFKauRvkFHupjJtQ7IXa8B2he+S4I1eRiwnc+RdxFwoaPxIWcK1Qw6eMPtY/OSBKz
+         zsW3JwO8CqlzXLs9wTN33qSGWgkbsZxolUzOzIWS3n4Eo/L1RXOdu69SAlwXk98YhEB1
+         Y1i75xs6bY9hz8B6wj/8FSJRFYsqGVPutDRWRcQAzkaVifETFIL151Qh/EyZVnD36ewY
+         AwKqK9liyvV+3orIhEyEu4I+WP5AgTZpYQ1web9Ql4p1Gtwd+3QMynLw2wfIhDCiRS0S
+         l2kY1QYW4f5xQoNPZZGgRDRuX+I35dwp911Xm28HB5u4+7YHkK97HrmVyz2ZBjQfKMNY
+         YJdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1782918354; x=1783523154;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wpcsb0+VdxshQ15XkMHrH6lVO/I8qddArljRZWvFEt8=;
+        b=QME4d0LMS1np4qeKzD+Af79q/Ovd4Zrgp/+fZsAWXu3/0EiEgVQv5enol0CFVOCGyC
+         8I+F2CrALEgib25fB1h0aS6J+XVp5vTD8LKTgVhd020zV62gz4RdTNpG0eE7Op1JKX/R
+         GZVnDhZD5P+ypbhyzP3xjP5AMEkqexo+ahRRYyt5glymEvEVmJEnR/7wSTZC0FHiS9Ai
+         3LYcgqxG0jtpHSy7o16WogkQHKCp5KQx5X3/JgeNSBXl5oLqvywB0KKuXJJ/n3B+PWCz
+         Eh2xAHoUOwSyb0aeCCOm9+DGkEmSSUjHZrtf7jzL+SNiCv4pYxYyiyerOJoGE0hsSEyO
+         OTpw==
+X-Forwarded-Encrypted: i=1; AHgh+Rr36WS+BAj2lypYZBkJICRFElzieJA/qqoxpS7y2h6xHwwTIULEqS49XpjTQWH2smaH/qQ5dnk4OuA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRNLMjfz7iBkwxAMyoBaF+9Xy83ut00CwBTNIlarevcEKvtFnI
+	Ai/jiIfuItKOT4cV/fEzV/FoVCIm13heuStQYsDCMlhh4ZMUbJzPcSvC0VssJXvrVoD9i4AYT+z
+	yh83K
+X-Gm-Gg: AfdE7ckuYPErvpgRAzl83NSaRsGNoMeSEdTM0CC1dMzD4jPOTaRIqTxwQHESP9Cj5dU
+	AffAN9Q/Iyst+SRdcBawBEC7bATDy8mBFAXq8Eajvg6HxyDEZ3SBskrK7HV1voTWyuCkJESHRro
+	/q9hpjlATjdvIvbNCXSVdIXUTB0+GAVPhB6Q4UjHSrgqD2Z8ejZUDfYVuGK14c/z/EMKkqRdMEN
+	ZyAzEYbQus61hyvO791CAd9h8SIQs2Bd2n24srn942CxrP51KqVBQqhwQI9QorbU9+rjKKYljUP
+	5pmyL1lnrnzcP9C87lmUqQf/h5DGjjURW3IfTuIJhIUzGucl168PGL7B2Jc36npa+pDRPteQqKV
+	IMgeFfdpdlubIglU4Lyp1HH9nxySlTMErPtJOTnFyDux+DIGUTEyR6CvcgewN8CtdfXY/quX/26
+	+PohuqvIDMEiVFdGJLjF1YhiFKDEDFJ1hflil9JpxMA2w2rIMO9DbQdVJUU0qq7+d3pInb
+X-Received: by 2002:a05:690c:6906:b0:80b:968:29ff with SMTP id 00721157ae682-812eb86e8ecmr20804517b3.53.1782918353875;
+        Wed, 01 Jul 2026 08:05:53 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8f3611d783bsm23143586d6.28.2026.07.01.08.05.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Jul 2026 08:05:53 -0700 (PDT)
+Date: Wed, 1 Jul 2026 11:05:48 -0400
+From: Gregory Price <gourry@gourry.net>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org, kernel-team@meta.com, osalvador@suse.de,
+	akpm@linux-foundation.org, rppt@kernel.org,
+	mgorman@techsingularity.net, hannes@cmpxchg.org, vbabka@kernel.org
+Subject: Re: [PATCH] mm/mm_init: handle alloc_percpu failure in
+ free_area_init_core_hotplug
+Message-ID: <akUszCySPFA7IRlb@gourry-fedora-PF4VCD3F>
+References: <20260630214039.2263562-1-gourry@gourry.net>
+ <b8baae33-d551-40fe-abb5-287f3711dd80@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/7] cxl/test: Add hierarchy enumeration support for
- type2 device
-To: Li Ming <ming.li@zohomail.com>
-Cc: djbw@kernel.org, dave@stgolabs.net, jic23@kernel.org,
- alison.schofield@intel.com, vishal.l.verma@intel.com,
- linux-cxl@vger.kernel.org
-References: <20260629221104.3891733-1-dave.jiang@intel.com>
- <20260629221104.3891733-5-dave.jiang@intel.com>
- <e0ef1308-f26a-4869-b5d4-5d14db539973@zohomail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <e0ef1308-f26a-4869-b5d4-5d14db539973@zohomail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b8baae33-d551-40fe-abb5-287f3711dd80@kernel.org>
 
-
-
-On 7/1/26 12:31 AM, Li Ming wrote:
-> On 6/30/2026 6:11 AM, Dave Jiang wrote:
->> Add enumeration of type2 device hierarchy in cxl-test. The type2 device
->> is setup to be directly attached to a root port instead of rp -> switch
->> -> device that type3 hierarchy is setup..
->>
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->> v7:
->> - Replace platform_device_put() with platform_device_unregister(). (sashiko)
->> ---
->>  tools/testing/cxl/test/cxl.c | 238 ++++++++++++++++++++++++++++-------
->>  1 file changed, 192 insertions(+), 46 deletions(-)
->>
->> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
->> index 8abe066080bc..801d42ac1bad 100644
->> --- a/tools/testing/cxl/test/cxl.c
->> +++ b/tools/testing/cxl/test/cxl.c
->> @@ -28,6 +28,7 @@ static bool type2_test;
->>  #define NR_CXL_SWITCH_PORTS 2
->>  #define NR_CXL_PORT_DECODERS 8
->>  #define NR_BRIDGES (NR_CXL_HOST_BRIDGES + NR_CXL_SINGLE_HOST + NR_CXL_RCH)
->> +#define NR_CXL_TYPE2_ACCEL 1
->>  
->>  #define MOCK_AUTO_REGION_SIZE_DEFAULT SZ_512M
->>  static int mock_auto_region_size = MOCK_AUTO_REGION_SIZE_DEFAULT;
->> @@ -1747,19 +1748,93 @@ static void cxl_single_topo_exit(void)
->>  	}
->>  }
->>  
->> +static void cxl_type3_mem_exit(void)
->> +{
->> +	struct platform_device *pdev;
->> +	int i;
->> +
->> +	for (i = ARRAY_SIZE(cxl_rcd) - 1; i >= 0; i--) {
->> +		pdev = cxl_rcd[i];
->> +		if (!pdev)
->> +			continue;
->> +		platform_device_unregister(cxl_rcd[i]);
->> +	}
->> +
->> +	for (i = ARRAY_SIZE(cxl_mem_single) - 1; i >= 0; i--) {
->> +		pdev = cxl_mem_single[i];
->> +		if (!pdev)
->> +			continue;
->> +		platform_device_unregister(cxl_mem_single[i]);
->> +	}
->> +
->> +	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--) {
->> +		pdev = cxl_mem[i];
->> +		if (!pdev)
->> +			continue;
->> +		platform_device_unregister(pdev);
->> +	}
->> +}
->> +
->> +static void cxl_type2_mem_exit(void)
->> +{
->> +	for (int i = NR_CXL_TYPE2_ACCEL - 1; i >= 0; i--) {
->> +		struct platform_device *pdev = cxl_mem[i];
->> +
->> +		if (!pdev)
->> +			continue;
->> +		platform_device_unregister(pdev);
->> +	}
->> +}
->> +
->>  static void cxl_mem_exit(void)
->>  {
->> -	int i;
->> -
->> -	for (i = ARRAY_SIZE(cxl_rcd) - 1; i >= 0; i--)
->> -		platform_device_unregister(cxl_rcd[i]);
->> -	for (i = ARRAY_SIZE(cxl_mem_single) - 1; i >= 0; i--)
->> -		platform_device_unregister(cxl_mem_single[i]);
->> -	for (i = ARRAY_SIZE(cxl_mem) - 1; i >= 0; i--)
->> -		platform_device_unregister(cxl_mem[i]);
->> +	if (type2_test) {
->> +		cxl_type2_mem_exit();
->> +		return;
->> +	}
->> +
->> +	cxl_type3_mem_exit();
->> +}
->> +
->> +static int cxl_type2_mem_init(void)
->> +{
->> +	int i, rc;
->> +
->> +	for (i = 0; i < NR_CXL_TYPE2_ACCEL; i++) {
->> +		struct platform_device *dport = cxl_root_port[i];
->> +		struct platform_device *pdev;
->> +
->> +		pdev = platform_device_alloc("cxl_type2_accel", i);
->> +		if (!pdev) {
->> +			rc = -ENOMEM;
->> +			goto err_mem;
->> +		}
->> +		pdev->dev.parent = &dport->dev;
->> +		set_dev_node(&pdev->dev, i % 2);
->> +
->> +		rc = platform_device_add(pdev);
->> +		if (rc) {
->> +			rc = -ENOMEM;
->> +			platform_device_put(pdev);
->> +			goto err_mem;
->> +		}
->> +		cxl_mem[i] = pdev;
+On Wed, Jul 01, 2026 at 10:35:41AM +0200, David Hildenbrand (Arm) wrote:
 > 
-> Hi Dave,
+> >  	 * The node we allocated has no zone fallback lists. For avoiding
+> > diff --git a/mm/mm_init.c b/mm/mm_init.c
+> > index 306ea5c13f54..37fd64ce144d 100644
+> > --- a/mm/mm_init.c
+> > +++ b/mm/mm_init.c
+> > @@ -1536,7 +1536,7 @@ void __init set_pageblock_order(void)
+> >   * NOTE: this function is only called during memory hotplug
+> >   */
+> >  #ifdef CONFIG_MEMORY_HOTPLUG
+> > -void __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
+> > +int __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
+> >  {
+> >  	int nid = pgdat->node_id;
+> >  	enum zone_type z;
+> > @@ -1544,8 +1544,14 @@ void __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
+> >  
+> >  	pgdat_init_internals(pgdat);
+> >  
+> > -	if (pgdat->per_cpu_nodestats == &boot_nodestats)
+> > -		pgdat->per_cpu_nodestats = alloc_percpu(struct per_cpu_nodestat);
+> > +	if (pgdat->per_cpu_nodestats == &boot_nodestats) {
+> > +		struct per_cpu_nodestat __percpu *p;
+> > +
+> > +		p = alloc_percpu(struct per_cpu_nodestat);
+> > +		if (!p)
+> > +			return -ENOMEM;
+> > +		pgdat->per_cpu_nodestats = p;
 > 
-> Sorry for the delayed review.
-> 
-> I think that we should use cxl_mock_platform_device_add() helper here when adding the device, otherwise it may hit the issue resolved by the patch[1].
-> 
-> If we confirm that we need to use the helper here, I can send out a fixup patch for this, or you can make the change directly.
-
-Please send a fixup patch. Thanks!
-
-> 
-> 
-> Ming
-> 
-> [1]: https://lore.kernel.org/all/20260520121457.234404-1-ming.li@zohomail.com/
-> 
+> Is there a need for the temporary variable?
 > 
 
+at start:
+    pgdat->per_cpu_nodestats = &boot_nodestats 
+
+So need a tmp to do the swap/revert/etc
+
+> Also how to handle cleanup on error? Or why can we skip cleanup? (what happens
+> if we get another call to __try_online_node()  later?)
+> 
+
+-ENOMEM ->
+    hotadd_init_pgdat -> NULL
+        __try_online_node -> -ENOMEM
+	    pr_err("Cannot online node %d due to NULL pgdat\n", nid);
+	    try_online_node -> -ENOMEM
+	        __add_memory_resource  ->  error_memblock_remove:
+
+Basically we're left exactly where we were before we made the attempt.
+
+Another call should work just fine after a bunch of dmesg spew.
+
+If this happens during boot via add_memory then something else is
+horribly horribly wrong and we'll at least get some debug info instead
+of null deref.
+
+~Gregory
