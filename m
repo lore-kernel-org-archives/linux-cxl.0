@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAF73B27EE;
-	Wed,  1 Jul 2026 07:25:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB811AA1D5;
+	Wed,  1 Jul 2026 07:31:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782890736; cv=none; b=pBXYjlFNmnlmcyMpXhxfIAfc410uh915LrxioyfazjMn5lLnYgOpMB0vrmpTUwDYZ5awA/oG3dhyUi90CkLoDwZmzRrKmdzChgbptQ2LkJNjh7j/aD2HWWRDt++gtkf0+YqgyZexD6g8lgKdJhX+8Oimm/BLLRNQ760+IE12Sck=
+	t=1782891107; cv=none; b=dWLoGZd1OiemVEBXdK3t7/ic+kiGF2t6LgMU1m1/wqTtVoAPA8LtwucFwx+4qTwTwHkF1fErPDQAN5irIecoPX5knRTN2hiv0ZHzsAN+X/d8LARUjslG7U7Op+TbTauo1Tre4bYuEON0JfwqVmzSC+C4qcKR2boauXh2s/mTjjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782890736; c=relaxed/simple;
-	bh=hmcVP5Cg6oz9osud4EUs+OMf+co0WlAtZ9TEu3/zJQE=;
+	s=arc-20240116; t=1782891107; c=relaxed/simple;
+	bh=Lx0j6QB5Gd2GxA6jD+E/cPCDd4fjc33vlHVaSb7RU4g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PkpeSQbGI51FH2JCo8VM8Zv4zL2F24M7osSJM4dTDPei4hvfekfZX+OfbxTC/XsuZnc9RUScJOs92FVdTxoMeIb40XgoTLaX43gS1JEQ5HWN6scbnDuDsQL3LKyTP6TArcLilsefGS5BfNmfuQlLDeNGRxudYgVr9T+A07LzH+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I5F8FOKj; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=ljMxlPwVFqjnYHltH4OpQPfFnKiHArWuolQI322hxt4VsFVk+ITp2a2+iTprXl5M4ZyeQvUYY7di+QJUTbHpn6++z5di4M09/2Wi7bwTHCU3caBVounThtDVlh+pkdAxgFvmN4vyx8odZV1jpusZFakrZHJvYfVuoDeSBn44bJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IHzOwZE+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I5F8FOKj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4631F1F000E9;
-	Wed,  1 Jul 2026 07:25:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IHzOwZE+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BA4C1F000E9;
+	Wed,  1 Jul 2026 07:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782890735;
-	bh=DqZwBk731TpEHtCNuVjKFUk/8TgFf3C+ElxFjSFdhPA=;
+	s=k20260515; t=1782891106;
+	bh=G1/Roy/gd5abi7rQ7Y2xyhwflNKpb+1eD3pI7ypSC3s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=I5F8FOKjzZ+AP2hgfBR4vSZp3JGvBJwWPoENm5R1OkRf5pCZ6xCwp0T8Lz+etWZKm
-	 vEupbVNhms36EIc/q2lIGQFdkYytAjtmpNPS6VXxnk66eRPYqvbX5qWKPQpAIRIE5Q
-	 vLz03iAG/0cTC7mrZuQPKkvNDdxoE01jyQyuNL87AuO5yf+eUB85ukCsaR/E2Afn5P
-	 YKZssVJdLBI5tjKZivXzbeCvofpXU7J6evuh+FMX5c+YRfPjGsGvWYgFwy8YqNHVQe
-	 s7AOf/NyppeGAsnchDOrIZdIWv4Tz0KkDMKnEd7fsQMkvWCDOi3G1Zan+Ue5CgYUSm
-	 61cpy3JzFhS6g==
-Message-ID: <30df34a2-bd2d-4a93-83db-19d8d1fb3451@kernel.org>
-Date: Wed, 1 Jul 2026 09:25:22 +0200
+	b=IHzOwZE+2TRu3VAS3ekDTfmRdl7r6/wviT1GJD9X+POvAFx3nGTJnzrmIiONVjNB7
+	 ikDJPjLxIzhMkhalBoI1xALtxkQk8+8SMV6x4M9XFWldjVtDZXRXCCf9BjHHxesoyH
+	 CB7aOPBxefEwMfdVEfD8uN8QjKCTC1F7lwv/ipJM/5j79p+V1zWXw6frsA8K1TLVX4
+	 OOpG8HnJH54ZC0LuvZ+OidamnvFsWFGLK3OA6XAx6CEB5M5PZeI6W0LG24hz3K1Aad
+	 rqAFWvnx44xuYt81DnmOiET88rUTSH0DkwbJN1w8WFH5PJ0q8Ye6Vort0a23KEWoPG
+	 koWC8+Dth7pMw==
+Message-ID: <46f9f24c-a842-48b6-ac95-add1942d086e@kernel.org>
+Date: Wed, 1 Jul 2026 09:31:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -60,9 +60,7 @@ References: <cover.1782676497.git.mst@redhat.com>
  <0b5f8b4b-d7dc-4b79-9555-a5b36265f3a9@kernel.org>
  <20260629030657-mutt-send-email-mst@kernel.org>
  <4f5ba5d6-246c-4430-9737-e8dd8e4c5142@kernel.org>
- <20260629092856-mutt-send-email-mst@kernel.org>
- <54c8cbee-9b26-458c-93ba-5aa594f5d1e8@kernel.org>
- <20260629175149-mutt-send-email-mst@kernel.org>
+ <20260629192811-mutt-send-email-mst@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -109,32 +107,33 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260629175149-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20260629192811-mutt-send-email-mst@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/29/26 23:54, Michael S. Tsirkin wrote:
-> On Mon, Jun 29, 2026 at 11:22:11PM +0200, David Hildenbrand (Arm) wrote:
->> [...]
->>
->>>
->>> And again, I'm really not sure fixing a theoretical race when memory
->>> is failing is worth slowing the world by 0.1-1% for.
->>>
->>
->> Fully agreed.
+On 6/30/26 01:29, Michael S. Tsirkin wrote:
+> On Mon, Jun 29, 2026 at 03:05:18PM +0200, David Hildenbrand (Arm) wrote:
+>> It would be good to coordinate here.
 > 
-> Let's say, we just send every bad page through MF machinery X times,
-> and hope the chances of a race are reduced enough not to matter.
-> WDYT?
+> Case in point, do you feel this should be blocking the zeroing/page
+> reporting work (which adds more non atomic RMWs), or I can work more on
+> that putting this aside?
 
-My personal opinion is that we either fix it properly or leave it broken. Making
-something unlikely a bit less likely is probably not worth the churn.
+For the zeroing optimization I think we'd restart with a proper discussion on
+the overall requirements + design (e.g., options to communicate information,
+options to do the zeroing, possible simplifications), as there are differing
+opinions on the general approach ... and my gut feeling is that this needs a
+proper discussion, as it involves folio allocation and severe core page
+allocator changes.
 
-Making something unlikely impossible OTOH (with no measurable overhead) seems
-tempting, as long as it's not too complicated.
+.. and as GFP_ZERO handling is a mess and we'd need a bigger discussion on how
+to sort that out.
 
-Let's discuss the other options we have in the other subthread.
+That is, I'd want to see a discussion thread before sending more code to the
+list (and ending in a sashiko review + resend spiral).
+
+Of course, you can link to code, but it will make all our life easier to explore
+the design space first before getting distracted by implementation details.
 
 -- 
 Cheers,
