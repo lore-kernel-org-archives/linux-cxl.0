@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F201221D96;
-	Wed,  1 Jul 2026 08:26:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7ACD38656D;
+	Wed,  1 Jul 2026 08:30:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782894396; cv=none; b=LVR1lSF7ZCOisPde9Z+ZIra94f9gfmIOeKFWN/5k5zUNABKYBBs4iB+7SDVVFL4LFhUN2iNXm+ln04l2tXbyEohwTzYSdZ4zNuct24ftWTGDZUugvP58Fto03O1o/1a3l2wWzwTl+h6a3WVTvEt8RM08FQvGHYARKYttSQwj0qI=
+	t=1782894642; cv=none; b=m06hJCRStOsodYfkIcM2I+ClbFhlM3EzPkJALnHzVrB7ZyiDMNECkggc77rWFM7tA15p3i7NxEMtNTl1WYzK3gdpemBQKuW/e6Kl9W9ciXOMU6iBGlnKvtVyIML3wJxjoOSVtGG4v5F5/4a4S1LTwp3Ex/juRpU6XahB362tvAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782894396; c=relaxed/simple;
-	bh=R+UEitqDjGPppgdaSzQpdx63EXMmwOStP7VgAgqf0nQ=;
+	s=arc-20240116; t=1782894642; c=relaxed/simple;
+	bh=fWH1wSgX08TW4O7VsaDF0cxPKrZ5+BCRV5QxNbilXUk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YJVLAgSBrvTcgOVA2ePVO8XKYAL66pxORdscZxA84CH6j8D0cZGeM1zkgAe47HucR8tl5FjZoU72I8FpDx8kDOtehHNlZNJfAo2pfI3Wh5Ud/cLw/Aq9P4o7F4g4wBMrHQjxDoIHOLLgm7VD0G3MOEyknC6dOeyiseGCO5JyZW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O3Z7BMXD; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=MwgTaP91nWfsRIRyxxrCbbEX2Rq+8+DDQUXBh/aJatoYipFqB+qraiL9XzsbG9qndJepRwu60IwzSrNdseGFD0J7lZButG/OLumg3K78qPj0tFLIG2VW5CUSr66sUa7ECovm+wdphOVwzqxQZeoj9oglWamV2ULB741fms2HAY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nsi0F+Yg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O3Z7BMXD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8569F1F00A3D;
-	Wed,  1 Jul 2026 08:26:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nsi0F+Yg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9B7D1F000E9;
+	Wed,  1 Jul 2026 08:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782894395;
-	bh=+T+6J6rF16tlV8s9JGhRswkVJRz4ywliNTiQ4lmmWRg=;
+	s=k20260515; t=1782894641;
+	bh=EitmsFYTKYnE/CMQXtoyKcbW9g8e44qIXAGKtiQio+M=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=O3Z7BMXD/3eyk+k/b4yeYELZ1QysIsroVxIbhrZy8ce8eHAFukhtRLDsgY2+iPhy2
-	 Fwhrf5+Cpin6juYgi7dSgn5vPHWFXIq8NmZOOeGOR8XkuWJChLFiNjG+8xtb/bpuit
-	 cZ/O39SiQykRMytVEDFPLz6LBZLoKYhB59d8FOgLY8TdAi9vLnWIC/sqqZVNT5DuIe
-	 PiVhwssdVaT7lfDToXrHQW2KbU0rge7a1y//tJtWiFGxGlPQU31sW4fDOQt3AX46XJ
-	 lkmeS1LpVJWaWSXro1KZXp7c1OqEHtqKB8ImYlY3YDgV9TFXCevaxMIe5bPL440PQi
-	 VsFRQVqZUeGZw==
-Message-ID: <d2ce93d9-c3d8-4915-a511-d08eb2c1b374@kernel.org>
-Date: Wed, 1 Jul 2026 10:26:26 +0200
+	b=Nsi0F+Ygx4oP2aOkquf50Ol5J/VKGlycgqaighAmg0TKSVZ3PKlnCmJ3MBwTCK0Ee
+	 ittaRsMuJbzHBRg9UCOcFaAvAwD/Gc11ZfEl5JM5wpMQz54Nb74/Bmo7RJKX8G9rkb
+	 +ULTndpI7UoV7aKeOWd8GamVyOwzLNgQFACq7gH4rd2AUpOCoZXYyI7uV84iywtoCK
+	 JXAFtNwd9RZ0sezEXaMXBopxgfiGPI1exZOp6hLMBfQqO3PPtLqIQGNABMlHg28Vqo
+	 cuQ9X3V7kFC1+jyIi6qyLoa/chLQdbTKZeWvFZo9cg9nTn4HBctwKqX1beZyEs6tDU
+	 F0DjNs/kuDEjw==
+Message-ID: <cfeb9b58-be6d-417f-8040-5e7e66158a64@kernel.org>
+Date: Wed, 1 Jul 2026 10:30:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,38 +35,20 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] mm: memory-failure: fix HWPoison flag race with
- non-atomic page flag ops
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, Oscar Salvador
- <osalvador@suse.de>, Andi Kleen <andi@firstfloor.org>,
- Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>,
- Rik van Riel <riel@redhat.com>, Vlastimil Babka <vbabka@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Brendan Jackman <jackmanb@google.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
- Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry@kernel.org>,
- Hao Li <hao.li@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Byungchul Park <byungchul@sk.com>, linux-mm@kvack.org,
- linux-cxl@vger.kernel.org
-References: <0b5f8b4b-d7dc-4b79-9555-a5b36265f3a9@kernel.org>
- <20260629030657-mutt-send-email-mst@kernel.org>
- <4f5ba5d6-246c-4430-9737-e8dd8e4c5142@kernel.org>
- <20260629092856-mutt-send-email-mst@kernel.org>
- <54c8cbee-9b26-458c-93ba-5aa594f5d1e8@kernel.org>
- <20260629174225-mutt-send-email-mst@kernel.org>
- <cbab829a-3e65-4b4f-a2e2-704e88a611a0@kernel.org>
- <f6d8354c-2f79-4a48-934c-cbeb335765e2@kernel.org>
- <20260630174852-mutt-send-email-mst@kernel.org>
- <2f884bfa-3cd5-4fba-8aa4-c2e68890ab64@kernel.org>
- <20260701041112-mutt-send-email-mst@kernel.org>
+Subject: Re: [PATCH v6 02/10] mm/memory_hotplug: add mhp_online_type_to_str()
+ and export string helpers
+To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
+Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, driver-core@lists.linux.dev,
+ linux-kselftest@vger.kernel.org, kernel-team@meta.com, osalvador@suse.de,
+ gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+ djbw@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
+ alison.schofield@intel.com, akpm@linux-foundation.org, ljs@kernel.org,
+ liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, shuah@kernel.org, iweiny@kernel.org,
+ Smita.KoralahalliChannabasappa@amd.com, apopple@nvidia.com
+References: <20260630211842.2252800-1-gourry@gourry.net>
+ <20260630211842.2252800-3-gourry@gourry.net>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -113,55 +95,19 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260701041112-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20260630211842.2252800-3-gourry@gourry.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 7/1/26 10:18, Michael S. Tsirkin wrote:
-> On Wed, Jul 01, 2026 at 10:08:45AM +0200, David Hildenbrand (Arm) wrote:
->>>
->>> Yay. I did that + dropped the extra lock/unlock and now it's in the noise in
->>> my testing. needs much more testing of course.
->>
->> Cool. I'd expect that latency-sensitive workloads (PREEMPT_RT) would not want to
->> have hwpoison handling either way, so using the no_resched variants at these
->> places might be doable.
->>
->>>
->>> If you want me to post (including addressing your other feedback) let me
->>> know.
->>>
->>
->> Let's first discuss the options. We essentially have the following one so far:
->>
->> 1) Ignore the problem
->>
->> It's been there forever ... but I am not quite happy about that.
->>
->> 2) Use atomics everywhere
->>
->> The easiest+cleanest, but as measured, the performance hit is real.
->>
->> 3) Keep retrying for a couple of times
->>
->> The big problem is "how long". A CPU in a hypervisor might be stalled for quite
->> a while (20s? can be longer).
+On 6/30/26 23:18, Gregory Price wrote:
+> Add mhp_online_type_to_str() as the inverse of mhp_online_type_from_str(),
+> and export both so a driver can render and parse the memory online type
+> through its own sysfs interface.
 > 
-> So on this idea. It might not matter. What I had in mind is:
-> 1. run the current logic
-> 2. add page to a list of pages to check, then invoke e.g. call_rcu_tasks
->    (or call_rcu_tasks_rude) maybe
-> 3. in the callback, recheck and if poison cleared, go back to 1
-> 4. otherwise everyone will see the bit set, remove from list we are done
-> 
-> it seems to not regress anything, and for the rare race, we set
-> the bit eventually.
-> 
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> ---
 
-So test-and-set (and friends) would also have to check the data structure that
-remembers bit to set/clear (and possibly update the data structure).
-
-That does seem doable. Do you have a prototype?
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
 -- 
 Cheers,
