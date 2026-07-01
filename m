@@ -1,33 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6767E372063;
-	Wed,  1 Jul 2026 16:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECA2374A0F
+	for <linux-cxl@vger.kernel.org>; Wed,  1 Jul 2026 16:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782924898; cv=none; b=mWgSjkO+roRQQ+Vg5ewTfbME4AOegP9myfluDVN076ijjkiO6zC9H9daDgtuc4G9y1bZiFZ3sicwCgKngy0vJdcsvK4kNsVy2Q8WnQlBUoJxRdGzk7GH9jxu7pSBJ9QMiZTrxzhX/3Z0MLtZusJuG/iebI8HUL2ofNrtI9/2DJQ=
+	t=1782925037; cv=none; b=JFkVFi5szk8wbsvOH9qO1l5mOa7z8+bHAoptBz+d1JBlG6LbHIWei95xctSzT0nkrTRMTP8PNepvawhVgv4oJXgxJfiXPXrYhUBtLnCx11IAvKLh0AS0ODo5h7aps6vI1TnZLcZBt4sDMDk+L7vQ8EXthLEKgvxPpjmtAqaSFqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782924898; c=relaxed/simple;
-	bh=7l9gIHgifJoMN3zoS9PXdp7hn8eP6N9EERRtvi9nqk0=;
+	s=arc-20240116; t=1782925037; c=relaxed/simple;
+	bh=xDvX3mRIKsGpaWasEuR3UJ89Gp6pouhVS2pQ4w2HG1M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IwRVJOpB3RkcVRMs4XWMGS+sgyEIIQyL50KusD43/UuOihqXzGFr5IB75xG92lfDeGBNMRZF5hG//GccKnZjo9ZWsV40QrAfTmATvLW7VxTMeH/iX8HQQU2AMsJFdviNLE0G6Pw1tQiGakcLiGwQL4hQofCEbJldPIT58pBQF7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIi48hmX; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=A58rgeDUSEtST2xFCWAlhqb1u5XUXRSWr+Ut+/q9PVQXXt4L/GLJV881Lf9ymO2FWtgx3srbl+HonTy90YWQJzrHzU461SMWmEoNDJlKyM7ByV8lHQCk7x5DC82ZRmo/eQZdxiD8NmepIPDLahrlr62GXqT6yhrvy608iAmLPkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VPvLao5J; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIi48hmX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25E881F000E9;
-	Wed,  1 Jul 2026 16:54:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782924897;
-	bh=87Wni51q7tV3DEcX7N0ywWkBdDM6S1XyRH7FSeJhsxg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=MIi48hmXsvy9gv6zAWRL5MXmswZhWZ0M1QqKS9FFSgETxRmTX2oSFqeGqE2qU5kxG
-	 k9280jpyr+SZh9okxydz/S4PDEhFalWWrTJP/ntLSe8r0V21zOn2UlDwojqVFcdpaD
-	 yyWSQDMkpPtx5d/6NZvWAggJEGl5tipOWNlOHf3Pta2mG9GhmIt4Diw/gQg+R+gOfk
-	 /QYH5/pPDy2FBtljlx1gcdfhfp5Ty2fRnXNHbwg6rVzYbrXUFjn8qPij2nGrnfbgE4
-	 MywQ1ESFcJnXMuWQ0En144bm6nFQOV27fZo894EdmNDXtLGS3mWP40g2X5YldmHHDh
-	 WB3BMJhUXFyQA==
-Message-ID: <43b4c503-14ba-4e88-b56c-caf5ef0597de@kernel.org>
-Date: Wed, 1 Jul 2026 18:54:52 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VPvLao5J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782925036; x=1814461036;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=xDvX3mRIKsGpaWasEuR3UJ89Gp6pouhVS2pQ4w2HG1M=;
+  b=VPvLao5J+66rqJNQvQv/qV808C8d5bEr2xFi3F3Yvo5fB3X3BFES2yo8
+   iA5tfcskEiG23JLuzQOp79wgEd4B/w0igIVSDfpSuvlkgCMaVWpN40USa
+   cujfYpoRpNumISvGH8KtL9O3gP4YqYEohk5ew6p2IWRjdLOoroooNTFHi
+   3gKg7VX7vPLJtSTq9w5k8Lk0QvmJAbzdF9doE9zNiE/lZJ1yKkGbG6+5U
+   W9iHrEUuki8jQOcb6izhOvu1KqmZKa56ea7tkcC9+didJ/4oBPHUcJcnO
+   VXvrNUbQp5rpBmLSuL40h5l9l7uKZEo2Uqdu0HNsyuxL1kL6YK8ivz5FS
+   Q==;
+X-CSE-ConnectionGUID: dues3+FUQrG9JnnU6zsDbQ==
+X-CSE-MsgGUID: EmEFM/PpRt6OyZdAoXJeNg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11834"; a="83699508"
+X-IronPort-AV: E=Sophos;i="6.25,142,1779174000"; 
+   d="scan'208";a="83699508"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 09:57:15 -0700
+X-CSE-ConnectionGUID: RX6jxmiVSTij4dxKrjKKOA==
+X-CSE-MsgGUID: sx6nNNcZTrOf+mYMetCfrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,142,1779174000"; 
+   d="scan'208";a="276935415"
+Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.110.66]) ([10.125.110.66])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 09:57:14 -0700
+Message-ID: <92ecdf52-993a-45e0-9fb7-4606481c378d@intel.com>
+Date: Wed, 1 Jul 2026 09:57:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,128 +52,223 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/mm_init: handle alloc_percpu failure in
- free_area_init_core_hotplug
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, kernel-team@meta.com, osalvador@suse.de,
- akpm@linux-foundation.org, rppt@kernel.org, mgorman@techsingularity.net,
- hannes@cmpxchg.org, vbabka@kernel.org
-References: <20260630214039.2263562-1-gourry@gourry.net>
- <b8baae33-d551-40fe-abb5-287f3711dd80@kernel.org>
- <akUszCySPFA7IRlb@gourry-fedora-PF4VCD3F>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
+Subject: Re: [PATCH v5 1/5] cxl: Add BI register probing and port
+ initialization
+To: Davidlohr Bueso <dave@stgolabs.net>, djbw@kernel.org
+Cc: jic23@kernel.org, benjamin.cheatham@amd.com, icheng@nvidia.com,
+ alucerop@amd.com, alison.schofield@intel.com, gourry@gourry.net,
+ dongjoo.seo1@samsung.com, linux-cxl@vger.kernel.org
+References: <20260615145529.13848-1-dave@stgolabs.net>
+ <20260615145529.13848-2-dave@stgolabs.net>
 Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <akUszCySPFA7IRlb@gourry-fedora-PF4VCD3F>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260615145529.13848-2-dave@stgolabs.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 7/1/26 17:05, Gregory Price wrote:
-> On Wed, Jul 01, 2026 at 10:35:41AM +0200, David Hildenbrand (Arm) wrote:
->>
->>>  	 * The node we allocated has no zone fallback lists. For avoiding
->>> diff --git a/mm/mm_init.c b/mm/mm_init.c
->>> index 306ea5c13f54..37fd64ce144d 100644
->>> --- a/mm/mm_init.c
->>> +++ b/mm/mm_init.c
->>> @@ -1536,7 +1536,7 @@ void __init set_pageblock_order(void)
->>>   * NOTE: this function is only called during memory hotplug
->>>   */
->>>  #ifdef CONFIG_MEMORY_HOTPLUG
->>> -void __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
->>> +int __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
->>>  {
->>>  	int nid = pgdat->node_id;
->>>  	enum zone_type z;
->>> @@ -1544,8 +1544,14 @@ void __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
->>>  
->>>  	pgdat_init_internals(pgdat);
->>>  
->>> -	if (pgdat->per_cpu_nodestats == &boot_nodestats)
->>> -		pgdat->per_cpu_nodestats = alloc_percpu(struct per_cpu_nodestat);
->>> +	if (pgdat->per_cpu_nodestats == &boot_nodestats) {
->>> +		struct per_cpu_nodestat __percpu *p;
->>> +
->>> +		p = alloc_percpu(struct per_cpu_nodestat);
->>> +		if (!p)
->>> +			return -ENOMEM;
->>> +		pgdat->per_cpu_nodestats = p;
->>
->> Is there a need for the temporary variable?
->>
-> 
-> at start:
->     pgdat->per_cpu_nodestats = &boot_nodestats 
-> 
-> So need a tmp to do the swap/revert/etc
 
-Reviewing too many patches today ...  makes sense.
 
+On 6/15/26 7:55 AM, Davidlohr Bueso wrote:
+> Add register probing for BI Route Table and BI Decoder capability
+> structures in cxl_probe_component_regs(), and helpers to map them.
 > 
->> Also how to handle cleanup on error? Or why can we skip cleanup? (what happens
->> if we get another call to __try_online_node()  later?)
->>
+> cxl_dport_map_bi() maps the BI Decoder of a downstream port (root
+> port or switch DSP) at dport-creation time via cxl_port_add_dport();
+> cxl_port_map_bi() maps a port's own BI capability during port probe
+> when the upstream link is in 256B Flit operation -- BI Decoder for
+> an endpoint, BI RT for a switch USP.
 > 
-> -ENOMEM ->
->     hotadd_init_pgdat -> NULL
->         __try_online_node -> -ENOMEM
-> 	    pr_err("Cannot online node %d due to NULL pgdat\n", nid);
-> 	    try_online_node -> -ENOMEM
-> 	        __add_memory_resource  ->  error_memblock_remove:
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> ---
+>  drivers/cxl/core/regs.c | 14 ++++++++
+>  drivers/cxl/cxl.h       |  6 ++++
+>  drivers/cxl/port.c      | 71 +++++++++++++++++++++++++++++++++++++++++
+>  include/cxl/cxl.h       |  6 ++++
+>  4 files changed, 97 insertions(+)
 > 
-> Basically we're left exactly where we were before we made the attempt.
-> 
-> Another call should work just fine after a bunch of dmesg spew.
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 93710cf4f0a6..a6caa793e7a4 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -92,6 +92,18 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+>  			length = CXL_RAS_CAPABILITY_LENGTH;
+>  			rmap = &map->ras;
+>  			break;
+> +		case CXL_CM_CAP_CAP_ID_BI_RT:
+> +			dev_dbg(dev, "found BI RT capability (0x%x)\n",
+> +				offset);
+> +			length = CXL_BI_RT_CAPABILITY_LENGTH;
+> +			rmap = &map->bi_rt;
+> +			break;
+> +		case CXL_CM_CAP_CAP_ID_BI_DECODER:
+> +			dev_dbg(dev, "found BI Decoder capability (0x%x)\n",
+> +				offset);
+> +			length = CXL_BI_DECODER_CAPABILITY_LENGTH;
+> +			rmap = &map->bi_decoder;
+> +			break;
+>  		default:
+>  			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
+>  				offset);
+> @@ -211,6 +223,8 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
+>  	} mapinfo[] = {
+>  		{ &map->component_map.hdm_decoder, &regs->hdm_decoder },
+>  		{ &map->component_map.ras, &regs->ras },
+> +		{ &map->component_map.bi_rt, &regs->bi_rt },
+> +		{ &map->component_map.bi_decoder, &regs->bi_decoder },
+>  	};
+>  	int i;
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 1297594beaec..760f51b43891 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -42,6 +42,12 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
+>  #define   CXL_CM_CAP_CAP_ID_RAS 0x2
+>  #define   CXL_CM_CAP_CAP_ID_HDM 0x5
+>  #define   CXL_CM_CAP_CAP_HDM_VERSION 1
+> +#define   CXL_CM_CAP_CAP_ID_BI_RT 0xB
+> +#define   CXL_CM_CAP_CAP_ID_BI_DECODER 0xC
 
-Okay, so the additional pgdat_init_internals) should be ok.
+While we are here, do you mind adding a comment above for the defines and point to 8.2.4 Table 8-74 in r4.0? 
 
-Makes sense to me, thanks.
+DJ
 
--- 
-Cheers,
+> +
+> +/* CXL 4.0 8.2.4.26 / 8.2.4.27 BI Capability Structures */
+> +#define CXL_BI_RT_CAPABILITY_LENGTH 0xC
+> +#define CXL_BI_DECODER_CAPABILITY_LENGTH 0xC
+>  
+>  /* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
+>  #define CXL_HDM_DECODER_CAP_OFFSET 0x0
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index ada51948d52f..ca8d8c14b787 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -58,6 +58,62 @@ static int discover_region(struct device *dev, void *unused)
+>  	return 0;
+>  }
+>  
+> +static void cxl_dport_map_bi(struct cxl_dport *dport)
+> +{
+> +	struct cxl_register_map *map = &dport->reg_map;
+> +	struct device *dev = dport->dport_dev;
+> +
+> +	if (!map->component_map.bi_decoder.valid) {
+> +		dev_dbg(dev, "BI Decoder registers not found\n");
+> +		return;
+> +	}
+> +
+> +	if (cxl_map_component_regs(map, &dport->regs.component,
+> +				   BIT(CXL_CM_CAP_CAP_ID_BI_DECODER)))
+> +		dev_dbg(dev, "Failed to map BI Decoder capability\n");
+> +}
+> +
+> +static void cxl_port_map_bi(struct cxl_port *port)
+> +{
+> +	struct cxl_register_map *map = &port->reg_map;
+> +	struct cxl_dport *parent_dport = port->parent_dport;
+> +	struct device *udev;
+> +	int cap_id;
+> +
+> +	/* no upstream BI registers above host bridges or the cxl_root */
+> +	if (!parent_dport || is_cxl_root(parent_dport->port))
+> +		return;
+> +
+> +	udev = is_cxl_endpoint(port) ?
+> +		port->uport_dev->parent : port->uport_dev;
+> +	if (!dev_is_pci(udev))
+> +		return;
+> +
+> +	/* BI requires 256B Flit on the upstream link */
+> +	if (!cxl_pci_flit_256(to_pci_dev(udev)))
+> +		return;
+> +
+> +	/* map this port's own BI capability */
+> +	if (is_cxl_endpoint(port)) {
+> +		if (!map->component_map.bi_decoder.valid) {
+> +			dev_dbg(&port->dev, "BI Decoder registers not found\n");
+> +			return;
+> +		}
+> +		cap_id = CXL_CM_CAP_CAP_ID_BI_DECODER;
+> +	} else {
+> +		if (!map->component_map.bi_rt.valid) {
+> +			dev_dbg(&port->dev, "BI RT registers not found\n");
+> +			return;
+> +		}
+> +		cap_id = CXL_CM_CAP_CAP_ID_BI_RT;
+> +	}
+> +
+> +	map->host = &port->dev;
+> +	if (cxl_map_component_regs(map, &port->regs, BIT(cap_id)))
+> +		dev_dbg(&port->dev, "Failed to map BI capability 0x%x\n",
+> +			cap_id);
+> +}
+> +
+>  static int cxl_switch_port_probe(struct cxl_port *port)
+>  {
+>  	/* Reset nr_dports for rebind of driver */
+> @@ -128,6 +184,8 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+>  	read_cdat_data(port);
+>  	cxl_endpoint_parse_cdat(port);
+>  
+> +	cxl_port_map_bi(port);
+> +
+>  	get_device(&cxlmd->dev);
+>  	rc = devm_add_action_or_reset(&port->dev, schedule_detach, cxlmd);
+>  	if (rc)
+> @@ -252,6 +310,8 @@ static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
+>  		 * on failure, or the device does not implement RAS registers.
+>  		 */
+>  		devm_cxl_port_ras_setup(port);
+> +
+> +		cxl_port_map_bi(port);
+>  	}
+>  
+>  	dport = devm_cxl_add_dport_by_dev(port, dport_dev);
+> @@ -261,6 +321,17 @@ static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
+>  	/* This group was only needed for early exit above */
+>  	devres_remove_group(&port->dev, no_free_ptr(port_dr_group));
+>  
+> +	if (dev_is_pci(dport_dev)) {
+> +		switch (pci_pcie_type(to_pci_dev(dport_dev))) {
+> +		case PCI_EXP_TYPE_ROOT_PORT:
+> +		case PCI_EXP_TYPE_DOWNSTREAM:
+> +			cxl_dport_map_bi(dport);
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +
+>  	cxl_switch_parse_cdat(dport);
+>  
+>  	/* New dport added, update the decoder targets */
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index fa7269154620..8ce9b4e9ca73 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -34,10 +34,14 @@ struct cxl_regs {
+>  	 * Common set of CXL Component register block base pointers
+>  	 * @hdm_decoder: CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure
+>  	 * @ras: CXL 2.0 8.2.5.9 CXL RAS Capability Structure
+> +	 * @bi_rt: CXL 4.0 8.2.4.26 CXL BI Route Table Capability Structure
+> +	 * @bi_decoder: CXL 4.0 8.2.4.27 CXL BI Decoder Capability Structure
+>  	 */
+>  	struct_group_tagged(cxl_component_regs, component,
+>  		void __iomem *hdm_decoder;
+>  		void __iomem *ras;
+> +		void __iomem *bi_rt;
+> +		void __iomem *bi_decoder;
+>  	);
+>  	/*
+>  	 * Common set of CXL Device register block base pointers
+> @@ -80,6 +84,8 @@ struct cxl_reg_map {
+>  struct cxl_component_reg_map {
+>  	struct cxl_reg_map hdm_decoder;
+>  	struct cxl_reg_map ras;
+> +	struct cxl_reg_map bi_rt;
+> +	struct cxl_reg_map bi_decoder;
+>  };
+>  
+>  struct cxl_device_reg_map {
 
-David
