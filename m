@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4EB2E7F17;
-	Wed,  1 Jul 2026 16:17:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6767E372063;
+	Wed,  1 Jul 2026 16:54:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782922654; cv=none; b=qAYKhOcInsuYXJtCH7ciNIq9chri/bN7zXRAAienT0q4nzMEVNaJh4yqWBAPTQArue6Q2WVewgAQv6yHnQ3qmVMgMIoQg9xIeXivDg5c+W7yWbkwgdU09TzOsJOpJTkoJT1aEC4kbCeVSLd48JalrzZABK7VQmlI73+3iHhlQKg=
+	t=1782924898; cv=none; b=mWgSjkO+roRQQ+Vg5ewTfbME4AOegP9myfluDVN076ijjkiO6zC9H9daDgtuc4G9y1bZiFZ3sicwCgKngy0vJdcsvK4kNsVy2Q8WnQlBUoJxRdGzk7GH9jxu7pSBJ9QMiZTrxzhX/3Z0MLtZusJuG/iebI8HUL2ofNrtI9/2DJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782922654; c=relaxed/simple;
-	bh=jOV5kJM61KuYmmRMT0eGDpsr71cDX1u+cdny1FRJSiY=;
+	s=arc-20240116; t=1782924898; c=relaxed/simple;
+	bh=7l9gIHgifJoMN3zoS9PXdp7hn8eP6N9EERRtvi9nqk0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q7FMp0EzNe/ipk6N8Uc61jrxAF6H8SAlVPgUH91SaTMOJlv3V33K7GUEqbYa9dg2VHx62VnpuGiUJQYhyOvQsNjdMlfMkzJRKw1V3idANomTZiqb9saiD5vzmL4cJA0/u712gZgxohJh/L3o167QhFL/99viJWh78Y/L6bOBtWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EzJnptID; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=IwRVJOpB3RkcVRMs4XWMGS+sgyEIIQyL50KusD43/UuOihqXzGFr5IB75xG92lfDeGBNMRZF5hG//GccKnZjo9ZWsV40QrAfTmATvLW7VxTMeH/iX8HQQU2AMsJFdviNLE0G6Pw1tQiGakcLiGwQL4hQofCEbJldPIT58pBQF7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIi48hmX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EzJnptID"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0A6A1F000E9;
-	Wed,  1 Jul 2026 16:17:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIi48hmX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25E881F000E9;
+	Wed,  1 Jul 2026 16:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782922653;
-	bh=uFcBNd60OaYA5Y+rtfkHScnnu+1+htBpNsra9XAmyzU=;
+	s=k20260515; t=1782924897;
+	bh=87Wni51q7tV3DEcX7N0ywWkBdDM6S1XyRH7FSeJhsxg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=EzJnptIDY29oYgbo6yB/i2dyz4L1vuF8JsElH3OX1hkNA2c4PF17z0+BlHpyQKiGh
-	 ae7zj5X/y9D4nGkzH5Ij4a7fHqonKNCax+j0zthiVJOQPXfYO12p4gvKJ9xg/5wDzq
-	 qbvlUmMyUgmJN5tPHZBhaPv7GkDppPJJeby1UlHFf5xs1C/6wbKwvx8FYN5Bi5Pujt
-	 bvyWOwEHEvTukWm2O2KQMsXycfN7T4T3Muhvb3wz5pLRs8Smsa07Srmjs/fbrwRYPR
-	 kw41ba9ko+kHFD44hAdTNIDxW8UNr57/GaVaGEWIC20B/A58RtTttqiHeRPKjMqTaw
-	 tLNdjf9+q5Hpg==
-Message-ID: <a353c28c-a864-456d-9b00-7f6a932cda73@kernel.org>
-Date: Wed, 1 Jul 2026 18:17:23 +0200
+	b=MIi48hmXsvy9gv6zAWRL5MXmswZhWZ0M1QqKS9FFSgETxRmTX2oSFqeGqE2qU5kxG
+	 k9280jpyr+SZh9okxydz/S4PDEhFalWWrTJP/ntLSe8r0V21zOn2UlDwojqVFcdpaD
+	 yyWSQDMkpPtx5d/6NZvWAggJEGl5tipOWNlOHf3Pta2mG9GhmIt4Diw/gQg+R+gOfk
+	 /QYH5/pPDy2FBtljlx1gcdfhfp5Ty2fRnXNHbwg6rVzYbrXUFjn8qPij2nGrnfbgE4
+	 MywQ1ESFcJnXMuWQ0En144bm6nFQOV27fZo894EdmNDXtLGS3mWP40g2X5YldmHHDh
+	 WB3BMJhUXFyQA==
+Message-ID: <43b4c503-14ba-4e88-b56c-caf5ef0597de@kernel.org>
+Date: Wed, 1 Jul 2026 18:54:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -35,38 +35,16 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] mm: memory-failure: fix HWPoison flag race with
- non-atomic page flag ops
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, Oscar Salvador
- <osalvador@suse.de>, Andi Kleen <andi@firstfloor.org>,
- Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>,
- Rik van Riel <riel@redhat.com>, Vlastimil Babka <vbabka@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Brendan Jackman <jackmanb@google.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
- Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry@kernel.org>,
- Hao Li <hao.li@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Byungchul Park <byungchul@sk.com>, linux-mm@kvack.org,
- linux-cxl@vger.kernel.org
-References: <54c8cbee-9b26-458c-93ba-5aa594f5d1e8@kernel.org>
- <20260629174225-mutt-send-email-mst@kernel.org>
- <cbab829a-3e65-4b4f-a2e2-704e88a611a0@kernel.org>
- <f6d8354c-2f79-4a48-934c-cbeb335765e2@kernel.org>
- <20260630174852-mutt-send-email-mst@kernel.org>
- <2f884bfa-3cd5-4fba-8aa4-c2e68890ab64@kernel.org>
- <20260701041112-mutt-send-email-mst@kernel.org>
- <d2ce93d9-c3d8-4915-a511-d08eb2c1b374@kernel.org>
- <20260701043024-mutt-send-email-mst@kernel.org>
- <c03ec696-d635-4c7f-8c77-89a439d9135b@kernel.org>
- <20260701112946-mutt-send-email-mst@kernel.org>
+Subject: Re: [PATCH] mm/mm_init: handle alloc_percpu failure in
+ free_area_init_core_hotplug
+To: Gregory Price <gourry@gourry.net>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, kernel-team@meta.com, osalvador@suse.de,
+ akpm@linux-foundation.org, rppt@kernel.org, mgorman@techsingularity.net,
+ hannes@cmpxchg.org, vbabka@kernel.org
+References: <20260630214039.2263562-1-gourry@gourry.net>
+ <b8baae33-d551-40fe-abb5-287f3711dd80@kernel.org>
+ <akUszCySPFA7IRlb@gourry-fedora-PF4VCD3F>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -113,80 +91,70 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260701112946-mutt-send-email-mst@kernel.org>
+In-Reply-To: <akUszCySPFA7IRlb@gourry-fedora-PF4VCD3F>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 7/1/26 17:54, Michael S. Tsirkin wrote:
-> On Wed, Jul 01, 2026 at 10:36:31AM +0200, David Hildenbrand (Arm) wrote:
->> On 7/1/26 10:33, Michael S. Tsirkin wrote:
->>>
->>> what do you think ;) post it?
+On 7/1/26 17:05, Gregory Price wrote:
+> On Wed, Jul 01, 2026 at 10:35:41AM +0200, David Hildenbrand (Arm) wrote:
 >>
->> As RFC please :) [and if it's AI generated, obviously properly reviewed and
->> reworked by you]
->> -- 
->> Cheers,
+>>>  	 * The node we allocated has no zone fallback lists. For avoiding
+>>> diff --git a/mm/mm_init.c b/mm/mm_init.c
+>>> index 306ea5c13f54..37fd64ce144d 100644
+>>> --- a/mm/mm_init.c
+>>> +++ b/mm/mm_init.c
+>>> @@ -1536,7 +1536,7 @@ void __init set_pageblock_order(void)
+>>>   * NOTE: this function is only called during memory hotplug
+>>>   */
+>>>  #ifdef CONFIG_MEMORY_HOTPLUG
+>>> -void __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
+>>> +int __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
+>>>  {
+>>>  	int nid = pgdat->node_id;
+>>>  	enum zone_type z;
+>>> @@ -1544,8 +1544,14 @@ void __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
+>>>  
+>>>  	pgdat_init_internals(pgdat);
+>>>  
+>>> -	if (pgdat->per_cpu_nodestats == &boot_nodestats)
+>>> -		pgdat->per_cpu_nodestats = alloc_percpu(struct per_cpu_nodestat);
+>>> +	if (pgdat->per_cpu_nodestats == &boot_nodestats) {
+>>> +		struct per_cpu_nodestat __percpu *p;
+>>> +
+>>> +		p = alloc_percpu(struct per_cpu_nodestat);
+>>> +		if (!p)
+>>> +			return -ENOMEM;
+>>> +		pgdat->per_cpu_nodestats = p;
 >>
->> David
+>> Is there a need for the temporary variable?
+>>
 > 
-> Not "generated" surely. But assisted, yes.
+> at start:
+>     pgdat->per_cpu_nodestats = &boot_nodestats 
+> 
+> So need a tmp to do the swap/revert/etc
 
-What I thought.
-
-> Still hacking on it, but the difficulty
-> with memory-failure is that fundamentally, it's not 100% robust.
-
-It's all a bit slapped on top of everything, yes.
-
-What I was wondering is, assuming the call_task_rcu() and it takes forever,
-there might be quite a while where a hwpoisoned page that lost its bit is not
-marked as hwpoisoned.
-
-So you'd actually want the one doing the test_and_set_bit() caller to wait until
-the bit is stable.
-
-But that should be rather hairy as well. :(
+Reviewing too many patches today ...  makes sense.
 
 > 
-> For example, we have a fifo fed by hardware and consumed by a workqueue:
+>> Also how to handle cleanup on error? Or why can we skip cleanup? (what happens
+>> if we get another call to __try_online_node()  later?)
+>>
 > 
->         struct memory_failure_cpu *mf_cpu;
->         unsigned long proc_flags;
->         bool buffer_overflow;
->         struct memory_failure_entry entry = {
->                 .pfn =          pfn,
->                 .flags =        flags,
->         };
+> -ENOMEM ->
+>     hotadd_init_pgdat -> NULL
+>         __try_online_node -> -ENOMEM
+> 	    pr_err("Cannot online node %d due to NULL pgdat\n", nid);
+> 	    try_online_node -> -ENOMEM
+> 	        __add_memory_resource  ->  error_memblock_remove:
 > 
->         mf_cpu = &get_cpu_var(memory_failure_cpu);
->         raw_spin_lock_irqsave(&mf_cpu->lock, proc_flags);
->         buffer_overflow = !kfifo_put(&mf_cpu->fifo, entry);
->         if (!buffer_overflow)
->                 schedule_work_on(smp_processor_id(), &mf_cpu->work);
->         raw_spin_unlock_irqrestore(&mf_cpu->lock, proc_flags);
->         put_cpu_var(memory_failure_cpu);
->         if (buffer_overflow)
->                 pr_err("buffer overflow when queuing memory failure at %#lx\n",
->                        pfn);
+> Basically we're left exactly where we were before we made the attempt.
 > 
-> 
-> if there are lots of these and the scheduler is slow and it overflows,
-> it's sayonara you have lost the flag, right?
+> Another call should work just fine after a bunch of dmesg spew.
 
-I guess so. I assume on relevant hw you wouldn't expect a storm. But who knows :)
+Okay, so the additional pgdat_init_internals) should be ok.
 
-> 
-> 
-> Oh and by the way, I just noticed that when buddy merges pages it does
-> not check the poison bit. So it looks like there's a simple way to lose
-> the poison bit - have it merge with a non poisoned page.
-
-When we poison, we try to take the free page off the buddy. At least that's what
-I remember.
-
-So I think we would just then go ahead and split the free higher-order buddy
-page to remove the single page.
+Makes sense to me, thanks.
 
 -- 
 Cheers,
