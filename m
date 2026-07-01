@@ -1,127 +1,186 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF6E358384
-	for <linux-cxl@vger.kernel.org>; Wed,  1 Jul 2026 15:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766BD48C8CE
+	for <linux-cxl@vger.kernel.org>; Wed,  1 Jul 2026 15:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782919258; cv=none; b=JZbdac0/OPGkaB9hAjr7zwwPVIAU7j9v+yisP6aNWTSJMW5GFORskRlqPzloyY3e+UAKVdigLjcFY6e3mpRaCT8DSaljAt5A5HQ3BCakMawnYj0QHph3zQjZyXkkPlhvn+Tbm3yxds8JfgILgCZDC6nxFKu/P+FF5nE0T2Sxopc=
+	t=1782921265; cv=none; b=q1Dg0T1AOJ4okrlI6LZCWXpL8UPc6LzTNS9uH1065mu9RYkD2AhgsMAQAfXY1vPWXypeBR8GHuY72iOE4RNA+s9qMwBeOwd33ur6kE8vxpIGJjHvqpv5KoObslUQkBUUumDFnIbYG7GSOy3kQzmLgHvNoj98UVtz1JcScHSNqj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782919258; c=relaxed/simple;
-	bh=B5OtZj/lBZyOnuuuCWdlMKPRT3npcqUb/grocb0Ceik=;
+	s=arc-20240116; t=1782921265; c=relaxed/simple;
+	bh=Xiv8a+MHhH8J6rT1nMbNrm50OA23p3Gi0rYDhopodjQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ssnHs+WhuMcMpaiWHMYmkAFS4jxM6NSAz75infeLco9Ttcir6kY6wG8vS3VvitOFmYkrgED1Ndj9u1fSE7GppYwYhaIQk/2JL5Ccy2ho9oxQCprKmVmrugQB4V28yu6V/MGgQyU8fZ90m9YN1yYhllEVmDvVg2aHMY2+JGGjZxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ufxlAByw; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 In-Reply-To:Content-Type:Content-Disposition; b=mt4wBWrGG4PpY5cgcg3+AYyX+fVyGgBvNDKLDwgkqVBca2nBE9v/dVJzDeO+EnzlBypiNcBIF7C6f/Y28MV6nJZ2AefkKGarJT9hgyz+SYnPE6sTmK7FPhWTXqYVRMqigqkXg3cTSZU1hlkR5jRRs47JIlHNsSIJ1sElGax6uH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A7iWcg2s; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ufxlAByw"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-92e602d2c0fso156516585a.0
-        for <linux-cxl@vger.kernel.org>; Wed, 01 Jul 2026 08:20:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1782919255; x=1783524055; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zSMdskJ/XVsebZBQ8sHZxAPdt7ILVugrW/olreDrl4I=;
-        b=ufxlABywSsz5oik0DwZQI8l3TVtoOhz4T/8mPkNocZCngVRiRVC7QdMijAKZOkhi8H
-         yQdiqi3qN9PYLQYAlzvEjgf8mp/bPJa8m1V0NX0uRlnhzDL9qZkHnuBGGDU9GhYbwlEY
-         oGWFQ8hCSPmGBqI7mL89dBV2VfLaeq8PNsAPx939s6qw/kRqOTTBurXVDGQ4XWmrAxSJ
-         rLp95vNLyPUJdB5xRY2lSQhIQzxBHLK29Fv58ZYNJVhWMYj5HDEsSfcw54sytQvuzpL1
-         Ac2StMsVKRQb1QeTaNdZyig8dUCvgshFOxGZOWiB8w59eMop4cAK6ZUc96osShIcVySF
-         5h+w==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A7iWcg2s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1782921263;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZQqt/bByGpZMVaTV47GrHV/MzFjAQYvcctbsvrjGHwc=;
+	b=A7iWcg2s15SWrCLcvcL5iL1gvKcnPUTcPu81VdD+E641LEKd059mPI9Sd3CKaEN/VOI1Md
+	Bq1/22pBQMlFb+LjwWshCSa6zvs6osx2wvl+a8KfS1/fkjdRbbF4BFIsIo18L56PB0/TMT
+	1XWyau9FvnN2vOPeYXGebjiEtcdfMvs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-320-AOw7T7YmMhysISjrpO5v1Q-1; Wed, 01 Jul 2026 11:54:22 -0400
+X-MC-Unique: AOw7T7YmMhysISjrpO5v1Q-1
+X-Mimecast-MFC-AGG-ID: AOw7T7YmMhysISjrpO5v1Q_1782921261
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-493c1bc7a70so8092855e9.1
+        for <linux-cxl@vger.kernel.org>; Wed, 01 Jul 2026 08:54:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782919255; x=1783524055;
+        d=1e100.net; s=20251104; t=1782921261; x=1783526061;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zSMdskJ/XVsebZBQ8sHZxAPdt7ILVugrW/olreDrl4I=;
-        b=VlEYqfuM8mKcXCUImcm5SFuzqp5iKZKtFhwLifn2JXwZCpbb56j/+Km+XsNDyQH4EX
-         762OTpN1ZQN7VLaJ9imnD07nxkQmXqWBsnPm0S38Q03HFHHk9h7gdOLM1UbLv1ehoCia
-         rV6h7jME0dD5ZriY9IvRlAAhqodFmU/F1xBZYOh3a2HpADQoHyJpu2IM0E1eq1F4pFPQ
-         v3wHJHKieK1BDCCah41EvvFJFNgHK7KgLa5QJ+/RM0YwqXGg0ypxt9fUyXRC8WCrCJGx
-         hZ9kdrDrCdpIQaY8WNWCkVJocyDYERljHJLRuLp52Ejt40BFRSj61wd6k0reG9eWgPup
-         CdTA==
-X-Forwarded-Encrypted: i=1; AFNElJ92iLdaCEEt9iSWRK38g9eXeq67HSZ0YXB1ze6pytK014J6AEIN1bdDA4Mg9iTO6lgEPh80vmrVlIc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq3u7k6ViQ2T+ezJP/n/kSuN7Msp5jORIrV+kAASUiFO7GtKV5
-	y/EUsDJ5Du38FUx12fW9Stb5tusjrn21gLfV2IlGZ3pXoMeHAtkb5tpYBQqXURT3FjI=
-X-Gm-Gg: AfdE7cnLu930bHWU016c11aVSWdT0UdX5XGe3fUD4NQkLWF5NUrzNj2fzOfFUQcbxQi
-	34p2XuAhvGNuyPZKhz/gtJ/QLeBeDyCLpXOPtJE0tWy3mYtOClyrjz0wbfK9+uUGC1UCDHBxUkZ
-	5JdRosgnD+VW0LDWiuIzHaykQa4dKeWEOIYvKxz5QID8Q5cCG2k/AmOwubooLbdN330yU6guTEJ
-	nE2fm3ZbKPWj8kaQy+jXfyFpBnfF3VNunyjEQ0l/Ncmrg3FOVE6k75/sNwE9mz6xdKXxTJFIuN6
-	MeMgpLfaaTd02yL43L7kBRbxts3rmNy2MqV5FmyHB8D7hQEXsmxNFM8WakyePjoLcbmx4V8eIqX
-	2n/0tF+Hmkysbyq75v6db4u3xCpg+gNjdiltyo5WBt6jOYA2lGY85n6lJsSFjfF8xszJOprCbPg
-	u2mNcLrtCZKg2U9plx9H6B4CJWjszs76AwxMezrt6XE31ytXVqCvU2kqHGGusFwkaVV+FA
-X-Received: by 2002:a05:620a:178e:b0:92b:f1ba:5fad with SMTP id af79cd13be357-92e69821ad8mr849855185a.37.1782919255344;
-        Wed, 01 Jul 2026 08:20:55 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-92e623379easm595581185a.32.2026.07.01.08.20.54
+        bh=ZQqt/bByGpZMVaTV47GrHV/MzFjAQYvcctbsvrjGHwc=;
+        b=Z0ZlK32P8sli+wt2I8s4pxASQ4/MZac5U9z5iiVUELFXRs+0k/Kj0u35nAQlQchAec
+         mdiwk4vP9kMRSVk3+6QTE8uq++0S0HfkaNqZxW8bij4UD0mO5loVg126Q9KBOIT7n84L
+         o+uCQcRlVS3mth16WSbTxsM2EAx01qHYp9gd79KC4kEORs2SHg5WpD57moNB0YvDPNAw
+         AIJzsKNh50TpS6r0cflSsMsS3fji7XY+HUCd2Z6g0YI/uxGg7Hg2hxaDldJPTP/RovgX
+         Oh6p1Dm5pIi3odOFP0ftnWw5uu5fa6JJZl332SIJw9Qrs6ZtZPocYr/LIjthN9QGz5Ii
+         z6fQ==
+X-Forwarded-Encrypted: i=1; AFNElJ9uD29nmId7GGjquvlZhB9O0mhZ6WcuChtUa2vH8qUAL2IeTxk/PYXVaUb2b8gtyXGf63S6jWYHb84=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCKGiIv8GbAvdAv9rCHYVoxaVJzhak7+vlqbPh3ec1goAKoAfz
+	W5kBD+aeCk1xlQ4a5xlEYokvm3giBemhDZXPn4xCwrinYY6pM289Z4CJ3Gv5TjLTHXii7h9G3F4
+	1UyO+jxcmhbtMivubxe6z/EGmKOkoOyJoAm2+CUjluiySnxgcvdcLBnw0UFcQkQ==
+X-Gm-Gg: AfdE7ckUl9W+3PKQos4AWiV4Pm570kg+Alw1t6RxS26UR3jloHz8wx1XRAecMEoelZI
+	HXmYTOz2HizOYmOqNRbvcXUly2LIa8IEDWdVUS6wf3MmIzr6fYJXNJ85mp5AvChFAUyZ5bbmApn
+	pkfHAsYU1F3YbiRlMM2IXU1YU1+UgwXqfzxERRl6k6OTdTiP9KDXLDSpLIwDsI3L95LrBCbLjoN
+	qyHSHtfZBprLAD+9twg74c+AQBT7rLmUr8eOSMnVFi8/hqL03TSDwz37VPjgs3Q7ZqEH6i2FbSD
+	hrQSk7H/e/yAT6q809nf3Im/lbz0nC4gX8cSVtoWfUgOAm7KZhBXIhlOH9JBS+a6P4SLckRM4Gz
+	Pve0jr2cF/iEqbLoJtWFDjVTih7htJQ29
+X-Received: by 2002:a05:600c:3588:b0:492:59fe:4a15 with SMTP id 5b1f17b1804b1-493c2b84695mr28231765e9.24.1782921260962;
+        Wed, 01 Jul 2026 08:54:20 -0700 (PDT)
+X-Received: by 2002:a05:600c:3588:b0:492:59fe:4a15 with SMTP id 5b1f17b1804b1-493c2b84695mr28231295e9.24.1782921260379;
+        Wed, 01 Jul 2026 08:54:20 -0700 (PDT)
+Received: from redhat.com (IGLD-80-230-85-71.inter.net.il. [80.230.85.71])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493be4c89ccsm95218855e9.4.2026.07.01.08.54.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2026 08:20:54 -0700 (PDT)
-Date: Wed, 1 Jul 2026 11:20:50 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, kernel-team@meta.com, david@kernel.org,
-	osalvador@suse.de, akpm@linux-foundation.org,
-	mgorman@techsingularity.net, hannes@cmpxchg.org, vbabka@kernel.org
-Subject: Re: [PATCH] mm/mm_init: handle alloc_percpu failure in
- free_area_init_core_hotplug
-Message-ID: <akUwUv_rrgmRP4bK@gourry-fedora-PF4VCD3F>
-References: <20260630214039.2263562-1-gourry@gourry.net>
- <akS2AYLzOzlJ8tIO@kernel.org>
+        Wed, 01 Jul 2026 08:54:19 -0700 (PDT)
+Date: Wed, 1 Jul 2026 11:54:15 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <nao.horiguchi@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Oscar Salvador <osalvador@suse.de>,
+	Andi Kleen <andi@firstfloor.org>,
+	Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>,
+	Rik van Riel <riel@redhat.com>, Vlastimil Babka <vbabka@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+	Lance Yang <lance.yang@linux.dev>,
+	Christoph Lameter <cl@gentwo.org>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Harry Yoo <harry@kernel.org>, Hao Li <hao.li@linux.dev>,
+	Kiryl Shutsemau <kas@kernel.org>, Byungchul Park <byungchul@sk.com>,
+	linux-mm@kvack.org, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH 0/2] mm: memory-failure: fix HWPoison flag race with
+ non-atomic page flag ops
+Message-ID: <20260701112946-mutt-send-email-mst@kernel.org>
+References: <54c8cbee-9b26-458c-93ba-5aa594f5d1e8@kernel.org>
+ <20260629174225-mutt-send-email-mst@kernel.org>
+ <cbab829a-3e65-4b4f-a2e2-704e88a611a0@kernel.org>
+ <f6d8354c-2f79-4a48-934c-cbeb335765e2@kernel.org>
+ <20260630174852-mutt-send-email-mst@kernel.org>
+ <2f884bfa-3cd5-4fba-8aa4-c2e68890ab64@kernel.org>
+ <20260701041112-mutt-send-email-mst@kernel.org>
+ <d2ce93d9-c3d8-4915-a511-d08eb2c1b374@kernel.org>
+ <20260701043024-mutt-send-email-mst@kernel.org>
+ <c03ec696-d635-4c7f-8c77-89a439d9135b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <c03ec696-d635-4c7f-8c77-89a439d9135b@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: TQF0xiqoG0ZqCtOUvqKfcLntBtWwqk8kYmhhLrqwxO0_1782921261
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <akS2AYLzOzlJ8tIO@kernel.org>
 
-On Wed, Jul 01, 2026 at 09:38:57AM +0300, Mike Rapoport wrote:
-> On Tue, Jun 30, 2026 at 05:40:39PM -0400, Gregory Price wrote:
-> > We miss a failed allocation check for pgdat->per_cpu_nodestats, which
-> > results in a NULL deref when we offset into the per-cpu area.
+On Wed, Jul 01, 2026 at 10:36:31AM +0200, David Hildenbrand (Arm) wrote:
+> On 7/1/26 10:33, Michael S. Tsirkin wrote:
+> > On Wed, Jul 01, 2026 at 10:26:26AM +0200, David Hildenbrand (Arm) wrote:
+> >> On 7/1/26 10:18, Michael S. Tsirkin wrote:
+> >>>
+> >>> So on this idea. It might not matter. What I had in mind is:
+> >>> 1. run the current logic
+> >>> 2. add page to a list of pages to check, then invoke e.g. call_rcu_tasks
+> >>>    (or call_rcu_tasks_rude) maybe
+> >>> 3. in the callback, recheck and if poison cleared, go back to 1
+> >>> 4. otherwise everyone will see the bit set, remove from list we are done
+> >>>
+> >>> it seems to not regress anything, and for the rare race, we set
+> >>> the bit eventually.
+> >>>
+> >>
+> >> So test-and-set (and friends) would also have to check the data structure that
+> >> remembers bit to set/clear (and possibly update the data structure).
+> >>
+> >> That does seem doable. Do you have a prototype?
 > > 
-> > Propagate -ENOMEM up the stack and leave per_cpu_nodestats pointing
-> > at boot_nodestats so a later online can retry the allocation.
-> > 
-> > hotadd_init_pgdat() returns NULL on failure, which __try_online_node()
-> > already maps to -ENOMEM.
-> > 
-> > Assisted-by: Sashiko:unknown-model
+> > what do you think ;) post it?
 > 
-> I suppose it's rather 
+> As RFC please :) [and if it's AI generated, obviously properly reviewed and
+> reworked by you]
+> -- 
+> Cheers,
 > 
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
+> David
 
-I honestly wasn't sure here, Assisted-by is the tag for LLMs lol
-i can change it
+Not "generated" surely. But assisted, yes. Still hacking on it, but the difficulty
+with memory-failure is that fundamentally, it's not 100% robust.
 
-> 
-> > Fixes: 75ef71840539 ("mm, vmstat: add infrastructure for per-node vmstats")
-> > Signed-off-by: Gregory Price <gourry@gourry.net>
-> > ---
-> >  include/linux/memory_hotplug.h |  2 +-
-> >  mm/memory_hotplug.c            |  3 ++-
-> >  mm/mm_init.c                   | 14 +++++++++++---
-> >  3 files changed, 14 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> > index 7c9d66729c60..f04b915678db 100644
-> > --- a/include/linux/memory_hotplug.h
-> > +++ b/include/linux/memory_hotplug.h
-> > @@ -289,7 +289,7 @@ static inline void __remove_memory(u64 start, u64 size) {}
-> >  /* Default online_type (MMOP_*) when new memory blocks are added. */
-> >  extern enum mmop mhp_get_default_online_type(void);
-> >  extern void mhp_set_default_online_type(enum mmop online_type);
-> > -extern void __ref free_area_init_core_hotplug(struct pglist_data *pgdat);
-> > +extern int __ref free_area_init_core_hotplug(struct pglist_data *pgdat);
-> 
-> Nit: we are trying to get rid of 'extern's in the headers, even though it
-> makes the declarations inconsistent.
-> Can you please drop the extern since you anyway changing this?
+For example, we have a fifo fed by hardware and consumed by a workqueue:
 
-yup no problem
+        struct memory_failure_cpu *mf_cpu;
+        unsigned long proc_flags;
+        bool buffer_overflow;
+        struct memory_failure_entry entry = {
+                .pfn =          pfn,
+                .flags =        flags,
+        };
+
+        mf_cpu = &get_cpu_var(memory_failure_cpu);
+        raw_spin_lock_irqsave(&mf_cpu->lock, proc_flags);
+        buffer_overflow = !kfifo_put(&mf_cpu->fifo, entry);
+        if (!buffer_overflow)
+                schedule_work_on(smp_processor_id(), &mf_cpu->work);
+        raw_spin_unlock_irqrestore(&mf_cpu->lock, proc_flags);
+        put_cpu_var(memory_failure_cpu);
+        if (buffer_overflow)
+                pr_err("buffer overflow when queuing memory failure at %#lx\n",
+                       pfn);
+
+
+if there are lots of these and the scheduler is slow and it overflows,
+it's sayonara you have lost the flag, right?
+
+
+Oh and by the way, I just noticed that when buddy merges pages it does
+not check the poison bit. So it looks like there's a simple way to lose
+the poison bit - have it merge with a non poisoned page.
+
+I guess maybe we should fix this last one.
+
+-- 
+MST
 
