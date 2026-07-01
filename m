@@ -1,75 +1,74 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DA240F8D5
-	for <linux-cxl@vger.kernel.org>; Wed,  1 Jul 2026 15:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF6E358384
+	for <linux-cxl@vger.kernel.org>; Wed,  1 Jul 2026 15:20:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782918358; cv=none; b=I1rqCorNsO4cREM1Wv6zxbLeD8TrG2BMMD5msE21Y1t/dum0XlEQH824ACVoqEmbjFwTr5oPBqvp+JoXvu0J4J75hfvzmRxXuA0PcayO1NmMz5IcoTOMsCKRnRJlIC7OhOGuJ9AaloJUztCupjD/Mu5TH3m5uBrNj0fYYrSdQIg=
+	t=1782919258; cv=none; b=JZbdac0/OPGkaB9hAjr7zwwPVIAU7j9v+yisP6aNWTSJMW5GFORskRlqPzloyY3e+UAKVdigLjcFY6e3mpRaCT8DSaljAt5A5HQ3BCakMawnYj0QHph3zQjZyXkkPlhvn+Tbm3yxds8JfgILgCZDC6nxFKu/P+FF5nE0T2Sxopc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782918358; c=relaxed/simple;
-	bh=O0/sSc5djxu9BW4d0paJyrvzS2rEhgQcnkyzbEMKO70=;
+	s=arc-20240116; t=1782919258; c=relaxed/simple;
+	bh=B5OtZj/lBZyOnuuuCWdlMKPRT3npcqUb/grocb0Ceik=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FqVyQbZN1EuYWsKExD7sY6YUp2GVy6j7m17jWKr/+baYY+MmBB6JnQ+gaVxqm1n3Dq6RSPqGvhPhgXmGaUnIuvvPK7fv5wJDm0LjPszGJ8DlAKOboI+YtrelY3PbZeGCaQ5SG93ZocLlzgnP4Ms+kSApsdCk0y97anwODcbSnoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=NmFKauRv; arc=none smtp.client-ip=209.85.128.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=ssnHs+WhuMcMpaiWHMYmkAFS4jxM6NSAz75infeLco9Ttcir6kY6wG8vS3VvitOFmYkrgED1Ndj9u1fSE7GppYwYhaIQk/2JL5Ccy2ho9oxQCprKmVmrugQB4V28yu6V/MGgQyU8fZ90m9YN1yYhllEVmDvVg2aHMY2+JGGjZxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ufxlAByw; arc=none smtp.client-ip=209.85.222.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="NmFKauRv"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-7fe36f1be74so11199237b3.2
-        for <linux-cxl@vger.kernel.org>; Wed, 01 Jul 2026 08:05:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ufxlAByw"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-92e602d2c0fso156516585a.0
+        for <linux-cxl@vger.kernel.org>; Wed, 01 Jul 2026 08:20:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1782918354; x=1783523154; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1782919255; x=1783524055; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Wpcsb0+VdxshQ15XkMHrH6lVO/I8qddArljRZWvFEt8=;
-        b=NmFKauRvkFHupjJtQ7IXa8B2he+S4I1eRiwnc+RdxFwoaPxIWcK1Qw6eMPtY/OSBKz
-         zsW3JwO8CqlzXLs9wTN33qSGWgkbsZxolUzOzIWS3n4Eo/L1RXOdu69SAlwXk98YhEB1
-         Y1i75xs6bY9hz8B6wj/8FSJRFYsqGVPutDRWRcQAzkaVifETFIL151Qh/EyZVnD36ewY
-         AwKqK9liyvV+3orIhEyEu4I+WP5AgTZpYQ1web9Ql4p1Gtwd+3QMynLw2wfIhDCiRS0S
-         l2kY1QYW4f5xQoNPZZGgRDRuX+I35dwp911Xm28HB5u4+7YHkK97HrmVyz2ZBjQfKMNY
-         YJdQ==
+        bh=zSMdskJ/XVsebZBQ8sHZxAPdt7ILVugrW/olreDrl4I=;
+        b=ufxlABywSsz5oik0DwZQI8l3TVtoOhz4T/8mPkNocZCngVRiRVC7QdMijAKZOkhi8H
+         yQdiqi3qN9PYLQYAlzvEjgf8mp/bPJa8m1V0NX0uRlnhzDL9qZkHnuBGGDU9GhYbwlEY
+         oGWFQ8hCSPmGBqI7mL89dBV2VfLaeq8PNsAPx939s6qw/kRqOTTBurXVDGQ4XWmrAxSJ
+         rLp95vNLyPUJdB5xRY2lSQhIQzxBHLK29Fv58ZYNJVhWMYj5HDEsSfcw54sytQvuzpL1
+         Ac2StMsVKRQb1QeTaNdZyig8dUCvgshFOxGZOWiB8w59eMop4cAK6ZUc96osShIcVySF
+         5h+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782918354; x=1783523154;
+        d=1e100.net; s=20251104; t=1782919255; x=1783524055;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Wpcsb0+VdxshQ15XkMHrH6lVO/I8qddArljRZWvFEt8=;
-        b=QME4d0LMS1np4qeKzD+Af79q/Ovd4Zrgp/+fZsAWXu3/0EiEgVQv5enol0CFVOCGyC
-         8I+F2CrALEgib25fB1h0aS6J+XVp5vTD8LKTgVhd020zV62gz4RdTNpG0eE7Op1JKX/R
-         GZVnDhZD5P+ypbhyzP3xjP5AMEkqexo+ahRRYyt5glymEvEVmJEnR/7wSTZC0FHiS9Ai
-         3LYcgqxG0jtpHSy7o16WogkQHKCp5KQx5X3/JgeNSBXl5oLqvywB0KKuXJJ/n3B+PWCz
-         Eh2xAHoUOwSyb0aeCCOm9+DGkEmSSUjHZrtf7jzL+SNiCv4pYxYyiyerOJoGE0hsSEyO
-         OTpw==
-X-Forwarded-Encrypted: i=1; AHgh+Rr36WS+BAj2lypYZBkJICRFElzieJA/qqoxpS7y2h6xHwwTIULEqS49XpjTQWH2smaH/qQ5dnk4OuA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRNLMjfz7iBkwxAMyoBaF+9Xy83ut00CwBTNIlarevcEKvtFnI
-	Ai/jiIfuItKOT4cV/fEzV/FoVCIm13heuStQYsDCMlhh4ZMUbJzPcSvC0VssJXvrVoD9i4AYT+z
-	yh83K
-X-Gm-Gg: AfdE7ckuYPErvpgRAzl83NSaRsGNoMeSEdTM0CC1dMzD4jPOTaRIqTxwQHESP9Cj5dU
-	AffAN9Q/Iyst+SRdcBawBEC7bATDy8mBFAXq8Eajvg6HxyDEZ3SBskrK7HV1voTWyuCkJESHRro
-	/q9hpjlATjdvIvbNCXSVdIXUTB0+GAVPhB6Q4UjHSrgqD2Z8ejZUDfYVuGK14c/z/EMKkqRdMEN
-	ZyAzEYbQus61hyvO791CAd9h8SIQs2Bd2n24srn942CxrP51KqVBQqhwQI9QorbU9+rjKKYljUP
-	5pmyL1lnrnzcP9C87lmUqQf/h5DGjjURW3IfTuIJhIUzGucl168PGL7B2Jc36npa+pDRPteQqKV
-	IMgeFfdpdlubIglU4Lyp1HH9nxySlTMErPtJOTnFyDux+DIGUTEyR6CvcgewN8CtdfXY/quX/26
-	+PohuqvIDMEiVFdGJLjF1YhiFKDEDFJ1hflil9JpxMA2w2rIMO9DbQdVJUU0qq7+d3pInb
-X-Received: by 2002:a05:690c:6906:b0:80b:968:29ff with SMTP id 00721157ae682-812eb86e8ecmr20804517b3.53.1782918353875;
-        Wed, 01 Jul 2026 08:05:53 -0700 (PDT)
+        bh=zSMdskJ/XVsebZBQ8sHZxAPdt7ILVugrW/olreDrl4I=;
+        b=VlEYqfuM8mKcXCUImcm5SFuzqp5iKZKtFhwLifn2JXwZCpbb56j/+Km+XsNDyQH4EX
+         762OTpN1ZQN7VLaJ9imnD07nxkQmXqWBsnPm0S38Q03HFHHk9h7gdOLM1UbLv1ehoCia
+         rV6h7jME0dD5ZriY9IvRlAAhqodFmU/F1xBZYOh3a2HpADQoHyJpu2IM0E1eq1F4pFPQ
+         v3wHJHKieK1BDCCah41EvvFJFNgHK7KgLa5QJ+/RM0YwqXGg0ypxt9fUyXRC8WCrCJGx
+         hZ9kdrDrCdpIQaY8WNWCkVJocyDYERljHJLRuLp52Ejt40BFRSj61wd6k0reG9eWgPup
+         CdTA==
+X-Forwarded-Encrypted: i=1; AFNElJ92iLdaCEEt9iSWRK38g9eXeq67HSZ0YXB1ze6pytK014J6AEIN1bdDA4Mg9iTO6lgEPh80vmrVlIc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywq3u7k6ViQ2T+ezJP/n/kSuN7Msp5jORIrV+kAASUiFO7GtKV5
+	y/EUsDJ5Du38FUx12fW9Stb5tusjrn21gLfV2IlGZ3pXoMeHAtkb5tpYBQqXURT3FjI=
+X-Gm-Gg: AfdE7cnLu930bHWU016c11aVSWdT0UdX5XGe3fUD4NQkLWF5NUrzNj2fzOfFUQcbxQi
+	34p2XuAhvGNuyPZKhz/gtJ/QLeBeDyCLpXOPtJE0tWy3mYtOClyrjz0wbfK9+uUGC1UCDHBxUkZ
+	5JdRosgnD+VW0LDWiuIzHaykQa4dKeWEOIYvKxz5QID8Q5cCG2k/AmOwubooLbdN330yU6guTEJ
+	nE2fm3ZbKPWj8kaQy+jXfyFpBnfF3VNunyjEQ0l/Ncmrg3FOVE6k75/sNwE9mz6xdKXxTJFIuN6
+	MeMgpLfaaTd02yL43L7kBRbxts3rmNy2MqV5FmyHB8D7hQEXsmxNFM8WakyePjoLcbmx4V8eIqX
+	2n/0tF+Hmkysbyq75v6db4u3xCpg+gNjdiltyo5WBt6jOYA2lGY85n6lJsSFjfF8xszJOprCbPg
+	u2mNcLrtCZKg2U9plx9H6B4CJWjszs76AwxMezrt6XE31ytXVqCvU2kqHGGusFwkaVV+FA
+X-Received: by 2002:a05:620a:178e:b0:92b:f1ba:5fad with SMTP id af79cd13be357-92e69821ad8mr849855185a.37.1782919255344;
+        Wed, 01 Jul 2026 08:20:55 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8f3611d783bsm23143586d6.28.2026.07.01.08.05.52
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-92e623379easm595581185a.32.2026.07.01.08.20.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jul 2026 08:05:53 -0700 (PDT)
-Date: Wed, 1 Jul 2026 11:05:48 -0400
+        Wed, 01 Jul 2026 08:20:54 -0700 (PDT)
+Date: Wed, 1 Jul 2026 11:20:50 -0400
 From: Gregory Price <gourry@gourry.net>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
 Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org, kernel-team@meta.com, osalvador@suse.de,
-	akpm@linux-foundation.org, rppt@kernel.org,
+	linux-cxl@vger.kernel.org, kernel-team@meta.com, david@kernel.org,
+	osalvador@suse.de, akpm@linux-foundation.org,
 	mgorman@techsingularity.net, hannes@cmpxchg.org, vbabka@kernel.org
 Subject: Re: [PATCH] mm/mm_init: handle alloc_percpu failure in
  free_area_init_core_hotplug
-Message-ID: <akUszCySPFA7IRlb@gourry-fedora-PF4VCD3F>
+Message-ID: <akUwUv_rrgmRP4bK@gourry-fedora-PF4VCD3F>
 References: <20260630214039.2263562-1-gourry@gourry.net>
- <b8baae33-d551-40fe-abb5-287f3711dd80@kernel.org>
+ <akS2AYLzOzlJ8tIO@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -78,63 +77,51 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b8baae33-d551-40fe-abb5-287f3711dd80@kernel.org>
+In-Reply-To: <akS2AYLzOzlJ8tIO@kernel.org>
 
-On Wed, Jul 01, 2026 at 10:35:41AM +0200, David Hildenbrand (Arm) wrote:
+On Wed, Jul 01, 2026 at 09:38:57AM +0300, Mike Rapoport wrote:
+> On Tue, Jun 30, 2026 at 05:40:39PM -0400, Gregory Price wrote:
+> > We miss a failed allocation check for pgdat->per_cpu_nodestats, which
+> > results in a NULL deref when we offset into the per-cpu area.
+> > 
+> > Propagate -ENOMEM up the stack and leave per_cpu_nodestats pointing
+> > at boot_nodestats so a later online can retry the allocation.
+> > 
+> > hotadd_init_pgdat() returns NULL on failure, which __try_online_node()
+> > already maps to -ENOMEM.
+> > 
+> > Assisted-by: Sashiko:unknown-model
 > 
-> >  	 * The node we allocated has no zone fallback lists. For avoiding
-> > diff --git a/mm/mm_init.c b/mm/mm_init.c
-> > index 306ea5c13f54..37fd64ce144d 100644
-> > --- a/mm/mm_init.c
-> > +++ b/mm/mm_init.c
-> > @@ -1536,7 +1536,7 @@ void __init set_pageblock_order(void)
-> >   * NOTE: this function is only called during memory hotplug
-> >   */
-> >  #ifdef CONFIG_MEMORY_HOTPLUG
-> > -void __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
-> > +int __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
-> >  {
-> >  	int nid = pgdat->node_id;
-> >  	enum zone_type z;
-> > @@ -1544,8 +1544,14 @@ void __ref free_area_init_core_hotplug(struct pglist_data *pgdat)
-> >  
-> >  	pgdat_init_internals(pgdat);
-> >  
-> > -	if (pgdat->per_cpu_nodestats == &boot_nodestats)
-> > -		pgdat->per_cpu_nodestats = alloc_percpu(struct per_cpu_nodestat);
-> > +	if (pgdat->per_cpu_nodestats == &boot_nodestats) {
-> > +		struct per_cpu_nodestat __percpu *p;
-> > +
-> > +		p = alloc_percpu(struct per_cpu_nodestat);
-> > +		if (!p)
-> > +			return -ENOMEM;
-> > +		pgdat->per_cpu_nodestats = p;
+> I suppose it's rather 
 > 
-> Is there a need for the temporary variable?
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
+
+I honestly wasn't sure here, Assisted-by is the tag for LLMs lol
+i can change it
+
 > 
-
-at start:
-    pgdat->per_cpu_nodestats = &boot_nodestats 
-
-So need a tmp to do the swap/revert/etc
-
-> Also how to handle cleanup on error? Or why can we skip cleanup? (what happens
-> if we get another call to __try_online_node()  later?)
+> > Fixes: 75ef71840539 ("mm, vmstat: add infrastructure for per-node vmstats")
+> > Signed-off-by: Gregory Price <gourry@gourry.net>
+> > ---
+> >  include/linux/memory_hotplug.h |  2 +-
+> >  mm/memory_hotplug.c            |  3 ++-
+> >  mm/mm_init.c                   | 14 +++++++++++---
+> >  3 files changed, 14 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> > index 7c9d66729c60..f04b915678db 100644
+> > --- a/include/linux/memory_hotplug.h
+> > +++ b/include/linux/memory_hotplug.h
+> > @@ -289,7 +289,7 @@ static inline void __remove_memory(u64 start, u64 size) {}
+> >  /* Default online_type (MMOP_*) when new memory blocks are added. */
+> >  extern enum mmop mhp_get_default_online_type(void);
+> >  extern void mhp_set_default_online_type(enum mmop online_type);
+> > -extern void __ref free_area_init_core_hotplug(struct pglist_data *pgdat);
+> > +extern int __ref free_area_init_core_hotplug(struct pglist_data *pgdat);
 > 
+> Nit: we are trying to get rid of 'extern's in the headers, even though it
+> makes the declarations inconsistent.
+> Can you please drop the extern since you anyway changing this?
 
--ENOMEM ->
-    hotadd_init_pgdat -> NULL
-        __try_online_node -> -ENOMEM
-	    pr_err("Cannot online node %d due to NULL pgdat\n", nid);
-	    try_online_node -> -ENOMEM
-	        __add_memory_resource  ->  error_memblock_remove:
+yup no problem
 
-Basically we're left exactly where we were before we made the attempt.
-
-Another call should work just fine after a bunch of dmesg spew.
-
-If this happens during boot via add_memory then something else is
-horribly horribly wrong and we'll at least get some debug info instead
-of null deref.
-
-~Gregory
