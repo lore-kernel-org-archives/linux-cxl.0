@@ -1,125 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6BC93612F6;
-	Wed,  1 Jul 2026 01:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CB83624B3
+	for <linux-cxl@vger.kernel.org>; Wed,  1 Jul 2026 04:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782870937; cv=none; b=rALSnd6uuokRuipgNF4V0vr6T3dc5B36sseq44lrjccxQ+N4CiF5AcA/xwyHznAkQYonEYk8AqftWjEz6IASfBBY9znrZ40BtjLBjApSHHJXZh3CV3VTc9GvzNcmleLprKgE/Zo9eepe3Q55hrps5PkPwov2uOejXo1arAgn698=
+	t=1782880938; cv=none; b=jxd1DkHOUj0Cc/5oxaGQaNtFwW5w+Gmy9ZwJUStol+4jHo/Dz1uUT8SjIMxPSVXPsEna+lWlHg5TsrrAxH28EDGNGFKWAuzctzpb4SZjMJiOAdL7fOMjbiWkr9k4Lp1NAiUEwl6jaQlT3q0IVHFzbP/ePstV75W4lSxIDxMONf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782870937; c=relaxed/simple;
-	bh=YLQRiwiNwAMu1Sy6NGJQuSnK0cM5yV192brPt84x3c4=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=RhTrgB7x4SsXmgEbywddo4wdD7RWQ0Xr7Y+FOQ1eW1RkgxkgQi6NNExppGcVX9C2Bi3u3ao5kzgwsM5cicX7Hv3nHwsGOkAiZNVfFtg/7nI0vajelKRyEcDO5QOcE+8bsl1ic2kDS7WanmlFSpEfzRVVSsDxwae7JaQ8vnreQDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AAVuSHn9; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1782880938; c=relaxed/simple;
+	bh=ghq/OG98GWLYP09JXIbbtHNZyBgDF5ppJNG3bpPzzPw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k3I7rjMzY39z67aKLSol8n1JYaIy4hgvwuGz0XjLSWpxXsnKa4yRYumiAKIowPDjPCb8CeT22mnnQVOgnEbnsZn/NkOfX95+Vdu7VSPpKsBZx73LkLI/nQUEpn+dSajJ5GhkYefhWfExZ6N1Np1gIxsSuuMAT+d0K0NCCZ/CbmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n4i24Lu5; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AAVuSHn9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BC6B1F000E9;
-	Wed,  1 Jul 2026 01:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782870936;
-	bh=KDG6DYlkY9mGU+G3JWqS4Jl00s6qbLiJ09QIn/rUD/Q=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AAVuSHn9Qbomh3eBP23JUc1gSNzdXfymGIpYiuDQtr52YxiIIthSM8FtDQKXE2avL
-	 UcD4uwOqKmqjCME+Uw61J1I1E81mtmZpTdD48ZtRhKktfXuweZC2unvGvzeM42gnNJ
-	 3bQYzedRzgvMQT8POvl6D8hHDizAvkCzDQVlSthx9wTKtVu76Aa+y5n1nqCW9w2Qso
-	 HFIRk3rtr9uFh5wKzSDpeYfYjv9oBARxsGKiMlAY+EQs4QLAIM+WA/+Qfdhr6kGfM1
-	 ZAG0O/Mv0EhaIxRS+0IYsE/xFJ8HjM6KcHVpxqGHuThwh4HGlcw2KIHFXYJ5MTEoDp
-	 ZIEbA8q93mByA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/2] perf/cxlpmu: Support Channel/Rank/Bank filter
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Davidlohr Bueso" <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260630235002.253297-2-dave@stgolabs.net>
-References: <20260630235002.253297-1-dave@stgolabs.net>
- <20260630235002.253297-2-dave@stgolabs.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 01 Jul 2026 01:55:35 +0000
-Message-Id: <20260701015535.8BC6B1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n4i24Lu5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1782880936; x=1814416936;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ghq/OG98GWLYP09JXIbbtHNZyBgDF5ppJNG3bpPzzPw=;
+  b=n4i24Lu5TYoT95d+yCJUf5wyYoVJCqs3MXrj8Zndqi6Qf5J4IpJOTGox
+   leJdlTrfjAeBm+FG3hKuuECWhquce050XHflQqlVk2/di5Qi0rg4p4Dwd
+   t7XyZOp1b8Q6PGmvdsKgjV+6y6NJJf6koZm8++fa4ZpIYbKNPwzL+8QAQ
+   EZ8QnJYpwQtZ45H8zn+ZDajZlh0MmCNIDx20yX+zFRPFHcuVKkcq4hWJ3
+   1G7KTUZjy3rKSqOePpvNvLqzUUAqYffsMdHtKkDrbQPBkFG9hJrGk5ADt
+   NZQ9CWISxQjOLEFfpIIHxfqdYKXUX5g85BQTIIsXSG7rA5F/rLKMU7Dia
+   g==;
+X-CSE-ConnectionGUID: Fuf4MjQ3R6qitycWVX3EYw==
+X-CSE-MsgGUID: 1I82at1pSyOr/h7r7JYlVg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11833"; a="83738121"
+X-IronPort-AV: E=Sophos;i="6.24,235,1774335600"; 
+   d="scan'208";a="83738121"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 21:42:15 -0700
+X-CSE-ConnectionGUID: 7/Dpd1gURUC9bRlpwcpJjA==
+X-CSE-MsgGUID: 8c0OlzJ9S4CHtBdp/Q9usA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.24,235,1774335600"; 
+   d="scan'208";a="256811594"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.46])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2026 21:42:14 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Richard Cheng <icheng@nvidia.com>
+Subject: [ndctl PATCH] test/cxl-poison.sh: test scanning past fully mapped partitions
+Date: Tue, 30 Jun 2026 21:42:02 -0700
+Message-ID: <20260701044205.1589967-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] PMU filters (like the newly added CRB filter) are silently ignor=
-ed if the requested event is assigned to a fixed counter.
---
+Listing poison by memdev scans the unmapped tail of every partition.
+When an earlier partition is fully mapped, its tail is zero length, but
+the scan must continue to later partitions. A regression caused the
+scan to stop at the first fully-mapped partition, leaving later
+partitions unscanned.
 
-commit efebea58e23a015bdb87cae3df5f0d067aa37706
-Author: Harshal Thakkar <harshal.t@samsung.com>
+Backstop that behavior with a test case that fully maps a memdev's RAM
+partition so its unmapped tail is zero length, then injects poison into
+the unmapped PMEM partition that follows. The PMEM poison is only
+reported if the scan continues past the fully-mapped RAM partition.
 
-perf/cxlpmu: Support Channel/Rank/Bank filter
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+ test/cxl-poison.sh | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-Implement CRB filtering per CXL 4.0 8.2.7.2.2, and extend the current
-filtering support beyond HDM. These filters are only for DDR Interface
-events.
+diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
+index 49aa1b68c5c1..a03e08084eb4 100644
+--- a/test/cxl-poison.sh
++++ b/test/cxl-poison.sh
+@@ -219,6 +219,45 @@ test_poison_by_region_offset_negative()
+ 	clear_poison "$region" "$large_offset" true
+ }
+ 
++# Backstop a driver fix where a fully mapped partition prematurely
++# terminated the unmapped poison scan.
++test_poison_unmapped_later_partition()
++{
++	local decoder ram_size pmem_dpa
++
++	check_min_kver "7.3" || return 0
++
++	# Free the auto region to use the ram capacity
++	$CXL destroy-region -f -b "$CXL_TEST_BUS" all
++
++	find_memdev
++
++	# Fully map the ram partition so it has a zero-length unmapped tail
++	decoder=$($CXL list -b "$CXL_TEST_BUS" -D -d root -m "$memdev" |
++		  jq -r ".[] |
++		  select(.volatile_capable == true) |
++		  select(.nr_targets == 1) |
++		  .decoder")
++	[[ -n "$decoder" && "$decoder" != "null" ]] ||
++		do_skip "no x1 volatile decoder found"
++
++	ram_size=$($CXL list -m "$memdev" | jq -r ".[0].ram_size")
++	[[ -n "$ram_size" && "$ram_size" != "null" ]] || err "$LINENO"
++
++	region=$($CXL create-region -t ram -d "$decoder" -m "$memdev" \
++		 -s "$ram_size" | jq -r ".region")
++	[[ -n "$region" && "$region" != "null" ]] || err "$LINENO"
++
++	# Poison the unmapped pmem tail
++	pmem_dpa=$ram_size
++	inject_poison "$memdev" "$pmem_dpa"
++	validate_poison_found "-m $memdev" 1
++	clear_poison "$memdev" "$pmem_dpa"
++	validate_poison_found "-m $memdev" 0
++
++	$CXL destroy-region -f -b "$CXL_TEST_BUS" "$region"
++}
++
+ is_unaligned() {
+ 	local region=$1
+ 	local hbiw=$2
+@@ -332,6 +371,7 @@ run_poison_test()
+ 		do_skip "test cases requires inject by region kernel support"
+ 	test_poison_by_region_offset
+ 	test_poison_by_region_offset_negative
++	test_poison_unmapped_later_partition
+ }
+ 
+ modprobe -r cxl_test
 
-> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> --- a/drivers/perf/cxl_pmu.c
-> +++ b/drivers/perf/cxl_pmu.c
-[ ... ]
-> @@ -627,15 +660,23 @@ static void cxl_pmu_event_start(struct perf_event *=
-event, int flags)
->  	hwc->state =3D 0;
-> =20
->  	/*
-> -	 * Currently only hdm filter control is implemented, this code will
-> -	 * want generalizing when more filters are added.
-> +	 * Filter ID=3D0: HDM decoder filter
-> +	 * Filter ID=3D1: Channel/Rank/Bank (CRB) filter
->  	 */
->  	if (info->filter_hdm) {
->  		if (cxl_pmu_config1_hdm_filter_en(event))
->  			cfg =3D cxl_pmu_config2_get_hdm_decoder(event);
->  		else
->  			cfg =3D GENMASK(31, 0); /* No filtering if 0xFFFF_FFFF */
-> -		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
-> +		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
-> +	}
-> +
-> +	if (info->filter_chan_rank_bank) {
-> +		if (cxl_pmu_config1_crb_filter_en(event))
-> +			cfg =3D cxl_pmu_config2_get_crb(event);
-> +		else
-> +			cfg =3D GENMASK(31, 0); /* no filtering if 0xFFFF_FFFF */
-> +		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 1));
+base-commit: 15e932c4e1318a9608ad9b799ad83a32a8b5970d
+-- 
+2.37.3
 
-[Severity: Medium]
-Will this filter configuration be silently ignored if the event is assigned
-to a fixed counter?
-
-In cxl_pmu_get_event_idx(), fixed counters are prioritized for assignment=20
-without checking if PMU filters were requested:
-
-cxl_pmu_get_event_idx() {
-	...
-	pmu_ev =3D cxl_pmu_find_fixed_counter_ev_cap(info, vid, gid, mask);
-	if (!IS_ERR(pmu_ev)) {
-		if (!counter_idx)
-			return 0;
-		if (!test_bit(pmu_ev->counter_idx, info->used_counter_bm)) {
-			*counter_idx =3D pmu_ev->counter_idx;
-			return 0;
-		}
-	}
-	...
-}
-
-Since fixed counters do not support filtering per the CXL specification, do=
-es
-writing the CRB filter configuration to a fixed counter's register result
-in the hardware silently ignoring it? This could lead to unfiltered counts
-being returned to the user when they expected filtered statistics.
-
->  	}
-> =20
->  	cfg =3D readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260630235002.2532=
-97-1-dave@stgolabs.net?part=3D1
