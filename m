@@ -1,209 +1,123 @@
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013066.outbound.protection.outlook.com [40.93.196.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A463911C9
-	for <linux-cxl@vger.kernel.org>; Thu,  2 Jul 2026 07:31:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782977490; cv=fail; b=aclBqSoELO/fDU1CZUTUmpiHIkUR/lhn0GeZxhm6/x9U3JMHtcJBZCiWw6CrsjOH+o2pOS0N59E7gieW3R6CX2wOSS8+jmGrZawblDhye4nECvEJ/omwEKs4n/FkFE/yd6HYFZoDsHH7citCGaMPWh6pVh9o2MTWq3GGW2MYm70=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782977490; c=relaxed/simple;
-	bh=s9eSXT6Y9caLp7gdQQ9ClVSVpov8bn1rDUoWRJkAqs4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=R9NdvFmQzNlkk2M8mmPZBswXTqQWEM2wRTLqaiEbmOPdu0h4MRvNZAgIH9d38+FVouFHveoXdW/80zHU0/PEgo5AU2+TJZ4eP9bEVOJ7pMnGAOkUUQXyi5QpOJjirFpnAgfbs4Oe50gfy+/84RdcBOaZUOXzcfgsgMwmUDWxP7o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=fail (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=LsH1mhns reason="signature verification failed"; arc=fail smtp.client-ip=40.93.196.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C263F1A6835;
+	Thu,  2 Jul 2026 08:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782979337; cv=none; b=UT0UCF+1/97pCh4VmbAcnyvNjwtRGwsdXjL45l4iY+ZyzhcihEK5rcB1VWHwPvNcpcJSdA9uAgRosjir1jbvfroXv2bkrUECNn9svWyaTcx9yMM1Newcxqc0A4ImKJB7Fz31Qkp2SjNEGphB4SnZXLQqZ+SJO6C3R6F4ntszKuM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782979337; c=relaxed/simple;
+	bh=AYdajbEATeTmKPEYQqQQkmg4SYvdHv9jZaZbxn/KFIA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lvQQ1/gjrHwGBPaXZcZcbtKm88BQaQI+KfpXAQoweybYGRTJY+R78zVqVHZEEKntO1NB77bnNZTaAF93G/RPCopQ/98uyl5g7DyFBLfcqlej9OffrLeab/43huqbQEeMlbJid1ByEpl+d+Sa8QRx8/bMZYnptgNz9D1hKUjkzUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHnVhNjX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="LsH1mhns"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Pf4BUHJdP9psjTQasCRsdnJT67PmpxmXOn0eCKaURIgn1Yct1A/35Ln5nBq9a4keAhRLARjvZY23jbfKRFy5704b/6hpt3CmEfzgm3aa4Uj2bLYtbFEwZB/4KnydacNCcAhvYyNmVnyweTmV1yPw1I0Hfad+6sPH9xKjSNGN6hDJF/zEVZQHQ7IMTJPCCCfA7mopZUWu6fdfCC+thPz4a9lByj6re8RzwcQVLqHDUNNUK2LlKIPIuKd+EfzEo/uWnnfaYL25sREYTVSS7Nlkr1I79TJHTQ58T+U5A63GPjBnIvg90oZ8/Q3OJL0sgGSG4B24N7R4FTChAjPXWZdUPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uDASgzq2jUIlNyFdvcbrtROXrfvUOGAT9mzxJxH8O8Y=;
- b=iOJzrodnnytAWQasFjn1vCjulAih350CFoDwGyHjdHcxVVafNdom/Gk+69RyZy7olSiEbYJv6qfGxBnOi9N3jhJgAp7udHS1qLzs5hGbuePm3GdrR70qfI9i4zhwtrFVDQSFFjY097qL2HTTUNfPeJP3F3+JO6yI43/rKci7KOUoVF9T/qhalExfU18Wokhrnym9x5IhcVfQayGorev2bVAZRJzwdkGqLboOdj+bYJHTXTePmWw8KH6VmQQaTfzAcCqutHIEyKdkYa3jhgUNudwU+3/A+RU7J6d9Z0gPtuNsUnbfCwblOf5ZAwCcIG195FX0f1wlMp//RJpv2MmLxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uDASgzq2jUIlNyFdvcbrtROXrfvUOGAT9mzxJxH8O8Y=;
- b=LsH1mhnsgtYAS4XqhRwRiVomQw1ochQ9aH/GQv99KCIKTVquajo4zDcpI+A5pmGjOUNqZ4KHLWmo0JSkZPRAKELbjbnF/IYsJOl5qiHFFYdpfP0ib4vkkDo5q3NHHq1Vk4TRxzkCcPC2RQbChsYRcnyEq0MgI4I4gBKgcF2v513pe0HRCAeiM3Rw3rfukHcxKSDXiIfkZTtEIb5SiQBG2iTB8jW/wDqEAG6NOFXdeo7tJgF1y4g6k0oYAh/FyJUmN4+DUxxu50BQI+nNhBD1kx4eE5GdeCi3fD4eUCQQZ3J7uDCFgyXsnZkMK/5XzQDYMFwl4GZyZ8P2xy+yvQVQMA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by SA3PR12MB9226.namprd12.prod.outlook.com (2603:10b6:806:396::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.9; Thu, 2 Jul 2026
- 07:31:24 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0181.008; Thu, 2 Jul 2026
- 07:31:24 +0000
-Date: Thu, 2 Jul 2026 15:31:18 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] tools/testing/cxl: Enable zero sized decoders
- under hb0
-Message-ID: <akYTPc5texS6oUo9@MWDK4CY14F>
-References: <20260625092857.41139-1-icheng@nvidia.com>
- <20260625092857.41139-3-icheng@nvidia.com>
- <20260625094602.8DB0E1F00A3A@smtp.kernel.org>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260625094602.8DB0E1F00A3A@smtp.kernel.org>
-X-ClientProxiedBy: TP0P295CA0016.TWNP295.PROD.OUTLOOK.COM
- (2603:1096:910:5::20) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHnVhNjX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF3501F000E9;
+	Thu,  2 Jul 2026 08:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782979336;
+	bh=LIx4oHNqv8X0dB4DCt7EXTPvI1hTEfxf9FIIoaHXNl0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=UHnVhNjXf5imydps00vyIiOjRAR6XJMJdcYf8WSWWv97iGom5D1uijZE/yLbR+xbP
+	 iS13JIITQFUn5X3IEl60xIJDQw++DefpKdaAQNfJwKh13hrismOrjIx2cBVPOmCFgl
+	 +QBCOBQeU4UXyEQIqgNN2Y7fwnZQhTKL35skA59hNo7WjdlxuBKIJIVWrVe3OdSUJe
+	 DmMPmQt0O2orA4oueA1z7I1FEtEqe+15RJPgdefAz0go7waTDMKIHUfLXXjfhTzPVa
+	 8f5Ylgvf8qWsr/30YPjXqBlBrS29ZLrQV/tXWadUhbHoXtBa9ViKMSIX8fTCOZcpxH
+	 v7hPZDngZr3DQ==
+Message-ID: <0dfa1f14-bf5e-4e02-bf4a-8b718c2774fe@kernel.org>
+Date: Thu, 2 Jul 2026 10:02:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|SA3PR12MB9226:EE_
-X-MS-Office365-Filtering-Correlation-Id: c6e0a662-0e21-4cef-26b8-08ded80beb03
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|23010399003|1800799024|366016|18002099003|56012099006|11063799006|5023799004|4143699003|6133799003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	WoyWpTuXFWfZ+oO2JfNwU+CD1+sxke+qRI7GVIkZfXhT9ISnFTI/isX3iowY6SzgAuHP7ALdkFe4gMOAxUuL1uEJ03cj590FcZuVLdp7Kp8WUA1qImdBxI98Wk0ZOhcs/bXUsOfnXHgF0MW6Myw5i3e8r5ZJfs1saxBPFOnkjSxiDHRa5eOSZjUM+Pw7OGKbn7N9/plIEHeYSQkCKfFt2KErObMpKN8dOC+dsxyIYQSatRaudsggvpNGRiwYt/ao+08FmkHyf2OKTcG4t2e4V6mweFwsmao9E2Pd3hHsWVUyPk/uGgi3Lha49Inju+lcMGbV0r33P0wb09CCUZbL5KqeMmwkle4rkKKp8aRPq8arOmuhl6L+moE/hd/hndE/9eQkl6B6VPZtZ3bWw7U5H1Dv9TMpF9UDZajVL3zcZ7GmNhCm1l87QLn8aCciXEKwv1z3cwYOTLBJQFCO8LZ7iOUl0jJKbz8tDsL0Mwj4AkHMv00i9nwIMSOG/p4yLIOjxZ/XY2IWT8QkQRA+hjJdTye284H29mhlG8+IJmny6qytKeTedMJse1uQ/qwNRGxjcc5LnK7XU7Q0TfbQDtEuWfxK7ROjFddB6HnUC31OuIe2IDrGmLVgdJAtIP+eOs44nmpmURzsudc+0EngfVKv81/rHNPMLuDMASpUxNfdGyU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(1800799024)(366016)(18002099003)(56012099006)(11063799006)(5023799004)(4143699003)(6133799003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?Vl/HpmWXTpUzHRqRQD00O07k+jexrANv1La8g31Lc8gz23mpi2Z5B+3Br9?=
- =?iso-8859-1?Q?rXZpMeUQZw0BW4WIaipABfF440riXOPJZmaCcY581lIFQ7vBx5cyeGXzju?=
- =?iso-8859-1?Q?dMhe3A0TUHF7B4erKIGVm1Kacd7dC5VFehNK6NWaVtrE/Vd452yDh5Q9wx?=
- =?iso-8859-1?Q?tJk7OWQGvpFrCvxRy/jRIEIWFNIg1gBueZDJk8zBL2Y1fDWmMoLS2iYKYW?=
- =?iso-8859-1?Q?xqvEWd+WbPBoePSoasWKdEFq4nZECEraCRvGZZBg5Vgs59TeI0fEyjsmhR?=
- =?iso-8859-1?Q?RIC6bQ/IDYXiU0JfXYvKOVRy654CG8JA19U4I/Ba1Jmche2bhIeN/K8SHi?=
- =?iso-8859-1?Q?VP+mObQoXDRt36qPpkranJ+6Q6+65pfmmQycbISmbxK4TXTpGPTMuY8C+/?=
- =?iso-8859-1?Q?90JzfpPva21ez5b96qe8lsWEIfwyQKYUlbpUiKsxAoTT0xDIvwv8LkkWEY?=
- =?iso-8859-1?Q?uwqhnxfjkPN38o6ddOBAOLe7oRwTX65vpDw0Sq7fzqFrQmN5vK75APY+bG?=
- =?iso-8859-1?Q?22yCY06DFlqpUpHi4ixPi/jqtTrUl/IxYi2vhEyaXF9ju5wwBs78X2HQ07?=
- =?iso-8859-1?Q?LIoatGdGB06gZmRdFXjEl3ZpWQNxybu5XAT2bpBJOkKzz8rAqvQHGYMQTB?=
- =?iso-8859-1?Q?vfg17h3wZEBk3wFaqtdiG1XRWUsfPEvwq2Tnsbt/oP0T074qqSOs0SPh39?=
- =?iso-8859-1?Q?Nz8AIPD5ZLVquJ1uYUtbE5W6GFnZW34XZU6gtl4E1hCR5hY/A5GxJf14+i?=
- =?iso-8859-1?Q?h1mwqDCZHrlcWpq/QU4nR7iSxF8x1SbXS1qZjfB11K4+plYsw9AWq7WcAZ?=
- =?iso-8859-1?Q?hQGyXeQrw3ogFNlCgTdx9gdJrvUMc6+Z1l2onVR6XAG10PXt0UWvFlCixo?=
- =?iso-8859-1?Q?QOiusGtQSHhlVEgrThdBZNeLviLXKHbfYMqNwUuPPEug7z74SBGY5hVBxj?=
- =?iso-8859-1?Q?lW84BUaXN+n1tdgpcc46yYIBXU6Qrt/9rLFPTGnEDBMNxhCw8KQWosNIj9?=
- =?iso-8859-1?Q?zUWvesy91sz4oLyCfceBuA3LpdBQg4wW/PzhRSbbcUNrCGVnf/tjI2WHQJ?=
- =?iso-8859-1?Q?7yVCwsX5nOX0pDxToDWKn6GtQ8SFK7MuvxJyG2vPy2vRzaIGTVNBgiJsNc?=
- =?iso-8859-1?Q?4QWWBqs3xIDtGhZqffdzluJFNhrs3uNv+nU6LUdSCTXgFC/KlKbiJxMORQ?=
- =?iso-8859-1?Q?MCzPuxiYfCgjde9OMejQkdGOGNbgXS4CDB1v2SCmksIiC2JUbKoLRYxSgH?=
- =?iso-8859-1?Q?zLsGRyNNHjf6/AM+fQVQJmOJ64qsf07oPe+lCnYjiWaCQBz0s8vyPcMrY7?=
- =?iso-8859-1?Q?Ou/p4CPUkhRLx2xFBo9XPADNkhGHw9P0852ibuF17T9uKfB8JwP7NFUNUT?=
- =?iso-8859-1?Q?TCQLz7qXw8Ww56XgfQDd6Omj445ozHnT3w00GUamBTkKm+T86iS+rtiUC9?=
- =?iso-8859-1?Q?v5MtEBc8pYX9ldS8jQniMWfm5XirnxLEP9qU8k6P4sYrThLM6OPtCaFpu8?=
- =?iso-8859-1?Q?Oh3O7HSD215wbZ8oIZHOocGswydTKevgjhQbQ3P3pn2TJcksBW0nAp8s7f?=
- =?iso-8859-1?Q?LHUvQoH807Lu4AM1m87JflRQzXpBQTDxDQpVK1e+/217+u3+m5Ks9VW9LC?=
- =?iso-8859-1?Q?jt6EXo/2SuR6jeazSpmoiaDZNQxD3llhlPcprQopSKi++Kh0BYbrnL4UiK?=
- =?iso-8859-1?Q?rd80H63GocAgASh6CWFNZvnUv7xwFVXGIy30TCGL4qe9SCV2WJu2w75/+B?=
- =?iso-8859-1?Q?6dI9K5ByYR1ZyWTOU0lJBt1QjHYKLseL/bfNv888kxyGfW?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6e0a662-0e21-4cef-26b8-08ded80beb03
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2026 07:31:24.0105
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: X+UL65OvuiVBJx9aYERJCvoxv5ehzlKYID9yTYmW2H3awZ3gy8Ywq+UNA29NIadKYeWg50HKKIgvoMWdNdw86Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9226
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mm/mm_init: handle alloc_percpu failure in
+ free_area_init_core_hotplug
+To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+ kernel-team@meta.com, osalvador@suse.de, akpm@linux-foundation.org,
+ rppt@kernel.org, mgorman@techsingularity.net, hannes@cmpxchg.org,
+ vbabka@kernel.org, Sashiko <sashiko-bot@kernel.org>
+References: <20260701221613.2818148-1-gourry@gourry.net>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260701221613.2818148-1-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 25, 2026 at 09:46:01AM +0800, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] Incorrect HPA base for zero-sized mock decoders causes them to overlap the start of decoder[0].
-> --
+On 7/2/26 00:16, Gregory Price wrote:
+> We miss a failed allocation check for pgdat->per_cpu_nodestats, which
+> results in a NULL deref when we offset into the per-cpu area.
 > 
-> commit e4836660bfdfee0da74cc6f18fe1e3c9826c4c04
-> Author: Richard Cheng <icheng@nvidia.com>
+> Propagate -ENOMEM up the stack and leave per_cpu_nodestats pointing
+> at boot_nodestats so a later online can retry the allocation.
 > 
-> tools/testing/cxl: Enable zero sized decoders under hb0
+> hotadd_init_pgdat() returns NULL on failure, which __try_online_node()
+> already maps to -ENOMEM.
 > 
-> This commit introduces a mock_zero_size_decoders module parameter to cxl_test.
-> It is intended to exercise zero-size DPA reservations by mocking committed,
-> empty decoders above the auto-region under host-bridge0.
+> On failure nothing needs to be unwound:
+>   - the node is never marked online
+>   - per_cpu_nodestats is left pointing at boot_nodestats
+>   - __add_memory_resource() cleans up pending memblock resources
+>   - later online attempts retry the per_cpu_nodestats allocation
 > 
-> > diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> > index 418669927fb00..117691b3c62f5 100644
-> > --- a/tools/testing/cxl/test/cxl.c
-> > +++ b/tools/testing/cxl/test/cxl.c
-> [ ... ]
-> > @@ -1145,6 +1178,20 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
-> >  	base = window->base_hpa;
-> >  	if (extended_linear_cache)
-> >  		base += mock_auto_region_size;
-> > +
-> > +	/*
-> > +	 * With mock_zero_size_decoders, decoders 1 and 2 of the special
-> > +	 * endpoints mock committed, locked, empty decoders above the
-> > +	 * decoder[0] auto-region (CXL r4.0 8.2.4.20.12). commit_end then
-> > +	 * points at a zero-size decoder, exercising the zero-size
-> > +	 * reservation and poison-by-endpoint code paths.
-> > +	 */
-> > +	if (cxld->id == 1 || cxld->id == 2) {
-> > +		size_zero_mock_decoder_ep(cxld, base);
-> 
-> [Severity: Medium]
-> Since the comment indicates these decoders are mocked above the decoder[0]
-> auto-region, should base + mock_auto_region_size be passed here instead
-> of base?
-> 
-> Passing base appears to set the zero-sized decoder's HPA to the start of the
-> region, causing it to overlap with decoder[0].
-> 
-> > +		port->commit_end = cxld->id;
-> > +		WARN_ON_ONCE(!cxld_registry_new(cxld));
-> > +		return false;
-> > +	}
-> [ ... ]
-> > @@ -1214,6 +1263,26 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
-> >  
-> >  		cxld_registry_update(cxld);
-> >  		put_device(dev);
-> > +
-> > +		if (!mock_zero_size_decoders)
-> > +			continue;
-> > +
-> > +		/*
-> > +		 * Mirror the endpoint: commit the next two switch decoders
-> > +		 * as zero-size + locked so the empty-decoder layout extends
-> > +		 * end-to-end through the switch and host bridge.
-> > +		 */
-> > +		for (id = 1; id <= 2; id++) {
-> > +			dev = device_find_child(&iter->dev, &id,
-> > +						match_decoder_by_index);
-> > +			if (WARN_ON(!dev))
-> > +				continue;
-> > +			cxld = to_cxl_decoder(dev);
-> > +			size_zero_mock_decoder_sw(cxld, base, i);
-> 
-> [Severity: Medium]
-> Similarly, does this incorrectly place the switch zero-sized mock decoders
-> at the start of decoder[0]'s HPA range instead of above it?
-> 
-> > +			iter->commit_end = id;
-> > +			cxld_registry_update(cxld);
-> > +			put_device(dev);
-> > +		}
-> >  	}
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260625092857.41139-1-icheng@nvidia.com?part=2
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
+> Link: https://sashiko.dev/#/patchset/20260627202243.758289-1-gourry%40gourry.net
+> Fixes: 75ef71840539 ("mm, vmstat: add infrastructure for per-node vmstats")
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> ---
 
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
-This doesn't stand neither, [base, base-1] is an empty range, it decodes nothing and can't
-overlap decoder[0]. Region assembly never sees it, endpoint empty decoder are skipped via cxled_empty(), and
-the switch matching predicates compare range ends, which an empty range can never satisfy.
+-- 
+Cheers,
 
---Richard
+David
