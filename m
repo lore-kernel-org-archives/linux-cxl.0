@@ -1,219 +1,221 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012035.outbound.protection.outlook.com [40.107.200.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0BF23EA84
-	for <linux-cxl@vger.kernel.org>; Thu,  2 Jul 2026 00:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD4D2DA76A;
+	Thu,  2 Jul 2026 04:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.35
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782952751; cv=pass; b=UayeE1it05poAyF/6XKWeoXtuJjeSntDhThOn7IAdErycHMmE7Rn5xDSJkUYi7j7BqE5/ae/635wvdD9Z7zDV4aqXK8znRCEpqoCuXnDLWhagW6QJmG4yyrd06G1ReHp5TGOSP4dxtGdXZc0PP1peJSGVSFJ6/l1z4AIo+nZ1bc=
+	t=1782964971; cv=fail; b=LqiXoaFWs9eaZMtEyd1lkyldtzQts2tDpxrhGUIkmFlzeCxmmUuQP5c9Z998xYTOimfFJ6n7y7J8hccTgybQvdHaUUi+Uy9H0BBzeReeyEvxClnHC7PgaJIgHouH/4TS14BWTGQ/pEOaQi+4+2tYoJsahKHLdoIkWIsmxTvRAaU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782952751; c=relaxed/simple;
-	bh=Zi1kQghazxxzAeyyFKUltMlvXrnk+hpCu/LTw4C9hls=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k0TWcPHI3h8kqF9ezu/0Gp7QD38UAIXRbVhe29cFakbMRKKNi/ktEoE4epvVKQ1oVJWBkxkD8qZ/cjeaQ2/6K9t6QsOSQp1fnOMeqM/tcfj9HaNd9YQs3wEODuNZAmet3qR2cD5+2on76bl83uMJ2eHPUx6EKIzOfQ7MX/joHyw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com; spf=pass smtp.mailfrom=trailofbits.com; dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b=G60kj55A; arc=pass smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trailofbits.com
+	s=arc-20240116; t=1782964971; c=relaxed/simple;
+	bh=NNBgZAD9JGUC0N4kkgcuZQXl0wFkIHsGj5KUDDrcXJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=pxX9n1mDSGO3DGv0XEZTQ034RZuPb63poNi4PHjkfHkxeMCCbBCaNbAVc9yPsXxj/7MtGL/jAMYU7mYSBePr5hMj9AK9MP+5v1BElg5MuLu+oRG1jwOOcF5m14kMtu2HyxmYHg+ImYK4siyEb1Vx73obDkWW9f/PAfeLI/9dgEI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Pn4PnbV3; arc=fail smtp.client-ip=40.107.200.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b="G60kj55A"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5aebbeba529so1179552e87.0
-        for <linux-cxl@vger.kernel.org>; Wed, 01 Jul 2026 17:39:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782952747; cv=none;
-        d=google.com; s=arc-20260327;
-        b=J/521+3gCDHGR05xrsJYINtSApdfCPsEMPtMe3Sh0B95cOVy76rJVBPm0orPLREIgM
-         O1aBoOOnVCEyQhWEZMeX5VLuEuv8o+01YhAi+HUjYCiaSysVTuL+QE9bEX5FXK7eXLg9
-         hKx6pRRMRK0kXhyGvWxNY9Tnbdl8Fj5BN9eUHnetCKLhpmsCMQYp6cm1AMFt52sfS26A
-         V/RDNDn+wV5h3IpfReqgXoJ55Ycvr0jSfll1KyyUqlzKv6o25R4ISYVciqfMNyJDXvJC
-         0VR4PY+Ze34TSxRZ+ZH/1HifFt/+ZA23012AW0gQeh4WSuBjTgqj0CH12CrftoeZ7f+l
-         RMeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=4nDJeF6RYimeoTxMvzC/hALCiJY7hlSNDd3stxB3hPU=;
-        fh=LGu+GSIPBUSrdtERbg+0Uqg9KPeSz6unqWLwsmHwsH0=;
-        b=Jnem+gjROPMlfKazXKDnSBPkGJpLxIE9gnS8d/qCUog74AGEb9GqS00XEeCccUQWK4
-         rc0ALD+IZUSIdgbovG7+pBaGZGnBtT9relW7/NZrD13td+qIPyszzve72kK/84fjNKpL
-         54qUovAn31fEHFECDwjZWfgxyLCB1j5kJ1jmgoD2RcRPMycInQhcrmMLmiGEuYc/Wpa+
-         qmVdiXlghNSj8sn9P8n/sumXOyS6FqQ4UvuDOPjBzraEQKHz2JK3P8jby+3uhYUG7P7e
-         425MN/nKByBmNbljTrg3gbwjeV/GDQ7eSmOI033ul/TyzbViKjJcOzcwQPdNU4fsBXts
-         3fVA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=trailofbits.com; s=google; t=1782952747; x=1783557547; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4nDJeF6RYimeoTxMvzC/hALCiJY7hlSNDd3stxB3hPU=;
-        b=G60kj55AHQiBh1+R63OFmDGqsQndTSU0VkxV0K7t1D054O7TyE4AdoFQvw23DnXeGO
-         x5xGN0C0LT14/fgyZCYhMCKE3opshgiZXwqdGoyMMYCm2IfRAf79hUe3yDiAVwRLqnDs
-         wckhf0J3nn66T6Kju/F7h0HArCjR0AIPmdDadlCUnfp8T35+aJew4Ga37c/MNesCd5Xr
-         LK7WNXk8xYH7yHG0shPKKoID0o0UM06rcRf2lpQjWiv8lMnHd8dPO8ZDorLtJJWUBMVU
-         VIij1IZEfpVaUtOQigTMgiplC8ZbdJN3RrhTIgIUkw/7KWJLJWJr6LT4ngcd1eJbmPh/
-         Pb4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782952747; x=1783557547;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4nDJeF6RYimeoTxMvzC/hALCiJY7hlSNDd3stxB3hPU=;
-        b=NBo8wIAKmUeyUnbRN8O9io4kXu4ZWKh+CZ9f7yOv0Si4SEZxoDSo0QXC0YR176wmOQ
-         klEDQzMLCwfhMFJsNGTHGtm8nWdHAG01541dOBn+jIWSGGmXoueR367l9CUJcHDh5Oku
-         CdKamBQ/PBdVf/Fp/qrmY3DhXggIusDLqfgDhDmd93R2J6DopvI/JS14Ec67ltZXM2ca
-         VM3La+rgecz009/PFDdh8stF7uuNazEneZF6l9lCsewhX2JPvtxgdRAx9PUKEhkamkRJ
-         0KelP7mBz9AEbx5OkGwNmpGsMrY+BuqbcKJYRSCdH797tdP/24utnTmLRchV0QaWNVPo
-         dwrg==
-X-Forwarded-Encrypted: i=1; AHgh+RqhH5G4vSjqLveI7+dnfK8jE+5SCt2qJwJI9/41nRzoyC+7vO18En+NqWX1GOt6Mr8t15MUKnSHra0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAHR69hNWCJbD6K+yjE7XGQlEUYG944EG03ru0j8HL0ke4G6bD
-	eEUDbPuwQ71+Y4F+riAC23dBTT+Hx+lDso6bajA+phQPzbdfBqMbIwbCJqnQpYanN0a4gu31Q14
-	aH1VyNCTEc13Vd6UqQ7velyqitXXddR3dItTrBrPb5Q==
-X-Gm-Gg: AfdE7cmdm58YGvsfWhfWLMoc52iT8H2krZvvb2H6uper3bUa9Jw5mk2jVz42G0RtvXg
-	4hO5k0Yk0ti0Unbohl+/FYamfJ1r7N8lP8SooWWlHnv0ScQJayqn9tYpLSIfniitWMrbZo13YYB
-	wCCrjicL+TTGTOVg27oHXwvD/iP24nWzCpqoZC9oiNw43tDT0EVb0pDJdimPHeJN2O7hqCdhYat
-	rSwhqHngHNcMsHYRC1nyHQ+RuRMyThmUADePwO7QWYRgFa4W0zqwhSsBRERQ7JBHdfvw2W5bAHP
-	GtfhHw==
-X-Received: by 2002:a05:6512:6382:b0:5ae:b185:1f8d with SMTP id
- 2adb3069b0e04-5aec68b3c25mr791941e87.41.1782952746079; Wed, 01 Jul 2026
- 17:39:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Pn4PnbV3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MEwcbsMfz2m/rNNQ7lWRXign30zf9lxYmow2ADDWU6MQu138F5/02w2WlhCa5IU7czNoRKh350k/MCjjB5MQCw/mvKOfchubyWy94M1LPj4ihF3riaJcZpp0EehVJa37uEG4m4QqReU3crwphK9OGMa5x/9oaz6+yvGMj68QNjEI0gu2eVtjmHMp1P1BqGBSGKbE/q4R0tvn9iyWcWh0WkZtlkg1Tvx0DIOyGmXxEJC0Q1U9U+PNvD5KgSRIogUkYpMPNQWXH7lHcXmefAASfXu3FSCrbLnlWABtURxhik9HMLsl9De7DTeBPabtHcQYpxOouSfZjf/fnuRsYn8fOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XnYMPMLxVD5w0BIBBWl6O8R+zbdq0fQFmNcLQmrPf30=;
+ b=E1/+DOkElGpvj7U//dupbvSsk+oUbPrk/I1GLW5Qc751Nv79YCkp3+unicJtAdEwLKmEcRBnse22TpZYFT6r77i80fvN3olMUtR12Fyxsbn4B5PRJVSjVl/uAmT86cD7u7o1pTL71z4toD4eyafngSyQO1aWgzIMlBty6HU8+FwdBySJ17w5Lams6wRqnypJpY5fMPW8eCjY9pLsWzIdSwY1xk9gau4weVm0Ka6lFi+SqS8ZlCILvxQV1/5yvzjrN6lXVCbY1NXlVC9mbg/b1/lvjGGvC80GSEOFNNTK0mppDu+leYsK1J2bWBpF6ysxZccix7LGAnlmXfrCwOEV0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XnYMPMLxVD5w0BIBBWl6O8R+zbdq0fQFmNcLQmrPf30=;
+ b=Pn4PnbV3ErOLc8P46DlBYBW2jRfYqm0IQi/xs00WcOy/PIDUx89BYZp81rngWhBY+1BzE2/arWdVBijOzlhC6XOJiDof8AR1LM0P5h3HGFOWzeDKOGB9k9Cry9upl1WN9OxND+h+GGFa7FSwCAKX8wXkzw4ItImcnjwA1Yo4R1o9PE7jgBLE3lkvDfiYBmQQMsZcPpmFQAHtC6i/meTIURxuUz7mNg2JDqx1zsWhaDVjg4vWTZGX8+yM52idaMJ1VBim0O7kR3TkwGwM7JyeJDS1MABdjPwXHfup5+s35+Cl29yoT/epGz6//mWjkd++gc80ffP7lQC/y2Kc9FyXOg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by MW6PR12MB8999.namprd12.prod.outlook.com (2603:10b6:303:247::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Thu, 2 Jul 2026
+ 04:02:43 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0181.008; Thu, 2 Jul 2026
+ 04:02:42 +0000
+Date: Thu, 2 Jul 2026 12:02:35 +0800
+From: Richard Cheng <icheng@nvidia.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, David Rhodes <david.rhodes@cirrus.com>, 
+	Richard Fitzgerald <rf@opensource.cirrus.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
+	Linus Walleij <linusw@kernel.org>, Len Brown <lenb@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>, 
+	Dave Jiang <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>, 
+	Li Ming <ming.li@zohomail.com>, Lizhi Hou <lizhi.hou@amd.com>, driver-core@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-sound@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>, 
+	Horatiu Vultur <horatiu.vultur@microchip.com>, Daniel Machon <daniel.machon@microchip.com>, 
+	Steen Hegelund <steen.hegelund@microchip.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v8 7/8] PCI: of: Set fwnode device of newly created PCI
+ device nodes
+Message-ID: <akXg4G4ksietvkwE@MWDK4CY14F>
+References: <20260630102804.413563-1-herve.codina@bootlin.com>
+ <20260630102804.413563-8-herve.codina@bootlin.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260630102804.413563-8-herve.codina@bootlin.com>
+X-ClientProxiedBy: SG2PR04CA0215.apcprd04.prod.outlook.com
+ (2603:1096:4:187::14) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260605142036.2062347-1-sam.moelius@trailofbits.com>
- <aimmfgWS6IPtwLVA@aschofie-mobl2.lan> <CAE+C+DYnidq7ZFoyxeL54YCT=JF5-Q-NkGFTgoAaW9EztwwaGQ@mail.gmail.com>
- <akOLH861twsGqEFM@MWDK4CY14F>
-In-Reply-To: <akOLH861twsGqEFM@MWDK4CY14F>
-From: Samuel Moelius <sam.moelius@trailofbits.com>
-Date: Wed, 1 Jul 2026 20:38:54 -0400
-X-Gm-Features: AVVi8CfEhZEmMV4kGJVuf8ispa2C34HfrxCUiy_lhZhKqcIcGJ1wx3NQBm-VNN8
-Message-ID: <CAE+C+DZhgBRYPctfMO8m7uBVRmqTVs3YD0GSpOGQZ535+eOAwQ@mail.gmail.com>
-Subject: Re: [PATCH] cxl/test: reject wrapped GET_LOG offsets
-To: Richard Cheng <icheng@nvidia.com>
-Cc: Alison Schofield <alison.schofield@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Dan Williams <djbw@kernel.org>, Eric Biggers <ebiggers@kernel.org>, 
-	Alejandro Lucero <alucerop@amd.com>, 
-	"open list:COMPUTE EXPRESS LINK (CXL)" <linux-cxl@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|MW6PR12MB8999:EE_
+X-MS-Office365-Filtering-Correlation-Id: 022b915e-71af-4591-9dfc-08ded7eec3c9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|1800799024|23010399003|7416014|11063799006|5023799004|4143699003|56012099006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	Ojd/ur+7GwDsqAknVwjWog7FKeXMsJ/ynr8uztlhUUuUrnm9ICA0fz2+TtpNBB7LMN+2C6bZTvNnWdKM65bzQB0ztvZmp34d5RVCFZRImYhWkRhSuUpUql90DIEaPa0ssvi+q3urbVLLbu7J2Fw7hNMhrCBURXISZsalUS/kO7uYYuaHi8NjawPNyz2MKoBCTp2ftIl+92XZgtaedb28qRpwYdnAjk0abGux+3W4DAtk0kdNMXcIY1pWvBMT4T1D4ZWzX4t5Qw+XMPIwwmOvIbsjki6ON7CU/QAavA7fqsoOxxm9Wp5kCpFtzC6R6dLQNFQMiXmkMel4/SsFH0704++vgkRJwAUhBuD6kLyhqr21XV8NMOuCAJoiu4TTh8Ui8W2s1OLP8+ysttwPnZ6M6zn09sxFmgzxA8J0KpvOCiCY0tPPYa+vCrLJTM1icjxMAVlLO7rjlVT/G+H5XRi+5/k4y/boWdZYus5Xlxg9wFuQ/gLcHojpmC8VqzL0u8wjyxVW3nqUmPWKryEajecoW1RHpvEVm42WGuYisVgsyz80Cy2Lzp6rzrUeFw1MlN1emfFsjNXE9iF6zVcURWfrcky7xssU/P4hNaFNlTpdVlGtoS+39iESZnGouOfKLZfuUtF/W2EY7TGUYegL3g1yG4ar6IfUp0NqGMGEml7bMB8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(23010399003)(7416014)(11063799006)(5023799004)(4143699003)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?kSNzeRni+AiBBRWP/g9WOiTRHcLUiglVaET+qGzHQ73waoHVa/eWP+yhEzPg?=
+ =?us-ascii?Q?1aVmmdkPCbHXIY7Bv3ov2YjR2yFYvAqNmDtx83nkVB+4ZT8oTuifUT7XkgIe?=
+ =?us-ascii?Q?HD/E4Qeg3TwqkkUJ5eiAIDBgkYNNWnga+xKrk875EcDBxCg1ZxBLEB6Gle5X?=
+ =?us-ascii?Q?mRTUriaABV5MarWFCFcYZ4XKZ03aclpEiJAmkC+5gHnmUsDC00G6KfjPZffN?=
+ =?us-ascii?Q?kKYx5Xj67VOu6tAzNyz16m6o7NnQa2ro8VLhmpZLnWowOINCgJqe/RV2xrtW?=
+ =?us-ascii?Q?rYErclGmze+ay74SMk7CImWup/fkBpnp6nc3E5+jlTPU8mVZ8Q6ChmQUTTUT?=
+ =?us-ascii?Q?AdheOA9Jdz2NNn/JJwN8SA1oXyElg4xOgg0CuuZoIS34ufkbkhpAa1ixcS9z?=
+ =?us-ascii?Q?VrB3xh4pGs/m7JkDN6csO6kM1vucIWHZuqcC42jotaaSLpEGvnhJcpqJ4x8g?=
+ =?us-ascii?Q?XwCr4Os0DdyXAjm4SVApNHPRui8ujzGXF1sBF4PGI2mqkDajfX6dBOTq8zWu?=
+ =?us-ascii?Q?fswcS2QZRNL7ELNGDnVOdt87S48QQdS/UpeK42HZhfzvKJSwoyvmOo6OwtT/?=
+ =?us-ascii?Q?KBpDQBMQUhf7N/u2O5ZFpTs7MWy2bgYkEfEDVQW0h9Q3rBxdOVjMiECh/Khy?=
+ =?us-ascii?Q?GS1/C52aVPrMc/e+BvhsJ5V4mr4GJQvoJtAMLhP2k0wtXSduAsOZyM2XEq5Z?=
+ =?us-ascii?Q?rjypkRI8yzXnqhEKjmEKw3zt64+BNZU3HXdkGD5pfQLCJpSfNQ2EojOgJn7X?=
+ =?us-ascii?Q?/2i0FgFh3KJdhL0BKQCo9yl1ZVTi07wi1GYe7v++3I4aOZtOVjjvKFRlFVP/?=
+ =?us-ascii?Q?dp15FeFKwJhgANCipwA4trkCLM7b5JAOjIuIxNS2iIEn3WQcWKATCACVNUMR?=
+ =?us-ascii?Q?O54M6I0LxdNMzwZb/nuohYnLiioNh7eT0P+kVjB9M5DiElDACVRdfg/DQS4m?=
+ =?us-ascii?Q?mtK/xI1b7fLGeVnQm1Y2Zi8H8jgdXGtvrSEBTI+q1duP0r1fLRIASzx7q09T?=
+ =?us-ascii?Q?deSoqoSTcWxC61O0U17b8UiujPyub4n1zlX4hqJCcdct2j1F5ubjvYTP08hU?=
+ =?us-ascii?Q?t+70g1gfOg4twEcgq6nxH75iPk1l5WjKSC/bMgyZ2+J1HhX3qdFW7uYaAtEJ?=
+ =?us-ascii?Q?1l+1L0ro57DDAaK8VZzur1HQpCjTD4+A+13EMsRjB/8XdqU/+KQzu7tFfw4V?=
+ =?us-ascii?Q?RhOSDLwEx9iKb/UiuW758cXlW2pWfLbPCzCd/mCaU141iwX7e4qsAI4ARyyp?=
+ =?us-ascii?Q?WhZjD+HSL4QYKk1UvhiFaJteRclBzXAZ1E484i2UmRn3/FvLfi/nFNAlZ6Ps?=
+ =?us-ascii?Q?wWOlPcYLhMC+BuMZnlqiuqPcneFStSsvnMI2IkuN/oOeWhnL/nvkJ4i9/XUD?=
+ =?us-ascii?Q?IyJY17rKDprfSC1I7fuzwgXRx43xpHpSG9Qw3F3ffNOwyRM5m65Xa/kWLFAp?=
+ =?us-ascii?Q?t2kgVpkHjMg3mY1F5241fVqDbRRNk1R8pTKykr1cJ2fBgM/qKzE5RAfI7/GL?=
+ =?us-ascii?Q?kvaTdWzcm5PpQEyFv/kYPV/ys7C+fgdUWkx0ZEKYspxK/srFuRT6hTYDm3np?=
+ =?us-ascii?Q?prACrDuQ9ira+B7vL6JKE0Z8sPhUMLSn3SIYHIqejxA9hDjgNwVVvdCx+14g?=
+ =?us-ascii?Q?Zue0WFKYMkwiLqSKQ/JmQaXN1LRADzmqvYZiZ6v9Yk1Id0uPAScLCxVDFosx?=
+ =?us-ascii?Q?KnqpTPYkoL3LHOm7PtvRT/iDXhr7GWOAdZz+fgb0p2PCIOjy?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 022b915e-71af-4591-9dfc-08ded7eec3c9
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2026 04:02:42.5955
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fkZQjkdBLvgQyOxL5ev1CnndbaMTmkkAwnzyr5Uh32HoG20sQAmtWcI06uqqQ128RMY+yWT0cTPl3ZGXKHr49A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8999
 
-On Tue, Jun 30, 2026 at 5:27=E2=80=AFAM Richard Cheng <icheng@nvidia.com> w=
-rote:
+On Tue, Jun 30, 2026 at 12:28:01PM +0800, Herve Codina wrote:
+> Device-tree node can be created when CONFIG_PCI_DYNAMIC_OF_NODES. Those
+> nodes are created and filled based on PCI core information but the
+> fwnode device field is not set.
+> 
+> When later an overlay is applied, this confuses fw_devlink. Indeed,
+> without any device attached to the node, fw_devlink considers that this
+> node will never become a device. When this node is pointed as a
+> supplier, devlink looks at its ancestors in order to find a node with a
+> device that could be used as the supplier.
+> 
+> In the PCI use case, this leads to links that wrongly use the PCI root
+> bridge device as the supplier instead of the expected PCI device.
+> 
+> Setting the fwnode device to the device of the PCI device allows devlink
+> to use this device as a supplier and so, correct links are created.
+> 
+> Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/of.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index ee9eb384b377..eda14cefca5e 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -709,6 +709,13 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
+>  	if (ret)
+>  		goto out_free_node;
+>  
+> +	/*
+> +	 * Set the fwnode device in order to have fw_devlink creating links
+> +	 * pointing to this PCI device instead of walking up to the PCI host
+> +	 * bridge.
+> +	 */
+> +	fw_devlink_set_device(&np->fwnode, &pdev->dev);
+> +
+>  	ret = of_changeset_apply(cset);
+>  	if (ret)
+>  		goto out_free_node;
+> -- 
+> 2.54.0
+> 
 >
-> On Sun, Jun 28, 2026 at 11:45:29AM +0800, Samuel Moelius wrote:
-> > On Wed, Jun 10, 2026 at 2:01=E2=80=AFPM Alison Schofield
-> > <alison.schofield@intel.com> wrote:
-> > >
-> > > On Fri, Jun 05, 2026 at 02:20:31PM +0000, Samuel Moelius wrote:
-> > > > The CXL mock mailbox GET_LOG handler validates the requested CEL sl=
-ice
-> > > > with `offset + length > sizeof(mock_cel)`.  Both fields come from t=
-he
-> > > > userspace CXL_MEM_SEND_COMMAND payload and are 32-bit values, so an
-> > > > offset near U32_MAX can wrap the addition to a small value and pass=
- the
-> > > > bounds check.
-> > > >
-> > > > The wrapped request then uses the original large offset as the sour=
-ce
-> > > > address for memcpy(), reading far outside the mock CEL array.
-> > > >
-> > > > Validate the offset first and compare the length against the remain=
-ing
-> > > > CEL size so the check cannot wrap.
-> > > >
-> > > > Assisted-by: Codex:gpt-5.5-cyber-preview
-> > > > Signed-off-by: Samuel Moelius <sam.moelius@trailofbits.com>
-> > >
-> > > Hi Samuel,
-> > >
-> > > I'd suggest keeping the commit log focused on the broken property and
-> > > how the fix restores it, rather than tracing the individual arithmeti=
-c
-> > > operations and later accesses, which are already evident from the cod=
-e.
-> > >
-> > > The GET_LOG handler is intended to reject requests that describe a CE=
-L
-> > > range extending beyond the available data. The current validation can
-> > > incorrectly accept some malformed requests because of arithmetic
-> > > wraparound, and the fix restores that property by validating the
-> > > requested range in a way that cannot overflow.
-> > >
-> > > The discussion of the subsequent memcpy() access leaves me wondering
-> > > what the observable effect actually is. Does this return bogus CEL
-> > > data, trigger KASAN, crash the test module, or something else? If the=
-re
-> > > is a demonstrated failure, please describe it. Otherwise, I think the
-> > > property being restored is the more important aspect to capture in th=
-e
-> > > commit log.
-> >
-> > A longer explanation appears below, but the bug can cause the kernel
-> > to panic with an out-of-bounds copy. So highlight that fact in the
-> > commit message?
-> >
-> > ---
-> >
-> > The bug was validated with a PoC that deliberately invalidates the CXL
-> > mailbox GET_LOG command to the mock CXL memory device.
-> >
-> > The vulnerable code checked the requested log slice like this:
-> >
-> >   if (offset + length > sizeof(mock_cel))
-> >   return -EINVAL;
-> >
-> > Both offset and length are 32-bit fields supplied by userspace. The PoC=
- sets:
-> >
-> >   in.offset =3D UINT32_MAX;
-> >   in.length =3D 1;
-> >
-> > So the vulnerable expression wraps:
-> >
-> >   UINT32_MAX + 1 =3D=3D 0
-> >
-> > That makes the range check pass, because 0 > sizeof(mock_cel) is false.
-> >
-> > After that, the mock GET_LOG handler still uses the original huge offse=
-t:
-> >
-> >   memcpy(cmd->payload_out, data + offset, length);
-> >
-> > So it tries to copy 1 byte from far past the mock CEL buffer. In QEMU
-> > pre-fix, that caused a kernel page fault in memcpy_orig, through
-> > cxl_mock_mbox_send, and then a panic because the test kernel used
-> > oops=3Dpanic.
-> >
->
-> Hi Samuel,
->
-> The substrction range check looks right to me, it also matches the existi=
-ng mock
-> LSA checks.
->
-> I would suggest a small regression test if you have time for it.
-> Now in-mind only a pseudo-code version, maybe something like that followi=
-ng
->
-> """
-> /* Use a cxl_test memdev and the valid CEL UUID/advertised CEL size. */
-> ASSERT_EQ(send_get_log(fd, cel_uuid, UINT32_MAX, 1, out, 1), -EINVAL);
->
-> /* Preserve valid boundaries. */
-> ASSERT_EQ(send_get_log(fd, cel_uuid, cel_size - 1, 1, out, 1), 0);
-> ASSERT_EQ(send_get_log(fd, cel_uuid, cel_size, 0, NULL, 0), 0);
-> """
->
-> The first case captures the overflow regression, the latter 2 document th=
-e
-> intended inclusive end-of-buffer behavior.
->
-> What do you think ?
 
-Could you please give me some more specifics of the type of test you
-imagine? For example, should it be a completely new test? Or should it
-build on some existing CXL test?
+Hi Herve,
+
+I wonder if this part has some issue, it sets np->fwnode.dev = &pdev->dev,
+but I don't see am matching clear on removal path, I doubt the back-pointer
+can outlive the pci_dev.
+
+device_del() do the check
+"""
+if (dev->fwnode && dev->fwnode->dev == dev)
+    fw_devlink_set_device(dev->fwnode, NULL);
+"""
+
+On removal, pci_stop_dev() calls of_pci_remove_node() before pci_destroy_dev()
+calls device_del(), and of_pci_remove_node() -> device_remove_of_node() has already NULLed pdev->dev.fwnode by then, so the "dev->fwnode" guard is false, and
+of_pci_remove_node() itself never clears np->fwnode.dev
+
+If something holds an extra ref on np past removal, e.g. a DT overlay applied via configfs that pins np through its gragment targets,
+np survives, the pci_dev is freed, and np->fwnode.dev dnalges into freed memory.
+Then fw_devlink walker that resolve it via get_dev_from_fwnode() -> get_device() would hit a use-after-free .
+
+I think of_pci_remove_node() should cleaer the back-pointer it set,
+before dropping the node's ref, e.g.
+
+"""
+np = pci_device_to_OF_node(pdev);
+if (!np || !of_node_check_flag(np, OF_DYNAMIC))
+    return;
+
+fw_devlink_set_device(&np->fwnode, NULL);
+device_remove_of_node(&pdev->dev);
+of_changeset_revert(np->data);
+"""
+
+Does that make sense to you ?
+
+Best regards,
+Richard Cheng.
