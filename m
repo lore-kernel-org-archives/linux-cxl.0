@@ -1,123 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010070.outbound.protection.outlook.com [40.93.198.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C263F1A6835;
-	Thu,  2 Jul 2026 08:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782979337; cv=none; b=UT0UCF+1/97pCh4VmbAcnyvNjwtRGwsdXjL45l4iY+ZyzhcihEK5rcB1VWHwPvNcpcJSdA9uAgRosjir1jbvfroXv2bkrUECNn9svWyaTcx9yMM1Newcxqc0A4ImKJB7Fz31Qkp2SjNEGphB4SnZXLQqZ+SJO6C3R6F4ntszKuM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782979337; c=relaxed/simple;
-	bh=AYdajbEATeTmKPEYQqQQkmg4SYvdHv9jZaZbxn/KFIA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lvQQ1/gjrHwGBPaXZcZcbtKm88BQaQI+KfpXAQoweybYGRTJY+R78zVqVHZEEKntO1NB77bnNZTaAF93G/RPCopQ/98uyl5g7DyFBLfcqlej9OffrLeab/43huqbQEeMlbJid1ByEpl+d+Sa8QRx8/bMZYnptgNz9D1hKUjkzUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHnVhNjX; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768BD420E90;
+	Thu,  2 Jul 2026 08:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782980121; cv=fail; b=hOYQFFT5CbHsjo4gIv5bDNGZnh1z624C7qnIEkShaisiEi4+09Ci1Jn+cQiOyNAlOcXWVvHNdkq4w+rUvTJjasiT4cmO/AbPAYthxg+FBt66YX41NFH+2ABYbCo1p7NhCbQUPdhRYdwJF8XyIJmXJdhgXL1bpsMkZYrKqoinpys=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782980121; c=relaxed/simple;
+	bh=xH6i9XSu72pU+YwRvten7Pw9G45o0bQPJA0ywjnpvAo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=RIAEhdYHXi5OaOLz74iLc51hmhREOeMcpXRdidloNEroQQ4WPHxOmXpBg5jRTck2JqQnq2puXWjfz8sWLt0YDmHvMx6ZkzLwbSjEbjmSlWTlmq8uNCVF/0cO9L2paumw/NZ2AxCNsHe2H7oEIV/OOf1aC5SoItzgqcvDoops2xU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=usFZ4ihE; arc=fail smtp.client-ip=40.93.198.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHnVhNjX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF3501F000E9;
-	Thu,  2 Jul 2026 08:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782979336;
-	bh=LIx4oHNqv8X0dB4DCt7EXTPvI1hTEfxf9FIIoaHXNl0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=UHnVhNjXf5imydps00vyIiOjRAR6XJMJdcYf8WSWWv97iGom5D1uijZE/yLbR+xbP
-	 iS13JIITQFUn5X3IEl60xIJDQw++DefpKdaAQNfJwKh13hrismOrjIx2cBVPOmCFgl
-	 +QBCOBQeU4UXyEQIqgNN2Y7fwnZQhTKL35skA59hNo7WjdlxuBKIJIVWrVe3OdSUJe
-	 DmMPmQt0O2orA4oueA1z7I1FEtEqe+15RJPgdefAz0go7waTDMKIHUfLXXjfhTzPVa
-	 8f5Ylgvf8qWsr/30YPjXqBlBrS29ZLrQV/tXWadUhbHoXtBa9ViKMSIX8fTCOZcpxH
-	 v7hPZDngZr3DQ==
-Message-ID: <0dfa1f14-bf5e-4e02-bf4a-8b718c2774fe@kernel.org>
-Date: Thu, 2 Jul 2026 10:02:11 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="usFZ4ihE"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UaLRTLV1djQZX/ujna1faIaqLGnbDTBbbR45xEN1tw6+vL2tZxSExrKxQ6uKjCiFC3m8r311YFS03dXpl/RyUrBFlAxbi2GwiMDyWb2OExuP3t95pk8sie7ft2Ba+VrDzdYUIbipf+Ssu091LgNrgCyeSRKz/FqeHyPUVr67qxoyiXj3wUqr+DwoBKfOQyVMtHKBB2X/op+3o/ZwFq+pDJbPmzOfvNSUWF2yJC+iOTIINbf57HoLMqtU8AfZGD0PAw44iGheEPU1Y3p1xelEdmHgyLehvo2M2Y+xZX+apU5UOV5QTu7L5KqaaretVTDb7ItFjlbNdFQHk0DyUBPlUw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FG776k9avwr+nGxb+8gCRMUgOgOVtshUUka7DM7P9gs=;
+ b=k1Yg1A54bVSjvYv/dXZBt1V7M5CViSU0YIMBCSDp9iyL6H0dD8U0t0MiWwVY+j4l6SeSF4xjuN39PW4IiEAjA/sEq9cf7UyDzSvmf5sVRw59CbisrN6e326Qdlt8Roo/SRGriQO9mrnUZjOztoGVY9b3n5YHkzb9mvGgTNmFm44ElHPUjlJPYHQls319tu4f5kEt5LBK4MytXhGczncRzH5XsVtjjvXIcFQhc1qq9oeTBDTO/Ee8obchVRe3tgGqenXiOERlBXHYtRSUCr+wGokzuQ0b4u6Sxzuxoz4tmhzYJuoI8IJLmTK7hbCwp5lcGIoIfyplWlNzBWnGQoj9wg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FG776k9avwr+nGxb+8gCRMUgOgOVtshUUka7DM7P9gs=;
+ b=usFZ4ihEh74eb3AUSmwtD/kRbGxTEB0b3aInE8CEfvOIcmdP6FtY7ru6QXhggjj8iUaB8DOpT3ydvJSuuPTYVn5Lnkwz7Ht5pIHds7eV/Decc4Q9YexL/GXyDTzRfpqzrz1Yz1ub6SOOtQHyH91ZB/oZY0lJsDw7xBkE9xfVtWOaHUTszlu22HUAdLzRBxsJJ8VUE5moJ3k+mQl/8klDr738uoB/Eni4YGGTASAxie2DxlpOs/YG7PFUEbR6bkjO9ELbI5vmuDwhzHBX/2UpSf9UHUhV3qxPDePJdJdgDHYuWakKcPCXO6Xv+cO29OyfjMhgk5TW/GOgPv6BM3m1IQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by MN0PR12MB5953.namprd12.prod.outlook.com (2603:10b6:208:37c::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Thu, 2 Jul 2026
+ 08:15:13 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0181.008; Thu, 2 Jul 2026
+ 08:15:13 +0000
+Date: Thu, 2 Jul 2026 16:15:04 +0800
+From: Richard Cheng <icheng@nvidia.com>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: dave@stgolabs.net, jic23@kernel.org, alison.schofield@intel.com, 
+	vishal.l.verma@intel.com, djbw@kernel.org, danwilliams@nvidia.com, iweiny@kernel.org, 
+	ming.li@zohomail.com, gourry@gourry.net, rrichter@amd.com, linux-cxl@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kees@kernel.org, newtonl@nvidia.com, kristinc@nvidia.com, 
+	mochs@nvidia.com, kaihengf@nvidia.com, kobak@nvidia.com
+Subject: Re: [PATCH 1/3] cxl/features: Reject feature offset that overflows
+ 16-bit field
+Message-ID: <akYddc2XRTz7Jywh@MWDK4CY14F>
+References: <20260630074657.43077-1-icheng@nvidia.com>
+ <20260630074657.43077-2-icheng@nvidia.com>
+ <3cdc48ca-5c39-42aa-8853-e5e3a7884bbe@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3cdc48ca-5c39-42aa-8853-e5e3a7884bbe@intel.com>
+X-ClientProxiedBy: KUZPR04CA0026.apcprd04.prod.outlook.com
+ (2603:1096:d10:25::17) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mm/mm_init: handle alloc_percpu failure in
- free_area_init_core_hotplug
-To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
- kernel-team@meta.com, osalvador@suse.de, akpm@linux-foundation.org,
- rppt@kernel.org, mgorman@techsingularity.net, hannes@cmpxchg.org,
- vbabka@kernel.org, Sashiko <sashiko-bot@kernel.org>
-References: <20260701221613.2818148-1-gourry@gourry.net>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260701221613.2818148-1-gourry@gourry.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|MN0PR12MB5953:EE_
+X-MS-Office365-Filtering-Correlation-Id: a281dadd-b543-4665-d456-08ded8120a47
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|7416014|1800799024|376014|366016|18002099003|22082099003|56012099006|4143699003|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	JqjvOIHujkVFRt9KaVR5pl7l8sEheuQ2KSXehEoukstzD/jonmZowGtEHX3ca52jeXh6UDzmckSXsSvjW+SYolvsptoYr4gB4O2RNZN3BmpbiSHoSlSfFgg/tFU9W6sejsmciFj+HUP/c56X9T/myzlCf0WXoKBK4yppHt/odbgJAXFRYCBQyrLHwmMghmi2Shf3DBAY6sZj4UZDWzbUmthSrLtt4uuUA6iYtFRrZmUYvJW7TwPlgX4BxvjTT1V4IbWM5LIzKBdWJTlK/WMs0Vcbc4r/p1j2IQNSXoge3kv2uBsl6QlUYwmKHYFvWWb/POegZGg4eLJfo0iIfhiBFQzQX+h+y00aPuAebhwvy3wUmHD8fONCbj8+O7TH8bWpNYrDLSN9htsvbYTdzCFFjAe7erG4aEfRciK/FQUM65SoAPPRk+pRfRXXvlKnrzAgKKtRYhxJ3M8FsOHXIyFvAYVNSDRPrdiGP7v5hDHwZt4SYLfv4cZDMMhnuwdSaAAhKW/IBgnrljv9khbJr8lgDWYcemXwd6xQFdkOTe34+YjCDI0quL1rTOsgzzzT+X2kJ4Gcavotmm7VnjPy7+WgfSWzpxsXww18xcSuaCJUXMyvSNVLyqDEgnmxEaD1uUQ/gpbuysxAyXlDckuOY9Ouk/B+r5gJ8lkXo7wZGhIXLqA=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(1800799024)(376014)(366016)(18002099003)(22082099003)(56012099006)(4143699003)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?R95w1v/tBH3pOWceS7N03NwzbWqfiaTTHXpSIbYiSrRyJapHt2y0jf4I6p3A?=
+ =?us-ascii?Q?Z54QW7DwIMJfaabU7c3tYsNfyPBbgURT89p3P+XmigwELkZFcZw4EpdhUmlx?=
+ =?us-ascii?Q?nBnP7zLmRPPn+JHzozo8jvYsRVCG8FxE/xoWESZRwC4VVbQb7DX5IZ+PUrXK?=
+ =?us-ascii?Q?iehoo5/rTrul+r4d2qqQLVkvGzOptJg11alEKvSes0zt9upvHKFmBIzaaO0s?=
+ =?us-ascii?Q?SuzxeEJn+pAmYP5AoC61T1NS3KrDjuvhFlPNp1Bxt+bsrmGOkiaxk0LuLuyB?=
+ =?us-ascii?Q?HZykorAHjc186wZmMGCw5E4+M6tLXsLIS7bGUPVIw/ClcKpIb5qVq35/s6oX?=
+ =?us-ascii?Q?OxIlLlM2tRLq3gi+2nJRDQVUyeV343mkTyB129Md/1evFcgywIBdDQXN4Uil?=
+ =?us-ascii?Q?3xUKwpg54xPXAAMYsA2AcZjnL56QlO9DADs7vKwnN5EJ+SXR3HzH+as9R2U4?=
+ =?us-ascii?Q?2eVTPO+g1ieUbHW59au82DdRZpGnePr+ea/gHillEabGjVwas2GOxUgnewsU?=
+ =?us-ascii?Q?bgPUu4OUNeUTNI8tj6eDGHyRz/CzMtlyv7QnlAZnYQ2ReOCj5Zc/QUvmJly9?=
+ =?us-ascii?Q?h38CWStoyfaFSo9KxHXCgiUB5YQ9S8Wsm4eq5jEyigpmwQqVi/SYzuHTGsZz?=
+ =?us-ascii?Q?f+5MxAhRJMNnnWoUVzvDutg0AmG/KggCdX99TSzIheDUxCd0D0zTclq31ALI?=
+ =?us-ascii?Q?rXBC+CWZsoehivU0UtbBWjsdY0joe2nc1jz4RgOEQMxqo0b2atLZNVYgqk+z?=
+ =?us-ascii?Q?C1U9jGoqvAHFeJZYiA+d0zK6uA5MCkdbLZL3Qy/qibVfqxvT1QH4oxEguj1m?=
+ =?us-ascii?Q?6drjsUq9ZV6+Fj8erWSfHKmSpQDdS7iDkwmTpWDiHu0Bcl1fL0xwOZ+iq/Mt?=
+ =?us-ascii?Q?lk1lxKpznEdlLaioflr7q1tU32Zbsr/AghouOFDbV95BRjmY1frm/3KSGvOd?=
+ =?us-ascii?Q?qYrQkYIvc4Czm2o4faJ9kuyyTGdzg2Z82UFdb9+jGE91GbUglyI/HvoVBLAl?=
+ =?us-ascii?Q?BEuIFBqLW+55O6ofA61eP0i99AdDE02caqNzlnTbg2Vn6wrHm9HXu9LzhyVx?=
+ =?us-ascii?Q?j0wWol/w9ShFiHciBwA8JrSSYBfWAVlNN2DAI28q0qkT8Oc3WmtolSROmSwu?=
+ =?us-ascii?Q?zEpdp+AELM81RQ+lyt/PT7JcJwCHQMubxxBuKBL7aSe6vepPE8cl1XF+aURv?=
+ =?us-ascii?Q?Se6pIA8pNJExBCvZUgYUI3WzS2/xnBYz0O7qHSDyqSLH5RoVsMtCPDG0t6dl?=
+ =?us-ascii?Q?GRXZ6OVv2lUO4OFkNdhet8CyQcBFjjYc+njomxgzSetrAWnU745q0QWNrJi4?=
+ =?us-ascii?Q?yQm0hIKplX7Y0MDdHn2QIy4SkJLBpTkmXdLYqze8TUYJrBKztJqYGuABIXvB?=
+ =?us-ascii?Q?nPvK0KizrCpRqnLn1khSxYJkyXwgnRn6IjD3kRjUzmU+cPus6V8ZjxSKNBo7?=
+ =?us-ascii?Q?1YnbgmHITb2YUy9+KPkRK4yCZOjO0WHQEekMRYRqLIFMlWPFK+BqGY5Vjh0N?=
+ =?us-ascii?Q?gmEG8D29UJuMlxr72gWntGonXyKNT19WmvCVjRwwBvAoZiPYIWPRY2Bmeok5?=
+ =?us-ascii?Q?+LD0uY3TFW0nPokmbBqwYF/lgoXbyhL5Id4h95z9UyPy2FtE/hUxTMBvqV0j?=
+ =?us-ascii?Q?yS1O/XqKwzAsncMWsAmKSWrjTyOu0Dvzw6uQyD2ry0PNUCG4F3fI9CmvXXYq?=
+ =?us-ascii?Q?II69RnYgGHxLjn+QX6hPReb3QbCcLJcRmOQ0LaQiH2qI5C8a?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a281dadd-b543-4665-d456-08ded8120a47
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jul 2026 08:15:13.0797
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aUqKPctU1HOVxCCAPs3PTHJPmoDfEt/XKAgxP2pDDXEsE3UJ00HvMbR3rmZ1K+xOqS480DCcA0tFTH9yEH5qJg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5953
 
-On 7/2/26 00:16, Gregory Price wrote:
-> We miss a failed allocation check for pgdat->per_cpu_nodestats, which
-> results in a NULL deref when we offset into the per-cpu area.
+On Tue, Jun 30, 2026 at 08:54:29AM +0800, Dave Jiang wrote:
 > 
-> Propagate -ENOMEM up the stack and leave per_cpu_nodestats pointing
-> at boot_nodestats so a later online can retry the allocation.
 > 
-> hotadd_init_pgdat() returns NULL on failure, which __try_online_node()
-> already maps to -ENOMEM.
+> On 6/30/26 12:46 AM, Richard Cheng wrote:
+> > cxl_get_feature() and cxl_set_feature() build the mailbox command's
+> > offset as cpu_to_le16(offset + data_rcvd_size/data_sent_size), but never
+> > check the sum fits in the 16-bit field. Via fwctl, a user-supplied
+> > offset plus count/op_size summing over 65535 silently wraps, steering
+> > the device to the wrong feature offset.
+> > 
+> > Fixes: 5e5ac21f629d ("cxl/mbox: Add GET_FEATURE mailbox command")
+> > Fixes: 14d502cc2718 ("cxl/mbox: Add SET_FEATURE mailbox command")
+> > Signed-off-by: Richard Cheng <icheng@nvidia.com>
+> > ---
+> >  drivers/cxl/core/features.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> > index 85185af46b72..db5964ea184f 100644
+> > --- a/drivers/cxl/core/features.c
+> > +++ b/drivers/cxl/core/features.c
+> > @@ -237,6 +237,9 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+> >  	if (!feat_out || !feat_out_size)
+> >  		return 0;
+> >  
+> > +	if (offset + feat_out_size > U16_MAX)
+> > +		return 0;
 > 
-> On failure nothing needs to be unwound:
->   - the node is never marked online
->   - per_cpu_nodestats is left pointing at boot_nodestats
->   - __add_memory_resource() cleans up pending memblock resources
->   - later online attempts retry the per_cpu_nodestats allocation
-> 
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Link: https://sashiko.dev/#/patchset/20260627202243.758289-1-gourry%40gourry.net
-> Fixes: 75ef71840539 ("mm, vmstat: add infrastructure for per-node vmstats")
-> Signed-off-by: Gregory Price <gourry@gourry.net>
-> ---
+> Should this return -EINVAL?
+>
 
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+I don't think so, the function's signature is size_t cxl_get_feature() , it returns the number
+of bytes received from the device, not an errno.
+If you really want this we need to change the signature.
 
--- 
-Cheers,
+But I agree that we shouldn't silently fail here, maybe move the check into cxlctl_get_feature()
+and return ERR_PTR(-EINVAL) ? would that work for you ?
 
-David
+Btw, for sashiko-bot's review, I think it stands, I'll send v2 with the fix.
+
+--Richard
+ 
+> > +
+> >  	size_out = min(feat_out_size, cxl_mbox->payload_size);
+> >  	uuid_copy(&pi.uuid, feat_uuid);
+> >  	pi.selection = selection;
+> > @@ -287,6 +290,9 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
+> >  	if (return_code)
+> >  		*return_code = CXL_MBOX_CMD_RC_INPUT;
+> >  
+> > +	if (offset + feat_data_size > U16_MAX)
+> > +		return -EINVAL;
+> > +
+> >  	struct cxl_mbox_set_feat_in *pi __free(kfree) =
+> >  			kzalloc(cxl_mbox->payload_size, GFP_KERNEL);
+> >  	if (!pi)
+> 
