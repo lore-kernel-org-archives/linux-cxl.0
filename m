@@ -1,64 +1,55 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385D019CD1B
-	for <linux-cxl@vger.kernel.org>; Thu,  2 Jul 2026 00:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8655171AF
+	for <linux-cxl@vger.kernel.org>; Thu,  2 Jul 2026 00:34:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782952260; cv=none; b=Xfg1vGdunXGq7lBrP/+D+EPtKtuL34wPvvX6lCwUUvj/Eo6l7zlvRZmEORP4826ms972Ko4Gn42Uab2D606DyIWSAk2GfQbnPJzlBMGSdJw0YKQvNhztZfa7R105fckQftTWeT5ZhNw0qV3+Br8ciyTWfeeIv0EmF+zkHh4MgdA=
+	t=1782952458; cv=none; b=uPmye/vZYfp52cTvGQPH5PwW7w9aymoE+4BaAjs3g7FXNTjgpCy5b4K+A7Oht/lQ1GwgzI2ZC0xR76kKjwruLtzsYNTHWV+TSstIreYGo0Vp2BahkYHT4oKUCquYsitTbf1mjGL5iC1ZRXH9REAJpWPT6DtO/v7c0NoXYzDr3Ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782952260; c=relaxed/simple;
-	bh=5NELd3GwPgNAqwbyuRg2/wom50MkFq3E9s3U/c7w1XQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N35z17ayoRM7c9ZoKh6eMpXQhEAXLv2uIgb+Wi8B0ZqXmZP+M6WHWIvaRcotLrWu3LGBNu61crTRtIbECH4J4AvQqmmi/EOtDmhOZLTrbbTxWwcMRaoKs1JxrhbOPL1ROmWHwqvWH3SltWUUV8KqblIZQlSHMzicX8xVbKq3Hzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e3tFJhsV; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1782952458; c=relaxed/simple;
+	bh=cQoIuTjVH1rKyL7jeC1wgN4OMYbRAxcrFCdl0o7/q2Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KKtB4yYiNyw3O/NDPm7dzpkDSNE2bj3g9pranaNVK+pU7jBJHT8iAbuVpPe4wORi9/zTPd9Sss8zM0M9ZDAe+JCyhVvbAJgxXSNlQFF7CMujvfU1FrBrOsWTjQTLVqAK9vdTRVcn4Rbg3eZdaQJd4uQSVJSGWvc50yvBKN8vJC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YT5fTBVI; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e3tFJhsV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YT5fTBVI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1782952258; x=1814488258;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=5NELd3GwPgNAqwbyuRg2/wom50MkFq3E9s3U/c7w1XQ=;
-  b=e3tFJhsVAvrcSzdDqZfbsTvH4ljrgC5Uz/bFfVvHZKNGr/SeKEt6mAa/
-   LbfD34dlYyX37HaLUOLkgSDyGwt4641SvTeJqqbIu26LLryEBAeu1N0mg
-   y/PrzwrD/lWJ9mAA43nsfzJHscCSYqiA3D6WpU+nNC9hh6Nh7mTuhKxVg
-   qYl9F56r10SYTPcjH4Qc+hvZN/yQB2fYLPZ/8qSg0Mv2TES9iOrIihWn4
-   crOXMjHalXcHM8rL+8rBDavHm9FhLgGRmyfIWg9xOjTIz6YrEHtwcM+ZP
-   naNbaoAd7W2eHjNIrEwIX/LL9O476iPUKqfxKvUAUAPpYmYeoMZPs577b
-   g==;
-X-CSE-ConnectionGUID: kj2Tuil4Q5Gz9yn/cUSKHA==
-X-CSE-MsgGUID: Y2Pq5RXDS5+VrKuJsd2Syw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11834"; a="83565782"
+  t=1782952456; x=1814488456;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=cQoIuTjVH1rKyL7jeC1wgN4OMYbRAxcrFCdl0o7/q2Y=;
+  b=YT5fTBVIlRt8qYJ6SDL402fTa2THsZCBqf2yMoviD2I4VG8AVCj6kq95
+   oPbPwimiQgnzbAsSgjCHU4jIxckY57eGF35AuF4WZN1M84iv7gAqYdECx
+   OqZCCOBRmQRQItp6ndkQf+HzE1NuafEvgZZyYcvOCfEKkCoJ+IAXmEHaE
+   GR+8vPRbku0zI9xDVegn46P5GezIy8f8VCwqin+AgxPZJmr/L1uinVr2Y
+   LYhMDN9am/pA8omFW7dan4J2trPgTGiRzOcKRmWy+6lDNDreeqjQo7JWE
+   E1uCYAmwzit2o3nW4RLz3NNacBBKt6+X9v/LSfpUrnzsuD/Z+h6ERFiCn
+   Q==;
+X-CSE-ConnectionGUID: KEcUGwDJRyigwwRymXJXCw==
+X-CSE-MsgGUID: W5R3B/sxRvS4EEgJehfdCw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11834"; a="82811333"
 X-IronPort-AV: E=Sophos;i="6.25,142,1779174000"; 
-   d="scan'208";a="83565782"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 17:30:57 -0700
-X-CSE-ConnectionGUID: xotFP3wKSKWGL3pqXOKxRg==
-X-CSE-MsgGUID: 0A2RlU5GQOmIl+pyK6VWgQ==
+   d="scan'208";a="82811333"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 17:34:15 -0700
+X-CSE-ConnectionGUID: KWQjPiGOS6WmEeFkIojHkg==
+X-CSE-MsgGUID: VzbIZQlZTyu/y7aAs+XBqg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,142,1779174000"; 
-   d="scan'208";a="275920062"
+   d="scan'208";a="246355529"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.139])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 17:30:56 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 17:34:15 -0700
 From: Alison Schofield <alison.schofield@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Dan Williams <djbw@kernel.org>,
-	Li Ming <ming.li@zohomail.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v2 3/3] cxl/test: Assign one mock memdev a full-width serial number
-Date: Wed,  1 Jul 2026 17:30:46 -0700
-Message-ID: <be03cc3762929ca0ac4e619a5fc7bd8ee7fe701d.1782948930.git.alison.schofield@intel.com>
+To: nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Cc: Alison Schofield <alison.schofield@intel.com>
+Subject: [ndctl PATCH] test/cxl-security.sh: test dimm unlock with a large serial number
+Date: Wed,  1 Jul 2026 17:34:03 -0700
+Message-ID: <20260702003407.1611731-1-alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1782948930.git.alison.schofield@intel.com>
-References: <cover.1782948930.git.alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -67,58 +58,101 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Mock memdev serial numbers have historically been derived from
-pdev->id, leaving them single-digit. As a result they never exercised
-either the decimal-vs-hex security-key lookup or unsigned formatting
-of large serial numbers.
+The existing CXL unlock test exposed the hexadecimal-vs-decimal key
+description mismatch once cxl_test mock serial numbers were extended
+to 10 and above. Serials with bit 63 set expose a second formatting
+problem in that the kernel formats the decimal serial as signed,
+rendering it as a negative value.
 
-Give one mock memdev a full-width serial with bit 63 set. This mirrors
-real hardware (for example, Montage devices) and provides a test
-device that exposes both the hexadecimal-vs-decimal and signed-vs-
-unsigned formatting differences.
-
-This enables adding a new test case to cxl-security.sh that does an
-auto-unlock using a mock device whose serial exposes both formatting
-differences.
+Extend the existing "unlock dimm" test to repeat the unlock against a
+mock memdev with a full-width serial that has bit 63 set. Refactor the
+common unlock sequence into an unlock_dimm() helper so the signedness
+case follows the same test flow as the original key lookup case.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- tools/testing/cxl/test/mem.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ test/cxl-security | 24 ++++++++++++++++++++++++
+ test/security.sh  | 16 ++++++++++++++--
+ 2 files changed, 38 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/cxl/test/mem.c b/tools/testing/cxl/test/mem.c
-index a1d170f88fee..42f5ffd29651 100644
---- a/tools/testing/cxl/test/mem.c
-+++ b/tools/testing/cxl/test/mem.c
-@@ -1714,6 +1714,7 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	struct cxl_mockmem_data *mdata;
- 	struct cxl_mailbox *cxl_mbox;
- 	struct cxl_dpa_info range_info = { 0 };
-+	u64 serial;
- 	int rc;
+diff --git a/test/cxl-security b/test/cxl-security
+index 9a28ffd82b0b..39b7e001ce08 100644
+--- a/test/cxl-security
++++ b/test/cxl-security
+@@ -9,6 +9,30 @@ detect()
+ 	[ -n "$id" ] || err "$LINENO"
+ }
  
- 	/* Increase async probe race window */
-@@ -1740,7 +1741,19 @@ static int cxl_mock_mem_probe(struct platform_device *pdev)
- 	if (rc)
- 		return rc;
- 
--	mds = cxl_memdev_state_create(dev, pdev->id + 1, 0);
-+	/*
-+	 * Mock serials have historically been derived from pdev->id and stayed
-+	 * single-digit, so they never exercised either decimal-vs-hex key
-+	 * lookup or unsigned formatting. Give one mock device a full-width
-+	 * serial with bit 63 set, matching real hardware such as Montage CXL
-+	 * devices. pdev->id 7 is unused by the auto-region topology.
-+	 */
-+	if (pdev->id == 7)
-+		serial = 0x8a34567890abcdef;
-+	else
-+		serial = pdev->id + 1;
++# Select the mock memdev whose serial has bit 63 set. Match on the hex
++# spelling of 'id' because the value exceeds signed 64-bit shell arithmetic.
++# A 16-digit hex value with a leading nibble of 8-f has bit 63 set.
++detect_big_serial()
++{
++	local d i hex
 +
-+	mds = cxl_memdev_state_create(dev, serial, 0);
- 	if (IS_ERR(mds))
- 		return PTR_ERR(mds);
++	dev=""
++	for d in $($NDCTL list -b "$CXL_TEST_BUS" -D | jq -r '.[].dev'); do
++		i="$($NDCTL list -b "$CXL_TEST_BUS" -D -d "$d" | \
++			jq -r '.[0].id')"
++		hex="$(printf '%x' "$i" 2>/dev/null)" || continue
++		case "${#hex}:${hex:0:1}" in
++		16:[89a-fA-F])
++			dev="$d"
++			id="$i"
++			break
++			;;
++		esac
++	done
++
++	[ -n "$dev" ] || err "$LINENO: no serial with bit 63 set found"
++}
++
+ lock_dimm()
+ {
+ 	$NDCTL disable-dimm "$dev"
+diff --git a/test/security.sh b/test/security.sh
+index d3a840c23276..72bb570142ed 100755
+--- a/test/security.sh
++++ b/test/security.sh
+@@ -144,7 +144,7 @@ test_3_security_setup_and_erase()
+ 	erase_security
+ }
  
+-test_4_security_unlock()
++unlock_dimm()
+ {
+ 	setup_passphrase
+ 	lock_dimm
+@@ -158,6 +158,18 @@ test_4_security_unlock()
+ 	remove_passphrase
+ }
+ 
++test_4_security_unlock()
++{
++	unlock_dimm
++
++	if [ "$1" = "cxl" ] && check_min_kver "7.3"; then
++		detect_big_serial
++		unlock_dimm
++		# Restore the default device selection for later tests.
++		detect
++	fi
++}
++
+ # This should always be the last nvdimm security test.
+ # with security frozen, nfit_test must be removed and is no longer usable
+ test_5_security_freeze()
+@@ -241,7 +253,7 @@ test_2_security_setup_and_update
+ echo "Test 3, security setup and erase"
+ test_3_security_setup_and_erase
+ echo "Test 4, unlock dimm"
+-test_4_security_unlock
++test_4_security_unlock "$1"
+ 
+ # Freeze should always be the last nvdimm security test because it locks
+ # security state and require nfit_test module unload. However, this does
+
+base-commit: 5fcbbee57319e718bf522436ea6595bd0f71296c
 -- 
 2.37.3
 
