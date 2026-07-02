@@ -1,45 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4CE1349AE0
-	for <linux-cxl@vger.kernel.org>; Thu,  2 Jul 2026 17:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52847353A71
+	for <linux-cxl@vger.kernel.org>; Thu,  2 Jul 2026 17:25:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783013110; cv=none; b=X18oD3nqj4CUxlOv9N9KFGa8/dsA6IDWtP+UytdEi9SkZ4jUsKnvGuJ11kWfxYqsh25xNh9KMS7/RQq4nxZaL5tHPyxCKA0xSSWxWTsp/JwJL6zb+rAbMOhGmM7New+ENfYzTwzLsZvpbMmEntCcZQI8F8ZzJ1ZfrrAHybXMSgM=
+	t=1783013120; cv=none; b=E8C5IxFk1ehZnAYcQSaxp7KwgE3n6ECorp/cP+8Q1jpWlSOxAdjylVOUba1327LasbYF9HcnuaVHIjaM56BTm6oC5oiGKPfoIa9Ou3nkPfcIUGEv83FCP73J5uP+uRhX/YbKw2c8PuITaAPsFlWLf3P+4+ZQVDCKY4Ndw5UWzU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783013110; c=relaxed/simple;
-	bh=wC85SlcB8tKCnNUkljig33zwjFejqec25kpt/3M+9i8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=t+qTgXZgABJ/luEMhNYclVJNvAuglDgCt60jRqtaVVOq0SWh75hUJh43T5WffHsyOtLEHWeikSTV+W0sMjbg2ag29yBvxAZjLr3JYBS/Sr2VVDkRwwcyjq407wiBz/niQnSTN94+8S67Y/srsx/fKxJfTqVYbnLTmIt0Ai4l120=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hUjj0LXf; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1783013120; c=relaxed/simple;
+	bh=Lwm2BMgNFAAQZ+E/pzU93lcyt1p3KF43Ex1TQaq48J0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:content-type; b=oet5JOjavq/Ec+0KFZNpDAoRS0IfgJrcRXBBJPmiX8979RcBjEYWDTHHEqT0H/RrlZ6qCxC8j5ao30T9F/GO/Vb3TWDpSYb8MskpEK3P9gVQXq8szhSb6/6CIFOnAcIc5FqvbdmtJ2ZT1n27R8vcvwDDvf0bPxW72cR2PmeAboI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z3mboY43; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hUjj0LXf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z3mboY43"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783013108;
+	s=mimecast20190719; t=1783013118;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=h2Ms0gDqn541Zm3m4bDAe3INBlyb1cMJpyBl6JN9E+g=;
-	b=hUjj0LXfiM3i/0vDMNbKyx86TSHKAI7aMlbA8K9qKAF+UQcnnBocjN5G7s1QZZmF/6u7Hf
-	VwNYYN5+Mshp8JUtInXHG0C46hYZw6G0V0b1RNLeVuuGpOB7OB/rop9awu5tsJSO5xX30B
-	MIVXNKYCXK9BEW6aBq62NFthyb7Bl48=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Rpsz4g3zxC6WA/xxJCnqVHrdcGnie/XC58606CgCcjE=;
+	b=Z3mboY43menYsUYwZDs3Ty8Q23dEdhn9i9yZh0tPdJfnMnE09GHlfLkw4j+tpNEvQD/sIk
+	zq+/I/dQNGHi1g0K/CPl/+qd6PD/X4sFdWt5AjokPP8o4oqhMWOElZ3PPXfspsKXJ2MkMX
+	H7HPol7Ni3oFUfSnaWgXPQlw1i6eLNw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-197-_Mnzm0EiNzKnCBN8KhOh8Q-1; Thu,
- 02 Jul 2026 13:25:03 -0400
-X-MC-Unique: _Mnzm0EiNzKnCBN8KhOh8Q-1
-X-Mimecast-MFC-AGG-ID: _Mnzm0EiNzKnCBN8KhOh8Q_1783013100
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-224-PFauOJgUMLqtjKwlVRLQbg-1; Thu,
+ 02 Jul 2026 13:25:12 -0400
+X-MC-Unique: PFauOJgUMLqtjKwlVRLQbg-1
+X-Mimecast-MFC-AGG-ID: PFauOJgUMLqtjKwlVRLQbg_1783013110
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 995D71944B24;
-	Thu,  2 Jul 2026 17:24:59 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F19621879595;
+	Thu,  2 Jul 2026 17:25:09 +0000 (UTC)
 Received: from p1.redhat.com (unknown [10.22.76.7])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0874E3002D2F;
-	Thu,  2 Jul 2026 17:24:50 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E25943002D2C;
+	Thu,  2 Jul 2026 17:25:00 +0000 (UTC)
 From: Nico Pache <npache@redhat.com>
 To: Barry Song <baohua@kernel.org>,
 	David Hildenbrand <david@kernel.org>,
@@ -59,9 +61,11 @@ Cc: ljs@kernel.org,
 	Gregory Price <gourry@gourry.net>,
 	Ying Huang <ying.huang@linux.alibaba.com>,
 	Alistair Popple <apopple@nvidia.com>
-Subject: [PATCH 0/2] mm: fix PMD level mTHP accounting bugs
-Date: Thu,  2 Jul 2026 11:25:45 -0600
-Message-ID: <20260702172548.37075-1-npache@redhat.com>
+Subject: [PATCH 1/2] mm: decrement MTHP_STAT_NR_ANON in free_zone_device_folio()
+Date: Thu,  2 Jul 2026 11:25:46 -0600
+Message-ID: <20260702172548.37075-2-npache@redhat.com>
+In-Reply-To: <20260702172548.37075-1-npache@redhat.com>
+References: <20260702172548.37075-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -69,41 +73,41 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
-X-Mimecast-MFC-PROC-ID: -XWvHkk3KLqdkG4yQzMVILyKa6mUcJ6gMzmK-AVIRso_1783013100
+X-Mimecast-MFC-PROC-ID: YK6H1msfIcL_g8OXjsBg6LP9xYYYFy3yP3Lfi6PcoQ0_1783013110
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-While running selftests I noticed the PMD level per-mTHP stats (nr_anon)
-remained elevated after each run. After further investigation I noticed
-this accounting error occurs for both the migration.private_anon_htlb_test
-and the HMM tests.
+When a zone device folio is mapped as anonymous, folio_add_new_anon_rmap()
+increments MTHP_STAT_NR_ANON. The corresponding decrement lives in
+__free_pages_prepare() in page_alloc.c, but zone device folios are freed
+via free_zone_device_folio() which never calls __free_pages_prepare().
+This causes nr_anon to remain permanently elevated after zone device
+folios are freed.
 
-In the HMM case this is due to folio_add_new_anon_rmap() incrementing the
-mTHP stats, but never containing a corresponding decrement in
-free_zone_device_folio(). We solve this by making sure to decrement the
-counter when freeing device memory.
+Add the missing mod_mthp_stat() decrement to free_zone_device_folio()
+so that the counter is properly balanced.
 
-In the migration case, we are incrementing this counter without first
-checking whether this folio is a hugetlb folio, which relies on a separate
-accounting system. We solve this by adding the proper hugetlb check before
-incrementing this counter.
-
-With these changes in place, the two tests no longer cause elevated PMD
-level accounting issues.
-
+Fixes: 5d65c8d758f2 ("mm: count the number of anonymous THPs per size")
 Co-developed-by: David Hildenbrand <david@kernel.org>
 Signed-off-by: David Hildenbrand <david@kernel.org>
 Signed-off-by: Nico Pache <npache@redhat.com>
-
-Nico Pache (2):
-  mm: decrement MTHP_STAT_NR_ANON in free_zone_device_folio()
-  mm/migrate: exclude hugetlb folios from MTHP_STAT_NR_ANON accounting
-
+---
  mm/memremap.c | 1 +
- mm/migrate.c  | 6 ++++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ 1 file changed, 1 insertion(+)
 
+diff --git a/mm/memremap.c b/mm/memremap.c
+index 81766d822400..accba23aef28 100644
+--- a/mm/memremap.c
++++ b/mm/memremap.c
+@@ -425,6 +425,7 @@ void free_zone_device_folio(struct folio *folio)
+ 	mem_cgroup_uncharge(folio);
+ 
+ 	if (folio_test_anon(folio)) {
++		mod_mthp_stat(folio_order(folio), MTHP_STAT_NR_ANON, -1);
+ 		for (i = 0; i < nr; i++)
+ 			__ClearPageAnonExclusive(folio_page(folio, i));
+ 	}
 -- 
 2.54.0
 
