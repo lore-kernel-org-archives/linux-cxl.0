@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B511A2C0B
-	for <linux-cxl@vger.kernel.org>; Thu,  2 Jul 2026 00:30:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CA72B9BA;
+	Thu,  2 Jul 2026 00:30:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782952258; cv=none; b=VV8NhvUhRvh4/ihMQYMkinLp3GptknzsJ+VzKS37B8k6COW6Xe3fPGZTWADKwxZn+ktnGvJS1saTUOIvKeIDlsH86oIWJFI6BRwxWbg9s8lhHwiXhZe0lZXHEByc7GuFOojhcr8fiLrNdiI44mJbYWHUjRahN4RJRkO/vBAx1TU=
+	t=1782952258; cv=none; b=oPkiIdfZKZws/GNZVchyTdxCGzZt3F6MlDw/DpESZbN1Ol8elr890w4RO5LChX1B12mnPtX737lhAnQn2a68ZQ5G0+mEHTlr+l9CyM9tZ805vUe8zrGTgbRjSFfcmJJug5YxTxy+FC17k4OZ7v3guejJu8iqvhY7K62/ySs/jDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1782952258; c=relaxed/simple;
-	bh=IRnPktXExwHS8O8vRGeWbb95GwtN9gS24CB7HZ496C8=;
+	bh=6RJz9T66+OhsFA81BL/SHfEOMk3438nuaMTFEC3yGgQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZFbZYq+crk3lVH+fj4jRy/utN044vtOvIwiwDRv5rn8ejkHN5hGkQTVkCMuW8xrrd3c0xl1i12g0vXI5dBiIeHhkmQRyi3MLebMHvkjzqXNuHcjbdn5Yr7p3NvhtWorU8GwDHtf3nJnjR4om+I+DYDRllmpbRCy6qWPUE77ZIlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QkdZ+ihv; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=HRLnqu9yhun44sBoa9u4LqA4HueAosBPl5U22N/NGwEi5HBcxPuoGBZq6r4jfKJ5kzTgsnf5gM76qurA5IfvCiGJ5Xyy8B8oXr8U/d55uTx9zJuYPMApSoT6m3t23jZ3Mo7gFAwUypXT3dT9fSPxtV+0/b7R6aZLOWLcB1vAwKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EL9wvESS; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QkdZ+ihv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EL9wvESS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1782952257; x=1814488257;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=IRnPktXExwHS8O8vRGeWbb95GwtN9gS24CB7HZ496C8=;
-  b=QkdZ+ihvdPoINJuPT2wY7GPJeLOS8RcGKIIPPBt93syICL2QkwNs+cjR
-   RxsdRhzfd44k8Hhz7Djgt60Gqe9uXctv377ycHGiGjYg3DRwxspk1ngCg
-   jY1B5YzTx6ug4mpywVm/hK7EzhbJiajKlwu43EOWLtl74i/7DGCy/XWAY
-   u4odivnp6KgXXEvPccarok7EcrI+kIuWxOyXAYmR5Car65JKr835QPpuV
-   fcxKcmLfm9c0BHdwF9hWZ5VTzHBQIg1J+RQZzc/Yd6ndJPH2YJZA+g+SL
-   WN44Q2umvwysh02SXKbZqrVxhfgBqmsdp5iYH7X+1HyiaefpJuq0NG2lK
-   g==;
-X-CSE-ConnectionGUID: RSJA+k5tTTyT5ZjPO5B8DA==
-X-CSE-MsgGUID: 6YqFyf/mQoe40fydVNFdcw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11834"; a="83565778"
+  bh=6RJz9T66+OhsFA81BL/SHfEOMk3438nuaMTFEC3yGgQ=;
+  b=EL9wvESS1b8OoPMq5BOG0hD3COViTxbTCePlhPKPLgkst2el6dhI9CcR
+   fXN8aFOaek4pd05DZjDJ98ZCT7T7UnbWBRZDfOWd7UlR+8XKDr5UywPdH
+   4wwCNWzQAoBP1hJfLG27rAqlAnxRxDMrDLP+OgSGTUmxzMjwr0bTrwc26
+   bhCN6Zau7vn8Bbp6SA4yGAXJXniC3JzxLNNr2qHdKGOMpaiJ4WKUjI9Po
+   RBaUKaVpNnbVloYDbW1QFrKoNxh9hGPfFLu6jSrs4gVt5EoqbYrn0BUcS
+   6r/QwZK0dljSQnf7zgUvx0ZnCc5gTEpAM+to9iIY6b+499PUhY2Psn/wZ
+   w==;
+X-CSE-ConnectionGUID: t11JjtdHSiOIR5DRE70I2g==
+X-CSE-MsgGUID: /6FSvT/TQiybo9hKD11bYA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11834"; a="83565774"
 X-IronPort-AV: E=Sophos;i="6.25,142,1779174000"; 
-   d="scan'208";a="83565778"
+   d="scan'208";a="83565774"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 17:30:56 -0700
-X-CSE-ConnectionGUID: Bp2qjKPHTaGNEP9MG02RLg==
-X-CSE-MsgGUID: r7iparIKSymVg8WWDh0EEg==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 17:30:55 -0700
+X-CSE-ConnectionGUID: WdBrzBkwRMezzuZu/OI1hA==
+X-CSE-MsgGUID: QGcuDEZMQTSqvKqlv3MV/g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,142,1779174000"; 
-   d="scan'208";a="275920058"
+   d="scan'208";a="275920054"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.139])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 17:30:55 -0700
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2026 17:30:54 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -52,10 +52,11 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <iweiny@kernel.org>,
 	Dan Williams <djbw@kernel.org>,
 	Li Ming <ming.li@zohomail.com>
-Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v2 2/3] cxl/core: Format the memdev serial number as unsigned in TP_printk
-Date: Wed,  1 Jul 2026 17:30:45 -0700
-Message-ID: <7b5c35da659d62ee4bec38f0427266ae4e3123f4.1782948930.git.alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2 1/3] cxl/pmem: Format the nvdimm serial number as unsigned decimal
+Date: Wed,  1 Jul 2026 17:30:44 -0700
+Message-ID: <e124234e95069cb6512b9e1ab8a1335bf4fbed5e.1782948930.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1782948930.git.alison.schofield@intel.com>
 References: <cover.1782948930.git.alison.schofield@intel.com>
@@ -67,70 +68,103 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The CXL memdev serial number is a u64 PCIe Device Serial Number, but
-the tracepoints format it with %lld. Devices whose vendor OUI sets
-bit 63 therefore appear with negative serial numbers in formatted
-trace output.
+The CXL NVDIMM security passphrase key description and the nvdimm 'id'
+sysfs attribute are both derived from the CXL device serial number,
+but the serial number is not formatted consistently.
 
-Note that the trace data itself is already stored correctly as u64.
+The key description is formatted in hexadecimal while the 'id'
+attribute is formatted in decimal. As a result, ndctl stores the key
+using a decimal description while the kernel later looks it up using
+a hexadecimal description. For serial numbers of 10 and above, the
+descriptions no longer match, preventing automatic unlock after
+reboot.
 
-Format the TP_printk serial as unsigned decimal, %llu, to match the
-underlying value.
+The decimal formatting has a second problem. Both the key description
+and the 'id' attribute use the signed %lld format for a u64 PCIe
+Device Serial Number. Devices whose vendor OUI sets bit 63, such as
+Montage CXL devices, appear with negative decimal serial numbers.
 
+Format the security key description and 'id' attribute as unsigned
+decimal, %llu, and document that the 'id' attribute is an unsigned
+decimal value.
+
+The key lookup mismatch was exposed by CXL unit test cxl-security.sh
+when cxl_test mock serial numbers were extended to 10 and above.
+
+Cc: <stable@vger.kernel.org>
+Fixes: b5807c80b5bc ("cxl: add dimm_id support for __nvdimm_create()")
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/core/trace.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-nvdimm |  3 ++-
+ drivers/cxl/core/pmem.c                    | 10 ++++++----
+ drivers/cxl/cxl.h                          |  3 ++-
+ drivers/cxl/pmem.c                         |  2 +-
+ 4 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-index d37876096dd7..c379d60047fc 100644
---- a/drivers/cxl/core/trace.h
-+++ b/drivers/cxl/core/trace.h
-@@ -107,7 +107,7 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
- 		memcpy(__entry->header_log, hl,
- 			CXL_HEADERLOG_TRACE_SIZE_U32 * sizeof(u32));
- 	),
--	TP_printk("memdev=%s host=%s serial=%lld: status: '%s' first_error: '%s'",
-+	TP_printk("memdev=%s host=%s serial=%llu: status: '%s' first_error: '%s'",
- 		  __get_str(memdev), __get_str(host), __entry->serial,
- 		  show_uc_errs(__entry->status),
- 		  show_uc_errs(__entry->first_error)
-@@ -166,7 +166,7 @@ TRACE_EVENT(cxl_aer_correctable_error,
- 		__entry->serial = cxlmd->cxlds->serial;
- 		__entry->status = status;
- 	),
--	TP_printk("memdev=%s host=%s serial=%lld: status: '%s'",
-+	TP_printk("memdev=%s host=%s serial=%llu: status: '%s'",
- 		  __get_str(memdev), __get_str(host), __entry->serial,
- 		  show_ce_errs(__entry->status)
- 	)
-@@ -206,7 +206,7 @@ TRACE_EVENT(cxl_overflow,
- 		__entry->last_ts = le64_to_cpu(payload->last_overflow_timestamp);
- 	),
+diff --git a/Documentation/ABI/testing/sysfs-bus-nvdimm b/Documentation/ABI/testing/sysfs-bus-nvdimm
+index 64eb8f4c6a41..46dafd8482b9 100644
+--- a/Documentation/ABI/testing/sysfs-bus-nvdimm
++++ b/Documentation/ABI/testing/sysfs-bus-nvdimm
+@@ -48,7 +48,8 @@ What:		/sys/bus/nd/devices/nmemX/cxl/id
+ Date:		November 2022
+ KernelVersion:	6.2
+ Contact:	Dave Jiang <dave.jiang@intel.com>
+-Description:	(RO) Show the id (serial) of the device. This is CXL specific.
++Description:	(RO) Show the id (serial) of the device, formatted as an
++		unsigned 64-bit decimal value. This is CXL specific.
  
--	TP_printk("memdev=%s host=%s serial=%lld: log=%s : %u records from %llu to %llu",
-+	TP_printk("memdev=%s host=%s serial=%llu: log=%s : %u records from %llu to %llu",
- 		__get_str(memdev), __get_str(host), __entry->serial,
- 		cxl_event_log_type_str(__entry->log), __entry->count,
- 		__entry->first_ts, __entry->last_ts)
-@@ -279,7 +279,7 @@ TRACE_EVENT(cxl_overflow,
- 	__entry->hdr_head_id = (hdr).head_id
+ What:		/sys/bus/nd/devices/nmemX/cxl/provider
+ Date:		November 2022
+diff --git a/drivers/cxl/core/pmem.c b/drivers/cxl/core/pmem.c
+index 68462e38a977..5a3bb7e8a1f1 100644
+--- a/drivers/cxl/core/pmem.c
++++ b/drivers/cxl/core/pmem.c
+@@ -219,12 +219,14 @@ static struct cxl_nvdimm *cxl_nvdimm_alloc(struct cxl_nvdimm_bridge *cxl_nvb,
+ 	dev->bus = &cxl_bus_type;
+ 	dev->type = &cxl_nvdimm_type;
+ 	/*
+-	 * A "%llx" string is 17-bytes vs dimm_id that is max
+-	 * NVDIMM_KEY_DESC_LEN
++	 * dev_id is the nvdimm dimm_id used for security key lookup.
++	 * It must match id_show(), which emits the CXL serial as an
++	 * unsigned decimal. A u64 decimal string is at most 20 digits
++	 * plus NUL.
+ 	 */
+-	BUILD_BUG_ON(sizeof(cxl_nvd->dev_id) < 17 ||
++	BUILD_BUG_ON(sizeof(cxl_nvd->dev_id) < 21 ||
+ 		     sizeof(cxl_nvd->dev_id) > NVDIMM_KEY_DESC_LEN);
+-	sprintf(cxl_nvd->dev_id, "%llx", cxlmd->cxlds->serial);
++	sprintf(cxl_nvd->dev_id, "%llu", cxlmd->cxlds->serial);
  
- #define CXL_EVT_TP_printk(fmt, ...) \
--	TP_printk("memdev=%s host=%s serial=%lld log=%s : time=%llu uuid=%pUb "	\
-+	TP_printk("memdev=%s host=%s serial=%llu log=%s : time=%llu uuid=%pUb "	\
- 		"len=%d flags='%s' handle=%x related_handle=%x "		\
- 		"maint_op_class=%u maint_op_sub_class=%u "			\
- 		"ld_id=%x head_id=%x : " fmt,					\
-@@ -1088,7 +1088,7 @@ TRACE_EVENT(cxl_poison,
- 		}
- 	    ),
+ 	return cxl_nvd;
+ }
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index c0e5308e4d1b..d683ae5e0f7d 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -503,7 +503,8 @@ struct cxl_nvdimm_bridge {
+ 	struct nvdimm_bus_descriptor nd_desc;
+ };
  
--	TP_printk("memdev=%s host=%s serial=%lld trace_type=%s region=%s "  \
-+	TP_printk("memdev=%s host=%s serial=%llu trace_type=%s region=%s "  \
- 		"region_uuid=%pU hpa=0x%llx hpa_alias0=0x%llx dpa=0x%llx " \
- 		"dpa_length=0x%x source=%s flags=%s overflow_time=%llu",
- 		__get_str(memdev),
+-#define CXL_DEV_ID_LEN 19
++/* Holds a u64 serial as a decimal string: up to 20 digits + NUL */
++#define CXL_DEV_ID_LEN 21
+ 
+ enum {
+ 	CXL_NVD_F_INVALIDATED = 0,
+diff --git a/drivers/cxl/pmem.c b/drivers/cxl/pmem.c
+index 261dff7ced9f..a9f50281875d 100644
+--- a/drivers/cxl/pmem.c
++++ b/drivers/cxl/pmem.c
+@@ -52,7 +52,7 @@ static ssize_t id_show(struct device *dev, struct device_attribute *attr, char *
+ 	struct cxl_nvdimm *cxl_nvd = nvdimm_provider_data(nvdimm);
+ 	struct cxl_dev_state *cxlds = cxl_nvd->cxlmd->cxlds;
+ 
+-	return sysfs_emit(buf, "%lld\n", cxlds->serial);
++	return sysfs_emit(buf, "%llu\n", cxlds->serial);
+ }
+ static DEVICE_ATTR_RO(id);
+ 
 -- 
 2.37.3
 
