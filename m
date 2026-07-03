@@ -1,170 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FFA83C3C0E
-	for <linux-cxl@vger.kernel.org>; Fri,  3 Jul 2026 12:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9444335AC20
+	for <linux-cxl@vger.kernel.org>; Fri,  3 Jul 2026 14:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783083393; cv=none; b=s0bIJw07/agoqFCcF4nRnfCBY6q6bARnKFODpar2IgxiH/L4nYN2RLmyw0JHJ5qp9xzG4pfxaV0shl8vtqoV8Xcy/Sq5QEeaphbesJ5W2nh7jGcmm1eKEZOVNsiClpAnwWzOSarphAbb+yysFgMFsHY3/d6K6o0vtw1JLJ3pTk8=
+	t=1783090481; cv=none; b=XTbE1Q6hUQ3RTuJcCgtdsq2jmjJUcuvFAZtsfc6Q6U+lf+YCH3r7/OxEQrSwVCeK3zY3LruoBR7+vP3LaRYKadHamDPwdREx01cP0oEUIvSj9Xur+JHWKCAIPIHArA9AE4SuHBe9KwCFzbo8PiqeKy4Kd6wcZ8SuYtM7RMoTJps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783083393; c=relaxed/simple;
-	bh=dOe0rEJMcDWi4szhcoZXofeoCXzFBelBTDZbHLHN0/c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y5ete7MAlNiNiQhqiN7KjnCIXVj1dw3XhPqWewMdQdfUbvzglRdruVOq9cLlrOAFagwCWbbdWs5oQZEuoxK0d180uBeTv1aokzoe7XiGMoWZf7ArrO4v/WGAj4rf7rniLoOHtvC8ZJY4dsc+wObF9aV1gj56T2XvMnHHBM3M5Nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RdePjsOQ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1783090481; c=relaxed/simple;
+	bh=eeC0J8ilZFI8FMO0xx0Mmy+EomilNkfXYLvWaW7bQsM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V1cMCToAIKl2wH8T7Q4GHbhsBR5MfeIYEjTu4WFJ12mHMHx6TBcnvhYheMCaGRe/5Hd2R/CWwaxKeAAqFDGLNXLHGJLXr7XidFYe+mVJ3NQQkms4kNvb+vFfiXXeMyei0UR2XeRAgrzHmbjlKoj9hlxru/EJY6x/ZGQ8C1HrI2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N2fhSW1+; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RdePjsOQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783083390;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HED6HRnydnqiSVH4UAUTFWH58XzQx39lyeEfirFqz7M=;
-	b=RdePjsOQhMu7qxfrFkRIpa7KvkDAyBpZ3nnLZjLIKe3lieU8DmbgxIW8Im2bCiCb5IUdzj
-	atYTmdPzkVzFDcb5qXFWgMmmaYP28v6PRbygssuW9w9+mf85J8UVQejH8FAJfowqPRQmZa
-	g2nPaYHrYMWv2VaMSrUrHgO43SjumEY=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-583-jfiNwM-NMz-oo72eFpuvOg-1; Fri, 03 Jul 2026 08:56:26 -0400
-X-MC-Unique: jfiNwM-NMz-oo72eFpuvOg-1
-X-Mimecast-MFC-AGG-ID: jfiNwM-NMz-oo72eFpuvOg_1783083385
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-39ae216b900so3148341fa.3
-        for <linux-cxl@vger.kernel.org>; Fri, 03 Jul 2026 05:56:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2fhSW1+"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-3811f512167so550988a91.3
+        for <linux-cxl@vger.kernel.org>; Fri, 03 Jul 2026 07:54:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783090480; x=1783695280; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=s84s7xlHtuCE+qHkzV8euAVnrD8Kmc3QE4u4jTrxAy0=;
+        b=N2fhSW1+Mk6lebrZMpTHDU2ejDSi9TkuLWgcO0g9viA6jp4SBeBv06dMlO4VWn8Jmi
+         SoLrMpy7bM/Fvd2kplLR5hSQ2jEMG+UT60IMAQv1VpqP9Xbfqy+/JGRtocErcLJGwLSK
+         IeR722bvdEaoGhRUTmga0+J1zBOn+8SfpAvqIca1QAkt7Dx9TtLFVkc68oo1bw3j2vfR
+         igcnLWVGY5kKJTLPwUgWMRzUrMZYzVWA4gAo+R1/0ApJjk9l+iTRB+58UVR92OfnypR7
+         qE2Xr1eAhXNYgb6K+5mt67Om1tcIgyY8KPHVTdeeLIFOTiUDOqzGhw1h7e5O8ZfwYBLm
+         QXeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783083385; x=1783688185;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=HED6HRnydnqiSVH4UAUTFWH58XzQx39lyeEfirFqz7M=;
-        b=BRXzPksws9uxUam4zbCfp785DKUHWpQqabpv08zBUJje9Sa9S7twxy731nuPGS94JF
-         hXLodzJkwLmdjdbIRE99GDP9sVjCtgOjN4SJDncQBcnq7H8gOQ1umJ+lPnhhNKh6k4mO
-         isjnjXKfTKMONnzCk7q5RwdEnxteV7Q03Z9Kjx1J1cLJxqB1IJggmKo4AVcQ+KjgiFVA
-         ZBiMD456gP8MBQEQQAa1nFCE5P9XoX7SjDMSigzzSkXRTuPeCoR47gDYgvvJPrqgoMoE
-         UJT3QdxYFw7p1bFb7kzuO9EEfjJ9f4oqxR07GIzujQce8f87SAjSf1XQdiWOq8uO1/cN
-         UHYg==
-X-Forwarded-Encrypted: i=1; AHgh+RoEQcJfebxQegYnDXM5JRFnnn4ESKX71XsxwBdnXznuqrfr2YnFm7aO7OvRtgyF/oGZEIWr1hmko/s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsnKZ2auq5LCjeyfadduXqSsRAs1r/bQpVwSvNxJvaDXMEUPpY
-	xjRt4KxtBLwaC/tgsTpiQ/YrkLn57edfsFIwvyGFIxJMVG6vxObym1kGWxbYS4Hbe117NMCKXGP
-	QDQ87SdWpW9F0K+ju1OAYCvxGed0nZbVSDI2FZ5H+jkVVrixD91cbTknPGl6g6q7BkXc50IyZD2
-	eT+q7KHB4rJLJUofzcdIVL+NJaBs954y/LH42H
-X-Gm-Gg: AfdE7cmmqRsw+3JhfC/dGvz6EYd4z0yl+Ney/TOHGbeuI+2wl42tg66hfsAFd2wI6UR
-	TdWBccauATc9zGxpDpJLSo7ynh99Hr/kRUXC4klEgXqWrWHVMzkGBTJLUMHHDNunJlH387+nXzF
-	RbUdSDvUbRf1n4ou9h9n/LKRzWCjUN3eGtlOFqBySB/wDmTH6aff71rWK7cMWLacZC
-X-Received: by 2002:a2e:bd16:0:b0:39a:e7f6:49aa with SMTP id 38308e7fff4ca-39b36f0dc25mr21174981fa.2.1783083385212;
-        Fri, 03 Jul 2026 05:56:25 -0700 (PDT)
-X-Received: by 2002:a2e:bd16:0:b0:39a:e7f6:49aa with SMTP id
- 38308e7fff4ca-39b36f0dc25mr21174701fa.2.1783083384715; Fri, 03 Jul 2026
- 05:56:24 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1783090480; x=1783695280;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s84s7xlHtuCE+qHkzV8euAVnrD8Kmc3QE4u4jTrxAy0=;
+        b=TQbfo3YKhlroEjrPuf/BLg7HqljGFG6IraWYHKnuxVHmLhqVDtMoXWiJa/GIe2aP9s
+         dRt9jzmsAjuHadbDQfzDSzN3LGLQYepLplQJic/7B06iH+3rPOt3ZGke/lN8TW7i7Nan
+         1YZNFILbnS/Hjj8WIKdmU/ndgDiT5KWlZpE0xpAqZcB69tQiJQdYDhCrcxifagB0txlg
+         /OuS7sGs0knXHvWnS2i2zYAcuSZ2xPVKtwgi5iF+/SrCCqMPwY8zZHohF4Qv0pjsk0cY
+         F9rNXZbCfbuye3YdkaGP4HgmDlovmLMm7fWuezHTwVovFKyhf9NLSYeZeeXoqvtEWoGa
+         1vvg==
+X-Forwarded-Encrypted: i=1; AHgh+RpCOhgiEPJb+4rFLsWT8iV/WsS8eDsoJscbLW4Jvug5F57P7YMjpL6HcbCUkLsMwJxHOHNwzPjFtds=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzbx6nZnMGYMPXzKOjjXtt29dHlYkATwDKJNpGi0Q9xwFK90Fab
+	pTUjZZHqbs+R3cePA+Wp1ntR3sLQPMw8SaKwj3dEjTcFrXZI3f38wnKi
+X-Gm-Gg: AfdE7cmseOEZFpXYnTTJ1GuD3goNrWr1AFRQqx30C9IPKcoRWYGuPe/V1+MsgRHTz21
+	exwKGILBElNL2cZHv6zYkmohCiTXntmw2nD+mc9BvzsECwprHLWIe9hmF8UklKcwjBCwEJ5X9Hz
+	X1v3GeV2FDuAY5Hsa7G74Wtml2+6IiSKInZyFCWTsADlBRS9asBEm3slKRwMptDk4s0h4b+/Y7n
+	fcfAZMUjDKg5w3k4kI52eUtJUf4o8sjlLzLk9AIbGiRT+KdyzCLMTIniBxG3hv94jieN0yGcLBG
+	SmRfvhPaRIGLvN3VzSz2rd6t/nqIGQvQ/JgwVI81PiXAFuuejaRZQgY+lt8Y3rrhUj2szCSzrGp
+	bue/MVp9FGC5vIrUaVWd5K3c0bsXIFr2uK+OMYweH/5qZFmAnadLHyoPJ6maq1pq0InFVq4negM
+	uUyRliCBzdGjgN33s8PA2MBuGA/dod4FWEbu47JJV5nW31Rt1/I6DIRC4JCOGbMhzSIK10sAZVo
+	rOrNlnW3eE=
+X-Received: by 2002:a17:90a:d44e:b0:37f:ad36:8fc5 with SMTP id 98e67ed59e1d1-380aa1d3d70mr9703263a91.23.1783090479611;
+        Fri, 03 Jul 2026 07:54:39 -0700 (PDT)
+Received: from fedora.localdomain ([152.58.57.44])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-30f0bb84405sm30960067eec.17.2026.07.03.07.54.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Jul 2026 07:54:39 -0700 (PDT)
+From: Praveen Rajendran <praveenrajendran2009@gmail.com>
+To: dave@stgolabs.net,
+	jic23@kernel.org,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	djbw@kernel.org
+Cc: iweiny@kernel.org,
+	ming.li@zohomail.com,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Praveen Rajendran <praveenrajendran2009@gmail.com>
+Subject: [PATCH] cxl: Fix spelling typo in asynchronous event string
+Date: Fri,  3 Jul 2026 20:22:50 +0530
+Message-ID: <20260703145250.3953-1-praveenrajendran2009@gmail.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260702172548.37075-1-npache@redhat.com> <20260702172548.37075-3-npache@redhat.com>
- <4c67ac7b-e021-4e4c-ae5c-07bfc0fba9c6@linux.alibaba.com>
-In-Reply-To: <4c67ac7b-e021-4e4c-ae5c-07bfc0fba9c6@linux.alibaba.com>
-From: Nico Pache <npache@redhat.com>
-Date: Fri, 3 Jul 2026 06:57:34 -0600
-X-Gm-Features: AVVi8CfzTBD7feuDGQNv3STuJ_PVTWfd_G02diIzr1_4eSFOGvY8Pww9hOYi6es
-Message-ID: <CAA1CXcC561g+nmAjB9Muvi4rsOYPgbud5USmJnxivV0RDYU=Vg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mm/migrate: exclude hugetlb folios from
- MTHP_STAT_NR_ANON accounting
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Barry Song <baohua@kernel.org>, David Hildenbrand <david@kernel.org>, linux-cxl@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, ljs@kernel.org, 
-	willy@infradead.org, Oscar Salvador <osalvador@suse.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Zi Yan <ziy@nvidia.com>, 
-	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
-	Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: YpVeCZQV86elrbSzZJFcKrC71fO3b0Gre5cIzdesnAk_1783083385
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 2, 2026 at 9:10=E2=80=AFPM Baolin Wang
-<baolin.wang@linux.alibaba.com> wrote:
->
->
->
-> On 7/3/26 1:25 AM, Nico Pache wrote:
-> > __folio_migrate_mapping() increments MTHP_STAT_NR_ANON for the
-> > destination folio when `folio_test_anon(folio) && folio_test_large(foli=
-o)`
-> > is true. However, hugetlb folios satisfy both conditions despite having=
- a
-> > completely separate accounting system; they use hugetlb_add_anon_rmap()
-> > which does not touch mTHP stats, and their free path also bypasses the
-> > mTHP decrement in __free_pages_prepare().
-> >
-> > This causes MTHP_STAT_NR_ANON to be incremented on each hugetlb
-> > migration without a corresponding decrement, permanently inflating the
-> > nr_anon counter.
-> >
-> > Add a !folio_test_hugetlb() check to both places in
-> > __folio_migrate_mapping() so that only actual mTHP folios are counted.
-> >
-> > Fixes: 5d65c8d758f2 ("mm: count the number of anonymous THPs per size")
-> > Co-developed-by: David Hildenbrand <david@kernel.org>
-> > Signed-off-by: David Hildenbrand <david@kernel.org>
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> > ---
-> >   mm/migrate.c | 6 ++++--
-> >   1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/mm/migrate.c b/mm/migrate.c
-> > index d9b23909d716..9fd50ea25d2d 100644
-> > --- a/mm/migrate.c
-> > +++ b/mm/migrate.c
-> > @@ -590,7 +590,8 @@ static int __folio_migrate_mapping(struct address_s=
-pace *mapping,
-> >               /* No turning back from here */
-> >               newfolio->index =3D folio->index;
-> >               newfolio->mapping =3D folio->mapping;
-> > -             if (folio_test_anon(folio) && folio_test_large(folio))
-> > +             if (folio_test_anon(folio) && folio_test_large(folio) &&
-> > +                 !folio_test_hugetlb(folio))
-> >                       mod_mthp_stat(folio_order(folio), MTHP_STAT_NR_AN=
-ON, 1);
->
-> Yes, anonymous hugetlb mappings can reach here, so this check looks
-> reasonable to me.
->
-> >               if (folio_test_swapbacked(folio))
-> >                       __folio_set_swapbacked(newfolio);
-> > @@ -623,7 +624,8 @@ static int __folio_migrate_mapping(struct address_s=
-pace *mapping,
-> >        */
-> >       newfolio->index =3D folio->index;
-> >       newfolio->mapping =3D folio->mapping;
-> > -     if (folio_test_anon(folio) && folio_test_large(folio))
-> > +     if (folio_test_anon(folio) && folio_test_large(folio) &&
-> > +         !folio_test_hugetlb(folio))
->
-> If the hugetlb folio has a non-NULL mapping (i.e., it's a shared
-> mapping), we should migrate it via
-> hugetlbfs_migrate_folio()->migrate_huge_page_move_mapping(). In other
-> words, shared hugetlb mappings should not reach this path, so this
-> hugetlb check can be dropped. Or am I missing something?
+Correct a user-facing spelling mistake in the CXL memory error logging
+macro array where "occurred" was misspelled as "occured".
 
-I double checked (and others seem to have confirmed), you are correct;
-these hugetlb pages shouldn't be reachable here.
+Signed-off-by: Praveen Rajendran <praveenrajendran2009@gmail.com>
+---
+ drivers/cxl/cxlmem.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ill drop this hunk and retest :)
-
-Thank you,
--- Nico
-
->
-> >               mod_mthp_stat(folio_order(folio), MTHP_STAT_NR_ANON, 1);
-> >       folio_ref_add(newfolio, nr); /* add cache reference */
-> >       if (folio_test_swapbacked(folio))
->
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index ed419d0c59f2..503ae2864591 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -183,7 +183,7 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
+ 	C(MBUNSUPPORTED, -ENXIO, "unsupported on the mailbox it was issued on"),\
+ 	C(PAYLOADLEN, -ENXIO, "invalid payload length"),			\
+ 	C(LOG, -ENXIO, "invalid or unsupported log page"),			\
+-	C(INTERRUPTED, -ENXIO, "asynchronous event occured"),			\
++	C(INTERRUPTED, -ENXIO, "asynchronous event occurred"),			\
+ 	C(FEATUREVERSION, -ENXIO, "unsupported feature version"),		\
+ 	C(FEATURESELVALUE, -ENXIO, "unsupported feature selection value"),	\
+ 	C(FEATURETRANSFERIP, -ENXIO, "feature transfer in progress"),		\
+-- 
+2.50.1
 
