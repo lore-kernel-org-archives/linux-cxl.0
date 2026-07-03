@@ -1,237 +1,122 @@
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azon11011008.outbound.protection.outlook.com [40.107.208.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DFC2652A2
-	for <linux-cxl@vger.kernel.org>; Fri,  3 Jul 2026 06:34:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.208.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783060489; cv=fail; b=h3nQFK0kCyNRCW0LaHnuf0+6KcJtzY5K6i8W5i10biiYuzpa9HapY/wM8B+3pv2n/DnWD8oxm7cs3hE3iQoy0vqI5ClVXwgbiyf3jsiPGEvwUxLZEjIP6zTSu89QJ8acI5LZUDY6UgmtTkwiFadYK7uIuk0fYu4GsPM/8k/bTWQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783060489; c=relaxed/simple;
-	bh=99HH0YUCBiUz/fvVvHVH125ZIH9st/Ak5zMHNhgbQpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=EcORkswv4/UX3/emrMyZQXvlkTnrtHTcKLfwPs8VqJ1nd3NHHNlgh+C2otMeAEPZlybr2YTLhi0FhkO8ICu2CHVmvVVsf4h4sSiMs3F/qH8gO3NCbq7Q7NzFOFUVgPtw0NWXk2SYWSDb55mf1aEwgv/uuOjtk5VSGhgfhreH6LY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=N4ehF/AC; arc=fail smtp.client-ip=40.107.208.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1B4333F5BC;
+	Fri,  3 Jul 2026 07:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783062847; cv=none; b=g7mJk+jJmms8tXZt+W3lu1I6rO5HE248tTSceHSFn5SV0MRwH249mEQpuXHeCtkwKcthUhYroJO2fl33IL2CPKskOwDkY7d29EGBorG87HvdYpgg9Le+aWIUIQz16GU/ctXfiPh7RF5+OMnvINdOrPaOnKMqd8BPozj1ucnYQjM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783062847; c=relaxed/simple;
+	bh=4qnWWsFswpLZT9kdWf4QYisKTC8ezhDEY2aBokQ7WiA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rG/xn0QL5YxA0wIm/OAjpMarBO9pM+4N4TzzgSWLIvOUtuig5QaWNkGaFaRE+Nt00eYALD8XfoZ8IhvGW6haiYModCj6QQhxrN5XV1Ypy7VgB9tvBax3gn+Qa+le/wfsBi+EJr8gukeKrVb91kd3cuheNlgwASPNyJ4dus23jn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EfzPfzJh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="N4ehF/AC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oMx3dcOTtT7Z+CMMjOBrQYJeh3UYQIhCEjFzG/wVDVeT+CA0Nu7vm5iHdVpeUym8QqZG8u3nk2NH/7cft2W7HhxacI9ly0ZyXKa7ymu9ZECdoBQ7JssTgS2Qr5Lwhe0rfrGivqK4Spe8jbrvpAuksJ0Qr+hlhhno+AamOSBrzpeDpABy9RmelUjhJdO+ZI3jzDfqEs/NS2eTsHUhDC8gBUaHVBXmtyGv36BF7GFNeNed2adw637mC9MqnlmOgsG+K/OwJJ01qxMXaxb9DpXfWxFYew8pahGsZk+leQ9RozUDrwnrbC+qXscq9jgod9kYI0P+Yok9g+igTSD1biw8Dg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EUiFbM6JwTBjwjexTuCRtYx+f4q2V6dRfe5qV7GIr3U=;
- b=A/uc1GiVOJGOyyF6aMTeNGVZL9GJn+UZjdnSJAE67DFmGR6E4VYayZBmn/LtSYvCOXsniak5xVoA2mqbYMhev/6/lNv0GjcWKRgTPo2YDV9ZZiWmaw8NGq8BGWdTQ5wsmXRN2x142IM4E7bCdJX0/iUhI1ljmkNqu8cjBmfvddjWYRc4gSIMOLwe8VtBz5Sn/EQt5HGCau3hp4QBis4wNMILQX87SvvNHY0pJpL/xfvcMR5iqMKZBLSCeYlHNbWM/4xTghLRRWLrXrIhumoQP+3F8hrNkGXuJdDpSsLCHYpCt9NcjeoNMVTJxQAydIHGMwqbZYqr6GUnBmWRnIaA8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EUiFbM6JwTBjwjexTuCRtYx+f4q2V6dRfe5qV7GIr3U=;
- b=N4ehF/ACJ4QwGCczyDj/wm/3da/U6JBZwx8gurROkIzo/p4O3GsPQ7RX0LXek0oapew92kh/qsnuu5QL4igtwt7ZcBd9DHEbjxu/8A0lhaIC6FynMMKaAbLgqroTo5GKK2E1Dr/V/6IjkLBusG8DkiL28ZcYOHDcmlAY5YYa/n24o67mtzj/mFw9rLzvU3mXueBnz5n8DtA/K9P/4NUA/b8r2ymy0s6AGFIOkvx6mSxZpTtnhE+xrbU1NJIH2eQ2Iz1I8/nih8+U7WVLyojYOXlvPa7eyDA4rkb6ucpemjlJDqDiohOfE8PIYGafm5JqvC/7CWlGT6JefSqsL5svqw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by PH7PR12MB9066.namprd12.prod.outlook.com (2603:10b6:510:1f6::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.9; Fri, 3 Jul 2026
- 06:34:44 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0181.009; Fri, 3 Jul 2026
- 06:34:43 +0000
-Date: Fri, 3 Jul 2026 14:34:36 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: Re: [ndctl PATCH] test/cxl-security.sh: test dimm unlock with a
- large serial number
-Message-ID: <akdXJgMHvXzQDHzl@MWDK4CY14F>
-References: <20260702003407.1611731-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260702003407.1611731-1-alison.schofield@intel.com>
-X-ClientProxiedBy: TPYP295CA0019.TWNP295.PROD.OUTLOOK.COM
- (2603:1096:7d0:a::14) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EfzPfzJh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30E831F000E9;
+	Fri,  3 Jul 2026 07:14:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783062846;
+	bh=sdwGMcIU09gTpDWPA1KnQIa/TOC4FmKSrATda7zEOCk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=EfzPfzJhrs/DcDGpdZ5+DAFM4EShhoQnzAjIm+qpobG5JJqPx5ypYeTS97Pf2W2fk
+	 MXB0HXJDWShx9T+2/TDqN2t+zJCtMpZmwr9fJc95xyVL/zT9V+8EWbmEe7JYPVpeAE
+	 xEDQ7jqwROA2mmv5ncKbNAvd0bmh9gPKHREEGYT0PpwyGTS0lSDBFampLZXQLecXtY
+	 3nZD2Epl8wq9Kuy33zU+8Z3IIWh4bS2Fqj89ojZw5b2X6o5jhI2YZmH3C6+mvzRoDi
+	 CI86CCNjfZO557U7asDOh2CVrUihU+qTWKo8BE198cuD1n5lNVI76Cy1PqIeKYempL
+	 YH+0xI8FNxc5A==
+Message-ID: <cda9bbdf-5ea6-41d5-8a68-629c2c4ce465@kernel.org>
+Date: Fri, 3 Jul 2026 09:13:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|PH7PR12MB9066:EE_
-X-MS-Office365-Filtering-Correlation-Id: 27e19a69-a2d7-497d-a62d-08ded8cd2a35
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|366016|1800799024|376014|6133799003|56012099006|11063799006|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	kaY6Buju1tSHTb1Y2xZMnZeglVoBBTEGoTGpFsrTyj3L5PX9LARUBlwvl3MPqpDVPBuyV9kGX4h1RvhLSm6ITUHzZYFJdlaPAOdNwFBeUFvE4FGPbx7UIwl0Zm+CT/waH3jx9rZDZt4+wFnk3ruby7dszW1ZVt/U+vkZOHxpoPG3qy0k12xQwVWtGQfoXCAxE2EwdKQWPcquarLebRNf2PXn29g2+sp7JfPd9fMyAscnnLX0cM/3CqREWX7CYDt1O3fy+h+ijxwheg/fqSvjQPbcN6WYaRozeWmnSzstTpwTNQAkFsVCN8wkYtMUiHXBWm5fS5j/ZwwCzXMTG+i/kwlzVShRVeek3Nh1hctII4JzLfesyVOycro5AHeRPzKKWN2oMPzY7SRftxwY3TV5sUScQF+RXvjUXJ+479YnRtEyZDmJxOnuCclRus0itpimGCiex5txYdPH78RpKO1iMyQtXICthP0ZxUOMe+dWfr4WAHkl1fzGLKNNzRd4iDM3lS7b4gXIDyiI49vJbaI3iCXdV5Qa8qHY/s4uTSAYrwqdAmV7fKZQdbK8/k0kDnfLDcVI6xfs7igVI7UlKUDK687ON8J7bIzZ2CMh+ulolmp+25YuHYwo07ViRzSCkk8LVa0QThmsGdK659ALon0Uwy4lMEuax9QEcuLORQZ7iAE=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(1800799024)(376014)(6133799003)(56012099006)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?67Tp+jLLh+nGH6HLCNn4yWrFKrl7EIHfl9ZAo4sk1/TAP+sXMbJ6Jy6FefEp?=
- =?us-ascii?Q?MFBAe+QF8HOTN8oASzzw/MTDLf0bNuWkYBU7Blwt/FoYW/AWf6VVn/d6DUrE?=
- =?us-ascii?Q?dR3Ty1YgwJmOPa9sK3SWlk6ZJmF79MuM98+kK2xmqmpcAMmohwCl2aYQPA/P?=
- =?us-ascii?Q?eMkrJjIRTqIrCLY+RQT+1HQC8hcsMYCtGQSFSqJBxJ444O30Sa+Dq7p37KHw?=
- =?us-ascii?Q?NDKFrqFBpUXYg5QtZUw4QPdOdC2GWJ45pT0fmTWHiOgnyhEcBXG1hPrSQZK8?=
- =?us-ascii?Q?TVgz72hx3tlaOZuilU/hIuDUFmy6pE4th0i3gO6mPg23WF2ymH1M+MB4Xiyv?=
- =?us-ascii?Q?RBrZpLHBr84r895yIQs7zptFidZ54j6IK6V9/PmK/EkEBKdhWqje2+pBE0WO?=
- =?us-ascii?Q?q0pJKi4FUCqSxSpEAUqPpbOUo15vYl0F45374W9woVgotxl+dnkXxbT7Q5ul?=
- =?us-ascii?Q?iNIB39ApUqNGzvWE7uYQbmJL/mg3rnNtthi4BHe8XFTycNcEZz/o6uIleyDV?=
- =?us-ascii?Q?ljfs1SwgX46p2pq/anYXdVxlFSSw3r45F0Jed6lyu7MZ5gXMB+IkQ+2DvIh2?=
- =?us-ascii?Q?gsS1JblcjsnFJTZF80r9vZlab7MWiCB4sasiZBCo6ck3odKsiNqUAFtYlNQK?=
- =?us-ascii?Q?4AbRUIt1hB7AHr6bk9ZKG3Wif1t1R/Vm3R3hfkxxlc/rj7n4KclS8nClQg/c?=
- =?us-ascii?Q?FEuJadnH4hFY9esyGYCP+2oVK1xgevMbx+Pvxz+9KzjLp/3BC4XfBA3AoTV6?=
- =?us-ascii?Q?16TdoIg3rRDcsFUmeL9Bp9hAjl8JbMZj4jDfNKnyjJXs5KRdeXITkX91SWtR?=
- =?us-ascii?Q?p3GdMH+OaQxRGv0Bl2tAipVt9pPQ6uelFRu5lIjDuD93RLq8IenZufOxhMGT?=
- =?us-ascii?Q?KjlVnFbU3oX/uU5Fp3PGPWnYw/C+7UBo5VAWbLYiCszzqhAECZkE+rhx62p/?=
- =?us-ascii?Q?f32i7i3er9krVikgGvWWSzEBLpZSD/KATHz4QhlU55PY2S20BH48lmiy/D8I?=
- =?us-ascii?Q?BiTrYjrFzVWCWYetf2j6oME4qtvUGorAp/OyEmHJ+KYGGEE+pztyBAxEUIgO?=
- =?us-ascii?Q?XNDd5vx2pLtonIRs0JOHBFKqSdsdvXWL1GX6g2r9pHUWCm2n3T1wvgB7oOdK?=
- =?us-ascii?Q?9NGd5I3miZJ3co4sjLe7FGQD+11Fi6f9WQErhIAh2vGEhdN3wpILtGdAJMwD?=
- =?us-ascii?Q?j4Bi7ish2TLuSHM+zY4RIevPX8+4Lcw9pfLrrUOlFNXRvxmYGr3QfFfqvOaI?=
- =?us-ascii?Q?/AlIfvG+m3hL6bk/E2DkT6uytcy90gSrDI/CLG3OI+9WLYCxLjZD21j65eP3?=
- =?us-ascii?Q?+torm7z2d9uXGbvZ6SCTDrszh9Jk6H55rfgPXLlN+rTzt+4rKMX7EqUYyy+f?=
- =?us-ascii?Q?jIIayev9arHc5Dv29h5XaahKzIFRa/NuQJhq8pZcj1PfaUsjZS01oOs/gFYU?=
- =?us-ascii?Q?VeHrFGWuyVd4Os4YyZEiR6gWyybCojttB28SCOvPNkoFqeAn8IM8WDh/yVcB?=
- =?us-ascii?Q?qFRFBBXMjE6JDMFGSbWylzwz87XMHL65PrN4gx8Y7gEzeQsHr+cqzRsuxZBD?=
- =?us-ascii?Q?t7W+2NeNLImXhHpw+ty0VF+N+q1tF5ukL/UekD6VY6+IcZpnrbsCb3CPQiLu?=
- =?us-ascii?Q?b0q/KLzr80WUfB5gf1LzuYyLiYC4R2EdBhtKhbUlni5Eve8V1jaBkIDD6e1N?=
- =?us-ascii?Q?h5plhnayZYshevbufjMw7NHHdC1Egvt170z8j0/+XatFDx8l9E+wnIA6HER6?=
- =?us-ascii?Q?e8RGK6ioWw=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27e19a69-a2d7-497d-a62d-08ded8cd2a35
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2026 06:34:43.6490
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: R55oQwospHk7kMRVDgtbxaxgbADbvFf2p/FP4DBoqU3qgfoLoIIPl6qEAdlsifzFwhjxAZeevG6rCpOittoyrQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9066
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mm/migrate: exclude hugetlb folios from
+ MTHP_STAT_NR_ANON accounting
+To: Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <npache@redhat.com>, Barry Song <baohua@kernel.org>,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc: ljs@kernel.org, willy@infradead.org, Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>, Zi Yan <ziy@nvidia.com>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>
+References: <20260702172548.37075-1-npache@redhat.com>
+ <20260702172548.37075-3-npache@redhat.com>
+ <4c67ac7b-e021-4e4c-ae5c-07bfc0fba9c6@linux.alibaba.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <4c67ac7b-e021-4e4c-ae5c-07bfc0fba9c6@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 01, 2026 at 05:34:03PM +0800, Alison Schofield wrote:
-> The existing CXL unlock test exposed the hexadecimal-vs-decimal key
-> description mismatch once cxl_test mock serial numbers were extended
-> to 10 and above. Serials with bit 63 set expose a second formatting
-> problem in that the kernel formats the decimal serial as signed,
-> rendering it as a negative value.
-> 
-> Extend the existing "unlock dimm" test to repeat the unlock against a
-> mock memdev with a full-width serial that has bit 63 set. Refactor the
-> common unlock sequence into an unlock_dimm() helper so the signedness
-> case follows the same test flow as the original key lookup case.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  test/cxl-security | 24 ++++++++++++++++++++++++
->  test/security.sh  | 16 ++++++++++++++--
->  2 files changed, 38 insertions(+), 2 deletions(-)
-> 
-> diff --git a/test/cxl-security b/test/cxl-security
-> index 9a28ffd82b0b..39b7e001ce08 100644
-> --- a/test/cxl-security
-> +++ b/test/cxl-security
-> @@ -9,6 +9,30 @@ detect()
->  	[ -n "$id" ] || err "$LINENO"
->  }
->  
-> +# Select the mock memdev whose serial has bit 63 set. Match on the hex
-> +# spelling of 'id' because the value exceeds signed 64-bit shell arithmetic.
-> +# A 16-digit hex value with a leading nibble of 8-f has bit 63 set.
-> +detect_big_serial()
-> +{
-> +	local d i hex
-> +
-> +	dev=""
-> +	for d in $($NDCTL list -b "$CXL_TEST_BUS" -D | jq -r '.[].dev'); do
-> +		i="$($NDCTL list -b "$CXL_TEST_BUS" -D -d "$d" | \
-> +			jq -r '.[0].id')"
-> +		hex="$(printf '%x' "$i" 2>/dev/null)" || continue
-> +		case "${#hex}:${hex:0:1}" in
-> +		16:[89a-fA-F])
-> +			dev="$d"
-> +			id="$i"
-> +			break
-> +			;;
-> +		esac
-> +	done
-> +
-> +	[ -n "$dev" ] || err "$LINENO: no serial with bit 63 set found"
-> +}
-> +
->  lock_dimm()
->  {
->  	$NDCTL disable-dimm "$dev"
-> diff --git a/test/security.sh b/test/security.sh
-> index d3a840c23276..72bb570142ed 100755
-> --- a/test/security.sh
-> +++ b/test/security.sh
-> @@ -144,7 +144,7 @@ test_3_security_setup_and_erase()
->  	erase_security
->  }
-> 
 
-Hi Alison,
-
-Just a question,
-Does this cover the reboot or load-keys path?
-setup_passphrase() leave the large-serial key resident in the keyring,
-the this only tests lookup of an already-loaded key.
-
-The failure being addressed occurs after reboot, when the key ring is empty
-and ndctl load-keys reconstructs the key from the persistent blob.
-test_6_load_keys() exercise() that path, but only after detect restores the default device.
-
-Could this case unlink the large-serial key, run ndctl load-keys, and then
-enable and verify that the device unlocks? That would excercise the
-persistence boundary relevant to the reported failure.
-
---Richard
- 
-> -test_4_security_unlock()
-> +unlock_dimm()
->  {
->  	setup_passphrase
->  	lock_dimm
-> @@ -158,6 +158,18 @@ test_4_security_unlock()
->  	remove_passphrase
->  }
->  
-> +test_4_security_unlock()
-> +{
-> +	unlock_dimm
-> +
-> +	if [ "$1" = "cxl" ] && check_min_kver "7.3"; then
-> +		detect_big_serial
-> +		unlock_dimm
-> +		# Restore the default device selection for later tests.
-> +		detect
-> +	fi
-> +}
-> +
->  # This should always be the last nvdimm security test.
->  # with security frozen, nfit_test must be removed and is no longer usable
->  test_5_security_freeze()
-> @@ -241,7 +253,7 @@ test_2_security_setup_and_update
->  echo "Test 3, security setup and erase"
->  test_3_security_setup_and_erase
->  echo "Test 4, unlock dimm"
-> -test_4_security_unlock
-> +test_4_security_unlock "$1"
->  
->  # Freeze should always be the last nvdimm security test because it locks
->  # security state and require nfit_test module unload. However, this does
+>>       newfolio->index = folio->index;
+>>       newfolio->mapping = folio->mapping;
+>> -    if (folio_test_anon(folio) && folio_test_large(folio))
+>> +    if (folio_test_anon(folio) && folio_test_large(folio) &&
+>> +        !folio_test_hugetlb(folio))
 > 
-> base-commit: 5fcbbee57319e718bf522436ea6595bd0f71296c
-> -- 
-> 2.37.3
-> 
-> 
+> If the hugetlb folio has a non-NULL mapping (i.e., it's a shared mapping), we
+> should migrate it via hugetlbfs_migrate_folio()-
+>>migrate_huge_page_move_mapping(). In other words, shared hugetlb mappings
+> should not reach this path, so this hugetlb check can be dropped. Or am I
+> missing something?
+
+Good point: we should only reach here with anonymous folios that are in the
+swapcache. That doesn't apply to hugetlb.
+
+-- 
+Cheers,
+
+David
