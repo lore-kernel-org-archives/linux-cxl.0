@@ -1,285 +1,208 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010001.outbound.protection.outlook.com [52.101.85.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B5B3A9D9B
-	for <linux-cxl@vger.kernel.org>; Mon,  6 Jul 2026 04:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B353ECBD7;
+	Mon,  6 Jul 2026 06:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.1
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783311069; cv=pass; b=CaGywmqGS15SklqOqx8pdmffC629CPkW5A44f78jwumBJ6sz0RYPk6cdZq4d3smuHk4bzmV+kI9l/xNfS7617jf2+THxBTa0l5hJTGrUyCCUdP51ICTlOaY9NvqEPeYnxhE67LPRuu4CGTmQ+MHQi/HBCtJharoORN5yF4eoS4o=
+	t=1783321046; cv=fail; b=MEOfUgN8/Y0bW9U6Vj9BXbhTLGTUIftAxhWpvJiI/stf0gnnuNe5fdSoXtGJe6zwsed03YdKB1K2NB3f6pTcCbli/i3a8gwhaX9e2WzgddJRczDuBk0bnhU1L5OGEEN+rsQGo617c6+MkTTS1C7VLn7Sdm+tW/v15W+0fltfVXU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783311069; c=relaxed/simple;
-	bh=CH1qM5/COWWxE8rnytoyXT+I2HCc7dULq+Y7tzs7cS4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DnfWByj5JOOlOPGISc8LKtDTa2mieTLFC4OiQm7oTxvCnzAtK1CQGQIAa7Op50EkQOwNAeHUda8EnDxXeo9qSc/joqKG745DQJ0dq7rnhJdNh3Kul71g1HZx3gHEGEIyZuVzAV6aWXzLud1ySawq9rFatOTXrMaaxImL1nFVWuU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cvFleykt; arc=pass smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1783321046; c=relaxed/simple;
+	bh=06SP8GGHzA0KXU0GTGeyK70W7kOrWB2/EGfiFI8CPHw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=WAYOGdmIzBPPEXSvujcTooUyNfBcZo30toBQmuOVyGnY2Qzr553HSTcdqF6KF/jn+VSr3CYNrWTgCRi4uc2Qx6RHFvUQuh1Aeu49u9zgkwF+QjamOKAqEf1qSHvGSbjwOp97pZNNmvwCBr6JCxz/Hqm5czVIheiTXH3PbgvtjkA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PLa/EPwB; arc=fail smtp.client-ip=52.101.85.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cvFleykt"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-698b6c87884so4423212a12.2
-        for <linux-cxl@vger.kernel.org>; Sun, 05 Jul 2026 21:11:07 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783311066; cv=none;
-        d=google.com; s=arc-20260327;
-        b=O4VJdnkJ3srGp/5qZW/4dfPB3nHl1BZLRRU2Qg7yGfey7V4ZVkgFhfu/zsDAOd/sH7
-         L353wsA+BMUqduqOKCDXyqyg/3R1QBvjIZL4RlhzZZ7Hxa/3XxbHpUYlT70QrLeO5zp0
-         G3BjHEahsXNbM34ey9/dssSkmD/Z7V1VqDyiGMnM0lDexu7FpJrXKbxBFoOd28vkETzo
-         3S47h5Nz/Sp4H/Tz+zgQJfB76z7fmkiDjD6uQUYeB1W7IxksRXEKepWJijYRgqVwsXuP
-         Db84lQ3BmJzLI/bWoxgG+B0ooRBdwEFZMkOlYBvwgJDKFj4UHG/gYrp5KqXq3Nf09Xl4
-         Gx+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=7HxEleNdpcq/puEELEg1OY61bl0n76N0fS35a2/nEw4=;
-        fh=V/fHg6TBydxmrgQc93RtrTioj1+sh3xVDNiKvJo2Ecw=;
-        b=gkTNqYn2qDwWOv2zJrT/BsK8CufPLJcP1DyHQZv1Kcz+A6IDfnycmFZJk1klIUT9Ss
-         Fv3pnSGsus/bruKcmjvG3L6HXxuo0k/eqkj3hQu3ToHMfD0dqjvZFkvgFyKz0AOklH6i
-         3xAlk9KMFdJyKhXvS0IRUCamPg6LRJQWvudInd7DHccs/NeQ0BGxgU9jWor9UXCEtM1l
-         qxuPX8/l74r4eyZjsOYVkm5vRSGeK5ZhbqCfTh4AKHwcUQCjVSoLpQJAZeUZVXT5Hx1H
-         7OQRnhKcyQ+LzaIrhjEy4Aa4drcgt4LrH2XwKvWqAT5Pj7jMi8h5iDKzKnEToo3gz08l
-         kAUQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1783311066; x=1783915866; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=7HxEleNdpcq/puEELEg1OY61bl0n76N0fS35a2/nEw4=;
-        b=cvFleykt8XD+YO1rUd2Q8l/LgzNpZpwy8Wh0EysZ58zHMDYorwuuFroz9Vv8UwmXU5
-         SF60rNjf6nC//cRVrhokzm/KYNMOdUCPYnXQ+GjqEGL3kOTM75WSDGED59KzA/jHN/Y1
-         zQ1Tj3Umva+qj8tOtSrShumwo10EMXVOt7wx9GED1CSvfKgLdsJNRII5zZSuoCO4ih87
-         uaAp0zJWLBip2LzJbdQrXDDLcbMqQBFeHXB/okdd2EWO2g7awtUNrPDaA2+nPERZBTO6
-         4IWbMHN4qPIajR7RxsRICq2HyqiV9uTBq3JMxug+QOtQZ/5aB8rFH47ExaogVaJHP9Q/
-         +Oyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783311066; x=1783915866;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=7HxEleNdpcq/puEELEg1OY61bl0n76N0fS35a2/nEw4=;
-        b=Hv58hQ1K3IPgyPdPHpsMx86VZnfJSdDxd8c+cAE0szMFjknrQSuijuarFbFjmetk29
-         NqxFQF+A7jrQ2484ifCAH5BaYFHmExC0LWYeg7FjE5MYKBE2LL23QR/U+5VgkaY1cSLw
-         nFJrQEYbhWKv2UrF6wUDAER4gNlhcJxphv0aqkA05rJcc7aMiGV+4OkaQaaToCj4A6A9
-         4R9D5bw+tHwtCPvmUiegTV5Mfee8PXDRVpU4B4RooJC8Nyhj9TvShgzstrDLDZ69+tZS
-         wZyrLCcjVesopYlkPJMBJ8iSDqAljUZyrP4pzwlGrSdf/e5fIU33X1FxiBskxmSYgpfo
-         D4MQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqjZ/1qAubDybBlN0nfZh2QC0k47WW6IvKjnUiFL/t+lINaYiZpX5nqTf2CKzB+het89Otso1H+5sk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmZKMaUYw9IKzo1Db+WgsWpq/3zt3wz7vVw9IAhVFcbwhJ+7gn
-	7DwsRBdwZ5LnhjTKEqRcsMQ5Uan2i/kahZynt6mGeLq1WYd8lzbDjHMOMk+gxLd9Y+Ukv/227Mf
-	vUUxztoITtwVHKp/fpxFaTfULST36EIQ=
-X-Gm-Gg: AfdE7ck12TYZJbCalvuLZhQhPfQLQcqpFIzyWiEbnc/+Av9or6PoKJm5KNJxKcr9XR/
-	Z4dKC/mDAzXlqz4ii4Pjx3qnwzaJ/CO0dlsmYpL5PeVk0k4R1T/tRerBv6I54BAdVMkWyHJhlg4
-	c6zAXY5bky5NMjvjbaDClBCUiofPPIAcq5aw8nrEF3OO4ylvoi1m/+R7b0i1xT90ssjyxSwB8An
-	0wbDFTwfBLjnsZ6NDX56C48gydfUS6LCjAE5jc7c+aAjjOqXILLtZG1LUvLhZUfPnM1k8JdR/eC
-	lBq4wJownqvN0DlHjS/u55OXqXKS1lKh14bvAg==
-X-Received: by 2002:a05:6402:3908:b0:698:3e99:815a with SMTP id
- 4fb4d7f45d1cf-69a1a4c094bmr2715772a12.38.1783311065710; Sun, 05 Jul 2026
- 21:11:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PLa/EPwB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jhXiAhy1lkrTHpLIJBsS/GCWYwgxRyYgcYwv7FE5LFyjDkWVKwD/V2uhK20KF8avd+JYqs060BFdF45q9mzfEfj9PGkrTBLW9jb4xUSM8CpNQggGUSnD55V4dwbLlhTVNHRqladAIXGuBbbPvK5BQg39WIXx9Z1lTreopfFIZVKh+7UUwVBkbSCQyYC+H2JnE7h6v0Q3RHEvUYpj7TWHmXocRG+4HaT4F5yw9zB/CGP+hdds2+DnLztTEnEFFmmZj/cJ9FivRqRsc5GC4t/KYw+tmoP151kuiTFqpFYLmf5LZVcGmC75P08HMIRXYzTcHKmJxGUKXoVGgbcwk87lDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OqqZFB7Iu+8RPQobTpoPCSHBqijpVjIo8npSJBxauts=;
+ b=tizdqjTX+qIFVlCrt1v7/Bg7TbOb5T612WSAf6vthYwxMgxh6BvULQOt63R3IVbnY7hBXnmUlMbODz7t2Z0ejn6SnpZ/QO4uzd4A33J151qBl5LyoknqjGq7CuA8Q7pp7J6eE0IFqo/REvWbFDbNS8KldfP45MS0VaE9qinjimVOqmvPCXO83958YXLtFUsq2tlzQ5mDapC7xO5BGP+2uW8H5cJfflGjKRN/P8y78Bq7X7uRcG1nGtjHhsLBoWseJfF3/rS0D53q9aIfJV7LrA2tWaZjXkSXI++5yt3qKcli37p5lGStqejxqkkGoniO8EbXCVb1CIWXirgwND7OAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OqqZFB7Iu+8RPQobTpoPCSHBqijpVjIo8npSJBxauts=;
+ b=PLa/EPwBmReGjY5ga1leKyCSoVWKLKI93Jx0JM7MvgP1euhURg03nnQzvyDmHjfO8JxRst1+N6OZmOYdQ1ecT/6aK37xb1jIZx2Qbze4kuA53rZDcEB7te4xU9eXGNmmx0vUL34RPs2mJqP6lNnpDgXeDsFQ+7pHWAzcTyS+944=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6254.namprd12.prod.outlook.com (2603:10b6:8:a5::17) by
+ IA1PR12MB8468.namprd12.prod.outlook.com (2603:10b6:208:445::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.10; Mon, 6 Jul
+ 2026 06:57:13 +0000
+Received: from DM4PR12MB6254.namprd12.prod.outlook.com
+ ([fe80::8211:9b5a:99d2:ffa1]) by DM4PR12MB6254.namprd12.prod.outlook.com
+ ([fe80::8211:9b5a:99d2:ffa1%6]) with mapi id 15.21.0181.009; Mon, 6 Jul 2026
+ 06:57:13 +0000
+Message-ID: <c88a09b4-6478-4c68-87f0-485dc6634af2@amd.com>
+Date: Mon, 6 Jul 2026 07:57:09 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v1 1/1] acpi/hmat: preserve hmat_adist_nb notifier
+ block
+Content-Language: en-US
+To: Richard Cheng <icheng@nvidia.com>, alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org, rafael@kernel.org
+References: <20260630143507.30193-1-alejandro.lucero-palau@amd.com>
+ <20260630143507.30193-2-alejandro.lucero-palau@amd.com>
+ <akYPrcsz2tWl7ga4@MWDK4CY14F>
+From: Alejandro Lucero Palau <alucerop@amd.com>
+In-Reply-To: <akYPrcsz2tWl7ga4@MWDK4CY14F>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P265CA0227.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:315::13) To DM4PR12MB6254.namprd12.prod.outlook.com
+ (2603:10b6:8:a5::17)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260618093827.3507-1-cp0613@linux.alibaba.com> <20260618093827.3507-5-cp0613@linux.alibaba.com>
-In-Reply-To: <20260618093827.3507-5-cp0613@linux.alibaba.com>
-From: Alistair Francis <alistair23@gmail.com>
-Date: Mon, 6 Jul 2026 14:10:39 +1000
-X-Gm-Features: AVVi8CdAeWtetyAQk_qrrsZ1ircuBVcHeYNWKbPeiByd5CkQfkXfp2U6MM-auzE
-Message-ID: <CAKmqyKP1DUuLBxLhsqVXa8Bsk_x_r=rg+-08dOg46fkEO2W0rQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] tests/qtest: Add RISC-V ACPI bios tables test for CXL
-To: Chen Pei <cp0613@linux.alibaba.com>
-Cc: jic23@kernel.org, pbonzini@redhat.com, palmer@dabbelt.com, 
-	alistair.francis@wdc.com, liwei1518@gmail.com, 
-	daniel.barboza@oss.qualcomm.com, zhiwei_liu@linux.alibaba.com, 
-	chao.liu.zevorn@gmail.com, sunilvl@ventanamicro.com, dave.jiang@intel.com, 
-	alison.schofield@intel.com, imammedo@redhat.com, mst@redhat.com, 
-	guoren@kernel.org, qemu-riscv@nongnu.org, qemu-devel@nongnu.org, 
-	linux-cxl@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6254:EE_|IA1PR12MB8468:EE_
+X-MS-Office365-Filtering-Correlation-Id: 140b28fe-7593-4f63-8cbf-08dedb2bcebb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|23010399003|376014|18002099003|22082099003|4143699003|6133799003|11063799006|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	F19HExQ/ipixRkc5UvCo++l+ONS3z7dzKwrq3zrORZap5ly6dOT1NcfnQWYL2vpDSQJS+NZuazwtVZ6ssFWCX3k8eiKFfZ2z1vDyeMyyA/X2WKZdOQ4FI2oJrZpx++cZL1ENdhRCyoHADkyjmXd+C+f2Loby0gmTgTBFWuoE6NOpE/aYu0EIUQql1KN4kLESBAPy1kbgdTamag/T3myN3tOCqVylXbtJAdSrlisggelWwTs/Ruy7APK3rNx1r/8T0AtXO0D2D9zeaF/qGIgEi+f5KWpvtOFVjMXE4zUcoXS+mI/rePeiq1fbpikhEqP5spkaH/B082CEbWb7QfsS3QUtIFYFWBEzE/WoXjUT+z0ke5SeXZt3An7I9HFRKKVmWas0BmNd/0tL9aHaNYbuqIW7kYHzQzKYikpWPjgyd7zkNEbiBWyMu9Kde19tQM2ZkKjgP2b1U/Dk/eRDykQASUlWFlUSc/r5K0TGgAF9XFrdO6L0qzX3U3Mw4tm10Kuw9Yl3PAhnUjyXRQNnC+k3xK2TqiDsQRpXKoAb/6cQdyeAwfAsVHRo3HxWkP1kS1r7kHXyo67S1gMRy/kzGnTZo6PchaAvaRpqneRHhdRj7TVdwMaS8DvipPqie83HbVZ1cRSl2HcS6qBun86UVnhUlHHV2GZkzH5KkZtoi599GeA=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6254.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(376014)(18002099003)(22082099003)(4143699003)(6133799003)(11063799006)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	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
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 140b28fe-7593-4f63-8cbf-08dedb2bcebb
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6254.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2026 06:57:13.5212
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3vkWCr1rUpHulN9mwiDsYyOFI1XQ6Y6QDDr4nffoACdy5XO/lHN8qC4Xc8tdhresyAJC5VcW9dkG06nTFEZlUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8468
 
-On Thu, Jun 18, 2026 at 7:39=E2=80=AFPM Chen Pei <cp0613@linux.alibaba.com>=
- wrote:
->
-> Add test_acpi_riscv64_virt_tcg_cxl() to verify that enabling CXL on
-> the RISC-V virt machine produces correct ACPI tables, including the
-> ACPI0017 CXLM device with _DEP in the DSDT and the CEDT table.
->
-> The test boots with cxl=3Don, one pxb-cxl bus (bus_nr=3D12), a CXL root
-> port, a cxl-type3 persistent memory device, and a fixed memory window,
-> mirroring the existing x86 q35 CXL test pattern.
->
-> Since pxb-cxl is a root bus, using -cdrom causes QEMU to auto-plug the
-> cdrom drive into pxb-cxl, triggering "Only PCI/PCIe bridges can be
-> plugged into pxb-cxl".  The ISO is instead attached explicitly via a
-> virtio-scsi-pci controller on pcie.0, following the same approach as
-> test_acpi_aarch64_virt_tcg_pxb().
->
-> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
 
-Acked-by: Alistair Francis <alistair.francis@wdc.com>
+On 7/2/26 08:20, Richard Cheng wrote:
+> On Tue, Jun 30, 2026 at 03:35:07PM +0800, alejandro.lucero-palau@amd.com wrote:
+>> From: Alejandro Lucero <alucerop@amd.com>
+>>
+>> Remove __meminitdata from hmat_adist_nb declaration preserving it even
+>> when CONFIG_MEMORY_HOTPLUG is not set. Otherwise further notifier
+>> registrations using register_mt_adistance_algorithm() will find a
+>> notifier chain likely corrupted. This is the case when a CXL Type2
+>> driver will load after kernel initialization and a CXL region created from
+>> its committed HDM decoders registers an mt_adistance_algorithm notifier.
+>>
+>> Signed-off-by: Alejandro Lucero <alucerop@amd.com>
+>> ---
+>>   drivers/acpi/numa/hmat.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
+>> index 9792dc394756..3006789ae31f 100644
+>> --- a/drivers/acpi/numa/hmat.c
+>> +++ b/drivers/acpi/numa/hmat.c
+>> @@ -995,7 +995,7 @@ static int hmat_calculate_adistance(struct notifier_block *self,
+>>   	return NOTIFY_STOP;
+>>   }
+>>   
+>> -static struct notifier_block hmat_adist_nb __meminitdata = {
+>> +static struct notifier_block hmat_adist_nb = {
+>>   	.notifier_call = hmat_calculate_adistance,
+>>   	.priority = 100,
+>>   };
+>> -- 
+>> 2.34.1
+>>
+>>
+> I think this is not limited to CXL type 2 device.
+> cxl_region_probe() already calls register_mt_adistance_algorithm(), and CXL_REGION
+> depends only on SPARSEMEM, not MEMORY_HOTPLUG, so with NUMA=y, MEMORY_HOTPLUG=n, CXL_ACPI=y and CXL_REGION=y,
+> any runtime CXL region probe walks the chain. I would suggest some tweak for commit message.
+> Also adding Fixes: 3718c02dbd4c ("acpi, hmat: calculate abstract distance with HMAT")
 
-Alistair
 
-> ---
->  tests/data/acpi/riscv64/virt/CEDT.cxl | Bin 0 -> 108 bytes
->  tests/data/acpi/riscv64/virt/DSDT.cxl | Bin 0 -> 6212 bytes
->  tests/qtest/bios-tables-test.c        |  54 ++++++++++++++++++++++++++
->  3 files changed, 54 insertions(+)
->  create mode 100644 tests/data/acpi/riscv64/virt/CEDT.cxl
->  create mode 100644 tests/data/acpi/riscv64/virt/DSDT.cxl
+I think you are right. I did say it was not affecting Type3 because I 
+was assuming only Type3 regions created during CXL core initialization 
+and cxl_mem "active" before after-initialization kernel memory release. 
+I will add what you suggest.
+
+
 >
-> diff --git a/tests/data/acpi/riscv64/virt/CEDT.cxl b/tests/data/acpi/risc=
-v64/virt/CEDT.cxl
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..81d746dfb09ccb147e26bb640=
-60404ca3191d097
-> GIT binary patch
-> literal 108
-> zc-nJzbqUE~U|?VjaPoKd2v%^42yj*a0!E-1hz+6{7!(+IKx!BefCEf2LP-snumA^?
-> O0aMEg#QH!C(hmS*@&^F`
+> And maybe keep unconditional removal rather than a consumer-keyed attribute.
+> register_mt_adistance_algorithm() is callable by any runtime module,
+> not just CXL, so a CONFIG_CXL_MEM-keyed condition would  still leave the hole
+> for other callers.
+
+
+Not sure what you mean here. The way I understand your comment leads to 
+contradictions ...
+
+
+"keep unconditional removal" suggest to me unregistering hmat_adist_nb 
+but "keep" confuses me as it is not unregister now only memory released 
+based on __meminitdata ... but maybe you mean exactly what I did and 
+avoid any change to __meminitdata declaration based on a config 
+attribute, what is what Dave is suggesting to explore.
+
+
+Please, could you clarify this?
+
+Thank you,
+
+Alejandro.
+
+
 >
-> literal 0
-> Hc-jL100001
+> What do you think ?
 >
-> diff --git a/tests/data/acpi/riscv64/virt/DSDT.cxl b/tests/data/acpi/risc=
-v64/virt/DSDT.cxl
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..45999636a05a16f68d1f418a5=
-8d9b80a8a62c9bd
-> GIT binary patch
-> literal 6212
-> zc-pO)%WoS+9LHzvjqR-0&f0Mj=3Djrqzae%_tantltHTF7bT*Zm;rVlBV91*2z8`P#y
-> z5CtJh4?H3sYJ<3NaYa=3DA0Zs@65?r`dLI_kOZd^FR0U;rUnO)o2Z@QIw$VS?ovFG=3Dl
-> z`E1tSkGJfUm&#coLJv!e_M9_bI$yKL<)#TCR9hXbkKfiVG@Mdn`SzS{1Bf-|D&<7c
-> zu2p1bO2isxDrLE^7MD^_8HclnHKEG<+ur{2?c=3DlO>{&19`I+h&88jgyoTZ`>k2P$&
-> zsL6fZNu`YBJKd_>vg9hoO<6frvD-_iJN8*wneQy&lv5IW3WX`eid$$$?Zqlr7CM!x
-> zX2=3D+5)mUo(ene=3DR;m#Usl$~;VB9!Vitjw=3DF55KzlL3Q)a*PnfR`g1KktfjM|#OjOJ
-> zR@aYQd};0aD{EI*Z^~(>kIPAm`q_GWx$_J4MLFr@?xY>g_SBa9=3DS{7(fZd3EP=3Dpo~
-> zG46{9wIWI?Vj?KQ2nA)pml5`76aq8CK^fD&4Bek`G%!OC%BcA=3Dy8IcFff-#v87sbw
-> zh(F_4U`8Y;W5bsb^=3DC{4W<-NBZuv4|t&EC354&}B)D~*8J=3D?iBYO*$I#NF}Zt*g*}
-> z<h4ws;nW?i6_pQ&(m3isK-2+_I<2B60;1H#;?Fu5kaaL1s}PhG=3DBz^jS%)}l_QRSD
-> z+yCv8Kc*@w<+K?xiw}&L+R5BfX~8hPSxoh%Qcn#U{Tt#n@q+wxl*O8ORa_RU@+dkV
-> z!diW)cm8GLRywZ7cXovOw+OGTsq-q*rfM4@b!OU~utF2*gl@`FLU`j^J<S`K^m=3DYx
-> zVYeIh^4+l^w{oJ>(|kiiUL|(BVc#rax3bXbX}+OhuQI>e4f|%%h48IF7n*OVF4~ms
-> zuAj4uIJ=3D0mi#fZPGeVpZ;*2n7ggK+c870mrb4HmnMw~I?j4@}7IlGCon>f3fvzs{$
-> z;xvfUU`~TM<HQ*!&Ny?%nbRarlQ>Q0G?_C&oC)GgFlT}}lf;=3DM&LndtnX`vDdx*1#
-> zIeVDXB2J4qE#|bCGew*!;!H7TiaFE7nI_IObEcWImpFTgvzIx0nKMJ28RE<^XNEcZ
-> zh_jD4`<SzjIs1vTpE&!Ov!6K!h;x8A2bgn!IkUu>CC)5!W|?!4I0uPykU0mLbBH*H
-> zh;xWJhnRDiIERUIm^p`;bA&iYh;xKFN0@VzI7f+dlsQM4bBs90h;xiN$CxumoH^pm
-> zF=3DwvL>D{=3DWGoE=3D@UJYj3_cwNScHU~Wt@jclWV%8=3D>?*dr+dF4!H4(Fy>ho^fcH6e=
-d
-> z%qJU*j;(L53%h(S-&`>7Y+X|By<GjR@K0`J`qOhair=3D01<)Zg${O7+eUH)OS`pt<?
-> zhOCo6{kOSp=3D(27?9%J%Y*igHbH&%??O4GW#by<5;rMmCso4t3p+_$~gEVWnTC)Cp1
-> zLbbY$71e5%^~X+V$^l2^Q3Xt@x}%CmH6|63N}tr!ZhQS+(wj@IF~7a;sT=3Dms0<nJ<
-> zh<&s`?3V@Jt=3DSdd*(&0=3DCxNY=3D`c3D|oD!}EcFv=3Dcz??Bs6Sk;G@f(*vah_NO;Zs5=
-Q
-> zRS<p^1gRiM1;Hu^RzZ*of>aQ!f?yQ{sUS!N!72z=3DL68c9R1mC!U=3D;+ZAV>wlDhO6V
-> zkP3oS5Uhe=3D6$GguNCm+v2v$Lm3W8J+tb$+_1gRiM1;Hu^RzZ*of>aQ!f?yQ{sUS!N
-> z!72z=3DL68c9R1mC!U=3D;+ZAV>wlDhO6VkP3oS5Uhe=3D6$GguNCm+v2v$Lm3W8J+tb$+_
-> z1gRiM1;Hu^RzZ*of>aQ!f?yQ{sUS!N!72z=3DL68c9R1mC!U=3D;+ZAV>wlDhO6VkP3oS
-> z5Uhe=3D6$GguNCm+v2v$Lm3W8J+tb$+_1gRiM1;Hu^RzZ*of>aQ!f?yQ{sUS!N!72z=3D
-> zL68c9R1mC!U=3D;+ZAV>wlDhO6VkP3oS5Uhe=3D6$GguNCm+v2v$KkOU7*2rJ~qYt_SZ{
-> zJ{L7^wDnJjxGRAqiqldQueI8c?`USY{j6Btg4GsQPmwpD_SLwX?v8M83}Wx=3DQX1x?
-> zERtQp9{E^f9D71zbp7z2Nn)2d(kMGsy?MZ!^TE`Qe>jt`SMLn`Ssnb|t~R^3u88ea
-> zSo3zvx2t-6#vu)CYjwfEBjoVT&Cba^;Ff4VTa4J}=3Dd1LzOg*bF&(zYUcHvp|Kwmvh
-> z%XF)!?qb`BXQtG8%_h9{-v4*)@87?;K7Ienmu7tNqk3n(S~IzIMcYotLRwmvlJY;~
-> Cu_#Oc
->
-> literal 0
-> Hc-jL100001
->
-> diff --git a/tests/qtest/bios-tables-test.c b/tests/qtest/bios-tables-tes=
-t.c
-> index 510751799e..4625b76692 100644
-> --- a/tests/qtest/bios-tables-test.c
-> +++ b/tests/qtest/bios-tables-test.c
-> @@ -2194,6 +2194,56 @@ static void test_acpi_riscv64_virt_tcg(void)
->      free_test_data(&data);
->  }
->
-> +#ifdef CONFIG_POSIX
-> +static void test_acpi_riscv64_virt_tcg_cxl(void)
-> +{
-> +    gchar *tmp_path =3D g_dir_make_tmp("qemu-test-cxl.XXXXXX", NULL);
-> +    gchar *params;
-> +
-> +    test_data data =3D {
-> +        .machine =3D "virt",
-> +        .arch =3D "riscv64",
-> +        .tcg_only =3D true,
-> +        .uefi_fl1 =3D "pc-bios/edk2-riscv-code.fd",
-> +        .uefi_fl2 =3D "pc-bios/edk2-riscv-vars.fd",
-> +        .ram_start =3D 0x80000000ULL,
-> +        .scan_len =3D 128ULL * MiB,
-> +        .variant =3D ".cxl",
-> +    };
-> +
-> +    /*
-> +     * While using -cdrom, the cdrom would auto-plug into pxb-cxl becaus=
-e
-> +     * its bus is also a root bus, triggering "Only PCI/PCIe bridges can=
- be
-> +     * plugged into pxb-cxl".  Attach the ISO explicitly to a scsi contr=
-oller
-> +     * on pcie.0 instead, following the same pattern as
-> +     * test_acpi_aarch64_virt_tcg_pxb().
-> +     */
-> +    params =3D g_strdup_printf("-cpu rva22s64"
-> +                             " -machine cxl=3Don"
-> +                             " -device pcie-root-port,chassis=3D1,id=3Dp=
-ci.1,bus=3Dpcie.0"
-> +                             " -device virtio-scsi-pci,id=3Dscsi0,bus=3D=
-pci.1"
-> +                             " -drive file=3Dtests/data/uefi-boot-images=
-/"
-> +                             "bios-tables-test.riscv64.iso.qcow2,"
-> +                             "if=3Dnone,media=3Dcdrom,id=3Ddrive-scsi0-0=
--0-1,readonly=3Don"
-> +                             " -device scsi-cd,bus=3Dscsi0.0,scsi-id=3D0=
-,"
-> +                             "drive=3Ddrive-scsi0-0-0-1,id=3Dscsi0-0-0-1=
-,bootindex=3D1"
-> +                             " -object memory-backend-file,id=3Dcxl-mem1=
-,mem-path=3D%s,size=3D256M"
-> +                             " -object memory-backend-file,id=3Dlsa1,mem=
--path=3D%s,size=3D256M"
-> +                             " -device pxb-cxl,bus_nr=3D12,bus=3Dpcie.0,=
-id=3Dcxl.1"
-> +                             " -device cxl-rp,port=3D0,bus=3Dcxl.1,id=3D=
-rp1,chassis=3D0,slot=3D2"
-> +                             " -device cxl-type3,bus=3Drp1,persistent-me=
-mdev=3Dcxl-mem1,lsa=3Dlsa1"
-> +                             " -M cxl-fmw.0.targets.0=3Dcxl.1,cxl-fmw.0.=
-size=3D4G,"
-> +                             "cxl-fmw.0.interleave-granularity=3D8k",
-> +                             tmp_path, tmp_path);
-> +    test_acpi_one(params, &data);
-> +
-> +    g_free(params);
-> +    g_assert(g_rmdir(tmp_path) =3D=3D 0);
-> +    g_free(tmp_path);
-> +    free_test_data(&data);
-> +}
-> +#endif /* CONFIG_POSIX */
-> +
->  static void test_acpi_aarch64_virt_tcg(void)
->  {
->      test_data data =3D {
-> @@ -2888,6 +2938,10 @@ int main(int argc, char *argv[])
->                             test_acpi_riscv64_virt_tcg_numamem);
->              qtest_add_func("acpi/virt/acpispcr",
->                             test_acpi_riscv64_virt_tcg_acpi_spcr);
-> +#ifdef CONFIG_POSIX
-> +            qtest_add_func("acpi/virt/cxl",
-> +                           test_acpi_riscv64_virt_tcg_cxl);
-> +#endif
->          }
->      } else if (strcmp(arch, "loongarch64") =3D=3D 0) {
->          if (has_tcg && qtest_has_machine("virt")) {
-> --
-> 2.50.1
->
->
+> Best regards,
+> Richard Cheng.
