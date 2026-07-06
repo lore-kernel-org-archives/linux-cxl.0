@@ -1,121 +1,132 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43FE384CCE
-	for <linux-cxl@vger.kernel.org>; Mon,  6 Jul 2026 15:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E341A3E7BC8
+	for <linux-cxl@vger.kernel.org>; Mon,  6 Jul 2026 16:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783353258; cv=none; b=b5ZK8oJN9Kz1uJm/p/9OfTkd4COkg/SWI5DdlaXms7rtls6u++RSgcqBXHN0gJfdJGxTOjG7geBlzq6+1lccmt5QggYI8jcdgCH7umh/eVyHTFqAZH9fRaePjJjMhhfLNOwSMvgPbouaaY7Mo4mjxhcsCcjsqQSfYAcYNPf9UVI=
+	t=1783355563; cv=none; b=FTiUaLl1boNUSDqk849JY4ROI+UOkuXiNBjbOEdymSGn4PFTZ8gA+eM3txAleDjpsYxlthkCfGwekY5Dr5hrrnlK1XxOWdjmlx8u/GLWNRqCJOL0kbryG/K1ABL0xHwzuFEc/Ahud0Xpg8RH3y4npKBo0bakkAeiZIrYzqprU5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783353258; c=relaxed/simple;
-	bh=jgtOj6HV0Lc74Fqi3YIUHikZwpNHEx6Z+PICt2TBtOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OUPgVF2ozGmVeN9hqNCOtmZBVj1wRcqo7m7B5SFwgASfp0xXyhdCyF0caUhcSB4f2zrfttH3E2mRWDe11xANuKE8Syu3o8X0pszPm6f/dOxbTTnIfky7msCz8jVPH4vYdaIjrBqa1SZIqJ1UEs12hkKR75K6CmTFETWLWDGzddw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=T/8O1Qpe; arc=none smtp.client-ip=209.85.219.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1783355563; c=relaxed/simple;
+	bh=ChT0Cy7t5UleR4cMAh98klooOZKR2NojT6Ljhw1EM/A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pfMDcGr5jomjASiGKx0KeRScT+yycKtLgZaiN8wGHRE7MQGdxTBRzqWeUWLgLP+S4v+zaojrFzIqPe7CxtycS0XUSzXtZcBnan/bburcG56ovgeTfZn5Z88lnGV3lqID4T/vzuMFvUgtnFnO4K13fBacy/B2QDhV851L6cJ81KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I3ZqVljW; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="T/8O1Qpe"
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-8ee88fce572so28362906d6.1
-        for <linux-cxl@vger.kernel.org>; Mon, 06 Jul 2026 08:54:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1783353256; x=1783958056; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=dIem8hyNlrcvgSP8xqIijowENEp+G1sYVnPl46s39CA=;
-        b=T/8O1QpeP78nJ/OkqbzrxdaIXjUVtpEka/Sb8ndpjaSMdimAv/kSDNox7FixBtsj9h
-         YqJgFxZuZb/ykoTmKJ3ESaihh/hGQtw+zFEY79mwmbAfCnEf2PR+d5NHpXvK6fG30as7
-         j11EnI+E0XeeuSC4Z0GBFGBu3x/6ll/xUhtfvkCc51fjrZRZWiqNDCtqbnCYkqfXQWf7
-         ldLZtSRidM3DrBYVoLrYwuthnwf9KzYeshNCDQmRjABVbYjOMZrOLnHlww8SZd+Ah+Jv
-         WJ2zcIKWdAuWlB/ilMZKeqjz2/TPRFfA7bY3H5i5ZBKL18gKoExPaAzw1O51dhhGlqBX
-         Hgzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783353256; x=1783958056;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=dIem8hyNlrcvgSP8xqIijowENEp+G1sYVnPl46s39CA=;
-        b=mHnFAj2O0vDuq7xMdPlAPlbyWuNFwIODH0Q3ZzaxIZqqxL2vJp6HRmNKACe1+9lWDS
-         APt/yyegHhpohjV3VZahidZ/PPu+wWWLLCZ3Gji1m90PMavO/chuBg9Hxtq4O4N7aA0V
-         iu6a3b/OtAcPGNqgdud8zgbRGtb3pIL7BwzVs4oKQcAsW6iYwDAH1OYMvwbR/449g0Sn
-         pjNyyrUrxks9BiUNf7e0Mfu9MluEFV3KUo16gipTeC3KiFHmkQvFyjjb2mpd9WjGYFG/
-         3NBGlvhKkOgd04Y8g9Pw7eMR+HYjWD0wC+G3E/AL9FStNqpUQmQrupvNtszKYFS1kRzO
-         6gUQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rq1m1NILcp40s2Rd2R0eqXyT2CiaIzeaPGFkhVJ4mnGj2AOeG8ujtSrqT6DDxCXhhTsxY9zTPEaJUo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwuTnKR0A/K7jr0x0ceI05lL9uXmrASTpggh/ZcoBdUMijKULL
-	BjknPDWFsha+21PdOBVlNJS03YXj63XsYmdlQyLxSeJkMrSmPwiHZPGZXTHDGbf5euw=
-X-Gm-Gg: AfdE7clpovN2aj9tEu4meDnS8g5x75dvumfTv3o9KpwC0tk375JxTvacqKYHJ6hJUMj
-	wKhg92ssUaabv4hqLYqLPP3cpi8zExOVqL3J97E1NQpfM7eA4Zcova5W7G3OlFb+6IA9ZR9uz02
-	kJKv36J/2maA1zGQUs7jl2i6x3eXEXFEzzQsI+R5aeLCJLkC4Rdk9F5g5pdASCFCw00XrhhoTXs
-	mzb2iXK9ByQhiEDTP2ulANs9z7NIWsLmdUqg5EqgWIpc8ovPaeeIHyKWpQWOCCN/MJG0wj9TV5P
-	+ytvsQ2ATJ10t2tPEF42ldJYryO58dnPP5S6TNj1iBa8LCtmYSLNbUt3ePlrFUEqueMz1IdkRK+
-	T19MqCIL1voIv4e3zXtl6mAUvoICOPZiROd4n/nmRyq5WpKlhMg4h0U9QHG8S
-X-Received: by 2002:a05:6214:4506:b0:8ef:4749:b1cd with SMTP id 6a1803df08f44-8fcb461b5cdmr13721496d6.30.1783353255815;
-        Mon, 06 Jul 2026 08:54:15 -0700 (PDT)
-Received: from ziepe.ca ([159.2.72.92])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8f4724bad04sm151773616d6.44.2026.07.06.08.54.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jul 2026 08:54:15 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1wgleA-00000000a9W-2CyF;
-	Mon, 06 Jul 2026 12:54:14 -0300
-Date: Mon, 6 Jul 2026 12:54:14 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Zhenhao Wan <whi4ed0g@gmail.com>, Dan Williams <djbw@kernel.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Li Ming <ming.li@zohomail.com>,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Yuhao Jiang <danisjiang@gmail.com>
-Subject: Re: [PATCH] cxl/features: bound fwctl command payload to the input
- buffer
-Message-ID: <20260706155414.GA118978@ziepe.ca>
-References: <20260620-cxl-fwctl-oob-v1-1-5758e34d784a@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I3ZqVljW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783355562; x=1814891562;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ChT0Cy7t5UleR4cMAh98klooOZKR2NojT6Ljhw1EM/A=;
+  b=I3ZqVljWRVZ0LY8pZRoo0VyNr3hbhquvyf85WMQOFbEqdWHjQPJ6rMOy
+   0GMdMBq1SCzI0aDdDISQQXfzdCF6doqCG+5GQs0EGfgV1+5OJvCDnIIt6
+   nYqjJHmf/BCtSlo0ge+pE7AqEzVZo/pqG34/A7Kp9ecL5QkGJwtNnTn2X
+   q1TZ+lMf9kO5il7w6fkLCQ2os7K5M5eHWfFTTvzV4S5j9kGhNcPX58a7/
+   MesHPoi8pl5wP+qxG6TJSdb6wzhVRSknvtRAGh1tTxC0goB5ksAAHtOtG
+   ykEKgSWF/TUKkosTqTPy1qb6u+xlethPwgUbM98FxPewtuGFElRzYcxP0
+   A==;
+X-CSE-ConnectionGUID: VRU9ESi3R3+aieOEksk4iw==
+X-CSE-MsgGUID: hUvrZisFS0K0fmfMEVnc7A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11838"; a="95149360"
+X-IronPort-AV: E=Sophos;i="6.25,151,1779174000"; 
+   d="scan'208";a="95149360"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 09:32:41 -0700
+X-CSE-ConnectionGUID: YdAtQfd0RAeZypVi9ybSLA==
+X-CSE-MsgGUID: eBx7Fhz/RkC1Ul7CmGNmaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,151,1779174000"; 
+   d="scan'208";a="291920458"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.110.202]) ([10.125.110.202])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 09:32:42 -0700
+Message-ID: <7b8cb4b0-f532-4711-9b37-a930ea1ed7a1@intel.com>
+Date: Mon, 6 Jul 2026 09:32:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260620-cxl-fwctl-oob-v1-1-5758e34d784a@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/2] cxl/hdm: Allow zero sized HDM decoders
+To: Richard Cheng <icheng@nvidia.com>, sashiko-reviews@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org
+References: <20260625092857.41139-1-icheng@nvidia.com>
+ <20260625092857.41139-2-icheng@nvidia.com>
+ <20260625094718.8D3FD1F000E9@smtp.kernel.org> <akYSpn_EyYTys6Fh@MWDK4CY14F>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <akYSpn_EyYTys6Fh@MWDK4CY14F>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 20, 2026 at 12:33:15PM +0800, Zhenhao Wan wrote:
-> fwctl_cmd_rpc() copies cmd->in_len bytes into inbuf = kvzalloc(cmd->in_len)
-> and passes inbuf and in_len to ->fw_rpc(). The CXL callback cxlctl_fw_rpc()
-> ignores in_len and never checks the user-controlled op_size against it.
+
+
+On 7/2/26 12:28 AM, Richard Cheng wrote:
+> On Thu, Jun 25, 2026 at 09:47:18AM +0800, sashiko-bot@kernel.org wrote:
+>> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+>> - [High] cxl_dpa_free() returns early for zero-sized decoders, permanently stranding their DPA reservation and breaking LIFO decoder teardown.
+>> --
+>>
+>> commit 0afce63a5399c17fcedf2e4f736d16ed9b2f7179
+>> Author: Richard Cheng <icheng@nvidia.com>
+>>
+>> cxl/hdm: Allow zero sized HDM decoders
+>>
+>> This commit allows empty (zero-sized) HDM decoders to be treated as first
+>> class instead of being rejected. It backs them with a kmalloc'd resource
+>> since the resource tree cannot represent an empty range, while keeping the
+>> skip and hdm_end accounting intact.
+>>
+>>> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+>>> index 0c80b76a5f9b4..ccbab2e21f060 100644
+>>> --- a/drivers/cxl/core/hdm.c
+>>> +++ b/drivers/cxl/core/hdm.c
+>> [ ... ]
+>>> @@ -545,7 +569,7 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
+>>>  	struct device *dev = &cxled->cxld.dev;
+>>>  
+>>>  	guard(rwsem_write)(&cxl_rwsem.dpa);
+>>> -	if (!cxled->dpa_res)
+>>> +	if (cxled_empty(cxled))
+>>>  		return 0;
+>>
+>> [Severity: High]
+>> Does this early return permanently strand the DPA reservation and break LIFO
+>> decoder teardown for zero-sized decoders?
+>>
+>> By returning early for zero-sized decoders here, the cleanup logic inside
+>> devm_cxl_dpa_release() is bypassed. This means the kmalloc'd 0-size
+>> resource and any associated skip range aren't freed, and port->hdm_end is
+>> not decremented.
+>>
+>> Consequently, any attempt to resize a zero-sized decoder would fail with
+>> -EBUSY because the reservation isn't actually freed. Attempting to free any
+>> lower-indexed decoder would also fail with -EBUSY due to the port->hdm_end
+>> ID mismatch.
+>>
+>>>  	if (cxled->cxld.region) {
+>>>  		dev_dbg(dev, "decoder assigned to: %s\n",
+>>>  			dev_name(&cxled->cxld.region->dev));
+>>
+>> -- 
+>> Sashiko AI review · https://sashiko.dev/#/patchset/20260625092857.41139-1-icheng@nvidia.com?part=1
 > 
-> cxlctl_set_feature() bounds op_size only from below
-> (op_size <= sizeof(feat_in->hdr)) and then reads op_size - sizeof(hdr)
-> bytes from feat_in->feat_data via cxl_set_feature(). With a small in_len
-> and a large op_size the first memcpy() already reads past the
-> kvzalloc(in_len) buffer; the out-of-bounds bytes are placed in the mailbox
-> payload and sent to the device, and a large enough op_size can walk into
-> unmapped memory and oops the kernel. The Get paths pin op_size to a fixed
-> size but likewise read the input struct without checking in_len.
+> I don't think this stands,
+> devm teardown still runs __cxl_dpa_release(), which kfrees the zero-size resource, releases the skip,
+> and decrements hdm_end. The early return only skips the sysfs free patch, and a committed empty decoder
+> is not userspace-manageable, resize already fails on the F_ENABLE check, and F_ENABLE is never cleared
+> since an empty decoder joins no region. Dan cover this on v5, I think it's ok for now.
 > 
-> Reject, at the single dispatch point, any request whose fixed header plus
-> op_size does not fit in the copied-in buffer. The lower-bound test guards
-> the subtraction and ensures op_size was copied in before it is read.
+> Anyone has thoughts on this ?
+
+sashiko looks to be wrong in this scenario. I think we can ignore. 
+
 > 
-> Fixes: eb5dfcb9e36d ("cxl: Add support to handle user feature commands for set feature")
-> Reported-by: Yuhao Jiang <danisjiang@gmail.com>
-> Signed-off-by: Zhenhao Wan <whi4ed0g@gmail.com>
-> ---
->  drivers/cxl/core/features.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+> --Richard
+> 
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-
-CXL folks, you will pick this up?
-
-I think it should be cc stable too
-
-Jason
