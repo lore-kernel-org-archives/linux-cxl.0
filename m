@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCAA3AB496;
-	Mon,  6 Jul 2026 17:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26939400E1F;
+	Mon,  6 Jul 2026 18:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783359211; cv=none; b=V4h9IDpVkIULecTNBoHgihuexSxzKr5TcFCe1QDjFhmjzH27zW/WILZ3FeC3voQm0h0v33fTgX1JgubqVf7c3Re3XUPW4C7lSsxO5DORHkrmxPtYA6u2VREGiFP+TKh/iuenu/thLkodY0/OqWtA58sUIEHxdkrYmSRKDYmzOHI=
+	t=1783361450; cv=none; b=EFTpHhBtLBRbFmbyQpWn8BXGp0x1phC87oijGsT68fwD3aRs4Nr/HLU2DRIGGgr+t77hYsArb0RmXS8YUWQF0qaKVRsS/O44OlrVos0W9ndU2wlpDsGhVWqFIBYs0F0swh9L+TQrJHcFoqIM7XEo3VlTROZv5yBHjD2PQRXE5Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783359211; c=relaxed/simple;
-	bh=Zn/stTFn0QaLbaG/id/Q79JL6pSBsxEMKR46vJrdOfU=;
+	s=arc-20240116; t=1783361450; c=relaxed/simple;
+	bh=cZylIpFjPYXD5YWCgz0Te7s0cm7VrMziO7tGsH5esms=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lt/SIwoOtu4UlBSdmaFCeRxSyGW7a3twXM6lbcFmS30/vEGmPBDcWntyFyDcjrMvmwLjELj7yX3ZujDFwQL1kgbeSzK9oVaa42M6PPFtz6YzRnOOVKi3zWrCI42bDr2QFdgIvN/bQQ77m+Jfo92HD5CFu8Osjrg298f8CpQ/TYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LpAIRjST; arc=none smtp.client-ip=198.175.65.20
+	 In-Reply-To:Content-Type; b=IK7E/zmdfBOD9MugEA3lwX85aWdHJzcU55SOAlnO9AEw8bpfjoufnEtpTpIC89R42zamTVeQjU1PZuyTriYYWCPxg/o3x8HzMj3KpYvACE7A6ZJGCmxhEVeSDqV2qQPajNZ1mnS8a8wc1HWFyFBLjXx9QiiofM74gQ9Gb8HSIuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H902nuq7; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LpAIRjST"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H902nuq7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783359210; x=1814895210;
+  t=1783361449; x=1814897449;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Zn/stTFn0QaLbaG/id/Q79JL6pSBsxEMKR46vJrdOfU=;
-  b=LpAIRjSTvcjTGIky2c+w266UUOALVA+hgnHC8Y9AuOkxj1KRoU3EMnQv
-   Um26bPvJSwZAce7CjXO4xdYAJlu21lgQW9JwSTO9NxoGPcNqqVs5EEFrv
-   L4slaezYYxgb4WxmY/2D6U4qVI2mjs+67aYKOZgkRDpEHzm4QwAXL1lco
-   s6Zyg6Tc0cDos8+W3rxKPdwWLq4P6BguF+IpvowFrDzONhsb3wUFyhlC1
-   F4Q9kriI+KGLTjOGffztBxha9wCHB0oDYZCzhaJfSsac1xDD9tXucMvCL
-   Sl3CxPWMe4f0RkGEl1bHYCh92TCyP9VlKk3o8fZiYcBajPwESrKPf9HjZ
-   w==;
-X-CSE-ConnectionGUID: W8v2RfDjTH+/COthTD2+Uw==
-X-CSE-MsgGUID: VQYVsxSPTJe/SckGmXHAWg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11839"; a="83773219"
+  bh=cZylIpFjPYXD5YWCgz0Te7s0cm7VrMziO7tGsH5esms=;
+  b=H902nuq7/4N86J2oMVOO5I43RlCsnKIDXcokr1SvWwoBbpqLYeh+elFv
+   Uq1DyrrNrrug9QiSVGPik4RvqDtZrulEM2hQRUXPyBmsKeB/iZl6LFyo1
+   iaQB/xYjeFO9r6nB6s5aZOCQ8q2KVZdJE2lH6E9HMTAkyU7I0tDTMfApY
+   AorHz6lGFfIgZ9oNoMcYQy2i2/KCppsoRlf7Ap43SDSRrJeeu5OoKGAol
+   WwMMte02NmegiN7P0Hwm+WROOnYkI8swnDTqv/4/2jBi/MH8LDfFfS0Nu
+   UFWgfCxz4u6v5JzukP6ivjS/wHPG5bxz1ayvmILshYl+FT7N4/Ms2djGK
+   A==;
+X-CSE-ConnectionGUID: uupzXXiDT8OyVQdMyQIIRQ==
+X-CSE-MsgGUID: KYwxji61Ra+E8vtLCbdo7g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11839"; a="94649881"
 X-IronPort-AV: E=Sophos;i="6.25,151,1779174000"; 
-   d="scan'208";a="83773219"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 10:33:30 -0700
-X-CSE-ConnectionGUID: HljJXmkUSumvNmZ17Kvh0A==
-X-CSE-MsgGUID: LZMOchDUSAenK+PRsdOaow==
+   d="scan'208";a="94649881"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 11:10:48 -0700
+X-CSE-ConnectionGUID: n+ReRpJNThaavuyjaUux0w==
+X-CSE-MsgGUID: TgkMcBRWTD6iAljQCa9GWg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,151,1779174000"; 
-   d="scan'208";a="257350372"
+   d="scan'208";a="250435443"
 Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.110.202]) ([10.125.110.202])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 10:33:28 -0700
-Message-ID: <aa5d1efd-9492-46c2-96d5-0a0e1be9d204@intel.com>
-Date: Mon, 6 Jul 2026 10:33:27 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 11:10:47 -0700
+Message-ID: <b2170b62-66c3-4cdc-8f9d-514a9cb049dd@intel.com>
+Date: Mon, 6 Jul 2026 11:10:46 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,59 +52,48 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] cxl/memdev: Don't overwrite the error from an
- earlier partition poison query
-To: Richard Cheng <icheng@nvidia.com>, dave@stgolabs.net, jic23@kernel.org,
- alison.schofield@intel.com, vishal.l.verma@intel.com, djbw@kernel.org,
- danwilliams@nvidia.com
-Cc: iweiny@kernel.org, ming.li@zohomail.com, gourry@gourry.net,
- rrichter@amd.com, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- kees@kernel.org, newtonl@nvidia.com, kristinc@nvidia.com, mochs@nvidia.com,
- kaihengf@nvidia.com, kobak@nvidia.com
-References: <20260702090849.47501-1-icheng@nvidia.com>
- <20260702090849.47501-6-icheng@nvidia.com>
+Subject: Re: [PATCH] cxl: Fix spelling typo in asynchronous event string
+To: Praveen Rajendran <praveenrajendran2009@gmail.com>, dave@stgolabs.net,
+ jic23@kernel.org, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ djbw@kernel.org
+Cc: iweiny@kernel.org, ming.li@zohomail.com, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260703145250.3953-1-praveenrajendran2009@gmail.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260702090849.47501-6-icheng@nvidia.com>
+In-Reply-To: <20260703145250.3953-1-praveenrajendran2009@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 7/2/26 2:08 AM, Richard Cheng wrote:
-> cxl_get_poison_by_memdev() queries Get Poison List per partition but
-> never checks the result inside the loop, so a later partition's success
-> overwrites an earlier partition's failure and the whole scan reports
-> success while that partition's poison went unlisted. Before the loop
-> conversion the PMEM query returned early on error. Stop the loop on any
-> error not already tolerated as a RAM -EFAULT.
+On 7/3/26 7:52 AM, Praveen Rajendran wrote:
+> Correct a user-facing spelling mistake in the CXL memory error logging
+> macro array where "occurred" was misspelled as "occured".
 > 
-> Fixes: be5cbd084027 ("cxl: Kill enum cxl_decoder_mode")
-> Signed-off-by: Richard Cheng <icheng@nvidia.com>
+> Signed-off-by: Praveen Rajendran <praveenrajendran2009@gmail.com>
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Hi Praveen, this is a duplicate [1] that was already applied to cxl/next.
+
+[1]: https://lore.kernel.org/linux-cxl/20260624122835.5656-1-alhouseenyousef@gmail.com/
+
 
 
 > ---
-> Changelog:
+>  drivers/cxl/cxlmem.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> v1->v2:
->     - New added patch ( sashiko-bot's report )
-> ---
->  drivers/cxl/core/memdev.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 33a3d2e7b13a..8718964b9c5e 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -231,6 +231,8 @@ static int cxl_get_poison_by_memdev(struct cxl_memdev *cxlmd)
->  		 */
->  		if (rc == -EFAULT && cxlds->part[i].mode == CXL_PARTMODE_RAM)
->  			rc = 0;
-> +		if (rc)
-> +			break;
->  	}
->  	return rc;
->  }
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index ed419d0c59f2..503ae2864591 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -183,7 +183,7 @@ static inline struct cxl_ep *cxl_ep_load(struct cxl_port *port,
+>  	C(MBUNSUPPORTED, -ENXIO, "unsupported on the mailbox it was issued on"),\
+>  	C(PAYLOADLEN, -ENXIO, "invalid payload length"),			\
+>  	C(LOG, -ENXIO, "invalid or unsupported log page"),			\
+> -	C(INTERRUPTED, -ENXIO, "asynchronous event occured"),			\
+> +	C(INTERRUPTED, -ENXIO, "asynchronous event occurred"),			\
+>  	C(FEATUREVERSION, -ENXIO, "unsupported feature version"),		\
+>  	C(FEATURESELVALUE, -ENXIO, "unsupported feature selection value"),	\
+>  	C(FEATURETRANSFERIP, -ENXIO, "feature transfer in progress"),		\
 
