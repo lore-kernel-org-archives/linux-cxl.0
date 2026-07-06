@@ -1,126 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F172EBDDE
-	for <linux-cxl@vger.kernel.org>; Mon,  6 Jul 2026 22:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E453DC4C8;
+	Mon,  6 Jul 2026 23:13:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783378610; cv=none; b=hKqxJJnAc22NdghnUGbFTGijjcZ/c26U9BMPKVTjq1eSzin13clRWHK6slQpPkFQ9sLkrgzrGVwNfmTkXefSS9EKXKGv+wi3ktk3zmlGGe6TgS9X31VNC1ES2xkQCrb10kuPkrcaGYNYeKZL5CYK1IYefaTTgX/aChwDhbxdQ1Y=
+	t=1783379600; cv=none; b=W1GblVQW6enGrCYY1t6CZYxa3vlrfMRUEJgdV0g8Z5IPatD8IWRUlxdCmCCUZimvFx3rjpUJaxJ/3uxeDvj9MRHxOmTdQhcS2ParatrSc9QRRkiWxavbVCYS1CI7h058a3S0idDPvVPhQybh22s+H2H6dr5pFLOmVGWRrNgjj0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783378610; c=relaxed/simple;
-	bh=znwEUHzUVkt0Fl30VQMT9l6EXqO+ehphZwnGwHyjZbE=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=daFQtr3DSioV9Ra5Yh3c+Opf5t3drL27knq/vKzw7L51SBiftar925kmstZ2Y51aEsMm9DFOgX4Cfi8DSCnhEt9UtgWqAHXy/ITzwf7WBUEE9IdMeqthm7F6Eou1f5BO7mjimauuXuu4jFqUG+TBu7cCDYdHP0UPbYuosuq7y0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2H/CwO/; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783379600; c=relaxed/simple;
+	bh=+x8wcxuE61wQFRgp9QDTuo3XMv+m2kTOJVo5ggvW3iU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qNbNGrliW1FEIzYbjhVIf2DGISBTOYMiSh/81LMBfdaRYgNhWdJi6Q9Ma75sG2A2pEDxQhlhu6Q5lMM7okG3chdMnMD6RWac+2VorvxGKBvKv/kgWOmsmwLmsx+xoflLuP1jZBh5fn0abiFeWIKAhVAh/tqDg/4fxhMtZY5w+Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mpl0CHL6; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2H/CwO/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6C031F000E9;
-	Mon,  6 Jul 2026 22:56:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783378609;
-	bh=pBOIFZermgCFixCNoNh21jvFnMyflRQkLOkVIimAtt4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=X2H/CwO/T211MZq+kGeDvfi6vvta23nYjq+XlxwWBKdWcNv9RKvAi4PTChOam+yFu
-	 3bSAOMskS11oqaPAL/tssU8p8GDxBQEZjIdgSGf85QvXPZpfv4SWMeDY69t7Xih3tq
-	 f80V2AF0aB0dDbK+BnolOjoDZyNGXHar3Wn6790Hft1WuqpljW+sVsUunCkFJ+S1l0
-	 0hUdSP7AidymWsjZTc5KUnrICIuy+7s0Py+tJaQHyy4d8D63BeDGs66EqcapPF6mcC
-	 QZRVK81woTGEUre6YhxslsjcvJIsKZznjbPn4LnyVt1Xz7WEKC+mI6AGbj8GjXcl3+
-	 ALq4ey0k/8nLQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] cxl/pci: Honor -EPROBE_DEFER from component register
- setup
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dave Jiang" <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260706224322.714934-1-dave.jiang@intel.com>
-References: <20260706224322.714934-1-dave.jiang@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 06 Jul 2026 22:56:48 +0000
-Message-Id: <20260706225648.C6C031F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mpl0CHL6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783379599; x=1814915599;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+x8wcxuE61wQFRgp9QDTuo3XMv+m2kTOJVo5ggvW3iU=;
+  b=mpl0CHL60JAlwZ/qmM0b2VRORuPj8yyDwZxJL8Gdz+sKb0xg8Go82AqJ
+   G+YAnduYQ4SignBaUMr005EqBE8fEsGjYhhDyCjRLiZSFfWNQ4nCJCAxm
+   BhqQBGid1IeLVn4phyEtEwl3ILD/9Z/CMwePs2mQBUs4P4QDLrHcPkhvY
+   zpCB0IMIjocwrq9EO1o8utAvJsTf745zLUNFQ6fYjduwD0h5yzwT2LEa7
+   a8G0lEpDJTxSUahrMk1mNRloy81b09Y47fyIFRlte6ztcyPsMVfNl9OlV
+   pZO5bGEAJHJ7pR1hAR2JgmnaZsxTsr0+b4JfdEMb+RBAEOamp/q7J9Ntk
+   Q==;
+X-CSE-ConnectionGUID: zE3K3dpASN2KBHS1E212Ng==
+X-CSE-MsgGUID: Sdvi7XTLR1izRtAKH/Fepg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11839"; a="95402825"
+X-IronPort-AV: E=Sophos;i="6.25,151,1779174000"; 
+   d="scan'208";a="95402825"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 16:13:17 -0700
+X-CSE-ConnectionGUID: 5QC7oYaQQ02ESW7ppKV3Dg==
+X-CSE-MsgGUID: 3odZuw7TSviwbCBmn0S01w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,151,1779174000"; 
+   d="scan'208";a="251161693"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.110.202]) ([10.125.110.202])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 16:13:16 -0700
+Message-ID: <fb9a53ea-2743-4e4c-b3b3-faa81dfac156@intel.com>
+Date: Mon, 6 Jul 2026 16:13:14 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 00/10] PCI/CXL: Add CXL reset support for Type 2
+ devices
+To: Srirangan Madhavan <smadhavan@nvidia.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Dan Williams <djbw@kernel.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>,
+ Jonathan Cameron <jic23@kernel.org>, Vishal Verma
+ <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
+ alwilliamson@nvidia.com, Dan Williams <danwilliams@nvidia.com>,
+ Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
+ Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
+ Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
+ linux-tegra@vger.kernel.org
+References: <20260703220508.546528-1-smadhavan@nvidia.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260703220508.546528-1-smadhavan@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
 
-Pre-existing issues:
-- [High] cxl_pci_type3_init_mailbox() incorrectly evaluates component_map.r=
-as.valid instead of device_map.mbox.valid to check mailbox presence, leadin=
-g to kernel panics or functional regressions.
---
 
---- Patch [1]: [PATCH v2] cxl/pci: Honor -EPROBE_DEFER from component regis=
-ter setup ---
-commit 04637d8b82b95fbc354ce623ffbeb09e3d57ae3e
-Author: Dave Jiang <dave.jiang@intel.com>
+On 7/3/26 3:04 PM, Srirangan Madhavan wrote:
+> Hi folks!
+> 
+> This series adds CXL Reset support for CXL Type 2 devices through the
+> existing PCI reset_method ABI. The reset sequence follows the CXL 4.0
+> specification [1], including CXL.cache disable, optional cache
+> writeback, CXL Reset initiation, ResetComplete polling, and ResetError
+> reporting.
+> 
+> The userspace ABI is the existing PCI reset interface:
+> 
+>     /sys/bus/pci/devices/.../reset_method
+>     /sys/bus/pci/devices/.../reset
+> 
+> Userspace can select "cxl_reset" in reset_method and then trigger reset
+> through the existing reset attribute.
+> 
+> Following Dan's v6 feedback, this replaces the proposed memdev sysfs ABI
+> with the existing PCI reset_method interface.
+> 
+> v8 changes from v7 [2]:
+> - Drop the PCI helper export patch.
+> - Drop the multi-function sibling coordination patch. cxl_reset is only
+>   exposed as a function-scoped reset method when the CXL reset scope is
+>   limited to the target function.
+> - Keep the reset-scope discovery needed to reject non-function-scoped
+>   CXL resets.
+> - Cache HDM location as BAR-relative metadata instead of keeping an
+>   enum-time MMIO mapping.
+> - Restore HDM through a temporary mapping based on the current BAR
+>   assignment after PCI config state is restored.
+> - Cache raw HDM decoder register state so uncommitted decoders can be
+>   restored as uncommitted, while committed decoders are recommitted
+>   through the normal HDM commit flow.
+> - Share HDM decoder decode and validation between normal CXL core
+>   enumeration and early PCI HDM caching.
+> - Put cxl_reset ahead of FLR in reset_method priority because FLR does
+>   not reset CXL.cache or CXL.mem protocol state.
+> 
+> Motivation:
+> -----------
+> - Type 2 devices need a CXL-specific reset mechanism beyond existing PCI
+>   reset methods.
+> 
+> - FLR does not reset CXL.cache or CXL.mem protocol state. CXL Reset is
+>   the architectural reset mechanism for those protocols.
+> 
+> - The PCI reset_method ABI lets userspace select this narrower CXL reset
+>   before falling back to broader bus reset methods.
+> 
+> Change Description:
+> -------------------
+> 
+> Patch 1: cxl/hdm: Split decoder programming into a reusable helper
+> - Move shared decoder settings to include/cxl/cxl.h.
+> - Factor low-level HDM register programming into cxl_commit().
+> 
+> Patch 2: cxl/hdm: Cache decoder settings on PCI devices
+> - Cache CXL core HDM decoder settings in pci_dev->hdm.
+> - Refresh the cache as decoders are enumerated, committed, or reset.
+> 
+> Patch 3: cxl/hdm: Share HDM decoder decode logic
+> - Share HDM decoder decode and validation between normal CXL core
+>   enumeration and early PCI HDM cache setup.
+> 
+> Patch 4: cxl/hdm: Cache endpoint decoder settings during PCI enumeration
+> - Snapshot endpoint HDM state during PCI capability initialization.
+> - Cache the HDM register locator as BAR-relative metadata.
+> - Cache raw decoder register state in addition to committed decoder
+>   settings.
+> 
+> Patch 5: PCI/CXL: Add CXL Device Reset helper
+> - Add the internal DVSEC reset sequence.
+> - Disable CXL.cache, perform cache writeback where supported, initiate
+>   CXL Reset, and wait for completion.
+> 
+> Patch 6: PCI/CXL: Validate HDM ranges before CXL reset
+> - Collect enabled cached HDM ranges.
+> - Reject reset if affected ranges are busy.
+> - Invalidate CPU caches when runtime cache-invalidation support is
+>   available, otherwise continue after warning.
+> 
+> Patch 7: PCI/CXL: Discover the CXL reset scope
+> - Discover whether CXL Reset is function-scoped using the Non-CXL
+>   Function Map and CXL cache/mem capability bits.
+> 
+> Patch 8: cxl/pci: Restore CXL HDM state after PCI reset
+> - Restore cached global and per-decoder HDM state after reset.
+> - Re-map HDM registers from the current BAR assignment during restore.
+> - Replay raw decoder state for uncommitted decoders and recommit
+>   decoders that were committed before reset.
+> 
+> Patch 9: PCI/CXL: Expose CXL Reset as a PCI reset method
+> - Add "cxl_reset" to the PCI reset_method table for Type 2 reset-capable
+>   CXL devices.
+> - Prioritize cxl_reset ahead of FLR.
+> 
+> Patch 10: Documentation/ABI: Document CXL Reset PCI reset method
+> - Document the new reset_method value and reset behavior.
+> 
+> The CPU cache invalidation step depends on
+> cpu_cache_invalidate_memregion() support for the affected address ranges.
+> If no runtime provider is available, the kernel emits a warning and
+> continues after the affected HDM ranges have been reserved.
+> 
+> Example:
+> 
+>     echo cxl_reset > /sys/bus/pci/devices/0000:bb:dd.f/reset_method
+>     echo 1 > /sys/bus/pci/devices/0000:bb:dd.f/reset
+> 
+> Testing:
+> - Ran 100 iterations of cxl_reset through the PCI reset sysfs ABI on a
+>   CXL Type 2 device. All iterations completed successfully and
+>   ResetComplete was observed.
+> - Exercised cxl_bus reset separately with an add-on HDM restore patch.
+> 
+> References:
+> [1] https://computeexpresslink.org/wp-content/uploads/2026/02/CXL-Specification_rev4p0_ver1p0_2026February26_clean_evalcopy_v2.pdf
+> [2] https://lore.kernel.org/linux-cxl/20260623032453.3404772-1-smadhavan@nvidia.com/
+> [3] https://lore.kernel.org/linux-cxl/20260306080026.116789-1-smadhavan@nvidia.com/
+> 
+> Srirangan Madhavan (10):
+>   cxl/hdm: Split decoder programming into a reusable helper
+>   cxl/hdm: Cache decoder settings on PCI devices
+>   cxl/hdm: Share HDM decoder decode logic
+>   cxl/hdm: Cache endpoint decoder settings during PCI enumeration
+>   PCI/CXL: Add CXL Device Reset helper
+>   PCI/CXL: Validate HDM ranges before CXL reset
+>   PCI/CXL: Discover the CXL reset scope
+>   cxl/pci: Restore CXL HDM state after PCI reset
+>   PCI/CXL: Expose CXL Reset as a PCI reset method
+>   Documentation/ABI: Document CXL Reset PCI reset method
+> 
+>  Documentation/ABI/testing/sysfs-bus-pci |   14 +
+>  drivers/cxl/Kconfig                     |    4 +
+>  drivers/cxl/core/Makefile               |    2 +-
+>  drivers/cxl/core/hdm.c                  |  257 ++---
+>  drivers/cxl/core/region.c               |    6 +-
+>  drivers/cxl/core/regs.c                 |    4 +
+>  drivers/cxl/core/reset.c                | 1354 +++++++++++++++++++++++
+>  drivers/cxl/cxl.h                       |   43 -
+>  drivers/pci/pci.c                       |    2 +
+>  drivers/pci/probe.c                     |    3 +
+>  include/cxl/cxl.h                       |  102 +-
+>  include/linux/pci.h                     |    8 +-
+>  include/uapi/linux/pci_regs.h           |   15 +
+>  tools/testing/cxl/test/cxl.c            |   10 +-
+>  14 files changed, 1615 insertions(+), 209 deletions(-)
+>  create mode 100644 drivers/cxl/core/reset.c
+> 
+> base-commit: 90cf2e0d702c8a132ccbe72e7687f33c04c14658
 
-cxl/pci: Honor -EPROBE_DEFER from component register setup
 
-cxl_pci_setup_regs() can return -EPROBE_DEFER on a Restricted CXL Host (RCD)
-when the upstream port has not yet been enumerated. This patch ensures that
-cxl_pci_probe() returns -EPROBE_DEFER instead of continuing so the probe is
-retried once the upstream port is available.
-
-Link: https://lore.kernel.org/linux-cxl/ajzhsubot_PSYtHQ@MWDK4CY14F/T/#m063=
-bbf76b1c9c293ade52ab311018ae6bba11a44
-
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index 267c679b0b3c2..6a132a6c4c5b3 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -829,10 +829,13 @@ static int cxl_pci_probe(struct pci_dev *pdev, cons=
-t struct pci_device_id *id)
->  	 */
->  	rc =3D cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT,
->  				&cxlds->reg_map);
-> -	if (rc)
-> +	if (rc) {
-> +		if (rc =3D=3D -EPROBE_DEFER)
-> +			return rc;
->  		dev_warn(&pdev->dev, "No component registers (%d)\n", rc);
-> -	else if (!cxlds->reg_map.component_map.ras.valid)
-> +	} else if (!cxlds->reg_map.component_map.ras.valid) {
->  		dev_dbg(&pdev->dev, "RAS registers not found\n");
-> +	}
-> =20
->  	rc =3D cxl_pci_type3_init_mailbox(cxlds);
->  	if (rc)
-
-[Severity: High]
-This isn't a bug introduced by this patch, but looking at the mailbox
-initialization, cxl_pci_type3_init_mailbox() checks the mbox valid flag:
-
-drivers/cxl/pci.c:cxl_pci_type3_init_mailbox() {
-    if (!cxlds->reg_map.device_map.mbox.valid)
-        return -ENODEV;
-    ...
-}
-
-Since cxl_pci_setup_regs() was just called above with
-CXL_REGLOC_RBI_COMPONENT and populated cxlds->reg_map, does this mailbox
-check inadvertently evaluate component_map.ras.valid due to the union
-in struct cxl_register_map?
-
-If a device lacks a mailbox but has RAS registers, could the presence
-check incorrectly pass?
-
-drivers/cxl/pci.c:cxl_pci_setup_mailbox() {
-    ...
-    const int cap =3D readl(cxlds->regs.mbox + CXLDEV_MBOX_CAPS_OFFSET);
-    ...
-}
-
-Would this lead to a null pointer dereference in cxl_pci_setup_mailbox()
-because cxlds->regs.mbox is null?
-
-Conversely, if a device has a valid mailbox but no RAS registers,
-would cxl_pci_type3_init_mailbox() incorrectly return -ENODEV and fail the
-probe of a functional device?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260706224322.7149=
-34-1-dave.jiang@intel.com?part=3D1
+Hi Srirangan,
+I am not able to apply the patch series using b4 with the above base commit.
+b4 picks up the last RFC patch as the first patch and fails to apply. However, skipping it b4 is still having trouble. Can you push a public git branch somewhere please? Also in the future the last RFC patch should be labeled 11/11. Thanks!
