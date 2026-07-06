@@ -1,131 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978303E1232;
-	Mon,  6 Jul 2026 20:28:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9727B435A9D
+	for <linux-cxl@vger.kernel.org>; Mon,  6 Jul 2026 22:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783369724; cv=none; b=YyS5K87ZZhayYE+TPN0c8beSjIENYieAu6zLcM8vLDXi3/4hYRUEFNI8OdD+QwHsHk6huSXZfqSbS2jTNMrPos3kjf6iU+8bMo9iBuw543t633fJOJZdXCkfWJOoElZMWutVAwrBnarUEORSUV/aQ8m2/sTdDHBQbUDDB1ficdY=
+	t=1783377063; cv=none; b=uXBZ2ynhla0OEcpN5pJ7vIIOCvGoBek6DSEWlzRwtgx8TTKXnWWlbX5xvD5XjDTUatdVfXjzUQcdtpk7GS+jfx9yX/UrcHxTzgrKrHUV9nPY4dG9jB0J/f5N01q9rRkiCipU3IwZ0BlYSduU+teVsGm5ZPiaeYFpJ8l4YANCWk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783369724; c=relaxed/simple;
-	bh=YdjHhiKI/9GDmO2IAIQLv/UxvVCUYkPfz+H8bPBIZBg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CxsETIZOJ9ydPSgSrQI/blwd8/IxdHsbfO4IDxLLHoDwOsQT/tUP17Fp7EJQCMgzXPiX2o6Kpf5nvPED0B60R8n1xOHlXs8mOxts0T9xP2HyTC8BiiRRdeJ1jMPsA+v+/SJl47GINruLKTgISGgev9SivAlkNM8683pVxoAn+E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZSUfl1zC; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZSUfl1zC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783369722; x=1814905722;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YdjHhiKI/9GDmO2IAIQLv/UxvVCUYkPfz+H8bPBIZBg=;
-  b=ZSUfl1zCu1lT3/o3OWLiXZ5IK6FhsuSFZwXRbFN0dNM/tjJHBkceACbb
-   tBH3rhahs7JapXFU799JCDB3tYRuN9S6z1v4V2BihDXJ6+px0WV0BA4uL
-   IgjO+B8Y+3y7KgsnuqhwzhU9Bd8BRxchFrFtgSSlAJKA3Vq6TsALqJXY3
-   Ym4Vfzf1v3q9Msid0rDmX4tQTGTuZLxmrvsnfbNmshE19sVJREgejJWdb
-   zwBAX1pMh3ePVdNoqcZ0JWrdCMfIlTrQWsErXDUOsk6Fx3qZj5/BdAU0o
-   7auDNvFpYRtYle8MTRCm3wDbNIvNtxSE3CUzYRhpY6WApnHUCnqLCxD2h
-   Q==;
-X-CSE-ConnectionGUID: 8R2TeFcFRfiF79LMOOyOpQ==
-X-CSE-MsgGUID: Gqj3I3E2QtOpOg+BjE+vOg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11839"; a="95526706"
-X-IronPort-AV: E=Sophos;i="6.25,151,1779174000"; 
-   d="scan'208";a="95526706"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 13:28:42 -0700
-X-CSE-ConnectionGUID: Ui+um8LUQimBWuReJy8LXw==
-X-CSE-MsgGUID: 7UchEyBkQ7+qYiWVYjEHvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,151,1779174000"; 
-   d="scan'208";a="283909385"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.110.202]) ([10.125.110.202])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2026 13:28:42 -0700
-Message-ID: <3cbc9816-e067-4b9b-a35c-19c7310809b1@intel.com>
-Date: Mon, 6 Jul 2026 13:28:40 -0700
+	s=arc-20240116; t=1783377063; c=relaxed/simple;
+	bh=rWMfI3y7vm7nsAXjzuJlMH0ZG0EnqyiJ7mqNW1Pejw4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A3AfEdZyqP49ISn6olIjoBP7Sml9xH+54y+7+kyqHlzn2cSfw7S8JUR88gFV9C+0D81YMg9FAjvk1Prd1G9B4AU5ev4HBc8HHyIs15l9KsF4r2TKxtpEyI5rQkqKTgTniphA4FbcJiV5Ttg5a7Mpnlj7bfptY99GohID2waHIhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2853C1F000E9;
+	Mon,  6 Jul 2026 22:31:02 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: djbw@kernel.org,
+	dave@stgolabs.net,
+	jic23@kernel.org,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	sashiko-bot@kernel.org
+Subject: [PATCH] cxl/pci: Honor -EPROBE_DEFER from component register setup
+Date: Mon,  6 Jul 2026 15:30:59 -0700
+Message-ID: <20260706223059.693499-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/features: bound fwctl command payload to the input
- buffer
-To: Zhenhao Wan <whi4ed0g@gmail.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jic23@kernel.org>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <djbw@kernel.org>, Li Ming <ming.li@zohomail.com>,
- Jason Gunthorpe <jgg@ziepe.ca>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yuhao Jiang <danisjiang@gmail.com>
-References: <20260620-cxl-fwctl-oob-v1-1-5758e34d784a@gmail.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260620-cxl-fwctl-oob-v1-1-5758e34d784a@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+cxl_pci_setup_regs() for CXL_REGLOC_RBI_COMPONENT can return
+-EPROBE_DEFER on a Restricted CXL Host (RCD) when the upstream port
+has not yet been enumerated and the Component Registers must be
+extracted from the RCRB. cxl_pci_probe() treats every non-zero return
+from that call as the benign "component registers not found" case,
+logs a warning, and continues. The rc is then immediately overwritten
+by the subsequent cxl_pci_type3_init_mailbox() call, so the deferral
+is silently swallowed.
 
+Return -EPROBE_DEFER instead of continuing so the probe is retried
+once the upstream port is available.
 
-On 6/19/26 9:33 PM, Zhenhao Wan wrote:
-> fwctl_cmd_rpc() copies cmd->in_len bytes into inbuf = kvzalloc(cmd->in_len)
-> and passes inbuf and in_len to ->fw_rpc(). The CXL callback cxlctl_fw_rpc()
-> ignores in_len and never checks the user-controlled op_size against it.
-> 
-> cxlctl_set_feature() bounds op_size only from below
-> (op_size <= sizeof(feat_in->hdr)) and then reads op_size - sizeof(hdr)
-> bytes from feat_in->feat_data via cxl_set_feature(). With a small in_len
-> and a large op_size the first memcpy() already reads past the
-> kvzalloc(in_len) buffer; the out-of-bounds bytes are placed in the mailbox
-> payload and sent to the device, and a large enough op_size can walk into
-> unmapped memory and oops the kernel. The Get paths pin op_size to a fixed
-> size but likewise read the input struct without checking in_len.
-> 
-> Reject, at the single dispatch point, any request whose fixed header plus
-> op_size does not fit in the copied-in buffer. The lower-bound test guards
-> the subtraction and ensures op_size was copied in before it is read.
-> 
-> Fixes: eb5dfcb9e36d ("cxl: Add support to handle user feature commands for set feature")
-> Reported-by: Yuhao Jiang <danisjiang@gmail.com>
-> Signed-off-by: Zhenhao Wan <whi4ed0g@gmail.com>
+Reported-by: sashiko-bot@kernel.org
+Closes: https://lore.kernel.org/linux-cxl/ajzhsubot_PSYtHQ@MWDK4CY14F/T/#m063bbf76b1c9c293ade52ab311018ae6bba11a44
+Assisted-by: Claude:claude-opus-4-8
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/cxl/pci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Applied to cxl/next
-f687394af983
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 267c679b0b3c..c85aa790ff6e 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -826,9 +826,13 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	/*
+ 	 * If the component registers can't be found, the cxl_pci driver may
+ 	 * still be useful for management functions so don't return an error.
++	 * A deferral request must still be honored, otherwise the component
++	 * and RAS registers are never mapped for the life of the binding.
+ 	 */
+ 	rc = cxl_pci_setup_regs(pdev, CXL_REGLOC_RBI_COMPONENT,
+ 				&cxlds->reg_map);
++	if (rc == -EPROBE_DEFER)
++		return rc;
+ 	if (rc)
+ 		dev_warn(&pdev->dev, "No component registers (%d)\n", rc);
+ 	else if (!cxlds->reg_map.component_map.ras.valid)
 
-> ---
->  drivers/cxl/core/features.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index 3435db9ea6b1..a76142b72935 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-> @@ -649,7 +649,13 @@ static void *cxlctl_fw_rpc(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
->  	struct cxl_memdev *cxlmd = fwctl_to_memdev(fwctl_dev);
->  	struct cxl_features_state *cxlfs = to_cxlfs(cxlmd->cxlds);
->  	const struct fwctl_rpc_cxl *rpc_in = in;
-> -	u16 opcode = rpc_in->opcode;
-> +	u16 opcode;
-> +
-> +	if (in_len < sizeof(rpc_in->hdr) ||
-> +	    rpc_in->op_size > in_len - sizeof(rpc_in->hdr))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	opcode = rpc_in->opcode;
->  
->  	if (!cxlctl_validate_hw_command(cxlfs, rpc_in, scope, opcode))
->  		return ERR_PTR(-EINVAL);
-> 
-> ---
-> base-commit: a48671671df5158a0b8e564cd509e04a090a941b
-> change-id: 20260620-cxl-fwctl-oob-97adb2864c5c
-> 
-> Best regards,
-> --  
-> Zhenhao Wan <whi4ed0g@gmail.com>
-> 
+base-commit: 8cdeaa50eae8dad34885515f62559ee83e7e8dda
+-- 
+2.54.0
 
