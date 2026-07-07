@@ -1,758 +1,269 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012039.outbound.protection.outlook.com [52.101.53.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47018436BF6;
-	Tue,  7 Jul 2026 17:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783446466; cv=none; b=MVapU/LxgiOzJ9mtGJFnYGiLqw6YHO/TmM1MQRGL1dn8byGzFO8Rl/CZj5WjN/P4zAG2b0pUnAFOH8JRBFvxm/ULbIZODd2hBAfNt1PnZQLZ6DS1hYZe1tE29A5ybH45TrwQJ/H4T2k+DqucrkZROsDy1HmBB1nNgynTvHiVVIc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783446466; c=relaxed/simple;
-	bh=ht+JkdwrUeSgS/QADvPB1ABNdqYIc3aIJ3sEPoNZzbI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PEq5JKS20ItIEa/Tn4pNLoURtlBaVILpVaXeRA0kmt13beqeV4C5+0UkZlrZxLLvifOI6GrHDWrF4Dh+XqA4t2DErGVxxuT+W3tfeHhDwI+CvI0q5Vl+hk+tVi2daIXsCAxEUu2XiHZYnZZ6fCq3ChAHay4dsaXKYLvGpyKpsgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AfkPsQGb; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAFD1E492D;
+	Tue,  7 Jul 2026 18:42:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.39
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783449767; cv=fail; b=cNiKMHOWVUy5urnFr2HnIISExOAublPzRAE+0v/UGPw0idLywp/CaolFogcL49ayII3ku8OF2FjAtL8CcONQFX7/Sugvk9Ujs8y/e64onO0nxJzl9vDC75ASMVnq1beELnQ0+cSDhPt69uKUCWlOWaE+0b/NIxFytL77tZtvYbk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783449767; c=relaxed/simple;
+	bh=JmgLcGbYd1opqxH/2KwpP34ePsMKIANWKCZzYFvqmRE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=fN8dYOhTsT/dBmJrgy6BVV5+RQn+b0uTXzqXBKRJMJhEHWhCFOC7bt5n8PyyIJ/dQrlf/u0zoDGJGOHuUM3czvMXXpHqKcJEZXc8wNyZc2QNDjAQRH6mAQ/Hiu2SSAnsfB5Tv3vkeOk+6/sUGChkLhfLLLfO1FhKzt8XwfhCLEM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Hfvhbpny; arc=fail smtp.client-ip=52.101.53.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AfkPsQGb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783446462; x=1814982462;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ht+JkdwrUeSgS/QADvPB1ABNdqYIc3aIJ3sEPoNZzbI=;
-  b=AfkPsQGbhsknrDuisJLZjO2pOlMExr0N/MBnn1v+3qcy+tXnhwc8RKxj
-   hg+/a6ds1a3hvOpSbQuj4HwwyNxHKZfTbClGLcgq7z/0vyYEn3BAIWk9y
-   G75miqmRJ2y1jmAVRQ3ZQW7b7sqi5jZX/Iz8VvBH9GItTIy8kNMMQ2fDB
-   kkrz6h+u4zONt+SrO6+nB2OxFy8l3uEhvGFHJWXZ0MkuriQoM5nasrERG
-   LnqUTtSnz01dxZMhAulUrGE4uBR5fvJ4xexGxC0FRhiLwtoWRW4CXMhVH
-   OpdSI9NCy0jOfvHLKaiB8xnYDoO5pQxoyRYCJvTkhdIPyUvLMxB8hE640
-   Q==;
-X-CSE-ConnectionGUID: 9MeGA0mORam/SSlnTGA7ow==
-X-CSE-MsgGUID: k0qJcAuFTzGyIxF+Vr9+YQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="95481415"
-X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="95481415"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 10:47:41 -0700
-X-CSE-ConnectionGUID: gEpEuhB3SU6rZmvnk85ViQ==
-X-CSE-MsgGUID: M6uY9pfFTxGVkRwXl1ISrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="254706710"
-Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.111.8]) ([10.125.111.8])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 10:47:39 -0700
-Message-ID: <2452a9ef-4986-48fd-9be2-03a9069bf216@intel.com>
-Date: Tue, 7 Jul 2026 10:47:34 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Hfvhbpny"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RmTJ31Ct0+CUX97U2ZHkeLIC67kfdPmYljzcXQ24Eq72xGvEkrOtI5yYaSIcjiHbryxlfnUFDud1qPikhfgpVu7Asg8LGw6knYwEEg8Pzom6XlH2ceskkAzSLH5v3jrQgg1s5Bgw9tLFp35yTot6FPpxBIsmAVDepUo5ctsL7Mpjyk6F+GpBBjPrzOXEFL2SEDinpGyeriMRCNOLviJd4eBw68XjXDp66QBz61anrl2L/iRh8/Oczp02fWDutLzbS9XCtt+fJaxqMCAmxj0fvuCs26sgk6TWHspLoc+BfOtL6aQIKtE4MRkL/+VcecqPeXQzlNngHSPngoouWm//VQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8IIIY9pm8QsmrcsmVwRwM6OzE1/6nUvrPB27JfGzzx8=;
+ b=iylyzlrc4c/wmEyxxb8Osn2/wtpafvvsCC4yT1r+wG5zsQPF2wh6HkBkM9OAJhlxz5LPDzMOPMANYrEm5CQOTvDQVIaEno6XoyquLlVFPZQ0sKLMU5bdvXvr5k687h1vgKzr38U8ahF7YdhKA4hch8SCEm9v40FJU7pggxGWvZK2DYop7sNI2X3rIOiiP61cxO08Xr6Hf5rfJS1OEPGA4klO21Ti/wFJPTXP5hCOjlBmxZc2ma+GNnyo5mxFbv1/5UG3Lpd8z94APxmJMd2e97c9CUaE2B15/y5aIw8wwm2H3Y/RCHSG7ucBIUVVdII3cgRRH6pUvQHMZOErMp/1kA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8IIIY9pm8QsmrcsmVwRwM6OzE1/6nUvrPB27JfGzzx8=;
+ b=HfvhbpnyNLIK283FnMtZc11O7Q568YHI2HJyZywHF4FZU91KTHyI2dejIn4X+I9JA0QOZ1fyNOXLr8M+FaY+TmLhGnWcHkyhFkwpuW/CyplekBCXy89HNQz5i8E2jFXPBGnH2CL+9yxvK+UZzphQILbyhnWGqJhz25pPkmovuxLYedWY4hGNNS38+MTND4n+SDLSE9jlb1mWPaaW3JRd9rE6Ktgyn1r1VDMA+DbC/cbvH/w5wLRTKe07lZqN+gmMSfyPykUWyrnbNf7xs5O/41MRn7c2owKJQ65zXETneeefJHbqrGoS8cg3ppgxh744YDa2DfvuTqIZpAHOP8QdyQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV3PR12MB9356.namprd12.prod.outlook.com (2603:10b6:408:20c::21)
+ by DM6PR12MB4281.namprd12.prod.outlook.com (2603:10b6:5:21e::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.14; Tue, 7 Jul
+ 2026 18:42:32 +0000
+Received: from LV3PR12MB9356.namprd12.prod.outlook.com
+ ([fe80::1c36:31b4:c420:6286]) by LV3PR12MB9356.namprd12.prod.outlook.com
+ ([fe80::1c36:31b4:c420:6286%5]) with mapi id 15.21.0181.009; Tue, 7 Jul 2026
+ 18:42:32 +0000
+Date: Tue, 7 Jul 2026 14:42:30 -0400
+From: Yury Norov <ynorov@nvidia.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Russell King <linux@armlinux.org.uk>, Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	"Christophe Leroy (CS GROUP)" <chleroy@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Heiko Stuebner <heiko@sntech.de>, Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>, Moritz Fischer <mdf@kernel.org>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Will Deacon <will@kernel.org>,
+	Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Xu Yang <xu.yang_2@nxp.com>, Linu Cherian <lcherian@marvell.com>,
+	Gowthami Thiagarajan <gthiagarajan@marvell.com>,
+	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>,
+	Yury Norov <yury.norov@gmail.com>, Kees Cook <kees@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Aboorva Devarajan <aboorvad@linux.ibm.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Besar Wicaksono <bwicaksono@nvidia.com>, Ma Ke <make24@iscas.ac.cn>,
+	Chengwen Feng <fengchengwen@huawei.com>,
+	Ritesh Harjani <ritesh.list@gmail.com>,
+	Yushan Wang <wangyushan12@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-perf-users@vger.kernel.org, x86@kernel.org,
+	driver-core@lists.linux.dev, linux-pm@vger.kernel.org,
+	linux-rockchip@lists.infradead.org, linux-fpga@vger.kernel.org,
+	linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-amlogic@lists.infradead.org, linux-cxl@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 00/11] lib/cpumask: get rid of
+ cpumap_print_to_pagebuf()
+Message-ID: <ak1IltLSvhw2xj2H@yury>
+References: <20260702154725.185376-1-ynorov@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260702154725.185376-1-ynorov@nvidia.com>
+X-ClientProxiedBy: CH0PR03CA0037.namprd03.prod.outlook.com
+ (2603:10b6:610:b3::12) To LV3PR12MB9356.namprd12.prod.outlook.com
+ (2603:10b6:408:20c::21)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 04/10] cxl: Cache endpoint decoder settings during PCI
- enumeration
-To: Srirangan Madhavan <smadhavan@nvidia.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Dan Williams <djbw@kernel.org>,
- Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <ira.weiny@intel.com>,
- Jonathan Cameron <jic23@kernel.org>, Vishal Verma
- <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
- alwilliamson@nvidia.com, Dan Williams <danwilliams@nvidia.com>,
- Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
- Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
- Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
- linux-tegra@vger.kernel.org
-References: <20260703220508.546528-1-smadhavan@nvidia.com>
- <20260703220508.546528-5-smadhavan@nvidia.com>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260703220508.546528-5-smadhavan@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR12MB9356:EE_|DM6PR12MB4281:EE_
+X-MS-Office365-Filtering-Correlation-Id: a9fe8075-5163-4391-bea2-08dedc578130
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|23010399003|376014|7416014|22082099003|18002099003|11063799006|56012099006|6133799003;
+X-Microsoft-Antispam-Message-Info:
+	NxpmzHpLRHbkpQwIcSIbqnmUt1oSohXxde2OGgxei0cGQUG0PntrEJZuhETYGiDkfQkSrhL90K9iaUdXgb7Lmvk0FpHYsDiYegAwjmh2PYkgS0paPwYWxovWF3etkfsvgC575c2uC1+AbSZpPyGFkKmHBp+8heQlQk+XM0m8V/Q4U0R/3OJt7VTQOFdWp9d7ZJe0EBl6gk6QsSA9C2TMr0mzQtt7Ct6iOa15KPkm1Y0/ZqfWFdmqyokl4lUlN2Fk6oODKPoNdEE4lvVcTRkb0GrkPs/TgpabINay7QUgayipdxmKGlRlA9m5FAxHlC1sJi04lllmjuBKXH5wU2Qyhi1rhUWcMYHj03k1IAFTkf+HmnbfatkjtlJ3EjjOApqrTtFDB77Ooj+AZwuVgQiSWM7xnri+o50Qgk4F8z/U2ph2aKq5avzKyscbhLgQOZVTYlmBjD0eC5EuMoSWXycvW02femTwdL/v3wOTei+1H+kd44iQGMmrm4nM/vjs9Nzs1WDDMsKgnl0x+gonK8YTnZ+BXD4Bo5ugM8PSFWQYWvd97C/o/ZTyHhYg+WlMUQW5J+IkC7GufPiM7MTS1v9rbnH7Cb0c0iKYBTDQQnvZJi/PWnUGIWIAZuMzaC8jdKZvjM79sihzbWiN9syqiR7IFhfSyz0F0uFXoKUMrRPYM6U=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9356.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(376014)(7416014)(22082099003)(18002099003)(11063799006)(56012099006)(6133799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?SiQzI8ohKs62x9Az4vlIly7jtkeb1zq7fA+N8Y4QXsU61R7rOL2lPYxQZrJV?=
+ =?us-ascii?Q?jP7N+OUGHezZWOqNG/LoH5SUHQzpeU3DN2iv01A5qCWtqxiGFrUdkP/WVTYY?=
+ =?us-ascii?Q?ag86fU/SBiF26PIDjxOXkIVIkOJYXWeSE/+U8dUBQHXI38pTnU3cLgtR5k3a?=
+ =?us-ascii?Q?TMDzZ5ajUwGstujZN4hJi+nGZlMJEfmPUHGHl4Ug8FNXlkisEhdIO2IqDJLl?=
+ =?us-ascii?Q?WAU8x41BDPDuwLYkSn3tKoWz94Rq7eBA/+kx3cMg8AQXhvIaxDpq+BbbEyLD?=
+ =?us-ascii?Q?WyXKA0Bg1L/ob8eaQiAp07uaxAzOaEKWPXHEb4y93BXynfLoR4lV4maDG0RT?=
+ =?us-ascii?Q?FMCiiZrmoJr5seo0du/jwMovnBkeer4TV8WCj4xcMKR9YkgOP/t2NN97u7x9?=
+ =?us-ascii?Q?wtKEIKN3Exs79ezHOg8haKhW7f5JcCmi+Jr60sYIbJCeRaF4TKnQi2NZgrcQ?=
+ =?us-ascii?Q?mbU86xNacK2UJ4u5QriD33CiMjlgwbd9/ZqSgdg0Xfz6wK6r8mlhYx2mdEYQ?=
+ =?us-ascii?Q?e8NV3+VcqyPrqTzlOKpHONruyACX5W6UNaBUNCnGfpj4RVETdhU4FwKq/l7E?=
+ =?us-ascii?Q?HizgZWA87T+4saJQ1OHCw0zy7xo9QAoprQUxOkZj/x8zlYsa8olqBooTThug?=
+ =?us-ascii?Q?XtXTolV/G6yN0dhX9idQ/qb9pJVV4+YYcUhXldKPUNZxo6sR6PAenoS4UkMR?=
+ =?us-ascii?Q?qvGypU0jO1wGKVOkQI75LusZ6WvOrQqrGJjxbzktl7Bzcb3+UCq7W4YMI8Tn?=
+ =?us-ascii?Q?+0SCpqUjGVWeQJH5a/0jTuxeG1TGJzJAcnC5Dl0TU4BIB7Njy/A3BX8YXH/R?=
+ =?us-ascii?Q?WcusWrkSKkU4CxJICvLYbUrCEOwfyLG5gMMBsz75Wa7vKmWMRoJ/HajiSwDt?=
+ =?us-ascii?Q?sLWXsO20+oAFm3BQg7ewE5Ugc8OAGL00DBfH3Nw0JefnNNwCW3PThWs/Wwer?=
+ =?us-ascii?Q?eWEo3cnHdPCm0KVOxcjfk3ICWg7aRFT1ULay1y4c4L5vZyxr2ltI8d/hp1lW?=
+ =?us-ascii?Q?HIoa65wmbpVUmFT6DggUgCq6iuyks3jl7nJ0xkRRIrsZ3sDVLSdf/I4tXemx?=
+ =?us-ascii?Q?SLwRekoK0bn9gx6cQFVQ6XZV0xuMDVSdZYfaMwjAbp2KtxjJMGenE/hi6T2D?=
+ =?us-ascii?Q?Dp3wF5Rm01fFzulYcl0r8IvrQm2ip7ZazotHt/zQ4UZ2JVgJZYmK4IHgBVh/?=
+ =?us-ascii?Q?BBUeK+5nJrCyfYxUsF35C8Itc7M4cH4QiICtKk9lNVxIc2Q4JqODoKdMdtDB?=
+ =?us-ascii?Q?hpfmREYiRPwHE1T+2dmMWX7WCGcfXNCKvFLv2tMRWiVPIINgd4b66QYUPQUY?=
+ =?us-ascii?Q?dWXcDUfKkC5TyFXUdYLt2vX/72zJS6qJP/ZfuVxMn9MJHYtHrNID0W2fVu9S?=
+ =?us-ascii?Q?gALekxfX/Y6MVNjd0sdzCajc7HIFptn3zGIUeB4Qh4JIB8q2o5lwBLu/a1yc?=
+ =?us-ascii?Q?7KGU+O8XVRe0gMr5V1lctB/X9rDPIaRlKdYjyP/+stqcqdnWHE4diBFIgR7D?=
+ =?us-ascii?Q?TevUlbhUhTGr1Dk4bAUoWJB91OS+m9yM5lE3sIjZ9d3eRlkjsPdomyWKViYr?=
+ =?us-ascii?Q?gjjLcSVlh6It5NIVUojhSIgRw7rKXIfUpDN1R7WYShiCww6NVRlD+h63FQlO?=
+ =?us-ascii?Q?7BPZLNOTGSDFbZ4G6/lgY2dIqJnIX85aJwFrns6W8Bq2TEISe+AOc0Ge38Tz?=
+ =?us-ascii?Q?GTq5lrSUyvCAF+HoUWUAk2uh8pytRVQ5bMGCvLEP4IDtgX5B?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9fe8075-5163-4391-bea2-08dedc578130
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9356.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jul 2026 18:42:32.3185
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uJ94FGIl5fGyIsMqJde9xM/7YwLuqHPmfqSuXko5YdDmTTaQuMcbWQZX6PT8XmAvMMaaqUt/VzshdNwEyjxqQQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4281
 
+Added in bitmap-for-next. Thanks.
 
-
-On 7/3/26 3:05 PM, Srirangan Madhavan wrote:
-> Populate pci_dev->hdm from PCI capability initialization for CXL.mem
-> functions. If Memory Space Enable is clear, temporarily set it while
-> reading HDM MMIO and restore the original PCI_COMMAND value before
-> returning. This gives driver-free reset paths an early HDM snapshot.
+On Thu, Jul 02, 2026 at 11:47:13AM -0400, Yury Norov wrote:
+> cpumap_print_to_pagebuf() is the equivalent for the "&*pb[l]" notation
+> in printk-like functions. In some cases, it makes people to create
+> temporary buffers for the printed cpumasks, where it can be avoided.
 > 
-> CXL core later reuses and refreshes the same cache. Move the register
-> helpers into the built-in CONFIG_CXL_HDM set so the early cache path is
-> available without cxl_core.
+> Get rid of it in a favor of more standard printing API.
 > 
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
-> ---
->  drivers/cxl/core/Makefile |   3 +-
->  drivers/cxl/core/hdm.c    |  58 ++++----
->  drivers/cxl/core/regs.c   |   4 +
->  drivers/cxl/core/reset.c  | 288 ++++++++++++++++++++++++++++++++++++++
->  drivers/pci/probe.c       |   3 +
->  include/cxl/cxl.h         |  31 +++-
->  6 files changed, 349 insertions(+), 38 deletions(-)
+> Each patch, except for the last one, is independent and may be moved with
+> the corresponding subsystem. Or I can take it in bitmap-for-next, at
+> maintainers' discretion.
 > 
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index dc075cee0450..69cf2ea7ee74 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_CXL_BUS) += cxl_core.o
-> -obj-$(CONFIG_CXL_HDM) += reset.o
-> +obj-$(CONFIG_CXL_HDM) += regs.o reset.o
->  obj-$(CONFIG_CXL_SUSPEND) += suspend.o
->  
->  ccflags-y += -I$(srctree)/drivers/cxl
-> @@ -8,7 +8,6 @@ CFLAGS_trace.o = -DTRACE_INCLUDE_PATH=. -I$(src)
->  
->  cxl_core-y := port.o
->  cxl_core-y += pmem.o
-> -cxl_core-y += regs.o
->  cxl_core-y += memdev.o
->  cxl_core-y += mbox.o
->  cxl_core-y += pci.o
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index bd1d92e5add2..7a1ade846c9c 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -84,18 +84,9 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
->  		cxlhdm->iw_cap_mask |= BIT(16);
->  }
->  
-> -static void clear_hdm_info(void *data)
-> -{
-> -	struct pci_dev *pdev = data;
-> -
-> -	WRITE_ONCE(pdev->hdm, NULL);
-> -}
-> -
-> -static int devm_cxl_pci_setup_hdm_info(struct cxl_hdm *cxlhdm)
-> +static struct pci_dev *cxl_hdm_to_pci_dev(struct cxl_hdm *cxlhdm)
->  {
->  	struct cxl_port *port = cxlhdm->port;
-> -	struct cxl_hdm_info *info;
-> -	struct pci_dev *pdev;
->  	struct device *uport;
->  
->  	if (is_cxl_endpoint(port)) {
-> @@ -107,42 +98,42 @@ static int devm_cxl_pci_setup_hdm_info(struct cxl_hdm *cxlhdm)
->  	}
->  
->  	if (!dev_is_pci(uport))
-> -		return 0;
-> +		return NULL;
->  
-> -	pdev = to_pci_dev(uport);
-> -	info = devm_kzalloc(&pdev->dev,
-> -			    struct_size(info, settings, cxlhdm->decoder_count),
-> -			    GFP_KERNEL);
-> -	if (!info)
-> -		return -ENOMEM;
-> +	return to_pci_dev(uport);
-> +}
-> +
-> +static int devm_cxl_pci_setup_hdm_info(struct cxl_hdm *cxlhdm)
-> +{
-> +	struct cxl_hdm_info *info;
-> +	struct pci_dev *pdev;
->  
-> -	info->decoder_count = cxlhdm->decoder_count;
-> -	WRITE_ONCE(pdev->hdm, info);
-> +	pdev = cxl_hdm_to_pci_dev(cxlhdm);
-> +	if (!pdev)
-> +		return 0;
->  
-> -	return devm_add_action_or_reset(&pdev->dev, clear_hdm_info, pdev);
-> +	guard(rwsem_read)(&cxl_rwsem.dpa);
-> +	info = pdev->hdm;
-> +	if (info) {
-> +		if (info->decoder_count != cxlhdm->decoder_count)
-> +			return -ENXIO;
-> +	}
-> +
-> +	return 0;
->  }
->  
->  static void cxl_hdm_info_set_decoder(struct cxl_hdm *cxlhdm,
->  				     struct cxl_decoder *cxld)
->  {
-> -	struct cxl_port *port = cxlhdm->port;
->  	struct cxl_hdm_info *info;
->  	struct pci_dev *pdev;
-> -	struct device *uport;
-> -
-> -	if (is_cxl_endpoint(port)) {
-> -		struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
-> -
-> -		uport = cxlmd->dev.parent;
-> -	} else {
-> -		uport = port->uport_dev;
-> -	}
->  
-> -	if (!dev_is_pci(uport))
-> +	pdev = cxl_hdm_to_pci_dev(cxlhdm);
-> +	if (!pdev)
->  		return;
->  
-> -	pdev = to_pci_dev(uport);
-> -	info = READ_ONCE(pdev->hdm);
-> +	guard(rwsem_write)(&cxl_rwsem.dpa);
-> +	info = pdev->hdm;
->  	if (!info || cxld->id >= info->decoder_count)
->  		return;
->  
-> @@ -948,6 +939,7 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->  {
->  	struct cxl_endpoint_decoder *cxled = NULL;
->  	u64 size, base, skip, dpa_size, lo, hi;
-> +	struct cxl_decoder_settings settings;
->  	bool committed;
->  	u32 remainder;
->  	int i, rc;
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 93710cf4f0a6..040b0304f63c 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -199,6 +199,7 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
->  
->  	return ret_val;
->  }
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_iomap_block, "CXL");
->  
->  int cxl_map_component_regs(const struct cxl_register_map *map,
->  			   struct cxl_component_regs *regs,
-> @@ -517,6 +518,7 @@ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb)
->  
->  	return offset;
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_rcrb_to_aer, "CXL");
->  
->  static resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport)
->  {
-> @@ -633,6 +635,7 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
->  
->  	return component_reg_phys;
->  }
-> +EXPORT_SYMBOL_NS_GPL(__rcrb_to_component, "CXL");
->  
->  resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
->  					   struct cxl_dport *dport)
-> @@ -641,3 +644,4 @@ resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
->  		return CXL_RESOURCE_NONE;
->  	return __rcrb_to_component(dev, &dport->rcrb, CXL_RCRB_UPSTREAM);
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_rcd_component_reg_phys, "CXL");
-> diff --git a/drivers/cxl/core/reset.c b/drivers/cxl/core/reset.c
-> index 4c977fc47f8d..97b72cc67b6b 100644
-> --- a/drivers/cxl/core/reset.c
-> +++ b/drivers/cxl/core/reset.c
-> @@ -2,9 +2,16 @@
->  /* Copyright(c) 2026 NVIDIA Corporation. All rights reserved. */
->  #include <linux/delay.h>
->  #include <linux/bug.h>
-> +#include <linux/bitfield.h>
->  #include <linux/errno.h>
->  #include <linux/export.h>
-> +#include <linux/io.h>
-> +#include <linux/ioport.h>
->  #include <linux/kernel.h>
-> +#include <linux/pci.h>
-> +#include <linux/slab.h>
-> +
-> +#include <cxlpci.h>
->  
->  #include "cxl.h"
->  #include "core.h"
-> @@ -161,3 +168,284 @@ int cxl_hdm_decode_decoder(struct cxl_decoder_settings *settings, int id,
->  				  &settings->interleave_granularity);
->  }
->  EXPORT_SYMBOL_FOR_MODULES(cxl_hdm_decode_decoder, "cxl_core");
-> +
-> +struct cxl_hdm_decoder_state {
-> +	u32 ctrl;
-> +	u32 base_low;
-> +	u32 base_high;
-> +	u32 size_low;
-> +	u32 size_high;
-> +	u32 target_low;
-> +	u32 target_high;
-> +};
-> +
-> +void pci_cxl_hdm_release(struct pci_dev *pdev)
-> +{
-> +	struct cxl_hdm_info *info;
-> +
-> +	scoped_guard(rwsem_write, &cxl_rwsem.dpa) {
-> +		info = pdev->hdm;
-> +		pdev->hdm = NULL;
-> +	}
-> +	if (!info)
-> +		return;
-> +
-> +	kfree(info->decoder_state);
-> +	kfree(info);
-> +}
-> +
-> +static int cxl_pci_hdm_find_bar(struct pci_dev *pdev, resource_size_t hdm_start,
-> +				resource_size_t hdm_size, int *bar,
-> +				resource_size_t *offset)
-> +{
-> +	resource_size_t hdm_end = hdm_start + hdm_size - 1;
-> +
-> +	for (int i = 0; i < PCI_STD_NUM_BARS; i++) {
-> +		struct resource *res = &pdev->resource[i];
-> +
-> +		if (!pci_resource_len(pdev, i))
-> +			continue;
-> +		if (resource_type(res) != IORESOURCE_MEM)
-> +			continue;
-> +		if (hdm_start < res->start || hdm_end > res->end)
-> +			continue;
-> +
-> +		*bar = i;
-> +		*offset = hdm_start - res->start;
-> +		return 0;
-> +	}
-> +
-> +	return -ENODEV;
-> +}
-> +
-> +static void __iomem *cxl_pci_hdm_map(struct pci_dev *pdev,
-> +				     struct cxl_register_map *map,
-> +				     struct cxl_hdm_info *info)
-> +{
-> +	struct cxl_reg_map *hdm_map = &map->component_map.hdm_decoder;
-> +	resource_size_t hdm_start;
-> +	void __iomem *hdm;
-> +	int rc;
-> +
-> +	hdm_start = map->resource + hdm_map->offset;
-> +	info->hdm_size = hdm_map->size;
-> +
-> +	rc = cxl_pci_hdm_find_bar(pdev, hdm_start, info->hdm_size,
-> +				  &info->hdm_bar, &info->hdm_offset);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	hdm = ioremap(hdm_start, info->hdm_size);
-> +	if (!hdm) {
-> +		pci_err(pdev, "failed to map CXL HDM decoder registers\n");
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	return hdm;
-> +}
-> +
-> +static void cxl_pci_hdm_read_decoder_state(struct cxl_hdm_decoder_state *state,
-> +					   void __iomem *hdm, int id)
-> +{
-> +	state->ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> +	state->base_low = readl(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
-> +	state->base_high = readl(hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(id));
-> +	state->size_low = readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(id));
-> +	state->size_high = readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(id));
-> +	state->target_low = readl(hdm + CXL_HDM_DECODER0_TL_LOW(id));
-> +	state->target_high = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(id));
-> +}
-> +
-> +static int cxl_pci_hdm_read_decoder(struct pci_dev *pdev,
-> +				    struct cxl_hdm_decoder_state *state,
-> +				    struct cxl_decoder_settings *settings,
-> +				    void __iomem *hdm, int id)
-> +{
-> +	u64 target_or_skip, base, size;
-> +	bool committed;
-> +	int rc;
-> +
-> +	cxl_pci_hdm_read_decoder_state(state, hdm, id);
-> +
-> +	base = ((u64)state->base_high << 32) | state->base_low;
-> +	size = ((u64)state->size_high << 32) | state->size_low;
-> +	target_or_skip = ((u64)state->target_high << 32) | state->target_low;
-> +
-> +	rc = cxl_hdm_decode_decoder(settings, id, state->ctrl, base, size,
-> +				    target_or_skip, &committed);
-> +	if (rc) {
-> +		pci_err(pdev, "CXL HDM decoder %d has invalid configuration: %d\n",
-> +			id, rc);
-> +		return rc;
-> +	}
-> +	if (!committed)
-> +		return 0;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cxl_pci_hdm_capable(struct pci_dev *pdev)
-> +{
-> +	u16 cap;
-> +	int dvsec;
-> +	int rc;
-> +
-> +	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-> +					  PCI_DVSEC_CXL_DEVICE);
-> +	if (!dvsec)
-> +		return -ENOTTY;
-> +
-> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CAP, &cap);
-> +	if (rc)
-> +		return pcibios_err_to_errno(rc);
-> +
-> +	if (!(cap & PCI_DVSEC_CXL_MEM_CAPABLE))
-> +		return -ENOTTY;
-> +
-> +	return 0;
-> +}
-> +
-> +static int __pci_cxl_hdm_init(struct pci_dev *pdev)
-> +{
-> +	struct cxl_decoder_settings *settings;
-> +	struct cxl_register_map map = { 0 };
-> +	struct cxl_hdm_info *info;
-> +	void __iomem *hdm = NULL;
-> +	bool restore_command = false;
-> +	bool allocated_info = false;
-> +	int decoder_count;
-> +	u16 command;
-> +	int rc;
-> +
-> +	scoped_guard(rwsem_read, &cxl_rwsem.dpa) {
-> +		info = pdev->hdm;
-> +		if (info)
-> +			return 0;
-> +	}
-> +
-> +	rc = cxl_pci_hdm_capable(pdev);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = pci_read_config_word(pdev, PCI_COMMAND, &command);
-> +	if (rc)
-> +		return pcibios_err_to_errno(rc);
-> +
-> +	if (!(command & PCI_COMMAND_MEMORY))
-> +		restore_command = true;
-> +
-> +	if (restore_command) {
-> +		rc = pci_write_config_word(pdev, PCI_COMMAND,
-> +					   command | PCI_COMMAND_MEMORY);
-> +		if (rc)
-> +			return pcibios_err_to_errno(rc);
-> +	}
-> +
-> +	if (!info) {
-> +		info = kzalloc_obj(*info, GFP_KERNEL);
-> +		if (!info)
-> +			goto err_nomem;
-> +		allocated_info = true;
-> +	}
-> +
-> +	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
-> +	if (rc)
-> +		goto out_restore_command;
-> +
-> +	rc = cxl_setup_regs(&map);
-> +	if (rc)
-> +		goto out_restore_command;
-> +
-> +	if (!map.component_map.hdm_decoder.valid) {
-> +		rc = -ENODEV;
-> +		goto out_restore_command;
-> +	}
-> +
-> +	hdm = cxl_pci_hdm_map(pdev, &map, info);
-> +	if (IS_ERR(hdm)) {
-> +		rc = PTR_ERR(hdm);
-> +		hdm = NULL;
-> +		goto out_restore_command;
-> +	}
-> +
-> +	decoder_count = cxl_hdm_decoder_count(readl(hdm +
-> +						    CXL_HDM_DECODER_CAP_OFFSET));
-> +	if (decoder_count < 0) {
-> +		rc = decoder_count;
-> +		goto out_unmap;
-> +	}
-> +
-> +	if (decoder_count > CXL_HDM_DECODER_MAX_COUNT) {
-> +		rc = -ENXIO;
-> +		goto out_unmap;
-> +	}
-> +
-> +	if (info->decoder_count && info->decoder_count != decoder_count) {
-> +		rc = -ENXIO;
-> +		goto out_unmap;
-> +	}
-> +
-> +	info->decoder_count = decoder_count;
-> +	info->global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-> +	info->decoder_state = kcalloc(decoder_count,
-> +				      sizeof(*info->decoder_state),
-> +				      GFP_KERNEL);
-> +	if (!info->decoder_state) {
-> +		rc = -ENOMEM;
-> +		goto out_unmap;
-> +	}
-> +
-> +	settings = info->settings;
-> +	for (int i = 0; i < info->decoder_count; i++) {
-> +		rc = cxl_pci_hdm_read_decoder(pdev, &info->decoder_state[i],
-> +					      &settings[i], hdm, i);
-> +		if (rc)
-> +			goto out_unmap;
-> +	}
-> +
-> +	if (restore_command) {
-> +		rc = pci_write_config_word(pdev, PCI_COMMAND, command);
-> +		if (rc)
-> +			goto out_restore_failed;
-> +	}
-> +
-> +	scoped_guard(rwsem_write, &cxl_rwsem.dpa) {
-> +		if (pdev->hdm)
-> +			goto out_unmap;
-> +		pdev->hdm = info;
-> +	}
-> +	iounmap(hdm);
-> +	return 0;
-> +
-> +out_restore_failed:
-> +	rc = pcibios_err_to_errno(rc);
-> +	goto out_unmap;
-> +err_nomem:
-> +	rc = -ENOMEM;
-> +	goto out_restore_command;
-> +out_unmap:
-> +	if (hdm)
-> +		iounmap(hdm);
-> +out_restore_command:
-> +	if (allocated_info) {
-> +		kfree(info->decoder_state);
-> +		kfree(info);
-> +	}
-> +	if (restore_command) {
-> +		int rc2;
-> +
-> +		rc2 = pci_write_config_word(pdev, PCI_COMMAND, command);
-> +		if (rc2 && !rc)
-> +			rc = pcibios_err_to_errno(rc2);
-> +	}
-> +	return rc;
-> +}
-
-This function is awfully long plus with the nested gotos is rather ugly. Maybe something like this? Claude generated refactoring with adjusments.
-
-static void cxl_hdm_info_free(struct cxl_hdm_info *info)
-{
-	kfree(info->decoder_state);
-	kfree(info);
-}
-DEFINE_FREE(cxl_hdm_info, struct cxl_hdm_info *, if (_T) cxl_hdm_info_free(_T))
-DEFINE_FREE(cxl_iounmap, void __iomem *, if (!IS_ERR_OR_NULL(_T)) iounmap(_T))
-
-/* Runs with PCI_COMMAND_MEMORY guaranteed enabled by the caller. */
-static int __pci_cxl_hdm_probe(struct pci_dev *pdev, struct cxl_hdm_info *info)
-{
-	struct cxl_register_map map = { 0 };
-	int decoder_count;
-	int rc;
-
-	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
-	if (rc)
-		return rc;
-
-	rc = cxl_setup_regs(&map);
-	if (rc)
-		return rc;
-
-	if (!map.component_map.hdm_decoder.valid)
-		return -ENODEV;
-
-	void __iomem *hdm __free(cxl_iounmap) = cxl_pci_hdm_map(pdev, &map, info);
-	if (IS_ERR(hdm))
-		return PTR_ERR(hdm);
-
-	decoder_count = cxl_hdm_decoder_count(readl(hdm +
-						    CXL_HDM_DECODER_CAP_OFFSET));
-	if (decoder_count < 0)
-		return decoder_count;
-	if (decoder_count > CXL_HDM_DECODER_MAX_COUNT)
-		return -ENXIO;
-	if (info->decoder_count && info->decoder_count != decoder_count)
-		return -ENXIO;
-
-	info->decoder_count = decoder_count;
-	info->global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-	info->decoder_state = kcalloc(decoder_count,
-				      sizeof(*info->decoder_state),
-				      GFP_KERNEL);
-	if (!info->decoder_state)
-		return -ENOMEM;
-
-	for (int i = 0; i < info->decoder_count; i++) {
-		rc = cxl_pci_hdm_read_decoder(pdev, &info->decoder_state[i],
-					      &info->settings[i], hdm, i);
-		if (rc)
-			return rc;
-	}
-
-	return 0;
-}
-
-static int __pci_cxl_hdm_init(struct pci_dev *pdev)
-{
-	bool enabled_memory = false;
-	u16 command;
-	int rc;
-
-	scoped_guard(rwsem_read, &cxl_rwsem.dpa)
-		if (pdev->hdm)
-			return 0;
-
-	rc = cxl_pci_hdm_capable(pdev);
-	if (rc)
-		return rc;
-
-	rc = pci_read_config_word(pdev, PCI_COMMAND, &command);
-	if (rc)
-		return pcibios_err_to_errno(rc);
-
-	if (!(command & PCI_COMMAND_MEMORY)) {
-		rc = pci_write_config_word(pdev, PCI_COMMAND,
-					   command | PCI_COMMAND_MEMORY);
-		if (rc)
-			return pcibios_err_to_errno(rc);
-		enabled_memory = true;
-	}
-
-	struct cxl_hdm_info *info __free(cxl_hdm_info) =
-		kzalloc_obj(*info, GFP_KERNEL);
-	if (!info)
-		rc = -ENOMEM;
-	else
-		rc = __pci_cxl_hdm_probe(pdev, info);
-
-	if (enabled_memory) {
-		int rc2 = pci_write_config_word(pdev, PCI_COMMAND, command);
-
-		if (rc2 && !rc)
-			rc = pcibios_err_to_errno(rc2);
-	}
-	if (rc)
-		return rc;
-
-	scoped_guard(rwsem_write, &cxl_rwsem.dpa)
-		if (!pdev->hdm)
-			pdev->hdm = no_free_ptr(info);
-
-	return 0;
-}
-
-DJ
-
-> +
-> +void pci_cxl_hdm_init(struct pci_dev *pdev)
-> +{
-> +	int rc;
-> +
-> +	rc = __pci_cxl_hdm_init(pdev);
-> +	if (rc && rc != -ENOTTY && rc != -ENODEV)
-> +		pci_dbg(pdev, "CXL HDM cache init failed: %d\n", rc);
-> +}
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index b63cd0c310bc..2fd186468498 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -24,6 +24,7 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/bitfield.h>
->  #include <trace/events/pci.h>
-> +#include <cxl/cxl.h>
->  #include "pci.h"
->  
->  static struct resource busn_resource = {
-> @@ -2489,6 +2490,7 @@ static void pci_release_dev(struct device *dev)
->  	struct pci_dev *pci_dev;
->  
->  	pci_dev = to_pci_dev(dev);
-> +	pci_cxl_hdm_release(pci_dev);
->  	pci_release_capabilities(pci_dev);
->  	pci_release_of_node(pci_dev);
->  	pcibios_release_device(pci_dev);
-> @@ -2679,6 +2681,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
->  	pci_rebar_init(dev);		/* Resizable BAR */
->  	pci_dev3_init(dev);		/* Device 3 capabilities */
->  	pci_ide_init(dev);		/* Link Integrity and Data Encryption */
-> +	pci_cxl_hdm_init(dev);		/* CXL HDM Decoder Capability */
->  
->  	pcie_report_downtraining(dev);
->  	pci_init_reset_methods(dev);
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 80839517eabf..2215fe1c3f78 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -26,6 +26,7 @@ enum cxl_devtype {
->  };
->  
->  struct cxl_region;
-> +struct pci_dev;
->  
->  enum cxl_decoder_type {
->  	CXL_DECODER_DEVMEM = 2,
-> @@ -121,22 +122,46 @@ struct cxl_regs {
->  	);
->  };
->  
-> +#define CXL_HDM_DECODER_MAX_COUNT 32
-> +
-> +struct cxl_hdm_decoder_state;
-> +
->  /**
->   * struct cxl_hdm_info - PCI device HDM decoder programming cache
->   * @decoder_count: number of decoder settings entries
-> - * @regs: mapped CXL component registers for this HDM decoder block
-> + * @hdm_bar: BAR containing the HDM decoder registers
-> + * @hdm_offset: HDM decoder register offset relative to @hdm_bar
-> + * @hdm_size: HDM decoder register resource size
-> + * @global_ctrl: cached HDM decoder global control register
-> + * @decoder_state: cached raw per-decoder register state
->   * @settings: cached per-decoder programming state
->   */
->  struct cxl_hdm_info {
->  	int decoder_count;
-> -	struct cxl_component_regs regs;
-> -	struct cxl_decoder_settings settings[] __counted_by(decoder_count);
-> +	int hdm_bar;
-> +	resource_size_t hdm_offset;
-> +	resource_size_t hdm_size;
-> +	u32 global_ctrl;
-> +	struct cxl_hdm_decoder_state *decoder_state;
-> +	struct cxl_decoder_settings settings[CXL_HDM_DECODER_MAX_COUNT];
->  };
->  
->  int cxl_hdm_decode_decoder(struct cxl_decoder_settings *settings, int id,
->  			   u32 ctrl, u64 base, u64 size, u64 target_or_skip,
->  			   bool *committed);
->  int cxl_commit(struct cxl_decoder_settings *settings, void __iomem *hdm);
-> +#ifdef CONFIG_CXL_HDM
-> +void pci_cxl_hdm_init(struct pci_dev *pdev);
-> +void pci_cxl_hdm_release(struct pci_dev *pdev);
-> +#else
-> +static inline void pci_cxl_hdm_init(struct pci_dev *pdev)
-> +{
-> +}
-> +
-> +static inline void pci_cxl_hdm_release(struct pci_dev *pdev)
-> +{
-> +}
-> +#endif
->  
->  struct cxl_reg_map {
->  	bool valid;
-
+> On top of -next.
+> 
+> This is the resend of:
+> 
+> https://lore.kernel.org/all/20260528183625.870813-1-ynorov@nvidia.com/
+> 
+> Except the patches merged in 7.1 cycle. I'm going to apply the material
+> in 7.2 unless explicit NAKs received.
+> 
+> Yury Norov (11):
+>   arm: Use sysfs_emit() for cpumask show callbacks
+>   powerpc: Use sysfs_emit() for cpumask show callbacks
+>   x86/events: Use sysfs_emit() for cpumask show callbacks
+>   cpu: Use sysfs_emit() for cpumask show callback
+>   devfreq: Use sysfs_emit() for cpumask show callbacks
+>   fpga: dfl-fme-perf: Use sysfs_emit() for cpumask show
+>   hwtracing: hisi_ptt: Use sysfs_emit() for cpumask show
+>   RDMA/hfi1: Use sysfs_emit() for cpumask show helper
+>   PCI/sysfs: Use sysfs_emit() for cpumask show callbacks
+>   perf: Use sysfs_emit() for cpumask show callbacks
+>   lib/bitmap-str: get rid of cpumap_print_to_pagebuf()
+> 
+>  arch/arm/mach-imx/mmdc.c                    |  2 +-
+>  arch/arm/mm/cache-l2x0-pmu.c                |  2 +-
+>  arch/powerpc/kernel/cacheinfo.c             |  3 ++-
+>  arch/powerpc/perf/hv-24x7.c                 |  2 +-
+>  arch/powerpc/perf/hv-gpci.c                 |  2 +-
+>  arch/powerpc/perf/imc-pmu.c                 |  2 +-
+>  arch/x86/events/amd/iommu.c                 |  2 +-
+>  arch/x86/events/amd/power.c                 |  2 +-
+>  arch/x86/events/amd/uncore.c                |  2 +-
+>  arch/x86/events/intel/core.c                |  2 +-
+>  arch/x86/events/intel/uncore.c              |  2 +-
+>  drivers/base/cpu.c                          |  2 +-
+>  drivers/devfreq/event/rockchip-dfi.c        |  2 +-
+>  drivers/devfreq/hisi_uncore_freq.c          |  2 +-
+>  drivers/fpga/dfl-fme-perf.c                 |  2 +-
+>  drivers/hwtracing/ptt/hisi_ptt.c            |  2 +-
+>  drivers/infiniband/hw/hfi1/sdma.c           |  3 ++-
+>  drivers/pci/pci-sysfs.c                     |  7 ++++---
+>  drivers/perf/alibaba_uncore_drw_pmu.c       |  2 +-
+>  drivers/perf/amlogic/meson_ddr_pmu_core.c   |  2 +-
+>  drivers/perf/arm-cci.c                      |  2 +-
+>  drivers/perf/arm-ccn.c                      |  2 +-
+>  drivers/perf/arm-cmn.c                      |  2 +-
+>  drivers/perf/arm-ni.c                       |  2 +-
+>  drivers/perf/arm_cspmu/arm_cspmu.c          |  2 +-
+>  drivers/perf/arm_dmc620_pmu.c               |  4 ++--
+>  drivers/perf/arm_dsu_pmu.c                  |  2 +-
+>  drivers/perf/arm_pmu.c                      |  2 +-
+>  drivers/perf/arm_smmuv3_pmu.c               |  2 +-
+>  drivers/perf/arm_spe_pmu.c                  |  2 +-
+>  drivers/perf/cxl_pmu.c                      |  2 +-
+>  drivers/perf/dwc_pcie_pmu.c                 |  2 +-
+>  drivers/perf/fsl_imx8_ddr_perf.c            |  2 +-
+>  drivers/perf/fsl_imx9_ddr_perf.c            |  2 +-
+>  drivers/perf/fujitsu_uncore_pmu.c           |  2 +-
+>  drivers/perf/hisilicon/hisi_pcie_pmu.c      |  2 +-
+>  drivers/perf/hisilicon/hisi_uncore_pmu.c    |  2 +-
+>  drivers/perf/marvell_cn10k_ddr_pmu.c        |  2 +-
+>  drivers/perf/marvell_cn10k_tad_pmu.c        |  2 +-
+>  drivers/perf/marvell_pem_pmu.c              |  2 +-
+>  drivers/perf/nvidia_t410_c2c_pmu.c          |  2 +-
+>  drivers/perf/nvidia_t410_cmem_latency_pmu.c |  2 +-
+>  drivers/perf/qcom_l2_pmu.c                  |  2 +-
+>  drivers/perf/qcom_l3_pmu.c                  |  2 +-
+>  drivers/perf/starfive_starlink_pmu.c        |  2 +-
+>  drivers/perf/thunderx2_pmu.c                |  2 +-
+>  drivers/perf/xgene_pmu.c                    |  2 +-
+>  include/linux/cpumask.h                     | 19 -------------------
+>  kernel/events/core.c                        |  2 +-
+>  lib/bitmap-str.c                            |  9 ++++-----
+>  50 files changed, 58 insertions(+), 75 deletions(-)
+> 
+> -- 
+> 2.53.0
