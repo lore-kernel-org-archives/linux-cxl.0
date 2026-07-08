@@ -1,106 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6024E3ACA7C;
-	Wed,  8 Jul 2026 10:43:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5707F42A178;
+	Wed,  8 Jul 2026 10:48:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783507400; cv=none; b=QF+JRSKZLgVl/ksxFU/Q1EjQWQ5l+dGKaNKX3MuBNu1ytO1cRvhrMUdoatcBxTjSh/noTb7hRCYBsu8dFWqf3liATTBq/RQyDD2/WHdfKgJitIem2b7Uv+x8ITWd/GGd+VaBTqVT4dguvA3iiaiQ/hpDFYFIyTcljvdChSDiL0U=
+	t=1783507714; cv=none; b=JL5J0fSlNZoYPh6vwWR0GH5xZgslFOMmVvcUsQ/RZINeyUw/QLPE4CqOIi7GRH2S4B0bErKMR+pgOYD4+QgSD+LT4aOSps+IPJLupis18dWoZnPxB6GSwT+RQPBzWF+/FBcECGCiBtJIC5hkTv8UWTXZQNsgd1e9ZoDGvGZrsoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783507400; c=relaxed/simple;
-	bh=uJBOg5a1fncflhd9ukrVEW+8wu2g8Xfd+z7xobfQwPE=;
+	s=arc-20240116; t=1783507714; c=relaxed/simple;
+	bh=3q1Tc+MrlY6u6Ky9tvYSqDvsGzCxws0MVOkL7UJ6W/A=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=EKrgFTKlsALc7Q1W0FFKr+5NdyGo0iZeTDHSx9G1i/MlTqCfR2Y+f1iqHp2QoSInx6B30BEO+BL3Js6Xs5GgsrtQBnAFVQmABJg884Xsn7OaPr37hjohxnzxbZ+LwU/Kb+YYmf0YGKSokG69xy70a26bSVwUO6vqs3Xyhoa7iHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XfC9GLS3; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=uhkCzB84bVh8j7AY6o0iH86rxAAgSyjH3qfzouH38Hjh1b56TEwNd6mA1Vwx0F0dbmsnolhdrhCmDLzDgt0B9IkiMgnQnilOFAxtVXcUXl4fXySkYGxXnhxh0/d8rMq30FjrVrr9g8od+2S4ylcxMVqOsadBguoV+0ChGga8JxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dSchksLc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XfC9GLS3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F3361F000E9;
-	Wed,  8 Jul 2026 10:43:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dSchksLc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01A141F000E9;
+	Wed,  8 Jul 2026 10:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783507389;
-	bh=pSs/U4SDImk2FjQuehMAS8/ghAonodc8RSsObJXlgwU=;
+	s=k20260515; t=1783507708;
+	bh=0WzWp+5C4fvgBzmdEdAvq+313zf+Oq7pz9+UW3Z/Zm4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XfC9GLS3QTb7VIoc7ls0cJK30jlNhStUny6DLIcUEly4NZq/VwzYnOfBdhDT1GQuX
-	 SWiA/a02nAj5ZhyOxRNpf++GR4dd+NIdZGn3uG/KYSFIEH/ShHNubRdA23aRCmuX6Q
-	 Cj5VKuWJrfvWHWimZQXHXCfecAtEwHyn3qPqXpx92qzcI5i/+rtrN7dSuNyGf2SNkJ
-	 SSB9tphQuf2Lukcawa5u/7G+KKCg9Ad7uohMU6G0ZJ5bi9naaaODQdmFgWigDyyUYJ
-	 arjx7NRMxg8TtTjp9a+S/LDipwUKL6nq7R6ey94AO4w7aBCMg4ZaTIjgIocx/pn0ya
-	 po1yf6epUHWsQ==
+	b=dSchksLcPCvRlayQvME9Q3370NloUZsuppJ/gWAjzwQgMBMEN4nKMw3jvzpyW4Kcf
+	 iPDDtt6Lq8DIdWBDU6APa5OBrIEX3+9CvUShdxfwHsC6LXzH4ZrnIH60uZmMd5W7/H
+	 L7JKe8tQjnHI8PPlNuLr8j59TZcpAgf0RaMe7iF5uENp4JqcxGEkWXi/1c+JXSa2AQ
+	 Qgtx268BcfXxhFY+yYGp/zr4+a0W2krwXzHAmaAerAN+SiAEXA3+p7z/1lnc0VVaf/
+	 uKFIErs365q8eCHVf3chaNBv0TIfSc2eBlCZgmMTHtz2eJSyEE2kUNYrNSWRadcJWS
+	 CjbfGuQuoH/CQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 8/9] PCI: of: Set fwnode device of newly created PCI
- device nodes
+Subject: Re: [PATCH v9 9/9] PCI: of: Remove fwnode_dev_initialized() call
+ for a PCI root bridge node
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Herve Codina" <herve.codina@bootlin.com>
 Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20260708100302.517792-9-herve.codina@bootlin.com>
+In-Reply-To: <20260708100302.517792-10-herve.codina@bootlin.com>
 References: <20260708100302.517792-1-herve.codina@bootlin.com>
- <20260708100302.517792-9-herve.codina@bootlin.com>
+ <20260708100302.517792-10-herve.codina@bootlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 08 Jul 2026 10:43:08 +0000
-Message-Id: <20260708104309.0F3361F000E9@smtp.kernel.org>
+Date: Wed, 08 Jul 2026 10:48:27 +0000
+Message-Id: <20260708104828.01A141F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] The `fwnode->dev` pointer is not cleared in the error paths of `of=
-_pci_make_dev_node()` and `of_pci_make_host_bridge_node()`, potentially lea=
-ving a dangling pointer.
---
+> During the instantiation of devices described by a device-tree overlay
+> applied on a PCI device, devlink displays the following kind of debug
+> messages instead of creating the expected links:
+>    'Not linking xxxx - might never become dev'
+>=20
+> Without those expected links, the device removal order cannot be
+> correct.
+>=20
+> Those debug traces are printed by fw_devlink_create_devlink(). In our
+> use case, they are all printed because the supplier of the link has at
+> least one of its ancestor with its fwnode flag FWNODE_FLAG_INITIALIZED
+> set.
+>=20
+> The culprit ancestor is the PCI root bridge.
+>=20
+> [ ... ]
+> are correctly created.
+>=20
+> Fixes: 1f340724419e ("PCI: of: Create device tree PCI host bridge node")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 
---- Patch [8]: [PATCH v9 8/9] PCI: of: Set fwnode device of newly created P=
-CI device nodes ---
-commit deed8a4ace1f4465ff17d82fc17dc458281c89a1
-Author: Herve Codina <herve.codina@bootlin.com>
-
-PCI: of: Set fwnode device of newly created PCI device nodes
-
-This commit sets the fwnode device field for dynamically created PCI
-device nodes to prevent fw_devlink from incorrectly using the PCI root
-bridge as a supplier. It ensures proper links are created by pointing
-devlink directly to the PCI device.
-
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 8dd558a490bbd..ca83006b7c7e2 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-
-[ ... ]
-
-> @@ -709,6 +710,13 @@ void of_pci_make_dev_node(struct pci_dev *pdev)
->  	if (ret)
->  		goto out_free_node;
-> =20
-> +	/*
-> +	 * Set the fwnode device in order to have fw_devlink creating links
-> +	 * pointing to this PCI device instead of walking up to the PCI host
-> +	 * bridge.
-> +	 */
-> +	fw_devlink_set_device(&np->fwnode, &pdev->dev);
-> +
->  	ret =3D of_changeset_apply(cset);
->  	if (ret)
->  		goto out_free_node;
-
-[Severity: High]
-If of_changeset_apply() fails here, the code jumps to the out_free_node
-error path in of_pci_make_dev_node() without clearing the fwnode.dev
-pointer that was just set.
-
-If the node survives due to an external reference acquired during partial
-application (such as from an OF_RECONFIG_ATTACH_NODE listener), could this
-leave np->fwnode.dev pointing to &pdev->dev?
-
-When the PCI device is later freed, does this result in a dangling pointer
-and a potential use-after-free?
-
-Should fw_devlink_set_device(&np->fwnode, NULL) be called in the error
-handling path to safely undo the assignment?
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260708100302.5177=
-92-1-herve.codina@bootlin.com?part=3D8
+92-1-herve.codina@bootlin.com?part=3D9
+
