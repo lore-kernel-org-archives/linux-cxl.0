@@ -1,161 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F060721ABB1
-	for <linux-cxl@vger.kernel.org>; Wed,  8 Jul 2026 13:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95105380FF4;
+	Wed,  8 Jul 2026 13:59:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783516136; cv=none; b=BhsdIdf/FH35rNR/NgwPo81SYnVBNJSwqN4baNzhU9OF8m+G5NrqiAGx1Vd8EHKnN4nPLVrH/1QhCprEww7JkODzbQLRH4qmvgg4VbKE5n1kZHSW58pgDd8DG1RUY7KJpzt8hXqUmX3qSTMXa1GtUV4Fv7j1UbomT9I509cQiec=
+	t=1783519165; cv=none; b=C5j1KvrR9/1aIguWLVTCHfM9gXbMgT21GZdQ1CmD1VJZPU7nLDf0cgV4DryCXBYevk9jTekoQvkusCRgwLqBlJvgG0s84fs0u/9/ozYv8yEHodryHO/kCv2R/WbbnBg+H9jcQi/ofNOi8sSqasDGgbp7+2D8seFzyyxsjuz90DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783516136; c=relaxed/simple;
-	bh=slzcngurpvijPvfNkGNfZu5oYV2DsjS057qVvK8Udik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=SLWwLdAXRelzibU5N+Ri95SE2Z04aYoaBAXlWywPE8vB1VX+HMuYscZR8A8pGfpexboKc0d/ycvv3K5xQtm2nDE0mDS/FmuNzkpeuBJBxfQ5COT28UAu8IwUNPvIMxNmOfivTClXhjKikkUY52BW89/FaeY8qgtGloXx6NLaDDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TfDNKzrK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1783519165; c=relaxed/simple;
+	bh=egpzf7FOljHOA/UNeDZ0uuZAzOwk9J//58dI10sIFww=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cKHSd416rvP20Xw0v5q+4vG/mlvKuPckYNx/oI7w7R3tf8FYH69969VZnfaBgR3nBzDxco+CTp0rvugEgYQdrYtt7KWgWDS7MdHyA7nTO2df8rj5WEzJh/W9ne1AIRtBg0pkLatpdibXLaBH0ojErstaQoolmIikqk64w67afeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=PPh5n0Rc; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TfDNKzrK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783516134;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U+rX2CKg5FhtAMYxFR8MmaCVN8SdzuEUH8feY2iANJc=;
-	b=TfDNKzrKQ1bS+vwFHUpRelbYRByd4nl4D9A+b4zrcKZoZzkzQGx2skqTAckn+Wq7vapKWD
-	GlZiLyqowYVOapRob7qvqJBgw7jeTY+Fo3ym6L+ocR+Sb6AbO4JM+USwxSm2um2y3uQ8c6
-	1ijjdhbSkccoFMs82/xJgjW039TY1qw=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-282-QhI76a1ZMbqcyczlad-FFw-1; Wed, 08 Jul 2026 09:08:52 -0400
-X-MC-Unique: QhI76a1ZMbqcyczlad-FFw-1
-X-Mimecast-MFC-AGG-ID: QhI76a1ZMbqcyczlad-FFw_1783516128
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-46fb9079a04so438826f8f.3
-        for <linux-cxl@vger.kernel.org>; Wed, 08 Jul 2026 06:08:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783516128; x=1784120928;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=U+rX2CKg5FhtAMYxFR8MmaCVN8SdzuEUH8feY2iANJc=;
-        b=jilFayCyrNtBb4uWEfDDE9RaIfbBTtY/89kjesRuOcdBXgD2/z53cZAta+AJh727RO
-         L65XJoK9hq7xWnTk1rfODihpcMC6OZu7OTLQburpJimeoIai9BB4Ao8iDNrnR3t9evfb
-         8VGb0YAjYzGowElN4gSMaBO/OaYp+s8x/iqAWc1pI6AOgrQM7RRVmXAYXhUNHeS2F8Cs
-         n2tB0EaydgxT3UhzOAn3ouQm3y4Jr8jwQq/mnwhP71kq75TGB0amtbT0A03DngzsQdUH
-         sTRVpk8yuG4p8xc4pPcBmOaO/i+1jvwVbtZAotSFshagUgTmfGTnQTxeqXhB/U8Jv+yd
-         2YZw==
-X-Forwarded-Encrypted: i=1; AHgh+RpNdkeH8M+DToJC74kyZY8McKZVnqFUWf1zrCIpSenrE6QVoob04N4G6PLn+cguJJSXaG64cBCCmfc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBtDynqoafkjyW/wP9LIf2U+6BppJza9CcwMRicJN5SIWLayue
-	4j3WDl17QU6lhZSuhB0d22xLTkyPLY/VLrrNQEVtozcVc/d79x9GNoaMy8oGjLpPbzx6QXs9MpM
-	OxD3E0Gu9ARDBoRKzeh56WQBidJKg7iWgAZnfpZ2k40dPcUyXdbEx1xI70+FGag==
-X-Gm-Gg: AfdE7cnMJ15NCCf7G/Apd9mSKHs8voNAFoONfJD3Y25YKoU6IzTMitIK85Q6UbNN0xL
-	goIKpJx1iLL+ye+MowoPbRm6hORMGfLBXLqWgPkGK9/ScYZF1ufisyRHXiekdnF0Wx2VHoKhx6C
-	COZ+Y7wgQu6/8iZihZnEA8AcNBpCWiZRzlfvGCgxv98UIsv9aH6sDbYVNfYSaqV5/v81Z2+tJwN
-	ZIwlxMiaOz4lojYUjdFEX+rDtm5AaPzZwjGC/Yw7TkIrwh+SEn6GmArdcFjrw3WK6icIIm8f7qv
-	/JSO3XGN9C4HZT3sMa35Hw1MFewMjJbb69CQ+geSG4VE85PX6l88NL4ugJrpmnDIIt6YWAbKMb7
-	7h7WhdjoyKG4XoM/rBwZi5y96//4ZnrsO
-X-Received: by 2002:a05:600c:8284:b0:493:c8cf:27bd with SMTP id 5b1f17b1804b1-493e68642c1mr25878095e9.19.1783516127929;
-        Wed, 08 Jul 2026 06:08:47 -0700 (PDT)
-X-Received: by 2002:a05:600c:8284:b0:493:c8cf:27bd with SMTP id 5b1f17b1804b1-493e68642c1mr25877715e9.19.1783516127480;
-        Wed, 08 Jul 2026 06:08:47 -0700 (PDT)
-Received: from redhat.com (IGLD-80-230-68-31.inter.net.il. [80.230.68.31])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493e0f294a6sm259459405e9.1.2026.07.08.06.08.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2026 06:08:46 -0700 (PDT)
-Date: Wed, 8 Jul 2026 09:08:42 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
-	Naoya Horiguchi <nao.horiguchi@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andi Kleen <andi@firstfloor.org>,
-	Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>,
-	Rik van Riel <riel@redhat.com>, Vlastimil Babka <vbabka@kernel.org>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-	Lance Yang <lance.yang@linux.dev>,
-	Christoph Lameter <cl@gentwo.org>,
-	David Rientjes <rientjes@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Harry Yoo <harry@kernel.org>, Hao Li <hao.li@linux.dev>,
-	Kiryl Shutsemau <kas@kernel.org>, Byungchul Park <byungchul@sk.com>,
-	linux-mm@kvack.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH 0/2] mm: memory-failure: fix HWPoison flag race with
- non-atomic page flag ops
-Message-ID: <20260708090739-mutt-send-email-mst@kernel.org>
-References: <cbab829a-3e65-4b4f-a2e2-704e88a611a0@kernel.org>
- <f6d8354c-2f79-4a48-934c-cbeb335765e2@kernel.org>
- <20260630174852-mutt-send-email-mst@kernel.org>
- <2f884bfa-3cd5-4fba-8aa4-c2e68890ab64@kernel.org>
- <20260701041112-mutt-send-email-mst@kernel.org>
- <d2ce93d9-c3d8-4915-a511-d08eb2c1b374@kernel.org>
- <20260701043024-mutt-send-email-mst@kernel.org>
- <c03ec696-d635-4c7f-8c77-89a439d9135b@kernel.org>
- <20260707155658-mutt-send-email-mst@kernel.org>
- <6ec8f683-77c7-4ddd-830c-030a3d984715@kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="PPh5n0Rc"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0B6B152B;
+	Wed,  8 Jul 2026 06:59:18 -0700 (PDT)
+Received: from e134710.arm.com (e134710.arm.com [10.33.10.82])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1EC253F66F;
+	Wed,  8 Jul 2026 06:59:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1783519162; bh=egpzf7FOljHOA/UNeDZ0uuZAzOwk9J//58dI10sIFww=;
+	h=From:Subject:Date:To:Cc:From;
+	b=PPh5n0Rckf4lPT5ow/Rp0ugC+rxNZkCQVJJXF0ETmkRNYeQcxFnVRsmQo1ikDUSUN
+	 NHgcSsIjM1TaYUpQRzAsK5Iu7jfGNS9QvFXLun9ISW97tCqPB5kZMG02XcsGCa7tyW
+	 34qZIeUqLvT1FPNy3Efqhmh1/RrhEH/7DAsWJEzI=
+From: Ahmed Tiba <ahmed.tiba@arm.com>
+Subject: [PATCH v7 00/10] ACPI: APEI: share GHES CPER helpers and add DT
+ FFH provider
+Date: Wed, 08 Jul 2026 14:58:59 +0100
+Message-Id: <20260708-topics-ahmtib01-ras_ffh_arm_internal_review-v7-0-8b3a85216cef@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <6ec8f683-77c7-4ddd-830c-030a3d984715@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: OQ1Fd3eZ9S2JnQJmw6S2sBrwVrja7EbbPgrKgtsACo4_1783516128
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKNXTmoC/5XRzWqEMBSG4VsZsm4k50x+dFa9j1Ik5qcGqg6J2
+ JbBe+9xoFiXLr9AnjeQByshp1DY7fJgOSyppGmkYV4uzPV2/Ag8edoMBWqBKPg83ZMr3PbDnDo
+ BPNvSxti3Ng9tGueQR/vZblL44l303pnojLMdI/GeQ0zfz9rbO+0+lXnKP8/4Atvp1lGAYACwl
+ qqCGiRAw2ELBl9R075SqnLTwDZiwb9r55+3IBf8Kk206M1VQXeU5S4rqM/JkmSJuqm1UZ3VcJT
+ VPxmbc7IiGYNQQngKSDzKepc1mHOyJrmBaOgDjLRW7PK6rr881bvuKQIAAA==
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
+ Hanjun Guo <guohanjun@huawei.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Shuai Xue <xueshuai@linux.alibaba.com>, Len Brown <lenb@kernel.org>, 
+ Saket Dumbre <saket.dumbre@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, 
+ Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
+ Alison Schofield <alison.schofield@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, 
+ Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, 
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+ Oliver O'Halloran <oohall@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Ahmed Tiba <ahmed.tiba@arm.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+ Shuah Khan <skhan@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+ acpica-devel@lists.linux.dev, linux-cxl@vger.kernel.org, 
+ linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-edac@vger.kernel.org, 
+ linux-doc@vger.kernel.org, Dmitry.Lamerov@arm.com
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1783519157; l=2775;
+ i=ahmed.tiba@arm.com; s=20260219; h=from:subject:message-id;
+ bh=egpzf7FOljHOA/UNeDZ0uuZAzOwk9J//58dI10sIFww=;
+ b=z0wp9aIYNr5NMorh09jiJbcMtJLugd5jUHOdl53jOd3TImjbi3fvS+YXV8tvo1u999mp+hyAF
+ A6HNDu/8MqQCkzA5Have9zBAay47klANWoyQ5GlaL26mz974WlQDnIH
+X-Developer-Key: i=ahmed.tiba@arm.com; a=ed25519;
+ pk=xVOtd+Qklh/4tuM3tB+BEZD4jj5a6W59C3KCNX6v7OE=
 
-On Wed, Jul 08, 2026 at 02:03:21PM +0200, David Hildenbrand (Arm) wrote:
-> On 7/7/26 22:27, Michael S. Tsirkin wrote:
-> > On Wed, Jul 01, 2026 at 10:36:31AM +0200, David Hildenbrand (Arm) wrote:
-> >> On 7/1/26 10:33, Michael S. Tsirkin wrote:
-> >>>
-> >>> what do you think ;) post it?
-> >>
-> >> As RFC please :) [and if it's AI generated, obviously properly reviewed and
-> >> reworked by you]
-> > 
-> > I spent a bit poking at it, and it's hairy.
-> 
-> What I thought ...
-> 
-> > The issue is that we have calls to both set and clear bits.
-> > When we record them in a side side structure so they can be retried,
-> > we have to carefully record both sets and clears and their order and make sure
-> > they do not bypass each other. So if there's set already in the
-> > structure, we need to take it out of structure and only then add a clear.
-> > 
-> > It gets very hairy because we want to set from NMI.  So now we can have
-> > clear in the data structure and set from NMI bypasses that. Now what?
-> > And set from NMI can't be 100% safe anyway as we discussed ...  Kinda
-> > reduced my motivation to try and make this reliable at all.
-> 
-> Maybe we should just really keep it as broken as it currently is. It's not
-> really worth our time fixing basic design flaws ... given that we didn't have
-> any report about these races so far :/
-> 
-> I mean, sure, if it's easy, ... but it sounds like getting more and more complex.
-> 
-> -- 
-> Cheers,
-> 
-> David
+This is v7 of the GHES refactor series. Compared to v6, it addresses
+the Sashiko-reported issues including pre-existing ones and fixes
+the ACPI-disabled cper-x86 build break.
 
-Right. Either we do the RCU thing or let it be. But then I'm uninclined
-to even bother with fixing other weird behaviour I see there.
+The DT firmware-first CPER provider is intended for the upstream zena-css
+platform. Validation so far has been on FVP.
 
+Changes in v7:
+- Address Sashiko-reported issues for this series, including pre-existing ones.
+- Fix pre-existing CPER header overflow validation in cper.c.
+- Fix AER recovery leak when no pci_dev is found.
+- For DT provider: serialize pool init, return IRQ_NONE on empty status,
+  add OF_RESERVED_MEM dependency, and harden status length checks.
+- Include <asm/acpi.h> in cper-x86.c for ACPI-disabled builds.
+- Link to v6: https://lore.kernel.org/r/20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com
+
+---
+Ahmed Tiba (10):
+      ACPI: APEI: GHES: share macros via a private header
+      ACPI: APEI: GHES: move CPER read helpers
+      ACPI: APEI: GHES: move GHESv2 ack and alloc helpers
+      ACPI: APEI: GHES: move estatus cache helpers
+      ACPI: APEI: GHES: move vendor record helpers
+      ACPI: APEI: GHES: move CXL CPER helpers
+      ACPI: APEI: introduce GHES helper
+      ACPI: APEI: share GHES CPER helpers
+      dt-bindings: firmware: add arm,ras-cper
+      RAS: add firmware-first CPER provider
+
+ Documentation/admin-guide/RAS/main.rst             |   15 +
+ .../devicetree/bindings/firmware/arm,ras-cper.yaml |   52 +
+ MAINTAINERS                                        |    6 +
+ drivers/Makefile                                   |    1 +
+ drivers/acpi/Kconfig                               |    4 +
+ drivers/acpi/apei/Kconfig                          |    1 +
+ drivers/acpi/apei/apei-internal.h                  |    3 +-
+ drivers/acpi/apei/ghes.c                           | 1044 +-----------------
+ drivers/acpi/apei/ghes_cper.c                      | 1122 ++++++++++++++++++++
+ drivers/firmware/efi/cper-x86.c                    |    1 +
+ drivers/firmware/efi/cper.c                        |    3 +-
+ drivers/pci/pcie/aer.c                             |    9 +-
+ drivers/ras/Kconfig                                |   12 +
+ drivers/ras/Makefile                               |    1 +
+ drivers/ras/cper-esource.c                         |  332 ++++++
+ include/acpi/ghes.h                                |   10 +-
+ include/acpi/ghes_cper.h                           |  141 +++
+ include/cxl/event.h                                |    2 +-
+ 18 files changed, 1709 insertions(+), 1050 deletions(-)
+---
+base-commit: 0e35b9b6ec0ffcc5e23cbdec09f5c622ad532b53
+change-id: 20260220-topics-ahmtib01-ras_ffh_arm_internal_review-bfddc7fc7cab
+
+Best regards,
 -- 
-MST
+Ahmed Tiba <ahmed.tiba@arm.com>
 
