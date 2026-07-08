@@ -1,149 +1,282 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0B4477E53;
-	Wed,  8 Jul 2026 14:21:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1C3478E45;
+	Wed,  8 Jul 2026 14:35:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783520481; cv=none; b=Odz17pCn69czG7R1pSXO0FCZZCyXBSRbzpC1JfZmnW9F0+NizaI4OCziXztSp/OR4LQlNuJe/dX3pQmdoycM6nmMeMfAzJeoCysj5hRksvRIivtmIZ0PzFgtbS0PKqy9s+/4tY+v/oQZWAcE7ReonXffVimR0Ke5XKvrLwPQDnk=
+	t=1783521359; cv=none; b=bK3X5z4A7zextQ2KbXbK0lTcTPC/ecHw7Ha2A2B63aZQD2LD8q5QwSZ8Q57t9dsoU9Y2ybinv5D/r6q+CLnqgnb/xCIETCDUeN705pm7aT0roh/Zb481f9D8CtiwaqTbCb4FP8R1PhK5OXOb4zpCNNC2EwRMhmGrM7j+SU9wC90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783520481; c=relaxed/simple;
-	bh=eptoqU3kcoiZ2MPYXhf+3yYOkpZj8bF8iCd83eySl6Y=;
+	s=arc-20240116; t=1783521359; c=relaxed/simple;
+	bh=w1fawoxoc6jpIjfKssHO3HbnDN9z+t5YL6JnefkNwmU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GQ7irYtfGsU6wFVhy7vNC+2SgkNtBHnKuDTEPlB4ycf6AOPwuFHT1d5zUhBQnyhpu0gq18PshPLbDlEVT1pWROig9t/CVWuAUKX1Lazcyc5S4aIIZNC93kJjOAdWHpLMVO2mgIt1kwyfPDsWY/ovWHccfLEN4R1XIxCDWtuu4r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVC0Li+x; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=VNk756l0wxhCLkPBHzIzPe6RYIm7AqllMxUnrG+CrADzpZ+odmboZZl7GDW55a4OuqWatIV+cciJdn4XXAR7tNXBxWhmT319zXj/4Bh1hfp3fS4+vyClNOwcnZqKwfdATxwn8N+LQNswbWujjdG5Ht8XYkaRRj941WNpk09pcrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LEW0hVbt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVC0Li+x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 311B21F00A3A;
-	Wed,  8 Jul 2026 14:21:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LEW0hVbt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91D601F000E9;
+	Wed,  8 Jul 2026 14:35:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783520480;
-	bh=EwqgsRzc4TDNJUcYjGgk9JH6x1MFE3isguoRJhDocHw=;
+	s=k20260515; t=1783521357;
+	bh=kVhVg7sAgvofNtLPi0k0PzLWq+B0jf1LlR7OHMFngFg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jVC0Li+xN/1ij1SL2KPvng+w2Q7MpryAem5TDTXRqLvsSUXG4Mxfr0bV7QSPFYc2f
-	 qzJQL1NnYBPCMtDPzDaJ5H5iFP/zE3IiivkAjYwSimIRug66Xz8RoZyvK7pv0x/wAn
-	 kq8TOYhfbz5ma+3zBhH5AxIenj4LC4w23xTrP4mQlYTa4wa4uF7NQeYaGMYea6sMrH
-	 NaS6rOQJ3RxJHqAiLAnIzyTCM89+kR9ejDrnWjUwOFVBOBAqDcM5iGg427f43CZbvH
-	 e1h80rV0X0Bz60w2cTztSrIGmSTEh1TLfGZp8MaoIVYs2erkozflUdyMpkH1gxBwLf
-	 edldXfOZZb3JA==
+	b=LEW0hVbtNAzYpk8XCw+MVGfUrUp6b/IaOyQ7cOoRXbdWRe3QlG8fGkCDuOc+b98Na
+	 sdC1pdTOqUqpCX9NEsNiH9Ayazh3rFMa+MzrXsmiEFJ2YLLpZpvs2PFFfAMHbw0Uzl
+	 dLE65gkZQu6JeTwnwbRpmaajEEuEi+P6ddXMjyv7Kh8dqIHLW3n91+wjDc8PxDc8XU
+	 sFXFe4AbRFrqGtkilwithKemZcL2ArZGOUaoEh3ni4X9Jji/8bxw7iD9UNAYIYc+AO
+	 bH9XH3iNfWo7qVv3M7PC4qva8CCLpcMaEJN3CkNCCkN8Xj3gKFMuKLhc1B1O6GjNlO
+	 B9lvkKgIzWqIA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 07/10] ACPI: APEI: introduce GHES helper
+Subject: Re: [PATCH v7 10/10] RAS: add firmware-first CPER provider
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ahmed Tiba" <ahmed.tiba@arm.com>
-Cc: robh@kernel.org, devicetree@vger.kernel.org, conor+dt@kernel.org, linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20260708-topics-ahmtib01-ras_ffh_arm_internal_review-v7-7-8b3a85216cef@arm.com>
+Cc: linux-cxl@vger.kernel.org, conor+dt@kernel.org, robh@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20260708-topics-ahmtib01-ras_ffh_arm_internal_review-v7-10-8b3a85216cef@arm.com>
 References: <20260708-topics-ahmtib01-ras_ffh_arm_internal_review-v7-0-8b3a85216cef@arm.com>
- <20260708-topics-ahmtib01-ras_ffh_arm_internal_review-v7-7-8b3a85216cef@arm.com>
+ <20260708-topics-ahmtib01-ras_ffh_arm_internal_review-v7-10-8b3a85216cef@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 08 Jul 2026 14:21:19 +0000
-Message-Id: <20260708142120.311B21F00A3A@smtp.kernel.org>
+Date: Wed, 08 Jul 2026 14:35:57 +0000
+Message-Id: <20260708143557.91D601F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
 s) to consider:
-- [Medium] The decoupled `GHES_CPER_HELPERS` config relies on symbols defin=
-ed in `ghes.o`, causing linker errors if enabled independently of `ACPI_APE=
-I_GHES`.
-- [Medium] `GHES_CPER_HELPERS` lacks dependencies on `ACPI_APEI` and archit=
-ectural support, causing implicit declarations and linker errors if enabled=
- independently.
+
+New issues:
+- [High] The ack register is mapped as cacheable memory (MEMREMAP_WB) witho=
+ut any cache flushing, which may prevent non-cache-coherent firmware from e=
+ver seeing the ack bit.
+- [High] Fatal hardware errors (GHES_SEV_PANIC) are processed asynchronousl=
+y in a threaded IRQ handler, allowing the system to continue running and po=
+tentially consume corrupted data before panicking.
+- [High] Missing acquire memory barrier before reading the CPER status bloc=
+k allows reading a corrupted/torn error record payload.
+
+Pre-existing issues:
+- [High] A missing remaining length check in the CPER sections loop leads t=
+o a heap out-of-bounds read when parsing.
+- [High] An integer overflow in cper_estatus_len() bypasses length checks, =
+returning a dangerously small size.
 --
 
---- Patch [7]: [PATCH v7 07/10] ACPI: APEI: introduce GHES helper ---
-commit 0f74f9098911a0c1e3d2f8f68c8908787e6ae1b7
+--- Patch [10]: [PATCH v7 10/10] RAS: add firmware-first CPER provider ---
+commit 32e67d0a44c9a2a1207aa498bd207d1d6f803056
 Author: Ahmed Tiba <ahmed.tiba@arm.com>
 
-ACPI: APEI: introduce GHES helper
-   =20
-This commit introduces a new GHES_CPER_HELPERS Kconfig entry so the shared
-helper code can be built even when ACPI_APEI_GHES is disabled. It updates
-the build glue and headers to depend on the new symbol.
+RAS: add firmware-first CPER provider
 
-> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-> index f165d14cf61a3..13ef0e99f840b 100644
-> --- a/drivers/acpi/Kconfig
-> +++ b/drivers/acpi/Kconfig
-> @@ -6,6 +6,10 @@
->  config ARCH_SUPPORTS_ACPI
->  	bool
-> =20
-> +config GHES_CPER_HELPERS
-> +	bool
-> +	select UEFI_CPER
-> +
+Add a firmware-first CPER provider that reuses the shared
+GHES helpers, wire it into the RAS Kconfig/Makefile and
+document it in the admin guide.
 
-[Severity: Medium]
-Since the commit message indicates this config is meant to be built even
-when ACPI_APEI_GHES is disabled, should this have a depends on ACPI_APEI
-rule?
+> diff --git a/drivers/acpi/apei/apei-internal.h b/drivers/acpi/apei/apei-i=
+nternal.h
+> index 77c10a7a7a9f4..15d11f10d0671 100644
+> --- a/drivers/acpi/apei/apei-internal.h
+> +++ b/drivers/acpi/apei/apei-internal.h
+> @@ -123,8 +123,7 @@ struct dentry *apei_get_debugfs_dir(void);
+>  static inline u32 cper_estatus_len(struct acpi_hest_generic_status *esta=
+tus)
+>  {
+>  	if (estatus->raw_data_length)
+> -		return estatus->raw_data_offset + \
+> -			estatus->raw_data_length;
+> +		return estatus->raw_data_offset + estatus->raw_data_length;
 
-If a future config selects GHES_CPER_HELPERS without ACPI_APEI, it looks
-like ghes_cper.c will fail to compile. For example, ghes_map() calls
-arch_apei_get_mem_attribute(), which lacks a fallback stub in
-arch/x86/include/asm/acpi.h when CONFIG_ACPI_APEI is disabled.
+[Severity: High]
+This is a pre-existing issue, but can the addition of raw_data_offset and
+raw_data_length overflow?
 
-Similarly, ghes_ack_error() calls apei_read(), which is only compiled
-when CONFIG_ACPI_APEI is enabled.
+If a malformed CPER record has values that sum to a 32-bit wrap-around
+(e.g., 0xFFFFFFF0 + 0x24 =3D 20), this could return a dangerously small siz=
+e,
+potentially leading to undersized cache allocations and downstream
+out-of-bounds accesses.
 
->  menuconfig ACPI
->  	bool "ACPI (Advanced Configuration and Power Interface) Support"
->  	depends on ARCH_SUPPORTS_ACPI
+>  	else
+>  		return sizeof(*estatus) + estatus->data_length;
+>  }
 
 [ ... ]
 
-> diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
-> index 8d7e5caef3f18..2ffab36b61541 100644
-> --- a/include/acpi/ghes.h
-> +++ b/include/acpi/ghes.h
-> @@ -83,15 +83,17 @@ int devm_ghes_register_vendor_record_notifier(struct =
-device *dev,
->  					      struct notifier_block *nb);
+> diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+> index 06b4fdb59917a..a78e7d17a1b9f 100644
+> --- a/drivers/firmware/efi/cper.c
+> +++ b/drivers/firmware/efi/cper.c
+> @@ -742,7 +742,8 @@ int cper_estatus_check_header(const struct acpi_hest_=
+generic_status *estatus)
+>  	    estatus->data_length < sizeof(struct acpi_hest_generic_data))
+>  		return -EINVAL;
+>  	if (estatus->raw_data_length &&
+> -	    estatus->raw_data_offset < sizeof(*estatus) + estatus->data_length)
+> +	    (estatus->raw_data_offset < sizeof(*estatus) ||
+> +	     estatus->raw_data_offset - sizeof(*estatus) < estatus->data_length=
+))
+>  		return -EINVAL;
 > =20
->  struct list_head *ghes_get_devices(void);
-> -
-> -void ghes_estatus_pool_region_free(unsigned long addr, u32 size);
->  #else
->  static inline struct list_head *ghes_get_devices(void) { return NULL; }
-> -
-> -static inline void ghes_estatus_pool_region_free(unsigned long addr, u32=
- size) { return; }
->  #endif
-> =20
-> +#ifdef CONFIG_GHES_CPER_HELPERS
->  int ghes_estatus_pool_init(unsigned int num_ghes);
-> +void ghes_estatus_pool_region_free(unsigned long addr, u32 size);
-> +#else
-> +static inline int ghes_estatus_pool_init(unsigned int num_ghes) { return=
- -ENODEV; }
-> +static inline void ghes_estatus_pool_region_free(unsigned long addr, u32=
- size) { }
-> +#endif
+>  	return 0;
+>  }
 
-[Severity: Medium]
-If GHES_CPER_HELPERS is enabled but ACPI_APEI_GHES is disabled, will this
-cause linker errors?
+[Severity: High]
+This is a pre-existing issue, but does cper_estatus_check() (which calls
+this header check) have a heap out-of-bounds read if a malformed CPER record
+has a valid total data_length, but the final section leaves fewer than
+sizeof(*gdata) bytes remaining?
 
-It appears ghes_defer_non_standard_event() in drivers/acpi/apei/ghes_cper.c
-allocates from ghes_estatus_pool:
+If the loop in apei_estatus_for_each_section() executes when the remaining
+length is very small, acpi_hest_get_size() will dereference gdata->revision
+reading past the end of the valid data buffer.
 
-drivers/acpi/apei/ghes_cper.c:ghes_defer_non_standard_event() {
-    ...
-    entry =3D (void *)gen_pool_alloc(ghes_estatus_pool, len);
-    ...
-}
+[ ... ]
 
-However, ghes_estatus_pool is defined in drivers/acpi/apei/ghes.c, which is
-entirely omitted when ACPI_APEI_GHES is disabled.
+> diff --git a/drivers/ras/cper-esource.c b/drivers/ras/cper-esource.c
+> new file mode 100644
+> index 0000000000000..3f60c9849d9a6
+> --- /dev/null
+> +++ b/drivers/ras/cper-esource.c
+> @@ -0,0 +1,332 @@
 
-Additionally, exposing the prototype here for ghes_estatus_pool_init()
-disables the inline stub, which could cause link errors for callers like
-hest.c if ghes.o is missing.
+[ ... ]
+
+> +static void *cper_esource_map_region(struct device *dev, unsigned int in=
+dex,
+> +				     size_t *size)
+> +{
+> +	struct resource res;
+> +	void *addr;
+> +
+> +	if (of_reserved_mem_region_to_resource(dev->of_node, index, &res))
+> +		return ERR_PTR(dev_err_probe(dev, -EINVAL,
+> +					     "unable to resolve memory-region %u\n",
+> +					     index));
+> +
+> +	*size =3D resource_size(&res);
+> +	if (!*size)
+> +		return ERR_PTR(dev_err_probe(dev, -EINVAL,
+> +					     "memory-region %u has zero length\n",
+> +					     index));
+> +
+> +	addr =3D devm_memremap(dev, res.start, *size, MEMREMAP_WB);
+
+[Severity: High]
+Will the firmware be able to observe the ack bit being set in the mapped
+ack region?
+
+The region is mapped as cacheable memory (MEMREMAP_WB). Later,
+cper_esource_ack() uses wmb() to publish the update, but wmb() only enforces
+memory ordering and does not flush the CPU data cache to main memory.=20
+
+Unless the firmware is fully cache-coherent with the OS, the updated ack bit
+might remain in the CPU cache, potentially causing the firmware to wait
+indefinitely.
+
+Could we map the ack register as uncached (e.g., MEMREMAP_WT, MEMREMAP_WC,
+or devm_ioremap), or perform an explicit cache clean operation?
+
+[ ... ]
+
+> +static void cper_esource_ack(struct cper_esource *ctx)
+> +{
+> +	if (!ctx->ack.present)
+> +		return;
+> +
+> +	if (ctx->ack.width =3D=3D 64) {
+> +		u64 *addr =3D ctx->ack.addr;
+> +		u64 val =3D READ_ONCE(*addr);
+> +
+> +		/* Publish status-buffer updates before raising the ack bit. */
+> +		wmb();
+> +		val &=3D ctx->ack.preserve;
+> +		val |=3D ctx->ack.set;
+> +		WRITE_ONCE(*addr, val);
+
+[Severity: High]
+As mentioned above, wmb() does not clean the cache line to main memory.
+Could this leave the updated ack bit trapped in the CPU cache?
+
+[ ... ]
+
+> +static irqreturn_t cper_esource_process(struct cper_esource *ctx)
+> +{
+> +	int rc;
+> +	int sev;
+> +
+> +	memcpy(ctx->estatus, ctx->status, ctx->status_len);
+
+[Severity: High]
+Does copying the entire status block before checking the block_status flag
+allow reading a corrupted or torn error record payload?
+
+Because the firmware buffer is mapped as cacheable memory, the CPU can reor=
+der
+the loads. If the CPU races with the firmware updating the record, it might
+load stale payload bytes out of order before observing the new
+block_status =3D=3D 1.
+
+Should we read block_status using smp_load_acquire(), check if it is non-ze=
+ro,
+and only then read the rest of the payload?
+
+> +
+> +	rc =3D cper_esource_validate_status(ctx);
+> +	if (rc =3D=3D -ENOENT)
+> +		return IRQ_NONE;
+> +	if (rc) {
+> +		dev_warn_ratelimited(ctx->dev, FW_WARN GHES_PFX
+> +				     "Invalid error status block\n");
+> +		cper_esource_clear_status(ctx);
+> +		cper_esource_ack(ctx);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	sev =3D ghes_severity(ctx->estatus->error_severity);
+> +	if (sev >=3D GHES_SEV_PANIC)
+> +		cper_esource_fatal(ctx);
+
+[Severity: High]
+Is it safe to process fatal hardware errors (GHES_SEV_PANIC) asynchronously=
+ in
+a threaded IRQ handler?
+
+If the system continues running, could the CPU consume poisoned memory befo=
+re
+the threaded handler executes and panics?
+
+[ ... ]
+
+> +static int cper_esource_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct cper_esource *ctx;
+> +	size_t size;
+> +	int source_id;
+> +	int rc;
+
+[ ... ]
+
+> +	rc =3D devm_request_threaded_irq(dev, ctx->irq, NULL, cper_esource_irq,
+> +				       IRQF_ONESHOT,
+> +				       dev_name(dev), ctx);
+
+[Severity: High]
+Because the IRQ is requested without a hardirq primary handler, the default
+primary handler masks the interrupt and wakes the thread, allowing the
+currently executing task to resume.
+
+For fatal RAS errors, shouldn't the system panic immediately in a hardirq
+(or NMI) handler to ensure containment guarantees?
+
+> +	if (rc)
+> +		return dev_err_probe(dev, rc, "failed to request interrupt\n");
+> +
+> +	return 0;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260708-topics-ahm=
-tib01-ras_ffh_arm_internal_review-v7-0-8b3a85216cef@arm.com?part=3D7
+tib01-ras_ffh_arm_internal_review-v7-0-8b3a85216cef@arm.com?part=3D10
