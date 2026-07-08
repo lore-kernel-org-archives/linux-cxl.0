@@ -1,99 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23EE23AEB27
-	for <linux-cxl@vger.kernel.org>; Wed,  8 Jul 2026 01:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEBC3403FE
+	for <linux-cxl@vger.kernel.org>; Wed,  8 Jul 2026 02:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783475037; cv=fail; b=j1HJUSTFOtnZn+I2zd0Ajy6xN0ysnp/4RYEONPEd5+6L2WiTfV46xzGOjEF632dmtvHKBLnXhrHCzWr4FqkyyKOGeIZreuIenPYdNBPzibOkoR+bJ9hBebenKwXwU/JIEcqMRi4vHdeAY5UTS3qzLlosQFHExBIxnaD69eTWX5c=
+	t=1783476046; cv=fail; b=G9EbcFu1hLUimtA3AZOZVVY3SKmdVvlIQH+st+/ymEAsnFunqHTNj1TQZ8tvkEM9tfKsgHtIvCJlbYr3/l0pWXLYDXZtQ71e9Qkrj1vl1uGJ0uFfUkGlv2JgbQb5sDy+Su9qtHKr2XbNpEjI2FiXI89Im1ARMDJKKjrP4h6ugzs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783475037; c=relaxed/simple;
-	bh=ta/abcDrC5hAhPq0EAcKBg/tCZMWlPtaUHOUV4eCA6U=;
+	s=arc-20240116; t=1783476046; c=relaxed/simple;
+	bh=4bIiLGqpmroygkKS2/nW56qzsM895lKs+wxpH9COceM=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=I0Ly8Mz27ZThufjXsYsVo4/WiWy4Rg8lbZ2S8Ty54S5qV5nKEQST7CHFSHnjtJCwSmKmP9EgnDtgZySyZC2ouuJATSlG4wDgrJPt/kSZbSDMX6TS0p+ndqHPax07R9vPcW2rztXMUA2L4iEI3ls7BZYeqg9Md85IxKiJ5oxyLhA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lU2R7TiQ; arc=fail smtp.client-ip=192.198.163.7
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Sf0lbQ0na8LhQ8IpUx42lymIaaqsOPjxmMZuHnApWwxOVXF5y+EtjilzAVTqAM8VjtWrOS+IFkb/LYt157RvX51rU+AIEnnv2kYMrMk99YVMg8t7K1MTgORclTX9Y3KiELgQ2hGUEneFsblgeWpORtMO3w9w6TCb4AzQL1MtJDs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FI3Zzzsd; arc=fail smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lU2R7TiQ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FI3Zzzsd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783475035; x=1815011035;
+  t=1783476044; x=1815012044;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=ta/abcDrC5hAhPq0EAcKBg/tCZMWlPtaUHOUV4eCA6U=;
-  b=lU2R7TiQjSz9BrV8E3Ufb/0ti5rmfxX/39UDqMkVt33zp2EKj3iVSQE6
-   9h7XH7HrUhl+DDEz9uwP8SLr33TaIbt0bUxslZOdbWN67en37h+VHCvyF
-   PF/EwAFKHL11OPuW+dUaeII7cRPSJjmXpsF4QLTZpbqi/UNltJ14HVem/
-   PLHssNCTd00/I5Esy7XhSdM3r4hyIINv/oQ0qOZVIDd4MSdQy3rbuJFZW
-   T05QBDzpkxJvPUTpHPvefignR0+iK74nVOz1ldYDJMSj7gkk58nkBdPcf
-   gZ7u5fNHnbboqXlRm56FQ+96U8dyVqtiTi7pB20ptypfEn2ttmGbUm+m8
-   w==;
-X-CSE-ConnectionGUID: gN5jykSoSnedHetDGyU/TQ==
-X-CSE-MsgGUID: DQfAXjSpQj6lfY3uqMesPg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="109674817"
+  bh=4bIiLGqpmroygkKS2/nW56qzsM895lKs+wxpH9COceM=;
+  b=FI3ZzzsdDQwAoiECSZ3rnGSHyR1XaK3OHmuyvk5JWHjH/9XO76D4NvH1
+   MPRO+uo6evZ4duAcfClLtMCZp/aojICHqlTtocczBWWgTzc5/BZuw5SKj
+   gWy+ITxXSTJJ8GssPi5Ca271conWnp3L9UXsEs57IZeTjFEBoYeZXBYIf
+   b7605yy1HhK55HpZJNsTP4w+Iwu+wIMTNSLPES6S0DMNyiJhLNU5Qh0KN
+   joc5XO1GOOnukpvYZ4Ckbkswukq9BgvHdxBMJkHZUF9Ow0+hPRQVOq+px
+   R2/k7jYKy1bex42UMhkFeIGIn5n6ro4J077RzXr7FnbP+icdbINRSOXIw
+   g==;
+X-CSE-ConnectionGUID: p+Yp/ZkATCaFUGhZbjQ/+w==
+X-CSE-MsgGUID: SU9CfDC9RbqmRYAoQ1vWMA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11840"; a="94775917"
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="109674817"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 18:43:54 -0700
-X-CSE-ConnectionGUID: iosKx/mxS9SdZzdq2fmWrQ==
-X-CSE-MsgGUID: R+/hIpaFTeyRw7TchbQ/NA==
+   d="scan'208";a="94775917"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 19:00:43 -0700
+X-CSE-ConnectionGUID: nWWfwn8oQ9ajx5WE30CokQ==
+X-CSE-MsgGUID: 1b/nGnPZRdKvIoRwLP9NkA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,153,1779174000"; 
-   d="scan'208";a="257738587"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 18:43:55 -0700
-Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+   d="scan'208";a="292339123"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2026 19:00:43 -0700
+Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.43; Tue, 7 Jul 2026 18:43:53 -0700
-Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
- FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ 15.2.2562.43; Tue, 7 Jul 2026 19:00:42 -0700
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.43 via Frontend Transport; Tue, 7 Jul 2026 18:43:53 -0700
-Received: from BYAPR05CU005.outbound.protection.outlook.com (52.101.85.30) by
- edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ 15.2.2562.43 via Frontend Transport; Tue, 7 Jul 2026 19:00:42 -0700
+Received: from CY3PR05CU001.outbound.protection.outlook.com (40.93.201.46) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.43; Tue, 7 Jul 2026 18:43:53 -0700
+ 15.2.2562.43; Tue, 7 Jul 2026 19:00:42 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BLlIK+k2Oyxmfx1itj1TLwlkSicBdAeuB45Ui03XtaxEPtkJ27CjweOnyesWTEuKaDYhV++XcPz1Cd/Gb2vWuDfNgnHxQWUpOrQYDP3NqEln50qkqKP0nOqwPpZga+Cm0Bx+uTtgV+leLO635WrxH7Oo8dCFuw+MWrGIOhzC43aFLhCWKN2C+ev70+C1uBOEtbLsZCulh1j0jNOv5J/Faek2S2VU3bWqGKQO6JfkeheM5kU60peFeB91UTNrU9sPnOfSyqacBYIBsV/pcUhAEB3RczrK/cYFzTr3z4bMEw8EIZ+Q6PqLA7qRW+q1yz+xutLp7cqpizTKq+1PA907VQ==
+ b=Ouz0lTuGKVg0v1LJ2EhrGLRtuxK3L6RwEfiAI/UWnB5Gb6lyQZRz/2O2L1CdmrEmHO7vG6Fj9Gx9OTVNltCpE1JMHu/cAwhKMs3p9OhKdAhsoIrSvQig7eSLyG71JKzYQKHG9aOmhNUlDZP8JBnga9atPH0l0z96fyfZBqLUQ9wEqEtEg/SwWigmZ/VE8vdyxNBXaJuG9QDTButARXgM33QR7rzHURPxj/N6car4hft2DgE+uW9fcTJ04zjRqCcTMTEN1HO/GXwEs4y5H+iDm9TAbPGAz/tAbZGxMKuI6gtiX7DkV+h43n8xs5cSZFL1L7RZxICRM1Dr3oVblOI8Tw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xWqk9vIVA85tRlOZdApUicHI8Jecsgxk7OAT3v9CfIA=;
- b=wU7UgP39SFUxAkvsYDIt9JTnVzR6iuRgHKsskv/8gLNu/UdeC2/L92Blr2V9UhfaQXavbPRUnUQu1Xh8NWr9pjlrmrm+HCdyaSoZRLF4bj/3q91AN8L94iNHvYFqsM46swSNu/fXBJFOqTTAQNlWywvoGZSjAcxWEY0dM9rG07EWuwNwfZoBX0uRbe5EGH3v2yJlTwMGyHM7MWcMk9GxSWPHTH/DCvk8CRkUp+cbyFMIfdbtUftnSI7ME8lsw6zL4Ux5SS4qQ09+le14zqQUVmFOs2eJwrboGWhl2PARW8omxkW0WR+lnWpcoycjuGwUKqq4ZELOqg457TLdCgdAvQ==
+ bh=aUysUzniu3uRsq0rK0TJ2uUBj9KLEXEN60xsYoaJq4g=;
+ b=TW9B0zJQwMvYUZ9b1AzA/mEi1Scn2qka6p+3iFwFuru9WFsuZXIYZJpjqyvCyqrRcRWEUQ2rq/iXdwPhSRaT5sLnHKdjPEk0EQhyAiSGEiGU1SKkcY2WFIa551cRpix8CwVmqCmnbIqbZmrbTh++G43LJmTJ1X7KZiwbAPhBxmLsb4oVorHtx27fJcY99suVdb7BIrhx08IysiyH0LSXIcRlwG62EW9/iLGb2RWc1DIoBKnk8jpylpGrGoiW7i9lPP0d8SvNPTl4Nc2m4xW5JpZgdjjiCDQycOa/pTpzRYx0+8viV7MGUC7yCxGoN1WgdLViELPOvXVz1o5nzPXB1w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by DM6PR11MB4658.namprd11.prod.outlook.com (2603:10b6:5:28f::20) with
+ by IA0PR11MB7305.namprd11.prod.outlook.com (2603:10b6:208:439::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.14; Wed, 8 Jul
- 2026 01:43:46 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Wed, 8 Jul 2026
+ 02:00:39 +0000
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::a195:49d4:38c5:3891%4]) with mapi id 15.21.0181.012; Wed, 8 Jul 2026
- 01:43:46 +0000
-Date: Tue, 7 Jul 2026 18:43:38 -0700
+ 02:00:39 +0000
+Date: Tue, 7 Jul 2026 19:00:31 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Robert Richter <rrichter@amd.com>
 CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
 	Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
 	Ira Weiny <iweiny@kernel.org>, Dan Williams <djbw@kernel.org>, Li Ming
 	<ming.li@zohomail.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 3/6] cxl/region: Account for mixed-granularity in
- position calculations
-Message-ID: <ak2rSrmJt8H-0xAn@aschofie-mobl2.lan>
+Subject: Re: [PATCH v2 1/6] cxl/region: Validate interleave selector bits
+Message-ID: <ak2vPxUW0jzPebZ0@aschofie-mobl2.lan>
 References: <cover.1781199122.git.alison.schofield@intel.com>
- <94ec26d420e0e40a2a991c1a4205e9e93cab44de.1781199122.git.alison.schofield@intel.com>
- <akITgju_8_6PoKFB@rric.localdomain>
+ <5ac370e484caeb49c334d5a586a7ec8fc1b3dc38.1781199122.git.alison.schofield@intel.com>
+ <aj5kbdsqLPge-rkT@rric.localdomain>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <akITgju_8_6PoKFB@rric.localdomain>
-X-ClientProxiedBy: SJ0PR03CA0169.namprd03.prod.outlook.com
- (2603:10b6:a03:338::24) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+In-Reply-To: <aj5kbdsqLPge-rkT@rric.localdomain>
+X-ClientProxiedBy: SJ0PR13CA0055.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c2::30) To DS4PPF0BAC23327.namprd11.prod.outlook.com
  (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -102,135 +101,459 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DM6PR11MB4658:EE_
-X-MS-Office365-Filtering-Correlation-Id: e2fc1a80-5171-46fe-91b6-08dedc925980
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|IA0PR11MB7305:EE_
+X-MS-Office365-Filtering-Correlation-Id: c0a0018e-db62-46a1-a20f-08dedc94b593
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|23010399003|22082099003|18002099003|11063799006|4143699003|56012099006|6133799003;
-X-Microsoft-Antispam-Message-Info: IQecaLJoCZYzglJhnc7juInUjg1j/MPxpZJaiayjYY/nY/4KUFu5XQ5rr6XuQtNZF1pT0KZ0MoEumrP0xzLFaEkkQap41aF388cidqvIBeYrvL86VMG5KUA/drol64B71AkLpbo4PioW55f0Sc0IXMDWw+QPDgxFzbeR7GhTiJduSiU3Kr670Kw/z4vLhNWBj9u7w9cUtq5TuGybwTsusKVpI/+C6ZzSGWHjKo/YuxQvOQvAdSCD2ArevZtW+GYy0r6wjhJbhkOc+rAgzJOTzc616upt3DZlvPFJtJ5/cZyRqqs54yNJ5y214KCvXKr+/bnqhUt2NBlkr2AKdxIjClxWm8g/XEyeK4jVpKKNCXJX7iTkc7JGA9HFm4kkcjeLNy06CWOQeXlTL0PHS+ciDxX/BzEbBr+uoob4LmW0UmFsQP+08AkIHTfCiHionhXugmSuBN9JY5AIQ3CCrQSr+RefFeSi92ny5Hlw4yuiWcmh44finYYqf3jstq0eWkiGkEnM06eZP2q5jKiduGFbsRWWsnhhBPOkVTYbPhqBmNPJN6YRbx7mcE+NtsrrJQzJQOIJL89lWUUSWw2GEipvZGlqu0lpeTI9d/1wSl69aPb0J+QXc8qGuMSUU3JBfQJARsjvbXcNpbBlkUnuzeyfGaBvsJFA2Vhwd1DqCb9ajpo=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(23010399003)(22082099003)(18002099003)(11063799006)(4143699003)(56012099006)(6133799003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|23010399003|1800799024|366016|18002099003|4143699003|11063799006|56012099006|6133799003|22082099003;
+X-Microsoft-Antispam-Message-Info: P6Kp0x5S6AkeJ6PM29VUvKxQLukJBlPS0XpHfcJJUh4I/tkb5Vt1hNZm+2U/08KJQnTaqAkRKmwIsz+N1i5OQdw3lEXLG+bRBeYBsv2ehBaM9fJOOxkmdHY53Xj/HXd5ZTgZ5/NCgvF3t8CyE0fKGRRPzaXj5S83XmMKqcdoZqWWL/aLu8dqjI/OCnkg0J06ZPbkB2frJ71h32AI3qiCC6k6QqPjwbWrlpASyPFPZTwX1WGWW0SkB1lTXWZLBPpBrNv1woSWtCk/LM3C1Si+kq1NFT4tsAaSoJ3XgtTW1Hodk54pgQ2JyhpVr0eMGVgcTScq2JuUI+ReBST4Bssq++axgf9OHjfKPidZVUBF5ZT492qy7zdCWS1fYfWPWseoJLUk+57KzRPfbBy7uPeeD7IMYLgonramEK+utGyWjVQuUHTnK7gNJ01DH83VIFx2H099L+PWGtfLcX8tNWF/lGjpozFSpvoNBDZRZQ5H52ZS65jtZmnnI607DtRohdBDSKV+THbRynXXXdaJni6tuDq6CuasgaSOjh6pxOwKv8pAg2Iv6gLFAuiAMa2PKlCqINkQVYlYmfoxK//uy4K+zRHXZrpN1cT4VrmowHmX/dPzvxnPrQ6ln5xsts5rMl54dO8n4sYsARoNDChqknwiZq0+QTnX5nFWJtdIlwhwLz0=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(1800799024)(366016)(18002099003)(4143699003)(11063799006)(56012099006)(6133799003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/bPr8melGqIaYimFRYqawrQ1DSDTlRxAR5nixT+vGBbFbHY2dhx0D2GYbiw9?=
- =?us-ascii?Q?cYIdqDLgKhHgqG8vj6epgp70uoDw0dGwbwzt9KHIG5LtsNWSLxysGm9HiRpx?=
- =?us-ascii?Q?5qhV0UohnYaT1q/WbwHVxFLzIZzlnithMYgMWAs9bh6zQ+sL6P/Q9kwYm3Yo?=
- =?us-ascii?Q?5eBcgxl0w6qssFzoawxzujcmWtEjZzVn1hgWIBHKq85r8JtzlspvJylulkxn?=
- =?us-ascii?Q?SL0sHr3JSeg/uk2majLZ+f8h4bedyBxo43s18qjvZs3ubwifvjzdOQOB8Nq7?=
- =?us-ascii?Q?c0XqGbIqVqgFL/A2vJomBAaCjpSAvbMhpo8hUeecyQVhqqYgalftc1n3Dz1R?=
- =?us-ascii?Q?pr2KaJJ0bT9MzidH0FVcSwqrdXe6yPU35fQ3ALCLVWwfASmwGD/mOR+jzTlO?=
- =?us-ascii?Q?qADhsSm2KrKX7BPJLl43Jslg4gN2ViW48FgW/MXsoloWeB1BkEB0y0n+GqBR?=
- =?us-ascii?Q?ffmobR30jHtPWQWhLfEXaM8JwK3A2RY2JNiiNe78+No9fLblilcByDAy47z5?=
- =?us-ascii?Q?bKbBhoIg9Vms/fVwdsZZXLYBWuOjXn4AJ2y89Ws3PwHx4MUq4MKEG8qEZTsb?=
- =?us-ascii?Q?5YVGSJhHMoB0QQ6R5ogXwkBDlew8lAaFjZCLd+zkXDCV9DeKZt8ef5842V1V?=
- =?us-ascii?Q?C6LRpj7xmvC/iK0gPSTtBVVpUfRmBFaFU5Hu6VyfA9S0dIRHWKeaQWJCTDps?=
- =?us-ascii?Q?JU6mW9Y0enhFZWCciV4aJeWrCZ8PMYZHMi+xZ3x1v9rlieFLwMA7JAb4Uggh?=
- =?us-ascii?Q?lE7fJzrBIrfAxDSgEHbhktk9KxSIcgPKyMoYMTn2zIsLAv7jUQlEzRcCUgZK?=
- =?us-ascii?Q?5v+kPJwmCMpKzJ9HLc5zU3HCIuz/BhpijZTZRFdi84dPg1CRbux9rFA8zuav?=
- =?us-ascii?Q?2eGOWbAGF8vDqoIgvZorZr4t9wV9Q3uy5WeLVRkgcTrxoXfc9f2p12P2832S?=
- =?us-ascii?Q?+1nLbl3AB4nCuxnjOX87+B0PuUz2Uew5s9LVd8XWA3m90RohTuV/x5TKMGrj?=
- =?us-ascii?Q?/69GxkeNIi1UpJXtn0G3xdlWzK2deyyFHLrNhPETrgL8zG+rBGoOTre+CiIx?=
- =?us-ascii?Q?k7VoY8OcWcEMl/sioxKFjTXOgdLRbxMDo7QEkZ2VNmG5LJcDVHl3cpnhpx94?=
- =?us-ascii?Q?JiMqcItBR8zhrXgS6Rj50CIaAXqxX4xHPv499qTn0raMjsxSFZLNaLdIlfep?=
- =?us-ascii?Q?zHGWzdcFwlYjZfnibvRzE+NsSZ4OeIYh4SXfDH54jzCePIQlCRkiRHCXThnq?=
- =?us-ascii?Q?jkdwQRe124awwfuLLVeBhV5wBYxQLsRZi/zQhelhmE4/tmoIkUW3jnnAW22d?=
- =?us-ascii?Q?qfzxJN64qgmXWz+mUJj0LLwfvPaVjIEndk2AC0tSKgphWMg0tXCeTTw2hwoZ?=
- =?us-ascii?Q?kfZcfxomw3sBvwaLjP2iQ/ySlw1NsKJoxM/WfTuYHQkVlj923y/9v/cMzqrd?=
- =?us-ascii?Q?whip6Brvyr8tVKUnOQrSeRGmnnsvRr4AytDBc3Lt+qui4yZrO6sFUK2AleND?=
- =?us-ascii?Q?mEXyojmZh7ZZcPUP5SZPT4AI4Mhl0uNGgMKJ/kTbzYHPJZec2H5Mm5F5Q4NL?=
- =?us-ascii?Q?KuvJc1goy0fut2tVnnjEMLnwKPsWRWP4cQZ3i40lpPyb+QMIR145GNLeEWyj?=
- =?us-ascii?Q?EbDBL+NhC5tzi2UehO8EcAI9n3syGN9FxxTtcp5joSjgw/Bk87YZi+Dh8SPR?=
- =?us-ascii?Q?h9wllMi8xbmjS8fNQ3HuapFZO3xizx7Lj3H+rnn5Eg2hKqD2BcuFBiAkXKa+?=
- =?us-ascii?Q?esZvb1cVQGX8c2+o2lnIUS/WPNTR6Yg=3D?=
-X-Exchange-RoutingPolicyChecked: XEMr4aOd4TobZHlsx+tlCp37E2WuEU6Rt6Gyh+jzETCzXRYw23dv+zKeefZqOk5NrKgksRkpO5UDSWUDRMxvemwhdi+PB/w6qZkwf2VUGql86wOBJTjirGyNifDaNpOmjt9oy6wEgY3LOkX3Ew5qWUWg7YN2HMMdd6A+Jbwvm7Zt9JGHN8zgj7mlhnR1eeXr2gbdVyhzz+U+waFc19geaGPTGgV0gl8wrlDyvWPN6PTLgezYIJzh1BuIsdU5L89QAJbSqwCp96ntzoRgYMznG4KccCJQP0UTZWz/LMJ4IfcIDG6ewY14MBw2jGv9OEHpeCnl663IfVvaZZfy0WLjzg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2fc1a80-5171-46fe-91b6-08dedc925980
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?yE72L0XoqsfLoydlMEzld5Q0KLUG1uisCUczuOKmBoShHjMM1DevcQsZu9UO?=
+ =?us-ascii?Q?pUyqoC+n69oaNduhV4bjkFooP+l16j8fc9jzfv7atzVyPNG96BpaQ1hPr/gj?=
+ =?us-ascii?Q?M8gq0A9stKAWLc+sOpAjuMaDHb0pcnBC89ToTmfBpYnO5by0dNz10hmq73Cd?=
+ =?us-ascii?Q?800swW2CWv6Xsq9pitX0XaB4kNrFjEnmbYjMJ1AQxhnO1FPfEzFPuyiLUo4u?=
+ =?us-ascii?Q?bdDVrFQnIQRkEnEoFwa9+MbVIqiocFBS32OTrmVy15qf1O26IzmaujFTXBuS?=
+ =?us-ascii?Q?G4S+IlbgF4klXlXGGF+TJP0iwI4GZI0yNddDKl9LRFA869WseLfRKim6j7Bu?=
+ =?us-ascii?Q?GYecLZ1Uf3sTHqIjfzxRPUweOnKuw5d8eItvaVHSUGk5VeU9ExJWiXp9cuYL?=
+ =?us-ascii?Q?ZrOv2dHUg7V8qkz2PhYuS+qsBfh/goB1VqhDf7XFgYq87QiQp4Km8vCKsDbc?=
+ =?us-ascii?Q?wjFQrLUg/ksXfph28emBi2rz8MtMgdS4grlRCZdxkHKGJq3jx3r6GXgCrpvr?=
+ =?us-ascii?Q?FnE2HIb3NYdnkh733fgmfMKZruTN4lbrcf5IXh1VhrcqYEL0r5i8vSVLIfuF?=
+ =?us-ascii?Q?obK3SWgYxEP7eYzRGyC2Oppf7qH5s7VDOtYQUsbW0BkcqZQ/Ux3kEYhsfVtr?=
+ =?us-ascii?Q?3zofRQPGIig8qeUaWkInC6Y0leXyKxiWpxoELopciPQ7h1gsgKsi84GNwQ3x?=
+ =?us-ascii?Q?3/mqtgrwknJtcTVOjkbFAW/cETKk67zAtQ+bYSxV9Kf3zloAbhUw/UcKsXWx?=
+ =?us-ascii?Q?DDxIqkLAQkDfjDWeghMeRcUBp/iyd/TGce4gjam2NS6S58QfA67/enfh9Q/m?=
+ =?us-ascii?Q?ydFZDJlk/TyX0UZvGuzyME7fMGEgzAmE8vpfqBHplzWskWsnyDtWEN0RHvXb?=
+ =?us-ascii?Q?NUdL7pe79gnjzKolvLfCL9L/niDpMRPUgqcESzixprzsz4RgsBqBeAXOb8sQ?=
+ =?us-ascii?Q?jAoFV8/c5uXKwBQZWokFwJIlQpW3W359K3UeaTlBlfFWU/TYAknFu3ygJFH7?=
+ =?us-ascii?Q?YuslXd0+5Jl1CagLx1XYanWmzyvTHQnu6RDvvRVdo+ZxsfUzpTiGWZE+kCi7?=
+ =?us-ascii?Q?2rBYWO3shhe437nQDx0f4ve4VR59YGBhzrB0zvU/biKJiDZsUeXcnstEaqHz?=
+ =?us-ascii?Q?Yy+Q6J3t0vjczSWmZYHdwLq2EU8JqN5rnEW/o93YLxIdSBkoiGMWjHEFQ2lo?=
+ =?us-ascii?Q?A92VwpbY5ibMXzeHebak/h1lMS6rw5jQgMse96YW2bBNQbVTuH37+hgwhMxw?=
+ =?us-ascii?Q?5R/HBMwYUV47pfdpAFIZi1EFv1Enz4/Ozy2vte+vL5UeDW37/H9Rfkq3Zopv?=
+ =?us-ascii?Q?zTyVJPOo6Evd82Hl7LuheiOV1NJw0CU7c6hkjqPP2d95H1MtmeCMCJ8RZV/L?=
+ =?us-ascii?Q?SQZGRq4voRaX/6p3r2harOaiQQ0StVuH78kPOCJMbyQV9kvFC2FWcs7aseo8?=
+ =?us-ascii?Q?7I2Q3dKKk7GRkMXINg+CeTefojsWRJfB+GAqy0E2hCvUc5eeSAbdR+yPo06D?=
+ =?us-ascii?Q?EmC67Z+5jyV3cSmGAFwnRcBJouAnrq+X70G2XJFFvwml4x7tWLoftP/h/XoE?=
+ =?us-ascii?Q?Y00zDNGAnvpTdWHZScBZbOlGS0RaplirtxMZ5Yy290I0npKFgLVDNDmDXyH5?=
+ =?us-ascii?Q?vDpM4nHUmoCVdwX53zfLdIauxQwR0av6/0M5oGWOk2CTd8GLmwzPebVvnIwv?=
+ =?us-ascii?Q?JygjvB3CRMV0Gpa0ZMOmbqh8dBT1CXQeNWBSn1RaojmCy1sQeDIolmF7Zj+z?=
+ =?us-ascii?Q?DMuPXXVG6RJ8Jr01cCbmy1RBL9IeTv8=3D?=
+X-Exchange-RoutingPolicyChecked: nFTA7Kr8gpXayxl9b4hq+0GKhPNmptZmpG/9U9F/HtY9SVBIEkehNTe+OUDSWUysBBr2iRt8uE2ajLxR7NxCkghsIYtfRRjl1ej0fRY7awLvZqwQqEI4t2aYwRyYg/t5E7JO9QDv3Zc4lG5I504cBGlrFWg7m3Khu6+GZM+qD4955KXsealEUN6CIWJGnUK86acVtrFOuftVrnZweuy+w1FB7e9x2D9GYQtC13+BkjCSldEOQwhpRy8ilX8unwaQvVYrGZLUMaZcCfh/9G7PVgsFNSGPnoFkiiX7z9J3Hn6VJfROLOC7F6piwP3unqBprW2uaegihntsrWQFOyoY3A==
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0a0018e-db62-46a1-a20f-08dedc94b593
 X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2026 01:43:46.1004
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2026 02:00:39.4717
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Nz5V7Iuynk2BsfhBX28FG2AX3396TmM/J3p6ALG5y4eavpuaIdUQ+EqE7RA2JY9E0XGip4mT0DS2mVsraIeYZ5i6TnqN/JNABCaiGPhgtWM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4658
+X-MS-Exchange-CrossTenant-UserPrincipalName: Zsi3EClAiTKgRMdr76K5hkbfZfXvgeNVk/ptOw19DEXG+C8/oxBAuo4BkbF9iOmiUz//y3ZnGbnbykrSUXqrdWq/EHnnzFh+NpRUV4G4DDA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7305
 X-OriginatorOrg: intel.com
 
-On Mon, Jun 29, 2026 at 08:41:06AM +0200, Robert Richter wrote:
-> Alison,
-> 
-> On 11.06.26 10:47:27, Alison Schofield wrote:
-> > Mixed-granularity regions place the root decoder at outer HPA bits.
-> > A root target then owns root_gran / region_gran inner positions
-> > before the root advances to the next target. That ratio becomes the
-> > root target stride in region positions.
+On Fri, Jun 26, 2026 at 01:37:17PM +0200, Robert Richter wrote:
+> On 11.06.26 10:47:25, Alison Schofield wrote:
+> > Multi-level interleaves are valid when each decoder level claims a
+> > distinct portion of the region HPA selector. The existing setup is
+> > too restrictive as it requires that each level's granularity must
+> > equal the parent granularity multiplied by the parent ways. That
+> > forces the root to sit at the innermost selector bit and rejects
+> > legal layouts where the root claims an outer bit.
 > > 
-> > Account for that stride in endpoint placement, position calculation,
-> > and peer-distance checks.
+> > Add selector-bit accounting to cxl_port_setup_targets(). Accumulate
+> > selector bits from the root toward the current port, reject overlap,
+> > and reject any accumulated selector that does not fit within the
+> > region selector.
+
+Hi Robert,
+
+The question underneath several of your comments, whether the
+implementation should move to selector-bit arithmetic, is answered in my
+reply on Patch 3/6.
+
+Below, the local comments on this patch.
+
 > 
-> I don't see why root decoders need special handling here (apart from
-> the 3-way factor, but this is already handled). See my earlier
-> comments to the other patches, but if root decoders were just included
-> in the pos calculation, that should give correct results. And, instead
-> of introducing the "stride" term, why not just continue to work with
-> the selector mask also for the root decoders?
+> I think this is the main goal of the patch, to introduce a
+> selector-bit mask and use that to keep track of ways and
+> granularities. We should remove as much as possible from the original
+> code without introducing functional changes here. Subject and
+> description should emphasize that more.
+
+Agreed. In v3 (I hope that) this patch becomes a no-functional-change
+refactor and the log say so explicitly.
+
 > 
-> This "special case" handling unnecessarily introduces complex logic
-> and code. We should avoid that.
+> > 
+> > Preserve the existing same-granularity behavior using values derived
+> > from the selector walk.
+> > 
+> > Block mixed-granularity attachments until position arithmetic is
+> > updated by a later patch.
+> > 
+> > Originally-by: Robert Richter <rrichter@amd.com>
+> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> > ---
+> >  drivers/cxl/core/region.c | 192 +++++++++++++++++++-------------------
+> >  1 file changed, 96 insertions(+), 96 deletions(-)
+> > 
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index e50dc716d4e8..c859c8661281 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> > @@ -1423,12 +1423,34 @@ static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
+> >  	return 0;
+> >  }
+> >  
+> > +/**
+> > + * get_selector() - Return the HPA selector mask for one level
+> > + * @ways: interleave ways
+> > + * @gran: interleave granularity in bytes
+> > + *
+> > + * Return: ``(ways - 1) * gran`` for power-of-2 interleaves, or the
+> > + * selector for the power-of-2 component of a 6-way or 12-way interleave.
+> > + *
+> > + * A 3-way interleave consumes no HPA selector bits.
+> > + */
+> > +static inline u64 get_selector(int ways, int gran)
+> > +{
+> > +	if (!is_power_of_2(ways))
+> > +		ways /= 3;
+> > +
+> > +	if (!is_power_of_2(ways) || !is_power_of_2(gran))
+> > +		return 0;
+> > +
+> > +	return (u64)(ways - 1) * gran;
+> > +}
+> > +
+> >  static int cxl_port_setup_targets(struct cxl_port *port,
+> >  				  struct cxl_region *cxlr,
+> >  				  struct cxl_endpoint_decoder *cxled)
+> >  {
+> >  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
+> > -	int parent_iw, parent_ig, ig, iw, rc, pos = cxled->pos;
+> > +	int distance, parent_distance;
+> > +	int ig, iw, rc, pos = cxled->pos;
+> >  	struct cxl_port *parent_port = to_cxl_port(port->dev.parent);
+> >  	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
+> >  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> > @@ -1436,9 +1458,10 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+> >  	struct cxl_region_params *p = &cxlr->params;
+> >  	struct cxl_decoder *cxld = cxl_rr->decoder;
+> >  	struct cxl_switch_decoder *cxlsd;
+> > -	struct cxl_port *iter = port;
+> > -	u16 eig, peig;
+> > -	u8 eiw, peiw;
+> > +	u64 selector, cxlr_sel;
+> > +	struct cxl_port *iter;
+> > +	u16 eig;
+> > +	u8 eiw;
+> 
+> That list of local vars is very long and we should factor out some of
+> the code to helpers.
+> 
 
-> I don't see why root decoders need special handling here (apart
-> from the 3-way factor, but this is already handled). See my
-> earlier comments to the other patches, but if root decoders were
-> just included in the pos calculation, that should give correct
-> results. And, instead of introducing the "stride" term, why not
-> just continue to work with the selector mask also for the root
-> decoders?
->
-> This "special case" handling unnecessarily introduces complex
-> logic and code. We should avoid that.
+Agreed. v3 factors the ancestor walk into a helper and moves the per-level
+selector computation with it. That takes most of the locals with it.
 
 
-Thanks for the review Robert,
+> >  
+> >  	/*
+> >  	 * While root level decoders support x3, x6, x12, switch level
+> > @@ -1452,28 +1475,66 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+> >  	}
+> >  
+> >  	cxlsd = to_cxl_switch_decoder(&cxld->dev);
+> 
+> That could be moved to the declaration section.
 
-It's not added complexity. It is the root decoder's contribution
-to the position, the piece you identified as missing from the
-walk in your follow-up on 1/6. Root decoders *are* "just included
-in the pos calculation" here: stride = root_gran / region_gran is
-the place value of the root's selector bits in position space, so
-the root step deposits the root's target index at the root's
-place value, same as every other level deposits its index at its
-own. It is the same information as the root decoder selectors from
-your follow-up on 1/6, just written as a multiplier instead of a
-bit mask, which matches the multiply/add arithmetic this function
-already uses. Without it, the endpoints get wrong positions while
-every selector check still passes.
+Done in v3.
 
-Nor is it a "special case" of the model. It is the general per-level
-rule "each level contributes target_idx * level_gran / region_gran,
-which same-granularity levels reduce to trivially. The root is simply
-the one level whose granularity can differ from the region's in this
-series, so it's the one place the general term is visible.
 
-I did check your selector-bit proposal. A selector-derived position
-formula gave identical results to the current code on every pow2 config.
-That was equivalent but not simpler. Issue is that it cannot express the
-factor of 3 of the 3/6/12-way roots, which consumes no HPA bits and is
-recovered by divide/modulo above the pow2 selector bits. So switching to
-selector-bit position math would actually require two models: selectors
-for pow2, plus the value math kept anyway for 3/6/12-way. The value math
-we use now handles both in one model, so position calculation stays there.
-Happy to post the comparison traces if useful.
+> 
+> > +	iw = cxl_rr->nr_targets;
+> > +
+> > +	if (iw > 8 || iw > cxlsd->nr_targets) {
+> 
+> And this can be moved up / merged with the power of 2 check before.
+> 
 
-For this patch: stride is renamed and commented as the root's position
-place value to make its connection to the selector layout explicit.
+Done in v3.
+
+
+> > +		dev_dbg(&cxlr->dev,
+> > +			"%s:%s:%s: ways: %d overflows targets: %d\n",
+> > +			dev_name(port->uport_dev), dev_name(&port->dev),
+> > +			dev_name(&cxld->dev), iw, cxlsd->nr_targets);
+> > +		return -ENXIO;
+> > +	}
+> > +
+> > +	/* Track selector bits already claimed by ancestor decoders */
+> > +	selector = get_selector(cxlrd->cxlsd.cxld.interleave_ways,
+> > +				cxlrd->cxlsd.cxld.interleave_granularity);
+> > +
+> > +	/* Track distances used in passthrough granularity and peer checks */
+> > +	parent_distance = cxlrd->cxlsd.cxld.interleave_ways;
+> > +	if (!is_power_of_2(parent_distance))
+> > +		parent_distance /= 3;
+> > +	distance = cxlrd->cxlsd.cxld.interleave_ways;
+> 
+> Better use only one var here. One can derived from the other once
+> needed.
+> 
+> Actually, we do not really need it at all, see below.
+> 
+
+v3 keeps a single variable and derives the other form at its one
+point of use. On whether we need it at all, deriving distance
+purely from the selector bits works for the power-of-2 part but
+the selectors cannot carry the factor 3 of a 3/6/12-way root, so a
+value-space term survives. See Patch 3/6 reply.
+
+
+> > +
+> > +	for (iter = parent_port; !is_cxl_root(iter);
+> 
+> That could become a helper function get_parent_selectors() or so.
+> 
+
+Agreed, that's the helper mentioned above.
+
+
+
+
+> > +	     iter = to_cxl_port(iter->dev.parent)) {
+> > +		struct cxl_region_ref *cxl_rr_iter = cxl_rr_load(iter, cxlr);
+> > +		struct cxl_decoder *cxld_iter = cxl_rr_iter->decoder;
+> > +		u64 cxld_sel;
+> > +
+> > +		if (cxld_iter->interleave_ways == 1)
+> > +			continue;
+> > +
+> > +		cxld_sel = get_selector(cxld_iter->interleave_ways,
+> > +					cxld_iter->interleave_granularity);
+> > +
+> > +		if (cxld_sel & selector) {
+> > +			dev_dbg(&cxlr->dev,
+> > +				"%s:%s: overlapping selectors: %#llx:%#llx\n",
+> > +				dev_name(iter->uport_dev),
+> > +				dev_name(&iter->dev), cxld_sel, selector);
+> > +			return -ENXIO;
+> > +		}
+> > +
+> > +		selector |= cxld_sel;
+> > +
+> > +		parent_distance *= cxl_rr_iter->nr_targets;
+> 
+> The parent_distance could be derived from the parent selector and
+> moved out of the loop to simplify factoring out this into a helper.
+> 
+
+For power-of-2 levels, yes, and v3 does that as part of the
+helper split. The x3 caveat above applies here too.
+
+
+
+> > +		distance *= cxl_rr_iter->nr_targets;
+> > +	}
+> > +
+> > +	distance *= iw;
+> 
+> The decoder's selectors are the next lower bits below the parent
+> selectors, so iw and ig could be directly calculated from that. I
+> think that very much simplifies the code.
+> 
+> There are those 3 selectors we just need to keep track of: switch
+> selector, region selector and parent selector. With that everything
+> else can be determined, e.g. iw and ig.
+> 
+> If we create helper functions to get all 3 selectors, this function
+> will be much smaller. That also moves away error checks to that
+> helpers.
+
+This is the core of the selector-model question answered in Path 3/6 reply.
+
+Short version: v3 takes the helper structure and adds the root decoder's
+selectors to the validation walk (your follow-up), but keeps iw/ig/position
+derivation in ways/gran value space, because the selector bits cannot
+represent the factor 3.
+
+> 
+> > +
+> > +	/* Accumulated bits must fit within the region selector */
+> > +	cxlr_sel = get_selector(p->interleave_ways, p->interleave_granularity);
+> > +	if ((cxlr_sel & selector) != selector) {
+> > +		dev_dbg(&cxlr->dev,
+> > +			"%s:%s: invalid selectors: cxlr %#llx accum %#llx\n",
+> > +			dev_name(port->uport_dev), dev_name(&port->dev),
+> > +			cxlr_sel, selector);
+> > +		return -ENXIO;
+> > +	}
+> > +
+> >  	if (cxl_rr->nr_targets_set) {
+> > -		int i, distance = 1;
+> > -		struct cxl_region_ref *cxl_rr_iter;
+> > -
+> > -		/*
+> > -		 * The "distance" between peer downstream ports represents which
+> > -		 * endpoint positions in the region interleave a given port can
+> > -		 * host.
+> > -		 *
+> > -		 * For example, at the root of a hierarchy the distance is
+> > -		 * always 1 as every index targets a different host-bridge. At
+> > -		 * each subsequent switch level those ports map every Nth region
+> > -		 * position where N is the width of the switch == distance.
+> > -		 */
+> > -		do {
+> > -			cxl_rr_iter = cxl_rr_load(iter, cxlr);
+> > -			distance *= cxl_rr_iter->nr_targets;
+> > -			iter = to_cxl_port(iter->dev.parent);
+> > -		} while (!is_cxl_root(iter));
+> > -		distance *= cxlrd->cxlsd.cxld.interleave_ways;
+> > -
+> > -		for (i = 0; i < cxl_rr->nr_targets_set; i++)
+> > +		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
+> >  			if (ep->dport == cxlsd->target[i]) {
+> >  				rc = check_last_peer(cxled, ep, cxl_rr,
+> >  						     distance);
+> > @@ -1484,84 +1545,18 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+> >  		goto add_target;
+> >  	}
+> >  
+> > -	if (is_cxl_root(parent_port)) {
+> > -		/*
+> > -		 * Root decoder IG is always set to value in CFMWS which
+> > -		 * may be different than this region's IG.  We can use the
+> > -		 * region's IG here since interleave_granularity_store()
+> > -		 * does not allow interleaved host-bridges with
+> > -		 * root IG != region IG.
+> > -		 */
+> > -		parent_ig = p->interleave_granularity;
+> > -		parent_iw = cxlrd->cxlsd.cxld.interleave_ways;
+> > -		/*
+> > -		 * For purposes of address bit routing, use power-of-2 math for
+> > -		 * switch ports.
+> > -		 */
+> > -		if (!is_power_of_2(parent_iw))
+> > -			parent_iw /= 3;
+> > -	} else {
+> > -		struct cxl_region_ref *parent_rr;
+> > -		struct cxl_decoder *parent_cxld;
+> > +	ig = p->interleave_granularity * parent_distance;
+> >  
+> > -		parent_rr = cxl_rr_load(parent_port, cxlr);
+> > -		parent_cxld = parent_rr->decoder;
+> > -		parent_ig = parent_cxld->interleave_granularity;
+> > -		parent_iw = parent_cxld->interleave_ways;
+> > -	}
+> > -
+> > -	rc = granularity_to_eig(parent_ig, &peig);
+> > -	if (rc) {
+> > -		dev_dbg(&cxlr->dev, "%s:%s: invalid parent granularity: %d\n",
+> > -			dev_name(parent_port->uport_dev),
+> > -			dev_name(&parent_port->dev), parent_ig);
+> > -		return rc;
+> > -	}
+> > -
+> > -	rc = ways_to_eiw(parent_iw, &peiw);
+> > -	if (rc) {
+> > -		dev_dbg(&cxlr->dev, "%s:%s: invalid parent interleave: %d\n",
+> > -			dev_name(parent_port->uport_dev),
+> > -			dev_name(&parent_port->dev), parent_iw);
+> > -		return rc;
+> > -	}
+> > -
+> > -	iw = cxl_rr->nr_targets;
+> >  	rc = ways_to_eiw(iw, &eiw);
+> > -	if (rc) {
+> > -		dev_dbg(&cxlr->dev, "%s:%s: invalid port interleave: %d\n",
+> > -			dev_name(port->uport_dev), dev_name(&port->dev), iw);
+> > -		return rc;
+> > -	}
+> > -
+> > -	/*
+> > -	 * Interleave granularity is a multiple of @parent_port granularity.
+> > -	 * Multiplier is the parent port interleave ways.
+> > -	 */
+> > -	rc = granularity_to_eig(parent_ig * parent_iw, &eig);
+> > +	if (!rc)
+> > +		rc = granularity_to_eig(ig, &eig);
+> >  	if (rc) {
+> >  		dev_dbg(&cxlr->dev,
+> > -			"%s: invalid granularity calculation (%d * %d)\n",
+> > -			dev_name(&parent_port->dev), parent_ig, parent_iw);
+> > +			"%s:%s: derived ig %d not a valid granularity (iw %d)\n",
+> > +			dev_name(port->uport_dev), dev_name(&port->dev), ig, iw);
+> >  		return rc;
+> >  	}
+> 
+> That is just a value check which could be reworked to check the
+> selector instead. Could be a helper function.
+> 
+> We should consider adding the selector to struct of cxld and only
+> check it once it is finally converted to ig and iw after setup is
+> done.
+
+The check moves into a helper in v3.
+
+About a stored selector in struct cxl_decoder, I don't think it fits
+the model. When a consumer show up w need, then consider it.
+
+> 
+> >  
+> > -	rc = eig_to_granularity(eig, &ig);
+> > -	if (rc) {
+> > -		dev_dbg(&cxlr->dev, "%s:%s: invalid interleave: %d\n",
+> > -			dev_name(port->uport_dev), dev_name(&port->dev),
+> > -			256 << eig);
+> > -		return rc;
+> > -	}
+> > -
+> > -	if (iw > 8 || iw > cxlsd->nr_targets) {
+> > -		dev_dbg(&cxlr->dev,
+> > -			"%s:%s:%s: ways: %d overflows targets: %d\n",
+> > -			dev_name(port->uport_dev), dev_name(&port->dev),
+> > -			dev_name(&cxld->dev), iw, cxlsd->nr_targets);
+> > -		return -ENXIO;
+> > -	}
+> > -
+> >  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
+> >  		if (cxld->interleave_ways != iw ||
+> >  		    (iw > 1 && cxld->interleave_granularity != ig) ||
+> > @@ -2067,6 +2062,11 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+> >  		return -ENXIO;
+> >  	}
+> >  
+> > +	/* Keep this patch bisectable until position arithmetic is updated */
+> > +	if (cxlrd->cxlsd.cxld.interleave_granularity >
+> > +	    p->interleave_granularity)
+> > +		return -ENXIO;
+> > +
+> 
+> Hmm, that looks odd, even if it's only temporary. Could you explain
+> why that is needed here.
+
+Your follow-up answered most of this. This patch makes the selector
+walk *pass* for mixed-granularity layouts that the old equality rule
+rejected, while position arithmetic doesn't handle them until 3/6.
+Without the temporary gate, a bisect landing between the two patches
+could assemble a mixed-gran region with wrong endpoint positions. The
+gate keeps every commit in the series correct on its own. It is removed
+in 3/6 when the position math catches up.
+
+I think that's all on this patch.
 
 -- Alison
 
 > 
+> Thanks,
+> 
 > -Robert
 > 
+> >  	if (p->nr_targets >= p->interleave_ways) {
+> >  		dev_dbg(&cxlr->dev, "region already has %d endpoints\n",
+> >  			p->nr_targets);
+> > -- 
+> > 2.37.3
 > > 
-> > Remove the temporary mixed-granularity attach reject now that position
-> > arithmetic matches the selector layout.
-> > 
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> >  drivers/cxl/core/region.c | 79 ++++++++++++++++++++++++++++-----------
-> >  1 file changed, 58 insertions(+), 21 deletions(-)
