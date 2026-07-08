@@ -1,69 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE121F4181
-	for <linux-cxl@vger.kernel.org>; Wed,  8 Jul 2026 13:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F060721ABB1
+	for <linux-cxl@vger.kernel.org>; Wed,  8 Jul 2026 13:08:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783515619; cv=none; b=lxyuXUdQnIvKU1GEYmFHzDuvBx2YWpcElC5HPXHU/KPxhswTJTclsZwCq4a2aB6fVL6Rs4FNIFokHIdHGir4OZ1s1zdi1DAsPq48U/7G/GYerqfERoC6LaOe++PZDsGE4jMa6FXWsiwusHx9bpVm9ZyryW5Mrda8A+E26/5ljfQ=
+	t=1783516136; cv=none; b=BhsdIdf/FH35rNR/NgwPo81SYnVBNJSwqN4baNzhU9OF8m+G5NrqiAGx1Vd8EHKnN4nPLVrH/1QhCprEww7JkODzbQLRH4qmvgg4VbKE5n1kZHSW58pgDd8DG1RUY7KJpzt8hXqUmX3qSTMXa1GtUV4Fv7j1UbomT9I509cQiec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783515619; c=relaxed/simple;
-	bh=8TnT3cGzhgFtS9Xuu2VMgPRHUgC5kqQMxAr2Q9rBdoc=;
+	s=arc-20240116; t=1783516136; c=relaxed/simple;
+	bh=slzcngurpvijPvfNkGNfZu5oYV2DsjS057qVvK8Udik=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=oXirgucvDX5MXWPb4L6srAcyqU/QTikXaw8zK0u03lkvcjzVPd7+V3YDEhOwiBOvQQcmFhJy63DDenHqSEXnFVmvSy3JjavS0axOHTRlQns9FH8gyRd14DRrGSNRxhA6F7eDMFfz5myGIFclimYXred4ueqmZo/NLqnC12FvKUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DSZyg+Py; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type:Content-Disposition; b=SLWwLdAXRelzibU5N+Ri95SE2Z04aYoaBAXlWywPE8vB1VX+HMuYscZR8A8pGfpexboKc0d/ycvv3K5xQtm2nDE0mDS/FmuNzkpeuBJBxfQ5COT28UAu8IwUNPvIMxNmOfivTClXhjKikkUY52BW89/FaeY8qgtGloXx6NLaDDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TfDNKzrK; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DSZyg+Py"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TfDNKzrK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1783515617;
+	s=mimecast20190719; t=1783516134;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=l1nxHUHuYBD2sRGWeQWBd/Pf2pEVUcm+cL6w6ahUDa0=;
-	b=DSZyg+Py6Xno846+1QVp68JnpT30SBr+C2eWDAK5gSZOeUjU2WIhSwvgvB6BV/p69nVm+D
-	hrG5Whu5grnjBXRzRNFCSAWxYuPfsW4fRtfUpRn09Yv20fjLl4D1ZuvwVEqhf3/6ZJhF6y
-	eGCn2k6vKwORbT1r5iAOs8SqVUhf9Mw=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=U+rX2CKg5FhtAMYxFR8MmaCVN8SdzuEUH8feY2iANJc=;
+	b=TfDNKzrKQ1bS+vwFHUpRelbYRByd4nl4D9A+b4zrcKZoZzkzQGx2skqTAckn+Wq7vapKWD
+	GlZiLyqowYVOapRob7qvqJBgw7jeTY+Fo3ym6L+ocR+Sb6AbO4JM+USwxSm2um2y3uQ8c6
+	1ijjdhbSkccoFMs82/xJgjW039TY1qw=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-PBIFXvI5MPeqE-WwcPz9Ew-1; Wed, 08 Jul 2026 09:00:15 -0400
-X-MC-Unique: PBIFXvI5MPeqE-WwcPz9Ew-1
-X-Mimecast-MFC-AGG-ID: PBIFXvI5MPeqE-WwcPz9Ew_1783515615
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-c15d4bd2afeso42541066b.3
-        for <linux-cxl@vger.kernel.org>; Wed, 08 Jul 2026 06:00:15 -0700 (PDT)
+ us-mta-282-QhI76a1ZMbqcyczlad-FFw-1; Wed, 08 Jul 2026 09:08:52 -0400
+X-MC-Unique: QhI76a1ZMbqcyczlad-FFw-1
+X-Mimecast-MFC-AGG-ID: QhI76a1ZMbqcyczlad-FFw_1783516128
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-46fb9079a04so438826f8f.3
+        for <linux-cxl@vger.kernel.org>; Wed, 08 Jul 2026 06:08:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783515614; x=1784120414;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l1nxHUHuYBD2sRGWeQWBd/Pf2pEVUcm+cL6w6ahUDa0=;
-        b=eaJ3RFu8VVuvqupzPf5fk+19Yg9liM5ZHWzl6hn8gC4ZF8GLe+NmmSRK3WtmX6EV4v
-         AQL11BpDFF4ciCTe67UMOPa3d8UZvdKgIIQJmOgic6K9qlYohASwljrneYLDcnFwM8uA
-         AowxfnDMRFv7DI6U3M95/TThRyVThLM39lo9gl/zwdM2IT+dbDhrejgLK90bgvHvQESA
-         AunGF/Pd84iGf+lk/Qsucj23rbFOxbhvOLRtOa7N4L7j45xvPSV4+BGbaLXRPW4Od6I6
-         ac8+vDVXHDZOL64PNlIN+gCYruilVrDqCpoJrlJz1427wwuya7F4qiHAPhHCvlGLPW8x
-         2ARg==
-X-Forwarded-Encrypted: i=1; AHgh+RpzKaG+IGyi0kr+lxAL9fSeVQxiN9D7wiXci4u8shlmTyseCdDuyrFSJFX/L9wIKMnEHBVAAeQp1RI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvxgGiCujFtkLsEwcy6izpduTT4psGs1KdJ3G6rlvhFbdAYSoF
-	OPRsZyW1d59Gsg//Xk4sdn6hN4o8bD5CTnq5E2nta5DAWs004Uct2DLGfjxjN94bC8ju1eFkBtD
-	D/WlGfk2AZ7mOcfNMcRxiQRE4xAfQVptnk89dp8keFPDkfY1q2nMnfC6GwZS25A==
-X-Gm-Gg: AfdE7clQzXrW/Soeygyzy3S8kij/K57QZHvtQo8aDooLV8GuRaKSwNPhD3AAUoX+WHA
-	1OKZlCxHszw5iOFNRH0TnP+Vj3JkVLP8MSyhmpU23Rex67/DqMMcMs6+/VFgkyPw6BbCUcr9/Em
-	R8NTTG9AHSsBBWf1h/w6KxQ525BGjA1/fFw+J35ne0JjkAaViAcw1zd+QfjKY/mDsYT+ipO9YZ3
-	2gxZzziG+ozF7mh7BH1FaqRksUvcJNVxSekG2SXzbYjyUDtS6+1m/qInEexePRWfDsFITm/xrsS
-	DAYvNDjV4tKq1tHNBKdf0dWA1VbxmhP29b9zrF1KhsfFI2b9bCSlCN3AcddSbTHnB9yG/fyXIkP
-	51imjlgfDJKZucH+UvhcexZ7RfEGnfTeD
-X-Received: by 2002:a17:907:26c1:b0:c12:7e24:a76f with SMTP id a640c23a62f3a-c15ce025ae4mr111217966b.20.1783515612908;
-        Wed, 08 Jul 2026 06:00:12 -0700 (PDT)
-X-Received: by 2002:a17:907:26c1:b0:c12:7e24:a76f with SMTP id a640c23a62f3a-c15ce025ae4mr111210366b.20.1783515611401;
-        Wed, 08 Jul 2026 06:00:11 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1783516128; x=1784120928;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=U+rX2CKg5FhtAMYxFR8MmaCVN8SdzuEUH8feY2iANJc=;
+        b=jilFayCyrNtBb4uWEfDDE9RaIfbBTtY/89kjesRuOcdBXgD2/z53cZAta+AJh727RO
+         L65XJoK9hq7xWnTk1rfODihpcMC6OZu7OTLQburpJimeoIai9BB4Ao8iDNrnR3t9evfb
+         8VGb0YAjYzGowElN4gSMaBO/OaYp+s8x/iqAWc1pI6AOgrQM7RRVmXAYXhUNHeS2F8Cs
+         n2tB0EaydgxT3UhzOAn3ouQm3y4Jr8jwQq/mnwhP71kq75TGB0amtbT0A03DngzsQdUH
+         sTRVpk8yuG4p8xc4pPcBmOaO/i+1jvwVbtZAotSFshagUgTmfGTnQTxeqXhB/U8Jv+yd
+         2YZw==
+X-Forwarded-Encrypted: i=1; AHgh+RpNdkeH8M+DToJC74kyZY8McKZVnqFUWf1zrCIpSenrE6QVoob04N4G6PLn+cguJJSXaG64cBCCmfc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBtDynqoafkjyW/wP9LIf2U+6BppJza9CcwMRicJN5SIWLayue
+	4j3WDl17QU6lhZSuhB0d22xLTkyPLY/VLrrNQEVtozcVc/d79x9GNoaMy8oGjLpPbzx6QXs9MpM
+	OxD3E0Gu9ARDBoRKzeh56WQBidJKg7iWgAZnfpZ2k40dPcUyXdbEx1xI70+FGag==
+X-Gm-Gg: AfdE7cnMJ15NCCf7G/Apd9mSKHs8voNAFoONfJD3Y25YKoU6IzTMitIK85Q6UbNN0xL
+	goIKpJx1iLL+ye+MowoPbRm6hORMGfLBXLqWgPkGK9/ScYZF1ufisyRHXiekdnF0Wx2VHoKhx6C
+	COZ+Y7wgQu6/8iZihZnEA8AcNBpCWiZRzlfvGCgxv98UIsv9aH6sDbYVNfYSaqV5/v81Z2+tJwN
+	ZIwlxMiaOz4lojYUjdFEX+rDtm5AaPzZwjGC/Yw7TkIrwh+SEn6GmArdcFjrw3WK6icIIm8f7qv
+	/JSO3XGN9C4HZT3sMa35Hw1MFewMjJbb69CQ+geSG4VE85PX6l88NL4ugJrpmnDIIt6YWAbKMb7
+	7h7WhdjoyKG4XoM/rBwZi5y96//4ZnrsO
+X-Received: by 2002:a05:600c:8284:b0:493:c8cf:27bd with SMTP id 5b1f17b1804b1-493e68642c1mr25878095e9.19.1783516127929;
+        Wed, 08 Jul 2026 06:08:47 -0700 (PDT)
+X-Received: by 2002:a05:600c:8284:b0:493:c8cf:27bd with SMTP id 5b1f17b1804b1-493e68642c1mr25877715e9.19.1783516127480;
+        Wed, 08 Jul 2026 06:08:47 -0700 (PDT)
 Received: from redhat.com (IGLD-80-230-68-31.inter.net.il. [80.230.68.31])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c15ddb9e1d2sm6630866b.52.2026.07.08.06.00.07
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493e0f294a6sm259459405e9.1.2026.07.08.06.08.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Jul 2026 06:00:10 -0700 (PDT)
-Date: Wed, 8 Jul 2026 09:00:05 -0400
+        Wed, 08 Jul 2026 06:08:46 -0700 (PDT)
+Date: Wed, 8 Jul 2026 09:08:42 -0400
 From: "Michael S. Tsirkin" <mst@redhat.com>
 To: "David Hildenbrand (Arm)" <david@kernel.org>
 Cc: linux-kernel@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
@@ -92,136 +93,69 @@ Cc: linux-kernel@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
 	linux-mm@kvack.org, linux-cxl@vger.kernel.org
 Subject: Re: [PATCH 0/2] mm: memory-failure: fix HWPoison flag race with
  non-atomic page flag ops
-Message-ID: <20260708085745-mutt-send-email-mst@kernel.org>
-References: <20260630174852-mutt-send-email-mst@kernel.org>
+Message-ID: <20260708090739-mutt-send-email-mst@kernel.org>
+References: <cbab829a-3e65-4b4f-a2e2-704e88a611a0@kernel.org>
+ <f6d8354c-2f79-4a48-934c-cbeb335765e2@kernel.org>
+ <20260630174852-mutt-send-email-mst@kernel.org>
  <2f884bfa-3cd5-4fba-8aa4-c2e68890ab64@kernel.org>
  <20260701041112-mutt-send-email-mst@kernel.org>
  <d2ce93d9-c3d8-4915-a511-d08eb2c1b374@kernel.org>
  <20260701043024-mutt-send-email-mst@kernel.org>
  <c03ec696-d635-4c7f-8c77-89a439d9135b@kernel.org>
- <20260701112946-mutt-send-email-mst@kernel.org>
- <a353c28c-a864-456d-9b00-7f6a932cda73@kernel.org>
- <20260701180511-mutt-send-email-mst@kernel.org>
- <6b0f028c-574b-4b80-b803-2bff15a5a148@kernel.org>
+ <20260707155658-mutt-send-email-mst@kernel.org>
+ <6ec8f683-77c7-4ddd-830c-030a3d984715@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <6b0f028c-574b-4b80-b803-2bff15a5a148@kernel.org>
+In-Reply-To: <6ec8f683-77c7-4ddd-830c-030a3d984715@kernel.org>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: ivGyNXnip7oBASLL9i7XZO90G3UlqBwU_8TddXBick4_1783515615
+X-Mimecast-MFC-PROC-ID: OQ1Fd3eZ9S2JnQJmw6S2sBrwVrja7EbbPgrKgtsACo4_1783516128
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jul 08, 2026 at 02:13:27PM +0200, David Hildenbrand (Arm) wrote:
-> On 7/2/26 00:18, Michael S. Tsirkin wrote:
-> > On Wed, Jul 01, 2026 at 06:17:23PM +0200, David Hildenbrand (Arm) wrote:
-> >> On 7/1/26 17:54, Michael S. Tsirkin wrote:
+On Wed, Jul 08, 2026 at 02:03:21PM +0200, David Hildenbrand (Arm) wrote:
+> On 7/7/26 22:27, Michael S. Tsirkin wrote:
+> > On Wed, Jul 01, 2026 at 10:36:31AM +0200, David Hildenbrand (Arm) wrote:
+> >> On 7/1/26 10:33, Michael S. Tsirkin wrote:
 > >>>
-> >>> Not "generated" surely. But assisted, yes.
+> >>> what do you think ;) post it?
 > >>
-> >> What I thought.
-> >>
-> >>> Still hacking on it, but the difficulty
-> >>> with memory-failure is that fundamentally, it's not 100% robust.
-> >>
-> >> It's all a bit slapped on top of everything, yes.
-> >>
-> >> What I was wondering is, assuming the call_task_rcu() and it takes forever,
-> >> there might be quite a while where a hwpoisoned page that lost its bit is not
-> >> marked as hwpoisoned.
-> >>
-> >> So you'd actually want the one doing the test_and_set_bit() caller to wait until
-> >> the bit is stable.
+> >> As RFC please :) [and if it's AI generated, obviously properly reviewed and
+> >> reworked by you]
 > > 
-> > not sure I get it.
+> > I spent a bit poking at it, and it's hairy.
 > 
-> Essentially, I think that after you set the bit you'd want everybody else in the
-> system to see that state before you continue.
+> What I thought ...
 > 
-> Such that other code that tests for poisoned pages would just immediately act on
-> it. Like the buddy not handing out such a page anymore, immediately.
+> > The issue is that we have calls to both set and clear bits.
+> > When we record them in a side side structure so they can be retried,
+> > we have to carefully record both sets and clears and their order and make sure
+> > they do not bypass each other. So if there's set already in the
+> > structure, we need to take it out of structure and only then add a clear.
+> > 
+> > It gets very hairy because we want to set from NMI.  So now we can have
+> > clear in the data structure and set from NMI bypasses that. Now what?
+> > And set from NMI can't be 100% safe anyway as we discussed ...  Kinda
+> > reduced my motivation to try and make this reliable at all.
 > 
-> At least that way it's easier to reason about. Losing these bits is really just
-> nasty :(
+> Maybe we should just really keep it as broken as it currently is. It's not
+> really worth our time fixing basic design flaws ... given that we didn't have
+> any report about these races so far :/
 > 
-> > 
-> >> But that should be rather hairy as well. :(
-> >>
-> >>>
-> >>> For example, we have a fifo fed by hardware and consumed by a workqueue:
-> >>>
-> >>>         struct memory_failure_cpu *mf_cpu;
-> >>>         unsigned long proc_flags;
-> >>>         bool buffer_overflow;
-> >>>         struct memory_failure_entry entry = {
-> >>>                 .pfn =          pfn,
-> >>>                 .flags =        flags,
-> >>>         };
-> >>>
-> >>>         mf_cpu = &get_cpu_var(memory_failure_cpu);
-> >>>         raw_spin_lock_irqsave(&mf_cpu->lock, proc_flags);
-> >>>         buffer_overflow = !kfifo_put(&mf_cpu->fifo, entry);
-> >>>         if (!buffer_overflow)
-> >>>                 schedule_work_on(smp_processor_id(), &mf_cpu->work);
-> >>>         raw_spin_unlock_irqrestore(&mf_cpu->lock, proc_flags);
-> >>>         put_cpu_var(memory_failure_cpu);
-> >>>         if (buffer_overflow)
-> >>>                 pr_err("buffer overflow when queuing memory failure at %#lx\n",
-> >>>                        pfn);
-> >>>
-> >>>
-> >>> if there are lots of these and the scheduler is slow and it overflows,
-> >>> it's sayonara you have lost the flag, right?
-> >>
-> >> I guess so. I assume on relevant hw you wouldn't expect a storm. But who knows :)
-> >>
-> >>>
-> >>>
-> >>> Oh and by the way, I just noticed that when buddy merges pages it does
-> >>> not check the poison bit. So it looks like there's a simple way to lose
-> >>> the poison bit - have it merge with a non poisoned page.
-> >>
-> >> When we poison, we try to take the free page off the buddy. At least that's what
-> >> I remember.
-> > 
-> > 
-> > Yes but not immediately - we set hwpoison then we try to take it off.
-> > 
-> > 
-> >> So I think we would just then go ahead and split the free higher-order buddy
-> >> page to remove the single page.
-> > 
-> > Later we split, yes. But I don't see where it sets HWPoison after
-> > split - it calls
-> > SetPageHWPoisonTakenOff but it seems to assume HWPoison is already set.
-> > 
-> > Am I missing something? It's late here...
-> So, we set hwpoison on a page and that is sticky, even when the buddy merges
-> them, right?
-
-right. bar races but that is separate.
-
-> When handing out pages, the buddy will check all pages through
-> check_new_pages(). If the poisoned page is part of a higher-order page, that
-> would still find it.
-> 
-> So I would assume that the hwpoison page->flags stays there, and
-> PageHWPoisonTakenOff() only tells us if we succeeded in removing the page from
-> the buddy ourselves.
-
-Right, I see.  Btw in a bunch of paths even if
-we unpoison we lose the page, right?
-And it seems we can also lose a hugepage just because 4k in
-it got poisoned?
-Is that expected?
-
+> I mean, sure, if it's easy, ... but it sounds like getting more and more complex.
 > 
 > -- 
 > Cheers,
 > 
 > David
+
+Right. Either we do the RCU thing or let it be. But then I'm uninclined
+to even bother with fixing other weird behaviour I see there.
+
+-- 
+MST
 
