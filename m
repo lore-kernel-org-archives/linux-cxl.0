@@ -1,117 +1,176 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E5325CC74
-	for <linux-cxl@vger.kernel.org>; Thu,  9 Jul 2026 16:46:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E692D3A60
+	for <linux-cxl@vger.kernel.org>; Thu,  9 Jul 2026 16:54:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783615566; cv=none; b=TI/OUsQRpQRgGfG0Js0MTQ29uDHfENFCKXJ82QfaUcJQV9VN7VlWPe5edWjRX0wu0CtmEHuc+loJfyopq6L3ARhghEL/SlosDaFn5ZUBYGFM/g1cuGOjPIRckflg/aQ2KQg2/w1/5+AmrK9WEcTs20Wz2TaKOxoQyVON3078YtA=
+	t=1783616099; cv=none; b=p/C5YSIis574Vs6BS+s2zlcjNe7GMJaoTyAisiw6hP00reZmdJPI0UYZ+7KlDXPQNrQahHE6wDRUmFRJOM9jMg1boRlY5Oi/lGr62grlU0Wdy86Ia39+wuZR+fzZcWSkPTE5hKMjD3NDKR5HIx0K3ZIfH5miLysEAffjSlFSAIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783615566; c=relaxed/simple;
-	bh=fdO4O47Ho2g1ZMJGd2EKCiMvk5nT7cSK45kUJQCd2nA=;
+	s=arc-20240116; t=1783616099; c=relaxed/simple;
+	bh=gzeUKoh2UIJ6Xhj7u2b2gIbc6Y/Bh697Hk0DsEhKAuQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hv8y9A3bp0k4xEYKNi2Eo75HNzF3cxulLiXkwg0519UW16XXrJExUKGil9SktujfA365NDtv1uyv35F4/vVt1rQsHfDt1sEqEMEboIiWOikwF65abcsD+cTtvhQaAD+PK585ZtIpl5GgsGtQFDStuKcVtkSxPMQl6Aa+g6nyMn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DWz3fc1L; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ZENesxH7uIZDhwvao/k9zFCw4tTsvGjxpmzE84RJ8vaiI6A2M1X3MmsOzgAfuMRfSrxWieCfTr1VlckixZckYpE315ruTbGJWqvhX9SLv7wFpoIwFRrVnadfV+ru/UM96f1dEBn/V48Ck3ZmoN9790Kjm6uGmDf8GC0qwt7eYZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b8ql2FnU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DWz3fc1L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0147A1F000E9;
-	Thu,  9 Jul 2026 16:46:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b8ql2FnU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BA181F000E9;
+	Thu,  9 Jul 2026 16:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783615565;
-	bh=i4B6E/HCaNJ78zoWXJfw6wA9P1+QlOkKrtPLwJN+nko=;
+	s=k20260515; t=1783616098;
+	bh=li95YnQcfx6jxQzVnRdzFJWfXXJ2b+v8kQxrVOyYaRs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DWz3fc1LzzXlKSk0ecvd1eAvWzSDN4bE+efY/leL4D9wwT9NAEoId87IqrI4a8RW0
-	 oLQ2TfQs0ALr5RFQJPwpkF0hMncxUlDh8fA6GnBQes8naWrFJ0ZLqJUYzhfaskg1Hs
-	 b5xlUN8e9q2Hw6tkwbX4cm5pyPivthfOQZyVJpQI6jeEW10a5DBx94Y2HrXf7LhuIA
-	 hbAyt0kbSl0Udowl4m1N4I2QF/3TcrJCuAAiA5TkTnGbk/cnjYM5s7G7tNuqKq9Zfj
-	 GxfJBk5URjmadCFIZi8o0N5ozkQokw/HNbT3Jnq1MfZyhy4gHxPIkQ45h8uFp6bojs
-	 wb8TJbksPKhVA==
+	b=b8ql2FnUoyet1KZTs0Z333NjOG5uyGe01NKR7CNWbLLQZE2CCY8ekCThASQzcOMvj
+	 PFv/zqhUMQDUASMRLjPRoWQ9vRvdcD3GCu+zQen3w7eP/zjyx0sCrJxkDzTqJ3GUQN
+	 zMzPTqjROr8pjbQCS52E2od+a3hesR8Suieq/C3J4PceJrRfOpPgWFd/FyNMkbwkVp
+	 9DTNyyvnckskR24lMLyH1IIrtngqiHZrreGGUYyNMahjmFG3n1djFthA5S7Lk1Dbd/
+	 BVlZGZ/uXN2juzCRI1iK1VyL6rLXrDUjQUtzUGJdyvOENrsTHyQzZE2HNPXa6QcIOm
+	 /d7/weRXtfppg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/4] ACPI: APEI: GHES: Use spin_lock_irqsave() for CXL
- CPER work locks
+Subject: Re: [PATCH 3/4] ACPI: extlog: Fix CONFIG_ACPI_APEI_PCIEAER guard
+ typo
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260709162807.1957783-2-dave.jiang@intel.com>
+In-Reply-To: <20260709162807.1957783-4-dave.jiang@intel.com>
 References: <20260709162807.1957783-1-dave.jiang@intel.com>
- <20260709162807.1957783-2-dave.jiang@intel.com>
+ <20260709162807.1957783-4-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 Jul 2026 16:46:04 +0000
-Message-Id: <20260709164605.0147A1F000E9@smtp.kernel.org>
+Date: Thu, 09 Jul 2026 16:54:57 +0000
+Message-Id: <20260709165457.8BA181F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Missing bounds check on CPER record length and `dvsec_len` allows =
-an out-of-bounds memory read that can be leaked to userspace via trace even=
-ts.
+- [High] Missing bounds checking on firmware-provided CPER data lengths bef=
+ore accessing or copying PCIe and CXL protocol error structures.
+- [High] Calling `cxl_cper_handle_prot_err` synchronously creates an AB-BA =
+lock ordering deadlock with PCI `device_lock` and `x86_mce_decoder_chain.rw=
+sem`.
+- [High] Casting the raw hardware `aer_info` buffer directly to `struct aer=
+_capability_regs` populates software-only metadata with unvalidated hardwar=
+e data, triggering out-of-bounds array reads.
+- [Low] Directly calling `cxl_cper_handle_prot_err()` causes a linkage fail=
+ure when `CONFIG_ACPI_EXTLOG=3Dy` and `CONFIG_CXL_BUS` is configured as a m=
+odule.
 --
 
---- Patch [1]: [PATCH 1/4] ACPI: APEI: GHES: Use spin_lock_irqsave() for CX=
-L CPER work locks ---
-commit 92925c77a9085c947d2733f2a851c54ec53288f8
+--- Patch [3]: [PATCH 3/4] ACPI: extlog: Fix CONFIG_ACPI_APEI_PCIEAER guard=
+ typo ---
+commit d29f05a05af2b3add29bfc216f34a5de8a53eb2a
 Author: Dave Jiang <dave.jiang@intel.com>
 
-ACPI: APEI: GHES: Use spin_lock_irqsave() for CXL CPER work locks
+ACPI: extlog: Fix CONFIG_ACPI_APEI_PCIEAER guard typo
 
-This patch switches the cxl_cper_work_lock and cxl_cper_prot_err_work_lock
-from plain spinlocks to spin_lock_irqsave(). This prevents a potential dead=
-lock
-when a GHES error interrupt interrupts a thread holding the lock in process
-context.
+This patch fixes a typo in the preprocessor guard for ACPI_APEI_PCIEAER.
+It changes the guard to use the correct CONFIG_ prefix, ensuring the
+enclosed PCIe AER and CXL CPER handling code is actually built when enabled.
 
-Link: https://sashiko.dev/#/patchset/20260617-topics-ahmtib01-ras_ffh_arm_i=
-nternal_review-v6-0-91f725174aa0@arm.com?part=3D6
+> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
+> index 7ad3b36013cc6..60c2b90adf0ae 100644
+> --- a/drivers/acpi/acpi_extlog.c
+> +++ b/drivers/acpi/acpi_extlog.c
 
-> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-> index 3236a3ce79d6b..9b6917698ed24 100644
-> --- a/drivers/acpi/apei/ghes.c
-> +++ b/drivers/acpi/apei/ghes.c
 [ ... ]
-> @@ -863,7 +863,7 @@ int cxl_cper_unregister_work(struct work_struct *work)
->  	if (cxl_cper_work !=3D work)
->  		return -EINVAL;
-> =20
-> -	guard(spinlock)(&cxl_cper_work_lock);
-> +	guard(spinlock_irqsave)(&cxl_cper_work_lock);
->  	cxl_cper_work =3D NULL;
->  	return 0;
->  }
+
+> @@ -136,7 +136,7 @@ static int print_extlog_rcd(const char *pfx,
+>  static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
+>  			      int severity)
+>  {
+> -#ifdef ACPI_APEI_PCIEAER
+> +#ifdef CONFIG_ACPI_APEI_PCIEAER
 
 [Severity: High]
-This is a pre-existing issue, but looking at the CXL CPER work queue
-handling, is there a potential out-of-bounds read when processing
-malformed CPER records?
+This isn't a bug introduced by this patch, but activating this code exposes
+a missing bounds check on firmware-provided CPER data lengths.
 
-In drivers/acpi/apei/ghes_helpers.c:cxl_cper_setup_prot_err_work_data(),
-the cap_start pointer is computed using an untrusted dvsec_len from the
-firmware:
+If the firmware provides a CPER record where gdata->error_data_length is
+smaller than the expected payload structs, or provides a maliciously large
+dvsec_len for a CXL Protocol Error, is there a risk of an out-of-bounds
+memory read?
 
-    dvsec_start =3D (u8 *)(prot_err + 1);
-    cap_start =3D dvsec_start + prot_err->dvsec_len;
+When extlog_print() extracts payloads and dispatches to handlers without
+verifying gdata->error_data_length >=3D sizeof(...), the code casts the
+payload and executes cxl_cper_setup_prot_err_work_data(). This function
+performs pointer arithmetic using the unvalidated dvsec_len and executes
+a fixed-size memcpy(), which could lead to a kernel panic or data leak.
 
-    memcpy(&wd->ras_cap, cap_start, sizeof(wd->ras_cap));
+[Severity: High]
+This is a pre-existing issue, but fixing the typo activates a code path in
+extlog_print_pcie() that can trigger out-of-bounds array reads.
 
-Since dvsec_len is provided by firmware, could a maliciously large value
-cause cap_start to point outside the mapped CPER record bounds?
+Does casting the raw 96-byte aer_info hardware buffer directly to struct
+aer_capability_regs * populate software-only metadata with unvalidated
+hardware data?
 
-Similarly, in drivers/acpi/apei/ghes.c:cxl_cper_post_event(), the code
-copies the event record:
+In Linux, struct aer_capability_regs embeds struct pcie_tlp_log, placing
+software metadata (header_len and flit) at offset 0x54. Casting raw
+registers populates these software fields with unvalidated hardware state.
 
-    memcpy(&wd.rec, rec, sizeof(wd.rec));
+If flit evaluates to true and header_len is read as a large value (up to
+255), pcie_print_tlp_log() will iterate up to 255 times, reading
+out-of-bounds past the 14-element log->dw array. This read traverses past
+the aer_info struct and can cross into unmapped memory.
 
-If a hardware device provides a malformed record with a small
-error_data_length or an unusually large dvsec_len, could this unconditional
-memcpy() read unmapped memory or leak kernel memory contents to userspace
-via the kfifo trace events?
+>  	struct aer_capability_regs *aer;
+>  	struct pci_dev *pdev;
+
+[ ... ]
+
+> @@ -167,7 +167,7 @@ static void
+>  extlog_cxl_cper_handle_prot_err(struct cxl_cper_sec_prot_err *prot_err,
+>  				int severity)
+>  {
+> -#ifdef ACPI_APEI_PCIEAER
+> +#ifdef CONFIG_ACPI_APEI_PCIEAER
+
+[Severity: Low]
+This is a pre-existing issue, but activating this previously dead code caus=
+es
+a linkage failure when CONFIG_ACPI_EXTLOG=3Dy and CONFIG_CXL_BUS is configu=
+red
+as a module.
+
+Because ACPI_EXTLOG does not depend on CXL_BUS in its Kconfig, is it possib=
+le
+that the direct symbol call to cxl_cper_handle_prot_err() from the built-in
+acpi_extlog.o to the module cxl_core.ko cannot be resolved? This would resu=
+lt
+in an undefined reference to cxl_cper_handle_prot_err.
+
+[Severity: High]
+This isn't a bug introduced by this patch, but activating this code exposes=
+ a
+potential AB-BA lock ordering deadlock with the PCI device_lock and
+x86_mce_decoder_chain.rwsem.
+
+When extlog_cxl_cper_handle_prot_err() is called synchronously while the
+notifier rwsem is held, does this create a circular dependency?
+
+extlog_print() is registered as an MCE decoder and is called with
+down_read(&x86_mce_decoder_chain.rwsem) held. It now synchronously calls
+cxl_cper_handle_prot_err(), which acquires the PCI device lock via
+guard(device)(&pdev->dev), establishing the lock order:
+x86_mce_decoder_chain.rwsem -> device_lock.
+
+Conversely, during system initialization, drivers (like AMD GPU or CXL via
+devm_cxl_register_mce_notifier()) execute .probe with the PCI device_lock
+held and call mce_register_decode_chain(), taking
+down_write(&x86_mce_decoder_chain.rwsem). Could this cause a hard deadlock =
+if
+an MCE occurs during driver probing or initialization?
+
+>  	struct cxl_cper_prot_err_work_data wd;
+> =20
+>  	if (cxl_cper_sec_prot_err_valid(prot_err))
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260709162807.1957=
-783-1-dave.jiang@intel.com?part=3D1
+783-1-dave.jiang@intel.com?part=3D3
