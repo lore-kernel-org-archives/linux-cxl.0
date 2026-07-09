@@ -1,65 +1,67 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243FB2744F
-	for <linux-cxl@vger.kernel.org>; Thu,  9 Jul 2026 21:57:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF7F4499AB
+	for <linux-cxl@vger.kernel.org>; Thu,  9 Jul 2026 21:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783634228; cv=none; b=eGIbhSmMTokrPT0hOmUXyaQsXMpVsTGxHV+qupRuY39HVgwV5Fu4kBg/dZORGXOtYa9euNTBLN6QLWUmxi7rbX0+V34e/35Rxqt8TO4vTsOCe6VhXn6zX9TOK9kOAOGSaGCQMSSFmZUg8j0ifFebQUgcVIBIULFueaGRRNGhDF8=
+	t=1783634286; cv=none; b=DdGEgrx1N4tY81VbpyDOVdLIDkKfkAkQE795stJbF9C8emVzJhZ2H6oGy2obe9Nbbq0Eqveq2vjmAqFwHUsvuhN5hkGcVXRw61ZwWX+DYQjJ5GCB6gjl371r5nGvYM5PVzoX2NUMuKI0cftvIgqTwL9hP7PB6N24qPJtAzNEXf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783634228; c=relaxed/simple;
-	bh=8UAIjOhvfbKjsQ/HTeZBSW9rJpTCzyIJqdF78M986Ac=;
+	s=arc-20240116; t=1783634286; c=relaxed/simple;
+	bh=C6+QVbKbywsT2lvtAVnXRM7Y/Q3xo1OzIYQ065Ab/+Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X6KfKSTftbqXlKXewqwNkweo9AzK4WUB9+Awgf7uvYsdBz6Yi3aGxsZmZALSN0TvRc5uRe7E20g9KVRMvnEzI1I6BrEoFY1aE+7NpzzGtD4VyQQulHAmUU3HW/QAinU3kW/ER2jZpeFjuSeqdlRb0O2QLqSaPNI+BpR2tvITHlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=jJ+P7PfB; arc=none smtp.client-ip=209.85.219.43
+	 Content-Type:Content-Disposition:In-Reply-To; b=fstm18OvvMxBWtS3/GhQr4mA14DivCwUJarH2S7WNcs0d4AQ6MLnG7PKhcQ9nEda1NSeiHIWGjdvkRUGEGsq77Hk3OKq4IA+B1eUkQYI4njHwYJK65MZsqvi60wuf0QHdi3IpXWUgFsds3sSsXGHxrtw33towXfU0i1SH3PhCpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=m3QKUTQ1; arc=none smtp.client-ip=209.85.160.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="jJ+P7PfB"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-8f1a8e914a9so3083526d6.1
-        for <linux-cxl@vger.kernel.org>; Thu, 09 Jul 2026 14:57:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="m3QKUTQ1"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-51bfad59921so1777711cf.0
+        for <linux-cxl@vger.kernel.org>; Thu, 09 Jul 2026 14:58:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1783634226; x=1784239026; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1783634284; x=1784239084; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=1AtZcCJL7SSO55KaeQpBRgHzud/kdG6WTG09Vy9G3lc=;
-        b=jJ+P7PfBLXbjT1Rj5WlEniYWLmlHlbxUD90Xxnzpg/yjCanjKgxL+RtFPEdfgR2oyx
-         0wEW/vD/gH1tUE4FGDERfWdghinDh+o8e+Q1fxIT7dsw8DoHnWvZjaa2NtfFUd3OGAc2
-         ChTjWCdhyWBPfC6dXPpitW79JuhgvARxItvaGs/xVwwYSRvqrHjUbpKz8mIDFlYJJwys
-         idPhAhYvLRgVAOWClwhJwxDZM8YbbfZ/8/OEz0bh/JAFskblZqcheMZ7bCvPzbryUqpv
-         dFGcITqw9H3ZlCJCK/8UrUiLbFwHLJwH+29S2FL8OwVV7fg1qnsn9+yQ2LDWzUpIfRkz
-         PimQ==
+        bh=rIyfo2VEcxlnkeMECDcWCS4lIF+QfUGCzzimsolaQ9k=;
+        b=m3QKUTQ1C5zbX/YpijBIQfKsHGZo+U6y/OV0TwRPisnkmezn6c2BxvvNsyC1cUd5uK
+         GChlQIbqGp06MpBOpgY/qP4CSt4tiWzxHSYarYdghDqihf12QtkdHqY+7Tc2Sq2/GW/u
+         ECNLCcbyf3olv+xfZeUBIsDp0KJIXnJWos3syNx7VzISIPu+Z6hhKMbi3ndDEz90IH95
+         zr6qa0cwwS8R27MsLMMeW9L7Sb2gny+Lnv0oG5RWWUgjdnMAURbOXtCv9Ni0AAZZfh1r
+         lRaWdiURFPgRAYDsZ7isZ/GYeH9THrS4FBIG10b7ZqclkvkbRm33AIuqpoIujUAMO/iB
+         se6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783634226; x=1784239026;
+        d=1e100.net; s=20251104; t=1783634284; x=1784239084;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=1AtZcCJL7SSO55KaeQpBRgHzud/kdG6WTG09Vy9G3lc=;
-        b=FYBCa5HEq8EsE5SW8+EtaOr1cez6TGgJ7WgFa+yr+lRTfHaS9aL0fF2WVTup/HGEVA
-         x4m0Qzas68U90AXWkablVBNvUVzudxAprE6g2FvjnDnBLUgx60VvoWltiSXvg7bAzmp5
-         DwUdkOYSD5slJuJ9opT/jRXDvjvtBRnFlfuJ7gqWnT/1WHmbFA1a9gn8pkQ/Ui2VHPPZ
-         XxbZ3qI+qieKWJH7nMPzV0T3nX1lxvu2Xt1UyylkOmX1AJzYIDS4guJK1vo5TT1wu4z8
-         RAebvzzyt/xNtoWp3tp2w72+fC7bqMYRpwUWvX+Fm584DbXR4htQXG+kufRiRngPzXcy
-         m0EQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqPmaf8ApGEf27IlrGyAj1LeHGU93ZHGacFBVkTKI6bh0HpbjWHTWhRm3BFg0ZDN4/0fUwYdBBUr34=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRzY/Y7oIfjpiZTMpGs6tHsuHjrg5Ce6nyJ/z0tuVs5VGfv6fL
-	1IkZeVFaegLZeT3dT5bNMb4Kn0J8GsPwEYBAov6CR7glRmMxSDae+CVbi7LJGcimX2M=
-X-Gm-Gg: AfdE7cnkcWCtZ4k/s7f1MyEu0dlu0ntYBfmaMmjWCSzQt5jwYy4Z9yy0yJGSxmZme8D
-	dXRkIwYfKSMpSoAt7XGk0EjAGLtqdRW7twuyNtgwsuGgKVl60O4rgH4uQgGsEYgPMan6UCudM0j
-	ZTHTkp9bFpCe1wtXFxX13N+OTmc4Ru5ZeOi1prVt+hU3EnM2U12OQgGr1/oFzzXojnIcu1wQKcV
-	4sNGzgl8grLrTOZv504zFKiT+TjOogxMHd5RH9Sy8EOVrcMmi98F4WH0v410dPVOTGZGweVwd3J
-	MrwZD69EiQvhfMzP3qAzGtxwiWNuhEwVNSJg6pJcsDcjmA/gVaLNBGay7FRsbChWQx8fnseDJhN
-	r9WuDMStmh1MiJYIXE2x1WPb+eC1805Qk4rIIBqmGdXpR9FBfJwGkNBOjWpOLuzDO1nOvi7g1ax
-	l1zwkaWo47l+F57JxNym4YMMBGbuNc8lZedKuCnb0w5RQgaP+maBO5XG8xtd5NjOfOhB5N
-X-Received: by 2002:a05:6214:2b83:b0:8e7:8d53:240f with SMTP id 6a1803df08f44-8fec2a4a020mr91687356d6.43.1783634226132;
-        Thu, 09 Jul 2026 14:57:06 -0700 (PDT)
+        bh=rIyfo2VEcxlnkeMECDcWCS4lIF+QfUGCzzimsolaQ9k=;
+        b=rWa2GAav+X+d8m/CWnPI+632faeq8Bwf6MUH2LPIN952SCEXlYzBzjy+Nvilz780Tk
+         5sJB3yXXsFHisslReu1Tm/AqW+yqcO2PNJa1c9t442FzcjZn64VX502hF2e6xYCiSPJ9
+         3KYO37EBjSuKN1ZoH03Y2D6MGevW81IylcsWpNQccSHwTDNqDvc9taARHbPfkyg0gc8Y
+         JLFnqENXdg7PkBndmkKt3E1jqRB3l05ozF0k7uma8FPT1AHzG/e6q/ICuM2Gy0u07UzI
+         DQ7iQFaKIlg5KqucVbQ5TmVys44UgG06OjjvCBXqZEgU8o+WvnfyxxSZFbmJZI6eQCMp
+         +Uxg==
+X-Forwarded-Encrypted: i=1; AHgh+RqOduA4ItKpCQtgVsAu7b/4E8go581mpJGl6GDqJt2UAiR/gUjKYgiA+M71JvRhecGmAzh5TowBkXs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6AmpuyngB6TiIHSWJSbDlDy5ODPBmX455NOHi1XUG4E/qkHlY
+	r4Mjd9jSu3RyE0m0Kjxqlh361k/a/bla70znu1Ilw4hRUQZaGjMVSA1QyI8Irb6JZZngQoUZ8eN
+	eJ2y9
+X-Gm-Gg: AfdE7cmz99xrcoagv2V/9VVpNnOb00fnIAAVJxpSABXijfvpncbP1c0GG9lB18rchAv
+	S0ikLkcON+fBWz3oHMllnMLTlyXMGpmT+GyvQ3Ba7VU+HNdN56ZiAJgwS5TUTGPg6Iyjcia+vdY
+	b8AO6iYCge6NvOJOhmJu04LuBkVTBqeCDnlf8O27fFlEcFbJsHEqU9O/IyTP+7pjy2KeRP5HBdB
+	zoHUxCiI1hqrUXhMf9ENrGHTT0f/oQ3VfzsSS1mfP9OievzZcZktSgii+z2rJBtiiWfGHwgk110
+	RUS44Uz4ynvUjJJqJBg411/gOBxa4hxXG3316zfMxPMpyGB2+WG9HxEz64LXvhrv6+ECO/1lnej
+	xJO6xD1Gkzsw+tOYq97IGOgVFV98WGucUqs1qclzBvG5t4KWmDdBdig+sMB4dxhUzIhWo6Hx2KU
+	zmuTk7NYUDuLQK+45KNGRwWoSmVUf4NTE19cAOJ/TfU2oI0FT4deX4rjgHDY9UXzU/i+5+RrmnV
+	drjERA=
+X-Received: by 2002:a05:622a:11d5:b0:516:dff5:68c4 with SMTP id d75a77b69052e-51c8b403cd3mr96830461cf.7.1783634283862;
+        Thu, 09 Jul 2026 14:58:03 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ffd80fd82csm26977986d6.35.2026.07.09.14.57.04
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51caaf9a12csm3563591cf.27.2026.07.09.14.58.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2026 14:57:05 -0700 (PDT)
-Date: Thu, 9 Jul 2026 17:57:00 -0400
+        Thu, 09 Jul 2026 14:58:03 -0700 (PDT)
+Date: Thu, 9 Jul 2026 17:57:59 -0400
 From: Gregory Price <gourry@gourry.net>
 To: Dave Jiang <dave.jiang@intel.com>
 Cc: linux-mm@kvack.org, nvdimm@lists.linux.dev,
@@ -73,12 +75,12 @@ Cc: linux-mm@kvack.org, nvdimm@lists.linux.dev,
 	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
 	shuah@kernel.org, iweiny@kernel.org,
 	Smita.KoralahalliChannabasappa@amd.com, apopple@nvidia.com
-Subject: Re: [PATCH v6 02/10] mm/memory_hotplug: add mhp_online_type_to_str()
- and export string helpers
-Message-ID: <alAZLBqgUEZliwk_@gourry-fedora-PF4VCD3F>
+Subject: Re: [PATCH v6 08/10] dax/kmem: extract hotplug/hotremove helper
+ functions
+Message-ID: <alAZZzO96_ZltrJV@gourry-fedora-PF4VCD3F>
 References: <20260630211842.2252800-1-gourry@gourry.net>
- <20260630211842.2252800-3-gourry@gourry.net>
- <bdf0ca14-eec4-43b6-93aa-310e77660d95@intel.com>
+ <20260630211842.2252800-9-gourry@gourry.net>
+ <151783f1-c0e4-4c2b-a051-1e6e9c546cae@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -87,20 +89,20 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bdf0ca14-eec4-43b6-93aa-310e77660d95@intel.com>
+In-Reply-To: <151783f1-c0e4-4c2b-a051-1e6e9c546cae@intel.com>
 
-On Thu, Jul 09, 2026 at 02:08:43PM -0700, Dave Jiang wrote:
+On Thu, Jul 09, 2026 at 02:44:25PM -0700, Dave Jiang wrote:
 > 
-> >  extern int mhp_online_type_from_str(const char *str);
-> > +const char *mhp_online_type_to_str(int online_type);
+> > +		 * Set flags appropriate for System RAM.  Leave ..._BUSY clear
+> > +		 * so that add_memory() can add a child resource.  Do not
+> > +		 * inherit flags from the parent since it may set new flags
+> > +		 * unknown to us that will break add_memory() below.
 > 
-> Does this need to also be 'extern'?
+> 'later' instead of 'below'? Comment reflects previous function flow that is no longer the case.
 > 
 > DJ
 > 
 
-General policy i've understood is: "No new extern"
-
-We use the EXPORT_SYMBOL_* family instead now
+ack. will pick it up on the respin
 
 ~Gregory
