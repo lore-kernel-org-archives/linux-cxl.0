@@ -1,68 +1,61 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011045.outbound.protection.outlook.com [52.101.62.45])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010039.outbound.protection.outlook.com [40.93.198.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D713E1CE5;
-	Thu,  9 Jul 2026 08:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB803EBF15;
+	Thu,  9 Jul 2026 09:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.39
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783586765; cv=fail; b=ab7/D3gUUUn3nMUyZqXyEGl7jf6jVckwd9MjXSyAaLayjEsubDXwNTr+nuEWUUySxtqjAEXcfCTrBThv0IiA+rr+W0KHUiMqNgY9sDfVfIBf3XfKvEw61w+CXKDYWMhCfwutbk+kGOskE0ZuXixswWxmClp08AcrF5f7cd3/3fc=
+	t=1783588627; cv=fail; b=rJryYZrdfUEj3/rvVwu+EplZME5hSDBlE56zh/SbEiQPTN0A6xayT0kRjJMb4PbN8Q0TyXaLmwNWOQWXFkutclv1tHX5NtGeomvQZJUHIe9Us/UMF+KDlNUIqLkuRcmB39YJorUms+CF/eTzPH2BN9Oxn39vA108ovTmnLk8FSA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783586765; c=relaxed/simple;
-	bh=AuYwDtzHflWOI3fN7ZHzWTV22EcDZGfIWajEXq4KFjc=;
+	s=arc-20240116; t=1783588627; c=relaxed/simple;
+	bh=JJTqB92cNS3/LToG+oMdHnJ3/9PdNzrXDmVZ7KZnd5M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=LWBYGwJ8ZbdbX5b+uCWxuikL2YoIcBKaVVuCx4rTm9trlxps6Ec1cTCRpRZ8RPL33ye1fl02Z6GMqKYU+VdrS+5CwL0luxfaAKx7KX3QHKpGrt/R0Gnc/XCNIubpY4sL2vfAkIrrqRXHTT2U7hME8TTlk7gom69HBiptSaqYrkY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aAtkuTkt; arc=fail smtp.client-ip=52.101.62.45
+	 Content-Disposition:In-Reply-To:MIME-Version; b=mkfRgc7BTwV4IM00QqySr71LTxcJAUlXu6LCn8qbfB8Is/I/gordV2a0BWq121QzYFw0rQRULi4kt+6cdCZlVtWgcygsqFCvxnWUYRQObwd+KFbascPf2MF6iq31+SutNqzddjUrgfMMvIahaGj4kLSaGhNrOF9psupMVhdYqiE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=a3FfJqIv; arc=fail smtp.client-ip=40.93.198.39
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aAtkuTkt"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="a3FfJqIv"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tGNANwinMChjdL+m4KX6QvU4MJHfBr14MlWrHxm1QNpjQjdeU3GdnqYegdlDU2U2vvoXTt4wzFsniCR+Vr9pL/61wVA7YzaXJ00VJFqnrGPWLY4To4Sf3/e5kPcJnFB/TsaW1a17lE/pMxlKMHKyITzprgnPeE3mDrplFFXdyQC5pz5HLxEKctbDwyF9OOj/fy1s7RCAlKx4y3d2B0KeRuihMnWdUHo7mE8y3R5icgfOMJtc6rw5UQdc/uabKSAPdo773l3Cqh480r3F2cQ31mpcwOoa3ry1kQEKHNkWb6QejUpRaN6N7O2rK2dJZkZhm7nCS/0lePfZjeY8sqsrVg==
+ b=fOJMyJB6LAHM9YbEdbUz+q2/gEOC5Xlm/VYrUZKil1UAIuri2VceIiIs5Fqfcrc732fwzjoxmPJaTWvaqhGekqU7Bx74dvCfV2QzGWA/rZxXFA1lOBQltfOvQ54K6j8HhGlH6J43CLGjtngb630iOGXKoLEeSNtVTwqA0pMr8vjV7KB3dTBekW9A91KnqE2b/phSmxzB3dtPUhZZTEDRp04uBX653V09dU8bziCCEEF2McMb+ppBDhLRQ8NUI6L85JKClzkOHW4DDQscxM8t0qmCNl18YLFglNskOIpLUzIRHkcSLkQAUsrqmqhWgwbwVQrysL6xVehzF5y9FQ894g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KP5k0OSsJoxqv1YhtRm3nEbrveUJb9u7FSUCwTJfrm4=;
- b=HJjn8aJSYMcaPSUPvLJmomKw3HBGSKvskiX9xN7JNNDUgYVCKjdmwRxnVjDBzaEsPURP2v4QBPC803L+V62ZRfZJmRbB+bMCimuEaxSy/7s9OnQYGT0CXCGx3wfjYuUdn6U52kh7lQP25ZZ8if7mp+HE7SjnkUQYCH9UMyzsGOrggPutI3qCr5zARTSPs6qiVATXr59O7PCqUyD2wEagCs3JaDM9bKIJEGw/wHKxIvVvWGq/AHz+X8NX10/AVEZ3sN31rZ+EA5lgfV2uP7Q4gU6d5hCD9BtI5jpsoIfNt/cXJe6r56tnSt2ZjYUe5/cIKVUEk8JFqa9MQLA85elomA==
+ bh=gHowT8qXU/aqj2hMyLXP1/2vYUord0LQigKfXjK65a8=;
+ b=L90iVdcfj56W/wRkEozREJ09MZCHzaH3JWTTENS1q+Oc3/o7Fp6VvMNZuVCulK2oRr/nQ5vOIYHMB3wsqcN3iuPyPhB1WQMqITI9LKhDq6RuKmGlSqmO6sbnLdk+9hyP8wmwbK70ljQGIrzJ4QRvEhbcpWPsuFlYIbYdZvTDm7Ow73jFvDfiu1+qp1+hSfS2qlKzN7t672b1U20GwuIfi6u3bB5bjxgc9z6yPS8Z5akZDDEiKO4bFXh1fbLDNFWw5WFj3RGLpKcATc0LDm70xPVnBcmu+lTWOo8h23ZLoKSrAFSS3cP2UbPJpePOZjO+jj8gYK1qVjSQlgfTOXEqWQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KP5k0OSsJoxqv1YhtRm3nEbrveUJb9u7FSUCwTJfrm4=;
- b=aAtkuTktPAwpTVuWZ1/Ls/3UQg+gwXCkNrhbrtlmjhmQNIvPM4rvY4sLmDjEcbGEhwTZsKuVRukjAxR4bKhvKqCQzDeB6GdJKR1Vy9ZvxRtqwFPzOVpG7tiJanKF4ihlF3ln7DyngLbnyAVd6lkMCwwMsnjwIFxoSsnddcZOf4qMtJi+YAeE3V3vEn/hM97QGTMd2vRv0R7yu2r5Zz8x5VAsJRqYnV2jEOIlI65bNAIbmaEnxeGHJYcX2jOLvy0x1NGp3TlIihc1uBgbTf7nIYUg1KsODYQ4LOSiRs9CnXKZnr7Az1yLXoYjR/vPV+CVVtk7a4GB4MlfSwNSZ/nsDg==
+ bh=gHowT8qXU/aqj2hMyLXP1/2vYUord0LQigKfXjK65a8=;
+ b=a3FfJqIvcr+e1CR+/13CajYlrQRKlCGGolG9u82sPQcnsertOh4wm4p37ciCx0o2SvtgH/oF4igHYtqdHzVZVLcRVB1zwl40d8QnobyN+ukm9IbzJ4ZhsDojcnXQR6TJH/wjs+O5VLdsoudClZ6mTcDDKdJsCfWl2Xgobr756n39fKwJAq7Hm5SbTm1ydNx4y6v+KqR2prNpqsSYdY+zbikl1Rmgxem3e1qSv0K4oBby65fG3wsBLmTa7eNB5FhwciEQoKCAmu+Zqgyw16p+Rr4ZYVCDTFHoCNo3GUNMvs49xhclrJtOdmc72RB4npj/sitx0rgZmvPNVMDUwffRjQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by CY5PR12MB6528.namprd12.prod.outlook.com (2603:10b6:930:43::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.15; Thu, 9 Jul
- 2026 08:45:58 +0000
+ by DS7PR12MB6021.namprd12.prod.outlook.com (2603:10b6:8:87::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.10; Thu, 9 Jul 2026 09:17:02 +0000
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0181.014; Thu, 9 Jul 2026
- 08:45:57 +0000
-Date: Thu, 9 Jul 2026 16:45:51 +0800
+ 09:17:01 +0000
+Date: Thu, 9 Jul 2026 17:16:53 +0800
 From: Richard Cheng <icheng@nvidia.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: linux-mm@kvack.org, nvdimm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, driver-core@lists.linux.dev, 
-	linux-kselftest@vger.kernel.org, kernel-team@meta.com, david@kernel.org, osalvador@suse.de, 
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, djbw@kernel.org, 
-	vishal.l.verma@intel.com, dave.jiang@intel.com, alison.schofield@intel.com, 
-	akpm@linux-foundation.org, ljs@kernel.org, liam@infradead.org, vbabka@kernel.org, 
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, shuah@kernel.org, 
-	iweiny@kernel.org, Smita.KoralahalliChannabasappa@amd.com, apopple@nvidia.com
-Subject: Re: [PATCH v6 06/10] mm/memory_hotplug: add
- offline_and_remove_memory_ranges()
-Message-ID: <ak9ee95F7pJpCKMo@MWDK4CY14F>
-References: <20260630211842.2252800-1-gourry@gourry.net>
- <20260630211842.2252800-7-gourry@gourry.net>
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: jic23@kernel.org, will@kernel.org, mark.rutland@arm.com, 
+	harshal.t@samsung.com, linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] perf/cxlpmu: Support Channel/Rank/Bank filter
+Message-ID: <ak9lQFNDiWAr2GUE@MWDK4CY14F>
+References: <20260630235002.253297-1-dave@stgolabs.net>
+ <20260630235002.253297-2-dave@stgolabs.net>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260630211842.2252800-7-gourry@gourry.net>
-X-ClientProxiedBy: SI2P153CA0018.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::9)
- To BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+In-Reply-To: <20260630235002.253297-2-dave@stgolabs.net>
+X-ClientProxiedBy: KL1P15301CA0053.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:820:3d::15) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -70,269 +63,225 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|CY5PR12MB6528:EE_
-X-MS-Office365-Filtering-Correlation-Id: 06cae3fa-30fd-4811-5bf1-08dedd967e72
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|DS7PR12MB6021:EE_
+X-MS-Office365-Filtering-Correlation-Id: a9d8fad6-31d1-4b30-3afe-08dedd9ad550
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|23010399003|366016|1800799024|18002099003|22082099003|56012099006|11063799006|5023799004|4143699003;
+	BCL:0;ARA:13230040|366016|376014|1800799024|23010399003|11063799006|6133799003|4143699003|56012099006|18002099003|22082099003;
 X-Microsoft-Antispam-Message-Info:
-	foqebd9PYE7c9NRrsNCJginSuTSgN00831602Dce5dnflo3Bz1Rl3xDqqHoZFhlgWJ3Nkxn0kzf8WVo9wK6zRjxl1lEPmaYSuS9Haa0Ems7/YyEBFypwJJ7LTw8wuJyJHO58npU8Ak/AeaXU/jwGH16nMi6knyjRljQJcdl+HhdGhM2Y6piRFXA9IzAxo6mF7asLlcTXlEJ0w8iIHOdhGMVPa4Ee71TkCO8xinXoOUQdJ1fxxt7HNH8lwldzpSIz6mUrumixKwyGZeurievimXW8lDT9ZKmKX83IDDO/Cg2bv0nMCJa9PmvDr3J50hwqwozGv/OS4aP1n1aqRIrJKoTGGII7eno15qW5TSFPqDQSt6s234kGrpZxPg//BxD26sP3EQXRnY+gfssmYCqYDYfktGE08A2U/HS8Kdc+lPezTyglzjQGs6Yntl1lqBRpwmzzU0n+sjDfzRZwVF7VBtCb0LS3WBur2bgZiCElUXs2cuybKakqfPX3zyWDVw3t4kmKgJ7RgZ/XSdZWra/c54/RAm0BslqIcY3ZFWYWVesJrlEYxdJ2UrAvy56L532oI0OLAcjvHHy74lSWlikLNTqOYMQLYrG3MeoVqOd1lpTTFeGtv9wAlucZf5rS/QNsDQxBOOCyPI9jbeWKH2VcIttjZQQdMmZtrdRfIXNs0sE=
+	dUm+oeq5sgvLmGn7dg5ua1vZrCDTq0+AFLv20wjAGuWfC4T9hYlEqg2XbidyOcf2kIcdL+sK4g3aM7IRdkeiZ2aF+RQPL99aDILPlzchAmrcYQvByhN6lEk2K0U2nzmwBpp1PKVJM+A+0Xjgw7k/GYwhYegYiLtQJ/7ruCog1LJpq+Tw8bfimQIdRvek82T72d4jkGG4Pf6BSUjUx3BCLWvk8gKQH3O00BhNc90AmHEEGdScZlOT0Yjd49D1rg7mhYcXZfHJukAV1X/zgfFQOhTvpbn4kmPL918KQZwww8BG2TI1RdawCJaaSBssFhCF7kWFfB86HEpqFbPCUc1JNJWJRNS/cur4SVLU8XBTIptqo/xwni+meRrwZHqDWz39kfsn5TuYAOwnc7gguVci89Hdxti6aqYxVZ5UrlGtXvpJWov5xAUrS8SNzhcPJB25R6NUhQpHSk11Dpi/ZxAXxtpFyj40Wi8jawLsF8cJD1reYoGPpNazF8hv0R2rlUAjvY0xoGcuZNq6euQrBsdIc1QQHvn5ZX/76ulF8WEg85I49xxqYNXxi/kJmvsMeuaC6yukjQ+mEcRwwc4BuwMaNO8a84G++kvQlybIaXLkZ1hX+VYct19ppeAtoGicIr/yRdaxk7dbXHHBuyEJi2bA7cAAnLZBHK5IfGECUDUNNHk=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(23010399003)(366016)(1800799024)(18002099003)(22082099003)(56012099006)(11063799006)(5023799004)(4143699003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(23010399003)(11063799006)(6133799003)(4143699003)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?gIBUeMRhPKC9BsAvS47tAMb5Nmz4xmyaQn1WnbgElofGtwf2Tu6YKIKNcoFs?=
- =?us-ascii?Q?346j2kWSpFvnh36fdBf34JLg9gcD4GXTfi36pBGwTLCiZx/7lTGeA0VKmSb5?=
- =?us-ascii?Q?v1+YTws2vVZ4VhedNiCKw6ti7eqR7bltvkBYRJZVpnQW/a+2ryx0NskNllm3?=
- =?us-ascii?Q?JeGRq+3l2Yx7A+Qp1BDfHvopsPlF0Z2rqYxsTZgXuJWZVtV9xYktouw0m/6D?=
- =?us-ascii?Q?/u8QE7rubS9B2ZcIgIV8N2605dpROknGkAx3dips+z5tJZDrcGZP+N1qS6mK?=
- =?us-ascii?Q?n1Ds6D2vqP8PHODbmxekijWt1kOC9QUR/8OR9+K2jXecZD9Hxzb2vd1k7rxD?=
- =?us-ascii?Q?m4/pW2fj6zcNUl/XWm+iw45z210hj8qqsCJqgsRd3jDm/1SlDDDb/zQdtNh7?=
- =?us-ascii?Q?MzCssrfqL+n9mA7E91IHt1PGgnB6oAIJTdgKshrul2BQcaP0v7hlLYoy0MNa?=
- =?us-ascii?Q?I0ZdSbhl7k1Mxw7my6rSml8Ko+fTZHD42umuizflf3MmrcGhbl+ofXm7d4dI?=
- =?us-ascii?Q?iDr4pCcIf2j05DzT+lHRJ90JAVzl+8eJXGllKf4NKZ8VHW4dtytUg8DR7q31?=
- =?us-ascii?Q?PC75sf+608L9E2aznZGkgmiN6pkE8VcQ93hjqMXhouoFrVxUuCOtHa/WPi1/?=
- =?us-ascii?Q?FYkVHpbYlYrkt3vFFmNbwB8LNdEnlHgHU141ZSRyDCKd5TIko8tvdsnmULXQ?=
- =?us-ascii?Q?d2zwIBx2go7KA0Y90v1z9Dy/TcbswuHbdJvEEkF8UkJ9vXaRcY4rYA1Uvv5y?=
- =?us-ascii?Q?/8aXMnsiHLH9PrcDrkKP2UhavpRY+1b+3nliWLyPVDnaLzI1acMZE2qfb60k?=
- =?us-ascii?Q?vbB6UR4qAiCVM/TWVkful39TvFI8ACeoCr4+65WsMz/h7s1WC8cB9vVmlx6I?=
- =?us-ascii?Q?HhKxlbK7MAkelaGeCnJaQ3xdTBoxzFNjxYOBlUIb0hcEno++nDdh6ERmHw4Q?=
- =?us-ascii?Q?zVN5s6+psuX1A1NeyMeiHKhB4OQW6CH+e2kadaRReplDeR3/kyhm23q8iKfv?=
- =?us-ascii?Q?sl+dUKmr9VABJ9oLNBkez69S8pqpM955zZ7wGqJhfGS5d1w/3TLgE0uFrnkr?=
- =?us-ascii?Q?tQkCsHJknU2ZcU7+PYVf3IOJo1CirWUpsq0poeQ5Z+Ej3rOJE8K58Nu64ata?=
- =?us-ascii?Q?fZ7YT4lMu0XUZ0+XvgM6oY4iKQNfvYytOJNmLfzmwTwIUVL2mfXBn96vFZ+v?=
- =?us-ascii?Q?3jxdCvUAkCY7AJLvtEnqOo48bpkm3dCqvU+hzl26iP1Ck8kMOycXv6UGdpGT?=
- =?us-ascii?Q?GNns/e++b3RxwyGBGzmwojP2DbzIhw96d07PCb8yndB73aD+4B/e4qBA4b5P?=
- =?us-ascii?Q?AdKM+EGnxcpDaSgyjG85jeCg8T20rqQpZ2rt4bc6fux5260nke8O3NTt0u0F?=
- =?us-ascii?Q?625nisNvXoQK+F5FJWghWGI9azQ3WzGDgfC28CyXYTd7ILTryfWXMB4ojh+K?=
- =?us-ascii?Q?e+VhMFCiQncJeft2/kB6xwzVvkdC8DKEFj+s+TmC9PzOexUBUix3w0eK1TTq?=
- =?us-ascii?Q?QvaVhYzWZJlxmwaEEnJX6B6IRdfV4Y1vQtxsYDeh3hZzvHdR93DPchqrDrxe?=
- =?us-ascii?Q?dKDUv3cOnXUCdqZFmlPdI4wUgQrtZ5iQzS+i3QX/VRqdLLULmM6vo73HlkL9?=
- =?us-ascii?Q?cX7z2hKQRRz3blowuGeZDdrwJ8mwCjHh6xYszDMkGiZZ3VkOLEirlUpkVUTs?=
- =?us-ascii?Q?e+xwVGNPg4stvxe6joqsxQ2GZVWGGyNexbBFV/Vgql9ex+72?=
+	=?us-ascii?Q?EEY0BpdN8Km7df0L23f5ZMaNAPBgDBJamHtZ2cz4m/MFsnGbjpZ86EPWAG7a?=
+ =?us-ascii?Q?bDTuIg3yMQbErCk/qSdVyvXI0AMAS4U1MKF7rKwIHppAEfnoXOgRJXtWv+05?=
+ =?us-ascii?Q?xOniyJ2H/RbbZF1SYFVsZUAcVn9FDhUTyOJuRCFmQeEX8WsVLIqCPYNevcdW?=
+ =?us-ascii?Q?w9/3gn1Rkqm7XGMPE0LA+eGqwIdA3C/BYbwTq1IvSwakIv99Ic3B8PR2M/yn?=
+ =?us-ascii?Q?7jvoYJkY9VQeF2GEvnBDxXSYBfwwsPpHk3sC+p1Lohl2uoiuFBoqE1tKpj8z?=
+ =?us-ascii?Q?jOccNViVvIYPyh61oDJuAG4Hu7w/UhYt5Bv6Tsnrp08qcmokWrc8eRDsQSX9?=
+ =?us-ascii?Q?juM/Caohwp6IcFei235QyFkHgTgo97ynoG4QvRSfkiIYeNxKkOxn1vUahoUb?=
+ =?us-ascii?Q?oW1ZApGCYjBl+PmgmsgkcICFVgCnfKxj/pJ+97itdAPalXd/J2haxPHyU1I9?=
+ =?us-ascii?Q?q/FMXlNT7JeswWkC2V0mfaF8iGdmES+i+P/jTAQd8aFqsWm5uwPpc8YpJQzz?=
+ =?us-ascii?Q?+NzAg2WboDLx6A50EnGAGk7OGHOBDwXgVl323hLScb8AW9GV7jPMDAiA778H?=
+ =?us-ascii?Q?c0pF0vRM4IN3yxnX6wI1VsYCPsklC/MgTiG3z1ZGZPtczqjIIxOt5OgxxEpF?=
+ =?us-ascii?Q?3P+RMLZK7QA8vUprVKlY2zoB1EHmrm7EEd0EFsnyLJdoi4x9zJRqsUKD3ZBt?=
+ =?us-ascii?Q?30ET4gsuAmtHW8cBXmXP1kR0X8ppvYin1pg8xdkIT2RhzBaB7g57zBCMB4lU?=
+ =?us-ascii?Q?u18aaMArBoXsh6Ne1NHLlerbqouumRv0xIj83OFPk8g0uGyRKN5zIBbr/c0I?=
+ =?us-ascii?Q?FkPb4I7yk9xnpLZzaT7y5rIRH15VmOqok+uTQVQNHe3qfiyIfbHlKhIDCtI9?=
+ =?us-ascii?Q?I0+/peA0E6W3RskT+3ikUphxWHIuhmbDmFSfQcmIU4XOhVg019E7tmUQOvVg?=
+ =?us-ascii?Q?dhIwwu7xQ94pxfo9jfxmJF7hfYIvOvM/VYPS3tznDoAlMzEtXLbo4RHWXQiO?=
+ =?us-ascii?Q?DZcHaAkKnrfoUgMFDdy5F5BTdaIBlhyXzMrR4ZVR7kTqcCxhRmBmXgH8jICE?=
+ =?us-ascii?Q?ybJKdErpHeP2TfJHBxE934B3oigWfMe5RjwnXwQfivKrnp5y8YYTwKqtqkVu?=
+ =?us-ascii?Q?tRLqNrcVi18tKAT5kY5dvtfRgtFtvdqORbXjonO4egTA17YBtnQSiqUGxZPD?=
+ =?us-ascii?Q?ndtS88/jKb1r4nLt5ZXxlL79y8rB2Zxi4eM0REc/ZLUubuV9JFiFfsPUIjDE?=
+ =?us-ascii?Q?4OA0ub7WFynR6eIZWDbuDZyWqkDcU6EDisUR1XDzbICit/rhXnudouuoJdyZ?=
+ =?us-ascii?Q?HqbVKo5dyGjbIXvQ26IiNFq4U88rdfAQntn9bBs/4e3T3M+GnSzRnsJfLBEC?=
+ =?us-ascii?Q?dafijqNPhy8Yiqme0rn1zU3WtVebRY0TOQtGmz9qCNxBII9ZypkfmOhlQMmU?=
+ =?us-ascii?Q?TJ6V/YugiHp+XZgYCMTzrstmY851xeiDq+B7ivlaUByycIM5kY8WuI0AP+oH?=
+ =?us-ascii?Q?g3tlwRSvhL3CTlSr5yXG8TDQuEHUwSgYHV4QoDB6AY75q0+tD5rlpyE+jbKQ?=
+ =?us-ascii?Q?HBqkh/l0cX/TfqqkZ+0TCwyERUOebS6Pi1KVE+t8NsA48BlHlCbdUPxkgPNd?=
+ =?us-ascii?Q?F/9KbZiObZxwwHU3zpWuODt14U8ZQcVJOE88VlPDWMB39lAlNUA8ZuPbE++A?=
+ =?us-ascii?Q?Wi25uWdt7trzqHGCSf8nVwWp6pPhU/ra320cN/PGhFHlRUsdAc8C99geJKfa?=
+ =?us-ascii?Q?QPwwNvAAJg=3D=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06cae3fa-30fd-4811-5bf1-08dedd967e72
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9d8fad6-31d1-4b30-3afe-08dedd9ad550
 X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2026 08:45:57.3153
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2026 09:17:01.1070
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5ff9ULOzWZZoqfZ8u753OtmcrhNX59/j2f4HglgYWUceLeJcjI2EbYpVX+qLBGCzT3QG4QYbTViI1EejWjunZQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6528
+X-MS-Exchange-CrossTenant-UserPrincipalName: yBPqmxDPjEu+qOPCqaFXwfcd5bYsAcP06GtZC/v6qgMtTnIVUd9/1IN0j82xZ7rKe95SowVpK/M6qQMRfwZxkw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6021
 
-On Tue, Jun 30, 2026 at 05:18:38PM +0800, Gregory Price wrote:
-> offline_and_remove_memory() handles a single contiguous range.
+On Tue, Jun 30, 2026 at 04:50:01PM +0800, Davidlohr Bueso wrote:
+> From: Harshal Thakkar <harshal.t@samsung.com>
 > 
-> Callers that manage a device composed of several ranges (dax/kmem)
-> currently have to call it in a loop, which gives up atomicity.
+> Implement CRB filtering per CXL 4.0 8.2.7.2.2, and extend the
+> current filtering support beyond HDM. These filters are only for
+> DDR Interface events.
 > 
-> In addition to pushing rollback logic into the driver, the lack
-> of atomicity creates a race condition between system daemons trying
-> to manage the same resource:
+> Placing the 32-bit CRB value at config2:32-63 leaves the
+> existing HDM value at config2:0-15 untouched and avoids needing
+> a new config3.
 > 
->    - Manager 1:  Offlines memory blocks.    Removes device.
->                                         ^^^^
->    - Manager 2:  Detects offline memory blocks, re-onlines them.
-> 
-> Add offline_and_remove_memory_ranges(), which takes an array of ranges
-> and processes them as one operation under a single lock_device_hotplug():
-> 
->   - Phase 1 offlines every block of every range.
->   - Phase 2 removes the ranges only if all ranges are offline.
->   - If any offline fails, the whole operation is reverted.
-> 
-> This gives callers all-or-nothing semantics for the offline step, so a
-> failed or interrupted unplug leaves the device in a consistent state.
-> 
-> This also resolves the battling managers race - the second manager's
-> operation simply fails when the block is destroyed / cannot be onlined.
-> 
-> offline_and_remove_memory() becomes a thin wrapper that passes its single
-> range to the new helper, so the offline/rollback logic lives in one place.
-> 
-> Suggested-by: David Hildenbrand (Arm) <david@kernel.org>
-> Signed-off-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: Harshal Thakkar <harshal.t@samsung.com>
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 > ---
->  include/linux/memory_hotplug.h |  8 +++
->  mm/memory_hotplug.c            | 93 ++++++++++++++++++++++++----------
->  2 files changed, 73 insertions(+), 28 deletions(-)
+>  drivers/perf/cxl_pmu.c | 47 +++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 44 insertions(+), 3 deletions(-)
 > 
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index ff3b865ea7e7..db10d50f30ae 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -268,6 +268,8 @@ extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
->  extern int remove_memory(u64 start, u64 size);
->  extern void __remove_memory(u64 start, u64 size);
->  extern int offline_and_remove_memory(u64 start, u64 size);
-> +int offline_and_remove_memory_ranges(const struct range *ranges,
-> +		unsigned int nr_ranges);
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index 68a54d97d2a8..58c15680f299 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -106,6 +106,7 @@ struct cxl_pmu_info {
+>  	int on_cpu;
+>  	struct hlist_node node;
+>  	bool filter_hdm;
+> +	bool filter_chan_rank_bank;
+>  	int irq;
+>  };
 >  
->  #else
->  static inline void try_offline_node(int nid) {}
-> @@ -284,6 +286,12 @@ static inline int remove_memory(u64 start, u64 size)
+> @@ -142,6 +143,8 @@ static int cxl_pmu_parse_caps(struct device *dev, struct cxl_pmu_info *info)
+>  	info->num_event_capabilities = FIELD_GET(CXL_PMU_CAP_NUM_EVN_CAP_REG_SUP_MSK, val) + 1;
+>  
+>  	info->filter_hdm = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) & CXL_PMU_FILTER_HDM;
+> +	info->filter_chan_rank_bank = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) &
+> +		CXL_PMU_FILTER_CHAN_RANK_BANK;
+>  	if (FIELD_GET(CXL_PMU_CAP_INT, val))
+>  		info->irq = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
+>  	else
+> @@ -225,6 +228,8 @@ enum {
+>  	cxl_pmu_edge_attr,
+>  	cxl_pmu_hdm_filter_en_attr,
+>  	cxl_pmu_hdm_attr,
+> +	cxl_pmu_crb_filter_en_attr,
+> +	cxl_pmu_crb_attr,
+>  };
+>  
+>  static struct attribute *cxl_pmu_format_attr[] = {
+> @@ -236,6 +241,8 @@ static struct attribute *cxl_pmu_format_attr[] = {
+>  	[cxl_pmu_edge_attr] = CXL_PMU_FORMAT_ATTR(edge, "config1:17"),
+>  	[cxl_pmu_hdm_filter_en_attr] = CXL_PMU_FORMAT_ATTR(hdm_filter_en, "config1:18"),
+>  	[cxl_pmu_hdm_attr] = CXL_PMU_FORMAT_ATTR(hdm, "config2:0-15"),
+> +	[cxl_pmu_crb_filter_en_attr] = CXL_PMU_FORMAT_ATTR(crb_filter_en, "config1:19"),
+> +	[cxl_pmu_crb_attr] = CXL_PMU_FORMAT_ATTR(crb, "config2:32-63"),
+>  	NULL
+>  };
+>  
+> @@ -246,7 +253,9 @@ static struct attribute *cxl_pmu_format_attr[] = {
+>  #define CXL_PMU_ATTR_CONFIG1_INVERT_MSK		BIT(16)
+>  #define CXL_PMU_ATTR_CONFIG1_EDGE_MSK		BIT(17)
+>  #define CXL_PMU_ATTR_CONFIG1_FILTER_EN_MSK	BIT(18)
+> +#define CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK	BIT(19)
+>  #define CXL_PMU_ATTR_CONFIG2_HDM_MSK		GENMASK(15, 0)
+> +#define CXL_PMU_ATTR_CONFIG2_CRB_MSK		GENMASK_ULL(63, 32)
+>  
+>  static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
+>  					 struct attribute *attr, int a)
+> @@ -263,6 +272,11 @@ static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
+>  	     attr == cxl_pmu_format_attr[cxl_pmu_hdm_attr]))
+>  		return 0;
+>  
+> +	if (!info->filter_chan_rank_bank &&
+> +	    (attr == cxl_pmu_format_attr[cxl_pmu_crb_filter_en_attr] ||
+> +	     attr == cxl_pmu_format_attr[cxl_pmu_crb_attr]))
+> +		return 0;
+> +
+>  	return attr->mode;
 >  }
 >  
->  static inline void __remove_memory(u64 start, u64 size) {}
-> +
-> +static inline int offline_and_remove_memory_ranges(const struct range *ranges,
-> +		unsigned int nr_ranges)
-> +{
-> +	return -EBUSY;
-> +}
->  #endif /* CONFIG_MEMORY_HOTREMOVE */
+> @@ -319,6 +333,17 @@ static u16 cxl_pmu_config2_get_hdm_decoder(struct perf_event *event)
+>  	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_HDM_MSK, event->attr.config2);
+>  }
 >  
->  #ifdef CONFIG_MEMORY_HOTPLUG
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index a66346def504..3225364bec2f 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -2429,58 +2429,95 @@ static int try_reonline_memory_block(struct memory_block *mem, void *arg)
->   */
->  int offline_and_remove_memory(u64 start, u64 size)
->  {
-> -	const unsigned long mb_count = size / memory_block_size_bytes();
-> +	struct range range = {
-> +		.start = start,
-> +		.end = start + size - 1,
-> +	};
-> +
-> +	return offline_and_remove_memory_ranges(&range, 1);
+> +static u16 cxl_pmu_config1_crb_filter_en(struct perf_event *event)
+> +{
+> +	return FIELD_GET(CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK,
+> +			 event->attr.config1);
 > +}
-> +EXPORT_SYMBOL_GPL(offline_and_remove_memory);
 > +
-> +/**
-> + * offline_and_remove_memory_ranges - offline and remove multiple memory ranges
-> + * @ranges: array of physical address ranges to offline and remove
-> + * @nr_ranges: number of entries in @ranges
-> + *
-> + * Offline and remove several memory ranges as one operation, serialized
-> + * against other hotplug operations by a single lock_device_hotplug().
-> + *
-> + * This offlines all ranges before removing any of them.  If offlining any
-> + * range fails, the entire process is reverted and nothing is removed.
-> + * This provides a fully atomic semantic for unplugging an entire device.
-> + *
-> + * Each range must be memory-block aligned in start and size.
-> + *
-> + * Return: 0 on success, negative errno otherwise.  On failure no range has
-> + * been removed.
-> + */
+> +static u32 cxl_pmu_config2_get_crb(struct perf_event *event)
+> +{
+> +	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
+> +}
+> +
+>  static ssize_t cxl_pmu_event_sysfs_show(struct device *dev,
+>  					struct device_attribute *attr, char *buf)
+>  {
+> @@ -571,6 +596,14 @@ static int cxl_pmu_event_init(struct perf_event *event)
+>  		return -EOPNOTSUPP;
+>  	/* TODO: Validation of any filter */
+>  
+> +	if (cxl_pmu_config1_crb_filter_en(event)) {
+> +		if (!info->filter_chan_rank_bank)
+> +			return -EINVAL;
+> +		/* only valid for DDR Interface events */
+> +		if (cxl_pmu_config_get_gid(event) != CXL_PMU_GID_DDR)
+> +			return -EINVAL;
+> +	}
+> +
 
-I think this can return 1, and it shouldn't.
-device_offline() returns 1 when a block is already offline, and phase 1 passes that value through as-is.
+Hi Davidlohr,
 
-Easy to hit with patch 0, offline one memory block via memoryN/state, then write
-"unplugged" to daxX.Y/state. The store returns 1, userspace treats it as a partial write of 1 byte,
-and retries the write with the rest of the string.
-
-Maybe
+Would this be too strict ?
+In CXL 4.0, Table 13-5 "Events under CXL Vendor ID", Section 13.2 "Performance Monitoring"
+Filter ID 1 is also permitted for Queue Occupancy (8001h), Queue Residency (8002h)
+and Retry Events (8003h).
+With this change, when we do something like
 """
-if (rc > 0)
-    rc = -EBUSY;
+perf stat -e cxl_pmu/rd_queue_occ,crb_filter_en=1,crb=0x5/
 """
+It will fail with -EINVAL, even though the sepc allows Filter ID 1 for that
+event group.
+
+>  	/*
+>  	 * Verify that it is possible to count what was requested. Either must
+>  	 * be a fixed counter that is a precise match or a configurable counter
+> @@ -627,15 +660,23 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
+>  	hwc->state = 0;
+>  
+>  	/*
+> -	 * Currently only hdm filter control is implemented, this code will
+> -	 * want generalizing when more filters are added.
+> +	 * Filter ID=0: HDM decoder filter
+> +	 * Filter ID=1: Channel/Rank/Bank (CRB) filter
+>  	 */
+>  	if (info->filter_hdm) {
+>  		if (cxl_pmu_config1_hdm_filter_en(event))
+>  			cfg = cxl_pmu_config2_get_hdm_decoder(event);
+>  		else
+>  			cfg = GENMASK(31, 0); /* No filtering if 0xFFFF_FFFF */
+> -		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
+> +		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
+> +	}
+
+This is a real bug fix on its own.
+The old 64-bit write also wrote 0 into the Filter ID 1 register at offset+4,
+and per Table 8-186 0 there means "filter to hannel/rank/bank 0", not disable.
+
+So on hardware that supports both filters, current kernel silently undercount.
+Woth splitting into its own patch so it can be backported without the new
+feature.
 
 Best regards,
 Richard Cheng.
 
-
-> +int offline_and_remove_memory_ranges(const struct range *ranges,
-> +		unsigned int nr_ranges)
-> +{
-> +	unsigned long mb_count = 0;
->  	uint8_t *online_types, *tmp;
-> -	int rc;
-> +	unsigned int i;
-> +	int rc = 0;
->  
-> -	if (!IS_ALIGNED(start, memory_block_size_bytes()) ||
-> -	    !IS_ALIGNED(size, memory_block_size_bytes()) || !size)
-> +	if (!ranges || !nr_ranges)
->  		return -EINVAL;
->  
-> +	for (i = 0; i < nr_ranges; i++) {
-> +		const u64 start = ranges[i].start;
-> +		const u64 size = range_len(&ranges[i]);
 > +
-> +		if (!IS_ALIGNED(start, memory_block_size_bytes()) ||
-> +		    !IS_ALIGNED(size, memory_block_size_bytes()) || !size)
-> +			return -EINVAL;
-> +		mb_count += size / memory_block_size_bytes();
-> +	}
-> +
->  	/*
-> -	 * We'll remember the old online type of each memory block, so we can
-> -	 * try to revert whatever we did when offlining one memory block fails
-> -	 * after offlining some others succeeded.
-> +	 * Remember the old online type of every memory block across all ranges,
-> +	 * so we can revert if offlining a later block fails.  All entries start
-> +	 * as MMOP_OFFLINE so blocks we never touched are skipped on rollback.
->  	 */
->  	online_types = kmalloc_array(mb_count, sizeof(*online_types),
->  				     GFP_KERNEL);
->  	if (!online_types)
->  		return -ENOMEM;
-> -	/*
-> -	 * Initialize all states to MMOP_OFFLINE, so when we abort processing in
-> -	 * try_offline_memory_block(), we'll skip all unprocessed blocks in
-> -	 * try_reonline_memory_block().
-> -	 */
->  	memset(online_types, MMOP_OFFLINE, mb_count);
->  
->  	lock_device_hotplug();
->  
-> +	/* Phase 1: offline every block in every range. */
->  	tmp = online_types;
-> -	rc = walk_memory_blocks(start, size, &tmp, try_offline_memory_block);
-> -
-> -	/*
-> -	 * In case we succeeded to offline all memory, remove it.
-> -	 * This cannot fail as it cannot get onlined in the meantime.
-> -	 */
-> -	if (!rc) {
-> -		rc = try_remove_memory(start, size);
-> +	for (i = 0; i < nr_ranges; i++) {
-> +		rc = walk_memory_blocks(ranges[i].start, range_len(&ranges[i]),
-> +					&tmp, try_offline_memory_block);
->  		if (rc)
-> -			pr_err("%s: Failed to remove memory: %d", __func__, rc);
-> +			break;
+> +	if (info->filter_chan_rank_bank) {
+> +		if (cxl_pmu_config1_crb_filter_en(event))
+> +			cfg = cxl_pmu_config2_get_crb(event);
+> +		else
+> +			cfg = GENMASK(31, 0); /* no filtering if 0xFFFF_FFFF */
+> +		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 1));
 >  	}
 >  
-> -	/*
-> -	 * Rollback what we did. While memory onlining might theoretically fail
-> -	 * (nacked by a notifier), it barely ever happens.
-> -	 */
-> +	/* If any failure occurred at all, rollback any changes and bail */
->  	if (rc) {
->  		tmp = online_types;
-> -		walk_memory_blocks(start, size, &tmp,
-> -				   try_reonline_memory_block);
-> +		for (i = 0; i < nr_ranges; i++)
-> +			walk_memory_blocks(ranges[i].start,
-> +					   range_len(&ranges[i]), &tmp,
-> +					   try_reonline_memory_block);
-> +		goto out_unlock;
->  	}
-> +
-> +	/* Phase 2: Remove. This should never fail holding the hotplug lock */
-> +	for (i = 0; i < nr_ranges; i++)
-> +		WARN_ON_ONCE(try_remove_memory(ranges[i].start,
-> +					       range_len(&ranges[i])));
-> +
-> +out_unlock:
->  	unlock_device_hotplug();
->  
->  	kfree(online_types);
->  	return rc;
->  }
-> -EXPORT_SYMBOL_GPL(offline_and_remove_memory);
-> +EXPORT_SYMBOL_GPL(offline_and_remove_memory_ranges);
->  #endif /* CONFIG_MEMORY_HOTREMOVE */
+>  	cfg = readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
 > -- 
-> 2.53.0-Meta
+> 2.39.5
 > 
 > 
