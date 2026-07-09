@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA694DA53B;
-	Thu,  9 Jul 2026 17:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D089B40B6E4;
+	Thu,  9 Jul 2026 17:59:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783619885; cv=none; b=S9i542iPakdTMh5YTHyoA6/5yZyXEhmImNwLP3kmzuWOirlhYcW7tlNlGMP+oEDTOocAKaGCdZ6FXyx3QUTr21QMXYTi+/oRLBoiTNM5kIxt6uf6+TkmCBtLSJutDe2Rp1uY4JQ6ODUkE6jI/wHrgO3roWmNwlhe/W4c8E5YC6U=
+	t=1783619961; cv=none; b=Zr4HJiXzKe3DX9MfTVLnXCp9sSfuy9l5/jgJgCRqk3UF5IHuBWZ9EgxjzexZ0S8r1F/EPwm1Ckv0s5gi2Vq0/1HIl8lxAQsrB6AlbstcJHpTcfSGZyvvE3aGYzVDF1uwkatMrhczF8fQm+3uDFE5tYDCBMB1VSBySeTRny+q1FI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783619885; c=relaxed/simple;
-	bh=ueCfC8mj9W6I1SlYqEpl674vMNV2wFKokvVZLAzEXzA=;
+	s=arc-20240116; t=1783619961; c=relaxed/simple;
+	bh=IeL1oxUC9sGqcnSkpWpKrEd+SnQglbBpUQgEgR4fVhc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zr/BJlkbfc31imioGeBGIU4shkOYceQysX/Vv51Ck3OoCxanRTkNf7FqbjBcsqc/GQCnonJFvw0as4s4Ji0q4NbFb1zmSx617DN0WsqovxeUs9aIP7MWHZ0pHz0oxNUaWFtnqvyTYVSJ7d1XgKzi0NuU06UMKxHhZKiMgiyPvKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QinGRakq; arc=none smtp.client-ip=192.198.163.12
+	 In-Reply-To:Content-Type; b=sbr0KOdLt+yPAxOoPC2RJnstks126fG3o0EMqw70bHj0EnU8IdEOBNPtgJee1dsBKr3cE+cS5N6q1xJ4WWdnjS5/Qk0JrU2xvoB0z95n9B8Y0O1Zxj2Tdb908Pw/7HZfSUn5d7CXehsNVnbrYcfwLyq9VbJrimUJiTVXa+nj8mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U6MD/U0F; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QinGRakq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U6MD/U0F"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783619885; x=1815155885;
+  t=1783619960; x=1815155960;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=ueCfC8mj9W6I1SlYqEpl674vMNV2wFKokvVZLAzEXzA=;
-  b=QinGRakq01yGwXdvDvTquHr/s0RRan5Ir9XySXk02l8qZeAiKN9413ae
-   3MtNp0rnXpHM3kzqarMKgLcB7pM6Fe6tdspo3gIerElyAEREkn6zX3FPt
-   aERtWyPEE0DecN+W6ea/LB56siGEjTzLIvcyYC2aeDDGfiv2tsdgT5cBO
-   /7Tp6HlwCQ0U/R7isW3ZiZmG3Tbm5M0XtH39PqZ70wgezHqv3o1bEXq//
-   gJR7XHW5i7h4esRokBI7hasKC5zaFsrHoo9rPRqBeCKL0tDmXrFsmAKYr
-   F2bMhE5zt8t+gYsqiJjWjNryf+dCM6HiGZNQ1Gz7rsPN9TEVTvYQJ0J7m
-   g==;
-X-CSE-ConnectionGUID: Mc+SeyOfQeefoWRyQ4oofA==
-X-CSE-MsgGUID: woQ/Rz1mTouS+5D0fgahyg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="88139583"
+  bh=IeL1oxUC9sGqcnSkpWpKrEd+SnQglbBpUQgEgR4fVhc=;
+  b=U6MD/U0F7Xb7wqiBtg+q9yO7uDjuU23dArzMyCtzO4bsL8rWyrIAtQya
+   4p7KyG9G9SaeGJCIdJhgqBdvFSNaZp8gqoTypgrHIGzp6rrIC5jHBk+9S
+   Q+yp+LLUNrkLGcdeNAS2lZaFXJF5QorcYd3ZS9jci4Y4oAHhsnWLxespa
+   wLp3V0szug3T7euzxEZAzePfGIJ7OS3qMxxLwvI3XdBC2T7JaAPIclgZ0
+   Y6Si2aypAMCCrBH6tQ+WmcxqJnZvVMiYoWUVrQ9KiNLdFgwxme2IJ/IWq
+   bhil7uvWkpL0PgDbEzsxL9QpNdmxHa+EGwQg5KXYFIIR6Lsm5i8fJ+hgt
+   A==;
+X-CSE-ConnectionGUID: 6C/iiJiHQhOjTnkvj6EBOQ==
+X-CSE-MsgGUID: X82vtOegT5+o1X8AjEZ1FA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="88139721"
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="88139583"
+   d="scan'208";a="88139721"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 10:58:04 -0700
-X-CSE-ConnectionGUID: hf/hEBL1SMaZOpk5XqzpzA==
-X-CSE-MsgGUID: mMZej/BNT82mbag9beBfMw==
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 10:59:06 -0700
+X-CSE-ConnectionGUID: NTSX3/2GQH6HiLFnWbczgA==
+X-CSE-MsgGUID: ot/6hvFVQieZNeL412g8ew==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="252920685"
+   d="scan'208";a="252920873"
 Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.111.142]) ([10.125.111.142])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 10:58:02 -0700
-Message-ID: <c4e18591-137f-4827-b635-a8662a44fe9d@intel.com>
-Date: Thu, 9 Jul 2026 10:58:00 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 10:59:05 -0700
+Message-ID: <f8005e88-51d9-4cc4-8a7e-596347de5d84@intel.com>
+Date: Thu, 9 Jul 2026 10:59:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 01/10] mm/memory: add memory_block_aligned_range()
- helper
+Subject: Re: [PATCH v6 02/10] mm/memory_hotplug: add mhp_online_type_to_str()
+ and export string helpers
 To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
 Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
  linux-cxl@vger.kernel.org, driver-core@lists.linux.dev,
@@ -65,94 +65,59 @@ Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
  mhocko@suse.com, shuah@kernel.org, iweiny@kernel.org,
  Smita.KoralahalliChannabasappa@amd.com, apopple@nvidia.com
 References: <20260630211842.2252800-1-gourry@gourry.net>
- <20260630211842.2252800-2-gourry@gourry.net>
+ <20260630211842.2252800-3-gourry@gourry.net>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260630211842.2252800-2-gourry@gourry.net>
+In-Reply-To: <20260630211842.2252800-3-gourry@gourry.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 6/30/26 2:18 PM, Gregory Price wrote:
-> Memory hotplug operations require ranges aligned to memory block
-> boundaries.  This is a generic operation for hotplug.
-> 
-> Add memory_block_aligned_range() as a common helper in <linux/memory.h>
-> that aligns the start address up and end address down to memory block
-> boundaries.  Guard against end underflow when the range falls below the
-> first memory block boundary, returning an empty range instead.
-> 
-> Update dax/kmem to use this helper.
+> Add mhp_online_type_to_str() as the inverse of mhp_online_type_from_str(),
+> and export both so a driver can render and parse the memory online type
+> through its own sysfs interface.
 > 
 > Signed-off-by: Gregory Price <gourry@gourry.net>
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 > ---
->  drivers/dax/kmem.c     |  4 +---
->  include/linux/memory.h | 27 +++++++++++++++++++++++++++
->  2 files changed, 28 insertions(+), 3 deletions(-)
+>  drivers/base/memory.c          | 9 +++++++++
+>  include/linux/memory_hotplug.h | 1 +
+>  2 files changed, 10 insertions(+)
 > 
-> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-> index a18e2b968e4d..592171ec10f4 100644
-> --- a/drivers/dax/kmem.c
-> +++ b/drivers/dax/kmem.c
-> @@ -33,9 +33,7 @@ static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r)
->  	struct dev_dax_range *dax_range = &dev_dax->ranges[i];
->  	struct range *range = &dax_range->range;
->  
-> -	/* memory-block align the hotplug range */
-> -	r->start = ALIGN(range->start, memory_block_size_bytes());
-> -	r->end = ALIGN_DOWN(range->end + 1, memory_block_size_bytes()) - 1;
-> +	*r = memory_block_aligned_range(range);
->  	if (r->start >= r->end) {
->  		r->start = range->start;
->  		r->end = range->end;
-> diff --git a/include/linux/memory.h b/include/linux/memory.h
-> index 463dc02f6cff..1783299073e4 100644
-> --- a/include/linux/memory.h
-> +++ b/include/linux/memory.h
-> @@ -20,6 +20,7 @@
->  #include <linux/compiler.h>
->  #include <linux/mutex.h>
->  #include <linux/memory_hotplug.h>
-> +#include <linux/range.h>
->  
->  #define MIN_MEMORY_BLOCK_SIZE     (1UL << SECTION_SIZE_BITS)
->  
-> @@ -100,6 +101,32 @@ int arch_get_memory_phys_device(unsigned long start_pfn);
->  unsigned long memory_block_size_bytes(void);
->  int set_memory_block_size_order(unsigned int order);
->  
-> +/**
-> + * memory_block_aligned_range - align a physical address range to memory blocks
-> + * @range: the input range to align
-> + *
-> + * Aligns the start address up and the end address down to memory block
-> + * boundaries. This is required for memory hotplug operations which must
-> + * operate on memory-block aligned ranges.
-> + *
-> + * Returns the aligned range. Callers should check that the returned
-> + * range is valid (aligned.start < aligned.end) before using it.
-> + */
-> +static inline struct range memory_block_aligned_range(const struct range *range)
+> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+> index b318344426fa..3a2f69d3af7b 100644
+> --- a/drivers/base/memory.c
+> +++ b/drivers/base/memory.c
+> @@ -46,6 +46,15 @@ int mhp_online_type_from_str(const char *str)
+>  	}
+>  	return -EINVAL;
+>  }
+> +EXPORT_SYMBOL_GPL(mhp_online_type_from_str);
+> +
+> +const char *mhp_online_type_to_str(int online_type)
 > +{
-> +	struct range aligned;
-> +
-> +	aligned.start = ALIGN(range->start, memory_block_size_bytes());
-> +	aligned.end = ALIGN_DOWN(range->end + 1, memory_block_size_bytes());
-> +	/* No whole block fits (e.g. range below the first boundary): empty. */
-> +	if (aligned.end <= aligned.start)
-> +		aligned.start = aligned.end;
-> +	else
-> +		aligned.end -= 1;
-> +
-> +	return aligned;
+> +	if (online_type < 0 || online_type >= (int)ARRAY_SIZE(online_type_to_str))
+> +		return NULL;
+> +	return online_type_to_str[online_type];
 > +}
-> +
->  struct memory_notify {
->  	unsigned long start_pfn;
->  	unsigned long nr_pages;
+> +EXPORT_SYMBOL_GPL(mhp_online_type_to_str);
+>  
+>  #define to_memory_block(dev) container_of(dev, struct memory_block, dev)
+>  
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index 7c9d66729c60..5d4b628c4a1f 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -127,6 +127,7 @@ extern int arch_add_memory(int nid, u64 start, u64 size,
+>  extern u64 max_mem_size;
+>  
+>  extern int mhp_online_type_from_str(const char *str);
+> +const char *mhp_online_type_to_str(int online_type);
+>  
+>  /* If movable_node boot option specified */
+>  extern bool movable_node_enabled;
 
