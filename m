@@ -1,227 +1,158 @@
-Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011047.outbound.protection.outlook.com [40.93.194.47])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF2C3BB9F8
-	for <linux-cxl@vger.kernel.org>; Thu,  9 Jul 2026 10:12:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.47
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783591948; cv=fail; b=HDJ5UHUdCnD4/7X4ThuZCOfarauieRyuPGShYF+3lLjWa358QvZPZ7X2Nw+t0l80Gg2LML1q6T1xFvnTEoOlCgtU1/u1tTpk3RPpXoWKGEtH+vYTtSGWpjYi6r7VZdE8M0T+w7XyAujxJrpq4Y3KmVpOVePFm+lg/m6HGcAQMOM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783591948; c=relaxed/simple;
-	bh=QyYlYybwC/gW0ZmPnP2Jjmfx6iAl1YLKZznNG4N+kuA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=TiQXNA4ydCENsA17/OQOgT31YE1WpUeihbGw/wAzQUSuR0vTjVphFhOpLPwzCUGd06TsXpL4QmSzO+GJ92DhakhM48FiW2VYcLq2eYqZZcJaIC3AAR278MC9UWDB4+hpDWsbiIBdZkYcOtGpGK8p0JuXkAfiFLi4WBqHBEwKY4Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EZOmCONK; arc=fail smtp.client-ip=40.93.194.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3CE3FC5AE;
+	Thu,  9 Jul 2026 10:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783592481; cv=none; b=eWVRK8SAl8AOkIQbmgO0+KMGmng/wEhlbqbVtCu0gL65IBq2388h+sa5Wf91Wu7uDbVQ0zVax/gTooJSUXDWMrYm5y6CXaM2Gktu1HqorZ3dRoSfatGFpWPwjvDf8Z4CFf6F9ZHaZpIgIjSjAsZWKkYDB51t59BishwWdarJ+Ag=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783592481; c=relaxed/simple;
+	bh=nhQj+fF2fDHLdsvAF7OaIL10PTGa5wId+gGMEA/4sIw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LVCyj+xU9FCaiivGExVU1F/OGdCaox4eu3nNGW0YwNOan77ezsfbrkAswpG+87SSY46AmxGVrlla0CQ3IED3uerdA4/LxkzI8Yr0OcM3Kg8UrIicvJpl95j+kNQ+2Gh/FDxnVhJ6eiugXI2SSmxuhfEAqfDqAcncQSS0LrJgwio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K4ZgFZUy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EZOmCONK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=riUF5zSOTVPOs5Aw0g+D+6D1dCFVX2UZFPVFumGdhs1abNSKvFmM4xx4wNK6sKZMxQSOS7ASE2s6ql1HjkqutepkjRpnRLvtADYp4KXW3GQnEF9YSTpH8er1C6VRwE9DE3cX2p3FM7dRjhstywKuzVmP5TbICv+gWw//Fe6Y0eP6/1cE5tFPaHd86e74YEsLA1RShFDCfBE82ry5EKY/ntc4zP4E9/dN6JzLIGN8PBOnkwq1pqQdZdh6ooZcuIEoN8v3QXoLkOvSr5E8Gvptglv8di0B2bHLgIeS6MWxRUFc9pMoVirq5ddfj6gQ9ifMfrYO4i2vM6G4/jZFQ3DQ6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OLu9lORoWgTl+JhM0rTkHw/oKGnZ3CPFcFQS8qV6fic=;
- b=o1Ir6wuUd8uu6FrthWL/0rg1wnBPaqYK83HWhUVPfd3yxeA46wF/hT8TC0g7SEzgEi5AHJpDbybdsuq66bj9xqnpLMIpYAHq5NzsF3yps4gusyOXQ5HC0993ifOQ6f2ERkoX12ZIdX7QlQcbHKIi6/rmS1weVkFuWRO1FMX9kDSlYUoeQ5pOFU2mCto34cCkL7kWVTp3my5t9FQsvMuCcxsg0jYZ/HMo1Ft7QwD0+BN7gN3xZ+bHEazCB9i9xyWa6w07Bd/i+n94BL/uHtpJTqxAiHGf7Z1SbROmPq/1Guuj/X42SoiDIjeYDT+Ul3KOBXyjVpaJEYAf5xFnAX7NNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OLu9lORoWgTl+JhM0rTkHw/oKGnZ3CPFcFQS8qV6fic=;
- b=EZOmCONKNr5ZP0ytTV5+S2vVhOSxvj0l6/kt9IvaOfUOjqJquFqucnunNt/8r1LzH+ULhmoYw0fpOK93mV0E0MS1BtdGn/bMMmbigNHn0SwfZk4i8fz5RSy6LehC7n5it9hZEEzuyhfdSbINF6hGYLT2qPvw8YuZ2Bt3wJIVenVsI9SuwR2Jw0b0rvQHVO8PXZDKarcXG3aDw4ZJRU920n+mHHiYN5TMC8r9607ur7MBATxk8SYw9eByLehe5FnODSJhJgF0Cb0xasnhDnlx+yOf1amisDhYIVz+CrooVVjKSLs21+O5QOFhgLaWa0UJkUPbUqan6KtSGGsH9+yf4w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by DM6PR12MB4187.namprd12.prod.outlook.com (2603:10b6:5:212::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.15; Thu, 9 Jul
- 2026 10:12:22 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0181.014; Thu, 9 Jul 2026
- 10:12:22 +0000
-Date: Thu, 9 Jul 2026 18:12:17 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-Subject: Re: [ndctl PATCH] test/cxl-poison.sh: test scanning past fully
- mapped partitions
-Message-ID: <ak9yQtGEvMWruPhV@MWDK4CY14F>
-References: <20260701044205.1589967-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260701044205.1589967-1-alison.schofield@intel.com>
-X-ClientProxiedBy: TP0P295CA0036.TWNP295.PROD.OUTLOOK.COM
- (2603:1096:910:4::15) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K4ZgFZUy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72D411F000E9;
+	Thu,  9 Jul 2026 10:21:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783592480;
+	bh=WdBwou6UoGXgB1ir3Lcp2nsy3ZSLNklF3fHXUXVCCQ8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=K4ZgFZUyiFpb4XeaDDvdVo/FZUL7Aa1kY1P27AoweaquTl0F7WsR1Ox6pOhMbAi39
+	 1zirrV2zmwwY4nyhmX7eq4QwcPawoSPfiKSiPHWIKGih2IatZ6QwGKS2P9vQvQScH/
+	 Zcel/Mjsnhx6CNRAo97h8GT6sZLKtTSV7OATYhdSKWjtplrpI/ULy9ogNjodp1rXFr
+	 LX/xJKZyMUxWN9BzcGuHS6GcYbfLjFm+Ad4h13zfSI4Jopy+i+jEF8/W3lx6v/qRVh
+	 EgDC7La1B9C761sME3x57+uIsVeNeK98og68SDGwfbPFq1ki21HsSB1Hj537eSYcuB
+	 1YMLNz1/n83QQ==
+Message-ID: <67bbfc47-a8f1-4557-9a24-298bad4f3591@kernel.org>
+Date: Thu, 9 Jul 2026 12:21:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|DM6PR12MB4187:EE_
-X-MS-Office365-Filtering-Correlation-Id: 55172e93-be11-4aec-c5cd-08dedda290f9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|366016|23010399003|5023799004|11063799006|56012099006|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	Mt2L2fzRV1qRFs6Cb+2xkb0yY1CEVqjD3lx8dJo8cN+rLoMR5lAAlhHx0MlvOQqq6SAEZi1lLvRl4oQDwqm/npCxvBbCKwfYjo9YrXuq93nXJ6LVR5UszQXazqHvGyD0z3+ik1UQku8nh6c/846Bb2wecV4LRD+vXWD58EWzB0jTpAYbmSKxtrE69WjD+ViNFfruBvHr3S0E1gF5+iUWeAFE7ZqUbRFQrNyYHa+ie7J+TYjo3FemjA6L5wcvH233ErtKKm1+roGdc+Q/Zd1rkyVy116WzWxD40skkGTW0E3Zna/MPbsAzk35mjQ3kBBdu8b1IIasIfnDSvNcqVKxmOJ3LKKwaxmcYi+v3qEHi0v4kiQqqarJTHdG/98FJivLd/CahGeAizMJK9n3iKUnReOlYDQlMOvCamwje5ftQ41ZcFgSA5m/DTG3NsPiI7DdCyhjEGx+9G+dtIOgnIP9jmDkFUS1gnf1H4lKH2mWxLSDwmFv73kdm8B4jHgnE4v3naic3xGQ4ldDBRrlRuDrI/RJwA/Da4sYu1OoNigGn6jjaA+md4IhEXFmUthaR7qmt4RFayD71WnsPeo3faPXs8oHQL8Oi5yM7960uuJWYdS/+Pzom4mfcP+DEI9NaG2yOJfWSPw1OgEnOT9et3/A3tmNuVkuaN2LGLGgdHQvUYo=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(23010399003)(5023799004)(11063799006)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?8qR2c6jPoWQe9xq3zFufQSVGBh2sdrQMdBP3eD6ivlf/0wR5wmY8Ao3nr0Vl?=
- =?us-ascii?Q?2ad6B1xIJdcq18c0hVL3QlSZZxVtnQZsqsJi3SOOXzlB9pb5gfUkNVjnDIvE?=
- =?us-ascii?Q?FhmBUWw42NFZtpcLRJFsrxQ/IBJK0EfSyn76w5RETajwy3pcOnHFIoqUMLOA?=
- =?us-ascii?Q?xqmM77e2WtmvxLDz2/U56kFvdHhbYXUVPdWFe4jVswBznz7SZJSTpz4fcl6J?=
- =?us-ascii?Q?CGmX2UoHTsPCJ/YF+4+O+obGEwhdGGPxnxQCBwYJwxXrBA+1LalBoWD247N5?=
- =?us-ascii?Q?qC+jEIqcgdOmCdFOb08lFPH6kxoZz8bjBJtPIz+klw3n9cueldvLdN3EIClN?=
- =?us-ascii?Q?UmcDcFfQpGtfZyPbUOiYVJAS4ZsuRnNI9b3MFJVs4q2pj3E7V5r0VoE0WUYL?=
- =?us-ascii?Q?05WB0dyCM4mAx8U3gJQFmz4HxRWN+ptfMCd4Gf4/9aNjd586U1rxM/va/2rG?=
- =?us-ascii?Q?wzVSByEeKvEhcoNWcTqjnlR5tooTeA2minZFt3SfZwmge8uoSmMj6d/0mTep?=
- =?us-ascii?Q?y/r2iuuBQtj5q7F/jqK/pVlUp9iO7AfTWqoqwOtxM9sU9zAJzovXI7CYUR5+?=
- =?us-ascii?Q?axEvKqBAfZc3e+gGKq8pkJdbCT9CfxnVXLr/BtZfjcj3bpOj6e2PpvgdDKeN?=
- =?us-ascii?Q?K9wyDyYI7KFq1bFIXqqVLfUeukJLrnoUi+SJmheBYWfo1cB/een/7TFTxYJS?=
- =?us-ascii?Q?RLIG5H0FuKKDGXIt1pVdOD0DV3nCijfz56gQxQdLM1OVi9CVbL4ci7E31YS0?=
- =?us-ascii?Q?vx3IIVDckf4aZb1dAi9+jna3CvIsVhuCKk2O4WIkILIOAR8zBz1/08oarvdT?=
- =?us-ascii?Q?o/6JjkkyAwLamzOQV6Ljx9BXiJIjC8FCnYTlY8LZVvcLq+R430Kee+Bzporh?=
- =?us-ascii?Q?EgOnfv5QAMZ7loT1gdstvI/cRXmTaj5Uhr4u+teweIrwHdQKPQT0JYFfGCuf?=
- =?us-ascii?Q?rOy37+TT2jbb91ThhR9ILgr8C2WcbEvFWe7cRPtM0agfWNbZoOC+iH/SASpw?=
- =?us-ascii?Q?Rqr5gkiIWAXO6VwEhWz/hIrhPv+6dmbYmyjyVK4SEBCqJE97bK8BdoT/7lq9?=
- =?us-ascii?Q?IFAnXCW6GAjiND4O2+fDuiQxiCKNi/uwJpmkyREruwS+kbox2MWioSES3rQ+?=
- =?us-ascii?Q?L3PlX+fyBcTpNptdF9Co0HgAh+jVfE3eLTKCpZjDerh+HJ26b/31KLpbIZuB?=
- =?us-ascii?Q?Go9Q58PDEy9SpBroktiGu7FOZODzplBloHIO9Tn6R1mT025TpjYYKbN88qQj?=
- =?us-ascii?Q?Ymkn/50o7bPS3LHzrYJhCup4nttL9RdyAFteT6NMjMeD8V1YSTeyuFPFCxQm?=
- =?us-ascii?Q?I74T0rpbnxcNnSSoFOzFmTRiVzOMMP9yJNCxFHHKblVYRRhWn2EC722Trr3l?=
- =?us-ascii?Q?OuyW15TvwyLWouTmSEM79lDb/kx+yPpES4RnlTUiRVU9fM1MGcQQioneDgrH?=
- =?us-ascii?Q?AGTyODOf0bqwRq6sQzOd+lUAMKOBk0kBr9YDfG3PzL5dmx/dg5VF1Do/Kl+8?=
- =?us-ascii?Q?ldgoi8hotL9f4gEaDCC+goFbPJLAZco6uzIKgOhLVoDQEAwg60wMvZy84fq0?=
- =?us-ascii?Q?UXVSxZMtA7ZCU7ymSOCujBUCNl/NIl6Tug+yTm4HYCEGBGxQcbGdC5c18BcA?=
- =?us-ascii?Q?/MG6X2UK3HM5c/2XToaWX4i46ye+OuF5t1yFZKGhTqrHMz/igiOTyEeVTpmL?=
- =?us-ascii?Q?rpxFVCDZL2yIaxmLoh3Qzgh/W8DI6T3cZoU/e6fmcM5OxWpP?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55172e93-be11-4aec-c5cd-08dedda290f9
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2026 10:12:22.3276
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XD+NW7/nXxlscHWxv2CkWGXsm9kHR8LT5qmGHTxy9debgCvpe3qQSgYmCpGv3YTpubq8JxuBokD0I62TGgVqHQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4187
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] mm: split a couple of headers from internal.h
+To: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>,
+ "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Graf <graf@amazon.com>, Alexander Potapenko
+ <glider@google.com>, Brendan Jackman <jackmanb@google.com>,
+ Christoph Lameter <cl@gentwo.org>, Dennis Zhou <dennis@kernel.org>,
+ Dmitry Vyukov <dvyukov@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Marco Elver <elver@google.com>, Michal Hocko <mhocko@suse.com>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Suren Baghdasaryan
+ <surenb@google.com>, Tejun Heo <tj@kernel.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Zi Yan <ziy@nvidia.com>,
+ kasan-dev@googlegroups.com, kexec@lists.infradead.org,
+ linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20260709-internal-h-v2-0-695631425968@kernel.org>
+ <0970fec0-5c18-41e1-b63d-029c7a8354ee@kernel.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <0970fec0-5c18-41e1-b63d-029c7a8354ee@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 30, 2026 at 09:42:02PM +0800, Alison Schofield wrote:
-> Listing poison by memdev scans the unmapped tail of every partition.
-> When an earlier partition is fully mapped, its tail is zero length, but
-> the scan must continue to later partitions. A regression caused the
-> scan to stop at the first fully-mapped partition, leaving later
-> partitions unscanned.
+On 7/9/26 12:09, Vlastimil Babka (SUSE) wrote:
+> On 7/9/26 12:00, Mike Rapoport (Microsoft) wrote:
+>> mm/internal.h becomes more and more bloated.
+>>
+>> Split declarations related to mm_init, memblock, vmalloc and sparse into
+>> new headers.
+>>
+>> ---
+>> v2 changes:
+>> * fix fallouts of rebase fixups of checkpatch warnings
+>>
+>> v1: https://patch.msgid.link/20260709-internal-h-v1-0-956d5092782d@kernel.org
+>>
+>> ---
+>> Mike Rapoport (Microsoft) (3):
+>>       mm: split out mm_init and memblock declarations from internal.h
+>>       mm: split out sparse declarations from internal.h
+>>       mm: split out vmalloc declarations from internal.h
+>>
+>>  MAINTAINERS                        |   3 +
+>>  kernel/liveupdate/kexec_handover.c |   3 +-
+>>  mm/cma.c                           |   1 +
+>>  mm/execmem.c                       |   1 +
+>>  mm/hugetlb.c                       |   1 +
+>>  mm/internal.h                      | 183 -------------------------------------
+>>  mm/kmsan/hooks.c                   |   1 +
+>>  mm/kmsan/shadow.c                  |   1 +
+>>  mm/memblock.c                      |   1 +
+>>  mm/memory_hotplug.c                |   1 +
+>>  mm/mm_init.c                       |   3 +
+>>  mm/mm_init.h                       | 120 ++++++++++++++++++++++++
+>>  mm/page_alloc.c                    |   1 +
+>>  mm/percpu-vm.c                     |   1 +
+>>  mm/sparse-vmemmap.c                |   2 +
+>>  mm/sparse.c                        |   2 +
+>>  mm/sparse.h                        |  63 +++++++++++++
+>>  mm/vmalloc.c                       |   1 +
+>>  mm/vmalloc.h                       |  46 ++++++++++
+>>  19 files changed, 251 insertions(+), 184 deletions(-)
 > 
-> Backstop that behavior with a test case that fully maps a memdev's RAM
-> partition so its unmapped tail is zero length, then injects poison into
-> the unmapped PMEM partition that follows. The PMEM poison is only
-> reported if the scan continues past the fully-mapped RAM partition.
->
-
-Hi Alison,
-
-Thanks for this ! I ran it against cxl_test in the following ways.
-
-On a kernel with the fix [1], the test passes in both run_poison_test passes:
-1 poison record found after inject at the first pmem DPA, 0 after clear.
-
-On a kernel without the fix, it fails exactly at the "1 poison records expected, 0 found"
-assertion, so it catches the regression as intended.
-
-Just one small thing below.
-
- 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  test/cxl-poison.sh | 40 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
+> Sounds good
 > 
-> diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
-> index 49aa1b68c5c1..a03e08084eb4 100644
-> --- a/test/cxl-poison.sh
-> +++ b/test/cxl-poison.sh
-> @@ -219,6 +219,45 @@ test_poison_by_region_offset_negative()
->  	clear_poison "$region" "$large_offset" true
->  }
->  
-> +# Backstop a driver fix where a fully mapped partition prematurely
-> +# terminated the unmapped poison scan.
-> +test_poison_unmapped_later_partition()
-> +{
-> +	local decoder ram_size pmem_dpa
-> +
+> Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
 
-"region" is assigned below but not declared local like the others.
-Does it have any reason for it to not be local var?
-It might be harmless today but tests added after this one will inherit
-a stale global region, if it ever uses one.
+Agreed
 
-Tested-by: Richard Cheng <icheng@nvidia.com>
-Reviewed-by: Richard Cheng <icheng@nvidia.com>
+Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
-[1]:
-https://lore.kernel.org/linux-cxl/20260708074228.43654-3-icheng@nvidia.com/
+-- 
+Cheers,
 
-Best regards,
-Richard Cheng.
-
-> +	check_min_kver "7.3" || return 0
-> +
-> +	# Free the auto region to use the ram capacity
-> +	$CXL destroy-region -f -b "$CXL_TEST_BUS" all
-> +
-> +	find_memdev
-> +
-> +	# Fully map the ram partition so it has a zero-length unmapped tail
-> +	decoder=$($CXL list -b "$CXL_TEST_BUS" -D -d root -m "$memdev" |
-> +		  jq -r ".[] |
-> +		  select(.volatile_capable == true) |
-> +		  select(.nr_targets == 1) |
-> +		  .decoder")
-> +	[[ -n "$decoder" && "$decoder" != "null" ]] ||
-> +		do_skip "no x1 volatile decoder found"
-> +
-> +	ram_size=$($CXL list -m "$memdev" | jq -r ".[0].ram_size")
-> +	[[ -n "$ram_size" && "$ram_size" != "null" ]] || err "$LINENO"
-> +
-> +	region=$($CXL create-region -t ram -d "$decoder" -m "$memdev" \
-> +		 -s "$ram_size" | jq -r ".region")
-> +	[[ -n "$region" && "$region" != "null" ]] || err "$LINENO"
-> +
-> +	# Poison the unmapped pmem tail
-> +	pmem_dpa=$ram_size
-> +	inject_poison "$memdev" "$pmem_dpa"
-> +	validate_poison_found "-m $memdev" 1
-> +	clear_poison "$memdev" "$pmem_dpa"
-> +	validate_poison_found "-m $memdev" 0
-> +
-> +	$CXL destroy-region -f -b "$CXL_TEST_BUS" "$region"
-> +}
-> +
->  is_unaligned() {
->  	local region=$1
->  	local hbiw=$2
-> @@ -332,6 +371,7 @@ run_poison_test()
->  		do_skip "test cases requires inject by region kernel support"
->  	test_poison_by_region_offset
->  	test_poison_by_region_offset_negative
-> +	test_poison_unmapped_later_partition
->  }
->  
->  modprobe -r cxl_test
-> 
-> base-commit: 15e932c4e1318a9608ad9b799ad83a32a8b5970d
-> -- 
-> 2.37.3
-> 
+David
