@@ -1,130 +1,158 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE7734FF55
-	for <linux-cxl@vger.kernel.org>; Thu,  9 Jul 2026 17:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA694DA53B;
+	Thu,  9 Jul 2026 17:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783617325; cv=none; b=RHfyJlapNVb0LRe4V3L8DQWZtanCVyPEF9ju6H1q7KnksFiWpeyz91oiNTOzXRuvA3TUUu+0ivUeG5yXlLw3S1S4+qzG7Gfy9gI7/MB5UsDrxy9mnBnLQevGyf4jptIpJToi+4MkMK7RpaBXIF+Px+KIdZuznYa2OSadhZ41wCY=
+	t=1783619885; cv=none; b=S9i542iPakdTMh5YTHyoA6/5yZyXEhmImNwLP3kmzuWOirlhYcW7tlNlGMP+oEDTOocAKaGCdZ6FXyx3QUTr21QMXYTi+/oRLBoiTNM5kIxt6uf6+TkmCBtLSJutDe2Rp1uY4JQ6ODUkE6jI/wHrgO3roWmNwlhe/W4c8E5YC6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783617325; c=relaxed/simple;
-	bh=SzROYG8BwD/EB/+MUjQ4u1vhoaHs3/zZwllWfULF+qU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GU6UXce7BIR8O+P2lnuH1ru6I9Hpf/98mhtFPtXBIWOH+8njDKOCMzhmRMIJEgDF7lTRgTgaCnkQH7b2DmQDoVtCE7h8h+cUmwNr2JXGHYlEVCAiWaKLMyltkWWXNscr4zhR0066hr2jYyDVRx0RiIFmuRdggccK9wL0WZ4LtKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gk0zhMxP; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1783619885; c=relaxed/simple;
+	bh=ueCfC8mj9W6I1SlYqEpl674vMNV2wFKokvVZLAzEXzA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zr/BJlkbfc31imioGeBGIU4shkOYceQysX/Vv51Ck3OoCxanRTkNf7FqbjBcsqc/GQCnonJFvw0as4s4Ji0q4NbFb1zmSx617DN0WsqovxeUs9aIP7MWHZ0pHz0oxNUaWFtnqvyTYVSJ7d1XgKzi0NuU06UMKxHhZKiMgiyPvKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QinGRakq; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gk0zhMxP"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-8ef1dc934d1so1159856d6.0
-        for <linux-cxl@vger.kernel.org>; Thu, 09 Jul 2026 10:15:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1783617323; x=1784222123; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=46UkRwT/i/djJx+KopbYZyKUrVPhRVpwIJdu7TzJpII=;
-        b=gk0zhMxPCwdMeia9k1VETsBkdLdlSUiHgtr/lxI34cIdfLJu788hSwNC4UXQj5RHLF
-         mex7yejvsPB2SSYb0a4ATL4mvLDHXVUcofAXP/G3aV+/e0HzaKcNf7cLVkkR85oNiD9m
-         LoDWnj2LMAt7utzVlJ+XOrCTJtE7qaFqyJFxZygEzxhwSHJrCxDozHyHA1XvlQH+Jrbc
-         imd7n4XXsQhloWf3R6EbXswShRm0e35oZVkp68wjNPOA5N6uqxNHp9O3nOq0N97Y+El4
-         7JS46cJLFNDyaPU2IWeXp0FUfg5eqh6HlWZMjjHIIOI/dAnwK60yX0GXfS4seLtNgcRL
-         L6tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783617323; x=1784222123;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=46UkRwT/i/djJx+KopbYZyKUrVPhRVpwIJdu7TzJpII=;
-        b=FOjOxg16Re05AyhfUZ8GhowQ/u3wefF1tJ1Bbg4Y0oXnetk/JcH/Kd7Aqy8abKEO4U
-         780EB9J/xSnBbe3ASp9f1fJwMu9FJyMLJUBtoIscK52k7IfRcqF2UHyRnG12TFKxhRqC
-         mhKZ9+p8ZcVnyyhqRZibguGRJ0sZN9JCl4adcKINRoCAkBZdc6bJ688/YVuBIIJ85q8A
-         n9ef5j9Q49eh6Tre6ZjYOWjLw4OHunHAh0wJjNl0E/hUneOV0/2JKVHaEWIuJEZXAfqA
-         kAviwXUvmsfq77qR4c7PVDRQ1pBMkUfEKu/GkcA0w7sId1LEvun8I4/hz8JzS4La2cnh
-         OnGQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rr8H2Y+RpIJfq8DIhJyjLLc2tiZ9PB4DKvNsNK35q5l10zuIva77Uf7/nGLB1mcGQHFgx6Wa1rJvbU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6kNh8nVShavKA07BMgdp6wpTohhaT7GXPlGqyvhg/OWGYWLUw
-	miuKsEfPi8Xi7Slp43kUkftOAUL/X1M8UCw5DhWTdwOgUTPdGAsJvs0j7iL+vzgnl+M=
-X-Gm-Gg: AfdE7cnd55t4mNaP4GVrIi7KFxQzC4NIM437lEVlbwaeDP1wXEcsFQaRP5/x7GpGHsJ
-	j/xgd2ZoyZZ9IXVrGJ38R3k0rYV50h+sRIr+qM6GaEPiPwIJmZg36wmc0sSczFpWC7o0fhXsBxT
-	+gFbEXb3Zl4UbmeEMeXLHuPGhPMdByTfVSH39dMgCfe/ST56GGNa2txIC4PqEBD0tqHeuD8MBlF
-	p5iQ2pRmPQS1+Gavnrd4cDwIJ8BTbwlpYdJQaKtPI8Ha0NUi/auUP7INPRcORX3WILj0TfMnpK1
-	CzC8k7dCOexx1NkegN+TUVnwR02hmuFrgZNp31so0seuVzZniWE1LK53pP+OTD9nZ9dqpT2d/2E
-	ZrC0kruAeqcIMnctXrler3gFeKwHHwuBtJmaNMap687Jh0PyNlRheoVmeibQKo0yWtUUYiJ67E6
-	PJtzYvBceL/Xtf+/N5pelxvbcxB+qgF31fWMtmS51ZUcYivBDgGxiHdExHJum7jCFq9AtT
-X-Received: by 2002:a05:6214:6014:b0:8e9:f45f:107b with SMTP id 6a1803df08f44-90242143c3amr1641696d6.34.1783617322803;
-        Thu, 09 Jul 2026 10:15:22 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-8ffd7c1d8fcsm22085656d6.25.2026.07.09.10.15.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2026 10:15:22 -0700 (PDT)
-Date: Thu, 9 Jul 2026 13:15:17 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: linux-mm@kvack.org, nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	driver-core@lists.linux.dev, linux-kselftest@vger.kernel.org,
-	kernel-team@meta.com, david@kernel.org, osalvador@suse.de,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-	djbw@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, akpm@linux-foundation.org,
-	ljs@kernel.org, liam@infradead.org, vbabka@kernel.org,
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com,
-	shuah@kernel.org, iweiny@kernel.org,
-	Smita.KoralahalliChannabasappa@amd.com, apopple@nvidia.com
-Subject: Re: [PATCH v6 06/10] mm/memory_hotplug: add
- offline_and_remove_memory_ranges()
-Message-ID: <ak_XJWglABmKfSiU@gourry-fedora-PF4VCD3F>
-References: <20260630211842.2252800-1-gourry@gourry.net>
- <20260630211842.2252800-7-gourry@gourry.net>
- <ak9ee95F7pJpCKMo@MWDK4CY14F>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QinGRakq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783619885; x=1815155885;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ueCfC8mj9W6I1SlYqEpl674vMNV2wFKokvVZLAzEXzA=;
+  b=QinGRakq01yGwXdvDvTquHr/s0RRan5Ir9XySXk02l8qZeAiKN9413ae
+   3MtNp0rnXpHM3kzqarMKgLcB7pM6Fe6tdspo3gIerElyAEREkn6zX3FPt
+   aERtWyPEE0DecN+W6ea/LB56siGEjTzLIvcyYC2aeDDGfiv2tsdgT5cBO
+   /7Tp6HlwCQ0U/R7isW3ZiZmG3Tbm5M0XtH39PqZ70wgezHqv3o1bEXq//
+   gJR7XHW5i7h4esRokBI7hasKC5zaFsrHoo9rPRqBeCKL0tDmXrFsmAKYr
+   F2bMhE5zt8t+gYsqiJjWjNryf+dCM6HiGZNQ1Gz7rsPN9TEVTvYQJ0J7m
+   g==;
+X-CSE-ConnectionGUID: Mc+SeyOfQeefoWRyQ4oofA==
+X-CSE-MsgGUID: woQ/Rz1mTouS+5D0fgahyg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="88139583"
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="88139583"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 10:58:04 -0700
+X-CSE-ConnectionGUID: hf/hEBL1SMaZOpk5XqzpzA==
+X-CSE-MsgGUID: mMZej/BNT82mbag9beBfMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="252920685"
+Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.111.142]) ([10.125.111.142])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 10:58:02 -0700
+Message-ID: <c4e18591-137f-4827-b635-a8662a44fe9d@intel.com>
+Date: Thu, 9 Jul 2026 10:58:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ak9ee95F7pJpCKMo@MWDK4CY14F>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 01/10] mm/memory: add memory_block_aligned_range()
+ helper
+To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
+Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, driver-core@lists.linux.dev,
+ linux-kselftest@vger.kernel.org, kernel-team@meta.com, david@kernel.org,
+ osalvador@suse.de, gregkh@linuxfoundation.org, rafael@kernel.org,
+ dakr@kernel.org, djbw@kernel.org, vishal.l.verma@intel.com,
+ alison.schofield@intel.com, akpm@linux-foundation.org, ljs@kernel.org,
+ liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, surenb@google.com,
+ mhocko@suse.com, shuah@kernel.org, iweiny@kernel.org,
+ Smita.KoralahalliChannabasappa@amd.com, apopple@nvidia.com
+References: <20260630211842.2252800-1-gourry@gourry.net>
+ <20260630211842.2252800-2-gourry@gourry.net>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260630211842.2252800-2-gourry@gourry.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 09, 2026 at 04:45:51PM +0800, Richard Cheng wrote:
-> On Tue, Jun 30, 2026 at 05:18:38PM +0800, Gregory Price wrote:
-> > +/**
-> > + * offline_and_remove_memory_ranges - offline and remove multiple memory ranges
-> > + * @ranges: array of physical address ranges to offline and remove
-> > + * @nr_ranges: number of entries in @ranges
-> > + *
-> > + * Offline and remove several memory ranges as one operation, serialized
-> > + * against other hotplug operations by a single lock_device_hotplug().
-> > + *
-> > + * This offlines all ranges before removing any of them.  If offlining any
-> > + * range fails, the entire process is reverted and nothing is removed.
-> > + * This provides a fully atomic semantic for unplugging an entire device.
-> > + *
-> > + * Each range must be memory-block aligned in start and size.
-> > + *
-> > + * Return: 0 on success, negative errno otherwise.  On failure no range has
-> > + * been removed.
-> > + */
+
+
+On 6/30/26 2:18 PM, Gregory Price wrote:
+> Memory hotplug operations require ranges aligned to memory block
+> boundaries.  This is a generic operation for hotplug.
 > 
-> I think this can return 1, and it shouldn't.
-> device_offline() returns 1 when a block is already offline, and phase 1 passes that value through as-is.
+> Add memory_block_aligned_range() as a common helper in <linux/memory.h>
+> that aligns the start address up and end address down to memory block
+> boundaries.  Guard against end underflow when the range falls below the
+> first memory block boundary, returning an empty range instead.
 > 
+> Update dax/kmem to use this helper.
+> 
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
-I just realized try_offline_memory_block() already clamps the value to 0
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-static int try_offline_memory_block(struct memory_block *mem, void *arg)
-{
-...
-    rc = device_offline(&mem->dev);
-...
-    /* Ignore if already offline. */
-    return rc < 0 ? rc : 0;
-}
+> ---
+>  drivers/dax/kmem.c     |  4 +---
+>  include/linux/memory.h | 27 +++++++++++++++++++++++++++
+>  2 files changed, 28 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index a18e2b968e4d..592171ec10f4 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
+> @@ -33,9 +33,7 @@ static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r)
+>  	struct dev_dax_range *dax_range = &dev_dax->ranges[i];
+>  	struct range *range = &dax_range->range;
+>  
+> -	/* memory-block align the hotplug range */
+> -	r->start = ALIGN(range->start, memory_block_size_bytes());
+> -	r->end = ALIGN_DOWN(range->end + 1, memory_block_size_bytes()) - 1;
+> +	*r = memory_block_aligned_range(range);
+>  	if (r->start >= r->end) {
+>  		r->start = range->start;
+>  		r->end = range->end;
+> diff --git a/include/linux/memory.h b/include/linux/memory.h
+> index 463dc02f6cff..1783299073e4 100644
+> --- a/include/linux/memory.h
+> +++ b/include/linux/memory.h
+> @@ -20,6 +20,7 @@
+>  #include <linux/compiler.h>
+>  #include <linux/mutex.h>
+>  #include <linux/memory_hotplug.h>
+> +#include <linux/range.h>
+>  
+>  #define MIN_MEMORY_BLOCK_SIZE     (1UL << SECTION_SIZE_BITS)
+>  
+> @@ -100,6 +101,32 @@ int arch_get_memory_phys_device(unsigned long start_pfn);
+>  unsigned long memory_block_size_bytes(void);
+>  int set_memory_block_size_order(unsigned int order);
+>  
+> +/**
+> + * memory_block_aligned_range - align a physical address range to memory blocks
+> + * @range: the input range to align
+> + *
+> + * Aligns the start address up and the end address down to memory block
+> + * boundaries. This is required for memory hotplug operations which must
+> + * operate on memory-block aligned ranges.
+> + *
+> + * Returns the aligned range. Callers should check that the returned
+> + * range is valid (aligned.start < aligned.end) before using it.
+> + */
+> +static inline struct range memory_block_aligned_range(const struct range *range)
+> +{
+> +	struct range aligned;
+> +
+> +	aligned.start = ALIGN(range->start, memory_block_size_bytes());
+> +	aligned.end = ALIGN_DOWN(range->end + 1, memory_block_size_bytes());
+> +	/* No whole block fits (e.g. range below the first boundary): empty. */
+> +	if (aligned.end <= aligned.start)
+> +		aligned.start = aligned.end;
+> +	else
+> +		aligned.end -= 1;
+> +
+> +	return aligned;
+> +}
+> +
+>  struct memory_notify {
+>  	unsigned long start_pfn;
+>  	unsigned long nr_pages;
 
-But this is a bit non-obvious, let me see about making this a little
-bit clearer.
-
-~Gregory
