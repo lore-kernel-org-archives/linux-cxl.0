@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EB5B3B388A;
-	Thu,  9 Jul 2026 18:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F66044998D;
+	Thu,  9 Jul 2026 18:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783621829; cv=none; b=KqtdP6gmxLZjgSjKefhDuqh4JxY70EsNrkTXphbS7einJ7wP/jMxdya+ggQBaa7KfEwKwnDxgB/qduok8j0dM1HRpyff1FyQkWv91wNfGGXa5dQ7gEqHeSG6EizMivgVKEax2mfEuJmawEff9U1dt1rvVG7YDpYUTwBtfmaKxpo=
+	t=1783622927; cv=none; b=Qi6Cgy+/i6QvdrYykJI4eYt7300gXX4Bi9jw9GA8ujXgs/fdlQmrpB9lLY8xMNq1+/WDgUa0qmJMDXHkujCgOZ6EwkkziK7y3rzOnUDmPh2uMEqJN982hof47nCOuKHvQsR4+Qmm2w26s3V8jC0aZGyRoRdmV+qXFteHPhIZOTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783621829; c=relaxed/simple;
-	bh=sJrITh55upt9+7i4xO8v5KWYgInW0gtqD9Qlj0C5gCY=;
+	s=arc-20240116; t=1783622927; c=relaxed/simple;
+	bh=eQe38nCcFVma1LFoo+FfKYEwuC+uAK1QDlLMvNStl/w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lWfjQA9rdO8pxDQxrOk4L779sgST8fpAyO4vzptAeneuH90sTHbTeD+6Er13Hx8ufFe3wOjw+kPNYANZ3UbfB2ZuzlmnGk0YvqfZrNEeGY/kIBhJIpvt5AewvEf1ycJI1pKrVVnbaAdUrchnXo0jv+czBHsrFXcqyBWLVcykjDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jOzwTZsM; arc=none smtp.client-ip=198.175.65.14
+	 In-Reply-To:Content-Type; b=DDhRS7dJix04cDdUJ0sY0jEvBBScRYKEe2poElI6y5RFR6u+niqTFPJcfWmLB+PANF5dd2PSLl+KqCWPwveGxjZS79wjs27DDFpiGRSi3SN2/CFfA8vQ9IGfPi3boWgpB7v3RXEwqaKiD2InLVE7icmGhuXaRBI/7HWNr0k0/Uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A4V9I73E; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jOzwTZsM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A4V9I73E"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783621827; x=1815157827;
+  t=1783622926; x=1815158926;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=sJrITh55upt9+7i4xO8v5KWYgInW0gtqD9Qlj0C5gCY=;
-  b=jOzwTZsMeZzDN1W64ahfbX6+rhyHQVD2ThXdLkQa9Twq/BmS+7V329qV
-   JrYZeU/TEZgiSV20b+UjXeqjDP+6jL0/AaSSHLSZJa/LrLwxWqzsf+9Zy
-   wp9krvGZzcgjeO5dMHLC+iB7gPnF/676Zf7RQk/VXU8RjyUrxs16Y/ru+
-   kgeNDCOR3AS5pJApFVhqRrew1O0osjKnc2QBscl2bE4+S4mm8aoky6Sul
-   v+4SJux9PYuJQcp/avpD+JILq20fxZMdzibNh1qcCDDt8e7i5vSua12dR
-   6IdelnEG9JiokhEFffQQq0mLejc30WxIcI0mMSdwJegsps6FZMkQWgTkB
-   A==;
-X-CSE-ConnectionGUID: rnKzzbEnQxKv8iWpsD74Fg==
-X-CSE-MsgGUID: cIbKVAFUQCuWtjAG4WJLlg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="88232220"
+  bh=eQe38nCcFVma1LFoo+FfKYEwuC+uAK1QDlLMvNStl/w=;
+  b=A4V9I73ErKuPhUmkpqwVvKDqQzGKaKapXs+8k+IgIjPl1m2txS/eslGe
+   ov5k2Zj+61uJ0No/lEUzGlkkqGIZvCe5+hTqGz21rOnevjvBsA1UiNYnR
+   6vpHZAsBQ3Wg/et8KHaxcX1WvMZdhD4/YGv54AghdQ/WmF4ZfQZSJPLgb
+   rRWjxlzb/jGJTOmzmGJVBiraa4WkD2oNkOqvOBDoHacfojZKVSbEQyGHD
+   q1aR1rM1SEDRbQu/+1Suw/XdBBvqD2VnIh2jAujToiPnwcdrshdTnDRTK
+   QotkPGxxwVsJNyZ8KIUV6HzINzee4kymIlACa7p3oAwWAnLhVfAcGc32W
+   Q==;
+X-CSE-ConnectionGUID: 6tznwAX6RiCRbKU5zwIm0g==
+X-CSE-MsgGUID: GrSBxn/CRzao+o8iX54L9g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="84510523"
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="88232220"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 11:30:27 -0700
-X-CSE-ConnectionGUID: CreSit38SEqhU34F5Ejwog==
-X-CSE-MsgGUID: GyVfq50gT2Gw6mAARUjGdw==
+   d="scan'208";a="84510523"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 11:48:39 -0700
+X-CSE-ConnectionGUID: kYtsmSMOTf29rCwwFr7afQ==
+X-CSE-MsgGUID: KmQqYJpaQhGKsg7QNVCUnw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="256580746"
+   d="scan'208";a="252932157"
 Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.111.142]) ([10.125.111.142])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 11:30:24 -0700
-Message-ID: <6cc4354f-c494-4198-b1ad-a8b538aa1a77@intel.com>
-Date: Thu, 9 Jul 2026 11:30:23 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2026 11:48:37 -0700
+Message-ID: <da2b9492-8b92-42dd-9906-e8942a42105d@intel.com>
+Date: Thu, 9 Jul 2026 11:48:36 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 04/10] mm/memory_hotplug: export
- mhp_get_default_online_type
+Subject: Re: [PATCH v6 05/10] mm/memory_hotplug: add
+ __add_memory_driver_managed() with online_type arg
 To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
 Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
  linux-cxl@vger.kernel.org, driver-core@lists.linux.dev,
@@ -63,66 +63,204 @@ Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
  alison.schofield@intel.com, akpm@linux-foundation.org, ljs@kernel.org,
  liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, surenb@google.com,
  mhocko@suse.com, shuah@kernel.org, iweiny@kernel.org,
- Smita.KoralahalliChannabasappa@amd.com, apopple@nvidia.com
+ Smita.KoralahalliChannabasappa@amd.com, apopple@nvidia.com,
+ Pankaj Gupta <pankaj.gupta@amd.com>
 References: <20260630211842.2252800-1-gourry@gourry.net>
- <20260630211842.2252800-5-gourry@gourry.net>
+ <20260630211842.2252800-6-gourry@gourry.net>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260630211842.2252800-5-gourry@gourry.net>
+In-Reply-To: <20260630211842.2252800-6-gourry@gourry.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 6/30/26 2:18 PM, Gregory Price wrote:
-> Drivers which may pass hotplug policy down to DAX need MMOP_ symbols
-> and the mhp_get_default_online_type function for hotplug use cases.
+> Existing callers of add_memory_driver_managed cannot select the
+> preferred online type (ZONE_NORMAL vs ZONE_MOVABLE), requiring it to
+> hot-add memory as offline blocks, and then follow up by onlining each
+> memory block individually.
 > 
-> Some drivers (cxl) co-mingle their hotplug and devdax use-cases into
-> the same driver code, and chose the dax_kmem path as the default driver
-> path - making it difficult to require hotplug as a predicate to building
-> the overall driver (it may break other non-hotplug use-cases).
+> Most drivers prefer the system default, but the CXL driver wants to
+> plumb a preferred policy through the dax kmem driver.
 > 
-> Export mhp_get_default_online_type function to allow these drivers to
-> build when hotplug is disabled and still use the DAX use case.
+> Refactor APIs to add a new interface which allows the dax kmem module
+> to select a preferred policy.
 > 
-> In the built-out case we simply return MMOP_OFFLINE as it's
-> non-destructive.  The internal function can never return -1 either,
-> so we choose this to allow for defining the function with 'enum mmop'.
+> Overriding the configured auto-online policy is only safe for known
+> in-tree modules, where we know the override reflects a different,
+> user-requested policy.  We do not want arbitrary out-of-tree drivers
+> silently overriding the system-wide onlining policy, so restrict the
+> new interface to the kmem module using EXPORT_SYMBOL_FOR_MODULES()
+> rather than a plain EXPORT_SYMBOL_GPL().  Other in-tree modules (e.g.
+> cxl_core) can be added to the allowed list as the need arises.
 > 
-> Signed-off-by: Gregory Price <gourry@gourry.net>
+> Refactor add_memory_driver_managed, extract __add_memory_driver_managed
+> - Add proper kernel-doc for add_memory_driver_managed while refactoring
+> - New helper accepts an explicit online_type.
+> - New helper validates online_type is between OFFLINE and ONLINE_MOVABLE
+> 
+> Refactor: add_memory_resource, extract __add_memory_resource
+> - new helper accepts an explicit online_type
+> 
+> Original APIs now explicitly pass the system-default to new helpers.
+> 
+> No functional change for existing users.
+> 
 > Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+> Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
 > ---
->  include/linux/memory_hotplug.h | 2 ++
->  mm/memory_hotplug.c            | 1 +
->  2 files changed, 3 insertions(+)
+>  include/linux/memory_hotplug.h |  3 ++
+>  mm/memory_hotplug.c            | 61 +++++++++++++++++++++++++++++-----
+>  2 files changed, 56 insertions(+), 8 deletions(-)
 > 
 > diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index 5d4b628c4a1f..4d51fcb93a37 100644
+> index 4d51fcb93a37..ff3b865ea7e7 100644
 > --- a/include/linux/memory_hotplug.h
 > +++ b/include/linux/memory_hotplug.h
-> @@ -317,6 +317,8 @@ extern struct zone *zone_for_pfn_range(enum mmop online_type,
->  extern int arch_create_linear_mapping(int nid, u64 start, u64 size,
->  				      struct mhp_params *params);
->  void arch_remove_linear_mapping(u64 start, u64 size);
-> +#else
-> +static inline enum mmop mhp_get_default_online_type(void) { return MMOP_OFFLINE; }
->  #endif /* CONFIG_MEMORY_HOTPLUG */
->  
->  #endif /* __LINUX_MEMORY_HOTPLUG_H */
+> @@ -295,6 +295,9 @@ extern int __add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags);
+>  extern int add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags);
+>  extern int add_memory_resource(int nid, struct resource *resource,
+>  			       mhp_t mhp_flags);
+> +int __add_memory_driver_managed(int nid, u64 start, u64 size,
+> +				const char *resource_name, mhp_t mhp_flags,
+> +				enum mmop online_type);
+>  extern int add_memory_driver_managed(int nid, u64 start, u64 size,
+>  				     const char *resource_name,
+>  				     mhp_t mhp_flags);
 > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 6833208cc17c..494257054095 100644
+> index 494257054095..a66346def504 100644
 > --- a/mm/memory_hotplug.c
 > +++ b/mm/memory_hotplug.c
-> @@ -239,6 +239,7 @@ enum mmop mhp_get_default_online_type(void)
->  
->  	return mhp_default_online_type;
->  }
-> +EXPORT_SYMBOL_GPL(mhp_get_default_online_type);
->  
->  void mhp_set_default_online_type(enum mmop online_type)
+> @@ -1494,10 +1494,10 @@ static int create_altmaps_and_memory_blocks(int nid, struct memory_group *group,
+>   *
+>   * we are OK calling __meminit stuff here - we have CONFIG_MEMORY_HOTPLUG
+>   */
+> -int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+> +static int __add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags,
+> +				 enum mmop online_type)
 >  {
+>  	struct mhp_params params = { .pgprot = pgprot_mhp(PAGE_KERNEL) };
+> -	enum mmop online_type = mhp_get_default_online_type();
+>  	enum memblock_flags memblock_flags = MEMBLOCK_NONE;
+>  	struct memory_group *group = NULL;
+>  	u64 start, size;
+> @@ -1585,7 +1585,7 @@ int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+>  		merge_system_ram_resource(res);
+>  
+>  	/* online pages if requested */
+> -	if (mhp_get_default_online_type() != MMOP_OFFLINE)
+> +	if (online_type != MMOP_OFFLINE)
+>  		walk_memory_blocks(start, size, &online_type,
+>  				   online_memory_block);
+>  
+> @@ -1603,7 +1603,13 @@ int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+>  	return ret;
+>  }
+>  
+> -/* requires device_hotplug_lock, see add_memory_resource() */
+> +int add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+> +{
+> +	return __add_memory_resource(nid, res, mhp_flags,
+> +				     mhp_get_default_online_type());
+> +}
+> +
+> +/* requires device_hotplug_lock, see __add_memory_resource() */
+>  int __add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags)
+>  {
+>  	struct resource *res;
+> @@ -1631,7 +1637,15 @@ int add_memory(int nid, u64 start, u64 size, mhp_t mhp_flags)
+>  }
+>  EXPORT_SYMBOL_GPL(add_memory);
+>  
+> -/*
+> +/**
+> + * __add_memory_driver_managed - add driver-managed memory with explicit online_type
+> + * @nid: NUMA node ID where the memory will be added
+> + * @start: Start physical address of the memory range
+> + * @size: Size of the memory range in bytes
+> + * @resource_name: Resource name in format "System RAM ($DRIVER)"
+> + * @mhp_flags: Memory hotplug flags
+> + * @online_type: Auto-Online behavior (offline, online, kernel, movable)
+> + *
+>   * Add special, driver-managed memory to the system as system RAM. Such
+>   * memory is not exposed via the raw firmware-provided memmap as system
+>   * RAM, instead, it is detected and added by a driver - during cold boot,
+> @@ -1639,6 +1653,7 @@ EXPORT_SYMBOL_GPL(add_memory);
+>   *
+>   * Reasons why this memory should not be used for the initial memmap of a
+>   * kexec kernel or for placing kexec images:
+> + *
+>   * - The booting kernel is in charge of determining how this memory will be
+>   *   used (e.g., use persistent memory as system RAM)
+>   * - Coordination with a hypervisor is required before this memory
+> @@ -1651,9 +1666,12 @@ EXPORT_SYMBOL_GPL(add_memory);
+>   *
+>   * The resource_name (visible via /proc/iomem) has to have the format
+>   * "System RAM ($DRIVER)".
+> + *
+> + * Return: 0 on success, negative error code on failure.
+>   */
+> -int add_memory_driver_managed(int nid, u64 start, u64 size,
+> -			      const char *resource_name, mhp_t mhp_flags)
+> +int __add_memory_driver_managed(int nid, u64 start, u64 size,
+> +		const char *resource_name, mhp_t mhp_flags,
+> +		enum mmop online_type)
+>  {
+>  	struct resource *res;
+>  	int rc;
+> @@ -1663,6 +1681,9 @@ int add_memory_driver_managed(int nid, u64 start, u64 size,
+>  	    resource_name[strlen(resource_name) - 1] != ')')
+>  		return -EINVAL;
+>  
+> +	if (online_type < MMOP_OFFLINE || online_type > MMOP_ONLINE_MOVABLE)
+> +		return -EINVAL;
+> +
+>  	lock_device_hotplug();
+>  
+>  	res = register_memory_resource(start, size, resource_name);
+> @@ -1671,7 +1692,7 @@ int add_memory_driver_managed(int nid, u64 start, u64 size,
+>  		goto out_unlock;
+>  	}
+>  
+> -	rc = add_memory_resource(nid, res, mhp_flags);
+> +	rc = __add_memory_resource(nid, res, mhp_flags, online_type);
+>  	if (rc < 0)
+>  		release_memory_resource(res);
+>  
+> @@ -1679,6 +1700,30 @@ int add_memory_driver_managed(int nid, u64 start, u64 size,
+>  	unlock_device_hotplug();
+>  	return rc;
+>  }
+> +EXPORT_SYMBOL_FOR_MODULES(__add_memory_driver_managed, "kmem");
+> +
+> +/**
+> + * add_memory_driver_managed - add driver-managed memory
+> + * @nid: NUMA node ID where the memory will be added
+> + * @start: Start physical address of the memory range
+> + * @size: Size of the memory range in bytes
+> + * @resource_name: Resource name in format "System RAM ($DRIVER)"
+> + * @mhp_flags: Memory hotplug flags
+> + *
+> + * Add driver-managed memory with the system default online type set by
+> + * build config or kernel boot parameter.
+> + *
+> + * See __add_memory_driver_managed for more details.
+> + *
+> + * Return: 0 on success, negative error code on failure.
+> + */
+> +int add_memory_driver_managed(int nid, u64 start, u64 size,
+> +			      const char *resource_name, mhp_t mhp_flags)
+> +{
+> +	return __add_memory_driver_managed(nid, start, size, resource_name,
+> +			mhp_flags,
+> +			mhp_get_default_online_type());
+> +}
+>  EXPORT_SYMBOL_GPL(add_memory_driver_managed);
+>  
+>  /*
 
