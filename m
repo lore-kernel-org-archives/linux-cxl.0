@@ -1,152 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011047.outbound.protection.outlook.com [40.93.194.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E753B40680A;
-	Thu,  9 Jul 2026 10:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783591808; cv=none; b=YzCpAXlYy8C9Hdm9zNbKWJJ8xPcOkZk721GQyORBz0P6T0AS53U8D66XCq6Oy4hD0wkPMjpc6pAzLxcM/ebyc1RRNo+wm4AiN1a0TcHSDyhXvkx1lMXYpTgrOEdLJC8u4gnDQUU+jeXBlYK1rWs62x/OWNoawvjiZUZL3wLVFVE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783591808; c=relaxed/simple;
-	bh=dxTPPt2QgtY2Pa2AvBFKjxAL05WV6i9AGj9iDaTz5E4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PF12LwZcFLe69D4EeShmn6/wrz9puVdQx6EWq+k4qFX/Jc7wOBivDfVpU8dMOI7irQehmqP6LIh+2y+NWZpMMXhQccsF6DV+mC3G1oRh65pqCkOvKFJN1QRecpvcP0CGMcoRDPMcolTpMKT2Z2sFzvkSdknCpA8m5hShFh5WDAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LfJR8DV3; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF2C3BB9F8
+	for <linux-cxl@vger.kernel.org>; Thu,  9 Jul 2026 10:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783591948; cv=fail; b=HDJ5UHUdCnD4/7X4ThuZCOfarauieRyuPGShYF+3lLjWa358QvZPZ7X2Nw+t0l80Gg2LML1q6T1xFvnTEoOlCgtU1/u1tTpk3RPpXoWKGEtH+vYTtSGWpjYi6r7VZdE8M0T+w7XyAujxJrpq4Y3KmVpOVePFm+lg/m6HGcAQMOM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783591948; c=relaxed/simple;
+	bh=QyYlYybwC/gW0ZmPnP2Jjmfx6iAl1YLKZznNG4N+kuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=TiQXNA4ydCENsA17/OQOgT31YE1WpUeihbGw/wAzQUSuR0vTjVphFhOpLPwzCUGd06TsXpL4QmSzO+GJ92DhakhM48FiW2VYcLq2eYqZZcJaIC3AAR278MC9UWDB4+hpDWsbiIBdZkYcOtGpGK8p0JuXkAfiFLi4WBqHBEwKY4Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EZOmCONK; arc=fail smtp.client-ip=40.93.194.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LfJR8DV3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 452041F000E9;
-	Thu,  9 Jul 2026 10:09:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783591805;
-	bh=62Xp9uenJbWFCQ1zJ3m5mkBRivtDvPiXDOuu4/GkIx8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=LfJR8DV3LYnN+5gzBj0atwXuJVwLFDJcyHGUFiHu62k+FqO0RhRNvNCnFiVHfQ2c0
-	 eahWL9aq2q5M1+Lo3F/7flwAAMOIJe/0FWe9q0WpKnGC+kz5Hs/RYHmwJewFB8vPlU
-	 Cx6rA1JiGR1210ORhlqBSZ+Jz1n4nsdIEF/ildxWVXiz1i9ij/gD/+5g8vx98LwXWJ
-	 KNEpduf3tpmwOibv/sUCnM9nJ/62bIVgZzVOr1gWw8P6WTGlDrHcw36X9QRtunuBJ7
-	 eNi0im4S0Hl6hDS1YiUFfgjqgqxwYkAMtl3SYwSCnWayPACRF/qpUG6ckmn5IrpGCa
-	 6zTFNO/+RQXzA==
-Message-ID: <0970fec0-5c18-41e1-b63d-029c7a8354ee@kernel.org>
-Date: Thu, 9 Jul 2026 12:09:58 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EZOmCONK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=riUF5zSOTVPOs5Aw0g+D+6D1dCFVX2UZFPVFumGdhs1abNSKvFmM4xx4wNK6sKZMxQSOS7ASE2s6ql1HjkqutepkjRpnRLvtADYp4KXW3GQnEF9YSTpH8er1C6VRwE9DE3cX2p3FM7dRjhstywKuzVmP5TbICv+gWw//Fe6Y0eP6/1cE5tFPaHd86e74YEsLA1RShFDCfBE82ry5EKY/ntc4zP4E9/dN6JzLIGN8PBOnkwq1pqQdZdh6ooZcuIEoN8v3QXoLkOvSr5E8Gvptglv8di0B2bHLgIeS6MWxRUFc9pMoVirq5ddfj6gQ9ifMfrYO4i2vM6G4/jZFQ3DQ6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OLu9lORoWgTl+JhM0rTkHw/oKGnZ3CPFcFQS8qV6fic=;
+ b=o1Ir6wuUd8uu6FrthWL/0rg1wnBPaqYK83HWhUVPfd3yxeA46wF/hT8TC0g7SEzgEi5AHJpDbybdsuq66bj9xqnpLMIpYAHq5NzsF3yps4gusyOXQ5HC0993ifOQ6f2ERkoX12ZIdX7QlQcbHKIi6/rmS1weVkFuWRO1FMX9kDSlYUoeQ5pOFU2mCto34cCkL7kWVTp3my5t9FQsvMuCcxsg0jYZ/HMo1Ft7QwD0+BN7gN3xZ+bHEazCB9i9xyWa6w07Bd/i+n94BL/uHtpJTqxAiHGf7Z1SbROmPq/1Guuj/X42SoiDIjeYDT+Ul3KOBXyjVpaJEYAf5xFnAX7NNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OLu9lORoWgTl+JhM0rTkHw/oKGnZ3CPFcFQS8qV6fic=;
+ b=EZOmCONKNr5ZP0ytTV5+S2vVhOSxvj0l6/kt9IvaOfUOjqJquFqucnunNt/8r1LzH+ULhmoYw0fpOK93mV0E0MS1BtdGn/bMMmbigNHn0SwfZk4i8fz5RSy6LehC7n5it9hZEEzuyhfdSbINF6hGYLT2qPvw8YuZ2Bt3wJIVenVsI9SuwR2Jw0b0rvQHVO8PXZDKarcXG3aDw4ZJRU920n+mHHiYN5TMC8r9607ur7MBATxk8SYw9eByLehe5FnODSJhJgF0Cb0xasnhDnlx+yOf1amisDhYIVz+CrooVVjKSLs21+O5QOFhgLaWa0UJkUPbUqan6KtSGGsH9+yf4w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by DM6PR12MB4187.namprd12.prod.outlook.com (2603:10b6:5:212::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.15; Thu, 9 Jul
+ 2026 10:12:22 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0181.014; Thu, 9 Jul 2026
+ 10:12:22 +0000
+Date: Thu, 9 Jul 2026 18:12:17 +0800
+From: Richard Cheng <icheng@nvidia.com>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Subject: Re: [ndctl PATCH] test/cxl-poison.sh: test scanning past fully
+ mapped partitions
+Message-ID: <ak9yQtGEvMWruPhV@MWDK4CY14F>
+References: <20260701044205.1589967-1-alison.schofield@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260701044205.1589967-1-alison.schofield@intel.com>
+X-ClientProxiedBy: TP0P295CA0036.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:910:4::15) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] mm: split a couple of headers from internal.h
-Content-Language: en-US
-To: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>
-Cc: Alexander Graf <graf@amazon.com>, Alexander Potapenko
- <glider@google.com>, Brendan Jackman <jackmanb@google.com>,
- Christoph Lameter <cl@gentwo.org>, Dennis Zhou <dennis@kernel.org>,
- Dmitry Vyukov <dvyukov@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
- Marco Elver <elver@google.com>, Michal Hocko <mhocko@suse.com>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Suren Baghdasaryan
- <surenb@google.com>, Tejun Heo <tj@kernel.org>,
- Uladzislau Rezki <urezki@gmail.com>, Zi Yan <ziy@nvidia.com>,
- kasan-dev@googlegroups.com, kexec@lists.infradead.org,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20260709-internal-h-v2-0-695631425968@kernel.org>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <20260709-internal-h-v2-0-695631425968@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|DM6PR12MB4187:EE_
+X-MS-Office365-Filtering-Correlation-Id: 55172e93-be11-4aec-c5cd-08dedda290f9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|366016|23010399003|5023799004|11063799006|56012099006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	Mt2L2fzRV1qRFs6Cb+2xkb0yY1CEVqjD3lx8dJo8cN+rLoMR5lAAlhHx0MlvOQqq6SAEZi1lLvRl4oQDwqm/npCxvBbCKwfYjo9YrXuq93nXJ6LVR5UszQXazqHvGyD0z3+ik1UQku8nh6c/846Bb2wecV4LRD+vXWD58EWzB0jTpAYbmSKxtrE69WjD+ViNFfruBvHr3S0E1gF5+iUWeAFE7ZqUbRFQrNyYHa+ie7J+TYjo3FemjA6L5wcvH233ErtKKm1+roGdc+Q/Zd1rkyVy116WzWxD40skkGTW0E3Zna/MPbsAzk35mjQ3kBBdu8b1IIasIfnDSvNcqVKxmOJ3LKKwaxmcYi+v3qEHi0v4kiQqqarJTHdG/98FJivLd/CahGeAizMJK9n3iKUnReOlYDQlMOvCamwje5ftQ41ZcFgSA5m/DTG3NsPiI7DdCyhjEGx+9G+dtIOgnIP9jmDkFUS1gnf1H4lKH2mWxLSDwmFv73kdm8B4jHgnE4v3naic3xGQ4ldDBRrlRuDrI/RJwA/Da4sYu1OoNigGn6jjaA+md4IhEXFmUthaR7qmt4RFayD71WnsPeo3faPXs8oHQL8Oi5yM7960uuJWYdS/+Pzom4mfcP+DEI9NaG2yOJfWSPw1OgEnOT9et3/A3tmNuVkuaN2LGLGgdHQvUYo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(23010399003)(5023799004)(11063799006)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8qR2c6jPoWQe9xq3zFufQSVGBh2sdrQMdBP3eD6ivlf/0wR5wmY8Ao3nr0Vl?=
+ =?us-ascii?Q?2ad6B1xIJdcq18c0hVL3QlSZZxVtnQZsqsJi3SOOXzlB9pb5gfUkNVjnDIvE?=
+ =?us-ascii?Q?FhmBUWw42NFZtpcLRJFsrxQ/IBJK0EfSyn76w5RETajwy3pcOnHFIoqUMLOA?=
+ =?us-ascii?Q?xqmM77e2WtmvxLDz2/U56kFvdHhbYXUVPdWFe4jVswBznz7SZJSTpz4fcl6J?=
+ =?us-ascii?Q?CGmX2UoHTsPCJ/YF+4+O+obGEwhdGGPxnxQCBwYJwxXrBA+1LalBoWD247N5?=
+ =?us-ascii?Q?qC+jEIqcgdOmCdFOb08lFPH6kxoZz8bjBJtPIz+klw3n9cueldvLdN3EIClN?=
+ =?us-ascii?Q?UmcDcFfQpGtfZyPbUOiYVJAS4ZsuRnNI9b3MFJVs4q2pj3E7V5r0VoE0WUYL?=
+ =?us-ascii?Q?05WB0dyCM4mAx8U3gJQFmz4HxRWN+ptfMCd4Gf4/9aNjd586U1rxM/va/2rG?=
+ =?us-ascii?Q?wzVSByEeKvEhcoNWcTqjnlR5tooTeA2minZFt3SfZwmge8uoSmMj6d/0mTep?=
+ =?us-ascii?Q?y/r2iuuBQtj5q7F/jqK/pVlUp9iO7AfTWqoqwOtxM9sU9zAJzovXI7CYUR5+?=
+ =?us-ascii?Q?axEvKqBAfZc3e+gGKq8pkJdbCT9CfxnVXLr/BtZfjcj3bpOj6e2PpvgdDKeN?=
+ =?us-ascii?Q?K9wyDyYI7KFq1bFIXqqVLfUeukJLrnoUi+SJmheBYWfo1cB/een/7TFTxYJS?=
+ =?us-ascii?Q?RLIG5H0FuKKDGXIt1pVdOD0DV3nCijfz56gQxQdLM1OVi9CVbL4ci7E31YS0?=
+ =?us-ascii?Q?vx3IIVDckf4aZb1dAi9+jna3CvIsVhuCKk2O4WIkILIOAR8zBz1/08oarvdT?=
+ =?us-ascii?Q?o/6JjkkyAwLamzOQV6Ljx9BXiJIjC8FCnYTlY8LZVvcLq+R430Kee+Bzporh?=
+ =?us-ascii?Q?EgOnfv5QAMZ7loT1gdstvI/cRXmTaj5Uhr4u+teweIrwHdQKPQT0JYFfGCuf?=
+ =?us-ascii?Q?rOy37+TT2jbb91ThhR9ILgr8C2WcbEvFWe7cRPtM0agfWNbZoOC+iH/SASpw?=
+ =?us-ascii?Q?Rqr5gkiIWAXO6VwEhWz/hIrhPv+6dmbYmyjyVK4SEBCqJE97bK8BdoT/7lq9?=
+ =?us-ascii?Q?IFAnXCW6GAjiND4O2+fDuiQxiCKNi/uwJpmkyREruwS+kbox2MWioSES3rQ+?=
+ =?us-ascii?Q?L3PlX+fyBcTpNptdF9Co0HgAh+jVfE3eLTKCpZjDerh+HJ26b/31KLpbIZuB?=
+ =?us-ascii?Q?Go9Q58PDEy9SpBroktiGu7FOZODzplBloHIO9Tn6R1mT025TpjYYKbN88qQj?=
+ =?us-ascii?Q?Ymkn/50o7bPS3LHzrYJhCup4nttL9RdyAFteT6NMjMeD8V1YSTeyuFPFCxQm?=
+ =?us-ascii?Q?I74T0rpbnxcNnSSoFOzFmTRiVzOMMP9yJNCxFHHKblVYRRhWn2EC722Trr3l?=
+ =?us-ascii?Q?OuyW15TvwyLWouTmSEM79lDb/kx+yPpES4RnlTUiRVU9fM1MGcQQioneDgrH?=
+ =?us-ascii?Q?AGTyODOf0bqwRq6sQzOd+lUAMKOBk0kBr9YDfG3PzL5dmx/dg5VF1Do/Kl+8?=
+ =?us-ascii?Q?ldgoi8hotL9f4gEaDCC+goFbPJLAZco6uzIKgOhLVoDQEAwg60wMvZy84fq0?=
+ =?us-ascii?Q?UXVSxZMtA7ZCU7ymSOCujBUCNl/NIl6Tug+yTm4HYCEGBGxQcbGdC5c18BcA?=
+ =?us-ascii?Q?/MG6X2UK3HM5c/2XToaWX4i46ye+OuF5t1yFZKGhTqrHMz/igiOTyEeVTpmL?=
+ =?us-ascii?Q?rpxFVCDZL2yIaxmLoh3Qzgh/W8DI6T3cZoU/e6fmcM5OxWpP?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55172e93-be11-4aec-c5cd-08dedda290f9
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Jul 2026 10:12:22.3276
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XD+NW7/nXxlscHWxv2CkWGXsm9kHR8LT5qmGHTxy9debgCvpe3qQSgYmCpGv3YTpubq8JxuBokD0I62TGgVqHQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4187
 
-On 7/9/26 12:00, Mike Rapoport (Microsoft) wrote:
-> mm/internal.h becomes more and more bloated.
+On Tue, Jun 30, 2026 at 09:42:02PM +0800, Alison Schofield wrote:
+> Listing poison by memdev scans the unmapped tail of every partition.
+> When an earlier partition is fully mapped, its tail is zero length, but
+> the scan must continue to later partitions. A regression caused the
+> scan to stop at the first fully-mapped partition, leaving later
+> partitions unscanned.
 > 
-> Split declarations related to mm_init, memblock, vmalloc and sparse into
-> new headers.
-> 
+> Backstop that behavior with a test case that fully maps a memdev's RAM
+> partition so its unmapped tail is zero length, then injects poison into
+> the unmapped PMEM partition that follows. The PMEM poison is only
+> reported if the scan continues past the fully-mapped RAM partition.
+>
+
+Hi Alison,
+
+Thanks for this ! I ran it against cxl_test in the following ways.
+
+On a kernel with the fix [1], the test passes in both run_poison_test passes:
+1 poison record found after inject at the first pmem DPA, 0 after clear.
+
+On a kernel without the fix, it fails exactly at the "1 poison records expected, 0 found"
+assertion, so it catches the regression as intended.
+
+Just one small thing below.
+
+ 
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > ---
-> v2 changes:
-> * fix fallouts of rebase fixups of checkpatch warnings
+>  test/cxl-poison.sh | 40 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
 > 
-> v1: https://patch.msgid.link/20260709-internal-h-v1-0-956d5092782d@kernel.org
-> 
-> ---
-> Mike Rapoport (Microsoft) (3):
->       mm: split out mm_init and memblock declarations from internal.h
->       mm: split out sparse declarations from internal.h
->       mm: split out vmalloc declarations from internal.h
-> 
->  MAINTAINERS                        |   3 +
->  kernel/liveupdate/kexec_handover.c |   3 +-
->  mm/cma.c                           |   1 +
->  mm/execmem.c                       |   1 +
->  mm/hugetlb.c                       |   1 +
->  mm/internal.h                      | 183 -------------------------------------
->  mm/kmsan/hooks.c                   |   1 +
->  mm/kmsan/shadow.c                  |   1 +
->  mm/memblock.c                      |   1 +
->  mm/memory_hotplug.c                |   1 +
->  mm/mm_init.c                       |   3 +
->  mm/mm_init.h                       | 120 ++++++++++++++++++++++++
->  mm/page_alloc.c                    |   1 +
->  mm/percpu-vm.c                     |   1 +
->  mm/sparse-vmemmap.c                |   2 +
->  mm/sparse.c                        |   2 +
->  mm/sparse.h                        |  63 +++++++++++++
->  mm/vmalloc.c                       |   1 +
->  mm/vmalloc.h                       |  46 ++++++++++
->  19 files changed, 251 insertions(+), 184 deletions(-)
+> diff --git a/test/cxl-poison.sh b/test/cxl-poison.sh
+> index 49aa1b68c5c1..a03e08084eb4 100644
+> --- a/test/cxl-poison.sh
+> +++ b/test/cxl-poison.sh
+> @@ -219,6 +219,45 @@ test_poison_by_region_offset_negative()
+>  	clear_poison "$region" "$large_offset" true
+>  }
+>  
+> +# Backstop a driver fix where a fully mapped partition prematurely
+> +# terminated the unmapped poison scan.
+> +test_poison_unmapped_later_partition()
+> +{
+> +	local decoder ram_size pmem_dpa
+> +
 
-Sounds good
+"region" is assigned below but not declared local like the others.
+Does it have any reason for it to not be local var?
+It might be harmless today but tests added after this one will inherit
+a stale global region, if it ever uses one.
 
-Acked-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+Tested-by: Richard Cheng <icheng@nvidia.com>
+Reviewed-by: Richard Cheng <icheng@nvidia.com>
 
-> ---
-> base-commit: 59e34180e138a293260301c139cf7ee800978533
-> change-id: 20260707-internal-h-2efef660381d
+[1]:
+https://lore.kernel.org/linux-cxl/20260708074228.43654-3-icheng@nvidia.com/
+
+Best regards,
+Richard Cheng.
+
+> +	check_min_kver "7.3" || return 0
+> +
+> +	# Free the auto region to use the ram capacity
+> +	$CXL destroy-region -f -b "$CXL_TEST_BUS" all
+> +
+> +	find_memdev
+> +
+> +	# Fully map the ram partition so it has a zero-length unmapped tail
+> +	decoder=$($CXL list -b "$CXL_TEST_BUS" -D -d root -m "$memdev" |
+> +		  jq -r ".[] |
+> +		  select(.volatile_capable == true) |
+> +		  select(.nr_targets == 1) |
+> +		  .decoder")
+> +	[[ -n "$decoder" && "$decoder" != "null" ]] ||
+> +		do_skip "no x1 volatile decoder found"
+> +
+> +	ram_size=$($CXL list -m "$memdev" | jq -r ".[0].ram_size")
+> +	[[ -n "$ram_size" && "$ram_size" != "null" ]] || err "$LINENO"
+> +
+> +	region=$($CXL create-region -t ram -d "$decoder" -m "$memdev" \
+> +		 -s "$ram_size" | jq -r ".region")
+> +	[[ -n "$region" && "$region" != "null" ]] || err "$LINENO"
+> +
+> +	# Poison the unmapped pmem tail
+> +	pmem_dpa=$ram_size
+> +	inject_poison "$memdev" "$pmem_dpa"
+> +	validate_poison_found "-m $memdev" 1
+> +	clear_poison "$memdev" "$pmem_dpa"
+> +	validate_poison_found "-m $memdev" 0
+> +
+> +	$CXL destroy-region -f -b "$CXL_TEST_BUS" "$region"
+> +}
+> +
+>  is_unaligned() {
+>  	local region=$1
+>  	local hbiw=$2
+> @@ -332,6 +371,7 @@ run_poison_test()
+>  		do_skip "test cases requires inject by region kernel support"
+>  	test_poison_by_region_offset
+>  	test_poison_by_region_offset_negative
+> +	test_poison_unmapped_later_partition
+>  }
+>  
+>  modprobe -r cxl_test
 > 
-> --
-> Sincerely yours,
-> Mike.
+> base-commit: 15e932c4e1318a9608ad9b799ad83a32a8b5970d
+> -- 
+> 2.37.3
 > 
-
