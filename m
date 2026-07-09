@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF2E403B1B;
-	Thu,  9 Jul 2026 10:00:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54F1408022;
+	Thu,  9 Jul 2026 10:00:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783591214; cv=none; b=R4MQ6d8dUt2r5Tw2AQIsMgvm/qFthwnnjKYPwmO8ypI4JzO7wrdYmRRLrqs8kvWwrfFBn3v+nGFVZJ/6ucxYI8IQFklC/m0GQKwYj/kePH6Ibn4LKatbE/ru8LzbRcq/4Iw2cHYuT1lLvLV9xAJCptebH832pjCzIOHUoJPYNdg=
+	t=1783591225; cv=none; b=aSYQKScmOonHeBbWX1SLeb08PmDzj9CatISGrYLPOA76Ddcps8e2PsBAGWnrm2fvge4XPjckWMSHj1LKeC4fjgTbRz+7oFnm5Z3/7br0vR55zJlj3jeq6QMCl1DlhLck5PlLFMKeAgdANPvtoG+yzXTp22SKO2M0hNBQfLNw7jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783591214; c=relaxed/simple;
-	bh=HfZbi+UkPks/CkZda0Tw8MJWw3GHLMLnSqqv4tIgObM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nKhbeL2lNia9l39g4fqDgktJVgd7MrFjQ6iDfppuWGqRfxer/mjLKiZp2EmOt1/zKvm9KzaREtlu2DhpMXsCWoIG7RSt4JfKh9EAFSokgnZ06rTQsG0MugyGCKpC3mizuA2fYOm269TO8xEdkY7sYN/fSxtdpgdv3/hTxLYJ3xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HQ91UncX; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783591225; c=relaxed/simple;
+	bh=hOp4zrAfgtRoAAUgMY5CJ7vOUpHrpAKhCoxyxhKqfwA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=aM2mpUhou8ogtZgPSwvmsJKuvieses8EFS4igXuOErlviZ9fzvJgiJ0zZunMBaAwEtIUEaW1++b248ys+SRzjl3mbilC1cA/vn+D5R1gWop9nBHxrxXq6L+gzzx8s/ny95BudWZ6mH5i18SUs1lI0OCL+ADAZaaff9h7r4U+i1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HHbCEebl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HQ91UncX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC85F1F000E9;
-	Thu,  9 Jul 2026 10:00:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHbCEebl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4650B1F00A3D;
+	Thu,  9 Jul 2026 10:00:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783591212;
-	bh=Qbt4ekz8xcd03uy7P/OzMvJEFCLZFGb2OtRS59Nxxvw=;
-	h=From:Subject:Date:To:Cc;
-	b=HQ91UncX+cUG+i2RI6m/YzVDE4IRkVEMUzrs+RCV2chjiekRRlFo8RZOiMP4k+T2P
-	 +auhgOw3e8TOq1fBwklI3IxXVH6M3XT9UvDSAUyvcYzUnfQm6edwVOBcwccFaXVgfm
-	 M8I6oBoAMC4q175jV7n67WUlz1rk+sDE15EOuXB0Hr3c1ngJ7y7nmS45hGyVDeMPb/
-	 ZX5WPqGuvq2nXaf0StFaeza79djxGu/NogpMGG0nKjFYUfWMC4PrCB9eqoiY84xxfI
-	 qgl/Pi5VP+gw978b9vvfSP1t5pL5tTYj0Xa+bwQsYCW+VoeQbnU4vcQ58Y6LXkfD3U
-	 U72n6krj64VvQ==
+	s=k20260515; t=1783591219;
+	bh=EQxS5gLJOprTy5BLpTKAG3KZTEQD8HTeSg2Kje/AmYw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=HHbCEeblArptyEoFgTeF0w7mbK5xIfC+AzNZ7BjM/Xzr1lvXqzL2qpSWiKQffbNRe
+	 k1/stSenLO3m4okjDzAxWynoagcMuWe+SV1OWBzTcctgBG2iZHCC0sOJRzKaYRrSTn
+	 j7l7jC93mXYK56MT4tbyHS/ydRgE86fP/6y7xXgxihOqouzjcQRXrE/ElyyyOZOURX
+	 KwUiQsqNnL9tLXPDrWV6HA4tpHRN/tI3J5LAnCL7RP5ktsxoiuq1SIrbhA0334V1y1
+	 GkXmaQxaEmX3XBz6Y+ssef+1jPByVyxdUihJW7UWrS94SF0Y5F8XVIMp3dv4rWgi66
+	 52//tzX6Zoq6Q==
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-Subject: [PATCH v2 0/3] mm: split a couple of headers from internal.h
-Date: Thu, 09 Jul 2026 13:00:02 +0300
-Message-Id: <20260709-internal-h-v2-0-695631425968@kernel.org>
+Date: Thu, 09 Jul 2026 13:00:03 +0300
+Subject: [PATCH v2 1/3] mm: split out mm_init and memblock declarations
+ from internal.h
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -37,11 +38,9 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIACJxT2oC/02OQQ6CMBBFr0K6drTUUMCV9zAsCh2gSlvTVtQQ7
- m6LMXH55s+8Pwvx6BR6csoW4nBWXlkTge0y0o3CDAhKRiaMMk5LWoIyAZ0RE4zAsMeec3qsckn
- iwd1hr16b7NJ82T/aK3YhGdJGKzxC64TpxjTS2gZ90BoMPlM8Kh+se2/PzHnS/Hrr/945Bwp1w
- WVBa1ZWTJ5vMcJpb91AmnVdP0COcLbWAAAA
-X-Change-ID: 20260707-internal-h-2efef660381d
+Message-Id: <20260709-internal-h-v2-1-695631425968@kernel.org>
+References: <20260709-internal-h-v2-0-695631425968@kernel.org>
+In-Reply-To: <20260709-internal-h-v2-0-695631425968@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
  David Hildenbrand <david@kernel.org>
 Cc: Alexander Graf <graf@amazon.com>, 
@@ -64,46 +63,436 @@ X-Mailer: b4 0.16-dev
 
 mm/internal.h becomes more and more bloated.
 
-Split declarations related to mm_init, memblock, vmalloc and sparse into
-new headers.
+Move declarations for related to mm/mm_init.c and mm/memblock.c to a new
+mm/mm_init.h header.
 
+No functional changes.
+
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Acked-by: Muchun Song <muchun.song@linux.dev>
 ---
-v2 changes:
-* fix fallouts of rebase fixups of checkpatch warnings
-
-v1: https://patch.msgid.link/20260709-internal-h-v1-0-956d5092782d@kernel.org
-
----
-Mike Rapoport (Microsoft) (3):
-      mm: split out mm_init and memblock declarations from internal.h
-      mm: split out sparse declarations from internal.h
-      mm: split out vmalloc declarations from internal.h
-
- MAINTAINERS                        |   3 +
- kernel/liveupdate/kexec_handover.c |   3 +-
+ MAINTAINERS                        |   1 +
+ kernel/liveupdate/kexec_handover.c |   1 +
  mm/cma.c                           |   1 +
- mm/execmem.c                       |   1 +
  mm/hugetlb.c                       |   1 +
- mm/internal.h                      | 183 -------------------------------------
- mm/kmsan/hooks.c                   |   1 +
- mm/kmsan/shadow.c                  |   1 +
+ mm/internal.h                      |  91 ----------------------------
  mm/memblock.c                      |   1 +
  mm/memory_hotplug.c                |   1 +
- mm/mm_init.c                       |   3 +
- mm/mm_init.h                       | 120 ++++++++++++++++++++++++
+ mm/mm_init.c                       |   1 +
+ mm/mm_init.h                       | 120 +++++++++++++++++++++++++++++++++++++
  mm/page_alloc.c                    |   1 +
- mm/percpu-vm.c                     |   1 +
- mm/sparse-vmemmap.c                |   2 +
- mm/sparse.c                        |   2 +
- mm/sparse.h                        |  63 +++++++++++++
- mm/vmalloc.c                       |   1 +
- mm/vmalloc.h                       |  46 ++++++++++
- 19 files changed, 251 insertions(+), 184 deletions(-)
----
-base-commit: 59e34180e138a293260301c139cf7ee800978533
-change-id: 20260707-internal-h-2efef660381d
+ mm/sparse-vmemmap.c                |   1 +
+ mm/sparse.c                        |   1 +
+ 12 files changed, 130 insertions(+), 91 deletions(-)
 
---
-Sincerely yours,
-Mike.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2acd811d3746..33cef4d8e1ee 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16880,6 +16880,7 @@ F:	include/linux/memblock.h
+ F:	mm/memblock.c
+ F:	mm/memtest.c
+ F:	mm/mm_init.c
++F:	mm/mm_init.h
+ F:	mm/rodata_test.c
+ F:	tools/testing/memblock/
+ 
+diff --git a/kernel/liveupdate/kexec_handover.c b/kernel/liveupdate/kexec_handover.c
+index 4834a809985a..fe11cbf1006e 100644
+--- a/kernel/liveupdate/kexec_handover.c
++++ b/kernel/liveupdate/kexec_handover.c
+@@ -35,6 +35,7 @@
+  * internal APIs.
+  */
+ #include "../../mm/internal.h"
++#include "../../mm/mm_init.h"
+ #include "../kexec_internal.h"
+ #include "kexec_handover_internal.h"
+ 
+diff --git a/mm/cma.c b/mm/cma.c
+index 31073738f2ac..a7929c758df1 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -33,6 +33,7 @@
+ 
+ #include "internal.h"
+ #include "cma.h"
++#include "mm_init.h"
+ 
+ struct cma cma_areas[MAX_CMA_AREAS];
+ unsigned int cma_area_count;
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index a85ea663b192..f4a7bf6fb518 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -51,6 +51,7 @@
+ #include "hugetlb_vmemmap.h"
+ #include "hugetlb_cma.h"
+ #include "hugetlb_internal.h"
++#include "mm_init.h"
+ #include <linux/page-isolation.h>
+ 
+ int hugetlb_max_hstate __read_mostly;
+diff --git a/mm/internal.h b/mm/internal.h
+index 3d30650a8440..59adb140fc7a 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -716,9 +716,6 @@ void set_recommended_min_free_kbytes(void);
+ 
+ extern char * const zone_names[MAX_NR_ZONES];
+ 
+-/* perform sanity checks on struct pages being allocated or freed */
+-DECLARE_STATIC_KEY_MAYBE(CONFIG_DEBUG_VM, check_pages_enabled);
+-
+ extern int min_free_kbytes;
+ extern int defrag_mode;
+ 
+@@ -726,19 +723,9 @@ void setup_per_zone_wmarks(void);
+ void calculate_min_free_kbytes(void);
+ int __meminit init_per_zone_wmark_min(void);
+ 
+-void set_zone_contiguous(struct zone *zone);
+-bool pfn_range_intersects_zones(int nid, unsigned long start_pfn,
+-			   unsigned long nr_pages);
+-
+-static inline void clear_zone_contiguous(struct zone *zone)
+-{
+-	zone->contiguous = false;
+-}
+-
+ extern int __isolate_free_page(struct page *page, unsigned int order);
+ extern void __putback_isolated_page(struct page *page, unsigned int order,
+ 				    int mt);
+-extern void memblock_free_pages(unsigned long pfn, unsigned int order);
+ 
+ /*
+  * This will have no effect, other than possibly generating a warning, if the
+@@ -820,14 +807,6 @@ static inline void init_compound_tail(struct page *tail,
+ 	prep_compound_tail(tail, head, order);
+ }
+ 
+-extern void *memmap_alloc(phys_addr_t size, phys_addr_t align,
+-			  phys_addr_t min_addr,
+-			  int nid, bool exact_nid);
+-
+-void memmap_init_range(unsigned long, int, unsigned long, unsigned long,
+-		unsigned long, enum meminit_context, struct vmem_altmap *, int,
+-		bool);
+-
+ /*
+  * mm/sparse.c
+  */
+@@ -948,9 +927,6 @@ int
+ isolate_migratepages_range(struct compact_control *cc,
+ 			   unsigned long low_pfn, unsigned long end_pfn);
+ 
+-/* Free whole pageblock and set its migration type to MIGRATE_CMA. */
+-void init_cma_reserved_pageblock(struct page *page);
+-
+ #endif /* CONFIG_COMPACTION || CONFIG_CMA */
+ 
+ struct cma;
+@@ -958,7 +934,6 @@ struct cma;
+ #ifdef CONFIG_CMA
+ bool cma_validate_zones(struct cma *cma);
+ void *cma_reserve_early(struct cma *cma, unsigned long size);
+-void init_cma_pageblock(struct page *page);
+ #else
+ static inline bool cma_validate_zones(struct cma *cma)
+ {
+@@ -968,9 +943,6 @@ static inline void *cma_reserve_early(struct cma *cma, unsigned long size)
+ {
+ 	return NULL;
+ }
+-static inline void init_cma_pageblock(struct page *page)
+-{
+-}
+ #endif
+ 
+ /* mm/util.c */
+@@ -1177,63 +1149,6 @@ static inline void vunmap_range_noflush(unsigned long start, unsigned long end)
+ }
+ #endif /* !CONFIG_MMU */
+ 
+-/* Memory initialisation debug and verification */
+-#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+-DECLARE_STATIC_KEY_TRUE(deferred_pages);
+-
+-static inline bool deferred_pages_enabled(void)
+-{
+-	return static_branch_unlikely(&deferred_pages);
+-}
+-
+-bool __init deferred_grow_zone(struct zone *zone, unsigned int order);
+-#else
+-static inline bool deferred_pages_enabled(void)
+-{
+-	return false;
+-}
+-#endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
+-
+-void init_deferred_page(unsigned long pfn, int nid);
+-
+-enum mminit_level {
+-	MMINIT_WARNING,
+-	MMINIT_VERIFY,
+-	MMINIT_TRACE
+-};
+-
+-#ifdef CONFIG_DEBUG_MEMORY_INIT
+-
+-extern int mminit_loglevel;
+-
+-#define mminit_dprintk(level, prefix, fmt, arg...) \
+-do { \
+-	if (level < mminit_loglevel) { \
+-		if (level <= MMINIT_WARNING) \
+-			pr_warn("mminit::" prefix " " fmt, ##arg);	\
+-		else \
+-			printk(KERN_DEBUG "mminit::" prefix " " fmt, ##arg); \
+-	} \
+-} while (0)
+-
+-extern void mminit_verify_pageflags_layout(void);
+-extern void mminit_verify_zonelist(void);
+-#else
+-
+-static inline void mminit_dprintk(enum mminit_level level,
+-				const char *prefix, const char *fmt, ...)
+-{
+-}
+-
+-static inline void mminit_verify_pageflags_layout(void)
+-{
+-}
+-
+-static inline void mminit_verify_zonelist(void)
+-{
+-}
+-#endif /* CONFIG_DEBUG_MEMORY_INIT */
+-
+ #define NODE_RECLAIM_NOSCAN	-2
+ #define NODE_RECLAIM_FULL	-1
+ #define NODE_RECLAIM_SOME	0
+@@ -1532,9 +1447,6 @@ static inline bool gup_must_unshare(struct vm_area_struct *vma,
+ 	return !PageAnonExclusive(page);
+ }
+ 
+-extern bool mirrored_kernelcore;
+-bool memblock_has_mirror(void);
+-void memblock_free_all(void);
+ 
+ static __always_inline void vma_set_range(struct vm_area_struct *vma,
+ 					  unsigned long start, unsigned long end,
+@@ -1573,9 +1485,6 @@ static inline bool pte_needs_soft_dirty_wp(struct vm_area_struct *vma, pte_t pte
+ 	return vma_soft_dirty_enabled(vma) && !pte_soft_dirty(pte);
+ }
+ 
+-void __meminit __init_single_page(struct page *page, unsigned long pfn,
+-				unsigned long zone, int nid);
+-
+ /* shrinker related functions */
+ unsigned long shrink_slab(gfp_t gfp_mask, int nid, struct mem_cgroup *memcg,
+ 			  int priority);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 6349c48154f4..777c69f05400 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -29,6 +29,7 @@
+ #include <linux/io.h>
+ 
+ #include "internal.h"
++#include "mm_init.h"
+ 
+ #define INIT_MEMBLOCK_REGIONS			128
+ #define INIT_PHYSMEM_REGIONS			4
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 11ab2f7bc7f3..99090f49d2df 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -40,6 +40,7 @@
+ #include <asm/tlbflush.h>
+ 
+ #include "internal.h"
++#include "mm_init.h"
+ #include "page_alloc.h"
+ #include "shuffle.h"
+ 
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 537664974ab1..39583c028e34 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -33,6 +33,7 @@
+ #include <linux/kexec_handover.h>
+ #include <linux/hugetlb.h>
+ #include "internal.h"
++#include "mm_init.h"
+ #include "page_alloc.h"
+ #include "slab.h"
+ #include "shuffle.h"
+diff --git a/mm/mm_init.h b/mm/mm_init.h
+new file mode 100644
+index 000000000000..39f75df9be1c
+--- /dev/null
++++ b/mm/mm_init.h
+@@ -0,0 +1,120 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * mm_init.h:
++ *
++ * mm/ internal mm_init and memblock declarations
++ */
++
++#ifndef __MM_MM_INIT_H
++#define __MM_MM_INIT_H
++
++#include <linux/types.h>
++#include <linux/init.h>
++#include <linux/mmzone.h>
++#include <linux/jump_label.h>
++#include <linux/printk.h>
++
++struct page;
++struct vmem_altmap;
++
++/* perform sanity checks on struct pages being allocated or freed */
++DECLARE_STATIC_KEY_MAYBE(CONFIG_DEBUG_VM, check_pages_enabled);
++
++void set_zone_contiguous(struct zone *zone);
++bool pfn_range_intersects_zones(int nid, unsigned long start_pfn,
++			   unsigned long nr_pages);
++
++static inline void clear_zone_contiguous(struct zone *zone)
++{
++	zone->contiguous = false;
++}
++
++void memblock_free_pages(unsigned long pfn, unsigned int order);
++
++void *memmap_alloc(phys_addr_t size, phys_addr_t align, phys_addr_t min_addr,
++		int nid, bool exact_nid);
++
++void memmap_init_range(unsigned long size, int nid, unsigned long zone,
++		unsigned long start_pfn, unsigned long zone_end_pfn,
++		enum meminit_context context,
++		struct vmem_altmap *altmap, int migratetype,
++		bool isolate_pageblock);
++
++#if defined CONFIG_COMPACTION || defined CONFIG_CMA
++/* Free whole pageblock and set its migration type to MIGRATE_CMA. */
++void init_cma_reserved_pageblock(struct page *page);
++#endif
++
++#ifdef CONFIG_CMA
++void init_cma_pageblock(struct page *page);
++#else
++static inline void init_cma_pageblock(struct page *page)
++{
++}
++#endif
++
++/* Memory initialisation debug and verification */
++#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
++DECLARE_STATIC_KEY_TRUE(deferred_pages);
++
++static inline bool deferred_pages_enabled(void)
++{
++	return static_branch_unlikely(&deferred_pages);
++}
++
++bool __init deferred_grow_zone(struct zone *zone, unsigned int order);
++#else
++static inline bool deferred_pages_enabled(void)
++{
++	return false;
++}
++#endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
++
++void init_deferred_page(unsigned long pfn, int nid);
++
++enum mminit_level {
++	MMINIT_WARNING,
++	MMINIT_VERIFY,
++	MMINIT_TRACE
++};
++
++#ifdef CONFIG_DEBUG_MEMORY_INIT
++
++extern int mminit_loglevel;
++
++#define mminit_dprintk(level, prefix, fmt, arg...) \
++do { \
++	if (level < mminit_loglevel) { \
++		if (level <= MMINIT_WARNING) \
++			pr_warn("mminit::" prefix " " fmt, ##arg);	\
++		else \
++			printk(KERN_DEBUG "mminit::" prefix " " fmt, ##arg); \
++	} \
++} while (0)
++
++void mminit_verify_pageflags_layout(void);
++void mminit_verify_zonelist(void);
++#else
++
++static inline void mminit_dprintk(enum mminit_level level,
++				const char *prefix, const char *fmt, ...)
++{
++}
++
++static inline void mminit_verify_pageflags_layout(void)
++{
++}
++
++static inline void mminit_verify_zonelist(void)
++{
++}
++#endif /* CONFIG_DEBUG_MEMORY_INIT */
++
++extern bool mirrored_kernelcore;
++bool memblock_has_mirror(void);
++void memblock_free_all(void);
++
++void __meminit __init_single_page(struct page *page, unsigned long pfn,
++				unsigned long zone, int nid);
++
++#endif /* __MM_MM_INIT_H */
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 543cd2fc88d5..03bf4933ddb7 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -56,6 +56,7 @@
+ #include <linux/pgalloc_tag.h>
+ #include <asm/div64.h>
+ #include "internal.h"
++#include "mm_init.h"
+ #include "page_alloc.h"
+ #include "shuffle.h"
+ #include "page_reporting.h"
+diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+index 515a404b66c0..10dd4a9b591b 100644
+--- a/mm/sparse-vmemmap.c
++++ b/mm/sparse-vmemmap.c
+@@ -41,6 +41,7 @@
+ #define VMEMMAP_POPULATE_PAGEREF	0x0001
+ 
+ #include "internal.h"
++#include "mm_init.h"
+ 
+ /*
+  * Allocate a block of memory to be used to back the virtual memory map
+diff --git a/mm/sparse.c b/mm/sparse.c
+index b5c74aab3379..d54e30f58b93 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -15,6 +15,7 @@
+ #include <linux/swapops.h>
+ #include <linux/vmstat.h>
+ #include "internal.h"
++#include "mm_init.h"
+ #include <asm/dma.h>
+ 
+ /*
+
+-- 
+2.53.0
 
