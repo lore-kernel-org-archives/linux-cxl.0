@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E3E2DA75C
-	for <linux-cxl@vger.kernel.org>; Sat, 11 Jul 2026 20:05:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D2A2BFC60
+	for <linux-cxl@vger.kernel.org>; Sat, 11 Jul 2026 20:05:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783800334; cv=none; b=UksSon20nOxFk1rtfbqy2mpmeXKzeV094clSQnPOBTTSzs3nXBvbttud6lYPvU6hgXbH+HCK5XIlhFqFNwjsBbBkp+nE7OC8d7XBOC1guS0rY4/D49OFLFMuJwwc5v7X5crfCyfIlRSOr2Ui+5AIW5KT7bGNY4/P/DM5yk6XGHo=
+	t=1783800336; cv=none; b=GESIoT8tvpRnfS2tnO6JA/4hMAl/392eKGLyrxJIV3q4PhBReUEsT1ZmfgiYEczLs2JndQWTZSf5VSLcmWhzChPal1PNAMoU9HPFRiszrO5pevBamJ81DhkEQSDoMMffcXs8ruSRBkT7PAb2liZid0mJyWrZRfQET0MnjHy6OJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783800334; c=relaxed/simple;
-	bh=tu6s5TuCulZa+0fps0q+wjSrS+/rgeopF4f24WiMaIo=;
+	s=arc-20240116; t=1783800336; c=relaxed/simple;
+	bh=gS+HAOQ1Iul40m1zPaSXgCXAQoZym5jm2roaPbSCb/k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E/c8MaZJm3zKnyAvisomvY/N2S2hhYZ3nmeIySuKri2tmJocWZY9cEqQlcrIdi72ghFk8/xZCUcFD+BXSkpFttdjPFTA+hmDvEkF0SM+APJHUWgKbwXwzhIUuXMvQQsXiqFLzdNrQG+w305Am4G61z/j8BijqigVWyzjS91xCz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ilb/xsrV; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version; b=BDmc7c5xrsdG7nh43hAudUpla7Nz14kSLGFerWgQZabPs16kApbbE4EDi1C2963DQ6OAsYuuoC6scsG7ZiiVgi4DegEm5+lPvzaC+Q36LZaSxbvNg2HPTT8JUcL5Ix5Fs9FsTlXCbAR5q7j/1SMEHaNiDXVzZRlUX/fSubZ7NK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X7NRQD9r; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ilb/xsrV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X7NRQD9r"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783800332; x=1815336332;
+  t=1783800334; x=1815336334;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=tu6s5TuCulZa+0fps0q+wjSrS+/rgeopF4f24WiMaIo=;
-  b=Ilb/xsrVDlx2zEEUuyJG6+zq7O+c2IOYLFmul6p559ElS6BtU65LUz8K
-   zTvS3igLlOjH67I1azeFH0vg9M4mreqbP5zUWzzzdVKm6TytjGkeMM4gf
-   vU4Alacrj/bYPAe1LqtSaXIteDMEZFAqzKGXEGcA1xt8AGe6ISjScUYbu
-   elnoZiFD7OOz+GAilZmMtAdJqbKcqqS2HaxCQyXGzdSpSIcFoXiBSoaKS
-   Ef8UNgHpBULAg3ISaJ7vLFPpw67DkMfs0YnppOUhvo57pO5zjuDT9x7ae
-   AheRXtH++kqz3uXg6GzORRzpzzZV1L/0eb5+RJq82AuRHrIaTtJJDL42c
+  bh=gS+HAOQ1Iul40m1zPaSXgCXAQoZym5jm2roaPbSCb/k=;
+  b=X7NRQD9r6BIUenuJRVntCPeliYXBsKKe+itaMH7ZSZDNvIeZvOga13T5
+   FF0iv/Paej1gwSWIPbyXzHuXy8/qcB5MaT/UrFO8mApo5B7Pqu/pqAAbM
+   JNukxTv4hncINyNHG1tA4f9k8Mp9Sjr44J6dFD+jDVrx5NTTdtx4GfCYg
+   SeWzwtdxhMnEMXLLaHNo8G0skGrOoahpPQZ9HF7ibDckXPdfnLz5s04qs
+   i0e+qR5Mjn9zXgXzPEuAn5tgmHDibJZ9/BrQJBb+cyGkLvTnVhB3bsKIu
+   ntTUpp8yr63jMALCA9HaGzSxX6eWSyOSWK638pYoV0J4ID1gZqWQbSAow
    Q==;
-X-CSE-ConnectionGUID: dAFp0Vz/QeCreqob/wicfg==
-X-CSE-MsgGUID: CMS64BtXSpyUCjSoauYzdA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="88379106"
+X-CSE-ConnectionGUID: xOqXEC0jSLeh9LCLRjLpxw==
+X-CSE-MsgGUID: jbUW0WdQQlqAv7diT4auEQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="88379108"
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="88379106"
+   d="scan'208";a="88379108"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2026 13:05:32 -0700
-X-CSE-ConnectionGUID: vwCAGh4nT8CtkuDiwznfKg==
-X-CSE-MsgGUID: uN4jxqOIQ264B6jTr9aJvQ==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2026 13:05:34 -0700
+X-CSE-ConnectionGUID: ixJKh5EhT2y6gOl5EbEDhg==
+X-CSE-MsgGUID: I8eIXgEPTJWl6OJM9BJEsw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="254048285"
+   d="scan'208";a="254048293"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.223.190])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2026 13:05:31 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2026 13:05:32 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -52,11 +52,10 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <iweiny@kernel.org>,
 	Dan Williams <djbw@kernel.org>,
 	Li Ming <ming.li@zohomail.com>
-Cc: linux-cxl@vger.kernel.org,
-	Sashiko AI Review <sashiko-bot@kernel.org>
-Subject: [PATCH v2 1/2] cxl/region: Allow passthrough decoders with >16K granularity
-Date: Sat, 11 Jul 2026 13:05:22 -0700
-Message-ID: <9a798f6b445ca8f2b16743d3e16fa289efadd86a.1783795720.git.alison.schofield@intel.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH v2 2/2] cxl/test: Add a 2-way 16K root decoder for passthrough testing
+Date: Sat, 11 Jul 2026 13:05:23 -0700
+Message-ID: <82b172d4698fdd4b57626f517bd74d946c9080a1.1783795720.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1783795720.git.alison.schofield@intel.com>
 References: <cover.1783795720.git.alison.schofield@intel.com>
@@ -68,142 +67,122 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Region configuration rejects valid topologies that contain a
-passthrough decoder beneath a wide parent interleave.
+The cxl-test topologies do not provide a configuration where pass-
+through decoders compute a granularity above the 16K max encodable
+in hardware. The widest power-of-2 root decoder currently available
+is 2-way at 4K granularity, so a passthrough decoder below it
+computes at most 16K.
 
-For example, a passthrough switch below an 8-way root decoder with
-4K granularity computes a 32K granularity. That exceeds the maximum
-encodable value of the HDM Decoder Control IG field, causing region
-setup to fail even though a non-interleaving decoder does not consume
-the IG field.
+Add a CFMWS entry for a 2-way root decoder at 16K granularity. This
+topology supports a region configuration spanning the two multi-port
+host bridges and placing one endpoint under each bridge. The
+intermediate switch decoders are then passthrough decoders with a
+computed granularity of 32K.
 
-Only require the granularity to be encodable for interleaving decoders,
-both where it is inherited from the parent and where it is computed for
-the current decoder. Keep the computed value for passthrough decoders so
-it can seed descendant decoder setup, and program a don't-care IG
-encoding when committing a non-interleaving decoder.
+This allows a CXL unit test to be added for this case.
 
-As a consequence, the interleave_granularity attribute of a decoder
-whose interleave_ways is 1 may report a value above 16K. Document that
-the reported granularity for non-interleaving decoders is a don't-care
-value that may exceed the maximum encodable in hardware.
+Place the new window in the XOR topology set so the default modulo
+topology used by most cxl-test coverage is unchanged.
 
-Fixes: 18f35dc9314d ("cxl/region: Refactor granularity select in cxl_port_setup_targets()")
-Suggested-by: Sashiko AI Review <sashiko-bot@kernel.org>
 Assisted-by: Claude:Opus-4-8
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- Documentation/ABI/testing/sysfs-bus-cxl |  5 ++-
- drivers/cxl/core/hdm.c                  | 13 +++++--
- drivers/cxl/core/region.c               | 47 +++++++++++++++----------
- 3 files changed, 42 insertions(+), 23 deletions(-)
+ tools/testing/cxl/test/cxl.c | 48 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 46 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 16a9b3d2e2c0..3f96e5bf1fd3 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -407,7 +407,10 @@ Description:
- 		space this decoder claims at address N before the decode rotates
- 		to the next target in the interleave at address N +
- 		interleave_granularity (assuming N is aligned to
--		interleave_granularity).
-+		interleave_granularity). When 'interleave_ways' is 1, the
-+		decoder does not interleave and the reported granularity is
-+		a don't-care value that may exceed the maximum encodable in
-+		hardware.
- 
- 
- What:		/sys/bus/cxl/devices/decoderX.Y/create_{pmem,ram}_region
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 0c80b76a5f9b..d164662668c1 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -691,9 +691,16 @@ static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
- 	if (WARN_ONCE(ways_to_eiw(cxld->interleave_ways, &eiw),
- 		      "invalid interleave_ways: %d\n", cxld->interleave_ways))
- 		return;
--	if (WARN_ONCE(granularity_to_eig(cxld->interleave_granularity, &eig),
--		      "invalid interleave_granularity: %d\n",
--		      cxld->interleave_granularity))
-+
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index ef92dd35e030..5b87a3f5673f 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -188,10 +188,18 @@ static struct {
+ 		struct acpi_cedt_cfmws cfmws;
+ 		u32 target[3];
+ 	} cfmws8;
++	struct {
++		struct acpi_cedt_cfmws cfmws;
++		u32 target[2];
++	} cfmws9;
+ 	struct {
+ 		struct acpi_cedt_cxims cxims;
+ 		u64 xormap_list[2];
+ 	} cxims0;
++	struct {
++		struct acpi_cedt_cxims cxims;
++		u64 xormap_list[1];
++	} cxims1;
+ } __packed mock_cedt = {
+ 	.cedt = {
+ 		.header = {
+@@ -371,6 +379,28 @@ static struct {
+ 		},
+ 		.target = { 0, 1, 2, },
+ 	},
 +	/*
-+	 * A non-interleaving decoder ignores the IG field. Encode a
-+	 * don't-care value instead of validating the stored granularity.
++	 * A 2-way root at 16K granularity. A passthrough decoder below this
++	 * root computes a 32K granularity (16K * 2), which exceeds the maximum
++	 * encodable in hardware. It exercises the passthrough granularity path
++	 * in cxl_port_setup_targets().
 +	 */
-+	if (cxld->interleave_ways == 1)
-+		eig = 0;
-+	else if (WARN_ONCE(granularity_to_eig(cxld->interleave_granularity, &eig),
-+			   "invalid interleave_granularity: %d\n",
-+			   cxld->interleave_granularity))
- 		return;
++	.cfmws9 = {
++		.cfmws = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CFMWS,
++				.length = sizeof(mock_cedt.cfmws9),
++			},
++			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
++			.interleave_ways = 1,
++			.granularity = 6,
++			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
++					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
++			.qtg_id = FAKE_QTG_ID,
++			.window_size = SZ_256M * 8UL,
++		},
++		.target = { 0, 1, },
++	},
+ 	.cxims0 = {
+ 		.cxims = {
+ 			.header = {
+@@ -382,6 +412,18 @@ static struct {
+ 		},
+ 		.xormap_list = { 0x404100, 0x808200, },
+ 	},
++	/* CXIMS for the 16K (hbig = 6) 2-way root, cfmws9 */
++	.cxims1 = {
++		.cxims = {
++			.header = {
++				.type = ACPI_CEDT_TYPE_CXIMS,
++				.length = sizeof(mock_cedt.cxims1),
++			},
++			.hbig = 6,
++			.nr_xormaps = 1,
++		},
++		.xormap_list = { 0x0, },
++	},
+ };
  
- 	u32p_replace_bits(ctrl, eig, CXL_HDM_DECODER0_CTRL_IG_MASK);
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 1e211542b6b6..5a443551288c 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1521,12 +1521,20 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 		parent_iw = parent_cxld->interleave_ways;
- 	}
+ struct acpi_cedt_cfmws *mock_cfmws[] = {
+@@ -395,6 +437,7 @@ struct acpi_cedt_cfmws *mock_cfmws[] = {
+ 	[6] = &mock_cedt.cfmws6.cfmws,
+ 	[7] = &mock_cedt.cfmws7.cfmws,
+ 	[8] = &mock_cedt.cfmws8.cfmws,
++	[9] = &mock_cedt.cfmws9.cfmws,
+ };
  
--	rc = granularity_to_eig(parent_ig, &peig);
--	if (rc) {
--		dev_dbg(&cxlr->dev, "%s:%s: invalid parent granularity: %d\n",
--			dev_name(parent_port->uport_dev),
--			dev_name(&parent_port->dev), parent_ig);
--		return rc;
-+	/*
-+	 * A non-interleaving parent does not encode its granularity, so its
-+	 * stored value may exceed the maximum encodable and need not be
-+	 * validated here.
-+	 */
-+	if (parent_iw > 1) {
-+		rc = granularity_to_eig(parent_ig, &peig);
-+		if (rc) {
-+			dev_dbg(&cxlr->dev,
-+				"%s:%s: invalid parent granularity: %d\n",
-+				dev_name(parent_port->uport_dev),
-+				dev_name(&parent_port->dev), parent_ig);
-+			return rc;
-+		}
- 	}
+ static int cfmws_start;
+@@ -402,10 +445,11 @@ static int cfmws_end;
+ #define CFMWS_MOD_ARRAY_START 0
+ #define CFMWS_MOD_ARRAY_END   5
+ #define CFMWS_XOR_ARRAY_START 6
+-#define CFMWS_XOR_ARRAY_END   8
++#define CFMWS_XOR_ARRAY_END   9
  
- 	rc = ways_to_eiw(parent_iw, &peiw);
-@@ -1549,20 +1557,21 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 	 * Interleave granularity is a multiple of @parent_port granularity.
- 	 * Multiplier is the parent port interleave ways.
- 	 */
--	rc = granularity_to_eig(parent_ig * parent_iw, &eig);
--	if (rc) {
--		dev_dbg(&cxlr->dev,
--			"%s: invalid granularity calculation (%d * %d)\n",
--			dev_name(&parent_port->dev), parent_ig, parent_iw);
--		return rc;
--	}
-+	ig = parent_ig * parent_iw;
+-struct acpi_cedt_cxims *mock_cxims[1] = {
++struct acpi_cedt_cxims *mock_cxims[2] = {
+ 	[0] = &mock_cedt.cxims0.cxims,
++	[1] = &mock_cedt.cxims1.cxims,
+ };
  
--	rc = eig_to_granularity(eig, &ig);
--	if (rc) {
--		dev_dbg(&cxlr->dev, "%s:%s: invalid interleave: %d\n",
--			dev_name(port->uport_dev), dev_name(&port->dev),
--			256 << eig);
--		return rc;
-+	/*
-+	 * Keep the computed granularity for descendant setup. Only
-+	 * interleaving decoders require an encodable granularity.
-+	 */
-+	if (iw > 1) {
-+		rc = granularity_to_eig(ig, &eig);
-+		if (rc) {
-+			dev_dbg(&cxlr->dev,
-+				"%s: invalid granularity calculation (%d * %d)\n",
-+				dev_name(&parent_port->dev), parent_ig,
-+				parent_iw);
-+			return rc;
-+		}
- 	}
- 
- 	if (iw > 8 || iw > cxlsd->nr_targets) {
+ struct cxl_mock_res {
 -- 
 2.37.3
 
