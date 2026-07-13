@@ -1,58 +1,58 @@
-Received: from gerbil.ash.relay.mailchannels.net (gerbil.ash.relay.mailchannels.net [23.83.222.67])
+Received: from silver.cherry.relay.mailchannels.net (silver.cherry.relay.mailchannels.net [23.83.223.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091333812F6;
-	Mon, 13 Jul 2026 06:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.222.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FF337C10C;
+	Mon, 13 Jul 2026 06:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.223.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783923420; cv=none; b=Wr6ATQypqtiyVkBU3dfMRYPh9lTKCrKcwpEGgVW7wtrHCOQCKjMMfJlk9WccQfGh305jZFYBmZHR/x5ePdBg+ymZCxkbYOi6Abuohurdgr0hcg2d+FyExGM4rf3iqVBiASzcF5lDYRi0xY1lBAX33riRISFioOfpS0JuqDA75eo=
+	t=1783924660; cv=none; b=QdJXZaQgasLDLjXO2+olTq5JMOfyvyJL/OSXAtbFp3FDYrcZ2pwhnmp4v8UQ1m++jUmK4WiMv6ePFQniF4CWS4nVVkRrTesCcCsZ5Eo5SfSvpK5Z5sPXSXqNXnOaUomOLq7NAD2hQcvHiCXh9TyMSu9g32C2a6h+XnqP4oBJ658=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783923420; c=relaxed/simple;
-	bh=OxMxLFHBhEdu3uMyPJ43SN3Z0J/FiifBUvc0DiPXFIM=;
+	s=arc-20240116; t=1783924660; c=relaxed/simple;
+	bh=X+MxHNWgG+jCdBn4XICUZo/b10URm+NRLG1sfrGa+w4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t0AnrLk++hmyFSqr3nFqwx4e/oVArKIRuN2dInc3BAu1qz7UCDl9eCnyrKuBFoQsF/QWyCgfaDoF7LYPVETybpCqtE1LDJFtngI8p4r5t3mSzQFtzZzx0nTcAoGJ2nqq1/Po3QF235cv35++8dD4PAawBPzktYTux+Xwvvi5vS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=bJh2I1/o; arc=none smtp.client-ip=23.83.222.67
+	 MIME-Version; b=eGoIAx2C4SZHbdM0tmyOmpWYinlAw2Ad5FSPvTreNdxM9th5M28kLDi7R1pw8Y8Ytc5npKWrR8wTydpezidoAdzsb+A+0N7qGerPM+j4a9c80wLxeFOWUeqB3IUyxQI5O0MSgRYmyi1fe8xvuZ8yuMfdS5Rt80Km9i/DSLNw0KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=lxu+sN96; arc=none smtp.client-ip=23.83.223.166
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="bJh2I1/o"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="lxu+sN96"
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id EF620722386;
-	Mon, 13 Jul 2026 06:11:19 +0000 (UTC)
-Received: from pdx1-sub0-mail-a229.dreamhost.com (trex-green-1.trex.outbound.svc.cluster.local [100.98.252.118])
+	by relay.mailchannels.net (Postfix) with ESMTP id 888067A261A;
+	Mon, 13 Jul 2026 06:11:20 +0000 (UTC)
+Received: from pdx1-sub0-mail-a229.dreamhost.com (100-99-12-219.trex-nlb.outbound.svc.cluster.local [100.99.12.219])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 953EA722916;
-	Mon, 13 Jul 2026 06:11:19 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 330F57A066D;
+	Mon, 13 Jul 2026 06:11:20 +0000 (UTC)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Befitting-Wiry: 4b5a23c836951b1c_1783923079893_295394544
-X-MC-Loop-Signature: 1783923079893:2023655165
-X-MC-Ingress-Time: 1783923079893
+X-Lonely-Whimsical: 2fc3d3f04a48515d_1783923080471_1164131750
+X-MC-Loop-Signature: 1783923080471:3517101457
+X-MC-Ingress-Time: 1783923080471
 Received: from pdx1-sub0-mail-a229.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.98.252.118 (trex/8.0.2);
-	Mon, 13 Jul 2026 06:11:19 +0000
+	by 100.99.12.219 (trex/8.0.2);
+	Mon, 13 Jul 2026 06:11:20 +0000
 Received: from offworld.lan (unknown [76.167.199.67])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a229.dreamhost.com (Postfix) with ESMTPSA id 4gzBs3049Qz77;
-	Sun, 12 Jul 2026 23:11:18 -0700 (PDT)
+	by pdx1-sub0-mail-a229.dreamhost.com (Postfix) with ESMTPSA id 4gzBs34S2NzTR;
+	Sun, 12 Jul 2026 23:11:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1783923079;
-	bh=X3viXdzlmBwAY52OK6zwsX7RuN1+PXNKsPekwhrlHIE=;
+	s=dreamhost; t=1783923080;
+	bh=pTJcDAQgnCO299gLmvH6Cu9xDIp5TOVM+7pacwEs3JQ=;
 	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=bJh2I1/oP61wkNIgOGkGQ6e2rbiGzEUVPVsNuvrTvPLtHGdRmyeCgfzMIzKC28F99
-	 L3cFEaN9S07H422KPDJH9DADoWyvLsziV71DgBY4yXBncRHEFrPZvSY5ll0Iemwp9F
-	 3LPZRe4TtG/nyJzvqKmQ8pIws4vtQ9Cr42UD+s6tGQDzLkbqsdAtoSPTYHUfyOyAq2
-	 kLRLRUbGawpI1Lz+d+BuCRR3ztRfQ8+PGH1y4IfCFTmtVVep5syoEjAZTsgp7ogQw8
-	 Yjpu1DiqWBPKHCAhcHLlqxBO6EfFxp49m1V+sWtVw1Qy0Tbsdhvmrfa28kMWRhviV0
-	 Xf1KZCnLdk2jw==
+	b=lxu+sN96axRR8STDg4Py/sE8JQccKKoYtWCwrqAggN87jI11gStAyZXCKDO2WlsXG
+	 C6meOt8whNIsYFKHc9LUBtXDNR6EPoZiDIYwrVjKd/Xmjtdt9A+r0IXIpCx9pwJHCK
+	 tXukGRCccIfyswn0UjdYhZIZft/BDNq3FeuTjIO7gY9uI45wy2+rNGrHcEbiDm2XLF
+	 SdpkLIbstGuIxOTlAThfAzbV7S7x37ZHwsWcSnsHX5eqAWDy18I/OlvIW1hoSQwOjt
+	 1isOnYpVEQkEfTjt1I3V8ooCwOvInQ+3SpgyuU2awWSSZm94+NPAfTlMSrQfpuCnG1
+	 UNIRenNp3AH4A==
 From: Davidlohr Bueso <dave@stgolabs.net>
 To: jic23@kernel.org,
 	will@kernel.org,
@@ -62,9 +62,9 @@ Cc: harshal.t@samsung.com,
 	linux-cxl@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCH v3 2/3] perf/cxlpmu: Add missing CXL 4.0 events
-Date: Sun, 12 Jul 2026 23:11:11 -0700
-Message-Id: <20260713061112.105419-3-dave@stgolabs.net>
+Subject: [PATCH v3 3/3] perf/cxlpmu: Support Channel/Rank/Bank filter
+Date: Sun, 12 Jul 2026 23:11:12 -0700
+Message-Id: <20260713061112.105419-4-dave@stgolabs.net>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20260713061112.105419-1-dave@stgolabs.net>
 References: <20260713061112.105419-1-dave@stgolabs.net>
@@ -78,115 +78,163 @@ Content-Transfer-Encoding: 8bit
 
 From: Harshal Thakkar <harshal.t@samsung.com>
 
-Add support for CXL 4.0 events that are exposed by the CPMU hardware
-but not present in the driver. Such events are defined in Table 13-5
-of the spec.
+Implement CRB filtering per CXL 4.0 8.2.7.2.2, and extend the
+current filtering support beyond HDM. CRB filtering is only
+permitted for the DDR Interface, Queue Occupancy, Queue Residency
+and Retry event groups (CXL 4.0 Table 13-5), and only when counting
+a single event (a single mask bit). For example, to count DDR
+activates on channel 2 only:
+
+  perf stat -a -e cxl_pmu_mem0.0/ddr_act,crb_filter_en=1,crb=0x02FFFFFF/
+
+Placing the 32-bit CRB value at config2:32-63 leaves the
+existing HDM value at config2:0-15 untouched and avoids needing
+a new config3.
 
 Signed-off-by: Harshal Thakkar <harshal.t@samsung.com>
-[davidlohr: add missing throttle and queue occupancy events]
 Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 ---
- drivers/perf/cxl_pmu.c | 50 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ drivers/perf/cxl_pmu.c | 63 ++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 61 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 39b46550a510..1fc83858f653 100644
+index 1fc83858f653..ca3361eb832d 100644
 --- a/drivers/perf/cxl_pmu.c
 +++ b/drivers/perf/cxl_pmu.c
-@@ -77,6 +77,10 @@
- #define CXL_PMU_GID_S2M_NDR		0x0024
- #define CXL_PMU_GID_S2M_DRS		0x0025
- #define CXL_PMU_GID_DDR			0x8000
-+#define CXL_PMU_GID_QUEUE_OCC           0x8001
-+#define CXL_PMU_GID_QUEUE_RESID         0x8002
-+#define CXL_PMU_GID_RETRY_EVENTS        0x8003
-+#define CXL_PMU_GID_THROTTLE            0x8004
+@@ -110,6 +110,7 @@ struct cxl_pmu_info {
+ 	int on_cpu;
+ 	struct hlist_node node;
+ 	bool filter_hdm;
++	bool filter_crb;
+ 	int irq;
+ };
  
- static int cxl_pmu_cpuhp_state_num;
+@@ -146,6 +147,8 @@ static int cxl_pmu_parse_caps(struct device *dev, struct cxl_pmu_info *info)
+ 	info->num_event_capabilities = FIELD_GET(CXL_PMU_CAP_NUM_EVN_CAP_REG_SUP_MSK, val) + 1;
  
-@@ -385,13 +389,23 @@ static struct attribute *cxl_pmu_event_attrs[] = {
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memwrfwd,		CXL_PMU_GID_M2S_REQ, BIT(4)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrdtee,		CXL_PMU_GID_M2S_REQ, BIT(5)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrddatatee,		CXL_PMU_GID_M2S_REQ, BIT(6)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminvtee,               CXL_PMU_GID_M2S_REQ, BIT(7)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memspecrd,		CXL_PMU_GID_M2S_REQ, BIT(8)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminvnt,		CXL_PMU_GID_M2S_REQ, BIT(9)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memcleanevict,		CXL_PMU_GID_M2S_REQ, BIT(10)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminvptee,		CXL_PMU_GID_M2S_REQ, BIT(11)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memspecrdtee,		CXL_PMU_GID_M2S_REQ, BIT(12)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_teupdate,		CXL_PMU_GID_M2S_REQ, BIT(13)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memclnevcttee,		CXL_PMU_GID_M2S_REQ, BIT(14)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memclnevctu,		CXL_PMU_GID_M2S_REQ, BIT(15)),
- 	/* CXL rev 3.0 Table 3-35 M2S RwD Memory Opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memwr,			CXL_PMU_GID_M2S_RWD, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memwrptl,		CXL_PMU_GID_M2S_RWD, BIT(2)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_biconflict,		CXL_PMU_GID_M2S_RWD, BIT(4)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memrdfill,		CXL_PMU_GID_M2S_RWD, BIT(5)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memwrtee,		CXL_PMU_GID_M2S_RWD, BIT(9)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memwrptltee,		CXL_PMU_GID_M2S_RWD, BIT(10)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memrdfilltee,		CXL_PMU_GID_M2S_RWD, BIT(13)),
- 	/* CXL rev 3.0 Table 3-38 M2S BIRsp Memory Opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_birsp_i,			CXL_PMU_GID_M2S_BIRSP, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_birsp_s,			CXL_PMU_GID_M2S_BIRSP, BIT(1)),
-@@ -406,15 +420,25 @@ static struct attribute *cxl_pmu_event_attrs[] = {
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblk,		CXL_PMU_GID_S2M_BISNP, BIT(4)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datblk,		CXL_PMU_GID_S2M_BISNP, BIT(5)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblk,		CXL_PMU_GID_S2M_BISNP, BIT(6)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curtee,		CXL_PMU_GID_S2M_BISNP, BIT(8)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datatee,		CXL_PMU_GID_S2M_BISNP, BIT(9)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invtee,		CXL_PMU_GID_S2M_BISNP, BIT(10)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblktee,		CXL_PMU_GID_S2M_BISNP, BIT(12)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datablktee,		CXL_PMU_GID_S2M_BISNP, BIT(13)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblktee,		CXL_PMU_GID_S2M_BISNP, BIT(14)),
- 	/* CXL rev 3.1 Table 3-50 S2M NDR Opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmp,			CXL_PMU_GID_S2M_NDR, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmps,			CXL_PMU_GID_S2M_NDR, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpe,			CXL_PMU_GID_S2M_NDR, BIT(2)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpm,			CXL_PMU_GID_S2M_NDR, BIT(3)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,		CXL_PMU_GID_S2M_NDR, BIT(4)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmptee,			CXL_PMU_GID_S2M_NDR, BIT(5)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmptee_s,		CXL_PMU_GID_S2M_NDR, BIT(6)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmptee_e,		CXL_PMU_GID_S2M_NDR, BIT(7)),
- 	/* CXL rev 3.0 Table 3-46 S2M DRS opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdata,			CXL_PMU_GID_S2M_DRS, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdatanxm,		CXL_PMU_GID_S2M_DRS, BIT(1)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdatatee,		CXL_PMU_GID_S2M_DRS, BIT(2)),
- 	/* CXL rev 3.0 Table 13-5 directly lists these */
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_act,				CXL_PMU_GID_DDR, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_pre,				CXL_PMU_GID_DDR, BIT(1)),
-@@ -423,6 +447,32 @@ static struct attribute *cxl_pmu_event_attrs[] = {
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_refresh,			CXL_PMU_GID_DDR, BIT(4)),
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_selfrefreshent,		CXL_PMU_GID_DDR, BIT(5)),
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_rfm,				CXL_PMU_GID_DDR, BIT(6)),
-+	/* CXL 4.0 Table 13-5 DDR add-on events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_cas_rd_ap,			CXL_PMU_GID_DDR, BIT(7)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_cas_wr_ap,			CXL_PMU_GID_DDR, BIT(8)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_refresh_all_banks,		CXL_PMU_GID_DDR, BIT(9)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_refresh_same_bank,		CXL_PMU_GID_DDR, BIT(10)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_pwrdn_entry,			CXL_PMU_GID_DDR, BIT(11)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_pwrdn_exit,			CXL_PMU_GID_DDR, BIT(12)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_rd_wr_ddr_bus_switching,	CXL_PMU_GID_DDR, BIT(13)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_incoming_rd_req,		CXL_PMU_GID_DDR, BIT(14)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_incoming_wr_req,		CXL_PMU_GID_DDR, BIT(15)),
-+	/* CXL 4.0 Table 13-5 QUEUE OCCUPANCY events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(rd_queue_occ,			CXL_PMU_GID_QUEUE_OCC, BIT(0)),
-+	CXL_PMU_EVENT_CXL_ATTR(wr_queue_occ,			CXL_PMU_GID_QUEUE_OCC, BIT(1)),
-+	CXL_PMU_EVENT_CXL_ATTR(rd_wr_merged_queue_occ,		CXL_PMU_GID_QUEUE_OCC, BIT(2)),
-+	CXL_PMU_EVENT_CXL_ATTR(pwrdn_event,			CXL_PMU_GID_QUEUE_OCC, BIT(3)),
-+	/* CXL 4.0 Table 13-5 QUEUE RESIDENCY events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(mc_rd_resid_cnt,			CXL_PMU_GID_QUEUE_RESID, BIT(0)),
-+	CXL_PMU_EVENT_CXL_ATTR(mc_wr_resid_cnt,			CXL_PMU_GID_QUEUE_RESID, BIT(1)),
-+	/* CXL 4.0 Table 13-5 RETRY events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(retry_event_trig_by_rd_crc,      CXL_PMU_GID_RETRY_EVENTS, BIT(0)),
-+	CXL_PMU_EVENT_CXL_ATTR(retry_event_trig_by_wr_crc,      CXL_PMU_GID_RETRY_EVENTS, BIT(1)),
-+	CXL_PMU_EVENT_CXL_ATTR(retry_event_trig_by_ca_parity,   CXL_PMU_GID_RETRY_EVENTS, BIT(2)),
-+	CXL_PMU_EVENT_CXL_ATTR(retry_event_trig_by_ecc,         CXL_PMU_GID_RETRY_EVENTS, BIT(3)),
-+	/* CXL 4.0 Table 13-5 THROTTLE events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(thermal_throttle_event,		CXL_PMU_GID_THROTTLE, BIT(0)),
-+	CXL_PMU_EVENT_CXL_ATTR(power_throttle_event,		CXL_PMU_GID_THROTTLE, BIT(1)),
+ 	info->filter_hdm = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) & CXL_PMU_FILTER_HDM;
++	info->filter_crb = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) &
++		CXL_PMU_FILTER_CHAN_RANK_BANK;
+ 	if (FIELD_GET(CXL_PMU_CAP_INT, val))
+ 		info->irq = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
+ 	else
+@@ -229,6 +232,8 @@ enum {
+ 	cxl_pmu_edge_attr,
+ 	cxl_pmu_hdm_filter_en_attr,
+ 	cxl_pmu_hdm_attr,
++	cxl_pmu_crb_filter_en_attr,
++	cxl_pmu_crb_attr,
+ };
+ 
+ static struct attribute *cxl_pmu_format_attr[] = {
+@@ -240,6 +245,8 @@ static struct attribute *cxl_pmu_format_attr[] = {
+ 	[cxl_pmu_edge_attr] = CXL_PMU_FORMAT_ATTR(edge, "config1:17"),
+ 	[cxl_pmu_hdm_filter_en_attr] = CXL_PMU_FORMAT_ATTR(hdm_filter_en, "config1:18"),
+ 	[cxl_pmu_hdm_attr] = CXL_PMU_FORMAT_ATTR(hdm, "config2:0-15"),
++	[cxl_pmu_crb_filter_en_attr] = CXL_PMU_FORMAT_ATTR(crb_filter_en, "config1:19"),
++	[cxl_pmu_crb_attr] = CXL_PMU_FORMAT_ATTR(crb, "config2:32-63"),
  	NULL
  };
  
+@@ -250,7 +257,9 @@ static struct attribute *cxl_pmu_format_attr[] = {
+ #define CXL_PMU_ATTR_CONFIG1_INVERT_MSK		BIT(16)
+ #define CXL_PMU_ATTR_CONFIG1_EDGE_MSK		BIT(17)
+ #define CXL_PMU_ATTR_CONFIG1_FILTER_EN_MSK	BIT(18)
++#define CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK	BIT(19)
+ #define CXL_PMU_ATTR_CONFIG2_HDM_MSK		GENMASK(15, 0)
++#define CXL_PMU_ATTR_CONFIG2_CRB_MSK		GENMASK_ULL(63, 32)
+ 
+ static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
+ 					 struct attribute *attr, int a)
+@@ -267,6 +276,11 @@ static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
+ 	     attr == cxl_pmu_format_attr[cxl_pmu_hdm_attr]))
+ 		return 0;
+ 
++	if (!info->filter_crb &&
++	    (attr == cxl_pmu_format_attr[cxl_pmu_crb_filter_en_attr] ||
++	     attr == cxl_pmu_format_attr[cxl_pmu_crb_attr]))
++		return 0;
++
+ 	return attr->mode;
+ }
+ 
+@@ -323,6 +337,17 @@ static u16 cxl_pmu_config2_get_hdm_decoder(struct perf_event *event)
+ 	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_HDM_MSK, event->attr.config2);
+ }
+ 
++static u16 cxl_pmu_config1_crb_filter_en(struct perf_event *event)
++{
++	return FIELD_GET(CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK,
++			 event->attr.config1);
++}
++
++static u32 cxl_pmu_config2_get_crb(struct perf_event *event)
++{
++	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
++}
++
+ static ssize_t cxl_pmu_event_sysfs_show(struct device *dev,
+ 					struct device_attribute *attr, char *buf)
+ {
+@@ -621,6 +646,32 @@ static int cxl_pmu_event_init(struct perf_event *event)
+ 		return -EOPNOTSUPP;
+ 	/* TODO: Validation of any filter */
+ 
++	if (cxl_pmu_config1_crb_filter_en(event)) {
++		if (!info->filter_crb)
++			return -EINVAL;
++		/*
++		 * CRB filtering (Filter ID 1) is only valid for the DDR
++		 * Interface, Queue Occupancy, Queue Residency and Retry
++		 * event groups (CXL 4.0 Table 13-5).
++		 */
++		switch (cxl_pmu_config_get_gid(event)) {
++		case CXL_PMU_GID_DDR:
++		case CXL_PMU_GID_QUEUE_OCC:
++		case CXL_PMU_GID_QUEUE_RESID:
++		case CXL_PMU_GID_RETRY_EVENTS:
++			break;
++		default:
++			return -EINVAL;
++		}
++
++		/*
++		 * Filtering while counting multiple events is
++		 * undefined behavior.
++		 */
++		if (hweight32(cxl_pmu_config_get_mask(event)) > 1)
++			return -EINVAL;
++	}
++
+ 	/*
+ 	 * Verify that it is possible to count what was requested. Either must
+ 	 * be a fixed counter that is a precise match or a configurable counter
+@@ -677,8 +728,8 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
+ 	hwc->state = 0;
+ 
+ 	/*
+-	 * Currently only hdm filter control is implemented, this code will
+-	 * want generalizing when more filters are added.
++	 * Filter ID=0: HDM decoder filter
++	 * Filter ID=1: Channel/Rank/Bank (CRB) filter
+ 	 */
+ 	if (info->filter_hdm) {
+ 		if (cxl_pmu_config1_hdm_filter_en(event))
+@@ -688,6 +739,14 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
+ 		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
+ 	}
+ 
++	if (info->filter_crb) {
++		if (cxl_pmu_config1_crb_filter_en(event))
++			cfg = cxl_pmu_config2_get_crb(event);
++		else
++			cfg = GENMASK(31, 0); /* no filtering if 0xFFFF_FFFF */
++		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 1));
++	}
++
+ 	cfg = readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
+ 	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
+ 	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_FREEZE_ON_OVRFLW, 1);
 -- 
 2.39.5
 
