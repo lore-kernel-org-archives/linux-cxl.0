@@ -1,240 +1,172 @@
-Received: from silver.cherry.relay.mailchannels.net (silver.cherry.relay.mailchannels.net [23.83.223.166])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013045.outbound.protection.outlook.com [40.93.196.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54FF337C10C;
-	Mon, 13 Jul 2026 06:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.223.166
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783924660; cv=none; b=QdJXZaQgasLDLjXO2+olTq5JMOfyvyJL/OSXAtbFp3FDYrcZ2pwhnmp4v8UQ1m++jUmK4WiMv6ePFQniF4CWS4nVVkRrTesCcCsZ5Eo5SfSvpK5Z5sPXSXqNXnOaUomOLq7NAD2hQcvHiCXh9TyMSu9g32C2a6h+XnqP4oBJ658=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783924660; c=relaxed/simple;
-	bh=X+MxHNWgG+jCdBn4XICUZo/b10URm+NRLG1sfrGa+w4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eGoIAx2C4SZHbdM0tmyOmpWYinlAw2Ad5FSPvTreNdxM9th5M28kLDi7R1pw8Y8Ytc5npKWrR8wTydpezidoAdzsb+A+0N7qGerPM+j4a9c80wLxeFOWUeqB3IUyxQI5O0MSgRYmyi1fe8xvuZ8yuMfdS5Rt80Km9i/DSLNw0KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=lxu+sN96; arc=none smtp.client-ip=23.83.223.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C948031283E;
+	Mon, 13 Jul 2026 07:22:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783927370; cv=fail; b=KqFBAZE8I9G77/sLP+beEbmVPPCZ4XY6Hn4+n2VyDLetvym0eTTw4gl8utHfaulM5S8Z+VzF4GtfRN6UsWz+hTcqh9zKKkls3pHaBmOcYrBa0ieqTHZfLkNX6YrHrKaQV5XboQo6RsdkY6JYiBE7rabA2zc4l/DxMXXnP0iQQeU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783927370; c=relaxed/simple;
+	bh=V8AvAktYKPJxjaLkiejRf+olXWMgiuHkVu5ogquYaho=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=j5ISH2NcuBDgGtqNd7HcB2fDbO+6BMs2E5IJCenIOfCI4Lt/GUP5YVlbhXtNqzASK7Suw5cUxpibjYTI/B34jy+uVJEEb9AJD6pfZUwAvy3H68MgRrol4ngMx/SvgdYMoKSnJ8s5YU5zfVNEGRHuk49vorpkM26nohzKo7D7KC8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=todVY+Bs; arc=fail smtp.client-ip=40.93.196.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="lxu+sN96"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 888067A261A;
-	Mon, 13 Jul 2026 06:11:20 +0000 (UTC)
-Received: from pdx1-sub0-mail-a229.dreamhost.com (100-99-12-219.trex-nlb.outbound.svc.cluster.local [100.99.12.219])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 330F57A066D;
-	Mon, 13 Jul 2026 06:11:20 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Lonely-Whimsical: 2fc3d3f04a48515d_1783923080471_1164131750
-X-MC-Loop-Signature: 1783923080471:3517101457
-X-MC-Ingress-Time: 1783923080471
-Received: from pdx1-sub0-mail-a229.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.99.12.219 (trex/8.0.2);
-	Mon, 13 Jul 2026 06:11:20 +0000
-Received: from offworld.lan (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a229.dreamhost.com (Postfix) with ESMTPSA id 4gzBs34S2NzTR;
-	Sun, 12 Jul 2026 23:11:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1783923080;
-	bh=pTJcDAQgnCO299gLmvH6Cu9xDIp5TOVM+7pacwEs3JQ=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=lxu+sN96axRR8STDg4Py/sE8JQccKKoYtWCwrqAggN87jI11gStAyZXCKDO2WlsXG
-	 C6meOt8whNIsYFKHc9LUBtXDNR6EPoZiDIYwrVjKd/Xmjtdt9A+r0IXIpCx9pwJHCK
-	 tXukGRCccIfyswn0UjdYhZIZft/BDNq3FeuTjIO7gY9uI45wy2+rNGrHcEbiDm2XLF
-	 SdpkLIbstGuIxOTlAThfAzbV7S7x37ZHwsWcSnsHX5eqAWDy18I/OlvIW1hoSQwOjt
-	 1isOnYpVEQkEfTjt1I3V8ooCwOvInQ+3SpgyuU2awWSSZm94+NPAfTlMSrQfpuCnG1
-	 UNIRenNp3AH4A==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: jic23@kernel.org,
-	will@kernel.org,
-	mark.rutland@arm.com
-Cc: harshal.t@samsung.com,
-	icheng@nvidia.com,
-	linux-cxl@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCH v3 3/3] perf/cxlpmu: Support Channel/Rank/Bank filter
-Date: Sun, 12 Jul 2026 23:11:12 -0700
-Message-Id: <20260713061112.105419-4-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260713061112.105419-1-dave@stgolabs.net>
-References: <20260713061112.105419-1-dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="todVY+Bs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iNVT9Cb+SjcTubJMKUyt+PW24yonaog8vQAebL7PhC+FPCBQQb3w+lSZJo0H3QvS2YXMsD75bwbmNglexqbelV/mu4Snf62A9JbrzN4CKcD3+BaOouqNNMhY2UrjP7W54jrOUR+IVboveMoK9E5JZdETKjBspNc15NsEB+79hDZkCWhf7QpjDs6u9FKwvWR/fc2zSBbDNkZQi52M2PrY6Eodg+2rCEjWh3uymCy5Z2ZsdM6A2fHh9xOOV4DmHeo/M2NjCeYE7kNURJQIf5RftFJNdc1CcKiYbfDo2jFHDcg5jZSMgoO8IqHSguIGutnKx0h1HRrk91XBuOWGx+8kEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3OhoQw+RYaBNiDe/zGw8kRCKN4aKQG2e43lG4svAjc0=;
+ b=kWXvxNTETUT3iprmPEQFupqa1OEvLt1j+o0LgYBTMirtUB78ZXuntxdyxEy3p68d/PA/bt73xea+WtZ9KAe5BMxD/JfNAWnBiU2KmHkHugLbosfWPvBpM3UNuDqLeN9QWDcf1sROJ6/jpGminZ4awzGn7Tc5S8A0ma4JN+zNZaEjaW5f6vAu7MP+7shozP35GlYovcQIRNCIh6K6yMTfa/6FRuWQlQWhlQ36+owCx7lwIOCt9Ro3xutb/YChVjHTsDj4p8g0KNyw0Bus+X5ZnJACvZnMx0LE+7mT+Roy0Ej6SBqD2XO+FngJP13YzF0d4WN2GRRyxQMJG0qE9nFrRA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3OhoQw+RYaBNiDe/zGw8kRCKN4aKQG2e43lG4svAjc0=;
+ b=todVY+BsMub8MWAiFIlXQ7LRLziin3Wr4x6Ox7hftOtNHLjFTEKRd8q1XJNAFytxAIBBaA2rmTluVsNjmAmEpBx6E1ver1IqjxWyfLoDqoL5DeNrWy4rocOBe8mUfln9yH2pgupUSd4JTnPaKUEIFm12UdtzndOinQd2xaR/Kc7srkRTYSLTLdjQya9A2qBeTNfr3lAGhD8IcgUrf+MEPMZLN7u4GWD3r6GYphoSPcUZ30gBjKnX2As0z8THS/9DGXnbGLojms6x5yBtuMs7AwrCDiNIEmuJzfovMQhIPGWsiQg6RswQ7Ex23V1yAxzfTuZHNC82l+4QNC4PaD06hg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by PH7PR12MB6635.namprd12.prod.outlook.com (2603:10b6:510:210::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Mon, 13 Jul
+ 2026 07:22:39 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0202.014; Mon, 13 Jul 2026
+ 07:22:39 +0000
+Date: Mon, 13 Jul 2026 15:22:34 +0800
+From: Richard Cheng <icheng@nvidia.com>
+To: dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com, 
+	alison.schofield@intel.com, vishal.l.verma@intel.com, djbw@kernel.org, 
+	danwilliams@nvidia.com
+Cc: iweiny@kernel.org, ming.li@zohomail.com, kobak@nvidia.com, 
+	kaihengf@nvidia.com, kees@kernel.org, newtonl@nvidia.com, kristinc@nvidia.com, 
+	mochs@nvidia.com, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] cxl/features: Bounds-check the fwctl feature
+ commands
+Message-ID: <alSPej_hjBLxQwk1@MWDK4CY14F>
+References: <20260626104102.53892-1-icheng@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260626104102.53892-1-icheng@nvidia.com>
+X-ClientProxiedBy: TPYP295CA0026.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:7d0:a::20) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|PH7PR12MB6635:EE_
+X-MS-Office365-Filtering-Correlation-Id: c0350a60-f096-45f2-d40a-08dee0af8533
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|23010399003|366016|1800799024|3023799007|18002099003|22082099003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	JaoPFYzlMAdTPwmoTp04xhIx2M6wOCcjRR2z7XpE5STaOnH036Cg/PGV9FyP5K4Ra3i+s7fHzUYoSNF85HB/vyf2fMyYTFzIm0N+ej995GQhVUe3uhD3sPEdSnDl/Vj9o2flc6chRLgtFZ+6Xh+c0vkKC5rpEthTAQ4eiFHbf87/KahKpwm7zr9qyeBH4ReCG3YwWOpnUZxIbCh9jVPJv8isA81P1mmd+vz9AZAnvKaBBG7ekPKqMLSDeVP+5rnXYC3vOZmzgVLy+jkRIVCjyumWmhVWim9wX28RXXQIWk+srfLMLuBVED/Bf+3gJAOndLjW78Fh4MNKzwRtwQiH2npxHF/PHQfocJ2RHqQ2TVaSpFMsxCCZeDJSUB3GPnicEKIbKvTk+j+wMlRb+z/xQx0QK6lF5CFMw8HJ2E8lcRypQYMP0kEOorGWoYGoIkUUo2M3NWtX1qUhyn3ifL4telHhxkiPcxk5LXvUMyP0xZVIvqs6EfF4YF0pYHHBMPZRbeH0bPI2Mdbyiw17+4rCizatHPD84EJAjV6KLsk0Zvvo/crTlZhokoLI0RqBqthNDTOplifcOqzYc2tivgS7YfhCU9HiU5yD/JdSyVNWVNnLbilJkM50AzFJYv/Q9PlxPQq0qIhF15XyN40lJA0DG4qO4lejYRYs/tyGpK7aLEY=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(23010399003)(366016)(1800799024)(3023799007)(18002099003)(22082099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?9tA43mB6GrEii8X0aGPinHwKL/jLFqEdghIaD+KCXu1fxg0B9+MWh45wMH5B?=
+ =?us-ascii?Q?rMXmjNMwKWWX1apOixVUlArkrWX62oJr09kfHsaoQqnQdO7SGgDdHWbFzLKA?=
+ =?us-ascii?Q?yzjV+Ygt2zWemQjRbnPbrQ/b4RiLVidkg4BoiJKo3OMLezerFNBLMUm00iD+?=
+ =?us-ascii?Q?E9leY9OMnWWkg9svI5PVzth2ZtvCr7DIU5oqN5aH9f0fHYklqqsMNg8kK9zB?=
+ =?us-ascii?Q?JEJNKQddhLabEymzalJtu8KY3EetBvej01vegIGaCiohbGWnP3+43qADPgrE?=
+ =?us-ascii?Q?OE0iGJAOdFkYY8FO+VCKANyJVm6fQf6eFYxDNGApIpLrSQA5wWAIvGQCUOjR?=
+ =?us-ascii?Q?nCCHLpizEVIROLLT1ztOkmCI/PA4L+9s+4pK1Vfkh3JwJukWuE/luzLcTB0x?=
+ =?us-ascii?Q?1EKl+vC82k5u3DQyRHHgh2XRpocHBJffsq76apyn7/aF/KxSEOmzBUcs9FmL?=
+ =?us-ascii?Q?06uWUz3XfOQBTERZ2cFhtNC67ZOaTa1MjbomiwOEnl/sJHj52rKrll2ABm2h?=
+ =?us-ascii?Q?eymzzDR5rofaEtEJJVuUGirWRWKz05W5Fop4HI9PDUQikCQMBNYKAC9NFsrn?=
+ =?us-ascii?Q?AaT95VbUJKtruErjPKJBAenZe02E+5z7ZSnRDsf3N/WqMg4G9Tcbu0AdRLYC?=
+ =?us-ascii?Q?40k5uzyKhpS3YWMx4/ELII2XI4vMh07TF2m8pMnIpJ/yvGfSGMn7KdKpnl3C?=
+ =?us-ascii?Q?3y+uyPwRGp4lOkgOkD08EPlwKOGe9rYxp5Y0Kc99NSCKuajOuSDZrpJFasGX?=
+ =?us-ascii?Q?P44AeTiDZCLsLkuEhFpK4BA1THgL3N3jEL7I3ewKeaZAZpiQVrnsRGrupzN4?=
+ =?us-ascii?Q?u0zSsWK7oKerHkKu9VhwTGxzKLhnve3QMPckacA6OF1Zl/66viF9tpDp1DH2?=
+ =?us-ascii?Q?L+ZbZGlQqqLZkIdJVsdKAC9XWmVgtMsICOTwRLcSHlFA3Xj14WTEYlRbkt/j?=
+ =?us-ascii?Q?84026tYcWBsAW8QRW5VB0FNGfVj1IJBjeFFSKteWME5c+Kii6u2b5o5RbNDQ?=
+ =?us-ascii?Q?zgDTsaZ0dEHj2EQAndUISMWQerDW22Xgz1NwFBjIUmA93afaLiC4faPmc4hV?=
+ =?us-ascii?Q?w4mnDmXR/JEDYjxQ5KOIZSG1rir6+/vsArj/2pPFPyQtBEHWPXXOvEbGqJv2?=
+ =?us-ascii?Q?Tum9HUkCB454DXOn+Gn44yP0Xm6Oap5WDrX5KnTJFIWSlzmQBiq8y2WAA82S?=
+ =?us-ascii?Q?BuvFaRVh0IFq03XF+4SoZO+n7PEislECOmJ25NWs9DBFKESzmrDkuJWW4D1x?=
+ =?us-ascii?Q?Sk094TgWCdFEerRA9hQEdfqJoa+By0tcbeM7ANo3zCMXbar5Du0+euEiZNSi?=
+ =?us-ascii?Q?OGlgp6bFhx1U/y82HZm6cbCtGxNywCvCA7M+91L5D1MvfVxQ01v57HF+Qb0c?=
+ =?us-ascii?Q?bflWRo87BtpRQGZMyhHKmRd1+FE5PvYaWJ+IC2nZ9UqoLeO64lhiXmUdp+63?=
+ =?us-ascii?Q?cMYf5OM0kNTfvR9wpHFHynzLyCF7XLpBlDX0PWZi6n8HNmmfsU7x/8lQNpCc?=
+ =?us-ascii?Q?NvlpRAuK4/xeCokvTwXRJihH5mwrw6rHLksq1l0i0O2pfwgh7GmlvZdFeqQh?=
+ =?us-ascii?Q?DeCLnThZ8X7lNg2AQfIrQtN3wyNwx/SCA8rkxH/rE83isHeerwGoIryVLefn?=
+ =?us-ascii?Q?dX+bCrlKzkSayWihnuiLbXh0TvfNZOyV2D2Wp7s7htydA7Tzjar4xo2qUlfA?=
+ =?us-ascii?Q?cBvqQG7o3lim1qHCuoT7FD09TYhzTnGcQob7QI8T06gMw5E9vxdjDPw+VdiX?=
+ =?us-ascii?Q?pic+7kND9Q=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0350a60-f096-45f2-d40a-08dee0af8533
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2026 07:22:39.5747
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: l4lA71GFfLJP34LdnjokxfMQ3SQKPzeduZ6qQDSRYHlq+CAL3l/EChUNaAohGo/qOXd/J+IrYR9io6cMuuAeCA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6635
 
-From: Harshal Thakkar <harshal.t@samsung.com>
+On Fri, Jun 26, 2026 at 06:40:59PM +0800, Richard Cheng wrote:
+> The CXL fwctl feature handlers take buffer sizes from userspace, which is
+> out_len, and from the device without fully checking them. This series
+> adds the missing bounds checks.
+> 
+> Patch 1: reject a Get Feature whose count is larger than the output
+>          buffer.
+> Patch 2: reject a Set Feature whose output buffer is too small for the
+>          reply header. A zero out_len makes kvzalloc() return
+>          ZERO_SIZE_PTR, and the header write then corrupts memory.
+> Patch 3: clamp the Get Feature read loop to the room left in the output
+>          buffer, so a device that returns more than requested cannot
+>          write past it.
+> 
+> A related gap is fixed separately by Zhenhao Wan's patch [1].
+> 
+> Changes since v2:
+>     - Expand the single Get Feature fix into a series that also covers
+>       the Set Feature output buffer and the Get Feature read loop.
+> 
+> [1]:
+> https://lore.kernel.org/all/20260620-cxl-fwctl-oob-v1-1-5758e34d784a@gmail.com/
+>
 
-Implement CRB filtering per CXL 4.0 8.2.7.2.2, and extend the
-current filtering support beyond HDM. CRB filtering is only
-permitted for the DDR Interface, Queue Occupancy, Queue Residency
-and Retry event groups (CXL 4.0 Table 13-5), and only when counting
-a single event (a single mask bit). For example, to count DDR
-activates on channel 2 only:
+Hello,
 
-  perf stat -a -e cxl_pmu_mem0.0/ddr_act,crb_filter_en=1,crb=0x02FFFFFF/
+Just a gentle ping on this serie.
 
-Placing the 32-bit CRB value at config2:32-63 leaves the
-existing HDM value at config2:0-15 untouched and avoids needing
-a new config3.
+As https://lore.kernel.org/linux-cxl/20260620-cxl-fwctl-oob-v1-1-5758e34d784a@gmail.com/
 
-Signed-off-by: Harshal Thakkar <harshal.t@samsung.com>
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
- drivers/perf/cxl_pmu.c | 63 ++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 61 insertions(+), 2 deletions(-)
+landed , I think these are worth to be taken a look as well?
 
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 1fc83858f653..ca3361eb832d 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -110,6 +110,7 @@ struct cxl_pmu_info {
- 	int on_cpu;
- 	struct hlist_node node;
- 	bool filter_hdm;
-+	bool filter_crb;
- 	int irq;
- };
+Best regards,
+Richard Cheng.
  
-@@ -146,6 +147,8 @@ static int cxl_pmu_parse_caps(struct device *dev, struct cxl_pmu_info *info)
- 	info->num_event_capabilities = FIELD_GET(CXL_PMU_CAP_NUM_EVN_CAP_REG_SUP_MSK, val) + 1;
- 
- 	info->filter_hdm = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) & CXL_PMU_FILTER_HDM;
-+	info->filter_crb = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) &
-+		CXL_PMU_FILTER_CHAN_RANK_BANK;
- 	if (FIELD_GET(CXL_PMU_CAP_INT, val))
- 		info->irq = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
- 	else
-@@ -229,6 +232,8 @@ enum {
- 	cxl_pmu_edge_attr,
- 	cxl_pmu_hdm_filter_en_attr,
- 	cxl_pmu_hdm_attr,
-+	cxl_pmu_crb_filter_en_attr,
-+	cxl_pmu_crb_attr,
- };
- 
- static struct attribute *cxl_pmu_format_attr[] = {
-@@ -240,6 +245,8 @@ static struct attribute *cxl_pmu_format_attr[] = {
- 	[cxl_pmu_edge_attr] = CXL_PMU_FORMAT_ATTR(edge, "config1:17"),
- 	[cxl_pmu_hdm_filter_en_attr] = CXL_PMU_FORMAT_ATTR(hdm_filter_en, "config1:18"),
- 	[cxl_pmu_hdm_attr] = CXL_PMU_FORMAT_ATTR(hdm, "config2:0-15"),
-+	[cxl_pmu_crb_filter_en_attr] = CXL_PMU_FORMAT_ATTR(crb_filter_en, "config1:19"),
-+	[cxl_pmu_crb_attr] = CXL_PMU_FORMAT_ATTR(crb, "config2:32-63"),
- 	NULL
- };
- 
-@@ -250,7 +257,9 @@ static struct attribute *cxl_pmu_format_attr[] = {
- #define CXL_PMU_ATTR_CONFIG1_INVERT_MSK		BIT(16)
- #define CXL_PMU_ATTR_CONFIG1_EDGE_MSK		BIT(17)
- #define CXL_PMU_ATTR_CONFIG1_FILTER_EN_MSK	BIT(18)
-+#define CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK	BIT(19)
- #define CXL_PMU_ATTR_CONFIG2_HDM_MSK		GENMASK(15, 0)
-+#define CXL_PMU_ATTR_CONFIG2_CRB_MSK		GENMASK_ULL(63, 32)
- 
- static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
- 					 struct attribute *attr, int a)
-@@ -267,6 +276,11 @@ static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
- 	     attr == cxl_pmu_format_attr[cxl_pmu_hdm_attr]))
- 		return 0;
- 
-+	if (!info->filter_crb &&
-+	    (attr == cxl_pmu_format_attr[cxl_pmu_crb_filter_en_attr] ||
-+	     attr == cxl_pmu_format_attr[cxl_pmu_crb_attr]))
-+		return 0;
-+
- 	return attr->mode;
- }
- 
-@@ -323,6 +337,17 @@ static u16 cxl_pmu_config2_get_hdm_decoder(struct perf_event *event)
- 	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_HDM_MSK, event->attr.config2);
- }
- 
-+static u16 cxl_pmu_config1_crb_filter_en(struct perf_event *event)
-+{
-+	return FIELD_GET(CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK,
-+			 event->attr.config1);
-+}
-+
-+static u32 cxl_pmu_config2_get_crb(struct perf_event *event)
-+{
-+	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-+}
-+
- static ssize_t cxl_pmu_event_sysfs_show(struct device *dev,
- 					struct device_attribute *attr, char *buf)
- {
-@@ -621,6 +646,32 @@ static int cxl_pmu_event_init(struct perf_event *event)
- 		return -EOPNOTSUPP;
- 	/* TODO: Validation of any filter */
- 
-+	if (cxl_pmu_config1_crb_filter_en(event)) {
-+		if (!info->filter_crb)
-+			return -EINVAL;
-+		/*
-+		 * CRB filtering (Filter ID 1) is only valid for the DDR
-+		 * Interface, Queue Occupancy, Queue Residency and Retry
-+		 * event groups (CXL 4.0 Table 13-5).
-+		 */
-+		switch (cxl_pmu_config_get_gid(event)) {
-+		case CXL_PMU_GID_DDR:
-+		case CXL_PMU_GID_QUEUE_OCC:
-+		case CXL_PMU_GID_QUEUE_RESID:
-+		case CXL_PMU_GID_RETRY_EVENTS:
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		/*
-+		 * Filtering while counting multiple events is
-+		 * undefined behavior.
-+		 */
-+		if (hweight32(cxl_pmu_config_get_mask(event)) > 1)
-+			return -EINVAL;
-+	}
-+
- 	/*
- 	 * Verify that it is possible to count what was requested. Either must
- 	 * be a fixed counter that is a precise match or a configurable counter
-@@ -677,8 +728,8 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
- 	hwc->state = 0;
- 
- 	/*
--	 * Currently only hdm filter control is implemented, this code will
--	 * want generalizing when more filters are added.
-+	 * Filter ID=0: HDM decoder filter
-+	 * Filter ID=1: Channel/Rank/Bank (CRB) filter
- 	 */
- 	if (info->filter_hdm) {
- 		if (cxl_pmu_config1_hdm_filter_en(event))
-@@ -688,6 +739,14 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
- 		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
- 	}
- 
-+	if (info->filter_crb) {
-+		if (cxl_pmu_config1_crb_filter_en(event))
-+			cfg = cxl_pmu_config2_get_crb(event);
-+		else
-+			cfg = GENMASK(31, 0); /* no filtering if 0xFFFF_FFFF */
-+		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 1));
-+	}
-+
- 	cfg = readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
- 	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
- 	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_FREEZE_ON_OVRFLW, 1);
--- 
-2.39.5
-
+> Richard Cheng (3):
+>   cxl/features: Reject Get Feature count larger than the output buffer
+>   cxl/features: Reject Set Features output buffer smaller than the
+>     header
+>   cxl/features: Clamp Get Feature output size to the remaining buffer
+> 
+>  drivers/cxl/core/features.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> 
+> base-commit: ef0c9f75a19532d7675384708fc8621e10850104
+> -- 
+> 2.43.0
+> 
