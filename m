@@ -1,110 +1,118 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from purple.birch.relay.mailchannels.net (purple.birch.relay.mailchannels.net [23.83.209.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FFB133B975
-	for <linux-cxl@vger.kernel.org>; Mon, 13 Jul 2026 02:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783910947; cv=pass; b=s5PHuK7R+QM5uUthwKRM6Rp6395QiEavhsntT/HbtmROl86pb3e6ZBI83RVX6kw8U5rXoakW7dFZC85Faaq42TsqP++u+bjkn4hMqCffRvD5Iqz3V57yaO9fjFz4c8YrMuAsJM9DMHzhCzWl+0fSVZajRGvDVdAg0xlWAsc4Bv8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783910947; c=relaxed/simple;
-	bh=ps1alfOy+OxgqeIyZ0gav9UvT4oAAV+laaKDT6yWHzY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lr1iJMqR/ZCJ5H8RfGjbkBHFm3PJZU6RmA6XrodbFDB1y2VyMbbJik3delI+TU3Z1hi0MKc7hyDIYvvg+MLl9hGvel/oDrye+oTL68IMgw1Ig3qsUtiITFm1Y25YHsIV8ZqBoDRfomSwS2I0DD9pvp3ALfHT0LQpJJ2eeN1VS+M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=XucdKBMz; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8B835F61A;
+	Mon, 13 Jul 2026 06:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.209.150
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783923086; cv=none; b=lH7MtCZx3fyitVPM4+kwX/caL4agSJvsTn5Lc2vHlYprsp8QjaGY2nA4E4IbsP0gTcY8LPt3+8b5H+h1rK47Nkv/miuRaylKuUeuGWx+TEqg7g12TsOSs0U1nrPc788GniMz0PiAbI89aizwFZcMAKxVJ/6CVtaNckACEhb37Tg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783923086; c=relaxed/simple;
+	bh=WjLXYPtZ48PUmAptVGCleZa4XxDp+q9fii1WWV3WbmE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pEonLRD6we53DQ/+6Xs3RVj7CQKBy4hx8LXoX7m/Wnhs7tNlL+Ixlf2jmSTiR95xIcD9p3SWbULBfYfg7Wrn6DSiz+Q69uLXsrOXg1qsDY1aToYoUU/30uf+kZnxGPEHirs5c9XcK5m08YUMt2n6ZlY3lmGdhcNw1OrVUKdXkrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=lGDKnY+v; arc=none smtp.client-ip=23.83.209.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="XucdKBMz"
-ARC-Seal: i=1; a=rsa-sha256; t=1783910940; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=QnP0rK6o7aYYZjx0pOa/pK64LJ0GTKp0yDPhMknqZ69XgK5lDstdXATWQKwrz3Ri9NqUVuegC5FuHZatUoIBudZ2/RBxN50p9Vt81U8gzUku+zgV5Aj/2+ItpvaZhiMEWSMiG/O3SwPURxbLLzwK07WN/hZX5SLTQGrN8LrNf6w=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1783910940; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=vm1pnD8kTrHNSm9lrXhziwQblk/5LjEldSxL/Sn8Jfg=; 
-	b=gqoOscg0WrDkCJ3TdjVBUoXvz31c3hPMW8iTvlgTbv20lnUPootRLKCTO2yHrnWBLqDzOHrAStvxaO67hz/Y8lciuj0tqP6EsiK1cALsfZWlKvXdZb7V7YHdebUXeuxnjR3gxTub0mFXN0Qk20+WlcoK4Eyz/WkiwLOyawq1QLE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783910940;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=vm1pnD8kTrHNSm9lrXhziwQblk/5LjEldSxL/Sn8Jfg=;
-	b=XucdKBMzUREqMoEU9WoHxvCQWN0udxV/verrK4C7L1kQz7Ikf1Dc0A/4Ebkm8xI5
-	BzO6N486lC14+t7r17U2ZWEKtNGxg04m8/9h9tRYnvCZo/UGBCpbAxINkl3a6y/6Ie8
-	Au3hC7T2M+hIz9Nph+8MEPbdie5UyS93xwmeslpI=
-Received: by mx.zohomail.com with SMTPS id 1783910937810704.8150433230427;
-	Sun, 12 Jul 2026 19:48:57 -0700 (PDT)
-Message-ID: <862754de-1e19-43ae-b212-f7a8c9ede739@zohomail.com>
-Date: Mon, 13 Jul 2026 10:48:52 +0800
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="lGDKnY+v"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id D2C687A1D10;
+	Mon, 13 Jul 2026 06:11:18 +0000 (UTC)
+Received: from pdx1-sub0-mail-a229.dreamhost.com (100-98-253-75.trex-nlb.outbound.svc.cluster.local [100.98.253.75])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 64C117A276B;
+	Mon, 13 Jul 2026 06:11:18 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Quick-Trade: 5edf72aa348f58c2_1783923078673_544100311
+X-MC-Loop-Signature: 1783923078673:3515348654
+X-MC-Ingress-Time: 1783923078673
+Received: from pdx1-sub0-mail-a229.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.98.253.75 (trex/8.0.2);
+	Mon, 13 Jul 2026 06:11:18 +0000
+Received: from offworld.lan (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a229.dreamhost.com (Postfix) with ESMTPSA id 4gzBs15mZvz77;
+	Sun, 12 Jul 2026 23:11:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1783923078;
+	bh=0gV9rAaaoqv9ur6PUIs7Vw8/UB99KTwcTpWSwyiBi3Y=;
+	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
+	b=lGDKnY+vE+f/GrbCatHDjfWP1Sv3LxX6/TwS65HPjoj3wJVwQhyLIetlX5roRyPz3
+	 4la2F7LBNvkPK6a8H+PSTQZmOUH88Ib4eB4UDANP7PDILVzLzxccmtKXBnPTrvPXfW
+	 AzEgPU8PmFw7ui32NKLODsyZUE8WDDdyLm4yrcStKS1M3EHb17KiQVKbl1/8PWNjbP
+	 8ffpftVK1TVc1JvbdQIyRgZsWzEDwaXCqp2bgOntOWv9UlxWmW/YBIRyij7rCp83IC
+	 CPCT4Bx5zz3BSBJUC4akZS+yXcYMCmLzP63c+RRqFoWA7PUmzzIXNcgvxoGPkgf4yy
+	 ZqFz03wTOkrxA==
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: jic23@kernel.org,
+	will@kernel.org,
+	mark.rutland@arm.com
+Cc: harshal.t@samsung.com,
+	icheng@nvidia.com,
+	linux-cxl@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>
+Subject: [PATCH v3 0/3] perf/cxlpmu: Misc updates
+Date: Sun, 12 Jul 2026 23:11:09 -0700
+Message-Id: <20260713061112.105419-1-dave@stgolabs.net>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/region: Fix use-after-free in find_pos_and_ways()
- error path
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
- Dan Williams <djbw@kernel.org>
-References: <20260711180755.1779002-1-alison.schofield@intel.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20260711180755.1779002-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: zu08011227c99e6ccdee7290eee3bd647200009b9398815180cbd311178650029d245399ccfab74eacc1b084:ZohoMail
-X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-On 7/12/2026 2:07 AM, Alison Schofield wrote:
-> The error path releases its reference to a switch decoder before
-> logging an error that includes the decoder name. If the released
-> reference is the last one, the decoder can be freed before the error
-> message accesses its name.
->
-> Drop the reference after the error is reported.
->
-> Found via inspection.
->
-> Fixes: d90acdf49e18 ("cxl/region: Add a dev_err() on missing target list entries")
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  drivers/cxl/core/region.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 1e211542b6b6..c86dd9d55e93 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1938,8 +1938,6 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
->  			break;
->  		}
->  	}
-> -	put_device(dev);
-> -
->  	if (rc)
->  		dev_err(port->uport_dev,
->  			"failed to find %s:%s in target list of %s\n",
-> @@ -1947,6 +1945,8 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
->  			dev_name(port->parent_dport->dport_dev),
->  			dev_name(&cxlsd->cxld.dev));
->  
-> +	put_device(dev);
-> +
+Hello,
 
-Is it better to use a __free(put_device) instead of this open-coded?
+Changes from v2 (https://lore.kernel.org/all/20260630235002.253297-1-dave@stgolabs.net/):
+ - Split the 64-bit HDM filter write fix into its own patch 1. (Richard).
+ - Allow CRB filtering for the Queue Occupancy, Queue Residency and
+   Retry event groups, not just DDR Interface in patch 3 (Richard).
+ - Reject CRB filtering when counting multiple events (multiple
+   mask bits set), undefined behavior in patch 3.
+ - Reordered the series so the events patch comes first, providing
+   the event group ID definitions the filter validation needs.
+ - Add the RD/WR merged queue occupancy and power down events,
+   and the Throttle Events group in patch 2.
 
-Ming
+Three patches for the CXL PMU driver.
 
->  	return rc;
->  }
->  
->
-> base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
+Patch 1 is a standalone fix.
 
+Patch 2 adds the CXL 4.0 events that hardware exposes but the
+driver did not. It now precedes the filter work as the latter
+refers to the new event group IDs.
+
+Patch 3 implements Channel/Rank/Bank (CRB) filtering, now permitted
+for all event groups that CXL 4.0 Table 13-5 allows Filter ID 1 on.
+
+v2 was tested on real hardware. The v3 changes have additionally
+been exercised under qemu CPMU emulation (jic23 tree) + changes for
+the new events/Filter=1.
+
+Thanks!
+
+Davidlohr Bueso (1):
+  perf/cxlpmu: Fix 64-bit write to 32-bit HDM filter register
+
+Harshal Thakkar (2):
+  perf/cxlpmu: Add missing CXL 4.0 events
+  perf/cxlpmu: Support Channel/Rank/Bank filter
+
+ drivers/perf/cxl_pmu.c | 115 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 112 insertions(+), 3 deletions(-)
+
+-- 
+2.39.5
 
