@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415B53C9ED5;
-	Tue, 14 Jul 2026 18:05:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4A93C1087;
+	Tue, 14 Jul 2026 18:06:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784052334; cv=none; b=G3SNgJZqwFHNyLbAUY/XgEzOr9nFU3BAVqDDThjj5DzttdifV4yT597BrcMYv4FUI3+KuGl9CKjcz3RhjxX24b4omFat2gojSqGQe5CfdBHwf/0HvW6F/1QsAUy6TY5wJpRGay6BK0uoIVh1c3eIIHeSTkEA07Q5fI9fQHUuvVs=
+	t=1784052414; cv=none; b=YKA4kkvkt7Ci5bBJzde6IiuwvL7CE7ZyrPRqPPrSd8BPTfv2iWPdU4NT6/6F3XQkdCd96uhN8yy3X0UTJmcDOldc2l26NMkyluKo1FCAjx6LQg0auyTjl+qTEqTNC8QcmSps1dfTOHy1piy769Y4vDZ/4BWuzN8E7eBrPEu2KZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784052334; c=relaxed/simple;
-	bh=D1TUSdG3tJPB5zMY35puNrbr8J5v5FI55ZwFLwE0vn4=;
+	s=arc-20240116; t=1784052414; c=relaxed/simple;
+	bh=9C9FAhgOyn3Lv0hqfBb+V3AAMp19nzpCqpzN5c69a1I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fWiNFGEehHnrQPuDWC2XEY06SS6MFyvN8a5aYSek9livbdtBebdaJqw7WOYbdTc82tmglpRXPS2VEtzH+D/Y/LWC0+c20txTM1ltQqBwQ70qxnEtREw8HkzpMCFmF4ffG/9YuGjp+lRv7IVmfcwJnbAb7KDLHlIzsVYV5q6bsQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ItG0U/nV; arc=none smtp.client-ip=192.198.163.19
+	 In-Reply-To:Content-Type; b=WmxcBUI8JPJul/iKURHKeu90asNOPnl3Ug2HPZ8Fc4qm1SiLSIfJSdLyZoRXMs3P8u8S5+ej32uHHwkpMwzTBI/00llVN8UDgi33W9212m6GO1QpA11TysitHyi0791yPnN3oePHdafMe9tL7YkzrnVFnbJu4Exkrhfy3R+Dqx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ot6O/HoG; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ItG0U/nV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ot6O/HoG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784052332; x=1815588332;
+  t=1784052413; x=1815588413;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=D1TUSdG3tJPB5zMY35puNrbr8J5v5FI55ZwFLwE0vn4=;
-  b=ItG0U/nVo8ClAKrNYs6gXPQdeuq+jPtBKXdntkMU/vAVffzuu8GE1ypx
-   PqmwPYczhGvP3VwrtaBB683b7JMioEkmJnmJWB4oTXYbXLqzqYR2UiXuh
-   a1g7LbdgKZLgJBovYylu6pw7tOLz/70SKU4SI5VK1wqGrBd+0uk9WDl3B
-   ZG+0Pblw0bhzFqI8SlKw2WHgauU9IaaqMuC3Ptb+vkP8iDwERPsDyl/xP
-   OX8MaWK8RywGWLy70J+32Q/kZVrDRb3j/HQM7Sv37grW73UGcVhlCPPo8
-   3jyAxq7oIiGPwQJTQ0TNUAWwNniXf4kcF+ALn+LWYamx+QzIHxlUXrc2P
-   g==;
-X-CSE-ConnectionGUID: uvKaPCpPRQ+wsBsfIG1BoA==
-X-CSE-MsgGUID: uYkFiKazSVi3xdfx4k9mrA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="83669309"
+  bh=9C9FAhgOyn3Lv0hqfBb+V3AAMp19nzpCqpzN5c69a1I=;
+  b=Ot6O/HoGgYAbaJNSwzBUvn7jHe862hRzuhi5zwl6Oe2YF4bP9LFJpLCI
+   GUlu29QaryloTgPaURRu3slEm4xiEuJDGGrVoHn2pz2peZ7GI+QJQ9M9b
+   AUeUjxFwdjFcWmF0Gbpk1JIZSQXBTC8oqKfHBtZO3jaw4r9xn1ODky1DC
+   kz13NHvWutno5mlLcTnTwUpgvYKsrsaJTNiM7gYw4CmPediPgG3ZuZBbk
+   4R2Eej2q7df1SY7FLDcDUFvJZkWgce4n5vXyHUUzQ2G6PGsVMmuqMBtY/
+   DBri9h1bhMq3Wq2e65ZsB3b8oKHEDnr9KkKJikNWd8QoCDaRlJuwiJbxh
+   Q==;
+X-CSE-ConnectionGUID: hXGfbCD7TwKTLkXZyfdX8A==
+X-CSE-MsgGUID: YTd6FXihQfumgZOPmLUxcA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="83669448"
 X-IronPort-AV: E=Sophos;i="6.25,164,1779174000"; 
-   d="scan'208";a="83669309"
+   d="scan'208";a="83669448"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 11:05:32 -0700
-X-CSE-ConnectionGUID: YMzEeyXWRluOegjl9+XfmQ==
-X-CSE-MsgGUID: LTCFEwh2SeamNaU2x+9wpA==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 11:06:52 -0700
+X-CSE-ConnectionGUID: fPoDGZKbThGP/hYYsZGX+g==
+X-CSE-MsgGUID: T30jAzGiTnGnUgt8ZS0+MA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,164,1779174000"; 
-   d="scan'208";a="254805108"
+   d="scan'208";a="254805543"
 Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.108.131]) ([10.125.108.131])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 11:05:30 -0700
-Message-ID: <9b4fa4d0-78fe-44a8-9d32-c6dc599888ef@intel.com>
-Date: Tue, 14 Jul 2026 11:05:29 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 11:06:50 -0700
+Message-ID: <afcb4966-88c3-4462-b1f2-5e63dfdabd81@intel.com>
+Date: Tue, 14 Jul 2026 11:06:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/3] cxl/features: Reject Set Features output buffer
- smaller than the header
+Subject: Re: [PATCH v3 3/3] cxl/features: Clamp Get Feature output size to the
+ remaining buffer
 To: Richard Cheng <icheng@nvidia.com>, dave@stgolabs.net, jic23@kernel.org,
  alison.schofield@intel.com, vishal.l.verma@intel.com, djbw@kernel.org,
  danwilliams@nvidia.com
@@ -62,30 +62,29 @@ Cc: iweiny@kernel.org, ming.li@zohomail.com, kobak@nvidia.com,
  kristinc@nvidia.com, mochs@nvidia.com, linux-cxl@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20260626104102.53892-1-icheng@nvidia.com>
- <20260626104102.53892-3-icheng@nvidia.com>
+ <20260626104102.53892-4-icheng@nvidia.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260626104102.53892-3-icheng@nvidia.com>
+In-Reply-To: <20260626104102.53892-4-icheng@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 6/26/26 3:41 AM, Richard Cheng wrote:
-> cxlctl_set_feature() sizes its output buffer from the user's
-> fwctl_rpc.out_len but never checks it is large enough to hold even the
-> fwctl_rpc_cxl_out header. With out_len == 0 , kvzalloc() returns
-> ZERO_SIZE_PTR, which passes the !rpc_out check, the subsequent
-> rpc_out->size = 0 then writes through the poison pointer.
+> cxl_get_feature() reads a feature in a loop but passes a fixed size_out
+> as the output capacity every iteration. On the last partial iteration
+> the buffer has less room left, so a device that returns more than asked
+> can overflow feat_out.
 > 
-> Reject requests whose output buffer can't hold the response header,
-> before allocating. The Set Feature reply carries no payload, so the
-> header is all that is required.
+> Use the per-iter size data_to_rd_size, which already tracks the
+> remaining room, as the output capacity.
 > 
-> Fixes: eb5dfcb9e36d ("cxl: Add support to handle user feature commands for set feature")
+> Fixes: 5e5ac21f629d ("cxl/mbox: Add GET_FEATURE mailbox command")
 > Signed-off-by: Richard Cheng <icheng@nvidia.com>
 
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
 
 > ---
 > Changelog:
@@ -93,21 +92,37 @@ Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 > v2 -> v3:
 >     - New patch.
 > 
->  drivers/cxl/core/features.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  drivers/cxl/core/features.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index 9c714ee42a41..ed18ccb5e236 100644
+> index ed18ccb5e236..e52371f87300 100644
 > --- a/drivers/cxl/core/features.c
 > +++ b/drivers/cxl/core/features.c
-> @@ -520,6 +520,9 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
->  	flags = le32_to_cpu(feat_in->flags);
->  	out_size = *out_len;
+> @@ -225,7 +225,7 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>  		       void *feat_out, size_t feat_out_size, u16 offset,
+>  		       u16 *return_code)
+>  {
+> -	size_t data_to_rd_size, size_out;
+> +	size_t data_to_rd_size;
+>  	struct cxl_mbox_get_feat_in pi;
+>  	struct cxl_mbox_cmd mbox_cmd;
+>  	size_t data_rcvd_size = 0;
+> @@ -237,7 +237,6 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>  	if (!feat_out || !feat_out_size)
+>  		return 0;
 >  
-> +	if (out_size < offsetof(struct fwctl_rpc_cxl_out, payload))
-> +		return ERR_PTR(-EINVAL);
-> +
->  	struct fwctl_rpc_cxl_out *rpc_out __free(kvfree) =
->  		kvzalloc(out_size, GFP_KERNEL);
->  	if (!rpc_out)
+> -	size_out = min(feat_out_size, cxl_mbox->payload_size);
+>  	uuid_copy(&pi.uuid, feat_uuid);
+>  	pi.selection = selection;
+>  	do {
+> @@ -250,7 +249,7 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>  			.opcode = CXL_MBOX_OP_GET_FEATURE,
+>  			.size_in = sizeof(pi),
+>  			.payload_in = &pi,
+> -			.size_out = size_out,
+> +			.size_out = data_to_rd_size,
+>  			.payload_out = feat_out + data_rcvd_size,
+>  			.min_out = data_to_rd_size,
+>  		};
 
