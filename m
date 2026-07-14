@@ -1,198 +1,301 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013005.outbound.protection.outlook.com [40.93.196.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59841233937;
-	Tue, 14 Jul 2026 04:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784003527; cv=none; b=H30fVb0lU9J0q3swSakWqq/48mkvcQvTOYu6sXs6wNA4Q1+kKZ9oZo4++GAXBnsihzUoeJFkJ0H1qmgzsm45pd9HvMGSw2yiI1BsAAZ1S420SGecu+6fbWDdiioMxMJ10CVBu6vuXp0WYRPLd2gpZwzmhxJJmTVUrQeYZw9xEMQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784003527; c=relaxed/simple;
-	bh=XM7VGBlv67NNumr+kynwEza1GVf1p/tMWmPt/JIhuv8=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=p0ro9gcsHzPx6CUDdM+UliNoFP3oEVmcmN1oH31YGOwrNfQjFtDF54SSx9OMSJGYPHyiUyVNT1lxAEU0dBn2tzV318rYAg7ts1kRaQzKgy0px1o2eCzuGOkHtHkrpZ55a2QPMZi2AULSQedve+k9x73WO2My/ZWGxlRWTyozFAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cYsFHduW; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154252FE575;
+	Tue, 14 Jul 2026 06:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.5
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784010957; cv=fail; b=pAV9ppBhmungQh823Z1WYHobkV88osjZHO5HKbHGvAzq9wpFkaWJx31dqLPx/wwMsAt6iuaQMNnJVsEvrAnQwvY77EHK/L8aNI/agdHUDEueazmzGmf4ktLRMx80WlFoH76LriMXA2jl0DWZBcto1Orst3URK3gKp29noCZx74E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784010957; c=relaxed/simple;
+	bh=ZwjhcWpY+KQ/VdOcVYCGDb6HjgnI89o0/A0EkX9H4QQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Ys8SjTCwKP5Mfh2VMip85uVrspfBdz4yWkpRvQUv22bdsX+Y7VcSX+NfH7u700szvBny1tfs59xb/dVWa/Ckmj3VwekKKS4qkkdPlfn5ex0aVUUntXA3Xel4tIIVjcfhHuHZOrj8sym2p9pkiMmd0VgPJczO47X01O6mRBT8Jqw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Mvbi4QGw; arc=fail smtp.client-ip=40.93.196.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cYsFHduW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C4D61F00A3A;
-	Tue, 14 Jul 2026 04:32:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784003526;
-	bh=ICf9OHjwxFwehYXqEt5J3kn7A2kZgUciQx2f6MzCt2Y=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject;
-	b=cYsFHduWOEX/90cDUwmi0F84QmFNIfZ3UOkSD15Mm6AFMrgog/Z3+LhFLFXaQAF6w
-	 MaIIiyoItCwgVQvrjwXYScVJkOZ9COVI0lMoPtIxy7gZt6l7vOqf84FObbfPBTPW9q
-	 ykCjbvzwlf6xSxpshlJmNFLfJU9kM6hEl/zQWGyl+/zu1Nlm/hYaFnO27guyzVYIme
-	 E9opmFJAhSYVTai4+TK2/6UgiDvmpkZrJKuWqvBO70tRnsAeHSMYvW+GMvvpe3uNeo
-	 hexyC3uVOJDkaGDrod7y5bLFGU/aM73lRPPSIoO0cxExUIUlhZXHO7oYY6zhOfuTyf
-	 tkJU8/4zTbNGA==
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 4EC2FF40078;
-	Tue, 14 Jul 2026 00:32:04 -0400 (EDT)
-Received: from phl-frontend-03 ([10.202.2.162])
-  by phl-compute-05.internal (MEProxy); Tue, 14 Jul 2026 00:32:04 -0400
-X-ME-Sender: <xms:xLtVarN6dk6rsOmCkO-hvq2gJutn2hmcYU2JOjSRSc0fi3AkkOV9ew>
-    <xme:xLtVaq0DBDSAFo0Y760y9W7A4ziv7FNxyEMR1Ly7CC_JlHyw73eHHkuE0DMVm_n1x
-    TeMCHOKzqdfWkwAV63jdG_QgaxiUJh7wsgWcIRfzFK2y-GaAZyxJIs>
-X-ME-Received: <xmr:xLtVan0Pq4IxK_mW93Uam745vAuJ2f_c89w59gk_tIIS9-eAVoiO639-v9Vb-YCv3RR1fhYhXw46W-rY0bI5hNWZAb4sImHT9ao>
-X-ME-Proxy-Cause: dmFkZTETAL60usH4lwlQ+4JamyiGMB40vHl7RgBXxsRW+Q/t46XOvYKxjtcqB7DgAdPC6i
-    zMIujK7PY4sEwXxazD+cu/TeVDF4gGUKmmd54dtA25ch6rGoXJwCupkApom8abyimHWxjk
-    DLdaPpsTwRaHCE++9rktMWDjVDFmr6CU0Jm7oQH94vJ7v+mplgl45VZFu0bVcmqSldtmyP
-    TsPb5ggmXk5spRxfJAiNTZnPUydufMtrYp4tqcSf/n46+m3l7r38cEHazhwn6Qp7DP25OL
-    +7gmDJ3RA06dy6rPvT8Slk3sgoDnnQ42j+hY5zYQVGCGqQspCGSx7XiOjPEtOtzmpVcxbM
-    sxpp+PgECi1Nk6EOwSE5+G77XfTW+06KOFWMcYwxpsclj/vLEOOGfHjhEgQtQFRjAsmBq1
-    nz0rZySu2yEuP/cuXXREFPtFMgH07FMuR3pMx57MagjZ4O+loKKKSoNHSPcieSeJ5/HZ6S
-    hL7IRiKeWLeEuHKkbK7NktIMhi89NtiFQZw9e7Nt9G4HsFIJW3kpfnAgqzFOnHxsva95hS
-    ssbW7ZxM53LmT9XKcEr50YysPX0vTrRoxmSGzMq16mukrhzOEBRx6jRmrY5j3iYbbvaFZe
-    V0B3jQYtoJ58Zt7Wqu5UJn8rTsTND9kyp3b7TO/B8nNfcJPnZi0TK1Mem4bA
-X-ME-Proxy: <xmx:xLtVahy2ngywLag-bMOt0yjyZRXwzIkHthZsohlCWRjaN92gSyj23A>
-    <xmx:xLtVaikLSb0O6jdVHHApcpNpF9jpnWGMImdDuINYgaQtAWqL5qE1cA>
-    <xmx:xLtVatzdFt6uVf1Kd6-ggDleOTtMVSJ_r4dg92V5tJ2S53s2ryETsg>
-    <xmx:xLtVapJenbLv68dmWS4szRfchpH2gaL2c3Rl2STOKCitqmiivYnw2w>
-    <xmx:xLtVagKBbKwjiBvK_qMG6wu9fLclvcCKO5KvhGBOnRpLAcnWoYdg7qjy>
-Feedback-ID: i67ae4b3e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 14 Jul 2026 00:32:03 -0400 (EDT)
-Date: Mon, 13 Jul 2026 21:32:02 -0700
-From: "Dan Williams (nvidia)" <djbw@kernel.org>
-To: Manish Honap <mhonap@nvidia.com>, 
- Alex Williamson <alex@shazbot.org>
-Cc: "djbw@kernel.org" <djbw@kernel.org>, 
- "jgg@ziepe.ca" <jgg@ziepe.ca>, 
- "jic23@kernel.org" <jic23@kernel.org>, 
- "dave.jiang@intel.com" <dave.jiang@intel.com>, 
- Ankit Agrawal <ankita@nvidia.com>, 
- "alejandro.lucero-palau@amd.com" <alejandro.lucero-palau@amd.com>, 
- "alison.schofield@intel.com" <alison.schofield@intel.com>, 
- "dave@stgolabs.net" <dave@stgolabs.net>, 
- "dmatlack@google.com" <dmatlack@google.com>, 
- "gourry@gourry.net" <gourry@gourry.net>, 
- "ira.weiny@intel.com" <ira.weiny@intel.com>, 
- Neo Jia <cjia@nvidia.com>, 
- Krishnakant Jaju <kjaju@nvidia.com>, 
- Vikram Sethi <vsethi@nvidia.com>, 
- Zhi Wang <zhiw@nvidia.com>, 
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
- "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, 
- Manish Honap <mhonap@nvidia.com>
-Message-ID: <6a55bbc276b96_f7ebd100e4@djbw-dev.notmuch>
-In-Reply-To: <IA1PR12MB90309355D97FE886A1DA77BABDFA2@IA1PR12MB9030.namprd12.prod.outlook.com>
-References: <20260625165407.1769572-1-mhonap@nvidia.com>
- <20260625165407.1769572-8-mhonap@nvidia.com>
- <20260710162316.29cf8107@shazbot.org>
- <IA1PR12MB90309355D97FE886A1DA77BABDFA2@IA1PR12MB9030.namprd12.prod.outlook.com>
-Subject: RE: [PATCH v3 07/11] vfio/pci: Add CONFIG_VFIO_PCI_CXL with bind-time
- CXL Type-2 acquisition
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Mvbi4QGw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ot8OpKWzOqO2SdB156Z4VcqbOx6JcjgiSinKV3Kw930lezbUmWC48fo0KBSJJE6BGKZeemp7l4TduI9POKw3vvmiRgRVo/mXjpOocCcOyZSYJFYlCpct1k57NWWMnEsjC6IfjEYUAFSqgoVufI17M9fm6LRgkm/J4MtrZDhICRt9Lp0o4KIIlf2q+lUCGJXNCJJibQ1uEJSomh4u7F+6vI7Mg1n5mRPZMRhIEqdguws4ozDccTymBkoIMjlWtP4qze10fagZhEU6xIoShksnd3Hs/1+wvuRa0UxsUCTB1RbVNytxgJami9gzl4nyzTXfEG/d6cwA9K6WG4QWIbXN7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Jmow8l6gp8Lm5LkV3H6ZMD9YjOASNyaJl3T7foR76IM=;
+ b=txa8QSY0p5oXkzjQWQhYgezxcRvL5lVi5R3SjkmHADONEsnH1hgugxiEngrbeBX7sASead5y5ao4uKLH8a5htmePiSU5R2Dn2nJxh1JeFbk8EPwmzelds61AW5BJp2WGZZeXHe3py0tSpUVbZHfpL+Ot9LtfTtJgvIMP9vCOvtSg0L0sEiFsK71MAF131JKOlC/VVSW05ESR13UyMo5JkegLTX1IFbQRD/PfDRT+FAGlyFjOvdteszmeP5wAT/7YYi/8gUJOJYHNGjVIUEGch3HUXhacEwGQ3D8yRCW5NTVbdTXStKt0Lrs4lmh2BXYn+/15LwuWmkiFJFdgkij/BA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Jmow8l6gp8Lm5LkV3H6ZMD9YjOASNyaJl3T7foR76IM=;
+ b=Mvbi4QGwiURifinVSa6t5EvCLELP8ijSINmqmI8UMWBJAJ8dXMPUadx5rTMCdWpk6wfjLh8ZzNHEtIzS1rnxWz4Mu4lYYz3/5NINVMUX65tZ2z+OWXybxcP9QcmVUzeZS0bHFeLh8HO7LP33FVoqQDdin3QKK/uLPmIve21XLxJkR3opX89VjmFx68RFD07qrMEZyPJj9fqWWqeJsZj8SRdf9bfxUa8+2Yxt8VfBJ03FGCQp2ajpM2hwyjhrzMlr1bbbOyfiqqCHw7dke0QgMMy6Yn35I3G4QIbgDpoWPLYG8RfuJboClA09/qbTVtvgARl9dDxRntqpVQc0w92y8g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by DS5PPFF2923D4C1.namprd12.prod.outlook.com (2603:10b6:f:fc00::669) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Tue, 14 Jul
+ 2026 06:35:48 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0223.008; Tue, 14 Jul 2026
+ 06:35:47 +0000
+Date: Tue, 14 Jul 2026 14:35:40 +0800
+From: Richard Cheng <icheng@nvidia.com>
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: jic23@kernel.org, will@kernel.org, mark.rutland@arm.com, 
+	harshal.t@samsung.com, linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] perf/cxlpmu: Support Channel/Rank/Bank filter
+Message-ID: <alXWrWdv-5xxHh4P@MWDK4CY14F>
+References: <20260713061112.105419-1-dave@stgolabs.net>
+ <20260713061112.105419-4-dave@stgolabs.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260713061112.105419-4-dave@stgolabs.net>
+X-ClientProxiedBy: KUZPR02CA0014.apcprd02.prod.outlook.com
+ (2603:1096:d10:33::12) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|DS5PPFF2923D4C1:EE_
+X-MS-Office365-Filtering-Correlation-Id: f97869e5-cc77-42c8-066a-08dee17223a7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|23010399003|376014|1800799024|6133799003|18002099003|4143699003|22082099003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	ouweEev8cQMmrtXnpQhE72StJeOkSnAaX4Qsl0MtuDJgX5qX3J7JRAPbFPyxQa6PtC0veOooxxAHU5Mq0wMsYTHCu65jf/kAf2rW3YFXneG6OW5Mg6rrsK2LwE8RhgdTg45LoyAO/cL/7mQ6+ARSi4x8wb4hMM9xHiHVl1v6DF6YpxILl/4zaVLQKBc31m51JV0JLqF/EmMTGupYjrolOayALNk5WZ5Cg6X+ybBHTv2kDyoe2cjK+gojN7JIUx6PyXAm4MtXzwRBXOPIpiqrCDmS7k8ySWjvc5JatgubfYi/vXZWZ9IYuUsfsrF3glVl16A/Lw59ouq4ZbJz/SNWNHRz2mZbdAFx/NVvkVYdiIzRvo+x3ohxgy8PX5tiiPKMrTSNVDdduGelD/K4XW9TofuaPxIdNCjPp0JNyWObmI99OQ+D1V3sAcOYGKAXCejYQBb3dNov3PcrCdOoAjRo9CxFtIxtvEt8YowVlhLeARdnL2UoHJPTq/jj7tA+b4ymzdCh/A2yk84f/bVbBYydnsVIZJ5MYDDvx+RGIGyS0xzRp40jA4PC+I5ndpg+gWLYqDcmKXYRx1YS1UYej8F6AkZGZJULxq2cTN4AgYKzzAzKwDHD4bAaAMZ1C2jNKc5ihZSWfQcQx9w51ZLeNgdtepGd8wwqsmU+FpvLkNqbavY=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(376014)(1800799024)(6133799003)(18002099003)(4143699003)(22082099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Oi9n+iS1o+sMFscfTP/KIaB6s9YSyecXDschBtjTqz4vkvagsc3r5xIbpDpG?=
+ =?us-ascii?Q?sNySJPZokYBIim++r3jfb4CXmy68gedIvOcvH3JQDgiSJG9FZ5I3R8VqXm/P?=
+ =?us-ascii?Q?nWHQhND5liIaONWN/7NMAeiN/0AlU/aflZv1AArTAd1OwpNENHXvctj7xcY0?=
+ =?us-ascii?Q?MyNkj82fBp23Ijch1A8gjxdMPmkTMvJ/6ArlPHfigPHfxdgjVXWL44jq3zzL?=
+ =?us-ascii?Q?DLs+JwJ6t71YNvKiCgBao5bQXHtdTfCy83fjB3+KCJP0MKqCeb8eHhQQM36G?=
+ =?us-ascii?Q?fqdcBMqz6f850tzkS/5RlhWAw+UKzUkpdI899iIy6Lm+64U1TrJbraCpA/cf?=
+ =?us-ascii?Q?eLqN2pTk9jpwiRZNPO1slaC00QScong9YN8UFWIJRcKFtLBZg8gs1MFulgwx?=
+ =?us-ascii?Q?x4Ly9RXX81O/SEK4QE/PHYzsh1gU4bOY0RupKivB+bY+9deJ3nlbimhMWnD1?=
+ =?us-ascii?Q?vzJYyFrcDibByT1d7ryb1cBwVQ64QNHRMGFS99vbFglj0qa4tA8JxDespsCf?=
+ =?us-ascii?Q?8D+/flK2WvOFhM7TYADsRMoxJiX4NuSGUMbM12QkYI643mP0RcfhrncySCMc?=
+ =?us-ascii?Q?ZX+FCSDmF9kIhuZrD4BhLATNIYrWqXa2E+mObgeB4seiWcdjoMaGoV4tkreU?=
+ =?us-ascii?Q?b1Y9m3NMKd3RbYjJq5UtDz5HC1NDgIBtCj8srVMcA/sSpnhynrRPZkz22Nuh?=
+ =?us-ascii?Q?OIhskniAVPVrGm74rYSn0D0z16TQDPbpnJApkiDqdl7rs69Rk9pZF3s3PYrK?=
+ =?us-ascii?Q?++nJ9AySBb6shYHKHiJTymjULfjKeTxP91JqN9h+0t7O2s329axBASH0le7e?=
+ =?us-ascii?Q?mnRI6LXaiLT/km+BB7XmUWCsZUSGUPlYhSNsRLUmnoi0+F5BDI2ICo47ndE6?=
+ =?us-ascii?Q?Z6j2qTB7Wctc1gEUwPUARQdaVv4W//ht+t1dqL+ayp5/sM8QkNEHS5oLdBhI?=
+ =?us-ascii?Q?bbX4OiWbkRV2MLzfkCeuYlae6+RYsOsT9H5dXxrHQXG/NVi9QWFVcrdwiM2O?=
+ =?us-ascii?Q?kAeUTLZqAsfaAdtJ/ftD0c9nto/fhD+yslwFSS3gJvHitskQf7vKwhsOK5dU?=
+ =?us-ascii?Q?ggqScGCV2e3G1YacQLO8HZHH/9zuMtSaeYOfRHUZidapiH7s1iCQcdMfnitw?=
+ =?us-ascii?Q?J3EyzGX1I/uXFfW48z9I92ri4GLcX0dGTYBN55YZuNvJlDHyc6aY7YeQbo2Z?=
+ =?us-ascii?Q?y5kx9QZ4DtRAvB8eVrZmSat4uKdFRdRrLdrS8pCks3YwXTvtbXQtsJWGi/oA?=
+ =?us-ascii?Q?yk9AKr/vbS0M+Ud79VyY6IUXSbGfib1gPJS2VmAXOUjjpcx8K9abz0Yn1D+9?=
+ =?us-ascii?Q?4Btg5YqXuYMdO20jnMkwDTJahk2lFLcSLIxm0DsB9ZrhEgyC0kSr3QndYFxQ?=
+ =?us-ascii?Q?kShnubcUto6fe/DPVMfQrHvgi8MsYBPaA5i1XulnNOBw+M22K0+TPprXxLtR?=
+ =?us-ascii?Q?9tmyjcyB9KPeopj+fMcQjwu09S0zis+1JGT+JDQY2NeTYjrdBSJ2pLw+HtBK?=
+ =?us-ascii?Q?Sb2DA4PU88i5LFCLGCmm+arTjmRcqOYlPvwtoP4+rtt3LQXsDTZFLZ1iMBis?=
+ =?us-ascii?Q?ayt99RmHjncYIr8YnQkwpFx9KjOUSmsT0hD5pD9Upp+Tykhp+E0Ld/G0upti?=
+ =?us-ascii?Q?r9dNKMQp+/pWw4JEk4CsEtHp80quTeBAz8i6uk+oKQkXOxrGvyLyPJEAgz/I?=
+ =?us-ascii?Q?EY1E3M/rCNVCCkNVKA+XHrTWQOAPFRis3nRKfolriGzPJHck?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f97869e5-cc77-42c8-066a-08dee17223a7
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2026 06:35:47.7490
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: m2Hbg5a9KZ43mGWyBc3ava3QTwYOLOKGeX5hIpvcRkRHMkmheyRV8Dfx27S+EVH028+Z8i6kRTsMqX3f79S0fw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPFF2923D4C1
 
-Manish Honap wrote:
-[..]
-> > > vfio_pci_cxl_acquire() implements the bind sequence:
-> > >
-> > >   - pcie_is_cxl() and CXL Device DVSEC discovery (-ENODEV if absent=
+On Sun, Jul 12, 2026 at 11:11:12PM +0800, Davidlohr Bueso wrote:
+> From: Harshal Thakkar <harshal.t@samsung.com>
+> 
+> Implement CRB filtering per CXL 4.0 8.2.7.2.2, and extend the
+> current filtering support beyond HDM. CRB filtering is only
+> permitted for the DDR Interface, Queue Occupancy, Queue Residency
+> and Retry event groups (CXL 4.0 Table 13-5), and only when counting
+> a single event (a single mask bit). For example, to count DDR
+> activates on channel 2 only:
+> 
+>   perf stat -a -e cxl_pmu_mem0.0/ddr_act,crb_filter_en=1,crb=0x02FFFFFF/
+> 
+> Placing the 32-bit CRB value at config2:32-63 leaves the
+> existing HDM value at config2:0-15 untouched and avoids needing
+> a new config3.
+> 
+> Signed-off-by: Harshal Thakkar <harshal.t@samsung.com>
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> ---
+>  drivers/perf/cxl_pmu.c | 63 ++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 61 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index 1fc83858f653..ca3361eb832d 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -110,6 +110,7 @@ struct cxl_pmu_info {
+>  	int on_cpu;
+>  	struct hlist_node node;
+>  	bool filter_hdm;
+> +	bool filter_crb;
+>  	int irq;
+>  };
+>  
+> @@ -146,6 +147,8 @@ static int cxl_pmu_parse_caps(struct device *dev, struct cxl_pmu_info *info)
+>  	info->num_event_capabilities = FIELD_GET(CXL_PMU_CAP_NUM_EVN_CAP_REG_SUP_MSK, val) + 1;
+>  
+>  	info->filter_hdm = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) & CXL_PMU_FILTER_HDM;
+> +	info->filter_crb = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) &
+> +		CXL_PMU_FILTER_CHAN_RANK_BANK;
+>  	if (FIELD_GET(CXL_PMU_CAP_INT, val))
+>  		info->irq = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
+>  	else
+> @@ -229,6 +232,8 @@ enum {
+>  	cxl_pmu_edge_attr,
+>  	cxl_pmu_hdm_filter_en_attr,
+>  	cxl_pmu_hdm_attr,
+> +	cxl_pmu_crb_filter_en_attr,
+> +	cxl_pmu_crb_attr,
+>  };
+>  
+>  static struct attribute *cxl_pmu_format_attr[] = {
+> @@ -240,6 +245,8 @@ static struct attribute *cxl_pmu_format_attr[] = {
+>  	[cxl_pmu_edge_attr] = CXL_PMU_FORMAT_ATTR(edge, "config1:17"),
+>  	[cxl_pmu_hdm_filter_en_attr] = CXL_PMU_FORMAT_ATTR(hdm_filter_en, "config1:18"),
+>  	[cxl_pmu_hdm_attr] = CXL_PMU_FORMAT_ATTR(hdm, "config2:0-15"),
+> +	[cxl_pmu_crb_filter_en_attr] = CXL_PMU_FORMAT_ATTR(crb_filter_en, "config1:19"),
+> +	[cxl_pmu_crb_attr] = CXL_PMU_FORMAT_ATTR(crb, "config2:32-63"),
+>  	NULL
+>  };
+>  
+> @@ -250,7 +257,9 @@ static struct attribute *cxl_pmu_format_attr[] = {
+>  #define CXL_PMU_ATTR_CONFIG1_INVERT_MSK		BIT(16)
+>  #define CXL_PMU_ATTR_CONFIG1_EDGE_MSK		BIT(17)
+>  #define CXL_PMU_ATTR_CONFIG1_FILTER_EN_MSK	BIT(18)
+> +#define CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK	BIT(19)
+>  #define CXL_PMU_ATTR_CONFIG2_HDM_MSK		GENMASK(15, 0)
+> +#define CXL_PMU_ATTR_CONFIG2_CRB_MSK		GENMASK_ULL(63, 32)
+>  
+>  static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
+>  					 struct attribute *attr, int a)
+> @@ -267,6 +276,11 @@ static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
+>  	     attr == cxl_pmu_format_attr[cxl_pmu_hdm_attr]))
+>  		return 0;
+>  
+> +	if (!info->filter_crb &&
+> +	    (attr == cxl_pmu_format_attr[cxl_pmu_crb_filter_en_attr] ||
+> +	     attr == cxl_pmu_format_attr[cxl_pmu_crb_attr]))
+> +		return 0;
+> +
+>  	return attr->mode;
+>  }
+>  
+> @@ -323,6 +337,17 @@ static u16 cxl_pmu_config2_get_hdm_decoder(struct perf_event *event)
+>  	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_HDM_MSK, event->attr.config2);
+>  }
+>  
+> +static u16 cxl_pmu_config1_crb_filter_en(struct perf_event *event)
+> +{
+> +	return FIELD_GET(CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK,
+> +			 event->attr.config1);
+> +}
+> +
+> +static u32 cxl_pmu_config2_get_crb(struct perf_event *event)
+> +{
+> +	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
+> +}
+> +
+>  static ssize_t cxl_pmu_event_sysfs_show(struct device *dev,
+>  					struct device_attribute *attr, char *buf)
+>  {
+> @@ -621,6 +646,32 @@ static int cxl_pmu_event_init(struct perf_event *event)
+>  		return -EOPNOTSUPP;
+>  	/* TODO: Validation of any filter */
+>  
+> +	if (cxl_pmu_config1_crb_filter_en(event)) {
+> +		if (!info->filter_crb)
+> +			return -EINVAL;
+> +		/*
+> +		 * CRB filtering (Filter ID 1) is only valid for the DDR
+> +		 * Interface, Queue Occupancy, Queue Residency and Retry
+> +		 * event groups (CXL 4.0 Table 13-5).
+> +		 */
+> +		switch (cxl_pmu_config_get_gid(event)) {
+> +		case CXL_PMU_GID_DDR:
+> +		case CXL_PMU_GID_QUEUE_OCC:
 
-> > >     or if MEM_CAPABLE clear =E2=80=94 caller falls back to plain vf=
-io-pci)
-> > >   - devm_cxl_dev_state_create() with struct vfio_pci_cxl_state
-> > >     embedding cxl_dev_state at offset 0 (required by the 7-arg
-> > >     macro's static_assert in include/cxl/cxl.h)
-> > >   - pci_enable_device_mem(), cxl_pci_setup_regs(), cxl_get_hdm_info=
-()
-> > >     (rejecting hdm_count !=3D 1), cxl_regblock_get_bar_info(),
-> > >     cxl_await_range_active()
-> > =
+Should we also validate the Event Vendor ID?
 
-> > The cover letter claims otherwise:
-> > =
+GID namespace is scoped by the Vendor ID, while the groups listed
+in CXL 4.0 Table 13-5 are under CXL vendor ID.
+A vendor-specific event could reuse one of these numeric GID and pass
+this switch even though the CXL CRB rules don't apply to it.
 
-> >   "- cxl_await_range_active stays in cxl-core probe; not exported, vf=
-io
-> >   does not call it."
-> > =
+I would suggest to reject non-CXL events before the switch
+"""
+if (cxl_pmu_config_get_vid(event) != PCI_VENDOR_ID_CXL)
+    return -EINVAL;
+"""
 
-> > It's exported in 2/ and called below.
+Do you think this make sense to you?
 
-This feels like a gap on the CXL side. devm_cxl_probe_mem() should take
-care to only succeed after memory is active, or fail with a timeout.
+Best regards,
+Richard Cheng.
 
-Recall that the current cxl_await_range_active() export is for the
-"internal" cxl_pci driver. Now that there are external consumers
-devm_cxl_probe_mem() should return a fully validated and awaited memory
-range. Do not make every driver remember this part of the setup flow.
-
-> > >   - devm_cxl_passthrough_create() to snapshot the DVSEC body, HDM
-> > >     block, and CM cap-array shadows owned by cxl-core
-> > >   - pci_disable_device() =E2=80=94 clears PCI_COMMAND_MASTER but NO=
-T
-> > >     PCI_COMMAND_MEMORY, so cxl-core MMIO accesses from the next ste=
-p
-> > >     still succeed
-> > >   - devm_cxl_probe_mem() to register the cxl_memdev, enumerate the
-> > >     endpoint port, and attach the firmware-committed autoregion
-> > >   - request_mem_region() + memremap_wb() of the autoregion's HPA so=
-
-> > >     the HDM VFIO region can serve guest accesses through it
-> > =
-
-> > How does this interact with:
-> > =
-
-> >  - The device making use of low power states while idle
-> >  - Repeatability per tenant instance
-> >  - Protection of tenant data per instance
-> > =
-
-> > The culmination of all of these, plus the basic housekeeping of
-> > maintaining the lightest touch on the device, including keeping the
-> > device in the minimum state of functionality outside of an actual use=
-r,
-> > is why I would expect to perform acquire/release as part of open/clos=
-e.
-> =
-
-> The cover letter description is wrong. During my earlier thought proces=
-s,
-> creating a region during probe seemed a correct option as any later req=
-uirement
-> where region needs to be already created at probe emerged, we will have=
- easier
-> way to handle it. I will give some more thought to update v4 to acquire=
-
-> CXL state in open_device() and release it in close_device(), matching z=
-pci.
-
-This is going to run up against a current design wart of
-devm_cxl_probe_mem() that does not have a teardown flow implemented
-outside of the typical ->remove() to devres_release_all() flow. Even if
-that was fixed I do not see it affecting the listed concerns.
-devm_cxl_probe_mem() for firmware committed decoders is mostly just
-reading resource values.
-
-For power state management the power management that vfio-pci performs
-only informs the CXL.io portion of device power. CXL.cache and CXL.mem
-are dynamically managed by the device.
-
-For repeatability I do think discarding and reinitializing the shadow
-configuration makes sense, but the base HDM configuration does not
-require teardown.
-
-For tenant data protection that arises from the data retention after
-reset policy, not impacted by unloading the HDM configuration.
-
-I assume VFIO likely would want to build a capability to zero HDM memory
-if the device leaves the state ambiguous / implementation defined?
-
-That is a good note for the CXL Reset series as well. If VFIO issued
-resets are for tenant handoff the make sure that CXL Reset requests
-memory clearing.
+> +		case CXL_PMU_GID_QUEUE_RESID:
+> +		case CXL_PMU_GID_RETRY_EVENTS:
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +
+> +		/*
+> +		 * Filtering while counting multiple events is
+> +		 * undefined behavior.
+> +		 */
+> +		if (hweight32(cxl_pmu_config_get_mask(event)) > 1)
+> +			return -EINVAL;
+> +	}
+> +
+>  	/*
+>  	 * Verify that it is possible to count what was requested. Either must
+>  	 * be a fixed counter that is a precise match or a configurable counter
+> @@ -677,8 +728,8 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
+>  	hwc->state = 0;
+>  
+>  	/*
+> -	 * Currently only hdm filter control is implemented, this code will
+> -	 * want generalizing when more filters are added.
+> +	 * Filter ID=0: HDM decoder filter
+> +	 * Filter ID=1: Channel/Rank/Bank (CRB) filter
+>  	 */
+>  	if (info->filter_hdm) {
+>  		if (cxl_pmu_config1_hdm_filter_en(event))
+> @@ -688,6 +739,14 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
+>  		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
+>  	}
+>  
+> +	if (info->filter_crb) {
+> +		if (cxl_pmu_config1_crb_filter_en(event))
+> +			cfg = cxl_pmu_config2_get_crb(event);
+> +		else
+> +			cfg = GENMASK(31, 0); /* no filtering if 0xFFFF_FFFF */
+> +		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 1));
+> +	}
+> +
+>  	cfg = readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
+>  	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
+>  	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_FREEZE_ON_OVRFLW, 1);
+> -- 
+> 2.39.5
+> 
