@@ -1,72 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BD142F6FF;
-	Tue, 14 Jul 2026 23:18:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9736368D5A
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Jul 2026 23:41:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784071138; cv=none; b=TzAghjSVGpSX3awYuGIcd3GeZHsItti8fn4+DGyqnT9nOTLxHNZ4wdgqyBPBCmGSekJm3bd12Za+2MIa4uM5hf+6yikEeErX+uQFOfXSuuMQD2RB4z8mOvHh9A1HxTWEsKdbvg+mQZdk8i5sbVWAkAd7jDfthVqwoVc7osHEb4U=
+	t=1784072478; cv=none; b=ehhC7rtoEqw8PV7f7xWXYMBwz2njBlF3n69dMGSFJ1xR/W7SIqBXMesGNJhuiVNsNJvbTzKAl1DxKOLf/vU6N6B/lkuFv5SvjbUVRuIMw4WZDLmpUxtjWCcKfLR7ZHQpfhdaA7i48dI1LdKtPbRoPReDuvli68JAp+PPAKg9jko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784071138; c=relaxed/simple;
-	bh=MSaYA5WcY+sHKNhzb/na0roVShFJIOoi5aNje1w8TXg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Hp6LIXFhBCb0croOORR4N3zK+iDmug6BC2Fcves87RFbDTy06sPz777SaCVwVaWzmpyaLTw4wIakptjfIwlvn3h/wyfa8YJH67Qtp/+G+8X6+irUVBoSeklW5436CEP9otyN0L8C/nU3p04vkfNfRoiMZUzCIA16G9/KQiQgi+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 304F81F00A3A;
-	Tue, 14 Jul 2026 23:18:57 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Cc: rafael@kernel.org,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	guohanjun@huawei.com,
-	mchehab@kernel.org,
-	xueshuai@linux.alibaba.com,
-	terry.bowman@amd.com
-Subject: [PATCH v2 7/7] ACPI: APEI: GHES: Validate memory error section length before payload access
-Date: Tue, 14 Jul 2026 16:18:35 -0700
-Message-ID: <20260714231835.303081-8-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260714231835.303081-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1784072478; c=relaxed/simple;
+	bh=S69HpvzEPm63tBdvWufHfxqv6Q4zXeRaxBJliHEYr3I=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=bLkDcv5yO2fagDtweWMVFCFXHvo2QdegL2HaCkXPZP57SWWfXPEIq9cwA1cgijH7a1epst3cDZzU9d9ZfD6bCsTicvRz1FzdjxGypPADJsc/XyR5x6FJMRpNuix7Xw6QSM4L9ALAvWF41i4o0tlNCVjAxHSyiLBtpVoYNiXyT1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFq69RDl; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFq69RDl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DE051F000E9;
+	Tue, 14 Jul 2026 23:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784072476;
+	bh=7N7uB1O1uQVWudPzgXMdfMpIRcp9poArEBYFwtsGEbg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=fFq69RDlGe2CzqUNivu9mdXgpF9FlU8Wqdc0TAf2y0rjPPa8+hkJueMZHcqLirDBe
+	 0781Ez0NsSQ9AbbK7YJb38mSj91+qk7LDm9iRY4Xy94/1Nco0s2hk5MOGIj/FkoR5d
+	 V1WpzcfeA7nDB1H179CwDzNnnEp5LR71/BbCm3DC9E1J2tJz5FK3UB3+SPRsB0efno
+	 Kbw6qSjS7PqFKQo7GRWa0Yptr3MFlksNEsi5oBqsHxRHCDn5Qi80UPYq/yU/ToKxr7
+	 yEt3MMuDS3unKMh0THVEfnqjyc2IoNGZ+NHy2CHuBPcI/J9WXXVJPBEgQy6kygtIx/
+	 dKwGviLy9qscA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 7/7] ACPI: APEI: GHES: Validate memory error section
+ length before payload access
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Dave Jiang" <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260714231835.303081-8-dave.jiang@intel.com>
 References: <20260714231835.303081-1-dave.jiang@intel.com>
+ <20260714231835.303081-8-dave.jiang@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 14 Jul 2026 23:41:16 +0000
+Message-Id: <20260714234116.8DE051F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-ghes_handle_memory_failure() dereferences the CPER section payload
-(mem_err->validation_bits, and mem_err->physical_addr) without first
-checking that gdata->error_data_length is large enough to hold a
-struct cper_sec_mem_err.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Fixes: ca104edc1784 ("ACPI, APEI, GHES: Cleanup ghes memory error handling")
-Assisted-by: Claude:claude-opus-4-8
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v2:
-- new from issue raised by sashiko
----
- drivers/acpi/apei/ghes.c | 3 +++
- 1 file changed, 3 insertions(+)
+New issues:
+- [High] The newly added length check is overly strict and incorrectly reje=
+cts legitimate memory error payloads generated by older UEFI firmware, sile=
+ntly dropping valid hardware errors.
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index b36f6d268c9f..e8b2980bd5fe 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -535,6 +535,9 @@ static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
- 	int sec_sev = ghes_severity(gdata->error_severity);
- 	struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
- 
-+	if (gdata->error_data_length < sizeof(*mem_err))
-+		return false;
-+
- 	if (!(mem_err->validation_bits & CPER_MEM_VALID_PA))
- 		return false;
- 
--- 
-2.55.0
+Pre-existing issues:
+- [High] The payload length check added in `ghes_handle_memory_failure()` i=
+s an incomplete fix and placed too late, leaving other consumers of the sam=
+e payload vulnerable to out-of-bounds reads.
+--
 
+--- Patch [7]: [PATCH v2 7/7] ACPI: APEI: GHES: Validate memory error secti=
+on length before payload access ---
+commit e9b5dfb37c8ab1d8db8c3e63d015c33fc4b4b12f
+Author: Dave Jiang <dave.jiang@intel.com>
+
+ACPI: APEI: GHES: Validate memory error section length before payload access
+
+This commit attempts to prevent out-of-bounds accesses when handling memory
+errors by validating that the CPER section payload length is large enough
+to contain a struct cper_sec_mem_err before dereferencing it.
+
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index b36f6d268c9fd..e8b2980bd5fea 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+
+[ ... ]
+
+> @@ -535,6 +535,9 @@ static bool ghes_handle_memory_failure(struct acpi_he=
+st_generic_data *gdata,
+>  	int sec_sev =3D ghes_severity(gdata->error_severity);
+>  	struct cper_sec_mem_err *mem_err =3D acpi_hest_get_payload(gdata);
+> =20
+> +	if (gdata->error_data_length < sizeof(*mem_err))
+> +		return false;
+> +
+
+[Severity: High]
+Does this length check accidentally reject legitimate memory error payloads
+from older UEFI firmware?
+
+If the firmware uses the older v2.1/v2.2 layout (which is 73 bytes long),
+comparing gdata->error_data_length against sizeof(*mem_err) (which evaluates
+to 80 bytes) will cause this condition to return false.
+
+Could this regression lead to silently dropping valid hardware errors and
+preventing the kernel from gracefully offlining broken memory pages?
+
+[Severity: High]
+This is a pre-existing issue, but does validating the payload length here in
+ghes_handle_memory_failure() leave other consumers vulnerable to
+out-of-bounds reads?
+
+Looking at the call chain, the payload is distributed to other consumers
+before this function is ever reached:
+
+drivers/acpi/apei/ghes.c:ghes_do_proc() {
+        ...
+        struct cper_sec_mem_err *mem_err =3D acpi_hest_get_payload(gdata);
+        atomic_notifier_call_chain(&ghes_report_chain, sev, mem_err);
+        arch_apei_report_mem_error(sev, mem_err);
+        queued =3D ghes_handle_memory_failure(gdata, sev, sync);
+        ...
+}
+
+If the payload is truncated, won't callbacks like
+ghes_edac_report_mem_error() and apei_mce_report_mem_error() access fields
+out of bounds when they check mem_err->validation_bits, potentially
+interpreting adjacent garbage memory as a valid physical address?
+
+>  	if (!(mem_err->validation_bits & CPER_MEM_VALID_PA))
+>  		return false;
+>
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260714231835.3030=
+81-1-dave.jiang@intel.com?part=3D7
