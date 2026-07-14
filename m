@@ -1,50 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671E9238D54;
-	Tue, 14 Jul 2026 16:49:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5BE13AD1C;
+	Tue, 14 Jul 2026 16:50:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784047744; cv=none; b=VrevogfwfqetMowk9MjJNbtwO6rMdswfzud5JjJS0ZDEIQFuMXDc4qrpzjvNXGf/vIr4hknjiqxRBIt5LETarfaO7Qne5Sn6od3qhoIbiF5EOjDapbBs2UWQyYzoDXcYq0n/JZ60uFspgvTnyqvzAlc1gxfsUOrWbVOtMstt7Z4=
+	t=1784047847; cv=none; b=KrcW1QEdrfoyLygOQtW/C8kel8+ql+JnqMojniRIOYN8Uaiub/+JnktUG+t6X3gR2cDj/whaOutV/tCTd6FHQC1lFY5oUJt/Cl85GufJfh3ZGU/PIUM3DLujK4P4tchMPCJuvBEo9NRoiYukplmIKOym4rW+eHkr5S3WdRAkuqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784047744; c=relaxed/simple;
-	bh=luQU9g/ssR2Lmq1+kE82E0EOheySBxZGo+mMHRl5r9k=;
+	s=arc-20240116; t=1784047847; c=relaxed/simple;
+	bh=fA7ZD5XNSiuUuHDvWxpdWt3MZogeSGNby7HFGRTcRDg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aJVsnczzCioPt8ZWhnz+UHUlaeU+3lseVO7ruKqH78/h8yKR0JqemzZnvJqaFmjAAiaWl1WL5kt/7AMDE/MzSl5GAwBwLI0GLOObJklv4g1APOtqijlUFSCZ2D82HZFy5wSbOsFBLLaBIyc5kde3vKDpwYg+VkqtMRbw3F0AVRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=APHOaFJK; arc=none smtp.client-ip=198.175.65.21
+	 In-Reply-To:Content-Type; b=coI8t1FZ6qpfTkeLBuLY/uzsvX0PVsPqkzqn5ASUvpgFZFCofjlu71+guWCnRhE3hOci+qvxUuL7lNhIKq9zRsT+YVen3mLFrir5YpPi4k3C5jg/yHKDCvFKDk0hQeVVg7KVlgsQch+XnHoR2nHO6pME0gijfgDNli1bTK0aJB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fkq0xeGZ; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="APHOaFJK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fkq0xeGZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784047742; x=1815583742;
+  t=1784047846; x=1815583846;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=luQU9g/ssR2Lmq1+kE82E0EOheySBxZGo+mMHRl5r9k=;
-  b=APHOaFJKv738RD0GbJAIPOS0g30B5IcWYsY12mv8WcGqZT2dpiSX9zFQ
-   KGi5NN7Qp2/jY4ftNIndzZZRT+F3JlNrgIMP4Lep7DsVcuP5KnfwW3Wl8
-   EY0T9mYjlnT+5O6lXkES+stzI20uXQlPZbhjg/j0Q+rOIrLdp3Ohe4IWU
-   v1SVOJlO75VA/9ckDPfy10Mtd0U77Bq5JMAFjfngdv3KgK9sCZ/i9n6xv
-   3j/503H7+ZwV8csbmClNjsJKt/k4jL4yt1b0Gdkp/y+8MY6SPAwByzSYQ
-   QX1d/fwvdoux7X4c4DQjaJaHpO33jTbWQzuFZTMsD9lyoU+p0Lrzx9jRy
-   w==;
-X-CSE-ConnectionGUID: tSkkY1/ZRv69R5ZBW7HPLw==
-X-CSE-MsgGUID: ORRNKWE3SXGpc1b2f6lfKw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11846"; a="84530807"
+  bh=fA7ZD5XNSiuUuHDvWxpdWt3MZogeSGNby7HFGRTcRDg=;
+  b=fkq0xeGZvkHezZXND0f9/VPzP/wEKaeDfeBDI1GR/4ngvFHALWAeyv7c
+   Oatea1nVj04yf1bxWIslrPkt+Zhj6c8seON1GZVJXSTk+4gu6B6Jb/BMC
+   LspmwTlDIU1to0GBme05/k9yJDOMiMswygBf3dsvgv63n6I6zS1Flgqjo
+   wMSEyhJJgGc3WKdEOlLgVwHcawOZ3wt3+lH4lHDSEF9C2TpiQu6JHpbxM
+   GHwjbBLCJ93RfUE2rwgssOJXPSA/icHLMxJuvd5/7peThDc5olMhO8Z1+
+   hIxv676S5dbC3WtX75dWkla9tfU++7v4mC6eFYQG81qgFyxZf00GKGRbj
+   g==;
+X-CSE-ConnectionGUID: xYIpjqC3QriMRoIQSWD5tw==
+X-CSE-MsgGUID: B1h1PHRITquVgbuYNkhl5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11846"; a="84530974"
 X-IronPort-AV: E=Sophos;i="6.25,164,1779174000"; 
-   d="scan'208";a="84530807"
+   d="scan'208";a="84530974"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 09:49:01 -0700
-X-CSE-ConnectionGUID: Z/xrciAqT/SXyLq59E198w==
-X-CSE-MsgGUID: BeKqHUotQ7ey86afVFJJmg==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 09:50:45 -0700
+X-CSE-ConnectionGUID: bX84TrLyQ/K5BaBQMPMkIg==
+X-CSE-MsgGUID: oXA6uTW7QQy7//cFEgeFgQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,164,1779174000"; 
-   d="scan'208";a="252518777"
+   d="scan'208";a="252519112"
 Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.108.131]) ([10.125.108.131])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 09:48:59 -0700
-Message-ID: <cba4bed5-2639-4b50-86a3-67d698ab049a@intel.com>
-Date: Tue, 14 Jul 2026 09:48:58 -0700
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 09:50:44 -0700
+Message-ID: <b41cdb78-e861-4d12-82f9-a647a194bf08@intel.com>
+Date: Tue, 14 Jul 2026 09:50:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,83 +52,57 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] cxl/test: Rework cxl_type2_mem_init() to use
- cxl_mock_platform_device_add()
-To: Li Ming <ming.li@zohomail.com>, dave@stgolabs.net, jic23@kernel.org,
+Subject: Re: [PATCH] cxl/memdev: Fix firmware upload exact-fit handling
+To: guzebing <guzebing1612@gmail.com>, dave@stgolabs.net, jic23@kernel.org,
  alison.schofield@intel.com, vishal.l.verma@intel.com, djbw@kernel.org,
- iweiny@kernel.org
+ iweiny@kernel.org, ming.li@zohomail.com
 Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20260713061531.56322-1-ming.li@zohomail.com>
+References: <20260713112744.2543829-1-guzebing1612@gmail.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260713061531.56322-1-ming.li@zohomail.com>
+In-Reply-To: <20260713112744.2543829-1-guzebing1612@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 7/12/26 11:15 PM, Li Ming wrote:
-> cxl_type2_mem_init() is used to set up mock CXL type2 memory device for
-> cxl testing, it introduces a known bug fixed by the following commit:
+On 7/13/26 4:27 AM, guzebing wrote:
+> From: Guzebing <Guzebing1612@gmail.com>
 > 
-> commit d90f236f8b9e ("cxl/test: Update mock dev array before calling platform_device_add()")
+> cxl_fw_prepare() classifies a firmware image as a one-shot transfer
+> only when its Transfer FW input payload is smaller than the mailbox
+> payload size. An image that exactly fills the payload is therefore
+> treated as a multi-part transfer.
 > 
-> Mock CXL devices require updating the mock device array prior to
-> platform_device_add(), otherwise, the CXL subsystem could fail to
-> recognize the newly added mock device. Switch to
-> cxl_mock_platform_device_add() helper to resolve this ordering issue.
+> The firmware loader invokes cxl_fw_write() only once for that image.
+> Since both offset == 0 and remaining == 0, the multi-part action
+> selection sends INITIATE, never sends END, and then attempts to activate
+> the target slot.
 > 
-> Besides, this patch also includes two minor changes.
-> 1. Preserve the original error code returned by
->    cxl_mock_platform_device_add(), rather than unconditionally
->    overriding it with -ENOMEM.
-> 2. Drop redundant NULL check before platform_device_unregister(), as the
->    function internally handles NULL pointer.
+> Include equality in the one-shot classification so exact-fit images use
+> the FULL action.
 > 
-> Fixes: 6b2e585142e6 ("cxl/test: Add hierarchy enumeration support for type2 device")
-> Signed-off-by: Li Ming <ming.li@zohomail.com>
+> Fixes: 9521875bbe00 ("cxl: add a firmware update mechanism using the sysfs firmware loader")
+> Signed-off-by: Guzebing <Guzebing1612@gmail.com>
 
 Applied to cxl/next
-9515af581da976911aea820175afb05be803ae8c
+af5035e1b3e4
 
 > ---
-> base-commit: 31adec5c3dc489966e6061cbe427dddb81d2e6b5 cxl/next
-> ---
->  tools/testing/cxl/test/cxl.c | 17 ++++-------------
->  1 file changed, 4 insertions(+), 13 deletions(-)
+>  drivers/cxl/core/memdev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 8ab2ce1262f3..62bd92b3be45 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -1947,25 +1947,16 @@ static int cxl_type2_mem_init(void)
->  		pdev->dev.parent = &dport->dev;
->  		set_dev_node(&pdev->dev, i % 2);
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 33a3d2e7b13af..45e7d2be17e09 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -921,7 +921,7 @@ static enum fw_upload_err cxl_fw_prepare(struct fw_upload *fwl, const u8 *data,
+>  	if (!size)
+>  		return FW_UPLOAD_ERR_INVALID_SIZE;
 >  
-> -		rc = platform_device_add(pdev);
-> -		if (rc) {
-> -			rc = -ENOMEM;
-> -			platform_device_put(pdev);
-> +		rc = cxl_mock_platform_device_add(pdev, &cxl_mem[i]);
-> +		if (rc)
->  			goto err_mem;
-> -		}
-> -		cxl_mem[i] = pdev;
->  	}
+> -	mds->fw.oneshot = struct_size(transfer, data, size) <
+> +	mds->fw.oneshot = struct_size(transfer, data, size) <=
+>  			    cxl_mbox->payload_size;
 >  
->  	return 0;
->  
->  err_mem:
-> -	for (i = NR_CXL_TYPE2_ACCEL - 1; i >= 0; i--) {
-> -		struct platform_device *pdev = cxl_mem[i];
-> -
-> -		if (!pdev)
-> -			continue;
-> -		platform_device_unregister(pdev);
-> -	}
-> +	for (i = NR_CXL_TYPE2_ACCEL - 1; i >= 0; i--)
-> +		platform_device_unregister(cxl_mem[i]);
->  	return rc;
->  }
->  
+>  	if (cxl_mem_get_fw_info(mds))
 
