@@ -1,136 +1,198 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF8C3812FE
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Jul 2026 03:21:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59841233937;
+	Tue, 14 Jul 2026 04:32:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783999269; cv=none; b=BQV6ahLvN83lkk/qMzcJwhCMJPMHyrDpo8BrwhdegLZGau0r7wl8sf1foNu2clY+eglg2kh6Ip0hzTDOR3hdgEbCvOLUjptJPooHHNzYav7qsfmb9Ny2s8ADBCl0Bt75nCLC2iwJMMZU+u2VmPnajbmzeF0yz1OTh1H2pYEbA1M=
+	t=1784003527; cv=none; b=H30fVb0lU9J0q3swSakWqq/48mkvcQvTOYu6sXs6wNA4Q1+kKZ9oZo4++GAXBnsihzUoeJFkJ0H1qmgzsm45pd9HvMGSw2yiI1BsAAZ1S420SGecu+6fbWDdiioMxMJ10CVBu6vuXp0WYRPLd2gpZwzmhxJJmTVUrQeYZw9xEMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783999269; c=relaxed/simple;
-	bh=pJivzLF/xKE6wu0oXcPSFFzh/zz2rrpto0/28g0X4WM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=piNMwYQwyDUsnykpBnKvpS15/aoHLve42SXYpSxyfReIUw5kNj2d/W4tq/lq5cc9VCp3XPx3d0U+4kmhLygd7oBvnWbx4loe9KjZkwU4U4+MSaSUMEP+8p2IPXsRFaMHxFH9NoQLdBcNpjtHQcd2zkxOHMKW613rMuiswnXqNoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtE5sgho; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784003527; c=relaxed/simple;
+	bh=XM7VGBlv67NNumr+kynwEza1GVf1p/tMWmPt/JIhuv8=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=p0ro9gcsHzPx6CUDdM+UliNoFP3oEVmcmN1oH31YGOwrNfQjFtDF54SSx9OMSJGYPHyiUyVNT1lxAEU0dBn2tzV318rYAg7ts1kRaQzKgy0px1o2eCzuGOkHtHkrpZ55a2QPMZi2AULSQedve+k9x73WO2My/ZWGxlRWTyozFAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cYsFHduW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtE5sgho"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 003AC1F000E9;
-	Tue, 14 Jul 2026 03:21:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cYsFHduW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C4D61F00A3A;
+	Tue, 14 Jul 2026 04:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783999268;
-	bh=+yyliz71akr58+TZQAR0AzDzhwayAhK65D/MZEruhQc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FtE5sghoUmHMgNZETotJ2z5vZsEYrFuCcDbpiyUQe7LqhJ8rcNOXDknXawOpZMWHV
-	 u/NGIHkNYcDB+DllWF9tdGTf5zP9hXjLeELSPI5eDv5CVgPcXBgHCmrtQWOf1el9el
-	 8p6UMn89u41KRTpu8uplZ0EAI6SjtKOUs71IPO1YZR9o8Xc9EN+AGiBZDThv+j0ZOW
-	 UCIfms0KWqIo93Oo446d2dD8SmmmYcRd471dVYD171/6b66BDTysl93GyGjzeGS34N
-	 XhYBiwThUbpmVegcFUQH4498STxSM1pt+7V7ChOmuwk+vqxXCHt5sRGeEqiJh7fLh7
-	 suShqcyZqvNWw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] cxl/mbox: Serialize RAW Get/Set Feature commands
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Richard Cheng" <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260714031010.14834-1-icheng@nvidia.com>
-References: <20260714031010.14834-1-icheng@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 14 Jul 2026 03:21:07 +0000
-Message-Id: <20260714032108.003AC1F000E9@smtp.kernel.org>
+	s=k20260515; t=1784003526;
+	bh=ICf9OHjwxFwehYXqEt5J3kn7A2kZgUciQx2f6MzCt2Y=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject;
+	b=cYsFHduWOEX/90cDUwmi0F84QmFNIfZ3UOkSD15Mm6AFMrgog/Z3+LhFLFXaQAF6w
+	 MaIIiyoItCwgVQvrjwXYScVJkOZ9COVI0lMoPtIxy7gZt6l7vOqf84FObbfPBTPW9q
+	 ykCjbvzwlf6xSxpshlJmNFLfJU9kM6hEl/zQWGyl+/zu1Nlm/hYaFnO27guyzVYIme
+	 E9opmFJAhSYVTai4+TK2/6UgiDvmpkZrJKuWqvBO70tRnsAeHSMYvW+GMvvpe3uNeo
+	 hexyC3uVOJDkaGDrod7y5bLFGU/aM73lRPPSIoO0cxExUIUlhZXHO7oYY6zhOfuTyf
+	 tkJU8/4zTbNGA==
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 4EC2FF40078;
+	Tue, 14 Jul 2026 00:32:04 -0400 (EDT)
+Received: from phl-frontend-03 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Tue, 14 Jul 2026 00:32:04 -0400
+X-ME-Sender: <xms:xLtVarN6dk6rsOmCkO-hvq2gJutn2hmcYU2JOjSRSc0fi3AkkOV9ew>
+    <xme:xLtVaq0DBDSAFo0Y760y9W7A4ziv7FNxyEMR1Ly7CC_JlHyw73eHHkuE0DMVm_n1x
+    TeMCHOKzqdfWkwAV63jdG_QgaxiUJh7wsgWcIRfzFK2y-GaAZyxJIs>
+X-ME-Received: <xmr:xLtVan0Pq4IxK_mW93Uam745vAuJ2f_c89w59gk_tIIS9-eAVoiO639-v9Vb-YCv3RR1fhYhXw46W-rY0bI5hNWZAb4sImHT9ao>
+X-ME-Proxy-Cause: dmFkZTETAL60usH4lwlQ+4JamyiGMB40vHl7RgBXxsRW+Q/t46XOvYKxjtcqB7DgAdPC6i
+    zMIujK7PY4sEwXxazD+cu/TeVDF4gGUKmmd54dtA25ch6rGoXJwCupkApom8abyimHWxjk
+    DLdaPpsTwRaHCE++9rktMWDjVDFmr6CU0Jm7oQH94vJ7v+mplgl45VZFu0bVcmqSldtmyP
+    TsPb5ggmXk5spRxfJAiNTZnPUydufMtrYp4tqcSf/n46+m3l7r38cEHazhwn6Qp7DP25OL
+    +7gmDJ3RA06dy6rPvT8Slk3sgoDnnQ42j+hY5zYQVGCGqQspCGSx7XiOjPEtOtzmpVcxbM
+    sxpp+PgECi1Nk6EOwSE5+G77XfTW+06KOFWMcYwxpsclj/vLEOOGfHjhEgQtQFRjAsmBq1
+    nz0rZySu2yEuP/cuXXREFPtFMgH07FMuR3pMx57MagjZ4O+loKKKSoNHSPcieSeJ5/HZ6S
+    hL7IRiKeWLeEuHKkbK7NktIMhi89NtiFQZw9e7Nt9G4HsFIJW3kpfnAgqzFOnHxsva95hS
+    ssbW7ZxM53LmT9XKcEr50YysPX0vTrRoxmSGzMq16mukrhzOEBRx6jRmrY5j3iYbbvaFZe
+    V0B3jQYtoJ58Zt7Wqu5UJn8rTsTND9kyp3b7TO/B8nNfcJPnZi0TK1Mem4bA
+X-ME-Proxy: <xmx:xLtVahy2ngywLag-bMOt0yjyZRXwzIkHthZsohlCWRjaN92gSyj23A>
+    <xmx:xLtVaikLSb0O6jdVHHApcpNpF9jpnWGMImdDuINYgaQtAWqL5qE1cA>
+    <xmx:xLtVatzdFt6uVf1Kd6-ggDleOTtMVSJ_r4dg92V5tJ2S53s2ryETsg>
+    <xmx:xLtVapJenbLv68dmWS4szRfchpH2gaL2c3Rl2STOKCitqmiivYnw2w>
+    <xmx:xLtVagKBbKwjiBvK_qMG6wu9fLclvcCKO5KvhGBOnRpLAcnWoYdg7qjy>
+Feedback-ID: i67ae4b3e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 14 Jul 2026 00:32:03 -0400 (EDT)
+Date: Mon, 13 Jul 2026 21:32:02 -0700
+From: "Dan Williams (nvidia)" <djbw@kernel.org>
+To: Manish Honap <mhonap@nvidia.com>, 
+ Alex Williamson <alex@shazbot.org>
+Cc: "djbw@kernel.org" <djbw@kernel.org>, 
+ "jgg@ziepe.ca" <jgg@ziepe.ca>, 
+ "jic23@kernel.org" <jic23@kernel.org>, 
+ "dave.jiang@intel.com" <dave.jiang@intel.com>, 
+ Ankit Agrawal <ankita@nvidia.com>, 
+ "alejandro.lucero-palau@amd.com" <alejandro.lucero-palau@amd.com>, 
+ "alison.schofield@intel.com" <alison.schofield@intel.com>, 
+ "dave@stgolabs.net" <dave@stgolabs.net>, 
+ "dmatlack@google.com" <dmatlack@google.com>, 
+ "gourry@gourry.net" <gourry@gourry.net>, 
+ "ira.weiny@intel.com" <ira.weiny@intel.com>, 
+ Neo Jia <cjia@nvidia.com>, 
+ Krishnakant Jaju <kjaju@nvidia.com>, 
+ Vikram Sethi <vsethi@nvidia.com>, 
+ Zhi Wang <zhiw@nvidia.com>, 
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+ "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+ "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, 
+ Manish Honap <mhonap@nvidia.com>
+Message-ID: <6a55bbc276b96_f7ebd100e4@djbw-dev.notmuch>
+In-Reply-To: <IA1PR12MB90309355D97FE886A1DA77BABDFA2@IA1PR12MB9030.namprd12.prod.outlook.com>
+References: <20260625165407.1769572-1-mhonap@nvidia.com>
+ <20260625165407.1769572-8-mhonap@nvidia.com>
+ <20260710162316.29cf8107@shazbot.org>
+ <IA1PR12MB90309355D97FE886A1DA77BABDFA2@IA1PR12MB9030.namprd12.prod.outlook.com>
+Subject: RE: [PATCH v3 07/11] vfio/pci: Add CONFIG_VFIO_PCI_CXL with bind-time
+ CXL Type-2 acquisition
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] Missing lock acquisition in kernel-managed Feature paths defeats t=
-he intended synchronization.
-- [Low] The patch references an undeclared struct member `feat_mutex`, resu=
-lting in an unconditional build failure.
---
+Manish Honap wrote:
+[..]
+> > > vfio_pci_cxl_acquire() implements the bind sequence:
+> > >
+> > >   - pcie_is_cxl() and CXL Device DVSEC discovery (-ENODEV if absent=
 
---- Patch [1]: [PATCH] cxl/mbox: Serialize RAW Get/Set Feature commands ---
-commit ffea860f8f4c719a69a797f95e4162563fecddae
-Author: Richard Cheng <icheng@nvidia.com>
+> > >     or if MEM_CAPABLE clear =E2=80=94 caller falls back to plain vf=
+io-pci)
+> > >   - devm_cxl_dev_state_create() with struct vfio_pci_cxl_state
+> > >     embedding cxl_dev_state at offset 0 (required by the 7-arg
+> > >     macro's static_assert in include/cxl/cxl.h)
+> > >   - pci_enable_device_mem(), cxl_pci_setup_regs(), cxl_get_hdm_info=
+()
+> > >     (rejecting hdm_count !=3D 1), cxl_regblock_get_bar_info(),
+> > >     cxl_await_range_active()
+> > =
 
-cxl/mbox: Serialize RAW Get/Set Feature commands
+> > The cover letter claims otherwise:
+> > =
 
-This commit modifies handle_mailbox_cmd_from_user() to acquire feat_mutex
-around RAW Get and Set Feature mailbox commands. It aims to serialize these
-userspace commands against kernel-managed Feature operations.
+> >   "- cxl_await_range_active stays in cxl-core probe; not exported, vf=
+io
+> >   does not call it."
+> > =
 
-Link: https://lore.kernel.org/linux-cxl/20260709155841.1895915-1-dave.jiang=
-@intel.com/
+> > It's exported in 2/ and called below.
 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 79543103ac298..b94b8514f6786 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -594,6 +594,8 @@ static int handle_mailbox_cmd_from_user(struct cxl_ma=
-ilbox *cxl_mbox,
->  					u32 *retval)
->  {
->  	struct device *dev =3D cxl_mbox->host;
-> +	bool is_feature_cmd =3D mbox_cmd->opcode =3D=3D CXL_MBOX_OP_GET_FEATURE=
- ||
-> +			      mbox_cmd->opcode =3D=3D CXL_MBOX_OP_SET_FEATURE;
->  	int rc;
-> =20
->  	dev_dbg(dev,
-> @@ -603,7 +605,11 @@ static int handle_mailbox_cmd_from_user(struct cxl_m=
-ailbox *cxl_mbox,
->  		cxl_mem_opcode_to_name(mbox_cmd->opcode),
->  		mbox_cmd->opcode, mbox_cmd->size_in);
-> =20
-> +	if (is_feature_cmd)
-> +		mutex_lock(&cxl_mbox->feat_mutex);
+This feels like a gap on the CXL side. devm_cxl_probe_mem() should take
+care to only succeed after memory is active, or fail with a timeout.
 
-[Severity: Low]
-Does this code compile? Looking at struct cxl_mailbox in
-include/cxl/mailbox.h, it doesn't appear to have a feat_mutex member
-declared:
+Recall that the current cxl_await_range_active() export is for the
+"internal" cxl_pci driver. Now that there are external consumers
+devm_cxl_probe_mem() should return a fully validated and awaited memory
+range. Do not make every driver remember this part of the setup flow.
 
-include/cxl/mailbox.h:
-struct cxl_mailbox {
-	struct device *host;
-	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
-	DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
-	size_t payload_size;
-	struct mutex mbox_mutex;
-	struct rcuwait mbox_wait;
-	int (*mbox_send)(struct cxl_mailbox *cxl_mbox, struct cxl_mbox_cmd *cmd);
-	enum cxl_features_capability feat_cap;
-};
+> > >   - devm_cxl_passthrough_create() to snapshot the DVSEC body, HDM
+> > >     block, and CM cap-array shadows owned by cxl-core
+> > >   - pci_disable_device() =E2=80=94 clears PCI_COMMAND_MASTER but NO=
+T
+> > >     PCI_COMMAND_MEMORY, so cxl-core MMIO accesses from the next ste=
+p
+> > >     still succeed
+> > >   - devm_cxl_probe_mem() to register the cxl_memdev, enumerate the
+> > >     endpoint port, and attach the firmware-committed autoregion
+> > >   - request_mem_region() + memremap_wb() of the autoregion's HPA so=
 
-[Severity: High]
-The commit message indicates this lock is meant to serialize RAW commands
-against kernel-managed Feature helper loops like cxl_get_feature().
+> > >     the HDM VFIO region can serve guest accesses through it
+> > =
 
-However, looking at cxl_get_feature() in drivers/cxl/core/features.c, it
-loops over cxl_internal_send_cmd() without acquiring feat_mutex:
+> > How does this interact with:
+> > =
 
-drivers/cxl/core/features.c:cxl_get_feature() {
-	...
-	do {
-		...
-		rc =3D cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-		...
-	} while (data_rcvd_size < feat_out_size);
-}
+> >  - The device making use of low power states while idle
+> >  - Repeatability per tenant instance
+> >  - Protection of tenant data per instance
+> > =
 
-Does this missing lock acquisition in the kernel-managed paths defeat the
-intended synchronization, allowing interleaved execution if userspace submi=
-ts
-RAW commands concurrently?
+> > The culmination of all of these, plus the basic housekeeping of
+> > maintaining the lightest touch on the device, including keeping the
+> > device in the minimum state of functionality outside of an actual use=
+r,
+> > is why I would expect to perform acquire/release as part of open/clos=
+e.
+> =
 
->  	rc =3D cxl_mbox->mbox_send(cxl_mbox, mbox_cmd);
-> +	if (is_feature_cmd)
-> +		mutex_unlock(&cxl_mbox->feat_mutex);
->  	if (rc)
->  		goto out;
+> The cover letter description is wrong. During my earlier thought proces=
+s,
+> creating a region during probe seemed a correct option as any later req=
+uirement
+> where region needs to be already created at probe emerged, we will have=
+ easier
+> way to handle it. I will give some more thought to update v4 to acquire=
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260714031010.1483=
-4-1-icheng@nvidia.com?part=3D1
+> CXL state in open_device() and release it in close_device(), matching z=
+pci.
+
+This is going to run up against a current design wart of
+devm_cxl_probe_mem() that does not have a teardown flow implemented
+outside of the typical ->remove() to devres_release_all() flow. Even if
+that was fixed I do not see it affecting the listed concerns.
+devm_cxl_probe_mem() for firmware committed decoders is mostly just
+reading resource values.
+
+For power state management the power management that vfio-pci performs
+only informs the CXL.io portion of device power. CXL.cache and CXL.mem
+are dynamically managed by the device.
+
+For repeatability I do think discarding and reinitializing the shadow
+configuration makes sense, but the base HDM configuration does not
+require teardown.
+
+For tenant data protection that arises from the data retention after
+reset policy, not impacted by unloading the HDM configuration.
+
+I assume VFIO likely would want to build a capability to zero HDM memory
+if the device leaves the state ambiguous / implementation defined?
+
+That is a good note for the CXL Reset series as well. If VFIO issued
+resets are for tenant handoff the make sure that CXL Reset requests
+memory clearing.
