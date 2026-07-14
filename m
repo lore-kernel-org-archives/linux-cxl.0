@@ -1,217 +1,155 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412914D90CF;
-	Tue, 14 Jul 2026 16:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92B304DA551
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Jul 2026 16:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784047921; cv=none; b=BLzWlBYPwEneRhWJhFGnW/y5Eh91kg18iUAYqXTZ0jCPe6fG0Y7EnUTeBh4oTYjoIuHLMc9itZQpnc0bJrhCz2zmiOqh198e8wE1VGOYWpdlvo63O2zCiEjL1otRGYPZQ2r3LdhfJWlp6WbDt40uPJGRxK15XhEhTMmYtTZZUTI=
+	t=1784047944; cv=none; b=NMmDywAJSidhTGFxwQOCcCM3d0Xzp8Hy55wTjV0/VwerK3WQKhIo0nRVC6Ylclll4b/IVXm8LhcZipl8u1ab1H0woVL7DhTrSH/4/rKhbKSNN6USbeOUnJzCtIRkXl+JE4C040NE958QlVyUa61HMQmcWhuyHi6O+N8f63drtMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784047921; c=relaxed/simple;
-	bh=y+nMsMtnPzeoRMm6XOGdcqLiE1JJKdTJFdXgVfqhtcg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EwUUPNJqa6zmAHjAT/2xSETCTcp4QDJWiYWpeDBctPsDRMei9pBWTrxOIOtN4nYDRCSPiStsktiu2G83qbqfJ50LOgStWzRqUvp9JPiIrsZYPjkzpnBN4/SgIJ6s8C68/m6bNQnPgQJWpVdbtEeh4AlXvVIUZLKUDWkv1kLwYmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=AfRCxkVh; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1784047944; c=relaxed/simple;
+	bh=OLH9+tXGBV8HboO7VvrLAxUaYuRyFxvgeguIaHfnNGE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=lOGMRznnge8zS9so8D1Tvi2TQTeakBk1xDEVRO/S22H3KmKjkjfTA0W8oyVcbpY/JHCXheVK6Ru3Swr0JIlCXiVyy8z+M4f6GxbDJcOXrbIx5QJq/obJDv351zASy2aDMPbvbMEugakV2f4Lw/cqPLII3UeAe9ey4mcM59gda+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I2uDtnzP; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="AfRCxkVh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1784047914;
-	bh=y+nMsMtnPzeoRMm6XOGdcqLiE1JJKdTJFdXgVfqhtcg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=AfRCxkVhMPXaeJ4X2pakjBoLYVMtENgqh6kslhbd+3AQg3WfIGgBcX2hDtINAVg+v
-	 Hw6tnma1FmLBkiT/Ldj7crCME1oCD5BjCY6CJbbzBhJYmNVDVsdn5FyukoGu1QvVSV
-	 BKkbdrDrb2bAHn8Ii1Z7+wIuZQYUY5Pu5/df8wFo=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Tue, 14 Jul 2026 18:51:50 +0200
-Subject: [PATCH 3/3] driver core: Constify the signature of
- device_show/store_*()
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I2uDtnzP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784047943; x=1815583943;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=OLH9+tXGBV8HboO7VvrLAxUaYuRyFxvgeguIaHfnNGE=;
+  b=I2uDtnzPHaaOYvHQ+9Fmli9MXhj9n5mj3CtnlYMFQNGeOfpPrn/tr9nQ
+   tDsJsQ/TVmsozCwc7+kEcLkhAzyr54/u+6DeWJDycLM5N5WfN4qlPi+54
+   CiVPnjZ7uzS1RYOiy7RiFzyJExh513g67YXytCEZHuXOHZ0sdFQsph1Ll
+   jBk62XRl6uMSMp03LapQ/UDPRlsngBPGpxLnZsbkvk5U0XYnFuh1S2pl1
+   zdmiFVQ1lmn+n8nnnwOTW5jJ/tGhoMyaqhZ4WXF7kBOBzNcWDhr0x/93F
+   3XrNUoXa+zia3Xv3Rsz448ZcysKjwdOhY3w+Z+46gb8jIvvLoSMnmG1Ul
+   A==;
+X-CSE-ConnectionGUID: RZKxzM73RlGzjmYvE8dUuQ==
+X-CSE-MsgGUID: Qj9lLqYQT8edNmzB/SRxsw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11846"; a="95822134"
+X-IronPort-AV: E=Sophos;i="6.25,164,1779174000"; 
+   d="scan'208";a="95822134"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 09:52:22 -0700
+X-CSE-ConnectionGUID: LplNOaN/TKyB8lk5OafNwQ==
+X-CSE-MsgGUID: dmblQdpHRRim16/eXnA8pw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,164,1779174000"; 
+   d="scan'208";a="255412625"
+Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.108.131]) ([10.125.108.131])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2026 09:52:22 -0700
+Message-ID: <463f5e4a-1631-4382-9aca-b57d7e0999b2@intel.com>
+Date: Tue, 14 Jul 2026 09:52:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20260714-sysfs-const-attr-dev_ext_attr-v1-3-6b2c0435d621@weissschuh.net>
-References: <20260714-sysfs-const-attr-dev_ext_attr-v1-0-6b2c0435d621@weissschuh.net>
-In-Reply-To: <20260714-sysfs-const-attr-dev_ext_attr-v1-0-6b2c0435d621@weissschuh.net>
-To: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
- Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, 
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
- "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, 
- Yushan Wang <wangyushan12@huawei.com>, Jijie Shao <shaojijie@huawei.com>, 
- Khuong Dinh <khuong@os.amperecomputing.com>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- "Christophe Leroy (CS GROUP)" <chleroy@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- linux-cxl@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linuxppc-dev@lists.ozlabs.org, driver-core@lists.linux.dev, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1784047913; l=5833;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=y+nMsMtnPzeoRMm6XOGdcqLiE1JJKdTJFdXgVfqhtcg=;
- b=CE/PLEPjEk9Clk2ILAqAI/VCFiwwgxAk66fuzdwrBCBYf62zj4nI5gb6xVcT3JfCfpR44koSU
- BdRAPrwT0zcBc20cdAFo7P5079v7q7Z6w6civBd2ZOcqPBwj5qITrGA
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cxl/features: Serialize multi-part Get/Set Feature
+ transfers
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: djbw@kernel.org, dave@stgolabs.net, jic23@kernel.org,
+ alison.schofield@intel.com, vishal.l.verma@intel.com
+References: <20260709155841.1895915-1-dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20260709155841.1895915-1-dave.jiang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Prepare for the constification of 'struct dev_ext_attribute' by changing
-the signature of the standard callback functions.
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
- arch/powerpc/perf/hv-24x7.c |  2 +-
- drivers/base/core.c         | 30 +++++++++++++++---------------
- include/linux/device.h      | 14 +++++++-------
- 3 files changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
-index abb4cfb11fcc..c0abac00e026 100644
---- a/arch/powerpc/perf/hv-24x7.c
-+++ b/arch/powerpc/perf/hv-24x7.c
-@@ -462,7 +462,7 @@ static struct attribute *device_str_attr_create_(char *name, char *str)
- 	attr->var = str;
- 	attr->attr.attr.name = name;
- 	attr->attr.attr.mode = 0444;
--	attr->attr.show = device_show_string;
-+	attr->attr.show_const = device_show_string;
- 
- 	return &attr->attr.attr;
- }
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 4d026682944f..649b8a126920 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -2513,13 +2513,13 @@ static const struct sysfs_ops dev_sysfs_ops = {
- 	.store	= dev_attr_store,
- };
- 
--#define to_ext_attr(x) container_of(x, struct dev_ext_attribute, attr)
-+#define to_ext_attr(x) container_of_const(x, struct dev_ext_attribute, attr)
- 
- ssize_t device_store_ulong(struct device *dev,
--			   struct device_attribute *attr,
-+			   const struct device_attribute *attr,
- 			   const char *buf, size_t size)
- {
--	struct dev_ext_attribute *ea = to_ext_attr(attr);
-+	const struct dev_ext_attribute *ea = to_ext_attr(attr);
- 	int ret;
- 	unsigned long new;
- 
-@@ -2533,19 +2533,19 @@ ssize_t device_store_ulong(struct device *dev,
- EXPORT_SYMBOL_GPL(device_store_ulong);
- 
- ssize_t device_show_ulong(struct device *dev,
--			  struct device_attribute *attr,
-+			  const struct device_attribute *attr,
- 			  char *buf)
- {
--	struct dev_ext_attribute *ea = to_ext_attr(attr);
-+	const struct dev_ext_attribute *ea = to_ext_attr(attr);
- 	return sysfs_emit(buf, "%lx\n", *(unsigned long *)(ea->var));
- }
- EXPORT_SYMBOL_GPL(device_show_ulong);
- 
- ssize_t device_store_int(struct device *dev,
--			 struct device_attribute *attr,
-+			 const struct device_attribute *attr,
- 			 const char *buf, size_t size)
- {
--	struct dev_ext_attribute *ea = to_ext_attr(attr);
-+	const struct dev_ext_attribute *ea = to_ext_attr(attr);
- 	int ret;
- 	long new;
- 
-@@ -2562,19 +2562,19 @@ ssize_t device_store_int(struct device *dev,
- EXPORT_SYMBOL_GPL(device_store_int);
- 
- ssize_t device_show_int(struct device *dev,
--			struct device_attribute *attr,
-+			const struct device_attribute *attr,
- 			char *buf)
- {
--	struct dev_ext_attribute *ea = to_ext_attr(attr);
-+	const struct dev_ext_attribute *ea = to_ext_attr(attr);
- 
- 	return sysfs_emit(buf, "%d\n", *(int *)(ea->var));
- }
- EXPORT_SYMBOL_GPL(device_show_int);
- 
--ssize_t device_store_bool(struct device *dev, struct device_attribute *attr,
-+ssize_t device_store_bool(struct device *dev, const struct device_attribute *attr,
- 			  const char *buf, size_t size)
- {
--	struct dev_ext_attribute *ea = to_ext_attr(attr);
-+	const struct dev_ext_attribute *ea = to_ext_attr(attr);
- 
- 	if (kstrtobool(buf, ea->var) < 0)
- 		return -EINVAL;
-@@ -2583,19 +2583,19 @@ ssize_t device_store_bool(struct device *dev, struct device_attribute *attr,
- }
- EXPORT_SYMBOL_GPL(device_store_bool);
- 
--ssize_t device_show_bool(struct device *dev, struct device_attribute *attr,
-+ssize_t device_show_bool(struct device *dev, const struct device_attribute *attr,
- 			 char *buf)
- {
--	struct dev_ext_attribute *ea = to_ext_attr(attr);
-+	const struct dev_ext_attribute *ea = to_ext_attr(attr);
- 
- 	return sysfs_emit(buf, "%d\n", *(bool *)(ea->var));
- }
- EXPORT_SYMBOL_GPL(device_show_bool);
- 
- ssize_t device_show_string(struct device *dev,
--			   struct device_attribute *attr, char *buf)
-+			   const struct device_attribute *attr, char *buf)
- {
--	struct dev_ext_attribute *ea = to_ext_attr(attr);
-+	const struct dev_ext_attribute *ea = to_ext_attr(attr);
- 
- 	return sysfs_emit(buf, "%s\n", (char *)ea->var);
- }
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 7b2baffdd2f5..61e2b98b38a4 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -127,19 +127,19 @@ struct dev_ext_attribute {
- 	void *var;
- };
- 
--ssize_t device_show_ulong(struct device *dev, struct device_attribute *attr,
-+ssize_t device_show_ulong(struct device *dev, const struct device_attribute *attr,
- 			  char *buf);
--ssize_t device_store_ulong(struct device *dev, struct device_attribute *attr,
-+ssize_t device_store_ulong(struct device *dev, const struct device_attribute *attr,
- 			   const char *buf, size_t count);
--ssize_t device_show_int(struct device *dev, struct device_attribute *attr,
-+ssize_t device_show_int(struct device *dev, const struct device_attribute *attr,
- 			char *buf);
--ssize_t device_store_int(struct device *dev, struct device_attribute *attr,
-+ssize_t device_store_int(struct device *dev, const struct device_attribute *attr,
- 			 const char *buf, size_t count);
--ssize_t device_show_bool(struct device *dev, struct device_attribute *attr,
-+ssize_t device_show_bool(struct device *dev, const struct device_attribute *attr,
- 			char *buf);
--ssize_t device_store_bool(struct device *dev, struct device_attribute *attr,
-+ssize_t device_store_bool(struct device *dev, const struct device_attribute *attr,
- 			 const char *buf, size_t count);
--ssize_t device_show_string(struct device *dev, struct device_attribute *attr,
-+ssize_t device_show_string(struct device *dev, const struct device_attribute *attr,
- 			   char *buf);
- 
- typedef ssize_t __device_show_handler_const(struct device *dev, const struct device_attribute *attr,
+On 7/9/26 8:58 AM, Dave Jiang wrote:
+> A Get or Set Feature payload larger than the mailbox payload size is
+> split into several mailbox commands. mbox_mutex only serializes
+> individual mailbox commands and is dropped between iterations of these
+> loops. Nothing serializes the multi-part transfer as a whole.
+> cxl_get_feature() and cxl_set_feature() are reachable concurrently
+> from fwctl (per-fd RPCs run under a read-held registration lock) and
+> from the EDAC scrub/ECS/repair paths, so two transfers to the same
+> mailbox can interleave their parts and corrupt the device's transfer
+> context.
+> 
+> Add a per-mailbox feat_mutex and hold it across the whole transfer in
+> both functions. It nests outside mbox_mutex (which is taken inside
+> cxl_internal_send_cmd()), and is taken nowhere else, so no lock-ordering
+> inversion is introduced.
+> 
+> Link: https://sashiko.dev/#/patchset/20260702090849.47501-1-icheng@nvidia.com?part=1
+> Fixes: 5e5ac21f629d ("cxl/mbox: Add GET_FEATURE mailbox command")
+> Fixes: 14d502cc2718 ("cxl/mbox: Add SET_FEATURE mailbox command")
+> Assisted-by: Claude:claude-opus-4-8
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
--- 
-2.55.0
+Applied to cxl/next
+77b814c1832f
+
+> ---
+>  drivers/cxl/core/features.c | 3 +++
+>  drivers/cxl/core/mbox.c     | 1 +
+>  include/cxl/mailbox.h       | 2 ++
+>  3 files changed, 6 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> index 85185af46b72..85d6bcdc360e 100644
+> --- a/drivers/cxl/core/features.c
+> +++ b/drivers/cxl/core/features.c
+> @@ -240,6 +240,8 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>  	size_out = min(feat_out_size, cxl_mbox->payload_size);
+>  	uuid_copy(&pi.uuid, feat_uuid);
+>  	pi.selection = selection;
+> +
+> +	guard(mutex)(&cxl_mbox->feat_mutex);
+>  	do {
+>  		data_to_rd_size = min(feat_out_size - data_rcvd_size,
+>  				      cxl_mbox->payload_size);
+> @@ -314,6 +316,7 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
+>  		data_in_size = cxl_mbox->payload_size - hdr_size;
+>  	}
+>  
+> +	guard(mutex)(&cxl_mbox->feat_mutex);
+>  	do {
+>  		int rc;
+>  
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 7c6c5b7450a5..0370ac39ec4a 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1516,6 +1516,7 @@ int cxl_mailbox_init(struct cxl_mailbox *cxl_mbox, struct device *host)
+>  
+>  	cxl_mbox->host = host;
+>  	mutex_init(&cxl_mbox->mbox_mutex);
+> +	mutex_init(&cxl_mbox->feat_mutex);
+>  	rcuwait_init(&cxl_mbox->mbox_wait);
+>  
+>  	return 0;
+> diff --git a/include/cxl/mailbox.h b/include/cxl/mailbox.h
+> index c4e99e2e3a9d..d008b9db07aa 100644
+> --- a/include/cxl/mailbox.h
+> +++ b/include/cxl/mailbox.h
+> @@ -50,6 +50,7 @@ struct cxl_mbox_cmd {
+>   * @payload_size: Size of space for payload
+>   *                (CXL 3.1 8.2.8.4.3 Mailbox Capabilities Register)
+>   * @mbox_mutex: mutex protects device mailbox and firmware
+> + * @feat_mutex: serializes multi-part Get/Set Feature transfers
+>   * @mbox_wait: rcuwait for mailbox
+>   * @mbox_send: @dev specific transport for transmitting mailbox commands
+>   * @feat_cap: Features capability
+> @@ -60,6 +61,7 @@ struct cxl_mailbox {
+>  	DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
+>  	size_t payload_size;
+>  	struct mutex mbox_mutex; /* lock to protect mailbox context */
+> +	struct mutex feat_mutex;
+>  	struct rcuwait mbox_wait;
+>  	int (*mbox_send)(struct cxl_mailbox *cxl_mbox, struct cxl_mbox_cmd *cmd);
+>  	enum cxl_features_capability feat_cap;
+> 
+> base-commit: 8cdeaa50eae8dad34885515f62559ee83e7e8dda
 
