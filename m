@@ -1,196 +1,171 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E7527587D
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Jul 2026 23:51:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4760F433E71
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Jul 2026 23:54:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784073117; cv=none; b=EMtuo4F6yMbSPDl+gN7D5nLJN82abLMcxJfVuE6pIZmmMtMaL7AQio/yqRrvO2mGWfOcBVFv/rZg7o2SFR+CmexRCdRgfKjsoHyFaNB3ZR5rG9uuskisVHLfmW7Fey9KO2tLO/MD68RRoCKx4/Hrn0h2ND+GVBAgxZuXir4NVnI=
+	t=1784073274; cv=none; b=D29ByakIZB9Y9W9FYTXRKddmaxKmfdkE1VPtMplK/5GzUI/QTLEtZaU07PHB28f+GHOQxWypDYBTHqiCOTdGYr2XD2mZcylo4vseSLrF9rcIi/YADElKxdma9EOVhRkWEzXEylVcxUvZEqsoDKxmc2tvT9GVoWvJC6PSra4hqxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784073117; c=relaxed/simple;
-	bh=NdJ1cB3MSpfybX5fX+WlC7aNbC5zaLywcmmRN1dXhA0=;
+	s=arc-20240116; t=1784073274; c=relaxed/simple;
+	bh=G67/h8IT1gIbDR1bx1/juoyHXtYiBzuMCz4Ic0cGQpE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lYEljV2TYuX+Z6X76TsUAugW057TjaH22ozhRr6sFcd6LKTNiuIOH2dn5LagyKwMT9YSPbevtMHgd85+ktmYHlxA7urjBAlKvayKdMyyfDf0FnGuE5Gh9KlvWaR6BkUNalKmFY23ydOP/souEBtdBc6HFQEd2oZ75nt91Sqze3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nmoWERWi; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ifWlgSmfFCDvvsriae9g6w8Uu6yQcYDBaiPlNDv/h4TLDkK2WfB5OljU0OWh4pw1dIxYtqO1GaAlvpBSjGd28ix5+MBldbeXgmny9qbHQQvHKkeAzLoH+iTwyCT1qASUDuiqM6WAcdCqn7WX2ywZRvPtUFGusQTSzruw/uC89sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ofzuh5KJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nmoWERWi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41F4E1F000E9;
-	Tue, 14 Jul 2026 23:51:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ofzuh5KJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B97411F000E9;
+	Tue, 14 Jul 2026 23:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784073115;
-	bh=aiRoSCyPuGk7GNEgu5eFOfvi2y+uXQ59d8SKLpkCCPc=;
+	s=k20260515; t=1784073272;
+	bh=CQ/AZRavTkZa5uMYB7DmW7PocxrmrPle706Bo+qF0bQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nmoWERWihn2NmkoqzEGTz5vdv+EJ50LhCPZPxKWPyxs4X6u62SPIqptfKnxbJjANp
-	 +cJTVkOhNrss22S1SdoPSEv3TB+QXpEuZmyONxKwsYTfX7gAIcJAN492qoOjxhgXzY
-	 ZtlrvOo+bIVxQRHzfBgB628b0A1KJDxiBxVcxcSrk4aIPOU41sdBarl0aolweNZ9OE
-	 XCM0aJaN9pcS5+utdknLRLncxnZTQoUXLKgV0F3WegF2clWA5ljAOTi6LZeJju+lbO
-	 U1uBYomxknJJb7MbR39dKggMY9Q4J36f66x2gjXSMbm5C3ebnedu0kL3Upe52cznIc
-	 00Lhu/kseVxFA==
+	b=ofzuh5KJOaJ8AWgdLBB8kXDU8O9VKKA31wOfAa2KYg8RpTfE5NPSOHCyAr2izkova
+	 vVDFj1pDhi9gQ4bi+GT0WPLSM7m2qerleI/x7TD2v8DGeq2thPQHENm7ohWCjoY1CC
+	 dMfkfAiaaMPisNUfJ76Bbc4y8Puf4Pcn8eKWSb3iK5l5Gj6dQ56coZ90Pz8nI9JdBm
+	 l3OPg0Q/RWeWp2cQo+RZ86r2VK+8qfpHMjXUXu1ojoEy+RMU8OF8UG3xqHWZCFDGPj
+	 Ja9I/SEmTLVwH181QBb35eIDjYGhcJf7KAJnh6KCdiMfRSxwLlQOlQOXXg7Ro4f888
+	 jbZC7Rig0p7LQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/7] ACPI: extlog: Avoid populating software AER
- metadata from raw hardware buffer
+Subject: Re: [PATCH v2 1/7] ACPI: APEI: GHES: Bound CXL event record copy to
+ the firmware section length
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260714231835.303081-4-dave.jiang@intel.com>
+In-Reply-To: <20260714231835.303081-2-dave.jiang@intel.com>
 References: <20260714231835.303081-1-dave.jiang@intel.com>
- <20260714231835.303081-4-dave.jiang@intel.com>
+ <20260714231835.303081-2-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 14 Jul 2026 23:51:54 +0000
-Message-Id: <20260714235155.41F4E1F000E9@smtp.kernel.org>
+Date: Tue, 14 Jul 2026 23:54:32 +0000
+Message-Id: <20260714235432.B97411F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
 
+New issues:
+- [Medium] The new length validation ties the minimum firmware section size=
+ to the kernel's internal maximum union size, which will break backwards co=
+mpatibility with existing firmwares as soon as the CXL event union grows.
+
 Pre-existing issues:
-- [High] GHES AER handling suffers from the exact same unvalidated hardware=
- data bug being fixed, plus a 4-byte out-of-bounds buffer read.
-- [High] cxl_rch_get_aer_info() reads raw MMIO past the hardware capability=
- boundary and populates software struct fields directly, triggering an out-=
-of-bounds stack read.
-- [High] Missing bounds check on gdata->error_data_length before processing=
- CPER_SEC_CXL_PROT_ERR and CPER_SEC_PCIE payloads.
-- [Medium] The patch maps the hardware AER capability buffer to struct aer_=
-capability_regs via memcpy, but structural misalignment causes hardware reg=
-isters to be logged erroneously as TLP Prefixes.
+- [High] Deadlock due to acquiring a spinlock in process context without di=
+sabling interrupts, while the same lock is acquired in hardware interrupt c=
+ontext.
+- [High] The newly added length check `len < sizeof(*rec)` can be bypassed =
+via an integer overflow, defeating the patch's protection and allowing an o=
+ut-of-bounds kernel memory read.
 --
 
---- Patch [3]: [PATCH v2 3/7] ACPI: extlog: Avoid populating software AER m=
-etadata from raw hardware buffer ---
-commit abdd5781d57340e81525247f53a52f27296139bd
+--- Patch [1]: [PATCH v2 1/7] ACPI: APEI: GHES: Bound CXL event record copy=
+ to the firmware section length ---
+commit e26fd5aa15a7b2ef67720b7ee480d05f9c35224c
 Author: Dave Jiang <dave.jiang@intel.com>
-ACPI: extlog: Avoid populating software AER metadata from raw hardware buff=
-er
 
-This commit copies the AER info hardware buffer into a zeroed local struct
-to avoid treating raw hardware bytes as software-only metadata. It then
-explicitly clears the header_len and flit fields so only known-safe values
-reach the TLP log printing routine.
+ACPI: APEI: GHES: Bound CXL event record copy to the firmware section length
 
-Link: https://lore.kernel.org/linux-cxl/20260709165457.8BA181F000E9@smtp.ke=
-rnel.org/
+This commit adds a bounds check to cxl_cper_post_event() to prevent copying
+more data than what the firmware provided in the CPER section. It passes
+the error data length into the function to reject undersized sections.
 
-> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> index 06a944dadbc15..fbc88c584c067 100644
-> --- a/drivers/acpi/acpi_extlog.c
-> +++ b/drivers/acpi/acpi_extlog.c
-> @@ -137,6 +137,7 @@ static void extlog_print_pcie(struct cper_sec_pcie *p=
-cie_err,
->  			      int severity)
->  {
->  #ifdef ACPI_APEI_PCIEAER
-> +	struct aer_capability_regs aer_regs =3D {};
->  	struct aer_capability_regs *aer;
+Link: https://sashiko.dev/#/patchset/20260617-topics-ahmtib01-ras_ffh_arm_i=
+nternal_review-v6-0-91f725174aa0@arm.com?part=3D6
 
-[ ... ]
-
-> @@ -149,7 +150,12 @@ static void extlog_print_pcie(struct cper_sec_pcie *=
-pcie_err,
->  		return;
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index 3236a3ce79d6b..9916271a81513 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -815,10 +815,21 @@ static DEFINE_SPINLOCK(cxl_cper_work_lock);
+>  struct work_struct *cxl_cper_work;
 > =20
->  	aer_severity =3D cper_severity_to_aer(severity);
-> -	aer =3D (struct aer_capability_regs *)pcie_err->aer_info;
-> +
-> +	memcpy(&aer_regs, pcie_err->aer_info, sizeof(pcie_err->aer_info));
+>  static void cxl_cper_post_event(enum cxl_event_type event_type,
+> -				struct cxl_cper_event_rec *rec)
+> +				struct cxl_cper_event_rec *rec, u32 len)
+>  {
+
+[Severity: High]
+This isn't a bug introduced by this patch, but can this lock cause a
+deadlock?
+
+Looking at how cxl_cper_work_lock is acquired in process context:
+
+drivers/acpi/apei/ghes.c:cxl_cper_register_work() {
+    guard(spinlock)(&cxl_cper_work_lock);
+    ...
+}
+
+And how it is acquired in hardirq context here in cxl_cper_post_event():
+
+drivers/acpi/apei/ghes.c:cxl_cper_post_event() {
+    ...
+    guard(spinlock_irqsave)(&cxl_cper_work_lock);
+    ...
+}
+
+If a process calls cxl_cper_register_work() and acquires the lock without
+disabling local interrupts, and a hardware error triggers an interrupt on
+the same CPU, cxl_cper_post_event() will attempt to acquire the exact same
+lock. Does this violate the locking rule that if a lock is used in hardirq
+context, all process-context acquisitions must disable interrupts?
+
+>  	struct cxl_cper_work_data wd;
+> =20
+> +	/*
+> +	 * The record is copied whole below, so the firmware-provided section
+> +	 * must be at least as large as the record. cper_estatus_check() only
+> +	 * validates the section fits the error block, not that it satisfies a
+> +	 * given section type's size, so guard the fixed-size copy here.
+> +	 */
+> +	if (len < sizeof(*rec)) {
+
+[Severity: High]
+This is a pre-existing issue, but does this length check remain vulnerable
+to an integer overflow bypass?
+
+If the firmware provides a length like 0xFFFFFFB9, upstream validation
+implicitly casts this u32 to a signed int:
+
+include/acpi/ghes.h:acpi_hest_get_error_length() {
+    return ((struct acpi_hest_generic_data *)(gdata))->error_data_length;
+}
+
+This returns a negative value, which underflows the size calculation and
+bypasses the estatus bounds check.
+
+When execution reaches this point, len is evaluated as the unsigned value
+0xFFFFFFB9. The check 0xFFFFFFB9 < sizeof(*rec) evaluates to false,
+bypassing this new protection and allowing the memcpy to read out of bounds.
 
 [Severity: Medium]
-This is a pre-existing issue, but the structural misalignment here appears =
-to
-cause hardware registers to be logged erroneously as TLP Prefixes.
+Will this strict size requirement break backwards compatibility with older
+firmwares if the kernel's internal event union structure increases in size?
 
-The software struct embeds a struct pcie_tlp_log that is 60 bytes long,
-whereas the actual hardware Header Log is only 16 bytes. Does mapping the
-hardware AER capability buffer directly to struct aer_capability_regs cause
-the Root Error Command and Root Error Status registers to map into the
-aer_regs.header_log.prefix array?
+By enforcing that len is at least sizeof(*rec) (which currently contains
+union cxl_event), the minimum firmware section size is tied to the kernel's
+internal maximum union size.
 
-Since flit is set to false below, pcie_print_tlp_log() falls back to
-printing the prefix array if prefix[0] is non-zero. Could this erroneously
-print raw hardware control registers as End-to-End TLP Prefixes, corrupting
-logs?
+If a future CXL specification introduces a larger event type and the kernel
+expands the union, sizeof(*rec) will increase. When that happens, would the
+updated kernel erroneously reject perfectly valid legacy events emitted by
+existing older firmwares?
 
-> +	aer_regs.header_log.header_len =3D 0;
-> +	aer_regs.header_log.flit =3D false;
-> +	aer =3D &aer_regs;
+Could we instead verify len >=3D sizeof(rec->hdr), zero-initialize the work
+data buffer, and safely copy min_t(size_t, len, sizeof(*rec)) bytes to
+decouple firmware section sizes from internal kernel union sizes?
 
-I noticed a few other related pre-existing issues in the codebase that might
-warrant a look:
-
-[Severity: High]
-This is a pre-existing issue, but is there a missing bounds check on the
-error data length before processing payloads?
-
-In extlog_print(), the code iterates over ACPI HEST generic data sections
-and processes them based on section type:
-
-drivers/acpi/acpi_extlog.c:extlog_print() {
-    ...
-    extlog_print_pcie(pcie_err, gdata->error_severity);
-    ...
-}
-
-If a malformed or truncated payload is received from the hardware, could th=
-is
-access out-of-bounds memory when downstream functions dereference the paylo=
-ad
-fields, since gdata->error_data_length isn't validated to be at least
-sizeof(struct cper_sec_pcie)?
-
-
-[Severity: High]
-This is a pre-existing issue, but does ghes_handle_aer() suffer from the
-same unvalidated hardware data bug being fixed here, along with an
-out-of-bounds read?
-
-drivers/acpi/apei/ghes.c:ghes_handle_aer() {
-    ...
-    memcpy(aer_info, pcie_err->aer_info, sizeof(struct aer_capability_regs)=
-);
-    ...
-}
-
-This memcpy copies 100 bytes (size of the struct) from a 96-byte array,
-reading past the payload buffer. Does this also populate the software-only
-flit and header_len fields with unvalidated hardware data, potentially
-causing pcie_print_tlp_log() to iterate past the end of the dynamically
-allocated buffer?
-
-
-[Severity: High]
-This is a pre-existing issue, but does cxl_rch_get_aer_info() read raw MMIO
-past the hardware capability boundary?
-
-drivers/cxl/core/ras_rch.c:cxl_rch_get_aer_info() {
-    ...
-    int read_cnt =3D sizeof(struct aer_capability_regs) / sizeof(u32);
-    ...
-    for (n =3D 0; n < read_cnt; n++)
-        aer_regs_buf[n] =3D readl(aer_base + n * sizeof(u32));
-    ...
-}
-
-This loop reads 100 bytes from the MMIO address, which exceeds standard AER
-capability sizes (56 to 72 bytes).=20
-
-Later, in cxl_handle_rdport_errors(), the polluted struct is allocated on
-the stack:
-
-drivers/cxl/core/ras_rch.c:cxl_handle_rdport_errors() {
-    ...
-    struct aer_capability_regs aer_regs;
-    ...
-}
-
-Since the raw MMIO read pollutes the flit and header_len fields, could
-pcie_print_tlp_log() use these unvalidated fields to iterate past the bounds
-of the dw array and leak kernel stack memory?
+> +		pr_err(FW_WARN "CXL CPER section too small (%u)\n", len);
+> +		return;
+> +	}
+> +
+>  	if (rec->hdr.length <=3D sizeof(rec->hdr) ||
+>  	    rec->hdr.length > sizeof(*rec)) {
+>  		pr_err(FW_WARN "CXL CPER Invalid section length (%u)\n",
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260714231835.3030=
-81-1-dave.jiang@intel.com?part=3D3
+81-1-dave.jiang@intel.com?part=3D1
