@@ -1,176 +1,136 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010063.outbound.protection.outlook.com [52.101.201.63])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A398B37F8A1;
-	Tue, 14 Jul 2026 03:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783998636; cv=fail; b=MlMfhGfOHTFYDbh7DlG3apGAS5r/NFkYQ43v4pBcdtq6/+HdQRPPW4pB2zW3mKPiqrSD0QnMrYPgJoiBMchMwuNK3ZHSH5F8PHIZFnDv9S0QDXCJRcHRr16Itwm8nP1SUoKRrZhX712C0kgE/mMZyUcQaih6Ve81cNLW4ZCdTPY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783998636; c=relaxed/simple;
-	bh=jp6waulNFY+PKqxNtLiz0G5Yv4yinnTGp1/blgZ3KuM=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=NocUsMJQ+9YFUuf7mAwQcSjCCIDBV9gf8PpeH7sPetYV9JTMxKZRTwXGYlLEQYG7P11OsKZdx5rDNbpbsvkNaC/7sDFWBjZqEiVDns+N9g4l2b26In0BCS62QKDy88EEWtmNblOVRvX2BbBXaoT0tgYhbBcVGho/c+yKfoExhRs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=s5Duy5bX; arc=fail smtp.client-ip=52.101.201.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF8C3812FE
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Jul 2026 03:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783999269; cv=none; b=BQV6ahLvN83lkk/qMzcJwhCMJPMHyrDpo8BrwhdegLZGau0r7wl8sf1foNu2clY+eglg2kh6Ip0hzTDOR3hdgEbCvOLUjptJPooHHNzYav7qsfmb9Ny2s8ADBCl0Bt75nCLC2iwJMMZU+u2VmPnajbmzeF0yz1OTh1H2pYEbA1M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783999269; c=relaxed/simple;
+	bh=pJivzLF/xKE6wu0oXcPSFFzh/zz2rrpto0/28g0X4WM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=piNMwYQwyDUsnykpBnKvpS15/aoHLve42SXYpSxyfReIUw5kNj2d/W4tq/lq5cc9VCp3XPx3d0U+4kmhLygd7oBvnWbx4loe9KjZkwU4U4+MSaSUMEP+8p2IPXsRFaMHxFH9NoQLdBcNpjtHQcd2zkxOHMKW613rMuiswnXqNoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FtE5sgho; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="s5Duy5bX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IsiOMoke49hQkN17J0dLciWy45EtF2qlHTy0+sYpZDUimdzALSeowBNITrE7bTqVl+iBP88mtKUWO0/sKcV0o3YaI9kY41cWQFi4ajLcmN8EMA/hYXr6IAZak0bBKFMvXzIAIpJ4Xf6JGrRPY8stb3t5RvG3ISNDebl9+6mhOLIxzqxBSazaZbqeuOJyK+s16tS7Llqmi+hXpNdNJnBzFdPpbknHBVZ2jrDrFmL8WJpY00spPqTcMsrA2Q47G94xE3cI2FIUhR0Zd9dgMNC6qoCOCxcrXc5KwTj6NT4QwHkax+EzQ0fKIc7BsgZPsZZncwnhHdZt222VOt7OzRibKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=15+6ggWkckreDxzm90U0V4wbHS9O1YOU5Ld//+uBDX4=;
- b=llhsRh3RudDfX3WU/VJXMEqIB6MovOkt17TferMHRtHg15SL/A0oNwbPDG9w49AcbqR+ly0amXScYkAjCZQop0Gzmi75nrGa+RT1Jc0/67wHFW1yxO/kT6RmsoPqEBp3r+/tKUvK2UCP9U8wDfIxqo++LdNvEwkHEEc2FrOyGhRNtAQMTR2dmjJLPhTiSwm/5Fgrc3E24L/UPCU4yBBwBOkI+FUYqCdDB9nor8N9nH+QxRLbB0RZhN9Ep1XVLbEq3+Zlfdg5SPoF9c61Q6KQXakbAXTMDJ2M3MQlNva5qtTii6b7USMIDWf/v3P3hqCc0QFgcdp9/c13HC3KXtjGaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=15+6ggWkckreDxzm90U0V4wbHS9O1YOU5Ld//+uBDX4=;
- b=s5Duy5bXqmvhrH0FK1V2vWD6gRK5BejufFWjFOmQMH02b3n1041RJAOnVIHaw98jYexw/WT3Kr9QFYhqtUx9F1IyYwdHf5//ce4NRwVCdr9+K6FOdtSpkdty6x6Cc6bWKvU147sosohdQK9e31MIGcWNYMDO4Qq1+4KDdQobjWJ0Nislp35d9YIlk4PjXluGKHg1iGyi9wkVdvnL5LfVwFfsd6faeskUmePS7In0Qh21BErauuGHMyWnyYXyLSUch6SVEMfCH+JqCetflQ93AeexX7bydMxVylX4QH7jg5UI0gDJcVckr0Ee/R61BE0QwUerDHeTUsX9O5m1SAn25A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MW2PR12MB2380.namprd12.prod.outlook.com (2603:10b6:907:4::32)
- by DS7PR12MB5888.namprd12.prod.outlook.com (2603:10b6:8:7b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Tue, 14 Jul
- 2026 03:10:31 +0000
-Received: from MW2PR12MB2380.namprd12.prod.outlook.com
- ([fe80::90d:c5c:6a5e:94a5]) by MW2PR12MB2380.namprd12.prod.outlook.com
- ([fe80::90d:c5c:6a5e:94a5%4]) with mapi id 15.21.0202.014; Tue, 14 Jul 2026
- 03:10:31 +0000
-From: Richard Cheng <icheng@nvidia.com>
-To: dave@stgolabs.net,
-	jic23@kernel.org,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	djbw@kernel.org,
-	danwilliams@nvidia.com
-Cc: iweiny@kernel.org,
-	ming.li@zohomail.com,
-	shiju.jose@huawei.com,
-	alucerop@amd.com,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kobak@nvidia.com,
-	kaihengf@nvidia.com,
-	newtonl@nvidia.com,
-	kristinc@nvidia.com,
-	mochs@nvidia.com,
-	Richard Cheng <icheng@nvidia.com>
-Subject: [PATCH] cxl/mbox: Serialize RAW Get/Set Feature commands
-Date: Tue, 14 Jul 2026 11:10:10 +0800
-Message-ID: <20260714031010.14834-1-icheng@nvidia.com>
-X-Mailer: git-send-email 2.50.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0004.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::12) To DM5PR12MB2376.namprd12.prod.outlook.com
- (2603:10b6:4:b9::11)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FtE5sgho"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 003AC1F000E9;
+	Tue, 14 Jul 2026 03:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783999268;
+	bh=+yyliz71akr58+TZQAR0AzDzhwayAhK65D/MZEruhQc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=FtE5sghoUmHMgNZETotJ2z5vZsEYrFuCcDbpiyUQe7LqhJ8rcNOXDknXawOpZMWHV
+	 u/NGIHkNYcDB+DllWF9tdGTf5zP9hXjLeELSPI5eDv5CVgPcXBgHCmrtQWOf1el9el
+	 8p6UMn89u41KRTpu8uplZ0EAI6SjtKOUs71IPO1YZR9o8Xc9EN+AGiBZDThv+j0ZOW
+	 UCIfms0KWqIo93Oo446d2dD8SmmmYcRd471dVYD171/6b66BDTysl93GyGjzeGS34N
+	 XhYBiwThUbpmVegcFUQH4498STxSM1pt+7V7ChOmuwk+vqxXCHt5sRGeEqiJh7fLh7
+	 suShqcyZqvNWw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] cxl/mbox: Serialize RAW Get/Set Feature commands
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Richard Cheng" <icheng@nvidia.com>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260714031010.14834-1-icheng@nvidia.com>
+References: <20260714031010.14834-1-icheng@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 14 Jul 2026 03:21:07 +0000
+Message-Id: <20260714032108.003AC1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW2PR12MB2380:EE_|DS7PR12MB5888:EE_
-X-MS-Office365-Filtering-Correlation-Id: 69686f81-80ef-449c-0c2e-08dee155755c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|366016|376014|1800799024|23010399003|18002099003|3023799007|56012099006|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	03HFujTNX6k/debfB0eaACvYNyGJLc+qKW30b7ZUDvAtyLUzEW2u3ZfmsQA8fP0qKhriXZzXO28zxiDx2nGTxExddBQxEvOxpZc/8UOM3N9sRTrWVcDlgIFxvvKz//UJ1FxWYs9GqGlb00nzAvNC7oYJsXINLH9Uj5AtshAlbDO/MB7MBC0WVenAQR0t8qWr34Q+3jziXw8Dt/ACxz3ddUQ4MZxrCPcypP4mWPtLB+m55x4bnwf/wV+zRhjakt99gnPsuijITbra165yVQKgG0ZP9rX0JG85ChBo6LbFPF0Y2vXdm8gjlku6qf91gyp2NTpOXA8E0b8aE8QJrO+ANqxo+2HtWev1i+3nBuIydjcGZ1qBOgxzvAR4xsghjlipYMl84KKe7aQJK9H6qHEPr9MzSxTp2hR6XmeI9lq7ev+91HNii2p/oT/SE2pCEwRvF/4hg8h3sQ/y+Sqb04S/CgevQ2Hj32darOVthKERbvAjQwE9AgaJNcJe/QRrmmuFOjbITGrR/LgfaOJoTB2BEhAvv5Yq1OJm/2SnP5GC1tVJfNYW/bhs6ZoQFw0hcRRL3LtSBjMB87/w3Qy6PEWIJ28jpNvsp/HOhNuwnwCszNRNII7vxg8Q5z4cDucDCD2D93HgBg3PtVfT5AxI6c3L7OVNs0KovOm6zZeHF28UxQ4=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB2380.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024)(23010399003)(18002099003)(3023799007)(56012099006)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ty5dX49GaHFtu4B1EnS0TuICEWn4xSlik1JX5bJqOij1p3BhpOpbZhUf+Zw6?=
- =?us-ascii?Q?rgaMV6Tvr3Mpbfs2VcGffsa8zGKkI9m+/XTPiusCyE/qmcliIsuF8HTlbsR0?=
- =?us-ascii?Q?u457jSOczKDBEF8jkwcbE1+7YwJ2Zkp6hv22+Po4KEwlN8gbQpSfuIU74Eio?=
- =?us-ascii?Q?kVNM+uNXsbVFJJng/VG9z8lMw5aXMSSv4udJ9hVIlksAw5WLFYt0TVyWwsfX?=
- =?us-ascii?Q?QVnqdZadwAloxiL9a6WnLSWSZ4c/xzamLgAsNXxuQagnBIbxdTk1PUbNArZ8?=
- =?us-ascii?Q?Fivhv1nK/PryYCo9p3vVErUTuB7ANUoI5VdejyrDWkgGFpARUCQ+R17Lhkii?=
- =?us-ascii?Q?/ApY8w7oid9Y+un44qGHmJ7FxnjmvxA7jDZ1DPRjS1pkrDliI14h2xAb+vQm?=
- =?us-ascii?Q?xU2C0IWRi85fAYiUAuncY62ocAPboYo7+PscdttnGjoRqirbv1FvmXBMtsuy?=
- =?us-ascii?Q?OpWzqqYyruW4iQnEjgtblXc/8PKaB7/aeyFR2UpILUS7OKbpcprAieTByFEu?=
- =?us-ascii?Q?STCn1yd0aGpVNSMJwr6tIt4l5yknZIGvz0T4/aoCQOaeDKheQJnsoDGUj4dD?=
- =?us-ascii?Q?QLoPAERJjmnAIG0RWI7S0MGVevtq4/Dto2kyGJewpwgUIXfzLGXhe1MJaaJL?=
- =?us-ascii?Q?TvDGOkYDA7pB9U7e9wYpH5yfheCnY0Uc4bhmg8c3nKG80stn8I139Ghj/j5k?=
- =?us-ascii?Q?F6NqRigaGJOy35Y059HC7xTK6WDXdJZlzKo5O3ON3l7GKCOGG22GbTjLz421?=
- =?us-ascii?Q?5NRsunFFkl/dA4mrmbjC/xLHwb8KDs228M51MmMddurgFUnphF0DoawsA9pS?=
- =?us-ascii?Q?I+HUWp+9GDgJTYwTxbln++MM4Rl/GXbEVUVNeEknTsvB9AAkQ4okJHgUBmMZ?=
- =?us-ascii?Q?P2jvVTbuWpu1FCl2QydgylF2Lm5F2mTvPwHj4gKAK7sWd+dCzJ/3fiaT9EpP?=
- =?us-ascii?Q?o0yoNbL+Delnkk0rAIUFDu2jCF5rEqRAwmY5RnWvrvfHeWQ8dIm1nwE+GZcJ?=
- =?us-ascii?Q?kj/6UDRiqm6Qk+sCW+NGOkiAXPFj2Xt2Wyyp1sVbYS4dFAvSjYBkjL1VcWDc?=
- =?us-ascii?Q?9KgisscADXfdnzcOveazs2sIKurSpXmuYX9Ag8zkSbUSRbl6XJiWokJ6iv22?=
- =?us-ascii?Q?5cMS1GU+eZeFaaIWYyW6lwUfa0e8A03lSG8lB6whLkxI64bUKjp4OIxzvkik?=
- =?us-ascii?Q?QsGBL5p59PyvEF1xHTsWAKcxkeAy91XD4dw7Yy8rFxv5Pxmj2YLxShMit/8E?=
- =?us-ascii?Q?/ism4NFGCaJ1SySDpZGLe9VU4IANzIdIDkwmzOyaP/mlmgePS4EPYsuyecCK?=
- =?us-ascii?Q?yYZLg9cjfFxPi+4V0TzmqzSxpzWAzqyvyRGRo8TPJDu93+MH25pTuU7G1U5L?=
- =?us-ascii?Q?HWOwRHg6SVXm8stiRdqTPAJZHmvZoAaVNHcoaCSpvj8Cd88MyoCUj+tWlR8l?=
- =?us-ascii?Q?uCcSFpeRO/UsV7d1aZX53bhkcNGciLkNTS+nA6XRW6TEU6SVJZOO36BeHc+1?=
- =?us-ascii?Q?VPsg8muyGRB2MZDL1IvNnoKuR1pBVFIj13dNWyNBBbxv4zRoxZDASotldmCM?=
- =?us-ascii?Q?Xa8hlwodxOI8BYvbWtwPodOqG7/DelRvGfB2kyjrKj9PadBt+5FNCeOadU1E?=
- =?us-ascii?Q?IGwor85tMiPl6+akPrsUOvI6De8WnyCP5BhNxD0InIBZPAlKw+bZcAbpOWkP?=
- =?us-ascii?Q?IwYThXk7+iZlJooMgKORKIhiwddzOs6gYvusue5bh0kFKaQJ?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69686f81-80ef-449c-0c2e-08dee155755c
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB2376.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2026 03:10:30.9489
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YuP7aU6iSr9zMQqBwsysZ0SNPbO3aXIMhexqAKdY1j++CQTfN265mp+OInEsRJZf80hJFshExPb3z8HguPYMyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5888
 
-Dave Jiang's patch [1] adds feat_mutex to serialize kernel-managed Get
-and Set Feature operations. However, the RAW command path calls
-mbox_send() directly and bypasses cxl_get_feature() and
-cxl_set_feature().
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] Missing lock acquisition in kernel-managed Feature paths defeats t=
+he intended synchronization.
+- [Low] The patch references an undeclared struct member `feat_mutex`, resu=
+lting in an unconditional build failure.
+--
 
-Take feat_mutex around each RAW Get and Set Feature mailbox send. This
-prevents individual RAW Feature commands from interleaving with
-kernel-managed Feature helper loops. Other RAW commands are unchanged.
+--- Patch [1]: [PATCH] cxl/mbox: Serialize RAW Get/Set Feature commands ---
+commit ffea860f8f4c719a69a797f95e4162563fecddae
+Author: Richard Cheng <icheng@nvidia.com>
 
-[1]:
-https://lore.kernel.org/linux-cxl/20260709155841.1895915-1-dave.jiang@intel.com/
-Signed-off-by: Richard Cheng <icheng@nvidia.com>
----
- drivers/cxl/core/mbox.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+cxl/mbox: Serialize RAW Get/Set Feature commands
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 0370ac39ec4a..55b0c3ac1ede 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -599,6 +599,8 @@ static int handle_mailbox_cmd_from_user(struct cxl_mailbox *cxl_mbox,
- 					u32 *retval)
- {
- 	struct device *dev = cxl_mbox->host;
-+	bool is_feature_cmd = mbox_cmd->opcode == CXL_MBOX_OP_GET_FEATURE ||
-+			      mbox_cmd->opcode == CXL_MBOX_OP_SET_FEATURE;
- 	int rc;
- 
- 	dev_dbg(dev,
-@@ -608,7 +610,11 @@ static int handle_mailbox_cmd_from_user(struct cxl_mailbox *cxl_mbox,
- 		cxl_mem_opcode_to_name(mbox_cmd->opcode),
- 		mbox_cmd->opcode, mbox_cmd->size_in);
- 
-+	if (is_feature_cmd)
-+		mutex_lock(&cxl_mbox->feat_mutex);
- 	rc = cxl_mbox->mbox_send(cxl_mbox, mbox_cmd);
-+	if (is_feature_cmd)
-+		mutex_unlock(&cxl_mbox->feat_mutex);
- 	if (rc)
- 		goto out;
- 
--- 
-2.43.0
+This commit modifies handle_mailbox_cmd_from_user() to acquire feat_mutex
+around RAW Get and Set Feature mailbox commands. It aims to serialize these
+userspace commands against kernel-managed Feature operations.
 
+Link: https://lore.kernel.org/linux-cxl/20260709155841.1895915-1-dave.jiang=
+@intel.com/
+
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 79543103ac298..b94b8514f6786 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -594,6 +594,8 @@ static int handle_mailbox_cmd_from_user(struct cxl_ma=
+ilbox *cxl_mbox,
+>  					u32 *retval)
+>  {
+>  	struct device *dev =3D cxl_mbox->host;
+> +	bool is_feature_cmd =3D mbox_cmd->opcode =3D=3D CXL_MBOX_OP_GET_FEATURE=
+ ||
+> +			      mbox_cmd->opcode =3D=3D CXL_MBOX_OP_SET_FEATURE;
+>  	int rc;
+> =20
+>  	dev_dbg(dev,
+> @@ -603,7 +605,11 @@ static int handle_mailbox_cmd_from_user(struct cxl_m=
+ailbox *cxl_mbox,
+>  		cxl_mem_opcode_to_name(mbox_cmd->opcode),
+>  		mbox_cmd->opcode, mbox_cmd->size_in);
+> =20
+> +	if (is_feature_cmd)
+> +		mutex_lock(&cxl_mbox->feat_mutex);
+
+[Severity: Low]
+Does this code compile? Looking at struct cxl_mailbox in
+include/cxl/mailbox.h, it doesn't appear to have a feat_mutex member
+declared:
+
+include/cxl/mailbox.h:
+struct cxl_mailbox {
+	struct device *host;
+	DECLARE_BITMAP(enabled_cmds, CXL_MEM_COMMAND_ID_MAX);
+	DECLARE_BITMAP(exclusive_cmds, CXL_MEM_COMMAND_ID_MAX);
+	size_t payload_size;
+	struct mutex mbox_mutex;
+	struct rcuwait mbox_wait;
+	int (*mbox_send)(struct cxl_mailbox *cxl_mbox, struct cxl_mbox_cmd *cmd);
+	enum cxl_features_capability feat_cap;
+};
+
+[Severity: High]
+The commit message indicates this lock is meant to serialize RAW commands
+against kernel-managed Feature helper loops like cxl_get_feature().
+
+However, looking at cxl_get_feature() in drivers/cxl/core/features.c, it
+loops over cxl_internal_send_cmd() without acquiring feat_mutex:
+
+drivers/cxl/core/features.c:cxl_get_feature() {
+	...
+	do {
+		...
+		rc =3D cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
+		...
+	} while (data_rcvd_size < feat_out_size);
+}
+
+Does this missing lock acquisition in the kernel-managed paths defeat the
+intended synchronization, allowing interleaved execution if userspace submi=
+ts
+RAW commands concurrently?
+
+>  	rc =3D cxl_mbox->mbox_send(cxl_mbox, mbox_cmd);
+> +	if (is_feature_cmd)
+> +		mutex_unlock(&cxl_mbox->feat_mutex);
+>  	if (rc)
+>  		goto out;
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260714031010.1483=
+4-1-icheng@nvidia.com?part=3D1
