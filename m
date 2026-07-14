@@ -1,367 +1,199 @@
-Received: from toucan.tulip.relay.mailchannels.net (toucan.tulip.relay.mailchannels.net [23.83.218.254])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDAD37DE8B
-	for <linux-cxl@vger.kernel.org>; Tue, 14 Jul 2026 02:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.218.254
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783995011; cv=none; b=aOPllQqGfwn2a9V40ftdPyfm8O6s4Q57es4V836ukg0zzVqKEUZJGEK8L/jUmUcAB8qghMtoqY5CZKrP+5j9PY4TvGuaEekEAlNYOVLr8rNhlf8BsiDk/DQbakSjtLnOts3VkI4lV2lB4Xh6A4dhf1wIYTT4MTdrh9U0YH/+frM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783995011; c=relaxed/simple;
-	bh=aYCBu/AQ+a4I/3Q4kkYKyCAFSQ8/vVYTkBVaUG/fb/k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iWHLfvib79ZpIzcuyDs+iz5GHJyGq8lXyBXz6YJPqcmcvoeFsmqXdrLYvKg1cvGeluSQ68jX/zQ30mkjxjxG9APfZBdZjcNjjXGSBDvv0S8bVLPdpuppxftXGXkwSNE7BvssBm9hmULGpw2MUSlF3BzPyX5x5rDesoSjXB2L8yY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=WRbmL1H4; arc=none smtp.client-ip=23.83.218.254
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5541C381E9E
+	for <linux-cxl@vger.kernel.org>; Tue, 14 Jul 2026 02:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783996665; cv=fail; b=p4UlSEVPmWHYb5YsojqKbaBFZruNsGDEQpuGRs9T5t5n7wZIfna82MAdm9dzHv1nGWIpHQt6XTpodwmeWmiN3qMjNfds063iSJ4JMTB+bRAScgGMhu/3jgk00y2I4tY9xG4DfBdD7KFHNoB0pTAs3qVcw97b4xr7zpJcxxSI0vA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783996665; c=relaxed/simple;
+	bh=f8FGgK6iSb+kk9dGeEylAxUguuV1KhZ8ICt+MGfdFmw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=tB9OG6W3qXDKONVkl1/gbgnEI9GQ2Vb1F8pUBowGoSzYSOxd5gbbaURAtK36tOKl7b/VQphZ/8GjxaDXzdNdjhcKcONjH54EyYKJTRuqhlCNMxAH30KjH11+dEp2yc7emxdoYfnjN6iuV9tO+kLM9+D+/i6KrOVGQ3rXy+DWxrQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X0cDYhzf; arc=fail smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="WRbmL1H4"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 83B6E8015C3;
-	Tue, 14 Jul 2026 02:01:22 +0000 (UTC)
-Received: from pdx1-sub0-mail-a260.dreamhost.com (100-104-243-177.trex-nlb.outbound.svc.cluster.local [100.104.243.177])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id C65768006BE;
-	Tue, 14 Jul 2026 02:01:19 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Shoe-Bubble: 0a5ec2aa60551679_1783994482382_2500815278
-X-MC-Loop-Signature: 1783994482382:378648659
-X-MC-Ingress-Time: 1783994482382
-Received: from pdx1-sub0-mail-a260.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.104.243.177 (trex/8.0.2);
-	Tue, 14 Jul 2026 02:01:22 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a260.dreamhost.com (Postfix) with ESMTPSA id 4gzjG735g8z105B;
-	Mon, 13 Jul 2026 19:01:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1783994479;
-	bh=kWHQnb0EGGzHVURtBrlXhWPoc3UwUKt9uP8bMtaV14o=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=WRbmL1H4tIfIB+sLtnY2usunnpEphEfwfIP/bha4btsJglz25Om7vGnjUjyFHcJE8
-	 1UUIsyZpBsTyxmaAKAOytdX23mDX/vrjyy3dBJsDuL/dHNciMbbf2etubEM7ziNgIP
-	 kY8h4Mpv2cwHpohOjlwn85bQ560l55l+Tueg1BR6tShtLvSNdkJ+K/ZIkO8dq0cfdb
-	 RsmaQSKD/QAcDJvbCVJxy/8XDiST7SHIvTKJI2eBhdkmUGtc2JmDtvpLqVkHvxa3G+
-	 JZFSGBSZwVp/PMS9M7KyGc6RyLg/RtN4LKDmVNxfNPNAYVTGI9nog8cWTKxHT9OlPp
-	 EhIQR5LMJ2Nyg==
-Date: Mon, 13 Jul 2026 19:01:16 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: sashiko-reviews@lists.linux.dev, dave.jiang@intel.com
-Cc: linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v5 2/5] cxl/pci: Add BI topology enable/disable
-Message-ID: <20260714020116.gehv2wfqrlecu5bc@offworld>
-References: <20260615145529.13848-3-dave@stgolabs.net>
- <20260615173429.0CBB61F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X0cDYhzf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1783996662; x=1815532662;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=f8FGgK6iSb+kk9dGeEylAxUguuV1KhZ8ICt+MGfdFmw=;
+  b=X0cDYhzfs4xhw403CUL18zeAND+rg7NBwBOWPqvAduxXBWmXUidaSxwE
+   KNQ290fhJAMPtMrwAwok+m99wBoIcwTLzqwEYdiv9pD0x7h9mPdKVM2Sa
+   U55kvAIRu5IsDErWLmiG4t3g+7ornfP/63kjeYote5HaKKa1MgHE6BH5m
+   O4X/L8Tn4ZJrU6g3v0xdqkfJb1yCIUoL05HY3HNvrpiiNvyXkB35qURu/
+   OJhzbO5wWwBnQXzDNWVFcDJv0oqIKBwvMsBLclIH2TD3bt0zAM1ioPZDf
+   Wq3cC7Zz53z/yMSFHNubWUjlFR1QHefrEkez+lCVurFroJqVHqKGOtHlq
+   Q==;
+X-CSE-ConnectionGUID: T/XQWugKRbWB0BQm1ayh+A==
+X-CSE-MsgGUID: gXFEdDo6R2SJY6P2VrpMuQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="88511199"
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="88511199"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 19:37:42 -0700
+X-CSE-ConnectionGUID: s9w9v4AfQEm2342U9kWJAg==
+X-CSE-MsgGUID: V2OhA7yOTIe2tuqh4Yu4Uw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
+   d="scan'208";a="257676197"
+Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 19:37:42 -0700
+Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43; Mon, 13 Jul 2026 19:37:41 -0700
+Received: from fmsedg901.ED.cps.intel.com (10.1.192.143) by
+ FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43 via Frontend Transport; Mon, 13 Jul 2026 19:37:41 -0700
+Received: from MW6PR02CU001.outbound.protection.outlook.com (52.101.48.9) by
+ edgegateway.intel.com (192.55.55.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43; Mon, 13 Jul 2026 19:37:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KtqEUd4KczMzpHrAuTpBswOIKylYD8AfbD52qTj20lnuPnQpE+bDjmZfB9fFXx5o2SLIInFrNmcMQ6ORJ+fIyYgV3oO1lZuaooC0HyLgP1E8gCHtzQU2TbO8yAcWu1Ah/BVPFPu32nbE9IpErRyxxkkwXprQBcNKHLSg4c/iu1zQ6//eNDaC9dEcu4HzaN/iGVUCgXvPww4IRQVxnnoJZYniCe/YGFw0fxjhl6HXYfIo0dub4v4Va54QzgEaP3mBwqbKZHezXUk911/qmClAb6JIEpsP7BSdMTYZw9jbAzaFytyiWHdbnTl7Pup45XdL/G1mnZDjSsOUmuHjm1Bm4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Kjx1RsuX5Z8j/0k153YEiIT1QY1Iv5BR9NDMCtvU1zg=;
+ b=ue9rvTylsH66cJ+4vjgXz2cjxMOCPz8TwrB8MBAzjaGfojn96Mjgxb3CwAWm00RO2lQ4RBe36flQcyzQzCf+UaCC1ezlfRl1fsXubYufueOHsZzNnP5juiCQXiqr0pVqKndDEHbPu1pS5cHFXBl35LRaJ7R+N77rAaULfrfuZZBtgHW/uzBBXTai7vzbs7GyRC8FWE+OUzbvbpzB1Wie50SnGsHyIKnr20nqCOIsAaF9SZ25nzipojhwaklSsyPYjupL9Rii6iLKL9jNvBZbiJeOnItU9VibNoPC95ab3PrPNFgtkPeRL2J42DZli53bKPlTUZaWkUwpl8NFtEFL7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by DS0PR11MB6493.namprd11.prod.outlook.com (2603:10b6:8:c3::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Tue, 14 Jul
+ 2026 02:37:30 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891%4]) with mapi id 15.21.0223.008; Tue, 14 Jul 2026
+ 02:37:30 +0000
+Date: Mon, 13 Jul 2026 19:37:26 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Dave Jiang <dave.jiang@intel.com>
+CC: <linux-cxl@vger.kernel.org>, <djbw@kernel.org>, <dave@stgolabs.net>,
+	<jic23@kernel.org>, <vishal.l.verma@intel.com>
+Subject: Re: [PATCH] cxl/mbox: Break poison list loop on an empty payload
+Message-ID: <alWg5q2CGP1ljJri@aschofie-mobl2.lan>
+References: <20260709155714.1893280-1-dave.jiang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260709155714.1893280-1-dave.jiang@intel.com>
+X-ClientProxiedBy: SJ0PR13CA0033.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c2::8) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20260615173429.0CBB61F000E9@smtp.kernel.org>
-User-Agent: NeoMutt/20220429
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DS0PR11MB6493:EE_
+X-MS-Office365-Filtering-Correlation-Id: f58eee29-a7c5-465d-538c-08dee150d985
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|23010399003|18002099003|6133799003|22082099003|56012099006|11063799006;
+X-Microsoft-Antispam-Message-Info: FOlm+zi7RECnMv8Xye3vP0X7Jn07AoKZI4pkI5i9vobJ3TnIzhPHPOGBPM3EqckOK4yB3ki3sXPVYcTlRTvWjBJag49oSoGQdM00ytvCNGwa4lr22vpCCjVU17508j1lBeNtv665Eorm7sVo/YFyQ9ko00C0xbLHVhE725TKvU5Dyv3/UiME2ilVgN3o3Is9g7Rlrwqs54iVFEUJaVOnp2Ohfyz1yeSHaeCCdea58bh7+SrvVZWJm4IpWtt7Q6GzrUNVUvpPxShwSpHI853fESaGOVE8DdJsIFLbveI3Kb0AxmfCEovDQSjf9FQVR+D21Wuy/6F8DPnRGNBF37ad4lXbzNv8duhKP/qL/YcDtEjkbENOn368gC6RVny23zIJARC0b8oPJiyKC7FUdbCn+Hal2+8njdreVGhRQxh6NCDKa9qmfQ6c94tgZVUhjgd/PnebKLyP4/uMUJvORQRKacz1AiubTrgccPRLIh13H9kcMtE25jFubOxRbZ9/FhegDifWn5jBEU27l5S8icSwT7aQeiYpUdK9BynWx2tmWnFDbiW2br1DPZl59AVUQxIPM4dBavXikQXn/HioioKVQM5tgSbCINcvWNE/2qEQVcg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(23010399003)(18002099003)(6133799003)(22082099003)(56012099006)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OUkSQXoYy84BpHY5vg7EZdMSXs2sGu3+MScJEBnW/n5WJD3aq0pQWA2a9MVH?=
+ =?us-ascii?Q?pbVHkmrQLArJt22pIlQf5Ar8tk9B2WRnzAzmKv0oNYGigRF8UYKCd9qZLtAs?=
+ =?us-ascii?Q?oFKjDAVdD3gTaJ4YIQGsKDgcZWIsRd2E6vs8z1HwIF6jrhSJ6f4rc67bMSxv?=
+ =?us-ascii?Q?pP00HTn/glEZNZm2Wi28X5G/zvzYBS5dka/w9E5T160fdYrbhVOty8IKKjPC?=
+ =?us-ascii?Q?5yuu0NjZi6iZ1Jb+okPUJa9aaSbnewQWXVnsd/3Jnn13ip2Of3F/mE0mIHN+?=
+ =?us-ascii?Q?kM8iHgl4wyGc9jDB0m5CULlOl6P6jF2pQjnHgIqVFvWUUMjfz9Kzlu/JFOkF?=
+ =?us-ascii?Q?gQLBFz2zLcYxTaPo3AlBCqPIRk62gE40zz5ZIuSYUGjyZm+fXl+f9ll2b2/u?=
+ =?us-ascii?Q?+fkBsmXV6bl01hflVGN1yyEBzgX0ypPd2Cf3tD5wpgaXIbbNCjRArkCrud3q?=
+ =?us-ascii?Q?87dQBHHqrJavLNfzAMwYt7j9ar11Nchkjo19oAuYfsh6yQF3v+jI/E+8upzB?=
+ =?us-ascii?Q?SM4UgQeHFLxbQD4iBTqXGqCeQj6Q+HcTUUmC89h9TA2VySSjmQKaG+XwFeEM?=
+ =?us-ascii?Q?XA8+YKMrVOyPhj5M37/MQdrhgvfUjCDsPihOfRAOCnLlp6TAp8YtdOSO5Ovo?=
+ =?us-ascii?Q?CB/CHgjsB/og3p3TpeJ2XXk7FaHMJSN/5TkmxBje7zkyB0C8fbnRNl9fwig/?=
+ =?us-ascii?Q?v1BRnrGClrQ1qy6MiHbBAhpmnuOIUs2PdnwPNo8iuctq4kypmYYXa6gVaVuU?=
+ =?us-ascii?Q?vmuBJgmTLTR9+xftJYKHUL3N2iZy12zJ8eygRk/yHuDUz7uLC9MNzZSIa1H3?=
+ =?us-ascii?Q?+hIHtWJaVwwmOYzLSicGrDXtCttutREr2aQMLTnX1PaGDf+nQc0ARFk2hZ3i?=
+ =?us-ascii?Q?oeQKiYqJhjs8w+K6LHV8vnrCE0MR9r5kTyWmAzo696hHybWP84WMUWwoco7n?=
+ =?us-ascii?Q?ZN660YtqHbAxxUSViuggJqoGHNsRoPFmGSyLSYzU0nE5u908E1c1dWTLIUw+?=
+ =?us-ascii?Q?C5Qc0d+gtEUU+fp3VsI/Pl2VDjdtG1xY9mIWjAH7E6x9J8pcLLTkWDN6pjxt?=
+ =?us-ascii?Q?OeqnB+P3Yrk0JQC3gk9czjiMMxbLQ/mTeYLUQCG6jUdHN7C0ZOptbQBumc/a?=
+ =?us-ascii?Q?MAQQUrfUNs73bdEx8K0NEp4lYNMGQn+VymAWnhhTxGlrfedL66zh6wSPxI4g?=
+ =?us-ascii?Q?m/B897apHQSkyFwt7+G2j7N1zfS6aFels23524QLfm1KxZGfpgLhKwpRUPE7?=
+ =?us-ascii?Q?Fm493NDJ0xSFPrzukmHgAttH9HnHqTJXA0gI5Can/fuvwg/GQ5AzKLIEeA08?=
+ =?us-ascii?Q?aM9EP3wsWtd8doPwl92LAWtLMcG4LlGO/ySu3ktxonye0dVURgo6VOH1Qm+h?=
+ =?us-ascii?Q?IJAyrvdzH1N4l68OKm2NkRV5bgPTXnvKY6ULDsC04LI6YtkOBBU8NOwnaChf?=
+ =?us-ascii?Q?Df/ORI2eKUelEMLofyrJG8q2nhEcM4MyWN9iP3FbvGfU7zVJBtgf/JmHM9sf?=
+ =?us-ascii?Q?g5BVIcvBadrky3Z2Q3eqmUe5QmbPSdoU9hRGLSoZvAZo2hqUc2g2VgLKu6u+?=
+ =?us-ascii?Q?QI7h8u4nLuL158e7q2hMeBQ8rRklC3wiO9yDkH86bxNDmjxBLjzKKOXMGHtw?=
+ =?us-ascii?Q?8He4pkfNjZ6+h0nQMOJ4wD56h8k+yFu0e44+BaE+3INebY46kgzC4TfZlkMo?=
+ =?us-ascii?Q?gYZVFqDv7SE/pTYXK5wRexewCIVgccM7moyHD49tiia2CllfEVEBGPQDQchz?=
+ =?us-ascii?Q?03rkAymPnebIYqg4IxluMoY4zeO3oo0=3D?=
+X-Exchange-RoutingPolicyChecked: o97BS4sNk3oFMn4KNwuM5bpC4G2NIy/HmQhjv3PJemMCMAFplHV7fryNBv0ilU3g7WKezrYYHhvksMOtbkbIohfeL4EkKpnyjAWn+e9UePanQY01btzgJnpwXRbJxm0m/ixU5fnxiYE0sHyegeR/pxq0t0teApvWIUijgqw500swQyXylAcCcPdVHmW6iCcntmBLJ1aujt33ftr39VADNI/t7wcA+oNWfyRyYTsb4ZTaoSrPAm+vsxpHfKK4aq0kl7Djjb352BjflOZtoFvDUWAMdA5+7ja+0OTGRHea4vcGm+55nDNccpmTmFutRzCBHJ3Huzj0UcYaHKG/QazezQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: f58eee29-a7c5-465d-538c-08dee150d985
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2026 02:37:29.9855
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cBf7r7/6oRKEW512IPxZxwxPGD2klU7kh5VG2VCOhIKF9lOLHY+9EWGnRfJF5VOdiNNWllQOndLwcw9vM5SA07osOyj3EMtmlN0H+hbK604=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6493
+X-OriginatorOrg: intel.com
 
-On Mon, 15 Jun 2026, sashiko-bot@kernel.org wrote:
+On Thu, Jul 09, 2026 at 08:57:14AM -0700, Dave Jiang wrote:
+> A device that returns count == 0 with CXL_POISON_FLAG_MORE set on every
+> iteration never advances nr_records, so the max_errors guard never
+> trips and the do/while loops forever while holding poison.mutex. That
+> hangs the sysfs-triggered scan thread and blocks all subsequent poison
+> operations on the device. The existing "Protect against an uncleared
+> _FLAG_MORE" guard was intended to bound a misbehaving device but does
+> not cover the count == 0 case.
+> 
+> Stop the loop on an empty payload so a malfunctioning or malicious
+> device cannot wedge the poison scan.
 
->Thank you for your contribution! Sashiko AI review found 4 potential issue(s) to consider:
->- [High] Mixing `goto` error handling with `__free()` scope-based cleanup declarations.
 
-Trivial, fixed for v6. See below.
+I'm guessing Sashiko's new pre-existing complaint will appear as
+a new patch in the future, so for this one, let's get it merged:
 
->- [High] Missing explicit commit for the Endpoint BI Decoder Control Register.
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-False positive, this commit does not apply to endpoints.
 
->- [High] Root port BI enablement logic is unreachable and contradicts the commit message.
-
-False positive.
-
-Sashiko read !is_cxl_root(port_iter) as "the RP is skipped," but the RP sits a
-level below the platform root.
-
->- [High] Missing reference counting (`nr_bi`) for shared downstream ports in cascaded switch topologies.
-
-I am avoiding cascaded switch topologies (PBR/HBR), nor does this touch at all wrt
-BI in the latest spec.
-
-See: https://lore.kernel.org/all/20260608000226.jb2ploxc5nkjestk@offworld/
-
->--
->
->commit 31994c2bf9d14374bacdb07d505a19b18a761e35
->Author: Davidlohr Bueso <dave@stgolabs.net>
->
->cxl/pci: Add BI topology enable/disable
->
->This commit implements cxl_bi_setup() to walk the CXL port topology and enable
->BI flows on the device and every component in the path. It also implements a
->teardown counterpart, cxl_bi_dealloc().
->
->> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->> index d1f487b3d809a..b1b0f3eab90e8 100644
->> --- a/drivers/cxl/core/pci.c
->> +++ b/drivers/cxl/core/pci.c
->
->[ ... ]
->
->> +static int __cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable)
->> +{
->> +	struct pci_dev *pdev = to_pci_dev(dport->dport_dev);
->> +	void __iomem *bi = dport->regs.bi_decoder;
->> +	struct cxl_port *port = dport->port;
->> +	u32 ctrl, value;
->> +	int rc;
->
->[ ... ]
->
->> +	case PCI_EXP_TYPE_DOWNSTREAM:
->> +		if (enable) {
->> +			value = ctrl & ~CXL_BI_DECODER_CTRL_BI_FW;
->> +			value |= CXL_BI_DECODER_CTRL_BI_ENABLE;
->> +		} else {
->> +			if (!FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl))
->> +				return 0;
->> +			value = ctrl & ~(CXL_BI_DECODER_CTRL_BI_FW |
->> +					 CXL_BI_DECODER_CTRL_BI_ENABLE);
->> +		}
->
->[Severity: High]
->In cascaded switch topologies, can this unconditionally clear the
->CXL_BI_DECODER_CTRL_BI_ENABLE bit while other endpoints below the switch
->are still actively using it?
->
->Unlike the root port case which uses dport->nr_bi for reference counting,
->downstream ports appear to clear this bit as soon as the first endpoint
->unbinds. This might break BI routing for other active endpoints on a shared
->downstream port.
->
->Does this need reference counting similar to the root port?
->
->[ ... ]
->
->> +static int __cxl_bi_ctrl_endpoint(struct cxl_dev_state *cxlds, bool enable)
->> +{
->
->[ ... ]
->
->> +	writel(val, bi + CXL_BI_DECODER_CTRL_OFFSET);
->> +	cxlds->bi = enable;
->> +
->> +	dev_dbg(cxlds->dev, "BI requests %s\n",
->> +		str_enabled_disabled(enable));
->> +
->> +	return 0;
->> +}
->
->[Severity: High]
->Is this missing an explicit commit for the Endpoint BI Decoder Control
->Register?
->
->The CXL 4.0 specification requires an explicit commit after changing
->BI_ENABLE for any BI Decoder via CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ.
->
->While __cxl_bi_ctrl_dport() correctly calls __cxl_bi_commit_decoder() after
->updating the downstream ports, __cxl_bi_ctrl_endpoint() omits this step.
->
->Could this cause the endpoint device to ignore the BI enablement state and
->silently fail to enable BI flows?
->
->[ ... ]
->
->> +int cxl_bi_setup(struct cxl_dev_state *cxlds)
->> +{
->> +	struct cxl_port *endpoint = cxlds->cxlmd->endpoint;
->> +	struct cxl_dport *dport_iter, *dport, *failed;
->> +	struct cxl_port *port_iter;
->> +	struct pci_dev *pdev;
->> +	int rc;
->> +
->> +	if (!dev_is_pci(cxlds->dev))
->> +		return 0;
->> +
->> +	pdev = to_pci_dev(cxlds->dev);
->> +	struct cxl_port *port __free(put_cxl_port) =
->> +		cxl_pci_find_port(pdev, &dport);
->> +
->> +	if (!port)
->> +		return -EINVAL;
->
->[ ... ]
->
->> +	port_iter = port;
->> +	dport_iter = dport;
->> +	while (!is_cxl_root(port_iter)) {
->> +		rc = cxl_bi_ctrl_dport_enable(dport_iter);
->> +		if (rc)
->> +			goto err_rollback;
->
->[Severity: High]
->The commit message states this will write BI Enable on each dport's BI
->Decoder Control register. However, doesn't this loop terminate before
->processing the root port?
->
->Since the loop condition is !is_cxl_root(port_iter), when port_iter reaches
->the CXL root, the loop exits and skips configuring the root port entirely.
->
->Additionally, if the loop did reach the PCI_EXP_TYPE_ROOT_PORT code inside
->__cxl_bi_ctrl_dport(), that code actually clears the enable bit:
->
->__cxl_bi_ctrl_dport() {
->    ...
->    case PCI_EXP_TYPE_ROOT_PORT:
->        ...
->        value &= ~CXL_BI_DECODER_CTRL_BI_ENABLE;
->}
->
->Should this loop include the root port, and should the root port logic actually
->set the enable bit rather than clearing it?
->
->[ ... ]
->
->> +	/* finally, enable BI on the device */
->> +	rc = cxl_bi_ctrl_endpoint_enable(cxlds);
->> +	if (rc)
->> +		goto err_rollback;
->> +
->> +	return devm_add_action_or_reset(&cxlds->cxlmd->dev,
->> +					cxl_bi_dealloc, cxlds);
->> +
->> +err_rollback:
->> +	/*
->> +	 * Undo all dports enabled so far, including the failed one.
->> +	 */
->> +	failed = dport_iter;
->> +	dport_iter = dport;
->> +	port_iter = port;
->> +	while (!is_cxl_root(port_iter)) {
->> +		cxl_bi_ctrl_dport_disable(dport_iter);
->> +		if (dport_iter == failed)
->> +			break;
->> +		dport_iter = port_iter->parent_dport;
->> +		port_iter = dport_iter->port;
->> +	}
->> +	return rc;
->> +}
->
->[Severity: High]
->Is it safe to mix goto-based error handling with scope-based cleanup in
->this function?
->
->This function declares struct cxl_port *port __free(put_cxl_port) at the
->top, but also uses a goto err_rollback pattern for failure paths.
->
->Mixing goto labels with __free() declarations in the same function creates
->confusing ownership semantics and violates subsystem cleanup guidelines.
->
->Should this be fully converted to scope-based cleanup, or avoid using
->__free() here?
-
-Sure. I went with this this change/unwind consolidation, fyi:
-
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index ed54268e9ec7..dc700f7c75c0 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -1247,10 +1247,52 @@ static void cxl_bi_dealloc(void *data)
-  	}
-  }
-  
-+/*
-+ * Enable BI on every dport in the path, then on the device itself.
-+ * On failure, unwind only the dports that fully enabled.
-+ */
-+static int cxl_bi_enable_path(struct cxl_dev_state *cxlds,
-+			      struct cxl_port *port, struct cxl_dport *dport)
-+{
-+	struct cxl_dport *dport_iter, *failed;
-+	struct cxl_port *port_iter;
-+	int rc;
-+
-+	port_iter = port;
-+	dport_iter = dport;
-+	while (!is_cxl_root(port_iter)) {
-+		rc = cxl_bi_ctrl_dport_enable(dport_iter);
-+		if (rc)
-+			goto err_rollback;
-+
-+		dport_iter = port_iter->parent_dport;
-+		port_iter = dport_iter->port;
-+	}
-+
-+	/* finally, enable BI on the device */
-+	rc = cxl_bi_ctrl_endpoint_enable(cxlds);
-+	if (rc)
-+		goto err_rollback;
-+
-+	return 0;
-+
-+err_rollback:
-+	/* Undo dports that fully enabled; skip the failed one. */
-+	failed = dport_iter;
-+	dport_iter = dport;
-+	port_iter = port;
-+	while (!is_cxl_root(port_iter) && dport_iter != failed) {
-+		cxl_bi_ctrl_dport_disable(dport_iter);
-+		dport_iter = port_iter->parent_dport;
-+		port_iter = dport_iter->port;
-+	}
-+	return rc;
-+}
-+
-  int cxl_bi_setup(struct cxl_dev_state *cxlds)
-  {
-  	struct cxl_port *endpoint = cxlds->cxlmd->endpoint;
--	struct cxl_dport *dport_iter, *dport, *failed;
-+	struct cxl_dport *dport_iter, *dport;
-  	struct cxl_port *port_iter;
-  	struct pci_dev *pdev;
-  	int rc;
-@@ -1293,35 +1335,11 @@ int cxl_bi_setup(struct cxl_dev_state *cxlds)
-  		port_iter = dport_iter->port;
-  	}
-  
--	port_iter = port;
--	dport_iter = dport;
--	while (!is_cxl_root(port_iter)) {
--		rc = cxl_bi_ctrl_dport_enable(dport_iter);
--		if (rc)
--			goto err_rollback;
--
--		dport_iter = port_iter->parent_dport;
--		port_iter = dport_iter->port;
--	}
--
--	/* finally, enable BI on the device */
--	rc = cxl_bi_ctrl_endpoint_enable(cxlds);
-+	rc = cxl_bi_enable_path(cxlds, port, dport);
-  	if (rc)
--		goto err_rollback;
-+		return rc;
-  
-  	return devm_add_action_or_reset(&cxlds->cxlmd->dev,
-  					cxl_bi_dealloc, cxlds);
--
--err_rollback:
--	/* Undo dports that fully enabled; skip the failed one. */
--	failed = dport_iter;
--	dport_iter = dport;
--	port_iter = port;
--	while (!is_cxl_root(port_iter) && dport_iter != failed) {
--		cxl_bi_ctrl_dport_disable(dport_iter);
--		dport_iter = port_iter->parent_dport;
--		port_iter = dport_iter->port;
--	}
--	return rc;
-  }
-  EXPORT_SYMBOL_NS_GPL(cxl_bi_setup, "CXL");
+> 
+> Link: https://sashiko.dev/#/patchset/20260702090849.47501-1-icheng@nvidia.com?part=3
+> Fixes: ed83f7ca398b ("cxl/mbox: Add GET_POISON_LIST mailbox command")
+> Assisted-by: Claude:claude-opus-4-8
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/cxl/core/mbox.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> index 7c6c5b7450a5..c09fae2cae9f 100644
+> --- a/drivers/cxl/core/mbox.c
+> +++ b/drivers/cxl/core/mbox.c
+> @@ -1455,6 +1455,11 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+>  		if (rc)
+>  			break;
+>  
+> +		if (!le16_to_cpu(po->count)) {
+> +			dev_dbg(&cxlmd->dev, "Poison empty payload!\n");
+> +			break;
+> +		}
+> +
+>  		for (int i = 0; i < le16_to_cpu(po->count); i++)
+>  			trace_cxl_poison(cxlmd, cxlr, &po->record[i],
+>  					 po->flags, po->overflow_ts,
+> 
+> base-commit: 8cdeaa50eae8dad34885515f62559ee83e7e8dda
+> -- 
+> 2.54.0
+> 
