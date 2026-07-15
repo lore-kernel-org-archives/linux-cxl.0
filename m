@@ -1,159 +1,237 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E4D3D47D9
-	for <linux-cxl@vger.kernel.org>; Wed, 15 Jul 2026 22:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E835A377A91
+	for <linux-cxl@vger.kernel.org>; Wed, 15 Jul 2026 23:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784154921; cv=none; b=EWEu4Cip3tUrT7bOkSKuq+38CbVAa3WU0+gP2qJ097UG2kqIyVUmym/GJbeAASuKVKl+GtACK3QuY0jcWEQCdnAx6JlITToxx7LdeDh4pqfGDaFR+VJucRO/KhNKJM7EbYKPvhfz4xKqXnEStRHakS/MZd894t7FKUvV2bP4WFE=
+	t=1784156956; cv=none; b=gDHKL869u+zLdVnJQ9Yj9W2ZogzpVgfoXJP53t/Q76jhvaBtpqHE4TSQNjLsih843kq+nDR9MCahz8YbJN7lNexoxWMxpS3JdOHL7gXnNzNAcogjzUsOoyX4ADmjt+NzEdsXneOBJrFmYEbEN3kd4E1HMaUnIzeHTrs2niUk6sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784154921; c=relaxed/simple;
-	bh=XRaW2nSJW/ZJH/KETqqjeqOqS+m7sEajGew9umlE19s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cqJPdikQq29Eab0JeKRmkWdBuUhjABf0uJiTuEESBA5uvuSQhTWnh9L0ICYz6t15yxojJksCoqqrsEv82BTSNKqIATd8Ra8FQZOUMHncKNFjZFmDcIwcFIMJvVU62O1LNcRx6TtDgf7oYg6NH5xutFzJasVPfpnYE05ASlncrbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RCqAKCl4; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=O/k1shjE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1784156956; c=relaxed/simple;
+	bh=0NFG4Ww2jSroHmWiUivePZxK2XpVdq/qHaQxr1Q7fsY=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=glsSiWQVERXFUJHU4vXjcA/SxI4MMevrbRgltyR21nlEA9sTdTJOwp/+kmtNg+HXIZYF0zgcN0D/8eLyr7PCxitWoPQj4EIWhGzTIu/N+dDPNPNxN4mijQpEzwo4BQE0IJzHPvfgE1RdHLZBL0DmQIkrsX+h6H44W5cWLI0fx/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S6BcM9yV; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RCqAKCl4";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="O/k1shjE"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66FKPG7V577469
-	for <linux-cxl@vger.kernel.org>; Wed, 15 Jul 2026 22:35:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	pzttxML50p3Qjxs95TmyrNyRbKMzRVF3lav5cviw9SA=; b=RCqAKCl42KVFy3Fg
-	37+c9449K1KA8oZz1v7T/8dDalZTIlbiUDn43AeJzOIn3+aeIjSCAFv+Vf6cV0kM
-	mqdzF1/qjxrsi+mBA8G6Ip0HPcURH5YKZi1l+BtIjcy4zGLC9ShAjo8Kyl1est/2
-	UKAdiwacGlZFttwuZ4IiKnNtxNnoEOSLOpLDTdvn7nc2zzR5VmUd4SwC5WEllC6+
-	3UZyiLwZwVbdZ2kBXSc4J+LbQJlgCh8bFaG7lOBn6CKRmctQAu2Fs+ZSBWXjFl9k
-	rQazxwYC07/EjH5jPjbAsvPJbZ6cYmj2uNC/Hzi3wtrRlybolzRQijMK2dUq4EKq
-	h/Q3cA==
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4feefqh18y-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-cxl@vger.kernel.org>; Wed, 15 Jul 2026 22:35:18 +0000 (GMT)
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cab048cdb3eso6521919a12.0
-        for <linux-cxl@vger.kernel.org>; Wed, 15 Jul 2026 15:35:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S6BcM9yV"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-38deea72eebso3937737a91.1
+        for <linux-cxl@vger.kernel.org>; Wed, 15 Jul 2026 16:09:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1784154917; x=1784759717; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=pzttxML50p3Qjxs95TmyrNyRbKMzRVF3lav5cviw9SA=;
-        b=O/k1shjEGKcSlvHlLbx4bW6LcxhoHVdRd9ewt+Yxhpik2cc+1xPcImyKGzga4/lNOw
-         Y0WSAbqxwEIUvbErYHr2RKuUx5Txyjcr10v325bOHyGQOpic/IbaD8OxYRnbDNSK+JBj
-         SNvLU/fjQH3JQIDaNQcgFJfKo/Vnw+Qjnybxt1XxUwlW3nMmZftgdVxW3p4923l9a7ZU
-         vTYf2P1xT0UqBNgZ+6vpeP9YscmwAOlz5eUtYIsWyBg64LDbMDDqX3dvhgrg/gJ3Fg4l
-         vfrIpBUBi2bVJKzFHQ/zZWqj2BjFN/UAV0FNwUkVShR7GzQNnrVnDrLZ75OH7UntCEv0
-         WV/Q==
+        d=gmail.com; s=20251104; t=1784156954; x=1784761754; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ElxrIYjyBDIOHQflkE/kwut9Q3GwTe8Bx9Dw1cR1MdI=;
+        b=S6BcM9yVZZPW/o2jIiQqq4HNSZS0ao4xD7bKyZ899nw08kKiZ+3IR7XheEXy/+FyC8
+         V+/pp39i4HkNx/tKyhXa70EfKinYjICHtJmDn1IwbOVSx+mFuthv7CaO9IoMG0ChYRwf
+         445fi2ihr4TuOdCEpnD/tzW0ZxJKeJ7SZrNNS3paoRb90Ll+S+MoaHHQWvk91VVgZZ/a
+         ULcYh42wIDrUKVCBBKJwdTBTUsyS/4YhA+JvuW2KZHaYQQGYRTlXgrzM0v9oXR4eSX8V
+         Lo+D25Ca4HCzcExObQ0o/9krHFkLxz0yfMLtzii4miYA4bX5IxRCMVO/OSW+zZlCXQCH
+         VHhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784154917; x=1784759717;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=pzttxML50p3Qjxs95TmyrNyRbKMzRVF3lav5cviw9SA=;
-        b=h4Ng+1ft57+zRLjA6FyUOLo/OvveD4A6jkcQAYuUo7azkI46lbmWXsOC7cfyAJhwTI
-         nusQBGcRhi5WD/Co5PAhSxRrWlWEfF2PsHJs7amwlThD5zbip6l3DaIP2USo3He5j89d
-         xnnNuWahRTxDYpeVm74lnrC5Kl5WCiy37gzPIkpih9wiymILGPQtM5NYnQpxAx7LYHXg
-         kpS7XqEkQnreODvTWBGJoJXsZWEoz/Cx/qDRq6wJ91cogCsu/sAZZB1soVjQ/gxyTOtf
-         3KD46Chj2IyNkETIQJWbN5TfK51pB792Y7cdspfVSw+Fg5UD2OrfYi0ArV/DQ7mYJSka
-         nyQQ==
-X-Gm-Message-State: AOJu0Yye9NObUFDYzw//lXY92H94HVsUnGvTmHAUwbW3OPV/oxhf5vyw
-	S9P/UpLeyWyCg5B8pCmRV6+QMjtH5wmJZVS9v0dKYKMCD1tFU3nUFCIa+5386vTSC/aNJmzXZA/
-	DPPHYVX1QbYUn3xDeDG8qyYqmjE/NJXTwiipu/XSDu8LCoGSa1CuS/pkNPhdBTmQ=
-X-Gm-Gg: AfdE7clwukrrHxxS01mR16SaNKZMQtD+pU2A8zzEZaQ4ZMMD+JyMly501JqCfpVCdYc
-	n+Zl2cfXNdbTnK4NnTnBavM4cx4ASgEVy8HaExaqasdbaueerAryeNobXxcPg+/Dn5F00NaQXuN
-	LzQEbr4IxDAvaVfQuWHZNLcs8DrmfPHbIRzp51wfQjZREpfzlVWmHznd2cVrhb3DAeMu762OgNH
-	TVmGfc5lBk2dTwu50RUf9yviUzsx6R+8v3X5qHpqX3PhHeeT3GsyMAxPd24R8lCjTtvKaYtQzVe
-	m28yoA+Yoi/gwexZLR5iTaKZS+Bn0r7wXRHDTKZ0ekP/lY+mz9afwnw+71rd8Bf2JSvBt2SiWnM
-	iP2xoQVFWCaRMt3vrBv11ztSr8juWJiEgnAx0N1ZjV3dGN6nAEtEi5oRP
-X-Received: by 2002:a05:6300:6705:b0:3c3:8ce8:203 with SMTP id adf61e73a8af0-3c38ce807camr143379637.50.1784154917189;
-        Wed, 15 Jul 2026 15:35:17 -0700 (PDT)
-X-Received: by 2002:a05:6300:6705:b0:3c3:8ce8:203 with SMTP id adf61e73a8af0-3c38ce807camr143334637.50.1784154916555;
-        Wed, 15 Jul 2026 15:35:16 -0700 (PDT)
-Received: from [10.71.178.173] (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3140e6f0dcdsm3949168eec.31.2026.07.15.15.35.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jul 2026 15:35:16 -0700 (PDT)
-Message-ID: <642b8ff6-5309-4500-bb62-ae5091bb7ea7@oss.qualcomm.com>
-Date: Wed, 15 Jul 2026 15:35:15 -0700
+        d=1e100.net; s=20251104; t=1784156954; x=1784761754;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:date
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=ElxrIYjyBDIOHQflkE/kwut9Q3GwTe8Bx9Dw1cR1MdI=;
+        b=bKmRWcfEQ3CBFGBaT+qboOZzcjHa8erjPfYThQoCG6Jso+bw9qg4jwVryEc+ZbQgah
+         gMUE5mCcL0FzFhC93IlXNb3xePFHMglvxYSBfhiuLoI9Y9IOPRUHvp3icT25x1cSm0PP
+         IooaL2WeeuHvwahagPCV8UGWyJmS3wGAOuvTPc6lSv3ENxkuwKkmwP5mw6IQ9LA9nwik
+         9UgBWZIpEZgbeUn5sDKoPToz8Q4xgxsOx/r1hSyRlkzxHszQmugr1S5g0bTIpNUec51c
+         ty2QlCTSZK22WhC4LXBg301k7bAlsz+K+NqZ3JRxS1AQFxlCycPIGuv33YwJI+rv5cgg
+         llFg==
+X-Forwarded-Encrypted: i=1; AHgh+Rr5nQ0/ZlofmJ4xBE1TbJftuhiuHU3TukW5X5OXABD+TTHn12w2kx+oFlcoKgxtRR3IPI3Iv2ipaEY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwKySgqmMH/WNtKLtjUY3mxk5t7jtQVICyFCIAAT0cXdXY0tN6
+	mkwqEcKEroDp+rs6hyePHfiTlubqNo7vvZCfEmztYoVTDOABcBN7MoMC
+X-Gm-Gg: AfdE7cnR8n2xXZd4ITkGLf2clzWlgEzebNXfGnde+3WKT2DLnYGGx+m57Ge0APPT8Gf
+	TyXfHh2wAheMeHcLC2HiZtGNfubC6XhI0qm0b1aSTnEdmQJiuA/lvFUFkytS5uH75d3c9ibXy7M
+	/OsiHApemrncXnrCKiD0jkEmNnSekJ2S8n6g99V2q+W/TfHUy11XKMRIdDOgFBSgriNP1Dw1c1/
+	8Bw0MYfaa64rXa95pBMV2XoGv3n+7iSQ4pbLLz5zZg4cMHavPgdRswYFXREmkTuXnQ1XriMJmR/
+	bFyV+2XyIjDngmlTKRCIm48h8LsYhBRJ8ar/qFE5qm/QNXTmOSGExNyY4H23fEHy5RWZ9hdeB17
+	AcE6MxuPXv1kTmjOI5jxLKnt8m9F/NqubuRNbNonCI8BZvdU37lGi0aP3Pvw3Wbg4Io+VuNOZHU
+	5NnGTrr5mDDL4ezvrqwBEnoBTtZfPeAgob+ggryNpmPGrDDTALBRv+QgqvB38I6XTUh2b3
+X-Received: by 2002:a17:90b:2dcc:b0:38c:e9e9:e7ce with SMTP id 98e67ed59e1d1-38e29facf55mr4440727a91.3.1784156954192;
+        Wed, 15 Jul 2026 16:09:14 -0700 (PDT)
+Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3140e53349dsm5371877eec.7.2026.07.15.16.09.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2026 16:09:13 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Wed, 15 Jul 2026 16:09:12 -0700
+To: sashiko-reviews@lists.linux.dev
+Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev
+Subject: Re: [PATCH v11 10/31] cxl/mem: Configure dynamic capacity interrupts
+Message-ID: <algTGPgDuwTUFI_q@AnisaLaptop.localdomain>
+References: <20260625112638.550691-1-anisa.su@samsung.com>
+ <20260625112638.550691-11-anisa.su@samsung.com>
+ <20260625181442.33E561F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cxl/hdm: Enforce CFMWS memory type policy at decoder
- commit time
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org, dan.j.williams@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        linux-kernel@vger.kernel.org
-References: <20260711003341.2602368-1-mayank.rana@oss.qualcomm.com>
- <20260713160448.wvkpmbldmfciq4a3@offworld>
-Content-Language: en-US
-From: Mayank Rana <mayank.rana@oss.qualcomm.com>
-In-Reply-To: <20260713160448.wvkpmbldmfciq4a3@offworld>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=APNfGQ4N c=1 sm=1 tr=0 ts=6a580b26 cx=c_pps
- a=Qgeoaf8Lrialg5Z894R3/Q==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=u7WPNUs3qKkmUXheDGA7:22 a=rJkE3RaqiGZ5pbrm-msn:22
- a=VwQbUJbxAAAA:8 a=R4ayLD03AAAA:8 a=bnOQvwX50u-8yI3fIb4A:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=x9snwWr2DeNwDh03kgHS:22 a=qJlm0-shE6CLU_iKUWNr:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE1MDIyNiBTYWx0ZWRfX3oPzGkAXlzXW
- 49R76w7UYJyQ69WPqBnaUUR7awG3LbVoYoqwtwO6b707rHkhN641M8xK/mhmcgkr/ua/U2XsrbS
- C40rJGnTw4A1Fnoik9R9Op/GKcvFpsE=
-X-Proofpoint-ORIG-GUID: sbIeyBG_RbM4QUUBT0c6qgGw3GqS7RE6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE1MDIyNiBTYWx0ZWRfX7xmgY+FQLFFi
- SC9uHZDeO0VPCMBclzH8l3ZmVr04wgmygEpIx42pSFPReIhR6Qfe1zvTR3toDRJQO6cjD96jYmi
- zS9R7oQ3S5bbmO4D5bWxfE9YQBgGhIKpAyTgqiKHCzczX6SoZZ0yTktrza3M+4XPBmg60j5kvsy
- hxbN6ITjZzvcOx6rypPKW0kn5IfKSvNNqBCgf0H6XSjYafkP7wD6Bb3JodjI/gGI50YE+ErG9ky
- sAmaHmCHEgHqMucvio/vPPxqQi4FxnDNVEQ0JOWlFKsOoOiV/RQQPsynAuNJFjQJhFo7FAqARIx
- J7oAboQeX05CaEhNl+gkZuM2/BvpFXIi3XJ3YXNVKV+oE0/4ZNaKAWcuytlRbttmMX1XPkPqa2h
- D6CH8fAGJxh6/2c7vNdGITq6dReZSVxNEXvpFb4a6L80sc0iz4XKA7ovCCKDftg81MtCrp6hG4B
- 3zdJw7a12Tt20qrQNng==
-X-Proofpoint-GUID: sbIeyBG_RbM4QUUBT0c6qgGw3GqS7RE6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-15_05,2026-07-15_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 phishscore=0 adultscore=0 lowpriorityscore=0 impostorscore=0
- malwarescore=0 bulkscore=0 spamscore=0 clxscore=1015 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607150226
+In-Reply-To: <20260625181442.33E561F000E9@smtp.kernel.org>
 
-Hi Davidlohr
+On Thu, Jun 25, 2026 at 06:14:41PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [High] An unhandled DCD event status bit will cause an infinite loop in the `cxl_event_thread` IRQ handler if DCD processing is disabled dynamically.
+Fixed
 
-Thank you for your review and suggestion.
+> - [High] The driver fails to perform an initial drain of the DCD event log when the BIOS has control of standard CXL errors (`!native_cxl`), stranding pre-existing events.
+Fixed
 
-On 7/13/2026 9:04 AM, Davidlohr Bueso wrote:
-> On Fri, 10 Jul 2026, Mayank Rana wrote:
+> --
 > 
->> A CXL Fixed Memory Window Structure (CFMWS) in the ACPI CEDT table
->> carries a restrictions field that describes the memory types a platform
->> window supports.Â  cfmws_to_decoder_flags() translates this into
->> CXL_DECODER_F_TYPE2 (HDM-DB permitted) and CXL_DECODER_F_TYPE3 (HDM-H
->> permitted) flags on the root decoder.
->>
->> However, nothing currently prevents a caller from committing an endpoint
->> or switch decoder whose target_type conflicts with the CFMWS policy:
+> commit 4e2d7455b6a9875d8ee530fc91ae3a8b65741caa
+> Author: Ira Weiny <iweiny@kernel.org>
 > 
-> Hi Mayank - please refer to the latest Back Invalidate patchset (v5)
-> for properly dealing with this:
+> cxl/mem: Configure dynamic capacity interrupts
 > 
-> https://lore.kernel.org/all/20260615145529.13848-1-dave@stgolabs.net/
-Ok. I will review propose changes, and rework upon this fix.
+> Dynamic Capacity Devices (DCD) support extent change notifications
+> through the event log mechanism.  The interrupt mailbox commands were
+> extended in CXL 3.1 to support these notifications.  Firmware can't
+> configure DCD events to be FW controlled but can retain control of
+> memory events.
+> 
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index 8d12c684d6700..95a4bf7c1e466 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> [ ... ]
+> > @@ -632,6 +657,30 @@ static int cxl_event_irqsetup(struct cxl_memdev_state *mds,
+> >  	return 0;
+> >  }
+> >  
+> > +static int cxl_irqsetup(struct cxl_memdev_state *mds,
+> > +			struct cxl_event_interrupt_policy *policy,
+> > +			bool native_cxl)
+> > +{
+> > +	struct cxl_dev_state *cxlds = &mds->cxlds;
+> > +	int rc;
+> > +
+> > +	if (native_cxl) {
+> > +		rc = cxl_event_irqsetup(mds, policy);
+> > +		if (rc)
+> > +			return rc;
+> > +	}
+> > +
+> > +	if (cxl_dcd_supported(mds)) {
+> > +		rc = cxl_event_req_irq(cxlds, policy->dcd_settings);
+> > +		if (rc) {
+> > +			dev_err(cxlds->dev, "Failed to get interrupt for DCD event log\n");
+> > +			cxl_disable_dcd(mds);
+> 
+> [Severity: High]
+> If cxl_event_req_irq() fails here, cxl_disable_dcd() is called, but the
+> device is already programmed to generate DCD interrupts.
+> 
+> When a DCD event interrupt fires, cxl_event_thread() will read the status
+> and retain the CXLDEV_EVENT_STATUS_DCD bit because the mask includes it.
+> However, cxl_mem_get_event_records() skips draining the log when
+> cxl_dcd_supported() is false:
+> 
+> drivers/cxl/core/mbox.c:cxl_mem_get_event_records() {
+>     ...
+>     if (cxl_dcd_supported(mds) && (status & CXLDEV_EVENT_STATUS_DCD))
+>         cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_DCD);
+>     ...
+> }
+> 
+> Will this cause cxl_event_thread() to spin in an infinite loop since the
+> status bit is never cleared by draining the log?
+> 
 
-Regards,
-Mayank
+The fix is in cxl_event_thread(). Instead of setting the event drain
+mask based only on the value of native_cxl:
 
-> Thanks,
-> Davidlohr
+mask = host_bridge->native_cxl_error ? CXLDEV_EVENT_STATUS_ALL
+                                     : CXLDEV_EVENT_STATUS_DCD;
 
+we additionally check cxl_dcd_supported(), because the native_cxl value
+only determines if the standard logs are owned by firmware. DCD event
+logs are always OS owned.
+
+So the mask becomes:
+
+u32 mask = 0;
+
+if (host_bridge->native_cxl_error)
+        mask |= CXLDEV_EVENT_STATUS_ALL & ~CXLDEV_EVENT_STATUS_DCD;
+if (cxl_dcd_supported(mds))
+        mask |= CXLDEV_EVENT_STATUS_DCD;
+
+This gets put in a new helper function cxl_event_drain_mask() because
+the second bug below uses it too.
+
+The helper is called from cxl_event_thread():
+static irqreturn_t cxl_event_thread(int irq, void *id)
+{
+	struct cxl_dev_id *dev_id = id;
+	struct cxl_dev_state *cxlds = dev_id->cxlds;
+	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
+	struct pci_host_bridge *host_bridge =
+		pci_find_host_bridge(to_pci_dev(cxlds->dev)->bus);
+	u32 mask = cxl_event_drain_mask(host_bridge, mds);
+...
+
+So if dcd has been disabled afterwards, DCD events are still cleared.
+
+> > +		}
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> [ ... ]
+> > @@ -687,11 +744,16 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > -	rc = cxl_event_irqsetup(mds, &policy);
+> > +	rc = cxl_irqsetup(mds, &policy, native_cxl);
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > -	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
+> > +	if (native_cxl)
+> > +		cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
+> 
+> [Severity: High]
+> If the BIOS has control of standard CXL errors (!native_cxl), does this skip
+> the initial drain of the DCD event log?
+> 
+> Since the driver owns the DCD log regardless of native_cxl, it appears that
+> pre-existing DCD events might be left in the log, potentially preventing
+> subsequent edge-triggered interrupts from firing.
+> 
+
+Fixed by calling previous defined helper cxl_event_drain_mask()
+which also checks if dcd is enabled.
+
+So if (native_cxl)
+	cxl_mem_get_event_records()
+
+is replaced by
+
+status = cxl_event_drain_mask(host_bridge, mds);
+if (status)
+	cxl_mem_get_event_records(mds, status);
+
+> > +
+> > +	dev_dbg(mds->cxlds.dev, "Event config : %s DCD %s\n",
+> > +		native_cxl ? "OS" : "BIOS",
+> > +		cxl_dcd_supported(mds) ? "supported" : "not supported");
+> >  
+> >  	return 0;
+> >  }
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260625112638.550691-1-anisa.su@samsung.com?part=10
