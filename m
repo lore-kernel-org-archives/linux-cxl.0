@@ -1,192 +1,167 @@
-Received: from cornsilk.maple.relay.mailchannels.net (cornsilk.maple.relay.mailchannels.net [23.83.214.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3933D31960B;
-	Wed, 15 Jul 2026 19:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.214.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E1C395AF5;
+	Wed, 15 Jul 2026 20:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784145223; cv=none; b=X/KdXJww5P0tYVBbA4u6Lj58M5TtJ+7Z6u6Fto9CQpPu3TR9m713p22odWXPnjF97a1sY82tFymAieE3+Rn0Nr89UTqfZjkyM1vFNS8JCv/UjJ3Umj1ItLjxifDr2XBHmvAYS8mcwzqqKnS/wsaF5D4+OVbqTGNYTrJgnqgyKMY=
+	t=1784146060; cv=none; b=NyhqIRyaB5jUCV/DelkQbmolj8in795CYjUU4pwKZWVE1THbVulRZgSE3rqAg/aNi/O3s6unSM8AlIE6qm9wnTCInjYNLB/xqAphiCqPW+znhMhXbxgjx7cm2HY5IlO/Nn3MR5qOld1EKn3wIRvLfkFl1wcQa0hP/kmVZRyv2gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784145223; c=relaxed/simple;
-	bh=OxMxLFHBhEdu3uMyPJ43SN3Z0J/FiifBUvc0DiPXFIM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lTgB36YaAuwapCWrG5Krcpn1ugfHLfcbcxMx2YieySomTbuICJ+YF7PaaRsVCFmq2PXiuQnnDjQ2FF7hpkDKB331AbD2yKLAZozohZBTOnUkMmOJbABBHevKwBp/ayGDVpKrzaPf1eJY1+qio3gfEQESwOlJDv8KZ61gZ4eCW/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=WI1EGT45; arc=none smtp.client-ip=23.83.214.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1784146060; c=relaxed/simple;
+	bh=F3SFr5brgqcEl/ySD/OLX1l0nukwaoO7RUJUyX0CsYQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=XQJyvyLheT2D1HsaZLiEiW8DqnUEAsHt1TmBIRkfbtijVy7MVKr9khj2mDr6Q6WMB3pJxQ5LBjTu38psQdG+1Oese86noKcyFWRX0m1hwppP63HquXuvXsQeXV0Bg8b9SKSlO0wrLdIqpLZfxl8LwdpuF+plHDiQKCLbYN0UfS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lEib2G7g; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="WI1EGT45"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id E00277E2924;
-	Wed, 15 Jul 2026 19:15:17 +0000 (UTC)
-Received: from pdx1-sub0-mail-a240.dreamhost.com (100-103-88-67.trex-nlb.outbound.svc.cluster.local [100.103.88.67])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 67A737E2E94;
-	Wed, 15 Jul 2026 19:15:17 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Cure-Average: 02feaebe7b802e26_1784142917814_3294138721
-X-MC-Loop-Signature: 1784142917814:3699843371
-X-MC-Ingress-Time: 1784142917813
-Received: from pdx1-sub0-mail-a240.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.103.88.67 (trex/8.0.2);
-	Wed, 15 Jul 2026 19:15:17 +0000
-Received: from offworld.lan (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a240.dreamhost.com (Postfix) with ESMTPSA id 4h0m8h5QDhzymb;
-	Wed, 15 Jul 2026 12:15:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1784142917;
-	bh=X3viXdzlmBwAY52OK6zwsX7RuN1+PXNKsPekwhrlHIE=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=WI1EGT4584LQOu/OXxg4UKOLvO9DK5lZA5u/ZZoOdhQwaPqVrjJkpDvayORsStHy8
-	 PBAxZ8mDja6GhuT4JFbGOSm3XGNEStr/lKnqZ7QgEyYyhyEr4SpWrpWAdhrj2yks3z
-	 aB2/FA6H3/NGfYrDOX3SgAqBjDH1J4sJnL4J0QBpjTUqeriRmsuTUNzXl8RqJgZgLQ
-	 JvsEiPB0rAAX480rcsdhptt84VCzI66tjFbG0Y+cw9QlW3SwFnImn831G/qWXLPTBz
-	 qJLJWLDSWIhstm8KUiMdD6LhgsDYhsQvK2TJXadQpkoyUhQ4nAsX5nWDBUYbw6rVFA
-	 HD8PdApPbHeXQ==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: jic23@kernel.org,
-	will@kernel.org,
-	mark.rutland@arm.com
-Cc: harshal.t@samsung.com,
-	icheng@nvidia.com,
-	linux-cxl@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCH v4 2/3] perf/cxlpmu: Add missing CXL 4.0 events
-Date: Wed, 15 Jul 2026 12:14:53 -0700
-Message-Id: <20260715191454.459673-3-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260715191454.459673-1-dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEib2G7g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 752801F000E9;
+	Wed, 15 Jul 2026 20:07:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784146058;
+	bh=4O9RsrXMZkTT74INtHWJeLGYsnB7XL033aH/Eg1rVE0=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=lEib2G7gOcLGEfiNd3lwYAI2TbidPxTURPSJT78+hB4YOkYu6NML6QUlQAvQEISKP
+	 ndNUpEX/97iHwuefzEhlVcstNpFvUg81Wn/r7buNWE131RHelw/85/FBr2uuQlpljC
+	 2gYMREhLzlkWC/F3FYaNTJKv4GxM+ddsqHdgx+0QuiuUKI9bA8hLvC0m/ZVuwomX2Y
+	 /Vd+oH1zoxZYGy7Jy7VBx0AspjNdz9xTQNGSIqeJyx8K4y2+5zPZQB1Ytw0Smx+fft
+	 5y1DCf1jAcALNvYDh00x7OP5/95YfA2MqCGIS9EOKYiRAZVxLT70PeGXNxDnGrJAE/
+	 bjBDZvz4lSEpQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 1/3] perf/cxlpmu: Fix 64-bit write to 32-bit HDM
+ filter register
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Davidlohr Bueso" <dave@stgolabs.net>
+Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260715191454.459673-2-dave@stgolabs.net>
 References: <20260715191454.459673-1-dave@stgolabs.net>
+ <20260715191454.459673-2-dave@stgolabs.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 15 Jul 2026 20:07:37 +0000
+Message-Id: <20260715200738.752801F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Harshal Thakkar <harshal.t@samsung.com>
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
 
-Add support for CXL 4.0 events that are exposed by the CPMU hardware
-but not present in the driver. Such events are defined in Table 13-5
-of the spec.
+Pre-existing issues:
+- [High] The driver updates the counter configuration register using bitwis=
+e OR without first clearing the relevant fields, causing stale bits to accu=
+mulate from previous events.
+- [High] The CPU hotplug instance is removed after the PMU is unregistered =
+during driver teardown, causing a Use-After-Free if a CPU goes offline conc=
+urrently.
+- [High] The `cxl_pmu_get_event_idx` function fails to set the `event_idx` =
+output parameter for configurable counters, resulting in silently measuring=
+ the wrong events.
+--
 
-Signed-off-by: Harshal Thakkar <harshal.t@samsung.com>
-[davidlohr: add missing throttle and queue occupancy events]
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
- drivers/perf/cxl_pmu.c | 50 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+--- Patch [1]: [PATCH v4 1/3] perf/cxlpmu: Fix 64-bit write to 32-bit HDM f=
+ilter register ---
+commit 1a1b5ade4d63271a0649378648434d5656079fd5
+Author: Davidlohr Bueso <dave@stgolabs.net>
 
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 39b46550a510..1fc83858f653 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -77,6 +77,10 @@
- #define CXL_PMU_GID_S2M_NDR		0x0024
- #define CXL_PMU_GID_S2M_DRS		0x0025
- #define CXL_PMU_GID_DDR			0x8000
-+#define CXL_PMU_GID_QUEUE_OCC           0x8001
-+#define CXL_PMU_GID_QUEUE_RESID         0x8002
-+#define CXL_PMU_GID_RETRY_EVENTS        0x8003
-+#define CXL_PMU_GID_THROTTLE            0x8004
- 
- static int cxl_pmu_cpuhp_state_num;
- 
-@@ -385,13 +389,23 @@ static struct attribute *cxl_pmu_event_attrs[] = {
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memwrfwd,		CXL_PMU_GID_M2S_REQ, BIT(4)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrdtee,		CXL_PMU_GID_M2S_REQ, BIT(5)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrddatatee,		CXL_PMU_GID_M2S_REQ, BIT(6)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminvtee,               CXL_PMU_GID_M2S_REQ, BIT(7)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memspecrd,		CXL_PMU_GID_M2S_REQ, BIT(8)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminvnt,		CXL_PMU_GID_M2S_REQ, BIT(9)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memcleanevict,		CXL_PMU_GID_M2S_REQ, BIT(10)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminvptee,		CXL_PMU_GID_M2S_REQ, BIT(11)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memspecrdtee,		CXL_PMU_GID_M2S_REQ, BIT(12)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_teupdate,		CXL_PMU_GID_M2S_REQ, BIT(13)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memclnevcttee,		CXL_PMU_GID_M2S_REQ, BIT(14)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memclnevctu,		CXL_PMU_GID_M2S_REQ, BIT(15)),
- 	/* CXL rev 3.0 Table 3-35 M2S RwD Memory Opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memwr,			CXL_PMU_GID_M2S_RWD, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memwrptl,		CXL_PMU_GID_M2S_RWD, BIT(2)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_biconflict,		CXL_PMU_GID_M2S_RWD, BIT(4)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memrdfill,		CXL_PMU_GID_M2S_RWD, BIT(5)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memwrtee,		CXL_PMU_GID_M2S_RWD, BIT(9)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memwrptltee,		CXL_PMU_GID_M2S_RWD, BIT(10)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memrdfilltee,		CXL_PMU_GID_M2S_RWD, BIT(13)),
- 	/* CXL rev 3.0 Table 3-38 M2S BIRsp Memory Opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_birsp_i,			CXL_PMU_GID_M2S_BIRSP, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_birsp_s,			CXL_PMU_GID_M2S_BIRSP, BIT(1)),
-@@ -406,15 +420,25 @@ static struct attribute *cxl_pmu_event_attrs[] = {
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblk,		CXL_PMU_GID_S2M_BISNP, BIT(4)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datblk,		CXL_PMU_GID_S2M_BISNP, BIT(5)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblk,		CXL_PMU_GID_S2M_BISNP, BIT(6)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curtee,		CXL_PMU_GID_S2M_BISNP, BIT(8)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datatee,		CXL_PMU_GID_S2M_BISNP, BIT(9)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invtee,		CXL_PMU_GID_S2M_BISNP, BIT(10)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblktee,		CXL_PMU_GID_S2M_BISNP, BIT(12)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datablktee,		CXL_PMU_GID_S2M_BISNP, BIT(13)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblktee,		CXL_PMU_GID_S2M_BISNP, BIT(14)),
- 	/* CXL rev 3.1 Table 3-50 S2M NDR Opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmp,			CXL_PMU_GID_S2M_NDR, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmps,			CXL_PMU_GID_S2M_NDR, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpe,			CXL_PMU_GID_S2M_NDR, BIT(2)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpm,			CXL_PMU_GID_S2M_NDR, BIT(3)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,		CXL_PMU_GID_S2M_NDR, BIT(4)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmptee,			CXL_PMU_GID_S2M_NDR, BIT(5)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmptee_s,		CXL_PMU_GID_S2M_NDR, BIT(6)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmptee_e,		CXL_PMU_GID_S2M_NDR, BIT(7)),
- 	/* CXL rev 3.0 Table 3-46 S2M DRS opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdata,			CXL_PMU_GID_S2M_DRS, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdatanxm,		CXL_PMU_GID_S2M_DRS, BIT(1)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdatatee,		CXL_PMU_GID_S2M_DRS, BIT(2)),
- 	/* CXL rev 3.0 Table 13-5 directly lists these */
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_act,				CXL_PMU_GID_DDR, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_pre,				CXL_PMU_GID_DDR, BIT(1)),
-@@ -423,6 +447,32 @@ static struct attribute *cxl_pmu_event_attrs[] = {
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_refresh,			CXL_PMU_GID_DDR, BIT(4)),
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_selfrefreshent,		CXL_PMU_GID_DDR, BIT(5)),
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_rfm,				CXL_PMU_GID_DDR, BIT(6)),
-+	/* CXL 4.0 Table 13-5 DDR add-on events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_cas_rd_ap,			CXL_PMU_GID_DDR, BIT(7)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_cas_wr_ap,			CXL_PMU_GID_DDR, BIT(8)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_refresh_all_banks,		CXL_PMU_GID_DDR, BIT(9)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_refresh_same_bank,		CXL_PMU_GID_DDR, BIT(10)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_pwrdn_entry,			CXL_PMU_GID_DDR, BIT(11)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_pwrdn_exit,			CXL_PMU_GID_DDR, BIT(12)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_rd_wr_ddr_bus_switching,	CXL_PMU_GID_DDR, BIT(13)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_incoming_rd_req,		CXL_PMU_GID_DDR, BIT(14)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_incoming_wr_req,		CXL_PMU_GID_DDR, BIT(15)),
-+	/* CXL 4.0 Table 13-5 QUEUE OCCUPANCY events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(rd_queue_occ,			CXL_PMU_GID_QUEUE_OCC, BIT(0)),
-+	CXL_PMU_EVENT_CXL_ATTR(wr_queue_occ,			CXL_PMU_GID_QUEUE_OCC, BIT(1)),
-+	CXL_PMU_EVENT_CXL_ATTR(rd_wr_merged_queue_occ,		CXL_PMU_GID_QUEUE_OCC, BIT(2)),
-+	CXL_PMU_EVENT_CXL_ATTR(pwrdn_event,			CXL_PMU_GID_QUEUE_OCC, BIT(3)),
-+	/* CXL 4.0 Table 13-5 QUEUE RESIDENCY events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(mc_rd_resid_cnt,			CXL_PMU_GID_QUEUE_RESID, BIT(0)),
-+	CXL_PMU_EVENT_CXL_ATTR(mc_wr_resid_cnt,			CXL_PMU_GID_QUEUE_RESID, BIT(1)),
-+	/* CXL 4.0 Table 13-5 RETRY events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(retry_event_trig_by_rd_crc,      CXL_PMU_GID_RETRY_EVENTS, BIT(0)),
-+	CXL_PMU_EVENT_CXL_ATTR(retry_event_trig_by_wr_crc,      CXL_PMU_GID_RETRY_EVENTS, BIT(1)),
-+	CXL_PMU_EVENT_CXL_ATTR(retry_event_trig_by_ca_parity,   CXL_PMU_GID_RETRY_EVENTS, BIT(2)),
-+	CXL_PMU_EVENT_CXL_ATTR(retry_event_trig_by_ecc,         CXL_PMU_GID_RETRY_EVENTS, BIT(3)),
-+	/* CXL 4.0 Table 13-5 THROTTLE events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(thermal_throttle_event,		CXL_PMU_GID_THROTTLE, BIT(0)),
-+	CXL_PMU_EVENT_CXL_ATTR(power_throttle_event,		CXL_PMU_GID_THROTTLE, BIT(1)),
- 	NULL
- };
- 
--- 
-2.39.5
+perf/cxlpmu: Fix 64-bit write to 32-bit HDM filter register
 
+The HDM decoder filter configuration register is 32 bits wide, but the
+driver programs it with a 64-bit writeq(). The filter value never
+exceeds 32 bits, so the upper half of the write is always zero and
+lands in the adjacent Filter ID 1 (Channel/Rank/Bank) configuration
+register at offset+4.
+
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index 68a54d97d2a8a..39b46550a5109 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -635,7 +635,7 @@ static void cxl_pmu_event_start(struct perf_event *ev=
+ent, int flags)
+>  			cfg =3D cxl_pmu_config2_get_hdm_decoder(event);
+>  		else
+>  			cfg =3D GENMASK(31, 0); /* No filtering if 0xFFFF_FFFF */
+> -		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
+> +		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
+>  	}
+> =20
+>  	cfg =3D readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
+>  	cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK,
+>  			  hwc->event_base);
+>  	cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENTS_MSK,
+>  			  cxl_pmu_config_get_mask(event));
+
+[Severity: High]
+This is a pre-existing issue, but does this bitwise OR accumulate stale bits
+from previous events?
+
+When setting CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK and
+CXL_PMU_COUNTER_CFG_EVENTS_MSK, the fields are not cleared first. If a new
+event is allocated to a previously used counter, it seems it will inherit
+the old event's bits, resulting in a bitwise OR of both events.
+
+Should the relevant masks be cleared before applying the new fields to prev=
+ent
+incorrect statistics?
+
+
+While reviewing this, I also noticed a few other pre-existing issues in
+this file that might need addressing:
+
+> drivers/perf/cxl_pmu.c:cxl_pmu_get_event_idx() {
+> [ ... ]
+> 		if (test_bit(i, info->conf_counter_bm) &&
+> 		    test_bit(i, info->used_counter_bm)) {
+> 			*counter_idx =3D i;
+> 			return 0;
+> 		}
+> [ ... ]
+> }
+
+[Severity: High]
+This isn't a bug introduced by this patch, but are we missing an assignment
+to the event_idx output parameter here?
+
+When a configurable counter is matched, *counter_idx is set, but it
+appears *event_idx is omitted.
+
+Since the caller initializes event_idx to 0, does this mean the counter
+will always be programmed to count the event group at index 0, silently
+ignoring the requested event group?
+
+
+> drivers/perf/cxl_pmu.c:cxl_pmu_probe() {
+> [ ... ]
+> 	rc =3D cpuhp_state_add_instance(cxl_pmu_cpuhp_state_num, &info->node);
+> 	if (rc)
+> 		return rc;
+>=20
+> 	rc =3D devm_add_action_or_reset(dev, cxl_pmu_cpuhp_remove, info);
+> 	if (rc)
+> 		return rc;
+>=20
+> 	rc =3D perf_pmu_register(&info->pmu, info->pmu.name, -1);
+> [ ... ]
+> }
+
+[Severity: High]
+This is a pre-existing issue, but does the registration order here create a
+use-after-free race during teardown?
+
+The devm framework executes teardown actions in last-in first-out order.
+Because the CPU hotplug instance is registered before the PMU, the PMU is
+unregistered first during teardown.
+
+When perf_pmu_unregister() frees the PMU's per-CPU context, if a CPU
+hotplug offline event occurs concurrently:
+
+cxl_pmu_offline_cpu()
+   perf_pmu_migrate_context()
+
+Could this access the freed per-CPU context since the hotplug instance
+has not been removed yet?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260715191454.4596=
+73-1-dave@stgolabs.net?part=3D1
