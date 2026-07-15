@@ -1,132 +1,98 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012039.outbound.protection.outlook.com [40.107.209.39])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BDC438474
-	for <linux-cxl@vger.kernel.org>; Wed, 15 Jul 2026 12:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.39
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784118244; cv=fail; b=QTGhorDvJ45ncVLN7rLH2NHH41/bn7KYaHXB9o6rXWJLv5eYfEiRlU7zAnA3yEBSyAgTMwwVFX0K3P1HDLifKt7GZ8eoKSVwd5frxYCSq2BT517j94Gjq31rAgb5egb0Sy1MMfGez0x1/vCsgpOCLOOWReUESdCT/ERPP6vzdnY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784118244; c=relaxed/simple;
-	bh=ABH51ypdAPPdoip9BH0RRfEih9kgF84hcmudJTnh1Qs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=gdk6SFuD6MML2EW4B49WhwtmHUoc9WSLY7oG6nWQEEImmZGxfVunV9DF0JJ8ReXU5+hqNggBTMQB0di5nl8zqyIvByBCsJydpwy4aLrXJy99XBpEyykQMxeNxCEQev3S+xFGrCTdySnkDG+743Q1S3Vi5ZD6cRnFOzmb8IPVBFU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MD3bGzTS; arc=fail smtp.client-ip=40.107.209.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD3E23507B;
+	Wed, 15 Jul 2026 13:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784122413; cv=none; b=QVs6tDkoCAvSOdW+2klEcyDXwIHI4TYfFvxLmvVQH97V4dj1urx8do3jUn3G1GJVkabvDHtgcHonFzKJDDgFEdy+CGqeaS0/TcSktdHNGtl26O71LUG0kyY1zuUP5vFuAqyMeEJgAWfvL51wVU9LOz9jkEFofq8BP/44EULOVac=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784122413; c=relaxed/simple;
+	bh=yhK+gWds0kqmJMK8oYokhqCx2haI6WBmsi0ir4zS+eM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fTCwi6lbZSQC3Ul0XpbdjZ3Y/6Slh2P5U5Wnw2QwZ1zVceuKQ0cH+C+nP10cjp/5ENuZm9wXNks6OEXpdRi9CgxSTbNf68GPYrcbLGqUZ2ZbtPQL+MtmyKhRAktU3RktKOK3ezAFXPG2k/WTJ4RwSyEPRhiWXRq32xR00x3jKGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=UkUElBTc; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MD3bGzTS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=huIdiB+hRaOK5YtGYKigEHDmGln8XZFEYJF+rflz3u96Ziu9QtgnHmTX9afN7Of6eJMSZEfWxu2GOWJGu5Aka+Paw7oOcxeLXM18uRR+DQWUsvUAxfz4sy7Z5XU+11GpPr3iMUUVdRLQ6x3vHs4Coj5nGAFiklhNFLcn3PWgf9zf0RQdzcZV8Ctml1Fo1QqbLqDlNTdkeDqSeLDGz0tOx9+fJ5xvGjQ/+LjtAAdmn5UyVn3Yo5JCIRGet7H8KFyBlwxBsuMNw/A2PGUS27DsyirtUWXlhM78XS2GSTSojJ5p+F6B59Kjdj0+7rcrf0KjNHLFPdXfbPqcUDn8RgeYdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vl/h0cZ9aSQNFcafpx9Cgjv07c8yYNJ2RRkh+BRh6+Y=;
- b=w+jC9c9uCfBf9gMdRzR6PuStFMTA96wiZ3nRwVPKeF81WoOm6WPzLiTbvVUeenTJbmWizyuDWlSpQBQiCOpba0FIsUOzhIGsncnb5ocsj2eKkFOUVApeTgxo+aFIf/qWk2xE8fxoDhXEeBg28FU+d2kXcOBIofO6Age4RtgkX73PbvU/zC+UQyh8koVJdYWClfrmVRWO4GAUisFzldZyWOUj0LVFSE7cdsWsC/kHS8WAR38w3kC6wX/7foF68xDt4vzzDwuzPhS7SdPNoMEaa5nr8DeL0nkFnefVYk2SMAGJPjK0cNjdLKqQETnH6VQCcb80mCKz3dyhwI2ZSGmdyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vl/h0cZ9aSQNFcafpx9Cgjv07c8yYNJ2RRkh+BRh6+Y=;
- b=MD3bGzTSb0V9cGyhJwhglbHogEUuIQ/XTAflNJXyfHcIGnP7v4d/9N5mCTNHlYpztDpGR5ZWQlYhAwx975mEhWaL+4u4FvlH3VHZ2UyNoUwtER1A1XvruXLLBFU36nnnKm28flR018z+jBVIRfyVhZVDJQ0kiQXK+a33N4okThY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16) by
- CYYPR12MB8731.namprd12.prod.outlook.com (2603:10b6:930:ba::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.223.11; Wed, 15 Jul 2026 12:23:57 +0000
-Received: from DM4PR12MB6085.namprd12.prod.outlook.com
- ([fe80::9d84:7eb1:a785:bda1]) by DM4PR12MB6085.namprd12.prod.outlook.com
- ([fe80::9d84:7eb1:a785:bda1%6]) with mapi id 15.21.0223.008; Wed, 15 Jul 2026
- 12:23:57 +0000
-Date: Wed, 15 Jul 2026 14:23:52 +0200
-From: Robert Richter <rrichter@amd.com>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>, Dan Williams <djbw@kernel.org>,
-	Li Ming <ming.li@zohomail.com>, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] cxl: Support mixed-granularity region interleaves
-Message-ID: <ald72KDU-seE0w6j@rric.localdomain>
-References: <cover.1781199122.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1781199122.git.alison.schofield@intel.com>
-X-ClientProxiedBy: CPCP307CA0007.DNKP307.PROD.OUTLOOK.COM (2603:10a6:380::7)
- To DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="UkUElBTc"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1784122404; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=JCr+B/B1w1jArutjB0fuPO9lz1kJ/HqQv993yIGFPyE=;
+	b=UkUElBTcTugk4OcYWdQ+ZxD5zVrSQ8dmRO6wTvR8NGtAKvg6qFSxp5N0MFOsi09xKg85cinwFtm7NCMgfwbKX+U5nyBTDLEIzMTa8PHlDLzexPlZX96pODEUqhpw5fZoGzI875Oi31qbBG1BQR5SzZTlkB8J5L+x/o1otBNTHb4=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R561e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0X79XPtG_1784122400;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X79XPtG_1784122400 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 15 Jul 2026 21:33:23 +0800
+From: Chen Pei <cp0613@linux.alibaba.com>
+To: dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	bhelgaas@google.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	guoren@kernel.org,
+	sashiko-reviews@lists.linux.dev
+Cc: linux-pci@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ACPI: PCI: Clear driver_data on all error paths in acpi_pci_root_add()
+Date: Wed, 15 Jul 2026 21:33:10 +0800
+Message-ID: <20260715133020.3282712-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260707122549.C01DC1F00A3A@smtp.kernel.org>
+References: <20260707121258.11640-1-cp0613@linux.alibaba.com> <20260707122549.C01DC1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6085:EE_|CYYPR12MB8731:EE_
-X-MS-Office365-Filtering-Correlation-Id: 171a5e76-f049-493c-bfa4-08dee26bf16b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|23010399003|56012099006|11063799006|22082099003|18002099003|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	Rxcx28VqKBLNML/VcruvbBe1f2qykaFASGkGHGfrgkNCAyepmPCd1shr2L5ng0ZJIm0NAcVU8ob8utjdv0z6wB6BINt4VqiwSpcDEbYvuDGsIIZS2WeBorAd6XUer4pn2HkrieZsOSYVfxv2VKricph1ynsZMWjxRfyphKnmm3gri3H26fsysNfVRQzFeB11XTTU3hnaoMxWPe7wMJiw3WePiCYeBbzK0ptM+Ch6GbLowHlxssh7E0B4ezM0peIo3aixwf5wDBm2jMLYagyaMpQ+OVrxutLrbQ8JIPB4hbAuT5S/FF4xGEZmpuYsAAMoGimvvM2oCTwulJzp5eAe+Rqd1D7hwsBzbaa8bxyb3+cmj8lOTrjv/aRFdj4Sb+nXoYf267w3Ef6hud5I2of00aee4fWsPi6qP+J4cNtn47NoDAF6kuAqFJa74aer/45pfRjEcYhlzLqVTFceS3phoN6RpQOwsa8yX+BHOIh627mo9+UhdOyhbg4FBtg2GSPSj4fSNCBRkaDAvCbbzCqbYhIUOoYPdaaBCPuR2N4pV3ogrDVNwCCrRz5n8yRJ931jVqCBVwevMWpcvcvs+aGciijTzdFUUjQfWAAqpzl7BHd7ylkdfdsdjrgBk2CUVS5obPSo+nluOxvdhnglRe9fMb0qyQKTtn72I1d+DmWR5GA=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6085.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(23010399003)(56012099006)(11063799006)(22082099003)(18002099003)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?E/sP90L63MiR6YDOffCONly8anHEjsK7vXMjbTUKSocs3s49jXYHFWOX8A7o?=
- =?us-ascii?Q?f8HpqWfUQrM/nbFGoNMVhgvYOahxUF8IGCm9QBvuqxUDyOlT/gmP6MN7+p3M?=
- =?us-ascii?Q?txFA1tnBELBcI8dfUc+wqyUKgtmaOl793fy6zzpB32vaQck7qaOk3d5hn5c1?=
- =?us-ascii?Q?IAB8kXpAtbBuYwn9uBXSoDUoqsQkrJ8xu0JtjY1EruuvSFSC0b+dRP1VHjob?=
- =?us-ascii?Q?ER7AKnd8JM0c1HrwxMN8S9fky385VxG04G7iwLvKEm7yB6Y82jXoVl8LG/13?=
- =?us-ascii?Q?ijUotKTJ3iuasvMaHEOo1CaFnYZPGda8pZCVkZwrR9LkllpP+uKLlg5d5/o+?=
- =?us-ascii?Q?dUFpAC+AsaSX+q4wI/mSmapUZgHIurWb/saQkkmDUSzRYcr7pIL9hC042oHO?=
- =?us-ascii?Q?07s+dkzXhn1MnCK2ZjKhEoqfqElwgYgqy+TkaxlefY+MNaq+xUaajEkC5iG+?=
- =?us-ascii?Q?MI11ZYswqdpIJxxMM6BzDqcLyQ+d3iyKrHboERuqLazXtP4Nj6OJH1PxxgNH?=
- =?us-ascii?Q?upossFDDcHJYK/VGXz+ozZRKTHVZAJJFO67Z/a46xwz03tjs4wvh0tL3EPHt?=
- =?us-ascii?Q?ohjNAg7zXpK4+J0WJ9rLLFwt+3UutZ028LOKLL6iYhTj//eaGsdmaGEwKqjZ?=
- =?us-ascii?Q?9dgIoUPrrKYxwlm+x5SLonkjQvk3IfxB77mnfMQsUHNCueHKPqaKiiBILRJr?=
- =?us-ascii?Q?iIts3FJZobx6NNLKxdo0fUeM5gbu266JkTmL24cKh2agMSzaeJ1IN3RBiytJ?=
- =?us-ascii?Q?ZwYG+iB8H+UFzlgbafTtdRuBtdtLc9UB8Z261iQmGBSVXrYQCFavrpl7Q4w5?=
- =?us-ascii?Q?cpqTy/IdZPeDqJqrJE11OKxkRtiyaNpEz46lktNLB4W/Nd+m3Lz+lyXzXGzU?=
- =?us-ascii?Q?vr85GDQgjCoh83J8X7wd7MLXEqupZDonyvv/5PE4lSzz8HLYQ82fbTvG5hJ4?=
- =?us-ascii?Q?XvM1b59HXZqghevzsgfDX9JaWCzQMdWsn/2YQ+Tt9OoktmhExyiKxKwLQmWD?=
- =?us-ascii?Q?md4DfUHZr8RQyPm0yRaAtaYvUtCTAqc9nhS/dAytYalYXWEsuvpWN44SjS8b?=
- =?us-ascii?Q?K3b5H2JKT3A/g5kAHoEsFOq386dXbOiPwucKFci+AH2EkFsscFBTmQtyAgMD?=
- =?us-ascii?Q?UVsngojKNnkYgbP0Rou7ONvx58bpCCoKiZ+9ZW9dpaMPMm1KQKYwmHKuhgwf?=
- =?us-ascii?Q?6B/gRn2JEu+N9+kbRFqC7z5gfpq9+Z2S2ElZr67QGnMWZWX6yItu+AJdj9oZ?=
- =?us-ascii?Q?ef535gKgfdburbEzoEwS1ZPap9lB9BNypY/2w72cOoPWsxCkJSOMw/8On0mt?=
- =?us-ascii?Q?dSOOteqWjBxVA5mcElzisQ2SYCuWT+DgxopCj0K2TY8K2CGFNnVdhUGn4e15?=
- =?us-ascii?Q?mVTlFzwr4783Ff7ZgyBWWpUTxGTtg9tc2uy7X/PJYzL1m8AY/FNb1PLZlylT?=
- =?us-ascii?Q?96zLJgxr9fdAciEvy9RFspMR5jIk6t5mTNEuVUoYdwHKXNnveNoTWQhYJiAl?=
- =?us-ascii?Q?aKEMNUlfTkvEAwoTXjwoi8iSslF2f0kow1NTbszKmVQ0JSASQw1NGr/RFl1s?=
- =?us-ascii?Q?me0GlW/g6Nr8BY3iSi9jiSWUPYsZZSWUbq2xBqgR0P/HNF0KStr4ssEV2etN?=
- =?us-ascii?Q?7a4nk5wr9u4Z7druOTMZt3nDPhj3wS6E8urWHpgf+VK9AXPuSE3qVn9YftKJ?=
- =?us-ascii?Q?9uy8YUViV96nSogiK/X0+H7aZH7PuAch7+hzaNaZa4dJvx/A?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 171a5e76-f049-493c-bfa4-08dee26bf16b
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6085.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2026 12:23:57.4296
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ylJubeKDdAC4HPRHYDK7hylmtHfjxW9zDjS6slxzbm3MWjZXurRFhKHUesaiharT7fUcl4JbiHW9ZVjveyjPwQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8731
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 11.06.26 10:47:24, Alison Schofield wrote:
-> Changes in v2:
-> - Patch 1,2: Defer the unused selector var store to keep P1 bisectable (Sashiko)
-> - Patch 1: Make divide by 3 in get_selctor() work on 32-bit builds) (lkp)
-> - Patch 4: Use local vars in cxl_region_attach() for readability (DaveJ)
-> - Patch 5: Add NULL checks on unused mock arrays (Sashiko)
-> - Resolved errant err_rch unwind with rc7 merge (DaveJ)
-> - Rebase onto 7.1-rc7
-> - Update commit logs in 1,2,5 to align w changes in v2 
-
-For the series:
-
-Tested-by: Robert Richter <rrichter@amd.com>
+Thanks for the review.=0D
+=0D
+> Pre-existing issues:=0D
+> - [High] The acpi_pci_root_remove() function frees the acpi_pci_root=0D
+>   object but fails to clear device->driver_data, leaving a dangling=0D
+>   pointer.=0D
+=0D
+Agreed. acpi_pci_root_remove() calls kfree(root) without resetting=0D
+device->driver_data, which leaves exactly the same dangling pointer=0D
+this patch removes from the add() error paths. I'll fix it in v2 by=0D
+also clearing device->driver_data in acpi_pci_root_remove(), so the=0D
+add and remove paths leave driver_data consistent.=0D
+=0D
+> - [High] Lockless access to `device->driver_data` causes a TOCTOU=0D
+>   Use-After-Free race during hot-add failure and hot-remove.=0D
+=0D
+I don't think this is reachable, so I'll leave the locking model=0D
+unchanged:=0D
+=0D
+- driver_data is published early (device->driver_data =3D root), but the=0D
+  PCI hierarchy below this root bridge is not created until=0D
+  pci_acpi_scan_root() and pci_bus_add_devices(), both of which run=0D
+  only on the success path, after the dmar_device_add() error goto.=0D
+  During the error window there are no child PCI devices yet, so an AER=0D
+  or CXL consumer under this bridge has no way to obtain the handle and=0D
+  call acpi_pci_find_root() against a half-initialized root.=0D
+=0D
+- The early publish of driver_data is pre-existing; this patch does not=0D
+  change it, it only makes the error-path cleanup consistent.=0D
+=0D
+- ACPI .add and .remove are serialized by acpi_scan_lock, so add cannot=0D
+  race remove.=0D
+=0D
+If there is a concrete caller that can reach acpi_pci_find_root() for=0D
+this handle during the add-failure window, I'm happy to revisit. Adding=0D
+RCU or locking to the find_root() fast path otherwise seems unwarranted=0D
+for this fix.=0D
+=0D
+I'll send a v2 with the acpi_pci_root_remove() fix.=0D
+=0D
+Thanks,=0D
+Pei=0D
+=0D
+=0D
