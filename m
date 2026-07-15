@@ -1,373 +1,272 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CB2143F08E
-	for <linux-cxl@vger.kernel.org>; Wed, 15 Jul 2026 21:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784151112; cv=none; b=NEfagC3kazGCRalQqFU5gt1W/mVXs0joqK21yuQoT4MgSmyOV/gDQQDdcazuZeiJ5AjGPGwhCSV59CaVGkMrr3cQTaphvujm2UOq4ngE6SKBYcyp7nyxBJd+w0q7k5pqAMM7QcxN1Nk/Z1mMlzKcEKXoTOJcJWjcrJ6zNHxGI/I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784151112; c=relaxed/simple;
-	bh=7QTPVpJJhfGFyRYBrsLIJeplcw7EovnGQvuPkXS/zD0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a7odDbeinSuMKu5te/zkXcgYzS9mXZAWs8JNYNWywha0n7QcG/RAIOuPDqo6PtmZnS23jpoa/jax7BTqVd5zLAS3JnvLPIJBjSiFwPRrexhJgm29vAijxI3Mh2yv1WUtmOnvCBR24cxdPweljzpbl6FmUG/jju9y7jZskfVxPEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c08dUsR0; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A563264D0
+	for <linux-cxl@vger.kernel.org>; Wed, 15 Jul 2026 21:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784151624; cv=fail; b=CyiAgbKSPWxSvOEgk5PuZVbjc/jXCMMmY0qksDNpMxH9k4SW7mi0Rp2lDS0CEVWgyONCyq6OhuqVXTMzh2hTb9IwC5UJNuMHvBl4cgDGlIzODn25SyBtLKiEnLgnaZrFyFfzY7Og3GVtMv4DjheNoJmqlg/RSELlmtEK0UFjfmo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784151624; c=relaxed/simple;
+	bh=CKbytpwO9DAcVlVMeCeXl24FqF67x9bs94BEmacNMSg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=WCDfHuD/dMpWq1KrHWtfevzoZzu9yU3mmmQSFTfLci3DD7Fh0J/1ZxLzktfxjHz0y1iK+ZNW9m86uo/NjHJWgimy+trOgvOjmgYPLMTR8HY0JqhWIAhqq5LJGRdSfGsZuqN7DTvqjB68RYN4ihe7I9Zunxf3Clu06klbCgFvopY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LeQqFz1U; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c08dUsR0"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-caf707e3a70so816333a12.1
-        for <linux-cxl@vger.kernel.org>; Wed, 15 Jul 2026 14:31:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784151110; x=1784755910; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=RkllprxknGgtsAUtKcMYlWZnTeNJpDATGUEaLC+fkyk=;
-        b=c08dUsR0ZejdpXGtyWRLerPz/jB1wY9Af+4mJIpV1H5kF5SJYmV99pcI8A6lnGViz8
-         AttApWO6SxoeUWdQXrmhtQIbe1XOfCYemVLhDzZCVlsiYRSc58iWDdPIpz/ITIqXpssZ
-         Yvm7jsjBIpcb49GQfnlEkP9zB/a8LW52mFvfRklV7oXUVduRLilCBffKBAibW5t6RNCz
-         6Xb/+Pd6zBhn0ilW0eIgHGVVRzgAEs/ZGEDqCad02uRUUI1j8OKvE4GYw6X6uev+QtyX
-         id8Nmuohnh5qO1PcNclx2zsHZFSudcgSF4zWA0nAMNDZihO3s47D12zotGkPcraqyrfB
-         SpGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784151111; x=1784755911;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=RkllprxknGgtsAUtKcMYlWZnTeNJpDATGUEaLC+fkyk=;
-        b=N+l7OIBLrSC8xzQFTw7ISSe42d7KH3p8cfWY0GpNmu+D3tlWk+b7cMdMgkuopAIeVv
-         QE+lyowtyEN0KAOPyE5jYMjC8z9X8WaN09vNS/MdGs/Vrali4FYaKOzrs6aBuIqwUOt2
-         c71x1iZNZ06j1GlndQC8Ss/pHz5nOkLUm7Jj34onyM9kpE8H0YfBH5CczP3DGWKdQtd5
-         9HrHc0rLkxwvI2gTPWlqbC8UQIeUzfa+I4Px0lco4ROQYcRRxPQQ83Ez2iFXrVJCyWJg
-         PMqmRYF2jMSnwTtdEkO/W8FVeYar5rcC3Lv6bk4IUngRrtQzaxeMHo4wiNsdUZ7nYePM
-         bwKg==
-X-Forwarded-Encrypted: i=1; AHgh+RqWrfABvvr+10RrUjKizDC9oUbk8PHx2Jk9zKd6gP/2lxKei9jK33I5kxMVk1NRl/v2PJiJc3FYLqo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5JilvyoZIZJMhOKmPz83Y5g3GlHKZO/yRHaQaTywa/hXnhmlp
-	V/YTOeXxBGi2EXkRNP28/Te0gFeavJT48YPTF6lDCzFEYtfyabkSQb3a
-X-Gm-Gg: AfdE7cnQGJXRxEVk0ri1lyyMGSskP77Ecrttf+cYG+53UJfCvY3fbo0Rg14tc1DW065
-	o5Xw3giZ4u7AI+pp/Tc6jHF9gjZ6Jo+x1DiQOnxB/ZQM7pq+g1OnCwUvViQ3XST6PvM+Rj/VGHn
-	tllPm0IWkDYG3cWDZvshtN9+PSqI5UFOCewzpab/AVrdFerCBexUSB72xcq0SwiTzc583qK85Kf
-	XhqZdXIbSN0A7eZsG7tYcSwljla0T84hDXcGZ58ZBFoT6/Cu96KFX/46BWdkS/l5yLsIgOWGLHX
-	qf32ce4Lzh3MjaU4l8H3TlD8fxH4e+E67J2+RnV7I+gLeGJH1c9Fn1pDTjJ2gYaB4LN1nhEs0KQ
-	D8sQ1ewx/srCSMcs6CUx6Zpc3RPnuuv0Cul9uuwVBtCtzGHKFezy1NpYltVWYxf5yF6nyVBE50v
-	jMWSgkTFtNnM74kQHRwy/mYj0oTg/JUCsmM28T2CXXg6THMACKpTWpvkww8w==
-X-Received: by 2002:a05:6a20:c98b:b0:3b4:731e:6fad with SMTP id adf61e73a8af0-3c384aeb33dmr1101447637.16.1784151110450;
-        Wed, 15 Jul 2026 14:31:50 -0700 (PDT)
-Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3140e4fc28dsm4621118eec.2.2026.07.15.14.31.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jul 2026 14:31:50 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Wed, 15 Jul 2026 14:31:49 -0700
-To: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-	Dan Williams <djbw@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	John Groves <John@groves.net>, Gregory Price <gourry@gourry.net>
-Subject: Re: [PATCH v11 10/31] cxl/mem: Configure dynamic capacity interrupts
-Message-ID: <alf8RRJ3tcRWvBIR@AnisaLaptop.localdomain>
-References: <20260625112638.550691-1-anisa.su@samsung.com>
- <20260625112638.550691-11-anisa.su@samsung.com>
- <6d4b2c0e-5c05-4e92-9c9d-dba8cabe849b@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LeQqFz1U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784151621; x=1815687621;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=CKbytpwO9DAcVlVMeCeXl24FqF67x9bs94BEmacNMSg=;
+  b=LeQqFz1UuRjzW120bV9b9pM5r6qpPLivWtob/NIOauPvKquGaIgQtsd8
+   Ff6ZNY4RBsdyL/9VLaI45i2ui2OLBGfiKLdtnR2+i+vvsxdsfAdCUKrx3
+   3xDr14SDs/jmFsdyQT+65cYyuXDg5cIIm9IXk/RF3jGY9ehpEtBYpNekE
+   YzsRh7QTauop+rD5rABAcrHR3rmWD0IsQT1DkvioavlZMHP+BFW6e02/L
+   iXMd1Bj/rAGaC0Pr2b8v3DZ+mJB3zf9Rgmcf/A6xQ1xXAGMhOl+7J7UQC
+   ekqPWOX6e4zoFZ/5xTiksVCRur9BQAsA+VCSMDSxg9n2RY6rUGAZr9NS4
+   g==;
+X-CSE-ConnectionGUID: OTZsDhBRQ5KbC2fybi04Jw==
+X-CSE-MsgGUID: IiDP5VXuQk6FMElJYt7qzg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="96319695"
+X-IronPort-AV: E=Sophos;i="6.25,166,1779174000"; 
+   d="scan'208";a="96319695"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2026 14:40:20 -0700
+X-CSE-ConnectionGUID: I5MOdqtqTI6XNxoV9nYHwA==
+X-CSE-MsgGUID: 8iNFhKy/TMqZoXRITy95VQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,166,1779174000"; 
+   d="scan'208";a="294528547"
+Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2026 14:40:20 -0700
+Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43; Wed, 15 Jul 2026 14:40:18 -0700
+Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
+ FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43 via Frontend Transport; Wed, 15 Jul 2026 14:40:18 -0700
+Received: from BL0PR03CU003.outbound.protection.outlook.com (52.101.53.26) by
+ edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43; Wed, 15 Jul 2026 14:40:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bfa5Gxq/z3D4DKkgEhpFRGDIwkoxVgqzMirW9lsku7PhOSgpgnUvYS+nLnVyr5gS6GjCx26wyk/IOoNo+sK/PcWOiLpPLKprf1xlzY+jLdsfm1any59YuxQQMv2sU6IwL03D+LvhMVhykzTtHIo6FVHGDlBZ8+ABq9scMsZl4yysw9VjkqHyhjd6UUXczj0q2QeLIlYBF8BDI8MthIqP/1XGIHatWZurlNHLoGb7cWbshSGrCGQ5IJUVe85VHNDQHk6W+sppNw2HrHC7ZBN84FK98siamFZR/tvUOhb1gmooTup2J9R9NqISJ/HmC3uYa8ZovUfCZpGCvNGlD8073Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fFU+3QXWGIbhBypNKXFh19y/txlZpxhrEFhztL++/D8=;
+ b=D2WveRtWBf1rWVhAEtdcjWcFLNJk4ZBq5WMJF9nDOFEgkuZhj+WxjthXyD8rl+jcm2vXvNfPmkeBId0eh6VnBM2iuTOktuAwznVjybVVAIELvAzlP71GKfWl7WdsI2f7cfGTf89PvB6j5Rmx8WHRpoNrm84h6sA24VTf0Eh1DcIZ6eEmr5CQuGL/xn/TXLljjNbOKfTQt+z/mJWZlSbc6ECQE0aGAHhzgw73iixn3rfovNZFkncl4GSMTJIYDVT5xD2rpgdBfZmgmpvvHZ4yCN6YROZ7RJKetg3nm5Tkg4qBgk15DL8TnAwL3FBVfBFiq+p0yQaLWqKB3v3dKDvlAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by CH3PR11MB8750.namprd11.prod.outlook.com (2603:10b6:610:1c7::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.11; Wed, 15 Jul
+ 2026 21:40:16 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891%4]) with mapi id 15.21.0223.008; Wed, 15 Jul 2026
+ 21:40:16 +0000
+Date: Wed, 15 Jul 2026 14:40:13 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: <sashiko-reviews@lists.linux.dev>
+CC: <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH 1/3] cxl/hdm: Reject switch decoder interleave ways that
+ overflow targets
+Message-ID: <alf-PfxF1-JkbZoW@aschofie-mobl2.lan>
+References: <cover.1783974681.git.alison.schofield@intel.com>
+ <dad02aebdc2d82537d779ddff459c8c4b5a614da.1783974681.git.alison.schofield@intel.com>
+ <20260713210019.A74F61F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260713210019.A74F61F000E9@smtp.kernel.org>
+X-ClientProxiedBy: SJ0PR05CA0063.namprd05.prod.outlook.com
+ (2603:10b6:a03:332::8) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6d4b2c0e-5c05-4e92-9c9d-dba8cabe849b@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|CH3PR11MB8750:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0f91725c-e642-49e2-6035-08dee2b9a8a3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|6133799003|3023799007|4143699003|11063799006|56012099006|18002099003|22082099003|10067099003|13003099007;
+X-Microsoft-Antispam-Message-Info: dnrkakauIwmnNlBGde3gSwwESkO7KmpvtMgVIRMjdQpm7ir7C1F80zJVu8ZYif7Iu10A2gMxVKznjuSyCjlSxArykO6Zk5SpvIogvANTHMjgUB9X63HZRZsJJ6UTGXzqPWytMdjDoG57rK/HxPnk1ygQVkOb7UJ6d04c90MaTp2r/0LQZzxUpaMyzLVAxiVnCiqFev3t723TxEgF3ilPSX3AT3qMYLNp+0JS7E8AhEqLXdxOwhJGGzFEJRGoHpJSzec2voe4OJkhIiMNiKM3MKZ4ea+QtqyGRn46yZheameY541e0uhBmDr1YndsDreMZhQERSg9n1GsOn8SEGMuzhDl0DVCELQe8Nk8XygTQBBeXBcrGpzQxzEbTUR+H7V7FdFsQAfDqLups7p/CSSvsSTEERL0u99EleaAxXH5+gRGIBtQ/jXYStao660lT9OHQFrSlWYwPhzApAfzhrXZETP9y0ANiah8ghx5jBG+yP/89zjmglmxeBydRkrnuv+dLFZtMruqgweaV5U3e6MmjfiV2i5qJFqqSZkYcPOeeUk1EkkBj+kK8eOdRL+HCjdyMAhwXZ7nBqgx4CFJhHIaeXlQXwLIZ8lVIofuYaTSDCg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(6133799003)(3023799007)(4143699003)(11063799006)(56012099006)(18002099003)(22082099003)(10067099003)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?DpBd5WDWP+M/EhcLYlHRhTlvJyyV4nE9X0yg5amZSTjGoQVTh+HeZOS9cu?=
+ =?iso-8859-1?Q?NmKUztMZjMWLJG8B8IeBlNkIrHsmvelYMoZf4NnfpeJKxE2aEx+zfbN5JE?=
+ =?iso-8859-1?Q?Rdr6XDc2s0tVK7/QYeTdO2Z00Zs5ynvZ3dJVhGgQoOErimZqgktvrUiJkP?=
+ =?iso-8859-1?Q?0NfjIIW/7EP82S12bJOBdX6Y4axLDfGyD3prLpl32KUJL/yHfKkZs+VOmk?=
+ =?iso-8859-1?Q?KQBK6NvFkVrYHz23ZVCJtSmoIhCOCtha5sgPLdmo2Rq+POiBXIXOF6x6+Q?=
+ =?iso-8859-1?Q?GER3bm1xEIPtqW8tVbuS1lKVX95Xqy7ICjQxpU3RMZCbCcfwlVxe3gKJF0?=
+ =?iso-8859-1?Q?RJmgzKUDcEJdl58sWhhQeWA3mi+xbS7ULMf0IWIPc7ll33UejSfANdXTgp?=
+ =?iso-8859-1?Q?6FlQ+F2Xxq4KdlVBJfyL7XW6tvZs3ctHVEVXQCr0lHaPRt7NFPty2XVKig?=
+ =?iso-8859-1?Q?JwEZ6D4SRtSFU2V617v7uoHY4lJfqXAFS5fcWqCkuOtz+NPUIFHxUa28yD?=
+ =?iso-8859-1?Q?gbkfhhOp35pPnFnTBVE0V2KSaMGq5Xk3IAYAibwhNg/GUmxAPi5VNRY4F7?=
+ =?iso-8859-1?Q?JSnT53+nK0dFASGjPELGmXlrnYbQWsEJO4FflbWoICrBsqSu+IoUmWjsRi?=
+ =?iso-8859-1?Q?dbl5GwZKeTcrZC6gmHATB32v7eHzTnnpvizLdvmJQC+v4QsQxj8GNEWdZP?=
+ =?iso-8859-1?Q?0T4G0oQLeJVcLh0Npdl0LN1e+Nxc1xXq9GxNkypuMXYqsJQZTKKo93cy3t?=
+ =?iso-8859-1?Q?/u0bLhisIMGUtxHxD+o02uVqQDfue3LgEczSBYj2T56b/bQnJZHNZ1ZkjU?=
+ =?iso-8859-1?Q?1IeVp8U++gpcorM88+UtJ6nZKIOLpvXZamwle0+ifTcT7a3KcL4TptnMZs?=
+ =?iso-8859-1?Q?ySvJVBNgMuDzs2VBhezC/EQrsBPeG1nBtPVJN2BgutfOA3qK/F4a3lr1YY?=
+ =?iso-8859-1?Q?YC32tAqdYQXhAV0OMswLv7RyM3jQ276pE2d81QD0QJ0d93rySnaFCoAz8c?=
+ =?iso-8859-1?Q?yyXuN70F3WJoCBHmtM/szCgaQH6CGEHFKXz2hsbZJelbJi7aC3aYPXEadb?=
+ =?iso-8859-1?Q?/bBAotNggXQhlPZaJspQiHzEWv62tE81moomdgjObrFn3CeD9GavH5CXRA?=
+ =?iso-8859-1?Q?cjbrpGezX+wRPUhYRuTc8VDil8ZplAzviyDDYe5e2JJ8pPZfBczubmjbYS?=
+ =?iso-8859-1?Q?Rm4cbhPxp/Bx45raqTsC/O2pz2QFwXn0qr3UJPxlhWkmgTBzxDpYpMl5/t?=
+ =?iso-8859-1?Q?2gf0t6yHWIwT8omW0yuK7IIQwiY0NTdr43xObUq8UyE76LU+41P7TGfNsW?=
+ =?iso-8859-1?Q?KCld9XHwVBbHclzUiPozBwJEv0ocHJucxkKtvHaCJRapbivOIvG45IwUP7?=
+ =?iso-8859-1?Q?7Q9Jh9bJyQv3tio3XGH4t/8YfbY3RN3vHMj4Xdby8vA9lTBsbMplXj+74n?=
+ =?iso-8859-1?Q?8HElIQomokm6oT5oY1cKIzP2yVU4W2kicDMZ4tYsEOI10nec7oHaCwPqbD?=
+ =?iso-8859-1?Q?Ur0nlTGeUh+EzIvk69uWbP5AZUbAF/RKhY3BevvbQUcy5x3vLWZBs/S3y7?=
+ =?iso-8859-1?Q?9estr8vJHDWIMoHdYsZhB+3Yr45tfkIL8Vx1POwO0YH1notpYfHuR9auC/?=
+ =?iso-8859-1?Q?Ln6GgGDMhLC2tPaVgsZniYgNaCbDswcGS4tft/mIcgMZJ7lXpn4wOLgV4l?=
+ =?iso-8859-1?Q?N/unQ+hZKPxy4lodm8Dipz5ohYIZlLnOe9obhjILMcNYJ7d8DcyObPWs6z?=
+ =?iso-8859-1?Q?FLoFkUfP+pGqhnfAjIVI6Op2ncF7rhFlWXTFsi+jCeZRcGxq++0bh0Dkv5?=
+ =?iso-8859-1?Q?pfkayLwxM4pked7e3uoUO4axosmkILU=3D?=
+X-Exchange-RoutingPolicyChecked: XiBFbx8zbmEJaGDqu+DYGZmCdjY9nfv12GIV76wCXTVDuHeSBithAKNW8bckyPKkxH4XaeFqFekVzcyxTPUsJhu+HAkwE/ViqHviwHt8qi5b5QC11JP67Qyza6/WFaOZEuMGvblFUbxs4Z9GoKOsbUM3w6G+Sjj+9KS+I+oOJgraeah5VvzEeJcipVqzFQmk0KNWxSL8drAS42oT9nDhL3Y8DssNl8aj/KwA2ONol0MMCtaGFTRDmPZDoNg6P1GW1tGhxw+CCt65pLSNzIO8Ri+8+sk+4WqUPWlAOJZH/5rzXS5hvgOdacf1v9Q40Vu+ip8jjIwf4x+UFqKQFji9SQ==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f91725c-e642-49e2-6035-08dee2b9a8a3
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2026 21:40:16.1427
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: X8nYSuYFQyGbvYdbmOsWi8UyDZC5M8052zv66k/uJps5SnhdJzJhKuE1GPTpEw38uzxec5SbCmPWAyywGOgbCVoLKYWPkmKLXTlmIeUXuZQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8750
+X-OriginatorOrg: intel.com
 
-On Tue, Jul 07, 2026 at 04:51:23PM -0500, Cheatham, Benjamin wrote:
-> On 6/25/2026 6:04 AM, Anisa Su wrote:
-> > From: Ira Weiny <iweiny@kernel.org>
-> > 
-> > Dynamic Capacity Devices (DCD) support extent change notifications
-> > through the event log mechanism.  The interrupt mailbox commands were
-> > extended in CXL 3.1 to support these notifications.  Firmware can't
-> > configure DCD events to be FW controlled but can retain control of
-> > memory events.
-> > 
-> > Configure DCD event log interrupts on devices supporting dynamic
-> > capacity.  Disable DCD if interrupts are not supported.
-> > 
-> > Care is taken to preserve the interrupt policy set by the FW if FW first
-> > has been selected by the BIOS.
-> > 
-> > Accept the 4-byte CXL 2.0 reply on GET Event Interrupt Policy by setting
-> > min_out to CXL_EVENT_INT_POLICY_BASE_SIZE; pre-CXL 3.1 firmware omits
-> > dcd_settings and would otherwise fail the size check.
-> > 
-> > Based on an original patch by Navneet Singh.
-> > 
-> > Signed-off-by: Ira Weiny <iweiny@kernel.org>
-> > Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> > 
-> > ---
-> > Changes:
-> > [anisa: add CXLDEV_EVENT_STATUS_DCD (bit 4) to CXLDEV_EVENT_STATUS_ALL;
-> > previously added in a later commit but moved to current commit]
-> > 
-> > [anisa: check native_cxl before cxl_mem_get_event_records]
-> > ---
-> >  drivers/cxl/cxl.h    |  4 +-
-> >  drivers/cxl/cxlmem.h |  2 +
-> >  drivers/cxl/pci.c    | 94 ++++++++++++++++++++++++++++++++++++--------
-> >  3 files changed, 83 insertions(+), 17 deletions(-)
-> > 
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index 1297594beaec..864f6d3c03d4 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -180,11 +180,13 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
-> >  #define CXLDEV_EVENT_STATUS_WARN		BIT(1)
-> >  #define CXLDEV_EVENT_STATUS_FAIL		BIT(2)
-> >  #define CXLDEV_EVENT_STATUS_FATAL		BIT(3)
-> > +#define CXLDEV_EVENT_STATUS_DCD			BIT(4)
-> >  
-> >  #define CXLDEV_EVENT_STATUS_ALL (CXLDEV_EVENT_STATUS_INFO |	\
-> >  				 CXLDEV_EVENT_STATUS_WARN |	\
-> >  				 CXLDEV_EVENT_STATUS_FAIL |	\
-> > -				 CXLDEV_EVENT_STATUS_FATAL)
-> > +				 CXLDEV_EVENT_STATUS_FATAL |	\
-> > +				 CXLDEV_EVENT_STATUS_DCD)
-> >  
-> >  /* CXL rev 3.0 section 8.2.9.2.4; Table 8-52 */
-> >  #define CXLDEV_EVENT_INT_MODE_MASK	GENMASK(1, 0)
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index afc195d8c090..bcf976829c3e 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -218,7 +218,9 @@ struct cxl_event_interrupt_policy {
-> >  	u8 warn_settings;
-> >  	u8 failure_settings;
-> >  	u8 fatal_settings;
-> > +	u8 dcd_settings;
-> >  } __packed;
-> > +#define CXL_EVENT_INT_POLICY_BASE_SIZE 4 /* info, warn, failure, fatal */
-> >  
-> >  /**
-> >   * struct cxl_event_state - Event log driver state
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index 8d12c684d670..95a4bf7c1e46 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -514,7 +514,19 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
-> >  	struct cxl_dev_id *dev_id = id;
-> >  	struct cxl_dev_state *cxlds = dev_id->cxlds;
-> >  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> > +	struct pci_host_bridge *host_bridge =
-> > +		pci_find_host_bridge(to_pci_dev(cxlds->dev)->bus);
-> >  	u32 status;
-> > +	u32 mask;
-> > +
-> > +	/*
-> > +	 * Only drain logs the driver owns.  When BIOS owns event reporting
-> > +	 * (!native_cxl) the driver is only here for the Dynamic Capacity log;
-> > +	 * processing the standard logs would steal firmware-first events from
-> > +	 * BIOS, so mask them out.
-> > +	 */
-> > +	mask = host_bridge->native_cxl_error ? CXLDEV_EVENT_STATUS_ALL
-> > +					     : CXLDEV_EVENT_STATUS_DCD;
-> >  
-> >  	do {
-> >  		/*
-> > @@ -522,8 +534,8 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
-> >  		 * ignore the reserved upper 32 bits
-> >  		 */
-> >  		status = readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
-> > -		/* Ignore logs unknown to the driver */
-> > -		status &= CXLDEV_EVENT_STATUS_ALL;
-> > +		/* Ignore logs unknown to the driver or owned by BIOS */
-> > +		status &= mask;
-> >  		if (!status)
-> >  			break;
-> >  		cxl_mem_get_event_records(mds, status);
-> > @@ -557,6 +569,8 @@ static int cxl_event_get_int_policy(struct cxl_memdev_state *mds,
-> >  		.opcode = CXL_MBOX_OP_GET_EVT_INT_POLICY,
-> >  		.payload_out = policy,
-> >  		.size_out = sizeof(*policy),
-> > +		/* CXL 2.0 firmware omits dcd_settings; accept the shorter reply */
-> > +		.min_out = CXL_EVENT_INT_POLICY_BASE_SIZE,
-> >  	};
-> >  	int rc;
-> >  
-> > @@ -569,23 +583,34 @@ static int cxl_event_get_int_policy(struct cxl_memdev_state *mds,
-> >  }
-> >  
-> >  static int cxl_event_config_msgnums(struct cxl_memdev_state *mds,
-> > -				    struct cxl_event_interrupt_policy *policy)
-> > +				    struct cxl_event_interrupt_policy *policy,
-> > +				    bool native_cxl)
-> >  {
-> >  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-> > +	size_t size_in = CXL_EVENT_INT_POLICY_BASE_SIZE;
-> >  	struct cxl_mbox_cmd mbox_cmd;
-> >  	int rc;
-> >  
-> > -	*policy = (struct cxl_event_interrupt_policy) {
-> > -		.info_settings = CXL_INT_MSI_MSIX,
-> > -		.warn_settings = CXL_INT_MSI_MSIX,
-> > -		.failure_settings = CXL_INT_MSI_MSIX,
-> > -		.fatal_settings = CXL_INT_MSI_MSIX,
-> > -	};
-> > +	/* memory event policy is left if FW has control */
-> > +	if (native_cxl) {
-> > +		*policy = (struct cxl_event_interrupt_policy) {
-> > +			.info_settings = CXL_INT_MSI_MSIX,
-> > +			.warn_settings = CXL_INT_MSI_MSIX,
-> > +			.failure_settings = CXL_INT_MSI_MSIX,
-> > +			.fatal_settings = CXL_INT_MSI_MSIX,
-> > +			.dcd_settings = 0,
-> > +		};
-> > +	}
-> > +
-> > +	if (cxl_dcd_supported(mds)) {
-> > +		policy->dcd_settings = CXL_INT_MSI_MSIX;
-> > +		size_in += sizeof(policy->dcd_settings);
-> > +	}
+On Mon, Jul 13, 2026 at 09:00:19PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
 > 
-> It seems there's a bug here that I found on one of our test machines. It's possible the card doesn't support
-> DCD commands but does have the policy bit for DCD (i.e. CXL card is 3.0+), so the payload still needs to be
-> large enough to include the DCD bit in that case. So, the size_in needs to always include dcd_settings but
-> the actual policy setting should stay based on whether the card supports DCD. Hopefully that makes sense, let
-> me know if it's not clear...
+> New issues:
+> - [High] Validation of `interleave_ways` returns a hard error for uncommitted decoders, causing a fatal probe failure if an inactive decoder contains leftover or uninitialized configuration.
+
+Fixed in v2.
+
+
+> - [High] Due to a preexisting off-by-one error in `nr_targets`, the new check `cxld->interleave_ways > cxlsd->nr_targets` will falsely reject valid max-width interleaved configurations.
 > 
-Yes that makes sense. Thank you for reporting!
 
+Disagree on this one. 
+Target Count is not 0-based. Per CXL r4.0, Table 8-116 (CXL HDM Decoder
+Capability Register), the Target Count field is a direct count
+
+But...given the confusion w the adjacent decoder_count field I have
+added a clarifying comment in v2.
+
+
+> Pre-existing issues:
+> - [Critical] Target list array accesses are endian-dependent, leading to corrupted target mapping on Big-Endian systems.
+
+This is addressed in Patch 2 of the series
+
+
+> --
 > 
-> The first thing that I thought of for a solution is setting size_in based on the CXL card's DVSEC revision
-> (i.e. size_in = 5 for CXL 3.0+, size_in = 4 otherwise). Not exactly a clean solution, but I'm not sure there's
-> a way around it.
+> --- Patch [1]: [PATCH 1/3] cxl/hdm: Reject switch decoder interleave ways that overflow targets ---
+> commit 0f855df703f711546a94bba79b4742022fb3bae7
+> Author: Alison Schofield <alison.schofield@intel.com>
 > 
-> Thanks,
-> Ben
+> cxl/hdm: Reject switch decoder interleave ways that overflow targets
+> 
+> This commit adds validation during CXL switch decoder enumeration to ensure
+> that the number of interleave ways does not exceed either the hardware
+> target list capacity or the reported target count. If the ways exceed
+> these values, enumeration fails with an error to prevent array overflows.
+> 
+> Link: https://sashiko.dev/#/patchset/20260711180755.1779002-1-alison.schofield@intel.com?part=1
+> 
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -1084,6 +1084,24 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+> >  		cxld->interleave_ways, cxld->interleave_granularity);
 > >  
-Here is what I came up with:
-
-In cxl_event_config(), we get the interrupt policy
-from cxl_event_get_int_policy() before cxl_event_config_msgnums().
-
-I added a return param to cxl_event_get_int_policy() to return the
-actual size:
-
-*policy_size = mbox_cmd.size_out
-
-The value is passed through a new input parameter for policy_size in
-cxl_event_config_msgnums() so it can use the actual size.
-
-I am working my way through the reviews and hope to post v12 soon :3
-
-Thanks,
-Anisa
-
-> >  	mbox_cmd = (struct cxl_mbox_cmd) {
-> >  		.opcode = CXL_MBOX_OP_SET_EVT_INT_POLICY,
-> >  		.payload_in = policy,
-> > -		.size_in = sizeof(*policy),
-> > +		.size_in = size_in,
-> >  	};
-> >  
-> >  	rc = cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-> > @@ -632,6 +657,30 @@ static int cxl_event_irqsetup(struct cxl_memdev_state *mds,
-> >  	return 0;
-> >  }
-> >  
-> > +static int cxl_irqsetup(struct cxl_memdev_state *mds,
-> > +			struct cxl_event_interrupt_policy *policy,
-> > +			bool native_cxl)
-> > +{
-> > +	struct cxl_dev_state *cxlds = &mds->cxlds;
-> > +	int rc;
+> >  	if (!cxled) {
+> > +		struct cxl_switch_decoder *cxlsd =
+> > +			to_cxl_switch_decoder(&cxld->dev);
 > > +
-> > +	if (native_cxl) {
-> > +		rc = cxl_event_irqsetup(mds, policy);
-> > +		if (rc)
-> > +			return rc;
-> > +	}
-> > +
-> > +	if (cxl_dcd_supported(mds)) {
-> > +		rc = cxl_event_req_irq(cxlds, policy->dcd_settings);
-> > +		if (rc) {
-> > +			dev_err(cxlds->dev, "Failed to get interrupt for DCD event log\n");
-> > +			cxl_disable_dcd(mds);
+> > +		if (cxld->interleave_ways > CXL_HDM_DECODER0_TL_TARGETS) {
+> 
+> [Severity: High]
+> Will this return a hard error for uncommitted decoders?
+> 
+> If an inactive or uncommitted decoder contains uninitialized or leftover
+> state (such as from BIOS) in its control register, this bounds check will
+> fail and return -ENXIO. 
+> 
+> Because this validation happens before checking if the decoder is actually
+> committed, does this abort the initialization of subsequent decoders and
+> prevent the CXL switch port from probing?
+> 
+> devm_cxl_switch_port_decoders_setup()
+>   -> devm_cxl_enumerate_decoders()
+>     -> init_hdm_decoder()
+> 
+> > +			dev_err(&port->dev,
+> > +				"decoder%d.%d: interleave ways: %d exceeds target list capacity: %d\n",
+> > +				port->id, cxld->id, cxld->interleave_ways,
+> > +				CXL_HDM_DECODER0_TL_TARGETS);
+> > +			return -ENXIO;
 > > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static bool cxl_event_int_is_fw(u8 setting)
-> >  {
-> >  	u8 mode = FIELD_GET(CXLDEV_EVENT_INT_MODE_MASK, setting);
-> > @@ -657,18 +706,26 @@ static bool cxl_event_validate_mem_policy(struct cxl_memdev_state *mds,
-> >  static int cxl_event_config(struct pci_host_bridge *host_bridge,
-> >  			    struct cxl_memdev_state *mds, bool irq_avail)
-> >  {
-> > -	struct cxl_event_interrupt_policy policy;
-> > +	struct cxl_event_interrupt_policy policy = { 0 };
-> > +	bool native_cxl = host_bridge->native_cxl_error;
-> >  	int rc;
-> >  
-> >  	/*
-> >  	 * When BIOS maintains CXL error reporting control, it will process
-> >  	 * event records.  Only one agent can do so.
-> > +	 *
-> > +	 * If BIOS has control of events and DCD is not supported skip event
-> > +	 * configuration.
-> >  	 */
-> > -	if (!host_bridge->native_cxl_error)
-> > +	if (!native_cxl && !cxl_dcd_supported(mds))
-> >  		return 0;
-> >  
-> >  	if (!irq_avail) {
-> >  		dev_info(mds->cxlds.dev, "No interrupt support, disable event processing.\n");
-> > +		if (cxl_dcd_supported(mds)) {
-> > +			dev_info(mds->cxlds.dev, "DCD requires interrupts, disable DCD\n");
-> > +			cxl_disable_dcd(mds);
-> > +		}
-> >  		return 0;
-> >  	}
-> >  
-> > @@ -676,10 +733,10 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
-> >  	if (rc)
-> >  		return rc;
-> >  
-> > -	if (!cxl_event_validate_mem_policy(mds, &policy))
-> > +	if (native_cxl && !cxl_event_validate_mem_policy(mds, &policy))
-> >  		return -EBUSY;
-> >  
-> > -	rc = cxl_event_config_msgnums(mds, &policy);
-> > +	rc = cxl_event_config_msgnums(mds, &policy, native_cxl);
-> >  	if (rc)
-> >  		return rc;
-> >  
-> > @@ -687,11 +744,16 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
-> >  	if (rc)
-> >  		return rc;
-> >  
-> > -	rc = cxl_event_irqsetup(mds, &policy);
-> > +	rc = cxl_irqsetup(mds, &policy, native_cxl);
-> >  	if (rc)
-> >  		return rc;
-> >  
-> > -	cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
-> > +	if (native_cxl)
-> > +		cxl_mem_get_event_records(mds, CXLDEV_EVENT_STATUS_ALL);
-> > +
-> > +	dev_dbg(mds->cxlds.dev, "Event config : %s DCD %s\n",
-> > +		native_cxl ? "OS" : "BIOS",
-> > +		cxl_dcd_supported(mds) ? "supported" : "not supported");
-> >  
-> >  	return 0;
-> >  }
+> > +		if (cxld->interleave_ways > cxlsd->nr_targets) {
 > 
+> [Severity: High]
+> Is cxlsd->nr_targets a 0-based count?
+> 
+> In parse_hdm_decoder_caps(), the 0-based hardware capability "Target Count"
+> is assigned to cxlhdm->target_count without adjustment, making
+> cxlsd->nr_targets 0-based (where 0 means 1 target, 1 means 2 targets, etc.).
+> 
+> Since interleave_ways is a 1-based exact count, won't this check incorrectly
+> reject valid configurations? 
+> 
+> For example, a 2-way interleave across 2 targets evaluates as 2 > 1,
+> incorrectly returning -ENXIO and preventing CXL memory enumeration on valid
+> hardware topologies.
+> 
+> > +			dev_err(&port->dev,
+> > +				"decoder%d.%d: interleave ways: %d exceeds targets: %d\n",
+> > +				port->id, cxld->id, cxld->interleave_ways,
+> > +				cxlsd->nr_targets);
+> > +			return -ENXIO;
+> > +		}
+> > +
+> >  		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+> >  		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
+> >  		target_list.value = (hi << 32) + lo;
+> 
+> [Severity: Critical]
+> This isn't a bug introduced by this patch, but does assigning
+> target_list.value this way cause endian-dependent target mapping on
+> Big-Endian systems?
+> 
+> By reading the lo and hi registers and combining them into a host-endian
+> 64-bit integer, accessing it as a byte array (e.g., via
+> target_list.target_id[i]) will read the most significant byte on Big-Endian
+> architectures instead of the expected byte.
+> 
+> Could this lead to memory traffic being routed to the wrong CXL target on
+> architectures like PowerPC or s390x?
+> 
+> [ ... ]
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/cover.1783974681.git.alison.schofield@intel.com?part=1
