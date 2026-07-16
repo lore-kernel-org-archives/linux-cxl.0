@@ -1,61 +1,68 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazon11011059.outbound.protection.outlook.com [52.101.52.59])
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010036.outbound.protection.outlook.com [52.101.46.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0642E62A9;
-	Thu, 16 Jul 2026 06:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.52.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95A733E348;
+	Thu, 16 Jul 2026 07:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.36
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784184817; cv=fail; b=ZjtL1YExuc6qNZlrlIDca9/RRYjM5Ke5lN8nPyYlLZxhnNr276Xe3+bdne42Lfh2nj60+b7/A/8BY9v29Mer6HG/3BayHmuw8Di0bm0ljILn3rNAhWHvu6T7giZe7hNgxjj8YvlsGfwSW1eN7dPO4FsELfuZR+ZY65nhvd3b274=
+	t=1784187929; cv=fail; b=YQYzuBRwKcPaHgxrw0I/eT5TP5WffhIyjEmVXZy0WPZ8whD40W73whCHkfEf+y5alN30dEa0CagM1l1yB82zGYOGkc2OAMF3SNObkiQx5eKAmp6z4Q177MimLoTnIA+vQdUl5X6hV2h2BDXZY4TISrK6UGqkNsEbSE3hSZBUwLw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784184817; c=relaxed/simple;
-	bh=jnjpRbBU0PNutP4IASv6g0q6xNJhl5OqGD2HR4IOz+c=;
+	s=arc-20240116; t=1784187929; c=relaxed/simple;
+	bh=LBKB4Yy+jWB6I3DOX/5R6ybHI8qYCBTvVjKUxIdByyQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=AG+l8xbm7C14T/pmNtpVFfdNaKFUO2n/OgXfJi7Plb7rGj4zUiVKx1lojl/paGPjJfqXErYgdRuL3f5gzfalKeM/fkI36+inSO/17PS9x37PuyazMSWoILEVhBC0GnxHrmHL/9cFcbM++NSvV6/B1Z20bhBJPmZN22jf3G1wRVM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=bhXApUE9; arc=fail smtp.client-ip=52.101.52.59
+	 Content-Disposition:In-Reply-To:MIME-Version; b=PgI2uCdEqEEN7oHLfDL320F9qOYOXZ5oeJwjqiFso9v3Ci7LfNWf7Z8J/VNjh3Co+h1Sxm0rAzijvomkRBlsvijBaSKSsdBs7fGaqrTKln03ppChUBmXkwgE6v2ViniKc1+75DcK5d+MB2ohuFkFzEmmh1eCR373xYKmCVIDXyk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=sGL0zOCy; arc=fail smtp.client-ip=52.101.46.36
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="bhXApUE9"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="sGL0zOCy"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CnqxyiSgXun7h+lDWjg0vtUdte4lz7nI0fOOnfpcNXt/EwKTURNcRfM2FX1a00LU7BZpkNERCYJti8SGabACDRAEnmSWnvlBG/w637s/E9dkfQQJ/o4+dFNgZcyoVXKHXV6lJnXxFPPzGM+qcldeKT+e3PhmCqfNhwf+zgZoOm03NhrvDlzmT1ssoMmHMoSylMxyo7ugy9TRA+rp3lU8/QnbBCBO864UCSkuyFy2ohYyJYmzQnguzY3EuriRlyK+GhG6uq05wCQTVb7lhf25K1BW3tRqPWGrsdxM0YCORmv9RABfGYiCm3jtnx2QXGnOf/gxIBdA+AP0q+7AsNy4Xw==
+ b=Z7y20qrbkGiwYYUbja+/wjqRgQDkt0J8/44ifnYxBj+hJD/jK9dnre39NClBZFVIctEvoFgr5O1DPwngULrM/STI9nZO/kLTKL5RdN/+8XuIuSSjiQDZ+DV4/1Mj6QW+E/CON8tIAu5buwqeGgWtCxWut0MjSzQ6r/mdbn9RL6IODprDq69aSky3ZUefcc9PZpB38/aN36UUeQYk0huwYZ7a9CLuMukftPTSMTQ7czEPZVMLMdOr9FNffg4WVe6mKze4Bsepjt+0ywFCgxIDGCUeDoqkw7LYW+2MtHryWvxCqpBd8EoWGR190dwUc5C06pbrxK26REtR5WNjCTzMyg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ab6jfLXHXhDlRH3EOet4UTE8o3U96i55NjIFPrVcPRs=;
- b=cKNsxHpzcfK6gaRRG/ZKFnIPRAmZKcGGHAL1MrfKPm/li041toUxYJ/szGWm5Q8ZniI4eLzguEAzAj02yEWi+wzeVJk31Y79sETGKtxpwejrRutvb+XoY9qZZb6vFKLF8CLVn97laeD4NTco+NtC2qHeZrmzkC9L8j3/FBy+SqtxjUzuVX0Voc6RJ9R3KxYVYLS0S6V0FyZbW2VF1UywjcEtwk8glb3mZJbWYZxd6JbaP4jAE0SJ2cpd805JfnN0rw51aHCmyVudP6f8Yzj4srK/3FeORzLUUkqTgKT1/lyvOz13hpu8Ws60lojxjXD3uBEJbQnnKbNituFCGAQidg==
+ bh=9G0O5AdLnsjQd1Os6Gb20Ljbz/NJRF9gtzCFGnf8pug=;
+ b=RafTB8HOrrPKke7YrgjoYNsPEOaUtWkoMfwNIfhOVe60yQ397uagm0GpJKokF53Ia5Qvicw1nXuw8BNOTh0ku3Pno0ThV6aKG7twoeZ61OyrAhiKDvfg50YUak29IodNIU+1s8jm8f7AujTaT+ha4Jka3PvsHi5aIKz5lswhgCVYFScIDyZRodr/QsrtuOXiDqOiB+wG5VbZga8wJ1HF3/dVqIYPML5UhXCRvWxRNKLzrrABSk/Tgs/sPQJUy3slcKPSKUiRWbstryM7Bpz38T18pukrWl1gjxpefZqnb9ivXAmZQ3ogo3lsVRIhT+kU1zdKLg67jW9LMv9+m7l3Ng==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ab6jfLXHXhDlRH3EOet4UTE8o3U96i55NjIFPrVcPRs=;
- b=bhXApUE9pLiE6IQLQ4ePVJi7m7Th1P3oA5lTGXmiHm71/MbUABIGxkXUblWsg93wq9x7lsZkSKEEZdQacJi/hwtaT/yzMKtZcYoPvKcDT2ALuNEVpqWjG7Wo9MR02n/Uw1oXBavS9coAHJPvufFWMNHrDDpMhwNMuwAUfY0sozfwsqzWbgDx3sXoQSWoDPD7/Zy/OFwHluSFPvbVKHMQq9abQHnl953Fdt6WJfhSzfmwrCG9r9tswMC4whpvspZOwwvT12cBRGYT/XlaPPCP8Tf11Nxn1BbIMcLiTCCB36Gkycih4I3TEA1bhWHKfnmcp/6q+u/zbOr7Z2cZq2VByQ==
+ bh=9G0O5AdLnsjQd1Os6Gb20Ljbz/NJRF9gtzCFGnf8pug=;
+ b=sGL0zOCyCbNF3VeFbTwYmSS+yGflWCkdkqyl/GbaadGABG7PUfTKZyavvtFwQPPlOGbi4E3JJKlv27nchjr4EjeLVP2OQg2m06V6vUO9R+/eMW5kPn4FNCD+AhkqwZJqrZiJqi0b9kPDRy7lbZ+zTgds+mDIilNi/L1lqB9+whtnq/8wdhxi3qKvlvhPRIbP5eWg32LHjWWxC/kW12ScyDCF+xAVmi8MJWqCRjLv4oGc1NAyqT35n/+8jZPOLyOKh48UctdE5gbRrZTVp9uoQAJNbuQ82moj5TsKEk/J/TMZvNqFXDnZuWcCP3yUC+L1GpFDuU/YcAuUJWU7hBKnEQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MW2PR12MB2380.namprd12.prod.outlook.com (2603:10b6:907:4::32)
- by BN7PPF915F74166.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6d9) with
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by SN7PR12MB7786.namprd12.prod.outlook.com (2603:10b6:806:349::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Thu, 16 Jul
- 2026 06:53:32 +0000
-Received: from MW2PR12MB2380.namprd12.prod.outlook.com
- ([fe80::90d:c5c:6a5e:94a5]) by MW2PR12MB2380.namprd12.prod.outlook.com
- ([fe80::90d:c5c:6a5e:94a5%4]) with mapi id 15.21.0223.008; Thu, 16 Jul 2026
- 06:53:32 +0000
-Date: Thu, 16 Jul 2026 14:53:25 +0800
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.10; Thu, 16 Jul
+ 2026 07:45:24 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0223.011; Thu, 16 Jul 2026
+ 07:45:23 +0000
+Date: Thu, 16 Jul 2026 15:45:16 +0800
 From: Richard Cheng <icheng@nvidia.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: jic23@kernel.org, will@kernel.org, mark.rutland@arm.com, 
-	harshal.t@samsung.com, linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] perf/cxlpmu: Support Channel/Rank/Bank filter
-Message-ID: <alh_wcMiD1hsnXvx@MWDK4CY14F>
-References: <20260715191454.459673-1-dave@stgolabs.net>
- <20260715191454.459673-4-dave@stgolabs.net>
+To: Srirangan Madhavan <smadhavan@nvidia.com>
+Cc: Alison Schofield <alison.schofield@intel.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Dan Williams <djbw@kernel.org>, 
+	Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>, 
+	Jonathan Cameron <jic23@kernel.org>, Vishal Verma <vishal.l.verma@intel.com>, 
+	linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com, alwilliamson@nvidia.com, 
+	Dan Williams <danwilliams@nvidia.com>, Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>, 
+	Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>, Jiandi An <jan@nvidia.com>, 
+	linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v9 11/11] PCI/CXL: Restore HDM state after CXL bus reset
+Message-ID: <aliLv1jdG53a2LtD@MWDK4CY14F>
+References: <20260709010304.680422-1-smadhavan@nvidia.com>
+ <20260709010304.680422-12-smadhavan@nvidia.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260715191454.459673-4-dave@stgolabs.net>
-X-ClientProxiedBy: KU0P306CA0004.MYSP306.PROD.OUTLOOK.COM
- (2603:1096:d10:17::7) To MW2PR12MB2380.namprd12.prod.outlook.com
+In-Reply-To: <20260709010304.680422-12-smadhavan@nvidia.com>
+X-ClientProxiedBy: SI2PR06CA0013.apcprd06.prod.outlook.com
+ (2603:1096:4:186::18) To MW2PR12MB2380.namprd12.prod.outlook.com
  (2603:10b6:907:4::32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -64,231 +71,140 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW2PR12MB2380:EE_|BN7PPF915F74166:EE_
-X-MS-Office365-Filtering-Correlation-Id: edc659cc-6fab-4d35-4906-08dee306f259
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|SN7PR12MB7786:EE_
+X-MS-Office365-Filtering-Correlation-Id: b616b6c5-cbf4-444c-2d72-08dee30e3055
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|6133799003|18002099003|22082099003|56012099006|4143699003|11063799006|10067099003;
+	BCL:0;ARA:13230040|1800799024|23010399003|366016|376014|7416014|22082099003|18002099003|11063799006|56012099006|4143699003|10067099003;
 X-Microsoft-Antispam-Message-Info:
-	pe7zqXQU0Ns/dYB9Eos+nZWbArUfa6tjNDMO+Ti2QWrIa8q7wQZ0gtK0cCx5n+dfy8vDzl4tMPY7EDKvEif+g3x6zybyxeCVV6kqZ34RkSNlCc6lg2rEYB31EeTZOiK80fiIxLAkvJFODRfU8Xjj3kqMbqTNAT0ewG337FkenKOFBDaY2u5FnXW4/S3/+F2Xw/sseLNwDlz8E+FQ2AwDTS/rP4X5+cF99H3UIoZotXJJTsnqTz16zFCOTNMFovWX2EVyb3RNA0xvCd6rNOUastRHehaElm7qHSIGxU+QFEKZXNoes7gxi1uyFbylE/V6uobZJtONZaT5+ktyvdjLrFj7VinqaRPfGte6oeJ2mWh2YinxdRAtIe6J9+PQHZOV/kQQg8AkADVJnDpfqPkYmL1mrtr9mWlzdEEUEXSWudGmkQlauePuMSJvrBUl4BrrFBzoYGkA+aB2mutvuPeWk/tw7GZBPWx8R+G7XhiSeoootKrY++PLKaGekIufbEvyOPMBIpE/893IgHYkIHSuj7LukIOzIhHGM1bi3KN57cR+E8+njQLg9+hVclDUrt5GxkzsqAjc6MssyQZcGIQ2uCjBaJtWwqVIXHYZqI2fOAhzRm2SSxfLMoZWPTEKcJD7v2ro5Ca1/9t64+NMr/kk29tc7t74LyuPGMflMSWuXdQ=
+	ICC2xKVHuXPMuFwFHLg5XwNEAWi4OpmmbEdh6lXIqZ4rOK2DW8VuYWf9TEyL/2f8CgtLuFFp4tabyW32el2b0Jknj5F1pf6RAL/EAn6YY8neZQxkIvAoK8RJaLUiZq4qFDOdlkplk3r/PV4V8NliEr1tD8epsvD0Gplr4ZfO7Q6JQC/wzdl5iAujXdZ22O78ciliBOOSctXcVfxot6UmHboRMx2lhXiXHECPY/oi+3J/2zZvmma5cXSFOllVby0scaEdYsKdRMIrwBvDeq0KyyEPMrXvJs2rtqBhdGotVBtqAiF08AsvYIkGELZfV+emTU8wOkYaoU09SZv8AJqIi1v07Jh1ufHVuI94vBJabgvAh2Uqpkr71fHuDN6K+cRkoEaoxuEThlgUC4F3Aynm+AaRIfJiIBeVdHGyQAj55kDDiBo7c3V6A1wcZJ5ao64PiJ6q4U2xhZWq0V/E5auTNw868aG0njxcBS+1zH5J6Q85+dfIJ9xYmCPuuf8WNyZbsYI2Ys1A9Zrxfs9OVaXj5BzNDFlR1/AQGvovFt3H3bHf1G98HfdE6vOtyBGeAwsgykMM/UBr76e7t8bU7F6YjiTWolek44+4VxpOtNvFKNcmgIr0Og6OawDzgZ4TgMkfAxvKaH4X3oC2zzI80XyAAp3OZMFXNsla2rpz/4LFi8k=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB2380.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(6133799003)(18002099003)(22082099003)(56012099006)(4143699003)(11063799006)(10067099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(366016)(376014)(7416014)(22082099003)(18002099003)(11063799006)(56012099006)(4143699003)(10067099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?le5RN4kDsP0LkTbkztdZJNg9Pb85v678LyFGHlwB5sCSjYuAHLvKv12LDFMI?=
- =?us-ascii?Q?PiHlC8ook/CbNyqXpHdDgRoMeFwc3OjqoP0DqYhY0PtZO2nb7FldqsXCBl0e?=
- =?us-ascii?Q?ZyswOwoyv9cmvfn6EaDMVysd+rrs+dkyr9NGXzqtGfegKazYhdp+V84rMyr9?=
- =?us-ascii?Q?FUaE059ckg7TcdjGb6B+8CEL3krBd+2J1/D7AJdEVdV3n5fCu27a2Yw15WtC?=
- =?us-ascii?Q?8wnuqfRW/FgYWRwtgNdUG7BrnZL3m4OWT2OQ14MJgucZHxvlhbelG2VHhlcL?=
- =?us-ascii?Q?lkpe4ZgwpPrQT2/pJfyBtQerYce7wz9fgoHQ/14H7p88XpCqYDhcp09VL8Yw?=
- =?us-ascii?Q?MPl4Mvf+9EvsUkYZvqTMJcmDWptvZGZZTWz15SNXQgO0PAyNHydAjXQ5alNX?=
- =?us-ascii?Q?igcANmlmuYlmqM/EnkD9l5V/W4KR6leX11IlyU6uLk4lg3eNzLJGFby14fRw?=
- =?us-ascii?Q?cWpme17nkWdgotdIBnImCeI5yJ1waY/UsNXCc5mdB8g1SldD6PWWYSFss7lP?=
- =?us-ascii?Q?b3UvDyQ0lwzsRIHmbz1n8rJ37YpUBWaFRewJhmNysmufTE3/nqG0p3AD9lHL?=
- =?us-ascii?Q?EcLMo1HVzP6PM7SnM6cnnJrwo+8ytMaYgcNjQN/a2+fy3TDOYBAjYjNEE3wP?=
- =?us-ascii?Q?RAtBO4/PUuhF7Y2qO4Si5y15qqs5e7pZ2NjE0Q0AijaI7jWqiOhQpT2s7TMw?=
- =?us-ascii?Q?u2Yd/Iw5ptDoN0qqnfhEeKkjgKBJIAKTpXiAaUJgO6xRfD46pxkkPDpwEeFe?=
- =?us-ascii?Q?e4I8EYkhsg080Y2SxHNkBignWDZuvtGGr9GEdZhAr5jGJ3p1KU74XOAzFjj1?=
- =?us-ascii?Q?Azk/q8zguseaKo0zdFN0UfVPnILbocSM3SPhZOo4VeZLhCM26mHj3+JGqdwT?=
- =?us-ascii?Q?757w/RQ7n0cFgkQOA32s8AOkldC7tPy3r/jQ07z9zIzlTtVEd+OyaOYt/l4e?=
- =?us-ascii?Q?5Yb9+q4iDeTjSaHtDy2iSwzkBLa9JXZU3lGsP0EyEFXtdvT7OkN8QOtqdu4H?=
- =?us-ascii?Q?OMKXOyhrYsIzr8mxVbiikE91NkdVGmsRhWqOnNtEm2eiEMLI9Iy24Thdhs9J?=
- =?us-ascii?Q?5oElgAOoeKr3m4OCPjGbSLmLCA6QmaeCPmPTamPSj3tXBr6WeqxWtpaf/5cs?=
- =?us-ascii?Q?FBH0ujUXAwcxrNn3eLVJPK5aLK3JSg5PPF3+uksdhJS4rkKqpupMVazhE/b3?=
- =?us-ascii?Q?xcDsH41lmuzi9cGoMU3UIuMp6loSFVye+ufJfP0jxlx7iJYmhawqo0l+/ADA?=
- =?us-ascii?Q?Yc+4IhTLgF8bsNf213IY9D77TJA7xUh2bz3sxaFpw3vnPrvPikkcmzLH1PB+?=
- =?us-ascii?Q?syjhAnTO6f+TdxTzCPxaFaqlKMhN4lagIgsixedqci1hqyecn6UBPzLwac/J?=
- =?us-ascii?Q?5rQgDHoMm00esNvuNgL06KrIsHzYDJiZsfwzxHHTwpStj3EG+JdhS/5QOClU?=
- =?us-ascii?Q?9lF48VDpd5/40aIqqZQb82USwmPgxHgcNLhuUyxI2WtOHcfqy7gaOje705jf?=
- =?us-ascii?Q?lrqGdSDMgdaovg/f5E1xuOFrbdXDKFovqpbidSPFhXw7ZcoeeG7FYf7Tv70i?=
- =?us-ascii?Q?0SccX3L+YMtTF3ES2BdumAku6KqNN/FEd1RiXKld6KXp/tgGgGUpIjZkfpV0?=
- =?us-ascii?Q?gE9fNUxRqm/hhZpADRMMd46TJIVsOKf9XICytasn1Pc40wLwfDlU0TFkhxtE?=
- =?us-ascii?Q?CSyVUdw8kr3eViRYug6/Q8q1/8/rW7zItJGXniG84q3ijpASKrcyOINtEuqM?=
- =?us-ascii?Q?9Q5HuziPhw=3D=3D?=
+	=?us-ascii?Q?tBUuCVTRIf1bRXnss1MkvW68FgLiDU6hWE3YiJ3Wtxw0D0GDT/vxuf0IUjzM?=
+ =?us-ascii?Q?KmrbasY5D/DJHSi/YCl8uLy9oohZz4j+X22Wv0vjgjnkCl96umVKrx+Xubk8?=
+ =?us-ascii?Q?gCB5HBIf6W45ZbMktnrgP1lzFcCo+GyZJYi3WN3C5X0J+OIvcE/FTR7UCl/v?=
+ =?us-ascii?Q?SI8j05syYhclO46COE0/rDDY0XxGGbR/hqMg7sETc+R0UdgUVixgUbTbskbp?=
+ =?us-ascii?Q?VT+B99vyMp3eKW7jatrh2hJl/d/qniwAMFy+QSOfsySV4xlTK2/j9FnOLGJZ?=
+ =?us-ascii?Q?818L7FZNaHQdcE7kfrk1nHvkU/3VF70KInu6zYL0SowHGYoqvvA/CfEMYIPj?=
+ =?us-ascii?Q?hbmk3jIUU3e0l12FPY6zKB5JIBcK0pEmBuXwwISKs6HzqUEqovGf481NO9gf?=
+ =?us-ascii?Q?WiqbLalsi6X5bpDDMU3IAzKH/O8oc6gALnCCLTs5A1P4YeYygGvUqX35d74t?=
+ =?us-ascii?Q?VpyfUkzB2+F79Oul6+Wwukud+sinIqQrN3Lf4ysLS7xxw53X7ifyt1HQBD26?=
+ =?us-ascii?Q?3x0K1YPi2St2wkaCIBIPjd2w4jJcooaEd7LQ3ZVEHBPRz55BWSKS4yBOv6GT?=
+ =?us-ascii?Q?0DVZQSLKAPvt69PSFtA192mo34Ed7cEPsBKV5H/C3PunZ0tCqQQP9+sswmvI?=
+ =?us-ascii?Q?t7/NYF+PTo9zUckVlDRRoXhn1zGdc/TZumOV8aehOeXI32fKA2ACVqhJyK/I?=
+ =?us-ascii?Q?mkCYYYeBXvW83LYqXuYRv9A3RymcXITZlwzdrLeaNX8Li5TLP0PToa2vKmmb?=
+ =?us-ascii?Q?+s8cOAF7py4Z6XRtXeLZWkymY/TEl5Ntsg3gNzneTKVKuQs1l3pGVsqs/ozH?=
+ =?us-ascii?Q?F6yZkM5C9WnosJlKx70APA661lF/5hjR9DTm7oKnYM8zsvgmodiSKdKhYyod?=
+ =?us-ascii?Q?/NzeBu9hIkU5mtJwlXLWZz5BXNMD0qpzugVe90AT+9TAByxGBmGeEaAlJD2F?=
+ =?us-ascii?Q?B2U53SD/zjCUMc+4S4FdZlPFlJfbo/59quflYnEXy44iDyTl+e8jtSXTw93e?=
+ =?us-ascii?Q?HQ6h/z8ct5uGL9Rj0xAI7CBNYPmTahSqwhce2Cho9MWrGgK6Ir398Q8vPETS?=
+ =?us-ascii?Q?9pdeRveHz5Q1atdh9LHKzdZBCJSYRTH5WKNqiQSHNKJm/NRhNKGl/IIAinoN?=
+ =?us-ascii?Q?A+A47UDJcphBfFTByc0GGX6pKVO9ISLf/RPRalXAJsHleFIEpgpCm234BHLa?=
+ =?us-ascii?Q?6ti+J8dO0bX32pXiSRhiS2KZWtlggw8iQ70So45xfQpWeXT27WbmFDLs2m2m?=
+ =?us-ascii?Q?HZoTrEDdcia7Bv3WgwNiPkd8LfskCjt/bho8OR+qfwNwU262WOUAcesRcKJx?=
+ =?us-ascii?Q?w6QEBy16ajqCsyul2FkBJjviXT908tiv2iWP+2jVvKVQ1RjhOT4+Z1RhJDxk?=
+ =?us-ascii?Q?N7hJioB2wk0KDtMfyUqrx1NE2TfH01EXxhIKzVV9p9JzxrlK+PZ3QbCXIzLZ?=
+ =?us-ascii?Q?QvXB21vpNXtSBQlWFY4tG5oO+DT5kg0fYne41GFC+eWAdnaRLfWK0Yqz06uL?=
+ =?us-ascii?Q?wrP6TpHM/iFmRKmpxNb2PNSB6Sgi2TUDHwniz232n/eKJIh9VNNoTZBigOd9?=
+ =?us-ascii?Q?QCQ3KJvXBu5APKMSpCB4gwV6cegtrCnDW120DtNWeBFAB8CI3yXb5T1zgoi9?=
+ =?us-ascii?Q?XWiAAe89At54u1851KbY7OmkzntybZzQOhBgTi+YUuRVoJCHPmDrU/aTFRXp?=
+ =?us-ascii?Q?GCRXuIlqSe2bI2ttwrvNMzqw0WfhPzF0J3n3xZ09DvUCJw6laU0A27EwIpY1?=
+ =?us-ascii?Q?YzVtX+mDiw=3D=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: edc659cc-6fab-4d35-4906-08dee306f259
+X-MS-Exchange-CrossTenant-Network-Message-Id: b616b6c5-cbf4-444c-2d72-08dee30e3055
 X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB2380.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2026 06:53:31.8434
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2026 07:45:23.5394
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: N8RRnbq0hExEiUzqmwiqjuE87aIoGToCb27hB0BAhXL7/C1bs4UmtmKiBAdCEwHh723kTvzimXdadYMmK+4VXQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPF915F74166
+X-MS-Exchange-CrossTenant-UserPrincipalName: ry8GsrZvJ0qCdABu5ejfG6D1WChxUGwj26+ryvLZAEnkV7bGelS5nbmcO6SBlNdYRB8t11AIqRLDUmx8/epZDQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7786
 
-On Wed, Jul 15, 2026 at 12:14:54PM +0800, Davidlohr Bueso wrote:
-> From: Harshal Thakkar <harshal.t@samsung.com>
+On Thu, Jul 09, 2026 at 01:03:04AM +0800, Srirangan Madhavan wrote:
+> CXL bus reset can clear HDM global control and decoder programming. Restore
+> cached HDM state after a successful cxl_bus reset while the IOMMU reset block
+> remains active.
 > 
-> Implement CRB filtering per CXL 4.0 8.2.7.2.2, and extend the
-> current filtering support beyond HDM. CRB filtering is only
-> permitted for the DDR Interface, Queue Occupancy, Queue Residency
-> and Retry event groups (CXL 4.0 Table 13-5), and only when counting
-> a single event (a single mask bit). Because these group IDs are
-> scoped by the CXL vendor ID, events from other vendors are also
-> rejected. For example, to count DDR activates on channel 2 only:
+> This intentionally restores only the HDM component decoder state cached by the
+> CXL reset support. It does not attempt to restore CXL Device DVSEC
+> range/control registers.
 > 
->   perf stat -a -e cxl_pmu_mem0.0/ddr_act,crb_filter_en=1,crb=0x02FFFFFF/
+> This was exercised with cxl_bus reset on a CXL Type 2 device. Testing confirmed
+> that CXL Device DVSEC range/control state is a separate restore class from HDM
+> component decoder state.
 > 
-> Placing the 32-bit CRB value at config2:32-63 leaves the
-> existing HDM value at config2:0-15 untouched and avoids needing
-> a new config3.
-> 
-> Signed-off-by: Harshal Thakkar <harshal.t@samsung.com>
-> [davidlohr: multiple fixes]
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> This depends on the CXL reset series because it reuses the HDM state cache and
+> restore helper introduced there.
+>
 
-Reviewed-by: Richard Cheng <icheng@nvidia.com>
-
---Richard
-
+Tested-by: Richard Cheng <icheng@nvidia.com>
+ 
+> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
 > ---
->  drivers/perf/cxl_pmu.c | 67 ++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 65 insertions(+), 2 deletions(-)
+>  drivers/cxl/core/reset.c | 5 +++++
+>  drivers/pci/pci.c        | 3 +++
+>  include/cxl/cxl.h        | 6 ++++++
+>  3 files changed, 14 insertions(+)
 > 
-> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index 1fc83858f653..bb32cd1084e9 100644
-> --- a/drivers/perf/cxl_pmu.c
-> +++ b/drivers/perf/cxl_pmu.c
-> @@ -110,6 +110,7 @@ struct cxl_pmu_info {
->  	int on_cpu;
->  	struct hlist_node node;
->  	bool filter_hdm;
-> +	bool filter_crb;
->  	int irq;
->  };
->  
-> @@ -146,6 +147,8 @@ static int cxl_pmu_parse_caps(struct device *dev, struct cxl_pmu_info *info)
->  	info->num_event_capabilities = FIELD_GET(CXL_PMU_CAP_NUM_EVN_CAP_REG_SUP_MSK, val) + 1;
->  
->  	info->filter_hdm = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) & CXL_PMU_FILTER_HDM;
-> +	info->filter_crb = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) &
-> +		CXL_PMU_FILTER_CHAN_RANK_BANK;
->  	if (FIELD_GET(CXL_PMU_CAP_INT, val))
->  		info->irq = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
->  	else
-> @@ -229,6 +232,8 @@ enum {
->  	cxl_pmu_edge_attr,
->  	cxl_pmu_hdm_filter_en_attr,
->  	cxl_pmu_hdm_attr,
-> +	cxl_pmu_crb_filter_en_attr,
-> +	cxl_pmu_crb_attr,
->  };
->  
->  static struct attribute *cxl_pmu_format_attr[] = {
-> @@ -240,6 +245,8 @@ static struct attribute *cxl_pmu_format_attr[] = {
->  	[cxl_pmu_edge_attr] = CXL_PMU_FORMAT_ATTR(edge, "config1:17"),
->  	[cxl_pmu_hdm_filter_en_attr] = CXL_PMU_FORMAT_ATTR(hdm_filter_en, "config1:18"),
->  	[cxl_pmu_hdm_attr] = CXL_PMU_FORMAT_ATTR(hdm, "config2:0-15"),
-> +	[cxl_pmu_crb_filter_en_attr] = CXL_PMU_FORMAT_ATTR(crb_filter_en, "config1:19"),
-> +	[cxl_pmu_crb_attr] = CXL_PMU_FORMAT_ATTR(crb, "config2:32-63"),
->  	NULL
->  };
->  
-> @@ -250,7 +257,9 @@ static struct attribute *cxl_pmu_format_attr[] = {
->  #define CXL_PMU_ATTR_CONFIG1_INVERT_MSK		BIT(16)
->  #define CXL_PMU_ATTR_CONFIG1_EDGE_MSK		BIT(17)
->  #define CXL_PMU_ATTR_CONFIG1_FILTER_EN_MSK	BIT(18)
-> +#define CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK	BIT(19)
->  #define CXL_PMU_ATTR_CONFIG2_HDM_MSK		GENMASK(15, 0)
-> +#define CXL_PMU_ATTR_CONFIG2_CRB_MSK		GENMASK_ULL(63, 32)
->  
->  static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
->  					 struct attribute *attr, int a)
-> @@ -267,6 +276,11 @@ static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
->  	     attr == cxl_pmu_format_attr[cxl_pmu_hdm_attr]))
->  		return 0;
->  
-> +	if (!info->filter_crb &&
-> +	    (attr == cxl_pmu_format_attr[cxl_pmu_crb_filter_en_attr] ||
-> +	     attr == cxl_pmu_format_attr[cxl_pmu_crb_attr]))
-> +		return 0;
-> +
->  	return attr->mode;
+> diff --git a/drivers/cxl/core/reset.c b/drivers/cxl/core/reset.c
+> index f708c7b80acf..67cdc51182f7 100644
+> --- a/drivers/cxl/core/reset.c
+> +++ b/drivers/cxl/core/reset.c
+> @@ -894,6 +894,11 @@ static int cxl_restore_hdm_decoders(struct cxl_reset_context *ctx)
+>  	return cxl_restore_hdm(ctx->target);
 >  }
 >  
-> @@ -323,6 +337,17 @@ static u16 cxl_pmu_config2_get_hdm_decoder(struct perf_event *event)
->  	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_HDM_MSK, event->attr.config2);
->  }
->  
-> +static u16 cxl_pmu_config1_crb_filter_en(struct perf_event *event)
+> +int cxl_restore_hdm_after_pci_reset(struct pci_dev *pdev)
 > +{
-> +	return FIELD_GET(CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK,
-> +			 event->attr.config1);
+> +	return cxl_restore_hdm(pdev);
 > +}
 > +
-> +static u32 cxl_pmu_config2_get_crb(struct perf_event *event)
-> +{
-> +	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-> +}
-> +
->  static ssize_t cxl_pmu_event_sysfs_show(struct device *dev,
->  					struct device_attribute *attr, char *buf)
+>  static void cxl_hdm_range_context_init(struct cxl_hdm_range_context *ctx)
 >  {
-> @@ -621,6 +646,36 @@ static int cxl_pmu_event_init(struct perf_event *event)
->  		return -EOPNOTSUPP;
->  	/* TODO: Validation of any filter */
+>  	INIT_LIST_HEAD(&ctx->ranges);
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ef25ba5f7fe9..b394704950a5 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5004,6 +5004,9 @@ static int cxl_reset_bus_function(struct pci_dev *dev, bool probe)
+>  		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL,
+>  				      reg);
 >  
-> +	if (cxl_pmu_config1_crb_filter_en(event)) {
-> +		if (!info->filter_crb)
-> +			return -EINVAL;
-> +		/* event group IDs are scoped by the CXL vendor ID */
-> +		if (cxl_pmu_config_get_vid(event) != PCI_VENDOR_ID_CXL)
-> +			return -EINVAL;
+> +	if (!rc)
+> +		rc = cxl_restore_hdm_after_pci_reset(dev);
 > +
-> +		/*
-> +		 * CRB filtering (Filter ID 1) is only valid for the DDR
-> +		 * Interface, Queue Occupancy, Queue Residency and Retry
-> +		 * event groups (CXL 4.0 Table 13-5).
-> +		 */
-> +		switch (cxl_pmu_config_get_gid(event)) {
-> +		case CXL_PMU_GID_DDR:
-> +		case CXL_PMU_GID_QUEUE_OCC:
-> +		case CXL_PMU_GID_QUEUE_RESID:
-> +		case CXL_PMU_GID_RETRY_EVENTS:
-> +			break;
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +
-> +		/*
-> +		 * Filtering while counting multiple events is
-> +		 * undefined behavior.
-> +		 */
-> +		if (hweight32(cxl_pmu_config_get_mask(event)) > 1)
-> +			return -EINVAL;
-> +	}
-> +
->  	/*
->  	 * Verify that it is possible to count what was requested. Either must
->  	 * be a fixed counter that is a precise match or a configurable counter
-> @@ -677,8 +732,8 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
->  	hwc->state = 0;
+>  	pci_dev_reset_iommu_done(dev);
+>  	return rc;
+>  }
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index de58f484b7d9..c1019e1b3b27 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -154,6 +154,7 @@ int cxl_commit(struct cxl_decoder_settings *settings, void __iomem *hdm);
+>  #ifdef CONFIG_CXL_HDM
+>  void pci_cxl_hdm_init(struct pci_dev *pdev);
+>  void pci_cxl_hdm_release(struct pci_dev *pdev);
+> +int cxl_restore_hdm_after_pci_reset(struct pci_dev *pdev);
+>  int cxl_reset_function(struct pci_dev *pdev, bool probe);
+>  #else
+>  static inline void pci_cxl_hdm_init(struct pci_dev *pdev)
+> @@ -164,6 +165,11 @@ static inline void pci_cxl_hdm_release(struct pci_dev *pdev)
+>  {
+>  }
 >  
->  	/*
-> -	 * Currently only hdm filter control is implemented, this code will
-> -	 * want generalizing when more filters are added.
-> +	 * Filter ID=0: HDM decoder filter
-> +	 * Filter ID=1: Channel/Rank/Bank (CRB) filter
->  	 */
->  	if (info->filter_hdm) {
->  		if (cxl_pmu_config1_hdm_filter_en(event))
-> @@ -688,6 +743,14 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
->  		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
->  	}
->  
-> +	if (info->filter_crb) {
-> +		if (cxl_pmu_config1_crb_filter_en(event))
-> +			cfg = cxl_pmu_config2_get_crb(event);
-> +		else
-> +			cfg = GENMASK(31, 0); /* no filtering if 0xFFFF_FFFF */
-> +		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 1));
-> +	}
+> +static inline int cxl_restore_hdm_after_pci_reset(struct pci_dev *pdev)
+> +{
+> +	return 0;
+> +}
 > +
->  	cfg = readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
->  	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
->  	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_FREEZE_ON_OVRFLW, 1);
+>  static inline int cxl_reset_function(struct pci_dev *pdev, bool probe)
+>  {
+>  	return -ENOTTY;
 > -- 
-> 2.39.5
+> 2.43.0
 > 
