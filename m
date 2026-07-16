@@ -1,126 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011022.outbound.protection.outlook.com [52.101.57.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB72383C8F;
-	Thu, 16 Jul 2026 17:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784221559; cv=none; b=en+v/a0bzTyxhfNYq10fTvUDE1qUtI/pJmEzXEE9kTne/fAJ8pV0hNGMp5z4gR1VR1j3Hi0EVvA8yHeg2z1njvL2uEEUSFQXBl8B9NoDEgImLOFN1SxQVZOB1TkfpLGJAY1XW/d9hP+3S/ZnHJn0E25BMua2iDVV5tiB96TFiLE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784221559; c=relaxed/simple;
-	bh=v9/QglZ/XTe9SIECMjV1lI0wjD2dEQADkG0X/NO1slo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VLMTlnOQcCgi2RkyySf1VNkmG5NaiZiHym8343K3eFdyt70sN6hbCq9Z5uQpGFa/UXl7d/PoCfGw6+xaH1ZfrBvLAwbpPtrOQw5aAITWb7M31KOS2DkDvFYdpAVSgBuhdWW87WSIkLirhUIwwn3qmj+XRCQokEqnYMUSThYvumI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RPiu/OHP; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13B442464B;
+	Thu, 16 Jul 2026 17:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.22
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784222027; cv=fail; b=PDBRBnm0FGPz3+eP0elc1vRV6A70mKEvXuz0e43rphV4SDL/YDBbvKJwTNY1+yNNmomqHqaiS6y98dzKIq1mvlwU79wauVDakLA+oLWk8QmPdOy2oxGSks1C0DUZIkq1GrvqQBu8EhJSMyYCX+9p2BfmrgE9rbrmsF0OuUX+4xQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784222027; c=relaxed/simple;
+	bh=tI2pZ46MeuNMEi6jGUfRNzSF1knzEL7Gd3VNDQGVwM8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NI4Fp9I3l000IwiiJvsFKNaL2HKYGxaBA5A4K8kYwrTNne+WTBnalohUh9Nwj0Ozx8H0Rz2l9MYl9ic0Rl3ZLszL14xuSs2N+QgjlmbXRBqlzEoQGF2Hg5mVN1N2LDjyUS66TY281EBhQxoFklOxg1Y84wN4ODTAXLyaaTa7zEo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=g0otGVlp; arc=fail smtp.client-ip=52.101.57.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RPiu/OHP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784221558; x=1815757558;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=v9/QglZ/XTe9SIECMjV1lI0wjD2dEQADkG0X/NO1slo=;
-  b=RPiu/OHPFvtXE1cNfdT48d03TwlHZ0Wqoi/FzKvcasezwpBiq019kpYZ
-   HGL4Q88b3rSHbVzodcYmXnGtkqRNGY/CojqdiGtFmfP7XNzruVH4kO64b
-   W+MYmOxGsWB+NBM0d1wDF/JGfipwUFQHl9+SgOCLKOIj0IJxmfUaBZULr
-   aWhunLAWhhXD9xRD+vlIcCXkfwu2LN0p1EZI446XURw5HS9tkQwaiG8NZ
-   xXBRt67/ZI/sz2HIf1upyopNnOXqG1AgGW3mQmHgk6aJW74EmtpPOuq2b
-   0cL2fZO9gpW8SNNZaVEHKUoA9RNESYaE86uxy5eg6K/YUkqzbUs16wlad
-   g==;
-X-CSE-ConnectionGUID: BPR6HDyxRIukcJg6Q4Z7eQ==
-X-CSE-MsgGUID: jFuCJUqJTG2PLOaY9qeWkw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11848"; a="84915144"
-X-IronPort-AV: E=Sophos;i="6.25,167,1779174000"; 
-   d="scan'208";a="84915144"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2026 10:05:57 -0700
-X-CSE-ConnectionGUID: zJKqblL7T+SuWhw9U9Rqcg==
-X-CSE-MsgGUID: 4cW507ZMQWC/RHCv3En6Xw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,167,1779174000"; 
-   d="scan'208";a="260152856"
-Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.109.15]) ([10.125.109.15])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2026 10:05:55 -0700
-Message-ID: <f7dfe837-a044-4d2e-bdb6-599157063eef@intel.com>
-Date: Thu, 16 Jul 2026 10:05:54 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="g0otGVlp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mjTsoFhvhtO2IhKTK8V88JrcWhHhMLp+sInnvYOqOiC7qeT8Lh/dX2nruss6pBx9S/WWp94E2SPuJ5zLbUUWLGsZtUlxPWWzD9R1wn2MjYPM13OSeprITtBk1qiF31F2MsurzoXV5OZsOnhG11B9DmmWcXIAY02Yxi7kf5LB1Fkoq6UzhBorc2zTeDS5kRvxeI+ZEJYrqQkmk5OoY2YtgohLcfnVTlVJ1iPnxmZqydzLyZHsPuNAF7HAyDGFB8A5IbX09ByHlsRkW5RjG96v5aqY37Tk5kcVP1gbENCvXU1aIbWppSv5Q8qUpn6tBbnAeCOxBuDLK4ll7odkUqzPVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9rvY48xg8emahi9xnLq8X1SeM2ZX94/bD6ipUvrjTvk=;
+ b=DzmY0Z/n/pU07YMHsBIsYINTBDMKGKbAyMsh/hW0dDxwVqdmBXyncw74vQbru6modAX47lM4W3yHGSRTa5GVBa4cqO606WS+oIZTE/RoxadT1ygFhcOzR5BmhXPLUnGKmilYEB7iOVYv02LWCzIo0tWw1fA4S7dZo9ktiTdAMmtloUK98Fdi5DCRl1ZCcgPEPnj2YjmYvbmeD2i7FRvjyyDYK9wK8G4Dcvu1qXtGEYYG/U5xmV8ov1EHogcxUaUMm5He+12SFNNz2W+9g5o3P73/4a7rLHilg59kNIrlgkP9pussPVWBXvQf+P/OO8Zk6guTfu1YjHKJcDInQYoZJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9rvY48xg8emahi9xnLq8X1SeM2ZX94/bD6ipUvrjTvk=;
+ b=g0otGVlpcrbgHhQYtVFaGGCvbf87cWlQTbaQ5lxQw3uG8EZH5hoBiDaMWv+guRnJf/s/6zgqa+emx2oNrmm7jzaPX+GwwqEPZp18rHL+U7Bf+JOhsVy5vi0335m/JVYaxsGSO5w/aFjaMFXeu/HrgJv3zSieHmQxRKijW5CPMvI=
+Received: from DM6PR02CA0138.namprd02.prod.outlook.com (2603:10b6:5:1b4::40)
+ by DM6PR12MB4404.namprd12.prod.outlook.com (2603:10b6:5:2a7::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.12; Thu, 16 Jul
+ 2026 17:13:42 +0000
+Received: from CY4PEPF0000E9CE.namprd03.prod.outlook.com
+ (2603:10b6:5:1b4:cafe::99) by DM6PR02CA0138.outlook.office365.com
+ (2603:10b6:5:1b4::40) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.223.12 via Frontend Transport; Thu,
+ 16 Jul 2026 17:13:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CY4PEPF0000E9CE.mail.protection.outlook.com (10.167.241.133) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.245.5 via Frontend Transport; Thu, 16 Jul 2026 17:13:41 +0000
+Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 16 Jul
+ 2026 12:13:41 -0500
+Received: from satlexmb08.amd.com (10.181.42.217) by satlexmb10.amd.com
+ (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 16 Jul
+ 2026 12:13:41 -0500
+Received: from galena-46a8.xcblab.xilinx.com (10.180.168.240) by
+ satlexmb08.amd.com (10.181.42.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.41 via Frontend Transport; Thu, 16 Jul 2026 12:13:40 -0500
+From: <alejandro.lucero-palau@amd.com>
+To: <linux-cxl@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<rafael@kernel.org>
+CC: Alejandro Lucero <alucerop@amd.com>
+Subject: [PATCH v2 0/1] Fix hmat_adist_nb for CXL
+Date: Thu, 16 Jul 2026 19:11:13 +0100
+Message-ID: <20260716181114.35962-1-alejandro.lucero-palau@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] perf/cxlpmu: Misc updates
-To: Will Deacon <will@kernel.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, jic23@kernel.org,
- mark.rutland@arm.com, harshal.t@samsung.com, icheng@nvidia.com,
- linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20260715191454.459673-1-dave@stgolabs.net>
- <ecd7aea3-88c0-4f1c-8130-c3c9ef9e6869@intel.com>
- <alkLGe4PfVK12lbQ@willie-the-truck>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <alkLGe4PfVK12lbQ@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9CE:EE_|DM6PR12MB4404:EE_
+X-MS-Office365-Filtering-Correlation-Id: 90cd695c-465c-438e-bc3d-08dee35d95df
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|23010399003|82310400026|36860700016|1800799024|6133799003|11063799006|56012099006|10067099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	pb6gthOY0/dbLBNxQWETuwUSjm4p4Z1anDv8VxYWhLHYDldRJqnsnOHV+9pJOZ+b1+HW+jJ+a5mFijRe6KtP3WZ+4gfOwMIOID90X5Y2ba+WT+5jrmvMM4BOYEaDWIp532uIW5up+0soNc0y9ZLHTRGkaYRPXcoQC6NN8eTJ5xH8XYbhDuGiRx6+TJM2WKZ5tYf2vjBLtwgoO0E6lzyUc+CxxOKYwEOEnYRaxUdZOfGc3V7WC5hfJ02Qv/WuH/BTDIMz6Wo+kifQfnBnoTRHqs4+PltrGoY9uxIauAl46rtSAWDgWo2VMWUhHBvwagX/bb2PsPFYX7GQIseQdhjCILN6j4A2ZFwCr3m/6Sl3Ny5yYkVj9GSyHSNY469ZIIXFVPVClys9MCctjwqD+iFK4sq/SAdfvGuetbZ8lK7bDSa0C/jB6MRNk2UQBMJHSxE1a31Ftooe4/xfQ5elSxlQBpoDctXgrnuzI1VA98ZuErnvIFjWEqTnbXdy3RdJ+VKbXG5FbN8moX11UMFr6k7vdx9u+DVQn0sUyvmb7iCozpzTTG2KMU1Q6+oXYWUa2VdwOQxqSOSQ827bWjxZ2dx6SB4WtO6if/WNC4aw+y21p4dKUr+FdocLT0Mfra0716k13PecR0qYmHRSNd2N5M81on0hP5kdc6W9LYuMy62TWP3//ziLp7ZCCeFxrEHVvbUWLzc8g3JR8OS9f9b4yjYy/g==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(23010399003)(82310400026)(36860700016)(1800799024)(6133799003)(11063799006)(56012099006)(10067099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	HuVGi3xRS/V9p6F4hvSOemWyueCuRZmFSIwevMXmnuMOqz43wjNE8M1s3WQx9Z5RQehWWLXOfdgiDp3OcDl9avE3uTRJI3rnnvhc23Sj0iOpXWoMzJhh9pFjB9a9B4T6STLeMI9zrdzidDdnYi1BWtYjISw+LMVHuCUHFqtuO3PzhE/99EsrL/eBiPS6j8owumb05F3OHQ2UedW41lhYBbi4FKlYUlAq0rEh8GnXuT+Y8e0yAh69JTfPj3aYTX9vnDlTjXGXRTOnHDUyAflBU7KjsWb1nAENFm7hkFxsbjUTYm3ygVz/9ks9b7RkGTFB6vUMnJ+fvMsKnVpiQvLghtZ6d5m9am1PcwMA+W4TSQnK3gCoumPP00p1tXeT6TGMe+6gJyGduSmX6Ls00Cu2AE4YfFdVNkYeIASF2FHwWxeXuhKEFfd/vsF/vuLPQc1m
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2026 17:13:41.8237
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90cd695c-465c-438e-bc3d-08dee35d95df
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9CE.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4404
+
+From: Alejandro Lucero <alucerop@amd.com>
+
+ v2:
+	- Add Fixes (Richarg Cheng)
+	- Change commit as fix for Type2/Type3 (Richar Cheng)
+
+RFC
+===
+While working on adding CXL Type2 support I found a problem with
+register_mt_adistance_algorithm() which is used inside
+cxl_region_probe(). It turns out my kernel config had not
+CONFIG_MEMORY_HOTPLUG enabled leading to the hmat_adist_nb notifier
+block deleted after kernel initialization without doing any notifer
+block unregister, leaving the notifier chain unaware of this. A CXL
+Type2 driver can be load after kernel initialization and with a kernel
+not enabling memory hotplug, the notifier registration crashes if the
+released memory from hmat_adist_nb is reused.
+
+I'm not sure but I do not think this can happen for Type3 devices
+because the related CXL driver is used only during kernel initialization
+if memory hotplug not enabled. Type2, aka CXL accelerator drivers, is
+coming and the problem will arise with certainty.
+
+I have contemplated to modify how the identified __meminit and
+__meminitdat are defined in linux/init.h, extending the case for being
+empty definitions if CONFIG_CXL_MEM=y, but I think it makes sense to
+only avoid the use of __meminit for hmat_adist_nb.
+
+FWIW, a Type2 device should not require CONFIG_MEMORY_HOTPLUG and its
+memory is currently initialized by the BIOS. Maybe not having memory
+hotplug enabled is unusual and even more with CXL, so another option
+could be to enable memory hotplug if CXL mem is enabled.
+
+Alejandro Lucero (1):
+  acpi/hmat: preserve hmat_adist_nb notifier block
+
+ drivers/acpi/numa/hmat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 
-
-On 7/16/26 9:47 AM, Will Deacon wrote:
-> On Thu, Jul 16, 2026 at 09:46:05AM -0700, Dave Jiang wrote:
->>
->>
->> On 7/15/26 12:14 PM, Davidlohr Bueso wrote:
->>> Hello,
->>>
->>> Changes from v3 (https://lore.kernel.org/all/20260713061112.105419-1-dave@stgolabs.net/):
->>>  - Validate the event vendor ID for CRB filtering, the Table 13-5
->>>    event groups are scoped by the CXL VID in patch 3 (Richard).
->>>  - Add Richard's Reviewed-by tag to patch 1.
->>>
->>> Three patches for the CXL PMU driver.
->>>
->>> Patch 1 is a standalone fix.
->>>
->>> Patch 2 adds the CXL 4.0 events that hardware exposes but the
->>> driver did not. It now precedes the filter work as the latter
->>> refers to the new event group IDs.
->>>
->>> Patch 3 implements Channel/Rank/Bank (CRB) filtering, now permitted
->>> for all event groups that CXL 4.0 Table 13-5 allows Filter ID 1 on.
->>>
->>> v2 was tested on real hardware. The v4 changes have been exercised
->>> under qemu CPMU emulation (jic23 tree) + changes for the new events/Filter=1:
->>>
->>>     https://lore.kernel.org/all/20260715190050.458288-1-dave@stgolabs.net/
->>>
->>> Thanks!
->>>
->>> Davidlohr Bueso (1):
->>>   perf/cxlpmu: Fix 64-bit write to 32-bit HDM filter register
->>>
->>> Harshal Thakkar (2):
->>>   perf/cxlpmu: Add missing CXL 4.0 events
->>>   perf/cxlpmu: Support Channel/Rank/Bank filter
->>>
->>>  drivers/perf/cxl_pmu.c | 119 +++++++++++++++++++++++++++++++++++++++--
->>>  1 file changed, 116 insertions(+), 3 deletions(-)
->>>
->>>
->>> base-commit: d60ec36cab338dfe2ae40d73e9c8d6c4af70d2b8
->>
->> For the series
->> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
->>
->>
->> This is being picked up by the perf maintainer right?
-> 
-> Yeah, I'll grab it eventually. Just a bit swamped atm.
-
-Thanks Will! Wasn't trying to rush you. Just checking to see which acceptance path the series is going through.
-
-> 
-> Will
+base-commit: 8cd9520d35a6c38db6567e97dd93b1f11f185dc6
+-- 
+2.34.1
 
