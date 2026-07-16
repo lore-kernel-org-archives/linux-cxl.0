@@ -1,257 +1,196 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D8F78F2B
-	for <linux-cxl@vger.kernel.org>; Thu, 16 Jul 2026 04:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE2D38229A
+	for <linux-cxl@vger.kernel.org>; Thu, 16 Jul 2026 04:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784174840; cv=none; b=RqY89Ez2VoAnL50LJd+VRWkZP7RjwYaiCUe5+wljIL/71a6TWV8Ut5PBuxkp207xrAADoUL9a1F2Rq65NRCcdB5eg2YVg5PayUXGCFRzTCKW97nC5I4KVz6LhqFLg/EFV9qThnUG26nqKy3YnPJqJxDqfzVEQdbw6ypWHp2oGvk=
+	t=1784174899; cv=none; b=UoXO13kCV40bR9XHN+NIiOdi/dt1veGDu2ApOPYP6Vw6Y409WMuOYHvPUz8q2tc2ltsMS76dYJsEu2/i7PkKQnwnbSMdkAXGmat/XzHEKm3N14kzVY6aJyZII5CP5nqzapHpFlxugzw1Pe21E1EROZqOLKqAm+6j8KD3yEmb+mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784174840; c=relaxed/simple;
-	bh=YTB+b+lX3lV30Twb0r27E7fahengim1ieqdN7vnFePg=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=ZqUIX1nGFbFOvt1GkaBK+vNbc4YeK6O6gj9s5Jc6shgpLX6YLEjO9oEJlkhxi0GADrsP7Hie+QHDn0hayFbmOFXlh13CN6+AIR/qpF0RZuLQJHOKrkC8r0MWRsQBPs2DTYWnw7aVqKWGxiGznI1/GPwe5urmm8txc4Jt/wn4tIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LFe+2zEs; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1784174899; c=relaxed/simple;
+	bh=R9xKCPWUV4jE/Y73zK46+N8T9xEUacgdX7igmryS87o=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ubPxoLsI3QwarbmpJEIUPBZ0kU4URQhXDtzgOpQkzA0ZBex9/MKsRaz+Ff18fr1Z8s+tt+MRXQtJaCzL+RFdVEQW/UPKFKFHCgadG7ORs8frcjCBLY6BYrc4njW/xkXTiRAavCSbr7BQYmOTpVku3F+jDaPHbYEEM3iaFCy41rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hSF+tJi9; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LFe+2zEs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784174840; x=1815710840;
-  h=date:from:to:cc:subject:message-id;
-  bh=YTB+b+lX3lV30Twb0r27E7fahengim1ieqdN7vnFePg=;
-  b=LFe+2zEsb3U0IW0Ur4cWmqwwAog51eraesq/xQHfi6JRWveAhoU4++ZX
-   GZ5lRChtvDV/BrvoPqzoPDQB/J+v+A5D1lgStreBxvmpVShwo0Qv+qR7j
-   Mxuc0EYXwO0/Ybk6akyxR0FI7g0jGWVCyOZ13ckQ/3XuSEIYYzxiQhH3o
-   Pu3dRE2fGS27QB4yvrrfLGUD2QLVtRRYlsHjvjgdq4YHLl0Wrfo7OwCCR
-   p2zG0pS1APNUMO1z2LMfbjGbvsBw+OdDN8pVPo8qJOu6CZzEOQjHWyE5r
-   IOe71S3VvtJuLDOYRBGD3PqYmLb3EsIAvYmkFKMdQ1Dt7+/gyVbOHaGIR
-   A==;
-X-CSE-ConnectionGUID: 7lQXVUVUQXGp9byNM0K8oA==
-X-CSE-MsgGUID: 4iW2BOYUS/aE/viIMbYPxg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="84853179"
-X-IronPort-AV: E=Sophos;i="6.25,166,1779174000"; 
-   d="scan'208";a="84853179"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2026 21:07:19 -0700
-X-CSE-ConnectionGUID: bjzPMPanQTCKROfzOPJ/TA==
-X-CSE-MsgGUID: J9u2jbeQRaCrhXenvrM2XQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,166,1779174000"; 
-   d="scan'208";a="257017632"
-Received: from lkp-server02.sh.intel.com (HELO ea128546eb3d) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 15 Jul 2026 21:07:16 -0700
-Received: from kbuild by ea128546eb3d with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wkDNQ-00000000OIX-1bmg;
-	Thu, 16 Jul 2026 04:07:12 +0000
-Date: Thu, 16 Jul 2026 12:06:36 +0800
-From: kernel test robot <lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hSF+tJi9"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3811f512167so6726724a91.3
+        for <linux-cxl@vger.kernel.org>; Wed, 15 Jul 2026 21:08:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784174897; x=1784779697; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=f9V0pZbsyulMpnH6R6OfoQOZz9JXss18PvQ1c2eqK3s=;
+        b=hSF+tJi9sHaTyjGHe7o8/mx4qbfHsGGL9P7VbepRKLj2hba0+/ZMxp5uApB9zLpIqz
+         HXo/dQQ1CmF9+7nhYGEKnFF5L9tIrMbPXHOE8J0rEwVSmcLlhMcq1bp0My5cFM41cDLU
+         ESC6iwzS93TtirSRYhO8rwFMMm0hDBiXzQMeLj/EZhWgZtzPs99R8Z6e9zRg7Wo/xlU5
+         Jpr5UI8CeSdQ6ejYaiWibZFU3Cbnj1z5j93HnGzIkY3fHRaQGLZTc+ry1aL09zcS0MkZ
+         lI7DmWqeDUw6ykzpza4a/SgWw0Aw5lklPW2CSJBEt/svED8oX9JIAO/B1b6oXLKq6+WF
+         Y2gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784174897; x=1784779697;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:date
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=f9V0pZbsyulMpnH6R6OfoQOZz9JXss18PvQ1c2eqK3s=;
+        b=nD01i4R3B3b4hYXrUqctdbNJsp5J1re1vX0UX2PiwzYvmtjNap29bHTR3fH08MI8Gj
+         I+LRWvZmGMJ1U4ySyssbFjchc++IdzyK/7gc1drLGaPzkOQu7GgOgC7nTdyzXdEin1WF
+         HZsW2HDVG5XzbTfjVt9OuER6XtvMXP0Yy+oRxO2AziOADe/9arr8t2MItS5QKFe/l9Ub
+         nAI4A5oO06Ah1HbeHJC+6fl4BSHyVwYi/0sSsK0hohn1KRUGgzysmWCt5iH3dZTZ2vSd
+         Hx1+r/4f1zFUTbCdVDvTbckZjT57j77iIc7w6Yc0ugPo/t43wIpLaqLOc8Bo2HEbrLOp
+         ydtQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rol/wiZdsGR2tiRvmGVjAFaP4KFizlWJnmAtrOUv1TB03+8AD2r6fbWdVc4Qh8msXURvVSBlVHcQGo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw29gUODmUW/bhRRyUY6irDmd9qITA6EEwIYCxKGW08XT6Fsd2e
+	4LtJ+QwYhASKJXQQvHBzoTbTBIZo77p91mB6VnUwXjc61lQNtfsX0+D5
+X-Gm-Gg: AfdE7cn/6nug8T51kxBXoDjPBuVlQyxIi59QB+BW7Y5J2sRHgUrlkU3phwQpgERb+of
+	xsJvrpSeL+5S2sWgbdfqZDa+9ef9J3P3WzEJ0j4fzd2Bwyra+AYDoK08b9GtamansCquQK5rF32
+	JUWrFXjOdkdA1+kQHrV8+fpTmucId3YOAvLTbRtv1jK2md7VE1CG6KNtmdap2MALEziXhCFTwMZ
+	7bCvCVdpvt/SaRfNfObApx8kuhCd6IB+Fvc+00KRgsriEOhTwU5wAmmtSFPFWRUA7mp3tOKUQeq
+	VuL2UbMUga2g8ylU3JkFDqpeCb8UljdkCrRiFZXguXT/m+dX21Gzp9mecIRBHX6F78o7AlZCV5u
+	gji2ZHnTTG8SJeIt7rmb7pLrU/mmXDJRNa6O4T4AcukQ06NFT+wzIjYax8x/S2raNVboZ9MspVz
+	ASIuCDoUY+6ta39vu8unw3sjcOUrM0I6VZ08h2Bwg4nrGA1ozdnM6lDcS5EQ==
+X-Received: by 2002:a17:90b:254d:b0:38d:c0f9:30be with SMTP id 98e67ed59e1d1-38e1b012d38mr8272945a91.38.1784174897247;
+        Wed, 15 Jul 2026 21:08:17 -0700 (PDT)
+Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3140e6f0fcdsm6473974eec.30.2026.07.15.21.08.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jul 2026 21:08:16 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Wed, 15 Jul 2026 21:08:14 -0700
 To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Dan Williams <djbw@kernel.org>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- 5ca04f3ba91f1773bbd5da6d9c654ccc1ba7831d
-Message-ID: <202607161223.yTPvMy3i-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+	Dan Williams <djbw@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Alison Schofield <alison.schofield@intel.com>,
+	John Groves <John@groves.net>, Gregory Price <gourry@gourry.net>
+Subject: Re: [PATCH v11 12/31] cxl/mem: Set up framework for handling DC
+ Events
+Message-ID: <alhZLnHZgvRcOvO8@AnisaLaptop.localdomain>
+References: <20260625112638.550691-1-anisa.su@samsung.com>
+ <20260625112638.550691-13-anisa.su@samsung.com>
+ <dc8155d9-df6a-444b-a954-dad2d59cf704@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dc8155d9-df6a-444b-a954-dad2d59cf704@intel.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 5ca04f3ba91f1773bbd5da6d9c654ccc1ba7831d  Bounds-check the fwctl feature commands
+On Fri, Jun 26, 2026 at 02:54:43PM -0700, Dave Jiang wrote:
+> 
+> 
+> On 6/25/26 4:04 AM, Anisa Su wrote:
+> > From: Ira Weiny <iweiny@kernel.org>
+> > 
+> > Adds the support for receiving DC event records but defers
+> > the real add/release logic to subsequent commits. Simply refuse all
+> > extents for DC_ADD and ack all DC_RELEASE events for now. Forced
+> > release is currently unsupported.
+> > 
+> > In order, this commit adds the following:
+> > 
+> > 1. Learn about DC Event Records and how to respond to them
+> > 
+> > * cxl_mem_get_event_records() learns about the DC Event record.
+> > Records of that type are routed to cxl_handle_dcd_event_records().
+> > 
+> > * cxl_handle_dcd_event_records() switches on event_type:
+> > 	- DCD_ADD_CAPACITY     -> handle_add_event()
+> > 	- DCD_RELEASE_CAPACITY -> cxl_rm_extent()
+> > 	- DCD_FORCED_CAPACITY_RELEASE is logged and ignored (FM/device-only).
+> > 
+> > * cxl_send_dc_response() sends the reply mailbox commands
+> > ADD_DC_RESPONSE / RELEASE_DC
+> > 
+> > 2. Add stubs for DC_ADD and DC_RELEASE logic
+> > 
+> > * handle_add_event() stages incoming extents onto
+> > mds->add_ctx.pending_extents and, when More=0 closes the chain,
+> > replies with an empty ADD_DC_RESPONSE — refusing all extents for now
+> > 
+> > * cxl_rm_extent() acks the release via memdev_release_extent() so the
+> > device's view stays consistent; we can ack all releases because
+> > we currently don't accept/use any extents offered.
+> > 
+> > 3. Structural setup for later commits:
+> > 
+> > * struct dc_extent, struct cxl_dc_tag_group, and pending_add_ctx
+> > set up the stage for the real DC_ADD path, which will enforce
+> > tag/grouping semantics
+> > 
+> > Based on an original patch by Navneet Singh.
+> > 
+> > Signed-off-by: Ira Weiny <iweiny@kernel.org>
+> > Signed-off-by: Anisa Su <anisa.su@samsung.com>
+> 
+> Just a minor comment below besides all the issues raised by sashiko
+> 
+Got it!
 
-elapsed time: 731m
+> 
+> > 
+> > +
+[snip]
 
-configs tested: 179
-configs skipped: 18
+I also meant to ask in the last rev but I forgot: are these stub
+comments useful or should I just get rid of them?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> > +/*
+> > + * Stub: ack the release back to the device so it knows we are not
+> > + * using the range.  A later commit replaces this with the real
+> > + * teardown that walks the region's tag group and tears down the
+> > + * member dc_extent devices.
+> > + */
+> > +static int cxl_rm_extent(struct cxl_memdev_state *mds,
+> > +			 struct cxl_extent *extent)
+> > +{
+> > +	u64 start_dpa = le64_to_cpu(extent->start_dpa);
+> > +	struct range dpa_range = {
+> > +		.start = start_dpa,
+> > +		.end = start_dpa + le64_to_cpu(extent->length) - 1,
+> > +	};
+> > +
+> > +	memdev_release_extent(mds, &dpa_range);
+> > +	return 0;
+> > +}
+> > +
+> > +static char *cxl_dcd_evt_type_str(u8 type)
+> 
+> Should it return 'const char *' instead?
+> 
+Yes
 
-tested configs:
-alpha                             allnoconfig    gcc-16.1.0
-alpha                            allyesconfig    gcc-16.1.0
-alpha                               defconfig    gcc-16.1.0
-arc                              allmodconfig    gcc-16.1.0
-arc                               allnoconfig    gcc-16.1.0
-arc                              allyesconfig    clang-24
-arc                              allyesconfig    gcc-16.1.0
-arc                                 defconfig    gcc-16.1.0
-arc                   randconfig-001-20260716    gcc-14.3.0
-arc                   randconfig-002-20260716    gcc-16.1.0
-arm                               allnoconfig    clang-17
-arm                               allnoconfig    gcc-16.1.0
-arm                              allyesconfig    gcc-16.1.0
-arm                                 defconfig    clang-23
-arm                   randconfig-001-20260716    gcc-8.5.0
-arm                   randconfig-002-20260716    clang-17
-arm                   randconfig-003-20260716    gcc-12.5.0
-arm                   randconfig-004-20260716    clang-23
-arm64                            allmodconfig    clang-24
-arm64                             allnoconfig    gcc-16.1.0
-arm64                               defconfig    gcc-16.1.0
-arm64                 randconfig-001-20260716    clang-23
-arm64                 randconfig-002-20260716    clang-22
-arm64                 randconfig-003-20260716    clang-23
-arm64                 randconfig-004-20260716    gcc-12.5.0
-csky                             allmodconfig    gcc-16.1.0
-csky                              allnoconfig    gcc-16.1.0
-csky                                defconfig    gcc-16.1.0
-csky                  randconfig-001-20260716    gcc-12.5.0
-csky                  randconfig-002-20260716    gcc-14.3.0
-hexagon                          allmodconfig    clang-23
-hexagon                          allmodconfig    gcc-16.1.0
-hexagon                           allnoconfig    clang-23
-hexagon                           allnoconfig    gcc-16.1.0
-hexagon                             defconfig    clang-23
-hexagon               randconfig-001-20260716    clang-23
-hexagon               randconfig-002-20260716    clang-23
-i386                             allmodconfig    clang-22
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                              allnoconfig    gcc-16.1.0
-i386                             allyesconfig    clang-22
-i386                             allyesconfig    gcc-14
-i386                                defconfig    clang-22
-i386                  randconfig-001-20260716    clang-22
-i386                  randconfig-002-20260716    clang-22
-i386                  randconfig-003-20260716    gcc-14
-i386                  randconfig-004-20260716    gcc-14
-i386                  randconfig-005-20260716    clang-22
-i386                  randconfig-006-20260716    clang-22
-i386                  randconfig-007-20260716    clang-22
-i386                           randconfig-011    clang-22
-i386                  randconfig-011-20260715    clang-22
-i386                           randconfig-012    clang-22
-i386                  randconfig-012-20260715    gcc-14
-i386                           randconfig-013    gcc-14
-i386                  randconfig-013-20260715    gcc-14
-i386                           randconfig-014    clang-22
-i386                  randconfig-014-20260715    clang-22
-i386                           randconfig-015    gcc-14
-i386                  randconfig-015-20260715    clang-22
-i386                           randconfig-016    gcc-14
-i386                  randconfig-016-20260715    clang-22
-i386                           randconfig-017    gcc-14
-i386                  randconfig-017-20260715    gcc-14
-loongarch                        allmodconfig    clang-24
-loongarch                         allnoconfig    clang-20
-loongarch                         allnoconfig    gcc-16.1.0
-loongarch                           defconfig    clang-23
-loongarch             randconfig-002-20260716    clang-23
-m68k                             allmodconfig    gcc-16.1.0
-m68k                              allnoconfig    gcc-16.1.0
-m68k                             allyesconfig    gcc-16.1.0
-m68k                                defconfig    gcc-16.1.0
-microblaze                        allnoconfig    gcc-16.1.0
-microblaze                       allyesconfig    gcc-16.1.0
-microblaze                          defconfig    gcc-16.1.0
-mips                             allmodconfig    gcc-16.1.0
-mips                              allnoconfig    gcc-16.1.0
-mips                             allyesconfig    gcc-16.1.0
-mips                         cobalt_defconfig    gcc-16.1.0
-nios2                            allmodconfig    clang-20
-nios2                            allmodconfig    gcc-11.5.0
-nios2                             allnoconfig    clang-24
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20260716    gcc-8.5.0
-nios2                 randconfig-002-20260716    gcc-8.5.0
-openrisc                         allmodconfig    clang-20
-openrisc                         allmodconfig    gcc-16.1.0
-openrisc                          allnoconfig    clang-24
-openrisc                          allnoconfig    gcc-16.1.0
-openrisc                            defconfig    gcc-16.1.0
-parisc                           allmodconfig    gcc-16.1.0
-parisc                            allnoconfig    clang-24
-parisc                            allnoconfig    gcc-16.1.0
-parisc                           allyesconfig    gcc-16.1.0
-parisc                              defconfig    gcc-16.1.0
-parisc                randconfig-001-20260716    gcc-15.2.0
-parisc                randconfig-002-20260716    gcc-8.5.0
-parisc64                            defconfig    gcc-16.1.0
-powerpc                          allmodconfig    gcc-16.1.0
-powerpc                           allnoconfig    clang-24
-powerpc                           allnoconfig    gcc-16.1.0
-powerpc               randconfig-001-20260716    clang-21
-powerpc               randconfig-002-20260716    clang-19
-powerpc64             randconfig-001-20260716    clang-22
-powerpc64             randconfig-002-20260716    clang-23
-riscv                            allmodconfig    clang-24
-riscv                             allnoconfig    clang-24
-riscv                             allnoconfig    gcc-16.1.0
-riscv                            allyesconfig    clang-23
-riscv                               defconfig    clang-23
-riscv                 randconfig-001-20260716    gcc-14.3.0
-s390                             allmodconfig    clang-23
-s390                              allnoconfig    clang-23
-s390                              allnoconfig    clang-24
-s390                             allyesconfig    gcc-16.1.0
-s390                                defconfig    clang-18
-s390                  randconfig-002-20260716    gcc-9.5.0
-sh                               allmodconfig    gcc-16.1.0
-sh                                allnoconfig    clang-24
-sh                                allnoconfig    gcc-16.1.0
-sh                               allyesconfig    gcc-16.1.0
-sh                                  defconfig    gcc-16.1.0
-sh                    randconfig-001-20260716    gcc-16.1.0
-sh                    randconfig-002-20260716    gcc-16.1.0
-sparc                             allnoconfig    clang-24
-sparc                             allnoconfig    gcc-16.1.0
-sparc                               defconfig    gcc-16.1.0
-sparc                 randconfig-001-20260716    gcc-13.4.0
-sparc                 randconfig-002-20260716    gcc-11.5.0
-sparc64                          allmodconfig    clang-20
-sparc64                             defconfig    clang-23
-sparc64               randconfig-001-20260716    clang-23
-sparc64               randconfig-002-20260716    clang-23
-um                               allmodconfig    clang-17
-um                                allnoconfig    clang-17
-um                                allnoconfig    clang-24
-um                               allyesconfig    gcc-14
-um                               allyesconfig    gcc-16.1.0
-um                                  defconfig    clang-23
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260716    clang-23
-um                    randconfig-002-20260716    gcc-14
-um                           x86_64_defconfig    clang-23
-x86_64                           allmodconfig    clang-22
-x86_64                            allnoconfig    clang-22
-x86_64                            allnoconfig    clang-24
-x86_64                           allyesconfig    clang-22
-x86_64      buildonly-randconfig-001-20260716    clang-22
-x86_64      buildonly-randconfig-002-20260716    gcc-14
-x86_64      buildonly-randconfig-003-20260716    gcc-14
-x86_64      buildonly-randconfig-004-20260716    gcc-14
-x86_64      buildonly-randconfig-005-20260716    gcc-14
-x86_64      buildonly-randconfig-006-20260716    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20260716    gcc-12
-x86_64                randconfig-002-20260716    gcc-14
-x86_64                randconfig-003-20260716    clang-22
-x86_64                randconfig-004-20260716    clang-22
-x86_64                randconfig-005-20260716    clang-22
-x86_64                randconfig-006-20260716    gcc-14
-x86_64                randconfig-011-20260716    clang-22
-x86_64                randconfig-012-20260716    clang-22
-x86_64                randconfig-013-20260716    gcc-14
-x86_64                randconfig-014-20260716    clang-22
-x86_64                randconfig-015-20260716    clang-22
-x86_64                randconfig-016-20260716    gcc-14
-x86_64                randconfig-074-20260716    gcc-14
-x86_64                randconfig-076-20260716    gcc-14
-x86_64                          rhel-9.4-rust    clang-22
-xtensa                            allnoconfig    clang-24
-xtensa                            allnoconfig    gcc-16.1.0
-xtensa                           allyesconfig    clang-20
-xtensa                           allyesconfig    gcc-16.1.0
-xtensa                  nommu_kc705_defconfig    gcc-16.1.0
-xtensa                randconfig-001-20260716    gcc-9.5.0
-xtensa                randconfig-002-20260716    gcc-8.5.0
+> DJ
+> 
+Thanks,
+Anisa
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> > +{
+> > +	switch (type) {
+> > +	case DCD_ADD_CAPACITY:
+> > +		return "add";
+> > +	case DCD_RELEASE_CAPACITY:
+> > +		return "release";
+> > +	case DCD_FORCED_CAPACITY_RELEASE:
+> > +		return "force release";
+> > +	default:
+> > +		break;
+> > +	}
+> > +
+> > +	return "<unknown>";
+> > +}
+> > +
+[snip]
+ 
