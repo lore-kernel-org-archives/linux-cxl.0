@@ -1,91 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FF12BFC7B;
-	Fri, 17 Jul 2026 16:17:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301F92F7EE4;
+	Fri, 17 Jul 2026 17:08:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784305025; cv=none; b=SHq+ozryYSh5DrYYjW/NkDklV2Windi25HL0orUkfrEyfRKsKBN4nZj2JcsfPTlJO45tTT844Zl0wRsKo0ftH+XKMSZSJEKhJqgaAyIR1aUn7Au4VK3pFlXhwDt36Pz8siSyyJ8sGfNEDgPx2DSn+ZQ1KBERySRiiEXUSl26NAw=
+	t=1784308108; cv=none; b=VhLmZPL2xSGQ02omC15IrKJpRiJF5986dr7YIXHVS6uhBor6XM/Ye3hfsBGThZcHYOkhyTDzwdw9Kx1R3c/fLiYOZ/PCjDIXfWZYTQsR/8sexv4HAqeXeSOUWgz8OogEkEKQqO6C/kN6FqfRPJovsSf1JiWO2y6Wr5TjOxla2KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784305025; c=relaxed/simple;
-	bh=Y87/0sGWahN2SvXEmGa9jixnkEGvO+sjLIKberF4ACw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MVpAGQPXuUqX+Wlf/IwKpcWpqR1h5DaYnyynRSkU08GND1her3jlHGNmjBHNZE6AH7CmBv8g6OSv/Ge5zyCHDMs9TMLcP1JscJflYqpPRZ+ToDB7m6Y2xOuR9S42VPCSrOOOqCvHZaqixd9Rm4ts2iJLa9nyru8nIqsFdDEhthQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3C451F00A3A;
-	Fri, 17 Jul 2026 16:17:03 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Cc: rafael@kernel.org,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	guohanjun@huawei.com,
-	mchehab@kernel.org,
-	xueshuai@linux.alibaba.com,
-	terry.bowman@amd.com,
-	sashiko-bot@kernel.org
-Subject: [PATCH v3 10/10] ACPI: extlog: Validate elog record length before walking sections
-Date: Fri, 17 Jul 2026 09:16:47 -0700
-Message-ID: <20260717161647.1493259-11-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260717161647.1493259-1-dave.jiang@intel.com>
-References: <20260717161647.1493259-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1784308108; c=relaxed/simple;
+	bh=LWTa0N9zI+WlpfHp5wwjE4sSSTbeeWltjSywixwG+eE=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=e22Bm0j1H0vcyfR6q5I80re6dXdNy7KQBl8Gh0IV7K53Z77i7TteKjSKGUpoveJX2USSHsKu7mceXFMkrDFgjedXkEzsVTCKHx7UdBvyucSdeDyT8lxu/jXV3PVlhwwEtk5EHTo0eiQzFBycMg8M7Sm5lbGPt5t+TU880EEgbco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QT3mFXlA; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QT3mFXlA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B02361F000E9;
+	Fri, 17 Jul 2026 17:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784308106;
+	bh=pNLGrFix6W248z666S+Ykq+P+PkJT+5J5ewxlxte0Tc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=QT3mFXlARDGeE5fJR0O7/YcYRL4XUYDTY4JfE5qW78UTR8YazDmW7eNCC107QLzec
+	 dwPrMw3S6Kyb5LgT+7K2goIYM4rZgf+fBl4LDX043Q0t4jpFQbkQNeOEdKksBtJScM
+	 HtmAz40JVBHpraJXOf6HbVL6xZz9PYn/PUf3wQ+5bIvtLr+J2gqa13E+xDbkUynFbZ
+	 oOKuqUJK3sNMAHTE+L91RMQUIM1m0WTeME8qmhBgara/gOKRkgETpMU9ho9/bRwtgh
+	 GxMEENAZlH3BH2SHFkXvpCuaxS2jvODSRqQtqD+P/rL66cmZs3FtJM7fGTrnZq0kor
+	 SypXjrZ+vV4jA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v10 09/10] PCI: of: Remove fwnode_dev_initialized() call
+ for a PCI root bridge node
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Herve Codina" <herve.codina@bootlin.com>
+Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
+In-Reply-To: <20260717145147.823749-10-herve.codina@bootlin.com>
+References: <20260717145147.823749-1-herve.codina@bootlin.com>
+ <20260717145147.823749-10-herve.codina@bootlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 17 Jul 2026 17:08:26 +0000
+Message-Id: <20260717170826.B02361F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-sashiko-bot flagged a missing bounds check on data_length that allows
-an out-of-bounds read of elog_buf.
+> During the instantiation of devices described by a device-tree overlay
+> applied on a PCI device, devlink displays the following kind of debug
+> messages instead of creating the expected links:
+>    'Not linking xxxx - might never become dev'
+>=20
+> Without those expected links, the device removal order cannot be
+> correct.
+>=20
+> Those debug traces are printed by fw_devlink_create_devlink(). In our
+> use case, they are all printed because the supplier of the link has at
+> least one of its ancestor with its fwnode flag FWNODE_FLAG_INITIALIZED
+> set.
+>=20
+> The culprit ancestor is the PCI root bridge.
+>=20
+> [ ... ]
+> are correctly created.
+>=20
+> Fixes: 1f340724419e ("PCI: of: Create device tree PCI host bridge node")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 
-extlog_print() copies a fixed ELOG_ENTRY_LEN (4096) bytes from the elog
-record into elog_buf, then walks the sections using the
-firmware-controlled data_length. Nothing checks that data_length stays
-within the buffer, so a malformed record can walk the section pointer
-past elog_buf and read adjacent memory.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-Unlike the GHES paths, extlog never calls cper_estatus_check(). Reject a
-record whose length exceeds ELOG_ENTRY_LEN and run cper_estatus_check()
-before walking the sections.
-
-A malformed record is now dropped with NOTIFY_DONE without setting
-MCE_HANDLED_EXTLOG, reflecting that extlog did not consume it.
-
-Reported-by: sashiko-bot@kernel.org
-Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@intel.com?part=6
-Fixes: f6ec01da40e4 ("ACPI: extlog: Handle multiple records")
-Assisted-by: Claude:claude-opus-4-8
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v3:
-- New patch. sashiko's review of v2 pointed out extlog walks the elog
-  sections without the cper_estatus_check() bound the GHES paths use.
----
- drivers/acpi/acpi_extlog.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-index 1fbaf134c04e..30863fd3f5b0 100644
---- a/drivers/acpi/acpi_extlog.c
-+++ b/drivers/acpi/acpi_extlog.c
-@@ -200,6 +200,13 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
- 
- 	tmp = (struct acpi_hest_generic_status *)elog_buf;
- 
-+	/*
-+	 * data_length is firmware controlled, so make sure the record and its
-+	 * sections stay within elog_buf before anything walks them.
-+	 */
-+	if (cper_estatus_len(tmp) > ELOG_ENTRY_LEN || cper_estatus_check(tmp))
-+		return NOTIFY_DONE;
-+
- 	if (!ras_userspace_consumers()) {
- 		print_extlog_rcd(NULL, tmp, cpu);
- 		goto out;
--- 
-2.55.0
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260717145147.8237=
+49-1-herve.codina@bootlin.com?part=3D9
 
