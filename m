@@ -1,38 +1,38 @@
 Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9ADE42BE83;
-	Fri, 17 Jul 2026 14:53:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF138430CD7;
+	Fri, 17 Jul 2026 14:53:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784300001; cv=none; b=APsl5MJC40jx2FTrJAJsF4z5aQU1QLgb5ayfcHsZTeTl+NRiKx2EjEuXzyzBgP9eYR411yRNXLBegqS2hLwyp7C2JBSkFxMtP6BBXBw1CkLHocrnIyuEd5nQtXCi6h1alzeOCi2YsMxN26Hm3E7jNqThwGFq95UnqDKZfamgBVk=
+	t=1784300005; cv=none; b=e+3GZCJ4Af/tg0lcLwDXK+xNfez/37bXgtFr4A31kY3YgTFDKiRkoZPbAFcWjT3OeWasszCaezu49O7kTrG7gP4HMxdztjeZsWQhWW3mA0HHI/820azq9Bb6mhTZyUtuu9C/tq5IUYFoGY+mCIMrrliOSrH1l98BlWeROWdMDbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784300001; c=relaxed/simple;
-	bh=8Q2xceHris1ZiP7k/aZEeH6tRf1AGd3i3AopNaXMLmY=;
+	s=arc-20240116; t=1784300005; c=relaxed/simple;
+	bh=V7UJIhHONa6PwjxaQPM/lB8FRDMH/CPmUpkAoTsUR5s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JrYyeo9WDxOrQippPthwvHpglRAtr6D98L1B3xOpK11rwRQviBUW34kDMrX37b24o3JF5JwAgrq9fi0h5+iqJnL6x9fSena9YHlhrCrwAkN34OheeV8hxNjiIfJa2W6TuKFJcxvqeAxsnuaBjGFMW+i17ve1Tu3Endd0ks3FqYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HN/k5NZE; arc=none smtp.client-ip=185.246.84.56
+	 MIME-Version; b=s/b6x8JsrTsoQWDjvWXf1tNDTCtFzwjQzIRR7RcHKak3qHTVzIwtm3qKrd6/rpDPiFRomnrEM/VHEaDjri0+d4uUKZrXx444EZOU+T75hgTa1MSSY6PwoZLjd7R3BLXgK78xfMKsQWTAbHweWpBvd93M3UKChqXcdMdZiLugKzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gv+t3KpE; arc=none smtp.client-ip=185.246.84.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HN/k5NZE"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gv+t3KpE"
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 11FA61A1066;
-	Fri, 17 Jul 2026 14:53:06 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id C5F8A1A1065;
+	Fri, 17 Jul 2026 14:53:13 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id D837160361;
-	Fri, 17 Jul 2026 14:53:05 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A5D8C11BD1840;
-	Fri, 17 Jul 2026 16:52:55 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 96C7160361;
+	Fri, 17 Jul 2026 14:53:13 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 473B111BD02F3;
+	Fri, 17 Jul 2026 16:53:04 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1784299983; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1784299991; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=8oni5+qg6JFZZ0q8XVNYt/XH64ASrue2NEUPXAcPmWw=;
-	b=HN/k5NZE3NNR/xP3vaBePNBAPsTod39MbHRVbpQflCMpW27L5yp3QziDovPIndxV03NHQX
-	mopZOJm6Ma4VM7KF/2suguAuxfsxkeiQBC+KJ23agA7UiN9n/HqG1OfkWvnnvq6VF8NcAW
-	dC7Q/OyrQPF3UOrE4Cj+7FtIOP+//Yx8ISvzYN4tBP80iejCScd8dxuhWvy7K9fJ8RcDCS
-	GhENGE02V0B4n4ofY2Fmvr84UOQOD1GtqBLFYsfqhSoa6OO86Qws4Q/5v9yivJ9ICc+CqC
-	IP0rpL8zVLyCBTbWYRW2HX9go6ev290VcTZ80wX/5RxzBffrCgHCdtAcNSastw==
+	bh=+9CnYiJau8FhyP1JC2OGvkUSIj/sOWL5/3RPGsZv/CE=;
+	b=gv+t3KpEI3R2Gs7Gk0luJ0opt4BhYBTkL7kim/VBsj7uOll+ubo8E0dPcSpJtpB2IQjfdx
+	hZgDnu+SWi9bSSs7iIvpEb8oQ8DEagzQr8eunj2e8YkjSf1RFswKUW4/Px2drur/G2Bh9W
+	p4ouBo8tHFH/QsMpNqGPkGz4kjQHIziiTSHxaUpxjUzQMWZnVFFIITEhLvVvJuOb2tpTEO
+	bSBBcJFzouSbB7M8SxOvO/PDpzrk3JT7lhHHi+jV5TZmGlsmUNqJ2Rz8dMTLyG1kK1YyLv
+	IsnIoDIWD9Oq3P9OCz40KC2avX+Sk/7FiACrFZjMxrQ2JrL976sK5SqZ9Mn/AQ==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Richard Cheng <icheng@nvidia.com>,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -75,10 +75,10 @@ Cc: driver-core@lists.linux.dev,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v10 09/10] PCI: of: Remove fwnode_dev_initialized() call for a PCI root bridge node
-Date: Fri, 17 Jul 2026 16:51:44 +0200
-Message-ID: <20260717145147.823749-10-herve.codina@bootlin.com>
+	stable+noautosel@kernel.org
+Subject: [PATCH v10 10/10] PCI: of: Guard against node removal with incorrect np->data
+Date: Fri, 17 Jul 2026 16:51:45 +0200
+Message-ID: <20260717145147.823749-11-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260717145147.823749-1-herve.codina@bootlin.com>
 References: <20260717145147.823749-1-herve.codina@bootlin.com>
@@ -91,56 +91,53 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-During the instantiation of devices described by a device-tree overlay
-applied on a PCI device, devlink displays the following kind of debug
-messages instead of creating the expected links:
-   'Not linking xxxx - might never become dev'
+of_pci_remove_node() and of_pci_remove_host_bridge_node() check
+whether the node is dynamic but not whether it has valid private data.
 
-Without those expected links, the device removal order cannot be
-correct.
+During the node creation, an OF changeset is used and this changeset is
+stored in np->data to be available for removal functions.
 
-Those debug traces are printed by fw_devlink_create_devlink(). In our
-use case, they are all printed because the supplier of the link has at
-least one of its ancestor with its fwnode flag FWNODE_FLAG_INITIALIZED
-set.
+If, for instance, a PCI host bridge is created using a device-tree
+overlay, the related node will have the dynamic flag set but np->data
+will be NULL. This leads to NULL pointer dereferences.
 
-The culprit ancestor is the PCI root bridge.
+Further more, having a NULL np->data pointer means that the node has
+been created out of our PCI node creation process and so shouldn't be
+handled by our PCI node removal process.
 
-The fwnode related to the PCI root bridge is created dynamically by the
-of_pci_make_host_bridge_node() function. During this creation
-fwnode_dev_initialized() is called which set the FWNODE_FLAG_INITIALIZED
-flag.
+Add a np->data check for NULL to bail out early of PCI node removal
+functions.
 
-Calling fwnode_dev_initialized() tells devlink that the device related
-to this node is handled out of the driver core. This is not correct in
-our case. Indeed the device related to this firmware node is handled
-using driver core mechanisms and is fully compliant devlink
-expectations.
-
-Simply remove the fwnode_dev_initialized() call. With that done, the
-devlink debug messages are no more displayed and links that were missing
-are correctly created.
-
+Fixes: 407d1a51921e ("PCI: Create device tree node for bridge")
 Fixes: 1f340724419e ("PCI: of: Create device tree PCI host bridge node")
-Cc: stable@vger.kernel.org
+Cc: <stable+noautosel@kernel.org> # Not triggered but 'This could be a problem...'
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/of.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pci/of.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index a98f360c289a..28896f748e8d 100644
+index 28896f748e8d..9f35e1e07cdc 100644
 --- a/drivers/pci/of.c
 +++ b/drivers/pci/of.c
-@@ -815,7 +815,6 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
- 	 */
- 	of_node_set_flag(np, OF_POPULATED);
- 	fw_devlink_set_device(&np->fwnode, &bridge->dev);
--	fwnode_dev_initialized(&np->fwnode, true);
+@@ -654,7 +654,7 @@ void of_pci_remove_node(struct pci_dev *pdev)
+ 	struct device_node *np;
  
- 	ret = of_changeset_apply(cset);
- 	if (ret)
+ 	np = pci_device_to_OF_node(pdev);
+-	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
++	if (!np || !of_node_check_flag(np, OF_DYNAMIC) || !np->data)
+ 		return;
+ 
+ 	fw_devlink_set_device(&np->fwnode, NULL);
+@@ -750,7 +750,7 @@ void of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge)
+ 	struct device_node *np;
+ 
+ 	np = pci_bus_to_OF_node(bridge->bus);
+-	if (!np || !of_node_check_flag(np, OF_DYNAMIC))
++	if (!np || !of_node_check_flag(np, OF_DYNAMIC) || !np->data)
+ 		return;
+ 
+ 	fw_devlink_set_device(&np->fwnode, NULL);
 -- 
 2.55.0
 
