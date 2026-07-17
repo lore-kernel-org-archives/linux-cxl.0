@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C7C246BD5;
-	Fri, 17 Jul 2026 22:37:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74577246BD5;
+	Fri, 17 Jul 2026 22:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784327879; cv=none; b=qbH4FczEusmfpAPHbinbbTj0zFJcjQx1fo38EEjqj/XjAnoefkkTWsWVVtUwKRXbTrS/Ac3gMUb/2JkkqgY+W1o/URY6jnNt5bAxmngcy7ZzrDZGRG6428oMi6RnFKofZ0T7DlSPPmcpRux2cIL6DagYJZfGsW1We4vUg+kT7gw=
+	t=1784328051; cv=none; b=LE8+5BXfXU9IErtgjV/1nF4k43ucDNcXFvhBeDzpAs9FtsAN5YEOBpNtJnI62numkffhTbj3Ued19TmDI7Vdoezfi9HC+W0rfg2KNz3woDmu6GCrIOTb7d7i1J6eUkKBydqF7bH0yUeSfXKJ3QRhD0VWtHU9uJUcsuRq29k25Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784327879; c=relaxed/simple;
-	bh=UIGC5v8NavuHilC8uqdbmB2biz2AyGKC9p+4Iu2e/ZI=;
+	s=arc-20240116; t=1784328051; c=relaxed/simple;
+	bh=2gY1WRBE9ls91adIqnsuZSO2Dc6uZB8j5G4AGHtjWl0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=G7XD6zQvM+2TQ0f77YQcPHGyBVz4vlVts5Lb7bS76setvB+LL/wEfRdD3pP6MuWQjj1L3fHhomfpsMJtooQw+xoHVICJgSr2wtt0W4/dF4fwCd2bz3dTA45ZBoKVs/fr3Jobuhz/AOtwkIrCTaBRNQ8Gz/FaocWnrinuMKo7w+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C94czIST; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=j7Ye94aFm6aXR0dzK0WBCglkdzvabjc7BFrNOpMBW1iI2KXrhIR0WFwi3XYzYuvj1HiSusnQhlZFtijS1jLS/etrZ1te6DDku85uEuJM6mKYzWtqPRlHxIN1Qcmuk7dKEsSfZrxvsPxhixt8paCDTld8HaOVLm30zDzoKl2d18s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=at7sTrcV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C94czIST"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF98B1F000E9;
-	Fri, 17 Jul 2026 22:37:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="at7sTrcV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0352A1F000E9;
+	Fri, 17 Jul 2026 22:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784327877;
-	bh=UIGC5v8NavuHilC8uqdbmB2biz2AyGKC9p+4Iu2e/ZI=;
+	s=k20260515; t=1784328050;
+	bh=2gY1WRBE9ls91adIqnsuZSO2Dc6uZB8j5G4AGHtjWl0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=C94czISTpgCykccQpCuoZK4QfanFqGNSywrGCv2G8D5rb0DeqWKTZGe6ICAVIGN1W
-	 kAq4b9rPRWof070DLKREWTg0JxA+QIWa1jlqxHhBQmVkDKA3yy6sorFF9zk1C2wuzA
-	 Xd5jOJGZLyW8pRAIaZXwte2mDUYKDeesb4duIrL4Yv6skgoc4yL3lTnT2gyFojbGIm
-	 AVPhK7D6M5rYatQF8uRG4Y7ZnEhjCLhGm0H2CBuQsyz2IbTxz2bW7PNAh1TgOqUvGW
-	 FjIIE/72EmcRB1WKxlZgL0MYMaFGJLdsUnUvItPi6r3RySvCPtY7DWQdnYwDZ2ZN/B
-	 gIkWhdPiS66ag==
+	b=at7sTrcVRWNIyIiChID82ZDW5TXruacxK7q/wnSi6/t3tUey16qkVU8PkSnNZ0+Ph
+	 wPygVmT65g6a0wdptxC+WGsku78QrCRkC85HloVr+tdJzxe2617795pWZ0BhSqID5f
+	 mcnv2/7jQoQKQs42MCj7zT8+tfKep0YLhabxHUTmMgJj7dc98NsvUJgZcFKADX5aDO
+	 bbo1OjAJRgeN1BaTgXcmroT/ReYtX+1yk/mUtMeykWO707smOLrwKnzBkM+/Uhtb+M
+	 hFwDp05aD6bTMT0IEesZRqQy/iiTEdl5dd6VEnFOQ9W5ILDpep6P1TeZTxgK23C4TN
+	 OFdsHv7TfXaAg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v18 03/13] cxl: Tighten CPER kfifo registration API and
- symbol visibility
+Subject: Re: [PATCH v18 08/13] cxl/pci: Thread port and dport through RAS
+ handling helpers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Terry Bowman" <terry.bowman@amd.com>
 Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20260717222706.3540281-4-terry.bowman@amd.com>
+In-Reply-To: <20260717222706.3540281-9-terry.bowman@amd.com>
 References: <20260717222706.3540281-1-terry.bowman@amd.com>
- <20260717222706.3540281-4-terry.bowman@amd.com>
+ <20260717222706.3540281-9-terry.bowman@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 17 Jul 2026 22:37:56 +0000
-Message-Id: <20260717223757.AF98B1F000E9@smtp.kernel.org>
+Date: Fri, 17 Jul 2026 22:40:49 +0000
+Message-Id: <20260717224050.0352A1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -47,27 +47,30 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
 > From: Dan Williams <djbw@kernel.org>
 >=20
-> Tighten the CPER protocol error kfifo registration API and symbol
-> visibility.
+> The callers of cxl_handle_ras() and cxl_handle_cor_ras() already hold
+> a struct cxl_port * and struct cxl_dport * for the device being
+> handled. Passing a generic struct device * requires is_cxl_memdev()
+> to distinguish Endpoints from ports at trace emission time. Threading
+> port and dport directly enables is_cxl_endpoint(port) and explicit
+> dport/port branching for cleaner trace dispatch.
 >=20
-> Use EXPORT_SYMBOL_FOR_MODULES() instead of EXPORT_SYMBOL_NS_GPL() for
-> the CPER kfifo registration symbols. This names the consuming module
-> explicitly and gives compile-time enforcement.
+> Refactor cxl_handle_ras() and cxl_handle_cor_ras() to accept struct
+> cxl_port * and struct cxl_dport * directly. The CXL RAS trace event
+> emission logic is split into three branches: Endpoint events are
+> identified via is_cxl_endpoint(port) and emit with the memdev, dport
+> events emit with dport->dport_dev, and Upstream Port events fall back
+> to port->uport_dev.
 >=20
-> Drop the work_struct argument from the unregister path. Change the
-> WARN_ONCE condition to a NULL check since there is no caller pointer
-> to compare against anymore.
+> Update cxl_handle_rdport_errors() in ras_rch.c and
+> cxl_handle_proto_error() in ras.c to pass port and dport to the
+> refactored functions.
 >=20
-> Change register/unregister return types to void. Flag double registration
-> with WARN_ONCE() inside the lock instead of returning an error.
->=20
-> Change cxl_ras_init() to void because there is one consumer and one produ=
-cer
-> so the error return was unnecessary. Remove the now-dead error check in
-> cxl_core_init().
->=20
-> Add a diagnostic log when the driver is not bound in
-> cxl_cper_handle_prot_err().
+> RCH Downstream Port correctable trace events now report the dport
+> device (dport->dport_dev) as a consequence of threading port and dport
+> through the RAS helpers. The following trace event rework ("cxl: Add
+> port and dport identifiers to CXL AER trace events") adds explicit
+> memdev, port, dport, and host fields that provide full context for
+> all device types.
 >=20
 > Co-developed-by: Terry Bowman <terry.bowman@amd.com>
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
@@ -77,5 +80,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260717222706.3540=
-281-1-terry.bowman@amd.com?part=3D3
+281-1-terry.bowman@amd.com?part=3D8
 
