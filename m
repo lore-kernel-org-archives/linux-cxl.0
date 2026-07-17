@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF75B34889F;
-	Fri, 17 Jul 2026 16:16:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF3B400964;
+	Fri, 17 Jul 2026 16:16:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784305017; cv=none; b=sDZwyGoaJgrZA16daANTqlM1MEURY2+9e0s+HYCX/rbWoz82mtsgA3l4YgtB0JnZZYgoZQnIjPm9O5V7CDi70axRF+QN9Pt1hzkpDuYjGSL3EfbkUoqk4W4t7mxbw0jn+BhPEwn3M5x13T/wHlVmaOIWoFjwojvV9I3AENQkDzs=
+	t=1784305019; cv=none; b=uZuenjS1lqBhMHTbDiWi7iSukCsUwX8sM8u6L6eca4gtWl/7efMIrHlrZMPqtxAbESj9ptDqPnqyxK//V0QEhahF8rX3+2Xf56tPD7XgBqYhoQ0QYxrBFbur6oBu0ZX5A0y8lsbfqiUwekQ/1nrdU3w3w1dmwyxXkM0aeN8NOro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784305017; c=relaxed/simple;
-	bh=wXXoetZYNlp6MjeZm8DNhaJcT5SeeaiTmoWAZrE5yLk=;
+	s=arc-20240116; t=1784305019; c=relaxed/simple;
+	bh=jYqwb5/XYCZgXZWwzJPvgI2RvRqPJgSbbtjaTErOHOA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IlPgGwZy7DPLubt0RCsVF8fQVfQGvdGRkAvyBsPcghdD14TFJvjw7STi8kzLVwEmrmxkmRsVWyNPSsW3zbF7w/UIIx0ATq2MYj1QGobrq7oO2jTMm8f+QvttfOeokZULdEczJjBxYmhFerCwYs3jH7G4InH8Cj14RLorFyC3zdo=
+	 MIME-Version; b=m/kg4CyMMzCRAVF8dNwNegwSo/cXXRyyuskaFvLdLZ1Oq8/vB6bkpWrIPARgUXt7LoqQ17O++M5IiLxZs0VDW3dIEJV/A7Gqrb6HCUx+wmjXjkmQcN9Kthh+BzZGVJzWEksRm4MS2UlnXN4CJUL0udcxwI4PbZrljTY827rbxrw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D40F1F000E9;
-	Fri, 17 Jul 2026 16:16:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E35221F00A3A;
+	Fri, 17 Jul 2026 16:16:56 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-acpi@vger.kernel.org,
 	linux-cxl@vger.kernel.org
@@ -25,9 +25,9 @@ Cc: rafael@kernel.org,
 	xueshuai@linux.alibaba.com,
 	terry.bowman@amd.com,
 	sashiko-bot@kernel.org
-Subject: [PATCH v3 04/10] ACPI: extlog: Avoid populating software AER metadata from raw hardware buffer
-Date: Fri, 17 Jul 2026 09:16:41 -0700
-Message-ID: <20260717161647.1493259-5-dave.jiang@intel.com>
+Subject: [PATCH v3 05/10] ACPI: extlog: Validate PCIe error section length before payload access
+Date: Fri, 17 Jul 2026 09:16:42 -0700
+Message-ID: <20260717161647.1493259-6-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260717161647.1493259-1-dave.jiang@intel.com>
 References: <20260717161647.1493259-1-dave.jiang@intel.com>
@@ -39,55 +39,58 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-sashiko-bot flagged that casting the raw aer_info buffer fills
-software-only AER metadata with hardware data, driving an out-of-bounds
-read.
+sashiko-bot flagged the missing section-length check before
+extlog_print_pcie() touches the PCIe payload.
 
-extlog_print_pcie() casts pcie_err->aer_info directly to struct
-aer_capability_regs *. That struct embeds struct pcie_tlp_log, whose
-software-only header_len and flit fields sit at offset 84, within the
-96-byte aer_info buffer, so the cast fills them with raw hardware data.
-pcie_print_tlp_log() uses flit and header_len to bound a loop over the
-dw[] array, so a large header_len walks past its end.
-
-Copy aer_info into a zeroed local struct aer_capability_regs and clear
-header_len and flit before passing it on.
+extlog_print_pcie() reads pcie_err->validation_bits and device_id and
+copies the 96-byte aer_info buffer without checking that
+gdata->error_data_length is large enough for a struct cper_sec_pcie.
+cper_estatus_check() keeps the read within the estatus block, but a
+short section still lets stale adjacent bytes be treated as PCIe error
+data. Reject a section too small to hold the record before touching any
+field.
 
 Reported-by: sashiko-bot@kernel.org
 Fixes: e778ffefa34d ("ACPI: extlog: Trace CPER PCI Express Error Section")
-Link: https://lore.kernel.org/linux-cxl/20260709165457.8BA181F000E9@smtp.kernel.org/
-Assisted-by: Claude:claude-sonnet-4-6
+Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/acpi/acpi_extlog.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/acpi/acpi_extlog.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-index 06a944dadbc1..fbc88c584c06 100644
+index fbc88c584c06..0c440d75d9a7 100644
 --- a/drivers/acpi/acpi_extlog.c
 +++ b/drivers/acpi/acpi_extlog.c
-@@ -137,6 +137,7 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
- 			      int severity)
+@@ -134,7 +134,7 @@ static int print_extlog_rcd(const char *pfx,
+ }
+ 
+ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
+-			      int severity)
++			      int severity, u32 len)
  {
  #ifdef ACPI_APEI_PCIEAER
-+	struct aer_capability_regs aer_regs = {};
- 	struct aer_capability_regs *aer;
- 	struct pci_dev *pdev;
- 	unsigned int devfn;
-@@ -149,7 +150,12 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
- 		return;
+ 	struct aer_capability_regs aer_regs = {};
+@@ -145,6 +145,9 @@ static void extlog_print_pcie(struct cper_sec_pcie *pcie_err,
+ 	int aer_severity;
+ 	int domain;
  
- 	aer_severity = cper_severity_to_aer(severity);
--	aer = (struct aer_capability_regs *)pcie_err->aer_info;
++	if (len < sizeof(*pcie_err))
++		return;
 +
-+	memcpy(&aer_regs, pcie_err->aer_info, sizeof(pcie_err->aer_info));
-+	aer_regs.header_log.header_len = 0;
-+	aer_regs.header_log.flit = false;
-+	aer = &aer_regs;
-+
- 	domain = pcie_err->device_id.segment;
- 	bus = pcie_err->device_id.bus;
- 	devfn = PCI_DEVFN(pcie_err->device_id.device,
+ 	if (!(pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID &&
+ 	      pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO))
+ 		return;
+@@ -247,7 +250,8 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
+ 		} else if (guid_equal(sec_type, &CPER_SEC_PCIE)) {
+ 			struct cper_sec_pcie *pcie_err = acpi_hest_get_payload(gdata);
+ 
+-			extlog_print_pcie(pcie_err, gdata->error_severity);
++			extlog_print_pcie(pcie_err, gdata->error_severity,
++					  gdata->error_data_length);
+ 		} else {
+ 			void *err = acpi_hest_get_payload(gdata);
+ 
 -- 
 2.55.0
 
