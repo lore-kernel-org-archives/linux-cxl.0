@@ -1,70 +1,81 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2823D9DD4
-	for <linux-cxl@vger.kernel.org>; Fri, 17 Jul 2026 07:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2FB2E62A9;
+	Fri, 17 Jul 2026 10:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784272038; cv=none; b=OiaFk3t6OLvxsNoHvXjp9JW1B65B21b7np9SAyv6zkL1x1+D0DAtcFtL1mJl6UVmBhA5puDeDPe/t2fNFBLhGaKB+GpxPzSwnQ2NwkRpRJStSB4XaSUVJikBMwjReTGVpE0irN7M7zNovW9fVVZj3yKlhKz9DCqU8sHnIQ9T+6E=
+	t=1784283286; cv=none; b=FwvUf/Rk8p1a7sS/gjnYt0WnGcz2pEGvpUFsXTfbDQFnm93/RSAYjvsaP9C/sr9ZS14Tki+E3K7bY/UUvlY+4r+45wxy//kzoCUfWx5YHXrxOY9BgzGQ47t6ZNmYhAIgaUMQ+jil2eHqVBkdL0cbhMMFQCQBo+hwe86NArkWdtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784272038; c=relaxed/simple;
-	bh=d0zAOKCo+rJkdmai6Ca3aCG/TcgkcR4kF8rJtJ0IURg=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=kKTTZam5SeTgIvcFx8XehZkvvYEiJ7nNBSb6aWK7Trrrgri3m2m7Wfz81S8kSiJB7B2lXRa+LN9Dx+2mttliF+oa2uuoOLEt8Hz1Rw17+/k6L3nS553XMRMFvPEtSd88wghVamXykcHIw/MltRAT9FnjHNOQa5cBBD59nH6HjcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FYcbXjoS; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1784283286; c=relaxed/simple;
+	bh=052OwKUJH39MP82Dql8W8+wvic7EK/0wgC2Ar7HG6dc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j6wDrzhax+REzjXex5mFAPvUFdglCto+smauCRu0uvEspHjIrChw+aGtkXtk57UaSyYMbBxO1uJrQFDp/IRHeBumI3oZdvB2WNvpGfPLy2p7/fO9Xz8OWdnox3o1iZ6iPoOmbaYYblXmGXX+cGFYgkRSEGV3MZK+Loy+sXXEnxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Mo+4dA83; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FYcbXjoS"
-Message-ID: <4d7ee6c9-ea5d-40d5-9af0-5c15b3c2cab0@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1784272033;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F0VorFQubA72e/tCA00Fb2KLrFZdh25LwjH5MvlC2w0=;
-	b=FYcbXjoSXSnpuaPUdr5wOGZcmcE+/jk7JT8DQzKA+ZKQFQ3nafMenU+ozew9SvtnyWa6w6
-	oFfczig9lfYag1nidAQh9OO0xfrwQnRNPSZGoO12c2OuAUHUtmIEy36w1Z/wAV/XQiD3u5
-	/aKrCXzpCOj80LUY8XMujoxAlc4X86g=
-Date: Fri, 17 Jul 2026 15:06:52 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Mo+4dA83"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1784283272; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=HN8DVK/53P10/O7YFi+DjGcyeRgpFH2mYcka/ASgu1I=;
+	b=Mo+4dA83pcmSAKBCAoQWbl9gMKD/l8LUqQbHC5a/rN8mnIaRkHEqso8Jz/4U68kgx+KQlwV2sbGxR/vRkx3XpNHFFQtyLEUZuP35bQrAntlD4zLJPC15eKJLJATpfRainYlo/Ogf8IW7qjD0gCucXOS8m1nk7QweMWQyZ4guNSw=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0X7H4Mt7_1784283269;
+Received: from 30.74.144.121(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0X7H4Mt7_1784283269 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 17 Jul 2026 18:14:30 +0800
+Message-ID: <17af25f6-20d2-483c-b9a1-5c89525dd65f@linux.alibaba.com>
+Date: Fri, 17 Jul 2026 18:14:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Cc: hongfu.li@linux.dev, david@kernel.org, osalvador@suse.de,
- akpm@linux-foundation.org, linux-mm@kvack.org, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, Hongfu Li <lihongfu@kylinos.cn>
-Subject: Re: [PATCH] mm: add missing alloc_percpu() NULL check in hotplug init
-To: Mike Rapoport <rppt@kernel.org>
-References: <20260717052938.58447-1-hongfu.li@linux.dev>
- <alnPz-r76FU6t5Uc@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Hongfu Li <hongfu.li@linux.dev>
-In-Reply-To: <alnPz-r76FU6t5Uc@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] mm/migrate: exclude hugetlb folios from
+ MTHP_STAT_NR_ANON accounting
+To: Nico Pache <npache@redhat.com>, Barry Song <baohua@kernel.org>,
+ David Hildenbrand <david@kernel.org>, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc: ljs@kernel.org, willy@infradead.org, Zi Yan <ziy@nvidia.com>,
+ Oscar Salvador <osalvador@suse.de>, Andrew Morton
+ <akpm@linux-foundation.org>, Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>
+References: <20260717064502.1980173-1-npache@redhat.com>
+ <20260717064502.1980173-3-npache@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20260717064502.1980173-3-npache@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
 
-On 7/17/26 2:46 PM, Mike Rapoport wrote:
-> On Fri, Jul 17, 2026 at 01:29:38PM +0800, Hongfu Li wrote:
->> From: Hongfu Li <lihongfu@kylinos.cn>
->>
->> No NULL check is done for alloc_percpu() when initializing per-CPU
->> nodestats. Allocation failure leads to NULL pointer dereference
->> during later memset.
->>
->> Make function return int, check alloc_percpu() result and return
->> -ENOMEM on error. The caller chain already propagates this error
->> correctly.
-> I already applied a fix from Gregory:
->
-> https://patch.msgid.link/20260701221613.2818148-1-gourry@gourry.net
->
-> It'll be unstreamed soon.
 
-Got it, I'll drop this patch as Gregory's fix is already on the way 
-upstream.
+On 7/17/26 2:45 PM, Nico Pache wrote:
+> __folio_migrate_mapping() increments MTHP_STAT_NR_ANON for the
+> destination folio when `folio_test_anon(folio) && folio_test_large(folio)`
+> is true. However, hugetlb folios satisfy both conditions despite having a
+> completely separate accounting system — they use hugetlb_add_anon_rmap()
+> which does not touch mTHP stats, and their free path also bypasses the
+> mTHP decrement in __free_pages_prepare().
+> 
+> This causes MTHP_STAT_NR_ANON to be incremented on each hugetlb
+> migration without a corresponding decrement, permanently inflating the
+> nr_anon counter.
+> 
+> Add a !folio_test_hugetlb() check to __folio_migrate_mapping() so that
+> only actual mTHP folios are counted.
+> 
+> Fixes: 5d65c8d758f2 ("mm: count the number of anonymous THPs per size")
+> Reviewed-by: Zi Yan <ziy@nvidia.com>
+> Co-developed-by: David Hildenbrand <david@kernel.org>
+> Signed-off-by: David Hildenbrand <david@kernel.org>
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
