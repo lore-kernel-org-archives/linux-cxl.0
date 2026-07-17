@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D6834889F;
-	Fri, 17 Jul 2026 16:16:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4684B34887E;
+	Fri, 17 Jul 2026 16:16:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784305012; cv=none; b=muCouSES5XkjtcziL6+4ugPztSK2ZRGvMK53FL4Oldls/sSJ/eaCenxBWYIhy6jv2sK3EU23zrrpKAyuE1I2mc4m1ugeB6lAOpoKo6nOU4pWmliydT0X07G5ENa+3qDVl4N/7ZC53SzqdPGzzvWtkGCkOES00XTNQTLTOQ6jjRA=
+	t=1784305014; cv=none; b=TSgDx8GOhW9Xvjy/iwnANiz47fbajyHpVc+vN5/+swbP5xEcUn6URy6LqbPtrKmJoMm+j5HdFlnYxXIyvILl2HbOKR6OO5m7diQS0XUyZZ8VrEHFLzttS5XocBCDK7P2pzC4eSnxSuzXZliwot9xjlumuxokCIIKM7fDmcQrIfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784305012; c=relaxed/simple;
-	bh=LJlHQDdk1m8F8CWxKd4a9bggipKP2AzEnd6alIbrpUQ=;
+	s=arc-20240116; t=1784305014; c=relaxed/simple;
+	bh=3rAvtf510ns5MbWfwxPhRhgCjNxxiM5BlZMFs4BTrCU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MWzItQJK4zlZ9J/0E30qKTvmSkw5103pjLdytpxcsuanx4xgFtrRLKQWjlGEFMjuq5p8hU/pZ84YM9l769IxftWadJJRI14YPlP1eYwR3Oupd1EiHNtteefs3pT7SRYIiKalgWf31cLD3lc4BnRffmUEGbAC/cb7uruBzGjG4rM=
+	 MIME-Version; b=WGblj1EE6f9N1XVO8gRoUf/o3hZqr8Yptxfzf9dJ+CdMAqNzABbibMiNRuvVPy++fn6Jo093W+Bnny6uPGj7r3NF+bXp8uyXAnoBoLJkTPLS0fCefPPNEWURLbv+OZSWTiTp6AGQngoBFZvXeo6A3OscULoHmcodqOi8E071TG8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C0E1F00A3A;
-	Fri, 17 Jul 2026 16:16:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D12841F000E9;
+	Fri, 17 Jul 2026 16:16:52 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-acpi@vger.kernel.org,
 	linux-cxl@vger.kernel.org
@@ -25,9 +25,9 @@ Cc: rafael@kernel.org,
 	xueshuai@linux.alibaba.com,
 	terry.bowman@amd.com,
 	sashiko-bot@kernel.org
-Subject: [PATCH v3 01/10] ACPI: APEI: GHES: Bound CXL event record copy to the firmware section length
-Date: Fri, 17 Jul 2026 09:16:38 -0700
-Message-ID: <20260717161647.1493259-2-dave.jiang@intel.com>
+Subject: [PATCH v3 02/10] efi/cper: Reject CPER records with an out-of-range error_data_length
+Date: Fri, 17 Jul 2026 09:16:39 -0700
+Message-ID: <20260717161647.1493259-3-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260717161647.1493259-1-dave.jiang@intel.com>
 References: <20260717161647.1493259-1-dave.jiang@intel.com>
@@ -39,66 +39,56 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-sashiko-bot flagged a missing bounds check that allows an
-out-of-bounds read of the firmware CPER section.
+sashiko-bot flagged that the "len < sizeof(*rec)" guard added in this
+series can be bypassed by an integer overflow in the shared length check.
 
-cxl_cper_post_event() copies a fixed sizeof(struct cxl_cper_event_rec)
-out of the firmware CPER section without checking its length. Pass
-gdata->error_data_length in and reject a section too small to hold the
-record before the copy.
+cper_estatus_check() bounds firmware CPER data before the section
+handlers in ghes_do_proc() run. It sizes each section with
+acpi_hest_get_record_size(), which adds the firmware-controlled u32
+error_data_length to the header size using signed int helpers in
+<acpi/ghes.h>. A value like 0xffffffb9 sign-converts to a negative
+number, wraps the record size small, and slips past the
+"record_size > data_len" check. A section handler then copies a
+fixed-size payload out of it and reads past the record.
+
+Reject a section whose error_data_length is negative once sign-converted
+or larger than the remaining data, before the size arithmetic runs.
 
 Reported-by: sashiko-bot@kernel.org
-Link: https://sashiko.dev/#/patchset/20260617-topics-ahmtib01-ras_ffh_arm_internal_review-v6-0-91f725174aa0@arm.com?part=6
-Fixes: 5e4a264bf8b5 ("acpi/ghes: Process CXL Component Events")
+Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@intel.com?part=1
+Fixes: 45b14a4ffcc1 ("efi: cper: Fix possible out-of-bounds access")
 Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/acpi/apei/ghes.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+v3:
+- New patch. Fix the signed error_data_length overflow that lets a
+  crafted section bypass cper_estatus_check() and defeat the per-caller
+  size guards (sashiko).
+---
+ drivers/firmware/efi/cper.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 3236a3ce79d6..a752e152a5a0 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -815,10 +815,15 @@ static DEFINE_SPINLOCK(cxl_cper_work_lock);
- struct work_struct *cxl_cper_work;
+diff --git a/drivers/firmware/efi/cper.c b/drivers/firmware/efi/cper.c
+index 06b4fdb59917..99a86b2675e3 100644
+--- a/drivers/firmware/efi/cper.c
++++ b/drivers/firmware/efi/cper.c
+@@ -765,6 +765,16 @@ int cper_estatus_check(const struct acpi_hest_generic_status *estatus)
+ 		if (acpi_hest_get_size(gdata) > data_len)
+ 			return -EINVAL;
  
- static void cxl_cper_post_event(enum cxl_event_type event_type,
--				struct cxl_cper_event_rec *rec)
-+				struct cxl_cper_event_rec *rec, u32 len)
- {
- 	struct cxl_cper_work_data wd;
- 
-+	if (len < sizeof(*rec)) {
-+		pr_err(FW_WARN "CXL CPER section too small (%u)\n", len);
-+		return;
-+	}
++		/*
++		 * error_data_length reaches record_size below as a signed int
++		 * (see <acpi/ghes.h>), so a value with the sign bit set can
++		 * wrap record_size small and slip past the bound check. Reject
++		 * it before the arithmetic.
++		 */
++		if (acpi_hest_get_error_length(gdata) < 0 ||
++		    acpi_hest_get_error_length(gdata) > data_len)
++			return -EINVAL;
 +
- 	if (rec->hdr.length <= sizeof(rec->hdr) ||
- 	    rec->hdr.length > sizeof(*rec)) {
- 		pr_err(FW_WARN "CXL CPER Invalid section length (%u)\n",
-@@ -949,15 +954,18 @@ static void ghes_do_proc(struct ghes *ghes,
- 		} else if (guid_equal(sec_type, &CPER_SEC_CXL_GEN_MEDIA_GUID)) {
- 			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
- 
--			cxl_cper_post_event(CXL_CPER_EVENT_GEN_MEDIA, rec);
-+			cxl_cper_post_event(CXL_CPER_EVENT_GEN_MEDIA, rec,
-+					    gdata->error_data_length);
- 		} else if (guid_equal(sec_type, &CPER_SEC_CXL_DRAM_GUID)) {
- 			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
- 
--			cxl_cper_post_event(CXL_CPER_EVENT_DRAM, rec);
-+			cxl_cper_post_event(CXL_CPER_EVENT_DRAM, rec,
-+					    gdata->error_data_length);
- 		} else if (guid_equal(sec_type, &CPER_SEC_CXL_MEM_MODULE_GUID)) {
- 			struct cxl_cper_event_rec *rec = acpi_hest_get_payload(gdata);
- 
--			cxl_cper_post_event(CXL_CPER_EVENT_MEM_MODULE, rec);
-+			cxl_cper_post_event(CXL_CPER_EVENT_MEM_MODULE, rec,
-+					    gdata->error_data_length);
- 		} else {
- 			void *err = acpi_hest_get_payload(gdata);
- 
+ 		record_size = acpi_hest_get_record_size(gdata);
+ 		if (record_size > data_len)
+ 			return -EINVAL;
 -- 
 2.55.0
 
