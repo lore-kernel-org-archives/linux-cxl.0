@@ -1,68 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79332285072;
-	Fri, 17 Jul 2026 22:34:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C87943F08A;
+	Fri, 17 Jul 2026 22:35:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784327656; cv=none; b=iTkE0ZLyOpLYtuZwM4KFC/9wo1CYPst6g5bn1zSDsnhR/VXeVHQN6UXx0YQz9507gQbXXa30uoOmjk51sHc3gxQzi3x2979XtWW/KUjMi8Qzp4wejwSxCO99PN32/ezeo/LUMqwvPtkcyQ3baPJdZuUiJ3GraDQ55Kfo7J9620g=
+	t=1784327728; cv=none; b=XIX8fvCtmf6FNQ6GuSoRqjes1bZ+hETikncMlS04MCYiHi+vx9m+BJx12LtQxZdqpUWa9yJg5S2SJlWOXzDUP7QF5gXf7CMWheZ8wtjfREmMAhuIabR9jaXclzMaenjnuj7mQAiq+8VDAv9v7m2W5ZbHLaGUWm9IpNKnnAzFaC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784327656; c=relaxed/simple;
-	bh=9/1Gqwzrm/1bJe4HBS3aJnBHulDSgY4soFcX6gTnQUM=;
+	s=arc-20240116; t=1784327728; c=relaxed/simple;
+	bh=juqaL3eaaRXK79+lHkOL3AwxXKWixjs+O3054ej3fcI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=swS0aY1H5SKfFXb9vcmJTMEEUyChdEfwEt34FejFUnsAaA27JM5kdu+hLd4OKDAhRWlmH9MgFtUx8Ene91zySNqXjHX60izKKiVzCpjeVxXPGg3hb0zy0usCKHsWBZvx/RKmuU6p/sTsuzmm8zBodGjMdHb52iGvDSuywgl0VBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZGpg1o2; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=jIOaSR9EXWPImJhIr5i3YUuBOOGyZ3kIUyBJzmveHK5nxzcK9UkzT1fIBrfz78absiCEisa1SZn0XsRsOiXtRkz0DMoi2UPg5UDeuRdZRs2EW9nh5j7gvp9CFyqPnNR6ioKOo/sc+MwymDIfhPwcQOKhz/iR0AkmYt/rynf1/ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m5w3ERP9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZGpg1o2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A56F1F000E9;
-	Fri, 17 Jul 2026 22:34:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5w3ERP9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC58C1F000E9;
+	Fri, 17 Jul 2026 22:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784327655;
-	bh=9/1Gqwzrm/1bJe4HBS3aJnBHulDSgY4soFcX6gTnQUM=;
+	s=k20260515; t=1784327727;
+	bh=juqaL3eaaRXK79+lHkOL3AwxXKWixjs+O3054ej3fcI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gZGpg1o2OSFcPqZsfVLwdaVqEU8Dn+WkGkaOs3M3MKSWKHCxqbXeIzQ4xvTlfLVF4
-	 SN/ZRuNCAOT+KTtr0aiheXxq8UizU25gFeltnwwoWonZeZqif8dbyUmWR9s/OHYzTP
-	 x0nSAN8eCmMEdKb1oWYi38W8lJoCGs6r2YgyXsFmoqSJSpk9fNZW+Atds7EZXwU3JN
-	 WOqkQ4NBeHajDNxVhwVMtpe3Trv5+FtdREazdt+2EDgKeDGSeEa4TMroSHYD28eCKP
-	 y8/sTEHgr1jMQzon4VsD81ScZK7Ve0cNKxHQeKo/mXG36g0qSBQS7MOHn18RajShOc
-	 ntsuktndLoqpQ==
+	b=m5w3ERP97U2POSMx0ukH5c11/bvgJzxDPl+ns+zBjMhl6XTzlj6/eN1SaVeJ03zbX
+	 oEASx/SdD4dzkKMxDsYVEM7Yj78EMd78QQu77k4MbLyAm2D0mGdBZaO40xwSZfF3aR
+	 nyEQChwZ9AZfctOlo7jVoY9mTioI3E/Tt2fvOYR5eWcaXz9Ff2sqjjwt7ow52RWeRz
+	 0y4QXXhcUdRyXC8AOBaQXnNcbXqnHan/YnxTe6o//4gsVMjhHgxUnwkgxEUKmTbMbP
+	 vdCcZCMFeYlZr9NkwHsuetyoa0B5W1quFpSnPRXDofvLy8XxLT+NwodxaQB91o5kRD
+	 8oWRZoHlaq7hA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v18 04/13] cxl: Rename find_cxl_port() to
- find_cxl_port_by_dport()
+Subject: Re: [PATCH v18 05/13] PCI/AER: Introduce AER-CXL protocol error
+ kfifo
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Terry Bowman" <terry.bowman@amd.com>
 Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
-In-Reply-To: <20260717222706.3540281-5-terry.bowman@amd.com>
+In-Reply-To: <20260717222706.3540281-6-terry.bowman@amd.com>
 References: <20260717222706.3540281-1-terry.bowman@amd.com>
- <20260717222706.3540281-5-terry.bowman@amd.com>
+ <20260717222706.3540281-6-terry.bowman@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 17 Jul 2026 22:34:14 +0000
-Message-Id: <20260717223415.3A56F1F000E9@smtp.kernel.org>
+Date: Fri, 17 Jul 2026 22:35:26 +0000
+Message-Id: <20260717223526.DC58C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-> From: Dan Williams <djbw@kernel.org>
+> CXL VH RAS handling requires a path for the AER driver to hand off
+> CXL protocol errors to cxl_core for logging and recovery before PCIe
+> AER recovery tears down the device. Add
+> drivers/pci/pcie/aer_cxl_vh.c to implement this handoff via a kfifo-backed
+> work item.
 >=20
-> find_cxl_port() and find_cxl_port_by_uport() are internal port lookup
-> functions that search the CXL bus by dport and uport respectively, but
-> their names do not make the lookup method clear.
+> Introduce is_aer_internal_error() to identify CXL protocol errors
+> from AER internal error status bits across both correctable and
+> uncorrectable severities.
 >=20
-> Rename find_cxl_port() to find_cxl_port_by_dport() to make the lookup
-> method explicit and consistent with find_cxl_port_by_uport(). Both
-> functions remain static to port.c; the upcoming patch that adds the
-> first cross-file caller will widen their scope.
+> Introduce is_cxl_error() to gate the VH kfifo path.
 >=20
-> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Introduce struct cxl_proto_err_work_data to carry the error source
+> PCI device and severity through the kfifo. Encapsulate the kfifo,
+> per-producer spinlock, registration rwsem, and work pointer in struct
+> [ ... ]
+> bridging code.
+>=20
+> Co-developed-by: Dan Williams <djbw@kernel.org>
 > Signed-off-by: Dan Williams <djbw@kernel.org>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260717222706.3540=
-281-1-terry.bowman@amd.com?part=3D4
+281-1-terry.bowman@amd.com?part=3D5
 
