@@ -1,120 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14EFF3B9DAD
-	for <linux-cxl@vger.kernel.org>; Fri, 17 Jul 2026 06:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B082D3C4577;
+	Fri, 17 Jul 2026 06:46:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784270680; cv=none; b=q/q+NRPhFzBI9hWKGu7v46Oi1w0NWDwUCiGOsOfSTeR1JvSE5LBkCJQ/INjuVQb+aREbBhA/Ym2yNtxj1dykYuTOt/TrrEVafLNk2IURNc281czV3cMBGXZo8KuF+t6t4t/oJNpctVGVaEy2B3KbDHI8ig10ISJekbQWzZ4Gxk4=
+	t=1784270816; cv=none; b=BisurkWdP2igJf0qM/RnGiokYK9AbVoPOKmue5GDv7UZ9ejnzYOJgB+8UVp9vv1Dkk/Gwwf+3vWCRAdo8K4F7ahyDr73OCNMUAa3LNPHZ+8Tawkhxn6S6KDoQN3eJ7kus8HOooNejncWhSwIiA32XXGPbMFP057qH4h+R4j/RGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784270680; c=relaxed/simple;
-	bh=sORV0X+F4O0KR4Pc+tiRmUJlRF6pji9/qC/zLQyUz8o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kvVxHUSi9Vmn9drb+se2lJQxrTn80zSdKe3Xn3ekQHT22t1KQtbdBOxrH5MPYwf8X3RzRaiCYQUQFV/yowG7+SlTvKLs/2Kisyj31wSSEqNasWOT/TN8KSzOXjOon+3ziWegqrsdU6vOt/Xq3RegHjpqBb3ERYoQqfJiCrz4VaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IEX/0s4x; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1784270816; c=relaxed/simple;
+	bh=YCvfqyyQpofXhnfj+3OQoK2LnKGLsuSK+bQvg5w0PDY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HzwZC/NiMfED9dBv7iNk1RRF2VX8G761EvNNHdebSp4aWbadsSbsBPo99KrBYgbJkHSDu3v/SIQBoxeO4i+qbg805vAZC+72WiwEBPoKW9hfClb1w3kIZhZE+5wOEEFhyAJ2EhyPPoGGw1uJt9eAqBUTnXtx0KHtr3ihriY+Qmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BBafwYvE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IEX/0s4x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784270666;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MfX3Q3RbVvpkOOQ837KTiogN+xhujAPLrjvpYVR6OyQ=;
-	b=IEX/0s4xdSdUk9cddvVpn0Ea9WQ1Sw1p6ZxikTOFmzo+tXfsFDHy2Fmxi/c+0A6ilYqT7v
-	lEIZvInnOIfUybbwuL2h/zOSKJbjzbjnekiL04djkNoe9YsX3MbERoNH1SxBqoos/WqpX4
-	dIG8frqMxJ9i0Mpulf1slJALbnvIGeU=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-213-t0hT6U0FPpu1tZ_D-cZpZQ-1; Fri,
- 17 Jul 2026 02:44:21 -0400
-X-MC-Unique: t0hT6U0FPpu1tZ_D-cZpZQ-1
-X-Mimecast-MFC-AGG-ID: t0hT6U0FPpu1tZ_D-cZpZQ_1784270658
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1AB5F18007F5;
-	Fri, 17 Jul 2026 06:44:18 +0000 (UTC)
-Received: from p1.redhat.com (unknown [10.22.74.7])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3548E180036E;
-	Fri, 17 Jul 2026 06:44:08 +0000 (UTC)
-From: Nico Pache <npache@redhat.com>
-To: Barry Song <baohua@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Cc: ljs@kernel.org,
-	willy@infradead.org,
-	Nico Pache <npache@redhat.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>,
-	Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Gregory Price <gourry@gourry.net>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>
-Subject: [PATCH v2 2/2] mm/migrate: exclude hugetlb folios from MTHP_STAT_NR_ANON accounting
-Date: Fri, 17 Jul 2026 00:45:00 -0600
-Message-ID: <20260717064502.1980173-3-npache@redhat.com>
-In-Reply-To: <20260717064502.1980173-1-npache@redhat.com>
-References: <20260717064502.1980173-1-npache@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BBafwYvE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A4AA1F000E9;
+	Fri, 17 Jul 2026 06:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784270806;
+	bh=JKXbEP5sSqxrG6do/l3oqh6oY1qmcTSdJKyv4PfqhKc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=BBafwYvEfSE6hpwsOqF2/uaWrqE+TQsBipAX8MMY3Sxwh4bSvGC3p4Eu8kg4ZvNCE
+	 lKJFaFU06pnCW3itM/r9962FcWJwYEbfhK1Yvg6e7tkc6b6o68VMUrw3s35hBNSA+W
+	 45UhoMH21d5wNPwebHBLMel3uHZ7WSmgBxquf3nlKK8NSbnIIHF7Dju5RDgExyemws
+	 3D0AALeeX6qoxwQv1xWSmkf6Tx+xkjLB8hFcih7BkCG5wF8xmIV4//8CKTi7Zdcqcl
+	 mxtYENbDaBMFbPdVLnwDw93Xc7NLAu8DapgwQ5e7afjD8//sKH3mp7+6C0it7XLCOF
+	 lWxLc5t/rimCw==
+Date: Fri, 17 Jul 2026 09:46:39 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Hongfu Li <hongfu.li@linux.dev>
+Cc: david@kernel.org, osalvador@suse.de, akpm@linux-foundation.org,
+	linux-mm@kvack.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Hongfu Li <lihongfu@kylinos.cn>
+Subject: Re: [PATCH] mm: add missing alloc_percpu() NULL check in hotplug init
+Message-ID: <alnPz-r76FU6t5Uc@kernel.org>
+References: <20260717052938.58447-1-hongfu.li@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: UCF-L7ldnEYNp15QPtixHQp56E6KLTQHqMqkEoo35HM_1784270658
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260717052938.58447-1-hongfu.li@linux.dev>
 
-__folio_migrate_mapping() increments MTHP_STAT_NR_ANON for the
-destination folio when `folio_test_anon(folio) && folio_test_large(folio)`
-is true. However, hugetlb folios satisfy both conditions despite having a
-completely separate accounting system — they use hugetlb_add_anon_rmap()
-which does not touch mTHP stats, and their free path also bypasses the
-mTHP decrement in __free_pages_prepare().
+On Fri, Jul 17, 2026 at 01:29:38PM +0800, Hongfu Li wrote:
+> From: Hongfu Li <lihongfu@kylinos.cn>
+> 
+> No NULL check is done for alloc_percpu() when initializing per-CPU
+> nodestats. Allocation failure leads to NULL pointer dereference
+> during later memset.
+> 
+> Make function return int, check alloc_percpu() result and return
+> -ENOMEM on error. The caller chain already propagates this error
+> correctly.
 
-This causes MTHP_STAT_NR_ANON to be incremented on each hugetlb
-migration without a corresponding decrement, permanently inflating the
-nr_anon counter.
+I already applied a fix from Gregory:
 
-Add a !folio_test_hugetlb() check to __folio_migrate_mapping() so that
-only actual mTHP folios are counted.
+https://patch.msgid.link/20260701221613.2818148-1-gourry@gourry.net
 
-Fixes: 5d65c8d758f2 ("mm: count the number of anonymous THPs per size")
-Reviewed-by: Zi Yan <ziy@nvidia.com>
-Co-developed-by: David Hildenbrand <david@kernel.org>
-Signed-off-by: David Hildenbrand <david@kernel.org>
-Signed-off-by: Nico Pache <npache@redhat.com>
----
- mm/migrate.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+It'll be unstreamed soon.
+ 
+> Signed-off-by: Hongfu Li <lihongfu@kylinos.cn>
+> ---
+>  include/linux/memory_hotplug.h |  2 +-
+>  mm/memory_hotplug.c            |  3 ++-
+>  mm/mm_init.c                   | 14 +++++++++++---
+>  3 files changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index d9b23909d716..dd15a84b2a52 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -590,7 +590,8 @@ static int __folio_migrate_mapping(struct address_space *mapping,
- 		/* No turning back from here */
- 		newfolio->index = folio->index;
- 		newfolio->mapping = folio->mapping;
--		if (folio_test_anon(folio) && folio_test_large(folio))
-+		if (folio_test_anon(folio) && folio_test_large(folio) &&
-+		    !folio_test_hugetlb(folio))
- 			mod_mthp_stat(folio_order(folio), MTHP_STAT_NR_ANON, 1);
- 		if (folio_test_swapbacked(folio))
- 			__folio_set_swapbacked(newfolio);
 -- 
-2.55.0
-
+Sincerely yours,
+Mike.
