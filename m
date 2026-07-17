@@ -1,81 +1,128 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2FB2E62A9;
-	Fri, 17 Jul 2026 10:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310221E2834
+	for <linux-cxl@vger.kernel.org>; Fri, 17 Jul 2026 12:44:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784283286; cv=none; b=FwvUf/Rk8p1a7sS/gjnYt0WnGcz2pEGvpUFsXTfbDQFnm93/RSAYjvsaP9C/sr9ZS14Tki+E3K7bY/UUvlY+4r+45wxy//kzoCUfWx5YHXrxOY9BgzGQ47t6ZNmYhAIgaUMQ+jil2eHqVBkdL0cbhMMFQCQBo+hwe86NArkWdtw=
+	t=1784292291; cv=none; b=DB1OX7xPmUf7z2nV/euG6oPedGTpwqWARRMigp/DciTyYywtRU8BwwXijXUpK5jqSrH8ixcMUyGrfOP7yFIqP/tWAKqQNoBIwhRWSNK3M1QLVSImYElj5dWqiVC7BxMXsRfr87F8niOUPb0vjeLcTYrJuNQ/rwhIpBigrnQg8NU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784283286; c=relaxed/simple;
-	bh=052OwKUJH39MP82Dql8W8+wvic7EK/0wgC2Ar7HG6dc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j6wDrzhax+REzjXex5mFAPvUFdglCto+smauCRu0uvEspHjIrChw+aGtkXtk57UaSyYMbBxO1uJrQFDp/IRHeBumI3oZdvB2WNvpGfPLy2p7/fO9Xz8OWdnox3o1iZ6iPoOmbaYYblXmGXX+cGFYgkRSEGV3MZK+Loy+sXXEnxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Mo+4dA83; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1784292291; c=relaxed/simple;
+	bh=YUhhqapHpYHZgybLFx9nk5ieQ+nspWQvhvvE00yGu6s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X8m/Fj2cjW7GmPpZeO4RM2bXfXECPuNqZOJSCWXOC9noMIJ7mf66QUX4ad3sFvI6FJ8td56Qm4isu5RHb3cdFgCQoJYhxJijQjHx1koDiyGF+lf5OYxGtAHILG75Y4pNHQQzyYBKLmn9FOb6JITeAiJ1Uw58O9SDp1Cjf9yUzrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bbkub3Yi; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Mo+4dA83"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1784283272; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=HN8DVK/53P10/O7YFi+DjGcyeRgpFH2mYcka/ASgu1I=;
-	b=Mo+4dA83pcmSAKBCAoQWbl9gMKD/l8LUqQbHC5a/rN8mnIaRkHEqso8Jz/4U68kgx+KQlwV2sbGxR/vRkx3XpNHFFQtyLEUZuP35bQrAntlD4zLJPC15eKJLJATpfRainYlo/Ogf8IW7qjD0gCucXOS8m1nk7QweMWQyZ4guNSw=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0X7H4Mt7_1784283269;
-Received: from 30.74.144.121(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0X7H4Mt7_1784283269 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 17 Jul 2026 18:14:30 +0800
-Message-ID: <17af25f6-20d2-483c-b9a1-5c89525dd65f@linux.alibaba.com>
-Date: Fri, 17 Jul 2026 18:14:29 +0800
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bbkub3Yi"
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 3479FC2B9F9
+	for <linux-cxl@vger.kernel.org>; Fri, 17 Jul 2026 12:45:05 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 6041160361;
+	Fri, 17 Jul 2026 12:44:47 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D187D11BD0007;
+	Fri, 17 Jul 2026 14:44:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1784292286; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=orntfb4ISJKu7Ltagz9jCqSpoh61GtFdaSyCjwLXfhI=;
+	b=bbkub3YiYCNb/0uCckh0Dp3s88IanSu4PonyJka37XKL2VO99fjEx0GH/FAZMcsiaEoDdL
+	e7iOiXWyh3R41YfGz6Q1Ye38i1PMYJgSTOG94OwEUOzRZqEMeiC0Fik9QZOiHtd4diUvLq
+	mJLQBu5oTkHIy/bV8T7a6dH0VQMllqc+l4rBqahUD3mcdqa6Vip48yiQUO3Qijl1uo1r5a
+	1XEKxzIZzvh7PiUujcqJBaOrjEO6DNpDSsgLa2vgBKtpffI6Btnl3cG0uh2EQejj8Srlkr
+	LWCVX5djLAmx3X19qbzvKLF/1dZSsk9TIllz0wbIgsR88iIDAPAu/IOgoPtQuQ==
+Date: Fri, 17 Jul 2026 14:44:44 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: sashiko-bot@kernel.org
+Cc: sashiko-reviews@lists.linux.dev, linux-cxl@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Subject: Re: [PATCH v9 6/9] PCI: of: Use fw_devlink_set_device()
+Message-ID: <20260717144444.72c8e73f@bootlin.com>
+In-Reply-To: <20260708102921.BDBD31F000E9@smtp.kernel.org>
+References: <20260708100302.517792-1-herve.codina@bootlin.com>
+	<20260708100302.517792-7-herve.codina@bootlin.com>
+	<20260708102921.BDBD31F000E9@smtp.kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] mm/migrate: exclude hugetlb folios from
- MTHP_STAT_NR_ANON accounting
-To: Nico Pache <npache@redhat.com>, Barry Song <baohua@kernel.org>,
- David Hildenbrand <david@kernel.org>, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc: ljs@kernel.org, willy@infradead.org, Zi Yan <ziy@nvidia.com>,
- Oscar Salvador <osalvador@suse.de>, Andrew Morton
- <akpm@linux-foundation.org>, Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>
-References: <20260717064502.1980173-1-npache@redhat.com>
- <20260717064502.1980173-3-npache@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20260717064502.1980173-3-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
+Hi,
 
+On Wed, 08 Jul 2026 10:29:21 +0000
+sashiko-bot@kernel.org wrote:
 
-On 7/17/26 2:45 PM, Nico Pache wrote:
-> __folio_migrate_mapping() increments MTHP_STAT_NR_ANON for the
-> destination folio when `folio_test_anon(folio) && folio_test_large(folio)`
-> is true. However, hugetlb folios satisfy both conditions despite having a
-> completely separate accounting system — they use hugetlb_add_anon_rmap()
-> which does not touch mTHP stats, and their free path also bypasses the
-> mTHP decrement in __free_pages_prepare().
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
 > 
-> This causes MTHP_STAT_NR_ANON to be incremented on each hugetlb
-> migration without a corresponding decrement, permanently inflating the
-> nr_anon counter.
+> Pre-existing issues:
+> - [High] Dangling pointer in `np->fwnode.dev` on error paths and during bridge removal, leading to a potential use-after-free.
+> --
 > 
-> Add a !folio_test_hugetlb() check to __folio_migrate_mapping() so that
-> only actual mTHP folios are counted.
+> --- Patch [6]: [PATCH v9 6/9] PCI: of: Use fw_devlink_set_device() ---
+> commit e05d94ee3b1f4fa9d5ff1b29db6b40e43eca7313
+> Author: Herve Codina <herve.codina@bootlin.com>
 > 
-> Fixes: 5d65c8d758f2 ("mm: count the number of anonymous THPs per size")
-> Reviewed-by: Zi Yan <ziy@nvidia.com>
-> Co-developed-by: David Hildenbrand <david@kernel.org>
-> Signed-off-by: David Hildenbrand <david@kernel.org>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
+> PCI: of: Use fw_devlink_set_device()
+> 
+> The code directly set the fwnode.dev field. This commit updates the code
+> to use the dedicated fw_devlink_set_device() helper to perform this
+> operation.
+> 
+> > diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> > index 8b18c4ba845cf..ee9eb384b377a 100644
+> > --- a/drivers/pci/of.c
+> > +++ b/drivers/pci/of.c
+> > @@ -803,7 +803,7 @@ void of_pci_make_host_bridge_node(struct pci_host_bridge *bridge)
+> >  	 * bus. Avoid any new device creation.
+> >  	 */
+> >  	of_node_set_flag(np, OF_POPULATED);
+> > -	np->fwnode.dev = &bridge->dev;
+> > +	fw_devlink_set_device(&np->fwnode, &bridge->dev);  
+> 
+> [Severity: High]
+> This isn't a bug introduced by this patch, but could this lead to a
+> use-after-free on error paths?
+> 
+> In of_pci_make_host_bridge_node(), if an error occurs after setting up the
+> fwnode (such as of_changeset_apply() or device_add_of_node() failing), the
+> error path removes the node from the tree and releases its reference, but
+> fails to clear the np->fwnode.dev pointer:
+> 
+> out_revert_cset:
+> 	np->data = NULL;
+> 	of_changeset_revert(cset);
+> out_free_node:
+> 	of_node_put(np);
+> 
+> Because device_remove_of_node() only clears the forward pointer
+> (dev->fwnode) and not the backpointer, np->fwnode.dev remains dangling. If
+> another thread holds a reference to np, the node outlives the function.
+> When the bridge is later freed, any concurrent access via
+> get_dev_from_fwnode(&np->fwnode) could dereference freed memory.
+> 
+> The same dangling pointer issue appears to exist in
+> of_pci_remove_host_bridge_node() during teardown:
+> 
+> void of_pci_remove_host_bridge_node(struct pci_host_bridge *bridge)
+> {
+> ...
+> 	device_remove_of_node(&bridge->bus->dev);
+> 	device_remove_of_node(&bridge->dev);
+> 	of_changeset_revert(np->data);
+> 	of_changeset_destroy(np->data);
+> 	of_node_put(np);
+> }
 
-LGTM.
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+This issue is relevant and clearing np->fwnode.dev in the error path will
+be take into account in the next iteration.
+
+Hervé
