@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF2C367B76
-	for <linux-cxl@vger.kernel.org>; Fri, 17 Jul 2026 21:43:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EF032B130
+	for <linux-cxl@vger.kernel.org>; Fri, 17 Jul 2026 21:43:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784324583; cv=none; b=BMBb/mhSTxJWe0TX6hg7r6g7F0L12ypZV6C54XQnziC7lvZKemYsHfrEcNO9eUXmZDXWp9HwWbXximWP+SCCOy9j5Z8Pk9ESlgEJdGggK2BaROAuEoXiftkBb4h+TjqNIm3L+rMCvdqhDx/EED2FYGTspoFmYG0Vr0IubAVh8UA=
+	t=1784324583; cv=none; b=dV5JQlOSAHg+6ZJeYXB9BGv0MvTrecF9xSp+bKroQP00cAPy8yHraastxThP0j6zvbtnFIYgT9tXLwxDBztQMzwXf14R7/n4E9cHqcFjSDOsxwICPccL2S6JFLSpjOA5ilQyGbCSmcBytzbfOY2/R0D06KqoT4LxNXracl47LPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1784324583; c=relaxed/simple;
-	bh=oKCxacNlgmrGla6EGiItQS8JiDa/vJItNHYv89R9QTM=;
+	bh=vaXazQEC+FcJ0bAcacfxCxOcYfPKyYqS4a/Wz6DLGzk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bJxa9EycqlDNAgajYvVP7sbipxY9gFhKOmRy0wyFPAKWQGwEQyz5iL/H08csjNYBDsSJOYmGN5XEdvNcYzPTv+arHknqkzl9n9sHme44Yua5tdhSmXOvliYYRRvJc1aNR1ecN1WHUocZOsYmz50QllJmPti3WwwrE6SOFdQ2bFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jx/BQdes; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version; b=HuUJf9vng4/3ni/YjLANVF4A8Srglp1n987L25wuVDDbDj23HMPCBEJAjPnHckiEHojQRKsYIwfb8MZfv3wfEfYa/x+JlJzepRPA4CvraEj3t30k40VZnFqkcsRbOUsYUOnxGwhvjRoqv0xTG+6kT7eWbFDU3/dMdj3n2Bwbh68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jliJameb; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jx/BQdes"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jliJameb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784324581; x=1815860581;
+  t=1784324582; x=1815860582;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=oKCxacNlgmrGla6EGiItQS8JiDa/vJItNHYv89R9QTM=;
-  b=jx/BQdesbfHd/n5NjxeLzrArbDgMyHJk14UxK7fH8IVmhX46K+eUTbRs
-   sY/bV8wHww/WzKIC263ErIpRCiFTUywAwDVR7yZWNhoXLJF5PzMwtXtaA
-   CPQqIy3pWMZoWzJEFjPn3aD/vF87+D3u3orwQCK2fEiZqoYEXuJdxUqXE
-   nWogTSIVy69TJn4cWPtkQksVCpnVr5ne83E+MW9rYPGmCZW4XfA6lobcD
-   Nbd6kYyCDMQMck5XLtJKnMicoZndB5kjlYiblHI1WEeAYRdaaYp6GzuS5
-   Sq5Bq3J9gTnB/TGSRCiy2+MCArE+dVVePt/ILHMagLAwe7y5d+7HL1SOq
-   w==;
-X-CSE-ConnectionGUID: WaZ0dihSTmy5Y/+cAPqBSA==
-X-CSE-MsgGUID: NevBemPOTk+ejqo9Qt7uXw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11849"; a="84129144"
+  bh=vaXazQEC+FcJ0bAcacfxCxOcYfPKyYqS4a/Wz6DLGzk=;
+  b=jliJamebxWIDGErUh56eV2CrW/uuYHJCET5KsVUEcCHAydnvWVjKnizC
+   xPYYsnr4dG6t/IhOjrYcyTLzEQno27l5K3EWIPlc/9iIsFoucZ74uZEWm
+   AJ0Uy7GB5yDUhFnnQzBVRlieFBI4eWFQWEPM44x4midIaI/AvfMiwYGcS
+   eTYZDZhK1Vkkp7AP9Kh/VOtQdgb0DSC5kQfYvVaqJg3p2yK+XmryAVVA2
+   AzmQytXWw8QbeI95fkOQ/2G0xbilt7434Z9vlbV8w70J84b2zc1T4JduY
+   /TA2No5gpF/7K0JVaMheIYSm8VgVti+lNWn5EGFuc0ZqVrZt05woN3RAL
+   g==;
+X-CSE-ConnectionGUID: lDj0VCHDQYyRahLNSuBXdw==
+X-CSE-MsgGUID: VT4R45ncSxuelO6WIyvj5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11849"; a="84129153"
 X-IronPort-AV: E=Sophos;i="6.25,170,1779174000"; 
-   d="scan'208";a="84129144"
+   d="scan'208";a="84129153"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 14:43:00 -0700
-X-CSE-ConnectionGUID: 1nc70YGRTNmLtSSbze9bDw==
-X-CSE-MsgGUID: 1BGoP/EISRWXJZfUwxWb8w==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 14:43:02 -0700
+X-CSE-ConnectionGUID: pJ5B72OwRtSme53vrk79oQ==
+X-CSE-MsgGUID: X3h8py/8R9ikBiL4dZyrFg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,170,1779174000"; 
-   d="scan'208";a="261161255"
+   d="scan'208";a="261161261"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.59])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 14:43:00 -0700
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 14:43:02 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -53,10 +53,11 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Dan Williams <djbw@kernel.org>,
 	Li Ming <ming.li@zohomail.com>
 Cc: linux-cxl@vger.kernel.org,
-	Srirangan Madhavan <smadhavan@nvidia.com>
-Subject: [PATCH v3 1/3] cxl/hdm: Reject switch decoder interleave ways that overflow targets
-Date: Fri, 17 Jul 2026 14:42:46 -0700
-Message-ID: <de61a8143c7de391f8463003d87a3845496f4af3.1784322343.git.alison.schofield@intel.com>
+	Srirangan Madhavan <smadhavan@nvidia.com>,
+	Richard Cheng <icheng@nvidia.com>
+Subject: [PATCH v3 2/3] cxl/hdm: Make switch decoder target parsing endian-safe
+Date: Fri, 17 Jul 2026 14:42:47 -0700
+Message-ID: <c09d201db3b716a6a9c664ccb8ff7fd9dc67b562.1784322343.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1784322343.git.alison.schofield@intel.com>
 References: <cover.1784322343.git.alison.schofield@intel.com>
@@ -68,92 +69,56 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Switch decoder enumeration validates that the interleave ways encoding
-is legal, but not that the resulting number of ways fits the available
-targets. This can overrun the target arrays during enumeration.
+Switch decoder target IDs are stored one per byte, starting with target
+0 in the least significant byte. The current code accesses those bytes
+in memory order, which only matches register order on little-endian
+hosts.
 
-Reject committed decoders whose interleave ways exceed either the
-hardware target list capacity or the reported target count. Reject
-switch decoders that report zero targets.
+On big-endian hosts, the target IDs are reversed and the decoder is
+associated with the wrong downstream ports.
 
-For uncommitted decoders, ignore the stale interleave ways value and
-reset it to one until the decoder is committed.
+Extract each target ID from the register value with an explicit shift
+and mask so the target mapping is independent of host endianness.
 
-Add a clarifying comment that target_count is a direct count, not
-0-based like decoder_count.
-
-Link: https://sashiko.dev/#/patchset/20260711180755.1779002-1-alison.schofield@intel.com?part=1
 Fixes: d17d0540a0db ("cxl/core/hdm: Add CXL standard decoder enumeration to the core")
+Reviewed-by: Richard Cheng <icheng@nvidia.com>
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/core/hdm.c | 33 +++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h      |  2 ++
- 2 files changed, 35 insertions(+)
+ drivers/cxl/core/hdm.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 0c80b76a5f9b..d81df45d8005 100644
+index d81df45d8005..4aaadb842d90 100644
 --- a/drivers/cxl/core/hdm.c
 +++ b/drivers/cxl/core/hdm.c
-@@ -76,6 +76,8 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+@@ -976,14 +976,11 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+ {
+ 	struct cxl_endpoint_decoder *cxled = NULL;
+ 	u64 size, base, skip, dpa_size, lo, hi;
++	u64 target_list;
+ 	bool committed;
+ 	u32 remainder;
+ 	int i, rc;
+ 	u32 ctrl;
+-	union {
+-		u64 value;
+-		unsigned char target_id[8];
+-	} target_list;
  
- 	hdm_cap = readl(cxlhdm->regs.hdm_decoder + CXL_HDM_DECODER_CAP_OFFSET);
- 	cxlhdm->decoder_count = cxl_hdm_decoder_count(hdm_cap);
-+
-+	/* target_count is a direct count (1h..8h), not 0-based like decoder_count */
- 	cxlhdm->target_count =
- 		FIELD_GET(CXL_HDM_DECODER_TARGET_COUNT_MASK, hdm_cap);
- 	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_11_8, hdm_cap))
-@@ -1084,6 +1086,37 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 		cxld->interleave_ways, cxld->interleave_granularity);
+ 	if (should_emulate_decoders(info))
+ 		return cxl_setup_hdm_decoder_from_dvsec(port, cxld, dpa_base,
+@@ -1119,9 +1116,9 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
  
- 	if (!cxled) {
-+		struct cxl_switch_decoder *cxlsd =
-+			to_cxl_switch_decoder(&cxld->dev);
-+
-+		if (cxlsd->nr_targets < 1) {
-+			dev_err(&port->dev,
-+				"decoder%d.%d: reports zero targets\n",
-+				port->id, cxld->id);
-+			return -ENXIO;
-+		}
-+
-+		if (!committed) {
-+			/* Ignore interleave ways until commit */
-+			cxld->interleave_ways = 1;
-+			return 0;
-+		}
-+
-+		if (cxld->interleave_ways > CXL_HDM_DECODER0_TL_TARGETS) {
-+			dev_err(&port->dev,
-+				"decoder%d.%d: interleave ways: %d exceeds target list capacity: %d\n",
-+				port->id, cxld->id, cxld->interleave_ways,
-+				CXL_HDM_DECODER0_TL_TARGETS);
-+			return -ENXIO;
-+		}
-+		if (cxld->interleave_ways > cxlsd->nr_targets) {
-+			dev_err(&port->dev,
-+				"decoder%d.%d: interleave ways: %d exceeds targets: %d\n",
-+				port->id, cxld->id, cxld->interleave_ways,
-+				cxlsd->nr_targets);
-+			return -ENXIO;
-+		}
-+
  		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
  		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
- 		target_list.value = (hi << 32) + lo;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index c0e5308e4d1b..291ada46b646 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -67,6 +67,8 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
- #define   CXL_HDM_DECODER0_CTRL_HOSTONLY BIT(12)
- #define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
- #define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
-+/* Two registers with one target ID per byte */
-+#define CXL_HDM_DECODER0_TL_TARGETS 8
- #define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
- #define CXL_HDM_DECODER0_SKIP_HIGH(i) CXL_HDM_DECODER0_TL_HIGH(i)
+-		target_list.value = (hi << 32) + lo;
++		target_list = (hi << 32) + lo;
+ 		for (i = 0; i < cxld->interleave_ways; i++)
+-			cxld->target_map[i] = target_list.target_id[i];
++			cxld->target_map[i] = (target_list >> (i * 8)) & 0xff;
  
+ 		return 0;
+ 	}
 -- 
 2.37.3
 
