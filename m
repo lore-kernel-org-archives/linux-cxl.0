@@ -1,75 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C87943F08A;
-	Fri, 17 Jul 2026 22:35:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42C7C246BD5;
+	Fri, 17 Jul 2026 22:37:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784327728; cv=none; b=XIX8fvCtmf6FNQ6GuSoRqjes1bZ+hETikncMlS04MCYiHi+vx9m+BJx12LtQxZdqpUWa9yJg5S2SJlWOXzDUP7QF5gXf7CMWheZ8wtjfREmMAhuIabR9jaXclzMaenjnuj7mQAiq+8VDAv9v7m2W5ZbHLaGUWm9IpNKnnAzFaC0=
+	t=1784327879; cv=none; b=qbH4FczEusmfpAPHbinbbTj0zFJcjQx1fo38EEjqj/XjAnoefkkTWsWVVtUwKRXbTrS/Ac3gMUb/2JkkqgY+W1o/URY6jnNt5bAxmngcy7ZzrDZGRG6428oMi6RnFKofZ0T7DlSPPmcpRux2cIL6DagYJZfGsW1We4vUg+kT7gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784327728; c=relaxed/simple;
-	bh=juqaL3eaaRXK79+lHkOL3AwxXKWixjs+O3054ej3fcI=;
+	s=arc-20240116; t=1784327879; c=relaxed/simple;
+	bh=UIGC5v8NavuHilC8uqdbmB2biz2AyGKC9p+4Iu2e/ZI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=jIOaSR9EXWPImJhIr5i3YUuBOOGyZ3kIUyBJzmveHK5nxzcK9UkzT1fIBrfz78absiCEisa1SZn0XsRsOiXtRkz0DMoi2UPg5UDeuRdZRs2EW9nh5j7gvp9CFyqPnNR6ioKOo/sc+MwymDIfhPwcQOKhz/iR0AkmYt/rynf1/ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m5w3ERP9; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=G7XD6zQvM+2TQ0f77YQcPHGyBVz4vlVts5Lb7bS76setvB+LL/wEfRdD3pP6MuWQjj1L3fHhomfpsMJtooQw+xoHVICJgSr2wtt0W4/dF4fwCd2bz3dTA45ZBoKVs/fr3Jobuhz/AOtwkIrCTaBRNQ8Gz/FaocWnrinuMKo7w+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C94czIST; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m5w3ERP9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC58C1F000E9;
-	Fri, 17 Jul 2026 22:35:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C94czIST"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF98B1F000E9;
+	Fri, 17 Jul 2026 22:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784327727;
-	bh=juqaL3eaaRXK79+lHkOL3AwxXKWixjs+O3054ej3fcI=;
+	s=k20260515; t=1784327877;
+	bh=UIGC5v8NavuHilC8uqdbmB2biz2AyGKC9p+4Iu2e/ZI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=m5w3ERP97U2POSMx0ukH5c11/bvgJzxDPl+ns+zBjMhl6XTzlj6/eN1SaVeJ03zbX
-	 oEASx/SdD4dzkKMxDsYVEM7Yj78EMd78QQu77k4MbLyAm2D0mGdBZaO40xwSZfF3aR
-	 nyEQChwZ9AZfctOlo7jVoY9mTioI3E/Tt2fvOYR5eWcaXz9Ff2sqjjwt7ow52RWeRz
-	 0y4QXXhcUdRyXC8AOBaQXnNcbXqnHan/YnxTe6o//4gsVMjhHgxUnwkgxEUKmTbMbP
-	 vdCcZCMFeYlZr9NkwHsuetyoa0B5W1quFpSnPRXDofvLy8XxLT+NwodxaQB91o5kRD
-	 8oWRZoHlaq7hA==
+	b=C94czISTpgCykccQpCuoZK4QfanFqGNSywrGCv2G8D5rb0DeqWKTZGe6ICAVIGN1W
+	 kAq4b9rPRWof070DLKREWTg0JxA+QIWa1jlqxHhBQmVkDKA3yy6sorFF9zk1C2wuzA
+	 Xd5jOJGZLyW8pRAIaZXwte2mDUYKDeesb4duIrL4Yv6skgoc4yL3lTnT2gyFojbGIm
+	 AVPhK7D6M5rYatQF8uRG4Y7ZnEhjCLhGm0H2CBuQsyz2IbTxz2bW7PNAh1TgOqUvGW
+	 FjIIE/72EmcRB1WKxlZgL0MYMaFGJLdsUnUvItPi6r3RySvCPtY7DWQdnYwDZ2ZN/B
+	 gIkWhdPiS66ag==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v18 05/13] PCI/AER: Introduce AER-CXL protocol error
- kfifo
+Subject: Re: [PATCH v18 03/13] cxl: Tighten CPER kfifo registration API and
+ symbol visibility
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Terry Bowman" <terry.bowman@amd.com>
-Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
-In-Reply-To: <20260717222706.3540281-6-terry.bowman@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
+In-Reply-To: <20260717222706.3540281-4-terry.bowman@amd.com>
 References: <20260717222706.3540281-1-terry.bowman@amd.com>
- <20260717222706.3540281-6-terry.bowman@amd.com>
+ <20260717222706.3540281-4-terry.bowman@amd.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 17 Jul 2026 22:35:26 +0000
-Message-Id: <20260717223526.DC58C1F000E9@smtp.kernel.org>
+Date: Fri, 17 Jul 2026 22:37:56 +0000
+Message-Id: <20260717223757.AF98B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-> CXL VH RAS handling requires a path for the AER driver to hand off
-> CXL protocol errors to cxl_core for logging and recovery before PCIe
-> AER recovery tears down the device. Add
-> drivers/pci/pcie/aer_cxl_vh.c to implement this handoff via a kfifo-backed
-> work item.
+> From: Dan Williams <djbw@kernel.org>
 >=20
-> Introduce is_aer_internal_error() to identify CXL protocol errors
-> from AER internal error status bits across both correctable and
-> uncorrectable severities.
+> Tighten the CPER protocol error kfifo registration API and symbol
+> visibility.
 >=20
-> Introduce is_cxl_error() to gate the VH kfifo path.
+> Use EXPORT_SYMBOL_FOR_MODULES() instead of EXPORT_SYMBOL_NS_GPL() for
+> the CPER kfifo registration symbols. This names the consuming module
+> explicitly and gives compile-time enforcement.
 >=20
-> Introduce struct cxl_proto_err_work_data to carry the error source
-> PCI device and severity through the kfifo. Encapsulate the kfifo,
-> per-producer spinlock, registration rwsem, and work pointer in struct
-> [ ... ]
-> bridging code.
+> Drop the work_struct argument from the unregister path. Change the
+> WARN_ONCE condition to a NULL check since there is no caller pointer
+> to compare against anymore.
 >=20
-> Co-developed-by: Dan Williams <djbw@kernel.org>
-> Signed-off-by: Dan Williams <djbw@kernel.org>
+> Change register/unregister return types to void. Flag double registration
+> with WARN_ONCE() inside the lock instead of returning an error.
+>=20
+> Change cxl_ras_init() to void because there is one consumer and one produ=
+cer
+> so the error return was unnecessary. Remove the now-dead error check in
+> cxl_core_init().
+>=20
+> Add a diagnostic log when the driver is not bound in
+> cxl_cper_handle_prot_err().
+>=20
+> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
 > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Dan Williams <djbw@kernel.org>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260717222706.3540=
-281-1-terry.bowman@amd.com?part=3D5
+281-1-terry.bowman@amd.com?part=3D3
 
