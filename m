@@ -1,67 +1,67 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736EF2DC76A
-	for <linux-cxl@vger.kernel.org>; Fri, 17 Jul 2026 21:37:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA632BD033
+	for <linux-cxl@vger.kernel.org>; Fri, 17 Jul 2026 21:40:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784324273; cv=fail; b=s3hHPXQYkxTuZkUDDn1AmkUHl2Wowm27OfY75Co5ijZo0wbSy/nDGW6yrTAd0hzstE5Xo+tpsXRy0jT0RA+UuE3wLpXPaUPHZol5clYZowH5FQVPHYN14G3lxJdgszuCx4gKrsAvPUlpZiqfFFYDQEG6vbCHQeZhHZlYzZdV+Gs=
+	t=1784324420; cv=fail; b=nFXslkPgUnWKmxgnTdoQO0CVxv4E1nA9bMnRlCugX3Dg4k0DImoZgOD8PqusVh4lLxkspeVHtb/e1jcAaeisS22EnyxUP3qaLY3HPvIed6osI3sUkkgEO4sDuRsu9Ccs3R24ekCKs6dVjLsS5udk1Qf7wOH0oHbJHcd6WcWSuJ0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784324273; c=relaxed/simple;
-	bh=Po6PgPjzDtPouIkx9hj9JaZtKbFi+D7Mo9nyOPaTb44=;
+	s=arc-20240116; t=1784324420; c=relaxed/simple;
+	bh=OtMzhyi9xh19FTvFhmrhrr3pKz9WDcc6vS9yDAx0Wkg=;
 	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=EbMrapafIvmSuy09ZPJxcRyGeJmwRY8th1rYOUGYHSiKfgil0axjV0mwq57EyNxmKcSG9ilhm2IDyqFSHIwA3UABvGFcLfyrX7G0Uas+E+adX1ylqFecKM325IEiaHl2cTXDe0yG9ZRRXcoi7MsIlkSbKByoFW3jOJGf2dhSNvo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dYPdLY+H; arc=fail smtp.client-ip=198.175.65.11
+	 Content-Disposition:In-Reply-To:MIME-Version; b=N1HoclOZALt9QgH0WcCzM83Gs7kMeCunu/2EcSnZ59Cg4R18vpg9gpjrWzFaIgdOdUR7UuMt34cW+0AGIlFkudgCU7z57fPmupHLwULmOY072hTrqlWf3NLWHyMawMxCzyTzZB6H/F1dHUo/x+HFGYJar7NzWJiWENcUZv0M1gs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KQ/1eLzi; arc=fail smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dYPdLY+H"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KQ/1eLzi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784324272; x=1815860272;
+  t=1784324417; x=1815860417;
   h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Po6PgPjzDtPouIkx9hj9JaZtKbFi+D7Mo9nyOPaTb44=;
-  b=dYPdLY+HA+mbhq/1g58haxfgSWX1JJnwcy5FRc6xAaik2WP+LSMaunqj
-   Si7LxzZgIpE69IftSzbwVospRsKxfEokq1t4TVvnB2fYr/urhy2nb07cE
-   QNnZkh3Mehapmhn/Z/JchLIphF2ckVNdj+QD4RzUDKhn++LoDy3rq2c++
-   +xRp5rEVLl7PgKnhQoP/xT6hMTISZzzeXy8KcCgePMIYzay4Twhn9U7Kp
-   sO780pLaQlA+zD03J4QISGHNgCHa3iapBh5BOA+QXz4QLJ/SsrLmkwKi8
-   wzHOZr8Etw5R5VBotkNPm72NVCzpzvf05rkPNWn7OMu3XzP4Pzjd8oPwR
-   Q==;
-X-CSE-ConnectionGUID: noP6Onj0R8WfDxZvc7F+sw==
-X-CSE-MsgGUID: g20vHNjyS3eYdeRi5bWeMA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11849"; a="95356182"
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=OtMzhyi9xh19FTvFhmrhrr3pKz9WDcc6vS9yDAx0Wkg=;
+  b=KQ/1eLzi4Ly6z3XbxEScrQM1nm6Mur5mwPydftpz6ReS9BJw7BcmIgP0
+   uywUyRJTLW8c9CcmoOBssW0eZBLhMGjjMmpP8vfmaLDsyRBF1biIPax/3
+   5SU5+Av8ZR9awxDfa1ln8eHSz9UtbHzxTZtDU10WQx5oQs/q8JOJtji41
+   GsfTfagycw/dWpQXknMZ46aghAUEf7AnIFgO0RSJpzr+AJY3ivOWNTGkc
+   5KscUeXF+EXum+S7W0f4adquoFvTJDAMco1oIaJfjSYhwDM35+ujAz1wb
+   moTXuXd7Io6nma4zNEs4eYdc6V/CMzu3ban+LTZtwxJ/XundePhWpRGmd
+   g==;
+X-CSE-ConnectionGUID: w3ksbHYUSrW31Q4i8PbI0Q==
+X-CSE-MsgGUID: S3HG/OBdROWAEDbKHfmPtw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11849"; a="95356368"
 X-IronPort-AV: E=Sophos;i="6.25,170,1779174000"; 
-   d="scan'208";a="95356182"
+   d="scan'208";a="95356368"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 14:37:51 -0700
-X-CSE-ConnectionGUID: 34Wnm3LpSD+F3pHeILZRMQ==
-X-CSE-MsgGUID: JIVbefeyRi+1isVBBxzTJg==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 14:40:17 -0700
+X-CSE-ConnectionGUID: W5VMh1GdSU+f+aU15jMG5w==
+X-CSE-MsgGUID: plgoNDvATmWndflj6UcoVw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,170,1779174000"; 
-   d="scan'208";a="257532174"
+   d="scan'208";a="257532484"
 Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 14:37:47 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 14:40:16 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
  ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.43; Fri, 17 Jul 2026 14:37:46 -0700
+ 15.2.2562.43; Fri, 17 Jul 2026 14:40:16 -0700
 Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.43 via Frontend Transport; Fri, 17 Jul 2026 14:37:46 -0700
-Received: from CY7PR03CU001.outbound.protection.outlook.com (40.93.198.22) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ 15.2.2562.43 via Frontend Transport; Fri, 17 Jul 2026 14:40:16 -0700
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (40.93.195.18)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.43; Fri, 17 Jul 2026 14:37:43 -0700
+ 15.2.2562.43; Fri, 17 Jul 2026 14:40:15 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nA1qerksY6tPML4JYbHNNLvhqTDEj1trSQJGWxfbdAjmBC91Dnbug6o0LuPweJXl4nSbUjQon+U2xKQ3fERI07OQ24Ze96alVEExD8HlH7le6PQmaSVgdGMiCcGvTTIrHBDsifu2WTKuXu17B1p0ACAthRf6axgwzSTSvrpbm11T8AYGTrjtsk4wV03JoEKYfGRRPo+aTBy0TqKvpGOifcX1WKtQAdlbVd0DARskQ8Gh38/p8hXouhib+FoLSDtuNRdy65SpLVvhzQ0LO17noh8IujSj0/b79tydlTO1ILFp3QYCzyZtUQD3Ra5jga88/y+fzc2BKCp1ovCmLuUfbA==
+ b=AhR8Alw4meay06LgstDvQjQISBqX1X4Y/HQIbxTKTUWCx193jO3yQtfPMXd1zqId/JS3rPc2WrPfHjy5L4MRtIDpYXM8iWLHKIvZWcFoBIkTfTNOkmVHd2kG5GuSNd7Fu+wgSlvk/bqjNB3J9XoBmY5c6OvGBwGOLYxt9ZuK93wG9EQwuUypxNM8KN1Ol0vL14OkVUigIpQ2ho7Yn3wN6uNqK3NIN/U76NK7Fb7lqpa4t8yZ7zXoWoJOFENtsVM70eXGLvQpJruNK4tIU/n+LWuaaW8wCHwdxo/NK/ViAuKDyDpIZrOawpRbFenwsXolwgAtcCCKC65miEbNKeTWMw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sqoyf6/bbaqWzD4cE5pzX52zk54X2XW/mxHXmOFnTlQ=;
- b=IWv4m7+ufc8RTdnFv/pDOhbYgTI4Lshg5v+C9LmoP1euF6ZpiQyQ5vXCEXaLPu4HLwQ36W7i5lX1uvruyU+H1V+yibyO/vFRDW3szyRk7HVNVSogQO2vYRbh6WXiDtoay8wMN+KVIKvw9NkAUm7ASoxtL/pM2EqPgaPEWHdjl+5kQ5Fg4hNgXfHSqBTrSTDPAlZqfBmLQ0z9fCsjCEaJXDuEC6kJQ0BXJ2gOWRxrIVq9VIGpC6sbU3oc0XlkEmmyuSa3fGzgTDV0hLJnUaXkZ2irx3Xo3mHmdYbPCLAEibJyM1lQ+gNJco9KvH9xfUB2ibZpI0oE8aNoc+LJN7q4fQ==
+ bh=qoupXDXW/8A46GadY/SCDNyGj3g2/TWz0VIQF2t6RPc=;
+ b=WOZE2qC+imCcuf8HsCLCyYDdtAIe+8hCJQz943HZLk1ad0ZAyY+B3qUPLpg5OvlS088iccIQme+1FEaba0M9GxjF0BFKv4oVK+qOqLuH4eE9wYjanRDuGIasG9CvVtbfpIizQaCwotsPP+qSQGyRwtLSrSfPAG+EuBWIhH31ml54/L3WVLnV6dPeKm/jAFNjULlPPu4QIZmBJ0X1f4wgnbJajsJgSMWLaSs7Vzsa32FpMAfDMZUPOZGaNTRxd5Jh+CnyNeqYvjMVWfbUm1Xv6Yf8x5kcCMbmp0guC7x/xNPlNOXoV08BNgDu3NyhjAhXXl8WuPe8EoL7bEh8029bRg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
@@ -71,30 +71,28 @@ Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
  by PH0PR11MB7616.namprd11.prod.outlook.com (2603:10b6:510:26d::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.11; Fri, 17 Jul
- 2026 21:37:41 +0000
+ 2026 21:40:13 +0000
 Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
  ([fe80::a195:49d4:38c5:3891%4]) with mapi id 15.21.0223.012; Fri, 17 Jul 2026
- 21:37:41 +0000
-Date: Fri, 17 Jul 2026 14:37:37 -0700
+ 21:40:13 +0000
+Date: Fri, 17 Jul 2026 14:40:10 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Richard Cheng <icheng@nvidia.com>
-CC: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>, Dan Williams <djbw@kernel.org>, Li Ming
-	<ming.li@zohomail.com>, <linux-cxl@vger.kernel.org>, Srirangan Madhavan
-	<smadhavan@nvidia.com>
-Subject: Re: [PATCH v2 1/3] cxl/hdm: Reject switch decoder interleave ways
- that overflow targets
-Message-ID: <alqgoVrM8fOTCu1E@aschofie-mobl2.lan>
+CC: <sashiko-reviews@lists.linux.dev>, <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] cxl/hdm: Restore commit_end when decoder
+ enumeration fails
+Message-ID: <alqhOsrokyGrt1_1@aschofie-mobl2.lan>
 References: <cover.1784150131.git.alison.schofield@intel.com>
- <0d7618c36e20bfda585699f8641d62928b23f6d5.1784150131.git.alison.schofield@intel.com>
- <aliaSasHogM2go8g@MWDK4CY14F>
-Content-Type: text/plain; charset="us-ascii"
+ <563095ff87e66b72651c15248a1a6dd6f5ddc3b5.1784150131.git.alison.schofield@intel.com>
+ <20260715215706.A76341F000E9@smtp.kernel.org>
+ <aliYaE7AMyHfF791@MWDK4CY14F>
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <aliaSasHogM2go8g@MWDK4CY14F>
-X-ClientProxiedBy: SJ0PR05CA0047.namprd05.prod.outlook.com
- (2603:10b6:a03:33f::22) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aliYaE7AMyHfF791@MWDK4CY14F>
+X-ClientProxiedBy: BY1P220CA0002.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:59d::6) To DS4PPF0BAC23327.namprd11.prod.outlook.com
  (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -104,177 +102,159 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|PH0PR11MB7616:EE_
-X-MS-Office365-Filtering-Correlation-Id: d87be94b-130e-461f-9e65-08dee44ba11e
+X-MS-Office365-Filtering-Correlation-Id: c5263900-8bab-4387-b1ed-08dee44bfb96
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|376014|1800799024|366016|56012099006|11063799006|10067099003|4143699003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info: apJE3Z3RRXNj/K24wXa7DQbvlAKSbraXnQ5dlGFhxFRfXrS3v7Ej4OsGT6Qy+PRY8loCwFYzy7oE9HBrHW8SrrGgNRsgX5F0vn4J7q+dl/1HM66FLJtIlUqWQX8nBHza2RyUdl9tiZ8KjL7LAisxDSRDdTe55rsBgGn4jfh4ppBDEZHL9C7IzKj780lEHTBnWJiH+zrksCzyYBmwH3WHgQjzIlFFQybhbU/bePadUueDvbyhUyeBz/uVu1FhcWGeGRXQ4C/MqLOQ5Uso8HqFWxN4z+kIGCumixjqblG7iI50V/pZ0pBe8UJzvFqGBNHR4gAS2pJXhZzdwJmVhO0mgBTkVsuEzPtnx1v6/2iyFgMup6lhyqFaBjdBU27tp5Y8PiTILFfI05oo25QKYLwrVA7fbDEt9fW8+vXIEdWq8vWrb6dJJX4I8HoRdZwM1soBzjCvSeYt3h7eLwNZQS3oqkpKweLFAxhNq4VFouqNoGvEvJShJBcANJE9hX1evKAUWP4tjSJpzbRjQwLd2p+1saor9cKj1ucJ31HSOQvZspoHlUMzORZXEV37w4LJsgooVQjS+h9Mrwd2hKpGucRh6fp0Aw38DospkvzZS7tAqhI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(1800799024)(366016)(56012099006)(11063799006)(10067099003)(4143699003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|376014|1800799024|366016|6133799003|5023799004|56012099006|11063799006|10067099003|4143699003|22082099003|18002099003|3023799007;
+X-Microsoft-Antispam-Message-Info: Teb94FT5ZmvEr8funE1e3lPhimzpaUJ/wMbGwplzhwzsqF376q67INcP8L2/HiotVtvbRmLO1orNTCLfADkUeLW03z6N9rYnZfaiElnDJIxqo+7q4z042/W6QWxzXZIc85mb0vq65OkutK8ktBip11vKmFBmm4isa3/PbxTv5J9koIWGhclp9qDIU4SEf8eraS5DfzfSSo356ToaYQVTVnSBbz0oUqkuHea5sXzHTwwPxjt99/suosT7paXdFV94tnQSQKBk7c4XxpxUKQpDUKE2+fAtBKjmTNxfILE3dEhzA/hoSkggtQvtGv94nhZLCGFwBpGDyyZDCrez0zAVPCGxSK+5HVGArLyoG/yAeUBEYnKXp4HDhnoK47neXJiTRdr/N7EXklapre6LSZOl9cV1mIC5GHI9EmuvEpSQtKWGkzF3PV0rQs4r64xf6R1QRwjARDHluoHuov85cst1nmIJ6pfQjPWEGx2ZIoS2hAnlJ9jxQjyRELfBHbEhbNFa4FZkbXaYGuCNRkgJOMxTH59NL6rePrkhnKN/XOibOloyVDUgm5h3R4hQmtpZDocmo6/gclgvex9+TbNWNhkOOLDt8vUgtlr3wFduzSHpyXg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(1800799024)(366016)(6133799003)(5023799004)(56012099006)(11063799006)(10067099003)(4143699003)(22082099003)(18002099003)(3023799007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?NaYOQdj6pg6MXUBWbyCzMd6sIYT36e5BVd4Ja8y3PY4ZhVKF+zlFyU6qcaZ+?=
- =?us-ascii?Q?8lxbicZmu/apKs8GrdltDEWy3WzfFartaPPzqv9PC2XW//eR9nSMQilSNTmO?=
- =?us-ascii?Q?W7KZC1AU1Yc/hwpDkhgK58dO4dRhUHPUiTOuGdo/evHbw2wANqKuUlpckaQc?=
- =?us-ascii?Q?Psc5hov1+Np4r6M68Pm3GG7Hml4ZveZ+hQ6hPdI+GrxngkdobhhQIqSw1d40?=
- =?us-ascii?Q?huIgm/rqflq98DRpLwNwQXUWoezQOH4G6hGMnaIzCpQfwdOSUwMbe8VAPKhF?=
- =?us-ascii?Q?W+ChnidNdo2ZuAI7waA3QwCoTRdewS91sgrzrgYVi5T1ekFmVskIdZ21Oe+k?=
- =?us-ascii?Q?B/0UJUposvY1B4Q9IlEiWmwTeqeFrYvMGFpOFwCO9wWuFMsHyvzDHsCSlclQ?=
- =?us-ascii?Q?8hYlSkYsPhubzO58FFkZ41PvtsjNLJOw2W/2xfRanT46yuVJ5gEo4vjSwN3I?=
- =?us-ascii?Q?DsKN0AADuJnAJ6q3Oom4jasY4/0YX21z1zo3gXScLmhyYSMUKceQvcg6pxMv?=
- =?us-ascii?Q?bAeV8n6eYaZ7Yv2QwOL/rwoUFfai25mzwBLoxTzMkDKgmSQCRgllqACW7JAm?=
- =?us-ascii?Q?Qai9Ojom9Gz3kmGRIVrykA50iezFjU/WVbFT5XHjLu9e5ctyeZ1boSbGAFu3?=
- =?us-ascii?Q?ypSgjVBI8+KTFxHkWSn/OOnF4mQ57DVGd+JF31yF3wC7lDh6qqqWE67+DyKC?=
- =?us-ascii?Q?3JpDeNt7t6stGhoUmYaYf7jihlKcgapAr4ByevJH89xD/bl7F5UB0eb91vVs?=
- =?us-ascii?Q?PQdqk6Lpcaf6MH0gEMZ8iKc/xajOmJnvghcgfW+E9hQ4UvtJNeASzq8+wCT/?=
- =?us-ascii?Q?KI4uiZOOI1G8jfScjRsRzEq3pMElP7PUJPZ1wr9IiMpK4/m4UNiYxVx95EQu?=
- =?us-ascii?Q?mZR6auOTTWaDkYUghsDCX/p5lGwEPBCE+Kyu7D0zS2hZFvWpVxe8bG+RC6Bh?=
- =?us-ascii?Q?tJ7nNzcKm8mBfUib/7qeyDC60+5sAVwYW/602CDKeo5+EUmgvIMvCU182Azg?=
- =?us-ascii?Q?mP68xmUNVGUzzViolayay+NRh4uUoWgSUYNDzDxrcpq670TspVzXU/1xyAwk?=
- =?us-ascii?Q?o1r5hYztpYD0w7droRD/gVeOSkmUz7Wt7q89WbaXiXHJjWwRUkA3tWx4d79c?=
- =?us-ascii?Q?EtKvqFVECnyuaWGZcZI70Rxz6Si78jRLVmf70XYoP1AQz9cKKKFrv3G23fB6?=
- =?us-ascii?Q?XW8TMnj/RECrqC5kOD0u/xli6GSQSEMEt8yHW+VaWBlnAMYyaPBVgTbxnC7D?=
- =?us-ascii?Q?d3w8rcqxnjxNU9Z0ApJ9XMGtYhQvdHmcZLE0KmaE4MZRCHgsKuGMM5n72sl3?=
- =?us-ascii?Q?lKex8aOMoAXYopRWialvb48OgdxmCNEVvL2fGuGT4GA/cj92icPwdQvO+tS4?=
- =?us-ascii?Q?WS3AN9MXawZ9xltktAlNE2YJIkPxBw4cstJbxZJnQOw8KWt/rXo8KERB3n2x?=
- =?us-ascii?Q?dNmNJvft+vwgerVxm+PuiARD7pV1TkXRCghfPEGGzc7fdcjDcwsRnFpaz4jH?=
- =?us-ascii?Q?elCn6muZYTSn2iIhwXrHs7C5+nt1QASG1VCqX+O9QAOxA2NS0HIKmnojC2g/?=
- =?us-ascii?Q?KFFj9S24z3AOTO0cBOciYxuiejmaDxSZwKIRZPi49WvxzxUCV5WCM5l9iqDA?=
- =?us-ascii?Q?b0G3116xkMryU0QFuXpnbBTfDzl9uzDJccefmbb4DT3ZbBxKTCeiPf3vK00M?=
- =?us-ascii?Q?YA2oADo+CB8EtxnHkG3sL91DAUwRv4nK/H/7wWrfs/lbd9tj5s0UHZQ23xfN?=
- =?us-ascii?Q?arrnRm9jCKExm0m5KPlR+/Ua95ybw/A=3D?=
-X-Exchange-RoutingPolicyChecked: eAD8+AcZPMZ0MF0d8nVkY35x1OuiUXGtraeZUkfNw+lYA0vPJtpKiVTJ5eYcl2E55hMI/kh0NsUyipR7K/ZwNhNHJyG2UuuKe63majnruRFhROMzHv0TBCnS57gMLSpRrzgTEhqPARAPHhRotfObWLsByqxg35IJ0R1ucwkmcjd687xnJ+2j4CS/LbXfxACPqukSnTAv+XMpk43FeFe9g1/WYI1hdW67Pq6FYWJpNDRUXZgHtZoEJTfFWRbVziDtornWferHn2P+UFTry9nHmbIVGIyKBiIwxyY5PRzArIDueFz0G3x9bmYMyA494NaREnnDzatL/DCBbT5/kSOuqg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: d87be94b-130e-461f-9e65-08dee44ba11e
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?bSijd4WtNHMIBjMXMGVn87HTmLRIgMGkgcD+gClCqmKYdx2T8wottWds10?=
+ =?iso-8859-1?Q?YaieO72QM3JKMvAB40zZoq0f9Q66sAH/fy+XqVmrJ19+k6qRBlXUDumxX/?=
+ =?iso-8859-1?Q?ld4VdsQGvrHoCBxWJ66PkOOeqlmJEaGA7zPs51ETx/cQ73oWC8V7m5o6Qh?=
+ =?iso-8859-1?Q?5ojfy7oCj8vOhHzNfKUo5XHZRlHzlC61sc70EeFd9Ojr9jNyHw6e3D9krK?=
+ =?iso-8859-1?Q?/wBOX/eDqfHFrD6dRJZsnytg7The2eobZ5cjyMi6ajrIyMvVDjo07EsgXJ?=
+ =?iso-8859-1?Q?cmGcIBJ5nTEqWQOcH7JabUF5pLvR/yzE6Y69thT6Zp/WGGhiCXgQNnOEeW?=
+ =?iso-8859-1?Q?02UXfLRXnPG3IHQBPs6r/1kCmltKubut+FA80JF0LCYV3U9OM9DwwtkEkR?=
+ =?iso-8859-1?Q?ZsplfHISoJVjuhJBTh/JcAwfrj79cjbDO5Z8zHw0ZfjToxTVJKBmbpG9/a?=
+ =?iso-8859-1?Q?NfoYvJejzaviFhSM7LNFxt5iyxzWpiLf1cvqv8b1qyby++QH1Xh+EPHwYh?=
+ =?iso-8859-1?Q?/CNfeEYKC3Npzn4rpSSInxbzCoQimO2UbZTpba1QhWa1nPICIpU0tY5V02?=
+ =?iso-8859-1?Q?myTMdL9f7/K1y/ise0AUYAfL7cwk3Vj54cNqlolqq/DQk6glsEpXE8zbii?=
+ =?iso-8859-1?Q?2x1ba73efrcpQtdJtE/3rVzz0z5je9SneqpD8pTI2zS83D80kmLWfYfCfF?=
+ =?iso-8859-1?Q?dgmtrni2B9Wxfiw29XRQNyrB1wlyvm0JEFAmFc6zRclxG+wN41mb8Bu0FI?=
+ =?iso-8859-1?Q?zDme8+a3qixwUOZcRYoyi40paasiNxKqzGhlDEyqxDuFwQAYrWsnvrNW9j?=
+ =?iso-8859-1?Q?W5tHe/jrRAArwY904nJtAtV1v6OYcW9eBSHTiONlU0Bptjp/r3Kogcq4Uj?=
+ =?iso-8859-1?Q?sE6m04IfC7T2mi3ctQFXfQBTIKb6oZwIvmiH68oRp4WMNdR04ntTOXlxCn?=
+ =?iso-8859-1?Q?9KJeci3NRN3ba7mb9RrRnZw9DfKwAyALwMw+wxgKv+eSTyJJ89ln8pP95B?=
+ =?iso-8859-1?Q?a9DuxLkj92A/NGgOB067J1YHn5GEMN2nrkEd5/jeiv+OXXD4w/DeRmkCTI?=
+ =?iso-8859-1?Q?e/nOotwQ98qs7nqkdwcjvlKjI1XDp/WmvrBOBAzTZxgCqJX2HSvD/zpSbp?=
+ =?iso-8859-1?Q?1+7dcD4IKUlUCTMggbXVNuYfzzbO+FtrOoStAZpwipElwwY7eZ27xgszj5?=
+ =?iso-8859-1?Q?Sd/DrdKY+HEWfxW9tu9mhS/qn7ZHYxe/rfr6gTV4jZTFSq2gGDY8eFnZcZ?=
+ =?iso-8859-1?Q?Niq2P9mNPp8gWiN1YeMahh8t0gQ85Skgr6NXf9Xf3+ZK59As1du22lwWRH?=
+ =?iso-8859-1?Q?DWR8GRv2NVuQlO593SJ4FpnbzNig7ywBiaRja1wQ75N2feiG8qx0w9cvWT?=
+ =?iso-8859-1?Q?LxKKsOlTvJBkYAo692+7F97Ik5XDqHvmisnp9OIKbnq4uYVFHtrF+Lewxt?=
+ =?iso-8859-1?Q?sfrPo6UPKIuIlwUmfKSvs4qIEctxfu5qOnHp8aZvgDPbMC7HQ0R2iZ9j2a?=
+ =?iso-8859-1?Q?vR72JPcniATggnCLgkX4x8qtiDf0vV0mmz+qbuBBTbQXwfGnbgY3qJ551o?=
+ =?iso-8859-1?Q?5bZ99dTsknRVFPSBRcj23LYY4rYzgz2HYoXTKGMxqAbxGmdU5xBIQOe0Mv?=
+ =?iso-8859-1?Q?3ic8WwlBz4euYOZSUkDatlO+1WE+JznEiSCFG/YhjNxjkisIm/bg2/bKHP?=
+ =?iso-8859-1?Q?rmHgU0JPAQOpTiHNenXP+nO4+sheCfUTi7xRtReeud7YX37i9DbOWAwHTT?=
+ =?iso-8859-1?Q?eEAy3xEiIxh7Bih3o/J7wRV/BpLcJYyL/5Jsdfz3CpZI8VjWJW66eRSete?=
+ =?iso-8859-1?Q?6G1fO8WwThho7cVJsTSlsON2zb9nHwU=3D?=
+X-Exchange-RoutingPolicyChecked: rphDedretXUKcC/Iu+BOU7iWEl0DauTgIwX9lakLebRoJvnmKrOTf7HLvDvPvfI9+mZf/jwhEeemhRnihbpYS36CsAO8o2ImD6lwGcz63ee4MMu9yIRXdXCmZ72OLcRrMM+lKY/KdsT26e/qXbxLiNQR0NVCpE9tuyce6zFFqsrgI7TUlvEyBjQ8lVC6XOTVUR7FXJfhOC8xtD/MdtBT8tMXWBzQeirnrH+AwWGrSd2idiVofW3RY9dX4+KeB9/y0zb4vODaUyKBfw7jEg7TEZXSN9RkL26NB6NzUV4dkEhBdVZpu2S0Uvsngbhh/lBmEJU4klb7oyIcsxJpoAPjcw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5263900-8bab-4387-b1ed-08dee44bfb96
 X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2026 21:37:41.1564
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jul 2026 21:40:12.9445
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: elSMYAYc0sq08awzKlfNmo9m7UiOS4bXKTEJ6SNrdtLKLRentUGfj5XV10pQu7e1eMISEbaqX/KH8S8LJHhfJ9Le0hiTMEbZorHT+FNWfiI=
+X-MS-Exchange-CrossTenant-UserPrincipalName: lRxc9WmUfBlBfftou/ccNrmhtOENSLvEmu1Y0xkQ7MM0C7k9I+nd3Uep7XMqvD+m97mhGAM99LQtP3t4ge35d04b9GOjOWdyrL4J38lpx94=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7616
 X-OriginatorOrg: intel.com
 
-On Thu, Jul 16, 2026 at 04:49:35PM +0800, Richard Cheng wrote:
-> On Wed, Jul 15, 2026 at 02:45:47PM +0800, Alison Schofield wrote:
-> > Switch decoder enumeration validates that the interleave ways encoding
-> > is legal, but not that the resulting number of ways fits the available
-> > targets. This can overrun the target arrays during enumeration.
+On Thu, Jul 16, 2026 at 04:41:30PM +0800, Richard Cheng wrote:
+> On Wed, Jul 15, 2026 at 09:57:06PM +0800, sashiko-bot@kernel.org wrote:
+> > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> > - [Medium] Mixing goto-based error handling with scope-based cleanup helpers (`scoped_guard()`) in the same function.
+> > --
 > > 
-> > Reject committed decoders whose interleave ways exceed either the
-> > hardware target list capacity or the reported target count. Reject
-> > switch decoders that report zero targets.
+> > --- Patch [3]: [PATCH v2 3/3] cxl/hdm: Restore commit_end when decoder enumeration fails ---
+> > commit fee00b887a5dc8f3c4c335d03db77d2ecce10947
+> > Author: Alison Schofield <alison.schofield@intel.com>
 > > 
-> > For uncommitted decoders, ignore the stale interleave ways value and
-> > reset it to one until the decoder is committed.
+> > cxl/hdm: Restore commit_end when decoder enumeration fails
 > > 
-> > Add a clarifying comment that target_count is a direct count, not
-> > 0-based like decoder_count.
+> > This commit restores commit_end to the none-committed baseline on the
+> > enumeration failure path so a subsequent probe can enumerate cleanly. It
+> > also protects the commit_end advance against concurrent readers in the
+> > DVSEC emulation path.
 > > 
-> > Link: https://sashiko.dev/#/patchset/20260711180755.1779002-1-alison.schofield@intel.com?part=1
-> > Fixes: d17d0540a0db ("cxl/core/hdm: Add CXL standard decoder enumeration to the core")
-> > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> > ---
-> >  drivers/cxl/core/hdm.c  | 26 ++++++++++++++++++++++++++
-> >  drivers/cxl/core/port.c |  2 +-
-> >  drivers/cxl/cxl.h       |  2 ++
-> >  3 files changed, 29 insertions(+), 1 deletion(-)
+> > > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > > --- a/drivers/cxl/core/hdm.c
+> > > +++ b/drivers/cxl/core/hdm.c
 > > 
-> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> > index 0c80b76a5f9b..9f005f3193e2 100644
-> > --- a/drivers/cxl/core/hdm.c
-> > +++ b/drivers/cxl/core/hdm.c
-> > @@ -76,6 +76,8 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
-> >  
-> >  	hdm_cap = readl(cxlhdm->regs.hdm_decoder + CXL_HDM_DECODER_CAP_OFFSET);
-> >  	cxlhdm->decoder_count = cxl_hdm_decoder_count(hdm_cap);
-> > +
-> > +	/* target_count is a direct count (1h..8h), not 0-based like decoder_count */
-> >  	cxlhdm->target_count =
-> >  		FIELD_GET(CXL_HDM_DECODER_TARGET_COUNT_MASK, hdm_cap);
-> >  	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_11_8, hdm_cap))
-> > @@ -1084,6 +1086,30 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
-> >  		cxld->interleave_ways, cxld->interleave_granularity);
-> >  
-> >  	if (!cxled) {
-> > +		struct cxl_switch_decoder *cxlsd =
-> > +			to_cxl_switch_decoder(&cxld->dev);
-> > +
-> > +		if (!committed) {
-> > +			/* Ignore interleave ways until commit */
-> > +			cxld->interleave_ways = 1;
-> > +			return 0;
-> > +		}
-> > +
-> > +		if (cxld->interleave_ways > CXL_HDM_DECODER0_TL_TARGETS) {
-> > +			dev_err(&port->dev,
-> > +				"decoder%d.%d: interleave ways: %d exceeds target list capacity: %d\n",
-> > +				port->id, cxld->id, cxld->interleave_ways,
-> > +				CXL_HDM_DECODER0_TL_TARGETS);
-> > +			return -ENXIO;
-> > +		}
-> > +		if (cxld->interleave_ways > cxlsd->nr_targets) {
-> > +			dev_err(&port->dev,
-> > +				"decoder%d.%d: interleave ways: %d exceeds targets: %d\n",
-> > +				port->id, cxld->id, cxld->interleave_ways,
-> > +				cxlsd->nr_targets);
-> > +			return -ENXIO;
-> > +		}
-> > +
-> >  		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
-> >  		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
-> >  		target_list.value = (hi << 32) + lo;
-> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> > index 1215ee4f4035..28eccfdd75b8 100644
-> > --- a/drivers/cxl/core/port.c
-> > +++ b/drivers/cxl/core/port.c
-> > @@ -1979,7 +1979,7 @@ static int cxl_switch_decoder_init(struct cxl_port *port,
-> >  				   struct cxl_switch_decoder *cxlsd,
-> >  				   int nr_targets)
-> >  {
-> > -	if (nr_targets > CXL_DECODER_MAX_INTERLEAVE)
-> > +	if (nr_targets < 1 || nr_targets > CXL_DECODER_MAX_INTERLEAVE)
+> > [ ... ]
+> > 
+> > > @@ -1198,7 +1199,8 @@ static int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+> > >  				dev_warn(&port->dev,
+> > >  					 "Failed to allocate decoder%d.%d\n",
+> > >  					 port->id, i);
+> > > -				return PTR_ERR(cxled);
+> > > +				rc = PTR_ERR(cxled);
+> > > +				goto err;
+> > 
+> > [ ... ]
+> > 
+> > > @@ -1220,17 +1223,23 @@ static int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
+> > >  				 "Failed to initialize decoder%d.%d\n",
+> > >  				 port->id, i);
+> > >  			put_device(&cxld->dev);
+> > > -			return rc;
+> > > +			goto err;
+> > >  		}
+> > >  		rc = add_hdm_decoder(port, cxld);
+> > >  		if (rc) {
+> > >  			dev_warn(&port->dev,
+> > >  				 "Failed to add decoder%d.%d\n", port->id, i);
+> > > -			return rc;
+> > > +			goto err;
+> > >  		}
+> > >  	}
+> > >  
+> > >  	return 0;
+> > > +
+> > > +err:
+> > > +	/* Reset to the none committed baseline for a fresh enumeration */
+> > > +	scoped_guard(rwsem_write, &cxl_rwsem.region)
+> > > +		port->commit_end = -1;
+> > > +	return rc;
+> > >  }
+> > 
+> > [Severity: Medium]
+> > Does mixing goto-based error handling with scope-based cleanup helpers
+> > (scoped_guard) in the same function violate the cleanup subsystem guidelines?
+> > 
+> > The documentation in include/linux/cleanup.h notes that usage of "goto"
+> > and cleanup helpers should never be mixed in the same function, because it
+> > creates confusing ownership semantics and can lead to bugs under future
+> > modifications.
+> > 
+> > Should devm_cxl_enumerate_decoders() either be converted entirely to
+> > scope-based cleanup, or avoid using scoped_guard() in the error path?
+> >
 > 
-> This contradict to what the comment claims.
-> The comment says that Target Count is a direct cound with 1h to 8h. However,
-> this check uses CXL_DECODER_MAX_INTERLEAVE, which is 16.
+> Hi Alison,
 > 
-> I think since the capability field is 4 bits wide, values 9 to 15 are still
-> acceptable.
+> I think this finding is real, at this point, decoder added by earlier loop
+> iterations are still registered until the caller's devres unwind runs.
 > 
-> I'm confused by this part, it looks inconsistent, refusing enumeration above 9
-> doesn't make sense to me either.
-> Maybe some explanation to explain why ?
+> So resetting commit_end here will create a window where those enable decoder
+> objects are still visible, but cxl_num_decoders_committed() tell us it's 0 there.
+> 
+> I think the commit_end reset should be ordered after the registered decoder are removed.
 
-Thanks for the review.
-Good catch. `cxl_switch_decoder_init()` is shared by root and switch decoders,
-so the `< 1` check didn't belong there.
+Thanks for reviewing! 
+Agreed, that's a real under-count window. Resetting commit_end on the failure
+path leaves it at -1 while previously registered decoders are still visible.
 
-For v3 I dropped that change and moved the zero-target reject into the switch
-decoder path in `init_hdm_decoder()`, alongside the other `target_count` checks.
-The original `CXL_DECODER_MAX_INTERLEAVE` bound is unchanged.
+v3 follows your suggestion and moves the reset into a devres action that's
+registered before any decoders are added. Since decoder teardown is registered
+later, devres unwinds them first and resets commit_end last, after all decoders
+have been removed.
+
+To verify, I instrumented the cxl_test mock enumerate path (which mirrors this
+fix) to fail after decoder0 commits and confirmed the ordering. The failure path
+leaves commit_end unchanged and the reset doesn't happen until teardown:
+
+endpoint11: DEMO: failing decoder11.1, commit_end=0 (not reset here)
+endpoint11: DEMO: devres reset commit_end=-1
 
 -- Alison
 
 > 
-> Best regards,
-> Richard Cheng.
-> >  		return -EINVAL;
-> >  
-> >  	cxlsd->nr_targets = nr_targets;
-> > diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> > index c0e5308e4d1b..291ada46b646 100644
-> > --- a/drivers/cxl/cxl.h
-> > +++ b/drivers/cxl/cxl.h
-> > @@ -67,6 +67,8 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
-> >  #define   CXL_HDM_DECODER0_CTRL_HOSTONLY BIT(12)
-> >  #define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
-> >  #define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
-> > +/* Two registers with one target ID per byte */
-> > +#define CXL_HDM_DECODER0_TL_TARGETS 8
-> >  #define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
-> >  #define CXL_HDM_DECODER0_SKIP_HIGH(i) CXL_HDM_DECODER0_TL_HIGH(i)
-> >  
+> --Richard
+>  
 > > -- 
-> > 2.37.3
-> > 
+> > Sashiko AI review · https://sashiko.dev/#/patchset/cover.1784150131.git.alison.schofield@intel.com?part=3
 > > 
