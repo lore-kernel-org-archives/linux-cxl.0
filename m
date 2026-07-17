@@ -1,36 +1,38 @@
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9CD42A7AE;
-	Fri, 17 Jul 2026 14:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD6C2BEC27;
+	Fri, 17 Jul 2026 14:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784299940; cv=none; b=ItyC20RYrtirSsxS2Gs7S4l3eOh1qYRx97u1JlTSuVpahGh/h+4gHZfImEXWIWSHEFhLW5EkMKB48ujhJV3zWbIKsFCQ1JHCcl+xJUARoD/R8izD6VBRb0KOvsOxAdfi9ghAPpVtLk+JAwH36daXcBYq8Y6A6Oe/B24FF1rl/9s=
+	t=1784299950; cv=none; b=tBrbnVRNvlXFEOjRqFvvIgktE7xNLiTB1GZYM/7rQZOB1//WLnBtbqrVkJi0gWBo4LqzQBOQFxhZzkuCXVCTIGnLOkXoWzCGAbhlj5wTNfBPhIvs3cTDtV/2CvlIHfZhi9/RB4OQSPO+w0HWauRJZw1shGRZJgbn1BU4h6k/wNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784299940; c=relaxed/simple;
-	bh=eRZmsQ8X5qYPzvQZzYfhQuwFEKd8T7ZIpTRLmoMkOSk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=leDAvF2f5GnmgxR3KTIQ/TKvT5NwdLfMkI7y/7U4XIp6hOsctbG3Jx0zuvqt/BOs1WhbXQhr2oC50DrOjNM2te1VO8Zq5KqiIPEpx96+RA2hwF3hxFJuZ4PzFkhls8jv8bIywLJ/Tly+jckgVS6wu5VgvshFXj0EPIrqVwmV8NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=vQcXVZBY; arc=none smtp.client-ip=185.246.84.56
+	s=arc-20240116; t=1784299950; c=relaxed/simple;
+	bh=K5zcO/4LZ49Ig7guwBzMe84nLwWunwh/cqvIjVb7D/w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rPS5Egbf9XPfCQRvRqiLLR4iD9ulIPIzwVWznIkphaz3iC7B97YlugM1x5/P7wVR9B56fniJMfN4aFDr4xH0Y07iu2Y1J4AnK4QAJYuIC5zhMtYbacZDAbC5wFY5CBG/wCZ3Rx5/S5hKRll6FyJcrZ80M/YcZXUgiPiwFJ8m03Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jW2J0cBY; arc=none smtp.client-ip=185.246.85.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="vQcXVZBY"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jW2J0cBY"
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 94A131A1065;
-	Fri, 17 Jul 2026 14:52:10 +0000 (UTC)
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 27D9E4E40E1A;
+	Fri, 17 Jul 2026 14:52:22 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 5B50160361;
-	Fri, 17 Jul 2026 14:52:10 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9404C11BD02F3;
-	Fri, 17 Jul 2026 16:51:53 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id EE93560361;
+	Fri, 17 Jul 2026 14:52:21 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8420C11BD02F3;
+	Fri, 17 Jul 2026 16:52:15 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1784299928; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=LvBwywUXRjG57X2lVde2Y0RnPp/ie3h4+eL+fkqU4Mw=;
-	b=vQcXVZBYKBlalpow8Vz+D9916PWFnlZnQ1iBbofzIOFuwOpLQT8VMRZBTKMW5fh91rtpZV
-	hxoDk7ET3DvhSazJEWZLtFZc1cymyY9UYMRaeEG1cGjTeXbMZJgx5LfWEMpgNbMni6FN7R
-	F63F94RvLbtjFEK3HH2NPYLl9sBO01kJsuLoxSSAWvNB0K6rMsClSIv0cETLcq301MbqU/
-	pU9ljqeGv/VdMOaTj2k5LZxjrtjqwsHlBTGGnFcYOcg8DVK0dVavWIDlUjPhhLWPsmHL9X
-	+yYx056f0sV+O6moJvw7gGFRAKxQth6wyJYiEzN1P4IqUAkFqbPfd7G5Q66Cbw==
+	t=1784299939; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=x4UHX84PJynxOty2gjCfMbZE65lyzocVuYlzP2bI7gA=;
+	b=jW2J0cBYTh7AbhgCIWUVibP+FJKMywPDNnKx5vTYAdA+HD68g0exaLQAIHyvLMY/S9qYzc
+	neaCD0Hg2pZt/85EAUzbJofNpWrHv4e+NvXRPKAW7+9Fv8XXNjyB1HcywHeGbmUFnDAOqh
+	aLyr6FA+QGzk8idvAgKIdqxhyrlBdmRyqBn3k19a6X3AMAGY3jyx3bDWNgmGhWAbs8EHdN
+	vnBukMdba4OGVSzmg6SBkmS6EmR/sIikmBO82+EwxITwv3twYV4FuRsbdWbe/162FTSl/h
+	bMTJ6MR1pHfr4Rxnsh5q3+TfFwI/pFzzCssZyDJSnQgVTvdyn3fmyl57isQh+Q==
 From: Herve Codina <herve.codina@bootlin.com>
 To: Richard Cheng <icheng@nvidia.com>,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -72,138 +74,57 @@ Cc: driver-core@lists.linux.dev,
 	Daniel Machon <daniel.machon@microchip.com>,
 	Steen Hegelund <steen.hegelund@microchip.com>,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v10 00/10] lan966x pci device: Add support for SFPs, PCI part
-Date: Fri, 17 Jul 2026 16:51:35 +0200
-Message-ID: <20260717145147.823749-1-herve.codina@bootlin.com>
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v10 02/10] drivers: core: Use fw_devlink_set_device()
+Date: Fri, 17 Jul 2026 16:51:37 +0200
+Message-ID: <20260717145147.823749-3-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260717145147.823749-1-herve.codina@bootlin.com>
+References: <20260717145147.823749-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-Hi,
+The code set directly fwnode->dev field.
 
-Previously, I sent a big picture series adding support for SFP ports
-available on the LAN966x PCI device [0].
+Use the dedicated fw_devlink_set_device() helper to perform this
+operation.
 
-In this series patches touch several parts and sub-system in the kernel.
-Reviews have be done and it makes sense to split the series and send
-parts separately.
+Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+ drivers/base/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-This current series is the extraction of patches related to issues in
-the PCI subsystem. It has to be seen as a continuation of the big
-picture series but related to this specific core part.
-
-Patches 1 to 6 introduce and use fw_devlink_set_device() in already
-existing code. No functional change but the introduction of the
-fw_devlink_set_device() wrapper.
-
-Patch 7 avoid a dangling pointer.
-
-Patches 8 and 9 fix fw_devlink issues specific to PCI and the
-device-tree nodes created during enumeration.
-
-Patch 10 adds a guards to prevent incorrect node removal.
-
-[0] https://lore.kernel.org/all/20260325143555.451852-1-herve.codina@bootlin.com/
-
-Best regards,
-Hervé
-
-Changes:
-
-v9 -> v10
-  v9: https://lore.kernel.org/all/20260708100302.517792-1-herve.codina@bootlin.com/
-
-  - Patches 1 to 6
-    No changes
-
-  - Patch 7
-    Clear fwnode->dev also on error path.
-
-  - Patch 8
-    Clear fwnode->dev also on error path.
-
-  - Patch 9
-    No changes
-
-  - Patch 10 (New patch in v10)
-    Guard against node removal with incorrect np->data.
-
-v8 -> v9
-  v8: https://lore.kernel.org/all/20260630102804.413563-1-herve.codina@bootlin.com/
-
-  - Patch 7 (new patch in v9)
-    Clear fwnode->dev during root bridge node removal (avoid a dangling
-    pointer).
-
-  - Patch 8 (patch 7 in v8)
-    Clear fwnode->dev during PCI device node removal.
-
-v7 -> v8
-  v7: https://lore.kernel.org/all/20260511155930.34604-1-herve.codina@bootlin.com/
-
-  Rebase on top of v7.2-rc1
-
-  - patches 4 and 5
-    Add 'Reviewed-by: Andy Shevchenko'
-
-  - Other Patches
-    No other changes
-
-v6 -> v7
-
-  Rebase on top of v7.1-rc1
-
-  - Patch 1
-     Add Cc stable. Needed for patches 11 and 12
-
-  - Patches 2 to 5
-    No changes
-
-  - Patch 6
-     Add Cc stable. Needed for patch 13
-     Add 'Acked-by: Bjorn Helgaas'
-
-  - Patch 7
-     Fix a typo in commit log
-     Add Fixes tag + Cc stable
-     Add 'Acked-by: Bjorn Helgaas'
-
-  - Patch 8
-     Add Fixes tag + Cc stable
-     Add 'Acked-by: Bjorn Helgaas'
-Older iterations:
-  Patches 6 to 13 in the big picture series
-  https://lore.kernel.org/all/20260325143555.451852-1-herve.codina@bootlin.com/
-
-Herve Codina (10):
-  driver core: fw_devlink: Introduce fw_devlink_set_device()
-  drivers: core: Use fw_devlink_set_device()
-  pinctrl: cs42l43: Use fw_devlink_set_device()
-  cxl/test: Use device_set_node()
-  cxl/test: Use fw_devlink_set_device()
-  PCI: of: Use fw_devlink_set_device()
-  PCI: of: Clear fwnode->dev during root bridge node removal and error
-    path
-  PCI: of: Set fwnode device of newly created PCI device nodes
-  PCI: of: Remove fwnode_dev_initialized() call for a PCI root bridge
-    node
-  PCI: of: Guard against node removal with incorrect np->data
-
- drivers/base/core.c                      |  4 ++--
- drivers/pci/of.c                         | 24 ++++++++++++++++++------
- drivers/pinctrl/cirrus/pinctrl-cs42l43.c |  2 +-
- include/linux/fwnode.h                   |  6 ++++++
- tools/testing/cxl/test/cxl.c             |  4 ++--
- 5 files changed, 29 insertions(+), 11 deletions(-)
-
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 4d026682944f..c205125344cf 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -3750,7 +3750,7 @@ int device_add(struct device *dev)
+ 	 * device and the driver sync_state callback is called for this device.
+ 	 */
+ 	if (dev->fwnode && !dev->fwnode->dev) {
+-		dev->fwnode->dev = dev;
++		fw_devlink_set_device(dev->fwnode, dev);
+ 		fw_devlink_link_device(dev);
+ 	}
+ 
+@@ -3925,7 +3925,7 @@ void device_del(struct device *dev)
+ 	device_unlock(dev);
+ 
+ 	if (dev->fwnode && dev->fwnode->dev == dev)
+-		dev->fwnode->dev = NULL;
++		fw_devlink_set_device(dev->fwnode, NULL);
+ 
+ 	/* Notify clients of device removal.  This call must come
+ 	 * before dpm_sysfs_remove().
 -- 
 2.55.0
 
