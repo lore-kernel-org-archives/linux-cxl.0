@@ -1,102 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mailout1.hostsharing.net (mailout1.hostsharing.net [83.223.95.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E07EEBB;
-	Sat, 18 Jul 2026 01:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991EA2264B0;
+	Sat, 18 Jul 2026 07:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784338190; cv=none; b=lyMbyku9GgjEQ+IqXpur9WvzJnK78nWu5sSHFO0WQmVEqk3jphPFw02Vp8xrTS2fiGX5aZ02SJglEmNRbBCT94dW3TTjS7yLJrrDXpR1vqf4UfitEGqryOcD+e7ZfH5M4w46rUVD28pZFDBwVnMSKigrpohV/i+DTlt5b3MLMEw=
+	t=1784358143; cv=none; b=SokvBIlCY4jnODTXAixgCMPKN6zTP13LzgSOI09hkbTyko8F5z8f1LLNP3FGuY0havq5Cz9RDCQ94Xrg3uyI9U0Kpk9OXy1ymNRgtG0XvFC3EHgp7WbdOTXBIerUDb9cxfeANiNKXXiySoa0ip7IQffQmNiwmDsYK1vfD8fmAbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784338190; c=relaxed/simple;
-	bh=dVdq03l8k8rnHkF2qT4pI32vsZll6gDNKxmxd/jMmgU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=aqtX0zAWtZsTOO8J10GpBjsPUtZhrLBbpH4s6DShuF5bG1B/1TlltQk1gQ4Xht6mbYUwFuslx9Nxaq+z9BrueM4oWXGVXfWB364uyGVn3qzkmNI2kFoYAPcT/+tGEVh57bmoBxee2i/t4tptMmA5EMTtss90ajpc2V11+etR9m8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=aYHkjg99; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="aYHkjg99"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABEBC1F000E9;
-	Sat, 18 Jul 2026 01:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1784338188;
-	bh=nGP1qpw+teL8hrbVXIODrPReZTXoSMVoPewT58BkKRk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=aYHkjg99340LaoEW+nC6j/pobLTfRsTslXzRUwPXTHiNjEJadkub9WwJRQgp86jFn
-	 5+NJNrQuZhOT5lp9Bw4Sj0JMFtWWc4BWUXkQ6wlqgwBPxG+QcXQbg+Gzm3pm0QIhlE
-	 LVQ5wOhwRIK1Md1rIdk9Eo4FSl5T/rwYi7n+OXI0=
-Date: Fri, 17 Jul 2026 18:29:47 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Nico Pache <npache@redhat.com>
-Cc: Barry Song <baohua@kernel.org>, David Hildenbrand <david@kernel.org>,
- linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, ljs@kernel.org, willy@infradead.org, Oscar Salvador
- <osalvador@suse.de>, Zi Yan <ziy@nvidia.com>, Matthew Brost
- <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim
- <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, Gregory Price
- <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, Alistair
- Popple <apopple@nvidia.com>
-Subject: Re: [PATCH v2 0/2] mm: fix PMD level mTHP accounting bugs
-Message-Id: <20260717182947.534af296aaa1831d13f8ae6d@linux-foundation.org>
-In-Reply-To: <20260717064502.1980173-1-npache@redhat.com>
-References: <20260717064502.1980173-1-npache@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1784358143; c=relaxed/simple;
+	bh=B2fgP4J5oWNRfT3014dYB6jAcg+N25xq0O5Js7k4How=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DxiO2Fa2mDAMrAyrRlMngDwl3+mhKiKxgoJFMR3YWj/8EuwTqjICLwgqikg8qlAanLnVIH/+grGpFRg+tB2+a5IBKwIGSRZDEGiOJgVWtjxfiUNkuHFYCILDwXQYdPAhkqBFdWNe8IajiflMqEMqG4AcRwuWKQiv2DMPSaMZ2vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.95.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by mailout1.hostsharing.net (Postfix) with ESMTPS id B53A5378;
+	Sat, 18 Jul 2026 09:02:15 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id A23CC603E05C; Sat, 18 Jul 2026 09:02:15 +0200 (CEST)
+Date: Sat, 18 Jul 2026 09:02:15 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Dan Williams <djbw@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <iweiny@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>, Len Brown <lenb@kernel.org>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Robert Richter <rrichter@amd.com>, linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, Alejandro Lucero <alucerop@amd.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Ankit Agrawal <ankita@nvidia.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Ben Cheatham <Benjamin.Cheatham@amd.com>,
+	Borislav Petkov <bp@alien8.de>, Breno Leitao <leitao@debian.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"Fabio M . De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Gregory Price <gourry@gourry.net>,
+	Hanjun Guo <guohanjun@huawei.com>, Jonathan Corbet <corbet@lwn.net>,
+	Kees Cook <kees@kernel.org>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Li Ming <ming.li@zohomail.com>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>
+Subject: Re: [PATCH v18 11/13] PCI: Cache PCI DSN into pci_dev->dsn during
+ probe
+Message-ID: <alsk97jVqw9jbRdQ@wunner.de>
+References: <20260717222706.3540281-1-terry.bowman@amd.com>
+ <20260717222706.3540281-12-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260717222706.3540281-12-terry.bowman@amd.com>
 
-On Fri, 17 Jul 2026 00:44:58 -0600 Nico Pache <npache@redhat.com> wrote:
+On Fri, Jul 17, 2026 at 05:27:04PM -0500, Terry Bowman wrote:
+> Add a u64 dsn field to struct pci_dev and populate it from pci_get_dsn()
+> during pci_init_capabilities() at probe time via pci_dsn_init(). Only
+> write dev->dsn when the read succeeds. The zero initial value from
+> pci_dev allocation already represents 'no DSN available.'
 
-> While running selftests I noticed the PMD level per-mTHP stats (nr_anon)
-> remained elevated after each run. After further investigation I noticed
-> this accounting error occurs for both the migration.private_anon_htlb_test
-> and the HMM tests.
-> 
-> In the HMM case this is due to folio_add_new_anon_rmap() incrementing the
-> mTHP stats, but never containing a corresponding decrement in
-> free_zone_device_folio(). We solve this by making sure to decrement the
-> counter when freeing device memory.
-> 
-> In the migration case, we are incrementing this counter without first
-> checking whether this folio is a hugetlb folio, which relies on a separate
-> accounting system. We solve this by adding the proper hugetlb check before
-> incrementing this counter.
-> 
-> With these changes in place, the two tests no longer cause elevated PMD
-> level accounting issues.
+The DSN is already cached on (natively handled) PCIe hotplug ports
+to detect device replacement during system sleep, see struct controller
+in drivers/pci/hotplug/pciehp.h.
 
-Thanks, I've updated mm.git's mm-hotfixes-unstable branch to this
-version.
+Please remove that member from struct controller, remove the two
+assignments to the member in pciehp_configure_device() and pcie_init()
+and change the comparison in pciehp_device_replaced() to use the new
+member in struct pci_dev.  You can do this either as part of this patch
+or in a separate patch.
 
-Sashiko is worried about the existing code ("list corruption or a
-use-after-free panic"):
-	https://sashiko.dev/#/patchset/20260717064502.1980173-1-npache@redhat.com
+Thanks,
 
-> 
-> V2 Changes:
->  - add RB from Zi
->  - Drop unnecessary check in __folio_migrate_folio(). HugeTLB has its own
->    migration system in hugetlbfs_migrate_folio().
-
-Here's how v2 altered mm.git:
-
- mm/migrate.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
---- a/mm/migrate.c~b
-+++ a/mm/migrate.c
-@@ -624,8 +624,7 @@ static int __folio_migrate_mapping(struc
- 	 */
- 	newfolio->index = folio->index;
- 	newfolio->mapping = folio->mapping;
--	if (folio_test_anon(folio) && folio_test_large(folio) &&
--	    !folio_test_hugetlb(folio))
-+	if (folio_test_anon(folio) && folio_test_large(folio))
- 		mod_mthp_stat(folio_order(folio), MTHP_STAT_NR_ANON, 1);
- 	folio_ref_add(newfolio, nr); /* add cache reference */
- 	if (folio_test_swapbacked(folio))
-_
-
+Lukas
