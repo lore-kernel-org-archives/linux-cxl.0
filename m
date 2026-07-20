@@ -1,493 +1,632 @@
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010066.outbound.protection.outlook.com [52.101.61.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56216388392;
-	Mon, 20 Jul 2026 18:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784571170; cv=fail; b=f6wzbqSUr8XinN9ZBqqZQH2tIXiDjB6srp8n73mSTarOGIEBPbZZ+cezy3IgewxFaAG1yfUucNDBnHbD1NX8XBMM3cQ7X9Pel26lHEls3bbaqrSe0sYANrzp+tggJJw5Fn7EEKE8joOPxfcTK0BUuQxNhM0Tj4F7xh0oVWjaAxs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784571170; c=relaxed/simple;
-	bh=MhY6fplKcjEk/t8ViWcZlGCre2VKfYaSOqq3KryTtEs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rG0ckK/Uss/yGNKB7DIfJ99ReC0v3i7K6YWJSNZJH0QIB6PBNqSWWHPyOKG3X6Neavi+EgL5TO+dZbcqEE3pXJvngaGGk2vFoZa5+h3K3TXK3MGMQC1LcQn0Tjkf+xCl0woEstjJdGZJbTnpaTmC2tn9QTxOKxZ0MmS2ahbm39Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2MznsapA; arc=fail smtp.client-ip=52.101.61.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD6F3976A7
+	for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 19:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784576082; cv=none; b=Nlep7bBWTIZengLy4+XC2omEak3PZku7PCeafK29G77590Fq94ZiMSkUjAkuVfnRNYPoAdthwovWMcauXB4G1hsIgLcjU8BuKnZMeTdKIeM03u+4co8GD6841WXGmmQfNXUCQkIdQXQ2SRWPCpUsE4VODCudBnfjc1UJEaJi5uc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784576082; c=relaxed/simple;
+	bh=Cs37rQ8OwzchP4fgdY8MkNkb+Cs0KiTvx56cOgTW4IM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ERjj2qOAuzq8wnhLC5LDwxnWSv4+VwqMkjmKEBtbcfq92zg2dpJB3yRtcI9LlwuPosczsqM4Y/h7/qNEyMXMUlWluwxUMhYZJpRfWhHNIMj1fpj7uNKhrr1pld5WzVAZrUY999cOio5LScnZyi2x4gUsyuj/djuLjiWk1JZb7ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=iNmxeElv; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2MznsapA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mor0/t6H5eOMMFFk9FRCg+7hiOP0KjoWQjsjF5ChY5AbzSnDUfzjVjTMIFTdA1ZnGhKspS3WJOH6dbyxNZUSbqN3s4tFcz/Pr1HEx/iLb5gmjAMAzwXDdxAH3maRESOSvhRJhNNbt8G5QO4NLbpgzTkGDfhGLGZm3okboa+qBgiXvTfji5azxwDMHk0qLjmIw6HzGg+W6+xY+XKWupJHfvLbzT8zC88NEsIhCxYQ9OlWbIFdrp4ofxGE8kBK6mtgU60dWze7XQp8qJPpUHad5kdUFN08sVNx0TJSmlZUEmjqzdTJ3h0J0sOjs6ztDA5Mh1ts1Yto+m4Hd8sp+ogecA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3RlEdrbrIhDTmMHUEP8MgUrUgNOPtQe6oaui2VSEN6g=;
- b=DoneN+LBzWc4a/dCPvb8BrkqooEDz7knw25pgish4FtqwUgKfTaJytEG6jTNCbuXy1gvDfwJM/tO+H4FT7GgA58Xh0dGlYx0yhciUb3PD4NswhX9cK9CmKxsjG8LoOpQfSPP47X5mQxvUPVKdwCCSu41Bn8MAPFNrjALOsU74S/2IJ4ZqkaohRJFWUA3TJRHkmKUDCsGw65hL6elaeLXSpTk8LmewaXxrAbrVvQU8knOPB+TUWTdzQEXaUlaEcLBMIDFy95m+xkgZnG0vGVmtVMlHQG4VGNf8pIZ6W2So1/lOWORhcYdC+fEOSkWMaGsT5JuM1Hxeoxy9u0LkreBJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3RlEdrbrIhDTmMHUEP8MgUrUgNOPtQe6oaui2VSEN6g=;
- b=2MznsapAGVMjJG6/sbz1Ecfnc7de6DsViBBexJXvpJzZ3Y+6xe4/LagUykSI3VNWfgT267zQRoIveQ3CYIgtBQhK8zlnq7DBFP0cZ5J1lF+1UxokRDOX+9vX9+6kyAwUI/cRGO9eOx8RZRFSWp9QivfnVx7TBDZ8gFTlHq6B4N4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH8PR12MB9766.namprd12.prod.outlook.com (2603:10b6:610:2b6::10)
- by CYYPR12MB8749.namprd12.prod.outlook.com (2603:10b6:930:c6::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.16; Mon, 20 Jul
- 2026 18:12:43 +0000
-Received: from CH8PR12MB9766.namprd12.prod.outlook.com
- ([fe80::be0f:431f:5f27:96d9]) by CH8PR12MB9766.namprd12.prod.outlook.com
- ([fe80::be0f:431f:5f27:96d9%3]) with mapi id 15.21.0223.017; Mon, 20 Jul 2026
- 18:12:41 +0000
-Message-ID: <5b4b84b0-e2f4-4ee2-8275-35df808ac87c@amd.com>
-Date: Mon, 20 Jul 2026 13:12:37 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] cxl: Device protocol AER injection
-To: Dave Jiang <dave.jiang@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
- Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
- Jonathan Cameron <jic23@kernel.org>, Robert Richter <rrichter@amd.com>
-Cc: linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- Alejandro Lucero <alucerop@amd.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Ben Cheatham <Benjamin.Cheatham@amd.com>, Davidlohr Bueso
- <dave@stgolabs.net>, Gregory Price <gourry@gourry.net>
-References: <20260717225700.3543801-1-terry.bowman@amd.com>
- <6ff8d646-61b1-496e-bdc0-f4a4011d1d58@intel.com>
-Content-Language: en-US
-From: "Bowman, Terry" <terry.bowman@amd.com>
-In-Reply-To: <6ff8d646-61b1-496e-bdc0-f4a4011d1d58@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR11CA0010.namprd11.prod.outlook.com
- (2603:10b6:610:54::20) To CH8PR12MB9766.namprd12.prod.outlook.com
- (2603:10b6:610:2b6::10)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="iNmxeElv"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-92e5cb052edso567124785a.2
+        for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 12:34:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1784576078; x=1785180878; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=YIRi/tNVurt0/aUbQiHfYuBt9pAAT54Lkn/ZbIwjgmA=;
+        b=iNmxeElvrHO2trZ1TTt6Tr6ZyJnihUaaBdd7NuEtI7JwReGsaYNJ4fgcf/01qniT3D
+         4U1Ily9pYbGl2s/2IokmNf/6ZoiwxWA5Vy19C3chSOYTzrCfV9sbiWorFIcpJiLYUKSw
+         rgbi+hEe2SQNQ8XyZQVNMOK2pLG9rPeyOcmmu/B9T7/e6/X9sGQgUi6bcW0zUDJWEiP3
+         /bYpnW2cIoR0NZKfikGGj892ZH4dnfm/Dv0SHpFpALyRR+OPB+2eD0gDPUR4SrVBpmKq
+         zAiXa/B1v121z9v3BTPmxDXvTnkVAt6vJzoVAQLJwwMCUsRPqYSBnBSNARoMHA38FK6a
+         5vQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784576078; x=1785180878;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=YIRi/tNVurt0/aUbQiHfYuBt9pAAT54Lkn/ZbIwjgmA=;
+        b=bbWXRO46soEho0zI2WXA/QTLFaeBdZtqrsDtc6rKynzr6j2ZTLBpz6UWJtil3+NM2X
+         60rFmPFJicPFyr5jHpXRv5WaCuIJXsaoxibGilTx1QLRYgeE3RTwGDFepSFakJeCWExS
+         V+HTP01nGB7ENxq5R3Jdnn/HpFF2OTxHufnX2mHjal2Alwi+9kpubIB4QN76VC89+Fee
+         y3UwBn2TzgxS8Ak39ejrd9I4nxW3LcovzNL1fHqHwOfqfLnPcaIrJr+kOEK6lZEyy88+
+         DeZL/uDMSH8UoDyLDvO8w0cbZgqVUbOnMhggZ+FoPRUUCNzHxncDOvsLvcqN4yFXgaSp
+         mnDg==
+X-Forwarded-Encrypted: i=1; AHgh+Rps+kfCk2uyDmG4NzUtaTN0wIKMpm8cCVADGGfU219ih/hl7/LqHJ5nwc7kQsBf8fr8mQy9kkDO5sY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWfE5NhcsmbhZA9C0vvtvn7f72znaEplRwjDzGRZ6QxFDcy7lp
+	RWzc8sqt9GMBydvLbjyJgsxK4FYLSz2K7lHkjMGLku3KBUpbWZshvJdWcYgzNzQGlzs=
+X-Gm-Gg: AfdE7cl+9+/XQLSywrzvP1dLn5PgDXQr6ZMXvspfgGbam+qkz/4W7OT4yXrCJD4M2aM
+	wQRv6pYN66J4kmKztrbUqV8rwd//ppd6Z5PnsDVU/TFUT5GSgHhVQzY1nLkEnvou7Fpwf12xT0+
+	PZGm7LHQQeFxNY261VwCMYvDjr2gm4h1vnPsr5Q8VqX7qzAaBiS6SwkDfB4pOqU27uZCdChWjB5
+	McQa1YTO5RCKjHuIs8sy/QBcB1vgyB8sJMysiQydzAunKMWLQK6VgMXUaP111fVxNIbfR5yzTUk
+	ZzxmqTm+6+VCKPm5BxVkElVvjHEA4pZN/tfYGyVqoXIaRhcBm5iR9/sDLtX5IkIYNDOGv4TnfNB
+	imnKUCBKpXBZl+jFR/v6H0pmjIzoODmQJAvguig6gM6pCQ15hG8lgt6mMH/goXux1CQ3IW8OTyL
+	gVrGcCOeHdolT6Ai7Ezz49zSDLjMjqKWwPuryj/g/Oz1zhwvBek5RF59lmy+bk+fUfnnz6vEEvh
+	A==
+X-Received: by 2002:a05:620a:4109:b0:92e:fe10:3ef6 with SMTP id af79cd13be357-930b419ed82mr1474129285a.43.1784576078000;
+        Mon, 20 Jul 2026 12:34:38 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-930b545e47bsm957792285a.35.2026.07.20.12.34.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Jul 2026 12:34:37 -0700 (PDT)
+From: Gregory Price <gourry@gourry.net>
+To: linux-mm@kvack.org
+Cc: Zhigang.Luo@amd.com,
+	arun.george@samsung.com,
+	balbirs@nvidia.com,
+	brendan.jackman@linux.dev,
+	yuzenghui@huawei.com,
+	apopple@nvidia.com,
+	alucerop@amd.com,
+	matthew.brost@intel.com,
+	akpm@linux-foundation.org,
+	david@kernel.org,
+	ljs@kernel.org,
+	liam@infradead.org,
+	vbabka@kernel.org,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	corbet@lwn.net,
+	skhan@linuxfoundation.org,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	dakr@kernel.org,
+	djbw@kernel.org,
+	vishal.l.verma@intel.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	osandov@osandov.com,
+	jannh@google.com,
+	pfalcato@suse.de,
+	jackmanb@google.com,
+	hannes@cmpxchg.org,
+	ziy@nvidia.com,
+	pbonzini@redhat.com,
+	osalvador@suse.de,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	byungchul@sk.com,
+	gourry@gourry.net,
+	ying.huang@linux.alibaba.com,
+	kasong@tencent.com,
+	qi.zheng@linux.dev,
+	shakeel.butt@linux.dev,
+	baohua@kernel.org,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk,
+	longman@redhat.com,
+	ridong.chen@linux.dev,
+	tj@kernel.org,
+	mkoutny@suse.com,
+	sj@kernel.org,
+	jgg@ziepe.ca,
+	jhubbard@nvidia.com,
+	peterx@redhat.com,
+	baolin.wang@linux.alibaba.com,
+	npache@redhat.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	lance.yang@linux.dev,
+	usama.arif@linux.dev,
+	xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev,
+	roman.gushchin@linux.dev,
+	muchun.song@linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	driver-core@lists.linux.dev,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-debuggers@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	damon@lists.linux.dev,
+	linux-kselftest@vger.kernel.org,
+	kernel-team@meta.com
+Subject: [PATCH v5 00/36] Private Memory NUMA Nodes
+Date: Mon, 20 Jul 2026 15:33:54 -0400
+Message-ID: <20260720193431.3841992-1-gourry@gourry.net>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH8PR12MB9766:EE_|CYYPR12MB8749:EE_
-X-MS-Office365-Filtering-Correlation-Id: 799e1231-2fb8-4666-1d33-08dee68a7ced
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|366016|1800799024|7416014|376014|10067099003|6133799003|5023799004|4143699003|3023799007|56012099006|11063799006|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info:
-	iVEUHmysBaNO9Aja5EXgI0+AdLKLAV1j1Ezoe5/1ua6nm8613mqoo2FgR6CMUWtqPFh9eTMdh8RZeeft+TXv/l0BvFghU6NpQlbQmnGDiWkbVpAvTMFh6Cd7d65Gsq8uE98ngi7euSYX1eWydHOo2w7q1DhkAzRCt0oC+wIATI+wQnTvy8RwhV3D/2hihZatklQm380a4gHm/iiZI9L6sp3mBty5tkBNWolQ99kXwOOfKsPR67PMT970YwDWs9uFh0IadyMYiwf1Z9MnBmmkZArrTtPrMPqiHQCAxGc0EiwHYIIY6INSOfHGVahNTlsXQ3TBWyUl0t1JJ51efe2qgQ/uD0j5lgd7jdSw8Lk7qNxy5Xq6yEjvE+lJHXXgASxEupQgBtqDiwgUf5NLTQa1hc0+38M5pJfjfDHRALLTXg5lePA8yl8Pv07L3Q8N+hmpcnpJGxWQbu1nENm3Ul5Xxai6bhuXVgYatOv6Zfq0bzvh0y6nhE+Vb/qr912dljQDF/olp17/NgXW5lr/LNSI0bI9eW2kTdRW2EYgveVvhBlUZT1JQqyU0Bs6zwoRVZWDSSiHel0Unhq23T0rT9vx8HqeNlNwBE3mqn34lJdLichp3j2X2WjjhNPZjDXZ5A5XV4PJF72aZUw7G7SiIvRLhTxksfGdB+WNH0ueX2GdVIU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH8PR12MB9766.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(1800799024)(7416014)(376014)(10067099003)(6133799003)(5023799004)(4143699003)(3023799007)(56012099006)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WVZid2xJdDBUOUV6dURSalZEZkorSkNUdkt1b05LVTllVlp4NEFWblhiRm5E?=
- =?utf-8?B?M1pkOXRQVnNWSzFhNTNlc1diQzl5NjVLdFJjbTZGZUczQkszTm82dW5ma3p1?=
- =?utf-8?B?ekdPRHAxdUE2Q3ZiMSs1a05za2s4ODFxVzVlWGVYWXpIZjRHWHNzWjAzM29H?=
- =?utf-8?B?WFgrRFAzNm5Hemd4K3R2V3ZWRGdpZTUyWXZmMWkrZzNvNWxCVGVURzdlWkw3?=
- =?utf-8?B?NmYvU2YwRVV4TTIvSFpIYkxacUt5b1cxQVJZU0pwL3YzVjVyeGQ3bTBRR0V2?=
- =?utf-8?B?OGVLOS9tV2tmTTkzLzl5dTdYdTJiRHYyTEF2d0FybVJ0NU1GSzFBdFhIL2s2?=
- =?utf-8?B?YlZUZU1mdjNjTmFHWGZnVUI2VzA2R2ZjeUJ4Tjhub1BwcStvZzRLSnpJRkh6?=
- =?utf-8?B?MnZaVks4b2lib2NaVTk0Z0xHRTZZUGhoS09jWVVLVXhGRzlQekhMSzMwMHlN?=
- =?utf-8?B?TWMzTVhiRWU3ekNuR2lwU254bWJVaVFCYWpTM0lRbng4OHJFNU9Ld29TRktM?=
- =?utf-8?B?enlKaXYzaDFiQytRVFFtMXRoZnlWbmFHQk5GUzFIbHhPZjNxU3U2SlZHek4v?=
- =?utf-8?B?WVM1UklwQlE3bFd2Z1ZBQXg2ek9CN0ZWR0wrR1RNNDY3UmVza2xxRVJQdnZw?=
- =?utf-8?B?b21hbkxTMVdSS2E3bkVBRWpQZ004QWxHNmNoYkhmYU0rL2hqc05wQWJMZXNq?=
- =?utf-8?B?aVdjdUpHakhwK1p2SHdiNlpnaEJJWFVERm10Nklyb3MybWN4TnIzdndrc0s4?=
- =?utf-8?B?cDU4WjNPVkpZY0IyY0Y2UFovTXZPUVVMODQzeWluOHROcDJHbWRLQmxjQnl4?=
- =?utf-8?B?RDRCU3k3NW9YMUJvbjVpRlMxc0l3amZDbUM1cG0xd2V6YncwN1huSzRXSXhR?=
- =?utf-8?B?MFJtNitSRDZtc1NNZUZEVFhERXZ3UHhGMkJSbmo1d0F6UlVqMWRxZ25jYzRG?=
- =?utf-8?B?cU5JRHpFMHJyTW5qaFVUNDlkdWVySzlnK09RanFrVzcyKzV1MS8wcnV1VkJo?=
- =?utf-8?B?dS82M1NYZDVZUitEaVAxQmJxZ2VUUzVSVFdxdldIdjJUeXRuV2F4Q0NTQTNo?=
- =?utf-8?B?RXZhYlFwaDRJL211SGRyNjZ2ZnVsa0M5MGk5KzZkdjVzYmZDbEJIemN0Rk84?=
- =?utf-8?B?NzM1T2NrdlNpSVBsWXlmZ0JGVjBsZ3FKNWhnRjRwNHdsVzFteVJKMm95UkJB?=
- =?utf-8?B?bmpWYTNDcm9KQTBMRTBJYkorRStJejRVY29YZWEySGVoRUVWZmZlZ2lhcElT?=
- =?utf-8?B?TFQvUlA1a3lHMC91UWt3clZXb2dlOUtvUloyc1oxOFlGbzlFOXJtRERaREZj?=
- =?utf-8?B?Vkd1SitYZkRDZ0Y5aXVlSUJDZkRJdjFCeXBMT1d6WVJ1TFR5dklCYjJjQTVq?=
- =?utf-8?B?NzlnZGM3Yk9Wb0hOVVg1WGU4WWJZd2Vha1JRblQzN3VwWEhUbHFzc0RYUmdC?=
- =?utf-8?B?Nk44VzRrYXhON05wTytDNlJTL29SR3VBN0xnNVI5VEYxTUFRWW1KOTUzZmNj?=
- =?utf-8?B?V1FHejgyTWZ0UnFqSk8wcjBsVXE1dGZxam4zUDhBblRaclZ1QXdQUW5YeHRK?=
- =?utf-8?B?bzV1bmhoWi9lb2pzTWhXWVdqeXplTW5FRDhQTWE1SVY4RU1WQ2MwTEo2M1dl?=
- =?utf-8?B?dWRJa1ZGRFpZU3ZTNEdKK2dudVFLUnBkd1d4WlkrZ2RKdlNVNFZZV3M1SUJw?=
- =?utf-8?B?UXd1UU5QVWJ4Q1g4N3RwK0tPSFFlU3NQWndUUUgwVEd5SWc1ekdENGZQVXJI?=
- =?utf-8?B?dlI1Z3VjblJ5cW9wQkVKbHNEeDltYldid0VmVlpyYS9uaWs4em8xbGp0MUNU?=
- =?utf-8?B?QmhabFhLc0JUa05mcjk3WEdaTEFZWXpXQTRxYmM5aEo5SGtiTndxVkZBM3FG?=
- =?utf-8?B?WjJubXczdjlrNHY3a014K1RRckVIMklURVRSeDBQVHYySWpBalVZalQrV3NI?=
- =?utf-8?B?S2k5bmtiVlZ6T3ZJUFFpTDN2cmd2NnY5WW9uNTVSKzRuMEkyTFZPM1pKdGdL?=
- =?utf-8?B?QndCT0NGZENVamwvN3U2dEJMM3VRb3ByMXBRMGkvVmtKUWt6Yy9tWnRpbGRH?=
- =?utf-8?B?cDBHSEFOelE3T0VGSHdDb2Y1bU9JWjFOd2EyYXlFaHNIN3VIb1NYcmdOd2h2?=
- =?utf-8?B?T1VjNi9yZkE5SjBTNFgzRTMraHhtQmdPRTVhNUZDQjdvdWVRN1U1Z01kMkNk?=
- =?utf-8?B?Wkp4MWJZeDJjMkEvWHg3VWcxS2IrOXFTOHowS2VueWRMbllObGVWeXZlNU9U?=
- =?utf-8?B?SXYxcEZEUEpFWG90UWhwUzVzSG8xeW5vd25hQ0NyQVJSYjhRSUlDRXBtd0V2?=
- =?utf-8?Q?FZMSewRnKjXAUKQBR4?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 799e1231-2fb8-4666-1d33-08dee68a7ced
-X-MS-Exchange-CrossTenant-AuthSource: CH8PR12MB9766.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2026 18:12:41.0061
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nZtMSvjBHVvlCw8RzhENuTqtdD0dvo7N2FSziNOL0NJkrivpQvP1+bFIUfZ8XNN8mBr6xJKtlnjqA5woofUyFA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8749
+Content-Transfer-Encoding: 8bit
 
-On 7/20/2026 12:38 PM, Dave Jiang wrote:
-> 
-> 
-> On 7/17/26 3:57 PM, Terry Bowman wrote:
->> This patch is intended to provide a method of testing the recently submitted
->> cxl series "cxl: Enable CXL PCIe Port Protocol Error handling and logging" found
->> here:
->>
->> https://lore.kernel.org/linux-cxl/20260717222706.3540281-1-terry.bowman@amd.com/T/#md90ec1fdd1b374bf1e32e7736e2b3e34b328c701
->>
->> The changes in this patch will allow CXL RAS protocol testing by injecting
->> AER errors using AER EINJ. The RAS register block status is updated
->> using a central function to augment RAS register block returned by
->> to_ras_base(). This supports all CXL devices including Root Ports,
->> Upstream Switch Ports, Downstream Switch Ports, Endpoints, and RCH
->> Downstream Ports.
->>
->> Add debugfs-based CXL protocol error injection for testing CXL RAS
->> error handling paths. Injects CXL RAS protocol errors using AER internal
->> error inject interface via /sys/kernel/debug/cxl/aer_einj_inject.
->>
->> RAS CXL status is set using to_ras_base() function override when kernel config
->> CONFIG_CXL_PROTO_AER_EINJ is enabled.
->>
->> Usage:
->>   echo "DDDD:BB:DD.F [UCE|CE] AER_STATUS RAS_STATUS [RCH]" > \
->>       /sys/kernel/debug/cxl/aer_einj_inject
->>
->> Move struct aer_error_inj and aer_inject() to linux/aer.h so CXL
->> can invoke AER injection directly. Export aer_inject() with
->> EXPORT_SYMBOL_GPL.
->>
->> Make cxl_debugfs non-static in port.c and declare it extern in
->> core.h so the debugfs file can be created under the existing CXL
->> debugfs root.
->>
->> Co-developed-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
->> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
->> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
->> ---
->>  drivers/cxl/Kconfig           |  13 +++
->>  drivers/cxl/core/core.h       |  21 ++++
->>  drivers/cxl/core/port.c       |   2 +-
->>  drivers/cxl/core/ras.c        | 208 ++++++++++++++++++++++++++++++++++
->>  drivers/cxl/core/ras_rch.c    |  12 ++
->>  drivers/pci/pcie/aer_inject.c |  29 ++---
->>  include/linux/aer.h           |  15 +++
->>  7 files changed, 281 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
->> index 80aeb0d556bd7..ef449228b2549 100644
->> --- a/drivers/cxl/Kconfig
->> +++ b/drivers/cxl/Kconfig
->> @@ -238,6 +238,19 @@ config CXL_RAS
->>  	def_bool y
->>  	depends on ACPI_APEI_GHES && PCIEAER && CXL_BUS
->>  
->> +config CXL_PROTO_AER_EINJ
->> +	bool "CXL: RAS Protocol Error Injection using AER EINJ"
->> +	depends on CXL_RAS
->> +	depends on PCIEAER_INJECT
->> +	help
->> +	  Enable debugfs-based CXL protocol error injection. Writes to
->> +	  /sys/kernel/debug/cxl/aer_einj_inject inject CXL RAS protocol
->> +	  errors using the AER internal error inject interface.
->> +
->> +	  This is a debug/test facility. Say N for production kernels.
->> +
->> +	  If unsure say N.
->> +
->>  config CXL_ATL
->>  	def_bool y
->>  	depends on CXL_REGION
->> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
->> index a55a4e409feda..91910d2bb5d39 100644
->> --- a/drivers/cxl/core/core.h
->> +++ b/drivers/cxl/core/core.h
->> @@ -182,6 +182,9 @@ static inline struct device *dport_to_host(struct cxl_dport *dport)
->>  		return port->uport_dev;
->>  	return &port->dev;
->>  }
->> +
->> +extern struct dentry *cxl_debugfs;
->> +
->>  #ifdef CONFIG_CXL_RAS
->>  void cxl_ras_init(void);
->>  void cxl_ras_exit(void);
->> @@ -244,4 +247,22 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
->>  
->>  resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
->>  					   struct cxl_dport *dport);
->> +
->> +#ifdef CONFIG_CXL_PROTO_AER_EINJ
->> +
->> +#define AER_REGISTER_SIZE 5
->> +#define RAS_REGISTER_SIZE (CXL_RAS_CAPABILITY_LENGTH / sizeof(u32))
->> +
->> +struct cxl_aer_einj {
->> +	int correctable;
->> +	bool is_rch;
->> +	struct mutex *lock;
->> +	struct device *dev;
->> +	u32 aer_registers[AER_REGISTER_SIZE];
->> +	u32 ras_registers[RAS_REGISTER_SIZE];
->> +};
->> +
->> +extern struct cxl_aer_einj cxl_aer_einj;
->> +#endif
->> +
->>  #endif /* __CXL_CORE_H__ */
->> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
->> index a76f3ee05cba8..79657e5fddaac 100644
->> --- a/drivers/cxl/core/port.c
->> +++ b/drivers/cxl/core/port.c
->> @@ -2501,7 +2501,7 @@ const struct bus_type cxl_bus_type = {
->>  };
->>  EXPORT_SYMBOL_NS_GPL(cxl_bus_type, "CXL");
->>  
->> -static struct dentry *cxl_debugfs;
->> +struct dentry *cxl_debugfs;
->>  
->>  struct dentry *cxl_debugfs_create_dir(const char *dir)
->>  {
->> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
->> index d77208af41e03..d41deea899d30 100644
->> --- a/drivers/cxl/core/ras.c
->> +++ b/drivers/cxl/core/ras.c
->> @@ -3,6 +3,7 @@
->>  
->>  #include <linux/pci.h>
->>  #include <linux/aer.h>
->> +#include <linux/debugfs.h>
->>  #include <cxl/event.h>
->>  #include <cxlmem.h>
->>  #include <cxlpci.h>
->> @@ -117,6 +118,195 @@ static void cxl_cper_prot_err_work_fn(struct work_struct *work)
->>  }
->>  static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
->>  
->> +#if IS_ENABLED(CONFIG_CXL_PROTO_AER_EINJ)
-> 
-> Can this be moved to a header file? Prefer to not introduce #ifdef in the C source.
-> 
+This series introduces the concept of "Private Memory Nodes", which
+are opted into two basic functionalities by default:
+  - page allocation (mm/page_alloc.c)
+  - OOM killing
 
-Yes, I will move to core.h. 
+All other features of mm/ are opted out of managing these NUMA
+nodes and its memory.  Then we add capability bits to allow node
+owners to opt back into those services (if supported).
 
->> +
->> +static DEFINE_MUTEX(cxl_aer_einj_mutex);
->> +
->> +struct cxl_aer_einj cxl_aer_einj = {
->> +	.lock = &cxl_aer_einj_mutex,
->> +};
->> +
->> +static const char cxl_aer_einj_usage[] =
->> +	"ssss:bb:dd.f [UCE|CE] AER_STATUS RAS_STATUS [RCH]\n";
->> +
->> +static int cxl_aer_inject_error(struct pci_dev *pdev, bool correctable,
->> +				u32 aer_status, u32 ras_status)
->> +{
->> +	/* RCD errors are signaled as internal errors on the associated RCEC */
->> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END) {
->> +		if (!pdev->rcec)
->> +			return -ENODEV;
->> +		pdev = pdev->rcec;
->> +	}
->> +
->> +	struct aer_error_inj einj = {
->> +		.bus = pdev->bus->number,
->> +		.dev = PCI_SLOT(pdev->devfn),
->> +		.fn = PCI_FUNC(pdev->devfn),
->> +		.domain = pci_domain_nr(pdev->bus),
->> +	};
->> +	int ret;
->> +	int aer_offset;
->> +	int ras_offset;
->> +
->> +	if (correctable) {
->> +		einj.cor_status = aer_status | PCI_ERR_COR_INTERNAL;
->> +		aer_offset = PCI_ERR_COR_STATUS / sizeof(u32);
->> +		ras_offset = CXL_RAS_CORRECTABLE_STATUS_OFFSET / sizeof(u32);
->> +	} else {
->> +		einj.uncor_status = aer_status | PCI_ERR_UNC_INTN;
->> +		aer_offset = PCI_ERR_UNCOR_STATUS / sizeof(u32);
->> +		ras_offset = CXL_RAS_UNCORRECTABLE_STATUS_OFFSET / sizeof(u32);
->> +	}
->> +
->> +	cxl_aer_einj.correctable = correctable;
->> +	cxl_aer_einj.aer_registers[aer_offset] = aer_status;
->> +	cxl_aer_einj.ras_registers[ras_offset] = ras_status;
->> +
->> +	ret = aer_inject(&einj);
->> +	if (ret) {
->> +		pr_err("cxl-einj: aer_inject failed: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static ssize_t cxl_aer_einj_write(struct file *file,
->> +				    const char __user *ubuf,
->> +				    size_t count, loff_t *ppos)
->> +{
->> +	char sbdf[16], severity[4], topology[4] = "";
->> +	unsigned int domain, bus, dev, fn;
->> +	u32 aer_status, ras_status;
->> +	struct cxl_dport *dport;
->> +	char buf[128];
->> +	int nargs;
->> +	int ret;
->> +
->> +	if (!capable(CAP_SYS_ADMIN))
->> +		return -EPERM;
->> +
->> +	if (count >= sizeof(buf)) {
->> +		pr_err("cxl-einj: input too long (%zu bytes, max %zu)\n", count, sizeof(buf) - 1);
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (copy_from_user(buf, ubuf, count)) {
->> +		pr_err("cxl-einj: copy_from_user failed\n");
->> +		return -EFAULT;
->> +	}
->> +	buf[count] = '\0';
->> +
->> +	nargs = sscanf(buf, "%15s %3s %x %x %3s", sbdf, severity,
->> +		       &aer_status, &ras_status, topology);
->> +	if (nargs < 4) {
->> +		pr_err("cxl-einj: expected format: <SBDF> <UCE|CE> <aer_status> <ras_status>\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (nargs == 5 && strcmp(topology, "RCH") != 0)
->> +		return -EINVAL;
->> +
->> +	if (strcmp(severity, "UCE") != 0 && strcmp(severity, "CE") != 0) {
->> +		pr_err("cxl-einj: expected 'UCE' or 'CE', got '%s'\n", severity);
->> +		return -EINVAL;
->> +	}
->> +
->> +	if (sscanf(sbdf, "%x:%x:%x.%x", &domain, &bus, &dev, &fn) != 4) {
->> +		pr_err("cxl-einj: invalid SBDF format '%s', expected DDDD:BB:DD.F\n", sbdf);
->> +		return -EINVAL;
->> +	}
->> +
->> +	struct pci_dev *pdev __free(pci_dev_put) =
->> +		pci_get_domain_bus_and_slot(domain, bus, PCI_DEVFN(dev, fn));
->> +	if (!pdev) {
->> +		pr_err("cxl-einj: device %s not found\n", sbdf);
->> +		return -ENODEV;
->> +	}
->> +
->> +	guard(mutex)(cxl_aer_einj.lock);
->> +	cxl_aer_einj.dev = NULL;
->> +
->> +	struct cxl_port *port __free(put_cxl_port) = find_cxl_port_by_dev(&pdev->dev, &dport);
->> +	if (!port) {
->> +		dev_err(&pdev->dev, "cxl-einj: Failed to find CXL Port.\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	if (!to_ras_base(port, dport)) {
->> +		dev_err(&pdev->dev, "cxl-einj: RAS not initialized.\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	cxl_aer_einj.is_rch = (nargs == 5 && strcmp(topology, "RCH") == 0);
->> +	if (!cxl_aer_einj.is_rch)
->> +		pci_dev_get(pdev);
->> +	cxl_aer_einj.dev = cxl_aer_einj.is_rch ? pdev->dev.parent : &pdev->dev;
->> +	ret = cxl_aer_inject_error(pdev, strcmp(severity, "CE") == 0,
->> +				   aer_status, ras_status);
->> +	if (ret) {
->> +		if (!cxl_aer_einj.is_rch)
->> +			pci_dev_put(pdev);
->> +		cxl_aer_einj.dev = NULL;
->> +		pr_err("cxl-einj: injection failed for %s: %d\n", sbdf, ret);
->> +		return ret;
->> +	}
->> +
->> +	return count;
->> +}
->> +
->> +static ssize_t cxl_aer_einj_read(struct file *file, char __user *ubuf,
->> +				 size_t count, loff_t *ppos)
->> +{
->> +	return simple_read_from_buffer(ubuf, count, ppos,
->> +				       cxl_aer_einj_usage,
->> +				       sizeof(cxl_aer_einj_usage) - 1);
->> +}
->> +
->> +static const struct file_operations cxl_ras_error_fops = {
->> +	.owner		= THIS_MODULE,
->> +	.read		= cxl_aer_einj_read,
->> +	.write		= cxl_aer_einj_write,
->> +	.llseek		= default_llseek,
->> +};
->> +
->> +static void cxl_ras_create_debugfs(struct dentry *dir)
->> +{
->> +	debugfs_create_file("aer_einj_inject", 0600, dir, NULL,
->> +			    &cxl_ras_error_fops);
->> +}
->> +
->> +static void __iomem *to_einj_ras_base(struct cxl_port *port, struct cxl_dport *dport)
->> +{
->> +	if (dport) {
->> +		if (cxl_aer_einj.is_rch) {
->> +			if (cxl_aer_einj.dev == dport->dport_dev) {
->> +				cxl_aer_einj.dev = NULL;
->> +				return (__force void __iomem *)cxl_aer_einj.ras_registers;
->> +			}
->> +		} else {
->> +			if (cxl_aer_einj.dev == dport->dport_dev) {
->> +				pci_dev_put(to_pci_dev(cxl_aer_einj.dev));
->> +				cxl_aer_einj.dev = NULL;
->> +				return (__force void __iomem *)cxl_aer_einj.ras_registers;
->> +			}
->> +		}
->> +	} else if (!cxl_aer_einj.is_rch) {
->> +		struct device *dev = is_cxl_endpoint(port) ?
->> +			port->uport_dev->parent : port->uport_dev;
->> +
->> +		if (dev_is_pci(dev) && cxl_aer_einj.dev == dev) {
->> +			pci_dev_put(to_pci_dev(cxl_aer_einj.dev));
->> +			cxl_aer_einj.dev = NULL;
->> +			return (__force void __iomem *)cxl_aer_einj.ras_registers;
->> +		}
->> +	}
->> +
->> +	return NULL;
->> +}
->> +#endif
->> +
->>  static void cxl_unmask_proto_interrupts(struct device *dev)
->>  {
->>  	struct pci_dev *pdev;
->> @@ -238,6 +428,14 @@ void __iomem *to_ras_base(struct cxl_port *port, struct cxl_dport *dport)
->>  	if (!port)
->>  		return NULL;
->>  
->> +#if IS_ENABLED(CONFIG_CXL_PROTO_AER_EINJ)
-> 
-> I think you can do something like below instead:
-> 
-> 	if (IS_ENABLED(CONFIG_CXL_PROTO_AER_EINJ))
-> 
-> DJ
-> 
+NUMA-hosted memory is presently a most-privilege system (any memory on
+any node, except ZONE_DEVICE, is 100% fungible and accessible). We
+then slap restrictions on top of it (cpuset, mempolicy, ZONE type,
+page/folio flags, etc).
 
-Good idea. Thanks for pointing this out.
+The goal here is to flip that dynamic, isolate by default and then
+opt-in to specific services that the device says is safe.
 
-Terry
+Isolation at the NUMA/Zonelist layer provides a powerful mechanism for
+memory hosted on accelerators - re-use of the kernel mm/ code.
 
-[snip]
+ - Accelerators (GPUs) can use demotion, numactl, and reclaim.
+ - Special memory devices (Compressed RAM) with special access controls
+   (promote-on-write) can have generic services written for them.
+ - Network devices with large memory regions intended for ring buffers
+   can use the buddy and standard networking stack.
+ - Slow, disaggregated memory pools which aren't suitable as general
+   purpose memory get cleaner interfaces (no need to re-write the buddy
+   in userland, can use migration interface, etc).
+ - Per-workload dedicated memory nodes (disaggregated VM memory)
+
+And more use cases I have collected over the past few years.
+
+Not included here is a dax-extension [1] that exposes all the internal
+bits as userland controls for testing - along with a pile of selftests
+that prove correctness.
+
+Changes Since V4
+================
+ - Massive reduction in complexity.
+     - no ops struct
+     - no callback functions
+     - no __GFP_PRIVATE
+     - no __GFP_THISNODE requirement
+     - no task flags (no PF_MEMALLOC_* in the alloc path)
+ - isolation via a dedicated zonelist:
+     - private nodes are omitted from FALLBACK/NOFALLBACK
+     - added ZONELIST_PRIVATE(_NOFALLBACK)
+ - ALLOC_ZONELIST_PRIVATE alloc_flag
+     - on top of Brendan Jackman's recent mm/page_alloc.h work [3]
+     - Zonelist selection rides the allocator's alloc_flags
+ - rename OPS -> CAPS (capabilities)
+ - split base functionality (isolation) from opt-ins (CAPS)
+     - first half of series can be merged without CAPS
+ - dropped compressed ram example from series
+     - will submit separately if this moves forward
+ - Added KVM as first primary in-tree user (mempolicy / CAP_USER_NUMA)
+ - fully functional dax-kmem extension and huge suite of selftests
+   located at my github, to be discussed separately [1]
+
+Patch Layout
+============
+The series is broken into two sections:
+
+1) N_MEMORY_PRIVATE Introduction.
+   Introduce the node state.
+   Opt those nodes out of mm/ services.
+
+2) NODE_PRIVATE_CAP_* features
+   A set of mm/ service opt-in flags that augment private
+   nodes to make them more useful (i.e. reclaim = overcommit).
+
+   NODE_PRIVATE_CAP_LTPIN for private node folio pinning
+   NODE_PRIVATE_CAP_NUMA_BALANCING for private-node NUMA balancing
+   NODE_PRIVATE_CAP_DEMOTION for private-node tiering demotion
+   NODE_PRIVATE_CAP_HOTUNPLUG for opted-in private nodes
+   NODE_PRIVATE_CAP_USER_NUMA for userland numa controls
+   NODE_PRIVATE_CAP_RECLAIM for opted-in private node reclaim
+
+My hope is to merge at least #1 pulled ahead while #2 is debated.
+
+Allocation Isolation
+====================
+page_alloc presently controls whether a node's memory can be allocated
+on a given call by 4 things (in order of authority)
+
+  1) ZONELIST membership
+     If a node is not in the walked zonelist, it's unreachable.
+
+  2) __GFP_THISNODE
+     If this flag is set and the only node in the ZONELIST is the
+     singular preferred node (or the local node, for -1)
+
+  3) cpuset.mems membership
+     cpuset trims any node in its allowed list
+
+  4) mempolicy nodemask
+     the allocator will skip any node not in the nodemask.
+
+Except for #1 (Zonelist membership) there are all kinds of weird corner
+conditions in which 2-4 can be completely ignored (interrupt context,
+empty set because cpuset doesn't intersect mempolicy, shared vma, ...)
+
+But ZONELIST membership is *absolute*.  If a zone is not in the
+zonelist being walked, IT CANNOT BE ALLOCATED FROM. PERIOD.
+
+The existing zonelists are constructed like so:
+  ZONELIST_FALLBACK    : All N_MEMORY nodes
+  ZONELIST_NOFALLBACK  : A singleton N_MEMORY node
+
+Private node isolation is implemented via ZONELIST isolation:
+  ZONELIST_PRIVATE            : The private node + N_MEMORY
+  ZONELIST_PRIVATE_NOFALLBACK : The private node alone.
+
+(mirrors exactly the fallback/nofallback for __GFP_THISNODE)
+
+Private nodes:
+  1) Never appear in any ZONELIST_FALLBACK
+  2) Have an empty ZONELIST_NOFALLBACK
+  3) Only appear in their own ZONELIST_PRIVATE(_NOFALLBACK)
+
+1 & 2 mean all existing in-tree callers to page_alloc can NEVER
+accidentally allocate from a private node.
+
+An allocation must explicitly ask via a zonelist and a nodemask.
+
+  alloc_flags |= ALLOC_ZONELIST_PRIVATE; /* use ZONELIST_PRIVATE */
+  __alloc_pages(..., nodemask);     /* with the private node set */
+
+The page allocator keeps all its original interfaces which only
+ever touch the default zonelists - avoiding churn.
+
+Making it accessible via Mempolicy: MPOL_F_PRIVATE and page_alloc
+=================================================================
+The vast majority of the kernel will never need to know about
+ZONELIST_PRIVATE, because we add MPOL_F_PRIVATE to mempolicy.
+
+When a mempolicy has MPOL_F_PRIVATE, the alloc_mpol() interfaces
+do the zonelist selection for the source of the allocation.
+
+That really is the whole explanation of the mechanism:
+
+  alloc_flags = mpol_alloc_flags(pol);
+  page = __alloc_frozen_pages_noprof(..., alloc_flags);
+
+On mm-new this rides the allocator's existing alloc_flags plumbing:
+ALLOC_ZONELIST_PRIVATE is just another alloc_flag, so no new
+parameter, enum, or alloc_context change is required.
+
+For modules that want to implement their own special handling, they
+get the _private variants for the page allocator.  This lets modules
+re-use the buddy instead of rewriting it.
+
+   - alloc_pages_node_private_noprof()
+   - folio_alloc_node_private_noprof()
+
+This keeps ALLOC_ flags mm/ internal (these functions add the flags).
+
+Isolating private node folios from kernel services
+==================================================
+We implement filter points in mm/ to prevent operations on
+private node memory.  Where possible, we even re-use existing
+filter points from ZONE_DEVICE.
+
+Most filter points are one or two lines of code:
+
+Combining ZONE_DEVICE and N_MEMORY_PRIVATE opt-out spots:
+  -     if (folio_is_zone_device(folio))
+  +     if (unlikely(folio_is_private_managed(folio)))
+
+Disabling a service:
+  +  if (!node_is_private(nid)) {
+  +      kswapd_run(nid);
+  +      kcompactd_run(nid);
+  +  }
+
+Disallowing a uapi interaction:
+  +  if (node_state(nid, N_MEMORY_PRIVATE))
+  +      return -EINVAL;
+
+In the second half of the series, we replace blanket N_MEMORY_PRIVATE
+filters with NODE_PRIVATE_CAP_* filters to opt those nodes into that
+interaction if CAP is set.
+
+We abstract this with a nice clean interface to make it really clear
+what is happening (nodes have features!)
+
+  -  if (node_state(pgdat->node_id, N_MEMORY_PRIVATE))
+  +  if (!node_allows_reclaim(pgdat->node_id))
+
+NODE_PRIVATE_CAP_* features
+===========================
+This series of commits opts private nodes into various mm/ services.
+
+Capabilities:
+  NODE_PRIVATE_CAP_RECLAIM       - direct and kswapd reclaim
+  NODE_PRIVATE_CAP_USER_NUMA     - userland numa controls
+  NODE_PRIVATE_CAP_DEMOTION      - node is a demotion target
+  NODE_PRIVATE_CAP_HOTUNPLUG     - hotunplug may migrate
+  NODE_PRIVATE_CAP_NUMA_BALANCING - NUMAB may target node folios
+  NODE_PRIVATE_CAP_LTPIN         - Longterm pin operates normally
+
+Some opt-in support is more intensive than others, so these features
+are broken out in a way that we can defer them as future work streams.
+
+NODE_PRIVATE_CAP_RECLAIM:
+  Enabling reclaim for these nodes is actually surprisingly trivial.
+
+  Without CAP_RECLAIM, when an allocation failure occurs, the system
+  will not attempt to swap the memory - and instead will OOM (typically
+  whatever task is using the most memory on *that* private node).
+
+  This capability consists of:
+    1) enabling kswapd and kcompactd for that node at hotplug time.
+    2) formalizing opt-out hooks to node_allows_reclaim() opt-in hooks.
+    3) Sets normal watermarks for these nodes.
+    4) Allow madvise operations on that node (PAGEOUT).
+    5) A small tweak to how LRU decides which zones to visit.
+
+NODE_PRIVATE_CAP_USER_NUMA
+  Enables the following userland interfaces to accept the node:
+    mbind()
+    set_mempolicy()
+    set_mempolicy_home_node()
+    move_pages()
+    migrate_pages()
+
+  example:
+     buf = mmap(..., MAP_ANON);
+     mbind(buf, ..., {private_node});
+     buf[0] = 0xDEADBEEF; /* Page faults onto the private node */
+
+  Later - the KVM example shows how in-kernel mempolicies can
+  also be bound by CAP_USER_NUMA.
+
+  Otherwise, that's it - it's just a mempolicy with MPOL_F_PRIVATE.
+
+NODE_PRIVATE_CAP_HOTUNPLUG
+  This is simple: allow hotunplug to migrate this nodes folios.
+
+  Some devices may not be able to tolerate unexpected migrations,
+  so we prevent hotunplug from engaging in migration by default.
+
+  Some devices may have an mmu_notifier in their driver that can
+  manage the migration and subsequent refault.
+
+  CAP_HOTUNPLUG allows memory_hotplug.c to migrate normally.
+
+NODE_PRIVATE_CAP_DEMOTION
+  This adds the private node as a valid demotion target, and allows
+  reclaim to demote memory from a private node to a demotion target.
+
+  Requires:  NODE_PRIVATE_CAP_RECLAIM
+
+NODE_PRIVATE_CAP_NUMA_BALANCING
+  This enables numa balancing to inject prot_none on private node
+  folio mappings and promote them when faults are taken.
+
+NODE_PRIVATE_CAP_LTPIN
+  This allows GUP Longterm Pinning to operate normally.
+
+  Normally, longterm pinning determines folio eligibility based
+  on its ZONE_* membership (among other things).
+
+  ZONE_NORMAL is eligible, while ZONE_MOVABLE folios require
+  migration to ZONE_NORMAL before pinning.
+
+  Neither operation is preferable by default on a private node,
+  so the base behavior of FOLL_LONGTERM is to FAIL.
+
+  This capability allows longterm pinning to operate normally
+  based on the ZONE membership.  Private node memory may be
+  hotplugged as either ZONE_NORMAL or ZONE_MOVABLE.
+
+In-tree User: KVM
+=================
+Dave Jiang proposed [2] dax-backed guest_memfd() memory as a way of
+enabling disaggregated memory pools to host dedicated KVM memory.
+
+With private nodes, this is trivial (with a bit of basic plumbing):
+
+static int kvm_gmem_bind_node(struct inode *inode, int node)
+{
+...
+  /* Bind to a private node - gated on CAP_USER_NUMA */
+  pol = mpol_bind_node(node);
+  if (IS_ERR(pol))
+    return PTR_ERR(pol);
+
+  /* Set the shared policy */
+  err = mpol_set_shared_policy_range(&GMEM_I(inode)->policy, ..., pol);
+...
+}
+
+KVM doesn't even need to know about private nodes at all, all it
+does is ask mempolicy whether the requested node is a valid bind.
+
+mm/ component testing with dax driver
+=====================================
+The dax driver extensions[1] implements a simple interface to create
+a private node from a dax device created by any source.
+
+I left the dax driver extensions out of this feature set because
+it locks in the CAP_ bits before anyone has input.  It's there
+primarily for testing at this point.
+
+The simplest way to get a dax device is with the memmap= boot arg.
+   e.g.: "memmap=0x40000000!0x140000000"
+
+The dax driver extension has the following sysfs entries:
+  dax0.0/private         - set the node to private
+  dax0.0/dax_file        - make /dev/dax0.0 mmap'able in kmem mode
+  dax0.0/adistance       - dictate memory_tierN membership
+  dax0.0/reclaim         - CAP_RECLAIM
+  dax0.0/demotion        - CAP_DEMOTION
+  dax0.0/user_numa       - CAP_USER_NUMA
+  dax0.0/hotunplug       - CAP_HOTUNPLUG
+  dax0.0/numa_balancing  - CAP_NUMA_BALANCING
+  dax0.0/ltpin           - CAP_LTPIN
+
+Now consider the following...
+
+Single node reclaim + mbind support:
+  echo 1 > dax0.0/private
+  echo 1 > dax0.0/reclaim
+  echo 1 > dax0.0/user_numa
+  echo online_movable > dax0.0/state
+
+Test program:
+   /* node1: 1GB Private Memory Node, 4GB swap */
+   buf = mmap(NULL, TWO_GB, PROT_READ | PROT_WRITE,
+              MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+   sys_mbind(p, len, MPOL_BIND, mask, MAXNODE, MPOL_MF_STRICT);
+   memset(buf, 0xff, TWO_GB);
+
+We can *guarantee* the ONLY reclaiming tasks are exactly:
+  - kswapdN (in theory we can even make this optional!)
+  - the memset task faulting pages in
+
+This also means these are the only tasks capable of becoming
+locked up and OOMing (as long as it is not under pressure).
+
+The rest of the system remains entirely functional for debugging.
+
+It now becomes possible to micro-benchmark and A/B test reclaim
+changes with different scenarios (number of tasks, amount of
+memory, watermark targets, etc), because we have hard controls
+over exactly which tasks can access that node memory and how.
+
+If we broke CAP_RECLAIM into subflags:
+  - CAP_RECLAIM_KSWAPD
+  - CAP_RECLAIM_DIRECT
+  - CAP_COMPACTION_KCOMPACTD
+  - CAP_COMPACTION_DIRECT
+
+We can actually test the efficacy of each of these mechanisms in
+isolation to each other - something that is strictly impossible today.
+
+Bonus Configuration: HBM device memory tiering
+==============================================
+echo 1 > dax0.0/private       # make the node private
+echo 0 > dax0.0/adistance     # highest tier
+echo 1 > dax0.0/reclaim       # reclaim active
+echo 1 > dax0.0/demotion      # may demote from the node
+echo 1 > dax0.0/user_numa     # mbind()
+echo online_movable > dax0.0/state
+echo 1 > numa/demotion_enabled
+
+This is an HBM device which is treated as the top-tier in the
+system but for which memory can only enter via explicit mbind().
+
+It can be overcommitted because it can be reclaimed (demotions
+go to CPU DRAM, and reclaim can swap from it).
+
+If the HBM is managed by an accelerator (GPU), the mmu_notifier
+allows it to know when reclaim is moving memory out to do
+device-mmu invalidation prior to migration.
+
+Prereqs, base commit, references
+================================
+akpm/mm-new - for Brendan Jackman's mm/page_alloc.h work[3]
+
+Prereqs (all already in akpm/mm-new; listed for out-of-tree application):
+
+page_alloc.h split + alloc_flags plumbing this series rides on:
+commit e81fae43cd69 ("mm: split out internal page_alloc.h")
+commit b4ff3b6d0a1d ("mm: replace __GFP_NO_CODETAG with ALLOC_NO_CODETAG")
+
+dax atomic whole-device hotplug (used by the dax extension [1]):
+commit d7aa81b9a919 ("mm/memory: add memory_block_aligned_range() helper")
+commit 3b2f402a1754 ("dax/kmem: add sysfs interface for atomic whole-device hotplug")
+
+[1] https://github.com/gourryinverse/linux/tree/scratch/gourry/managed_nodes/dax_private-mm-new
+[2] https://lore.kernel.org/all/20260423170219.281618-1-dave.jiang@intel.com/
+[3] https://lore.kernel.org/all/20260702-alloc-trylock-v4-0-0af8ff387e80@google.com/
+
+base-commit: c872b70f5d6c742ad34b8e838c92af81c8920b3e
+
+Gregory Price (36):
+  mm: refactor find_next_best_node to find_next_best_node_in
+  mm/page_alloc: refactor build_node_zonelist() out of build_zonelists()
+  mm/page_alloc: let the bulk and folio allocators carry alloc_flags
+  numa: introduce N_MEMORY_PRIVATE
+  mm: add ZONELIST_PRIVATE(_NOFALLBACK) for N_MEMORY_PRIVATE nodes.
+  cpuset: exclude private nodes from cpuset.mems (default-open)
+  mm/memory_hotplug: disallow migration-driven private node hotunplug
+  mm/mempolicy: skip private node folios when queueing for migration
+  mm/migrate: disallow userland driven migration for private nodes
+  mm/madvise: disallow madvise operations on private node folios
+  mm/compaction: disallow compaction on private nodes
+  mm/page_alloc: clear private node watermarks and system reserves
+  mm/mempolicy: disallow NUMA Balancing prot_none on private nodes
+  mm/damon: skip private node memory in DAMON migration and pageout
+  mm/ksm: skip KSM for managed-memory folios
+  mm/khugepaged: skip private node folios when trying to collapse.
+  mm/vmscan: disallow reclaim of private node memory
+  mm/gup: disallow longterm pin of private node folios
+  proc: include N_MEMORY_PRIVATE nodes in numa_maps output
+  mm/memcontrol: account private-node memory in per-node stats
+  proc/kcore: include private-node RAM in the kcore RAM map
+  mm/mempolicy: add MPOL_F_PRIVATE and zonelist selection
+  mm/mempolicy: apply policy at the kernel zone for private-node binds
+  mm/mempolicy: add in-kernel MPOL_BIND interfaces for drivers/services
+  mm/memory_hotplug: support N_MEMORY_PRIVATE node hotplug
+  mm: add NODE_PRIVATE_CAP_RECLAIM for opted-in private node reclaim
+  mm: add NODE_PRIVATE_CAP_USER_NUMA for userland numa controls
+  mm: add NODE_PRIVATE_CAP_HOTUNPLUG for opted-in private nodes
+  mm: add NODE_PRIVATE_CAP_DEMOTION for private-node tiering demotion
+  mm: add NODE_PRIVATE_CAP_NUMA_BALANCING for private-node NUMA
+    balancing
+  mm: add NODE_PRIVATE_CAP_LTPIN for private node folio pinning
+  mm/khugepaged: base private node collapse eligiblity on actor/cap bits
+  Documentation/mm: describe private (N_MEMORY_PRIVATE) memory nodes
+  mm/mempolicy: add mpol_set_shared_policy_range()
+  KVM: guest_memfd: bind backing memory to a NUMA node at creation
+  KVM: selftests: add a guest_memfd FLAG_BIND_NODE test
+
+ Documentation/ABI/stable/sysfs-devices-node   |  10 +
+ Documentation/mm/index.rst                    |   1 +
+ Documentation/mm/numa_private_nodes.rst       | 160 ++++++++++
+ drivers/base/node.c                           | 118 +++++++
+ drivers/dax/kmem.c                            |   2 +-
+ fs/proc/kcore.c                               |   5 +-
+ fs/proc/task_mmu.c                            |  10 +-
+ include/linux/gfp.h                           |  22 +-
+ include/linux/kvm_host.h                      |   3 +
+ include/linux/memory_hotplug.h                |   5 +-
+ include/linux/mempolicy.h                     |  16 +
+ include/linux/mmzone.h                        |  26 +-
+ include/linux/node_private.h                  | 262 ++++++++++++++++
+ include/linux/nodemask.h                      |   7 +-
+ include/uapi/linux/kvm.h                      |   5 +-
+ include/uapi/linux/mempolicy.h                |   1 +
+ kernel/cgroup/cpuset.c                        |  26 +-
+ mm/compaction.c                               |  13 +
+ mm/damon/paddr.c                              |   9 +
+ mm/gup.c                                      |  28 +-
+ mm/huge_memory.c                              |   5 +
+ mm/internal.h                                 |  97 +++++-
+ mm/khugepaged.c                               |  18 +-
+ mm/ksm.c                                      |   8 +-
+ mm/madvise.c                                  |   8 +-
+ mm/memcontrol-v1.c                            |   8 +-
+ mm/memcontrol.c                               |  13 +-
+ mm/memory-tiers.c                             |  40 ++-
+ mm/memory_hotplug.c                           | 119 +++++++-
+ mm/mempolicy.c                                | 288 +++++++++++++++---
+ mm/migrate.c                                  |  19 +-
+ mm/mm_init.c                                  |   2 +-
+ mm/page_alloc.c                               | 189 +++++++++---
+ mm/page_alloc.h                               |  34 +++
+ mm/vmscan.c                                   |  57 +++-
+ tools/testing/selftests/kvm/Makefile.kvm      |   2 +
+ .../kvm/guest_memfd_bind_node_test.c          | 213 +++++++++++++
+ virt/kvm/guest_memfd.c                        |  39 ++-
+ 38 files changed, 1728 insertions(+), 160 deletions(-)
+ create mode 100644 Documentation/mm/numa_private_nodes.rst
+ create mode 100644 include/linux/node_private.h
+ create mode 100644 tools/testing/selftests/kvm/guest_memfd_bind_node_test.c
+
+-- 
+2.53.0-Meta
 
