@@ -1,64 +1,63 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DCC3B388C
-	for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 19:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD62C3B83FE
+	for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 19:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784576087; cv=none; b=Hfx50wn7ebx+eOFbjRN8wacUgHdSPMQc3GVGDGahN6Mhk//5LOk7VqLyfmuRPEN6z8Glqdl7s9zXoA9WaaVHyf68Y8QQ9B4TY2ejUrEt7TjcqNzMxC+2aZD9BYunrNIE+WcHbXXpSHSb4JB2wJjBrBCvsF9mktbcvNmHjtMspVw=
+	t=1784576091; cv=none; b=RVmUMEDOhtMmE6kDR2OQ1yPF4I+M8OvWRZrCkHqpB/DEFVDau0mYcqHV9B+LpwiCgmJH7VHFqkHGi4xwejlMS8YlYgbS2KcGYnz0LTYByCCnGxK4FRXZBp9dDnCrQwCgK/Vy+iMHSBAIexAKqv763Uaa4QP2AVA6uT1Lxo0WQXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784576087; c=relaxed/simple;
-	bh=BXKkjPaqRDLvf1Rsfxqjf9a9bmU7Z6cyMAMgQYWOA+0=;
+	s=arc-20240116; t=1784576091; c=relaxed/simple;
+	bh=s8N6ij9YzlqwJM+1Bik+LPbU80jwh2BdJJ4iGqocVBA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WnullAwhx82+csUGbEyN4mKXr0hM9Ash3hCBPaDKjQD6d6IBQRyQmOvyUIywrY7+3I1f/fY+szc/PMDXagKjB+uJS30tRpqwFqxZlsHjFvHsL2LbGchR/RGW8hPOVdPIXpblCyN5dhxCORMolXeU6aXMItOXlBWM1Sf0d39jGBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=jrpOzZ2y; arc=none smtp.client-ip=209.85.222.180
+	 MIME-Version; b=Aoutx+NAohKuMvy3j1vHCg6/VTnzL/5K/mnXfv6naNEp54VMp+txGM0BBi3qqDLuTyugfCIdYlYw4kqOf6mP/a5/CCaNoO4HVpgLYAkh7+EDF0kxuT4946LUwnUdXUm+eXobvDZi3XliibiUcpkMhKa64YCFH4hI5Uf21Ze3zV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=fCcO+9Ki; arc=none smtp.client-ip=209.85.222.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="jrpOzZ2y"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-92e5c9211d2so926743985a.1
-        for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 12:34:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="fCcO+9Ki"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-92e99ef0902so741332585a.2
+        for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 12:34:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1784576084; x=1785180884; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1784576087; x=1785180887; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/c51hvMQmc3XHuoW6uDjvccdoKFQfSnHZbbwUxq30Zg=;
-        b=jrpOzZ2ynYu9F7excnopUTd9s9hiCLHLOri8XDMd4svOLXUXM1ntthtLTdTWmCQmZg
-         LTrr89ncyv582qROyKmVuX0qLZ+ZcDkWkVF6jjIGJeYsuxLJHubKrV7rXY63ooxkQSnc
-         cBQRcXrJjstf55LXZAlMcyIhxOpE6YYKifL1xeH+e1dK14Ov109KSJupIbp/QdcMnQqZ
-         0N2lTnXTJ+TMFmhE7aNSRLphdhOe+0NtTjA64JFAzT33MIFovAAydDxADk/LoO+47lA/
-         jc7i0NOtVyGjUOoIbi1voxag75F+JjahEdrzGjCFGayzefrc62C/WgnaDUbwVpwNMGbi
-         3bLQ==
+        bh=O4ZbFLqrZPbRYYHVyM+GUe32g3SELymPp/g2pETaCC4=;
+        b=fCcO+9Ki4gHgQp/K7isIFue5Eh8XQKefbL1wCjp5cZxWN8PCl+DWWa7k+GSJSd/kCi
+         7tYFpsUUJh2oWD+/VaqhW2z0eDjSo+ic/rP1z7E9cf65OR+8eYQ5z58O+M1eD01pZVee
+         jqPHZGbDTcrgxP91Cp3ENWGL4P6Dr3uAqhnl1IbKZVB+WHFlhpKJQcb8ZAfkCiubbqIy
+         GGp8yiijpsFrCI8OBgLR1UHrkSIvdx+e4ufacc3Wsu1S7ia6dQsG3c/QhWw0JzK3Y6Fh
+         0E8R6UgbH/ggVBnk5H4sd95ce40pncnUZsZfR1Z0EEBVJdFx5jZLWjkNNpLkp3RY39Qk
+         7RCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784576084; x=1785180884;
+        d=1e100.net; s=20251104; t=1784576087; x=1785180887;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=/c51hvMQmc3XHuoW6uDjvccdoKFQfSnHZbbwUxq30Zg=;
-        b=s5Evbok8x67s+m1Hxov1ozz1ItWJtAZmVgdP/O/jd7MZhz5ziq7zPUo/m2x+U1hRP9
-         ibl14Q1l9/zoed4zVEKn2Ql1DerG/Qb6WppT9fKXWKGDwvAij1Yz/p8L8L2p1OqlH0rx
-         DoYNXXZXWAXqsEuY7ED7haJ5Ve+rH7Z+TbiLPb+HuRaVH7/17DvebaDz+KyVzjwYBqtv
-         QlTprwLV4FxzfjbXMhrVqa8tSe7p9U92Kunn9AEgl+/89adcOLz1bsP7SOB52xD7rS6o
-         1RliEmu8iGVn9PCY4iSY06ETRdNq6RBs49x18E5DYs+/HUH93pyXmPqHPqXCF+tPbNHj
-         dhHA==
-X-Forwarded-Encrypted: i=1; AHgh+RrfGBm+GUzAiZ3ihxfH2lwPkxNY55G5VK4AEaG2iI+YmAkylaN6EK4Gqf/xVZa6ownVVNUI9Bs1p7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzb4EDHsVp69VQV8kYLiwSY+9jJG3stDZiwtkz8lbi9OtorWRbp
-	9ANjNoEQiVPFoq58VRHTV8x9ZF/Gx3Yg+cyEWqfl2Qo9EpQTYfTv61mbSmThCG6J12M=
-X-Gm-Gg: AfdE7cmyYAb/ED1WrdH6p7N2KeA1SI0UVafQyQhKWK6vyKGNlCWwjJKjD8GzfvSuK0x
-	muK7q2LoItKmKc+h+UtsYVRLSKHXmHMrUM9RuPFOM4Bf1ahFwUf8DNxKTGHX0KTtt824NhnLiJw
-	6HuT95yc/cYLNGKh6fjg87MIBOxAdH21NYntctdsCbvhUTXeAr9Jij2v8bvGAHT9eyk7z3CJ46I
-	yuM/okm4bkExDfJ6Lp+9+LJVUQumaqbq+UnYtg27DJzChKcqcjvZlMXHko+ruTJhycOl0c+oGUm
-	bRujc2ddcC4vYNoZXoBXHnLAvidRUHYDhgE92Q5g27lmIqbFZCR84IM2QUcCNJztIz31dtFg84P
-	bC+93r6EPjVZuHDKqr15caKOGhQbJqtQmfyefBRzX2DQmy+fxv9SJMVQvJBM9rwOq2Ljk/ZaCEv
-	+4CSjqbb3xIa/lb0VL457CuPiYuaHaGKD6ZYw1pzzVCt9UteO9WWyAuM+HvRQmvZFERa9RFOPwj
-	Q==
-X-Received: by 2002:a05:620a:1a19:b0:92e:c118:18bb with SMTP id af79cd13be357-930b43dfc05mr1508161685a.90.1784576083785;
-        Mon, 20 Jul 2026 12:34:43 -0700 (PDT)
+        bh=O4ZbFLqrZPbRYYHVyM+GUe32g3SELymPp/g2pETaCC4=;
+        b=anXATG7azm5UfNK928Zn1HrBz87/ADDSuBh3uBJeVUT8D5wx5ZSox5QoLFCc/uhsr3
+         lv/gTsql5u6rEMsmnfoUJpE8eO7iBkbTVdbrG/1IbQTVW4Np8hE+g+FRTe66LjdNnlri
+         D2+hq7W1GHXts0of04WVCnzcpKmtSzj0wgJx/OF/YirnGf/cl0LcXQ6seYauTz48vDqO
+         vNnoNfdvC57bOfhZOlqjshcJj6HsO+jx9kSadtfa7vnb3edUZfY/IqInwje+vuaBZVVl
+         dEUmpjzDkc9BO3POU6kYpHh4SgXwcMvK5bqQzWtQ7QLH/X5OJVISr5QzmxDKWmwGzvv3
+         twgQ==
+X-Forwarded-Encrypted: i=1; AHgh+RouEhCvi1lEZC0alCUkOSR7//EUb8EUMeG7/L3gTjwuxxIqy3CJt3OHOz8fdDz6UNQpPsLMRPNjqFE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFX29mQWtdgIXb1xN88Vm6xOEgh++zQFf/jVJE+N3YKtrMo61/
+	gOSh0WwzSA5xPxSWtDDIHM4T54zpZ69K6J4dg6kWdvKTFW/so/+K2ULgI+JJSVQjOH4=
+X-Gm-Gg: AfdE7clCwhBKBbVV+bTfZsSoNmIGm6uiZGiMEtuqti+PAL3wjPj0zONKetgD6D8NrwB
+	0aybXcqJObgFaA2rDUEV3zRQh7LyfKoqJWBdL/+HUeHFFr0VVB7Qn3Dq5M2vqtLTiS6KgjCZDy/
+	rSHUXIb0MsVdNOmxSml5L0RNNAyz7eXGzAGU9kqo/3b/Kf17jRsfV7OMZNwinqqa1VbNnDPE1zw
+	ITV2uY7bKE7tDYKQlDEdxoRCj5KmHynrtR3m4p0VL0x9JRzqPTBiRAawcCSjB4frY1idApX40lc
+	JeaqArXGSehMm81rjRO29x5B211Oe1cK/u+LngFeWMxPpF4+OeKDadOOk4XVFTLYcyLhQ2nm+FY
+	dIvgGvGz2iWqhYmtnMiX8T2wqJvUisRFZU6mMnj3H+J8cdyxITLN2WgC/Ib0xTc6Vj5jNA+1P9S
+	HwWXvo1NgovnMaq6McCd6koSZwLtqgZ4IuNLSiVbF4/YK9XxwphT6BjoPnULOQghY=
+X-Received: by 2002:a05:620a:4713:b0:92b:67e6:4b66 with SMTP id af79cd13be357-930b416d8f5mr1564037585a.61.1784576086371;
+        Mon, 20 Jul 2026 12:34:46 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-930b545e47bsm957792285a.35.2026.07.20.12.34.41
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-930b545e47bsm957792285a.35.2026.07.20.12.34.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2026 12:34:43 -0700 (PDT)
+        Mon, 20 Jul 2026 12:34:45 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: Zhigang.Luo@amd.com,
@@ -138,9 +137,9 @@ Cc: Zhigang.Luo@amd.com,
 	damon@lists.linux.dev,
 	linux-kselftest@vger.kernel.org,
 	kernel-team@meta.com
-Subject: [PATCH v5 02/36] mm/page_alloc: refactor build_node_zonelist() out of build_zonelists()
-Date: Mon, 20 Jul 2026 15:33:56 -0400
-Message-ID: <20260720193431.3841992-3-gourry@gourry.net>
+Subject: [PATCH v5 03/36] mm/page_alloc: let the bulk and folio allocators carry alloc_flags
+Date: Mon, 20 Jul 2026 15:33:57 -0400
+Message-ID: <20260720193431.3841992-4-gourry@gourry.net>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260720193431.3841992-1-gourry@gourry.net>
 References: <20260720193431.3841992-1-gourry@gourry.net>
@@ -152,102 +151,228 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Extract per-node fallback-list construction into build_node_zonelist().
+__alloc_pages_noprof() takes an explicit alloc_flags, but the bulk and
+folio entry points do not, so callers cannot select allocator behaviour
+(e.g. an alternate zonelist) through them.
 
-This lets use build zonelists from candidate nodemasks instead of just
-the default N_MEMORY node state list.
+Thread alloc_flags through both, matching __alloc_pages_noprof(), and
+keep the flag-carrying primitives mm-internal (page_alloc.h) so the
+public gfp.h wrappers stay flag-free:
 
-No functional change: build_zonelists() builds the same FALLBACK list over
-N_MEMORY with node_load updates as before.
+ - add __alloc_pages_bulk_noprof(gfp, alloc_flags, ...) in page_alloc.h
+   alloc_pages_bulk_noprof() becomes a wrapper passing ALLOC_DEFAULT
+
+ - give __folio_alloc_noprof() an alloc_flags parameter and moves
+   __folio_alloc_node_noprof() moves into page_alloc.c
+   __folio_alloc_noprof() is no longer exported
+
+No functional change: every caller passes ALLOC_DEFAULT.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- mm/page_alloc.c | 44 ++++++++++++++++++++++++++++++--------------
- 1 file changed, 30 insertions(+), 14 deletions(-)
+ include/linux/gfp.h | 13 +------------
+ mm/khugepaged.c     |  2 +-
+ mm/migrate.c        |  2 +-
+ mm/page_alloc.c     | 46 ++++++++++++++++++++++++++++++---------------
+ mm/page_alloc.h     |  8 ++++++++
+ 5 files changed, 42 insertions(+), 29 deletions(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index acf096f525f49..4c1ef84c02a3d 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5813,12 +5813,12 @@ int find_next_best_node_in(int node, nodemask_t *used_node_mask,
-  * DMA zone, if any--but risks exhausting DMA zone.
-  */
- static void build_zonelists_in_node_order(pg_data_t *pgdat, int *node_order,
--		unsigned nr_nodes)
-+		unsigned int nr_nodes, int zlidx)
- {
- 	struct zoneref *zonerefs;
- 	int i;
+diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+index 872bc53f32ec8..a327e58c313f8 100644
+--- a/include/linux/gfp.h
++++ b/include/linux/gfp.h
+@@ -204,10 +204,6 @@ static inline void arch_free_page(struct page *page, int order) { }
+ static inline void arch_alloc_page(struct page *page, int order) { }
+ #endif
  
--	zonerefs = pgdat->node_zonelists[ZONELIST_FALLBACK]._zonerefs;
-+	zonerefs = pgdat->node_zonelists[zlidx]._zonerefs;
- 
- 	for (i = 0; i < nr_nodes; i++) {
- 		int nr_zones;
-@@ -5847,26 +5847,28 @@ static void build_thisnode_zonelists(pg_data_t *pgdat)
- 	zonerefs->zone_idx = 0;
+-struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int preferred_nid,
+-		nodemask_t *nodemask);
+-#define __folio_alloc(...)			alloc_hooks(__folio_alloc_noprof(__VA_ARGS__))
+-
+ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
+ 				nodemask_t *nodemask, int nr_pages,
+ 				struct page **page_array);
+@@ -252,14 +248,7 @@ static inline void warn_if_node_offline(int this_node, gfp_t gfp_mask)
+ 	dump_stack();
  }
  
--static void build_zonelists(pg_data_t *pgdat)
-+/*
-+ * Build one node-ordered fallback list from a candidate nodemask.
-+ * update_load round-robins node_load across equidistant nodes.
-+ */
-+static void build_node_zonelist(pg_data_t *pgdat, const nodemask_t *candidates,
-+				int zlidx, bool update_load,
-+				int *node_order, int *nr)
- {
--	static int node_order[MAX_NUMNODES];
--	int node, nr_nodes = 0;
- 	nodemask_t used_mask = NODE_MASK_NONE;
--	int local_node, prev_node;
+-static inline
+-struct folio *__folio_alloc_node_noprof(gfp_t gfp, unsigned int order, int nid)
+-{
+-	warn_if_node_offline(nid, gfp);
 -
--	/* NUMA-aware ordering of nodes */
--	local_node = pgdat->node_id;
--	prev_node = local_node;
-+	int local_node = pgdat->node_id;
-+	int prev_node = local_node;
-+	int node, nr_nodes = 0;
+-	return __folio_alloc_noprof(gfp, order, nid, NULL);
+-}
+-
++struct folio *__folio_alloc_node_noprof(gfp_t gfp, unsigned int order, int nid);
+ #define  __folio_alloc_node(...)		alloc_hooks(__folio_alloc_node_noprof(__VA_ARGS__))
  
--	memset(node_order, 0, sizeof(node_order));
- 	while ((node = find_next_best_node_in(local_node, &used_mask,
--					      &node_states[N_MEMORY])) >= 0) {
-+					      candidates)) >= 0) {
- 		/*
- 		 * We don't want to pressure a particular node.
- 		 * So adding penalty to the first node in same
- 		 * distance group to make it round-robin.
- 		 */
--		if (node_distance(local_node, node) !=
-+		if (update_load &&
-+		    node_distance(local_node, node) !=
- 		    node_distance(local_node, prev_node))
- 			node_load[node] += 1;
+ /*
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 27e8f3077e80f..89ce6bcbc376b 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1243,7 +1243,7 @@ static enum scan_result alloc_charge_folio(struct folio **foliop, struct mm_stru
+ 	int node = collapse_find_target_node(cc);
+ 	struct folio *folio;
  
-@@ -5874,8 +5876,22 @@ static void build_zonelists(pg_data_t *pgdat)
- 		prev_node = node;
- 	}
+-	folio = __folio_alloc(gfp, order, node, &cc->alloc_nmask);
++	folio = __folio_alloc(gfp, order, node, &cc->alloc_nmask, ALLOC_DEFAULT);
+ 	if (!folio) {
+ 		*foliop = NULL;
+ 		if (is_pmd_order(order))
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 60355be9f652c..a8a86141dbb54 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -2231,7 +2231,7 @@ struct folio *alloc_migration_target(struct folio *src, unsigned long private)
+ 	if (is_highmem_idx(zidx) || zidx == ZONE_MOVABLE)
+ 		gfp_mask |= __GFP_HIGHMEM;
  
--	build_zonelists_in_node_order(pgdat, node_order, nr_nodes);
-+	build_zonelists_in_node_order(pgdat, node_order, nr_nodes, zlidx);
-+	*nr = nr_nodes;
-+}
+-	return __folio_alloc(gfp_mask, order, nid, mtc->nmask);
++	return __folio_alloc(gfp_mask, order, nid, mtc->nmask, ALLOC_DEFAULT);
+ }
+ 
+ #ifdef CONFIG_NUMA_MIGRATION
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 4c1ef84c02a3d..aa35bbe5d4c3e 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5103,8 +5103,8 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
+  * @page_array were set to %NULL on entry, the slots from 0 to the return value
+  * - 1 will be filled.
+  */
+-unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
+-			nodemask_t *nodemask, int nr_pages,
++unsigned long __alloc_pages_bulk_noprof(gfp_t gfp, unsigned int alloc_flags,
++			int preferred_nid, nodemask_t *nodemask, int nr_pages,
+ 			struct page **page_array)
+ {
+ 	struct page *page;
+@@ -5112,8 +5112,8 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
+ 	struct zoneref *z;
+ 	struct per_cpu_pages *pcp;
+ 	struct list_head *pcp_list;
+-	struct alloc_context ac;
+-	unsigned int alloc_flags = ALLOC_WMARK_LOW;
++	struct alloc_context ac = { .alloc_flags = alloc_flags };
++	unsigned int fastpath_alloc_flags = alloc_flags | ALLOC_WMARK_LOW;
+ 	int nr_populated = 0, nr_account = 0;
+ 
+ 	/*
+@@ -5153,7 +5153,7 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
+ 
+ 	/* May set ALLOC_NOFRAGMENT, fragmentation will return 1 page. */
+ 	gfp &= gfp_allowed_mask;
+-	if (!prepare_alloc_pages(gfp, 0, preferred_nid, nodemask, &ac, &gfp, &alloc_flags))
++	if (!prepare_alloc_pages(gfp, 0, preferred_nid, nodemask, &ac, &gfp, &fastpath_alloc_flags))
+ 		goto out;
+ 
+ 	/* Find an allowed local zone that meets the low watermark. */
+@@ -5161,7 +5161,7 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
+ 	for_next_zone_zonelist_nodemask(zone, z, ac.highest_zoneidx, ac.nodemask) {
+ 		unsigned long mark;
+ 
+-		if (cpusets_enabled() && (alloc_flags & ALLOC_CPUSET) &&
++		if (cpusets_enabled() && (fastpath_alloc_flags & ALLOC_CPUSET) &&
+ 		    !__cpuset_zone_allowed(zone, gfp)) {
+ 			continue;
+ 		}
+@@ -5171,16 +5171,17 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
+ 			goto failed;
+ 		}
+ 
+-		cond_accept_memory(zone, 0, alloc_flags);
++		cond_accept_memory(zone, 0, fastpath_alloc_flags);
+ retry_this_zone:
+-		mark = wmark_pages(zone, alloc_flags & ALLOC_WMARK_MASK) + nr_pages - nr_populated;
++		mark = wmark_pages(zone, fastpath_alloc_flags & ALLOC_WMARK_MASK) +
++		       nr_pages - nr_populated;
+ 		if (zone_watermark_fast(zone, 0,  mark,
+ 				zonelist_zone_idx(ac.preferred_zoneref),
+-				alloc_flags, gfp)) {
++				fastpath_alloc_flags, gfp)) {
+ 			break;
+ 		}
+ 
+-		if (cond_accept_memory(zone, 0, alloc_flags))
++		if (cond_accept_memory(zone, 0, fastpath_alloc_flags))
+ 			goto retry_this_zone;
+ 
+ 		/* Try again if zone has deferred pages */
+@@ -5212,7 +5213,7 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
+ 			continue;
+ 		}
+ 
+-		page = __rmqueue_pcplist(zone, 0, ac.migratetype, alloc_flags,
++		page = __rmqueue_pcplist(zone, 0, ac.migratetype, fastpath_alloc_flags,
+ 								pcp, pcp_list);
+ 		if (unlikely(!page)) {
+ 			/* Try and allocate at least one page */
+@@ -5238,11 +5239,19 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
+ 	return nr_populated;
+ 
+ failed:
+-	page = __alloc_pages_noprof(gfp, 0, preferred_nid, nodemask, ALLOC_DEFAULT);
++	page = __alloc_pages_noprof(gfp, 0, preferred_nid, nodemask, alloc_flags);
+ 	if (page)
+ 		page_array[nr_populated++] = page;
+ 	goto out;
+ }
 +
-+static void build_zonelists(pg_data_t *pgdat)
++unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
++			nodemask_t *nodemask, int nr_pages,
++			struct page **page_array)
 +{
-+	static int node_order[MAX_NUMNODES];
-+	int local_node = pgdat->node_id;
-+	int node, nr_nodes = 0;
++	return __alloc_pages_bulk_noprof(gfp, ALLOC_DEFAULT, preferred_nid,
++					 nodemask, nr_pages, page_array);
++}
+ EXPORT_SYMBOL_GPL(alloc_pages_bulk_noprof);
+ 
+ /*
+@@ -5433,13 +5442,20 @@ struct page *alloc_pages_node_noprof(int nid, gfp_t gfp_mask, unsigned int order
+ EXPORT_SYMBOL(alloc_pages_node_noprof);
+ 
+ struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int preferred_nid,
+-		nodemask_t *nodemask)
++		nodemask_t *nodemask, unsigned int alloc_flags)
+ {
+ 	struct page *page = __alloc_pages_noprof(gfp | __GFP_COMP, order,
+-					preferred_nid, nodemask, ALLOC_DEFAULT);
++					preferred_nid, nodemask, alloc_flags);
+ 	return page_rmappable_folio(page);
+ }
+-EXPORT_SYMBOL(__folio_alloc_noprof);
 +
-+	memset(node_order, 0, sizeof(node_order));
++struct folio *__folio_alloc_node_noprof(gfp_t gfp, unsigned int order, int nid)
++{
++	warn_if_node_offline(nid, gfp);
 +
-+	build_node_zonelist(pgdat, &node_states[N_MEMORY], ZONELIST_FALLBACK,
-+			    true, node_order, &nr_nodes);
- 	build_thisnode_zonelists(pgdat);
++	return __folio_alloc_noprof(gfp, order, nid, NULL, ALLOC_DEFAULT);
++}
++EXPORT_SYMBOL(__folio_alloc_node_noprof);
+ 
+ /*
+  * Common helper functions. Never use with __GFP_HIGHMEM because the returned
+diff --git a/mm/page_alloc.h b/mm/page_alloc.h
+index b9259deddb59d..23fc79ce97b60 100644
+--- a/mm/page_alloc.h
++++ b/mm/page_alloc.h
+@@ -258,6 +258,14 @@ struct page *__alloc_pages_noprof(gfp_t gfp, unsigned int order, int preferred_n
+ 		nodemask_t *nodemask, unsigned int alloc_flags);
+ #define __alloc_pages(...)			alloc_hooks(__alloc_pages_noprof(__VA_ARGS__))
+ 
++struct folio *__folio_alloc_noprof(gfp_t gfp, unsigned int order, int preferred_nid,
++		nodemask_t *nodemask, unsigned int alloc_flags);
++#define __folio_alloc(...)			alloc_hooks(__folio_alloc_noprof(__VA_ARGS__))
 +
- 	pr_info("Fallback order for Node %d: ", local_node);
- 	for (node = 0; node < nr_nodes; node++)
- 		pr_cont("%d ", node_order[node]);
++unsigned long __alloc_pages_bulk_noprof(gfp_t gfp, unsigned int alloc_flags,
++		int preferred_nid, nodemask_t *nodemask, int nr_pages,
++		struct page **page_array);
++
+ extern void zone_pcp_reset(struct zone *zone);
+ extern void zone_pcp_disable(struct zone *zone);
+ extern void zone_pcp_enable(struct zone *zone);
 -- 
 2.53.0-Meta
 
