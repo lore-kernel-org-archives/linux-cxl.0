@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBD342CB1E;
-	Mon, 20 Jul 2026 21:59:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6D839D6DA;
+	Mon, 20 Jul 2026 22:02:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784584793; cv=none; b=JDyd3w3KmurwM5PWWM6itfOe8lbAgOdWg47lHqI52YFWc+FvGQdHu0csyrq7F87kph9nehHLau812XL3IYFJPiGH+anUqCwNrtSFwKhgnnRuG7LixH3MXIWyp2f2mVd5KWbrrgSL7qMFXRKWqrsw+vbZpPKGoKgrVr2zgj3HY0M=
+	t=1784584949; cv=none; b=K9oiteYf90I7TyhmIrFFSmaSpCOYecapjP1MazsOiCN2qGw430iCH5T0HOhFwySsUEhaFJIusjFuyIRZRPO5G5Vf2I/9ncMSynb19K/nVRYCisZQtkedxlmhMWrtU+IDd8IuDCKr/aynSv+vXka7ouC9d+sYW/Fth1fAajcMgi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784584793; c=relaxed/simple;
-	bh=D0ckuBsCZ74OC823vK3qxIRyTeNiJP9v8oSt51s2Hgk=;
+	s=arc-20240116; t=1784584949; c=relaxed/simple;
+	bh=ElidOuKi/lhVoMHuisWulB2Ej7l5oNTcYCEHGdMRC/4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AiN3FpWWnOSCqcWrwKQRpEqkxQEqPE4IDnm4+/gUzxfvzB72bAj9/mDQxyXL44QJw4zv9Jos/295gEral48j8/X4NIkq7FI069+MsoZLdXQFKkMdgfef8+Ys8ku/euvYXNuIUq/QOhSaVe5jnoRfwYCMP3kqIRdSh1Um1KUMjGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HovYPW6f; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=Sq6vg7SiziXTwletvG8t23xWYYCUJgULqYFzqzX9uH8TFAFYth2HwKe/hEV6unluHwzj8AhpWBInbpa50RYfni3UMfUAI6HOq9ZaAHQnI5Ayf1ZJIhkjHSyWFIrm3ZKJAmiAAh0RBjwOOLU2gaUdmhI9vkBLFmdouTQpkTgCY4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+2U5CnU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HovYPW6f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54BDE1F000E9;
-	Mon, 20 Jul 2026 21:59:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+2U5CnU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47AB61F000E9;
+	Mon, 20 Jul 2026 22:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784584792;
-	bh=a6WrH1AIy+EK4Fw2+FOXO+vq75HdWci5vwL+qT5Ta4Y=;
+	s=k20260515; t=1784584947;
+	bh=6cs7LhaOrHnB/OaGU/+xy3diNyVqHofixZTfSSyjrGs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=HovYPW6fiGWU66tFqNtu10vR52vWnoSaRI54L1LrC4I0aVd0QRg+vUmQ6KiDtwjvZ
-	 TO0PAWlZsD7CMYmkyByMojv4kkBywjFyKfnIFf6XjlHTQL3slD56ml8qapzjClmrYB
-	 YzG2nKCgab0hIvV9d/PMc1TW867aJRarEZvrWwC5lFJzXZ7JxejAoRn+vBYRzT70lW
-	 9OegIrsEsQVmSHl/qYhSIrqpBfs0u9tKN4DQsAHY/BpMukSI5G59QOS13hx3b8KcvK
-	 buuADXN5TGdAsb0lWmfcBDqebyBB+EegeKhn8uQTzYZNR/Uox5nVmN9jCI2nimSKmQ
-	 kfmWnzUy9zPQg==
-Date: Mon, 20 Jul 2026 22:59:43 +0100
+	b=a+2U5CnUbrj+JzvFAXU+vwi4g6TkNykWxDqU1QodrcuosBXdGMdV5IKvLI5ADTTEB
+	 ZAXpIVMzHuvIc4ET6+IHyKMbJjYdZFXC/LdVSBIBFTi9ngKoaPF6fyecRUAjO80NHk
+	 vv4lQ098TM28m5u8iZzmAy0x/xDaZAO7pvPS0eZnkTnSYFkjOwkYI+JlvoswH0OXSZ
+	 pgbNN2KlkFoALigw4h1AbtEpE1WIL8Y0nFBMJUk0w8TEMj4UxvdN+NtSiHRKCWx3Pg
+	 TmycMTeyZM1RZEbIULPT/XeBndPmudjGkE5d8RV9gC9oPQQ59hPbdlstiUXLbjK5b6
+	 94RCWGg8Vyi9A==
+Date: Mon, 20 Jul 2026 23:02:19 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Terry Bowman <terry.bowman@amd.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, Dan Williams <djbw@kernel.org>,
@@ -50,12 +50,12 @@ Cc: Bjorn Helgaas <bhelgaas@google.com>, Dan Williams <djbw@kernel.org>,
  Shuai Xue <xueshuai@linux.alibaba.com>, Smita Koralahalli
  <Smita.KoralahalliChannabasappa@amd.com>, Tony Luck <tony.luck@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [PATCH v18 03/13] cxl: Tighten CPER kfifo registration API and
- symbol visibility
-Message-ID: <20260720225943.0415d43c@jic23-huawei>
-In-Reply-To: <20260717222706.3540281-4-terry.bowman@amd.com>
+Subject: Re: [PATCH v18 04/13] cxl: Rename find_cxl_port() to
+ find_cxl_port_by_dport()
+Message-ID: <20260720230219.632420c1@jic23-huawei>
+In-Reply-To: <20260717222706.3540281-5-terry.bowman@amd.com>
 References: <20260717222706.3540281-1-terry.bowman@amd.com>
-	<20260717222706.3540281-4-terry.bowman@amd.com>
+	<20260717222706.3540281-5-terry.bowman@amd.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -66,55 +66,25 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 17 Jul 2026 17:26:56 -0500
+On Fri, 17 Jul 2026 17:26:57 -0500
 Terry Bowman <terry.bowman@amd.com> wrote:
 
 > From: Dan Williams <djbw@kernel.org>
 > 
-Hi Terry, Dan,
-
-There are a few different things in here. Having them all together
-may make it a little harder to keep track of the different changes.
-
-> Tighten the CPER protocol error kfifo registration API and symbol
-> visibility.
+> find_cxl_port() and find_cxl_port_by_uport() are internal port lookup
+> functions that search the CXL bus by dport and uport respectively, but
+> their names do not make the lookup method clear.
 > 
-> Use EXPORT_SYMBOL_FOR_MODULES() instead of EXPORT_SYMBOL_NS_GPL() for
-> the CPER kfifo registration symbols. This names the consuming module
-> explicitly and gives compile-time enforcement.
-To me this is one patch.
-> 
-> Drop the work_struct argument from the unregister path. Change the
-> WARN_ONCE condition to a NULL check since there is no caller pointer
-> to compare against anymore.
+> Rename find_cxl_port() to find_cxl_port_by_dport() to make the lookup
+> method explicit and consistent with find_cxl_port_by_uport(). Both
+> functions remain static to port.c; the upcoming patch that adds the
+> first cross-file caller will widen their scope.
 
-This is one.
+Could have mentioned the __ one, but it is fairly obvious why you did
+that even without saying it.
 
-> 
-> Change register/unregister return types to void. Flag double registration
-> with WARN_ONCE() inside the lock instead of returning an error.
-Another change.
-
-That covers why for the register, for unregister maybe mention it was
-unchecked anyway.
-
-> 
-> Change cxl_ras_init() to void because there is one consumer and one producer
-> so the error return was unnecessary. Remove the now-dead error check in
-> cxl_core_init().
-This is change
-
-> 
-> Add a diagnostic log when the driver is not bound in
-> cxl_cper_handle_prot_err().
-Unrelated really to all the rest. 
-
-All nice changes and maybe a few of them can be combined but to me this
-is too many in one.  Anyhow I might be letting perfect be enemy of
-good and all that so if others think it should go in as one then
-I'm fine with that.
-
-Trivial thing inline todo with formatting consistency.
+Nice improvement
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 
 > 
 > Co-developed-by: Terry Bowman <terry.bowman@amd.com>
@@ -124,38 +94,67 @@ Trivial thing inline todo with formatting consistency.
 > ---
 > 
 > Changes in v17 -> v18:
-> - New patch.
+> - New commit
 > ---
->  drivers/acpi/apei/ghes.c | 32 +++++++++++++++-----------------
->  drivers/cxl/core/core.h  |  7 ++-----
->  drivers/cxl/core/port.c  |  6 +-----
->  drivers/cxl/core/ras.c   | 12 +++++++-----
->  include/cxl/event.h      | 17 ++++++-----------
->  5 files changed, 31 insertions(+), 43 deletions(-)
+>  drivers/cxl/core/port.c | 20 ++++++++++++++------
+>  1 file changed, 14 insertions(+), 6 deletions(-)
 > 
-> diff --git a/include/cxl/event.h b/include/cxl/event.h
-> index ff97fea718d2c..3471d4f75c025 100644
-> --- a/include/cxl/event.h
-> +++ b/include/cxl/event.h
-> @@ -287,10 +287,10 @@ struct cxl_cper_prot_err_work_data {
-
-> -static inline int cxl_cper_register_prot_err_work(struct work_struct *work)
-> +static inline void cxl_cper_register_prot_err_work(struct work_struct *work)
->  {
-> -	return 0;
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index f90f899c31d07..cadb51f70f854 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1379,7 +1379,7 @@ static int match_port_by_dport(struct device *dev, const void *data)
+>  	return dport != NULL;
 >  }
-
-I'd go a bit long and move { } up.  Compact stubs are always nice!
-
-
-> -static inline int cxl_cper_unregister_prot_err_work(struct work_struct *work)
-> +static inline void cxl_cper_unregister_prot_err_work(void)
-
-This one is shorter than the one you did it for above!
-
+>  
+> -static struct cxl_port *__find_cxl_port(struct cxl_find_port_ctx *ctx)
+> +static struct cxl_port *__find_cxl_port_by_dport(struct cxl_find_port_ctx *ctx)
 >  {
-> -	return 0;
+>  	struct device *dev;
+>  
+> @@ -1392,8 +1392,16 @@ static struct cxl_port *__find_cxl_port(struct cxl_find_port_ctx *ctx)
+>  	return NULL;
 >  }
->  static inline int cxl_cper_prot_err_kfifo_get(struct cxl_cper_prot_err_work_data *wd)
+>  
+> -static struct cxl_port *find_cxl_port(struct device *dport_dev,
+> -				      struct cxl_dport **dport)
+> +/**
+> + * find_cxl_port_by_dport - find a cxl_port by one of its targets
+> + * @dport_dev: device representing the dport target
+> + * @dport: optional output of the 'struct cxl_dport' companion of the @dport_dev
+> + *
+> + * Return a 'struct cxl_port' with an elevated reference if found. Use
+> + * __free(put_cxl_port) to release.
+> + */
+> +static struct cxl_port *find_cxl_port_by_dport(struct device *dport_dev,
+> +					       struct cxl_dport **dport)
 >  {
+>  	struct cxl_find_port_ctx ctx = {
+>  		.dport_dev = dport_dev,
+> @@ -1401,7 +1409,7 @@ static struct cxl_port *find_cxl_port(struct device *dport_dev,
+>  	};
+>  	struct cxl_port *port;
+>  
+> -	port = __find_cxl_port(&ctx);
+> +	port = __find_cxl_port_by_dport(&ctx);
+>  	return port;
+>  }
+>  
+> @@ -1895,14 +1903,14 @@ EXPORT_SYMBOL_NS_GPL(devm_cxl_enumerate_ports, "CXL");
+>  struct cxl_port *cxl_pci_find_port(struct pci_dev *pdev,
+>  				   struct cxl_dport **dport)
+>  {
+> -	return find_cxl_port(pdev->dev.parent, dport);
+> +	return find_cxl_port_by_dport(pdev->dev.parent, dport);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_pci_find_port, "CXL");
+>  
+>  struct cxl_port *cxl_mem_find_port(struct cxl_memdev *cxlmd,
+>  				   struct cxl_dport **dport)
+>  {
+> -	return find_cxl_port(grandparent(&cxlmd->dev), dport);
+> +	return find_cxl_port_by_dport(grandparent(&cxlmd->dev), dport);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cxl_mem_find_port, "CXL");
+>  
 
