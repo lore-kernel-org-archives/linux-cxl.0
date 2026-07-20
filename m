@@ -1,283 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF6E391838;
-	Mon, 20 Jul 2026 03:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8662391838;
+	Mon, 20 Jul 2026 03:57:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784519825; cv=none; b=lNQUkec0nf95eshqVDnQL52xhJNbDNxvYPNn0au/7KlaGd+dXnBHObyxs9Hal+3hiVs2Egcz5kBAaB/oHfef3hky63Y4QMu0tpHSsyAsqNqRPMdMxg9fisKRF8Bz2YRo3Q80DPp+MlMW8W+vk3T2GAmrmE1GXFERDdDbK2LmH1Y=
+	t=1784519830; cv=none; b=TKuB3IhqFxPMfTechL3sHXhB8w+kk7U+O9s9QWwnkN2dOejqKCIXwBpIqc4g0FSwE4Dy4bXTKeonYRJMtcA9lYXv9HYrJUkEvuvaj0oPBIQmQgEGzMbFBQAMDZzNIXe5Z94xGFvkvKP/Su3i/+RqDyPnQeQP3XIb4BCTWkKSqJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784519825; c=relaxed/simple;
-	bh=gUb1RE3R0w7S6C8TpPrz+FSTQjV+viFY95tz0zd1C/k=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=iPPCTS/sZ7YI/KD4P5cmqU4j5esXtGpy0xaAM/ARZJsrRsjoK88mV5DnRdHcb5uE45XrSMjHw2MOvb0fjgWwvZx+4RlgxBCPbCAeAW0JLyB+VoK7u+cuyMA7I3S9bWfUMdmIxE1P8+JFF2liSz4y2prT+9TycbB3Rqe4qHB+ceU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GhKTF0YM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784519830; c=relaxed/simple;
+	bh=FGNZk1B/g4lSat+TD26du1p5U+sjvBqH3Ks8aOh02zY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VDDrvXcw6O1yOwYYXjdhclSA0t19Lr+2mCLfK1tML3w6c/4L7N9OPYo1JYT4l1iDtjyyv7vNFnmGz0zDykutJ2aj8NOptyhbLJl27lhvagYLdzHzkRrl8d+2wqi4r9LeacFSZ0Sek4rJzjEJhRoVQ/GC+3/UiVc9u74RcrEombk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=J0VSyJYM; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GhKTF0YM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D96F01F000E9;
-	Mon, 20 Jul 2026 03:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784519824;
-	bh=0oUzMAJKYmlpoHfxjiK+N+cGfjOjJ5XURT1pYrsEWsg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GhKTF0YMV29yOL/VxTs/Qj6FGN3XqZgBZjxuV87QsYPdqvyhGcwHyccl7Q/2N519x
-	 NxYaYGm9AJBSfD+J9df/jfEnlXC8aK3rf3W5HaDJ+QS9Ph/qJWs/YFl14PaxQ7M6Ht
-	 53aCI7G2HHTsgtuQmeJe1iLYlNAGeVz09B+FdYW0aMW9YaiWnx11Fal3zqC7lO6h0L
-	 jipOAyTm+1NPLk7l8V5QlOkDpBFcq2DnIEcRCsg33qM+JhR+R4phGxpMdx0IRULofO
-	 qkTFpNkn6ctjOWVsq2QCZG2zY1YYKiody7ejvCfIPazYi02eVq6Su9rU4E95Wc1pyw
-	 ePynKBJSGb0RQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V11 6/9] famfs_fuse: Plumb dax iomap and fuse
- read/write/mmap
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "John Groves" <john@jagalactic.com>
-Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-In-Reply-To: <0100019f7da1cf3d-bb04c043-a09f-4925-bf63-eb92452871e5-000000@email.amazonses.com>
-References: <0100019f7d9fbe81-6cb16662-2522-47ea-a152-fab0ee3d9b35-000000@email.amazonses.com>
- <20260720034616.68834-1-john@jagalactic.com>
- <0100019f7da1cf3d-bb04c043-a09f-4925-bf63-eb92452871e5-000000@email.amazonses.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Jul 2026 03:57:03 +0000
-Message-Id: <20260720035703.D96F01F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="J0VSyJYM"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4BDEF1476;
+	Sun, 19 Jul 2026 20:57:02 -0700 (PDT)
+Received: from [10.164.18.31] (unknown [10.164.18.31])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 704733F86F;
+	Sun, 19 Jul 2026 20:57:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1784519826; bh=FGNZk1B/g4lSat+TD26du1p5U+sjvBqH3Ks8aOh02zY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=J0VSyJYMiKo7Ps1MrSM5R8ut41wweptSyPHSMZAEhYOtEB6Cs+vGlWMrR/jYAVHSj
+	 6UyedudCsLMg6q3dfLnWV+ZqC8ohsH0H2iGS7C8qCUD77Tl5BL0tLY95j6VBl8nvVd
+	 RGB1Lgqyp/kJkNIhIcKY6sLhZoLrGf6ypVdie34o=
+Message-ID: <153f7a44-b995-4001-a2af-b576656963a1@arm.com>
+Date: Mon, 20 Jul 2026 09:26:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/mm: Check the requested PFN range during memoroy
+ removal
+To: Richard Cheng <icheng@nvidia.com>, catalin.marinas@arm.com,
+ will@kernel.org
+Cc: ryan.roberts@arm.com, ardb@kernel.org, kevin.brodsky@arm.com,
+ yang@os.amperecomputing.com, chaitanyas.prakash@arm.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, newtonl@nvidia.com, kristinc@nvidia.com,
+ mochs@nvidia.com, kaihengf@nvidia.com, kobak@nvidia.com
+References: <20260720020655.9607-1-icheng@nvidia.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20260720020655.9607-1-icheng@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
-s) to consider:
-- [Critical] famfs_fuse_write_iter and famfs_fuse_read_iter completely bypa=
-ss mandatory VFS locking, security privilege stripping, and POSIX semantics.
-- [High] famfs_fuse_mmap fails to set the VM_MIXEDMAP flag, guaranteeing a =
-BUG_ON() crash during DAX page faults.
-- [High] Explicitly returning -EIO for splice operations on famfs files bre=
-aks standard system calls like sendfile() and splice().
-- [High] 32-bit architectures suffer from silent data truncation due to the=
- use of size_t and off_t for 64-bit file offsets and sizes.
-- [Medium] Concurrent, lockless modification of `meta->error` in `famfs_fil=
-e_bad()` creates a data race.
---
 
---- Patch [6]: [PATCH V11 6/9] famfs_fuse: Plumb dax iomap and fuse read/wr=
-ite/mmap ---
-commit 26226f89d9106affa50e5f7fc0a4be4656c4531c
-Author: John Groves <john@groves.net>
 
-famfs_fuse: Plumb dax iomap and fuse read/write/mmap
+On 20/07/26 7:36 AM, Richard Cheng wrote:
+> prevent_memory_remove_notifier() advances pfn while checking whether the
+> range contains early memory. After the loop, pfn points to end_pfn, but
+> it is passed to can_unmap_without_split(). This checks the range
+> immediately after the requested memory instead of the range being
+> offlined.
 
-This commit adds read, write, and mmap support for famfs files using the
-dev_dax_iomap interface. It handles file offset resolution and page faults
-via DAX upcalls.
+can_unmap_without_split() ends up checking 'a memory range' after
+the actual range being offlined, because pfn could have gone past
+end_pfn by the time it exists the loop. This is wrong and was not
+intended.
 
-> diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
-> index a2a7dd631dc0f..ac56317944d93 100644
-> --- a/fs/fuse/famfs.c
-> +++ b/fs/fuse/famfs.c
+> 
+> Consequently, valid requests can be rejected with shifted address range,
+> while an unsafe request can be accepted when the following range is
+> unmapped. This was observed with CXL DAX memory, where the final memory
+> block was incorrectly allowed offline.
 
-[ ... ]
+Agreed.
+> 
+> Pass arg->start_pfn so the leaf-split check examines the requested
 
-> +static int
-> +famfs_fileofs_to_daxofs(struct inode *inode, struct iomap *iomap,
-> +			loff_t file_offset, off_t len, unsigned int flags)
-> +{
+Pass arg->start_pfn into can_unmap_without_split().
+> range.
 
-[Severity: High]
-Does defining the len parameter as off_t truncate the mapping length on 32-=
-bit
-systems?
+Although the explanations above are correct, the wording in the
+commit message could have been better.
+> 
+> Fixes: 95a58852b0e5 ("arm64/mm: Reject memory removal that splits a kernel leaf mapping")
 
-[ ... ]
+Correct commit ID for attribution.
 
-> +const struct vm_operations_struct famfs_file_vm_ops =3D {
-> +	.fault		=3D famfs_filemap_fault,
-> +	.huge_fault	=3D famfs_filemap_huge_fault,
-> +	.map_pages	=3D filemap_map_pages,
+> Signed-off-by: Richard Cheng <icheng@nvidia.com>
+> ---
+> The bug occurred on a machine with CXL Type-3 device.
+> Branch: cxl-next
+> 
+> Before 95a58852b0e5:
+> 
+> """
+> $ sudo echo offline > memory557056/state
+> write error: Operation not permitted
+> $ sudo dmesg
+> ---[snip]---
+> [440008000000 440010000000] splits a leaf entry in linear map
+> 
+> $ sudo echo offline > memory558079/state
+> $ cat memory558079/state
+> offline
+> """
+> 
+> After:
+> """
+> $ sudo echo offline > memory557056/state
+> write error: Operation not permitted
+> [440000000000 440008000000] splits a leaf entry in linear map
+> 
+> $ sudo echo offline > memory558079/state
+> write error: Operation not permitted
+> [441ff8000000 442000000000] splits a leaf entry in linear map
 
-[Severity: High]
-Is it correct to assign a page-cache-specific mapping function here? Since
-DAX mappings bypass the page cache, using filemap_map_pages might lead to
-unexpected behavior.
+Seems exactly as would have been expected.
+> 
+> My fix corrects the checked range and prevents the false acceptance.
 
-> +	.page_mkwrite	=3D famfs_filemap_mkwrite,
-> +	.pfn_mkwrite	=3D famfs_filemap_mkwrite,
-> +};
+> 
+> Best regards,
+> Richard Cheng.
+> ---
+>  arch/arm64/mm/mmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index a25d8beacc83..18a8b0d3714e 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -2194,7 +2194,7 @@ static int prevent_memory_remove_notifier(struct notifier_block *nb,
+>  		}
+>  	}
+>  
+> -	if (!can_unmap_without_split(pfn, arg->nr_pages))
+> +	if (!can_unmap_without_split(arg->start_pfn, arg->nr_pages))
+>  		return NOTIFY_BAD;
+>  
+>  	return NOTIFY_OK;
+> 
+> base-commit: 5ca04f3ba91f1773bbd5da6d9c654ccc1ba7831d
 
-[ ... ]
-
-> +static int
-> +famfs_file_bad(struct inode *inode)
-> +{
-> +	struct fuse_inode *fi =3D get_fuse_inode(inode);
-> +	struct famfs_file_meta *meta =3D fi->famfs_meta;
-> +	size_t i_size =3D i_size_read(inode);
-> +
-> +	if (!meta) {
-> +		pr_err("%s: un-initialized famfs file\n", __func__);
-> +		return -EIO;
-> +	}
-> +	if (meta->error) {
-> +		pr_debug("%s: previously detected metadata errors\n", __func__);
-> +		return -EIO;
-> +	}
-> +	if (i_size !=3D meta->file_size) {
-> +		pr_warn("%s: i_size overwritten from %ld to %ld\n",
-> +		       __func__, meta->file_size, i_size);
-> +		meta->error =3D true;
-
-[Severity: Medium]
-Can concurrent I/O operations cause a data race on meta->error? Since read
-and write paths can execute without the inode lock, multiple threads might
-modify this flag simultaneously.
-
-> +		return -ENXIO;
-> +	}
-
-[ ... ]
-
-> +static ssize_t
-> +famfs_fuse_rw_prep(struct kiocb *iocb, struct iov_iter *ubuf)
-> +{
-> +	struct inode *inode =3D iocb->ki_filp->f_mapping->host;
-> +	size_t i_size =3D i_size_read(inode);
-
-[Severity: High]
-Might reading i_size_read() into a size_t truncate the 64-bit value on 32-b=
-it
-platforms? This would break I/O bounds checking for files larger than 4GB.
-This also applies to the file_size field in the famfs_file_meta structure if
-it is similarly defined as size_t.
-
-> +	size_t count =3D iov_iter_count(ubuf);
-> +	size_t max_count;
-> +	ssize_t rc;
-
-[ ... ]
-
-> +ssize_t
-> +famfs_fuse_read_iter(struct kiocb *iocb, struct iov_iter	*to)
-> +{
-> +	ssize_t rc;
-> +
-> +	rc =3D famfs_fuse_rw_prep(iocb, to);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (!iov_iter_count(to))
-> +		return 0;
-> +
-> +	rc =3D dax_iomap_rw(iocb, to, &famfs_iomap_ops);
-
-[Severity: Critical]
-Does this read path need to acquire inode_lock_shared()? The standard VFS
-read paths typically acquire it before calling dax_iomap_rw().
-
-> +
-> +	file_accessed(iocb->ki_filp);
-> +	return rc;
-> +}
-> +
-> +ssize_t
-> +famfs_fuse_write_iter(struct kiocb *iocb, struct iov_iter *from)
-> +{
-> +	ssize_t rc;
-> +
-> +	rc =3D famfs_fuse_rw_prep(iocb, from);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (!iov_iter_count(from))
-> +		return 0;
-> +
-> +	return dax_iomap_rw(iocb, from, &famfs_iomap_ops);
-> +}
-
-[Severity: Critical]
-Does this write path omit mandatory VFS security and integrity checks?
-Calling dax_iomap_rw() directly without acquiring inode_lock() bypasses
-generic_write_checks() and file_remove_privs(), which could allow
-unprivileged modification of setuid/setgid files and bypass O_APPEND
-restrictions.
-
-> +int
-> +famfs_fuse_mmap(struct file *file, struct vm_area_struct *vma)
-> +{
-> +	struct inode *inode =3D file_inode(file);
-> +	ssize_t rc;
-> +
-> +	rc =3D famfs_file_bad(inode);
-> +	if (rc)
-> +		return rc;
-> +
-> +	file_accessed(file);
-> +	vma->vm_ops =3D &famfs_file_vm_ops;
-> +	vm_flags_set(vma, VM_HUGEPAGE);
-
-[Severity: High]
-Could this trigger a kernel panic during DAX page faults? The
-vmf_insert_mixed() path expects VM_MIXEDMAP or VM_PFNMAP to be set on the
-vma, but VM_MIXEDMAP appears to be omitted here.
-
-> +	return 0;
-> +}
-
-[ ... ]
-
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index b4e7b6a645870..2435a79cbb4a3 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-
-[ ... ]
-
-> @@ -1896,9 +1900,13 @@ static ssize_t fuse_splice_read(struct file *in, l=
-off_t *ppos,
->  				unsigned int flags)
->  {
->  	struct fuse_file *ff =3D in->private_data;
-> +	struct inode *inode =3D file_inode(in);
-> +	struct fuse_inode *fi =3D get_fuse_inode(inode);
-> =20
->  	/* FOPEN_DIRECT_IO overrides FOPEN_PASSTHROUGH */
-> -	if (fuse_file_passthrough(ff) && !(ff->open_flags & FOPEN_DIRECT_IO))
-> +	if (fuse_file_famfs(fi))
-> +		return -EIO; /* famfs does not use the page cache... */
-
-[Severity: High]
-Will returning -EIO break standard system calls like splice() and sendfile()
-for famfs files? Should this fall back to iter_file_splice_read() or
-copy_splice_read() instead?
-
-> +	else if (fuse_file_passthrough(ff) && !(ff->open_flags & FOPEN_DIRECT_I=
-O))
->  		return fuse_passthrough_splice_read(in, ppos, pipe, len, flags);
->  	else
->  		return filemap_splice_read(in, ppos, pipe, len, flags);
-> @@ -1908,9 +1916,13 @@ static ssize_t fuse_splice_write(struct pipe_inode=
-_info *pipe, struct file *out,
->  				 loff_t *ppos, size_t len, unsigned int flags)
->  {
->  	struct fuse_file *ff =3D out->private_data;
-> +	struct inode *inode =3D file_inode(out);
-> +	struct fuse_inode *fi =3D get_fuse_inode(inode);
-> =20
->  	/* FOPEN_DIRECT_IO overrides FOPEN_PASSTHROUGH */
-> -	if (fuse_file_passthrough(ff) && !(ff->open_flags & FOPEN_DIRECT_IO))
-> +	if (fuse_file_famfs(fi))
-> +		return -EIO; /* famfs does not use the page cache... */
-
-[Severity: High]
-Does hardcoding -EIO here also break splice writes? Falling back to
-iter_file_splice_write() might be required to keep standard system calls
-functioning.
-
-> +	else if (fuse_file_passthrough(ff) && !(ff->open_flags & FOPEN_DIRECT_I=
-O))
->  		return fuse_passthrough_splice_write(pipe, out, ppos, len, flags);
->  	else
->  		return iter_file_splice_write(pipe, out, ppos, len, flags);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0100019f7d9fbe81-6c=
-b16662-2522-47ea-a152-fab0ee3d9b35-000000@email.amazonses.com?part=3D6
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
