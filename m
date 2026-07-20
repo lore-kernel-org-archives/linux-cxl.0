@@ -1,144 +1,255 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8662391838;
-	Mon, 20 Jul 2026 03:57:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A2D2E62B3;
+	Mon, 20 Jul 2026 03:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784519830; cv=none; b=TKuB3IhqFxPMfTechL3sHXhB8w+kk7U+O9s9QWwnkN2dOejqKCIXwBpIqc4g0FSwE4Dy4bXTKeonYRJMtcA9lYXv9HYrJUkEvuvaj0oPBIQmQgEGzMbFBQAMDZzNIXe5Z94xGFvkvKP/Su3i/+RqDyPnQeQP3XIb4BCTWkKSqJc=
+	t=1784519989; cv=none; b=B3jPL5h8M0eHW+bXJL9uFocOYEJx+ea25LDZpkjIPUnNsJX9Pdy4xsow0BNj9mSrcc1f9NtFUD2Efjeg6YTc97ldDYeoTmiot4x8QoIGq72uvDya0PCWXZUilWq409BYMwTkp1//jfQjXKUdFoUexlvm6LZ+SBT3xCctyim8w0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784519830; c=relaxed/simple;
-	bh=FGNZk1B/g4lSat+TD26du1p5U+sjvBqH3Ks8aOh02zY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VDDrvXcw6O1yOwYYXjdhclSA0t19Lr+2mCLfK1tML3w6c/4L7N9OPYo1JYT4l1iDtjyyv7vNFnmGz0zDykutJ2aj8NOptyhbLJl27lhvagYLdzHzkRrl8d+2wqi4r9LeacFSZ0Sek4rJzjEJhRoVQ/GC+3/UiVc9u74RcrEombk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=J0VSyJYM; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1784519989; c=relaxed/simple;
+	bh=suP9phJOtkRNZmQBS5n7Y4F/PetVyMOwOc9xZr62waw=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=iH6DhxPtQRuPawbonrWyeaxItj3YPbfTRb/35UCvfAxG/YDpw3kFAEugme22BqnZyxMq0pMYhRgoE3mcgLP9i5F28eIheq4/dPEJoVqBT7z7ltQ3yyT6/bElCQAnVCZpdSJIHdwS2olW1Kqp6nwr758ykOuCVyUioHJ6nKUmLEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AcGBVPzZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="J0VSyJYM"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4BDEF1476;
-	Sun, 19 Jul 2026 20:57:02 -0700 (PDT)
-Received: from [10.164.18.31] (unknown [10.164.18.31])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 704733F86F;
-	Sun, 19 Jul 2026 20:57:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1784519826; bh=FGNZk1B/g4lSat+TD26du1p5U+sjvBqH3Ks8aOh02zY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=J0VSyJYMiKo7Ps1MrSM5R8ut41wweptSyPHSMZAEhYOtEB6Cs+vGlWMrR/jYAVHSj
-	 6UyedudCsLMg6q3dfLnWV+ZqC8ohsH0H2iGS7C8qCUD77Tl5BL0tLY95j6VBl8nvVd
-	 RGB1Lgqyp/kJkNIhIcKY6sLhZoLrGf6ypVdie34o=
-Message-ID: <153f7a44-b995-4001-a2af-b576656963a1@arm.com>
-Date: Mon, 20 Jul 2026 09:26:59 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AcGBVPzZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CBFA1F000E9;
+	Mon, 20 Jul 2026 03:59:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784519987;
+	bh=Is6uVOPHI3S1LTVsEalhveXaEtJ+ThxDXMEMjY7neOw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=AcGBVPzZTBfhDRwUi4k2U+5DkuQ0FPZqvCMl+aHZThh85ocTUZGJribegBxEUJ/z7
+	 YfBsSBatM2AWw5VF5I+/5npXIqOWNGz4yZd3XBNCgztDn2Bp/ypzIE+Sa3a2IunWx7
+	 +l4N5E1GXEGbO9AhImDru/hG9OMmAr8PD5fsLhFVn7G0mnvn4TUrebihdqHYMSwZbq
+	 fAi2UWklt8cV7NweZ9ySKhFby+sUSxLSEXD2ft6e4JtkZwAAlKhjgrBKHsbpjmOsZt
+	 l+1d8aZ5rXz9zNfC7hixrHtRTHyEYOaAdo63ksH29aQniWtARGVgKlbOUub7ya8ja3
+	 UlTNO0Ozq1B5g==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH V11 4/9] famfs_fuse: Create files with famfs fmaps
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "John Groves" <john@jagalactic.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
+In-Reply-To: <0100019f7da174eb-4cd0f3ae-59da-4533-b469-6eee009a22bd-000000@email.amazonses.com>
+References: <0100019f7d9fbe81-6cb16662-2522-47ea-a152-fab0ee3d9b35-000000@email.amazonses.com>
+ <20260720034553.68798-1-john@jagalactic.com>
+ <0100019f7da174eb-4cd0f3ae-59da-4533-b469-6eee009a22bd-000000@email.amazonses.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 20 Jul 2026 03:59:46 +0000
+Message-Id: <20260720035947.3CBFA1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64/mm: Check the requested PFN range during memoroy
- removal
-To: Richard Cheng <icheng@nvidia.com>, catalin.marinas@arm.com,
- will@kernel.org
-Cc: ryan.roberts@arm.com, ardb@kernel.org, kevin.brodsky@arm.com,
- yang@os.amperecomputing.com, chaitanyas.prakash@arm.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, newtonl@nvidia.com, kristinc@nvidia.com,
- mochs@nvidia.com, kaihengf@nvidia.com, kobak@nvidia.com
-References: <20260720020655.9607-1-icheng@nvidia.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20260720020655.9607-1-icheng@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+Thank you for your contribution! Sashiko AI review found 7 potential issue(=
+s) to consider:
+- [High] File size and extent lengths are truncated to 32 bits on 32-bit ar=
+chitectures, leading to file size corruption and validation bypass.
+- [High] Premature publication of DAX metadata allows concurrent threads to=
+ observe an incomplete initialization state.
+- [High] Modifying `inode->i_flags` directly with bitwise operations bypass=
+es the required `inode->i_lock` spinlock, causing lost updates.
+- [Medium] Unvalidated FUSE server input passed directly to `BIT_ULL()` cau=
+ses a shift-out-of-bounds, leading to Undefined Behavior.
+- [Medium] The `famfs_file_meta` and its extent array are allocated without=
+ `__GFP_ACCOUNT`, allowing unbounded kernel memory consumption.
+- [Low] `famfs_meta_set()` incorrectly returns `struct fuse_backing *` inst=
+ead of `void *`.
+- [Low] Ineffective concurrency check using `cmpxchg()` on a local stack va=
+riable.
+--
 
+--- Patch [4]: [PATCH V11 4/9] famfs_fuse: Create files with famfs fmaps ---
+commit 293d4aeecd8b2f11982375cde3643693ae41f5d0
+Author: John Groves <john@groves.net>
 
-On 20/07/26 7:36 AM, Richard Cheng wrote:
-> prevent_memory_remove_notifier() advances pfn while checking whether the
-> range contains early memory. After the loop, pfn points to end_pfn, but
-> it is passed to can_unmap_without_split(). This checks the range
-> immediately after the requested memory instead of the range being
-> offlined.
+famfs_fuse: Create files with famfs fmaps
 
-can_unmap_without_split() ends up checking 'a memory range' after
-the actual range being offlined, because pfn could have gone past
-end_pfn by the time it exists the loop. This is wrong and was not
-intended.
+This commit interprets the fmap retrieved by GET_FMAP into the in-memory
+metadata that later patches use to resolve read/write/mmap directly to dax.
+It adds the fmap wire format, in-memory structures, and metadata
+allocation logic.
 
-> 
-> Consequently, valid requests can be rejected with shifted address range,
-> while an unsafe request can be accepted when the following range is
-> unmapped. This was observed with CXL DAX memory, where the final memory
-> block was incorrectly allowed offline.
+> diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
+> index 80e6640ac970b..8f7ee7d6151bb 100644
+> --- a/fs/fuse/famfs.c
+> +++ b/fs/fuse/famfs.c
+[ ... ]
+> @@ -14,13 +14,244 @@
+[ ... ]
+> +	struct famfs_file_meta *meta __free(__famfs_meta_free) =3D kzalloc(size=
+of(*meta), GFP_KERNEL);
 
-Agreed.
-> 
-> Pass arg->start_pfn so the leaf-split check examines the requested
+[Severity: Medium]
+Is it intentional to omit the __GFP_ACCOUNT flag here? A single DAX file can
+have up to 32,768 extents, and unprivileged containerized processes could
+repeatedly open FUSE DAX files to trigger these allocations. Adding
+__GFP_ACCOUNT would ensure these allocations are charged to the memory cgro=
+up.
 
-Pass arg->start_pfn into can_unmap_without_split().
-> range.
+> +
+> +	if (!meta)
+> +		return -ENOMEM;
+> +
+> +	meta->error =3D false;
+> +	meta->file_type =3D fmh->file_type;
+> +	meta->file_size =3D fmh->file_size;
+> +
+> +	switch (fmh->ext_type) {
+> +	case FUSE_FAMFS_EXT_SIMPLE: {
+> +		struct fuse_famfs_simple_ext *se_in;
+> +
+> +		se_in =3D fmap_buf + next_offset;
+> +
+> +		/* Move past simple extents */
+> +		next_offset +=3D fmh->nextents * sizeof(*se_in);
+> +		if (next_offset > fmap_buf_size) {
+> +			pr_err("%s:%d: fmap_buf underflow offset/size %ld/%ld\n",
+> +			       __func__, __LINE__, next_offset, fmap_buf_size);
+> +			return -EINVAL;
+> +		}
+> +
+> +		meta->fm_nextents =3D fmh->nextents;
+> +
+> +		meta->se =3D kcalloc(meta->fm_nextents, sizeof(*(meta->se)),
+> +				   GFP_KERNEL);
 
-Although the explanations above are correct, the wording in the
-commit message could have been better.
-> 
-> Fixes: 95a58852b0e5 ("arm64/mm: Reject memory removal that splits a kernel leaf mapping")
+[Severity: Medium]
+Should this variable-length extent array allocation also include the
+__GFP_ACCOUNT flag? It could consume substantial memory per file.
 
-Correct commit ID for attribution.
+> +		if (!meta->se)
+> +			return -ENOMEM;
+> +
+> +		for (i =3D 0; i < fmh->nextents; i++) {
+> +			meta->se[i].dev_index  =3D se_in[i].se_devindex;
+> +			meta->se[i].ext_offset =3D se_in[i].se_offset;
+> +			meta->se[i].ext_len    =3D se_in[i].se_len;
+> +
+> +			/* Record bitmap of referenced daxdev indices */
+> +			meta->dev_bitmap |=3D BIT_ULL(meta->se[i].dev_index);
 
-> Signed-off-by: Richard Cheng <icheng@nvidia.com>
-> ---
-> The bug occurred on a machine with CXL Type-3 device.
-> Branch: cxl-next
-> 
-> Before 95a58852b0e5:
-> 
-> """
-> $ sudo echo offline > memory557056/state
-> write error: Operation not permitted
-> $ sudo dmesg
-> ---[snip]---
-> [440008000000 440010000000] splits a leaf entry in linear map
-> 
-> $ sudo echo offline > memory558079/state
-> $ cat memory558079/state
-> offline
-> """
-> 
-> After:
-> """
-> $ sudo echo offline > memory557056/state
-> write error: Operation not permitted
-> [440000000000 440008000000] splits a leaf entry in linear map
-> 
-> $ sudo echo offline > memory558079/state
-> write error: Operation not permitted
-> [441ff8000000 442000000000] splits a leaf entry in linear map
+[Severity: Medium]
+Could this trigger a shift-out-of-bounds if the FUSE server provides a
+dev_index >=3D 64? There doesn't appear to be a bounds check on
+se_in[i].se_devindex prior to this bitwise shift operation.
 
-Seems exactly as would have been expected.
-> 
-> My fix corrects the checked range and prevents the false acceptance.
+[ ... ]
+> +	/* More sanity checks */
+> +	if (extent_total < meta->file_size) {
+> +		pr_err("%s: file size %ld larger than map size %ld\n",
+> +		       __func__, meta->file_size, extent_total);
+> +		return -EINVAL;
+> +	}
 
-> 
-> Best regards,
-> Richard Cheng.
-> ---
->  arch/arm64/mm/mmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index a25d8beacc83..18a8b0d3714e 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -2194,7 +2194,7 @@ static int prevent_memory_remove_notifier(struct notifier_block *nb,
->  		}
->  	}
->  
-> -	if (!can_unmap_without_split(pfn, arg->nr_pages))
-> +	if (!can_unmap_without_split(arg->start_pfn, arg->nr_pages))
->  		return NOTIFY_BAD;
->  
->  	return NOTIFY_OK;
-> 
-> base-commit: 5ca04f3ba91f1773bbd5da6d9c654ccc1ba7831d
+[Severity: High]
+Can this comparison bypass validation on 32-bit architectures? In
+struct famfs_file_meta, file_size is defined as a size_t, which is 32 bits
+on those systems. The FUSE wire format provides it as a 64-bit integer,
+so any file size > 4GB could be silently truncated. Would it be better
+to declare file_size as a 64-bit type like loff_t or u64?
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> +
+> +	if (cmpxchg(metap, NULL, meta) !=3D NULL) {
+> +		pr_debug("%s: fmap race detected\n", __func__);
+> +		return 0; /* fmap already installed */
+> +	}
+
+[Severity: Low]
+Is this race detection effective here? metap points to the local stack vari=
+able
+declared as struct famfs_file_meta *meta =3D NULL; in famfs_file_init_dax().
+Because it is an unshared local variable, the cmpxchg will always succeed,
+rendering this branch dead code.
+
+[ ... ]
+> +int
+> +famfs_file_init_dax(
+> +	struct fuse_mount *fm,
+> +	struct inode *inode,
+> +	void *fmap_buf,
+> +	size_t fmap_size)
+> +{
+> +	struct fuse_inode *fi =3D get_fuse_inode(inode);
+> +	struct famfs_file_meta *meta =3D NULL;
+> +	int rc;
+> +
+> +	if (fi->famfs_meta) {
+> +		pr_notice("%s: i_no=3D%llu fmap_size=3D%zu ALREADY INITIALIZED\n",
+> +			  __func__,
+> +			  inode->i_ino, fmap_size);
+> +		return 0;
+> +	}
+
+[Severity: High]
+Can concurrent threads observe an incomplete initialization state here?
+
+If thread A publishes the metadata pointer via famfs_meta_set() but has
+not yet fully initialized i_size and S_DAX, thread B could evaluate
+fi->famfs_meta as true and immediately return.
+
+Thread B might then proceed to read() and locklessly evaluate IS_DAX(inode)
+as false, falling back to the non-DAX page cache path.
+
+[ ... ]
+> +	/* Publish the famfs metadata on fi->famfs_meta */
+> +	inode_lock(inode);
+> +
+> +	if (famfs_meta_set(fi, meta) =3D=3D NULL) {
+> +		i_size_write(inode, meta->file_size);
+> +		inode->i_flags |=3D S_DAX;
+
+[Severity: High]
+Can this direct bitwise modification of inode->i_flags cause lost updates?
+
+The modification is performed without holding inode->i_lock. Since FUSE
+can concurrently modify i_flags in fuse_change_attributes_common() while
+holding fi->lock, this could result in a data race.
+
+Should this use inode_set_flags() or set_mask_bits() instead?
+
+> diff --git a/fs/fuse/famfs_kfmap.h b/fs/fuse/famfs_kfmap.h
+> index 0000000000000..d87b065e8ac83
+> --- /dev/null
+> +++ b/fs/fuse/famfs_kfmap.h
+[ ... ]
+> +struct famfs_file_meta {
+> +	bool                   error;
+> +	enum famfs_file_type   file_type;
+> +	size_t                 file_size;
+
+[Severity: High]
+Does this type cause truncation on 32-bit systems? The FUSE wire format
+struct fuse_famfs_fmap_header provides file_size as a uint64_t, but size_t
+is 32 bits on 32-bit architectures.
+
+> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> index 5bacc50986203..46a7040b38dc4 100644
+> --- a/fs/fuse/fuse_i.h
+> +++ b/fs/fuse/fuse_i.h
+[ ... ]
+> @@ -1364,7 +1367,10 @@ static inline struct fuse_backing *famfs_meta_set(=
+struct fuse_inode *fi,
+
+[Severity: Low]
+Does famfs_meta_set() return the wrong type? It is declared to return a
+struct fuse_backing *, but cmpxchg(&fi->famfs_meta, NULL, meta) returns a
+void *.
+
+> =20
+>  static inline void famfs_meta_free(struct fuse_inode *fi)
+>  {
+> -	famfs_meta_set(fi, NULL);
+> +	if (fi->famfs_meta !=3D NULL) {
+> +		__famfs_meta_free(fi->famfs_meta);
+> +		WRITE_ONCE(fi->famfs_meta, NULL);
+> +	}
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/0100019f7d9fbe81-6c=
+b16662-2522-47ea-a152-fab0ee3d9b35-000000@email.amazonses.com?part=3D4
