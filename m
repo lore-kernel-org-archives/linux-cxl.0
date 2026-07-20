@@ -1,64 +1,63 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1F54963DA
-	for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 19:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 930C949551A
+	for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 19:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784576144; cv=none; b=D8NrbY3IuAaNgl4CP56sQEqMBd3HtItZAgr53ves/jApD4No+kMzUZ1dRPVr98BzWlxaxLurZXmEBYZF8j151csdSD9/EBShuP2EcQAeBBLClVtwbAdoHaahwizeexwKHzXrcSa+tNmYVcO4h4C9NH346DNTSmdGKpeIG6Eh4ns=
+	t=1784576147; cv=none; b=AgUlOChu7eDkDTAu7bEVV07flHc8BoVaBB/l6nw+tFMK5rHfCRoSt9AOx1OxuUyddUckx+boVAxuIOIcBJIUgXgHUTywKGuQdksjqP3b3DW8xelOGfGDG3u1EtDauOgyZUNSGwQIh0RG2Il8HlXbTrzzPdZteLuaroq6UU2P6ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784576144; c=relaxed/simple;
-	bh=4zcS+WScYQPwZyM+xiHJlRsISzjdbehehXpn4Ix1F20=;
+	s=arc-20240116; t=1784576147; c=relaxed/simple;
+	bh=yY8vdYfrcyLR9od9JeL4axrrxakrg2eLNX+2tZcvV5k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A32pjjWy5mwitYUUsGFXMUUkMSIBcXVtvMRwmpJYVC2AK9Ca+NvgI9WNHUk0n8KqorEOxWH9rW5k7qWIUXBqms2Ditef/x9ISevRnsvPeIFrubCgp/Zb7LAY14M4+Gsvzw/3AO4imAcuB/7GRQg/pgF+wVKiWSKXTJW0wsXyfiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=VxO8BlYZ; arc=none smtp.client-ip=209.85.222.182
+	 MIME-Version; b=QsdJKq3vzyphup0/IvSSDaTfbXcoCKGLDetA3ealj0Sgy97XZkKj/v28b444rezJPokGJIpoCj+mn95u7sYKep5rUEAms2hijWbfOUBdDqFYOej+eypFQ2TaMI/dmhNlTw84N/jVAqrgrnmV7UYe9+oJmqVi+u5LNE61gR8z7o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=TDymSED3; arc=none smtp.client-ip=209.85.222.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="VxO8BlYZ"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-92e6391b114so567549785a.3
-        for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 12:35:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="TDymSED3"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-92e50c5d14cso756416585a.2
+        for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 12:35:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1784576138; x=1785180938; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1784576142; x=1785180942; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=KyXKxKoPetSKUj/EMCvw6yCRblDu/3mrIttJowkuK3Y=;
-        b=VxO8BlYZBs2PxviIR4POMtkxgvXfoSVhFrreMn3GW0RTQ/sRuUDROF6NeddrqNfxQl
-         Xx6HGa6ImPNsOhohdMoHyvb90oU1sgjnuirSs3REP4GVVSDTBZyFec3BAZJP0DmzWoVv
-         Fy2FNCQTUvppEj+WgRqfZla8zgJsfOc/2ynw/ThM3y6g+PhEgJgbviGPDxG47j3u1Z6g
-         xXHUJ81ivjfp8e0bjlbTMq5X2MV1af0SrSexIOISA6GotWUadFNbEy8xStT5+VX4kccR
-         XmrOJesGs9CMqNOYEGi/uABzi1yg5xwqpfIL4KMVzffK8wcJ+SQZDGa2Hk9FggoNa9yt
-         AhuQ==
+        bh=QJBiGb0Mu/jlRkqoocYqUCBCgZwlU5de7y2L/NJU7rM=;
+        b=TDymSED3K2LEuJHTs2e2VKvHgiEh4y/rSOShx9Hiybg3g3oKl0N+buiHhzd10pAq4Z
+         q25WC+g4rotWXqcsdGmVsBIQT3OEvVfHGQjsLYnTUjMWu97ZoVGA/eDthfUJMocZpPRD
+         wbfdjB+wEBJce4bUBhIQtjk66yP4x9GqeYMh3cz0fXkJ0eRyL4QIshs7Csi51vB5jppw
+         yTpzUP17ek2NRKQSe4Vd8q04g/yWLqH64z0zWFEhTx5sZGRtSyJ+zVqcE/GYm30wBkgD
+         4LYQAy06Rbf+34BglL0JUJELnRW0tUfambsWcgEmvP+TC35bB5oscBdEMzekjlMYG6gG
+         Ecxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784576138; x=1785180938;
+        d=1e100.net; s=20251104; t=1784576142; x=1785180942;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=KyXKxKoPetSKUj/EMCvw6yCRblDu/3mrIttJowkuK3Y=;
-        b=OAsYvE+SbNe49Yir1tov0AHWvD+0CgXNwukRC6Pg1LZbF1AlzYweolKqaQ1GXAf2hB
-         N58elnaPvRLAwBQaSvHOMMhn5m9yGa4YxIFbFda1VeICTBIArqG+kbVBBEExAWk+dOF6
-         zM8uO7vzAp4dMHw3g6w6X3PVD2NUbS7eaxyg7ITsLajRg2x5waZXsnJ9Qef6yaNRKesM
-         YBZm+bon3V98JOT4nAEmqF7vJxs0IoFIQg4MGEChTpcPOD3wE0wndKKkadDbQ+iT8Brl
-         SoCtcswPYUgFNc9FMWvXI4QcUgpuwBViO55EgnSaTBTSzouR2SdapKl7NmiXWGgrLYvB
-         ZkZg==
-X-Forwarded-Encrypted: i=1; AHgh+RpqDIwZYA8BGTXRoKmTobNOgJMAt2ZlmVM8g28Ao9NFpg9MLhjpdl3cRtjkabWLM/nLdpsjdz8NFmo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp3Byj6q4UQpgUHA6rpnY1hyYdwUABYYyS1G7gjCFZO6V2C9lc
-	Ra2Cx4dUM14um3IjDXE5vhgqi1jaVdYdhBe0Th+XLq/aADLYH5wjez5Jc5wS9mJ7MzA=
-X-Gm-Gg: AfdE7clcVMGACXhayyasGud43DPNWdqrQniRJYQHAcVAdvhOJfgYr6gsqJgvXoW28kx
-	61RauJSjcii/JOEUMnP25hyFOK4jCG5DtBlIRMGeiRisvv27M19zY5yTEo9wRgzRTa8P6Qgw150
-	boHHN/sE52fXCoj7FEWk3LlmYLLXubFxeVzkKIKUY2sTIf41A2v/rBpMAZMKQwKBOHd7EGrB1Zw
-	h03RVp+nqjnMUoTNaCXoM54xHiauN2WSJgathjvcXBIrVk9+nEh0b3xXpBFDQwxP5sGNHF3PLhF
-	cGIJFZVx5FDLC14QLaGRUrY1r1/p17wzY72sJcmh2fyw1+gSu5V/oIIu0HewLbjQyx/Du32Epqp
-	UqNFADriqdXLwskU8HLVHVk6ly5QelGYLoIvE/9ZzJIDZlPEjWWDuMOiq2mIEqTxOOchD10ukCc
-	GjX0gwNiWqNQG+rZg8duZs5CWYOuIVNZQ6HHKFGwJSmq60nVjokN+51oeZNL3gxajMi1LrSL4xy
-	Q==
-X-Received: by 2002:a05:620a:44c2:b0:930:a963:da73 with SMTP id af79cd13be357-930b419edc2mr1559559685a.50.1784576138219;
-        Mon, 20 Jul 2026 12:35:38 -0700 (PDT)
+        bh=QJBiGb0Mu/jlRkqoocYqUCBCgZwlU5de7y2L/NJU7rM=;
+        b=W+kDC0eBI3MMaiFee6uAYwyCxaQoxOCgkPs1+NxYNCANksdfsHoka8oW45u3qzzSjK
+         BzRJY2vflg9694MF93OFgl0Ec0fTvuyA6m9nTEv3cSZvJs8KxEkel1TbyBPm1/aLrVy6
+         DLxXxhtU1Tystx5fcD2cbBbwDE26QnbXg+lTYJkWy3mmY8K92TPWcHoqw3AJC8qrwdZP
+         MRVZWh+/xT1IoRZMc5s7iRvaN2VIGjkpO+mxBj5RLOAA/22w0IwF0y46+iBV0SpnBIWt
+         hNIDkAfsA2LVmxGin2dpYymP2Z1E1Ye1HukNHIhbvl0VvAAPEYvNbWmO2+uLxUtX1UMu
+         Vc1A==
+X-Forwarded-Encrypted: i=1; AHgh+RoNXCAu3amMdnfdk4cabZFML1X5eMT0+mIh33jnqU04SJ1Tt8Jcun9wyvy/KjAzkNGMS50ZQEpK9fA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXJI0w4sCmzszM51/raae85XOX4ZbxghpYQvyHSvTshPg+peJn
+	DykY1X/iGTVtl76r64f7MBF/tXSIeW2q1i8a65vXBkFoH2KtLn39X3DoyV4qT3BaJHc=
+X-Gm-Gg: AfdE7ckR24ZTAFYNr+piFUlxlKPIQzx7wb+4WpR9Dz9gApToTeXs3xmeCtYdY99Qr8W
+	wv2P+fBKW4xd/O4kOBT+6qZgOO8n32jIuUtK1prlmJ5iXasi/W9yK/4fx4vOFBTJBgJUCozJd/w
+	+twKdWMz0NwRazUcJNrCNF38hANis//NG5OdfWPUQBRyrDEHQ/PvjZyYYf/TDuhGAQURXktSR+0
+	//n+DNBbC15OQ8j89BwLHM6R+Jloqvu06wcisbeic/ujLL9+KN672d9h6QYtzQwuxqKXen59lzN
+	qKDWe68zPCZWJF9RdPyU33v2HwRWnBg2YoaMwzjzu7pIbcD3F9i+Ft/lB2z0iMkJZQx45oIG7I1
+	si1mcjU+nJl+OxrDMKa/GqBIvn/7sI1IxHiQQnjI/XZQ09T+kGL6l8o2g9M/RhVDgXV3Gc0RPGZ
+	YJtBiYz3NtDUEkXlbxshQz0MAFaXLzLdSGEnbHM0sajrpyImOnggP9oMMmagoH2X8=
+X-Received: by 2002:a05:620a:370d:b0:930:ab28:945c with SMTP id af79cd13be357-930b41df2e2mr1633607185a.50.1784576140803;
+        Mon, 20 Jul 2026 12:35:40 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-930b545e47bsm957792285a.35.2026.07.20.12.35.36
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-930b545e47bsm957792285a.35.2026.07.20.12.35.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2026 12:35:37 -0700 (PDT)
+        Mon, 20 Jul 2026 12:35:40 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: Zhigang.Luo@amd.com,
@@ -138,9 +137,9 @@ Cc: Zhigang.Luo@amd.com,
 	damon@lists.linux.dev,
 	linux-kselftest@vger.kernel.org,
 	kernel-team@meta.com
-Subject: [PATCH v5 23/36] mm/mempolicy: apply policy at the kernel zone for private-node binds
-Date: Mon, 20 Jul 2026 15:34:17 -0400
-Message-ID: <20260720193431.3841992-24-gourry@gourry.net>
+Subject: [PATCH v5 24/36] mm/mempolicy: add in-kernel MPOL_BIND interfaces for drivers/services
+Date: Mon, 20 Jul 2026 15:34:18 -0400
+Message-ID: <20260720193431.3841992-25-gourry@gourry.net>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260720193431.3841992-1-gourry@gourry.net>
 References: <20260720193431.3841992-1-gourry@gourry.net>
@@ -152,105 +151,200 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-apply_policy_zone() raises dynamic_policy_zone to ZONE_MOVABLE when none
-of a policy's nodes have non-movable memory, so a bind to movable-only
-node does not force kernel-zone allocations onto a zone that cannot
-satisfy them - resulting retries forever (livelock).
+Add and export interfaces to enable modules to build a mempolicy with
+(MPOL_BIND | MPOL_F_PRIVATE) pinned to a private NUMA node, so the
+drivers can stamp it onto VMAs they control (via vma->vm_policy).
 
-The current code uses N_HIGH_MEMORY to denote eligibility, but private
-nodes are deliberately not in N_HIGH_MEMORY nor N_NORMAL_MEMORY. This
-means a private node onlined into ZONE_NORMAL is judged as movable-only.
+  mpol_bind_node()    - acts the same as a userland mbind()
+  mpol_private_bind() - bypasses the CAP_USER_NUMA check.
 
-This means a policy set with set_mempolicy() binding a private node with
-ZONE_NORMAL memory will shunt otherwise eligible allocations (like the
-task's page tables) back to N_MEMORY nodes.
+Export it to modules (private:kmem, bind:kvm).
 
-This also becomes relevant for in-kernel users that want non-movable
-memory (such as KVM placing pinned VM memory solely on a private node).
+Widen __mpol_put()'s module export to kmem so the driver can
+release the policy.
 
-Add policy_private_has_kernel_zone() to consult the actual zones of
-the policy's private nodes and keep the policy applied at lower zones
-when a kernel-zoned private node can satisfy the allocation.
-
-Only a mempolicy binding a private node pays the zone scan, all other
-mempolicies preserve fast-path performance.
-
-Additionally: update the comments in apply_policy_zone for clarity,
-because this particular policy mechanism is very confusing.
+Adjust mpol_set_nodemask to check for a pre-set MPOL_F_PRIVATE flag
+to allow the mpol_private_bind() check to bypass the N_MEMORY filter.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- mm/mempolicy.c | 48 ++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 42 insertions(+), 6 deletions(-)
+ include/linux/mempolicy.h |  14 ++++++
+ mm/mempolicy.c            | 102 +++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 114 insertions(+), 2 deletions(-)
 
+diff --git a/include/linux/mempolicy.h b/include/linux/mempolicy.h
+index 65c732d440d2f..715951a5b03c1 100644
+--- a/include/linux/mempolicy.h
++++ b/include/linux/mempolicy.h
+@@ -7,6 +7,7 @@
+ #define _LINUX_MEMPOLICY_H 1
+ 
+ #include <linux/sched.h>
++#include <linux/err.h>
+ #include <linux/mmzone.h>
+ #include <linux/slab.h>
+ #include <linux/rbtree.h>
+@@ -128,6 +129,9 @@ void mpol_free_shared_policy(struct shared_policy *sp);
+ struct mempolicy *mpol_shared_policy_lookup(struct shared_policy *sp,
+ 					    pgoff_t idx);
+ 
++struct mempolicy *mpol_private_bind(int nid);
++struct mempolicy *mpol_bind_node(int nid);
++
+ struct mempolicy *get_task_policy(struct task_struct *p);
+ struct mempolicy *__get_vma_policy(struct vm_area_struct *vma,
+ 		unsigned long addr, pgoff_t *ilx);
+@@ -226,6 +230,16 @@ mpol_shared_policy_lookup(struct shared_policy *sp, pgoff_t idx)
+ 	return NULL;
+ }
+ 
++static inline struct mempolicy *mpol_private_bind(int nid)
++{
++	return ERR_PTR(-EOPNOTSUPP);
++}
++
++static inline struct mempolicy *mpol_bind_node(int nid)
++{
++	return ERR_PTR(-EOPNOTSUPP);
++}
++
+ static inline struct mempolicy *get_vma_policy(struct vm_area_struct *vma,
+ 				unsigned long addr, int order, pgoff_t *ilx)
+ {
 diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 90110e9761122..e83c2c7a94c1d 100644
+index e83c2c7a94c1d..a3ffb09897489 100644
 --- a/mm/mempolicy.c
 +++ b/mm/mempolicy.c
-@@ -2091,6 +2091,34 @@ bool vma_policy_mof(struct vm_area_struct *vma)
- 	return mof;
+@@ -406,7 +406,7 @@ static int mpol_new_preferred(struct mempolicy *pol, const nodemask_t *nodes)
+ static int mpol_set_nodemask(struct mempolicy *pol,
+ 		     const nodemask_t *nodes, struct nodemask_scratch *nsc)
+ {
+-	int ret;
++	int ret, nid;
+ 
+ 	/*
+ 	 * Default (pol==NULL) resp. local memory policies are not a
+@@ -432,6 +432,18 @@ static int mpol_set_nodemask(struct mempolicy *pol,
+ 	else
+ 		pol->w.cpuset_mems_allowed = cpuset_current_mems_allowed;
+ 
++	/*
++	 * Private nodes are not in cpuset.mems, so they're always stripped.
++	 * Driver-allocated policies will already have MPOL_F_PRIVATE set,
++	 * if that's the case, add back in the requested set of private nodes.
++	 */
++	for_each_node_mask(nid, *nodes) {
++		if (!node_is_private(nid))
++			continue;
++		if (pol->flags & MPOL_F_PRIVATE)
++			node_set(nid, nsc->mask2);
++	}
++
+ 	/* If any private nodes left in the nodemask - add the private flag */
+ 	if (nodes_intersects(nsc->mask2, node_states[N_MEMORY_PRIVATE]))
+ 		pol->flags |= MPOL_F_PRIVATE;
+@@ -501,7 +513,7 @@ void __mpol_put(struct mempolicy *pol)
+ 	 */
+ 	kfree_rcu(pol, rcu);
+ }
+-EXPORT_SYMBOL_FOR_MODULES(__mpol_put, "kvm");
++EXPORT_SYMBOL_FOR_MODULES(__mpol_put, "kvm,kmem");
+ 
+ static void mpol_rebind_default(struct mempolicy *pol, const nodemask_t *nodes)
+ {
+@@ -1126,6 +1138,92 @@ static long do_set_mempolicy(unsigned short mode, unsigned short flags,
+ 	return ret;
  }
  
 +/*
-+ * true if any policy *private* node can satisfy a !__GFP_MOVABLE allocation.
-+ * Policies without private nodes (~MPOL_F_PRIVATE) always return false.
++ * Build a refcounted MPOL_BIND policy targeting the single node @nid,
++ * contextualised to the caller's cpuset like a userspace mbind().
 + *
-+ * This provides a way for otherwise-bound kernel allocations to make their
-+ * way onto private nodes with ZONE_NORMAL memory without having to audit
-+ * every caller.  The cost is a zone scan for private nodes in the mask.
++ * @flags is MPOL_F_PRIVATE for the an explicit in-kernel user, letting
++ * a private node be bound without checking CAP_USER_NUMA.  Otherwise,
++ * CAP_USER_NUMA is enforced.
++ *
++ * The caller owns the reference and frees it with mpol_put().
 + */
-+static bool policy_private_has_kernel_zone(const struct mempolicy *pol)
++static struct mempolicy *__mpol_bind_node(int nid, unsigned short flags)
 +{
-+	int nid;
++	struct mempolicy *pol;
++	nodemask_t nodes;
++	int err;
 +
-+	if (!(pol->flags & MPOL_F_PRIVATE))
-+		return false;
++	NODEMASK_SCRATCH(scratch);
 +
-+	for_each_node_mask(nid, pol->nodes) {
-+		pg_data_t *pgdat = NODE_DATA(nid);
-+		enum zone_type zt;
++	if (!scratch)
++		return ERR_PTR(-ENOMEM);
 +
-+		if (!node_is_private(nid))
-+			continue;
-+		for (zt = ZONE_NORMAL; zt < ZONE_MOVABLE; zt++)
-+			if (managed_zone(&pgdat->node_zones[zt]))
-+				return true;
++	nodes_clear(nodes);
++	node_set(nid, nodes);
++
++	pol = mpol_new(MPOL_BIND, flags, &nodes);
++	if (IS_ERR(pol)) {
++		NODEMASK_SCRATCH_FREE(scratch);
++		return pol;
 +	}
-+	return false;
++
++	err = mpol_set_nodemask(pol, &nodes, scratch);
++	NODEMASK_SCRATCH_FREE(scratch);
++	if (err) {
++		mpol_put(pol);
++		return ERR_PTR(err);
++	}
++	return pol;
 +}
 +
- bool apply_policy_zone(struct mempolicy *policy, enum zone_type zone)
- {
- 	enum zone_type dynamic_policy_zone = policy_zone;
-@@ -2098,14 +2126,22 @@ bool apply_policy_zone(struct mempolicy *policy, enum zone_type zone)
- 	BUG_ON(dynamic_policy_zone == ZONE_MOVABLE);
- 
- 	/*
--	 * if policy->nodes has movable memory only,
--	 * we apply policy when gfp_zone(gfp) = ZONE_MOVABLE only.
-+	 * dynamic_policy_zone is the lowest zone this policy is enforced for,
-+	 * allocations below it ignore the nodemask and fall back freely.
-+	 *
-+	 * If all policy-nodes are movable-only (all ZONE_MOVABLE), raise the
-+	 * dynamic_policy_zone to ZONE_MOVABLE so that only movable allocations
-+	 * stay bound - otherwise this would force kernel-zone allocations
-+	 * (e.g. page tables) onto a zone that cannot satisfy them.  This
-+	 * results in allocation failure and retry loop (livelock).
- 	 *
--	 * policy->nodes is intersect with node_states[N_MEMORY].
--	 * so if the following test fails, it implies
--	 * policy->nodes has movable memory only.
-+	 * N_HIGH_MEMORY tells us "has a non-movable zone" for ordinary nodes.
-+	 * Private nodes are deliberately excluded from N_HIGH_MEMORY, so we
-+	 * need to check their actual zones - a kernel-zoned private node can
-+	 * hold the allocation and must keep the policy applied.
- 	 */
--	if (!nodes_intersects(policy->nodes, node_states[N_HIGH_MEMORY]))
-+	if (!nodes_intersects(policy->nodes, node_states[N_HIGH_MEMORY]) &&
-+	    !policy_private_has_kernel_zone(policy))
- 		dynamic_policy_zone = ZONE_MOVABLE;
- 
- 	return zone >= dynamic_policy_zone;
++/**
++ * mpol_private_bind - build an MPOL_BIND policy pinned to a private node
++ * @nid: an N_MEMORY_PRIVATE node
++ *
++ * Returns a refcounted mempolicy that binds allocations to @nid with the
++ * private-placement intent (MPOL_F_PRIVATE).  This binds to @nid regardless
++ * of the node's CAP_USER_NUMA, providing a privileged way for node-owners
++ * to bind driver/service owned VMAs to the node.
++ *
++ * Like any MPOL_BIND it is relaxable: an unsatisfiable request falls back
++ * rather than failing.
++ *
++ * Must be called while @nid is N_MEMORY_PRIVATE.
++ *
++ * The caller owns the reference and frees it with mpol_put().
++ *
++ * Return: the policy, or an ERR_PTR on failure.
++ */
++struct mempolicy *mpol_private_bind(int nid)
++{
++	if (!node_is_private(nid))
++		return ERR_PTR(-EINVAL);
++	return __mpol_bind_node(nid, MPOL_F_PRIVATE);
++}
++EXPORT_SYMBOL_FOR_MODULES(mpol_private_bind, "kmem");
++
++/**
++ * mpol_bind_node - build an MPOL_BIND policy targeting @nid for in-kernel use
++ * @nid: the node to bind to
++ *
++ * Returns a refcounted MPOL_BIND policy that places allocations on @nid,
++ * contextualised to the caller's cpuset exactly like a userspace mbind().
++ *
++ * This interface should be used by services implenting mempolicy support with
++ * user-provided node bindings. N_MEMORY_PRIVATE node bindings are honored if
++ * the node has CAP_USER_NUMA, otherwise return -EINVAL.
++ *
++ * The caller owns the reference and frees it with mpol_put().
++ *
++ * Return: the policy, or an ERR_PTR on failure.
++ */
++struct mempolicy *mpol_bind_node(int nid)
++{
++	return __mpol_bind_node(nid, 0);
++}
++EXPORT_SYMBOL_FOR_MODULES(mpol_bind_node, "kvm");
++
+ /*
+  * Return nodemask for policy for get_mempolicy() query
+  *
 -- 
 2.53.0-Meta
 
