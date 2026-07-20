@@ -1,178 +1,586 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EEA839CCEC;
-	Mon, 20 Jul 2026 16:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784564978; cv=fail; b=OkAdg6ZVonG+xANFN0A5tdvqwo6qeeBdtBrGnxM71qjEnBRQ5PInOGBUfZq4YJxLGkCugRP3sqEloghrX31nKUqNK6pI3eu8nosdcPQAML9TYmbYSmDRpVnUimF8vgPEG7zyJ0nXWjye2OabwOChr8ABp8WjDiFywusG8vXg79M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784564978; c=relaxed/simple;
-	bh=04pOvS6iTjI1M0TN3Z0SFlCVlPIZCqHdmMU0NtS5s2U=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=RJqLIZqNJXIx2vsZw9GO8Y+0jG1CVRtXnY7fU6pxfjcGYWXRtQSGAKfw4EAKFYNaC1jYKHpPkXYPXfuoOKOmILfs86ISCP4N+MTrf1d8bBNJI1eNJILj5IYnHnY9Eqqups1av/xdrLCdLXoJAf0cdx5zsoyutcen2FAYP7jK0hI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HCPGmasZ; arc=fail smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9602E4343F6;
+	Mon, 20 Jul 2026 17:38:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784569118; cv=none; b=cFip+/bDDVdpS9K2K0UvlrEnHGgBBLupz9CPXklcB5oLmbZh5OGlajaaPOwMOqwbUqIo4t+kPmnHIyzThc3B9mn0Js1n8C/NL0MSuNIHSUBUd829mlVp6uwdThCgecyqe/lLP2TIbV/A3LqJe7ygA7IDtt7aaRtPboxuO5139Vg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784569118; c=relaxed/simple;
+	bh=cw3/RS4mM1ejUEOQ9/ogBM7VjF6isqMeU8WvHbBz2lo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=POOyiPKzr7vrepit2iJP+YzaOw/vXINsm2NNfaLKl24UlUPkA97Fhzipt73uWAzvNwQvNuIUeO5dVo5FnmbyVtH73ibCjLW7tneGQkdOA1we8YFE4jmcQZyFgoEcuNfdeO0xNMhRnIlsFhfpMLSmO/hKZSJI3UDsiF0eVoEyeGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KJZahZ8h; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HCPGmasZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KJZahZ8h"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784564978; x=1816100978;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=04pOvS6iTjI1M0TN3Z0SFlCVlPIZCqHdmMU0NtS5s2U=;
-  b=HCPGmasZOVVr62f7/wl3BunhBac9oKFdEAG+zuPtQQ98ZUvupRZHvP6S
-   MIU1FivoZwfbLSzoqx+omNhhgZQaC21p6lugck53XNW4ldZ5LHBadbeZp
-   xDFWto7cvLyY7lZZyQ8KI9mhJqlsFO1br86Q/CTB7qHXxDN0MsKBuxmtR
-   pf/+4DT30pNqpyuuK5bWKsizLuWxbswEVOV5IOB+CXMiAkXuNWehKPS7Q
-   s96wRy77upLHapCbzfW/YATEmpO2zx3dtdlywWtfKF4VYaj93tvWTxSAF
-   3q87TdiuxVKFkULB91nvG0w4pq75iuo3ou5VMVet96mu0tPqWOP2VCyUy
-   w==;
-X-CSE-ConnectionGUID: CKmyK2qDR6eN4i06b6CijQ==
-X-CSE-MsgGUID: I492At7FTnWL55ULNdrwtA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11852"; a="110703041"
+  t=1784569116; x=1816105116;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=cw3/RS4mM1ejUEOQ9/ogBM7VjF6isqMeU8WvHbBz2lo=;
+  b=KJZahZ8hNpXi4bfyBsxB7FOvx9YdOtB0uMNmr+BaVc1oZ93/yr1V5Tqh
+   rXwBW/fg6v1I0uIZgnhR3p0qhdjm0z28/O19ivHbwNrVzNNu2QQbAhk9K
+   sk6IfTeyA8FEFMjuaW76gtMYIVg3jWBoFC/enSXx6Pf7K0HI3GcnRcs0k
+   3k2TW6C0xSgJqtNz8hXqCwSXXA05AXjryHfjC9PhzUjA6uLiy5e5FQ4ix
+   p7J814QYn3fi3TK5FB4GFwbEcaFvZoIYEERwwl54RP80/ZjV/oikrsrAi
+   MsdTeEBewCTcpzKSjcz48IVlrikaMdj0etuF8KR6Xsz+mfTQeneuWaXAh
+   g==;
+X-CSE-ConnectionGUID: 5e5i+AgmQnWMZ27fJ4R+LQ==
+X-CSE-MsgGUID: ttcYZiWxRauWUxFrB3ug4Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11852"; a="95751358"
 X-IronPort-AV: E=Sophos;i="6.25,175,1779174000"; 
-   d="scan'208";a="110703041"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2026 09:29:37 -0700
-X-CSE-ConnectionGUID: eel0jTgYTjSKaWnD9dS36g==
-X-CSE-MsgGUID: 2Uo9IBIcTKS73RRRYiyD1g==
+   d="scan'208";a="95751358"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2026 10:38:34 -0700
+X-CSE-ConnectionGUID: 2tpFPn/NRe63YmCxGdjBcw==
+X-CSE-MsgGUID: EXy7h36ORbicy3mIKxEexQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,175,1779174000"; 
-   d="scan'208";a="254092066"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2026 09:29:34 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.43; Mon, 20 Jul 2026 09:29:34 -0700
-Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.43 via Frontend Transport; Mon, 20 Jul 2026 09:29:34 -0700
-Received: from CH1PR05CU001.outbound.protection.outlook.com (52.101.193.36) by
- edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.43; Mon, 20 Jul 2026 09:29:33 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=B59g0vVziQZuMCHwjeNYoS1/xgjtNUar/0+FXECNdOCRaadMtptYWfAZVbQaNvE6L5eJOeZaqeQgxfJiEKyfNaLor8d7//o3sybV6wfD2GFaaWcIunU1dbLnp79sSlqkXxFFkyKmxyczemrL0/FAt2NUcE1Pj1omdrP6vKG0c3ocSraIDO1h48A699JpT1fuLsKNAIgIDyk+GvNfCuOEr+Oya69ZcXQahEx/3yRr35jJ8TJ57szEm3peQsGXuqhU9a0VWhDaVbvXQhW05E3sqoZ1Auu6qb0zNrqHPRpVdgA5KqkPOGl27XVUHquKR0/CZcGTxpHUIMwoFLa/tRwjWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nStEuFi7Kva6E0Pv28GLTFfRLelSZkEkOL90/8Y0vfw=;
- b=I+JAydKrBygSHAXhLgawib2ktv4qiqKeVbjszM17O7OcfnqzFhA6udotfKFACH94RXT5DqI0u8KuWj9TW0ZtT/NCUVDoFCkihisBXTs8zYyzPRsFZiqdlk79wWiYQsbOFp7pmKIJ6/WGv+J97GG1QMJdo8G71sN2wOftMK+8hRmNSCr+N1GTvYSgWyqWxG78Lkc+FkFYkC6U777CivwaZQYJjNm49uRmpzz4ki+fPg5v5kBexpY0UdYsqJPjdrazbWWgqZfJhi4/jgtZy6RqWDmu1RvlsXUxufOFN0NALRjwGiChIXD+8/GiXDve+It+sUj/hhWvy8U4b2tfs8BcHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
- by DM4PR11MB5248.namprd11.prod.outlook.com (2603:10b6:5:38b::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.18; Mon, 20 Jul
- 2026 16:29:31 +0000
-Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
- ([fe80::a195:49d4:38c5:3891%4]) with mapi id 15.21.0223.017; Mon, 20 Jul 2026
- 16:29:31 +0000
-Date: Mon, 20 Jul 2026 09:29:27 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-CC: <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<rafael@kernel.org>, <tony.luck@intel.com>, <bp@alien8.de>,
-	<guohanjun@huawei.com>, <mchehab@kernel.org>, <xueshuai@linux.alibaba.com>,
-	<terry.bowman@amd.com>, <sashiko-bot@kernel.org>
-Subject: Re: [PATCH v3 10/10] ACPI: extlog: Validate elog record length
- before walking sections
-Message-ID: <al5M51G4Er8uP6wZ@aschofie-mobl2.lan>
-References: <20260717161647.1493259-1-dave.jiang@intel.com>
- <20260717161647.1493259-11-dave.jiang@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260717161647.1493259-11-dave.jiang@intel.com>
-X-ClientProxiedBy: BYAPR21CA0013.namprd21.prod.outlook.com
- (2603:10b6:a03:114::23) To DS4PPF0BAC23327.namprd11.prod.outlook.com
- (2603:10b6:f:fc02::9)
+   d="scan'208";a="253587895"
+Received: from cooperst-gp83.amr.corp.intel.com (HELO [10.125.109.176]) ([10.125.109.176])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2026 10:38:31 -0700
+Message-ID: <6ff8d646-61b1-496e-bdc0-f4a4011d1d58@intel.com>
+Date: Mon, 20 Jul 2026 10:38:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DM4PR11MB5248:EE_
-X-MS-Office365-Filtering-Correlation-Id: 837b7c1a-bf3c-4136-5715-08dee67c1367
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|23010399003|366016|4143699003|5023799004|11063799006|56012099006|10067099003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info: CnobfoSjn+0qpLMYlIuzM5lU7PcHfUNvVySOFbZLYvSAY1Wtr4aqqAUIAmgkflUAkLH4vP/+I/t1mo4TOhcCUgOhpRwifrrGwow+Ncx9/EZfV3T9vqNVmSnyZhGpGxs5+PTVYG88PaSNsr08XClg5BG5JpfKw5Tjuq8A4vfi0IWy/5H2aRXW6qxcDM7889VPE1V7E0cbjhw3v9d9DPphj2FQsROWf+U8E7lDmo7l4Q058FVgkV5n5AoisDM4UNtbktG6Jtrc+EHetYtbwbHOKvkmqRoR09HkburL9qsIoJURAS0f8kT1LbJAopwCU0zvyV/LsB8YUH2p+Vx3lKo17MCagrmOSfKi1RCm48HDwZ0wCIB61CfImpqJaVtJ+OILHrAQ7kfeXVtNS8usORPBGl2+oCK8Q0Go4AlzjYeMp7HbsYTKVTR1fXFiC4Sqar/XOtRcj2LJw6l0V0MAIHgI1Q537/JpRUcwvpxwujKbuSUpMDjcChgNIXPxP2DWkzOBRueJSlBnungx1BBElfq4e7nQhpRjo9c8jXuhFTzHQ6YhjAoERp+ToatWGDQtSpj4zFD7t1yoUp0fros/OnJWmaXh+P2ZMflhegdc9mZ325w=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(23010399003)(366016)(4143699003)(5023799004)(11063799006)(56012099006)(10067099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5vnVAGNkNjRs83L7mJa8zbI/kn8hO03wo3tJBLj3QjanAt+qorg2BXl05UVf?=
- =?us-ascii?Q?90wVsv0dc+qbpfpy0oOYXSglx7bNsvMJmv8RuVI/hKt2fuyYwVaTZysilQy+?=
- =?us-ascii?Q?nrZWCFBZ3exRl6I5/6qjaG4IyM4ylaBlsGm7rIMlTz4iDzxNFHLpQmMwHqQN?=
- =?us-ascii?Q?nS+9OXBlYF/oVxQRoSwUXEurGXBQLo1njyCYVBxol+sEtz0/EvSq4Z8viY6C?=
- =?us-ascii?Q?YhfXakNmrW6JT+60HfEtZW/s39ruj6SlrMJF/IxclSy4u+i6M1uzCUAuYlzV?=
- =?us-ascii?Q?MlR3bsj1EsY44zTK2/s503C8olEwBr7yzZW9MiWzXM1EKBMaNM4bqP4xUBKR?=
- =?us-ascii?Q?N/DZkU2PLaXQ+us/nAiWSi6YYFyTGnajEIvx77fosp5TVTZILgJ3qfP1ePeD?=
- =?us-ascii?Q?RCm2gBQ7oxIwOggSVPGr4tdmaJ5dbU533NptauwA1txwQ950ksLFurrBThyO?=
- =?us-ascii?Q?M53LzY3GLLwckJLZEj62nNkAyhWVYUQRN7OZtyruUlQ1FOZoSaI95M8qc9XM?=
- =?us-ascii?Q?x1tyr1lKupHtoHBk3sH4LImW5oSyp3N8Z6YVuWPXLEan9GARceFpfmAl5fol?=
- =?us-ascii?Q?16bvUfTSBvZTjLn9lM79hkNuKCMl6igI2vS/IvNOWXqgx2BZhEyo+lLrP8XY?=
- =?us-ascii?Q?7hAhDkyLWP2bqJDhVg9ZvtZ1wTgZcrrA6Rf+ZC18Zl5tn0keTijw4UF0SHwi?=
- =?us-ascii?Q?t51qfCLQxJwAyQIcaJ6nyppxj92c/HAj2nYEcQ56BXyFsjYMbcJZIbEFbbch?=
- =?us-ascii?Q?uE/AUwu5g0uHV30WW6tH9vP5BQVBVfoQaOQicacfZDIzOY+Qrq2lNuuGyx/N?=
- =?us-ascii?Q?4WFTkeRo2HHfpSgJ5/W3/YugOTMalQAAS2fpCWNYUufPOHTWFgmNRRO2UDA0?=
- =?us-ascii?Q?S9CG3v+Cd8FlvHn/iadrOD/4fzGp0yK+0PUurMsFG2NBfwXfii1WmkUEIh2g?=
- =?us-ascii?Q?3nrAGnfZTI67YZ2m/6fR6q5UBWt9fSv2eK9ZFL1DN+ULSbpl3xxciVuGBIJT?=
- =?us-ascii?Q?isAoIebn325bd0PqC8dfK7r7ZSFUfUcLWhxsfj3zMH7sEGHoLStThlxcKz2l?=
- =?us-ascii?Q?re62EbJfh9WhWDs0lyPM0FY9XLk+d+HeTbgyo94Jwvr7GaLWqc3VbAf1BT+C?=
- =?us-ascii?Q?By3EOe85OubqJpHpB3E4aW8ZdT5R9QrWdNCb9JLHiDob58Psy4Pc+5yQPeLS?=
- =?us-ascii?Q?EGMoygPOze7MGeBswIYSLhzhkFEuzpXsZtApX1deud+YUalU6rCZ40WrAOR7?=
- =?us-ascii?Q?RqJdA8yXznTLVRRRqBvr89lfRsQvyn29oEy8bbHRLU+rx2muaJw/GtTGz3pa?=
- =?us-ascii?Q?3Zb3vwSKOPvCK5K1h7SwWatRB7zQCNNxf/HLgb0SRvdB0LznAnCSIYyexqlu?=
- =?us-ascii?Q?RWahM29xfOkgQkcPp7zG5bD1woesmJ2kgMcyheDw1RqCAuCFRAIOunM3nCnu?=
- =?us-ascii?Q?tPgXW4P0TiVbNNXImk1ko1NyGWxyzuvq3A+1FcOYO0C+3bK74MIzJxurPHte?=
- =?us-ascii?Q?h+Xm36Fi0l8art/7TzE9GyAsVCCSXhF/nJSQbqDYH1FzHQjkj0FyiylRvnIV?=
- =?us-ascii?Q?WImlnoaN4hOv6eW6yokdIVUQ1PGJ78tWNIBTaeuCe/DWOOR4XA0/09QyFO96?=
- =?us-ascii?Q?9LURQ00krSv6mPtGchi2DJbNuFzZSKkvzy4GuhqkR4ysxaglHFhus3zh5fS8?=
- =?us-ascii?Q?YZn/uTMRdioyTXMArEhJbXUUEb8/oD0E9AeywfH8ss0nFUhYSzil5nprWAKW?=
- =?us-ascii?Q?JbBJkIBa6r5fsaAg8wlLp6Ime74XDpk=3D?=
-X-Exchange-RoutingPolicyChecked: PKBZcYzWsAImrG2o1KhD0OERZFDUhCtQcrD5a3hEkT3tbMAcprZzTXqG+8WZ2UTlZL987N473Lju+NeeaVhpI8d5Hr5FUG+5uefLUOqo6S0c7Gl5R5rPr5eRUHm5Jcg2wVn9pmZtRBs8wdA/hJWv7uqUfEMVojNT9ehT/IyHtQ6X71FI454XqK11HGhKfgH3PFrvvbOGrbIx83zVFxMGUUWldyQxj/FMfnbER7psp8tEHBQB8m6ZpxahHPU/Ng6AfraE6ltsVaYQSbzzQEXD4nkwyDPxQYkQ3fMORMTE/APGrFkG7lvZZj8u1iPMgu7qLJQpRHrQFvPdGkVbzZu8Pg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 837b7c1a-bf3c-4136-5715-08dee67c1367
-X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2026 16:29:31.0470
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: u+lQfUqj/Y73OopYd65maH6YkSjRFIUcpmyRHxjHLnn02ZDQiaVG9/F77WrtALzFxtvRb6ODJ1OPRBVNCAuA+dkMODR//ZHuMdMjbkiG4bY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5248
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] cxl: Device protocol AER injection
+To: Terry Bowman <terry.bowman@amd.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
+ Jonathan Cameron <jic23@kernel.org>, Len Brown <lenb@kernel.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>, Robert Richter <rrichter@amd.com>
+Cc: linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ Alejandro Lucero <alucerop@amd.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Ankit Agrawal <ankita@nvidia.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Ben Cheatham <Benjamin.Cheatham@amd.com>, Borislav Petkov <bp@alien8.de>,
+ Breno Leitao <leitao@debian.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ "Fabio M . De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+ Gregory Price <gourry@gourry.net>, Hanjun Guo <guohanjun@huawei.com>,
+ Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ Li Ming <ming.li@zohomail.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Oliver O'Halloran <oohall@gmail.com>, Shiju Jose <shiju.jose@huawei.com>,
+ Shuah Khan <skhan@linuxfoundation.org>,
+ Shuai Xue <xueshuai@linux.alibaba.com>,
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+ Tony Luck <tony.luck@intel.com>, Vishal Verma <vishal.l.verma@intel.com>
+References: <20260717225700.3543801-1-terry.bowman@amd.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260717225700.3543801-1-terry.bowman@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 17, 2026 at 09:16:47AM -0700, Dave Jiang wrote:
-> sashiko-bot flagged a missing bounds check on data_length that allows
-> an out-of-bounds read of elog_buf.
-> 
-> extlog_print() copies a fixed ELOG_ENTRY_LEN (4096) bytes from the elog
-> record into elog_buf, then walks the sections using the
-> firmware-controlled data_length. Nothing checks that data_length stays
-> within the buffer, so a malformed record can walk the section pointer
-> past elog_buf and read adjacent memory.
-> 
-> Unlike the GHES paths, extlog never calls cper_estatus_check(). Reject a
-> record whose length exceeds ELOG_ENTRY_LEN and run cper_estatus_check()
-> before walking the sections.
-> 
-> A malformed record is now dropped with NOTIFY_DONE without setting
-> MCE_HANDLED_EXTLOG, reflecting that extlog did not consume it.
-> 
-> Reported-by: sashiko-bot@kernel.org
-> Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@intel.com?part=6
-> Fixes: f6ec01da40e4 ("ACPI: extlog: Handle multiple records")
-> Assisted-by: Claude:claude-opus-4-8
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+
+On 7/17/26 3:57 PM, Terry Bowman wrote:
+> This patch is intended to provide a method of testing the recently submitted
+> cxl series "cxl: Enable CXL PCIe Port Protocol Error handling and logging" found
+> here:
+> 
+> https://lore.kernel.org/linux-cxl/20260717222706.3540281-1-terry.bowman@amd.com/T/#md90ec1fdd1b374bf1e32e7736e2b3e34b328c701
+> 
+> The changes in this patch will allow CXL RAS protocol testing by injecting
+> AER errors using AER EINJ. The RAS register block status is updated
+> using a central function to augment RAS register block returned by
+> to_ras_base(). This supports all CXL devices including Root Ports,
+> Upstream Switch Ports, Downstream Switch Ports, Endpoints, and RCH
+> Downstream Ports.
+> 
+> Add debugfs-based CXL protocol error injection for testing CXL RAS
+> error handling paths. Injects CXL RAS protocol errors using AER internal
+> error inject interface via /sys/kernel/debug/cxl/aer_einj_inject.
+> 
+> RAS CXL status is set using to_ras_base() function override when kernel config
+> CONFIG_CXL_PROTO_AER_EINJ is enabled.
+> 
+> Usage:
+>   echo "DDDD:BB:DD.F [UCE|CE] AER_STATUS RAS_STATUS [RCH]" > \
+>       /sys/kernel/debug/cxl/aer_einj_inject
+> 
+> Move struct aer_error_inj and aer_inject() to linux/aer.h so CXL
+> can invoke AER injection directly. Export aer_inject() with
+> EXPORT_SYMBOL_GPL.
+> 
+> Make cxl_debugfs non-static in port.c and declare it extern in
+> core.h so the debugfs file can be created under the existing CXL
+> debugfs root.
+> 
+> Co-developed-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+> Signed-off-by: Ben Cheatham <Benjamin.Cheatham@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> ---
+>  drivers/cxl/Kconfig           |  13 +++
+>  drivers/cxl/core/core.h       |  21 ++++
+>  drivers/cxl/core/port.c       |   2 +-
+>  drivers/cxl/core/ras.c        | 208 ++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/ras_rch.c    |  12 ++
+>  drivers/pci/pcie/aer_inject.c |  29 ++---
+>  include/linux/aer.h           |  15 +++
+>  7 files changed, 281 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/cxl/Kconfig b/drivers/cxl/Kconfig
+> index 80aeb0d556bd7..ef449228b2549 100644
+> --- a/drivers/cxl/Kconfig
+> +++ b/drivers/cxl/Kconfig
+> @@ -238,6 +238,19 @@ config CXL_RAS
+>  	def_bool y
+>  	depends on ACPI_APEI_GHES && PCIEAER && CXL_BUS
+>  
+> +config CXL_PROTO_AER_EINJ
+> +	bool "CXL: RAS Protocol Error Injection using AER EINJ"
+> +	depends on CXL_RAS
+> +	depends on PCIEAER_INJECT
+> +	help
+> +	  Enable debugfs-based CXL protocol error injection. Writes to
+> +	  /sys/kernel/debug/cxl/aer_einj_inject inject CXL RAS protocol
+> +	  errors using the AER internal error inject interface.
+> +
+> +	  This is a debug/test facility. Say N for production kernels.
+> +
+> +	  If unsure say N.
+> +
+>  config CXL_ATL
+>  	def_bool y
+>  	depends on CXL_REGION
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index a55a4e409feda..91910d2bb5d39 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -182,6 +182,9 @@ static inline struct device *dport_to_host(struct cxl_dport *dport)
+>  		return port->uport_dev;
+>  	return &port->dev;
+>  }
+> +
+> +extern struct dentry *cxl_debugfs;
+> +
+>  #ifdef CONFIG_CXL_RAS
+>  void cxl_ras_init(void);
+>  void cxl_ras_exit(void);
+> @@ -244,4 +247,22 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>  
+>  resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
+>  					   struct cxl_dport *dport);
+> +
+> +#ifdef CONFIG_CXL_PROTO_AER_EINJ
+> +
+> +#define AER_REGISTER_SIZE 5
+> +#define RAS_REGISTER_SIZE (CXL_RAS_CAPABILITY_LENGTH / sizeof(u32))
+> +
+> +struct cxl_aer_einj {
+> +	int correctable;
+> +	bool is_rch;
+> +	struct mutex *lock;
+> +	struct device *dev;
+> +	u32 aer_registers[AER_REGISTER_SIZE];
+> +	u32 ras_registers[RAS_REGISTER_SIZE];
+> +};
+> +
+> +extern struct cxl_aer_einj cxl_aer_einj;
+> +#endif
+> +
+>  #endif /* __CXL_CORE_H__ */
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index a76f3ee05cba8..79657e5fddaac 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -2501,7 +2501,7 @@ const struct bus_type cxl_bus_type = {
+>  };
+>  EXPORT_SYMBOL_NS_GPL(cxl_bus_type, "CXL");
+>  
+> -static struct dentry *cxl_debugfs;
+> +struct dentry *cxl_debugfs;
+>  
+>  struct dentry *cxl_debugfs_create_dir(const char *dir)
+>  {
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index d77208af41e03..d41deea899d30 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -3,6 +3,7 @@
+>  
+>  #include <linux/pci.h>
+>  #include <linux/aer.h>
+> +#include <linux/debugfs.h>
+>  #include <cxl/event.h>
+>  #include <cxlmem.h>
+>  #include <cxlpci.h>
+> @@ -117,6 +118,195 @@ static void cxl_cper_prot_err_work_fn(struct work_struct *work)
+>  }
+>  static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
+>  
+> +#if IS_ENABLED(CONFIG_CXL_PROTO_AER_EINJ)
+
+Can this be moved to a header file? Prefer to not introduce #ifdef in the C source.
+
+> +
+> +static DEFINE_MUTEX(cxl_aer_einj_mutex);
+> +
+> +struct cxl_aer_einj cxl_aer_einj = {
+> +	.lock = &cxl_aer_einj_mutex,
+> +};
+> +
+> +static const char cxl_aer_einj_usage[] =
+> +	"ssss:bb:dd.f [UCE|CE] AER_STATUS RAS_STATUS [RCH]\n";
+> +
+> +static int cxl_aer_inject_error(struct pci_dev *pdev, bool correctable,
+> +				u32 aer_status, u32 ras_status)
+> +{
+> +	/* RCD errors are signaled as internal errors on the associated RCEC */
+> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END) {
+> +		if (!pdev->rcec)
+> +			return -ENODEV;
+> +		pdev = pdev->rcec;
+> +	}
+> +
+> +	struct aer_error_inj einj = {
+> +		.bus = pdev->bus->number,
+> +		.dev = PCI_SLOT(pdev->devfn),
+> +		.fn = PCI_FUNC(pdev->devfn),
+> +		.domain = pci_domain_nr(pdev->bus),
+> +	};
+> +	int ret;
+> +	int aer_offset;
+> +	int ras_offset;
+> +
+> +	if (correctable) {
+> +		einj.cor_status = aer_status | PCI_ERR_COR_INTERNAL;
+> +		aer_offset = PCI_ERR_COR_STATUS / sizeof(u32);
+> +		ras_offset = CXL_RAS_CORRECTABLE_STATUS_OFFSET / sizeof(u32);
+> +	} else {
+> +		einj.uncor_status = aer_status | PCI_ERR_UNC_INTN;
+> +		aer_offset = PCI_ERR_UNCOR_STATUS / sizeof(u32);
+> +		ras_offset = CXL_RAS_UNCORRECTABLE_STATUS_OFFSET / sizeof(u32);
+> +	}
+> +
+> +	cxl_aer_einj.correctable = correctable;
+> +	cxl_aer_einj.aer_registers[aer_offset] = aer_status;
+> +	cxl_aer_einj.ras_registers[ras_offset] = ras_status;
+> +
+> +	ret = aer_inject(&einj);
+> +	if (ret) {
+> +		pr_err("cxl-einj: aer_inject failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static ssize_t cxl_aer_einj_write(struct file *file,
+> +				    const char __user *ubuf,
+> +				    size_t count, loff_t *ppos)
+> +{
+> +	char sbdf[16], severity[4], topology[4] = "";
+> +	unsigned int domain, bus, dev, fn;
+> +	u32 aer_status, ras_status;
+> +	struct cxl_dport *dport;
+> +	char buf[128];
+> +	int nargs;
+> +	int ret;
+> +
+> +	if (!capable(CAP_SYS_ADMIN))
+> +		return -EPERM;
+> +
+> +	if (count >= sizeof(buf)) {
+> +		pr_err("cxl-einj: input too long (%zu bytes, max %zu)\n", count, sizeof(buf) - 1);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (copy_from_user(buf, ubuf, count)) {
+> +		pr_err("cxl-einj: copy_from_user failed\n");
+> +		return -EFAULT;
+> +	}
+> +	buf[count] = '\0';
+> +
+> +	nargs = sscanf(buf, "%15s %3s %x %x %3s", sbdf, severity,
+> +		       &aer_status, &ras_status, topology);
+> +	if (nargs < 4) {
+> +		pr_err("cxl-einj: expected format: <SBDF> <UCE|CE> <aer_status> <ras_status>\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (nargs == 5 && strcmp(topology, "RCH") != 0)
+> +		return -EINVAL;
+> +
+> +	if (strcmp(severity, "UCE") != 0 && strcmp(severity, "CE") != 0) {
+> +		pr_err("cxl-einj: expected 'UCE' or 'CE', got '%s'\n", severity);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (sscanf(sbdf, "%x:%x:%x.%x", &domain, &bus, &dev, &fn) != 4) {
+> +		pr_err("cxl-einj: invalid SBDF format '%s', expected DDDD:BB:DD.F\n", sbdf);
+> +		return -EINVAL;
+> +	}
+> +
+> +	struct pci_dev *pdev __free(pci_dev_put) =
+> +		pci_get_domain_bus_and_slot(domain, bus, PCI_DEVFN(dev, fn));
+> +	if (!pdev) {
+> +		pr_err("cxl-einj: device %s not found\n", sbdf);
+> +		return -ENODEV;
+> +	}
+> +
+> +	guard(mutex)(cxl_aer_einj.lock);
+> +	cxl_aer_einj.dev = NULL;
+> +
+> +	struct cxl_port *port __free(put_cxl_port) = find_cxl_port_by_dev(&pdev->dev, &dport);
+> +	if (!port) {
+> +		dev_err(&pdev->dev, "cxl-einj: Failed to find CXL Port.\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!to_ras_base(port, dport)) {
+> +		dev_err(&pdev->dev, "cxl-einj: RAS not initialized.\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	cxl_aer_einj.is_rch = (nargs == 5 && strcmp(topology, "RCH") == 0);
+> +	if (!cxl_aer_einj.is_rch)
+> +		pci_dev_get(pdev);
+> +	cxl_aer_einj.dev = cxl_aer_einj.is_rch ? pdev->dev.parent : &pdev->dev;
+> +	ret = cxl_aer_inject_error(pdev, strcmp(severity, "CE") == 0,
+> +				   aer_status, ras_status);
+> +	if (ret) {
+> +		if (!cxl_aer_einj.is_rch)
+> +			pci_dev_put(pdev);
+> +		cxl_aer_einj.dev = NULL;
+> +		pr_err("cxl-einj: injection failed for %s: %d\n", sbdf, ret);
+> +		return ret;
+> +	}
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t cxl_aer_einj_read(struct file *file, char __user *ubuf,
+> +				 size_t count, loff_t *ppos)
+> +{
+> +	return simple_read_from_buffer(ubuf, count, ppos,
+> +				       cxl_aer_einj_usage,
+> +				       sizeof(cxl_aer_einj_usage) - 1);
+> +}
+> +
+> +static const struct file_operations cxl_ras_error_fops = {
+> +	.owner		= THIS_MODULE,
+> +	.read		= cxl_aer_einj_read,
+> +	.write		= cxl_aer_einj_write,
+> +	.llseek		= default_llseek,
+> +};
+> +
+> +static void cxl_ras_create_debugfs(struct dentry *dir)
+> +{
+> +	debugfs_create_file("aer_einj_inject", 0600, dir, NULL,
+> +			    &cxl_ras_error_fops);
+> +}
+> +
+> +static void __iomem *to_einj_ras_base(struct cxl_port *port, struct cxl_dport *dport)
+> +{
+> +	if (dport) {
+> +		if (cxl_aer_einj.is_rch) {
+> +			if (cxl_aer_einj.dev == dport->dport_dev) {
+> +				cxl_aer_einj.dev = NULL;
+> +				return (__force void __iomem *)cxl_aer_einj.ras_registers;
+> +			}
+> +		} else {
+> +			if (cxl_aer_einj.dev == dport->dport_dev) {
+> +				pci_dev_put(to_pci_dev(cxl_aer_einj.dev));
+> +				cxl_aer_einj.dev = NULL;
+> +				return (__force void __iomem *)cxl_aer_einj.ras_registers;
+> +			}
+> +		}
+> +	} else if (!cxl_aer_einj.is_rch) {
+> +		struct device *dev = is_cxl_endpoint(port) ?
+> +			port->uport_dev->parent : port->uport_dev;
+> +
+> +		if (dev_is_pci(dev) && cxl_aer_einj.dev == dev) {
+> +			pci_dev_put(to_pci_dev(cxl_aer_einj.dev));
+> +			cxl_aer_einj.dev = NULL;
+> +			return (__force void __iomem *)cxl_aer_einj.ras_registers;
+> +		}
+> +	}
+> +
+> +	return NULL;
+> +}
+> +#endif
+> +
+>  static void cxl_unmask_proto_interrupts(struct device *dev)
+>  {
+>  	struct pci_dev *pdev;
+> @@ -238,6 +428,14 @@ void __iomem *to_ras_base(struct cxl_port *port, struct cxl_dport *dport)
+>  	if (!port)
+>  		return NULL;
+>  
+> +#if IS_ENABLED(CONFIG_CXL_PROTO_AER_EINJ)
+
+I think you can do something like below instead:
+
+	if (IS_ENABLED(CONFIG_CXL_PROTO_AER_EINJ))
+
+DJ
+
+ > +	if (cxl_aer_einj.dev) {
+> +		void __iomem *einj = to_einj_ras_base(port, dport);
+> +		if (einj)
+> +			return einj;
+> +	}
+> +#endif
+> +
+>  	if (dport)
+>  		return dport->regs.ras;
+>  
+> @@ -458,10 +656,20 @@ void cxl_ras_init(void)
+>  	cxl_cper_register_prot_err_work(&cxl_cper_prot_err_work);
+>  	cxl_register_proto_err_work(&cxl_proto_err_work,
+>  				   cxl_proto_err_do_flush);
+> +#if IS_ENABLED(CONFIG_CXL_PROTO_AER_EINJ)
+> +	cxl_ras_create_debugfs(cxl_debugfs);
+> +#endif
+>  }
+>  
+>  void cxl_ras_exit(void)
+>  {
+>  	cxl_unregister_proto_err_work();
+>  	cxl_cper_unregister_prot_err_work();
+> +#if IS_ENABLED(CONFIG_CXL_PROTO_AER_EINJ)
+> +	if (cxl_aer_einj.dev) {
+> +		if (!cxl_aer_einj.is_rch)
+> +			pci_dev_put(to_pci_dev(cxl_aer_einj.dev));
+> +		cxl_aer_einj.dev = NULL;
+> +	}
+> +#endif
+>  }
+> diff --git a/drivers/cxl/core/ras_rch.c b/drivers/cxl/core/ras_rch.c
+> index 14bb3bdb2d092..5071cf86e4a68 100644
+> --- a/drivers/cxl/core/ras_rch.c
+> +++ b/drivers/cxl/core/ras_rch.c
+> @@ -110,6 +110,14 @@ void cxl_handle_rdport_errors(struct pci_dev *pdev)
+>  	if (!dport)
+>  		return;
+>  
+> +#if IS_ENABLED(CONFIG_CXL_PROTO_AER_EINJ)
+> +	if (cxl_aer_einj.is_rch && cxl_aer_einj.dev) {
+> +		severity = cxl_aer_einj.correctable ?
+> +			AER_CORRECTABLE : AER_FATAL;
+> +		goto handle_ras;
+> +	}
+> +#endif
+> +
+>  	if (!cxl_rch_get_aer_info(dport->regs.dport_aer, &aer_regs))
+>  		return;
+>  
+> @@ -117,6 +125,10 @@ void cxl_handle_rdport_errors(struct pci_dev *pdev)
+>  		return;
+>  
+>  	pci_print_aer(pdev, severity, &aer_regs);
+> +
+> +#if IS_ENABLED(CONFIG_CXL_PROTO_AER_EINJ)
+> +handle_ras:
+> +#endif
+>  	if (severity == AER_CORRECTABLE)
+>  		cxl_handle_cor_ras(dport->port, dport,
+>  				   to_ras_base(port, dport), pdev->dsn);
+> diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
+> index 09bfc7194ef31..b313adef680ae 100644
+> --- a/drivers/pci/pcie/aer_inject.c
+> +++ b/drivers/pci/pcie/aer_inject.c
+> @@ -14,6 +14,7 @@
+>  
+>  #define dev_fmt(fmt) "aer_inject: " fmt
+>  
+> +#include <linux/aer.h>
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/interrupt.h>
+> @@ -31,19 +32,6 @@
+>  static bool aer_mask_override;
+>  module_param(aer_mask_override, bool, 0);
+>  
+> -struct aer_error_inj {
+> -	u8 bus;
+> -	u8 dev;
+> -	u8 fn;
+> -	u32 uncor_status;
+> -	u32 cor_status;
+> -	u32 header_log0;
+> -	u32 header_log1;
+> -	u32 header_log2;
+> -	u32 header_log3;
+> -	u32 domain;
+> -};
+> -
+>  struct aer_error {
+>  	struct list_head list;
+>  	u32 domain;
+> @@ -316,7 +304,7 @@ static int pci_bus_set_aer_ops(struct pci_bus *bus)
+>  	return 0;
+>  }
+>  
+> -static int aer_inject(struct aer_error_inj *einj)
+> +int aer_inject(struct aer_error_inj *einj)
+>  {
+>  	struct aer_error *err, *rperr;
+>  	struct aer_error *err_alloc = NULL, *rperr_alloc = NULL;
+> @@ -332,10 +320,14 @@ static int aer_inject(struct aer_error_inj *einj)
+>  	dev = pci_get_domain_bus_and_slot(einj->domain, einj->bus, devfn);
+>  	if (!dev)
+>  		return -ENODEV;
+> -	rpdev = pcie_find_root_port(dev);
+> -	/* If Root Port not found, try to find an RCEC */
+> -	if (!rpdev)
+> -		rpdev = dev->rcec;
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
+> +		rpdev = dev;
+> +	else {
+> +		rpdev = pcie_find_root_port(dev);
+> +		/* If Root Port not found, try to find an RCEC */
+> +		if (!rpdev)
+> +			rpdev = dev->rcec;
+> +	}
+>  	if (!rpdev) {
+>  		pci_err(dev, "Neither Root Port nor RCEC found\n");
+>  		ret = -ENODEV;
+> @@ -482,6 +474,7 @@ static int aer_inject(struct aer_error_inj *einj)
+>  	pci_dev_put(dev);
+>  	return ret;
+>  }
+> +EXPORT_SYMBOL_GPL(aer_inject);
+>  
+>  static ssize_t aer_inject_write(struct file *filp, const char __user *ubuf,
+>  				size_t usize, loff_t *off)
+> diff --git a/include/linux/aer.h b/include/linux/aer.h
+> index b3657b80564b9..65c22ba597657 100644
+> --- a/include/linux/aer.h
+> +++ b/include/linux/aer.h
+> @@ -27,6 +27,21 @@
+>  struct pci_dev;
+>  struct work_struct;
+>  
+> +struct aer_error_inj {
+> +	u8 bus;
+> +	u8 dev;
+> +	u8 fn;
+> +	u32 uncor_status;
+> +	u32 cor_status;
+> +	u32 header_log0;
+> +	u32 header_log1;
+> +	u32 header_log2;
+> +	u32 header_log3;
+> +	u32 domain;
+> +};
+> +
+> +int aer_inject(struct aer_error_inj *einj);
+> +
+>  struct pcie_tlp_log {
+>  	union {
+>  		u32 dw[PCIE_STD_MAX_TLP_HEADERLOG];
+
