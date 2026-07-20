@@ -1,63 +1,63 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA31842E8C0
-	for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 19:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A898A4D8DA3
+	for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 19:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784576165; cv=none; b=aw8hg8uIP2VHP790lgNpwB3Vu0XACd+LtQOec5lQlYgAa+guy1Ebhl0yjBc7TirzIZiUD8tKSKUbivK+b3Ycg7O0niG19XMMSd5U3oJuycLScJa4uuUoWRrs7KjZlQ821rgEGjDJ/e7DplOSiKW/cNZuD6JuMHlnTZd0temmaWU=
+	t=1784576168; cv=none; b=kyYVQi+cEnHcQy3XbzAWslDInIAb9wkod6YVdM3RVfeihV0sJM55yL9/UR90E5VTfntQqSmbjS9zqAFk8DhbbR2ifc3kK/noG16byr2er4/V7R9f6s7QLVVk7b6H/BniSzK4xUT7+WShYZ6iGNlXb54e2+B6EiAvqSbHvQd7llU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784576165; c=relaxed/simple;
-	bh=ykYAmhd68ENhZafgAWcDfavSm6U0Wnr9Pzc8SD5B8Ac=;
+	s=arc-20240116; t=1784576168; c=relaxed/simple;
+	bh=VIh2CZmLMZ/97T44ZUvXoEPJ4nbdEMs3NtJzTr5SgDU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ApjRm2SLsEoLdbjkGDbgrTx1DidueIuKOTPyNLrP3GRN3j+kJjducndQDkzb8gZx7kZ6NF3YqHKbREwuP2mkR2ExHk1/jRA0GLWBlI2ONwG3TtiwRGWA5BsANDspnc74YtXK+TygbmFX9BrYz8LNabLPNVHlSSZ+kOcXDCaawcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=urabPHWY; arc=none smtp.client-ip=209.85.222.175
+	 MIME-Version; b=FMXcrEXbfrboh2YQbWP2z8Zi/wq5bUgVq3MTE4DG9qqB1XojsKQL+dJkcjoK/noEtNtnu06lFPfO2FTNG2wZUphyL9tKlh+YahEntHNHIlVFbkCL1mpe3MMDm2q1rilKBn9YAsp4R5bnMwEpggqLpwwv/y1KdJynrPOH3jkVglE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=JRF0aQVi; arc=none smtp.client-ip=209.85.222.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="urabPHWY"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-92e7c6ec9dbso548917285a.0
-        for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 12:36:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="JRF0aQVi"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-92e533aacf2so395310785a.2
+        for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 12:36:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1784576160; x=1785180960; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1784576163; x=1785180963; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=52AwKQKrQ6RLG5kuFGfqaKwjxS+9GOxT3lcLnMmQsKc=;
-        b=urabPHWY/4r2SA0gTLZoiuuXGF0JchFx3ihxRTIardaKhPBUW0MAUT01h9p2CMem+0
-         WgwXYcdKIsw/gQ1fDKuTEUet17c0qiYo6pM5aKrSM6sjPRqAOykWJAqEfOJq1Q2SbR9M
-         I8FKZSkDw4MXK/YTFmVbP65sYuTJzBG0S3GDLaGEwxtgGmLpoTgK0oZ50ANqCwJ102rq
-         VR++1rfDfdt3B5WQ+oSzwZK2w9HK0IkH1iVN3G/K6qxNVTGa5y8CloRFsFx0nGLcum+K
-         3T5zDho7mb5AyeUI0kH5QGRSdaauyW3LZqRQPlbxnEmwOYC1NSLoswUFM7yU9/EIiR/u
-         saJw==
+        bh=cmMfaNN8FH7IwFGvNgQFqVAtbOqtT0oL84O+5IPA/hE=;
+        b=JRF0aQViSVTmZOO8r9abVlam1VW7oEF1TCAP12arFXsWSk1qoVPq77Yf0CWFHKWMSe
+         q5/wnL54LYqc8nUAERRdE79fRvVVCKPvzab9i6XWuXy+aPGlre/rwpO+4m6sgBIYkivj
+         VjzTYXeVt/M0N4wWTAb/sCFYbahP1AoQgpIuktVi/l76b8skyRpq5JC5klpN+DVpHO2Z
+         ryrMIyFPgv+NsrRNkPeuVx5pl5FwOwggsTM6OFM84TRi87QU/9dYAWjM1rmsStSteV/m
+         hjmuaxGEWGdIsofVXvMhomuvXPhAHc1wGCEcD0gxvSPuKV8lz0FF83dOg5jO/t8H03/Z
+         3Wvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784576160; x=1785180960;
+        d=1e100.net; s=20251104; t=1784576163; x=1785180963;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=52AwKQKrQ6RLG5kuFGfqaKwjxS+9GOxT3lcLnMmQsKc=;
-        b=JdjGrjVO1Ymu5Wru0wbDy5QuAS541pG6jz42guAMDU+LFiH0IOp0k0zZO7XXTMkX5m
-         MFI696BsmysCzs163GgFMx7Wes3vmu0c2hIIUgtSldzGN2PyxmBWBZi1nntnisQUtIn7
-         oNVG+7y896+ee5HVdknLuyo3sfnsz+ADcZ9Ct/TeL9euAjeV7d1bUJFvfncPiSb1XIKk
-         yKIJ07+YVeS6zH67G7Xu9kkDr4+qLWCVLyIubbVpeOnu5FZ5IKjZgqzcy4p1J9sXn88o
-         T5gHZTIQ7y929Gf7neGVNywlMGXtXvRopajd6o8ZHq4eZK3fFbd9dujz+SyuBB43Lpjn
-         iOuQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpvJd2v/io4YoKQVemIZwkvFiQOtWK1nmpQXaZ0kugMk3IL76Sbdwj3mfWGAIRAAPf0PQSus2ioeeA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVPZxl7zWgmieMBYwJ9mGA6DuqMi2S5CejXE2LkYFETXxFkNYe
-	RYqul8UkPteoFeVDaB6FfL66bLITj/XFcMRYUq3340Wehu2esbwQZ1+cziA0tPNPHFs=
-X-Gm-Gg: AfdE7cmMZ9cs5OKKrEqxeTtkvU9++VPepDRYN0RcXpl33Ccwk58NjNformFqS6xD0Q0
-	26+SfB29uUojf51xNvEObQu5C7O9BcY2quotVktCQG5aAexRLvRlMjEW0TbEFVNRpQ+ANZB8Fmq
-	UJZS2ebOxCdja3kMdV1L3MAkg3vYW3YW25s6YKuQKei1U2EWw3qjnb5xEXG6tbd/RcrigmC/HpI
-	ICNMjZ3MVFjSeJMdg5WAqubP6M6ez8/vDi0ZdrfPbp4z+LTntXDlPo2s3Qfp6KvDKkuc5oET5xL
-	quGF352axw+vq5XUrCWC3nvr5PRLuUnyLgq1OXCzvEdctTrQz9aTXPD8NI3JCbgUdauoWKZWodu
-	vS0zowaQrY4LI1O+eYLQVMQNoIxMixA5Ww+G8Ch+hxQNIwpMYdKtoHAHqPI7wFY39InuUNz6CJc
-	XqDFCIlsUYFoikx4E3lpRZNRsrhbMkeOcRYuhwyHZV/Qo6XGmmsMJxY0mYXP4U/B0=
-X-Received: by 2002:a05:620a:4095:b0:92e:7467:fea0 with SMTP id af79cd13be357-930b3ed66d5mr1519423785a.34.1784576160054;
-        Mon, 20 Jul 2026 12:36:00 -0700 (PDT)
+        bh=cmMfaNN8FH7IwFGvNgQFqVAtbOqtT0oL84O+5IPA/hE=;
+        b=f9XlCulKmtWati3f5g/QlVAyMjO93s58S9RNC2gK1pLJtTOfeEMoyOSM8YDx9qvq8O
+         He2eyjqIU7E8iGh04Hc2D6ucJRWQawi166qFQdJrK2O9ENICufTG5A30qs14P75QV6bs
+         XP5HQw8ZuKSujsAa66bcyDZWycmcrq68FZ/wul9es1e9v3Z/kp+3vLNTHUlNJ/ZYnGU8
+         NcoeHugRRX7u0USBVWqvjIUx7RIgaZuclpE59QFZsn0QJt5ssdY8GKOOc3n5IJUBes8M
+         wiAnNLP3fcd7TsVrhnZ+MBPZWYpt15hqQTloxpMuFhM3M4HcOXPP9Xd2B04VpbJvfAKH
+         3zSQ==
+X-Forwarded-Encrypted: i=1; AHgh+RotD/lwHQpvCb+Ewc9YvTbBiUFABM8ikKHOzI736pQ9VoVE7I7MlQAvohPlQuN622TY0ZDtsdDYLxA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZA5+xXP+PIYQnvm5nbvAqY2ce6e0PXC9+LBcp3Hl93SYYtMl6
+	B1uoiHX7eIC2SRWU4BGlw0RPrNE9rpCxXE8XM5roMKt0CB1exP684LWIf7FgkDxvtWE=
+X-Gm-Gg: AfdE7cm33SaqJwXfiFaVoRluC9AH0+tgVA8sG1fNo+o4rLyNseiWp35FaBwVzN9bnWs
+	XLqW0BnlQHawnhp8I/rl7cEn19FTI/XTw9E1W4lBYL4mLE4xXnAz3sNefy5swWrj4ygF6jw85D2
+	x/lhqzUlLffq7yL1wib6CVkm940zG+HisPe63RKwZ/TyR18YE1Xh9J7hpKvVTOba55uWjuut/fy
+	Qhi/m74sJxEItMHFhRhA78PV26tmCLKuTLCylQf5qG2PrAE2KEBFOetuvzuzgJLfQReNHWeDJY4
+	4w/XFlYDbb4aGhizacaQ/AmMaxTCGbeI34Ag/drMBIBoFfXYn3wQFw/CnDR7BRo9GX81VTRhkPb
+	6CVY3Ob3nvNDNtEvTVtWwIgFzrA8UDUDKU5QgLn5dPKOPmqO30lJbZmCjatrjGDSVPBKpNyrusC
+	cBEXXQzL+Ib0LiASzCTRJHEj1OjVuLxaUDyNnI4t43TvHeXr0TbxVMFVU38ailUwE=
+X-Received: by 2002:a05:620a:4620:b0:92f:279:5953 with SMTP id af79cd13be357-930b3ea8f3emr1530889385a.27.1784576162881;
+        Mon, 20 Jul 2026 12:36:02 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-930b545e47bsm957792285a.35.2026.07.20.12.35.58
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-930b545e47bsm957792285a.35.2026.07.20.12.36.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2026 12:35:59 -0700 (PDT)
+        Mon, 20 Jul 2026 12:36:02 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: Zhigang.Luo@amd.com,
@@ -137,9 +137,9 @@ Cc: Zhigang.Luo@amd.com,
 	damon@lists.linux.dev,
 	linux-kselftest@vger.kernel.org,
 	kernel-team@meta.com
-Subject: [PATCH v5 31/36] mm: add NODE_PRIVATE_CAP_LTPIN for private node folio pinning
-Date: Mon, 20 Jul 2026 15:34:25 -0400
-Message-ID: <20260720193431.3841992-32-gourry@gourry.net>
+Subject: [PATCH v5 32/36] mm/khugepaged: base private node collapse eligiblity on actor/cap bits
+Date: Mon, 20 Jul 2026 15:34:26 -0400
+Message-ID: <20260720193431.3841992-33-gourry@gourry.net>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260720193431.3841992-1-gourry@gourry.net>
 References: <20260720193431.3841992-1-gourry@gourry.net>
@@ -151,115 +151,105 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add NODE_PRIVATE_CAP_LTPIN so a node can opt back into gup pins.
+Collapse can move base pages across nodes.  The khugepaged daemon does
+this transparently, while MADV_COLLAPSE is a userland construct.
 
-An opted-in node is then pinned exactly like ordinary memory, or
-migrated and pinned if in ZONE_MOVABLE.
+Isolate private nodes from khugepaged exactly like ZONE_DEVICE.
+Never collapse private node folios silently (the owner may not
+support migration).
+
+MADV_COLLAPSE is user-initiated, so it is allowed on a private node
+opted into CAP_USER_NUMA, consistent with other userspace interfaces.
+
+folio_allows_collapse() encodes this: false for khugepaged on a private
+node, CAP_USER_NUMA for MADV_COLLAPSE.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- include/linux/node_private.h | 29 +++++++++++++++++++++++++++++
- mm/gup.c                     |  3 ++-
- mm/internal.h                |  9 +++++----
- 3 files changed, 36 insertions(+), 5 deletions(-)
+ mm/internal.h   | 26 ++++++++++++++++++++++++++
+ mm/khugepaged.c | 16 +++++++++++++---
+ 2 files changed, 39 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/node_private.h b/include/linux/node_private.h
-index 5c3e070ed0deb..6f568bc0d46c7 100644
---- a/include/linux/node_private.h
-+++ b/include/linux/node_private.h
-@@ -17,6 +17,7 @@ struct page;
- #define NODE_PRIVATE_CAP_HOTUNPLUG	(1UL << 2)	/* allow hot-unplug */
- #define NODE_PRIVATE_CAP_DEMOTION	(1UL << 3)	/* allow tiering demotion */
- #define NODE_PRIVATE_CAP_NUMA_BALANCING	(1UL << 4)	/* allow NUMA balancing */
-+#define NODE_PRIVATE_CAP_LTPIN		(1UL << 5)	/* allow GUP pins */
- 
- /**
-  * struct node_private - Per-node container for N_MEMORY_PRIVATE nodes
-@@ -167,6 +168,29 @@ static inline bool node_allows_numa_balancing(int nid)
- 	return ret;
- }
- 
-+/**
-+ * node_allows_ltpin - may a folio on this node be long-term GUP-pinned?
-+ * @nid: the node to test
-+ *
-+ * Opted-out private nodes cause longterm pins to outright fail regardless
-+ * of ZONE placement (NORMAL would allow, MOVABLE would migrate first).
-+ *
-+ * Opted-in private nodes allow longterm pins to operate normally.
-+ */
-+static inline bool node_allows_ltpin(int nid)
-+{
-+	struct node_private *np;
-+	bool ret;
-+
-+	if (!node_state(nid, N_MEMORY_PRIVATE))
-+		return true;
-+	rcu_read_lock();
-+	np = rcu_dereference(NODE_DATA(nid)->node_private);
-+	ret = np && (np->caps & NODE_PRIVATE_CAP_LTPIN);
-+	rcu_read_unlock();
-+	return ret;
-+}
-+
- #else /* !CONFIG_NUMA */
- 
- static inline bool folio_is_private_node(struct folio *folio)
-@@ -209,6 +233,11 @@ static inline bool node_allows_numa_balancing(int nid)
- 	return true;
- }
- 
-+static inline bool node_allows_ltpin(int nid)
-+{
-+	return true;
-+}
-+
- #endif /* CONFIG_NUMA */
- 
- #if defined(CONFIG_NUMA) && defined(CONFIG_MEMORY_HOTPLUG)
-diff --git a/mm/gup.c b/mm/gup.c
-index a7d4de223785c..1e313aa590bc1 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -547,7 +547,8 @@ static struct folio *try_grab_folio_fast(struct page *page, int refs,
- 	/*
- 	 * Can't do FOLL_LONGTERM + FOLL_PIN gup fast path if not in a
- 	 * right zone, so fail and let the caller fall back to the slow
--	 * path.  Fail for private-node folios here so slow path rejects.
-+	 * path.  Fail for non-opted-in private node folios here so the
-+	 * slow path can reject the pin entirely.
- 	 */
- 	if (unlikely((flags & FOLL_LONGTERM) &&
- 		     !folio_allows_longterm_pin(folio))) {
 diff --git a/mm/internal.h b/mm/internal.h
-index 01ab8b32b0bd8..9621eb127c28c 100644
+index 9621eb127c28c..9dbc5752cd3fe 100644
 --- a/mm/internal.h
 +++ b/mm/internal.h
-@@ -146,19 +146,20 @@ static inline bool folio_allows_numa_balance(struct folio *folio)
- static inline bool folio_allows_longterm_pin(struct folio *folio)
- {
- 	return folio_is_longterm_pinnable(folio) &&
--	       !folio_is_private_node(folio);
-+	       node_allows_ltpin(folio_nid(folio));
+@@ -136,6 +136,32 @@ static inline bool folio_allows_numa_balance(struct folio *folio)
+ 	       node_allows_numa_balancing(folio_nid(folio));
  }
  
++/*
++ * folio_allows_collapse() - may collapse fold this folio into a THP?
++ * @is_khugepaged: true for the khugepaged, false for MADV_COLLAPSE.
++ *
++ * Collapse is a residency operation gated by the actor calling it:
++ *   - khugepaged never operates on private-node folios (like ZONE_DEVICE)
++ *   - MADV_COLLAPSE is gated by CAP_USER_NUMA
++ *
++ * Never true for ZONE_DEVICE.
++ */
++static inline bool folio_allows_collapse(struct folio *folio, bool is_khugepaged)
++{
++	int nid = folio_nid(folio);
++
++	if (folio_is_zone_device(folio))
++		return false;
++	if (is_khugepaged)
++		return !node_is_private(nid);
++	return node_allows_user_numa(nid);
++}
++
++static inline bool page_allows_collapse(struct page *page, bool is_khugepaged)
++{
++	return folio_allows_collapse(page_folio(page), is_khugepaged);
++}
++
  /*
-  * folio_longterm_pin_forbidden() - must a longterm pin of this folio fail
-  * outright (neither pinned in place nor migrated off the node)?
+  * folio_allows_longterm_pin() - may this folio be long-term GUP-pinned?
   *
-- * True for any folio on a private node: such memory can be neither pinned
-- * nor migrated, so the pin must be rejected with the folio left in place.
-+ * True only for a folio on a private node that did not opt into longterm
-+ * pinning (NODE_PRIVATE_CAP_LTPIN); node_allows_ltpin() is true for ordinary
-+ * nodes and for opted-in private nodes, so this never trips them.
-  */
- static inline bool folio_longterm_pin_forbidden(struct folio *folio)
- {
--	return folio_is_private_node(folio);
-+	return !node_allows_ltpin(folio_nid(folio));
- }
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index fb4378cc17b10..5f20839857738 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -700,7 +700,8 @@ static enum scan_result __collapse_huge_page_isolate(struct vm_area_struct *vma,
+ 			goto out;
+ 		}
+ 		page = vm_normal_page(vma, addr, pteval);
+-		if (unlikely(!page) || unlikely(page_is_private_managed(page))) {
++		if (unlikely(!page) ||
++		    unlikely(!page_allows_collapse(page, cc->is_khugepaged))) {
+ 			result = SCAN_PAGE_NULL;
+ 			goto out;
+ 		}
+@@ -1241,9 +1242,17 @@ static enum scan_result alloc_charge_folio(struct folio **foliop, struct mm_stru
+ 	gfp_t gfp = (cc->is_khugepaged ? alloc_hugepage_khugepaged_gfpmask() :
+ 		     GFP_TRANSHUGE);
+ 	int node = collapse_find_target_node(cc);
++	unsigned int aflags;
+ 	struct folio *folio;
++	bool allow;
  
- /*
+-	folio = __folio_alloc(gfp, order, node, &cc->alloc_nmask, ALLOC_DEFAULT);
++	/* Private node access: khugepaged never, madvise with CAP_USER_NUMA */
++	allow = cc->is_khugepaged ? !node_is_private(node)
++				  : node_allows_user_numa(node);
++	aflags = (allow && node_is_private(node)) ?
++		ALLOC_ZONELIST_PRIVATE : ALLOC_DEFAULT;
++
++	folio = __folio_alloc(gfp, order, node, &cc->alloc_nmask, aflags);
+ 	if (!folio) {
+ 		*foliop = NULL;
+ 		if (is_pmd_order(order))
+@@ -1687,7 +1696,8 @@ static enum scan_result collapse_scan_pmd(struct mm_struct *mm,
+ 		}
+ 
+ 		page = vm_normal_page(vma, addr, pteval);
+-		if (unlikely(!page) || unlikely(page_is_private_managed(page))) {
++		if (unlikely(!page) ||
++		    unlikely(!page_allows_collapse(page, cc->is_khugepaged))) {
+ 			result = SCAN_PAGE_NULL;
+ 			goto out_unmap;
+ 		}
 -- 
 2.53.0-Meta
 
