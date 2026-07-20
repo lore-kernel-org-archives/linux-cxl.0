@@ -1,43 +1,43 @@
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC4125A655
-	for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 06:03:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A8B38D3E5
+	for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 06:06:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784527419; cv=pass; b=OYh+teuX681NsRImEXNNLQ8vRUGw/bS93zjXofIaVC9ZhgmxRwQZJQhiy5FhASziM76QqUW3FHTJi9zDsY+pGghm0qSYKC2R7LqxrPh+jCVhedzdjyBmkcbpxX97/LXWz0eTqZj7SeXgdF9mxq4Ak9QL2Bf8Hnjp08+1vQTTzf0=
+	t=1784527579; cv=pass; b=Lskmg6JyAEJ/bc4OJnUIcZOrnq8PvkU89atwDEWMzQYQ3d5Wwi1PPAiKe3XbbpBSPwv6Ugyp/kpJISqoVrmxyF8g1cm+aPYCEyaxrEeh5lTutDubqw912b13z09QIRDpcoPNC/20h2KehU1HE4p0vgVOFs3zL2dQ8khxfnMBYs4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784527419; c=relaxed/simple;
-	bh=PEBiXeVWXAVMxJ9PAyDrBGPWcLHMYWg2tpPPZlRyhtE=;
+	s=arc-20240116; t=1784527579; c=relaxed/simple;
+	bh=zfCfJuazhpNHCe0ASlzTsjwG6DuFQvMsdtvFr3Vv85A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WsbB5Ubb6G4zpjxsiNB2rYtp/A1zNvyZbgHkJAgHf0RBFdyUd2QS6jt4LOkaJk7NuiqJwE2PzbmnvEp6QGY75RyDoG0iHO0lCqhT2t9FdY/D65I7gJq70S/zD5rKt8VBl+1qxfTliOk87asLvu591lPOl8G5AZO7AK3WUUW4es0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=eV/64VE+; arc=pass smtp.client-ip=136.143.188.94
+	 In-Reply-To:Content-Type; b=QTvhKkQ8rbIvS5gUCWolFUN+AIkkOm1GLA2yhe2TY4YDCdmmS+aJ0qnqiH0Rl/NRFvUfYMGOThQLoUPx4R0jzuHSQdzDUMOeb0q6eFq+rehVfmEExIez0qN2p2I63WdiByISVOYIYigraf5AYaDV5NPo2mZ8371H3AXtb1zbuC8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=TuhlXNOo; arc=pass smtp.client-ip=136.143.188.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="eV/64VE+"
-ARC-Seal: i=1; a=rsa-sha256; t=1784527398; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="TuhlXNOo"
+ARC-Seal: i=1; a=rsa-sha256; t=1784527563; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=beE/c8+9VT3/0kZpIuIEPiMQKl3oAHxrV3P/Dhw/yKg0synkzSr6KKM9phmv3vNR0bRb+ChYnI045CI4HewU622vb8B1C/0U6KJwy+TIN1bGs+Du8yuYYgXcZHxXQdgyQR7BWxCdr81+JTzXkFu85wmZB7c4LifWlT9oQwdRdy0=
+	b=l7q5QK4Pjnl4DI4R4cmBoGMuMNCKLblQrju+jnTCkCERQzIbZg7F00Uj3NhLLJotT9vGuU4z2ttjspX9JWOfVr2+7dPMMDCzmSpLk1Gyc5ALQhCjKvTNxkDIsrEO3zjK7noXaZw4w+G9F6ExLt34M5JhVRXNtgBxRtgN6X5WsYk=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1784527398; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=cIsEj6YAupl7MYoXDjtItsKqoZcq334lYDTPd/alWus=; 
-	b=ESdZiQCyvgRL/1FbcANU6HcH2hAGapE94EV4LPModvYaWHgLq6lDBft5/U52AhV486KW2rYg2T7ElnOPTtA1Zz/j5QiCNhlHCyTxoYj36Uz2U0z5NZslOAmLQNUEUfXtZh897xW0tjvraLccAmVGmogUA0ju4lJROVkjMW/yw/U=
+	t=1784527563; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=/ZnMXlzQpBHxKcD8OYB1VvoAQHa0aHp0dCGtj+Eakmk=; 
+	b=cI4fUmQks0Qh+4TjGgNWXVCM2YlLKM7S/JJIl4WlyvQ86DagvvYk5NaHIOhoAswAz9wOaAVIG+bey3nzlpkJTvphqiYUF2LeH5eoHvydcXUt5Pl5woUHHuv376YJkvZhvbCgDXlsihUsowGBmvCmyfeiE9ZBQIx8GWN0pzoW0Ns=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784527398;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1784527563;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=cIsEj6YAupl7MYoXDjtItsKqoZcq334lYDTPd/alWus=;
-	b=eV/64VE+sBszGEfBefuOZkq7NIUu2PLsqsYd4YWe69uXMbiE9O6fkXIbcqrcZ7uJ
-	3rJuYSuD0fgwN0JOPr+kWQKTi119qk96OILtNMbFMi4S8TC3F0qPs7zGkY6AokD8T4F
-	3ekKJJnCmIO1kWka94csRbcF7RuFGmkUDvYKFH8U=
-Received: by mx.zohomail.com with SMTPS id 1784527395750528.8390715284543;
-	Sun, 19 Jul 2026 23:03:15 -0700 (PDT)
-Message-ID: <171d58db-3555-4a79-a9f9-8a3c2e14d91d@zohomail.com>
-Date: Mon, 20 Jul 2026 14:03:06 +0800
+	bh=/ZnMXlzQpBHxKcD8OYB1VvoAQHa0aHp0dCGtj+Eakmk=;
+	b=TuhlXNOoYlFt0ls0RJnfSnpMXjPX80UKLVZHzwMHfG9Lb0SHLpOKTUaM+Fmah9qF
+	j4iomlpUxwc1E1pumRm0PikL5DbKoTwne8DX6RJSCiXLLhzPG3iMMD5lGApzzFPrmso
+	ijLcZS4cY0YsxGHCOuB1Xx16ZfMWkhpJxgnyS/Jw=
+Received: by mx.zohomail.com with SMTPS id 1784527560312704.8273564297459;
+	Sun, 19 Jul 2026 23:06:00 -0700 (PDT)
+Message-ID: <84e5dff7-1e49-49d6-8e7d-c9bc42600e0a@zohomail.com>
+Date: Mon, 20 Jul 2026 14:05:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -45,113 +45,77 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] cxl/hdm: Reject switch decoder interleave ways
- that overflow targets
+Subject: Re: [PATCH v3 2/3] cxl/hdm: Make switch decoder target parsing
+ endian-safe
 To: Alison Schofield <alison.schofield@intel.com>
 Cc: linux-cxl@vger.kernel.org, Srirangan Madhavan <smadhavan@nvidia.com>,
+ Richard Cheng <icheng@nvidia.com>, Ira Weiny <iweiny@kernel.org>,
  Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
  Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Ira Weiny <iweiny@kernel.org>, Dan Williams <djbw@kernel.org>
+ Dan Williams <djbw@kernel.org>
 References: <cover.1784322343.git.alison.schofield@intel.com>
- <de61a8143c7de391f8463003d87a3845496f4af3.1784322343.git.alison.schofield@intel.com>
+ <c09d201db3b716a6a9c664ccb8ff7fd9dc67b562.1784322343.git.alison.schofield@intel.com>
 From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <de61a8143c7de391f8463003d87a3845496f4af3.1784322343.git.alison.schofield@intel.com>
+In-Reply-To: <c09d201db3b716a6a9c664ccb8ff7fd9dc67b562.1784322343.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Feedback-ID: zu0801122727be893a46aeeadd8dcb35c500000089a84ee7e77af35162f86bd1e38a2615cfbdec684f3baddb:ZohoMail
+Feedback-ID: zu08011227a060d09af4f7fb29b8101b990000e633ae0e2b5052ba04dcd68aa451f1104f48be0b355f031cc6:ZohoMail
 X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
 X-ZohoMailClient: External
 
 
 在 2026/7/18 05:42, Alison Schofield 写道:
-> Switch decoder enumeration validates that the interleave ways encoding
-> is legal, but not that the resulting number of ways fits the available
-> targets. This can overrun the target arrays during enumeration.
+> Switch decoder target IDs are stored one per byte, starting with target
+> 0 in the least significant byte. The current code accesses those bytes
+> in memory order, which only matches register order on little-endian
+> hosts.
 >
-> Reject committed decoders whose interleave ways exceed either the
-> hardware target list capacity or the reported target count. Reject
-> switch decoders that report zero targets.
+> On big-endian hosts, the target IDs are reversed and the decoder is
+> associated with the wrong downstream ports.
 >
-> For uncommitted decoders, ignore the stale interleave ways value and
-> reset it to one until the decoder is committed.
+> Extract each target ID from the register value with an explicit shift
+> and mask so the target mapping is independent of host endianness.
 >
-> Add a clarifying comment that target_count is a direct count, not
-> 0-based like decoder_count.
->
-> Link: https://sashiko.dev/#/patchset/20260711180755.1779002-1-alison.schofield@intel.com?part=1
 > Fixes: d17d0540a0db ("cxl/core/hdm: Add CXL standard decoder enumeration to the core")
+> Reviewed-by: Richard Cheng <icheng@nvidia.com>
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+
+Reviewed-by: Li Ming <ming.li@zohomail.com>
+
+
 > ---
->   drivers/cxl/core/hdm.c | 33 +++++++++++++++++++++++++++++++++
->   drivers/cxl/cxl.h      |  2 ++
->   2 files changed, 35 insertions(+)
+>   drivers/cxl/core/hdm.c | 9 +++------
+>   1 file changed, 3 insertions(+), 6 deletions(-)
 >
 > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 0c80b76a5f9b..d81df45d8005 100644
+> index d81df45d8005..4aaadb842d90 100644
 > --- a/drivers/cxl/core/hdm.c
 > +++ b/drivers/cxl/core/hdm.c
-> @@ -76,6 +76,8 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+> @@ -976,14 +976,11 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>   {
+>   	struct cxl_endpoint_decoder *cxled = NULL;
+>   	u64 size, base, skip, dpa_size, lo, hi;
+> +	u64 target_list;
+>   	bool committed;
+>   	u32 remainder;
+>   	int i, rc;
+>   	u32 ctrl;
+> -	union {
+> -		u64 value;
+> -		unsigned char target_id[8];
+> -	} target_list;
 >   
->   	hdm_cap = readl(cxlhdm->regs.hdm_decoder + CXL_HDM_DECODER_CAP_OFFSET);
->   	cxlhdm->decoder_count = cxl_hdm_decoder_count(hdm_cap);
-> +
-> +	/* target_count is a direct count (1h..8h), not 0-based like decoder_count */
->   	cxlhdm->target_count =
->   		FIELD_GET(CXL_HDM_DECODER_TARGET_COUNT_MASK, hdm_cap);
->   	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_11_8, hdm_cap))
-> @@ -1084,6 +1086,37 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->   		cxld->interleave_ways, cxld->interleave_granularity);
+>   	if (should_emulate_decoders(info))
+>   		return cxl_setup_hdm_decoder_from_dvsec(port, cxld, dpa_base,
+> @@ -1119,9 +1116,9 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
 >   
->   	if (!cxled) {
-> +		struct cxl_switch_decoder *cxlsd =
-> +			to_cxl_switch_decoder(&cxld->dev);
-> +
-> +		if (cxlsd->nr_targets < 1) {
-> +			dev_err(&port->dev,
-> +				"decoder%d.%d: reports zero targets\n",
-> +				port->id, cxld->id);
-> +			return -ENXIO;
-> +		}
-> +
-> +		if (!committed) {
-> +			/* Ignore interleave ways until commit */
-> +			cxld->interleave_ways = 1;
-> +			return 0;
-> +		}
-Current init_hdm_decoder() reads IW and IG from CTRL register whatever a 
-decoder is enabled or not, just wondering any reason for that. Because 
-my understanding is when CXL driver programs a decoder, IW and IG will 
-be rewritten, so is it not needed to read IW and IG from the register if 
-a decoder is not enabled?
-> +
-> +		if (cxld->interleave_ways > CXL_HDM_DECODER0_TL_TARGETS) {
-> +			dev_err(&port->dev,
-> +				"decoder%d.%d: interleave ways: %d exceeds target list capacity: %d\n",
-> +				port->id, cxld->id, cxld->interleave_ways,
-> +				CXL_HDM_DECODER0_TL_TARGETS);
-> +			return -ENXIO;
-> +		}
-> +		if (cxld->interleave_ways > cxlsd->nr_targets) {
-> +			dev_err(&port->dev,
-> +				"decoder%d.%d: interleave ways: %d exceeds targets: %d\n",
-> +				port->id, cxld->id, cxld->interleave_ways,
-> +				cxlsd->nr_targets);
-> +			return -ENXIO;
-> +		}
-> +
 >   		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
 >   		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
->   		target_list.value = (hi << 32) + lo;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index c0e5308e4d1b..291ada46b646 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -67,6 +67,8 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
->   #define   CXL_HDM_DECODER0_CTRL_HOSTONLY BIT(12)
->   #define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
->   #define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
-> +/* Two registers with one target ID per byte */
-> +#define CXL_HDM_DECODER0_TL_TARGETS 8
->   #define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
->   #define CXL_HDM_DECODER0_SKIP_HIGH(i) CXL_HDM_DECODER0_TL_HIGH(i)
+> -		target_list.value = (hi << 32) + lo;
+> +		target_list = (hi << 32) + lo;
+>   		for (i = 0; i < cxld->interleave_ways; i++)
+> -			cxld->target_map[i] = target_list.target_id[i];
+> +			cxld->target_map[i] = (target_list >> (i * 8)) & 0xff;
 >   
+>   		return 0;
+>   	}
