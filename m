@@ -1,63 +1,63 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1176B47DD5A
-	for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 19:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DE147DF99
+	for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 19:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784576115; cv=none; b=VYgUpULgOflzbq2VaF9u/vjQ2O4kWC3RSZoYqINwmDC+f/kSVjVZJGe9GZ9V5Nku82QO2YwEaZk/wpWGoyPuuY+2cbCKy1jqsL5QyUor6ZATt5qLAE2F6fUwISmOS4vSUWQ8f6fHkiMdo+J9gEbxY87S99TLXY3LYntUhtM2Gl0=
+	t=1784576118; cv=none; b=IFg2T4KxkFeuUIpPxVL0TizEX1b+q5LSZ1rxkuSTR7ynFJcG+U8wfjWe+lPk5ptVoB1T7o9ARpv6Sd31KKPT7OL3TA54vVxH5V1q22vGlyxxflmMTtqX2QEh3OdaNI2Ak9eKfWLEg8nURN/EeDXLsCbkm5DTB55zcS9Jnj8mSW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784576115; c=relaxed/simple;
-	bh=cwT1qxzu5mcEtwbfCjbjp1x2zlkj7iTH/wP2YBbJ88A=;
+	s=arc-20240116; t=1784576118; c=relaxed/simple;
+	bh=rQ3ZLRwttPY5U7qx79TyOlCHcsHd1SWTIks/cm1EO0k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Mdzqyz4rTGKc2FwX4wNlUmlp59hmPJ3PvOWbBtOfPX8J1SkxA2bzCosSylOB3l5h1/73L9QBVuuk/IU900xTfqwZZTKDt+8untN1jswCLKnjAf2rO9xXiaRR4ZUBJfL7fUb4La5sev97yjXiMtOps+wbhUmHMQB52Zq/8h0SGns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=eyxoedwA; arc=none smtp.client-ip=209.85.222.179
+	 MIME-Version; b=lLpbaZEY9CTlsIevuSCIlt5lQNzJZSCMUZju3JvQkpSBiPlF/DX8R1KYl53vfwR271KPihycXy7uS/EyKx2I3nNuYkUewmyq+yD2tJTkYTgUY4BiUMYQzI6mlmIeYYQL8+srRP3AqfDPGoVNArqEgkg6jNXQA9eyTx2RziG+9Ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Jzb7G+L+; arc=none smtp.client-ip=209.85.219.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="eyxoedwA"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-92e5cb052edso567160185a.2
-        for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 12:35:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Jzb7G+L+"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-8efcef23d21so104277556d6.2
+        for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 12:35:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1784576110; x=1785180910; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1784576113; x=1785180913; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=zRBuTTcFDLFkxWr76FAXg5UPkm9NjmBW+wSCIxxIlUw=;
-        b=eyxoedwAgKPwlER6cisueYVhnwGikgeb6n92xljUQIvdVPafD6U5vCCdqvQmpHWntT
-         CmQA/p9doNwRA9EfJnbBmapZcEIwVradgPhUl/Ny1o0Ghnk+E3P+ZWbWHxOaPf4kmWiW
-         KPxTvjO7j+k9X4G0cXhViItoWgy888RpaocJo+HrBB30ZYWxIAiRGHNdjhGiq88btefv
-         rywIAwhmVtE7AAK10m3inPwKhWivK6Yv4PGNR5kYiv1CGm/IroMqBHDRtgcaTQRgjX+9
-         YlRdKqvQhOgvstox5F1CdKoHsoVtvyMPOdHB0+xhXdOL37S3ZlNV/ckZJkmvxGZ9U68c
-         vVWg==
+        bh=dXwJlI/llosQi30lLS1O2+gV7rtKvgDC66cTY4z3y4o=;
+        b=Jzb7G+L+pWevO30ha/zRsPrDNzrFGAKggAwxk7Yv/LsBZKPzLyRZovMh8ZirvuBknj
+         weVss9OdLNVU7q9vh5b3czjhw28LQfkCgK2M23dqsahaKyXPJJ321z4Rp7/GpypsLFqy
+         fC/YLDW53VfGKqk7BbghBQgYdNzcuvR3i/rDGfcoXIBP6RovKh9nfxC1yPe1niSFf0ma
+         gvcy13NKniHDM13kC5OMDbuPdrx7zJASklqNQtn5RWem1tHLcXm75R1wtYzkLXDVvn+r
+         InJLCTnfyYPJScL6Gkwm61ta05M3o/Xverw/GjLi4m8y+mAGBVWdhhyr/Eg3fQF5FtH0
+         rWtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784576110; x=1785180910;
+        d=1e100.net; s=20251104; t=1784576113; x=1785180913;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=zRBuTTcFDLFkxWr76FAXg5UPkm9NjmBW+wSCIxxIlUw=;
-        b=PsVuPTdcfvoMa8swOsdraCGtiSoFUNEp+nov6/hzEOSx2hyEqtXUt71Tt8fgag8BDn
-         ywodEDqkCQ/Ow4+1iwHk5UeLxYepWLCjKZamr2G9ti7G1925dLpMKGbvV+HozuDlyas8
-         KNeXUMj7Zlt//XR7dmiRXtR7/8vWxt6VJOf3FFQ77wOPFVIhv9YiCdS667DOL2RJ14Sd
-         QyGAmfzvnXN1YS1tUMmLKzcPnLsXaC6t5aWsv94L/XeQ/aMdBx3AfAJUvnNRcXDPBvV5
-         Apogw/0UxsH9ec1OMRXtmZtG/rlXvdxH3DLn6rEXxcUyRrUAITwDkqTDNpRw0+EhNKUY
-         dHTA==
-X-Forwarded-Encrypted: i=1; AHgh+RrLeT4EY/rk0VR+uRbwfmztXfPfIeqKaI1x+3f5Voits0DAeqkVqsZ+o9NQkXWtm+UlCbuQJFG6YMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzi1nzc5qPYpaBzXaqO4wqEG81KqLczMaovMDW3RWBcyvO7fX+D
-	hw36Rf6rBTA2eRZwjL1230PbqBmZu5To+6EXUxrrVeGDO6PWeRJCp0jDJ1DMrA67JHM=
-X-Gm-Gg: AfdE7cnhumn3BtvgqTWwJpOOkpnLztjon6zvFSJXVelbd6eC9kD7DkayFGVTSj6K+el
-	0Fw95vUaPDx5+ctiehijP7pecGTep+AxzWbmtTuHHMCdyt/6UuQiSwx/1UX4rtnKBzXv7c/9ADD
-	EM4d7CeAUig6Z2kkFffz+4643VidN9PfwR7GqE2xHPlDX+qOetQLafKyI3dIEcsA05u5/KQl0Hl
-	NWbpTQXrk1PEQCG+oB7cZUFxAnFchp2xMNTmBeL/+PmOvPIGvyzyM3mFSk6Pv8qVb1fP+Bjj7UO
-	z35nDgQRhMHoZinF16xP/meTLxLRuTtdsg994v4osdKw5axb5aUQzSNRu2LqYaI3gVzbY3PR56B
-	w/dz2miQY5VSfZiHCHEKh1vUwzzJZvzOmmiveGaakDOuZ9J9UbbxGSCOJxLcXPN7qCgxTQTkEpG
-	xVfIUrxpyRIjS1yYa09l2VxG6XoRm9rbDMhjsjMRxO7wo12V8G9EbcAvqJsU9Myug=
-X-Received: by 2002:a05:620a:3706:b0:92e:f212:98df with SMTP id af79cd13be357-930b3ec8d4emr1550494985a.34.1784576110290;
-        Mon, 20 Jul 2026 12:35:10 -0700 (PDT)
+        bh=dXwJlI/llosQi30lLS1O2+gV7rtKvgDC66cTY4z3y4o=;
+        b=TelP+ml8L+c7QcD5o+zS2SklsKpnPKEC75nTWFedO/TNaLcAAMq5WtPyyWKf+QBDZP
+         VVb8ydjc6LYptJfn+kabQY5NSEZhrfpZQASEyV8RhmkWwrKAznWMqdhA8IVj98FocIRo
+         7YNfwNcGNbZciLNtB+46KN7LwAY/WAxlxfE57cHfgS2GJPjo656pRFMCSCSAPYZTDb/R
+         cYigFpaTxfMjQl0QJX2bvW3jdwS9H3pzCfJnv/d832rqnrtZFZ4uNVwM4rNSQAKVfl8g
+         UsvvgZIRq3ccYDdLxwaScfhVw+JHsnnuvvtZYTouTNL0k1o414oDnyqBvumrL0c2hVAm
+         nmvg==
+X-Forwarded-Encrypted: i=1; AHgh+RqKSbURwkMJEHBDIS1WrD51D0N+/S5JRAYEGHirYcaU0R8zpHrqcGrBKzYOKSwQW7555K0ozB2Viiw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFOLdC3AlyMfTdYqXA7QMSkdW9H4BpeZKJj8EaFcVYpeWBPUQC
+	aUvcO+uiXm5WecY9hwAvo5BsY1VLccAM1T7vEZhrhvWhOc8hmzuqi4LjcaDRjN1m5ZE=
+X-Gm-Gg: AfdE7clsyp2kjbAPEiCTVEbbp4eJKIHL3VasV0qSStAAAcVlPTyvrnKF/7fl4Cts0kq
+	YhLgPVE+IMzjkDhybHJmZGhDuCmC0cVEVWQ49EhZ6eFQ3RTUzbc9rOB/QuDximAZXOn3NiArb0f
+	QvxgadQatK0DX26wesJnl9vp7jUfy0tgiI4pn/iggWCa4IZpdAq2I0NeDHZ22PV1XRKXma5vpHJ
+	D6PDvVMU6qMn3lK3puaQzh97JZj4FY5cuAGX6yLrx4eHU9upscbNBBt/Z6iQWth7NcjlrTcUWRr
+	bcHVWQofQX3KRqSGeefNsmuyY5jp7SP6pJN3pMpnIE2ITBqoJn7/dT3LPmA1H+vamLmMZyOEP2X
+	zRTAS7yPmVfxmFa9pI6f3ysjLNeRM+1r+RSFfc8yA1HXaIrZOYvMKxoYH/ryVzMrYH6fbx1ssBi
+	xZ2VqUhi6arzrUizVgFboEV9GoPS1+fdFW8kd5R/5hjFlqnqrMDluGvshZmzya3+E=
+X-Received: by 2002:a05:620a:45a4:b0:930:af44:c3f6 with SMTP id af79cd13be357-930b416db87mr1543521885a.43.1784576112837;
+        Mon, 20 Jul 2026 12:35:12 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-930b545e47bsm957792285a.35.2026.07.20.12.35.08
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-930b545e47bsm957792285a.35.2026.07.20.12.35.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2026 12:35:09 -0700 (PDT)
+        Mon, 20 Jul 2026 12:35:12 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: Zhigang.Luo@amd.com,
@@ -137,9 +137,9 @@ Cc: Zhigang.Luo@amd.com,
 	damon@lists.linux.dev,
 	linux-kselftest@vger.kernel.org,
 	kernel-team@meta.com
-Subject: [PATCH v5 12/36] mm/page_alloc: clear private node watermarks and system reserves
-Date: Mon, 20 Jul 2026 15:34:06 -0400
-Message-ID: <20260720193431.3841992-13-gourry@gourry.net>
+Subject: [PATCH v5 13/36] mm/mempolicy: disallow NUMA Balancing prot_none on private nodes
+Date: Mon, 20 Jul 2026 15:34:07 -0400
+Message-ID: <20260720193431.3841992-14-gourry@gourry.net>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260720193431.3841992-1-gourry@gourry.net>
 References: <20260720193431.3841992-1-gourry@gourry.net>
@@ -151,68 +151,27 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Set private node watermarks to 0 (reclaim isn't supported yet, so they
-are pointless), and do not include private nodes in system reserves.
-
-The oom killer can't actually resolve general system pressure by
-releasing private node capacity, so including them in system reserve
-calculations dilutes DRAM watermarks and causes poor OOM kill behavior.
+Skip private node memory the same way zone device memory is
+skipped, since private nodes do not presently support migration.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- mm/page_alloc.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ mm/mempolicy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 78755a55b1540..2b08bea2379a9 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6555,6 +6555,10 @@ static void calculate_totalreserve_pages(void)
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 8e8763f6e5f5b..2b76c57a460c9 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -845,7 +845,7 @@ bool folio_can_map_prot_numa(struct folio *folio, struct vm_area_struct *vma,
+ {
+ 	int nid;
  
- 		pgdat->totalreserve_pages = 0;
+-	if (!folio || folio_is_zone_device(folio) || folio_test_ksm(folio))
++	if (!folio || folio_is_private_managed(folio) || folio_test_ksm(folio))
+ 		return false;
  
-+		/* private nodes have zero watermarks */
-+		if (node_is_private(pgdat->node_id))
-+			continue;
-+
- 		for (i = 0; i < MAX_NR_ZONES; i++) {
- 			struct zone *zone = pgdat->node_zones + i;
- 			long max = 0;
-@@ -6647,9 +6651,15 @@ static void __setup_per_zone_wmarks(void)
- 	struct zone *zone;
- 	unsigned long flags;
- 
--	/* Calculate total number of !ZONE_HIGHMEM and !ZONE_MOVABLE pages */
-+	/*
-+	 * Calculate total number of !ZONE_HIGHMEM and !ZONE_MOVABLE pages
-+	 *
-+	 * Private nodes are excluded because they are not in the regular
-+	 * allocation fallback path - including them dilutes DRAM watermarks.
-+	 */
- 	for_each_zone(zone) {
--		if (!is_highmem(zone) && zone_idx(zone) != ZONE_MOVABLE)
-+		if (!is_highmem(zone) && zone_idx(zone) != ZONE_MOVABLE &&
-+		    !node_is_private(zone_to_nid(zone)))
- 			lowmem_pages += zone_managed_pages(zone);
- 	}
- 
-@@ -6657,6 +6667,16 @@ static void __setup_per_zone_wmarks(void)
- 		u64 tmp;
- 
- 		spin_lock_irqsave(&zone->lock, flags);
-+		if (node_is_private(zone_to_nid(zone))) {
-+			zone->_watermark[WMARK_MIN] = 0;
-+			zone->_watermark[WMARK_LOW] = 0;
-+			zone->_watermark[WMARK_HIGH] = 0;
-+			zone->_watermark[WMARK_PROMO] = 0;
-+			zone->watermark_boost = 0;
-+			spin_unlock_irqrestore(&zone->lock, flags);
-+			continue;
-+		}
-+
- 		tmp = (u64)pages_min * zone_managed_pages(zone);
- 		tmp = div64_ul(tmp, lowmem_pages);
- 		if (is_highmem(zone) || zone_idx(zone) == ZONE_MOVABLE) {
+ 	/* Also skip shared copy-on-write folios */
 -- 
 2.53.0-Meta
 
