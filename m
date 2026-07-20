@@ -1,63 +1,63 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 133DB47A0CD
-	for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 19:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F262F480941
+	for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 19:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784576119; cv=none; b=IF1pZFQy8Ym4np0kWtUNUrKSriFb9Q+apTFCcn/LtScoq0n4tZTQ8qHnXRs2CZijrWiPZzozpqyy3ywH+KbZm1CC+/jBx/XZ5zfXQPkG36iGcr3Ww/9gMnOXfrSxmM2LS96O7x+Qz35R2qmPNv7gIO6Lq7TaGcBpikA2RDKXUSg=
+	t=1784576124; cv=none; b=ogkygEAqyWmYOZqWQz1kTGdTBqJ7vLoEnXDjhNUhE2W3vbK22yDNoNBe6pO8YuNny5zgHstfVhoYUus3prG/14zYfVWugN+T7LBtuVkyztTS5+RgX+V7caeEHrBjqcsHi8ocV95qWIqXF5gt9ZmY50AcVY03TlpjeIVAOKvZ+Xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784576119; c=relaxed/simple;
-	bh=YDZvVuwxxNQNjdV0uMiVC+0kbWzivRWlBZFWKXKo0fQ=;
+	s=arc-20240116; t=1784576124; c=relaxed/simple;
+	bh=wTYQxiwnnNn1fQlaf49KQEuG8RjOnNBI3U36p9hX2rg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SUVsTj8G3GITe3ah63OyT98hhUa0Ne+fzJAAFqGqJR7pzd3ameZ6zrUTcavvWh0JVzbDMaQfIjTSsNlLNkDgLw8GgBewvWpanKBTDdUrHj2/rjETO2DVMUOlf+9d3r8gSM0kyvAa6hfDHWsps7UMJO78vSDEaNPYQAyWB4VyJ9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=UkNy6Lyf; arc=none smtp.client-ip=209.85.222.181
+	 MIME-Version; b=fTnxxIOqVTQ2lN2m3uOwlmgpbFQk4oun2eyLUBpNkUmTxv60eTxFcGq2quKHoaBBUF5OW06CdB2+FvXt6/E+uSlT0rlny+JLCV8f+dM0Yktc6XXjKEUAFE8mVdXMfUWqp1JcO2RgXitdXbzOw/iATQLcJVJUYzub6SHa9WjG2vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=vLMs9sBk; arc=none smtp.client-ip=209.85.222.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="UkNy6Lyf"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-92e50979c71so1168487385a.3
-        for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 12:35:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="vLMs9sBk"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-92e533aacf2so395278585a.2
+        for <linux-cxl@vger.kernel.org>; Mon, 20 Jul 2026 12:35:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1784576115; x=1785180915; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1784576118; x=1785180918; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Bn1va8d6JpVtah/28aJ2nDxAxk/IiYTaqElYsPWqJNc=;
-        b=UkNy6LyfbqXF9yIeCYdJyilNhqzXgUux1X1hd6mYEUcb/KF6frIUHMm4glreGepqiR
-         dkGrwvm03lgliafPrVgh/K2lSTt+JMh4f3Q26AkwdQDhYLEgxNFln4OOIIL0HAhwUN1j
-         ASTYMqe5SWSQau6D4RKTKMbwTTHFCWlugLVvqbfsV4qG2Ti5LUTHoJz2ofGrjb5cnMh+
-         5AWDqCtxMuLDf2B8BHg2xqq3tevfeQe1n5KCFBZa+fc+glDYONDJRhIkqRpnDAIUWMBm
-         NBFn0KyHXZmhjlKQ70uZoESWndE4PpY1AyRlM5fd0+IgLPKdYugn8VdkXuu9FGgvth8G
-         Ybaw==
+        bh=HgkUnnQve0Rn/Pvs0Z/0q3yFfFJ0c7Ckz6K5pdtr6eU=;
+        b=vLMs9sBkiBOQ7nWM2/JvINrnxvZuXiHaXQoiMxPSr9eLnxFZ+Jzubfq8+Y765V6jXH
+         Qn8sZ2I2RIRe0s69fsIAccrMwJQGCsw8WCY05tISAT99hWL7opQyW484byM6FeBWNaka
+         m8yYTUY6rBYH1WE5qrmHC8lRhBH3osqitPluMLWB2m5jHl/iIAHL4mhmjmPkqlZ6M4n3
+         6kxnHP7O1qeE8JGHbnySHwQdHdAcGUIsO8lJmjhLJSppROXwONURxUzeicmaHtBoahjW
+         kfzSqFvXdhsznzyA2nTDknEFEDy98eJefQV3l5V0+vjf0VGjoLjx3uEklcDvL4B5rIL0
+         HlWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784576115; x=1785180915;
+        d=1e100.net; s=20251104; t=1784576118; x=1785180918;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Bn1va8d6JpVtah/28aJ2nDxAxk/IiYTaqElYsPWqJNc=;
-        b=Z5lXC0TuHfxyk3sIEmBlqPh0QRUSyxCjsBpPCI0OFHn8p9J9z+xoGpoYsyIz/fPc1s
-         Jj1Q3ztohwci8S/kzA+FCbS7ne+8fZ5gHmB8DiPMVX+d3GXR5IrxjvB5WGEmVO81zMlL
-         LbAnoZXJmXiKp5LAOHaEouKizfnENQfSnLX9+cQlFAkIOqLirlv8tLpZij7vHe8FPtgM
-         y/LCcPyQbPQGiTwu+OSSfc0gu8fHWKK92hSuLxYQVPKyl/Oj/h6kbtkta73S5ZcnJFcK
-         CxbN8sfHI9uJJQcBD1GHsdBs6Binf1TiU9qv+4EnOeX1mCXEKhm1IgsEojeZSDuXbYy1
-         72iw==
-X-Forwarded-Encrypted: i=1; AHgh+RrjbEn36matS2LXN/km4IuGg0uz6r2+BQ6UrgI62oT5vg+0G5sP5nTSXKBYpR4ethRwulldC4NKoOc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycUjeLRNO4iQBKfNNZXl/19D8aTKbVnyIIVzMGzb8JyZ3zzbmK
-	VswCeXPRP5iLXFCzZIBzCTIZMaOVG7VABUmBoMZocyriZNtuXBjtYdRpKGSXSb4dfqU=
-X-Gm-Gg: AfdE7cmhONiuPjFaPnQ7HrZLOK2lAJk8Zh1XNtEuV3yagXWsrZkVuCakyvrQMshLSHe
-	fQdxkc9Ozvxaut2LfpUMX1KmtR/WpzH7R+6Ep9k59VVmIf99173S9XBz6+7y9D5CKTiJH84q8Uv
-	VsKpPnSlwlyJytenBnJtzF3gQtE5OCkhZnDWbBGFtGDQgrUW2LWOVgZRX3O4tNMjT4bNpAlXtJy
-	n0UwvntQU13f0NJfYhK80IbVYFcXddRbdtvU2f7h7uCS7gOqDPiC+R9q2KwGfGxaPmyoAeCi9za
-	sCoaN0nHEgrfJR81IpvUBesZruNp88/Wrr+tmPluWOv2+EvbsYOWOaqvknibgpNU811RD1uJUPv
-	m0VXjI2ByS79CPdQqPVy9NVt+Y9vipYFlLXqsaxm/pR1Pjj/KSoGGP1966cPv7nh96RKUlRMCu9
-	7Qbsx4N5zKPlgry8bxxX1QJYGavIYQcCz5np50W+FoWBT1LQC3DZ5dPLIOGsLDj4w=
-X-Received: by 2002:a05:620a:f0b:b0:92e:5ffe:7833 with SMTP id af79cd13be357-930b41d083dmr1531787885a.61.1784576115361;
-        Mon, 20 Jul 2026 12:35:15 -0700 (PDT)
+        bh=HgkUnnQve0Rn/Pvs0Z/0q3yFfFJ0c7Ckz6K5pdtr6eU=;
+        b=TqemFk4371AWmo53GAQWkE14QYNOyhIIanYssv+EdG211CK3+0KDKiuBBH8fbV2m3V
+         7Dwjse37ZoXt56LG1wYBwjvLIt5Y96O6ebd2Lj3snfoONCvvE65CiBN36Tr/sEter+9+
+         FYmbXGF05mVngpjN/S6kV9vzPi5ZV48yI98zDlGpYbzgCG1Lb/Oq6hGj+yfME6dT2nd9
+         tmG8PwnNbTJKtTN/QwwxRS5snxKx4CytxpGEGSaGZN8aLRgBpNpa/JdTRbV59fATOnPT
+         6dTC8ykBQemDQfFl1PYnKP5vxIsK7zmT6FrqZ+E1DNqERStehl5BnEI8MR0fV4YdWo2g
+         K0Fg==
+X-Forwarded-Encrypted: i=1; AHgh+Rr8zeU5A7iTweBQ2ZaNLzF09fQypuq+4CT5kcFc7PDS2vaLqaZKywKOMoO6pa/5Zh33u0lnPCrX8Jg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzyTfN2sa13w9+fFTpyr0cgVt/ULan//ReSayMeKcjdbVLcZvl
+	uh6xoeqCcUTHO4WvwR3n7Yj3DKFSsViQ374DT2qFLqPAQqqDX/QadtJiaERzxjpr7mk=
+X-Gm-Gg: AfdE7ck2tZ6PzxuzEhoyElTo+4he3HCl9TzuOSxGBrrA4U0XeaIdwmGtA5KuJrwYXkD
+	m8t3V9Y+YqtD0GRZZfgARmlBKV8IVf/UjbQ/s4Y3otn1rWbOcHQh5k+FuzOtLdV6iqXEdEH5SCh
+	4pWs/jj+DqcSAIWBvzgJq7nV9vdZDvgSuvEAtrHpn6MX2lyR/jzfDKipZa+xfSG16jp0gejxwYx
+	2bhJf1wmnn+E8vjLDvkDMeJ7c6ipj4J32UiglkOeNuDx+vE6EK/EoM+OotLGax1FnKIOuNutEsT
+	HY5db9/8x4lEB6PDkzKrAP01cLBTCu9ud3lQ8f3B1Igm2Ii4RfXAruDX0RlnVC0foOTgh8qe5Q6
+	aV0o3qatKSuDE1vNb2ILDxmdYlkEXjdaB8IXwf50qpkjBKrwlSwCIssw+rHcHN0+ZvA24wKpP1i
+	ZFJm/pqBqy+9pH5cCW9LlIEvqAFg52N7Z6YUBCSXma5PC+CTZGBD7W05Yz03B4ODU=
+X-Received: by 2002:a05:620a:4007:b0:92e:c116:bef9 with SMTP id af79cd13be357-930b4315599mr1572701485a.86.1784576117793;
+        Mon, 20 Jul 2026 12:35:17 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-930b545e47bsm957792285a.35.2026.07.20.12.35.13
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-930b545e47bsm957792285a.35.2026.07.20.12.35.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2026 12:35:15 -0700 (PDT)
+        Mon, 20 Jul 2026 12:35:17 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-mm@kvack.org
 Cc: Zhigang.Luo@amd.com,
@@ -137,9 +137,9 @@ Cc: Zhigang.Luo@amd.com,
 	damon@lists.linux.dev,
 	linux-kselftest@vger.kernel.org,
 	kernel-team@meta.com
-Subject: [PATCH v5 14/36] mm/damon: skip private node memory in DAMON migration and pageout
-Date: Mon, 20 Jul 2026 15:34:08 -0400
-Message-ID: <20260720193431.3841992-15-gourry@gourry.net>
+Subject: [PATCH v5 15/36] mm/ksm: skip KSM for managed-memory folios
+Date: Mon, 20 Jul 2026 15:34:09 -0400
+Message-ID: <20260720193431.3841992-16-gourry@gourry.net>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260720193431.3841992-1-gourry@gourry.net>
 References: <20260720193431.3841992-1-gourry@gourry.net>
@@ -151,49 +151,50 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DAMON operates on physical address ranges, which can cover private
-node memory. Skip private-node folios in both DAMON's migration
-and reclaim paths.
+Since private memory is intended for explicit placement, allowing
+KSM to operate on it by default would completely defeat the purpose.
+
+Skip KSM merge and scan operations for private node folios using
+the same filter location as zone_device folios.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- mm/damon/paddr.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ mm/ksm.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
-index e4f98d67461f5..c741a94319750 100644
---- a/mm/damon/paddr.c
-+++ b/mm/damon/paddr.c
-@@ -12,6 +12,7 @@
- #include <linux/swap.h>
- #include <linux/memory-tiers.h>
- #include <linux/mm_inline.h>
-+#include <linux/node_private.h>
+diff --git a/mm/ksm.c b/mm/ksm.c
+index 47006f494fcb1..dcc5c46a29eac 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -827,7 +827,7 @@ static struct page *get_mergeable_page(struct ksm_rmap_item *rmap_item)
  
- #include "../internal.h"
- #include "ops-common.h"
-@@ -250,6 +251,10 @@ static unsigned long damon_pa_pageout(struct damon_region *r,
+ 	folio = folio_walk_start(&fw, vma, addr, 0);
+ 	if (folio) {
+-		if (!folio_is_zone_device(folio) &&
++		if (!folio_is_private_managed(folio) &&
+ 		    folio_test_anon(folio)) {
+ 			folio_get(folio);
+ 			page = fw.page;
+@@ -2558,7 +2558,8 @@ static int ksm_next_page_pmd_entry(pmd_t *pmdp, unsigned long addr, unsigned lon
+ 				goto not_found_unlock;
+ 			folio = page_folio(page);
+ 
+-			if (folio_is_zone_device(folio) || !folio_test_anon(folio))
++			if (unlikely(folio_is_private_managed(folio)) ||
++			    !folio_test_anon(folio))
+ 				goto not_found_unlock;
+ 
+ 			page += ((addr & (PMD_SIZE - 1)) >> PAGE_SHIFT);
+@@ -2582,7 +2583,8 @@ static int ksm_next_page_pmd_entry(pmd_t *pmdp, unsigned long addr, unsigned lon
  			continue;
- 		}
+ 		folio = page_folio(page);
  
-+		/* private node memory is not reclaimable by default */
-+		if (folio_is_private_node(folio))
-+			goto put_folio;
-+
- 		if (damos_pa_filter_out(s, folio))
- 			goto put_folio;
- 		else
-@@ -344,6 +349,10 @@ static unsigned long damon_pa_migrate(struct damon_region *r,
- 		else
- 			*sz_filter_passed += folio_size(folio) / addr_unit;
- 
-+		/* private nodes do not support migration by default */
-+		if (folio_is_private_node(folio))
-+			goto put_folio;
-+
- 		if (!folio_isolate_lru(folio))
- 			goto put_folio;
- 		list_add(&folio->lru, &folio_list);
+-		if (folio_is_zone_device(folio) || !folio_test_anon(folio))
++		if (unlikely(folio_is_private_managed(folio)) ||
++		    !folio_test_anon(folio))
+ 			continue;
+ 		goto found_unlock;
+ 	}
 -- 
 2.53.0-Meta
 
