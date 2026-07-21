@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28513BBFAA
-	for <linux-cxl@vger.kernel.org>; Tue, 21 Jul 2026 09:08:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40E67261A
+	for <linux-cxl@vger.kernel.org>; Tue, 21 Jul 2026 09:16:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784624915; cv=none; b=u4DDaweULyjp//ONAgwZbw2/Mp+Tpak5Q4v4rsswQiRMyPojTstNEASl70Qc/2HQuCrvA2FybWHNUH5MeaJfAY0Zg5aHUbCGsynQkW9idOO2yL/jRaokpUqLmQ4GHx9WQqSK6R2daqLfNilAq5wNaBqDlq3f3PMEKW5d0m8Z4XY=
+	t=1784625386; cv=none; b=TZiN8KygNgEypSSnyjafkQsqaeS8c1GSozYuewY6E8X6y+H3TWd+WOh1BGgj+PoZ5yUApPUnH2zTfxpWf+iaOdumqYh9OC2H54AS/501GyAg1+PD+oF7Oi4g+Np8o5pOv18QCL3FHbBjFhlCB+2pDYQoz9PyUG6pYfHoKCLDZxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784624915; c=relaxed/simple;
-	bh=MQpSm73FtDbcXsNiMJARzbKQGuGMtdjrtyO5FwhC5uA=;
+	s=arc-20240116; t=1784625386; c=relaxed/simple;
+	bh=c11pR/s0UdIJ86N3saz9aeYIk2ulhBgUoSiy6nAYKZk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=idd7IXoUba813ClUAYVUSBgG7gru0czwEaxVCcpu37w3y9a/HabBAjiG5nbmmVSdNdkvobssfjMO1UE1BPkaFs/nHmoq4zdF/kCr/Drg6J5fr2xcuFvUqXl/KpWzBZwwGuKjvHWD5xXzMGC+s/QbAk7+eaM1eUvIlrmX/FhmRio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dao6PciS; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=R4iLlQCCTjuNSSsoaCB0vF0j0kfnsp+WYL5kghN/5049VmxLypBzNu78Bnm+Xv02deqoLUvIUjUl9CMEod9DgAcBF3FHfUkpF1ndspstxSFZPTU5zAWzIDiw0ecyT/XwxyH59lzk6xz4l3aHqKy0/CerP909CeCHMGR9NFebpzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B2SCf6Q6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dao6PciS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82EA01F000E9;
-	Tue, 21 Jul 2026 09:08:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B2SCf6Q6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CDD61F00A3D;
+	Tue, 21 Jul 2026 09:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784624914;
-	bh=Pk5Yc4dnNfmAy0Ki/utRijZNd90Jgk782y8Usvv3l78=;
+	s=k20260515; t=1784625384;
+	bh=Lj0EERcC6gXIR9nyxdp7pNuuWvwl0rTLT75wSWLE/Ks=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dao6PciSOJObuR845Ck7dfFd2Qq4kSqYuuhkIGE1A/JdalUnrwLETPWZ+PVBYq/h3
-	 gcpJqbZupqecDrn5o8pq/OE9wcabEPr3vrFTfeCVyVYI9BKdD7xcTlGjbtXya+/LCs
-	 vZWXaq4V/TxIr65bKLZyDYXagW3HvhsxPeVDQFy4UpFClJWfcMebtzYTG9iG3YWoUQ
-	 B3UcMQhsTAnzJ5oCBIcaVjg7Aj5KcnPsH4WYjhzK75+a3sWmS24XnUDenvMn1btWSg
-	 FjqvirQybGfR7ECRh4IEuT8nmEX/TmRyP0xT8Y7+/yiW8jlJOXM4jYM8yQ7yHJKrwm
-	 RcG7z937j4j0g==
+	b=B2SCf6Q6ORLvrwO989wdFCOzfO9hDubZylWPJnn5MUUe7g93fdLIRQkgo8uy2az1u
+	 M3liRxNz24Y/taEAKnqMNCUKW2ZRfF1rmrMNyKfiacdpxvfUjpr7CfNLd0JfcyAU+i
+	 ysnsr1xRBOTk1hT4iXqLuvdvF0u2o/kN70v8qHK0Qw36nngH/M8KktPfLmEquF5rVO
+	 +EVeFWmTgwYeJGi+SaH3gkjjfrCKLgklzIQjD5Uosoyo8/OigZTh4XrPnNAMHPDjkw
+	 HD4Y5Xwm5iCP4Pvre99DK/Lf/ueETpezKhBm1+52ZG0kxj4XA141DNJdDN8RwJl6er
+	 FWB74htUBDHnA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 2/2 RESEND] tools/testing/cxl: Enable zero sized
- decoders under hb0
+Subject: Re: [PATCH v7 1/2 RESEND] cxl/hdm: Allow zero sized HDM decoders
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Richard Cheng" <icheng@nvidia.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260721085715.39322-3-icheng@nvidia.com>
+In-Reply-To: <20260721085715.39322-2-icheng@nvidia.com>
 References: <20260721085715.39322-1-icheng@nvidia.com>
- <20260721085715.39322-3-icheng@nvidia.com>
+ <20260721085715.39322-2-icheng@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 21 Jul 2026 09:08:34 +0000
-Message-Id: <20260721090834.82EA01F000E9@smtp.kernel.org>
+Date: Tue, 21 Jul 2026 09:16:24 +0000
+Message-Id: <20260721091624.9CDD61F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -47,101 +46,53 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] cxl_dpa_free() fails to release 0-length DPA reservations, renderi=
-ng unlocked zero-size decoders permanently unusable by userspace and leakin=
-g memory.
+- [High] cxl_dpa_free() returns early for zero-sized decoders, bypassing re=
+source release, leaking the DPA reservation, and permanently breaking port =
+LIFO teardown.
 --
 
---- Patch [2]: [PATCH v7 2/2 RESEND] tools/testing/cxl: Enable zero sized d=
-ecoders under hb0 ---
-commit 328b24698ee67fa6e936ca1dc4e6a01523de8a20
+--- Patch [1]: [PATCH v7 1/2 RESEND] cxl/hdm: Allow zero sized HDM decoders=
+ ---
+commit 69f9a310ab608be9b469a96819d45389f215c346
 Author: Richard Cheng <icheng@nvidia.com>
 
-tools/testing/cxl: Enable zero sized decoders under hb0
-   =20
-The kernel now allows committed zero-size HDM decoders so BIOS can lock
-empty decoders; cxl_test needs to exercise that path. Add a module
-parameter to mock zero-size decoders under host-bridge0 endpoints.
+cxl/hdm: Allow zero sized HDM decoders
 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index 8ab2ce1262f30..fff2004a08c80 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
+This commit allows the CXL subsystem to accept zero-sized HDM decoders
+instead of rejecting them during port enumeration. It treats empty decoders
+as first-class by backing them with a kmalloc'd resource and keeping the
+skip and hdm_end accounting intact.
+
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
 
 [ ... ]
 
-> @@ -1072,16 +1072,49 @@ static void default_mock_decoder(struct cxl_decod=
-er *cxld)
->  	WARN_ON_ONCE(!cxld_registry_new(cxld));
->  }
+> @@ -545,7 +569,7 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
+>  	struct device *dev =3D &cxled->cxld.dev;
 > =20
-> -static int first_decoder(struct device *dev, const void *data)
-> +static int match_decoder_by_index(struct device *dev, const void *data)
->  {
-> +	int target_id =3D *(const int *)data;
->  	struct cxl_decoder *cxld;
-> =20
->  	if (!is_switch_decoder(dev))
->  		return 0;
->  	cxld =3D to_cxl_decoder(dev);
-> -	if (cxld->id =3D=3D 0)
-> -		return 1;
-> -	return 0;
-> +	return cxld->id =3D=3D target_id;
-> +}
-> +
-> +/*
-> + * Mock a committed, locked, empty decoder
-> + * (CXL r4.0 8.2.4.20.12). Gated by the mock_zero_size_decoders module
-> + * param so the default cxl_test topology, shared by the region test
-> + * suite, is left undisturbed.
-> + */
-> +static void size_zero_mock_decoder_ep(struct cxl_decoder *cxld, u64 base)
-> +{
-> +	struct cxl_endpoint_decoder *cxled =3D to_cxl_endpoint_decoder(&cxld->d=
-ev);
-> +
-> +	cxld->hpa_range =3D DEFINE_RANGE(base, base - 1);
-> +	cxld->interleave_ways =3D 2;
-> +	cxld->interleave_granularity =3D 4096;
-> +	cxld->target_type =3D CXL_DECODER_HOSTONLYMEM;
-> +	cxld->flags =3D CXL_DECODER_F_ENABLE | CXL_DECODER_F_LOCK;
-> +	cxled->state =3D CXL_DECODER_STATE_AUTO;
-> +	/* decoder[0] reserved [0, size/2), empty decoders sit at that watermar=
-k */
-> +	devm_cxl_dpa_reserve(cxled, mock_auto_region_size / 2, 0, 0);
+>  	guard(rwsem_write)(&cxl_rwsem.dpa);
+> -	if (!cxled->dpa_res)
+> +	if (cxled_empty(cxled))
 
 [Severity: High]
-Does this 0-length DPA reservation leak when the decoder is torn down?
+Does this early return skip the necessary cleanup for zero-sized decoders?
 
-Looking at the core CXL code, cxl_dpa_free() returns early if cxled_empty()
-is true:
+When cxled_empty(cxled) evaluates to true for a zero-sized decoder that
+has a valid dpa_res, returning 0 here skips devm_cxl_dpa_release().
+Since the reservation is backed by a kmalloc'd resource from
+cxl_dpa_request_region(), does this leak the dpa_res memory?
 
-drivers/cxl/core/hdm.c:cxl_dpa_free() {
-	...
-	if (cxled_empty(cxled))
-		return 0;
-	...
-}
+Additionally, skipping devm_cxl_dpa_release() means port->hdm_end is not
+decremented. Because CXL DPA management strictly enforces LIFO teardown,
+will this strand the hdm_end watermark and permanently break the ability
+to free or reconfigure prior decoders on the same port?
 
-And cxled_empty() returns true for 0-length resources:
-
-drivers/cxl/cxl.h:cxled_empty() {
-	return !cxled->dpa_res || !resource_size(cxled->dpa_res);
-}
-
-Because resource_size(cxled->dpa_res) =3D=3D 0, cxl_dpa_free() returns 0 wi=
-thout
-calling devm_cxl_dpa_release().
-
-Does this mean the 0-length kmalloc'd resource is leaked and port->hdm_end
-is never decremented, rendering unlocked zero-size decoders permanently
-unusable by userspace?
-
-> +	cxld->commit =3D mock_decoder_commit;
-> +	cxld->reset =3D mock_decoder_reset;
-> +}
+>  		return 0;
+>  	if (cxled->cxld.region) {
+>  		dev_dbg(dev, "decoder assigned to: %s\n",
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260721085715.3932=
-2-1-icheng@nvidia.com?part=3D2
+2-1-icheng@nvidia.com?part=3D1
