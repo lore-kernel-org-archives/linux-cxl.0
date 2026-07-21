@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AB23845D8;
-	Tue, 21 Jul 2026 15:06:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F1C4D90B1
+	for <linux-cxl@vger.kernel.org>; Tue, 21 Jul 2026 15:09:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784646417; cv=none; b=qKzlhtUiassjKhB6pxx7OJdI4jiL0jUblSbupKrUWDqCALIjiBnzkPaohrWIW76nwPMUm/iKbNczcY9G3osuRWKPPwmAU///UJwfdTXQTUafkcaAu8AbK9TxYmLc9tPDUiPpfAgf2hYMwmfaQ36s7yYpmY+hqq0b27aXhOh/oGs=
+	t=1784646563; cv=none; b=CytmF+Clg+AEWz5Pcfa2btg5seRmBCkiOGxw9H4UQhbnOChJuzUOrMMbv+U/0LL7xnEP297w6umPSMOudqbCijbPkTz59laPFuCRUG44kQKAM17tweV/zXNJLQ+VpixPPtsVSTRNmaKkBdblIFp8ee0yBKTkXs9iQcEqPq/ygI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784646417; c=relaxed/simple;
-	bh=CcvUIeqigSygCGtNOPb8sVT8Pr2fc6JEh3pu7NYqG4o=;
+	s=arc-20240116; t=1784646563; c=relaxed/simple;
+	bh=b6hf/7dwGHf2YGiyWyyEzr07MRmmPumtP+D2l2gFed0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uCte8o2bWbuz2lv7uQX05/oG5sll0iTskjDlqdcSn4NGE2gjSFchqAI6eEG98gOryjIw9COXemKp1oUKSEU0yzhj1sSz95r002ThxLCzUS+a0wjhP5V45SZg1/tPfcZGArzNVLm1AfGgsL89Lew6sn2EqVFoC3MnkCUmej8v1dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fny3PYZG; arc=none smtp.client-ip=198.175.65.19
+	 In-Reply-To:Content-Type; b=Mn4jqI1bmzfkq4TRz2F6rDOPUudNB9Px1enX6RlBk5gobJM4A9JIgbQTpZxZ2Nxxri2U0mZ9Alv3689TWkSb9YCAIDvJ7ekH8hSeYLCRTuPvkwvwnzKW4EelYt4quBDOd02CYw3OqDGpmiQUXjczcnvLArkzUNF2gIZoR5hqfNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OPCrMEOM; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fny3PYZG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OPCrMEOM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784646416; x=1816182416;
+  t=1784646561; x=1816182561;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=CcvUIeqigSygCGtNOPb8sVT8Pr2fc6JEh3pu7NYqG4o=;
-  b=Fny3PYZGqr2g5S9sBP5GDp7JrOnQjT5l9FhgvmATm5C6a9SRObTfCSkC
-   1o6dM9OQtko69ajfcauyDjBJ49KIuhv0sjAQWRJhnKfX/cEYeuVxStVe6
-   +TWdxqS+3hW6V/6mXoWEcOMd36yQ/gioZyowBc3kSA+WwQmBMSFlt1L+I
-   e7FEBz8sAm/Aozv5aq+EzmWDaIohesfzhutj0nF1fZLIgmfTw+ebXrlD7
-   VKoUUGJS9hoFkzJhDYbTZguhwc8GD3AZX0BNNeDTHp1rrm3VTacCGDz7M
-   Q4SCcXaj/+IcMWE0G4Mxq9IchuMuDNY/UvW4nhVubJszHlyW9uDGvHE9S
-   Q==;
-X-CSE-ConnectionGUID: UL6YZIr1Te6qecfe49e6IQ==
-X-CSE-MsgGUID: FibcDwhYSuisrrvD8XAuBw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="85193927"
+  bh=b6hf/7dwGHf2YGiyWyyEzr07MRmmPumtP+D2l2gFed0=;
+  b=OPCrMEOMxoVMA/icE0fbmA3sAulTlEv2BXf5qnFz+gDBbQDR/WAX1XDq
+   hHsA356ccn+M8JkjlNnuSprsyctfQbnhEYgOZkIKDDQ/lnuhhX2CULI9y
+   vsn0fqlGl2Jw4BtXauL/zvhn8HkHhvS0zBO1iDU8OdW42X9mnKlzhayfc
+   Hc+jhpva5x/SIuDl5wRbEY2RWMbUd4nRaykFd6tujHsmVIV0id2jd8Qtn
+   j8vm5he2sMTYtS+B+GLsEDJIAzp7ntER0ITPmaCOofHqqpIpB5Nk4SSd/
+   N7/Nk8DG2+NKecw6pmJ+uNjfhpA9VV0ryykEFUYAzFVzUHVgB/jH2AkWr
+   g==;
+X-CSE-ConnectionGUID: ErjGM+LfTVS8ztMqu69Zig==
+X-CSE-MsgGUID: FcYy4ZK5T8eo+LS5x0WDHA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="85194309"
 X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
-   d="scan'208";a="85193927"
+   d="scan'208";a="85194309"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 08:06:56 -0700
-X-CSE-ConnectionGUID: yO6KrpiBT4uIDzX9IYtClQ==
-X-CSE-MsgGUID: yzGgcSMBQF2aH40ZwcfhDQ==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 08:09:20 -0700
+X-CSE-ConnectionGUID: VIK3goZ9TYyhmzQA49Y9cg==
+X-CSE-MsgGUID: UxCgS3BIQiG2l76bvFya8w==
 X-ExtLoop1: 1
 Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.109.244]) ([10.125.109.244])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 08:06:54 -0700
-Message-ID: <983e48d0-b281-44dc-9ca6-4e1612319ce3@intel.com>
-Date: Tue, 21 Jul 2026 08:06:53 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 08:09:18 -0700
+Message-ID: <bcd3fde1-a312-4865-8a74-7dfe1b175e6e@intel.com>
+Date: Tue, 21 Jul 2026 08:09:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -50,116 +50,78 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/10] ACPI: APEI: GHES: Collection of fixes for issues
- reported by sashiko
-To: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Cc: linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
- tony.luck@intel.com, bp@alien8.de, guohanjun@huawei.com, mchehab@kernel.org,
- xueshuai@linux.alibaba.com, terry.bowman@amd.com,
- Ben Cheatham <benjamin.cheatham@amd.com>
-References: <20260717161647.1493259-1-dave.jiang@intel.com>
- <CAJZ5v0gLTkGLX_3PLBJYCfFS0_qFjHR+P4agvQQ-Usg4p5nUcA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] cxl/hdm: Make switch decoder target parsing
+ endian-safe
+To: Alison Schofield <alison.schofield@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
+ Dan Williams <djbw@kernel.org>, Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org, Srirangan Madhavan <smadhavan@nvidia.com>,
+ Richard Cheng <icheng@nvidia.com>
+References: <cover.1784595445.git.alison.schofield@intel.com>
+ <f98abc5edccc4fed9250d29df76ac677e3e51702.1784595445.git.alison.schofield@intel.com>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <CAJZ5v0gLTkGLX_3PLBJYCfFS0_qFjHR+P4agvQQ-Usg4p5nUcA@mail.gmail.com>
+In-Reply-To: <f98abc5edccc4fed9250d29df76ac677e3e51702.1784595445.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 7/21/26 4:33 AM, Rafael J. Wysocki (Intel) wrote:
-> On Fri, Jul 17, 2026 at 6:16 PM Dave Jiang <dave.jiang@intel.com> wrote:
->>
->> A collection of fixes for pre-existing issues reported by sashiko-bot while
->> reviewing patches.
->>
->> The v1 posting fixed a first batch of these issues, and v2 grew the set as
->> sashiko-bot's review surfaced more problems in the same CPER/extlog paths.
->> sashiko-bot's review of v2 flagged yet more of the same class of bug in
->> neighbouring code, so v3 adds those as well: an out-of-range section length
->> that defeats cper_estatus_check(), the same unvalidated AER buffer handling
->> in ghes_handle_aer() that was already fixed for extlog, and an unbounded
->> walk of the extlog record.
->>
->> 1/10:  Bound the CXL event record copy to the firmware section length.
->> 2/10:  Reject CPER records with an out-of-range error_data_length.
->> 3/10:  Validate the CXL protocol error section length before the RAS cap copy.
->> 4/10:  Avoid populating software AER metadata from the raw hardware buffer.
->> 5/10:  Validate the PCIe error section length before payload access.
->> 6/10:  Fix the CONFIG_ACPI_APEI_PCIEAER guard typo in extlog.c.
->> 7/10:  Defer CXL protocol error handling to avoid a lock inversion.
->> 8/10:  Validate the memory error section length before payload access.
->> 9/10:  Bound the AER info copy and sanitize software metadata in ghes.c.
->> 10/10: Validate the extlog record length before walking sections.
->>
->> Note patch 2 touches drivers/firmware/efi/cper.c; it closes the length
->> validation hole at the shared choke point that the per-section guards in the
->> rest of the series rely on.
->>
->> sashiko-bot's review of v2 also flagged a few related issues that are not
->> addressed here because they live in other subsystems.
->>
->>   - cxl_cper_print_prot_err() in drivers/firmware/efi/cper_cxl.c uses the
->>     firmware-controlled dvsec_len without bounding it against the section
->>     length.
->>   - cxl_rch_get_aer_info() in drivers/cxl/core/ras_rch.c reads the RCH AER
->>     capability from MMIO into a struct aer_capability_regs without clearing
->>     the software-only header_len/flit fields, the same class of issue as
->>     patches 4 and 9.
->>
->> v1: https://lore.kernel.org/linux-cxl/20260709162807.1957783-1-dave.jiang@intel.com/
->> v2: https://lore.kernel.org/linux-cxl/20260714231835.303081-1-dave.jiang@intel.com/
->>
->> Changes since v2
->> ----------------
->> - Dropped the standalone spin_lock_irqsave() change; it is a separate issue
->>   being handled by Terry Bowman.
->> - New patch 2: reject a section whose error_data_length is out of range in
->>   cper_estatus_check(), closing the signed-int overflow that let a crafted
->>   section bypass the check and defeat the per-caller size guards (sashiko).
->> - New patch 9: apply the same AER buffer sanitization to ghes_handle_aer()
->>   that patch 4 applies to extlog (sashiko).
->> - New patch 10: bound the extlog record and run cper_estatus_check() before
->>   walking its sections, which extlog did not do (sashiko).
->> - Patch 8: move the memory error length check into ghes_do_proc() so the
->>   report chain and arch reporter are covered too, and bound against the
->>   older UEFI 2.1/2.2 layout rather than the full struct (sashiko).
->> - Reordered so the extlog PCIe path is hardened, and the CXL protocol error
->>   handling is deferred to the workqueue, before the typo fix that activates
->>   that code.
->>
->> Changes since v1
->> ----------------
->> - See the v2 posting for the full v1 -> v2 changelog.
->>
->>
->> Dave Jiang (10):
->>   ACPI: APEI: GHES: Bound CXL event record copy to the firmware section
->>     length
->>   efi/cper: Reject CPER records with an out-of-range error_data_length
->>   ACPI: APEI: GHES: Validate CXL protocol error section length before
->>     RAS cap copy
->>   ACPI: extlog: Avoid populating software AER metadata from raw hardware
->>     buffer
->>   ACPI: extlog: Validate PCIe error section length before payload access
->>   ACPI: extlog: Defer CXL protocol error handling to avoid lock
->>     inversion
->>   ACPI: extlog: Fix CONFIG_ACPI_APEI_PCIEAER guard typo
->>   ACPI: APEI: GHES: Validate memory error section length before payload
->>     access
->>   ACPI: APEI: GHES: Bound AER info copy and sanitize software metadata
->>   ACPI: extlog: Validate elog record length before walking sections
->>
->>  drivers/acpi/acpi_extlog.c       | 47 ++++++++++++-------------
->>  drivers/acpi/apei/ghes.c         | 59 +++++++++++++++++++++++++-------
->>  drivers/acpi/apei/ghes_helpers.c | 21 +++++++++++-
->>  drivers/firmware/efi/cper.c      | 10 ++++++
->>  include/acpi/ghes.h              |  4 +++
->>  include/cxl/event.h              |  4 +--
->>  6 files changed, 106 insertions(+), 39 deletions(-)
+On 7/20/26 6:59 PM, Alison Schofield wrote:
+> Switch decoder target IDs are stored one per byte, starting with
+> target 0 in the least significant byte. The current code accesses
+> those bytes in memory order, which only matches register order on
+> little-endian hosts.
 > 
-> All of this looks reasonable to me, but it really is material for Tony
-> to look at.
+> On big-endian hosts, the target IDs are reversed and the decoder is
+> associated with the wrong downstream ports.
+> 
+> Extract each target ID from the register value with an explicit shift
+> and mask so the target mapping is independent of host endianness.
+> 
+> Fixes: d17d0540a0db ("cxl/core/hdm: Add CXL standard decoder enumeration to the core")
+> Reviewed-by: Richard Cheng <icheng@nvidia.com>
+> Reviewed-by: Li Ming <ming.li@zohomail.com>
+> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-Thanks Rafael. I've asked Tony to take a look. Looks like he's on vacation so hopefully soon. 
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+
+> ---
+>  drivers/cxl/core/hdm.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 1f995191baf5..077aface1a2a 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
+> @@ -976,14 +976,11 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  {
+>  	struct cxl_endpoint_decoder *cxled = NULL;
+>  	u64 size, base, skip, dpa_size, lo, hi;
+> +	u64 target_list;
+>  	bool committed;
+>  	u32 remainder;
+>  	int i, rc;
+>  	u32 ctrl;
+> -	union {
+> -		u64 value;
+> -		unsigned char target_id[8];
+> -	} target_list;
+>  
+>  	if (should_emulate_decoders(info))
+>  		return cxl_setup_hdm_decoder_from_dvsec(port, cxld, dpa_base,
+> @@ -1122,9 +1119,9 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  
+>  		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+>  		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
+> -		target_list.value = (hi << 32) + lo;
+> +		target_list = (hi << 32) + lo;
+>  		for (i = 0; i < cxld->interleave_ways; i++)
+> -			cxld->target_map[i] = target_list.target_id[i];
+> +			cxld->target_map[i] = (target_list >> (i * 8)) & 0xff;
+>  
+>  		return 0;
+>  	}
 
