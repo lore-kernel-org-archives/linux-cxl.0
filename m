@@ -1,173 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38DB3E51F4
-	for <linux-cxl@vger.kernel.org>; Tue, 21 Jul 2026 11:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF5E30BF6D;
+	Tue, 21 Jul 2026 13:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784633612; cv=none; b=Ow9316uWvorDX6WpRBiYRwdXS4aDFrAvqlhA5kqWqwP+kUuXgIHbF6ZLJ4uDmlIO2OGnnjqCPcdBB4v2A9RQ8LMSjMiOIe09TxhPLdx7VCrNW496ObqEhVkoVbAQfsolwPCqFy1icEdSsWiot97mae1iZFRlLKvEtQIiwpnlP+M=
+	t=1784640390; cv=none; b=ipoE0gGtEjJKuy2TvAGZLbNIVfVO2mPg43KNXEeuwJPs5dNCm9wCK27dxsb9WAQwVk8XkSnLnZC4T5fqzca6vrsxZuFwcG3/5NGzNe00rtuIkTXvECQ3AxcBbV9jYbE725Stz9/oTKXXdDMYOkGXWnxXhnJrtBzcUSl5BQzCg4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784633612; c=relaxed/simple;
-	bh=VM7uZt4h+ob0QAAXaxc53STfVYYtKFcP12rAjdHK7yU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e10kxOUA5fmjebHlqNdv1JQ7JWu2hpWPl1XavXfjSht4OI7JdJPHukwN0r/B88PNjiNOeHJhJ1UhQAd8rGr4lfxccxiHqckjBuKBBUV7OmHu4u0rqjnjCmChpjYIB51+ujedi3gB2d+sTUdp4RLS/eN2cvhtQMpvqfhhsKxnZkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOuchITk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784640390; c=relaxed/simple;
+	bh=Hc9kzoQ9rFyyW8XHyUKHR1d2Dsj44oWw597yXAQp+uc=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=S6qY3atJleIeiRt1c/1j6Bspp/lblM9kVDLGTGnkrV70y8vZeSQWSOC5sjHNYs32T4w9s/Zx1YoiYRttA64c/j3yTGNu7/DKJ7XfzTjMvTvM3nkFemGh4/hx3mTbf9EKVGJmPsiWAaBffG2a/6uaeoFw83HsaC70+F7o4HVXhcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Uj1oBLm2; arc=none smtp.client-ip=113.46.200.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOuchITk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2B371F00A3F
-	for <linux-cxl@vger.kernel.org>; Tue, 21 Jul 2026 11:33:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784633602;
-	bh=a0wHmtmfVITct5QNAFts0xKDGDbiQtAyxU0Sg3FoZhg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc;
-	b=oOuchITkqQPF/cbgZd30FfvBACgh8FBDR6XSZlFLKc6Z/bQFeeiH7HinfmleyRKAG
-	 SND0Ccbn7W9KoGtohk1a03M+EO93p4Pz4IWY2hOwnC5PbD5Pb3/QFSNJ8pqrwA10Lt
-	 rE7RaSCtj2O+WUxfb9BIj8VuqGGVtk6jJI+GY0uBnqliyc5LzQSKd7LEM1PWtcn0Ru
-	 2hLIAp9tJDoFyG3N+MaW13/8b611wVcPpqBV16OlK+n6XiU4g68yW538139Vgahk5/
-	 xr38rEPEHj+B/p5yBxNcSkORRkuibdG1+VO3UBQjD7GnHojBf2uMOOt9elYQTpMB8Q
-	 EDDsy83VHxMnA==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-39eb257e9fbso28969311fa.0
-        for <linux-cxl@vger.kernel.org>; Tue, 21 Jul 2026 04:33:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AHgh+RpFcYOunaxCLDjAo+gAobjCt5MP21RVRLs0k4bbBlBjp1JH/Oy9ok8C2Epw/mKPMkA7uTquEEuK/2I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzblWfnnO8jn0RFiCRnNTCZp8hCjKYV51u+xn3I6lcVq/5aOaf1
-	/zO9X3HLi+2xVEfN2xAOS2gikAexkhKVdx4KeD79SGhTkwrrVI9A8yE/LcMa/Utdvt8XKU/enMz
-	OD7r/Q1pFEhPUdmdX75VTcAsH10qIrPw=
-X-Received: by 2002:a05:651c:543:b0:39e:ed52:cfdf with SMTP id
- 38308e7fff4ca-39eed52d138mr4118691fa.20.1784633601333; Tue, 21 Jul 2026
- 04:33:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Uj1oBLm2"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=9hgq2bOlQdWO8j42MpZzQv278XodO4khDw3hgg8g+EE=;
+	b=Uj1oBLm2piRS2jcNrVUUdAj64NR7QB2AifXV29XsiXtXTCt8/PmMpEq+nwr+s8iX+TO4SVXy8
+	IusYOu5A+t3ilK/5m8l2t6qY1s1aIGuzFz4Xh3ZFK7Gj4qZgTf2WIrFuLXxQw3LkIeDfDM4c4Ja
+	qOFsHfRNHFyUbXAQwQgO+MU=
+Received: from mail.maildlp.com (unknown [172.19.163.214])
+	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4h4HwN5h1CzKmTp;
+	Tue, 21 Jul 2026 21:16:52 +0800 (CST)
+Received: from whupemo200006.china.huawei.com (unknown [7.152.185.252])
+	by mail.maildlp.com (Postfix) with ESMTPS id 668704056C;
+	Tue, 21 Jul 2026 21:26:17 +0800 (CST)
+Received: from [10.174.178.219] (10.174.178.219) by
+ whupemo200006.china.huawei.com (7.152.185.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 21 Jul 2026 21:26:10 +0800
+Subject: Re: [PATCH v5 00/36] Private Memory NUMA Nodes
+To: Gregory Price <gourry@gourry.net>
+CC: <linux-mm@kvack.org>, <Zhigang.Luo@amd.com>, <arun.george@samsung.com>,
+	<balbirs@nvidia.com>, <brendan.jackman@linux.dev>, <apopple@nvidia.com>,
+	<alucerop@amd.com>, <matthew.brost@intel.com>, <akpm@linux-foundation.org>,
+	<david@kernel.org>, <ljs@kernel.org>, <liam@infradead.org>,
+	<vbabka@kernel.org>, <rppt@kernel.org>, <surenb@google.com>,
+	<mhocko@suse.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
+	<gregkh@linuxfoundation.org>, <rafael@kernel.org>, <dakr@kernel.org>,
+	<djbw@kernel.org>, <vishal.l.verma@intel.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <osandov@osandov.com>, <jannh@google.com>,
+	<pfalcato@suse.de>, <jackmanb@google.com>, <hannes@cmpxchg.org>,
+	<ziy@nvidia.com>, <pbonzini@redhat.com>, <osalvador@suse.de>,
+	<joshua.hahnjy@gmail.com>, <rakie.kim@sk.com>, <byungchul@sk.com>,
+	<ying.huang@linux.alibaba.com>, <kasong@tencent.com>, <qi.zheng@linux.dev>,
+	<shakeel.butt@linux.dev>, <baohua@kernel.org>, <axelrasmussen@google.com>,
+	<yuanchu@google.com>, <weixugc@google.com>, <yury.norov@gmail.com>,
+	<linux@rasmusvillemoes.dk>, <longman@redhat.com>, <ridong.chen@linux.dev>,
+	<tj@kernel.org>, <mkoutny@suse.com>, <sj@kernel.org>, <jgg@ziepe.ca>,
+	<jhubbard@nvidia.com>, <peterx@redhat.com>, <baolin.wang@linux.alibaba.com>,
+	<npache@redhat.com>, <ryan.roberts@arm.com>, <dev.jain@arm.com>,
+	<lance.yang@linux.dev>, <usama.arif@linux.dev>, <xu.xin16@zte.com.cn>,
+	<chengming.zhou@linux.dev>, <roman.gushchin@linux.dev>,
+	<muchun.song@linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <driver-core@lists.linux.dev>,
+	<nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+	<linux-debuggers@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<kvm@vger.kernel.org>, <cgroups@vger.kernel.org>, <damon@lists.linux.dev>,
+	<linux-kselftest@vger.kernel.org>, <kernel-team@meta.com>
+References: <20260720193431.3841992-1-gourry@gourry.net>
+From: Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <a9c52bb6-5e04-1d41-913a-685a7be3fad4@huawei.com>
+Date: Tue, 21 Jul 2026 21:26:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260717161647.1493259-1-dave.jiang@intel.com>
-In-Reply-To: <20260717161647.1493259-1-dave.jiang@intel.com>
-From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
-Date: Tue, 21 Jul 2026 13:33:02 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gLTkGLX_3PLBJYCfFS0_qFjHR+P4agvQQ-Usg4p5nUcA@mail.gmail.com>
-X-Gm-Features: AUfX_mxXX0k43KyjGbx2pRTLQhQ1ihnfZOjDDbcRsPM4PjZKQFrZ1rNYTgtxwpA
-Message-ID: <CAJZ5v0gLTkGLX_3PLBJYCfFS0_qFjHR+P4agvQQ-Usg4p5nUcA@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] ACPI: APEI: GHES: Collection of fixes for issues
- reported by sashiko
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, rafael@kernel.org, 
-	tony.luck@intel.com, bp@alien8.de, guohanjun@huawei.com, mchehab@kernel.org, 
-	xueshuai@linux.alibaba.com, terry.bowman@amd.com, 
-	Ben Cheatham <benjamin.cheatham@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260720193431.3841992-1-gourry@gourry.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ whupemo200006.china.huawei.com (7.152.185.252)
 
-On Fri, Jul 17, 2026 at 6:16=E2=80=AFPM Dave Jiang <dave.jiang@intel.com> w=
-rote:
->
-> A collection of fixes for pre-existing issues reported by sashiko-bot whi=
-le
-> reviewing patches.
->
-> The v1 posting fixed a first batch of these issues, and v2 grew the set a=
-s
-> sashiko-bot's review surfaced more problems in the same CPER/extlog paths=
-.
-> sashiko-bot's review of v2 flagged yet more of the same class of bug in
-> neighbouring code, so v3 adds those as well: an out-of-range section leng=
-th
-> that defeats cper_estatus_check(), the same unvalidated AER buffer handli=
-ng
-> in ghes_handle_aer() that was already fixed for extlog, and an unbounded
-> walk of the extlog record.
->
-> 1/10:  Bound the CXL event record copy to the firmware section length.
-> 2/10:  Reject CPER records with an out-of-range error_data_length.
-> 3/10:  Validate the CXL protocol error section length before the RAS cap =
-copy.
-> 4/10:  Avoid populating software AER metadata from the raw hardware buffe=
-r.
-> 5/10:  Validate the PCIe error section length before payload access.
-> 6/10:  Fix the CONFIG_ACPI_APEI_PCIEAER guard typo in extlog.c.
-> 7/10:  Defer CXL protocol error handling to avoid a lock inversion.
-> 8/10:  Validate the memory error section length before payload access.
-> 9/10:  Bound the AER info copy and sanitize software metadata in ghes.c.
-> 10/10: Validate the extlog record length before walking sections.
->
-> Note patch 2 touches drivers/firmware/efi/cper.c; it closes the length
-> validation hole at the shared choke point that the per-section guards in =
-the
-> rest of the series rely on.
->
-> sashiko-bot's review of v2 also flagged a few related issues that are not
-> addressed here because they live in other subsystems.
->
->   - cxl_cper_print_prot_err() in drivers/firmware/efi/cper_cxl.c uses the
->     firmware-controlled dvsec_len without bounding it against the section
->     length.
->   - cxl_rch_get_aer_info() in drivers/cxl/core/ras_rch.c reads the RCH AE=
-R
->     capability from MMIO into a struct aer_capability_regs without cleari=
-ng
->     the software-only header_len/flit fields, the same class of issue as
->     patches 4 and 9.
->
-> v1: https://lore.kernel.org/linux-cxl/20260709162807.1957783-1-dave.jiang=
-@intel.com/
-> v2: https://lore.kernel.org/linux-cxl/20260714231835.303081-1-dave.jiang@=
-intel.com/
->
-> Changes since v2
-> ----------------
-> - Dropped the standalone spin_lock_irqsave() change; it is a separate iss=
-ue
->   being handled by Terry Bowman.
-> - New patch 2: reject a section whose error_data_length is out of range i=
-n
->   cper_estatus_check(), closing the signed-int overflow that let a crafte=
-d
->   section bypass the check and defeat the per-caller size guards (sashiko=
-).
-> - New patch 9: apply the same AER buffer sanitization to ghes_handle_aer(=
-)
->   that patch 4 applies to extlog (sashiko).
-> - New patch 10: bound the extlog record and run cper_estatus_check() befo=
-re
->   walking its sections, which extlog did not do (sashiko).
-> - Patch 8: move the memory error length check into ghes_do_proc() so the
->   report chain and arch reporter are covered too, and bound against the
->   older UEFI 2.1/2.2 layout rather than the full struct (sashiko).
-> - Reordered so the extlog PCIe path is hardened, and the CXL protocol err=
-or
->   handling is deferred to the workqueue, before the typo fix that activat=
-es
->   that code.
->
-> Changes since v1
-> ----------------
-> - See the v2 posting for the full v1 -> v2 changelog.
->
->
-> Dave Jiang (10):
->   ACPI: APEI: GHES: Bound CXL event record copy to the firmware section
->     length
->   efi/cper: Reject CPER records with an out-of-range error_data_length
->   ACPI: APEI: GHES: Validate CXL protocol error section length before
->     RAS cap copy
->   ACPI: extlog: Avoid populating software AER metadata from raw hardware
->     buffer
->   ACPI: extlog: Validate PCIe error section length before payload access
->   ACPI: extlog: Defer CXL protocol error handling to avoid lock
->     inversion
->   ACPI: extlog: Fix CONFIG_ACPI_APEI_PCIEAER guard typo
->   ACPI: APEI: GHES: Validate memory error section length before payload
->     access
->   ACPI: APEI: GHES: Bound AER info copy and sanitize software metadata
->   ACPI: extlog: Validate elog record length before walking sections
->
->  drivers/acpi/acpi_extlog.c       | 47 ++++++++++++-------------
->  drivers/acpi/apei/ghes.c         | 59 +++++++++++++++++++++++++-------
->  drivers/acpi/apei/ghes_helpers.c | 21 +++++++++++-
->  drivers/firmware/efi/cper.c      | 10 ++++++
->  include/acpi/ghes.h              |  4 +++
->  include/cxl/event.h              |  4 +--
->  6 files changed, 106 insertions(+), 39 deletions(-)
+On 2026/7/21 3:33, Gregory Price wrote:
+>   KVM: guest_memfd: bind backing memory to a NUMA node at creation
+>   KVM: selftests: add a guest_memfd FLAG_BIND_NODE test
 
-All of this looks reasonable to me, but it really is material for Tony
-to look at.
+I can't find the last patch in my inbox or on the lore. Not sure what went
+wrong.
+
+Thanks,
+Zenghui
