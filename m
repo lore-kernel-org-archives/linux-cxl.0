@@ -1,89 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38516403AEA;
-	Tue, 21 Jul 2026 17:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B986369D71
+	for <linux-cxl@vger.kernel.org>; Tue, 21 Jul 2026 17:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784654343; cv=none; b=Oto/PGs5Jw8Qg97dyb0MU9IcSukjdjhk1K9bb88ySp4DF9vDYY6EgEiU8tYTOr50KElnOnXMkTjWiIqFeNcCL4P0sqvcrZSi4LoLMh5nEMAjq8V25Jb7xtxbUGBOSBkmorXs+TUC+AUINWmUn8EeSOADs0d1npii3IA1qAuDheQ=
+	t=1784655431; cv=none; b=c0GHxIPNy+1Lqzxv4Q7vUvWzKw4H22O+fH7SeQhmBCOIr2qZh2V0NxnZ9MTQJLHTDoAg3SmJqIOjbaWmXtvGdEYCs9pc2iy1Xz7fijirSTS/iNpu6UIKRYGRlm9F8cxAFzLxgroVsLyYjeRoPAUp/8J7QxLb3ZOT1U3T0OK6iF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784654343; c=relaxed/simple;
-	bh=Vi8SRRmyuNg8Cx6Jp7BsFckp7lvfXrOyXhQP2iPvHr4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UU1wtky19Dy3O9bwdXtP7xbmSut7BHN2MfsKWtyPU7ywqu/VFwbMXlnobZRbwts2D87h+9Z6lh8aACjEaGI2MkQo7qbV1UU5rTMsRB6bYkPg8s7kw5ZhyEumLp1YNcfnd4igc38ZPQvhycC4RT+i7Ox7KIV1c2ETRjJO5d+QNd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I3J0SdG0; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784655431; c=relaxed/simple;
+	bh=9CansrlgyyP3gUMHNdV0ha6t+LH+ydqnVUS2qiTMQtE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aRXdAc1Shjhare3eCZjGYHWcEZycRy5eYQxRj/pBzhxxsVG2YziNe948/LbTUXAmAkDwsso0V8JjEu6DKu+gIoKw8JFcFrXAe2vUvhUeyjOwgRs9e5WBeN2zbV1M3fS8M9xTVOMYQ4bXp9TvYMi4YjDZxHOByM9b4ASYff7MnLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nebn8kWa; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I3J0SdG0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B4931F00A3F;
-	Tue, 21 Jul 2026 17:18:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784654340;
-	bh=G1xIDTvgZ4xzm/y4PId7m0JZQk33VonJiCwyHQfI7w4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=I3J0SdG01kE6rdr1FSu1R3zVfFWQbw9lRLTQmNudH5bgjiecaV1WU3e9cbI4PODgS
-	 JcLXBvcvUyvB3yAhtqo+NMtwWwPzRPyXmK1U7ci2hsczYXIu4q27naG31eVrKgNDRF
-	 hWec1Gj65tCJhT52Ls0zJbj/0dkIPJJYez8BEz1JSt7zORXlLOyVdFBsfRc+n9h7VV
-	 lxDcsuVVJ5m4i5x0rUf+DbxnOToPhxJbtZmh7UEBwhew0pb2twuYLkcBELI6+aVRh/
-	 9ErKfk5dYyOkutA8RIta4NSi4Ddu12+E92rzib/ScfS6tLJQEEZsYl+sRZWBsfO+e+
-	 2OeMOHuTUBRPg==
-From: Will Deacon <will@kernel.org>
-To: catalin.marinas@arm.com,
-	jic23@kernel.org,
-	Richard Cheng <icheng@nvidia.com>
-Cc: kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	ryan.roberts@arm.com,
-	ardb@kernel.org,
-	kevin.brodsky@arm.com,
-	anshuman.khandual@arm.com,
-	yang@os.amperecomputing.com,
-	chaitanyas.prakash@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	newtonl@nvidia.com,
-	kristinc@nvidia.com,
-	mochs@nvidia.com,
-	kaihengf@nvidia.com,
-	kobak@nvidia.com
-Subject: Re: [PATCH v2] arm64/mm: Check the requested PFN range during memory removal
-Date: Tue, 21 Jul 2026 18:18:39 +0100
-Message-ID: <178464727167.1304664.6289495269821621329.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260721100026.10408-1-icheng@nvidia.com>
-References: <20260721100026.10408-1-icheng@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nebn8kWa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784655431; x=1816191431;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9CansrlgyyP3gUMHNdV0ha6t+LH+ydqnVUS2qiTMQtE=;
+  b=nebn8kWaBhyKatBk9S4tgKaPHysuq7UxL/4hthupKx5B18lSBSeM45b2
+   3se8QqZJA1Yb67Gu7WepU/CcCslZUMeA9NQYERVmoaOrvfGMNBZssPDsY
+   RV/ganSaqZRE2BCVt5oug/KxkPNIXp9V8/+wsKPGesA1P3YAkLTk1Q8YJ
+   UJZEWqoayhX0kgvTauCuJ4W9FIwvyJ//7xqVqvnX+71T/tVcGvvsadmYy
+   Len5YbnNMHw2x+g595aST2kIlKt6MVAQJgEAqI6aEV9h+ejqukOx/+nOy
+   mGKwrv8BWxqTmCRmNJOlXmZnKqH7hzDPhUnRcEzP0rZ+64NNYoOQ1iq6S
+   w==;
+X-CSE-ConnectionGUID: I9sVEfIFT+i1ZH0ii/w2cg==
+X-CSE-MsgGUID: QCTKd7PYQ5GfvKBhZ+c1+A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="96782119"
+X-IronPort-AV: E=Sophos;i="6.25,177,1779174000"; 
+   d="scan'208";a="96782119"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 10:37:10 -0700
+X-CSE-ConnectionGUID: o+pdtNEUT3mDMtWxe9jC7Q==
+X-CSE-MsgGUID: fc2WBhZpRn6PsVYvNzsixA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,177,1779174000"; 
+   d="scan'208";a="258486547"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.249])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 10:37:10 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <iweiny@kernel.org>,
+	Dan Williams <djbw@kernel.org>,
+	Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org
+Subject: [PATCH v2 1/2] cxl/region: Fix use-after-free in find_pos_and_ways() error path
+Date: Tue, 21 Jul 2026 10:37:03 -0700
+Message-ID: <3a36953b5c665cb9544ba61dafbea0b0fa508c77.1784654628.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Tue, 21 Jul 2026 18:00:26 +0800, Richard Cheng wrote:
-> prevent_memory_remove_notifier() advances pfn while scanning the requested
-> range for early memory. When the loop completes, pfn is at or beyond
-> end_pfn. Passing it to can_unmap_without_split() therefore checks a range
-> after the one being offlined.
-> 
-> Consequently, a valid request can be rejected based on the following
-> range, while a request that would split a leaf mapping can be accepted if
-> the shifted range can be unmapped without a split. This was observed with
-> CXL DAX memory, where the final memory block was incorrectly allowed to
-> be offlined.
-> 
-> [...]
+The error path releases its reference to a switch decoder before
+logging an error that includes the decoder name. If the released
+reference is the last one, the decoder can be freed before the error
+message accesses its name.
 
-Applied to arm64 (for-next/fixes), thanks!
+Drop  the reference after the error is reported.
 
-[1/1] arm64/mm: Check the requested PFN range during memory removal
-      https://git.kernel.org/arm64/c/285f90a4d1141
+Fixes: d90acdf49e18 ("cxl/region: Add a dev_err() on missing target list entries")
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
 
-Cheers,
+No changes in v2.
+Reposted in series w the __free change in patch 2/2
+
+
+
+ drivers/cxl/core/region.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 1e211542b6b6..c86dd9d55e93 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -1938,8 +1938,6 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+ 			break;
+ 		}
+ 	}
+-	put_device(dev);
+-
+ 	if (rc)
+ 		dev_err(port->uport_dev,
+ 			"failed to find %s:%s in target list of %s\n",
+@@ -1947,6 +1945,8 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+ 			dev_name(port->parent_dport->dport_dev),
+ 			dev_name(&cxlsd->cxld.dev));
+ 
++	put_device(dev);
++
+ 	return rc;
+ }
+ 
+
+base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
 -- 
-Will
+2.37.3
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
