@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B986369D71
-	for <linux-cxl@vger.kernel.org>; Tue, 21 Jul 2026 17:37:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB24046C4DD
+	for <linux-cxl@vger.kernel.org>; Tue, 21 Jul 2026 17:37:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784655431; cv=none; b=c0GHxIPNy+1Lqzxv4Q7vUvWzKw4H22O+fH7SeQhmBCOIr2qZh2V0NxnZ9MTQJLHTDoAg3SmJqIOjbaWmXtvGdEYCs9pc2iy1Xz7fijirSTS/iNpu6UIKRYGRlm9F8cxAFzLxgroVsLyYjeRoPAUp/8J7QxLb3ZOT1U3T0OK6iF4=
+	t=1784655433; cv=none; b=ozk1C7EGeBcO/rj5vg/ZU/WaF/PaWhYMOqBTMdfwiyyGPcJxTkq2Ug9UFOi9ZdEdUfwg7RCgM5p5r5l1t/fN6bbGU2sMFOVt4M0Qgt8nyU/drnQaQAaIIg1/T2BMujmwrM+oYDN4dMjss/EgrK8RD9OVTfZCM2Z0DcyvNOJbCtY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784655431; c=relaxed/simple;
-	bh=9CansrlgyyP3gUMHNdV0ha6t+LH+ydqnVUS2qiTMQtE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aRXdAc1Shjhare3eCZjGYHWcEZycRy5eYQxRj/pBzhxxsVG2YziNe948/LbTUXAmAkDwsso0V8JjEu6DKu+gIoKw8JFcFrXAe2vUvhUeyjOwgRs9e5WBeN2zbV1M3fS8M9xTVOMYQ4bXp9TvYMi4YjDZxHOByM9b4ASYff7MnLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nebn8kWa; arc=none smtp.client-ip=198.175.65.12
+	s=arc-20240116; t=1784655433; c=relaxed/simple;
+	bh=VkfsPJqBhxtMnegb6Mm8zHGCWqI6+ybCdA4gJ+JGXJQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pHdZIHXDgTz54J+vQbAWVObySeXrS7mvBO2Fryynxr4vW9CvovkR2a60l8JYmhwqlhMybYcTpOvsuoYMbBbw4WtCWSvkJRkNSdeRDTmWdeNSwB6fzkjUxhXsxS4ydP+6yKd2GgnT41ZU46i0AADo2RG5iGSUjKcwPFF1vFrFuOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HI0H6VmC; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nebn8kWa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HI0H6VmC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784655431; x=1816191431;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9CansrlgyyP3gUMHNdV0ha6t+LH+ydqnVUS2qiTMQtE=;
-  b=nebn8kWaBhyKatBk9S4tgKaPHysuq7UxL/4hthupKx5B18lSBSeM45b2
-   3se8QqZJA1Yb67Gu7WepU/CcCslZUMeA9NQYERVmoaOrvfGMNBZssPDsY
-   RV/ganSaqZRE2BCVt5oug/KxkPNIXp9V8/+wsKPGesA1P3YAkLTk1Q8YJ
-   UJZEWqoayhX0kgvTauCuJ4W9FIwvyJ//7xqVqvnX+71T/tVcGvvsadmYy
-   Len5YbnNMHw2x+g595aST2kIlKt6MVAQJgEAqI6aEV9h+ejqukOx/+nOy
-   mGKwrv8BWxqTmCRmNJOlXmZnKqH7hzDPhUnRcEzP0rZ+64NNYoOQ1iq6S
+  t=1784655432; x=1816191432;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=VkfsPJqBhxtMnegb6Mm8zHGCWqI6+ybCdA4gJ+JGXJQ=;
+  b=HI0H6VmCd2QtVQ5blUUaLpWODJRjwvX/P/1WiA8xhqAm/X0DZrBsEgfF
+   XURrzz2CpdoKC/kZIwZyC0U9ddYVtet5oHVjxLLihqlqqbpITrsBF9eiF
+   IrO3pd9wvbr3mUYmICoMGNBfpZD8FCXz9ieAjmM6Zyz87cbTJE0eq7Iji
+   2VkmmH/kjGlpq4BCoJb2242ZTWpEyKDUr68fZxUy7jfKjCpQ6S6gn4xzl
+   7qYegDb8p4p+/l1CLHY4S9JgkzBRFqzhr+7J2foAPegIwMrbJyPJxPyj4
+   YJDBSVTKp+TQvKclz0h3xSY+Itu+F1ERMOZvWE5K4I49OFanJZDEcciro
    w==;
-X-CSE-ConnectionGUID: I9sVEfIFT+i1ZH0ii/w2cg==
-X-CSE-MsgGUID: QCTKd7PYQ5GfvKBhZ+c1+A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="96782119"
+X-CSE-ConnectionGUID: I4wB+0GaTtikonT8fwxofg==
+X-CSE-MsgGUID: FGm2lWlNQOy4IZBD+18UZA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="96782123"
 X-IronPort-AV: E=Sophos;i="6.25,177,1779174000"; 
-   d="scan'208";a="96782119"
+   d="scan'208";a="96782123"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 10:37:10 -0700
-X-CSE-ConnectionGUID: o+pdtNEUT3mDMtWxe9jC7Q==
-X-CSE-MsgGUID: fc2WBhZpRn6PsVYvNzsixA==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 10:37:12 -0700
+X-CSE-ConnectionGUID: axwXFN9eSWCYIHS0CFkoVA==
+X-CSE-MsgGUID: zOga5J6BQN6SrYX/i0DWcA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,177,1779174000"; 
-   d="scan'208";a="258486547"
+   d="scan'208";a="258486554"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.249])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 10:37:10 -0700
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 10:37:11 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -52,10 +53,12 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Dan Williams <djbw@kernel.org>,
 	Li Ming <ming.li@zohomail.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v2 1/2] cxl/region: Fix use-after-free in find_pos_and_ways() error path
-Date: Tue, 21 Jul 2026 10:37:03 -0700
-Message-ID: <3a36953b5c665cb9544ba61dafbea0b0fa508c77.1784654628.git.alison.schofield@intel.com>
+Subject: [PATCH v2 2/2] cxl/region: Use __free(put_device) in find_pos_and_ways()
+Date: Tue, 21 Jul 2026 10:37:04 -0700
+Message-ID: <03aceaa0001651c28f221988c9e845f59bf1d84d.1784654628.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <3a36953b5c665cb9544ba61dafbea0b0fa508c77.1784654628.git.alison.schofield@intel.com>
+References: <3a36953b5c665cb9544ba61dafbea0b0fa508c77.1784654628.git.alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -64,49 +67,47 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The error path releases its reference to a switch decoder before
-logging an error that includes the decoder name. If the released
-reference is the last one, the decoder can be freed before the error
-message accesses its name.
+Use __free(put_device) for the switch decoder reference returned by
+device_find_child() instead of releasing it with an open-coded
+put_device().
 
-Drop  the reference after the error is reported.
+This matches the scoped device reference handling used elsewhere in
+the file.
 
-Fixes: d90acdf49e18 ("cxl/region: Add a dev_err() on missing target list entries")
+Suggested-by: Li Ming <ming.li@zohomail.com>
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
 
-No changes in v2.
-Reposted in series w the __free change in patch 2/2
+This is a new patch added in series after the UAF fixup in patch 1/2.
 
 
-
- drivers/cxl/core/region.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/cxl/core/region.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 1e211542b6b6..c86dd9d55e93 100644
+index c86dd9d55e93..4d7d96d03ece 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -1938,8 +1938,6 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
- 			break;
- 		}
- 	}
--	put_device(dev);
--
- 	if (rc)
- 		dev_err(port->uport_dev,
- 			"failed to find %s:%s in target list of %s\n",
-@@ -1947,6 +1945,8 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+@@ -1911,9 +1911,9 @@ static int match_switch_decoder_by_range(struct device *dev,
+ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+ 			     int *pos, int *ways)
+ {
++	struct device *dev __free(put_device) = NULL;
+ 	struct cxl_switch_decoder *cxlsd;
+ 	struct cxl_port *parent;
+-	struct device *dev;
+ 	int rc = -ENXIO;
+ 
+ 	parent = parent_port_of(port);
+@@ -1945,8 +1945,6 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
  			dev_name(port->parent_dport->dport_dev),
  			dev_name(&cxlsd->cxld.dev));
  
-+	put_device(dev);
-+
+-	put_device(dev);
+-
  	return rc;
  }
  
-
-base-commit: dc59e4fea9d83f03bad6bddf3fa2e52491777482
 -- 
 2.37.3
 
