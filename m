@@ -1,61 +1,63 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D694399FC
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 18:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829683DC4AE
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 18:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784745327; cv=none; b=R8EBYdIjHdutGTOEclvgWKju4Kt3M8pMrADxZa6O/ekCx8717ZS0XfYJVd0Va/1JWQO+fnY5T2vdtZZz3miZ4VvF3Bm3p2bRp7LG3XWVZo8hM6F7OWCRYgmsgBe0AGgeKVYK4OBP0AIxNl91dOy2exICEP7/asZA1UrWVBIVmr4=
+	t=1784745329; cv=none; b=p5d3s9oghFQLiNGK6nvJ0trJ3De3X6JpDHQJTlcRNDaI0Gk7kXyts6qrdCvMs1p5+p6+Vgb9/oMpkKIeYhCr9FARhZGRHluCEzdKgTS9gymY+ohQ8Vl1eP9sXO+8h409d3Pv+74gxCY7kHiYeXUZBfbXDymvUxMvO8csF99ksg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784745327; c=relaxed/simple;
-	bh=dWFSG8u7oJ1tS5+bgC+LuxGSEyW5U3yv31ndL8WfbZk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=skUZvbZTU2FeVwb+sA4yHXdS6281S+Vcs71mpD/lEv1xgM8su8eyTZGzQTSZGvM3WxyQTqPk7ncK3M9e1MgPQM2fUwEQF+hXHTH4GWO+SFK+k6yykbJnKFtrHSo94HdE5XYf6+9oe38m0Y2q/WnDMrkP70BFmS9GsBjbGptiJwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=cYOe7wsh; arc=none smtp.client-ip=209.85.160.174
+	s=arc-20240116; t=1784745329; c=relaxed/simple;
+	bh=17xpFpa5YRnGNcYvBWqNUbnxwE6UGTg1b8TiOR8UmHc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MBhHlkq79iw/AIxf/6dtRBwnjpOcvT9d1pKmCc0OT2ZKjNsRwsYxAm3/VwFx9hLOctnbgeKxj0BI4uuNI464Rl4oYdFKaZfNkjXomR6RGi9YQwRDUJqXENp4sYAjZ2RmIkdd7H0HVQTEXiDspCjjokFZyHVpNLkYWaumQv7Pd/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=DFKkCMgY; arc=none smtp.client-ip=209.85.160.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="cYOe7wsh"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-51c149c5722so81149201cf.0
-        for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 11:35:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="DFKkCMgY"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-51c2cce930cso90799141cf.0
+        for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 11:35:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1784745325; x=1785350125; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ZE3yTmrW+H7J5TExci9q9j4rULKpaqgUmy/qSHf1N/c=;
-        b=cYOe7wshwnGpQWgsqWmo+m+oz3PBdXOihaKRVf/Lvg134blcq7kv7uWiDeTKFqsb5a
-         2kiviag2TTH0psuFpac4pUZ9dl5m4/a0GThwURMELGl5lLn7v118+xRyxxmz9Dvz+7OS
-         zO8Mr01eCkvMN1d8qYXtfzVv20AovxBOMBIKO+lOyzLc/l8LE89mSecLDulx9k0SyHyx
-         R+Gi/AMPdg6cQLDojhNKMX03A73G8+ilJNVT129WdlLUPiHRC4PtCNneYNkLpmyzRUGm
-         ldnE0Z1fEk3Q1CtxXWFPtSBuXKU/UH/WeiIiqyFlFRcmLJwDNId1iqQOGongQhJkOwXN
-         BYYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784745325; x=1785350125;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gourry.net; s=google; t=1784745326; x=1785350126; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=ZE3yTmrW+H7J5TExci9q9j4rULKpaqgUmy/qSHf1N/c=;
-        b=h+Stqq7y4jWgUhCmAf5ETxKOdX+G9McA8IJ18wF9Q8V2o9QHRn/h+WRZAU/eQNJkH2
-         61eApB/w9Itz0tzRjdyvwtoPZLfRu0mwSoQ6rhxRgzOl0mH4m33Hmb01TFmwaFgOeRXI
-         fV8PspkrXmaJ0zvufL9tKxe1bzFaJ2fUD5wHGxy/OVz1RXvU6mo4FAhGWnChUg3LFzwp
-         HGW2oAcRS41JutlyvovI5MSOpJE0EdUcYX0M0onHimkS42bzajojtJZD4OfS08vV22tj
-         mZ/ESpPIAHF1/n1f8cSn5WvZV1wiGNjI2A00gzChobJ/EfBz9yEhFhYEc+QKKjgzm76d
-         xuHg==
-X-Gm-Message-State: AOJu0Yx8NP7J63f2jVqWfL89BY9tebN8MJhgHE2w/iBB5rDId3frplzC
-	jhd10sVAxBdha10XXgE8siu5Y0CipejSi8Km9waANe1gPvYRtSfl995AHtIZgbmtXh1I41ohOWK
-	H44Ps
-X-Gm-Gg: AR+sD11TKoJHAg9SALWHzODjlGwCh2TsKm9prQ0xMFl9S9CKgEISGptKL6xoyPrtKHY
-	6pJMyG0CUCUfnQD8mtCqUtFW9J41DuPnMzHv4NrfLoGYG0Pmb/OMxC/RoiLZB3dj9U+fPODaeGr
-	JmYgcanS7/4Pq97neyA3wOO2BUpKZP1FAUDhalJKP4SYkVUYZS7APzFA6SOPNTBOHIiBTCmGr/K
-	5/9XN8t4MdjzI8WXjTgKoLJh4vxXIbP75Pu4Lj7mxzRLBjdbJOMhN1LL9KV3aGfXEwI59bbhYSs
-	PfNQ1MTDWHRgB5p0qSSHtDDs43x2PGUHN/xZSZKSfBe76BupYZXhP3Trsnm3Aom9bhX3MHW18qA
-	wItAa5o4BJmMp8+0BgRGGVKuwLl4RIBzHcHNKCEkK4VCquMivr1+xKjbxPryukKjiA3hFVnoXZ1
-	gF3NToY98KsWJFZ5QfJP3/diNk1e9oAqT7IpAfsCnnjMU9VJPDAQxai4u2fAImADk=
-X-Received: by 2002:a05:622a:1b8e:b0:516:35fe:5524 with SMTP id d75a77b69052e-527a5c0f064mr51449541cf.5.1784745324692;
-        Wed, 22 Jul 2026 11:35:24 -0700 (PDT)
+        bh=Pm5BZ9qJgkVevAwG5CFNqV+xwvYk7oAu9XFj5gld8ew=;
+        b=DFKkCMgYuHhfHygeKuOz2qeB49pxidY/bvOiflmnE63/Df0KGZUh4FS7A2ZoXJzQjd
+         C/pbPaJPXiAcMdVf9R7TwuQK44M5nUXvhNqd5oZ9R+2iv8PfSLd69JtioafhC5bx/vhj
+         Z0nUMhvX/11ony+tB1KnXxyk3ucitvQVSNLSTlZQ3BPD0ECjUgxTIFwQG9md/K4AKuyO
+         EudUDRZVgbTsiJ55Z4ymVq+L2ohXXuoYzL03Yk0SVSHfOYgfU0gX04yYPUW14Ip6Uylh
+         T6MTddqN43Ij6kgLRRLZOjf0W/4lKteWVTkBHVMo3bf7Npd704JjLFCJCdY9dvSlSR5b
+         H3+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784745326; x=1785350126;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Pm5BZ9qJgkVevAwG5CFNqV+xwvYk7oAu9XFj5gld8ew=;
+        b=sfPUhycHfS7Sx+qOZ07V6+Cz72VMgWd1OwJjCxwSxmrEet6h5l+P1hBb15pa8U/oFC
+         RdAZJnXma7WL9XOtvrQ071UvKwVbkkMHb0BQHCR0kobN9JGnDJ6lYAeF/egX8RGDtsUs
+         cRJtz9YbhkSuNS/caAdHzjxQ9ZqPdx6llksSeEJBD54/tAgrCSp7k5rVT/R88whvMRRm
+         UXJPgsM95M/d48z8RS9KpLVZB530od/EloY9MIZKUS8fgo57gC67BFW7ZSZP87RlPDkA
+         Ni86Fz4IFnTjGBZfnp6KF4ZJJkv251YlCAPJpOSCHJslDzqaELPI/+EtnX6Vn/T3jDHh
+         WR+g==
+X-Gm-Message-State: AOJu0YyF4WiAMzGwfh8gcBWCNklc/1zJeXlPB2RlDjySlMUbtcS5TQ5u
+	n/rOUUCJu7ORIUxJG9WzbF2m+4riir7mqLpvAcLla1EXXuCfTy70624Ex+kFvEdRbtj/c5Mm3+2
+	tGf6C
+X-Gm-Gg: AR+sD10Gh0T/0lHrg5GO/G7g1JJN5faQHIXNU7Tdj4c5adzkXIxrQxVDGOV3cgQ22TZ
+	cdi/l11x6X853crDIhJKH3tzPreF0bnSMrhfOrjUYy7yMYpEtmc78MccrUsDnfOjq5ZBbsU7/F6
+	vYspjIF9nzDavH9oNNB+TlpOTQwQ31sXbtUGaFM427p1KgzYN8Yd9xVXrDOJjELO/6mWVCkxl1S
+	ASRh66xbatAoeRYnBEmbEwnQ1b1qYlC5iJW98FzzQXma7od2xMdutM5w8+hTCyZOtzlr5XFl3la
+	adNwFwqoQBgpaSHpufqm0M7zCQYqbbA5NgDe8fozNqRteC4ar1pEU7WI49sYIfC2HlqfiMw4VlY
+	kXywnmzhCbzwnGW6cFM74hRzqNHdX+M/PRQmmpHFe5bvrdgCvD7NZtk0iA2QowovZ3y+cfAJ9Ej
+	RRDyGUDoAeZSlGo+YY9GbmomWA6N5MZkWUclFzTmj2h1BNys62sGXoGHpS+90Bg7I=
+X-Received: by 2002:a05:622a:349:b0:527:f4d0:4bb7 with SMTP id d75a77b69052e-527f4d05517mr42226231cf.52.1784745326076;
+        Wed, 22 Jul 2026 11:35:26 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-907ba8b3e96sm27630216d6.1.2026.07.22.11.35.23
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-907ba8b3e96sm27630216d6.1.2026.07.22.11.35.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2026 11:35:24 -0700 (PDT)
+        Wed, 22 Jul 2026 11:35:25 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-cxl@vger.kernel.org
 Cc: nvdimm@lists.linux.dev,
@@ -65,10 +67,12 @@ Cc: nvdimm@lists.linux.dev,
 	vishal.l.verma@intel.com,
 	dave.jiang@intel.com,
 	alison.schofield@intel.com
-Subject: [RFC PATCH 0/8] dax/kmem: support for private NUMA nodes
-Date: Wed, 22 Jul 2026 14:35:11 -0400
-Message-ID: <20260722183519.935213-1-gourry@gourry.net>
+Subject: [RFC PATCH 1/8] dax/kmem: add dax_file= to expose an anonymous-fault char device
+Date: Wed, 22 Jul 2026 14:35:12 -0400
+Message-ID: <20260722183519.935213-2-gourry@gourry.net>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260722183519.935213-1-gourry@gourry.net>
+References: <20260722183519.935213-1-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -77,80 +81,282 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series adds uapi bits for private memory NUMA node [0] control.
+Add a "dax_file" knob to dax/kmem.
 
-It is not intended for merge - just discussion.
+When set, installs a char device on the existing /dev/daxN.N whose
+mmap() turns the mapping into an ordinary ANONYMOUS mapping bound
+to the device's node - so every folio (on fault and swap-in) lands
+on that node exactly like an mbind() to it.
 
-I have been using this to extensively test mm/ behaviors with private
-nodes [1] and am wondering whether some of this is more generally
-useful for coherent memory devices if private nodes lands.
+Writing 0 removes the char device again.
 
-For now, this is useful for testing, but locks in UAPI, so this RFC
-is not intended as an intent to upstream - just sharing my testing api.
-  
-  Question 1: Do we want dax control of private node settings?
-              1a) External? (uapi like this?)
-	      1b) Internal-only? (plumbed through module apis)
+Because kmem devices hotplug memory to mm/, faulted memory is NOT
+limited to just the dax device's memory ranges.  This is not
+particularly useful for normal nodes, but will be useful for private
+nodes where each node can only have one owner - and therefore the
+faults are limited to the device's memory ranges.
 
-  Question 2: If we do want this, do we want it in kmem or a
-              separate dax driver? (dax/private_mem ?)
+Note: The mapping is deliberately not S_DAX - otherwise the vma would
+be wrongly excluded from migration, NUMA balancing, and the like.
 
-  Question 3: are dax_file and adistance useful regardless?
+The node binding is a device-lifetime mempolicy, built once at online
+time. A plain fault would place the first folio correctly without it,
+but swap-in would likely misplace the folio, so the policy is what
+keeps the mapping pinned to the node.
 
-This adds 9 interfaces:
+MAP_SHARED is rejected (no shared mappings are possible here).
 
-  dax0.0/dax_file
-     this makes /dev/dax0.0 mmap-able when online as kmem
-     it essentially attaches a default mempolicy to the vma
-     that binds it to the dax device's node.
+Signed-off-by: Gregory Price <gourry@gourry.net>
+---
+ drivers/dax/kmem.c | 171 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 170 insertions(+), 1 deletion(-)
 
-  dax0.0/private
-     this switches whether hotplug sets N_MEMORY or N_MEMORY_PRIVATE
-
-  dax0.0/adistance
-     this allows overriding the default adistance to for the node
-     into a specific tier.  That allows for testing tiering in both
-     directions (demotion from/to the node)
-
-  dax0.0/reclaim
-  dax0.0/user_numa
-  dax0.0/hotunplug
-  dax0.0/demotion
-  dax0.0/numa_balancing
-  dax0.0/ltpin
-     these bits all enable their respective NODE_PRIVATE_CAP_ bit
-
-     reclaim   - enables reclaim on the node
-     user_numa - enables mbind/mempolicy/move_pages/migrate_pages
-     hotunplug - enables hotunplug to migrate memory
-     demotion  - enables reclaim to demote from or to the node
-     numa_balancing - allows prot_none injection on the node's folios
-     ltpin     - allows longterm pin on node's folios to work
-
-[0] private node series
-https://lore.kernel.org/linux-mm/20260720193431.3841992-1-gourry@gourry.net/
-
-[1] selftests/dax extensions for all of this that show use cases and
-    testing for the private node series - including all user api's
-    like mbind, set_mempolicy, move_pages, migrate_privates - as well
-    as reclaim behaviors.
-https://github.com/gourryinverse/linux/commits/scratch/gourry/managed_nodes/dax_private-mm-new/
-
-Gregory Price (8):
-  dax/kmem: add dax_file= to expose an anonymous-fault char device
-  dax/kmem: add private= to online memory as an N_MEMORY_PRIVATE node
-  dax/kmem: add the reclaim opt-in (CAP_RECLAIM) for private nodes
-  dax/kmem: add the user_numa opt-in (CAP_USER_NUMA) for private nodes
-  dax/kmem: add the hotunplug opt-in (CAP_HOTUNPLUG) for private nodes
-  dax/kmem: add the demotion and numa_balancing opt-ins for private
-    nodes
-  dax/kmem: add the ltpin opt-in (CAP_LTPIN) for private nodes
-  dax/kmem: add dax/adistance to make private node adistance
-    configurable
-
- drivers/dax/kmem.c | 368 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 366 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+index c3faf18e7f85d..d9021cf148982 100644
+--- a/drivers/dax/kmem.c
++++ b/drivers/dax/kmem.c
+@@ -5,11 +5,13 @@
+ #include <linux/memory.h>
+ #include <linux/module.h>
+ #include <linux/device.h>
++#include <linux/cdev.h>
+ #include <linux/slab.h>
+ #include <linux/dax.h>
+ #include <linux/fs.h>
+ #include <linux/mm.h>
+ #include <linux/mman.h>
++#include <linux/mempolicy.h>
+ #include <linux/memory-tiers.h>
+ #include <linux/memory_hotplug.h>
+ #include <linux/string_helpers.h>
+@@ -45,8 +47,11 @@ static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r)
+ struct dax_kmem_data {
+ 	const char *res_name;
+ 	int mgid;
++	int numa_node;
+ 	int state;
+-	struct mutex lock; /* protects hotplug state transitions */
++	struct mutex lock; /* protects hotplug state transitions and config */
++	bool dax_file; /* when set, cdev allows mmap */
++	struct mempolicy *policy; /* device-lifetime bind for dax-file mmap */
+ 	struct resource *res[];
+ };
+ 
+@@ -65,6 +70,90 @@ static void kmem_put_memory_types(void)
+ 	mt_put_memory_types(&kmem_memory_types);
+ }
+ 
++#ifdef CONFIG_NUMA
++static void kmem_vma_set_policy(struct vm_area_struct *vma, struct mempolicy *pol)
++{
++	vma->vm_policy = pol;
++}
++#else
++static void kmem_vma_set_policy(struct vm_area_struct *vma, struct mempolicy *pol)
++{
++}
++#endif
++
++/*
++ * On mmap, install MPOL_F_PRIVATE mempolicy to bind to that node's memory,
++ * so every folio (fault and swap-in) lands on the node exactly like an mbind().
++ * Only present when dax_file=true, otherwise returns -ENXIO as before.
++ */
++static int kmem_anon_mmap(struct file *filp, struct vm_area_struct *vma)
++{
++	struct dev_dax *dev_dax = filp->private_data;
++	struct dax_kmem_data *data = dev_get_drvdata(&dev_dax->dev);
++	int rc = 0, id;
++
++	id = dax_read_lock();
++	if (!dax_alive(dev_dax->dax_dev))
++		rc = -ENXIO;
++	dax_read_unlock(id);
++	if (rc)
++		return rc;
++
++	/* Private mappings are not shared by definition, reject MAP_SHARED. */
++	if (vma->vm_flags & VM_SHARED)
++		return -EINVAL;
++
++	/* No policy means the node is not online yet - nothing to map. */
++	if (!data->policy)
++		return -ENXIO;
++
++	vma_set_anonymous(vma);
++	mpol_get(data->policy);
++	kmem_vma_set_policy(vma, data->policy);
++	return 0;
++}
++
++static int kmem_anon_open(struct inode *inode, struct file *filp)
++{
++	struct dax_device *dax_dev = inode_dax(inode);
++	struct dev_dax *dev_dax = dax_get_private(dax_dev);
++
++	filp->private_data = dev_dax;
++	/* Deliberately NOT S_DAX to allow normal mm/ operations on the vma */
++	return 0;
++}
++
++static const struct file_operations kmem_anon_fops = {
++	.llseek = noop_llseek,
++	.owner = THIS_MODULE,
++	.open = kmem_anon_open,
++	.mmap = kmem_anon_mmap,
++};
++
++/* Installs dax-file char device fops on the existing /dev/daxN.N node. */
++static int kmem_dax_file_cdev_add(struct dev_dax *dev_dax)
++{
++	struct dax_device *dax_dev = dev_dax->dax_dev;
++	struct device *dev = &dev_dax->dev;
++	struct cdev *cdev = dax_inode(dax_dev)->i_cdev;
++	int rc;
++
++	cdev_init(cdev, &kmem_anon_fops);
++	cdev->owner = dev->driver->owner;
++	cdev_set_parent(cdev, &dev->kobj);
++	rc = cdev_add(cdev, dev->devt, 1);
++	if (rc)
++		return rc;
++	run_dax(dax_dev);
++	return 0;
++}
++
++static void kmem_dax_file_cdev_del(struct dev_dax *dev_dax)
++{
++	kill_dev_dax(dev_dax);
++	cdev_del(dax_inode(dev_dax->dax_dev)->i_cdev);
++}
++
+ /* True for the online states a kmem dax device can hold. */
+ static bool dax_kmem_state_is_online(int state)
+ {
+@@ -339,6 +428,7 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct dev_dax *dev_dax = to_dev_dax(dev);
+ 	struct dax_kmem_data *data = dev_get_drvdata(dev);
++	struct mempolicy *pol;
+ 	int online_type;
+ 	int rc;
+ 
+@@ -377,8 +467,69 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
+ 	}
+ 
+ 	data->state = online_type;
++
++	/* If in dax-file mode, build the bind policy applied during mmap */
++	if (data->dax_file && !data->policy) {
++		pol = mpol_private_bind(data->numa_node);
++		if (IS_ERR(pol))
++			dev_warn(dev, "dax-file bind failed: %ld\n", PTR_ERR(pol));
++		else
++			data->policy = pol;
++	}
++
++	return len;
++}
++
++static ssize_t dax_file_show(struct device *dev, struct device_attribute *attr,
++			     char *buf)
++{
++	struct dax_kmem_data *data = dev_get_drvdata(dev);
++
++	if (!data)
++		return -ENXIO;
++	return sysfs_emit(buf, "%d\n", data->dax_file);
++}
++
++static ssize_t dax_file_store(struct device *dev, struct device_attribute *attr,
++			      const char *buf, size_t len)
++{
++	struct dev_dax *dev_dax = to_dev_dax(dev);
++	struct dax_kmem_data *data = dev_get_drvdata(dev);
++	bool enable;
++	int rc;
++
++	if (!data)
++		return -ENXIO;
++
++	rc = kstrtobool(buf, &enable);
++	if (rc)
++		return rc;
++
++	guard(mutex)(&data->lock);
++
++	/* dax_file= only reconfigures the device while it holds no memory. */
++	if (data->state != DAX_KMEM_UNPLUGGED)
++		return -EBUSY;
++
++	if (enable == data->dax_file)
++		return len;
++
++	if (enable) {
++		/* Add the anon-fault cdev; mmap returns -ENXIO until onlined. */
++		rc = kmem_dax_file_cdev_add(dev_dax);
++		if (rc)
++			return rc;
++		data->dax_file = true;
++	} else {
++		kmem_dax_file_cdev_del(dev_dax);
++		mpol_put(data->policy);
++		data->policy = NULL;
++		data->dax_file = false;
++	}
++
+ 	return len;
+ }
++static DEVICE_ATTR_RW(dax_file);
+ 
+ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ {
+@@ -448,6 +599,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 	if (rc < 0)
+ 		goto err_reg_mgid;
+ 	data->mgid = rc;
++	data->numa_node = numa_node;
+ 	data->state = DAX_KMEM_UNPLUGGED;
+ 	mutex_init(&data->lock);
+ 
+@@ -516,6 +668,13 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
+ 	struct device *dev = &dev_dax->dev;
+ 	struct dax_kmem_data *data = dev_get_drvdata(dev);
+ 
++	/* If enabled, clean up the dax-file char device configuration. */
++	if (data->dax_file) {
++		kmem_dax_file_cdev_del(dev_dax);
++		mpol_put(data->policy);
++		data->policy = NULL;
++	}
++
+ 	/*
+ 	 * Remove every range that is still added.  dax_kmem_remove_ranges()
+ 	 * uses remove_memory(), which never offlines: an online block fails
+@@ -548,6 +707,15 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
+ #else
+ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
+ {
++	struct dax_kmem_data *data = dev_get_drvdata(&dev_dax->dev);
++
++	/* If enabled, clean up the dax-file char device configuration. */
++	if (data && data->dax_file) {
++		kmem_dax_file_cdev_del(dev_dax);
++		mpol_put(data->policy);
++		data->policy = NULL;
++	}
++
+ 	/*
+ 	 * Without hotremove purposely leak the request_mem_region() for the
+ 	 * device-dax range and return '0' to ->remove() attempts. The removal
+@@ -563,6 +731,7 @@ static DEVICE_ATTR_RW(state);
+ 
+ static struct attribute *dev_dax_kmem_attrs[] = {
+ 	&dev_attr_state.attr,
++	&dev_attr_dax_file.attr,
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(dev_dax_kmem);
 -- 
 2.53.0-Meta
 
