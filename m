@@ -1,127 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DF41F5842;
-	Wed, 22 Jul 2026 00:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784678859; cv=none; b=TFhx+RXNungxNgMWxdQ6qmncy7RLSVJ1gsLiifrQgnBueAKasIHXyjMES/OtRKQPSfvo/JPzipUPE9+fAGY1xyVt2aJHf3BLTuFla9BWewmaOtc5qvmCppgqtEW+JYVbXgmbt0YXstP2RH+VVGWzgpaA2BCDeY80nwC1GBY25yY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784678859; c=relaxed/simple;
-	bh=rc8ljG8dSIlqk+aIVEJqaImUZnf7Li885PYIOTVqgks=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q6+jPCtRnnv73riRuzAYt1eg09CqKO2dj58bBj1Xq2eXgWoTtQ64NFZXM8cVsTaDtkDSBrUsh55PtSbWUDBQ3enT+HlTyx9qnXlbLnaC2LIn0OhaP1L425RGsCML6uc2uTZHh+XlmLd3igjR41uZ/azIOYh9qlOqcEB4hpeJrf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fYZqa9on; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EDB3313535;
+	Wed, 22 Jul 2026 00:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784679583; cv=fail; b=mdZMCHcBDXuImeKwydAg2UD0kcyiDhT/eQa1+umWwnYlQsxtWVnxEwDqpuW7C2QdwNbevqgpwfcJgXGF/lLN04gEW3R4co/g1zoBCO66io9tjMIP/vuCHcGrsyNYmnAo+ra+TMsp82oPGhmlMln6RPBPNR/GP3SAldBqodAuKXk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784679583; c=relaxed/simple;
+	bh=MkXAatsWGVPeJxI8X5Or8u1OJaWdGaTactY2Ur3vIAM=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=SZ/Tq1gd8K1y4HdPrv1ZcxsOGjjzXRdE8aFPZfO61J7eYU1HVDanrfzz63351JkxawSWfjl21AeJU71QBnljZIYrrSmkiatcKHVmH7g+IqUHhtXqt82GAAG6zzNTWn5lmAr/I0NfPjthIOFKoAWjHa7e6S7dBlSU4h1rejYV6J0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OrxddVoS; arc=fail smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fYZqa9on"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A44BA1F000E9;
-	Wed, 22 Jul 2026 00:07:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784678858;
-	bh=pAe5TcYHgmHD6jozIsXi+gmsvMZD6KYR7+ijGn883LE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=fYZqa9on+cpDorDMyr7npnS4PcnZ1EWN6odyia9y8+8g12fJUFMbUilZsCJBCU8G3
-	 mMfAHLbl0P8naXpsdfW1wHah+iQSQCyvQVdEViLXN8WnAXoIFePIs6OBrrVQ5aaj8S
-	 VNMXJPqyOyEhUkHxMt4gNflyQmffWiVzBrDgSReBl5O0t5Q232bUeOGYPA9c8lvrTb
-	 mYfJyAdFvodsh3F964XNo0liA04n/i+Vp3srW3cTNzqBdTbW95vCUbrAovz5cXosXT
-	 F8mWFF22Wu4xjSNvGJtZnTEkGOfbNLdbt+Z487wt/+4vVVTpgWQk4W+6kbYbA7alap
-	 /rkqMjvSo/kYQ==
-Date: Wed, 22 Jul 2026 01:07:31 +0100
-From: Jonathan Cameron <jic23@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OrxddVoS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784679575; x=1816215575;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=MkXAatsWGVPeJxI8X5Or8u1OJaWdGaTactY2Ur3vIAM=;
+  b=OrxddVoSAFPYwuOBfoXu8DRp46kyuVVEpftwUrcYCOmbJufxM1akgSRp
+   pPFf86B0sI7Jh0RK4/hOuc18l+IRhHUYO5rXoheBJhwFwM6mew9h+DFAD
+   2FsdJ7h+PDnJUr3W6Em74UgY+RSZ/jMQ+tfl1p0ALC/Y5t31ntEbHH3/c
+   kimsIJ9aLYeq5jEBn+Ik9+GhAR5THXp4wQ073Gj3DF0zQEwFz19LqAyr/
+   g/xWGhie/y2i5wxrHE/qSRrW+RWKvnOk2ThHcQWtR++KOd9sUAmdPFMbO
+   WO+ngVf5GeAboUVF2SIzfc4wRBUKXi3ZTY03gl9eaeOdpH2IiYFMhu/SE
+   w==;
+X-CSE-ConnectionGUID: cllqjn/ESNWekbmUxAm3bQ==
+X-CSE-MsgGUID: egoWMCHRQHSbBWoU2CqGZA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="85064886"
+X-IronPort-AV: E=Sophos;i="6.25,177,1779174000"; 
+   d="scan'208";a="85064886"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 17:19:26 -0700
+X-CSE-ConnectionGUID: GHZsmxLSRiGLjNvnrHdcAQ==
+X-CSE-MsgGUID: IqDjLdw+Qi669gwiElcAAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,177,1779174000"; 
+   d="scan'208";a="261701732"
+Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 17:19:26 -0700
+Received: from FMSMSX903.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43; Tue, 21 Jul 2026 17:19:25 -0700
+Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
+ FMSMSX903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43 via Frontend Transport; Tue, 21 Jul 2026 17:19:25 -0700
+Received: from MW6PR02CU001.outbound.protection.outlook.com (52.101.48.71) by
+ edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43; Tue, 21 Jul 2026 17:19:25 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WAfwTVoceIXNOEPuV1q0DoodkqhB6AT06g5/E15JKdS55ItIos78nq8ue6ROV0FksL/yi/ReQKQXX5BXl8/h6eAmzEVc61SfR8MLdFDk0f8vz3/+e+8vJaUYAq2cOGe2/KVAPq5L6GMoFTHkn3w3Km1HUsSDfAWyhCJ9QthUFp4u4mBgKH8W6l8RwLNeJ3mT2qODyyAYcXc9FjK2vWJG2ESKcdN20VpYRKuqsPv8FsamL/2WMa/eSfQR1ORoZPY9BKGSSV7JEewdjilnF/zGGDY063q/o8MvotUvDH6bQaJ+82ByK+jMiqdB5GfQs+zelY0AjWmE3Ws1Cwxej/Vang==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O4UVmaV+X/+2NLRrFm28bG8MzZvgNiXZk9tXr6rcrQQ=;
+ b=vx0xssivwIpjwFD6smBAwKb02fTyujLMvYuPGfjrwrMzF7FNfFcgwwKcYVcvch09VPz1op2vQ7y3woNJB36Uc8aXyX6yMUL7bUTSiyEjj4yTbNdCeB4MKh0QvWOoW5UfQwu2uTB67GHJHuYgNv1+SF44oaCKT0s/uLj9k1123UFdPkOxBtslWym8jIwnO42MzMzULUE71VGDNudrGWnup65apNEloziTLG3QCvy8K5tFXZJh46SH533nAEL2GA2HbhgwhcwTSD6UlRB6y8IjvzXT/zSmDYqA8Gl1QqgjdhiCJltI96Koo5xKXuM5dcM1hcZj3imOytUR5UPLPTvPYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by DS0PR11MB7998.namprd11.prod.outlook.com (2603:10b6:8:126::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.10; Wed, 22 Jul
+ 2026 00:19:23 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::a195:49d4:38c5:3891%4]) with mapi id 15.21.0223.017; Wed, 22 Jul 2026
+ 00:19:22 +0000
+Date: Tue, 21 Jul 2026 17:19:18 -0700
+From: Alison Schofield <alison.schofield@intel.com>
 To: Richard Cheng <icheng@nvidia.com>
-Cc: dave@stgolabs.net, dave.jiang@intel.com, alison.schofield@intel.com,
- vishal.l.verma@intel.com, djbw@kernel.org, danwilliams@nvidia.com,
- iweiny@kernel.org, ming.li@zohomail.com, linux-cxl@vger.kernel.org,
- linux-kernel@vger.kernel.org, newtonl@nvidia.com, kristinc@nvidia.com,
- kaihengf@nvidia.com, kobak@nvidia.com
-Subject: Re: [PATCH v7 0/2 RESEND] Support zero-sized HDM decoders
-Message-ID: <20260722010731.053a6bef@jic23-huawei>
-In-Reply-To: <20260721085715.39322-1-icheng@nvidia.com>
-References: <20260721085715.39322-1-icheng@nvidia.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+CC: <dave@stgolabs.net>, <jic23@kernel.org>, <dave.jiang@intel.com>,
+	<vishal.l.verma@intel.com>, <djbw@kernel.org>, <nvdimm@lists.linux.dev>,
+	<iweiny@kernel.org>, <ming.li@zohomail.com>, <gourry@gourry.net>,
+	<rrichter@amd.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <newtonl@nvidia.com>, <kristinc@nvidia.com>,
+	<kaihengf@nvidia.com>, <kobak@nvidia.com>, <mochs@nvidia.com>
+Subject: Re: [ndctl PATCH v2] test/fwctl: Add Feature OOB rejection
+ regression tests
+Message-ID: <amAMhmCpBCKC1XOB@aschofie-mobl2.lan>
+References: <20260721062122.24138-1-icheng@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20260721062122.24138-1-icheng@nvidia.com>
+X-ClientProxiedBy: SJ0PR03CA0338.namprd03.prod.outlook.com
+ (2603:10b6:a03:39c::13) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|DS0PR11MB7998:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2d882d21-0409-40b0-28cf-08dee786e174
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|366016|1800799024|376014|7416014|56012099006|11063799006|10067099003|22082099003|18002099003|3023799007;
+X-Microsoft-Antispam-Message-Info: m0mUe3rBJI/Y2VIrGC77XrZZQTAam38pvv8xGY+eDjBMGrW8VBH0vsAlCPT3YTyqpKo5LZKnrJIFwH+6pvWkuvZdx/S2ouMUlNf6JUbrc77Q6ROR4FmQSfJ8Vsb9M/Wcqopt4SsWX0oWGfWzftHMT9qdsnLSbfQHaSiPyC0VD0BTg2M0tHW/ps/Y4NFAsKWyDYFZvbwTtLcoW2zgEHTrbInVkENNVBGjysNeTh9MYTEYSiDAT1rw9M90spgO3+exDrMEbrupIsuzwJYpkc8kc6lZ4CO0Qx5EDt0a1omi1CjeDQOHXB0XtjfrlmlTwEWerUEVREoXG/xyqFc4vhf3l4lhXlg8Y15svtgZiNtu0AIpDQAwiIa24PGTHx38XWlFPBeyoe4gN3+dj7DyVRmWUK5vkGYr/RbZdI8ON5SLASzs2gzdQdfbtOBYFqLvViJcyWtxhS59zi3kYySC3rI7BW9OOF5J3Q21Wk1o5lvJM0UvLiUaOt/nkECNz7EEhKrBhHTZCPS//cE+3E0IOxxboorRQpBfRLK16gb0Zpg80lj7yiggtshHLE9Q90GUhXW0Ddh27hCBHtO5sOqCwnFDQFJXvnrRAixMaqxnqJrMI2TjDycIOHM8ARFrZztr2fk3s1AdQ6GEbfzIgfGw7Jj56QwkolhOWpQyqrC4TEypmjQ=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(1800799024)(376014)(7416014)(56012099006)(11063799006)(10067099003)(22082099003)(18002099003)(3023799007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lnEBkrxzL8asD2Rw3hCKJOaWO4b1yEvh2l6XuRQf/vchYGcnFKDTxNVyFtLS?=
+ =?us-ascii?Q?U4TS9CkvF5DrViccQvdKH/yTLFiOfdrZvtRZCHQjNfwRt+0LZePKVlulIf5h?=
+ =?us-ascii?Q?OOqG1wUPAGHnE0lnDzz62jSCOg/dhIzBu8X8EVcIL5Ot800LS7Fm33F9fAX7?=
+ =?us-ascii?Q?+0/gp+Cw6lUpkJ7BsDbCDn2KdK7//0hAlvgy4wTTLmwqD5wIObvUFWmjNrHL?=
+ =?us-ascii?Q?n1dLJt+1WTkTmKZOiISVlgxX5WDxx5hVwWlq2jT2CYbaxV3NSaaVjK69gnVJ?=
+ =?us-ascii?Q?R/vhOh0UifQulpWsXmxps96mlIqvLC+9aVzqiT40P8aT7eUj5rHA5IKQ8OJu?=
+ =?us-ascii?Q?ImKq/bfoCpuM+3nwtBVtbVBUEytoHlI2ilSTGO9LiqYoiV8zJc0OUeDD94xY?=
+ =?us-ascii?Q?c8VsQrh+wNxXPgUCURHK/GctJJfDnxwE5tT9dyv1A+7ulKqYNHZhzsptc/OF?=
+ =?us-ascii?Q?VJ8Y69Fhv5zjF4Zi9Ciq+XMsVeg8NT+Alk5VtHORsj6RdiEkmaBFbc3ls4JW?=
+ =?us-ascii?Q?mEl6/T1jgNzHRrO9qoqT7KdV5vF5y6AiiMvVkq25beXulP3jeYtE1Rt9q/uy?=
+ =?us-ascii?Q?MMXU0EdGv2Schb3tLpPgLBxIcPornA9agnydTC87wzNupMpU1pSAKMevo+uG?=
+ =?us-ascii?Q?CJRGtOL8sK0ixUnMu2j9Ox9nQc6GICpATsljTXubr3iheiw1UWddRNEZjxqC?=
+ =?us-ascii?Q?/fmNaLmuIKc0y2EFBgEDm4l7KQHpsEDA9giS/ybEiUC5Z9HQg/YHLb4VN/DK?=
+ =?us-ascii?Q?alqKQMaN7BWwijJaBuQKQpW72zh279WvFIwr8caqosFOJhNJl55d5CCfjrvd?=
+ =?us-ascii?Q?WJwGmVi/hq6q44+ZvYrKaJQKZ1KHliA0bxFTlfg1Cf1LDLbWuF31yVe2ONOY?=
+ =?us-ascii?Q?iEHFwS1+MeFS3jKtEDtTVoYKTZgkD2ktSVh8w7Lx2qHK7NeH9pF6h0g/pJEk?=
+ =?us-ascii?Q?D1HAXC5KRzcTWKlTaeVb+jWUrhbrD9tGu0OFTQFIWRe2LnwazoIY9n5TSS8p?=
+ =?us-ascii?Q?/nFzPdKX8zt9W+ss64DrKlXA/wI34R8aJt7LuKNoCy67EFvQxnIscP0LlzpC?=
+ =?us-ascii?Q?XMkZjMo7FzNEYNycHFd1dorda0YkvHzIa1pZEpJlH6Q2GW90D2MTfJQmgvrB?=
+ =?us-ascii?Q?wXU+IfYC6uXsRZ+IU3IrpCC1Q1VlmfbZe/NYmbPDUABzLWpMkRZyanYxprvY?=
+ =?us-ascii?Q?You5FEiEuMlvvG4v8hbB6voxh8W5vbd5qqYHtndZkTY/jxOaf56XKSlltH14?=
+ =?us-ascii?Q?i0x/jOq5dyDWV+5WzGk90EkXRcmAU1hnPhPhK3ofoKZ2vB8/thZ8eErEPYRg?=
+ =?us-ascii?Q?Lb5KWPfpeCjktIfZ8Mu+EUUUDUIaNfMATdv3oiAHxa2XW13qIPfBEDgs2mvy?=
+ =?us-ascii?Q?Lx+xfNLDfKFf9SLEe/P+EqN72mMn3893GQaPi2ymzqsypMn6snCA1CSkoCKq?=
+ =?us-ascii?Q?cySqrg/mYNaIuT5VlcVUTmFttsVxVlb8skgaCCiz6FKKU2jDtZOaQPFuocj9?=
+ =?us-ascii?Q?NeX09xZuqKcqiUfjom9nEgVPw4U7Q/v9D7I0R60pIhBfZ+n/Vj/04eDylbaN?=
+ =?us-ascii?Q?+EW2JnflbNP/XfPSrSkSSnflW387a4p/TVSyMEhIgv/I/qyUwnVxrdQiiZ8l?=
+ =?us-ascii?Q?+EgukSg/PKbofzMOzGxaJqsmIb4tXEXJr7hBw/IHgoB+gLhZmnm7eReTCDq4?=
+ =?us-ascii?Q?Kg1LT4u0N77+X+s6NX36TJmwELA0YKUY1jJRgx3ft1VTy8KJ8rpF9b0dIAI7?=
+ =?us-ascii?Q?bH+TCTDyCh7qDPa37ofkeZ1ULJgVqpo=3D?=
+X-Exchange-RoutingPolicyChecked: d0O7gBN6or+IQKdWjSLF2eO6knhJ7Po9Y1j+MGH2O4mrg080MSLn+niSJ9p1wPKyasH6EOnJxvl0IvGHx9Vt/qq3WT3B0UzI32d1YscEjNmnY3rverSqUHhFA2MTIY/spm/d3FGku9n1SzvxXDJanf3bsK5OgljsMR93d/YoBzZpmSW63czkuExI4MKd1tlxLoLHyVo+cc3bNQIIqp/TsG+pP38oi3ErE3l/a3CDsWdqbibvfz0lmTShZLiZtGX5SzmAESmtUG216HLUEdKHptF/avBhRkggkyw8Jeg02jyHnoUVijpxYeYgaQPutkYgxdRvbiow/FWuY/G9cGDEtw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d882d21-0409-40b0-28cf-08dee786e174
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2026 00:19:22.8601
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lj7+MqpvudtEr4UEHGH1f0y2qj09mQLHr6rx9kPHkJ3qMVPub5DsAKlrVGGzBIxxbpCgC2XA3pjplNN98CjfozQRanlx3rUX9hyrZNOIHms=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7998
+X-OriginatorOrg: intel.com
 
-On Tue, 21 Jul 2026 16:57:13 +0800
-Richard Cheng <icheng@nvidia.com> wrote:
+On Tue, Jul 21, 2026 at 02:21:22PM +0800, Richard Cheng wrote:
+> Add negative cases for the CXL fwctl Get Feature and Set Feature output
+> buffer bounds checks.
+> 
+> For Get Feature, request a non-zero payload while providing room only
+> for the fwctl_rpc_cxl_out header. Verify that the kernel rejects the
+> request with -EINVAL instead of writing past the rpc_out buffer.
+> 
+> For Set Feature, build a valid request and set out_len to zero. Verify
+> that the kernel rejects it with -EINVAL. Without the bounds check,
+> kvzalloc(0) returns ZERO_SIZE_PTR and the output header write can oops
+> the kernel.
+> 
+> Both cases depend on fixes [1]. Gate the tests on the running kernel
+> version so older kernels skip the unsafe requests rather than failing
+> the fwctl test.
+> 
+> [1]: https://lore.kernel.org/all/20260624134737.49166-1-icheng@nvidia.com/
+> Signed-off-by: Richard Cheng <icheng@nvidia.com>
+> ---
 
-Hi Richard,
+Thanks!
 
-RESEND series should always include a brief note at the top of the cover le=
-tter
-saying why. Otherwise it can get rather confusing for anyone seeing both.
-I'd also always reply to original post (even it when to subset of people
-or similar) just to call out you are resending and hopefully stop
-the reviews getting split across the two postings.
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 
-If it was just that it had been a few weeks, don't resend for that.
-
-Jonathan
-
-
-> CXL r4.0 =C2=A78.2.4.20.12 ("Committing Decoder Programming") and
-> =C2=A714.13.10 ("CXL HDM Decoder Zero Size Commit") permit committing an
-> HDM decoder with size 0. Firmware may commit and lock such decoders so
-> the OS cannot program regions through them; this is a platform design
-> choice rather than a specification requirement.
->=20
-> The kernel currently rejects these decoders with -ENXIO during port
-> enumeration and aborts enumeration of the entire port. On affected
-> systems, this prevents the CXL topology from appearing in userspace.
->=20
-> This series enumerates empty committed decoders into the topology while
-> keeping them out of region assembly.
->=20
-> Patch 1 makes zero-size DPA reservations first-class. Since the resource
-> tree cannot represent an empty range, an empty decoder is backed by a
-> separately allocated resource. This keeps port->hdm_end, skip handling,
-> and in-order DPA accounting consistent. Operations requiring non-empty
-> capacity, including region attachment and poison queries, are guarded
-> appropriately.
->=20
-> Patch 2 adds the mock_zero_size_decoders cxl_test module parameter,
-> disabled by default. When enabled, it installs committed, locked,
-> zero-sized endpoint, switch, and host-bridge decoders under
-> host-bridge0.
->=20
-> Testing on arm64 covered enumeration of eight locked zero-sized
-> decoders, DPA reservation and release after those decoders, ACPI
-> unbind/rebind, module reload, poison handling, and rejection of
-> incompatible cxl_test module-parameter combinations. The core patch was
-> also previously validated on a Montage CXL Type 3 device.
->=20
-> The corresponding ndctl test is attached at
-> https://lore.kernel.org/linux-cxl/20260709022857.18732-1-icheng@nvidia.co=
-m/
->=20
-> Changelog:
->=20
-> v6->v7:
-> - Rebase onto cxl/for-7.3/cxl-type2-test.
-> - Patch 1 is unchanged.
-> - Adapt patch 2 to the refactored Type-2/Type-3 decoder initialization
->   paths.
-> - Integrate mock_zero_size_decoders with special-topology parameter
->   validation and reject its incompatible use with fail_autoassemble.
->=20
-> Richard Cheng (2):
->   cxl/hdm: Allow zero sized HDM decoders
->   tools/testing/cxl: Enable zero sized decoders under hb0
->=20
->  drivers/cxl/core/hdm.c       |  52 +++++++++++------
->  drivers/cxl/core/mbox.c      |   3 +
->  drivers/cxl/core/region.c    |  49 ++++++++++------
->  drivers/cxl/cxl.h            |  10 ++++
->  drivers/cxl/port.c           |   3 +
->  tools/testing/cxl/test/cxl.c | 109 ++++++++++++++++++++++++++++++-----
->  6 files changed, 177 insertions(+), 49 deletions(-)
->=20
->=20
-> base-commit: 1c6b4ceafc3b994871c29340e0c1ddb0af5800e7
-
+Applied to pending for NDCTL v86
+https://github.com/pmem/ndctl/commits/pending/
