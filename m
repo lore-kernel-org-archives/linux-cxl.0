@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2879936EAA8
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 20:53:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB6436EAA8
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 20:53:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784753590; cv=none; b=fYltiMB0vUNCNpEUyJvUIPr1z2Ha/qB67+989wvYh08ypTWRYqoE2TTAXmLvNgDI5MWPuWuN3giG8GHBjACQ5L4Hd4WqzPguKAGKya6q6hvmUY0RWqdH5XiWnQ1jjMC2fEyfNypo8T/m+eauZ4Yph18i4pzwZuTdN8zTH1fU+FQ=
+	t=1784753591; cv=none; b=BsTxlhyOrFmgfHUsCDLR0LGGDE+V7qUBcdWgh+sYpM4S0QgCf0kuH9uWi3SblKL4Y1NPIJ3jEgp4M1o0FTQUXBhsfDhw/TvO70kst/MXUAkSbNdCS6c2o2nHxyGH+Jg/iAkaOS+mVrR03+VUBppfk1j2ruX+4X7gc5seqIMLduA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784753590; c=relaxed/simple;
-	bh=OO3TKWf34d6TmJ3YYQE3nOs3BbFwnIEL8H0dVEHAsis=;
+	s=arc-20240116; t=1784753591; c=relaxed/simple;
+	bh=7/8I9Odjy+zgltxERz8cK9zg/sdnw6bGsANMQ744CS8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LIwyOrOWMaCvZZ8hUu9sFqCuVWjwOwCqcKdg4FP003M0w49HhzJHQQlKR3YAN8/hooQwoJJt1SEiaedU323tnqX7Wc8YhlYmPVGrEciGvEW8lA+r3EqycMk525XOgriY8oje8k2yYpjbvch3pnqtbz2qtm6mYLavTlhGMev+970=
+	 MIME-Version; b=fuuCr4bvtfwQw3BSkueyS0yN6n+Oh0aFHJn8X7uQQyHBAxOW7EsWGuXgqC182gUC9qP14xiwbEkw2CpszlSV865VrlAu/7ncH24yStgcmZakdsWKXKtUuNBuX3Ig2v++Cogd9zVA5vA8v61n297ZgspAu2lKeX4dRJdr6b2D+M8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B049A1F000E9;
-	Wed, 22 Jul 2026 20:53:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2643E1F00A3A;
+	Wed, 22 Jul 2026 20:53:10 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org
 Cc: djbw@kernel.org,
@@ -22,9 +22,9 @@ Cc: djbw@kernel.org,
 	alison.schofield@intel.com,
 	vishal.l.verma@intel.com,
 	sashiko-bot@kernel.org
-Subject: [PATCH 1/3] cxl/region: Guard against unset partition in poison_by_decoder()
-Date: Wed, 22 Jul 2026 13:53:00 -0700
-Message-ID: <20260722205303.3184787-2-dave.jiang@intel.com>
+Subject: [PATCH 2/3] cxl/ras: Clear software-only TLP log fields after RCH AER copy
+Date: Wed, 22 Jul 2026 13:53:01 -0700
+Message-ID: <20260722205303.3184787-3-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260722205303.3184787-1-dave.jiang@intel.com>
 References: <20260722205303.3184787-1-dave.jiang@intel.com>
@@ -36,38 +36,43 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-poison_by_decoder() reads cxlds->part[cxled->part].mode after checking
-only that cxled->dpa_res is set. During enumeration __cxl_dpa_reserve()
-sets dpa_res but leaves cxled->part at -1 when the range maps no
-partition, and the decoder is still added. cxl_get_poison_by_endpoint()
-then walks it, indexing part[-1] out of bounds.
+cxl_rch_get_aer_info() copies the AER capability from MMIO into struct
+aer_capability_regs by dword. That struct embeds struct pcie_tlp_log,
+whose software-only header_len and flit fields sit past the hardware
+registers, so the raw copy fills them with garbage. pcie_print_tlp_log()
+then walks dw[] up to header_len (a u8, up to 255) over a 14-entry
+array, reading off the stack and leaking it into the error log.
 
-Skip decoders with cxled->part < 0, matching cxl_region_attach() which
-treats an unset partition as a dead decoder.
+Reset header_len and flit after the copy so only the standard header is
+walked.
 
-Fixes: be5cbd084027 ("cxl: Kill enum cxl_decoder_mode")
+Fixes: 7e077e6707b3 ("PCI/ERR: Handle TLP Log in Flit mode")
 Reported-by: sashiko-bot@kernel.org
-Closes: https://sashiko.dev/#/patchset/20260708074228.43654-1-icheng@nvidia.com?part=4
+Closes: https://sashiko.dev/#/patchset/20260717222706.3540281-1-terry.bowman@amd.com?part=1
 Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/region.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/cxl/core/ras_rch.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 1e211542b6b6..ec0dc4284c3c 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2959,6 +2959,9 @@ static int poison_by_decoder(struct device *dev, void *arg)
- 	if (!cxled->dpa_res)
- 		return rc;
+diff --git a/drivers/cxl/core/ras_rch.c b/drivers/cxl/core/ras_rch.c
+index 0a8b3b9b6388..a847727686df 100644
+--- a/drivers/cxl/core/ras_rch.c
++++ b/drivers/cxl/core/ras_rch.c
+@@ -69,6 +69,13 @@ static bool cxl_rch_get_aer_info(void __iomem *aer_base,
+ 	for (n = 0; n < read_cnt; n++)
+ 		aer_regs_buf[n] = readl(aer_base + n * sizeof(u32));
  
-+	if (cxled->part < 0)
-+		return rc;
++	/*
++	 * header_len and flit are software-only metadata in struct
++	 * pcie_tlp_log; Clear to remove garbage register contents.
++	 */
++	aer_regs->header_log.header_len = 0;
++	aer_regs->header_log.flit = false;
 +
- 	cxlmd = cxled_to_memdev(cxled);
- 	cxlds = cxlmd->cxlds;
- 	mode = cxlds->part[cxled->part].mode;
+ 	writel(aer_regs->uncor_status, aer_base + PCI_ERR_UNCOR_STATUS);
+ 	writel(aer_regs->cor_status, aer_base + PCI_ERR_COR_STATUS);
+ 
 -- 
 2.55.0
 
