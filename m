@@ -1,68 +1,68 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A39A242D84
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 12:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CC5313531
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 12:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784722626; cv=none; b=Z9l6wh4sK+DUikf3de/l9KpwvVuchT6SMm/QBcdAy1/BUkp7B1NJZJajLMVwO1B6TN6SJq3IB8zG2O4/C7cFGr4jKw1LtJyHHpOU8pelJXT4ydgTlaXY3e0rarqmL8EKAqWkcLlnftb0mxFVPRpb397gpkGWgHVSACy89lTmz9I=
+	t=1784723338; cv=none; b=KEKouPHhALcUN2dEbjZDY5MsOEq/LDqzaz3UPVNcnhl0XrPr/bdbSvJklc1LUqOOYQPzKTXA6vd88iSRh464daA6cXc50ML7ca6vD3H3M11gOAD/3DfOd27DhhF1S2vFDxFHoUn1Z9PevmfYYWsOoJT1U3NXrqi13dotPSi030g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784722626; c=relaxed/simple;
-	bh=EUT6xo+7c4fR9AjpRdk73GGw88Txx/5nWXpuxkERzDs=;
+	s=arc-20240116; t=1784723338; c=relaxed/simple;
+	bh=iQpjr5fJ0FGJnIGe3ONTjxP/7vJYxnkvS87QkOPQeac=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JdagBRoynu1IsUlQJ86TBsoZr1HM9eWG7UGgnsEWqjpzIJUilVPZ/c6l0IK/TII2f0wol2fXoke1WXJmhUT9W7jdu729a3KrLHYjjojEkBYEr+FfFVgSLI8wgf/0FOrJVhjNiKduVIzykJYOkl81c4VRx+vspxQ3bKGDjitxY64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=J4e8ehjd; arc=none smtp.client-ip=209.85.222.170
+	 Content-Type:Content-Disposition:In-Reply-To; b=uBbaZJU/9kub6gTS3l69h+pGRHPlhtXColPnwfq7wT0HCxEO6Lt2H+HcCyZjkTgMExGWJnc5ZQXKO3+YitRS9dT0iGMutDs5PpqAKuLxHXdWXdtKPorUk/lcJl2bCi12cUyfl2cmAsauVvElfpSJJAesdIGFheAtPZ1LDOkpbQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=l0IvwqsM; arc=none smtp.client-ip=209.85.160.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="J4e8ehjd"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-930f618435cso70503985a.3
-        for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 05:17:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="l0IvwqsM"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-51c0c68aa31so91138661cf.3
+        for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 05:28:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1784722622; x=1785327422; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1784723335; x=1785328135; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=5mNAYCNl+PvzQVOY++arp3TkG6k570KzmUdhkjTUZ24=;
-        b=J4e8ehjdkG8PhCbD4a9R5pp1+Yj6H7EkvNahqfwFzKS41ukJAzqr7cuep2PE/pBg9p
-         l7+KsUyXNAbTuqZjbm6yToeKKtTWYFESilmqxJ3Qjigw1wlmK2G1kYo+iwgyMcSvr1/o
-         YoI65CN0MFyy4DiF9b3jxFmRy9N6maeTA8HAIzh1jPILs0FPUlV5h4Ffaf/hxA3VmdnI
-         oX1vZaMZ4sIo2eYIW1aSLaDFZ/LzKO3se+eV5cYlkYsMPIeqa4Zz0x6q86VRVXPjPua+
-         q41JmadsIb7Oml+N56HtrVTAGdVOkxa4DXokMkBhx3N1yz/hobYgQJFJyBPkn3W3iLtZ
-         4dkA==
+        bh=xIVz1DID8CeKWsK6GdOZ3gM4R5/BpOF1rbBDSWQ/gXQ=;
+        b=l0IvwqsM6zlM7NkEgYXDzeGbn6uOx1oqhRhYMdNJCeynL7xP69Zoq2WDhy/+9575uV
+         GvrY/ubHPcryeLmgg4oLIe3VCLLynP9wz4toMy89OkfW8FI6crAKbGIbnfMXCvqMHIVY
+         dcj2JUzLCI3Oz3712KvA1Dayhf8UwqMYWl915SLcQTK52TLIUtQ0ejLswXfYZ0Mp6ku0
+         FyZu2DsnTjLVxHKHI+NtM3TaGCYWXLkjnODgNmg2bQJCnVQP56n5qdeGTyEmoKKKo439
+         kwQOfJoqzLvuwXCn58xKmZlz0wI6AlItNlAyZPYt9zavEvBTzo1UNTXFhaWJUw52we74
+         TS7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784722622; x=1785327422;
+        d=1e100.net; s=20251104; t=1784723335; x=1785328135;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=5mNAYCNl+PvzQVOY++arp3TkG6k570KzmUdhkjTUZ24=;
-        b=lGZuMe3cl1A54Zb2AlpA5cBEUVVnpOkN+fIYxdCjqFdZNS0zSDW6D2XjJ2/FWYahRt
-         FOykLs7ENac+DdIxqlVRZ9T8mGLn9DhyY5Os5kQfcm/15SlgrtEraV7b5fLKWrL1lGhe
-         9hrq/gcEqrszAI/QOO7fuSG0eExc1fjP7ixen5T1QcWK0hq2h7uvSybv46zNmkqV58Fm
-         I3OOQEWi92BmFrk4FOes5ua3dNOh1leSugMfic0hI9U1EgwcuAqOgzwQ7pIoPx8V9aRO
-         H/8chKefcA1We8uHrSaXUuyDQ3AHFXcsiMjX3AWcbJiZHny1kif9PE0teRSNL4jcPEk3
-         39IQ==
-X-Forwarded-Encrypted: i=1; AHgh+RolxxscF+WZg7nrL6DQsPgWVX+EuPyrCngp0SzehX1xY+gBMXZXUI6RxUhJByzK+wHbRj45ja7n4Tc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxP9t3s+XaaY+yxUqBlYkbkRVT8G7IuHlnlx5xeQvQ7ylUT7GOk
-	rQVEx+Jswj9bUaq3k0lQxps/suK6cjfWo8iPs9DYbM67b4+2jpuD9DZSG1eYBPl1QRY=
-X-Gm-Gg: AR+sD13X8GjHhLCLcH+k7AKrlRKqnN9nk45sP6lgj4ANXDLOnb9vdB5mYiMOqdW6OGu
-	bgHwc0Xs5Ha4usW2KJ62HZ8L6VEroSaF68jPBlaxPwFJNAIEW2EwfLDtkZC4Tqm9ayUxrSH2Z6C
-	0Akz3PhLfK5jXKhb3fXREpjnNJ3d9t8cYvCdxBDqF3CVUzSHSFQot4mPW6TOMSD1gZdEp/livRQ
-	OzsHb9K1J6oRTHkfiaj5oSkAyWZoW0osUud/oYAYrYIYRiQ4uRR/Yjq13wpTC614IeHamLS+Cwo
-	QP1vYbOMIvw3Qt8XNMwy5XE30QW6u2i4q3kkiCqtItLZTKbLeAeFg2fpHyjxlARJGN0ob4yx88U
-	t7ryJWGtqmbW7rq1J7eZbGG2aogAoAgs0QdAIbJxhQgE3Bo4eBWK+YYwwI5yGBTUURCCKunaJ5z
-	vEyaAEgWvJL+GJa6tWTvGZImPNvqo48O8TaNS15iRikD6V+JUFlGyvYmu3qw==
-X-Received: by 2002:a05:620a:700a:b0:92e:72c4:152b with SMTP id af79cd13be357-930b43155bcmr2298496985a.71.1784722622381;
-        Wed, 22 Jul 2026 05:17:02 -0700 (PDT)
+        bh=xIVz1DID8CeKWsK6GdOZ3gM4R5/BpOF1rbBDSWQ/gXQ=;
+        b=i+ADzOpJywUlqshFRAFqJ22A1liiEXSLt1r5ehtKjd+6NH3pN3TOj0b4nJxnj7jc1u
+         XeDBFKx1bZfZsXbrihKglXhOqygRnb172579dsRYsCUA+sQ/ssQmn1WTlCiBDv5TKPsj
+         yn1gLV+ILgMfh2vtup78DLCpXu0zvb2xbCkfha8ROhCX6Ce45au3yCFMf3MmkCEBgUaS
+         CC358948tqrIzFfq019P4UViO5QolkFiWkuWPeFs8UPIBfGA4plcS1NFD/x/2XMMzweY
+         cyoxhtefJVg+ySbj4U5Smpr1+5qNHRgJeya4/zSDxB9Eh8rQVKn7IzCcbGwW/KtZBgzL
+         a+Kg==
+X-Forwarded-Encrypted: i=1; AHgh+Rqj34YMI65zFP4Dyfo8UEkY6a9+ujHWDQLUIE3XtltawJ9nPn27JjSJcWrmG1xUPH/Uzubb9ZCUu/k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDDX/9Fd0VygBJlrUVWRwx2JaEXvm+B+sfPgIk49vwYjkd0KD6
+	V0s1SQgEe8CZBvhI3lNNLBPu/pFnmaQJpZgBJn36DCnfv1CTXzMJ5k/bVlbo5b+/VBI=
+X-Gm-Gg: AR+sD10jB2ngEyMo3Ia1XNOjmc4i7zGUIjp0rrVYCWbbmTvsySxN/Crq935dLTU/4Iu
+	ydVJLcgWWVKr5FPilybqoNM9tlNehe7Rf4YT/Jf1ci8KdN4/0jW5bmZrvX5PcNbyQXeAfGRj+mT
+	mheyV7AdLjNQIt55P37Lwiqm7B8d++Oo/EtoaSRbn5ZrV3EswJJhzQQmt1yxTE/P0YX1NcR8jbR
+	coZzKiRrWBss6/7QT9+dOy1JAg4ao/ju5wwDVwy4MSEuM5d1DgipakHEkwy/OyjQQnhlm25qnAg
+	E/hEhJAt50qS0PEXZyfH+cED9D2SY4N7f89AB1+4CkF1FAptujzhCZKDDSlDcXza3PEzrFEwnDW
+	3I3qMNvw+VJ4EVCenKLKhBTWZonJJGHaRehB9uUyS85AicnUCgczKOlg80QrQUAH7Zmjr0VMA/t
+	OYlaLs5iUjNsq9TExPbZYufh08fLzKw6S9Zlc2AHAeoL0CJAMCBeiqITqh5Q==
+X-Received: by 2002:ac8:5ad6:0:b0:51b:efbb:fbf with SMTP id d75a77b69052e-5213aa6e321mr250430031cf.18.1784723334838;
+        Wed, 22 Jul 2026 05:28:54 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-930f6a03834sm149477885a.30.2026.07.22.05.17.00
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-527d3b3f66dsm13968621cf.27.2026.07.22.05.28.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2026 05:17:01 -0700 (PDT)
-Date: Wed, 22 Jul 2026 08:16:56 -0400
+        Wed, 22 Jul 2026 05:28:54 -0700 (PDT)
+Date: Wed, 22 Jul 2026 08:28:48 -0400
 From: Gregory Price <gourry@gourry.net>
-To: SJ Park <sj@kernel.org>
-Cc: linux-mm@kvack.org, arun.george@samsung.com, balbirs@nvidia.com, 
+To: Balbir Singh <balbirs@nvidia.com>
+Cc: linux-mm@kvack.org, Zhigang.Luo@amd.com, arun.george@samsung.com, 
 	brendan.jackman@linux.dev, yuzenghui@huawei.com, apopple@nvidia.com, alucerop@amd.com, 
 	matthew.brost@intel.com, akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, 
 	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, surenb@google.com, 
@@ -75,19 +75,21 @@ Cc: linux-mm@kvack.org, arun.george@samsung.com, balbirs@nvidia.com,
 	kasong@tencent.com, qi.zheng@linux.dev, shakeel.butt@linux.dev, baohua@kernel.org, 
 	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com, 
 	linux@rasmusvillemoes.dk, longman@redhat.com, ridong.chen@linux.dev, tj@kernel.org, 
-	mkoutny@suse.com, jgg@ziepe.ca, jhubbard@nvidia.com, peterx@redhat.com, 
-	baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, 
-	lance.yang@linux.dev, usama.arif@linux.dev, xu.xin16@zte.com.cn, 
-	chengming.zhou@linux.dev, roman.gushchin@linux.dev, muchun.song@linux.dev, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, driver-core@lists.linux.dev, 
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, linux-debuggers@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, cgroups@vger.kernel.org, 
-	damon@lists.linux.dev, linux-kselftest@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v5 14/36] mm/damon: skip private node memory in DAMON
- migration and pageout
-Message-ID: <amCzmkdOr6AFv_kQ@gourry-fedora-PF4VCD3F>
-References: <20260720193431.3841992-15-gourry@gourry.net>
- <20260721234644.149401-1-sj@kernel.org>
+	mkoutny@suse.com, sj@kernel.org, jgg@ziepe.ca, jhubbard@nvidia.com, 
+	peterx@redhat.com, baolin.wang@linux.alibaba.com, npache@redhat.com, 
+	ryan.roberts@arm.com, dev.jain@arm.com, lance.yang@linux.dev, usama.arif@linux.dev, 
+	xu.xin16@zte.com.cn, chengming.zhou@linux.dev, roman.gushchin@linux.dev, 
+	muchun.song@linux.dev, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	driver-core@lists.linux.dev, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+	linux-debuggers@vger.kernel.org, linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, 
+	cgroups@vger.kernel.org, damon@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+	kernel-team@meta.com
+Subject: Re: [PATCH v5 00/36] Private Memory NUMA Nodes
+Message-ID: <amC0vzXEEnZaWim0@gourry-fedora-PF4VCD3F>
+References: <20260720193431.3841992-1-gourry@gourry.net>
+ <6a7aaac3-e70d-4063-9c84-e643db1488e0@nvidia.com>
+ <al-2D_7NcwMxqmsM@gourry-fedora-PF4VCD3F>
+ <1d8b6857-de1e-4807-8201-4f6a49a3b8f7@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -96,81 +98,81 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260721234644.149401-1-sj@kernel.org>
+In-Reply-To: <1d8b6857-de1e-4807-8201-4f6a49a3b8f7@nvidia.com>
 
-On Tue, Jul 21, 2026 at 04:46:43PM -0700, SJ Park wrote:
-> On Mon, 20 Jul 2026 15:34:08 -0400 Gregory Price <gourry@gourry.net> wrote:
-> 
-> > DAMON operates on physical address ranges, which can cover private
-> > node memory. Skip private-node folios in both DAMON's migration
-> > and reclaim paths.
+On Wed, Jul 22, 2026 at 06:29:53PM +1000, Balbir Singh wrote:
+> On 7/22/26 4:16 AM, Gregory Price wrote:
 > > 
-> > Signed-off-by: Gregory Price <gourry@gourry.net>
-> > ---
-> >  mm/damon/paddr.c | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
+> > User-numa
 > > 
-> > diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
-> > index e4f98d67461f5..c741a94319750 100644
-> > --- a/mm/damon/paddr.c
-> > +++ b/mm/damon/paddr.c
-> > @@ -12,6 +12,7 @@
-> >  #include <linux/swap.h>
-> >  #include <linux/memory-tiers.h>
-> >  #include <linux/mm_inline.h>
-> > +#include <linux/node_private.h>
-> >  
-> >  #include "../internal.h"
-> >  #include "ops-common.h"
-> > @@ -250,6 +251,10 @@ static unsigned long damon_pa_pageout(struct damon_region *r,
-> >  			continue;
-> >  		}
-> >  
-> > +		/* private node memory is not reclaimable by default */
-> > +		if (folio_is_private_node(folio))
-> > +			goto put_folio;
-> > +
+> >    Some devices don't want the user to have control over placement.
+> >    I have been working on compressed memory, for example, which only
+> >    ever wants to be used as a reclaim-demotion target.
+> >    
+> >    (The reasoning for this is another thread, i plan on publishing
+> >     my research on this this year)
+> > 
 > 
-> "by default".  Does that mean it could be reclaimable in some situations?  If
-> so, could we check if it is reclaimable?
+> I don't fully understand, how do we allocate memory on these devices then? Is
+> the driver expected to allocate and map via vm_insert_page()?
+>
+
+It depends on your use case, but yes that's one possibility.
+
+In another use case, you could enable (CAP_RECLAIM | CAP_DEMOTION) and
+pages are allocated via alloc_demotion_target() in the reclaim path.
+
+For general "device hosted memory", you can do a variety of things:
+
+Direct alloc 
+    ioctl(...) ->  explicit alloc call
+    mmap(/dev/my_device) + mm_fault handler
+
+Or a kernel-internal mempolicy
+    ioctl(...) ->  set kernel-internal mempolicy on a vma
+    mmap(/dev/my_device) + kernel-internal only mempolicy on the vma
+
+The KVM guest_memfd patch included at the end of the series uses the
+kernel-internal mempolicy mechanism:
+https://lore.kernel.org/linux-mm/al-pkvmgIxGu3LzM@gourry-fedora-PF4VCD3F/T/#me04a7e3556677babd82bfe3947b1a83b7f0017e1
+
+This pattern is needed because the memory is never mapped into userland,
+so userland actually *can't* set a mempolicy on this memory itself.
+
+and then of course: CAP_USER_NUMA + mbind/set_mempolicy directly
+
+This is kind of the point - the source of the memory has some control
+over how it can be used.
+
+> > Hot-unplug:
+> > 
+> >    Some devices can't necessarily handle unexpected migration, and
+> >    hot-unplug is fundamentally a migration.  So the HOTUNPLUG cap
+> >    actually means "hot-unplug can execute migrations".
+> > 
+> >    If the entire device has pre-drained the memory (all memory is free)
+> >    then unplug works - it's just not very hot (no migrations) :]
+> > 
+> >    Maybe a naming issue?
+> > 
+> 
+> Yes, I would prefer MIGRATION in the name, HOTUNPLUG made me wonder how these
+> devices come online and because it is a device, it can go offline while the
+> system is still online
 > 
 
-See the damon changes in:
+There's a difference between device hotplug and memory hotplug.  The
+kernel's memory hotunplug system can at best be described as "best
+effort", and if hotplugged as ZONE_NORMAL (on a non-private node) you're
+unlikely to ever be able to hotunplug.
 
-https://lore.kernel.org/linux-mm/al-pkvmgIxGu3LzM@gourry-fedora-PF4VCD3F/T/#mfb99303c85dd9d4c3f58832dc28fc55583a7217a
+It's possible that this CAP bit should just go away and if the device
+doesn't want its memory to be run migratable then it needs to hold extra
+references on the folios.  That's probably reasonable and looks a lot
+like a long term pin.
 
-> Also, what happens if we just try paging out the private node memory?  Will it
-> simply fail?  Or, make some problems?
-> 
-
-user controls for MADV_ commands that affect private node folios would
-skip those folios - exactly same as ZONE_DEVICE folios.
-
-Which I'm not sure damon actually handles correctly presently (zone
-device).  I remember looking around damon and thinking to myself "what
-if this is a zone device page?" and not being able to find a satisfying
-answer.
-
-> >  		if (damos_pa_filter_out(s, folio))
-> >  			goto put_folio;
-> >  		else
-> > @@ -344,6 +349,10 @@ static unsigned long damon_pa_migrate(struct damon_region *r,
-> >  		else
-> >  			*sz_filter_passed += folio_size(folio) / addr_unit;
-> >  
-> > +		/* private nodes do not support migration by default */
-> > +		if (folio_is_private_node(folio))
-> > +			goto put_folio;
-> > +
-> 
-> Same questions.
-> 
-
-Technically there is nothing in migration core to prevent migration
-operations, it's done on a service basis - hotunplug, reclaim/demotion,
-user numa (mbind, migrate/move_pages) etc.
-
-Operations on private nodes/private node folioes are refused if the
-capability bit is not set.
+(note: I have to respin for Sashiko fixes, i'm likely going to drop most
+of the CAP bits except USER_NUMA in v6 and have them come in with
+specific use cases).
 
 ~Gregory
