@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42E9246781
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 00:55:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BFF523183C
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 01:07:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784681755; cv=none; b=R05XrwokD6kyoeGL4X9uUj3nMIeXDaCuNelkOKZvfSAV5dd+PTMgrIX3HLB/sJ7VLGCJLIVQ3r6f6doTCdehlXuVzbjYoZ+tx0WJ0U73BpntsAF/zqeV6Po2sIXOLc+UGpzzOdery0fo5Pa70EGmTwNN9nBVj96w9ykHyEjfyrQ=
+	t=1784682475; cv=none; b=aIg8+TxHvsPoBAObeFnPL21zlCL5qz0XyzOs3nb5+tqdysQFDolI9wWNrt3K/+314i8srIqLEwN1KXzsHrKaUuq7L9uFGsycpWHQRnIBokAjXeOgSDGoiNwO1Pdr2jEmS3XvSJYk+u3sxWvx5MSS//u5z7kxuT7Uv3sJ4tEgYF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784681755; c=relaxed/simple;
-	bh=FYi3ohHMG0bPyHLfTOxtLAMGZi9VUCl8TpQejB235SY=;
+	s=arc-20240116; t=1784682475; c=relaxed/simple;
+	bh=iV/5GjEgaYKNU6sbqUC5QsRQxdSz0sDuhSDRnjX4aRY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lWtbhfUsj/XjEPRqkoSgoPOIad60U2a6D68mKQlKbdFE6FpKOXcK2kVobD9FDn5pQ4S9E8hZXf0mX0ZOp1gpmB1BYcsuZvkkPP/SQXMksY6UvXoussbw3QCnq7cID0KIePdD/0GlIWLgpKs470qBD/5bkpPgCTzXR10QkUrmeBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FP+pslJL; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=mWZyeTdtbo4DmOVyES0Mb4nJ+tDRUqE+1JDfN3rMHVfRuj0ZKvLr+mE9XikE/0Y8hnHazsJA8ZcQ8xx1JC37Y0WwCvqQMGRr7KnQQxc0FDPJPhJz34pWIMfo0oxDVnPwvgndldqE2PxOHILoK0g+lHb7u3eC63cbzQWW7DQv/ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OkLAalUv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FP+pslJL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FA8E1F000E9;
-	Wed, 22 Jul 2026 00:55:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OkLAalUv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2662E1F000E9;
+	Wed, 22 Jul 2026 01:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784681753;
-	bh=c5naB8oPgsmoVSwXhSz1i1+AFDZEkh70M7tmtubQro4=;
+	s=k20260515; t=1784682474;
+	bh=VAx4wqaKI1zYYnc2DMGog4ueTt9L7yCc+fNjOGeaJ7E=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=FP+pslJLxnexQToYPPLAwG+968wMtQ4AtRLcnfWf5TMFq0gjHm5jGyaD/NsgpjHju
-	 okQ9903W4JyVSDFmkazHfK/tiljgyoP2Aj2YFW+uds+ygBh8rYBWCX4evdgu+L7Ac9
-	 wFmvQw60YyAsVwhOVWF7EgKRNQz+NZ8XKhQmOSW3kzzA80AxcAPbPmY5MpBj4BUmUA
-	 wCpWORO5cZ8wlE4XCxQNx1OJt9mRKR0Gm7cTbiz8qsCn576DVwvI1FofdD7DDn1YYU
-	 HkHpMJqk1gl9fY/6BT5X1xdS0wDl01XcxL5JW78NrljMOwrign6BTC4iE3rRVuMZpg
-	 XPP80w6rC8uzw==
-Date: Wed, 22 Jul 2026 01:55:47 +0100
+	b=OkLAalUvtXNkHXuhGFPysClqFqP87MwTFNtt/VOOE3dh1d68Yq+dFCLPQe7wXoqLu
+	 yX0atLHPdkRwzXx378bhL1E2F3lDshHOC/4dab9SBY4kSaolPzPBpl2loZMcdBw0RY
+	 w3kw/U0s4fR0GL+/itKshiOdKnrungncqI91+rjvjSBbyE/jiQlCKzg4CklMGYSiIJ
+	 8RFpoFO4hKiYhFwR/LiJ/8iQLIpZMAMvK7QqC8/s2E4F3d1LXa+Nu1mHEqYopitDtK
+	 OVOC3tra89BCoGJYR0Qcx0uFREiHVp2mhdHNxF976392n62BtOE4QPB3P7nNFPC5nO
+	 JzU1dCnHPr7rQ==
+Date: Wed, 22 Jul 2026 02:07:49 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Alison Schofield <alison.schofield@intel.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
  Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>, Dan
  Williams <djbw@kernel.org>, Li Ming <ming.li@zohomail.com>,
- linux-cxl@vger.kernel.org, Srirangan Madhavan <smadhavan@nvidia.com>
-Subject: Re: [PATCH v4 1/4] cxl/hdm: Reject switch decoder interleave ways
- that overflow targets
-Message-ID: <20260722015547.6c3bdd47@jic23-huawei>
-In-Reply-To: <1e0e4d7b431a97efa0a8c83591b42b7a0622cea1.1784595445.git.alison.schofield@intel.com>
+ linux-cxl@vger.kernel.org, Srirangan Madhavan <smadhavan@nvidia.com>,
+ Richard Cheng <icheng@nvidia.com>
+Subject: Re: [PATCH v4 3/4] cxl/hdm: Make switch decoder target parsing
+ endian-safe
+Message-ID: <20260722020749.1826e787@jic23-huawei>
+In-Reply-To: <f98abc5edccc4fed9250d29df76ac677e3e51702.1784595445.git.alison.schofield@intel.com>
 References: <cover.1784595445.git.alison.schofield@intel.com>
-	<1e0e4d7b431a97efa0a8c83591b42b7a0622cea1.1784595445.git.alison.schofield@intel.com>
+	<f98abc5edccc4fed9250d29df76ac677e3e51702.1784595445.git.alison.schofield@intel.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -49,100 +50,80 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 20 Jul 2026 18:59:37 -0700
+On Mon, 20 Jul 2026 18:59:39 -0700
 Alison Schofield <alison.schofield@intel.com> wrote:
 
-> Switch decoder enumeration validates that the interleave ways encoding
-> is legal, but not that the resulting number of ways fits the available
-> targets. This can overrun the target arrays during enumeration.
+> Switch decoder target IDs are stored one per byte, starting with
+> target 0 in the least significant byte. The current code accesses
+> those bytes in memory order, which only matches register order on
+> little-endian hosts.
 > 
-> Reject committed decoders whose interleave ways exceed either the
-> hardware target list capacity or the reported target count. Reject
-> switch decoders that report zero targets.
+> On big-endian hosts, the target IDs are reversed and the decoder is
+> associated with the wrong downstream ports.
 > 
-> For uncommitted decoders, ignore the stale interleave ways value and
-> reset it to one until the decoder is committed.
+> Extract each target ID from the register value with an explicit shift
+> and mask so the target mapping is independent of host endianness.
 > 
-> Add a clarifying comment that target_count is a direct count, not
-> 0-based like decoder_count.
-> 
-> Link: https://sashiko.dev/#/patchset/20260711180755.1779002-1-alison.schofield@intel.com?part=1
 > Fixes: d17d0540a0db ("cxl/core/hdm: Add CXL standard decoder enumeration to the core")
+> Reviewed-by: Richard Cheng <icheng@nvidia.com>
+> Reviewed-by: Li Ming <ming.li@zohomail.com>
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 
-oops. I replied to v3 after you sent this out. Please take a look.
+Suggestion for explicitly handling the endian issue inline.
+I'm also fine if you stick with what you have here.
 
-Thanks,
-
-Jonathan
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 
 > ---
->  drivers/cxl/core/hdm.c | 33 +++++++++++++++++++++++++++++++++
->  drivers/cxl/cxl.h      |  2 ++
->  2 files changed, 35 insertions(+)
+>  drivers/cxl/core/hdm.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 0c80b76a5f9b..d81df45d8005 100644
+> index 1f995191baf5..077aface1a2a 100644
 > --- a/drivers/cxl/core/hdm.c
 > +++ b/drivers/cxl/core/hdm.c
-> @@ -76,6 +76,8 @@ static void parse_hdm_decoder_caps(struct cxl_hdm *cxlhdm)
+> @@ -976,14 +976,11 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  {
+>  	struct cxl_endpoint_decoder *cxled = NULL;
+>  	u64 size, base, skip, dpa_size, lo, hi;
+> +	u64 target_list;
+>  	bool committed;
+>  	u32 remainder;
+>  	int i, rc;
+>  	u32 ctrl;
+
+Maybe alternative approach along the lines of:
+
+> -	union {
+> -		u64 value;
+		struct {
+			__le32 lo;
+			__le32 hi;
+		};
+> -		unsigned char target_id[8];
+> -	} target_list;
 >  
->  	hdm_cap = readl(cxlhdm->regs.hdm_decoder + CXL_HDM_DECODER_CAP_OFFSET);
->  	cxlhdm->decoder_count = cxl_hdm_decoder_count(hdm_cap);
-> +
-> +	/* target_count is a direct count (1h..8h), not 0-based like decoder_count */
->  	cxlhdm->target_count =
->  		FIELD_GET(CXL_HDM_DECODER_TARGET_COUNT_MASK, hdm_cap);
->  	if (FIELD_GET(CXL_HDM_DECODER_INTERLEAVE_11_8, hdm_cap))
-> @@ -1084,6 +1086,37 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->  		cxld->interleave_ways, cxld->interleave_granularity);
+>  	if (should_emulate_decoders(info))
+>  		return cxl_setup_hdm_decoder_from_dvsec(port, cxld, dpa_base,
+> @@ -1122,9 +1119,9 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
 >  
->  	if (!cxled) {
-> +		struct cxl_switch_decoder *cxlsd =
-> +			to_cxl_switch_decoder(&cxld->dev);
-> +
-> +		if (cxlsd->nr_targets < 1) {
-> +			dev_err(&port->dev,
-> +				"decoder%d.%d: reports zero targets\n",
-> +				port->id, cxld->id);
-> +			return -ENXIO;
-> +		}
-> +
-> +		if (!committed) {
-> +			/* Ignore interleave ways until commit */
-> +			cxld->interleave_ways = 1;
-> +			return 0;
-> +		}
-> +
-> +		if (cxld->interleave_ways > CXL_HDM_DECODER0_TL_TARGETS) {
-> +			dev_err(&port->dev,
-> +				"decoder%d.%d: interleave ways: %d exceeds target list capacity: %d\n",
-> +				port->id, cxld->id, cxld->interleave_ways,
-> +				CXL_HDM_DECODER0_TL_TARGETS);
-> +			return -ENXIO;
-> +		}
-> +		if (cxld->interleave_ways > cxlsd->nr_targets) {
-> +			dev_err(&port->dev,
-> +				"decoder%d.%d: interleave ways: %d exceeds targets: %d\n",
-> +				port->id, cxld->id, cxld->interleave_ways,
-> +				cxlsd->nr_targets);
-> +			return -ENXIO;
-> +		}
-> +
 >  		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
 >  		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
->  		target_list.value = (hi << 32) + lo;
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index c0e5308e4d1b..291ada46b646 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -67,6 +67,8 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
->  #define   CXL_HDM_DECODER0_CTRL_HOSTONLY BIT(12)
->  #define CXL_HDM_DECODER0_TL_LOW(i) (0x20 * (i) + 0x24)
->  #define CXL_HDM_DECODER0_TL_HIGH(i) (0x20 * (i) + 0x28)
-> +/* Two registers with one target ID per byte */
-> +#define CXL_HDM_DECODER0_TL_TARGETS 8
->  #define CXL_HDM_DECODER0_SKIP_LOW(i) CXL_HDM_DECODER0_TL_LOW(i)
->  #define CXL_HDM_DECODER0_SKIP_HIGH(i) CXL_HDM_DECODER0_TL_HIGH(i)
+
+		target_list.lo = cpu_to_le32(readl());
+		target_list.hi = cpu_to_le32(readl());
+
+or just have a byte array and
+
+		put_unaligned_le32(&target_id[0], readl());
+		put_unaligned_le32(&target_id[4], readl());
+
+> -		target_list.value = (hi << 32) + lo;
+> +		target_list = (hi << 32) + lo;
+>  		for (i = 0; i < cxld->interleave_ways; i++)
+> -			cxld->target_map[i] = target_list.target_id[i];
+> +			cxld->target_map[i] = (target_list >> (i * 8)) & 0xff;
 >  
+>  		return 0;
+>  	}
 
