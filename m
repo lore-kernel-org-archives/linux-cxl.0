@@ -1,136 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F16135C183
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 21:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13A82FD1B3
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 21:10:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784754250; cv=none; b=j7pJRxMUeEp0NlXcocIMpQHsnfjc9G2LTZC6U/Tp5rUwdW7TcoCWSBetkncxIXQpq6QFmVV6qR3BnzAzfY42RF9fZjhvQWVtL7bqxQx6h6PQbeodJbFPY6KZgoW/t5cBfh5O29T5Jx7CBKZfMuPefYjmie2H7pha67sdgX6kMec=
+	t=1784754611; cv=none; b=K1wkQVNeT2XdXDCpVhvrWXlKjBDzaLXlKyGsx9u0VqCr4x/P3BAE+7RvsKi8VbHPwgVyOnnkPQQrjKYnIb60pK48uf9YuFuwwT/uY/i8C3IMqNYuxOLe+vCaZ5R9eKIe79JmCELu9P7Gev00HM27C4EBfBRnJPrM40fegIEkjfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784754250; c=relaxed/simple;
-	bh=Q0t1/32TVc9kgcwu284js9lrW8jpZRQ4grrGlz9Ax0w=;
+	s=arc-20240116; t=1784754611; c=relaxed/simple;
+	bh=kMWqO2vlWwKxmmCeFR4sxQo9LTrO8Icwmc6sSR0HN04=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=RGw2Y3ckhJJJgmchOgDYpJdcI25VQfIRSIQK2KhdYryp4uf7u3toXvW8g9/DS2rG2gUTAJCPPqwtgpFHsnjk84S54FWpdHLQ2W+UqKa3GHRdmhBDvEoAl1h7g4fA8rjkSV8ulosp2v6Z8Ug4ycQuSgYhHBUvjvPEN5ShcXpLQFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aow1z1Sz; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Ags239n+F9iq3JIqTc36aYipT14C0d2WDlb5jRvK2o906BWueNt4s1IBN03SbGAmk9g5iFWNz1y3BwDpj63Wtf2kJ9SgenjOVtJKj7KBO2cb2ZMarshnMRFpanNkfJ2HBS4Pwli7z9rBn4fJg6jd2HuuSNVNrJxHL1AS1DXhaow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I+O6Pobi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aow1z1Sz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3225C1F000E9;
-	Wed, 22 Jul 2026 21:04:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I+O6Pobi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 388D81F000E9;
+	Wed, 22 Jul 2026 21:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784754249;
-	bh=uOlKU8KE4rXi05ns5z3yExGUKlkwm5pbnmPN9peRIOs=;
+	s=k20260515; t=1784754610;
+	bh=Nd0XvRfD/8WnnDLPiB2UjK7E2yTo3+dGfmMsoxtJYg0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Aow1z1Szk80e8cDv6CC5XEfItCFGPbBQ9TyYfkOmIRR3UieRN3PoCN00SH3ccLBpN
-	 yh47QQqqzJqqHneDjVQ8XHB+E5OOPz103KwXrEc8PTJmuxVXZFNol5wyxR214U31r1
-	 zAaQszvYICoUQ3gYTgNK8HaKlqPL8VLwEeTDen+mIvHFJqItVMRxkbKwpUouQBh27q
-	 fTQkHnrTy2mHHk2svmHGkuaPZmNRmRCW6Jf9P7SKACkrkqxXJ/M3CGammzN/XHGnob
-	 ijQrg6y7BIvLZuoSk8Fh9agOoy85SwUlFk3mPZCtlJK572slgfHMCMMzRM63mWPHWt
-	 zC28sCKAd0R6w==
+	b=I+O6PobigzcL0Na9wlpLuvdFkHbKNb1UaVWmg89t850AnTGPLYDhsI/griZrCxnYp
+	 W9lcuF363cy0XoTeYeBF2agmGYCQxnrWeYcjj5zjn1KK5uB/zx0UvtrmujNezBjv1E
+	 8u7DUliroS+vH2ioxrqtCuiRuQDUJ1eeOUdpb5bCypu49U94Y+odz2WA7LqMWR948+
+	 qBCifNTYsvxWPOKlUZ3Pnbl0mDSUPTSpWdU5S31/ORzSG1D3G8da0uKq1VuL1FbgD0
+	 rbrHNYIQ5KwvRyc/eTNPKcU2e+tuTz7JlC2hdm0AmCW5djepRVvwvf05Iflyx9nQLA
+	 wU/U01ICADJpw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/3] cxl/memdev: Don't mask an earlier partition's
- poison query error
+Subject: Re: [PATCH 2/3] cxl/ras: Clear software-only TLP log fields after
+ RCH AER copy
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260722205303.3184787-4-dave.jiang@intel.com>
+In-Reply-To: <20260722205303.3184787-3-dave.jiang@intel.com>
 References: <20260722205303.3184787-1-dave.jiang@intel.com>
- <20260722205303.3184787-4-dave.jiang@intel.com>
+ <20260722205303.3184787-3-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 22 Jul 2026 21:04:08 +0000
-Message-Id: <20260722210409.3225C1F000E9@smtp.kernel.org>
+Date: Wed, 22 Jul 2026 21:10:09 +0000
+Message-Id: <20260722211010.388D81F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Incorrect error handling in cxl_get_poison_unmapped for unsupporte=
-d RAM poison queries leaks -EFAULT.
-- [High] Premature loop termination in cxl_get_poison_unmapped skips subseq=
-uent partitions when a partition is fully mapped.
+- [High] cxl_rch_get_aer_info() and cxl_dport_map_rch_aer() use sizeof(stru=
+ct aer_capability_regs) (bloated to 100 bytes) for MMIO mapping and reading=
+, causing a 44-byte out-of-bounds MMIO read past the actual hardware AER ca=
+pability.
+- [High] ghes_handle_aer() suffers from a 4-byte out-of-bounds memory read =
+when copying firmware-provided CPER records due to the expanded struct aer_=
+capability_regs.
+- [High] The out-of-bounds array read vulnerability fixed in CXL is left co=
+mpletely unpatched in ACPI GHES and EXTLOG drivers, which also pass uniniti=
+alized firmware metadata to pcie_print_tlp_log().
 --
 
---- Patch [3]: [PATCH 3/3] cxl/memdev: Don't mask an earlier partition's po=
-ison query error ---
-commit 8d306ff8fd6e937d7c00800ee63688acb619e094
+--- Patch [2]: [PATCH 2/3] cxl/ras: Clear software-only TLP log fields afte=
+r RCH AER copy ---
+commit 5075cbfef0d94b8fb5de2ea2f5d342f46661acbd
 Author: Dave Jiang <dave.jiang@intel.com>
 
-cxl/memdev: Don't mask an earlier partition's poison query error
+cxl/ras: Clear software-only TLP log fields after RCH AER copy
 
-cxl_get_poison_by_memdev() reassigns rc every partition iteration with
-no early exit, so an error from an earlier partition is overwritten
-when a later partition succeeds. Break on the first failure.
+This commit clears the software-only header_len and flit fields in the
+embedded pcie_tlp_log structure after copying the AER capability from
+MMIO. This prevents pcie_print_tlp_log() from walking out of bounds and
+leaking stack contents into the error log.
 
-Closes: https://sashiko.dev/#/patchset/20260708074228.43654-1-icheng@nvidia=
-.com?part=3D5
+Reported-by: sashiko-bot@kernel.org
+Closes: https://sashiko.dev/#/patchset/20260717222706.3540281-1-terry.bowma=
+n@amd.com?part=3D1
 
-> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-> index 33a3d2e7b13af..8718964b9c5e8 100644
-> --- a/drivers/cxl/core/memdev.c
-> +++ b/drivers/cxl/core/memdev.c
-> @@ -231,6 +231,8 @@ static int cxl_get_poison_by_memdev(struct cxl_memdev=
- *cxlmd)
->  		 */
->  		if (rc =3D=3D -EFAULT && cxlds->part[i].mode =3D=3D CXL_PARTMODE_RAM)
->  			rc =3D 0;
-> +		if (rc)
-> +			break;
->  	}
->  	return rc;
->  }
+> diff --git a/drivers/cxl/core/ras_rch.c b/drivers/cxl/core/ras_rch.c
+> index 0a8b3b9b63884..a847727686df5 100644
+> --- a/drivers/cxl/core/ras_rch.c
+> +++ b/drivers/cxl/core/ras_rch.c
+> @@ -69,6 +69,13 @@ static bool cxl_rch_get_aer_info(void __iomem *aer_bas=
+e,
+>  	for (n =3D 0; n < read_cnt; n++)
+>  		aer_regs_buf[n] =3D readl(aer_base + n * sizeof(u32));
 
 [Severity: High]
-This isn't a bug introduced by this patch, but since you are fixing the poi=
-son
-partition loop here, I noticed similar bugs in drivers/cxl/core/region.c in
-cxl_get_poison_unmapped().
+This is a pre-existing issue, but does using sizeof(struct aer_capability_r=
+egs)
+cause an out-of-bounds MMIO read here?
 
-First, does this break statement skip poison collection for subsequent=20
-partitions?
+The loop count is calculated earlier in cxl_rch_get_aer_info() as:
 
-If an earlier partition (e.g., RAM) is fully mapped, length evaluates to 0,
-and the loop terminates early:
+    int read_cnt =3D sizeof(struct aer_capability_regs) / sizeof(u32);
 
-drivers/cxl/core/region.c:cxl_get_poison_unmapped() {
-...
-	for (int i =3D ctx->part; i < cxlds->nr_partitions; i++) {
-...
-		length =3D res->end - offset + 1;
-		if (!length)
-			break;
-...
-}
+Since the software struct is bloated to 100 bytes with the embedded
+pcie_tlp_log, but the hardware AER capability is at most 56 to 72 bytes,
+won't this loop read undefined or overlapping MMIO registers past the end
+of the capability? This can potentially trigger synchronous external aborts
+or Machine Checks on some architectures during hardware error handling.
 
-If a partition is fully mapped, shouldn't this be continue so we don't
-completely skip checking unmapped capacity in a subsequent PMEM partition?
+A similar regression appears in cxl_dport_map_rch_aer():
+
+    devm_cxl_iomap_block(host, aer_phys, sizeof(struct aer_capability_regs)=
+);
+
+Could this map unbacked RCRB memory or overlap with other capability
+registers?
+
+> +	/*
+> +	 * header_len and flit are software-only metadata in struct
+> +	 * pcie_tlp_log; Clear to remove garbage register contents.
+> +	 */
+> +	aer_regs->header_log.header_len =3D 0;
+> +	aer_regs->header_log.flit =3D false;
+
+While this patch addresses the stack read in cxl/ras, there are pre-existing
+regressions in the ACPI GHES and EXTLOG drivers caused by this same struct
+expansion.
 
 [Severity: High]
-This is a pre-existing issue, but further down in the same function,
-if we hit the expected -EFAULT for RAM partitions that don't support volati=
-le
-poison lists, does it leak the error?
+This is a pre-existing issue, but does copying sizeof(struct aer_capability=
+_regs)
+cause an out-of-bounds memory read in ghes_handle_aer()?
 
-drivers/cxl/core/region.c:cxl_get_poison_unmapped() {
-...
-		rc =3D cxl_mem_get_poison(cxlmd, offset, length, NULL);
-		if (rc =3D=3D -EFAULT && cxlds->part[i].mode =3D=3D CXL_PARTMODE_RAM)
-			continue;
-		if (rc)
-			break;
-	}
+In drivers/acpi/apei/ghes.c:ghes_handle_aer():
 
-	return rc;
-}
+    memcpy(aer_info, pcie_err->aer_info, sizeof(struct aer_capability_regs)=
+);
 
-Because continue bypasses the error check but fails to clear rc to 0,
-if this happens on the last partition (or the only unmapped one), wouldn't
-the function erroneously return -EFAULT on termination?
+Since pcie_err->aer_info is strictly defined as a 96-byte array, copying
+100 bytes will read past the CPER payload. If the array sits at the end of
+a mapped page, could this trigger a fatal page fault during a machine check
+or NMI context?
+
+[Severity: High]
+This is a pre-existing issue, but are the software-only fields left
+uninitialized when passed to pcie_print_tlp_log() from the ACPI drivers?
+
+In drivers/acpi/apei/ghes.c:ghes_handle_aer(), the struct is populated
+directly from the firmware payload:
+
+    memcpy(aer_info, pcie_err->aer_info, sizeof(struct aer_capability_regs)=
+);
+
+And in drivers/acpi/acpi_extlog.c:extlog_print_pcie():
+
+    aer =3D (struct aer_capability_regs *)pcie_err->aer_info;
+    ...
+    pci_print_aer(pdev, aer_severity, aer);
+
+If firmware provides arbitrary bytes that happen to set flit to true and
+header_len to a large value, could pcie_print_tlp_log() iterate up to
+255 times, reading out of bounds and leaking adjacent kernel memory?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260722205303.3184=
-787-1-dave.jiang@intel.com?part=3D3
+787-1-dave.jiang@intel.com?part=3D2
