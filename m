@@ -1,173 +1,136 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8805942B302
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 20:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F16135C183
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 21:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784753814; cv=none; b=ihGsqhC4mD7tp6e4KDCXA7wnyeAnNv4u56AzB5hVAOBr3ZjdossmlvuOU/94HlgGhdEqEhhH6ojx95HJzbFF7zrXGalVBXzeU59ydCtm5srI1uVYE1wYiTEf/Z7XUNzQF/sILEK5cHKenR587Qh49uOeQPnBzF0Wkykzjne2y4U=
+	t=1784754250; cv=none; b=j7pJRxMUeEp0NlXcocIMpQHsnfjc9G2LTZC6U/Tp5rUwdW7TcoCWSBetkncxIXQpq6QFmVV6qR3BnzAzfY42RF9fZjhvQWVtL7bqxQx6h6PQbeodJbFPY6KZgoW/t5cBfh5O29T5Jx7CBKZfMuPefYjmie2H7pha67sdgX6kMec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784753814; c=relaxed/simple;
-	bh=s8/wCDafUQ7pmN88abnD2Ydl0D4cpNmsjgZZBVN4G00=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I3G5a3i5D5MjoadszVbJdbS3p/xM/vf6rAeNGaUrYpvqiJK66SLPOSsceDEDHiV/FZrnpDOi659yvxr1+ngsxBMguz6YweI9UjTddvtTVLOoAPGtZ8HpSqeUIgQUSqUrHGuwvC/o1JW8CIBF402w+h81x6b064QQuOj34Fz8Xjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=BmbxhrHw; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1784754250; c=relaxed/simple;
+	bh=Q0t1/32TVc9kgcwu284js9lrW8jpZRQ4grrGlz9Ax0w=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=RGw2Y3ckhJJJgmchOgDYpJdcI25VQfIRSIQK2KhdYryp4uf7u3toXvW8g9/DS2rG2gUTAJCPPqwtgpFHsnjk84S54FWpdHLQ2W+UqKa3GHRdmhBDvEoAl1h7g4fA8rjkSV8ulosp2v6Z8Ug4ycQuSgYhHBUvjvPEN5ShcXpLQFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aow1z1Sz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="BmbxhrHw"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-52192509869so42557061cf.1
-        for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 13:56:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1784753811; x=1785358611; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=DrWtospFmR1X6Ml2Vs8JTWDG5C2VdzRczI8oq8UdJr8=;
-        b=BmbxhrHwS6SGD+DstaxN9aum0F+qVmFaCCLRCAesmHXK1x1tbM8o4VXAY3bTRgTam9
-         XN/lXuukJ8njiId9TQhkCaRPDHdLvVG/UbqfgTdVJ7GSf/bhXuLy1McqVIhavwwBnm+u
-         eH9ysztsnbb3Y0hPkS5OJzKx0qvgsrYFdGfqtYdAbumPyibsoupEOFlrVRXIIl2k70T3
-         EAOge8mNby2tH4tbCTbQnpGhXvpzaKnk8AB4lrEjLDfvD+NmiYvFPPRjv4XfQeD4YzrJ
-         ldCwOWXJsoNHETHoVs0VPJZNiN+TJ5HMUYIlSh7Q19XCK5ykMuHxhknCy8215sucxrl2
-         8/jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784753811; x=1785358611;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=DrWtospFmR1X6Ml2Vs8JTWDG5C2VdzRczI8oq8UdJr8=;
-        b=AH9QwUCBbvW9Uwo8UT9cvWy+o4K87xHum2XJ38Qdng1f30PWxE0Xc6aWo1ChG9LWAw
-         7nXhKozvmvHcqRIZfpxJwcz4/ma1AZ95NUzOxmAPgibP97Ax3d5UJfrTVJWp3icYLtAl
-         jt2D3MrfNSGfrpVjogv4emkrVXtipnaqtc2PeQjpllFwEovU1Daj6WBd059YtybGeca/
-         wO2WTU0qjJlQ8WtPum1Hu/G8CXI65ohNLj1yiQFXRaHEW629NYfTdOwYgpXvujg4k7bG
-         XedFORrPrrhDy6oFtT5uAFBVvBbeViDxshdaC4rEd6mdlm2zz6tO9QJryZbmzWEUw315
-         HHFQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rof2juIoOIwJiYNUH1b5E93+X1SbIcK7KpRyujrRtJAJ9fLoHYvcS+ZiMPPeIKXPJoFvclWLjVxZJg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0GsKEND5P4pD7BaNcJ9KcxcbQbQRYtoOCnfQfFRFUO90qiBGp
-	6N9SvvMzxPSeHmFkKq6l3CInFdRp82j2utOzN/jwqMd38eEyhq50e80S9CQUiE8Lr34=
-X-Gm-Gg: AR+sD11TBcQMdHhj/b8mck2EI1KIAvfiu8AbnjPUmXN6w6QumeQCCxLWPC8Fa0vmuaN
-	cB8D1uoa3NIYS+ePVLs/TeyfPGFuk1kKKMhRSZzJus2peQbUQdV+o5OPTPNmK4uTNK05C/mEAOc
-	wZk30shiqg+aejvl1c+1OwCZ3SqxSQVWz7bNcyYdI6g27s4SFMNm0L3TpE5jZuRQM8JTxQef8jU
-	O8L5GIMyEpEPJiPgstfhkqVa4vLHgRn6AbVDcdb3e5SDnntAZosp5ieGgt1mmthu86/VtUALspN
-	1e3z23o26lixSDW7OiTBnoaUcqNXSfkV6UzAYtr5J7BTAK9Q3lcd6Hlbc205U5MNTv/+CwEWwqE
-	BVJHVeVrazSG41ABJEoMMLkbT54Mobsnl3BzA9l6uVCfVfi/IO2yMhqNBMNO0vZJUW6lp2Vdzjl
-	7ciPMrXkovksVRcyWixYcH0uln+gnred5pJnrirS8Hq77O4ycVfKNmTwh2+ncZtYeMFda3
-X-Received: by 2002:a05:622a:997:b0:519:5680:1b5 with SMTP id d75a77b69052e-5283de4650emr1484841cf.21.1784753811471;
-        Wed, 22 Jul 2026 13:56:51 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-907ba672806sm29772246d6.0.2026.07.22.13.56.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2026 13:56:51 -0700 (PDT)
-Date: Wed, 22 Jul 2026 16:56:45 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: linux-mm@kvack.org, Zhigang.Luo@amd.com, arun.george@samsung.com, 
-	balbirs@nvidia.com, brendan.jackman@linux.dev, yuzenghui@huawei.com, 
-	apopple@nvidia.com, alucerop@amd.com, matthew.brost@intel.com, 
-	akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, liam@infradead.org, 
-	vbabka@kernel.org, rppt@kernel.org, surenb@google.com, mhocko@suse.com, 
-	corbet@lwn.net, skhan@linuxfoundation.org, gregkh@linuxfoundation.org, 
-	rafael@kernel.org, dakr@kernel.org, djbw@kernel.org, vishal.l.verma@intel.com, 
-	dave.jiang@intel.com, alison.schofield@intel.com, osandov@osandov.com, 
-	jannh@google.com, pfalcato@suse.de, jackmanb@google.com, hannes@cmpxchg.org, 
-	ziy@nvidia.com, pbonzini@redhat.com, osalvador@suse.de, joshua.hahnjy@gmail.com, 
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com, 
-	kasong@tencent.com, qi.zheng@linux.dev, shakeel.butt@linux.dev, baohua@kernel.org, 
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com, 
-	linux@rasmusvillemoes.dk, longman@redhat.com, ridong.chen@linux.dev, tj@kernel.org, 
-	mkoutny@suse.com, sj@kernel.org, jgg@ziepe.ca, jhubbard@nvidia.com, 
-	peterx@redhat.com, baolin.wang@linux.alibaba.com, npache@redhat.com, 
-	ryan.roberts@arm.com, dev.jain@arm.com, lance.yang@linux.dev, usama.arif@linux.dev, 
-	xu.xin16@zte.com.cn, chengming.zhou@linux.dev, roman.gushchin@linux.dev, 
-	muchun.song@linux.dev, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	driver-core@lists.linux.dev, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	linux-debuggers@vger.kernel.org, linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, 
-	cgroups@vger.kernel.org, damon@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	kernel-team@meta.com
-Subject: Re: [PATCH v5 00/36] Private Memory NUMA Nodes
-Message-ID: <amEpR83RtiqstjNs@gourry-fedora-PF4VCD3F>
-References: <20260720193431.3841992-1-gourry@gourry.net>
- <amDL80BSEP6u9XfE@MWDK4CY14F>
- <amDVQopyvolxfX8K@gourry-fedora-PF4VCD3F>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aow1z1Sz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3225C1F000E9;
+	Wed, 22 Jul 2026 21:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784754249;
+	bh=uOlKU8KE4rXi05ns5z3yExGUKlkwm5pbnmPN9peRIOs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Aow1z1Szk80e8cDv6CC5XEfItCFGPbBQ9TyYfkOmIRR3UieRN3PoCN00SH3ccLBpN
+	 yh47QQqqzJqqHneDjVQ8XHB+E5OOPz103KwXrEc8PTJmuxVXZFNol5wyxR214U31r1
+	 zAaQszvYICoUQ3gYTgNK8HaKlqPL8VLwEeTDen+mIvHFJqItVMRxkbKwpUouQBh27q
+	 fTQkHnrTy2mHHk2svmHGkuaPZmNRmRCW6Jf9P7SKACkrkqxXJ/M3CGammzN/XHGnob
+	 ijQrg6y7BIvLZuoSk8Fh9agOoy85SwUlFk3mPZCtlJK572slgfHMCMMzRM63mWPHWt
+	 zC28sCKAd0R6w==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 3/3] cxl/memdev: Don't mask an earlier partition's
+ poison query error
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Dave Jiang" <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260722205303.3184787-4-dave.jiang@intel.com>
+References: <20260722205303.3184787-1-dave.jiang@intel.com>
+ <20260722205303.3184787-4-dave.jiang@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 22 Jul 2026 21:04:08 +0000
+Message-Id: <20260722210409.3225C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <amDVQopyvolxfX8K@gourry-fedora-PF4VCD3F>
 
-On Wed, Jul 22, 2026 at 11:40:06AM -0400, Gregory Price wrote:
-> On Wed, Jul 22, 2026 at 10:20:00PM +0800, Richard Cheng wrote:
-> > 
-> > I saw the reply in patch 5, so in fact there's not only one
-> > dedicate zonelist, but numerous ?
-> > I raise the question because zonelist was supposed to be a
-> > global, unbypasssable thing in MM design, but now what you
-> > are trying to do is to seperate the whole global list into several
-> > parts ?
-> > 
-> > Can you explain why in current design you don't consider to support
-> > something like ZONELIST_PRIVATE[n]={0, .. ,n-1} ? that's my imagination
-> > of what a global zonelist should look like, no matter private or non.
-> > 
-> 
-> First let me say that there's nothing that prevents us from doing this,
-> and we *could* make this the default case - but this decision was
-> intentional by me.
-> 
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-You caught me on something here - I am wrong about my own code.
+Pre-existing issues:
+- [High] Incorrect error handling in cxl_get_poison_unmapped for unsupporte=
+d RAM poison queries leaks -EFAULT.
+- [High] Premature loop termination in cxl_get_poison_unmapped skips subseq=
+uent partitions when a partition is fully mapped.
+--
 
-I described to you how I originally implemented zonelist isolation,
-which I walked back when I was testing mempolicy and demotion.
+--- Patch [3]: [PATCH 3/3] cxl/memdev: Don't mask an earlier partition's po=
+ison query error ---
+commit 8d306ff8fd6e937d7c00800ee63688acb619e094
+Author: Dave Jiang <dave.jiang@intel.com>
 
-The current code and the comments in the code are correct, we get
-the following zonelists.
+cxl/memdev: Don't mask an earlier partition's poison query error
 
-N_MEMORY : 0,1
-N_MEMORY_PRIVATE: 2,3
+cxl_get_poison_by_memdev() reassigns rc every partition iteration with
+no early exit, so an error from an earlier partition is overwritten
+when a later partition succeeds. Break on the first failure.
 
-ZONELIST_PRIVATE[0]     = {0,1,2,3}
-ZONELIST_PRIVATE[1]     = {1,0,2,3}
-ZONELIST_PRIVATE[2]     = {2,0,1,3}
-ZONELIST_PRIVATE[3]     = {3,0,1,2}
+Closes: https://sashiko.dev/#/patchset/20260708074228.43654-1-icheng@nvidia=
+.com?part=3D5
 
-Meaning everything except for MPOL_F_RELATIVE_NODES works (because
-of cpuset isolation, but more on this in a moment).
+> diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+> index 33a3d2e7b13af..8718964b9c5e8 100644
+> --- a/drivers/cxl/core/memdev.c
+> +++ b/drivers/cxl/core/memdev.c
+> @@ -231,6 +231,8 @@ static int cxl_get_poison_by_memdev(struct cxl_memdev=
+ *cxlmd)
+>  		 */
+>  		if (rc =3D=3D -EFAULT && cxlds->part[i].mode =3D=3D CXL_PARTMODE_RAM)
+>  			rc =3D 0;
+> +		if (rc)
+> +			break;
+>  	}
+>  	return rc;
+>  }
 
+[Severity: High]
+This isn't a bug introduced by this patch, but since you are fixing the poi=
+son
+partition loop here, I noticed similar bugs in drivers/cxl/core/region.c in
+cxl_get_poison_unmapped().
 
-So what I shipped here is what you are describing.
+First, does this break statement skip poison collection for subsequent=20
+partitions?
 
-Looking back at my notes - I realized a few things that lead me to
-walk back that isolation:
+If an earlier partition (e.g., RAM) is fully mapped, length evaluates to 0,
+and the loop terminates early:
 
-1) mempolicy makes more sense this way.
-2) reclaim/demotion is easier to implement without isolation.
-3) The individual service checks and nodelists handle the rest.
-4) It overally just makes more sense.  If something breaks isolation
-   it's because there's a bug, not because of a structural issue.
+drivers/cxl/core/region.c:cxl_get_poison_unmapped() {
+...
+	for (int i =3D ctx->part; i < cxlds->nr_partitions; i++) {
+...
+		length =3D res->end - offset + 1;
+		if (!length)
+			break;
+...
+}
 
-For example in demotion we do this:
+If a partition is fully mapped, shouldn't this be continue so we don't
+completely skip checking unmapped capacity in a subsequent PMEM partition?
 
-demote_folio_list():
-    /* Get demotion targets, find the best one, and demote */
-    node_get_allowed_targets(pgdat, &allowed_mask);
-    target_nid = next_demotion_node(pgdat->node_id, &allowed_mask);
-    migrate_pages(demote_folios, alloc_demote_folio, ...);
+[Severity: High]
+This is a pre-existing issue, but further down in the same function,
+if we hit the expected -EFAULT for RAM partitions that don't support volati=
+le
+poison lists, does it leak the error?
 
-Where the first step already filters on CAP_DEMOTION.
-The result is still clean - no special iterators needed.
+drivers/cxl/core/region.c:cxl_get_poison_unmapped() {
+...
+		rc =3D cxl_mem_get_poison(cxlmd, offset, length, NULL);
+		if (rc =3D=3D -EFAULT && cxlds->part[i].mode =3D=3D CXL_PARTMODE_RAM)
+			continue;
+		if (rc)
+			break;
+	}
 
-What I realized from your questions here is that since i walked back the
-zonelist isolation, I think i can actually include any CAP_USER_NUMA
-node in cpuset.mems and allow parititioning fairly trivially.
+	return rc;
+}
 
-I think this might be the last majority complexity falling out.
+Because continue bypasses the error check but fails to clear rc to 0,
+if this happens on the last partition (or the only unmapped one), wouldn't
+the function erroneously return -EFAULT on termination?
 
-Thank you for the questions - this has helped.
-
-~Gregory
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260722205303.3184=
+787-1-dave.jiang@intel.com?part=3D3
