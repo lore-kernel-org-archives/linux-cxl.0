@@ -1,216 +1,188 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB8244457A5
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 18:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D541470E8A
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 19:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784745342; cv=none; b=B1pmLLrb37tIv7HRo4lUXS3O8Hl/8Q8lEGN4FWRMSW4qhzglR6UpkuStPIt4kosk9XDRdVSFpejZXg4u+7rAUWEdq9X/IpDz3bZcjQyzi06oL9snQ92NZTktpYiWm4Teelh7/mH5mloaPiQReRbog0ibd6sQkurrXDFasq+R6oA=
+	t=1784747846; cv=none; b=pjdMWcwlQgigIZ+m3chi1RxiyWumaPBXLVEy3q6ndCwxfnjjQ45oYNFMrLZQqYZEE/eWrK95negxBFB5/7WKqsxNMDnWX51i+tsLjtszK+IgyntfhDMhWlCqL3BGZj54ZvpeHRXuI92IAF9cYn0/b/Cc0ApDMTk9Dd5HwleYSjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784745342; c=relaxed/simple;
-	bh=nJ35d+eSRwcW0nsb3UMSMmMEzxzLr5EKcff45F9EGHk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SR1fetfnA81gkulJluROD0nJzq0JfVYOjf2BQc3Nzb+u52GbtOhN8rGtF3gWGXoee9F0rmt80a/5/YxuQ3RO3cyxR8HR++/6Hrk3aPf095ItXyeYO93G2z1P51j4CS0mH/3dQ80NOHfGMTriQ5elmSLlRTiclC24/PjqmaQY33Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Sl9+Z9jT; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1784747846; c=relaxed/simple;
+	bh=oRVP2YqIK5Fe0gQiceXBodZWa/MEMWHrbUr9fFfXFQc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AFIlCtQk9f9UHNiyuxJxZ9QDLp4KhEs4y/kPX4Y2sx+pv+Xv9Brsf6Xpb5fxqx5CqGG2VUkqYlClj8p4blLS8u5NFK8cQiF3G0iIBjz7kr++6OsXHsSACw2d0NuZtFXHjXMvjA9/wFXOF1qM12DRYSA5H4xfesdohcjg4EmhFmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ig5RPG4P; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Sl9+Z9jT"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-9305a2121a1so961529985a.2
-        for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 11:35:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1784745336; x=1785350136; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=rb3wioIcpW4xOhPfXJEKXcvsIiP8tbJgl4SCMKfLhpI=;
-        b=Sl9+Z9jTE3gnS9DBZMHJ8oL9nCIJiTS6xfiaRNCN1Brjme023rH/b3x54CvoPkhXj4
-         7ivZjJuASH8xM5ZzPaPsbQsDzWfuNZONrqDMJxZUuAeKY+UgTdLRpi6ZfznzezN1T6n2
-         5BsaiK9eo4QXKYwufyIT6vWmwUomne2hOTDcFljKgyZx6pW+X8RiMH9mLtI0evht5Y5x
-         ymcJKZr0WmbeSOl+Rh90kY2D/F1j63+Q1PsS6a2nvH/ITkJZuokqY/lpkM7FzugOj7f1
-         25Uc0MuukQf1FglToPOk0pxL3slkaalpCIS+05ixVTHiENFZpCCkb0NwGHW4nXihuBje
-         FAPQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ig5RPG4P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1784747844;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fgADKQPfJd1AEoeiRdVbxkdpyLJkdcTqBLoWey7SyyQ=;
+	b=ig5RPG4Ph6EUKda2FgNhUlBNMekDDchL8BY9iL5RL9UOn10YFCDcuhbIqjzP1FFiDqt75Y
+	1Y9HeF7PG7CQ2h5EqLk3hHnLkI2tGQX7cJ379blVtdxfSAfKeMH8BqTvuQ/7YnC4hvYKyq
+	K+LFJvEfnkHTXcv9fCntd9HknfW8hEI=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-484-tTD_OZSMPy681rJVpZrByA-1; Wed, 22 Jul 2026 15:17:22 -0400
+X-MC-Unique: tTD_OZSMPy681rJVpZrByA-1
+X-Mimecast-MFC-AGG-ID: tTD_OZSMPy681rJVpZrByA_1784747841
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-39ad467f184so79945821fa.2
+        for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 12:17:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784745336; x=1785350136;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=rb3wioIcpW4xOhPfXJEKXcvsIiP8tbJgl4SCMKfLhpI=;
-        b=mfjSwf+SfpepXPNvSSE8Xrhahp+lzbmq2TB07sDApmkQlF/kuJ+oxNNzEqdjzEhbS2
-         2VICTPJHwM/A5KJjDzYk/3a9rtUwGHMhrMv5vQWjjxQOyhLd8CU0YeeZVpspZs7wU+o5
-         tpi6P/pfk+ZPk/sDGfHdis9SZJ589n633FDXpeH0jChjgHGgCncQupLiptxG+OvosdKJ
-         xUU4p9vjXQdRKD3JJ1cKJhqW0HDI+H+6Un2YXJ8/6Yiy4OSmrKN4QsBkWombD+WOHu9R
-         eoCHohHpefCZQ1a2pk+YU9T5PaxjeoUsi9+duvaMHZHeOV92Xgv4QgNckefLsdj7FOPN
-         im5A==
-X-Gm-Message-State: AOJu0YxUsJEkBpHUM234PCE2qGUWPTA4rI8g2G5BF6atXA+x/eByvA71
-	OVyaQbFL0nmNiAmAdLNUos1kWS8oCP/dWz5Awm7Pc17SuCRJA6e1sEVoVKjcC5188IPr2sduzuu
-	JTQOd
-X-Gm-Gg: AR+sD13JcPBXJobqyOUVVjyYqsZP6PrJXrndbMtJ+ArjY1EIMTcp/oOzl4CB6O0QpCf
-	zEkAbo1gZGemySKjtqLzz7wSQiuAVSymNtzSvfNqAfwKl5cvjdTGd6ej7KWdRySqm97scSrzRzT
-	g+haWDlXabZlL7lK8Nh92xHRat+CQG4NEbK720W5XZDobr2B86gK7fBLCnk8QClq9SRAHsTydIw
-	PV3Mx7BIynMgH3FnryEMIKYbPLN7Y0AiZ3jM2zyjRV/cK4ekIRmFf7S/E8H38LBQuTJLgVcnpgy
-	nd3d/GBXuvljWxguVVrDIunw+37Fdoc8JjUvJ6lKdmpL4YGd4MsBJIKiuTzvuEvYa7jqYEfDpP6
-	fDJ6kfDu8pRAAaRWPBomNmICah8QLn4NBn+pzin7PcjNpXG0pxznllUdZvhaySjfOzgl67qPLZk
-	vGrlu8W9MAOJYVjFugt0vTwY9JSo7O2Fgabw0ilhGu3TeWkkt2OE0Fph/7/Ti/dfs=
-X-Received: by 2002:a05:620a:4885:b0:92e:d5f6:2e71 with SMTP id af79cd13be357-930b3eea5damr2411579085a.14.1784745335608;
-        Wed, 22 Jul 2026 11:35:35 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-907ba8b3e96sm27630216d6.1.2026.07.22.11.35.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2026 11:35:35 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-cxl@vger.kernel.org
-Cc: nvdimm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	djbw@kernel.org,
-	vishal.l.verma@intel.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com
-Subject: [RFC PATCH 8/8] dax/kmem: add dax/adistance to make private node adistance configurable
-Date: Wed, 22 Jul 2026 14:35:19 -0400
-Message-ID: <20260722183519.935213-9-gourry@gourry.net>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260722183519.935213-1-gourry@gourry.net>
-References: <20260722183519.935213-1-gourry@gourry.net>
+        d=1e100.net; s=20251104; t=1784747841; x=1785352641;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=fgADKQPfJd1AEoeiRdVbxkdpyLJkdcTqBLoWey7SyyQ=;
+        b=OCst7A2hl026MMk/9JUBjMcKuDlNxh/TbZc0Hje2AuEXwYH0LeY2t+iiJcKDBlChHV
+         MGGGj1jfKaSnbGY9nvl9RzVnKPL2Iva8ZTtzkFdDc3J0vLmDRj/yLxlrGlKz4sIPhJmn
+         cDWQXUPYHC2HIKlYRyrnnBSyH/GPoUO0hQ5c3kv5retzNt2dr/nq5CeVOgs8zreLkUTi
+         vWcEkmuGEUz+iBwL3auWWkwgAP/eXVyOZ0edtcnZYDxYbtFce8o5LNDP8WuAzmFf+uxY
+         +n27o6c+j3N9Td+NhdTMf+Bqokigf5wT9p3Vo0gUgmQGthdGSoVyse50Pf6CmHFe6dLP
+         7JuQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqDAgUx0Gs91tuoNJxiOeYun4WAet5crSGO4qJK0wMpMdwyCT5YOzWjfsyF8XSsDhUN25AM7CbFRik=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd5rJdHOE/gDFlb2f+oMWEwql83xHdeb4kgajEFmW0TorW79A4
+	H6IBHd8N0P8oJ1p69Eh/cKn32ijixgnlHVojKhNX58lbZglAG3Mw6I7BOoyNHEo4kBiwDtO1Ib+
+	HM1HRz+LHtqAv3BDZBv0mDSi2UFlId92WDi6L9v1hWrJNFw/3B8pR0cgfnhtZ0s0dWWk7iTYdIk
+	1rBx3tKplts6jL5iftj0PBH28tix6mtjpTI5lz
+X-Gm-Gg: AR+sD10IZ3Fap0nLeoJ6yAvfEjKUCcnpdjfjEu6RwAf43qoaZB7+D0P5aqjS4687o4z
+	FiLR1D5rw37SqkowoG6GrmRDHmZhBfdEbw68zlKhyBVYYRzArAus4f9gatVTEJjdW48MtjdaixJ
+	C7T4k5enqIxV+95uUHpiHBW/y/6XKfg1IfFdNou7qpseH4n0TMc4cJXQ==
+X-Received: by 2002:a05:651c:1442:b0:39c:7d51:70de with SMTP id 38308e7fff4ca-39f07ec9fe4mr5181fa.24.1784747841138;
+        Wed, 22 Jul 2026 12:17:21 -0700 (PDT)
+X-Received: by 2002:a05:651c:1442:b0:39c:7d51:70de with SMTP id
+ 38308e7fff4ca-39f07ec9fe4mr5071fa.24.1784747840707; Wed, 22 Jul 2026 12:17:20
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260717064502.1980173-1-npache@redhat.com> <20260717182947.534af296aaa1831d13f8ae6d@linux-foundation.org>
+ <CAA1CXcCrA9nrraxVNTdo19TRONvqM-fndSbDaCib4tZCmQC9tw@mail.gmail.com> <5766bfae-8dd9-4542-bbab-324dbde0e2f5@kernel.org>
+In-Reply-To: <5766bfae-8dd9-4542-bbab-324dbde0e2f5@kernel.org>
+From: Nico Pache <npache@redhat.com>
+Date: Wed, 22 Jul 2026 13:18:46 -0600
+X-Gm-Features: AUfX_mxBP6oQ9YP4CSpm6uLN70-PCju-h_3ep9e5ccbsKoOnsmvoI6BqZQW6fM4
+Message-ID: <CAA1CXcCFrnw4K+yStkmdEOdfn+9XJd4tXYNyOnBKobLo_WRX0w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] mm: fix PMD level mTHP accounting bugs
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Jason Gunthorpe <jgg@nvidia.com>, 
+	"Lorenzo Stoakes (Oracle)" <ljs@kernel.org>, Alistair Popple <apopple@nvidia.com>, Oscar Salvador <osalvador@suse.de>, 
+	Barry Song <baohua@kernel.org>, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, willy@infradead.org, Zi Yan <ziy@nvidia.com>, 
+	Matthew Brost <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, 
+	Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
+	Ying Huang <ying.huang@linux.alibaba.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: fduBgLFjznZsflbE01cTazrSnSVHOqiZgUZ53o5zDT4_1784747841
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-For testing, it is useful to allow adjustments to node location in the
-tiering hierarchy - but this is presently a function of static config
-data (SRAT/HMAT).
+On Tue, Jul 21, 2026 at 8:34=E2=80=AFAM David Hildenbrand (Arm)
+<david@kernel.org> wrote:
+>
+> On 7/21/26 15:57, Nico Pache wrote:
+> > On Fri, Jul 17, 2026 at 7:29=E2=80=AFPM Andrew Morton <akpm@linux-found=
+ation.org> wrote:
+> >>
+> >> On Fri, 17 Jul 2026 00:44:58 -0600 Nico Pache <npache@redhat.com> wrot=
+e:
+> >>
+> >>> While running selftests I noticed the PMD level per-mTHP stats (nr_an=
+on)
+> >>> remained elevated after each run. After further investigation I notic=
+ed
+> >>> this accounting error occurs for both the migration.private_anon_htlb=
+_test
+> >>> and the HMM tests.
+> >>>
+> >>> In the HMM case this is due to folio_add_new_anon_rmap() incrementing=
+ the
+> >>> mTHP stats, but never containing a corresponding decrement in
+> >>> free_zone_device_folio(). We solve this by making sure to decrement t=
+he
+> >>> counter when freeing device memory.
+> >>>
+> >>> In the migration case, we are incrementing this counter without first
+> >>> checking whether this folio is a hugetlb folio, which relies on a sep=
+arate
+> >>> accounting system. We solve this by adding the proper hugetlb check b=
+efore
+> >>> incrementing this counter.
+> >>>
+> >>> With these changes in place, the two tests no longer cause elevated P=
+MD
+> >>> level accounting issues.
+> >>
+> >> Thanks, I've updated mm.git's mm-hotfixes-unstable branch to this
+> >> version.
+> >
+> > Thanks!
+> >
+> >>
+> >> Sashiko is worried about the existing code ("list corruption or a
+> >> use-after-free panic"):
+> >>         https://sashiko.dev/#/patchset/20260717064502.1980173-1-npache=
+@redhat.com
+> >
+> > https://sashiko.dev/#/patchset/20260717064502.1980173-1-npache@redhat.c=
+om
+> >
+> > I dug into this, although I'm not very familiar with device memory.
+>
+> In general: Don't let a tool waste your time on unrelated things if it wa=
+sn't
+> you that asked the tool for it. Someone else asked the tool to find unrel=
+ated
+> things.
 
-Private nodes have a contract of one owning service per node, meaning
-the registering service can set the adistance for that node without
-interfering with other hotplugged memory (no other service can hotplug).
+Ok sounds good. It flagged the same issue in both of my submissions so
+I figured I'd investigate. It also helped me better understand the
+code by forcing me to dig.
 
-Extend kmem to have dax0.0/adistance when `private=1`, so that the
-targeted node's tier membership can be moved around.
+>
+> I thought we only support anonymous THP for device-private, not device-co=
+herent.
 
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- drivers/dax/kmem.c | 68 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+Device-coherent has PMD support; albiet I dont think there are many
+users of using the MIGRATE_VMA_SELECT_COMPOUND flag.
 
-diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
-index c33dac5939edd..9fd50ef44d56b 100644
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -51,6 +51,7 @@ struct dax_kmem_data {
- 	int numa_node;
- 	int state;
- 	struct mutex lock; /* protects hotplug state transitions and config */
-+	int adistance; /* node abstract distance */
- 	bool dax_file; /* when set, cdev allows mmap */
- 	struct mempolicy *policy; /* device-lifetime bind for dax-file mmap */
- 	bool private; /* when set, memory is onlined as N_MEMORY_PRIVATE */
-@@ -68,6 +69,27 @@ static struct memory_dev_type *kmem_find_alloc_memory_type(int adist)
- 	return mt_find_alloc_memory_type(adist, &kmem_memory_types);
- }
- 
-+/*
-+ * Re-register the node's memory type at given abstract distance, refined
-+ * by the platform algorithm.  This lets us move nodes to different memory
-+ * tiers for testing and if the node does not have static perf data.
-+ *
-+ * Caller holds data->lock, and device must be in unplugged state.
-+ */
-+static int kmem_set_adistance(struct dax_kmem_data *data, int adist)
-+{
-+	struct memory_dev_type *memtype;
-+
-+	mt_calc_adistance(data->numa_node, &adist);
-+	memtype = kmem_find_alloc_memory_type(adist);
-+	if (IS_ERR(memtype))
-+		return PTR_ERR(memtype);
-+	clear_node_memory_type(data->numa_node, NULL);
-+	init_node_memory_type(data->numa_node, memtype);
-+	data->adistance = adist;
-+	return 0;
-+}
-+
- static void kmem_put_memory_types(void)
- {
- 	guard(mutex)(&kmem_memory_type_lock);
-@@ -495,6 +517,45 @@ static ssize_t state_store(struct device *dev, struct device_attribute *attr,
- 	return len;
- }
- 
-+static ssize_t adistance_show(struct device *dev, struct device_attribute *attr,
-+			      char *buf)
-+{
-+	struct dax_kmem_data *data = dev_get_drvdata(dev);
-+
-+	if (!data)
-+		return -ENXIO;
-+	return sysfs_emit(buf, "%d\n", data->adistance);
-+}
-+
-+static ssize_t adistance_store(struct device *dev, struct device_attribute *attr,
-+			       const char *buf, size_t len)
-+{
-+	struct dax_kmem_data *data = dev_get_drvdata(dev);
-+	int adist;
-+	ssize_t rc;
-+
-+	if (!data)
-+		return -ENXIO;
-+
-+	rc = kstrtoint(buf, 0, &adist);
-+	if (rc)
-+		return rc;
-+	if (adist <= 0)
-+		return -EINVAL;
-+
-+	guard(mutex)(&data->lock);
-+
-+	/* adistance only reconfigures the device while it holds no memory. */
-+	if (data->state != DAX_KMEM_UNPLUGGED)
-+		return -EBUSY;
-+
-+	rc = kmem_set_adistance(data, adist);
-+	if (rc)
-+		return rc;
-+	return len;
-+}
-+static DEVICE_ATTR_RW(adistance);
-+
- static const struct attribute_group dax_kmem_private_group;
- 
- static ssize_t private_show(struct device *dev, struct device_attribute *attr,
-@@ -529,6 +590,11 @@ static ssize_t private_store(struct device *dev, struct device_attribute *attr,
- 	if (enable == data->private)
- 		return len;
- 
-+	/* When toggling private, reset custom adistance to default */
-+	rc = kmem_set_adistance(data, MEMTIER_DEFAULT_DAX_ADISTANCE);
-+	if (rc)
-+		return rc;
-+
- 	if (enable) {
- 		/* Add the per-service opt-in attributes. */
- 		rc = sysfs_create_group(&dev->kobj, &dax_kmem_private_group);
-@@ -637,6 +703,7 @@ KMEM_PRIVATE_CAP_ATTR(ltpin, NODE_PRIVATE_CAP_LTPIN);
- 
- /* Per-service opt-ins. Visibility toggled by 'private' control */
- static struct attribute *dax_kmem_private_attrs[] = {
-+	&dev_attr_adistance.attr,
- 	&dev_attr_reclaim.attr,
- 	&dev_attr_user_numa.attr,
- 	&dev_attr_hotunplug.attr,
-@@ -719,6 +786,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
- 	data->mgid = rc;
- 	data->numa_node = numa_node;
- 	data->state = DAX_KMEM_UNPLUGGED;
-+	data->adistance = adist;
- 	data->np.owner = data;
- 	mutex_init(&data->lock);
- 
--- 
-2.53.0-Meta
+I think Matthew is fixing this from a different perspective. Teach the
+split code how to handle this.
+https://lore.kernel.org/lkml/20260722044220.1110278-1-matthew.brost@intel.c=
+om/#t
+
+Zi made some comments about it there.
+
+-- Nico
+
+>
+> Maybe lib/test_hmm.c could somehow trigger it by selecting
+> MIGRATE_VMA_SELECT_COMPOUND?
+>
+> But in migrate_device_coherent_folio() we have
+>
+>         WARN_ON_ONCE(folio_test_large(folio));
+>
+> So this would already be pretty broken and I wouldn't spend any more time=
+ on it.
+
+
+
+>
+> --
+> Cheers,
+>
+> David
+>
 
