@@ -1,140 +1,143 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF7D34EF1F
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 13:48:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D67353A85
+	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 13:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784728139; cv=none; b=W2bPusH9gtGS+qfcVL00MQjaOXhKpidguiuAUYbWDpu5syFan2EQS9miCmrg9oxrx69br3onsw3qmX5Vq0f69ExRrY7ZBZRrj3d+cWtJ81tOIdub8gQNIsYvHNTVN3/1Getem+iljphD1+mlDvqtkHgTmOzQNvApPffoZPcFmX0=
+	t=1784728430; cv=none; b=BwT83aaogwnsm8/H/66LpSIDY8vB82Wki83NiRGyde1Gnkl13CXuFIjhzFUz7ORBnYcHLgtVY1wwACPVYxJ88CbF8xsH8jSn7tRmQVudqhtjA0ovvQOUmrkKATBlbZkjHX/S9+F+Vu/dYUXFnDs/oWJh3itPqck2PUdR1J4z1+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784728139; c=relaxed/simple;
-	bh=JAIqzpQM3gUx7M+gDSziic1KcB43W58VAXiVvJF0/Hk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gqVhgSwIExyLCiTjCF32KcYb52Abm6+pjuur7KvXjnSH/LdLPbh0SJTKQpqCGsXll0zKy2JHaWglK5NGBpVIIz4ohY+0iujwvi0P7JIRAOj/Ky/HjzLvayg9uPVZqwNDP0+TRta3i4rtYI0Ltrb+tcchltwVlVmP/KPb9O8Mx3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=GfLa6fHj; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1784728430; c=relaxed/simple;
+	bh=WkQP+VLLIUcupmM/h8M3bLBbXU5+xR/+0pbsUwRlOyw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ubo5YxOcB/qaHU3ExhKfrKmlaIQUaSvw37dZPruvYwANqY2p/0H+lJjLLblTiUWsVE1dNPPBTbylyaBLcmy5PncPsMSWsDbuwwwRnFnd2yIU8BlYTT6SxWPwBUlmEwtg/+AyTstOMaKnac0ELMuBoU+iB8uO5uftJIDlEhjM06c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DfSyb1bT; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="GfLa6fHj"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-51c4436d02cso50814361cf.1
-        for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 06:48:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1784728136; x=1785332936; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=LI4otu0+1hHJyrtu/tBxz3iTtloCysub9k9iNgYv1gk=;
-        b=GfLa6fHjBw5k5Cgmz1whJ5nETVeelFxMT26tNktv/o76lhNb8g352TR5NSgzxj0xK/
-         l99ZU3otNIqIWf5NPRZOUByX/rsuPiQ11f/76fJZU6VdndYf/hECk1QXXGmtm6zxg/D+
-         Jp3L7vWik0zmayA89l50HzOSWyCZrphTG1lt1EZnBbJQbWY5rLr8WS00j1qAY7moV6C6
-         lTJ7XSZYNDD8dlO/MPxVy2EEZD8SCjSLPMCaZCsQD7e37hasV8TP4a+NhorAAbZ0Ohhs
-         6nlqtYbIICyZZQkN6OqTZwVx6r17L7v2FbkjPkZ0Eqhsumnot7b9+N7Dj0SpPbVDkztD
-         g8YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784728136; x=1785332936;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=LI4otu0+1hHJyrtu/tBxz3iTtloCysub9k9iNgYv1gk=;
-        b=IhlJqxr7wKbDJtKFET4tn8F8A+Mf8djEhv1jNha5bhqEUIN4sadhYVNDakT9SVBLXG
-         WU6bwn7vsT+shZOHgdNkI3viOI+nllgrEMbO5r4FaRNms1upbAsHyKmr4ywigOYl1M6l
-         BsvW1PzNeTNxsB+rO1lo9rni1VLvi2gFpniU+b1nOyGnEMRpKtgBtsbWvmMsPQZ62pOe
-         fRnqGPL1tnBUTcfRtnopKmDjkfpgSXnIlDS0wY5Tqr4h6CxsX5Kzykux2gUM76qmZT3u
-         R4Ur1q8JrjAGkvTyKy2if+pz5bZjFTm6LJTHR0efXC2U1TMZOTle78+XiAbL3f/NX4Jf
-         CXwA==
-X-Forwarded-Encrypted: i=1; AHgh+Rr/aI5MPPXxVnGjk+RwSAiCb80ulaY9ImT4qlOPSjeWQZL2rs9m8akVupNeJK8FeEAw28fIy8UoyGo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNZkn2u3Q3rRh4FC4Jdjcjzfdp8DG9jQMscEmGyC0ZNtkePG48
-	DTYX7YNHoYdBcyS/8MwCrP7eywS45qOuft1cUlE6dQEbaBkRVpmLPGnENv2n9NGdkr8=
-X-Gm-Gg: AR+sD12c+PDk9TwlGay6IGGQ5YoGDP33fx/KkHiB1LLqvFQZLx8UClps5jona20H175
-	zh+1GuvqlGVcGpTtlQsZJB9cOx17z9sz387ymDeix9Vimw1u9j4ELc/3Ei/o430Uo9yfR8DZ4R1
-	fisn9dQn+OPFZACrXUTo4Dxv7PnX4M3gFrSdgN5Z3TAZgwsorPedjQFWVpGUdHhIyMSlmcjCIgm
-	hz3JKm2UNUBnrQXsPts5hu27KrMgd3qt9OJnj75spn4ivK7NxbWqPemnpmYypS1B9VifYZ+S5Ru
-	tts7yGL1XuJ4QIYGTA5Vig5dLRT9x9Ji75R+fUEed6nHgSiPlo/MpJ+ujozo+ib9yOzsaZaUU6Z
-	64omPzUBkDpO3Lx/w+OeuPuEAfhCJ6eJ5Hx0yEhB3sGDnYUzasQ1JQsbGYsSF0uwOFBoeRnR9AX
-	mcmeWt0jTgWywkZtBSXrNfLnAGaIu0G8t2IcOIZuUQev+OOCy6BQmbLNM2ew==
-X-Received: by 2002:a05:622a:350:b0:51c:555:7dea with SMTP id d75a77b69052e-5213cbd667cmr215415981cf.30.1784728136109;
-        Wed, 22 Jul 2026 06:48:56 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-907ba8e2581sm21393266d6.19.2026.07.22.06.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jul 2026 06:48:55 -0700 (PDT)
-Date: Wed, 22 Jul 2026 09:48:50 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: linux-mm@kvack.org, Zhigang.Luo@amd.com, arun.george@samsung.com, 
-	balbirs@nvidia.com, brendan.jackman@linux.dev, yuzenghui@huawei.com, 
-	apopple@nvidia.com, alucerop@amd.com, matthew.brost@intel.com, 
-	akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, liam@infradead.org, 
-	vbabka@kernel.org, rppt@kernel.org, surenb@google.com, mhocko@suse.com, 
-	corbet@lwn.net, skhan@linuxfoundation.org, gregkh@linuxfoundation.org, 
-	rafael@kernel.org, dakr@kernel.org, djbw@kernel.org, vishal.l.verma@intel.com, 
-	dave.jiang@intel.com, alison.schofield@intel.com, osandov@osandov.com, 
-	jannh@google.com, pfalcato@suse.de, jackmanb@google.com, hannes@cmpxchg.org, 
-	ziy@nvidia.com, pbonzini@redhat.com, osalvador@suse.de, joshua.hahnjy@gmail.com, 
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com, 
-	kasong@tencent.com, qi.zheng@linux.dev, shakeel.butt@linux.dev, baohua@kernel.org, 
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com, 
-	linux@rasmusvillemoes.dk, longman@redhat.com, ridong.chen@linux.dev, tj@kernel.org, 
-	mkoutny@suse.com, sj@kernel.org, jgg@ziepe.ca, jhubbard@nvidia.com, 
-	peterx@redhat.com, baolin.wang@linux.alibaba.com, npache@redhat.com, 
-	ryan.roberts@arm.com, dev.jain@arm.com, lance.yang@linux.dev, usama.arif@linux.dev, 
-	xu.xin16@zte.com.cn, chengming.zhou@linux.dev, roman.gushchin@linux.dev, 
-	muchun.song@linux.dev, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	driver-core@lists.linux.dev, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	linux-debuggers@vger.kernel.org, linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, 
-	cgroups@vger.kernel.org, damon@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	kernel-team@meta.com
-Subject: Re: [PATCH v5 26/36] mm: add NODE_PRIVATE_CAP_RECLAIM for opted-in
- private node reclaim
-Message-ID: <amDJEbu3aQO8J8f4@gourry-fedora-PF4VCD3F>
-References: <20260720193431.3841992-1-gourry@gourry.net>
- <20260720193431.3841992-27-gourry@gourry.net>
- <amDGXU94trqlXUgR@MWDK4CY14F>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DfSyb1bT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784728428; x=1816264428;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=WkQP+VLLIUcupmM/h8M3bLBbXU5+xR/+0pbsUwRlOyw=;
+  b=DfSyb1bTfJIgDZamMB7fkWY5AqtrEEYjCXD2nPWbWtV9e81fAiuhicoa
+   ZxgSatISL/8uFWEF7NBgVuPdOQlsXfqgxccTTYALvMNwa7Tv06gj8p0Ib
+   +VzKMMm7885PDzFcbaqVjkq4CEf8zIK441S0XzdqvdAw0pGo5gjYivghI
+   ix7ceXyVy+DlLq+2z75VYSu4WZKTsk3VdI75XkUgJyuwSK9m9fIxrBNgw
+   2FhI5sbtVTZWnkK3uo4iEJlD1cRB6E5OAeylQ4ryRXx2+1XHsmiiJgEFG
+   iM8Yj4KB5Ql2Iucbj//9qg2oE918w7+T1D9U6ujWuhq2PqkD78EWEfTsS
+   g==;
+X-CSE-ConnectionGUID: MRzZQgyJSrS/OVC3rvcH0g==
+X-CSE-MsgGUID: 2yW7ErwURq2F/PQnQ/DLtw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="85455074"
+X-IronPort-AV: E=Sophos;i="6.25,178,1779174000"; 
+   d="scan'208";a="85455074"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2026 06:53:32 -0700
+X-CSE-ConnectionGUID: cywj4bg0QqWWIhVHLsmINg==
+X-CSE-MsgGUID: ARkzCj6xSN+AapMbVWmVdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,178,1779174000"; 
+   d="scan'208";a="251796121"
+Received: from junjie-desk-dev.bj.intel.com (HELO junjie-desk-dev.tail2c02c1.ts.net) ([10.238.152.71])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2026 06:53:27 -0700
+From: Junjie Cao <junjie.cao@intel.com>
+To: Chen Pei <cp0613@linux.alibaba.com>
+Cc: jic23@kernel.org,
+	pbonzini@redhat.com,
+	palmer@dabbelt.com,
+	alistair.francis@wdc.com,
+	liwei1518@gmail.com,
+	daniel.barboza@oss.qualcomm.com,
+	zhiwei_liu@linux.alibaba.com,
+	chao.liu.zevorn@gmail.com,
+	sunilvl@ventanamicro.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	imammedo@redhat.com,
+	mst@redhat.com,
+	guoren@kernel.org,
+	qemu-riscv@nongnu.org,
+	qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] hw/riscv/virt,gpex: Provide 32-bit MMIO window for CXL host bridges
+Date: Wed, 22 Jul 2026 21:52:38 +0800
+Message-ID: <20260722135240.763013-1-junjie.cao@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260618093827.3507-4-cp0613@linux.alibaba.com>
+References: <20260618093827.3507-1-cp0613@linux.alibaba.com> <20260618093827.3507-4-cp0613@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <amDGXU94trqlXUgR@MWDK4CY14F>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 22, 2026 at 09:36:14PM +0800, Richard Cheng wrote:
-> On Mon, Jul 20, 2026 at 03:34:20PM +0800, Gregory Price wrote:
-> > +static struct zonelist *memcg_reclaim_zonelist(int nid, gfp_t gfp_mask)
-> > +{
-> > +	unsigned int aflags = ALLOC_DEFAULT;
-> > +
-> > +	if (unlikely(!nodes_empty(node_states[N_MEMORY_PRIVATE])))
-> > +		aflags = ALLOC_ZONELIST_PRIVATE;
-> > +
-> > +	return select_zonelist(nid, gfp_mask, aflags);
-> > +}
-> 
-> 
-> I applied this code change and notice in mem_cgroup_shrink_node(), it calls
-> shrink_lruvec() directly and never passes through shrink_node().
-> 
-> This patch makes private nodes reachable through memcg reclaim zonelist, but
-> what prevents the direct per-node memcg path from reclaiming a private node
-> that has not set NODE_PRIVATE_CAP_RECLAIM ?
-> 
+Hi Chen Pei,
 
-I legitimately missed this.
+On Thu, 18 Jun 2026 17:38:25 +0800, Chen Pei wrote:
+> +            if (is_cxl && cfg->cxl_mmio32.size) {
+> +                uint64_t cxl_base = cfg->cxl_mmio32.base;
+> +                uint64_t cxl_size = cfg->cxl_mmio32.size;
+> +                crs = aml_resource_template();
+> +                /* 32-bit MMIO range for CXL devices */
+> +                aml_append(crs,
+> +                    aml_dword_memory(AML_POS_DECODE, AML_MIN_FIXED,
+> +                                     AML_MAX_FIXED, AML_NON_CACHEABLE,
+> +                                     AML_READ_WRITE, 0,
+> +                                     cxl_base, cxl_base + cxl_size - 1,
+> +                                     0, cxl_size));
 
-Sashiko also picked it up on the filter patch:
-https://sashiko.dev/#/message/20260721183528.B4B9C1F00A3A%40smtp.kernel.org
+cfg->cxl_mmio32 is a single range on the main GPEX host, but this block
+runs once per CXL host bridge in the QLIST_FOREACH(bus, &bus->child)
+loop, so with more than one pxb-cxl every ACPI0016 gets a _CRS that
+declares the *same* [cxl_base, cxl_base + 256 MiB) window.
 
-If nothing else - implementing this feature has taught me some
-sub-components of mm/ have very well centralized logic, and others (like
-vmscan.c) have 3 or 4 different paths in with a lot of strange quirks
-carved out.
+I realise build_crs() returns nothing usable for these bridges at
+ACPI-build time (the BARs aren't assigned yet, per your commit message),
+which is why the static path exists -- but it hands that one shared
+cfg->cxl_mmio32 to every CXL bridge.
 
-I think some of the vmscan paths can be improved to simplify this
-interaction, but i will fix this particular miss in v6 and come back
-around to see whether we can clean up these different paths as a general
-improvement.
+I checked the generated DSDT for a two-pxb-cxl riscv64 config (cxl.1 at
+bus_nr=12, cxl.2 at bus_nr=200): both ACPI0016 host bridges (PC0C and
+PCC8) come up with the identical producer window
 
-~Gregory
+    DWordMemory (ResourceProducer, PosDecode, MinFixed, MaxFixed, ...)
+        0x70000000,   // Range Minimum
+        0x7FFFFFFF,   // Range Maximum
+        0x10000000,   // Length
+
+while PCI0 is correctly shrunk to 0x40000000-0x6FFFFFFF. That 256 MiB
+window is the only memory range either ACPI0016 advertises, so every BAR
+behind the two bridges has to come from it; and since two host bridges
+can't both decode the same range, at most one of them can actually
+claim it. Multiple pxb-cxl is a supported topology in QEMU generally.
+Partitioning the window per bridge may be one way out, but whether
+that's the right model is your call -- is supporting more than one
+pxb-cxl in scope for this series, or is a single CXL host bridge the
+intended target for now? If the latter, a note to that effect in the
+commit message would help.
+
+One smaller thing about the hand-built template: the bus range is
+hard-coded to [bus_num, bus_num + 15], so with cxl.1 at bus_nr=12 and
+cxl.2 at bus_nr=16 the two _CRS come out as [0x0C,0x1B] and [0x10,0x1F],
+which overlap on buses 0x10-0x1B. The real width depends on how many
+buses the pxb-cxl spans, which isn't known at ACPI-build time (pxb-cxl
+only carries a bus_nr). build_crs() is no drop-in here either: with the
+static path disabled I saw the range collapse to a single bus
+[bus_num, bus_num], since no subordinate buses are enumerated yet -- so
+it under-sizes rather than over-sizes.
+
+Both really trace back to the same spot: the static branch synthesises
+the bridge's window and bus range from machine-global constants
+(cfg->cxl_mmio32 and the fixed +15) rather than anything per-bridge, so
+neither scales past one pxb-cxl. Going static is fair enough given
+build_crs() has nothing to offer at build time -- as above, it supplies
+neither the window nor a usable bus range -- so the real question is
+just where the per-bridge window size and bus span should come from.
+
+Many thanks,
+Junjie
