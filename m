@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 275FA389460
-	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 04:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C3E37F726
+	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 04:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784782267; cv=none; b=EV2j4CjsSWdacEgCHkKv/xota9vZM/RvhIWwHnuJ1X/nKdJkgUWZZc+uI5fuVP1TfhtJaeHJRIvKnWm2ntp6CPQYFZxDWp4LqRXDKH9PgWe5GTwpZp4yV/gAI4rKhLaawMorB+uwUGX3TdqzInVAVs7CcFWTL4faA+R7Gf4qWXQ=
+	t=1784782274; cv=none; b=UZhI/zB70sGWJljgLZivQqlWpbKINYSHhOXbY39SovwnAGHG6lvGrzkx+J82Gzb7dBxz3O+jS9Vohgh7FkjQYZmx149oS91j6rUtQylJ0Y1z12IJsVUNMBvanMGSJrvw/xC5TlLIa7TFtuBxzCpTm7h29wNPDfXSVt4JBTrVgnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784782267; c=relaxed/simple;
-	bh=EEVA3DLc8WUgAWrFrVwZBRbr2tuhR7vD7oHOnr3UP/Q=;
+	s=arc-20240116; t=1784782274; c=relaxed/simple;
+	bh=qsW2IuxOW0Tc6hcH3fzGl3hASqAwyiPcHfmuAjgWNn4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=B4DnoY8ckqwRxncl9v4zHl6NX0jwv0trcAAihNhy8fJmLY/3XOhYxuRNkE3wVcNwVvsRaLv84TlP4jVjNGte+oFglctQO/j22ynX0Fmk5Pika59nK9H7Ry2RZA0iIapczkWVs+z8R3WXXfeVSTdLV6XSP9dx2qhNl6pjwoCZbAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Qs8I7FEk; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=aCiy0yJwE2WpwjTJgyR7tt4eaurvP+mCIlHlGKAVIZ/LJOIWwW3IL4mfPvq7Tmha2I5FY2Z63LNVAppfsYBM6BcUIlBl21i/INgcc7sumkw9TwFcx6zMlfzV1aRdyvV1fRDMUWBpWh+yus7BzOsoJijCSkhQ8CuF0j0dTYV78UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=La3NxwtK; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qs8I7FEk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="La3NxwtK"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784782245;
+	s=mimecast20190719; t=1784782254;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TMsbmtwIJsHsJ64Y/awhARhEChYJf52hplBgthhLPFc=;
-	b=Qs8I7FEk2rdmkiohppYGCYgKG3wPxdwRMXEriU7t8WB62mTyffKMCsQA1jcHwziC35wTFw
-	/Sc29ziPY7XbYRoWS+mI9DnfZBpDOPdxFz/AoaXMdRy8aXez2ccxRyPUn6DHo+flUqAIUK
-	Yu9F1tD8NIvIfgPo/bKAqkYx82eNkYA=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=XX0MM67l2hTQkl3T1X4vh6I9bh96PpfSjiv2H/lU8Zg=;
+	b=La3NxwtKkOiet9vkChN24M+b4pE/lFhf04uBYSwTgV4f7Ct07mwTJxVltZIeuc+uI39pKk
+	gQSgW//V3GjnSJh1RWPXfnGD7FMiU1Dn2We9b61cw0WKcF1pJ3GaD4kGfovMFXkMB61wtI
+	JN4AgZw1lwdfk26eXDH0PFOsbV2NlF8=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-42-H7AG1BgiOSiid6wo1RwJ1A-1; Thu,
- 23 Jul 2026 00:50:40 -0400
-X-MC-Unique: H7AG1BgiOSiid6wo1RwJ1A-1
-X-Mimecast-MFC-AGG-ID: H7AG1BgiOSiid6wo1RwJ1A_1784782237
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-589-BCZ7n0D3Ptumtz7syo7Jjw-1; Thu,
+ 23 Jul 2026 00:50:50 -0400
+X-MC-Unique: BCZ7n0D3Ptumtz7syo7Jjw-1
+X-Mimecast-MFC-AGG-ID: BCZ7n0D3Ptumtz7syo7Jjw_1784782247
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 219EA1954B26;
-	Thu, 23 Jul 2026 04:50:37 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6C45F1800759;
+	Thu, 23 Jul 2026 04:50:47 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.44])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4599F18002AE;
-	Thu, 23 Jul 2026 04:50:26 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 823A018002AE;
+	Thu, 23 Jul 2026 04:50:37 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -80,9 +80,9 @@ Cc: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
 	Jason Wang <jasowangio@gmail.com>,
 	qemu-trivial@nongnu.org,
 	Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v2 14/44] qapi: convert intro sections for replay.json
-Date: Thu, 23 Jul 2026 00:47:35 -0400
-Message-ID: <20260723044805.527643-15-jsnow@redhat.com>
+Subject: [PATCH v2 15/44] qapi: convert trivial intro sections for machine-s390x.json
+Date: Thu, 23 Jul 2026 00:47:36 -0400
+Message-ID: <20260723044805.527643-16-jsnow@redhat.com>
 In-Reply-To: <20260723044805.527643-1-jsnow@redhat.com>
 References: <20260723044805.527643-1-jsnow@redhat.com>
 Precedence: bulk
@@ -92,7 +92,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: mP3AzebnqQmeFSji6J2Ip1OUNahs8NeK8RyBXNMTcYc_1784782237
+X-Mimecast-MFC-PROC-ID: 4CuOLF03S89W5C95fTHAfjhfmPgLeeOM0qwNN8ZhABE_1784782247
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
@@ -101,99 +101,60 @@ content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/replay.json | 45 ++++++++++++++++++++-------------------------
- 1 file changed, 20 insertions(+), 25 deletions(-)
+ qapi/machine-s390x.json | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/qapi/replay.json b/qapi/replay.json
-index ccf84da68ef..db1440c09a6 100644
---- a/qapi/replay.json
-+++ b/qapi/replay.json
-@@ -12,8 +12,7 @@
+diff --git a/qapi/machine-s390x.json b/qapi/machine-s390x.json
+index ea430e1b889..2d40629683f 100644
+--- a/qapi/machine-s390x.json
++++ b/qapi/machine-s390x.json
+@@ -9,9 +9,8 @@
  
  ##
- # @ReplayMode:
+ # @S390CpuPolarization:
 -#
--# Mode of the replay subsystem.
-+#     Mode of the replay subsystem.
+-# An enumeration of CPU polarization that can be assumed by a virtual
+-# S390 CPU
++#     An enumeration of CPU polarization that can be assumed by a
++#     virtual S390 CPU
  #
- # @none: normal execution mode.  Replay or record are not enabled.
- #
-@@ -30,8 +29,7 @@
+ # Since: 8.2
+ ##
+@@ -21,10 +20,9 @@
  
  ##
- # @ReplayInfo:
+ # @set-cpu-topology:
 -#
--# Record/replay information.
-+#     Record/replay information.
+-# Modify the topology by moving the CPU inside the topology tree, or
+-# by changing a modifier attribute of a CPU.  Absent values will not
+-# be modified.
++#     Modify the topology by moving the CPU inside the topology tree,
++#     or by changing a modifier attribute of a CPU.  Absent values
++#     will not be modified.
  #
- # @mode: current mode.
+ # @core-id: the vCPU ID to be moved
  #
-@@ -47,10 +45,9 @@
+@@ -94,8 +92,7 @@
  
  ##
- # @query-replay:
+ # @CpuPolarizationInfo:
 -#
--# Retrieve the record/replay information.  It includes current
--# instruction count which may be used for `replay-break` and
--# `replay-seek` commands.
-+#     Retrieve the record/replay information.  It includes current
-+#     instruction count which may be used for `replay-break` and
-+#     `replay-seek` commands.
+-# The result of a CPU polarization query.
++#     The result of a CPU polarization query.
  #
- # Returns: record/replay information.
+ # @polarization: the CPU polarization
  #
-@@ -66,13 +63,13 @@
+@@ -122,9 +119,8 @@
  
  ##
- # @replay-break:
+ # @SCLP_CPI_INFO_AVAILABLE:
 -#
--# Set replay breakpoint at instruction count @icount.  Execution stops
--# when the specified instruction is reached.  There can be at most one
--# breakpoint.  When breakpoint is set, any prior one is removed.  The
--# breakpoint may be set only in replay mode and only "in the future",
--# i.e. at instruction counts greater than the current one.  The
--# current instruction count can be observed with `query-replay`.
-+#     Set replay breakpoint at instruction count @icount.  Execution
-+#     stops when the specified instruction is reached.  There can be
-+#     at most one breakpoint.  When breakpoint is set, any prior one
-+#     is removed.  The breakpoint may be set only in replay mode and
-+#     only "in the future", i.e. at instruction counts greater than
-+#     the current one.  The current instruction count can be observed
-+#     with `query-replay`.
+-# Emitted when the Control-Program Identification data is available in
+-# the QOM tree.
++#     Emitted when the Control-Program Identification data is
++#     available in the QOM tree.
  #
- # @icount: instruction count to stop at
- #
-@@ -87,9 +84,8 @@
- 
- ##
- # @replay-delete-break:
--#
--# Remove replay breakpoint which was set with `replay-break`.  The
--# command is ignored when there are no replay breakpoints.
-+#     Remove replay breakpoint which was set with `replay-break`.  The
-+#     command is ignored when there are no replay breakpoints.
- #
- # Since: 5.2
- #
-@@ -102,13 +98,12 @@
- 
- ##
- # @replay-seek:
--#
--# Automatically proceed to the instruction count @icount, when
--# replaying the execution.  The command automatically loads nearest
--# snapshot and replays the execution to find the desired instruction.
--# When there is no preceding snapshot or the execution is not
--# replayed, then the command fails.  Instruction count can be obtained
--# with the `query-replay` command.
-+#     Automatically proceed to the instruction count @icount, when
-+#     replaying the execution.  The command automatically loads
-+#     nearest snapshot and replays the execution to find the desired
-+#     instruction.  When there is no preceding snapshot or the
-+#     execution is not replayed, then the command fails.  Instruction
-+#     count can be obtained with the `query-replay` command.
- #
- # @icount: target instruction count
+ # Features:
  #
 -- 
 2.55.0
