@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE2632AAB5
-	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 04:51:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EEA537B007
+	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 04:51:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784782302; cv=none; b=m4PJ0a1O6KwibAqxYVokFYl4RuM2PvVnh8HfoLEN/Nus/hlANcenHaezvglVPqJHJZ7A5774z9Ed4emSVxN28GjEEaMUtJttLYdZM6/JG9+aaLLpmHvFlZ+xaEQJEF+MND3hpeOBkNPslgV3g96uDAuz21aGo3J7feeWjkt/N98=
+	t=1784782319; cv=none; b=pfM6zGhjEoAl5giqUeas7RxQEJQBqIxWkqF6GPRyGR7d3ZtekeYDdcQrgQYme2wQaDa5lzvd4T6L6QtY0ZqzFhzPxh1Rv0+ry1fTyB+ty1fu9RQ0jIIARJLDGbroaFmZIOlHGYJsx/NTuDFRRjEKnGVyLLXd5w3vcOUcbNwxACg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784782302; c=relaxed/simple;
-	bh=lml0sCwBNAe9/7CrXv9IEgiy9hZcb7xT94hK1k7jyA4=;
+	s=arc-20240116; t=1784782319; c=relaxed/simple;
+	bh=vMlVC7jvU3Gem/HWMlfCLISAxmgdJIiWpjRuLWf+Ogk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=CY2WLUq75SXlh17BP6/In2PPD9DXttls5oDSs/4TWaHNgPCAjb9cBYMTRhyB3p8Km0xkID+fD9ImGsCqUB9Puwb6zqsFUJNVZ3lrwUWzDbZgmg5xchK92rrlRVfqIV0IfjU8NPeySrus57yXqyslkQp/B9t+uuMCRmIRmWFA28M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VMuQC0WB; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=rNcTTdslWTqzJVhIteMXP+S84ca1M+xPnkuUIv+3E7GpksApJZweQ/W0q7IweXw+24Mvns+0zkj6wZ+ISpZkZFsl392xFJuUwEM4QIZcE+OP6X9wvxktVduXgCDmuzeIpP2Ww9Y6mL5pJ6q1PxhpELQ9rhqb6tmvwFUjFYCLkjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TPncDVxs; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VMuQC0WB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TPncDVxs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784782284;
+	s=mimecast20190719; t=1784782306;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=uK3gVanDkZsjvvgE0Rg1w4gDzuwAaXDx8DZDiRphsfQ=;
-	b=VMuQC0WBtSGVTVPlrz9sGOtvXj5/RAHbnPBEY8+lk0RgILAM/NHwB87EubYzxFiTk7JLrc
-	bXyWoU+7svxvuDQC4kddUI0s4GAZmE4vYED1wJ/LEz1axI+h8fKlaW3KH+sGGiHoNoMt2D
-	rImj4UhCffZ1Fyngob8B4hhwp4GTFQo=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=U2M2DNHzDsbrmW/HGNuaaemkcJAWL2ZJ96wipo50CoA=;
+	b=TPncDVxs9AwE9TyTpRz00mM3gk1viWBuw/e7lJc4nd63VHM4zFcj+H3CfN0rZdZvHol+r8
+	CbMolnEz/+lVxw8KvekKm2boUlHOfOFbfbd8qkNj3WcDePbKgdrK5RSa/s1/JP0a5fcanc
+	RDv+T+NI9sr3p7tShv2wKsmC7Zliq3s=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-44-1zGTlrKaO5G6JF2UIT2urw-1; Thu,
- 23 Jul 2026 00:51:22 -0400
-X-MC-Unique: 1zGTlrKaO5G6JF2UIT2urw-1
-X-Mimecast-MFC-AGG-ID: 1zGTlrKaO5G6JF2UIT2urw_1784782279
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-664-DTqSLi1KOLirIKpVr7DHyA-1; Thu,
+ 23 Jul 2026 00:51:43 -0400
+X-MC-Unique: DTqSLi1KOLirIKpVr7DHyA-1
+X-Mimecast-MFC-AGG-ID: DTqSLi1KOLirIKpVr7DHyA_1784782300
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5A3101954B26;
-	Thu, 23 Jul 2026 04:51:19 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9B5ED1800578;
+	Thu, 23 Jul 2026 04:51:40 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.44])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5531018002AE;
-	Thu, 23 Jul 2026 04:51:09 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3BB8318002AE;
+	Thu, 23 Jul 2026 04:51:30 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -80,9 +80,9 @@ Cc: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
 	Jason Wang <jasowangio@gmail.com>,
 	qemu-trivial@nongnu.org,
 	Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v2 18/44] qapi: convert trivial intro sections for qdev.json
-Date: Thu, 23 Jul 2026 00:47:39 -0400
-Message-ID: <20260723044805.527643-19-jsnow@redhat.com>
+Subject: [PATCH v2 20/44] qapi: convert intro sections for dump.json
+Date: Thu, 23 Jul 2026 00:47:41 -0400
+Message-ID: <20260723044805.527643-21-jsnow@redhat.com>
 In-Reply-To: <20260723044805.527643-1-jsnow@redhat.com>
 References: <20260723044805.527643-1-jsnow@redhat.com>
 Precedence: bulk
@@ -92,7 +92,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: oINemdeZZfYfdDY1wwRFQC_eMeZhmm9DU6Jm-AulJ0I_1784782279
+X-Mimecast-MFC-PROC-ID: RVqPgLhomaRMf9HqdF0PyX7EycujT18vlOthHEV0JI0_1784782300
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
@@ -101,70 +101,85 @@ content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/qdev.json | 23 +++++++++--------------
- 1 file changed, 9 insertions(+), 14 deletions(-)
+ qapi/dump.json | 24 +++++++++---------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
 
-diff --git a/qapi/qdev.json b/qapi/qdev.json
-index 974cf9c5830..a35321d2fd1 100644
---- a/qapi/qdev.json
-+++ b/qapi/qdev.json
-@@ -14,8 +14,7 @@
+diff --git a/qapi/dump.json b/qapi/dump.json
+index 726b5208703..c96dd2364bb 100644
+--- a/qapi/dump.json
++++ b/qapi/dump.json
+@@ -12,8 +12,7 @@
  
  ##
- # @device-list-properties:
+ # @DumpGuestMemoryFormat:
 -#
--# List properties associated with a device.
-+#     List properties associated with a device.
+-# An enumeration of guest-memory-dump's format.
++#     An enumeration of guest-memory-dump's format.
  #
- # @typename: the type name of a device
+ # @elf: elf format
  #
-@@ -33,8 +32,7 @@
+@@ -49,9 +48,8 @@
  
  ##
- # @device_add:
+ # @dump-guest-memory:
 -#
--# Add a device.
-+#     Add a device.
+-# Dump guest's memory to vmcore.  It is a synchronous operation that
+-# can take very long depending on the amount of guest memory.
++#     Dump guest's memory to vmcore.  It is a synchronous operation
++#     that can take very long depending on the amount of guest memory.
  #
- # @driver: the name of the new device's driver
- #
-@@ -85,8 +83,7 @@
+ # @paging: if true, do paging to get guest's memory mapping.  This
+ #     allows using gdb to process the core file.
+@@ -109,8 +107,8 @@
  
  ##
- # @device_del:
+ # @DumpStatus:
 -#
--# Remove a device from a guest
-+#     Remove a device from a guest
+-# Describe the status of a long-running background guest memory dump.
++#     Describe the status of a long-running background guest memory
++#     dump.
  #
- # @id: the device's ID or QOM path
+ # @none: no `dump-guest-memory` has started yet.
  #
-@@ -121,11 +118,10 @@
+@@ -127,8 +125,7 @@
  
  ##
- # @DEVICE_DELETED:
+ # @DumpQueryResult:
 -#
--# Emitted whenever the device removal completion is acknowledged by
--# the guest.  At this point, it's safe to reuse the specified device
--# ID.  Device removal can be initiated by the guest or by HMP/QMP
--# commands.
-+#     Emitted whenever the device removal completion is acknowledged
-+#     by the guest.  At this point, it's safe to reuse the specified
-+#     device ID.  Device removal can be initiated by the guest or by
-+#     HMP/QMP commands.
+-# The result format for `query-dump`.
++#     The result format for `query-dump`.
  #
- # @device: the device's ID if it has one
+ # @status: enum of `DumpStatus`, which shows current dump status
  #
-@@ -145,9 +141,8 @@
+@@ -145,8 +142,7 @@
  
  ##
- # @DEVICE_UNPLUG_GUEST_ERROR:
+ # @query-dump:
 -#
--# Emitted when a device hot unplug fails due to a guest reported
--# error.
-+#     Emitted when a device hot unplug fails due to a guest reported
-+#     error.
+-# Query latest dump status.
++#     Query latest dump status.
  #
- # @device: the device's ID if it has one
+ # Returns: An object showing the dump status.
+ #
+@@ -162,8 +158,7 @@
+ 
+ ##
+ # @DUMP_COMPLETED:
+-#
+-# Emitted when background dump has completed
++#     Emitted when background dump has completed
+ #
+ # @result: final dump status
+ #
+@@ -196,8 +191,7 @@
+ 
+ ##
+ # @query-dump-guest-memory-capability:
+-#
+-# Return the available formats for `dump-guest-memory`
++#     Return the available formats for `dump-guest-memory`
+ #
+ # Returns: An object listing available formats for `dump-guest-memory`
  #
 -- 
 2.55.0
