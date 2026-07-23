@@ -1,239 +1,125 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2EC633F5A4;
-	Thu, 23 Jul 2026 16:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6809838E5D7
+	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 16:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784822495; cv=none; b=KXPjmJLtrFFg4/a0YROI94WFMA+1n28wMdEsBKTo9Axi/HEkSAPzfK+WqIDqXKwPcWkTsBhmT9tkpcAHCz275QRO1qyJAmOBpK4tya6wYCJY011OGN8rwx7M4lE0oruh4DfGgHaeSEVCHa7xvdgboHnr0XdD5xYD4w1C9q/pDNE=
+	t=1784825596; cv=none; b=jT4laJXLSZ1N9S2Tn0pymvO+QClsyi1lO/xnEC1rj/ENqdeBuVyCuB4vcR9sPN8DM1ukcZhECFtrmXmEv9+SE2AS0br/hp7C1B13x+0KDGaFP0K8b5w8L6D3203/VqxvWuT7IMx005ZobgxV6uLAYr7sQ6Tsq6R1DCbavh2v/EM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784822495; c=relaxed/simple;
-	bh=KQlyYudqMNoKpwplZ54s7tyBYprJt2G+01E6JXW8QeY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SxfikOZVY7PIBufjPejQYkvutnUaRgJGJ/XjiWhcIl6vQZYmf6ayrSlMmlmp2jn+zhjbTqb0cxux7nkG0JsaA8cWTXcT4Oh4JSEKQaWbl9S0fsS/gQsBJhwC8cYiHO4uPQHWBqi1szkpvdjB85YLmY/vFFU5v98cZsg1MVC82Rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OdaYgiUv; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1784825596; c=relaxed/simple;
+	bh=z+HoEvmWYKtMfBygtPBl68CeMD6wWsLW69JzvhhpR/g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nOIoKGDVTa27kxhrWotAS8RfT7YFvqFXPwVAalvL+6jZ7S4rxPW6QqGZUdQK9gNF99s8P8Fdqn/qLmqJ4GE1+OYm8VqqL080FJQKZB6URPzOsX/vqv4+9bTeSf8ONSPyyTg1T43Whjb4mFIiMO95HHNohPOJuyrPWhMD/1GlEMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Gk6jW8du; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OdaYgiUv"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66NDBuCb3106596;
-	Thu, 23 Jul 2026 16:00:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=korN2Y
-	Hqsh8pT9F7lctEfcYhU6wnH85Xri/gBWLMa6Y=; b=OdaYgiUvF5VsUFv0ntdGo9
-	23s1sdFL9q2oGZiCtz8rSTBder/AqwvN81qoR53QrHvjD2LDugnJZlrQ73NcgG62
-	lyV2gguCoQM6o5aJ9yivOZMB9QjgSK5JkAV6JbVRj8lgj6MNKMSNZDKNi6fvLK5f
-	RXBWFgUGwSp9EXcJ9fOOumnrZT+FSfK7R2V8EjQAn68IMa3IL3OXwGGSwhPr40am
-	YR/oMfW5X4EM6fZ2dlP+Ygu7ag9aQ9aotNCuRVwhASAoKfaAErFA/i80jJ87kw/m
-	12WiwcbV3wWIv8O8R6Afn5x74Zl7iMsRyc7w7/G9IvdD7YWSVMnbGtXVk1ZdHATQ
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fg7918e9h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 Jul 2026 16:00:41 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66NFnd1n027646;
-	Thu, 23 Jul 2026 16:00:40 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fgmtk4x5t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 Jul 2026 16:00:40 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66NG0eXY47710556
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 Jul 2026 16:00:40 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E18AB58063;
-	Thu, 23 Jul 2026 16:00:39 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9C1DA58043;
-	Thu, 23 Jul 2026 16:00:37 +0000 (GMT)
-Received: from [9.47.158.153] (unknown [9.47.158.153])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 23 Jul 2026 16:00:37 +0000 (GMT)
-Message-ID: <925af65e-89ac-4ba6-a4f6-316b97d209ef@linux.ibm.com>
-Date: Thu, 23 Jul 2026 12:00:37 -0400
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Gk6jW8du"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-92e65e18969so81393385a.1
+        for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 09:53:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1784825593; x=1785430393; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=bqVE/c/eX9E/Cy6wFBhLLV7HBSbIhrEkmRJZ6Osn4Tc=;
+        b=Gk6jW8duMorFxZCKOTImKK/cthkQTePo/7XXo0yOSe8t/4ZafB2e38eaAzmr6WeMVE
+         EUihxK/INqSSpq0j/FYQG3btxjT4+3qwY9q9QVjDr3h3KhUX0Sm6ty0CUZU4HhzHfM5A
+         KT4fWPdgBq718p0P0aWwUR2I9rNE5zu3guFZOhTjdlFGmNGcrLapR1HxQahETeYLGwiO
+         nOL+GnNGC1gOuxE8VjXSq6vIYbcYfq+JmU4geK+aeg6Mxms1DsVn7HVD6K4nJXOp0dM1
+         GlFRjxDBTSyJltmU9fOYCpkQu6/iK0v99poJz+5FONYUVksgFUwse+RD/2/BXvoh0feM
+         zZng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784825593; x=1785430393;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=bqVE/c/eX9E/Cy6wFBhLLV7HBSbIhrEkmRJZ6Osn4Tc=;
+        b=Je3qtUkaLrjBfvXtiXaAkmZ5fw6prX7uGkzBfDslE1fsCfubO0XaaAffQn+1Swsc9p
+         mR+VVZshLNUWAzGLcpY4zGdhIPUGHqS1UwZNJf3l4E7EpaAsLJHiIG6W4Bri+NauXVwh
+         dKq6CiynfMZMLKjXyYr33JX1bnCbOE9CrAJGusjoHgPMkDfCtygyWEB5QBdcHiu0qr8j
+         d48eY+WoGKAHHSiEjJGcaFwqjq08TnWKCmXaCyuyAOVvJv0iqiykvJ/30J2FbXU45kmB
+         bQ6sErwFqYa+aGmFPQWZVrLtKK84jFdDix4xGlHDPUdgdHvWNPM25vJuJZGCYDvxTLCz
+         o4eQ==
+X-Forwarded-Encrypted: i=1; AHgh+Ro36kf2VvZxi15uAS1uiSgmRQxkoTS3TKW2SrYkjQPEDGEdwcR70abIlXcsqHL8xXCVGMTi3pAO+Ss=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygN2GG1bks6o/uaS9NX4FdB1ZoCoEDD41cwilVateyTTtlNgvx
+	J/8uWAObzAi3HYwpl8zNxcw3L8tEKMDBFOXVG6Z5nlPDXKsbPJYZ332js7nfb+Oomw0=
+X-Gm-Gg: AR+sD10Skj1g44Lf5+Fp1lvMc87eElgOg+Ezt1yfBzQSXLbwvRqfeMmcO0AB+HtQOaO
+	mFAOHIUBni9kKNfubPIKh1BV8oYwfYuhHoLnjGnVc7PDGrutzgk+h6DzyoVVKjAbAoIK9sMDmRu
+	86iD+HrhnFKWKG2jUy7PLdME+LuUVCshQy7jyV0Y0JadVH2gzGaVRtgd+V3qHfxer2AKSdnosDF
+	x+DgoJICqbvs8meH/R0WfohQV5vpQkhJlRu27gqLfYHz1LIpNRs8f93XBzRUmN3wNAHMJ7V3fUf
+	WODzUi5sj1nRgXxMs/xzP/vWbUelYOezMTtaB6BXEaq6PAWb8l9VTyN7PzsEfmUk/tGuIP/uiQM
+	jEthIrGPwE6n9juBza98mU+fwYnCume+moQhxuNiLiIWEvNK6BI+P/DnksjbKNa/IJRs07nR6r/
+	Es8Yh7eiigjoIuxjXiKL6IylvRbNyb2qjlInWSU6EqjAKUoHcenrOCicTLGQ==
+X-Received: by 2002:a05:620a:1729:b0:930:9533:5e32 with SMTP id af79cd13be357-9310468af9emr366578785a.7.1784825593202;
+        Thu, 23 Jul 2026 09:53:13 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-907ba9e18d4sm48785446d6.23.2026.07.23.09.53.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2026 09:53:12 -0700 (PDT)
+Date: Thu, 23 Jul 2026 12:53:06 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Arun George/Arun George <arun.george@samsung.com>
+Cc: linux-mm@kvack.org, Zhigang.Luo@amd.com, balbirs@nvidia.com, 
+	brendan.jackman@linux.dev, yuzenghui@huawei.com, apopple@nvidia.com, alucerop@amd.com, 
+	matthew.brost@intel.com, akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, 
+	liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, surenb@google.com, 
+	mhocko@suse.com, corbet@lwn.net, skhan@linuxfoundation.org, 
+	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org, djbw@kernel.org, 
+	vishal.l.verma@intel.com, dave.jiang@intel.com, alison.schofield@intel.com, 
+	osandov@osandov.com, jannh@google.com, pfalcato@suse.de, jackmanb@google.com, 
+	hannes@cmpxchg.org, ziy@nvidia.com, pbonzini@redhat.com, osalvador@suse.de, 
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com, 
+	kasong@tencent.com, qi.zheng@linux.dev, shakeel.butt@linux.dev, baohua@kernel.org, 
+	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com, 
+	linux@rasmusvillemoes.dk, longman@redhat.com, ridong.chen@linux.dev, tj@kernel.org, 
+	mkoutny@suse.com, sj@kernel.org, jgg@ziepe.ca, jhubbard@nvidia.com, 
+	peterx@redhat.com, baolin.wang@linux.alibaba.com, npache@redhat.com, 
+	ryan.roberts@arm.com, dev.jain@arm.com, lance.yang@linux.dev, usama.arif@linux.dev, 
+	xu.xin16@zte.com.cn, chengming.zhou@linux.dev, roman.gushchin@linux.dev, 
+	muchun.song@linux.dev, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	driver-core@lists.linux.dev, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
+	linux-debuggers@vger.kernel.org, linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, 
+	cgroups@vger.kernel.org, damon@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+	kernel-team@meta.com, cpgs@samsung.com
+Subject: Re: [PATCH v5 00/36] Private Memory NUMA Nodes
+Message-ID: <amJGUuBZ2857QjDB@gourry-fedora-PF4VCD3F>
+References: <CGME20260720193443epcas5p167fa7d8490edfb4d8c0aa6a259db058f@epcas5p1.samsung.com>
+ <20260720193431.3841992-1-gourry@gourry.net>
+ <963815509.21784796303385.JavaMail.epsvc@epcpadp1new>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 17/44] qapi: convert intro sections for tpm.json
-To: John Snow <jsnow@redhat.com>, qemu-devel@nongnu.org
-Cc: =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        Lukas Straub <lukasstraub2@web.de>,
-        Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru>,
-        Zhao Liu <zhao1.liu@intel.com>, Laurent Vivier <laurent@vivier.eu>,
-        Markus Armbruster <armbru@redhat.com>,
-        "Gonglei (Arei)" <arei.gonglei@huawei.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
-        Alex Williamson <alex@shazbot.org>, zhenwei pi <zhenwei.pi@linux.dev>,
-        Hanna Reitz <hreitz@redhat.com>, Ani Sinha <anisinha@redhat.com>,
-        qemu-block@nongnu.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Xu <peterx@redhat.com>, Kevin Wolf <kwolf@redhat.com>,
-        linux-cxl@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>,
-        =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        Fabiano Rosas <farosas@suse.de>, Stefan Hajnoczi <stefanha@redhat.com>,
-        Michael Tokarev <mjt@tls.msk.ru>, Igor Mammedov <imammedo@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-edac@vger.kernel.org,
-        =?UTF-8?Q?Marc-Andr=C3=A9_Lureau?=
- <marcandre.lureau@redhat.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Eric Blake <eblake@redhat.com>,
-        =?UTF-8?Q?C=C3=A9dric_Le_Goater?=
- <clg@redhat.com>,
-        Jason Wang <jasowangio@gmail.com>, qemu-trivial@nongnu.org,
-        Jonathan Cameron <jic23@kernel.org>
-References: <20260723044805.527643-1-jsnow@redhat.com>
- <20260723044805.527643-18-jsnow@redhat.com>
-Content-Language: en-US
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20260723044805.527643-18-jsnow@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: VBysymmx7-i_vvoDQTZTlhWT_AiBBj7E
-X-Authority-Analysis: v=2.4 cv=V6RNF+ni c=1 sm=1 tr=0 ts=6a623aaa cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=20KFwNOVAAAA:8
- a=VnNF1IyMAAAA:8 a=1mmTJrKIPDxWdWRvuakA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzIzMDE1NSBTYWx0ZWRfX26QsPcGnl7QE
- GVxy+PE+Ap4ev68RtrJ7IF7lXyJ5SNBScFL5Jst0WkDEhYr9R36c7PunE2UcWp+cPZ3pEaTmfD6
- Q8+ZgNTJ6vI89jzGejZ/NZItpw96UH4=
-X-Proofpoint-GUID: i_T5eeGgDnNzwNRIS0Bk3XBBlhInfrK4
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzIzMDE1NSBTYWx0ZWRfXyf0iTDBlWwf6
- UFO+Oj1cDYZS7ZXgTvjjXMazIzluHC9IMwT5cjvkJYk/S1TKNka7cy4XMr30tVLaCP63J1DC6at
- ffj10/ly4a5s+733G0sTsW2Kg3Di0MjATLgfqUTkeYB3OHLovE3TNurX5bKcbFgXlCuWprWVEw0
- 8xp+CYWXDH1bT5r1I/nddFvJ0Cd3WNjKaA+zQcuahrGMOizYxKA+cMshKcoHp6j/xMxgsB2x+Fi
- MPwdMGlbOeeeyTgULmmD+rU/CQ3vA1Cm3Qrrds1B6UfVxb+/89Q+3X9W+yJu7gP0BiYdMG9QKqK
- niCIDWrSuyv76sGvw3t2OPLoe60qkfJsxZAB+4mdSwZiasuHTE++KT1ehV2gKMeTLLR2b4anOWA
- Hwk2hmy2SP8Z2I4l7BIitDMIIrJO1deCcwtsL68g6T9TFZ14yKYnUfTrxquhRR91glYOclypUC8
- Pt9ZUYtT1d/BWvOY33A==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-23_04,2026-07-22_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1011
- spamscore=0 impostorscore=0 phishscore=0 priorityscore=1501 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607230155
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <963815509.21784796303385.JavaMail.epsvc@epcpadp1new>
 
-
-
-On 7/23/26 12:47 AM, John Snow wrote:
-> (Trivial)
+On Thu, Jul 23, 2026 at 02:08:31PM +0530, Arun George/Arun George wrote:
+> On 21-07-2026 01:03 am, Gregory Price wrote:
+> > Changes Since V4
+> > ================
+> >   - dropped compressed ram example from series
+> >       - will submit separately if this moves forward
 > 
-> Signed-off-by: John Snow <jsnow@redhat.com>
-> ---
->   qapi/tpm.json | 29 ++++++++++-------------------
->   1 file changed, 10 insertions(+), 19 deletions(-)
+> We intend to test this series on a compression capable CXL expander 
+> hardware. Since compressed ram example (cram) is not part of this 
+> series, how do you suggest to do that? Do you have a version of cram 
+> module compatible with this series?
 > 
-> diff --git a/qapi/tpm.json b/qapi/tpm.json
-> index 3f2850a5733..6d94be656ae 100644
-> --- a/qapi/tpm.json
-> +++ b/qapi/tpm.json
-> @@ -10,8 +10,7 @@
->   
->   ##
->   # @TpmModel:
-> -#
-> -# An enumeration of TPM models
-> +#     An enumeration of TPM models
->   #
->   # @tpm-tis: TPM TIS model
->   #
-> @@ -26,8 +25,7 @@
->   
->   ##
->   # @query-tpm-models:
-> -#
-> -# Return a list of supported TPM models
-> +#     Return a list of supported TPM models
->   #
->   # Since: 1.5
->   #
-> @@ -41,8 +39,7 @@
->   
->   ##
->   # @TpmType:
-> -#
-> -# An enumeration of TPM types
-> +#     An enumeration of TPM types
->   #
->   # @passthrough: TPM passthrough type
->   #
-> @@ -55,8 +52,7 @@
->   
->   ##
->   # @query-tpm-types:
-> -#
-> -# Return a list of supported TPM types
-> +#     Return a list of supported TPM types
->   #
->   # Since: 1.5
->   #
-> @@ -70,8 +66,7 @@
->   
->   ##
->   # @TPMPassthroughOptions:
-> -#
-> -# Information about the TPM passthrough type
-> +#     Information about the TPM passthrough type
->   #
->   # @path: string describing the path used for accessing the TPM device
->   #
-> @@ -87,8 +82,7 @@
->   
->   ##
->   # @TPMEmulatorOptions:
-> -#
-> -# Information about the TPM emulator type
-> +#     Information about the TPM emulator type
->   #
->   # @chardev: Name of a unix socket chardev
->   #
-> @@ -121,9 +115,8 @@
->   
->   ##
->   # @TpmTypeOptions:
-> -#
-> -# A union referencing different TPM backend types' configuration
-> -# options
-> +#     A union referencing different TPM backend types' configuration
-> +#     options
->   #
->   # @type:
->   #     - 'passthrough' The configuration options for the TPM
-> @@ -142,8 +135,7 @@
->   
->   ##
->   # @TPMInfo:
-> -#
-> -# Information about the TPM
-> +#     Information about the TPM
->   #
->   # @id: The Id of the TPM
->   #
-> @@ -161,8 +153,7 @@
->   
->   ##
->   # @query-tpm:
-> -#
-> -# Return information about the TPM device
-> +#     Return information about the TPM device
->   #
->   # Since: 1.5
->   #
+> ~Arun
 
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Hi Arun,
 
+I dropped it from the base series because i want to try to move forward
+with this without RFC.  The compressed service itself will be a separate
+submission after I get decent signal on whether this will be accepted.
+
+I plan to RFC the new setup for compressed ram this a bit later, but I
+will share my working branch with you for testing.
+
+~Gregory
