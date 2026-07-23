@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0C5257435
-	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 04:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5199388881
+	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 04:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784782152; cv=none; b=m5rBDkRlpf6haGFma56gfjHhVTWTP/pE5JlFlIqoRPvzLHAzFb4r1kJXyT12E9K2Ca2wJwBM+sAhhPmGgfynpjmGDHyeYmOwyswbX0YB8olFnadQt2PkIJS4gZYaAeP9sjA0hqTvGTmzX36btjLH1gWODguRjuLwT29N8Hdf+Iw=
+	t=1784782153; cv=none; b=faqBD8yKn9zXVDTpcMER9AfGOtc/04THc1yAzHNa6LUHn8x3ChH4DmtFXS/wZPgc5Lc/IuAd9Gx6RRyR5U7sEKUj5g8k0Rddm3XDsXfuCbqEn9THTlbczkId5UyGAoIDXjI+DcnusDWNXWoqCpP6OKzQDM9DswGpbwNPGLx6GhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784782152; c=relaxed/simple;
-	bh=DlT0603oOx+k3hPD0c15F/LknX5BsjoQ5+rCXZ1zohE=;
+	s=arc-20240116; t=1784782153; c=relaxed/simple;
+	bh=yIS5Q9ipsL3Axb+naalhxpGiIo1fXIPDAwq0GOjCaSg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=AV874uNoYBGUIhptdIlcokZTCIs6pT0smlQUFp3VCHDLwMKisl+opl4vHWa9oNEAN/ZsTjmbhV2y6TCk7qJO743fOE7+aVp6cVQjZIeP3lIF0OJnvYefxepAtmSB4OjBtLc60+H0cIaJgMRAzZ/up3BdTztyx6p9/sZZGy/Edz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BVSkbya9; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=IwpuR8XwHo7XDFDgkOKRMUJLzqNzlaKzzVtGb4/2HzzRc9xdK3CB+Rs7pWp2sO9SIU52aXWSisV5t9sjaT9sbRu8jW8YbA1iXb16et2GXGYn702oVSZuGuDUPE5MdvtytAa8HFWxe7aDB0LdmALpYZxFwOmg52k2CDGfLsPghK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gY9rdP6v; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BVSkbya9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gY9rdP6v"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784782137;
+	s=mimecast20190719; t=1784782144;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NSEF3Y3+ufb+xLGwy5XyD2M1KREl2XGjKup2Cecdxwg=;
-	b=BVSkbya9HmdwPPPiccOcnrbZMH1hsnqyNov8ZcE0Wk3AJPWB0Nj/g0gY4uSENnokLWGKaG
-	qW6TIFkPOGbX26UC4xzWnu8PH7RlElBh2iQf7S7DgA813dYFtU1b1UVgIJLt7R+KF66Pti
-	eEGMgpg0qt+5u3F/4SwF+1gEw2CMnv0=
+	bh=o+bQR//T6yQ1PPsE5y6DgGjYaFx3qqyzrYEDUIB8MPE=;
+	b=gY9rdP6v9Ug6gsbtZeRqoxiJxKQOoqcc4B0BWOWOusUOKB8e0yvxjPAnd6Vk5I/0eEDixF
+	xZT/nbYuJQ74qf76nSjPufW7UgXUfc7IZq3QBDFmgk5nqoRZjEliJ7/9u2hVCBF5Bp3mD1
+	Jbl2tnYLrm7lrn4KV2tYFpn5czujA6A=
 Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-235-5koa4SSgPwmIuwVIehVJAA-1; Thu,
- 23 Jul 2026 00:48:52 -0400
-X-MC-Unique: 5koa4SSgPwmIuwVIehVJAA-1
-X-Mimecast-MFC-AGG-ID: 5koa4SSgPwmIuwVIehVJAA_1784782130
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-100-eQm3yPQvNnmtw7CwDzAuJA-1; Thu,
+ 23 Jul 2026 00:49:02 -0400
+X-MC-Unique: eQm3yPQvNnmtw7CwDzAuJA-1
+X-Mimecast-MFC-AGG-ID: eQm3yPQvNnmtw7CwDzAuJA_1784782140
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 895981800759;
-	Thu, 23 Jul 2026 04:48:49 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EA336182E6BA;
+	Thu, 23 Jul 2026 04:48:58 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.44])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E8BB018002AE;
-	Thu, 23 Jul 2026 04:48:39 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AA0BD18002B4;
+	Thu, 23 Jul 2026 04:48:49 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -80,9 +80,9 @@ Cc: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
 	Jason Wang <jasowangio@gmail.com>,
 	qemu-trivial@nongnu.org,
 	Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v2 03/44] qapi: convert intro sections for ebpf.json
-Date: Thu, 23 Jul 2026 00:47:24 -0400
-Message-ID: <20260723044805.527643-4-jsnow@redhat.com>
+Subject: [PATCH v2 04/44] qapi: convert intro sections for uefi.json
+Date: Thu, 23 Jul 2026 00:47:25 -0400
+Message-ID: <20260723044805.527643-5-jsnow@redhat.com>
 In-Reply-To: <20260723044805.527643-1-jsnow@redhat.com>
 References: <20260723044805.527643-1-jsnow@redhat.com>
 Precedence: bulk
@@ -92,7 +92,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: 736ZYB0QnxYktN4-AiuT69Wk_LG4gJilVd6MSmiUDdw_1784782130
+X-Mimecast-MFC-PROC-ID: ebd4dP0LLOInBOT3gF884BXu29NYJvSvE_7GyP-e8Kg_1784782140
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
@@ -101,47 +101,24 @@ content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/ebpf.json | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ qapi/uefi.json | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/qapi/ebpf.json b/qapi/ebpf.json
-index f0257955fa2..1f7a4d5c126 100644
---- a/qapi/ebpf.json
-+++ b/qapi/ebpf.json
-@@ -20,8 +20,7 @@
+diff --git a/qapi/uefi.json b/qapi/uefi.json
+index 86f33b234ba..cb2b5e1f531 100644
+--- a/qapi/uefi.json
++++ b/qapi/uefi.json
+@@ -17,9 +17,8 @@
  
  ##
- # @EbpfObject:
+ # @UefiVariable:
 -#
--# An eBPF ELF object.
-+#     An eBPF ELF object.
+-# UEFI Variable.  Check the UEFI specification for more detailed
+-# information on the fields.
++#     UEFI Variable.  Check the UEFI specification for more detailed
++#     information on the fields.
  #
- # @object: the eBPF object encoded in base64
- #
-@@ -33,8 +32,7 @@
- 
- ##
- # @EbpfProgramID:
--#
--# The eBPF programs that can be gotten with `request-ebpf`.
-+#     The eBPF programs that can be gotten with `request-ebpf`.
- #
- # @rss: Receive side scaling, technology that allows steering traffic
- #     between queues by calculation hash.  Users may set up
-@@ -49,10 +47,10 @@
- 
- ##
- # @request-ebpf:
--#
--# Retrieve an eBPF object that can be loaded with libbpf.  Management
--# applications (e.g. libvirt) may load it and pass file descriptors to
--# QEMU, so they can run running QEMU without BPF capabilities.
-+#     Retrieve an eBPF object that can be loaded with libbpf.
-+#     Management applications (e.g. libvirt) may load it and pass file
-+#     descriptors to QEMU, so they can run running QEMU without BPF
-+#     capabilities.
- #
- # @id: The ID of the program to return.
+ # @guid: variable namespace GUID
  #
 -- 
 2.55.0
