@@ -1,126 +1,216 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622A642EEA7
-	for <linux-cxl@vger.kernel.org>; Wed, 22 Jul 2026 22:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1651D555;
+	Thu, 23 Jul 2026 00:19:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784759393; cv=none; b=I3hSFn+ElaXI0WCXTOCvDyn/OXenhDbVBL2r31YL8kGaJhqiWQKylijBN48haNPfkujzs9KiEJ3CGAVTrQsR08GHIHNyQqLUd1A3ixtnlMkwa2Rct3W1GVml3+h2qGPC4eUFZsvILINSJX1VMPEjFMb4wqLOuE0ivC8CmWoV3tw=
+	t=1784765996; cv=none; b=ieUHiaZVSddwJnQb/0FxLi+ToTXwhgVtVqqDTdGNa1+PzM+4bVS+mXH9FPmStMavj9/9119/soGFWNlBzBSfXqmzrzv3EolYMRC8HaAUV+CfGndvtH7KNnHza8ThRhyPG2fN340BlR5sGqGPM0Nf7FoNzKV8QZ5Tbhjbm8lcLz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784759393; c=relaxed/simple;
-	bh=eIEiHfsMC7DCrFKT8SAAzbol7fM9mtZtPPn4M/6NHog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iQhG576gAv0V65XHBFS5mq5i2HU54JfI+rS7LOp9DfE66HY9eWnlPxe8U6wqyQO6b4XpyaNOVr0UqOOHU4cCAN5DkXzvatgPUNYBSeXes1Y6IY7MdBZNdDfXA2obQwVkTlGDUPbU41/ZM452lJ7QmPAZLc0YSOx0qmRd+2KrAOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YJndtC0F; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1784765996; c=relaxed/simple;
+	bh=LJrwMBFzEJfWlcNe+u3Em2s3k7Xc8/tdxZKRwTN6sgU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MDI8rZSaSoy2a1MI2eL9qWQhAyYxkiULZfZUpW2PtIUP8lsYR075zwHvFdQ5IbEqllXh2domy4T92813E0I8cq6kkBP3mA93I7GkLZBTlMjhYkKAaMAVNPEycFBNhWpO6Dxde9yZ3M8fn/wLHx0G/XwKUUegyumIY1vvjCfJjJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BCF74EeS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YJndtC0F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784759391; x=1816295391;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=eIEiHfsMC7DCrFKT8SAAzbol7fM9mtZtPPn4M/6NHog=;
-  b=YJndtC0FKJ6jNwV+UZ0/5KQ1QtB6az1hl7d2kaxyKw4IUdP61ozKkkef
-   ecW0dbe9awqtzZTvTzsRT6PL5sivR38HainGba7vA9fnlNDbfSOrUTWEy
-   IDtfbEaqOvsLrnHW8fd1R/XB5egyGFtq0CCKLvJfon5yRkAgwmXWSq84L
-   s1GU6wGuhqMNEddHNev39scN4vm2SpCEEcsvMIu2OehCP3Q77OzrcuGU2
-   4CNxuewvHSMd0LYafB0Zs98l2LZ7bY8n4q1s74MkRUe+ONki7Gl0bceat
-   oK1yZRVGU2GI1JEbBWs8zmO+vMwxCAZfbMdW5FrWVgc8ejv5RV0r8/He4
-   g==;
-X-CSE-ConnectionGUID: UO22xG5rQTm7yoDWrsM9pg==
-X-CSE-MsgGUID: JqWNPh6BQyqiV1Y+P4syiA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="89227922"
-X-IronPort-AV: E=Sophos;i="6.25,179,1779174000"; 
-   d="scan'208";a="89227922"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2026 15:29:51 -0700
-X-CSE-ConnectionGUID: 8cz/rnxeSviGOxxl+f26oA==
-X-CSE-MsgGUID: 5ZfvyUARTrik7K5a8y4/pg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,179,1779174000"; 
-   d="scan'208";a="282737096"
-Received: from aduenasd-mobl5.amr.corp.intel.com (HELO [10.125.110.61]) ([10.125.110.61])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2026 15:29:50 -0700
-Message-ID: <8af783cc-a012-4244-840f-269fd8b09984@intel.com>
-Date: Wed, 22 Jul 2026 15:29:49 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BCF74EeS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A0F61F000E9;
+	Thu, 23 Jul 2026 00:19:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784765994;
+	bh=etGADT3O07IS+YgXI7BAorrClTolrXpqV0QzB1dZpWA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=BCF74EeStolbb2W/TP1soDHuWZ51DJgYsnp0HoXIhY2LV8FES9MkZRqdbEzajNcq+
+	 FdLD6IqAG7VkemQlxBlzfSPOaZ9GNCpfftJx+0klLFu5BE2mkb7lN3baGG6RJOA/f+
+	 OTbXbg6YqfXU+lWGMVnTAd3AXQwctqtKShgO3nYG2UgswjKxrd3j5RbvY6xNG9gaXM
+	 fPUG9Bt2NyDXhqYg6+KA0IHV+/ZVkHI4krzjxQIX39zaRdwO1taH2ix1ZIoapD4CwO
+	 y+KvoVgLfc1T4Hs6ON+9+dwzzQyWXFuwLTkfAhh3M+nzbYJObaTnWnCcSzHNgOzf46
+	 0VqiGCD9JgaHg==
+From: SJ Park <sj@kernel.org>
+To: Gregory Price <gourry@gourry.net>
+Cc: SJ Park <sj@kernel.org>,
+	arun.george@samsung.com,
+	balbirs@nvidia.com,
+	brendan.jackman@linux.dev,
+	yuzenghui@huawei.com,
+	apopple@nvidia.com,
+	alucerop@amd.com,
+	matthew.brost@intel.com,
+	akpm@linux-foundation.org,
+	david@kernel.org,
+	ljs@kernel.org,
+	liam@infradead.org,
+	vbabka@kernel.org,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	corbet@lwn.net,
+	skhan@linuxfoundation.org,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	dakr@kernel.org,
+	djbw@kernel.org,
+	vishal.l.verma@intel.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	osandov@osandov.com,
+	jannh@google.com,
+	pfalcato@suse.de,
+	jackmanb@google.com,
+	hannes@cmpxchg.org,
+	ziy@nvidia.com,
+	pbonzini@redhat.com,
+	osalvador@suse.de,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	byungchul@sk.com,
+	ying.huang@linux.alibaba.com,
+	kasong@tencent.com,
+	qi.zheng@linux.dev,
+	shakeel.butt@linux.dev,
+	baohua@kernel.org,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk,
+	longman@redhat.com,
+	ridong.chen@linux.dev,
+	tj@kernel.org,
+	mkoutny@suse.com,
+	jgg@ziepe.ca,
+	jhubbard@nvidia.com,
+	peterx@redhat.com,
+	baolin.wang@linux.alibaba.com,
+	npache@redhat.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	lance.yang@linux.dev,
+	usama.arif@linux.dev,
+	xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev,
+	roman.gushchin@linux.dev,
+	muchun.song@linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	driver-core@lists.linux.dev,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-debuggers@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	damon@lists.linux.dev,
+	linux-kselftest@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v5 14/36] mm/damon: skip private node memory in DAMON migration and pageout
+Date: Wed, 22 Jul 2026 17:19:42 -0700
+Message-ID: <20260723001943.95854-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <amCzmkdOr6AFv_kQ@gourry-fedora-PF4VCD3F>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] cxl/region: Guard against unset partition in
- poison_by_decoder()
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-cxl@vger.kernel.org
-References: <20260722205303.3184787-1-dave.jiang@intel.com>
- <20260722205303.3184787-2-dave.jiang@intel.com>
- <20260722211025.E33CE1F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260722211025.E33CE1F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+On Wed, 22 Jul 2026 08:16:56 -0400 Gregory Price <gourry@gourry.net> wrote:
+
+> On Tue, Jul 21, 2026 at 04:46:43PM -0700, SJ Park wrote:
+> > On Mon, 20 Jul 2026 15:34:08 -0400 Gregory Price <gourry@gourry.net> wrote:
+> > 
+> > > DAMON operates on physical address ranges, which can cover private
+> > > node memory. Skip private-node folios in both DAMON's migration
+> > > and reclaim paths.
+> > > 
+> > > Signed-off-by: Gregory Price <gourry@gourry.net>
+> > > ---
+> > >  mm/damon/paddr.c | 9 +++++++++
+> > >  1 file changed, 9 insertions(+)
+> > > 
+> > > diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
+> > > index e4f98d67461f5..c741a94319750 100644
+> > > --- a/mm/damon/paddr.c
+> > > +++ b/mm/damon/paddr.c
+> > > @@ -12,6 +12,7 @@
+> > >  #include <linux/swap.h>
+> > >  #include <linux/memory-tiers.h>
+> > >  #include <linux/mm_inline.h>
+> > > +#include <linux/node_private.h>
+> > >  
+> > >  #include "../internal.h"
+> > >  #include "ops-common.h"
+> > > @@ -250,6 +251,10 @@ static unsigned long damon_pa_pageout(struct damon_region *r,
+> > >  			continue;
+> > >  		}
+> > >  
+> > > +		/* private node memory is not reclaimable by default */
+> > > +		if (folio_is_private_node(folio))
+> > > +			goto put_folio;
+> > > +
+> > 
+> > "by default".  Does that mean it could be reclaimable in some situations?  If
+> > so, could we check if it is reclaimable?
+> > 
+> 
+> See the damon changes in:
+> 
+> https://lore.kernel.org/linux-mm/al-pkvmgIxGu3LzM@gourry-fedora-PF4VCD3F/T/#mfb99303c85dd9d4c3f58832dc28fc55583a7217a
+
+Summarizing what you want to say, quoting something from the patch, or at least
+calling it "26th patch of this series" would have made reviewing much easier.
+Cc-ing damon@ for only patches that toucing DAMON source files and the cover
+letter of the series could also be helpful.  Please consider doing some of
+these for future replies.
+
+So, I understand later patches will make it optionally reclaimable and update
+this restriction by the 26th patch?  That sounds fair.  But, could we drop "by
+default" from the above comment for reducing the confusion?
+
+> 
+> > Also, what happens if we just try paging out the private node memory?  Will it
+> > simply fail?  Or, make some problems?
+> > 
+> 
+> user controls for MADV_ commands that affect private node folios would
+> skip those folios - exactly same as ZONE_DEVICE folios.
+> 
+> Which I'm not sure damon actually handles correctly presently (zone
+> device).  I remember looking around damon and thinking to myself "what
+> if this is a zone device page?" and not being able to find a satisfying
+> answer.
+> 
+> > >  		if (damos_pa_filter_out(s, folio))
+> > >  			goto put_folio;
+> > >  		else
+> > > @@ -344,6 +349,10 @@ static unsigned long damon_pa_migrate(struct damon_region *r,
+> > >  		else
+> > >  			*sz_filter_passed += folio_size(folio) / addr_unit;
+> > >  
+> > > +		/* private nodes do not support migration by default */
+> > > +		if (folio_is_private_node(folio))
+> > > +			goto put_folio;
+> > > +
+> > 
+> > Same questions.
+> > 
+> 
+> Technically there is nothing in migration core to prevent migration
+> operations, it's done on a service basis - hotunplug, reclaim/demotion,
+> user numa (mbind, migrate/move_pages) etc.
+> 
+> Operations on private nodes/private node folioes are refused if the
+> capability bit is not set.
+
+I haven't had a chance to read the entire series, sorry about that.  So, do you
+mean the above blocking is not really needed, or that will conditionally be
+allowed by another later patch?
 
 
+Thanks,
+SJ
 
-On 7/22/26 2:10 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] The early return for decoders with `part < 0` skips the loop termination condition, causing iteration to silently continue past the last committed decoder.
-> --
-> 
-> --- Patch [1]: [PATCH 1/3] cxl/region: Guard against unset partition in poison_by_decoder() ---
-> commit 8424c8c335042ef0b39d03b8e79434f7d0ee9eba
-> Author: Dave Jiang <dave.jiang@intel.com>
-> 
-> cxl/region: Guard against unset partition in poison_by_decoder()
-> 
-> This commit skips decoders with an unset partition (part < 0) in
-> poison_by_decoder() to prevent an out-of-bounds access when querying
-> partition modes.
-> 
-> Closes: https://sashiko.dev/#/patchset/20260708074228.43654-1-icheng@nvidia.com?part=4
-> 
->> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
->> index 1e211542b6b64..ec0dc4284c3c5 100644
->> --- a/drivers/cxl/core/region.c
->> +++ b/drivers/cxl/core/region.c
->> @@ -2959,6 +2959,9 @@ static int poison_by_decoder(struct device *dev, void *arg)
->>  	if (!cxled->dpa_res)
->>  		return rc;
->>  
->> +	if (cxled->part < 0)
->> +		return rc;
-> 
-> [Severity: Medium]
-> Does this early return bypass the iteration termination logic if the
-> commit_end decoder itself has an unset partition?
-> 
-> Looking at poison_by_decoder(), returning early here skips the termination
-> check at the bottom of the function:
-> 
-> 	/* Iterate until commit_end is reached */
-> 	if (cxled->cxld.id == ctx->port->commit_end) {
-> 		ctx->offset = cxled->dpa_res->end + 1;
-> 		ctx->part = cxled->part;
-> 		return 1;
-> 	}
-> 
-> This would cause device_for_each_child() to continue iterating into 
-> uncommitted decoders instead of returning 1 and stopping. Because the 
-> iteration would ultimately return 0 instead of 1, cxl_get_poison_by_endpoint() 
-> would then fail to trigger the subsequent cxl_get_poison_unmapped() call.
-
-False positive. The intent is to iterate through all the child devices to find the commit end. Having cxled->part < 0 does not mean it is the commit_end. Iterating through uncommitted decoders just return 0 and is harmless. And if there's none found, then it doesn't matter if cxl_get_poison_by_endpoint() needs to be triggered.
-
-DJ
-> 
->> +
->>  	cxlmd = cxled_to_memdev(cxled);
->>  	cxlds = cxlmd->cxlds;
->>  	mode = cxlds->part[cxled->part].mode;
-> 
-
+[...]
