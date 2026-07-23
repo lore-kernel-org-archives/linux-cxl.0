@@ -1,117 +1,204 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E99446D2BA
-	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 13:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC67D4DB557;
+	Thu, 23 Jul 2026 13:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784811690; cv=none; b=QLiNK/nMAa9KQqbNI3yWq2DgFGmYmjPaFek4WSR/1QspPjI/ez1RW8JlWmIRa+4SLA5Fg5h/13WDaoBn4aznypUUUWl/zTw+1RBpLogE/3t52ROMNUqpHbkItP40E2LzUPcA/viGQDx7oeOvQ2zoVbQPkkZTx0etWWC82EnPo5A=
+	t=1784813839; cv=none; b=n/7zlLZTHjy/ghz3QIZZH+Ipf93Oh7DLARZwSsPrvm6wK1y2A0B3zECmyTKeXVv20N4DGBO3/I0dCoVIECaJ7FfPHj7mIGgA/DjNVb8joS0vv2NzOuqSHkTPlcN0WIt5eHwq0Yy0fqohTB1F+1SyDM3rfs17FDaQJ4cqC8rs7e8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784811690; c=relaxed/simple;
-	bh=Jca/pcJKGiK402dCkOJO7iUK3SNE3m/eWcPrGYrUiSA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VoYvrTEDyjMc0yPYnaBaCcm8RxC/wj2jlQwdx/Pei88Arvc6dUr3QNt4VdK2WxIaSpPDByYa9besbqCEckdtT06ZeiKBRqOd+1RGc3PZoXFClrXVHSWjPj3tKHUfwpxswottGy7m8jUNzRV8l87dDBWLnKMahbwWLY+VfhP3TnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MJ21kLwD; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1784813839; c=relaxed/simple;
+	bh=eO9vT5YPysqOukd+jY+035D0z/zLeO1w4vN1NwNe2Qc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LYuwM562Fx4Cd0dk8jozvP6yRGrmEDu1z8Gpq3bIjg4+FkA+n4htgAwdYENx/B+vI4QJMPm/0QPDQFmjHyXvNJK0lFs4DN2l8gCAP7Nw9iEz+QfB6u86Xvkxv8Zio/0ifppV1+hpi3kVS371/yDWQ92G6ANI9249AJJ334ORHEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eXwPqfU5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MJ21kLwD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784811688;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xy+7a6eZK+ojmfMOcpNV21XUG+/7yzFNRjjodlGqMaM=;
-	b=MJ21kLwDsrvBFQnz3arJHebay+vW8DV5c3/nCoTfnOz3aWrhxHwJd4r9FJIQBo9agfCAJm
-	RBkgA8JESvAvyQmNlnxmT1IGg1dIee2CDTV2Xwzvh5Y4+FmOLLROOvMQ2blYNKkb2/lILW
-	AOCN0vLAChm1L2dk3h+txP2RiU71Pnk=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-327-TgHcgvvWPKiI1MiWK14ZGA-1; Thu,
- 23 Jul 2026 09:01:25 -0400
-X-MC-Unique: TgHcgvvWPKiI1MiWK14ZGA-1
-X-Mimecast-MFC-AGG-ID: TgHcgvvWPKiI1MiWK14ZGA_1784811683
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 47183180A970;
-	Thu, 23 Jul 2026 13:01:22 +0000 (UTC)
-Received: from blackfin.pond.sub.org (unknown [10.44.22.4])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E8C4918002B5;
-	Thu, 23 Jul 2026 13:01:20 +0000 (UTC)
-Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-	id 8C1B421E6920; Thu, 23 Jul 2026 15:01:18 +0200 (CEST)
-From: Markus Armbruster <armbru@redhat.com>
-To: John Snow <jsnow@redhat.com>
-Cc: qemu-devel@nongnu.org,  Alex =?utf-8?Q?Benn=C3=A9e?=
- <alex.bennee@linaro.org>,  Lukas
- Straub <lukasstraub2@web.de>,  Vladimir Sementsov-Ogievskiy
- <vsementsov@yandex-team.ru>,  Zhao Liu <zhao1.liu@intel.com>,  Laurent
- Vivier <laurent@vivier.eu>,  "Gonglei (Arei)" <arei.gonglei@huawei.com>,
-  Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@mailo.com>,  Alex
- Williamson
- <alex@shazbot.org>,  zhenwei pi <zhenwei.pi@linux.dev>,  Hanna Reitz
- <hreitz@redhat.com>,  Ani Sinha <anisinha@redhat.com>,
-  qemu-block@nongnu.org,  Paolo Bonzini <pbonzini@redhat.com>,  Peter Xu
- <peterx@redhat.com>,  Kevin Wolf <kwolf@redhat.com>,
-  linux-cxl@vger.kernel.org,  Jiri Pirko <jiri@resnulli.us>,  Daniel P.
- =?utf-8?Q?Berrang=C3=A9?= <berrange@redhat.com>,  Stefan Berger
- <stefanb@linux.vnet.ibm.com>,  Fabiano Rosas <farosas@suse.de>,  Stefan
- Hajnoczi <stefanha@redhat.com>,  Michael Tokarev <mjt@tls.msk.ru>,  Igor
- Mammedov <imammedo@redhat.com>,  "Michael S. Tsirkin" <mst@redhat.com>,
-  Gerd Hoffmann <kraxel@redhat.com>,  Mauro Carvalho Chehab
- <mchehab+huawei@kernel.org>,  linux-edac@vger.kernel.org,  =?utf-8?Q?Marc?=
- =?utf-8?Q?-Andr=C3=A9?=
- Lureau <marcandre.lureau@redhat.com>,  Richard Henderson
- <richard.henderson@linaro.org>,  Eric Blake <eblake@redhat.com>,
-  =?utf-8?Q?C=C3=A9dric?=
- Le Goater <clg@redhat.com>,  Jason Wang <jasowangio@gmail.com>,
-  qemu-trivial@nongnu.org,  Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 44/44] qapi: convert trivial intro sections for
- block-core.json
-In-Reply-To: <20260723044805.527643-45-jsnow@redhat.com> (John Snow's message
-	of "Thu, 23 Jul 2026 00:48:05 -0400")
-References: <20260723044805.527643-1-jsnow@redhat.com>
-	<20260723044805.527643-45-jsnow@redhat.com>
-Date: Thu, 23 Jul 2026 15:01:18 +0200
-Message-ID: <87ecgtg8rl.fsf@pond.sub.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eXwPqfU5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A16401F000E9;
+	Thu, 23 Jul 2026 13:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784813825;
+	bh=tqvVeERBLT6ROkppBN4MEGfSa50o0lpYhxpdXTdGfSM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=eXwPqfU5+dyGmmARtvY9crMVwvGOsCAZ2Ru0lYpoOfgXEOQb2mMyZcg1q6u92yB0Z
+	 eZMN9cLTZ+yubZjVJ3wy4M7XG7fZikCsbl6f1040nSPNfNyH4meZZBsET+2pf6T6qH
+	 qq5izJpow7RoIotkR8UYgW6x+l2czIIn3yNVRVjPMN17oPO831Axfy1Rymb/HnXcNb
+	 XY24eVkU+jFNiKTi8CRFsGG3DyaUFKembWWsN5r8eTzYpjL4efTFMbO0xnASQRTvpI
+	 YnaQfcVtFoK4C7nDN/JU0FZvuMbAzBAbv7MBIkBFZsTw/0q7oFhQitlB8lVT412AvD
+	 YKt/asR4pMeRw==
+From: SJ Park <sj@kernel.org>
+To: Gregory Price <gourry@gourry.net>
+Cc: SJ Park <sj@kernel.org>,
+	balbirs@nvidia.com,
+	brendan.jackman@linux.dev,
+	yuzenghui@huawei.com,
+	apopple@nvidia.com,
+	alucerop@amd.com,
+	matthew.brost@intel.com,
+	akpm@linux-foundation.org,
+	david@kernel.org,
+	ljs@kernel.org,
+	liam@infradead.org,
+	vbabka@kernel.org,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	corbet@lwn.net,
+	skhan@linuxfoundation.org,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	dakr@kernel.org,
+	djbw@kernel.org,
+	vishal.l.verma@intel.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	osandov@osandov.com,
+	jannh@google.com,
+	pfalcato@suse.de,
+	jackmanb@google.com,
+	hannes@cmpxchg.org,
+	ziy@nvidia.com,
+	pbonzini@redhat.com,
+	osalvador@suse.de,
+	joshua.hahnjy@gmail.com,
+	rakie.kim@sk.com,
+	byungchul@sk.com,
+	ying.huang@linux.alibaba.com,
+	kasong@tencent.com,
+	qi.zheng@linux.dev,
+	shakeel.butt@linux.dev,
+	baohua@kernel.org,
+	axelrasmussen@google.com,
+	yuanchu@google.com,
+	weixugc@google.com,
+	yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk,
+	longman@redhat.com,
+	ridong.chen@linux.dev,
+	tj@kernel.org,
+	mkoutny@suse.com,
+	jgg@ziepe.ca,
+	jhubbard@nvidia.com,
+	peterx@redhat.com,
+	baolin.wang@linux.alibaba.com,
+	npache@redhat.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	lance.yang@linux.dev,
+	usama.arif@linux.dev,
+	xu.xin16@zte.com.cn,
+	chengming.zhou@linux.dev,
+	roman.gushchin@linux.dev,
+	muchun.song@linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	driver-core@lists.linux.dev,
+	nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org,
+	linux-debuggers@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	damon@lists.linux.dev,
+	linux-kselftest@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v5 14/36] mm/damon: skip private node memory in DAMON migration and pageout
+Date: Thu, 23 Jul 2026 06:36:53 -0700
+Message-ID: <20260723133654.86752-1-sj@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <amGHuputMNCFZ9CV@gourry-fedora-PF4VCD3F>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: ycUX6pomj52wwX-N2E7j4VlcADPSZ90-XBMs9DJFpU8_1784811683
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-John Snow <jsnow@redhat.com> writes:
+On Wed, 22 Jul 2026 23:25:15 -0400 Gregory Price <gourry@gourry.net> wrote:
 
-> (Trivial)
->
-> Signed-off-by: John Snow <jsnow@redhat.com>
+> On Wed, Jul 22, 2026 at 05:19:42PM -0700, SJ Park wrote:
+> > On Wed, 22 Jul 2026 08:16:56 -0400 Gregory Price <gourry@gourry.net> wrote:
+> > 
+> > > > "by default".  Does that mean it could be reclaimable in some situations?  If
+> > > > so, could we check if it is reclaimable?
+> > > > 
+> > > 
+> > > See the damon changes in:
+> > > 
+> > > https://lore.kernel.org/linux-mm/al-pkvmgIxGu3LzM@gourry-fedora-PF4VCD3F/T/#mfb99303c85dd9d4c3f58832dc28fc55583a7217a
+> > 
+> > Summarizing what you want to say, quoting something from the patch, or at least
+> > calling it "26th patch of this series" would have made reviewing much easier.
+> > Cc-ing damon@ for only patches that toucing DAMON source files and the cover
+> > letter of the series could also be helpful.  Please consider doing some of
+> > these for future replies.
+> > 
+> 
+> I have been very much discouraged from this kind of trimming because it
+> removes the context of the series from the individual patches - making it
+> even more confusing.
 
-Here's the one single paragraph you didn't convert (as far as I can
-see):
+That's fair and making sense.
 
-diff --git a/qapi/block-core.json b/qapi/block-core.json
-index bd98af2f29..9c30890ae5 100644
---- a/qapi/block-core.json
-+++ b/qapi/block-core.json
-@@ -1563,8 +1563,7 @@
- 
- ##
- # @BlockdevSnapshotSync:
--#
--# Either @device or @node-name must be set but not both.
-+#     Either @device or @node-name must be set but not both.
- #
- # @device: the name of the device to take a snapshot of.
- #
+> 
+> But I understand, I will try to remember to do this for you.
 
-It's not overview.  Worth a mention in the commit message?
+Thank you, Gregory.  Nonetheless, I wouldn't insist selective Cc-ing.  I agree
+your point, and I expect doing that would be tedious if you don't have a script
+or tool (I use a tool).  It is just one of my suggestion to help reviewing in
+this context, insted of only lore link.  Just one among the other three
+suggestions (summarizing your thought, quoting, or simply calling it "26th
+patch of this series") should also suffice.
 
+> 
+> > So, I understand later patches will make it optionally reclaimable and update
+> > this restriction by the 26th patch?  That sounds fair.  But, could we drop "by
+> > default" from the above comment for reducing the confusion?
+> 
+> Yes, but you bring up a good point - I think this two-step process is
+> actually poor form and that I need to redo it.
+> 
+> Maybe this can be redone as node states (features?) such as:
+> 
+>    N_MEMORY_RECLAIMABLE
+>    N_MEMORY_DEMOTABLE
+>    N_MEMORY_TIERABLE
+> 
+> so these damon changes will forego this confusing intermediate step of:
+> 
+>    if (folio_is_private_node(folio))
+> 
+> and go straight to
+> 
+>    if (node_is_reclaimable(folio_nid(folio)))
+> 
+> In the first patch - without ever having to revisit damon again.
+
+Indeed that sounds better than my suggestion.
+
+> 
+> > > 
+> > > Technically there is nothing in migration core to prevent migration
+> > > operations, it's done on a service basis - hotunplug, reclaim/demotion,
+> > > user numa (mbind, migrate/move_pages) etc.
+> > > 
+> > > Operations on private nodes/private node folioes are refused if the
+> > > capability bit is not set.
+> > 
+> > I haven't had a chance to read the entire series, sorry about that.  So, do you
+> > mean the above blocking is not really needed, or that will conditionally be
+> > allowed by another later patch?
+> > 
+> 
+> I will reduce this all to a single patch in v6, I see where things can
+> be improved now based on a few pieces of feedback.
+
+Sounds good, thank you Gregory.  Looking forward to the next version!
+
+
+Thanks,
+SJ
+
+[...]
