@@ -1,108 +1,147 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36CCA3E00B3;
-	Thu, 23 Jul 2026 08:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D722040B0E1
+	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 09:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784796308; cv=none; b=YuARorRXbElwUawwNoGu7EPf8+9ooJoi4bXbrfmykoTxRwesvt9Yb1M5Ms1HcnbeBAWtNdbYeRftKlPKGnCwRKwZxsnmidGjerUAujom6QavC6QX88ynhoN3GpbEInsGJRbVIj0vtZ7RnQLtT2mQ3K3/jX15DAwaCkSK4x19ipc=
+	t=1784797915; cv=none; b=kxznFvtIWzbooD0uOnyjra0bB3wYlOkNkGuGN/J+LmgnGRja2v1mevyNJeSaTVB5T9aPV+eLehCYbqTxd6bzicZiZVkq/Evkow8oCiMMYfW0A2a31WA+/AkL5SzslYHmSZghSkmLxZc8BLcYNIjJEP+g3vkG9KzF/QWlBzNdEm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784796308; c=relaxed/simple;
-	bh=8GgPzaxuYc4s2cVuSgAcGd76ajTea0DUpWFyFtd2Oy4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=dOALgCHeUlGxQTwpEoO6EoTmY0R2TrvCOH4o483ji6QdgPuxmBc47U5HoUFk09CiGF1oUqIw1gWkVAl/xpNdYKH2I1X8ZdyBoxKPx5Kit3WIrTZAFt5tM6Jrgwnc51hYmmj50Tk9+b52wA4JbC7WqPBjPkcCc7U1F4VSyX5ECfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=W5gXIxoD; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1784797915; c=relaxed/simple;
+	bh=YVkjv9FjYBKj6eSmPJYTcLtHtlqO+AlK7IHagS7bYkc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cHkecgBKxt4+LWfxNlwV9djCcaAap5DS2O7NKRfW94rv5cq/sDX8JT8he+6CCplh7YaXHehTe+w/6MT0eGp2GvUZqKC+EiprvWbpBeMss+IkrXpxfBVX7OTmxtbV6nwa43Gsvd2KTx8KQ+Bj9tXsIuGYN6rBp/ret3ECB7z7WH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jQIhRa7d; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="W5gXIxoD"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20260723084503epoutp04a324084313ef02b272e897115231c5b2~E3sg4KZO-3034630346epoutp04L;
-	Thu, 23 Jul 2026 08:45:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20260723084503epoutp04a324084313ef02b272e897115231c5b2~E3sg4KZO-3034630346epoutp04L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1784796303;
-	bh=sQjXIg3wAcrT3mkYCsdbl0LWsoOlUsvvM9TLKCcGrBo=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=W5gXIxoDyG4Nfrz0+i0pklqM2q3/qpEunf4JU/SLOUtj2VknFkftcVuCb6c5nB9rv
-	 0PfvO1yP0f71Cs1IOmIxhbGH98MahM0XyvQigBVdJ9zrXWw6I7OJvWLRpHZNA++6Az
-	 8E6N/DHVyIA5A/LbAByxODYxcLsaYG1fyL2e0bnc=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20260723084503epcas5p43df5d820cf5e5603cbe8d66b060992f0~E3sgfyfxj0540505405epcas5p4A;
-	Thu, 23 Jul 2026 08:45:03 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4h5Pnq2p8Nz6B9mQ; Thu, 23 Jul
-	2026 08:45:03 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260723083847epcas5p21a735796de0bdb6459cd2c3b7b9b18de~E3nCLElTK0474604746epcas5p2T;
-	Thu, 23 Jul 2026 08:38:47 +0000 (GMT)
-Received: from [107.122.10.65] (unknown [107.122.10.65]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20260723083835epsmtip11766a99123bc01993811bc8746be0d2d~E3m3Il4WE1438914389epsmtip1e;
-	Thu, 23 Jul 2026 08:38:35 +0000 (GMT)
-Message-ID: <963815509.21784796303385.JavaMail.epsvc@epcpadp1new>
-Date: Thu, 23 Jul 2026 14:08:31 +0530
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jQIhRa7d"
+Message-ID: <344dd201-27c5-41f5-acb1-a6bb4c7192f8@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1784797910;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ph7nu7v5ynKoGLeN6brlvQB+6K4JFjnx8hTC6Ek69CM=;
+	b=jQIhRa7d7a71Qb5eYzYKY5rr8fCi3w8825EkGf8oS7fErG4JRkxRoLoMz3cV8Tx2V2vFx6
+	gBSC4JAhHh5Ul0wYdarkwPv7+4HYuu3ucVb9gEALTeFzzLIkTiKn7yTROGN2y1yImohY7U
+	XhqWorSuB8BzCAhpwYZPUbyhyWiYBNo=
+Date: Thu, 23 Jul 2026 17:11:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 00/36] Private Memory NUMA Nodes
-To: Gregory Price <gourry@gourry.net>, linux-mm@kvack.org
-Cc: Zhigang.Luo@amd.com, balbirs@nvidia.com, brendan.jackman@linux.dev,
-	yuzenghui@huawei.com, apopple@nvidia.com, alucerop@amd.com,
-	matthew.brost@intel.com, akpm@linux-foundation.org, david@kernel.org,
-	ljs@kernel.org, liam@infradead.org, vbabka@kernel.org, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, corbet@lwn.net,
-	skhan@linuxfoundation.org, gregkh@linuxfoundation.org, rafael@kernel.org,
-	dakr@kernel.org, djbw@kernel.org, vishal.l.verma@intel.com,
-	dave.jiang@intel.com, alison.schofield@intel.com, osandov@osandov.com,
-	jannh@google.com, pfalcato@suse.de, jackmanb@google.com, hannes@cmpxchg.org,
-	ziy@nvidia.com, pbonzini@redhat.com, osalvador@suse.de,
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
-	ying.huang@linux.alibaba.com, kasong@tencent.com, qi.zheng@linux.dev,
-	shakeel.butt@linux.dev, baohua@kernel.org, axelrasmussen@google.com,
-	yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com,
-	linux@rasmusvillemoes.dk, longman@redhat.com, ridong.chen@linux.dev,
-	tj@kernel.org, mkoutny@suse.com, sj@kernel.org, jgg@ziepe.ca,
-	jhubbard@nvidia.com, peterx@redhat.com, baolin.wang@linux.alibaba.com,
-	npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com,
-	lance.yang@linux.dev, usama.arif@linux.dev, xu.xin16@zte.com.cn,
-	chengming.zhou@linux.dev, roman.gushchin@linux.dev, muchun.song@linux.dev,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	driver-core@lists.linux.dev, nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org, linux-debuggers@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, cgroups@vger.kernel.org,
-	damon@lists.linux.dev, linux-kselftest@vger.kernel.org,
-	kernel-team@meta.com, cpgs@samsung.com
+Subject: Re: [PATCH v2 09/44] qapi: convert intro sections for cryptodev.json
+To: John Snow <jsnow@redhat.com>, qemu-devel@nongnu.org
+Cc: =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
+ Lukas Straub <lukasstraub2@web.de>,
+ Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru>,
+ Zhao Liu <zhao1.liu@intel.com>, Laurent Vivier <laurent@vivier.eu>,
+ Markus Armbruster <armbru@redhat.com>,
+ "Gonglei (Arei)" <arei.gonglei@huawei.com>,
+ =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
+ Alex Williamson <alex@shazbot.org>, Hanna Reitz <hreitz@redhat.com>,
+ Ani Sinha <anisinha@redhat.com>, qemu-block@nongnu.org,
+ Paolo Bonzini <pbonzini@redhat.com>, Peter Xu <peterx@redhat.com>,
+ Kevin Wolf <kwolf@redhat.com>, linux-cxl@vger.kernel.org,
+ Jiri Pirko <jiri@resnulli.us>, =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?=
+ <berrange@redhat.com>, Stefan Berger <stefanb@linux.vnet.ibm.com>,
+ Fabiano Rosas <farosas@suse.de>, Stefan Hajnoczi <stefanha@redhat.com>,
+ Michael Tokarev <mjt@tls.msk.ru>, Igor Mammedov <imammedo@redhat.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ linux-edac@vger.kernel.org, =?UTF-8?Q?Marc-Andr=C3=A9_Lureau?=
+ <marcandre.lureau@redhat.com>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Eric Blake <eblake@redhat.com>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?=
+ <clg@redhat.com>, Jason Wang <jasowangio@gmail.com>,
+ qemu-trivial@nongnu.org, Jonathan Cameron <jic23@kernel.org>
+References: <20260723044805.527643-1-jsnow@redhat.com>
+ <20260723044805.527643-10-jsnow@redhat.com>
 Content-Language: en-US
-From: Arun George/Arun George <arun.george@samsung.com>
-In-Reply-To: <20260720193431.3841992-1-gourry@gourry.net>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: zhenwei pi <zhenwei.pi@linux.dev>
+In-Reply-To: <20260723044805.527643-10-jsnow@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20260723083847epcas5p21a735796de0bdb6459cd2c3b7b9b18de
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20260720193443epcas5p167fa7d8490edfb4d8c0aa6a259db058f
-References: <CGME20260720193443epcas5p167fa7d8490edfb4d8c0aa6a259db058f@epcas5p1.samsung.com>
-	<20260720193431.3841992-1-gourry@gourry.net>
+X-Migadu-Flow: FLOW_OUT
 
-On 21-07-2026 01:03 am, Gregory Price wrote:
-> Changes Since V4
-> ================
->   - dropped compressed ram example from series
->       - will submit separately if this moves forward
+LGTM.
+Acked-by: zhenwei pi <zhenwei.pi@linux.dev>
 
-We intend to test this series on a compression capable CXL expander 
-hardware. Since compressed ram example (cram) is not part of this 
-series, how do you suggest to do that? Do you have a version of cram 
-module compatible with this series?
-
-~Arun
+On 7/23/26 12:47, John Snow wrote:
+> (Trivial)
+> 
+> Signed-off-by: John Snow <jsnow@redhat.com>
+> ---
+>   qapi/cryptodev.json | 18 ++++++------------
+>   1 file changed, 6 insertions(+), 12 deletions(-)
+> 
+> diff --git a/qapi/cryptodev.json b/qapi/cryptodev.json
+> index eb309c22f86..d0c1e6c8944 100644
+> --- a/qapi/cryptodev.json
+> +++ b/qapi/cryptodev.json
+> @@ -12,8 +12,7 @@
+>   
+>   ##
+>   # @QCryptodevBackendAlgoType:
+> -#
+> -# The supported algorithm types of a crypto device.
+> +#     The supported algorithm types of a crypto device.
+>   #
+>   # @sym: symmetric encryption
+>   #
+> @@ -26,8 +25,7 @@
+>   
+>   ##
+>   # @QCryptodevBackendServiceType:
+> -#
+> -# The supported service types of a crypto device.
+> +#     The supported service types of a crypto device.
+>   #
+>   # @cipher: Symmetric Key Cipher service
+>   #
+> @@ -46,8 +44,7 @@
+>   
+>   ##
+>   # @QCryptodevBackendType:
+> -#
+> -# The crypto device backend type
+> +#     The crypto device backend type
+>   #
+>   # @builtin: the QEMU builtin support
+>   #
+> @@ -62,8 +59,7 @@
+>   
+>   ##
+>   # @QCryptodevBackendClient:
+> -#
+> -# Information about a queue of crypto device.
+> +#     Information about a queue of crypto device.
+>   #
+>   # @queue: the queue index of the crypto device
+>   #
+> @@ -77,8 +73,7 @@
+>   
+>   ##
+>   # @QCryptodevInfo:
+> -#
+> -# Information about a crypto device.
+> +#     Information about a crypto device.
+>   #
+>   # @id: the id of the crypto device
+>   #
+> @@ -95,8 +90,7 @@
+>   
+>   ##
+>   # @query-cryptodev:
+> -#
+> -# Return information about current crypto devices.
+> +#     Return information about current crypto devices.
+>   #
+>   # Since: 8.0
+>   ##
 
