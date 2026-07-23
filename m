@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5307438D40B
-	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 04:55:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E8939E178
+	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 04:55:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784782524; cv=none; b=jE8ya1VhVbrFhttP3tH2OYDY5Pkv/9DP/26iFfFIb4K9IkLhPaIfWB8hvPijFK5taAm9C4CY8fPKArlJE9LpZgVuiLVqWN0U3CC5hzLYek/+b2pwcNAzrtrmPNSsBAQcJ8dUkzsBw2otuGUuog+hp3f2e5hC1UpX0HxTV89UFfI=
+	t=1784782538; cv=none; b=i9D6xv2GyIHKq0aMwjp9X7j4dAVfcLKP3gGpm+dEDXforGkVjuInrqPzlCQwkyI3Z3Rb7ryyysBjVJwcF3jiTF49Y8fbQOm3TL2MP5Y/X8SeXoNOuTx1N8Hu7qJb/02VKjUMgSb7wbcpSLciUvA0X4NNDPQ7Ml7mboedepaYeO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784782524; c=relaxed/simple;
-	bh=g3+knicL3LFxlTS0Z3C5j4HTwyxHlZhaRIGFaOpPXRI=;
+	s=arc-20240116; t=1784782538; c=relaxed/simple;
+	bh=fFBK+AV8rbUkTiLjhewn05rt480tf8+CoJFRT/lQ+e8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=KDfDQtGnQGCI9ZhbX42Y9nuQpu0pZVGHLHXYwAuquRgv1+pOknS/zHp0YrIebRFYvOOGERiI5n/CBoPE2vl/CDULvUPbZrA3ad5aA2CwvcRsO0YnThFkGYc1lN6RLwB6yRxzSYzUepV8LQS5Md09hJCFfcZ3KTLtPrFPEfEhhY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mk15VVcR; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=dVSpQAerhoJ/QWphBGzHY22BNK8ANH1f/kbGre+Wludcx+XdiMPouyuDbXU1X3qhp2RgNmcsEBg5q3mO50esUMEmscj2yH2bRgGK1DtnuKQBJcc9f7GrqwObQPhxGb98+60yF2IoC+ppqHqFyUSNqgsuZIJ3uYMmbaj9ImjYBvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eBrOBiOx; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mk15VVcR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eBrOBiOx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784782508;
+	s=mimecast20190719; t=1784782520;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5mqCvm2ktjlYMsJL+/1197LnuW9YBvA42lCVgEVbiMk=;
-	b=Mk15VVcRUTcmAdqp8niHLIPno4FmVizax5YhDzYHuDkPHbkdzAX5iMYTQnDRovs1jPFlGU
-	SNRp9Tfl45TPo5eJoII9fmd9meWYPu0gk64X109tyqWyv9UxBkPKoG7zrl3DEih2EWUB4K
-	YSZ1M9kcmpLOPa7riBDe7MMd/coV2dA=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=50CZod/iUePAFwxf+WZghW/YZKa0XPt7IqYHe7UOp5g=;
+	b=eBrOBiOxgXa8qHu7dpbgPXOArUYcBxd90w2zb/YJZa6+QNhQ/JdzNCfYI/I4W4pDbb3V98
+	55sxO5Aek/x31MMke1g/wrxjC4niXVvWAS4FVbiCp3UKv824eFJxjbfMk7cpcsto97PFhg
+	xrF8EyJXJFhLn4YTfbExffhvjuhdtgY=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-178-onnmSIaEMbqeSBBvoArGhA-1; Thu,
- 23 Jul 2026 00:55:05 -0400
-X-MC-Unique: onnmSIaEMbqeSBBvoArGhA-1
-X-Mimecast-MFC-AGG-ID: onnmSIaEMbqeSBBvoArGhA_1784782502
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-564-6KLshGhfPWKysXqy8wvqgw-1; Thu,
+ 23 Jul 2026 00:55:15 -0400
+X-MC-Unique: 6KLshGhfPWKysXqy8wvqgw-1
+X-Mimecast-MFC-AGG-ID: 6KLshGhfPWKysXqy8wvqgw_1784782512
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 607581800578;
-	Thu, 23 Jul 2026 04:55:02 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8F355195FE0B;
+	Thu, 23 Jul 2026 04:55:12 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.44])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BEA13180029D;
-	Thu, 23 Jul 2026 04:54:52 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EE85918002AE;
+	Thu, 23 Jul 2026 04:55:02 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -80,9 +80,9 @@ Cc: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
 	Jason Wang <jasowangio@gmail.com>,
 	qemu-trivial@nongnu.org,
 	Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v2 41/44] qapi: convert trivial intro sections for ui.json
-Date: Thu, 23 Jul 2026 00:48:02 -0400
-Message-ID: <20260723044805.527643-42-jsnow@redhat.com>
+Subject: [PATCH v2 42/44] qapi: convert trivial intro sections for migration.json
+Date: Thu, 23 Jul 2026 00:48:03 -0400
+Message-ID: <20260723044805.527643-43-jsnow@redhat.com>
 In-Reply-To: <20260723044805.527643-1-jsnow@redhat.com>
 References: <20260723044805.527643-1-jsnow@redhat.com>
 Precedence: bulk
@@ -92,7 +92,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: Ln63Fq2XqEaSPMRpQscjVZ-lZG5lLlPjX0PIHGjkAtA_1784782502
+X-Mimecast-MFC-PROC-ID: wZ9NbJD34brteeSkVbloDjejgHUKA69E1XJ65dWF5EM_1784782512
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
@@ -101,697 +101,570 @@ content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/ui.json | 215 ++++++++++++++++++---------------------------------
- 1 file changed, 75 insertions(+), 140 deletions(-)
+ qapi/migration.json | 201 +++++++++++++++++---------------------------
+ 1 file changed, 78 insertions(+), 123 deletions(-)
 
-diff --git a/qapi/ui.json b/qapi/ui.json
-index b2c42a7f578..b4122b2fa9f 100644
---- a/qapi/ui.json
-+++ b/qapi/ui.json
+diff --git a/qapi/migration.json b/qapi/migration.json
+index 66bd900465a..f9300c9e329 100644
+--- a/qapi/migration.json
++++ b/qapi/migration.json
 @@ -13,8 +13,7 @@
  
  ##
- # @DisplayProtocol:
+ # @MigrationRAMStats:
 -#
--# Display protocols which support changing password options.
-+#     Display protocols which support changing password options.
+-# Detailed migration status.
++#     Detailed migration status.
  #
- # Since: 7.0
- ##
-@@ -23,9 +22,8 @@
+ # @transferred: amount of bytes already transferred to the target VM
+ #
+@@ -78,8 +77,7 @@
  
  ##
- # @SetPasswordAction:
+ # @XBZRLECacheStats:
 -#
--# An action to take on changing a password on a connection with active
--# clients.
-+#     An action to take on changing a password on a connection with
-+#     active clients.
+-# Detailed XBZRLE migration cache statistics
++#     Detailed XBZRLE migration cache statistics
  #
- # @keep: maintain existing clients
+ # @cache-size: XBZRLE cache size
  #
-@@ -40,8 +38,7 @@
+@@ -104,8 +102,7 @@
  
  ##
- # @SetPasswordOptions:
+ # @CompressionStats:
 -#
--# Options for `set_password`.
-+#     Options for `set_password`.
+-# Detailed migration compression statistics
++#     Detailed migration compression statistics
  #
- # @protocol:
- #     - 'vnc' to modify the VNC server password
-@@ -64,8 +61,7 @@
+ # @pages: amount of pages compressed and transferred to the target VM
+ #
+@@ -126,8 +123,7 @@
  
  ##
- # @SetPasswordOptionsVnc:
+ # @MigrationStatus:
 -#
--# Options for `set_password` specific to the VNC protocol.
-+#     Options for `set_password` specific to the VNC protocol.
+-# An enumeration of migration status.
++#     An enumeration of migration status.
  #
- # @display: The id of the display where the password should be
- #     changed.  Defaults to the first.
-@@ -77,8 +73,7 @@
+ # @none: no migration has ever happened.
+ #
+@@ -189,8 +185,7 @@
  
  ##
- # @set_password:
+ # @VfioStats:
 -#
--# Set the password of a remote display server.
-+#     Set the password of a remote display server.
+-# Detailed VFIO devices migration statistics
++#     Detailed VFIO devices migration statistics
  #
- # Errors:
- #     - If Spice is not enabled, DeviceNotFound
-@@ -95,8 +90,7 @@
+ # @transferred: amount of bytes transferred to the target VM by VFIO
+ #     devices
+@@ -202,8 +197,7 @@
  
  ##
- # @ExpirePasswordOptions:
+ # @MigrationInfo:
 -#
--# General options for `expire_password`.
-+#     General options for `expire_password`.
+-# Information about current migration process.
++#     Information about current migration process.
  #
- # @protocol:
- #     - 'vnc' to modify the VNC server expiration
-@@ -125,8 +119,7 @@
+ # @status: `MigrationStatus` describing the current migration status.
+ #     If this field is not returned, no migration process has been
+@@ -339,9 +333,9 @@
  
  ##
- # @ExpirePasswordOptionsVnc:
+ # @query-migrate:
 -#
--# Options for `expire_password` specific to the VNC protocol.
-+#     Options for `expire_password` specific to the VNC protocol.
- #
- # @display: The id of the display where the expiration should be
- #     changed.  Defaults to the first.
-@@ -138,8 +131,7 @@
- 
- ##
- # @expire_password:
--#
--# Expire the password of a remote display server.
-+#     Expire the password of a remote display server.
- #
- # Errors:
- #     - If @protocol is 'spice' and Spice is not active,
-@@ -157,8 +149,7 @@
- 
- ##
- # @ImageFormat:
--#
--# Supported image format types.
-+#     Supported image format types.
- #
- # @png: PNG format
- #
-@@ -171,8 +162,7 @@
- 
- ##
- # @screendump:
--#
--# Capture the contents of a screen and write it to a file.
-+#     Capture the contents of a screen and write it to a file.
- #
- # @filename: the path of a new file to store the image
- #
-@@ -208,8 +198,7 @@
- 
- ##
- # @SpiceBasicInfo:
--#
--# The basic information for SPICE network connection
-+#     The basic information for SPICE network connection
- #
- # @host: IP address
- #
-@@ -227,8 +216,7 @@
- 
- ##
- # @SpiceServerInfo:
--#
--# Information about a SPICE server
-+#     Information about a SPICE server
- #
- # @auth: authentication method
- #
-@@ -241,8 +229,7 @@
- 
- ##
- # @SpiceChannel:
--#
--# Information about a SPICE client channel.
-+#     Information about a SPICE client channel.
- #
- # @connection-id: SPICE connection id number.  All channels with the
- #     same id belong to the same SPICE session.
-@@ -267,8 +254,7 @@
- 
- ##
- # @SpiceQueryMouseMode:
--#
--# An enumeration of Spice mouse states.
-+#     An enumeration of Spice mouse states.
- #
- # @client: Mouse cursor position is determined by the client.
- #
-@@ -285,8 +271,7 @@
- 
- ##
- # @SpiceInfo:
--#
--# Information about the SPICE session.
-+#     Information about the SPICE session.
- #
- # @enabled: true if the SPICE server is enabled, false otherwise
- #
-@@ -325,8 +310,7 @@
- 
- ##
- # @query-spice:
--#
--# Return information about the current SPICE server
-+#     Return information about the current SPICE server
+-# Return information about current migration process.  If migration is
+-# active there will be another json-object with RAM migration status.
++#     Return information about current migration process.  If
++#     migration is active there will be another json-object with RAM
++#     migration status.
  #
  # Since: 0.14
  #
-@@ -370,8 +354,7 @@
+@@ -435,8 +429,7 @@
  
  ##
- # @SPICE_CONNECTED:
+ # @MigrationCapability:
 -#
--# Emitted when a SPICE client establishes a connection
-+#     Emitted when a SPICE client establishes a connection
+-# Migration capabilities enumeration
++#     Migration capabilities enumeration
  #
- # @server: server information
- #
-@@ -395,9 +378,8 @@
+ # @xbzrle: Migration supports xbzrle (Xor Based Zero Run Length
+ #     Encoding).  This feature allows us to minimize migration traffic
+@@ -545,8 +538,7 @@
  
  ##
- # @SPICE_INITIALIZED:
+ # @MigrationCapabilityStatus:
 -#
--# Emitted after initial handshake and authentication takes place (if
--# any) and the SPICE channel is up and running
-+#     Emitted after initial handshake and authentication takes place
-+#     (if any) and the SPICE channel is up and running
+-# Migration capability information
++#     Migration capability information
  #
- # @server: server information
+ # @capability: capability enum
  #
-@@ -423,8 +405,7 @@
+@@ -559,8 +551,8 @@
  
  ##
- # @SPICE_DISCONNECTED:
+ # @migrate-set-capabilities:
 -#
--# Emitted when the SPICE connection is closed
-+#     Emitted when the SPICE connection is closed
+-# Enable/Disable the following migration capabilities (like xbzrle)
++#     Enable/Disable the following migration capabilities (like
++#     xbzrle)
  #
- # @server: server information
+ # @capabilities: json array of capability modifications to make
  #
-@@ -448,8 +429,7 @@
+@@ -577,8 +569,8 @@
  
  ##
- # @SPICE_MIGRATE_COMPLETED:
+ # @query-migrate-capabilities:
 -#
--# Emitted when SPICE migration has completed
-+#     Emitted when SPICE migration has completed
+-# Return information about the current migration capabilities status
++#     Return information about the current migration capabilities
++#     status
  #
- # Since: 1.3
+ # Since: 1.2
  #
-@@ -468,8 +448,7 @@
+@@ -598,8 +590,7 @@
  
  ##
- # @VncBasicInfo:
+ # @MultiFDCompression:
 -#
--# The basic information for vnc network connection
-+#     The basic information for vnc network connection
+-# An enumeration of multifd compression methods.
++#     An enumeration of multifd compression methods.
  #
- # @host: IP address
+ # @none: no compression.
  #
-@@ -492,8 +471,7 @@
+@@ -776,9 +767,8 @@
  
  ##
- # @VncServerInfo:
+ # @BitmapMigrationNodeAlias:
 -#
--# The network connection information for server
-+#     The network connection information for server
+-# Maps a block node name and the bitmaps it has to aliases for dirty
+-# bitmap migration.
++#     Maps a block node name and the bitmaps it has to aliases for
++#     dirty bitmap migration.
  #
- # @auth: authentication method used for the plain (non-websocket) VNC
- #     server
-@@ -507,8 +485,7 @@
+ # @node-name: A block node name.
+ #
+@@ -798,9 +788,8 @@
  
  ##
- # @VncClientInfo:
+ # @MigrationParameter:
 -#
--# Information about a connected VNC client.
-+#     Information about a connected VNC client.
+-# Migration parameters enumeration.  The enumeration values mirror the
+-# members of @MigrationParameters.
++#     Migration parameters enumeration.  The enumeration values mirror
++#     the members of @MigrationParameters.
  #
- # @x509_dname: If x509 authentication is in use, the Distinguished
- #     Name of the client.
-@@ -525,8 +502,7 @@
+ # Features:
+ #
+@@ -834,8 +823,7 @@
  
  ##
- # @VncInfo:
+ # @migrate-set-parameters:
 -#
--# Information about the VNC session.
-+#     Information about the VNC session.
+-# Set migration parameters.  All arguments are optional.
++#     Set migration parameters.  All arguments are optional.
  #
- # @enabled: true if the VNC server is enabled, false otherwise
+ # Since: 2.4
  #
-@@ -576,8 +552,7 @@
+@@ -1057,11 +1045,10 @@
  
  ##
- # @VncPrimaryAuth:
+ # @query-migrate-parameters:
 -#
--# vnc primary authentication method.
-+#     vnc primary authentication method.
+-# Return information about the current migration parameters.  Optional
+-# members of the return value are always present, except
+-# @block-bitmap-mapping, which is only present if it has been
+-# previously set.
++#     Return information about the current migration parameters.
++#     Optional members of the return value are always present, except
++#     @block-bitmap-mapping, which is only present if it has been
++#     previously set.
  #
- # Since: 2.3
- ##
-@@ -588,8 +563,7 @@
+ # Since: 2.4
+ #
+@@ -1082,10 +1069,9 @@
  
  ##
- # @VncVencryptSubAuth:
+ # @migrate-start-postcopy:
 -#
--# vnc sub authentication method with vencrypt.
-+#     vnc sub authentication method with vencrypt.
+-# Followup to a migration command to switch the migration to postcopy
+-# mode.  The postcopy-ram capability must be set on both source and
+-# destination before the original migration command.
++#     Followup to a migration command to switch the migration to
++#     postcopy mode.  The postcopy-ram capability must be set on both
++#     source and destination before the original migration command.
  #
- # Since: 2.3
- ##
-@@ -603,8 +577,7 @@
+ # Since: 2.5
+ #
+@@ -1098,8 +1084,7 @@
  
  ##
- # @VncServerInfo2:
+ # @MIGRATION:
 -#
--# The network connection information for server
-+#     The network connection information for server
+-# Emitted when a migration event happens
++#     Emitted when a migration event happens
  #
- # @auth: The current authentication type used by the servers
+ # @status: `MigrationStatus` describing the current migration status.
  #
-@@ -621,8 +594,7 @@
+@@ -1116,9 +1101,8 @@
  
  ##
- # @VncInfo2:
+ # @MIGRATION_PASS:
 -#
--# Information about a vnc server
-+#     Information about a vnc server
+-# Emitted from the source side of a migration at the start of each
+-# pass (when it syncs the dirty bitmap)
++#     Emitted from the source side of a migration at the start of each
++#     pass (when it syncs the dirty bitmap)
  #
- # @id: vnc server name.
+ # @pass: An incrementing count (starting at 1 on the first pass)
  #
-@@ -655,8 +627,7 @@
+@@ -1134,8 +1118,8 @@
  
  ##
- # @query-vnc:
+ # @COLOMessage:
 -#
--# Return information about the current VNC server
-+#     Return information about the current VNC server
+-# The message transmission between Primary side and Secondary side.
++#     The message transmission between Primary side and Secondary
++#     side.
  #
- # Since: 0.14
+ # @checkpoint-ready: Secondary VM (SVM) is ready for checkpointing
  #
-@@ -685,8 +656,7 @@
+@@ -1161,8 +1145,7 @@
  
  ##
- # @query-vnc-servers:
+ # @COLOMode:
 -#
--# Return a list of vnc servers.  The list can be empty.
-+#     Return a list of vnc servers.  The list can be empty.
+-# The COLO current mode.
++#     The COLO current mode.
  #
- # Since: 2.3
- ##
-@@ -695,8 +665,7 @@
+ # @none: COLO is disabled.
+ #
+@@ -1177,8 +1160,7 @@
  
  ##
- # @change-vnc-password:
+ # @FailoverStatus:
 -#
--# Change the VNC server password.
-+#     Change the VNC server password.
+-# An enumeration of COLO failover status
++#     An enumeration of COLO failover status
  #
- # @password: the new password to use with VNC authentication
+ # @none: no failover has ever happened
  #
-@@ -712,8 +681,7 @@
+@@ -1198,9 +1180,8 @@
  
  ##
- # @VNC_CONNECTED:
+ # @COLO_EXIT:
 -#
--# Emitted when a VNC client establishes a connection
-+#     Emitted when a VNC client establishes a connection
+-# Emitted when VM finishes COLO mode due to some errors happening or
+-# at the request of users.
++#     Emitted when VM finishes COLO mode due to some errors happening
++#     or at the request of users.
  #
- # @server: server information
+ # @mode: report COLO mode when COLO exited.
  #
-@@ -741,9 +709,8 @@
+@@ -1218,8 +1199,7 @@
  
  ##
- # @VNC_INITIALIZED:
+ # @COLOExitReason:
 -#
--# Emitted after authentication takes place (if any) and the VNC
--# session is made active
-+#     Emitted after authentication takes place (if any) and the VNC
-+#     session is made active
+-# The reason for a COLO exit.
++#     The reason for a COLO exit.
  #
- # @server: server information
- #
-@@ -768,8 +735,7 @@
+ # @none: failover has never happened.  This state does not occur in
+ #     the `COLO_EXIT` event, and is only visible in the result of
+@@ -1238,12 +1218,11 @@
  
  ##
- # @VNC_DISCONNECTED:
+ # @x-colo-lost-heartbeat:
 -#
--# Emitted when the connection is closed
-+#     Emitted when the connection is closed
+-# Tell QEMU that heartbeat is lost, request it to do takeover
+-# procedures.  If this command is sent to the PVM, the Primary side
+-# will exit COLO mode.  If sent to the Secondary, the Secondary side
+-# will run failover work, then takes over server operation to become
+-# the service VM.
++#     Tell QEMU that heartbeat is lost, request it to do takeover
++#     procedures.  If this command is sent to the PVM, the Primary
++#     side will exit COLO mode.  If sent to the Secondary, the
++#     Secondary side will run failover work, then takes over server
++#     operation to become the service VM.
  #
- # @server: server information
+ # Features:
  #
-@@ -800,8 +766,7 @@
+@@ -1281,8 +1260,7 @@
  
  ##
- # @MouseInfo:
+ # @migrate-continue:
 -#
--# Information about a mouse device.
-+#     Information about a mouse device.
+-# Continue migration when it's in a paused state.
++#     Continue migration when it's in a paused state.
  #
- # @name: the name of the mouse device
+ # @state: The state the migration is currently expected to be in
  #
-@@ -820,8 +785,7 @@
+@@ -1298,8 +1276,7 @@
  
  ##
- # @query-mice:
+ # @MigrationAddressType:
 -#
--# Return information about each active mouse device
-+#     Return information about each active mouse device
+-# The migration stream transport mechanisms.
++#     The migration stream transport mechanisms.
  #
- # Returns: a list of info for each device
+ # @socket: Migrate via socket.
  #
-@@ -850,10 +814,9 @@
+@@ -1339,8 +1316,7 @@
  
  ##
- # @QKeyCode:
-+#     An enumeration of key name.
- #
--# An enumeration of key name.
+ # @MigrationAddress:
 -#
--# This is used by the `send-key` command.
-+#     This is used by the `send-key` command.
+-# Migration endpoint configuration.
++#     Migration endpoint configuration.
  #
- # @unmapped: since 2.0
+ # @transport: The migration stream transport mechanism
  #
-@@ -1005,8 +968,7 @@
+@@ -1357,8 +1333,7 @@
  
  ##
- # @KeyValue:
+ # @MigrationChannelType:
 -#
--# Represents a keyboard key.
-+#     Represents a keyboard key.
+-# The migration channel-type request options.
++#     The migration channel-type request options.
  #
- # @type: key encoding
+ # @main: Main outbound migration channel.
  #
-@@ -1021,8 +983,7 @@
+@@ -1371,8 +1346,7 @@
  
  ##
- # @send-key:
+ # @MigrationChannel:
 -#
--# Send keys to guest.
-+#     Send keys to guest.
+-# Migration stream channel parameters.
++#     Migration stream channel parameters.
  #
- # @keys: An array of `KeyValue` elements.  All @KeyValues in this
- #     array are simultaneously sent to the guest.  A `KeyValue`.number
-@@ -1050,8 +1011,7 @@
+ # @channel-type: Channel type for transferring packet information.
+ #
+@@ -1387,8 +1361,7 @@
  
  ##
- # @InputButton:
+ # @migrate:
 -#
--# Button of a pointer input device (mouse, tablet).
-+#     Button of a pointer input device (mouse, tablet).
+-# Migrates the current running guest to another Virtual Machine.
++#     Migrates the current running guest to another Virtual Machine.
  #
- # @side: front side button of a 5-button mouse (since 2.9)
+ # @uri: the Uniform Resource Identifier of the destination VM
  #
-@@ -1067,8 +1027,7 @@
+@@ -1464,9 +1437,8 @@
  
  ##
- # @InputAxis:
+ # @migrate-incoming:
 -#
--# Position axis of a pointer input device (mouse, tablet).
-+#     Position axis of a pointer input device (mouse, tablet).
+-# Start an incoming migration.  QEMU must have been started with
+-# -incoming defer.
++#     Start an incoming migration.  QEMU must have been started with
++#     -incoming defer.
  #
- # Since: 2.0
- ##
-@@ -1077,8 +1036,7 @@
+ # @uri: The Uniform Resource Identifier identifying the source or
+ #     address to listen on
+@@ -1536,9 +1508,8 @@
  
  ##
- # @InputMultiTouchType:
+ # @xen-save-devices-state:
 -#
--# Type of a multi-touch event.
-+#     Type of a multi-touch event.
+-# Save the state of all devices to file.  The RAM and the block
+-# devices of the VM are not saved by this command.
++#     Save the state of all devices to file.  The RAM and the block
++#     devices of the VM are not saved by this command.
  #
- # @begin: A new touch event sequence has just started.
- #
-@@ -1097,8 +1055,7 @@
+ # @filename: the file to save the state of the devices to as binary
+ #     data.  See `xen-save-devices-state`.txt for a description of the
+@@ -1560,8 +1531,7 @@
  
  ##
- # @InputKeyEvent:
+ # @xen-set-global-dirty-log:
 -#
--# Keyboard input event.
-+#     Keyboard input event.
+-# Enable or disable the global dirty log mode.
++#     Enable or disable the global dirty log mode.
  #
- # @key: Which key this event is for.
+ # @enable: true to enable, false to disable.
  #
-@@ -1112,8 +1069,7 @@
+@@ -1577,9 +1547,8 @@
  
  ##
- # @InputBtnEvent:
+ # @xen-load-devices-state:
 -#
--# Pointer button input event.
-+#     Pointer button input event.
+-# Load the state of all devices from file.  The RAM and the block
+-# devices of the VM are not loaded by this command.
++#     Load the state of all devices from file.  The RAM and the block
++#     devices of the VM are not loaded by this command.
  #
- # @button: Which button this event is for.
- #
-@@ -1127,8 +1083,7 @@
+ # @filename: the file to load the state of the devices from as binary
+ #     data.  See `xen-save-devices-state`.txt for a description of the
+@@ -1597,8 +1566,7 @@
  
  ##
- # @InputMoveEvent:
+ # @xen-set-replication:
 -#
--# Pointer motion input event.
-+#     Pointer motion input event.
+-# Enable or disable replication.
++#     Enable or disable replication.
  #
- # @axis: Which axis is referenced by @value.
+ # @enable: true to enable, false to disable.
  #
-@@ -1143,8 +1098,7 @@
+@@ -1621,8 +1589,7 @@
  
  ##
- # @InputMultiTouchEvent:
+ # @ReplicationStatus:
 -#
--# MultiTouch input event.
-+#     MultiTouch input event.
+-# The result format for `query-xen-replication-status`.
++#     The result format for `query-xen-replication-status`.
  #
- # @type: The type of multi-touch event.
+ # @error: true if an error happened, false if replication is normal.
  #
-@@ -1226,8 +1180,7 @@
+@@ -1670,8 +1637,7 @@
  
  ##
- # @InputEvent:
+ # @COLOStatus:
 -#
--# Input event union.
-+#     Input event union.
+-# The result format for `query-colo-status`.
++#     The result format for `query-colo-status`.
  #
- # @type: the type of input event
- #
-@@ -1316,8 +1269,7 @@
+ # @mode: COLO running mode.  If COLO is running, this field will
+ #     return 'primary' or 'secondary'.
+@@ -1709,8 +1675,7 @@
  
  ##
- # @DisplayGTK:
+ # @migrate-recover:
 -#
--# GTK display options.
-+#     GTK display options.
+-# Provide a recovery migration stream URI.
++#     Provide a recovery migration stream URI.
  #
- # @clipboard: Enable host-guest clipboard sharing.  Defaults to "off".
- #     (Since 11.1)
-@@ -1357,8 +1309,7 @@
+ # @uri: the URI to be used for the recovery of migration stream.
+ #
+@@ -1742,11 +1707,10 @@
  
  ##
- # @DisplayEGLHeadless:
+ # @UNPLUG_PRIMARY:
 -#
--# EGL headless display options.
-+#     EGL headless display options.
+-# Emitted from source side of a migration when migration state is
+-# WAIT_UNPLUG.  Device was unplugged by guest operating system.
+-# Device resources in QEMU are kept on standby to be able to re-plug
+-# it in case of migration failure.
++#     Emitted from source side of a migration when migration state is
++#     WAIT_UNPLUG.  Device was unplugged by guest operating system.
++#     Device resources in QEMU are kept on standby to be able to
++#     re-plug it in case of migration failure.
  #
- # @rendernode: Which DRM render node should be used.  Default is the
- #     first available node on the host.
-@@ -1370,8 +1321,7 @@
+ # @device-id: QEMU device id of the unplugged device
+ #
+@@ -1763,8 +1727,7 @@
  
  ##
- # @DisplayDBus:
+ # @DirtyRateVcpu:
 -#
--# DBus display options.
-+#     DBus display options.
+-# Dirty rate of vcpu.
++#     Dirty rate of vcpu.
  #
- # @addr: The D-Bus bus address (default to the session bus).
+ # @id: vcpu index.
  #
-@@ -1393,8 +1343,7 @@
+@@ -1777,8 +1740,7 @@
  
  ##
- # @DisplayGLMode:
+ # @DirtyRateStatus:
 -#
--# Display OpenGL mode.
-+#     Display OpenGL mode.
+-# Dirty page rate measurement status.
++#     Dirty page rate measurement status.
  #
- # @off: Disable OpenGL (default).
+ # @unstarted: measuring thread has not been started yet
  #
-@@ -1413,8 +1362,7 @@
+@@ -1793,9 +1755,8 @@
  
  ##
- # @DisplayCurses:
+ # @DirtyRateMeasureMode:
 -#
--# Curses display options.
-+#     Curses display options.
+-# Method used to measure dirty page rate.  Differences between
+-# available methods are explained in `calc-dirty-rate`.
++#     Method used to measure dirty page rate.  Differences between
++#     available methods are explained in `calc-dirty-rate`.
  #
- # @charset: Font charset used by guest (default: CP437).
+ # @page-sampling: use page sampling
  #
-@@ -1425,8 +1373,7 @@
+@@ -1810,8 +1771,7 @@
  
  ##
- # @DisplayCocoa:
+ # @TimeUnit:
 -#
--# Cocoa display options.
-+#     Cocoa display options.
+-# Specifies unit in which time-related value is specified.
++#     Specifies unit in which time-related value is specified.
  #
- # @left-command-key: Enable/disable forwarding of left command key to
- #     guest.  Allows command-tab window switching on the host without
-@@ -1461,8 +1408,8 @@
+ # @second: value is in seconds
+ #
+@@ -1824,8 +1784,7 @@
  
  ##
- # @HotKeyMod:
+ # @DirtyRateInfo:
 -#
--# Set of modifier keys that need to be held for shortcut key actions.
-+#    Set of modifier keys that need to be held for shortcut key
-+#    actions.
+-# Information about measured dirty page rate.
++#     Information about measured dirty page rate.
  #
- # Since: 7.1
- ##
-@@ -1471,8 +1418,7 @@
+ # @dirty-rate: an estimate of the dirty page rate of the VM in units
+ #     of MiB/s.  Value is present only when @status is 'measured'.
+@@ -1935,8 +1894,8 @@
  
  ##
- # @DisplaySDL:
+ # @query-dirty-rate:
 -#
--# SDL2 display options.
-+#     SDL2 display options.
+-# Query results of the most recent invocation of `calc-dirty-rate`.
++#     Query results of the most recent invocation of
++#     `calc-dirty-rate`.
  #
- # @grab-mod: Modifier keys that should be pressed together with the
- #     "G" key to release the mouse grab.
-@@ -1484,8 +1430,7 @@
+ # @calc-time-unit: time unit in which to report calculation time.
+ #     By default it is reported in seconds.  (Since 8.2)
+@@ -1962,8 +1921,7 @@
  
  ##
- # @DisplayType:
+ # @DirtyLimitInfo:
 -#
--# Display (user interface) type.
-+#     Display (user interface) type.
+-# Dirty page rate limit information of a virtual CPU.
++#     Dirty page rate limit information of a virtual CPU.
  #
- # @default: The default user interface, selecting from the first
- #     available of gtk, sdl, cocoa, and vnc.
-@@ -1535,8 +1480,7 @@
+ # @cpu-index: index of a virtual CPU.
+ #
+@@ -2029,8 +1987,8 @@
  
  ##
- # @DisplayOptions:
+ # @query-vcpu-dirty-limit:
 -#
--# Display (user interface) options.
-+#     Display (user interface) options.
- #
- # @type: Which `DisplayType` QEMU should use.
- #
-@@ -1573,8 +1517,7 @@
- 
- ##
- # @query-display-options:
--#
--# Return information about display configuration
-+#     Return information about display configuration
- #
- # Since: 3.1
- ##
-@@ -1583,8 +1526,7 @@
- 
- ##
- # @DisplayReloadType:
--#
--# Available DisplayReload types.
-+#     Available DisplayReload types.
- #
- # @vnc: VNC display
- #
-@@ -1595,8 +1537,7 @@
- 
- ##
- # @DisplayReloadOptionsVNC:
--#
--# Specify the VNC reload options.
-+#     Specify the VNC reload options.
- #
- # @tls-certs: reload tls certs or not.
- #
-@@ -1607,8 +1548,7 @@
- 
- ##
- # @DisplayReloadOptions:
--#
--# Options of the display configuration reload.
-+#     Options of the display configuration reload.
- #
- # @type: Specify the display type.
- #
-@@ -1621,8 +1561,7 @@
- 
- ##
- # @display-reload:
--#
--# Reload display configuration.
-+#     Reload display configuration.
- #
- # Since: 6.0
- #
-@@ -1638,8 +1577,7 @@
- 
- ##
- # @DisplayUpdateType:
--#
--# Available DisplayUpdate types.
-+#     Available DisplayUpdate types.
- #
- # @vnc: VNC display
- #
-@@ -1650,8 +1588,7 @@
- 
- ##
- # @DisplayUpdateOptionsVNC:
--#
--# Specify the VNC reload options.
-+#     Specify the VNC reload options.
- #
- # @addresses: If specified, change set of addresses to listen for
- #     connections.  Addresses configured for websockets are not
-@@ -1664,8 +1601,7 @@
- 
- ##
- # @DisplayUpdateOptions:
--#
--# Options of the display configuration reload.
-+#     Options of the display configuration reload.
- #
- # @type: Specify the display type.
- #
-@@ -1678,8 +1614,7 @@
- 
- ##
- # @display-update:
--#
--# Update display configuration.
-+#     Update display configuration.
+-# Return information about virtual CPU dirty page rate limits, if any.
++#     Return information about virtual CPU dirty page rate limits, if
++#     any.
  #
  # Since: 7.1
  #
-@@ -1697,10 +1632,10 @@
+@@ -2046,8 +2004,7 @@
  
  ##
- # @client_migrate_info:
+ # @snapshot-save:
 -#
--# Set migration information for remote display.  This makes the server
--# ask the client to automatically reconnect using the new parameters
--# once migration finished successfully.  Only implemented for SPICE.
-+#     Set migration information for remote display.  This makes the
-+#     server ask the client to automatically reconnect using the new
-+#     parameters once migration finished successfully.  Only
-+#     implemented for SPICE.
+-# Save a VM snapshot
++#     Save a VM snapshot
  #
- # @protocol: must be "spice"
+ # @job-id: identifier for the newly created job
+ #
+@@ -2118,8 +2075,7 @@
+ 
+ ##
+ # @snapshot-load:
+-#
+-# Load a VM snapshot
++#     Load a VM snapshot
+ #
+ # @job-id: identifier for the newly created job
+ #
+@@ -2188,8 +2144,7 @@
+ 
+ ##
+ # @snapshot-delete:
+-#
+-# Delete a VM snapshot
++#     Delete a VM snapshot
+ #
+ # @job-id: identifier for the newly created job
  #
 -- 
 2.55.0
