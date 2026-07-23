@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB4123D7F4
-	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 04:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE2632AAB5
+	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 04:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784782289; cv=none; b=lp3WIU2Z81z9vb7HlwgSLqVxFt9Gzlw0DnIJYJgYE+JOXgWzMyAMs0N3nxjyVX6qa73W8RvpplN0oZFjWA5Zs6NGCD32/EFQRWi5vUlxXpbBqeuExTcerGekMXo7aIZS0yup4G4N5YDe39DtwpWtg3S9LkpwqNJHVvmujZfYJBs=
+	t=1784782302; cv=none; b=m4PJ0a1O6KwibAqxYVokFYl4RuM2PvVnh8HfoLEN/Nus/hlANcenHaezvglVPqJHJZ7A5774z9Ed4emSVxN28GjEEaMUtJttLYdZM6/JG9+aaLLpmHvFlZ+xaEQJEF+MND3hpeOBkNPslgV3g96uDAuz21aGo3J7feeWjkt/N98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784782289; c=relaxed/simple;
-	bh=ZjIdTTmOaltM+a7tID0CEbV+bz1zXDJVKnSDUU45k7I=;
+	s=arc-20240116; t=1784782302; c=relaxed/simple;
+	bh=lml0sCwBNAe9/7CrXv9IEgiy9hZcb7xT94hK1k7jyA4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=I/Qfe2lB4aWdNxKHpjyJ7OkBSyNjKdXyb5fcqbOl4l+1R2KYhVNzxmOuTzzooESMbFssyNcW58KzX3lb5kDoFz+7YgCFTX12KczzfPtkgrpEt4+zbRSi3oB/kfcPnuYILKXCh5hNIJu3eRqMphjBou6cWoPdsIRZQ8k0qiumapg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fzIwRFAy; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=CY2WLUq75SXlh17BP6/In2PPD9DXttls5oDSs/4TWaHNgPCAjb9cBYMTRhyB3p8Km0xkID+fD9ImGsCqUB9Puwb6zqsFUJNVZ3lrwUWzDbZgmg5xchK92rrlRVfqIV0IfjU8NPeySrus57yXqyslkQp/B9t+uuMCRmIRmWFA28M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VMuQC0WB; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fzIwRFAy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VMuQC0WB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784782276;
+	s=mimecast20190719; t=1784782284;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BLReHKiKZLrcMhTJHEtDrbs61uxUo1HyBJxoZBg4t+Q=;
-	b=fzIwRFAyiNY+Jt39wzDig532s9GRZOGqA6yQQZ9z7lMSQnI8qWsKu78ECbCJSRMtQr9I+O
-	nIbZvKN0Q/EGQGhbFeoigCP84AARDAS/AgFHqV0xr7QFpLTWTGdSOAeLLgWa6SP2V95jPm
-	dUeiIqGhAxqa0fZJXMRUuVd4yUfMHQU=
+	bh=uK3gVanDkZsjvvgE0Rg1w4gDzuwAaXDx8DZDiRphsfQ=;
+	b=VMuQC0WBtSGVTVPlrz9sGOtvXj5/RAHbnPBEY8+lk0RgILAM/NHwB87EubYzxFiTk7JLrc
+	bXyWoU+7svxvuDQC4kddUI0s4GAZmE4vYED1wJ/LEz1axI+h8fKlaW3KH+sGGiHoNoMt2D
+	rImj4UhCffZ1Fyngob8B4hhwp4GTFQo=
 Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-593-BZq-vpapOaiUMw0l_FqGng-1; Thu,
- 23 Jul 2026 00:51:11 -0400
-X-MC-Unique: BZq-vpapOaiUMw0l_FqGng-1
-X-Mimecast-MFC-AGG-ID: BZq-vpapOaiUMw0l_FqGng_1784782269
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-44-1zGTlrKaO5G6JF2UIT2urw-1; Thu,
+ 23 Jul 2026 00:51:22 -0400
+X-MC-Unique: 1zGTlrKaO5G6JF2UIT2urw-1
+X-Mimecast-MFC-AGG-ID: 1zGTlrKaO5G6JF2UIT2urw_1784782279
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DD7811944F05;
-	Thu, 23 Jul 2026 04:51:08 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5A3101954B26;
+	Thu, 23 Jul 2026 04:51:19 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.44])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 679A6180029D;
-	Thu, 23 Jul 2026 04:50:59 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5531018002AE;
+	Thu, 23 Jul 2026 04:51:09 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -80,9 +80,9 @@ Cc: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
 	Jason Wang <jasowangio@gmail.com>,
 	qemu-trivial@nongnu.org,
 	Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v2 17/44] qapi: convert intro sections for tpm.json
-Date: Thu, 23 Jul 2026 00:47:38 -0400
-Message-ID: <20260723044805.527643-18-jsnow@redhat.com>
+Subject: [PATCH v2 18/44] qapi: convert trivial intro sections for qdev.json
+Date: Thu, 23 Jul 2026 00:47:39 -0400
+Message-ID: <20260723044805.527643-19-jsnow@redhat.com>
 In-Reply-To: <20260723044805.527643-1-jsnow@redhat.com>
 References: <20260723044805.527643-1-jsnow@redhat.com>
 Precedence: bulk
@@ -92,7 +92,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: 0wwJNNAVnJJKKURAEJR9JxPbCxAjfO218Cb9ZbRs3Mk_1784782269
+X-Mimecast-MFC-PROC-ID: oINemdeZZfYfdDY1wwRFQC_eMeZhmm9DU6Jm-AulJ0I_1784782279
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
@@ -101,104 +101,70 @@ content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/tpm.json | 29 ++++++++++-------------------
- 1 file changed, 10 insertions(+), 19 deletions(-)
+ qapi/qdev.json | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/qapi/tpm.json b/qapi/tpm.json
-index 3f2850a5733..6d94be656ae 100644
---- a/qapi/tpm.json
-+++ b/qapi/tpm.json
-@@ -10,8 +10,7 @@
+diff --git a/qapi/qdev.json b/qapi/qdev.json
+index 974cf9c5830..a35321d2fd1 100644
+--- a/qapi/qdev.json
++++ b/qapi/qdev.json
+@@ -14,8 +14,7 @@
  
  ##
- # @TpmModel:
+ # @device-list-properties:
 -#
--# An enumeration of TPM models
-+#     An enumeration of TPM models
+-# List properties associated with a device.
++#     List properties associated with a device.
  #
- # @tpm-tis: TPM TIS model
+ # @typename: the type name of a device
  #
-@@ -26,8 +25,7 @@
+@@ -33,8 +32,7 @@
  
  ##
- # @query-tpm-models:
+ # @device_add:
 -#
--# Return a list of supported TPM models
-+#     Return a list of supported TPM models
+-# Add a device.
++#     Add a device.
  #
- # Since: 1.5
+ # @driver: the name of the new device's driver
  #
-@@ -41,8 +39,7 @@
+@@ -85,8 +83,7 @@
  
  ##
- # @TpmType:
+ # @device_del:
 -#
--# An enumeration of TPM types
-+#     An enumeration of TPM types
+-# Remove a device from a guest
++#     Remove a device from a guest
  #
- # @passthrough: TPM passthrough type
+ # @id: the device's ID or QOM path
  #
-@@ -55,8 +52,7 @@
+@@ -121,11 +118,10 @@
  
  ##
- # @query-tpm-types:
+ # @DEVICE_DELETED:
 -#
--# Return a list of supported TPM types
-+#     Return a list of supported TPM types
+-# Emitted whenever the device removal completion is acknowledged by
+-# the guest.  At this point, it's safe to reuse the specified device
+-# ID.  Device removal can be initiated by the guest or by HMP/QMP
+-# commands.
++#     Emitted whenever the device removal completion is acknowledged
++#     by the guest.  At this point, it's safe to reuse the specified
++#     device ID.  Device removal can be initiated by the guest or by
++#     HMP/QMP commands.
  #
- # Since: 1.5
+ # @device: the device's ID if it has one
  #
-@@ -70,8 +66,7 @@
+@@ -145,9 +141,8 @@
  
  ##
- # @TPMPassthroughOptions:
+ # @DEVICE_UNPLUG_GUEST_ERROR:
 -#
--# Information about the TPM passthrough type
-+#     Information about the TPM passthrough type
+-# Emitted when a device hot unplug fails due to a guest reported
+-# error.
++#     Emitted when a device hot unplug fails due to a guest reported
++#     error.
  #
- # @path: string describing the path used for accessing the TPM device
- #
-@@ -87,8 +82,7 @@
- 
- ##
- # @TPMEmulatorOptions:
--#
--# Information about the TPM emulator type
-+#     Information about the TPM emulator type
- #
- # @chardev: Name of a unix socket chardev
- #
-@@ -121,9 +115,8 @@
- 
- ##
- # @TpmTypeOptions:
--#
--# A union referencing different TPM backend types' configuration
--# options
-+#     A union referencing different TPM backend types' configuration
-+#     options
- #
- # @type:
- #     - 'passthrough' The configuration options for the TPM
-@@ -142,8 +135,7 @@
- 
- ##
- # @TPMInfo:
--#
--# Information about the TPM
-+#     Information about the TPM
- #
- # @id: The Id of the TPM
- #
-@@ -161,8 +153,7 @@
- 
- ##
- # @query-tpm:
--#
--# Return information about the TPM device
-+#     Return information about the TPM device
- #
- # Since: 1.5
+ # @device: the device's ID if it has one
  #
 -- 
 2.55.0
