@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C909A378824
-	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 04:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B973932E2
+	for <linux-cxl@vger.kernel.org>; Thu, 23 Jul 2026 04:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784782398; cv=none; b=tGmfJadXpB0uCEJ4gG9eOVMvTMNcfrI+TtxhDAL8SzeNdz5MfutB3PcqK1Y6bVVfur635waGlmaf4k1cijyCtefkJe6+loi1C9jTVaN6TpWGtuCcxBglryrxyIhghzwxKv6msYoPTkPGNz0EdVYha2WSy12t+8NZAiRa9y36eLk=
+	t=1784782418; cv=none; b=OtjyYoC1Exzc/25aTQkwv5Xc1/8HuBdGBFJT9NsbGLYKqMGZpErofP7kqZIhucsMBgXiFMWrdOFOzmxoNWU1sc7DmoovfV/8CuOBMdxDLA0IYpi+fx8CJDfckhab9+fVWj8SDTvJ/N5Iw9qr2iB1Q+z/0yZkv5CMU7tgIlnNvLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784782398; c=relaxed/simple;
-	bh=QSwP5k8lm+kJRPLuPICnUYduiWsO2mfk15l2+jfguiQ=;
+	s=arc-20240116; t=1784782418; c=relaxed/simple;
+	bh=0PirwlxZ2i7yPLmiffUMiAS6RaALirfLcbahUlAfF5A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=GwkMXndPfxgS71Lcfzm+frxvQqEVpuG1hxPuy4BVCSis4DB+Rd6prL6yVHssvLbjfRlttMGM2kLlVlYMsCJl211V4gqaSC7XWY9lan2m+kZJm1j6jqngjavlSQ6pWAkPtg7I/EFRQSYQGaIiIwBum2CFMtgwZCaDBoMMfegvSy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IqqoqqAS; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=eO3XM80fW7OXrPxu4DNyHwdhLY0ROEjPo32BmOPrs6QTlBiSqPib7KWDo4YhCn2cXF7ykJFL96ECXWlhV4ynlgR+rcPbup/w2YzS82YnXG0X7uLfhjawtbA6DGIN8pLnSUeL67vwYjPYMDFc9yD6AmTZ/QfZ1HSjPU+D9qphL3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FXz1bgM4; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IqqoqqAS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FXz1bgM4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784782384;
+	s=mimecast20190719; t=1784782402;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BuLUJmRQbdL+tiBVb/y3st603k+nuJ/NK2BP1mGjFEM=;
-	b=IqqoqqASdkQRI+R77welFyEcABVyWOKakwLcxRSUivq8MzaaABYN27IM5ljSDmLJZLaQff
-	NOV557AlVHpJwFdesBpRAYUgNkQENS84bfphY7f2bD281xPep4yAYvQURYzRFMyYaTddFS
-	2bqncjWY3s0U8YMsS9589OYwfR0vjww=
+	bh=CqpQURYzqagcZw6PUEaGQX94Y2bhPgrE5ybIwr9ASNk=;
+	b=FXz1bgM4ws6TzxpDATWJL7WwUHP7n8hasn8yj75v60dHCEFC4xGIxSsznWBwSlkPmUbvIu
+	zRCuIkAkR6e2YnxDfBdFrJCIW6wgAlYLMRjGBsQS/dW57VeIuoMguInMy1YYmTyocOtUKN
+	oTbYacI6W5daMWDRGmIxX1PNgFj3hdQ=
 Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-205-CFvqc4DOO3CwZcM_zo-wjQ-1; Thu,
- 23 Jul 2026 00:53:00 -0400
-X-MC-Unique: CFvqc4DOO3CwZcM_zo-wjQ-1
-X-Mimecast-MFC-AGG-ID: CFvqc4DOO3CwZcM_zo-wjQ_1784782377
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-694-2u3NbkSaOaqH6BtjDhRcyA-1; Thu,
+ 23 Jul 2026 00:53:19 -0400
+X-MC-Unique: 2u3NbkSaOaqH6BtjDhRcyA-1
+X-Mimecast-MFC-AGG-ID: 2u3NbkSaOaqH6BtjDhRcyA_1784782396
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3B2AC1805F18;
-	Thu, 23 Jul 2026 04:52:57 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 77ED41805F05;
+	Thu, 23 Jul 2026 04:53:16 +0000 (UTC)
 Received: from jsnow-thinkpadp16vgen1.westford.csb (unknown [10.22.88.44])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B996F18002B5;
-	Thu, 23 Jul 2026 04:52:47 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EDD4918002AE;
+	Thu, 23 Jul 2026 04:53:05 +0000 (UTC)
 From: John Snow <jsnow@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
@@ -80,9 +80,9 @@ Cc: =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
 	Jason Wang <jasowangio@gmail.com>,
 	qemu-trivial@nongnu.org,
 	Jonathan Cameron <jic23@kernel.org>
-Subject: [PATCH v2 28/44] qapi: convert intro sections for rocker.json
-Date: Thu, 23 Jul 2026 00:47:49 -0400
-Message-ID: <20260723044805.527643-29-jsnow@redhat.com>
+Subject: [PATCH v2 30/44] qapi: convert trivial intro sections for block-export.json
+Date: Thu, 23 Jul 2026 00:47:51 -0400
+Message-ID: <20260723044805.527643-31-jsnow@redhat.com>
 In-Reply-To: <20260723044805.527643-1-jsnow@redhat.com>
 References: <20260723044805.527643-1-jsnow@redhat.com>
 Precedence: bulk
@@ -92,7 +92,7 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: jbAj_E_eAtn0SG69EULKTXIz0KaxEcc8u9sZ6QmoTU8_1784782377
+X-Mimecast-MFC-PROC-ID: WhcLmTYzwovvJjIbwG9ViKm9bdSvrNMGm-iP_glif5g_1784782396
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
@@ -101,142 +101,232 @@ content-type: text/plain; charset="US-ASCII"; x-default=true
 
 Signed-off-by: John Snow <jsnow@redhat.com>
 ---
- qapi/rocker.json | 39 +++++++++++++--------------------------
- 1 file changed, 13 insertions(+), 26 deletions(-)
+ qapi/block-export.json | 87 +++++++++++++++++-------------------------
+ 1 file changed, 35 insertions(+), 52 deletions(-)
 
-diff --git a/qapi/rocker.json b/qapi/rocker.json
-index 5d2dbd26034..7eb0a88dafd 100644
---- a/qapi/rocker.json
-+++ b/qapi/rocker.json
-@@ -9,8 +9,7 @@
+diff --git a/qapi/block-export.json b/qapi/block-export.json
+index dd724acf1cb..e9f7e72c8ee 100644
+--- a/qapi/block-export.json
++++ b/qapi/block-export.json
+@@ -37,10 +37,9 @@
  
  ##
- # @RockerSwitch:
+ # @NbdServerOptions:
 -#
--# Rocker switch information.
-+#     Rocker switch information.
+-# Keep this type consistent with the `NbdServerOptionsLegacy` type.
+-# The only intended difference is using `SocketAddress` instead of
+-# `SocketAddressLegacy`.
++#     Keep this type consistent with the `NbdServerOptionsLegacy`
++#     type.  The only intended difference is using `SocketAddress`
++#     instead of `SocketAddressLegacy`.
  #
- # @name: switch name
- #
-@@ -25,8 +24,7 @@
+ # @addr: Address on which to listen (since 4.2).
+ ##
+@@ -50,10 +49,9 @@
  
  ##
- # @query-rocker:
+ # @NbdServerOptionsLegacy:
 -#
--# Return rocker switch information.
-+#     Return rocker switch information.
+-# Keep this type consistent with the `NbdServerOptions` type.  The
+-# only intended difference is using `SocketAddressLegacy` instead of
+-# `SocketAddress`.
++#     Keep this type consistent with the `NbdServerOptions` type.  The
++#     only intended difference is using `SocketAddressLegacy` instead
++#     of `SocketAddress`.
  #
- # @name: switch name
- #
-@@ -43,8 +41,7 @@
+ # @addr: Address on which to listen (since 1.3).
+ ##
+@@ -63,11 +61,11 @@
  
  ##
- # @RockerPortDuplex:
+ # @nbd-server-start:
 -#
--# An enumeration of port duplex states.
-+#     An enumeration of port duplex states.
+-# Start an NBD server listening on the given host and port.  Block
+-# devices can then be exported using `nbd-server-add`.  The NBD server
+-# will present them as named exports; for example, another QEMU
+-# instance could refer to them as "nbd:HOST:PORT:exportname=NAME".
++#     Start an NBD server listening on the given host and port.  Block
++#     devices can then be exported using `nbd-server-add`.  The NBD
++#     server will present them as named exports; for example, another
++#     QEMU instance could refer to them as
++#     "nbd:HOST:PORT:exportname=NAME".
  #
- # @half: half duplex
- #
-@@ -56,8 +53,7 @@
+ # Errors:
+ #     - if the server is already running
+@@ -80,9 +78,8 @@
  
  ##
- # @RockerPortAutoneg:
+ # @BlockExportOptionsNbdBase:
 -#
--# An enumeration of port autoneg states.
-+#     An enumeration of port autoneg states.
+-# An NBD block export (common options shared between `nbd-server-add`
+-# and the NBD branch of `block-export-add`).
++#     An NBD block export (common options shared between
++#     `nbd-server-add` and the NBD branch of `block-export-add`).
  #
- # @off: autoneg is off
- #
-@@ -69,8 +65,7 @@
+ # @name: Export name.  If unspecified, the @device parameter is used
+ #     as the export name.  (Since 2.12)
+@@ -97,9 +94,8 @@
  
  ##
- # @RockerPort:
+ # @BlockExportOptionsNbd:
 -#
--# Rocker switch port information.
-+#     Rocker switch port information.
+-# An NBD block export (distinct options used in the NBD branch of
+-# `block-export-add`).
++#     An NBD block export (distinct options used in the NBD branch of
++#     `block-export-add`).
  #
- # @name: port name
- #
-@@ -93,8 +88,7 @@
+ # @bitmaps: Also export each of the named dirty bitmaps reachable from
+ #     @device, so the NBD client can use NBD_OPT_SET_META_CONTEXT with
+@@ -121,8 +117,7 @@
  
  ##
- # @query-rocker-ports:
+ # @BlockExportOptionsVhostUserBlk:
 -#
--# Return rocker switch port information.
-+#     Return rocker switch port information.
+-# A vhost-user-blk block export.
++#     A vhost-user-blk block export.
  #
- # @name: port name
- #
-@@ -115,8 +109,7 @@
+ # @addr: The vhost-user socket on which to listen.  Both 'unix' and
+ #     'fd' `SocketAddress` types are supported.  Passed fds must be
+@@ -143,8 +138,7 @@
  
  ##
- # @RockerOfDpaFlowKey:
+ # @FuseExportAllowOther:
 -#
--# Rocker switch OF-DPA flow key
-+#     Rocker switch OF-DPA flow key
+-# Possible allow_other modes for FUSE exports.
++#     Possible allow_other modes for FUSE exports.
  #
- # @priority: key priority, 0 being lowest priority
+ # @off: Do not pass allow_other as a mount option.
  #
-@@ -153,8 +146,7 @@
+@@ -195,8 +189,7 @@
  
  ##
- # @RockerOfDpaFlowMask:
+ # @BlockExportOptionsVduseBlk:
 -#
--# Rocker switch OF-DPA flow mask
-+#     Rocker switch OF-DPA flow mask
+-# A vduse-blk block export.
++#     A vduse-blk block export.
  #
- # @in-pport: physical input port
+ # @name: the name of VDUSE device (must be unique across the host).
  #
-@@ -182,8 +174,7 @@
+@@ -221,8 +214,7 @@
  
  ##
- # @RockerOfDpaFlowAction:
+ # @NbdServerAddOptions:
 -#
--# Rocker switch OF-DPA flow action
-+#     Rocker switch OF-DPA flow action
+-# An NBD block export, per legacy `nbd-server-add` command.
++#     An NBD block export, per legacy `nbd-server-add` command.
  #
- # @goto-tbl: next table ID
+ # @device: The device name or node name of the node to be exported
  #
-@@ -209,8 +200,7 @@
+@@ -266,8 +258,7 @@
  
  ##
- # @RockerOfDpaFlow:
+ # @BlockExportRemoveMode:
 -#
--# Rocker switch OF-DPA flow
-+#     Rocker switch OF-DPA flow
+-# Mode for removing a block export.
++#     Mode for removing a block export.
  #
- # @cookie: flow unique cookie ID
- #
-@@ -230,8 +220,7 @@
+ # @safe: Remove export if there are no existing connections, fail
+ #     otherwise.
+@@ -289,8 +280,7 @@
  
  ##
- # @query-rocker-of-dpa-flows:
+ # @nbd-server-remove:
 -#
--# Return rocker OF-DPA flow information.
-+#     Return rocker OF-DPA flow information.
+-# Remove NBD export by name.
++#     Remove NBD export by name.
  #
- # @name: switch name
+ # @name: Block export id.
  #
-@@ -261,8 +250,7 @@
+@@ -316,9 +306,8 @@
  
  ##
- # @RockerOfDpaGroup:
+ # @nbd-server-stop:
 -#
--# Rocker switch OF-DPA group
-+#     Rocker switch OF-DPA group
+-# Stop QEMU's embedded NBD server, and unregister all devices
+-# previously added via `nbd-server-add`.
++#     Stop QEMU's embedded NBD server, and unregister all devices
++#     previously added via `nbd-server-add`.
  #
- # @id: group unique ID
- #
-@@ -305,8 +293,7 @@
+ # Since: 1.3
+ ##
+@@ -327,8 +316,7 @@
  
  ##
- # @query-rocker-of-dpa-groups:
+ # @BlockExportType:
 -#
--# Return rocker OF-DPA group information.
-+#     Return rocker OF-DPA group information.
+-# An enumeration of block export types
++#     An enumeration of block export types
  #
- # @name: switch name
+ # @nbd: NBD export
+ #
+@@ -349,9 +337,8 @@
+ 
+ ##
+ # @BlockExportOptions:
+-#
+-# Describes a block export, i.e. how single node should be exported on
+-# an external interface.
++#     Describes a block export, i.e. how single node should be
++#     exported on an external interface.
+ #
+ # @type: Block export type
+ #
+@@ -412,9 +399,8 @@
+ 
+ ##
+ # @BlockExportIothreads:
+-#
+-# Specify a single or multiple I/O threads in which to run a block
+-# export's I/O.
++#     Specify a single or multiple I/O threads in which to run a block
++#     export's I/O.
+ #
+ # @single: Run the export's I/O in the given single I/O thread.
+ #
+@@ -436,8 +422,7 @@
+ 
+ ##
+ # @block-export-add:
+-#
+-# Creates a new block export.
++#     Creates a new block export.
+ #
+ # Since: 5.2
+ ##
+@@ -447,10 +432,10 @@
+ 
+ ##
+ # @block-export-del:
+-#
+-# Request to remove a block export.  This drops the user's reference
+-# to the export, but the export may still stay around after this
+-# command returns until the shutdown of the export has completed.
++#     Request to remove a block export.  This drops the user's
++#     reference to the export, but the export may still stay around
++#     after this command returns until the shutdown of the export has
++#     completed.
+ #
+ # @id: Block export id.
+ #
+@@ -470,8 +455,7 @@
+ 
+ ##
+ # @BLOCK_EXPORT_DELETED:
+-#
+-# Emitted when a block export is removed and its id can be reused.
++#     Emitted when a block export is removed and its id can be reused.
+ #
+ # @id: Block export id.
+ #
+@@ -482,8 +466,7 @@
+ 
+ ##
+ # @BlockExportInfo:
+-#
+-# Information about a single block export.
++#     Information about a single block export.
+ #
+ # @id: The unique identifier for the block export
  #
 -- 
 2.55.0
