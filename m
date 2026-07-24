@@ -1,105 +1,159 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0F240097F
-	for <linux-cxl@vger.kernel.org>; Fri, 24 Jul 2026 12:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103D925CC57
+	for <linux-cxl@vger.kernel.org>; Fri, 24 Jul 2026 13:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784895056; cv=none; b=awQanl6Mvx6jiHP1RLK29EpWaTjS4GtQJnNNk7Zwf8zeCrzEvj2N8hnGTeu6b80fRDSMwDj1/cuY+Nrtg7xuC5x51/FQtQmtMtU950FrtmoiHpNwo9rxoKOnUWYfQ4lW+EvNXRv78LNnihuI4oBMQ5oX76pryy2TUDZWX0fcZfI=
+	t=1784898402; cv=none; b=AP1I4CEPxn7ufJb7iRs1lPjAq+mAwJ8YewlzGcITaREtiCUfEqKWNJIfaCWxPsVj5AACRnuLkLAndlNj26qYCIu1jBCWZAnhdBVdUIQnfi+46E9nhUjm5eiEnCA/n+Uz4BD//wAUTEew1TR0HyhaASzECzWB4ZZu1qMG0/H8k1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784895056; c=relaxed/simple;
-	bh=+K75ZKUUT9jKQO4Hm6LpjU8yweCppiGSUWmxtwjqqpY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o/jh3e5Yl89ShRYJNpPN7c6EmywqJzACjHky59RixSB5v8L3C9+TQsjzY6e6azw9sad3PIVHqFPMxNgbmxgE9hocDr7Zwj3egx65zmEx6TD7xL4YlBGv/UlOZm1nOfPJotsPgRHExrS4vqnHlIKQ+ZBjGNs5gtbVPaCwQtXgAoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=SkBvlUe0; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1784898402; c=relaxed/simple;
+	bh=BO1Qo1nw+0PvCR2G2yHuB96lktg3Fj/o/8I/fLPhaLs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A820+S7Exik4Afsq2zZn/9D6tbVV3VDXk61WbePkzi52tfa6136b+qpBB/dG0Va6n5+07QRlIxn8x7vKFWLR6njXcSvo8IuqTFYTdPr1ByEmrqtySQUL5Tjnv1jZgdjA8Bp8Br+R7cWbIqfqMA1bMj1dbLTbqsOIoMKeND1EMz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=owOCOzrs; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="SkBvlUe0"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1784895048; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=AY2MUFtWa7qbEgOXmtH7fiAkQnXvuDoQ+rmq6ZDnlW0=;
-	b=SkBvlUe0ez7y4ULN4wVzJvcuSgizuCJLT6sa8Miuc+RPxCN3x2U+xlnSErR1sRQXy6p3uNElTDs5WqxwRAEJKrWk9D3LPZT+TNIFoUW//LTZiAX/JvxQKvlKF1quG9xIHv6uwWRepv/sGiHQr2Bg179KjFEw/LikRVGJZH1EE+A=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0X7j4T27_1784895030;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X7j4T27_1784895030 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 24 Jul 2026 20:10:47 +0800
-From: Chen Pei <cp0613@linux.alibaba.com>
-To: Junjie Cao <junjie.cao@intel.com>
-Cc: jic23@kernel.org,
-	pbonzini@redhat.com,
-	palmer@dabbelt.com,
-	alistair.francis@wdc.com,
-	liwei1518@gmail.com,
-	daniel.barboza@oss.qualcomm.com,
-	zhiwei_liu@linux.alibaba.com,
-	chao.liu.zevorn@gmail.com,
-	sunilvl@ventanamicro.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	imammedo@redhat.com,
-	mst@redhat.com,
-	guoren@kernel.org,
-	qemu-riscv@nongnu.org,
-	qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] hw/riscv/virt,gpex: Provide 32-bit MMIO window for CXL host bridges
-Date: Fri, 24 Jul 2026 20:10:20 +0800
-Message-ID: <20260724020000.100000-1-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260722135240.763013-1-junjie.cao@intel.com>
-References: <20260618093827.3507-1-cp0613@linux.alibaba.com> <20260618093827.3507-4-cp0613@linux.alibaba.com> <20260722135240.763013-1-junjie.cao@intel.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="owOCOzrs"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-8efcef23d21so3899926d6.2
+        for <linux-cxl@vger.kernel.org>; Fri, 24 Jul 2026 06:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1784898400; x=1785503200; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=uClgs/33iOo+YM1fFExYaaz7O5yD2KHvC68r49braVw=;
+        b=owOCOzrs8uY6A5RtywfAysDKXLFeRjf1meYDZH6XqhX9eUwK/JMdzMWsKzkVsaEIvd
+         AfIcTjLmyUYnQe35AqxCdEGauL4CPCNNPdV9nPgERmJef4WbvH0DhYvbXCPInJnPLrYX
+         dMp9FFfFTYlW99hUnozn+PZfuhK0t2ESilG/g1r5LLADVc2VIshJhYhi/0Jwt9Z9BIJA
+         v0YhggNlAo/xHIwkZMAEbfthbBcY91+gHM+TIw5AyoaFPsk3yDOifG5LkSjD1nHmrYV8
+         YiGj2e+HNnMT/kxn9EmuAMpcYhxQIoRMrQAb12D8tI7Zu3sdmcQl79wzqcQ8jst1E/FD
+         WXaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784898400; x=1785503200;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=uClgs/33iOo+YM1fFExYaaz7O5yD2KHvC68r49braVw=;
+        b=o/GbnPPCVmZ7zONulfIbIwXqEOECz9NdNFLLnDBZE3fzXGu2DU0MYz1EVEMnd8iMU0
+         Uw8t62p5JYsgq1g/euJ/oKMELh05S+qx0DucPftOKW2ceV81/cqZolIaj4htkMOMg0r9
+         EJez6XXtMAxsNDRb0i0l1+VU1b06OqzM64UBgYcXQVIbi+vebyd4dtn/bKVtB9bbCN7g
+         r+2UnFKxouq18P+vNTe7UnWKb8ce8wKWEGY3vbXEAfaScB1bUtzUGhR1t71BS+Ao0GEu
+         9Mf5m9shC8qGmV/Fp91glNy4xXho3EobbfYhn24AOyP4MxUNoZllH8jdXcZGdSsiVPyc
+         4Ycw==
+X-Gm-Message-State: AOJu0Yzw69wUQMaI5svasp/weSAiEvepMivgwPwXcyjBoeoerucgyBWP
+	yeCoHvzvMX7Jve3dZrjs1lA3Q0jJYI7GLJ+LSmC4Gujh5NbY3k+kvKasiRrcGaP7c+A=
+X-Gm-Gg: AR+sD122KZZFfG1xhEn8a5lDm5cKdsiaoY/CVEJkS3wRYLIyyY8C5ad2KKslSvarU/r
+	TaFKNKBJNgYq+dV4WGoEbBakoFiNkSJTdVwiSeIfGAWXtne9ljWDqedFFnuMPE44uhUgYsD5hA6
+	0syILnt/FF30aEq8zZN3iFyT0Es2RG5E+GH9ClcxwpKSJxtni05FaMUA+1KWUkdW80iKkQRXYAI
+	x6vHxbi4ReVedMDDN5yxB68kiyqcUoXNLCG2WeRHSHCSgOksYE4TPUw/EDAUgcE44jJtwNTYOsF
+	m2fJTqCP1woEDZqvP1Yc9yM9HGJeFhByNs3Tihlf5m47j5awvEUiRtdLjeS120dsSf0sRczBx7P
+	UwfokIpNbWzF5YK3Hg+snsQwHa5AMcYZEkTDsanUtdEm7lbplm7KBm333K2C/FR1MjA6IBfvs1g
+	jU+opT986+0Stvb5z3R2nPeJgPL2bMj0ew7u2SMKS0EtYJl7dcAqTrcEk+Yrj7IOcos5aH
+X-Received: by 2002:a05:6214:ccb:b0:8dd:4979:4b19 with SMTP id 6a1803df08f44-907ca570d4dmr77408266d6.13.1784898399844;
+        Fri, 24 Jul 2026 06:06:39 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-907ba8b5f85sm68863316d6.2.2026.07.24.06.06.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2026 06:06:39 -0700 (PDT)
+Date: Fri, 24 Jul 2026 09:06:34 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Richard Cheng <icheng@nvidia.com>
+Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, kernel-team@meta.com, djbw@kernel.org, vishal.l.verma@intel.com, 
+	dave.jiang@intel.com, alison.schofield@intel.com
+Subject: Re: [RFC PATCH 0/8] dax/kmem: support for private NUMA nodes
+Message-ID: <amNegmEeK1dUP1Dz@gourry-fedora-PF4VCD3F>
+References: <20260722183519.935213-1-gourry@gourry.net>
+ <amMUZ-QnxV0SKevW@MWDK4CY14F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <amMUZ-QnxV0SKevW@MWDK4CY14F>
 
-Hi Junjie,
+On Fri, Jul 24, 2026 at 03:45:23PM +0800, Richard Cheng wrote:
+> On Wed, Jul 22, 2026 at 02:35:11PM +0800, Gregory Price wrote:
+> 
+> Hi Gregory,
+> 
+> I have some thoughts especially for ownership and configs.
+> 
+> I think it would be good to expose dax control of private node, just with
+> the following guarantees.
+> 
+> Let's make it clear that userspace should never become the owner
+> of private node, they should be driver-owned and 1-to-1 mapping relationship.
+> 
 
-Thanks for the thorough review.
+The intent here is 100% 1-to-1 driver:node mappings.
 
-> cfg->cxl_mmio32 is a single range on the main GPEX host, but this block
-> runs once per CXL host bridge in the QLIST_FOREACH(bus, &bus->child)
-> loop, so with more than one pxb-cxl every ACPI0016 gets a _CRS that
-> declares the *same* [cxl_base, cxl_base + 256 MiB) window.
+Technically there's nothing unreasonable about single-owner multi-node, but
+really we just don't want multiple devices on one node.
 
-You're right. The static path synthesises the bridge window from the
-machine-global cfg->cxl_mmio32 rather than per-bridge state, so it
-does not scale past one pxb-cxl.
+> A userspace tool can request to reconfigure some capability of the DAX device, and
+> maybe how the driver expose it.
+> 
+> A dax range may have several deployment rules, e.g. devdax, system-ram or private, with
+> the patch series' tool, it looks like a userspace tool can convert a DAX device between
+> dax and system-ram mode, I think that's unsafe especially when the region is online as
+> system-ram.
+> 
+> And it will cause coherence issue to be resolved, if no special or strong use cases, I would
+> prevent having such ability to convert the rules in runtime, especially for fixed-purpose device.
+> 
 
-> is supporting more than one pxb-cxl in scope for this series, or is a
-> single CXL host bridge the intended target for now? If the latter, a
-> note to that effect in the commit message would help.
+Right now we can't really prevent a user from doing:
 
-For this series the intended target is a single CXL host bridge,
-which matches the bios-tables test case (one pxb-cxl at bus_nr=12).
-I'll add a note to the commit message in v3.
+echo dax0.0 > dax/drivers/devdax/unbind
+echo dax0.0 > dax/drivers/kmem/bind
 
-> One smaller thing about the hand-built template: the bus range is
-> hard-coded to [bus_num, bus_num + 15], so with cxl.1 at bus_nr=12 and
-> cxl.2 at bus_nr=16 the two _CRS come out as [0x0C,0x1B] and [0x10,0x1F],
-> which overlap on buses 0x10-0x1B.
+And in fact we depend on kmem being the default target for CXL to
+auto-probe through to hotplug.  For CXL accelerators, the current
+intended auto-probe behavior is to terminate at an offline kmem dax
+binding, and then expect the user to either rebind the dax device, or
+rebind the entire cxl device:
 
-This is a related symptom of the same root cause: pxb-cxl only carries
-a bus_nr and the actual subordinate bus count is not known at
-ACPI-build time, so neither build_crs() nor a static constant can
-produce a correct span for the multi-bridge case.  The +15 heuristic
-is borrowed from the ARM virt machine's gpex handling where a single
-pxb is the norm.
+echo $DEVICE > ../drivers/cxl_pci/unbind
+echo $DEVICE > ../pci/my_cxl_device_driver/bind
 
-> Both really trace back to the same spot: the static branch synthesises
-> the bridge's window and bus range from machine-global constants
-> (cfg->cxl_mmio32 and the fixed +15) rather than anything per-bridge, so
-> neither scales past one pxb-cxl.
+I have some old patches that augment how drivers select the dax mode,
+I can see about reviving that and maybe letting the source driver
+also dictate which dax modes are valid according to the source.
 
-Agreed.  I'll add a TODO comment at the static branch in gpex-acpi.c
-to flag this for future work, and document the single-bridge limitation
-in the commit message as noted above.
+I'll look into that.
 
-Thanks,
-Pei
+> For capability bitmap part, I think it's reasonable to expose it, but with 2 concepts
+> - supported_caps : immutable, supplied by the provider/vendor
+> - enabled-caps : selected policy, subset of supported_caps
+> 
+> The invariant should always hold
+> """
+> enabled_caps & ~supported_caps == 0
+> """
+> 
+> This way we can prevent userspace from touching things that they shouldn't.
+> 
+
+This I like, and i think you've convinced me that this should be a
+separate dax device driver so we're not overloading kmem.
+
+That said, for a dax device that was not created by a driver, but
+instead created via something like "memmap=" boot parameter, i'm we
+can't really dictate supported caps - but for a driver that *does* want
+to limit support, I think we can manage that.
+
+> Maybe a demo with a driver would be nice ?
+> 
+
+Sure! I think i'm going to include my anon-memory only compressed ram
+service back into v6 w/ the dax driver extensions you've suggested.
+
+~Gregory
+
