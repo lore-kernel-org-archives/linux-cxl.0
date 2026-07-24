@@ -1,159 +1,89 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103D925CC57
-	for <linux-cxl@vger.kernel.org>; Fri, 24 Jul 2026 13:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7207731E845
+	for <linux-cxl@vger.kernel.org>; Fri, 24 Jul 2026 14:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784898402; cv=none; b=AP1I4CEPxn7ufJb7iRs1lPjAq+mAwJ8YewlzGcITaREtiCUfEqKWNJIfaCWxPsVj5AACRnuLkLAndlNj26qYCIu1jBCWZAnhdBVdUIQnfi+46E9nhUjm5eiEnCA/n+Uz4BD//wAUTEew1TR0HyhaASzECzWB4ZZu1qMG0/H8k1A=
+	t=1784905106; cv=none; b=e8ZaunCxD92y3LRTJlIKqGD4i3ES1h0D62vFpi+aBSzAtej1q7CO35ZMHH793EbgUYpB1Sz+qi1csKE4OE4opVG4siRGlOjuZoFmSpSe2oXuIK/F3ypNTwkySrr4El2IkUHm7xvOV0w0PSK2GLdA1rr0/E1oi6XdloKPepniG3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784898402; c=relaxed/simple;
-	bh=BO1Qo1nw+0PvCR2G2yHuB96lktg3Fj/o/8I/fLPhaLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A820+S7Exik4Afsq2zZn/9D6tbVV3VDXk61WbePkzi52tfa6136b+qpBB/dG0Va6n5+07QRlIxn8x7vKFWLR6njXcSvo8IuqTFYTdPr1ByEmrqtySQUL5Tjnv1jZgdjA8Bp8Br+R7cWbIqfqMA1bMj1dbLTbqsOIoMKeND1EMz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=owOCOzrs; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1784905106; c=relaxed/simple;
+	bh=YtNwPpLBpzxItCNix5XKiyB+aKzbV0Eq1W74WOpiZAQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=FcX8MBpBuOmwLoGcGbeHV+ypRix3wQNHMtAWjoxtxur/iik6FWIe+/jEgmLAquOFLd9yfI0E39P+Dq6ket2S3wUH0K33YZO76S8d4CjJcr1b6GuPbJJPSSj/r97tpQdHFNVU8WgobMRARGib4fRRfRXnrZ9GW3Bszko7QCh6bIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iOmaTTzp; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="owOCOzrs"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-8efcef23d21so3899926d6.2
-        for <linux-cxl@vger.kernel.org>; Fri, 24 Jul 2026 06:06:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1784898400; x=1785503200; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=uClgs/33iOo+YM1fFExYaaz7O5yD2KHvC68r49braVw=;
-        b=owOCOzrs8uY6A5RtywfAysDKXLFeRjf1meYDZH6XqhX9eUwK/JMdzMWsKzkVsaEIvd
-         AfIcTjLmyUYnQe35AqxCdEGauL4CPCNNPdV9nPgERmJef4WbvH0DhYvbXCPInJnPLrYX
-         dMp9FFfFTYlW99hUnozn+PZfuhK0t2ESilG/g1r5LLADVc2VIshJhYhi/0Jwt9Z9BIJA
-         v0YhggNlAo/xHIwkZMAEbfthbBcY91+gHM+TIw5AyoaFPsk3yDOifG5LkSjD1nHmrYV8
-         YiGj2e+HNnMT/kxn9EmuAMpcYhxQIoRMrQAb12D8tI7Zu3sdmcQl79wzqcQ8jst1E/FD
-         WXaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784898400; x=1785503200;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=uClgs/33iOo+YM1fFExYaaz7O5yD2KHvC68r49braVw=;
-        b=o/GbnPPCVmZ7zONulfIbIwXqEOECz9NdNFLLnDBZE3fzXGu2DU0MYz1EVEMnd8iMU0
-         Uw8t62p5JYsgq1g/euJ/oKMELh05S+qx0DucPftOKW2ceV81/cqZolIaj4htkMOMg0r9
-         EJez6XXtMAxsNDRb0i0l1+VU1b06OqzM64UBgYcXQVIbi+vebyd4dtn/bKVtB9bbCN7g
-         r+2UnFKxouq18P+vNTe7UnWKb8ce8wKWEGY3vbXEAfaScB1bUtzUGhR1t71BS+Ao0GEu
-         9Mf5m9shC8qGmV/Fp91glNy4xXho3EobbfYhn24AOyP4MxUNoZllH8jdXcZGdSsiVPyc
-         4Ycw==
-X-Gm-Message-State: AOJu0Yzw69wUQMaI5svasp/weSAiEvepMivgwPwXcyjBoeoerucgyBWP
-	yeCoHvzvMX7Jve3dZrjs1lA3Q0jJYI7GLJ+LSmC4Gujh5NbY3k+kvKasiRrcGaP7c+A=
-X-Gm-Gg: AR+sD122KZZFfG1xhEn8a5lDm5cKdsiaoY/CVEJkS3wRYLIyyY8C5ad2KKslSvarU/r
-	TaFKNKBJNgYq+dV4WGoEbBakoFiNkSJTdVwiSeIfGAWXtne9ljWDqedFFnuMPE44uhUgYsD5hA6
-	0syILnt/FF30aEq8zZN3iFyT0Es2RG5E+GH9ClcxwpKSJxtni05FaMUA+1KWUkdW80iKkQRXYAI
-	x6vHxbi4ReVedMDDN5yxB68kiyqcUoXNLCG2WeRHSHCSgOksYE4TPUw/EDAUgcE44jJtwNTYOsF
-	m2fJTqCP1woEDZqvP1Yc9yM9HGJeFhByNs3Tihlf5m47j5awvEUiRtdLjeS120dsSf0sRczBx7P
-	UwfokIpNbWzF5YK3Hg+snsQwHa5AMcYZEkTDsanUtdEm7lbplm7KBm333K2C/FR1MjA6IBfvs1g
-	jU+opT986+0Stvb5z3R2nPeJgPL2bMj0ew7u2SMKS0EtYJl7dcAqTrcEk+Yrj7IOcos5aH
-X-Received: by 2002:a05:6214:ccb:b0:8dd:4979:4b19 with SMTP id 6a1803df08f44-907ca570d4dmr77408266d6.13.1784898399844;
-        Fri, 24 Jul 2026 06:06:39 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-907ba8b5f85sm68863316d6.2.2026.07.24.06.06.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2026 06:06:39 -0700 (PDT)
-Date: Fri, 24 Jul 2026 09:06:34 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, kernel-team@meta.com, djbw@kernel.org, vishal.l.verma@intel.com, 
-	dave.jiang@intel.com, alison.schofield@intel.com
-Subject: Re: [RFC PATCH 0/8] dax/kmem: support for private NUMA nodes
-Message-ID: <amNegmEeK1dUP1Dz@gourry-fedora-PF4VCD3F>
-References: <20260722183519.935213-1-gourry@gourry.net>
- <amMUZ-QnxV0SKevW@MWDK4CY14F>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iOmaTTzp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784905105; x=1816441105;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=YtNwPpLBpzxItCNix5XKiyB+aKzbV0Eq1W74WOpiZAQ=;
+  b=iOmaTTzpjtbowHRLRhtK3CbNhlP/FsLtiSYbCBMIi4cistrud7JxaNof
+   lTr4u/UGgrafPuqiVG4qOUCIxiaDJwQFHd0vOvgoNh1FSts5WB47UVHyq
+   Y6/LRy+bx3UFOl+ZSaeXg7ve5l1iOBPwiwf13FtbZ1CgcXS128CaBNgMQ
+   Kyh0KVceK7rh08gfnucWWpX9EzZEFvydI+1xAJtwYQfdyAQwJOnyqCXZB
+   /HcpyIFrsytK2xHsqM2Cd3JHT+NyCJIWYS+BDWndnQwxCyP7Ilhs2cnaU
+   1YYy7qiUdYKSD5/oJ1PrjfCksqJTkjvW3wUYtWCMVgaSZlAfYffrdbn/P
+   Q==;
+X-CSE-ConnectionGUID: xHcDoYlETZK84uDKsdEBpA==
+X-CSE-MsgGUID: SnDq7WCrRnO/6kNg6N19cg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="96721613"
+X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
+   d="scan'208";a="96721613"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 07:58:24 -0700
+X-CSE-ConnectionGUID: t0iMy75NR16gRU/t7iNx6w==
+X-CSE-MsgGUID: Op+a+PPaTbOrQwBrcrXO4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
+   d="scan'208";a="296950242"
+Received: from smithj1-mobl2.amr.corp.intel.com (HELO [10.125.110.193]) ([10.125.110.193])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 07:58:23 -0700
+Message-ID: <61395775-5603-4582-a540-0d2aa60dec94@intel.com>
+Date: Fri, 24 Jul 2026 07:58:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <amMUZ-QnxV0SKevW@MWDK4CY14F>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] cxl: Misc sashiko fixes
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org
+Cc: djbw@kernel.org, dave@stgolabs.net, jic23@kernel.org,
+ alison.schofield@intel.com, vishal.l.verma@intel.com
+References: <20260722205303.3184787-1-dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20260722205303.3184787-1-dave.jiang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 24, 2026 at 03:45:23PM +0800, Richard Cheng wrote:
-> On Wed, Jul 22, 2026 at 02:35:11PM +0800, Gregory Price wrote:
+
+
+On 7/22/26 1:52 PM, Dave Jiang wrote:
+> Several shashiko reported issues
+> 1. cxl/memdev: Don't mask an earlier partition's poison query error
+> 2. cxl/ras: Clear software-only TLP log fields after RCH AER copy
+> 3. cxl/region: Guard against unset partition in poison_by_decoder()
 > 
-> Hi Gregory,
 > 
-> I have some thoughts especially for ownership and configs.
+> Dave Jiang (3):
+>   cxl/region: Guard against unset partition in poison_by_decoder()
+>   cxl/ras: Clear software-only TLP log fields after RCH AER copy
+>   cxl/memdev: Don't mask an earlier partition's poison query error
 > 
-> I think it would be good to expose dax control of private node, just with
-> the following guarantees.
+>  drivers/cxl/core/memdev.c  | 2 ++
+>  drivers/cxl/core/ras_rch.c | 7 +++++++
+>  drivers/cxl/core/region.c  | 3 +++
+>  3 files changed, 12 insertions(+)
 > 
-> Let's make it clear that userspace should never become the owner
-> of private node, they should be driver-owned and 1-to-1 mapping relationship.
 > 
+> base-commit: 1590cf0329716306e948a8fc29f1d3ee87d3989f
 
-The intent here is 100% 1-to-1 driver:node mappings.
 
-Technically there's nothing unreasonable about single-owner multi-node, but
-really we just don't want multiple devices on one node.
-
-> A userspace tool can request to reconfigure some capability of the DAX device, and
-> maybe how the driver expose it.
-> 
-> A dax range may have several deployment rules, e.g. devdax, system-ram or private, with
-> the patch series' tool, it looks like a userspace tool can convert a DAX device between
-> dax and system-ram mode, I think that's unsafe especially when the region is online as
-> system-ram.
-> 
-> And it will cause coherence issue to be resolved, if no special or strong use cases, I would
-> prevent having such ability to convert the rules in runtime, especially for fixed-purpose device.
-> 
-
-Right now we can't really prevent a user from doing:
-
-echo dax0.0 > dax/drivers/devdax/unbind
-echo dax0.0 > dax/drivers/kmem/bind
-
-And in fact we depend on kmem being the default target for CXL to
-auto-probe through to hotplug.  For CXL accelerators, the current
-intended auto-probe behavior is to terminate at an offline kmem dax
-binding, and then expect the user to either rebind the dax device, or
-rebind the entire cxl device:
-
-echo $DEVICE > ../drivers/cxl_pci/unbind
-echo $DEVICE > ../pci/my_cxl_device_driver/bind
-
-I have some old patches that augment how drivers select the dax mode,
-I can see about reviving that and maybe letting the source driver
-also dictate which dax modes are valid according to the source.
-
-I'll look into that.
-
-> For capability bitmap part, I think it's reasonable to expose it, but with 2 concepts
-> - supported_caps : immutable, supplied by the provider/vendor
-> - enabled-caps : selected policy, subset of supported_caps
-> 
-> The invariant should always hold
-> """
-> enabled_caps & ~supported_caps == 0
-> """
-> 
-> This way we can prevent userspace from touching things that they shouldn't.
-> 
-
-This I like, and i think you've convinced me that this should be a
-separate dax device driver so we're not overloading kmem.
-
-That said, for a dax device that was not created by a driver, but
-instead created via something like "memmap=" boot parameter, i'm we
-can't really dictate supported caps - but for a driver that *does* want
-to limit support, I think we can manage that.
-
-> Maybe a demo with a driver would be nice ?
-> 
-
-Sure! I think i'm going to include my anon-memory only compressed ram
-service back into v6 w/ the dax driver extensions you've suggested.
-
-~Gregory
-
+Ok ignore this series for now. I'm working it out with Alison and Terry to get them more organized into specific area series.
