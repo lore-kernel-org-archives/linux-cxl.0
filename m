@@ -1,114 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0415034DB41
-	for <linux-cxl@vger.kernel.org>; Fri, 24 Jul 2026 10:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0F240097F
+	for <linux-cxl@vger.kernel.org>; Fri, 24 Jul 2026 12:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784889492; cv=none; b=JwHZpiMxaDRtOnj0GLE7wOK+nUJtvGVdulNoCZI0L4+G8f6r14KAdmm5rAHb6nVxN1NwZNcOIdFx66uHJsqQd4Cm/3X8hvJsJlUCZQs91IZA8QDxIvt0jGFBnpR0USBNbbFAbQsDOfWKtY0a/PJvRrSQ/RfLOfbk1PROXDCQ2dw=
+	t=1784895056; cv=none; b=awQanl6Mvx6jiHP1RLK29EpWaTjS4GtQJnNNk7Zwf8zeCrzEvj2N8hnGTeu6b80fRDSMwDj1/cuY+Nrtg7xuC5x51/FQtQmtMtU950FrtmoiHpNwo9rxoKOnUWYfQ4lW+EvNXRv78LNnihuI4oBMQ5oX76pryy2TUDZWX0fcZfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784889492; c=relaxed/simple;
-	bh=SsDywP4rywReLAK6ZrLEd+ZAPvj3dC56ZhGDGzSQlnM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hFVV9AbT9mumfrigr7Ay19xI42/VgA6VCuT1IBsWXIOdXH5y5uDNBMNHmn02tQA/mwlN46PW+iENWYdkJtBO8BI/HS5xb4swvfpMLfaaxjqu6oWQd4h8fhhg7EmJ2P7t+Oy5w9MW42oPlUe7Mv+lOCrSRqfpgK3iPMSz6UgGpxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hqbyCvNa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1784895056; c=relaxed/simple;
+	bh=+K75ZKUUT9jKQO4Hm6LpjU8yweCppiGSUWmxtwjqqpY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o/jh3e5Yl89ShRYJNpPN7c6EmywqJzACjHky59RixSB5v8L3C9+TQsjzY6e6azw9sad3PIVHqFPMxNgbmxgE9hocDr7Zwj3egx65zmEx6TD7xL4YlBGv/UlOZm1nOfPJotsPgRHExrS4vqnHlIKQ+ZBjGNs5gtbVPaCwQtXgAoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=SkBvlUe0; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hqbyCvNa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784889488;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OWjrYIeYwmpjJ1Ej8RflnyzFYAlRgloM4zHRRFTOgq0=;
-	b=hqbyCvNaoMVl2Nu+nM/6OcIK44SI7ArKXjIUN2cUv2w1d30K0hUTnhc64nGBNl8Chp6O4U
-	bgNY/GU79SYqbsi78Ba8jsyxoEBtCubf1Arm/luAOay2bMVlwHbfODOr45aZI+lbY3tbw0
-	B9mxHVlzyYS0fwrhaxCdyFvr2eSzSEY=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-153-7oi8HimiPt2yxjaNJw_88Q-1; Fri,
- 24 Jul 2026 06:38:03 -0400
-X-MC-Unique: 7oi8HimiPt2yxjaNJw_88Q-1
-X-Mimecast-MFC-AGG-ID: 7oi8HimiPt2yxjaNJw_88Q_1784889480
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E5F22197766C;
-	Fri, 24 Jul 2026 10:37:58 +0000 (UTC)
-Received: from blackfin.pond.sub.org (unknown [10.44.22.4])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 40C18195605F;
-	Fri, 24 Jul 2026 10:37:55 +0000 (UTC)
-Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-	id E027B21E6920; Fri, 24 Jul 2026 12:37:52 +0200 (CEST)
-From: Markus Armbruster <armbru@redhat.com>
-To: John Snow <jsnow@redhat.com>
-Cc: qemu-devel@nongnu.org,  Alex =?utf-8?Q?Benn=C3=A9e?=
- <alex.bennee@linaro.org>,  Lukas
- Straub <lukasstraub2@web.de>,  Vladimir Sementsov-Ogievskiy
- <vsementsov@yandex-team.ru>,  Zhao Liu <zhao1.liu@intel.com>,  Laurent
- Vivier <laurent@vivier.eu>,  "Gonglei (Arei)" <arei.gonglei@huawei.com>,
-  Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@mailo.com>,  Alex
- Williamson
- <alex@shazbot.org>,  zhenwei pi <zhenwei.pi@linux.dev>,  Hanna Reitz
- <hreitz@redhat.com>,  Ani Sinha <anisinha@redhat.com>,
-  qemu-block@nongnu.org,  Paolo Bonzini <pbonzini@redhat.com>,  Peter Xu
- <peterx@redhat.com>,  Kevin Wolf <kwolf@redhat.com>,
-  linux-cxl@vger.kernel.org,  Jiri Pirko <jiri@resnulli.us>,  Daniel P.
- =?utf-8?Q?Berrang=C3=A9?= <berrange@redhat.com>,  Stefan Berger
- <stefanb@linux.vnet.ibm.com>,  Fabiano Rosas <farosas@suse.de>,  Stefan
- Hajnoczi <stefanha@redhat.com>,  Michael Tokarev <mjt@tls.msk.ru>,  Igor
- Mammedov <imammedo@redhat.com>,  "Michael S. Tsirkin" <mst@redhat.com>,
-  Gerd Hoffmann <kraxel@redhat.com>,  Mauro Carvalho Chehab
- <mchehab+huawei@kernel.org>,  linux-edac@vger.kernel.org,  =?utf-8?Q?Marc?=
- =?utf-8?Q?-Andr=C3=A9?=
- Lureau <marcandre.lureau@redhat.com>,  Richard Henderson
- <richard.henderson@linaro.org>,  Eric Blake <eblake@redhat.com>,
-  =?utf-8?Q?C=C3=A9dric?=
- Le Goater <clg@redhat.com>,  Jason Wang <jasowangio@gmail.com>,
-  qemu-trivial@nongnu.org,  Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 43/44] qapi: convert trivial intro sections for
- machine.json
-In-Reply-To: <20260723044805.527643-44-jsnow@redhat.com> (John Snow's message
-	of "Thu, 23 Jul 2026 00:48:04 -0400")
-References: <20260723044805.527643-1-jsnow@redhat.com>
-	<20260723044805.527643-44-jsnow@redhat.com>
-Date: Fri, 24 Jul 2026 12:37:52 +0200
-Message-ID: <87jyqkad1b.fsf@pond.sub.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="SkBvlUe0"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1784895048; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=AY2MUFtWa7qbEgOXmtH7fiAkQnXvuDoQ+rmq6ZDnlW0=;
+	b=SkBvlUe0ez7y4ULN4wVzJvcuSgizuCJLT6sa8Miuc+RPxCN3x2U+xlnSErR1sRQXy6p3uNElTDs5WqxwRAEJKrWk9D3LPZT+TNIFoUW//LTZiAX/JvxQKvlKF1quG9xIHv6uwWRepv/sGiHQr2Bg179KjFEw/LikRVGJZH1EE+A=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0X7j4T27_1784895030;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X7j4T27_1784895030 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 24 Jul 2026 20:10:47 +0800
+From: Chen Pei <cp0613@linux.alibaba.com>
+To: Junjie Cao <junjie.cao@intel.com>
+Cc: jic23@kernel.org,
+	pbonzini@redhat.com,
+	palmer@dabbelt.com,
+	alistair.francis@wdc.com,
+	liwei1518@gmail.com,
+	daniel.barboza@oss.qualcomm.com,
+	zhiwei_liu@linux.alibaba.com,
+	chao.liu.zevorn@gmail.com,
+	sunilvl@ventanamicro.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	imammedo@redhat.com,
+	mst@redhat.com,
+	guoren@kernel.org,
+	qemu-riscv@nongnu.org,
+	qemu-devel@nongnu.org,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] hw/riscv/virt,gpex: Provide 32-bit MMIO window for CXL host bridges
+Date: Fri, 24 Jul 2026 20:10:20 +0800
+Message-ID: <20260724020000.100000-1-cp0613@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260722135240.763013-1-junjie.cao@intel.com>
+References: <20260618093827.3507-1-cp0613@linux.alibaba.com> <20260618093827.3507-4-cp0613@linux.alibaba.com> <20260722135240.763013-1-junjie.cao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Mimecast-MFC-PROC-ID: qljFsjRtHTwq9KeVtR5SCyoq6qKwiuLBoG-VbxI23_8_1784889480
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-John Snow <jsnow@redhat.com> writes:
+Hi Junjie,
 
-> (Trivial)
->
-> Signed-off-by: John Snow <jsnow@redhat.com>
+Thanks for the thorough review.
 
-I think you missed
+> cfg->cxl_mmio32 is a single range on the main GPEX host, but this block
+> runs once per CXL host bridge in the QLIST_FOREACH(bus, &bus->child)
+> loop, so with more than one pxb-cxl every ACPI0016 gets a _CRS that
+> declares the *same* [cxl_base, cxl_base + 256 MiB) window.
 
-diff --git a/qapi/machine.json b/qapi/machine.json
-index 2b0b975764..cb2ec93e18 100644
---- a/qapi/machine.json
-+++ b/qapi/machine.json
-@@ -1370,8 +1370,7 @@
- 
- ##
- # @SpMemDeviceInfo:
--#
--# sp-mem device state information
-+#     sp-mem device state information
- #
- # @id: device's ID
- #
+You're right. The static path synthesises the bridge window from the
+machine-global cfg->cxl_mmio32 rather than per-bridge state, so it
+does not scale past one pxb-cxl.
 
+> is supporting more than one pxb-cxl in scope for this series, or is a
+> single CXL host bridge the intended target for now? If the latter, a
+> note to that effect in the commit message would help.
+
+For this series the intended target is a single CXL host bridge,
+which matches the bios-tables test case (one pxb-cxl at bus_nr=12).
+I'll add a note to the commit message in v3.
+
+> One smaller thing about the hand-built template: the bus range is
+> hard-coded to [bus_num, bus_num + 15], so with cxl.1 at bus_nr=12 and
+> cxl.2 at bus_nr=16 the two _CRS come out as [0x0C,0x1B] and [0x10,0x1F],
+> which overlap on buses 0x10-0x1B.
+
+This is a related symptom of the same root cause: pxb-cxl only carries
+a bus_nr and the actual subordinate bus count is not known at
+ACPI-build time, so neither build_crs() nor a static constant can
+produce a correct span for the multi-bridge case.  The +15 heuristic
+is borrowed from the ARM virt machine's gpex handling where a single
+pxb is the norm.
+
+> Both really trace back to the same spot: the static branch synthesises
+> the bridge's window and bus range from machine-global constants
+> (cfg->cxl_mmio32 and the fixed +15) rather than anything per-bridge, so
+> neither scales past one pxb-cxl.
+
+Agreed.  I'll add a TODO comment at the static branch in gpex-acpi.c
+to flag this for future work, and document the single-bridge limitation
+in the commit message as noted above.
+
+Thanks,
+Pei
