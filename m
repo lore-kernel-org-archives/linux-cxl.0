@@ -1,58 +1,58 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F0C3B1B3
-	for <linux-cxl@vger.kernel.org>; Sat, 25 Jul 2026 14:00:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5F73B1B3
+	for <linux-cxl@vger.kernel.org>; Sat, 25 Jul 2026 14:01:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784988059; cv=none; b=jHA3RwqjgoOgYDplroq63iaF1CQaOtHf37j28WmM4D+bD2d5/XLONraUau2m72Z9ffImNou0dR4aL86X5iQNeGZUSnhzCKAUJiv18hLU5+++s6sPCyLQvXOAk/F789/zuSjInLRb+F3sRAZeLM5OWOob0lnjv9MYpGN9x7jlZj8=
+	t=1784988065; cv=none; b=lfu9fgKguKMkOQZODXB7pjGMz4sdaMsf/1J2HMkFzwqOcjQb/OM16ZAIWnGDGiotgeN7g3A37604Eh13aOkr287VVZ1VPub3mxtF56d8J3R1OWph6VpaphcW5Dyc7PBrbHzxba9R09W1FKE9kzEBDDpgNidD3h+hkmZGC8+h3q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784988059; c=relaxed/simple;
-	bh=8V4SbETfqA20e58q6VCGWaqhSb6JTXgkzFqcys/62CY=;
+	s=arc-20240116; t=1784988065; c=relaxed/simple;
+	bh=tc59tpUIOnJATfZj0Ow9IZihAQ/ju8XXCdAihZfGr0Q=;
 	h=From:Date:Subject:MIME-Version:Message-Id:References:In-Reply-To:
-	 To:Cc:Content-Type; b=UzrTr9mO3lC1WTjVnud6mTHmSA8I5q+Z+31xum5xMp3RpcBwavfJ3N3JP9taoIObqyznSqTn/egg4HV8gLx5N0GcAajNapAH+PiBU9zrtuwqQICg9btBi29YhxrlWAAUJVDbmmfHaigKF5b1E/f+FYkfJTr5LFIckti54J1MuZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XaZyYOo/; arc=none smtp.client-ip=170.10.129.124
+	 To:Cc:Content-Type; b=Q744oR7sgO3dwI8NMMjHaY0e0gF1bdLm95Ww7Hj5cdANPyI2EeikCw5QoibaWz91Rvgr+EuVXZvhs45bEghRf8We785XvnvtCnx+ucbyl3GuyCPTRRBp5glZTQJEXiUUseIGpBLnipaeBOcJy9lRYE4yeD5Gc/ZmzJHFyfjvedw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HsjoIGuD; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XaZyYOo/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HsjoIGuD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784988057;
+	s=mimecast20190719; t=1784988063;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sgwF7jkNJLhj6j+139aaPY14IWX2xoRAqge3G7njsEU=;
-	b=XaZyYOo/g6i+grb2CSczgfC5dgP36YDMsR7iAQqASh3OdNDw2M1Tkj+Lr/aQweMnAoL7Hv
-	6tz0Ft7lKHmDTdP59lp+ikFvCWz6zDRcq4jjahHUJxU56DHJWAKWEAG06AuZGV48nu8jPA
-	ExQb7svlezwRxs3kk1KFoO5elB/6kJc=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=ayGYuMqLtdZ4tO4DWqG//BYWp/04yuY/5uhQAQdO2WU=;
+	b=HsjoIGuDYYZNq0vIkmLmRnPOe/3FCiFsNZcpgV3M2DrAFA640wtdoDOcfxm2qRFlnvLGLt
+	KQcRWhxpyAmXZD5nSMc82P/hrjdZLdGuk38nAyknPE9CHDej3Gik2ztqh5XBPD39cXa2b1
+	6TZbVcGD2m4yDWTTWzX12or92U0XJgk=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-37-sxELkOo0Nxm4eGyza9UWKA-1; Sat,
- 25 Jul 2026 10:00:53 -0400
-X-MC-Unique: sxELkOo0Nxm4eGyza9UWKA-1
-X-Mimecast-MFC-AGG-ID: sxELkOo0Nxm4eGyza9UWKA_1784988051
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-263-UIgTjnWwPw-WTRys6eze3Q-1; Sat,
+ 25 Jul 2026 10:00:59 -0400
+X-MC-Unique: UIgTjnWwPw-WTRys6eze3Q-1
+X-Mimecast-MFC-AGG-ID: UIgTjnWwPw-WTRys6eze3Q_1784988057
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 60D4319560AD;
-	Sat, 25 Jul 2026 14:00:51 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4366E1800366;
+	Sat, 25 Jul 2026 14:00:57 +0000 (UTC)
 Received: from localhost (unknown [10.44.22.7])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C102018001DA;
-	Sat, 25 Jul 2026 14:00:49 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9723B300019F;
+	Sat, 25 Jul 2026 14:00:55 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Sat, 25 Jul 2026 18:00:07 +0400
-Subject: [PATCH 6/7] migration/multifd: fix Error leak in
- multifd_recv_terminate_threads()
+Date: Sat, 25 Jul 2026 18:00:08 +0400
+Subject: [PATCH 7/7] qdev-monitor: drain RCU callbacks in
+ qdev_device_add_from_qdict
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <20260725-fix2-v1-6-5c9a6ce7b96a@redhat.com>
+Message-Id: <20260725-fix2-v1-7-5c9a6ce7b96a@redhat.com>
 References: <20260725-fix2-v1-0-5c9a6ce7b96a@redhat.com>
 In-Reply-To: <20260725-fix2-v1-0-5c9a6ce7b96a@redhat.com>
 To: qemu-devel@nongnu.org
@@ -72,49 +72,103 @@ Cc: "Michael S. Tsirkin" <mst@redhat.com>,
  =?utf-8?q?Philippe_Mathieu-Daud=C3=A9?= <philmd@mailo.com>, 
  Peter Xu <peterx@redhat.com>, Fabiano Rosas <farosas@suse.de>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=654;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2906;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=8V4SbETfqA20e58q6VCGWaqhSb6JTXgkzFqcys/62CY=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBqZMFmNAkgl2xEbUo9EDHoKtnbnGWWKiCA9f1c7
- w/JnJfJ58CJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCamTBZgAKCRDa6OEJdZac
- 5QEfEACXyaWaIRPdYyDbzJF90W4hI7CRu9vhXtTaIGGqKUdpKEw1dDd+TxowUq8CqLugHr6cK3q
- +uwLO9+gCkfgquQzkACO3h8Wwp++W5hOiHyahV2wpaupJMcGtxax0YfPcwRv4D6yU7AjOggAyOg
- YSbepCIij7JVEY8iMrfWA/sPc5mBOM0xYAg1rFk6EckJi94w/AAmVxi/gMcEELYvCm9r4eQxakA
- H35K21T38uvL4CmSCr0U//Dcvojofk4oDD4hfp+/5lheKFdqHB5kp1xqnxTJaAgdjXXlg/OgYHa
- QvtUMXERNQzTLKni1pUFJ2rt00UCs3MZjroibopQ5kzmJii0v78wVUiwML3wiqnAdV4hcwe0165
- PNpUKm8kTpb9Hq7rkYJe0rbUkcuJH8eATFR7zOJUHfhWIRBrux9acLWCX6fWYHWdPg6HHQMwrAu
- Rb1g2ZUo5vHsldTRZReSywB5opuObrjrBBTPI1DjFZYO9m+L7z7+Q+JJp2St8S3S6IzTCQ8O/Js
- p9tleZPkzskXqY5eoko5AZJqhTAKIM4XTZrIXEYy4tAl1Z/p5uWzolvN5WhASqgXG3J4h/CbMmX
- BlC6MjnuqcL2393G5ry/ylUOV3O1xvMlxSS16o80yn8/2hfmPJcOLfmtDTRmw4ldy0dvQ1ORtTY
- /G2CvnqnmyOd28w==
+ bh=tc59tpUIOnJATfZj0Ow9IZihAQ/ju8XXCdAihZfGr0Q=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBqZMFmg2IQSzXLgb1HeD4VQxrb08w/yBiPzE55j
+ 2UdhTQdlO+JAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCamTBZgAKCRDa6OEJdZac
+ 5RgpD/46Kwqoedezh17/7AwZORHSgHU7hKbFErb7X4Ikhq1/dLQSkXBtm5abklnGQO7N8TO4sS8
+ OfbbNBDS/aeA+btHMl5bLz/O7y3tWsqLYR76CbHnw+iWqxre97mP4BVZzLr1YyhxzsGM6xMQndb
+ zV+npve/xAPguVU5RtwD4l9qK3BQAhLagSqG5zWC0otLwxithRDCHnVRVtDGpiO0i3QkmlzLTjq
+ HHuCMUOKjJZNHFuCej8YbXh78jDonklWR/aBbeONo2zlTo9k5vGjOp2unuKBB+SftjxALcevMGu
+ e4ivmu6IKX83FV9zzfo8M3bshxBabng6IzOITBfuDh7KTAdHyC0F+H9CuS5aCIk3eHXJebdYcDK
+ fi51MqFwAukd/0ePcpgm8loFqF6gJGoeiaA7n6SmkYtdV6mlkpyzw3BWftmoxMWob+6QU2OIszu
+ LHsbC3TBB/suz8NCRQLpuLIf6f3HmO7pcUW6FLP5S4UvKX73xCwh+wuJCz1Db50DpTvwbiPJfEH
+ S8S9v0H9tD1SNUuPILRTVH6U7iSfQ+6zUXRBfKDebGFmsgypyReuwWpSODYgP/qEJdet3krd74m
+ GHVq0aVf0YH7DTRUU1zmpI6q3tLCdRl9XlD+PZAVfuFqiSonRAF9X5dJ6qwv2bvDia/Dx+5FmJ/
+ GijtQUiJ8r6cJCg==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: slq9KsJZs3fBtYPMRUmKDGzRrL5agiOCDw8crhJuUmE_1784988051
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: _xgHbn_Qrqz1OusSTXzJRcMmRN9QqGFGOXrdR6rIFBo_1784988057
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-If err != NULL, free it.
+qmp_device_add() and hmp_device_add() drain pending RCU callbacks after
+a failed device_add, since some bus teardown (e.g. bus_remove_child())
+is deferred to call_rcu(). -device on the command line reaches the same
+qdev_device_add_from_qdict() with errp pointing at error_fatal, whose
+ERRP_GUARD() exits before control returns to the caller, so the caller's
+drain_call_rcu() never runs.
 
-Fixes: 11dd7be57524 ("migration/multifd: Remove p->quit from recv side")
+Move the drain into qdev_device_add_from_qdict()'s own err_del_dev path
+so it always runs, and drop the now-redundant calls in qmp_device_add()
+and hmp_device_add().
+
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- migration/multifd.c | 1 +
- 1 file changed, 1 insertion(+)
+ system/qdev-monitor.c | 33 ++++++++++-----------------------
+ 1 file changed, 10 insertions(+), 23 deletions(-)
 
-diff --git a/migration/multifd.c b/migration/multifd.c
-index dbad525d2a28..503014f76ba5 100644
---- a/migration/multifd.c
-+++ b/migration/multifd.c
-@@ -1056,6 +1056,7 @@ static void multifd_recv_terminate_threads(Error *err)
-     trace_multifd_recv_terminate_threads(err != NULL);
+diff --git a/system/qdev-monitor.c b/system/qdev-monitor.c
+index 00fed791cce1..884d407d60d4 100644
+--- a/system/qdev-monitor.c
++++ b/system/qdev-monitor.c
+@@ -746,6 +746,16 @@ err_del_dev:
+     object_unparent(OBJECT(dev));
+     object_unref(OBJECT(dev));
  
-     if (qatomic_xchg(&multifd_recv_state->exiting, 1)) {
-+        error_free(err);
-         return;
++    /*
++     * Drain all pending RCU callbacks. This is done because some bus
++     * related operations can delay a device removal (in this case this
++     * can happen if device is added and then removed due to a
++     * configuration error) to a RCU callback, but a caller might expect
++     * the failed device to be fully torn down once this function
++     * returns.
++     */
++    drain_call_rcu();
++
+     return NULL;
+ }
+ 
+@@ -870,18 +880,6 @@ void qmp_device_add(QDict *qdict, QObject **ret_data, Error **errp)
+     DeviceState *dev;
+ 
+     dev = qdev_device_add_from_qdict(qdict, true, errp);
+-    if (!dev) {
+-        /*
+-         * Drain all pending RCU callbacks. This is done because
+-         * some bus related operations can delay a device removal
+-         * (in this case this can happen if device is added and then
+-         * removed due to a configuration error)
+-         * to a RCU callback, but user might expect that this interface
+-         * will finish its job completely once qmp command returns result
+-         * to the user
+-         */
+-        drain_call_rcu();
+-    }
+     object_unref(OBJECT(dev));
+ }
+ 
+@@ -1017,17 +1015,6 @@ void hmp_device_add(Monitor *mon, const QDict *qdict)
      }
- 
+     dev = qdev_device_add(opts, &err);
+     if (!dev) {
+-        /*
+-         * Drain all pending RCU callbacks. This is done because
+-         * some bus related operations can delay a device removal
+-         * (in this case this can happen if device is added and then
+-         * removed due to a configuration error)
+-         * to a RCU callback, but user might expect that this interface
+-         * will finish its job completely once qmp command returns result
+-         * to the user
+-         */
+-        drain_call_rcu();
+-
+         qemu_opts_del(opts);
+     }
+     object_unref(dev);
 
 -- 
 2.55.0
