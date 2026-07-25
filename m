@@ -1,151 +1,136 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439951D47AC
-	for <linux-cxl@vger.kernel.org>; Sat, 25 Jul 2026 04:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.180
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784952106; cv=pass; b=C+NC+mcDZjzQ6jJDF36iYDeIOj8wU//EtH39JSdPrGw1ie1iOlExN7AwhboR+6Y9PLZf0dx67YT/jQwJqyIxjMsMwdzFjyChzqunaT6AUFKntUV+KqWVAdOHul7vUjOdL9eZlbKgnvBeLVKPaz+19+lDVrMvudLRnFknT8r1pSg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784952106; c=relaxed/simple;
-	bh=fNC8wElaBgCywizq8gsw7GvnGpxJrTKPY2EQunJ50fQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mUqQn+/mNlh+TObpWCPAfXD4ClXFuX0Joh34HFLae7PvH6keG4kR8nD+Qsc/FS5pTmHnubqBSSJ9XdvBVS1/SDyJQAU6caaUOnI1mMJUQrSsbCZhjSXpGk0tJMwJQaRgnXEEFj01mbIjTxLCxln0kMybJSwkCpy1TdMHO/uQyY8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=CNAZJoN0; arc=pass smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E125021883E
+	for <linux-cxl@vger.kernel.org>; Sat, 25 Jul 2026 14:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784988025; cv=none; b=IGqOHtHAbX4BQcjcbotcqudOyDkcB5D7Yec5h73rH8OyAyt9AmiftZeTMPyx7uC1XXG/7lBanFm8eOGfB1zMvVerLQN6jayifDHSpVu2FT4CJIokCRu4KLV5TglCiOCFyrYpGJNN9rp1YtLrEHH8XjDc9OeFaDj2D+9jEnY0AyY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784988025; c=relaxed/simple;
+	bh=lXenDq8VhO/CQidP59Zf/rUFYaTPbWRyfx8K5nWqM3A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:To:Cc:Content-Type; b=C05+ecoFndiXlBLXFGk0zaYpXpNdU9QCgFbzKsDZevWQMyiJJsYv7s8JM8f4/qdzKs0eDBhiHO/hyg3MM1v4dF/OtohopevPa3XbHZkv31kGeHyk2CnGriXTW7wGUBeytTfHDwVSrvVYstjuql8t1EXHGHhRQUIkePn5t0lE/io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N45Wh2GM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="CNAZJoN0"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-526f963372aso9481481cf.1
-        for <linux-cxl@vger.kernel.org>; Fri, 24 Jul 2026 21:01:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1784952103; cv=none;
-        d=google.com; s=arc-20260327;
-        b=L3w3tED+Rh3iVp7V76C0MUEKiYWsbDumXirmMSDoHP1TrOijSpZbk29zX6mmn2Hd4J
-         F+G1TvWciYJojQbOLj9s3TWMirUJ3x+1ExnMIMMbfxa4oyJLDpj3R8FfEulm8BS92Khf
-         BPAovFQKKlOqSQx3rdSE3urvZ9P6r1506f6Q8E+SDYu2pqhAKk5k1olEeJa4Xw29nyDh
-         9KmejPS0A38HPuO2bz0gheIUR7ZspaBtdUC2V1dJ7y7QOjLTxO40IlUnejP7LU2aesR3
-         yXwg/areCg8eLH/vHGcxOQomQZKi1rofVolvJOxyEaCI2+vhk0/dBMWpULw10GL9dFRj
-         WLOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=CzPMjf6pORP572iHiiQv3possHTxsjbSzVUS0tfn1HU=;
-        fh=K8UicKpuI/TXyIZMTBF+FjZMhDW+AsC3U/tzzO5zevk=;
-        b=PjDAWltOhB45qN2iK8bzjnc/YOFNEyk8s02nuuPImjfVrQmUoL+JpkZT5fY3KDmXR5
-         szVK30pbfExELytBcgTOLLxYbX/2f7UkOmCHpcyDLHVWqwLWJGwjDPBombi7IV5rHgc7
-         V8g+WagVeBYvfsv3/0qiDvuByE0EyHUxFqZ4ofjfUL3JbC8TvpoWPaYdiMm13ImNzFp4
-         jh8/Txj1Ifik77gVjSANrpNlIvBa8NIxMYvyZA576y8lORd4i7sbbYMux9bXheTAU4Gq
-         S9L8N9ck3dK6yRKvQpAG/KHJValJsphlgbZSBqTPA8ovcfmcRnHnqhbd9/U9YMpZUl16
-         nyGA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1784952103; x=1785556903; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=CzPMjf6pORP572iHiiQv3possHTxsjbSzVUS0tfn1HU=;
-        b=CNAZJoN0GTGYkkNaC+LQwZa9ZPYftYSqqF9YnFNyEv/DFmrM+msE4JBCrJb/oKRqVL
-         hih2RSoXP1ImRcm7kDGVqmiKReSP64UzzbzY7d6sGRf3Iz+pK7OkARtstKIc9iL9J3Ko
-         Jfb6ddY0nBEAbcuBHouUYHej58F60A0BJgcIg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784952103; x=1785556903;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=CzPMjf6pORP572iHiiQv3possHTxsjbSzVUS0tfn1HU=;
-        b=kI+exsqhHSVsnFSk1AUQ42SmZiT8u7jREsyNt+cOk/RzjdlpRBqrx76e/80SMk5ES1
-         kL0uH8tucP4GpOQtGSg22YZSd1Ik0ukt3cTX8o677gZY8fnzVzGdWhvkjYc+tMYyW+9U
-         +qULvsJFfeekPDPDInBcPrjBpfbGn5NCMFhd4O/yTXW+FGDyDLGxjl6yRfI2mhkMDpqi
-         vi7Qmku2WGaIT+H4h0AYRH26DFljlkwnmMpFj1QCuEHk6V84Ui/NKp0/3SPH2QstKoS2
-         o08hnDGGmJpWdbRd/qvjccpdiCe5VM9SDwJov7uKQISquT32k2rUg0uvXiUZFVb+K3mL
-         8dKg==
-X-Forwarded-Encrypted: i=1; AHgh+Rr2BC6FJqYbVOnf6vypweOkZVAxV+ym1Jqt8AoWUtws+nlU9mqjjKjbIRHcqjpPA6JAaQx+AV7nM8E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSUMbxD8b+3M9eF9/m3QRGfUsTmGJteIllvobKies27u5h9dUt
-	oj9wvv7SLQaE18okTsw7OAxeEAnixcD/eNJtBpgkRiwrfi8U7sS5vbG/EUhhKDK1HQxwC/QaIRa
-	ITqKTD7FWgOTwcDIS2BqN3sBgT/hnLJnanRfqD43mYQ==
-X-Gm-Gg: AR+sD11BR8rcPhuNohzRNrzbZs1VpliPKvX2OfivhEtTtayxOkquGDieGYVttFTFI9+
-	c9hZalBKpJifIBHrTiK903ylEdLh+YnfV9Fgd1w4k3dkjDrHSjO8roc4T7ZkIXacXlo/GyytUJ6
-	4as8mruerSLXf1Nm02IwDJNI4d63BfyA05qhN5NxIPyeaDxK7zpqqjwgTUveUzXnwveReYanveL
-	dCh2COg9Q/wYjfVxtwqSV7rG2TYxIlE8g7ze51435scI/8Aj5GJKiO2ZQWiM3+77ZcYkfxygatK
-	t6SojVk5w2Fd8SoB
-X-Received: by 2002:ac8:5c90:0:b0:51c:7b12:6001 with SMTP id
- d75a77b69052e-529a8714e88mr10045521cf.77.1784952103086; Fri, 24 Jul 2026
- 21:01:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N45Wh2GM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1784988022;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=sMkB49AJSC8avS3ylIG8JsgdXl7kTvtqlZEz34WRqRI=;
+	b=N45Wh2GMWACS2XxHnbUzlzBoYz4nnh3clp2OgMepyxOsVA+zajK+i2ZYtXZJoqn6ZYFKGE
+	dgydH83ltW/uXkjqZ8rJEXNvE4uakdP1ZuNxfuLby1yckLIo1gkIpJ7jlGq15mgNdHlzSQ
+	lMhPzv3kcJFxThN9P9hgF13dmAWg1vM=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-113-bru7P_bxMZaU1UpPJHRhFA-1; Sat,
+ 25 Jul 2026 10:00:18 -0400
+X-MC-Unique: bru7P_bxMZaU1UpPJHRhFA-1
+X-Mimecast-MFC-AGG-ID: bru7P_bxMZaU1UpPJHRhFA_1784988015
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 098BA18002D1;
+	Sat, 25 Jul 2026 14:00:13 +0000 (UTC)
+Received: from localhost (unknown [10.44.22.7])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F3844180057F;
+	Sat, 25 Jul 2026 14:00:09 +0000 (UTC)
+From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
+Subject: [PATCH 0/7] Fixes for 11.1
+Date: Sat, 25 Jul 2026 18:00:01 +0400
+Message-Id: <20260725-fix2-v1-0-5c9a6ce7b96a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260720034358.68714-1-john@jagalactic.com> <0100019f7d9fbe81-6cb16662-2522-47ea-a152-fab0ee3d9b35-000000@email.amazonses.com>
- <CAOQ4uxiEzP2e=cRw-AiGxtSv6WMSA5yR3cmgrF97s7ggU6wzqg@mail.gmail.com>
- <CAJfpegt9PwHksYhsQZeCsW0eooXVVihyieTpeHMmC-+Pq8BWaw@mail.gmail.com>
- <CAOQ4uxhuivjMMt_Dm3VwKmOhHg7ZHdAww6j6jp+RMjPoRde+bA@mail.gmail.com>
- <CAJnrk1Yat+SEr=SmZXwUt9y2WcC0VEC4KUpPrkrRSjMEmx42WQ@mail.gmail.com>
- <CAJfpegtnja6tkOnNPD2WZxu14Dd+UM9AvynsVB_E268iSXLbkQ@mail.gmail.com> <CAJnrk1a9mR-6hFie3hfFRgWTkrhJMVx4j9e7WGnjTRFuX2iJOg@mail.gmail.com>
-In-Reply-To: <CAJnrk1a9mR-6hFie3hfFRgWTkrhJMVx4j9e7WGnjTRFuX2iJOg@mail.gmail.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Sat, 25 Jul 2026 06:01:30 +0200
-X-Gm-Features: AUfX_mxAcvr2jX4Ns3aulDhtsSqUabRQhwz0VnV0bbRi_FBtOFn1nR0cN_FIRKA
-Message-ID: <CAJfpeguEptz4sEXq=pBWPFop--1kTDu5p2yZnCyzXcrZ28Nekw@mail.gmail.com>
-Subject: Re: [PATCH V11 0/9] famfs: port into fuse
-To: Joanne Koong <joannelkoong@gmail.com>
-Cc: Amir Goldstein <amir73il@gmail.com>, John Groves <john@jagalactic.com>, 
-	John Groves <John@groves.net>, Dan Williams <djbw@kernel.org>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, James Morse <james.morse@arm.com>, 
-	Fuad Tabba <tabba@google.com>, Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
-	"fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzMDcyNT3bTMCiNds1RTwxQjY0NzS5MkJaDSgqJUoDjYmOhYCL+4NCkrNbk
+ EpFepthYArFUDzGgAAAA=
+X-Change-ID: 20260725-fix2-6e51d231794b
+To: qemu-devel@nongnu.org
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, 
+ =?utf-8?q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>, 
+ Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>, 
+ Dmitry Osipenko <dmitry.osipenko@collabora.com>, 
+ Stefan Hajnoczi <stefanha@redhat.com>, Kevin Wolf <kwolf@redhat.com>, 
+ Hanna Reitz <hreitz@redhat.com>, qemu-block@nongnu.org, 
+ Jonathan Cameron <jic23@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+ Fam Zheng <fam@euphon.net>, 
+ =?utf-8?q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>, 
+ Zhao Liu <zhao1.liu@intel.com>, Roman Bolshakov <rbolshakov@ddn.com>, 
+ Phil Dennis-Jordan <phil@philjordan.eu>, Wei Liu <wei.liu@kernel.org>, 
+ linux-cxl@vger.kernel.org, Brian Cain <brian.cain@oss.qualcomm.com>, 
+ Pierrick Bouvier <pierrick.bouvier@oss.qualcomm.com>, 
+ =?utf-8?q?Philippe_Mathieu-Daud=C3=A9?= <philmd@mailo.com>, 
+ Peter Xu <peterx@redhat.com>, Fabiano Rosas <farosas@suse.de>, 
+ =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>, 
+ Haotian Jiang <jianghaotian.sunday@gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1512;
+ i=marcandre.lureau@redhat.com; h=from:subject:message-id;
+ bh=lXenDq8VhO/CQidP59Zf/rUFYaTPbWRyfx8K5nWqM3A=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBqZMFlzjhua2XJ9qKFuUZoGltAjqoD+6VC0jRdO
+ mHxxqlOAlSJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCamTBZQAKCRDa6OEJdZac
+ 5YblD/9uGULyoQvLf1S4WJHbuo6j884tmQ+nnyp+i6ItXJ8pYluxd/VhKRg0SZMRj/Zt9Z25ePm
+ pysfYH/TVKngEmDXdzvSb+j83YE/emPoUJKSDiwmw7EwOXuBtMP9ZhTMa+lLf0WcvGHIYEhmEkX
+ EfsVaRvIgOeriij+EV3QdVeZPhXf1gggfl+PWsvc00dXO0c6SRQ+y8/KmdIhPIH3Ijr6Gas/bwq
+ WkrCTc1O2keHN075MIheEIUDFzFh2uW8eJzff5AA99Hkk2TUF1K1y05uZkfXfN58NCUWz4bwU0Q
+ FbHz64oc4piO4d9R4/t0MXvjmWreLdsI0wjv/Fffv9AR2MO4dpIqo9DZSHLbnGOONamEsnOsSoc
+ FtCQ9BnMcdXxPvCrd6idvwCObmXvXqR2R1F5l7RjOomUqgqaONpJyTPMLld/yfoQDV68p4SSBkL
+ kPrknSWHRwAhFmQXiIV8jjZDbl83MLDi2ikGpUy66z0UbWVezBI7H68F7+REjdaXIXFFtLQ1NS2
+ NQ4pngMIDMoFq49ONkI3u7TFPZ2Uh2TG4KlH17mqIx9wUbjea+VRDnU8FHYa7FNQr+JGzXKDHAe
+ MtgvjsheQpp1B1KdhHU+37y9c0pRO3WrKFCGq7LQlm5kMTCj3fIZpf5+PkbJIsnlZJcdoRrDGNa
+ jDaT6eprT55WC2g==
+X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
+ fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: 9UZWVNanGeBUsas-VdK0zIjqy5bQ-ZF6llacb7FAASg_1784988015
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-(Replying shortly as we are starting now on a two week journey.  Won't
-read email during this time).
+Hi
 
-On Fri, 24 Jul 2026 at 22:23, Joanne Koong <joannelkoong@gmail.com> wrote:
+Here are some assorted patches worth considering for the 11.1 freeze
+bug-fix period.
 
-> imo these changes seem doable for making the 7.3 merge window. I'm not
-> sure how much bandwidth John has though. Maybe one idea that could
-> work if John is completely slammed for time right now is having the
-> changes requested above be a separate followup series someone else can
-> do and then this current series (after the sashiko fixes) and that
-> series can get landed together in the same merge window.
+Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
+---
+Marc-André Lureau (7):
+      hw/display/virtio-gpu-rutabaga: zero-init capset info response
+      block/blkio: fix error return value on getlength()
+      Fix many -Werror=maybe-uninitialized
+      hw/hexagon: fix machine->fdt leak in qom-test
+      hw/core/machine: free machine->fdt in machine_finalize()
+      migration/multifd: fix Error leak in multifd_recv_terminate_threads()
+      qdev-monitor: drain RCU callbacks in qdev_device_add_from_qdict
 
-I'm all for it.
+ block/blkio.c                    |  8 ++++----
+ block/qcow2.c                    |  2 +-
+ hw/core/machine.c                |  1 +
+ hw/cxl/cxl-host.c                |  2 +-
+ hw/display/virtio-gpu-rutabaga.c |  2 ++
+ hw/hexagon/virt.c                |  9 +--------
+ hw/scsi/scsi-disk.c              |  2 +-
+ hw/scsi/scsi-generic.c           |  4 ++--
+ hw/scsi/virtio-scsi.c            |  2 +-
+ io/net-listener.c                | 10 +++++-----
+ migration/multifd.c              |  1 +
+ system/qdev-monitor.c            | 33 ++++++++++-----------------------
+ target/i386/cpu.c                |  3 ++-
+ target/i386/emulate/x86_mmu.c    |  4 ++--
+ 14 files changed, 34 insertions(+), 49 deletions(-)
+---
+base-commit: 300438ffbb8d9430cac2fcc15cba6f482b2c0587
+change-id: 20260725-fix2-6e51d231794b
 
+Best regards,
+--  
+Marc-André Lureau <marcandre.lureau@redhat.com>
 
->
-> >
-> > Maybe the striping setup can also be done with a notification.  The
->
-> I had interpreted the FUSE_DEV_IOC_STRIPE_OPEN patch as implying that
-> the mapping gets forwarded to the kernel through the backing id in the
-> open() reply, which I think is how Amir had also interpreted it. I
-> didn't like that the striping mappings got sent through an ioctl while
-> the simple mappings didn't, but I think maybe the patch was not trying
-> to suggest that and I had interpreted it too literally. I like the
-> striping setup through an ioctl - I think it makes sense given that it
-> is connection-level instead of inode-level.
-
-Yeah, the striping setup is on a different level (like we have with
-regular filesystems).  So I think it's not that bad that the setup is
-different.
-
-Thanks,
-Miklos
