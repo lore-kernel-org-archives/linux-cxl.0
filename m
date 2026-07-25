@@ -1,59 +1,60 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E125021883E
-	for <linux-cxl@vger.kernel.org>; Sat, 25 Jul 2026 14:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AAA521767D
+	for <linux-cxl@vger.kernel.org>; Sat, 25 Jul 2026 14:00:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784988025; cv=none; b=IGqOHtHAbX4BQcjcbotcqudOyDkcB5D7Yec5h73rH8OyAyt9AmiftZeTMPyx7uC1XXG/7lBanFm8eOGfB1zMvVerLQN6jayifDHSpVu2FT4CJIokCRu4KLV5TglCiOCFyrYpGJNN9rp1YtLrEHH8XjDc9OeFaDj2D+9jEnY0AyY=
+	t=1784988029; cv=none; b=DK8HbMboG729W98dwYGpQ7szswdbmBeqgaK+v9f/1v2cYYB37GGAFRbSvIx1JthwtDVST2NQF3zufLJhZ52kLKDzXTnz2dCSjRVvcKKmFHumTSliQgGSk3ZxMn1laLpAKSQE4I2rkJJPcJ1wg7SrCUgm2HI+aV7yG4j43wfCUxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784988025; c=relaxed/simple;
-	bh=lXenDq8VhO/CQidP59Zf/rUFYaTPbWRyfx8K5nWqM3A=;
-	h=From:Subject:Date:Message-Id:MIME-Version:To:Cc:Content-Type; b=C05+ecoFndiXlBLXFGk0zaYpXpNdU9QCgFbzKsDZevWQMyiJJsYv7s8JM8f4/qdzKs0eDBhiHO/hyg3MM1v4dF/OtohopevPa3XbHZkv31kGeHyk2CnGriXTW7wGUBeytTfHDwVSrvVYstjuql8t1EXHGHhRQUIkePn5t0lE/io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N45Wh2GM; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1784988029; c=relaxed/simple;
+	bh=i6aG/+m9MW1saa93R8BeXUCOlYyxsLU70+4agx0S76E=;
+	h=From:Date:Subject:MIME-Version:Message-Id:References:In-Reply-To:
+	 To:Cc:Content-Type; b=fsaP0NACzAc0MHAhSmPNAPzK62bT4cbng5sn2Y08mgye/p/964W0qoNllL5iYClfJbwdUvIjHgA+ur7jGTZ+JeqkIa0xaKQuNXKB6lcMAyHj4YdJP7+AzlfJbBU0pkVqJ/MYi13bfYI51u/4uP4Ei4voCrA+8sI1deuaKimxUZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UqGbzuhD; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N45Wh2GM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UqGbzuhD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784988022;
+	s=mimecast20190719; t=1784988027;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=sMkB49AJSC8avS3ylIG8JsgdXl7kTvtqlZEz34WRqRI=;
-	b=N45Wh2GMWACS2XxHnbUzlzBoYz4nnh3clp2OgMepyxOsVA+zajK+i2ZYtXZJoqn6ZYFKGE
-	dgydH83ltW/uXkjqZ8rJEXNvE4uakdP1ZuNxfuLby1yckLIo1gkIpJ7jlGq15mgNdHlzSQ
-	lMhPzv3kcJFxThN9P9hgF13dmAWg1vM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+2QvmsMbZq6HxVKl0q+cNVQuSts58ffZqW4LJ1FpBXw=;
+	b=UqGbzuhDK8CuOaIKfsxOGpRhU4WIDasGozZreeaRUI958bseDJXPldhuQ/cTMcfFePCtrp
+	Ya4b+TWCPHs/DkN0GOsT01eSTdh3HJ43LgqY81z443LQBiAH1BtgpzERrnCiPkh7IQLUix
+	B1Rm5sorr71Nqy3jnFbXD/bRuUMWOHA=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-113-bru7P_bxMZaU1UpPJHRhFA-1; Sat,
- 25 Jul 2026 10:00:18 -0400
-X-MC-Unique: bru7P_bxMZaU1UpPJHRhFA-1
-X-Mimecast-MFC-AGG-ID: bru7P_bxMZaU1UpPJHRhFA_1784988015
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-411-UzdeTn1GNI61I7j9eW2ppw-1; Sat,
+ 25 Jul 2026 10:00:23 -0400
+X-MC-Unique: UzdeTn1GNI61I7j9eW2ppw-1
+X-Mimecast-MFC-AGG-ID: UzdeTn1GNI61I7j9eW2ppw_1784988021
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 098BA18002D1;
-	Sat, 25 Jul 2026 14:00:13 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EFFE319560BF;
+	Sat, 25 Jul 2026 14:00:19 +0000 (UTC)
 Received: from localhost (unknown [10.44.22.7])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F3844180057F;
-	Sat, 25 Jul 2026 14:00:09 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6E67D180058C;
+	Sat, 25 Jul 2026 14:00:16 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Subject: [PATCH 0/7] Fixes for 11.1
-Date: Sat, 25 Jul 2026 18:00:01 +0400
-Message-Id: <20260725-fix2-v1-0-5c9a6ce7b96a@redhat.com>
+Date: Sat, 25 Jul 2026 18:00:02 +0400
+Subject: [PATCH 1/7] hw/display/virtio-gpu-rutabaga: zero-init capset info
+ response
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDcyNT3bTMCiNds1RTwxQjY0NzS5MkJaDSgqJUoDjYmOhYCL+4NCkrNbk
- EpFepthYArFUDzGgAAAA=
-X-Change-ID: 20260725-fix2-6e51d231794b
+Message-Id: <20260725-fix2-v1-1-5c9a6ce7b96a@redhat.com>
+References: <20260725-fix2-v1-0-5c9a6ce7b96a@redhat.com>
+In-Reply-To: <20260725-fix2-v1-0-5c9a6ce7b96a@redhat.com>
 To: qemu-devel@nongnu.org
 Cc: "Michael S. Tsirkin" <mst@redhat.com>, 
  =?utf-8?q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>, 
@@ -72,65 +73,62 @@ Cc: "Michael S. Tsirkin" <mst@redhat.com>,
  Peter Xu <peterx@redhat.com>, Fabiano Rosas <farosas@suse.de>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>, 
  Haotian Jiang <jianghaotian.sunday@gmail.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1512;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1461;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=lXenDq8VhO/CQidP59Zf/rUFYaTPbWRyfx8K5nWqM3A=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBqZMFlzjhua2XJ9qKFuUZoGltAjqoD+6VC0jRdO
- mHxxqlOAlSJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCamTBZQAKCRDa6OEJdZac
- 5YblD/9uGULyoQvLf1S4WJHbuo6j884tmQ+nnyp+i6ItXJ8pYluxd/VhKRg0SZMRj/Zt9Z25ePm
- pysfYH/TVKngEmDXdzvSb+j83YE/emPoUJKSDiwmw7EwOXuBtMP9ZhTMa+lLf0WcvGHIYEhmEkX
- EfsVaRvIgOeriij+EV3QdVeZPhXf1gggfl+PWsvc00dXO0c6SRQ+y8/KmdIhPIH3Ijr6Gas/bwq
- WkrCTc1O2keHN075MIheEIUDFzFh2uW8eJzff5AA99Hkk2TUF1K1y05uZkfXfN58NCUWz4bwU0Q
- FbHz64oc4piO4d9R4/t0MXvjmWreLdsI0wjv/Fffv9AR2MO4dpIqo9DZSHLbnGOONamEsnOsSoc
- FtCQ9BnMcdXxPvCrd6idvwCObmXvXqR2R1F5l7RjOomUqgqaONpJyTPMLld/yfoQDV68p4SSBkL
- kPrknSWHRwAhFmQXiIV8jjZDbl83MLDi2ikGpUy66z0UbWVezBI7H68F7+REjdaXIXFFtLQ1NS2
- NQ4pngMIDMoFq49ONkI3u7TFPZ2Uh2TG4KlH17mqIx9wUbjea+VRDnU8FHYa7FNQr+JGzXKDHAe
- MtgvjsheQpp1B1KdhHU+37y9c0pRO3WrKFCGq7LQlm5kMTCj3fIZpf5+PkbJIsnlZJcdoRrDGNa
- jDaT6eprT55WC2g==
+ bh=i6aG/+m9MW1saa93R8BeXUCOlYyxsLU70+4agx0S76E=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBqZMFl6n3FXGeka2GqVWAr7DfN3yU1cJsO+7fyG
+ ZCXBCbeNSqJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCamTBZQAKCRDa6OEJdZac
+ 5TQNEAC5lnm/WyMGw3mTaHRhojYRmDb8uhNbmYbgBkqHeUv2WmoN/gszPoL7+u0gtJZ8Hl15Sjr
+ zj90sK1yghWmWEQ+7+eMB/bLoU2rtYGmba6QJ9UevBGIjx4Cy0n2UXjr4naa1T4zCXDNa93Qt5w
+ Ebjiks3mliMcjA50OHg4HfJtPr54eXPM6eWtLnFxx/wrvR6qCCAo3dxcy6GFsx/iBP6H61DT0EN
+ PiqtIqgaN58UEC2ouYpcEyaxW9BcDwRj4MIAx8W2gu9iHhUZSmjhCHpY/Vu8uuUPdBSN8sOiMwt
+ WzalKhKY5FWgD26ZQdy7UhksxSVAlIEytj+cd1ArTwsp7hYYYcbE+Y3Y1U8npYOndfey9oz+YU4
+ CrK7Gkz4wDHoFqvSk0otXOiOnDjXBmv4ma2EbardiBYqwTrXBmnjqroWjiqAJvcBEQfVKYlvjph
+ hMH7TVO1IcGnbWPHtktoG1yKWy46bJ73vHIhJnW+/lCEj4bES7p5oDevwSL6BjFUD2u99b+duHq
+ BH0wSpvZAP+ZykceZlfHfg4o96sj+spXrDdW1CcoLzpl2pjnm7abvM+P8UG7E6yTOyRp3fawqo8
+ 3kGT3he1dKmZlcxitCW1h7aLM+/1LhMHJwu/iYmz7LZPvBd2FMTCYiSbPh0ggzoSkde6YqPbx/c
+ foJ/baWu3fdsvsg==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: 9UZWVNanGeBUsas-VdK0zIjqy5bQ-ZF6llacb7FAASg_1784988015
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Mimecast-MFC-PROC-ID: NgGo5HXux2giEbmwwj8C4W55Y24B-L_XEcugPNbrDKo_1784988021
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi
+rutabaga_cmd_get_capset_info() only fills in capset_id,
+capset_max_version and capset_max_size before sending the response to
+the guest. The remaining fields of struct virtio_gpu_resp_capset_info,
+including hdr.fence_id, hdr.ctx_id and hdr.ring_idx, are left with
+stack garbage and leaked to the guest, including host pointers useful
+for an ASLR bypass.
 
-Here are some assorted patches worth considering for the 11.1 freeze
-bug-fix period.
+Zero the response first, matching virgl_cmd_get_capset_info().
 
+Not a real risk thanks to -ftrivial-auto-var-init=zero.
+
+Resolves: https://gitlab.com/qemu-project/qemu/-/work_items/3609
+Fixes: 1dcc6adbc168 ("gfxstream + rutabaga: add initial support for gfxstream")
+Reported-by: Haotian Jiang <jianghaotian.sunday@gmail.com>
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
-Marc-André Lureau (7):
-      hw/display/virtio-gpu-rutabaga: zero-init capset info response
-      block/blkio: fix error return value on getlength()
-      Fix many -Werror=maybe-uninitialized
-      hw/hexagon: fix machine->fdt leak in qom-test
-      hw/core/machine: free machine->fdt in machine_finalize()
-      migration/multifd: fix Error leak in multifd_recv_terminate_threads()
-      qdev-monitor: drain RCU callbacks in qdev_device_add_from_qdict
+ hw/display/virtio-gpu-rutabaga.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- block/blkio.c                    |  8 ++++----
- block/qcow2.c                    |  2 +-
- hw/core/machine.c                |  1 +
- hw/cxl/cxl-host.c                |  2 +-
- hw/display/virtio-gpu-rutabaga.c |  2 ++
- hw/hexagon/virt.c                |  9 +--------
- hw/scsi/scsi-disk.c              |  2 +-
- hw/scsi/scsi-generic.c           |  4 ++--
- hw/scsi/virtio-scsi.c            |  2 +-
- io/net-listener.c                | 10 +++++-----
- migration/multifd.c              |  1 +
- system/qdev-monitor.c            | 33 ++++++++++-----------------------
- target/i386/cpu.c                |  3 ++-
- target/i386/emulate/x86_mmu.c    |  4 ++--
- 14 files changed, 34 insertions(+), 49 deletions(-)
----
-base-commit: 300438ffbb8d9430cac2fcc15cba6f482b2c0587
-change-id: 20260725-fix2-6e51d231794b
+diff --git a/hw/display/virtio-gpu-rutabaga.c b/hw/display/virtio-gpu-rutabaga.c
+index 4d7d7b245929..95a19eed7eda 100644
+--- a/hw/display/virtio-gpu-rutabaga.c
++++ b/hw/display/virtio-gpu-rutabaga.c
+@@ -555,6 +555,8 @@ rutabaga_cmd_get_capset_info(VirtIOGPU *g, struct virtio_gpu_ctrl_command *cmd)
+ 
+     VIRTIO_GPU_FILL_CMD(info);
+ 
++    memset(&resp, 0, sizeof(resp));
++
+     result = rutabaga_get_capset_info(vr->rutabaga, info.capset_index,
+                                       &resp.capset_id, &resp.capset_max_version,
+                                       &resp.capset_max_size);
 
-Best regards,
---  
-Marc-André Lureau <marcandre.lureau@redhat.com>
+-- 
+2.55.0
 
