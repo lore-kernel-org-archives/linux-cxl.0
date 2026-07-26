@@ -1,119 +1,157 @@
-Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5319353A6B
-	for <linux-cxl@vger.kernel.org>; Sun, 26 Jul 2026 08:54:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E3120E023
+	for <linux-cxl@vger.kernel.org>; Sun, 26 Jul 2026 20:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785056095; cv=none; b=TnWIoGXTp/f7fdPSEQXc4uIr7rW3LjRSxlm8946KB9qWIYU8pqyJNt27jHVabCyP+CEdjgbKPvY715zvlVJM4oGBzKXV554vgvnKiFeu6Hp0X2flG9BDCIG4N2ukIJAawPOI3PxiEZU9360Fs0gQYJrqouUi4quToQc6yPhZ76M=
+	t=1785098670; cv=none; b=UcdwRqmnibOlrqf96aoKC8pR76EqPTZSV2TS74axH17ZwQHe+GDp8IyHAAiToR05gB73HSqzhcZ1H2IlEha0xi8wy6t7fVootOjXwULN0SdCJbaS6U/3pNbfxvqa8S9X1k0qR1r2zPgTpYpB0u2poatKi0F82Qn+5VLFquvcaWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785056095; c=relaxed/simple;
-	bh=dEJeHOz60lto/Q29TuBaBGpt8Q2QKDW+lvwgf3/mAVY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ExiyatYG4THZXYOcds56M6Zp3w0Jz4gb4P5V6WebkRfatbUMvyQYa475+R4+puP9AUBDpRTQxR9JWMU8ard6HxLe6xdZmZ2p5+NMFuyuOeg9Wqib2si+K3g+r9WVjNk6jT3asrRpyynWyKqKU1+ieqeo3OH4D/obtTVd/syv27g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=tdXf8xzT; arc=none smtp.client-ip=49.212.243.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
+	s=arc-20240116; t=1785098670; c=relaxed/simple;
+	bh=81XNAl0jGOvgHJBEZNtBgZcA7BxMGvlceRyUY4G25BU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:To:Cc:Content-Type; b=MlMgeVIkmJ96aBwYWt3DJ6Lr+gCRKWxnNgi1a7N1nvj5wx6ZSh5EKJYEv2xg/lYM23W1rnTTdd/8kVum75MhwJrgoOlKMGK8UmUCxAXn6K+iJsLV5Mubh35V7DV5qkROJ136nazlr6Vi2PfD5MIE2P+cqiBBUuOp3oocUpZUH5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XWRkonJp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="tdXf8xzT"
-Received: from [133.11.54.183] (h183.csg.ci.i.u-tokyo.ac.jp [133.11.54.183])
-	(authenticated bits=0)
-	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 66Q8spD6041554
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Sun, 26 Jul 2026 17:54:51 +0900 (JST)
-	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
-DKIM-Signature: a=rsa-sha256; bh=zLiyvFbK0EZfPQhzcGaxWTV73bEQVJG8/gJeaWqLKas=;
-        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
-        h=From:Message-ID:To:Subject:Date;
-        s=rs20250326; t=1785056091; v=1;
-        b=tdXf8xzTF4jl9mgPvb+xLc5UE+wFmGPZQKm1LIbowW7Ot/9MY3LCFVFQDCPgRCSR
-         k8sGdP5gIf75509VfKMEW/UZZTp00rXCJcMOan6+s49TkvWgA1XGDzCBbvanzAwB
-         Qp/swMScHMfGfZiOXBb7tXJp7pXq6B3ZkbdzwmL1S9nHqwTpcC9sHxI7hiG/ygKH
-         IfyNH86QCFkSFsH2qTI37F4nRtNdsn/1My1lntFWKjw4mbLvtnzT7rlPiywo1NCG
-         OkfNN5cYC7CmWVLvZc7MBCNETeXnRTc20MIv8xvYLw6ItY2FaEypQjFOL7XQlqxr
-         oqXK4ATth/GUc4kBAYu48Q==
-Message-ID: <e982d318-965f-4f0f-a709-37808e1149ca@rsg.ci.i.u-tokyo.ac.jp>
-Date: Sun, 26 Jul 2026 17:54:50 +0900
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XWRkonJp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1785098667;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9VGR6qC2/lcwNbneDZFXtH9Y/dg0TeIf8HpB0dX/lL8=;
+	b=XWRkonJpWIipURmTDtPxhigxxVhYr+93C5Ekj+U3nv7zvOH1BJJhR98Fxk/UtS8RWu2Pvy
+	LOjinkzANYOzKDTCdY7t+ZWRcJLsZfIKAtxYR+qE7MyhjXFlN97Skzh//LIQ2EUj3u33QQ
+	K/Y/Zpjp6JrN3v8bnxhw4ryBiLHwgE4=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-375-b7kZzEVIP4-jfjjeXPhszw-1; Sun,
+ 26 Jul 2026 16:44:22 -0400
+X-MC-Unique: b7kZzEVIP4-jfjjeXPhszw-1
+X-Mimecast-MFC-AGG-ID: b7kZzEVIP4-jfjjeXPhszw_1785098659
+Received: from mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 10B88195605F;
+	Sun, 26 Jul 2026 20:44:18 +0000 (UTC)
+Received: from localhost (unknown [10.44.24.5])
+	by mx-prod-int-10.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B5AAF424;
+	Sun, 26 Jul 2026 20:44:13 +0000 (UTC)
+From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
+Subject: [PATCH v2 00/12] Fixes for 11.1
+Date: Mon, 27 Jul 2026 00:43:59 +0400
+Message-Id: <20260727-fix2-v2-0-d0c4831ed7ea@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/7] hw/core/machine: free machine->fdt in
- machine_finalize()
-To: =?UTF-8?Q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>,
-        qemu-devel@nongnu.org
-Cc: "Michael S. Tsirkin" <mst@redhat.com>,
-        =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        Dmitry Osipenko <dmitry.osipenko@collabora.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>, Kevin Wolf <kwolf@redhat.com>,
-        Hanna Reitz <hreitz@redhat.com>, qemu-block@nongnu.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, Fam Zheng <fam@euphon.net>,
-        =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?=
- <berrange@redhat.com>,
-        Zhao Liu <zhao1.liu@intel.com>, Roman Bolshakov <rbolshakov@ddn.com>,
-        Phil Dennis-Jordan
- <phil@philjordan.eu>, Wei Liu <wei.liu@kernel.org>,
-        linux-cxl@vger.kernel.org, Brian Cain <brian.cain@oss.qualcomm.com>,
-        Pierrick Bouvier <pierrick.bouvier@oss.qualcomm.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
-        Peter Xu <peterx@redhat.com>, Fabiano Rosas <farosas@suse.de>
-References: <20260725-fix2-v1-0-5c9a6ce7b96a@redhat.com>
- <20260725-fix2-v1-5-5c9a6ce7b96a@redhat.com>
-Content-Language: en-US
-From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
-In-Reply-To: <20260725-fix2-v1-5-5c9a6ce7b96a@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/12Nyw7CIBREf6W5azEFBYIr/8N0weNqr4nFADaah
+ n+X1p3LMzkzs0DGRJjh1C2QcKZMcWogdh340U43ZBQag+iF6rWQ7EpvwRRKHsSBa3N00NRnwpZ
+ vM5fhx/nl7ujL2l2NkXKJ6bP9zHz1/iZnznomvbHKo3ZG2XPCMNqy9/EBQ631C+egivurAAAA
+X-Change-ID: 20260725-fix2-6e51d231794b
+To: qemu-devel@nongnu.org
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, 
+ =?utf-8?q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>, 
+ Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>, 
+ Dmitry Osipenko <dmitry.osipenko@collabora.com>, 
+ Stefan Hajnoczi <stefanha@redhat.com>, Kevin Wolf <kwolf@redhat.com>, 
+ Hanna Reitz <hreitz@redhat.com>, qemu-block@nongnu.org, 
+ Jonathan Cameron <jic23@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+ Fam Zheng <fam@euphon.net>, 
+ =?utf-8?q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>, 
+ Zhao Liu <zhao1.liu@intel.com>, Roman Bolshakov <rbolshakov@ddn.com>, 
+ Phil Dennis-Jordan <phil@philjordan.eu>, Wei Liu <wei.liu@kernel.org>, 
+ linux-cxl@vger.kernel.org, Brian Cain <brian.cain@oss.qualcomm.com>, 
+ Pierrick Bouvier <pierrick.bouvier@oss.qualcomm.com>, 
+ =?utf-8?q?Philippe_Mathieu-Daud=C3=A9?= <philmd@mailo.com>, 
+ Peter Xu <peterx@redhat.com>, Fabiano Rosas <farosas@suse.de>, 
+ =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>, 
+ Haotian Jiang <jianghaotian.sunday@gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2658;
+ i=marcandre.lureau@redhat.com; h=from:subject:message-id;
+ bh=81XNAl0jGOvgHJBEZNtBgZcA7BxMGvlceRyUY4G25BU=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBqZnGW/T0EIhd4oRY5ZiWQ2xRzskvNLXAVUwAxf
+ c4J6Zk10S6JAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCamZxlgAKCRDa6OEJdZac
+ 5WTiEACFaQUoMGXX+XPUIq8TH938iokMjYobWwUVZd2vVOYsPkFAJAwji2sS8wyIdcKYBFu1xOL
+ MhUUoogBKiguHuGDTEEo4iVAVd7TXGseSbcaHKCMrlpNhLq4XEQbZ9Slr2IR/bol0GAd+JcRFD1
+ SLj7B2PCDORx0gJQ5YXjYPIafMwk887Jnxskb7HUqjZcZ624pcFZEFr2c5HErZu7f97CWJFIHfp
+ yTyKYPPYy/UZ2zlF5F7SntV74yrLvUfCt1D5qyki0Ry5VPc7CVoSyBrHUxF9IRxLIjdr8U6jzVD
+ ZvqZMkPUG/z1Jp2tWheBWMG1cAlH9ori5kpmeA4vF2u5PfoiaB9zDGayuH+EJqPDj3B/FJPOP6L
+ hZ9tKcQwZigLFredm+hqtdz0TIcaJpSe813clsOAIe+HaUUiloziOEh4wZJiFXjwS5kBh8QBMt5
+ osUEMTsGZiLQFeZvWaTFCCrYISv3/jaMTiLzmh5cyJij8cxuB/2nvHT2aj3GdgdujPFB0tw1hTX
+ tdXaT39K1rAf0aLsaajuzLRwjJFRy+DsINiz2P6E2nm4zYmgggocxemIeX6KzzMYYKXXn/CxR9Y
+ HJbv5YzUo5Wx5n5jxiBk7m6hztE9Gdjv5DpbraRd2Z0+4sI8WyPivWaePNi8a83XHpEcBL8H5uB
+ 4aC3nj1YXfb522w==
+X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
+ fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
+X-Scanned-By: MIMEDefang 3.6 on 10.30.177.95
+X-Mimecast-MFC-PROC-ID: QrmoExVA1__g-1v7Ea5LC1hiCslhPiABGxNr7pd2jnM_1785098659
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On 2026/07/25 23:00, Marc-André Lureau wrote:
-> machine->fdt is a plain g_malloc0() buffer (see create_device_tree())
-> that boards populate during MachineClass::init, but machine_finalize()
-> never freed it, unlike the other boot-time buffers (dtb, dumpdtb,
-> kernel_filename, ...). Free it for consistency.
+Hi
 
-This unfortunately converts an existing bug into double-free.
+Here are some assorted patches worth considering for the 11.1 freeze
+bug-fix period.
 
-spapr_machine_reset() aliases machine->fdt to spapr->fdt_blob. 
-spapr_dtb_pre_load() and h_update_dt() later free it via
-spapr->fdt_blob, but does not update machine->fdt, making it dangling.
+Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
+---
+Changes in v2, after Akihiko comments:
+- split the "Fix many -Werror=maybe-uninitialized" patch
+- qdev-monitor: add drain_rcu parameter to avoid deadlock from virtio-net
+- rewrite WITH_QEMU_LOCK_GUARD/WITH_RCU_READ_LOCK_GUARD macros to suppress
+  GCC false-positive warnings (new patch)
+- block/blkio: use QEMU_LOCK_GUARD instead of WITH_QEMU_LOCK_GUARD in
+  getlength() to avoid false-positive (new patch)
+- hw/cxl: split invalid-free fix into its own patch
+- hw/i3c: fix default return value of d2_i3c_send() (new patch)
+- hw/ppc: fix dangling machine->fdt reference after spapr fdt updates (new patch)
+- Link to v1: https://lore.kernel.org/qemu-devel/20260725-fix2-v1-0-5c9a6ce7b96a@redhat.com
 
-Leaving machine->fdt dangling is already a bug. 
-do_client_architecture_support() explains that as follows:
+---
+Marc-André Lureau (12):
+      hw/display/virtio-gpu-rutabaga: zero-init capset info response
+      block/blkio: fix error return value on getlength()
+      block/blkio: fix compiler false-positive warning
+      include/qemu: adjust LOCK_GUARD macros to avoid potential warning
+      hw/cxl: fix invalid free on early return
+      hw/i3c: fix default return value of d2_i3c_send()
+      Fix some -Werror=maybe-uninitialized
+      hw/hexagon: fix machine->fdt leak in qom-test
+      hw/ppc: fix dangling fdt reference
+      hw/core/machine: free machine->fdt in machine_finalize()
+      migration/multifd: fix Error leak in multifd_recv_terminate_threads()
+      qdev-monitor: drain RCU callbacks in qdev_device_add_from_qdict
 
-     /*
-      * Set the machine->fdt pointer again since we just freed
-      * it above (by freeing spapr->fdt_blob). We set this
-      * pointer to enable support for the 'dumpdtb' QMP/HMP
-      * command.
-      */
-     MACHINE(spapr)->fdt = fdt;
+ include/monitor/qdev.h           |  3 ++-
+ include/qemu/lockable.h          | 19 +++++++++++-------
+ include/qemu/rcu.h               | 17 ++++++++++------
+ block/blkio.c                    |  7 +++----
+ hw/audio/intel-hda.c             |  2 +-
+ hw/core/machine.c                |  1 +
+ hw/cxl/cxl-host.c                |  2 +-
+ hw/display/virtio-gpu-rutabaga.c |  2 ++
+ hw/hexagon/virt.c                |  9 +--------
+ hw/i3c/dw-i3c.c                  |  2 +-
+ hw/net/virtio-net.c              |  2 +-
+ hw/ppc/spapr.c                   |  1 +
+ hw/ppc/spapr_hcall.c             |  1 +
+ migration/multifd.c              |  1 +
+ system/qdev-monitor.c            | 42 +++++++++++++++-------------------------
+ target/i386/cpu.c                |  3 ++-
+ target/i386/emulate/x86_mmu.c    |  4 ++--
+ 17 files changed, 59 insertions(+), 59 deletions(-)
+---
+base-commit: 300438ffbb8d9430cac2fcc15cba6f482b2c0587
+change-id: 20260725-fix2-6e51d231794b
 
-This patch introduces another path to trigger the bug.
-
-Regards,
-Akihiko Odaki
-
-> 
-> Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
-> ---
->   hw/core/machine.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/hw/core/machine.c b/hw/core/machine.c
-> index 805148678d57..2b24d711d76f 100644
-> --- a/hw/core/machine.c
-> +++ b/hw/core/machine.c
-> @@ -1301,6 +1301,7 @@ static void machine_finalize(Object *obj)
->       g_free(ms->kernel_cmdline);
->       g_free(ms->dtb);
->       g_free(ms->dumpdtb);
-> +    g_free(ms->fdt);
->       g_free(ms->dt_compatible);
->       g_free(ms->firmware);
->       g_free(ms->device_memory);
-> 
+Best regards,
+--  
+Marc-André Lureau <marcandre.lureau@redhat.com>
 
