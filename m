@@ -1,57 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47D330C150
-	for <linux-cxl@vger.kernel.org>; Sun, 26 Jul 2026 20:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9D715E5DC
+	for <linux-cxl@vger.kernel.org>; Sun, 26 Jul 2026 20:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785098722; cv=none; b=IcRDpnLfeDgQVFspT/CXS3GLr5nU1OIPv7zf42U0OHUD+qk1apU+6/vO5bUGH7o6S+NdJ9I3IGW13j5fHuZy98BUaYbgrlMa3fAFTjda2Mo+VLlfQinTV3q46arVYb/UNXGocjmS6Z6M8xyVO4kIkHj3JaX6tsNTW8LNz0yELD0=
+	t=1785098727; cv=none; b=IBgk206ghGYV+J5kqTWAvQNCJQsQSYKcj3vEPDobdnM8XmGjWIJ55ETLtLee3LzPAGY/FMx8fztqQN3G/96q9aK5a3/P+SvW/MvrVLmB2nrc1cilzwuVC9D+uIxGuqiWAb1bk0l+pMJbjSvP2HYnRSy9N5wucUZiIdyEYaS0qV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785098722; c=relaxed/simple;
-	bh=xVw6bhj6Lyb5iaDKjsHTyu75/0clDHHxVE1UNjqqjMw=;
+	s=arc-20240116; t=1785098727; c=relaxed/simple;
+	bh=sIBVNLsGCOna3Hd2Wy4wJ32pRVDvMFiol07f6gVUCMU=;
 	h=From:Date:Subject:MIME-Version:Message-Id:References:In-Reply-To:
-	 To:Cc:Content-Type; b=ZGkMxtv6aIpoqGgYyygtGKN5OlnTJnd5Llh7kLn5SNV4dCiiU4vRxWoy5ZwqXyCMHR9AaBYfJiNIwGXABw7uZH2mMf4zLWG0LxHIbzJwkZC7odG6COnk6ZLp60cQJBrYMDf5KtXNVqvYUAcVdpJCTMM8vC8RG9vAgxGp/00Bs8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z4vZL6Lp; arc=none smtp.client-ip=170.10.129.124
+	 To:Cc:Content-Type; b=vA1vgE/4jG2DaNG3FohU0aPaY4KF0WFx38at1fxe/wU124SksjL9CrGfBFTC+NFcnnaw42sLHkCmVV9xbQMnvyrbSYw4eH9WPgrem/1a4Dvr8Aqz6yFg6163ZtNfBeGypzG9b8FzF1u5gpHj81eamUdAYk89psUUo6566TK2be4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aZFHpBTZ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z4vZL6Lp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aZFHpBTZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785098719;
+	s=mimecast20190719; t=1785098725;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=s7WPHlfybK9wgT6X16AjorCstp8vZ/94rL5kznfJWio=;
-	b=Z4vZL6LpWH+cvkJbgkk30wPqx8zWI5SzDxvpzvlGLeETIZmzWXZOLz2H4vBMd8ji06/S4X
-	QTZjwVk3zk7xY1+utLSrFHqGNKdVAbZ1csaT42q5hdI8N6Ok7XUEw9jFqubxIrUWBUmHeX
-	uBE3pgcsHQmQs+ussff8/jevHE+v8a4=
+	bh=+TTlcmViaW/jr0GgH0ehJXptanXZXliFPnYWOw9ddzY=;
+	b=aZFHpBTZgq50zpH5AKfpj5Jm1PaWEs5zovfkTt44vEozHCzzsSCAmNZFhWFdpX+h9QemUP
+	iWsb3G6gT9o/klLfGonHtFGBht4gfxNi43q0HI+pw1PQcMgs/1tRF5yan5dezuKO3AlgQx
+	VxQKAZ5QGNawzMnSsOZPTLbyCjAte2c=
 Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-665-sq1FeV81PO6gnCoRPG_YDA-1; Sun,
- 26 Jul 2026 16:45:16 -0400
-X-MC-Unique: sq1FeV81PO6gnCoRPG_YDA-1
-X-Mimecast-MFC-AGG-ID: sq1FeV81PO6gnCoRPG_YDA_1785098714
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-610-4FWo0WPTPb6Hu_l50vZDeA-1; Sun,
+ 26 Jul 2026 16:45:21 -0400
+X-MC-Unique: 4FWo0WPTPb6Hu_l50vZDeA-1
+X-Mimecast-MFC-AGG-ID: 4FWo0WPTPb6Hu_l50vZDeA_1785098719
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A82EB1956068;
-	Sun, 26 Jul 2026 20:45:13 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AA331195607B;
+	Sun, 26 Jul 2026 20:45:19 +0000 (UTC)
 Received: from localhost (unknown [10.44.24.5])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B835A180049F;
-	Sun, 26 Jul 2026 20:45:11 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A9A3630001BE;
+	Sun, 26 Jul 2026 20:45:17 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Mon, 27 Jul 2026 00:44:08 +0400
-Subject: [PATCH v2 09/12] hw/ppc: fix dangling fdt reference
+Date: Mon, 27 Jul 2026 00:44:09 +0400
+Subject: [PATCH v2 10/12] hw/core/machine: free machine->fdt in
+ machine_finalize()
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <20260727-fix2-v2-9-d0c4831ed7ea@redhat.com>
+Message-Id: <20260727-fix2-v2-10-d0c4831ed7ea@redhat.com>
 References: <20260727-fix2-v2-0-d0c4831ed7ea@redhat.com>
 In-Reply-To: <20260727-fix2-v2-0-d0c4831ed7ea@redhat.com>
 To: qemu-devel@nongnu.org
@@ -71,64 +72,51 @@ Cc: "Michael S. Tsirkin" <mst@redhat.com>,
  =?utf-8?q?Philippe_Mathieu-Daud=C3=A9?= <philmd@mailo.com>, 
  Peter Xu <peterx@redhat.com>, Fabiano Rosas <farosas@suse.de>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1191;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=816;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=xVw6bhj6Lyb5iaDKjsHTyu75/0clDHHxVE1UNjqqjMw=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBqZnGX2Y+rWTiYiQt1e+yf1EHsB+qZXRe7kZsoO
- SpPByrEy0mJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCamZxlwAKCRDa6OEJdZac
- 5RB/EACr+9Kc6bCEszt9T3iHIwv94R/fghtv5Kp9Yh1KBXH0pg2Up9jaSZldWAwW3Uk8hkCs1YZ
- p3J864iaDVaiulOz91BUVcXWc+lf4i5J0CcldHsrMqNVEp5ugXAUnbIkHdFQ3IEYeqiCRzETpzl
- 2jbjAIIABmyQyqp+QWG7w7fHnAl+BTWk3/NilkDd1UJFPUGLWtazpVrBkExzRm0Cn6mW3YNh+vY
- O4PEmtY6OxCkVx+c8HLg7y4uHS1daWlcC3QThwKl7ayMkL2D+eO8Kupom7OUAvpxrlTxkTQVPsv
- 8vEB0jOXYriXcL7eazHDL0u/F/XU4zsQMevwM8B4/ZaacGIJDScRA4LTRCpH28t1wZF29aW0nIG
- 7rKEYuGcTIW1+ZgIefsC5gXWcUeLGPSIzrEPZ+19JCgKKhGLwd2Om27/KLTvic3qoYoD/WeKbXP
- aDUk9jCQZss/2F3WoxR7w/wk4l4QfbjA7NYgiUmceBhWk/T+xGC/DTwq+vUGuEsFlS33wLAK2X6
- y7q8dlu/CWQQCAjafpoBdbVBq6hShuLeR4mISm01dM99TVtmTSHxnX44sWPXFn4QXHukX2+osk4
- qDx3OxmmNzlB/6QsnafaeVhIYJqSRnIIQLsjXe1aINRgwHAYwk0zZLKFntXG0Iii3145tIOcNbg
- /2/VKc7644O4fUw==
+ bh=sIBVNLsGCOna3Hd2Wy4wJ32pRVDvMFiol07f6gVUCMU=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBqZnGXv6fr/VusynUuJj+7991gNH6KtKVK0aAzQ
+ YHC1MBl1J2JAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCamZxlwAKCRDa6OEJdZac
+ 5Z5QD/4wWnnfTAOKE1y1toBi/3+xqSlAbzCU1yNo25LhIFeg6ovEG7WRWFtpS1JS40df1o4yInL
+ u7AWArOtmKtK4+t8eahOiXoYNo/xoE1P9MGX1pPIv8knrfCrNS2WLr/4mTy+gZVdWJDYkKMNxPc
+ 0wpRzr/a8VT9Mkmb03NFoPR8sNFYq0KpQmd26ItLvA39hBxcpzZjM02PRtg3tUH4EsQnoiv971g
+ u+438RwibEet6RdZXNsaYn0/kzo3D1a6tKguF8mrk9q4zaP54UblrAbgl2jhtBYSunT+IFKlCDj
+ fe3aRKKtNYYKXQEQ26YaoYAJVaupRiRUUNqqcdI4t/fvg/nFfwDsIrQcndIXyafN6DFn++DPnJC
+ hBZILSGXx2rZoYC77dlYghbp53qgYPGzYB8O1R/OHhVUs5MJM2dA4wgoGwlDrrrTCPLzFMZI0fv
+ Yjt/vtrDAjj0Q4NNVnWDnC/OOTcG4dRqBf07sXJS0EFFXN/kWUKVFIfDm4AavoxS+mTs4J91pUH
+ yjQTnw5zTcpdVOldmjZm8Wzcujc2xZyovTdxEuhGkMlH/S3zvWcUSxE6kJLCZNYOjeTpSR+Uc9J
+ hYDXC/aSs6wA/G9M7O8pc/ahqo98Y/BhIT7FozEnQ73laditARDQoPio9M2pSW1Q6SsjdtucKKD
+ yUIrMAEUkf0q+UQ==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: 7wPakeOWPnvDOY5rS9uJ0b8MtLf5SuiPe89ufD1sqFE_1785098714
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Mimecast-MFC-PROC-ID: DLhw79K8IiZlBkYeuRYyAiNu3Hv_E0r5Gq31DoV7EN0_1785098719
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-machine->fdt is aliasing fdt_blob. We need to make sure it is cleared
-or updated when we free fdt_blob.
+machine->fdt is a plain g_malloc0() buffer (see create_device_tree())
+that boards populate during MachineClass::init, but machine_finalize()
+never freed it, unlike the other boot-time buffers (dtb, dumpdtb,
+kernel_filename, ...). Free it for consistency.
 
-Fixes: d890f2fa9f1e ("hw/ppc: set machine->fdt in spapr machine")
-Reported-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- hw/ppc/spapr.c       | 1 +
- hw/ppc/spapr_hcall.c | 1 +
- 2 files changed, 2 insertions(+)
+ hw/core/machine.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/hw/ppc/spapr.c b/hw/ppc/spapr.c
-index b79828b4e90c..2fa4db3d493a 100644
---- a/hw/ppc/spapr.c
-+++ b/hw/ppc/spapr.c
-@@ -2137,6 +2137,7 @@ static int spapr_dtb_pre_load(void *opaque)
-     g_free(spapr->fdt_blob);
-     spapr->fdt_blob = NULL;
-     spapr->fdt_size = 0;
-+    MACHINE(spapr)->fdt = NULL;
- 
-     return 0;
- }
-diff --git a/hw/ppc/spapr_hcall.c b/hw/ppc/spapr_hcall.c
-index 23bcd788daf6..2ed063279200 100644
---- a/hw/ppc/spapr_hcall.c
-+++ b/hw/ppc/spapr_hcall.c
-@@ -1511,6 +1511,7 @@ static target_ulong h_update_dt(PowerPCCPU *cpu, SpaprMachineState *spapr,
-     g_free(spapr->fdt_blob);
-     spapr->fdt_size = cb;
-     spapr->fdt_blob = fdt;
-+    MACHINE(spapr)->fdt = fdt;
-     trace_spapr_update_dt(cb);
- 
-     return H_SUCCESS;
+diff --git a/hw/core/machine.c b/hw/core/machine.c
+index 805148678d57..2b24d711d76f 100644
+--- a/hw/core/machine.c
++++ b/hw/core/machine.c
+@@ -1301,6 +1301,7 @@ static void machine_finalize(Object *obj)
+     g_free(ms->kernel_cmdline);
+     g_free(ms->dtb);
+     g_free(ms->dumpdtb);
++    g_free(ms->fdt);
+     g_free(ms->dt_compatible);
+     g_free(ms->firmware);
+     g_free(ms->device_memory);
 
 -- 
 2.55.0
