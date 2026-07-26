@@ -1,57 +1,57 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1469B20E023
-	for <linux-cxl@vger.kernel.org>; Sun, 26 Jul 2026 20:44:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B9437DEA1
+	for <linux-cxl@vger.kernel.org>; Sun, 26 Jul 2026 20:45:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785098699; cv=none; b=M7ih0udR7knjYxpFF+zg5YqvtTzQg4m1juzofaCkZAcDPX/hSiTnzdrd0q52GTqrx53rdVHkPdvSMZN/Ql9mn8dL639Vcw4K4EtHsYFVdtGagttJtyiLGabjXOQuENUGbU8KD6DviN9qwOcCz48yqaoksSdhaP/pGIyro/Kgt/M=
+	t=1785098705; cv=none; b=pvOeJ+A/V7MwauHKVkA5nZNdaK6hYEE/pBQ3YW+jwdahY0sSuMGogHmMaNs293Yatrx5jgRwI+IH/YLWKFWZxZRCgqT11zvFo3eKf2tl4URI+5GZK/LKssq3n7JH1ajoU6o5NkPRqCueIoa0MoT5JDCVsFhMndxY4fUeR9G3vLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785098699; c=relaxed/simple;
-	bh=BvH11bAGqVafjw/9JvRuhekLdJbHoBFg9BIf/wU6vRM=;
+	s=arc-20240116; t=1785098705; c=relaxed/simple;
+	bh=yLUYCOVVGOOzvkcMBJDU+EkijY7q7UFVkrLi3+nOZyw=;
 	h=From:Date:Subject:MIME-Version:Message-Id:References:In-Reply-To:
-	 To:Cc:Content-Type; b=rwahtuIWPAmWJn36Ks6fDTJOwlyNQN9Wvye3jDay66v5UpDgIi04uzzvmjbn4cnOezgAHYC2bmEOysyO2+6mJVXTfuRjOURfZz9osCfCJCT0LxYAFWbiYDS77nHU7OZv+GKDV6bl3VlywzOoErDclBevhtm5I4blgLrTqS47Reo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Wh7de3EE; arc=none smtp.client-ip=170.10.133.124
+	 To:Cc:Content-Type; b=GAtwlpBWErQBulsNwiuUhs0SKrlCmP3LcvAbyNHglR7Z2fnA5V1+VWDAylzj1ft7eaYtiU/ffFhUvDENRk15PkgAqM1o6fUPvA7mUtItQmec1iXRqUYfUVYVxB60RILo/kO7RCjoM/jwM+FE1iQXvvc3ZcyylKk8h7jFsKt+YPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M8f113dq; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wh7de3EE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M8f113dq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785098697;
+	s=mimecast20190719; t=1785098703;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=E/POaYwIz7h1//1YrnKweU5fHiZe4sgfVD5NET1i974=;
-	b=Wh7de3EERW3FuFple8rpmu/KfK1H/AEE+a81XO7T7wySEDxtwwfKbGniYayNHUUGDGpQs6
-	KEnIQF7YENLIcixRp8BCBJyMLfeq/peS+HMLVBxFPBOFOoddNLsR8HMRXcK4kUN0MnDr5/
-	7KGZUkKZbjh3Dda9YJgocg4M4rmG1NM=
+	bh=u5JdBKnDUC0tRVlexJlfFKHyzLpG60H+XeK97IeZmTM=;
+	b=M8f113dqdt370q5164Q2ar30XGHFPkcUuH4x0SYAyrJAa0zysKtDrVuWwMB2RruHU++gmi
+	KCM3+eQ20hSkvKQBiL9p4Oe2KmB09JlglaO/5Vp1Gn6ArDShM5B3UPcsiOIqn3BGwPPTyr
+	I+4zjw5bhGTQuhFF0Y4tEBS+3YUrWk4=
 Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-458-BjhnSJ1GPq6lxd1wDejhgQ-1; Sun,
- 26 Jul 2026 16:44:53 -0400
-X-MC-Unique: BjhnSJ1GPq6lxd1wDejhgQ-1
-X-Mimecast-MFC-AGG-ID: BjhnSJ1GPq6lxd1wDejhgQ_1785098691
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-508-P7Uo06K4NSC0igOr9KJzpw-1; Sun,
+ 26 Jul 2026 16:44:59 -0400
+X-MC-Unique: P7Uo06K4NSC0igOr9KJzpw-1
+X-Mimecast-MFC-AGG-ID: P7Uo06K4NSC0igOr9KJzpw_1785098696
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 99C671800590;
-	Sun, 26 Jul 2026 20:44:50 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C7E3418005BA;
+	Sun, 26 Jul 2026 20:44:56 +0000 (UTC)
 Received: from localhost (unknown [10.44.24.5])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0495318001E0;
-	Sun, 26 Jul 2026 20:44:48 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 71EA61956047;
+	Sun, 26 Jul 2026 20:44:54 +0000 (UTC)
 From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-Date: Mon, 27 Jul 2026 00:44:04 +0400
-Subject: [PATCH v2 05/12] hw/cxl: fix invalid free on early return
+Date: Mon, 27 Jul 2026 00:44:05 +0400
+Subject: [PATCH v2 06/12] hw/i3c: fix default return value of d2_i3c_send()
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <20260727-fix2-v2-5-d0c4831ed7ea@redhat.com>
+Message-Id: <20260727-fix2-v2-6-d0c4831ed7ea@redhat.com>
 References: <20260727-fix2-v2-0-d0c4831ed7ea@redhat.com>
 In-Reply-To: <20260727-fix2-v2-0-d0c4831ed7ea@redhat.com>
 To: qemu-devel@nongnu.org
@@ -71,48 +71,48 @@ Cc: "Michael S. Tsirkin" <mst@redhat.com>,
  =?utf-8?q?Philippe_Mathieu-Daud=C3=A9?= <philmd@mailo.com>, 
  Peter Xu <peterx@redhat.com>, Fabiano Rosas <farosas@suse.de>, 
  =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=778;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=671;
  i=marcandre.lureau@redhat.com; h=from:subject:message-id;
- bh=BvH11bAGqVafjw/9JvRuhekLdJbHoBFg9BIf/wU6vRM=;
- b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBqZnGXHbn11IZQ/CDpUaKI05AbxWrb9OZgBYekD
- XuyRkyAFmWJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCamZxlwAKCRDa6OEJdZac
- 5TYkEAC0/2zRf5blPzTCAoJEW0pHJuoT9U8kH4ZlWJmNB3kkCelOXhj4bOA+ruA/vDQ84R1H6DB
- naJaP6PBqRfjYiDIzb11fNEqGIvqeo3GpQZfgDwn0UYjrBmQxNLzPst8NURBymGu75UmKEiYIWz
- l89a4uaSsUqPRlXyOmzjxDUL2c6OqMSJkCVx9WaDVRqhIlMaW8MkdUCsW8ezdLScTWNSJnQw0yJ
- 7SpNkb9o/iTFiV0Txec3oqoxoSaQD2foMqM8V8a4AQMyUNA6ug0i3v4L8sgfDadt1pO6GR/2eA+
- yL5uzreMw/jotkO8M11vR/GlsvmYa0Uj7knOrCBTs37cy+axWflxBK3/k0V2RdpywlfMwHz9O9K
- w9jwOiaYELCwHcWmfZObOWAt9m31trcUeJ8iskULfPBrMKef2sR1a/bUcfhBTnuLjWTHaJQq84h
- 946xKgjQ0zPiEE+dywIZQAukm83YoIekyQDTjZNLmV7SNfurUs778wu9H/x8nnLYO8DVgBa1COu
- 3+6PYOWkNEvxzy6I1XvrRzjsKbYYlxKeNZ+VJ08v5Nc79pjtYsFi+jDIEb8e6rlb86AblPrin4E
- K4Wk2O5MzpHmPZtOC2/RwmnpXwIKWrDqtfib+1taDAHhnY0C1+1yZn+eK0qSJQZgVvRHqKjvDrg
- AQ5C84uCth0eyJQ==
+ bh=yLUYCOVVGOOzvkcMBJDU+EkijY7q7UFVkrLi3+nOZyw=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBqZnGXzCOsJ4UKngjdieqOOoqYb+7p0YsyJGWAa
+ zSctAlLU+mJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCamZxlwAKCRDa6OEJdZac
+ 5U6SD/9ZiIj1kKHx72+YPi6++0gcQKFWDo07L8J/vSGP9PLw1OjpJsYO1+JSP3ZhSDUg+IavGLW
+ xB1LZ/VrZVDy8vG9It1Y9GJYpHX95IfJuJAuSgVhvUQJ5qZTxYF9w+rc30pZwrExeUzo8g9oCUX
+ EPBuS7iaa9OF+SpEcc33UvW/bprKIKm+ltBVMF0U6Laq5FvJYhljDEnY54cW8U6uTbGb8AGAimy
+ YLCp9bPAghEgfLCZY+UXVrydpYKA/mQNOwLMZmNbLtH7rN0+euH0w2+aMxZ20ULGz+9IT1wgqYS
+ jBpAf5u0Ymt12hq3wxguch6LiMB/C3RhQ9AbruW6JgkxW5s6FkxB/OJRgJacq75KGdkhY8MLjPN
+ 3ODGX950kl+zpsoGH3Bd2BK14XzPXtygb2bGrUjO7WgDKZ38Gbo1jSzlQX9NIGesgOCrhBfdg99
+ F8wHNbcKJH23L+LvJbMnTmsa7hcSPxz5P0yNNE01B0SLNR2m/pNQ7z2NBJx6eX6HaM3leBnFFFf
+ OwVD5nj2ULMMg3lv9qddX7dGgsCsDYPhgoT80OM3nGW+Ts58dgtGD6m1RwSx2RZU1mxD2hDvUAX
+ KLogy3MGtIJv/LDpqgcZPMRIDSOFZntq7YNDxgKUWhhm57maFkhKh2QVc6Cq7h19Nol6ttMTCWd
+ 2GJmNIwb0el05jg==
 X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
  fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
-X-Mimecast-MFC-PROC-ID: HMOKRyCk0QSwCHHuU-XpOFZowQiXp52HRCkowp3DZPk_1785098691
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-MFC-PROC-ID: pgNlqVD_k6ojbJCoMdowbxjUQm_N7_NxPoTdLUZcR94_1785098696
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Fixes: 680935c9a6ff ("hw/cxl: Add a performant (and correct) path for the non interleaved cases")
+Fixes: 208772a189f9 ("hw/i3c/dw-i3c: Add data TX and RX")
 Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
 ---
- hw/cxl/cxl-host.c | 2 +-
+ hw/i3c/dw-i3c.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
-index 7e744312f1d8..eba13c9e7cba 100644
---- a/hw/cxl/cxl-host.c
-+++ b/hw/cxl/cxl-host.c
-@@ -279,7 +279,7 @@ static void cxl_fmws_direct_passthrough_setup(CXLDirectPTState *state,
-     MemoryRegion *mr = NULL;
-     uint64_t vmr_size = 0, pmr_size = 0, offset = 0;
-     MemoryRegion *direct_mr;
--    g_autofree char *direct_mr_name;
-+    g_autofree char *direct_mr_name = NULL;
-     unsigned int idx = state->hdm_decoder_idx;
+diff --git a/hw/i3c/dw-i3c.c b/hw/i3c/dw-i3c.c
+index 6386499dd9fc..7b887fbd60cb 100644
+--- a/hw/i3c/dw-i3c.c
++++ b/hw/i3c/dw-i3c.c
+@@ -430,7 +430,7 @@ static int dw_i3c_send_start(DWI3C *s, uint8_t addr, bool is_recv, bool is_i2c)
+ static int dw_i3c_send(DWI3C *s, const uint8_t *data, uint32_t num_to_send,
+                        uint32_t *num_sent, bool is_i2c)
+ {
+-    int ret;
++    int ret = 0;
+     uint32_t i;
  
-     if (ct3d->hostvmem) {
+     *num_sent = 0;
 
 -- 
 2.55.0
