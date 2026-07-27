@@ -1,70 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86A93F5BFC
-	for <linux-cxl@vger.kernel.org>; Mon, 27 Jul 2026 12:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF58E3002D8
+	for <linux-cxl@vger.kernel.org>; Mon, 27 Jul 2026 12:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785154737; cv=none; b=WTeaT1epJw+1q86Dpev8mUsvuzBxCjHoaLU/oILDUe3tPCA09CgT0SiVPe7EBcuhIAYoGedeycdTMTYddR4FJXN9n/7vyEgyD0ItK6zPix7MZg8ZMBbgDWLrYUOfxy2789MA+QK0k4p+OlA1vXxXDTv8H5PEbIs6EYmcGsf/Ibk=
+	t=1785154840; cv=none; b=PxOF8ccS4OhR7Av0HO9iehO016EuKmcFsTt1zRf2Y9Y769cJbZoW5OidzWB8nMKgzTVahMeYUZ1wr2cP5IMcPZDyRU3pmltvFr3vNwD86CNTI0i+/+3KwhNB2k4Fo+0W6FbEiswn77UUOMASt0DK7+gM0cuuFyccXUYPXw5I3u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785154737; c=relaxed/simple;
-	bh=qwk80AisqTMy0iYs4QukeX072/7dtVnb8chN7LgZcqQ=;
+	s=arc-20240116; t=1785154840; c=relaxed/simple;
+	bh=uskVNlkyvxprPb9BLZPWseweM4Ai4Fom+LaRXS4DDOw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OJAXnVUjCK+877+4zqhWd0k0zkuE/nPx+mnneUBm125povseTdjn+kUDU5h1/a2yOO50+NrKWPICD+KdJxPeSdJAy00snkwnjJ4AM4SvDRtgPF+MYg9MsrrXHGXHC6OPrt/by+n4pK33b8Q2EImn61KB99PXNclBYFN0Gyme6Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XEm8+oO7; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=sUe4KH4sx1ga+Gdrg1wSdZNxjUUxs/nHC5ROrbddXSrp1IWta0miNOFBp+EVMUgFBxX/XjFVxHKP0lZW7vhqKrAB3LtaPu2bQSGc1fbUyGGI0ze1Ya0v0dM+1YK4MTcsySK8VKWWg8BZQw6N6HefIcGquj2GEHtk22cDFdgZuoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TuSNLT3L; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XEm8+oO7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TuSNLT3L"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785154734;
+	s=mimecast20190719; t=1785154835;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=L5dKeWNXTVrL85tSrPucpBv2NSFt9uxptmhhn9V0Ke0=;
-	b=XEm8+oO7AVncKeEfSBHC0NSp/l6PAWJqgNFKTRe5xNe1shKvB5B2ksdSJL5vgKpGrT/TJG
-	kokTwU7IfgDn5zHrdhChtsNW2nWOirTRi24eVyXTZkSIGfCsd6OAmOKThvvnjefktS5HMo
-	ad5LotK2J7uKl8DRvj8ov4SAAcWZmsg=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=89NzTzSellfW3qMr8dN8sAksaWWUoRY5Hxr3im1aqv4=;
+	b=TuSNLT3LS3lnF+kPEkA90Zaq0l7ELWxS1cdLwjyG3sDfD7TIto9O++BIr74WJUbgVj0gY1
+	vRvoAmpbbVkvox4VWa9IOxbhe3cy8FnplqhvU74NvxUqwtjK3X82FpxJFT39HDXh58mLIS
+	nIzUJAp4l+tPItSDOR6M0Pe9opR4ivM=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-388-PCTNl3h9N5ylvhz4NWXA_w-1; Mon, 27 Jul 2026 08:18:53 -0400
-X-MC-Unique: PCTNl3h9N5ylvhz4NWXA_w-1
-X-Mimecast-MFC-AGG-ID: PCTNl3h9N5ylvhz4NWXA_w_1785154732
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4954fd771baso24071255e9.0
-        for <linux-cxl@vger.kernel.org>; Mon, 27 Jul 2026 05:18:53 -0700 (PDT)
+ us-mta-3-lEuKVY8QN0uflLUmDMy1Xw-1; Mon, 27 Jul 2026 08:20:34 -0400
+X-MC-Unique: lEuKVY8QN0uflLUmDMy1Xw-1
+X-Mimecast-MFC-AGG-ID: lEuKVY8QN0uflLUmDMy1Xw_1785154833
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-c11f2b9f62fso213442666b.2
+        for <linux-cxl@vger.kernel.org>; Mon, 27 Jul 2026 05:20:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785154732; x=1785759532;
+        d=1e100.net; s=20251104; t=1785154833; x=1785759633;
         h=content-transfer-encoding:content-type:mime-version:references
          :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=L5dKeWNXTVrL85tSrPucpBv2NSFt9uxptmhhn9V0Ke0=;
-        b=XzTgx/Jdj5lj3kucjUJz60pUBzzYIxe8qInerq74Wswnr3wNpxHikEyp67V0EJZT/l
-         qzsYEtPGXsuerlEbv7GxcgZcGO1rA4lkvbKfJp+UUYQAjQOUH7h9BdI1RRqjqQYrUDj+
-         9T2Q2HmiYjMWupA95Dm1dYK+XZInUqh36EZK8/oJrYeEJjU70xr4YH0dOnvTdTEHZmyX
-         gMfJI30ECH+XYDyYt2+gimOBz0e2McSgoM99kLHz1HEyeMiofs2OmAovCEHvnxZ0s1k+
-         IP7vmEnx/LOaOweQVrZNIaTQgBLmpxVUlf1h8zJ0J07av0/hqK01eg03/BoiE23WSolg
-         x+FA==
-X-Forwarded-Encrypted: i=1; AHgh+RqKuqTCeMlQzAKj1+AehYir3tqPlNt0OtM72sWbusT2qI62xwrtpFq/KI7yd+NGe/qqdemCV+jIzoc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZgmvjV5ZEUe7giYkALEjhg0xj/LE1n7iySrChnYtXisi06zS+
-	B2BjZ0JwrzsEnrKPvOoAWFNdBc9ArxzevWZ6/mbXzHUg2vUjp4Q116QGQFOPZUoTiynTu5KrNNv
-	WNryqmYuvbX1U5AOhPD4uvMVWX21XKKoC6lt6tqvX0rAe/5/AYNDaFc1Jt5lDOg==
-X-Gm-Gg: AR+sD10zgm0gLp/9+rOqdFHVIW/WedoUnsYsoE18ZHfy7f1SuXvJ3Mesd1jpo63/pn6
-	GTPoiz/PGEm+QEj4TsZj/GQelr8t/CxZC8+Z0SSpueLLiYafoHQSUiS0nP89Lg1GVRsFw3Et7h/
-	dYjsCT51u2/NlHw6IPRQ8q7g9wWCDuUkEeSVL4z7OUv2wHzTP35B+iV7tAaSZMd6/fg3Tgsq4BF
-	aSDX6/5BVAyqcOGEDI0NIYrtnRN4XWPl23Z2FfJbQCZsr40wAJ3Ai+xGunBHUWNHh93zrCyqlAe
-	Jrn87zZaGPAqYiNAAf7HoYDb4piJQ3BKKBP8J9YHUFMa+vnRcGx36+7Ch9cf
-X-Received: by 2002:a05:600c:4444:b0:495:6b4c:fccc with SMTP id 5b1f17b1804b1-496b5c7182amr99174645e9.10.1785154732012;
-        Mon, 27 Jul 2026 05:18:52 -0700 (PDT)
-X-Received: by 2002:a05:600c:4444:b0:495:6b4c:fccc with SMTP id 5b1f17b1804b1-496b5c7182amr99174075e9.10.1785154731608;
-        Mon, 27 Jul 2026 05:18:51 -0700 (PDT)
-Received: from imammedo ([213.175.37.14])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-496b388d5b4sm162922435e9.3.2026.07.27.05.18.49
+        bh=89NzTzSellfW3qMr8dN8sAksaWWUoRY5Hxr3im1aqv4=;
+        b=Ue2j/OwgsP8IxacLEBG+ime1K6S+Y1P5bsJyTMkxrkalLU3odzAD0yN2O7NSYYNNJ4
+         MvpApoImoVSy+nl3WHdW50apAvZD95kaW3+xzV90qbGbnkYp0h52GKWB+2wZWwXHLYjN
+         jCkvCTCgxIckB8GLqO4AsuZ1Pw/qthAXUSiXfUQOQNiXVqtr4+ZIfqM29cYdD0Ic8pOa
+         9r9PfS6tj8v9dAARAKIFcDNyIeS9wIxqi4ZWLqtm51YDOJflIXem6f+StFtfQbATCLy1
+         2Mlb/lZHSAWSD9HoRUbEIPC9OZ21QEYfOmIWl5o9vD/3k+yUyOH5BervtLYalQl9H+GI
+         TfbA==
+X-Forwarded-Encrypted: i=1; AHgh+RoQjFab8jMoTRDg5D+2LuwrmjephH0wmbx9ORIFEza1F8Ta+xU/zu/leYfgOwjY6VPnmAd2EA1S5ho=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCwPgaFXQ98KuAQlLIeLAUnFEB06BwGn1W5GUqO5xjkF98n+ZG
+	V5O7mADfsawV5aTuuUfWSekCxSmbDRFqhG2EHa3Xdk5pkoDKO87Pmyg6fF1A0iBZeIoIZ5u+Pye
+	+MjlFaVkcLtGRJy0HXlUWLufQ+Tppg5rRuSzrwh/pN4x1D8Dlxpnc0LT1fRo2pw==
+X-Gm-Gg: AR+sD13v16JrxjiGtJgeYCTS6zehEcrgLQsTxWykrl4V85MjfaSFF0deESNWn7RYh/r
+	Tygl5ABGo4lSKksbabjRrqFBUg3P940EyXxl/cyjI9DFlwuH51A160quyqGbpdq+wydkfy2Was0
+	WbPaT9MiBgR6/CnPgJ4ytoNoDS13yQLM7s+5ZXlp1cEIW2+uBgt5FObcAomrcxvGRYxXiwbnp2d
+	6i/o4ztL42vS7TXzggZvnCfzXKnSs8nhttQmjFjkAo5H6KVTfwXmyyr+6DbdOMZNJhwojEmGape
+	odsVqjvIPlxFUJ+DKs/mWNS2b2ceIcXb8jt+/RWsZba9LTWhD2/c8hIt+Tcp
+X-Received: by 2002:a17:907:72cb:b0:c16:26c7:6ba8 with SMTP id a640c23a62f3a-c1f1ea08253mr325683466b.6.1785154832928;
+        Mon, 27 Jul 2026 05:20:32 -0700 (PDT)
+X-Received: by 2002:a17:907:72cb:b0:c16:26c7:6ba8 with SMTP id a640c23a62f3a-c1f1ea08253mr325680866b.6.1785154832520;
+        Mon, 27 Jul 2026 05:20:32 -0700 (PDT)
+Received: from imammedo ([213.175.46.86])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1c32f19c57sm626106066b.58.2026.07.27.05.20.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2026 05:18:50 -0700 (PDT)
-Date: Mon, 27 Jul 2026 14:18:48 +0200
+        Mon, 27 Jul 2026 05:20:32 -0700 (PDT)
+Date: Mon, 27 Jul 2026 14:20:28 +0200
 From: Igor Mammedov <imammedo@redhat.com>
 To: John Snow <jsnow@redhat.com>
 Cc: qemu-devel@nongnu.org, Alex =?UTF-8?B?QmVubsOpZQ==?=
@@ -88,12 +88,11 @@ Cc: qemu-devel@nongnu.org, Alex =?UTF-8?B?QmVubsOpZQ==?=
  =?UTF-8?B?Q8OpZHJpYw==?= Le Goater <clg@redhat.com>, Jason Wang
  <jasowangio@gmail.com>, qemu-trivial@nongnu.org, Jonathan Cameron
  <jic23@kernel.org>
-Subject: Re: [PATCH v2 16/44] qapi: convert trivial intro sections for
- acpi.json
-Message-ID: <20260727141848.5cc56eb2@imammedo>
-In-Reply-To: <20260723044805.527643-17-jsnow@redhat.com>
+Subject: Re: [PATCH v2 26/44] qapi: convert intro sections for pci.json
+Message-ID: <20260727142028.3206f9e7@imammedo>
+In-Reply-To: <20260723044805.527643-27-jsnow@redhat.com>
 References: <20260723044805.527643-1-jsnow@redhat.com>
-	<20260723044805.527643-17-jsnow@redhat.com>
+	<20260723044805.527643-27-jsnow@redhat.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -102,12 +101,12 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: biy6s-KWW0dU1zANok0jDy53UFVu8LJ0-nplhakNbkk_1785154732
+X-Mimecast-MFC-PROC-ID: kIz3-6V0m51n7br7j4XJBqBf6q3H6V297SuMeNvrJsI_1785154833
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 23 Jul 2026 00:47:37 -0400
+On Thu, 23 Jul 2026 00:47:47 -0400
 John Snow <jsnow@redhat.com> wrote:
 
 > (Trivial)
@@ -117,47 +116,101 @@ John Snow <jsnow@redhat.com> wrote:
 Reviewed-by: Igor Mammedov <imammedo@redhat.com>
 
 > ---
->  qapi/acpi.json | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
+>  qapi/pci.json | 27 +++++++++------------------
+>  1 file changed, 9 insertions(+), 18 deletions(-)
 > 
-> diff --git a/qapi/acpi.json b/qapi/acpi.json
-> index 906b3687a55..291a04a7ea4 100644
-> --- a/qapi/acpi.json
-> +++ b/qapi/acpi.json
-> @@ -81,10 +81,9 @@
+> diff --git a/qapi/pci.json b/qapi/pci.json
+> index 694c741e420..a6a79f91afc 100644
+> --- a/qapi/pci.json
+> +++ b/qapi/pci.json
+> @@ -13,8 +13,7 @@
 >  
 >  ##
->  # @ACPIOSTInfo:
+>  # @PciMemoryRange:
 > -#
-> -# OSPM Status Indication for a device.  For description of possible
-> -# values of @source and @status fields see "_OST (OSPM Status
-> -# Indication)" chapter of ACPI5.0 spec.
-> +#     OSPM Status Indication for a device.  For description
-> +#     of possible values of @source and @status fields see "_OST (OSPM
-> +#     Status Indication)" chapter of ACPI5.0 spec.
+> -# A PCI device memory region
+> +#     A PCI device memory region
 >  #
->  # @device: device ID associated with slot
+>  # @base: the starting address (guest physical)
 >  #
-> @@ -107,9 +106,8 @@
+> @@ -26,8 +25,7 @@
 >  
 >  ##
->  # @query-acpi-ospm-status:
+>  # @PciMemoryRegion:
 > -#
-> -# Return a list of `ACPIOSTInfo` for devices that support status
-> -# reporting via ACPI _OST method.
-> +#     Return a list of `ACPIOSTInfo` for devices
-> +#     that support status reporting via ACPI _OST method.
+> -# Information about a PCI device I/O region.
+> +#     Information about a PCI device I/O region.
 >  #
->  # Since: 2.1
+>  # @bar: the index of the Base Address Register for this region
 >  #
-> @@ -126,8 +124,7 @@
+> @@ -51,8 +49,7 @@
 >  
 >  ##
->  # @ACPI_DEVICE_OST:
+>  # @PciBusInfo:
 > -#
-> -# Emitted when guest executes ACPI _OST method.
-> +#     Emitted when guest executes ACPI _OST method.
+> -# Information about a bus of a PCI Bridge device
+> +#     Information about a bus of a PCI Bridge device
 >  #
->  # @info: OSPM Status Indication
+>  # @number: primary bus interface number.  This should be the number of
+>  #     the bus the device resides on.
+> @@ -80,8 +77,7 @@
+>  
+>  ##
+>  # @PciBridgeInfo:
+> -#
+> -# Information about a PCI Bridge device
+> +#     Information about a PCI Bridge device
 >  #
+>  # @bus: information about the bus the device resides on
+>  #
+> @@ -94,8 +90,7 @@
+>  
+>  ##
+>  # @PciDeviceClass:
+> -#
+> -# Information about the Class of a PCI device
+> +#     Information about the Class of a PCI device
+>  #
+>  # @desc: a string description of the device's class (not stable, and
+>  #     should only be treated as informational)
+> @@ -109,8 +104,7 @@
+>  
+>  ##
+>  # @PciDeviceId:
+> -#
+> -# Information about the Id of a PCI device
+> +#     Information about the Id of a PCI device
+>  #
+>  # @device: the PCI device id
+>  #
+> @@ -128,8 +122,7 @@
+>  
+>  ##
+>  # @PciDeviceInfo:
+> -#
+> -# Information about a PCI device
+> +#     Information about a PCI device
+>  #
+>  # @bus: the bus number of the device
+>  #
+> @@ -161,8 +154,7 @@
+>  
+>  ##
+>  # @PciInfo:
+> -#
+> -# Information about a PCI bus
+> +#     Information about a PCI bus
+>  #
+>  # @bus: the bus index
+>  #
+> @@ -174,8 +166,7 @@
+>  
+>  ##
+>  # @query-pci:
+> -#
+> -# Return information about the PCI bus topology of the guest.
+> +#     Return information about the PCI bus topology of the guest.
+>  #
+>  # Returns: a list of info for each PCI bus.  Each bus is
+>  #     represented by a json-object, which has a key with a json-array
 
