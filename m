@@ -1,311 +1,181 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010013.outbound.protection.outlook.com [52.101.201.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAD2381AF
-	for <linux-cxl@vger.kernel.org>; Mon, 27 Jul 2026 09:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785143186; cv=none; b=JD+khS8rrkItakOz6pmjT74Tko6M0LCAukMMddo7JJUkn2OppT/PLaMuZl/wyCZ+PDCCLVjykguFtLsBMHtFABgJHW5ARQX7kRnjopNKVMtM/rY25840M15TwGJDiQ3ABT7Rn6yP7d+2k9Y/NfrhmMxuibV7AJ+vNUJ6E612Mkk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785143186; c=relaxed/simple;
-	bh=XRxPRqvh6xGZ1roOj30kRgPLcnZg87ruW1jsDuzR2F8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hpXx+ncVa6Zylx5L1VOrHAPj2N38+0pnZkyp8o2uRIIYQWgZUhzby1ty1StDzSeWzUA2Z913h7GFzNE1jB2yv5iaGAlx9egxJ6VoYK9xJ3pkVTvFgisYJQoarfymVckBvuhTpPmEK9sFBnxuwTTn35Kci3Ilc1SPcl27XilyN00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YGqKe9Sp; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DB4378814;
+	Mon, 27 Jul 2026 10:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785148679; cv=fail; b=WFHDO79I22V4XRp6vKpr2jc0O/qW4sM0zBmTwWQ2OJUIXrrdsfgl//pphYHNZQiSH+6pg7VBUNH+749WgXt3NOw1+EmVCdjjpIn69I4j44cdNDxf7lNfb5VkfPtPkpWXiWj+rsVDy1BhwYBR+eBmhGLjuw0Deqt58zzkV4zFfTI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785148679; c=relaxed/simple;
+	bh=aJal4WBJUoKoYe+Z49YP5uHlgxw7z8cefr4+Kmfhkao=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=mE026HOhP+G1vcNWbg+jghxZFter5v9ixFUslW7fx+5Df5gqGeu33viMiH9YFSvHLKncypT1dWdEkba+tA9q6y0ksRhgc3M6U03hPu0BYqRuXPbcHcilQXL3VZmAY1BsMDHUVuH9WshmnIYhXy4zgjFLdYeXuVPaHCj6OkDpBXY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DyDxuHzn; arc=fail smtp.client-ip=52.101.201.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YGqKe9Sp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785143183;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6juDJB9SuJ8viw5hTV/fyWyN9im+TVrsr9lb3ZKqVHQ=;
-	b=YGqKe9Sp6J2DjL9lGHcEL1XfZqTIeTNEkhRSdFHVUsmW034YPoc6jLc5hAhM/+6uVGdMfV
-	EJWAwEkxS+qlUDEAocvn1k3tkC4tGaGr/57sagoFsjtYFNUZ3ejQqoCUmO9fAODVJ8W9kq
-	lcnOYyAbofiDmsifQhtlzlS3zZfEIb8=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-589-OR8hByQfO4im01D49d2FvQ-1; Mon, 27 Jul 2026 05:06:22 -0400
-X-MC-Unique: OR8hByQfO4im01D49d2FvQ-1
-X-Mimecast-MFC-AGG-ID: OR8hByQfO4im01D49d2FvQ_1785143181
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-47f9ae25143so2093429f8f.2
-        for <linux-cxl@vger.kernel.org>; Mon, 27 Jul 2026 02:06:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785143181; x=1785747981;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=FYAQR87+IF7SU2JF8iWU2NworjIcqWl+5FKENXWQeZE=;
-        b=FiMKrIKXk7ioMBqJ0UINDEkQwcU1C/tJkpRKk41P+S/Y8XEXPFELrNFaRONECBh7mB
-         p0XgWAJt/P4F4MSccPZzF6uElMEbLf2Ohrh9tPsxRSrzmTyUpvk3Mt5Q9PKpZJuFb/G2
-         scOQllT6dSNdqZx/GOQ1bL/iaSc3jnNfMJoiIh/iG/1YJ3zwI0Q+DXn+QYtRS8hiDCw+
-         UxTEgAHiMbr4WSLU1Y/nEi7jq3KHRa0DsZilqav7lGxGwXEvQVhNg27r2eJMA6bLXuO4
-         DJvK3IKsQskWcLGPa9LqgqfWBAGIhQa3GkNfIMEF3dbwX9jvNAQURlAvYbfxtaFXPOFR
-         nogw==
-X-Forwarded-Encrypted: i=1; AHgh+RoNXVNvDRb2/jhziBpvP20fXGlADu9r4OvSFUvzJNDUUjq9J3fYEK723iDl+E2WufL1BYdDwPkZfLo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxp3isJLQrRQ4iXufbhRigS/6BuNMx2tTdnXIO65D9Tpp9swwrX
-	ZtPVprZHA8h1/3nyu96D2ZV4UTECPP56+Qj7jwcmPU9uj5yEF9AEqG1tNicKwcC0cQ6MpGy2OhS
-	Za5xDTUIcvSGUsbgKZgN8OKM45/rQ9WzZ77TbwLRW8J/RN6cG5mRZGtpyuwut5Q==
-X-Gm-Gg: AR+sD13YBpQAJ92kTiT3kvyQHtE3FdWkD7eR6SfEmj8m22DtbnvgrRQ4TOKcSDcrTxA
-	5S4r7w15d76WKobpgEQp1IHG/7AOUMcVAPMqQSz9NhLpv93FDwA1ibEHglMS+Mhlaa7vitIqxpF
-	oXHchcBMfMfOgRTo8ea/V2UIDIKq5o4In5kK3Kw5jVccQTFHK5K0ka3ULAWu7QgA2diXbvPuwz0
-	w3aeJMNLCOoGEYb+XbwsGLEmXKFlzbh/iWWFNksUr2ArMdQttaGIaMUUJ4iYq3Mb8N6K/qexOCK
-	SgZ00KfG8R2qOue0jA8v9tIh2XLnWDZBJddSVLgVVL4xIg50iTjV97RJmcon
-X-Received: by 2002:a05:6000:2681:b0:47d:f01e:83cf with SMTP id ffacd0b85a97d-47f9febea2dmr8819722f8f.58.1785143180729;
-        Mon, 27 Jul 2026 02:06:20 -0700 (PDT)
-X-Received: by 2002:a05:6000:2681:b0:47d:f01e:83cf with SMTP id ffacd0b85a97d-47f9febea2dmr8819676f8f.58.1785143180237;
-        Mon, 27 Jul 2026 02:06:20 -0700 (PDT)
-Received: from imammedo ([213.175.37.14])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47f85c6dc25sm46202931f8f.33.2026.07.27.02.06.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jul 2026 02:06:18 -0700 (PDT)
-Date: Mon, 27 Jul 2026 11:06:15 +0200
-From: Igor Mammedov <imammedo@redhat.com>
-To: Chen Pei <cp0613@linux.alibaba.com>
-Cc: jic23@kernel.org, pbonzini@redhat.com, palmer@dabbelt.com,
- alistair.francis@wdc.com, liwei1518@gmail.com,
- daniel.barboza@oss.qualcomm.com, zhiwei_liu@linux.alibaba.com,
- chao.liu.zevorn@gmail.com, sunilvl@ventanamicro.com, dave.jiang@intel.com,
- alison.schofield@intel.com, mst@redhat.com, guoren@kernel.org,
- qemu-riscv@nongnu.org, qemu-devel@nongnu.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] hw/riscv/virt,gpex: Provide 32-bit MMIO window
- for CXL host bridges
-Message-ID: <20260727110615.3e523125@imammedo>
-In-Reply-To: <20260618093827.3507-4-cp0613@linux.alibaba.com>
-References: <20260618093827.3507-1-cp0613@linux.alibaba.com>
-	<20260618093827.3507-4-cp0613@linux.alibaba.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DyDxuHzn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=R9dNIMRcddgGGa5Rmz6l3uHYZOF/9s3/xGtJ52InLitO1Y/OEmC8xjkWszIeBbkE4X8tYKqLp+ulmUcKgSFz4oh8EWxkmhNQX6GB0Owy9VNEoWGftIDBOfYtFkx/mBjQWTfhSa/2qBlDs1NmwaI2Xc6hnwBuzNy651MsgnKL/8DgOHXSt9+aibh/Y9w3p+JRo4gJ1YPcXoqq4R/ak+rgf/bXg/tIa00RWvS5Le8oMFnuxYKg5jiv/h769VSFGz33MTNdk0bMdIpytFwtCuSJP/tDOyJnK5OA2N9HMnTJi4pWN3uuBY/X/emJaoRhaZOD23iS8IbL3HmhFBxlEjwO9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=R/GaOjHljSaJgOqj9L1dRoyqrHA/68VCaHQ3RjXHhJM=;
+ b=DScQhRSOalBWRSdBmXbGjBK4hHda3aV0Qr/ZgBlxVhGvCOGw3e4Jc/enzRdoyUwU1xHAz4b6z7/jWWW8WoryEEAfeeQADD3SGFIFb1AqDtFC4eMM9Uou8jveM1KxnI2EzvLTQhE0MHanoywIMwH6ywilRecg4fv9stwTwF7TkWIp8gs5bs17udgBeBaWoDU/8ZGRKSLMQGq7HO/wiog4IzKO6g47mNz5mCzJtAtBoyxQX4a0nPcEWIihKiqI6hYrT7B8qbRdOwn4l40dVRfJGO+ks9V0uFDdF7vl0YBuk5KrjK6pe9XGzpFwvVsBaaAeO++1yy2W/OofJJXJOlyehA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R/GaOjHljSaJgOqj9L1dRoyqrHA/68VCaHQ3RjXHhJM=;
+ b=DyDxuHzngZ27ZGRmjFU9scVkVl8kbpkkLT118cFDdy8NYSphsoX8weGyWV2HHrU1Tis99j6MWiSqXFt8vWS5D9ThyxuP2/gZZHH43/tFMpwNbXJ00XhJQgrXgUCboMm6lW65mZEJ8D5X3hIv27w7+i3cj5X3qxHH6HD4RgJH83UQv1xnYcVLg0SudoRdMaYeHDS7Mru/tR80fuHopY0l7fqyqKSX4qBxQqbzCAnFQ0dU/cA/XmYzdi1R4m/4wqUXCdPRiScYL+FDb7uaPglokn17gd7raUjfyjB1hFAcnk4Qj7SKYvE5qhMUbmaveoU1RnDeQDuLCRsegXOQwcR7VA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by BY5PR12MB4100.namprd12.prod.outlook.com (2603:10b6:a03:200::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.13; Mon, 27 Jul
+ 2026 10:37:51 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0245.012; Mon, 27 Jul 2026
+ 10:37:51 +0000
+From: Richard Cheng <icheng@nvidia.com>
+To: dave@stgolabs.net,
+	jic23@kernel.org,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	djbw@kernel.org,
+	danwilliams@nvidia.com
+Cc: iweiny@kernel.org,
+	ming.li@zohomail.com,
+	gourry@gourry.net,
+	rrichter@amd.com,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	sreddym@nvidia.com,
+	smadhavan@nvidia.com,
+	kaihengf@nvidia.com,
+	kobak@nvidia.com,
+	newtonl@nvidia.com,
+	kristinc@nvidia.com,
+	mochs@nvidia.com,
+	Richard Cheng <icheng@nvidia.com>
+Subject: [PATCH] cxl/region: Restore passthrough decoder enable on region re-assembly
+Date: Mon, 27 Jul 2026 18:37:43 +0800
+Message-ID: <20260727103743.63343-1-icheng@nvidia.com>
+X-Mailer: git-send-email 2.50.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TP0P295CA0019.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:910:5::13) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 29D4DQm11-BKYvce7_GwcqUuM_Xetab3N-avxCNx3Os_1785143181
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|BY5PR12MB4100:EE_
+X-MS-Office365-Filtering-Correlation-Id: 234e1341-66ab-415f-6fc6-08deebcb1b91
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|23010399003|366016|1800799024|56012099006|11063799006|10067099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	H9A8VNx8oSzqvTpeOaSX61XMw5xEzKwidkRlwiij8uLXvpW4VD0kOoERxj+hLJDv0vOIJtDDCDMbcywC7eUuYccZHVVoPLIydeyxO8fokpxCirF0isVGldnoBmpu5tnrLsfsuZe6kdX0r+DwW4zssyMoIPouqSrFB82TKKoO4gt5HqYxf+ZyXCA/Q5ZLMA1A9r8xkiw7mxh1sLkGBQMhzLbTmDPF0kYExY0GU1+XYa1Uopio2OcaBFiyU9SYLnh3Ex4YFT15IWI5U3vC89nKaoetoCrv62UTCzfSmlsKOuqxwGip8buk/3vBZRYYIUsELx7PK0qXeeiVpL6EyO2zYUMJvEHZEN6awNH61jk6Je73Cxh6WB52nVDuMilUpY1JQ3IZDHTjY41rlYCp4oLCVdtH/fq+jBrdL3jpFuW9/naI/6O90mWZv7g5un1iVs9/5wvDWOFX2u/OrCK2Q0DPRJ5Q15IXuXn4vrfEC0YfPmupzAmLbzNPZ0V1YEKXs46gXwoxXncQ72aM5od+Q1Y2GxzbSGU+XO2jiHnwryTDu+jgSX0w/269+b3F8HG9TFspHKNeFKtSzrNg7c8m3YNSHuYSKZoH4yNvBFNxv5aWn7yKCFtSDhmYAbxsoEAd+5xt0yczq5dilk4J1SLKsXCDa9+WA1eTWDX01tWQmcQk938=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(23010399003)(366016)(1800799024)(56012099006)(11063799006)(10067099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ySVx65P3f6/niWyeZjIKHxoXMaKzW2Y0x18ORly5MUU9lgEl+x5XIOPjzAsH?=
+ =?us-ascii?Q?/o9btGClut2Dv/b2lftlfsDNiB5j1U8S+mb2Uwm8LoZobOCWlHtLZ5aAqsW0?=
+ =?us-ascii?Q?kbER8iLzv2ve2UC26d2MKAVtVFhivFzFVXC3tacYBGePE5rO366OjR7qEhCw?=
+ =?us-ascii?Q?FWbNcP+az+4gUYdlBg+7b9DT9M5MWziwAXtAg3WX68bBiShAMEFkIfarUNJs?=
+ =?us-ascii?Q?aJrbGlimU+Exfs2p+2iwkIKwEqAD8SRQbsAMU2hVDIIPXmiSBpBruuYnAT1G?=
+ =?us-ascii?Q?LIvT1wTMnecUo5buGoWQxvUQkSK/HDihZe1V8A9aygymrz7PtQ9lnjYyapZn?=
+ =?us-ascii?Q?qcndo2xd+1Taz/NQU5wyPHNbZoFluagv0Mxc5uADONEQkNrVArD3ehSYQg9u?=
+ =?us-ascii?Q?R0vHbbHrZ57F4RA7Tk5cfUvrkmi53i6/Flky4hz76SzT7mhq+TnXWMfbtosB?=
+ =?us-ascii?Q?cBPmo5WJTIQSvb0EdrPgsYoK/SdNZV0kHud0ZYVNvOqxBvIPsGQiyzn6A0BU?=
+ =?us-ascii?Q?9gXvwewbC8Gsf9LQch1VyS7tZ5ZtEyZyBAMIKks12E+DIy/w1XbxqXGBymK0?=
+ =?us-ascii?Q?qxnfC/kKibF6t/fIea/AgcnFhjFQCHaQfbxHK9QlitMrSonS5h45DW844E5e?=
+ =?us-ascii?Q?bDG+mo5zJIRbjgvxVzW4EKm32fcXQ+Ru9s/B05N1/86T2bVf27aJedLgRcpO?=
+ =?us-ascii?Q?Vv86wgLOXnHiaQwJ4Jqfopb7L2PTkofXF9urfc4JInBiia9iM0hoSFk3cQrE?=
+ =?us-ascii?Q?H6x3nDf1XmT57bP0178t9NknCPkjJJTj5uEJApYquqGicnWEhnWVCALmgevd?=
+ =?us-ascii?Q?rU8LG/hbbEzZHiDsPYLPo2k7+p0cm/JefCdi/6oP7vEgt66SyBQwQJ8VHpcs?=
+ =?us-ascii?Q?Tz9i8iZnSi4CfWX4kOdUfSx9D/S7gDKPGXKY8DlD5ul2Tdq54Wt83e7Jn26I?=
+ =?us-ascii?Q?US6tc0tDugmxxtsxgTiF8IGd6i+Pmt2+to9cj01/Cs2bMehXyJOITD8Xx39S?=
+ =?us-ascii?Q?j/XK/llqRnkru8JMw+20aiTzBzMYLcrEaJQAURMJvhkT6qLmFXKwOfRlduZA?=
+ =?us-ascii?Q?TA+OzhZ33yKkTaNYKbNiHVwBxUsT8eJqX9DsEvqSv8u9qgXFUVzKDh4Qiuqh?=
+ =?us-ascii?Q?mC746ZRkFRM1emoZd9ArIobdoXnLjJ8kk+Ovk08RErjI1RPJnKOBtXxLgCzW?=
+ =?us-ascii?Q?rHedKHW1QYLBJ9siJVgjVVh+niGrP/FJo9dTdhPl8kk42Ylq6hvSREfWIMCl?=
+ =?us-ascii?Q?W/rXFFKURk4U8InsetTIo9issoooZT2A0muLvwiUx6o1A2raSbopkSlW1m9h?=
+ =?us-ascii?Q?cTB/XGj0i/MYcEsy9QVqFSbNuvstx90/nbRkxFgdAG82YM1fZ/tu6M8ZMMpU?=
+ =?us-ascii?Q?n+oUpQG3AHNoJ0f7W0mvHMym7HUf1jMIu/JG15E7POBogzCUQh4GI8O5EJWh?=
+ =?us-ascii?Q?dj0k3pTz5el1kBgyalj4loJGEYS9hAXzpzjuLCS7EbHOVvqcShmgNQYS/mdx?=
+ =?us-ascii?Q?7Ulj6/koZtmed6UcB0zRfWjK1FKqO5zY8BwvfMTve5ouFtqBxtdCmwY2R9vp?=
+ =?us-ascii?Q?0EoOgZ9O/bRj67sSysC1IGSLikeID3RaTP8joVQEfG8p/XAyTCRuPpnlLhQT?=
+ =?us-ascii?Q?R58n0DfqpvFj7uD/0Miawq163g5gshBjGtSBUDKxf/OsdN4Nhk4ssRrzHt4k?=
+ =?us-ascii?Q?9h8+u+0VLY5GD+X9X1SgRrLiHwl9uUfa/LXfspymQVUVFSKw3OcmOjx8OaKn?=
+ =?us-ascii?Q?hmUIk25haw=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 234e1341-66ab-415f-6fc6-08deebcb1b91
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2026 10:37:51.3752
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: X0jOy971ZepMdMwCeqG57mwl4zDBM1C6BMHBtY+sjubcABJGYMgpmfIY8BBJQFGppuS3+MJrN75RRk+LCgs1BA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4100
 
-On Thu, 18 Jun 2026 17:38:25 +0800
-Chen Pei <cp0613@linux.alibaba.com> wrote:
+After a CXL endpoint is PCI hot-removed and the bus rescanned, an
+auto-discovered region fails to rebiuld and is lost, evne though the
+device's HDM decoder is still committed and decoding.
 
-> CXL component register BAR (BAR0 on CXL Root Port and Type3 device)
-> and the CXL device register BAR (BAR2 on Type3 device) are declared
-> as 64-bit non-prefetchable memory.  Per the PCI-to-PCI Bridge
-> Architecture Specification Rev 1.2 (PCI-SIG, 2003):
->=20
->   - =C2=A73.2.5.8 (Memory Base/Limit): the non-prefetchable window covers
->     only 32-bit addresses (AD[31:20]); the Type 1 header defines no
->     upper-32-bit extension for it.
->   - =C2=A73.2.5.9 (Prefetchable Memory Base/Limit): the bottom 4 bits
->     encode 64-bit support (01h), but this applies exclusively to the
->     *prefetchable* window.
->   - =C2=A73.2.5.10 (Prefetchable Base/Limit Upper 32 Bits): optional
->     registers for AD[63:32] of the prefetchable range only.
->=20
-> The architecture therefore allows a 64-bit window only when it is also
-> prefetchable; there is no 64-bit non-prefetchable form.  PCIe inherits
-> this Type 1 header layout unchanged.  Linux thus places 64-bit
-> non-prefetchable BARs in the 32-bit non-prefetchable bridge window,
-> which requires the bridge to own enough address space below 4 GiB.
->=20
-> On RISC-V virt the 32-bit PCIe MMIO range (1 GiB at 0x40000000) is
-> currently consumed entirely by PCI0, so CXL host bridges (ACPI0016)
-> have no non-prefetchable window and Linux fails to assign these BARs.
-> Marking the BARs prefetchable would work around it, but the CXL
-> component registers have read/write side effects and are not
-> prefetchable per the PCIe specification.
->=20
-> Reserve the top 256 MiB of the 32-bit MMIO window exclusively for
-> CXL host bridges:
-> - Shrink PCI0's mmio32 window by 256 MiB in virt.c so that UEFI's
->   PciHostBridgeDxe and the ACPI _CRS for PCI0 never claim that range
-> - Store the reserved range in a new gpex_cfg.cxl_mmio32 field
-> - In gpex-acpi.c, emit the cxl_mmio32 range as the Memory resource
->   in the CXL host bridge _CRS instead of re-using build_crs() (which
->   returns an empty set when UEFI has not assigned resources yet)
-> - Reduce the FDT 'ranges' for PCI0 by the same 256 MiB so that UEFI
->   firmware driven by device-tree also respects the reservation
->=20
-> Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
-> ---
->  hw/pci-host/gpex-acpi.c    | 36 +++++++++++++++++++++--
->  hw/riscv/virt.c            | 58 +++++++++++++++++++++++++++++++-------
->  include/hw/pci-host/gpex.h |  1 +
->  3 files changed, 83 insertions(+), 12 deletions(-)
->=20
-> diff --git a/hw/pci-host/gpex-acpi.c b/hw/pci-host/gpex-acpi.c
-> index d9820f9b41..d8b943b665 100644
-> --- a/hw/pci-host/gpex-acpi.c
-> +++ b/hw/pci-host/gpex-acpi.c
-> @@ -158,9 +158,41 @@ void acpi_dsdt_add_gpex(Aml *scope, struct GPEXConfi=
-g *cfg)
->               * Resources defined for PXBs are composed of the following =
-parts:
->               * 1. The resources the pci-bridge/pcie-root-port need.
->               * 2. The resources the devices behind pxb need.
-> +             *
-> +             * For CXL host bridges on platforms where UEFI (driven by
-> +             * FDT 'ranges') does not assign PCI resources for the CXL
-> +             * root bridge before ACPI table construction, build_crs()
+A single-dport host bridge/root port has no HDM decoder capability, so
+its switch decoder is a SW-only passthrough. Its CXL_DECODER_F_ENABLE
+flag is cleared on region teardown and never restored on rescan, so
+cxl_port_setup_targets() fails with -ENXIO.
 
-I kind of dislike (basically riscv specific hack) in generic code.
-well, correct way to tackle this is
- 1: fix UEFI to perform required initialization.
+Re-enable the passthrough decoder when its interleave and HPA config
+still match the region, it holds no HW state.
 
-> +             * would return an empty resource set.  When the platform
-> +             * has reserved a dedicated MMIO window for CXL host bridges
-> +             * (cfg->cxl_mmio32), emit that window as a static _CRS
-> +             * instead.  The platform is responsible for shrinking PCI0'=
-s
-> +             * mmio32 window so the two do not overlap.
+Signed-off-by: Richard Cheng <icheng@nvidia.com>
+---
+ drivers/cxl/core/region.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-if you have to put a hack into QEMU, make it work with current build_crs()
-and localize 'proper simulated initialization' in riscv codebase
-(i.e. do not spread it to common codebase). But before doing it see (#1 not=
-e).
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 1e211542b6b6..011ceb5bae79 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -1574,6 +1574,19 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+ 	}
+ 
+ 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
++		/*
++		 * A passthrough switch decoder holds no HW decode state.
++		 * It's CXL_DECODER_F_ENABLE flag is pure software bookkeeping
++		 * that is cleared when the region is torn down. On auto-discovery
++		 * re-assembly after a subsequent rescan the decode config still
++		 * matches the region, so restore the flag rather than fail to
++		 * rebuild a region that HW is in fact still decoding.
++		 */
++		if (!cxld->commit && cxld->interleave_ways == iw &&
++		    (iw <= 1 || cxld->interleave_granularity == ig) &&
++		    spa_maps_hpa(p, &cxld->hpa_range))
++			cxld->flags |= CXL_DECODER_F_ENABLE;
++
+ 		if (cxld->interleave_ways != iw ||
+ 		    (iw > 1 && cxld->interleave_granularity != ig) ||
+ 		    !spa_maps_hpa(p, &cxld->hpa_range) ||
 
->               */
-> -            crs =3D build_crs(PCI_HOST_BRIDGE(BUS(bus)->parent), &crs_ra=
-nge_set,
-> -                            cfg->pio.base, 0, 0, 0);
-> +            if (is_cxl && cfg->cxl_mmio32.size) {
-> +                uint64_t cxl_base =3D cfg->cxl_mmio32.base;
-> +                uint64_t cxl_size =3D cfg->cxl_mmio32.size;
-> +
-> +                crs =3D aml_resource_template();
-> +
-> +                /* 32-bit MMIO range for CXL devices */
-> +                aml_append(crs,
-> +                    aml_dword_memory(AML_POS_DECODE, AML_MIN_FIXED,
-> +                                     AML_MAX_FIXED, AML_NON_CACHEABLE,
-> +                                     AML_READ_WRITE, 0,
-> +                                     cxl_base,
-> +                                     cxl_base + cxl_size - 1,
-> +                                     0, cxl_size));
-> +
-> +                /* Bus number range */
-> +                aml_append(crs,
-> +                    aml_word_bus_number(AML_MIN_FIXED, AML_MAX_FIXED,
-> +                                       AML_POS_DECODE, 0,
-> +                                       bus_num, bus_num + 15,
-> +                                       0, 16));
-> +            } else {
-> +                crs =3D build_crs(PCI_HOST_BRIDGE(BUS(bus)->parent),
-> +                                &crs_range_set, cfg->pio.base, 0, 0, 0);
-> +            }
->              aml_append(dev, aml_name_decl("_CRS", crs));
-> =20
->              if (is_cxl) {
-> diff --git a/hw/riscv/virt.c b/hw/riscv/virt.c
-> index 84b91b4322..9c1a001553 100644
-> --- a/hw/riscv/virt.c
-> +++ b/hw/riscv/virt.c
-> @@ -113,6 +113,9 @@ static const MemMapEntry virt_memmap[] =3D {
->  /* PCIe high mmio for RV64, size is fixed but base depends on top of RAM=
- */
->  #define VIRT64_HIGH_PCIE_MMIO_SIZE  (16 * GiB)
-> =20
-> +/* 32-bit MMIO range carved out of VIRT_PCIE_MMIO for CXL host bridges *=
-/
-> +#define VIRT_CXL_MMIO32_SIZE        (256 * MiB)
-> +
->  static MemMapEntry virt_high_pcie_memmap;
-> =20
->  #define VIRT_FLASH_SECTOR_SIZE (256 * KiB)
-> @@ -890,15 +893,28 @@ static void create_fdt_pcie(RISCVVirtState *s,
->      }
->      qemu_fdt_setprop_sized_cells(ms->fdt, name, "reg", 2,
->          s->memmap[VIRT_PCIE_ECAM].base, 2, s->memmap[VIRT_PCIE_ECAM].siz=
-e);
-> -    qemu_fdt_setprop_sized_cells(ms->fdt, name, "ranges",
-> -        1, FDT_PCI_RANGE_IOPORT, 2, 0,
-> -        2, s->memmap[VIRT_PCIE_PIO].base, 2, s->memmap[VIRT_PCIE_PIO].si=
-ze,
-> -        1, FDT_PCI_RANGE_MMIO,
-> -        2, s->memmap[VIRT_PCIE_MMIO].base,
-> -        2, s->memmap[VIRT_PCIE_MMIO].base, 2, s->memmap[VIRT_PCIE_MMIO].=
-size,
-> -        1, FDT_PCI_RANGE_MMIO_64BIT,
-> -        2, virt_high_pcie_memmap.base,
-> -        2, virt_high_pcie_memmap.base, 2, virt_high_pcie_memmap.size);
-> +    {
-> +        /*
-> +         * When CXL is enabled, reserve the last 256 MiB of the 32-bit
-> +         * MMIO window for CXL host bridges and exclude it from the main
-> +         * PCIe host bridge's FDT 'ranges' so UEFI's PciHostBridgeDxe
-> +         * does not allocate that range to PCI0.  The CXL host bridge
-> +         * _CRS declares this range independently.
-> +         */
-> +        hwaddr mmio32_size =3D s->memmap[VIRT_PCIE_MMIO].size;
-> +        if (s->cxl_devices_state.is_enabled) {
-> +            mmio32_size -=3D VIRT_CXL_MMIO32_SIZE;
-> +        }
-> +        qemu_fdt_setprop_sized_cells(ms->fdt, name, "ranges",
-> +            1, FDT_PCI_RANGE_IOPORT, 2, 0,
-> +            2, s->memmap[VIRT_PCIE_PIO].base, 2, s->memmap[VIRT_PCIE_PIO=
-].size,
-> +            1, FDT_PCI_RANGE_MMIO,
-> +            2, s->memmap[VIRT_PCIE_MMIO].base,
-> +            2, s->memmap[VIRT_PCIE_MMIO].base, 2, mmio32_size,
-> +            1, FDT_PCI_RANGE_MMIO_64BIT,
-> +            2, virt_high_pcie_memmap.base,
-> +            2, virt_high_pcie_memmap.base, 2, virt_high_pcie_memmap.size=
-);
-> +    }
-> =20
->      if (virt_is_iommu_sys_enabled(s)) {
->          qemu_fdt_setprop_cells(ms->fdt, name, "iommu-map",
-> @@ -1728,7 +1744,29 @@ static void virt_machine_init(MachineState *machin=
-e)
->              qdev_get_gpio_in(virtio_irqchip, VIRTIO_IRQ + i));
->      }
-> =20
-> -    gpex_pcie_init(system_memory, pcie_irqchip, s);
-> +    DeviceState *pcie_dev =3D gpex_pcie_init(system_memory, pcie_irqchip=
-, s);
-> +
-> +    /*
-> +     * If CXL is enabled, reserve the last 256 MiB of the 32-bit MMIO
-> +     * window for CXL host bridges so the bridge non-prefetchable window
-> +     * can hold CXL device BARs (component registers and similar 64-bit
-> +     * non-prefetchable BARs that need a < 4 GiB address).
-> +     *
-> +     * - Shrink PCI0's mmio32 advertised in the ACPI _CRS by the same
-> +     *   256 MiB so the two ranges do not overlap (the FDT 'ranges'
-> +     *   shrink happens in create_fdt_pcie()).
-> +     * - Store the reserved range in cxl_mmio32 so gpex-acpi.c can emit
-> +     *   a correct _CRS for the CXL host bridge (ACPI0016).
-> +     */
-> +    if (s->cxl_devices_state.is_enabled) {
-> +        GPEXHost *gpex =3D GPEX_HOST(pcie_dev);
-> +        gpex->gpex_cfg.cxl_mmio32.size =3D VIRT_CXL_MMIO32_SIZE;
-> +        gpex->gpex_cfg.cxl_mmio32.base =3D
-> +            s->memmap[VIRT_PCIE_MMIO].base +
-> +            s->memmap[VIRT_PCIE_MMIO].size - VIRT_CXL_MMIO32_SIZE;
-> +        /* Shrink PCI0's advertised 32-bit MMIO window to exclude CXL ra=
-nge */
-> +        gpex->gpex_cfg.mmio32.size -=3D VIRT_CXL_MMIO32_SIZE;
-> +    }
-> =20
->      create_platform_bus(s, mmio_irqchip);
-> =20
-> diff --git a/include/hw/pci-host/gpex.h b/include/hw/pci-host/gpex.h
-> index 1da9c85bce..d38fbbacd6 100644
-> --- a/include/hw/pci-host/gpex.h
-> +++ b/include/hw/pci-host/gpex.h
-> @@ -43,6 +43,7 @@ struct GPEXConfig {
->      MemMapEntry mmio32;
->      MemMapEntry mmio64;
->      MemMapEntry pio;
-> +    MemMapEntry cxl_mmio32;
->      int         irq;
->      PCIBus      *bus;
->      bool        pci_native_hotplug;
+base-commit: 4539944e515183668109bdf4d0c3d7d228383d88
+-- 
+2.43.0
 
