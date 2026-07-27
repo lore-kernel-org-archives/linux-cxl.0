@@ -1,164 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from www3579.sakura.ne.jp (www3579.sakura.ne.jp [49.212.243.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9B76FC5
-	for <linux-cxl@vger.kernel.org>; Sun, 26 Jul 2026 21:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B56F374E5B
+	for <linux-cxl@vger.kernel.org>; Mon, 27 Jul 2026 04:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.243.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785101411; cv=none; b=t3KbOOdV7yaZeJ4lQZcN075l2LOvxTmFcOsIThLFmsiAWFrRc8vTXgZR78We+WwiYmOhvvdniQQwINwqVbGpjM4CORqaHjYApF8y5Bv5D5Oh1pL7UyOZynwp1d98QjX7F73yRDZ5Dvqxyko1pMJocozigViwFwEGosCLMUOS5OA=
+	t=1785127254; cv=none; b=ACvGf/E9oZjlN/vV7jaSwyLcJ31k92CB4pctedsiaHnAe3bWLKmP/lecUsudxIbFxv5QaYrTgPWJWoPso75w+bfzvoDZaFMxY0qEGpNQqLZo5B1q3d3t3cH5dHaqipmHnRW30uxYO1+hyPcjUoE/SEprPF2wu4LJ0vBM1sztkX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785101411; c=relaxed/simple;
-	bh=gsfwHDBL3Ajjd4WLPCETroICOfycJZVmoqYo5DQ4vvQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=AJ6/KVS4p8ChS9gQqu1aRWX9IA6EjcqclGxPYAvuvBcyGjiTbfYVS19gY9hjQgpQSCxxFsKg1GaSy8Q+ipwnA88yqu/3dNMUbgM+9pH3G4OO20rCZBnmWfMwjYloV3rn2TKSaAkUuRSoqxQtMv8e9sxZ8YEacVWi2BPzNrhrTK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cdW+5xKl; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1785127254; c=relaxed/simple;
+	bh=UO02C9z2tic/Qo/soNLkAjKqGKFiAg19sgKkt/O4hTY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hJOcWs0NPGO6aDrFL6rf5xTcUGjOrtEhJ9iFTIiBDWCK3vf+9mEscX3N8XEV+GzT2vOLjqRPuu/t9vE3ClUQsgxt9x68OdcLVrVYJB50jH+wsesJs/RrzGXS4fCz1UQf9srE+Wc0hB6rUxgQ2t4GUjNIqqYcGP4EviHDoxSO2O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp; dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b=jWs6yonO; arc=none smtp.client-ip=49.212.243.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rsg.ci.i.u-tokyo.ac.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rsg.ci.i.u-tokyo.ac.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cdW+5xKl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785101409;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SmGEwUN6ZoBQwWGEsj9lWjkAqkITIK5CY/izBuC1F/k=;
-	b=cdW+5xKlD9v7il1ri7cMTKp1rQ3S1rCJXpuGdWi/C5M6TcS/xgPA4SnbKh8OssYPiG/zVy
-	VcZNfUhd/1jDGunsic0vjsMElDJ+yQgnQ0a9uzCQ6Ye/JKBthc9UGxmigF+Zdjco0Dg2le
-	1f8edlJJKekSG/OnXbdctzs2DRv/CkI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-590-7WbUJas8P7SR89OpBijhEw-1; Sun, 26 Jul 2026 17:30:07 -0400
-X-MC-Unique: 7WbUJas8P7SR89OpBijhEw-1
-X-Mimecast-MFC-AGG-ID: 7WbUJas8P7SR89OpBijhEw_1785101406
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-490a767b782so15142175e9.2
-        for <linux-cxl@vger.kernel.org>; Sun, 26 Jul 2026 14:30:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785101406; x=1785706206;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=SmGEwUN6ZoBQwWGEsj9lWjkAqkITIK5CY/izBuC1F/k=;
-        b=TDmpXLT2XetmJwVedFp4FH0r+E3MiAsCAvzSR2CI588+98MPicVjgAvvSJ5qWx/uiF
-         PLIv7acXzYQyJvPhhOFyMbqr0OMM4/3oqPmqO7ml7iQso8ZHhG/eFPUMGSLTK5SpGfSn
-         hX29WLkxecNbngn2NgBulslfHfq81FlHqdIrLSXFnrOFlx+ZeoVytGVE+Su4l/gOz7OG
-         Vqlcv2pWdd8XJeSb2Q62cq1lOYrgRaKY8NaFLFFJc471oxZGGaLBKobrg9yRA/8sWPwE
-         xS1h0mqoPUisbnG5fOQSi6l4BFA6LdPO3d3QqVEl1Qq4vAjQWU3tVe/nCUObSSicHXRz
-         enIQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrehcsLq31ozjBFUOItifI1RXoEEbe3kUgwsHP+lC1F0cwCqGTd4evLQdfQpeX7FUyaIuBp3zakpuo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkSpRL8CvifWO27A6ICdLmpxZqH01egJzKqu2rOEQ9aOgI1ZO3
-	bWbiZhULvo+2Xi6uWrvpiuyQf6caPIrViVv6vPuubGH/JtHU1X4Vhn2Rr2KQk5J8rq7zHTk4QQ8
-	1eaJTuLU7t1WfvtTsO/mhsGOr6P5f5OZSOP+Jpn1LJCLD7G9wxMQo3KUFs8K0Rg==
-X-Gm-Gg: AR+sD11eFOfhvM38Hu5tL8RGLm2mTfr8YNx/UbHSxCFfLxkpKnCt4uiFSNkSrbCGkZX
-	ogITNiFtDzv6RZ2ra27Sl+BEUxRyHY4etB1CpVbxss2Svy5lktsFcbm1EOjzcbIkeXzgVVUMzgB
-	k1ASLjTCnhXCXkrQWk7s9R+W5TSSi/LEWsTE4yzlyhzSeg1SuLa7UW20LPXTuxPaOpujpfAqh14
-	/Zr3ax7fxOGgqpUtjVkF8KwCse9LnzvkAv+vIjI+9dHxiQrHv45M8G6OuRpgXTYSCeZ2XielDmQ
-	i2/wH130W8Ttkh+8c9/VIyWnr5Ip+77GHhmyfBXuIKYTT8pRfmJneyvUr9rNTI6ETwSLklMw6PM
-	RUFkRMTPfUWQP7xx5wCRA1Q==
-X-Received: by 2002:a05:600c:4688:b0:496:bba5:33a7 with SMTP id 5b1f17b1804b1-496bba53519mr42463505e9.27.1785101406281;
-        Sun, 26 Jul 2026 14:30:06 -0700 (PDT)
-X-Received: by 2002:a05:600c:4688:b0:496:bba5:33a7 with SMTP id 5b1f17b1804b1-496bba53519mr42462825e9.27.1785101405693;
-        Sun, 26 Jul 2026 14:30:05 -0700 (PDT)
-Received: from redhat.com (IGLD-80-230-37-66.inter.net.il. [80.230.37.66])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-496ba82468bsm109682065e9.4.2026.07.26.14.30.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Jul 2026 14:30:04 -0700 (PDT)
-Date: Sun, 26 Jul 2026 17:30:02 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: qemu-devel@nongnu.org
-Cc: Peter Maydell <peter.maydell@linaro.org>,
-	Haotian Jiang <jianghaotian.sunday@gmail.com>,
-	qemu-stable@nongnu.org, Jonathan Cameron <jic23@kernel.org>,
-	linux-cxl@vger.kernel.org
-Subject: [PULL 26/30] hw/cxl: fix OOB access in cxl_doe_cdat_rsp via
- entry_handle
-Message-ID: <19b566d397e382892af337e8b19e5676b9d36ac4.1785101237.git.mst@redhat.com>
-References: <cover.1785101237.git.mst@redhat.com>
+	dkim=pass (2048-bit key) header.d=rsg.ci.i.u-tokyo.ac.jp header.i=@rsg.ci.i.u-tokyo.ac.jp header.b="jWs6yonO"
+Received: from [133.11.54.183] (h183.csg.ci.i.u-tokyo.ac.jp [133.11.54.183])
+	(authenticated bits=0)
+	by www3579.sakura.ne.jp (8.16.1/8.16.1) with ESMTPSA id 66R4emMA047169
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Mon, 27 Jul 2026 13:40:48 +0900 (JST)
+	(envelope-from odaki@rsg.ci.i.u-tokyo.ac.jp)
+DKIM-Signature: a=rsa-sha256; bh=P+n2yqHAEB0fjUEbDZnBYZx+mrptb5uxVUai3KjbmFE=;
+        c=relaxed/relaxed; d=rsg.ci.i.u-tokyo.ac.jp;
+        h=From:Message-ID:To:Subject:Date;
+        s=rs20250326; t=1785127249; v=1;
+        b=jWs6yonOxfPbIhMbYHVnuGXwNjRQ9IqlE6c3Dvt1RLbedYcO4UbMKkx8Io8gqnmW
+         tz3lVexA0oI5/0nyL66+yk436BwN91514TRY2GdFQ8b4pre+KfenWUDVgwHuLUwU
+         vf29CMT/0j+0Yk4iKSIL0s0WiZjQqNEX7MRGjAWms44hXIV6nYs8lUcRzNjpVRjD
+         20BR9+RVtrkEdgBDEzqkEmeo3+A2MfpRzjuEWs2CLraYT0wP0LrKPHh8LbujfW6S
+         jAe7XYJzuLjdpX1qtYl0ToPi03WTAHSHP822MsT0IsS9geXpx8M1NnWYUv74/+W/
+         CFBrLZwLC0RZxqhJYIE3Iw==
+Message-ID: <70e1a2db-472d-46f4-ae27-ea8fb4af6cc0@rsg.ci.i.u-tokyo.ac.jp>
+Date: Mon, 27 Jul 2026 13:40:48 +0900
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <cover.1785101237.git.mst@redhat.com>
-X-Mailer: git-send-email 2.51.2.2891.g4157995a80.dirty
-X-Mutt-Fcc: =sent
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 5BnnrgZE1dfZ-hg4og86Exn9EC9MwjYiivFM-TwSKKc_1785101406
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/12] hw/cxl: fix invalid free on early return
+To: =?UTF-8?Q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc: qemu-devel@nongnu.org,
+        =?UTF-8?Q?Alex_Benn=C3=A9e?=
+ <alex.bennee@linaro.org>,
+        Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>, Kevin Wolf <kwolf@redhat.com>,
+        Hanna Reitz <hreitz@redhat.com>, qemu-block@nongnu.org,
+        Jonathan Cameron <jic23@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, Fam Zheng <fam@euphon.net>,
+        =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?=
+ <berrange@redhat.com>,
+        Zhao Liu <zhao1.liu@intel.com>, Roman Bolshakov <rbolshakov@ddn.com>,
+        Phil Dennis-Jordan
+ <phil@philjordan.eu>, Wei Liu <wei.liu@kernel.org>,
+        linux-cxl@vger.kernel.org, Brian Cain <brian.cain@oss.qualcomm.com>,
+        Pierrick Bouvier <pierrick.bouvier@oss.qualcomm.com>,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
+        Peter Xu <peterx@redhat.com>, Fabiano Rosas <farosas@suse.de>
+References: <20260727-fix2-v2-0-d0c4831ed7ea@redhat.com>
+ <20260727-fix2-v2-5-d0c4831ed7ea@redhat.com>
+ <20260726164738-mutt-send-email-mst@kernel.org>
+ <CAJ+F1C+fCyazpGfof9H0_n54FMy3LX6ujdmTcW=gAmhFz8Lk-w@mail.gmail.com>
+Content-Language: en-US
+From: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
+In-Reply-To: <CAJ+F1C+fCyazpGfof9H0_n54FMy3LX6ujdmTcW=gAmhFz8Lk-w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Haotian Jiang <jianghaotian.sunday@gmail.com>
+On 2026/07/27 6:09, Marc-André Lureau wrote:
+> On Mon, Jul 27, 2026 at 12:49 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+>>
+>> On Mon, Jul 27, 2026 at 12:44:04AM +0400, Marc-André Lureau wrote:
+>>> Fixes: 680935c9a6ff ("hw/cxl: Add a performant (and correct) path for the non interleaved cases")
+>>> Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
+>>
+>> Not commit log really?
+> 
+> SSIA, but I can make it longer if it helps.
 
-cxl_doe_cdat_rsp() takes ent = req->entry_handle (uint16_t, fully
-guest-controlled, 0..0xFFFF) and directly indexes cdat->entry[ent]
-without checking ent < cdat->entry_len. For a default cxl-type3 with
-one volatile memory region, entry_len = 1 + CT3_CDAT_NUM_ENTRIES = 7,
-so any entry_handle >= 7 reads past the CDATEntry array into host heap.
+I agree the subject is sufficient so:
 
-The OOB-read base/length are then used in
-memcpy(read_mbox + offset, base, len) at cxl_type3.c:298-299, leaking
-host heap memory to the guest via PCI_EXP_DOE_RD_DATA_MBOX, and
-potentially overflowing the 1 MiB read_mbox heap buffer when the OOB
-length field is large.
+Reviewed-by: Akihiko Odaki <odaki@rsg.ci.i.u-tokyo.ac.jp>
 
-The same bug exists in the cxl-upstream implementation.
+That said, we can quote docs/devel/style.rst if desired:
 
-Existing checks do not bound ent: assert(cdat->entry_len) only ensures
-the table is loaded; the minimum-length check only guards against a
-truncated CDATReq; the entry_handle ternary at line 293 only decides
-the next-handle echo, not the current access; pcie_doe_get_obj_len
-reads header.length, not entry_handle.
+ > * Variables declared with g_auto* MUST always be initialized,
+ >   otherwise the cleanup function will use uninitialized stack memory
 
-Reproduce: build QEMU with CONFIG_CXL, boot
-  -M q35,cxl=on -device pxb-cxl,bus_nr=52 ... -device cxl-type3,...
-then send a CDATReq with entry_handle=0xFFFF via the DOE mailbox at
-config offset 0x190. Under ASAN this reports SEGV in cxl_doe_cdat_rsp
-at cxl_type3.c:281.
+Regards,
+Akihiko Odaki
 
-Fixes: f5ee7413d5 ("hw/mem/cxl-type3: Add CXL CDAT Data Object Exchange")
-Fixes: 882877fc35 ("hw/pci-bridge/cxl-upstream: Add a CDAT table access DOE")
-Signed-off-by: Haotian Jiang <jianghaotian.sunday@gmail.com>
-Cc: qemu-stable@nongnu.org
-Reviewed-by: Jonathan Cameron <jic23@kernel.org>
-Reviewed-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Message-ID: <20260713072336.623604-2-jianghaotian.sunday@gmail.com>
----
- hw/mem/cxl_type3.c           | 3 +++
- hw/pci-bridge/cxl_upstream.c | 3 +++
- 2 files changed, 6 insertions(+)
-
-diff --git a/hw/mem/cxl_type3.c b/hw/mem/cxl_type3.c
-index cba05ec57d..28f41fa623 100644
---- a/hw/mem/cxl_type3.c
-+++ b/hw/mem/cxl_type3.c
-@@ -278,6 +278,9 @@ static bool cxl_doe_cdat_rsp(DOECap *doe_cap)
-     }
- 
-     ent = req->entry_handle;
-+    if (ent >= cdat->entry_len) {
-+        return false;
-+    }
-     base = cdat->entry[ent].base;
-     len = cdat->entry[ent].length;
- 
-diff --git a/hw/pci-bridge/cxl_upstream.c b/hw/pci-bridge/cxl_upstream.c
-index b6281cbd4c..69773ff163 100644
---- a/hw/pci-bridge/cxl_upstream.c
-+++ b/hw/pci-bridge/cxl_upstream.c
-@@ -158,6 +158,9 @@ static bool cxl_doe_cdat_rsp(DOECap *doe_cap)
-     }
- 
-     ent = req->entry_handle;
-+    if (ent >= cdat->entry_len) {
-+        return false;
-+    }
-     base = cdat->entry[ent].base;
-     len = cdat->entry[ent].length;
- 
--- 
-MST
+> 
+>>
+>>> ---
+>>>   hw/cxl/cxl-host.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
+>>> index 7e744312f1d8..eba13c9e7cba 100644
+>>> --- a/hw/cxl/cxl-host.c
+>>> +++ b/hw/cxl/cxl-host.c
+>>> @@ -279,7 +279,7 @@ static void cxl_fmws_direct_passthrough_setup(CXLDirectPTState *state,
+>>>       MemoryRegion *mr = NULL;
+>>>       uint64_t vmr_size = 0, pmr_size = 0, offset = 0;
+>>>       MemoryRegion *direct_mr;
+>>> -    g_autofree char *direct_mr_name;
+>>> +    g_autofree char *direct_mr_name = NULL;
+>>>       unsigned int idx = state->hdm_decoder_idx;
+>>>
+>>>       if (ct3d->hostvmem) {
+>>>
+>>> --
+>>> 2.55.0
+>>
+>>
 
