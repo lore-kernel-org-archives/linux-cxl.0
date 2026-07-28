@@ -1,286 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99391200110
-	for <linux-cxl@vger.kernel.org>; Tue, 28 Jul 2026 15:16:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CB143A7F1
+	for <linux-cxl@vger.kernel.org>; Tue, 28 Jul 2026 15:26:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785251791; cv=none; b=CUaCt2+YPlfjpil0q8v/KYcDj4QI569Xku3ak0CXz17G8/W9RGmsnfAaGKtd2rl3J3ckLPq8ItRqjeWET1MehWrqzGbhXrKRwsKOWhz5SeLeq7jBGFfPYEYblbrRXEr3oN5Q7SQf2vBpt+3QgrmKwz/j8PLWlpYA9ALUgIkOBXc=
+	t=1785252395; cv=none; b=lGcIUz0REnzh2Bg9bCYd5T4UCl/R7V7kXeI5x3RbpKKLwgjRC5wnuC1Ma1QsCCum8pQfWYBu/kic4nzwLR0U+iFnUUaHwa0auRDvmmQsFs90MQnCTMb0F90n0HeuX2I8NaeuJxi7IqseLS5kxv+PdvVnOXApSdr+t+X9f9BQjNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785251791; c=relaxed/simple;
-	bh=IpJqVtqK2DxckWWw5/oHblwFsTFKuxXYhtRRymQnvMk=;
+	s=arc-20240116; t=1785252395; c=relaxed/simple;
+	bh=APJnB71NtQLz5/zBZCtmxGmzUfGNReLaXbVrIi1P5JQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=AKqWWmTxLH/0FZpceuzqtaynLORkzSdvfp0GzR0PNfH7TspOrBdAzjSgbgZin5XzDEUJeyd25mICv9cHwrOSIE4XlqzZKWPblLe4PQ5F10jWi3oS39LPaQxjMjbsAkQkXVRdhBtavjRP6KwC5USLUFHSF8fJtsB2eiN63nttmCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RHG6wfca; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=GcOWQIRXTHJvynJmkL/6HA5biY1ObtmUh4en6FF/DElJR+K2TxLvNM3Yf1dN7EcjW6P9jdcyk11w4jGO4aCGeJ+6yJMGQtUR534n96/RFnQG10YeKU+m6oWRHx547wow5gJeZyOwBfbar3xYpvdZEdkJEKIBWqSDDXXuALkaDFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/Na8LFc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RHG6wfca"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20F0D1F000E9;
-	Tue, 28 Jul 2026 15:16:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/Na8LFc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E1B91F00A3A;
+	Tue, 28 Jul 2026 15:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785251789;
-	bh=kdrCvv3MTvszt9CrCzZ9WqTVh2caQQ1Evgdz1l9jqfY=;
+	s=k20260515; t=1785252394;
+	bh=gza1FrI+Jp5q3zrbGlToVkEdvtbzrFN/UxzGIk+vcsw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RHG6wfcaLtjwM7KKGPTZnSJo9EJh7oY30qN/2Q6gDqd1IkP8iolopxN3trSOzedj/
-	 AwYy30MTuhyrF/7TsqzDZseQknRaqnh4n2goHZ1xz4j28E9Ge8CXvfVE1cBwG0o/ka
-	 lGhNfJG0ZBBKOUeJppA4O1cF+YNi/BRnYEEiC711kxEsDEyreM7vhxBBQSUP2OSz2T
-	 g3dNcspg2P7sGxNjbD/GBvIDVPn3zPxxqKhPoOpQOSgNvpRY+04uUyoyncp3bYURKf
-	 jGlU1jnIKsdsP5W+MtfV1zeVWy3wu96ogXWTLGimsIbAGsMEqVwEuVn6TlLA+ROD/G
-	 QpV63rYdDttfw==
+	b=A/Na8LFcUoeXtpt96ubppWVLH3nfupLWVBhBEvROd5umpuTh883hoKT800FkREQX0
+	 dqh2JFec7z45uXxVqs8iGPLgjlrEV+91m2OZ/7I6jWaPseKz4pDhfPywVtr8d01y8U
+	 uzPWchMcRwmDn9dYuQCR31mozvhE5wDHBQn72bPyj4qgn3zlwTn+qPJHUbM62P9ljD
+	 ui72aVdcxd8qt2NVb0eoVr9p2ME2pdtTaCdn0F6AZag+8XidKUjK59si/yw7wzQVxF
+	 a+BTCi9QwUDE+2zVVhcIol/78JjDNuslK/lf6DQJYlHr2eI5fZLqBJu7Hm0BoFyjOW
+	 qbspdtFG1rPMw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 2/8] cxl/pci: Add BI topology enable/disable
+Subject: Re: [PATCH v7 3/8] cxl/hdm: Add BI coherency support for endpoint
+ decoders
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Davidlohr Bueso" <dave@stgolabs.net>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260728144136.709882-3-dave@stgolabs.net>
+In-Reply-To: <20260728144136.709882-4-dave@stgolabs.net>
 References: <20260728144136.709882-1-dave@stgolabs.net>
- <20260728144136.709882-3-dave@stgolabs.net>
+ <20260728144136.709882-4-dave@stgolabs.net>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 28 Jul 2026 15:16:28 +0000
-Message-Id: <20260728151629.20F0D1F000E9@smtp.kernel.org>
+Date: Tue, 28 Jul 2026 15:26:33 +0000
+Message-Id: <20260728152634.1E1B91F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Topology walk loop exits early, completely skipping CXL Root Ports=
- and breaking BI enablement.
-- [High] Missing explicit hardware commit for Endpoints and Root Ports.
-- [High] Premature BI disablement on shared Switch DSPs due to missing `nr_=
-bi` reference counting.
-- [Medium] Hardware register state is leaked (left enabled) when a downstre=
-am port fails to commit.
-- [Medium] Writing to the BI_COMMIT control bit without waiting for the BI_=
-COMMITTED status bit to clear introduces a race condition.
+
+Pre-existing issues:
+- [High] Kernel stack out-of-bounds read when parsing HDM decoder target li=
+sts with interleave_ways > 8.
 --
 
---- Patch [2]: [PATCH v7 2/8] cxl/pci: Add BI topology enable/disable ---
-commit 60c6baf3b8f67e918530663c4dbf82d8c044cc21
+--- Patch [3]: [PATCH v7 3/8] cxl/hdm: Add BI coherency support for endpoin=
+t decoders ---
+commit b9f3e30d3fbbe54161183f25487d1176310fc0eb
 Author: Davidlohr Bueso <dave@stgolabs.net>
 
-cxl/pci: Add BI topology enable/disable
+cxl/hdm: Add BI coherency support for endpoint decoders
 
-This commit implements cxl_bi_setup() to enable Back-Invalidate (BI) flows
-on a device and every component in its path. It also implements the teardown
-counterpart cxl_bi_dealloc(). The setup runs during endpoint port probe and
-walks the topology to enable BI capabilities.
+This commit caches the HDM decoder's supported coherency models on struct
+cxl_hdm. It also uses this to default the target_type for uncommitted endpo=
+int
+decoders and blocks support for pre-committed decoders with the BI bit set.
 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index f82559d8a8c5a..a87c2ad9ac533 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-[ ... ]
-> @@ -964,3 +966,380 @@ void devm_cxl_dport_bi_setup(struct cxl_dport *dpor=
-t)
-[ ... ]
-> +static int __cxl_bi_commit_decoder(struct device *dev, void __iomem *bi)
-> +{
-> +	u32 status, ctrl;
-> +	unsigned int scale, base;
-> +
-> +	if (!FIELD_GET(CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ,
-> +		       readl(bi + CXL_BI_DECODER_CAPS_OFFSET)))
-> +		return 0;
-> +
-> +	ctrl =3D readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
-> +	writel(ctrl & ~CXL_BI_DECODER_CTRL_BI_COMMIT,
-> +	       bi + CXL_BI_DECODER_CTRL_OFFSET);
-> +	writel(ctrl | CXL_BI_DECODER_CTRL_BI_COMMIT,
-> +	       bi + CXL_BI_DECODER_CTRL_OFFSET);
-
-[Severity: Medium]
-Will this sequence cause a race condition with the subsequent polling loop?
-
-If the hardware was previously in a committed state, the status bit might
-still be set when the polling starts.
-
-Could this allow the polling loop to succeed instantly before the hardware =
-has
-processed the new commit request?
+> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> index 0c80b76a5f9b4..9da8aa2116095 100644
+> --- a/drivers/cxl/core/hdm.c
+> +++ b/drivers/cxl/core/hdm.c
 
 [ ... ]
-> +static int __cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable)
-> +{
-> +	struct pci_dev *pdev =3D to_pci_dev(dport->dport_dev);
-> +	void __iomem *bi =3D dport->regs.bi_decoder;
-> +	struct cxl_port *port =3D dport->port;
-> +	u32 ctrl, value;
-> +	int rc;
-> +
-> +	guard(mutex)(&port->bi_lock);
-> +	if (!bi)
-> +		return -EINVAL;
-> +
-> +	ctrl =3D readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
-> +
-> +	switch (pci_pcie_type(pdev)) {
-> +	case PCI_EXP_TYPE_ROOT_PORT:
-> +		if (enable) {
-> +			/*
-> +			 * There is no point of failure from here on,
-> +			 * BI will be enabled on the endpoint device.
-> +			 */
-> +			dport->nr_bi++;
-> +
-> +			if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_FW, ctrl) &&
-> +			    !FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl))
-> +				return 0;
-> +
-> +			value =3D ctrl | CXL_BI_DECODER_CTRL_BI_FW;
-> +			value &=3D ~CXL_BI_DECODER_CTRL_BI_ENABLE;
-> +		} else {
-> +			if (WARN_ON_ONCE(dport->nr_bi =3D=3D 0))
-> +				return -EINVAL;
-> +			if (--dport->nr_bi > 0)
-> +				return 0;
-> +
-> +			value =3D ctrl & ~(CXL_BI_DECODER_CTRL_BI_FW |
-> +					 CXL_BI_DECODER_CTRL_BI_ENABLE);
-> +		}
-> +
-> +		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
-> +		return 0;
+
+> @@ -1040,17 +1063,7 @@ static int init_hdm_decoder(struct cxl_port *port,=
+ struct cxl_decoder *cxld,
+>  		port->commit_end =3D cxld->id;
+>  	} else {
+>  		if (cxled) {
+> -			struct cxl_memdev *cxlmd =3D cxled_to_memdev(cxled);
+> -			struct cxl_dev_state *cxlds =3D cxlmd->cxlds;
+> -
+> -			/*
+> -			 * Default by devtype until a device arrives that needs
+> -			 * more precision.
+> -			 */
+> -			if (cxlds->type =3D=3D CXL_DEVTYPE_CLASSMEM)
+> -				cxld->target_type =3D CXL_DECODER_HOSTONLYMEM;
+> -			else
+> -				cxld->target_type =3D CXL_DECODER_DEVMEM;
+> +			cxld->target_type =3D cxled_default_type(cxled);
+>  		} else {
+>  			/* To be overridden by region type at commit time */
+>  			cxld->target_type =3D CXL_DECODER_HOSTONLYMEM;
 
 [Severity: High]
-Does this code need to explicitly commit the BI Decoder for Root Ports?
+This is a pre-existing issue, but looking further down in init_hdm_decoder(=
+),
+is there a risk of a kernel stack out-of-bounds read?
 
-The control register is updated, but a hardware commit is never performed.
+When parsing HDM decoder target lists for a switch decoder, the loop uses
+cxld->interleave_ways as the upper bound:
 
-Will this fail to enable BI on Root Ports that require an explicit commit?
+	union {
+		u64 value;
+		unsigned char target_id[8];
+	} target_list;
+=09
+	...
+=09
+	if (!cxled) {
+		lo =3D readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+		hi =3D readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
+		target_list.value =3D (hi << 32) + lo;
+		for (i =3D 0; i < cxld->interleave_ways; i++)
+			cxld->target_map[i] =3D target_list.target_id[i];
 
-> +	case PCI_EXP_TYPE_DOWNSTREAM:
-> +		if (enable) {
-> +			value =3D ctrl & ~CXL_BI_DECODER_CTRL_BI_FW;
-> +			value |=3D CXL_BI_DECODER_CTRL_BI_ENABLE;
-> +		} else {
-> +			if (!FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl))
-> +				return 0;
-> +			value =3D ctrl & ~(CXL_BI_DECODER_CTRL_BI_FW |
-> +					 CXL_BI_DECODER_CTRL_BI_ENABLE);
-> +		}
-> +
-> +		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
+		return 0;
+	}
 
-[Severity: High]
-Is there a missing reference count for Downstream Ports here?
+Since the target_list union is fixed at 8 bytes, if a CXL switch device
+presents an interleave_ways value greater than 8 (such as 12 or 16), could
+this loop read up to 8 bytes of adjacent kernel stack memory into
+cxld->target_map?
 
-Unlike Root Ports which check dport->nr_bi, this unconditionally clears the
-CXL_BI_DECODER_CTRL_BI_ENABLE bit when disabling.
-
-If this is a shared Switch DSP in a cascaded switch topology, will unbinding
-one endpoint instantly break BI functionality for all other active endpoints
-below the same upstream switch?
-
-[ ... ]
-> +static int __cxl_bi_ctrl_endpoint(struct cxl_dev_state *cxlds, bool enab=
-le)
-> +{
-> +	struct cxl_port *endpoint =3D cxlds->cxlmd->endpoint;
-> +	void __iomem *bi =3D endpoint->regs.bi_decoder;
-> +	u32 ctrl, val;
-[ ... ]
-> +	writel(val, bi + CXL_BI_DECODER_CTRL_OFFSET);
-> +	cxlds->bi =3D enable;
-> +
-> +	dev_dbg(cxlds->dev, "BI requests %s\n",
-> +		str_enabled_disabled(enable));
-> +
-> +	return 0;
-> +}
-
-[Severity: High]
-Does the endpoint need an explicit hardware commit here?
-
-Similar to the Root Port case, this modifies the CXL_BI_DECODER_CTRL_BI_ENA=
-BLE
-bit but never calls __cxl_bi_commit_decoder() to commit the change to
-hardware.
-
-[ ... ]
-> +static void cxl_bi_dealloc(void *data)
-> +{
-> +	struct cxl_port *endpoint =3D data;
-> +	struct cxl_memdev *cxlmd =3D to_cxl_memdev(endpoint->uport_dev);
-> +	struct cxl_dev_state *cxlds =3D cxlmd->cxlds;
-> +	struct cxl_dport *dport_iter;
-> +	struct cxl_port *port_iter;
-> +
-> +	if (!cxlds->bi)
-> +		return;
-> +
-> +	scoped_guard(rwsem_read, &cxl_rwsem.region)
-> +		cxl_bi_ctrl_endpoint_disable(cxlds);
-> +
-> +	/*
-> +	 * Walk the same parent_dport chain that enabled the path. A bus
-> +	 * lookup cannot stand in for it: an ancestor-driven teardown
-> +	 * delists the parent port before this devres action runs.
-> +	 */
-> +	dport_iter =3D endpoint->parent_dport;
-> +	port_iter =3D dport_iter->port;
-> +	while (!is_cxl_root(port_iter)) {
-> +		int rc =3D cxl_bi_ctrl_dport_disable(dport_iter);
-
-[Severity: High]
-Does this loop terminate before processing the Root Port?
-
-When port_iter reaches the top, its owning port is cxl_root. Since
-is_cxl_root(cxl_root) evaluates to true, it looks like the loop exits
-immediately before executing the disable body for the Root Port.
-
-[ ... ]
-> +static int cxl_bi_enable_path(struct cxl_dev_state *cxlds,
-> +			      struct cxl_port *port, struct cxl_dport *dport)
-> +{
-> +	struct cxl_dport *dport_iter, *failed;
-> +	struct cxl_port *port_iter;
-> +	int rc;
-> +
-> +	port_iter =3D port;
-> +	dport_iter =3D dport;
-> +	while (!is_cxl_root(port_iter)) {
-> +		rc =3D cxl_bi_ctrl_dport_enable(dport_iter);
-> +		if (rc)
-> +			goto err_rollback;
-> +
-> +		dport_iter =3D port_iter->parent_dport;
-> +		port_iter =3D dport_iter->port;
-> +	}
-
-[Severity: High]
-Does this also skip enabling the Root Port?
-
-Using the same !is_cxl_root() condition as cxl_bi_dealloc(), this loop will
-exit before calling cxl_bi_ctrl_dport_enable() for the Root Port, leaving t=
-he
-host path incomplete.
-
-[ ... ]
-> +err_rollback:
-> +	failed =3D dport_iter;
-> +	dport_iter =3D dport;
-> +	port_iter =3D port;
-> +	while (!is_cxl_root(port_iter) && dport_iter !=3D failed) {
-> +		cxl_bi_ctrl_dport_disable(dport_iter);
-> +		dport_iter =3D port_iter->parent_dport;
-> +		port_iter =3D dport_iter->port;
-> +	}
-> +	return rc;
-> +}
-
-[Severity: Medium]
-Should the failed dport be included in the rollback loop?
-
-If cxl_bi_ctrl_dport_enable() writes the enable bit but the hardware commit
-fails, the control register has still been modified.=20
-
-By stopping the rollback when dport_iter !=3D failed,
-cxl_bi_ctrl_dport_disable() is never called for it, potentially leaking the
-hardware register state as left enabled.
+Because this mapped array is subsequently exposed to user-space via the
+target_list sysfs attribute, could this allow unprivileged users to leak
+stack canaries or kernel addresses?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260728144136.7098=
-82-1-dave@stgolabs.net?part=3D2
+82-1-dave@stgolabs.net?part=3D3
