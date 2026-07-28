@@ -1,57 +1,58 @@
-Received: from shrimp.cherry.relay.mailchannels.net (shrimp.cherry.relay.mailchannels.net [23.83.223.164])
+Received: from bisque.elm.relay.mailchannels.net (bisque.elm.relay.mailchannels.net [23.83.212.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF867448BBD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A201B3A3815
 	for <linux-cxl@vger.kernel.org>; Tue, 28 Jul 2026 14:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.223.164
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.212.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785249710; cv=none; b=WkGUmS3UqSfH3an5KjHSvEQK8CO8EoQqKgn+UilTOcHwLVdvq5jK63K+92eI3t5NRHufwvDSOADRDJVj6E+7bllyUdlIvqTu53kSUxfy6Pec0leyi2O1f3cZRE64vsIrhSe+zH1oa3hMw9UXJzZXKZdvvv1SD8za0YnzAUfDYn0=
+	t=1785249711; cv=none; b=u6tCpxfngJ1fskII/DSiqUT2uyThjzsAMydV1Y18RUx/0+qFjTKZrD+wMooH5ZIwH3OuoSb9PTlv1vNmqeCMPP8sHufwzvNIP0N76svVpunSQgxa+JI+yraYNhFnw8e+y5EmcvJ0iUehCrvtPTnAJxM0Yh7TqEnjRfgUSsADP6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785249710; c=relaxed/simple;
-	bh=fJBNvw2F+6gakPYpU1EFasMVbvsbqZu60vswHh9iGog=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cAtilPAIHvWjVO1mLu1VgPD8f5Hu2FW4ZchQK6dV6AHSyRuHTwQwONJLcOQSmdP6dcjuiUcDGke9CtQsnw1zBCjaZwYbgJJku+0+uGwWdaWs+sz974QU4ve/IITGFBdiQedf8fWCQ1eRnVb+35x9p0v16gKxFxubpxf2x8p8Hak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=C3miZxNU; arc=none smtp.client-ip=23.83.223.164
+	s=arc-20240116; t=1785249711; c=relaxed/simple;
+	bh=jSghqKCsmgAjvwKuCATmolFgso7QI6jAGdhpTsBW1DM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HYTX0Tr61XNvW8TpY8KzjfYQWPmeex23GZZDwLd/M7o9uU39gmX3LEb8VBO4mFS56Lp4INs8yduxWzF8U7QzkmlyrUTO6lghb/NXzMEwIMDOAcAkhSKZ9quyzrhhI7TFTERfQ0hJBdvvRrgfqFoh01jQeUUVP2Ol9LRKGFL9BAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=gJQfOYU4; arc=none smtp.client-ip=23.83.212.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="C3miZxNU"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="gJQfOYU4"
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id DC7794224B;
-	Tue, 28 Jul 2026 14:41:47 +0000 (UTC)
-Received: from pdx1-sub0-mail-a216.dreamhost.com (trex-green-7.trex.outbound.svc.cluster.local [100.111.244.85])
+	by relay.mailchannels.net (Postfix) with ESMTP id 0AC724C279A;
+	Tue, 28 Jul 2026 14:41:48 +0000 (UTC)
+Received: from pdx1-sub0-mail-a216.dreamhost.com (trex-green-9.trex.outbound.svc.cluster.local [100.106.248.197])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 7085E41DA1;
-	Tue, 28 Jul 2026 14:41:46 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTPA id D09C64C0227;
+	Tue, 28 Jul 2026 14:41:47 +0000 (UTC)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Belong-Share: 0ddabf48401c8326_1785249706620_804313506
-X-MC-Loop-Signature: 1785249706620:3588340614
-X-MC-Ingress-Time: 1785249706619
+X-Imminent-Absorbed: 2d10371b206a7df7_1785249707989_2605754103
+X-MC-Loop-Signature: 1785249707989:234392946
+X-MC-Ingress-Time: 1785249707988
 Received: from pdx1-sub0-mail-a216.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.111.244.85 (trex/8.0.2);
-	Tue, 28 Jul 2026 14:41:46 +0000
+	by 100.106.248.197 (trex/8.0.2);
+	Tue, 28 Jul 2026 14:41:47 +0000
 Received: from offworld.lan (unknown [76.167.199.67])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a216.dreamhost.com (Postfix) with ESMTPSA id 4h8dT559KBz2N;
-	Tue, 28 Jul 2026 07:41:45 -0700 (PDT)
+	by pdx1-sub0-mail-a216.dreamhost.com (Postfix) with ESMTPSA id 4h8dT71FSPz18l;
+	Tue, 28 Jul 2026 07:41:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1785249706;
-	bh=kPw/B0C1wJUUsM7keHisZwmswFMn7O0YyxaKyaiaqqc=;
+	s=dreamhost; t=1785249707;
+	bh=JLBcrpDxSZGs0k/Jp8pkvSFnopSZNG0YQr5TZ9TsLNY=;
 	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=C3miZxNUeLicizZIe8FZXg3WCoWRHa11zg2y4GPVilCsgkiinI24tWjPnFImPM395
-	 JqvcNInNLJP9hXXSDdXOtXOBlmENqAkTTWFy5GQIPDeSv3y780qDvYXO/BSeivrtoQ
-	 EThWzI5ycLPC36hSby8cax2KmveLBtGxThtQQK8UHVZpz50+1fPNbK7+1UqWQT1gvs
-	 WqnhTUTkC3OzEmLWzLZUFWoJLElqhwY5mNJDe5Xumq0DnBFFfg8k5ys0TuN79Ygn2B
-	 SIwyx4M5Dk4MeDuEpxZzAoTUfXikOiGmtK6m9X9Mq6Eb6Mvec9HefymCoRnkVbgYtq
-	 Lv5UTz1cwzbXg==
+	b=gJQfOYU40dgEf2MChqdXtaCeEm5c1Xv4qzJuV+OBwUmBx0oe1lK5OKMbcUfFj8qVT
+	 bqqUv50WPJ0K03c8O8GGVwvtEH5eI9oAz/DZbM4I6kMs/rKa2ST46/xD3Ziu5Ol6zf
+	 opZ+4h3Dr9q1HNtG79LK3GwzZZI33ts0IDmjsch/e+Z0Fvvqsbt3mqia6bm7SMKglm
+	 thpbF0PTWZW3J5eQi5lRRo3MYvJqOHI86c1JgwhZ00x1eR2AytnzGYe/FXi8Yc3tHd
+	 XqPUeAogXnDlHlw5gKNPSd7V3e1qySSw9b1M30a40mqanRQxubrjeiU0YEBiqIpO2T
+	 62N7LuXy6bL3g==
 From: Davidlohr Bueso <dave@stgolabs.net>
 To: dave.jiang@intel.com
 Cc: jic23@kernel.org,
@@ -62,10 +63,12 @@ Cc: jic23@kernel.org,
 	dongjoo.seo1@samsung.com,
 	dave@stgolabs.net,
 	linux-cxl@vger.kernel.org
-Subject: [PATCH v7 0/8] cxl: Support Back-Invalidate
-Date: Tue, 28 Jul 2026 07:41:28 -0700
-Message-Id: <20260728144136.709882-1-dave@stgolabs.net>
+Subject: [PATCH v7 2/8] cxl/pci: Add BI topology enable/disable
+Date: Tue, 28 Jul 2026 07:41:30 -0700
+Message-Id: <20260728144136.709882-3-dave@stgolabs.net>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260728144136.709882-1-dave@stgolabs.net>
+References: <20260728144136.709882-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -74,318 +77,569 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+Implement cxl_bi_setup() to enable BI flows on the device and every
+component in the path, and its teardown counterpart cxl_bi_dealloc().
+Both run from cxl_endpoint_port_probe(): the BI-ID and path
+enablement belong to the endpoint port's lifetime.
 
-Changes from v6 (https://lore.kernel.org/all/20260727193601.651871-1-dave@stgolabs.net/):
-  - Consolidated the BI setup/teardown into patch 2, using the
-    endpoint port lifecycle from the start. Patch 7 is folded into patch 2.
-  - Patch 3's BOTH-coherency comment moved to patch 4, where the
-    behavior it describes lands (Sashiko).
-  - Patch 4 drops the endpoint type-mismatch assertion: we already 
-    rejected by the region attach checks.
-  - Patch 4 restores the endpoint default target_type on a failed
-    attach, not just on detach (Sashiko).
+Setup is safe in endpoint port probe context: the port probes
+synchronously from cxl_mem_probe(), pinning the memdev state the
+walk consumes, and the whole ancestor path already exists with BI
+registers mapped (dports at dport-add time, the switch USP RT at
+first-dport setup) because devm_cxl_enumerate_ports() completes
+before the endpoint is created.
 
-This series is the initial plumbing to enable HDM-DB in Linux. The
-model allows Type 2 and Type 3 devices to expose their local memory
-to the host CPU in a coherent manner. In alignment with what was
-discussed at 2024 LPC type2 support session, this series takes the
-Type 3 memory expander approach, which is more direct. Further,
-afaik there is no Type 2 + BI hardware out there.
+Dealloc is safe in endpoint devres context: both setup and dealloc
+walk the endpoint's parent_dport topology rather than getting the
+port by bus lookup - an ancestor teardown delists the parent port
+before the endpoint's devres runs.
 
-A flagship use case of Type 3 + BI is coherent shared memory, and
-there is currently a big gap in this regard (ie: GFAM). Another
-is P2P via PCIe UIO, which is also lacking today. Media Operation
-(4402h) for ranged sanitize/zero also trigger snoops and there are
-some patches out there[0]. As such this series focuses on BI enablement
-in terms of discovery and configuration.
+The topology walk is stable as parent_dport pointers are fixed at
+port creation; ancestors cannot be reaped while holding this
+memdev's cxl_ep; and their own teardown frees dports only after
+the endpoint is gone.
 
-The idea is for Type 3 memdevs and Type 2 devices to make use of
-cxlds->bi when committing HDM decoders, such that different device
-coherence models can be differentiated as:
+The device state holds up as well: cxlmd->cxlds is nulled only
+after cxl_memdev_unregister() has torn the endpoint down, and
+delete_endpoint() clears cxlmd->endpoint only after the endpoint
+devres has run.
 
-  type2 hdm-d:  cxlds->type == CXL_DEVTYPE_DEVMEM && cxlds->bi == false
-  type2 hdm-db: cxlds->type == CXL_DEVTYPE_DEVMEM && cxlds->bi == true
-  type3 hdm-h:  cxlds->type == CXL_DEVTYPE_CLASSMEM && cxlds->bi == false
-  type3 hdm-db: cxlds->type == CXL_DEVTYPE_CLASSMEM && cxlds->bi == true
+With dealloc in the endpoint's devres, delete_endpoint() already
+holds the parent port's device lock, so to avoid deadlocking, add a
+per-port bi_lock, serializing only dports that share state (ie:
+sibling nr_bi on a root port, the switch USP's BI RT).
 
-Unlike previous versions, an auto-committed BI decoder found during
-enumeration is no longer rejected: patches 7-8 adopt the inherited
-configuration when the device and path are BI capable, refusing only
-broken combinations. See the auto-discovery tests section below.
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/cxl/core/pci.c  | 379 ++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/port.c |   1 +
+ drivers/cxl/cxl.h       |  30 ++++
+ drivers/cxl/port.c      |   4 +
+ include/cxl/cxl.h       |   2 +
+ 5 files changed, 416 insertions(+)
 
-o Patch 1 probes BI capabilities during register discovery, and maps BI
-  Decoder registers.
-
-o Patch 2 implements the BI-ID allocation (and deallocation) from
-  the endpoint port's lifecycle.
-
-o Patch 3 adds coherency support for endpoint decoders based on what the
-root decoder restricts.
-
-o Patch 4 adds support for HDM-DB region creation.
-
-o Patch 5 trivially renames some coherency flags.
-
-o Patch 6 logs the coherency model (HDM-H, HDM-D, HDM-DB) when a
-  region is created.
-
-o Patch 7 splits the BI capability walk from BI-ID allocation so the
-  answer is available when committed decoders are first parsed.
-
-o Patch 8 allows committed BI decoders. Overall this series
-  could be picked up with or without this patch.
-
-Testing
--------
-
-Testing has been done on top of upstream qemu with the CFMW options series:
-
-  https://lore.kernel.org/all/20260720233242.901544-1-dave@stgolabs.net/
-
-A new qemu-based test suite has been added for full automation and pounding,
-covering many topologies and corner cases:
-
-  https://github.com/davidlohr/cxl-bi-tests
-
-This passes regression testing (nothing breaks) ndctl suite via cxl_test.
-
-1. HDM Decoder with BI through ad-hoc region creation.
-------------------------------------------------------
-# cxl list -D
-[
-  {
-    "decoder":"decoder0.0",
-    "resource":6710886400,
-    "size":4294967296,
-    "interleave_ways":1,
-    "accelmem_capable":true,
-    "nr_targets":1
-  }
-]
-
-# ROOT=/sys/bus/cxl/devices/decoder0.0
-# EP=/sys/bus/cxl/devices/decoder2.0
-# echo region0 > $ROOT/create_ram_region
-[    7.662871] cxl_core:devm_cxl_add_region:2824: cxl_acpi ACPI0017:00: decoder0.0: created HDM-DB region0
-# REG=/sys/bus/cxl/devices/region0
-# echo ram > $EP/mode
-# echo 0x40000000 > $EP/dpa_size
-# echo 1 > $REG/interleave_ways
-# echo 4096 > $REG/interleave_granularity
-# echo 0x40000000 > $REG/size
-# cat $EP/bi
-0
-# echo decoder2.0 > $REG/target0
-[    8.153566] cxl_core:cxl_port_attach_region:1288: cxl region0: mem0:endpoint2 decoder2.0 add: mem0:decoder2.0 @ 0 next: none nr_eps: 1 nr_targets: 1
-[    8.157683] cxl_core:cxl_port_attach_region:1288: cxl region0: pci0000:0c:port1 decoder1.0 add: mem0:decoder2.0 @ 0 next: mem0 nr_eps: 1 nr_targets: 1
-[    8.159570] cxl_core:cxl_port_setup_targets:1623: cxl region0: pci0000:0c:port1 iw: 1 ig: 4096
-[    8.160487] cxl_core:cxl_port_setup_targets:1631: cxl region0: pci0000:0c:port1 target[0] = 0000:0c:00.0 for mem0:decoder2.0 @ 0
-[    8.161759] cxl_core:cxl_calc_interleave_pos:2041: cxl_mem mem0: decoder:decoder2.0 parent:0000:0d:00.0 port:endpoint2 range:0x190000000-0x1cfffffff pos:0
-[    8.163681] cxl_core:cxl_region_attach:2265: cxl decoder2.0: Test cxl_calc_interleave_pos(): success test_pos:0 target->pos:0
-# cat $EP/bi
-1
-# echo 1 > $REG/commit
-# cxl list -D
-[
-  {
-    "root decoders":[
-      {
-        "decoder":"decoder0.0",
-        "resource":6710886400,
-        "size":4294967296,
-        "interleave_ways":1,
-        "accelmem_capable":true,
-        "nr_targets":1
-      }
-    ]
-  },
-  {
-    "port decoders":[
-      {
-        "decoder":"decoder1.0",
-        "resource":6710886400,
-        "size":1073741824,
-        "interleave_ways":1,
-        "region":"region0",
-        "nr_targets":1
-      }
-    ]
-  },
-  {
-    "endpoint decoders":[
-      {
-        "decoder":"decoder2.0",
-        "resource":6710886400,
-        "size":1073741824,
-        "interleave_ways":1,
-        "region":"region0",
-        "dpa_resource":0,
-        "dpa_size":1073741824,
-        "mode":"ram"
-      }
-    ]
-  }
-]
-
-2. Type3 device does not support BI, but CFMW has BI restriction
-----------------------------------------------------------------
-# echo decoder2.0 > $REG/target0
-[    7.311927] cxl region0: mem0:decoder2.0 BI not enabled on device
-[    7.313907] cxl_port endpoint2: failed to attach decoder2.0 to region0: -6
-
-3. Type3 device supports BI but CFMW does not, create HDM-H region
-------------------------------------------------------------------
-# cxl list -D
-[
-  {
-    "decoder":"decoder0.0",
-    "resource":6710886400,
-    "size":4294967296,
-    "interleave_ways":1,
-    "max_available_extent":4294967296,
-    "pmem_capable":true,
-    "volatile_capable":true,
-    "accelmem_capable":true,
-    "nr_targets":1
-  }
-]
-# echo region0 > $ROOT/create_ram_region
-[    7.679496] cxl_core:devm_cxl_add_region:2824: cxl_acpi ACPI0017:00: decoder0.0: created HDM-H region0
-# cat $EP/bi
-0
-# echo decoder2.0 > $REG/target0
-[    8.165400] cxl_core:cxl_port_attach_region:1288: cxl region0: mem0:endpoint2 decoder2.0 add: mem0:decoder2.0 @ 0 next: none nr_eps: 1 nr_targets: 1
-[    8.167128] cxl_core:cxl_port_attach_region:1288: cxl region0: pci0000:0c:port1 decoder1.0 add: mem0:decoder2.0 @ 0 next: mem0 nr_eps: 1 nr_targets: 1
-[    8.168834] cxl_core:cxl_port_setup_targets:1623: cxl region0: pci0000:0c:port1 iw: 1 ig: 4096
-[    8.169893] cxl_core:cxl_port_setup_targets:1631: cxl region0: pci0000:0c:port1 target[0] = 0000:0c:00.0 for mem0:decoder2.0 @ 0
-[    8.171302] cxl_core:cxl_calc_interleave_pos:2041: cxl_mem mem0: decoder:decoder2.0 parent:0000:0d:00.0 port:endpoint2 range:0x190000000-0x1cfffffff pos:0
-[    8.173036] cxl_core:cxl_region_attach:2265: cxl decoder2.0: Test cxl_calc_interleave_pos(): success test_pos:0 target->pos:0
-# echo 1 > $REG/commit
-# cat $EP/bi
-0
-
-4. Unbind + Bind
-----------------
-# echo mem0 > /sys/bus/cxl/drivers/cxl_mem/unbind
-[    7.645330] cxl_core:__cxl_bi_ctrl_endpoint:1218: cxl_pci 0000:0d:00.0: BI requests disabled
-[    7.648838] cxl_core:cxl_port_commit_reap:900: cxl_port endpoint2: reap: decoder2.0 commit_end: -1
-[    7.651284] cxl_core:cxl_detach_ep:1556: cxl_mem mem0: disconnect mem0 from port1
-
-# echo mem0 > /sys/bus/cxl/drivers/cxl_mem/bind
-[    8.909437] cxl_core:devm_cxl_enumerate_ports:1871: cxl_mem mem0: scan: iter: mem0 dport_dev: 0000:0c:00.0 parent: pci0000:0c
-[    8.911170] cxl_core:devm_cxl_enumerate_ports:1877: cxl_mem mem0: found already registered port port1:pci0000:0c
-[    8.945969] cxl_core:init_hdm_decoder:1128: cxl_port endpoint2: decoder2.0: range: 0x0-0xffffffffffffffff iw: 1 ig: 4096
-[    8.949705] cxl_core:add_hdm_decoder:39: cxl_mem mem0: decoder2.0 added to endpoint2
-[    8.960378] cxl_core:__cxl_bi_ctrl_endpoint:1218: cxl_pci 0000:0d:00.0: BI requests enabled
-[    8.961196] cxl_core:cxl_bus_probe:2299: cxl_port endpoint2: probe: 0
-[    8.962592] cxl_core:cxl_bus_probe:2299: cxl_mem mem0: probe: 0
-
-The same applies to the endpoint port, with the memdev rebind recovering the endpoint:
-
-# echo endpoint2 > /sys/bus/cxl/drivers/cxl_port/unbind
-[   10.483509] cxl_core:__cxl_bi_ctrl_endpoint:1218: cxl_pci 0000:0d:00.0: BI requests disabled
-[   10.487570] cxl_core:cxl_port_commit_reap:900: cxl_port endpoint2: reap: decoder2.0 commit_end: -1
-[   10.491501] cxl_core:cxl_detach_ep:1556: cxl_mem mem0: disconnect mem0 from port1
-
-# echo mem0 > /sys/bus/cxl/drivers/cxl_mem/bind
-[   11.754957] cxl_core:devm_cxl_enumerate_ports:1871: cxl_mem mem0: scan: iter: mem0 dport_dev: 0000:0c:00.0 parent: pci0000:0c
-[   11.756343] cxl_core:devm_cxl_enumerate_ports:1877: cxl_mem mem0: found already registered port port1:pci0000:0c
-[   11.789821] cxl_core:init_hdm_decoder:1128: cxl_port endpoint2: decoder2.0: range: 0x0-0xffffffffffffffff iw: 1 ig: 4096
-[   11.794674] cxl_core:add_hdm_decoder:39: cxl_mem mem0: decoder2.0 added to endpoint2
-[   11.805772] cxl_core:__cxl_bi_ctrl_endpoint:1218: cxl_pci 0000:0d:00.0: BI requests enabled
-[   11.806810] cxl_core:cxl_bus_probe:2299: cxl_port endpoint2: probe: 0
-[   11.808661] cxl_core:cxl_bus_probe:2299: cxl_mem mem0: probe: 0
-
-From a cold boot, without a region ever created, the endpoint port
-unbind only disables BI - there is no committed decoder to reap:
-
-# echo endpoint2 > /sys/bus/cxl/drivers/cxl_port/unbind
-[   22.046813] cxl_core:__cxl_bi_ctrl_endpoint:1218: cxl_pci 0000:0d:00.0: BI requests disabled
-[   22.049676] cxl_core:cxl_detach_ep:1556: cxl_mem mem0: disconnect mem0 from port1
-
-# echo mem0 > /sys/bus/cxl/drivers/cxl_mem/bind
-[   24.270628] cxl_core:devm_cxl_enumerate_ports:1871: cxl_mem mem0: scan: iter: mem0 dport_dev: 0000:0c:00.0 parent: pci0000:0c
-[   24.273682] cxl_core:devm_cxl_enumerate_ports:1877: cxl_mem mem0: found already registered port port1:pci0000:0c
-[   24.312426] cxl_core:init_hdm_decoder:1128: cxl_port endpoint2: decoder2.0: range: 0x0-0xffffffffffffffff iw: 1 ig: 256
-[   24.315677] cxl_core:add_hdm_decoder:39: cxl_mem mem0: decoder2.0 added to endpoint2
-[   24.332406] cxl_core:__cxl_bi_ctrl_endpoint:1218: cxl_pci 0000:0d:00.0: BI requests enabled
-[   24.334427] cxl_core:cxl_bus_probe:2299: cxl_port endpoint2: probe: 0
-[   24.337952] cxl_core:cxl_bus_probe:2299: cxl_mem mem0: probe: 0
-
-5. Discovery behind a Switch
-----------------------------
-[    0.782301] cxl_core:cxl_probe_component_regs:102: cxl_pci 0000:0f:00.0: found BI Decoder capability (0xab4)
-[    0.851085] cxl_core:cxl_probe_component_regs:102: pcieport 0000:0c:00.0: found BI Decoder capability (0xab4)
-[    0.866840] cxl_core:cxl_probe_component_regs:96: cxl_port port2: found BI RT capability (0xaa8)
-[    0.902485] cxl_core:cxl_probe_component_regs:102: pcieport 0000:0e:00.0: found BI Decoder capability (0xab4)
-[    1.221118] cxl_core:__cxl_bi_wait_commit:1032: pcieport 0000:0e:00.0: BI-ID commit wait took 250908us
-[    1.368581] cxl_core:__cxl_bi_wait_commit:1032: cxl_port port2: BI-ID commit wait took 146455us
-[    1.371579] cxl_core:__cxl_bi_ctrl_endpoint:1218: cxl_pci 0000:0f:00.0: BI requests enabled
-
-6. Corrupted hw (commit timeout handling)
------------------------------------------
-[    1.003566] cxl_core:cxl_probe_component_regs:102: pcieport 0000:0e:00.0: found BI Decoder capability (0xab4)
-[    3.203147] pcieport 0000:0e:00.0: BI-ID commit timed out (2000000us)
-[    3.206048] cxl_port:cxl_endpoint_port_probe:190: cxl_port endpoint3: BI setup failed rc=-110
-
-7. Mixed Configurations (BI-capable Type 3 but DSP 68b)
--------------------------------------------------------
-[    0.837902] cxl_mem:cxl_mem_probe:155: cxl_mem mem0: BI setup failed rc=-22
-
-8. Auto-discovered (committed) BI decoders
-------------------------------------------
-For testing, qemu hack emulates auto-committed decoder:
-
-[    0.670374] cxl_core:devm_cxl_switch_port_decoders_setup:1282: cxl_port port1: Fallback to passthrough decoder
-[    0.718374] cxl_core:init_hdm_decoder:1128: cxl_port endpoint2: decoder2.0: range: 0x190000000-0x19fffffff iw: 1 ig: 256
-[    0.728498] cxl_core:__cxl_bi_ctrl_endpoint:1200: cxl_pci 0000:0d:00.0: adopting firmware-enabled BI
-[    0.730880] cxl_core:devm_cxl_add_region:2824: cxl_acpi ACPI0017:00: decoder0.0: created HDM-DB region0
-[    0.731906] cxl_core:__construct_region:3810: cxl_pci 0000:0d:00.0: mem0:decoder2.0: __construct_region region0 res: [mem 0x190000000-0x19fffffff flags 0x200] iw: 1 ig: 256
-[    0.734473] cxl_core:cxl_region_sort_targets:2071: cxl region0: region sort successful
-[    0.739452] cxl_core:devm_cxl_add_dax_region:101: cxl_region region0: region0: register dax_region0
-[    0.740239] cxl_core:cxl_bus_probe:2299: cxl_region region0: probe: 0
-# cat /sys/bus/cxl/devices/region0/commit
-1
-# cat /sys/bus/cxl/devices/decoder2.0/bi
-1
-
-A committed BI decoder under a window without the BI restriction is
-refused at region assembly:
-
-[    0.794477] cxl_core:__cxl_bi_ctrl_endpoint:1200: cxl_pci 0000:0d:00.0: adopting firmware-enabled BI
-[    0.795396] cxl_pci 0000:0d:00.0: mem0:decoder2.0 BI decoder in a non-BI window
-[    0.796050] cxl_port:discover_region:55: cxl decoder2.0: failed to add to region: 0x190000000-0x19fffffff
-
-Applies against v7.2-rc5. Please consider for v7.3.
-
-[0] https://lore.kernel.org/linux-cxl/20260428200410.705675-1-dave@stgolabs.net/
-
-Thanks!
-
-Davidlohr Bueso (8):
-  cxl: Add BI register probing and port initialization
-  cxl/pci: Add BI topology enable/disable
-  cxl/hdm: Add BI coherency support for endpoint decoders
-  cxl: Add HDM-DB region creation
-  cxl/hdm: Rename decoder coherency flags
-  cxl/region: Log the coherency model at region creation
-  cxl/pci: Split BI capability probe from setup
-  cxl: Allow auto-committed BI hdm decoders
-
- Documentation/ABI/testing/sysfs-bus-cxl |  18 +-
- drivers/cxl/acpi.c                      |  19 +-
- drivers/cxl/core/core.h                 |   2 +
- drivers/cxl/core/hdm.c                  |  68 ++++-
- drivers/cxl/core/pci.c                  | 456 ++++++++++++++++++++++++++++++++
- drivers/cxl/core/port.c                 |  48 +++-
- drivers/cxl/core/region.c               | 106 ++++++--
- drivers/cxl/core/regs.c                 |  14 +
- drivers/cxl/cxl.h                       |  55 +++-
- drivers/cxl/cxlmem.h                    |   2 +
- drivers/cxl/port.c                      |  54 ++++
- include/cxl/cxl.h                       |  10 +
- 12 files changed, 810 insertions(+), 42 deletions(-)
-
---
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index f82559d8a8c5..a87c2ad9ac53 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -2,11 +2,13 @@
+ /* Copyright(c) 2021 Intel Corporation. All rights reserved. */
+ #include <linux/units.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
++#include <linux/iopoll.h>
+ #include <linux/device.h>
+ #include <linux/delay.h>
+ #include <linux/pci.h>
+ #include <linux/pci-doe.h>
+ #include <linux/aer.h>
++#include <linux/string_choices.h>
+ #include <cxlpci.h>
+ #include <cxlmem.h>
+ #include <cxl.h>
+@@ -964,3 +966,380 @@ void devm_cxl_dport_bi_setup(struct cxl_dport *dport)
+ 		break;
+ 	}
+ }
++/*
++ * BI requires 256B Flit operation on the link. RP/DSP/endpoint must
++ * also have the BI Decoder cap mapped (@bi); for USPs the BI RT cap
++ * is optional per CXL 4.0 8.2.4.26, so absent @bi is allowed.
++ */
++static bool cxl_is_bi_capable(struct pci_dev *pdev, void __iomem *bi)
++{
++	if (!cxl_pci_flit_256(pdev))
++		return false;
++	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_UPSTREAM && !bi) {
++		dev_dbg(&pdev->dev, "No BI Decoder registers.\n");
++		return false;
++	}
++	return true;
++}
++
++/* limit any insane timeouts from hw */
++#define CXL_BI_COMMIT_MAXTMO_US (5 * USEC_PER_SEC)
++
++static unsigned long __cxl_bi_get_timeout_us(struct device *dev,
++					     unsigned int scale,
++					     unsigned int base)
++{
++	static const unsigned long scale_tbl[] = {
++		1, 10, 100, 1000, 10000, 100000, 1000000, 10000000,
++	};
++
++	if (scale >= ARRAY_SIZE(scale_tbl) || !base) {
++		dev_dbg(dev, "Invalid BI commit timeout: scale=%u base=%u\n",
++			scale, base);
++		return CXL_BI_COMMIT_MAXTMO_US;
++	}
++
++	return scale_tbl[scale] * base;
++}
++
++static int __cxl_bi_wait_commit(struct device *dev, void __iomem *status_reg,
++				u32 committed_bit, u32 err_bit,
++				unsigned int scale, unsigned int base)
++{
++	unsigned long tmo_us, poll_us;
++	ktime_t start;
++	u32 status;
++	int rc;
++
++	tmo_us = min_t(unsigned long, CXL_BI_COMMIT_MAXTMO_US,
++		       __cxl_bi_get_timeout_us(dev, scale, base));
++	poll_us = max_t(unsigned long, tmo_us / 10, 1); /* ~10% */
++	start = ktime_get();
++
++	rc = readx_poll_timeout(readl, status_reg, status,
++				status & (committed_bit | err_bit),
++				poll_us, tmo_us);
++	if (rc) {
++		dev_err(dev, "BI-ID commit timed out (%luus)\n", tmo_us);
++		return rc; /* -ETIMEDOUT */
++	}
++
++	if (status & err_bit) {
++		dev_err(dev, "BI-ID commit rejected by hardware\n");
++		return -EIO;
++	}
++
++	dev_dbg(dev, "BI-ID commit wait took %lluus\n",
++		ktime_to_us(ktime_sub(ktime_get(), start)));
++	return 0;
++}
++
++/* BI RT only exists on switch upstream ports. */
++static int __cxl_bi_commit_rt(struct device *dev, void __iomem *bi)
++{
++	u32 status, ctrl;
++	unsigned int scale, base;
++
++	if (!FIELD_GET(CXL_BI_RT_CAPS_EXPLICIT_COMMIT_REQ,
++		       readl(bi + CXL_BI_RT_CAPS_OFFSET)))
++		return 0;
++
++	ctrl = readl(bi + CXL_BI_RT_CTRL_OFFSET);
++	writel(ctrl & ~CXL_BI_RT_CTRL_BI_COMMIT, bi + CXL_BI_RT_CTRL_OFFSET);
++	writel(ctrl | CXL_BI_RT_CTRL_BI_COMMIT, bi + CXL_BI_RT_CTRL_OFFSET);
++
++	status = readl(bi + CXL_BI_RT_STATUS_OFFSET);
++	scale = FIELD_GET(CXL_BI_RT_STATUS_BI_COMMIT_TM_SCALE, status);
++	base = FIELD_GET(CXL_BI_RT_STATUS_BI_COMMIT_TM_BASE, status);
++
++	return __cxl_bi_wait_commit(dev, bi + CXL_BI_RT_STATUS_OFFSET,
++				    CXL_BI_RT_STATUS_BI_COMMITTED,
++				    CXL_BI_RT_STATUS_BI_ERR_NOT_COMMITTED,
++				    scale, base);
++}
++
++static int __cxl_bi_commit_decoder(struct device *dev, void __iomem *bi)
++{
++	u32 status, ctrl;
++	unsigned int scale, base;
++
++	if (!FIELD_GET(CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ,
++		       readl(bi + CXL_BI_DECODER_CAPS_OFFSET)))
++		return 0;
++
++	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
++	writel(ctrl & ~CXL_BI_DECODER_CTRL_BI_COMMIT,
++	       bi + CXL_BI_DECODER_CTRL_OFFSET);
++	writel(ctrl | CXL_BI_DECODER_CTRL_BI_COMMIT,
++	       bi + CXL_BI_DECODER_CTRL_OFFSET);
++
++	status = readl(bi + CXL_BI_DECODER_STATUS_OFFSET);
++	scale = FIELD_GET(CXL_BI_DECODER_STATUS_BI_COMMIT_TM_SCALE, status);
++	base = FIELD_GET(CXL_BI_DECODER_STATUS_BI_COMMIT_TM_BASE, status);
++
++	return __cxl_bi_wait_commit(dev, bi + CXL_BI_DECODER_STATUS_OFFSET,
++				    CXL_BI_DECODER_STATUS_BI_COMMITTED,
++				    CXL_BI_DECODER_STATUS_BI_ERR_NOT_COMMITTED,
++				    scale, base);
++}
++
++/* Enable or dealloc BI-ID changes in the given level of the topology. */
++static int __cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable)
++{
++	struct pci_dev *pdev = to_pci_dev(dport->dport_dev);
++	void __iomem *bi = dport->regs.bi_decoder;
++	struct cxl_port *port = dport->port;
++	u32 ctrl, value;
++	int rc;
++
++	guard(mutex)(&port->bi_lock);
++	if (!bi)
++		return -EINVAL;
++
++	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
++
++	switch (pci_pcie_type(pdev)) {
++	case PCI_EXP_TYPE_ROOT_PORT:
++		if (enable) {
++			/*
++			 * There is no point of failure from here on,
++			 * BI will be enabled on the endpoint device.
++			 */
++			dport->nr_bi++;
++
++			if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_FW, ctrl) &&
++			    !FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl))
++				return 0;
++
++			value = ctrl | CXL_BI_DECODER_CTRL_BI_FW;
++			value &= ~CXL_BI_DECODER_CTRL_BI_ENABLE;
++		} else {
++			if (WARN_ON_ONCE(dport->nr_bi == 0))
++				return -EINVAL;
++			if (--dport->nr_bi > 0)
++				return 0;
++
++			value = ctrl & ~(CXL_BI_DECODER_CTRL_BI_FW |
++					 CXL_BI_DECODER_CTRL_BI_ENABLE);
++		}
++
++		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
++		return 0;
++	case PCI_EXP_TYPE_DOWNSTREAM:
++		if (enable) {
++			value = ctrl & ~CXL_BI_DECODER_CTRL_BI_FW;
++			value |= CXL_BI_DECODER_CTRL_BI_ENABLE;
++		} else {
++			if (!FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl))
++				return 0;
++			value = ctrl & ~(CXL_BI_DECODER_CTRL_BI_FW |
++					 CXL_BI_DECODER_CTRL_BI_ENABLE);
++		}
++
++		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
++
++		rc = __cxl_bi_commit_decoder(dport->dport_dev, bi);
++		if (rc)
++			return rc;
++
++		if (port->regs.bi_rt)
++			return __cxl_bi_commit_rt(&port->dev, port->regs.bi_rt);
++		return 0;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int cxl_bi_ctrl_dport_enable(struct cxl_dport *dport)
++{
++	return __cxl_bi_ctrl_dport(dport, true);
++}
++
++static int cxl_bi_ctrl_dport_disable(struct cxl_dport *dport)
++{
++	return __cxl_bi_ctrl_dport(dport, false);
++}
++
++static int __cxl_bi_ctrl_endpoint(struct cxl_dev_state *cxlds, bool enable)
++{
++	struct cxl_port *endpoint = cxlds->cxlmd->endpoint;
++	void __iomem *bi = endpoint->regs.bi_decoder;
++	u32 ctrl, val;
++
++	if (!bi)
++		return -EINVAL;
++
++	ctrl = readl(bi + CXL_BI_DECODER_CTRL_OFFSET);
++
++	if (enable) {
++		if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl)) {
++			if (cxlds->bi)
++				return 0;
++			dev_err(cxlds->dev,
++				"BI already enabled in hardware\n");
++			return -EBUSY;
++		}
++		val = ctrl | CXL_BI_DECODER_CTRL_BI_ENABLE;
++	} else {
++		if (!FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl)) {
++			if (!cxlds->bi)
++				return 0;
++			dev_err(cxlds->dev,
++				"BI already disabled in hardware\n");
++			return -EBUSY;
++		}
++		val = ctrl & ~CXL_BI_DECODER_CTRL_BI_ENABLE;
++	}
++
++	writel(val, bi + CXL_BI_DECODER_CTRL_OFFSET);
++	cxlds->bi = enable;
++
++	dev_dbg(cxlds->dev, "BI requests %s\n",
++		str_enabled_disabled(enable));
++
++	return 0;
++}
++
++static int cxl_bi_ctrl_endpoint_enable(struct cxl_dev_state *cxlds)
++{
++	return __cxl_bi_ctrl_endpoint(cxlds, true);
++}
++
++static int cxl_bi_ctrl_endpoint_disable(struct cxl_dev_state *cxlds)
++{
++	return __cxl_bi_ctrl_endpoint(cxlds, false);
++}
++
++/*
++ * devm teardown on endpoint port destruction. Endpoint decoders may
++ * still be committed here (cxl_workqueue tears them down
++ * asynchronously), but memory access has been quiesced.
++ */
++static void cxl_bi_dealloc(void *data)
++{
++	struct cxl_port *endpoint = data;
++	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct cxl_dport *dport_iter;
++	struct cxl_port *port_iter;
++
++	if (!cxlds->bi)
++		return;
++
++	scoped_guard(rwsem_read, &cxl_rwsem.region)
++		cxl_bi_ctrl_endpoint_disable(cxlds);
++
++	/*
++	 * Walk the same parent_dport chain that enabled the path. A bus
++	 * lookup cannot stand in for it: an ancestor-driven teardown
++	 * delists the parent port before this devres action runs.
++	 */
++	dport_iter = endpoint->parent_dport;
++	port_iter = dport_iter->port;
++	while (!is_cxl_root(port_iter)) {
++		int rc = cxl_bi_ctrl_dport_disable(dport_iter);
++
++		/* best effort */
++		if (rc)
++			dev_dbg(&port_iter->dev,
++				"BI dport disable failed: %d\n", rc);
++
++		dport_iter = port_iter->parent_dport;
++		port_iter = dport_iter->port;
++	}
++}
++
++/*
++ * Enable BI on every dport in the path, then on the device itself.
++ * On failure, unwind only the dports that fully enabled.
++ */
++static int cxl_bi_enable_path(struct cxl_dev_state *cxlds,
++			      struct cxl_port *port, struct cxl_dport *dport)
++{
++	struct cxl_dport *dport_iter, *failed;
++	struct cxl_port *port_iter;
++	int rc;
++
++	port_iter = port;
++	dport_iter = dport;
++	while (!is_cxl_root(port_iter)) {
++		rc = cxl_bi_ctrl_dport_enable(dport_iter);
++		if (rc)
++			goto err_rollback;
++
++		dport_iter = port_iter->parent_dport;
++		port_iter = dport_iter->port;
++	}
++
++	/* finally, enable BI on the device */
++	rc = cxl_bi_ctrl_endpoint_enable(cxlds);
++	if (rc)
++		goto err_rollback;
++
++	return 0;
++
++err_rollback:
++	failed = dport_iter;
++	dport_iter = dport;
++	port_iter = port;
++	while (!is_cxl_root(port_iter) && dport_iter != failed) {
++		cxl_bi_ctrl_dport_disable(dport_iter);
++		dport_iter = port_iter->parent_dport;
++		port_iter = dport_iter->port;
++	}
++	return rc;
++}
++
++int cxl_bi_setup(struct cxl_port *endpoint)
++{
++	struct cxl_memdev *cxlmd = to_cxl_memdev(endpoint->uport_dev);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct cxl_dport *dport = endpoint->parent_dport;
++	struct cxl_dport *dport_iter;
++	struct cxl_port *port_iter;
++	int rc;
++
++	if (!dev_is_pci(cxlds->dev))
++		return 0;
++
++	/* BI is VH-only */
++	if (cxlds->rcd)
++		return 0;
++
++	if (!cxl_is_bi_capable(to_pci_dev(cxlds->dev),
++			       endpoint->regs.bi_decoder))
++		return 0;
++
++	/* walkup the topology twice, first to check, then to enable */
++	port_iter = dport->port;
++	dport_iter = dport;
++	while (!is_cxl_root(port_iter)) {
++		/* check rp, dsp */
++		if (!cxl_is_bi_capable(to_pci_dev(dport_iter->dport_dev),
++				       dport_iter->regs.bi_decoder)) {
++			dev_dbg(cxlds->dev, "BI not supported by topology\n");
++			return 0;
++		}
++
++		/* check usp */
++		if (dev_is_pci(port_iter->uport_dev) &&
++		    pci_pcie_type(to_pci_dev(port_iter->uport_dev)) ==
++			    PCI_EXP_TYPE_UPSTREAM &&
++		    !cxl_is_bi_capable(to_pci_dev(port_iter->uport_dev),
++				       port_iter->regs.bi_rt)) {
++			dev_dbg(cxlds->dev, "BI not supported by USP\n");
++			return 0;
++		}
++
++		dport_iter = port_iter->parent_dport;
++		port_iter = dport_iter->port;
++	}
++
++	rc = cxl_bi_enable_path(cxlds, dport->port, dport);
++	if (rc)
++		return rc;
++
++	return devm_add_action_or_reset(&endpoint->dev, cxl_bi_dealloc,
++					endpoint);
++}
++EXPORT_SYMBOL_NS_GPL(cxl_bi_setup, "CXL");
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index b2f8fb9547d3..7817109026b1 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -741,6 +741,7 @@ static struct cxl_port *cxl_port_alloc(struct device *uport_dev,
+ 	xa_init(&port->dports);
+ 	xa_init(&port->endpoints);
+ 	xa_init(&port->regions);
++	mutex_init(&port->bi_lock);
+ 	port->component_reg_phys = CXL_RESOURCE_NONE;
+ 
+ 	device_initialize(dev);
+diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+index f9fcb6387fc8..d00b8b7b778a 100644
+--- a/drivers/cxl/cxl.h
++++ b/drivers/cxl/cxl.h
+@@ -180,6 +180,31 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
+ #define CXL_HEADERLOG_TRACE_SIZE SZ_512
+ #define CXL_HEADERLOG_TRACE_SIZE_U32 (CXL_HEADERLOG_TRACE_SIZE / sizeof(u32))
+ 
++/* CXL 4.0 8.2.4.26 CXL BI Route Table Capability Structure */
++#define CXL_BI_RT_CAPS_OFFSET 0x0
++#define   CXL_BI_RT_CAPS_EXPLICIT_COMMIT_REQ BIT(0)
++#define CXL_BI_RT_CTRL_OFFSET 0x4
++#define   CXL_BI_RT_CTRL_BI_COMMIT BIT(0)
++#define CXL_BI_RT_STATUS_OFFSET 0x8
++#define   CXL_BI_RT_STATUS_BI_COMMITTED BIT(0)
++#define   CXL_BI_RT_STATUS_BI_ERR_NOT_COMMITTED BIT(1)
++#define   CXL_BI_RT_STATUS_BI_COMMIT_TM_SCALE GENMASK(11, 8)
++#define   CXL_BI_RT_STATUS_BI_COMMIT_TM_BASE GENMASK(15, 12)
++
++/* CXL 4.0 8.2.4.27 CXL BI Decoder Capability Structure */
++#define CXL_BI_DECODER_CAPS_OFFSET 0x0
++#define   CXL_BI_DECODER_CAPS_HDMD_CAP BIT(0)
++#define   CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ BIT(1)
++#define CXL_BI_DECODER_CTRL_OFFSET 0x4
++#define   CXL_BI_DECODER_CTRL_BI_FW BIT(0)
++#define   CXL_BI_DECODER_CTRL_BI_ENABLE BIT(1)
++#define   CXL_BI_DECODER_CTRL_BI_COMMIT BIT(2)
++#define CXL_BI_DECODER_STATUS_OFFSET 0x8
++#define   CXL_BI_DECODER_STATUS_BI_COMMITTED BIT(0)
++#define   CXL_BI_DECODER_STATUS_BI_ERR_NOT_COMMITTED BIT(1)
++#define   CXL_BI_DECODER_STATUS_BI_COMMIT_TM_SCALE GENMASK(11, 8)
++#define   CXL_BI_DECODER_STATUS_BI_COMMIT_TM_BASE GENMASK(15, 12)
++
+ /* CXL 2.0 8.2.8.1 Device Capabilities Array Register */
+ #define CXLDEV_CAP_ARRAY_OFFSET 0x0
+ #define   CXLDEV_CAP_ARRAY_CAP_ID 0
+@@ -562,6 +587,7 @@ struct cxl_dax_region {
+  * @decoder_ida: allocator for decoder ids
+  * @reg_map: component and ras register mapping parameters
+  * @regs: mapped component registers
++ * @bi_lock: serializes BI Decoder/RT state of this port's dports
+  * @nr_dports: number of entries in @dports
+  * @hdm_end: track last allocated HDM decoder instance for allocation ordering
+  * @commit_end: cursor to track highest committed decoder for commit ordering
+@@ -584,6 +610,7 @@ struct cxl_port {
+ 	struct ida decoder_ida;
+ 	struct cxl_register_map reg_map;
+ 	struct cxl_component_regs regs;
++	struct mutex bi_lock;
+ 	int nr_dports;
+ 	int hdm_end;
+ 	int commit_end;
+@@ -647,6 +674,7 @@ struct cxl_rcrb_info {
+  * @coord: access coordinates (bandwidth and latency performance attributes)
+  * @link_latency: calculated PCIe downstream latency
+  * @gpf_dvsec: Cached GPF port DVSEC
++ * @nr_bi: number of BI-enabled endpoints below this dport
+  */
+ struct cxl_dport {
+ 	struct device *dport_dev;
+@@ -659,6 +687,7 @@ struct cxl_dport {
+ 	struct access_coordinate coord[ACCESS_COORDINATE_MAX];
+ 	long link_latency;
+ 	int gpf_dvsec;
++	int nr_bi;
+ };
+ 
+ /**
+@@ -923,6 +952,7 @@ void cxl_coordinates_combine(struct access_coordinate *out,
+ 			     struct access_coordinate *c2);
+ 
+ bool cxl_endpoint_decoder_reset_detected(struct cxl_port *port);
++int cxl_bi_setup(struct cxl_port *endpoint);
+ struct cxl_dport *devm_cxl_add_dport_by_dev(struct cxl_port *port,
+ 					    struct device *dport_dev);
+ 
+diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+index a527dd13fb68..22bd4254ba8d 100644
+--- a/drivers/cxl/port.c
++++ b/drivers/cxl/port.c
+@@ -180,6 +180,10 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+ 	if (rc)
+ 		return rc;
+ 
++	rc = cxl_bi_setup(port);
++	if (rc)
++		dev_dbg(&port->dev, "BI setup failed rc=%d\n", rc);
++
+ 	/*
+ 	 * With VH (CXL Virtual Host) topology the cxl_port::add_dport() method
+ 	 * handles RAS setup for downstream ports. With RCH (CXL Restricted CXL
+diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+index 2816954680b3..e507cb0f777f 100644
+--- a/include/cxl/cxl.h
++++ b/include/cxl/cxl.h
+@@ -168,6 +168,7 @@ struct cxl_dpa_partition {
+  * @regs: Parsed register blocks
+  * @cxl_dvsec: Offset to the PCIe device DVSEC
+  * @rcd: operating in RCD mode (CXL 3.0 9.11.8 CXL Devices Attached to an RCH)
++ * @bi: device is BI (Back-Invalidate) enabled
+  * @media_ready: Indicate whether the device media is usable
+  * @dpa_res: Overall DPA resource tree for the device
+  * @part: DPA partition array
+@@ -187,6 +188,7 @@ struct cxl_dev_state {
+ 	struct cxl_device_regs regs;
+ 	int cxl_dvsec;
+ 	bool rcd;
++	bool bi;
+ 	bool media_ready;
+ 	struct resource dpa_res;
+ 	struct cxl_dpa_partition part[CXL_NR_PARTITIONS_MAX];
+-- 
 2.39.5
+
