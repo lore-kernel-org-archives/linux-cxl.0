@@ -1,94 +1,119 @@
-Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAFB468C05;
-	Wed, 29 Jul 2026 19:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28830468C13;
+	Wed, 29 Jul 2026 19:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785352283; cv=none; b=ZeCZZ88+9BfomzKAugWhPu51CykRbWNe1ZpRHH8ubUVVOJltmD1L/Cz2GYXkew39nh0J8tpfNO1ygKr+fIluTxjITMA4oz7UYOG6a+nNrvq0Cr1mqCujjqeENTsAC+m3UgeM96y3PsfPqR7fOuwxZk9dKNzbOPap9f0zOq+CodA=
+	t=1785352491; cv=none; b=A+oH2QbVYkAoo7iGs9I47GrScI57nap2qU2fbINAq2SjpnDacPtHmjmbqZ3L3ZmJrf66nu4C3MBZjqXxj+fTEJ3ODBx0gcL9oCUPFkeQZlT0iSakkU8130qPOyzXUiz7orqvDMVh7O1NrVfu+6+DRdI0XfIo9SvUxFY8SHN+wDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785352283; c=relaxed/simple;
-	bh=XShsP8cL+4M0WaaElgWelTNGmpfDkNR5V7HlMuScjts=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bDpwKRStAsY84hJEI6oCFmznjs8AU87DFGQYK4uwEUozz05LPlmhFloNz0qT1wxz4UnfXTah54svWs9HEu9fEbRO2ZHsvdFvI8NEW0aH0Sg4rKQlpxLeO/teqfodCNTsJE7DYMipIa05EhDH2e63CyUuyDgQG8BYtAjizySL1fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=t9gfp2sa; arc=none smtp.client-ip=178.154.239.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+	s=arc-20240116; t=1785352491; c=relaxed/simple;
+	bh=svLtFfcMj+MtL57Jiu0gFs0QFN6XZ+oKK2jpR8p2XhI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ERkENGUqXTRWjS3fpgAcQabOlfB5+Ea6uiTk4FHnvLiureFp72abqciMYgig76ZAzJVyicuzHudljNq/I3+mg2GkYrdTHSmV26025Ih3J2LdldSLGBdvfp3XUyDO63VocMdIYLORGg+71AhjZF6LNpytaMzNPL36epJEPx7zg4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R0cYBQmI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="t9gfp2sa"
-Received: from mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net [IPv6:2a02:6b8:c2d:3530:0:640:eca4:0])
-	by forwardcorp1a.mail.yandex.net (postfix) with ESMTPS id 15DC3C0235;
-	Wed, 29 Jul 2026 22:11:14 +0300 (MSK)
-Received: from [IPV6:2a02:6bf:8080:484::1:24] (unknown [2a02:6bf:8080:484::1:24])
-	by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp) with ESMTPSA id ABkPESLWT0U0-10TKtRX1;
-	Wed, 29 Jul 2026 22:11:13 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1785352273;
-	bh=BBayXCrmEuxM62n4vJsiyicvfg6LL27hCE0P5dz9xHM=;
-	h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
-	b=t9gfp2saepz3+mG7OVVn6wdNYAhO53wxY+71ngl7i+M3Cd1MqjjkKighPODOk38cS
-	 HLek12z98QXr5TgH6x/lf8kRnx/ql3ElrZF8jXzLq5Um3tQ0Bp+WmbbhzRcaCdmffx
-	 KZy9Pqaf61sKkmJoNRnB/IotqShcL3o8CAv5pL1E=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-Message-ID: <6c1394b3-279c-44ca-b20b-7d3b3abf3f42@yandex-team.ru>
-Date: Wed, 29 Jul 2026 22:11:10 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0cYBQmI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 099421F000E9;
+	Wed, 29 Jul 2026 19:14:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785352490;
+	bh=24Z5iDsdAi+qQI0YVBFgmLu8L2SsrEqjiBGXreN8T7g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=R0cYBQmIXkhpSyjGVrL4PdRhKX6ltk9X4BGT5SZqhuhw397w9PeaN2Am6xNrKL47a
+	 zGqksMcAEicwm4p1/4aGZ1tbCj+J04aAgKiVsJ48P9snwsU6RVcNdHJsmkSg5xR0R/
+	 BtL2HiTqu10VI1/TbpbegpbPTe39UNEybVoxt5AjGe2kpVE8mWoeZbhrrsXpYQpspe
+	 GqlF1HqpJXKiT0DtH/Rdb01vbvzwA+xTcojna45zSbGqsGA9a4+PmWUdHSg2+9yyFr
+	 6mpyaF9HpIBYvUcNj0IY2ERQ4+oXtAC5nQYB1UBJRUJN1JyGZ9K1HKkjRGOSQJ30Wa
+	 5g9l6veEBThkQ==
+Date: Wed, 29 Jul 2026 20:14:46 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
+ sashiko-bot@kernel.org, Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2 9/9] perf/cxl: Avoid cpumask_of(-1) when no CPU is
+ assigned
+Message-ID: <20260729201446.62732044@jic23-huawei>
+In-Reply-To: <20260729145555.3919550-10-dave.jiang@intel.com>
+References: <20260729145555.3919550-1-dave.jiang@intel.com>
+	<20260729145555.3919550-10-dave.jiang@intel.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 25/44] qapi: convert trivial intro sections for
- job.json
-To: John Snow <jsnow@redhat.com>, qemu-devel@nongnu.org
-Cc: =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
- Lukas Straub <lukasstraub2@web.de>, Zhao Liu <zhao1.liu@intel.com>,
- Laurent Vivier <laurent@vivier.eu>, Markus Armbruster <armbru@redhat.com>,
- "Gonglei (Arei)" <arei.gonglei@huawei.com>,
- =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
- Alex Williamson <alex@shazbot.org>, zhenwei pi <zhenwei.pi@linux.dev>,
- Hanna Reitz <hreitz@redhat.com>, Ani Sinha <anisinha@redhat.com>,
- qemu-block@nongnu.org, Paolo Bonzini <pbonzini@redhat.com>,
- Peter Xu <peterx@redhat.com>, Kevin Wolf <kwolf@redhat.com>,
- linux-cxl@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>,
- =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
- Stefan Berger <stefanb@linux.vnet.ibm.com>, Fabiano Rosas <farosas@suse.de>,
- Stefan Hajnoczi <stefanha@redhat.com>, Michael Tokarev <mjt@tls.msk.ru>,
- Igor Mammedov <imammedo@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- Gerd Hoffmann <kraxel@redhat.com>,
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
- linux-edac@vger.kernel.org, =?UTF-8?Q?Marc-Andr=C3=A9_Lureau?=
- <marcandre.lureau@redhat.com>,
- Richard Henderson <richard.henderson@linaro.org>,
- Eric Blake <eblake@redhat.com>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?=
- <clg@redhat.com>, Jason Wang <jasowangio@gmail.com>,
- qemu-trivial@nongnu.org, Jonathan Cameron <jic23@kernel.org>
-References: <20260723044805.527643-1-jsnow@redhat.com>
- <20260723044805.527643-26-jsnow@redhat.com>
-Content-Language: en-US
-From: Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru>
-In-Reply-To: <20260723044805.527643-26-jsnow@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 23.07.26 07:47, John Snow wrote:
-> (Trivial)
+On Wed, 29 Jul 2026 07:55:55 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
+
+> cpumask_show() feeds info->on_cpu straight into cpumask_of() for the
+> world-readable cpumask sysfs attribute. on_cpu is -1 before the first
+> hotplug online callback and transiently in cxl_pmu_offline_cpu() before a
+> new target is chosen. cpumask_of(-1) treats the CPU number as unsigned and
+> does out-of-bounds pointer arithmetic in get_cpu_mask(), so a concurrent
+> read of the attribute dereferences a wild pointer and can fault -- a local
+> denial of service.
 > 
-> Signed-off-by: John Snow<jsnow@redhat.com>
+
+I'm not keen on the solution here. 
+
+The transient state is ugly anyway. We can just move setting it to -1 into
+the dummy code that deals with that well known case of you have CPUs online
+and code is still running.
+
+The init case looks like a false positive to me.  But maybe I'm missing stuff.
+The perf registration that surfaces the sysfs happens after hotplug handler is
+added and I believe that synchronously runs it for CPUs that are already up.
+Given we are running code (and CXL stuff isn't super early) something will
+be up so it won't remain -1 by the time of use.
+
+Can we just use the generic stuff?  Maybe need Robin's stuff to add init / exit
+per driver calls. 
+https://lore.kernel.org/linux-arm-kernel/cover.1784911757.git.robin.murphy@arm.com/
+
+In general, I'd like Robin to take a quick look at the more generic perf
+parts of this series given he has clearly been deep in this stuff a lot
+more recently than me :)
+
+Jonathan
+
+> Read on_cpu once and emit an empty mask when it is negative.
+> 
+> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+> Reported-by: sashiko-bot@kernel.org
+> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
+> Assisted-by: Claude:claude-opus-4-8
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->   qapi/job.json | 18 ++++++------------
->   1 file changed, 6 insertions(+), 12 deletions(-)
+>  drivers/perf/cxl_pmu.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
 > 
-> diff --git a/qapi/job.json b/qapi/job.json
-> index 31618e6ebcc..b68d7292423 100644
-> --- a/qapi/job.json
-> +++ b/qapi/job.json
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index f42238b2b6b0..6aad381c0376 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -501,8 +501,17 @@ static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
+>  			    char *buf)
+>  {
+>  	struct cxl_pmu_info *info = dev_get_drvdata(dev);
+> +	int cpu = READ_ONCE(info->on_cpu);
+>  
+> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(info->on_cpu));
+> +	/*
+> +	 * on_cpu is -1 before the first online callback and transiently during
+> +	 * cxl_pmu_offline_cpu(). cpumask_of(-1) computes an out-of-bounds
+> +	 * pointer, so report an empty mask instead.
+> +	 */
+> +	if (cpu < 0)
+> +		return sysfs_emit(buf, "\n");
+> +
+> +	return cpumap_print_to_pagebuf(true, buf, cpumask_of(cpu));
+>  }
+>  static DEVICE_ATTR_RO(cpumask);
+>  
 
-Acked-by: Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru>
-
-
--- 
-Best regards,
-Vladimir
