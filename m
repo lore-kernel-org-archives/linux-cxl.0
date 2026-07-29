@@ -1,97 +1,94 @@
-Received: from giant.apple.relay.mailchannels.net (giant.apple.relay.mailchannels.net [23.83.208.68])
+Received: from forwardcorp1a.mail.yandex.net (forwardcorp1a.mail.yandex.net [178.154.239.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7314519B5
-	for <linux-cxl@vger.kernel.org>; Wed, 29 Jul 2026 18:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.208.68
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAFB468C05;
+	Wed, 29 Jul 2026 19:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785350418; cv=none; b=EbYSf7mG2NznOEs2ucs/cza928UGwHgLOXxvlP04tcriht1SSPiDxvUCkFTQ27x53gQCWpDwrtJECa9j5SMyid9yg1EpIoEUIJ86zswJnokPXhAAYlRolL0tsYBmuLPjSrdcR6CHGNYs5jNGsB6Qt9EQxQQApxl2bl6VttywkgI=
+	t=1785352283; cv=none; b=ZeCZZ88+9BfomzKAugWhPu51CykRbWNe1ZpRHH8ubUVVOJltmD1L/Cz2GYXkew39nh0J8tpfNO1ygKr+fIluTxjITMA4oz7UYOG6a+nNrvq0Cr1mqCujjqeENTsAC+m3UgeM96y3PsfPqR7fOuwxZk9dKNzbOPap9f0zOq+CodA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785350418; c=relaxed/simple;
-	bh=t55bO+9jXTQJ1tsHu0qmtMC5CDgf5dGJvU3AHRZmZJ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=juU2xX5Hg9DoPJafqyaDCDYKILEfR6q9IT52YTESxmhTBhApxyloT39CF2aY78Qb/qkztNfAc2dodfKTCWgJgwAUL856VmGOc1jT5h3kfxV6Mj38LtD/bjB0uOkSI9A+iW3OdJ4e2G0FchHKQ295wTE72inErPaRqJDMit4//+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=kd8yOAJG; arc=none smtp.client-ip=23.83.208.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1785352283; c=relaxed/simple;
+	bh=XShsP8cL+4M0WaaElgWelTNGmpfDkNR5V7HlMuScjts=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bDpwKRStAsY84hJEI6oCFmznjs8AU87DFGQYK4uwEUozz05LPlmhFloNz0qT1wxz4UnfXTah54svWs9HEu9fEbRO2ZHsvdFvI8NEW0aH0Sg4rKQlpxLeO/teqfodCNTsJE7DYMipIa05EhDH2e63CyUuyDgQG8BYtAjizySL1fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=t9gfp2sa; arc=none smtp.client-ip=178.154.239.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="kd8yOAJG"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id E04FE61E03;
-	Wed, 29 Jul 2026 16:45:18 +0000 (UTC)
-Received: from pdx1-sub0-mail-a249.dreamhost.com (trex-green-4.trex.outbound.svc.cluster.local [100.108.64.42])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id A99C8613C3;
-	Wed, 29 Jul 2026 16:45:17 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Good
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Troubled-Chemical: 48c1a2745f17a973_1785343518149_1580690283
-X-MC-Loop-Signature: 1785343518149:49706445
-X-MC-Ingress-Time: 1785343518148
-Received: from pdx1-sub0-mail-a249.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.108.64.42 (trex/8.0.2);
-	Wed, 29 Jul 2026 16:45:18 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a249.dreamhost.com (Postfix) with ESMTPSA id 4h9J9905zHz1054;
-	Wed, 29 Jul 2026 09:45:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1785343517;
-	bh=t55bO+9jXTQJ1tsHu0qmtMC5CDgf5dGJvU3AHRZmZJ8=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=kd8yOAJG2OLxSxXixh3LWRG76Y1S3Nr4Sp48Up/xgG+mR2pgU9+rTwAYM/8LuGg3q
-	 3fKR60Yfs2P4un5ChJ/50diiU53VrLkN36oiXIY/5xwbfqeJV15h3ZBfPjZJ+4GB+V
-	 0K3mjKqgPsqWov10uVdCmhqrzGKlVpCs8VYbdgzRnR3uSsAue0ex+llg271fwUA5X2
-	 Rwiowu/3lPY8bSNXHfDTwOtCaFOWsxj+NwaSxe6fFTo4TtCwf8XXceDzb313fzOSfk
-	 cV92fXa2AlsfWOv4u2jF0HMXiakg1ju6qra85h/g9UZF/+h6oFC5x5Qao71pz96rm1
-	 RICyv1ub4aESA==
-Date: Wed, 29 Jul 2026 09:45:14 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>, Dan Williams <djbw@kernel.org>,
-	Li Ming <ming.li@zohomail.com>, linux-cxl@vger.kernel.org,
-	Srirangan Madhavan <smadhavan@nvidia.com>
-Subject: Re: [PATCH v4 1/4] cxl/hdm: Reject switch decoder interleave ways
- that overflow targets
-Message-ID: <20260729164514.esgrps5ajkydfqhz@offworld>
-References: <cover.1784595445.git.alison.schofield@intel.com>
- <1e0e4d7b431a97efa0a8c83591b42b7a0622cea1.1784595445.git.alison.schofield@intel.com>
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="t9gfp2sa"
+Received: from mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net [IPv6:2a02:6b8:c2d:3530:0:640:eca4:0])
+	by forwardcorp1a.mail.yandex.net (postfix) with ESMTPS id 15DC3C0235;
+	Wed, 29 Jul 2026 22:11:14 +0300 (MSK)
+Received: from [IPV6:2a02:6bf:8080:484::1:24] (unknown [2a02:6bf:8080:484::1:24])
+	by mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net (smtpcorp) with ESMTPSA id ABkPESLWT0U0-10TKtRX1;
+	Wed, 29 Jul 2026 22:11:13 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
+	s=default; t=1785352273;
+	bh=BBayXCrmEuxM62n4vJsiyicvfg6LL27hCE0P5dz9xHM=;
+	h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
+	b=t9gfp2saepz3+mG7OVVn6wdNYAhO53wxY+71ngl7i+M3Cd1MqjjkKighPODOk38cS
+	 HLek12z98QXr5TgH6x/lf8kRnx/ql3ElrZF8jXzLq5Um3tQ0Bp+WmbbhzRcaCdmffx
+	 KZy9Pqaf61sKkmJoNRnB/IotqShcL3o8CAv5pL1E=
+Authentication-Results: mail-nwsmtp-smtp-corp-main-83.vla.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+Message-ID: <6c1394b3-279c-44ca-b20b-7d3b3abf3f42@yandex-team.ru>
+Date: Wed, 29 Jul 2026 22:11:10 +0300
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <1e0e4d7b431a97efa0a8c83591b42b7a0622cea1.1784595445.git.alison.schofield@intel.com>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 25/44] qapi: convert trivial intro sections for
+ job.json
+To: John Snow <jsnow@redhat.com>, qemu-devel@nongnu.org
+Cc: =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
+ Lukas Straub <lukasstraub2@web.de>, Zhao Liu <zhao1.liu@intel.com>,
+ Laurent Vivier <laurent@vivier.eu>, Markus Armbruster <armbru@redhat.com>,
+ "Gonglei (Arei)" <arei.gonglei@huawei.com>,
+ =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@mailo.com>,
+ Alex Williamson <alex@shazbot.org>, zhenwei pi <zhenwei.pi@linux.dev>,
+ Hanna Reitz <hreitz@redhat.com>, Ani Sinha <anisinha@redhat.com>,
+ qemu-block@nongnu.org, Paolo Bonzini <pbonzini@redhat.com>,
+ Peter Xu <peterx@redhat.com>, Kevin Wolf <kwolf@redhat.com>,
+ linux-cxl@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>,
+ =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
+ Stefan Berger <stefanb@linux.vnet.ibm.com>, Fabiano Rosas <farosas@suse.de>,
+ Stefan Hajnoczi <stefanha@redhat.com>, Michael Tokarev <mjt@tls.msk.ru>,
+ Igor Mammedov <imammedo@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Gerd Hoffmann <kraxel@redhat.com>,
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ linux-edac@vger.kernel.org, =?UTF-8?Q?Marc-Andr=C3=A9_Lureau?=
+ <marcandre.lureau@redhat.com>,
+ Richard Henderson <richard.henderson@linaro.org>,
+ Eric Blake <eblake@redhat.com>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?=
+ <clg@redhat.com>, Jason Wang <jasowangio@gmail.com>,
+ qemu-trivial@nongnu.org, Jonathan Cameron <jic23@kernel.org>
+References: <20260723044805.527643-1-jsnow@redhat.com>
+ <20260723044805.527643-26-jsnow@redhat.com>
+Content-Language: en-US
+From: Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru>
+In-Reply-To: <20260723044805.527643-26-jsnow@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 20 Jul 2026, Alison Schofield wrote:
+On 23.07.26 07:47, John Snow wrote:
+> (Trivial)
+> 
+> Signed-off-by: John Snow<jsnow@redhat.com>
+> ---
+>   qapi/job.json | 18 ++++++------------
+>   1 file changed, 6 insertions(+), 12 deletions(-)
+> 
+> diff --git a/qapi/job.json b/qapi/job.json
+> index 31618e6ebcc..b68d7292423 100644
+> --- a/qapi/job.json
+> +++ b/qapi/job.json
 
->Switch decoder enumeration validates that the interleave ways encoding
->is legal, but not that the resulting number of ways fits the available
->targets. This can overrun the target arrays during enumeration.
->
->Reject committed decoders whose interleave ways exceed either the
->hardware target list capacity or the reported target count. Reject
->switch decoders that report zero targets.
->
->For uncommitted decoders, ignore the stale interleave ways value and
->reset it to one until the decoder is committed.
->
->Add a clarifying comment that target_count is a direct count, not
->0-based like decoder_count.
+Acked-by: Vladimir Sementsov-Ogievskiy <vsementsov@yandex-team.ru>
 
-Tested-by: Davidlohr Bueso <dave@stgolabs.net>
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+
+-- 
+Best regards,
+Vladimir
