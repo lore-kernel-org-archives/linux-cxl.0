@@ -1,215 +1,189 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250D443DA31
-	for <linux-cxl@vger.kernel.org>; Wed, 29 Jul 2026 08:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63D043B3C5
+	for <linux-cxl@vger.kernel.org>; Wed, 29 Jul 2026 08:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785314092; cv=none; b=drPcEUmWLpwuOCFIdE+eO05R/3SVIRKWiTd/SaeuhtN8oaTM3VacI3VUsnVEDZ3UjG1V59EoMBFe4BS/0dxP+/nTnRK+txycZ8NnvNLm6pfLU7yuBLctbpqWBehwfgt3c1Kgk1AGAnwdegxCYMo6mTCbTFYycoq1dYvdVq+JvjM=
+	t=1785314470; cv=none; b=nPPyqjNrKkccynwY23dHWX+KqaZo9g1ys4IhojGCOov92iqcA9uU3tenMmzCuU/nnbPnjAwWiTVtN97Dd4HWh7/lchF2Dlswmav66kLupEALnOKlxpRNPRwH/HEXPS2+4kuXRh9tHRYhYuohDAKC03LH6AURxo+znw49wmZV2QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785314092; c=relaxed/simple;
-	bh=VBWe4z6lpdhgWWhgi9ZL4hf+LSw7oDXHex0pW15bWNM=;
+	s=arc-20240116; t=1785314470; c=relaxed/simple;
+	bh=AoaCHVUlogiTnFufxBVUpWVGN0xOur8l/4UX/MML0K8=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UTdpANrxSFvnhGgbzRWmQi0AWcig4YfBY0ltL/nyPsbuCyhHV5HSK1jGxv6AgA8itLf+gA5+65/ikTXQwcEmcATWi0kmzZvnkOiMzYl5OOjZWN6lqthe2nMx5DxOln8ACrPMw1YfUM0KDyPN1mH45gVNbXTDHsaOrqpAuv0rUQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b8LN3Q+M; arc=none smtp.client-ip=209.85.214.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=R0mXAojmLaAkHRoLu4+To9/51UyElXgrQSLVN30ZNSi/M6nZwzCjRRzes2lggHEojGXGA89Pm7U7ow+btLdtMBWtxcuJ6Dasy7QKFVHlbrqiOcXxiGaQjIzLJzF1aUM/yvnzDZwSnhklxrlFez0hmRAIN2TQRDCfGkwyeyVHip4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fvMZmpcx; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8LN3Q+M"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2cc61541f8cso26639195ad.0
-        for <linux-cxl@vger.kernel.org>; Wed, 29 Jul 2026 01:34:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvMZmpcx"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2caf228a910so5952235ad.2
+        for <linux-cxl@vger.kernel.org>; Wed, 29 Jul 2026 01:41:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785314082; x=1785918882; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1785314468; x=1785919268; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :content-type:mime-version:references:message-id:subject:cc:to:date
          :from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=y8VVG7c5rynDfSnOxDa5w1W+bUds2tSk8XMQSsCkTs4=;
-        b=b8LN3Q+MMRoVwdoybUjAaHwme5b1Io8UiuPa6R35FaeVUQoy9amYOGmTs3wr0W1nlp
-         lfLXlJPHlXojKJG6X+tw5sR+kY/ikbUmk2AeiFQMXPnTlhumGIGcEU1A10QQr4gKiKJD
-         as5uQN/S3YSmlrXNd5PdM2BZHes3rVriYudx62UNF2FfU875Jodkk8iTB5e+3UHq00xU
-         +lrtpK1EWmJtQOC5QEZVFEll+CoYbIETPf9UrPrQpnp8ii5326mzToGA7bDsrp2TvhHE
-         yy53CCBRU9LIoEou3xkjMo4DjWmGb+wsedwjPq5A6EBU4Xh2yRT8jtS8YJ/oVGXXg0yY
-         OvzQ==
+        bh=JYTx72Rn0uzNL9+eoqaoZGN5MRd0NWcXqTetb/qXnzw=;
+        b=fvMZmpcxJm1FkyLgBoPUPcNiEeYcAD0UhjMNt0NTXCwT+9fiizEb/bhtAG25assk14
+         5Dnz09dJdaiJOE3jiy29OfqofmKaK2ZTt5ypBGmkQoBzTwM4Wpfygq6IxgSGR3grHTos
+         twI1izBhKlIFiBTWkNdkwA5xzJkXscKgqV8LszKBbqV4yc+eqNlL1RSN6zF5N5YON/iO
+         IP7uKjaUMRLmNch7hYxeI4o856wihAQD0f2bLDt6fQsTbBmMbaR9jRV8hRHUHiUOyvoo
+         DzjTQ+VckWdu6v/FxBNw61ge1Al+lsBKfy9oM0IwpJkqFbTHrVRKWgHJXQ1mXtFYSp0J
+         RiCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785314082; x=1785918882;
+        d=1e100.net; s=20251104; t=1785314468; x=1785919268;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :content-type:mime-version:references:message-id:subject:cc:to:date
          :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to:content-type;
-        bh=y8VVG7c5rynDfSnOxDa5w1W+bUds2tSk8XMQSsCkTs4=;
-        b=fMn1FaBt+ovx2kVFUUY37gDv5iPQO44SbEy1gCJOugy7hs9IVXdtOh2FBgX3SGxen1
-         SUHaPrJ5CYQ83yQ8+LzZNCgLbLT8ZS+mfbCZ5IIouCZctkS0NnfDwUJzAF61UdG0a5II
-         H5mpE4n5wtFL4354wz7xLaFBfnj3AEu/YwK/kdMXad3SieBKEpXC57ODa9UX8k/tDC0z
-         p9Rkpk2K4ahhQl0/wAdW8YO9WgoTgM6rTCzLZ9+6uWsKt6uRcIqP+uFliG7vV2RfPcXr
-         /OoZofeSmoHSH1cqLBz5bLHk4fObQNA/mZwMfSVZw9PAJ5KUmmcz6yb7Ui32k84YBxH9
-         G0Aw==
-X-Forwarded-Encrypted: i=1; AHgh+Roq0d3HtcNM4TTEDjIAmjg/kxvPODkkIWS0NaJ9ZVUuOq7R1D74e5KhZfoi+q1euA+buhTHAkAqLTM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywgh3a0wwPsB/jFY/jw3LH/lUTIiPAxGO2SF/8FXVs80dMmdwUu
-	qUXiC9Rl4wnrqFQzgRPoDckXziOayAo0eSMmqK+am/zEHlIkDJk60Ee8
-X-Gm-Gg: AR+sD112LCywRdUAK1udTxfDcvOIA9d6n79plkCUpT+83u6JIWHZDJeuZg2Eq97RW5k
-	1rEKwIPFSdGLVvTMB68FeN8cpSo57Eh+PpzHohvBndIi73dAneMfCD32OMCE7MljBSqFF2hii3s
-	kk7JzXWB3gXG9k3BYaujxTSi7Ux61IE170V7g8V+PJnRNnISnUmm2lsMJrTDQOYGt7YYmVjGZzD
-	rLmFFB/bRCmjepEQ2HVqQMN1hDjlF8WKrlSBADC2ur6YvZ+TK3hpnEt6AbXXnzDDbMK3AToKGal
-	of8S+LcfQ9VEHwXjssVeuwSzHRYrHpjhf8YV61ReUprlq/nsvyMOrqlFJRdHjVU316PFPT0gFQB
-	o8mZ5h276OeWvFbW1xjbLXnijXsqfaLzWM2j7/7xcLo655NjzdVT6p3asfpN/SgS1Hn8Q6a1NKP
-	zU6SS3fFPWg/LRReYT3NSVz5kn0I1o2LyJxyuyckm3JZ6O9eto1bASLnT9DBf6AO9qlHAK0YYUq
-	GSbWTV2sSoBh462Ab3lcKHBCk9tFyFP6aFEIMm9YXNN
-X-Received: by 2002:a17:903:2c04:b0:2ca:12aa:a390 with SMTP id d9443c01a7336-2d02625525dmr14066595ad.0.1785314081788;
-        Wed, 29 Jul 2026 01:34:41 -0700 (PDT)
+        bh=JYTx72Rn0uzNL9+eoqaoZGN5MRd0NWcXqTetb/qXnzw=;
+        b=qBAKxU/zcuffdvqOiap8UaSl48FcnDydwzrjfOt+LESwhWjcM8mp31eKLLKkiO+ZPu
+         q9I6I194q3mfqCIIiqXUngZorQsbS7gsWgUW8SIFOPoIalhsU1qNgexJA37vutW6a/e7
+         2wtTtXM6ku3ZMyda22U7+uzspRoHlb7Nwl89ozWB/jsmfdQh7+BKvMJiFitJKzQiyI7g
+         umCyRUGTiY24ec8Bm2m3rXFljMVtIy4r8JF7Y8gi7WhBo7jw7YvRybdJzSK8YJCBGWwF
+         8hajS7wjz0XazaEEfPUa0NsF1eyumI9+9g5W5wcEFJjwz6+Snf9dyEXrcje9hC0spcQ2
+         8hmA==
+X-Forwarded-Encrypted: i=1; AHgh+RqQ+Ydi6OtTKCC64dSPN1gREMA0gr7o8rt7Etldm7ZzEU5fMnuufiS9NpmI9V+5CTNkes4IQOmA+Uc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxebWaXffao8i7WP3iLMtMBg+B8o88vtmOzC8eQKy6wOUUaJUeN
+	2g1Bu8E7NtX4RxzFOsbe23lQmW0RQkEEEVudU11IjoiyzTlQnSImzsB5g7sv5Q==
+X-Gm-Gg: AR+sD10lgDKOHBBqyX/AVTfojOhKnjo51WJsDOqPuaEqf5L48ebWE2RiL2TINBqn9cX
+	EW1bBtaG87TvSLsxyEoZuKTE7DgFa4bdmN1+P61jSOD0hn3jG/fN5sMlbUloseVftbSPjuif7pz
+	OEeS/xq1XAmcBwlOXFgVFbCj/qoKHYLuufUXVvQzJEWrnJzEEjcdI4f5+zTXL0BLJ5ro97sCk3M
+	tLJ1cBt45FTnSVjwnjOKlMpe41YJzDn/nektIq37UuhIiJCyqLN3Zkc9TzZA1CC9utyc4NcUgs3
+	YHCyo8hBlZlRt5MXIEAZ/D2wD7blfpgc3zHVNNKqH6bcBz/IOLS6XwVXHqKT4iM2qJ2dWC5VqzC
+	cQqkE1fViKwkGnF0sb9nwxKEHFRYKrXdtzyAJ5rm4W4V+pqOJmGkUUsAZWRALfLARf9XgenHJpM
+	xVPMqcTIyzsQBgsMD9pPhRprpp2exyKBFrVaj0ftLTCnrXDslaB0ZLhnU8vI7dnkvzb8dRmBDiG
+	EQmXnviM7UClsBvjwuucreETr75l13lhEz83/3Mq/UE
+X-Received: by 2002:a17:903:1b24:b0:2cc:d6de:d597 with SMTP id d9443c01a7336-2d015c92ce3mr65710025ad.7.1785314468117;
+        Wed, 29 Jul 2026 01:41:08 -0700 (PDT)
 Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d022bf888csm7779935ad.64.2026.07.29.01.34.40
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d022a465f7sm7962085ad.24.2026.07.29.01.41.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2026 01:34:41 -0700 (PDT)
+        Wed, 29 Jul 2026 01:41:07 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Wed, 29 Jul 2026 01:34:40 -0700
+Date: Wed, 29 Jul 2026 01:41:06 -0700
 To: sashiko-reviews@lists.linux.dev
 Cc: Anisa Su <anisa.su887@gmail.com>, nvdimm@lists.linux.dev,
 	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v11 16/31] cxl/extent: Validate DC extent partition
-Message-ID: <amm7IJgMdlMpb7dd@AnisaLaptop.localdomain>
+Subject: Re: [PATCH v11 17/31] cxl/mem: Enforce tag-group semantics
+Message-ID: <amm8ovfX2d9p3ijj@AnisaLaptop.localdomain>
 References: <20260625112638.550691-1-anisa.su@samsung.com>
- <20260625112638.550691-17-anisa.su@samsung.com>
- <20260625182052.07E301F000E9@smtp.kernel.org>
+ <20260625112638.550691-18-anisa.su@samsung.com>
+ <20260625182418.E9F8E1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260625182052.07E301F000E9@smtp.kernel.org>
+In-Reply-To: <20260625182418.E9F8E1F00A3A@smtp.kernel.org>
 
-On Thu, Jun 25, 2026 at 06:20:51PM +0000, sashiko-bot@kernel.org wrote:
+On Thu, Jun 25, 2026 at 06:24:18PM +0000, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
 > 
 > Pre-existing issues:
-> - [High] Entirely duplicate tag groups are rejected and dropped instead of replying success to the device.
-True but benign. And also unlikely. Even if an entirely duplicate tag
-group is ommitted from the DC add response, since the capacity was
-previously added, it's still provisioned to the host until a release
-event.
+> - [High] Untagged extents spanning different DC partitions and DAX regions are incorrectly coalesced and assigned to the same region.
 
-> - [High] Concurrent access to `group->nr_extents` without locks causes a memory leak and pins the DAX region device indefinitely.
-False Positive.
+Fixed in patch 12. extract_tag_group() originally put all untagged
+extents into the same tag_group. This has been fixed to put each
+untagged extent into its own tag_group so they are not coalesced and
+assigned to the same region.
 
+> - [High] Fully duplicate extent groups are incorrectly rejected and omitted from the device response.
+
+Duplicate false positive from patch 14 and 16.
 > --
 > 
-> commit b3bfb6df5d2f0f0f9e2b022064279f74742afa2e
-> Author: Ira Weiny <iweiny@kernel.org>
+> commit c2cf18ae81b1c32953f39b06aeaa9e153f4ac609
+> Author: Anisa Su <anisa.su887@gmail.com>
 > 
-> cxl/extent: Validate DC extent partition
->     
-> Extend cxl_validate_extent() — the per-extent check of the add pipeline
-> to check partition membership. Resolves an extent's DPA to its containing
-> DC partition. Sharability is a property of the partition (part->shareable),
-> taken from its CDAT DSMAS entry.
+> cxl/mem: Enforce tag-group semantics
 > 
-> > diff --git a/drivers/cxl/core/extent.c b/drivers/cxl/core/extent.c
-> > index 6e67e787d14de..2e770c5279c23 100644
-> > --- a/drivers/cxl/core/extent.c
-> > +++ b/drivers/cxl/core/extent.c
+> This commit completes tag-group validation. It adds sequence integrity
+> checks to verify that sharable partitions have dense shared_extn_seq
+> values, and verifies that tagged allocations do not span DC partitions.
+> 
+> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > index 14ba263044f08..7967b0db2c512 100644
+> > --- a/drivers/cxl/core/mbox.c
+> > +++ b/drivers/cxl/core/mbox.c
 > 
 > [ ... ]
 > 
-> > @@ -101,6 +159,27 @@ static int cxl_validate_extent(struct cxl_memdev_state *mds,
-> >  		.end = start_dpa + le64_to_cpu(extent->length) - 1,
-> >  	};
-> >  	struct range ed_range;
-> > +	uuid_t uuid;
+> > +static int cxl_check_group_partition(struct cxl_memdev_state *mds,
+> > +				     const uuid_t *tag,
+> > +				     const struct list_head *group)
+> > +{
+> > +	struct device *dev = mds->cxlds.dev;
+> > +	const struct cxl_dpa_partition *first_part = NULL;
+> > +	u64 first_dpa = 0;
+> > +	struct cxl_extent_list_node *pos;
 > > +
-> > +	import_uuid(&uuid, extent->uuid);
-> > +
-> > +	part = cxl_extent_dc_partition(mds, extent, &ext_range);
-> > +	if (!part)
-> > +		return -ENXIO;
-> > +
-> > +	if (part->shareable) {
-> > +		if (uuid_is_null(&uuid)) {
-> > +			dev_err_ratelimited(dev,
-> > +				"DC extent DPA %pra: sharable-partition extent has null tag (firmware bug)\n",
-> > +				&ext_range);
-> > +			return -ENXIO;
-> > +		}
-> > +	} else if (le16_to_cpu(extent->shared_extn_seq)) {
-> > +		dev_err_ratelimited(dev,
-> > +			"DC extent DPA %pra (%pU): non-sharable partition but shared_extn_seq=%u (firmware bug)\n",
-> > +			&ext_range, &uuid, le16_to_cpu(extent->shared_extn_seq));
-> > +		return -ENXIO;
-> > +	}
+> > +	if (uuid_is_null(tag) || list_empty(group))
+> > +		return 0;
+> 
+> [Severity: High]
+> This is a pre-existing issue, but does this explicit bypass for untagged
+> extents allow them to span different DC partitions?
+> 
+> If a device sends multiple untagged DC add capacity events spanning
+> different partitions, cxl_add_pending() appears to extract them all into a
+> single group.
+> 
+> Since this check returns 0 for null UUIDs, cxl_realize_group() processes them
+> together. Would cxlr_add_extent() then register them all under the DAX region
+> of the first extent, effectively merging extents from different partitions into
+> the same region's resource tree?
+> 
+> [ ... ]
+> 
+> >  static int cxl_realize_group(struct cxl_memdev_state *mds, const uuid_t *tag,
+> > -			     struct list_head *group, bool existing)
+> > +			     struct list_head *group, bool shareable,
+> > +			     bool existing)
+> >  {
+> >  	struct device *dev = mds->cxlds.dev;
+> >  	struct cxl_extent_list_node *pos, *tmp;
+> >  	struct cxl_dc_tag_group *tag_group;
+> >  	int group_cnt = 0;
+> > +	u16 seq_num;
+> >  	int rc;
 > >  
-> >  	cxlr = cxl_dpa_to_region(cxlmd, start_dpa, &cxled);
-> >  	if (!cxlr || !cxlr->cxlr_dax)
+> > +	seq_num = -1;
+> >  	list_for_each_entry_safe(pos, tmp, group, list) {
+> > -		/*
+> > -		 * Pass the device-stamped 0-based shared_extn_seq through
+> > -		 * unchanged as the dax-side @seq_num (0..n-1).
+> > -		 */
+> > -		u16 seq = le16_to_cpu(pos->extent->shared_extn_seq);
+> > +		if (shareable)
+> > +			seq_num = le16_to_cpu(pos->extent->shared_extn_seq);
+> > +		else
+> > +			seq_num++;
+> >  
+> > -		if (cxl_add_extent(mds, pos->extent, seq) < 0) {
+> > +		if (cxl_add_extent(mds, pos->extent, seq_num) < 0) {
 > 
 > [Severity: High]
-> This is a pre-existing issue, but I noticed a potential race condition in
-> drivers/cxl/core/extent.c:dc_extent_release() that might lead to a leak:
+> This is a pre-existing issue, but what happens if a device resends a tag group
+> where all extents have already been accepted?
 > 
-> 	group->nr_extents--;
-> 	if (!group->nr_extents)
-> 		free_tag_group(group);
+> If cxl_add_extent() detects a duplicate, it returns 0 without calling
+> cxlr_add_extent(). If this happens for every extent in the group,
+> mds->add_ctx.group is never allocated and remains NULL.
 > 
-> Could concurrent access to group->nr_extents without locks cause a lost
-> decrement?
+> Does this cause the subsequent if (!tag_group) check in this function to drop
+> the group and return -ENXIO instead of returning group_cnt to acknowledge
+> the extents back to the device?
 > 
-A tag group's extents are never concurrently torn down.
-
-> When userspace closes sysfs files for multiple extents of the same tag group
-> concurrently, their kobject refcounts can drop to 0 simultaneously, causing
-> dc_extent_release() to run on multiple CPUs in parallel.
->
-??? An open sysfs fd does not pin the device's kobject, and closing it
-does not trigger the device's release. sysfs files are backed by kernfs,
-and kernfs uses active references that are taken only for the duration
-of an individual read/write, then dropped — not held across an idle open
-fd. The device's own kref comes from device_add() and is dropped by
-device_del()/put_device() in the driver-core teardown path, not by
-userspace opening or closing sysfs files.
-
-
-> If group->nr_extents never reaches 0, does this permanently pin the DAX
-> region device (since the reference isn't dropped) and leak the
-> cxl_dc_tag_group structure?
+> >  			dev_dbg(dev,
+> >  				"Tag %pUb: failed to add extent DPA:%#llx LEN:%#llx\n",
+> >  				tag,
+> > @@ -1412,15 +1532,22 @@ static int cxl_realize_group(struct cxl_memdev_state *mds, const uuid_t *tag,
 > 
-
-Well that never happens because there is no lost decrement race.
-
-> [Severity: High]
-> This isn't a bug introduced by this patch, but I have a question about how
-> duplicate tag groups are handled between drivers/cxl/core/extent.c and
-> drivers/cxl/core/mbox.c.
-> 
-> In drivers/cxl/core/extent.c:cxl_add_extent(), duplicate extents return 0
-> without allocating or assigning mds->add_ctx.group:
-> 
-> 	case CXL_EXT_DUPLICATE:
-> 		/*
-> 		 * Idempotent accept simplifies the dax-side scan for existing
-> 		 * extents on region creation; reply success without duplicating.
-> 		 */
-> 		dev_warn_ratelimited(&cxled->cxld.dev,
-> 				     "Extent %pra exists; accept again\n",
-> 				     &ext_range);
-> 		return 0;
-> 
-> If all extents in a group are duplicates, cxl_realize_group() in
-> drivers/cxl/core/mbox.c finishes its loop with group_cnt > 0 but
-> mds->add_ctx.group remains NULL. It then returns -ENXIO:
-> 
-> 	tag_group = mds->add_ctx.group;
-> 	mds->add_ctx.group = NULL;
-> 	if (!tag_group)
-> 		return -ENXIO;
-> 
-> Since this causes the caller cxl_add_pending() to treat the group as an error
-> and drop the extents instead of adding them to the accepted list, does this
-> leave the device hanging without an ADD_DC_RESPONSE if it resends an
-> unacknowledged extent group?
-> 
-No. cxl_add_pending() always sends a response, even if it's empty. We
-simply omit fully duplicate extents from the response.
-
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260625112638.550691-1-anisa.su@samsung.com?part=16
+> Sashiko AI review � https://sashiko.dev/#/patchset/20260625112638.550691-1-anisa.su@samsung.com?part=17
