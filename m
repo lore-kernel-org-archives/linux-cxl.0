@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C60395D98
-	for <linux-cxl@vger.kernel.org>; Thu, 30 Jul 2026 22:20:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B833AB26A
+	for <linux-cxl@vger.kernel.org>; Thu, 30 Jul 2026 22:21:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785450063; cv=none; b=u//vSoG4vKrvJeu8D4umoowU4KyVGjQ7I0qrccH+BTnP329E+yptDiu+BAH8ePeB3FiDGFlgSEmHKnbN5IOfQfL5B/7pRtFVrLEIG880qlLy1PBNG2PWbvmnwy2GrAE8LWnVNYvxnFapwzthAD+v4eTdoLghjS1QTqmSKacdLro=
+	t=1785450063; cv=none; b=HcQtwp1SKJxZjIOKymr22Km6auy3Er9mJ8GyhgrbVD5QjwbY6f7Qbo2zBolsflCgRRSrJattkaMf0/yDHe725VXe7AgAhcUL517fLqwa6Ky86tZ31PRjF6SHMEUkjZ4o+0qUq8602rc6O7zlYSsZey2QnVbUMfPODRDZt9Gu0Mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785450063; c=relaxed/simple;
-	bh=v8cjlw6s7f2G91GSCtAqf2Mg1qZuS8b50Xl82Bj0ReU=;
+	bh=F3bl87RoQiaS73IjXzugU52nA28elaJZKwBRXA4tnPw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EZpnkd11ZWL++IZ5Rh/hiq/DRNZjJ5259wzYTi6BF2GB4ZFdu80gkJNlXI44BKhSzvoxBdCKbJaP+p2a/dHbbc/lzQtcCqoc5yhL2DGc0+te6KBSmOGVUFh2KUwOHPGANLpWg2Q8WYQ5ZSCFBCG+/Y5Dc8aN2/xvsE0FkYypy48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dac4R056; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version; b=MfD/JCXsutWzoi70UkPOc0IfGttuFbAsy6/iGEzD8sz0ty5+PWDjEsZXDBVBL1utuuEtzPhpdAko5WT2t2469PR0FKr5XjWz5kEukj2nsnPTVhsw7BvAZjFCyXJrZldYcxbzBw8ruv5mq/LfmoDABzJDUV0vmXwdmCcyY5qh7YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l8o7Y2zx; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dac4R056"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l8o7Y2zx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785450061; x=1816986061;
+  t=1785450062; x=1816986062;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=v8cjlw6s7f2G91GSCtAqf2Mg1qZuS8b50Xl82Bj0ReU=;
-  b=Dac4R056fFbX3tCW5pqIjMn3esEymDOtal96jte4Z5pESkAczE540sop
-   UdBAq5T2R2VipHS4f2tllq1OZGk7vKEO6mCB+yLiEAwWtf1sbg9x+iBIY
-   fhYeeQyeDWmVmxOBH3ToRTYH8e15mD+FuDcCrStuBnBiPG00epZ40rKQn
-   k3CEMZrpZxK6NGP3QxpaDypKE6N3aQ7BjZJ+IUxnnMhDYluK3cYdBCJ9H
-   SOZZvzD9FRLJwZPFJR75pgbC9fZJFKxSkZ8vfzX6Of29UrW+T51/pe53E
-   UQ36HX1vxWS8NUknhW4hwenGbyGPtsFm/3fejSrdYV9QGEoqfPHbO7xGb
-   A==;
-X-CSE-ConnectionGUID: J8045YzTQ6q3T634SztwHw==
-X-CSE-MsgGUID: JWJG+i4ERsWNaj7vmEiG8Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="96665374"
+  bh=F3bl87RoQiaS73IjXzugU52nA28elaJZKwBRXA4tnPw=;
+  b=l8o7Y2zxuboDOTbppj1xcn+/FySXLoD9mKnWImrHyIgJADcWbpAn+UQG
+   aJaiow6fuNs02reptmc0yWOn3lx4WNbFWTNLDYpl/+njcGNWR0Yk3kvWn
+   HkCPJyNddaykEahaA04xrJeobhozr0AdPu7TEyXTv1cgHiVp9Mc3J9WFP
+   eWUvZDH2NIfnLDwcoV9liSR89FUs+fLFxLBscsmchHMfrcWhE9TuJBTxB
+   h6vf+5JDC8tpqOsiBKhWTzFJf36F9+SsB9TAq6WXukRWM7bgSdny2JsdI
+   MPz6IvN9tjA2ldb+kaD+waW/40++w5Xw1/I3BL/nimF7EE8B7Jh6CFhBi
+   g==;
+X-CSE-ConnectionGUID: F3xOcJPfSjOVXqd3hrbnfA==
+X-CSE-MsgGUID: eZdv0ZhNS2CFGS7TtS/reQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="96665379"
 X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
-   d="scan'208";a="96665374"
+   d="scan'208";a="96665379"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 15:20:44 -0700
-X-CSE-ConnectionGUID: US4aEdaXQgyPvpnA5jW24Q==
-X-CSE-MsgGUID: 9D4z2/BfQ6Gdw1qlmmZdtw==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 15:20:49 -0700
+X-CSE-ConnectionGUID: DYiQYEvzTpqY9K0Rg2ON6w==
+X-CSE-MsgGUID: TOE5sPhkSA6/GlD8IgzoPQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
-   d="scan'208";a="265482244"
+   d="scan'208";a="265482250"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.220.90])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 15:20:43 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 15:20:44 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -53,9 +53,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Li Ming <ming.li@zohomail.com>,
 	Robert Richter <rrichter@amd.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v3 3/9] cxl/region: Derive port granularity from selector bits
-Date: Thu, 30 Jul 2026 15:20:23 -0700
-Message-ID: <efef416440a89a44dfddb13ef390285a98c69cd4.1785444498.git.alison.schofield@intel.com>
+Subject: [PATCH v3 4/9] cxl/region: Account for mixed-granularity in position calculations
+Date: Thu, 30 Jul 2026 15:20:24 -0700
+Message-ID: <05d8d1f002757c53bdb61175e937e42991c3f465.1785444498.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1785444498.git.alison.schofield@intel.com>
 References: <cover.1785444498.git.alison.schofield@intel.com>
@@ -67,158 +67,254 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A user-created region currently derives each port decoder granularity
-from the parent granularity and ways. That recurrence assumes the
-selector bits follow the existing same-granularity ordering and cannot
-derive the decoder settings for a mixed-granularity region.
+Endpoint positions identify the order in which a region routes
+addresses to its endpoint decoders. The existing calculation assumes
+the root target changes at every region position. In a
+mixed-granularity region, one root target instead covers multiple
+positions before the next root target is selected.
 
-Add cxl_region_is_mixed_gran() as the common predicate for regions
-whose granularity is finer than an interleaving root decoder.
+Add root_positions_per_target() to express that ratio and use it when
+validating root targets, checking peer distance, and calculating
+endpoint positions. Keep the existing position recurrence for
+same-granularity regions and use each decoder level's granularity when
+calculating positions for mixed-granularity regions.
 
-Update derive_port_granularity() to choose each port decoder's
-granularity from the selector bits not already used by its ancestors.
-For auto regions, compare the firmware-programmed granularity with the
-derived value and reject a mismatch.
+Remove the temporary mixed-granularity reject now that endpoint
+positions match the selector layout.
 
-Originally-by: Robert Richter <rrichter@amd.com>
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/core/region.c | 90 ++++++++++++++++++++++++++++++++++-----
- 1 file changed, 79 insertions(+), 11 deletions(-)
+ drivers/cxl/core/region.c | 109 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 89 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index b0061f03892a..871dedd37cc8 100644
+index 871dedd37cc8..938781c9bc5c 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -1552,32 +1552,94 @@ static bool region_selectors_fit(struct cxl_port *port,
- 	return true;
+@@ -1569,6 +1569,49 @@ static inline bool cxl_region_is_mixed_gran(struct cxl_region *cxlr)
+ 	       cxld->interleave_granularity > cxlr->params.interleave_granularity;
  }
  
 +/**
-+ * cxl_region_is_mixed_gran() - Test for a mixed-granularity region
++ * root_positions_per_target() - Count positions covered by a root target
 + * @cxlr: region
 + *
-+ * A region is mixed-granularity when an interleaving root decoder uses a
-+ * larger granularity than the region.
++ * In a mixed-granularity region, a root target covers
++ * ``root_granularity / region_granularity`` consecutive region positions.
++ * A same-granularity root covers one position.
 + *
-+ * Return: true for a mixed-granularity region.
++ * Return: the number of region positions covered by one root target.
 + */
-+static inline bool cxl_region_is_mixed_gran(struct cxl_region *cxlr)
++static inline int root_positions_per_target(struct cxl_region *cxlr)
 +{
-+	struct cxl_decoder *cxld = &cxlr->cxlrd->cxlsd.cxld;
++	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
 +
-+	return cxld->interleave_ways > 1 &&
-+	       cxld->interleave_granularity > cxlr->params.interleave_granularity;
++	if (!cxl_region_is_mixed_gran(cxlr))
++		return 1;
++
++	return cxlrd->cxlsd.cxld.interleave_granularity /
++	       cxlr->params.interleave_granularity;
++}
++
++/**
++ * peer_pos_distance() - Calculate the distance between same-dport endpoints
++ * @cxlr: region under construction
++ * @fanout: product of the ancestor switch ways
++ * @iw: port decoder interleave ways
++ *
++ * Mixed-granularity routing groups the endpoints below a dport into
++ * consecutive region positions. Same-granularity routing spaces them by
++ * the root ways and the switch fan-out above the port.
++ *
++ * Return: the distance in region positions.
++ */
++static int peer_pos_distance(struct cxl_region *cxlr, int fanout, int iw)
++{
++	int root_iw = cxlr->cxlrd->cxlsd.cxld.interleave_ways;
++
++	if (cxl_region_is_mixed_gran(cxlr))
++		return 1;
++
++	return root_iw * fanout * iw;
 +}
 +
  /**
   * derive_port_granularity() - Calculate the granularity for a port decoder
-+ * @port: port being configured
-  * @cxlr: region under construction
-+ * @accum: selectors used by the ancestor decoders
-  * @fanout: product of the ancestor switch ways
-- * @ig: filled with the port decoder granularity
-+ * @iw: port decoder interleave ways
-+ * @ig: filled with the derived granularity
-  *
-- * Preserve the existing parent-granularity times parent-ways recurrence in
-- * terms of the region granularity and the fan-out above this port.
-+ * Select the decoder granularity from the region selector bits not already
-+ * used by its ancestors. Same-granularity regions allocate the lowest
-+ * available selector bits first. Mixed-granularity regions allocate the
-+ * highest available selector bits first so decoder granularities decrease
-+ * from the root toward the endpoints.
-  *
-- * Return: 0 on success.
-+ * A passthrough decoder uses no selector bits and retains the granularity
-+ * implied by the ancestor fan-out.
-+ *
-+ * Return: 0 on success, -ENXIO when no valid selector remains.
-  */
--static int derive_port_granularity(struct cxl_region *cxlr, int fanout,
--				   int *ig)
-+static int derive_port_granularity(struct cxl_port *port,
-+				   struct cxl_region *cxlr, u64 accum,
-+				   int fanout, int iw, int *ig)
+  * @port: port being configured
+@@ -1645,7 +1688,6 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+ 				  struct cxl_endpoint_decoder *cxled)
  {
  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
- 	int root_iw = cxlrd->cxlsd.cxld.interleave_ways;
- 	struct cxl_region_params *p = &cxlr->params;
-+	u64 selector;
- 	int sel_distance;
+-	int root_iw = cxlrd->cxlsd.cxld.interleave_ways;
+ 	struct cxl_port *parent_port = to_cxl_port(port->dev.parent);
+ 	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
+ 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+@@ -1689,7 +1731,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+ 		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
+ 			if (ep->dport == cxlsd->target[i]) {
+ 				rc = check_last_peer(cxled, ep, cxl_rr,
+-						     root_iw * fanout * iw);
++						     peer_pos_distance(cxlr, fanout, iw));
+ 				if (rc)
+ 					return rc;
+ 				goto out_target_set;
+@@ -1947,14 +1989,16 @@ static int cxl_region_attach_position(struct cxl_region *cxlr,
+ 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+ 	struct cxl_switch_decoder *cxlsd = &cxlrd->cxlsd;
+ 	struct cxl_decoder *cxld = &cxlsd->cxld;
++	int root_pos_per_target = root_positions_per_target(cxlr);
+ 	int iw = cxld->interleave_ways;
+ 	struct cxl_port *iter;
+ 	int rc;
  
--	sel_distance = is_power_of_2(root_iw) ? root_iw : root_iw / 3;
--	sel_distance *= fanout;
--	*ig = p->interleave_granularity * sel_distance;
-+	selector = get_selector(p->interleave_ways,
-+				p->interleave_granularity) & ~accum;
-+
-+	if (iw == 1) {
-+		sel_distance = is_power_of_2(root_iw) ? root_iw : root_iw / 3;
-+		sel_distance *= fanout;
-+		*ig = p->interleave_granularity * sel_distance;
-+	} else if (selector && cxl_region_is_mixed_gran(cxlr)) {
-+		*ig = (1ULL << fls64(selector)) / iw;
-+	} else if (selector) {
-+		*ig = 1ULL << __ffs64(selector);
-+	} else {
+-	if (dport != cxlrd->cxlsd.target[pos % iw]) {
+-		dev_dbg(&cxlr->dev, "%s:%s invalid target position for %s\n",
++	if (dport != cxlrd->cxlsd.target[pos / root_pos_per_target % iw]) {
 +		dev_dbg(&cxlr->dev,
-+			"%s:%s: no selector bits available for iw %d\n",
-+			dev_name(port->uport_dev), dev_name(&port->dev), iw);
-+		return -ENXIO;
-+	}
-+
-+	if (iw > 1 && (~selector & get_selector(iw, *ig))) {
-+		dev_dbg(&cxlr->dev,
-+			"%s:%s: derived selector %#llx exceeds remaining %#llx (iw %d ig %d)\n",
-+			dev_name(port->uport_dev), dev_name(&port->dev),
-+			get_selector(iw, *ig), selector, iw, *ig);
-+		return -ENXIO;
-+	}
++			"%s:%s invalid target position for %s (positions per target %d)\n",
+ 			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+-			dev_name(&cxlrd->cxlsd.cxld.dev));
++			dev_name(&cxlrd->cxlsd.cxld.dev), root_pos_per_target);
+ 		return -ENXIO;
+ 	}
  
- 	return 0;
+@@ -2053,7 +2097,7 @@ static int match_switch_decoder_by_range(struct device *dev,
  }
  
-+/**
-+ * cxl_port_setup_targets() - Validate and program a port decoder
-+ * @port: port being configured
-+ * @cxlr: region under construction
-+ * @cxled: endpoint decoder being attached
-+ *
-+ * Validate the decoder's selector placement and derive its interleave
-+ * geometry. User-created regions program the derived values; auto regions
-+ * validate the firmware-programmed values.
-+ *
-+ * Return: 0 on success, negative errno on invalid interleave geometry.
-+ */
- static int cxl_port_setup_targets(struct cxl_port *port,
- 				  struct cxl_region *cxlr,
- 				  struct cxl_endpoint_decoder *cxled)
-@@ -1635,7 +1697,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 		goto add_target;
+ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+-			     int *pos, int *ways)
++			     int *pos, int *ways, int *gran)
+ {
+ 	struct cxl_switch_decoder *cxlsd;
+ 	struct cxl_port *parent;
+@@ -2074,6 +2118,7 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
  	}
+ 	cxlsd = to_cxl_switch_decoder(dev);
+ 	*ways = cxlsd->cxld.interleave_ways;
++	*gran = cxlsd->cxld.interleave_granularity;
  
--	rc = derive_port_granularity(cxlr, fanout, &ig);
-+	rc = derive_port_granularity(port, cxlr, accum, fanout, iw, &ig);
- 	if (rc)
- 		return rc;
+ 	for (int i = 0; i < *ways; i++) {
+ 		if (cxlsd->target[i] == port->parent_dport) {
+@@ -2098,6 +2143,8 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+  * cxl_calc_interleave_pos() - calculate an endpoint position in a region
+  * @cxled: endpoint decoder member of given region
+  * @hpa_range: translated HPA range of the endpoint
++ * @root_pos_per_target: region positions under one root target
++ * @region_gran: region interleave granularity
+  *
+  * The endpoint position is calculated by traversing the topology from
+  * the endpoint to the root decoder and iteratively applying this
+@@ -2107,15 +2154,25 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+  *
+  * ...where @position is inferred from switch and root decoder target lists.
+  *
++ * For a mixed-granularity region, each interleaving level contributes its
++ * target index at the number of region positions covered by one of its
++ * targets:
++ *
++ *    position += positions_per_target * target_index
++ *
++ * Switch positions-per-target is ``parent_gran / region_gran``. The root
++ * uses @root_pos_per_target.
++ *
+  * Return: position >= 0 on success
+  *	   -ENXIO on failure
+  */
+ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
+-				   struct range *hpa_range)
++				   struct range *hpa_range,
++				   int root_pos_per_target, int region_gran)
+ {
+ 	struct cxl_port *iter, *port = cxled_to_port(cxled);
+ 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+-	int parent_ways = 0, parent_pos = 0, pos = 0;
++	int parent_ways = 0, parent_pos = 0, parent_gran = 0, pos = 0;
+ 	int rc;
  
-@@ -1650,8 +1712,14 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 	}
+ 	/*
+@@ -2153,11 +2210,24 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
+ 			break;
  
- 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-+		if (iw > 1 && cxld->interleave_granularity != ig) {
-+			dev_dbg(&cxlr->dev,
-+				"%s:%s: firmware ig %d != derived ig %d (iw %d)\n",
-+				dev_name(port->uport_dev), dev_name(&port->dev),
-+				cxld->interleave_granularity, ig, iw);
-+			return -ENXIO;
+ 		rc = find_pos_and_ways(iter, hpa_range, &parent_pos,
+-				       &parent_ways);
++				       &parent_ways, &parent_gran);
+ 		if (rc)
+ 			return rc;
+ 
+-		pos = pos * parent_ways + parent_pos;
++		if (root_pos_per_target > 1 &&
++		    is_cxl_root(parent_port_of(iter))) {
++			pos = pos + root_pos_per_target * parent_pos;
++			break;
 +		}
- 		if (cxld->interleave_ways != iw ||
--		    (iw > 1 && cxld->interleave_granularity != ig) ||
- 		    !spa_maps_hpa(p, &cxld->hpa_range) ||
- 		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
- 			dev_err(&cxlr->dev,
++
++		/*
++		 * Passthrough levels do not select a target and therefore do
++		 * not contribute to the region position.
++		 */
++		if (root_pos_per_target > 1)
++			pos = pos + (parent_gran / region_gran) * parent_pos;
++		else
++			pos = pos * parent_ways + parent_pos;
+ 	}
+ 
+ 	dev_dbg(&cxlmd->dev,
+@@ -2171,12 +2241,15 @@ static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled,
+ static int cxl_region_sort_targets(struct cxl_region *cxlr)
+ {
+ 	struct cxl_region_params *p = &cxlr->params;
++	int root_pos_per_target = root_positions_per_target(cxlr);
+ 	int i, rc = 0;
+ 
+ 	for (i = 0; i < p->nr_targets; i++) {
+ 		struct cxl_endpoint_decoder *cxled = p->targets[i];
+ 
+-		cxled->pos = cxl_calc_interleave_pos(cxled, &cxlr->hpa_range);
++		cxled->pos = cxl_calc_interleave_pos(cxled, &cxlr->hpa_range,
++						     root_pos_per_target,
++						     p->interleave_granularity);
+ 		/*
+ 		 * Record that sorting failed, but still continue to calc
+ 		 * cxled->pos so that cxl_calc_interleave_pos() emits its
+@@ -2204,6 +2277,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+ 	struct cxl_port *ep_port, *root_port;
+ 	struct cxl_dport *dport;
+ 	int rc = -ENXIO;
++	int root_pos_per_target;
+ 
+ 	rc = check_interleave_cap(&cxled->cxld, p->interleave_ways,
+ 				  p->interleave_granularity);
+@@ -2236,14 +2310,6 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+ 		return -ENXIO;
+ 	}
+ 
+-	/*
+-	 * Mixed-granularity position calculation is added by the next patch.
+-	 * Reject it until then so this intermediate state remains bisectable.
+-	 */
+-	if (cxlrd->cxlsd.cxld.interleave_granularity >
+-	    p->interleave_granularity)
+-		return -ENXIO;
+-
+ 	if (p->nr_targets >= p->interleave_ways) {
+ 		dev_dbg(&cxlr->dev, "region already has %d endpoints\n",
+ 			p->nr_targets);
+@@ -2365,11 +2431,14 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+ 	 * A fail message here means that this interleave config
+ 	 * will fail when presented as CXL_REGION_F_AUTO.
+ 	 */
++	root_pos_per_target = root_positions_per_target(cxlr);
+ 	for (int i = 0; i < p->nr_targets; i++) {
+ 		struct cxl_endpoint_decoder *target = p->targets[i];
+ 		int test_pos;
+ 
+-		test_pos = cxl_calc_interleave_pos(target, &cxlr->hpa_range);
++		test_pos = cxl_calc_interleave_pos(target, &cxlr->hpa_range,
++						   root_pos_per_target,
++						   p->interleave_granularity);
+ 		dev_dbg(&target->cxld.dev,
+ 			"Test cxl_calc_interleave_pos(): %s test_pos:%d target->pos:%d\n",
+ 			(test_pos == target->pos) ? "success" : "fail",
 -- 
 2.37.3
 
