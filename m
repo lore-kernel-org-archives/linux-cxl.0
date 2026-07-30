@@ -1,169 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B4042BE85
-	for <linux-cxl@vger.kernel.org>; Thu, 30 Jul 2026 12:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B4043C7C4;
+	Thu, 30 Jul 2026 15:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785416369; cv=none; b=EmK+nfZJ+oo2c+ZkJ+alHtH2DRy5zq1pGI2d19Yy800X+oiKDtlREOQTea90cCjHdkjP3m97AmmzjNi6IJUKDOM5Pfjc/nqMxS3FZdaMcvXdw8tp+ziSBT4GOyKXVkAJqzQCAvuLazQkMe4a95+VgQhFki+2ATwogjGtDyYW7rk=
+	t=1785426309; cv=none; b=rLDm7Qw6Xo5vnRTZJ4GntozRSIgDUboppG7pf++YuVY5Wd1ngNhBIDNKwxeSuFWYhCey8T2sX4483DIxYRFRl+BUTFB/sK/nnUg+WUssDrqeq6dd58DBfuGNgab7amUMOiWOu49ZMqB5Uk2TK5ho/HYAprF0FJuX9rPVEuIk0xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785416369; c=relaxed/simple;
-	bh=CC1aI9uWktVgOtbfJgpL/VSvJeVGX2Mx5TzH4LHt3q4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RMuX9EywmV6edjm0mXoAA/Tb2f7HfxkjrI/7/Eo3yAbfu4IGpYvjXTO7U/5PwxAy4r/xDPMdj12TMyYGIgqX84O0TYjvU4kla2XFDXkDyQq8cRZXRFUr2PcZENM8b0iYK4Zh24OOph0D96AtHrNtD6LoWq8XBExdmGysKVsAaJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ikUbjpj5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1785426309; c=relaxed/simple;
+	bh=K8jGPRIbU/4fEg3XbqlxfxTZioamTfWErR33qeGGRH8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XjAm/tZC0XVt6ZrXz0VkMiX74r2/Xu46YZU1mu4Btvm+NmE1LyuQ9EcclpKxynAR7PnelmDzqPhDZcnoITmBOUdHE56Fyf2jNnpsmSkXv9I4hDyQQbByEvQNI3EApsxGNE1tlB+g74ayuW1deiNNKHh9DXOMIJZL46UkeQJgUUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lHM36fzF; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ikUbjpj5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1785416365;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mDS4TkMha0gHH0wVcrCrut/csLSeIVhxyOKouJJJjDU=;
-	b=ikUbjpj52lMI1fiUCPKm4x+y23MJTiDoOGhlX1cprAcFkBXds16l8xH6oMdoFmkUuNr9vS
-	2b2hxmHinT0oD5b6FuJ0YQCVtB8HIHJVy2RpiHVFUL7ubtjYbd7MpPHSkdbln7hnRTGQU7
-	gl91H/JZTsML2boFVKMqkKPjGKceFys=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-442-4tyhKubONrCWr4rAUTIOHA-1; Thu,
- 30 Jul 2026 08:59:22 -0400
-X-MC-Unique: 4tyhKubONrCWr4rAUTIOHA-1
-X-Mimecast-MFC-AGG-ID: 4tyhKubONrCWr4rAUTIOHA_1785416359
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D31C31800358;
-	Thu, 30 Jul 2026 12:59:17 +0000 (UTC)
-Received: from blackfin.pond.sub.org (unknown [10.44.22.4])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D00CD180034E;
-	Thu, 30 Jul 2026 12:59:14 +0000 (UTC)
-Received: by blackfin.pond.sub.org (Postfix, from userid 1000)
-	id 74A8021E6920; Thu, 30 Jul 2026 14:59:12 +0200 (CEST)
-From: Markus Armbruster <armbru@redhat.com>
-To: John Snow <jsnow@redhat.com>
-Cc: qemu-devel@nongnu.org,  Alex =?utf-8?Q?Benn=C3=A9e?=
- <alex.bennee@linaro.org>,  Lukas
- Straub <lukasstraub2@web.de>,  Vladimir Sementsov-Ogievskiy
- <vsementsov@yandex-team.ru>,  Zhao Liu <zhao1.liu@intel.com>,  Laurent
- Vivier <laurent@vivier.eu>,  "Gonglei (Arei)" <arei.gonglei@huawei.com>,
-  Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <philmd@mailo.com>,  Alex
- Williamson
- <alex@shazbot.org>,  zhenwei pi <zhenwei.pi@linux.dev>,  Hanna Reitz
- <hreitz@redhat.com>,  Ani Sinha <anisinha@redhat.com>,
-  qemu-block@nongnu.org,  Paolo Bonzini <pbonzini@redhat.com>,  Peter Xu
- <peterx@redhat.com>,  Kevin Wolf <kwolf@redhat.com>,
-  linux-cxl@vger.kernel.org,  Jiri Pirko <jiri@resnulli.us>,  Daniel P.
- =?utf-8?Q?Berrang=C3=A9?= <berrange@redhat.com>,  Stefan Berger
- <stefanb@linux.vnet.ibm.com>,  Fabiano Rosas <farosas@suse.de>,  Stefan
- Hajnoczi <stefanha@redhat.com>,  Michael Tokarev <mjt@tls.msk.ru>,  Igor
- Mammedov <imammedo@redhat.com>,  "Michael S. Tsirkin" <mst@redhat.com>,
-  Gerd Hoffmann <kraxel@redhat.com>,  Mauro Carvalho Chehab
- <mchehab+huawei@kernel.org>,  linux-edac@vger.kernel.org,  =?utf-8?Q?Marc?=
- =?utf-8?Q?-Andr=C3=A9?=
- Lureau <marcandre.lureau@redhat.com>,  Richard Henderson
- <richard.henderson@linaro.org>,  Eric Blake <eblake@redhat.com>,
-  =?utf-8?Q?C=C3=A9dric?=
- Le Goater <clg@redhat.com>,  Jason Wang <jasowangio@gmail.com>,
-  qemu-trivial@nongnu.org,  Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 44/44] qapi: convert trivial intro sections for
- block-core.json
-In-Reply-To: <87qzkntdpy.fsf@pond.sub.org> (Markus Armbruster's message of
-	"Tue, 28 Jul 2026 16:01:45 +0200")
-References: <20260723044805.527643-1-jsnow@redhat.com>
-	<20260723044805.527643-45-jsnow@redhat.com>
-	<87y0f0aikr.fsf@pond.sub.org>
-	<CAFn=p-axhB-ezhfD2F8EoFhWT0h92d6oWP6Li1-JdhiXUGbsdA@mail.gmail.com>
-	<87qzkntdpy.fsf@pond.sub.org>
-Date: Thu, 30 Jul 2026 14:59:12 +0200
-Message-ID: <878q6socpr.fsf@pond.sub.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lHM36fzF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785426308; x=1816962308;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=K8jGPRIbU/4fEg3XbqlxfxTZioamTfWErR33qeGGRH8=;
+  b=lHM36fzF0nZsmmlS5i2mIjWjgJJRTB8vF6Ttl/wbjhqgVOU05YAhKDIu
+   kaX5TjR4elB59Ai1M9ohm71nODK/ZrMm11uEfYobg9wr9xqcaj1pXnKx7
+   aIySEDYAe8eSjAzPCr2bEOdxU4qIZVfN9u0XFzg8WM0WfujC7LrgYBXLM
+   o0bS7gjtqKawQFW9yGDNmjA2NR9fErT69HYSSErFrbxtysvasGOfv7/It
+   vWM5hH9p6/pDubFKxKQ5FlQkXorPFb03r3XrNnBrwu6QweDWp1BtBR6B8
+   LusZgo0Q/KiKJrNR+/Zei7wA+Obq4+fUssBIxXVXv1LJb+6vblhyIo88N
+   w==;
+X-CSE-ConnectionGUID: ohI+xr5CTfaZgMHp8GCP3g==
+X-CSE-MsgGUID: wcLmhXr4Tmm1IEN93RVNfw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="96406414"
+X-IronPort-AV: E=Sophos;i="6.25,194,1779174000"; 
+   d="scan'208";a="96406414"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 08:45:07 -0700
+X-CSE-ConnectionGUID: mCB6mlH9QsqMdcDMK+jKMA==
+X-CSE-MsgGUID: 8nrhI5iASLisKcN0KUbwrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,194,1779174000"; 
+   d="scan'208";a="260939655"
+Received: from rfrazer-mobl3.amr.corp.intel.com (HELO [10.125.111.248]) ([10.125.111.248])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 08:45:06 -0700
+Message-ID: <19d92f60-c0b3-4057-9521-0662121d6e17@intel.com>
+Date: Thu, 30 Jul 2026 08:45:05 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
-X-Mimecast-MFC-PROC-ID: rHjsT2D2zCexy73vq2EOY4kjT-ZjH90DEJG7UfFiLLQ_1785416359
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/9] perf/cxl: Clear stale event fields before
+ reprogramming a counter
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
+ sashiko-bot@kernel.org
+References: <20260729145555.3919550-1-dave.jiang@intel.com>
+ <20260729145555.3919550-3-dave.jiang@intel.com>
+ <20260729232529.27d08ff4@jic23-huawei>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260729232529.27d08ff4@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Markus Armbruster <armbru@redhat.com> writes:
 
-> John Snow <jsnow@redhat.com> writes:
->
->> On Fri, Jul 24, 2026 at 4:38=E2=80=AFAM Markus Armbruster <armbru@redhat=
-.com> wrote:
->
-> [...]
->
->>> I believe all the problematic first paragraphs consist of more than one
->>> sentence.  What about splitting "trivial" into "very trivial" (just one
->>> paragraph, no sentence-ending punctuation in the middle) and "hopefully
->>> trivial" (just one paragraph, remainder)?
+
+On 7/29/26 3:25 PM, Jonathan Cameron wrote:
+> On Wed, 29 Jul 2026 07:55:48 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> cxl_pmu_event_start() ORs the event group id, event mask, edge and invert
+>> selections into a configurable counter's config register without clearing
+>> those fields first, and cxl_pmu_event_stop() leaves them set. Reusing a
+>> counter for another event therefore ORs the new selection onto the old,
+>> counting the wrong events with stale edge/invert behaviour.
 >>
->> That's tricky to automate, and doing it by hand doesn't sound much fun
->> either... can we just power through one-by-one?
+>> Clear EVENT_GRP_ID_IDX, EVENTS, EDGE and INVERT before applying the new
+>> values.
+> 
+> Maybe use FIELD_MODIFY() instead of mask then fill?
+
+Will do
+
+DJ
+
+> 
+> Otherwise LGTM.
+> 
 >>
->> Unless you have a script or a trick you believe will help, and then I
->> am happy to oblige.
->
-> By hand would clearly be a bad use of your time.
->
-> I'll look into automating it.
-
-Lightly tested throwaway script:
-
-#!/usr/bin/env python3
-
-import os
-import re
-import subprocess
-import sys
-
-proc =3D subprocess.Popen(['/usr/bin/git', 'add', '-p'],
-                        bufsize=3D1,
-                        stdin=3Dsubprocess.PIPE,
-                        stdout=3Dsubprocess.PIPE,
-                        text=3DTrue)
-
-n =3D 0
-while True:
-    n +=3D 1
-    chunk =3D os.read(proc.stdout.fileno(), 1024*1024).decode('utf-8')
-    if not chunk:
-        break
-    lines =3D chunk.splitlines()
-    prompt =3D lines[-1]
-    if prompt.find('Stage this hunk') =3D=3D -1:
-        print(f"{sys.argv[0]}: no recognizable prompt after chunk #{n}",
-              file=3Dsys.stderr)
-        break
-    #old =3D '\n'.join(filter(lambda l: re.match(r'^[- ]', l), lines))
-    #print(old)
-    deleted =3D '\n'.join(filter(lambda l: re.match(r'^-#', l), lines))
-    if re.search(r'[!.?].*[!.?]', deleted, flags=3Dre.DOTALL):
-        proc.stdin.write('n\n')
-    else:
-        proc.stdin.write('y\n')
-    ch =3D os.read(proc.stdout.fileno(), 1).decode('utf-8')
-
-try:
-    proc.wait(1)
-except:
-    print(f"{sys.argv[0]}: git-add appears to hang, sending SIGTERM",
-          file=3Dsys.stderr)
-    proc.terminate()
-proc.wait()
-
-if proc.returncode !=3D 0:
-    print(f"{sys.argv[0]}: git-add terminated abnormally (code=3D{proc.retu=
-rncode})",
-          file=3Dsys.stderr)
+>> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+>> Reported-by: sashiko-bot@kernel.org
+>> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
+>> Assisted-by: Claude:claude-opus-4-8
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>  drivers/perf/cxl_pmu.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+>> index e77c0650a7eb..3138514157cd 100644
+>> --- a/drivers/perf/cxl_pmu.c
+>> +++ b/drivers/perf/cxl_pmu.c
+>> @@ -641,6 +641,7 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
+>>  	}
+>>  
+>>  	cfg = readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
+>> +	cfg &= ~(CXL_PMU_COUNTER_CFG_EDGE | CXL_PMU_COUNTER_CFG_INVERT);
+>>  	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
+>>  	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_FREEZE_ON_OVRFLW, 1);
+>>  	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_ENABLE, 1);
+>> @@ -651,6 +652,8 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
+>>  
+>>  	/* Fixed purpose counters have next two fields RO */
+>>  	if (test_bit(hwc->idx, info->conf_counter_bm)) {
+>> +		cfg &= ~(CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK |
+>> +			 CXL_PMU_COUNTER_CFG_EVENTS_MSK);
+>>  		cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK,
+>>  				  hwc->event_base);
+>>  		cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENTS_MSK,
+> 
 
