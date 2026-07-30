@@ -1,90 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5499432BF4;
-	Wed, 29 Jul 2026 22:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECD763FCB11;
+	Thu, 30 Jul 2026 09:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785364172; cv=none; b=NkHuN4KZ7KENZf6ImVtK+iumkcTGa3z5yOmFYODtQ5SvFhUzdijLxIwyNv8Bfb0kaVtTpwEv5dJgMl4PR4EAlWNtdyU9ysGKbKflTA12lWVbYEVKIaQRyDG5soshpR2DITRSt/OINaM21jPjrTs9jM4YNhQ/tB3GoBqJ2kvu6Fo=
+	t=1785404202; cv=none; b=aH8jPNwtZvKQMP8MvRjzwiILpPAmekAcrKuLEPWaKuycPY3QtAUcLyTWvUI2UPAbiwUdIrY6JTDp+1ML6BFanTTMCzVwspvdgcOuisOt4ncw47ck2HdUelQymkol9aVQ92N2J3Z9E8jbQ4ZGg89AGMCRXdKdXRjE0dInxFZCjf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785364172; c=relaxed/simple;
-	bh=37z9+LqiOrwnmYGEkRWmGoCt7mFclFuiVWkTxFxzz4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W3ind83Bl5IHP8z2F6t+c1qB4X2pJP8977e/wWTJ1Kxi5rxiB23NegvO/x6CEw3kl+Y5U9V5nz/xo2IhXhaLsTUSJ7QZa7dJJKEAfkgy6eQ5TylLC+J6eiI64Fjut5AZ41sihCN/8YdhUjoUNC8GQjNXPQDwe62096aWAZ+FPOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1IX1HWw; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785404202; c=relaxed/simple;
+	bh=sbiS7/mhJqPdX+9Zj95HBA4DYxZrYAH88hJZ7+G/CDE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aXlOhxELTGsBahZ0ljSJ3VSGAR+/ZKuHoTE+iV8ee8dMC4pUda50bG36qYCqW3PfFSEq3GVZ1T70cLH9+UoNxP2Ce14KIoXwdw3qsYWLTzaxSrAC2C5pgcStTWem3xR4gGTSLb/q8ufpxEnBlq6h/xqljbcI6buOqk7Ds+DzmDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Sf61sdsx; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1IX1HWw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2A801F000E9;
-	Wed, 29 Jul 2026 22:29:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785364171;
-	bh=x6n/h7j6UiRNWh36uhnx6kkrahhow7yjBJ0zpEn3t5k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=e1IX1HWwbiBn110ryRxB4J/dh19ZvKXmLWe/kj90gej/Q344r12Tu4iwn6N/nh5ed
-	 Q5zMi0fi860vElhFJvrjq3DpJAYBVxdSlWb0CzydmFsgyjjzb5ToxGImSlKe9430pu
-	 t5BWHoEFCRf5KPXK93JgtdHWauFI23KHVcs2EtUL9E1Wi6GhqJfswNqTsA3vxMlt1R
-	 vGntG2agu6UYrE9XDaLjQmGKEf7WI6rPePXFY7RejeVxK6/5kTJI81ZuD/Tgtbg7pk
-	 2jFdiBo/i/436ga3Qi9VC75GbAzpXg1HujodNqkXLXck67zBVcnH1iODIXp9vzonpd
-	 I+udPF0ZxDiaQ==
-Date: Wed, 29 Jul 2026 23:29:27 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
- will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
- sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/9] perf/cxl: Program the requested event group on
- configurable counters
-Message-ID: <20260729232927.0ebdffff@jic23-huawei>
-In-Reply-To: <20260729145555.3919550-2-dave.jiang@intel.com>
-References: <20260729145555.3919550-1-dave.jiang@intel.com>
-	<20260729145555.3919550-2-dave.jiang@intel.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Sf61sdsx"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2EEEE1684;
+	Thu, 30 Jul 2026 02:36:36 -0700 (PDT)
+Received: from [10.57.84.210] (unknown [10.57.84.210])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03D6B3F763;
+	Thu, 30 Jul 2026 02:36:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1785404200; bh=sbiS7/mhJqPdX+9Zj95HBA4DYxZrYAH88hJZ7+G/CDE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Sf61sdsxxkyXEpyxPvQgL5mK5opxyaScjYjKS2vh+DGOW7QiIMXABx13Y0sYZiN1C
+	 FcD59ESbbC1jz2E5JqvR+1cdi25d4Gv7J35x8k3fTORuBzAco6FzzdoGTHN69MzhJW
+	 b0COYItRaxjJ+j60e6iYpN0qEO1cxNqEeVW6jM2o=
+Message-ID: <822d1d81-4657-45e9-8857-843f35c327a2@arm.com>
+Date: Thu, 30 Jul 2026 10:36:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 9/9] perf/cxl: Avoid cpumask_of(-1) when no CPU is
+ assigned
+To: Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
+ sashiko-bot@kernel.org
+References: <20260729145555.3919550-1-dave.jiang@intel.com>
+ <20260729145555.3919550-10-dave.jiang@intel.com>
+ <20260729201446.62732044@jic23-huawei>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20260729201446.62732044@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Wed, 29 Jul 2026 07:55:47 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
-
-> cxl_pmu_get_event_idx() sets *counter_idx for a configurable counter but
-> never sets *event_idx, so hwc->event_base stays 0 and cxl_pmu_event_start()
-> programs event group 0 regardless of the group the user requested.
+On 2026-07-29 8:14 pm, Jonathan Cameron wrote:
+> On Wed, 29 Jul 2026 07:55:55 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> Return the matched capability's event_idx.
+>> cpumask_show() feeds info->on_cpu straight into cpumask_of() for the
+>> world-readable cpumask sysfs attribute. on_cpu is -1 before the first
+>> hotplug online callback and transiently in cxl_pmu_offline_cpu() before a
+>> new target is chosen. cpumask_of(-1) treats the CPU number as unsigned and
+>> does out-of-bounds pointer arithmetic in get_cpu_mask(), so a concurrent
+>> read of the attribute dereferences a wild pointer and can fault -- a local
+>> denial of service.
+>>
 > 
-> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
-> Reported-by: sashiko-bot@kernel.org
-> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
-> Assisted-by: Claude:claude-opus-4-8
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
-One minor thing.  Otherwise LGTM
-Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-
-> ---
-
->  drivers/perf/cxl_pmu.c | 2 ++
->  1 file changed, 2 insertions(+)
+> I'm not keen on the solution here.
 > 
-> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index 68a54d97d2a8..e77c0650a7eb 100644
-> --- a/drivers/perf/cxl_pmu.c
-> +++ b/drivers/perf/cxl_pmu.c
-> @@ -552,6 +552,8 @@ static int cxl_pmu_get_event_idx(struct perf_event *event, int *counter_idx,
->  			return -EINVAL;
->  
->  		*counter_idx = i;
-> +		if (event_idx)
-Hmm. We never want to get counter_idx and not event_idx.  Perhaps
-add this check to the one for counter_idx at the top of this scope.
+> The transient state is ugly anyway. We can just move setting it to -1 into
+> the dummy code that deals with that well known case of you have CPUs online
+> and code is still running.
+> 
+> The init case looks like a false positive to me.  But maybe I'm missing stuff.
+> The perf registration that surfaces the sysfs happens after hotplug handler is
+> added and I believe that synchronously runs it for CPUs that are already up.
+> Given we are running code (and CXL stuff isn't super early) something will
+> be up so it won't remain -1 by the time of use.
 
-> +			*event_idx = pmu_ev->event_idx;
->  		return 0;
->  	}
->  
+Yup, this is pure nonsensical AI gibberish. The only PMUs which might 
+ever need to take care in this respect are those which can only 
+associate with a fixed subset of CPUs (e.g. arm_dsu_pmu), where that set 
+could potentially all be offlined while still leaving other CPUs capable 
+of calling the driver.
+
+If one _could_ offline the last CPU in the system (which hotplug doesn't 
+allow for obvious reasons), the "local denial of service" would be 
+rather larger than one random sysfs file...
+
+> Can we just use the generic stuff?  Maybe need Robin's stuff to add init / exit
+> per driver calls.
+> https://lore.kernel.org/linux-arm-kernel/cover.1784911757.git.robin.murphy@arm.com/
+
+Indeed for arbitrary CXL devices I'm not sure the existing x86 uncore 
+scopes would fit, but feedback on my patch is welcome! ;)
+
+Thanks,
+Robin.
+
+> 
+> In general, I'd like Robin to take a quick look at the more generic perf
+> parts of this series given he has clearly been deep in this stuff a lot
+> more recently than me :)
+> 
+> Jonathan
+> 
+>> Read on_cpu once and emit an empty mask when it is negative.
+>>
+>> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+>> Reported-by: sashiko-bot@kernel.org
+>> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
+>> Assisted-by: Claude:claude-opus-4-8
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>   drivers/perf/cxl_pmu.c | 11 ++++++++++-
+>>   1 file changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+>> index f42238b2b6b0..6aad381c0376 100644
+>> --- a/drivers/perf/cxl_pmu.c
+>> +++ b/drivers/perf/cxl_pmu.c
+>> @@ -501,8 +501,17 @@ static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
+>>   			    char *buf)
+>>   {
+>>   	struct cxl_pmu_info *info = dev_get_drvdata(dev);
+>> +	int cpu = READ_ONCE(info->on_cpu);
+>>   
+>> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(info->on_cpu));
+>> +	/*
+>> +	 * on_cpu is -1 before the first online callback and transiently during
+>> +	 * cxl_pmu_offline_cpu(). cpumask_of(-1) computes an out-of-bounds
+>> +	 * pointer, so report an empty mask instead.
+>> +	 */
+>> +	if (cpu < 0)
+>> +		return sysfs_emit(buf, "\n");
+>> +
+>> +	return cpumap_print_to_pagebuf(true, buf, cpumask_of(cpu));
+>>   }
+>>   static DEVICE_ATTR_RO(cpumask);
+>>   
+> 
 
