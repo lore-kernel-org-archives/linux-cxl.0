@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7343D8901
-	for <linux-cxl@vger.kernel.org>; Thu, 30 Jul 2026 22:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBA7395D98
+	for <linux-cxl@vger.kernel.org>; Thu, 30 Jul 2026 22:21:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785450065; cv=none; b=nKIHkmSMEZ+lcNgmBkpI8qm/fXcH/Psx/JXVyw7DFp4WH1wGwgoBoh2Aj/pg0D0d1GnmcSvOhCZs3435/9vDTBvoLm689YSoU/OJShRyVaTjLWpSytKGwRq5XBFyvLtxRanAGcYnKGaNlnKtgGMqtffJEE1RpH50fxxs1V2J3iw=
+	t=1785450071; cv=none; b=irP8qEcQISwDR7b57V3MFHccK9SfxFLk4vwRSQIcTxLsa21oIIJ8Xd8jRhZLDkvkJg15//1m2xfECThSitnTGHykMiCRyUK7hydWk6dTrck4Kykv3oMP7wl2TNhFOWBtPfCrGdbdcKShTQ+ETQwlTAP5tcIkj2mpupr/VS/GoOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785450065; c=relaxed/simple;
-	bh=PH0AlGQrBxNvW3g4huRIGTMIJ/Rw2vW1Tsw6SoYTjsI=;
+	s=arc-20240116; t=1785450071; c=relaxed/simple;
+	bh=V1pHeEuPBesymqPrJLh02pa0u8t9fb2Fk6tg6X5v/KI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rhx4D5oVVrWY38chxdSz9OWgozyY0ln7yqcbIJWMBL3SGblGk1kroXkrkFBnDN8byv8Jp6JioaIsu2oRZ4nEXcC8o8UxAp7LMYr8zPv4Q/xVgVYdI90eOo64VvKJHL2+5LDTcTWKIj32KWNpDQNarkTfbDqneiioWs8N7q+wQRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U+4xA0SS; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version; b=cLzytIZDpp4euWNY4A8jM6bkPsppG7TH2j0SyWnut1lHTykxgh8QTdJBod61PX8VUud67UczWEYy0pIyht0i+h6l0M01dyBw2moCMgKyZlB9QK+9io2ADLsoePYXOP4dRoRMHMqEkieku0F+YqNQ888Y7seWrZNJo+Tu7IWiW6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dFWHKmpP; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U+4xA0SS"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dFWHKmpP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785450063; x=1816986063;
+  t=1785450069; x=1816986069;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=PH0AlGQrBxNvW3g4huRIGTMIJ/Rw2vW1Tsw6SoYTjsI=;
-  b=U+4xA0SShdllFmtQx3S/5sbxkA937crxC2PHhgpc0Wy081vZWugt3HMs
-   xjzBUabQ7so4ossaWlWR1ZQf6zWZazA1YWKYXXMeZz6CF4l2/CwmP63Hj
-   483ZuBkA91isl4AXW09ghl6dDcDouswnder/MNeXCiUPE4J4KoOqfZZxg
-   35y16dB/foK5aexsO+A/SF7e7UoLo7JFC5WX72KgJUBhXoLZv0k1NJz5R
-   WNpmvp8zXYpD6wTkhYSUcLpgCzm02JjAZJHp6Fo2RGQ8r5w8Rto/IQKI5
-   +stpI5JKNmQYiMDEOy5LdZtLYLfjzdSDDqg2sNJB55gnz7Vtu6odEp4vp
-   A==;
-X-CSE-ConnectionGUID: ceukfXeNTKONz7X3pvTQRw==
-X-CSE-MsgGUID: ZIySn699S0qcfcr5ssCMMg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="96665395"
+  bh=V1pHeEuPBesymqPrJLh02pa0u8t9fb2Fk6tg6X5v/KI=;
+  b=dFWHKmpPvpagr9Bu0YoZgjrzlaMrPXLgcRvH82HUznALiaF0M6AW3HID
+   oYbEEEUfyf15jDpQ5PuFVyv41GkWFtoJ5g9chtSoyWZcUisVg1X5z32JR
+   wEnFG/QOGB6KLslUxxobnc35EmqIOgqO1kI2XIaJ3ieaT6wL7HetZvKsS
+   2C/0fruBIa63QwA/yh/muVPXxO9AmnkR4bj9jm+afkfbZegX9ZR0bgM7l
+   W32TT4of5nY+tKDWwBfWt+09WVBxt3raglTWxvOhiCvtG/KA8sWhzlHXT
+   WrFHQ3NFO+e2/GLbSxpb+RpOIlWCxwZUPvwK12xKz63S6QZpxyrlqMErY
+   g==;
+X-CSE-ConnectionGUID: 3uFwbFmdRtSBujQK9YTtfg==
+X-CSE-MsgGUID: Mj0sar0TQEKGhrhtMNmUrA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="96665401"
 X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
-   d="scan'208";a="96665395"
+   d="scan'208";a="96665401"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
   by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 15:20:50 -0700
-X-CSE-ConnectionGUID: e8q1QQlET9yjbutqsKV3Kw==
-X-CSE-MsgGUID: OSP0krqoT5q4Wnj5E/l5Lg==
+X-CSE-ConnectionGUID: SUF4czzxT56CIZeNsRdiVA==
+X-CSE-MsgGUID: ITnUngj5TyOAyhOFuo3QBw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
-   d="scan'208";a="265482259"
+   d="scan'208";a="265482266"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.220.90])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 15:20:46 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 15:20:47 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -53,9 +53,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Li Ming <ming.li@zohomail.com>,
 	Robert Richter <rrichter@amd.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v3 6/9] cxl/region: Enforce coarse-to-fine ordering for mixed-granularity regions
-Date: Thu, 30 Jul 2026 15:20:26 -0700
-Message-ID: <c0c02a889a3e53d0daa5e69ad92cc6a3e88f1732.1785444498.git.alison.schofield@intel.com>
+Subject: [PATCH v3 7/9] cxl/region: Fail region creation on position check mismatch
+Date: Thu, 30 Jul 2026 15:20:27 -0700
+Message-ID: <73e263e243583a26d0ab302a4f39aabc4a47b105.1785444498.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1785444498.git.alison.schofield@intel.com>
 References: <cover.1785444498.git.alison.schofield@intel.com>
@@ -67,90 +67,88 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With mixed granularity allowed, selector disjointness alone would
-accept an arrangement where an interleaving level is coarser than one
-above it. The position arithmetic cannot represent such a layout: it
-assumes each level below the root refines the one above.
+The position check in cxl_region_attach() only logged a mismatch
+between the attach-order position and the auto-discovery calculator.
+A mismatch means the same configuration would decode wrong when
+presented as CXL_REGION_F_AUTO, yet region creation still succeeded.
 
-In a mixed-granularity region require each interleaving level to be
-strictly finer than its nearest interleaving ancestor, and reject a
-violation with -ENXIO in check_gran_ordering(), called from
-cxl_port_setup_targets(). The value validated is the derived
-granularity on the user path and the firmware-programmed granularity on
-the auto path. Same-granularity regions are exempt; their levels
-legitimately coarsen away from the root.
+Fail region creation on a mismatch, before the region reaches
+CXL_CONFIG_ACTIVE, so a configuration that cannot round-trip through
+auto-discovery cannot be committed.
+
+Since cxl_region_setup_targets() has already programmed the topology
+at this point, tear it down before returning so a later detach can
+cleanly replace the endpoint.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/core/region.c | 48 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ drivers/cxl/core/region.c | 46 +++++++++++++++++++--------------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 3919f64e2467..b4e8ebe158f7 100644
+index b4e8ebe158f7..62179d987e4b 100644
 --- a/drivers/cxl/core/region.c
 +++ b/drivers/cxl/core/region.c
-@@ -1680,6 +1680,50 @@ static int derive_port_granularity(struct cxl_port *port,
+@@ -2492,6 +2492,29 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+ 		rc = cxl_region_setup_targets(cxlr);
+ 		if (rc)
+ 			return rc;
++
++		/*
++		 * Verify that auto-discovery reconstructs the endpoint
++		 * positions assigned while creating the region.
++		 */
++		root_pos_per_target = root_positions_per_target(cxlr);
++		for (int i = 0; i < p->nr_targets; i++) {
++			struct cxl_endpoint_decoder *target = p->targets[i];
++			int test_pos;
++
++			test_pos = cxl_calc_interleave_pos(target,
++							   &cxlr->hpa_range,
++							   root_pos_per_target,
++							   p->interleave_granularity);
++			if (test_pos != target->pos) {
++				dev_err(&target->cxld.dev,
++					"cxl_calc_interleave_pos() mismatch: test_pos:%d target->pos:%d\n",
++					test_pos, target->pos);
++				cxl_region_teardown_targets(cxlr);
++				return -ENXIO;
++			}
++		}
++
+ 		p->state = CXL_CONFIG_ACTIVE;
+ 		cxl_region_shared_upstream_bandwidth_update(cxlr);
+ 	}
+@@ -2503,29 +2526,6 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+ 		.end = p->res->end,
+ 	};
+ 
+-	if (p->nr_targets != p->interleave_ways)
+-		return 0;
+-
+-	/*
+-	 * Test the auto-discovery position calculator function
+-	 * against this successfully created user-defined region.
+-	 * A fail message here means that this interleave config
+-	 * will fail when presented as CXL_REGION_F_AUTO.
+-	 */
+-	root_pos_per_target = root_positions_per_target(cxlr);
+-	for (int i = 0; i < p->nr_targets; i++) {
+-		struct cxl_endpoint_decoder *target = p->targets[i];
+-		int test_pos;
+-
+-		test_pos = cxl_calc_interleave_pos(target, &cxlr->hpa_range,
+-						   root_pos_per_target,
+-						   p->interleave_granularity);
+-		dev_dbg(&target->cxld.dev,
+-			"Test cxl_calc_interleave_pos(): %s test_pos:%d target->pos:%d\n",
+-			(test_pos == target->pos) ? "success" : "fail",
+-			test_pos, target->pos);
+-	}
+-
  	return 0;
  }
  
-+/**
-+ * check_gran_ordering() - Check mixed-granularity decoder ordering
-+ * @port: port being configured
-+ * @cxlr: region under construction
-+ * @cxld: port decoder
-+ * @accum: selectors used by the ancestor decoders
-+ * @iw: port decoder interleave ways
-+ * @ig: derived port decoder granularity
-+ *
-+ * The mixed-granularity position calculation requires each interleaving
-+ * decoder below the root to use a smaller granularity than its nearest
-+ * interleaving ancestor. Passthrough decoders do not participate.
-+ *
-+ * Auto regions validate the firmware-programmed granularity. User-created
-+ * regions validate @ig.
-+ *
-+ * Return: 0 on success, -ENXIO on invalid ordering.
-+ */
-+static int check_gran_ordering(struct cxl_port *port, struct cxl_region *cxlr,
-+			       struct cxl_decoder *cxld, u64 accum, int iw,
-+			       int ig)
-+{
-+	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
-+	u64 val, ancestor_gran;
-+
-+	if (!cxl_region_is_mixed_gran(cxlr) || iw <= 1)
-+		return 0;
-+
-+	val = test_bit(CXL_REGION_F_AUTO, &cxlr->flags) ?
-+		cxld->interleave_granularity : ig;
-+	ancestor_gran = accum ? (1ULL << __ffs64(accum)) :
-+		cxlrd->cxlsd.cxld.interleave_granularity;
-+
-+	if (val >= ancestor_gran) {
-+		dev_dbg(&cxlr->dev,
-+			"%s:%s: iw %d ig %llu not finer than nearest interleaving ancestor (ig %llu); coarse-to-fine ordering required\n",
-+			dev_name(port->uport_dev), dev_name(&port->dev),
-+			iw, val, ancestor_gran);
-+		return -ENXIO;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * cxl_port_setup_targets() - Validate and program a port decoder
-  * @port: port being configured
-@@ -1762,6 +1806,10 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 		return rc;
- 	}
- 
-+	rc = check_gran_ordering(port, cxlr, cxld, accum, iw, ig);
-+	if (rc)
-+		return rc;
-+
- 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
- 		if (iw > 1 && cxld->interleave_granularity != ig) {
- 			dev_dbg(&cxlr->dev,
 -- 
 2.37.3
 
