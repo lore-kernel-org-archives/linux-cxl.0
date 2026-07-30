@@ -1,146 +1,125 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EA73C061D
-	for <linux-cxl@vger.kernel.org>; Thu, 30 Jul 2026 20:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785445170; cv=pass; b=fTZotoy49ygsV091NWxprbG3My3PBSm5qEOAnn6kja+n/wJ3uIWdZzub9ywbev2hzMFOFSehQXvhqpysjA5LGiHF6nk7jfD8SUs4BNjcwdiNk9VSOj15Ly9ytE10Jq9NiLLfzADBlGXTs8hBzDn7vU86u5QWdW+770ks5/rvwxg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785445170; c=relaxed/simple;
-	bh=TjfWFjcumtGogPzfLKW4RhkCh9Rhh17DgLYBpsrtvDg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T5gRv1Ei2PfPrJ12qambXyCpPAPetr0oTfRkH2+M38Q2WSA2LornTEkSopxfCYNpTxJP05pMDMQJq/hWyZN76/6yIXsJDF8kWokJUarh5inzeAo8uERkGLaAeRIxV8Hna6/zhCFsZyZ2wK2nOxe0jApsUp4X4XiaC55aw1Kf/1M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R6ME+3Hp; arc=pass smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4E03D6CB4;
+	Thu, 30 Jul 2026 21:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785447171; cv=none; b=C1Klb8R4qKszWoukGCiGbrEBYTlpYfUChKbZK3htsJSmyZZKqpu/9TSEni9mwyLv+ZwIGpE3XeWwfG8tenh1FKIrnj/thzxY2OkZY/uJ1gpEeVlslYgL35+hyHapeVk8NKXu4k6dW9UuPGQQGQASdZ/rdiqfEatwJ40BytvMh0g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785447171; c=relaxed/simple;
+	bh=CqW8ing/3P5z+cbuGE0kjT2cI97PuhqFI9Q1dTak05o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A9jdRSbl8TSwNkTAKuOmEIOVq6a1S8ssRrwzp/+rOg3FmTv1bRnJ1Mb9kQ6fb097ALZazKOqWXLAH2NPI59C866Sxf901y5WtsjAknhX8cJN9zLrnV2htrk5Nd2aRGjaiAYQb3R5qR4gynxrEN+xS7qDR+JPc9Tha76AUuzmoAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fffPQjeE; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R6ME+3Hp"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-49550ec592cso7807525e9.0
-        for <linux-cxl@vger.kernel.org>; Thu, 30 Jul 2026 13:59:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785445166; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Ch79mrI0MXf7Fq9jjFLeuOBMEJc0+J+nQiQ9P7s4hQQzDEAFllN7rdFagxOpv0NAXa
-         yjRUZpZulqbyApHP56J/eJ8PwaDctP3up64NrGFkFMR55FkPafpZDro8ATV8vZXJSo5j
-         imwB3HLetqp/w7Zle46Gb8svJkVPMu+SHrw7RVgmaLjCtDo8J8/+vd8su3UEAJG7dBuw
-         FMqwMc3bpJ1uuxgufXhdDt2JXtcUe/VsNxsJpyx2rArL1c383reIAtmk8uMkzssjU0N+
-         lH9tMRBaEGNHnh5mWrR+kkBjoLLp62KpU4Wb9OEEQJiC+H3EfxP9bFfSCt/QGSAPgBwQ
-         bjug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=TjfWFjcumtGogPzfLKW4RhkCh9Rhh17DgLYBpsrtvDg=;
-        fh=LX2saRGL5dsgD14xDpn+/o5AOtBYG0lPQ/LbyAb1Ge0=;
-        b=ET57Z0wJ5BduofSlYuXQf0b3+XX76IcddGyEdgalU7x3ONhsHw+K895xdeLrgoSz0z
-         nZER5fuDOxK93pRwfRf63FH3df9v3AsDaZz8MlH0FyChzGTkhJYGM2xJHM6acXWVOPHt
-         /0lIHVJauivtZCrqvxTFFVRshfHdhuCCe6NnkLlpM1skY3BIqb6IVW2cXGzVBjrYVEbZ
-         b+Rvi6iz4XZMhgm17O4hZ9UbfIAHu9jn51fsPY7qWRU/IuPqtPdoaJ/AvcjEb+gTaix3
-         kdyg48LvKuG1F1l/f/MIJ916bBQGFaarm91MGIjqTiXhwpkCPh7X5r1IipNgY5DLIo45
-         OCiQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785445166; x=1786049966; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=TjfWFjcumtGogPzfLKW4RhkCh9Rhh17DgLYBpsrtvDg=;
-        b=R6ME+3HpvtKodB5vMz0HHdPy/tumwxk9eembr/QeHJJMiqq+apXcoGz7XZc43ETGd7
-         O8NIVDm2Uxanw1UE2eD+0O6cByz3cIg34hczcsHbkvyM4zMxOkRF+fp7e6HFxiNdCyqF
-         mlDU0nwiZkucLp2N0Mksf4zxO7W904kuFt8Dk8kGpRmilj+cy3+4PHQh1OhUMuGiFXjH
-         LVPVUCNwrKaIJpSsIFW7XOikTaCgZK6wmtyrpJOGyMzx7KefmrsTEXonBIYS7Z+D6ogI
-         lFvfmp6EKz8kYmHwGulCC68bCuCe8OV5dmzEtsXeIYAn2CF5fWeClCLjySPRlu4hEX9r
-         mr1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785445166; x=1786049966;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=TjfWFjcumtGogPzfLKW4RhkCh9Rhh17DgLYBpsrtvDg=;
-        b=asCLGNl03FL0o3FwfvxdftFSRgaThI9GFutXWmmfQK8NN8r2L6DuzWOvty++2Z6ulW
-         cbzbXkdi1UX5YfSS5SJtiNlHyZrfVHnDm8nLwAuWarBnJhQUmlkmauEGgnEIb1jfGf/H
-         HhozYqYF1fkkYR/lrMPwBYP5Tg240W9/S4KHjN8hYpr9DdDfTLlNguzCT2KY0WOrw1bY
-         C0wk3uGWrK+77RWAbZa5RsI2ENqm7Y6ZGJxiXx7Qypa65MD8yQ51UVMzQ/ooNqQUIKk3
-         h6CcZlHOjak1nemtOA0DPsr8U04sx/v1stmXVhSyKYlkgJpgjcsN82v7ziQiNx1BiJ4E
-         V9cw==
-X-Forwarded-Encrypted: i=1; AHgh+RqB/LEtOz97kzA078o1S2PJ4dqmcZRLFn/Zb953MawnDevwfOUFxLxU9QhvmMMkdOOspiTvgLM/9m0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyctjRXL9Jirbi8pEypY2TbnFcnEslz7MPRDrlOsuNCfWO6gB5A
-	Vz5yhHpBOBusjlyurrS+bNqgsU9d6uMf5vDwlMeZV6KnIfOJlx3GD8M+m57ioKJ46K2428yn0nY
-	17EbhTQgs0DKO9eDmgR5bC+lzmT0TVEs=
-X-Gm-Gg: AR+sD13rAtouaC+oB/t2AuejTXOPvJy254eact7ozwi5ux7g+l9DBoUHdiISccEWiSs
-	ITv+IKt0m8BRSVQP/KOm9noAqs6XD6o5UAB2z65t8NeESPi1vsILWhRzSx9prBBFC2/dahjI1Mz
-	dHGEQlEs1VBBZnpMRmO293iN+A2R5/NAF61zSfFnGJVMsQpa/GMHhlj4kyqi4OK7722bAADqqEE
-	GSBi19Xq1+p0CU4AX3bfhxiIZu+Y+aMRWjOj5PzGxHbv+ibCIX3eo0QfDHNa9BVyf7ct6HopZ+o
-	eLW1HLRbIH7r7riVna7AsICrMCi9CJKdbQ4y4b9x4GxVS4VfkotZaxumJIKzRzwFmkFCB8KEBV1
-	tE7Ynkbp6C8EkKXio+heN+lZq
-X-Received: by 2002:a05:600c:5641:b0:495:50b6:5a6d with SMTP id
- 5b1f17b1804b1-49804c4cc7bmr22571485e9.12.1785445166339; Thu, 30 Jul 2026
- 13:59:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fffPQjeE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785447169; x=1816983169;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=CqW8ing/3P5z+cbuGE0kjT2cI97PuhqFI9Q1dTak05o=;
+  b=fffPQjeEnmY246tFr776xnQ3mRfcSKfyE2RP1RQoWG+MMiqNB+qlpsj9
+   CcidUyCCppj4a1s1JHIJVjDJJKVbOttGfVUx8xXG46mUZfEWV+cZCH10c
+   xMOcHpt69K5buW6E0hFDYDM3siTv9SU2zrreAHr6O9En4KGILS7QwwavZ
+   VzHObOSNVdVOmk/ZkHnsqD5RO7cpdQUDe/s61jK3k5R445C8/WHVUT21g
+   toxiij9FpVG0j68BuIpfgvD6jpbnCyHzf8uRqgUif2UPOyHEXPXAGGBjt
+   soL7mV5I3TFJkYCIGvTdYKcQMhyM0aVuK6KI1HJCiE4kyeaUHy4wiqfsH
+   Q==;
+X-CSE-ConnectionGUID: z2ILeQ2ZSd2yimlGLZrFIg==
+X-CSE-MsgGUID: K+7sij6rTLeT6omFsaVDyQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="103485232"
+X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
+   d="scan'208";a="103485232"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 14:32:48 -0700
+X-CSE-ConnectionGUID: 3AFHPfw1QW+VuEk2MmCJRw==
+X-CSE-MsgGUID: KHvNXZ20S8iYEl0cPn7ZBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
+   d="scan'208";a="254089491"
+Received: from rfrazer-mobl3.amr.corp.intel.com (HELO [10.125.111.248]) ([10.125.111.248])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 14:32:46 -0700
+Message-ID: <cf97261e-a7a1-4b82-a142-72d6e5c962ea@intel.com>
+Date: Thu, 30 Jul 2026 14:32:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260720034358.68714-1-john@jagalactic.com> <0100019f7d9fbe81-6cb16662-2522-47ea-a152-fab0ee3d9b35-000000@email.amazonses.com>
- <CAOQ4uxiEzP2e=cRw-AiGxtSv6WMSA5yR3cmgrF97s7ggU6wzqg@mail.gmail.com>
- <CAJfpegt9PwHksYhsQZeCsW0eooXVVihyieTpeHMmC-+Pq8BWaw@mail.gmail.com>
- <CAOQ4uxhuivjMMt_Dm3VwKmOhHg7ZHdAww6j6jp+RMjPoRde+bA@mail.gmail.com>
- <CAJnrk1Yat+SEr=SmZXwUt9y2WcC0VEC4KUpPrkrRSjMEmx42WQ@mail.gmail.com>
- <CAJfpegtnja6tkOnNPD2WZxu14Dd+UM9AvynsVB_E268iSXLbkQ@mail.gmail.com> <CAJnrk1a9mR-6hFie3hfFRgWTkrhJMVx4j9e7WGnjTRFuX2iJOg@mail.gmail.com>
-In-Reply-To: <CAJnrk1a9mR-6hFie3hfFRgWTkrhJMVx4j9e7WGnjTRFuX2iJOg@mail.gmail.com>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Thu, 30 Jul 2026 13:59:14 -0700
-X-Gm-Features: AUfX_myiGnqGNN965xypoyGuHF_KvdnF6l6Z1HdJgtyCUEVPa6_UpbiR6bYul1c
-Message-ID: <CAJnrk1aj4B-T14SMTZhst2XsjOkKWStUj_0cjwHswgYWWuaB4w@mail.gmail.com>
-Subject: Re: [PATCH V11 0/9] famfs: port into fuse
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Amir Goldstein <amir73il@gmail.com>, John Groves <john@jagalactic.com>, 
-	John Groves <John@groves.net>, Dan Williams <djbw@kernel.org>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, James Morse <james.morse@arm.com>, 
-	Fuad Tabba <tabba@google.com>, Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
-	"fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/9] perf/cxl: Accept an overflow interrupt on MSI
+ message number 0
+To: Jonathan Cameron <jic23@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
+ sashiko-bot@kernel.org
+References: <20260729145555.3919550-1-dave.jiang@intel.com>
+ <20260729145555.3919550-5-dave.jiang@intel.com>
+ <5196c172-9ef3-43ae-98df-57a95427a00a@arm.com>
+ <20260730195707.553670cd@jic23-huawei>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20260730195707.553670cd@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 24, 2026 at 1:23=E2=80=AFPM Joanne Koong <joannelkoong@gmail.co=
-m> wrote:
->
-> As I understand it, the merge window for 7.3 closes at the end of
-> August. Just to summarize, the only things needed to get this into 7.3
-> (besides addressing the Sashiko comments) are:
-> a) replace FUSE_GET_FMAP with FUSE_NOTIFY_EXTENT_MAP (will also be
-> good for famfs in general, saves an extra context switch)
-> b) remove FUSE_DEV_IOC_DAXDEV_OPEN and reuse existing
-> FUSE_DEV_IOC_BACKING_OPEN (logic for this already supplied in Miklos's
-> patch in [1])
-> c) remove "config FUSE_FAMFS_DAX"
-> d) remove FUSE_DAX_FMAP capability (not 100% sure about this, but
-> since the only thing added to the uapi is a new notif type, seems fine
-> to exclude this cap flag)
->
 
-John, is your intention still to get this into 7.3 through fuse? If so
-and if you're pressed for time, I'm happy to take on the items as
-follow-up patches to your series, if that would be helpful.
 
-Thanks,
-Joanne
+On 7/30/26 11:57 AM, Jonathan Cameron wrote:
+> On Thu, 30 Jul 2026 13:18:42 +0100
+> Robin Murphy <robin.murphy@arm.com> wrote:
+> 
+>> On 29/07/2026 3:55 pm, Dave Jiang wrote:
+>>> cxl_pmu_probe() rejects the PMU with -EINVAL when info->irq <= 0, but
+>>> info->irq holds the MSI/MSI-X message number the device signals overflow
+>>> on (CXL_PMU_CAP_MSI_N_MSK, a 0-based 4-bit field), with -1 meaning "no
+>>> interrupt support". Message number 0 is valid and pci_irq_vector() takes
+>>> a 0-based index, so a compliant device signalling on the first vector is
+>>> wrongly refused and fails to probe.  
+>>
+>> If info->irq is a PCI MSI vector index, not the Linux vIRQ number, then 
+>> surely that means the irq_set_affinity() calls are wrong as well?
+> 
+> yup.  I really messed this driver up :(
+> 
+> should rename this one and then have irq mean irq.
+
+I have a patch for v3 :) > 
+> 
+>>
+>> Thanks,
+>> Robin.
+>>
+>>> Reject only the no-interrupt case (info->irq < 0), matching the sibling
+>>> CXL mailbox and event IRQ handling.
+>>>
+>>> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+>>> Reported-by: sashiko-bot@kernel.org
+>>> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
+>>> Assisted-by: Claude:claude-opus-4-8
+>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>> ---
+>>>   drivers/perf/cxl_pmu.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+>>> index 956da8202551..d1e810601e36 100644
+>>> --- a/drivers/perf/cxl_pmu.c
+>>> +++ b/drivers/perf/cxl_pmu.c
+>>> @@ -876,7 +876,7 @@ static int cxl_pmu_probe(struct device *dev)
+>>>   		.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
+>>>   	};
+>>>   
+>>> -	if (info->irq <= 0)
+>>> +	if (info->irq < 0)
+>>>   		return -EINVAL;
+>>>   
+>>>   	rc = pci_irq_vector(pdev, info->irq);  
+>>
+> 
+
