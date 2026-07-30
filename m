@@ -1,196 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51474468C09;
-	Thu, 30 Jul 2026 19:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785438071; cv=none; b=JuLyYnElkS47RWNlorxP9Iu/6iZQSqesYRI/MpB76OEKSi+0Hnhh8+KaOTqhiNZz/eClko8Jz1c+3IQxnrFxIq+acLZTq2LFQ6Ps0O6hjisga+GKZPzD5uWnRjOjfAhlSdLNrNI+xfN1qlQ0UFA6X6Eh8+km6NyBfTTKEZCXR/U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785438071; c=relaxed/simple;
-	bh=zfiZM5XzcKn91pstdwU6M+kGdgqlzQlVs+AG2AyYuIE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EwAWIth3raehOoqYhDVUKV+GpK9gbATU1eCh/6UWDg/PEQNFOIxZYMdRbS9n+vxwh/Em3mEDbz2uzrxilFjCgB7OAqMJK/Awbb3BsYSCL16TTrQj9mvZMDYng8VrCFak2JLdhXnOlMwn1AXweO9LWLjqXbviYtxdSrPUgpZKMyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ONz1SCaY; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EA73C061D
+	for <linux-cxl@vger.kernel.org>; Thu, 30 Jul 2026 20:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785445170; cv=pass; b=fTZotoy49ygsV091NWxprbG3My3PBSm5qEOAnn6kja+n/wJ3uIWdZzub9ywbev2hzMFOFSehQXvhqpysjA5LGiHF6nk7jfD8SUs4BNjcwdiNk9VSOj15Ly9ytE10Jq9NiLLfzADBlGXTs8hBzDn7vU86u5QWdW+770ks5/rvwxg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785445170; c=relaxed/simple;
+	bh=TjfWFjcumtGogPzfLKW4RhkCh9Rhh17DgLYBpsrtvDg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T5gRv1Ei2PfPrJ12qambXyCpPAPetr0oTfRkH2+M38Q2WSA2LornTEkSopxfCYNpTxJP05pMDMQJq/hWyZN76/6yIXsJDF8kWokJUarh5inzeAo8uERkGLaAeRIxV8Hna6/zhCFsZyZ2wK2nOxe0jApsUp4X4XiaC55aw1Kf/1M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R6ME+3Hp; arc=pass smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ONz1SCaY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2474D1F00A3A;
-	Thu, 30 Jul 2026 19:00:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785438042;
-	bh=N28i5mQ3wBeE7mvDVmN3/ZFnUovgogXsQkYUz6BS3wM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ONz1SCaYZWJvvxnQbkP++SHjj/65gyjJSHEAp4BkT6FA16ScJ89ZtP1zKQxy9RyKa
-	 bT3ULbwXo5iIQVpppEedoN/K1HoAIoGK4S2YNpbrHdAHbmJkpWEaJqK2bAhYD3gpsa
-	 I/W0jWkE8I36F5F8XFtEXl9IyWFbvvype3FF7Q6zRm8j0t1Cv5Hhg1bH1PMK1VbeBH
-	 6/zSS/OAWSAXXq5GEzrf/nJfvj1/+GgVz3WOG5fZKj3n2J0E+bEbpgKpUqomhUyELv
-	 o2b0xJoS4oUCA5LeKv/G7RD7BytbmMi1/E2z6yOScq3B0qQUbAwFxm/y3ka0bwhxHi
-	 wTbQLuyjH6Wdg==
-Date: Thu, 30 Jul 2026 20:00:37 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
- will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
- sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 3/9] perf/cxl: Fix the counter overflow delta fixup
-Message-ID: <20260730200037.0517df7a@jic23-huawei>
-In-Reply-To: <51728f3b-e75d-4b63-a355-7d0b0398d0dc@intel.com>
-References: <20260729145555.3919550-1-dave.jiang@intel.com>
-	<20260729145555.3919550-4-dave.jiang@intel.com>
-	<20260729232142.050ed34c@jic23-huawei>
-	<51728f3b-e75d-4b63-a355-7d0b0398d0dc@intel.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R6ME+3Hp"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-49550ec592cso7807525e9.0
+        for <linux-cxl@vger.kernel.org>; Thu, 30 Jul 2026 13:59:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785445166; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Ch79mrI0MXf7Fq9jjFLeuOBMEJc0+J+nQiQ9P7s4hQQzDEAFllN7rdFagxOpv0NAXa
+         yjRUZpZulqbyApHP56J/eJ8PwaDctP3up64NrGFkFMR55FkPafpZDro8ATV8vZXJSo5j
+         imwB3HLetqp/w7Zle46Gb8svJkVPMu+SHrw7RVgmaLjCtDo8J8/+vd8su3UEAJG7dBuw
+         FMqwMc3bpJ1uuxgufXhdDt2JXtcUe/VsNxsJpyx2rArL1c383reIAtmk8uMkzssjU0N+
+         lH9tMRBaEGNHnh5mWrR+kkBjoLLp62KpU4Wb9OEEQJiC+H3EfxP9bFfSCt/QGSAPgBwQ
+         bjug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=TjfWFjcumtGogPzfLKW4RhkCh9Rhh17DgLYBpsrtvDg=;
+        fh=LX2saRGL5dsgD14xDpn+/o5AOtBYG0lPQ/LbyAb1Ge0=;
+        b=ET57Z0wJ5BduofSlYuXQf0b3+XX76IcddGyEdgalU7x3ONhsHw+K895xdeLrgoSz0z
+         nZER5fuDOxK93pRwfRf63FH3df9v3AsDaZz8MlH0FyChzGTkhJYGM2xJHM6acXWVOPHt
+         /0lIHVJauivtZCrqvxTFFVRshfHdhuCCe6NnkLlpM1skY3BIqb6IVW2cXGzVBjrYVEbZ
+         b+Rvi6iz4XZMhgm17O4hZ9UbfIAHu9jn51fsPY7qWRU/IuPqtPdoaJ/AvcjEb+gTaix3
+         kdyg48LvKuG1F1l/f/MIJ916bBQGFaarm91MGIjqTiXhwpkCPh7X5r1IipNgY5DLIo45
+         OCiQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785445166; x=1786049966; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=TjfWFjcumtGogPzfLKW4RhkCh9Rhh17DgLYBpsrtvDg=;
+        b=R6ME+3HpvtKodB5vMz0HHdPy/tumwxk9eembr/QeHJJMiqq+apXcoGz7XZc43ETGd7
+         O8NIVDm2Uxanw1UE2eD+0O6cByz3cIg34hczcsHbkvyM4zMxOkRF+fp7e6HFxiNdCyqF
+         mlDU0nwiZkucLp2N0Mksf4zxO7W904kuFt8Dk8kGpRmilj+cy3+4PHQh1OhUMuGiFXjH
+         LVPVUCNwrKaIJpSsIFW7XOikTaCgZK6wmtyrpJOGyMzx7KefmrsTEXonBIYS7Z+D6ogI
+         lFvfmp6EKz8kYmHwGulCC68bCuCe8OV5dmzEtsXeIYAn2CF5fWeClCLjySPRlu4hEX9r
+         mr1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785445166; x=1786049966;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=TjfWFjcumtGogPzfLKW4RhkCh9Rhh17DgLYBpsrtvDg=;
+        b=asCLGNl03FL0o3FwfvxdftFSRgaThI9GFutXWmmfQK8NN8r2L6DuzWOvty++2Z6ulW
+         cbzbXkdi1UX5YfSS5SJtiNlHyZrfVHnDm8nLwAuWarBnJhQUmlkmauEGgnEIb1jfGf/H
+         HhozYqYF1fkkYR/lrMPwBYP5Tg240W9/S4KHjN8hYpr9DdDfTLlNguzCT2KY0WOrw1bY
+         C0wk3uGWrK+77RWAbZa5RsI2ENqm7Y6ZGJxiXx7Qypa65MD8yQ51UVMzQ/ooNqQUIKk3
+         h6CcZlHOjak1nemtOA0DPsr8U04sx/v1stmXVhSyKYlkgJpgjcsN82v7ziQiNx1BiJ4E
+         V9cw==
+X-Forwarded-Encrypted: i=1; AHgh+RqB/LEtOz97kzA078o1S2PJ4dqmcZRLFn/Zb953MawnDevwfOUFxLxU9QhvmMMkdOOspiTvgLM/9m0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyctjRXL9Jirbi8pEypY2TbnFcnEslz7MPRDrlOsuNCfWO6gB5A
+	Vz5yhHpBOBusjlyurrS+bNqgsU9d6uMf5vDwlMeZV6KnIfOJlx3GD8M+m57ioKJ46K2428yn0nY
+	17EbhTQgs0DKO9eDmgR5bC+lzmT0TVEs=
+X-Gm-Gg: AR+sD13rAtouaC+oB/t2AuejTXOPvJy254eact7ozwi5ux7g+l9DBoUHdiISccEWiSs
+	ITv+IKt0m8BRSVQP/KOm9noAqs6XD6o5UAB2z65t8NeESPi1vsILWhRzSx9prBBFC2/dahjI1Mz
+	dHGEQlEs1VBBZnpMRmO293iN+A2R5/NAF61zSfFnGJVMsQpa/GMHhlj4kyqi4OK7722bAADqqEE
+	GSBi19Xq1+p0CU4AX3bfhxiIZu+Y+aMRWjOj5PzGxHbv+ibCIX3eo0QfDHNa9BVyf7ct6HopZ+o
+	eLW1HLRbIH7r7riVna7AsICrMCi9CJKdbQ4y4b9x4GxVS4VfkotZaxumJIKzRzwFmkFCB8KEBV1
+	tE7Ynkbp6C8EkKXio+heN+lZq
+X-Received: by 2002:a05:600c:5641:b0:495:50b6:5a6d with SMTP id
+ 5b1f17b1804b1-49804c4cc7bmr22571485e9.12.1785445166339; Thu, 30 Jul 2026
+ 13:59:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20260720034358.68714-1-john@jagalactic.com> <0100019f7d9fbe81-6cb16662-2522-47ea-a152-fab0ee3d9b35-000000@email.amazonses.com>
+ <CAOQ4uxiEzP2e=cRw-AiGxtSv6WMSA5yR3cmgrF97s7ggU6wzqg@mail.gmail.com>
+ <CAJfpegt9PwHksYhsQZeCsW0eooXVVihyieTpeHMmC-+Pq8BWaw@mail.gmail.com>
+ <CAOQ4uxhuivjMMt_Dm3VwKmOhHg7ZHdAww6j6jp+RMjPoRde+bA@mail.gmail.com>
+ <CAJnrk1Yat+SEr=SmZXwUt9y2WcC0VEC4KUpPrkrRSjMEmx42WQ@mail.gmail.com>
+ <CAJfpegtnja6tkOnNPD2WZxu14Dd+UM9AvynsVB_E268iSXLbkQ@mail.gmail.com> <CAJnrk1a9mR-6hFie3hfFRgWTkrhJMVx4j9e7WGnjTRFuX2iJOg@mail.gmail.com>
+In-Reply-To: <CAJnrk1a9mR-6hFie3hfFRgWTkrhJMVx4j9e7WGnjTRFuX2iJOg@mail.gmail.com>
+From: Joanne Koong <joannelkoong@gmail.com>
+Date: Thu, 30 Jul 2026 13:59:14 -0700
+X-Gm-Features: AUfX_myiGnqGNN965xypoyGuHF_KvdnF6l6Z1HdJgtyCUEVPa6_UpbiR6bYul1c
+Message-ID: <CAJnrk1aj4B-T14SMTZhst2XsjOkKWStUj_0cjwHswgYWWuaB4w@mail.gmail.com>
+Subject: Re: [PATCH V11 0/9] famfs: port into fuse
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: Amir Goldstein <amir73il@gmail.com>, John Groves <john@jagalactic.com>, 
+	John Groves <John@groves.net>, Dan Williams <djbw@kernel.org>, Bernd Schubert <bschubert@ddn.com>, 
+	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, James Morse <james.morse@arm.com>, 
+	Fuad Tabba <tabba@google.com>, Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	"venkataravis@micron.com" <venkataravis@micron.com>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+	"fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 30 Jul 2026 09:56:35 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Fri, Jul 24, 2026 at 1:23=E2=80=AFPM Joanne Koong <joannelkoong@gmail.co=
+m> wrote:
+>
+> As I understand it, the merge window for 7.3 closes at the end of
+> August. Just to summarize, the only things needed to get this into 7.3
+> (besides addressing the Sashiko comments) are:
+> a) replace FUSE_GET_FMAP with FUSE_NOTIFY_EXTENT_MAP (will also be
+> good for famfs in general, saves an extra context switch)
+> b) remove FUSE_DEV_IOC_DAXDEV_OPEN and reuse existing
+> FUSE_DEV_IOC_BACKING_OPEN (logic for this already supplied in Miklos's
+> patch in [1])
+> c) remove "config FUSE_FAMFS_DAX"
+> d) remove FUSE_DAX_FMAP capability (not 100% sure about this, but
+> since the only thing added to the uapi is a new notif type, seems fine
+> to exclude this cap flag)
+>
 
-> On 7/29/26 3:21 PM, Jonathan Cameron wrote:
-> > On Wed, 29 Jul 2026 07:55:49 -0700
-> > Dave Jiang <dave.jiang@intel.com> wrote:
-> >   
-> >> Counters are configured with Freeze on Overflow and are never reloaded: on
-> >> overflow the counter wraps to 0, counts on until the CPMU freezes, and  
-> > Hi Dave,
-> > 
-> > Thanks for looking at these.
-> > 
-> > Why would it count on if it froze?  I think the bot is tripping over the
-> > fact we don't yet implement free running counters (and the other bug
-> > about not unfreezing) for currently the ability to freeze on only some
-> > counters (to do periodic sampling for instance).
-> > 
-> > The CXL CPMU spec is incredibly broad in what is supported, so maybe
-> > we want to harden things anyway but I'm not sure the condition described
-> > by most of this is real.
-> >   
-> >> retains that residual (CXL r4.0 8.2.7.2.3). So the masked subtraction in
-> >> __cxl_pmu_read() only spans the wrap when new_cnt < prev_cnt.  
-> > 
-> > It's been a long time so maybe I have how this was meant to work wrong.
-> > 
-> > There are two paths to __cxl_pmu_read()
-> > 
-> > 1. We have freeze on overflow enabled so any counter that overflows results
-> > in an interrupt. At that point all counters are frozen.
-> > We then read only the counter that overflowed (which is 0) and that
-> > will update the prev_cnt storage.  No chance of hitting the full wrap
-> > around seen here.
-> > 
-> > 2. An on demand read (polling) In this case the counter may
-> > take any value, but because we have freeze on overflow it can't have
-> > wrapped (as otherwise we'd have taken path 1).
-> > 
-> > So slightly fun question of why we have any wrapping control and I think
-> > the answer is because the freeze on overflow isn't very specific in the
-> > spec for whether it freezes on max value or 0.  
-> 
-> Vague enough that hardware can freeze on overflow but leave greater than 0 value? Or is it always either max value or 0? If you don't think this patch is needed I can drop. 
+John, is your intention still to get this into 7.3 through fuse? If so
+and if you're pressed for time, I'm happy to take on the items as
+follow-up patches to your series, if that would be helpful.
 
-Ah.  Good point. I think the spec at least comprehends increments of
-more than 1 for some events so it might not be 0 and this patch would
-therefore be needed for that corner case.
-
-
-> 
-> DJ
-> 
-> > 
-> >   
-> >>
-> >> The fixup keys off the delta rather than the operands:
-> >>
-> >> 	delta = (new_cnt - prev_cnt) & GENMASK_ULL(counter_width - 1, 0);
-> >> 	if (overflow && delta < GENMASK_ULL(counter_width - 1, 0))
-> >> 		delta += (1UL << counter_width);
-> >>
-> >> and is wrong both ways. After a mid-period read the subtraction already
-> >> spans the wrap, but the guard holds for all but one delta value, so a
-> >> second period is added and the event over-counts. After an earlier
-> >> overflow read - or after event_start(), which leaves prev_count at 0 -
-> >> prev_cnt is a small residual, and once the new residual is greater or
-> >> equal only the difference between the two is counted and the period is
-> >> lost, which for a residual of 0 means every period after the first.
-> >> 'perf stat -I' hits the former, plain 'perf stat' the latter.
-> >>
-> >> The shift is also undefined for counter_width == 64, and for >= 32 on
-> >> 32-bit kernels where 1UL is 32 bits.  
-> > 
-> > That bit seems valid.
-> >   
-> >>
-> >> Condition the fixup on new_cnt >= prev_cnt, the one case the masked
-> >> subtraction cannot express, and use mask + 1 for the period: it is 0 for a
-> >> 64-bit counter, the correct sum mod 2^64, and needs no shift. A
-> >> userspace read landing between the wrap and the handler clearing the
-> >> overflow status stays correct because the counter is frozen and cannot
-> >> advance between the two reads.
-> >>
-> >> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
-> >> Reported-by: sashiko-bot@kernel.org
-> >> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
-> >> Assisted-by: Claude:claude-opus-4-8
-> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> >> ---
-> >> v2:
-> >> - Fix the fixup instead of deleting it. v1 dropped it on the rationale
-> >>   that the masked subtraction already handles the wrap, which only holds
-> >>   for new_cnt < prev_cnt; with freeze on overflow and no reload the
-> >>   overflow path routinely sees new_cnt >= prev_cnt, where v1 silently
-> >>   dropped a full period (sashiko-bot,
-> >>   https://lore.kernel.org/linux-cxl/20260728211411.47B2D1F000E9@smtp.kernel.org/).
-> >> - Keep the overflow argument and the __cxl_pmu_read()/cxl_pmu_read()
-> >>   split; v1 folded them together once the argument went unused.
-> >> - Use mask + 1 rather than 1ULL << counter_width so the 64-bit counter
-> >>   case needs no special casing.
-> >> ---
-> >>  drivers/perf/cxl_pmu.c | 18 ++++++++++++------
-> >>  1 file changed, 12 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> >> index 3138514157cd..956da8202551 100644
-> >> --- a/drivers/perf/cxl_pmu.c
-> >> +++ b/drivers/perf/cxl_pmu.c
-> >> @@ -690,7 +690,7 @@ static void __cxl_pmu_read(struct perf_event *event, bool overflow)
-> >>  {
-> >>  	struct cxl_pmu_info *info = pmu_to_cxl_pmu_info(event->pmu);
-> >>  	struct hw_perf_event *hwc = &event->hw;
-> >> -	u64 new_cnt, prev_cnt, delta;
-> >> +	u64 new_cnt, prev_cnt, delta, mask;
-> >>  
-> >>  	do {
-> >>  		prev_cnt = local64_read(&hwc->prev_count);
-> >> @@ -698,12 +698,18 @@ static void __cxl_pmu_read(struct perf_event *event, bool overflow)
-> >>  	} while (local64_cmpxchg(&hwc->prev_count, prev_cnt, new_cnt) != prev_cnt);
-> >>  
-> >>  	/*
-> >> -	 * If we know an overflow occur then take that into account.
-> >> -	 * Note counter is not reset as that would lose events
-> >> +	 * The counter wraps to 0 and is never reloaded, so the masked unsigned
-> >> +	 * subtraction only recovers a wrap when new_cnt < prev_cnt. On the
-> >> +	 * overflow path new_cnt >= prev_cnt means the full period elapsed
-> >> +	 * (prev_cnt is 0 from event_start(), or the residual left by an earlier
-> >> +	 * overflow), so add the period back. mask + 1 is 2^counter_width, which
-> >> +	 * evaluates to 0 for a 64-bit counter - the correct sum mod 2^64, and
-> >> +	 * avoids the undefined 1 << 64.
-> >>  	 */
-> >> -	delta = (new_cnt - prev_cnt) & GENMASK_ULL(info->counter_width - 1, 0);
-> >> -	if (overflow && delta < GENMASK_ULL(info->counter_width - 1, 0))
-> >> -		delta += (1UL << info->counter_width);
-> >> +	mask = GENMASK_ULL(info->counter_width - 1, 0);
-> >> +	delta = (new_cnt - prev_cnt) & mask;
-> >> +	if (overflow && new_cnt >= prev_cnt)
-> >> +		delta += mask + 1;
-> >>  
-> >>  	local64_add(delta, &event->count);
-> >>  }  
-> >   
-> 
-
+Thanks,
+Joanne
