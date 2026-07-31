@@ -1,63 +1,63 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF393D7D6C
-	for <linux-cxl@vger.kernel.org>; Fri, 31 Jul 2026 08:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8119C3D75A6
+	for <linux-cxl@vger.kernel.org>; Fri, 31 Jul 2026 08:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785487782; cv=none; b=KICGbR8hm4EiVvZaR0EvyZqFmMsiHAXfNT3oNOtE95UdeIhNIIP7mTegB5tqpEBn+KzroQG5kW6vDir1GWHiE3gGIiGYDvv4QigjAqjk2uBpLf1qfLbxJCoDrltehNrYbRQVNbselA12m5GikTF8RUiXNEhtTYyNnz8mSANreIM=
+	t=1785487787; cv=none; b=Z0lNmV24knPRfll0n44Tn8yEKNriswmovy4voHPkZR7/nyZkrouY+puQYRpIcJgaimH05f1HHDY5Zc3DT8pAqeCe2C9bFxSgVpSA/0wuIv7d8oy/IEYxwIUFB/wEsZFc7d9+6HO7fkhF4jQgtnmxTmRJ+GUjDvrAtsLeTpQXgbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785487782; c=relaxed/simple;
-	bh=5CJDiK1L6YNDbUW5Cu1Fdb5mVPJ25ymBR9VdR1qYoH4=;
+	s=arc-20240116; t=1785487787; c=relaxed/simple;
+	bh=hC92LITz7Yccr/XageZqVp/voSi/++OW1y3xLwXgptM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SBz1r/MKkryw6UTSxqisDoxw/Y6vRfpdu2yUGpJc/QdDz8pFKbP+h5L7XIb7uUtFKrVRhYobLeYtFcTsz1ZLAeZJvzaRL5YKjKc6AyKQ0G+HyfKr7eg7/cI+lDkM+vCWGGxpW82GubqUitWbpNurWKP1f4L303HoYVM+hK2eRTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G7OWykE/; arc=none smtp.client-ip=209.85.214.172
+	 MIME-Version; b=So7+QqFtaLTLOSqIc3WzK5QfJkhJ/Jcg3Sz/7kg5aQK1ijOx4/K1Lzgq2IwPj287p3v6zjsgAL7JEE0WrPE6enPwcISLZ1VNNI58YffZJj6s/fut2JNHrgP/kYVa11Rcbk8tAwRN8qw/+lAzIO8JPkz1tbmy7aNpmO62EtzP37U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fKQ24wyz; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7OWykE/"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2cfff5f88dbso7536395ad.3
-        for <linux-cxl@vger.kernel.org>; Fri, 31 Jul 2026 01:49:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fKQ24wyz"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2cc97653887so7500015ad.1
+        for <linux-cxl@vger.kernel.org>; Fri, 31 Jul 2026 01:49:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785487780; x=1786092580; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1785487786; x=1786092586; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=lw90wO5t99ejao3BX1gIeILEn6WuTY7Fx6rXmrY2A4M=;
-        b=G7OWykE/L5OB1etTaXxL2sGPnLMzIb0RxKb1Fgm/37Z4vViKX+ZVdwjCvnZphUjH7X
-         pCPQ06Y2iFNR5MUDESzlF4sIkyRl7OGc5ofPpXBP3CcYnFozeZ4zSrI6S3sB2t15WGGH
-         0QsDbOcfD2c5G5xORMOZOtf7glNL5jT0VsML98jmZfntBqrCWVEdbW3XEPRa9GpPwC+k
-         0XbiblB9++9O8vNP7Fmh/NkVmIwn69iROLUIvW17t5DVvutcb30F2d1JbGCpysfGHrmI
-         wWdzKsutUy5fECwlQAgD1uWyJAy2NYjrTxBMl5CMad+/un+9F2rrG48uFJxdOotqBk5E
-         fvhw==
+        bh=kAapaizwDkinO3KVOW2bB2GwZSS0Ne6+YXNPHio3Jxc=;
+        b=fKQ24wyz+aL8EG9Ttomrz0bg6gMq5nYyPW5scUegjQLYwyJfLcJagIFpsnRfJPw0rM
+         joItpEeFP9h+tqhZ/ffjJLfUOxQvWcnrRWLg9vDvhUZ7elruaWqFPfPIFg1H7IC9WTeV
+         TWaQrV42LetvLLh5Q73CbGrSjMNhgKoXgG7O6bFUnD5yPaZC142V9FNE8Aed6IV7Ha89
+         KbEsWsfijWL8AkBA5N3a9SBbDhdPOm9PUubs8lsPFLnGBHiK5UsVeMBeKng3WUBXxWuz
+         Xx4s6yuY29XAOcTO6Ufqe9S3EHZyKqQvrL0k3TwAliqmI4mmoD9DzBJIfFwoUNhcAjwY
+         7wNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785487780; x=1786092580;
+        d=1e100.net; s=20251104; t=1785487786; x=1786092586;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=lw90wO5t99ejao3BX1gIeILEn6WuTY7Fx6rXmrY2A4M=;
-        b=hli5p3jiELmD1kYv3GUsTHFbPobnF6xoUwNQFxzHLczbgytWDiNYL9tBPFQYVPLGog
-         QSyg4vG3eyKLhgr3DysmhQ5dMJlm+glMwX3N72s4vksM2dJ7zT3aGZy0aefa4e9ZhoPn
-         CQE1dbey4ntf++rjmdh7Gp0D5JK5KZhM8mrfBik4+cZq0nhtm/eK7yqj2XA8FUGFWz0H
-         3hDl+mqBYXuqKp7peYASfxr0HVHHcwBXRsH6nUF7qzXVLhiU7M8DnRFeTNShgI277ngX
-         pw8YYmC86j5vJ5ChgikapTd8togvVDhmaI3uKSvcrN/bAkH6mOiYVGzNBFTDV7js5+bn
-         322Q==
-X-Gm-Message-State: AOJu0YyuJ/SmhwQDNa56zlMDmtITcmVUIOl1CgFMblwbWbeJ+HH7uDDd
-	3gHH5oKY6PDd7aeLSe0fRhuA8byVKRiOdBJMLRrIXsj5MioWHck3hoNlN6q9jg==
-X-Gm-Gg: AR+sD12QJsDEQAyMnv4Q+vztRV1c9JMV2zWa+1abqH5C30FEUFnbyxLELk7EKD4NB1T
-	on4bSIsYxIxUJ5fT+qeFvfKg5HZMp6anNpp75pcNe7HKae4twRvdX9KPPwTSP0Alz1WRLnhwchp
-	EUTgHAlWL9GFX+lmtSd60z0jVAK8G7yPjQeWPkOBayYbSLEqiao+lxsoZX1opxjYa5aTdNKG1K2
-	kYRZVu+42Ggk24LmyzURIC9Si1FxRMLPqKnOMUwNn9jBjXi6RwNb1D7xfIxQ+gvhwscV6VqGFk/
-	eyzKtlqFEo2SMaaqrXsP5PtwQR9ZuIsnU66tIPZeLViOBUhf6/RMBBfCw2j1Jcos0LiHBmKxZJT
-	kvqrjJmOnZlw9mTxPI5YmLbpvLnOHh0FIP9XwU1JtCSZ94CqWwBjs/6maKTjEBGX7NI9hIjh4dw
-	QX0798AtJ/mG4TAOob+jFCjAyGPw7mkurPzMm0jbuwZx3JSZl0sLTwkE53FS9mOKYWCL5Nc3Tka
-	vrxvWVae1+GYkdmNFgEjuCR3LWYj9jXmiiJZDGrN1pjlEr9Dh+mvPs=
-X-Received: by 2002:a17:903:2c0c:b0:2ca:73aa:b48f with SMTP id d9443c01a7336-2d046e99fdcmr11410495ad.35.1785487779751;
-        Fri, 31 Jul 2026 01:49:39 -0700 (PDT)
+        bh=kAapaizwDkinO3KVOW2bB2GwZSS0Ne6+YXNPHio3Jxc=;
+        b=Y1quSXleJbOGPvoJyKucobU125hCvYFiJQRP6ku39hUOwMZw1XaZGWx8IcZa3dTkEs
+         KJavQpdiWZhCjWfaLk3N+9ZeGW+MHRYSuqezDuau4G4UzAuOf8mepea1UOJ9uZK0X5OB
+         0mytTHslIVhdNuJOWme5si2c233KPpoGo3z3AmqDXT3/WY8MNKWb2gMxX9Y3Ni3T8Afz
+         QpBC9bJleourWaWM6QoUHGHnehpLpu0rbnrBKvNnjldvoRZvVOufV2puE9yD7bx2P16Q
+         uruSHVK98BVP+rz7uOX8CVJqhr3sKTmodIsbroMdgjmtfvLko4HLSRju9hGr+L9m5ilp
+         u+Tw==
+X-Gm-Message-State: AOJu0YxsySTRygFOiY8AvJn02ZiIhmzY16PlIDzbwyyZIoI31dm5cCPE
+	q73Dai6QnBesRKPCuRcY7qEa3JF991IdYPr1fTrgLAWZE9YTBGTpMNYNzu4xHQ==
+X-Gm-Gg: AR+sD11kFzIaZcfrIxmI9/5k73/a/dzZUfrvSu34ZgLRBigqHmuFDiXcHhkhJjUaKVK
+	PWXR+HVXtupc7epUANwtdbjUym1sLE7sk6JfsMbpt1eJGC40H3uwoCOZnauKBzVgFDKug5KF3gZ
+	gIIHue2cbNcduEzMGyRtP4psVH9cm2VB00lWR0N8JnseAF8t3m5QTOYMCeqIpvJx9oAaoluNUWi
+	FezIKx1+QIVqf+rNkmb4A4EHRBpviub2PFqCEnx61EPTuq7v0FzbiQZkNv1LNHlGxn7yXihg5CJ
+	IUds3kflaKpjbbpUABwCzjjcnvmlHLnBEmMOXvXmNmw0A58afqv4pHvIZbrruS0W30yr7qLLBQt
+	jvsnbpzVXAIoctA6C+mk4Ule7KOqvmV7hgVsPgNhr9Y5Dss4OxbyZsM94Pb65K2GCM/3e2gVpIt
+	oyhbHaX4uJ/sMZWUmMnJnLuPTvEP85mr016AsS1y/eGun3E1EhZs+QvTJrgiYoplanLTYG9FB9d
+	iGaGSMiJZK11ojAVGQIUnfwmN4/yKyrdLufwnbe5wUB
+X-Received: by 2002:a17:903:2ac3:b0:2ca:5a42:d8c5 with SMTP id d9443c01a7336-2d046f0318emr12343185ad.46.1785487785643;
+        Fri, 31 Jul 2026 01:49:45 -0700 (PDT)
 Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d04ae5abaesm2708425ad.27.2026.07.31.01.49.34
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d04ae5abaesm2708425ad.27.2026.07.31.01.49.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2026 01:49:39 -0700 (PDT)
+        Fri, 31 Jul 2026 01:49:45 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
 To: linux-cxl@vger.kernel.org
@@ -76,9 +76,9 @@ Cc: nvdimm@lists.linux.dev,
 	Junhee Park <jh9934.park@samsung.com>,
 	Heesoo Kim <habil.kim@samsung.com>,
 	Anisa Su <anisa.su@samsung.com>
-Subject: [PATCH v12 3/8] cxl/cdat: Gather DSMAS data for DCD partitions
-Date: Fri, 31 Jul 2026 01:48:08 -0700
-Message-ID: <20260731084901.1512819-4-anisa.su@samsung.com>
+Subject: [PATCH v12 4/8] cxl/events: Split event msgnum configuration from irq setup
+Date: Fri, 31 Jul 2026 01:48:09 -0700
+Message-ID: <20260731084901.1512819-5-anisa.su@samsung.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260731084901.1512819-1-anisa.su@samsung.com>
 References: <20260731084901.1512819-1-anisa.su@samsung.com>
@@ -92,207 +92,90 @@ Content-Transfer-Encoding: 8bit
 
 From: Ira Weiny <iweiny@kernel.org>
 
-Additional DCD partition (AKA region) information is contained in the
-DSMAS CDAT tables, including performance, read only, and shareable
-attributes.
+Dynamic Capacity Devices (DCD) require event interrupts to process
+memory addition or removal.  BIOS may have control over non-DCD event
+processing.  DCD interrupt configuration needs to be separate from
+memory event interrupt configuration.
 
-Match DCD partitions with DSMAS tables and store the meta data.
+Split cxl_event_config_msgnums() from irq setup in preparation for
+separate DCD interrupts configuration.
 
 Signed-off-by: Ira Weiny <iweiny@kernel.org>
-Co-developed-by: Anisa Su <anisa.su@samsung.com>
 Signed-off-by: Anisa Su <anisa.su@samsung.com>
 Tested-by: Wonjae Lee <wj28.lee@samsung.com>
 Tested-by: Junhee Park <jh9934.park@samsung.com>
 Tested-by: Heesoo Kim <habil.kim@samsung.com>
+Reviewed-by: Jonathan Cameron <jic23@kernel.org>
+Reviewed-by: Fan Ni <nifan.cxl@gmail.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Li Ming <ming.li@zohomail.com>
 ---
- drivers/cxl/core/cdat.c | 13 +++++++++++++
- drivers/cxl/core/hdm.c  |  1 +
- drivers/cxl/core/mbox.c | 22 ++++++++++++++++------
- drivers/cxl/cxlmem.h    |  2 ++
- include/cxl/cxl.h       |  4 ++++
- 5 files changed, 36 insertions(+), 6 deletions(-)
+ drivers/cxl/pci.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index 5c9f07262513..37136b2cf7e4 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -17,6 +17,7 @@ struct dsmas_entry {
- 	struct access_coordinate cdat_coord[ACCESS_COORDINATE_MAX];
- 	int entries;
- 	int qos_class;
-+	bool shareable;
- };
- 
- static u32 cdat_normalize(u16 entry, u64 base, u8 type)
-@@ -74,6 +75,7 @@ static int cdat_dsmas_handler(union acpi_subtable_headers *header, void *arg,
- 		return -ENOMEM;
- 
- 	dent->handle = dsmas->dsmad_handle;
-+	dent->shareable = dsmas->flags & ACPI_CDAT_DSMAS_SHAREABLE;
- 	dent->dpa_range.start = le64_to_cpu((__force __le64)dsmas->dpa_base_address);
- 	dent->dpa_range.end = le64_to_cpu((__force __le64)dsmas->dpa_base_address) +
- 			      le64_to_cpu((__force __le64)dsmas->dpa_length) - 1;
-@@ -266,15 +268,26 @@ static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
- 		bool found = false;
- 
- 		for (int i = 0; i < cxlds->nr_partitions; i++) {
-+			enum cxl_partition_mode mode = cxlds->part[i].mode;
- 			struct resource *res = &cxlds->part[i].res;
-+			u8 handle = cxlds->part[i].handle;
- 			struct range range = {
- 				.start = res->start,
- 				.end = res->end,
- 			};
- 
- 			if (range_contains(&range, &dent->dpa_range)) {
-+				if (mode == CXL_PARTMODE_DYNAMIC_RAM_1 &&
-+				    dent->handle != handle) {
-+					dev_warn(dev,
-+						 "Dynamic RAM perf mismatch; %pra (%u) vs %pra (%u)\n",
-+						 &range, handle, &dent->dpa_range,
-+						 dent->handle);
-+					continue;
-+				}
- 				update_perf_entry(dev, dent,
- 						  &cxlds->part[i].perf);
-+				cxlds->part[i].shareable = dent->shareable;
- 				found = true;
- 				break;
- 			}
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 0ef076c08ed2..7f63b86887f4 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -477,6 +477,7 @@ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
- 
- 		cxlds->part[i].perf.qos_class = CXL_QOS_CLASS_INVALID;
- 		cxlds->part[i].mode = part->mode;
-+		cxlds->part[i].handle = part->handle;
- 
- 		/* Require ordered + contiguous partitions */
- 		if (i) {
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index d79019fbd790..a6cdea9f4080 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1357,10 +1357,16 @@ static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part_a
- {
- 	u64 blk_size = le64_to_cpu(dev_part->block_size);
- 	u64 len = le64_to_cpu(dev_part->length);
-+	u32 handle = le32_to_cpu(dev_part->dsmad_handle);
- 
- 	part_array[index].start = le64_to_cpu(dev_part->base);
- 	part_array[index].size = le64_to_cpu(dev_part->decode_length);
- 	part_array[index].size *= CXL_CAPACITY_MULTIPLIER;
-+	if (handle & ~0xFF) {
-+		dev_warn(dev, "DSMAD handle 0x%x has non-zero reserved bits\n", handle);
-+		return -EINVAL;
-+	}
-+	part_array[index].handle = handle;
- 
- 	/* Check partitions are in increasing DPA order */
- 	if (index > 0) {
-@@ -1536,6 +1542,7 @@ int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
- 	/* Return 1st partition */
- 	dc_info->start = partitions[0].start;
- 	dc_info->size = partitions[0].size;
-+	dc_info->handle = partitions[0].handle;
- 	dev_dbg(dev, "Returning partition 0 %llu size %llu\n",
- 		dc_info->start, dc_info->size);
- 
-@@ -1543,7 +1550,8 @@ int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
- }
- EXPORT_SYMBOL_NS_GPL(cxl_dev_dc_identify, "CXL");
- 
--static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
-+static void add_part(struct cxl_dpa_info *info, u64 start, u64 size,
-+		     enum cxl_partition_mode mode, u8 handle)
- {
- 	int i = info->nr_partitions;
- 
-@@ -1555,6 +1563,7 @@ static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_pa
- 		.end = start + size - 1,
- 	};
- 	info->part[i].mode = mode;
-+	info->part[i].handle = handle;
- 	info->nr_partitions++;
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 9b320a2b6fe0..8e122de1876b 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -599,35 +599,31 @@ static int cxl_event_config_msgnums(struct cxl_memdev_state *mds,
+ 	return cxl_event_get_int_policy(mds, policy);
  }
  
-@@ -1572,9 +1581,9 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
- 	info->size = mds->total_bytes;
+-static int cxl_event_irqsetup(struct cxl_memdev_state *mds)
++static int cxl_event_irqsetup(struct cxl_memdev_state *mds,
++			      struct cxl_event_interrupt_policy *policy)
+ {
+ 	struct cxl_dev_state *cxlds = &mds->cxlds;
+-	struct cxl_event_interrupt_policy policy;
+ 	int rc;
  
- 	if (mds->partition_align_bytes == 0) {
--		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM);
-+		add_part(info, 0, mds->volatile_only_bytes, CXL_PARTMODE_RAM, 0);
- 		add_part(info, mds->volatile_only_bytes,
--			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM);
-+			 mds->persistent_only_bytes, CXL_PARTMODE_PMEM, 0);
- 		return 0;
- 	}
- 
-@@ -1584,9 +1593,9 @@ int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+-	rc = cxl_event_config_msgnums(mds, &policy);
+-	if (rc)
+-		return rc;
+-
+-	rc = cxl_event_req_irq(cxlds, policy.info_settings);
++	rc = cxl_event_req_irq(cxlds, policy->info_settings);
+ 	if (rc) {
+ 		dev_err(cxlds->dev, "Failed to get interrupt for event Info log\n");
  		return rc;
  	}
  
--	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM);
-+	add_part(info, 0, mds->active_volatile_bytes, CXL_PARTMODE_RAM, 0);
- 	add_part(info, mds->active_volatile_bytes, mds->active_persistent_bytes,
--		 CXL_PARTMODE_PMEM);
-+		 CXL_PARTMODE_PMEM, 0);
+-	rc = cxl_event_req_irq(cxlds, policy.warn_settings);
++	rc = cxl_event_req_irq(cxlds, policy->warn_settings);
+ 	if (rc) {
+ 		dev_err(cxlds->dev, "Failed to get interrupt for event Warn log\n");
+ 		return rc;
+ 	}
  
- 	return 0;
- }
-@@ -1638,7 +1647,8 @@ void cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
- 	info->size += dc_info.size;
- 	dev_dbg(dev, "Adding dynamic ram partition 1; %llu size %llu\n",
- 		dc_info.start, dc_info.size);
--	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_1);
-+	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_1,
-+		 dc_info.handle);
- }
- EXPORT_SYMBOL_NS_GPL(cxl_configure_dcd, "CXL");
+-	rc = cxl_event_req_irq(cxlds, policy.failure_settings);
++	rc = cxl_event_req_irq(cxlds, policy->failure_settings);
+ 	if (rc) {
+ 		dev_err(cxlds->dev, "Failed to get interrupt for event Failure log\n");
+ 		return rc;
+ 	}
  
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index a9782939d82b..eb1e6f7a2038 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -140,6 +140,7 @@ struct cxl_dpa_info {
- 	struct cxl_dpa_part_info {
- 		struct range range;
- 		enum cxl_partition_mode mode;
-+		u8 handle;
- 	} part[CXL_NR_PARTITIONS_MAX];
- 	int nr_partitions;
- };
-@@ -853,6 +854,7 @@ int cxl_dev_state_identify(struct cxl_memdev_state *mds);
- struct cxl_dc_partition_info {
- 	u64 start;
- 	u64 size;
-+	u8 handle;
- };
+-	rc = cxl_event_req_irq(cxlds, policy.fatal_settings);
++	rc = cxl_event_req_irq(cxlds, policy->fatal_settings);
+ 	if (rc) {
+ 		dev_err(cxlds->dev, "Failed to get interrupt for event Fatal log\n");
+ 		return rc;
+@@ -674,11 +670,15 @@ static int cxl_event_config(struct pci_host_bridge *host_bridge,
+ 		return -EBUSY;
+ 	}
  
- int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
-diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-index 87c2bd73df21..baf0132c70a3 100644
---- a/include/cxl/cxl.h
-+++ b/include/cxl/cxl.h
-@@ -141,11 +141,15 @@ enum cxl_partition_mode {
-  * @res: shortcut to the partition in the DPA resource tree (cxlds->dpa_res)
-  * @perf: performance attributes of the partition from CDAT
-  * @mode: operation mode for the DPA capacity, e.g. ram, pmem, dynamic...
-+ * @handle: DSMAS handle intended to represent this partition
-+ * @shareable: Is the partition sharable (from its CDAT DSMAS entry)
-  */
- struct cxl_dpa_partition {
- 	struct resource res;
- 	struct cxl_dpa_perf perf;
- 	enum cxl_partition_mode mode;
-+	u8 handle;
-+	bool shareable;
- };
++	rc = cxl_event_config_msgnums(mds, &policy);
++	if (rc)
++		return rc;
++
+ 	rc = cxl_mem_alloc_event_buf(mds);
+ 	if (rc)
+ 		return rc;
  
- #define CXL_NR_PARTITIONS_MAX 3
+-	rc = cxl_event_irqsetup(mds);
++	rc = cxl_event_irqsetup(mds, &policy);
+ 	if (rc)
+ 		return rc;
+ 
 -- 
 2.43.0
 
