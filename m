@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11BA146EF9B;
-	Thu, 30 Jul 2026 23:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4F61F94F;
+	Fri, 31 Jul 2026 00:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785452443; cv=none; b=au0/eBumGjtB0Sti9diEGw3l4VgWVXWFsJ7jGF8j9lbW7s89w8kRWy15k6lcYzwPIDplqnW0euXdHJG3npXXeNLqGiVF3Did30G3PimhLTz3WVjs5coXEzFGk/sXBHGjKXiN3EJam6S+sOGrv4z0XX0dWWiKTrq33ofF2CDdkxw=
+	t=1785456684; cv=none; b=kXQ4ZQl4gzZEfVAkjokHp/8UP5tZ47YLKVXTo3fpV8+IdxsI3rLPhdAfoo0hPnukPq8Zitg14dX5d4110tCTemWnuNjiif+R1K7A9XfQJoLNbDaT/18TSoJ659dOpnm3rCcCwop3ZqkPewMa6ypibi08UCKETnCL6qmPeslksgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785452443; c=relaxed/simple;
-	bh=uCYWKp4UStM+MGuse6L/bw9Ttb4tZx0GkNoTb28c1PQ=;
+	s=arc-20240116; t=1785456684; c=relaxed/simple;
+	bh=EkDpzVxoha4JSFgC4RJPD/ZleGAhmY6mLsUikmZJMss=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wm2SdI7BDdGHKGaEMoeaaaMoUIPz4rrZweB+ZpbLYmt6FqmUxZsBpc3haoedmj55zaDFIyBuSxUu4CLf6GbpQJcxtJ3SVDfwMdlF4cJuhl3nKqdn9UJQhk25q/amq1ghnkCIOUCg2wkn6Mu2v1cnkG3pIaaGP2k+A6y5P30vrR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BkCyq/vU; arc=none smtp.client-ip=198.175.65.11
+	 In-Reply-To:Content-Type; b=XoOuaUvRD8LS9VO3yKEUdhlL7mGw6Eezpdajuamt2mgu+Ug3VPFYx3ZNfjLcSlh1GvDXzv/gpLzS9BPuzuihz3j2lW+5FfqIHHy89pf56AB7e81VB0e44zHJXB2geDTxERqoR/9HRVAbsH2s2pdhA0s/o2flMIVSZcJ5XHSAHu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hXqh6sFy; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BkCyq/vU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hXqh6sFy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785452442; x=1816988442;
+  t=1785456683; x=1816992683;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=uCYWKp4UStM+MGuse6L/bw9Ttb4tZx0GkNoTb28c1PQ=;
-  b=BkCyq/vUFfBdtmJld5HpmDPuNLI2YbskONG/k7AyZ9uldljp0lhI+AhJ
-   fuzUWVJCc/TUkO/N8voBbMSeFyABAIwZrkh15gKlLt3j3aoAW+lcbsGFz
-   nS9vrRvRGITXXTUkHKA6d7fZVJA9DEG0FXbKSGZgHRRyiVT4OlNazvVdJ
-   l2bZkhSnaymswkx8aZsHzoRN4R1DCIcW68/pUIx5udWacio4kwTh5OgiE
-   qanexvHU3RY2zElekrPhqFycAs5CuGBa2yopvZM4lUcthPoSJo25y3r2j
-   v00dMl04isCqkioFH9zxisM671Do5ZatNIGOW/MyRNSf2HN2A5368oC7f
-   A==;
-X-CSE-ConnectionGUID: aKx7jmOwSgm9KRFFd6bq8A==
-X-CSE-MsgGUID: z+DIgYAMT3yocQsMOPMrnQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="96440830"
+  bh=EkDpzVxoha4JSFgC4RJPD/ZleGAhmY6mLsUikmZJMss=;
+  b=hXqh6sFyPtrh/ZO6OThD+sxu0GG5TFnzoUyzFT2QQSL1jggjGiD5shXd
+   RfjUFjY2AH3voupQDiWhbrX80gxEYk9ykdrfFjrfMgvvOIMlaAViDd+ui
+   jApyYHSUiZmjr+zOHF3zCmGkNpTkSEuAOZpfH1+OzoJzSeUzZ5BNE4UNW
+   AphIPFWhTUVTyu5R3lY81tqpAcUbZY1XAo2MncznDmuyyKZMUBvhsphde
+   qz8RDpE5Nss6sRpr69bWb7CERHmt9pceQ4EPnN/Ys9fV6zq6SQMBAaQZ3
+   JS50F4W3jQBvUsNI/r5II7hn53yKPUWga9ntAQ6kxMMYVWDGFw/4fKtuO
+   Q==;
+X-CSE-ConnectionGUID: Indo9C8yTheyV3WW3M/Y6A==
+X-CSE-MsgGUID: ffSAmmKgSvmMXevRn4Q8sA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="97599442"
 X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
-   d="scan'208";a="96440830"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 16:00:41 -0700
-X-CSE-ConnectionGUID: yGU3RCGTRp6+wnL3vF1C6g==
-X-CSE-MsgGUID: dWKxWgzcRL+/itCZyFc73A==
+   d="scan'208";a="97599442"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 17:11:22 -0700
+X-CSE-ConnectionGUID: eIbBzUtmTTW0rJR6FUfaqA==
+X-CSE-MsgGUID: hDotel4UShyy9Gq1s6efsA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
-   d="scan'208";a="262368533"
+   d="scan'208";a="285039298"
 Received: from rfrazer-mobl3.amr.corp.intel.com (HELO [10.125.111.248]) ([10.125.111.248])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 16:00:39 -0700
-Message-ID: <6d0c2109-6e02-4df8-a732-557e0d6e81df@intel.com>
-Date: Thu, 30 Jul 2026 16:00:38 -0700
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 17:11:21 -0700
+Message-ID: <fa12f874-c594-4cdb-94ea-4a53aad11c8f@intel.com>
+Date: Thu, 30 Jul 2026 17:11:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,88 +52,96 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/9] perf/cxl: Unfreeze counters after handling an
- overflow interrupt
-To: Jonathan Cameron <jic23@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2 9/9] perf/cxl: Avoid cpumask_of(-1) when no CPU is
+ assigned
+To: Jonathan Cameron <jic23@kernel.org>
 Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
  will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
- sashiko-bot@kernel.org
+ sashiko-bot@kernel.org, Robin Murphy <robin.murphy@arm.com>
 References: <20260729145555.3919550-1-dave.jiang@intel.com>
- <20260729145555.3919550-7-dave.jiang@intel.com>
- <3dc5c366-652f-4977-84a1-6e5a921a74cc@arm.com>
- <20260730195313.3e2c0b8e@jic23-huawei>
+ <20260729145555.3919550-10-dave.jiang@intel.com>
+ <20260729201446.62732044@jic23-huawei>
 Content-Language: en-US
 From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260730195313.3e2c0b8e@jic23-huawei>
+In-Reply-To: <20260729201446.62732044@jic23-huawei>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 7/30/26 11:53 AM, Jonathan Cameron wrote:
-> On Thu, 30 Jul 2026 13:04:17 +0100
-> Robin Murphy <robin.murphy@arm.com> wrote:
+On 7/29/26 12:14 PM, Jonathan Cameron wrote:
+> On Wed, 29 Jul 2026 07:55:55 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 > 
->> On 29/07/2026 3:55 pm, Dave Jiang wrote:
->>> The counters are configured with Freeze on Overflow, so when any counter
->>> overflows the CPMU freezes every counter in the block (CXL r4.0
->>> §8.2.7.2.1). cxl_pmu_irq() reads the overflowed counters and clears the
->>> overflow status, but never writes the CPMU Freeze register to unfreeze,
->>> so all counters stay frozen until the next pmu_enable() and events in
->>> that window are silently lost.
->>>
->>> Unfreeze after clearing the overflow status so counting resumes.
->>>
->>> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
->>> Reported-by: sashiko-bot@kernel.org
->>> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
->>> Assisted-by: Claude:claude-opus-4-8
->>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>> ---
->>>   drivers/perf/cxl_pmu.c | 9 +++++++++
->>>   1 file changed, 9 insertions(+)
->>>
->>> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
->>> index 8b89db8f4d68..52e78a6e0960 100644
->>> --- a/drivers/perf/cxl_pmu.c
->>> +++ b/drivers/perf/cxl_pmu.c
->>> @@ -804,6 +804,15 @@ static irqreturn_t cxl_pmu_irq(int irq, void *data)
->>>   
->>>   	writeq(overflowed, base + CXL_PMU_OVERFLOW_REG);
->>>   
->>> +	/*
->>> +	 * Counters are configured to freeze on overflow (Freeze on Overflow),
->>> +	 * which freezes every counter in the CPMU. Once the overflowed counters
->>> +	 * have been read and their status cleared, unfreeze so counting resumes;
->>> +	 * otherwise all counters stay frozen until the next pmu_enable() and
->>> +	 * events are silently lost.
->>> +	 */
->>> +	writeq(0, base + CXL_PMU_FREEZE_REG);  
->>
->> Does this unconditionally unfreeze _all_ counters, including any which 
->> might have have overflowed since the read of CXL_PMU_OVERFLOW_REG and 
->> thus have not been handled yet? Or are we hoping that the "global 
->> freeze" behaviour prevents that from being able to happen?
+>> cpumask_show() feeds info->on_cpu straight into cpumask_of() for the
+>> world-readable cpumask sysfs attribute. on_cpu is -1 before the first
+>> hotplug online callback and transiently in cxl_pmu_offline_cpu() before a
+>> new target is chosen. cpumask_of(-1) treats the CPU number as unsigned and
+>> does out-of-bounds pointer arithmetic in get_cpu_mask(), so a concurrent
+>> read of the attribute dereferences a wild pointer and can fault -- a local
+>> denial of service.
 >>
 > 
-> Yes global freeze should stop world on first one overflowing - if two go together
-> we should see them both in the handler.
+> I'm not keen on the solution here. 
 > 
->> Furthermore, what if an overflow happens to occur just as 
->> cxl_pmu_disable() is intentionally freezing all the counters, such that 
->> by the time we get here, unfreezing them would be the wrong thing to do?
+> The transient state is ugly anyway. We can just move setting it to -1 into
+> the dummy code that deals with that well known case of you have CPUs online
+> and code is still running.
 > 
-> Hmm. That may indeed be bad.
+> The init case looks like a false positive to me.  But maybe I'm missing stuff.
+> The perf registration that surfaces the sysfs happens after hotplug handler is
+> added and I believe that synchronously runs it for CPUs that are already up.
+> Given we are running code (and CXL stuff isn't super early) something will
+> be up so it won't remain -1 by the time of use.
+> 
+> Can we just use the generic stuff?  Maybe need Robin's stuff to add init / exit
+> per driver calls. 
+> https://lore.kernel.org/linux-arm-kernel/cover.1784911757.git.robin.murphy@arm.com/
 
-I can add a bool as a en/disable state in info to guard against that. > 
+I'll drop this patch for now.
+
+DJ
+
+> 
+> In general, I'd like Robin to take a quick look at the more generic perf
+> parts of this series given he has clearly been deep in this stuff a lot
+> more recently than me :)
+> 
+> Jonathan
+> 
+>> Read on_cpu once and emit an empty mask when it is negative.
 >>
->> Thanks,
->> Robin.
+>> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+>> Reported-by: sashiko-bot@kernel.org
+>> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
+>> Assisted-by: Claude:claude-opus-4-8
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>  drivers/perf/cxl_pmu.c | 11 ++++++++++-
+>>  1 file changed, 10 insertions(+), 1 deletion(-)
 >>
->>> +
->>>   	return IRQ_HANDLED;
->>>   }
->>>     
->>
+>> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+>> index f42238b2b6b0..6aad381c0376 100644
+>> --- a/drivers/perf/cxl_pmu.c
+>> +++ b/drivers/perf/cxl_pmu.c
+>> @@ -501,8 +501,17 @@ static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
+>>  			    char *buf)
+>>  {
+>>  	struct cxl_pmu_info *info = dev_get_drvdata(dev);
+>> +	int cpu = READ_ONCE(info->on_cpu);
+>>  
+>> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(info->on_cpu));
+>> +	/*
+>> +	 * on_cpu is -1 before the first online callback and transiently during
+>> +	 * cxl_pmu_offline_cpu(). cpumask_of(-1) computes an out-of-bounds
+>> +	 * pointer, so report an empty mask instead.
+>> +	 */
+>> +	if (cpu < 0)
+>> +		return sysfs_emit(buf, "\n");
+>> +
+>> +	return cpumap_print_to_pagebuf(true, buf, cpumask_of(cpu));
+>>  }
+>>  static DEVICE_ATTR_RO(cpumask);
+>>  
 > 
 
