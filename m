@@ -1,63 +1,63 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA00D3D8103
-	for <linux-cxl@vger.kernel.org>; Fri, 31 Jul 2026 08:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0F63D9DB1
+	for <linux-cxl@vger.kernel.org>; Fri, 31 Jul 2026 08:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785487809; cv=none; b=fljgEKAfr2ssgI35dLHqAkm2BWmPEHFAo/uu7xWdvBg0i5i+ZkmbdPnPf9f8tRn9SwtpFzkmL5qG1ahfsuww8u037XtC5HDHxw5mH2JmtjA+HACDukVCj2Dkjhr8WGGuccchFPB0pY1T+bDnjEBYZ7D2gAdoD4H5vqWLWjKmC+0=
+	t=1785487815; cv=none; b=OZSjbrLgXUH5fPQcSdnM22RO1R6957Rpx2BRKsPnDZ9xppzhzUp6o1QBjE3tWALCONSMOHTZ6wInbdrnvyWwzLD5iR7w3A20S8b5F0SsMed9Pr+8pydHJPrsalXsY3Ml+Rvc5o6f3W+hdFNGerlZerHu1MclJCrW+3LMcAWO6eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785487809; c=relaxed/simple;
-	bh=btNatOLsQqoViiqylOQnAJqclEYWr8c/tMJjbquJJaU=;
+	s=arc-20240116; t=1785487815; c=relaxed/simple;
+	bh=2gbuA1AjlN179ZHb25jNrxxQxfaAVzkCubGgIeg8DsI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mkf5FbYCRNCMVptyr3jpL3gotmy2XnlcS3pBo5M0pAbl9ni4jT13bps/PttlJ2soynIRP/rjBgabt+ScG8x81qE9X4LGzTd9MmYTOSrlEiPrPlC0jKMDqamIpz45xXqfx/Erjw9VMvMg9ZFBpAm8H515nFWff+yeqDkr2tMo7+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nza1ObUJ; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=uJQ/SxWRKMRGs8YSje9kkqWrO6jlSdQGIlfcDqQX7IO6iIO/dDVLxK3AKCyv+csUfVKmMbtbDM+e9p6BE7CJ8SaAdvx/EyUmcBwTC97Irw9cDIhi9/3aWePnX/U7nzDmFo30U2D/LcpAncIfwbIlKmsP4CwX0jqJqE3owUXvVyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DjEgWDmg; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nza1ObUJ"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2cace91f112so7528885ad.0
-        for <linux-cxl@vger.kernel.org>; Fri, 31 Jul 2026 01:50:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjEgWDmg"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2cc61541f8cso18829415ad.0
+        for <linux-cxl@vger.kernel.org>; Fri, 31 Jul 2026 01:50:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785487806; x=1786092606; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1785487812; x=1786092612; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Rwe/gV63+b/gEszupNwAxf6rsJfvimLAKp08K8RKoKI=;
-        b=Nza1ObUJiSUvboi3u+LaCS1HZFqE11cmC0WLr+qMXygNs9VtmcGQlBxQMjB1UNU0Vd
-         te/5BeCjHKH6IlML2+PHSbyuw0V4ZwLKTY47szF07yiRKnJmDBGNRVIN8xMwFC4Memx9
-         DhbPDLqJlMzu8Rzo7vza2nK2GB4NhLiHAI/uaYp/3/AjVG9V1z3pxr4OZO8eHGvr4lwi
-         iay8GCH+V0mVDXK897KlwzR0BFRBTz8LSVQQ9TxgTxpKrdI7ETRa+3jsrgz82Sso06Zn
-         5ZqepiUl5ij6wUhc7XSRiZRPnaCpZscL7hn48ddfdRwzmsXia3YJFtiHYox2j4kJ3pUa
-         sBNA==
+        bh=z8WEQGrgrO2scS8Gd9nnQU/D+8yl6XUvFmWxuOwntXk=;
+        b=DjEgWDmg1HNXGCGm+y8hORXMNoW5FHf6n79jtYO6JQVIEmekXkEMCZAiyTNTcp5Nkf
+         xdzDZwrxeBalReUJqTxjH7PfUuM4lWWfh0gA+5d5KQlD7tvcHoJuymLBxhgjqPBkUMKG
+         bn1vlG0FGpfFkQB2mf4Ymnii5iwToUN6S2z9sUf4rnkJQ+eX8BZChzxiGPdp8HIs+79U
+         5vLUkOvN5eLZtqoBSvkRZUw99k6u4nx1QU5yK1ux/Ecai8S96WAgas/9E3un4BRi6o5n
+         4H7io+7GvhMh9IQgs+vMaIiSKD72s3poC2WWXASbXkoOJV7jF0n0zg0jJy/2OXgX6vPe
+         pucQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785487806; x=1786092606;
+        d=1e100.net; s=20251104; t=1785487812; x=1786092612;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Rwe/gV63+b/gEszupNwAxf6rsJfvimLAKp08K8RKoKI=;
-        b=RRL0JCFCSSSH/KXDm3r6yUd3BD+LIS4YZtH3vGqTKQSs16mP9P8tMg4V+JeSeX6Eh1
-         SYHDJjaHZTRjNQn3xNxW6KSckIC5gzO9vz6mm5LRgnUnWDhGxx6PUMm8WnV2sAFZHon4
-         XFv8NsSvPMFGnjTAjIJ3QRjrPtRYEZt1Nai+anOdF107/fJm2e5O6UBNhR507W4K95i7
-         CU5yix9om3Ic8RKfEZMv8ux9HWyNm1ZFWFUd5Avkg21ZzpxlpnTFbqrNfcmQsNpiA11X
-         5WypoXUfGx0Gz6PSybFh6Y+8t1xGTRdGs/+PIDJ6QGxfyDa2O357ZgrXds1+MfqPG2Bq
-         IFhQ==
-X-Gm-Message-State: AOJu0YwgFSJTZxpoc7hYCR0g+ceeBdtDq64RREhFORSH4HW/cujpS6oX
-	djHT0bc+oXLJDtOQtPPNBxfoQxKxdZCfrHzlK06lYVM86p2HAU3/CBOtcafbnw==
-X-Gm-Gg: AR+sD10RwSlSJZD2rtxiOCsP7TgLzpxlIxP9yLrKcyBrDot22/2WQPq8w96NfIalznw
-	xuTrbeuf9qycM9A/Pundtb8cqngdHDz6VuZ9tWgvH9CV7rX30U6VsJhZapoum5rAKWZUi+99b/e
-	y/o2m6ootQr/SRwB7usWsXCvIRAj+HDHXZ95bv0bCSRzb+ySXO7tSoLm5IqYwXvZQW1ID3KTiu3
-	K4uPr8ZfJZuL0Hld7q0VmUvmidHuSnEcHBgBH6hYyYt1iVftVtA76ZtlxZTqeu4SqCiccgboCjL
-	LsgVsdAmSAk2sl+Z+ItwzvkmtCYll2h5O6HCOMkKN7rdYzf6N0h10tCi5eJh7oiVnDS7qCYut3X
-	Y2hUec4uDlMaTuYGej9Xn6YVfXSIsRLsrJf0DVE71eAR9siz1P8v7eWi6kclxd2OInzPUlME9kn
-	yYpCRG2bVj26QTNgFMxueEc4xElDmHLZuJLzSoKchYeYg56OMDF7l7M1BM+zuVgAfFSKQ5nY6yo
-	N0OKyW9F2jMxbCgN5PrJU9GiyQRX2mEoLontaj08eXe
-X-Received: by 2002:a17:903:38c4:b0:2c6:a172:55a6 with SMTP id d9443c01a7336-2d046d812ebmr13117815ad.9.1785487805687;
-        Fri, 31 Jul 2026 01:50:05 -0700 (PDT)
+        bh=z8WEQGrgrO2scS8Gd9nnQU/D+8yl6XUvFmWxuOwntXk=;
+        b=EOVL47GJrJxLK8ieVX3KkksK45j49lmGf1z3agP1FHiyLY9P1EXVyzWN9DJ6LqX1PN
+         B1nJwbK+SJ/QutpiBODXue+Hw0UsY6VGjTcCvG6Ke/wyHzBcavYvdcmBqSju9GksdpjK
+         eaAfkryQvd9E1yvqKHd1GWkXUOmrG4MZw0HfMQ4L/fQssgMRWcNCXHxp5nRdCelHrfgG
+         eBJO9XqpdpcMksvFsP96MmW+gGHOSdMYkOvGWlZg3vKfm4worPdUdCUuO19/7oM8dwv2
+         Cm+ZEpvflWmWLG2y0Chz4nQEo9MXb+zxrTeHXaCGG7v1vox/iCu/y1D1GaU/QqInwY1O
+         +BIQ==
+X-Gm-Message-State: AOJu0YxKTK8hw2VAN4RTjJh+RxcYqLgi7rLOQgHwjPmDNYfqMfwOFVtp
+	ptw5Zjsq4pMyOoNXaU3bAjtaFHgUJQlyXOjhuuvmT+EcPrEp7jqBYL2Y39o4kQ==
+X-Gm-Gg: AR+sD12AMDZ3TBbZmkzhFmB9BGoR4AjIUHvy0B13DFAfQfgVBrvBxEs9BheZ33tELKs
+	gMR/HHdUkGbAlTNZnTNGRFlmu7H3y63XmX3JHeSnDLDhI3nBuap531d/V32V2NWwWtZjT8f7ep3
+	8qiHmJCVsgVlzul5kFu4w7jA2rCfzI0XQoQJ32wDuDZtITayb70mJi5X4VRFGY5eJkoAtBr611b
+	rIvZkxQvwAvWuCeerwGY0ZV7hgnulmBt2fwhl9cWSzWQaA6xzpEqU6Mn66G6mlBTYkQgPGJx5qb
+	aEUGIbPllXFW1IqTlIovIbrXjfTGuzbF3AnPufgn4Mb0kH/icVXzWJG5+lFB7ZzFzv3tHV8/Dxe
+	8ew2B7p5IYbMbuS3ViltfjunbhmoejlJyi2Go0y2OtPR5+CQ2U4BpLl+RoUoiypjAiuwuqrpSUq
+	2OM/olb0k2xxbeUyCVHZuz9k35b06OxvOktpXNix+bOhl0PLh52+4hrhpiD9oaWRRU0ISAtGe3B
+	F/ounh3U06xb937vzfDubzo2TFH+0L8hy9vb1QDAh3v
+X-Received: by 2002:a17:903:1786:b0:2cf:70d2:da7c with SMTP id d9443c01a7336-2d047d7921fmr9860715ad.12.1785487811786;
+        Fri, 31 Jul 2026 01:50:11 -0700 (PDT)
 Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d04ae5abaesm2708425ad.27.2026.07.31.01.50.00
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d04ae5abaesm2708425ad.27.2026.07.31.01.50.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2026 01:50:05 -0700 (PDT)
+        Fri, 31 Jul 2026 01:50:11 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
 To: linux-cxl@vger.kernel.org
@@ -76,9 +76,9 @@ Cc: nvdimm@lists.linux.dev,
 	Junhee Park <jh9934.park@samsung.com>,
 	Heesoo Kim <habil.kim@samsung.com>,
 	Anisa Su <anisa.su@samsung.com>
-Subject: [PATCH v12 7/8] cxl/core: Return endpoint decoder information from region search
-Date: Fri, 31 Jul 2026 01:48:12 -0700
-Message-ID: <20260731084901.1512819-8-anisa.su@samsung.com>
+Subject: [PATCH v12 8/8] cxl/core: Enforce partition order/simplify partition calls
+Date: Fri, 31 Jul 2026 01:48:13 -0700
+Message-ID: <20260731084901.1512819-9-anisa.su@samsung.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260731084901.1512819-1-anisa.su@samsung.com>
 References: <20260731084901.1512819-1-anisa.su@samsung.com>
@@ -92,128 +92,190 @@ Content-Transfer-Encoding: 8bit
 
 From: Ira Weiny <iweiny@kernel.org>
 
-cxl_dpa_to_region() finds the region from a <DPA, device> tuple.
-The search involves finding the device endpoint decoder as well.
+Device partitions have an implied order which is made more complex by
+the addition of a dynamic partition
 
-Dynamic capacity extent processing uses the endpoint decoder HPA
-information to calculate the HPA offset.  In addition, well behaved
-extents should be contained within an endpoint decoder.
-
-Return the endpoint decoder found to be used in subsequent DCD code.
+Remove the ram special case information calls in favor of generic calls
+with a check ahead of time to ensure the preservation of the implied
+partition order.
 
 Signed-off-by: Ira Weiny <iweiny@kernel.org>
 Signed-off-by: Anisa Su <anisa.su@samsung.com>
 Tested-by: Wonjae Lee <wj28.lee@samsung.com>
 Tested-by: Junhee Park <jh9934.park@samsung.com>
 Tested-by: Heesoo Kim <habil.kim@samsung.com>
-Reviewed-by: Jonathan Cameron <jic23@kernel.org>
-Reviewed-by: Fan Ni <nifan.cxl@gmail.com>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 ---
- drivers/cxl/core/core.h   | 6 ++++--
- drivers/cxl/core/mbox.c   | 2 +-
- drivers/cxl/core/memdev.c | 4 ++--
- drivers/cxl/core/region.c | 8 +++++++-
- 4 files changed, 14 insertions(+), 6 deletions(-)
+ drivers/cxl/core/hdm.c    | 11 ++++++++++-
+ drivers/cxl/core/memdev.c | 32 +++++++++-----------------------
+ drivers/cxl/cxlmem.h      |  9 +++------
+ drivers/cxl/mem.c         |  2 +-
+ 4 files changed, 23 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 07555ae63859..e4bd220faa92 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -47,7 +47,8 @@ int cxl_decoder_detach(struct cxl_region *cxlr,
- int cxl_region_init(void);
- void cxl_region_exit(void);
- int cxl_get_poison_by_endpoint(struct cxl_port *port);
--struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa);
-+struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa,
-+				     struct cxl_endpoint_decoder **cxled);
- u64 cxl_dpa_to_hpa(struct cxl_region *cxlr, const struct cxl_memdev *cxlmd,
- 		   u64 dpa);
- int devm_cxl_add_dax_region(struct cxl_region *cxlr);
-@@ -61,7 +62,8 @@ static inline u64 cxl_dpa_to_hpa(struct cxl_region *cxlr,
- 	return ULLONG_MAX;
- }
- static inline
--struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
-+struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa,
-+				     struct cxl_endpoint_decoder **cxled)
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 7f63b86887f4..d87dfbcac6a5 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -457,6 +457,7 @@ static const char *cxl_mode_name(enum cxl_partition_mode mode)
+ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
  {
- 	return NULL;
- }
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index a6cdea9f4080..b18ea02ed2e6 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -969,7 +969,7 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
- 		guard(rwsem_read)(&cxl_rwsem.dpa);
+ 	struct device *dev = cxlds->dev;
++	int i;
  
- 		dpa = le64_to_cpu(evt->media_hdr.phys_addr) & CXL_DPA_MASK;
--		cxlr = cxl_dpa_to_region(cxlmd, dpa);
-+		cxlr = cxl_dpa_to_region(cxlmd, dpa, NULL);
- 		if (cxlr) {
- 			u64 cache_size = cxlr->params.cache_size;
+ 	guard(rwsem_write)(&cxl_rwsem.dpa);
+ 
+@@ -469,9 +470,17 @@ int cxl_dpa_setup(struct cxl_dev_state *cxlds, const struct cxl_dpa_info *info)
+ 		return 0;
+ 	}
+ 
++	/* Verify partitions are in expected order. */
++	for (i = 1; i < info->nr_partitions; i++) {
++		if (info->part[i].mode < info->part[i - 1].mode) {
++			dev_err(dev, "Partition order mismatch\n");
++			return -EINVAL;
++		}
++	}
++
+ 	cxlds->dpa_res = DEFINE_RES_MEM(0, info->size);
+ 
+-	for (int i = 0; i < info->nr_partitions; i++) {
++	for (i = 0; i < info->nr_partitions; i++) {
+ 		const struct cxl_dpa_part_info *part = &info->part[i];
+ 		int rc;
  
 diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index 33a3d2e7b13a..1565a5cf0f32 100644
+index 1565a5cf0f32..136443bffcb8 100644
 --- a/drivers/cxl/core/memdev.c
 +++ b/drivers/cxl/core/memdev.c
-@@ -317,7 +317,7 @@ int cxl_inject_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
- 	if (rc)
- 		return rc;
+@@ -77,20 +77,12 @@ static ssize_t label_storage_size_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(label_storage_size);
  
--	cxlr = cxl_dpa_to_region(cxlmd, dpa);
-+	cxlr = cxl_dpa_to_region(cxlmd, dpa, NULL);
- 	if (cxlr)
- 		dev_warn_once(cxl_mbox->host,
- 			      "poison inject dpa:%#llx region: %s\n", dpa,
-@@ -386,7 +386,7 @@ int cxl_clear_poison_locked(struct cxl_memdev *cxlmd, u64 dpa)
- 	if (rc)
- 		return rc;
+-static resource_size_t cxl_ram_size(struct cxl_dev_state *cxlds)
+-{
+-	/* Static RAM is only expected at partition 0. */
+-	if (cxlds->part[0].mode != CXL_PARTMODE_RAM)
+-		return 0;
+-	return resource_size(&cxlds->part[0].res);
+-}
+-
+ static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
+ 			     char *buf)
+ {
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+-	unsigned long long len = cxl_ram_size(cxlds);
++	unsigned long long len = cxl_part_size(cxlds, CXL_PARTMODE_RAM);
  
--	cxlr = cxl_dpa_to_region(cxlmd, dpa);
-+	cxlr = cxl_dpa_to_region(cxlmd, dpa, NULL);
- 	if (cxlr)
- 		dev_warn_once(cxl_mbox->host,
- 			      "poison clear dpa:%#llx region: %s\n", dpa,
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 1e211542b6b6..ec5e5b7090cf 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3012,6 +3012,7 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port)
- struct cxl_dpa_to_region_context {
- 	struct cxl_region *cxlr;
- 	u64 dpa;
-+	struct cxl_endpoint_decoder *cxled;
+ 	return sysfs_emit(buf, "%#llx\n", len);
+ }
+@@ -103,7 +95,7 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+-	unsigned long long len = cxl_pmem_size(cxlds);
++	unsigned long long len = cxl_part_size(cxlds, CXL_PARTMODE_PMEM);
+ 
+ 	return sysfs_emit(buf, "%#llx\n", len);
+ }
+@@ -426,10 +418,11 @@ static struct attribute *cxl_memdev_attributes[] = {
+ 	NULL,
  };
  
- static int __cxl_dpa_to_region(struct device *dev, void *arg)
-@@ -3045,11 +3046,13 @@ static int __cxl_dpa_to_region(struct device *dev, void *arg)
- 			dev_name(dev));
- 
- 	ctx->cxlr = cxlr;
-+	ctx->cxled = cxled;
- 
- 	return 1;
- }
- 
--struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
-+struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa,
-+				     struct cxl_endpoint_decoder **cxled)
+-static struct cxl_dpa_perf *to_pmem_perf(struct cxl_dev_state *cxlds)
++static struct cxl_dpa_perf *part_perf(struct cxl_dev_state *cxlds,
++				      enum cxl_partition_mode mode)
  {
- 	struct cxl_dpa_to_region_context ctx;
- 	struct cxl_port *port = cxlmd->endpoint;
-@@ -3063,6 +3066,9 @@ struct cxl_region *cxl_dpa_to_region(const struct cxl_memdev *cxlmd, u64 dpa)
- 	if (cxl_num_decoders_committed(port))
- 		device_for_each_child(&port->dev, &ctx, __cxl_dpa_to_region);
+ 	for (int i = 0; i < cxlds->nr_partitions; i++)
+-		if (cxlds->part[i].mode == CXL_PARTMODE_PMEM)
++		if (cxlds->part[i].mode == mode)
+ 			return &cxlds->part[i].perf;
+ 	return NULL;
+ }
+@@ -440,7 +433,7 @@ static ssize_t pmem_qos_class_show(struct device *dev,
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
  
-+	if (cxled)
-+		*cxled = ctx.cxled;
-+
- 	return ctx.cxlr;
+-	return sysfs_emit(buf, "%d\n", to_pmem_perf(cxlds)->qos_class);
++	return sysfs_emit(buf, "%d\n", part_perf(cxlds, CXL_PARTMODE_PMEM)->qos_class);
  }
  
+ static struct device_attribute dev_attr_pmem_qos_class =
+@@ -452,20 +445,13 @@ static struct attribute *cxl_memdev_pmem_attributes[] = {
+ 	NULL,
+ };
+ 
+-static struct cxl_dpa_perf *to_ram_perf(struct cxl_dev_state *cxlds)
+-{
+-	if (cxlds->part[0].mode != CXL_PARTMODE_RAM)
+-		return NULL;
+-	return &cxlds->part[0].perf;
+-}
+-
+ static ssize_t ram_qos_class_show(struct device *dev,
+ 				  struct device_attribute *attr, char *buf)
+ {
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+ 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+ 
+-	return sysfs_emit(buf, "%d\n", to_ram_perf(cxlds)->qos_class);
++	return sysfs_emit(buf, "%d\n", part_perf(cxlds, CXL_PARTMODE_RAM)->qos_class);
+ }
+ 
+ static struct device_attribute dev_attr_ram_qos_class =
+@@ -501,7 +487,7 @@ static umode_t cxl_ram_visible(struct kobject *kobj, struct attribute *a, int n)
+ {
+ 	struct device *dev = kobj_to_dev(kobj);
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+-	struct cxl_dpa_perf *perf = to_ram_perf(cxlmd->cxlds);
++	struct cxl_dpa_perf *perf = part_perf(cxlmd->cxlds, CXL_PARTMODE_RAM);
+ 
+ 	if (a == &dev_attr_ram_qos_class.attr &&
+ 	    (!perf || perf->qos_class == CXL_QOS_CLASS_INVALID))
+@@ -520,7 +506,7 @@ static umode_t cxl_pmem_visible(struct kobject *kobj, struct attribute *a, int n
+ {
+ 	struct device *dev = kobj_to_dev(kobj);
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
+-	struct cxl_dpa_perf *perf = to_pmem_perf(cxlmd->cxlds);
++	struct cxl_dpa_perf *perf = part_perf(cxlmd->cxlds, CXL_PARTMODE_PMEM);
+ 
+ 	if (a == &dev_attr_pmem_qos_class.attr &&
+ 	    (!perf || perf->qos_class == CXL_QOS_CLASS_INVALID))
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 666e01326dae..77f6417a1de7 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -412,14 +412,11 @@ struct cxl_security_state {
+ 
+ #define CXL_MAX_DC_PARTITIONS 8
+ 
+-static inline resource_size_t cxl_pmem_size(struct cxl_dev_state *cxlds)
++static inline resource_size_t cxl_part_size(struct cxl_dev_state *cxlds,
++					    enum cxl_partition_mode mode)
+ {
+-	/*
+-	 * Static PMEM may be at partition index 0 when there is no static RAM
+-	 * capacity.
+-	 */
+ 	for (int i = 0; i < cxlds->nr_partitions; i++)
+-		if (cxlds->part[i].mode == CXL_PARTMODE_PMEM)
++		if (cxlds->part[i].mode == mode)
+ 			return resource_size(&cxlds->part[i].res);
+ 	return 0;
+ }
+diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
+index 798e5c369cfc..9c4ef401cbad 100644
+--- a/drivers/cxl/mem.c
++++ b/drivers/cxl/mem.c
+@@ -139,7 +139,7 @@ static int cxl_mem_probe(struct device *dev)
+ 		return -ENXIO;
+ 	}
+ 
+-	if (cxl_pmem_size(cxlds) && IS_ENABLED(CONFIG_CXL_PMEM)) {
++	if (cxl_part_size(cxlds, CXL_PARTMODE_PMEM) && IS_ENABLED(CONFIG_CXL_PMEM)) {
+ 		rc = devm_cxl_add_nvdimm(dev, parent_port, cxlmd);
+ 		if (rc) {
+ 			if (rc == -ENODEV)
 -- 
 2.43.0
 
