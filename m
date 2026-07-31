@@ -1,107 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC69745DF4B;
-	Fri, 31 Jul 2026 23:28:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08ACADDCD;
+	Fri, 31 Jul 2026 23:37:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785540523; cv=none; b=YaBzhuRBRPDVsNT+QT0ddjo041g886mxenn2Vcp+iBsPnJ0s2H/jsFEBmCuNxyN2FteMD85uGy87aGW3CpKsD+LcXu6JjZqmledMcOWPcm+RBMo90nU3E/eFrOKx7TbB0lnNicxyyZobvH875ura7U11ykFuZkhOuz5OW3cBFQI=
+	t=1785541047; cv=none; b=RtyVTNpFfkCMNrDxf/qv2icZuEnq4MgKmAsw1dvqtjX4Hu38DjOV23K7KJB2N9NiXj4w21ayHD0963hQgLFj+0rRK3jZMpak6ABXfnnPt2YKSfm9XOcQV1ceqlWaJQ6uuNb6VhatB1ksLUH9b7glK5dCssbbZ0zTOJWxGpugNrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785540523; c=relaxed/simple;
-	bh=Si+2IbyZr5DwcAODuS4rS50l5gS6BgXYead8EhBYFiU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OZWX1zSmnQvg21npaFq/LBUBnv7ydLv+WtnnxZFadjr9TLhrZ5a3rmwbMdBnjbk7hGRIwyH8+YXTUI/OFx6bAcyBkSMaK/sGgu5vND3fLD3vxgQgDbB+oNGMpBo+fyv9SK8mbBznPOCAxG5vMC8G/GEuBM3XRKrEtXB5HigOTeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8048B1F00ACF;
-	Fri, 31 Jul 2026 23:28:41 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: jic23@kernel.org,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	dave@stgolabs.net,
-	robin.murphy@arm.com,
-	sashiko-bot@kernel.org
-Subject: [PATCH v3 9/9] perf/cxl: Don't log through pmu.dev in the overflow interrupt handler
-Date: Fri, 31 Jul 2026 16:28:27 -0700
-Message-ID: <20260731232827.401447-10-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260731232827.401447-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1785541047; c=relaxed/simple;
+	bh=WqQfjkWetI2gSUGpr0bE6MJPNxeXn/ZfqwmK9TD6PYQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=gb8FqL5Qb57MOzn/UlNs7o4KQFn3DohQNohcNANkIb7dazA4V1WDlLoiMcFVa2827UQwjGtvfucEnunYEAIiSMVsXTmgkGJGHC8Ji+h7Yy9ir94BdL6dVNgvm6tFwY15AY20jsai8DYt6jnPskp/iqh2dkQ2I9ofw6BIQzEZw84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AGOIJDB5; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AGOIJDB5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 724FE1F00AC4;
+	Fri, 31 Jul 2026 23:37:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785541045;
+	bh=Lh1/0FfraVLa7SimcsHUMfALGyAerQY5MToPlCDM8v8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=AGOIJDB5yLK+d/KCkq1OXc0O2b9UogpQW6YqusAo+goN4stGR9sFsiIRYTanEoI/H
+	 1VEa/hZCeWPxzw5nNcNZiZFHrVAaE5ORSI5SF8sC0i4AIgg4dfp38JMopjb5O7beMe
+	 XRqV+TVLVnoXerot/4PkgJ7eJUhpbBm+jz3vO/N+vp+hKD4f+0RctQHN6sJfAKDQ6C
+	 m51aOFpbrZqOcs6mOdIVntBsyBLLlqQJiMoBd4PljnKbzgEhvjrtgYmIXMBYtQW7Fy
+	 GfVPzKy0te8JI35qNbZQZI6GaL8LtnR5+5Ml3P5MQHn1PZZeUbNRJSujGH+XeLmFdQ
+	 H4Ki5xvNbU2mw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 3/9] perf/cxl: Fix the counter overflow delta fixup
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Dave Jiang" <dave.jiang@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-cxl@vger.kernel.org
+In-Reply-To: <20260731232827.401447-4-dave.jiang@intel.com>
 References: <20260731232827.401447-1-dave.jiang@intel.com>
+ <20260731232827.401447-4-dave.jiang@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 31 Jul 2026 23:37:24 +0000
+Message-Id: <20260731233725.724FE1F00AC4@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-perf_pmu_unregister() frees pmu->dev without clearing the pointer, and
-cxl_pmu_probe() registers its devm actions so that teardown runs
-perf_pmu_unregister() first, then the hotplug instance removal, then
-free_irq(). Nothing before free_irq() masks the interrupt, so the handler
-stays live across a window where info->pmu.dev is freed and its dev_dbg()
-walks that pointer.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Unsharing the interrupt does not close that window. cxl_pmu_event_stop()
-leaves the counter's overflow status bit set, and only the handler clears
-it, so an overflow taken just before teardown is still delivered and still
-gets past the "did anything overflow" early-out. It lands in the !event
-branch, where the dev_dbg() is.
+Pre-existing issues:
+- [Medium] A race condition between a polled read and the overflow IRQ hand=
+ler causes a double-counting of a full period if the polled read executes a=
+fter the counter wraps but before the IRQ handler.
+- [Medium] Missing validation for `info->counter_width` allows a non-compli=
+ant or buggy CXL device to trigger Undefined Behavior when `GENMASK_ULL` is=
+ evaluated.
+--
 
-Log through info->pmu.parent instead, which is devm-managed and outlives
-every teardown action.
+--- Patch [3]: [PATCH v3 3/9] perf/cxl: Fix the counter overflow delta fixu=
+p ---
+commit 333d6be6b59d292e876b5c4888ab33d0abc8cc03
+Author: Dave Jiang <dave.jiang@intel.com>
 
-Clear the overflow status before requesting the interrupt too, since the
-driver never touched it at probe and a counter left enabled with
-INT_ON_OVRFLW by firmware or a previous kernel can raise an interrupt at
-any point.
+perf/cxl: Fix the counter overflow delta fixup
 
-Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
-Reported-by: sashiko-bot@kernel.org
-Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
-Assisted-by: Claude:claude-opus-4-8
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v3:
-- Clear CXL_PMU_OVERFLOW_REG at probe, before the handler is armed. A stale
-  status bit from firmware can cause overflow interrupt. (Robin)
-- Ack dropped as the patch grew a hunk.
-- Drop the cxl_pmu_offline_cpu() hunk. That dev_err() cannot be reached.
----
- drivers/perf/cxl_pmu.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+This commit alters the CXL PMU counter overflow logic to condition the fixup
+on new_cnt >=3D prev_cnt, aiming to correctly handle cases where the subtra=
+ction
+cannot express the span over a period boundary, while accommodating events
+that increment by more than 1 per cycle. It also modifies the period additi=
+on
+to use mask + 1 to avoid undefined behavior on 64-bit counters.
 
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 37742ce43d9f..3683427fbb7e 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -806,7 +806,7 @@ static irqreturn_t cxl_pmu_irq(int irq, void *data)
- 		struct perf_event *event = info->hw_events[i];
- 
- 		if (!event) {
--			dev_dbg(info->pmu.dev,
-+			dev_dbg(info->pmu.parent,
- 				"overflow but on non enabled counter %d\n", i);
- 			continue;
- 		}
-@@ -903,6 +903,15 @@ static int cxl_pmu_probe(struct device *dev)
- 	if (!irq_name)
- 		return -ENOMEM;
- 
-+	/*
-+	 * Clear any overflow status left set by firmware or a previous kernel
-+	 * before the handler goes live, so it cannot mistake a stale bit for an
-+	 * overflow on a counter no event owns yet. The register is RW1C, and
-+	 * bits above the implemented counters are RsvdZ, so only write those.
-+	 */
-+	writeq(GENMASK_ULL(info->num_counters - 1, 0),
-+	       info->base + CXL_PMU_OVERFLOW_REG);
-+
- 	/*
- 	 * The handler must run on info->on_cpu, so the interrupt cannot be
- 	 * shared - IRQF_NOBALANCING is only honoured for the first action on a
--- 
-2.55.0
+Link: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.=
+net?part=3D1
 
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index b16e2e4090a39..3511d049aea40 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -689,7 +689,7 @@ static void __cxl_pmu_read(struct perf_event *event, =
+bool overflow)
+>  {
+>  	struct cxl_pmu_info *info =3D pmu_to_cxl_pmu_info(event->pmu);
+>  	struct hw_perf_event *hwc =3D &event->hw;
+> -	u64 new_cnt, prev_cnt, delta;
+> +	u64 new_cnt, prev_cnt, delta, mask;
+> =20
+>  	do {
+>  		prev_cnt =3D local64_read(&hwc->prev_count);
+
+[ ... ]
+
+>  	/*
+> -	 * If we know an overflow occur then take that into account.
+> -	 * Note counter is not reset as that would lose events
+> +	 * The mask discards exactly the bit that says the counter wrapped, so a
+> +	 * delta of one whole period reads back as 0, the same as no events at
+> +	 * all. Only the overflow status distinguishes them, and new_cnt >=3D
+> +	 * prev_cnt is that case, so add the period back. mask + 1 is
+> +	 * 2^counter_width, which is 0 for a 64-bit counter - the right value to
+> +	 * add once the top bit is gone, and no undefined 1 << 64.
+>  	 */
+> -	delta =3D (new_cnt - prev_cnt) & GENMASK_ULL(info->counter_width - 1, 0=
+);
+> -	if (overflow && delta < GENMASK_ULL(info->counter_width - 1, 0))
+> -		delta +=3D (1UL << info->counter_width);
+> +	mask =3D GENMASK_ULL(info->counter_width - 1, 0);
+
+[Severity: Medium]
+This is a pre-existing issue, but could a buggy or malicious CXL device
+reporting a counter width of 0 (or > 64) trigger Undefined Behavior here?
+
+If the device reports 0 for the counter width in the capability registers,
+the driver reads this into info->counter_width without bounds validation.
+
+When GENMASK_ULL(info->counter_width - 1, 0) is evaluated, it results in a
+negative shift amount which leads to Undefined Behavior and corrupted PMU
+masks.
+
+> +	delta =3D (new_cnt - prev_cnt) & mask;
+> +	if (overflow && new_cnt >=3D prev_cnt)
+> +		delta +=3D mask + 1;
+
+[Severity: Medium]
+This isn't a bug introduced by this patch, but does this sequence allow a=20
+race condition between a polled read and the overflow IRQ handler to
+double-count a full period?
+
+If the hardware counter wraps, setting the overflow bit, a polled read
+(such as via perf stat -I) might read the counter before the hardware IRQ
+is delivered.
+
+The polled read would compute the delta, correctly including the period
+because new_cnt is wrapped and smaller than prev_cnt, and then update
+prev_count to the small post-wrap value.
+
+When the delayed overflow IRQ handler subsequently runs, it reads the
+overflow bit and calls __cxl_pmu_read(event, true). Because prev_cnt is
+now the small post-wrap value, new_cnt >=3D prev_cnt evaluates to true.
+
+The handler would then execute delta +=3D mask + 1, incorrectly adding a
+second full period because it assumes the wrap wasn't already consumed.
+
+> =20
+>  	local64_add(delta, &event->count);
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260731232827.4014=
+47-1-dave.jiang@intel.com?part=3D3
