@@ -1,47 +1,47 @@
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010006.outbound.protection.outlook.com [52.101.85.6])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012061.outbound.protection.outlook.com [40.107.200.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28DCD33AD8B;
-	Fri, 31 Jul 2026 06:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143F3344021;
+	Fri, 31 Jul 2026 06:49:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.61
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785480574; cv=fail; b=KW0gn9MSx1a3trQhe0wzsto8FaDUdet3eU6vzqBEM+uChK/3BTrJrOi+FSeNay8gQ/dCc5Rl7cmahTcw1U+I0sZ8I/C+9sslYSy3B5PsFHvh1mppFfvu2C1Ogb4VpvoVwd+vzNIscl1wWiFv8mKLSmwfvI4zZOEjTA38V3p2K4o=
+	t=1785480585; cv=fail; b=iQJ0rk3lDSKq69gIoiRITRhGpaQNyykpvTdEUIiGrh2KZP8FuLxFv2gF+3mKYx7z5JZkoxGZSitBM8ML2MDkmTz/GiBoepQKp9ybK9ZTPwgqDvk+5pqe2rAqjx6pDMpct3FsopctUqLqDnWHIed63dKsz1723QfzSa0qUkxES10=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785480574; c=relaxed/simple;
-	bh=5x1z4Hsrw9+IgS2PfBFvmQadlgJhsYdOkKBX3iQ75uY=;
+	s=arc-20240116; t=1785480585; c=relaxed/simple;
+	bh=o443tHFaDflTX4joWo3j8crJ6+erM7Pl+JkxOiiHNks=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=egsIAdE16tR3q8DSjB7n/xze6Auy94D94uCGoVEv1nCvSWfZ2HsyYPSpiIU6sLs0uchgXvDNjp7uJCv+mHo2IHqGPXpjE+Ati3crWUIBWoNbCv5bh+OJIy5SVWp7BD8S/tdzj58Ud23qowk/fQkZVi9kcQDIK5fW7ZWlZdvL+JI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=DEeyY6tV; arc=fail smtp.client-ip=52.101.85.6
+	 Content-Type:MIME-Version; b=dPtpEbatRKQhJem4K2HaSR6w0tqPrMVUMBe1HyPelyzbxgPlt+DyR4paJRZC2hlnjGJj7fjW6VzVjFkZuWfNdnSg/feOtLZXSN6HOZM7iUTfpagoeiNwwyT1ITfdItdrXBo3QiV4n20NTfAFzE8q/7NBPIXstVT02Zx8WSVvBvM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=uYK1bkdm; arc=fail smtp.client-ip=40.107.200.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="DEeyY6tV"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="uYK1bkdm"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=K80fsfvrSXbDbXpBBKP55egt7KDTnWC77CMuZQSgqEj1iOydejDCxvGq3WTtbOfGv84VUkGXv6IogbgprSTsMa4TZLKThUi8I9ObdIKv6epwHCoc7Ng74ofo65R2tCD7OPjIQk1Y/wrzYlL/RTSV1CbT2r7zYKZpgiPw+fPyI7zwrAqy9FLLbaFsaCOu6zaQvFdJkxKx/HtqlIO476mcGG8iND3TiU/vTe2W4wtkWf5nD2VCa521bB7/IVMi5D03LZFgrwikzhwJxNQVi7vK5rqGoaWVHaPj7WckqpGPHpqzEiifxXv76udFAQUvBpksABVL8JtZovnCN3eJuQIo6w==
+ b=t2fhDaSc9a0HHsj3pyD3VE7FlKhSx8pbVGigMnPNcBD7hPvgQrqUAcbB3FGLqvoL5Gwy/xuweh2iHGGLg/ZvMDnVoMAOCSKS3gK0jxeqXpee8+jqhyI1D2C+yym0YtxtDf3FxT6KXre37EbGpec7oO1EB5B9H8aOFQXygjLVmHMB3F8xawWfTM3CtSJBT3xvrg4C+L4Uy5m4vtvgtrObndD4f/8b5DxI+UJJ+hPKGC1jeeRJmxKoKdQgfJmKShG0a5Q/G+SibM968LANELseMHHnT89d7XfceN4ZqyIE6OktwtgHK5Hkz38DS4Qw4hqdgSYwnkcK93zOh31/YJldtQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3dM1BmlFeqo9TA65wSCjYbD1IkpOTSt/CDFKD0o0dSc=;
- b=Qmwg052TxcvNQjHI2eD79PxgfNMZCfoDyqXdtpN//oIwXnDgPBdA/m2bLdVqvMPaaa8ha3nPr7CQyEax8EEEP85dRfocZcWGjD1ZU11lIMitZx6mJEmJMUP/Cj/TAlkNjDAnDVUlICNFD3ZlQZBDuueQoZ2R0kx0mc/D/TqjRPGF9AWmUz8FpKRG8QxHa/iPXw6mX2jdyMvCYfbor4qDlRdQNzR2qobaSqB6yqtDHUI8EOUhDVGz7GbripeYwtaJYmmVy8iv9VVkI9DCwru8GD3elHvrX5cyTSq/f36p0fVIiXmblqOQ9iWvazfNgfFoEIkIYi/MV5xzziEL4PV7PQ==
+ bh=s2SCC4lkrcYmqDZ/9UWkNohuHEhBEr3nOScDfhkhssQ=;
+ b=AO6/eAniIT5FEjGNSNJLQ4KOWIau5F6yDafsJFNDxlUuGPRlcrmFNUxE6Ntsu8alzzY4xu1T0k67swXkWcCHCMpby6oE372DkyQepJ1AQTfbn5kAmItxrhvFxJiRunW5uUMpdW8kDLXmaurB5awP3pGW5spnpOjliFqBd8mBJfsHR3TIvfGvdqChmzqQY1P7B4GnSpHiWYCcropJ1t6eoczH2dn4hGauDxO3EhhX1CnXgLDS714zgEAm6d23nHUiMqB3lS9G1BlaXiFZZ+7FZkbHXXTDV+PLQfvhaqq9ZdN4cKt78V22JJ2zeZ1WuILiDo2AqMH55Ny9kHBuEJkuqA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3dM1BmlFeqo9TA65wSCjYbD1IkpOTSt/CDFKD0o0dSc=;
- b=DEeyY6tVpsIsmOPtAuDr04HqyF6XBzpHN5Rm3nkrxyktQuvAUoJHBDiIdqx9kXqZvtuHuNlXW8ZazVBshcx7qbts9ky7jDNiB/fWI9R1cJabnSIgDOmfvsCOT68Zqi16BiYbPOBWZFRbQwUR5Zo3rp/rE2oz1yC5p9I8uhnHoW1ryPzxD0Yehi64yalW3DUpJSnA+jqmQs6WKus+HOYAqdv7drnFE97e6DGGeQbl82H5gAshLENKc2HsVNyPfeZ+/qlayZ2ongof3VjQDuo+QPG5dPuIxeDlxCDkCZMDKxbHm3mdQ0vsiX7U7WWhcnVSSN2pDpjiyVON+islNk6HSQ==
+ bh=s2SCC4lkrcYmqDZ/9UWkNohuHEhBEr3nOScDfhkhssQ=;
+ b=uYK1bkdmKOTCg4y8YhedLcY/2aRtXKUr/ObF9c7rZ9N0WKXsf7us9jmeGaoyLhVOWSb7IJVASmR5TWijbDmncv0kuiYGVFftOLYr9n1Z2rueX3eQGBUfynTPm1KV0M080wqHdyFzYCYZ5R0Z2cAYZ1FBUPLZUsfii3psxVt31Ip2t62c/cXXHyvyQnkGXWtJFxa33Bg85o1/7TZVm63kSFurCeQuBm/HHMxuDLK4YmmzDfCfyt0lwZQExL2J70n5znA7ER+UKpcYNKR9tzsXpcEU1OrE1IiOwxvi1fPNr0O4HJDhgEOe0vIOKCgxsvSGZQtsbjgTKF4iIW5xgE1b0g==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
  by SA5PPFB2BF91BC0.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8de) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.15; Fri, 31 Jul
- 2026 06:49:29 +0000
+ 2026 06:49:40 +0000
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0270.012; Fri, 31 Jul 2026
- 06:49:29 +0000
+ 06:49:40 +0000
 From: Richard Cheng <icheng@nvidia.com>
 To: jic23@kernel.org,
 	dave@stgolabs.net,
@@ -62,17 +62,17 @@ Cc: iweiny@kernel.org,
 	mochs@nvidia.com,
 	Richard Cheng <icheng@nvidia.com>,
 	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v8 2/3] cxl/hdm: Allow zero sized HDM decoders
-Date: Fri, 31 Jul 2026 14:49:01 +0800
-Message-ID: <20260731064902.34127-3-icheng@nvidia.com>
+Subject: [PATCH v8 3/3] tools/testing/cxl: Enable zero sized decoders under hb0
+Date: Fri, 31 Jul 2026 14:49:02 +0800
+Message-ID: <20260731064902.34127-4-icheng@nvidia.com>
 X-Mailer: git-send-email 2.50.1
 In-Reply-To: <20260731064902.34127-1-icheng@nvidia.com>
 References: <20260731064902.34127-1-icheng@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: KU2P306CA0020.MYSP306.PROD.OUTLOOK.COM
- (2603:1096:d10:3b::8) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0127.apcprd02.prod.outlook.com
+ (2603:1096:4:188::7) To MW2PR12MB2380.namprd12.prod.outlook.com
+ (2603:10b6:907:4::32)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -81,407 +81,323 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|SA5PPFB2BF91BC0:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7516bd42-c90a-4002-8b82-08deeecfddf2
+X-MS-Office365-Filtering-Correlation-Id: c8980fb9-aea4-4a58-4221-08deeecfe375
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|23010399003|376014|7416014|22082099003|18002099003|11063799006|5023799004|56012099006|3023799007|6133799003|10067099003;
+	BCL:0;ARA:13230040|1800799024|366016|23010399003|376014|7416014|22082099003|18002099003|11063799006|56012099006|3023799007|6133799003|10067099003;
 X-Microsoft-Antispam-Message-Info:
-	NiTfQCdSfiPjEQQhD1HHh1dt+FjcK7jAe9fK9M5xIWL2c2fZ9yBykiCbyq3+DChbY8uAPb7Y3Su9tKXcA/ADzbBDr/m2GOYsbTmqlZM0wcMnHLCor+rlsVu0bnP0PmRQS4Tp+mTLg65vyHf9dyUmlPJ4FehAkTm/0P0qvgJBkegGo3n52jAwygeDZ/0r7owXKARQVT8nJ3AjQUxKbJX65SkLKu/GcPjhS1X569pOlTT3ZnYgOXQBdAQ/n+GeUDu0xauZ4zeSH5s5Krpttn9THQpeP95vlNQerrz2fnNuJ+eqDb3mwVMStjAfoRNbd0jbuvJKeyn0RUhOnzYDOTEBgVKJ1QLLmFzD7bkQag/Mq89m09Ls3v02Le/7fgYVZFhpeTie/cDBi+cGhYr1YqOZ26KsTtBrjASGvMCYloytK5jI+gB0hKAeLKq8iGk4W9LkBuOX5cNfHNu9i2kDnMQVxGikEEj1ik5OrsBwspi/pFBzZXCkr3Rs4i8djE7GTILdT/rVnAYKQ4o08KngSmJAd4m+DLFqlQgPr0v0W2cgEM1nrOopHdCZ6APmlgBnl+Xl9WoVhPTrStLMkCYiPU/Zu+YMz99MDbmVYqlP9bFI9wosvd1hO4QXiEzBD+4hgf2UfSklx8mu/m0KP7mMUb/MDSfI1PThlMr/1hOSGtlzUNY=
+	LfLokhHpU1V42ddj4bzuH6c7VvAYEXYE880DAp4qj5UQQZ4Qwglz0qW1rwc2zhjAqIIjvM202GFyyfRdGdVVlVzdWW4WqTv1LmAnWYJ5vN2zUsaJ+6OUU5lxD6GeTbEclAdVpQzNApfS4TLYI3nCcmiw115lPZEIOoaoxQNN5zPJPwycuY7kkcWUzE60JnPn/h5b/41ucjVoTI4jFD5hLyEeFmgyWC6NBHsBM3pXR4Ec0r4ZaSh5dDABk4l/9Lv/nJ7WB9jJHQEIrhlsG5QRJCEZY7MMWo5zirc3t4rmilqrZ02kowpbn7nS0/P29TnKGuKtQHOUIR2BUAhcLKauwVrX44nj2ewG+cxi9/YqUxygc1sp2mUkvoegygGMwKf8j3TMZgop2qIrK4/M35M4Wvm06imKADKeKBLX00loN/rICKLTg8TFA8t8vS/DhMPzBWGqqIMZQoY2L80lwZxoawyawjxxAGdb2JEXqhyDnaxCKqAQBERsUoB2bi83gUop19zTqCidBGifbmit7wS5Pp/hRTSei7vImcAU8a5Yc9GHLlElm77XUoMWpCAAA2l2hzjZuBN9n0ycwaOAKIQQtng/Oc6qeHgC4FaJGbziZRYaniXydK/Q5HlelcP+mFWtNrR1zZHCXCIxjuK4vpBKMpoghY9jzwGBCsw7YieIvBw=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(376014)(7416014)(22082099003)(18002099003)(11063799006)(5023799004)(56012099006)(3023799007)(6133799003)(10067099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(376014)(7416014)(22082099003)(18002099003)(11063799006)(56012099006)(3023799007)(6133799003)(10067099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZEFPRG0xTCtDNitCekYvY3g5NGdicWN1R2NVYlNIUWl2eGM5ZGY5WHYycjBU?=
- =?utf-8?B?cStic1JkMnJnZ3k3VjRnWkI4czVoblI1ZUZ3MVJzMzRYdjVISTZFYU9hSEI4?=
- =?utf-8?B?Z0NVditYWHgrRjlnK1VxWWtLemVMVXJFQXh0L2pDOWFUT3IyelVQYlZ6SGxr?=
- =?utf-8?B?bWhLeS9rZEtzaThwTXBIVmIvTjFDeHpJcmNWakNlY05acjNTVno2TnR0Z0lI?=
- =?utf-8?B?M2ozb3JEMDErWncvQjN3dkF3ZXhQalk4SlhrK28wUGMvaUpHK2RyTTNLMHdU?=
- =?utf-8?B?TThJdUY5eENNMnFMbXhKeGtzNE5aUnNyYTFVdXVnSndJbXREbVd4VHhZZ2w2?=
- =?utf-8?B?K0N3U1hTeDdJbFVmL3hIZVlTWnNiWHdOSDYyd3hSTTZLVEIxS01rZzNvV2JR?=
- =?utf-8?B?U1U0Y3cvQ2hsZk95ZzhaYjJEVThNVzlna1VHVUJWd3Q3djRuWm83NWpWbW5q?=
- =?utf-8?B?THBlUWNETzZmYXdGN1BycGNYTVVaTkQ1ZllXcWNUVkRselkzNGo2RDJXcUNL?=
- =?utf-8?B?MXBjdFI5Q2tQbnV4NEtLVTBKNDdTWCt5VFMrbHpnMllDdHBTWUtCaWk1NWk3?=
- =?utf-8?B?dkc1dEE5dTdGZjJ0aXpKMXJDNkhJYU01VWkrU1M0OVRWd2g1dnVxcUIxdHpF?=
- =?utf-8?B?ZC9UQSszNVVEZGlVOURtM2ltU2FQT2ZVNzNkUjE4RmxFZmx1YS9aSVBweW1T?=
- =?utf-8?B?UnUzdVd2QmNBZTJWSnRkbWVRd1l2M1RCSW5BcXBnY2dtSEVOcjFnRHAzY09L?=
- =?utf-8?B?NkxNUGw3Q0QwSkYva0FxdDlwOXBxOWNRbnBrc2NRM1JDcFFEbkhYczNZc0dy?=
- =?utf-8?B?OUJPMUJBVWk0YVZnN0UreGF3Y2pXK2tTbExWMWRwVkg5OEdGYmVXaVo1dVBh?=
- =?utf-8?B?aHRuNEhvb21jZm01NmFWV3JNK0VIN0hOOEFLVjMvT2RKOXE1clllK0tJYUd1?=
- =?utf-8?B?cjRKUk5MYWtDdE1nRG9HdVRRd1R1Rk8ydkExTmVEZWRsT1hGMjFxdG9Mc2pq?=
- =?utf-8?B?YzZORFQ5L0RNcExVN0o5eGxmeUtBMU9CLyttaUNiMUEzdFU0Z3ViYjFjZ3R6?=
- =?utf-8?B?eDVxL3NVSFdXUzlhdXRaTEhjVVAwQmFlQjdHNmFxYklzVFhhNXp3RG85RUtj?=
- =?utf-8?B?RDZsdEZtbjZqaTRaUm0zTTJFRE1SaWg5dUNVZVZGL09XNjkrREpCUTd1bzlj?=
- =?utf-8?B?VmI0YlNacW0xYmJwQU1UWXEzS0ZhNlI2SkE1ZEYxU0hyTm9uQlNOWHcyVmFD?=
- =?utf-8?B?TkJaY3hIL2pnVlJxalhLNHpFRXRKT01ZNjVmay9vVzg5bFY5RHZHWmFoSmRh?=
- =?utf-8?B?ODFKd1crMi9MUHZhZE5WL05SaVB1YU5aQk1TeTZjTFFhbDVHZmxjeWU1cGEr?=
- =?utf-8?B?cW1QNkNEQ21qa3RjMmMzcm1IdDhTUUVIUS81WTZkZFVJdWFTeXFHaWoxNnJI?=
- =?utf-8?B?Y1ZQREN0b2wyT0dOckZnZ1ZJSnlCU09BeDJHajdSZ2pnbVc3c1haMzcvUEJx?=
- =?utf-8?B?V1RnVUdnZ09uaHdabng2bzRyZy9oME1ZTDhCRmdSWlllOEY5SGUwblQzOGtj?=
- =?utf-8?B?ZExGcXN5bjQ1TUU4ZmFYelg5TUxFM2hZS0d5bk5mWTUwN285VWJLT0FHYVZR?=
- =?utf-8?B?eVlNN0lnYkFqM0Z5azhnUFBCY25VTG5yZzB1WGp4ejdNdU81OSs4MVlJWkNv?=
- =?utf-8?B?dzdjMFVtRW55T3lzUUY0S0VmQ1Uxd1I2RnZCUlMwbTZxU2I1T29EMERmVDNt?=
- =?utf-8?B?cGtEbkFRMkRjaXdWellldWVEVHlCWFhobnJlM2pQbDJNbmtHdnpuT2Vnc2pl?=
- =?utf-8?B?bmVzSzREelFyR0cvUHNCdm5Tc21FRGVBbmhzUldOTzhBaEpIYnY1NFlUSDRX?=
- =?utf-8?B?bnIvZkhnT0kzaDlOdEcwazB5eTBuWDFCb1l3WHg0WXYwUnd5OXpnQXFUb2tj?=
- =?utf-8?B?UjYzRjFJbnB1TDR6NVZ5djJJdldzSW5Mb3oxWUprdXArVlh2NzRMVzZxMm1D?=
- =?utf-8?B?MHlpb3FFa3RIQlBKZDVOTnFvSklNakhNY29wbmNSVmk3bWcxcVZCaVRva3BL?=
- =?utf-8?B?YVFDdkNTSldFUWFrTkZaeGpwRkd4ZkVyajVWWFV0VGhsTlMvSHBoVVNBWHF4?=
- =?utf-8?B?Z3JtUGh3Q1dCdzNic2dJZVRXc0RvNFdaaFQxM244L05NYWNadS93OWtrazlV?=
- =?utf-8?B?RVdiTkdiamtVeXpKVHUxL2tMTENyaEpLTFdheGlBeXhMcGFKelAwSEt2WE5B?=
- =?utf-8?B?OHc3RGdtTzgzeHloUGJFZ1hlVWNqUW4zR0tSbVlEd0czOTM3TDRrdWdWWnMx?=
- =?utf-8?B?NHN0ekxYRVZ3RUEyTUFJQ21MNVRUNHhSS1hLRHlPNkgzM0lWV254QT09?=
+	=?us-ascii?Q?frQgayI/FnZuVb6uB3F7gZPuJMar87qmddGDCXBcaUl2PZ42BSjWN62KUoRA?=
+ =?us-ascii?Q?HM5U9uq8jGpTCpmQElW/0JHyatkin2M1mNnPlm67h6Ul8c3sCrvoifWhBnmE?=
+ =?us-ascii?Q?JLT5aq1ngNBOY8xJFL6/IyZNwI+00ovIL7y2YlvwHulGWKIzQPOmqWFx2vZE?=
+ =?us-ascii?Q?6Yvrf/dXa+IBRo7hYVVKaLV38J8Q3QSo+ciYyPbi5HHvV5RzfVRWguJASGcb?=
+ =?us-ascii?Q?qiyiBeTfWRU0RZBhUH7+zUU00oBynndGcYF33lVqOMmFkIODgDnAFEc7cn+U?=
+ =?us-ascii?Q?BOHrPa8mionxbnhcXcop2Lg6hGsQaYaQmK7TuIdGp+fbgFngVXxRectF72UG?=
+ =?us-ascii?Q?OdI1D/b5lqADwOlPesrlQLEvZkx5QCpWOyGYmDrohkQiXdfVKvBx0rEKlQCm?=
+ =?us-ascii?Q?NO8TnGJoYn1jSs1Hxghb+pQ/v3pN4yp4NkHub1yQ7Fl0Cf8UkOMrrY+kT2n0?=
+ =?us-ascii?Q?cUGVSLdxb3EEwZH6HHyQXa1ZuuRJH2ug9wN73BBAlE2bveRRxiyZbtonuAHe?=
+ =?us-ascii?Q?DpXUbhOPDyA1H3bc9m67+Z9brfYCVt82hAha77+3vmd7zYfIkLKf/qIny80P?=
+ =?us-ascii?Q?CqyDMyUugWAZ082W/ijJpCR1jSC/WezgW8NOasGANVf/jMOam8QEcthLkCk6?=
+ =?us-ascii?Q?XzbljEMQR8WZow+2m+rx3JGMoH4RT3/F0JOBg27T6Zfychcb7JeslDalauOJ?=
+ =?us-ascii?Q?z0jEl2MWaZhtY471RCAPeAGLxVknNQnfIUGAxse4uotdWPxVUr3rrs+vAbdZ?=
+ =?us-ascii?Q?cVtWkdgCUPIpBYn1UfRjAXgyP8QQnP2Sq0ldYBs2FhrA6RtNELMaLxw5PxCB?=
+ =?us-ascii?Q?YaxY7B/0RQ9Ku/gsNqg32zAUSatdsTJqrUYahvLXBSTcWaHMUXQO6dbNm37y?=
+ =?us-ascii?Q?UFg/QdSG8acjU7twWOEoKpiv61uK7Vt7oD8gYNemIybjAarSgVtuBrUH7hna?=
+ =?us-ascii?Q?t87EV4fONtwXRy2OCjcvh6271lBh3IDU2CtbDDELF4n4RNocKweBXfDNgmcZ?=
+ =?us-ascii?Q?SZB7g7mo3U/TV7+ymWmQ1pYXq+dVHSoQ1EwXEhnVc2r7yq0Y6A5qTuQqYsa/?=
+ =?us-ascii?Q?z736o4vfOD9Xw7KaZp+kabZQ/9rxVypIaox5ksBn1PTRU9tadnvMTCPKLfzs?=
+ =?us-ascii?Q?o1rqP+ZFftLPxH++jgZ/Wb/aHLxip+hSx7xKNkBC01q0GSrnfQdfI9hc03qw?=
+ =?us-ascii?Q?t6d4CHYiP94t6o9uDXcHMoFtcMjXel45KQHptVfXFr1XGiCGZ0Sh1i+/xkha?=
+ =?us-ascii?Q?tcUWw6VjdGstOAJ50IxM7EBSdezpp8aBtq4Vouk+3T6lYMzZjXlNKrwDnr7U?=
+ =?us-ascii?Q?Tf8GRF8I+K2f4qchgklhkgZZCr+2kgIUZ+ABLQA2bwK0mc7j542yYgBlmXri?=
+ =?us-ascii?Q?7nS09xQPNFTeZU8vrh3va6xTceKTLDIHN8dDOaKOAnlbtlfTwikyMnGWvtWH?=
+ =?us-ascii?Q?vr39A+xg9ytmvMjdoR/aYTLy8FXHZlOC7s0qpnblJpM9QfQXqhl5W8fNaCmA?=
+ =?us-ascii?Q?LJC0NfCwS+a0MNwKcc1NnR6zNHtPWnoy1YrkCk770+rAOZPmcH56liSK7brS?=
+ =?us-ascii?Q?jojXsEHuFT7eWH8F6ShZtU+P8Uc+ApDZgTI2tE6S89TzWwiPDV4jlqMoi+8D?=
+ =?us-ascii?Q?HSUMfU3fDuZiJAfkt3fyqexoKrXik2r9JN0tIGkLxjfWYkgRVwPjRbKR4b+z?=
+ =?us-ascii?Q?gaVJ5nH9YiuzY/RGRfHTMWgDM/x9dm0RCzpR2s7csCbdeu91Sfs0BuAfdXtw?=
+ =?us-ascii?Q?DdfIlB5tdg=3D=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7516bd42-c90a-4002-8b82-08deeecfddf2
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8980fb9-aea4-4a58-4221-08deeecfe375
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB2380.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2026 06:49:29.5681
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2026 06:49:40.4490
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CE0gGUETh9DJZ7UNhJZ6iEiF9CjtUqtNHmt43LfBrzr840Cft3rlTJI6LNu75SuK60nG8xcAwIxspku62w0tZg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: gDuPgUBGx+BUAp9mp+2vr8AFhZvkTmdIE9oGnW11B2Shx/4IEfLJV24cQh6wko/EMNT2ldVJCku/Ezd0jucOwg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPFB2BF91BC0
 
-CXL r4.0 §8.2.4.20.12 ("Committing Decoder Programming") and §14.13.10
-("CXL HDM Decoder Zero Size Commit") permit committing an HDM decoder
-with size 0. BIOS may commit and lock such decoders so the OS cannot
-program regions through them, this is a design choice rather than a spec
-requirement.
+The kernel now allows committed zero-size HDM decoders so BIOS can lock
+empty decoders; cxl_test needs to exercise that path.
 
-The kernel rejected these with -ENXIO during port enumeration and
-aborted the whole port, so affected systems showed nothing under "cxl
-list".
+Add a mock_zero_size_decoders module parameter (default off). When set,
+the special endpoints under host-bridge0 (cxl_mem.0 and cxl_mem.4)
+commit decoders 1 and 2 as zero-size + locked above the decoder[0]
+auto-region, mirrored on the parent switch and host bridge. The mocks
+take a real zero-size DPA reservation, like enumeration of real
+hardware, so commit_end lands on a zero-size decoder and the
+reservation, poison-by-endpoint, and teardown paths all run.
 
-Treat empty decoders as first class instead of special casing them, back
-them with a kmalloc'd resource, since the resource tree can't represent
-an empty range, and keep the skip and hdm_end accounting intact. Guard
-the paths an empty decoder can't serve, e.g. region attach, DPA free,
-and poison queries.
-
-Suggested-by: Dan Williams <djbw@kernel.org>
 Signed-off-by: Vishal Aslot <vaslot@nvidia.com>
 Signed-off-by: Richard Cheng <icheng@nvidia.com>
-Reviewed-by: Dan Williams <djbw@kernel.org>
 Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Alison Schofield <alison.schofield@intel.com>
 ---
 Changelog:
 
 v7 -> v8:
-    - Rebase onto the new poison_by_decoder() cleanup patch. The poison
-      hunk now only wraps the existing code in "if (cxled->part >= 0)";
-      the -EFAULT/RAM rework moved to patch 1
-    - cxl_dpa_request_region(): split the declaration from the
-      allocation
-    - Add the missing blank line between commit message paragraphs
+    - No change.
 
 v6->v7:
-	- Rebase onto cxl/for-7.3/cxl-type2-test.
+    - Rebase onto cxl/for-7.3/cxl-type2-test.
+    - Integrate mock_zero_size_decoders with special-topology parameter
+      validation and reject its incompatible use with fail_autoassemble.
 
 v5->v6:
-     - Comment wording fixups, no functional change: reword cxled_empty()
-       per Dan Williams' review and tidy the poison-walk comment.
+     - Reword a mock comment, no functional change.
 
 v4->v5:
-     - Rework per Dan Williams' suggestion: make zero-size DPA
-       reservations first class instead of bypassing reservation.
-       cxl_dpa_request_region() returns a kmalloc'd resource for size 0;
-       cxl_dpa_release_region() kfrees it on teardown. hdm_end now
-       advances and releases for zero-size decoders under cxl_rwsem.dpa,
-       and their skip registers are honored.
-     - Corrections to the posted sketch: add the missing return after
-       kfree() (use-after-free), use IORESOURCE_MEM flags so
-       resource_contains() can resolve cxled->part.
-     - cxl_mem_get_poison() returns success for zero-length queries
-       before issuing a mailbox command.
-     - Fully-burned device (all decoders zero-size at DPA 0): cxled->part
-       cannot resolve; gate poison_by_decoder() queries on part >= 0
-       (the part[-1] OOB read was already reachable for sized decoders
-       that fail partition containment) and scan all partitions when the
-       walk reaches commit_end with nothing mapped (sashiko report).
-     - Drop v4's poison_by_decoder() restructure and the hdm_end
-       non-advance approach; superseded by the above.
+      - Mirror the v5 core semantics: mock zero-size decoders take a real
+        zero-size DPA reservation via devm_cxl_dpa_reserve() so
+        dpa_res/hdm_end/cxled->part match real hardware enumeration and
+        the poison-by-endpoint walk reaches commit_end.
+      - Set cxled->state = CXL_DECODER_STATE_AUTO to match
+        init_hdm_decoder()'s fall-through (undoes the v2 switch to
+        MANUAL).
+      - cxld_registry_restore(): reserve unconditionally for enabled
+        endpoint decoders; enabled now implies reserved, sized or not.
 
 v3->v4:
-     - Drop the port->hdm_end advance for zero-size decoders (sashiko AI
-       review). The write was outside cxl_rwsem.dpa, and advancing the
-       watermark without a balanced release strands hdm_end and breaks
-       LIFO teardown. It is also unnecessary -- zero-size committed slots
-       are trailing and locked, so the in-order check in
-       __cxl_dpa_reserve() is never reached past them.
+     - No change.
 
 v2->v3:
-     - Advance port->hdm_end for the committed zero-size decoder so a
-       following committed decoder still passes the in-order check in
-       __cxl_dpa_reserve() (it was left un-incremented in v2).
-     - Fold the poison fix into this patch: commit_end may now reference a
-       zero-size decoder with no DPA resource, so poison_by_decoder() falls
-       through to run cxl_get_poison_unmapped() and scan the unmapped DPA
-       tail.
+      - Gate the zero-size + locked decoder injection behind a new
+        mock_zero_size_decoders module parameter (default off). v2
+        applied it unconditionally on the host-bridge0 auto-region
+        endpoints, which the region test suite reuses, regressing 7 of
+        17 cxl unit tests; defaulting off leaves the shared topology
+        untouched.
 
 v1->v2:
-    - Add zero-size committed decoders to the topology instead of
-      skipping them. Drop v1's -ENOSPC sentinel and the matching
-      "continue" in devm_cxl_enumerate_decoders(); fall through so
-      add_hdm_decoder() registers the decoder.
-    - Set port->commit_end unconditionally for any committed decoder,
-      not only non-zero-size ones, so subsequent decoders satisfy the
-      out-of-order check.
-    - Add an explicit early-return before devm_cxl_dpa_reserve() in the
-      endpoint-decoder path. __cxl_dpa_reserve() rejects zero-size
-      decoders
-    - Spell out TSP and TCB and cite spec sections in commit message
-    - Reorder series, implementation first
+      - Replace second_decoder(), third_decoder() with a single
+        match_decoder_by_index() helper, so all lookups share one
+        matcher.
+      - Use DEFINE_RANGE() for the empty range instead of an open-coded
+        struct.
+      - Set cxled->state = CXL_DECODER_STATE_MANUAL rather than
+        STATE_AUTO.
+      - Set CXL_DECODER_F_LOCK on the mock zero-size decoders to model
+        the BIOS-burns-slots case.
 ---
- drivers/cxl/core/hdm.c    | 55 +++++++++++++++++++++++++++------------
- drivers/cxl/core/mbox.c   |  3 +++
- drivers/cxl/core/region.c | 45 +++++++++++++++++++++-----------
- drivers/cxl/cxl.h         | 10 +++++++
- drivers/cxl/port.c        |  3 +++
- 5 files changed, 84 insertions(+), 32 deletions(-)
+ tools/testing/cxl/test/cxl.c | 109 ++++++++++++++++++++++++++++++-----
+ 1 file changed, 94 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 0c80b76a5f9b..3b3cfa0f2507 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -240,6 +240,18 @@ static resource_size_t __adjust_skip(struct cxl_dev_state *cxlds,
- }
- #define release_skip(c, b, l) __adjust_skip((c), (b), (l), NULL)
+diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
+index 8ab2ce1262f3..fff2004a08c8 100644
+--- a/tools/testing/cxl/test/cxl.c
++++ b/tools/testing/cxl/test/cxl.c
+@@ -18,6 +18,7 @@ static int interleave_arithmetic;
+ static bool extended_linear_cache;
+ static bool fail_autoassemble;
+ static bool type2_test;
++static bool mock_zero_size_decoders;
  
-+static void cxl_dpa_release_region(struct resource *parent,
-+				   struct resource *res)
+ #define FAKE_QTG_ID	42
+ 
+@@ -872,14 +873,13 @@ static int cxld_registry_restore(struct cxl_decoder *cxld,
+ 		cxld_copy(cxld, &td->cxled.cxld);
+ 		cxled->state = td->cxled.state;
+ 		cxled->skip = td->cxled.skip;
+-		if (range_len(&td->dpa_range)) {
+-			rc = devm_cxl_dpa_reserve(cxled, td->dpa_range.start,
+-						  range_len(&td->dpa_range),
+-						  td->cxled.skip);
+-			if (rc) {
+-				init_disabled_mock_decoder(cxld);
+-				return rc;
+-			}
++		/* enabled endpoint decoders hold a reservation, sized or not */
++		rc = devm_cxl_dpa_reserve(cxled, td->dpa_range.start,
++					  range_len(&td->dpa_range),
++					  td->cxled.skip);
++		if (rc) {
++			init_disabled_mock_decoder(cxld);
++			return rc;
+ 		}
+ 		port->commit_end = cxld->id;
+ 	}
+@@ -1072,16 +1072,49 @@ static void default_mock_decoder(struct cxl_decoder *cxld)
+ 	WARN_ON_ONCE(!cxld_registry_new(cxld));
+ }
+ 
+-static int first_decoder(struct device *dev, const void *data)
++static int match_decoder_by_index(struct device *dev, const void *data)
+ {
++	int target_id = *(const int *)data;
+ 	struct cxl_decoder *cxld;
+ 
+ 	if (!is_switch_decoder(dev))
+ 		return 0;
+ 	cxld = to_cxl_decoder(dev);
+-	if (cxld->id == 0)
+-		return 1;
+-	return 0;
++	return cxld->id == target_id;
++}
++
++/*
++ * Mock a committed, locked, empty decoder
++ * (CXL r4.0 8.2.4.20.12). Gated by the mock_zero_size_decoders module
++ * param so the default cxl_test topology, shared by the region test
++ * suite, is left undisturbed.
++ */
++static void size_zero_mock_decoder_ep(struct cxl_decoder *cxld, u64 base)
 +{
-+	/* zero sized decoders are not tracked in the resource tree */
-+	if (resource_size(res) == 0) {
-+		kfree(res);
++	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(&cxld->dev);
++
++	cxld->hpa_range = DEFINE_RANGE(base, base - 1);
++	cxld->interleave_ways = 2;
++	cxld->interleave_granularity = 4096;
++	cxld->target_type = CXL_DECODER_HOSTONLYMEM;
++	cxld->flags = CXL_DECODER_F_ENABLE | CXL_DECODER_F_LOCK;
++	cxled->state = CXL_DECODER_STATE_AUTO;
++	/* decoder[0] reserved [0, size/2), empty decoders sit at that watermark */
++	devm_cxl_dpa_reserve(cxled, mock_auto_region_size / 2, 0, 0);
++	cxld->commit = mock_decoder_commit;
++	cxld->reset = mock_decoder_reset;
++}
++
++static void size_zero_mock_decoder_sw(struct cxl_decoder *cxld, u64 base,
++				      int level)
++{
++	cxld->flags = CXL_DECODER_F_ENABLE | CXL_DECODER_F_LOCK;
++	cxld->target_type = CXL_DECODER_HOSTONLYMEM;
++	cxld->interleave_ways = level == 0 ? 2 : 1;
++	cxld->interleave_granularity = 4096;
++	cxld->hpa_range = DEFINE_RANGE(base, base - 1);
++	cxld->commit = mock_decoder_commit;
++	cxld->reset = mock_decoder_reset;
+ }
+ 
+ enum cxld_init_type {
+@@ -1114,7 +1147,7 @@ static enum cxld_init_type get_decoder_init_type(struct cxl_decoder *cxld,
+ 	 * See 'cxl list -BMPu -m cxl_mem.0,cxl_mem.4'
+ 	 */
+ 	if (!is_endpoint_decoder(&cxld->dev) || !hb0 || pdev->id % 4 ||
+-	    pdev->id > 4 || cxld->id > 0)
++	    pdev->id > 4 || cxld->id > (mock_zero_size_decoders ? 2 : 0))
+ 		return MOCK_DECODER_INIT_DEFAULT;
+ 
+ 	return type2_test ? MOCK_DECODER_INIT_TYPE2_AUTO :
+@@ -1147,6 +1180,7 @@ static void mock_init_hdm_type2_cxled(struct cxl_endpoint_decoder *cxled,
+ 	struct cxl_port *root_port;
+ 	struct device *dev;
+ 	u64 base;
++	int id = 0;
+ 
+ 	base = window->base_hpa;
+ 	cxld->hpa_range = (struct range) {
+@@ -1172,7 +1206,7 @@ static void mock_init_hdm_type2_cxled(struct cxl_endpoint_decoder *cxled,
+ 	 */
+ 	dport = port->parent_dport;
+ 	root_port = dport->port;
+-	dev = device_find_child(&root_port->dev, NULL, first_decoder);
++	dev = device_find_child(&root_port->dev, &id, match_decoder_by_index);
+ 	/*
+ 	 * Ancestor ports are guaranteed to be enumerated before
+ 	 * @port, and all ports have at least one decoder.
+@@ -1232,6 +1266,20 @@ static void mock_init_hdm_type3_cxled(struct cxl_endpoint_decoder *cxled,
+ 	base = window->base_hpa;
+ 	if (extended_linear_cache)
+ 		base += mock_auto_region_size;
++
++	/*
++	 * With mock_zero_size_decoders, decoders 1 and 2 of the special
++	 * endpoints mock committed, locked, empty decoders above the
++	 * decoder[0] auto-region (CXL r4.0 8.2.4.20.12). commit_end then
++	 * points at a zero-size decoder, exercising the zero-size
++	 * reservation and poison-by-endpoint code paths.
++	 */
++	if (cxld->id == 1 || cxld->id == 2) {
++		size_zero_mock_decoder_ep(cxld, base);
++		port->commit_end = cxld->id;
++		WARN_ON_ONCE(!cxld_registry_new(cxld));
 +		return;
 +	}
+ 	cxld->hpa_range = (struct range) {
+ 		.start = base,
+ 		.end = base + mock_auto_region_size - 1,
+@@ -1255,9 +1303,11 @@ static void mock_init_hdm_type3_cxled(struct cxl_endpoint_decoder *cxled,
+ 	 */
+ 	iter = port;
+ 	for (i = 0; i < 2; i++) {
++		int id = 0;
 +
-+	__release_region(parent, res->start, resource_size(res));
-+}
+ 		dport = iter->parent_dport;
+ 		iter = dport->port;
+-		dev = device_find_child(&iter->dev, NULL, first_decoder);
++		dev = device_find_child(&iter->dev, &id, match_decoder_by_index);
+ 		/*
+ 		 * Ancestor ports are guaranteed to be enumerated before
+ 		 * @port, and all ports have at least one decoder.
+@@ -1307,6 +1357,26 @@ static void mock_init_hdm_type3_cxled(struct cxl_endpoint_decoder *cxled,
+ 
+ 		cxld_registry_update(cxld);
+ 		put_device(dev);
 +
- /*
-  * Must be called in a context that synchronizes against this decoder's
-  * port ->remove() callback (like an endpoint decoder sysfs attribute)
-@@ -256,7 +268,7 @@ static void __cxl_dpa_release(struct cxl_endpoint_decoder *cxled)
- 
- 	/* save @skip_start, before @res is released */
- 	skip_start = res->start - cxled->skip;
--	__release_region(&cxlds->dpa_res, res->start, resource_size(res));
-+	cxl_dpa_release_region(&cxlds->dpa_res, res);
- 	if (cxled->skip)
- 		release_skip(cxlds, skip_start, cxled->skip);
- 	cxled->skip = 0;
-@@ -336,6 +348,26 @@ static int request_skip(struct cxl_dev_state *cxlds,
- 	return -EBUSY;
- }
- 
-+static struct resource *cxl_dpa_request_region(struct resource *parent,
-+					       resource_size_t start,
-+					       resource_size_t n,
-+					       const char *name)
-+{
-+	if (!n) {
-+		struct resource *res;
++		if (!mock_zero_size_decoders)
++			continue;
 +
-+		res = kmalloc_obj(*res);
-+		if (!res)
-+			return NULL;
-+
-+		*res = DEFINE_RES_NAMED(start, 0, name, IORESOURCE_MEM);
-+
-+		return res;
-+	}
-+
-+	return __request_region(parent, start, n, name, 0);
-+}
-+
- static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 			     resource_size_t base, resource_size_t len,
- 			     resource_size_t skipped)
-@@ -349,12 +381,6 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 
- 	lockdep_assert_held_write(&cxl_rwsem.dpa);
- 
--	if (!len) {
--		dev_warn(dev, "decoder%d.%d: empty reservation attempted\n",
--			 port->id, cxled->cxld.id);
--		return -EINVAL;
--	}
--
- 	if (cxled->dpa_res) {
- 		dev_dbg(dev, "decoder%d.%d: existing allocation %pr assigned\n",
- 			port->id, cxled->cxld.id, cxled->dpa_res);
-@@ -378,8 +404,8 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 		if (rc)
- 			return rc;
- 	}
--	res = __request_region(&cxlds->dpa_res, base, len,
--			       dev_name(&cxled->cxld.dev), 0);
-+	res = cxl_dpa_request_region(&cxlds->dpa_res, base, len,
-+				     dev_name(&cxled->cxld.dev));
- 	if (!res) {
- 		dev_dbg(dev, "decoder%d.%d: failed to reserve allocation\n",
- 			port->id, cxled->cxld.id);
-@@ -402,7 +428,8 @@ static int __cxl_dpa_reserve(struct cxl_endpoint_decoder *cxled,
- 				break;
- 			}
- 
--	if (cxled->part < 0)
-+	/* Empty decoders may not be contained by a partition boundary */
-+	if (cxled->part < 0 && resource_size(res))
- 		dev_warn(dev, "decoder%d.%d: %pr does not map any partition\n",
- 			 port->id, cxled->cxld.id, res);
- 
-@@ -545,7 +572,7 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
- 	struct device *dev = &cxled->cxld.dev;
- 
- 	guard(rwsem_write)(&cxl_rwsem.dpa);
--	if (!cxled->dpa_res)
-+	if (cxled_empty(cxled))
- 		return 0;
- 	if (cxled->cxld.region) {
- 		dev_dbg(dev, "decoder assigned to: %s\n",
-@@ -1031,12 +1058,6 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 			return -ENXIO;
- 		}
- 
--		if (size == 0) {
--			dev_warn(&port->dev,
--				 "decoder%d.%d: Committed with zero size\n",
--				 port->id, cxld->id);
--			return -ENXIO;
--		}
- 		port->commit_end = cxld->id;
- 	} else {
- 		if (cxled) {
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 97b1e61ad018..ffd24992273d 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1384,6 +1384,9 @@ int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
- 	int nr_records = 0;
- 	int rc;
- 
-+	if (!len)
-+		return 0;
-+
- 	ACQUIRE(mutex_intr, lock)(&mds->poison.mutex);
- 	if ((rc = ACQUIRE_ERR(mutex_intr, &lock)))
- 		return rc;
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index fabaad3469b1..033063bd0658 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2115,7 +2115,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
- 		return -ENXIO;
- 	}
- 
--	if (!cxled->dpa_res) {
-+	if (cxled_empty(cxled)) {
- 		dev_dbg(&cxlr->dev, "%s:%s: missing DPA allocation.\n",
- 			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
- 		return -ENXIO;
-@@ -2959,24 +2959,31 @@ static int poison_by_decoder(struct device *dev, void *arg)
- 	if (!cxled->dpa_res)
- 		return 0;
- 
--	cxlmd = cxled_to_memdev(cxled);
--	cxlds = cxlmd->cxlds;
--	mode = cxlds->part[cxled->part].mode;
-+	/*
-+	 * Handle the degenerate case of a device with only empty decoders. An
-+	 * empty decoder can still map a non-zero skip range, so advance the
-+	 * walk to commit_end either way.
-+	 */
-+	if (cxled->part >= 0) {
-+		cxlmd = cxled_to_memdev(cxled);
-+		cxlds = cxlmd->cxlds;
-+		mode = cxlds->part[cxled->part].mode;
- 
--	if (cxled->skip) {
--		offset = cxled->dpa_res->start - cxled->skip;
--		length = cxled->skip;
--		rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
-+		if (cxled->skip) {
-+			offset = cxled->dpa_res->start - cxled->skip;
-+			length = cxled->skip;
-+			rc = cxl_mem_get_poison(cxlmd, offset, length, NULL);
-+			if (rc && (rc != -EFAULT || mode != CXL_PARTMODE_RAM))
-+				return rc;
-+		}
-+
-+		offset = cxled->dpa_res->start;
-+		length = cxled->dpa_res->end - offset + 1;
-+		rc = cxl_mem_get_poison(cxlmd, offset, length, cxled->cxld.region);
- 		if (rc && (rc != -EFAULT || mode != CXL_PARTMODE_RAM))
- 			return rc;
- 	}
- 
--	offset = cxled->dpa_res->start;
--	length = cxled->dpa_res->end - offset + 1;
--	rc = cxl_mem_get_poison(cxlmd, offset, length, cxled->cxld.region);
--	if (rc && (rc != -EFAULT || mode != CXL_PARTMODE_RAM))
--		return rc;
--
- 	/* Iterate until commit_end is reached */
- 	if (cxled->cxld.id == ctx->port->commit_end) {
- 		ctx->offset = cxled->dpa_res->end + 1;
-@@ -2998,9 +3005,17 @@ int cxl_get_poison_by_endpoint(struct cxl_port *port)
- 	};
- 
- 	rc = device_for_each_child(&port->dev, &ctx, poison_by_decoder);
--	if (rc == 1)
-+	if (rc == 1) {
 +		/*
-+		 * No decoder with a sized DPA reservation was walked
-+		 * (every committed decoder is zero-size): scan all
-+		 * partitions in full.
++		 * Mirror the endpoint: commit the next two switch decoders
++		 * as zero-size + locked so the empty-decoder layout extends
++		 * end-to-end through the switch and host bridge.
 +		 */
-+		if (ctx.part < 0)
-+			ctx.part = 0;
- 		rc = cxl_get_poison_unmapped(to_cxl_memdev(port->uport_dev),
- 					     &ctx);
-+	}
- 
- 	return rc;
++		for (id = 1; id <= 2; id++) {
++			dev = device_find_child(&iter->dev, &id,
++						match_decoder_by_index);
++			if (WARN_ON(!dev))
++				continue;
++			cxld = to_cxl_decoder(dev);
++			size_zero_mock_decoder_sw(cxld, base, i);
++			iter->commit_end = id;
++			cxld_registry_update(cxld);
++			put_device(dev);
++		}
+ 	}
  }
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index c0e5308e4d1b..cef53d9bd5c0 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -336,6 +336,16 @@ struct cxl_endpoint_decoder {
- 	int pos;
- };
  
-+/*
-+ * The common case is decoders with no reservation, but also handle
-+ * decoders with a zero-sized reservation that firmware may install for
-+ * security lockdown purposes.
-+ */
-+static inline bool cxled_empty(struct cxl_endpoint_decoder *cxled)
-+{
-+	return !cxled->dpa_res || !resource_size(cxled->dpa_res);
-+}
+@@ -2085,6 +2155,12 @@ static bool __init have_multiple_modparms(void)
+ 		count++;
+ 	if (type2_test)
+ 		count++;
++	if (mock_zero_size_decoders)
++		count++;
 +
- /**
-  * struct cxl_switch_decoder - Switch specific CXL HDM Decoder
-  * @cxld: base cxl_decoder object
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index 99cf77b6b699..c12fd0b89883 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -46,6 +46,9 @@ static int discover_region(struct device *dev, void *unused)
- 	if (cxled->state != CXL_DECODER_STATE_AUTO)
- 		return 0;
++	/* Zero-size decoders require decoder[0] to preserve commit order. */
++	if (fail_autoassemble && mock_zero_size_decoders)
++		return true;
  
-+	if (cxled_empty(cxled))
-+		return 0;
-+
- 	/*
- 	 * Region enumeration is opportunistic, if this add-event fails,
- 	 * continue to the next endpoint decoder.
+ 	return count > 1;
+ }
+@@ -2493,6 +2569,9 @@ module_param(fail_autoassemble, bool, 0444);
+ MODULE_PARM_DESC(fail_autoassemble, "Simulate missing member of an auto-region");
+ module_param(type2_test, bool, 0444);
+ MODULE_PARM_DESC(type2_test, "Enable type 2 support testing");
++module_param(mock_zero_size_decoders, bool, 0444);
++MODULE_PARM_DESC(mock_zero_size_decoders,
++		 "Mock committed, locked, empty decoders under host-bridge0");
+ module_init(cxl_test_init);
+ module_exit(cxl_test_exit);
+ MODULE_LICENSE("GPL v2");
 -- 
 2.43.0
 
