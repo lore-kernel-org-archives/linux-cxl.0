@@ -1,254 +1,347 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010059.outbound.protection.outlook.com [52.101.201.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 769E919E968
-	for <linux-cxl@vger.kernel.org>; Fri, 31 Jul 2026 07:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.59
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785483870; cv=fail; b=MyBK+7ytcAQxE20dD0t99Uk63odvpljV3TFEOJmZ+9xz6WEm749TT5W5LIRVbVSTT0Dv68i8gnTFok6D1XanPQNtLammVlKfB5kJJxcl+i5vE2kz7b3uo33/82amfRQ2F5ITLIIgQJKKkUtBLuljFDjdgWVxsbLyHQ+3/jaMPMA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785483870; c=relaxed/simple;
-	bh=784wOH4kAgwSKJF18Ubz7c9XealF3KHT6Dh3egJu4ys=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=pNUk3pJUNYQujtB17kHlkbxJySFGLGiZ9MXXTY4zTas9Hr/+uVkPe7EH8QmX4PLT71i8ZGeTU2spoZQjSxslw9Wv8I8jcf7D0zn4URZ9nuikg7FoGlq6gEy88qmqs1wUxx/3uYSCSQ7fXdZdEn9h+eqPf7gCsuJhw0FFm7hp/y0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gxUvUmjv; arc=fail smtp.client-ip=52.101.201.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F402367D3
+	for <linux-cxl@vger.kernel.org>; Fri, 31 Jul 2026 08:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785487763; cv=none; b=bgI8GMOFqS98DyHp6U5aJiMrFTX/b3iwRQh4muUVBKWdsRKZeeWkGsWuycseaNZfp0nKNxIE3ACef/Uo0GiB6jL0Kii608wHphPP6CUpckRH5PgdvI/DUHgXuLWq16gmnQgfkN83iP29hsz6FTxvBfSHcz6lty4qDhfY+vu253A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785487763; c=relaxed/simple;
+	bh=7EXJ/G0Pc7WGa2dz40IdLuVJeR6loF+lYJObwJCcpLA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QxOcnqfH2dOlqS/VZYipQJzS1+Rf9S6RLHz1q3pgmj3ejyhUtGycoxf8TLS2TA9k2YSYwiB4Ysp7kkDXyqmf5xHL4wp5nKuvZhuZwaXGfQBqzsvgs9A4rV0FUP2dmCA3pjimuf7C+8H1lI2CvIAbLHMuseN7EXSt5y1qFUBi4Yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=r+rdj9t2; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gxUvUmjv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CRICO5Zpxf5sPT5NfgZ9Ctp8BAqKQPTxDOtUzcT8qcN2iAgeZBLcCEs/1mmL+7Deh1OehrORBtmDE/hL/+JbJ9ApLCKw8X87RNMdMVOBmpzlGCLXpAcqbnhTaLwPrQgc+2yDw9y5/VZg0IKVO3O+nh6UPuR1YLxvOGBmo6haOwxu/z9jsnqBPuvZgUlibVBNN4m+fr2uo4azMFaCtur2far5KXdy9jNpJoa0DdQ74phDDCY8xDQWxFE6XCUKLWy7MuTsO94cEK6LfcwSsdm64y03Eod7YHJ5xXbjx+laVpl8CWdjGk3wbfujIuwZiUYmUHx4vq/IWqtYHeZZaLrOuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CsxANrZHdchk5Aic9SUh+dwHRbhxDyhBE4sQz8AjQi4=;
- b=PRtlXIxIXA6/GnsikMRS2CcZIq/eIuqjrz5tFKp1POgQAJjlZ7X8lB6HkfYj5mMXHLwiJ05kLFRjBbkfN9iYJKo1uPqxd4clkTsj+XkP1MFPtXDIGrFEopEP0hRHyWfWbY3xTGSzrsT563eCi9nzE2r1wZIuQCchHMbJvYNxkZLd/Zy7ZDskwwLYmHgu+pdUa1O4zgFj4zds1Ba3ib8AJFAucSKBMW5br/faaZH1HuOlwXKquHVpT5qXipUmmlqZHUEPSslUYtjh5U94y7tvhl/j0xjlrOvmIHGchPJGYB8Pq/VJpbG0XiBdNImJOgAlwD0qqftGoEKKqkEXX/crMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CsxANrZHdchk5Aic9SUh+dwHRbhxDyhBE4sQz8AjQi4=;
- b=gxUvUmjvf1ZqWqt1XY/xcpS3csPV4I9aDe4b6XuQ29bJQVqh6vsAc+GIKbvLfPmMPuhCYtd3s/Y/Upaz+lKHbp5rbC+WLVyT8HM+uOmhZ1J9lL5R0pMHLruwIko2p+1YJ7IfzvUMZ2xBp+RyI1cpXeNTTDHJJHtD7w9QWg1MYzt0dIf5hjjlMuSHjLX3u6yCcmyhfr0uwrqCqcevem8AB6cbhe3q4cocQCJ9IzRsHrFl00R3Q18H2n0le1Y+236hjI3aZctNVyhjqCE6EhzwMDHh8tU/MkpqQzRuwEjZN6VNi3v3X1WSiLCEY7Pd5aBNY3MqQO5HzSJnCovoo5EZIA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by CH3PR12MB7569.namprd12.prod.outlook.com (2603:10b6:610:146::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.16; Fri, 31 Jul
- 2026 07:44:25 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0270.012; Fri, 31 Jul 2026
- 07:44:25 +0000
-Date: Fri, 31 Jul 2026 15:44:18 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, 
-	Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, 
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] cxl/test: Add a 2-way 16K root decoder for
- passthrough testing
-Message-ID: <amxRzTxrPiwhlsx1@MWDK4CY14F>
-References: <cover.1784940306.git.alison.schofield@intel.com>
- <e89552a2c51b63657da50c9286d48ab858016721.1784940306.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e89552a2c51b63657da50c9286d48ab858016721.1784940306.git.alison.schofield@intel.com>
-X-ClientProxiedBy: JH0PR01CA0156.apcprd01.prod.exchangelabs.com
- (2603:1096:990:7::14) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+rdj9t2"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2cca0c5799eso5964555ad.0
+        for <linux-cxl@vger.kernel.org>; Fri, 31 Jul 2026 01:49:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785487761; x=1786092561; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=HfOGJ/oCq2h0EMXcanwDEj3Yl0Tslr9AcWcPdwXvyEs=;
+        b=r+rdj9t2+JFCPyomGWt1W7wnQWDi+dpioe2YZWomXizxRBJoBZVCyyk/K9suuj7vGq
+         BMNfTE9gvIdS1TJsIiMGd2Zqa2E8JVx+JU9esiWVK4pZk9fifLwQ6Ii7CnIXujyjyaHw
+         sUe8sDdumTNPRuZ3qSoZu8pXeMQAhHwv18Zc5H6eyx7CHIzkdA3VdeFpMIQHWqfsMJs3
+         aZkTFtXFsfccwPHuYJiIOgu3pyvemhyVZqN0hpGrSwwOHYWGpa0zz7VmEdFVrnYirQl0
+         Ms8iGXH9O+ePZABiFfdg0fDFch0P7mib7xg68KvWkZgltupGGTmcsRnocveadjHKS9+6
+         LMag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785487761; x=1786092561;
+        h=content-transfer-encoding:content-type:mime-version:message-id:date
+         :subject:cc:to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=HfOGJ/oCq2h0EMXcanwDEj3Yl0Tslr9AcWcPdwXvyEs=;
+        b=HtiNk8MvA24JhOgsrVdwAXFHk2k0IpNCTpQoecVpXXQ9nMkdTReTXa600jBYqKEM/n
+         xfjuOyvuuTQvyKADXC1XGRTmjey8M45vXHYNxiG5ut1S88/BzqeCo04oCnG+Olz1RJ6o
+         uCqTdI6gGLmKUwgZD0I4G/U+ict2RXT0eTnJ2M5Es6OrEKEjFqFgqXuFPic66m1xKKrx
+         m5aiuRt6dftsk3i2bO2qo35+yraqWsT4hV+mLYWbMI7rL8l1eeqsgYZq7l2h0HC+fWMX
+         R0yJ5P6nTNOMLIroNrv++05j1UZqF3SjZ1C399yc6VzGSp3DwzIOu5xtwV7sHPI3s08r
+         j0LQ==
+X-Gm-Message-State: AOJu0Yzlbovp+1+4VS+Adc+hkZuD5ohiVPqjKWEwyWJygzfYGs5vvmax
+	1J7rHcIWdI3ZtM4JTHPlE+L4YH+B8CgpDWs5Is4zP2ZCN55/ZFa1UL5S78G1+A==
+X-Gm-Gg: AR+sD119uiqkXnXTRQr2SCunyXhuFM++Sqie3RefAJSjyh8vbAA4jnWDrOgE5YUrHl+
+	DLrgmcrRxq+gp95uvS4GofxdjgmiE3Nglz+3FzVodbQqlu+9kL60uFgs8b9FDdJblqxFxoOgFsw
+	Ma5ZJVnPSgcQIyxsAbOIAtiG1knTvlT9uJNp+eEhNsCqBRIk0XV9fK1KwBumVWTDR1grv5eDJRM
+	TVIIiJdwHEXDtDN8mnhmHdNpoPswk3wVtig88GJxYxcP7vstuu0NIjm/F/9iwf2AKZlqwZrD4vf
+	KmcQ01dcGSUP62R4SLXNRS6P8S7aJEsOiIZWQXuOfjkphWiptBHfK5gaEM937TpuqDZ/oAg3c1p
+	va5ip0ISAcIg0TPH/hIfEdpZA+xZjnFMoAnPfbWLtQBjwNJklka9K1zDtO11FH6uXLCdJlluEds
+	aR/Gi1dIxCECxTIiNeEXFNsW5v6E8ZwKJtcsZon8dSmDd4KDRwRpHXvuofqTBsYp9opOaCLU6cl
+	07vt6FrWkPQJxld3nwTqOIyNEst125J8ayvXhHgc2Ow
+X-Received: by 2002:a17:903:1b0d:b0:2cc:aa36:c04c with SMTP id d9443c01a7336-2d046d6fac4mr12405165ad.1.1785487760433;
+        Fri, 31 Jul 2026 01:49:20 -0700 (PDT)
+Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d04ae5abaesm2708425ad.27.2026.07.31.01.49.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Jul 2026 01:49:19 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+To: linux-cxl@vger.kernel.org
+Cc: nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Fan Ni <nifan.cxl@gmail.com>,
+	Li Ming <ming.li@zohomail.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Ira Weiny <iweiny@kernel.org>,
+	Benjamin Cheatham <benjamin.cheatham@amd.com>,
+	Wonjae Lee <wj28.lee@samsung.com>,
+	Junhee Park <jh9934.park@samsung.com>,
+	Heesoo Kim <habil.kim@samsung.com>,
+	Anisa Su <anisa.su@samsung.com>
+Subject: [PATCH v12 0/8] DCD Prep Series
+Date: Fri, 31 Jul 2026 01:48:05 -0700
+Message-ID: <20260731084901.1512819-1-anisa.su@samsung.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|CH3PR12MB7569:EE_
-X-MS-Office365-Filtering-Correlation-Id: 28006ae1-c1ef-47f5-02c6-08deeed78a89
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|23010399003|1800799024|3023799007|4143699003|11063799006|6133799003|10067099003|18002099003|22082099003|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	rTW2MS3VPv5Avfd52BgRhIPmZQ+gEZ+ZA8pJ8WHHzE9bMVcNzeXpJvxYG15WtEIa74NSdtm0JYgvjnXSsgGiflde9Z3/LkCOyK7rB6jUyxNUjkOnIcWiCWUG0zawPDj/dNPD+e2SJrIjEeQTgl2rLEwQCBfRQRBFuiJfr6wltDZFDKG1Ki7AzwksxgQrHRjvlUJVQaGMs/cR6a+jPTZix+Lvv3XlxGP6l15BAzl6hxzx/aWz8qeziOlBs/kjXYhtAZtZ/Xn9OEybkbT3Mup614+gzMXPkgWUD6lqNWsAyBoIzBG47HcvzxKr7cVVyxHSu4u0K4ZpKJQ864rdO70lxXa9c7ECuOUe9gwG59xQ9QGYh2L45uShmYmAEtOEb5sAHDQcTvMB8HmkMkyYy1+1YSBrrGc9lZfAlz9w8F5Hn/NO9gJqnG4w1BpcvQpeNbodcWJCjoWzR18cmv1US1v0ZU/lNYs5OmW2h/sAkANi+VHMuBXZfsMp/VGqS2aefdaS/DiurEudlKAk61Bi9L27aZju8IG7zRQD3TOxfF7T2MaWo8XXMbz0RbDhkwE50nDA6Z22E1fvj8OKQxeoq4o7bKOmRIxpqG4LYgZYa5aZj5Dfdk4WS6+H20GsH71jAMl1rbbQKePj1Wi4Mes5l7Xl69tQs98rPLjRL2ISpN6+mtM=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(23010399003)(1800799024)(3023799007)(4143699003)(11063799006)(6133799003)(10067099003)(18002099003)(22082099003)(56012099006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?XUq8FsuMwTIBmHHI5E3EeRpYThAg/O47nyWB6Wd5Pff7YDYxp15rqyON6+bX?=
- =?us-ascii?Q?0KJUaO1Zf1pjZJlfjIhdJODWxN7+/l8r9CYskimERQM0morQs2L5hctL34fy?=
- =?us-ascii?Q?EgA67tkICRvzjyEZaaBOfkcT+OGHv8KkKEDiJ9J6mwWc7IJ8Rl6SzmA2fPMC?=
- =?us-ascii?Q?uXXgvQYM6j2R81QymYfe0HkNx80LxpP3Noj4vJ6nM24To8llHU0Wcg/h+Au5?=
- =?us-ascii?Q?qjNH7Or3tWxX+qj/G0ti3bqsNk6PuJ/arnlMoin7QG4X1jWVjGaXqb/msAgZ?=
- =?us-ascii?Q?x/glpdN4AS+C3sWWxEd9QMCpSdbbOH85At39EG8ExH2FQuh0H5k7eY89Cvxl?=
- =?us-ascii?Q?rflpcIkST+/15kHO0B5fFl2Bv+C7RMujkFHZrXiaShpV1U+dHDYdjgM/187j?=
- =?us-ascii?Q?/0KoS1XWCcELiOLFyNIarGMOoEfkDLBi95BRZiD/Htd9swCparY5z7Gap7Y8?=
- =?us-ascii?Q?XZnfN9EGouLYtaHaxRctq2vrRPYSrbZvdkrp9715K5cEP/AGdc3V+U8wSv0f?=
- =?us-ascii?Q?AQFUcIrH3I6RwUqh72KN59oN8c3zOWEwatSFjQZeQH1vRM72HUlwrhlMG90O?=
- =?us-ascii?Q?G5+8WzFscZhEFKA6aQbRk29SfYRp2kMJ6jVTLdhLiUMpx4X4RgUS24NARGuO?=
- =?us-ascii?Q?y2jO+M3+f22hkYfNzGddped0Bd8qCXgKV5dH0kUIcMpM5z/xa5fxQGh6PvAQ?=
- =?us-ascii?Q?yiFpdzoKyE4KijvAb+X41jHTzydsEQOHGVxnU/kG+OEOlhE5ohBKOJpfPRZ6?=
- =?us-ascii?Q?YjBDonBeEYfydRwyrATBwo3xIW2vTZlERPsEAabvq/go97u86cMiwDNk63KW?=
- =?us-ascii?Q?MVcLhHNuL3WdE5+KP6mcv8QTqjV6pKtxIC9Ai+6eXntHXthalWRC7iYOxyRp?=
- =?us-ascii?Q?MixqotMwWrxUF0gLsRULb+63pOAI6lCI39Z2a+O6OWxU33XoltyY6Te2ENFF?=
- =?us-ascii?Q?8wGXhaPcOZea+zgZbnZATRq0kW6LT5LC0g5VbZ3XIl146xp+1+9KdTQdCA24?=
- =?us-ascii?Q?o9yMBii7/KiIz9ank4tc2rRFkB3vyN1ByxxMLuLbNzu2Ny0V43Zobcyk6m8/?=
- =?us-ascii?Q?z6kKbN7me14aOQWVYP5m6jAAzBFq8ISggiDXNBDdtSnHe17btPXwt1a1isIC?=
- =?us-ascii?Q?McMlw6DzQelc50u3JT5UezY0X4kCVFf7MWHN2fiWjP+uvZwrx94uOx82PdIN?=
- =?us-ascii?Q?F9UYNXMHnK8bg970vuuTrewPVuU3WnKa+C0keIkSNoU4cXrt764Mf3eavmEG?=
- =?us-ascii?Q?V6rjVkduFMNHa1/ZL1cCI+5OLW8thD5ksE4kkXExNRRZY6ZAtHDK/zQShvA9?=
- =?us-ascii?Q?b+K5SyXToWvRC8RZpkhVABRaxswahaG5QklRxrZe/yfrfdm87fTkjmP9HMTK?=
- =?us-ascii?Q?L7R6PJRwf/KwqhQqIM6MVJZqgiezMMXeuk7Q2nbW3TQyhkoqQcIQQ/aK2KSM?=
- =?us-ascii?Q?YFolmUgHv01eJb2tDGbu/rONdnOSAJD5Jijgqf1EdVt/D/G9+cD7X9jnCL+z?=
- =?us-ascii?Q?jEYXrQxszmcLRzBfcek0i+e1EBwS6/dS/ZbLpc35SZC/njGE1datFqEKcklI?=
- =?us-ascii?Q?fxq7f2Ac8uM4tyf6Xadd9SON+05HIzWV0o8jSqf5FfaR56HMaYllgXYRTxF2?=
- =?us-ascii?Q?oLpK86mV1npVKKCL9aLSnyslU1hbgZCiisTvokXwj11Q7uobCKRnofTOi1lO?=
- =?us-ascii?Q?dxOwnjpZYn1VhLX2Bq8LexKmh13o6u1PY4qrE2LxVsH4KTM0aud2/effbVQu?=
- =?us-ascii?Q?bgpqcPylVw=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28006ae1-c1ef-47f5-02c6-08deeed78a89
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2026 07:44:24.9878
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: So2ttKPmyrcUU0pPlaLNB3Vhabr1EZuYd9RikHO86rxAztM21GAEVGRoUblUYnx8/Mafai9hw3csbKsm5/sGOA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7569
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 24, 2026 at 06:08:55PM +0800, Alison Schofield wrote:
-> The cxl-test topologies do not provide a configuration where pass-
-> through decoders compute a granularity above the 16K max encodable
-> in hardware. The widest power-of-2 root decoder currently available
-> is 2-way at 4K granularity, so a passthrough decoder below it
-> computes at most 16K.
->
+These are the first eight patches of the Dynamic Capacity Device (DCD)
+series, split from v11 and posted on their own: DCD enumeration, CDAT handling
+for DC partitions, the event interrupt plumbing, and two prepatory refactors.
+They stand alone, and keep DCD disabled. They are not dependent on the
+rest of the series, so I think they are safe enough to pick up ahead
+of the rest.
 
-I think 2-way with 4K granularity computes 8K, not 16K.
-The conclusion does hold, just the number.
+Patch 1 detects the 48h command set and then leaves mds->dcd_supported
+false. The flag is only turned on by the event handling patch later
+in the full series, so every DCD specific path added here is shut off at
+runtime: cxl_configure_dcd() never runs, no DC partition is created,
+no DCD interrupt is armed, and the CXL_PARTMODE_DYNAMIC_RAM_1 paths are
+unreachable.  The intent is to land the enumeration and plumbing while
+the extent to DAX pipeline is still under review.
 
- 
-> Add a CFMWS entry for a 2-way root decoder at 16K granularity. This
-> topology supports a region configuration spanning the two multi-port
-> host bridges and placing one endpoint under each bridge. The
-> intermediate switch decoders are then passthrough decoders with a
-> computed granularity of 32K.
-> 
-> This allows a CXL unit test to be added for this case.
-> 
-> Place the new window in the XOR topology set so the default modulo
-> topology used by most cxl-test coverage is unchanged.
-> 
-> Assisted-by: Claude:Opus-4-8
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  tools/testing/cxl/test/cxl.c | 48 ++++++++++++++++++++++++++++++++++--
->  1 file changed, 46 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index ef92dd35e030..5b87a3f5673f 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -188,10 +188,18 @@ static struct {
->  		struct acpi_cedt_cfmws cfmws;
->  		u32 target[3];
->  	} cfmws8;
-> +	struct {
-> +		struct acpi_cedt_cfmws cfmws;
-> +		u32 target[2];
-> +	} cfmws9;
->  	struct {
->  		struct acpi_cedt_cxims cxims;
->  		u64 xormap_list[2];
->  	} cxims0;
-> +	struct {
-> +		struct acpi_cedt_cxims cxims;
-> +		u64 xormap_list[1];
-> +	} cxims1;
->  } __packed mock_cedt = {
->  	.cedt = {
->  		.header = {
-> @@ -371,6 +379,28 @@ static struct {
->  		},
->  		.target = { 0, 1, 2, },
->  	},
-> +	/*
-> +	 * A 2-way root at 16K granularity. A passthrough decoder below this
-> +	 * root computes a 32K granularity (16K * 2), which exceeds the maximum
-> +	 * encodable in hardware. It exercises the passthrough granularity path
-> +	 * in cxl_port_setup_targets().
-> +	 */
-> +	.cfmws9 = {
-> +		.cfmws = {
-> +			.header = {
-> +				.type = ACPI_CEDT_TYPE_CFMWS,
-> +				.length = sizeof(mock_cedt.cfmws9),
-> +			},
-> +			.interleave_arithmetic = ACPI_CEDT_CFMWS_ARITHMETIC_XOR,
-> +			.interleave_ways = 1,
-> +			.granularity = 6,
-> +			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-> +					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-> +			.qtg_id = FAKE_QTG_ID,
-> +			.window_size = SZ_256M * 8UL,
-> +		},
-> +		.target = { 0, 1, },
-> +	},
->  	.cxims0 = {
->  		.cxims = {
->  			.header = {
-> @@ -382,6 +412,18 @@ static struct {
->  		},
->  		.xormap_list = { 0x404100, 0x808200, },
->  	},
-> +	/* CXIMS for the 16K (hbig = 6) 2-way root, cfmws9 */
-> +	.cxims1 = {
-> +		.cxims = {
-> +			.header = {
-> +				.type = ACPI_CEDT_TYPE_CXIMS,
-> +				.length = sizeof(mock_cedt.cxims1),
-> +			},
-> +			.hbig = 6,
-> +			.nr_xormaps = 1,
-> +		},
-> +		.xormap_list = { 0x0, },
-> +	},
->  };
->  
->  struct acpi_cedt_cfmws *mock_cfmws[] = {
-> @@ -395,6 +437,7 @@ struct acpi_cedt_cfmws *mock_cfmws[] = {
->  	[6] = &mock_cedt.cfmws6.cfmws,
->  	[7] = &mock_cedt.cfmws7.cfmws,
->  	[8] = &mock_cedt.cfmws8.cfmws,
-> +	[9] = &mock_cedt.cfmws9.cfmws,
->  };
->  
->  static int cfmws_start;
-> @@ -402,10 +445,11 @@ static int cfmws_end;
->  #define CFMWS_MOD_ARRAY_START 0
->  #define CFMWS_MOD_ARRAY_END   5
->  #define CFMWS_XOR_ARRAY_START 6
-> -#define CFMWS_XOR_ARRAY_END   8
-> +#define CFMWS_XOR_ARRAY_END   9
->  
-> -struct acpi_cedt_cxims *mock_cxims[1] = {
-> +struct acpi_cedt_cxims *mock_cxims[2] = {
->  	[0] = &mock_cedt.cxims0.cxims,
-> +	[1] = &mock_cedt.cxims1.cxims,
->  };
->  
->  struct cxl_mock_res {
-> -- 
-> 2.37.3
-> 
-> 
+Based on v7.2-rc5.
 
-Reviewed-by: Richard Cheng <icheng@nvidia.com>
+GitHub Branch:
+https://github.com/anisa-su993/anisa-linux-kernel/tree/dcd-prep-series
 
-Best regards,
-Richard Cheng.
+v11 -> v12 Changes:
+===================
+ - Patch 1: cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
+        - now leaves DCD disabled (mds->dcd_supported = false)
+
+ - Patch 2: cxl/mem: Read dynamic capacity configuration from the device
+        - mbox.c: bound the Get DC Config request by the negotiated
+          mailbox payload. Requesting all 8 partitions needs 328 bytes,
+          which exceeds a spec-minimum 256-byte mailbox and fails -E2BIG,
+          disabling DCD. Cap partition_count per call and read the rest
+          via the existing loop (Sashiko)
+
+        - cxlmem.h/mbox.c: bump DC config comment references from CXL 3.2
+          to CXL r4.0 (Tables 8-178/179/180), matching the commit log (Dave)
+
+ - Patch 3: cxl/cdat: Gather DSMAS data for DCD partitions\
+        - No functional change. Just added the tags below
+        + Co-developed-by: Anisa Su (for shareable support)
+        + Reviewed-by: Dave Jiang
+
+ - Patch 6:
+        - pci.c: size the Set Event Interrupt Policy payload by the
+          device's policy layout (Get reply length) instead of assuming
+          based on DCD command support; a CXL 3.0+ non-DCD device can have
+          the dcd_settings policy bit but not support DCD commands (Benjamin Cheatham).
+        - link to report: https://lore.kernel.org/linux-cxl/20260625112638.550691-1-anisa.su@samsung.com/T/#m09b4512dbde6e1f47a27f28c44e23d83a2d628e4
+
+        - pci.c: add cxl_event_drain_mask() helper to set drain mask
+          (standard logs when native_cxl, DCD when supported). Shared by
+          cxl_event_thread() and the initial drain in cxl_event_config() to
+          address the 2 issues reported by Sashiko below:
+          1. If cxl_event_req_irq() fails for the DCD log, cxl_irqsetup()
+            calls cxl_disable_dcd() — which clears the driver's flag but
+            leaves the device armed for DCD interrupts. Then cxl_event_thread(),
+            whose drain mask still included the DCD bit, would see
+            CXLDEV_EVENT_STATUS_DCD set while cxl_mem_get_event_records()
+            refused to drain that log (it checks cxl_dcd_supported(), now false),
+            leaving the bit permanently set and spinning the
+            do { } while (status) loop forever.
+          2. The probe-time drain was gated on native_cxl, but the driver owns the
+            DCD log regardless of who owns standard error handling (firmware cannot take DCD).
+            So on a BIOS-first platform with a DCD device, the pre-existing DCD events were
+            never drained at probe. Because the interrupts are edge-triggered, that already-set
+            status bit could strand future notifications
+          > link to report: https://lore.kernel.org/linux-cxl/20260625112638.550691-1-anisa.su@samsung.com/T/#m9141704ffeadd08ea86d16121575c4b5c400d107
+
+ - misc. checkpatch and comment cleanups across the set
+
+ - Tested-by: from Wonjae Lee, Junhee Park and Heesoo Kim on all 8 patches
+
+The tags apply to the v11 series but I carried the tags over because
+the changes detailed above (256B mailbox size, card with dcd_settings policy
+bit but doesn't support 48xx cmds) are not relevant to the test configuration,
+which has a sufficiently large mailbox size, and has both the
+dcd_settings policy bit + supports the 48xx commands.
+But if needed, this can be re-tested on HW. I thought
+it might not be very meaningful since DCD is turned off.
+
+Instead, I emulated a 256B mailbox with QEMU and a 3.0 non-DCD device to
+check that the fixes work. Detailed below.
+
+v11 (full series):
+https://lore.kernel.org/linux-cxl/20260625112638.550691-1-anisa.su@samsung.com/
+
+What changes for devices without DCD
+====================================
+Code that touches non-DCD devices:
+
+ - ram_size and ram qos_class locate the RAM partition by mode instead of
+   assuming index 0; cxl_pmem_size() becomes cxl_part_size().
+
+ - CXL_NR_PARTITIONS_MAX goes from 2 to 3, and each partition records its
+   DSMAS handle and shareable flag from CDAT. Both fields are written
+   here but not consumed until the rest of the patchset.
+
+Review status
+=============
+Patches 1, 2 and 6 carry no Reviewed-by: the DCD capability flag, the
+Get DC Config read, and the event interrupt configuration, so review
+there is especially welcome.  Patches 3 and 8 picked up Dave Jiang's
+Reviewed-by since v11; the rest carry their v11 tags unchanged.
+
+Patch organization
+==================
+ 1-3: enumerate DCD command support, read the DC configuration, and pick
+      up DSMAS data for DC partitions.
+ 4-6: split event msgnum configuration from irq setup, factor out the
+      interrupt policy check, then configure the DCD event interrupt.
+ 7-8: prepatory refactors -- return the endpoint decoder from the region
+      search, and enforce partition order while collapsing the ram/pmem
+      specific partition helpers into one.
+
+Testing
+=======
+As I mentioned above, the full v11 series was tested on shareable DCD hw
+on GNR platform, but since the test configuration doesn't apply to
+the changes made in this version, I quickly tweaked QEMU to emulate a
+256B mailbox (set CXL_MAILBOX_PAYLOAD_SHIFT = 8) and set the minimum
+policy length from 4 to 5 (to include dcd_settings).
+
+The relevant conclusion from the HW testing on v11 is that adding
+and releasing extents succeeded, so the event interrupts were working.
+Additionally, the device is shareable and an untagged (null uuid)
+extent was rejected, so partition data is probably read correctly.
+
+Also used ndctl-test-runner to run cxl_test to test for regressions.
+The NDCTL branch tested against is pmem/pending:
+https://github.com/anisa-su993/ndctl-test-runner/actions/runs/30613886000
+
+QEMU test results: interrupt policy sizing and Get DC Config bounding
+=====================================================================
+QEMU:   cxl-type3, two local modifications described per test
+
+Test 1: Set Event Interrupt Policy against a strict device
+----------------------------------------------------------
+Models the card Benjamin Cheatham reported: CXL 3.0+, exposes the DCD
+interrupt-policy field, does NOT advertise the 48h DCD command set.
+
+QEMU modification -- make the device reject the 4 byte policy payload:
+
+    --- a/include/hw/cxl/cxl_events.h
+    +++ b/include/hw/cxl/cxl_events.h
+    -#define CXL_EVENT_INT_SETTING_MIN_LEN 4
+    +#define CXL_EVENT_INT_SETTING_MIN_LEN 5
+
+Topology: plain cxl-type3 (no dc-regions), so no 48h commands appear in
+the CEL and the driver leaves DCD unsupported.
+
+With the fix (payload sized from the device's Get reply):
+
+    Event config : OS DCD not supported
+    memdev count:  1
+
+The device probes, and the Set succeeds because the driver echoes back
+the 5-byte layout the device declared in its Get reply, even though DCD
+command support is off.
+
+Without the fix -- same topology
+(.size_in = CXL_EVENT_INT_POLICY_BASE_SIZE, i.e. always 4 bytes):
+
+    [   13.635070] cxl_pci:__cxl_pci_mbox_send_cmd:346: cxl_pci 0000:0d:00.0: Mailbox operation had an error: invalid payload length
+    [   13.638125] cxl_pci 0000:0d:00.0: Failed to set event interrupt policy : -6
+    memdev count:  0
+
+The failure is not cosmetic: cxl_event_config() propagates the error and
+cxl_pci_probe() returns it, so the memory device does not attach at all.
+This reproduces the reported failure and confirms the fix addresses it.
+
+
+Test 2: Get DC Config on a spec-minimum mailbox
+-----------------------------------------------
+CXL r3.1 allows a 256-byte mailbox payload.  Before the v12 change the
+driver asked for all CXL_MAX_DC_PARTITIONS (8) partitions in one Get DC
+Config -- 8 + 8 * 40 = 328 bytes -- which cxl_internal_send_cmd() rejects
+with -E2BIG before the command reaches the device, leaving DCD silently
+unavailable.
+
+QEMU modification -- shrink the mailbox to the spec minimum:
+
+    --- a/include/hw/cxl/cxl_device.h
+    +++ b/include/hw/cxl/cxl_device.h
+    -#define CXL_MAILBOX_PAYLOAD_SHIFT 11        /* 2048 bytes */
+    +#define CXL_MAILBOX_PAYLOAD_SHIFT 8         /*  256 bytes */
+
+2a. Single DC region -- PASSES
+
+    [  370.443819] cxl_pci_setup_mailbox: Mailbox payload sized 256
+    [  370.574517] cxl_dc_check: DC partition 0 start 0 size 12884901888 blk_size: 2097152
+    [  370.579817] cxl_dev_dc_identify: Returning partition 0 0 size 12884901888
+    [  370.584529] cxl_configure_dcd: Adding dynamic ram partition 1; 0 size 12884901888
+    [  370.588750] add_dpa_res: DPA(dynamic_ram_1): [mem 0x00000000-0x2ffffffff flags 0x200]
+
+    # cat /sys/bus/cxl/devices/mem0/dynamic_ram_1/size
+    0x300000000
+
+cxl_dc_check() and cxl_dev_dc_identify() only reach those dev_dbg()s
+after cxl_get_dc_config() returns successfully, so the read completed
+rather than failing -E2BIG.  Exactly one "Sending command: 0x4800"
+appears: the device has one region, so the per-call cap is exercised but
+the start_partition continuation loop is not.
+
+2b. Eight DC regions -- PASSES
+
+Re-run with num-dc-regions=8 to force more partitions than fit in one
+payload to test that the loop for retrieving all paritions is working.
+
+    Mailbox payload sized 256
+    "Sending command: 0x4800" count: 2
+
+    [   13.037634] cxl_pci:__cxl_pci_mbox_send_cmd:263: cxl_pci 0000:0d:00.0: Sending command: 0x4800
+    [   13.039762] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0d:00.0: Doorbell wait took 0ms
+    [   13.042483] cxl_core:cxl_get_dc_config:2166: cxl_pci 0000:0d:00.0: Read 5/8 DC partitions
+    [   13.044020] cxl_core:cxl_dc_check:2111: cxl_pci 0000:0d:00.0: DC partition 0 start 0 size 1610612736 blk_size: 2097152
+    [   13.046735] cxl_core:cxl_dc_check:2111: cxl_pci 0000:0d:00.0: DC partition 1 start 1610612736 size 1610612736 blk_size: 2097152
+    [   13.049732] cxl_core:cxl_dc_check:2111: cxl_pci 0000:0d:00.0: DC partition 2 start 3221225472 size 1610612736 blk_size: 2097152
+    [   13.053862] cxl_core:cxl_dc_check:2111: cxl_pci 0000:0d:00.0: DC partition 3 start 4831838208 size 1610612736 blk_size: 2097152
+    [   13.056833] cxl_core:cxl_dc_check:2111: cxl_pci 0000:0d:00.0: DC partition 4 start 6442450944 size 1610612736 blk_size: 2097152
+    [   13.059801] cxl_pci:__cxl_pci_mbox_send_cmd:263: cxl_pci 0000:0d:00.0: Sending command: 0x4800
+    [   13.062293] cxl_pci:cxl_pci_mbox_wait_for_doorbell:74: cxl_pci 0000:0d:00.0: Doorbell wait took 0ms
+    [   13.064680] cxl_core:cxl_get_dc_config:2166: cxl_pci 0000:0d:00.0: Read 3/8 DC partitions
+    [   13.066897] cxl_core:cxl_dc_check:2111: cxl_pci 0000:0d:00.0: DC partition 5 start 8053063680 size 1610612736 blk_size: 2097152
+    [   13.072694] cxl_core:cxl_dc_check:2111: cxl_pci 0000:0d:00.0: DC partition 6 start 9663676416 size 1610612736 blk_size: 2097152
+    [   13.076634] cxl_core:cxl_dc_check:2111: cxl_pci 0000:0d:00.0: DC partition 7 start 11274289152 size 1610612736 blk_size: 2097152
+    [   13.080084] cxl_core:cxl_dev_dc_identify:2256: cxl_pci 0000:0d:00.0: Returning partition 0 0 size 1610612736
+
+Two Get DC Config commands rather than one: the device holds eight
+partitions and only five fit per call, so start_partition advances and
+the remaining three are read in a second call. 
+
+Ira Weiny (8):
+  cxl/mbox: Flag support for Dynamic Capacity Devices (DCD)
+  cxl/mem: Read dynamic capacity configuration from the device
+  cxl/cdat: Gather DSMAS data for DCD partitions
+  cxl/events: Split event msgnum configuration from irq setup
+  cxl/pci: Factor out interrupt policy check
+  cxl/mem: Configure dynamic capacity interrupts
+  cxl/core: Return endpoint decoder information from region search
+  cxl/core: Enforce partition order/simplify partition calls
+
+ drivers/cxl/core/cdat.c   |  13 ++
+ drivers/cxl/core/core.h   |   6 +-
+ drivers/cxl/core/hdm.c    |  14 +-
+ drivers/cxl/core/mbox.c   | 286 +++++++++++++++++++++++++++++++++++++-
+ drivers/cxl/core/memdev.c |  36 ++---
+ drivers/cxl/core/region.c |   8 +-
+ drivers/cxl/cxl.h         |   4 +-
+ drivers/cxl/cxlmem.h      |  88 +++++++++++-
+ drivers/cxl/mem.c         |   2 +-
+ drivers/cxl/pci.c         | 161 ++++++++++++++++-----
+ include/cxl/cxl.h         |   7 +-
+ 11 files changed, 546 insertions(+), 79 deletions(-)
+
+
+base-commit: f5098b6bae761e346ebcd9da7f95622c04733cff
+-- 
+2.43.0
+
