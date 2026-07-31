@@ -1,98 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0CE36BCED
-	for <linux-cxl@vger.kernel.org>; Fri, 31 Jul 2026 07:01:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7D31A6806
+	for <linux-cxl@vger.kernel.org>; Fri, 31 Jul 2026 07:04:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785481321; cv=none; b=nJVEV4lP1KYowPRj/W0AOsEUQSq9qDGCN8heV5pnKMnc56/6qwz/HhpDYCIVRh0RNqoH5Zhw2DXg/+bP2DwIa/y+E9bxY4buAFZgKa4Ftr8s8XKKQR56M4laGP2vC4bETpQznMrUubMRU4sEF5piiuOrjYKOvmH++oFu4sUReQs=
+	t=1785481489; cv=none; b=q66lLtwntMZVBQiaCcEnK8+gIQSEInLwD7Lr/zxRemKbmduRuyLjmqouyG9gU91XOC9Tm4t0ZSpqkAUNsomtEVrOAu++DKJfQ29qfj9P4uuv/0AJPV7g09vajHuyOiNxGrXomigeidzZh8EO50WeztfYGvJcCXtg2YNG1ovzm10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785481321; c=relaxed/simple;
-	bh=BExyUmTRcMtsUZQJI8KjL11ZDrOBhX4q4k6/6yGLFLk=;
+	s=arc-20240116; t=1785481489; c=relaxed/simple;
+	bh=4xkKEUtuA2MgJ01XWfmDRJcHAMvDaZ/xYuRGbW1fcIA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YTUHy5RLoqRg1+uGdNTZQ41xFCh2p1x7Er7rfwFR8WoyTwxR2icUGNdJTsvrFyMN4qE1Td2WK7Ymn+ae3V+Q5WwmrLGlAFFgg1vePSjLBg+u0xCwXme8uyRggZgTVs2Jz8HcP5H7r1A/3e3WKLpmU/zzfxGY3uuC5aU626qH88M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c61X5FkN; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=eL3rX3oNloQUdpqXXI/Toeini7/bCMpSjOcvEPWhoxoqnZIFn3AyMR9N6v5T1u021IIfNwuWujQGDE9dX2twmY4PEuYMsIy0VG1AgrTOwhPOo9/SJ7lMKj65HaZkY5r9ZfI7RJWCayIoV3gfGKnb5cn7yHvE+l75awHIEs70WhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GfIACrPv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c61X5FkN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A61051F00AC4;
-	Fri, 31 Jul 2026 07:01:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GfIACrPv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E01A81F000E9;
+	Fri, 31 Jul 2026 07:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785481318;
-	bh=bdm2GwZD5UGw9DLdOvfUT9vYh2vzwbZAzeyq93bGIhM=;
+	s=k20260515; t=1785481487;
+	bh=P1aUfCvHiNwMLrV5u2FM51grOlzAEgmj2BV+oSaUz2k=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=c61X5FkNHYoE+wHLy+iw9Yb8ynBytRTY4aYC/hlmDD40VWga45vBePYBErqz74fA/
-	 sq+RyCVB3BXU+phd0YAmhKCgFeboelOzoUsoSVlHHsTkMMzm5MFBWat6ZInkOnAh6J
-	 A/3ZIr9Q9C4cC1ssVPKElLPicUNWdoUuSfhxYmU0uw25/fYUV+NTFO4x+A78+05Imh
-	 wPBWdL67/ag3W5GNDJZeo0+dKir/wVsBBJC8MoOCn+jaU7TUK/VeG9G7lgGlFlBTwS
-	 2CgiUHYA5DHwLEMbtIfSBDQUNDcnf0+BnAC0LoSgj7fefnrNCTlaxRNzeBS2jXo9Iy
-	 dHLkvKIXAQLkw==
+	b=GfIACrPv9/eD7rAIWIBnQcCisG5Oqz7mTPDuw6Y/Wt5qNT8M+FhsMCrFEDgtGdj5G
+	 fihzScgtjwB/f+gSuRUeM26VHze/N9DHOTG24M8TEGHjarKhSSiMfPhABoPeETqehW
+	 5tNLRX+Un3r0PvIMaF0Pen1s3ffgs4CK76Www+gaBCh/DjOTgOA1bOaLhz/RiYHtNd
+	 U80h5gEE9ROK0zCgcSxeq+YppiYeKw7TwNKsRPpkcLDBdw2WQui3MrYjztroOUKIDZ
+	 K68yb4hzELwjaxSL+LlIBa65uGMRffnwZd1ViDGxUIvM78fcj53mgiamqy+/5Ruww3
+	 uTvhowJYHe52A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 2/3] cxl/hdm: Allow zero sized HDM decoders
+Subject: Re: [PATCH v8 1/3] cxl/region: Simplify poison_by_decoder() error
+ handling
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Richard Cheng" <icheng@nvidia.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260731064902.34127-3-icheng@nvidia.com>
+In-Reply-To: <20260731064902.34127-2-icheng@nvidia.com>
 References: <20260731064902.34127-1-icheng@nvidia.com>
- <20260731064902.34127-3-icheng@nvidia.com>
+ <20260731064902.34127-2-icheng@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 31 Jul 2026 07:01:58 +0000
-Message-Id: <20260731070158.A61051F00AC4@smtp.kernel.org>
+Date: Fri, 31 Jul 2026 07:04:46 +0000
+Message-Id: <20260731070446.E01A81F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] cxl_dpa_free() silently early-returns on zero-sized decoders, fail=
-ing to release the DPA tracking resource and permanently locking port->hdm_=
-end, breaking LIFO teardown.
+
+Pre-existing issues:
+- [High] Array out-of-bounds read when `cxled->part` is -1.
+- [High] Silent error masking in `cxl_get_poison_by_memdev` overwrites earl=
+ier failures.
 --
 
---- Patch [2]: [PATCH v8 2/3] cxl/hdm: Allow zero sized HDM decoders ---
-commit d92ffa9b7fbe4708b46c314f7b9ca98c30df149a
+--- Patch [1]: [PATCH v8 1/3] cxl/region: Simplify poison_by_decoder() erro=
+r handling ---
+commit 091367d84a5db5147f3a65c244b70983d67217ac
 Author: Richard Cheng <icheng@nvidia.com>
 
-cxl/hdm: Allow zero sized HDM decoders
+cxl/region: Simplify poison_by_decoder() error handling
 
-This commit updates the CXL core to allow committing an HDM decoder
-with a size of 0, treating them as first-class decoders backed by a
-kmalloc'd resource. It updates accounting and guards various paths
-that an empty decoder cannot serve.
+"rc" carries both an error code and the loop control signal for
+device_for_each_child(), so returning it bare is misleading, the early
+guards mean "keep walking", not "no error". Zeroing "rc" to forgive an
+-EFAULT on a RAM partition adds to that by discarding what the device
+actually returned.
 
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 0c80b76a5f9b4..3b3cfa0f25074 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-
-[ ... ]
-
-> @@ -545,7 +572,7 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
->  	struct device *dev =3D &cxled->cxld.dev;
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 1e211542b6b64..fabaad3469b1b 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2950,14 +2950,14 @@ static int poison_by_decoder(struct device *dev, =
+void *arg)
+>  	struct cxl_dev_state *cxlds;
+>  	struct cxl_memdev *cxlmd;
+>  	u64 offset, length;
+> -	int rc =3D 0;
+> +	int rc;
 > =20
->  	guard(rwsem_write)(&cxl_rwsem.dpa);
-> -	if (!cxled->dpa_res)
-> +	if (cxled_empty(cxled))
->  		return 0;
+>  	if (!is_endpoint_decoder(dev))
+> -		return rc;
+> +		return 0;
+> =20
+>  	cxled =3D to_cxl_endpoint_decoder(dev);
+>  	if (!cxled->dpa_res)
+> -		return rc;
+> +		return 0;
+> =20
+>  	cxlmd =3D cxled_to_memdev(cxled);
+>  	cxlds =3D cxlmd->cxlds;
 
 [Severity: High]
-Does this early return leak the zero-sized DPA reservation and break the
-LIFO teardown order?
+This isn't a bug introduced by this patch, but does the array access in
+poison_by_decoder() risk an out-of-bounds read if cxled->part is -1?
 
-When a zero-sized decoder is initialized, __cxl_dpa_reserve() allocates a
-zero-sized resource and increments port->hdm_end.
+If firmware provides misconfigured ACPI tables or CXL DPA resources,
+cxl_dpa_alloc() might leave cxled->part as -1. A subsequent userspace read
+of the trigger_poison_list sysfs attribute calls
+cxl_get_poison_by_endpoint() which iterates over endpoint decoders and
+evaluates:
 
-If a user later attempts to free this DPA (for example, by writing 0 to the
-dpa_size sysfs attribute), cxled_empty() will evaluate to true here because
-the resource size is 0. This bypasses devm_cxl_dpa_release(), meaning the
-kmalloc'd resource is never freed and port->hdm_end is never decremented.
+drivers/cxl/core/region.c:poison_by_decoder() {
+    ...
+    cxlmd =3D cxled_to_memdev(cxled);
+    cxlds =3D cxlmd->cxlds;
+    mode =3D cxlds->part[cxled->part].mode;
+    ...
+}
 
-Since port->hdm_end remains stuck on this decoder, does this permanently
-block the freeing of any prior decoders on the same port due to the strict
-LIFO teardown requirements?
+Would this result in an invalid memory access of cxlds->part[-1]?
+
+
+[Severity: High]
+This is also a pre-existing issue, but does cxl_get_poison_by_memdev()
+silently overwrite errors from earlier partitions?
+
+Looking at cxl_get_poison_by_memdev() in drivers/cxl/core/memdev.c:
+
+drivers/cxl/core/memdev.c:cxl_get_poison_by_memdev() {
+    ...
+    for (int i =3D 0; i < cxlds->nr_partitions; i++) {
+        ...
+        rc =3D cxl_mem_get_poison(cxlmd, offset, length, NULL);
+        if (rc =3D=3D -EFAULT && cxlds->part[i].mode =3D=3D CXL_PARTMODE_RA=
+M)
+            rc =3D 0;
+    }
+    return rc;
+}
+
+If a device fails to retrieve poison for the first partition (e.g. PMEM,
+returning -ENXIO) but succeeds on a subsequent partition (e.g. RAM, returni=
+ng
+0), rc is overwritten to 0.
+
+Does this permanently mask failures of earlier partitions, potentially leav=
+ing
+poisoned memory undetected?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260731064902.3412=
-7-1-icheng@nvidia.com?part=3D2
+7-1-icheng@nvidia.com?part=3D1
