@@ -1,205 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012020.outbound.protection.outlook.com [52.101.53.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEAA51DF75B;
-	Fri, 31 Jul 2026 09:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785488685; cv=none; b=Ead6sfO+Ym62Fu/j0f72+W0ECzu7XLeGOx8LxPsQ3oIrijR/7NmSrL+4fTFvxMPYn8SFmaMSwa2Lx0fjL6eVtaLSzhEQY+4fyhBQrL0iWrZkp02eFiePYrwKZS2dksU/tCeJPHpd76sExFSmCBJC1j2NJm1JBtFaTBff7S/cxls=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785488685; c=relaxed/simple;
-	bh=XAhY2LjsD3z0kbZgY0n/Ne0pMMd5Ztv/IZiRid6ZKOc=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=l3mSznkuQS2u0hj7diSU1YKIvcwxtb4Ag7hjbqFFkhuviAaAcNEP0zWlsaknEWf/ORNs7lMYne9Glq4Cjy3BKh9Jt/AD599Po3xCxKyqqDBYZMpw6vhzbcroU3MGPbyFoe1La2/SPFnGBLiSR4Bo6qS7w65L2RKZicdZz/MdS8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S8U3oZ5y; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BF119E968;
+	Fri, 31 Jul 2026 09:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785489220; cv=fail; b=o+x7Nf9xP1fp+bREq4SnVGfYx45quFXGbWYd+rlNG8TTcAw7JvpTdGqZVFt3WkD077GJzdhk5OpF5kr6zoGj5LiAwCpxOSz7v05ghCBC0SB2/vc5cNWaJCdKbcjSUC3cuSEBZdE8xjGhmUYuuGVwLacXAcciShLWRaZc4Hl82T0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785489220; c=relaxed/simple;
+	bh=t+n8c/4RfSpL2jUiLpm9R7bkWqXlHVRA+TFUredCs2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=c0zRWh/rTrmIjTrp15AWePlZ9l7FNFP8MsxeEgD4UrP1EeRN2N86nLVuRCb3LgXxxRaEEu03iWjvC0UdDAc+0vAk5246iWzG+/Y2VPlnV6tElUIW1zKPhvTetcYS147qd8LpTJ1XfGtC4wVgCwpm1DPSxoVjZjDEZRMQesikvAQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aTKvcNYs; arc=fail smtp.client-ip=52.101.53.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S8U3oZ5y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 558491F000E9;
-	Fri, 31 Jul 2026 09:04:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785488684;
-	bh=CiChtvOanhbbN3LDErpUWZE9zsETG3HdtaCcK5OuVXs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=S8U3oZ5yqPYlDvNyaLq0MIXnsG5Cw6NaGXaZTJA5MOStU6p6/sJLQ88JRUw9XZGTB
-	 MMyBHj1HCxXZkLVhYR6wpy08BEDGwo1qIPQFyJlVyGiog1kDNolE/YtjUFiFThlsa2
-	 T5hV+G2DY6znqXZXTQVReyClxSWPk3sdSkH+CQNqNRoYDdtFLHFPI1I+JP3uxsoPNF
-	 OZuvYOuLsY45wpe1PU3Jqucrzfb9bzwdAiSC5DZQZ6mno+YJabh3GknuSQt/R+/kT9
-	 Yi6zjhWlHSYOPlZbORTGTS8YykdiYpZNWAXFSpUudIVOP+zDdsBaYbqd9/d89LfDCt
-	 FovZ2Stz5P3qQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 6/8] cxl/mem: Configure dynamic capacity interrupts
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Anisa Su" <anisa.su887@gmail.com>
-Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-In-Reply-To: <20260731084901.1512819-7-anisa.su@samsung.com>
-References: <20260731084901.1512819-1-anisa.su@samsung.com>
- <20260731084901.1512819-7-anisa.su@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 31 Jul 2026 09:04:43 +0000
-Message-Id: <20260731090444.558491F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aTKvcNYs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gDRQOIr+uvrlBYx4GG8K2ib/TaD75B3jtquL6OKRLxqjhVhSIhesuiWZDR9sufDlD6d/xmIEeFH7Ccpyp/lTvkHtxh0zewhU3mE8UBcOhBHV5tsOA12VN4E4guPV5Wmp5jRm2pOfGVbv9btUB4a4IpU4pVz/VjPQS5tMwVl46YvbeoOhYLaKs6On3CFTgVTJenMMMScVYEFjp51DLsxUyOH1OCeDXSYmScf2+h1UtEmO+ZWCJ85rnVhWzMe3t16XMBV8Q5s10IP68meL3difk/BMu5devKaKAfKbJha4TKEYY7it9zye3MikRDDuGxW7UJsZCZfgxh6G04CL/Tx76Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/UK8FKWjIloiS0F5rXHfvWBgPsmtwFIiWhKLhceI7Us=;
+ b=ltIgaSIQFAfAWxBavWtCwekiIvtgNevmlrp5mhACmg+WQLLjA+2GtcbZXu35/QR1K0u0C2EjDjukmhxm6/SsR3wawnsQ/Oo+Ilp6G00F2R09H1z/ILNgZTC4Iw/6iq38SajXrDZgw0/hnJdUP9E6C6d9oollf1nAwhaKKjdKOQjOIM1FRSSJkeNeVpN6lKKfxxiNReWirha98f6VYIyVDCROxUzh7x3WecZT7ZdDX5zobB3rTMDO2QE3KdAk3ygEQB5UN6JGH5wr1Odzv17i+cAw6odW5NcSLJ0eV6dQbE37c5ljeo9H3dFQZWUcLVJxyOedbCSS0USR5iN3gOh77Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/UK8FKWjIloiS0F5rXHfvWBgPsmtwFIiWhKLhceI7Us=;
+ b=aTKvcNYskJlYec8M7b/hUreXhpuJWmSKdnNcceyzmDYWueV7JOavZZGQJOJ9o4K+Hp5eQnHPBrIHCdrOr0aEZcCelwUcqbp+ulrXi84t3BQHAlZvz0rCqLwqilBFHr3AQuzpn4wC9PsLo2/pq4nXWtvEVqX30eC33Z4zoQFB6CQQ/rKCWwecA54ELaW9zhZenxIvJ+Mnlff0NJOBB+vWZL4tF5c+vnHRAnV6saCgrLYlR5/OiLQS3Sh1yHP5f90OyGl8RX1/plzQvsUnhGpHI1z0J6sWl/6WjbtKMVVV0vgtr4/FiHRwIsK8+EUiy3ghTuJzKV0yiswXKx4KlCM7ow==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by SJ2PR12MB7941.namprd12.prod.outlook.com (2603:10b6:a03:4d3::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.14; Fri, 31 Jul
+ 2026 09:13:32 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0270.012; Fri, 31 Jul 2026
+ 09:13:32 +0000
+Date: Fri, 31 Jul 2026 17:13:26 +0800
+From: Richard Cheng <icheng@nvidia.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: Dave Jiang <dave.jiang@intel.com>, dave@stgolabs.net, jic23@kernel.org, 
+	alison.schofield@intel.com, vishal.l.verma@intel.com, djbw@kernel.org, 
+	danwilliams@nvidia.com, iweiny@kernel.org, ming.li@zohomail.com, rrichter@amd.com, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, sreddym@nvidia.com, 
+	smadhavan@nvidia.com, kaihengf@nvidia.com, kobak@nvidia.com, newtonl@nvidia.com, 
+	kristinc@nvidia.com, mochs@nvidia.com
+Subject: Re: [PATCH] cxl/region: Restore passthrough decoder enable on region
+ re-assembly
+Message-ID: <amxmOj19GEh95sut@MWDK4CY14F>
+References: <20260727103743.63343-1-icheng@nvidia.com>
+ <d96567c3-df6f-4008-9678-c4fed3787309@intel.com>
+ <amgQUnkQ1VjyXtzx@MWDK4CY14F>
+ <amgqJDkOyyzMau2R@gourry-fedora-PF4VCD3F>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <amgqJDkOyyzMau2R@gourry-fedora-PF4VCD3F>
+X-ClientProxiedBy: TP0P295CA0008.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:910:2::20) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|SJ2PR12MB7941:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6b6a7594-982d-4675-e440-08deeee3fe38
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|7416014|18002099003|22082099003|4143699003|3023799007|11063799006|10067099003|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	VirBAtHfROXMDI5RYdL2A2AXjTOoHSgxeYOrnqzKdWekUOcmVP06QnCoQ+9JfP5+tgJgr/ZmfbA47DxF7OBreolx5wpxZDeefaZ+PXQwQe3dIZ8EmORfanuLURsnN76qoE16Mwh1cd8WRxSssapkbgFuswTvUn3dFs4D2O0TpU2k73ZSZRiWh1eGukDg5Knuxj6AS4SmEaOSjXVzaDePyy7mbG2RToO4uGYKSXb5iyOIFiSLM6meB74+BL2Lm7I2We+/3ovceVIuwvaoJWzb307SA4r61lAlKUtsEjuDby9eA0Dv//k3GvR9K0HUobHMlfOUcNJkBo8GzxxonR11l3J7tnWFeRBkaRoXjE29Sj7nLhT+/nQG+tTwOvdAIBk0Ksh3o1uLWgKGm8YMOhtmLhhg7rk+9ac6wON2Dblsxug7oUHgy/0kq5KLsndwK4v2vHYu2qJqJMsY7IMK1O8NA8T+JZKX5NJqu9HbVqFisfp+8Y1MMMy4EoqHIE2AJmdB3Y4RV/j83MQuYjiYU/OoFVau0y+8eh/hTDCQnUM3pL7lP/qdcghphUQtfDyw9Fha/JOPHl0o4WoO4tZH2u8AflJPFxlrJff3mE2hetY5t4UnZ33zIl+tQCLlvpmAxQ1A8Y7EE76fE3Z6Fo9PVImJhUzp6AZoqU/zCxPMWANhTkM=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(7416014)(18002099003)(22082099003)(4143699003)(3023799007)(11063799006)(10067099003)(56012099006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?VlPnpVz5WF9EQuCPCVtxgReBQFF9D+NtUcU2EfJiVJdBfkEkWKJFTHHYyvVM?=
+ =?us-ascii?Q?eIVFi7/Ad46lRms/A8r4w2J0PdhpZE+DGuuSZa1JYU4fzsAPXi6kW3KPwu2i?=
+ =?us-ascii?Q?dvH0QiAsNx0P49WshfDxlu30wxX31iWcUdcje+nNq8peW5Rov5tBTpl15P8Z?=
+ =?us-ascii?Q?VIK1B7Ms7OBSUXqUJUPoeI9KoIbYyRmcGxvHRQ1Qlopf4Bjb6Vip9VB8bv8h?=
+ =?us-ascii?Q?suLn0qQNxR0imSGjKRKrOqidvCxXhmXUFUNPzNvZeva7nkfINY1I9OL446vr?=
+ =?us-ascii?Q?XXdZwIe5idXc3uTgf2Tkae8at5uAEtKKe3ryIYF6rCyx+NFWQ5JV73vKqEfo?=
+ =?us-ascii?Q?yy+clbwOWBfX+sG1nuy6lpey18j9Jz31vxGOuhdyz8zHf7ySpO9rwnCWenLa?=
+ =?us-ascii?Q?JZygkVgj9lCOb2w749XyAFaYhgvpF9/gkO17FA6dDKV9dZ3lIogW/kukRls6?=
+ =?us-ascii?Q?Zyi60Sxgd0fg5eP3Zd//gVDVxRHmF5tTmzhr2df8NO7+ndtiBJPPG6IxHZmR?=
+ =?us-ascii?Q?MTsGib5AaKu2gHbWkX0Qz9iVSrZdfb/5YRH8Xfeu0xpnW1wBWAZOHVOw2QLi?=
+ =?us-ascii?Q?AepnHUIEVVtTKySTHIQc+KhrUX8BeQVYZ2uDMU7T+V5BwS8XwhXrrblglV14?=
+ =?us-ascii?Q?lRh9sin47mIYgCgWa2m0N5AXeDzgN9eEXaaCNX4OM2zJxWr04SeFA4heiPKS?=
+ =?us-ascii?Q?5Ijb0ZQqb5nHamWb9QxKIxRX/krb5WnUTvMDN1SiJOT59PCp3010m1D4311y?=
+ =?us-ascii?Q?AWjUT/dg2QQqqTwIsl/1uUxGcjAAEtKtCAMLOmWlDDY/1Yr2UuJ/RzY59pjZ?=
+ =?us-ascii?Q?2bTL1tLlR/16GG+tGelRI86t0xlqgbqLyufk4mDf8WcPiBdxGhZtTtTMLLuL?=
+ =?us-ascii?Q?d4O7GVMiADdOzqxjXUYKsPUx1wRbmOBkgzd7tj2N82Z2LmyX83nM99UPXQVb?=
+ =?us-ascii?Q?cA1d2ejeAqBb02cGcBpDnwjCA46Pyv6s1Omo3HCcwNfTzjVsl8qTrEoMnEh+?=
+ =?us-ascii?Q?4VPZEhAdm6vvhLe4D6qivscVQpLFJdBtq3TFFWI4XohakheIu9qbnpcdKwl+?=
+ =?us-ascii?Q?hDEGKumkghn4LthfRXz1qpvSQ0stQAoDiRbNrF9e3xFzH1aZFVJDoyDT/Khu?=
+ =?us-ascii?Q?Yvyyy0ix4qfHaxvr04otJ844HaazGOlmTfXmVqrytSTLus/UrsrEbcxl5kar?=
+ =?us-ascii?Q?JOY1myHKwYQxCoNvcuij63E+8tkbX+08rwDLqggdyWXTwIefrpzFahowNrmr?=
+ =?us-ascii?Q?ShBeaHY4tfVtjmJlfUa05Yijta9JVVRPX+PCd1i16I18ScxNKP6M88R4zCtG?=
+ =?us-ascii?Q?e2FwhOncbObjdzMJ9k9yzyrtTnQLeVLjKV3oyO4HWDx37KOXVVpeFLyPkrHG?=
+ =?us-ascii?Q?/HrErAddD7EJn3SQDLDplmRtLqCINvzeW3gJykUJjcc8XccJZvus2j+3zAlm?=
+ =?us-ascii?Q?eiYylj9isw1f3HpO/+O+LLARrEvzP+PrzWwwl76CeAe8Jwtrndgpzgo53Ofv?=
+ =?us-ascii?Q?YqS6akKXmDitE84nglei3va9wMUgeZbEcQz0lTodJDKjwqg0AEmmgqgEW5Zp?=
+ =?us-ascii?Q?BgQx6TGr3iilBZ8PuU/uTh8OIQxc9EDzJLnj9dIoQoYVFTRL3xD2nu/1/NEa?=
+ =?us-ascii?Q?auLnWhQ6KaktS0KJVg052xRfHj7Y26piqV73+15a+kwPUwW7Z5jUxsGOT+TY?=
+ =?us-ascii?Q?Gx2XnrvBQ+L86WLeVYSOQ7IGfslRWycLYP3NkYX97IreRmM85vcNc4SGbPJY?=
+ =?us-ascii?Q?BgGBRwv9Sw=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b6a7594-982d-4675-e440-08deeee3fe38
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2026 09:13:32.6913
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /q6dVmtfhc218wIJ1gYGGGKDPOp/V9icqcNQRSSrcW4BoeEJbSbyQGBdEWMWvk0tFFiC+6r0AHiIC/Sd0lrhBQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7941
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+On Tue, Jul 28, 2026 at 12:14:18AM +0800, Gregory Price wrote:
+> On Tue, Jul 28, 2026 at 11:03:37AM +0800, Richard Cheng wrote:
+> > On Mon, Jul 27, 2026 at 01:25:48PM +0800, Dave Jiang wrote:
+> > 
+> > I think this part is talking about physical remove/insert ? sorry maybe I commit message was too vague about the scenario.
+> > The case here is a SW-only teardown via sysfs, this is what I did.
+> > 
+> > """
+> > $ echo 1 > /sys/bus/pci/devices/$BDF/remove
+> > $ echo 1 > /sys/bus/pci/devices/$BDF/rescan
+> > """
+> > 
+> > No physical removal, no power cycle, no link-down, no reset. Linux drops and re-enumerates the same device, which never stopped running.
+> > The endpoint HDM decoder is still committed.
+> > 
+> > The device is byte-identical before and after, the kernel doesn't clear it either, the decoder is locked and cxl_decoder_reset() returns
+> > early for CXL_DECODER_F_LOCK before touching any register. The memory keeps decoding.
+> > 
+> > I don't think anything needs re-programming here? the only thing lost is kernel-side bookkeeping on the passthrough decoder, which is
+> > freed with port and reallocated with F_ENABLE clear on rescan. The endpoint recovers its state from HW.
+> > The passthrough decoder has no HW to recover from, that asymmetry is the bug.
+> > 
+> 
+> Being a passthrough decoder is just a special state of a switch decoder,
+> it doesn't necessarily imply programmability (Enable, Commit, Lock all
+> technically still apply, it's just ambiguous what they should be).
+> 
+> Wonder if we're just not setting these intermediate decoders up sanely.
+> 
+> If the endpoint is locked / not reprogrammable (commit / lock) on the
+> first go around, maybe the intermediate decoders should be force-locked
+> and not have F_ENABLE cleared on teardown?  It's not like this actually
+> changes anything on the hardware, it's just bookkeeping.
+>
 
-New issues:
-- [High] Infinite IRQ Thread Loop / CPU Spin when handling DCD events
+Agree on this part, I think what you are suggesting is a better approach
+than what I posted, if the EP is locked an not reprogrammable, the intermediate
+decoder describing that path has no business begin torn down either.
 
-Pre-existing issues:
-- [High] Out-of-Bounds Read and Information Leak in Event logs
-- [High] Out-of-Bounds Read and Information Leak in Poison logs
---
+It also lines up with Dave's question about checking the EP decoder's lock state
+before proceeding.
 
---- Patch [6]: [PATCH v12 6/8] cxl/mem: Configure dynamic capacity interrup=
-ts ---
-commit 5b173c122c3602992c4ceeafd1c2d87a80accacb
-Author: Ira Weiny <iweiny@kernel.org>
+ 
+> (although i will say it's been a bit since i looked at the flag state
+> machine here, so i could be misremembering what the rules around ENABLE
+> are i this context).
+> 
+> Curious - what happens if you fully unload cxl_pci between
+> remove/rescan?
+> 
 
-cxl/mem: Configure dynamic capacity interrupts
+Good qeustion, I'll test that as soon as possible before I sent v2.
 
-Dynamic Capacity Devices (DCD) support extent change notifications
-through the event log mechanism. Configure DCD event log interrupts
-on devices supporting dynamic capacity. Disable DCD if interrupts
-are not supported.
+Thanks for the pointer !
 
-> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> index df13fb8802c38..6cb344ec4f3a7 100644
-> --- a/drivers/cxl/pci.c
-> +++ b/drivers/cxl/pci.c
-> @@ -509,11 +509,30 @@ static bool cxl_alloc_irq_vectors(struct pci_dev *p=
-dev)
->  	return true;
->  }
-> =20
-> +/*
-> + * Event logs the driver drains: standard logs when native_cxl, DCD when
-> + * supported.
-> + */
-> +static u32 cxl_event_drain_mask(struct pci_host_bridge *host_bridge,
-> +				struct cxl_memdev_state *mds)
-> +{
-> +	u32 mask =3D 0;
-> +
-> +	if (host_bridge->native_cxl_error)
-> +		mask |=3D CXLDEV_EVENT_STATUS_ALL & ~CXLDEV_EVENT_STATUS_DCD;
-> +	if (cxl_dcd_supported(mds))
-> +		mask |=3D CXLDEV_EVENT_STATUS_DCD;
-> +	return mask;
-> +}
-> +
->  static irqreturn_t cxl_event_thread(int irq, void *id)
->  {
->  	struct cxl_dev_id *dev_id =3D id;
->  	struct cxl_dev_state *cxlds =3D dev_id->cxlds;
->  	struct cxl_memdev_state *mds =3D to_cxl_memdev_state(cxlds);
-> +	struct pci_host_bridge *host_bridge =3D
-> +		pci_find_host_bridge(to_pci_dev(cxlds->dev)->bus);
-> +	u32 mask =3D cxl_event_drain_mask(host_bridge, mds);
->  	u32 status;
-> =20
->  	do {
-> @@ -522,8 +541,8 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
->  		 * ignore the reserved upper 32 bits
->  		 */
->  		status =3D readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
-> -		/* Ignore logs unknown to the driver */
-> -		status &=3D CXLDEV_EVENT_STATUS_ALL;
-> +		/* Ignore logs unknown to the driver or owned by BIOS */
-> +		status &=3D mask;
->  		if (!status)
->  			break;
->  		cxl_mem_get_event_records(mds, status);
+Best regards,
+Richard Cheng.
 
-[Severity: High]
-Since mask now includes CXLDEV_EVENT_STATUS_DCD, status can have this bit s=
-et.
-However, cxl_mem_get_event_records() does not appear to handle the DCD even=
-t:
-
-drivers/cxl/core/mbox.c:cxl_mem_get_event_records() {
-    ...
-    if (status & CXLDEV_EVENT_STATUS_FATAL)
-        cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_FATAL);
-    if (status & CXLDEV_EVENT_STATUS_FAIL)
-        cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_FAIL);
-    if (status & CXLDEV_EVENT_STATUS_WARN)
-        cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_WARN);
-    if (status & CXLDEV_EVENT_STATUS_INFO)
-        cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_INFO);
-    ...
-}
-
-Will this fail to clear the DCD event from the device? If the event is never
-cleared, will the hardware register retain the bit and cause the while (sta=
-tus)
-loop to spin infinitely on the exact same status bit, potentially causing a=
- CPU
-soft lockup?
-
->  		cond_resched();
->  	} while (status);
-
-[ ... ]
-
-[Severity: High]
-This is a pre-existing issue, but I noticed a potential out-of-bounds read =
-when
-fetching event logs:
-
-drivers/cxl/core/mbox.c:cxl_mem_get_records_log() {
-    ...
-    nr_rec =3D le16_to_cpu(payload->record_count);
-    if (!nr_rec)
-        break;
-
-    for (i =3D 0; i < nr_rec; i++)
-        __cxl_event_trace_record(cxlmd, type,
-                                 &payload->records[i]);
-    ...
-}
-
-Does this code validate the hardware-provided nr_rec against the allocated
-payload size? If an untrusted or compromised device returns an artificially
-large count, could this read out of bounds?
-
-Similarly, when clearing those records:
-
-drivers/cxl/core/mbox.c:cxl_clear_event_record() {
-    ...
-    for (cnt =3D 0; cnt < total; cnt++) {
-        struct cxl_event_record_raw *raw =3D &get_pl->records[cnt];
-        struct cxl_event_generic *gen =3D &raw->event.generic;
-
-        payload->handles[i++] =3D gen->hdr.handle;
-    ...
-}
-
-Could this write the out-of-bounds memory values into the clear event paylo=
-ad
-sent back to the device, leading to an information leak?
-
-[Severity: High]
-This is also a pre-existing issue, but a similar pattern exists in the pois=
-on
-log handling:
-
-drivers/cxl/core/mbox.c:cxl_mem_get_poison() {
-    ...
-    for (int i =3D 0; i < le16_to_cpu(po->count); i++)
-        trace_cxl_poison(cxlmd, cxlr, &po->record[i],
-                         po->flags, po->overflow_ts,
-                         CXL_POISON_TRACE_LIST);
-    ...
-}
-
-Does this validate po->count against the buffer size, or could it result
-in an out-of-bounds read if the device returns a large count?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260731084901.1512=
-819-1-anisa.su@samsung.com?part=3D6
+> ~Gregory
