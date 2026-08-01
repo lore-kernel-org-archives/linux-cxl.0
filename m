@@ -1,248 +1,178 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85679353A6D
-	for <linux-cxl@vger.kernel.org>; Sat,  1 Aug 2026 09:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8023B20E023
+	for <linux-cxl@vger.kernel.org>; Sat,  1 Aug 2026 10:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785576628; cv=none; b=oNzgHgp4Pz2zKEIx3VUz0n0CQso/YHTKfwZNWxYGbv26UpypSRTaOJ/n79NPWK+1h5LZz1A48dgbcwwJa5zEA2247+dmw5ecy7b1IDpXeIAlbJLQezAo9QUqeu3Mk7lbbEMdMcf9RanpUAWfz7BMKWCMJbvSp0y2qj7duWGwUhc=
+	t=1785579167; cv=none; b=agOqB6cu6YXZsskZz4AoG1aQnLxelUC8q4BP7rQ1AVA18sKJ3QaBhkQ9Sh5jHOjpxdpsHyjQGtPDDZVWwsBnJJJbcsOC/JeGsL6ZpkqY3i6tL54OJzpy8grtQfyfwo8T713TWqrnSM5vn52Il+qcP/Ft9pRnSyroGdzUHkbbBFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785576628; c=relaxed/simple;
-	bh=HdEmUDwZLn0wW9dQa+nd1AhK2b3wr4gNpcv6lOn/g6c=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rW0OFkyIJjo+y1zoMMQOaD2Aa5l4bgZj4muPd3FlgjNHURzyvGet3kS6kIbBu52BEwjegtH3RW1Bq1/XslXZ341TuyIRyQ/Z+5WHHDVE5axsO8Ce/5hDDBuNAValmgLjni4koFLWPdjRHxDAWhlrp8i5BgXCSfS4KqSQwWtZyts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hrRf1wVh; arc=none smtp.client-ip=209.85.216.49
+	s=arc-20240116; t=1785579167; c=relaxed/simple;
+	bh=g/j50hg1gf+M5nAj7G6slFMXY3YdVKAmXsiQ4ZtAavY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EIZRPsA3GMeHJ8iDB36qQ0/2oSK9DdflzcYv9kTLUB2cC+af3f8Qf1HgX5hhiOo1FDVQJOata5fyCMZBiMV4PRO6O5CM1dw7lhpufk848zRIBWi0HYxFqqtcsFyYghv9iVM5hdSIDjDuKukkQrkFgoswcc1eUYgipTCdvObwkU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FqJby/ko; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hrRf1wVh"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-38e041ea211so1900967a91.0
-        for <linux-cxl@vger.kernel.org>; Sat, 01 Aug 2026 02:30:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FqJby/ko"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-38e041ea211so1922357a91.0
+        for <linux-cxl@vger.kernel.org>; Sat, 01 Aug 2026 03:12:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785576627; x=1786181427; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=ypHZlXSUXCKVXUtnVdQ6FQwUu/1gI9U0Sj1QazJgXTg=;
-        b=hrRf1wVhwEcGdWmRZsWrnE08bCe4cYlGBqKENTN1H3TvhXfp7/6z7I4Q5jmxqj7CEQ
-         hItjrHKfuk8R0wt8nTtZQp+SdSw2xekXxgoeNHRtP1djrSviooBNNwoLWx7TR0Ilb8Ym
-         4ZFRK0X7jPOSa/o8jh6280Dw8p14bzu7mWyMKdzN9dKbM0m8psPtvpbU8kRYB7jmYsQY
-         1kaHHfmd4ouEP9LNw4MonepyAzR+NxSnqMbwWKFeYTHKkSYv0SRYvfII8z5E3XTcR1X0
-         p9tVCm9uJz4Ed6zUItf9TO2zOZuT+9ReXHiTQCbcwwu6qWO9ZZPYNkIkaBMRrDoc3vx2
-         iLGQ==
+        d=gmail.com; s=20251104; t=1785579166; x=1786183966; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=CRjCJN4PPtRE4NvJhtErGEPAXvNAwEgHaW35/sMVDho=;
+        b=FqJby/koV5Qbp95Wf4YlxAVp4ubVU/IN7M8suh61XQTeaIM+6tGu6L8vd6f8SmjhJi
+         08gva/PkSFl8Ih6ZyUYlJSDZ6Ilwy8wLOUON945VY8xgYhg+XkVpD4HgnH9hwe2ZsFmC
+         NU+aY/0gUp1KO10PtoqBUgB0W31T0yA3iys//v619etEJmELLdLJq/rWAeUi2dpFZAas
+         pSvCjfoX5e9Qp5mQy+lNP/H1WWtO2o9mEc8VIyFWqx1uZLgyohA9NncrqRONrjXonPHl
+         4f++IUDnxEV5rMCTFZABj4lfK86whQAQIBq3KKjmpf6lJzeqzlf4FZSc1zWnB8FGJmXD
+         mmVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785576627; x=1786181427;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:date
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=ypHZlXSUXCKVXUtnVdQ6FQwUu/1gI9U0Sj1QazJgXTg=;
-        b=o1cma2oz2EEdrsLTeYX+cRN+PZnTH3eJgcUqiM0U002mQLX6wFKA8dxB4NZQZGqXeM
-         WuWLxQJPJsLz9Gf6WLdt31qOUDJfvgLLuQRGg29BYYqUA/dmUuQ6Ia4KTdm1ZOzG1Zbw
-         uKQWHH5RsoEsp3pjvOZMeGH2zndNMuxaZ8dd4TxC+pPAulvmR1mDL9HSXeldUU0O9m+k
-         gNvdOWMXpuR/rbBCYOHQOni4iFMu7CUJ/5pdOI/z72sioCb8fCntunBBd4fYNVsEF7SQ
-         OU58iIax5cQ1FeV1fmTHjVxJkoXfJS0ODl1SMnR23ovLkvuPam19SzQoKtwFre6BkeCC
-         fxYQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqEF05Tfx+XiAA5OV1TxY6C3zK9s61xUmIcp0XM4FPoyUO5velre9Yqof7N3qOd9RVo4mAsKtCt2CM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmUW4I2hKGbb6Ob3FxLkUpV6xLoUYDq3cxB2cN1ofLY558GnGK
-	lkj9Zz2Hpn+GM3/JJiuJII5vzPTwJ4Z9yQTBFz7K++Mgk2mURWn2H/1z
-X-Gm-Gg: AR+sD11RcdP+0nzAcR6tONreefxu00MbjAvxgy1rYnZDI/9vH97WFEFqxKEsuQcfVt9
-	D9pcV/u094K0/IDQzy9/9RpIjM8cp6aPlH2X9cbb1pX2cQRGD1GiZhT0OO6PUO4IRf9po8STBS3
-	mFj1brRBJd6ZXoM4NdmIqNuRD9AssOMRLemp0sQFv5csGT5pG/Vq9+/BtwBKIiZ92QJQhwNm6tI
-	6KRywoPrsF9Xx+IHznNA5/Mt2H2v+kwVe2wZ+waoE//iKTmbb72gCZZwFdgFn1m5ua1l3DR8xni
-	VYxdBFDviyPQBiCM+kmgX4w4eIOHpIS8y2drlxrUCnH/Djfe9Lthz19fqAbiEz0BOw43jxeE2uZ
-	uNO9itXRRLsKMrgBrosSezOalt+bcDd+SPDFHhkepkPfFb6HqGENGjycDPUqredhpYA7BpvtaOT
-	TGpnjcLji5hWDFWh0jmSCmhsrz+YNE4bl8kltZYl1v174ziqGPlTobCU42ojiWe3Emx2aQe6faM
-	7DQz92w5hSNJRvyQClokYLj7y1BR2L2j5jnnnzrsDWD
-X-Received: by 2002:a17:90b:57cb:b0:381:11eb:d78e with SMTP id 98e67ed59e1d1-38fbc4431dcmr2875847a91.14.1785576626663;
-        Sat, 01 Aug 2026 02:30:26 -0700 (PDT)
-Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3153dd9c1casm15122663eec.10.2026.08.01.02.30.25
+        d=1e100.net; s=20251104; t=1785579166; x=1786183966;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=CRjCJN4PPtRE4NvJhtErGEPAXvNAwEgHaW35/sMVDho=;
+        b=YDHHOHFOXJIlr9qVPd5T3Aw6MFOt9ZQdl/9KSEXxw8p6Ug7j6gR/YWHEgWRqYOpp27
+         eCu3O1CVFqjTqECMIXtoqXr5dfX4flFLtmYAsxf0xoNCVsFQKWy+NisuijYHIaTBYYUs
+         nVopFdMUSXKY1MW5NFjDkbfO1XOJig+OPlADYkXgI6O39wFtXpQXARueJz9SjUMo9/tx
+         huQVSXC/ZSNEu4HOjCeLDvApbypV7uqY+l4WinxpjtShcd1wm+kXZAGqcbwOhuRfLtbL
+         9QHLuZIVrwjllAvEL8IF4wMdkWOcmuokFH7AXeHBtFXIfAw+Ho0RELHOuZJu5CjmT3Be
+         rJdQ==
+X-Gm-Message-State: AOJu0YwelrGG5/GoS08jg4YX8HwvDiwXXnh8X4+ZrBqNk471FM52r9qk
+	c1VyvbRGz17RqVbHSlS0fHMPSx9yP4HvZqQFAp7FL8qaqYgeMhVKl4uk
+X-Gm-Gg: AR+sD12iwW2bEEKPmisbx3uA4J8nOaG/Y8F+fMZtv+v5JZmmTctaP9nA4PWj3DiQruP
+	J3AwOJMDMEaWnS7jjV3DHcnyCIsVDaRQmHAinbKKTI2YiL6vbgOVcql/YcTmCEpmhwYsj0XGyMN
+	INlX/AjjXUmz4RKkzslEt8KcAyG8ocXzCSTEQSrIUvZAP+QbSyORG6faFw9vO71vJ2TY7tL5jII
+	hTm62/rAZmxk3Rrm+OpFoNyqPc/rmde0EjGwIfNkpreoARDtUouigcV95Jz16OKDbWIL/qUm8q+
+	JvqzvqDA2n66MR9oDUJyVYpP8+XyNgxKWQN8K0GpjR8N0im5ft0fe6l0+BpEyoaT+kFQmXtGb2z
+	bx+GxhamDoDYSyDNIaJBZgd7CiMeHvKChtALwg1gx84Nm1JRDnYnsMA+GcAD2duh/MmzpZ3pnbX
+	cAhBjWIl88EcAfq5TouSDHOW9mOmRh17ewrMwJ+HKD6yo8dB9XlbBLxCmSsJE51cxxsSqArQBqb
+	Kh0pz/cl1H/DfhUdQ==
+X-Received: by 2002:a17:90b:5888:b0:38f:1e1a:5141 with SMTP id 98e67ed59e1d1-38fbc50af6cmr2938409a91.28.1785579165811;
+        Sat, 01 Aug 2026 03:12:45 -0700 (PDT)
+Received: from acer-nitro-anv15-41.entro.com ([118.34.230.2])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d04b120f2fsm16130565ad.64.2026.08.01.03.12.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Aug 2026 02:30:26 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Sat, 1 Aug 2026 02:30:24 -0700
-To: sashiko-reviews@lists.linux.dev
-Cc: Anisa Su <anisa.su887@gmail.com>, nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v12 6/8] cxl/mem: Configure dynamic capacity interrupts
-Message-ID: <am28sIX7a6Z7QaXr@AnisaLaptop.localdomain>
-References: <20260731084901.1512819-1-anisa.su@samsung.com>
- <20260731084901.1512819-7-anisa.su@samsung.com>
- <20260731090444.558491F000E9@smtp.kernel.org>
+        Sat, 01 Aug 2026 03:12:45 -0700 (PDT)
+From: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Robert Richter <rrichter@amd.com>,
+	Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] cxl: use %pe to print error pointers
+Date: Sat,  1 Aug 2026 15:42:17 +0530
+Message-ID: <20260801101217.12778-1-shaikhkamal2012@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260731090444.558491F000E9@smtp.kernel.org>
 
-On Fri, Jul 31, 2026 at 09:04:43AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
-> 
-> New issues:
-> - [High] Infinite IRQ Thread Loop / CPU Spin when handling DCD events
-> 
-False Positive. DCD events are ignored because DCD is turned off
-(mds->dcd_supported = false).
+Make the code printing pointer error values simpler and address the
+coccinelle warnings:
 
-> Pre-existing issues:
-> - [High] Out-of-Bounds Read and Information Leak in Event logs
-> - [High] Out-of-Bounds Read and Information Leak in Poison logs
-> --
-> 
-> --- Patch [6]: [PATCH v12 6/8] cxl/mem: Configure dynamic capacity interrupts ---
-> commit 5b173c122c3602992c4ceeafd1c2d87a80accacb
-> Author: Ira Weiny <iweiny@kernel.org>
-> 
-> cxl/mem: Configure dynamic capacity interrupts
-> 
-> Dynamic Capacity Devices (DCD) support extent change notifications
-> through the event log mechanism. Configure DCD event log interrupts
-> on devices supporting dynamic capacity. Disable DCD if interrupts
-> are not supported.
-> 
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index df13fb8802c38..6cb344ec4f3a7 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -509,11 +509,30 @@ static bool cxl_alloc_irq_vectors(struct pci_dev *pdev)
-> >  	return true;
-> >  }
-> >  
-> > +/*
-> > + * Event logs the driver drains: standard logs when native_cxl, DCD when
-> > + * supported.
-> > + */
-> > +static u32 cxl_event_drain_mask(struct pci_host_bridge *host_bridge,
-> > +				struct cxl_memdev_state *mds)
-> > +{
-> > +	u32 mask = 0;
-> > +
-> > +	if (host_bridge->native_cxl_error)
-> > +		mask |= CXLDEV_EVENT_STATUS_ALL & ~CXLDEV_EVENT_STATUS_DCD;
-> > +	if (cxl_dcd_supported(mds))
-> > +		mask |= CXLDEV_EVENT_STATUS_DCD;
-> > +	return mask;
-> > +}
-> > +
-> >  static irqreturn_t cxl_event_thread(int irq, void *id)
-> >  {
-> >  	struct cxl_dev_id *dev_id = id;
-> >  	struct cxl_dev_state *cxlds = dev_id->cxlds;
-> >  	struct cxl_memdev_state *mds = to_cxl_memdev_state(cxlds);
-> > +	struct pci_host_bridge *host_bridge =
-> > +		pci_find_host_bridge(to_pci_dev(cxlds->dev)->bus);
-> > +	u32 mask = cxl_event_drain_mask(host_bridge, mds);
-> >  	u32 status;
-> >  
-> >  	do {
-> > @@ -522,8 +541,8 @@ static irqreturn_t cxl_event_thread(int irq, void *id)
-> >  		 * ignore the reserved upper 32 bits
-> >  		 */
-> >  		status = readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
-> > -		/* Ignore logs unknown to the driver */
-> > -		status &= CXLDEV_EVENT_STATUS_ALL;
-> > +		/* Ignore logs unknown to the driver or owned by BIOS */
-> > +		status &= mask;
-> >  		if (!status)
-> >  			break;
-> >  		cxl_mem_get_event_records(mds, status);
-> 
-> [Severity: High]
-> Since mask now includes CXLDEV_EVENT_STATUS_DCD, status can have this bit set.
-> However, cxl_mem_get_event_records() does not appear to handle the DCD event:
-> 
-The mask never includes CXLDEV_EVENT_STATUS_DCD.
-Above in cxl_event_drain_mask:
+  drivers/cxl/core/port.c:939:3-10: WARNING: Consider using %pe to print PTR_ERR()
+  drivers/cxl/core/port.c:1275:25-32: WARNING: Consider using %pe to print PTR_ERR()
+  drivers/cxl/core/port.c:1309:25-32: WARNING: Consider using %pe to print PTR_ERR()
+  drivers/cxl/core/region.c:686:3-10: WARNING: Consider using %pe to print PTR_ERR()
+  drivers/cxl/core/region.c:3778:13-20: WARNING: Consider using %pe to print PTR_ERR()
 
-if (cxl_dcd_supported(mds))
-              mask |= CXLDEV_EVENT_STATUS_DCD;
+The %pe specifier prints the error symbolically, so a failed dport
+addition reports -EBUSY rather than -16, which is easier to follow
+when tracing port and region setup with dynamic debug enabled.
 
-mds->dcd_supported is set to false in Patch 1 so the DCD bit is never
-set.
+The PTR_ERR() uses in return statements are left unchanged.
 
-So status &= mask becomes zero and we break from the loop.
+Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+---
+Tested with cxl config build in x86 Architecture
 
-- Anisa
-> drivers/cxl/core/mbox.c:cxl_mem_get_event_records() {
->     ...
->     if (status & CXLDEV_EVENT_STATUS_FATAL)
->         cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_FATAL);
->     if (status & CXLDEV_EVENT_STATUS_FAIL)
->         cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_FAIL);
->     if (status & CXLDEV_EVENT_STATUS_WARN)
->         cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_WARN);
->     if (status & CXLDEV_EVENT_STATUS_INFO)
->         cxl_mem_get_records_log(mds, CXL_EVENT_TYPE_INFO);
->     ...
-> }
-> 
-> Will this fail to clear the DCD event from the device? If the event is never
-> cleared, will the hardware register retain the bit and cause the while (status)
-> loop to spin infinitely on the exact same status bit, potentially causing a CPU
-> soft lockup?
-> 
-> >  		cond_resched();
-> >  	} while (status);
-> 
-> [ ... ]
-> 
-> [Severity: High]
-> This is a pre-existing issue, but I noticed a potential out-of-bounds read when
-> fetching event logs:
-> 
-> drivers/cxl/core/mbox.c:cxl_mem_get_records_log() {
->     ...
->     nr_rec = le16_to_cpu(payload->record_count);
->     if (!nr_rec)
->         break;
-> 
->     for (i = 0; i < nr_rec; i++)
->         __cxl_event_trace_record(cxlmd, type,
->                                  &payload->records[i]);
->     ...
-> }
-> 
-> Does this code validate the hardware-provided nr_rec against the allocated
-> payload size? If an untrusted or compromised device returns an artificially
-> large count, could this read out of bounds?
-> 
-> Similarly, when clearing those records:
-> 
-> drivers/cxl/core/mbox.c:cxl_clear_event_record() {
->     ...
->     for (cnt = 0; cnt < total; cnt++) {
->         struct cxl_event_record_raw *raw = &get_pl->records[cnt];
->         struct cxl_event_generic *gen = &raw->event.generic;
-> 
->         payload->handles[i++] = gen->hdr.handle;
->     ...
-> }
-> 
-> Could this write the out-of-bounds memory values into the clear event payload
-> sent back to the device, leading to an information leak?
-> 
-> [Severity: High]
-> This is also a pre-existing issue, but a similar pattern exists in the poison
-> log handling:
-> 
-> drivers/cxl/core/mbox.c:cxl_mem_get_poison() {
->     ...
->     for (int i = 0; i < le16_to_cpu(po->count); i++)
->         trace_cxl_poison(cxlmd, cxlr, &po->record[i],
->                          po->flags, po->overflow_ts,
->                          CXL_POISON_TRACE_LIST);
->     ...
-> }
-> 
-> Does this validate po->count against the buffer size, or could it result
-> in an out-of-bounds read if the device returns a large count?
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260731084901.1512819-1-anisa.su@samsung.com?part=6
+ drivers/cxl/core/port.c   | 13 ++++++-------
+ drivers/cxl/core/region.c |  8 ++++----
+ 2 files changed, 10 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 1215ee4f4035..c9875e6af9f6 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -932,11 +932,10 @@ struct cxl_port *devm_cxl_add_port(struct device *host,
+ 
+ 	parent_port = parent_dport ? parent_dport->port : NULL;
+ 	if (IS_ERR(port)) {
+-		dev_dbg(uport_dev, "Failed to add%s%s%s: %ld\n",
++		dev_dbg(uport_dev, "Failed to add%s%s%s: %pe\n",
+ 			parent_port ? " port to " : "",
+ 			parent_port ? dev_name(&parent_port->dev) : "",
+-			parent_port ? "" : " root port",
+-			PTR_ERR(port));
++			parent_port ? "" : " root port", port);
+ 	} else {
+ 		dev_dbg(uport_dev, "%s added%s%s%s\n",
+ 			dev_name(&port->dev),
+@@ -1271,8 +1270,8 @@ struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
+ 	dport = __devm_cxl_add_dport(port, dport_dev, port_id,
+ 				     component_reg_phys, CXL_RESOURCE_NONE);
+ 	if (IS_ERR(dport)) {
+-		dev_dbg(dport_dev, "failed to add dport to %s: %ld\n",
+-			dev_name(&port->dev), PTR_ERR(dport));
++		dev_dbg(dport_dev, "failed to add dport to %s: %pe\n",
++			dev_name(&port->dev), dport);
+ 	} else {
+ 		dev_dbg(dport_dev, "dport added to %s\n",
+ 			dev_name(&port->dev));
+@@ -1305,8 +1304,8 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
+ 	dport = __devm_cxl_add_dport(port, dport_dev, port_id,
+ 				     CXL_RESOURCE_NONE, rcrb);
+ 	if (IS_ERR(dport)) {
+-		dev_dbg(dport_dev, "failed to add RCH dport to %s: %ld\n",
+-			dev_name(&port->dev), PTR_ERR(dport));
++		dev_dbg(dport_dev, "failed to add RCH dport to %s: %pe\n",
++			dev_name(&port->dev), dport);
+ 	} else {
+ 		dev_dbg(dport_dev, "RCH dport added to %s\n",
+ 			dev_name(&port->dev));
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 1e211542b6b6..894df68a6074 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -682,8 +682,8 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
+ 				    dev_name(&cxlr->dev));
+ 	if (IS_ERR(res)) {
+ 		dev_dbg(&cxlr->dev,
+-			"HPA allocation error (%ld) for size:%pap in %s %pr\n",
+-			PTR_ERR(res), &size, cxlrd->res->name, cxlrd->res);
++			"HPA allocation error (%pe) for size:%pap in %s %pr\n",
++			res, &size, cxlrd->res->name, cxlrd->res);
+ 		return PTR_ERR(res);
+ 	}
+ 
+@@ -3773,9 +3773,9 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+ 
+ 	if (IS_ERR(cxlr)) {
+ 		dev_err(cxlmd->dev.parent,
+-			"%s:%s: %s failed assign region: %ld\n",
++			"%s:%s: %s failed assign region: %pe\n",
+ 			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+-			__func__, PTR_ERR(cxlr));
++			__func__, cxlr);
+ 		return cxlr;
+ 	}
+ 
+
+base-commit: f5098b6bae761e346ebcd9da7f95622c04733cff
+-- 
+2.43.0
+
