@@ -1,152 +1,188 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CF163876B8
-	for <linux-cxl@vger.kernel.org>; Sat,  1 Aug 2026 19:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785610941; cv=pass; b=m3xxwMRBJsYWfUt/aiEKDmHaRgrtWr2iCXNs2wgOWCBUGVwJq3CmhkYaAJ1o+T0qRQnDfdcxf0sJlj5uTsrU/+yYiCLK3jjPSVg8tn16E04FdWb3qCkZ6KOX/4ti5Du+9e9EOUKcJB3pCc5K5EN8R44cNzBLapSVbGFpO5+GdM8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785610941; c=relaxed/simple;
-	bh=nivli2INTpQAZY/8TzmpQ6V0d9mAXZr2We8tZu0CLGU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZPwAg5UBaRDDpYf+INHRuSnlG/bLIs+DuT1KSUuj65cb7xdkw4XKaWnqEECndXnmbam3oIOME7zYJvA8dto5x9S66LCzd+HjPyP7ALjh2KcGQe4YW4aC+0zhBbgxxvQ/MuyLOoPsLNvcxLTBm4EchH+hrPtAXgTXVESvmWPm5jI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KdUXF+3y; arc=pass smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612E2322A
+	for <linux-cxl@vger.kernel.org>; Sun,  2 Aug 2026 11:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785669646; cv=none; b=UzIvrOQSrJKe48a01ZMtz1qFmiUBJoHjDLBECNsauLTmy65sCNTt9KfAPOVuzIMd5zg71k/JXbw7S0kNm/czefcIIRtqQ2Fi0lcB83t1CijPacRJzsXmZNrlurzVs9ER9ynhURNkFdkopPaLXx33E37iHFTYQnrVZNJa2tWpQrw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785669646; c=relaxed/simple;
+	bh=LFPcp6CXA/x3F71q2TIdQYdeiBvgEWE8aizjnFiqyiE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hKCOe5EdSKhiLgBfLyjr/P6Qo/DY8/wBcvOy4XK3qx0T6uBHHL91TPhv0kVg7MB6ASQVvF5qaFwXie1rY8nBpxT4Z3KbgDP8kmwrjrO5HKqVd5UEQviIHw3OR8XV07NAGhw3wIw/qbsc+OtVU/ZB/BC/ZFoUwWLNuUEshildyNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=THK+NQ2A; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdUXF+3y"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6a0c8283146so591732a12.0
-        for <linux-cxl@vger.kernel.org>; Sat, 01 Aug 2026 12:02:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785610938; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Ri6cI4I+Yn7neBbALfm71EcF5v3PYVu/O2GhlDYrhQm1EaC3sac8r8XIClD6kROb6i
-         gXldUkxS5Tywhd2rTt1CJin/tUBm4/XsW7y+YPcZZJYHosOLEjdQpr9QzwLLFansiLDi
-         cS6gM/IjQzjb800UlIre4Nx+q8bi9cQL1/aOBUHUjCAZOeWXolEi9NAHLKXCrtxbB4gF
-         y1oc3SLmcvNJkgNqVsAk298ZhhoUtjWyzA7u/7Cg+DtMrxYbNDUAA+CcldkYaY+7lLVR
-         dzvorjW+JWDwvlct80phFd6MYZvaG0028STUgX1SOqy+TtCKlKLkTBuFP+HHV1oWlL/t
-         xicA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=nivli2INTpQAZY/8TzmpQ6V0d9mAXZr2We8tZu0CLGU=;
-        fh=peE0sj0vnObJbU7EF50gG1su1d8pWJmtLuxArNWUfaw=;
-        b=bawqA5DnDSkVXCn3xPp1CZiyP4L1XXhzyeM3LMC4zW5obaOW5S21K6eUrLIk4UkHbn
-         HT7UdjsU0Ec7RtJv8EO2eNJ4PpivLutVc2uwdIUpJB4TeYVKqYyHu1Vk5zx4grQ4/mwh
-         9JNXP7VhRMa1NxlUiEfoY5iw99bvOtqSnitbNMKUlCpbLL9J6T2ssKPswnW+dhfVx+tg
-         aDTATjNTVV0LKldlNbuvYkc59u13kCyaDqN0BudiQKk9HPqa1E2D+kdl0v6h8/E/3bSk
-         VvfWI6tYdDEZ9+zuhz9CD6qRg/XIWaFNcKCeDwP2t1LQqP895QY7RZmdPdHH1dKeNm8S
-         oHwQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THK+NQ2A"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2cf6d65d8a7so33753515ad.0
+        for <linux-cxl@vger.kernel.org>; Sun, 02 Aug 2026 04:20:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785610938; x=1786215738; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=nivli2INTpQAZY/8TzmpQ6V0d9mAXZr2We8tZu0CLGU=;
-        b=KdUXF+3ykfIPwHSaJSeFEHofwhjSnI1tczDKFGkXUMnlNyR3F923FZqksKe39mHwW7
-         dCFQwl+6lag2J8mXhqPdjSvJyOfv+oEGR1XZmRmdc/n+8d1Q4YUoJr2cQE8ttNrKZZtq
-         q9RKXQGOJ9/j92E1PEnI+5lk20BK153agHD8gQsHInkqmhfCSGUddeIGwN1cziXS1f7t
-         85D9Av9CzZ8sRacrA5DqqekOWA/HgBAaE6v7NVE1oM7qHZM6vcKSxa1M+a3CgrGhz9qE
-         dXI0Fa+oxV2basBHwq944W/k3QT59qjYK6I8reBNZ2kIQ34OFLV7U2v2qBMOj0//Nh2K
-         7YSQ==
+        d=gmail.com; s=20251104; t=1785669644; x=1786274444; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=XXturRtkPIePk9i4DZbCbMO/flEYuSWL+nIK+cXwWV4=;
+        b=THK+NQ2AqMQaUyVQ+zto2DrZ/4dCt2MQCBFg7f6U0JYORe96xTgZsIjmB2zVUXyGxd
+         iQL+8YY4Gb/nXU0H7oqSfCxEEXdcyvNF6GiKZXCTaRBux5BT5xAM8d4tPD3TsBoRQPGd
+         9LziQi+TGS1kqtEglsjVsdvJ/3oGHXmPmpOLLNO9Piwcss1mLBjxq4nbCTjRoJUlzfSt
+         YLpcjL6jOKQwKiMAH4aWVpXG4irJlMjdUqaVTVJSKzwqaSvaxJ/0bm+TT88F68Hg6sXZ
+         KBwmoQxIRizu6b/S7st0AuZIm+INUUzU9guI/Ga968pJX5V029/a/luCGgWDHMzTN+3B
+         nTgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785610938; x=1786215738;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=nivli2INTpQAZY/8TzmpQ6V0d9mAXZr2We8tZu0CLGU=;
-        b=gxSjCAE9a83UBHS66Dl702UcXSg/KTTawl/AazJWV3GgVxzofg+fcFDdLT0ANraFd8
-         Zjzvs6aaO67nvICQZwCnOtjQkZ3fqMNZS6dMTOBZalJOz0rW+/WulTTdAiJ6CibiKq7j
-         uJzdI24T6PrwReP2GrsMKamG5KPqyjH12KAcSZNYGSHJgYA3Aujcvtd8iHvu2tJXzpMK
-         ucg1jPZLEG6kEmLurJPYytEA7zzgaNtB+rBWDCCKY8oZF78qLFbVkeHjblkCY8bfBVWH
-         aKqVZzjZZUz7OLi807E7bZrqXAuR6li/RmxxnS56LeODfl1L5eIMPfc1tHmNiHNlb5Wm
-         H/pw==
-X-Forwarded-Encrypted: i=1; AHgh+RqVe45bWXZj88YK9T57fSriP9KA085VBbu9qA6cu38jZxWUFznIzMwZsgDbM/uXJmRmmi4W96o6jc8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxK/+1v2qa3DZjNOel6xZCJnkwLvi1Y0W5SXJiFVRtigBPg0UC
-	5Z0IGfg47+BuSN85FwEA/IDNq/JGMFcTyEMRsVLjEUTY7O9Avo0qrbcOEEjTbMiaJAe9Gh8P4Ff
-	AgzsOPrysT6RSiwNd724SKuOenXbjrOk=
-X-Gm-Gg: AR+sD12KJgd0i45efx1B9jjjf3iGs8cEokSWkxEGoGhKDpptgbw2nDXdpbxohuHayeo
-	EyDBcjzGW6eS7GTYazIhd4SztgkFedf5WiF/e7F5OurPv1GA/dnAZqgbRBC7yXGFsDoAs/ftkqM
-	PYCIIS5E6NTDVoAuTUgGR6vzqccW2MYH/Y6u6ye8bv8jofltVf2Hx3mWjqjvsIkY/2ijy8P1cuZ
-	3W+X31yculwWgAive1BhMUqyM0s771NoETTZAlqRaCZkNnnDRlahdn8awBuxo2gs0uNkIO6BIgP
-	mVYJgml+I7mKgdEeOnIudL1J/O+UU9ij+63YndzmYK0TZtY=
-X-Received: by 2002:a05:6402:449a:b0:697:de29:c802 with SMTP id
- 4fb4d7f45d1cf-6a0a7ccb364mr2898579a12.18.1785610937994; Sat, 01 Aug 2026
- 12:02:17 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1785669644; x=1786274444;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=XXturRtkPIePk9i4DZbCbMO/flEYuSWL+nIK+cXwWV4=;
+        b=NzhhPotaNmDRsRsirMJ4Eo/Ewougzoel94korQ2RzZnUPjPfLSs3833FGkH+oW0AkL
+         uSFCYJzDA9+WkqIiaSSWbnaQXxsc0F8kbTEClBOm2NhhAEOODXjrzXQaMS9VtQhHkNlg
+         fQmi3kliPITjgmnZj2AiG6jVA4xYYj0PynsMjEe2GWbCRE+RteoL7j8MxSTJoLReXq+0
+         Sz/VNi5ykEuKX7hIYrh+9KY9qdhy7XEdr3+T7VSlmoXW3evJGy2FSI0XH7iZHSrLvS0j
+         9FIg6qaqnPKaQf3l+T06YN/Ay6KAgP2eNThy/XDeEKkceo5MSeF7MUBT5708+HBiNQR2
+         VEAA==
+X-Gm-Message-State: AOJu0Ywd/6XWMXZOrOPHKUTx7Lx7e4LzABrmhT5Gj7RYwqTyEZoIdfwr
+	BaEXiDnv2+eWMlM8cTj1+bjbJP0gwXCayCUry/yaip687Kn5SP1A3kzo
+X-Gm-Gg: AR+sD11uEItslmqa1AMrl4EIGljfe1cGrA8eYDtDh5CZGoexJTfYvnvKKz1tGSOMPby
+	mbV5iEQjAf1A3lMavfxnO/pxvwhX0MaEL7hKBCtjwd5wRQ+tmllYjKS6ufSXVpXmIk8PfjglrMo
+	NL6wJFpFt+4kECSMxdDWUCc3jV+ppNZKy3EBgO9jtcw7Jj8k+m8UOyXo+so6i914FT7YGRKXTLF
+	42pdkEB2D+v9QOb2CZq48UmNqUNhWbCxgCD2I4/6ac4l6IHxTvhwR6+CBdwuzWbkraJ/zVv/JJj
+	BdpLzAlUmgj4zjlLiAo3y9fyjgj06rixEUjMjBgQA1iKR6BCWxd2nRpCkhpjMVw3Ib2BheI9LVi
+	eOyexJizccfGxIdv2NBhOUXolE7Ef8BP2aue+XTMuLXNuNvdSD7kYVNvWznwoLU3sNHO+W8PcA6
+	j/JSNKVa20eHgDe6u5pJX114wkhCSScjSoBeK132H00Gb6Vnt2sF8KP7Tm5e+CKwUxsxDahLQVn
+	XfLKohispLPRwe/ktgmBTA3hCSg
+X-Received: by 2002:a17:902:da81:b0:2c9:97a9:2097 with SMTP id d9443c01a7336-2d05241c768mr70935345ad.43.1785669643654;
+        Sun, 02 Aug 2026 04:20:43 -0700 (PDT)
+Received: from acer-nitro-anv15-41.entro.com ([118.34.230.2])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d04b0eb486sm25568915ad.53.2026.08.02.04.20.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Aug 2026 04:20:42 -0700 (PDT)
+From: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Robert Richter <rrichter@amd.com>,
+	Gregory Price <gourry@gourry.net>
+Cc: linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] cxl: Use %pe to print error pointers
+Date: Sun,  2 Aug 2026 16:50:29 +0530
+Message-ID: <20260802112029.28767-1-shaikhkamal2012@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260720034358.68714-1-john@jagalactic.com> <0100019f7d9fbe81-6cb16662-2522-47ea-a152-fab0ee3d9b35-000000@email.amazonses.com>
- <CAOQ4uxiEzP2e=cRw-AiGxtSv6WMSA5yR3cmgrF97s7ggU6wzqg@mail.gmail.com>
- <CAJfpegt9PwHksYhsQZeCsW0eooXVVihyieTpeHMmC-+Pq8BWaw@mail.gmail.com>
- <CAOQ4uxhuivjMMt_Dm3VwKmOhHg7ZHdAww6j6jp+RMjPoRde+bA@mail.gmail.com>
- <CAJnrk1Yat+SEr=SmZXwUt9y2WcC0VEC4KUpPrkrRSjMEmx42WQ@mail.gmail.com>
- <CAJfpegtnja6tkOnNPD2WZxu14Dd+UM9AvynsVB_E268iSXLbkQ@mail.gmail.com>
- <CAJnrk1a9mR-6hFie3hfFRgWTkrhJMVx4j9e7WGnjTRFuX2iJOg@mail.gmail.com> <CAJnrk1aj4B-T14SMTZhst2XsjOkKWStUj_0cjwHswgYWWuaB4w@mail.gmail.com>
-In-Reply-To: <CAJnrk1aj4B-T14SMTZhst2XsjOkKWStUj_0cjwHswgYWWuaB4w@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Sat, 1 Aug 2026 21:02:06 +0200
-X-Gm-Features: AUfX_mx0nmQgWA50AjJPZwCEcEACcDvMhxSi5YeCpVu2bWW7aLZWp00XQH36_Y0
-Message-ID: <CAOQ4uxhop5bzpDxiqSdfHS8JyUASfAmpsmuhrpq7Ey28jATVsw@mail.gmail.com>
-Subject: Re: [PATCH V11 0/9] famfs: port into fuse
-To: Joanne Koong <joannelkoong@gmail.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, John Groves <john@jagalactic.com>, 
-	John Groves <John@groves.net>, Dan Williams <djbw@kernel.org>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, James Morse <james.morse@arm.com>, 
-	Fuad Tabba <tabba@google.com>, Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
-	"fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 30, 2026 at 10:59=E2=80=AFPM Joanne Koong <joannelkoong@gmail.c=
-om> wrote:
->
-> On Fri, Jul 24, 2026 at 1:23=E2=80=AFPM Joanne Koong <joannelkoong@gmail.=
-com> wrote:
-> >
-> > As I understand it, the merge window for 7.3 closes at the end of
-> > August. Just to summarize, the only things needed to get this into 7.3
-> > (besides addressing the Sashiko comments) are:
-> > a) replace FUSE_GET_FMAP with FUSE_NOTIFY_EXTENT_MAP (will also be
-> > good for famfs in general, saves an extra context switch)
-> > b) remove FUSE_DEV_IOC_DAXDEV_OPEN and reuse existing
-> > FUSE_DEV_IOC_BACKING_OPEN (logic for this already supplied in Miklos's
-> > patch in [1])
-> > c) remove "config FUSE_FAMFS_DAX"
-> > d) remove FUSE_DAX_FMAP capability (not 100% sure about this, but
-> > since the only thing added to the uapi is a new notif type, seems fine
-> > to exclude this cap flag)
-> >
+Use the %pe printk format specifier to report error pointers directly
+instead of printing PTR_ERR() as a long value.  A failed dport addition
+then reports -EBUSY rather than -16, which is easier to follow when
+tracing port and region setup with dynamic debug enabled.
 
-FWIW I'd rather keep the explicit negotiation flag and make it mutually
-exclusive with FUSE_PASSTHROUGH (anything else)?
+Convert the five affected sites in drivers/cxl/core/port.c and
+drivers/cxl/core/region.c.  PTR_ERR() uses in return statements are
+unaffected and left unchanged.
 
-This will allow us reuse of fuse_passthrough infrastructure with less
-concern about mixing the two use cases, which at this point seem
-like two different use cases.
+drivers/cxl was scanned in full; these are the only conversion
+candidates.
 
-Thanks,
-Amir.
+Found by: make coccicheck MODE=report M=drivers/cxl/
+No functional change intended.
+
+Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+---
+Compile tested only with cxl config on x86.
+
+v2:
+ - Reword commit message: lead with the code improvement, note coccinelle
+   only as the tool used to locate the sites (Alison)
+ - Capitalise subject per CXL convention (Alison)
+ - Note that drivers/cxl was scanned in full and these are the only
+   candidates (Alison)
+ - Clarify that the patch is compile tested only
+ - No code changes
+Link to v1: https://lore.kernel.org/linux-cxl/20260801101217.12778-1-shaikhkamal2012@gmail.com/
+
+ drivers/cxl/core/port.c   | 13 ++++++-------
+ drivers/cxl/core/region.c |  8 ++++----
+ 2 files changed, 10 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 1215ee4f4035..c9875e6af9f6 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -932,11 +932,10 @@ struct cxl_port *devm_cxl_add_port(struct device *host,
+ 
+ 	parent_port = parent_dport ? parent_dport->port : NULL;
+ 	if (IS_ERR(port)) {
+-		dev_dbg(uport_dev, "Failed to add%s%s%s: %ld\n",
++		dev_dbg(uport_dev, "Failed to add%s%s%s: %pe\n",
+ 			parent_port ? " port to " : "",
+ 			parent_port ? dev_name(&parent_port->dev) : "",
+-			parent_port ? "" : " root port",
+-			PTR_ERR(port));
++			parent_port ? "" : " root port", port);
+ 	} else {
+ 		dev_dbg(uport_dev, "%s added%s%s%s\n",
+ 			dev_name(&port->dev),
+@@ -1271,8 +1270,8 @@ struct cxl_dport *devm_cxl_add_dport(struct cxl_port *port,
+ 	dport = __devm_cxl_add_dport(port, dport_dev, port_id,
+ 				     component_reg_phys, CXL_RESOURCE_NONE);
+ 	if (IS_ERR(dport)) {
+-		dev_dbg(dport_dev, "failed to add dport to %s: %ld\n",
+-			dev_name(&port->dev), PTR_ERR(dport));
++		dev_dbg(dport_dev, "failed to add dport to %s: %pe\n",
++			dev_name(&port->dev), dport);
+ 	} else {
+ 		dev_dbg(dport_dev, "dport added to %s\n",
+ 			dev_name(&port->dev));
+@@ -1305,8 +1304,8 @@ struct cxl_dport *devm_cxl_add_rch_dport(struct cxl_port *port,
+ 	dport = __devm_cxl_add_dport(port, dport_dev, port_id,
+ 				     CXL_RESOURCE_NONE, rcrb);
+ 	if (IS_ERR(dport)) {
+-		dev_dbg(dport_dev, "failed to add RCH dport to %s: %ld\n",
+-			dev_name(&port->dev), PTR_ERR(dport));
++		dev_dbg(dport_dev, "failed to add RCH dport to %s: %pe\n",
++			dev_name(&port->dev), dport);
+ 	} else {
+ 		dev_dbg(dport_dev, "RCH dport added to %s\n",
+ 			dev_name(&port->dev));
+diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+index 1e211542b6b6..894df68a6074 100644
+--- a/drivers/cxl/core/region.c
++++ b/drivers/cxl/core/region.c
+@@ -682,8 +682,8 @@ static int alloc_hpa(struct cxl_region *cxlr, resource_size_t size)
+ 				    dev_name(&cxlr->dev));
+ 	if (IS_ERR(res)) {
+ 		dev_dbg(&cxlr->dev,
+-			"HPA allocation error (%ld) for size:%pap in %s %pr\n",
+-			PTR_ERR(res), &size, cxlrd->res->name, cxlrd->res);
++			"HPA allocation error (%pe) for size:%pap in %s %pr\n",
++			res, &size, cxlrd->res->name, cxlrd->res);
+ 		return PTR_ERR(res);
+ 	}
+ 
+@@ -3773,9 +3773,9 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+ 
+ 	if (IS_ERR(cxlr)) {
+ 		dev_err(cxlmd->dev.parent,
+-			"%s:%s: %s failed assign region: %ld\n",
++			"%s:%s: %s failed assign region: %pe\n",
+ 			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
+-			__func__, PTR_ERR(cxlr));
++			__func__, cxlr);
+ 		return cxlr;
+ 	}
+ 
+
+base-commit: f5098b6bae761e346ebcd9da7f95622c04733cff
+-- 
+2.43.0
+
