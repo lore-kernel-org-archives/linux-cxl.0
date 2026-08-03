@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530F02EF66B;
-	Mon,  3 Aug 2026 16:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09BF421255;
+	Mon,  3 Aug 2026 17:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785772868; cv=none; b=DYxT8D9KgXcHjGBmXNlfIEkPTUlpE6gl4JqD0fiue8zYQKW25uSJmyjy5xcPv8cg0AbaOJCppdBKXJc9iG9OojmRgGKnX6xfs6lHsSSdTW9fLPuUpK/TvnR/Xjvug5fhYHzzBYen1qXlVrYo0uqpaY3W8df77dxwNnSVKhC6wKQ=
+	t=1785777664; cv=none; b=HPbrldBY9SknK63HWEI59ocpBi//fFlxy0HxG+sIWwEN+BwIycFhVgjvTvkB03GPQIqyXz9+QFDog5rgQX6r69faHOCFo7zrPmH2sXzZM71/GRxVDcNyp/TIodVZDdNjOM0W5QhLDlKgdu/A/3hxGkpbCKodd22i8aR6Q2n6gwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785772868; c=relaxed/simple;
-	bh=Ir8o5TbqMkWU4xH647a9ZPxtXOsvWt+HjGoWV195J88=;
+	s=arc-20240116; t=1785777664; c=relaxed/simple;
+	bh=6CnFkG9LXI17KmuvQVP3wyXFtIz8bQdBghV0XA7gMvw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kvd8FsTNo9xuRfiLhi9alJEVLbus1h3NFDJX6HM+o/Kms6cQ4G+98REoqzrSkKQe585J0DIEfVECajseEWl30DDESQoLpvfFLA8uir0RHX3LgZjKgT99Cmr/5AwZrma+YLkrvXIzET6PAOi8+QW6hDVqMGGDGnwwnePXgTaK3Ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dShiq9Xr; arc=none smtp.client-ip=192.198.163.15
+	 In-Reply-To:Content-Type; b=VakwiPXMAen7khnD53HJFPrhRjrVDtW6EFUYN1givG2uO6fGynMnHLuIFyptq/wvz+FXIx1ZXLqU0l2nfMAgVRPgoAUCKTT0NC2CIfFcLOnASlFD/eE6/fujLsZgVhbDLn8S4V1y8LecZopMKnDX08aaCGifw31awXlQXAGASa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nhwwf6qm; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dShiq9Xr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nhwwf6qm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785772867; x=1817308867;
+  t=1785777661; x=1817313661;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Ir8o5TbqMkWU4xH647a9ZPxtXOsvWt+HjGoWV195J88=;
-  b=dShiq9Xro7CaU8zSuuqWF2SssxfSH4iovC4bXw2HaiNk13KdCSLZdbZU
-   AAVNDW+tAKHITtl4UTShN1JL2JozhwFDB6rruElmD3NX0Mh0BmLRSM0Hf
-   N0MVchkam5pLI/caqTRhJvqA1suE4U9DgU5kKIOfGB/lh4wAF/keUc8EH
-   rVYK9Z8BN5G6fChkxoCoAQAHxQcx4MaO3fhflwhq4gK8UKpI7CkEuSiAu
-   fxHuqxSKvJ99KS6vRwl98kDDNWZn+sHHzo0MhNw41DTOQ7sTnS0htbLUJ
-   h5uRHI5Gg1FTAUs8oycA2iSu4oMnredL9PeKmu9mE1nYEvIGcJ9hdgEOd
+  bh=6CnFkG9LXI17KmuvQVP3wyXFtIz8bQdBghV0XA7gMvw=;
+  b=Nhwwf6qmyumNftp/SU/IK2NoCHFKbIpTcVzM1QlrxPVum8i9e0+KMfle
+   G+uNFiGt1ZiUPcIBG5JYRCVJ9/2fVo49HeTafCyB6DipG482SHNbUOBPW
+   mEgwzmiPd4wS6WDS3qRL8l1sTcSg93sqKftwVg+25sSgCMk9930MyuM1y
+   RdKs5ZwyHhQztKQ5s1cOeynQ5z1G5ILCfL5BOMnouZShxbFfPy+V54a6h
+   YNIBsN5O9Uusb1MzuuXnyKRq668X63XhhaDuKTaxF7kgtT/qeFxtpVU8M
+   pWDAHJMBwGOBAmomXQY3B+qmd19V1aLqfwwZcNQDaP5n9zWmllxjBfWQO
    w==;
-X-CSE-ConnectionGUID: o0omsYheTBW7N3wYd0f5Iw==
-X-CSE-MsgGUID: RXzQ+2t8SB+OyDmgfZkRuA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11864"; a="86435055"
+X-CSE-ConnectionGUID: F7A97BCcRqSAt7e5jfzA3Q==
+X-CSE-MsgGUID: v3mZVrdnRY2Y7LdzFARs7Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11864"; a="85451686"
 X-IronPort-AV: E=Sophos;i="6.25,202,1779174000"; 
-   d="scan'208";a="86435055"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2026 09:01:06 -0700
-X-CSE-ConnectionGUID: 4HFuHvY8SsuKMffI5xJh0g==
-X-CSE-MsgGUID: OyLEquncT2eqzuUio+GwOA==
+   d="scan'208";a="85451686"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2026 10:20:57 -0700
+X-CSE-ConnectionGUID: KLUPn4yWQKefcFAnZeEmGg==
+X-CSE-MsgGUID: 4LPdYXsTQWuZWmyI5dcPNA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,202,1779174000"; 
-   d="scan'208";a="265526755"
+   d="scan'208";a="257368994"
 Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.108.187]) ([10.125.108.187])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2026 09:01:06 -0700
-Message-ID: <ab9b7f3a-e2a5-4627-b2ac-d53ce3a82477@intel.com>
-Date: Mon, 3 Aug 2026 09:01:04 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2026 09:39:45 -0700
+Message-ID: <fb57cfe8-cb70-4e4f-8fea-77e82bf1cb68@intel.com>
+Date: Mon, 3 Aug 2026 09:39:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,85 +52,116 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/9] perf/cxl: Split the MSI vector out of info->irq
-To: Robin Murphy <robin.murphy@arm.com>, linux-cxl@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Cc: jic23@kernel.org, will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net
+Subject: Re: [PATCH v3 9/9] perf/cxl: Don't log through pmu.dev in the
+ overflow interrupt handler
+To: Richard Cheng <icheng@nvidia.com>
+Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ jic23@kernel.org, will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
+ robin.murphy@arm.com, sashiko-bot@kernel.org
 References: <20260731232827.401447-1-dave.jiang@intel.com>
- <20260731232827.401447-5-dave.jiang@intel.com>
- <a4a807e6-b477-40c3-ac42-2bef8dd82d7e@arm.com>
+ <20260731232827.401447-10-dave.jiang@intel.com> <anAVpO--i5heVfz9@MWDK4CY14F>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <a4a807e6-b477-40c3-ac42-2bef8dd82d7e@arm.com>
+In-Reply-To: <anAVpO--i5heVfz9@MWDK4CY14F>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 8/3/26 5:04 AM, Robin Murphy wrote:
-> On 01/08/2026 12:28 am, Dave Jiang wrote:
->> info->irq means two different things depending on how far probe has got.
->> cxl_pmu_parse_caps() sets it to the MSI/MSI-X message number from the CPMU
->> Capability register. cxl_pmu_probe() passes that to pci_irq_vector() and
->> then overwrites it with the Linux virq, which is what the hotplug callbacks
->> hand to irq_set_affinity().
+On 8/2/26 10:29 PM, Richard Cheng wrote:
+> On Fri, Jul 31, 2026 at 04:28:27PM +0800, Dave Jiang wrote:
+>> perf_pmu_unregister() frees pmu->dev without clearing the pointer, and
+>> cxl_pmu_probe() registers its devm actions so that teardown runs
+>> perf_pmu_unregister() first, then the hotplug instance removal, then
+>> free_irq(). Nothing before free_irq() masks the interrupt, so the handler
+>> stays live across a window where info->pmu.dev is freed and its dev_dbg()
+>> walks that pointer.
 >>
->> Give the message number its own field. No functional change.
-> 
-> Thanks, this makes it much less confusing;
-> 
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-> 
-> If the fix itself was just the comparison operator then I'd suggest folding it in so as to avoid extra backporting dependencies/conflicts, but it sounds like we might have a corner case where 0 may still mean "no IRQ", so maybe sort that first then put this refactoring on top?
-
-Will do. I'll flip the order.
-
-DJ
-
-> 
-> Cheers,
-> Robin.
-> 
+>> Unsharing the interrupt does not close that window. cxl_pmu_event_stop()
+>> leaves the counter's overflow status bit set, and only the handler clears
+>> it, so an overflow taken just before teardown is still delivered and still
+>> gets past the "did anything overflow" early-out. It lands in the !event
+>> branch, where the dev_dbg() is.
+>>
+>> Log through info->pmu.parent instead, which is devm-managed and outlives
+>> every teardown action.
+>>
+>> Clear the overflow status before requesting the interrupt too, since the
+>> driver never touched it at probe and a counter left enabled with
+>> INT_ON_OVRFLW by firmware or a previous kernel can raise an interrupt at
+>> any point.
+>>
+>> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+>> Reported-by: sashiko-bot@kernel.org
+>> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
 >> Assisted-by: Claude:claude-opus-4-8
 >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 >> ---
 >> v3:
->> - New patch
+>> - Clear CXL_PMU_OVERFLOW_REG at probe, before the handler is armed. A stale
+>>   status bit from firmware can cause overflow interrupt. (Robin)
+>> - Ack dropped as the patch grew a hunk.
+>> - Drop the cxl_pmu_offline_cpu() hunk. That dev_err() cannot be reached.
 >> ---
->>   drivers/perf/cxl_pmu.c | 9 +++++----
->>   1 file changed, 5 insertions(+), 4 deletions(-)
+>>  drivers/perf/cxl_pmu.c | 11 ++++++++++-
+>>  1 file changed, 10 insertions(+), 1 deletion(-)
 >>
 >> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
->> index 3511d049aea4..56e6ae7bebf7 100644
+>> index 37742ce43d9f..3683427fbb7e 100644
 >> --- a/drivers/perf/cxl_pmu.c
 >> +++ b/drivers/perf/cxl_pmu.c
->> @@ -106,6 +106,7 @@ struct cxl_pmu_info {
->>       int on_cpu;
->>       struct hlist_node node;
->>       bool filter_hdm;
->> +    int msi_vec;
->>       int irq;
->>   };
->>   @@ -143,9 +144,9 @@ static int cxl_pmu_parse_caps(struct device *dev, struct cxl_pmu_info *info)
->>         info->filter_hdm = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) & CXL_PMU_FILTER_HDM;
->>       if (FIELD_GET(CXL_PMU_CAP_INT, val))
->> -        info->irq = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
->> +        info->msi_vec = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
->>       else
->> -        info->irq = -1;
->> +        info->msi_vec = -1;
->>         /* First handle fixed function counters; note if configurable counters found */
->>       for (i = 0; i < info->num_counters; i++) {
->> @@ -874,10 +875,10 @@ static int cxl_pmu_probe(struct device *dev)
->>           .capabilities = PERF_PMU_CAP_NO_EXCLUDE,
->>       };
->>   -    if (info->irq <= 0)
->> +    if (info->msi_vec <= 0)
->>           return -EINVAL;
->>   -    rc = pci_irq_vector(pdev, info->irq);
->> +    rc = pci_irq_vector(pdev, info->msi_vec);
->>       if (rc < 0)
->>           return rc;
->>       irq = rc;
+>> @@ -806,7 +806,7 @@ static irqreturn_t cxl_pmu_irq(int irq, void *data)
+>>  		struct perf_event *event = info->hw_events[i];
+>>  
+>>  		if (!event) {
+>> -			dev_dbg(info->pmu.dev,
+>> +			dev_dbg(info->pmu.parent,
+>>  				"overflow but on non enabled counter %d\n", i);
+>>  			continue;
+>>  		}
+>> @@ -903,6 +903,15 @@ static int cxl_pmu_probe(struct device *dev)
+>>  	if (!irq_name)
+>>  		return -ENOMEM;
+>>  
+>> +	/*
+>> +	 * Clear any overflow status left set by firmware or a previous kernel
+>> +	 * before the handler goes live, so it cannot mistake a stale bit for an
+>> +	 * overflow on a counter no event owns yet. The register is RW1C, and
+>> +	 * bits above the implemented counters are RsvdZ, so only write those.
+>> +	 */
+>> +	writeq(GENMASK_ULL(info->num_counters - 1, 0),
+>> +	       info->base + CXL_PMU_OVERFLOW_REG);
+>> +
 > 
+> Hi Dave,
+> 
+> I have a question here, since you are adding a clear, event_start() covers more than probe does. The block is frozen there, and it closes the reuse case as well as the boot one.
+> If a counter's overflow MSI is still in flight when perf reschedule that counter
+> to another event, the handler charges the full period to an event whose
+> prev_count was just zeroed.
+
+You are correct. v4 will add to event_start():
+	writeq(BIT_ULL(hwc->idx), base + CXL_PMU_OVERFLOW_REG);
+
+
+> 
+> Also if FW can leave a counter enabled, I'm not sure whether it's possible or not, but if that's the case, is clearing the status bit enough?
+> A leftoever counter with Global Freeze on Overflow but not Interrupt on Overflow
+> will wrap, freeze the whole CPMU, and raise nothing.
+
+Also right. This series is already large enough. Will have follow on patches to address this.
+
+> 
+> Best regards,
+> Richard Cheng.
+> 
+> 
+> 
+>>  	/*
+>>  	 * The handler must run on info->on_cpu, so the interrupt cannot be
+>>  	 * shared - IRQF_NOBALANCING is only honoured for the first action on a
+>> -- 
+>> 2.55.0
+>>
+>>
 
