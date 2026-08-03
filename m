@@ -1,187 +1,253 @@
-Received: from dog.elm.relay.mailchannels.net (dog.elm.relay.mailchannels.net [23.83.212.48])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C87432BF8
-	for <linux-cxl@vger.kernel.org>; Mon,  3 Aug 2026 19:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.212.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785783662; cv=none; b=KehTMd0B1qZwXoDGaY4I21L6jTPJnK1WG8UMa52C1hQhQDJrw0oqVImkU6KxCoqcSRrc8eJZ/isfuIg+YmsBdAj++JrE1QCBHmlRPqo/1Iv3iqTYvHFdj2QwbZ+tQvb+gNY9u1hC5cX2LvlED5VcALlWFXgUGzcGNvxNW76XpEw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785783662; c=relaxed/simple;
-	bh=io2MAlRr9oG+AJcwI1d6xwdVOseYEH/R/L9RUghY2ag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WagvXWr+K6kE5yThn3BbAYdWdTpof+D9e7Ou3FAhp9QprZfYTbmxTICKajMdrdJlHZ+9mm8YAUzQNV2tpD5raw5IhSmBUmbMdw52DsX258StodAiOvVilQrAm6obuy9F1QXpbzNqzhE7fAE3c+4x0+T60XP+Hhs2vJf5ViLoDOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=bfJmVjFo; arc=none smtp.client-ip=23.83.212.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421F74137A2;
+	Mon,  3 Aug 2026 19:13:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785784402; cv=fail; b=g8z9jn9pr/nJ3onG612djUJkP0D+IfhdY/kcFN2xrxwZf1iTqwQpnzTtZHl3DNQC8LurfWwBqQ0cdaiXhpCXKmrwbTBvl9qc9OZBoy4kRKo+ETpZX34BBNjWOgvyhKk8QFwpdNJ83gjx/0IW1xN7F1yfVEhRHS23bCWULVOk+1c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785784402; c=relaxed/simple;
+	bh=SytbcfeZaHxoVaipC5rgpiLVpi8/WhRmoTXieS6ceH8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=E5vZIMvyFKbWlhKXz7icYdEDVLwjJwooBVZP4OrSv2NkAl36tVqeGyuCCZIJqnHzGokO4hKpR+aZiYztCrGOldXDMPJ249d//OwZQJ453/kYOv9bWSAQJTIJhSAMqFMzqxXQdh/YjA+6gmwxmLnPlTlxRBjphE5uvz8HSoiFbzw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kRInuu3F; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="bfJmVjFo"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id D4C8D4C25F2;
-	Mon, 03 Aug 2026 18:55:11 +0000 (UTC)
-Received: from pdx1-sub0-mail-a227.dreamhost.com (100-108-70-126.trex-nlb.outbound.svc.cluster.local [100.108.70.126])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id E41064C2830;
-	Mon, 03 Aug 2026 18:55:09 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Minister-Trade: 12f34d71196e5865_1785783310513_3543770020
-X-MC-Loop-Signature: 1785783310513:4190499230
-X-MC-Ingress-Time: 1785783310512
-Received: from pdx1-sub0-mail-a227.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.108.70.126 (trex/8.0.2);
-	Mon, 03 Aug 2026 18:55:10 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a227.dreamhost.com (Postfix) with ESMTPSA id 4hDQpj3wbdz1d8;
-	Mon,  3 Aug 2026 11:55:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1785783309;
-	bh=siJi4mmUcnDZF68egfStMVH5FmIUAowG1dNveBmtVt8=;
-	h=Date:From:To:Cc:Subject:Content-Type:Content-Transfer-Encoding;
-	b=bfJmVjFotEq9UjeuMttc/5XkiuRCT9s954UF83NY7zn3X3qhxzR/NEtv1cjyNKKaj
-	 bbPH+90EiwYsBwnNRBgLpF5b5hTCnIUM+RbHhcvkcQqCM4Lo+Kl9fQ/iZN0YqwrjFX
-	 qw+UNfTS2DhURDQXqYBU4DMfs1GmtpdKLCnw1xmcu+JZMAfSxmbMsaSQx0/3tsmx8v
-	 0eyKilQK4o1B4rsjvEcgWPUBerBzdOuOCK4cFyZld6RJo6cSB/159Mz6K5mduoueT2
-	 YU70r0cy7Lmq6OPEvMuC+wE9sVuKraZ0z7nqe062pyHnJIqfCHlApJSUfOGk2XZKbr
-	 Nil+w8sbRQbvg==
-Date: Mon, 3 Aug 2026 11:55:06 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: sashiko-reviews@lists.linux.dev, dave.jiang@intel.com
-Cc: linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v7 2/8] cxl/pci: Add BI topology enable/disable
-Message-ID: <20260803185506.wynluncuhpda2tw7@offworld>
-References: <20260728144136.709882-1-dave@stgolabs.net>
- <20260728144136.709882-3-dave@stgolabs.net>
- <20260728151629.20F0D1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kRInuu3F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785784401; x=1817320401;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=SytbcfeZaHxoVaipC5rgpiLVpi8/WhRmoTXieS6ceH8=;
+  b=kRInuu3Fi47kroW2j2AAtp+7lOPv/YZA6k6fDlE7a441RBGAv5V+gxlJ
+   0ez7yq+9GLIXi2x17Ynxv8eD2rgwUN2UYRN8S1ahmnGq2LiFCfZf9e0vp
+   c7SexOENpazQkNGqS3KbFOI1MPDwQw1u8eKzNFTurypY/FqWnGEahpQ7Q
+   d48hqMZvrcDqoO0EwHX1QKfYmmAPKoDLTj//3WQItkHvCclwVtFmCK5B7
+   sJDVz/W/dxAL1LHRNrya7gsZg3YxOE8AZj1xxVbeS78zXD247XzTstY/f
+   Ad2Ko+7017SDIkXCMLU1QCVL38so2Ql85hHCAFFxxDA1OkPrES3ZdzjaE
+   Q==;
+X-CSE-ConnectionGUID: 02SKf0lJRSiLLEzzFKQlTw==
+X-CSE-MsgGUID: OPvT9DiCSFi8oWdQiOwuqQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11864"; a="86450866"
+X-IronPort-AV: E=Sophos;i="6.25,203,1779174000"; 
+   d="scan'208";a="86450866"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2026 12:13:19 -0700
+X-CSE-ConnectionGUID: JkSYJ321TsCswX8t/h7CQw==
+X-CSE-MsgGUID: GWsQiLEZRZuJU3VQmtvoFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,203,1779174000"; 
+   d="scan'208";a="265562869"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2026 12:13:19 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Mon, 3 Aug 2026 12:13:18 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45 via Frontend Transport; Mon, 3 Aug 2026 12:13:18 -0700
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (40.93.194.18)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Mon, 3 Aug 2026 12:13:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LywHQ6SB2nQHi9uFdJtXHlSySk4tDtFVIKUZ0Ip2GBg6ptep7iZR9h1mqKRaDT6jAnTCc+nku9wIMzCUz8SyYnRoGQDo6JgTMkz6crmR58Uhz7SYJJn6qKuXWVaYicw49PmCXvnWi5PBUXwgmtd8ECG3D9f9J0MotCZvhck2pKRC4Lb1jE4s5oWwJZ4gxCmVE97QEb+E8y11IiTojsLU7aa5z9/Ldeq/poHUbL7TV2muxK+6uUX59600nOtWYjkaDJgodCi1+ulNtTxN/8ZsCkk+hwW54X6klsF8RcOcE08Fi1p3oiTJmdKH747PXYIHd07aMuLOP/8dhshuTHXhAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=046wWEXFMPQxW7g0j3SNslQrjij1fHSQ90cqA2riIb8=;
+ b=vD18FoAaBv+jnBYieu+ASUtMcAlf5ZUa1Qs0MK/ZPjInpaOHr05BuY+cvASYf3sE7c8w9NIf+6VynpsumXtbIHE7303O6hGT6WRtcUY8S/pe35P82IWX6pjEVRkuhTxFVjEIeLYKHjrqWTzgxQY2sCQ53d/z1N44jU6K4OymyQCj8UkFI2NX0+nK3EbIiCyKCJBgH4R5MiFBQVKyHHICWOL5vxnZoDbECr5hRKgmV1xoM3KNilEOIr7PYzpyB8gd4utNDRJ+Yg76hJDNRESDTZNL/29+0/nt3tWxlsZsYyBhI62K3HUoqstwpHVo/aqPWM3/OSgyGUiSJ7l2aStmXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by PH0PR11MB5094.namprd11.prod.outlook.com (2603:10b6:510:3f::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.18; Mon, 3 Aug
+ 2026 19:13:13 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::e721:90d7:9214:2d53]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::e721:90d7:9214:2d53%6]) with mapi id 15.21.0270.017; Mon, 3 Aug 2026
+ 19:13:13 +0000
+Date: Mon, 3 Aug 2026 12:13:01 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: John Groves <john@jagalactic.com>
+CC: John Groves <John@groves.net>, Miklos Szeredi <miklos@szeredi.hu>, "Dan
+ Williams" <djbw@kernel.org>, Bernd Schubert <bschubert@ddn.com>, John Groves
+	<jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, Jake Edge
+	<jake@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Vishal Verma
+	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox
+	<willy@infradead.org>, Jan Kara <jack@suse.cz>, Alexander Viro
+	<viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, "Christian
+ Brauner" <brauner@kernel.org>, "Darrick J . Wong" <djwong@kernel.org>, "Randy
+ Dunlap" <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, "Amir
+ Goldstein" <amir73il@gmail.com>, Jonathan Cameron <jic23@kernel.org>, "Stefan
+ Hajnoczi" <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>,
+	"Josef Bacik" <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>,
+	"Chen Linxuan" <chenlinxuan@uniontech.com>, James Morse
+	<james.morse@arm.com>, "Fuad Tabba" <tabba@google.com>, Sean Christopherson
+	<seanjc@google.com>, "Shivank Garg" <shivankg@amd.com>, Ackerley Tng
+	<ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, Andrew Morton
+	<akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, Lorenzo
+ Stoakes <ljs@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ira Weiny <iweiny@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Haren Myneni <haren@linux.ibm.com>, "Pratyush Yadav" <pratyush@kernel.org>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Jiri Slaby
+	<jirislaby@kernel.org>, Ethan Nelson-Moore <enelsonmoore@gmail.com>, Gabriel
+ Whigham <gabewhigham@gmail.com>, "Aravind Ramesh" <arramesh@micron.com>, Ajay
+ Joshi <ajayjoshi@micron.com>, "venkataravis@micron.com"
+	<venkataravis@micron.com>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev"
+	<nvdimm@lists.linux.dev>, "linux-cxl@vger.kernel.org"
+	<linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org"
+	<linux-fsdevel@vger.kernel.org>, "fuse-devel@lists.linux.dev"
+	<fuse-devel@lists.linux.dev>
+Subject: Re: [PATCH V12 01/12] dax: replace exported dax_dev_get() with
+ non-allocating dax_dev_find()
+Message-ID: <anDoPTHjlOPhnnR-@aschofie-mobl2.lan>
+References: <0100019fc572ca94-ec363dd7-3a77-484b-b4b7-f2503a0931a6-000000@email.amazonses.com>
+ <20260803022817.75759-1-john@jagalactic.com>
+ <0100019fc5737596-636bde4f-7fc7-46a4-b011-63870098df09-000000@email.amazonses.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <0100019fc5737596-636bde4f-7fc7-46a4-b011-63870098df09-000000@email.amazonses.com>
+X-ClientProxiedBy: SJ0PR03CA0099.namprd03.prod.outlook.com
+ (2603:10b6:a03:333::14) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20260728151629.20F0D1F000E9@smtp.kernel.org>
-User-Agent: NeoMutt/20220429
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|PH0PR11MB5094:EE_
+X-MS-Office365-Filtering-Correlation-Id: ea898f98-ae83-4756-6979-08def19343ab
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|376014|1800799024|7416014|56012099006|10067099003|11063799006|5023799004|4143699003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: 97GVJFa+68zloqTplDikveh8ny7ychBLCx4Dw0HruIdmMsRb5ex7GE0KKeaRjW5FCcpWP+sJbualQNPk2Yd5al20MI/d04tLupP10TNglXfTirHfrvS+AG4ZtjjFY7eCmRjqlhD0DlKmyaNV5jFfLP38VjNsmTDl8IJdtcSZkN+jWKcZkOf8+ERXBLtuFg5vwnjTHsvybg16hcZdQmpLPMzFclGOivAlV0gURNT1nwV1vLlRUIdi7AT5jG+bxOCnb0x790NFqLIwSeWHtiQCLo6RkGpw0+hAcxpEv5ytrJ1H/iYUSjcNr/vVd7kVLgAQkMoOIXRKGEQTPD3pr7618X0toAn0izYHVyrpyqPy6oJ3rFuHhD9eZZNj10yOyfjXEpeFCALCzHHzD4YhQdGyQUMBuYWOfIDYbqanbEjCgIX07cpPl5S21ZFeCXFTw3CRdJ0Z2rENJbAkJR3H+ssJPveqX+Y7NLNTJDxFiDJVlmwqGVAf7vnJxJvOA13w9rNxYYedb50RM8jN0JUDmo3FmW4YLcyt3N5YnuwuP1ixz/EqbBeyVIUNrFRrY22dW458VzbXLZJVJhmoXiKV3mX3/5K5n61G4xIj/IF9rSeA+RGs3MeMtH5s2YojJpGwrLWKAjTy1J6m8lcQL/h9u8hfhjWAMNf+ipc573BEtAvQWjM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(376014)(1800799024)(7416014)(56012099006)(10067099003)(11063799006)(5023799004)(4143699003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?i15FoE2iJVKTjhNM3AC0uIqwbeQ7FKI4Ei++m/48lS0jbyzb5Jm6ALA7VJv4?=
+ =?us-ascii?Q?NE3QnRuLfb2Cp4HFCjuA96GMxpbNBDxqjvduKC4NCdSuQJKAc+NzMLuAX22Z?=
+ =?us-ascii?Q?EzCSthoC0UU4RwNQOWixv1+5JW3qhIFJ5icv+Ll1MHyNhci1rHViHw13QsV4?=
+ =?us-ascii?Q?7WMZsweJnykUxg0mEWNPE9Loi5xNjBIXUY0Nzds3AZtWxr/50FG7VXW1Iz0x?=
+ =?us-ascii?Q?WP+9r//6nX09bpyHG5Wwzm080chSQLI8+3GBCrIl78jBfCJzunYl/brb7kvG?=
+ =?us-ascii?Q?jHAqMgjMWoa7GkwsQ3+29BS0HnKek1YYP/I36vwlb/+UFpqGnRBZt3VxGZrt?=
+ =?us-ascii?Q?j+87gn7a+gYk+tFgtUquFbjG2BT7S70PR5dHJqCFJaKB4lOMbK0EPQ/ofJST?=
+ =?us-ascii?Q?ldsGwEReNiJbFj5p0x0nXniDe/d6y2ygLEe9fQ4s3sI5PLAfTOMnH/Fc+5Rw?=
+ =?us-ascii?Q?EFPAhiuWXqW9GqUN3YVyDYdgQfnSMfqHHG3jNGj9mfY0JcDhQbPjybDI+9lN?=
+ =?us-ascii?Q?+ym3ZEYA3aUc7hCRD00K6XtvuGWct/vGQo7TwdqOo8+S+SAX5GkczOejtZrV?=
+ =?us-ascii?Q?a2Hq19TC1Jfus+444bAnY+3BwMJ7Kchb6NauKiJvYPGqeUnWEfXP0wNvsJOq?=
+ =?us-ascii?Q?ane+64suuHpekZaRrfJWTdkaFGhvImVfwHaD58pi3wyP+QEEx+s8uA/TsOGo?=
+ =?us-ascii?Q?JP/NEX5DkE7X+4Uin7DulpNVhGd172x8G7SOjpXYPUFQQE6IpVy8l20hniOQ?=
+ =?us-ascii?Q?0CzbmzYDYwX7SFeFQzloCWw47LW9NwiOg06euc0eITWunOpWr3pZgMkXFZLP?=
+ =?us-ascii?Q?RWQTfNjiQAnnBOkfyT39iXBT7a9t5jlbBfJXOX7FZo6TPJ65spCP2kCD5Xnd?=
+ =?us-ascii?Q?W+01B8KsAPjZq/Isfn+NDpMA1dTBwG9mvbED3CMMDoIviIMohzNO5mYWvy4W?=
+ =?us-ascii?Q?c34QW8modv8JecjgItMbgeEBesNERp0OidMfSABwDpyLmjkWtIfUyVNeuCCY?=
+ =?us-ascii?Q?dUolEczX/RWdnRTWgKB+xgbbIDiJOw9Xc2w5blOCTs5uDSfsfNyb5w7CZk+O?=
+ =?us-ascii?Q?v3HrgSJ5i5Bxjck4q/qUGCy8ilEkK1KZdTVxXNlRmLC2uHqDukFZ79oHORS6?=
+ =?us-ascii?Q?5uLHaHDSjvSdwjtvES5oG1wZbobpo62k6neTBcxrjxCf515Qf/q8NdpjBH9T?=
+ =?us-ascii?Q?KRB+QfdugxhhblSntafOEI7TMFIoRcVsmOdXqXg/3agwuR3q9hOIhRi7KT5+?=
+ =?us-ascii?Q?9nlVPF/fdjzW52ZtMzlGfrya2l3LSW5ydd6ZW/5cn+zJZlpKKTsFzq1Rk25x?=
+ =?us-ascii?Q?pf2P6uoc4mR/MW3ip+DowPnXZ54vlZmIF7A7R4Rl5FMYu6v/m8Kek27X7dY7?=
+ =?us-ascii?Q?bQQXxs6EqhxYbaXudxOHNyLl/TVqn5iZLIb2z0WNSww8r9lIp8TogmVCE8cZ?=
+ =?us-ascii?Q?Htf1wxLeh3hpZqP9CKH8ndVkYuI+W0XRNs6H/tBwOXi7dT0ry7JTi0x5HxlK?=
+ =?us-ascii?Q?kytMBv9bQLvR01EkCEd0ur8xDD4mAe6SbT9aEZ9qrl7aeqhF8zwxm+q8TDyq?=
+ =?us-ascii?Q?kw/NGVmfvSyTvty0L/SqBg3uS43+CIZ2KhMI30PJOgDZuxeU5nU9QecwcKPY?=
+ =?us-ascii?Q?8nG6LBDu4yOkjlInoMTqUV5lJVKOC35kcKdGe5NYPXS67ddSXiL/Oxqts7mO?=
+ =?us-ascii?Q?e3gUT4jgIX6IWYp22wrmh/y30l+Qy8JrUIk5vCGpBqJN37VALpLNiL24iIPb?=
+ =?us-ascii?Q?54QFEOpxqLGhCy2ZiLbh2dF9DRBMeqc=3D?=
+X-Exchange-RoutingPolicyChecked: ENbcCG56YAdGikIprBSdNqmULGZLjLWKanBR55NuHZSbakmEX9lB/Sw1x3l0rIOmywtlzour22KFA5+RbobGKKoC+rVaQOJezars4jz2YWubQJNnKQknP7Fa099GOJ60FNwipjM+030Ozxb6ybs75cF2OsfrdecXZ9jnGJuaC2omvzm/rBwdgo99C1Ee9nI0TpCAsL0VBsAGyTgfjM2IU/j+yex6Bfv2qSEWxf9Bw/4gPKPBxMDhqoZBcO/CBYcYUSJKcXefVRkBUAzJ8oX+2txLHGqCvdJAvgFzGuOK7w16gfyN6Vz1wOdikUS2eI/bqBjQrmtObXrM8u9XY6p58w==
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea898f98-ae83-4756-6979-08def19343ab
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2026 19:13:13.2814
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5IhgEM62f+Ff2vuzKdIeTvcXMIuXgKt84XO9kf1ygnQhiQtziiqH8cwakhmF0pD5tpwt05Z5ccNd9spgdDKlOa0111GstBmCeQ0uGi6jog0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5094
+X-OriginatorOrg: intel.com
 
-On Tue, 28 Jul 2026, sashiko-bot@kernel.org wrote:
+On Mon, Aug 03, 2026 at 02:28:26AM +0000, John Groves wrote:
+> From: John Groves <John@Groves.net>
+> 
+> This fix is in response to a Sashiko review, and some subsequent
+> analysis.
+> 
+> dax_dev_get() uses iget5_locked() which creates a new inode if no
+> matching one exists. This is correct for the internal caller
+> (alloc_dax), but dangerous for external callers that look up devices
+> from user-supplied or metadata-supplied dev_t values:
+> 
+> 1. A new inode is created with DAXDEV_ALIVE set but no backing driver,
+>    no ops, and no IDA-allocated minor number.
+> 
+> 2. On teardown, dax_destroy_inode() warns because kill_dax() was never
+>    called, and dax_free_inode() calls ida_free() for a minor that was
+>    never ida_alloc'd -- potentially freeing the minor of a real device.
+> 
+> Add dax_dev_find() which uses ilookup5() for lookup-only semantics:
+> it returns an existing dax_device with an elevated inode reference, or
+> NULL if no device with the given dev_t exists. It never creates inodes.
+> A dax_alive() check under dax_read_lock() guards against returning a
+> device that is concurrently being torn down by kill_dax().
+> 
+> Make dax_dev_get() static again (internal to super.c for alloc_dax),
+> export dax_dev_find() instead, and update the two external callers
+> (famfs_inode.c, famfs.c). Also add the missing CONFIG_DAX=n stub.
 
->Thank you for your contribution! Sashiko AI review found 5 potential issue=
-(s) to consider:
->- [High] Topology walk loop exits early, completely skipping CXL Root Port=
-s and breaking BI enablement.
-
-No, we already covered this.
-
->- [High] Missing explicit hardware commit for Endpoints and Root Ports.
-
-No, we already covered this.
-
->- [High] Premature BI disablement on shared Switch DSPs due to missing `nr=
-_bi` reference counting.
-
-No, we already covered this.
-
->- [Medium] Hardware register state is leaked (left enabled) when a downstr=
-eam port fails to commit.
-
-Yes, that's a corner case which I've fixed up but should not be a show stop=
-per for v7.
-The fix is trivial, see below.
-
->- [Medium] Writing to the BI_COMMIT control bit without waiting for the BI=
-_COMMITTED status bit to clear introduces a race condition.
-
-False positive. This is guaranteed per hw - see Table 8-158.
-
-=2E..
-
->> +static int cxl_bi_enable_path(struct cxl_dev_state *cxlds,
->> +			      struct cxl_port *port, struct cxl_dport *dport)
->> +{
->> +	struct cxl_dport *dport_iter, *failed;
->> +	struct cxl_port *port_iter;
->> +	int rc;
->> +
->> +	port_iter =3D port;
->> +	dport_iter =3D dport;
->> +	while (!is_cxl_root(port_iter)) {
->> +		rc =3D cxl_bi_ctrl_dport_enable(dport_iter);
->> +		if (rc)
->> +			goto err_rollback;
->> +
->> +		dport_iter =3D port_iter->parent_dport;
->> +		port_iter =3D dport_iter->port;
->> +	}
->
->[Severity: High]
->Does this also skip enabling the Root Port?
->
->Using the same !is_cxl_root() condition as cxl_bi_dealloc(), this loop will
->exit before calling cxl_bi_ctrl_dport_enable() for the Root Port, leaving =
-the
->host path incomplete.
->
->[ ... ]
->> +err_rollback:
->> +	failed =3D dport_iter;
->> +	dport_iter =3D dport;
->> +	port_iter =3D port;
->> +	while (!is_cxl_root(port_iter) && dport_iter !=3D failed) {
->> +		cxl_bi_ctrl_dport_disable(dport_iter);
->> +		dport_iter =3D port_iter->parent_dport;
->> +		port_iter =3D dport_iter->port;
->> +	}
->> +	return rc;
->> +}
->
->[Severity: Medium]
->Should the failed dport be included in the rollback loop?
-
-No, we've already covered that. But we can fix the register
-rollback:
-
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -1161,12 +1161,11 @@ static int __cxl_bi_ctrl_dport(struct cxl_dport *dp=
-ort, bool enable)
-		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
-
-		rc =3D __cxl_bi_commit_decoder(dport->dport_dev, bi);
--		if (rc)
--			return rc;
--
--		if (port->regs.bi_rt)
--			return __cxl_bi_commit_rt(&port->dev, port->regs.bi_rt);
--		return 0;
-+		if (!rc && port->regs.bi_rt)
-+			rc =3D __cxl_bi_commit_rt(&port->dev, port->regs.bi_rt);
-+		if (rc && enable) /* undo previous enablement */
-+			writel(ctrl, bi + CXL_BI_DECODER_CTRL_OFFSET);
-+		return rc;
-	default:
-		return -EINVAL;
-	}
+There are no external callers yet as those arrive in subsequent
+famfs patches.
 
 
->
->If cxl_bi_ctrl_dport_enable() writes the enable bit but the hardware commit
->fails, the control register has still been modified.
->
->By stopping the rollback when dport_iter !=3D failed,
->cxl_bi_ctrl_dport_disable() is never called for it, potentially leaking the
->hardware register state as left enabled.
->
->--
->Sashiko AI review =B7 https://sashiko.dev/#/patchset/20260728144136.709882=
--1-dave@stgolabs.net?part=3D2
+> 
+> About the 'fixes' tag: this removes the export of dax_dev_get(),
+> which was flawed, and replaces is with dax_dev_find(). It feels like
+> the fixes tag makes sense for correcting an ABI error.
+> 
+> Fixes: 2ae624d5a555d ("dax: export dax_dev_get()")
+
+Hi John,
+
+I think this should be split.
+
+Please send a standalone DAX patch that only removes the dax_dev_get()
+export (make it static again, drop the header declaration). It's unused
+in-tree and unsafe for its intended use, so it stands on its own with
+no FAMFS dependency. I'll take it through the DAX tree for 7.3.
+
+Please drop the Fixes: tag on the removal. IIUC the stable team uses
+it to pick backports, and this shouldn't land in 7.2.y. Removing this
+fixes nothing since no in-tree code calls the symbol. Name the commit
+in prose instead, something like:
+
+  Commit 2ae624d5a555 ("dax: export dax_dev_get()") exported
+  dax_dev_get() in v7.2 for famfs, which has not merged. The export
+  has never had an in-tree caller, so make dax_dev_get() static again.
+
+Keep the dax_dev_find() addition in this famfs series, so the new export
+lands with famfs.
+
+-- Alison
+
+> 
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Alison Schofield <alison.schofield@intel.com>
+
+I think you can carry the tags for both patches because the code
+should end up byte identical.
+
+snip
