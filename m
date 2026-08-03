@@ -1,241 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from dog.elm.relay.mailchannels.net (dog.elm.relay.mailchannels.net [23.83.212.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713FA2F7445;
-	Mon,  3 Aug 2026 18:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C87432BF8
+	for <linux-cxl@vger.kernel.org>; Mon,  3 Aug 2026 19:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.212.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785780209; cv=none; b=tkm5jbKH9YdH1ZIq9ve/foO0c7zqAMSmvioDe1IsFJfh0z/AZ2J/ns7W+Mrh8ndve/mEBB2R939ZkgMvYWdEnvEnPRkmqP+B79WswlnzOde8ytw7+rBNP98g6wPN4arJ/cPdieGa+cIlZI+D/06Ob2/ItRdkGryKkf/e76fFHe0=
+	t=1785783662; cv=none; b=KehTMd0B1qZwXoDGaY4I21L6jTPJnK1WG8UMa52C1hQhQDJrw0oqVImkU6KxCoqcSRrc8eJZ/isfuIg+YmsBdAj++JrE1QCBHmlRPqo/1Iv3iqTYvHFdj2QwbZ+tQvb+gNY9u1hC5cX2LvlED5VcALlWFXgUGzcGNvxNW76XpEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785780209; c=relaxed/simple;
-	bh=TGoNR3HXz8zM7wPXiETNUAd3dU/dkStTzg9hxy5RUFw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ip1GBi8AqOqCYKohbO1+BAh5m+JL+HFTzFPLJs0J1V1m+3tCmian4aprbGk25LO3LF9+ARbrVTZJe62GefG7+8oPpgcdq4mvc5acBtKAp7fLWRhixrLSIDpKbRoZ2S7NOZOc+dV+Hg+rrn0IHP1M8qF0D8XNALKaB1CQm0WR9mY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a7h4hdop; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1785783662; c=relaxed/simple;
+	bh=io2MAlRr9oG+AJcwI1d6xwdVOseYEH/R/L9RUghY2ag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WagvXWr+K6kE5yThn3BbAYdWdTpof+D9e7Ou3FAhp9QprZfYTbmxTICKajMdrdJlHZ+9mm8YAUzQNV2tpD5raw5IhSmBUmbMdw52DsX258StodAiOvVilQrAm6obuy9F1QXpbzNqzhE7fAE3c+4x0+T60XP+Hhs2vJf5ViLoDOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=bfJmVjFo; arc=none smtp.client-ip=23.83.212.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a7h4hdop"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785780208; x=1817316208;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TGoNR3HXz8zM7wPXiETNUAd3dU/dkStTzg9hxy5RUFw=;
-  b=a7h4hdopLAR3NrY8SgPIRTAbH/Mb508uFazokFurSK5gJ2wEl+7pAjf2
-   amXEAYKrM8LXdCuIghpxuDdtGIus8g+amJYZkjRRpIgpE0NwQPI+UgdT5
-   YSowShlnxB2Y8j1X/eS5nz2+vo53utAwTfol8Vfrj8BLaUcpFjOPNQqBy
-   l0dSfs1Oez3gMVe5LSxB9+6HAfzMEhG3x6Gqb8WMT9ZXCTsyhhy62Hgak
-   +HOOT78ug5DbnBHHqU2CE4h7JTjog99bDOAlXLTsIx1mHzMBTQx885No0
-   HtYW1iky3jh4phif5eUJL5aUimOTX7WG3TukpzGHZPiFYha8JrD+Ok6Hy
-   Q==;
-X-CSE-ConnectionGUID: 9hbPp3zxQFiD82AsXvPD7g==
-X-CSE-MsgGUID: 40Us0iaKQsCbViqL+6iaqg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11864"; a="85301109"
-X-IronPort-AV: E=Sophos;i="6.25,202,1779174000"; 
-   d="scan'208";a="85301109"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2026 11:03:27 -0700
-X-CSE-ConnectionGUID: bvPtUuIrTaW08GIIo93z8Q==
-X-CSE-MsgGUID: 3nD+Z1FJSGCspWyysoSRTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,202,1779174000"; 
-   d="scan'208";a="299505437"
-Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.108.187]) ([10.125.108.187])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2026 11:03:25 -0700
-Message-ID: <9b3a1271-642f-442d-b545-d00d6863a54c@intel.com>
-Date: Mon, 3 Aug 2026 11:03:24 -0700
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="bfJmVjFo"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id D4C8D4C25F2;
+	Mon, 03 Aug 2026 18:55:11 +0000 (UTC)
+Received: from pdx1-sub0-mail-a227.dreamhost.com (100-108-70-126.trex-nlb.outbound.svc.cluster.local [100.108.70.126])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id E41064C2830;
+	Mon, 03 Aug 2026 18:55:09 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Minister-Trade: 12f34d71196e5865_1785783310513_3543770020
+X-MC-Loop-Signature: 1785783310513:4190499230
+X-MC-Ingress-Time: 1785783310512
+Received: from pdx1-sub0-mail-a227.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.108.70.126 (trex/8.0.2);
+	Mon, 03 Aug 2026 18:55:10 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a227.dreamhost.com (Postfix) with ESMTPSA id 4hDQpj3wbdz1d8;
+	Mon,  3 Aug 2026 11:55:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1785783309;
+	bh=siJi4mmUcnDZF68egfStMVH5FmIUAowG1dNveBmtVt8=;
+	h=Date:From:To:Cc:Subject:Content-Type:Content-Transfer-Encoding;
+	b=bfJmVjFotEq9UjeuMttc/5XkiuRCT9s954UF83NY7zn3X3qhxzR/NEtv1cjyNKKaj
+	 bbPH+90EiwYsBwnNRBgLpF5b5hTCnIUM+RbHhcvkcQqCM4Lo+Kl9fQ/iZN0YqwrjFX
+	 qw+UNfTS2DhURDQXqYBU4DMfs1GmtpdKLCnw1xmcu+JZMAfSxmbMsaSQx0/3tsmx8v
+	 0eyKilQK4o1B4rsjvEcgWPUBerBzdOuOCK4cFyZld6RJo6cSB/159Mz6K5mduoueT2
+	 YU70r0cy7Lmq6OPEvMuC+wE9sVuKraZ0z7nqe062pyHnJIqfCHlApJSUfOGk2XZKbr
+	 Nil+w8sbRQbvg==
+Date: Mon, 3 Aug 2026 11:55:06 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: sashiko-reviews@lists.linux.dev, dave.jiang@intel.com
+Cc: linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v7 2/8] cxl/pci: Add BI topology enable/disable
+Message-ID: <20260803185506.wynluncuhpda2tw7@offworld>
+References: <20260728144136.709882-1-dave@stgolabs.net>
+ <20260728144136.709882-3-dave@stgolabs.net>
+ <20260728151629.20F0D1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 1/8] cxl/mbox: Flag support for Dynamic Capacity
- Devices (DCD)
-To: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org
-Cc: nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
- Alison Schofield <alison.schofield@intel.com>,
- Jonathan Cameron <jic23@kernel.org>, Fan Ni <nifan.cxl@gmail.com>,
- Li Ming <ming.li@zohomail.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <iweiny@kernel.org>,
- Benjamin Cheatham <benjamin.cheatham@amd.com>,
- Wonjae Lee <wj28.lee@samsung.com>, Junhee Park <jh9934.park@samsung.com>,
- Heesoo Kim <habil.kim@samsung.com>, Anisa Su <anisa.su@samsung.com>
-References: <20260731084901.1512819-1-anisa.su@samsung.com>
- <20260731084901.1512819-2-anisa.su@samsung.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20260731084901.1512819-2-anisa.su@samsung.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20260728151629.20F0D1F000E9@smtp.kernel.org>
+User-Agent: NeoMutt/20220429
+
+On Tue, 28 Jul 2026, sashiko-bot@kernel.org wrote:
+
+>Thank you for your contribution! Sashiko AI review found 5 potential issue=
+(s) to consider:
+>- [High] Topology walk loop exits early, completely skipping CXL Root Port=
+s and breaking BI enablement.
+
+No, we already covered this.
+
+>- [High] Missing explicit hardware commit for Endpoints and Root Ports.
+
+No, we already covered this.
+
+>- [High] Premature BI disablement on shared Switch DSPs due to missing `nr=
+_bi` reference counting.
+
+No, we already covered this.
+
+>- [Medium] Hardware register state is leaked (left enabled) when a downstr=
+eam port fails to commit.
+
+Yes, that's a corner case which I've fixed up but should not be a show stop=
+per for v7.
+The fix is trivial, see below.
+
+>- [Medium] Writing to the BI_COMMIT control bit without waiting for the BI=
+_COMMITTED status bit to clear introduces a race condition.
+
+False positive. This is guaranteed per hw - see Table 8-158.
+
+=2E..
+
+>> +static int cxl_bi_enable_path(struct cxl_dev_state *cxlds,
+>> +			      struct cxl_port *port, struct cxl_dport *dport)
+>> +{
+>> +	struct cxl_dport *dport_iter, *failed;
+>> +	struct cxl_port *port_iter;
+>> +	int rc;
+>> +
+>> +	port_iter =3D port;
+>> +	dport_iter =3D dport;
+>> +	while (!is_cxl_root(port_iter)) {
+>> +		rc =3D cxl_bi_ctrl_dport_enable(dport_iter);
+>> +		if (rc)
+>> +			goto err_rollback;
+>> +
+>> +		dport_iter =3D port_iter->parent_dport;
+>> +		port_iter =3D dport_iter->port;
+>> +	}
+>
+>[Severity: High]
+>Does this also skip enabling the Root Port?
+>
+>Using the same !is_cxl_root() condition as cxl_bi_dealloc(), this loop will
+>exit before calling cxl_bi_ctrl_dport_enable() for the Root Port, leaving =
+the
+>host path incomplete.
+>
+>[ ... ]
+>> +err_rollback:
+>> +	failed =3D dport_iter;
+>> +	dport_iter =3D dport;
+>> +	port_iter =3D port;
+>> +	while (!is_cxl_root(port_iter) && dport_iter !=3D failed) {
+>> +		cxl_bi_ctrl_dport_disable(dport_iter);
+>> +		dport_iter =3D port_iter->parent_dport;
+>> +		port_iter =3D dport_iter->port;
+>> +	}
+>> +	return rc;
+>> +}
+>
+>[Severity: Medium]
+>Should the failed dport be included in the rollback loop?
+
+No, we've already covered that. But we can fix the register
+rollback:
+
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -1161,12 +1161,11 @@ static int __cxl_bi_ctrl_dport(struct cxl_dport *dp=
+ort, bool enable)
+		writel(value, bi + CXL_BI_DECODER_CTRL_OFFSET);
+
+		rc =3D __cxl_bi_commit_decoder(dport->dport_dev, bi);
+-		if (rc)
+-			return rc;
+-
+-		if (port->regs.bi_rt)
+-			return __cxl_bi_commit_rt(&port->dev, port->regs.bi_rt);
+-		return 0;
++		if (!rc && port->regs.bi_rt)
++			rc =3D __cxl_bi_commit_rt(&port->dev, port->regs.bi_rt);
++		if (rc && enable) /* undo previous enablement */
++			writel(ctrl, bi + CXL_BI_DECODER_CTRL_OFFSET);
++		return rc;
+	default:
+		return -EINVAL;
+	}
 
 
-
-On 7/31/26 1:48 AM, Anisa Su wrote:
-> From: Ira Weiny <iweiny@kernel.org>
-> 
-> Per the CXL 4.0 specification software must check the Command Effects
-> Log (CEL) for dynamic capacity command support.
-> 
-> Detect support for the DCD commands while reading the CEL, including:
-> 
->         Get DC Config
->         Get DC Extent List
->         Add DC Response
->         Release DC
-> 
-> Based on an original patch by Navneet Singh.
-> 
-> Signed-off-by: Ira Weiny <iweiny@kernel.org>
-> Signed-off-by: Anisa Su <anisa.su@samsung.com>
-> Tested-by: Wonjae Lee <wj28.lee@samsung.com>
-> Tested-by: Junhee Park <jh9934.park@samsung.com>
-> Tested-by: Heesoo Kim <habil.kim@samsung.com>
-> 
-> ---
-> Changes:
-> 1. mbox.c: leave mds->dcd_supported false so the hardware enablement
->    patches can be upstreamed ahead of the extent and DAX work; the
->    event handling patch re-enables it.
-> ---
->  drivers/cxl/core/mbox.c | 44 +++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlmem.h    | 20 +++++++++++++++++++
->  2 files changed, 64 insertions(+)
-> 
-> diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-> index 7c6c5b7450a5..4790524c32a7 100644
-> --- a/drivers/cxl/core/mbox.c
-> +++ b/drivers/cxl/core/mbox.c
-> @@ -165,6 +165,38 @@ static void cxl_set_security_cmd_enabled(struct cxl_security_state *security,
->  	}
->  }
->  
-> +static bool cxl_is_dcd_command(u16 opcode)
-> +{
-> +#define CXL_MBOX_OP_DCD_CMDS 0x48
-> +
-> +	return (opcode >> 8) == CXL_MBOX_OP_DCD_CMDS;
-> +}
-> +
-> +static void cxl_set_dcd_cmd_enabled(u16 opcode, unsigned long *cmd_mask)
-> +{
-> +	switch (opcode) {
-> +	case CXL_MBOX_OP_GET_DC_CONFIG:
-> +		set_bit(CXL_DCD_ENABLED_GET_CONFIG, cmd_mask);
-> +		break;
-> +	case CXL_MBOX_OP_GET_DC_EXTENT_LIST:
-> +		set_bit(CXL_DCD_ENABLED_GET_EXTENT_LIST, cmd_mask);
-> +		break;
-> +	case CXL_MBOX_OP_ADD_DC_RESPONSE:
-> +		set_bit(CXL_DCD_ENABLED_ADD_RESPONSE, cmd_mask);
-> +		break;
-> +	case CXL_MBOX_OP_RELEASE_DC:
-> +		set_bit(CXL_DCD_ENABLED_RELEASE, cmd_mask);
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +}
-> +
-> +static bool cxl_verify_dcd_cmds(unsigned long *cmds_seen)
-> +{
-> +	return bitmap_full(cmds_seen, CXL_DCD_ENABLED_MAX);
-> +}
-> +
->  static bool cxl_is_poison_command(u16 opcode)
->  {
->  #define CXL_MBOX_OP_POISON_CMDS 0x43
-> @@ -757,6 +789,7 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
->  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
->  	struct cxl_cel_entry *cel_entry;
->  	const int cel_entries = size / sizeof(*cel_entry);
-> +	DECLARE_BITMAP(dcd_cmds, CXL_DCD_ENABLED_MAX) = {};
->  	struct device *dev = mds->cxlds.dev;
->  	int i, ro_cmds = 0, wr_cmds = 0;
->  
-> @@ -785,11 +818,22 @@ static void cxl_walk_cel(struct cxl_memdev_state *mds, size_t size, u8 *cel)
->  			enabled++;
->  		}
->  
-> +		if (cxl_is_dcd_command(opcode)) {
-> +			cxl_set_dcd_cmd_enabled(opcode, dcd_cmds);
-> +			enabled++;
-> +		}
-> +
->  		dev_dbg(dev, "Opcode 0x%04x %s\n", opcode,
->  			enabled ? "enabled" : "unsupported by driver");
->  	}
->  
->  	set_features_cap(cxl_mbox, ro_cmds, wr_cmds);
-> +	/*
-> +	 * Disabled until event handling implemented.
-> +	 */
-> +	if (cxl_verify_dcd_cmds(dcd_cmds))
-> +		dev_dbg(dev, "Device supports DCD; capability disabled\n");
-> +	mds->dcd_supported = false;
-
-Assume this is intentional to disable DCD for the prep series. Should mention that in the commit log as something to come back to and change later. Also prevent sashiko from tripping on that. With the note:
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-DJ
-
-
->  }
->  
->  static struct cxl_mbox_get_supported_logs *cxl_get_gsl(struct cxl_memdev_state *mds)
-> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> index ed419d0c59f2..616eeaeee5b9 100644
-> --- a/drivers/cxl/cxlmem.h
-> +++ b/drivers/cxl/cxlmem.h
-> @@ -252,6 +252,20 @@ struct cxl_event_state {
->  	struct mutex log_lock;
->  };
->  
-> +/**
-> + * CXL r4.0 Section 8.2.10.9 - Memory Device Command Sets. See Table 8-308.
-> + *
-> + * The 48h Command Set (Opcodes 4800h - 4803h) defines the device-enabled DCD
-> + * commands.
-> + */
-> +enum dcd_cmd_enabled_bits {
-> +	CXL_DCD_ENABLED_GET_CONFIG,
-> +	CXL_DCD_ENABLED_GET_EXTENT_LIST,
-> +	CXL_DCD_ENABLED_ADD_RESPONSE,
-> +	CXL_DCD_ENABLED_RELEASE,
-> +	CXL_DCD_ENABLED_MAX
-> +};
-> +
->  /* Device enabled poison commands */
->  enum poison_cmd_enabled_bits {
->  	CXL_POISON_ENABLED_LIST,
-> @@ -427,6 +441,7 @@ static inline struct cxl_dev_state *mbox_to_cxlds(struct cxl_mailbox *cxl_mbox)
->   * @partition_align_bytes: alignment size for partition-able capacity
->   * @active_volatile_bytes: sum of hard + soft volatile
->   * @active_persistent_bytes: sum of hard + soft persistent
-> + * @dcd_supported: all DCD commands are supported
->   * @event: event log driver state
->   * @poison: poison driver state info
->   * @security: security driver state info
-> @@ -446,6 +461,7 @@ struct cxl_memdev_state {
->  	u64 partition_align_bytes;
->  	u64 active_volatile_bytes;
->  	u64 active_persistent_bytes;
-> +	bool dcd_supported;
->  
->  	struct cxl_event_state event;
->  	struct cxl_poison_state poison;
-> @@ -507,6 +523,10 @@ enum cxl_opcode {
->  	CXL_MBOX_OP_UNLOCK		= 0x4503,
->  	CXL_MBOX_OP_FREEZE_SECURITY	= 0x4504,
->  	CXL_MBOX_OP_PASSPHRASE_SECURE_ERASE	= 0x4505,
-> +	CXL_MBOX_OP_GET_DC_CONFIG	= 0x4800,
-> +	CXL_MBOX_OP_GET_DC_EXTENT_LIST	= 0x4801,
-> +	CXL_MBOX_OP_ADD_DC_RESPONSE	= 0x4802,
-> +	CXL_MBOX_OP_RELEASE_DC		= 0x4803,
->  	CXL_MBOX_OP_MAX			= 0x10000
->  };
->  
-
+>
+>If cxl_bi_ctrl_dport_enable() writes the enable bit but the hardware commit
+>fails, the control register has still been modified.
+>
+>By stopping the rollback when dport_iter !=3D failed,
+>cxl_bi_ctrl_dport_disable() is never called for it, potentially leaking the
+>hardware register state as left enabled.
+>
+>--
+>Sashiko AI review =B7 https://sashiko.dev/#/patchset/20260728144136.709882=
+-1-dave@stgolabs.net?part=3D2
