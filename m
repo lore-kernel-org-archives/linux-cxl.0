@@ -1,74 +1,74 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D5841E6A8
-	for <linux-cxl@vger.kernel.org>; Tue,  4 Aug 2026 09:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A96343CE52
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Aug 2026 09:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785834770; cv=none; b=iif3U+iriQ0U1+NqtMXCcskCxuMNgp4wDs8vJtnWvBy4d3dVJcZYuVRe1b9ii3FDjuC6FqeRx3JpBFqDRNLe4X8k2lNhXZnKDcGlnMXSJTpXwG3NgWPXVOiD0fyG8NBXZ1brLVYpvXWopWdmZLzKzATpsrpv9ceRffFPZY6W5ZE=
+	t=1785837252; cv=none; b=abDtRw5qIIvXL+Ln84tr0PGjAS6ltZcPyhl6CYslpmrHV4po7RysEk4+8QBHVdPH4KDauSmLda9zw1x9RXqWAueOkThdFn5DVC139PwBUbXlOwUTUxfQFopdhmlfTghV7sIwusVPnRCibJSs4AgpIhFTtsavTh/88kYZVYR0OHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785834770; c=relaxed/simple;
-	bh=QrRCjwfLGZcW4M2CiM6v1J4D+OgWeTTYd84b8kYW65s=;
+	s=arc-20240116; t=1785837252; c=relaxed/simple;
+	bh=AHfsnOFC2AS5u/XxLaDu2XTKosKXy6ByffHyafLqWmQ=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TjS6sYswO/japgzHjcacCB8zhYpgZc9uBy8nbnAd9lDXw8lHjIblU6G1A8qeCdHElpJYo37oM/W2/KDacoMNynHh+V3vrzalYIitUur47S8Spfkfc4zKs4eUB5XdItdssZMDNOPQeARkJ4rMmGB7pPb2/P24zteDzH4lN+sQmN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HSfNBSA5; arc=none smtp.client-ip=209.85.215.177
+	 Content-Type:Content-Disposition:In-Reply-To; b=G0Dm1ff7JD+UgzmfWI3DCCytA1p4Etxhd6foEPq2LUsKluM9+0oL7RG3dyDUJfbowcWTgoxptiqUbcECB7FKoqfrEoO0o7kn4e4Qz0UZj7JX7VnDrczSWIGFTr3BXNzUitiAm15g67qCZ5AoK1+vuY8FCxDAfHCf+81/hcdGCx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cchBcfgF; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HSfNBSA5"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-cbe3fed2f58so2509945a12.3
-        for <linux-cxl@vger.kernel.org>; Tue, 04 Aug 2026 02:12:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cchBcfgF"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2d02b4c3601so48289395ad.3
+        for <linux-cxl@vger.kernel.org>; Tue, 04 Aug 2026 02:54:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785834767; x=1786439567; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1785837249; x=1786442049; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:date:from:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=hSTwpiLxQq1UQjrHpomtU2NdX/u0MOULxD6jsG+x0Ws=;
-        b=HSfNBSA51eRy7i/cnyhZdHx1lLvCtDMRYSzh4l3oB2AcRUEFtw/f48pC6A88oy8CiN
-         F1r8pD87wx96D8jF0pqpYYnnaWePVIko+ffQkoXPjOSF0BlIn/B53vHGxCoe8vKD9XDB
-         n+b6aRcqHj0FAmUPVgd5rZUvfgse8cQHZzV0CGPoUDGIAnTRZ1KooZl0nbWJBBhI9P94
-         NTCIasy1EOGOJqZseKmt6/FHUE08dT4WsjMTc7jR5nMcxFhnVGVqYFzTd7PNLJrNphvf
-         J6fDP4yTBiY/+fT77FDlJzFMm3C6ZUEJUwf7fvFWFVasnQ67cKhjGSQgpsDFQiaW5Kp7
-         khdg==
+        bh=1Afs63KtzqwY1jV3RU1yPpFiCQtMPoQQlCP9xxFLzzc=;
+        b=cchBcfgF/pggwOMkRxOeVT4ABQonOUhkDREelkQx9McoSqeCXi2JxbHJHfJxAM797M
+         ap4cYfKSd0Ohk3uKURDZ0K/neQFdrJbEU/e1p6TItodY6+crxjUASkpVSIBHPrkWh/tH
+         3UlxEXuPVG6gY6+nmqwwh6XFVOEDbw99D031d3r6jCgu2Dw1NPi8THQWL/qBeX693E87
+         NHa2t5MRqWcQJ2uBrGmVmP6tmTM6MYuVxMIhDoeHBoTwRmBoc16MvWPy68I9tKLSByiQ
+         SV5970+XHqhdSuTcJuEYgUbqEnooH2IfxYrT+dCRLSaqkPX4E7KmgRIPgTV18UlndNXV
+         2/3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785834767; x=1786439567;
+        d=1e100.net; s=20251104; t=1785837249; x=1786442049;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=hSTwpiLxQq1UQjrHpomtU2NdX/u0MOULxD6jsG+x0Ws=;
-        b=LM9BxFLLKMhKPKwu/HVb3IdFB4aLPZ4UIxl+MJ8UPcD1va+iN0GJDPIg+Cd9MAX5l/
-         71EYcFwRth00JM434lRyz0Nex/O6Z3ZNNLEsBxQZLKEkeyF13TTP75YqBnJSf7bdmtCF
-         tXPE1U1BfuhtOdTpYcMWlh/HyfCkFtwW7Fm1mZRJB3Tq6+n42NZOKXtBlf3A84qHZsMt
-         adDMBAbjUxNBXQpUE/d9zUmANlwpltXz3AYqA24Tj1b+/aVVnufhujE5ZriClE4v7ScJ
-         7msXmiLdfnOEDc76Dxl8+ePanBsliVPkuow8xq9mRiWvNEINEEEW378A9xpz9zPB/xxc
-         M4Aw==
-X-Forwarded-Encrypted: i=1; AHgh+Roa29/8i7M1ejKGYrKJJAFaVGMFsExVKzlIhfsTQJHLUUXfsBe7o1Z44xYK1hGCYgsvt0HqE7d/qww=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXzURKvwqS6XyJP4WQFPN1Y4GF1rL3tXh/VdQbruQtusGMy3GI
-	v5AvIARSO4I5tbuzaLNqNLdSIOpTSylEpnxJFLvcZzlrfPRgkX8HUf6N
-X-Gm-Gg: AR+sD13BnuW7vnPQNYsQq4B0K2e01gXFI/V7VJKpewqZCKJwkDLUPe5acv9EZsaXo2L
-	BqpLMYuDmFZwFXJ3I0XB8PRMz09OMB4IX0yWzfvVXwsLvR4bNYrzK+J1MWKfa9phktWU4yhlK7B
-	IJc+vjypN+qFP+d9ueudBaPu88K4Bw+H1ygR96ktVy4VAPw7QIq3qBASANL1o52l0mRfXIvR0+s
-	ioUx8z4KTrFrZikUnYZgh+bHId9m4W1eUm6/YmQ3xqE63C1VZ0O/RvJz0BFL1jBcahGNCOvZyd8
-	NzBzLu8DYjxs51JjpVVsENF9wf0XMB3m4U9OSM13h1A6SCLkkJfcHoojhd+w8Xr1hloAfQA4i31
-	/BnRKs7pAj9nlXp1g6zhrqXvMNQ792Y7KSD1d+jylKF9S6i4VvyQS9HubrCdxCB25d0ldoWCiT7
-	CzoxUpP3q1M86YryfLn2Y/thNr3AWQSoXqSZ0KZLKszPqNdpM3QPia95cYIJ3tr4TRp773CXmGp
-	mJVIiW/Nvx1VgbO2Zv17EY1QBCisjK6DpGRa1GAf1Ec
-X-Received: by 2002:a05:6a20:93a0:b0:3c3:bbe6:95b1 with SMTP id adf61e73a8af0-3c92a5d6d57mr13851053637.24.1785834766953;
-        Tue, 04 Aug 2026 02:12:46 -0700 (PDT)
+        bh=1Afs63KtzqwY1jV3RU1yPpFiCQtMPoQQlCP9xxFLzzc=;
+        b=FT27Ki0mkQ5Qt5Uh6G65qFqt7jkphE/6qOzRIEgUiAQ3ilrlHutgSBDmvyvAQmfTob
+         NbrB7zS2HqwrXe6RuQ3ypkMGLrJNuyR8/iGbYeNMwkN3E2fr04Bif+oX8052p4wGQCnm
+         lLbo6dB6StgErlISs7qma49aXKyIDJqMfvfCbFH02iHmh81Yqv06DrzEQjA/lKAdHrHA
+         OKfenvJmsBJi7xyMECO3QiOjKyZCd/+g4pquUztq39ddI4XaW9637tJjIh0Yk8A3GVg/
+         BP4H4gJ4tPqHJQ0mq/j8A+ziP8rEfEceE6XwW8Qy8aoftLN5lLYchs6zL3vdp/hZyLSr
+         z/6g==
+X-Forwarded-Encrypted: i=1; AHgh+RqS7qjIDdTBP6B24Fy53aHXrAjpyycFS5yLioKA/YytPc4Lg48A+I44K0RIPq69R0pXADiXk31w6tQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbVOwBEYn7VLfSg3+D1CCRrf+nwf0bQ60XnuiQvPtt+sSxSvav
+	MD5QJriw0Xpk0ivCmSDcDyMf9JNlBGGgkYE0AZNUTt3H6vytupYsiaI+
+X-Gm-Gg: AR+sD10mU+z4SrW+iFF5XmEtGOrJf2w3Am96QkwLi1dRYKraVQuMF8Sw2JXYV2TiHJ2
+	HpYSSj+TREdqQ27LALmgXWkOVfIbc2wTdMH+wUQRZW/N5Mabgd464luqDPzJBXmNBwdyC3Txzur
+	lIAemIG4HBU8yiwYZBx1XtVavKghwSkuCkTGnD9K+LwVfIva6ubiJV3TNKe6VIZHwuTA9pnhoeF
+	HBmT5eZaWG9PGF3uCeOMiqSb/+zU3yZglgggHGmjkksixnfuclwKJo7W0SX6/1NI8VRrCbGYlUu
+	C6BJo5gjLL2WdBzaYWzlYUN8ggDLHkabfA3qvDBboYTrIpvLfiX7hkrAz5UygWq1K8dMFDj+A84
+	0FodpEgtOnd2HT4E+uQtbOCFCq2MV8GUHdHerArAOqnOmoa65TAIK6qeSRpOMq1j6fGy1mG42ig
+	6l/EIu+jWbFIMQZVtHW/wWBJ/s4oK/zlKgenIq/9bzQXPwdhDjGXxmwRAvzCjJbw9ar8Stmu8l/
+	GeIcRnN8xgTL3wITl81qvv3wV5Tw80Tq/VaEMDpiTgA
+X-Received: by 2002:a17:903:184e:b0:2d0:401c:2ebb with SMTP id d9443c01a7336-2d0521e93a3mr138027585ad.4.1785837249357;
+        Tue, 04 Aug 2026 02:54:09 -0700 (PDT)
 Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-315863fb350sm2659990eec.8.2026.08.04.02.12.45
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-315867a68fdsm4673072eec.25.2026.08.04.02.54.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2026 02:12:46 -0700 (PDT)
+        Tue, 04 Aug 2026 02:54:08 -0700 (PDT)
 From: Anisa Su <anisa.su887@gmail.com>
 X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Tue, 4 Aug 2026 02:12:44 -0700
-To: Alison Schofield <alison.schofield@intel.com>
+Date: Tue, 4 Aug 2026 02:54:07 -0700
+To: Jonathan Cameron <jic23@kernel.org>
 Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
 	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
 	Dave Jiang <dave.jiang@intel.com>,
-	Jonathan Cameron <jic23@kernel.org>, Fan Ni <nifan.cxl@gmail.com>,
-	Li Ming <ming.li@zohomail.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Fan Ni <nifan.cxl@gmail.com>, Li Ming <ming.li@zohomail.com>,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <iweiny@kernel.org>,
 	Benjamin Cheatham <benjamin.cheatham@amd.com>,
@@ -77,10 +77,10 @@ Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
 	Heesoo Kim <habil.kim@samsung.com>
 Subject: Re: [PATCH v12 2/8] cxl/mem: Read dynamic capacity configuration
  from the device
-Message-ID: <anGtDPQ41N-SGQFG@AnisaLaptop.localdomain>
+Message-ID: <anG2vz3Ybp715TkW@AnisaLaptop.localdomain>
 References: <20260731084901.1512819-1-anisa.su@samsung.com>
  <20260731084901.1512819-3-anisa.su@samsung.com>
- <anENkWO2G5tdPtNb@aschofie-mobl2.lan>
+ <20260804005527.103b7a9f@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -89,10 +89,12 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <anENkWO2G5tdPtNb@aschofie-mobl2.lan>
+In-Reply-To: <20260804005527.103b7a9f@jic23-huawei>
 
-On Mon, Aug 03, 2026 at 02:52:17PM -0700, Alison Schofield wrote:
-> On Fri, Jul 31, 2026 at 01:48:07AM -0700, Anisa Su wrote:
+On Tue, Aug 04, 2026 at 12:55:27AM +0100, Jonathan Cameron wrote:
+> On Fri, 31 Jul 2026 01:48:07 -0700
+> Anisa Su <anisa.su887@gmail.com> wrote:
+> 
 > > From: Ira Weiny <iweiny@kernel.org>
 > > 
 > > Devices which optionally support Dynamic Capacity (DC) are configured
@@ -110,31 +112,6 @@ On Mon, Aug 03, 2026 at 02:52:17PM -0700, Alison Schofield wrote:
 > > such a device ever materializes.  Additionally it is anticipated that no
 > > skips will be present from the end of the pmem partition.  Check for and
 > > disallow this configuration as well.
-> 
-> Hi Anisa,
-> 
-> "Additionally, it is anticipated that no skips will be present.." sounds
-> woogedy. The paragraph starts with a Linux limitation of only one partition.
-> and next mentions skips. Is that a Linux implementation rule, a spec
-> rule, or something else?
-> 
-
-Sorry for the lack of clarity. The commit message has been revised to
-make it clear that DPA gaps between partitions are a Linux rule. The
-spec permits a gap: the DC region base is device assigned and only has to be
-256MB aligned (r4.0 Table 8-347). It now reads:
-
-    Linux has no support for more than one dynamic capacity partition. Read
-    and validate all the partitions but configure only the first partition
-    as 'dynamic ram 1'. Additional partitions can be added in the future if
-    such a device ever materializes. Linux additionally requires partitions
-    to be contiguous. Therefore, check for and disallow any gap between the
-    end of the pmem partition and the first DC partition, as well as gaps
-    between the remaining DC partitions.
-
-> See below wrt validation checks.
-> 
-> 
 > > 
 > > Based on an original patch by Navneet Singh.
 > > 
@@ -143,36 +120,14 @@ spec permits a gap: the DC region base is device assigned and only has to be
 > > Tested-by: Wonjae Lee <wj28.lee@samsung.com>
 > > Tested-by: Junhee Park <jh9934.park@samsung.com>
 > > Tested-by: Heesoo Kim <habil.kim@samsung.com>
-> > 
-> > ---
-> > Changes:
-> > 1. mbox.c: bound the Get DC Config request by the negotiated mailbox
-> >    payload. Requesting all CXL_MAX_DC_PARTITIONS (8) needs a 328-byte
-> >    response, which exceeds a spec-minimum 256-byte mailbox and fails
-> >    -E2BIG, disabling DCD. Cap partition_count per call to what the
-> >    payload holds and read the rest via the existing start_partition
-> >    loop.
-> > ---
-> >  drivers/cxl/core/hdm.c  |   2 +
-> >  drivers/cxl/core/mbox.c | 220 ++++++++++++++++++++++++++++++++++++++++
-> >  drivers/cxl/cxlmem.h    |  55 ++++++++++
-> >  drivers/cxl/pci.c       |   3 +
-> >  include/cxl/cxl.h       |   3 +-
-> >  5 files changed, 282 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> > index 0c80b76a5f9b..0ef076c08ed2 100644
-> > --- a/drivers/cxl/core/hdm.c
-> > +++ b/drivers/cxl/core/hdm.c
-> > @@ -446,6 +446,8 @@ static const char *cxl_mode_name(enum cxl_partition_mode mode)
-> >  		return "ram";
-> >  	case CXL_PARTMODE_PMEM:
-> >  		return "pmem";
-> > +	case CXL_PARTMODE_DYNAMIC_RAM_1:
-> > +		return "dynamic_ram_1";
-> >  	default:
-> >  		return "";
-> >  	};
+> 
+> Hi Anisa,
+> 
+> A few things to add to the reviews of others.
+> 
+Thanks Jonathan! Details below.
+
+> Jonathan
 > > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
 > > index 4790524c32a7..d79019fbd790 100644
 > > --- a/drivers/cxl/core/mbox.c
@@ -190,6 +145,31 @@ spec permits a gap: the DC region base is device assigned and only has to be
 > > +	part_array[index].start = le64_to_cpu(dev_part->base);
 > > +	part_array[index].size = le64_to_cpu(dev_part->decode_length);
 > > +	part_array[index].size *= CXL_CAPACITY_MULTIPLIER;
+> 
+> I'd be tempted to make it clear you are setting whole structure with
+> 
+> 	part_array[index] = (struct cxl_dc_partition_info) {
+> 		.start = le64_to_cpu(dev_part->base),
+> 		.size = le64_to_cpu(dev_part->decode_length) * CXL_CAPACITY_MULTIPLIER,
+> //This is a case where I think readability justifies the long line.
+> 
+Agreed, and it also improves readability of patch 3, which adds the DSMAD handle.
+Originally handle verification came after setting start and size, and
+before setting handle. Now, the handle verification goes once in front,
+and all 3 fields set together. So the end result reads:
+
+	if (handle & ~0xFF) {
+		dev_warn(dev, "DSMAD handle 0x%x has non-zero reserved bits\n", handle);
+		return -EINVAL;
+	}
+
+	part_array[index] = (struct cxl_dc_partition_info) {
+		.start = le64_to_cpu(dev_part->base),
+		.size = le64_to_cpu(dev_part->decode_length) * CXL_CAPACITY_MULTIPLIER,
+		.handle = handle,
+	};
+
+> 	};
 > > +
 > > +	/* Check partitions are in increasing DPA order */
 > > +	if (index > 0) {
@@ -197,281 +177,44 @@ spec permits a gap: the DC region base is device assigned and only has to be
 > > +
 > > +		if ((prev_part->start + prev_part->size) >
 > > +		     part_array[index].start) {
+> 
+> I'd be tempted to put the above on one line.
+> 
+Done.
+	if (prev_part->start + prev_part->size != part_array[index].start) {
+
+The comparison changed from > to != because Alison pointed out this was
+only an overlap check and gaps were passing. Since Linux requires
+contiguous partitions I made it require exact contiguity.
+
+One thing I mentioned in my reply to Alison: since only partiton 0 is
+configured, a device with a valid partition 0 has DCD disabled if
+a gap exists in subsequent partitions, even though the spec permits the
+DPA gaps and we never use other partitions.
+
+cxl_dpa_setup() is where partitions are configured and enforces the contiguity
+rule. Is it more correct for cxl_dev_dc_identify() to check for spec compliance
+only (no overlap) and defer the Linux-specific rule of no gaps between
+partitions up to cxl_dpa_check()?
+
 > > +			dev_err(dev,
 > > +				"DPA ordering violation for DC partition %d and %d\n",
 > > +				index - 1, index);
 > > +			return -EINVAL;
 > > +		}
 > > +	}
+> 
+> Alison's comments seem valid to me and apply to rest of this function at least so I'll
+> not add anything else on that.
+> 
+
+Agreed and worked through.
+
 > > +
-> > +	if (part_array[index].size == 0 || len == 0 ||
-> > +	    part_array[index].size < len || !IS_ALIGNED(len, blk_size)) {
-> > +		dev_err(dev, "DC partition %d invalid length; size %llu len %llu blk size %llu\n",
-> > +			index, part_array[index].size, len, blk_size);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (blk_size == 0 || blk_size % CXL_DCD_BLOCK_LINE_SIZE ||
-> > +	    !is_power_of_2(blk_size)) {
-> > +		dev_err(dev, "DC partition %d invalid block size %llu\n",
-> > +			index, blk_size);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (!IS_ALIGNED(part_array[index].start, SZ_256M) ||
-> > +	    !IS_ALIGNED(part_array[index].start, blk_size)) {
-> > +		dev_err(dev, "DC partition %d invalid start %llu blk size %llu\n",
-> > +			index, part_array[index].start, blk_size);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	dev_dbg(dev, "DC partition %d start %llu size %llu blk_size: %llu\n",
-> > +		index, part_array[index].start, part_array[index].size,
-> > +		blk_size);
-> > +
-> > +	return 0;
 > > +}
 > 
+> ...
 > 
-> cxl_dc_check() above needs rework.
-> Please go back through it against CXL r4.0 Tables 8-346 and 8-347 and confirm
-> that each constraint the code enforces is the constraint the spec actually
-> states. The check need to run in dependency order, and then each failure
-> needs to report the specific field or relationship that is invalid.
-> 
-Done, double checked both tables. The function now validates in
-dependency order with one message per field:
-
-    /* Block size is a power of 2 and a multiple of 40h */
-    if (blk_size == 0 || !is_power_of_2(blk_size) ||
-        blk_size % CXL_DCD_BLOCK_LINE_SIZE) {
-            dev_err(dev, "DC partition %d invalid block size %#llx\n", ...);
-
-*** note sashiko pointed out is_power_of_2(unsigned long n) truncates
-on 32-bit builds, so is_power_of_2 is replaced with (blk_size & (blk_size - 1))
-
-    if (part_array[index].size == 0)   -> "zero decode length"
-    if (len == 0)                      -> "zero length"
-    if (len > part_array[index].size)  -> "length %#llx exceeds decode length %#llx"
-    if (!IS_ALIGNED(len, blk_size))    -> "length %#llx not a multiple of block size %#llx"
-    if (!IS_ALIGNED(start, SZ_256M))   -> "base %#llx not aligned to 256M"
-
-    /* Partitions must be contiguous and in increasing DPA order */
-
-Point by point details below.
-
-> A terse list of what looks wrong from here. (I have not chased each one)
-> 
-> - blk_size is used as the alignment in IS_ALIGNED(len, blk_size) and
->   IS_ALIGNED(start, blk_size) before it is validated.
-
-Fixed, block size is validated first now.
-
-To clarify the exact fix and reason:
-
-In v12, a block size of 0 would still be rejected, but print "invalid length"
-instead of "invalid block size:
-
-	if (part_array[index].size == 0 || len == 0 ||
-          part_array[index].size < len || !IS_ALIGNED(len, blk_size)) {
-              dev_err(dev, "DC partition %d invalid length; size %llu len %llu blk size %
-              return -EINVAL;
-      }
-
-!IS_ALIGNED(len, blk_size) = !(len & ~0ULL)
-
-len & ~0ULL == 0 iff. len == 0. Since len is checked before the
-alignement check, then !(len &0ULL) evaluates to true and prints
-"invalid length". By moving the blk_size check above, the correct error
-message "invalid block size" is printed for blk_size == 0.
-
-> - Four unrelated conditions share one "invalid length" message.
-
-Fixed, four separate checks, each naming its own field.
-
- if (part_array[index].size == 0)   -> "zero decode length"
- if (len == 0)                      -> "zero length"
- if (len > part_array[index].size)  -> "length %#llx exceeds decode length %#llx"
- if (!IS_ALIGNED(len, blk_size))    -> "length %#llx not a multiple of block size %#llx
-
-> - The start check combines the 256 MiB and block-size requirements, so the
->   message cannot say which alignment failed.
-
-Fixed: Table 8-347 requires the base to be 256MB aligned, and states the block
-size alignment for the starting DPAs of extents, **not** for the region
-base. So the start check now only requires 256 MiB alignment.
-
-> - "DPA ordering violation" is really an overlap check, and gaps appear to be
->   allowed.
-
-Fixed to tighten the check. One thing to note: only DC partition 0 is configured,
-so this check would mean DCD is disabled for a device with a usable
-partition 0, but which has gaps between later partitions. If
-multi-partition support is landed later, gaps would be caught by
-cxl_dpa_check when the partition is configured. Should
-cxl_dev_dc_identify() only check for spec compliance and defer the
-Linux rule of no gaps between partitions up to cxl_dpa_check()?
-
-	/* Partitions must be contiguous and in increasing DPA order */
-	for (int prev = index - 1; prev >= 0; prev--) {
-		struct cxl_dc_partition_info *prev_part = &part_array[prev];
-
-		if (prev_part->size == 0)
-			continue;
-
-		if (prev_part->start + prev_part->size != part_array[index].start) {
-			dev_err(dev,
-				"DC partition %d and %d are not contiguous\n",
-				prev, index);
-			return -EINVAL;
-		}
-		break;
-	}
-> - avail_partition_count is never checked against the 1 to 8 range Table 8-346
->   requires.
-
-Added in cxl_get_dc_config(), before the count is used as the bound for
-the read loop:
-
-    /* A DCD reports between 1 and 8 partitions */
-    if (dc_resp->avail_partition_count == 0 ||
-        dc_resp->avail_partition_count > CXL_MAX_DC_PARTITIONS) {
-            dev_err(mbox->host,
-                    "Device reported %u available DC partitions, expected 1 to %u\n",
-                    dc_resp->avail_partition_count, CXL_MAX_DC_PARTITIONS);
-            return -EIO;
-    }
-
-This also answers the Sashiko report on this patch, which asked whether
-a device with 0 partitions is failed incorrectly. Table 8-346 says "A
-DCD shall report between 1 and 8 regions. All other values are
-reserved.", so 0 is not a legal value and failing is the correct
-behavior.
-
-> - cxl_configure_dcd()'s "skip from pmem not supported" also fires on overlap,
->   and prints neither address.
-
-Split into two checks that print both addresses:
-
-    if (dc_info.start < info->size)
-            dev_err(dev, "DC partition 0 base %#llx overlaps static capacity ending at %#llx\n", ...);
-
-    /* A gap between static capacity and the DC partition is not supported */
-    if (dc_info.start > info->size)
-            dev_warn(dev, "DC partition 0 base %#llx leaves a gap from static capacity ending at %#llx\n", ...);
-
-An overlap is the device contradicting itself so it is an error, a gap
-is legal but unsupported so it stays a warning. Both still disable DCD.
-
-The message also said "pmem capacity", which I think is less accurate
-than "static capacity", since we could have a volatile only device with
-no pmem partition.
-
-> - min_out = 8 is a bare constant for the header ahead of the flex array
-
-Fixed. Uses sizeof(*dc_resp), which for a flex array struct is exactly the fixed
-header.
-
-> - DPA addresses and sizes print in decimal, rest of CXL uses hex 
-
-Converted to hex -- Partition indices stay %d.
-
-> - The Table 8-178, 8-179 and 8-180 citations are not r4.0 numbering
-> 
-Sorry, my bad!
-
-Corrected to Table 8-345 (input payload), 8-346 (output payload) and 8-347
-(region configuration). I also re-checked the Table 8-308 citation in
-patch 1 and that one is correct.
-
-> And RichardC called out this one in his prior review -
-> - Zero geometry fields are legal per Table 8-347, as already raised on the
->   list. Agreed, and the fallout of skipping rather than rejecting needs
->   working through.
-> 
-
-Fixed: New helper, and cxl_dc_check() returns early leaving the array
-entry empty:
-
-    static bool cxl_dc_partition_unavailable(struct cxl_dc_partition *dev_part)
-    {
-            return !le64_to_cpu(dev_part->decode_length) &&
-                   !le64_to_cpu(dev_part->length) &&
-                   !le64_to_cpu(dev_part->block_size);
-    }
-
-Regarding the fallout of skipping:
-- Only those three fields are tested. Table 8-347 states the report-0
-  behaviour for decode length, length and block size only, so a stale
-  base or DSMAD handle on an unavailable region is not an error.
-- If only some of the three are zero, falls through to the individual
-  blk_size, len, and decode_len checks above and rejects the partition.
-- The contiguity check checks against the last non-empty entry rather
-  than index - 1, so a skipped partition in the middle cannot mask an
-  overlap between the partitions either side of it.
-- cxl_dev_dc_identify() returns -ENODEV if partition 0 itself is
-  unavailable, since Linux only wires up partition 0. No message there,
-  cxl_dc_check() has already logged the skip.
-
-> -- Alison
-> 
-Thanks,
-Anisa
-> 
-> > +
-> > +/* Returns the number of partitions in dc_resp or -ERRNO */
-> > +static int cxl_get_dc_config(struct cxl_mailbox *mbox, u8 start_partition,
-> > +			     u8 partition_count,
-> > +			     struct cxl_mbox_get_dc_config_out *dc_resp,
-> > +			     size_t dc_resp_size)
-> > +{
-> > +	struct cxl_mbox_get_dc_config_in get_dc = (struct cxl_mbox_get_dc_config_in) {
-> > +		.partition_count = partition_count,
-> > +		.start_partition_index = start_partition,
-> > +	};
-> > +	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
-> > +		.opcode = CXL_MBOX_OP_GET_DC_CONFIG,
-> > +		.payload_in = &get_dc,
-> > +		.size_in = sizeof(get_dc),
-> > +		.size_out = dc_resp_size,
-> > +		.payload_out = dc_resp,
-> > +		.min_out = 8,
-> > +	};
-> > +	size_t expected_sz;
-> > +	int rc;
-> > +
-> > +	rc = cxl_internal_send_cmd(mbox, &mbox_cmd);
-> > +	if (rc < 0)
-> > +		return rc;
-> > +
-> > +	if (dc_resp->partitions_returned > partition_count) {
-> > +		dev_err(mbox->host, "Device returned %u partitions, requested %u\n",
-> > +			dc_resp->partitions_returned, partition_count);
-> > +		return -EIO;
-> > +	}
-> > +
-> > +	/*
-> > +	 * The payload carries trailing extent/tag count fields after the
-> > +	 * partition array (CXL r4.0 Table 8-179) which the driver ignores, so
-> > +	 * the response is at least, not exactly, expected_sz.
-> > +	 */
-> > +	expected_sz = struct_size(dc_resp, partition,
-> > +				  dc_resp->partitions_returned);
-> > +
-> > +	if (mbox_cmd.size_out < expected_sz) {
-> > +		dev_err(mbox->host,
-> > +			"Payload size %zu less than expected %zu for %u partitions\n",
-> > +			mbox_cmd.size_out,
-> > +			expected_sz,
-> > +			dc_resp->partitions_returned);
-> > +		return -EIO;
-> > +	}
-> > +
-> > +	dev_dbg(mbox->host, "Read %d/%d DC partitions\n",
-> > +		dc_resp->partitions_returned, dc_resp->avail_partition_count);
-> > +	return dc_resp->partitions_returned;
-> > +}
-> > +
 > > +/**
 > > + * cxl_dev_dc_identify() - Reads the dynamic capacity information from the
 > > + *                         device.
@@ -511,9 +254,6 @@ Anisa
 > > +	 * Read and check all partition information for validity and potential
 > > +	 * debugging; see debug output in cxl_dc_check()
 > > +	 */
-> needless comment
-> 
-> 
 > > +	start_partition = 0;
 > > +	num_partitions = 0;
 > > +	do {
@@ -536,6 +276,22 @@ Anisa
 > > +		num_partitions += rc;
 > > +
 > > +		if (num_partitions < 1 || num_partitions > CXL_MAX_DC_PARTITIONS) {
+> 
+> How could num_partitions end up either 0 or negative given we added at least 1 and
+> I don't see a path by which it will get decremented. Roll over isn't a thing given
+> we would have failed the other check on a previous loop.
+> 
+Good point, dropped. This leaves:
+	
+	if (num_partitions > CXL_MAX_DC_PARTITIONS) {
+
+Alison separately asked for avail_partition_count to be range checked
+against the 1 to 8 Table 8-346 requires, which is now done in
+cxl_get_dc_config() before the count is used as the loop bound. So this
+check is left as a defense against a faulty device that somehow returns
+more partitions than advertised.
+
+> 
 > > +			dev_err(dev, "Invalid num of dynamic capacity partitions %d\n",
 > > +				num_partitions);
 > > +			return -EINVAL;
@@ -560,11 +316,9 @@ Anisa
 > > +
 > > +	return 0;
 > > +}
-> > +EXPORT_SYMBOL_NS_GPL(cxl_dev_dc_identify, "CXL");
-> > +
-> >  static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
-> >  {
-> >  	int i = info->nr_partitions;
+> 
+> 
+> 
 > > @@ -1422,6 +1613,35 @@ int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count)
 > >  }
 > >  EXPORT_SYMBOL_NS_GPL(cxl_get_dirty_count, "CXL");
@@ -572,6 +326,18 @@ Anisa
 > > +void cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
 > > +{
 > > +	struct cxl_dc_partition_info dc_info = { 0 };
+> 
+> I think the preferred way of doing this is heading for the C23 option of
+> 
+>   = { };
+> 
+> but CXL has plenty of { 0 }; so fair enough if you prefer to keep it this
+> way.  For anyone concerned about older compilers there is a specific selftest
+> for { } doing what we expect even if the structure has holes.
+> 
+Switched to { }.
+
+> 
 > > +	struct device *dev = mds->cxlds.dev;
 > > +	int rc;
 > > +
@@ -579,6 +345,39 @@ Anisa
 > > +	if (rc) {
 > > +		dev_warn(dev,
 > > +			 "Failed to read Dynamic Capacity config: %d\n", rc);
+> 
+> Fun question on whether we consider a DCD capable device failing such
+> a basic thing as a warning level thing or a hard failure thing.
+> 
+> To me DCD is a important core device feature (unlikely maybe fwctl, features etc)
+> so we should be failing. 
+> 
+> We should definitely be returning an error from here, even if ultimate
+> we decide not to act on that error in cxl_pci_probe().
+> 
+Agreed, cxl_configure_dcd() returns int now. cxl_pci_probe() now
+disables dcd if cxl_configure_dcd() fails:
+
+	if (cxl_dcd_supported(mds)) {
+		rc = cxl_configure_dcd(mds, &range_info);
+		if (rc)
+			cxl_disable_dcd(mds);
+	}
+
+The three paths return distinct errors:
+1. the cxl_dev_dc_identify() err propagates,
+2. -EINVAL for a DC partition overlapping static capacity
+3. -EOPNOTSUPP for the gap below.
+
+Re: should "we consider a DCD capable device failing such a basic thing as
+a warning level thing or a hard failure thing":
+
+I went with continuing the probe without DCD. Failing cxl_pci_probe()
+costs the device its static capacity too, which seems a worse outcome than
+running without dynamic capacity.
+But I could be persuaded the other way -- if a DCD device that cannot report
+its DC Config then it should not come up at all.
+
 > > +		cxl_disable_dcd(mds);
 > > +		return;
 > > +	}
@@ -589,6 +388,35 @@ Anisa
 > > +			 "Dynamic Capacity skip from pmem not supported\n");
 > > +		cxl_disable_dcd(mds);
 > > +		return;
+> 
+> In this case not failing hard is probably fair if that is a specification
+> allowed feature we are just not choosing to support for now.
+> 
+Agreed, so it stays a warning and returns -EOPNOTSUPP. From Alison's
+review, I split it up to differentiate skip from overlap. Overlap
+returns -EINVAL. So now we have:
+
+	if (dc_info.start < info->size) {
+		dev_err(dev, "DC partition 0 base %#llx overlaps static capacity ending at %#llx\n",
+			dc_info.start, info->size);
+		return -EINVAL;
+	}
+
+	/* A gap between static capacity and the DC partition is not supported */
+	if (dc_info.start > info->size) {
+		dev_warn(dev, "DC partition 0 base %#llx leaves a gap from static capacity ending at %#llx\n",
+			 dc_info.start, info->size);
+		return -EOPNOTSUPP;
+	}
+
+The old message also said "pmem" when the value it compares against is
+info->size, ie mds->total_bytes, the whole static capacity from Identify
+rather than the end of the pmem partition, which is not quite accurate
+for a volatile-only device. Reworded.
+
+Thanks,
+Anisa
+
 > > +	}
 > > +
 > > +	info->size += dc_info.size;
@@ -597,135 +425,5 @@ Anisa
 > > +	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_1);
 > > +}
 > > +EXPORT_SYMBOL_NS_GPL(cxl_configure_dcd, "CXL");
-> > +
-> >  int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds)
-> >  {
-> >  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index 616eeaeee5b9..a9782939d82b 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -407,6 +407,8 @@ struct cxl_security_state {
-> >  	struct kernfs_node *sanitize_node;
-> >  };
-> >  
-> > +#define CXL_MAX_DC_PARTITIONS 8
-> > +
-> >  static inline resource_size_t cxl_pmem_size(struct cxl_dev_state *cxlds)
-> >  {
-> >  	/*
-> > @@ -691,6 +693,39 @@ struct cxl_mbox_set_shutdown_state_in {
-> >  	u8 state;
-> >  } __packed;
-> >  
-> > +/* See CXL r4.0 Table 8-178 get dynamic capacity config Input Payload */
-> > +struct cxl_mbox_get_dc_config_in {
-> > +	u8 partition_count;
-> > +	u8 start_partition_index;
-> > +} __packed;
-> > +
-> > +/* See CXL r4.0 Table 8-179 get dynamic capacity config Output Payload */
-> > +struct cxl_mbox_get_dc_config_out {
-> > +	u8 avail_partition_count;
-> > +	u8 partitions_returned;
-> > +	u8 rsvd[6];
-> > +	/* See CXL r4.0 Table 8-180 */
-> > +	struct cxl_dc_partition {
-> > +		__le64 base;
-> > +		__le64 decode_length;
-> > +		__le64 length;
-> > +		__le64 block_size;
-> > +		__le32 dsmad_handle;
-> > +		u8 flags;
-> > +		u8 rsvd[3];
-> > +	} __packed partition[] __counted_by(partitions_returned);
-> > +	/* Trailing extent/tag count fields unused */
-> > +} __packed;
-> > +
-> > +/* Trailing counts; cannot be a member after the flex array above */
-> > +struct cxl_mbox_get_dc_config_tail {
-> > +	__le32 num_extents_supported;
-> > +	__le32 num_extents_available;
-> > +	__le32 num_tags_supported;
-> > +	__le32 num_tags_available;
-> > +} __packed;
-> > +#define CXL_DCD_BLOCK_LINE_SIZE 0x40
-> > +
-> >  /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
-> >  struct cxl_mbox_set_timestamp_in {
-> >  	__le64 timestamp;
-> > @@ -814,9 +849,18 @@ enum {
-> >  int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
-> >  			  struct cxl_mbox_cmd *cmd);
-> >  int cxl_dev_state_identify(struct cxl_memdev_state *mds);
-> > +
-> > +struct cxl_dc_partition_info {
-> > +	u64 start;
-> > +	u64 size;
-> > +};
-> > +
-> > +int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
-> > +			struct cxl_dc_partition_info *dc_info);
-> >  int cxl_await_media_ready(struct cxl_dev_state *cxlds);
-> >  int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
-> >  int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
-> > +void cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
-> >  struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
-> >  						 u16 dvsec);
-> >  void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
-> > @@ -830,6 +874,17 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
-> >  			    const uuid_t *uuid, union cxl_event *evt);
-> >  int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count);
-> >  int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds);
-> > +
-> > +static inline bool cxl_dcd_supported(struct cxl_memdev_state *mds)
-> > +{
-> > +	return mds->dcd_supported;
-> > +}
-> > +
-> > +static inline void cxl_disable_dcd(struct cxl_memdev_state *mds)
-> > +{
-> > +	mds->dcd_supported = false;
-> > +}
-> > +
-> >  int cxl_set_timestamp(struct cxl_memdev_state *mds);
-> >  int cxl_poison_state_init(struct cxl_memdev_state *mds);
-> >  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
-> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-> > index 267c679b0b3c..9b320a2b6fe0 100644
-> > --- a/drivers/cxl/pci.c
-> > +++ b/drivers/cxl/pci.c
-> > @@ -870,6 +870,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-> >  	if (rc)
-> >  		return rc;
-> >  
-> > +	if (cxl_dcd_supported(mds))
-> > +		cxl_configure_dcd(mds, &range_info);
-> > +
-> >  	rc = cxl_dpa_setup(cxlds, &range_info);
-> >  	if (rc)
-> >  		return rc;
-> > diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> > index 016c74fb747c..87c2bd73df21 100644
-> > --- a/include/cxl/cxl.h
-> > +++ b/include/cxl/cxl.h
-> > @@ -133,6 +133,7 @@ struct cxl_dpa_perf {
-> >  enum cxl_partition_mode {
-> >  	CXL_PARTMODE_RAM,
-> >  	CXL_PARTMODE_PMEM,
-> > +	CXL_PARTMODE_DYNAMIC_RAM_1,
-> >  };
-> >  
-> >  /**
-> > @@ -147,7 +148,7 @@ struct cxl_dpa_partition {
-> >  	enum cxl_partition_mode mode;
-> >  };
-> >  
-> > -#define CXL_NR_PARTITIONS_MAX 2
-> > +#define CXL_NR_PARTITIONS_MAX 3
-> >  
-> >  /**
-> >   * struct cxl_dev_state - The driver device state
-> > -- 
-> > 2.43.0
-> > 
+> 
+> 
