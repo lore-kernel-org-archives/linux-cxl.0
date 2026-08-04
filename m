@@ -1,125 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C1146A5E1;
-	Tue,  4 Aug 2026 19:49:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84D34746DA;
+	Tue,  4 Aug 2026 19:51:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785872992; cv=none; b=pgDefmPq7a8R2Sb1Lmiaz3Vlj5e7TbI0mf2gpiW6SrOp91jwzFTId9l0KqsmPtIefRMs8zmiedsNzCQqBg/5bo8rDkJZyOnRXlpEYvYDUaJSu/+tUQO0FFQdrN3hf9SjSpbMMWsAcoLLb4T+fsaGNeDvfY5JqIhUCgvpXaNgv0A=
+	t=1785873114; cv=none; b=btfg2wGkhw/ag72B/lcEIDwD3wHR+o4XaePcAmhIdY1fMPOfah2Dq8tKp5IrDnQ28LYsE5blV78sQbIvm1I7Z7XbaKRujs8hpr/LeRsXZMt5z3NIRHkTuLeAomo1LbF0zbbB0elLGDO+6x2FVOPgHIVuHtlYExmmtpsljbMcYCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785872992; c=relaxed/simple;
-	bh=tNXF8j7VrIfLS0XxoghC25GZpRC0Oa1lBtrS1tkqpR0=;
+	s=arc-20240116; t=1785873114; c=relaxed/simple;
+	bh=ktrhA6EKtSJ4/DRnQIxOFuTJzH6hDxTvj4/Fp/CW+Go=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Hovnim9bv2GAHo8KShgLcY637MCY6zFKF3Ly9XStwwKNqxlMab5+tV+nHW6IXEam3yyEdc5lBl/TNFa09p713qhpTDlMj14Ph2RXCDIqsCiGr1NpA6imRA1GLZzNGlG2wuoQlEof62VPldkUm/5mxSLM/TVw7nAVYTgG9wZ02+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oPmJDSF+; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=e98spE9izjuHlnjwaav+wpUcCAbt4V4VGYo9NARGIgnqVfDPhxgIqSWPsq/s4UggXCQpmqqlDcibE9j3EVgtzSk5utFNUCGv51l6tJpAxiqCeXBlmSi/bn38coR8XUJmfGBEMVktTiy6MOvNcJOOjoBJqQwF9VBjOBf0F0g0KFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IMRItkXs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oPmJDSF+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 789C31F000E9;
-	Tue,  4 Aug 2026 19:49:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IMRItkXs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1941F000E9;
+	Tue,  4 Aug 2026 19:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785872990;
-	bh=rqCYr62xs9dAw4288zOnrA2/ffqzdVWlWyO9J08wGWQ=;
+	s=k20260515; t=1785873112;
+	bh=lw3LY9M9OEyv5DnROr0wTyJdNNBznR1Ybp2eXytvD44=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oPmJDSF+s/F6P9RSLEJeWsh7VKBcxQPeTQ0b2bWMpx4MfJlQXTvpRabL5huS455G+
-	 OaILp+EiFtIcdbwvW2zYBQ+aZVp0bxDn7M7kLmoCU++Imwbsi0Q4D4Hs3ExDjN4nGk
-	 53B2NZZxjCVTqcR7bjwunV+rhSM20tNZzqGPd3k+JFg3vHL16dtamlKU071l0A/pkW
-	 EPCITVWdVVcjisRtiHE+xTdR2ExTiEsD6qjd6YusTAMNTfJ3F94yXcO93jehlchViB
-	 eUaWJi3euFiSMhkP69Lbm27kANSLgn3CKkPt9gG/6RQ7g3M17ghkxp/HaCYvPb01W1
-	 xLykCCyEEojKg==
+	b=IMRItkXs7s+GYXdPmeC7GrZaEkl91jm9F+RWtQgLeHcqKB7mI8+98mvaJQbiKjKQK
+	 REUPOjuIpSQTtx9vgxHLsiVVAjvAqwrHbrIWcFpdsPbPEwzRp1XumX1A08BodAoAJ5
+	 9s88zXk8c33JxliFwloRDTQ+QoWtebSfXmYrChIW/6buty5pucl+0EDvnqpcvFrmah
+	 NKZ1/Gz4N1rPDBmpO/MZYUEJ/BjLDhrnEQ2beRoj/gW5eq+oP5PoBRD4BwxcW3RWAl
+	 6GuZLwxHaR0tFEl0QHLv11rr0iTnelbEuJEcdrtf4H7sp3qdkz1CaTROUbJGpgeRG3
+	 6j+1HOVIBo6gQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 02/12] cxl: Pass decoder settings to HDM commit
- helpers
+Subject: Re: [PATCH v10 05/12] cxl: Cache endpoint decoder settings during
+ PCI enumeration
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Srirangan Madhavan" <smadhavan@nvidia.com>
 Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
-In-Reply-To: <20260804192958.1823952-3-smadhavan@nvidia.com>
+In-Reply-To: <20260804192958.1823952-6-smadhavan@nvidia.com>
 References: <20260804192958.1823952-1-smadhavan@nvidia.com>
- <20260804192958.1823952-3-smadhavan@nvidia.com>
+ <20260804192958.1823952-6-smadhavan@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 04 Aug 2026 19:49:49 +0000
-Message-Id: <20260804194950.789C31F000E9@smtp.kernel.org>
+Date: Tue, 04 Aug 2026 19:51:51 +0000
+Message-Id: <20260804195152.4B1941F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] New pre-checks in `setup_hw_decoder()` permanently wedge the decod=
-er after an error and cause spurious failures during quick reset-recommit c=
-ycles.
+- [High] A malicious CXL device can trigger an out-of-bounds MMIO read by c=
+hanging the HDM decoder count between the sizing read and the enumeration r=
+ead.
+- [High] Manually enabling PCI_COMMAND_MEMORY bypasses proper device and br=
+idge enablement flows, risking fatal PCIe errors.
 --
 
---- Patch [2]: [PATCH v10 02/12] cxl: Pass decoder settings to HDM commit h=
-elpers ---
-commit e130015805d1a3746154432a62193b6dcb3f71f9
+--- Patch [5]: [PATCH v10 05/12] cxl: Cache endpoint decoder settings durin=
+g PCI enumeration ---
+commit 14e10e2fbfc0ad9b68f5138b15e8cb4944bab222
 Author: Srirangan Madhavan <smadhavan@nvidia.com>
 
-cxl: Pass decoder settings to HDM commit helpers
+cxl: Cache endpoint decoder settings during PCI enumeration
 
-Introduce struct cxl_decoder_settings as a plain snapshot of HDM decoder
-programming state and pass it to the shared commit helpers. Split the helper
-entry points into cxl_commit_start() and cxl_commit_wait() so hdm.c keeps
-the existing DPA-lock and commit policy flow while later reset restore code
-can reuse the register programming sequence.
+This patch populates the pci_dev->hdm for CXL.mem functions early during
+PCI enumeration from pci_bus_add_device(). This provides an early HDM
+snapshot for driver-free reset paths while temporarily enabling Memory Spac=
+e.
 
 > diff --git a/drivers/cxl/core/resource.c b/drivers/cxl/core/resource.c
-> index dd8bed3d3ff0c..dd5e0cc82da49 100644
+> index 97cb136cb2aeb..7f5946d3f2c4e 100644
 > --- a/drivers/cxl/core/resource.c
 > +++ b/drivers/cxl/core/resource.c
-
 [ ... ]
-
-> +static int setup_hw_decoder(struct cxl_decoder_settings *settings,
-> +			    void __iomem *hdm)
->  {
-> -	int id =3D cxld->id;
-> +	int id =3D settings->id;
-> +	u64 target_or_skip;
->  	u64 base, size;
->  	u32 ctrl;
-> =20
-> -	/* common decoder settings */
-> -	ctrl =3D readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> -	cxld_set_interleave(cxld, &ctrl);
-> -	cxld_set_type(cxld, &ctrl);
-> -	base =3D cxld->hpa_range.start;
-> -	size =3D range_len(&cxld->hpa_range);
-> +	ctrl =3D readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> +	if (ctrl & CXL_HDM_DECODER0_CTRL_COMMITTED)
-> +		return -EBUSY;
-> +	if (ctrl & CXL_HDM_DECODER0_CTRL_COMMIT)
-> +		return -ETIMEDOUT;
-> +	if (ctrl & CXL_HDM_DECODER0_CTRL_COMMIT_ERROR)
-> +		return -EIO;
+> +static int cxl_pci_hdm_read_info(struct pci_dev *pdev,
+> +				 struct cxl_register_map *map,
+> +				 struct cxl_hdm_info *info)
+> +{
+[ ... ]
+> +	hdm =3D cxl_pci_hdm_map(pdev, map, info);
+> +	if (IS_ERR(hdm))
+> +		return PTR_ERR(hdm);
+> +
+> +	decoder_count =3D cxl_hdm_decoder_count(readl(hdm +
+> +						    CXL_HDM_DECODER_CAP_OFFSET));
 
 [Severity: High]
-Will these new pre-checks permanently wedge the decoder if a previous commit
-attempt timed out or encountered an error?
+Could a malicious CXL device trigger an out-of-bounds MMIO read here?
 
-If a commit times out, cxld_await_commit() returns -ETIMEDOUT leaving the
-CXL_HDM_DECODER0_CTRL_COMMIT bit set. Because CXL_DECODER_F_ENABLE is not s=
-et
-on failure, cxl_decoder_reset() refuses to run, so the COMMIT bit is never
-cleared.
+During the capability initialization, the component register block is mapped
+using a size calculated from a first read of the capabilities. When
+cxl_pci_hdm_read_info() maps this memory, it reads the capability register a
+second time to get decoder_count.
 
-When a subsequent commit attempt occurs, won't it immediately return
--ETIMEDOUT from these checks without attempting to clear the error?
-
-Similarly, for quick reset-recommit cycles, cxl_decoder_reset() clears
-the COMMIT bit but does not wait for the hardware to clear COMMITTED.
-Could this leave the hardware in a transient state that triggers the newly
-added -EBUSY check?
-
-> +	cxld_set_interleave(settings, &ctrl);
-> +	cxld_set_type(settings, &ctrl);
-> +	base =3D settings->hpa_range.start;
-> +	size =3D range_len(&settings->hpa_range);
+If the hardware returns a larger count on this second read, the subsequent
+loop over decoder_count will read from MMIO offsets that exceed the ioremap
+size. If this crosses a page boundary into an unmapped page, it could cause
+a synchronous page fault or kernel panic.
 
 [ ... ]
+> +static int __pci_cxl_hdm_init(struct pci_dev *pdev)
+> +{
+[ ... ]
+> +	rc =3D pci_read_config_word(pdev, PCI_COMMAND, &command);
+> +	if (rc) {
+> +		rc =3D pcibios_err_to_errno(rc);
+> +		goto out_free_info;
+> +	}
+> +
+> +	restore_command =3D !(command & PCI_COMMAND_MEMORY);
+> +	if (restore_command) {
+> +		rc =3D pci_write_config_word(pdev, PCI_COMMAND,
+> +					   command | PCI_COMMAND_MEMORY);
+
+[Severity: High]
+Does manually enabling PCI_COMMAND_MEMORY here risk fatal PCIe errors?
+
+Because __pci_cxl_hdm_init() is called from pci_bus_add_device() before
+drivers are bound and before pci_enable_device_mem() has enabled the
+upstream bridge windows, asserting PCI_COMMAND_MEMORY directly on the
+endpoint might create a PCIe topology hazard.
+
+If the upstream bridges are not fully enabled (for example, with hotplugged
+devices), they will drop the subsequent MMIO reads to the decoder registers.
+This results in an Unsupported Request (UR) completion, which typically
+triggers a Machine Check Exception or synchronous external abort.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260804192958.1823=
-952-1-smadhavan@nvidia.com?part=3D2
+952-1-smadhavan@nvidia.com?part=3D5
