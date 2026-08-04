@@ -1,129 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84D34746DA;
-	Tue,  4 Aug 2026 19:51:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3D74BC001;
+	Tue,  4 Aug 2026 19:59:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785873114; cv=none; b=btfg2wGkhw/ag72B/lcEIDwD3wHR+o4XaePcAmhIdY1fMPOfah2Dq8tKp5IrDnQ28LYsE5blV78sQbIvm1I7Z7XbaKRujs8hpr/LeRsXZMt5z3NIRHkTuLeAomo1LbF0zbbB0elLGDO+6x2FVOPgHIVuHtlYExmmtpsljbMcYCk=
+	t=1785873592; cv=none; b=DQ8Hn1OZsUN00Y0uk3Tem+Jn61GSX0dh5O1/RSUepR/0z6aS99L0GzRu114Tso6ZOyGa4nFS5vjILN1UgbVRSQvB5yIigozIfh7ALkhJJMm9cumT5tDvCmnuD4j0qSnHqtBB19UBKuQL8d0l+5gQvOghT/FHjO++d5HL8D4pO0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785873114; c=relaxed/simple;
-	bh=ktrhA6EKtSJ4/DRnQIxOFuTJzH6hDxTvj4/Fp/CW+Go=;
+	s=arc-20240116; t=1785873592; c=relaxed/simple;
+	bh=kAcLG07OvZRp1iCxt+6RcMROQaTZug33aGgdbvq81Ro=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=e98spE9izjuHlnjwaav+wpUcCAbt4V4VGYo9NARGIgnqVfDPhxgIqSWPsq/s4UggXCQpmqqlDcibE9j3EVgtzSk5utFNUCGv51l6tJpAxiqCeXBlmSi/bn38coR8XUJmfGBEMVktTiy6MOvNcJOOjoBJqQwF9VBjOBf0F0g0KFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IMRItkXs; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=kjaZO+fNQslKuKcD1uQjM6SgFc35dMiuPjooim7dPmPn+5fIBcbxXb9nGn6hYP6lQjO38Jrn7C5gvd4ulx6BgW38vfBxY/ITCUlg9LLfo2/MTVjFGmuPAB/dOejSelxfEDw17rYKX/4s3lgX/suKL6kRQey4+i85NZsMsJ2AV6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eEqSW24Y; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IMRItkXs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1941F000E9;
-	Tue,  4 Aug 2026 19:51:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eEqSW24Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23B5E1F00A3A;
+	Tue,  4 Aug 2026 19:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785873112;
-	bh=lw3LY9M9OEyv5DnROr0wTyJdNNBznR1Ybp2eXytvD44=;
+	s=k20260515; t=1785873591;
+	bh=RkHJTJ2QZf9oj93grXxeMt8a4/zlOUVSAUpSVYFXD1M=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=IMRItkXs7s+GYXdPmeC7GrZaEkl91jm9F+RWtQgLeHcqKB7mI8+98mvaJQbiKjKQK
-	 REUPOjuIpSQTtx9vgxHLsiVVAjvAqwrHbrIWcFpdsPbPEwzRp1XumX1A08BodAoAJ5
-	 9s88zXk8c33JxliFwloRDTQ+QoWtebSfXmYrChIW/6buty5pucl+0EDvnqpcvFrmah
-	 NKZ1/Gz4N1rPDBmpO/MZYUEJ/BjLDhrnEQ2beRoj/gW5eq+oP5PoBRD4BwxcW3RWAl
-	 6GuZLwxHaR0tFEl0QHLv11rr0iTnelbEuJEcdrtf4H7sp3qdkz1CaTROUbJGpgeRG3
-	 6j+1HOVIBo6gQ==
+	b=eEqSW24Yuu+OvN0BZAhwDCmck4bfrtbseJrHVIwNLvNUFpKxI3X/rqxXlnQzOQJWY
+	 5TjLsPJQpv2YMep4R9S44Iq2b1kUv/dhXEE6TZS+BJ62MKjHEirrRgcJxyMRQAf79l
+	 PmQma5iZOQXbpvEVJovOkLOKPr/QCsMUg7r7xmr2ZI++Z/a+5MRfhI4HujRiyjo6rV
+	 Dah2t2JIfVNnSHPsBT+UvA47ahx6ENUpSeZjAhvOk6eNpHKefVpXCnIbTj22zf4P89
+	 S3weXA0jV97jpirfNiRo8pfgI/K9i71ZL8kYlkOu/XRchvMkjwja+R+2GZQvswAYx5
+	 GW0NYdw+i+WGg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 05/12] cxl: Cache endpoint decoder settings during
- PCI enumeration
+Subject: Re: [PATCH v10 12/12] PCI/CXL: Restore HDM state after CXL bus
+ reset
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Srirangan Madhavan" <smadhavan@nvidia.com>
-Cc: linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
-In-Reply-To: <20260804192958.1823952-6-smadhavan@nvidia.com>
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org
+In-Reply-To: <20260804192958.1823952-13-smadhavan@nvidia.com>
 References: <20260804192958.1823952-1-smadhavan@nvidia.com>
- <20260804192958.1823952-6-smadhavan@nvidia.com>
+ <20260804192958.1823952-13-smadhavan@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 04 Aug 2026 19:51:51 +0000
-Message-Id: <20260804195152.4B1941F000E9@smtp.kernel.org>
+Date: Tue, 04 Aug 2026 19:59:50 +0000
+Message-Id: <20260804195951.23B5E1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] A malicious CXL device can trigger an out-of-bounds MMIO read by c=
-hanging the HDM decoder count between the sizing read and the enumeration r=
-ead.
-- [High] Manually enabling PCI_COMMAND_MEMORY bypasses proper device and br=
-idge enablement flows, risking fatal PCIe errors.
+
+Pre-existing issues:
+- [High] cxl_bus reset method is bypassed by standard bus reset if SBR is u=
+nmasked, silently dropping HDM state.
 --
 
---- Patch [5]: [PATCH v10 05/12] cxl: Cache endpoint decoder settings durin=
-g PCI enumeration ---
-commit 14e10e2fbfc0ad9b68f5138b15e8cb4944bab222
+--- Patch [12]: [PATCH v10 12/12] PCI/CXL: Restore HDM state after CXL bus =
+reset ---
+commit 40f2649e2ecc899dc17ea040e81eb83bfd2d204c
 Author: Srirangan Madhavan <smadhavan@nvidia.com>
 
-cxl: Cache endpoint decoder settings during PCI enumeration
+PCI/CXL: Restore HDM state after CXL bus reset
 
-This patch populates the pci_dev->hdm for CXL.mem functions early during
-PCI enumeration from pci_bus_add_device(). This provides an early HDM
-snapshot for driver-free reset paths while temporarily enabling Memory Spac=
-e.
+The commit attempts to restore CXL HDM decoder state after a successful CXL
+bus reset while the IOMMU reset block is active. It restores PCI config
+state first so BARs are valid before HDM MMIO access. It also adds a check
+to reject CXL bus reset for multifunction devices.
 
-> diff --git a/drivers/cxl/core/resource.c b/drivers/cxl/core/resource.c
-> index 97cb136cb2aeb..7f5946d3f2c4e 100644
-> --- a/drivers/cxl/core/resource.c
-> +++ b/drivers/cxl/core/resource.c
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index ef25ba5f7fe95..7d1e968a2aa2d 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+
 [ ... ]
-> +static int cxl_pci_hdm_read_info(struct pci_dev *pdev,
-> +				 struct cxl_register_map *map,
-> +				 struct cxl_hdm_info *info)
-> +{
-[ ... ]
-> +	hdm =3D cxl_pci_hdm_map(pdev, map, info);
-> +	if (IS_ERR(hdm))
-> +		return PTR_ERR(hdm);
+
+> @@ -5004,6 +5007,9 @@ static int cxl_reset_bus_function(struct pci_dev *d=
+ev, bool probe)
+>  		pci_write_config_word(bridge, dvsec + PCI_DVSEC_CXL_PORT_CTL,
+>  				      reg);
+> =20
+> +	if (!rc)
+> +		rc =3D cxl_restore_hdm_after_pci_reset(dev);
 > +
-> +	decoder_count =3D cxl_hdm_decoder_count(readl(hdm +
-> +						    CXL_HDM_DECODER_CAP_OFFSET));
-
 [Severity: High]
-Could a malicious CXL device trigger an out-of-bounds MMIO read here?
+This isn't a bug introduced by this patch, but is there a situation where
+cxl_reset_bus_function() is bypassed by the standard bus reset?
 
-During the capability initialization, the component register block is mapped
-using a size calculated from a first read of the capabilities. When
-cxl_pci_hdm_read_info() maps this memory, it reads the capability register a
-second time to get decoder_count.
+Looking at the pci_reset_fn_methods array in drivers/pci/pci.c:
 
-If the hardware returns a larger count on this second read, the subsequent
-loop over decoder_count will read from MMIO offsets that exceed the ioremap
-size. If this crosses a page boundary into an unmapped page, it could cause
-a synchronous page fault or kernel panic.
+const struct pci_reset_fn_method pci_reset_fn_methods[] =3D {
+	...
+	{ pci_pm_reset, .name =3D "pm" },
+	{ pci_reset_bus_function, .name =3D "bus" },
+	{ cxl_reset_bus_function, .name =3D "cxl_bus" },
+};
 
-[ ... ]
-> +static int __pci_cxl_hdm_init(struct pci_dev *pdev)
-> +{
-[ ... ]
-> +	rc =3D pci_read_config_word(pdev, PCI_COMMAND, &command);
-> +	if (rc) {
-> +		rc =3D pcibios_err_to_errno(rc);
-> +		goto out_free_info;
-> +	}
-> +
-> +	restore_command =3D !(command & PCI_COMMAND_MEMORY);
-> +	if (restore_command) {
-> +		rc =3D pci_write_config_word(pdev, PCI_COMMAND,
-> +					   command | PCI_COMMAND_MEMORY);
+The standard "bus" reset precedes the "cxl_bus" reset.
 
-[Severity: High]
-Does manually enabling PCI_COMMAND_MEMORY here risk fatal PCIe errors?
+If a CXL device has its Secondary Bus Reset (SBR) unmasked, will the
+standard bus reset probe successfully and handle the reset instead?
 
-Because __pci_cxl_hdm_init() is called from pci_bus_add_device() before
-drivers are bound and before pci_enable_device_mem() has enabled the
-upstream bridge windows, asserting PCI_COMMAND_MEMORY directly on the
-endpoint might create a PCIe topology hazard.
+If so, does this cause the new cxl_restore_hdm_after_pci_reset() logic to
+be silently skipped during a PCI reset (e.g., from VFIO or sysfs)?
 
-If the upstream bridges are not fully enabled (for example, with hotplugged
-devices), they will drop the subsequent MMIO reads to the decoder registers.
-This results in an Unsupported Request (UR) completion, which typically
-triggers a Machine Check Exception or synchronous external abort.
+Could this result in the CXL HDM decoder state being wiped without getting
+restored, potentially breaking CXL memory access and leading to Machine
+Check Exceptions?
+
+>  	pci_dev_reset_iommu_done(dev);
+>  	return rc;
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260804192958.1823=
-952-1-smadhavan@nvidia.com?part=3D5
+952-1-smadhavan@nvidia.com?part=3D12
