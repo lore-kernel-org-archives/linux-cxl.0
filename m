@@ -1,570 +1,731 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013049.outbound.protection.outlook.com [40.93.201.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82C842049C;
-	Tue,  4 Aug 2026 08:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785831360; cv=fail; b=cSBkXwD8et2qYFsKNgxrkGsRuJPJLN0W8z/P47nIsI7TqdQmcQF4AltdefB37eCqgYloGcgWS1eWTUHhvcD+sXjmQCOJjWf1I0mpPxbjvjALzU9MFSsY/pUqHyel1r90aRWHQsWaVKGwkksHfcdBOqGCDdT3FW2pbSL9J8yklEg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785831360; c=relaxed/simple;
-	bh=kN7ddRU+lexmP7QPPZ9lqSHrjUkUKOit7QPESw409Cc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=NNaOezK31wGfMOkDFJSvMHZT+gBlDiuv6pjJQZoTBcVVzoG7mk4CP4dRQ7HB3gGAJKh7PWQ0ObBZXUPFYhomnVtuLb4qOMHyex2T75DFjs4MLxiw4UnGRkjGCRqKHnwk91zsCcebs+3KRkxBTry12FVgKON/82oatxshQljeCGM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jK74nmbF; arc=fail smtp.client-ip=40.93.201.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D5841E6A8
+	for <linux-cxl@vger.kernel.org>; Tue,  4 Aug 2026 09:12:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785834770; cv=none; b=iif3U+iriQ0U1+NqtMXCcskCxuMNgp4wDs8vJtnWvBy4d3dVJcZYuVRe1b9ii3FDjuC6FqeRx3JpBFqDRNLe4X8k2lNhXZnKDcGlnMXSJTpXwG3NgWPXVOiD0fyG8NBXZ1brLVYpvXWopWdmZLzKzATpsrpv9ceRffFPZY6W5ZE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785834770; c=relaxed/simple;
+	bh=QrRCjwfLGZcW4M2CiM6v1J4D+OgWeTTYd84b8kYW65s=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TjS6sYswO/japgzHjcacCB8zhYpgZc9uBy8nbnAd9lDXw8lHjIblU6G1A8qeCdHElpJYo37oM/W2/KDacoMNynHh+V3vrzalYIitUur47S8Spfkfc4zKs4eUB5XdItdssZMDNOPQeARkJ4rMmGB7pPb2/P24zteDzH4lN+sQmN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HSfNBSA5; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jK74nmbF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JVr38X5UxNqGUs6tHYB5gLwjCmscXl4FQutZqLAfe/eNjhf9Z7h8zfqZqqTBTdOXBXoO0O/N5FGnd3A+t/lo3hLALb6xUjgK+TAvXyhmF+nYmjzrpCzUzGdMXJ+v5+79dmmToJHpvnyRuFirKupg6TeWTO7ppZf5q9KSfMSdRG/Cxrgy6e3ukacm3Tc+kJ8o61hkXelehfHnt4iEZNev8EKBspQtNbKJgqxVAhhI7NZVRTuoVGBdic/Yk4rm0lRuWsYMZYHyBZ5DZV5Iwm223M6PTABjvQT+NDtgrkPJz9kXwFar+CeGpUIEKtC/vaIoZbAYSEd3bKgD8ATbshiBmw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=89sB7eiHQ50GsuKbL+325uyp/7rAMoA+YKl6WdvqSrQ=;
- b=u8unDJHesfgK62eoZywv4oNKdXoVxKwoitnBKuEHbNY3+vWPTOgdnGGK5+JRopTCdle9CVoZtulxov7Z5wL7fPOwmP0l0ERomSwei0XGxwgve2W+YOMvxiODj5Wanbr39141Wxi9CrOHJyx8PcBpKm7mjJFb+u+fSZWaJcfuZnjfYj/qH3TFGBAIAaSVflvduzC8G6C9kPLQ5p8aJ0hZidmb9ab4ijWmiBBukG8lim/zcIieZ+g2PDAFspUankzLoCwYpJQ90kIK3pBYNJjYwe2NJugiwWbZLhTL3hOUDjOKkpuYsaRnsdoPeOcVnNTKiUugxongpkn3JwwEt2WMEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=89sB7eiHQ50GsuKbL+325uyp/7rAMoA+YKl6WdvqSrQ=;
- b=jK74nmbFS/P61EC84v1k0olL1cP2ov6mP3TChhyURnfu8P++wDEwel/sKp/+K6YNZYd7lGfYiK1t110MoObgFo/qAuhayYRvkFq5YJBuZa0ESZZ/cN9DdCxoNjIPIgfgK3SUbLzhSfrlKqgPCRPwxeiLQ+9QDSkBjCUktZTHD4Y2wRTP6cG9GIpOMlRix6+OZswkFvbwN7vwsK33jdfv0NPTV4vuORUGu5WF5qv2UyWIgeQyLBI8UDPXoUBogWeHxfL7UokNTnC+Dj8Kn4q+owamVzHLe1+7M+wWU+nYi9zMHJvkw43FFaST8ILBPTHa/WtKmVuoxOPqbMBEpO2qzQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by PH7PR12MB7331.namprd12.prod.outlook.com (2603:10b6:510:20e::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.18; Tue, 4 Aug
- 2026 08:15:53 +0000
-Received: from BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
- ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0270.017; Tue, 4 Aug 2026
- 08:15:53 +0000
-Date: Tue, 4 Aug 2026 16:15:46 +0800
-From: Richard Cheng <icheng@nvidia.com>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
-	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Bjorn Helgaas <bhelgaas@google.com>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-cxl@vger.kernel.org, 
-	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, 
-	Hanjun Guo <guohanjun@huawei.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Shuai Xue <xueshuai@linux.alibaba.com>, Len Brown <lenb@kernel.org>, Ira Weiny <iweiny@kernel.org>, 
-	Li Ming <ming.li@zohomail.com>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Ben Cheatham <Benjamin.Cheatham@amd.com>, Robert Richter <rrichter@amd.com>, linux-pci@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v19 06/14] PCI/AER: Introduce AER-CXL protocol error kfifo
-Message-ID: <anGe95AFo-98IbO9@MWDK4CY14F>
-References: <20260803221810.3685703-1-terry.bowman@amd.com>
- <20260803221810.3685703-7-terry.bowman@amd.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260803221810.3685703-7-terry.bowman@amd.com>
-X-ClientProxiedBy: SG2PR01CA0197.apcprd01.prod.exchangelabs.com
- (2603:1096:4:189::8) To BL0PR12MB2370.namprd12.prod.outlook.com
- (2603:10b6:207:47::27)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HSfNBSA5"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-cbe3fed2f58so2509945a12.3
+        for <linux-cxl@vger.kernel.org>; Tue, 04 Aug 2026 02:12:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785834767; x=1786439567; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=hSTwpiLxQq1UQjrHpomtU2NdX/u0MOULxD6jsG+x0Ws=;
+        b=HSfNBSA51eRy7i/cnyhZdHx1lLvCtDMRYSzh4l3oB2AcRUEFtw/f48pC6A88oy8CiN
+         F1r8pD87wx96D8jF0pqpYYnnaWePVIko+ffQkoXPjOSF0BlIn/B53vHGxCoe8vKD9XDB
+         n+b6aRcqHj0FAmUPVgd5rZUvfgse8cQHZzV0CGPoUDGIAnTRZ1KooZl0nbWJBBhI9P94
+         NTCIasy1EOGOJqZseKmt6/FHUE08dT4WsjMTc7jR5nMcxFhnVGVqYFzTd7PNLJrNphvf
+         J6fDP4yTBiY/+fT77FDlJzFMm3C6ZUEJUwf7fvFWFVasnQ67cKhjGSQgpsDFQiaW5Kp7
+         khdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785834767; x=1786439567;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=hSTwpiLxQq1UQjrHpomtU2NdX/u0MOULxD6jsG+x0Ws=;
+        b=LM9BxFLLKMhKPKwu/HVb3IdFB4aLPZ4UIxl+MJ8UPcD1va+iN0GJDPIg+Cd9MAX5l/
+         71EYcFwRth00JM434lRyz0Nex/O6Z3ZNNLEsBxQZLKEkeyF13TTP75YqBnJSf7bdmtCF
+         tXPE1U1BfuhtOdTpYcMWlh/HyfCkFtwW7Fm1mZRJB3Tq6+n42NZOKXtBlf3A84qHZsMt
+         adDMBAbjUxNBXQpUE/d9zUmANlwpltXz3AYqA24Tj1b+/aVVnufhujE5ZriClE4v7ScJ
+         7msXmiLdfnOEDc76Dxl8+ePanBsliVPkuow8xq9mRiWvNEINEEEW378A9xpz9zPB/xxc
+         M4Aw==
+X-Forwarded-Encrypted: i=1; AHgh+Roa29/8i7M1ejKGYrKJJAFaVGMFsExVKzlIhfsTQJHLUUXfsBe7o1Z44xYK1hGCYgsvt0HqE7d/qww=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXzURKvwqS6XyJP4WQFPN1Y4GF1rL3tXh/VdQbruQtusGMy3GI
+	v5AvIARSO4I5tbuzaLNqNLdSIOpTSylEpnxJFLvcZzlrfPRgkX8HUf6N
+X-Gm-Gg: AR+sD13BnuW7vnPQNYsQq4B0K2e01gXFI/V7VJKpewqZCKJwkDLUPe5acv9EZsaXo2L
+	BqpLMYuDmFZwFXJ3I0XB8PRMz09OMB4IX0yWzfvVXwsLvR4bNYrzK+J1MWKfa9phktWU4yhlK7B
+	IJc+vjypN+qFP+d9ueudBaPu88K4Bw+H1ygR96ktVy4VAPw7QIq3qBASANL1o52l0mRfXIvR0+s
+	ioUx8z4KTrFrZikUnYZgh+bHId9m4W1eUm6/YmQ3xqE63C1VZ0O/RvJz0BFL1jBcahGNCOvZyd8
+	NzBzLu8DYjxs51JjpVVsENF9wf0XMB3m4U9OSM13h1A6SCLkkJfcHoojhd+w8Xr1hloAfQA4i31
+	/BnRKs7pAj9nlXp1g6zhrqXvMNQ792Y7KSD1d+jylKF9S6i4VvyQS9HubrCdxCB25d0ldoWCiT7
+	CzoxUpP3q1M86YryfLn2Y/thNr3AWQSoXqSZ0KZLKszPqNdpM3QPia95cYIJ3tr4TRp773CXmGp
+	mJVIiW/Nvx1VgbO2Zv17EY1QBCisjK6DpGRa1GAf1Ec
+X-Received: by 2002:a05:6a20:93a0:b0:3c3:bbe6:95b1 with SMTP id adf61e73a8af0-3c92a5d6d57mr13851053637.24.1785834766953;
+        Tue, 04 Aug 2026 02:12:46 -0700 (PDT)
+Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-315863fb350sm2659990eec.8.2026.08.04.02.12.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2026 02:12:46 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Tue, 4 Aug 2026 02:12:44 -0700
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Anisa Su <anisa.su887@gmail.com>, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Dave Jiang <dave.jiang@intel.com>,
+	Jonathan Cameron <jic23@kernel.org>, Fan Ni <nifan.cxl@gmail.com>,
+	Li Ming <ming.li@zohomail.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ira Weiny <iweiny@kernel.org>,
+	Benjamin Cheatham <benjamin.cheatham@amd.com>,
+	Wonjae Lee <wj28.lee@samsung.com>,
+	Junhee Park <jh9934.park@samsung.com>,
+	Heesoo Kim <habil.kim@samsung.com>
+Subject: Re: [PATCH v12 2/8] cxl/mem: Read dynamic capacity configuration
+ from the device
+Message-ID: <anGtDPQ41N-SGQFG@AnisaLaptop.localdomain>
+References: <20260731084901.1512819-1-anisa.su@samsung.com>
+ <20260731084901.1512819-3-anisa.su@samsung.com>
+ <anENkWO2G5tdPtNb@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|PH7PR12MB7331:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5f10dbd0-1279-45ba-932c-08def20099d8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|23010399003|6133799003|22082099003|18002099003|3023799007|11063799006|4143699003|56012099006|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	+Oq5zj5/KiFyeeMsRdkLAEjBkRM5zB6TJFZkDN1mn74GmGVSTittDkWyU6lQLeG6Hhw1/mdy+hnfI2cXkz+spx4eN9GyPOgJmjHOKLIzTsPbtnPCDJKM6AlZhqA1xDB5ZR54e6G6VAO+2i6MW103X8fv2AF6BRJyXlAoT9cISmYW+1fy7N8iH+y4WSUJ2Hk/KCdFi8EFGsmsKLuYUCxDiG9m8LvzHH/S0qFafCkTyCH7uyJ0Hwt4lPq7YzxEBIguaTLovppi+YZvc+KahlX69gRWJfPQSFKwQaG6fEf2UWDVt0e8+C300UT07qtXwO6QaZa6t4dUsn4hMsfG9nV3VtHjmjnF804hyfYoRIou4ykc0znHUy9Ui5xBc/j6tqAomg4Al2J7cRQ5OHNqIl1KdIzUtjheKUU/ukrVORmo70jie5E2ddxMYJti7xCZcwIsG0kpHyLw0mBvIUwSzMtpIqju1rN7RFdkV+LouJ6xCqWT0xC4vt9tH6ZA6btKQA3ZR/3XqXlDSIRJI5HMyxojnkajqkUIPyndBnPUrV/fLLfhwW/xCkTE2e0RKE3mQH5d44+LGgqeueC2OBV7gflUL3zcmtb15IZJu84MbfcjQPmhNgZvf8gU6pYhLKzsFeFHFscJ6Df/qNDBv6MeV3nL6lCXWp6nil5w6WT/pZN86DY=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(23010399003)(6133799003)(22082099003)(18002099003)(3023799007)(11063799006)(4143699003)(56012099006)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?MBl5vK4Dk5jQae3SzxAAloB3cF9wO4sUdBpRsD2V7r1OMjOQGf8g7xslQPNH?=
- =?us-ascii?Q?6b3dzQwvwj3SUGGeVMCqUtjPXfyOCaUHF4hYRGyXAuhZZWdBJmrufMuaplmP?=
- =?us-ascii?Q?eewpRu7AcjJqxqAftA9Ku9DEfpUgz+vWpAF7mdxEPIePrfPY8RhO4MFE6Bq5?=
- =?us-ascii?Q?P2GsIcsd7R6UzyQJ2hxt8A3KVlv8Nv4AbEgSNeGs8+vdL8VXjCk0Sr6MerZo?=
- =?us-ascii?Q?YaXQOc/L0E2CsW5+0EyxAOkjuzDu+NVt39nAVFRrcAEShrXo+cGmnAa3BNDb?=
- =?us-ascii?Q?rRUTz4EVO4L4/85HqS/NBgY9Auapt0QcbT6GDJR/3BDMdRAyRYgzlwy6B8Q3?=
- =?us-ascii?Q?DeAG5qv8Qk6TjyHa3Lu2wo26Ie57OW1BNRWCstdgcnL1vWIIUvQAz7CT74MA?=
- =?us-ascii?Q?IKNIaTYn1hXteG0d4WoEBnwAfrt3OgrkK7U8h01CYzMQM74T4Q0jduGWxDhI?=
- =?us-ascii?Q?PGWRqGj+7+OzxRE3/6TCfxP4lfIWtItx+GA6z7hB43slDfRA7BQJ/CjWkF/t?=
- =?us-ascii?Q?+G9d9Q7cGAxvlxjwAY/jvQDyXVg5GKYZ87AYX6bD63UWMUsfy6yyC8UH7UxH?=
- =?us-ascii?Q?YZu6Wqbe4OrqORkOVW1fIHgIvuexCLR8ErNFY32D7j89SiuCZmqBVvYG38HO?=
- =?us-ascii?Q?rT5yewBPSh9ahEmXWNfGIsfMozNx0nCk9PfM2IMOFoNl46vQvwD2qJyYAvcq?=
- =?us-ascii?Q?4Dcxm5t3rmZ5Fct/Zl1GLHBVT/CJJdmKptfVC3BXsMuiGMwOfPiU6Vud3745?=
- =?us-ascii?Q?Nqsh6hPjdbo6NHTv1ItM9HWdvWaj7CN5nc29dyHeq+DId1MXUOhHdhO3YDie?=
- =?us-ascii?Q?YqPzx1CD9GNAJl45XxIJPolsL3z0SHeIYVnASgYdTjY9VRbxUPktU1i2VowN?=
- =?us-ascii?Q?Mvrey2kf47WnbOsrMpAVOA2y7fAN9VmN/cCa8Ozhm9nMQK3rt2MDVwlX3RAC?=
- =?us-ascii?Q?f6qDE/e+XDQqInYEU5aYeehmqRIFAkCutp0cc8avydVJr5dFW/fmwGZn1u7q?=
- =?us-ascii?Q?VlLzsjC+Ji2c0IBPnEEEW+WxJZfJaFHgUn5JAv/IYU188ZtYtGM2QGJrY6ha?=
- =?us-ascii?Q?F1ejuPX523te1BTx2pS4qq5OZfGWc3SuuL5WpdL7FjYiTj5TwcYDKfj3GTNU?=
- =?us-ascii?Q?uQO04IN2XAH6lQ2DprsJB8KiJCoGKnhjCEWMUEXZi6/42fJO1JRMnyXTuEAU?=
- =?us-ascii?Q?8+AHfvmmolFQ446E3GJDDshUxRtG1LCp4X6dIuzmLH0/+bv2FVKtkADegeXq?=
- =?us-ascii?Q?8jby2xHGkxr58tFp9EiQtkztBhEXsK0tOqL74/DFzV9XBJH8GN/hPpEw0AmY?=
- =?us-ascii?Q?tiUTB9jx1WwzlL7jj7Qaq/M4Qp1GenZ1KmfiurUhGmMcDKNi0mnvrGLUuxBM?=
- =?us-ascii?Q?n4CueVHvM+H5C+patw/7dGD0RbimPBCkNoZjv3pE7+qi769eTwrs6A/viauY?=
- =?us-ascii?Q?taBGQ6kk6AhIUdLdNnUGp8G2IGKmeXZufmaNjWYGlNzax8iTG0WzDIG1jJTK?=
- =?us-ascii?Q?yserPYahaQ/NijBF65YCXvYtye8zCLKvj09k3L7q19n54SNX5YEsk5lT/8BD?=
- =?us-ascii?Q?+7ZVU3Uh2MYzLU9q5d350gQQAP2ehlsqslECB/y7v2V4JCUnTqXzFZmhr3RV?=
- =?us-ascii?Q?uwfuzFKZuWz3uM7Ru4S4zZo+lo7r0KH0sk2TDqUuXcXxY6qXesQ1avHKveAq?=
- =?us-ascii?Q?avzf8Ii552PfaFI+5KQFZX1ZE/HcaHvzf9fmYY1hdJHByz1Y?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f10dbd0-1279-45ba-932c-08def20099d8
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2026 08:15:53.0357
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: upPZFIOm/a/QujjJ0qpxhdXOBvPE4pLQhUigtveQ2YbiCylZaLqe3ixtnmQEkUIYumwVpcYb3aGbvlFG720lkg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7331
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <anENkWO2G5tdPtNb@aschofie-mobl2.lan>
 
-On Mon, Aug 03, 2026 at 05:18:02PM +0800, Terry Bowman wrote:
-> CXL VH RAS handling requires a path for the AER driver to hand off CXL
-> protocol errors to cxl_core for logging and recovery before PCIe AER
-> recovery tears down the device. Introduce drivers/pci/pcie/aer_cxl_vh.c to
-> implement this handoff via a kfifo-backed work item.
+On Mon, Aug 03, 2026 at 02:52:17PM -0700, Alison Schofield wrote:
+> On Fri, Jul 31, 2026 at 01:48:07AM -0700, Anisa Su wrote:
+> > From: Ira Weiny <iweiny@kernel.org>
+> > 
+> > Devices which optionally support Dynamic Capacity (DC) are configured
+> > via mailbox commands.  CXL r4.0 section 9.13.3 requires the host to issue
+> > the Get DC Configuration command in order to properly configure DCDs.
+> > Without the Get DC Configuration command DCD can't be supported.
+> > 
+> > Implement the DC mailbox commands as specified in CXL 4.0 section
+> > 8.2.10.9.9 (opcodes 48XXh) to read and store the DCD configuration
+> > information.  Disable DCD if an invalid configuration is found.
+> > 
+> > Linux has no support for more than one dynamic capacity partition.  Read
+> > and validate all the partitions but configure only the first partition
+> > as 'dynamic ram 1'.  Additional partitions can be added in the future if
+> > such a device ever materializes.  Additionally it is anticipated that no
+> > skips will be present from the end of the pmem partition.  Check for and
+> > disallow this configuration as well.
 > 
-> Move is_aer_internal_error() into this new file. It identifies AER internal
-> error status bits across both correctable and uncorrectable severities.
+> Hi Anisa,
 > 
-> Introduce is_cxl_error() to gate the VH kfifo path.
+> "Additionally, it is anticipated that no skips will be present.." sounds
+> woogedy. The paragraph starts with a Linux limitation of only one partition.
+> and next mentions skips. Is that a Linux implementation rule, a spec
+> rule, or something else?
 > 
-> Introduce struct cxl_proto_err_work_data to carry the error source PCI
-> device and severity through the kfifo.
-> 
-> Introduce cxl_forward_error() to enqueue a CXL protocol error. A reference
-> is taken on the PCI device; the consumer releases it via
-> for_each_cxl_proto_err(). On enqueue failure the reference is released
-> immediately, the error is dropped, and the consumer is scheduled to drain
-> existing entries. A subsequent patch wires cxl_forward_error() into
-> handle_error_source() where correctable and uncorrectable status clearing
-> is left to pci_aer_handle_error().
-> 
-> Introduce cxl_proto_err_wait_for_empty() to synchronously wait for the
-> consumer worker to drain the kfifo.
-> 
-> Introduce cxl_register_proto_err_work() and cxl_unregister_proto_err_work()
-> for cxl_core to register and deregister its work handler. On unregistration,
-> pending kfifo entries are drained and their pdev references released before
-> cancel_work_sync() runs. Export these and for_each_cxl_proto_err() via
-> EXPORT_SYMBOL_FOR_MODULES restricted to cxl_core.
-> 
-> Protect the work pointer with a rwsem to correctly serialize
-> registration, deregistration, enqueue, and dequeue against concurrent
-> AER IRQ threads. Serialize concurrent kfifo writers with a spinlock.
-> 
-> Add MAINTAINERS entries for aer_cxl_vh.c and aer_cxl_rch.c under
-> the CXL entry so CXL maintainers are CC'd on changes to the AER-CXL
-> bridging code.
-> 
-> Co-developed-by: Dan Williams <djbw@kernel.org>
-> Signed-off-by: Dan Williams <djbw@kernel.org>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> 
-> ---
-> 
-> Changes in v18 -> v19:
-> - Rename cxl_proto_err_flush() to cxl_proto_err_wait_for_empty() to
->   better reflect that it waits for the kfifo to drain (Jonathan).
-> 
-> Changes in v17->v18:
-> - Remove correctable status clear from cxl_forward_error(); the AER core
->   clears all status bits via pci_aer_handle_error() info->status writeback
-> - Schedule consumer on kfifo overflow so existing entries can be drained
-> 
-> Changes in v16->v17:
-> - Reword "kfifo semaphore" to "kfifo spinlock" to match fifo_lock.
-> - Defer the handle_error_source() is_cxl_error() switch to the patch that
->   registers the kfifo consumer to keep each commit bisect-safe.
-> - Rename rwsema to rwsem
-> - Change CPER exports to use EXPORT_SYMBOL_FOR_MODULES.
-> - Add work cancel function.
-> - Replace kfifo_put() with kfifo_in_spinlocked() for multiple producers
-> - Add fifo_lock spinlock for concurrent producer serialisation
-> - Initialize the embedded kfifo with INIT_KFIFO() in a subsys_initcall so
->   kfifo->mask, ->esize and ->data are set before first use.
-> - Clear PCI_ERR_COR_STATUS in cxl_forward_error() after enqueue so the
->   device is acked for correctable events even when the consumer drops the
->   event. Uncorrectable status is left for cxl_do_recovery() to clear after
->   recovery completes, mirroring the AER core convention.
-> - WARN on double-registration in cxl_register_proto_err_work() to make an
->   unintended second consumer visible at runtime.
-> - Add direct rwsem.h, cleanup.h and workqueue.h includes for symbols used
->   in aer_cxl_vh.c
-> - Add MAINTAINERS entries for drivers/pci/pcie/aer_cxl_*.c
-> - Update message
-> ---
->  MAINTAINERS                   |   2 +
->  drivers/pci/pcie/Makefile     |   1 +
->  drivers/pci/pcie/aer.c        |  10 --
->  drivers/pci/pcie/aer_cxl_vh.c | 227 ++++++++++++++++++++++++++++++++++
->  drivers/pci/pcie/portdrv.h    |   6 +
->  include/linux/aer.h           |  24 ++++
->  6 files changed, 260 insertions(+), 10 deletions(-)
->  create mode 100644 drivers/pci/pcie/aer_cxl_vh.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5114e6db7307d..3a1f1057a21e5 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6527,6 +6527,8 @@ S:	Maintained
->  F:	Documentation/driver-api/cxl
->  F:	Documentation/userspace-api/fwctl/fwctl-cxl.rst
->  F:	drivers/cxl/
-> +F:	drivers/pci/pcie/aer_cxl_rch.c
-> +F:	drivers/pci/pcie/aer_cxl_vh.c
->  F:	include/cxl/
->  F:	include/uapi/linux/cxl_mem.h
->  F:	tools/testing/cxl/
-> diff --git a/drivers/pci/pcie/Makefile b/drivers/pci/pcie/Makefile
-> index b0b43a18c304b..62d3d3c69a5df 100644
-> --- a/drivers/pci/pcie/Makefile
-> +++ b/drivers/pci/pcie/Makefile
-> @@ -9,6 +9,7 @@ obj-$(CONFIG_PCIEPORTBUS)	+= pcieportdrv.o bwctrl.o
->  obj-y				+= aspm.o
->  obj-$(CONFIG_PCIEAER)		+= aer.o err.o tlp.o
->  obj-$(CONFIG_CXL_RAS)		+= aer_cxl_rch.o
-> +obj-$(CONFIG_CXL_RAS)		+= aer_cxl_vh.o
->  obj-$(CONFIG_PCIEAER_INJECT)	+= aer_inject.o
->  obj-$(CONFIG_PCIE_PME)		+= pme.o
->  obj-$(CONFIG_PCIE_DPC)		+= dpc.o
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index c4fd9c0b2a548..c5bce25df51cb 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1150,16 +1150,6 @@ void pci_aer_unmask_internal_errors(struct pci_dev *dev)
->   */
->  EXPORT_SYMBOL_FOR_MODULES(pci_aer_unmask_internal_errors, "cxl_core");
->  
-> -#ifdef CONFIG_CXL_RAS
-> -bool is_aer_internal_error(struct aer_err_info *info)
-> -{
-> -	if (info->severity == AER_CORRECTABLE)
-> -		return info->status & PCI_ERR_COR_INTERNAL;
-> -
-> -	return info->status & PCI_ERR_UNC_INTN;
-> -}
-> -#endif
-> -
->  /**
->   * pci_aer_handle_error - handle logging error into an event log
->   * @dev: pointer to pci_dev data structure of error source device
-> diff --git a/drivers/pci/pcie/aer_cxl_vh.c b/drivers/pci/pcie/aer_cxl_vh.c
-> new file mode 100644
-> index 0000000000000..cd921ade1a38f
-> --- /dev/null
-> +++ b/drivers/pci/pcie/aer_cxl_vh.c
-> @@ -0,0 +1,227 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright(c) 2026 AMD Corporation. All rights reserved. */
-> +
-> +#include <linux/aer.h>
-> +#include <linux/atomic.h>
-> +#include <linux/cleanup.h>
-> +#include <linux/init.h>
-> +#include <linux/kfifo.h>
-> +#include <linux/lockdep.h>
-> +#include <linux/rwsem.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/wait_bit.h>
-> +#include <linux/workqueue.h>
-> +#include "../pci.h"
-> +#include "portdrv.h"
-> +
-> +#define CXL_ERROR_SOURCES_MAX          128
-> +
-> +struct cxl_proto_err_kfifo {
-> +	struct work_struct *work;
-> +	void (*flush)(void);
-> +	struct rw_semaphore rwsem;
-> +	spinlock_t fifo_lock;           /* Serializes kfifo writers */
-> +	atomic_t flush_inflight;
-> +	DECLARE_KFIFO(fifo, struct cxl_proto_err_work_data,
-> +		      CXL_ERROR_SOURCES_MAX);
-> +};
-> +
-> +static struct cxl_proto_err_kfifo cxl_proto_err_kfifo = {
-> +	.rwsem = __RWSEM_INITIALIZER(cxl_proto_err_kfifo.rwsem),
-> +	.fifo_lock = __SPIN_LOCK_UNLOCKED(cxl_proto_err_kfifo.fifo_lock),
-> +};
-> +
-> +static int __init cxl_proto_err_kfifo_init(void)
-> +{
-> +	INIT_KFIFO(cxl_proto_err_kfifo.fifo);
-> +	return 0;
-> +}
-> +subsys_initcall(cxl_proto_err_kfifo_init);
-> +
-> +bool is_aer_internal_error(struct aer_err_info *info)
-> +{
-> +	if (info->severity == AER_CORRECTABLE)
-> +		return info->status & PCI_ERR_COR_INTERNAL;
-> +
-> +	return info->status & PCI_ERR_UNC_INTN;
-> +}
 
-Hi Terry,
+Sorry for the lack of clarity. The commit message has been revised to
+make it clear that DPA gaps between partitions are a Linux rule. The
+spec permits a gap: the DC region base is device assigned and only has to be
+256MB aligned (r4.0 Table 8-347). It now reads:
 
-Should we use unmasked status here ? just like other consumer does.
-aer_get_device_error_info() gates on "!(info->status & ~info->mask)"
-"info->mask" is always populated on the path that reaches here, so it's free.
+    Linux has no support for more than one dynamic capacity partition. Read
+    and validate all the partitions but configure only the first partition
+    as 'dynamic ram 1'. Additional partitions can be added in the future if
+    such a device ever materializes. Linux additionally requires partitions
+    to be contiguous. Therefore, check for and disallow any gap between the
+    end of the pmem partition and the first DC partition, as well as gaps
+    between the remaining DC partitions.
 
-Does that make sense to you ? or any specific reason we don't need the mask
-here ?
-
-Best regards,
-Richard Cheng
-
-> +
-> +bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info)
-> +{
-> +	if (!info || !info->is_cxl)
-> +		return false;
-> +
-> +	if (pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT)
-> +		return false;
-> +
-> +	return is_aer_internal_error(info);
-> +}
-> +
-> +/**
-> + * cxl_forward_error - Forward a CXL protocol error to the CXL subsystem via kfifo
-> + * @pdev: PCI device that reported the AER error
-> + * @info: AER error info containing severity and status
-> + *
-> + * Producer side of the AER-CXL kfifo. Enqueues a CXL protocol error work
-> + * item and schedules the consumer workqueue. Takes a reference on @pdev
-> + * that the consumer releases after handling.
-> + *
-> + * Return: true if the consumer workqueue was scheduled and the caller may
-> + * need to drain the kfifo before AER recovery; false if no CXL error
-> + * handling was initiated due to an early return on error (e.g. no kfifo
-> + * consumer registered).  Note that on a full kfifo a correctable error is
-> + * dropped but true is still returned; this is harmless because the caller
-> + * only drains the kfifo for non-correctable events.
-> + */
-> +bool cxl_forward_error(struct pci_dev *pdev, struct aer_err_info *info)
-> +{
-> +	struct cxl_proto_err_work_data wd = {
-> +		.severity = info->severity,
-> +		.pdev = pdev,
-> +	};
-> +
-> +	guard(rwsem_read)(&cxl_proto_err_kfifo.rwsem);
-> +
-> +	if (!cxl_proto_err_kfifo.work) {
-> +		dev_err_ratelimited(&pdev->dev, "AER-CXL kfifo reader not registered\n");
-> +		return false;
-> +	}
-> +
-> +	/*
-> +	 * Reference discipline: the AER caller (handle_error_source()) holds
-> +	 * a ref on @pdev for the duration of this call and releases it on
-> +	 * return. Take a fresh ref here so the pdev stays live while queued
-> +	 * in the kfifo; the corresponding consumer is for_each_cxl_proto_err()
-> +	 * and will drop that ref after handling. On enqueue failure below,
-> +	 * drop the ref we just took to avoid a leak.
-> +	 */
-> +	pci_dev_get(pdev);
-> +
-> +	/* Serialize concurrent kfifo writers: multiple AER threaded IRQs */
-> +	if (!kfifo_in_spinlocked(&cxl_proto_err_kfifo.fifo, &wd, 1,
-> +				 &cxl_proto_err_kfifo.fifo_lock)) {
-> +
-> +		if (info->severity != AER_CORRECTABLE) {
-> +			/*
-> +			 * Unlike PCIe AER, a dropped CXL.mem uncorrectable
-> +			 * error cannot be treated as device-local: it may
-> +			 * signal lost cache coherency over HDM memory in
-> +			 * active use. The error can no longer be confirmed
-> +			 * via CXL RAS, so collapse the unknown state to the
-> +			 * same conservative outcome as a confirmed UCE.
-> +			 */
-> +			panic("CXL: dropped uncorrectable protocol error\n");
-> +		}
-> +
-> +		dev_err_ratelimited(&pdev->dev, "AER-CXL kfifo add failed\n");
-> +		pci_dev_put(pdev);
-> +	}
-> +
-> +	schedule_work(cxl_proto_err_kfifo.work);
-> +	return true;
-> +}
-> +
-> +void cxl_register_proto_err_work(struct work_struct *work,
-> +				void (*flush)(void))
-> +{
-> +	guard(rwsem_write)(&cxl_proto_err_kfifo.rwsem);
-> +
-> +	/*
-> +	 * Warn on double-registration to surface driver bugs (e.g. missing
-> +	 * cxl_unregister_proto_err_work() on module exit)
-> +	 */
-> +	if (WARN(cxl_proto_err_kfifo.work,
-> +		 "AER-CXL kfifo consumer already registered\n"))
-> +		return;
-> +	cxl_proto_err_kfifo.work = work;
-> +	cxl_proto_err_kfifo.flush = flush;
-> +}
-> +EXPORT_SYMBOL_FOR_MODULES(cxl_register_proto_err_work, "cxl_core");
-> +
-> +static struct work_struct *cancel_cxl_proto_err(void)
-> +{
-> +	struct work_struct *work;
-> +	struct cxl_proto_err_work_data wd;
-> +
-> +	guard(rwsem_write)(&cxl_proto_err_kfifo.rwsem);
-> +	work = cxl_proto_err_kfifo.work;
-> +	cxl_proto_err_kfifo.work = NULL;
-> +	cxl_proto_err_kfifo.flush = NULL;
-> +
-> +	/* rwsem_write excludes all producers; fifo_lock not needed */
-> +	while (kfifo_get(&cxl_proto_err_kfifo.fifo, &wd)) {
-> +		dev_err_ratelimited(&wd.pdev->dev,
-> +				    "AER-CXL error report canceled\n");
-> +		pci_dev_put(wd.pdev);
-> +	}
-> +	return work;
-> +}
-> +
-> +void cxl_unregister_proto_err_work(void)
-> +{
-> +	struct work_struct *work;
-> +
-> +	lockdep_assert_not_held(&cxl_proto_err_kfifo.rwsem);
-> +
-> +	work = cancel_cxl_proto_err();
-> +
-> +	/* Wait for any in-flight cxl_proto_err_wait_for_empty() calls to complete */
-> +	wait_var_event(&cxl_proto_err_kfifo.flush_inflight,
-> +		       atomic_read(&cxl_proto_err_kfifo.flush_inflight) == 0);
-> +
-> +	if (work)
-> +		cancel_work_sync(work);
-> +}
-> +EXPORT_SYMBOL_FOR_MODULES(cxl_unregister_proto_err_work, "cxl_core");
-> +
-> +/**
-> + * for_each_cxl_proto_err - Call a function for each kfifo work item
-> + *
-> + * Single-consumer invariant: this function is only called from
-> + * cxl_proto_err_work_fn() via a single DECLARE_WORK.
-> + *
-> + * Holds rwsem_read internally; fn() must not call cxl_register_proto_err_work()
-> + * or cxl_unregister_proto_err_work().
-> + */
-> +void for_each_cxl_proto_err(struct cxl_proto_err_work_data *wd,
-> +			    cxl_proto_err_fn_t fn)
-> +{
-> +	guard(rwsem_read)(&cxl_proto_err_kfifo.rwsem);
-> +	while (kfifo_get(&cxl_proto_err_kfifo.fifo, wd)) {
-> +		fn(wd);
-> +
-> +		/* Corresponding ref incr taken in cxl_forward_error() */
-> +		pci_dev_put(wd->pdev);
-> +	}
-> +}
-> +EXPORT_SYMBOL_FOR_MODULES(for_each_cxl_proto_err, "cxl_core");
-> +
-> +/**
-> + * cxl_proto_err_wait_for_empty - drain pending AER-CXL kfifo work synchronously
-> + *
-> + * Ensures CXL RAS handling and panic policy complete before AER
-> + * recovery proceeds. Only needed for UCE; CE runs asynchronously.
-> + *
-> + * Snapshots the flush callback under rwsem_read, then releases the
-> + * rwsem before calling it to avoid deadlock with a concurrent
-> + * rwsem_write from cxl_unregister_proto_err_work().
-> + *
-> + * The flush_inflight counter (typically 0 or 1) prevents module
-> + * unload while a flush is in progress outside the rwsem.
-> + */
-> +void cxl_proto_err_wait_for_empty(void)
-> +{
-> +	void (*flush)(void);
-> +
-> +	scoped_guard(rwsem_read, &cxl_proto_err_kfifo.rwsem) {
-> +		flush = cxl_proto_err_kfifo.flush;
-> +		if (flush)
-> +			atomic_inc(&cxl_proto_err_kfifo.flush_inflight);
-> +	}
-> +
-> +	if (flush) {
-> +		flush();
-> +		if (atomic_dec_and_test(&cxl_proto_err_kfifo.flush_inflight))
-> +			wake_up_var(&cxl_proto_err_kfifo.flush_inflight);
-> +	}
-> +}
-> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-> index cc58bf2f2c844..357310916088f 100644
-> --- a/drivers/pci/pcie/portdrv.h
-> +++ b/drivers/pci/pcie/portdrv.h
-> @@ -130,9 +130,15 @@ struct aer_err_info;
->  bool is_aer_internal_error(struct aer_err_info *info);
->  void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info);
->  void cxl_rch_enable_rcec(struct pci_dev *rcec);
-> +bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info);
-> +bool cxl_forward_error(struct pci_dev *pdev, struct aer_err_info *info);
-> +void cxl_proto_err_wait_for_empty(void);
->  #else
->  static inline bool is_aer_internal_error(struct aer_err_info *info) { return false; }
->  static inline void cxl_rch_handle_error(struct pci_dev *dev, struct aer_err_info *info) { }
->  static inline void cxl_rch_enable_rcec(struct pci_dev *rcec) { }
-> +static inline bool is_cxl_error(struct pci_dev *pdev, struct aer_err_info *info) { return false; }
-> +static inline bool cxl_forward_error(struct pci_dev *pdev, struct aer_err_info *info) { return false; }
-> +static inline void cxl_proto_err_wait_for_empty(void) { }
->  #endif /* CONFIG_CXL_RAS */
->  #endif /* _PORTDRV_H_ */
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index df0f5c382286f..8eba3192e2d15 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -25,6 +25,7 @@
->  #define PCIE_STD_MAX_TLP_HEADERLOG	(PCIE_STD_NUM_TLP_HEADERLOG + 10)
->  
->  struct pci_dev;
-> +struct work_struct;
->  
->  struct pcie_tlp_log {
->  	union {
-> @@ -66,6 +67,29 @@ static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->  static inline void pci_aer_unmask_internal_errors(struct pci_dev *dev) { }
->  #endif
->  
-> +#ifdef CONFIG_CXL_RAS
-> +/**
-> + * struct cxl_proto_err_work_data - Error information used in CXL error handling
-> + * @pdev: PCI device detecting the error
-> + * @severity: AER severity
-> + */
-> +struct cxl_proto_err_work_data {
-> +	struct pci_dev *pdev;
-> +	int severity;
-> +};
-> +
-> +/**
-> + * Callback for processing a CXL protocol error from the AER-CXL kfifo.
-> + */
-> +typedef void (*cxl_proto_err_fn_t)(struct cxl_proto_err_work_data *wd);
-> +
-> +void cxl_register_proto_err_work(struct work_struct *work,
-> +				void (*flush)(void));
-> +void for_each_cxl_proto_err(struct cxl_proto_err_work_data *wd,
-> +			    cxl_proto_err_fn_t fn);
-> +void cxl_unregister_proto_err_work(void);
-> +#endif
-> +
->  void pci_print_aer(struct pci_dev *dev, int aer_severity,
->  		    struct aer_capability_regs *aer);
->  int cper_severity_to_aer(int cper_severity);
-> -- 
-> 2.34.1
+> See below wrt validation checks.
 > 
+> 
+> > 
+> > Based on an original patch by Navneet Singh.
+> > 
+> > Signed-off-by: Ira Weiny <iweiny@kernel.org>
+> > Signed-off-by: Anisa Su <anisa.su@samsung.com>
+> > Tested-by: Wonjae Lee <wj28.lee@samsung.com>
+> > Tested-by: Junhee Park <jh9934.park@samsung.com>
+> > Tested-by: Heesoo Kim <habil.kim@samsung.com>
+> > 
+> > ---
+> > Changes:
+> > 1. mbox.c: bound the Get DC Config request by the negotiated mailbox
+> >    payload. Requesting all CXL_MAX_DC_PARTITIONS (8) needs a 328-byte
+> >    response, which exceeds a spec-minimum 256-byte mailbox and fails
+> >    -E2BIG, disabling DCD. Cap partition_count per call to what the
+> >    payload holds and read the rest via the existing start_partition
+> >    loop.
+> > ---
+> >  drivers/cxl/core/hdm.c  |   2 +
+> >  drivers/cxl/core/mbox.c | 220 ++++++++++++++++++++++++++++++++++++++++
+> >  drivers/cxl/cxlmem.h    |  55 ++++++++++
+> >  drivers/cxl/pci.c       |   3 +
+> >  include/cxl/cxl.h       |   3 +-
+> >  5 files changed, 282 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+> > index 0c80b76a5f9b..0ef076c08ed2 100644
+> > --- a/drivers/cxl/core/hdm.c
+> > +++ b/drivers/cxl/core/hdm.c
+> > @@ -446,6 +446,8 @@ static const char *cxl_mode_name(enum cxl_partition_mode mode)
+> >  		return "ram";
+> >  	case CXL_PARTMODE_PMEM:
+> >  		return "pmem";
+> > +	case CXL_PARTMODE_DYNAMIC_RAM_1:
+> > +		return "dynamic_ram_1";
+> >  	default:
+> >  		return "";
+> >  	};
+> > diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+> > index 4790524c32a7..d79019fbd790 100644
+> > --- a/drivers/cxl/core/mbox.c
+> > +++ b/drivers/cxl/core/mbox.c
+> > @@ -1352,6 +1352,197 @@ int cxl_mem_sanitize(struct cxl_memdev *cxlmd, u16 cmd)
+> >  	return -EBUSY;
+> >  }
+> >  
+> > +static int cxl_dc_check(struct device *dev, struct cxl_dc_partition_info *part_array,
+> > +			u8 index, struct cxl_dc_partition *dev_part)
+> > +{
+> > +	u64 blk_size = le64_to_cpu(dev_part->block_size);
+> > +	u64 len = le64_to_cpu(dev_part->length);
+> > +
+> > +	part_array[index].start = le64_to_cpu(dev_part->base);
+> > +	part_array[index].size = le64_to_cpu(dev_part->decode_length);
+> > +	part_array[index].size *= CXL_CAPACITY_MULTIPLIER;
+> > +
+> > +	/* Check partitions are in increasing DPA order */
+> > +	if (index > 0) {
+> > +		struct cxl_dc_partition_info *prev_part = &part_array[index - 1];
+> > +
+> > +		if ((prev_part->start + prev_part->size) >
+> > +		     part_array[index].start) {
+> > +			dev_err(dev,
+> > +				"DPA ordering violation for DC partition %d and %d\n",
+> > +				index - 1, index);
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +
+> > +	if (part_array[index].size == 0 || len == 0 ||
+> > +	    part_array[index].size < len || !IS_ALIGNED(len, blk_size)) {
+> > +		dev_err(dev, "DC partition %d invalid length; size %llu len %llu blk size %llu\n",
+> > +			index, part_array[index].size, len, blk_size);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	if (blk_size == 0 || blk_size % CXL_DCD_BLOCK_LINE_SIZE ||
+> > +	    !is_power_of_2(blk_size)) {
+> > +		dev_err(dev, "DC partition %d invalid block size %llu\n",
+> > +			index, blk_size);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	if (!IS_ALIGNED(part_array[index].start, SZ_256M) ||
+> > +	    !IS_ALIGNED(part_array[index].start, blk_size)) {
+> > +		dev_err(dev, "DC partition %d invalid start %llu blk size %llu\n",
+> > +			index, part_array[index].start, blk_size);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	dev_dbg(dev, "DC partition %d start %llu size %llu blk_size: %llu\n",
+> > +		index, part_array[index].start, part_array[index].size,
+> > +		blk_size);
+> > +
+> > +	return 0;
+> > +}
+> 
+> 
+> cxl_dc_check() above needs rework.
+> Please go back through it against CXL r4.0 Tables 8-346 and 8-347 and confirm
+> that each constraint the code enforces is the constraint the spec actually
+> states. The check need to run in dependency order, and then each failure
+> needs to report the specific field or relationship that is invalid.
+> 
+Done, double checked both tables. The function now validates in
+dependency order with one message per field:
+
+    /* Block size is a power of 2 and a multiple of 40h */
+    if (blk_size == 0 || !is_power_of_2(blk_size) ||
+        blk_size % CXL_DCD_BLOCK_LINE_SIZE) {
+            dev_err(dev, "DC partition %d invalid block size %#llx\n", ...);
+
+*** note sashiko pointed out is_power_of_2(unsigned long n) truncates
+on 32-bit builds, so is_power_of_2 is replaced with (blk_size & (blk_size - 1))
+
+    if (part_array[index].size == 0)   -> "zero decode length"
+    if (len == 0)                      -> "zero length"
+    if (len > part_array[index].size)  -> "length %#llx exceeds decode length %#llx"
+    if (!IS_ALIGNED(len, blk_size))    -> "length %#llx not a multiple of block size %#llx"
+    if (!IS_ALIGNED(start, SZ_256M))   -> "base %#llx not aligned to 256M"
+
+    /* Partitions must be contiguous and in increasing DPA order */
+
+Point by point details below.
+
+> A terse list of what looks wrong from here. (I have not chased each one)
+> 
+> - blk_size is used as the alignment in IS_ALIGNED(len, blk_size) and
+>   IS_ALIGNED(start, blk_size) before it is validated.
+
+Fixed, block size is validated first now.
+
+To clarify the exact fix and reason:
+
+In v12, a block size of 0 would still be rejected, but print "invalid length"
+instead of "invalid block size:
+
+	if (part_array[index].size == 0 || len == 0 ||
+          part_array[index].size < len || !IS_ALIGNED(len, blk_size)) {
+              dev_err(dev, "DC partition %d invalid length; size %llu len %llu blk size %
+              return -EINVAL;
+      }
+
+!IS_ALIGNED(len, blk_size) = !(len & ~0ULL)
+
+len & ~0ULL == 0 iff. len == 0. Since len is checked before the
+alignement check, then !(len &0ULL) evaluates to true and prints
+"invalid length". By moving the blk_size check above, the correct error
+message "invalid block size" is printed for blk_size == 0.
+
+> - Four unrelated conditions share one "invalid length" message.
+
+Fixed, four separate checks, each naming its own field.
+
+ if (part_array[index].size == 0)   -> "zero decode length"
+ if (len == 0)                      -> "zero length"
+ if (len > part_array[index].size)  -> "length %#llx exceeds decode length %#llx"
+ if (!IS_ALIGNED(len, blk_size))    -> "length %#llx not a multiple of block size %#llx
+
+> - The start check combines the 256 MiB and block-size requirements, so the
+>   message cannot say which alignment failed.
+
+Fixed: Table 8-347 requires the base to be 256MB aligned, and states the block
+size alignment for the starting DPAs of extents, **not** for the region
+base. So the start check now only requires 256 MiB alignment.
+
+> - "DPA ordering violation" is really an overlap check, and gaps appear to be
+>   allowed.
+
+Fixed to tighten the check. One thing to note: only DC partition 0 is configured,
+so this check would mean DCD is disabled for a device with a usable
+partition 0, but which has gaps between later partitions. If
+multi-partition support is landed later, gaps would be caught by
+cxl_dpa_check when the partition is configured. Should
+cxl_dev_dc_identify() only check for spec compliance and defer the
+Linux rule of no gaps between partitions up to cxl_dpa_check()?
+
+	/* Partitions must be contiguous and in increasing DPA order */
+	for (int prev = index - 1; prev >= 0; prev--) {
+		struct cxl_dc_partition_info *prev_part = &part_array[prev];
+
+		if (prev_part->size == 0)
+			continue;
+
+		if (prev_part->start + prev_part->size != part_array[index].start) {
+			dev_err(dev,
+				"DC partition %d and %d are not contiguous\n",
+				prev, index);
+			return -EINVAL;
+		}
+		break;
+	}
+> - avail_partition_count is never checked against the 1 to 8 range Table 8-346
+>   requires.
+
+Added in cxl_get_dc_config(), before the count is used as the bound for
+the read loop:
+
+    /* A DCD reports between 1 and 8 partitions */
+    if (dc_resp->avail_partition_count == 0 ||
+        dc_resp->avail_partition_count > CXL_MAX_DC_PARTITIONS) {
+            dev_err(mbox->host,
+                    "Device reported %u available DC partitions, expected 1 to %u\n",
+                    dc_resp->avail_partition_count, CXL_MAX_DC_PARTITIONS);
+            return -EIO;
+    }
+
+This also answers the Sashiko report on this patch, which asked whether
+a device with 0 partitions is failed incorrectly. Table 8-346 says "A
+DCD shall report between 1 and 8 regions. All other values are
+reserved.", so 0 is not a legal value and failing is the correct
+behavior.
+
+> - cxl_configure_dcd()'s "skip from pmem not supported" also fires on overlap,
+>   and prints neither address.
+
+Split into two checks that print both addresses:
+
+    if (dc_info.start < info->size)
+            dev_err(dev, "DC partition 0 base %#llx overlaps static capacity ending at %#llx\n", ...);
+
+    /* A gap between static capacity and the DC partition is not supported */
+    if (dc_info.start > info->size)
+            dev_warn(dev, "DC partition 0 base %#llx leaves a gap from static capacity ending at %#llx\n", ...);
+
+An overlap is the device contradicting itself so it is an error, a gap
+is legal but unsupported so it stays a warning. Both still disable DCD.
+
+The message also said "pmem capacity", which I think is less accurate
+than "static capacity", since we could have a volatile only device with
+no pmem partition.
+
+> - min_out = 8 is a bare constant for the header ahead of the flex array
+
+Fixed. Uses sizeof(*dc_resp), which for a flex array struct is exactly the fixed
+header.
+
+> - DPA addresses and sizes print in decimal, rest of CXL uses hex 
+
+Converted to hex -- Partition indices stay %d.
+
+> - The Table 8-178, 8-179 and 8-180 citations are not r4.0 numbering
+> 
+Sorry, my bad!
+
+Corrected to Table 8-345 (input payload), 8-346 (output payload) and 8-347
+(region configuration). I also re-checked the Table 8-308 citation in
+patch 1 and that one is correct.
+
+> And RichardC called out this one in his prior review -
+> - Zero geometry fields are legal per Table 8-347, as already raised on the
+>   list. Agreed, and the fallout of skipping rather than rejecting needs
+>   working through.
+> 
+
+Fixed: New helper, and cxl_dc_check() returns early leaving the array
+entry empty:
+
+    static bool cxl_dc_partition_unavailable(struct cxl_dc_partition *dev_part)
+    {
+            return !le64_to_cpu(dev_part->decode_length) &&
+                   !le64_to_cpu(dev_part->length) &&
+                   !le64_to_cpu(dev_part->block_size);
+    }
+
+Regarding the fallout of skipping:
+- Only those three fields are tested. Table 8-347 states the report-0
+  behaviour for decode length, length and block size only, so a stale
+  base or DSMAD handle on an unavailable region is not an error.
+- If only some of the three are zero, falls through to the individual
+  blk_size, len, and decode_len checks above and rejects the partition.
+- The contiguity check checks against the last non-empty entry rather
+  than index - 1, so a skipped partition in the middle cannot mask an
+  overlap between the partitions either side of it.
+- cxl_dev_dc_identify() returns -ENODEV if partition 0 itself is
+  unavailable, since Linux only wires up partition 0. No message there,
+  cxl_dc_check() has already logged the skip.
+
+> -- Alison
+> 
+Thanks,
+Anisa
+> 
+> > +
+> > +/* Returns the number of partitions in dc_resp or -ERRNO */
+> > +static int cxl_get_dc_config(struct cxl_mailbox *mbox, u8 start_partition,
+> > +			     u8 partition_count,
+> > +			     struct cxl_mbox_get_dc_config_out *dc_resp,
+> > +			     size_t dc_resp_size)
+> > +{
+> > +	struct cxl_mbox_get_dc_config_in get_dc = (struct cxl_mbox_get_dc_config_in) {
+> > +		.partition_count = partition_count,
+> > +		.start_partition_index = start_partition,
+> > +	};
+> > +	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
+> > +		.opcode = CXL_MBOX_OP_GET_DC_CONFIG,
+> > +		.payload_in = &get_dc,
+> > +		.size_in = sizeof(get_dc),
+> > +		.size_out = dc_resp_size,
+> > +		.payload_out = dc_resp,
+> > +		.min_out = 8,
+> > +	};
+> > +	size_t expected_sz;
+> > +	int rc;
+> > +
+> > +	rc = cxl_internal_send_cmd(mbox, &mbox_cmd);
+> > +	if (rc < 0)
+> > +		return rc;
+> > +
+> > +	if (dc_resp->partitions_returned > partition_count) {
+> > +		dev_err(mbox->host, "Device returned %u partitions, requested %u\n",
+> > +			dc_resp->partitions_returned, partition_count);
+> > +		return -EIO;
+> > +	}
+> > +
+> > +	/*
+> > +	 * The payload carries trailing extent/tag count fields after the
+> > +	 * partition array (CXL r4.0 Table 8-179) which the driver ignores, so
+> > +	 * the response is at least, not exactly, expected_sz.
+> > +	 */
+> > +	expected_sz = struct_size(dc_resp, partition,
+> > +				  dc_resp->partitions_returned);
+> > +
+> > +	if (mbox_cmd.size_out < expected_sz) {
+> > +		dev_err(mbox->host,
+> > +			"Payload size %zu less than expected %zu for %u partitions\n",
+> > +			mbox_cmd.size_out,
+> > +			expected_sz,
+> > +			dc_resp->partitions_returned);
+> > +		return -EIO;
+> > +	}
+> > +
+> > +	dev_dbg(mbox->host, "Read %d/%d DC partitions\n",
+> > +		dc_resp->partitions_returned, dc_resp->avail_partition_count);
+> > +	return dc_resp->partitions_returned;
+> > +}
+> > +
+> > +/**
+> > + * cxl_dev_dc_identify() - Reads the dynamic capacity information from the
+> > + *                         device.
+> > + * @mbox: Mailbox to query
+> > + * @dc_info: The dynamic partition information to return
+> > + *
+> > + * Read Dynamic Capacity information from the device and return the partition
+> > + * information.
+> > + *
+> > + * Return: 0 if identify was executed successfully, -ERRNO on error.
+> > + *         on error only dc_info is left unchanged.
+> > + */
+> > +int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+> > +			struct cxl_dc_partition_info *dc_info)
+> > +{
+> > +	struct cxl_dc_partition_info partitions[CXL_MAX_DC_PARTITIONS];
+> > +	struct cxl_mbox_get_dc_config_out *dc_resp __free(kfree) = NULL;
+> > +	struct device *dev = mbox->host;
+> > +	u8 start_partition;
+> > +	u8 num_partitions;
+> > +	u8 partition_count;
+> > +	size_t dc_resp_size;
+> > +
+> > +	/* Bound requested number of partitions by mailbox payload size */
+> > +	partition_count = min_t(size_t, CXL_MAX_DC_PARTITIONS,
+> > +				(mbox->payload_size - sizeof(*dc_resp) -
+> > +				 sizeof(struct cxl_mbox_get_dc_config_tail)) /
+> > +				sizeof(struct cxl_dc_partition));
+> > +	dc_resp_size = struct_size(dc_resp, partition, partition_count) +
+> > +		       sizeof(struct cxl_mbox_get_dc_config_tail);
+> > +
+> > +	dc_resp = kmalloc(dc_resp_size, GFP_KERNEL);
+> > +	if (!dc_resp)
+> > +		return -ENOMEM;
+> > +
+> > +	/*
+> > +	 * Read and check all partition information for validity and potential
+> > +	 * debugging; see debug output in cxl_dc_check()
+> > +	 */
+> needless comment
+> 
+> 
+> > +	start_partition = 0;
+> > +	num_partitions = 0;
+> > +	do {
+> > +		int rc, i, j;
+> > +
+> > +		rc = cxl_get_dc_config(mbox, start_partition, partition_count,
+> > +				       dc_resp, dc_resp_size);
+> > +		if (rc < 0) {
+> > +			dev_err(dev, "Failed to get DC config: %d\n", rc);
+> > +			return rc;
+> > +		}
+> > +
+> > +		if (rc == 0) {
+> > +			dev_err(dev,
+> > +				"Device reported %u partitions available but returned none at index %u\n",
+> > +				dc_resp->avail_partition_count, start_partition);
+> > +			return -EIO;
+> > +		}
+> > +
+> > +		num_partitions += rc;
+> > +
+> > +		if (num_partitions < 1 || num_partitions > CXL_MAX_DC_PARTITIONS) {
+> > +			dev_err(dev, "Invalid num of dynamic capacity partitions %d\n",
+> > +				num_partitions);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		for (i = start_partition, j = 0; i < num_partitions; i++, j++) {
+> > +			rc = cxl_dc_check(dev, partitions, i,
+> > +					  &dc_resp->partition[j]);
+> > +			if (rc)
+> > +				return rc;
+> > +		}
+> > +
+> > +		start_partition = num_partitions;
+> > +
+> > +	} while (num_partitions < dc_resp->avail_partition_count);
+> > +
+> > +	/* Return 1st partition */
+> > +	dc_info->start = partitions[0].start;
+> > +	dc_info->size = partitions[0].size;
+> > +	dev_dbg(dev, "Returning partition 0 %llu size %llu\n",
+> > +		dc_info->start, dc_info->size);
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(cxl_dev_dc_identify, "CXL");
+> > +
+> >  static void add_part(struct cxl_dpa_info *info, u64 start, u64 size, enum cxl_partition_mode mode)
+> >  {
+> >  	int i = info->nr_partitions;
+> > @@ -1422,6 +1613,35 @@ int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count)
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(cxl_get_dirty_count, "CXL");
+> >  
+> > +void cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info)
+> > +{
+> > +	struct cxl_dc_partition_info dc_info = { 0 };
+> > +	struct device *dev = mds->cxlds.dev;
+> > +	int rc;
+> > +
+> > +	rc = cxl_dev_dc_identify(&mds->cxlds.cxl_mbox, &dc_info);
+> > +	if (rc) {
+> > +		dev_warn(dev,
+> > +			 "Failed to read Dynamic Capacity config: %d\n", rc);
+> > +		cxl_disable_dcd(mds);
+> > +		return;
+> > +	}
+> > +
+> > +	/* Skips between pmem and the dynamic partition are not supported */
+> > +	if (dc_info.start != info->size) {
+> > +		dev_warn(dev,
+> > +			 "Dynamic Capacity skip from pmem not supported\n");
+> > +		cxl_disable_dcd(mds);
+> > +		return;
+> > +	}
+> > +
+> > +	info->size += dc_info.size;
+> > +	dev_dbg(dev, "Adding dynamic ram partition 1; %llu size %llu\n",
+> > +		dc_info.start, dc_info.size);
+> > +	add_part(info, dc_info.start, dc_info.size, CXL_PARTMODE_DYNAMIC_RAM_1);
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(cxl_configure_dcd, "CXL");
+> > +
+> >  int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds)
+> >  {
+> >  	struct cxl_mailbox *cxl_mbox = &mds->cxlds.cxl_mbox;
+> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> > index 616eeaeee5b9..a9782939d82b 100644
+> > --- a/drivers/cxl/cxlmem.h
+> > +++ b/drivers/cxl/cxlmem.h
+> > @@ -407,6 +407,8 @@ struct cxl_security_state {
+> >  	struct kernfs_node *sanitize_node;
+> >  };
+> >  
+> > +#define CXL_MAX_DC_PARTITIONS 8
+> > +
+> >  static inline resource_size_t cxl_pmem_size(struct cxl_dev_state *cxlds)
+> >  {
+> >  	/*
+> > @@ -691,6 +693,39 @@ struct cxl_mbox_set_shutdown_state_in {
+> >  	u8 state;
+> >  } __packed;
+> >  
+> > +/* See CXL r4.0 Table 8-178 get dynamic capacity config Input Payload */
+> > +struct cxl_mbox_get_dc_config_in {
+> > +	u8 partition_count;
+> > +	u8 start_partition_index;
+> > +} __packed;
+> > +
+> > +/* See CXL r4.0 Table 8-179 get dynamic capacity config Output Payload */
+> > +struct cxl_mbox_get_dc_config_out {
+> > +	u8 avail_partition_count;
+> > +	u8 partitions_returned;
+> > +	u8 rsvd[6];
+> > +	/* See CXL r4.0 Table 8-180 */
+> > +	struct cxl_dc_partition {
+> > +		__le64 base;
+> > +		__le64 decode_length;
+> > +		__le64 length;
+> > +		__le64 block_size;
+> > +		__le32 dsmad_handle;
+> > +		u8 flags;
+> > +		u8 rsvd[3];
+> > +	} __packed partition[] __counted_by(partitions_returned);
+> > +	/* Trailing extent/tag count fields unused */
+> > +} __packed;
+> > +
+> > +/* Trailing counts; cannot be a member after the flex array above */
+> > +struct cxl_mbox_get_dc_config_tail {
+> > +	__le32 num_extents_supported;
+> > +	__le32 num_extents_available;
+> > +	__le32 num_tags_supported;
+> > +	__le32 num_tags_available;
+> > +} __packed;
+> > +#define CXL_DCD_BLOCK_LINE_SIZE 0x40
+> > +
+> >  /* Set Timestamp CXL 3.0 Spec 8.2.9.4.2 */
+> >  struct cxl_mbox_set_timestamp_in {
+> >  	__le64 timestamp;
+> > @@ -814,9 +849,18 @@ enum {
+> >  int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
+> >  			  struct cxl_mbox_cmd *cmd);
+> >  int cxl_dev_state_identify(struct cxl_memdev_state *mds);
+> > +
+> > +struct cxl_dc_partition_info {
+> > +	u64 start;
+> > +	u64 size;
+> > +};
+> > +
+> > +int cxl_dev_dc_identify(struct cxl_mailbox *mbox,
+> > +			struct cxl_dc_partition_info *dc_info);
+> >  int cxl_await_media_ready(struct cxl_dev_state *cxlds);
+> >  int cxl_enumerate_cmds(struct cxl_memdev_state *mds);
+> >  int cxl_mem_dpa_fetch(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
+> > +void cxl_configure_dcd(struct cxl_memdev_state *mds, struct cxl_dpa_info *info);
+> >  struct cxl_memdev_state *cxl_memdev_state_create(struct device *dev, u64 serial,
+> >  						 u16 dvsec);
+> >  void set_exclusive_cxl_commands(struct cxl_memdev_state *mds,
+> > @@ -830,6 +874,17 @@ void cxl_event_trace_record(struct cxl_memdev *cxlmd,
+> >  			    const uuid_t *uuid, union cxl_event *evt);
+> >  int cxl_get_dirty_count(struct cxl_memdev_state *mds, u32 *count);
+> >  int cxl_arm_dirty_shutdown(struct cxl_memdev_state *mds);
+> > +
+> > +static inline bool cxl_dcd_supported(struct cxl_memdev_state *mds)
+> > +{
+> > +	return mds->dcd_supported;
+> > +}
+> > +
+> > +static inline void cxl_disable_dcd(struct cxl_memdev_state *mds)
+> > +{
+> > +	mds->dcd_supported = false;
+> > +}
+> > +
+> >  int cxl_set_timestamp(struct cxl_memdev_state *mds);
+> >  int cxl_poison_state_init(struct cxl_memdev_state *mds);
+> >  int cxl_mem_get_poison(struct cxl_memdev *cxlmd, u64 offset, u64 len,
+> > diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> > index 267c679b0b3c..9b320a2b6fe0 100644
+> > --- a/drivers/cxl/pci.c
+> > +++ b/drivers/cxl/pci.c
+> > @@ -870,6 +870,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > +	if (cxl_dcd_supported(mds))
+> > +		cxl_configure_dcd(mds, &range_info);
+> > +
+> >  	rc = cxl_dpa_setup(cxlds, &range_info);
+> >  	if (rc)
+> >  		return rc;
+> > diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> > index 016c74fb747c..87c2bd73df21 100644
+> > --- a/include/cxl/cxl.h
+> > +++ b/include/cxl/cxl.h
+> > @@ -133,6 +133,7 @@ struct cxl_dpa_perf {
+> >  enum cxl_partition_mode {
+> >  	CXL_PARTMODE_RAM,
+> >  	CXL_PARTMODE_PMEM,
+> > +	CXL_PARTMODE_DYNAMIC_RAM_1,
+> >  };
+> >  
+> >  /**
+> > @@ -147,7 +148,7 @@ struct cxl_dpa_partition {
+> >  	enum cxl_partition_mode mode;
+> >  };
+> >  
+> > -#define CXL_NR_PARTITIONS_MAX 2
+> > +#define CXL_NR_PARTITIONS_MAX 3
+> >  
+> >  /**
+> >   * struct cxl_dev_state - The driver device state
+> > -- 
+> > 2.43.0
+> > 
