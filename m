@@ -1,208 +1,321 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFF0384CE8
-	for <linux-cxl@vger.kernel.org>; Wed,  5 Aug 2026 08:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785918621; cv=none; b=JYMu2WQvXl8QpBn7p3uGgNBf0ZUub8HDIRhNp5hVZdLLpSQudRcBPMYTxHgg8usFaMQN1FfofiNiSIgjgwzOZ/CIV3p4ahEim3BumP5RVbf8ne4jR6gzaCuPUudFQSvQSh/98DYBtuOlgKQnvRN8MySm3+i1VVregBjb3NYq6rc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785918621; c=relaxed/simple;
-	bh=wyDb6aiYJzuDo75DXeSRbyfaXaw4LKngEepKY5JR8mc=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=reoaBfjX6Dyh2XEMze23YBpg1+jUIwOaoGYJt3qkovJ0iqIDGb3n0lxCU5JXGHAK/vMLfOTvzJdfGbMzsspu9xADELlgl9Q9abVPFbEVe6PvUuaWfUaL5PGwZ6SiLmJ56lRiUBcZxxqO2s6XrPkHZjVfyEmmMCbSknGJKn4DB3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BJYRcz/e; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E311C41DE15
+	for <linux-cxl@vger.kernel.org>; Wed,  5 Aug 2026 10:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785926493; cv=pass; b=ur90jxAT9n7hZHHAShm9UvucYZGA/5eIBIuDOgB6/6nldGpfE87ctACkDDl5RnAl0ThR5IOlScObmrulyMvirEEtB8kDHlMM8EvOp3+woErJXuzvfMtz40jXd/zQqH8ZCRhbYOJLxG7VXPYSKJYnii2kJC7AIVLdX3TF+UCKYdc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785926493; c=relaxed/simple;
+	bh=BBkyKCRNMZoh9aaZIKTdkTmYZyuzOSbH6/ZEeKxjtCg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qSnCNAXsqXcDt4WcwF8zHRIlj7c0VushpmR9P93OZgDqE9NpwHrpBoycjfOwrsxCmNnAlqYukeR0jAjgO8A4GErsRUyhGm3+5CxYJ7QB3GyCBg0sDixJUGa3NOjjqMF7JSs5hMJpokc4Gu3mV6ActwF+lQWou6YyNeNcfaYyRBo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=f3WcU5kX; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJYRcz/e"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2caced6038eso9294275ad.0
-        for <linux-cxl@vger.kernel.org>; Wed, 05 Aug 2026 01:30:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785918619; x=1786523419; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=mpPAMc4ZZFPnAnk5upUQB/9QFh37+AndiyvVntjTWm4=;
-        b=BJYRcz/e9sV2HEiJj9nb4wy0fsfKqkGtfVZN+luMxhH3oPTgKQCaaAJuo5d963PZge
-         q6kTwPynqu14G25j+wSuH/9EUnzZ+LtBqMHjKAhi8IAhvLJJjNIe0wr6sP8Gt5LR4T74
-         ofxQpmxWrh01aNjB1jqi5Ar3TLvPqVe67NBNhHCun+FoJLxPVpqzNdwdINVhwse9skZf
-         VEZim5Dtq++kMOV3A6TmyGxaTVZ3pCf8n1rjKJnmUxqUgE4+N3vREWEISe86JipLLeBZ
-         ADcAsO+FfTr4AZOMGRkJ0ysF81u0RFG7huCDl+IZ2moZ0VDRCt2rrcMuYfufM/GCmvsB
-         6lGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785918619; x=1786523419;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=mpPAMc4ZZFPnAnk5upUQB/9QFh37+AndiyvVntjTWm4=;
-        b=F6dvL4FWfPXPIAgYpy4IbiOkE2FhmnRRYAGxHzClLtSlLMTQZ6DS//oXbhYorm30br
-         5QF3BOeN6IN3EVt1kj+X3wRgpO0vJy1pZXKVJgQZ5Mk4nwwe6ExfHZrHg6SYZGoXiJEN
-         LoYfxljdWEY+vlx6epEEsxMAizElWpd6ZPeE60F5vvXdAVPTCZJmsLcuc2/du5Ogc+8S
-         Zsu6q6637H7TQMPHxNTP0DCJGc5vz35+Oh39BlIm70XPTspsEFycTipi3hhcWfKDlaq/
-         i8C6D9F4LCjaOmA32r7Fl4a6DlsQ41PUsZi/WA7W5VkVWANTBxHlwu/9824goksGUu+T
-         xIow==
-X-Forwarded-Encrypted: i=1; AHgh+RodrJHv6v39Bqcjll+SU292J5wxiwFV18DAcQ23iNi8cHYufK2114PV9Tlx8bDhmUmjiUIy0jWKwNA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoiUFqjup/mkoEhaMAwPmEIF8yhoDafIWePzoQHecnJ1jrcUxA
-	1frxQ8KZOtur1u+gQ+8QJd5YWPpEJKNcYma8l4MqFgWoiuF+KFZpXa1v
-X-Gm-Gg: AR+sD12fHAQVYQPJHfoCNngfhgqmEQHXsFsD/zgIp0kCjol3AV6V4s3O5WMRtd0Ac8Q
-	rKk7QfHzpuBj4iQEmvy+5JPFvNrOduHmK9U8v4C/6nalsfigoCudwWitgS5sf5/YB4Fg2UumX57
-	kO6HZCQY1pfx47nznVVRlHyJ4ZLJKix1g78sy+gv4vkpJ/SxxArtT0HKw56Y39xbC8PXnZseA9l
-	5PQSxwFhW9CN2SUuGLoysY0SeII7mMnMbjkXrH8BDYAVE3JnZJWKaNMYDUgVJAuIIdqGuPm+3AB
-	HyZocgeAnwzbeyssD+czZaafSDDFlrYhTt0UtEk5c9Ar6/Ex++YOTQ61j8SCHPdfVqM5sWFCGGV
-	xknC3XfpzOnrWiXBpAJ9k69Y607/BdIRXZYP87ZjgZZOJGrSnvnaD9f1GbedZmA54vyb1nN9z7w
-	4W2iQR/Z5c0PJ6jJGS1UP/OYqNGFa6Q9azj30ykbng6NRRMWoRdooaWAf3ygXGdnyDh45EoUlKB
-	gn7w1y+z1ew7dM49sIWNktZIjgt9E7HNI/Xks43vzT3M8f9GE82Dfo=
-X-Received: by 2002:a17:903:384d:b0:2c9:c517:d08b with SMTP id d9443c01a7336-2d0c9b8873cmr27963405ad.22.1785918619163;
-        Wed, 05 Aug 2026 01:30:19 -0700 (PDT)
-Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d0a9f9362esm15543935ad.12.2026.08.05.01.30.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2026 01:30:18 -0700 (PDT)
-From: Anisa Su <anisa.su887@gmail.com>
-X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
-Date: Wed, 5 Aug 2026 01:30:16 -0700
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev,
-	Anisa Su <anisa.su887@gmail.com>, nvdimm@lists.linux.dev,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v12 3/8] cxl/cdat: Gather DSMAS data for DCD partitions
-Message-ID: <anL0mD3DKfwJh4UY@AnisaLaptop.localdomain>
-References: <20260731084901.1512819-1-anisa.su@samsung.com>
- <20260731084901.1512819-4-anisa.su@samsung.com>
- <20260731090250.0C8DE1F000E9@smtp.kernel.org>
- <20260804010748.7f9f8174@jic23-huawei>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="f3WcU5kX"
+ARC-Seal: i=1; a=rsa-sha256; t=1785926479; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=NXRxin97XsmarCJkvqLqhF+77z7zcaZma36rZV/d4WjBSCCigr/7YJGJ60Tt4qjrcz+mbXahfedR18XsVcbFrSYhxrcgwUsg+L6ZEUcSO2w4IfeAWBgPQ5SamytERlfXBwVLmFJwKUHgFyaqFzcxdrUVat66gAdxLB6M0RPASd0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1785926479; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=C34aAuYsQC5hMZs65e/nt69Wo2kbH1VyCWSIIhYy5rI=; 
+	b=f2M/6o+PetbiZj7fhUj0FGmyZoh4Wr9nMVLoqgUZS/lMMQIXx3VvMJFU3Ax6JkPc70gz1t5Rzf5NZvmOizsV3wgrRAlzjkfyRLqdcYyUvMSAZH3az/fQuBDBYoIKl4Se3JrasWU/mYQhg9siFd9jFxFmeRUV5ICvQ4mU8Gnvsqs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1785926479;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=C34aAuYsQC5hMZs65e/nt69Wo2kbH1VyCWSIIhYy5rI=;
+	b=f3WcU5kXjAqqsSFtis0H6QhzULiuX6Kg0gZSgg/4VJckrhBdTJqpdjI+Cn4B5Shk
+	o0tujNMYQsE6M8lFrrrhTE3BN6dafPpjb+8bajaefCFEgQ3mhQbjKu4Ve0ZCmhq2UMD
+	/T0nwDaut70h4zFPRaHuWLZOtYerF6HWuDeQpM5E=
+Received: by mx.zohomail.com with SMTPS id 1785926475831411.3137122566767;
+	Wed, 5 Aug 2026 03:41:15 -0700 (PDT)
+Message-ID: <fbfbac70-c0ab-4e07-a6b8-b8efc36cae4b@zohomail.com>
+Date: Wed, 5 Aug 2026 18:41:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260804010748.7f9f8174@jic23-huawei>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/8] cxl: Add BI register probing and port
+ initialization
+To: Davidlohr Bueso <dave@stgolabs.net>
+Cc: jic23@kernel.org, alison.schofield@intel.com, icheng@nvidia.com,
+ benjamin.cheatham@amd.com, alucerop@amd.com, dongjoo.seo1@samsung.com,
+ linux-cxl@vger.kernel.org, dave.jiang@intel.com
+References: <20260728144136.709882-1-dave@stgolabs.net>
+ <20260728144136.709882-2-dave@stgolabs.net>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20260728144136.709882-2-dave@stgolabs.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Feedback-ID: zu08011227bf045e66db49ba5a883e18560000d5ce15227106f2a6ae9742690204b076d4a8c5222c49c02518:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-On Tue, Aug 04, 2026 at 01:07:48AM +0100, Jonathan Cameron wrote:
-> On Fri, 31 Jul 2026 09:02:49 +0000
-> sashiko-bot@kernel.org wrote:
-> 
-> > Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> > - [Medium] The commit message claims to extract and store the 'read only' attribute from DSMAS tables, but this logic is completely missing from the code.
-> 
-> Given it will make a lot of difference to a user if they think they have writeable
-> memory that isn't - I think we probably do want to have readonly here.
-> 
-I did some digging: it seems in v8, the read only flag was gathered and
-exposed in sysfs, but dropped during the region -> partition rework.
+On 7/28/2026 10:41 PM, Davidlohr Bueso wrote:
+> Add register probing for BI Route Table and BI Decoder capability
+> structures in cxl_probe_component_regs(), and helpers to map them.
+>
+> cxl_dport_map_bi() maps the BI Decoder of a downstream port (root
+> port or switch DSP) at dport-creation time via cxl_port_add_dport();
+> cxl_port_map_bi() maps a port's own BI capability during port probe
+> when the upstream link is in 256B Flit operation -- BI Decoder for
+> an endpoint, BI RT for a switch USP.
+>
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 
-v8 of this commit used to do:
-    dent->read_only = dsmas->flags & ACPI_CDAT_DSMAS_READ_ONLY;
-    ...
-    mds->dc_region[i].read_only = dent->read_only;
+Reviewed-by: Li Ming <ming.li@zohomail.com>
 
-    https://lore.kernel.org/all/20241210-dcd-type2-upstream-v8-6-812852504400@intel.com/
+Just a minor suggestion below.
 
-and a following patch exposed it, with a documented ABI:
+> ---
+>  drivers/cxl/core/core.h |  1 +
+>  drivers/cxl/core/pci.c  | 38 ++++++++++++++++++++++++++++++++++
+>  drivers/cxl/core/port.c |  4 +++-
+>  drivers/cxl/core/regs.c | 14 +++++++++++++
+>  drivers/cxl/cxl.h       |  7 +++++++
+>  drivers/cxl/port.c      | 45 +++++++++++++++++++++++++++++++++++++++++
+>  include/cxl/cxl.h       |  6 ++++++
+>  7 files changed, 114 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 07555ae63859..e36b55fd63bd 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -209,6 +209,7 @@ static inline void devm_cxl_dport_ras_setup(struct cxl_dport *dport) { }
+>  #endif /* CONFIG_CXL_RAS */
+>  
+>  int cxl_gpf_port_setup(struct cxl_dport *dport);
+> +void devm_cxl_dport_bi_setup(struct cxl_dport *dport);
+>  
+>  struct cxl_hdm;
+>  int cxl_hdm_decode_init(struct cxl_dev_state *cxlds, struct cxl_hdm *cxlhdm,
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index e4338fd7e01b..f82559d8a8c5 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -926,3 +926,41 @@ int cxl_port_get_possible_dports(struct cxl_port *port)
+>  
+>  	return ctx.count;
+>  }
+> +
+> +static void cxl_dport_map_bi(struct cxl_dport *dport)
+> +{
+> +	struct cxl_register_map *map = &dport->reg_map;
+> +	struct device *dev = dport->dport_dev;
+> +
+> +	if (!map->component_map.bi_decoder.valid) {
+> +		dev_dbg(dev, "BI Decoder registers not found\n");
+> +		return;
+> +	}
+> +
+> +	if (cxl_map_component_regs(map, &dport->regs.component,
+> +				   BIT(CXL_CM_CAP_CAP_ID_BI_DECODER)))
+> +		dev_dbg(dev, "Failed to map BI Decoder capability\n");
+> +}
+> +
+> +/**
+> + * devm_cxl_dport_bi_setup - Map BI Decoder registers on a CXL dport
+> + * @dport: the cxl_dport that needs to be initialized
+> + *
+> + * Must be called while the dport's devres group is open so iomap
+> + * allocations are released on dport removal.
+> + */
+> +void devm_cxl_dport_bi_setup(struct cxl_dport *dport)
+> +{
+> +	if (!dev_is_pci(dport->dport_dev))
+> +		return;
+> +
+> +	switch (pci_pcie_type(to_pci_dev(dport->dport_dev))) {
+> +	case PCI_EXP_TYPE_ROOT_PORT:
+> +	case PCI_EXP_TYPE_DOWNSTREAM:
+> +		dport->reg_map.host = dport_to_host(dport);
+> +		cxl_dport_map_bi(dport);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 1215ee4f4035..b2f8fb9547d3 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -1242,8 +1242,10 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>  
+>  	cxl_debugfs_create_dport_dir(dport);
+>  
+> -	if (!dport->rch)
+> +	if (!dport->rch) {
+>  		devm_cxl_dport_ras_setup(dport);
+> +		devm_cxl_dport_bi_setup(dport);
+> +	}
+>  
+>  	/* keep the group, and mark the end of devm actions */
+>  	cxl_dport_close_dr_group(dport, no_free_ptr(dport_dr_group));
+> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+> index 93710cf4f0a6..a6caa793e7a4 100644
+> --- a/drivers/cxl/core/regs.c
+> +++ b/drivers/cxl/core/regs.c
+> @@ -92,6 +92,18 @@ void cxl_probe_component_regs(struct device *dev, void __iomem *base,
+>  			length = CXL_RAS_CAPABILITY_LENGTH;
+>  			rmap = &map->ras;
+>  			break;
+> +		case CXL_CM_CAP_CAP_ID_BI_RT:
+> +			dev_dbg(dev, "found BI RT capability (0x%x)\n",
+> +				offset);
+> +			length = CXL_BI_RT_CAPABILITY_LENGTH;
+> +			rmap = &map->bi_rt;
+> +			break;
+> +		case CXL_CM_CAP_CAP_ID_BI_DECODER:
+> +			dev_dbg(dev, "found BI Decoder capability (0x%x)\n",
+> +				offset);
+> +			length = CXL_BI_DECODER_CAPABILITY_LENGTH;
+> +			rmap = &map->bi_decoder;
+> +			break;
+>  		default:
+>  			dev_dbg(dev, "Unknown CM cap ID: %d (0x%x)\n", cap_id,
+>  				offset);
+> @@ -211,6 +223,8 @@ int cxl_map_component_regs(const struct cxl_register_map *map,
+>  	} mapinfo[] = {
+>  		{ &map->component_map.hdm_decoder, &regs->hdm_decoder },
+>  		{ &map->component_map.ras, &regs->ras },
+> +		{ &map->component_map.bi_rt, &regs->bi_rt },
+> +		{ &map->component_map.bi_decoder, &regs->bi_decoder },
+>  	};
+>  	int i;
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index c0e5308e4d1b..f9fcb6387fc8 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -39,9 +39,16 @@ extern const struct nvdimm_security_ops *cxl_security_ops;
+>  #define   CXL_CM_CAP_HDR_ARRAY_SIZE_MASK GENMASK(31, 24)
+>  #define CXL_CM_CAP_PTR_MASK GENMASK(31, 20)
+>  
+> +/* CXL 4.0 8.2.4 Table 8-74 */
+>  #define   CXL_CM_CAP_CAP_ID_RAS 0x2
+>  #define   CXL_CM_CAP_CAP_ID_HDM 0x5
+>  #define   CXL_CM_CAP_CAP_HDM_VERSION 1
+> +#define   CXL_CM_CAP_CAP_ID_BI_RT 0xB
+> +#define   CXL_CM_CAP_CAP_ID_BI_DECODER 0xC
+> +
+> +/* CXL 4.0 8.2.4.26 / 8.2.4.27 BI Capability Structures */
+> +#define CXL_BI_RT_CAPABILITY_LENGTH 0xC
+> +#define CXL_BI_DECODER_CAPABILITY_LENGTH 0xC
+>  
+>  /* HDM decoders CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure */
+>  #define CXL_HDM_DECODER_CAP_OFFSET 0x0
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index 99cf77b6b699..a527dd13fb68 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -58,6 +58,47 @@ static int discover_region(struct device *dev, void *unused)
+>  	return 0;
+>  }
+>  
+> +static void cxl_port_map_bi(struct cxl_port *port)
+> +{
+> +	struct cxl_register_map *map = &port->reg_map;
+> +	struct cxl_dport *parent_dport = port->parent_dport;
+> +	struct device *udev;
+> +	int cap_id;
+> +
+> +	/* no upstream BI registers above host bridges or the cxl_root */
+> +	if (!parent_dport || is_cxl_root(parent_dport->port))
+> +		return;
+> +
+> +	udev = is_cxl_endpoint(port) ?
+> +		port->uport_dev->parent : port->uport_dev;
+> +	if (!dev_is_pci(udev))
+> +		return;
+> +
+> +	/* BI requires 256B Flit on the upstream link */
+> +	if (!cxl_pci_flit_256(to_pci_dev(udev)))
+> +		return;
+> +
+> +	/* map this port's own BI capability */
+> +	if (is_cxl_endpoint(port)) {
+> +		if (!map->component_map.bi_decoder.valid) {
+> +			dev_dbg(&port->dev, "BI Decoder registers not found\n");
+> +			return;
+> +		}
+> +		cap_id = CXL_CM_CAP_CAP_ID_BI_DECODER;
+> +	} else {
+> +		if (!map->component_map.bi_rt.valid) {
+> +			dev_dbg(&port->dev, "BI RT registers not found\n");
+> +			return;
+> +		}
+> +		cap_id = CXL_CM_CAP_CAP_ID_BI_RT;
+> +	}
+> +
+> +	map->host = &port->dev;
+> +	if (cxl_map_component_regs(map, &port->regs, BIT(cap_id)))
+> +		dev_dbg(&port->dev, "Failed to map BI capability 0x%x\n",
+> +			cap_id);
+> +}
+> +
+>  static int cxl_switch_port_probe(struct cxl_port *port)
+>  {
+>  	/* Reset nr_dports for rebind of driver */
+> @@ -128,6 +169,8 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+>  	read_cdat_data(port);
+>  	cxl_endpoint_parse_cdat(port);
+>  
+> +	cxl_port_map_bi(port);
+> +
+>  	get_device(&cxlmd->dev);
+>  	rc = devm_add_action_or_reset(&port->dev, schedule_detach, cxlmd);
+>  	if (rc)
+> @@ -252,6 +295,8 @@ static struct cxl_dport *cxl_port_add_dport(struct cxl_port *port,
+>  		 * on failure, or the device does not implement RAS registers.
+>  		 */
+>  		devm_cxl_port_ras_setup(port);
+> +
+> +		cxl_port_map_bi(port);
 
-  https://lore.kernel.org/all/20241210-dcd-type2-upstream-v8-7-812852504400@intel.com/
+How about adding a devm_cxl_port_bi_setup()? like what you have done for cxl_dport_map_bi().
 
-    /sys/bus/cxl/devices/memX/dcY/size
-    /sys/bus/cxl/devices/memX/dcY/read_only
-    /sys/bus/cxl/devices/memX/dcY/shareable
-    /sys/bus/cxl/devices/memX/dcY/qos_class
+It can align with devm_cxl_port_ras_setup().
 
-In v9 dynamic capacity moved from its own dc_region[] array and dcY/
-sysfs directory to the generic partition model:
+>  	}
+>  
+>  	dport = devm_cxl_add_dport_by_dev(port, dport_dev);
+> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
+> index 016c74fb747c..2816954680b3 100644
+> --- a/include/cxl/cxl.h
+> +++ b/include/cxl/cxl.h
+> @@ -34,10 +34,14 @@ struct cxl_regs {
+>  	 * Common set of CXL Component register block base pointers
+>  	 * @hdm_decoder: CXL 2.0 8.2.5.12 CXL HDM Decoder Capability Structure
+>  	 * @ras: CXL 2.0 8.2.5.9 CXL RAS Capability Structure
+> +	 * @bi_rt: CXL 4.0 8.2.4.26 CXL BI Route Table Capability Structure
+> +	 * @bi_decoder: CXL 4.0 8.2.4.27 CXL BI Decoder Capability Structure
+>  	 */
+>  	struct_group_tagged(cxl_component_regs, component,
+>  		void __iomem *hdm_decoder;
+>  		void __iomem *ras;
+> +		void __iomem *bi_rt;
+> +		void __iomem *bi_decoder;
+>  	);
+>  	/*
+>  	 * Common set of CXL Device register block base pointers
+> @@ -80,6 +84,8 @@ struct cxl_reg_map {
+>  struct cxl_component_reg_map {
+>  	struct cxl_reg_map hdm_decoder;
+>  	struct cxl_reg_map ras;
+> +	struct cxl_reg_map bi_rt;
+> +	struct cxl_reg_map bi_decoder;
+>  };
+>  
+>  struct cxl_device_reg_map {
 
-  https://lore.kernel.org/all/20250413-dcd-type2-upstream-v9-3-1d4911a0b365@intel.com/
 
-size and qos_class survived that move because ram and pmem already have
-them. read_only and shareable did not, because the generic partition
-model had nowhere to put attributes that only dynamic capacity has, but
-the commit message survived the rework.
-
-More specifically, read_only was dropped from both the sysfs commit and
-this commit. shareable was dropped only from the sysfs commit, but still
-read from the DSMAS entry in v9 of this commit. Not sure why though; I
-didn't see any consumers of the attribute. Oh well... We use it now
-since shared extents are supported to check if an extent marked shared
-is actually in a shared partition.
-
-So TLDR; I've removed the "read only" part from the commit message. But
-let me know if you think it should be re-introduced?
-
-I agree with what you said about it being important for a user to know
-whether a partition is read only. Some things to consider:
-
-- The partition model has no precedent for a DC only attribute.
-  dynamic_ram_1/ currently exposes size and qos_class, the same two that
-  ram/ and pmem/ expose. Adding read_only there would be the first
-  attribute that exists for one partition mode and not the others.
-
-- shareable is in exactly the same position. It is gathered and used
-  internally but not exposed anywhere, so if we are adding one of these
-  back we should probably decide about both.
-
-- I don't think the DSMAS Flags bit 6 (read only) is specific to DCD?
-  It describes any device scoped memory range, so a read only ram or pmem
-  partition is expressible in CDAT today and the driver ignores it.
-  Maybe it should be exposed in sysfs for every partition
-  rather than only on dynamic_ram_1? Which probably makes it a generic CDAT/partition
-  patch rather than something for this series.
-
-> > [ ... ]
-> > > @@ -266,15 +268,26 @@ static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
-> > >  		bool found = false;
-> > >  
-> > >  		for (int i = 0; i < cxlds->nr_partitions; i++) {
-> > > +			enum cxl_partition_mode mode = cxlds->part[i].mode;
-> > >  			struct resource *res = &cxlds->part[i].res;
-> > > +			u8 handle = cxlds->part[i].handle;
-> > >  			struct range range = {
-> > >  				.start = res->start,
-> > >  				.end = res->end,
-> > >  			};
-> > >  
-> > >  			if (range_contains(&range, &dent->dpa_range)) {
-> > > +				if (mode == CXL_PARTMODE_DYNAMIC_RAM_1 &&
-> > > +				    dent->handle != handle) {
-> > > +					dev_warn(dev,
-> > > +						 "Dynamic RAM perf mismatch; %pra (%u) vs %pra (%u)\n",
-> > > +						 &range, handle, &dent->dpa_range,
-> > > +						 dent->handle);
-> > > +					continue;
-> > > +				}  
-> > 
-> > [Severity: Medium]
-> > Could this trigger spurious warnings on valid hardware configurations?
-> > 
-> > The CDAT specification allows overlapping DSMAS ranges with different handles
-> > to support multiple memory types or sharing characteristics for the same DPA
-> > space. 
-> 
-> Huh?  Where did it get that from.  I'm 99% sure you can't have overlapping
-> DSMAS entries for the same DPA space.
-> 
-Sigh... sometimes it does that. I double-checked the CDAT spec (r1.04)
-to confirm:
-
-The DSMADHandle of a DSMAS entry is described as "The handle used to refer to
-this DSMAD. Each instance of DSMAS shall be associated with a unique
-DSMADHandle value."
-
-So each DSMAS describes exactly 1 DSMAD (DPA range).
-
-Additionally DSMAD is defined as:
-	 Device Scoped Memory Affinity Domain (DSMAD) is a contiguous
-	 DPA range *** with unique memory attributes*** ...
-
-Treating it as a false positive.
-
-Thanks,
-Anisa
-> > 
-> > If a compliant device provides multiple valid DSMAS entries that overlap
-> > the partition's range but have different handles, won't iterating over them 
-> > incorrectly flag the unselected ones as a perf mismatch?
-> > 
