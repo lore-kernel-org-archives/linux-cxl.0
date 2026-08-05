@@ -1,195 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37EE3E5EEC
-	for <linux-cxl@vger.kernel.org>; Wed,  5 Aug 2026 08:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFF0384CE8
+	for <linux-cxl@vger.kernel.org>; Wed,  5 Aug 2026 08:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785917155; cv=none; b=HwVv+d9LtIQ7f5eeguwFtdXS+kZqDazBfLkRzELdH2M7jujm0E6cNw8PVokNaOAkyyTSpY0crPu8t/219wLDlRBODQzSVLtuJlJliqKF2bjBaDwGrRV2U1W9UQN6lIiYBtldGVvrKD3EVmHGz5KfURbCoRjejmC0eGmzcC1olhs=
+	t=1785918621; cv=none; b=JYMu2WQvXl8QpBn7p3uGgNBf0ZUub8HDIRhNp5hVZdLLpSQudRcBPMYTxHgg8usFaMQN1FfofiNiSIgjgwzOZ/CIV3p4ahEim3BumP5RVbf8ne4jR6gzaCuPUudFQSvQSh/98DYBtuOlgKQnvRN8MySm3+i1VVregBjb3NYq6rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785917155; c=relaxed/simple;
-	bh=2fREaEvA6el9L/qfT572kQlR0g35U7CiN0JsjOqT/PY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=BEVHm6CJc8qO1xIU+RfWi5DhhtURVItf4SVSLdDOtKJZ08Tp6SO71bx6PNQLl4G8BIXXLV1YE0+8D1KBdK81Kl5drgvu/9oHTzTHQpPrLe8bTaFX0vLz6DQ9qinFq250gAT+Bh6dMetowEKIQb3A5texzCOXUYPDCjLCwa2O/Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=le3woobJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785918621; c=relaxed/simple;
+	bh=wyDb6aiYJzuDo75DXeSRbyfaXaw4LKngEepKY5JR8mc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=reoaBfjX6Dyh2XEMze23YBpg1+jUIwOaoGYJt3qkovJ0iqIDGb3n0lxCU5JXGHAK/vMLfOTvzJdfGbMzsspu9xADELlgl9Q9abVPFbEVe6PvUuaWfUaL5PGwZ6SiLmJ56lRiUBcZxxqO2s6XrPkHZjVfyEmmMCbSknGJKn4DB3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BJYRcz/e; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="le3woobJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7489E1F000E9;
-	Wed,  5 Aug 2026 08:05:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785917137;
-	bh=cWwl5BwtqTrogMichxp+DBcQzrO+MczfkNxJhu18X9Q=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=le3woobJy+WTyFvBdOhK3Hxkvr2+C7nui42X1XZI5DLqfnC8PLYiM253291FxNJaA
-	 oMHgTedQC8OsKj3tiu601WlN/BzI8/ZRPGW2F2USTvTl7MPmhf9u5ngoKIDk1A8HaZ
-	 +5WueL+AWd5WlRFATS//GztMaepMPqBESfOOMGsWFOxRjFK0S0PcJGJgwxBiHk4nli
-	 lYX/yzvNldl/svqIB/Y1teKPUGpcbKJQbXtmEEn6lt3PNiSldPuSq6El0Wa10UbTTK
-	 76wYwA9Yd/+7t2OUyyCIJRMwPe/rZg0j2wllg+CcCeDWjNCo97BpshJZgjmAHqk0MY
-	 3soDaT5D0Z3/w==
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 2/3] cxl/region: Auto-create a region for memdev
- attach
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Richard Cheng" <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260805074042.30173-3-icheng@nvidia.com>
-References: <20260805074042.30173-1-icheng@nvidia.com>
- <20260805074042.30173-3-icheng@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 05 Aug 2026 08:05:36 +0000
-Message-Id: <20260805080537.7489E1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJYRcz/e"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2caced6038eso9294275ad.0
+        for <linux-cxl@vger.kernel.org>; Wed, 05 Aug 2026 01:30:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785918619; x=1786523419; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=mpPAMc4ZZFPnAnk5upUQB/9QFh37+AndiyvVntjTWm4=;
+        b=BJYRcz/e9sV2HEiJj9nb4wy0fsfKqkGtfVZN+luMxhH3oPTgKQCaaAJuo5d963PZge
+         q6kTwPynqu14G25j+wSuH/9EUnzZ+LtBqMHjKAhi8IAhvLJJjNIe0wr6sP8Gt5LR4T74
+         ofxQpmxWrh01aNjB1jqi5Ar3TLvPqVe67NBNhHCun+FoJLxPVpqzNdwdINVhwse9skZf
+         VEZim5Dtq++kMOV3A6TmyGxaTVZ3pCf8n1rjKJnmUxqUgE4+N3vREWEISe86JipLLeBZ
+         ADcAsO+FfTr4AZOMGRkJ0ysF81u0RFG7huCDl+IZ2moZ0VDRCt2rrcMuYfufM/GCmvsB
+         6lGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785918619; x=1786523419;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=mpPAMc4ZZFPnAnk5upUQB/9QFh37+AndiyvVntjTWm4=;
+        b=F6dvL4FWfPXPIAgYpy4IbiOkE2FhmnRRYAGxHzClLtSlLMTQZ6DS//oXbhYorm30br
+         5QF3BOeN6IN3EVt1kj+X3wRgpO0vJy1pZXKVJgQZ5Mk4nwwe6ExfHZrHg6SYZGoXiJEN
+         LoYfxljdWEY+vlx6epEEsxMAizElWpd6ZPeE60F5vvXdAVPTCZJmsLcuc2/du5Ogc+8S
+         Zsu6q6637H7TQMPHxNTP0DCJGc5vz35+Oh39BlIm70XPTspsEFycTipi3hhcWfKDlaq/
+         i8C6D9F4LCjaOmA32r7Fl4a6DlsQ41PUsZi/WA7W5VkVWANTBxHlwu/9824goksGUu+T
+         xIow==
+X-Forwarded-Encrypted: i=1; AHgh+RodrJHv6v39Bqcjll+SU292J5wxiwFV18DAcQ23iNi8cHYufK2114PV9Tlx8bDhmUmjiUIy0jWKwNA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoiUFqjup/mkoEhaMAwPmEIF8yhoDafIWePzoQHecnJ1jrcUxA
+	1frxQ8KZOtur1u+gQ+8QJd5YWPpEJKNcYma8l4MqFgWoiuF+KFZpXa1v
+X-Gm-Gg: AR+sD12fHAQVYQPJHfoCNngfhgqmEQHXsFsD/zgIp0kCjol3AV6V4s3O5WMRtd0Ac8Q
+	rKk7QfHzpuBj4iQEmvy+5JPFvNrOduHmK9U8v4C/6nalsfigoCudwWitgS5sf5/YB4Fg2UumX57
+	kO6HZCQY1pfx47nznVVRlHyJ4ZLJKix1g78sy+gv4vkpJ/SxxArtT0HKw56Y39xbC8PXnZseA9l
+	5PQSxwFhW9CN2SUuGLoysY0SeII7mMnMbjkXrH8BDYAVE3JnZJWKaNMYDUgVJAuIIdqGuPm+3AB
+	HyZocgeAnwzbeyssD+czZaafSDDFlrYhTt0UtEk5c9Ar6/Ex++YOTQ61j8SCHPdfVqM5sWFCGGV
+	xknC3XfpzOnrWiXBpAJ9k69Y607/BdIRXZYP87ZjgZZOJGrSnvnaD9f1GbedZmA54vyb1nN9z7w
+	4W2iQR/Z5c0PJ6jJGS1UP/OYqNGFa6Q9azj30ykbng6NRRMWoRdooaWAf3ygXGdnyDh45EoUlKB
+	gn7w1y+z1ew7dM49sIWNktZIjgt9E7HNI/Xks43vzT3M8f9GE82Dfo=
+X-Received: by 2002:a17:903:384d:b0:2c9:c517:d08b with SMTP id d9443c01a7336-2d0c9b8873cmr27963405ad.22.1785918619163;
+        Wed, 05 Aug 2026 01:30:19 -0700 (PDT)
+Received: from AnisaLaptop.localdomain (c-73-170-217-179.hsd1.ca.comcast.net. [73.170.217.179])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d0a9f9362esm15543935ad.12.2026.08.05.01.30.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2026 01:30:18 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Wed, 5 Aug 2026 01:30:16 -0700
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: sashiko-bot@kernel.org, sashiko-reviews@lists.linux.dev,
+	Anisa Su <anisa.su887@gmail.com>, nvdimm@lists.linux.dev,
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v12 3/8] cxl/cdat: Gather DSMAS data for DCD partitions
+Message-ID: <anL0mD3DKfwJh4UY@AnisaLaptop.localdomain>
+References: <20260731084901.1512819-1-anisa.su@samsung.com>
+ <20260731084901.1512819-4-anisa.su@samsung.com>
+ <20260731090250.0C8DE1F000E9@smtp.kernel.org>
+ <20260804010748.7f9f8174@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260804010748.7f9f8174@jic23-huawei>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+On Tue, Aug 04, 2026 at 01:07:48AM +0100, Jonathan Cameron wrote:
+> On Fri, 31 Jul 2026 09:02:49 +0000
+> sashiko-bot@kernel.org wrote:
+> 
+> > Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> > - [Medium] The commit message claims to extract and store the 'read only' attribute from DSMAS tables, but this logic is completely missing from the code.
+> 
+> Given it will make a lot of difference to a user if they think they have writeable
+> memory that isn't - I think we probably do want to have readonly here.
+> 
+I did some digging: it seems in v8, the read only flag was gathered and
+exposed in sysfs, but dropped during the region -> partition rework.
 
-New issues:
-- [Medium] Mixing goto-based error handling with __free() or guard() cleanu=
-p in the same function.
+v8 of this commit used to do:
+    dent->read_only = dsmas->flags & ACPI_CDAT_DSMAS_READ_ONLY;
+    ...
+    mds->dc_region[i].read_only = dent->read_only;
 
-Pre-existing issues:
-- [High] Self-deadlock in find_committed_attach_region() on the devm_add_ac=
-tion_or_reset() error path due to function-scoped read lock on cxl_rwsem.re=
-gion.
---
+    https://lore.kernel.org/all/20241210-dcd-type2-upstream-v8-6-812852504400@intel.com/
 
---- Patch [2]: [RFC PATCH 2/3] cxl/region: Auto-create a region for memdev =
-attach ---
-commit 5faea7eff07e5a585a3f3dc3abd38f41084338fd
-Author: Richard Cheng <icheng@nvidia.com>
+and a following patch exposed it, with a documented ABI:
 
-cxl/region: Auto-create a region for memdev attach
+  https://lore.kernel.org/all/20241210-dcd-type2-upstream-v8-7-812852504400@intel.com/
 
-devm_cxl_probe_mem() currently fails when FW has not committed a region,
-even when a Type-2 accelerator has usable CXL.mem capacity. This patch
-auto-creates a region when no mapped decoder exists by selecting a manual
-DEVMEM decoder and a compatible root decoder.
+    /sys/bus/cxl/devices/memX/dcY/size
+    /sys/bus/cxl/devices/memX/dcY/read_only
+    /sys/bus/cxl/devices/memX/dcY/shareable
+    /sys/bus/cxl/devices/memX/dcY/qos_class
 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 7fcaddc61180d..4ceabdfdd3b6a 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-[ ... ]
-> +static struct cxl_region *
-> +create_attach_region(struct cxl_endpoint_decoder *cxled,
-> +		     struct cxl_root_decoder *cxlrd, resource_size_t size)
-> +{
-> +	struct cxl_region *cxlr;
-> +	int rc;
-> +
-> +	guard(mutex)(&cxlrd->regions_lock);
-> +	do {
-[ ... ]
-> +	rc =3D device_attach(&cxlr->dev);
-> +	if (rc <=3D 0) {
-> +		if (!rc)
-> +			rc =3D -ENXIO;
-> +		goto err_unregister;
-> +	}
-> +
-> +	get_device(&cxlr->dev);
-> +	return cxlr;
-> +
-> +err_unregister:
-> +	unregister_region(cxlr, CXL_REGION_RESET_MANAGED_DETACH);
-> +	return ERR_PTR(rc);
-> +}
+In v9 dynamic capacity moved from its own dc_region[] array and dcY/
+sysfs directory to the generic partition model:
 
-[Severity: Medium]
-Is it acceptable to mix guard() based cleanup with goto-based error handling
-in this function? According to the cleanup subsystem guidelines, functions
-should ideally use scope-based cleanup exclusively or goto-based cleanup
-exclusively to prevent complex ownership and LIFO ordering bugs.
+  https://lore.kernel.org/all/20250413-dcd-type2-upstream-v9-3-1d4911a0b365@intel.com/
 
-[ ... ]
-> +static int create_memdev_attach_region(struct cxl_memdev *cxlmd,
-> +				       struct cxl_attach_region *attach)
-> +{
-> +	struct cxl_port *endpoint =3D cxlmd->endpoint;
-> +	struct device *decoder_dev __free(put_device) =3D NULL;
-> +	struct cxl_endpoint_decoder *cxled;
-[ ... ]
-> +	cxlrd =3D find_attach_root_decoder(cxled);
-> +	if (IS_ERR(cxlrd)) {
-> +		rc =3D PTR_ERR(cxlrd);
-> +		dev_dbg(cxlmd->cxlds->dev,
-> +			"no compatible Type-2 root decoder to auto-create a region for %s: %d=
-\n",
-> +			dev_name(&cxlmd->dev), rc);
-> +		goto err_cleanup_dpa;
-> +	}
+size and qos_class survived that move because ram and pmem already have
+them. read_only and shareable did not, because the generic partition
+model had nowhere to put attributes that only dynamic capacity has, but
+the commit message survived the rework.
 
-[Severity: Medium]
-Similar to create_attach_region() above, does mixing __free() and goto labe=
-ls
-in the same function conflict with the cleanup subsystem expectations?
+More specifically, read_only was dropped from both the sysfs commit and
+this commit. shareable was dropped only from the sysfs commit, but still
+read from the DSMAS entry in v9 of this commit. Not sure why though; I
+didn't see any consumers of the attribute. Oh well... We use it now
+since shared extents are supported to check if an extent marked shared
+is actually in a shared partition.
 
-[ ... ]
->  /*
-> - * Runs in cxl_mem_probe context after successful endpoint probe, assume=
-s the
-> - * simple case of single mapped decoder per memdev.
-> + * Attach to a firmware-precommitted region already mapped to the endpoi=
-nt.
-> + * Return 0 on success, -ENODEV when no region is present (the caller th=
-en
-> + * auto-creates one), or a negative errno for a present-but-unusable reg=
-ion.
->   */
-> -int cxl_memdev_attach_region(struct cxl_memdev *cxlmd)
-> +static int find_committed_attach_region(struct cxl_memdev *cxlmd,
-> +					struct cxl_attach_region *attach)
->  {
-> -	struct cxl_attach_region *attach =3D
-> -		container_of(cxlmd->attach, typeof(*attach), attach);
->  	struct cxl_port *endpoint =3D cxlmd->endpoint;
->  	struct cxl_endpoint_decoder *cxled;
->  	struct cxl_region *cxlr;
->  	int rc;
-> =20
-> -	/* hold endpoint lock to setup autoremove of the region */
-> -	guard(device)(&endpoint->dev);
-> -	if (!endpoint->dev.driver)
-> -		return -ENXIO;
->  	guard(rwsem_read)(&cxl_rwsem.region);
->  	guard(rwsem_read)(&cxl_rwsem.dpa);
-[ ... ]
-> -	/* Only teardown regions that pass validation, ignore the rest */
-> +	/* Only teardown regions that pass validation. */
->  	get_device(&cxlr->dev);
-> -	rc =3D devm_add_action_or_reset(&endpoint->dev,
-> -				      endpoint_unregister_region, cxlr);
-> +	rc =3D devm_add_action_or_reset(&endpoint->dev, endpoint_unregister_reg=
-ion,
-> +				      cxlr);
->  	if (rc)
->  		return rc;
+So TLDR; I've removed the "read only" part from the commit message. But
+let me know if you think it should be re-introduced?
 
-[Severity: High]
-This is a pre-existing issue, but can this devm_add_action_or_reset() trigg=
-er
-a self-deadlock on failure?
+I agree with what you said about it being important for a user to know
+whether a partition is read only. Some things to consider:
 
-Because the function scope is guarded by a read lock on cxl_rwsem.region:
+- The partition model has no precedent for a DC only attribute.
+  dynamic_ram_1/ currently exposes size and qos_class, the same two that
+  ram/ and pmem/ expose. Adding read_only there would be the first
+  attribute that exists for one partition mode and not the others.
 
-    guard(rwsem_read)(&cxl_rwsem.region);
+- shareable is in exactly the same position. It is gathered and used
+  internally but not exposed anywhere, so if we are adding one of these
+  back we should probably decide about both.
 
-If devm_add_action_or_reset() fails, it immediately executes its callback
-endpoint_unregister_region() inline. This callback eventually calls
-unregister_region() and detach_target(), which attempts to acquire a write
-lock on the same semaphore:
+- I don't think the DSMAS Flags bit 6 (read only) is specific to DCD?
+  It describes any device scoped memory range, so a read only ram or pmem
+  partition is expressible in CDAT today and the driver ignores it.
+  Maybe it should be exposed in sysfs for every partition
+  rather than only on dynamic_ram_1? Which probably makes it a generic CDAT/partition
+  patch rather than something for this series.
 
-    ACQUIRE(rwsem_write_kill, rwsem)(&cxl_rwsem.region)
+> > [ ... ]
+> > > @@ -266,15 +268,26 @@ static void cxl_memdev_set_qos_class(struct cxl_dev_state *cxlds,
+> > >  		bool found = false;
+> > >  
+> > >  		for (int i = 0; i < cxlds->nr_partitions; i++) {
+> > > +			enum cxl_partition_mode mode = cxlds->part[i].mode;
+> > >  			struct resource *res = &cxlds->part[i].res;
+> > > +			u8 handle = cxlds->part[i].handle;
+> > >  			struct range range = {
+> > >  				.start = res->start,
+> > >  				.end = res->end,
+> > >  			};
+> > >  
+> > >  			if (range_contains(&range, &dent->dpa_range)) {
+> > > +				if (mode == CXL_PARTMODE_DYNAMIC_RAM_1 &&
+> > > +				    dent->handle != handle) {
+> > > +					dev_warn(dev,
+> > > +						 "Dynamic RAM perf mismatch; %pra (%u) vs %pra (%u)\n",
+> > > +						 &range, handle, &dent->dpa_range,
+> > > +						 dent->handle);
+> > > +					continue;
+> > > +				}  
+> > 
+> > [Severity: Medium]
+> > Could this trigger spurious warnings on valid hardware configurations?
+> > 
+> > The CDAT specification allows overlapping DSMAS ranges with different handles
+> > to support multiple memory types or sharing characteristics for the same DPA
+> > space. 
+> 
+> Huh?  Where did it get that from.  I'm 99% sure you can't have overlapping
+> DSMAS entries for the same DPA space.
+> 
+Sigh... sometimes it does that. I double-checked the CDAT spec (r1.04)
+to confirm:
 
-Since the current thread already holds the function-scoped read lock, would=
-n't
-this result in an ABBA-style self-deadlock?
+The DSMADHandle of a DSMAS entry is described as "The handle used to refer to
+this DSMAD. Each instance of DSMAS shall be associated with a unique
+DSMADHandle value."
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260805074042.3017=
-3-1-icheng@nvidia.com?part=3D2
+So each DSMAS describes exactly 1 DSMAD (DPA range).
+
+Additionally DSMAD is defined as:
+	 Device Scoped Memory Affinity Domain (DSMAD) is a contiguous
+	 DPA range *** with unique memory attributes*** ...
+
+Treating it as a false positive.
+
+Thanks,
+Anisa
+> > 
+> > If a compliant device provides multiple valid DSMAS entries that overlap
+> > the partition's range but have different handles, won't iterating over them 
+> > incorrectly flag the unselected ones as a perf mismatch?
+> > 
