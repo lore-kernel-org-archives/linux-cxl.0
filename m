@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72033481241;
-	Wed,  5 Aug 2026 15:59:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D76A47DD75;
+	Wed,  5 Aug 2026 15:59:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785945571; cv=none; b=GWJ9k9talxJPPz5ghmZde4wHSqn3VUjulvSnuiNASEQJbXn8PZy4kPf2FIeIUJU9rsho2wNQxMX7DJbGx9AeeBpLVTn+E+QauW0mzpUSU4S+KDYcOmmnGZtnY/7OgC9swdBP0YPatgG9i+nNwCJDgEwN/ve/I6y+4pEU8guQY/M=
+	t=1785945574; cv=none; b=SF5gfjnaC3TvN+r1mKWTVrNf87tGIgHC+FlauZmIxCLdspBuX3GBu4hc5t1DbsnIH8wixvDkA2/c6rBYDg5iD03TqYCz1dt8tJjG3W88z9qiy4y75AxFMpU9jO2GrTBcQCoXnNuZxZz9IsoPTZlmY0sRIEiXRXvWS7kT61g75Q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785945571; c=relaxed/simple;
-	bh=9mC0vWnG6zGdJJwjH0qspuBkVa29oc8jd5CQlhwJGbc=;
+	s=arc-20240116; t=1785945574; c=relaxed/simple;
+	bh=zabtP119DXiF4b+kW/WzYg/ztpIthQuDA8n9E0in1+4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HiEemnGh6TZaB4ffhpWm3cQbDopyEE7ONVZICNnMHwz/q96E9196BM8YQODpHtf2WwmyL0iDBlVWhX0J/QXWYVqX6t0VQ2EJVp2b1H5HA2QK4hfogU8R1Bl3XIV+38lOKpO01T6QrkFdIwETuOF7insKdrlKMpiewiV26CmA/gQ=
+	 MIME-Version; b=nOFim+YQKvYG74nwDFK0+8Rue2Nkp40SMazaGV04613Dcpqc+orQ4dcKOufUUcPLkS1Cs/Mq1Im9C7lEPS1POb089VBkmJ0YzZVUdzuXlYH/uCDOTx7zll1SXi2OajIEUIYSc6oWuOH12wcB5nzr8Vf647Nb9bWCE3/CZzittKM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 610411F00A3F;
-	Wed,  5 Aug 2026 15:59:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 199741F00ACF;
+	Wed,  5 Aug 2026 15:59:26 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
@@ -22,10 +22,12 @@ Cc: jic23@kernel.org,
 	mark.rutland@arm.com,
 	dave@stgolabs.net,
 	robin.murphy@arm.com,
-	icheng@nvidia.com
-Subject: [RESEND PATCH v4 05/11] perf/cxl: Split the MSI vector out of info->irq
-Date: Wed,  5 Aug 2026 08:59:05 -0700
-Message-ID: <20260805155911.1304807-6-dave.jiang@intel.com>
+	icheng@nvidia.com,
+	sashiko-bot@kernel.org,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Subject: [RESEND PATCH v4 09/11] perf/cxl: Validate the hardware-reported counter width
+Date: Wed,  5 Aug 2026 08:59:09 -0700
+Message-ID: <20260805155911.1304807-10-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260805155911.1304807-1-dave.jiang@intel.com>
 References: <20260805155911.1304807-1-dave.jiang@intel.com>
@@ -37,65 +39,44 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-info->irq means two different things depending on how far probe has got.
-cxl_pmu_parse_caps() sets it to the MSI/MSI-X message number from the CPMU
-Capability register. cxl_pmu_probe() passes that to pci_irq_vector() and
-then overwrites it with the Linux virq, which is what the hotplug callbacks
-hand to irq_set_affinity().
+cxl_pmu_parse_caps() takes the Counter Width straight from the CPMU
+Capability register without a bounds check. The Counter Data register is 64
+bits wide, so a device reporting 0 or more than 64 is reporting nonsense,
+and GENMASK_ULL(width - 1, 0) in the read path then shifts out of range.
+That is undefined behaviour, and a UBSAN splat where it is enabled.
 
-Both are ints called irq, so nothing catches a mix-up, and the valid ranges
-differ. 0 is a fine message number but never a valid virq.
+Reject a counter width outside 1..64 at probe.
 
-Give the message number its own field. No functional change.
-
+Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+Reported-by: sashiko-bot@kernel.org
+Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
 Assisted-by: Claude:claude-opus-4-8
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
-v4:
-- Move after the one-line fix so that fix has no dependency on this rename
-  (Robin).
----
- drivers/perf/cxl_pmu.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/perf/cxl_pmu.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 2bebbbe67a0a..481d32d0c1b0 100644
+index a081fcba6991..84ebc7da181d 100644
 --- a/drivers/perf/cxl_pmu.c
 +++ b/drivers/perf/cxl_pmu.c
-@@ -106,6 +106,7 @@ struct cxl_pmu_info {
- 	int on_cpu;
- 	struct hlist_node node;
- 	bool filter_hdm;
-+	int msi_vec;
- 	int irq;
- };
+@@ -142,6 +142,15 @@ static int cxl_pmu_parse_caps(struct device *dev, struct cxl_pmu_info *info)
  
-@@ -143,9 +144,9 @@ static int cxl_pmu_parse_caps(struct device *dev, struct cxl_pmu_info *info)
+ 	info->num_counters = FIELD_GET(CXL_PMU_CAP_NUM_COUNTERS_MSK, val) + 1;
+ 	info->counter_width = FIELD_GET(CXL_PMU_CAP_COUNTER_WIDTH_MSK, val);
++	/*
++	 * The Counter Data register is 64 bits wide, so a Counter Width of 0 or
++	 * >64 is invalid. Reject it rather than let GENMASK_ULL(width - 1, 0) in
++	 * the read path shift out of range.
++	 */
++	if (info->counter_width == 0 || info->counter_width > 64) {
++		dev_err(dev, "Invalid counter width %d\n", info->counter_width);
++		return -ENODEV;
++	}
+ 	info->num_event_capabilities = FIELD_GET(CXL_PMU_CAP_NUM_EVN_CAP_REG_SUP_MSK, val) + 1;
  
  	info->filter_hdm = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) & CXL_PMU_FILTER_HDM;
- 	if (FIELD_GET(CXL_PMU_CAP_INT, val))
--		info->irq = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
-+		info->msi_vec = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
- 	else
--		info->irq = -1;
-+		info->msi_vec = -1;
- 
- 	/* First handle fixed function counters; note if configurable counters found */
- 	for (i = 0; i < info->num_counters; i++) {
-@@ -873,10 +874,10 @@ static int cxl_pmu_probe(struct device *dev)
- 		.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
- 	};
- 
--	if (info->irq < 0)
-+	if (info->msi_vec < 0)
- 		return -EINVAL;
- 
--	rc = pci_irq_vector(pdev, info->irq);
-+	rc = pci_irq_vector(pdev, info->msi_vec);
- 	if (rc < 0)
- 		return rc;
- 	irq = rc;
 -- 
 2.54.0
 
