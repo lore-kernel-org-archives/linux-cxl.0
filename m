@@ -1,43 +1,43 @@
 Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7318146A602
-	for <linux-cxl@vger.kernel.org>; Wed,  5 Aug 2026 12:49:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132E42F7EFF
+	for <linux-cxl@vger.kernel.org>; Wed,  5 Aug 2026 13:33:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785934200; cv=pass; b=ab0L/o4yIhS788snhYhWfxwudCtOCxlHtijo1/90nTZB2MoMOd6CR7slp0PPXouve1h+lNAr9NXIWDWcgbehhLzkj/aps0+4jQXfoKj+Fw2wlkgwaRvVt0KJD4BQkyoehKNDjCJ/satwnJJUKw6vE/WZfnt9BNVCg9l3DBCvG/w=
+	t=1785936834; cv=pass; b=sedQtf1jYr5TgS2vUNScntiaKJn9R3hfCA1tlOxm+pqD2NQOpOERzfZO1f6SQ2L/Mxpk3K8Ga+vyyzYa1r3uXQfTk5ZMts6pE3GI0X/WwuUVUGN607dv3lt32X54SItC8RpKsL8/eTexTCTPYZ+Nk4JyqPIYf3DAE1WJ4RekeuU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785934200; c=relaxed/simple;
-	bh=Fbotr0+NQOXVB0OqnpG4CqE+NxIFZFTvtzLuheLHaIU=;
+	s=arc-20240116; t=1785936834; c=relaxed/simple;
+	bh=oG98BkkOHotCn1hBlZ/6yg/vb6B3Nc34ays+GH1ojfs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ODZ2fY5tw8pn2SSR/9GZciTKQ/FQaLW3dvIxL6wc31SFw1LxQKjB6HH1zzdaqMqRGRFvgg5tpKQPTAJBCahW3aJ+5H616dv7XvTPgWvGEczlYmFkULUyWQyNMkyIdY6+srapUV9ILT+TPXMCh2gnvj0wNaCXWGaFHou1DhR4GAA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=Vce4aEHr; arc=pass smtp.client-ip=136.143.188.94
+	 In-Reply-To:Content-Type; b=mr+kO6ArTrHg9+JmtolZ7Wcst4p8Z0z5LO4+HYlDUZjLfsHEAUUJxnOuLbUlRlG+mbqJttjeT17P05guu/ASZtWcRky3CKEnxABdR0e7gGqHo19orS+P7ebwuROa4qrOn9cWYypK4auQ2PBquNqGBKsmpu6ZoOaXT9eRNLE5eh4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=RDOPcN8p; arc=pass smtp.client-ip=136.143.188.94
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="Vce4aEHr"
-ARC-Seal: i=1; a=rsa-sha256; t=1785934185; cv=none; 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="RDOPcN8p"
+ARC-Seal: i=1; a=rsa-sha256; t=1785936818; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=Qnjyojssfjnw8LlRuxXGJ64CUfgfaKKSwjGqMSdodUME7DL3vXnT+GV6XiI2uAB6gdD+UVMCgc1hjDJxYjOrpfhTy4mDmi/nLCqI+DJ64XoupHIYk7n61nMnTIHc/hh3crV3Luq7x216rz+YLWrS2sOqmHxCX45zT51qmJCrkgc=
+	b=TmF2xlab0flQDbqgB62I2Du/VG2LUjdnNaB2SYscQC5QvLIseQ0uFiap6Z6ewOZtK1Q/nfa8YxQmL5EO1IBVw3KZxTiumgv3zkNxZidZKEJOHBb1SSuqxgntMfkMB7B7PYXFlB0etqKzrjsvZqamSdOCjeeiN1DDGWNTAtDvbGE=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1785934185; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=5qypjsaI387IVXHIrbJeX/4R8vRAZomRQFszqqOaAdA=; 
-	b=gQAt8ZK+XVOkfjucypAMpnL5seMl4TMe0KJVKN9xry2jSQpUJduY7QSwB57EpmJAKbHSYsUWX+c6I3MXvo6OEaeWntrabWMAj7KLOKBNDsQbGBc2T6FPjWy0N0Ok54Z7J8Dm/YVrvvXI0J8yRl04hI67wgN/XeVuTdtFINNZp+U=
+	t=1785936818; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=xb1tqnES7dUCwJdbqYxDurejTKs4KXOJGRt3fNnmvKA=; 
+	b=jnyuKUYMOzhwhSDgyHzujCq+5Q6JpnVEjmcAiK1X7HNPZZfJV20r+uW9w+6N/0ozrzPFFNrNufQ8zhL5gh86Hhfc+9JRCUmYOIXiQBPVT1V8Ce5V4ZqwIRNurJA6FeqIkzcEuc1hwq1SA/Rublv7KOBRfxCfA++Dg/E+JCmckro=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=zohomail.com;
 	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
 	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1785934185;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1785936818;
 	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
 	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=5qypjsaI387IVXHIrbJeX/4R8vRAZomRQFszqqOaAdA=;
-	b=Vce4aEHrF0A8WQ30TMXoSU3IAj6NpAm9LHHe7oMeYHOqntzFwtW37hcqhKVRutiV
-	8CCvFFqkARZjsRZVteE9yevPsH5KW4Umbc/jdBM43L5vG8L4I8VSW73JjTnGP+bGhMV
-	2S6APx6fAZo6V2EgB1vUJbQx+WmRv0bLofRr2d9k=
-Received: by mx.zohomail.com with SMTPS id 1785934182606100.16727493152644;
-	Wed, 5 Aug 2026 05:49:42 -0700 (PDT)
-Message-ID: <da9b493f-c212-4dd1-9f0b-ec5b975dee2c@zohomail.com>
-Date: Wed, 5 Aug 2026 20:49:38 +0800
+	bh=xb1tqnES7dUCwJdbqYxDurejTKs4KXOJGRt3fNnmvKA=;
+	b=RDOPcN8p0C8sTcAjiQ/WrqF+tWFYldxFSVpfU9PoOcj2kBeIKuR0CqRnlGMQOBO8
+	yGfLKPQgPJOz1llqq7hiU/CvKlEj+Ikot08lQreh2o+YzVTTIkeZvu5zr8pS8na+lrG
+	4erYh8fFagdnd/kmFPPigLDUe5XOcUU82f4w1odA=
+Received: by mx.zohomail.com with SMTPS id 1785936815977464.95693075929694;
+	Wed, 5 Aug 2026 06:33:35 -0700 (PDT)
+Message-ID: <a417b52b-41a7-4f90-9231-6abf82ee22a6@zohomail.com>
+Date: Wed, 5 Aug 2026 21:33:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -55,8 +55,8 @@ References: <20260728144136.709882-1-dave@stgolabs.net>
 From: Li Ming <ming.li@zohomail.com>
 In-Reply-To: <20260728144136.709882-3-dave@stgolabs.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Feedback-ID: zu08011227a74453b68950abebd6c0eb3a0000cabea427fe09e5855fdfb4158980a2ecff950c823f0a47fccf:ZohoMail
+Content-Transfer-Encoding: 8bit
+Feedback-ID: zu080112272dc782136889d8165710b92f000040277e8fa295913fd82cbec1140a330042cd03db495051d1fe:ZohoMail
 X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
 X-ZohoMailClient: External
 
@@ -304,9 +304,19 @@ On 7/28/2026 10:41 PM, Davidlohr Bueso wrote:
 > +			return __cxl_bi_commit_rt(&port->dev, port->regs.bi_rt);
 > +		return 0;
 
-If my understanding is correct, we also need to maintain a dport->nr_bi for multiple cxl switch levels case, is it right?
+I think another issue here is:
 
-If yes, the only difference between DSP and RP is that we need to handle BI commit flow for DSP case. Maybe we remove some duplicate code.
+Per CXL r4.0 8.2.4.27.2 Table 8-157. the description of BI  Enable and BI Forward fields.
+
+My understanding is that if a DSP or RP connects to a BI-Capable device directly, the BI Enable field should be set.
+
+Which means if a BI-Capable device is connected to a root port directly, the BI Enable filed of the root port should be set.
+
+In multiple switch levels case, only the last level DSP should set BI Enable filed, other DSPs and root port should set BI Forward.
+
+But current implementation will set BI Enable on all DSPs, and set BI Forward on root port whatever the root port connects to BI-Capable device directly.
+
+If my understanding is incorrect, please let me know. thanks
 
 
 Ming
@@ -500,12 +510,6 @@ Ming
 > +		dport_iter = port_iter->parent_dport;
 > +		port_iter = dport_iter->port;
 > +	}
-
-Here walks the topology to confirm whether all pci devices along the path are working on 256B flit mode. Maybe we can remove the cxl_pci_flit_256() checking in cxl_port_map_bi() in PATCH #1? we can check here, not need to check during mapping BI capability.
-
-
-Ming
-
 > +
 > +	rc = cxl_bi_enable_path(cxlds, dport->port, dport);
 > +	if (rc)
