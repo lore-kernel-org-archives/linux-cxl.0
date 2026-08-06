@@ -1,169 +1,274 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7F4399368
-	for <linux-cxl@vger.kernel.org>; Thu,  6 Aug 2026 17:16:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7996836195B;
+	Thu,  6 Aug 2026 20:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786036572; cv=none; b=BcbolIn8EesFUAtbwlRIwe6fQjqeNGcg61b5n3KFzZUo+m/SG2LhZNR8cULXBSdEXpOox0JlCfMRnLPIFDj5noVCRTdOltFklokGrAQxwihjBIvs41112HtYA7jGhwJsTGpCF6jz8ASo58h61VKUCdAuzWUn54l00jGMhH1yXKo=
+	t=1786046607; cv=none; b=eBdYRCeQn5LdcsVUiroJWWbNSMO5EYX22a6LVCdilykAmcEcyIskdmVd6oJHcWQv7zaVZizRKiYfLL58cBnjmlWr03OxMO/X7JCJgr422NS7xxpDCbwLvp1NFG/93xZsJbxBUtlcwT3yad/i6ssU135gCiXV3YyqhM2QlVqmoKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786036572; c=relaxed/simple;
-	bh=0buP9eEimcNGJTMvtIZiV/oU0eoXIFGQFJ3sFl4Q1UA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tDpXHMOjPJRqwP/hJmnufBsRSVnyKi4tNeDAw+fFxHplyFFek6r95trIVxOV1SZVLWzqxdEY92TmflitxqUgcRkcUkVC03SqxxF/TcvHxISDxEHoMRw44ah7kTfVia8Cf3C3qlc1sKVvemoIJspKV+3aKRKZJinkzQGzUKSo8uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UOOa78u2; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UOOa78u2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786036571; x=1817572571;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=0buP9eEimcNGJTMvtIZiV/oU0eoXIFGQFJ3sFl4Q1UA=;
-  b=UOOa78u2VqMoZeHPqAm8xkEji9BlV0LYh11E0WM5/Gfr2Gq1iivfOeiZ
-   P2PxuugoJvykFkCVvYuPNoeOMfoOxCRT6AJe5l8EwfIorIjIJbeQyMny7
-   Se7mEDHZFmYdcDFipK+A+5cLSEIpzLL49TSjJJGOOHmUQZMIriy3c/pmb
-   9WKQlHn0KTTuWUTXpPhxZccsTej0fmZ4raT8DDG9w5hlNHMkod6t1TSUR
-   EVwL2jyVWC1/Zgy6DaANbzt1o6ThuHYy1LvZIboxIQ6S4oUvkCdEKuX6d
-   XjleOLjrR2QV3WIW1k3q89nosxvrr24vQpqscjp/lpKTbcbvKNDZC+1R1
-   w==;
-X-CSE-ConnectionGUID: d9fjSzAJSs+yMB7c0PZmVg==
-X-CSE-MsgGUID: 1qi5yH3tQqGEt5k3cvWLiQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11867"; a="98001946"
-X-IronPort-AV: E=Sophos;i="6.25,208,1779174000"; 
-   d="scan'208";a="98001946"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2026 10:16:09 -0700
-X-CSE-ConnectionGUID: t35CSj9/SjOGsoXncLzF5A==
-X-CSE-MsgGUID: lC+ic9sPSPq/2gJelIxs2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,208,1779174000"; 
-   d="scan'208";a="255911954"
-Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.109.117]) ([10.125.109.117])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2026 10:16:08 -0700
-Message-ID: <3d761f1f-6ff2-42d6-a451-e013c45ce959@intel.com>
-Date: Thu, 6 Aug 2026 10:16:07 -0700
+	s=arc-20240116; t=1786046607; c=relaxed/simple;
+	bh=7JKyxC0lVhQOIrumF7ydzSJc5ZSRS+xdk/3yQU4vWvI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WtN7AbHofmTZpU+AWh7wc5PlOEyY24QH9GM7iMwlrkk2qI6cMZiNNxc61aNUIbyR5Cx/w1poTlse+8fsTUkLjidZWn4yVXS7Hqaz/RXDesRNGtEE/XSIVIaI3sJjZVHhpS3ciFKQDjx7pHeDASed614QlSAqsscTDLMeXWWBAsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
+Received: from omf10.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id A013AA157C;
+	Thu,  6 Aug 2026 20:03:18 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf10.hostedemail.com (Postfix) with ESMTPA id CAB693E;
+	Thu,  6 Aug 2026 20:03:01 +0000 (UTC)
+Date: Thu, 6 Aug 2026 15:03:00 -0500
+From: John Groves <John@groves.net>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Dan Williams <djbw@kernel.org>, Bernd Schubert <bschubert@ddn.com>, 
+	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Jake Edge <jake@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Ira Weiny <iweiny@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Haren Myneni <haren@linux.ibm.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	Ethan Nelson-Moore <enelsonmoore@gmail.com>, Gabriel Whigham <gabewhigham@gmail.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+	"fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
+Subject: Re: [PATCH V12 05/12] famfs: Introduce file_operations read/write
+Message-ID: <anTfcB7thypyYosz@groves.net>
+References: <0100019fc572ca94-ec363dd7-3a77-484b-b4b7-f2503a0931a6-000000@email.amazonses.com>
+ <20260803022859.75838-1-john@jagalactic.com>
+ <0100019fc5741536-d6b2c2f4-794a-43b4-abf4-f38f2d812e19-000000@email.amazonses.com>
+ <20260806051454.GE3560084@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/Documentation: Spell out globbed sysfs attribute
- names
-To: Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <iweiny@kernel.org>,
- Li Ming <ming.li@zohomail.com>
-Cc: linux-cxl@vger.kernel.org
-References: <20260804232014.2286549-1-alison.schofield@intel.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20260804232014.2286549-1-alison.schofield@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260806051454.GE3560084@frogsfrogsfrogs>
+X-Stat-Signature: gm7ukas5jaj58ofp167htxxde8tqhqwn
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: CAB693E
+X-Session-Marker: 6A6F686E4067726F7665732E6E6574
+X-Session-ID: U2FsdGVkX1+LXEKbbJ65PH0h4WQ/rVEovV2QmqmVb70=
+X-HE-Tag: 1786046581-812498
+X-HE-Meta: U2FsdGVkX1/q5xUraaNuYkBkOe9mViYAGWr7FuIimwMbrqtFOSLKir8hdx+AUb2/UEFIdoEY6U8kAf8GSXddDNosfoDtCfksrejeD+bW/uAGliqL9zjKCDm8qmTEKvpgrYiOcG2ooeac3dw6jx0F5Wy396jO3AcU7/LmLd8LastlQd/OkCYVVaOUM4rpVC5/NHUelf4vKma4j+O26TNskt5sXgMAJlbLCF7a0z1qrVPCUYMjwrnBZ1e0iJILsuDJj1LrZNjuXyySQ6Nc+FT98N+yfStaUB9Dl9i+oWZxnswBJo+brjduKginYQ6IuADNbVgn52Ydq+NnmRrXrGK4LPTmtgC2ghdIh9t57cQPcc5UKs+OEU3JgO985ZTLk62U
 
+On 26/08/05 10:14PM, Darrick J. Wong wrote:
+> On Mon, Aug 03, 2026 at 02:29:07AM +0000, John Groves wrote:
+> > From: John Groves <john@groves.net>
+> > 
+> > This commit introduces fs/famfs/famfs_file.c and the famfs
+> > file_operations for read/write.
+> > 
+> > This is not usable yet because:
+> > 
+> > * It calls dax_iomap_rw() with NULL iomap_ops (which will be
+> >   introduced in a subsequent commit).
+> > * famfs_ioctl() is coming in a later commit, and it is necessary
+> >   to map a file to a memory allocation.
+> > 
+> > Signed-off-by: John Groves <john@groves.net>
+> > ---
+> >  fs/famfs/Makefile         |   2 +-
+> >  fs/famfs/famfs_file.c     | 138 ++++++++++++++++++++++++++++++++++++++
+> >  fs/famfs/famfs_inode.c    |   2 +-
+> >  fs/famfs/famfs_internal.h |   2 +
+> >  4 files changed, 142 insertions(+), 2 deletions(-)
+> >  create mode 100644 fs/famfs/famfs_file.c
+> > 
+> > diff --git a/fs/famfs/Makefile b/fs/famfs/Makefile
+> > index 62230bcd6793..8cac90c090a4 100644
+> > --- a/fs/famfs/Makefile
+> > +++ b/fs/famfs/Makefile
+> > @@ -2,4 +2,4 @@
+> >  
+> >  obj-$(CONFIG_FAMFS) += famfs.o
+> >  
+> > -famfs-y := famfs_inode.o
+> > +famfs-y := famfs_inode.o famfs_file.o
+> > diff --git a/fs/famfs/famfs_file.c b/fs/famfs/famfs_file.c
+> > new file mode 100644
+> > index 000000000000..e192b573c51f
+> > --- /dev/null
+> > +++ b/fs/famfs/famfs_file.c
+> > @@ -0,0 +1,138 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * famfs - dax file system for shared fabric-attached memory
+> > + *
+> > + * Copyright 2023-2024 Micron Technology, Inc.
+> > + *
+> > + * This file system, originally based on ramfs the dax support from xfs,
+> > + * is intended to allow multiple host systems to mount a common file system
+> > + * view of dax files that map to shared memory.
+> > + */
+> > +
+> > +#include <linux/fs.h>
+> > +#include <linux/mm.h>
+> > +#include <linux/dax.h>
+> > +#include <linux/iomap.h>
+> > +
+> > +#include "famfs_internal.h"
+> > +
+> > +/*********************************************************************
+> > + * file_operations
+> > + */
+> > +
+> > +/* Reject I/O to files that aren't in a valid state */
+> > +static ssize_t
+> > +famfs_file_invalid(struct inode *inode)
+> > +{
+> > +	if (!IS_DAX(inode)) {
+> > +		pr_debug("%s: inode %llx IS_DAX is false\n",
+> > +			 __func__, (u64)inode);
+> > +		return -ENXIO;
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> > +static ssize_t
+> > +famfs_rw_prep(struct kiocb *iocb, struct iov_iter *ubuf)
+> > +{
+> > +	struct inode *inode = iocb->ki_filp->f_mapping->host;
+> > +	struct super_block *sb = inode->i_sb;
+> > +	struct famfs_fs_info *fsi = sb->s_fs_info;
+> > +	size_t i_size = i_size_read(inode);
+> > +	size_t count = iov_iter_count(ubuf);
+> > +	size_t max_count;
+> > +	ssize_t rc;
+> > +
+> > +	if (fsi->deverror)
+> > +		return -ENODEV;
+> > +
+> > +	rc = famfs_file_invalid(inode);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	/* Avoid unsigned underflow if position is past EOF */
+> > +	if (iocb->ki_pos >= i_size)
+> > +		max_count = 0;
+> > +	else
+> > +		max_count = i_size - iocb->ki_pos;
+> > +
+> > +	if (count > max_count)
+> > +		iov_iter_truncate(ubuf, max_count);
+> > +
+> > +	if (!iov_iter_count(ubuf))
+> > +		return 0;
+> > +
+> > +	return rc;
+> > +}
+> > +
+> > +static ssize_t
+> > +famfs_dax_read_iter(struct kiocb *iocb, struct iov_iter	*to)
+> > +{
+> > +	struct inode *inode = iocb->ki_filp->f_mapping->host;
+> > +	ssize_t rc;
+> > +
+> > +	/* dax_iomap_rw() requires i_rwsem held (shared for read) */
+> > +	inode_lock_shared(inode);
+> > +	rc = famfs_rw_prep(iocb, to);
+> > +	if (rc || !iov_iter_count(to)) {
+> > +		inode_unlock_shared(inode);
+> > +		return rc;
+> > +	}
+> > +
+> > +	rc = dax_iomap_rw(iocb, to, NULL /*&famfs_iomap_ops */);
+> > +	inode_unlock_shared(inode);
+> > +
+> > +	file_accessed(iocb->ki_filp);
+> 
+> Is it really accessed if rc != 0?
 
+Good point; looks like only if rc > 0. Will update, thanks.
 
-On 8/4/26 4:20 PM, Alison Schofield wrote:
-> Four entries in sysfs-bus-cxl use braced globs to document groups of
-> attributes. Where the glob factors out a common prefix, as in
-> cap_{pmem,ram,type2,type3}, no individual attribute name appears in
-> the file at all and none can be found by grep or get_abi.py search. In
-> every case the glob also keys get_abi.py validate on the glob string,
-> so duplicates against separately documented attributes go undetected.
 > 
-> Replace the globs with consecutive What: lines for each attribute.
-> These lines continue to share the existing metadata and description
-> and follow the format used in sysfs-driver-ufs and sysfs-bus-iio.
+> > +	return rc;
+> > +}
+> > +
+> > +/**
+> > + * famfs_dax_write_iter()
+> > + *
+> > + * We need our own write-iter in order to prevent append
+> > + *
+> > + * @iocb:
+> > + * @from: iterator describing the user memory source for the write
+> > + */
+> > +static ssize_t
+> > +famfs_dax_write_iter(struct kiocb *iocb, struct iov_iter *from)
+> > +{
+> > +	struct inode *inode = iocb->ki_filp->f_mapping->host;
+> > +	struct famfs_fs_info *fsi = inode->i_sb->s_fs_info;
+> > +	ssize_t rc;
+> > +
+> > +	if (!famfs_opt_enabled(fsi, FAMFS_OPT_WRITE))
+> > +		return -EPERM;
+> > +
+> > +	/* dax_iomap_rw() requires i_rwsem held (exclusive for write) */
+> > +	inode_lock(inode);
+> > +	rc = famfs_rw_prep(iocb, from);
+> > +	if (rc || !iov_iter_count(from)) {
+> > +		inode_unlock(inode);
+> > +		return rc;
+> > +	}
+> > +
+> > +	rc = dax_iomap_rw(iocb, from, NULL /*&famfs_iomap_ops*/);
 > 
-> Also restore one missing blank line between entries.
-> 
-> Verify with:
->   python3 tools/docs/get_abi.py -D Documentation/ABI/testing validate
->   python3 tools/docs/get_abi.py search cap_pmem
->   python3 tools/docs/get_abi.py search create_ram_region
-> 
-> validate reports no sysfs-bus-cxl warning, and both searches now return
-> the stanza where they returned nothing before.
-> 
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+> What happens if you pass a null iomap ops?  TBH I was expecting you to
+> define the iomap ops with a dummy ->iomap_begin that returns EIO or
+> something.
 
-Applied to cxl/next
-d7066cfc4187
+If we actually called dax_iomap_rw() with null iomap ops, it would
+hork. However, if we called it with null iomap_ops->iomap_begin it
+will also hork. I could introduce the dax_iomap_rw call later, when
+sufficient code is in, but that might require (void) declarations
+to squelch the compiler about unreferenced stuff.
 
-> ---
+So dummy iomap_ops won't actually work. My objective was to drop in
+bite-sized chunks that were functionally coherent, until it's complete
+(in commit 12).
+
+I suspect multiple of these commits would do something bad if you
+tried to run them before you had all.
+
+Given all that, I'm inclined to leave it alone. 
+
+Hmm, I could keep things where all commits compile, but cause 
+module_init to fail until all commits are in. Then it couldn't do 
+any harm to try to try running incomplete famfs.
+
+I think I'll do that...
+
 > 
-> This caught my eye when reading DavidLohr's Back-Invalidate series
-> that adds cap_bi to the cap_{pmem,ram,type2,type3} glob and then
-> references it. I couldn't find it, not w grep and not w 'get_abi.py
-> search'. None of the existing cap_* names can be found. This patch
-> is independent of that series and happy to spin this to include
-> cap_bi if needed.
+> > +	inode_unlock(inode);
+> > +	return rc;
 > 
-> This intentionally does not address `get_abi.py undefined`, which still
-> fails to match decoderX.Y attributes due to a bug in the ABI tooling.
-> That will be fixed separately in linux-doc.
+> Do you need to update mtime here?
 > 
->  Documentation/ABI/testing/sysfs-bus-cxl | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 16a9b3d2e2c0..7352dbd70bc7 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -201,7 +201,8 @@ Description:
->  		capability.
->  
->  
-> -What:		/sys/bus/cxl/devices/{port,endpoint}X/parent_dport
-> +What:		/sys/bus/cxl/devices/portX/parent_dport
-> +What:		/sys/bus/cxl/devices/endpointX/parent_dport
->  Date:		January, 2023
->  KernelVersion:	v6.3
->  Contact:	linux-cxl@vger.kernel.org
-> @@ -258,7 +259,8 @@ Description:
->  		instance id of a given decoder resource.
->  
->  
-> -What:		/sys/bus/cxl/devices/decoderX.Y/{start,size}
-> +What:		/sys/bus/cxl/devices/decoderX.Y/start
-> +What:		/sys/bus/cxl/devices/decoderX.Y/size
->  Date:		June, 2021
->  KernelVersion:	v5.14
->  Contact:	linux-cxl@vger.kernel.org
-> @@ -297,7 +299,10 @@ Description:
->  		Each entry in the list is a dport id.
->  
->  
-> -What:		/sys/bus/cxl/devices/decoderX.Y/cap_{pmem,ram,type2,type3}
-> +What:		/sys/bus/cxl/devices/decoderX.Y/cap_pmem
-> +What:		/sys/bus/cxl/devices/decoderX.Y/cap_ram
-> +What:		/sys/bus/cxl/devices/decoderX.Y/cap_type2
-> +What:		/sys/bus/cxl/devices/decoderX.Y/cap_type3
->  Date:		June, 2021
->  KernelVersion:	v5.14
->  Contact:	linux-cxl@vger.kernel.org
-> @@ -410,7 +415,8 @@ Description:
->  		interleave_granularity).
->  
->  
-> -What:		/sys/bus/cxl/devices/decoderX.Y/create_{pmem,ram}_region
-> +What:		/sys/bus/cxl/devices/decoderX.Y/create_pmem_region
-> +What:		/sys/bus/cxl/devices/decoderX.Y/create_ram_region
->  Date:		May, 2022, January, 2023
->  KernelVersion:	v6.0 (pmem), v6.3 (ram)
->  Contact:	linux-cxl@vger.kernel.org
-> @@ -500,6 +506,7 @@ Description:
->  		cache is present, the size indicates extended linear cache size
->  		plus the CXL region size.
->  
-> +
->  What:		/sys/bus/cxl/devices/regionZ/extended_linear_cache_size
->  Date:		October, 2025
->  KernelVersion:	v6.19
-> 
+> --D
+
+Yeah, I guess I should - will do.
+
+FYI file times in famfs have limited usefulness, because they don't
+propagate in the cluster.
+
+<snip> 
 
