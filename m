@@ -1,158 +1,90 @@
-Received: from olivedrab.birch.relay.mailchannels.net (olivedrab.birch.relay.mailchannels.net [23.83.209.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from a11-16.smtp-out.amazonses.com (a11-16.smtp-out.amazonses.com [54.240.11.16])
+	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1433EFFC5
-	for <linux-cxl@vger.kernel.org>; Wed,  5 Aug 2026 21:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.209.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A91F255F28;
+	Thu,  6 Aug 2026 00:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.11.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785965589; cv=none; b=DQytDvNc+AOCkng3MziQHXbopYEYgH6vqW+Ss5PzOIAdhUphhDqte/CucgXrKtskd1DplzETtoEv0UuW4LDON/lk1nvjkUvYgcYy5+DFCT27sxqpuQGiX7vGb+ArIB0jETaH446BZxFTElFSCM8735bgHGiBTBkxKkOTgmsvspI=
+	t=1785976124; cv=none; b=HllnUfSYLSkP3iMShlM2N0sNgi5igd/9UfwV0nJDGcX3XC7D2nR9x3zOyNFSgxFPbi7w7cIBEqm/v9F9KimR4XMG3Povm7a9e8qzUukGGg40Tew6axW/IYPWbI6xymjssfCz0GFbxLeFPENLgDYy0Opt0cB7Sbtjqth0ssczyY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785965589; c=relaxed/simple;
-	bh=YKBpBe9GKVjS2hRhGTcrvrZnxeP+k1GSUot9IL1SmSM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LUaqrXKilKRrnc2G2axJ8ZrysorWBiD/u5oLY1L2B/mnBS0wDzE2ienCCDA/MLxf3iwh/iiRXHwoa5bR+B6xHyV4Tbp69lfis1fhPB2zJu1JKBzPtI9dO7xthPgXvo/edObMdJaXWRNvKiFUMjVhKc7uFqSCWV+GcUQ9GeYM9aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=ShpQNyRZ; arc=none smtp.client-ip=23.83.209.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1785976124; c=relaxed/simple;
+	bh=kl24c4r+F4VrSfxC6I+3VJNboUOE2bT+8ZU3aJDzXNM=;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:References:
+	 Message-ID; b=F5HbOuGUC8rqI/sPdy/Tnk9FBOEQhyoWZYKfrz0+YHx2g3tRhjhKWGELSa6NJftdU9detkb8VvDp5TOikFBuJVhVXDqQGASfXKyvKpiJ5j+dU2d/8gjtX+sSJM447/E4bei6bVOGgz7Y5rFskkLNcTtjrANTOiScHfE0Jx2rH58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=Igm0JNcB; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=eK9c5oYM; arc=none smtp.client-ip=54.240.11.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="ShpQNyRZ"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 29FEA3E16E8;
-	Wed, 05 Aug 2026 19:10:39 +0000 (UTC)
-Received: from pdx1-sub0-mail-a237.dreamhost.com (100-111-248-111.trex-nlb.outbound.svc.cluster.local [100.111.248.111])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 5EBD33E0C44;
-	Wed, 05 Aug 2026 19:10:38 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Supply-Invention: 0cf5e0e16d343ef8_1785957038799_998002380
-X-MC-Loop-Signature: 1785957038799:3646080685
-X-MC-Ingress-Time: 1785957038799
-Received: from pdx1-sub0-mail-a237.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.111.248.111 (trex/8.0.2);
-	Wed, 05 Aug 2026 19:10:38 +0000
-Received: from offworld (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a237.dreamhost.com (Postfix) with ESMTPSA id 4hFg3d5WNtz1049;
-	Wed,  5 Aug 2026 12:10:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1785957038;
-	bh=hOhIIQY17IMtjyX9O2RYsvg5nPvBEHE+gM4WXAAUlGg=;
-	h=Date:From:To:Cc:Subject:Content-Type:Content-Transfer-Encoding;
-	b=ShpQNyRZ+49gb0oYm7fXbuHUPrdHuXB8YZUyW6UQPRRhxYTn10hlKtmgheUGHKJb3
-	 D9F2k2WBCcPFlWk3ssR4lEZmwyKKGUSPNRxkic7w2B5hcFxu5Ii3BZuTpVJ3a1PWJG
-	 DaTmZJA4n3x0asPPCSxqjrHGxsDamoGY7bO/U2/MHFtEB92hoAV+JCSP/vw4h9J2eS
-	 vcN6ukcnbxNn9AJHaF3UQMVO37v2gB8xwurZD4xPZsTtbQJxtMf2zwDJPrWZ8zUGNd
-	 lFh9uIp+I8DIveCJWvfSnh57t8YXGJbo9vHfaUSkIxAQSbw4ZKTGfodf+Ze4eBIQFw
-	 mzxevpoxn4/ew==
-Date: Wed, 5 Aug 2026 12:10:35 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: dave.jiang@intel.com, jic23@kernel.org, icheng@nvidia.com,
-	benjamin.cheatham@amd.com, alucerop@amd.com,
-	dongjoo.seo1@samsung.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v7 4/8] cxl: Add HDM-DB region creation
-Message-ID: <20260805191035.z7ayr7koxbomgq2h@offworld>
-References: <20260728144136.709882-1-dave@stgolabs.net>
- <20260728144136.709882-5-dave@stgolabs.net>
- <anJ_lwQfXvGaoLxJ@aschofie-mobl2.lan>
+	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="Igm0JNcB";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="eK9c5oYM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1785976122;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Reply-To:Message-Id;
+	bh=kl24c4r+F4VrSfxC6I+3VJNboUOE2bT+8ZU3aJDzXNM=;
+	b=Igm0JNcB0597sI75kRZ2EC1QrfXdDXeZe5T5PqWJ9RtFE7Hqe8Ef6qMRFTHNrDN9
+	S1s1bzWtzt02dQOfh1MYVelKgmW6O5VLEfwXxEp6yAKk0rPo8LIWLZxUR2qe5FdH1T0
+	jo3VSAJvUmA18/y8kbusN9LJdxWL3SJohphEbwkY=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1785976122;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Reply-To:Message-Id:Feedback-ID;
+	bh=kl24c4r+F4VrSfxC6I+3VJNboUOE2bT+8ZU3aJDzXNM=;
+	b=eK9c5oYMrxgJdvki4ALiAiE8OUdxkT1UmwKNiUxYVSkSViNsIEiQkkS3Dk/rBF91
+	SyO2keG4PHBhSeVk/aLsjynNRuZjHRLP4apG695cEKHfyFCngtbH1MNqeEEtdaYsETQ
+	r0/N1xRBtla0tsXZcSvnYyVxD2mNQ4GYHt0qQJqQ=
+Subject: [PATCH] dax: Remove unused export of dax_dev_get()
+From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
+To: =?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
+	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
+	=?UTF-8?Q?Alison_Schofield?= <alison.schofield@intel.com>, 
+	=?UTF-8?Q?John_Groves?= <john@groves.net>
+Cc: =?UTF-8?Q?nvdimm=40lists=2Elinux=2Edev?= <nvdimm@lists.linux.dev>, 
+	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
+	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?John_Groves?= <John@Groves.net>
+Date: Thu, 6 Aug 2026 00:28:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <anJ_lwQfXvGaoLxJ@aschofie-mobl2.lan>
-User-Agent: NeoMutt/20220429
+References: <20260806002830.2610417-1-john@jagalactic.com>
+X-Mailer: Amazon WorkMail
+Thread-Index: AQHdJTqHSqNOYbcPTuixEb1oOAfS1Q==
+Thread-Topic: [PATCH] dax: Remove unused export of dax_dev_get()
+Reply-To: =?UTF-8?Q?John_Groves?= <john@groves.net>
+X-Wm-Sent-Timestamp: 1785976121
+X-Original-Mailer: git-send-email 2.53.0
+Message-ID: <0100019fd478eb93-a6bd48e4-b5f1-4871-93d4-582802956e6c-000000@email.amazonses.com>
+Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
+X-SES-Outgoing: 2026.08.06-54.240.11.16
 
-Hi Alison, thanks for having a look at the series.
-
-On Tue, 04 Aug 2026, Alison Schofield wrote:
-
->On Tue, Jul 28, 2026 at 07:41:32AM -0700, Davidlohr Bueso wrote:
->> A region inherits its coherency from the chosen root decoder: HDM-DB
->> if the root has CXL_DECODER_F_BI, otherwise HDM-H.
->>
->> Surface the topology through read-only sysfs:
->>
->>   - decoderX.Y/cap_bi (root): CFMWS BI restriction.
->>   - decoderX.Y/bi (endpoint): '1' when configured for HDM-DB.
->
->Hi Davidlohr,
->
->$ grep What Documentation/ABI/testing/sysfs-bus-cxl
->shows that we have a precedent for spelling things out in the
->sysfs attribute names. Even long things like interleave_granularity
->and extended_linear_cache_size. Suggest doing same for these.
-
-Sure, I can rename to backinv or back_invalidate.
-
->one bit below..
->
->
->> @@ -2108,10 +2106,31 @@ static int cxl_region_attach(struct cxl_region *=
-cxlr,
->>		return -ENXIO;
->>	}
->>
->> -	if (cxled->cxld.target_type !=3D cxlr->type) {
->> -		dev_dbg(&cxlr->dev, "%s:%s type mismatch: %d vs %d\n",
->> -			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
->> -			cxled->cxld.target_type, cxlr->type);
->
->The new checks below seem to ignore CXL_HDM_DECODER_COHERENCY_UNKNOWN.
->Does the existing type check need to stay for UNKNOWNS?
-
-This is a good point; I will be more explicit about the UNKNOWN handling
-in the changelog. But we don't want it as a type match perse as unknown
-could still allow for configurable settings (CXL_HDM_DECODER_COHERENCY_BOTH)
-but its just not announcing it - albeit that would be pretty funky hw.
-
-cxled_default_type() gives a type 3 decoder HOSTONLYMEM unless the HDM
-reports device-coherent only, so the check would refuse every unknown
-=66rom HDM-DB regions.
-
-Thanks,
-Davidlohr
-
->> +	/*
->> +	 * Verify the device and HDM are capable of the region's flavor before
->> +	 * proceeding. The endpoint decoder's target_type is then inherited
->> +	 * from cxlr->type later in cxl_rr_assign_decoder().
->> +	 */
->> +	if (cxlr->type =3D=3D CXL_DECODER_DEVMEM &&
->> +	    cxl_root_decoder_is_bi(cxlrd) && !cxlds->bi) {
->> +		dev_err(&cxlr->dev, "%s:%s BI not enabled on device\n",
->> +			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
->> +		return -ENXIO;
->> +	}
->> +
->> +	cxlhdm =3D dev_get_drvdata(&ep_port->dev);
->> +	if (!cxlhdm)
->> +		return -ENXIO;
->> +	if (cxlr->type =3D=3D CXL_DECODER_HOSTONLYMEM &&
->> +	    cxlhdm->supported_coherency =3D=3D CXL_HDM_DECODER_COHERENCY_DEV) {
->> +		dev_warn(&cxlr->dev, "%s:%s HDM is device-coherent only\n",
->> +			 dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
->> +		return -ENXIO;
->> +	}
->> +	if (cxlr->type =3D=3D CXL_DECODER_DEVMEM &&
->> +	    cxlhdm->supported_coherency =3D=3D CXL_HDM_DECODER_COHERENCY_HOST)=
- {
->> +		dev_warn(&cxlr->dev, "%s:%s HDM is host-only coherent\n",
->> +			 dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
->>		return -ENXIO;
->>	}
->
->snip to end
+From: John Groves <John@Groves.net>=0D=0A=0D=0ACommit 2ae624d5a555 ("dax:=
+ export dax_dev_get()") exported dax_dev_get()=0D=0Ain v7.2 for famfs, wh=
+ich has not merged. The export has never had an=0D=0Ain-tree caller, so m=
+ake dax_dev_get() static again.=0D=0A=0D=0ASigned-off-by: John Groves <Jo=
+hn@Groves.net>=0D=0AReviewed-by: Dave Jiang <dave.jiang@intel.com>=0D=0AR=
+eviewed-by: Alison Schofield <alison.schofield@intel.com>=0D=0A---=0D=0A =
+drivers/dax/super.c | 3 +--=0D=0A include/linux/dax.h | 1 -=0D=0A 2 files=
+ changed, 1 insertion(+), 3 deletions(-)=0D=0A=0D=0Adiff --git a/drivers/=
+dax/super.c b/drivers/dax/super.c=0D=0Aindex 25cf99dd9360..d4ab60c406bf 1=
+00644=0D=0A--- a/drivers/dax/super.c=0D=0A+++ b/drivers/dax/super.c=0D=0A=
+@@ -521,7 +521,7 @@ static int dax_set(struct inode *inode, void *data)=0D=
+=0A =09return 0;=0D=0A }=0D=0A=20=0D=0A-struct dax_device *dax_dev_get(de=
+v_t devt)=0D=0A+static struct dax_device *dax_dev_get(dev_t devt)=0D=0A {=
+=0D=0A =09struct dax_device *dax_dev;=0D=0A =09struct inode *inode;=0D=0A=
+@@ -544,7 +544,6 @@ struct dax_device *dax_dev_get(dev_t devt)=0D=0A=20=0D=
+=0A =09return dax_dev;=0D=0A }=0D=0A-EXPORT_SYMBOL_GPL(dax_dev_get);=0D=0A=
+=20=0D=0A struct dax_device *alloc_dax(void *private, const struct dax_op=
+erations *ops)=0D=0A {=0D=0Adiff --git a/include/linux/dax.h b/include/li=
+nux/dax.h=0D=0Aindex fe6c3ded1b50..f6b4549a8b4b 100644=0D=0A--- a/include=
+/linux/dax.h=0D=0A+++ b/include/linux/dax.h=0D=0A@@ -54,7 +54,6 @@ struct=
+ dax_device *alloc_dax(void *private, const struct dax_operations *ops);=0D=
+=0A void *dax_holder(struct dax_device *dax_dev);=0D=0A void put_dax(stru=
+ct dax_device *dax_dev);=0D=0A void kill_dax(struct dax_device *dax_dev);=
+=0D=0A-struct dax_device *dax_dev_get(dev_t devt);=0D=0A void dax_write_c=
+ache(struct dax_device *dax_dev, bool wc);=0D=0A bool dax_write_cache_ena=
+bled(struct dax_device *dax_dev);=0D=0A bool dax_synchronous(struct dax_d=
+evice *dax_dev);=0D=0A--=20=0D=0A2.53.0=0D=0A=0D=0A
