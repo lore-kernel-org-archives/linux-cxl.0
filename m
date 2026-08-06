@@ -1,284 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBA5499F23
-	for <linux-cxl@vger.kernel.org>; Thu,  6 Aug 2026 23:03:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92072415F2D
+	for <linux-cxl@vger.kernel.org>; Thu,  6 Aug 2026 23:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786057436; cv=none; b=FE7Oj6TnMlwev9+SrHzpVmMLMhJV8kDc7KBm/ypOvDOsTi7Ka02wL1xSnL2vb2TKk2Jyvhz+gKmGNdmH7QGwrlPIUhrlsU3TekRXrQgyVDA/cXhQ7unk0UQTLJpfQxnZsu4C7ph4RaCSD5tSTH+X5bsDLDHOZRs9q/drcqgpwxU=
+	t=1786058821; cv=none; b=onxgYMvnXb6lOSuWNzWrFb8uBGyAebvDqlC6YLl7StXnhiC6KHX3prwoEqiTu9kB8SGOHch1/KsTskVGAF3gzE+2Kz6VmFWczLM64kKmZ1xoACg/A90+vT5EMN9M47vBsTJc1WAk34MTen9lELyUgaSSWW2xVcm+vnZrCQCcwjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786057436; c=relaxed/simple;
-	bh=dNAWilsOdqeKdmdpsYPwI70egeQgrcLDxds18XvjD8E=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=F4H5E97QVztxIDL1ZaJBVl4s5jnYu48B2sD8mCsAvqe1FPj7urhmfFm9HmRzh91eYx+hf+HlXYXdYe3RoTUcZxsqOLpaz8dxhGYCIxolmvsnza/RYvycOxjJdVvvvK4JckhKBligLqftlRkx1921yJ5x1/ZDJ7H3QIuDjzGS6Uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L78lUt4+; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1786058821; c=relaxed/simple;
+	bh=8ernjYW7bovLgY78GoVgutHqXvV1nj4wsCTAcwbRWr4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U4TWDxx2SHu56c+R/Il2jCHXgaD5Nwm+Vopfo/WVc0brH8iKTlZXKCdxdaQlBKBZsoT7FfXWsbhcbfyg3p6iAmH0gzEOwQ7lKLY/jwwvzaz6+LglQgSM/uLIoOWiN9P386Ec5IAolarmSWR4KrJ2kvwVzRzQswNHzEQzEnGzRe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eqv2W4C0; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L78lUt4+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786057434; x=1817593434;
-  h=date:from:to:cc:subject:message-id;
-  bh=dNAWilsOdqeKdmdpsYPwI70egeQgrcLDxds18XvjD8E=;
-  b=L78lUt4+xh8NTFu+x+xzwxQVuUrCz5LJimAcfb4TIMvcXl9q/KXR48YR
-   VDs8DrOKLlPTxuFpjA9oxo/F1FszoOZh0bW4jkfwTLC9DzTM/4iU/5Ytf
-   N5dKtn6FE010/bYcPL6PVKOg+ZnDZI3NV8nQ5IjHa5hBFntDu+XPQ87j4
-   eddoiomOBtUiU4WMhEtG0J7FCh7vHdPMZNNeiG/qGQXX+O5TiMw7twB7q
-   jU6n+XW89/zzN8GZKUdSL2/iMFjEsrnjSAF/BPuyQ6QSfFogFt8RaGIPE
-   N40zdl+xihYXoo2cMvK5QZlDJ0ytas066pBkpueO6wOcTrm9g+xFvlVAs
-   A==;
-X-CSE-ConnectionGUID: BEdQwYi2Qreg1fbOPjx3cg==
-X-CSE-MsgGUID: lHPznAUoS0ScvSp4Q/8oVQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11867"; a="90483114"
-X-IronPort-AV: E=Sophos;i="6.25,209,1779174000"; 
-   d="scan'208";a="90483114"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2026 16:03:54 -0700
-X-CSE-ConnectionGUID: Bq24Z4vmQjSkBJQ0utzXgg==
-X-CSE-MsgGUID: BLNrm9ndRq6aPbquQbjgPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,209,1779174000"; 
-   d="scan'208";a="259625476"
-Received: from lkp-server01.sh.intel.com (HELO 6eda058d650d) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 06 Aug 2026 16:03:52 -0700
-Received: from kbuild by 6eda058d650d with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1ws77u-00000000GUz-0KLY;
-	Thu, 06 Aug 2026 23:03:50 +0000
-Date: Fri, 07 Aug 2026 07:03:19 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Dan Williams <djbw@kernel.org>, linux-cxl@vger.kernel.org
-Subject: [cxl:for-7.3/cxl-port-err-prep] BUILD SUCCESS
- 658fb50cc8882608dc72dfa6b2e052f87d265ce6
-Message-ID: <202608070759.GWZHQ5uS-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqv2W4C0"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2cf27856f9cso35130395ad.2
+        for <linux-cxl@vger.kernel.org>; Thu, 06 Aug 2026 16:27:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786058820; x=1786663620; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=yMThCopPkAFmI168rEXeIJriFw8m5HwaXiuoWGQJQhA=;
+        b=eqv2W4C0c87j80zZIhf942/Jm5rWlHoWFSjTcuh331h0dJh4fAF40ve3W/H1FXWMYU
+         +DT483A8D9GxP9Kk9Dg15IZ5iTPZMMoD28Kqt2S97VaxVsoxg3wByS6zXn38F4M6EBut
+         sJ3B4Tt1huoGUa6+OdMcIedKT8MZ4jCZWDqySfq6m+7Qc1ENSvLV9OJHLX0/mBiTAHpM
+         +c5WxF+TIDirLYWbpqRKkACMwPcnU3owuHN+APJiYrzeXTd28S9cD/pC5VE/6QrgtuM2
+         u8ddzCJ+rB7vHymfuwqO5Qjdh/oIe1max+//+3DCc6ri3XNicQrV7Hdo+RupoTs41D2j
+         +2BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786058820; x=1786663620;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=yMThCopPkAFmI168rEXeIJriFw8m5HwaXiuoWGQJQhA=;
+        b=hOwVI8uNTjmHr6+Jy0XKIycvMddN/+LHD66QR8GrZwcZEDzIbQR2tKAQERhOnOq7QE
+         p7rXlFnXcin1v4MWBqo1L5BW4eW9k9WKAUSprFuWGd93nv8Fr46JeY91+TTusx1Na/c9
+         6lgxQFzmFFZ6csljO8QXNMYfgU9gHWQnMoxMPJ2EWxArH4WJc6/OI5HVeFzPubVxDbkD
+         xV6X3b6zmbB0Qx9BQ9CLV706Q1CFrT9/INbDoL56F5cT36wS8MjKEcZg+vPqZMBWYPVg
+         K73dc/b3odD+XRZVAO0MgGXwBwYDw3pL+3LNHgfqhK4nxTcTxkyx0XzCFmpUcKJ6HSiL
+         iBkA==
+X-Forwarded-Encrypted: i=1; AHgh+RqFbdGQzSGueMDWoXoZwVgLwBmdJZONfkah/7aw1lHK6q0iLRCL7Kkf8esyqd2qPDfEwkHKzrVCQPw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx594/yhl0MKsLqaiMQ5TKqN5vTDoSCcoge70dWMdCbsGHKyuVK
+	4FwA7gm+KGNtPKvbPS6Yi8V8ndrmbb8OBs14rB0MvuVuxJ6sFUITXQpq
+X-Gm-Gg: AR+sD12c4rSWkhHBfADAIWPcS60y59QJpeAt4R0Rdn8kwvFbkL/854Dc2A8v+i7xWr2
+	Q5g3cFl8DMyukWUUGBGjaYOZD1RBD5n8b8MW9iQ2r7BXLPYY6ygteExHdYOOJNMvdlmuC/jE9OO
+	RhEaNvUuudQazd5oD1nvHuJNMvjhI/WvyLzW94NjfNGPXkz9BtyqlYrz7rJzCm7L4Blw0pe5yDH
+	e+ftM3Wm03ueEFlZjtFb7q9JsiXvuWrj6rubvt9wWJYErDk07p8UeRKHW2w/1EdQ0thrNznxFSS
+	rUdPNrQhFkCs3pCDZrdLSTz6/Twr2hNoZu7IOlDz47o3JBbXnCcfPJfGBCmEX3TNhMkSsuI3jJ8
+	8eFlOze9PT67v52lyoY4IwWB2eeVjDWfn3q2EaoeRzBwWgR/Yog/3XxT8UC7reEnuZaY4goSuaj
+	InfMt88zRmCQKXM3cp679c4FZbYQSkf5LYUIZmlviy1rfE1NouedSJ1Hur
+X-Received: by 2002:a05:6300:4049:b0:3bf:a638:4376 with SMTP id adf61e73a8af0-3cb85ea369dmr22427218637.21.1786058819814;
+        Thu, 06 Aug 2026 16:26:59 -0700 (PDT)
+Received: from cxlqual ([220.120.90.131])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cbe8bb33f90sm25853a12.2.2026.08.06.16.26.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Aug 2026 16:26:59 -0700 (PDT)
+From: Anisa Su <anisa.su887@gmail.com>
+X-Google-Original-From: Anisa Su <anisa.su@samsung.com>
+Date: Fri, 7 Aug 2026 08:27:27 +0900
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: Anisa Su <anisa.su887@gmail.com>, sashiko-reviews@lists.linux.dev,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v12 6/8] cxl/mem: Configure dynamic capacity interrupts
+Message-ID: <anUYX0t32y37vfyR@cxlqual>
+References: <20260731084901.1512819-1-anisa.su@samsung.com>
+ <20260731084901.1512819-7-anisa.su@samsung.com>
+ <20260731090444.558491F000E9@smtp.kernel.org>
+ <am28sIX7a6Z7QaXr@AnisaLaptop.localdomain>
+ <anExYCOu1n0RnYvh@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <anExYCOu1n0RnYvh@aschofie-mobl2.lan>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git for-7.3/cxl-port-err-prep
-branch HEAD: 658fb50cc8882608dc72dfa6b2e052f87d265ce6  cxl: Rename find_cxl_port() to find_cxl_port_by_dport()
+On Mon, Aug 03, 2026 at 05:25:04PM -0700, Alison Schofield wrote:
+> On Sat, Aug 01, 2026 at 02:30:24AM -0700, Anisa Su wrote:
+> > On Fri, Jul 31, 2026 at 09:04:43AM +0000, sashiko-bot@kernel.org wrote:
+> > > Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+> > > 
+> > > New issues:
+> > > - [High] Infinite IRQ Thread Loop / CPU Spin when handling DCD events
+> > > 
+> > False Positive. DCD events are ignored because DCD is turned off
+> > (mds->dcd_supported = false).
+> 
+> Hi Anisa,
+> 
+> I have related review feedback -
+> 
+> 
+> snip
+> 
+> > > 
+> > > [Severity: High]
+> > > Since mask now includes CXLDEV_EVENT_STATUS_DCD, status can have this bit set.
+> > > However, cxl_mem_get_event_records() does not appear to handle the DCD event:
+> > > 
+> > The mask never includes CXLDEV_EVENT_STATUS_DCD.
+> > Above in cxl_event_drain_mask:
+> > 
+> > if (cxl_dcd_supported(mds))
+> >               mask |= CXLDEV_EVENT_STATUS_DCD;
+> > 
+> > mds->dcd_supported is set to false in Patch 1 so the DCD bit is never
+> > set.
+> > 
+> > So status &= mask becomes zero and we break from the loop.
+> > 
+> > - Anisa
+> 
+> I understand that dcd_supported being forced false makes this unreachable
+> today. My concern is that this patch adds the DCD bit to the drain path
+> before there is code to consume and clear that log.
+> 
+> As soon as a later patch enables dcd_supported, the bit can enter status
+> and the handler can loop without clearing it. Could the DCD bit be added
+> to the mask in the same patch that adds the DCD drain handling?
+> 
+> -- Alison
 
-elapsed time: 1539m
+Sure, that makes sense.
 
-configs tested: 206
-configs skipped: 1
+cxl_event_drain_mask() no longer sets the DCD bit, and it
+loses the mds argument it needed for checking cxl_dcd_supported() to set it:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+	/* Event logs the driver drains: standard logs when native_cxl */
+	static u32 cxl_event_drain_mask(struct pci_host_bridge *host_bridge)
+	{
+		if (host_bridge->native_cxl_error)
+			return CXLDEV_EVENT_STATUS_ALL & ~CXLDEV_EVENT_STATUS_DCD;
+		return 0;
+	}
 
-tested configs:
-alpha                            allnoconfig    gcc-16.1.0
-alpha                           allyesconfig    gcc-16.1.0
-alpha                              defconfig    gcc-16.1.0
-arc                             allmodconfig    gcc-16.1.0
-arc                             allyesconfig    gcc-16.1.0
-arc                  randconfig-001-20260806    gcc-11.5.0
-arc                  randconfig-001-20260806    gcc-8.5.0
-arc                  randconfig-001-20260807    gcc-14.3.0
-arc                  randconfig-002-20260806    gcc-11.5.0
-arc                  randconfig-002-20260807    gcc-14.3.0
-arm                  randconfig-001-20260806    clang-24
-arm                  randconfig-001-20260806    gcc-11.5.0
-arm                  randconfig-001-20260807    gcc-14.3.0
-arm                  randconfig-002-20260806    gcc-10.5.0
-arm                  randconfig-002-20260806    gcc-11.5.0
-arm                  randconfig-002-20260807    gcc-14.3.0
-arm                  randconfig-003-20260806    gcc-11.5.0
-arm                  randconfig-003-20260806    gcc-8.5.0
-arm                  randconfig-003-20260807    gcc-14.3.0
-arm                  randconfig-004-20260806    gcc-11.5.0
-arm                  randconfig-004-20260806    gcc-8.5.0
-arm                  randconfig-004-20260807    gcc-14.3.0
-arm64                randconfig-001-20260806    gcc-13.4.0
-arm64                randconfig-001-20260806    gcc-8.5.0
-arm64                randconfig-001-20260807    gcc-16.1.0
-arm64                randconfig-002-20260806    gcc-11.5.0
-arm64                randconfig-002-20260806    gcc-13.4.0
-arm64                randconfig-002-20260807    gcc-16.1.0
-arm64                randconfig-003-20260806    clang-17
-arm64                randconfig-003-20260806    gcc-13.4.0
-arm64                randconfig-003-20260807    gcc-16.1.0
-arm64                randconfig-004-20260806    clang-17
-arm64                randconfig-004-20260806    gcc-13.4.0
-arm64                randconfig-004-20260807    gcc-16.1.0
-csky                            allmodconfig    gcc-16.1.0
-csky                 randconfig-001-20260806    gcc-13.4.0
-csky                 randconfig-001-20260806    gcc-15.2.0
-csky                 randconfig-001-20260807    gcc-16.1.0
-csky                 randconfig-002-20260806    gcc-13.4.0
-csky                 randconfig-002-20260807    gcc-16.1.0
-hexagon              randconfig-001-20260806    clang-24
-hexagon              randconfig-001-20260807    clang-18
-hexagon              randconfig-002-20260806    clang-24
-hexagon              randconfig-002-20260807    clang-18
-i386                            allmodconfig    gcc-14
-i386       buildonly-randconfig-001-20260806    gcc-14
-i386       buildonly-randconfig-002-20260806    gcc-14
-i386       buildonly-randconfig-003-20260806    clang-22
-i386       buildonly-randconfig-003-20260806    gcc-14
-i386       buildonly-randconfig-004-20260806    clang-22
-i386       buildonly-randconfig-004-20260806    gcc-14
-i386       buildonly-randconfig-005-20260806    gcc-14
-i386       buildonly-randconfig-006-20260806    gcc-14
-i386                 randconfig-001-20260806    clang-22
-i386                 randconfig-001-20260806    gcc-14
-i386                 randconfig-002-20260806    clang-22
-i386                 randconfig-003-20260806    clang-22
-i386                 randconfig-003-20260806    gcc-14
-i386                 randconfig-004-20260806    clang-22
-i386                 randconfig-005-20260806    clang-22
-i386                 randconfig-006-20260806    clang-22
-i386                 randconfig-007-20260806    clang-22
-i386                 randconfig-007-20260806    gcc-14
-i386                 randconfig-011-20260806    clang-22
-i386                 randconfig-011-20260807    clang-22
-i386                 randconfig-012-20260806    clang-22
-i386                 randconfig-012-20260807    clang-22
-i386                 randconfig-013-20260806    clang-22
-i386                 randconfig-013-20260807    clang-22
-i386                 randconfig-014-20260806    clang-22
-i386                 randconfig-014-20260807    clang-22
-i386                 randconfig-015-20260806    clang-22
-i386                 randconfig-015-20260806    gcc-13
-i386                 randconfig-015-20260807    clang-22
-i386                 randconfig-016-20260806    clang-22
-i386                 randconfig-016-20260807    clang-22
-i386                 randconfig-017-20260806    clang-22
-i386                 randconfig-017-20260807    clang-22
-loongarch                          defconfig    clang-24
-loongarch            randconfig-001-20260806    clang-22
-loongarch            randconfig-001-20260806    clang-24
-loongarch            randconfig-001-20260807    clang-18
-loongarch            randconfig-002-20260806    clang-24
-loongarch            randconfig-002-20260807    clang-18
-m68k                      m5208evb_defconfig    gcc-16.1.0
-m68k                         sun3x_defconfig    gcc-16.1.0
-nios2                           allmodconfig    gcc-11.5.0
-nios2                            allnoconfig    gcc-11.5.0
-nios2                randconfig-001-20260806    clang-24
-nios2                randconfig-001-20260806    gcc-9.5.0
-nios2                randconfig-001-20260807    clang-18
-nios2                randconfig-002-20260806    clang-24
-nios2                randconfig-002-20260806    gcc-11.5.0
-nios2                randconfig-002-20260807    clang-18
-parisc                          allmodconfig    gcc-16.1.0
-parisc                          allyesconfig    gcc-16.1.0
-parisc                             defconfig    gcc-16.1.0
-parisc                        randconfig-001    gcc-8.5.0
-parisc               randconfig-001-20260806    gcc-8.5.0
-parisc               randconfig-001-20260807    gcc-8.5.0
-parisc               randconfig-002-20260806    gcc-8.5.0
-parisc               randconfig-002-20260807    gcc-8.5.0
-powerpc              randconfig-001-20260806    gcc-11.5.0
-powerpc              randconfig-001-20260806    gcc-8.5.0
-powerpc              randconfig-001-20260807    gcc-8.5.0
-powerpc              randconfig-002-20260806    gcc-8.5.0
-powerpc              randconfig-002-20260807    gcc-8.5.0
-powerpc64            randconfig-001-20260806    gcc-8.5.0
-powerpc64            randconfig-001-20260807    gcc-8.5.0
-powerpc64            randconfig-002-20260806    clang-22
-powerpc64            randconfig-002-20260806    gcc-8.5.0
-powerpc64            randconfig-002-20260807    gcc-8.5.0
-riscv                randconfig-001-20260806    gcc-13.4.0
-riscv                randconfig-001-20260807    gcc-12.5.0
-riscv                randconfig-002-20260806    gcc-13.4.0
-riscv                randconfig-002-20260806    gcc-8.5.0
-riscv                randconfig-002-20260807    gcc-12.5.0
-s390                 randconfig-001-20260806    clang-24
-s390                 randconfig-001-20260806    gcc-13.4.0
-s390                 randconfig-001-20260807    gcc-12.5.0
-s390                 randconfig-002-20260806    clang-24
-s390                 randconfig-002-20260806    gcc-13.4.0
-s390                 randconfig-002-20260807    gcc-12.5.0
-sh                                 defconfig    gcc-16.1.0
-sh                   randconfig-001-20260806    gcc-11.5.0
-sh                   randconfig-001-20260806    gcc-13.4.0
-sh                   randconfig-001-20260807    gcc-12.5.0
-sh                   randconfig-002-20260806    gcc-13.4.0
-sh                   randconfig-002-20260806    gcc-16.1.0
-sh                   randconfig-002-20260807    gcc-12.5.0
-sh                          se7705_defconfig    gcc-16.1.0
-sparc                         randconfig-001    gcc-8.5.0
-sparc                randconfig-001-20260806    gcc-16.1.0
-sparc                randconfig-001-20260807    gcc-16.1.0
-sparc                randconfig-002-20260806    gcc-8.5.0
-sparc                randconfig-002-20260807    gcc-16.1.0
-sparc64              randconfig-001-20260806    clang-20
-sparc64              randconfig-001-20260807    gcc-16.1.0
-sparc64              randconfig-002-20260806    gcc-8.5.0
-sparc64              randconfig-002-20260807    gcc-16.1.0
-um                   randconfig-001-20260806    gcc-14
-um                   randconfig-001-20260807    gcc-16.1.0
-um                   randconfig-002-20260806    gcc-14
-um                   randconfig-002-20260807    gcc-16.1.0
-x86_64     buildonly-randconfig-001-20260806    clang-22
-x86_64     buildonly-randconfig-001-20260807    clang-22
-x86_64     buildonly-randconfig-002-20260806    clang-22
-x86_64     buildonly-randconfig-002-20260807    clang-22
-x86_64     buildonly-randconfig-003-20260806    clang-22
-x86_64     buildonly-randconfig-003-20260806    gcc-14
-x86_64     buildonly-randconfig-003-20260807    clang-22
-x86_64     buildonly-randconfig-004-20260806    clang-22
-x86_64     buildonly-randconfig-004-20260807    clang-22
-x86_64     buildonly-randconfig-005-20260806    clang-22
-x86_64     buildonly-randconfig-005-20260806    gcc-14
-x86_64     buildonly-randconfig-005-20260807    clang-22
-x86_64     buildonly-randconfig-006-20260806    clang-22
-x86_64     buildonly-randconfig-006-20260806    gcc-14
-x86_64     buildonly-randconfig-006-20260807    clang-22
-x86_64                                 kexec    clang-22
-x86_64               randconfig-001-20260806    clang-22
-x86_64               randconfig-001-20260807    clang-22
-x86_64               randconfig-002-20260806    clang-22
-x86_64               randconfig-002-20260807    clang-22
-x86_64               randconfig-003-20260806    clang-22
-x86_64               randconfig-003-20260806    gcc-14
-x86_64               randconfig-003-20260807    clang-22
-x86_64               randconfig-004-20260806    clang-22
-x86_64               randconfig-004-20260807    clang-22
-x86_64               randconfig-005-20260806    clang-22
-x86_64               randconfig-005-20260807    clang-22
-x86_64               randconfig-006-20260806    clang-22
-x86_64               randconfig-006-20260806    gcc-14
-x86_64               randconfig-006-20260807    clang-22
-x86_64               randconfig-011-20260806    clang-22
-x86_64               randconfig-011-20260807    clang-22
-x86_64               randconfig-012-20260806    clang-22
-x86_64               randconfig-012-20260806    gcc-12
-x86_64               randconfig-012-20260807    clang-22
-x86_64               randconfig-013-20260806    clang-22
-x86_64               randconfig-013-20260807    clang-22
-x86_64               randconfig-014-20260806    clang-22
-x86_64               randconfig-014-20260807    clang-22
-x86_64               randconfig-015-20260806    clang-22
-x86_64               randconfig-015-20260807    clang-22
-x86_64               randconfig-016-20260806    clang-22
-x86_64               randconfig-016-20260806    gcc-14
-x86_64               randconfig-016-20260807    clang-22
-x86_64               randconfig-071-20260806    gcc-14
-x86_64               randconfig-071-20260807    clang-22
-x86_64               randconfig-072-20260806    gcc-14
-x86_64               randconfig-072-20260807    clang-22
-x86_64               randconfig-073-20260806    gcc-14
-x86_64               randconfig-073-20260807    clang-22
-x86_64               randconfig-074-20260806    gcc-14
-x86_64               randconfig-074-20260807    clang-22
-x86_64               randconfig-075-20260806    clang-22
-x86_64               randconfig-075-20260806    gcc-14
-x86_64               randconfig-075-20260807    clang-22
-x86_64               randconfig-076-20260806    gcc-14
-x86_64               randconfig-076-20260807    clang-22
-x86_64                          rhel-9.4-bpf    gcc-14
-xtensa               randconfig-001-20260806    gcc-14.3.0
-xtensa               randconfig-001-20260807    gcc-16.1.0
-xtensa               randconfig-002-20260806    gcc-16.1.0
-xtensa               randconfig-002-20260807    gcc-16.1.0
+The bit is added back by "cxl/mem: Set up framework for handling DC
+Events", the patch that adds the DCD case to
+cxl_mem_get_event_records(), so the mask and its consumer arrive
+together.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+The commit message is updated to make it clear that the DCD event log
+is not drained in this patch:
+
+    The DCD event log is not drained here.  cxl_event_drain_mask() reports
+    only the logs the driver can service, and the DCD bit is added by
+    the patch introducing DCD event handling.  Until then a DCD interrupt
+    wakes the event thread, which finds no log it owns and returns.
+
+Thanks,
+Anisa
