@@ -1,90 +1,109 @@
-Received: from a11-16.smtp-out.amazonses.com (a11-16.smtp-out.amazonses.com [54.240.11.16])
-	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A91F255F28;
-	Thu,  6 Aug 2026 00:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.11.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FE2329E5D;
+	Thu,  6 Aug 2026 03:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.222
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785976124; cv=none; b=HllnUfSYLSkP3iMShlM2N0sNgi5igd/9UfwV0nJDGcX3XC7D2nR9x3zOyNFSgxFPbi7w7cIBEqm/v9F9KimR4XMG3Povm7a9e8qzUukGGg40Tew6axW/IYPWbI6xymjssfCz0GFbxLeFPENLgDYy0Opt0cB7Sbtjqth0ssczyY4=
+	t=1785987021; cv=none; b=pVojs5U8/7zkadd3EUsvf1ELndj7iSsfCd6/tARrabbPqXwu8WB2ah9plU4Tm9m5gOHiKwqNX90CyRtO/N+OmPIU9AsI8mDRy8DWaW29sflpKcaWkaiOc4W4PZByYLR520pqLuB4nZyETISeuLAQfdAeXXSxj2C0Spo258afYw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785976124; c=relaxed/simple;
-	bh=kl24c4r+F4VrSfxC6I+3VJNboUOE2bT+8ZU3aJDzXNM=;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:References:
-	 Message-ID; b=F5HbOuGUC8rqI/sPdy/Tnk9FBOEQhyoWZYKfrz0+YHx2g3tRhjhKWGELSa6NJftdU9detkb8VvDp5TOikFBuJVhVXDqQGASfXKyvKpiJ5j+dU2d/8gjtX+sSJM447/E4bei6bVOGgz7Y5rFskkLNcTtjrANTOiScHfE0Jx2rH58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=Igm0JNcB; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=eK9c5oYM; arc=none smtp.client-ip=54.240.11.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
+	s=arc-20240116; t=1785987021; c=relaxed/simple;
+	bh=5wus9n0+Mpv7rQWIuIFpoGHkgxM6w2e5wGqel/1cJaU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ky2L2dbAUfgHUcHtbUiToTlod9U4B2JjNeaoUCO1MH3c+LyLCHX6J2NNK5bViz2Oy3Flv99IrX2KyicdmgV3Epna5mGsEBK62GXJkPFRK2DK5GiBnVMc4lPPWPTh36N/TZ273I0opiAUY2CLYChmOPWhOpY5GUuyAqgOzNlvv4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=xvnedJmH; arc=none smtp.client-ip=113.46.200.222
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="Igm0JNcB";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="eK9c5oYM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1785976122;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Reply-To:Message-Id;
-	bh=kl24c4r+F4VrSfxC6I+3VJNboUOE2bT+8ZU3aJDzXNM=;
-	b=Igm0JNcB0597sI75kRZ2EC1QrfXdDXeZe5T5PqWJ9RtFE7Hqe8Ef6qMRFTHNrDN9
-	S1s1bzWtzt02dQOfh1MYVelKgmW6O5VLEfwXxEp6yAKk0rPo8LIWLZxUR2qe5FdH1T0
-	jo3VSAJvUmA18/y8kbusN9LJdxWL3SJohphEbwkY=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1785976122;
-	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Reply-To:Message-Id:Feedback-ID;
-	bh=kl24c4r+F4VrSfxC6I+3VJNboUOE2bT+8ZU3aJDzXNM=;
-	b=eK9c5oYMrxgJdvki4ALiAiE8OUdxkT1UmwKNiUxYVSkSViNsIEiQkkS3Dk/rBF91
-	SyO2keG4PHBhSeVk/aLsjynNRuZjHRLP4apG695cEKHfyFCngtbH1MNqeEEtdaYsETQ
-	r0/N1xRBtla0tsXZcSvnYyVxD2mNQ4GYHt0qQJqQ=
-Subject: [PATCH] dax: Remove unused export of dax_dev_get()
-From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
-To: =?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
-	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
-	=?UTF-8?Q?Alison_Schofield?= <alison.schofield@intel.com>, 
-	=?UTF-8?Q?John_Groves?= <john@groves.net>
-Cc: =?UTF-8?Q?nvdimm=40lists=2Elinux=2Edev?= <nvdimm@lists.linux.dev>, 
-	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
-	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
-	=?UTF-8?Q?John_Groves?= <John@Groves.net>
-Date: Thu, 6 Aug 2026 00:28:42 +0000
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="xvnedJmH"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=5wus9n0+Mpv7rQWIuIFpoGHkgxM6w2e5wGqel/1cJaU=;
+	b=xvnedJmHWhePXoOFObXkvLZJh87bx4MqXErY79eOEcbrJjXMeD32rgcW+e1+Mzp80DMGfqr0p
+	H5FXDNNf1FtCAkZtvN0zOyEW3ZqTIIFL63xHsatM7LYQOmJbAX0l/KDbPYMgxr2Fhy00WgHcfHo
+	1HBeTwRYcVunCQ6fWo8o/vc=
+Received: from mail.maildlp.com (unknown [172.19.162.92])
+	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4hFsx51ybgzLlTg;
+	Thu,  6 Aug 2026 11:20:41 +0800 (CST)
+Received: from kwepemo500018.china.huawei.com (unknown [7.202.195.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id 14F5F4058A;
+	Thu,  6 Aug 2026 11:30:13 +0800 (CST)
+Received: from [10.174.176.101] (10.174.176.101) by
+ kwepemo500018.china.huawei.com (7.202.195.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Thu, 6 Aug 2026 11:30:09 +0800
+Message-ID: <6840c720-8cb7-46bb-a652-040c130a4427@huawei.com>
+Date: Thu, 6 Aug 2026 11:30:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-References: <20260806002830.2610417-1-john@jagalactic.com>
-X-Mailer: Amazon WorkMail
-Thread-Index: AQHdJTqHSqNOYbcPTuixEb1oOAfS1Q==
-Thread-Topic: [PATCH] dax: Remove unused export of dax_dev_get()
-Reply-To: =?UTF-8?Q?John_Groves?= <john@groves.net>
-X-Wm-Sent-Timestamp: 1785976121
-X-Original-Mailer: git-send-email 2.53.0
-Message-ID: <0100019fd478eb93-a6bd48e4-b5f1-4871-93d4-582802956e6c-000000@email.amazonses.com>
-Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
-X-SES-Outgoing: 2026.08.06-54.240.11.16
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 25/36] mm/memory_hotplug: support N_MEMORY_PRIVATE node
+ hotplug
+To: Gregory Price <gourry@gourry.net>, <linux-mm@kvack.org>
+CC: <Zhigang.Luo@amd.com>, <arun.george@samsung.com>, <balbirs@nvidia.com>,
+	<brendan.jackman@linux.dev>, <yuzenghui@huawei.com>, <apopple@nvidia.com>,
+	<alucerop@amd.com>, <matthew.brost@intel.com>, <akpm@linux-foundation.org>,
+	<david@kernel.org>, <ljs@kernel.org>, <liam@infradead.org>,
+	<vbabka@kernel.org>, <rppt@kernel.org>, <surenb@google.com>,
+	<mhocko@suse.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
+	<gregkh@linuxfoundation.org>, <rafael@kernel.org>, <dakr@kernel.org>,
+	<djbw@kernel.org>, <vishal.l.verma@intel.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <osandov@osandov.com>, <jannh@google.com>,
+	<pfalcato@suse.de>, <jackmanb@google.com>, <hannes@cmpxchg.org>,
+	<ziy@nvidia.com>, <pbonzini@redhat.com>, <osalvador@suse.de>,
+	<joshua.hahnjy@gmail.com>, <rakie.kim@sk.com>, <byungchul@sk.com>,
+	<ying.huang@linux.alibaba.com>, <kasong@tencent.com>, <qi.zheng@linux.dev>,
+	<shakeel.butt@linux.dev>, <baohua@kernel.org>, <axelrasmussen@google.com>,
+	<yuanchu@google.com>, <weixugc@google.com>, <yury.norov@gmail.com>,
+	<linux@rasmusvillemoes.dk>, <longman@redhat.com>, <ridong.chen@linux.dev>,
+	<tj@kernel.org>, <mkoutny@suse.com>, <sj@kernel.org>, <jgg@ziepe.ca>,
+	<jhubbard@nvidia.com>, <peterx@redhat.com>, <baolin.wang@linux.alibaba.com>,
+	<npache@redhat.com>, <ryan.roberts@arm.com>, <dev.jain@arm.com>,
+	<lance.yang@linux.dev>, <usama.arif@linux.dev>, <xu.xin16@zte.com.cn>,
+	<chengming.zhou@linux.dev>, <roman.gushchin@linux.dev>,
+	<muchun.song@linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <driver-core@lists.linux.dev>,
+	<nvdimm@lists.linux.dev>, <linux-cxl@vger.kernel.org>,
+	<linux-debuggers@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<kvm@vger.kernel.org>, <cgroups@vger.kernel.org>, <damon@lists.linux.dev>,
+	<linux-kselftest@vger.kernel.org>, <kernel-team@meta.com>
+References: <20260720193431.3841992-1-gourry@gourry.net>
+ <20260720193431.3841992-26-gourry@gourry.net>
+From: Qiqi Li <liqiqi23@huawei.com>
+In-Reply-To: <20260720193431.3841992-26-gourry@gourry.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemo500018.china.huawei.com (7.202.195.199)
 
-From: John Groves <John@Groves.net>=0D=0A=0D=0ACommit 2ae624d5a555 ("dax:=
- export dax_dev_get()") exported dax_dev_get()=0D=0Ain v7.2 for famfs, wh=
-ich has not merged. The export has never had an=0D=0Ain-tree caller, so m=
-ake dax_dev_get() static again.=0D=0A=0D=0ASigned-off-by: John Groves <Jo=
-hn@Groves.net>=0D=0AReviewed-by: Dave Jiang <dave.jiang@intel.com>=0D=0AR=
-eviewed-by: Alison Schofield <alison.schofield@intel.com>=0D=0A---=0D=0A =
-drivers/dax/super.c | 3 +--=0D=0A include/linux/dax.h | 1 -=0D=0A 2 files=
- changed, 1 insertion(+), 3 deletions(-)=0D=0A=0D=0Adiff --git a/drivers/=
-dax/super.c b/drivers/dax/super.c=0D=0Aindex 25cf99dd9360..d4ab60c406bf 1=
-00644=0D=0A--- a/drivers/dax/super.c=0D=0A+++ b/drivers/dax/super.c=0D=0A=
-@@ -521,7 +521,7 @@ static int dax_set(struct inode *inode, void *data)=0D=
-=0A =09return 0;=0D=0A }=0D=0A=20=0D=0A-struct dax_device *dax_dev_get(de=
-v_t devt)=0D=0A+static struct dax_device *dax_dev_get(dev_t devt)=0D=0A {=
-=0D=0A =09struct dax_device *dax_dev;=0D=0A =09struct inode *inode;=0D=0A=
-@@ -544,7 +544,6 @@ struct dax_device *dax_dev_get(dev_t devt)=0D=0A=20=0D=
-=0A =09return dax_dev;=0D=0A }=0D=0A-EXPORT_SYMBOL_GPL(dax_dev_get);=0D=0A=
-=20=0D=0A struct dax_device *alloc_dax(void *private, const struct dax_op=
-erations *ops)=0D=0A {=0D=0Adiff --git a/include/linux/dax.h b/include/li=
-nux/dax.h=0D=0Aindex fe6c3ded1b50..f6b4549a8b4b 100644=0D=0A--- a/include=
-/linux/dax.h=0D=0A+++ b/include/linux/dax.h=0D=0A@@ -54,7 +54,6 @@ struct=
- dax_device *alloc_dax(void *private, const struct dax_operations *ops);=0D=
-=0A void *dax_holder(struct dax_device *dax_dev);=0D=0A void put_dax(stru=
-ct dax_device *dax_dev);=0D=0A void kill_dax(struct dax_device *dax_dev);=
-=0D=0A-struct dax_device *dax_dev_get(dev_t devt);=0D=0A void dax_write_c=
-ache(struct dax_device *dax_dev, bool wc);=0D=0A bool dax_write_cache_ena=
-bled(struct dax_device *dax_dev);=0D=0A bool dax_synchronous(struct dax_d=
-evice *dax_dev);=0D=0A--=20=0D=0A2.53.0=0D=0A=0D=0A
+Hi Gregory,
+
+On 7/21/2026 3:34 AM, Gregory Price wrote:
+
+> Add add_private_memory_driver_managed() to let modules hotplug
+> memory onto an N_MEMORY_PRIVATE node they control.
+
+I am trying to understand how the nid passed to
+add_private_memory_driver_managed() is expected to be provisioned.
+
+From what I can see, both node_private_register() and
+__add_memory_resource() require the nid to already be present in
+node_possible_map. My understanding is therefore that this patch
+supports hotplugging private memory onto an existing possible node,
+rather than creating a new possible node ID at runtime.
+
+For example, in the use case I am looking at, the device's private
+node is not described by firmware. Would its nid need to be reserved
+during early NUMA initialization, or is there another mechanism that
+I may have missed?
+
+Also, could you please Cc me on future revisions of this series?
+I would appreciate it and would be happy to follow the work:)
+
+Thanks,
+Qiqi
