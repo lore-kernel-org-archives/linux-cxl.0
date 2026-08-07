@@ -1,55 +1,58 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE5C40F8F8;
-	Fri,  7 Aug 2026 22:10:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F8046EC9D;
+	Fri,  7 Aug 2026 22:10:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786140615; cv=none; b=vGDj3HmlBopotjkb7g85WXrbhkvlSaDrqUHLIehZcKg1BAWXNgTkvArYbG+X5sHus9ahSuS1h1IRHde8b02ADl0Q0Wy5D7C7kyipdgx0blVW1rptLt7j6LY3fvzStddIz3EFPJ/jjWByGgpOufASPJckbvJCYNyBEm7YpJk9LiY=
+	t=1786140616; cv=none; b=Gr0Br+svh77nL97OrSX8FPG6TOETt/JEzf18n2Dvyan8rrkXnYr35WnwIc1xaEQ+iqAVnmjCONdYmrHlj16R+DsZTJZsgKIjfTVAuIn4ad4PLUg6I/eN+mNmeoSNrzsRxgusTKRRKrBUX/fv/X/ts+BNaZ67lypx6rYdVTEpbMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786140615; c=relaxed/simple;
-	bh=Rxeyts2J+BktJktwM2KvtcO72hJSx+d4YSQZNechytc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MUV9SrMTOtJhVGz110mWrp3VghY/aESR9VEK7O2RSVnueLBYNg4J2b12jioSeXrPPKjHYbY5wrKZo4HBbh2qRRGrVW51YWwJcMNSHotzQHEbMixIa4Gfi0BOMgb46+UC0bPgfQMAg0vFu3uzE8p488keD8cW7ZeXkWlOgyN604w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AkCnWMpB; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1786140616; c=relaxed/simple;
+	bh=OIJ4NpRUNV6fCJ/4BcVN0UjqGJ2aTDW/1EGKpTcycfQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aoOOZGWLOtGpsIyL3E1X/qooVnF144vmgYWSpGd4moq49AMH/YDUoRLNWZE/Z9Gr8DJWf20n0bj8jvK/6fZ8lIaim8vzdLbiB9DM5c1E5annc87cB3Ib2l4DO4qO1w2+Xnd/UDUJlAUYF5KLeAeAXQOamR05sjXLa1h3Ef8zIoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nu6fxcMq; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AkCnWMpB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nu6fxcMq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786140613; x=1817676613;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Rxeyts2J+BktJktwM2KvtcO72hJSx+d4YSQZNechytc=;
-  b=AkCnWMpBnQbpyKLvLH7ONVmWxUeyQIpCd5pXuNY/z5kdFNXLCo60+1rT
-   Y3fIa1g0yifasqKQJW3B8qIgcrbH1x2Iz8sMBGCmn0Bp6tUann1dUVOFY
-   7oFS1XYqAeTI6ekQO4SRL2b2yb4QUQ4hZ/3EB177obgNMkFdKcBpHbVIx
-   E02B+4MUWkN97KRIshN+l1lTmwmjdt4GIr9ibkQdUgLmY5oD6R/8NVxrP
-   M6ggRczkElGQhDog7lQux3emkjPLVVGoI3sq6pPW8FmUKG6wVKr+kmxBm
-   F8/r/qvw/N7USGdj0NsbFdd6wHI8/e4li96hGOHSZ1nB3Y8uWglVwkgXy
-   Q==;
-X-CSE-ConnectionGUID: XJC2hrNvRHWZ4al9HmAL1w==
-X-CSE-MsgGUID: kdIfY9F7R5mPbmea4vwjLA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11868"; a="97355676"
+  t=1786140614; x=1817676614;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=OIJ4NpRUNV6fCJ/4BcVN0UjqGJ2aTDW/1EGKpTcycfQ=;
+  b=nu6fxcMq1Cx4HUSMY9iR98aN/gA9YOyS9IrDN8/Nl/4+wSQOLCO8m2Ci
+   6hfmTY/y4ABRBjnCAFJM7OiUGG6CbdZk2qyiCx35ndsc6I32LIfXCI6Jl
+   umSOEIYPSTrgJ2tRYojz/2s80SRREsh2Z4RRR7f7aq34jR6ocNv1uBMsn
+   sQkShHZZwC2n3njBdR0ZnU2aNrsv1LjmatwJmpXXKfce4IrlzcE8yLUR6
+   MlCaPVri2VaF1rkUZYRViK4T1tDDa5XqNOcgDln7ux4lSZcTMKWO+YUsL
+   Cvpwc7lbBVJILefo10yhGCWLTlVKRWPKgdZ/52oDy/MGFDrXDc7mb6lH+
+   w==;
+X-CSE-ConnectionGUID: Ely2Qf+USJmM/BSDYC+c9g==
+X-CSE-MsgGUID: HMH/Rip6QYqzvatC9+WdMw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11868"; a="97355680"
 X-IronPort-AV: E=Sophos;i="6.25,210,1779174000"; 
-   d="scan'208";a="97355676"
+   d="scan'208";a="97355680"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2026 15:10:12 -0700
-X-CSE-ConnectionGUID: 1ozVTaRvQ5is0CVcq/hGow==
-X-CSE-MsgGUID: e6ijwpisTXmMeLEaVOkMJQ==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2026 15:10:13 -0700
+X-CSE-ConnectionGUID: HY77v3cbSwqrtsJZZiPUtQ==
+X-CSE-MsgGUID: KNyBLxvjSTW7jHjBgLJXrg==
 X-ExtLoop1: 1
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.80])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2026 15:10:11 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2026 15:10:12 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Jonathan Corbet <corbet@lwn.net>,
 	Shuah Khan <skhan@linuxfoundation.org>
 Cc: Alison Schofield <alison.schofield@intel.com>,
 	linux-doc@vger.kernel.org,
 	linux-cxl@vger.kernel.org
-Subject: [PATCH v2 1/2] docs: python: abi_regex: catch the right exception for a bad regex
-Date: Fri,  7 Aug 2026 15:10:03 -0700
-Message-ID: <9f6fa7a9aa6ba9a26b484b911976713356b3fd44.1786139549.git.alison.schofield@intel.com>
+Subject: [PATCH v2 2/2] docs: python: abi_regex: convert adjacent index placeholders
+Date: Fri,  7 Aug 2026 15:10:04 -0700
+Message-ID: <cc893dca3aaa3ec833ba70d1f32c3e7342b7faf2.1786139549.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
+In-Reply-To: <9f6fa7a9aa6ba9a26b484b911976713356b3fd44.1786139549.git.alison.schofield@intel.com>
+References: <9f6fa7a9aa6ba9a26b484b911976713356b3fd44.1786139549.git.alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -59,63 +62,40 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 While validating recent CXL ABI documentation updates with
-get_abi.py, the 'undefined' mode was found to abort instead of
-reporting undocumented ABI entries.
+get_abi.py, every decoderX.Y entry was reported as undocumented.
 
-Older Python releases raise re.error, while newer releases expose
-re.PatternError. Catching the compatible re.error exception handles
-both cases.
+The placeholder conversion mishandles adjacent index placeholders,
+producing patterns that cannot match the corresponding sysfs paths.
+As a result, valid ABI entries are reported as undocumented.
 
-Use re.error so the scan continues and reports the remaining
-results.
+Handle adjacent placeholders independently so generated patterns match
+the documented paths. This fixes decoderX.Y entries in the CXL ABI and
+other ABI documentation that uses the same naming convention.
 
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
 
 Changes in v2:
-- Update commit msg to say catches the compatible re.error (Sashiko)
-- No code change
+- No changes
 
 
- tools/lib/python/abi/abi_regex.py | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/lib/python/abi/abi_regex.py | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/tools/lib/python/abi/abi_regex.py b/tools/lib/python/abi/abi_regex.py
-index d0c5e3ede6b5..69d8507b7382 100644
+index 69d8507b7382..198ecbf49c51 100644
 --- a/tools/lib/python/abi/abi_regex.py
 +++ b/tools/lib/python/abi/abi_regex.py
-@@ -155,7 +155,7 @@ class AbiRegex(AbiParser):
-             if self.search_string:
-                 if what.find(self.search_string) >= 0:
-                     print(f"What: {what}")
--        except re.PatternError:
-+        except re.error:
-             self.log.warning("Ignoring '%s' as it produced an invalid regex:\n"
-                              "           '%s'", what, new)
+@@ -65,8 +65,7 @@ class AbiRegex(AbiParser):
+         (re.compile(r"\[[^\]]+\]"), "\\\\w\xf7"),
  
-@@ -194,7 +194,7 @@ class AbiRegex(AbiParser):
+         (re.compile(r"XX+"), "\\\\w\xf7"),
+-        (re.compile(r"([^A-Z])[XYZ]([^A-Z])"), "\\1\\\\w\xf7\\2"),
+-        (re.compile(r"([^A-Z])[XYZ]$"), "\\1\\\\w\xf7"),
++        (re.compile(r"(?<![A-Z])[XYZ](?![A-Z])"), "\\\\w\xf7"),
+         (re.compile(r"_[AB]_"), "_\\\\w\xf7_"),
  
-                 try:
-                     self.re_string = re.compile(self.search_string)
--                except re.PatternError as e:
-+                except re.error as e:
-                     msg = f"{self.search_string} is not a valid regular expression"
-                     raise ValueError(msg) from e
- 
-@@ -223,9 +223,9 @@ class AbiRegex(AbiParser):
-                 for r, s in self.re_whats:
-                     try:
-                         new = r.sub(s, new)
--                    except re.PatternError as e:
-+                    except re.error as e:
-                         # Help debugging troubles with new regexes
--                        raise re.PatternError(f"{e}\nwhile re.sub('{r.pattern}', {s}, str)") from e
-+                        raise re.error(f"{e}\nwhile re.sub('{r.pattern}', {s}, str)") from e
- 
-                 v["regex"].append(new)
- 
-
-base-commit: 075b74841bd0065a3bda3440873c747938e69b68
+         # Recover [0-9] type of patterns
 -- 
 2.37.3
 
