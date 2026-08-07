@@ -1,253 +1,121 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC2F331A61
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Aug 2026 15:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE5C40F8F8;
+	Fri,  7 Aug 2026 22:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786115133; cv=none; b=G8V5KK+oDq6oKNkCg92eYs9RoHK1FYua41LFkQVXuC7NdmDLB0igO5DFpp3YSTUt02fbuSfl220ryofxbNTQLWj4sL7qe0Mg2l/eRkUdA8ZqQ+vTDhdwaTTQWhJ3Eu89zfAPXuNkod76TcwIQ0Ls3Q8qBqjDgsUP9piq2jZlXT8=
+	t=1786140615; cv=none; b=vGDj3HmlBopotjkb7g85WXrbhkvlSaDrqUHLIehZcKg1BAWXNgTkvArYbG+X5sHus9ahSuS1h1IRHde8b02ADl0Q0Wy5D7C7kyipdgx0blVW1rptLt7j6LY3fvzStddIz3EFPJ/jjWByGgpOufASPJckbvJCYNyBEm7YpJk9LiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786115133; c=relaxed/simple;
-	bh=glgKEem+6g70PraGqIwL/Po1kA8bdnkrVHo0WIwVe+k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VS8GKmzZHVgJ2FNHhc4zq/0jjhDD+zNZivE9JaiqsNS2KqJPrsamRVN1VidLAo/VaXc57d56VV4sNMCCLi+GuwihsprO6PW7Jcy12xBeq9wz8G+1RbabBHlyRgVurEKYrLgeV0TAGOT7u9t3hpeoor+NtCtrI82CSz/vV9OZuJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
-Received: from omf01.hostedemail.com (lb01a-stub [10.200.18.249])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id F0CF480214;
-	Fri,  7 Aug 2026 15:05:24 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf01.hostedemail.com (Postfix) with ESMTPA id BC60A6000C;
-	Fri,  7 Aug 2026 15:05:07 +0000 (UTC)
-Date: Fri, 7 Aug 2026 10:05:06 -0500
-From: John Groves <john@groves.net>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Dan Williams <djbw@kernel.org>, Bernd Schubert <bschubert@ddn.com>, 
-	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Jake Edge <jake@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Ira Weiny <iweiny@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Haren Myneni <haren@linux.ibm.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	Ethan Nelson-Moore <enelsonmoore@gmail.com>, Gabriel Whigham <gabewhigham@gmail.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
-	"fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>, Jonathan Cameron <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH V12 12/12] famfs: Add documentation
-Message-ID: <anXpf1JJYsV5cfYL@groves.net>
-References: <0100019fc572ca94-ec363dd7-3a77-484b-b4b7-f2503a0931a6-000000@email.amazonses.com>
- <20260803023009.75966-1-john@jagalactic.com>
- <0100019fc5752a8f-df47f869-a29b-4b6d-936a-67dd521c0f5e-000000@email.amazonses.com>
- <20260806053852.GM3560084@frogsfrogsfrogs>
+	s=arc-20240116; t=1786140615; c=relaxed/simple;
+	bh=Rxeyts2J+BktJktwM2KvtcO72hJSx+d4YSQZNechytc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MUV9SrMTOtJhVGz110mWrp3VghY/aESR9VEK7O2RSVnueLBYNg4J2b12jioSeXrPPKjHYbY5wrKZo4HBbh2qRRGrVW51YWwJcMNSHotzQHEbMixIa4Gfi0BOMgb46+UC0bPgfQMAg0vFu3uzE8p488keD8cW7ZeXkWlOgyN604w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AkCnWMpB; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AkCnWMpB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786140613; x=1817676613;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Rxeyts2J+BktJktwM2KvtcO72hJSx+d4YSQZNechytc=;
+  b=AkCnWMpBnQbpyKLvLH7ONVmWxUeyQIpCd5pXuNY/z5kdFNXLCo60+1rT
+   Y3fIa1g0yifasqKQJW3B8qIgcrbH1x2Iz8sMBGCmn0Bp6tUann1dUVOFY
+   7oFS1XYqAeTI6ekQO4SRL2b2yb4QUQ4hZ/3EB177obgNMkFdKcBpHbVIx
+   E02B+4MUWkN97KRIshN+l1lTmwmjdt4GIr9ibkQdUgLmY5oD6R/8NVxrP
+   M6ggRczkElGQhDog7lQux3emkjPLVVGoI3sq6pPW8FmUKG6wVKr+kmxBm
+   F8/r/qvw/N7USGdj0NsbFdd6wHI8/e4li96hGOHSZ1nB3Y8uWglVwkgXy
+   Q==;
+X-CSE-ConnectionGUID: XJC2hrNvRHWZ4al9HmAL1w==
+X-CSE-MsgGUID: kdIfY9F7R5mPbmea4vwjLA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11868"; a="97355676"
+X-IronPort-AV: E=Sophos;i="6.25,210,1779174000"; 
+   d="scan'208";a="97355676"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2026 15:10:12 -0700
+X-CSE-ConnectionGUID: 1ozVTaRvQ5is0CVcq/hGow==
+X-CSE-MsgGUID: e6ijwpisTXmMeLEaVOkMJQ==
+X-ExtLoop1: 1
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.80])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2026 15:10:11 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	linux-doc@vger.kernel.org,
+	linux-cxl@vger.kernel.org
+Subject: [PATCH v2 1/2] docs: python: abi_regex: catch the right exception for a bad regex
+Date: Fri,  7 Aug 2026 15:10:03 -0700
+Message-ID: <9f6fa7a9aa6ba9a26b484b911976713356b3fd44.1786139549.git.alison.schofield@intel.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260806053852.GM3560084@frogsfrogsfrogs>
-X-Stat-Signature: wwskbdqhc3jzktyryshh4awcxi5ukaeg
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: BC60A6000C
-X-Session-Marker: 6A6F686E4067726F7665732E6E6574
-X-Session-ID: U2FsdGVkX18b4zxH4gkowpJ5t9P02dhsJKnGhwZqyp8=
-X-HE-Tag: 1786115107-833865
-X-HE-Meta: U2FsdGVkX1/xIhMDbEBd8+CBNlywVoLemHpmYl/fPnh6lKjCc2JVy4c74zDaDkCO2uGhn6St9fhFdvYDhRuJ23fJys9OIJTD5Et6krB5GW4dqcpEdR7GikNbBR3R6zTWf9MACb1vtXepkUro47UJOKPy1RMf4Weanu6F2kWB4YE5cFyX5YU5ocWy+jXPHq90GTqdTHS8BEQhh2SWrHRjLJ8IAE88yLOzg/QGsQOULqMJZqFg/s/ha4sQ6SLAbYVkR7RzW6zioBI59jux6vj2AAlx5W4ozheg9lKV/v7wszwfwUWTYGsFmoWYpUVfo6h+/D9D+QCbnNewuw0zAGkxIjzO3jMPWcx6wod1RXQzlC7TZeEJPKt2xPG3iCyAUAhlIY/Xf0qLPTnRA9qKYS/mfGGpZdq2hZWtMEXZTZaGzCFd2tg/bDBZhO1HjhdzcDBtvwikOx/NBgQUMk/lll/sbw==
+Content-Transfer-Encoding: 8bit
 
-On 26/08/05 10:38PM, Darrick J. Wong wrote:
-> On Mon, Aug 03, 2026 at 02:30:18AM +0000, John Groves wrote:
-> > From: John Groves <John@Groves.net>
-> > 
-> > Add Documentation/filesystems/famfs.rst and update MAINTAINERS
-> > 
-> > Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-> > Tested-by: Randy Dunlap <rdunlap@infradead.org>
-> > Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-> > Signed-off-by: John Groves <john@groves.net>
-> > ---
-> >  Documentation/filesystems/famfs.rst | 142 ++++++++++++++++++++++++++++
-> >  Documentation/filesystems/index.rst |   1 +
-> >  MAINTAINERS                         |   1 +
-> >  3 files changed, 144 insertions(+)
-> >  create mode 100644 Documentation/filesystems/famfs.rst
-> > 
-> > diff --git a/Documentation/filesystems/famfs.rst b/Documentation/filesystems/famfs.rst
-> > new file mode 100644
-> > index 000000000000..048791bcbcfd
-> > --- /dev/null
-> > +++ b/Documentation/filesystems/famfs.rst
-> > @@ -0,0 +1,142 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +.. _famfs_index:
-> > +
-> > +==================================================================
-> > +famfs: The fabric-attached memory file system
-> > +==================================================================
-> > +
-> > +- Copyright (C) 2024-2026 Micron Technology, Inc.
-> > +
-> > +Introduction
-> > +============
-> > +Compute Express Link (CXL) provides a mechanism for disaggregated or
-> > +fabric-attached memory (FAM). This creates opportunities for data sharing;
-> > +clustered apps that would otherwise have to shard or replicate data can
-> > +share one copy in disaggregated memory.
-> > +
-> > +Famfs, which is not CXL-specific in any way, provides a mechanism for
-> > +multiple hosts to concurrently access data in shared memory, by giving it
-> > +a file system interface. With famfs, any app that understands files can
-> > +access data sets in shared memory. Although famfs supports read and write,
-> > +the real point is to support mmap, which provides direct (dax) access to
-> > +the memory - either writable or read-only.
-> > +
-> > +Shared memory can pose complex coherency and synchronization issues, but
-> > +there are also simple cases. Two simple and eminently useful patterns that
-> > +occur frequently in data analytics and AI are:
-> > +
-> > +* Serial Sharing - Only one host or process at a time has access to a file
-> > +* Read-only Sharing - Multiple hosts or processes share read-only access
-> > +  to a file
-> > +
-> > +The famfs file system is part of the famfs framework; user space
-> > +components [1] handle metadata allocation and distribution, and populate
-> > +the in-kernel files (via ioctls) so that they map directly to shared
-> > +memory.
-> 
-> Ok, so maybe it is the famfs server that's supposed to go modify the
-> directory tree after the metadata log updates.
+While validating recent CXL ABI documentation updates with
+get_abi.py, the 'undefined' mode was found to abort instead of
+reporting undocumented ABI entries.
 
-Right, pretty much. With standalone famfs, there is currently no stateful
-server per se (which is a benefit!). There is state in the log, and state in 
-the kernel (dirs and files with fmaps). Periodically we replay the log to 
-push up any new state into the kernel - at which point we add dirs and files 
-if the log has been appended.  Since we don't delete or truncate stuff, 
-logplay either adds files/dirs or does nothing.
+Older Python releases raise re.error, while newer releases expose
+re.PatternError. Catching the compatible re.error exception handles
+both cases.
 
-> 
-> > +The famfs framework manages coherency of its own metadata and structures,
-> > +but does not attempt to manage coherency for applications.
-> > +
-> > +Famfs also provides data isolation between files. That is, even though
-> > +the host has access to an entire memory "device" (as a devdax device), apps
-> > +cannot write to memory for which the file is read-only, and mapping one
-> > +file provides isolation from the memory of all other files. This is pretty
-> > +basic, but some experimental shared memory usage patterns provide no such
-> > +isolation.
-> > +
-> > +Principles of Operation
-> > +=======================
-> > +
-> > +Famfs is a file system with one or more devdax devices as a first-class
-> > +backing device(s). Metadata maintenance and query operations happen
-> > +entirely in user space.
-> > +
-> > +The famfs user space provides each file's map (fmap) and its backing
-> > +devdax devices to the kernel through ioctls (FAMFSIOC_MAP_CREATE and
-> > +FAMFSIOC_DAXDEV_OPEN), after which read/write/mapping faults are handled
-> > +entirely in the kernel with no up-calls for all active files.
-> > +
-> > +The famfs user space is responsible for maintaining and distributing
-> > +consistent metadata. This is currently handled via an append-only
-> > +metadata log within the memory, but this is orthogonal to the famfs
-> > +kernel code.
-> > +
-> > +Once instantiated, "the same file" on each host points to the same shared
-> > +memory, but in-memory metadata (inodes, etc.) is ephemeral on each host
-> > +that has a famfs instance mounted. Use cases are free to allow or not
-> > +allow mutations to data on a file-by-file basis.
-> > +
-> > +When an app accesses a data object in a famfs file, there is no page cache
-> > +involvement. The CPU cache is loaded directly from the shared memory. In
-> > +some use cases, this is an enormous reduction in read amplification
-> > +compared to loading an entire page into the page cache.
-> > +
-> > +
-> > +Famfs is Not a Conventional File System
-> > +---------------------------------------
-> > +
-> > +Famfs files can be accessed by conventional means, but there are
-> > +limitations. The famfs kernel module is not involved in the allocation of
-> > +backing memory for files at all; the famfs user space creates files and
-> > +supplies their fmaps and devdax device info to the kernel via ioctls.
-> 
-> ...and just to be clear, regular programs *do not* modify the directory
-> tree, create files, or delete them?
+Use re.error so the scan continues and reports the remaining
+results.
 
-Right, though I'm hesitant to say it should *never* be allowed. One recent
-use case needed to create local-only symlinks within famfs, to make some 
-app or benchmark happy...
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
 
-But any mutability other than by the logplay machinery is severely or
-completely restricted.
+Changes in v2:
+- Update commit msg to say catches the compatible re.error (Sashiko)
+- No code change
 
-> 
-> > +Famfs differs in some important ways from conventional file systems:
-> > +
-> > +* Files must be pre-allocated by the famfs framework; allocation is never
-> > +  performed on (or after) write.
-> > +* Any operation that changes a file's size is considered to put the file
-> > +  in an invalid state, disabling access to the data. It may be possible to
-> > +  revisit this in the future. (Typically the famfs user space can restore
-> > +  files to a valid state by replaying the famfs metadata log.)
-> > +
-> > +Famfs exists to apply the existing file system abstractions to shared
-> > +memory so applications and workflows can more easily adapt to an
-> > +environment with disaggregated shared memory.
-> > +
-> > +Memory Error Handling
-> > +=====================
-> > +
-> > +Possible memory errors include timeouts, poison, and unexpected
-> > +reconfiguration of an underlying dax device. In all of these cases, famfs
-> > +receives a call from the devdax layer via its
-> > +dax_holder_operations->notify_failure() function. If any memory errors have
-> > +been detected, access to the affected
-> > +daxdev is disabled to avoid further errors or corruption.
-> > +
-> > +In all known cases, famfs can be unmounted cleanly. In most cases errors
-> > +can be cleared by re-initializing the memory - at which point a new famfs
-> > +file system can be created.
-> 
-> Should media failure notifications get passed to the new fserror
-> framework (see xfs_verify_media.c)?
-> 
-> --D
 
-I didn't know about fserror; Initial impression is I'm hesitant to jump in
-immediately, but we should consider adding it later.
+ tools/lib/python/abi/abi_regex.py | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Famfs currently does not attempt to determine which files are affected by
-a memory error - it just shuts down the mount. It's possible we'll attempt
-this in the future, but I'm not yet convinced it's needed.
+diff --git a/tools/lib/python/abi/abi_regex.py b/tools/lib/python/abi/abi_regex.py
+index d0c5e3ede6b5..69d8507b7382 100644
+--- a/tools/lib/python/abi/abi_regex.py
++++ b/tools/lib/python/abi/abi_regex.py
+@@ -155,7 +155,7 @@ class AbiRegex(AbiParser):
+             if self.search_string:
+                 if what.find(self.search_string) >= 0:
+                     print(f"What: {what}")
+-        except re.PatternError:
++        except re.error:
+             self.log.warning("Ignoring '%s' as it produced an invalid regex:\n"
+                              "           '%s'", what, new)
+ 
+@@ -194,7 +194,7 @@ class AbiRegex(AbiParser):
+ 
+                 try:
+                     self.re_string = re.compile(self.search_string)
+-                except re.PatternError as e:
++                except re.error as e:
+                     msg = f"{self.search_string} is not a valid regular expression"
+                     raise ValueError(msg) from e
+ 
+@@ -223,9 +223,9 @@ class AbiRegex(AbiParser):
+                 for r, s in self.re_whats:
+                     try:
+                         new = r.sub(s, new)
+-                    except re.PatternError as e:
++                    except re.error as e:
+                         # Help debugging troubles with new regexes
+-                        raise re.PatternError(f"{e}\nwhile re.sub('{r.pattern}', {s}, str)") from e
++                        raise re.error(f"{e}\nwhile re.sub('{r.pattern}', {s}, str)") from e
+ 
+                 v["regex"].append(new)
+ 
 
-Famfs is not storage, and we advise users that it's a mistake to put your 
-only copy of valuable data in famfs. But it's great for stuff like kv-cache 
-blocks, which can be regenerated. So errors famfs memory, if you're using
-it right, are not lost data in the same sense as with xfs.
-
-Push back if you disagree. Otherwise I've noted it in our internal roadmap
-docs...
-
-Thanks!
-John
-
-<snip>
+base-commit: 075b74841bd0065a3bda3440873c747938e69b68
+-- 
+2.37.3
 
