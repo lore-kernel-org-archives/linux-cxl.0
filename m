@@ -1,101 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F8046EC9D;
-	Fri,  7 Aug 2026 22:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147B1466AE1;
+	Fri,  7 Aug 2026 22:17:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786140616; cv=none; b=Gr0Br+svh77nL97OrSX8FPG6TOETt/JEzf18n2Dvyan8rrkXnYr35WnwIc1xaEQ+iqAVnmjCONdYmrHlj16R+DsZTJZsgKIjfTVAuIn4ad4PLUg6I/eN+mNmeoSNrzsRxgusTKRRKrBUX/fv/X/ts+BNaZ67lypx6rYdVTEpbMQ=
+	t=1786141074; cv=none; b=OU5FQfAw7SuiEo57cQ3IB+s/8z8rkRbFCjTNOl7dSD9LnO3DtP5Kal4jK0E2KCca3TFG8Ar6c8rkpbekthIkoK/iufsHuYq+dqs/f0C99esgDsXl5d1/2/grmvlfOqKBiGufh1eMPLZGyTQb+5a3ugIBsnIv4diWhYPQ9GXH48U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786140616; c=relaxed/simple;
-	bh=OIJ4NpRUNV6fCJ/4BcVN0UjqGJ2aTDW/1EGKpTcycfQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aoOOZGWLOtGpsIyL3E1X/qooVnF144vmgYWSpGd4moq49AMH/YDUoRLNWZE/Z9Gr8DJWf20n0bj8jvK/6fZ8lIaim8vzdLbiB9DM5c1E5annc87cB3Ib2l4DO4qO1w2+Xnd/UDUJlAUYF5KLeAeAXQOamR05sjXLa1h3Ef8zIoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nu6fxcMq; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nu6fxcMq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786140614; x=1817676614;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=OIJ4NpRUNV6fCJ/4BcVN0UjqGJ2aTDW/1EGKpTcycfQ=;
-  b=nu6fxcMq1Cx4HUSMY9iR98aN/gA9YOyS9IrDN8/Nl/4+wSQOLCO8m2Ci
-   6hfmTY/y4ABRBjnCAFJM7OiUGG6CbdZk2qyiCx35ndsc6I32LIfXCI6Jl
-   umSOEIYPSTrgJ2tRYojz/2s80SRREsh2Z4RRR7f7aq34jR6ocNv1uBMsn
-   sQkShHZZwC2n3njBdR0ZnU2aNrsv1LjmatwJmpXXKfce4IrlzcE8yLUR6
-   MlCaPVri2VaF1rkUZYRViK4T1tDDa5XqNOcgDln7ux4lSZcTMKWO+YUsL
-   Cvpwc7lbBVJILefo10yhGCWLTlVKRWPKgdZ/52oDy/MGFDrXDc7mb6lH+
-   w==;
-X-CSE-ConnectionGUID: Ely2Qf+USJmM/BSDYC+c9g==
-X-CSE-MsgGUID: HMH/Rip6QYqzvatC9+WdMw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11868"; a="97355680"
-X-IronPort-AV: E=Sophos;i="6.25,210,1779174000"; 
-   d="scan'208";a="97355680"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2026 15:10:13 -0700
-X-CSE-ConnectionGUID: HY77v3cbSwqrtsJZZiPUtQ==
-X-CSE-MsgGUID: KNyBLxvjSTW7jHjBgLJXrg==
-X-ExtLoop1: 1
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.222.80])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2026 15:10:12 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	linux-doc@vger.kernel.org,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH v2 2/2] docs: python: abi_regex: convert adjacent index placeholders
-Date: Fri,  7 Aug 2026 15:10:04 -0700
-Message-ID: <cc893dca3aaa3ec833ba70d1f32c3e7342b7faf2.1786139549.git.alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <9f6fa7a9aa6ba9a26b484b911976713356b3fd44.1786139549.git.alison.schofield@intel.com>
-References: <9f6fa7a9aa6ba9a26b484b911976713356b3fd44.1786139549.git.alison.schofield@intel.com>
+	s=arc-20240116; t=1786141074; c=relaxed/simple;
+	bh=J4JLIR8qt7OMPKMUTgAP0WX5jKAWME93N1J+XGiazdw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c8xIiRU+envJBWHryQZ/9cBlv5oMbUsqeK3/rXJKsFTYBQBpRc+IoRP8kL2K4opWaa6zplUf7K0zqVAIrrMHiNDmyvYWfFeS/ojWWELeukohUuG0ukSO69XRM9gkBPsHCl5GeADmB/oyWwsE+/bxj14rnFkQkScJiFNuDL59B5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=groves.net; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=groves.net
+Received: from omf17.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 42B5AC01E3;
+	Fri,  7 Aug 2026 22:17:39 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: john@groves.net) by omf17.hostedemail.com (Postfix) with ESMTPA id C813317;
+	Fri,  7 Aug 2026 22:17:22 +0000 (UTC)
+Date: Fri, 7 Aug 2026 17:17:21 -0500
+From: John Groves <john@groves.net>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: John Groves <john@jagalactic.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Dan Williams <djbw@kernel.org>, Bernd Schubert <bschubert@ddn.com>, 
+	Alison Schofield <alison.schofield@intel.com>, John Groves <jgroves@micron.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Jake Edge <jake@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Stefan Hajnoczi <shajnocz@redhat.com>, 
+	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
+	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
+	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, 
+	Lorenzo Stoakes <ljs@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Ira Weiny <iweiny@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Haren Myneni <haren@linux.ibm.com>, Pratyush Yadav <pratyush@kernel.org>, 
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Jiri Slaby <jirislaby@kernel.org>, 
+	Ethan Nelson-Moore <enelsonmoore@gmail.com>, Gabriel Whigham <gabewhigham@gmail.com>, 
+	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
+	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+	"fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
+Subject: Re: [PATCH V12 07/12] famfs: MAP_CREATE ioctl and fmap ingest (ABI
+ 44)
+Message-ID: <anZXxns2H0hraevA@groves.net>
+References: <0100019fc572ca94-ec363dd7-3a77-484b-b4b7-f2503a0931a6-000000@email.amazonses.com>
+ <20260803022919.75875-1-john@jagalactic.com>
+ <0100019fc5746312-6cfe9a07-a658-4aba-b1e9-5233b0ddfcf4-000000@email.amazonses.com>
+ <20260806052449.GG3560084@frogsfrogsfrogs>
+ <anTxt3qsUQuCKvMz@groves.net>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <anTxt3qsUQuCKvMz@groves.net>
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: C813317
+X-Stat-Signature: 8j34j75gqi1wmp6t4z3xaq87gdp38by1
+X-Session-Marker: 6A6F686E4067726F7665732E6E6574
+X-Session-ID: U2FsdGVkX1+Jhg+QZrZX5fW8FKmAtX44m54gPSILj4M=
+X-HE-Tag: 1786141042-871016
+X-HE-Meta: U2FsdGVkX19CtPIfRxeFZ3e99ugG6+ZU3FJMM8tlxbxau2+hivErNN8eJFH7VkJHIzdcrThG0zrLMFoBhzt+qIVnrbtUGpNoH2u0ciCcd1TX4m8T34JMcfhKMrCpF1shSRwIqSGS6E9LxQ0z67EQxus0sJB8AqdTVFbP+mFcJhkxSzvGwXcl6DAp1lEouJWztVlhsYZ3ixSy8Cn8s4mKt8jyY2cmnMcg8sxPxG0dz4NQwdQaIqamoAtByXbmTzVN6ymFtoS2vI78/PkZL15H5B2V3yN3vEpo79o3qWwgaxcvIEHzBRpRh+tOZf13+uWS4nO+5VnxYxqjD+oqAyCgLBwCy9PjI0xTdbLAdVpXmobkOf4+RwMP0ar5Mk01PK5t
 
-While validating recent CXL ABI documentation updates with
-get_abi.py, every decoderX.Y entry was reported as undocumented.
+On 26/08/06 03:53PM, John Groves wrote:
+> On 26/08/05 10:24PM, Darrick J. Wong wrote:
+> > On Mon, Aug 03, 2026 at 02:29:26AM +0000, John Groves wrote:
+> > > From: John Groves <John@Groves.net>
+> > > 
+> > > Add the famfs file ioctl handler (FAMFSIOC_NOP, FAMFSIOC_MAP_CREATE) and
+> > > the KABI-44 self-describing fmap message: the wire ABI in famfs_ioctl.h
+> > > (famfs_ioc_fmap_header plus the simple and interleaved extent structs), the
+> > > in-core famfs_file_meta, and famfs_file_init_dax(), which copies the
+> > > message in, parses both the simple-extent and interleaved (striped) wire
+> > > forms into inode->i_private, and sets S_DAX.
+> > > 
+> > > Resolving those mappings to dax-device offsets (iomap_begin) is added in
+> > > the following commit; the read/write/fault paths keep their NULL iomap_ops
+> > > stub until then.
+> > > 
+> > > Also add famfs ioctls to ioctl-number.rst
+> > > 
+> > > Signed-off-by: John Groves <john@groves.net>
+> > > ---
+> > >  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
+> > >  fs/famfs/famfs_file.c                         | 326 +++++++++++++++++-
+> > >  fs/famfs/famfs_inode.c                        |   1 +
+> > >  fs/famfs/famfs_internal.h                     |  46 +++
+> > >  include/uapi/linux/famfs_ioctl.h              |  91 +++++
+> > >  5 files changed, 462 insertions(+), 3 deletions(-)
+> > >  create mode 100644 include/uapi/linux/famfs_ioctl.h
+> > > 
+> > > diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> > > index 3f0ef1e27eb0..5e244dec1b98 100644
+> > > --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> > > +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> > > @@ -299,6 +299,7 @@ Code  Seq#    Include File                                             Comments
+> > >  'u'   00-2F  linux/ublk_cmd.h                                          conflict!
+> > >  'u'   20-3F  linux/uvcvideo.h                                          USB video class host driver
+> > >  'u'   40-4f  linux/udmabuf.h                                           userspace dma-buf misc device
+> > > +'u'   50-5F  linux/famfs_ioctl.h                                       famfs shared memory file system
+> > >  'v'   00-1F  linux/ext2_fs.h                                           conflict!
+> > >  'v'   00-1F  linux/fs.h                                                conflict!
+> > >  'v'   00-0F  linux/sonypi.h                                            conflict!
+> > > diff --git a/fs/famfs/famfs_file.c b/fs/famfs/famfs_file.c
+> > > index 678f2035fd5f..d710c8a0c923 100644
+> > > --- a/fs/famfs/famfs_file.c
+> > > +++ b/fs/famfs/famfs_file.c
+> > > @@ -13,9 +13,313 @@
+> > >  #include <linux/mm.h>
+> > >  #include <linux/dax.h>
+> > >  #include <linux/iomap.h>
+> > > +#include <linux/capability.h>
+> > >  
+> > > +#include <linux/famfs_ioctl.h>
+> > >  #include "famfs_internal.h"
+> > >  
+> > > +/* Expose famfs kernel abi version as a read-only module parameter */
+> > > +static int famfs_kabi_version = FAMFS_KABI_VERSION;
+> > > +module_param(famfs_kabi_version, int, 0444);
+> > > +MODULE_PARM_DESC(famfs_kabi_version, "famfs kernel abi version");
+> > 
+> > Maybe make the "NOP" ioctl a geometry ioctl that tells you the abi
+> > version and (I guess) the page and pmd size? :D
+> 
+> I like it - will do
 
-The placeholder conversion mishandles adjacent index placeholders,
-producing patterns that cannot match the corresponding sysfs paths.
-As a result, valid ABI entries are reported as undocumented.
+Err, gonna leave this alone after all. The kabi_version is already exposed
+as a module parameter - which is better. That is needed before mount (and
+the ioctls can't be called till mounted). The other useful stuff that goes 
+here is the supported page sizes (which famfs generally calls "allocation 
+units". But there again, user space needs them prior to mount. So exposing 
+those as one or more module parameters is ideal.
 
-Handle adjacent placeholders independently so generated patterns match
-the documented paths. This fixes decoderX.Y entries in the CXL ABI and
-other ABI documentation that uses the same naming convention.
+The NOP ioctl originated to answer the question "is this file famfs", and
+it still works fine for that (and user space relies on that in certain
+circumstances).
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
+Thanks!
+John
 
-Changes in v2:
-- No changes
-
-
- tools/lib/python/abi/abi_regex.py | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/tools/lib/python/abi/abi_regex.py b/tools/lib/python/abi/abi_regex.py
-index 69d8507b7382..198ecbf49c51 100644
---- a/tools/lib/python/abi/abi_regex.py
-+++ b/tools/lib/python/abi/abi_regex.py
-@@ -65,8 +65,7 @@ class AbiRegex(AbiParser):
-         (re.compile(r"\[[^\]]+\]"), "\\\\w\xf7"),
- 
-         (re.compile(r"XX+"), "\\\\w\xf7"),
--        (re.compile(r"([^A-Z])[XYZ]([^A-Z])"), "\\1\\\\w\xf7\\2"),
--        (re.compile(r"([^A-Z])[XYZ]$"), "\\1\\\\w\xf7"),
-+        (re.compile(r"(?<![A-Z])[XYZ](?![A-Z])"), "\\\\w\xf7"),
-         (re.compile(r"_[AB]_"), "_\\\\w\xf7_"),
- 
-         # Recover [0-9] type of patterns
--- 
-2.37.3
+<snip>
 
