@@ -1,62 +1,62 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010048.outbound.protection.outlook.com [52.101.46.48])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012037.outbound.protection.outlook.com [40.107.200.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79048470EB9
-	for <linux-cxl@vger.kernel.org>; Fri,  7 Aug 2026 11:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D7346EC81
+	for <linux-cxl@vger.kernel.org>; Fri,  7 Aug 2026 12:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.37
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786103479; cv=fail; b=MT9GeJ7ndFvgAe5Qo0y3pOqubOf0SS6mAFJaD0c+AIN1OKGXzTl4Ox95hZZz90Z7cHGsuhCxcF1/rL8RVZxaDceVGTEaLGFXvIU2knxKu0iyDdpSeQb2WI4XPqK7+TwX8tru2mGjnM3Ft8mN3zngLciRTbvjVMdazdpLTwilUX4=
+	t=1786104229; cv=fail; b=VayjWHHyzpBLBg/mZ+wK5d+58dbWpfRMObuMLn9y9hlTha6VLPM0iSu5TxwNuvqtEspXwORQ3sDl3uFxxKaVNtWqFlCI73VpxNssXFqJpnFp2LyyTKfx+t4IEjOxt8mYDuf5/4MZFFzRt2dxxzJADOqr5jpzcz6AXjgcZoSLlSk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786103479; c=relaxed/simple;
-	bh=fVC3q2LIbwCELC+SkJZ9fb+/PjFgMgQ82pYFzEcfS24=;
+	s=arc-20240116; t=1786104229; c=relaxed/simple;
+	bh=C+mhmPDkSYYIyRE+EzTbY296vyWenUUoXJDZqfSHZos=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ARAT7nQvMsfmamkEIIXcNtft04EyZu4+IfDwUUkytOtwvOU6WEaC+VHTyEt8+9vfxDQuv//mbSuCuoIt54wT9xMUADau4GVjp1r5J/AR9v8WOnKjhLTxO/q9nJKRFccnNaulN/kIQkqJmXpzj3Z7w0DQN2Ln32uwp3LLFYQpw/E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OpExMBrb; arc=fail smtp.client-ip=52.101.46.48
+	 Content-Disposition:In-Reply-To:MIME-Version; b=oAOnbvRFkLs+66UkthH4nFx1AahdejPJbIv2HY+sUNYnPUSlwTX0Nyr8NyV9k7O0m0J48neY/HD3gPi9Sy5mPwqtEEaowZEjvuPUk6ECmp+nR+Zubq+CiyWddZYIYCAGtWkHHnT0vIhFT+1WOutWCXhW3RvgagPRMhRQBvaR6bo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ECau496x; arc=fail smtp.client-ip=40.107.200.37
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OpExMBrb"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ECau496x"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sh3Q5aOgmm9jSxQh3AszcHmpQN/250Zg9PKJQSvpD29Tu8b4FOuu59QGOzAFs8rjMgQK4psCiYaKSXIliAQqulpEik4K7YA7iLrUgsGYpG862oDXIj9B50wNdKz80JhbYd5hfQi4hGGVhgjBpUrliisyJFCwtaz3O0OHKe7ZD//M+T3afjNhFlshrwLJVdq50YoeuC0ejQ/QxyZ9n2/uk6fGmvEeirPEm+u4UlXsW0Dvv3wcTRGhs7hEcoprCkbEw4i57YjYKD4OHCTfUXpbXRNtudP1+We4CL+QDsw7hp+9gG2S4cLlEbMju2xAFVLmLJ0gnFd5xHd/2t7lYXItdQ==
+ b=yE6spzfXUAMB3S7DANMR2HlgP1jED8eMkXfFkzhp1SZd9x/IFKAZbXivVisbw6WezJe9jYT9sqmr8JRtlZ6RJDboUtZ33/9GR5vn7/y68GxVvMh3u5lxHarVlUdkT4Mxv02L14vO9QtV/yYvi9lpAbupx9cYYyC+gRh7xBIvGcJ16TUWYPLkxYwx4nc87+X41q4Y0jIWX0h1rBpxS4E9c/4M7jzj0JDhYCfr5evjQXSKNd2IE5Lzyyf8IarnjawCGVkF/Z/TT6Tcz/NEAiqloew+r/p4jdEIXnfTU4oCIWfO5nfIbzkDDXxO74Rj/bQk2P7wpvLrakhdUy2yWTxzBA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sAK6UCnm2pOqx3g2G1WCJ9OOAazdi3rxlZRs4UcjFcE=;
- b=Rv4dPR/rE6d0cyEexbfg0FL5JYscGiTnP94TE7AAmWnxw78JSk7Pa//V0+SPOzmdz9Th30f25uC09mrMVojCgi70ic1WK2/wrv2wXwaHMugwIX+N0MnGYBDW+WWyB+qVaJEcqKhr64d5sSMbV73eunWQIDZWhRtviZE4vld3ISysrUa5W3gD8iEoFUMkrzZ+Aytw6QVvj4iXbAQ1eNSVjrxVR/v+Rl/SesBSuxIxCkwjbN0gmUfjpIKMxfo6ALXPY9RDltZkPg1KC2WjTlyvkiwpKkZxAgArbf7woshfyAW75yF1jhftP0rDC0HMx8XIXHi17IBzJehl3bh3/9aF6w==
+ bh=+RnLVw2/AamGc4lqs+q6J6oszXu54Z0c0iT7JfmC6aM=;
+ b=LiT1VH8V1vVNOOF933oJifrwkKq1oyqNz+ttnH5QY3ykBmkt6Nh0tJs2l/IgZ2Z/tuIYe4dFuhLYRj6dEmV/vFVdxq2als0mFcDk3V0XN+sOYcMYOAKUEofNsXkxsaI/mPEDby4VGSdwM7+GRNe4Jh35fqJGM3xUlPSR1P17xG8ACXBWft7SLSol20GExyemfLTDogQhxPQonLz/9tngXQVrzV6LFKUNQPQOXnhXr2Zwhsg7pnNa1osbRTwdtXVvYcQ05AvqPOcl1HQ6AlnD2UqP8I0u9gM71GbnEuv6/5CczmmBYfUojmL3Wvxw3uFldEa6gBAF+EKIw8vjFLthwA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sAK6UCnm2pOqx3g2G1WCJ9OOAazdi3rxlZRs4UcjFcE=;
- b=OpExMBrbaB/z0ktT5h8v7PkFIBfoHhY3ZPAMHJg9GzBmsZ2w0lFZ/7hJKM09MEyNdwOmvq2CZlo7u6uupNXibiFU/6UM/4fAvTTRQhCZL5Y35LLFBoPmP5K23DQJVPIuUJ5MHaDzMzHjh53mSHSO3TZyk3ANOVAqb3PQqd0tWvPAxFLnc42goYyYyvGt8nK2ZY235bQ7VF++/4aOXk40w4sXVjh3QEdt+uUI4ucl8ak9U9D50LU7YphFp3zgCnDxjaPz6/vdOSdg+ekjJs4T1/XBRF9+yJLW1pecxVv4BfFXeafO3yGqFbYUJXYRsZXSOoVSgaUfGxRwHixx85R5sA==
+ bh=+RnLVw2/AamGc4lqs+q6J6oszXu54Z0c0iT7JfmC6aM=;
+ b=ECau496xCSJkCAnfxceNJJYC9Tddf0HpmJVbWNaKaZi8HlzPPzM4VfLSTVhn8lxzaYNr4ZNoQdhjxlOlawtd3hgRjNIWEd9zSmBhhVUS5lCfcvZCRwnrMqY4yUJExJNk8/ueBYBT55aBIwft/44h23AZR5GfKIaUpX6LHlIuwSGRd5d0s2VpuWGuDO1wtvvkqbIZuRy9CYRXFYlVCg0EMChh+zcAdKCPhRq3vBtRM66x4Mcf5gIqFkrkVJDkKvP8BSQ4YFuitiYvQGyue/pHwaWZqYwbQeZo29+kLizXf5A860Zc46DNcIhxp3bRf4vdVAp4SRBdWgfgDV07b1+1YQ==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
- by BL4PR12MB9478.namprd12.prod.outlook.com (2603:10b6:208:58e::9) with
+ by SJ0PR12MB6967.namprd12.prod.outlook.com (2603:10b6:a03:44b::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.19; Fri, 7 Aug
- 2026 11:51:03 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.21; Fri, 7 Aug
+ 2026 12:03:31 +0000
 Received: from BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
  ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0292.018; Fri, 7 Aug 2026
- 11:51:03 +0000
-Date: Fri, 7 Aug 2026 19:50:56 +0800
+ 12:03:31 +0000
+Date: Fri, 7 Aug 2026 20:03:24 +0800
 From: Richard Cheng <icheng@nvidia.com>
 To: Davidlohr Bueso <dave@stgolabs.net>
 Cc: dave.jiang@intel.com, jic23@kernel.org, alison.schofield@intel.com, 
 	benjamin.cheatham@amd.com, alucerop@amd.com, dongjoo.seo1@samsung.com, 
 	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v7 4/8] cxl: Add HDM-DB region creation
-Message-ID: <anXFldW1WpSIsRUC@MWDK4CY14F>
+Subject: Re: [PATCH v7 8/8] cxl: Allow auto-committed BI hdm decoders
+Message-ID: <anXH5vC_w-iu6_iB@MWDK4CY14F>
 References: <20260728144136.709882-1-dave@stgolabs.net>
- <20260728144136.709882-5-dave@stgolabs.net>
+ <20260728144136.709882-9-dave@stgolabs.net>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260728144136.709882-5-dave@stgolabs.net>
-X-ClientProxiedBy: KL1PR01CA0146.apcprd01.prod.exchangelabs.com
- (2603:1096:820:149::9) To BL0PR12MB2370.namprd12.prod.outlook.com
+In-Reply-To: <20260728144136.709882-9-dave@stgolabs.net>
+X-ClientProxiedBy: KUZPR01CA0008.apcprd01.prod.exchangelabs.com
+ (2603:1096:d10:34::8) To BL0PR12MB2370.namprd12.prod.outlook.com
  (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -65,451 +65,279 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|BL4PR12MB9478:EE_
-X-MS-Office365-Filtering-Correlation-Id: f24f36ee-b027-4cf4-d468-08def47a283e
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|SJ0PR12MB6967:EE_
+X-MS-Office365-Filtering-Correlation-Id: b183e6a7-6b63-4544-816d-08def47be635
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|366016|376014|1800799024|3023799007|6133799003|11063799006|5023799004|4143699003|56012099006|10067099003|18002099003|22082099003;
+	BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|5023799004|56012099006|11063799006|10067099003|6133799003|18002099003|22082099003|3023799007|4143699003;
 X-Microsoft-Antispam-Message-Info:
-	E56rO3nF6dUdwK8/MI1MCsuGWn2Ypbfrn4JmHvRTdX3/KMgy1yuIzHcdv8vq9/oLWOU0SU3JysqSdXPMiGtrP9BcVc1WbzAHnFMJYMNQGwQxm/Pq6SgapOYUkH4qfdk8hGWNaP6gE5PyGTXRH6BiLmWAK1fN37+GwvQ4Y+ORa6wJ9jHqcxteBn1ovAvYQfC6Nhr7wgEE50+9qDKtknMry/Q3LciqP8/26jpBERG3cF8D0jNJxAk1cC9XtN+GG0l5zXJjnH0ION9xbhLVMcnivzAE4wrrGicdOWC61ZF+qfbYWgmLcJXz2ZCfB/M/WY90dPWEWAmePDD1XwOz1CfnPU0zXEnAjfo4bioIVqZ1oqm46zn7f8zvhabqSA435eTPImytXo/rCIoJoCNi7/WKAdltlyHqSns50W9ELYK+fpC20lcdGVTnsCxq8MNDcDPw+bIuvQFu5Q9OeZ1t/XPzAdpEPbdS4tlX/fGnUU2TrZQhQ5alesQxdfLYTtLvEaYROgpGIFMhISLGjgDearPvknejxMRA0Ud0sRqHWtFmmmlX6CezXA1hVIoXPxJ8rn89FM7ffLcniqXLJBI+ebUytANpsrtPiqehXN6ZAWhm7ddHBA6q7r953DrzQSw8pnBL86CrIbQ+HKrUOjCDbWE7WLQDs5LXjOkH9axjLQhhrZw=
+	zaSD5fyjdqTZMDNxDs9lH4gxWBn1f/Qs8xl/mG8w1aow8SfuW50ueo61x4yub9hpSRRA1Q2q/cUVwfxui9HXNlD1z+ngYq3cZ0YnsxjCtz1Afk820KvW1NQ26fIki/TDGScz1xbmOycvEd8SmJC9gpcGyaOVge20rJvraW6g69LZ18HpbE/4JLrER+S0PJ5BNPy+GqXtX+j8W0gOX0R5TGWt3kJFObP6ucSZrfjg6x5eNPSOshT2cJZbOrs91zTr6cuH8PnGPS0WG4CIN5o9Msk3Dkl4ITzNER6GPIbPYXpzt8KRZOdULw/ayTwfjXSt9f65oJ+Ex7vbHVjSs79Po/8QWsFYWTaYO+wsXw/8B10rCK0ur84SnRQSCDxMOeLkJF7oVx4hZ3Sl/H7dag5O7ArLyr8kyDz3Ai6hl6tofrzlY427L8InHx+wtEWU9CxBCh1CY4AaujEL6JZ6Ek2qNXw+lO41AEZ0Brk8KdB0az8F6f+wbZga0/w7LO28o5dFS8gPYeACwbkxHYqSBggC+wAFSUzyeZFhsAPqMtVLhI4z8JQ7smktsxkLM9ajonEkq2K7E0gfseXnVV+KXAl1Cr6ZMlWLMc53IwRzmSZwMF8FtTYft+wuZW5nD3uypnNCLfpzWUpzHKpxdGCJCnUQ4IDPM00jYwzPsZVyxAJVCqk=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(376014)(1800799024)(3023799007)(6133799003)(11063799006)(5023799004)(4143699003)(56012099006)(10067099003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(5023799004)(56012099006)(11063799006)(10067099003)(6133799003)(18002099003)(22082099003)(3023799007)(4143699003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Gd7Ytq0j8Q8FSfaE5Ip3bS2ZALUVGiqCM8/X/cnN4ypKr38s6AlToR6cCFiY?=
- =?us-ascii?Q?qHDla61bRoay1/tKmKtl1TwT4PctFnJUQcLZnfwuPMQGO5e8r9JXxZx0b3oZ?=
- =?us-ascii?Q?4j1VEH7bgviChmcqfubPAKCeQiwMjRIpk7c70F3qPhlXInBounla6ZzgRbv+?=
- =?us-ascii?Q?U9iAixiTs3nUpqxhXZ38WtQGQdyxLBM48ciKbjNpGStEx/yv58bxm8YMDiJu?=
- =?us-ascii?Q?rlFebXZRxmlK8Vv0rXutBazCXTg3K7d+uqAm0iGYpBsnnNFPWYpvSGh2VVHQ?=
- =?us-ascii?Q?Uy2cxQggBzt9EAdEoo3UEgsjc4JhJIehfvyRW7v8esiLGhIehBIPKe2h1Mbs?=
- =?us-ascii?Q?PELVTxRiCnnkPWXyyHQgWlXnLcGN9mO4bLhBQErBKh76h91FH3Qm6dpURGRI?=
- =?us-ascii?Q?maY3sFnsapc1Ymc5PpeuAzr8r7qqouXgJTXjCquANbbeZm4n+kj5c62cjVPb?=
- =?us-ascii?Q?y5nRjlee5PcUSQsdIpgCC5kgYS/M3lTG/HPT6OAwMoik/1uoBnc/1TgXnBvM?=
- =?us-ascii?Q?lJrn6AnvGPXrwRX9Za+d0+j4wtavSwEyFGp+CLbmEWM+hvRks5nezri958jG?=
- =?us-ascii?Q?mFdNZUroTr8mtMBBTIHtJwwlJhjL8aMBwAfyVU1CpdkRMbaLPzkvTkzDxZF9?=
- =?us-ascii?Q?vA4PQuGYogc9yqo9cLV7S3SUmzEAJWHWjyDQBRZzposB7wcCQqVrzKQSZzlM?=
- =?us-ascii?Q?C7RATIxRZzvDPp5LTBg4AtZ1LWtOsPUd8qC/pd+CpFHhnKfRnP/IBIImVFZw?=
- =?us-ascii?Q?kqTD+6iyCRmNoJmEIhBXGKpiM8OM/bDY3p2FLwQJWnHZzWhPgd2rdRkd42ab?=
- =?us-ascii?Q?uyND86vpOLQd5pSk4iOlnMKBDIOEclRaIwbEOPjIK6MIzhzFBLJQ16sLgloS?=
- =?us-ascii?Q?WzMcBLsKF2x5LR2NsSujbc1k285HFCPkX5hi3WedgfK+1+/NuL43Kk+9r12N?=
- =?us-ascii?Q?xCW2TpjZyiNmIrYuXCGu3qfEbg8aRXr0DHcPNC7NmzNJbfyOdPoRoAjOCwGd?=
- =?us-ascii?Q?GknTfhAB7RogkZrWfuLxr1lNk2LH32LKQjtHX4WNIDpQ2o2GIszTDV8o4Hoa?=
- =?us-ascii?Q?kwQEf01oqNmT2BwbXYrfDOm+m0wX5CtCDj9Sg+cmUY2gUEtQj4RMlwEUHKOQ?=
- =?us-ascii?Q?D4S9h4VF0pzsvypYCxUmbPHV8rDM4AuBowK873xVCxbhahnmPn7j3IkND/CF?=
- =?us-ascii?Q?VW32NdwTgoFo1K90FraJqsZa6dAFeJM+pmToLurC0aWJWb5uvZCb+5/QN6Eg?=
- =?us-ascii?Q?b9XKRmV1oTYU2HjTZdbMPtac+CI2vRAEE1DF2I0tG13wFN3fyjZgJs1BV+WY?=
- =?us-ascii?Q?rRvr/zuxcCjpCTHVnHJts6TiOilQG6w6vtHikAHD+ZX0aFkGEsdehdwcxMzp?=
- =?us-ascii?Q?K20ch1E+PjAabekFHe0aHMV8NY8mKJkSxggJz1Dg2HubYraBAcPXSolmys03?=
- =?us-ascii?Q?mc3RQOqfk9kuWE0SC9AZW2GmArodTBlXE9OFJRDPqRUxLTVlCFf0gNNFzM8z?=
- =?us-ascii?Q?tx6b0tKpbtKy/o+XVRYL15IhMZSKiDTa6u4RINYPYFm9cMYn/xzTzNa36Mi1?=
- =?us-ascii?Q?fHmggJ1KBNn5pe0kCjNArfKXHSCcSaq3LLVWkDysgSYX6+ldNLYtOicUbkJ/?=
- =?us-ascii?Q?hWdP+UZYiw1KjY/Qx3d0Su8aJOHU7cDSMrsO9eVv52BjpAJjsFUeyQpbnyLP?=
- =?us-ascii?Q?5NSg2zqb9kdxsBoSbLe485zqjfwr3i4CCbzaAPaE6jBE8+fxCrOyhF1EoA0V?=
- =?us-ascii?Q?rV6SbGk92w=3D=3D?=
+	=?us-ascii?Q?AXY1j9lXtfdJJnkypBoDZ9yTNRd9HVTThYT9b7K137ZklgeR7E+bnvURjotS?=
+ =?us-ascii?Q?nKPm7JAK0kRSNsK0pd8Emio/nKBef/B++6n1V0Ls+R1Mw7SZHcD+QjC+KqYQ?=
+ =?us-ascii?Q?FND7b18/KxwY/gRYHyjCQ4tOei+ep1iW0J6kSooHhVCehD5W00gXwb9ZvEGN?=
+ =?us-ascii?Q?/zTkSlG6rhfuyF4VeSJa/OS8vFweGU73WgdkkP2DDIqg1CUU3MIUNvX2LR0E?=
+ =?us-ascii?Q?FZLdU1Wx0WoJx3hem6v15SFBImR/nUbP1SlZvgF9aXfGrpkg/eeKj3YmR4BW?=
+ =?us-ascii?Q?ediXSgZPQGzc6Sp+P6Bm8WMQB4VxcJz7xnc5arGQGHyZ2E04cUDGuf2OTP11?=
+ =?us-ascii?Q?Y9vwMkf5zQH5RZXjVO4ZM/dUxxE+jQyBxCyd2nHIXfbhBGT16P00WHP3fEg7?=
+ =?us-ascii?Q?tpetLcl3pVN/USra0gx7zRKu7VPOC0UZXqkfo4UUqe/S1mSqDCUJZH0NLE4s?=
+ =?us-ascii?Q?V0DffpOHQoB0F+Uvb86C4vYETIE4lxAdFJjMnYKbMEQUuB+nQ0vnDYjXqYhQ?=
+ =?us-ascii?Q?hAvzP95EteTprnU8FyGeCP2dxeVP2gDMgQdbJRiesafhD7jBNgpTyl6cXLNo?=
+ =?us-ascii?Q?2kwGTXN+BIpgtHnxNHwP7NsV0QBF6bC56XAsR7iTO9LdzPQyIzwKHzOppoY4?=
+ =?us-ascii?Q?mWw67bWKJQTpLazdi0kKLLs03RSA34S0dzNM/kHh2jT2mOR4bL1hsiwKjJVC?=
+ =?us-ascii?Q?fzSmzE+wsUnOHlOje/Rf9yu4bTmDslvfnUyXDnkQ8/mxWFvnMosLD4ziB45J?=
+ =?us-ascii?Q?UMVHSAIjXqKKoPq0FsdMxJvJXtORc6g2hSRGFaF5ddU8liYGefMCXZWxICvc?=
+ =?us-ascii?Q?5Hanx1DBRA9EWlyJxUd+mmcZME8W2fNw+eQpYnbo+7AyxWZnXhyiUvUNgnWD?=
+ =?us-ascii?Q?2xkQoWjDWitr/KIL9ZCogTlf6Z4l6faYA1gAtKUVzHfAGJmKFueOiM29j5rS?=
+ =?us-ascii?Q?Q4GKTgPxu8D5/3e0RflkZi0Ob+LqvMaME4tasY5I2Ex/YKGY/08oRVi0OlFS?=
+ =?us-ascii?Q?C6LyvqvWCujdY+lPSKuppOR0JsUvNePq6QVsOUolLRcmDyQ88p8QC3Wl1PS7?=
+ =?us-ascii?Q?Q1PbkLlyVC87aJsvqGy2M38pCTtj4zJmjB2fe+IJPo9xc8cbViYJMYNCg28k?=
+ =?us-ascii?Q?vVj4UyQzGHu+Gmph2jxraJ/ItwtMp8EZz8yIx+76in1VkLmL3MJtU4F0k0I4?=
+ =?us-ascii?Q?HKs57q3ZYfcfXEyinAvUpTM3+NpM/oE+sz7JPk9gKLj2q1RsjV0V4I1k3JVD?=
+ =?us-ascii?Q?hVlQfLRdQ+f5R0PQudjNLsy10IT3jKT7Zwg4k65wkviB/ysO9Q6NLBkhaqmj?=
+ =?us-ascii?Q?5AqFGbBsIJyqv9vU9bHQLKr3JDqKy/IkE63M4qrj/gFRu18JvVmnZHSqvf08?=
+ =?us-ascii?Q?9+0I8sPgWyadn64QukGNgnmS/lxpYsrXLM9RTooYxOI6BSCjUAz8J/updDkT?=
+ =?us-ascii?Q?Uq2AKEApcPEEy2TOV0Dc3Ks5E2MSM7wu5yEZcY0A6MW975+fx+yuz1v8nZuH?=
+ =?us-ascii?Q?lNihJIg7JRzsLACzZiPWkwSAkwVqGReV9Gu8ZBLtgTCJmJT9Z4WZeFTnGVlD?=
+ =?us-ascii?Q?diw4EfPDxe1FFHq5n0tScSIM3Vf4mAYiO7NQ/uM49wqTErQmiun0WgM9wN35?=
+ =?us-ascii?Q?AiPyFqBr3+UPLg3qE4pw6UXDmCWeA9NKEykPsUGq1UaSeiCO7bY3KAVfN87X?=
+ =?us-ascii?Q?NELfFVhyw//7vbFr5mqjVuRaLQpYihWH/2/NmpQfhc0FvBKqvqGq/iF2OOG+?=
+ =?us-ascii?Q?9/BwJ/HerQ=3D=3D?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f24f36ee-b027-4cf4-d468-08def47a283e
+X-MS-Exchange-CrossTenant-Network-Message-Id: b183e6a7-6b63-4544-816d-08def47be635
 X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2026 11:51:03.4297
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2026 12:03:31.7043
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ot2nMrUp5pUTPJivvU7iOAAhqd5MuAaRDmydevqmwkXgWj2UAk8LfmU1GhbYzUry837lMND/16sia+/R37xXTg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR12MB9478
+X-MS-Exchange-CrossTenant-UserPrincipalName: bkQzW4+tOHZuYY6uhJLwzSkpEHj/n2I+s9VFi6J23PQwv1b1gmJSrBJ54EoqFIP1Aw+q7tskENEPI93du12dwA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6967
 
-On Tue, Jul 28, 2026 at 07:41:32AM +0800, Davidlohr Bueso wrote:
-> A region inherits its coherency from the chosen root decoder: HDM-DB
-> if the root has CXL_DECODER_F_BI, otherwise HDM-H.
+On Tue, Jul 28, 2026 at 07:41:36AM +0800, Davidlohr Bueso wrote:
+> Allow auto-committed BI hdm decoders on sane platforms, rejecting
+> only broken paths (ie: one that cannot route BISnp, or BI paired
+> with a host-only target range type).
 > 
-> Surface the topology through read-only sysfs:
+> The respective region creation is done like any other committed
+> decoder - with cxlds->bi set by the time an decoder attaches.
 > 
->   - decoderX.Y/cap_bi (root): CFMWS BI restriction.
->   - decoderX.Y/bi (endpoint): '1' when configured for HDM-DB.
-> 
-> cxl_region_attach() rejects endpoints whose device or HDM cannot
-> serve the region's type; target_type is inherited from cxlr->type
-> in cxl_rr_assign_decoder() and restored to the endpoint default on
-> detach and on a failed attach.
-> 
-> The HDM Decoder Control BI bit is set at commit time only when the
-> target_type is DEVMEM and the BI capability is advertised
-> (cxlds->bi for endpoints, root F_BI for switches).
+> A committed BI decoder under a window without the BI restriction is
+> refused (undefined behavior per the CFMWS Window Restrictions), as
+> is a committed decoder attaching to a region of a different
+> coherency model.
 > 
 > Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
 > ---
->  Documentation/ABI/testing/sysfs-bus-cxl | 18 ++++++--
->  drivers/cxl/acpi.c                      | 15 +++++++
->  drivers/cxl/core/hdm.c                  | 23 ++++++++++
->  drivers/cxl/core/port.c                 | 39 +++++++++++++++--
->  drivers/cxl/core/region.c               | 57 +++++++++++++++++++------
->  drivers/cxl/cxl.h                       |  5 +++
->  6 files changed, 136 insertions(+), 21 deletions(-)
+>  drivers/cxl/core/hdm.c    | 24 +++++++++++++++++-------
+>  drivers/cxl/core/pci.c    | 36 +++++++++++++++++++++++++++++-------
+>  drivers/cxl/core/region.c | 33 +++++++++++++++++++++++++++++++++
+>  drivers/cxl/port.c        |  4 ++++
+>  4 files changed, 83 insertions(+), 14 deletions(-)
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-> index 16a9b3d2e2c0..370c6fd7d245 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-cxl
-> +++ b/Documentation/ABI/testing/sysfs-bus-cxl
-> @@ -297,7 +297,7 @@ Description:
->  		Each entry in the list is a dport id.
->  
->  
-> -What:		/sys/bus/cxl/devices/decoderX.Y/cap_{pmem,ram,type2,type3}
-> +What:		/sys/bus/cxl/devices/decoderX.Y/cap_{pmem,ram,type2,type3,bi}
->  Date:		June, 2021
->  KernelVersion:	v5.14
->  Contact:	linux-cxl@vger.kernel.org
-> @@ -306,8 +306,9 @@ Description:
->  		represents a fixed memory window identified by platform
->  		firmware. A fixed window may only support a subset of memory
->  		types. The 'cap_*' attributes indicate whether persistent
-> -		memory, volatile memory, accelerator memory, and / or expander
-> -		memory may be mapped behind this decoder's memory window.
-> +		memory, volatile memory, accelerator memory, expander memory,
-> +		and / or back-invalidate (HDM-DB) memory may be mapped behind
-> +		this decoder's memory window.
->  
->  
->  What:		/sys/bus/cxl/devices/decoderX.Y/target_type
-> @@ -426,6 +427,17 @@ Description:
->  		current cached value.
->  
->  
-> +What:		/sys/bus/cxl/devices/decoderX.Y/bi
-> +Date:		July, 2026
-> +KernelVersion:	v7.3
-> +Contact:	linux-cxl@vger.kernel.org
-> +Description:
-> +		(RO) Shows '1' if this endpoint decoder is currently configured
-> +		for HDM-DB (device-managed coherency with back-invalidate).
-> +		The HDM-DB state is inherited from the region the decoder is
-> +		attached to, which is in turn set from the chosen root
-> +		decoder's CFMWS BI restriction (see cap_bi).
-> +
->  What:		/sys/bus/cxl/devices/decoderX.Y/delete_region
->  Date:		May, 2022
->  KernelVersion:	v6.0
-> diff --git a/drivers/cxl/acpi.c b/drivers/cxl/acpi.c
-> index 3b818adbd38b..eceb8dd97df2 100644
-> --- a/drivers/cxl/acpi.c
-> +++ b/drivers/cxl/acpi.c
-> @@ -152,6 +152,8 @@ static unsigned long cfmws_to_decoder_flags(int restrictions)
->  		flags |= CXL_DECODER_F_PMEM;
->  	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_FIXED)
->  		flags |= CXL_DECODER_F_LOCK;
-> +	if (restrictions & ACPI_CEDT_CFMWS_RESTRICT_BI)
-> +		flags |= CXL_DECODER_F_BI;
->  
->  	return flags;
->  }
-> @@ -198,6 +200,12 @@ static int cxl_acpi_cfmws_verify(struct device *dev,
->  		dev_dbg(dev, "CFMWS length %d greater than expected %d\n",
->  			cfmws->header.length, expected_len);
->  
-> +	if ((cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM) &&
-> +	    (cfmws->restrictions & ACPI_CEDT_CFMWS_RESTRICT_BI)) {
-> +		dev_err(dev, "CFMWS cannot have both HDM-H and HDM-DB\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -437,7 +445,14 @@ static int __cxl_parse_cfmws(struct acpi_cedt_cfmws *cfmws,
->  
->  	cxld = &cxlrd->cxlsd.cxld;
->  	cxld->flags = cfmws_to_decoder_flags(cfmws->restrictions);
-> +	/* host-only wins if firmware sets both coherency restrictions */
->  	cxld->target_type = CXL_DECODER_HOSTONLYMEM;
-> +	if (cxld->flags & CXL_DECODER_F_TYPE2) {
-> +		if (cxld->flags & CXL_DECODER_F_TYPE3)
-> +			dev_dbg(dev, "CFMWS has both HDM-H and HDM-D\n");
-> +		else
-> +			cxld->target_type = CXL_DECODER_DEVMEM;
-> +	}
->  	cxld->hpa_range = (struct range) {
->  		.start = cfmws->base_hpa,
->  		.end = cfmws->base_hpa + cfmws->window_size - 1,
 > diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index 9da8aa211609..f437fe15c6df 100644
+> index f437fe15c6df..c5be6fe4c77a 100644
 > --- a/drivers/cxl/core/hdm.c
 > +++ b/drivers/cxl/core/hdm.c
-> @@ -705,9 +705,25 @@ static void cxld_set_interleave(struct cxl_decoder *cxld, u32 *ctrl)
+> @@ -1061,13 +1061,23 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+>  		else
+>  			cxld->target_type = CXL_DECODER_DEVMEM;
 >  
->  static void cxld_set_type(struct cxl_decoder *cxld, u32 *ctrl)
->  {
-> +	bool bi = cxld->target_type == CXL_DECODER_DEVMEM;
+> -		/*
+> -		 * Autocommit BI-enabled decoders is not supported.
+> -		 * At this point cxlds->bi is not yet setup, so there
+> -		 * are no guarantees that the platform supports BI.
+> -		 */
+> -		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_BI, ctrl))
+> -			return -ENXIO;
+> +		if (FIELD_GET(CXL_HDM_DECODER0_CTRL_BI, ctrl)) {
+> +			struct cxl_dev_state *cxlds = cxled ?
+> +				cxled_to_memdev(cxled)->cxlds : NULL;
 > +
-
-This doesn't make sense to me, HDM-D and HDM-DB are both DEVMEM but only HDM-DB
-has BI. We should look for their root decoder's BI flag ?
-
-
-> +	if (bi) {
-> +		if (is_endpoint_decoder(&cxld->dev)) {
-> +			struct cxl_endpoint_decoder *cxled =
-> +				to_cxl_endpoint_decoder(&cxld->dev);
-> +			struct cxl_dev_state *cxlds =
-> +				cxled_to_memdev(cxled)->cxlds;
-> +
-> +			bi = cxlds->bi;
-
-cxlds->bi only says that BI has been enabled for this EP and its path.
-One EP can have multiple HDM decoders for different regions and not every
-DEVMEM region uses BI.
-For example, the EP could have one HDM-DB region under a BI root and another HDM-D region
-under a non-BI root.
-
-Maybe cxl_root_decoder_is_bi(cxld->region->cxlrd) ?
-
-Best regards,
-Richard Cheng.
-
-> +		} else if (cxld->region) {
-> +			bi = cxl_root_decoder_is_bi(cxld->region->cxlrd);
+> +			if (cxld->target_type == CXL_DECODER_HOSTONLYMEM) {
+> +				dev_warn(&port->dev,
+> +					 "decoder%d.%d: BI with host-only\n",
+> +					 port->id, cxld->id);
+> +				return -ENXIO;
+> +			}
+> +			if (cxlds && !cxlds->bi_capable) {
+> +				dev_warn(&port->dev,
+> +					 "decoder%d.%d: path not BI capable\n",
+> +					 port->id, cxld->id);
+> +				return -ENXIO;
+> +			}
 > +		}
-> +	}
-> +
->  	u32p_replace_bits(ctrl,
->  			  !!(cxld->target_type == CXL_DECODER_HOSTONLYMEM),
->  			  CXL_HDM_DECODER0_CTRL_HOSTONLY);
-> +	u32p_replace_bits(ctrl, bi, CXL_HDM_DECODER0_CTRL_BI);
+>  
+>  		guard(rwsem_write)(&cxl_rwsem.region);
+>  		if (cxld->id != cxl_num_decoders_committed(port)) {
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 554058ccb1e9..8d2651e06a79 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -1083,6 +1083,18 @@ static int __cxl_bi_commit_decoder(struct device *dev, void __iomem *bi)
+>  				    scale, base);
 >  }
 >  
->  static void cxlsd_set_targets(struct cxl_switch_decoder *cxlsd, u64 *tgt)
-> @@ -970,6 +986,13 @@ static int cxl_setup_hdm_decoder_from_dvsec(
->  	return 0;
->  }
->  
-> +/*
-> + * HDMs that advertise support for both coherency modes
-> + * (CXL_HDM_DECODER_COHERENCY_BOTH) default to host-only; the region
-> + * attach path switches target_type to device-coherent if the region's
-> + * root decoder has the CFMWS BI bit set. Only HDMs that strictly
-> + * support device-coherent mode default to HDM-DB.
-> + */
->  enum cxl_decoder_type cxled_default_type(struct cxl_endpoint_decoder *cxled)
->  {
->  	struct cxl_dev_state *cxlds = cxled_to_memdev(cxled)->cxlds;
-> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> index 7817109026b1..2dbd8c24f968 100644
-> --- a/drivers/cxl/core/port.c
-> +++ b/drivers/cxl/core/port.c
-> @@ -131,6 +131,7 @@ CXL_DECODER_FLAG_ATTR(cap_ram, CXL_DECODER_F_RAM);
->  CXL_DECODER_FLAG_ATTR(cap_type2, CXL_DECODER_F_TYPE2);
->  CXL_DECODER_FLAG_ATTR(cap_type3, CXL_DECODER_F_TYPE3);
->  CXL_DECODER_FLAG_ATTR(locked, CXL_DECODER_F_LOCK);
-> +CXL_DECODER_FLAG_ATTR(cap_bi, CXL_DECODER_F_BI);
->  
->  static ssize_t target_type_show(struct device *dev,
->  				struct device_attribute *attr, char *buf)
-> @@ -233,6 +234,26 @@ static ssize_t mode_store(struct device *dev, struct device_attribute *attr,
->  }
->  static DEVICE_ATTR_RW(mode);
->  
-> +static ssize_t bi_show(struct device *dev, struct device_attribute *attr,
-> +		       char *buf)
+> +/* Committed, or no explicit commit required */
+> +static bool cxl_bi_decoder_committed(void __iomem *bi)
 > +{
-> +	struct cxl_endpoint_decoder *cxled = to_cxl_endpoint_decoder(dev);
-> +	struct cxl_dev_state *cxlds = cxled_to_memdev(cxled)->cxlds;
-> +	struct cxl_region *cxlr;
+> +	u32 caps = readl(bi + CXL_BI_DECODER_CAPS_OFFSET);
+> +	u32 sts = readl(bi + CXL_BI_DECODER_STATUS_OFFSET);
 > +
-> +	guard(rwsem_read)(&cxl_rwsem.region);
-> +	/*
-> +	 * An endpoint decoder is HDM-DB when the device advertises BI
-> +	 * (cxlds->bi) and it is attached to a device-coherent (DEVMEM)
-> +	 * region whose root decoder advertises the CFMWS BI restriction.
-> +	 */
-> +	cxlr = cxled->cxld.region;
-> +	return sysfs_emit(buf, "%d\n", cxlds->bi && cxlr &&
-> +			  cxled->cxld.target_type == CXL_DECODER_DEVMEM &&
-> +			  cxl_root_decoder_is_bi(cxlr->cxlrd));
+> +	if (!FIELD_GET(CXL_BI_DECODER_CAPS_EXPLICIT_COMMIT_REQ, caps))
+> +		return true;
+> +
+> +	return FIELD_GET(CXL_BI_DECODER_STATUS_BI_COMMITTED, sts);
 > +}
-> +static DEVICE_ATTR_RO(bi);
 > +
->  static ssize_t dpa_resource_show(struct device *dev, struct device_attribute *attr,
->  			    char *buf)
+>  /* Enable or dealloc BI-ID changes in the given level of the topology. */
+>  static int __cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable)
 >  {
-> @@ -329,6 +350,7 @@ static struct attribute *cxl_decoder_root_attrs[] = {
->  	&dev_attr_cap_ram.attr,
->  	&dev_attr_cap_type2.attr,
->  	&dev_attr_cap_type3.attr,
-> +	&dev_attr_cap_bi.attr,
->  	&dev_attr_target_list.attr,
->  	&dev_attr_qos_class.attr,
->  	SET_CXL_REGION_ATTR(create_pmem_region)
-> @@ -339,16 +361,24 @@ static struct attribute *cxl_decoder_root_attrs[] = {
->  
->  static bool can_create_pmem(struct cxl_root_decoder *cxlrd)
->  {
-> -	unsigned long flags = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_PMEM;
-> +	unsigned long flags = cxlrd->cxlsd.cxld.flags;
-> +	unsigned long hdm_h, hdm_db;
->  
-> -	return (cxlrd->cxlsd.cxld.flags & flags) == flags;
-> +	hdm_h = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_PMEM;
-> +	hdm_db = CXL_DECODER_F_TYPE2 | CXL_DECODER_F_BI | CXL_DECODER_F_PMEM;
+> @@ -1127,6 +1139,16 @@ static int __cxl_bi_ctrl_dport(struct cxl_dport *dport, bool enable)
+>  		return 0;
+>  	case PCI_EXP_TYPE_DOWNSTREAM:
+>  		if (enable) {
+> +			/*
+> +			 * Adopt a dport that was already programmed and
+> +			 * committed by firmware: nothing new is enabled
+> +			 * below it, so no commit is due.
+> +			 */
+> +			if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl) &&
+> +			    !FIELD_GET(CXL_BI_DECODER_CTRL_BI_FW, ctrl) &&
+> +			    cxl_bi_decoder_committed(bi))
+> +				return 0;
 > +
-> +	return (flags & hdm_h) == hdm_h || (flags & hdm_db) == hdm_db;
->  }
+
+Small question, when DSP's BI related registers are committed by FW, does it guaranteed
+that all the intermediate switch on the path are also committed with BI enabled ?
+
+
+
+>  			value = ctrl & ~CXL_BI_DECODER_CTRL_BI_FW;
+>  			value |= CXL_BI_DECODER_CTRL_BI_ENABLE;
+>  		} else {
+> @@ -1173,11 +1195,11 @@ static int __cxl_bi_ctrl_endpoint(struct cxl_dev_state *cxlds, bool enable)
 >  
->  static bool can_create_ram(struct cxl_root_decoder *cxlrd)
->  {
-> -	unsigned long flags = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_RAM;
-> +	unsigned long flags = cxlrd->cxlsd.cxld.flags;
-> +	unsigned long hdm_h, hdm_db;
-> +
-> +	hdm_h = CXL_DECODER_F_TYPE3 | CXL_DECODER_F_RAM;
-> +	hdm_db = CXL_DECODER_F_TYPE2 | CXL_DECODER_F_BI | CXL_DECODER_F_RAM;
->  
-> -	return (cxlrd->cxlsd.cxld.flags & flags) == flags;
-> +	return (flags & hdm_h) == hdm_h || (flags & hdm_db) == hdm_db;
->  }
->  
->  static umode_t cxl_root_decoder_visible(struct kobject *kobj, struct attribute *a, int n)
-> @@ -402,6 +432,7 @@ static const struct attribute_group *cxl_decoder_switch_attribute_groups[] = {
->  static struct attribute *cxl_decoder_endpoint_attrs[] = {
->  	&dev_attr_target_type.attr,
->  	&dev_attr_mode.attr,
-> +	&dev_attr_bi.attr,
->  	&dev_attr_dpa_size.attr,
->  	&dev_attr_dpa_resource.attr,
->  	SET_CXL_REGION_ATTR(region)
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 1e211542b6b6..840acc330ede 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1130,16 +1130,11 @@ static int cxl_rr_assign_decoder(struct cxl_port *port, struct cxl_region *cxlr,
+>  	if (enable) {
+>  		if (FIELD_GET(CXL_BI_DECODER_CTRL_BI_ENABLE, ctrl)) {
+> -			if (cxlds->bi)
+> -				return 0;
+> -			dev_err(cxlds->dev,
+> -				"BI already enabled in hardware\n");
+> -			return -EBUSY;
+> +			/* adopt firmware enabled */
+> +			if (!cxlds->bi)
+> +				dev_dbg(cxlds->dev,
+> +					"adopting firmware-enabled BI\n");
+> +			goto done;
+>  		}
+>  		val = ctrl | CXL_BI_DECODER_CTRL_BI_ENABLE;
+>  	} else {
+> @@ -1192,11 +1214,11 @@ static int __cxl_bi_ctrl_endpoint(struct cxl_dev_state *cxlds, bool enable)
 >  	}
 >  
->  	/*
-> -	 * Endpoints should already match the region type, but backstop that
-> -	 * assumption with an assertion. Switch-decoders change mapping-type
-> -	 * based on what is mapped when they are assigned to a region.
-> +	 * Endpoint decoders inherit their type from cxlr->type; broken
-> +	 * pairings were already rejected by the coherency checks in
-> +	 * cxl_region_attach(). Switch-decoders change mapping-type based
-> +	 * on what is mapped when they are assigned to a region.
->  	 */
-> -	dev_WARN_ONCE(&cxlr->dev,
-> -		      port == cxled_to_port(cxled) &&
-> -			      cxld->target_type != cxlr->type,
-> -		      "%s:%s mismatch decoder type %d -> %d\n",
-> -		      dev_name(&cxled_to_memdev(cxled)->dev),
-> -		      dev_name(&cxld->dev), cxld->target_type, cxlr->type);
->  	cxld->target_type = cxlr->type;
->  	cxl_rr->decoder = cxld;
+>  	writel(val, bi + CXL_BI_DECODER_CTRL_OFFSET);
+> -	cxlds->bi = enable;
+>  
+>  	dev_dbg(cxlds->dev, "BI requests %s\n",
+>  		str_enabled_disabled(enable));
+> -
+> +done:
+> +	cxlds->bi = enable;
 >  	return 0;
-> @@ -1827,6 +1822,8 @@ static int cxl_region_attach_position(struct cxl_region *cxlr,
->  	for (iter = cxled_to_port(cxled); !is_cxl_root(iter);
->  	     iter = to_cxl_port(iter->dev.parent))
->  		cxl_port_detach_region(iter, cxlr, cxled);
-> +	/* undo cxl_rr_assign_decoder() type inheritance */
-> +	cxled->cxld.target_type = cxled_default_type(cxled);
+>  }
+>  
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 76c6dc28a407..5578ef68034d 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1827,6 +1827,21 @@ static int cxl_region_attach_position(struct cxl_region *cxlr,
 >  	return rc;
 >  }
 >  
-> @@ -2059,6 +2056,7 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->  	struct cxl_region_params *p = &cxlr->params;
->  	struct cxl_port *ep_port, *root_port;
->  	struct cxl_dport *dport;
-> +	struct cxl_hdm *cxlhdm;
->  	int rc = -ENXIO;
->  
->  	rc = check_interleave_cap(&cxled->cxld, p->interleave_ways,
-> @@ -2108,10 +2106,31 @@ static int cxl_region_attach(struct cxl_region *cxlr,
->  		return -ENXIO;
+> +/* Read back the committed BI bit of an auto-discovered decoder */
+> +static bool cxled_committed_bi(struct cxl_endpoint_decoder *cxled)
+> +{
+> +	struct cxl_port *port = cxled_to_port(cxled);
+> +	struct cxl_hdm *cxlhdm = dev_get_drvdata(&port->dev);
+> +	u32 ctrl;
+> +
+> +	if (!cxlhdm || !cxlhdm->regs.hdm_decoder)
+> +		return false;
+> +
+> +	ctrl = readl(cxlhdm->regs.hdm_decoder +
+> +		     CXL_HDM_DECODER0_CTRL_OFFSET(cxled->cxld.id));
+> +	return FIELD_GET(CXL_HDM_DECODER0_CTRL_BI, ctrl);
+> +}
+> +
+>  static int cxl_region_attach_auto(struct cxl_region *cxlr,
+>  				  struct cxl_endpoint_decoder *cxled, int pos)
+>  {
+> @@ -1839,6 +1854,16 @@ static int cxl_region_attach_auto(struct cxl_region *cxlr,
+>  		return -EINVAL;
 >  	}
 >  
-> -	if (cxled->cxld.target_type != cxlr->type) {
-> -		dev_dbg(&cxlr->dev, "%s:%s type mismatch: %d vs %d\n",
-> -			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev),
-> -			cxled->cxld.target_type, cxlr->type);
-> +	/*
-> +	 * Verify the device and HDM are capable of the region's flavor before
-> +	 * proceeding. The endpoint decoder's target_type is then inherited
-> +	 * from cxlr->type later in cxl_rr_assign_decoder().
-> +	 */
-> +	if (cxlr->type == CXL_DECODER_DEVMEM &&
-> +	    cxl_root_decoder_is_bi(cxlrd) && !cxlds->bi) {
-> +		dev_err(&cxlr->dev, "%s:%s BI not enabled on device\n",
-> +			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
+> +	/* A committed decoder may only join a region of its own flavor */
+> +	if (cxled_committed_bi(cxled) !=
+> +	    (cxlr->type == CXL_DECODER_DEVMEM &&
+> +	     cxl_root_decoder_is_bi(cxlr->cxlrd))) {
+> +		dev_err(&cxlr->dev, "%s:%s coherency model mismatch\n",
+> +			dev_name(&cxled_to_memdev(cxled)->dev),
+> +			dev_name(&cxled->cxld.dev));
 > +		return -ENXIO;
 > +	}
 > +
-> +	cxlhdm = dev_get_drvdata(&ep_port->dev);
-> +	if (!cxlhdm)
-> +		return -ENXIO;
-> +	if (cxlr->type == CXL_DECODER_HOSTONLYMEM &&
-> +	    cxlhdm->supported_coherency == CXL_HDM_DECODER_COHERENCY_DEV) {
-> +		dev_warn(&cxlr->dev, "%s:%s HDM is device-coherent only\n",
-> +			 dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
-> +		return -ENXIO;
+>  	if (pos >= 0) {
+>  		dev_dbg(&cxlr->dev, "%s: expected auto position, not %d\n",
+>  			dev_name(&cxled->cxld.dev), pos);
+> @@ -3806,6 +3831,14 @@ static struct cxl_region *construct_region(struct cxl_root_decoder *cxlrd,
+>  	if (part < 0)
+>  		return ERR_PTR(-EBUSY);
+>  
+> +	/* avoid UB */
+> +	if (cxled_committed_bi(cxled) && !cxl_root_decoder_is_bi(cxlrd)) {
+> +		dev_err(cxlmd->dev.parent,
+> +			"%s:%s BI decoder in a non-BI window\n",
+> +			dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
+> +		return ERR_PTR(-ENXIO);
 > +	}
-> +	if (cxlr->type == CXL_DECODER_DEVMEM &&
-> +	    cxlhdm->supported_coherency == CXL_HDM_DECODER_COHERENCY_HOST) {
-> +		dev_warn(&cxlr->dev, "%s:%s HDM is host-only coherent\n",
-> +			 dev_name(&cxlmd->dev), dev_name(&cxled->cxld.dev));
->  		return -ENXIO;
->  	}
->  
-> @@ -2327,6 +2346,8 @@ __cxl_decoder_detach(struct cxl_region *cxlr,
->  		.start = 0,
->  		.end = -1,
->  	};
-> +	/* undo cxl_rr_assign_decoder() type inheritance */
-> +	cxled->cxld.target_type = cxled_default_type(cxled);
->  
->  	get_device(&cxlr->dev);
->  	return cxlr;
-> @@ -2823,6 +2844,7 @@ static ssize_t create_region_store(struct device *dev, const char *buf,
->  				   size_t len, enum cxl_partition_mode mode)
->  {
->  	struct cxl_root_decoder *cxlrd = to_cxl_root_decoder(dev);
-> +	enum cxl_decoder_type target_type;
->  	struct cxl_region *cxlr;
->  	int rc, id;
->  
-> @@ -2834,7 +2856,14 @@ static ssize_t create_region_store(struct device *dev, const char *buf,
->  	if ((rc = ACQUIRE_ERR(mutex_intr, &regions_lock)))
+> +
+
+Should we also check the inverse mismatch case here ?
+
+if (!cxled_committed_bi() && cxl_root_decoder_is_bi()) {}
+
+thoughts ?
+
+>  	do {
+>  		cxlr = __create_region(cxlrd, cxlds->part[part].mode,
+>  				       atomic_read(&cxlrd->region_id),
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index ab3317fc1388..0c666ce00aa2 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -181,6 +181,10 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
+>  	if (rc)
 >  		return rc;
 >  
-> -	cxlr = __create_region(cxlrd, mode, id, CXL_DECODER_HOSTONLYMEM);
 > +	/*
-> +	 * The CFMWS dictates endpoint coherency: a BI-restricted Window
-> +	 * produces an HDM-DB region; otherwise HDM-H.
+> +	 * Must precede region discovery so that any firmware-committed BI
+> +	 * decoder is adopted before its region is assembled.
 > +	 */
-> +	target_type = cxl_root_decoder_is_bi(cxlrd) ?
-> +		CXL_DECODER_DEVMEM : CXL_DECODER_HOSTONLYMEM;
-> +
-> +	cxlr = __create_region(cxlrd, mode, id, target_type);
->  	if (IS_ERR(cxlr))
->  		return PTR_ERR(cxlr);
->  
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index c323c38d0da2..ec2203561446 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -300,6 +300,7 @@ int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
->  #define CXL_DECODER_F_LOCK  BIT(4)
->  #define CXL_DECODER_F_ENABLE    BIT(5)
->  #define CXL_DECODER_F_NORMALIZED_ADDRESSING BIT(6)
-> +#define CXL_DECODER_F_BI    BIT(7)
->  #define CXL_DECODER_F_RESET_MASK (CXL_DECODER_F_ENABLE | CXL_DECODER_F_LOCK)
->  
->  enum cxl_decoder_type {
-> @@ -826,6 +827,10 @@ static inline int cxl_root_decoder_autoremove(struct device *host,
->  {
->  	return cxl_decoder_autoremove(host, &cxlrd->cxlsd.cxld);
->  }
-> +static inline bool cxl_root_decoder_is_bi(struct cxl_root_decoder *cxlrd)
-> +{
-> +	return cxlrd->cxlsd.cxld.flags & CXL_DECODER_F_BI;
-> +}
->  int cxl_endpoint_autoremove(struct cxl_memdev *cxlmd, struct cxl_port *endpoint);
->  
->  /**
+>  	rc = cxl_bi_setup(port);
+>  	if (rc)
+>  		dev_dbg(&port->dev, "BI setup failed rc=%d\n", rc);
 > -- 
 > 2.39.5
-> 
+>
+
+Hmmm just curious are intermediate switch are guaranteed to be valid in AUTO discovery
+scenario , seems that the implementation only checks DSP.
+
+Best regards,
+Richard Cheng.
