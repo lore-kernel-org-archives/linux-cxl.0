@@ -1,277 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mailout1.hostsharing.net (mailout1.hostsharing.net [83.223.95.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86AE26ED3E
-	for <linux-cxl@vger.kernel.org>; Sat,  8 Aug 2026 17:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66421C5F1B;
+	Sun,  9 Aug 2026 15:57:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786208891; cv=none; b=lcMWy5aBbiLnr5NvlBudeiYO3wguhlxmDcu5lQTIA7YcB3ckHijngmUWOjYApg5fe9AY/6StW91SiJFOyGM8zaQJkA/KxoCmFfbMyirGjVYKvNzdRd8JxKpJgJ7FpDiD1dEZe9TQ/b3E/i5D5HCGPiO55rfldPVyO+TvQXo0TpU=
+	t=1786291056; cv=none; b=s4DYJhAF5Y0V9EoKfnULTUJWF6HRbU7nAif2q2Q37OImMHrB+bxvUfgs4hEgMQ/gHZMl9l4bwPK0LN9gjQMxCTeq0JayeWVe61ZFZamvN07tHvJlljdZs+MXHEgeWRMUPPGaMsrsWZf7LK4IFfmdyeuG5wTEItzMpzR/udZBR7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786208891; c=relaxed/simple;
-	bh=JgWx9bo9nzxlElIHHBpv1mGJ9PwlR9bEbGDhRS7GE4o=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=NpD6RGE8kIT/ixtXS/En41TqQdvmeYK9FPiLEKVye++/jbQ+lJhgFPoJmpszQwnMtrZnHQYYhf+s5C7+Bhx6JihvxNv030Koy2AxBu0MVaDObAYlFiBXlHxIm4MYV+zvaMPXrDtoMFByZ7R1S4p1E1IHnBBQYyjmVQUPTHL9gK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MFMufMZt; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MFMufMZt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786208889; x=1817744889;
-  h=date:from:to:cc:subject:message-id;
-  bh=JgWx9bo9nzxlElIHHBpv1mGJ9PwlR9bEbGDhRS7GE4o=;
-  b=MFMufMZt0YIWe5ZuVnA51MrkYTHrBDrqY6mZhebCKsy13hWdY4RmnciP
-   hf6HkDxjyR58PLTxFRWsSbPlRgxo2VAMb/UDItIXwoCF4X6s2mWp3ZvuH
-   rmWvAKPMj7KWLngPI5MQWty7EAeq1byPL6VaPQ5SNniox4rUc6adGVApZ
-   UnuzS6XRXxaIh2f4S3eB8q+sc8RWRC6V1rlQNdZLXT9UGtve+1CMRAiEr
-   JxcDz/o1iCADab6NTG/1lGVBHc83H5mI8mXR0phHJ9m7MXrCM2i9kkTIW
-   1TDRYs1dtdiZnQ2ro0xMPMcXb1SW3Aaw/KshnsSZhnJp5HNlFYSBWMz/d
-   A==;
-X-CSE-ConnectionGUID: p3Yu/c5fQquSdhBNyW9eiQ==
-X-CSE-MsgGUID: vLXW1PPASYaKOTI/fnZbgg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11869"; a="90469128"
-X-IronPort-AV: E=Sophos;i="6.25,212,1779174000"; 
-   d="scan'208";a="90469128"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2026 10:08:09 -0700
-X-CSE-ConnectionGUID: 5RX4b6S4S0a/ye7n46IqGw==
-X-CSE-MsgGUID: XtTxSv4ZQzCBIsNYv9bFtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,212,1779174000"; 
-   d="scan'208";a="260045751"
-Received: from lkp-server01.sh.intel.com (HELO 6eda058d650d) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 08 Aug 2026 10:08:06 -0700
-Received: from kbuild by 6eda058d650d with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1wskWh-00000000KUb-40Dp;
-	Sat, 08 Aug 2026 17:08:03 +0000
-Date: Sun, 09 Aug 2026 01:07:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Dan Williams <djbw@kernel.org>, linux-cxl@vger.kernel.org
-Subject: [cxl:next] BUILD SUCCESS
- 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
-Message-ID: <202608090107.DBHcyoOQ-lkp@intel.com>
-User-Agent: s-nail v14.9.25
+	s=arc-20240116; t=1786291056; c=relaxed/simple;
+	bh=Zy1vgel1zUMweUYLVamNGU6I19RYrsIGKTEU6Gy754M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iR3NW6yZrc5VDZuFWr7OwpjkSGqM/I2j73Yz97By0pil3eHYxcEBaIVj9xhoxCx19QAG/pPi5sEQo1S/VPiSCy+gp1CLJF+XjT3i/11wNHg8XYnIgtu6aKOhJUTO3QZlpDqgUw0orVGWYR3YcKipwBdYaR5jxpcBhRzUHmidQI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.95.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
+	 client-signature ECDSA (secp384r1) client-digest SHA384)
+	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
+	by mailout1.hostsharing.net (Postfix) with ESMTPS id 1110B677;
+	Sun, 09 Aug 2026 17:57:23 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 0C2796035055; Sun,  9 Aug 2026 17:57:23 +0200 (CEST)
+Date: Sun, 9 Aug 2026 17:57:23 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Terry Bowman <terry.bowman@amd.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, linux-cxl@vger.kernel.org,
+	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Shuai Xue <xueshuai@linux.alibaba.com>, Len Brown <lenb@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Ben Cheatham <Benjamin.Cheatham@amd.com>,
+	Richard Cheng <icheng@nvidia.com>,
+	Robert Richter <rrichter@amd.com>, linux-pci@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v19 02/14] cxl/ras: Fix cxl_rch_get_aer_severity() wrong
+ severity register
+Message-ID: <anijY3eTVWSqHLxh@wunner.de>
+References: <20260803221810.3685703-1-terry.bowman@amd.com>
+ <20260803221810.3685703-3-terry.bowman@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260803221810.3685703-3-terry.bowman@amd.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git next
-branch HEAD: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07  Merge branch 'for-7.3/cxl-misc' into cxl-for-next
+On Mon, Aug 03, 2026 at 05:17:58PM -0500, Terry Bowman wrote:
+> +++ b/drivers/cxl/core/ras_rch.c
+> @@ -94,11 +94,11 @@ static bool cxl_rch_get_aer_info(void __iomem *aer_base,
+>  static bool cxl_rch_get_aer_severity(struct aer_capability_regs *aer_regs,
+>  				     int *severity)
+>  {
+> -	if (aer_regs->uncor_status & ~aer_regs->uncor_mask) {
+> -		if (aer_regs->uncor_status & PCI_ERR_ROOT_FATAL_RCV)
+> -			*severity = AER_FATAL;
+> -		else
+> -			*severity = AER_NONFATAL;
+> +	u32 uncor_status = aer_regs->uncor_status & ~aer_regs->uncor_mask;
+> +
+> +	if (uncor_status) {
+> +		*severity = (uncor_status & aer_regs->uncor_severity) ?
+> +			     AER_FATAL : AER_NONFATAL;
+>  		return true;
+>  	}
+>  
 
-elapsed time: 2812m
+Independently of this patch, I'm wondering why the severity is inferred
+from the AER registers.  I would assume that the severity always equals
+the message received by the RCEC (ERR_COR, ERR_NONFATAL or ERR_FATAL).
 
-configs tested: 199
-configs skipped: 1
+So the severity could be passed to cxl_handle_rdport_errors() from its
+callers:  cxl_cor_err_detected() would pass AER_CORRECTABLE and
+cxl_error_detected() would pass ERR_NONFATAL or ERR_FATAL (depending
+on the "state" variable).
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+cxl_handle_rdport_errors() would no longer need to call
+cxl_rch_get_aer_severity(), so the latter could be removed.
 
-tested configs:
-alpha                            allnoconfig    gcc-16.1.0
-alpha                           allyesconfig    gcc-16.1.0
-alpha                              defconfig    gcc-16.1.0
-arc                             allmodconfig    gcc-16.1.0
-arc                             allyesconfig    gcc-16.1.0
-arc                  randconfig-001-20260807    gcc-14.3.0
-arc                  randconfig-001-20260807    gcc-8.5.0
-arc                  randconfig-001-20260808    gcc-9.5.0
-arc                  randconfig-002-20260807    gcc-14.3.0
-arc                  randconfig-002-20260808    gcc-9.5.0
-arm                  randconfig-001-20260807    clang-17
-arm                  randconfig-001-20260807    gcc-14.3.0
-arm                  randconfig-001-20260808    gcc-9.5.0
-arm                  randconfig-002-20260807    gcc-12.5.0
-arm                  randconfig-002-20260807    gcc-14.3.0
-arm                  randconfig-002-20260808    gcc-9.5.0
-arm                  randconfig-003-20260807    gcc-10.5.0
-arm                  randconfig-003-20260807    gcc-14.3.0
-arm                  randconfig-003-20260808    gcc-9.5.0
-arm                  randconfig-004-20260807    gcc-14.3.0
-arm                  randconfig-004-20260807    gcc-16.1.0
-arm                  randconfig-004-20260808    gcc-9.5.0
-arm64                         randconfig-001    gcc-11.5.0
-arm64                randconfig-001-20260807    clang-24
-arm64                randconfig-001-20260807    gcc-16.1.0
-arm64                randconfig-001-20260808    gcc-11.5.0
-arm64                randconfig-002-20260807    clang-24
-arm64                randconfig-002-20260807    gcc-16.1.0
-arm64                randconfig-002-20260808    gcc-11.5.0
-arm64                randconfig-003-20260807    gcc-16.1.0
-arm64                randconfig-003-20260808    gcc-11.5.0
-arm64                randconfig-004-20260807    clang-17
-arm64                randconfig-004-20260807    gcc-16.1.0
-arm64                randconfig-004-20260808    gcc-11.5.0
-csky                            allmodconfig    gcc-16.1.0
-csky                 randconfig-001-20260807    gcc-14.3.0
-csky                 randconfig-001-20260807    gcc-16.1.0
-csky                 randconfig-001-20260808    gcc-11.5.0
-csky                 randconfig-002-20260807    gcc-16.1.0
-csky                 randconfig-002-20260808    gcc-11.5.0
-hexagon              randconfig-001-20260807    clang-18
-hexagon              randconfig-001-20260807    clang-24
-hexagon              randconfig-001-20260808    gcc-16.1.0
-hexagon              randconfig-002-20260807    clang-18
-hexagon              randconfig-002-20260807    clang-24
-hexagon              randconfig-002-20260808    gcc-16.1.0
-i386                            allmodconfig    gcc-14
-i386                buildonly-randconfig-001    clang-22
-i386       buildonly-randconfig-001-20260807    gcc-13
-i386       buildonly-randconfig-001-20260807    gcc-14
-i386       buildonly-randconfig-001-20260808    clang-22
-i386       buildonly-randconfig-002-20260807    gcc-13
-i386       buildonly-randconfig-002-20260807    gcc-14
-i386       buildonly-randconfig-002-20260808    clang-22
-i386       buildonly-randconfig-003-20260807    clang-22
-i386       buildonly-randconfig-003-20260807    gcc-13
-i386       buildonly-randconfig-003-20260808    clang-22
-i386       buildonly-randconfig-004-20260807    clang-22
-i386       buildonly-randconfig-004-20260807    gcc-13
-i386       buildonly-randconfig-004-20260808    clang-22
-i386       buildonly-randconfig-005-20260807    clang-22
-i386       buildonly-randconfig-005-20260807    gcc-13
-i386       buildonly-randconfig-005-20260808    clang-22
-i386       buildonly-randconfig-006-20260807    gcc-13
-i386       buildonly-randconfig-006-20260808    clang-22
-i386                 randconfig-001-20260808    clang-22
-i386                 randconfig-002-20260808    clang-22
-i386                 randconfig-003-20260808    clang-22
-i386                 randconfig-004-20260808    clang-22
-i386                 randconfig-005-20260808    clang-22
-i386                 randconfig-006-20260808    clang-22
-i386                 randconfig-007-20260808    clang-22
-i386                 randconfig-011-20260807    clang-22
-i386                 randconfig-011-20260808    clang-22
-i386                 randconfig-012-20260807    clang-22
-i386                 randconfig-012-20260807    gcc-14
-i386                 randconfig-012-20260808    clang-22
-i386                 randconfig-013-20260807    clang-22
-i386                 randconfig-013-20260808    clang-22
-i386                 randconfig-014-20260807    clang-22
-i386                 randconfig-014-20260807    gcc-14
-i386                 randconfig-014-20260808    clang-22
-i386                 randconfig-015-20260807    clang-22
-i386                 randconfig-015-20260808    clang-22
-i386                 randconfig-016-20260807    clang-22
-i386                 randconfig-016-20260808    clang-22
-i386                 randconfig-017-20260807    clang-22
-i386                 randconfig-017-20260807    gcc-14
-i386                 randconfig-017-20260808    clang-22
-loongarch                          defconfig    clang-24
-loongarch            randconfig-001-20260807    clang-18
-loongarch            randconfig-001-20260807    clang-24
-loongarch            randconfig-001-20260808    gcc-16.1.0
-loongarch            randconfig-002-20260807    clang-18
-loongarch            randconfig-002-20260808    gcc-16.1.0
-nios2                           allmodconfig    gcc-11.5.0
-nios2                            allnoconfig    gcc-11.5.0
-nios2                randconfig-001-20260807    clang-18
-nios2                randconfig-001-20260807    gcc-8.5.0
-nios2                randconfig-001-20260808    gcc-16.1.0
-nios2                randconfig-002-20260807    clang-18
-nios2                randconfig-002-20260807    gcc-8.5.0
-nios2                randconfig-002-20260808    gcc-16.1.0
-parisc                          allmodconfig    gcc-16.1.0
-parisc                          allyesconfig    gcc-16.1.0
-parisc                             defconfig    gcc-16.1.0
-parisc               randconfig-001-20260807    gcc-9.5.0
-parisc               randconfig-001-20260808    gcc-8.5.0
-parisc               randconfig-002-20260807    gcc-8.5.0
-parisc               randconfig-002-20260808    gcc-8.5.0
-powerpc              randconfig-001-20260807    clang-24
-powerpc              randconfig-001-20260808    gcc-8.5.0
-powerpc              randconfig-002-20260807    clang-24
-powerpc              randconfig-002-20260808    gcc-8.5.0
-powerpc64                       alldefconfig    clang-17
-powerpc64            randconfig-001-20260807    gcc-8.5.0
-powerpc64            randconfig-001-20260808    gcc-8.5.0
-powerpc64            randconfig-002-20260807    gcc-14.3.0
-powerpc64            randconfig-002-20260808    gcc-8.5.0
-riscv                randconfig-001-20260807    gcc-12.5.0
-riscv                randconfig-001-20260808    clang-24
-riscv                randconfig-002-20260807    gcc-10.5.0
-riscv                randconfig-002-20260808    clang-24
-s390                 randconfig-001-20260807    gcc-9.5.0
-s390                 randconfig-001-20260808    clang-24
-s390                 randconfig-002-20260807    gcc-15.2.0
-s390                 randconfig-002-20260808    clang-24
-sh                                 defconfig    gcc-16.1.0
-sh                   randconfig-001-20260807    gcc-16.1.0
-sh                   randconfig-001-20260808    clang-24
-sh                   randconfig-002-20260807    gcc-16.1.0
-sh                   randconfig-002-20260808    clang-24
-sparc                randconfig-001-20260807    gcc-15.2.0
-sparc                randconfig-001-20260808    gcc-8.5.0
-sparc                randconfig-002-20260807    gcc-16.1.0
-sparc                randconfig-002-20260808    gcc-8.5.0
-sparc64              randconfig-001-20260807    clang-20
-sparc64              randconfig-001-20260808    gcc-8.5.0
-sparc64              randconfig-002-20260807    clang-20
-sparc64              randconfig-002-20260808    gcc-8.5.0
-um                   randconfig-001-20260807    gcc-14
-um                   randconfig-001-20260808    gcc-8.5.0
-um                   randconfig-002-20260807    clang-24
-um                   randconfig-002-20260808    gcc-8.5.0
-x86_64     buildonly-randconfig-001-20260807    clang-22
-x86_64     buildonly-randconfig-001-20260808    gcc-14
-x86_64     buildonly-randconfig-002-20260807    clang-22
-x86_64     buildonly-randconfig-002-20260807    gcc-14
-x86_64     buildonly-randconfig-002-20260808    gcc-14
-x86_64     buildonly-randconfig-003-20260807    clang-22
-x86_64     buildonly-randconfig-003-20260807    gcc-14
-x86_64     buildonly-randconfig-003-20260808    gcc-14
-x86_64     buildonly-randconfig-004-20260807    clang-22
-x86_64     buildonly-randconfig-004-20260808    gcc-14
-x86_64     buildonly-randconfig-005-20260807    clang-22
-x86_64     buildonly-randconfig-005-20260808    gcc-14
-x86_64     buildonly-randconfig-006-20260807    clang-22
-x86_64     buildonly-randconfig-006-20260808    gcc-14
-x86_64                                 kexec    clang-22
-x86_64                        randconfig-001    clang-22
-x86_64               randconfig-001-20260808    clang-22
-x86_64               randconfig-002-20260808    clang-22
-x86_64               randconfig-003-20260808    clang-22
-x86_64               randconfig-004-20260808    clang-22
-x86_64               randconfig-005-20260808    clang-22
-x86_64               randconfig-006-20260808    clang-22
-x86_64               randconfig-011-20260807    clang-22
-x86_64               randconfig-011-20260808    clang-22
-x86_64               randconfig-012-20260807    clang-22
-x86_64               randconfig-012-20260808    clang-22
-x86_64               randconfig-013-20260807    clang-22
-x86_64               randconfig-013-20260808    clang-22
-x86_64               randconfig-014-20260807    gcc-14
-x86_64               randconfig-014-20260808    clang-22
-x86_64               randconfig-015-20260807    gcc-14
-x86_64               randconfig-015-20260808    clang-22
-x86_64               randconfig-016-20260807    gcc-14
-x86_64               randconfig-016-20260808    clang-22
-x86_64                        randconfig-071    gcc-14
-x86_64               randconfig-071-20260807    clang-22
-x86_64               randconfig-071-20260807    gcc-13
-x86_64               randconfig-071-20260808    gcc-14
-x86_64               randconfig-072-20260807    clang-22
-x86_64               randconfig-072-20260808    gcc-14
-x86_64               randconfig-073-20260807    clang-22
-x86_64               randconfig-073-20260808    gcc-14
-x86_64               randconfig-074-20260807    clang-22
-x86_64               randconfig-074-20260808    gcc-14
-x86_64               randconfig-075-20260807    clang-22
-x86_64               randconfig-075-20260807    gcc-14
-x86_64               randconfig-075-20260808    gcc-14
-x86_64               randconfig-076-20260807    clang-22
-x86_64               randconfig-076-20260808    gcc-14
-x86_64                          rhel-9.4-bpf    gcc-14
-xtensa                 nommu_kc705_defconfig    gcc-16.1.0
-xtensa               randconfig-001-20260807    gcc-8.5.0
-xtensa               randconfig-001-20260808    gcc-8.5.0
-xtensa               randconfig-002-20260807    gcc-13.4.0
-xtensa               randconfig-002-20260808    gcc-8.5.0
+Am I missing something?  Is a scenario ever conceivable where the RCEC
+receives a message with different severity than what is inferred from
+the registers by cxl_rch_get_aer_severity()?
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+And a related question:  linux-next commit 21963e6e4e04 ("PCI/AER:
+Support Advisory Non-Fatal Errors") enables support for Non-Fatal
+Errors which are signaled with an ERR_COR message.
+
+These so-called Advisory Non-Fatal Errors set one bit in the Correctable
+Error Status Register (Advisory Non-Fatal Error Status, bit 13) and
+additionally one or more bits in the Uncorrectable Error Status Register
+(see the commit for details).
+
+cxl_rch_get_aer_severity() is not able to cope with such errors and
+will incorrectly infer that the severity is AER_NONFATAL.
+
+Now I *think* this is not a problem because Advisory Non-Fatal Errors
+are masked by default and the commit only unmasks them on regular PCI
+devices, not in the RCRB of a CXL device.  Only once bit 13 in the
+Correctable Error Mask Register is cleared in the RCRB will
+cxl_rch_get_aer_severity() fail.  Right?
+
+Thanks,
+
+Lukas
