@@ -1,118 +1,147 @@
-Received: from mailout1.hostsharing.net (mailout1.hostsharing.net [83.223.95.204])
+Received: from silver.cherry.relay.mailchannels.net (silver.cherry.relay.mailchannels.net [23.83.223.166])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66421C5F1B;
-	Sun,  9 Aug 2026 15:57:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2548731F9A4
+	for <linux-cxl@vger.kernel.org>; Sun,  9 Aug 2026 20:06:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.223.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786291056; cv=none; b=s4DYJhAF5Y0V9EoKfnULTUJWF6HRbU7nAif2q2Q37OImMHrB+bxvUfgs4hEgMQ/gHZMl9l4bwPK0LN9gjQMxCTeq0JayeWVe61ZFZamvN07tHvJlljdZs+MXHEgeWRMUPPGaMsrsWZf7LK4IFfmdyeuG5wTEItzMpzR/udZBR7E=
+	t=1786306016; cv=none; b=C+gkq/9bbVHJhweqn+NKLIeXZEqAHeJ9N0QdXXrYPmUylynXL3NCVa3fwdo5cIvimOxXPzaNiGXSyMZv6GM1Rybaeug4qKBp772DuXSTdT8dYyin5Y8iEqug6gvBMX+kexkvMKRe4/+PJXUwo6gYsEAIg6Mj1nz9tKrJA9BGPCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786291056; c=relaxed/simple;
-	bh=Zy1vgel1zUMweUYLVamNGU6I19RYrsIGKTEU6Gy754M=;
+	s=arc-20240116; t=1786306016; c=relaxed/simple;
+	bh=nSBtQx5s8WIGz06Agj7JmzCFoMqzwgiNiiNSQ2QA2qs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iR3NW6yZrc5VDZuFWr7OwpjkSGqM/I2j73Yz97By0pil3eHYxcEBaIVj9xhoxCx19QAG/pPi5sEQo1S/VPiSCy+gp1CLJF+XjT3i/11wNHg8XYnIgtu6aKOhJUTO3QZlpDqgUw0orVGWYR3YcKipwBdYaR5jxpcBhRzUHmidQI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=pass smtp.mailfrom=wunner.de; arc=none smtp.client-ip=83.223.95.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wunner.de
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	 Content-Type:Content-Disposition:In-Reply-To; b=lX10RmNbqAG0CSyt924I0JO49+aWJoFHHLxRWeFaD144uq3nPUt+syJaaY2AfrR/xmBr3tEdc5uWu+hhnGLm2WlFkNNuRyc8kqqOEZloNMYD+ipN2CDi/rZK6wv2H28RFqdNDup49kDxaj1MU6QbkysQME+yaHB2ARbmg5rVcE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=JpqodqzR; arc=none smtp.client-ip=23.83.223.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="JpqodqzR"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 3AA2D161FD0;
+	Sun, 09 Aug 2026 20:06:48 +0000 (UTC)
+Received: from pdx1-sub0-mail-a237.dreamhost.com (100-111-249-226.trex-nlb.outbound.svc.cluster.local [100.111.249.226])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id C035F162053;
+	Sun, 09 Aug 2026 20:06:45 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Bottle-Spicy: 603bcc5f37ea8639_1786306008016_270426347
+X-MC-Loop-Signature: 1786306008016:197005890
+X-MC-Ingress-Time: 1786306008016
+Received: from pdx1-sub0-mail-a237.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.111.249.226 (trex/8.0.2);
+	Sun, 09 Aug 2026 20:06:48 +0000
+Received: from offworld (unknown [172.56.213.38])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (secp384r1) server-digest SHA384
-	 client-signature ECDSA (secp384r1) client-digest SHA384)
-	(Client CN "*.hostsharing.net", Issuer "GlobalSign GCC R6 AlphaSSL CA 2025" (verified OK))
-	by mailout1.hostsharing.net (Postfix) with ESMTPS id 1110B677;
-	Sun, 09 Aug 2026 17:57:23 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 0C2796035055; Sun,  9 Aug 2026 17:57:23 +0200 (CEST)
-Date: Sun, 9 Aug 2026 17:57:23 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, linux-cxl@vger.kernel.org,
-	Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Shuai Xue <xueshuai@linux.alibaba.com>, Len Brown <lenb@kernel.org>,
-	Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Ben Cheatham <Benjamin.Cheatham@amd.com>,
-	Richard Cheng <icheng@nvidia.com>,
-	Robert Richter <rrichter@amd.com>, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v19 02/14] cxl/ras: Fix cxl_rch_get_aer_severity() wrong
- severity register
-Message-ID: <anijY3eTVWSqHLxh@wunner.de>
-References: <20260803221810.3685703-1-terry.bowman@amd.com>
- <20260803221810.3685703-3-terry.bowman@amd.com>
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a237.dreamhost.com (Postfix) with ESMTPSA id 4hJ86X66qFz103y;
+	Sun,  9 Aug 2026 13:06:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1786306005;
+	bh=3fZlfpYZhzHg3MjJItsWA706lgLIbhHcLbOyxjbcwSY=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=JpqodqzRf83wtjcaJSCRIB8gvxXBH4ZgpKVWRl8WuDgCES1VcY7zYbsZZnCDEiuKj
+	 0Bg7+ZTioOn6fCZvjdvLeKJLMrOzg7MMuuIUBVl03ZJ7pFliEPqlCZ7oMdwgrw0Xr4
+	 ptON0OX50k5MnUr0EC1i3gf/Q2sI1SwOtpL5ZsuYPKhiGpKg9NgbXro1Df5mpffL8D
+	 unBf53qGfhHp44Ez14pN+WWWFSmdEa/FFQ1d8qo2hnDT/QjV0HWfsNh34XJ968Z7Ga
+	 0Q6tQz5YPFZ0k/0kZrZN26eBvjWbJZbCd2o1lkc66O426qCG20aC3aFNJI7A0Kwj/a
+	 4QSsQddR4dWlw==
+Date: Sun, 9 Aug 2026 13:06:40 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Richard Cheng <icheng@nvidia.com>
+Cc: dave.jiang@intel.com, jic23@kernel.org, alison.schofield@intel.com,
+	benjamin.cheatham@amd.com, alucerop@amd.com,
+	dongjoo.seo1@samsung.com, linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v7 1/8] cxl: Add BI register probing and port
+ initialization
+Message-ID: <20260809200640.ahsbgyt7e6kg4klf@offworld>
+References: <20260728144136.709882-1-dave@stgolabs.net>
+ <20260728144136.709882-2-dave@stgolabs.net>
+ <anVt9LtGbP8PzklF@MWDK4CY14F>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20260803221810.3685703-3-terry.bowman@amd.com>
+In-Reply-To: <anVt9LtGbP8PzklF@MWDK4CY14F>
+User-Agent: NeoMutt/20220429
 
-On Mon, Aug 03, 2026 at 05:17:58PM -0500, Terry Bowman wrote:
-> +++ b/drivers/cxl/core/ras_rch.c
-> @@ -94,11 +94,11 @@ static bool cxl_rch_get_aer_info(void __iomem *aer_base,
->  static bool cxl_rch_get_aer_severity(struct aer_capability_regs *aer_regs,
->  				     int *severity)
->  {
-> -	if (aer_regs->uncor_status & ~aer_regs->uncor_mask) {
-> -		if (aer_regs->uncor_status & PCI_ERR_ROOT_FATAL_RCV)
-> -			*severity = AER_FATAL;
-> -		else
-> -			*severity = AER_NONFATAL;
-> +	u32 uncor_status = aer_regs->uncor_status & ~aer_regs->uncor_mask;
-> +
-> +	if (uncor_status) {
-> +		*severity = (uncor_status & aer_regs->uncor_severity) ?
-> +			     AER_FATAL : AER_NONFATAL;
->  		return true;
->  	}
->  
+On Fri, 07 Aug 2026, Richard Cheng wrote:
 
-Independently of this patch, I'm wondering why the severity is inferred
-from the AER registers.  I would assume that the severity always equals
-the message received by the RCEC (ERR_COR, ERR_NONFATAL or ERR_FATAL).
+>On Tue, Jul 28, 2026 at 07:41:29AM +0800, Davidlohr Bueso wrote:
+>> +static void cxl_port_map_bi(struct cxl_port *port)
+>> +{
+>> +	struct cxl_register_map *map = &port->reg_map;
+>> +	struct cxl_dport *parent_dport = port->parent_dport;
+>> +	struct device *udev;
+>> +	int cap_id;
+>> +
+>> +	/* no upstream BI registers above host bridges or the cxl_root */
+>> +	if (!parent_dport || is_cxl_root(parent_dport->port))
+>> +		return;
+>> +
+>> +	udev = is_cxl_endpoint(port) ?
+>> +		port->uport_dev->parent : port->uport_dev;
+>> +	if (!dev_is_pci(udev))
+>> +		return;
+>> +
+>> +	/* BI requires 256B Flit on the upstream link */
+>> +	if (!cxl_pci_flit_256(to_pci_dev(udev)))
+>> +		return;
+>> +
+>> +	/* map this port's own BI capability */
+>> +	if (is_cxl_endpoint(port)) {
+>> +		if (!map->component_map.bi_decoder.valid) {
+>> +			dev_dbg(&port->dev, "BI Decoder registers not found\n");
+>> +			return;
+>> +		}
+>> +		cap_id = CXL_CM_CAP_CAP_ID_BI_DECODER;
+>> +	} else {
+>> +		if (!map->component_map.bi_rt.valid) {
+>> +			dev_dbg(&port->dev, "BI RT registers not found\n");
+>> +			return;
+>> +		}
+>> +		cap_id = CXL_CM_CAP_CAP_ID_BI_RT;
+>> +	}
+>> +
+>> +	map->host = &port->dev;
+>> +	if (cxl_map_component_regs(map, &port->regs, BIT(cap_id)))
+>> +		dev_dbg(&port->dev, "Failed to map BI capability 0x%x\n",
+>> +			cap_id);
+>
+>Do we need to distinguish an optional absent BI RT from an advertised BI RT
+>that failed to map?
+>
+>In both cases port->regs.bi_rt is NULL, then cxl_is_bi_capable() accepts a NULL BI
+>pointer for a USP, and __cxl_bi_ctrl_dport() consequently skips __cxl_bi_commit_rt().
+>
+>So a mapping failure of a present BI RT can be treated like the switch do not need a
+>route table.
+>
+>I think we should treat mapping failure of BI RT differently.
 
-So the severity could be passed to cxl_handle_rdport_errors() from its
-callers:  cxl_cor_err_detected() would pass AER_CORRECTABLE and
-cxl_error_detected() would pass ERR_NONFATAL or ERR_FATAL (depending
-on the "state" variable).
+I agree. For example a switch that requires an explicit BI RT commit would have BI
+enabled below it without its route table ever being committed. I have fixed this
+for v8 such that cxl_is_bi_capable() does:
 
-cxl_handle_rdport_errors() would no longer need to call
-cxl_rch_get_aer_severity(), so the latter could be removed.
+	if (port_iter->reg_map.component_map.bi_rt.valid &&
+	    !port_iter->regs.bi_rt) {
+		dev_dbg(cxlds->dev,
+			"BI RT advertised but unmapped\n");
+		return;
+	}
 
-Am I missing something?  Is a scenario ever conceivable where the RCEC
-receives a message with different severity than what is inferred from
-the registers by cxl_rch_get_aer_severity()?
-
-And a related question:  linux-next commit 21963e6e4e04 ("PCI/AER:
-Support Advisory Non-Fatal Errors") enables support for Non-Fatal
-Errors which are signaled with an ERR_COR message.
-
-These so-called Advisory Non-Fatal Errors set one bit in the Correctable
-Error Status Register (Advisory Non-Fatal Error Status, bit 13) and
-additionally one or more bits in the Uncorrectable Error Status Register
-(see the commit for details).
-
-cxl_rch_get_aer_severity() is not able to cope with such errors and
-will incorrectly infer that the severity is AER_NONFATAL.
-
-Now I *think* this is not a problem because Advisory Non-Fatal Errors
-are masked by default and the commit only unmasks them on regular PCI
-devices, not in the RCRB of a CXL device.  Only once bit 13 in the
-Correctable Error Mask Register is cleared in the RCRB will
-cxl_rch_get_aer_severity() fail.  Right?
+So then the later cxl_bi_setup will fail.
 
 Thanks,
-
-Lukas
+Davidlohr
