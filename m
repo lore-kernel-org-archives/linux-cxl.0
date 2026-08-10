@@ -1,332 +1,226 @@
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012004.outbound.protection.outlook.com [40.107.209.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from a10-18.smtp-out.amazonses.com (a10-18.smtp-out.amazonses.com [54.240.10.18])
+	(using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F34C439004;
-	Mon, 10 Aug 2026 19:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.4
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786388472; cv=fail; b=ikgiUiOSZYaownM7FpWBTK/S9tzM7NEsweMJ3Pi6qQkTlfwusmWZK9HgCOeqgPgX8IICPzgSMBCVnFglOFPnLmG0SXlaS1p4n+FLftZC+Oeu3kc6YcT15+qkRmn5JlLU6Ts5M3Y6gcXk2oL5HUwhFSzzoRdvDU39oT2WFTQ7wX8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786388472; c=relaxed/simple;
-	bh=UDLaV6ar6MjteDKX0z3r2KnglHriGZSCI8mm+dEVXV8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bFHfVf/MWkDyuKvS3tFOhThtQiGiraQZI3M+4acA38G3XEqHNWEpIhD2vUKWEsKEhzKphmCraezVG7DvvbCsRCgD6ePsZDlSP7FdelVo2OfywdOPw3k1Py6l1swoh8hO6XmMOxNg7Lenjw1DByEj3T+Skwv2VB4AQoxoeCxU/0E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JILSKbA6; arc=fail smtp.client-ip=40.107.209.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE4F372B57;
+	Mon, 10 Aug 2026 20:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.240.10.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786393418; cv=none; b=pmu45aWFsil7sHX00TBKLZGNHJ9UokYsvena+3JIISfsVKBrlsweI2Z6kTXboVPjbimFdbMMdmnmYa9Cqwohiw6YXPstfrdZ4XVH4wtuxAxR42GCCkK3GOYlooRA8SyA2w0fnTp0GDoHIZ2a/qS3XvULdJJYOfgY3MnSeBm63ks=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786393418; c=relaxed/simple;
+	bh=d0CSqObjb+GjkcI5dizLFpN48hdd5rA81MwgT6rZ0vc=;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:References:
+	 Message-ID; b=m8nsFw5uCTcBXWjgK9HwUl+t4X3dvC8qtuwf0LcPCnvs2Hks10psKMMNAvMsg66e9zemShw/6zEAx/GwX2DO3KgA/lOO6n9sqezi3GRKvo8jVeRkwImfEwLc1NHfiO140vZXWVHpv8i/VDCMTHR1sFRiuSQJ2AuL9NgogJ5BLeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com; spf=pass smtp.mailfrom=amazonses.com; dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b=eirgdkVh; dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b=h9CA2PyW; arc=none smtp.client-ip=54.240.10.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jagalactic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazonses.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JILSKbA6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qgiIo8/xZJErhLTKenPKXOrG8lfa9VY3oG5HQ/olIMH58K2wxVzoYJU4ECdMlLEwBP8aKLM42KwEnuH4/Yp2wm645w3SeSXViKmJ4ftkXUBm0wXTgL7DrQrwpbG6LxlZFsiCvQOXxTfwVoVnYPCpGXTinBv2jxbCE+oCjpDfWNuKZY4p48ewS7vJAO8xGvGNztRfXfiGtdjTp5iEn56EeZjcfVmB5cadWqlhae3DaoA3RmyWE0Wgf/c7Soae6593A4BVX1GQ2Cr6/SndWdJt5+wURyk6Rtpd6AFVddRMT++TiKyxjEjZW2HzRQFwpYgI8agOzih7LgUlpF++pUVrwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qYdgfEWQ8yhmHKX2/lSRCbzQHXlViRkar1JkHJ33fFM=;
- b=ghsJpQ0jkdUbSwuRotglvREt1gzGFoML7vybpOXQ6WXIy/286ZbvXK2GFO0Ll3pvr/ts6AWumsLopGJQAQyZDdq77Eyikny3k24cdUOmSNrVpsTviayl3HHHo/3s6qONmFY9fFseOen9icdZgLJEClu3eLtFMiXRcXQRU5lIXeGMEj9bRGGwISE7VXIuUls+fN4FN4mrf3xVhkjfXKEVXNdP8u9yziDtB3H28SfDzw2kyLaIuusphUy1sOAWgl3dGHiqeITnGN9bZvvkSjyWZTRJjsOzHw15Z2afPu57Il2Ko9Kbkpn8jWjlJmHry8JUrqz1+fL1adwj3gTJLLjI7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qYdgfEWQ8yhmHKX2/lSRCbzQHXlViRkar1JkHJ33fFM=;
- b=JILSKbA6gzIt5YP6nnab8WBVajjDw1yfMdD4k/A/A6SgneIAoaYLOC6bp2L5cwmTmdXA6Wx7FjxZGARiTjKU2DPi9dLW+xK+Ja5zRJgX/FyLjQUTUMXTXDiPwNj7FNZopUZ2JYeV4ZcdN+enA/aau2+8u8L7g+CG/jMWqZjiqpc=
-Received: from BY3PR03CA0010.namprd03.prod.outlook.com (2603:10b6:a03:39a::15)
- by LV2PR12MB5942.namprd12.prod.outlook.com (2603:10b6:408:171::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.25; Mon, 10 Aug
- 2026 19:00:21 +0000
-Received: from MWH0EPF000A6730.namprd04.prod.outlook.com
- (2603:10b6:a03:39a:cafe::b) by BY3PR03CA0010.outlook.office365.com
- (2603:10b6:a03:39a::15) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.292.25 via Frontend Transport; Mon,
- 10 Aug 2026 19:00:21 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- MWH0EPF000A6730.mail.protection.outlook.com (10.167.249.22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.315.6 via Frontend Transport; Mon, 10 Aug 2026 19:00:21 +0000
-Received: from [192.168.86.74] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Mon, 10 Aug
- 2026 14:00:18 -0500
-Message-ID: <8cef03f0-ab19-42b7-ad04-a1e98e2270ec@amd.com>
-Date: Mon, 10 Aug 2026 14:00:18 -0500
+	dkim=pass (1024-bit key) header.d=jagalactic.com header.i=@jagalactic.com header.b="eirgdkVh";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="h9CA2PyW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=o25mqk5iffcfzgc3wo2zjhkohcyjzsoq; d=jagalactic.com; t=1786393416;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id;
+	bh=d0CSqObjb+GjkcI5dizLFpN48hdd5rA81MwgT6rZ0vc=;
+	b=eirgdkVhzV02zmGcDo4sIrJLcwIIqDYqT9NJMGRYTo243Y7zOpAktRPfag090CwU
+	75jiKR51c5deXEtQWLrXa7zMAIOJCapdNNdua4dJr/tylY76fVgsOWTZdo/XWd3lmfV
+	ijh3wcRdncrT3ZtivnV7hS4HSfw8HWDeP+T+t/5g=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=224i4yxa5dv7c2xz3womw6peuasteono; d=amazonses.com; t=1786393416;
+	h=Subject:From:To:Cc:Date:Mime-Version:Content-Type:Content-Transfer-Encoding:References:Message-Id:Feedback-ID;
+	bh=d0CSqObjb+GjkcI5dizLFpN48hdd5rA81MwgT6rZ0vc=;
+	b=h9CA2PyWFhNhMx/r9sCMopNezJjOBEmv7vkCZqB7tDnjyCypoSep6bXSmCbhLzHV
+	hMHPxT3ip226B8WM1kmBSvIkdcrHOmm6w8jJHasQtD7TaUPkUy8cipbWxb45mhwKj0N
+	blIaPPFVlPX10vh8iPeo6IwJdDJjU9kHqcULrlFM=
+Subject: [PATCH v13 00/12] famfs: the Fabric-Attached Memory File System
+ (standalone)
+From: =?UTF-8?Q?John_Groves?= <john@jagalactic.com>
+To: =?UTF-8?Q?John_Groves?= <John@Groves.net>, 
+	=?UTF-8?Q?Miklos_Szeredi?= <miklos@szeredi.hu>, 
+	=?UTF-8?Q?Dan_Williams?= <djbw@kernel.org>, 
+	=?UTF-8?Q?Bernd_Schubert?= <bschubert@ddn.com>, 
+	=?UTF-8?Q?Alison_Schofiel?= =?UTF-8?Q?d?= <alison.schofield@intel.com>
+Cc: =?UTF-8?Q?John_Groves?= <jgroves@micron.com>, 
+	=?UTF-8?Q?Jonathan_Corbe?= =?UTF-8?Q?t?= <corbet@lwn.net>, 
+	=?UTF-8?Q?Jake_Edge?= <jake@lwn.net>, 
+	=?UTF-8?Q?Shuah_Khan?= <skhan@linuxfoundation.org>, 
+	=?UTF-8?Q?Vishal_Verma?= <vishal.l.verma@intel.com>, 
+	=?UTF-8?Q?Dave_Jiang?= <dave.jiang@intel.com>, 
+	=?UTF-8?Q?Matthew_Wilcox?= <willy@infradead.org>, 
+	=?UTF-8?Q?Jan_Kara?= <jack@suse.cz>, 
+	=?UTF-8?Q?Alexander_Viro?= <viro@zeniv.linux.org.uk>, 
+	=?UTF-8?Q?David_Hildenbrand?= <david@kernel.org>, 
+	=?UTF-8?Q?Christian_Bra?= =?UTF-8?Q?uner?= <brauner@kernel.org>, 
+	=?UTF-8?Q?Darrick_J_=2E_Wong?= <djwong@kernel.org>, 
+	=?UTF-8?Q?Randy_Dunlap?= <rdunlap@infradead.org>, 
+	=?UTF-8?Q?Jeff_Layton?= <jlayton@kernel.org>, 
+	=?UTF-8?Q?Amir_Goldstein?= <amir73il@gmail.com>, 
+	=?UTF-8?Q?Jonathan_Cameron?= <jic23@kernel.org>, 
+	=?UTF-8?Q?Stefan_Hajnoczi?= <shajnocz@redhat.com>, 
+	=?UTF-8?Q?Joanne_Koong?= <joannelkoong@gmail.com>, 
+	=?UTF-8?Q?Josef_Bacik?= <josef@toxicpanda.com>, 
+	=?UTF-8?Q?Bagas_Sanjaya?= <bagasdotme@gmail.com>, 
+	=?UTF-8?Q?Chen_Linxuan?= <chenlinxuan@uniontech.com>, 
+	=?UTF-8?Q?James_Morse?= <james.morse@arm.com>, 
+	=?UTF-8?Q?Fuad_Tabba?= <tabba@google.com>, 
+	=?UTF-8?Q?Sean_Christopherson?= <seanjc@google.com>, 
+	=?UTF-8?Q?Shivank_Garg?= <shivankg@amd.com>, 
+	=?UTF-8?Q?Ackerley_Tng?= <ackerleytng@google.com>, 
+	=?UTF-8?Q?Gregory_Pric?= =?UTF-8?Q?e?= <gourry@gourry.net>, 
+	=?UTF-8?Q?Andrew_Morton?= <akpm@linux-foundation.org>, 
+	=?UTF-8?Q?Namjae_Jeon?= <linkinjeon@kernel.org>, 
+	=?UTF-8?Q?Lorenzo_Stoakes?= <ljs@kernel.org>, 
+	=?UTF-8?Q?Greg_Kroah-Hartman?= <gregkh@linuxfoundation.org>, 
+	=?UTF-8?Q?Ira_Weiny?= <iweiny@kernel.org>, 
+	=?UTF-8?Q?Pasha_Tatashin?= <pasha.tatashin@soleen.com>, 
+	=?UTF-8?Q?Haren_Myneni?= <haren@linux.ibm.com>, 
+	=?UTF-8?Q?Pratyush_Yadav?= <pratyush@kernel.org>, 
+	=?UTF-8?Q?Giovanni_Cabiddu?= <giovanni.cabiddu@intel.com>, 
+	=?UTF-8?Q?Jiri_Slaby?= <jirislaby@kernel.org>, 
+	=?UTF-8?Q?Ethan_Nelson-Moo?= =?UTF-8?Q?re?= <enelsonmoore@gmail.com>, 
+	=?UTF-8?Q?Gabriel_Whigham?= <gabewhigham@gmail.com>, 
+	=?UTF-8?Q?Aravind_Ramesh?= <arramesh@micron.com>, 
+	=?UTF-8?Q?Ajay_Joshi?= <ajayjoshi@micron.com>, 
+	=?UTF-8?Q?venkataravis=40m?= =?UTF-8?Q?icron=2Ecom?= <venkataravis@micron.com>, 
+	=?UTF-8?Q?linux-doc=40?= =?UTF-8?Q?vger=2Ekernel=2Eorg?= <linux-doc@vger.kernel.org>, 
+	=?UTF-8?Q?linux-kernel=40vger=2Ekernel=2Eorg?= <linux-kernel@vger.kernel.org>, 
+	=?UTF-8?Q?nvdimm=40lists=2Elinux=2Edev?= <nvdimm@lists.linux.dev>, 
+	=?UTF-8?Q?linux-cxl=40vger=2Ekernel=2Eorg?= <linux-cxl@vger.kernel.org>, 
+	=?UTF-8?Q?linux-fsdevel=40vger=2Ekernel=2Eorg?= <linux-fsdevel@vger.kernel.org>, 
+	=?UTF-8?Q?fuse-devel=40lists=2Elinux=2E?= =?UTF-8?Q?dev?= <fuse-devel@lists.linux.dev>, 
+	=?UTF-8?Q?John_Groves?= <john@groves.net>
+Date: Mon, 10 Aug 2026 20:23:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cxl/mce: Only act on uncorrected memory errors
-To: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>, Davidlohr Bueso
-	<dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>, Dave Jiang
-	<dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>, Vishal
- Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Ira Weiny
-	<iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, <tony.luck@intel.com>,
-	<bp@alien8.de>
-CC: <linux-cxl@vger.kernel.org>, <linux-edac@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>, <x86@kernel.org>
-References: <20260810183013.47085-1-shaikhkamal2012@gmail.com>
-Content-Language: en-US
-From: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>
-In-Reply-To: <20260810183013.47085-1-shaikhkamal2012@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: satlexmb07.amd.com (10.181.42.216) To satlexmb07.amd.com
- (10.181.42.216)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000A6730:EE_|LV2PR12MB5942:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3d7a40ad-95c4-47c2-0a31-08def711a0ab
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|23010399003|82310400026|36860700016|921020|13003099007|22082099003|18002099003|56012099006|10067099003|11063799006|5023799004|6133799003;
-X-Microsoft-Antispam-Message-Info:
-	aBk5cVUs//b7nEqn9npti6Q5cgoDSLQPFYJcoUV2KXu6Ipowjcgf3/1KEFvteugddTi0QtbNgjKPhsIR6BwVALXZkYPtrSM5igu9BZKM73j6mfLxMxAIayTwa1KVm8c3AXULoHlqoYLc8mUPFxuX+X6y00v8YZJLdSIYVirhjYjAM7QquuC1wyr3ktice22J7wvyuBOsYc12BQJk6FMNQ+flxHjzCxWzcrRRUlREYQp2RqSxcVROyM0T/6MylqacbITdMLKBJ8tGp7MO1gxkfgFvHjnzyaraIhiQGnax5Bnj90YLMkZQrDPhG8lQB1oEEPH7AHHUA8ZIjEELekZQQL3Rf9aLxfVvjQtumD30vGrnanMJncpBIDfGVSxUftrP1sV7m25lfBpQdg/KiNAW9Wjt9KBj19b9+qfPsd1j/79exXy36vLFUb9w52CAU/KBUsBaLnxIvcAhuaZoB+lODLPBEiwkgEa7ZxtmSjCzc88In6lhyqha8J/U7sgiIok8cJ9RibkuA7gqFjjJ5j/TyC5r6/stHDYJVAm/N9CMq8MvkKZZpRTylxN9FJbyZ3xX98eEr/r2P0lR5sAzCthfdPgr+dBxwX3fMdrV6I0RsiBUj/G1MXsEuhVr5r72QYMoBbYXex4IWhb9OWhgBVdUSpLH4tXu/9NC0wFYFnnLYjBo59rj9ScsQfI9CFYW1kwA+X4bkH3at93hVQE0Y0uJqw5JWgwMzBMZ4RoiYW0iGAZeQWdweNoGbn11ArIO64yo
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(23010399003)(82310400026)(36860700016)(921020)(13003099007)(22082099003)(18002099003)(56012099006)(10067099003)(11063799006)(5023799004)(6133799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	MjtoaSHVyNQc8rkeKjfntEW5/IDJ22cglW4XswUwNJpgewkffjMN+y1F3HKq0p8c7uP0W1rmr1gnzIzkOIMqal4+kLh04TN6WwRlx88CcpYN7VZgr+ML9ylDScYu/SKv7GTb4qbdGxmH4bhy6CTiBUGnkrfpASc3n2twwaxPeIPdx2xeB+VrdoOvJZuMDN+fppM0TEyPj8yYJtTIt2u2raCQ87WKy+ivkAAZHNacLhZtm643bcUSUtTaB1KVBxE0NX5Jb7iVrJbrU3gDLx0ks0OTzis7KDg8pkzumr1J0R4UStdsAFc2mQ/HGYHTyWSyGqYamBj2erITby9/dFU9wlwhXdsxhbtvUm0SzyOj8JpBdkwvE1hnYXJ+E9jQ0F65leTuMlxHblhAMHxZIWv8czTNXe0c9lGkQpwW7p/QBdQNs58Lw7/0peFbnTyrqOr0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2026 19:00:21.2484
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d7a40ad-95c4-47c2-0a31-08def711a0ab
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000A6730.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5942
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+References: <20260810202325.96202-1-john@jagalactic.com>
+X-Mailer: Amazon WorkMail
+Thread-Index: AQHdKQYd8BhJGjNjSyqPwMCz2Vr35A==
+Thread-Topic: [PATCH v13 00/12] famfs: the Fabric-Attached Memory File System
+ (standalone)
+X-Wm-Sent-Timestamp: 1786393414
+X-Original-Mailer: git-send-email 2.55.0
+Message-ID: <0100019fed5850ec-2bdfb17a-3086-44ea-8fdd-777d3ce12a33-000000@email.amazonses.com>
+Feedback-ID: ::1.us-east-1.LF00NED762KFuBsfzrtoqw+Brn/qlF9OYdxWukAhsl8=:AmazonSES
+X-SES-Outgoing: 2026.08.10-54.240.10.18
 
-On 8/10/2026 1:30 PM, Shaikh Kamaluddin wrote:
-> [You don't often get email from shaikhkamal2012@gmail.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> cxl_handle_mce() offlines the aliased page of an ELC region on any
-> record with a usable address; it does not check MCI_STATUS_UC or
-> filter non-memory errors. uc_decode_notifier(), the equivalent
-> handler for plain memory on the same chain at the same priority,
-> filters on mce->severity and leaves corrected errors untouched.
-> cxl_handle_mce() has no such gate, so a corrected error - which
-> the generic handler ignores - still causes the alias to be
-> permanently retired via memory_failure().
-> 
-> Corrected errors do reach the chain: machine_check_poll() logs
-> them via the same mce_gen_pool_process() path that feeds
-> x86_mce_decoder_chain, and cxl_extended_linear_cache_resize()
-> extends p->res to cover the DRAM half of the ELC pair, so a
-> routine DRAM CE carries an address inside the region resource.
-> 
-> Filter the record as nfit_handle_mce() does. Commit fc08a4703a41
-> ("acpi, nfit: Fix the memory error check in nfit_handle_mce()") and
-> commit 5d96c9342c23 ("acpi/nfit, x86/mce: Handle only uncorrectable
-> machine checks") established this filter for an equivalent handler
-> on the same notifier chain; the consequence here is more severe, as
-> the CXL handler calls memory_failure() rather than recording a bad
-> block.
-> 
-> mce_is_correctable() is used instead of copying
-> uc_decode_notifier()'s AO/DEFERRED test because the alias must
-> still be offlined on MCE_AR_SEVERITY, where kill_me_maybe() owns
-> the reported page but nothing owns the alias.
-> 
-> Fixes: 516e5bd0b6bf ("cxl: Add mce notifier to emit aliased address for extended linear cache")
-> 
-> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
-> ---
-
-This looks good to me, so:
-Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
-
-If you have the time, could you also share a script that does the below testing on the list? It may
-be possible to integrate into the CXL testing suite (see https://github.com/pmem/ndctl.git), though
-the QEMU usage may throw a wrench in that. Even if it's not possible, having the tests out there
-for people to run would help with any future breakage.
-
-Thanks,
-Ben
-> Reproduced under QEMU/vng. QEMU's cxl-type3 does not emulate the HMAT
-> extended-linear address_mode bit, so ELC was forced locally for testing
-> via a one-line debug hack in cxl_region_probe() (not part of this patch):
-> 
->         if (!p->cache_size && p->res)
->                 p->cache_size = resource_size(p->res) / 2;
-> 
-> Steps:
-> 1. Boot with an Intel CPU model under TCG (KVM host-passthrough will
->     otherwise leak the host's real vendor ID, and AMD/SMCA takes a
->     different mce_usable_address() path than the one under test):
-> vng -v -r ./arch/x86/boot/bzImage --disable-kvm --qemu-opts='-cpu Skylake-Server-v4,+mce,+mca -m 4G -machine q35,cxl=on -object memory-backend-ram,id=cxl-mem0,size=512M -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.0 -device cxl-rp,port=0,bus=cxl.0,id=root_port0,chassis=0,slot=0 -device cxl-type3,bus=root_port0,volatile-memdev=cxl-mem0,id=cxl-mem-device0 -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=512M'
-> 
-> 2. modprobe mce-inject
-> $cxl list -M
-> $cxl list -D
-> $cxl create-region -m mem0 -d decoder0.0 -w 1 -g 256 -t ram
-> $dmesg | grep "DEBUG: forced cache_size"
-> $modprobe device_dax
-> $modprobe kmem
-> $ls /sys/bus/dax/devices/
-> $daxctl reconfigure-device dax0.0 --mode=system-ram
-> $lsmem
-> it will show as below:
-> dax0.0
-> [   42.857642] Fallback order for Node 0: 0
-> [   42.857828] Built 1 zonelists, mobility grouping on.  Total pages: 1010805
-> [   42.858446] Policy zone: Normal
-> [
->   {
->     "chardev":"dax0.0",
->     "size":536870912,
->     "target_node":0,
->     "align":2097152,
->     "mode":"system-ram",
->     "online_memblocks":4,
->     "total_memblocks":4,
->     "movable":true
->   }
-> ]
-> reconfigured 1 device
-> RANGE                                  SIZE  STATE REMOVABLE BLOCK
-> 0x0000000000000000-0x000000007fffffff    2G online       yes  0-15
-> 0x0000000100000000-0x000000017fffffff    2G online       yes 32-47
-> 0x0000000190000000-0x00000001afffffff  512M online       yes 50-53
-> 
-> Memory block size:       128M
-> Total online memory:     4.5G
-> Total offline memory:      0B
-> 
-> 3. Load the injector if not loaded earlier and derive the two MCi_STATUS values.
-> 
->     modprobe mce-inject
-> 
->     MCi_STATUS bit layout used here (arch/x86/include/asm/mce.h):
->       bit 63  VAL     - record valid
->       bit 61  UC      - uncorrected (0 = corrected error under test)
->       bit 60  EN      - error reporting enabled
->       bit 59  MISCV   - MCi_MISC valid
->       bit 58  ADDRV   - MCi_ADDR valid
->       bits[15:0] MCACOD - bit 7 set = memory-error signature, per
->                           mce_is_memory_error()'s Intel branch
-> 
->     python3 -c "
->     VAL, UC, EN, MISCV, ADDRV = 1<<63, 1<<61, 1<<60, 1<<59, 1<<58
->     MCACOD_MEM = 1<<7                      # memory error signature
->     ce = VAL | EN | MISCV | ADDRV | MCACOD_MEM
->     uc = ce | UC
->     print(f'CE status = {hex(ce)}')
->     print(f'UC status = {hex(uc)}')"
->     # CE status = 0x9c00000000000080
->     # UC status = 0xbc00000000000080
-> 
->     MCi_MISC: address-mode field, bits[8:6], must be 2 (physical):
-> 
->     python3 -c "print(hex(2 << 6))"
->     # misc = 0x80
-> 
-> 4.  $ cd /sys/kernel/debug/mce-inject
-> $echo sw > flags
-> $echo 0x9C00000000000080 > status
-> $echo 0x80 > misc
-> $echo 0x190010000 > addr
-> $echo 9 > bank
-> [  221.813395] mce: [Hardware Error]: Machine check events logged
-> [  221.814716] cxl_mce_debug: entered status=0x9c00000000000080 addr=0x190010000 cache_size=0x10000000 res=[mem 0x190000000-0x1afffffff flags 0x200] usable=1
-> [  221.816200] cxl_mce_debug: spa=0x190010000 contains=1
-> [  221.817089] cxl_mce_debug: spa_alias=0x1a0010000 pfn=0x1a0010 pfn_valid=1
-> [  221.817655] cxl_region region0: Offlining aliased SPA address0: 0x1a0010000
-> [  221.821504] Memory failure: 0x1a0010: recovery action for free buddy page: Recovered
-> [  221.823903] mce: [Hardware Error]: CPU 0: Machine Check: 0 Bank 9: 9c00000000000080
-> [  221.824617] mce: [Hardware Error]: TSC a605ccda40 ADDR 190010000 MISC 80
-> [  221.824997] mce: [Hardware Error]: PROCESSOR 0:50654 TIME 1786375908 SOCKET 0 APIC 0 microcode 1
-> root@virtme-ng:/sys/kernel/debug/mce-inject#
-> root@virtme-ng:/sys/kernel/debug/mce-inject# grep HardwareCorrupted /proc/meminfo
-> HardwareCorrupted:     4 kB
-> 
-> CE without this patch:
->   cxl_region region0: Offlining aliased SPA address0: 0x1a0010000
->   Memory failure: 0x1a0010: recovery action for free buddy page: Recovered
->   HardwareCorrupted: 4 kB
-> -------------------------------------
-> CE with this patch:
->   (no "Offlining aliased SPA" message logged)
->   HardwareCorrupted: 0 kB
-> 
-> $cd /sys/kernel/debug/mce-inject
-> $echo sw > flags
-> $echo 0x9C00000000000080 > status
-> $echo 0x80 > misc
-> $echo 0x190010000 > addr
-> $echo 9 > bank
-> addr  bank  cpu  flags  ipid  misc  README  status  synd
-> [   61.681659] mce: [Hardware Error]: Machine check events logged
-> [   61.683442] cxl_mce_debug: entered status=0x9c00000000000080 addr=0x190010000 cache_size=0x10000000 res=[mem 0x190000000-0x1afffffff flags 0x200] usable=1
-> [   61.684528] mce: [Hardware Error]: CPU 0: Machine Check: 0 Bank 9: 9c00000000000080
-> [   61.684974] mce: [Hardware Error]: TSC 2eeae32fe0 ADDR 190010000 MISC 80
-> [   61.688880] mce: [Hardware Error]: PROCESSOR 0:50654 TIME 1786377156 SOCKET 0 APIC 0 microcode 1
-> [   86.504456] clocksource: Watchdog remote CPU 11 read timed out
-> 
-> $grep HardwareCorrupted /proc/meminfo
-> HardwareCorrupted:     0 kB
-> -------------------------
-> For UC, same steps only status bit information will change :
-> $cd /sys/kernel/debug/mce-inject
-> $echo sw > flags
-> $echo 0xbc00000000000080 > status
-> $echo 0x80 > misc
-> $echo 0x190010000 > addr
-> $echo 9 > bank
-> $dmesg | grep cxl_mce_debug
-> $grep HardwareCorrupted /proc/meminfo
-> [  313.398747] mce: [Hardware Error]: Machine check events logged
-> [  313.400518] cxl_mce_debug: entered status=0xbc00000000000080 addr=0x190010000 cache_size=0x10000000 res=[mem 0x190000000-0x1afffffff flags 0x200] usable=1
-> [  313.401727] cxl_mce_debug: spa=0x190010000 contains=1
-> [  313.402157] cxl_mce_debug: spa_alias=0x1a0010000 pfn=0x1a0010 pfn_valid=1
-> [  313.402663] cxl_region region0: Offlining aliased SPA address0: 0x1a0010000
-> [  313.405999] Memory failure: 0x1a0010: recovery action for free buddy page: Recovered
-> [  313.408375] mce: [Hardware Error]: CPU 0: Machine Check: 0 Bank 9: bc00000000000080
-> [  313.408999] mce: [Hardware Error]: TSC e9dd2869e0 ADDR 190010000 MISC 80
-> [  313.409367] mce: [Hardware Error]: PROCESSOR 0:50654 TIME 1786377750 SOCKET 0 APIC 0 microcode 1
-> 
-> Patched, UC: alias still offlined, confirming uncorrected handling is unchanged by this patch.
->     cxl_region region0: Offlining aliased SPA address0: 0x1a0010000
->     Memory failure: 0x1a0010: recovery action for free buddy page: Recovered
->     HardwareCorrupted: 4 kB
-> 
->  drivers/cxl/core/mce.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/mce.c b/drivers/cxl/core/mce.c
-> index 65fed913b221..ee70c1c9f9b9 100644
-> --- a/drivers/cxl/core/mce.c
-> +++ b/drivers/cxl/core/mce.c
-> @@ -18,7 +18,14 @@ static int cxl_handle_mce(struct notifier_block *nb, unsigned long val,
->         u64 spa, spa_alias;
->         unsigned long pfn;
-> 
-> -       if (!mce || !mce_usable_address(mce))
-> +       if (!mce)
-> +               return NOTIFY_DONE;
-> +
-> +       /* Only uncorrected memory errors warrant taking down the alias page */
-> +       if (!mce_is_memory_error(mce) || mce_is_correctable(mce))
-> +               return NOTIFY_DONE;
-> +
-> +       if (!mce_usable_address(mce))
->                 return NOTIFY_DONE;
-> 
->         spa = mce->addr & MCI_ADDR_PHYSADDR;
-> 
-> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
-> --
-> 2.43.0
-> 
-
+From: John Groves <john@groves.net>=0D=0A=0D=0AThis is v13 of famfs, as a=
+ standalone file system. v12 is at [7].=0D=0A=0D=0AMost of this cover let=
+ter repeats v12. If you have read it, skip to "Changes=0D=0Asince v12" be=
+low and to the per-patch changelogs under the "---" line of each=0D=0Apat=
+ch. The history goes back to 2023, and is briefly covered in the v12=0D=0A=
+cover.=0D=0A=0D=0AThe most important thing to know about famfs is that it=
+ CANNOT be used as a=0D=0Ageneral purpose file system. It is for enabling=
+ file-based byte-level access=0D=0A(including direct mmap) to very large =
+(e.g. 100TB) shared/disaggregated=0D=0Amemory appliances - which have bec=
+ome available during this long process,=0D=0Aand which are in need of Lin=
+ux support.=0D=0A=0D=0ASo famfs cannot be used by anybody who doesn't kno=
+w why they need it. Making=0D=0Afamfs standalone means it can't affect us=
+ers who don't use it. Micron, as=0D=0Awell as other memory companies, nee=
+d it, and do not intend to abandon it -=0D=0Abut imagine if we did: fs/fa=
+mfs/ should be removed if the memory companies=0D=0Acan't be bothered to =
+maintain it.=0D=0A=0D=0AThis code base has been in active CI and used glo=
+bally by early adopters and=0D=0Atesters of disaggregated memory since 20=
+24. I believe it is solid.=0D=0A=0D=0AWhy standalone (short version)=0D=0A=
+=0D=0Afamfs was introduced at LPC 2023 and LSFMM 2024 [1] as a standalone=
+ file=0D=0Asystem, then spent close to a year being ported to fuse/libfus=
+e. After=0D=0Amaintaining famfs in both forms, I have concluded it makes =
+more sense as a=0D=0Astandalone file system: fuse adds complexity to famf=
+s (more complex, less=0D=0Aadaptable, less performant - and famfs files a=
+re memory, so access must run=0D=0Aat memory speed), while famfs adds com=
+plexity to fuse that is unlikely to see=0D=0Aconstructive re-use. The ful=
+l history and argument are in the v12 cover=0D=0Aletter [7].=0D=0A=0D=0AC=
+hanges since v12=0D=0A-----------------=0D=0A=0D=0A- Patch 01 split, per =
+Alison Schofield: the removal of the now-unused=0D=0A  dax_dev_get() expo=
+rt is a standalone DAX cleanup that goes via the DAX tree=0D=0A  and is p=
+osted separately [8]. Patch 01 of this series is reduced to adding=0D=0A =
+ the non-allocating lookup helper dax_dev_find().=0D=0A=0D=0A- Darrick Wo=
+ng's review comments are addressed across the series: the=0D=0A  kill_*_s=
+uper() rationale in the mount patch, the page_mkwrite/pfn_mkwrite=0D=0A  =
+write-fault comment, dropping the operation flags from iomap->flags in th=
+e=0D=0A  resolver, and more.=0D=0A=0D=0A- A number of findings from the S=
+ashiko review bot are fixed:=0D=0A    * mprotect() could bypass the FAMFS=
+_OPT_WRITE gate (the check looked at=0D=0A      VM_WRITE only, not VM_MAY=
+WRITE);=0D=0A    * rename() over an existing target bypassed the FAMFS_OP=
+T_UNLINK /=0D=0A      FAMFS_OPT_RMDIR policy that unlink()/rmdir() enforc=
+e;=0D=0A    * splice()/sendfile() returned zeroes on these DAX files=0D=0A=
+      (filemap_splice_read -> copy_splice_read);=0D=0A    * create/mkdir/=
+mknod updated the child inode's timestamps instead of the=0D=0A      pare=
+nt directory's;=0D=0A    * .map_pages (filemap_map_pages) was a no-op on =
+DAX and is removed;=0D=0A    * mount-parameter and module-namespace hygie=
+ne (reject unknown mount=0D=0A      options; prefix the non-static lookup=
+_daxdev()).=0D=0A  A few Sashiko findings were considered and declined wi=
+th rationale - for=0D=0A  example generic_write_sync(), which is inert fo=
+r a filesystem with no page=0D=0A  cache, no writeback, and a noop_fsync =
+->fsync. Those are noted under the=0D=0A  relevant patch.=0D=0A=0D=0A- fa=
+mfs now accepts 4 KiB extent alignment in addition to 2 MiB: the=0D=0A  a=
+llocation unit may be 4 KiB or 2 MiB. 2 MiB-aligned extents still map wit=
+h=0D=0A  huge pages; 4 KiB-granular extents map with PTEs (the DAX fault =
+path already=0D=0A  falls back PMD -> PTE).=0D=0A=0D=0A- MAP_SYNC is now =
+supported (FOP_MMAP_SYNC). famfs fmap metadata is immutable=0D=0A  after =
+MAP_CREATE, so the MAP_SYNC durability guarantee is met with no=0D=0A  me=
+tadata sync required.=0D=0A=0D=0A- famfs is explicitly 64-bit only now (d=
+epends on 64BIT); it targets=0D=0A  CXL/fabric-attached memory, which doe=
+s not exist on 32-bit systems.=0D=0A=0D=0AFamfs Overview=0D=0A=0D=0AFamfs=
+ exposes sharable disaggregated memory as a file system. Famfs consumes=0D=
+=0Ashared memory from [usually shared memory] dax devices, and provides=0D=
+=0Amemory-mappable files that map directly to the memory - no page cache=0D=
+=0Ainvolvement. Famfs differs from conventional file systems in fs-dax mo=
+de,=0D=0Ain that it handles in-memory metadata in a sharable way (which b=
+egins with=0D=0Anever caching dirty shared metadata). So a famfs file sys=
+tem can be mounted=0D=0Afrom multiple nodes, provided they have access to=
+ the memory.=0D=0A=0D=0AThe key performance requirement is that famfs mus=
+t resolve mapping faults=0D=0Awith minimal overhead. This is achieved by =
+fully caching the file-to-devdax=0D=0Ametadata for all active files.=0D=0A=
+=0D=0AFamfs remains the first fs-dax file system that is backed by devdax=
+ rather=0D=0Athan pmem in fs-dax mode (hence the need for the new dax mod=
+e).=0D=0A=0D=0AFamfs depends on the 'fsdev' dax mode which landed in 7.1 =
+- it will only run=0D=0Awith an fsdev-mode (aka famfs-mode) daxdev as its=
+ backing device(s).=0D=0A=0D=0AThe famfs user space can be found at [6].=0D=
+=0A=0D=0A[1] https://lwn.net/Articles/983105/ (Famfs at LSFMM 2024)=0D=0A=
+[2] https://lwn.net/Articles/1020170/ (Famfs at LSFMM 2025, with patch li=
+nk)=0D=0A[3] https://lwn.net/Articles/1068686/ (LWN coverage of the patch=
+ thread)=0D=0A[4] https://lwn.net/Articles/1082687/ (Famfs at LSFMM 2026)=
+=0D=0A[5] https://lore.kernel.org/linux-fsdevel/0100019f7d9fbe81-6cb16662=
+-2522-47ea-a152-fab0ee3d9b35-000000@email.amazonses.com/#b=0D=0A[6] https=
+://famfs.org=0D=0A[7] https://lore.kernel.org/linux-fsdevel/2026080605340=
+9.GL3560084@frogsfrogsfrogs/T/#t (v12)=0D=0A[8] https://lore.kernel.org/l=
+inux-cxl/0100019fd478eb93-a6bd48e4-b5f1-4871-93d4-582802956e6c-000000@ema=
+il.amazonses.com/T/#u (Partial dax patch)=0D=0A=0D=0A=0D=0AJohn Groves (1=
+2):=0D=0A  dax: replace exported dax_dev_get() with non-allocating dax_de=
+v_find()=0D=0A  famfs: Module operations, fs_context, and mount=0D=0A  fa=
+mfs: Add daxdev table and dax notify_failure support=0D=0A  famfs: Introd=
+uce inode_operations and super_operations=0D=0A  famfs: Introduce file_op=
+erations read/write=0D=0A  famfs: Introduce mmap and VM fault handling=0D=
+=0A  famfs: MAP_CREATE ioctl and fmap ingest (ABI 44)=0D=0A  famfs: iomap=
+_begin and file-to-dax offset resolution=0D=0A  famfs: Register secondary=
+ daxdevs by path (FAMFSIOC_DAXDEV_OPEN)=0D=0A  famfs: Add runtime operati=
+on-permission (opts) framework=0D=0A  famfs: Report device capacity via s=
+tatfs so df works=0D=0A  famfs: Add documentation=0D=0A=0D=0A Documentati=
+on/filesystems/famfs.rst           |  142 +++=0D=0A Documentation/filesys=
+tems/index.rst           |    1 +=0D=0A .../userspace-api/ioctl/ioctl-num=
+ber.rst      |    1 +=0D=0A MAINTAINERS                                  =
+ |    8 +=0D=0A drivers/dax/fsdev.c                           |   19 +=0D=
+=0A drivers/dax/super.c                           |   38 +-=0D=0A fs/Kcon=
+fig                                    |    2 +=0D=0A fs/Makefile        =
+                           |    1 +=0D=0A fs/famfs/Kconfig               =
+               |   12 +=0D=0A fs/famfs/Makefile                          =
+   |    5 +=0D=0A fs/famfs/famfs_file.c                         | 1007 ++=
++++++++++++++++=0D=0A fs/famfs/famfs_inode.c                        |  86=
+9 ++++++++++++++=0D=0A fs/famfs/famfs_internal.h                     |  1=
+62 +++=0D=0A fs/namei.c                                    |    1 +=0D=0A=
+ fs/super.c                                    |    7 +=0D=0A include/lin=
+ux/dax.h                           |    7 +-=0D=0A include/linux/fs.h    =
+                        |    1 +=0D=0A include/uapi/linux/famfs_ioctl.h  =
+            |  160 +++=0D=0A include/uapi/linux/magic.h                  =
+  |    1 +=0D=0A 19 files changed, 2441 insertions(+), 3 deletions(-)=0D=0A=
+ create mode 100644 Documentation/filesystems/famfs.rst=0D=0A create mode=
+ 100644 fs/famfs/Kconfig=0D=0A create mode 100644 fs/famfs/Makefile=0D=0A=
+ create mode 100644 fs/famfs/famfs_file.c=0D=0A create mode 100644 fs/fam=
+fs/famfs_inode.c=0D=0A create mode 100644 fs/famfs/famfs_internal.h=0D=0A=
+ create mode 100644 include/uapi/linux/famfs_ioctl.h=0D=0A=0D=0A--=20=0D=0A=
+2.53.0=0D=0A=0D=0A
