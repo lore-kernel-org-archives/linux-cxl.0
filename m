@@ -1,30 +1,30 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A4E3B71C5
-	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 11:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28AA43CE6D
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 11:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786448182; cv=none; b=hEZiJW6ps7obnooef08Kr9sEFZTSWVskSdH20KIXWm5uKrM6GiDumOiNcjczDePTXmkFaPgMmLfgWhbZKCOPrJ13OqoutwhLlvB1gPIIq8m8EsKZGWOznBewjuUE9hqzTW6c3UxdbIVwu10K5QHRRACihA/T3/G6SuyEeTwClmM=
+	t=1786448184; cv=none; b=qntXsTNouYIsJa7YEAMmNJCYCc5nb+WAZbntB4Fb9abcwtcyTmSnvgVc5L3A8BSBDxFXyzaNXRdj+OhSs/t1LzFwkGAeQlAX9eJIP4ntodkCKQH1+n3VLiSFxGMCALdLiojXoU80/FrCkDNAt3jZzIVLvmexB6oO8S7+REaleL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786448182; c=relaxed/simple;
-	bh=v2Y8QLeNGjHusKG5mSS1CluNmiDbrk7shaktZCW6aGA=;
+	s=arc-20240116; t=1786448184; c=relaxed/simple;
+	bh=uC7X8HY9CF1B2KKQqdp21IYKNQZANWEkCORxPQEf4ZA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V6Oirh+4oW8fwRLhJ3ovT+lIW23ooO8rMt/J/KzQq+hHDOGp9jlkBDsz/Z2fqO4gTcSn0Ja8+C4NiXeHrjgkuUrB/LZx6m5ufb6nsRACqQFSg1DED3RUsONwdeSQ5n95T9Mptb0Dv+ta/OOe2FboOP2YHAqO7rrroK4v10JIxl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=PqahTpyX; arc=none smtp.client-ip=115.124.30.119
+	 MIME-Version; b=fa53X45b1RGBRKUdbK5IhQf24qiEyFPb6uNeOyNYN4juvSTU7dDwY5cQKcIaDo6pagBqyX8YSVY+hqBrxvp7T0DfXHeB0LTlyidweIUrWy5Ym13y36aPIH3ZhjPSLgTI7pj7NndFBvTpBBBqsS04BKeuk28yJ/skbD4cvWxxObo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dIZuiwUy; arc=none smtp.client-ip=115.124.30.110
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="PqahTpyX"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dIZuiwUy"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1786448176; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=9xdgk82SxmU4qyXPq+TvFrjNWCRaS2JNXAib21SnGh8=;
-	b=PqahTpyXWL/1S/QJrWSDdoORlWE4HMpYWUHqDvWs1Ha5XN/vAaEOSvQb8md7U9PMVDbvzW7YQqF/kfgGeHpzrrScmVNkxRPnEAqWCftYeSJaWuBwHrUFCL5Yt35nAoX2rYzdN7zcRi7QtGTzEWhadK6l7QT4UdwihtpLX2HHU84=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X8oKIz0_1786448175;
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8oKIz0_1786448175 cluster:ay36)
+	t=1786448177; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=Oh5qC9ZfUFJnNzOz5dynF8LEfapY6a6EtLvIar8vO9E=;
+	b=dIZuiwUyWDdL5xe3dYZSsxsE+4vv/QQCexfJJzpZViC/X9lTLx/pxyE6leJDZxNJElUOa0YS/lYLumvPxuwLvdbDFEILx4SDVoFG5gPTVLunzN2nQljF+xZ3OciyvGGvE5fJVr5nLNtex6djL28IiAX1yYGmAsZFD+MFoBAHDLU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X8oJZ3z_1786448176;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8oJZ3z_1786448176 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 11 Aug 2026 19:36:15 +0800
+          Tue, 11 Aug 2026 19:36:16 +0800
 From: Guixin Liu <kanie@linux.alibaba.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -38,9 +38,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 Cc: linux-cxl@vger.kernel.org,
 	xlpang@linux.alibaba.com,
 	oliver.yang@linux.alibaba.com
-Subject: [PATCH 1/8] cxl/features: Validate the fwctl RPC input length
-Date: Tue, 11 Aug 2026 19:36:01 +0800
-Message-ID: <20260811113608.2815625-2-kanie@linux.alibaba.com>
+Subject: [PATCH 2/8] cxl/features: Bound the Get Feature output by the user output buffer
+Date: Tue, 11 Aug 2026 19:36:02 +0800
+Message-ID: <20260811113608.2815625-3-kanie@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260811113608.2815625-1-kanie@linux.alibaba.com>
 References: <20260811113608.2815625-1-kanie@linux.alibaba.com>
@@ -52,62 +52,54 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cxlctl_fw_rpc() ignores @in_len, the length of the buffer that the fwctl
-core copied in from userspace, and blindly dereferences the input as a
-'struct fwctl_rpc_cxl'.
+cxlctl_get_feature() allocates the output buffer from the size userspace
+asked for (fwctl_rpc.out_len, arriving as *out_len), but then asks the
+device for a completely independent, also userspace supplied, amount of
+data:
 
-Userspace fully controls that length via fwctl_rpc.in_len, which the core
-only bounds from above (MAX_RPC_LEN) before doing
-kvzalloc(cmd->in_len)/copy_from_user(). An in_len of 0 yields a
-ZERO_SIZE_PTR allocation, so the read of rpc_in->opcode at the top of
-cxlctl_fw_rpc() faults, and any in_len smaller than the header reads past
-the allocation.
+	out_size = *out_len;
+	count = le16_to_cpu(feat_in->count);
+	rpc_out = kvzalloc(out_size, GFP_KERNEL);
+	out_size = cxl_get_feature(..., rpc_out->payload, count, ...);
 
-The @op_size field of the header is equally unchecked. It is a u32 that
-describes how much payload trails the header, and it is used as such:
-cxlctl_set_feature() passes 'op_size - sizeof(feat_in->hdr)' to
-cxl_set_feature() as the length of feat_in->feat_data, and
-cxlctl_validate_set_features() reads the UUID out of the payload once
-op_size claims to be large enough. Since op_size is never compared against
-the size of the buffer that was actually copied in, a caller passing a
-small in_len together with a large op_size makes the driver read up to
-~4GB past the end of the input allocation.
+cxl_get_feature() loops until it has read @count bytes into
+@rpc_out->payload, so any 'count' larger than the output allocation
+overflows it, with up to 64KB of device supplied data landing past the end
+of the object. An out_len of 0 additionally turns the allocation into
+ZERO_SIZE_PTR.
 
-Require the input to be at least header sized, and require the declared
-payload to fit in what was copied in. This matches the documented
-userspace calling convention (Documentation/userspace-api/fwctl/
-fwctl-cxl.rst), which sizes the input buffer as
-'sizeof(struct fwctl_rpc_cxl) + sizeof(*payload)' while setting op_size to
-just the payload size.
+Reject the request unless the allocation can hold the Feature data at the
+offset the mailbox writes it to, i.e. sizeof(struct fwctl_rpc_cxl_out_hdr)
+plus @count.
 
-Fixes: 4d1c09cef2c2 ("cxl: Add support for fwctl RPC command to enable CXL feature commands")
+Note that struct_size_t(struct fwctl_rpc_cxl_out, payload, count) is not
+the right bound here: @payload lives in a union whose largest member,
+'struct cxl_mbox_get_sup_feats_out', is 8 bytes, so
+sizeof(struct fwctl_rpc_cxl_out) already covers the first 8 payload bytes
+and the resulting bound would reject valid requests that allocate exactly
+the header plus the Feature data.
+
+Fixes: 5908f3ed6dc2 ("cxl: Add support to handle user feature commands for get feature")
 Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
 ---
- drivers/cxl/core/features.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/cxl/core/features.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-index 85185af46b72..0ab1a8547b7e 100644
+index 0ab1a8547b7e..b631643ecc7a 100644
 --- a/drivers/cxl/core/features.c
 +++ b/drivers/cxl/core/features.c
-@@ -649,7 +649,16 @@ static void *cxlctl_fw_rpc(struct fwctl_uctx *uctx, enum fwctl_rpc_scope scope,
- 	struct cxl_memdev *cxlmd = fwctl_to_memdev(fwctl_dev);
- 	struct cxl_features_state *cxlfs = to_cxlfs(cxlmd->cxlds);
- 	const struct fwctl_rpc_cxl *rpc_in = in;
--	u16 opcode = rpc_in->opcode;
-+	u16 opcode;
-+
-+	if (in_len < sizeof(rpc_in->hdr))
-+		return ERR_PTR(-EINVAL);
-+
-+	/* @op_size describes the input payload that trails the header */
-+	if (rpc_in->op_size > in_len - sizeof(rpc_in->hdr))
-+		return ERR_PTR(-EINVAL);
-+
-+	opcode = rpc_in->opcode;
- 
- 	if (!cxlctl_validate_hw_command(cxlfs, rpc_in, scope, opcode))
+@@ -471,6 +471,10 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
+ 	if (!count)
  		return ERR_PTR(-EINVAL);
+ 
++	/* cxl_get_feature() writes @count bytes at @rpc_out->payload */
++	if (out_size < sizeof(struct fwctl_rpc_cxl_out_hdr) + count)
++		return ERR_PTR(-EINVAL);
++
+ 	struct fwctl_rpc_cxl_out *rpc_out __free(kvfree) =
+ 		kvzalloc(out_size, GFP_KERNEL);
+ 	if (!rpc_out)
 -- 
 2.43.7
 
