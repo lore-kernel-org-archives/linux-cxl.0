@@ -1,254 +1,162 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9DD1279DB6
-	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 15:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786462198; cv=none; b=JdeZstUUnCeqtsXTTncqWW8DUQDHdJko1mKccGGJuInIo4QjraQSv94Our2J9MKrPAL0uFTweh4q2tWXmn5rYKrianVdh0nN0abXfFEY3AKbNDOpwIrmwiqamU4iEeBXa4XnwgD9ljoH0G553CS0LVsksStqwA15LSsjpqQQNXI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786462198; c=relaxed/simple;
-	bh=5sz1zEi9BvjCQI+AyYQ/GCs7RA4pVHuBwfD3Zl8mX5g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BRckv52BJx5JpwkVbowpeBNZ0LP24GGFG0e6wKmQX/WdG+HQ2nr3kITVDnMBBXVIj9+H4Ab4J42pO3Y/FW9Ypp5KcDHc9eLit6z8PKJSqeHC5mNFRBs8pjHNEs1Rmftq1hXs96PcwVYhbLEglxwbzLWQTCdHdbitmiZ1ma6HTfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dHw0Hrt4; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836053644C1
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 16:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786464244; cv=pass; b=WmcbXxU8NhBWZYGGIPvJU/vW3BGieTW8HFecxoqlzK+ZLBqGOL8Tt0ZTUep+1o2w4Up4FfKZiX+fO0DqBrJ+MLAMbFc5pNBpMi9fHhCA+oMBY9HE2cYgvv8b9ZH7Nx1U3B1w6v0apQyTml2LLD9sBwwBjyZgx60vgF8Nbjz+uzw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786464244; c=relaxed/simple;
+	bh=oOgme09HLM0srNy5PYV7NUiOqvwkCHqw4GSl04ko5JM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JSSq7KiQlFkG+5FGjdEEkYzqdflJOMYzIXHbKYfdEBF1HErebymediYYy4m3s42yWiZNoBC369NCF+jpMq8P6RgW29pRkRFSfzYzce6mKn/iVN06yIIL3+yy0URsHoPbqyJDcisw0l/dnjSeSucVOWusxzHFnrMJq2OqH0+PYxo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=aSzXGzdG; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dHw0Hrt4"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-7e6b5737bb2so50726a34.1
-        for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 08:29:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786462195; x=1787066995; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=dMGzaTR2fG9A9c/MgSioyYDGHbbLKIjYxPc4ZGRn4m8=;
-        b=dHw0Hrt4J80p+x5QU4R6e9diXZ4mbyM5lRH7BHS82Kjtqxed/RA+TL7yQAumMsw8bX
-         3UpfH7r/ctKVECo4bZApQlE717NVap66ICcJfLe53H/mn+zLM1aoxNyiwajo+E0sZFoK
-         uQVttK0FlQH8Oq6Gn7WqGuluEXLCz3EqoCdwEWkNpolldNIHN7gHA+EEbenNXTWJ62gz
-         J8/hoV0GfPlFCpcCTDLQSDMBMp6vVyp5iak9NikEE/6SkI9Hh8oPGMm4pQtF+S849pEc
-         fetLqyMMlJm712UyFN+0MoAoKQxheCr3VLfpKufDo7CFZSnCULUlr7KwWBteGye/ATyz
-         vnkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786462195; x=1787066995;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=dMGzaTR2fG9A9c/MgSioyYDGHbbLKIjYxPc4ZGRn4m8=;
-        b=j2nV4k3RyaS+1iYXZ9IHtiqnDvIB6Cv+G21Hrc6Z9hxl46eANhAnO/PLk/uOgIiSUv
-         Vy6/+fbHJkE4ScpE+Xy8h7S83FvtpFC0EOkmu+VBB3z4wXVkif67iIycotzAqp1YfwMQ
-         3FLn+69IDUemQKMYuTFT8O4ibQxLxm9ma5JkT4wUzRE3PzzmWOWx3uTUnHJkh+ifnmyf
-         qkopTUVQ1rz0ezL2mflzRJdncfhsweCbwJh0Lso2OLS7Not4xKxzOEn5HUgAoX/LQdxe
-         AjqCAHiqUHj/0ki7blGclp45AdhAr+eOhpK1cTu2YtaoKyewud2GUo4yEjEO5I1BoxsR
-         Etlg==
-X-Forwarded-Encrypted: i=1; AHgh+RoZdktR/d1Iq63XTSO+MXIL5VxYWpirdz6JtA9rQk+UsxHvtGOCAv8QcrRQg1AtTGjfFVptwLa+rhU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4fQvfH+TfomVvyR2Gok5JJ9jFr2Ne/tI6vbCp0upXDWFue/0a
-	sMXiiONQFq1bF+SH4mRTApqECrDIXspoohiTDpPBjjKlNZ3s9+FbU+RISZ4PYw==
-X-Gm-Gg: AR+sD115ckYVMlxfJrKq+3NQ9UjX9wCbLTyay+gFDCUelTiYiaVun/xquOGV6jpwC3C
-	R7hWi0u+VR1L5KP22H59wDh3TZPe9V94Fjd9Mhd2gNrPFN91cbwMOcUf7RkXfGI6feF2DLzOOzx
-	PB65sDd55OQNBTrqDi5y02w28K8BcMY71txoOK2Y7WDJNGeTu2Hf3WybAjY4EoegHOPgedVe7+T
-	RCI0LCGdKcY7CFayoagskAN5/p6hjEjxHVwQXDxCa8jGfA48lVaBlxC0fqfeCtPyf15bs3zlVBu
-	mNAjqooJKBTf45n9ASn/71Me43zR2Y+C6WLLzNsPdx4hDShOvWnyFW9DvuU2ei/I4RaKYXsyjsI
-	nW0+RPxregJAcjNmc2DldRtCpKVKCVA6jrQCzBEoQ5N/VWQ+rIRFYOgusaQ8BarRAldOAa8FXwc
-	ljXRdfjuEfl8otb33zruG/m7e2geX0ZlBTUroObN2d2XqVkISaN0KDZMkORPeXdB1QV0Q+PmQhI
-	BYbOJmNn208tCab2TCUCPKpI3yA7Q==
-X-Received: by 2002:a05:6830:6617:b0:7e7:16b9:e274 with SMTP id 46e09a7af769-7f3a8203291mr3055974a34.8.1786462195335;
-        Tue, 11 Aug 2026 08:29:55 -0700 (PDT)
-Received: from localhost ([2a03:2880:10ff:48::])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7f3b34266f3sm81980a34.24.2026.08.11.08.29.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2026 08:29:54 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: akpm@linux-foundation.org,
-	gourry@gourry.net,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	byungchul@sk.com,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	david@kernel.org,
-	ljs@kernel.org,
-	liam@infradead.org,
-	vbabka@kernel.org,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	dave@stgolabs.net,
-	jic23@kernel.org,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	harry@kernel.org,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com
-Subject: Re: [PATCH 0/4] mm/mempolicy: introduce package-aware weighted interleave
-Date: Tue, 11 Aug 2026 08:29:51 -0700
-Message-ID: <20260811152951.195315-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260806080936.421-1-rakie.kim@sk.com>
-References: 
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="aSzXGzdG"
+ARC-Seal: i=1; a=rsa-sha256; t=1786464225; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=RVi4sLjGMH3RrJalwJj+/1RLhMDPRdiSHAtRUmKzmLsNQ2wlRc0WSMDso5YJOtwkEoMN8bjAulEawlgWrSIpcc1Ap+ZZ1ahnOMYQS+9Yq2WDYXzrURcIUhzUFzYqZhE5qvG8kfxQj/OneW+0nbRO+y21KFN5KR+Bb9R/pYxEPPQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1786464225; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=iO3Rgtyeq1e1TpHD4yiJMVgnpmqN9+/UUPih56+pZMk=; 
+	b=DJFW01KbZYk/dygM3l0sAHHD4IoEn9QNpcvY+sEHSvrswkHfXFOct7a7ZU39LzY1GPdepnppHYDBMvOWKfC9nXAut8dyRdP0TVnIJrgKThpIDaKqmc6fAjUiBjhsGEgOY/XrubJq8UAQwv4AhGU51kDeJxrc9ggP9ROe1QvGr/w=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1786464225;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=iO3Rgtyeq1e1TpHD4yiJMVgnpmqN9+/UUPih56+pZMk=;
+	b=aSzXGzdG+xAbdxkqLXARSyY9Zf6Eb9Ay0QejO02j24UjZDmRHWCR4inZooX0D+z+
+	OGHYsQ+C3YeG9AXiw5EyAjyQEK522uMM1dVdxdHRzqdF0pyVPG5eqPsjOEM4VupgJPc
+	n/leZ2Hgc8FfAP8XuB0lBFiyRM9Iv1WdrKN/SJAo=
+Received: by mx.zohomail.com with SMTPS id 1786464223607390.80635754618504;
+	Tue, 11 Aug 2026 09:03:43 -0700 (PDT)
+Message-ID: <06658b3d-74dc-4d89-88c0-38b2ff098c75@zohomail.com>
+Date: Wed, 12 Aug 2026 00:03:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] cxl/core: Fix dport use-after-free via the
+ einj_inject debugfs file
+To: Guixin Liu <kanie@linux.alibaba.com>, Davidlohr Bueso
+ <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
+ Ira Weiny <iweiny@kernel.org>, Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org, xlpang@linux.alibaba.com,
+ oliver.yang@linux.alibaba.com
+References: <20260811113608.2815625-1-kanie@linux.alibaba.com>
+ <20260811113608.2815625-4-kanie@linux.alibaba.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20260811113608.2815625-4-kanie@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Feedback-ID: zu08011227fdba198cdcfa6f3d83c9a1c0000024d7df721c16ac69e485944641b196fed4d6270141216eb3d3:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-On Thu,  6 Aug 2026 17:09:31 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
 
-> Package-aware weighted interleave places a task's weighted-interleave
-> pages on the NUMA nodes of its local package, so that interleave traffic
-> does not have to cross the interconnect to another package. This keeps
-> each node's weight aligned with the bandwidth the task actually gets
-> from it, so effective bandwidth holds up on a system that has more than
-> one package. (A package is a CPU socket together with the memory
-> attached to it.)
-> 
-> Changes from RFC:
-> https://lore.kernel.org/all/20260316051258.246-1-rakie.kim@sk.com/
-> - Added an opt-in sysfs toggle (off by default) and a read-only sysfs
->   view of the package topology
-> - Added topology validation with a clean fallback to plain weighted
->   interleave on unsupported topologies
-> - Hardened the allocation, device-teardown, and node-hotplug paths
+在 2026/8/11 19:36, Guixin Liu 写道:
+> cxl_debugfs_create_dport_dir() creates a debugfs directory holding an
+> "einj_inject" file whose i_private is the 'struct cxl_dport', but it
+> discards the returned dentry and registers no cleanup. The dport is freed
+> by free_dport() when the devres group of its host device is released,
+> while the debugfs nodes live until the cxl_core module is unloaded
+> (debugfs_remove_recursive() in cxl_core_exit()).
+>
+> So after unbinding the dport's host, e.g. unbinding the host bridge port
+> or the ACPI0017 root, writing to
+>
+>    /sys/kernel/debug/cxl/<dport_dev>/einj_inject
+>
+> calls cxl_einj_inject() on freed memory and dereferences dport->rch and
+> dport->dport_dev.
+>
+> The leaked directory is also named after the dport device, so re-adding the
+> same dport (bind after unbind) hits an existing name, debugfs creation
+> fails, and error injection stays broken for that dport for the rest of the
+> module's lifetime.
+>
+> Save the dentry and drop the whole directory via a devm action on the same
+> host device. The action is registered inside the dport devres group and
+> after free_dport(), so it runs before the dport is freed. Propagate the
+> failure to __devm_cxl_add_dport() rather than continuing with a dport that
+> has a dangling debugfs node.
+>
+> Fixes: 8039804cfa73 ("cxl/core: Add CXL EINJ debugfs files")
+> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+> ---
+>   drivers/cxl/core/port.c | 18 ++++++++++++++----
+>   1 file changed, 14 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 1215ee4f4035..76bda54ed986 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -813,13 +813,18 @@ static int cxl_einj_inject(void *data, u64 type)
+>   DEFINE_DEBUGFS_ATTRIBUTE(cxl_einj_inject_fops, NULL, cxl_einj_inject,
+>   			 "0x%llx\n");
+>   
+> -static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+> +static void remove_debugfs(void *dentry)
+> +{
+> +	debugfs_remove_recursive(dentry);
+> +}
+> +
+> +static int cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+>   {
+>   	struct cxl_port *parent = parent_port_of(dport->port);
+>   	struct dentry *dir;
+>   
+>   	if (!einj_cxl_is_initialized())
+> -		return;
+> +		return 0;
+>   
+>   	/*
+>   	 * Protocol error injection is only available for CXL 2.0+ root ports
+> @@ -827,12 +832,15 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+>   	 */
+>   	if (!dport->rch &&
+>   	    !(dev_is_pci(dport->dport_dev) && parent && is_cxl_root(parent)))
+> -		return;
+> +		return 0;
+>   
+>   	dir = cxl_debugfs_create_dir(dev_name(dport->dport_dev));
+>   
+>   	debugfs_create_file("einj_inject", 0200, dir, dport,
+>   			    &cxl_einj_inject_fops);
+> +
+> +	return devm_add_action_or_reset(dport_to_host(dport), remove_debugfs,
+> +					dir);
 
-Hello Rakie,
+I think we don't need to worry about devm_add_action_or_reset() failing, 
+missing this debugfs directory seems like acceptable, but the failure 
+cases of this devm_add_action_or_reset() will cause dport addition failure.
 
-I hope you are doing well! Sorry for the late repsonse.
+So I think just like below devm_cxl_dport_ras_setup(), do not check the 
+return value of the function.
 
-I have a few thoughts, some of which are carry-overs from the RFC
-discussion we had before! I think there are still some open questions,
-and I wanted to get your opinion on some of them.
-
-My first question is whether we want cross-socket allocations at all.
-The examples you gave seem to line up with node-restricted interleave,
-as opposed to cross-socket interleave. I think the wording that you
-use to describe the feature in 4/4 (which I will copy below)
-
-> The resolved mask is by construction a subset of the policy nodemask, which
-> mempolicy already restricts to the task's cpuset; package mode can only
-> narrow that set, never widen it, so cpusets and the task nodemask remain
-> authoritative.
-
-is 100% the right way to treat these package-aware (socket-aware)
-interleaving allocations, but the example below
-
-[...snip...]
-
-> Applied the same way to every source, these weights give the map:
-> 
->               node0  node1  node2  node3
-> global:         2      2      1      1
-
-[...snip...]
-
->               node0  node1  node2  node3
-> from CPU 0:     2      0      1      0
-> from CPU 1:     0      2      0      1
-
-Is essentially the existing weighted interleave mechanism with a 
-nodemask/cpuset applied. With that said, I think a more interesting and
-illustrative example would be if the user truly would want to allow some
-allocations to go through cross-socket, but be able to control the
-ratio at which these slip through.
-
-              node0  node1  node2  node3
-from CPU 0:     3      1      2      0
-from CPU 1:     0      3      1      2
-
-Maybe even more illustrative of the true capabilities of this series
-would be if you have an asymmetric system where you bind some
-host-level monitoring / logging workloads to one node (say, node0) and
-want that to be able to cross through to the other socket, but not the
-other way around:
-
-              node0  node1  node2  node3
-from CPU 0:     3      1      2      0
-from CPU 1:     0      2      0      1
-
-Anyways, these are just super hypothetical scenarios and I don't even
-know if the configuration that I'm listing would really be beneficial
-for the system. I think that coming up with some illustrative usecases
-which are now made possible by this series could help motivate why we
-would want to interleave across sockets. 
-
-> A task on CPU 0 now places pages on node0 (weight 2) and node2
-> (weight 1) at 2:1, which matches their effective bandwidth of 300:150;
-> a task on CPU 1 places on node1 and node3 the same way. Placement
-> follows the bandwidth each task actually sees, NUMA locality is
-> preserved, and interleave traffic stays off the interconnect.
-> 
-> To make this possible the kernel needs a notion of which nodes share a
-> package. The NUMA distance model offers only relative latencies and no
-> structural grouping, which is especially limiting for CXL memory nodes
-> that come online without an explicit package association.
-> 
-> The series adds a package-aware topology layer that groups CPU and
-> memory-only nodes into a "memory package", built from the physical
-> package ids firmware reports and, for a memory-only node, an initiator
-> CPU node or SLIT distances. A package can contain more than one CPU node
-> or more than one memory-only node, so the layer maps a package to a set
-> of nodes rather than to a single node or a single CXL device.
-> 
-> The feature is off by default and opt-in through a sysfs toggle. The
-> package topology itself is exposed read-only under
-> /sys/devices/system/package/; there is deliberately no writable
-> override, since a machine whose firmware describes its topology
-> incorrectly should be fixed in firmware. On a topology that does not
-> have the symmetric shape the placement relies on, enabling is refused
-> and any active mode degrades cleanly to the original flat behavior.
-
-I was also hoping to see what this interface looks like and maybe
-discuss how we should relay the information to the users, since this
-seems to be a new addition from the RFC.
-
-> Measured results:
-> 
-> System Configuration:
-> - Processor: Dual-Socket Intel Xeon 6980P (Granite Rapids)
-
-I think a description of this system's topology would help me understand
-the results below a bit better : -)
-
-> 1) Throughput (System Bandwidth)
->    - DRAM Only: 966 GB/s
->    - Weighted Interleave: 903 GB/s (7% decrease compared to DRAM Only)
->    - Package-Aware Weighted Interleave: 1329 GB/s (1.33 TB/s)
->      (38% increase compared to DRAM Only,
->       47% increase compared to Weighted Interleave)
-> 
-> 2) Loaded Latency (Under High Bandwidth)
->    - DRAM Only: 544 ns
->    - Weighted Interleave: 545 ns
->    - Package-Aware Weighted Interleave: 436 ns
->      (20% reduction compared to both)
-
-Really awesome results!
-
-> A small CXL driver change registers a CXL memory node into its package
-> as the node comes online, using the initiator the driver resolves for
-> the region; this is where the package layer gets the CPU-side
-> association that plain NUMA distance does not carry.
-> 
-> The memory_package layer offers a broader interface for grouping and
-> querying package topology - usable by memory tiering as well - and
-> package-aware weighted interleave uses the subset it needs.
-
-I was hoping you could expand on this a bit more. Aside from the
-alloction-time placement strategy, did you have other ideas in mind for
-who could ingest the package information to make tiering decisions?
-
-I definitely think this series makes a lot of sense and I am
-hoping to hear more about it. Thank you, I hope you have a great day!
-
-Joshua
+>   }
+>   
+>   static int cxl_port_add(struct cxl_port *port,
+> @@ -1240,7 +1248,9 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+>   	if (dev_is_pci(dport_dev))
+>   		dport->link_latency = cxl_pci_get_latency(to_pci_dev(dport_dev));
+>   
+> -	cxl_debugfs_create_dport_dir(dport);
+> +	rc = cxl_debugfs_create_dport_dir(dport);
+> +	if (rc)
+> +		return ERR_PTR(rc);
+>   
+>   	if (!dport->rch)
+>   		devm_cxl_dport_ras_setup(dport);
