@@ -1,30 +1,30 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14C043CE6D
-	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 11:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708DB43B3D9
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 11:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786448187; cv=none; b=b1Ii4ACbVfR0tvo/5ghHGHkSVomqZkQDV45N5wWPEGpuRJpn14ks8AViU6mFdmHcfvo+MA5scQiCxxmuPjoRYi7Xtu6Gl7EQIzQ2Fk3ELBzyVCuVOL+NUcRVmttuNHk7bSjBCMd5OybEkbWLxfM+YRZ1g7Y0MkUaNFLGGhUbXxU=
+	t=1786448187; cv=none; b=gsiCCD51qkosG8rYNmEDa69Mwlz5+3lGBktTCZeSv84xFAEmybyaId+IjHAGA/+lA52X6SEpHXrmmFscjPQ+ISK1IGcuz+69OZ77ktH1aAk2mrbXnJyieYiu0eoyWmLCaHy2/PQbbgmPv11Snn0H0D1FtHZLsQ5vYY0OMkxub2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1786448187; c=relaxed/simple;
-	bh=REZ2lYwKAxlJEAzqtYkjfEM+oqcmVjnQJDnk5PhCr30=;
+	bh=G0SYWwxHFvDXLGcy1atWymmczyV8I6EW2NYJsaEcunw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RQ3sYBDitFvKLX0k7dvxfGT637f9Zn54i3i8BGjYexIjKUcBnr6mEJlr0JP3pKTLc7N/mFsHdpYQxfsGAJ/OLylat/G1ymsYx0J4qTHPSxAAXX8jn7tJ5/CHdMICMH5S+Pa+zxqB+mGd2T2IsCVLb1r+VmMQWbeFjDG7azqqRN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=J8aFc7s2; arc=none smtp.client-ip=115.124.30.124
+	 MIME-Version; b=fn5tldP6Pq0euVBu7QXO7u5miENKwYKnyQeynr7+cnF9TD+7+L+E7Phj5YpfH1DzurY/HhWVvmPYREa/DdT4PXg8HW+YLDBjJAnRHu7FSBq1LoiRC7lLV+wZPOEUhEpjtKSnDzORZ1CQuP2WRAxkXKs9U/ABHFWDO3Fswr1GFEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=lsjMLSoz; arc=none smtp.client-ip=115.124.30.97
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="J8aFc7s2"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="lsjMLSoz"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1786448179; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=yP6NHZc//sLjuDoLDwKVqjskANYdRwrQDgUgNNawOG0=;
-	b=J8aFc7s2NjqfKsemnyW6Rb4gAyIAPjTrKwdfOhQpyrPNOytfHii7Dyk6LCTzAQMKkBZ5E8oM31T8nYUu04XPTh+vN+JqneLDfoKZmHV+g+2C9+VSoPYK3l4ukU3BMzGPQqL12nCXkVwtpLTSkgDyeW54SKcGUV4+5L+FrPczZ2s=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X8oJZ4H_1786448177;
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8oJZ4H_1786448177 cluster:ay36)
+	t=1786448183; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=ozvsfTjo0i7g/xCnAIRJclI2uIF92+RwcfsgGKRLjUQ=;
+	b=lsjMLSozhLgrTOaZB+AYDHOYwsTuT0K7NKX6L4mk2a9/fyPDcOhDw/dXJPnyHm2if4ELgnD0Ulk51FbmT3XHoCLZKHuSoXatIqO24HFap0xgBOaICMNqWRQS+O0mjELKtwm/8mMAlr8tQNFJ+kqY9EOUL+Rpqe4ZOtBlBaK+44I=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X8oKJ-w_1786448181;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8oKJ-w_1786448181 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 11 Aug 2026 19:36:18 +0800
+          Tue, 11 Aug 2026 19:36:22 +0800
 From: Guixin Liu <kanie@linux.alibaba.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -38,9 +38,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 Cc: linux-cxl@vger.kernel.org,
 	xlpang@linux.alibaba.com,
 	oliver.yang@linux.alibaba.com
-Subject: [PATCH 3/8] cxl/core: Fix dport use-after-free via the einj_inject debugfs file
-Date: Tue, 11 Aug 2026 19:36:03 +0800
-Message-ID: <20260811113608.2815625-4-kanie@linux.alibaba.com>
+Subject: [PATCH 7/8] cxl/mce: Validate the memdev and endpoint before use
+Date: Tue, 11 Aug 2026 19:36:07 +0800
+Message-ID: <20260811113608.2815625-8-kanie@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260811113608.2815625-1-kanie@linux.alibaba.com>
 References: <20260811113608.2815625-1-kanie@linux.alibaba.com>
@@ -52,91 +52,57 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cxl_debugfs_create_dport_dir() creates a debugfs directory holding an
-"einj_inject" file whose i_private is the 'struct cxl_dport', but it
-discards the returned dentry and registers no cleanup. The dport is freed
-by free_dport() when the devres group of its host device is released,
-while the debugfs nodes live until the cxl_core module is unloaded
-(debugfs_remove_recursive() in cxl_core_exit()).
+cxl_handle_mce() dereferences mds->cxlds.cxlmd and treats cxlmd->endpoint
+as a plain pointer. Neither holds at all times:
 
-So after unbinding the dport's host, e.g. unbinding the host bridge port
-or the ACPI0017 root, writing to
+- The notifier is registered by cxl_memdev_state_create() from
+  cxl_pci_probe(), while cxlds->cxlmd is only published later by
+  devm_cxl_add_memdev(). An MCE delivered in that window dereferences a
+  NULL cxlmd.
 
-  /sys/kernel/debug/cxl/<dport_dev>/einj_inject
+- cxl_memdev_alloc() initialises cxlmd->endpoint to ERR_PTR(-ENXIO). It
+  stays that way until the cxl_mem driver adds the endpoint port in a
+  separate probe, and forever if that probe never runs or fails before
+  then. The existing "if (!endpoint)" test lets the error pointer
+  through, and cxl_port_get_spa_cache_alias() only guards against NULL
+  as well before walking endpoint->regions.
 
-calls cxl_einj_inject() on freed memory and dereferences dport->rch and
-dport->dport_dev.
+Check cxlmd for NULL before dereferencing it, and use IS_ERR_OR_NULL() on
+the endpoint. delete_endpoint() stores a plain NULL, so the existing test
+is only wrong about the error pointer.
 
-The leaked directory is also named after the dport device, so re-adding the
-same dport (bind after unbind) hits an existing name, debugfs creation
-fails, and error injection stays broken for that dport for the rest of the
-module's lifetime.
-
-Save the dentry and drop the whole directory via a devm action on the same
-host device. The action is registered inside the dport devres group and
-after free_dport(), so it runs before the dport is freed. Propagate the
-failure to __devm_cxl_add_dport() rather than continuing with a dport that
-has a dangling debugfs node.
-
-Fixes: 8039804cfa73 ("cxl/core: Add CXL EINJ debugfs files")
+Fixes: 516e5bd0b6bf ("cxl: Add mce notifier to emit aliased address for extended linear cache")
 Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
 ---
- drivers/cxl/core/port.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/cxl/core/mce.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 1215ee4f4035..76bda54ed986 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -813,13 +813,18 @@ static int cxl_einj_inject(void *data, u64 type)
- DEFINE_DEBUGFS_ATTRIBUTE(cxl_einj_inject_fops, NULL, cxl_einj_inject,
- 			 "0x%llx\n");
+diff --git a/drivers/cxl/core/mce.c b/drivers/cxl/core/mce.c
+index ff8d078c6ca1..47566015eb00 100644
+--- a/drivers/cxl/core/mce.c
++++ b/drivers/cxl/core/mce.c
+@@ -13,7 +13,7 @@ static int cxl_handle_mce(struct notifier_block *nb, unsigned long val,
+ 	struct cxl_memdev_state *mds = container_of(nb, struct cxl_memdev_state,
+ 						    mce_notifier);
+ 	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
+-	struct cxl_port *endpoint = cxlmd->endpoint;
++	struct cxl_port *endpoint;
+ 	struct mce *mce = data;
+ 	u64 spa, spa_alias;
+ 	unsigned long pfn;
+@@ -21,7 +21,11 @@ static int cxl_handle_mce(struct notifier_block *nb, unsigned long val,
+ 	if (!mce || !mce_usable_address(mce))
+ 		return NOTIFY_DONE;
  
--static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
-+static void remove_debugfs(void *dentry)
-+{
-+	debugfs_remove_recursive(dentry);
-+}
+-	if (!endpoint)
++	if (!cxlmd)
++		return NOTIFY_DONE;
 +
-+static int cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
- {
- 	struct cxl_port *parent = parent_port_of(dport->port);
- 	struct dentry *dir;
++	endpoint = cxlmd->endpoint;
++	if (IS_ERR_OR_NULL(endpoint))
+ 		return NOTIFY_DONE;
  
- 	if (!einj_cxl_is_initialized())
--		return;
-+		return 0;
- 
- 	/*
- 	 * Protocol error injection is only available for CXL 2.0+ root ports
-@@ -827,12 +832,15 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
- 	 */
- 	if (!dport->rch &&
- 	    !(dev_is_pci(dport->dport_dev) && parent && is_cxl_root(parent)))
--		return;
-+		return 0;
- 
- 	dir = cxl_debugfs_create_dir(dev_name(dport->dport_dev));
- 
- 	debugfs_create_file("einj_inject", 0200, dir, dport,
- 			    &cxl_einj_inject_fops);
-+
-+	return devm_add_action_or_reset(dport_to_host(dport), remove_debugfs,
-+					dir);
- }
- 
- static int cxl_port_add(struct cxl_port *port,
-@@ -1240,7 +1248,9 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
- 	if (dev_is_pci(dport_dev))
- 		dport->link_latency = cxl_pci_get_latency(to_pci_dev(dport_dev));
- 
--	cxl_debugfs_create_dport_dir(dport);
-+	rc = cxl_debugfs_create_dport_dir(dport);
-+	if (rc)
-+		return ERR_PTR(rc);
- 
- 	if (!dport->rch)
- 		devm_cxl_dport_ras_setup(dport);
+ 	spa = mce->addr & MCI_ADDR_PHYSADDR;
 -- 
 2.43.7
 
