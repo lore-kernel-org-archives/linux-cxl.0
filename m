@@ -1,100 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F3041A77C;
-	Tue, 11 Aug 2026 09:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4653B71C5
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 11:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786440308; cv=none; b=R9Op5ZDGHzKhJzZEHDmUiF1tzkf9dIXe12BKs0LFY20JAfGYyrhw/o18QcfQvABBH7lI5cGXOc9khkhMGGK/LcNNE7D6keIweryIJB67awFh9NiaGkOPKcKeVmB5Kv5Jo9MIW0G9tkYWIfWbGsp6nvg3FI13gESSpGFqAgs7S4c=
+	t=1786448179; cv=none; b=WoHdCbJcsEXZEOSCw8+qEhP7Cub/lj0pyFOsicSIaJ2Qsn8v+8xV8P2wXJJ6GGkrpRV63gMdyDbFEWzvJyRSN1vV1oKDTaJY5DHllveu7d5j0ON3TsohOfpiBPVPklhMknM7JjWgDcGLCq2a+go9cPT3qAoI6ViSAOas6ydLPx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786440308; c=relaxed/simple;
-	bh=rW4Gn8nuPAChuOaOAphRZUDkedE+y6quD4t7euLTO2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lcLUX1yJsre2nCVsWZ+Am4x6jp554bxejjk0nGxJdPPNx1Gn+rr2k3nQgXF3qHtbrCZwaTxrS++vz2sUVyvSrJjjmJDEzCA+Kqwwrcoh11rTNlcoGD0P353EHP7KdRqrnDYRYRHZmaDRyis5zLP1L1iO/wwhpwMw/YJdwf6V8QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j0Aq5Cvy; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786448179; c=relaxed/simple;
+	bh=pqPry6ge5d2E1qqfWwwsQMWy6vuPhEhCN39JVBdHUhY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QTAM4u1vtJeUMiSGGkJv14EN+jny76HScZV+bgY7bUdTdEVEOpeoDm0SRgMtAhPG6paHEHFHwgkrfMIwIes0veUOwBrR3JU5mV3PSnfU5zlNr+gCPS73zvWYInaaMduEzQoROonhdRJXZebwd5VJPJNvnc1wGow7cmXKL8vARAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hkW2PsZ7; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j0Aq5Cvy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D2D71F000E9;
-	Tue, 11 Aug 2026 09:24:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786440303;
-	bh=1d60DmOiyf9vsbdMyOWLJ3UiUYY8mb2XIfOf8L0jGDE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=j0Aq5Cvyz+T1Uud910iFya0piC9xc+brcKgCD1Db6hjJr3STNtbaXxFVUwpuXwqBz
-	 TQQJ+uvbdjhto04m+YOzULdfS3vs+J+3utCDaw+WRfEFYvk7xkEkY2+TSqQfFlukjZ
-	 Q/Jao7LxvvZfOINF15S0zz5HaO2AbStAErUS6/mP8FTWHCRV69piYvapF6a6RGyr3F
-	 4mVy/kXkRALUb7iVBbAe5jRVfXuBIALgZiTA2Wf0QZK3x9HjrLQxGhZGuA2KpOqZOl
-	 6uZnLkcBX86LvDtxdh6nmS26Vl4JyZC4nAlKmoQEfTzTxZ2rqeTy83L1BWpayRjojT
-	 LceiMr3EkrCNA==
-Date: Tue, 11 Aug 2026 11:24:50 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, 
-	John Groves <john@jagalactic.com>, John Groves <John@groves.net>, Dan Williams <djbw@kernel.org>, 
-	Bernd Schubert <bschubert@ddn.com>, Alison Schofield <alison.schofield@intel.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, Jake Edge <jake@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Hildenbrand <david@kernel.org>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <jic23@kernel.org>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Chen Linxuan <chenlinxuan@uniontech.com>, James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Ira Weiny <iweiny@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Haren Myneni <haren@linux.ibm.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	Ethan Nelson-Moore <enelsonmoore@gmail.com>, Gabriel Whigham <gabewhigham@gmail.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
-	"fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
-Subject: Re: [PATCH V12 02/12] famfs: Module operations, fs_context, and mount
-Message-ID: <20260811-baugebiet-hofiert-fanden-3354f4a5e820@brauner>
-References: <0100019fc572ca94-ec363dd7-3a77-484b-b4b7-f2503a0931a6-000000@email.amazonses.com>
- <20260803022828.75776-1-john@jagalactic.com>
- <0100019fc5739e5d-bc002300-eede-4c40-9ca8-a277b754496e-000000@email.amazonses.com>
- <20260806043712.GB3560084@frogsfrogsfrogs>
- <CAJfpegtW4bFn=oNfTipCxhiExaqSXnhXeBd6Uq15FpepqCJaPQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hkW2PsZ7"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1786448175; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=waJkvAFwEXj+Ge4KO+KcqceZJgD0P+W3IEbtq0repI8=;
+	b=hkW2PsZ7S+eONgsFmxPdoqLFsGiUWREo7SV8SQ4xSdRHhZdrDSXsgZYYDV0i9aJ2wJCNJc0VLSKjaZ/W71rKtwWoT7q9B6pr94mw8iVK0GO392/Yh8OIL7sOWkuWQzQFEJLjhSKJQ2lBS/CDlZ2IhzKGdLKyjOT5oo0QmzfOS/E=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R681e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X8oNeXb_1786448174;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8oNeXb_1786448174 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 11 Aug 2026 19:36:14 +0800
+From: Guixin Liu <kanie@linux.alibaba.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org,
+	xlpang@linux.alibaba.com,
+	oliver.yang@linux.alibaba.com
+Subject: [PATCH 0/8] cxl: Assorted fixes
+Date: Tue, 11 Aug 2026 19:36:00 +0800
+Message-ID: <20260811113608.2815625-1-kanie@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJfpegtW4bFn=oNfTipCxhiExaqSXnhXeBd6Uq15FpepqCJaPQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 11, 2026 at 10:59:50AM +0200, Miklos Szeredi wrote:
-> On Thu, 6 Aug 2026 at 06:37, Darrick J. Wong <djwong@kernel.org> wrote:
-> 
-> > IOWs, let's fix the remaining wobbles (if any) and just merge this
-> > already.  No more side quests through gigantic refactorings of fusex,
-> > that's too much to ask after you already redesigned and reimplemented
-> > the whole thing already.
-> 
-> Without any intention to change the direction, let me just state some facts:
-> 
->  - it was never suggested that famfs depend on the fusex work in any way
-> 
->  - the plan to add famfs mappings to fuse was laid out two and a half
-> years ago in reply to the very first rfc posting and has basically
-> remained unchanged since then:
-> 
-> https://lore.kernel.org/all/CAJfpegv8XzFvty_x00UehUQxw9ai8BytvGNXE8SL03zfsTN6ag@mail.gmail.com/
-> 
-> I understand how that seemingly simple API addition was overwhelming
-> for John, and I should have been more proactive in helping with the
-> implementation.  That's entirely my fault.
-> 
-> On the other hand John could have been more trusting that the plan will work.
-> 
-> But that's behind us now, let's move on...
+This is a batch of fixes found while auditing drivers/cxl. They are
+independent of each other and can be applied individually or dropped in
+any combination; they are only sent together because they came out of the
+same pass over the code.
 
-with fuse, please...
+Guixin Liu (8):
+  cxl/features: Validate the fwctl RPC input length
+  cxl/features: Bound the Get Feature output by the user output buffer
+  cxl/core: Fix dport use-after-free via the einj_inject debugfs file
+  cxl/pci: Fix NULL pointer dereference in reset detection
+  cxl/hdm: Fix out of bounds read of the decoder target list
+  cxl/cdat: Fix uninitialized stack use in endpoint bandwidth gathering
+  cxl/mce: Validate the memdev and endpoint before use
+  cxl/region: Unregister the pmem region bridge on setup failure
+
+ drivers/cxl/core/cdat.c        |  6 +++---
+ drivers/cxl/core/features.c    | 15 ++++++++++++++-
+ drivers/cxl/core/hdm.c         | 12 ++++++++++++
+ drivers/cxl/core/mce.c         |  8 ++++++--
+ drivers/cxl/core/pci.c         |  8 ++++++++
+ drivers/cxl/core/port.c        | 18 ++++++++++++++----
+ drivers/cxl/core/region_pmem.c |  6 ++++--
+ 7 files changed, 61 insertions(+), 12 deletions(-)
+
+
+base-commit: d58772d8520c7ef247c4b95c9bd76d3a25da9ff5
+-- 
+2.43.7
+
