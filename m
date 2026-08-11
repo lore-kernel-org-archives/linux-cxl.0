@@ -1,30 +1,30 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708DB43B3D9
-	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 11:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAA543B3D9
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 11:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786448187; cv=none; b=gsiCCD51qkosG8rYNmEDa69Mwlz5+3lGBktTCZeSv84xFAEmybyaId+IjHAGA/+lA52X6SEpHXrmmFscjPQ+ISK1IGcuz+69OZ77ktH1aAk2mrbXnJyieYiu0eoyWmLCaHy2/PQbbgmPv11Snn0H0D1FtHZLsQ5vYY0OMkxub2s=
+	t=1786448189; cv=none; b=pI5ixqqFmEbzj9Am1F1lOzLPHGSnz3Q4afzD2F/M/qFUW7OImK2tpspJq6xXUNYW46wukuEXuqufhmp6Fuk5Q1ljMiko9LyOeqD2WOlZm3DeN0XgbLIiQFnWRF1C755trTqeWJ9uLrxIAo0PamZNydZWOPwdxJdRTgyA7CIG5fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786448187; c=relaxed/simple;
-	bh=G0SYWwxHFvDXLGcy1atWymmczyV8I6EW2NYJsaEcunw=;
+	s=arc-20240116; t=1786448189; c=relaxed/simple;
+	bh=r8kDbhyTWBRnDGNUaCSeMm1gvYyBvBPRlUCWSpcIDhE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fn5tldP6Pq0euVBu7QXO7u5miENKwYKnyQeynr7+cnF9TD+7+L+E7Phj5YpfH1DzurY/HhWVvmPYREa/DdT4PXg8HW+YLDBjJAnRHu7FSBq1LoiRC7lLV+wZPOEUhEpjtKSnDzORZ1CQuP2WRAxkXKs9U/ABHFWDO3Fswr1GFEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=lsjMLSoz; arc=none smtp.client-ip=115.124.30.97
+	 MIME-Version; b=Cvz/Um3aTOi2/YsxKbm/vb8HW1KT9VMHW2eLBwy+9649A941EilJmBSUTRAToca6RD6fv5LotWUKHBnVF1Zw9gJJRjZoimgAyOEDLv5K1Yt+Qa41fUGhXw6YqtGuKbzoHasYRMzH3+oqqkybqzESDSPFapl77qzTAbuP/bh/VjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=sinirRia; arc=none smtp.client-ip=115.124.30.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="lsjMLSoz"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="sinirRia"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
 	t=1786448183; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=ozvsfTjo0i7g/xCnAIRJclI2uIF92+RwcfsgGKRLjUQ=;
-	b=lsjMLSozhLgrTOaZB+AYDHOYwsTuT0K7NKX6L4mk2a9/fyPDcOhDw/dXJPnyHm2if4ELgnD0Ulk51FbmT3XHoCLZKHuSoXatIqO24HFap0xgBOaICMNqWRQS+O0mjELKtwm/8mMAlr8tQNFJ+kqY9EOUL+Rpqe4ZOtBlBaK+44I=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X8oKJ-w_1786448181;
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8oKJ-w_1786448181 cluster:ay36)
+	bh=4WP3suhv2DMIq1gWCVVpjKiFCFjo5Xp474EKOmG0m7M=;
+	b=sinirRiahVdIWkzBmg6+gAfBzsf1zl5SUsuu0Wb0D2F6dK0b9UOEwdFAr0dlz1IfmNSZufYPtzG2a+z4Ar7CpHQ0itwdH9IXpLhNfiaXVi/KPXBSKiTlE2Gsc5BICM0mNQJJAHh1vLiqDfjXlkUBMJe7hjIZI27mfMJ1pfaz48U=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X8oKJ.9_1786448182;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8oKJ.9_1786448182 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 11 Aug 2026 19:36:22 +0800
+          Tue, 11 Aug 2026 19:36:23 +0800
 From: Guixin Liu <kanie@linux.alibaba.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -38,9 +38,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 Cc: linux-cxl@vger.kernel.org,
 	xlpang@linux.alibaba.com,
 	oliver.yang@linux.alibaba.com
-Subject: [PATCH 7/8] cxl/mce: Validate the memdev and endpoint before use
-Date: Tue, 11 Aug 2026 19:36:07 +0800
-Message-ID: <20260811113608.2815625-8-kanie@linux.alibaba.com>
+Subject: [PATCH 8/8] cxl/region: Unregister the pmem region bridge on setup failure
+Date: Tue, 11 Aug 2026 19:36:08 +0800
+Message-ID: <20260811113608.2815625-9-kanie@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260811113608.2815625-1-kanie@linux.alibaba.com>
 References: <20260811113608.2815625-1-kanie@linux.alibaba.com>
@@ -52,57 +52,49 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cxl_handle_mce() dereferences mds->cxlds.cxlmd and treats cxlmd->endpoint
-as a plain pointer. Neither holds at all times:
+When the nvdimm bridge has no driver bound, devm_cxl_add_pmem_region()
+bails out with -ENXIO through the err_bridge label. That label only drops
+the reference on @cxl_nvb, so the cxl_pmem_region device that device_add()
+just published stays in sysfs forever: there is no device_del() and no
+put_device(), and no devm action was registered to do either later.
 
-- The notifier is registered by cxl_memdev_state_create() from
-  cxl_pci_probe(), while cxlds->cxlmd is only published later by
-  devm_cxl_add_memdev(). An MCE delivered in that window dereferences a
-  NULL cxlmd.
+Beyond the leak, cxlr->cxlr_pmem is left pointing at the stale device, so
+a later probe of the same region allocates a second one and fails in
+device_add() with -EEXIST on the duplicate "pmem_region%d" name.
 
-- cxl_memdev_alloc() initialises cxlmd->endpoint to ERR_PTR(-ENXIO). It
-  stays that way until the cxl_mem driver adds the endpoint port in a
-  separate probe, and forever if that probe never runs or fails before
-  then. The existing "if (!endpoint)" test lets the error pointer
-  through, and cxl_port_get_spa_cache_alias() only guards against NULL
-  as well before walking endpoint->regions.
+Call cxlr_pmem_unregister() explicitly in that branch. It runs under the
+bridge's device lock held by the scoped_guard(), which is what its
+device_lock_assert() expects, and it performs the same teardown the devm
+action would have done, including clearing cxlr->cxlr_pmem, so err_bridge
+only has the @cxl_nvb reference left to drop.
 
-Check cxlmd for NULL before dereferencing it, and use IS_ERR_OR_NULL() on
-the endpoint. delete_endpoint() stores a plain NULL, so the existing test
-is only wrong about the error pointer.
-
-Fixes: 516e5bd0b6bf ("cxl: Add mce notifier to emit aliased address for extended linear cache")
+Fixes: f17b558d6663 ("cxl/pmem: Refactor nvdimm device registration, delete the workqueue")
 Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
 ---
- drivers/cxl/core/mce.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/cxl/core/region_pmem.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/core/mce.c b/drivers/cxl/core/mce.c
-index ff8d078c6ca1..47566015eb00 100644
---- a/drivers/cxl/core/mce.c
-+++ b/drivers/cxl/core/mce.c
-@@ -13,7 +13,7 @@ static int cxl_handle_mce(struct notifier_block *nb, unsigned long val,
- 	struct cxl_memdev_state *mds = container_of(nb, struct cxl_memdev_state,
- 						    mce_notifier);
- 	struct cxl_memdev *cxlmd = mds->cxlds.cxlmd;
--	struct cxl_port *endpoint = cxlmd->endpoint;
-+	struct cxl_port *endpoint;
- 	struct mce *mce = data;
- 	u64 spa, spa_alias;
- 	unsigned long pfn;
-@@ -21,7 +21,11 @@ static int cxl_handle_mce(struct notifier_block *nb, unsigned long val,
- 	if (!mce || !mce_usable_address(mce))
- 		return NOTIFY_DONE;
+diff --git a/drivers/cxl/core/region_pmem.c b/drivers/cxl/core/region_pmem.c
+index 23d97e3d78b6..7ab1373a95e0 100644
+--- a/drivers/cxl/core/region_pmem.c
++++ b/drivers/cxl/core/region_pmem.c
+@@ -168,12 +168,14 @@ int devm_cxl_add_pmem_region(struct cxl_region *cxlr)
+ 		dev_name(dev));
  
--	if (!endpoint)
-+	if (!cxlmd)
-+		return NOTIFY_DONE;
-+
-+	endpoint = cxlmd->endpoint;
-+	if (IS_ERR_OR_NULL(endpoint))
- 		return NOTIFY_DONE;
+ 	scoped_guard(device, &cxl_nvb->dev) {
+-		if (cxl_nvb->dev.driver)
++		if (cxl_nvb->dev.driver) {
+ 			rc = devm_add_action_or_reset(&cxl_nvb->dev,
+ 						      cxlr_pmem_unregister,
+ 						      cxlr_pmem);
+-		else
++		} else {
+ 			rc = -ENXIO;
++			cxlr_pmem_unregister(cxlr_pmem);
++		}
+ 	}
  
- 	spa = mce->addr & MCI_ADDR_PHYSADDR;
+ 	if (rc)
 -- 
 2.43.7
 
