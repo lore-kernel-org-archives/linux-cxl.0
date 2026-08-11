@@ -1,30 +1,30 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28AA43CE6D
-	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 11:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF33939E177
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 11:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786448184; cv=none; b=qntXsTNouYIsJa7YEAMmNJCYCc5nb+WAZbntB4Fb9abcwtcyTmSnvgVc5L3A8BSBDxFXyzaNXRdj+OhSs/t1LzFwkGAeQlAX9eJIP4ntodkCKQH1+n3VLiSFxGMCALdLiojXoU80/FrCkDNAt3jZzIVLvmexB6oO8S7+REaleL8=
+	t=1786448185; cv=none; b=vAGOnRgyz/ljcgXb2DhYq6RsCmt7xq00+Lqit5DRVJMj+Ncv6HZTMpHmAMSpWHm36mae6t9EjW3vhBO2NBWNwYvQ1W67tluEpo6lQz7M1UHyBdQQY1Wgz6a4Hy1Ft10yfGgiBLPTt19bTunVEPA/c9M1DqpfYdhF4dvUJyuKc/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786448184; c=relaxed/simple;
-	bh=uC7X8HY9CF1B2KKQqdp21IYKNQZANWEkCORxPQEf4ZA=;
+	s=arc-20240116; t=1786448185; c=relaxed/simple;
+	bh=gJUMtt5Cs27gdt3j/Z6OWH9rMG1CWpXm39xno4yOTN0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fa53X45b1RGBRKUdbK5IhQf24qiEyFPb6uNeOyNYN4juvSTU7dDwY5cQKcIaDo6pagBqyX8YSVY+hqBrxvp7T0DfXHeB0LTlyidweIUrWy5Ym13y36aPIH3ZhjPSLgTI7pj7NndFBvTpBBBqsS04BKeuk28yJ/skbD4cvWxxObo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dIZuiwUy; arc=none smtp.client-ip=115.124.30.110
+	 MIME-Version; b=dAAMozw8g+Rf3uhRaVcPlVsqgYt48yeSfyBuhKmfK2HfcslLmGsLnFb5R8jRIo9Y4C4dBAQpVKEY0vTXOUXZ3PfHYJuey580ACrwGPx2lXS0vSEULmrQWtOPBCjyH8M7Fs2POOMGMyzhPQ44UfhnFODDpEq97LeQJA6nfk16FDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=E5PvOCCC; arc=none smtp.client-ip=115.124.30.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dIZuiwUy"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="E5PvOCCC"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1786448177; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=Oh5qC9ZfUFJnNzOz5dynF8LEfapY6a6EtLvIar8vO9E=;
-	b=dIZuiwUyWDdL5xe3dYZSsxsE+4vv/QQCexfJJzpZViC/X9lTLx/pxyE6leJDZxNJElUOa0YS/lYLumvPxuwLvdbDFEILx4SDVoFG5gPTVLunzN2nQljF+xZ3OciyvGGvE5fJVr5nLNtex6djL28IiAX1yYGmAsZFD+MFoBAHDLU=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X8oJZ3z_1786448176;
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8oJZ3z_1786448176 cluster:ay36)
+	t=1786448179; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=o4C0fRkLjZ1d20A8vx7yv8Z5cLe4fNmymlfjVRTLRqI=;
+	b=E5PvOCCCNSqU16RLTpByBaw6YMvNqxs84d7JvTe+GelVvWbnl8GONYp+LaWgpjCw2jyJGAIm+cSnAkbgpd8ZNY2SfsxXLwBaUvC+V7AkeL/3Nkge0DWCv/I9IyqerQC9VWPeFqf2ceqYxU26NGOGd40sQc2G4ckBVuOar3/3lcQ=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R861e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X8oKJ-6_1786448178;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8oKJ-6_1786448178 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 11 Aug 2026 19:36:16 +0800
+          Tue, 11 Aug 2026 19:36:19 +0800
 From: Guixin Liu <kanie@linux.alibaba.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -38,9 +38,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 Cc: linux-cxl@vger.kernel.org,
 	xlpang@linux.alibaba.com,
 	oliver.yang@linux.alibaba.com
-Subject: [PATCH 2/8] cxl/features: Bound the Get Feature output by the user output buffer
-Date: Tue, 11 Aug 2026 19:36:02 +0800
-Message-ID: <20260811113608.2815625-3-kanie@linux.alibaba.com>
+Subject: [PATCH 4/8] cxl/pci: Fix NULL pointer dereference in reset detection
+Date: Tue, 11 Aug 2026 19:36:04 +0800
+Message-ID: <20260811113608.2815625-5-kanie@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260811113608.2815625-1-kanie@linux.alibaba.com>
 References: <20260811113608.2815625-1-kanie@linux.alibaba.com>
@@ -52,54 +52,51 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cxlctl_get_feature() allocates the output buffer from the size userspace
-asked for (fwctl_rpc.out_len, arriving as *out_len), but then asks the
-device for a completely independent, also userspace supplied, amount of
-data:
+__cxl_endpoint_decoder_reset_detected() reads the HDM decoder control
+register without checking that the endpoint has any:
 
-	out_size = *out_len;
-	count = le16_to_cpu(feat_in->count);
-	rpc_out = kvzalloc(out_size, GFP_KERNEL);
-	out_size = cxl_get_feature(..., rpc_out->payload, count, ...);
+	cxlhdm = dev_get_drvdata(&port->dev);
+	hdm = cxlhdm->regs.hdm_decoder;
+	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
 
-cxl_get_feature() loops until it has read @count bytes into
-@rpc_out->payload, so any 'count' larger than the output allocation
-overflows it, with up to 64KB of device supplied data landing past the end
-of the object. An out_len of 0 additionally turns the allocation into
-ZERO_SIZE_PTR.
+For a device that has no component registers and describes its HDM ranges
+through the CXL DVSEC range registers instead, devm_cxl_setup_hdm() returns
+early with cxlhdm->regs.hdm_decoder left NULL and the decoder count taken
+from the DVSEC ranges. Those emulated decoders are published with
+CXL_DECODER_F_ENABLE set by cxl_setup_hdm_decoder_from_dvsec(), so
+cxl_reset_done() walking the endpoint's decoders after an FLR or SBR
+reaches the readl() with a NULL base and oopses.
 
-Reject the request unless the allocation can hold the Feature data at the
-offset the mailbox writes it to, i.e. sizeof(struct fwctl_rpc_cxl_out_hdr)
-plus @count.
+Bail out when there are no HDM decoder registers, mirroring the existing
+!hdm test in should_emulate_decoders(). Without those registers there is no
+Committed bit to sample, so report "no reset detected" rather than
+dereferencing NULL.
 
-Note that struct_size_t(struct fwctl_rpc_cxl_out, payload, count) is not
-the right bound here: @payload lives in a union whose largest member,
-'struct cxl_mbox_get_sup_feats_out', is 8 bytes, so
-sizeof(struct fwctl_rpc_cxl_out) already covers the first 8 payload bytes
-and the resulting bound would reject valid requests that allocate exactly
-the header plus the Feature data.
-
-Fixes: 5908f3ed6dc2 ("cxl: Add support to handle user feature commands for get feature")
+Fixes: 934edcd436dc ("cxl: Add post-reset warning if reset results in loss of previously committed HDM decoders")
 Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
 ---
- drivers/cxl/core/features.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/cxl/core/pci.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-index 0ab1a8547b7e..b631643ecc7a 100644
---- a/drivers/cxl/core/features.c
-+++ b/drivers/cxl/core/features.c
-@@ -471,6 +471,10 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
- 	if (!count)
- 		return ERR_PTR(-EINVAL);
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index e4338fd7e01b..2515ef4282f2 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -684,6 +684,14 @@ static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
  
-+	/* cxl_get_feature() writes @count bytes at @rpc_out->payload */
-+	if (out_size < sizeof(struct fwctl_rpc_cxl_out_hdr) + count)
-+		return ERR_PTR(-EINVAL);
+ 	cxlhdm = dev_get_drvdata(&port->dev);
+ 	hdm = cxlhdm->regs.hdm_decoder;
 +
- 	struct fwctl_rpc_cxl_out *rpc_out __free(kvfree) =
- 		kvzalloc(out_size, GFP_KERNEL);
- 	if (!rpc_out)
++	/*
++	 * Devices that describe their HDM ranges with the DVSEC range
++	 * registers have no HDM decoder registers to consult.
++	 */
++	if (!hdm)
++		return 0;
++
+ 	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+ 
+ 	return !FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl);
 -- 
 2.43.7
 
