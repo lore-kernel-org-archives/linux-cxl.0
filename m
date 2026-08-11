@@ -1,30 +1,30 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420D13B71C5
-	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 11:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E5143DA4C
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 11:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786448186; cv=none; b=BAnqqfwUsULM1A6uiYZs79LN8X/UFP4da5nhRk5tHMT+HzmlsyHiMgLeeljT8QGnVopbBNN7GwQVgW80T6vb8YhvnG8230pSJMzbPm9vxFTwwOVWgR5pADKCFORQh7vzfvlFXQsmLSBpxdyHFa+ieCraFKp4dXFt+DOc/HBj7bs=
+	t=1786448186; cv=none; b=YidTEga0nkBranjVJMnrhbHjHwUdmiuAgluVqJaTMTlIk2ER36U7P96xEIZ9hx3bMajqO72wXFSZi/z93He/ojpo1+sgSpTGfZZuQwS46coNS8thJ0ZSQwsplO8trMOih4WjilR1kd38SkhAMKRoVzM6mVfkIXjfr+vvWSEKKhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1786448186; c=relaxed/simple;
-	bh=NDT/HN7wom8qrGdhBDGUjcYQRLvN5Yv7RztsrH1XUJk=;
+	bh=T514opcNUktHO6ym0TE9ODQB4xSSpD6pkA2JY+enOwQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MoPuXpPPVdqyQs/vU2Lr78BW/VZdlYtwHHh0/i2vGGl9Nmi6FLVtQVUywnn2pnz6ouk0Dz97F2EQUrA9AhV/mQ98T54lrs50+X4iAtfvEQD2S+AixOuBZKxumdnfAI7Y7FQjmd6SSx6DJMjxgc0wHIGrnSBJZymizZH55I4GoU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ahCxyIzu; arc=none smtp.client-ip=115.124.30.110
+	 MIME-Version; b=RblKie57NZvoJTLu0NdMditAF0YTtlnJG+eKhHVBeejBc4TfHNJ/BRYlsSFzzPLV7NnaXVhu/dCd4EOeGZaxtUYD14ACIK6QZpIeZsVkoSC9ylMg9jmyoaRw5O4tn26B7cd4WlRqOjWbQbEBpjG8EGcVnGMF/gAXxKOe8M0KVXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=x30FZXU9; arc=none smtp.client-ip=115.124.30.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ahCxyIzu"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="x30FZXU9"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
 	t=1786448181; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=FAAA48ppTjqeWs0KTaKHZFjYiHHXvLsxMIuW/EydZRc=;
-	b=ahCxyIzuebYC0S8kht4pij0yMFxlGFI2YqdUvSrgNtiKcr9sYIQ+V0BRGHtJy7b9sdtRih6uDCDNJbdy+keoUx6Wc95vVbMn8q9nGJbONfxkWBPO+kXgJbE/fUDJylMXhd/M7+9+07QKEHeZGGkEyiRt8DP1niPqDLQXx+EP6Ws=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R901e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X8oJZ54_1786448180;
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8oJZ54_1786448180 cluster:ay36)
+	bh=UHW7AjeqsC9YcCpvFz3nhYxVbrQasEro0ZQeLxSLr0c=;
+	b=x30FZXU9uosTtxJbT92yyt20yzeL8vC24lN29f1blD2CLOJHglpN6Q81vptN9OkoPzPW+LVWcqZDiIwEDZYk3L4+r/ohoZuw8BRppEbKrokJTk3AWlJ/KIg1ft5unyD4trMBSXSmBqBPnPkyxasrhAfGY1rDsYAOfV7t5ALlJ8M=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R251e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X8oO0gO_1786448179;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8oO0gO_1786448179 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 11 Aug 2026 19:36:21 +0800
+          Tue, 11 Aug 2026 19:36:20 +0800
 From: Guixin Liu <kanie@linux.alibaba.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -38,9 +38,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 Cc: linux-cxl@vger.kernel.org,
 	xlpang@linux.alibaba.com,
 	oliver.yang@linux.alibaba.com
-Subject: [PATCH 6/8] cxl/cdat: Fix uninitialized stack use in endpoint bandwidth gathering
-Date: Tue, 11 Aug 2026 19:36:06 +0800
-Message-ID: <20260811113608.2815625-7-kanie@linux.alibaba.com>
+Subject: [PATCH 5/8] cxl/hdm: Fix out of bounds read of the decoder target list
+Date: Tue, 11 Aug 2026 19:36:05 +0800
+Message-ID: <20260811113608.2815625-6-kanie@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260811113608.2815625-1-kanie@linux.alibaba.com>
 References: <20260811113608.2815625-1-kanie@linux.alibaba.com>
@@ -52,62 +52,63 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cxl_endpoint_gather_bandwidth() combines the endpoint's upstream link
-bandwidth with the bandwidth from the endpoint CDAT into an uninitialized
-on-stack array:
+init_hdm_decoder() copies the HDM Decoder Target List register into
+cxld->target_map using the decoder's interleave ways as the element count:
 
-	struct access_coordinate ep_coord[ACCESS_COORDINATE_MAX];
+	union {
+		u64 value;
+		unsigned char target_id[8];
+	} target_list;
 	...
-	cxl_coordinates_combine(ep_coord, pci_coord, perf->cdat_coord);
+	target_list.value = (hi << 32) + lo;
+	for (i = 0; i < cxld->interleave_ways; i++)
+		cxld->target_map[i] = target_list.target_id[i];
 
-__cxl_coordinates_combine() only assigns the output bandwidth when both
-inputs are non-zero:
+The Target List register is 8 bytes wide, i.e. 8 target ports, but
+interleave ways comes from the 4-bit Interleave Ways field of the decoder
+control register, and eiw_to_ways() maps the valid encodings to 1, 2, 4, 8,
+16 (eiw 0-4) and 3, 6, 12 (eiw 8-10). A switch or host bridge decoder found
+programmed with 12 or 16 ways therefore reads up to 8 bytes past the
+on-stack union.
 
-	if (c1->write_bandwidth && c2->write_bandwidth)
-		out->write_bandwidth = min(...);
+The region programming path already rejects that configuration in
+cxl_port_setup_targets(), 'if (iw > 8 || iw > cxlsd->nr_targets)', but the
+enumeration path of a BIOS programmed decoder has no such check.
 
-That form is intended for the chained 'out == c1' calls that follow, but on
-this first call @out is fresh stack. A device whose CDAT DSLBIS does not
-report a bandwidth for an access class leaves the corresponding ep_coord
-entry untouched, and cxl_bandwidth_add() then accumulates that stack
-residue into the region coordinates that are published through the region's
-sysfs access coordinate attributes.
+Reject the decoder instead, consistent with how the neighbouring
+eiw_to_ways() and eig_to_granularity() failures are handled: a target list
+that cannot describe the interleave is not a configuration the driver can
+attach a region to.
 
-pci_coord and sw_coord are less severe but still wrong. Their producers,
-cxl_pci_get_bandwidth() and cxl_port_get_switch_dport_bandwidth(), only
-fill in the read/write bandwidth fields, so the latency terms are read
-uninitialized by the unconditional read_latency and write_latency sums in
-the same helper. cxl_bandwidth_add() propagates only bandwidth, so those
-sums are discarded rather than published, but the reads themselves are
-still undefined behaviour.
-
-Zero initialize all three, which also makes an unreported bandwidth read
-back as 0, the value the rest of the CXL performance code already uses to
-mean "unknown".
-
-Fixes: a5ab0de0ebaa ("cxl: Calculate region bandwidth of targets with shared upstream link")
+Fixes: d17d0540a0db ("cxl/core/hdm: Add CXL standard decoder enumeration to the core")
 Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
 ---
- drivers/cxl/core/cdat.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/cxl/core/hdm.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index 5c9f07262513..3c6a1537f89b 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -633,9 +633,9 @@ static int cxl_endpoint_gather_bandwidth(struct cxl_region *cxlr,
- 	struct cxl_port *endpoint = to_cxl_port(cxled->cxld.dev.parent);
- 	struct cxl_port *parent_port = to_cxl_port(endpoint->dev.parent);
- 	struct cxl_port *gp_port = to_cxl_port(parent_port->dev.parent);
--	struct access_coordinate pci_coord[ACCESS_COORDINATE_MAX];
--	struct access_coordinate sw_coord[ACCESS_COORDINATE_MAX];
--	struct access_coordinate ep_coord[ACCESS_COORDINATE_MAX];
-+	struct access_coordinate pci_coord[ACCESS_COORDINATE_MAX] = { };
-+	struct access_coordinate sw_coord[ACCESS_COORDINATE_MAX] = { };
-+	struct access_coordinate ep_coord[ACCESS_COORDINATE_MAX] = { };
- 	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 0c80b76a5f9b..9d49b48a4456 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -1084,6 +1084,18 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
+ 		cxld->interleave_ways, cxld->interleave_granularity);
+ 
+ 	if (!cxled) {
++		/*
++		 * The Target List register only holds
++		 * ARRAY_SIZE(target_list.target_id) entries, so a switch
++		 * decoder cannot interleave across more ports than that.
++		 */
++		if (cxld->interleave_ways > ARRAY_SIZE(target_list.target_id)) {
++			dev_warn(&port->dev,
++				 "decoder%d.%d: Interleave ways: %d exceeds target list size\n",
++				 port->id, cxld->id, cxld->interleave_ways);
++			return -ENXIO;
++		}
++
+ 		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
+ 		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
+ 		target_list.value = (hi << 32) + lo;
 -- 
 2.43.7
 
