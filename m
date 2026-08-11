@@ -1,30 +1,30 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E5143DA4C
-	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 11:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14C043CE6D
+	for <linux-cxl@vger.kernel.org>; Tue, 11 Aug 2026 11:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786448186; cv=none; b=YidTEga0nkBranjVJMnrhbHjHwUdmiuAgluVqJaTMTlIk2ER36U7P96xEIZ9hx3bMajqO72wXFSZi/z93He/ojpo1+sgSpTGfZZuQwS46coNS8thJ0ZSQwsplO8trMOih4WjilR1kd38SkhAMKRoVzM6mVfkIXjfr+vvWSEKKhs=
+	t=1786448187; cv=none; b=b1Ii4ACbVfR0tvo/5ghHGHkSVomqZkQDV45N5wWPEGpuRJpn14ks8AViU6mFdmHcfvo+MA5scQiCxxmuPjoRYi7Xtu6Gl7EQIzQ2Fk3ELBzyVCuVOL+NUcRVmttuNHk7bSjBCMd5OybEkbWLxfM+YRZ1g7Y0MkUaNFLGGhUbXxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786448186; c=relaxed/simple;
-	bh=T514opcNUktHO6ym0TE9ODQB4xSSpD6pkA2JY+enOwQ=;
+	s=arc-20240116; t=1786448187; c=relaxed/simple;
+	bh=REZ2lYwKAxlJEAzqtYkjfEM+oqcmVjnQJDnk5PhCr30=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RblKie57NZvoJTLu0NdMditAF0YTtlnJG+eKhHVBeejBc4TfHNJ/BRYlsSFzzPLV7NnaXVhu/dCd4EOeGZaxtUYD14ACIK6QZpIeZsVkoSC9ylMg9jmyoaRw5O4tn26B7cd4WlRqOjWbQbEBpjG8EGcVnGMF/gAXxKOe8M0KVXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=x30FZXU9; arc=none smtp.client-ip=115.124.30.100
+	 MIME-Version; b=RQ3sYBDitFvKLX0k7dvxfGT637f9Zn54i3i8BGjYexIjKUcBnr6mEJlr0JP3pKTLc7N/mFsHdpYQxfsGAJ/OLylat/G1ymsYx0J4qTHPSxAAXX8jn7tJ5/CHdMICMH5S+Pa+zxqB+mGd2T2IsCVLb1r+VmMQWbeFjDG7azqqRN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=J8aFc7s2; arc=none smtp.client-ip=115.124.30.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="x30FZXU9"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="J8aFc7s2"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1786448181; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=UHW7AjeqsC9YcCpvFz3nhYxVbrQasEro0ZQeLxSLr0c=;
-	b=x30FZXU9uosTtxJbT92yyt20yzeL8vC24lN29f1blD2CLOJHglpN6Q81vptN9OkoPzPW+LVWcqZDiIwEDZYk3L4+r/ohoZuw8BRppEbKrokJTk3AWlJ/KIg1ft5unyD4trMBSXSmBqBPnPkyxasrhAfGY1rDsYAOfV7t5ALlJ8M=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R251e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X8oO0gO_1786448179;
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8oO0gO_1786448179 cluster:ay36)
+	t=1786448179; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=yP6NHZc//sLjuDoLDwKVqjskANYdRwrQDgUgNNawOG0=;
+	b=J8aFc7s2NjqfKsemnyW6Rb4gAyIAPjTrKwdfOhQpyrPNOytfHii7Dyk6LCTzAQMKkBZ5E8oM31T8nYUu04XPTh+vN+JqneLDfoKZmHV+g+2C9+VSoPYK3l4ukU3BMzGPQqL12nCXkVwtpLTSkgDyeW54SKcGUV4+5L+FrPczZ2s=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0X8oJZ4H_1786448177;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8oJZ4H_1786448177 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 11 Aug 2026 19:36:20 +0800
+          Tue, 11 Aug 2026 19:36:18 +0800
 From: Guixin Liu <kanie@linux.alibaba.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -38,9 +38,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 Cc: linux-cxl@vger.kernel.org,
 	xlpang@linux.alibaba.com,
 	oliver.yang@linux.alibaba.com
-Subject: [PATCH 5/8] cxl/hdm: Fix out of bounds read of the decoder target list
-Date: Tue, 11 Aug 2026 19:36:05 +0800
-Message-ID: <20260811113608.2815625-6-kanie@linux.alibaba.com>
+Subject: [PATCH 3/8] cxl/core: Fix dport use-after-free via the einj_inject debugfs file
+Date: Tue, 11 Aug 2026 19:36:03 +0800
+Message-ID: <20260811113608.2815625-4-kanie@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.7
 In-Reply-To: <20260811113608.2815625-1-kanie@linux.alibaba.com>
 References: <20260811113608.2815625-1-kanie@linux.alibaba.com>
@@ -52,63 +52,91 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-init_hdm_decoder() copies the HDM Decoder Target List register into
-cxld->target_map using the decoder's interleave ways as the element count:
+cxl_debugfs_create_dport_dir() creates a debugfs directory holding an
+"einj_inject" file whose i_private is the 'struct cxl_dport', but it
+discards the returned dentry and registers no cleanup. The dport is freed
+by free_dport() when the devres group of its host device is released,
+while the debugfs nodes live until the cxl_core module is unloaded
+(debugfs_remove_recursive() in cxl_core_exit()).
 
-	union {
-		u64 value;
-		unsigned char target_id[8];
-	} target_list;
-	...
-	target_list.value = (hi << 32) + lo;
-	for (i = 0; i < cxld->interleave_ways; i++)
-		cxld->target_map[i] = target_list.target_id[i];
+So after unbinding the dport's host, e.g. unbinding the host bridge port
+or the ACPI0017 root, writing to
 
-The Target List register is 8 bytes wide, i.e. 8 target ports, but
-interleave ways comes from the 4-bit Interleave Ways field of the decoder
-control register, and eiw_to_ways() maps the valid encodings to 1, 2, 4, 8,
-16 (eiw 0-4) and 3, 6, 12 (eiw 8-10). A switch or host bridge decoder found
-programmed with 12 or 16 ways therefore reads up to 8 bytes past the
-on-stack union.
+  /sys/kernel/debug/cxl/<dport_dev>/einj_inject
 
-The region programming path already rejects that configuration in
-cxl_port_setup_targets(), 'if (iw > 8 || iw > cxlsd->nr_targets)', but the
-enumeration path of a BIOS programmed decoder has no such check.
+calls cxl_einj_inject() on freed memory and dereferences dport->rch and
+dport->dport_dev.
 
-Reject the decoder instead, consistent with how the neighbouring
-eiw_to_ways() and eig_to_granularity() failures are handled: a target list
-that cannot describe the interleave is not a configuration the driver can
-attach a region to.
+The leaked directory is also named after the dport device, so re-adding the
+same dport (bind after unbind) hits an existing name, debugfs creation
+fails, and error injection stays broken for that dport for the rest of the
+module's lifetime.
 
-Fixes: d17d0540a0db ("cxl/core/hdm: Add CXL standard decoder enumeration to the core")
+Save the dentry and drop the whole directory via a devm action on the same
+host device. The action is registered inside the dport devres group and
+after free_dport(), so it runs before the dport is freed. Propagate the
+failure to __devm_cxl_add_dport() rather than continuing with a dport that
+has a dangling debugfs node.
+
+Fixes: 8039804cfa73 ("cxl/core: Add CXL EINJ debugfs files")
 Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
 ---
- drivers/cxl/core/hdm.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/cxl/core/port.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 0c80b76a5f9b..9d49b48a4456 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -1084,6 +1084,18 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 		cxld->interleave_ways, cxld->interleave_granularity);
+diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+index 1215ee4f4035..76bda54ed986 100644
+--- a/drivers/cxl/core/port.c
++++ b/drivers/cxl/core/port.c
+@@ -813,13 +813,18 @@ static int cxl_einj_inject(void *data, u64 type)
+ DEFINE_DEBUGFS_ATTRIBUTE(cxl_einj_inject_fops, NULL, cxl_einj_inject,
+ 			 "0x%llx\n");
  
- 	if (!cxled) {
-+		/*
-+		 * The Target List register only holds
-+		 * ARRAY_SIZE(target_list.target_id) entries, so a switch
-+		 * decoder cannot interleave across more ports than that.
-+		 */
-+		if (cxld->interleave_ways > ARRAY_SIZE(target_list.target_id)) {
-+			dev_warn(&port->dev,
-+				 "decoder%d.%d: Interleave ways: %d exceeds target list size\n",
-+				 port->id, cxld->id, cxld->interleave_ways);
-+			return -ENXIO;
-+		}
+-static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
++static void remove_debugfs(void *dentry)
++{
++	debugfs_remove_recursive(dentry);
++}
 +
- 		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
- 		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
- 		target_list.value = (hi << 32) + lo;
++static int cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+ {
+ 	struct cxl_port *parent = parent_port_of(dport->port);
+ 	struct dentry *dir;
+ 
+ 	if (!einj_cxl_is_initialized())
+-		return;
++		return 0;
+ 
+ 	/*
+ 	 * Protocol error injection is only available for CXL 2.0+ root ports
+@@ -827,12 +832,15 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+ 	 */
+ 	if (!dport->rch &&
+ 	    !(dev_is_pci(dport->dport_dev) && parent && is_cxl_root(parent)))
+-		return;
++		return 0;
+ 
+ 	dir = cxl_debugfs_create_dir(dev_name(dport->dport_dev));
+ 
+ 	debugfs_create_file("einj_inject", 0200, dir, dport,
+ 			    &cxl_einj_inject_fops);
++
++	return devm_add_action_or_reset(dport_to_host(dport), remove_debugfs,
++					dir);
+ }
+ 
+ static int cxl_port_add(struct cxl_port *port,
+@@ -1240,7 +1248,9 @@ __devm_cxl_add_dport(struct cxl_port *port, struct device *dport_dev,
+ 	if (dev_is_pci(dport_dev))
+ 		dport->link_latency = cxl_pci_get_latency(to_pci_dev(dport_dev));
+ 
+-	cxl_debugfs_create_dport_dir(dport);
++	rc = cxl_debugfs_create_dport_dir(dport);
++	if (rc)
++		return ERR_PTR(rc);
+ 
+ 	if (!dport->rch)
+ 		devm_cxl_dport_ras_setup(dport);
 -- 
 2.43.7
 
