@@ -1,160 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E4B39902B
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 06:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB19399031
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 06:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786516286; cv=none; b=ZRBxbn+hyLF9LTnGy/W7zi6227b/SektINVqNP6vbvfJx5v7ayhQPv8KdfRH1iO5E4557ihamY39XvYI429/kcu1CFO4K8FqPLzN03ZqCPZa8dtP35KBgy2rqPvD+hVQLuX0uKpFeI7/t6p6cA0mBJmV2isQUpqw7tLgm6UZXd4=
+	t=1786516637; cv=none; b=XjrzHP/l8ypB4q3d37KIuv3iS1T9jD9PMx/FHg04J6uYaR8LqwTW1gAJerxQ1HDwiaDF5Y6PRMFaceC8Bm7KrYuk3tUP/28SGz+4cYn4eU2Ww88aEsBZRXEpsgduK9lC6t1+ptPZbfrdp66amH5AX6Zek9EqjYwCbIAZ+2ChtdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786516286; c=relaxed/simple;
-	bh=spVtXQTpYG0SqtBbCevMp5bIL6X9hjSRGuqvSMu4Z0w=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=belRTk6Xc4XaUgwEdc3cDWnrKdhxW+P7eZUXirdc7ZOdGPqnGzJTizcgc109JmMVDRavJJBo/qEtIaq2djfGIHkSSL7pn58DGqnRJL8vqBkNiSR9YppSg1OOuMbRlki+WeCORoXsH7o7to4Yw+Dy6McmOuHxmhSqSnbmQzcHOrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i9FEe0NH; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786516637; c=relaxed/simple;
+	bh=Fb6l6texhcQH2qwr1NvnJjPxPB8hHtgQueF3SaRCv+E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ib15uJST8KWytPBUoZ7Y0Xv34bRMJ+5tMrZWF6iRHGL7/Ra3iW5EtUMzhv6sHelm6gxNJu60uiLpnN+4mB3jP5g+2r9aJZ09g8emS1+/8iyv1htgtjmTvk41++KR66r2qVvzCZTrDyeCAJDBeFGdFFwGSosP7ftkO0AcDIb9BQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=r9prKHY9; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i9FEe0NH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 136981F000E9;
-	Wed, 12 Aug 2026 06:31:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786516284;
-	bh=uyYd5DJVhq+mH3FVvu/G0DD0bT0bglGcmQmc0h+DW6A=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=i9FEe0NHh6FNBOOdcsV/jEcdT3vFG3MS3GFeaboViQ7E6fzXbs+2xXVqKfYxMUQ8c
-	 +qGD3qUiiXKQ9LNvfj5xjRk+XDDU+JrK2ZT5Udu6CaQFSdndD7rA7mT2ReTH5Wa9sl
-	 bgla3YIvdac+DhrmtyDrfAFuieBfdp7gK4a799ldpuwKtrjAhZ4LhE0GZz8mD7Txu7
-	 tZB5qq30TYWydb09uKWTD+oqTtpMERGs5cFSTi4pX5/dlmVN0WLDztCfg0ECRgjff6
-	 WKfpDmYKdceyILEZ5tUDbis75yHWicokLuZjHjrfaWrrSsIyjZUoLNkQMjLXSdSNu/
-	 0bAYOYQHUgOSw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] cxl/pci: Fix NULL pointer dereference in reset
- detection
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Guixin Liu" <kanie@linux.alibaba.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260812061027.57037-1-kanie@linux.alibaba.com>
-References: <20260812061027.57037-1-kanie@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 12 Aug 2026 06:31:23 +0000
-Message-Id: <20260812063124.136981F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="r9prKHY9"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1786516629; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=YeSAu1TQ+Djh26JZhr0kK3+RliVckpg31TWgDiRN4/0=;
+	b=r9prKHY9ilrtKh53Ftx1OTDJfqMC8Wv4X1Yz+KoNmdfR5h/Spu56ApOdUceqk1bPG4CCkCWt6BrrRhGTR9YWaLsPv8VYQAJILJKG2IcmKWhA6cPJja6vwl/zjMVheoaMjzGGABhsVvH0BRDJk5ZNzQkp+k+fXMOn0fRJOjr4ab8=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0X8qgyE1_1786516627;
+Received: from 30.178.83.207(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8qgyE1_1786516627 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 12 Aug 2026 14:37:09 +0800
+Message-ID: <4ed92a11-04e9-4551-8177-402c850add1d@linux.alibaba.com>
+Date: Wed, 12 Aug 2026 14:37:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/8] cxl: Assorted fixes
+To: Richard Cheng <icheng@nvidia.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+ Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
+ Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
+ Li Ming <ming.li@zohomail.com>, Robert Richter <rrichter@amd.com>,
+ linux-cxl@vger.kernel.org, xlpang@linux.alibaba.com,
+ oliver.yang@linux.alibaba.com
+References: <20260811113608.2815625-1-kanie@linux.alibaba.com>
+ <ant-ttVtO_tFY_rt@aschofie-mobl2.lan>
+ <f43fe1df-e7ed-40a8-882e-2963968c10cb@linux.alibaba.com>
+ <anwSLJXiwmUi8cCq@MWDK4CY14F>
+From: Guixin Liu <kanie@linux.alibaba.com>
+In-Reply-To: <anwSLJXiwmUi8cCq@MWDK4CY14F>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
 
-Pre-existing issues:
-- [High] Incomplete fix for DVSEC-emulated decoders allows spurious reset w=
-arnings and kernel tainting.
-- [High] Race condition between PCIe reset and sysfs driver unbind leading =
-to NULL pointer dereference or UAF.
-- [High] Data race on `cxld->flags` due to missing synchronization.
---
 
---- Patch [1]: [PATCH v2] cxl/pci: Fix NULL pointer dereference in reset de=
-tection ---
-commit 0a3a66bfcbdad33db13f3c33dd88b689403ca622
-Author: Guixin Liu <kanie@linux.alibaba.com>
+在 2026/8/12 14:29, Richard Cheng 写道:
+> On Wed, Aug 12, 2026 at 10:10:35AM +0800, Guixin Liu wrote:
+>>
+>> 在 2026/8/12 03:57, Alison Schofield 写道:
+>>> On Tue, Aug 11, 2026 at 07:36:00PM +0800, Guixin Liu wrote:
+>>>> This is a batch of fixes found while auditing drivers/cxl. They are
+>>>> independent of each other and can be applied individually or dropped in
+>>>> any combination; they are only sent together because they came out of the
+>>>> same pass over the code.
+>>> Hi Guixin Liu.
+>>>
+>>> Thanks for taking a look at CXL and putting these fixes together. I
+>>> appreciate that the intent here is to make the individual fixes easy to
+>>> take or drop. From the maintainer side, though, a grab bag of independent
+>>> findings from an audit has somewhat the opposite effect. It leaves us
+>>> with the audit results and the homework. :)
+>>>
+>>> We have been working through this kind of cleanup in focused functional
+>>> areas, like features, HDM enumeration, etc. Please take a similar approach
+>>> rather than collecting unrelated findings into a single series. Address
+>>> one area at a time.
+>> Sorry, this is my first time sending patch to cxl mailing list,
+>> I will pay attention to these next time, thanks.
+>>> As part of that work, please check mailing list traffic and cxl/next for
+>>> fixes that have already been posted or merged, and review the pre-existing
+>>> complaints reported by the Sashiko bot against your patchset:
+>>> https://sashiko.dev/#/patchset/20260811113608.2815625-1-kanie%40linux.alibaba.com
+>> Sure, I will check before,
+>>
+>> but why dosen't Sashiko reply directly in the current email? I can't reply
+>> Sashiko.
+>>> Please also follow the conventions we use for fix commit messages. They
+>>> should not narrate the code change, but rather describe what happens today,
+>>> why that is wrong and its impact, then state how the patch fixes it.
+>>> For an example of switching from code narration to behavior description,
+>>> take a look at my recent reply to a commit message w similar issue:
+>>> https://lore.kernel.org/linux-cxl/ant2Z1mzHCrzmzXn@aschofie-mobl2.lan/
+>> Got that, thanks.
+>>
+>> Best Regards,
+>> Guixin Liu
+> Hi Guixin,
+>
+> I think some of your fixes are already addressed.
+> For what I've known, the first 2 patches are already covered in my patch series
+>
+> https://lore.kernel.org/linux-cxl/20260708074228.43654-1-icheng@nvidia.com/
+>
+> Best regards,
+> Richard Cheng.
+Yes，I removed 1,2,7 patch, and sent the rest separately.
 
-cxl/pci: Fix NULL pointer dereference in reset detection
+Best Regards,
+Guixin Liu
+>
+>
+>>> This up-front triage is becoming increasingly important as we see more
+>>> AI-assisted audits and fix submissions. Without it, maintainers end up
+>>> determining whether each finding is still present, already being
+>>> addressed, significant enough to fix, and where it fits with ongoing
+>>> work. That review burden does not scale with the volume of AI-generated
+>>> findings.
+>>>
+>>> Rather than reworking this series as a whole, please apply this feedback
+>>> to focused CXL fixes you submit going forward.
+>>>
+>>> Thanks,
+>>> Alison
+>>>
+>>>> Guixin Liu (8):
+>>>>     cxl/features: Validate the fwctl RPC input length
+>>>>     cxl/features: Bound the Get Feature output by the user output buffer
+>>>>     cxl/core: Fix dport use-after-free via the einj_inject debugfs file
+>>>>     cxl/pci: Fix NULL pointer dereference in reset detection
+>>>>     cxl/hdm: Fix out of bounds read of the decoder target list
+>>>>     cxl/cdat: Fix uninitialized stack use in endpoint bandwidth gathering
+>>>>     cxl/mce: Validate the memdev and endpoint before use
+>>>>     cxl/region: Unregister the pmem region bridge on setup failure
+>>>>
+>>>>    drivers/cxl/core/cdat.c        |  6 +++---
+>>>>    drivers/cxl/core/features.c    | 15 ++++++++++++++-
+>>>>    drivers/cxl/core/hdm.c         | 12 ++++++++++++
+>>>>    drivers/cxl/core/mce.c         |  8 ++++++--
+>>>>    drivers/cxl/core/pci.c         |  8 ++++++++
+>>>>    drivers/cxl/core/port.c        | 18 ++++++++++++++----
+>>>>    drivers/cxl/core/region_pmem.c |  6 ++++--
+>>>>    7 files changed, 61 insertions(+), 12 deletions(-)
+>>>>
+>>>>
+>>>> base-commit: d58772d8520c7ef247c4b95c9bd76d3a25da9ff5
+>>>> -- 
+>>>> 2.43.7
+>>>>
+>>
 
-This commit adds a check for a NULL hdm pointer before reading the control
-register in __cxl_endpoint_decoder_reset_detected(). This prevents a kernel
-oops during PCIe resets on memory devices that emulate their HDM decoders
-using DVSEC ranges instead of physical registers.
-
-Link: https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linu=
-x.alibaba.com/
-
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 9d807c1a002ca..611175f29d245 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -685,6 +685,14 @@ static int __cxl_endpoint_decoder_reset_detected(str=
-uct device *dev, void *data)
-> =20
->  	cxlhdm =3D dev_get_drvdata(&port->dev);
->  	hdm =3D cxlhdm->regs.hdm_decoder;
-
-[Severity: High]
-This is a pre-existing issue, but is there a race condition here between
-the PCIe reset handling and sysfs driver unbind?
-
-Looking at cxl_reset_done(), it iterates over the endpoint's children using
-device_for_each_child() without holding the port's device lock:
-
-drivers/cxl/pci.c:cxl_reset_done() {
-    ...
-    device_for_each_child(&cxlmd->endpoint->dev, NULL,
-                          cxl_endpoint_decoder_clear_reset_flags);
-    ...
-}
-
-If a concurrent sysfs unbind of the cxl_port driver clears the driver data
-and frees the cxlhdm structure, could dev_get_drvdata() return NULL or a
-stale pointer, leading to a crash when cxlhdm is dereferenced?
-
-> +
-> +	/*
-> +	 * Devices that describe their HDM ranges with the DVSEC range
-> +	 * registers have no HDM decoder registers to consult.
-> +	 */
-> +	if (!hdm)
-> +		return 0;
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does this check fully cover
-all DVSEC-emulated decoders?
-
-In should_emulate_decoders(), a device can fall back to DVSEC emulation
-even when the hdm pointer is not NULL (for example, if HDM decoders are
-present but globally disabled by firmware).
-
-In this fallback case, the decoder is emulated but the hdm pointer remains
-valid. This function would bypass the !hdm check, read the HDM control
-register where the COMMITTED bit is likely 0, and falsely trigger a reset
-warning.
-
-Since cxl_setup_hdm_decoder_from_dvsec() sets cxld->commit to NULL for all
-emulated decoders, would checking for emulation directly (e.g.,
-if (!cxld->commit)) be a more robust approach?
-
-> +
->  	ctrl =3D readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> =20
->  	return !FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl);
->  }
-
-[Severity: High]
-This is a pre-existing issue, but does modifying cxld->flags during reset
-handling lack necessary synchronization?
-
-In cxl_endpoint_decoder_clear_reset_flags(), which is called during
-cxl_reset_done(), the flags are modified using a non-atomic operation:
-
-drivers/cxl/pci.c:cxl_endpoint_decoder_clear_reset_flags() {
-    ...
-    cxled->cxld.flags &=3D ~CXL_DECODER_F_RESET_MASK;
-    ...
-}
-
-This happens while holding only the parent memory device lock.
-Concurrently, sysfs operations can commit a decoder:
-
-cxl_decoder_commit() {
-    ...
-    cxld->flags |=3D CXL_DECODER_F_ENABLE;
-    ...
-}
-
-Because cxld->flags is modified concurrently without a common lock or atomic
-bit operations, could flag updates be lost, potentially causing the loss of
-the ENABLE flag?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260812061027.5703=
-7-1-kanie@linux.alibaba.com?part=3D1
