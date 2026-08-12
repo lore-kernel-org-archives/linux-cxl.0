@@ -1,29 +1,29 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06EC27603F
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 06:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764DB2E7F20
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 06:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786515029; cv=none; b=nrqHl/VxOTqKaSmmu902Gg2WAX4OjUU4hfVq9zXFqFBB8++x3v03+ZxiSsd9tHRicoV+2ARVgSPImwUruC1gUYLtfw6DUvbJJuHVGCROSPwCj6v8LT2LfkjIPVGu3F9313grlALFE0cNet9DY+cBO65A4ga79nm2+4zzCgESWco=
+	t=1786515040; cv=none; b=nxBTKiUfRF6eg5khfCnl5JZnq1a1wwyeYCkjido7/gjq8wHyCewr6Mi75lUTfGz9wyp/bUHCXlhTiiSW+ZytzlyQfgTOJvTIm2PyAhqCYlko4XCEbfD2qy3TP6pTjW8NpPsrnO3qBaFUrmsCAMT0TlzkqkNXw75ibi+X+K1klkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786515029; c=relaxed/simple;
-	bh=VmPSktMl1lxP/T3+ym7lvUDDnyMWnH/qiDksT+mgyiE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sIOt4BfpUtXSQaf1XQ4n/cR+nLZ5WRPQWQ4OZHcDPC06VTKXL7DMneAU6keDJPlQugZJfSNqo494WjkvDNGvoszG2DZt6oaOOz4uyORD4qZDVqzx5YXliaXV4wv5RvCw+U2gcz6ryLdM5KA+WKd8OiO3HpM5QhExLZnPU+A5afk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=TF5aC93Z; arc=none smtp.client-ip=115.124.30.119
+	s=arc-20240116; t=1786515040; c=relaxed/simple;
+	bh=gS9I41+LuoViO4M39c+wVQYgs5rtMWkPbyJgVraNK6I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P4JDQzDvjAhWD5fvkGuFsH3Fw8EhawJrcQo66f03+r9TixT5t1zzUZ4QALZQQaMP6h9taHmGAIprJY1/s3pzZ6yIlyLPtX/J1GmwNw8OnfUotSclc1LBmjaSieh+h0IOsO3TvWwtejHzp91UwlkCpsov0p2J0hqGwVb/DBhPC7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=unQV21JJ; arc=none smtp.client-ip=115.124.30.113
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="TF5aC93Z"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="unQV21JJ"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1786515018; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=a3nekCCxShRBBNnZRf6LzrmcA8LRrb1K9GGzxSXaZH4=;
-	b=TF5aC93ZvkRq6ryJ0aNi6a0cttK8p0S4X4nsRb1FJ5sALFmWkp6rHg8LMNWSkX/KYqoB7+aMH7CVrx7lVhhC8KLvCKyCz/UEN9KkGyJ4z/cA1y1va/iZ27YYFobL7zbaPHmWQ4IVTYlN4MAccFi8TnYQz+1aDR0bFaPeYpStCqI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0X8qhx7k_1786515017;
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8qhx7k_1786515017 cluster:ay36)
+	t=1786515028; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=MAO/NY5Dg6PP4fOe3xLnTT2svj8ldv1vksAyCiuDMwo=;
+	b=unQV21JJDoVR/I1slCvcO5tTrU1nzmEqCsWBrk0Q8FZDTs6EuLsR85/N3qXzzqIqkciB19Ru5E+C9DOhdC8e5ID3JBJ/h9Gt0+OY18NhAW9X5/Yu1dd+N/tGHNTFs1sM7PvepLwzYjVaV7WwICJxu8sZyxl+PTG/wZsNz82TLlY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R761e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0X8qdtsS_1786515027;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8qdtsS_1786515027 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 12 Aug 2026 14:10:17 +0800
+          Wed, 12 Aug 2026 14:10:27 +0800
 From: Guixin Liu <kanie@linux.alibaba.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -34,9 +34,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <iweiny@kernel.org>,
 	Li Ming <ming.li@zohomail.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v2] cxl/hdm: Fix out of bounds read of the decoder target list
-Date: Wed, 12 Aug 2026 14:10:17 +0800
-Message-ID: <20260812061017.56916-1-kanie@linux.alibaba.com>
+Subject: [PATCH v2] cxl/pci: Fix NULL pointer dereference in reset detection
+Date: Wed, 12 Aug 2026 14:10:27 +0800
+Message-ID: <20260812061027.57037-1-kanie@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -46,35 +46,31 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-init_hdm_decoder() reads the HDM Decoder Target List register of a switch
-or host bridge decoder into an 8 byte on-stack image and copies
-cxld->interleave_ways bytes of it into cxld->target_map, with nothing
-bounding the count against the 8 target port IDs the register can hold.
-cxl_port_setup_targets(), which programs the same field from the region
-side, refuses the configuration up front with 'iw > 8 || iw > nr_targets';
-the enumeration path has no equivalent gate.
+__cxl_endpoint_decoder_reset_detected() samples the Committed bit of an
+enabled endpoint decoder by reading the decoder control register at
+cxlhdm->regs.hdm_decoder, without testing that pointer.
+should_emulate_decoders(), the other consumer of the same field, does test
+it, because the field is optional.
 
-Values above 8 are legal hardware encodings, not corruption.
-interleave_ways comes from the 4-bit Interleave Ways field of the decoder
-control register through eiw_to_ways(), which returns 16 for eiw 4 and 12
-for eiw 10, and the driver accepts whatever firmware left programmed there
-before it enumerated the decoder.
+A memory device that exposes no component registers and describes its HDM
+ranges through the CXL DVSEC range registers takes the early return in
+devm_cxl_setup_hdm(), which leaves regs.hdm_decoder NULL and derives the
+decoder count from the DVSEC ranges instead.
+cxl_setup_hdm_decoder_from_dvsec() then publishes those emulated decoders
+with CXL_DECODER_F_ENABLE set, and CXL_DECODER_F_ENABLE is the only filter
+cxl_reset_done() applies when it walks the endpoint's decoders after an FLR
+or an SBR. So on such a device every reset reaches the readl() with a NULL
+base and oopses in the PCI reset completion path.
 
-The copy loop therefore reads up to 8 bytes past the union, and the stack
-residue is stored into target_map as target port IDs. Those IDs are matched
-against the port's dports by find_dport() when the decoder's targets are
-populated, so a byte that happens to match an unrelated dport's port_id
-installs that dport into cxlsd->target[].
+Report "no reset detected" when the endpoint has no HDM decoder registers,
+as should_emulate_decoders() already does for the same condition. A range
+described by the DVSEC registers has no Committed bit that a reset could
+clear, so there is nothing for the post-reset warning to observe.
 
-Reject the decoder, which is how the eiw_to_ways() and eig_to_granularity()
-failures in the same function are already handled. A decoder whose target
-list register cannot describe its own interleave is not a configuration a
-region can be attached to.
-
-Fixes: d17d0540a0db ("cxl/core/hdm: Add CXL standard decoder enumeration to the core")
+Fixes: 934edcd436dc ("cxl: Add post-reset warning if reset results in loss of previously committed HDM decoders")
 Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
 ---
-This was patch 5/8 of the "cxl: Assorted fixes" series [1]. Per review
+This was patch 4/8 of the "cxl: Assorted fixes" series [1]. Per review
 feedback that series is not being reworked as a whole; the fixes are resent
 individually instead. Patches 1, 2 and 7 of the series are dropped, as those
 issues are already fixed in cxl/next.
@@ -86,32 +82,28 @@ v1->v2:
 
 [1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
 
- drivers/cxl/core/hdm.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/cxl/core/pci.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 0c80b76a5f9b..9d49b48a4456 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -1084,6 +1084,18 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
- 		cxld->interleave_ways, cxld->interleave_granularity);
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 9d807c1a002c..611175f29d24 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -685,6 +685,14 @@ static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
  
- 	if (!cxled) {
-+		/*
-+		 * The Target List register only holds
-+		 * ARRAY_SIZE(target_list.target_id) entries, so a switch
-+		 * decoder cannot interleave across more ports than that.
-+		 */
-+		if (cxld->interleave_ways > ARRAY_SIZE(target_list.target_id)) {
-+			dev_warn(&port->dev,
-+				 "decoder%d.%d: Interleave ways: %d exceeds target list size\n",
-+				 port->id, cxld->id, cxld->interleave_ways);
-+			return -ENXIO;
-+		}
+ 	cxlhdm = dev_get_drvdata(&port->dev);
+ 	hdm = cxlhdm->regs.hdm_decoder;
 +
- 		lo = readl(hdm + CXL_HDM_DECODER0_TL_LOW(which));
- 		hi = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(which));
- 		target_list.value = (hi << 32) + lo;
++	/*
++	 * Devices that describe their HDM ranges with the DVSEC range
++	 * registers have no HDM decoder registers to consult.
++	 */
++	if (!hdm)
++		return 0;
++
+ 	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+ 
+ 	return !FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl);
 
 base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
 -- 
