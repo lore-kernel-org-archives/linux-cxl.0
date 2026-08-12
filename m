@@ -1,100 +1,82 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C132146A61A
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 14:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5850468C08
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 15:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786546208; cv=none; b=on1E2Vvol8bTdVx6SRldGMKRCv5LOswjBE8X+4NLMUjbuBphwVgmF6ho9A6/IT8MTMkxOFLJC6V93gImAy1MjxCYprkXCTuesbdIk781RZUxvnjAouWpVNj1VvxCW0ax/0rqVtfi4nw8NISXopT3Gs3sl/uy5iHtB+O7zKtnJGM=
+	t=1786547892; cv=none; b=EielFoZ3S1kFZVehd2vmig5t5o9I6F6xRfvSEy92VP/Db5xsUAlTgq/5gQk+TfIsiH58YMA/gdYKPYX/NnpCEhma9Kk9KFfBfrhpdfmRz9jf0BDuBF6j1L0k9dRB/zp6zfVlAlIBG/fXtvPKZLJ6ghelb3KDUeGGIs+5jQyyDfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786546208; c=relaxed/simple;
-	bh=GJNzfFCXyA7QbUzI2qk0+6EWy2+CpitP1Nwr5kSDWqA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=avQypHfuluzy9mQl2QYQROUok8kIMksYXYI3657CGeJfWHMsCLT2byfdnv3VwYU6JanIOltP360rS9ClU4Rph5EQ7VRnJnVowZ6tCwLIz+A/jkrtQIYbMiBmb+yfjmhUIjgswZM2oJguvD3xzUS3jApu9MJjA0AdR/3egMFqyfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tf5Fol9y; arc=none smtp.client-ip=209.85.210.52
+	s=arc-20240116; t=1786547892; c=relaxed/simple;
+	bh=4lponhvcBoEj4isXQY9iYKXNBCg2Z0hXTEzAYNInePI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n4GnkHt3VQzn43wRtjZfC36wNXM+zLY/p9EH2FfRiOL3ZthXezXiV4/5kKAoAQzAoXLkD8M1L+yCMBy2w2mitTUkvrJbAOK9xAor+A4FUJFJsKLtNDmq4GfAHXGggN/CUHhNKRl3wi1lVKXFT4+zlQguyF/+SElMPqqlKaYxutk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oDa0C+Hy; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tf5Fol9y"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7eb34c17b96so826225a34.2
-        for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 07:50:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oDa0C+Hy"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2cfff5f88dbso12699455ad.3
+        for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 08:18:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786546198; x=1787150998; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=m2bfz1xPNnYsmTuBu6PuVX8SO2+iE1L2/l9R4aB2xA4=;
-        b=Tf5Fol9ySfjSDRO1xw2XUdIXYsSWkOddbA8BVven8ewFKAcFwZHqkh49Uli+onmRiM
-         FTo11AK01Fghyud5mUqs545RB2ojUbWA0ceIjIsm+xmpEqF2QjxXAm7LH2Oluz4DZlm6
-         DNuNzguw5uCR5dgxzc0q8OzQ07LBDwUS+Unpm+GIOiU5wgcZDxwZNZTDksYb24/UbEzz
-         wOhk9VMQ+aCVg0AV5FqfMUz6Qtlw4ekTQcMtawEbzR55zkxLcXKvPirJWlfRh1erywfm
-         vya2qSHN7BrpTPlc6ph5cuBOPjJDyYOdxN14dvWdqTStxC97irnoGYapyuRdVtnRDBrz
-         0bcA==
+        d=gmail.com; s=20251104; t=1786547890; x=1787152690; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Qaa+Sy+sE+8+QMHIV71O2fnlj9rH1hWPcoo3mwjBGow=;
+        b=oDa0C+HyO6Lk22tXbulpHjG0uyvopIbMrS4h2CggvlhASYHIb06C8yEXrCPbODd5fi
+         j2sbQPc6H+py6zAo5+0V5YBG5lgfExNdx5UHIINNTNDsguNE39btqGfYty5QmIswV3IQ
+         CIr03Eavvz01O+UodHEHYt8lIdfyPv4wAFV6Ka7dF7JhFsTxgbOL5Ap5n9ma2YoHtnoz
+         /tq2GuH4N4knLqONOyfoKpwg1fCmv4A9GaVXgdSZSzosUsFskDoKEerDBxY3d7MrMeA7
+         UHRC2eLQTuw05pZjXuEMng911mK/rWz4484+ARJe8VCj11A+DiHnuFSL5WsO26tuONlw
+         lB5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786546198; x=1787150998;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=m2bfz1xPNnYsmTuBu6PuVX8SO2+iE1L2/l9R4aB2xA4=;
-        b=AREmAIKjN/ZUNB3v1HCjwJ3CbQkeoeROOYFnVn0jmtANlg0QbOPJfIEsdD6nTO9+Yo
-         My2dperclYhjUwfsqmQEdIpsSvS1Dki7JR/Pvm0kjP1VSS8qbLKEbR/A13hHG05IkSCe
-         WBlPNxA5JZk2ICCPzWjEX3zjOeSx0E4rmYfHoABL9FLqSbHYDducf/70r0yaIvfv3Z3C
-         2ut/Ll2LbdVwS/WcSapdCu1X7AMZ1fBym71KHgfYzpfjA5CZC4EfvcibTHZrB+OQqR+1
-         KDg6eqDMR3ixFhWe0AtsQ6vt64p6vcXQAkVLiU3Kwrfw4TK5mn6aa2JOw31/A/iSGnqf
-         EMsA==
-X-Forwarded-Encrypted: i=1; AHgh+RqFyT2h3AQ4nB0/iiKha34VzKTpeNSX0v+Djh7Hs/UjNTu5xSii3ACjWRYmloPAwOeiHnExcV2vM2Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOxtkbj3LxDV8h3Dhv95u/rYw49b17jl//pBB0xoVSmLqpIjvG
-	lyHLewrRSUed2wY6elgYoirPWp5G+ErdCbfWNnxNu1yozYC5/9yCsQiX
-X-Gm-Gg: AR+sD11f3NWGD7CsIT5CDB7q/zuhXDiQWdlyUxA0gwOdHBRTz9gVrFXtGwfd0zHKCk5
-	08DIfvXmHvvuBqss1C3r5mlTpth183OYQvOW/pA7mYN5eWFRb0xMu5OANXKIXyRZAdO50QplUHm
-	7YACMJggqmW4yVnW7FIF6BaV+1UHNWwiTghngY2biEQQBNkxYWMxj5kl4KIXs2obMr4G+CE4qj0
-	aIi0fgkKRWwDgsCPJmCBYV5ETPpEpdUxh64yAnIKCG39pdZ314S+1TL1XMWJSshULr19nt6ENSe
-	3m0LTa6MS6z3EM5XrmiVaBsxGEmCYsF/MxlEXdiU8HHnk5THK7dshNv5yOTrHdlYSHUijQbR7+u
-	C7pnp5BzuUhHqdZysBIInu1fuh0Yj2Rrd1cWbIDM/fhF4v3DXf/dE7F6Gphx55Sum2xY7SPJwK7
-	2Uofv5uhh4CVmGMcqkN/+Iq5JCJfCD56+SIjVezT8t42A6pGenKGiBbvKbXYqeUKfewROAOSw6p
-	orrc1KfS+7pZ48w2x0=
-X-Received: by 2002:a05:6830:2116:b0:7dc:c7aa:22bd with SMTP id 46e09a7af769-7f3b7731b94mr5693831a34.6.1786546197721;
-        Wed, 12 Aug 2026 07:49:57 -0700 (PDT)
-Received: from localhost ([2a03:2880:10ff:49::])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7f3b34266f3sm3096544a34.24.2026.08.12.07.49.56
+        d=1e100.net; s=20251104; t=1786547890; x=1787152690;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Qaa+Sy+sE+8+QMHIV71O2fnlj9rH1hWPcoo3mwjBGow=;
+        b=JnlEL8KxFL1aw7ZS2ZLpbOartSYbMFdNiR895G5GmhzXTEcX21WYngq5RCExr8aVKA
+         aI8coRBLHylUAtm74PiV1d5IlOnDHu//fdyDW8N0lnf6GqVdPBWMWdXKVd/qgfg0FlwU
+         ibWumS0WnlB0iPIsDngtORN4K5QRzZWr8zY3eAsnIEUm7xT6JTDG2gEg/2fyzS9bZEcG
+         o4LyfgYsWlN6CICFfj4tQGriPtWHVkFdWqHiZEIHK7yXWm++3QHcEY/Qu1NJKpoe/Kai
+         MoPMDy4u2piMLAk7e7aNaxBVShqMxKFnghx+iantbOBBUFs9RDwMigqzzNgWZXXntyWt
+         tgeg==
+X-Gm-Message-State: AOJu0YyAaiSRVar2KJaEoawy2IWI7+f6yw5YYP4EkJXU8WHn3IjFa3pd
+	sFh3Yk/cbUTRRGhQrht/uF08NrEVgxgNwH9St9nOCDJoGCikZpITF1EM
+X-Gm-Gg: AR+sD11KTs2JntYlA8kGj+JPZqWC0BoJJoKL8PZdBburVsXzEniu15KVFBvsNYkxz2t
+	ri2ZFfSOoWOaXUKZag+hhtHClQyIFmA8TgYtWg1dhZ8Y1LA4W9rHZ4+I6ZSSOcFROvJltiZfnxZ
+	pyMRV5hCDFIHiWUSm1XIZ0XLSnUNCE9TcudMmkfuGQ+45iOYKrfdutSzLGXNaYLC+3wHeHcOzOV
+	4kEzVRE/Z1d0QRlxpI0YJiavA5XSH73ufY79/kvAG5FMh8TGr0XZ4XutDd84gZ46VSvn8+5ZnY8
+	R5uF0nEZPiFeL6SLjKnOi6MXPq2Efp4m7MpPYXkKKd66b9KC3oUdOVD8bKNGQxX8ejxTWc9mc8l
+	Ix59BdhQZrhCc7LGVqGDcHreQpDzIm8yaUOjzSGqQYfW3pzv7pHBs8rB5QpjAWZq+ISt6qgCpjd
+	kt3Yq7a/Zcj3sUMaegxipQbvFgw6IN8P0+jSOwTLNLlfECfvxRogmIDAN5P67T3pAFhZBhGo2mw
+	m+u61rckcRSdDkBjg==
+X-Received: by 2002:a17:903:4b46:b0:2cc:f5b8:4c2e with SMTP id d9443c01a7336-2d3453848d4mr85562295ad.9.1786547889806;
+        Wed, 12 Aug 2026 08:18:09 -0700 (PDT)
+Received: from acer-nitro-anv15-41.entro.com ([118.34.230.2])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d3522019d3sm8426135ad.56.2026.08.12.08.18.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2026 07:49:57 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: akpm@linux-foundation.org,
-	gourry@gourry.net,
-	linux-mm@kvack.org,
+        Wed, 12 Aug 2026 08:18:09 -0700 (PDT)
+From: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+To: Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>,
+	Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>,
+	Ben Cheatham <benjamin.cheatham@amd.com>,
+	tony.luck@intel.com,
+	bp@alien8.de
+Cc: linux-cxl@vger.kernel.org,
+	linux-edac@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	byungchul@sk.com,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	david@kernel.org,
-	ljs@kernel.org,
-	liam@infradead.org,
-	vbabka@kernel.org,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	dave@stgolabs.net,
-	jic23@kernel.org,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	harry@kernel.org,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com
-Subject: Re: [PATCH 0/4] mm/mempolicy: introduce package-aware weighted interleave
-Date: Wed, 12 Aug 2026 07:49:55 -0700
-Message-ID: <20260812144955.3310684-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260812054700.1803-1-rakie.kim@sk.com>
-References: 
+	stable@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH v2] cxl/mce: Avoid alias page retirement for corrected errors
+Date: Wed, 12 Aug 2026 20:47:59 +0530
+Message-ID: <20260812151759.14390-1-shaikhkamal2012@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -103,238 +85,195 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-> Hello Joshua,
-> 
-> I am doing well, thank you, and I hope you are too. Thank you for
-> taking the time to review this series and for following up on the
-> questions from the RFC discussion.
-> 
-> > My first question is whether we want cross-socket allocations at all.
-> > The examples you gave seem to line up with node-restricted interleave,
-> > as opposed to cross-socket interleave. I think the wording that you
-> > use to describe the feature in 4/4 (which I will copy below)
-> > 
-> > > The resolved mask is by construction a subset of the policy nodemask, which
-> > > mempolicy already restricts to the task's cpuset; package mode can only
-> > > narrow that set, never widen it, so cpusets and the task nodemask remain
-> > > authoritative.
-> > 
-> > is 100% the right way to treat these package-aware (socket-aware)
-> > interleaving allocations, but the example below
-> > 
-> > [...snip...]
-> > 
-> > > Applied the same way to every source, these weights give the map:
-> > > 
-> > >               node0  node1  node2  node3
-> > > global:         2      2      1      1
-> > 
-> > [...snip...]
-> > 
-> > >               node0  node1  node2  node3
-> > > from CPU 0:     2      0      1      0
-> > > from CPU 1:     0      2      0      1
-> > 
-> > Is essentially the existing weighted interleave mechanism with a
-> > nodemask/cpuset applied.
-> 
-> The example I gave was not explained well enough, and I can see how
-> it reads as a manually applied nodemask.
-> 
-> A nodemask or a cpuset names a fixed set of nodes, while package mode
-> expresses a rule: use the nodes of the package the allocation is
-> requested from. The mask is resolved per allocation from the
-> requesting CPU, so a single policy gives {0,2} to a thread on package
-> 0 and {1,3} to a thread on package 1 at the same time. One nodemask
-> cannot do that, since it is the same set for everyone who uses the
-> policy.
+cxl_handle_mce() offlines the aliased page of an Extended Linear Cache
+(ELC) region for any MCE with a usable address in the region. This
+includes corrected errors and non-memory errors, needlessly reducing
+usable memory.
 
-Ah! I'm sorry. It seems I totally misunderstood the intent of the
-series. I think that my brain short-circuted to the discussion at
-LSFMMBPF from 2025, where I think we discussed having a real 2-D
-grid with weights per-node, per-CPU. I think my confusion is responsible
-for the examples below, which as I understand it now, are not the intent
-of the series.
+Restrict ELC MCE handling to uncorrected memory errors. Use
+mce_is_correctable() so that MCE_AR_SEVERITY errors continue to retire
+the alias when the reported page is handled elsewhere.
 
-> There is also the question of how a user would build such a nodemask.
-> The package a CXL node belongs to is not visible today: on the
-> systems I tested, the firmware reports node1 as the initiator for
-> both CXL nodes. The topology layer in this series is what makes that
-> association available, and the read-only view under
-> /sys/devices/system/package/ lets the user check it.
+Fixes: 516e5bd0b6bf ("cxl: Add mce notifier to emit aliased address for extended linear cache")
+Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+---
+Changelog:
 
-That makes sense. Now I really see the goal of the series and it makes
-a lot more sense. Thank you for the clarification. 
+v1 -> v2:
+  - Reworked commit message per review feedback
+  - Dropped redundant comment from the code
+ 
+Reproduced under QEMU/vng. QEMU's cxl-type3 does not emulate the HMAT
+extended-linear address_mode bit, so ELC was forced locally for testing
+via a one-line debug hack in cxl_region_probe() (not part of this patch):
 
-> > With that said, I think a more interesting and
-> > illustrative example would be if the user truly would want to allow some
-> > allocations to go through cross-socket, but be able to control the
-> > ratio at which these slip through.
-> >
-> >               node0  node1  node2  node3
-> > from CPU 0:     3      1      2      0
-> > from CPU 1:     0      3      1      2
-> >
-> > Maybe even more illustrative of the true capabilities of this series
-> > would be if you have an asymmetric system where you bind some
-> > host-level monitoring / logging workloads to one node (say, node0) and
-> > want that to be able to cross through to the other socket, but not the
-> > other way around:
-> > 
-> >               node0  node1  node2  node3
-> > from CPU 0:     3      1      2      0
-> > from CPU 1:     0      2      0      1
-> > 
-> > Anyways, these are just super hypothetical scenarios and I don't even
-> > know if the configuration that I'm listing would really be beneficial
-> > for the system. I think that coming up with some illustrative usecases
-> > which are now made possible by this series could help motivate why we
-> > would want to interleave across sockets.
-> >
-> 
-> These maps are an interesting idea, and I would like to look at them
-> with you.
-> 
-> This series only narrows the candidate nodes; the weights themselves
-> stay global, so every source that reaches a node uses the same weight
-> for it. Both of your maps give a node a different weight depending on
-> which package the allocation comes from, so the weight table would
-> have to become per source rather than a single global one.
-> 
-> Encoding the weights that way came up in an earlier stage of this
-> work, and it was mentioned again briefly in the RFC thread. As I
-> recall, the difficulty then was less the placement logic than how a
-> user would drive it: weights would have to be configured for every
-> source, so both the interface and the structure behind it grow
-> considerably.
+	if (!p->cache_size && p->res)
+		p->cache_size = resource_size(p->res) / 2;
 
-Yeah, I can imagine it is quite a lot of tuning that users have to do.
-So I'm 100% on board for the goal of this series to make the existing
-weighted interleave mechanism respect the initiator's POV. Sorry for
-making you explain all of this, this confusion is just due to my
-misunderstanding.
+Steps:
+1. Boot with an Intel CPU model under TCG (KVM host-passthrough will
+    otherwise leak the host's real vendor ID, and AMD/SMCA takes a
+    different mce_usable_address() path than the one under test):
+vng -v -r ./arch/x86/boot/bzImage --disable-kvm --qemu-opts='-cpu Skylake-Server-v4,+mce,+mca -m 4G -machine q35,cxl=on -object memory-backend-ram,id=cxl-mem0,size=512M -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.0 -device cxl-rp,port=0,bus=cxl.0,id=root_port0,chassis=0,slot=0 -device cxl-type3,bus=root_port0,volatile-memdev=cxl-mem0,id=cxl-mem-device0 -M cxl-fmw.0.targets.0=cxl.0,cxl-fmw.0.size=512M'
 
-> That does not make your suggestion less interesting to me. I think it
-> could work well once there are clear scenarios for it, and the
-> grouping added here is what such a table would be built on, since a
-> per source weight only has meaning when the kernel knows which
-> package each node belongs to. What I am unsure about is folding it
-> into this series, whose aim is the narrower one of raising effective
-> bandwidth by keeping interleave traffic within a package. Allowing a
-> controlled amount of cross-package traffic points the other way, so I
-> think it is a topic we could discuss separately, with the use cases
-> worked out first.
+2. modprobe mce-inject
+$cxl list -M
+$cxl list -D
+$cxl create-region -m mem0 -d decoder0.0 -w 1 -g 256 -t ram
+$dmesg | grep "DEBUG: forced cache_size"
+$modprobe device_dax
+$modprobe kmem
+$ls /sys/bus/dax/devices/
+$daxctl reconfigure-device dax0.0 --mode=system-ram
+$lsmem
+it will show as below:
+dax0.0
+[   42.857642] Fallback order for Node 0: 0 
+[   42.857828] Built 1 zonelists, mobility grouping on.  Total pages: 1010805
+[   42.858446] Policy zone: Normal
+[
+  {
+    "chardev":"dax0.0",
+    "size":536870912,
+    "target_node":0,
+    "align":2097152,
+    "mode":"system-ram",
+    "online_memblocks":4,
+    "total_memblocks":4,
+    "movable":true
+  }
+]
+reconfigured 1 device
+RANGE                                  SIZE  STATE REMOVABLE BLOCK
+0x0000000000000000-0x000000007fffffff    2G online       yes  0-15
+0x0000000100000000-0x000000017fffffff    2G online       yes 32-47
+0x0000000190000000-0x00000001afffffff  512M online       yes 50-53
 
-Thanks! Actually I think we can wait on this until we have real
-usecases where we prefer to make cross-socket allocations.
+Memory block size:       128M
+Total online memory:     4.5G
+Total offline memory:      0B
 
-> > I was also hoping to see what this interface looks like and maybe
-> > discuss how we should relay the information to the users, since this
-> > seems to be a new addition from the RFC.
-> >
-> 
-> Sure. The toggle lives with the existing weighted interleave knobs.
-> package_mode defaults to false, so nothing changes until the
-> operator explicitly enables it:
-> 
-> /sys/kernel/mm/mempolicy/weighted_interleave
-> |-- auto
-> |-- node0
-> |-- node1
-> |-- node2
-> |-- node3
-> `-- package_mode -> true/false
-> 
-> The package topology view is read-only and lives under
-> /sys/devices/system/package/. This is how it looks on the system I
-> am currently using:
-> 
-> /sys/devices/system/package
-> |-- package0
-> |   |-- package_cpu_nodes -> 0
-> |   |-- package_mem_only_nodes -> 2
-> |   |-- package_nodes -> 0,2
-> |   `-- physical_package_id -> 0
-> `-- package1
->     |-- package_cpu_nodes -> 1
->     |-- package_mem_only_nodes -> 3
->     |-- package_nodes -> 1,3
->     `-- physical_package_id -> 1
-> 
-> package_nodes shows every node grouped into that package, and the
-> cpu/mem_only files split them by type, so an operator can check how
-> the kernel grouped the topology before turning package_mode on. I
-> will update the documentation in the next version to describe this
-> interface and how to use it.
+3. Load the injector if not loaded earlier and derive the two MCi_STATUS values.
 
-Great, I think this would be a great addition to add to the cover
-letter and also add as documentation, since it is user-facing. 
+    modprobe mce-inject
 
-> > > Measured results:
-> > > 
-> > > System Configuration:
-> > > - Processor: Dual-Socket Intel Xeon 6980P (Granite Rapids)
-> > 
-> > I think a description of this system's topology would help me understand
-> > the results below a bit better : -)
-> >
-> 
-> That is a fair point. The system used for the measurements is
-> configured as follows:
-> 
-> - Processor:                 Dual-Socket Intel Xeon 6980P
->                              (Granite Rapids)
-> - Local memory (per socket): 12 channels, DDR5-6400
-> - CXL memory (per socket):   8 channels, DDR5-6400
-> 
-> It boots as two CPU+DRAM nodes and two CXL memory-only nodes, which
-> is the topology shown in the sysfs output above. I will add this
-> description to the measured results in the next version.
+    MCi_STATUS bit layout used here (arch/x86/include/asm/mce.h):
+      bit 63  VAL     - record valid
+      bit 61  UC      - uncorrected (0 = corrected error under test)
+      bit 60  EN      - error reporting enabled
+      bit 59  MISCV   - MCi_MISC valid
+      bit 58  ADDRV   - MCi_ADDR valid
+      bits[15:0] MCACOD - bit 7 set = memory-error signature, per
+                          mce_is_memory_error()'s Intel branch
 
-Thanks. Notably I wanted to see if the DDR generation was the same
-across DRAM and CXL. 
+    python3 -c "
+    VAL, UC, EN, MISCV, ADDRV = 1<<63, 1<<61, 1<<60, 1<<59, 1<<58
+    MCACOD_MEM = 1<<7                      # memory error signature
+    ce = VAL | EN | MISCV | ADDRV | MCACOD_MEM
+    uc = ce | UC
+    print(f'CE status = {hex(ce)}')
+    print(f'UC status = {hex(uc)}')"
+    # CE status = 0x9c00000000000080
+    # UC status = 0xbc00000000000080
 
-> The case I had in mind is demotion and promotion target selection.
-> With the package information, tiering could keep those decisions
-> within a package: choosing the memory-only nodes of the task's
-> package as demotion targets, and symmetrically preferring the
-> package's CPU nodes when promoting, so that both hot and cold pages
-> stay close to the CPUs that use them.
+    MCi_MISC: address-mode field, bits[8:6], must be 2 (physical):
 
-Yeah, I like this idea a lot.
+    python3 -c "print(hex(2 << 6))"
+    # misc = 0x80
 
-For demotion, we would just chnage the fallback zonelist based on the
-sockets.
+4.  $ cd /sys/kernel/debug/mce-inject
+$echo sw > flags
+$echo 0x9C00000000000080 > status
+$echo 0x80 > misc
+$echo 0x190010000 > addr
+$echo 9 > bank
+[  221.813395] mce: [Hardware Error]: Machine check events logged
+[  221.814716] cxl_mce_debug: entered status=0x9c00000000000080 addr=0x190010000 cache_size=0x10000000 res=[mem 0x190000000-0x1afffffff flags 0x200] usable=1
+[  221.816200] cxl_mce_debug: spa=0x190010000 contains=1
+[  221.817089] cxl_mce_debug: spa_alias=0x1a0010000 pfn=0x1a0010 pfn_valid=1
+[  221.817655] cxl_region region0: Offlining aliased SPA address0: 0x1a0010000
+[  221.821504] Memory failure: 0x1a0010: recovery action for free buddy page: Recovered
+[  221.823903] mce: [Hardware Error]: CPU 0: Machine Check: 0 Bank 9: 9c00000000000080
+[  221.824617] mce: [Hardware Error]: TSC a605ccda40 ADDR 190010000 MISC 80 
+[  221.824997] mce: [Hardware Error]: PROCESSOR 0:50654 TIME 1786375908 SOCKET 0 APIC 0 microcode 1
+root@virtme-ng:/sys/kernel/debug/mce-inject# 
+root@virtme-ng:/sys/kernel/debug/mce-inject# grep HardwareCorrupted /proc/meminfo
+HardwareCorrupted:     4 kB
 
-I think we actually get promotions for free, since if this series is
-doing a good job of allocating memory close to the consuming CPU, and
-the demotions prevent the memory from moving cross-socket, initiators
-should only promote (NUMAB2 promotion) memory that is socket-local.
+CE without this patch:
+  cxl_region region0: Offlining aliased SPA address0: 0x1a0010000
+  Memory failure: 0x1a0010: recovery action for free buddy page: Recovered
+  HardwareCorrupted: 4 kB
+------------------------------------- 
+CE with this patch:
+  (no "Offlining aliased SPA" message logged)
+  HardwareCorrupted: 0 kB
 
-> To support this, the layer already exposes per-node "preferred" node
-> queries: for a CPU node it reports the nearest memory-only nodes in
-> the same package, and for a memory-only node the nearest CPU nodes.
-> Nothing consumes them yet; I kept them out of the placement path so
-> that tiering can adopt them separately when there is a real user.
-> 
-> > I definitely think this series makes a lot of sense and I am
-> > hoping to hear more about it. Thank you, I hope you have a great day!
-> >
-> > Joshua
-> 
-> Thank you again for the careful review and for the questions; they
-> were a great help in seeing what the cover letter needs to explain
-> better. I hope you have a great day too.
+$cd /sys/kernel/debug/mce-inject
+$echo sw > flags
+$echo 0x9C00000000000080 > status
+$echo 0x80 > misc
+$echo 0x190010000 > addr
+$echo 9 > bank
+addr  bank  cpu  flags	ipid  misc  README  status  synd
+[   61.681659] mce: [Hardware Error]: Machine check events logged
+[   61.683442] cxl_mce_debug: entered status=0x9c00000000000080 addr=0x190010000 cache_size=0x10000000 res=[mem 0x190000000-0x1afffffff flags 0x200] usable=1
+[   61.684528] mce: [Hardware Error]: CPU 0: Machine Check: 0 Bank 9: 9c00000000000080
+[   61.684974] mce: [Hardware Error]: TSC 2eeae32fe0 ADDR 190010000 MISC 80 
+[   61.688880] mce: [Hardware Error]: PROCESSOR 0:50654 TIME 1786377156 SOCKET 0 APIC 0 microcode 1
+[   86.504456] clocksource: Watchdog remote CPU 11 read timed out
 
-Thank you Rakie. I don't think the cover letter was misleading,
-it was just my fault for short-circuiting and thinking the series was
-about adding per-socket per-node weights, as opposed to the
-restriction that you're adding to the existing weights.
+$grep HardwareCorrupted /proc/meminfo
+HardwareCorrupted:     0 kB
+-------------------------
+For UC, same steps only status bit information will change :
+$cd /sys/kernel/debug/mce-inject
+$echo sw > flags
+$echo 0xbc00000000000080 > status
+$echo 0x80 > misc
+$echo 0x190010000 > addr
+$echo 9 > bank
+$dmesg | grep cxl_mce_debug
+$grep HardwareCorrupted /proc/meminfo
+[  313.398747] mce: [Hardware Error]: Machine check events logged
+[  313.400518] cxl_mce_debug: entered status=0xbc00000000000080 addr=0x190010000 cache_size=0x10000000 res=[mem 0x190000000-0x1afffffff flags 0x200] usable=1
+[  313.401727] cxl_mce_debug: spa=0x190010000 contains=1
+[  313.402157] cxl_mce_debug: spa_alias=0x1a0010000 pfn=0x1a0010 pfn_valid=1
+[  313.402663] cxl_region region0: Offlining aliased SPA address0: 0x1a0010000
+[  313.405999] Memory failure: 0x1a0010: recovery action for free buddy page: Recovered
+[  313.408375] mce: [Hardware Error]: CPU 0: Machine Check: 0 Bank 9: bc00000000000080
+[  313.408999] mce: [Hardware Error]: TSC e9dd2869e0 ADDR 190010000 MISC 80 
+[  313.409367] mce: [Hardware Error]: PROCESSOR 0:50654 TIME 1786377750 SOCKET 0 APIC 0 microcode 1
 
-If I may add one more comment, I think 2/4 is a bit hard to review.
-A 1k line patch is not so easy to see the full picture, I think it would
-make it less intimidating to review if it could be split up into
-smaller patches. Just my 2c : -)
+Patched, UC: alias still offlined, confirming uncorrected handling is unchanged by this patch.
+    cxl_region region0: Offlining aliased SPA address0: 0x1a0010000
+    Memory failure: 0x1a0010: recovery action for free buddy page: Recovered
+    HardwareCorrupted: 4 kB
 
-Thanks again. I hope you have a great day!
-Joshua
+ drivers/cxl/core/mce.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/cxl/core/mce.c b/drivers/cxl/core/mce.c
+index 65fed913b221..e3c561489a00 100644
+--- a/drivers/cxl/core/mce.c
++++ b/drivers/cxl/core/mce.c
+@@ -18,7 +18,13 @@ static int cxl_handle_mce(struct notifier_block *nb, unsigned long val,
+ 	u64 spa, spa_alias;
+ 	unsigned long pfn;
+ 
+-	if (!mce || !mce_usable_address(mce))
++	if (!mce)
++		return NOTIFY_DONE;
++
++	if (!mce_is_memory_error(mce) || mce_is_correctable(mce))
++		return NOTIFY_DONE;
++
++	if (!mce_usable_address(mce))
+ 		return NOTIFY_DONE;
+ 
+ 	spa = mce->addr & MCI_ADDR_PHYSADDR;
+
+base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
+-- 
+2.43.0
+
