@@ -1,32 +1,32 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB19399031
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 06:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FC83655E7
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 06:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786516637; cv=none; b=XjrzHP/l8ypB4q3d37KIuv3iS1T9jD9PMx/FHg04J6uYaR8LqwTW1gAJerxQ1HDwiaDF5Y6PRMFaceC8Bm7KrYuk3tUP/28SGz+4cYn4eU2Ww88aEsBZRXEpsgduK9lC6t1+ptPZbfrdp66amH5AX6Zek9EqjYwCbIAZ+2ChtdE=
+	t=1786517094; cv=none; b=amvUBcmo+LQPsbIu2mnOTMCddxlw1zUaHuJlQ9nUBMEr3oI0IaDu9t/sP2QaLH+eYJkbStvcmsUTuq1H0hy86UInnDihkQLlFU0WqlVJG3T2SFMnBo1cfZJ41E0W5UhIki7xsLxnRnGsBdlMrTeGWDTkb65IsJ2DBuqE9J3bfcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786516637; c=relaxed/simple;
-	bh=Fb6l6texhcQH2qwr1NvnJjPxPB8hHtgQueF3SaRCv+E=;
+	s=arc-20240116; t=1786517094; c=relaxed/simple;
+	bh=ZehznD972PzSThMLyX1XlWT4oAwUULRCWERaE2CRksg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ib15uJST8KWytPBUoZ7Y0Xv34bRMJ+5tMrZWF6iRHGL7/Ra3iW5EtUMzhv6sHelm6gxNJu60uiLpnN+4mB3jP5g+2r9aJZ09g8emS1+/8iyv1htgtjmTvk41++KR66r2qVvzCZTrDyeCAJDBeFGdFFwGSosP7ftkO0AcDIb9BQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=r9prKHY9; arc=none smtp.client-ip=115.124.30.100
+	 In-Reply-To:Content-Type; b=ib2PoIvAeJsTznJJKdWECy0PrKMg+xoFk0uxdLHnLW8xNBNZKNHlLHnpy6a/ZnXawyi3WUfxGVwGb6wlLLCPtH5t4/AQ823tkoYGST+TknR+JTRvXqod1BZBqdGHU2SZjFxggR3w9FTNFcTxKqINfAHvc0iL6CjPA4wO/cVzSPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=HY+PuBWx; arc=none smtp.client-ip=115.124.30.110
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="r9prKHY9"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="HY+PuBWx"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1786516629; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=YeSAu1TQ+Djh26JZhr0kK3+RliVckpg31TWgDiRN4/0=;
-	b=r9prKHY9ilrtKh53Ftx1OTDJfqMC8Wv4X1Yz+KoNmdfR5h/Spu56ApOdUceqk1bPG4CCkCWt6BrrRhGTR9YWaLsPv8VYQAJILJKG2IcmKWhA6cPJja6vwl/zjMVheoaMjzGGABhsVvH0BRDJk5ZNzQkp+k+fXMOn0fRJOjr4ab8=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0X8qgyE1_1786516627;
-Received: from 30.178.83.207(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8qgyE1_1786516627 cluster:ay36)
+	t=1786517087; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=OFUQvK7sq6uJFUWt0Md1Hq5RBKP1XgwUdLYssyYVU6E=;
+	b=HY+PuBWxp9dO7IgRV3AZzlkiZRF3SPqf4xOeoDZCKa0fzXdR21SRN+2vlo2tnP09FVmRMsIFWsNm+w/in93CJC/ZJzKKP6JchqFubXKZQvZ4Xsps8CrV+JlDs//mz/SuVeKSoECrWdFPRiBE6ejzq3eS6GRGnh/JmfndchmNGbQ=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0X8qe3m-_1786517086;
+Received: from 30.178.83.207(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8qe3m-_1786517086 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 12 Aug 2026 14:37:09 +0800
-Message-ID: <4ed92a11-04e9-4551-8177-402c850add1d@linux.alibaba.com>
-Date: Wed, 12 Aug 2026 14:37:06 +0800
+          Wed, 12 Aug 2026 14:44:47 +0800
+Message-ID: <b78fa489-8ef9-4cc7-a8a1-c3b7996db7c2@linux.alibaba.com>
+Date: Wed, 12 Aug 2026 14:44:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -34,118 +34,131 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] cxl: Assorted fixes
-To: Richard Cheng <icheng@nvidia.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
- Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Dave Jiang <dave.jiang@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
- Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
- Li Ming <ming.li@zohomail.com>, Robert Richter <rrichter@amd.com>,
- linux-cxl@vger.kernel.org, xlpang@linux.alibaba.com,
- oliver.yang@linux.alibaba.com
-References: <20260811113608.2815625-1-kanie@linux.alibaba.com>
- <ant-ttVtO_tFY_rt@aschofie-mobl2.lan>
- <f43fe1df-e7ed-40a8-882e-2963968c10cb@linux.alibaba.com>
- <anwSLJXiwmUi8cCq@MWDK4CY14F>
+Subject: Re: [PATCH v2] cxl/cdat: Fix uninitialized stack use in endpoint
+ bandwidth gathering
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org
+References: <20260812060912.54932-1-kanie@linux.alibaba.com>
+ <20260812062241.570631F000E9@smtp.kernel.org>
 From: Guixin Liu <kanie@linux.alibaba.com>
-In-Reply-To: <anwSLJXiwmUi8cCq@MWDK4CY14F>
+In-Reply-To: <20260812062241.570631F000E9@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
-在 2026/8/12 14:29, Richard Cheng 写道:
-> On Wed, Aug 12, 2026 at 10:10:35AM +0800, Guixin Liu wrote:
->>
->> 在 2026/8/12 03:57, Alison Schofield 写道:
->>> On Tue, Aug 11, 2026 at 07:36:00PM +0800, Guixin Liu wrote:
->>>> This is a batch of fixes found while auditing drivers/cxl. They are
->>>> independent of each other and can be applied individually or dropped in
->>>> any combination; they are only sent together because they came out of the
->>>> same pass over the code.
->>> Hi Guixin Liu.
->>>
->>> Thanks for taking a look at CXL and putting these fixes together. I
->>> appreciate that the intent here is to make the individual fixes easy to
->>> take or drop. From the maintainer side, though, a grab bag of independent
->>> findings from an audit has somewhat the opposite effect. It leaves us
->>> with the audit results and the homework. :)
->>>
->>> We have been working through this kind of cleanup in focused functional
->>> areas, like features, HDM enumeration, etc. Please take a similar approach
->>> rather than collecting unrelated findings into a single series. Address
->>> one area at a time.
->> Sorry, this is my first time sending patch to cxl mailing list,
->> I will pay attention to these next time, thanks.
->>> As part of that work, please check mailing list traffic and cxl/next for
->>> fixes that have already been posted or merged, and review the pre-existing
->>> complaints reported by the Sashiko bot against your patchset:
->>> https://sashiko.dev/#/patchset/20260811113608.2815625-1-kanie%40linux.alibaba.com
->> Sure, I will check before,
->>
->> but why dosen't Sashiko reply directly in the current email? I can't reply
->> Sashiko.
->>> Please also follow the conventions we use for fix commit messages. They
->>> should not narrate the code change, but rather describe what happens today,
->>> why that is wrong and its impact, then state how the patch fixes it.
->>> For an example of switching from code narration to behavior description,
->>> take a look at my recent reply to a commit message w similar issue:
->>> https://lore.kernel.org/linux-cxl/ant2Z1mzHCrzmzXn@aschofie-mobl2.lan/
->> Got that, thanks.
->>
->> Best Regards,
->> Guixin Liu
-> Hi Guixin,
+在 2026/8/12 14:22, sashiko-bot@kernel.org 写道:
+> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
 >
-> I think some of your fixes are already addressed.
-> For what I've known, the first 2 patches are already covered in my patch series
+> Pre-existing issues:
+> - [High] Uninitialized stack memory use in cxl_switch_gather_bandwidth() during access coordinate combination.
+> - [High] Uninitialized stack memory leak into QoS class calculation for Restricted CXL Devices (RCDs).
+> - [Medium] Pointer aliasing in `cxl_coordinates_combine()` causes bandwidth calculations to incorrectly ignore zero bandwidths from downstream hops.
+> --
 >
-> https://lore.kernel.org/linux-cxl/20260708074228.43654-1-icheng@nvidia.com/
+> --- Patch [1]: [PATCH v2] cxl/cdat: Fix uninitialized stack use in endpoint bandwidth gathering ---
+> commit 1627473a040a741d578311d820959582436220a3
+> Author: Guixin Liu <kanie@linux.alibaba.com>
 >
-> Best regards,
-> Richard Cheng.
-Yes，I removed 1,2,7 patch, and sent the rest separately.
+> cxl/cdat: Fix uninitialized stack use in endpoint bandwidth gathering
+>
+> cxl_endpoint_gather_bandwidth() declares three access_coordinate arrays on
+> the stack - pci_coord, sw_coord and ep_coord - without initializing them,
+> and relies on its helpers to fill every member. None of them does.
+>
+> Link: https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
+>
+>> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+>> index 5c9f072625135..3c6a1537f89b8 100644
+>> --- a/drivers/cxl/core/cdat.c
+>> +++ b/drivers/cxl/core/cdat.c
+>> @@ -633,9 +633,9 @@ static int cxl_endpoint_gather_bandwidth(struct cxl_region *cxlr,
+>>   	struct cxl_port *endpoint = to_cxl_port(cxled->cxld.dev.parent);
+>>   	struct cxl_port *parent_port = to_cxl_port(endpoint->dev.parent);
+>>   	struct cxl_port *gp_port = to_cxl_port(parent_port->dev.parent);
+>> -	struct access_coordinate pci_coord[ACCESS_COORDINATE_MAX];
+>> -	struct access_coordinate sw_coord[ACCESS_COORDINATE_MAX];
+>> -	struct access_coordinate ep_coord[ACCESS_COORDINATE_MAX];
+>> +	struct access_coordinate pci_coord[ACCESS_COORDINATE_MAX] = { };
+>> +	struct access_coordinate sw_coord[ACCESS_COORDINATE_MAX] = { };
+>> +	struct access_coordinate ep_coord[ACCESS_COORDINATE_MAX] = { };
+>>   	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> [Severity: High]
+> This is a pre-existing issue, but cxl_switch_gather_bandwidth() has a similar
+> uninitialized stack array:
+>
+> drivers/cxl/core/cdat.c:cxl_switch_gather_bandwidth() {
+>      ...
+>      struct access_coordinate coords[ACCESS_COORDINATE_MAX];
+>      ...
+>      rc = cxl_pci_get_bandwidth(pdev, coords);
+>      ...
+>      cxl_coordinates_combine(coords, coords, ctx->coord);
+>      ...
+> }
+>
+> cxl_pci_get_bandwidth() leaves latency members uninitialized, and then
+> cxl_coordinates_combine() unconditionally sums them.
+>
+> Should coords be zero-initialized here as well to prevent reading
+> uninitialized memory?
+Yes, will be changed too in v3.
+>
+> [Severity: High]
+> This is a pre-existing issue, but uninitialized stack memory can leak into QoS
+> calculations for Restricted CXL Devices (RCDs):
+>
+> drivers/cxl/core/cdat.c:cxl_port_perf_data_calculate() {
+>      struct access_coordinate ep_c[ACCESS_COORDINATE_MAX];
+>      ...
+>      rc = cxl_endpoint_get_perf_coordinates(port, ep_c);
+>      ...
+>      cxl_coordinates_combine(dent->coord, dent->cdat_coord, ep_c);
+>      ...
+> }
+>
+> For RCDs, cxl_endpoint_get_perf_coordinates() returns 0 early without
+> modifying the array:
+>
+> drivers/cxl/core/port.c:cxl_endpoint_get_perf_coordinates() {
+>      ...
+>      if (cxlmd->cxlds->rcd)
+>          return 0;
+>      ...
+> }
+>
+> This causes cxl_coordinates_combine() to merge uninitialized stack data into
+> the region's coordinates, which is later passed to QoS class calculation and
+> exported to userspace sysfs.
+>
+> Should ep_c also be zero-initialized?
+Yes, changed too in v3.
+>
+> [Severity: Medium]
+> This is a pre-existing issue, but does pointer aliasing in
+> cxl_coordinates_combine() cause bandwidth calculations to ignore zero
+> bandwidths from downstream hops?
+>
+> drivers/cxl/core/cdat.c:__cxl_coordinates_combine() {
+>      if (c1->write_bandwidth && c2->write_bandwidth)
+>          out->write_bandwidth = min(c1->write_bandwidth,
+>                                     c2->write_bandwidth);
+> }
+>
+> When called with aliased pointers in cxl_endpoint_gather_bandwidth() and
+> cxl_switch_gather_bandwidth():
+>
+>      cxl_coordinates_combine(ep_coord, ep_coord, sw_coord);
+>
+> If sw_coord has 0 bandwidth, the operation is skipped, and ep_coord retains
+> its previous non-zero bandwidth instead of being updated to 0.
+>
+> Should the bandwidth be updated when one of the inputs has 0 bandwidth, or is
+> retaining the previous value intended?
+It is intended.
 
 Best Regards,
 Guixin Liu
->
->
->>> This up-front triage is becoming increasingly important as we see more
->>> AI-assisted audits and fix submissions. Without it, maintainers end up
->>> determining whether each finding is still present, already being
->>> addressed, significant enough to fix, and where it fits with ongoing
->>> work. That review burden does not scale with the volume of AI-generated
->>> findings.
->>>
->>> Rather than reworking this series as a whole, please apply this feedback
->>> to focused CXL fixes you submit going forward.
->>>
->>> Thanks,
->>> Alison
->>>
->>>> Guixin Liu (8):
->>>>     cxl/features: Validate the fwctl RPC input length
->>>>     cxl/features: Bound the Get Feature output by the user output buffer
->>>>     cxl/core: Fix dport use-after-free via the einj_inject debugfs file
->>>>     cxl/pci: Fix NULL pointer dereference in reset detection
->>>>     cxl/hdm: Fix out of bounds read of the decoder target list
->>>>     cxl/cdat: Fix uninitialized stack use in endpoint bandwidth gathering
->>>>     cxl/mce: Validate the memdev and endpoint before use
->>>>     cxl/region: Unregister the pmem region bridge on setup failure
->>>>
->>>>    drivers/cxl/core/cdat.c        |  6 +++---
->>>>    drivers/cxl/core/features.c    | 15 ++++++++++++++-
->>>>    drivers/cxl/core/hdm.c         | 12 ++++++++++++
->>>>    drivers/cxl/core/mce.c         |  8 ++++++--
->>>>    drivers/cxl/core/pci.c         |  8 ++++++++
->>>>    drivers/cxl/core/port.c        | 18 ++++++++++++++----
->>>>    drivers/cxl/core/region_pmem.c |  6 ++++--
->>>>    7 files changed, 61 insertions(+), 12 deletions(-)
->>>>
->>>>
->>>> base-commit: d58772d8520c7ef247c4b95c9bd76d3a25da9ff5
->>>> -- 
->>>> 2.43.7
->>>>
->>
+>>   	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+>>   	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
 
