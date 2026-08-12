@@ -1,159 +1,355 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DEE30C158
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 09:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B01EC40314F;
+	Wed, 12 Aug 2026 09:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786525704; cv=none; b=nm+xe9fcG7bjtQXN2Xc7iQ13RcX4kF0tG1v4jENLweWA3cm71vKE6XqAizYUP7wKnxp59WZ1z5OvpZulYZ6Zrui+7sjCADDo+nrOV4QNyfaiR/0w2xyOxsGJ2RuvR5MbW+HU1M5ulddNehc0hCLEp+PGbB+zza6EdHechW5ZHEA=
+	t=1786526314; cv=none; b=Ugm50+6aW5wu5ZefManKLFucka3a5vBeCgGzy8ApkBtq/ckotrkcGue82turdJU2G5AFa48ejZI7n1cF64iwKpUSwB1uQAWjXwcN1jNz2PDFjNzphAsZ5umoFM/4Jxo4AINljcsz/jhruPS+nNKqRwsoVZI0U90CPhTfN/aVjUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786525704; c=relaxed/simple;
-	bh=USkddxp1KIfa0fMdR/UUWCcd+m+f+tEbQoZfQXfmDbA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vksie5XcC9OFLHw3EAuZpfAuRnVuBwTAp/WtRODun46Rqi7rMpJ7nR32zvgCyr6dP57xKESKHeNg8mE/Mp58eVmyC2cdBBOoyE3Vr9tE7z+rdc+Ga3+ieS1xi6nkHb9YCkEUEqZaCcAYpg71P85yV44Ov8uPI8CWCi9QlWa4Paw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=bRMAcNDV; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="bRMAcNDV"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1786525692; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=QktvlERZxBJ2P8shSXSLCS6QAutmsxZN1xlh6/xfq5U=;
-	b=bRMAcNDV3Udffa4rxspce/GVevKh5bnpD/0402FcSeysuZsDAjHGh9rPudbAc27hKzO458UboTEploUAig9xT8ZGGz16m5auN9oov6/rfvQi/eYxV/xsIq1ZKyLO+DMJ1guLcd+u573ALpp9LdWnzQ4/50qWxkS+CprCK9sEtYM=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0X8r4Edj_1786525691;
-Received: from 30.178.83.207(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8r4Edj_1786525691 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 12 Aug 2026 17:08:12 +0800
-Message-ID: <892c037a-49c5-415b-8c7a-b8846e34d7df@linux.alibaba.com>
-Date: Wed, 12 Aug 2026 17:08:10 +0800
+	s=arc-20240116; t=1786526314; c=relaxed/simple;
+	bh=fMFkGKGQ7IWELHdcg8i5WeaseJTu+tKJqwS8InsU7is=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Y1RShvX0aUaKzFzoK44AnIUzcJ24hRrNhVUoERBgziMV4Z3h6kL9Zu6c6iXssK5EYfy570c3bOdjIb5zX4htIE7NicIHbC0T3KfvCh5rQb6ifLoVgjY8KtZHPLMo+//MhjZWVcOyWju58cULa4sAUN59sNpLultga+/sgbYI7z0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-c45ff70000001609-b0-6a7c3a61053e
+From: Rakie Kim <rakie.kim@sk.com>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: akpm@linux-foundation.org,
+	gourry@gourry.net,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	byungchul@sk.com,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	david@kernel.org,
+	liam@infradead.org,
+	vbabka@kernel.org,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	dave@stgolabs.net,
+	jic23@kernel.org,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	harry@kernel.org,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	Rakie Kim <rakie.kim@sk.com>
+Subject: Re: [PATCH 0/4] mm/mempolicy: introduce package-aware weighted interleave
+Date: Wed, 12 Aug 2026 18:18:20 +0900
+Message-ID: <20260812091823.1817-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.52.0.windows.1
+In-Reply-To: <anwcRyfzs5lklpzk@lucifer>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] cxl/cdat: Fix uninitialized stack use in bandwidth
- gathering
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-cxl@vger.kernel.org
-References: <20260812083035.372308-1-kanie@linux.alibaba.com>
- <20260812083035.372308-2-kanie@linux.alibaba.com>
- <20260812084459.07B941F000E9@smtp.kernel.org>
-From: Guixin Liu <kanie@linux.alibaba.com>
-In-Reply-To: <20260812084459.07B941F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLIsWRmVeSWpSXmKPExsXC9ZZnoW6SVU2WwZ61zBZz1q9hs7j7+AKb
+	xa4bIRYnbjayWay+uYbR4vnWX4wWP+8eZ7e4fmslo8X+p89ZLB40rWKyOL51HrvFulOH2CzO
+	zzrFYnF51xw2i3tr/rNavHnsZvGtT9rifp+Dxcoff1gtjqzfzmQx+dICNouOl/dZLG5NOMZk
+	sXpNhsXso/fYHSQ9ds66y+6xYFOpR3fbZXaPzSu0PBbvecnksWlVJ5vHpk+T2D1OzPjN4rHz
+	oaXHi80zGT16m9+xeUydXe+xfstVFo/Pm+QC+KK4bFJSczLLUov07RK4MjYt281csCi2Ysu2
+	94wNjB9duxg5OSQETCS2HHjC3MXIAWa3LXYEMdkElCSO7Y0BqRAR0JG42TWNqYuRi4NZYCer
+	xPyHe5lAEsICQRJd058zgtgsAqoSP15PB7N5gcYs2jOXEWK8psS6jbdYQGxOAXWJtZf/gvUK
+	CfBIvNqwH6peUOLkzCdgNcwC8hLNW2czgyyTEPjKLvH2xxVmiEGSEgdX3GCZwMg/C0nPLCQ9
+	CxiZVjEKZeaV5SZm5pjoZVTmZVboJefnbmIERuqy2j/ROxg/XQg+xCjAwajEw3tBpjpLiDWx
+	rLgy9xCjBAezkghv9aqqLCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8Rt/KU4QE0hNLUrNTUwtS
+	i2CyTBycUg2MEncvCV+zNc/7eFnOPniZs8S1sNsffSrrZFzUW67yMb5dMyGjVOruIQ7BiL9s
+	J+yl134svLL360bbRc3i6QUv3O4/+z47NTxAnG/G5aXtm4t3/ZddyM5Z6PCkqGDWY7k0Vb0f
+	vX//vtK4t2xW4Wapzbm3fFnVKr6Xa5WbLzrHa5K5wu+5FbeXEktxRqKhFnNRcSIA7Yb609AC
+	AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYQCG+87Ozo5jg9NadFIxGIkkqYUFXyFldPvqh1RkQXg75CGn25RN
+	xUuSaYgtErXLdFMTLdF5n27eEZZ5I0uUTOct0ZpmpHkvtXJS4L8Hnvd9/7wkR9SM25NSRSSr
+	VDAyCcHH+Vkufm7MybuhR5aGPWBOZRkBRyd7Cdg4eB2+e6ojYOfQfQKWDpUBaDX+AvDnaAcP
+	frSUALj4ZZYDWz9bcfgpSY/BDmMeD77O7eLCim4zAd9ru3HY35hDwLGyP1z4bfICXElzgONp
+	3rBkbYMLzQNWLmyrrMPgk758AqbOjOPQkt6OwdKyELhuKiag7s0Yz9sJNWhHeSjfEIUepfTz
+	UE2xKypsnsGQQf+QQIaFTB7qzFrHUcPECTRdkw3Q4+TvBFoZRqhweh5Dz3T3UGXtBxwtGpyu
+	ULf4XsGsTBrNKj1OBfFDDEVNnIgC/5ha0xxIBD/OqwFJ0tQxOqXwjA0JSkK3t/ipgR0ppg7T
+	Q+rnmBrwSQ7VwKVfTLRgNrGHukarNVZgY5xyptdmNdss3JopaM7dZpo6RFdUW3Ab21EudHn/
+	5nZXRAnor1Wt//K76a7sqe0MhzpAJxt1nHQg0O5Q2h0qH2B6IJYqouWMVHbcXRUWEquQxrjf
+	DpcbwNanRQkbGfVgqf+iGVAkkAiEvY7xoSIuE62KlZsBTXIkYmG8Pi5UJAxmYuNYZXigMkrG
+	qszAgcQl+4SXb7JBIuoOE8mGsWwEq/xvMdLOPhF0B/imh5tatJaClfpX9m9blSON9NjmoJ+P
+	py5RLu9x1a5OVqUuJJW75S1P+WV4goFqSBl/TwkS+m4wmS48H9nI3gfz/ucW1YEOGseXlzSe
+	vB7rnDFg19mN+fZVovz0ssm4VlXXO17Q1rT/6rwm0fmgWKLzDbtm8upTNIV2tUhwVQhz1JWj
+	VDF/AdkS2W/PAgAA
+X-CFilter-Loop: Reflected
 
+On Wed, 12 Aug 2026 08:16:23 +0100 "Lorenzo Stoakes (ARM)" <ljs@kernel.org> wrote:
 
+Hello Lorenzo,
 
-在 2026/8/12 16:44, sashiko-bot@kernel.org 写道:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+Thank you for taking the time to review this series and for the
+advice on how to submit it.
+
+> On Thu, Aug 06, 2026 at 05:09:31PM +0900, Rakie Kim wrote:
+> > Package-aware weighted interleave places a task's weighted-interleave
+> > pages on the NUMA nodes of its local package, so that interleave traffic
+> > does not have to cross the interconnect to another package. This keeps
+> > each node's weight aligned with the bandwidth the task actually gets
+> > from it, so effective bandwidth holds up on a system that has more than
+> > one package. (A package is a CPU socket together with the memory
+> > attached to it.)
+> >
+> > Changes from RFC:
+> > https://lore.kernel.org/all/20260316051258.246-1-rakie.kim@sk.com/
+> > - Added an opt-in sysfs toggle (off by default) and a read-only sysfs
+> >   view of the package topology
+> > - Added topology validation with a clean fallback to plain weighted
+> >   interleave on unsupported topologies
+> > - Hardened the allocation, device-teardown, and node-hotplug paths
+> 
+> Please put change logs under the cover letter :) in mm we put the cover
+> letter in the actual upstream commit so it's better to keep separate for
+> reviewers.
 >
-> Pre-existing issues:
-> - [High] Zero-initializing `ep_coord` codifies a logic error where valid PCI bandwidth is discarded if CDAT bandwidth is unreported (0), contradicting subsystem conventions.
-> - [High] The cxl_port_perf_data_calculate() function declares an uninitialized access_coordinate array on the stack, which is leaked to userspace via sysfs for Restricted CXL Devices (RCDs).
+
+Thank you, I did not know that. I will keep the change log out of the
+cover letter body from the next version.
+
+
+> I see the RFC was from march and tied to an LSF session I think?
+> 
+> While I don't want to be too pedantic, I think you should only really
+> un-RFC in a situation where you have a good sense that the relevant
+> maintainers are happy with the _concept_.
+> 
+> Looking at the RFC thread it's not clear that David was OK with this on the
+> mm side, though I see you got some feedback from Jonathan on the CXL driver
+> side.
+> 
+> So I wonder whether next respin this should be re-RFC'd unless you get
+> clear feedback that we want to go in this direction?
+>
+
+You are right about the LSF session: the RFC was posted with that
+proposal in mind, but I could not attend for personal reasons, so the
+discussion I had hoped for there did not happen.
+
+Your point about the concept is fair as well, so I will post the next
+version as an RFC again.
+
+
+> >
+> > Weighted interleave places pages on nodes in proportion to per-node
+> > weights that are set from each node's bandwidth. Within one package the
+> > weight given to a node matches the bandwidth a task sees from it. Across
+> > packages it no longer does: a memory node's physical bandwidth is fixed,
+> > but the bandwidth a task effectively sees depends on which package its
+> > CPU is in, because memory reached from another package, over the
+> > interconnect between them, is slower than the same memory reached within
+> > the package. The weights are set once from device bandwidth and applied
+> > the same way wherever the task runs, so a node in another package is
+> > given a weight higher than the bandwidth it can deliver to that task.
+> > The kernel has no package abstraction and does not record which package
+> > a node belongs to, so it cannot tell which node pairs are separated by
+> > the interconnect.
+> 
+> Please please - break up huge paragraphs like this :)
+> 
+> It's 2026 so I have to mention that if you've used AI to assist with
+> writing it (which is fine) please do a pass over it manually to curb AI's
+> tendency to be overly verbose + definitely try to break up paragraphs into
+> smaller charts at least :)
+>
+
+I agree. Reading it again, my sentences are too long and the
+explanation is more verbose than it needs to be, which makes the
+cover letter hard to read. This needs to be fixed.
+
+I will rewrite the cover letter for the next version in a form that
+is easier to read.
+
+
+> >
+> >           node0             node1
+> >         +-------+         +-------+
+> >         | CPU 0 |---------| CPU 1 |
+> >         +-------+         +-------+
+> >         | DRAM0 |         | DRAM1 |
+> >         +---+---+         +---+---+
+> >             |                 |
+> >         +---+---+         +---+---+
+> >         | CXL 0 |         | CXL 1 |
+> >         +-------+         +-------+
+> >           node2             node3
+> 
+> ...though I _love_ ASCII diagrams so this is great ;)
+>
+
+Thank you.
+
+
+> >
+> > The numbers below are illustrative single-stream bandwidths (GB/s).
+> > Local DRAM sustains 300 and local CXL 150; any path that crosses to
+> > another package, over the interconnect, is capped at 100, so a node in
+> > another package delivers 100 whether it is DRAM or CXL. Note that local
+> > CXL (150) is still faster than any node in another package (100). The
+> > effective bandwidth each CPU sees is therefore:
+> >
+> >               node0  node1  node2  node3
+> > from CPU 0:    300    100    150    100
+> > from CPU 1:    100    300    100    150
+> >
+> > Since a single per-node weight cannot encode the interconnect penalty,
+> > a reasonable set of global weights is taken from local device bandwidth
+> > (local DRAM : local CXL = 300 : 150 = 2 : 1): node0=2 node1=2 node2=1
+> > node3=1.
+> 
+> Also great that you provide the receipts on actual observed real-world
+> numbers that's great.
+> 
+> NUMA isn't my area so I can't comment here on the technical details but
+> thanks for providing this :)
+>
+
+Thank you. I will keep reporting measured results with the next
+versions.
+
+
+> 
+> >
+> > Applied the same way to every source, these weights give the map:
+> >
+> >               node0  node1  node2  node3
+> > global:         2      2      1      1
+> >
+> > A task on CPU 0 gives node1 - remote DRAM, effective 100 - the same
+> > weight 2 as its own local node0 at 300. Worse, node1 is weighted above
+> > node2, the task's local CXL at effective 150, even though node2 is the
+> > faster of the two. The flat weights rank a slower interconnect-bound
+> > node above a faster local one, which is exactly backwards.
+> >
+> > This series makes weighted interleave package-aware. When it is on,
+> > weighted interleave prefers the task's current package: while the
+> > package's nodes have room, the task's pages are spread across them by
+> > weight, so allocations stay off the interconnect. The rest of the
+> > policy nodemask is used when the local package cannot serve the request
+> > - when a node in it is under pressure and the page allocator falls back
+> > along the zonelist, or when the policy nodemask happens to exclude every
+> > node of the current package, in which case the package spanned by the
+> > policy's own nodes is used instead. The nodes considered are always
+> > within the policy nodemask, which mempolicy already narrows to the
+> > task's cpuset, so cpusets and the task nodemask stay in control.
+> >
+> >               node0  node1  node2  node3
+> > from CPU 0:     2      0      1      0
+> > from CPU 1:     0      2      0      1
+> >
+> > A task on CPU 0 now places pages on node0 (weight 2) and node2
+> > (weight 1) at 2:1, which matches their effective bandwidth of 300:150;
+> > a task on CPU 1 places on node1 and node3 the same way. Placement
+> > follows the bandwidth each task actually sees, NUMA locality is
+> > preserved, and interleave traffic stays off the interconnect.
+> >
+> > To make this possible the kernel needs a notion of which nodes share a
+> > package. The NUMA distance model offers only relative latencies and no
+> > structural grouping, which is especially limiting for CXL memory nodes
+> > that come online without an explicit package association.
+> >
+> > The series adds a package-aware topology layer that groups CPU and
+> > memory-only nodes into a "memory package", built from the physical
+> > package ids firmware reports and, for a memory-only node, an initiator
+> > CPU node or SLIT distances. A package can contain more than one CPU node
+> > or more than one memory-only node, so the layer maps a package to a set
+> > of nodes rather than to a single node or a single CXL device.
+> >
+> > The feature is off by default and opt-in through a sysfs toggle. The
+> > package topology itself is exposed read-only under
+> > /sys/devices/system/package/; there is deliberately no writable
+> > override, since a machine whose firmware describes its topology
+> > incorrectly should be fixed in firmware. On a topology that does not
+> > have the symmetric shape the placement relies on, enabling is refused
+> > and any active mode degrades cleanly to the original flat behavior.
+> >
+> > Measured results:
+> >
+> > System Configuration:
+> > - Processor: Dual-Socket Intel Xeon 6980P (Granite Rapids)
+> >
+> > 1) Throughput (System Bandwidth)
+> >    - DRAM Only: 966 GB/s
+> >    - Weighted Interleave: 903 GB/s (7% decrease compared to DRAM Only)
+> >    - Package-Aware Weighted Interleave: 1329 GB/s (1.33 TB/s)
+> >      (38% increase compared to DRAM Only,
+> >       47% increase compared to Weighted Interleave)
+> >
+> > 2) Loaded Latency (Under High Bandwidth)
+> >    - DRAM Only: 544 ns
+> >    - Weighted Interleave: 545 ns
+> >    - Package-Aware Weighted Interleave: 436 ns
+> >      (20% reduction compared to both)
+> >
+> > A small CXL driver change registers a CXL memory node into its package
+> > as the node comes online, using the initiator the driver resolves for
+> > the region; this is where the package layer gets the CPU-side
+> > association that plain NUMA distance does not carry.
+> >
+> > The memory_package layer offers a broader interface for grouping and
+> > querying package topology - usable by memory tiering as well - and
+> > package-aware weighted interleave uses the subset it needs.
+> >
+> > [PATCH 1/4] mm/numa: introduce nearest_nodes_nodemask()
+> >   Add a NUMA helper that returns every node sharing the minimum distance
+> >   from a source node.
+> >
+> > [PATCH 2/4] mm/memory-tiers: package-aware topology management
+> >   Group NUMA nodes into memory packages from firmware topology data,
+> >   expose the grouping read-only under /sys/devices/system/package/, and
+> >   validate the symmetric shape that package-aware placement relies on.
+> >
+> > [PATCH 3/4] mm/memory-tiers: register CXL nodes to packages
+> >   Bind a CXL memory node to a package using an initiator CPU node.
+> >
+> > [PATCH 4/4] mm/mempolicy: package-aware weighted interleave
+> >   Prefer the current package for weighted interleave node selection,
+> >   behind an opt-in package_mode sysfs toggle that is off by default.
+> >
+> > Rakie Kim (4):
+> >   mm/numa: introduce nearest_nodes_nodemask()
+> >   mm/memory-tiers: introduce package-aware topology management for NUMA
+> >     nodes
+> >   mm/memory-tiers: register CXL nodes to memory packages via initiator
+> >   mm/mempolicy: enhance weighted interleave with package-aware locality
+> >
+> >  .../ABI/testing/sysfs-devices-system-package  |   35 +
+> >  ...fs-kernel-mm-mempolicy-weighted-interleave |   17 +
+> >  drivers/cxl/core/region.c                     |   54 +
+> >  drivers/cxl/cxl.h                             |    1 +
+> >  drivers/dax/kmem.c                            |    3 +
+> >  include/linux/memory-tiers.h                  |  113 ++
+> >  include/linux/numa.h                          |   11 +
+> >  mm/memory-tiers.c                             | 1009 +++++++++++++++++
+> >  mm/mempolicy.c                                |  200 +++-
+> >  9 files changed, 1439 insertions(+), 4 deletions(-)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-devices-system-package
+> >
+> >
+> > base-commit: 8cd9520d35a6c38db6567e97dd93b1f11f185dc6
+> > --
+> > 2.25.1
+> >
+>
 > --
->
-> --- Patch [1]: [PATCH v3 1/2] cxl/cdat: Fix uninitialized stack use in bandwidth gathering ---
-> commit ecbce27f92f7e67349081889c3ca38eb48761104
-> Author: Guixin Liu <kanie@linux.alibaba.com>
-> Subject: cxl/cdat: Fix uninitialized stack use in bandwidth gathering
->
-> This commit fixes uninitialized stack usage in cxl_endpoint_gather_bandwidth()
-> and cxl_switch_gather_bandwidth() by zero-initializing the access_coordinate
-> arrays. It prevents uninitialized kernel stack data from being exposed as
-> bandwidth and latency figures.
->
->> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
->> index 5c9f072625135..df9261ba84e5a 100644
->> --- a/drivers/cxl/core/cdat.c
->> +++ b/drivers/cxl/core/cdat.c
->> @@ -633,9 +633,9 @@ static int cxl_endpoint_gather_bandwidth(struct cxl_region *cxlr,
->>   	struct cxl_port *endpoint = to_cxl_port(cxled->cxld.dev.parent);
->>   	struct cxl_port *parent_port = to_cxl_port(endpoint->dev.parent);
->>   	struct cxl_port *gp_port = to_cxl_port(parent_port->dev.parent);
->> -	struct access_coordinate pci_coord[ACCESS_COORDINATE_MAX];
->> -	struct access_coordinate sw_coord[ACCESS_COORDINATE_MAX];
->> -	struct access_coordinate ep_coord[ACCESS_COORDINATE_MAX];
->> +	struct access_coordinate pci_coord[ACCESS_COORDINATE_MAX] = { };
->> +	struct access_coordinate sw_coord[ACCESS_COORDINATE_MAX] = { };
->> +	struct access_coordinate ep_coord[ACCESS_COORDINATE_MAX] = { };
-> [Severity: High]
-> This isn't a bug introduced by this patch, but does zero-initializing
-> ep_coord codify a logic error where valid PCI bandwidth is discarded?
->
-> If an endpoint CDAT does not report bandwidth, the bandwidth fields in
-> perf->cdat_coord will be 0. When cxl_coordinates_combine() is called later
-> in cxl_endpoint_gather_bandwidth():
->
-> 	rc = cxl_pci_get_bandwidth(pdev, pci_coord);
-> 	if (rc < 0)
-> 		return rc;
->
-> 	/*
-> 	 * Min of upstream link bandwidth and Endpoint CDAT bandwidth from
-> 	 * DSLBIS.
-> 	 */
-> 	cxl_coordinates_combine(ep_coord, pci_coord, perf->cdat_coord);
->
-> The __cxl_coordinates_combine() helper requires both inputs to be non-zero
-> to assign the output:
->
-> 	if (c1->write_bandwidth && c2->write_bandwidth)
-> 		out->write_bandwidth = min(c1->write_bandwidth,
-> 					   c2->write_bandwidth);
->
-> Because the bandwidth in perf->cdat_coord is 0, ep_coord remains untouched
-> (which is now 0). This completely discards the valid upstream link
-> bandwidth in pci_coord, resulting in an erroneous region aggregate
-> bandwidth of 0.
->
-> [Severity: High]
-> This is a pre-existing issue, but while fixing uninitialized stack
-> variables, did you notice a similar leak in cxl_port_perf_data_calculate()
-> in drivers/cxl/core/cdat.c?
->
-> It declares an uninitialized array:
->
-> 	struct access_coordinate ep_c[ACCESS_COORDINATE_MAX];
-> 	...
-> 	rc = cxl_endpoint_get_perf_coordinates(port, ep_c);
->
-> If the device is a Restricted CXL Device (RCD),
-> cxl_endpoint_get_perf_coordinates() in drivers/cxl/core/port.c returns 0
-> early without initializing the array:
->
-> 	/*
-> 	 * Skip calculation for RCD. Expectation is HMAT already covers RCD case
-> 	 * since RCH does not support hotplug.
-> 	 */
-> 	if (cxlmd->cxlds->rcd)
-> 		return 0;
->
-> cxl_port_perf_data_calculate() then passes this uninitialized array to
-> cxl_coordinates_combine(), which can leak kernel stack memory to userspace
-> via world-readable sysfs region attributes.
-On the RCD leak in cxl_port_perf_data_calculate(): that is what patch 2 of
-this series fixes. cxl_endpoint_get_perf_coordinates() now zeroes the
-caller's array before the early return for RCDs, so ep_c[] is no longer read
-before anything writes it. The fix is in the exported helper rather than in
-the caller because the helper documents @coord as an output parameter, and
-cxl_test discards its return value.
+> Cheers, Lorenzo
 
-On ep_coord being discarded when the CDAT reports no bandwidth: the guard
-that skips the assignment, "if (c1->write_bandwidth && c2->write_bandwidth)"
-in __cxl_coordinates_combine(), is pre-existing and untouched by this patch.
-What the patch changes is only what remains in the output when that guard
-skips: stack residue before, zero now. A zero bandwidth is how that helper
-already spells "not reported" - that is why the guard exists, since min()
-against an unknown value is meaningless. Making the combine step fall back
-to one input instead would change the meaning of the helper for all of its
-callers, which is a separate discussion from not reading uninitialized
-stack. The cover letter says the same about the aliasing question raised on
-v2.
+Thank you again for the excellent advice. What you pointed out matters
+for how a patch is delivered, so I will keep it in mind for the next
+version and the ones after it.
 
-Best Regards,
-Guixin Liu
+Thanks again for your time and review.
 
+Rakie Kim
