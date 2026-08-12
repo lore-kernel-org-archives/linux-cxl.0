@@ -1,134 +1,114 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C719240F729
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 11:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786535068; cv=pass; b=iul/c4go0cwG3oUK7BZiEc1vRB8hsGWnvTpfLup6idxZUbQGNt4+Y6kTQeqhdNUjejTLpLu10Ts19TkOu3ZVFSK8XnvH3hPwXeGMdlDNUMaC1gp+XCAxzzt1+f7i/jbht+xzKTWqiILQqJxGlbipkEO6hoy3R4ahGl/+aeG16Po=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786535068; c=relaxed/simple;
-	bh=lrPAfXW/tpbbtUy8sKQeR5l3iggxWlNrJXpRFweN/ww=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rOU7dYUjH/GRc2BB3juMyAF4rrLtYeJkoXw6RiYOeDmj+Z5/m0r63thPWwQa5IbQe8Zi8p2vsPfqRK72hlrh4fBRVYfXkAerSZUBrMk5gpm28SjVJ13Mu97BI/3SZMXzhYymL1G7t8whG1GqI2QtiMic8EMLv2IUN8UPbupgm9o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=BVR2Ylqo; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF5B434407
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 11:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786535536; cv=none; b=eTIjIVZHrXCXKhw9RSZ4Pa780HDSLpeyf23ty4zcC4lqClF5lHrvO8LwNHtokdzzaPUG/nC0mvvHhxKUh3TKmwSerWTiEbd2ECfD0bXB7mysjBt+HUm7WvR/i/5UHs7Y+xN5yae/M6PKNo81tAPn/BRXcJd0/by8MN3B7RM1FDc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786535536; c=relaxed/simple;
+	bh=CMCx9JGbn512rSCXyn+0Cn5fAIpLjBWoF+SL7RCB0Cc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=E0MeapPZPsEQ2g6Tz/eZm+tISKYuTIYX6X6a8LNFlcRdNZl7bov2SoWg9zd5p6SyrPtPcI93rB36SD+t1rtWSbMoWu+3H5mN+2yZ/WOf2+dNby/ZU/ymJKp7XCH4oOy2luQ6gdzxXdn83xMzT1Lc4RlDQXnPaU4ksWtFpQnPAls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q/kVUPJh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="BVR2Ylqo"
-ARC-Seal: i=1; a=rsa-sha256; t=1786535056; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=DaiQjeK7rQ9fHHh4e9NZLHKkos7eqos7PnVlHnBm8A9Ys8fP8clFTF8ihYLAuIYul+kyQ/GpUFmgn9mWdnHMU0Wgm81UWZXCblQ8R98NWGq5MbPCU1PF/EVGRyNVKA/vjvWIImVxTy4+GQWV/RjEKiWErvIgpgc9MylAx0sLYhE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1786535056; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Or7dfzrQ+jU+goad7gdaoXKc87AnPWm64gPqzTFSYRc=; 
-	b=inzL0IvpbuvFxylF8F4y/dGMq+Fu6IX6mFQ9DbrGC1QtS/8p2/VftnVwS53STyqsbyOK59tOS7SlqqeRI8k8kcy+1if+jI0wnR6R9rekKdAJpu5xObOv9LDQNxNqMTBcBZKXRwB4IPi36J+LkyRDljgs24GFFX4lFPvAvDpLb8Q=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1786535056;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
-	bh=Or7dfzrQ+jU+goad7gdaoXKc87AnPWm64gPqzTFSYRc=;
-	b=BVR2YlqoY4KWjK0iLO13V6uVfdusQowEKDIvosjzv0LJ/ZOWyGkj9+yhVPyHqPwH
-	0Ob9GdEE3hiLnExUHMqrnsyEyoTmEdhbeUAzeox8uhByNnw3P9mIOYhIVcomzP4IUMp
-	vpx4ihjy1q8+bZBo7+R/yC6U69lbH8TILc4EKm7w=
-Received: by mx.zohomail.com with SMTPS id 1786535052702316.90688317257377;
-	Wed, 12 Aug 2026 04:44:12 -0700 (PDT)
-Message-ID: <51dc752d-e452-48e8-89e3-54947f215043@zohomail.com>
-Date: Wed, 12 Aug 2026 19:44:09 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/kVUPJh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CE5A1F000E9;
+	Wed, 12 Aug 2026 11:52:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786535533;
+	bh=LYWSuCHz3LVfdIV5hAmlaAHu4HI1XSWM9WdFnXDI3ZU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Q/kVUPJh6gyB57T73EMvbTAT4A9+FjH7AtJyNO6JxMOQ8Nz/gRVJjuXeznvMy7OeE
+	 tSn7T7FPjsHpj3JpwGP3FxAVICKh+4xEBRhhF0ExjU8bmybMfYa3woS8r7mY/J7ON6
+	 ncKyO/j2VSO7sPWDj3/dLV37P9zSvncwYu/RgFKoM+fsj6uZS2zFb5hU3oimM9KZ32
+	 obQuJn5vl4B3PTRx6BeiCJ4OT8ulsL+07j0wEiovYSuuskJruknHqOhg7Qxpum791f
+	 zmM3Mm/v7zzCUgKocj88SsVgHMjqxQ9JE5L9m6VScd8a/AQJRgS5n6PAno0I92M4QQ
+	 7FHHKdyg2HWqQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 1/6] cxl/features: Reject feature offset that
+ overflows 16-bit field
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Richard Cheng" <icheng@nvidia.com>
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260812112107.56181-2-icheng@nvidia.com>
+References: <20260812112107.56181-1-icheng@nvidia.com>
+ <20260812112107.56181-2-icheng@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 12 Aug 2026 11:52:13 +0000
+Message-Id: <20260812115213.7CE5A1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] cxl/cdat: Fix uninitialized stack use in endpoint
- bandwidth gathering
-To: Guixin Liu <kanie@linux.alibaba.com>, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
- Ira Weiny <iweiny@kernel.org>
-Cc: linux-cxl@vger.kernel.org
-References: <20260812060912.54932-1-kanie@linux.alibaba.com>
-From: Li Ming <ming.li@zohomail.com>
-In-Reply-To: <20260812060912.54932-1-kanie@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Feedback-ID: zu08011227f88eed4329538c9c8eadf97f00002246a238b473cf8564c71660e40d7b87d88825d6e34994e130:ZohoMail
-X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
-X-ZohoMailClient: External
 
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-在 2026/8/12 14:09, Guixin Liu 写道:
-> cxl_endpoint_gather_bandwidth() declares three access_coordinate arrays on
-> the stack - pci_coord, sw_coord and ep_coord - without initializing them,
-> and relies on its helpers to fill every member. None of them does.
-> cxl_pci_get_bandwidth() and cxl_port_get_switch_dport_bandwidth() assign
-> only read_bandwidth and write_bandwidth, and
-> __cxl_coordinates_combine() assigns an output bandwidth only when both
-> input bandwidths are non-zero. Every member a producer declines to set is
-> read back as whatever was on the stack.
->
-> Both cases occur on real topologies. The latency members of pci_coord and
-> sw_coord are never written, yet __cxl_coordinates_combine() sums them
-> unconditionally, so the latency reads are undefined on every call. And a
-> device whose CDAT DSLBIS reports no bandwidth for an access class leaves
-> perf->cdat_coord zero for that class, which is exactly the condition that
-> makes __cxl_coordinates_combine() skip the bandwidth assignment and leave
-> the ep_coord entry untouched.
->
-> The ep_coord case escapes the function: cxl_bandwidth_add() accumulates it
-> into the per-upstream-port aggregate that is published through the region's
-> access coordinate sysfs attributes, so stack contents are reported to
-> userspace as a bandwidth figure. The latency sums are discarded by
-> cxl_bandwidth_add() rather than published, but they are still computed from
-> uninitialized memory.
->
-> Zero initialize the three arrays. Zero is already the value this code uses
-> for "not reported" - both the __cxl_coordinates_combine() guard and
-> coordinates_valid() test for it - so a member no producer sets now reads
-> back as unknown rather than as a plausible number.
->
-> Fixes: a5ab0de0ebaa ("cxl: Calculate region bandwidth of targets with shared upstream link")
-> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
-Reviewed-by: Li Ming <ming.li@zohomail.com>
-> ---
-> This was patch 6/8 of the "cxl: Assorted fixes" series [1]. Per review
-> feedback that series is not being reworked as a whole; the fixes are resent
-> individually instead. Patches 1, 2 and 7 of the series are dropped, as those
-> issues are already fixed in cxl/next.
->
-> v1->v2:
-> - rebase onto cxl/next
-> - rewrite the commit message to describe the behaviour rather than narrate
->    the code change (Alison Schofield)
->
-> [1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
->
->   drivers/cxl/core/cdat.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-> index 5c9f07262513..3c6a1537f89b 100644
-> --- a/drivers/cxl/core/cdat.c
-> +++ b/drivers/cxl/core/cdat.c
-> @@ -633,9 +633,9 @@ static int cxl_endpoint_gather_bandwidth(struct cxl_region *cxlr,
->   	struct cxl_port *endpoint = to_cxl_port(cxled->cxld.dev.parent);
->   	struct cxl_port *parent_port = to_cxl_port(endpoint->dev.parent);
->   	struct cxl_port *gp_port = to_cxl_port(parent_port->dev.parent);
-> -	struct access_coordinate pci_coord[ACCESS_COORDINATE_MAX];
-> -	struct access_coordinate sw_coord[ACCESS_COORDINATE_MAX];
-> -	struct access_coordinate ep_coord[ACCESS_COORDINATE_MAX];
-> +	struct access_coordinate pci_coord[ACCESS_COORDINATE_MAX] = { };
-> +	struct access_coordinate sw_coord[ACCESS_COORDINATE_MAX] = { };
-> +	struct access_coordinate ep_coord[ACCESS_COORDINATE_MAX] = { };
->   	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->   	struct cxl_dev_state *cxlds = cxlmd->cxlds;
->   	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
->
-> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
+Pre-existing issues:
+- [High] fwctl ioctls falsely report SUCCESS to userspace when CXL mailbox =
+transport encounters an internal error.
+--
+
+--- Patch [1]: [PATCH v4 1/6] cxl/features: Reject feature offset that over=
+flows 16-bit field ---
+commit 758deff635a1582bb94f5fac18c817ddd4966bdb
+Author: Richard Cheng <icheng@nvidia.com>
+
+cxl/features: Reject feature offset that overflows 16-bit field
+
+This patch validates that the transfer size does not exceed the remaining 1=
+6-bit
+feature range to prevent truncation when building mailbox command offsets. =
+It
+also changes cxl_get_feature() to return ssize_t so invalid input and mailb=
+ox
+failures are reported as negative errno. Finally, it updates the EDAC calle=
+rs
+to handle negative results.
+
+> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> index ba6d2a5acb74a..8d44ce8294978 100644
+> --- a/drivers/cxl/core/features.c
+> +++ b/drivers/cxl/core/features.c
+[ ... ]
+> @@ -259,7 +262,7 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, =
+const uuid_t *feat_uuid,
+>  		if (rc < 0 || !mbox_cmd.size_out) {
+>  			if (return_code)
+>  				*return_code =3D mbox_cmd.return_code;
+> -			return 0;
+> +			return rc < 0 ? rc : -EIO;
+>  		}
+
+[Severity: High]
+This isn't a bug introduced by this patch, but if cxl_internal_send_cmd()
+fails with an OS-level error (rc < 0), it won't populate
+mbox_cmd.return_code. Since mbox_cmd was initialized as a compound literal,
+doesn't this set *return_code to 0 (CXL_MBOX_CMD_RC_SUCCESS)?
+
+When this happens, cxlctl_get_feature() will absorb the negative error code
+and pass the zeroed return_code back to fwctl:
+
+drivers/cxl/core/features.c:cxlctl_get_feature() {
+	...
+	data_size =3D cxl_get_feature(..., &return_code);
+	*out_len =3D sizeof(struct fwctl_rpc_cxl_out);
+	if (data_size <=3D 0) {
+		rpc_out->size =3D 0;
+		rpc_out->retval =3D return_code;
+		return no_free_ptr(rpc_out);
+	}
+	...
+}
+
+Does this result in fwctl ioctls falsely reporting SUCCESS to userspace when
+the CXL mailbox transport encounters an internal error? This same pattern
+appears to be present in cxl_set_feature() and cxlctl_set_feature() as well.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260812112107.5618=
+1-1-icheng@nvidia.com?part=3D1
