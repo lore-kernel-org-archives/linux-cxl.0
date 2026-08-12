@@ -1,104 +1,147 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9701B3E3DA4
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 08:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FC7310779
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 08:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786523452; cv=none; b=MDOEmVWjS52gcSo3K805GThs4D7zxPlRGcekdYcisRPp8C7+13A8OW5t3yZ1sr7EGR5srKhvZosyWyVlDsjVbbWY0eKbRF2YG/3n5EZZcJ5LtGw7ws8i/CePsqPLAcQdeKyy37+2fphe5TB5w3amhMd7CRn2qouoDpR6746S9Us=
+	t=1786523693; cv=none; b=MTCn21iax7ci/D/+la5BkhVtviW+j5YZ80/zwaZkBpEO0GtU3NGi3W2u3Fl9FX2rIqI7u6hExfqJcSgBzpNsvMX42GFEmSmQ1COXzX9T6Zw5kh9VHqX5IMbEx6uGEh0R+OGKJOXI71RblzartybjIp1cLl8Ki6+lvi/Pm3Pf1AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786523452; c=relaxed/simple;
-	bh=pC24eGeR7WzVxfZpOP2985EE4ZDbcu8w7laytrHkDLM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JeZmfPpcLImP6cw575YsBRjYBlQHwCSX+hbNvwfE0WWSD1FbM9K3MrtM9AqbB664UOIuX9PMuXciFD2a+AGm8WpgaBlGqSIXwh+IvgQU1u+TI4VnFxlR1QQIT3zThYvfB2zTlZxqqjmdfwVXla6y3+s6/Faurj1qa3cUyZ8xdjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=b/KJtBXi; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1786523693; c=relaxed/simple;
+	bh=MZ9FwUSn5DylJhcsQVLHAnrrwqyJizeEe/De9sY8Bog=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=fCip2QIVL6RArU+6C/+DB4070fPdWOVCviKB0UeX/Frm9d5r+d4NX+IMFaRJL6bGRLDQx09BvkJSNzflibEYkwJVUf0AmBkSq9irmX4yKzMh8L3hUv9z9Zrn54bJhXXKg+blmdqKTSzB+ozSDlVcT/tN1oCKV5M4oUOpGX+m+bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6BqzbDy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="b/KJtBXi"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1786523442; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=PnRoXOE0k5yZn7jYBeVbPJFJfeOLuD+mK1Zj1iMbZ+E=;
-	b=b/KJtBXi5v5BdGorplATqFxrU4iwmcC0eWat4WaPzwSUQFMz/vdYQiqlj3/CTsm0zjZLROE5tXw4ih9O2rqt+MIBYpXu9HlqdBaNbx+0r+DI9X9MTcZjV+TOH0KoXLXkWcXFWOQsTbAkvHwLQ/tAD4fOdHW3Mft+LxMbDB8wtLo=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0X8r40Ah_1786523441;
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8r40Ah_1786523441 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 12 Aug 2026 16:30:41 +0800
-From: Guixin Liu <kanie@linux.alibaba.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dan Williams <djbw@kernel.org>,
-	Ira Weiny <iweiny@kernel.org>,
-	Li Ming <ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6BqzbDy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47FE31F000E9;
+	Wed, 12 Aug 2026 08:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786523692;
+	bh=Q5zOXe3pfgkSJGqxZA84LdCYn7kE//iBhbmFNvVi150=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=O6BqzbDyoDKrje0wUhpVZ7+oELWO9zRwSlQA0FhSepzVp9N0WhRUGAR3gAjOKsyo+
+	 YJgGPO+sxdTx+F7jgrLP5Gl0kwIILgIS3VQVIMTC9c/+kn+rKXoxoWkWWsFF41SOCt
+	 SHr+h7ZStUjLumINsbTadZsjoGqw2SJO9VGbj6bS0l8ZX4/cZKKt3NOMKfTM4qrdgo
+	 L6S15RHIVZyMp/HQ8OKiW/rwEfexaZhmyRduQViyBYGvUPlb+esR+0c7pjZDViFTyh
+	 v+sMA7DmwpFKPNnfM167uAdLlC9naEKAzYfJve25t9xqEXx8x8FH9JdbEE9cww5iC6
+	 d/9ISsMqVkmlg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3] cxl/pci: Skip reset detection for DVSEC emulated
+ decoders
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Guixin Liu" <kanie@linux.alibaba.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v3 2/2] cxl/port: Fix uninitialized coordinates reported for RCDs
-Date: Wed, 12 Aug 2026 16:30:35 +0800
-Message-ID: <20260812083035.372308-3-kanie@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.7
-In-Reply-To: <20260812083035.372308-1-kanie@linux.alibaba.com>
-References: <20260812083035.372308-1-kanie@linux.alibaba.com>
+In-Reply-To: <20260812082347.354371-1-kanie@linux.alibaba.com>
+References: <20260812082347.354371-1-kanie@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 12 Aug 2026 08:34:51 +0000
+Message-Id: <20260812083452.47FE31F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-cxl_endpoint_get_perf_coordinates() walks the CXL path and copies the
-accumulated numbers into the caller's array with set_access_coordinates()
-just before it returns. For a Restricted CXL Device it never gets that far:
-RCH topologies are covered by HMAT and cannot be hotplugged, so the walk is
-skipped and the function returns 0 with the output array untouched. Every
-caller is told the coordinates are valid while nothing was written to them.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Its only consumer, cxl_port_perf_data_calculate(), keeps the array on the
-stack and does not pre-zero it, and endpoint CDAT parsing is not gated on
-the topology: cxl_endpoint_port_probe() calls read_cdat_data() and
-cxl_endpoint_parse_cdat() for every endpoint port, RCD included. So an RCD
-that exposes a CDAT combines stack residue with the values from its DSMAS
-entries.
+Pre-existing issues:
+- [High] A race condition between PCI error handler and port driver unbind =
+can cause a Use-After-Free or NULL pointer dereference on the `cxlhdm` stru=
+cture.
+- [High] Concurrent non-atomic modifications to `cxld->flags` in `cxl_endpo=
+int_decoder_clear_reset_flags()` can lead to lost updates and state corrupt=
+ion.
+--
 
-The residue does not stay in the driver. __cxl_coordinates_combine() sums
-the latencies unconditionally and takes the minimum of the bandwidths when
-both are non-zero, so it lands in dent->coord, which selects a QoS class
-through cxl_root->ops.qos_class() and is copied into the memdev's
-cxl_dpa_perf, where cxl_memdev_update_perf() publishes it through the
-memdev's access coordinate sysfs attributes.
+--- Patch [1]: [PATCH v3] cxl/pci: Skip reset detection for DVSEC emulated =
+decoders ---
+commit c5fca0ff917fa2bd1a3438469d23f5762cfe524b
+Author: Guixin Liu <kanie@linux.alibaba.com>
 
-Clear the output on the RCD path so the function honours its contract for
-every caller. Zeroing at the single caller instead would leave the exported
-helper free to report success without writing anything, which the next
-caller would have to know about; and zero is the value this code already
-uses for "not reported", so an RCD now reads back as unknown rather than as
-plausible numbers.
+cxl/pci: Skip reset detection for DVSEC emulated decoders
 
-Fixes: 5d211c709059 ("cxl: Fix cxl_endpoint_get_perf_coordinate() support for RCH")
-Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
----
- drivers/cxl/core/port.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+This commit skips the reset detection check for CXL decoders emulated from
+DVSEC ranges. It addresses a crash and false warnings during PCI reset when
+HDM decoder registers are unused or non-existent, as these decoders do not
+have a commit state to lose.
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 625e4aa427db..fea43a92744c 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -2394,8 +2394,10 @@ int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
- 	 * Skip calculation for RCD. Expectation is HMAT already covers RCD case
- 	 * since RCH does not support hotplug.
- 	 */
--	if (cxlmd->cxlds->rcd)
-+	if (cxlmd->cxlds->rcd) {
-+		memset(coord, 0, sizeof(*coord) * ACCESS_COORDINATE_MAX);
- 		return 0;
-+	}
- 
- 	/*
- 	 * Exit the loop when the parent port of the current iter port is cxl
--- 
-2.43.7
+[ ... ]
 
+> - cxld->flags is updated with a plain read-modify-write in
+>   cxl_endpoint_decoder_clear_reset_flags(), while cxl_decoder_commit() and
+>   cxl_decoder_reset() update the same word under cxl_rwsem.region, which
+>   __commit() and the region reset paths hold across those calls. Having t=
+he
+>   reset handler take that rwsem too looks like the natural fix, but it
+>   already holds the memdev device lock at that point, so the lock ordering
+>   wants review first.
+
+[Severity: High]
+This isn't a bug introduced by this patch, but since it is discussed here, =
+can
+the non-atomic modification to cxld->flags in
+cxl_endpoint_decoder_clear_reset_flags() lead to lost updates?
+
+drivers/cxl/pci.c:cxl_endpoint_decoder_clear_reset_flags() {
+    ...
+    cxled =3D to_cxl_endpoint_decoder(dev);
+    cxled->cxld.flags &=3D ~CXL_DECODER_F_RESET_MASK;
+    ...
+}
+
+During a PCI reset, cxl_reset_done() calls this function which performs the
+unprotected read-modify-write on cxld->flags. Concurrently, operations like
+cxl_decoder_commit() modify the same flags word under the cxl_rwsem.region
+lock.
+
+Because the reset handler does not hold this semaphore, can these updates r=
+ace
+and overwrite each other, potentially dropping the CXL_DECODER_F_ENABLE or
+lock flags and leaving the decoder in an inconsistent state?
+
+[ ... ]
+
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 9d807c1a002ca..d8b07f86bab09 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -683,6 +683,13 @@ static int __cxl_endpoint_decoder_reset_detected(str=
+uct device *dev, void *data)
+>  	if ((cxld->flags & CXL_DECODER_F_ENABLE) =3D=3D 0)
+>  		return 0;
+> =20
+> +	/*
+> +	 * Decoders emulated from the DVSEC range registers have no commit
+> +	 * callback and no HDM decoder registers to consult.
+> +	 */
+> +	if (!cxld->commit)
+> +		return 0;
+> +
+>  	cxlhdm =3D dev_get_drvdata(&port->dev);
+>  	hdm =3D cxlhdm->regs.hdm_decoder;
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does this code risk a
+use-after-free or a NULL pointer dereference on the cxlhdm structure?
+
+A PCI reset (like FLR or SBR) triggers cxl_reset_done(), which walks endpoi=
+nt
+decoders without holding locks that would prevent the cxl_port driver from
+unbinding from the endpoint port.
+
+If the port unbinds concurrently, devres frees the cxl_hdm structure.
+The device walk here in __cxl_endpoint_decoder_reset_detected() then calls
+dev_get_drvdata() on the unbound port device, retrieves a dangling pointer =
+to
+cxlhdm, and immediately dereferences it at cxlhdm->regs.hdm_decoder.
+
+>  	ctrl =3D readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+> =20
+>  	return !FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl);
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260812082347.3543=
+71-1-kanie@linux.alibaba.com?part=3D1
