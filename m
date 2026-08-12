@@ -1,114 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF5B434407
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 11:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786535536; cv=none; b=eTIjIVZHrXCXKhw9RSZ4Pa780HDSLpeyf23ty4zcC4lqClF5lHrvO8LwNHtokdzzaPUG/nC0mvvHhxKUh3TKmwSerWTiEbd2ECfD0bXB7mysjBt+HUm7WvR/i/5UHs7Y+xN5yae/M6PKNo81tAPn/BRXcJd0/by8MN3B7RM1FDc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786535536; c=relaxed/simple;
-	bh=CMCx9JGbn512rSCXyn+0Cn5fAIpLjBWoF+SL7RCB0Cc=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=E0MeapPZPsEQ2g6Tz/eZm+tISKYuTIYX6X6a8LNFlcRdNZl7bov2SoWg9zd5p6SyrPtPcI93rB36SD+t1rtWSbMoWu+3H5mN+2yZ/WOf2+dNby/ZU/ymJKp7XCH4oOy2luQ6gdzxXdn83xMzT1Lc4RlDQXnPaU4ksWtFpQnPAls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q/kVUPJh; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A2D398915
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 11:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786535667; cv=pass; b=Y8rovO4rPoit31y0oI36in6ZFZvrlM2M8NVVF7Pixv+Fj/jNeRcf4QpS2fSgjK8QqblTYKwblceVj8CbqG7Y5wNRNPlWiwZL22zi0K74nlaBbZRxgSFg9qqnIndRHaLjR5OAxrj9yk8xayhtumG9zuf5kWJf8ZB5VhlkC8QfM9Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786535667; c=relaxed/simple;
+	bh=1eee5drbn4hQlfAk88cXKMXaneD5JjjiHQPyWc+Yoc8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RKpUWDzgeYx5h1P0oP1vUV3UhLLXmCwXeOwM8rCZrzNN1Sch84b7kp8YiVQfWp6dTYkmS3TOuVlj0ODMyF/siQQy4YZA51csfVMwCwflF4OC+bPqaY/GXccaW1O97DkBItovBJQWbdNEUkf4lJwCGqaRxamI7PPyL9KkELRnhEY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=GTTTylrL; arc=pass smtp.client-ip=136.143.188.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/kVUPJh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CE5A1F000E9;
-	Wed, 12 Aug 2026 11:52:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786535533;
-	bh=LYWSuCHz3LVfdIV5hAmlaAHu4HI1XSWM9WdFnXDI3ZU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Q/kVUPJh6gyB57T73EMvbTAT4A9+FjH7AtJyNO6JxMOQ8Nz/gRVJjuXeznvMy7OeE
-	 tSn7T7FPjsHpj3JpwGP3FxAVICKh+4xEBRhhF0ExjU8bmybMfYa3woS8r7mY/J7ON6
-	 ncKyO/j2VSO7sPWDj3/dLV37P9zSvncwYu/RgFKoM+fsj6uZS2zFb5hU3oimM9KZ32
-	 obQuJn5vl4B3PTRx6BeiCJ4OT8ulsL+07j0wEiovYSuuskJruknHqOhg7Qxpum791f
-	 zmM3Mm/v7zzCUgKocj88SsVgHMjqxQ9JE5L9m6VScd8a/AQJRgS5n6PAno0I92M4QQ
-	 7FHHKdyg2HWqQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 1/6] cxl/features: Reject feature offset that
- overflows 16-bit field
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Richard Cheng" <icheng@nvidia.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260812112107.56181-2-icheng@nvidia.com>
-References: <20260812112107.56181-1-icheng@nvidia.com>
- <20260812112107.56181-2-icheng@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 12 Aug 2026 11:52:13 +0000
-Message-Id: <20260812115213.7CE5A1F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="GTTTylrL"
+ARC-Seal: i=1; a=rsa-sha256; t=1786535655; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=IVARlcg/Ws7gbG3OQhbMNvZzOopmNmcwVB9BL7VU1weZJU/USQ5dA36iMlzizJMZ6aWSuxgO4vGvO2JPT0R/CIZefW+I8mEwCHT2/y0WcewXee05YCF+8UFbl1v3kNwKdzqX/Wlndtr4H51y+lLjKTcKtgmN5mZhxQHgMtSplMI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1786535655; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=x7Ceo1MAcZZaI+X1+905OMar6RUz+mcr2mRrK4wruQ0=; 
+	b=B54lCneUDZTlksuR6Yj/8WckxUGGTw13IKFsx6G1BivOflephBZAuinyetCHpHfQxi9HPMxU0rZBEvZO2M4AOYnP9p2ey8/FtUXpePZ6P/aybM+QTXOkaEe5ch2k1M+V3K2x3kYHE4aPqpXgFRSxFgGRuMRYky+5Gep47FZzDRI=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=zohomail.com;
+	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
+	dmarc=pass header.from=<ming.li@zohomail.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1786535654;
+	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID:Message-Id:Reply-To;
+	bh=x7Ceo1MAcZZaI+X1+905OMar6RUz+mcr2mRrK4wruQ0=;
+	b=GTTTylrL9m7QZz7MNiydD3JyOPOJeAtJbEmIR1E6c5KSFxEzGn7Ozzt9wLsuwtGY
+	d+rNp0IZ9rC98IG1zkSw/zv30IgI+crUY2ctjwo97tlnQ/VS0xWgsSyO2bxOmwPevfo
+	1gu6CJCq8BJys0iMtl10Rr54wE8cbgRiVNhPyAXE=
+Received: by mx.zohomail.com with SMTPS id 1786535652360819.9258603759376;
+	Wed, 12 Aug 2026 04:54:12 -0700 (PDT)
+Message-ID: <e2b0b35d-c528-43c6-ab98-730c82e0eb24@zohomail.com>
+Date: Wed, 12 Aug 2026 19:54:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] cxl/core: Fix dport use-after-free via the einj_inject
+ debugfs file
+To: Guixin Liu <kanie@linux.alibaba.com>, Davidlohr Bueso
+ <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
+ Ira Weiny <iweiny@kernel.org>
+Cc: linux-cxl@vger.kernel.org
+References: <20260812060943.56246-1-kanie@linux.alibaba.com>
+From: Li Ming <ming.li@zohomail.com>
+In-Reply-To: <20260812060943.56246-1-kanie@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Feedback-ID: zu08011227faff7a4e75042cedb866e39c0000e9072b7900a88aa838abe19ff54b00d38545a4fb0075dc89f2:ZohoMail
+X-Zoho-CM-AccountID: abd763e7b9fa23acf4f42a44f9876d2d993e05abdb9290f9ccb1008c977bf7f0
+X-ZohoMailClient: External
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
 
-Pre-existing issues:
-- [High] fwctl ioctls falsely report SUCCESS to userspace when CXL mailbox =
-transport encounters an internal error.
---
-
---- Patch [1]: [PATCH v4 1/6] cxl/features: Reject feature offset that over=
-flows 16-bit field ---
-commit 758deff635a1582bb94f5fac18c817ddd4966bdb
-Author: Richard Cheng <icheng@nvidia.com>
-
-cxl/features: Reject feature offset that overflows 16-bit field
-
-This patch validates that the transfer size does not exceed the remaining 1=
-6-bit
-feature range to prevent truncation when building mailbox command offsets. =
-It
-also changes cxl_get_feature() to return ssize_t so invalid input and mailb=
-ox
-failures are reported as negative errno. Finally, it updates the EDAC calle=
-rs
-to handle negative results.
-
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index ba6d2a5acb74a..8d44ce8294978 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-[ ... ]
-> @@ -259,7 +262,7 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, =
-const uuid_t *feat_uuid,
->  		if (rc < 0 || !mbox_cmd.size_out) {
->  			if (return_code)
->  				*return_code =3D mbox_cmd.return_code;
-> -			return 0;
-> +			return rc < 0 ? rc : -EIO;
->  		}
-
-[Severity: High]
-This isn't a bug introduced by this patch, but if cxl_internal_send_cmd()
-fails with an OS-level error (rc < 0), it won't populate
-mbox_cmd.return_code. Since mbox_cmd was initialized as a compound literal,
-doesn't this set *return_code to 0 (CXL_MBOX_CMD_RC_SUCCESS)?
-
-When this happens, cxlctl_get_feature() will absorb the negative error code
-and pass the zeroed return_code back to fwctl:
-
-drivers/cxl/core/features.c:cxlctl_get_feature() {
-	...
-	data_size =3D cxl_get_feature(..., &return_code);
-	*out_len =3D sizeof(struct fwctl_rpc_cxl_out);
-	if (data_size <=3D 0) {
-		rpc_out->size =3D 0;
-		rpc_out->retval =3D return_code;
-		return no_free_ptr(rpc_out);
-	}
-	...
-}
-
-Does this result in fwctl ioctls falsely reporting SUCCESS to userspace when
-the CXL mailbox transport encounters an internal error? This same pattern
-appears to be present in cxl_set_feature() and cxlctl_set_feature() as well.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260812112107.5618=
-1-1-icheng@nvidia.com?part=3D1
+在 2026/8/12 14:09, Guixin Liu 写道:
+> cxl_debugfs_create_dport_dir() publishes a debugfs directory containing an
+> "einj_inject" file whose i_private is the 'struct cxl_dport', then discards
+> the returned dentry and registers nothing to remove it. The other per-dport
+> facility set up next to it in __devm_cxl_add_dport(),
+> devm_cxl_dport_ras_setup(), binds its resources to dport_to_host(dport) so
+> that they go away with the dport. The debugfs directory has no such owner:
+> it lives until cxl_core is unloaded and cxl_core_exit() tears down the
+> whole cxl/ tree.
+>
+> The dport itself is freed much earlier. free_dport() is registered in the
+> dport's devres group, so the dport is freed when the host device is
+> unbound, which is an ordinary sysfs operation on the host bridge port or
+> the ACPI0017 root, not a module-teardown-only path. After that unbind the
+> einj_inject file is still there, and a write to it calls cxl_einj_inject()
+> on freed memory, reading dport->rch and dport->dport_dev and passing them
+> to the EINJ code.
+>
+> Re-binding the topology does not recover either. The stale directory keeps
+> the dport device's name, so the second creation finds the name in use,
+> debugfs setup fails, and error injection is silently unavailable for that
+> dport for the remaining lifetime of the module.
+>
+> Keep the dentry and remove the directory from a devm action on the dport's
+> host device. The action is registered after free_dport() within the same
+> devres group, so release ordering runs it before the dport is freed. Its
+> registration failure is deliberately not propagated, following
+> devm_cxl_dport_ras_setup(): a missing debugfs directory is not a
+> functional failure of the dport, and on that path
+> devm_add_action_or_reset() has already removed the directory itself, so
+> there is no dangling node left and nothing to gain from failing the dport
+> addition.
+>
+> Fixes: 8039804cfa73 ("cxl/core: Add CXL EINJ debugfs files")
+> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+Reviewed-by: Li Ming <ming.li@zohomail.com>
+> ---
+> This was patch 3/8 of the "cxl: Assorted fixes" series [1]. Per review
+> feedback that series is not being reworked as a whole; the fixes are resent
+> individually instead. Patches 1, 2 and 7 of the series are dropped, as those
+> issues are already fixed in cxl/next.
+>
+> v1->v2:
+> - do not propagate the devm_add_action_or_reset() failure out of
+>    cxl_debugfs_create_dport_dir(); a missing debugfs directory must not fail
+>    the dport addition (Li Ming)
+> - rebase onto cxl/next
+> - rewrite the commit message to describe the behaviour rather than narrate
+>    the code change (Alison Schofield)
+>
+> [1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
+>
+>   drivers/cxl/core/port.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index 625e4aa427db..62a9c2038d1f 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -814,6 +814,11 @@ static int cxl_einj_inject(void *data, u64 type)
+>   DEFINE_DEBUGFS_ATTRIBUTE(cxl_einj_inject_fops, NULL, cxl_einj_inject,
+>   			 "0x%llx\n");
+>   
+> +static void remove_debugfs(void *dentry)
+> +{
+> +	debugfs_remove_recursive(dentry);
+> +}
+> +
+>   static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+>   {
+>   	struct cxl_port *parent = parent_port_of(dport->port);
+> @@ -834,6 +839,8 @@ static void cxl_debugfs_create_dport_dir(struct cxl_dport *dport)
+>   
+>   	debugfs_create_file("einj_inject", 0200, dir, dport,
+>   			    &cxl_einj_inject_fops);
+> +
+> +	devm_add_action_or_reset(dport_to_host(dport), remove_debugfs, dir);
+>   }
+>   
+>   static int cxl_port_add(struct cxl_port *port,
+>
+> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
