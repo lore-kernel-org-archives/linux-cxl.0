@@ -1,105 +1,340 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2CC3546F9;
-	Wed, 12 Aug 2026 13:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C132146A61A
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 14:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786540707; cv=none; b=EFePDfe954VsvKKo5ZgcRaJh/4KWAmDJyxYuk4jj9PbUcXy39Q016lnAh2Gl7fj5W08FXJ9Sb8UjktP3t5fifmb/P00KIFa2Vd9GCnpKy8iiSYHdZqOfAE0rggo3MmT/2lykcVQ6eM6DyjhYkHghdqn4fgYSGJzxR3DRPlSFr50=
+	t=1786546208; cv=none; b=on1E2Vvol8bTdVx6SRldGMKRCv5LOswjBE8X+4NLMUjbuBphwVgmF6ho9A6/IT8MTMkxOFLJC6V93gImAy1MjxCYprkXCTuesbdIk781RZUxvnjAouWpVNj1VvxCW0ax/0rqVtfi4nw8NISXopT3Gs3sl/uy5iHtB+O7zKtnJGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786540707; c=relaxed/simple;
-	bh=FNYMuvDxnN2le7GrJsSybD+3kq9674S4u5uqSocNf8Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AXjWw63q8UsTqfJR/g7oLXkAnOzy9Y5lVbTvPXnjBmA/PUYG6Dw4x1JBXJwOz0elj5M0fAd76Jjf7bf+W2Ryc258Mm5fVxXwHI9Z1tJHri4/VnSGT2/RdsGW1E6hBQMIo96wei+ZecUkPFQwbtC7YGQhg/qxBXCfbQCNvvX1Uik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=VDMJoP7o; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1786546208; c=relaxed/simple;
+	bh=GJNzfFCXyA7QbUzI2qk0+6EWy2+CpitP1Nwr5kSDWqA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=avQypHfuluzy9mQl2QYQROUok8kIMksYXYI3657CGeJfWHMsCLT2byfdnv3VwYU6JanIOltP360rS9ClU4Rph5EQ7VRnJnVowZ6tCwLIz+A/jkrtQIYbMiBmb+yfjmhUIjgswZM2oJguvD3xzUS3jApu9MJjA0AdR/3egMFqyfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tf5Fol9y; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="VDMJoP7o"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1786540702; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=w5Ux7//5pOr7u2EOh2gxhjxHv/3OlkRpCDUVa9tIf1U=;
-	b=VDMJoP7o2wOCOsMWZFuTGfqomOVQGMcjb8K8Szn/UJ33Z7o3zPcubgxUSgJkbNwj+bVVYSvFC0VT4nbTdn3XAI4ay5EvqKkPLNt8YDeioOeyHX6dDC4K6x3zNI/KEqYF3/q+GP3lLvEHpqZ4f5nkSuqTzTAlEq5LXKAdiaMD3xg=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0X8rgG-I_1786540701;
-Received: from 30.246.161.236(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X8rgG-I_1786540701 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 12 Aug 2026 21:18:21 +0800
-Message-ID: <607b4999-6054-4fc9-8e30-d2de20031bc2@linux.alibaba.com>
-Date: Wed, 12 Aug 2026 21:18:20 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tf5Fol9y"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-7eb34c17b96so826225a34.2
+        for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 07:50:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786546198; x=1787150998; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=m2bfz1xPNnYsmTuBu6PuVX8SO2+iE1L2/l9R4aB2xA4=;
+        b=Tf5Fol9ySfjSDRO1xw2XUdIXYsSWkOddbA8BVven8ewFKAcFwZHqkh49Uli+onmRiM
+         FTo11AK01Fghyud5mUqs545RB2ojUbWA0ceIjIsm+xmpEqF2QjxXAm7LH2Oluz4DZlm6
+         DNuNzguw5uCR5dgxzc0q8OzQ07LBDwUS+Unpm+GIOiU5wgcZDxwZNZTDksYb24/UbEzz
+         wOhk9VMQ+aCVg0AV5FqfMUz6Qtlw4ekTQcMtawEbzR55zkxLcXKvPirJWlfRh1erywfm
+         vya2qSHN7BrpTPlc6ph5cuBOPjJDyYOdxN14dvWdqTStxC97irnoGYapyuRdVtnRDBrz
+         0bcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786546198; x=1787150998;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=m2bfz1xPNnYsmTuBu6PuVX8SO2+iE1L2/l9R4aB2xA4=;
+        b=AREmAIKjN/ZUNB3v1HCjwJ3CbQkeoeROOYFnVn0jmtANlg0QbOPJfIEsdD6nTO9+Yo
+         My2dperclYhjUwfsqmQEdIpsSvS1Dki7JR/Pvm0kjP1VSS8qbLKEbR/A13hHG05IkSCe
+         WBlPNxA5JZk2ICCPzWjEX3zjOeSx0E4rmYfHoABL9FLqSbHYDducf/70r0yaIvfv3Z3C
+         2ut/Ll2LbdVwS/WcSapdCu1X7AMZ1fBym71KHgfYzpfjA5CZC4EfvcibTHZrB+OQqR+1
+         KDg6eqDMR3ixFhWe0AtsQ6vt64p6vcXQAkVLiU3Kwrfw4TK5mn6aa2JOw31/A/iSGnqf
+         EMsA==
+X-Forwarded-Encrypted: i=1; AHgh+RqFyT2h3AQ4nB0/iiKha34VzKTpeNSX0v+Djh7Hs/UjNTu5xSii3ACjWRYmloPAwOeiHnExcV2vM2Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOxtkbj3LxDV8h3Dhv95u/rYw49b17jl//pBB0xoVSmLqpIjvG
+	lyHLewrRSUed2wY6elgYoirPWp5G+ErdCbfWNnxNu1yozYC5/9yCsQiX
+X-Gm-Gg: AR+sD11f3NWGD7CsIT5CDB7q/zuhXDiQWdlyUxA0gwOdHBRTz9gVrFXtGwfd0zHKCk5
+	08DIfvXmHvvuBqss1C3r5mlTpth183OYQvOW/pA7mYN5eWFRb0xMu5OANXKIXyRZAdO50QplUHm
+	7YACMJggqmW4yVnW7FIF6BaV+1UHNWwiTghngY2biEQQBNkxYWMxj5kl4KIXs2obMr4G+CE4qj0
+	aIi0fgkKRWwDgsCPJmCBYV5ETPpEpdUxh64yAnIKCG39pdZ314S+1TL1XMWJSshULr19nt6ENSe
+	3m0LTa6MS6z3EM5XrmiVaBsxGEmCYsF/MxlEXdiU8HHnk5THK7dshNv5yOTrHdlYSHUijQbR7+u
+	C7pnp5BzuUhHqdZysBIInu1fuh0Yj2Rrd1cWbIDM/fhF4v3DXf/dE7F6Gphx55Sum2xY7SPJwK7
+	2Uofv5uhh4CVmGMcqkN/+Iq5JCJfCD56+SIjVezT8t42A6pGenKGiBbvKbXYqeUKfewROAOSw6p
+	orrc1KfS+7pZ48w2x0=
+X-Received: by 2002:a05:6830:2116:b0:7dc:c7aa:22bd with SMTP id 46e09a7af769-7f3b7731b94mr5693831a34.6.1786546197721;
+        Wed, 12 Aug 2026 07:49:57 -0700 (PDT)
+Received: from localhost ([2a03:2880:10ff:49::])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7f3b34266f3sm3096544a34.24.2026.08.12.07.49.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Aug 2026 07:49:57 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Rakie Kim <rakie.kim@sk.com>
+Cc: akpm@linux-foundation.org,
+	gourry@gourry.net,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	byungchul@sk.com,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	david@kernel.org,
+	ljs@kernel.org,
+	liam@infradead.org,
+	vbabka@kernel.org,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	dave@stgolabs.net,
+	jic23@kernel.org,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	harry@kernel.org,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com
+Subject: Re: [PATCH 0/4] mm/mempolicy: introduce package-aware weighted interleave
+Date: Wed, 12 Aug 2026 07:49:55 -0700
+Message-ID: <20260812144955.3310684-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260812054700.1803-1-rakie.kim@sk.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 10/10] ACPI: extlog: Validate elog record length before
- walking sections
-To: Dave Jiang <dave.jiang@intel.com>, linux-acpi@vger.kernel.org,
- linux-cxl@vger.kernel.org
-Cc: rafael@kernel.org, tony.luck@intel.com, bp@alien8.de,
- guohanjun@huawei.com, mchehab@kernel.org, terry.bowman@amd.com,
- sashiko-bot@kernel.org
-References: <20260717161647.1493259-1-dave.jiang@intel.com>
- <20260717161647.1493259-11-dave.jiang@intel.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20260717161647.1493259-11-dave.jiang@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+> Hello Joshua,
+> 
+> I am doing well, thank you, and I hope you are too. Thank you for
+> taking the time to review this series and for following up on the
+> questions from the RFC discussion.
+> 
+> > My first question is whether we want cross-socket allocations at all.
+> > The examples you gave seem to line up with node-restricted interleave,
+> > as opposed to cross-socket interleave. I think the wording that you
+> > use to describe the feature in 4/4 (which I will copy below)
+> > 
+> > > The resolved mask is by construction a subset of the policy nodemask, which
+> > > mempolicy already restricts to the task's cpuset; package mode can only
+> > > narrow that set, never widen it, so cpusets and the task nodemask remain
+> > > authoritative.
+> > 
+> > is 100% the right way to treat these package-aware (socket-aware)
+> > interleaving allocations, but the example below
+> > 
+> > [...snip...]
+> > 
+> > > Applied the same way to every source, these weights give the map:
+> > > 
+> > >               node0  node1  node2  node3
+> > > global:         2      2      1      1
+> > 
+> > [...snip...]
+> > 
+> > >               node0  node1  node2  node3
+> > > from CPU 0:     2      0      1      0
+> > > from CPU 1:     0      2      0      1
+> > 
+> > Is essentially the existing weighted interleave mechanism with a
+> > nodemask/cpuset applied.
+> 
+> The example I gave was not explained well enough, and I can see how
+> it reads as a manually applied nodemask.
+> 
+> A nodemask or a cpuset names a fixed set of nodes, while package mode
+> expresses a rule: use the nodes of the package the allocation is
+> requested from. The mask is resolved per allocation from the
+> requesting CPU, so a single policy gives {0,2} to a thread on package
+> 0 and {1,3} to a thread on package 1 at the same time. One nodemask
+> cannot do that, since it is the same set for everyone who uses the
+> policy.
 
+Ah! I'm sorry. It seems I totally misunderstood the intent of the
+series. I think that my brain short-circuted to the discussion at
+LSFMMBPF from 2025, where I think we discussed having a real 2-D
+grid with weights per-node, per-CPU. I think my confusion is responsible
+for the examples below, which as I understand it now, are not the intent
+of the series.
 
-On 7/18/26 12:16 AM, Dave Jiang wrote:
-> sashiko-bot flagged a missing bounds check on data_length that allows
-> an out-of-bounds read of elog_buf.
-> 
-> extlog_print() copies a fixed ELOG_ENTRY_LEN (4096) bytes from the elog
-> record into elog_buf, then walks the sections using the
-> firmware-controlled data_length. Nothing checks that data_length stays
-> within the buffer, so a malformed record can walk the section pointer
-> past elog_buf and read adjacent memory.
-> 
-> Unlike the GHES paths, extlog never calls cper_estatus_check(). Reject a
-> record whose length exceeds ELOG_ENTRY_LEN and run cper_estatus_check()
-> before walking the sections.
-> 
-> A malformed record is now dropped with NOTIFY_DONE without setting
-> MCE_HANDLED_EXTLOG, reflecting that extlog did not consume it.
-> 
-> Reported-by: sashiko-bot@kernel.org
-> Closes: https://sashiko.dev/#/patchset/20260714231835.303081-1-dave.jiang@intel.com?part=6
-> Fixes: f6ec01da40e4 ("ACPI: extlog: Handle multiple records")
-> Assisted-by: Claude:claude-opus-4-8
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-> ---
-> v3:
-> - New patch. sashiko's review of v2 pointed out extlog walks the elog
->    sections without the cper_estatus_check() bound the GHES paths use.
-> ---
->   drivers/acpi/acpi_extlog.c | 7 +++++++
->   1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/acpi/acpi_extlog.c b/drivers/acpi/acpi_extlog.c
-> index 1fbaf134c04e..30863fd3f5b0 100644
-> --- a/drivers/acpi/acpi_extlog.c
-> +++ b/drivers/acpi/acpi_extlog.c
-> @@ -200,6 +200,13 @@ static int extlog_print(struct notifier_block *nb, unsigned long val,
->   
->   	tmp = (struct acpi_hest_generic_status *)elog_buf;
->   
-> +	/*
-> +	 * data_length is firmware controlled, so make sure the record and its
-> +	 * sections stay within elog_buf before anything walks them.
-> +	 */
-> +	if (cper_estatus_len(tmp) > ELOG_ENTRY_LEN || cper_estatus_check(tmp))
-> +		return NOTIFY_DONE;
-> +
->   	if (!ras_userspace_consumers()) {
->   		print_extlog_rcd(NULL, tmp, cpu);
->   		goto out;
+> There is also the question of how a user would build such a nodemask.
+> The package a CXL node belongs to is not visible today: on the
+> systems I tested, the firmware reports node1 as the initiator for
+> both CXL nodes. The topology layer in this series is what makes that
+> association available, and the read-only view under
+> /sys/devices/system/package/ lets the user check it.
 
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+That makes sense. Now I really see the goal of the series and it makes
+a lot more sense. Thank you for the clarification. 
 
-Thanks.
-Shuai
+> > With that said, I think a more interesting and
+> > illustrative example would be if the user truly would want to allow some
+> > allocations to go through cross-socket, but be able to control the
+> > ratio at which these slip through.
+> >
+> >               node0  node1  node2  node3
+> > from CPU 0:     3      1      2      0
+> > from CPU 1:     0      3      1      2
+> >
+> > Maybe even more illustrative of the true capabilities of this series
+> > would be if you have an asymmetric system where you bind some
+> > host-level monitoring / logging workloads to one node (say, node0) and
+> > want that to be able to cross through to the other socket, but not the
+> > other way around:
+> > 
+> >               node0  node1  node2  node3
+> > from CPU 0:     3      1      2      0
+> > from CPU 1:     0      2      0      1
+> > 
+> > Anyways, these are just super hypothetical scenarios and I don't even
+> > know if the configuration that I'm listing would really be beneficial
+> > for the system. I think that coming up with some illustrative usecases
+> > which are now made possible by this series could help motivate why we
+> > would want to interleave across sockets.
+> >
+> 
+> These maps are an interesting idea, and I would like to look at them
+> with you.
+> 
+> This series only narrows the candidate nodes; the weights themselves
+> stay global, so every source that reaches a node uses the same weight
+> for it. Both of your maps give a node a different weight depending on
+> which package the allocation comes from, so the weight table would
+> have to become per source rather than a single global one.
+> 
+> Encoding the weights that way came up in an earlier stage of this
+> work, and it was mentioned again briefly in the RFC thread. As I
+> recall, the difficulty then was less the placement logic than how a
+> user would drive it: weights would have to be configured for every
+> source, so both the interface and the structure behind it grow
+> considerably.
+
+Yeah, I can imagine it is quite a lot of tuning that users have to do.
+So I'm 100% on board for the goal of this series to make the existing
+weighted interleave mechanism respect the initiator's POV. Sorry for
+making you explain all of this, this confusion is just due to my
+misunderstanding.
+
+> That does not make your suggestion less interesting to me. I think it
+> could work well once there are clear scenarios for it, and the
+> grouping added here is what such a table would be built on, since a
+> per source weight only has meaning when the kernel knows which
+> package each node belongs to. What I am unsure about is folding it
+> into this series, whose aim is the narrower one of raising effective
+> bandwidth by keeping interleave traffic within a package. Allowing a
+> controlled amount of cross-package traffic points the other way, so I
+> think it is a topic we could discuss separately, with the use cases
+> worked out first.
+
+Thanks! Actually I think we can wait on this until we have real
+usecases where we prefer to make cross-socket allocations.
+
+> > I was also hoping to see what this interface looks like and maybe
+> > discuss how we should relay the information to the users, since this
+> > seems to be a new addition from the RFC.
+> >
+> 
+> Sure. The toggle lives with the existing weighted interleave knobs.
+> package_mode defaults to false, so nothing changes until the
+> operator explicitly enables it:
+> 
+> /sys/kernel/mm/mempolicy/weighted_interleave
+> |-- auto
+> |-- node0
+> |-- node1
+> |-- node2
+> |-- node3
+> `-- package_mode -> true/false
+> 
+> The package topology view is read-only and lives under
+> /sys/devices/system/package/. This is how it looks on the system I
+> am currently using:
+> 
+> /sys/devices/system/package
+> |-- package0
+> |   |-- package_cpu_nodes -> 0
+> |   |-- package_mem_only_nodes -> 2
+> |   |-- package_nodes -> 0,2
+> |   `-- physical_package_id -> 0
+> `-- package1
+>     |-- package_cpu_nodes -> 1
+>     |-- package_mem_only_nodes -> 3
+>     |-- package_nodes -> 1,3
+>     `-- physical_package_id -> 1
+> 
+> package_nodes shows every node grouped into that package, and the
+> cpu/mem_only files split them by type, so an operator can check how
+> the kernel grouped the topology before turning package_mode on. I
+> will update the documentation in the next version to describe this
+> interface and how to use it.
+
+Great, I think this would be a great addition to add to the cover
+letter and also add as documentation, since it is user-facing. 
+
+> > > Measured results:
+> > > 
+> > > System Configuration:
+> > > - Processor: Dual-Socket Intel Xeon 6980P (Granite Rapids)
+> > 
+> > I think a description of this system's topology would help me understand
+> > the results below a bit better : -)
+> >
+> 
+> That is a fair point. The system used for the measurements is
+> configured as follows:
+> 
+> - Processor:                 Dual-Socket Intel Xeon 6980P
+>                              (Granite Rapids)
+> - Local memory (per socket): 12 channels, DDR5-6400
+> - CXL memory (per socket):   8 channels, DDR5-6400
+> 
+> It boots as two CPU+DRAM nodes and two CXL memory-only nodes, which
+> is the topology shown in the sysfs output above. I will add this
+> description to the measured results in the next version.
+
+Thanks. Notably I wanted to see if the DDR generation was the same
+across DRAM and CXL. 
+
+> The case I had in mind is demotion and promotion target selection.
+> With the package information, tiering could keep those decisions
+> within a package: choosing the memory-only nodes of the task's
+> package as demotion targets, and symmetrically preferring the
+> package's CPU nodes when promoting, so that both hot and cold pages
+> stay close to the CPUs that use them.
+
+Yeah, I like this idea a lot.
+
+For demotion, we would just chnage the fallback zonelist based on the
+sockets.
+
+I think we actually get promotions for free, since if this series is
+doing a good job of allocating memory close to the consuming CPU, and
+the demotions prevent the memory from moving cross-socket, initiators
+should only promote (NUMAB2 promotion) memory that is socket-local.
+
+> To support this, the layer already exposes per-node "preferred" node
+> queries: for a CPU node it reports the nearest memory-only nodes in
+> the same package, and for a memory-only node the nearest CPU nodes.
+> Nothing consumes them yet; I kept them out of the placement path so
+> that tiering can adopt them separately when there is a real user.
+> 
+> > I definitely think this series makes a lot of sense and I am
+> > hoping to hear more about it. Thank you, I hope you have a great day!
+> >
+> > Joshua
+> 
+> Thank you again for the careful review and for the questions; they
+> were a great help in seeing what the cover letter needs to explain
+> better. I hope you have a great day too.
+
+Thank you Rakie. I don't think the cover letter was misleading,
+it was just my fault for short-circuiting and thinking the series was
+about adding per-socket per-node weights, as opposed to the
+restriction that you're adding to the existing weights.
+
+If I may add one more comment, I think 2/4 is a bit hard to review.
+A 1k line patch is not so easy to see the full picture, I think it would
+make it less intimidating to review if it could be split up into
+smaller patches. Just my 2c : -)
+
+Thanks again. I hope you have a great day!
+Joshua
