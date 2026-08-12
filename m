@@ -1,29 +1,29 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870BE3126A0
-	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 08:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442063B442F
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 08:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786523045; cv=none; b=KtqR4dNqzgTy6TFV1eL0yadfrPrkmFd4uUFZVjGMHIvHqghPyd7+qLygva9K2RShC5FpRNsQ4TVOg+WgFkdSJJHvaqCNlEwqsg/9t1qlXnjiEtpo/1wvA1tFfn0xp4bIdvSgXKxrvKPjI5XXPW6HVRrR1bpiVZ75ih+cB4brqdU=
+	t=1786523132; cv=none; b=QvDZLnKqJ82zJXdB2L2WRGPDaF9dB5CAEDLmzo3ti9gQaOzs6Lx+fsutyFdeAu+qCYEVGUfUgxbHLQ8bdGJSjoO5aL6e266j2qlA/S/jN3ZNZOykANpI3F9z7QCyVZe/O6KfvJi/ezETI3O/6QvLWhYWS+aEK6zPBQaMtwEZ7jE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786523045; c=relaxed/simple;
-	bh=A8tnaJyUk1YhSCKNC0RDHTBl1xTeCn+cgfOjzCDqZbg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ubCSkJ4mOax7wNOlFduEx92umLYVsqj4sJyGuaoaFhtOGyJXsrBax8LEeaPNJxtDvia0GwpVSBreDcNGketsTb1szsGhpdeHWlMm8ldnH0Ww+ilgjylS6LhOqlvXf/5suACZX/SPfPZZ/7R3tzJchO1iE4onRWLnUldAk/75G/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=yQySwv0n; arc=none smtp.client-ip=115.124.30.124
+	s=arc-20240116; t=1786523132; c=relaxed/simple;
+	bh=UgDH+0UmT8EKHV6zkYpXIbmDMRA34B9xhV7lb9tZoz0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QXMasWRluqqo6baTXkwweA/t/dzmnNhycPSarfsMDT4vZCWLcDec1Q29+M7Xwd0EJzeBbHc1BJtsj38OomzBEesRpgBRQd0QAAAzFBPKJ4gQtaslvPFjv3gt0L8oLAyI2lLnPzExOFBfs9ksRQdnwyteyiB7iNzv3OnBxc8lAhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=vv32Jzgc; arc=none smtp.client-ip=115.124.30.101
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="yQySwv0n"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="vv32Jzgc"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1786523033; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=QZvfiFecBqt6jf/VV+bHCPmh8I2I/ajTyLeXVGSnzL8=;
-	b=yQySwv0niCHAMKTeWJOY3PhjnvOHEWpsbsJ0bE/f5GpHgz7x3+ANA7b9lkwaFrgt3cGgxusrLI5icEyEe6Uf1rVgI12FqC63GSnJXh7gWCNAQffIY3j+ybdrioS5KBeGsPDao6CWjfcHYCpJE21MGQxufr6Z75QXo5j6X11VTDA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037026112;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0X8qzF7n_1786523032;
-Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8qzF7n_1786523032 cluster:ay36)
+	t=1786523125; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=seJlBFvA4wpaI8eN+kXlat1QS47eLT6pUSfes6j1l7c=;
+	b=vv32Jzgc89o7xJWLhVDKf2zGP6+cwAocqTtzPR9XYJSTY6Kc62Okhfdgz94nzC+HuZYYPECqDoNZcXFzh8+PwGHbs7QvkhjWKrNHjuHcopmNtI7BnBwbSNGjkWVQu2MpTTEDIn1xZukUVUhsll9mnONxsJnRq30Z1KLx4EEW15Q=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0X8r2roc_1786523124;
+Received: from localhost(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8r2roc_1786523124 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 12 Aug 2026 16:23:52 +0800
+          Wed, 12 Aug 2026 16:25:24 +0800
 From: Guixin Liu <kanie@linux.alibaba.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -34,9 +34,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Ira Weiny <iweiny@kernel.org>,
 	Li Ming <ming.li@zohomail.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v3] cxl/pci: Skip reset detection for DVSEC emulated decoders
-Date: Wed, 12 Aug 2026 16:23:47 +0800
-Message-ID: <20260812082347.354371-1-kanie@linux.alibaba.com>
+Subject: [PATCH] cxl/hdm: Reset the commit cursor before enumerating decoders
+Date: Wed, 12 Aug 2026 16:25:24 +0800
+Message-ID: <20260812082524.359758-1-kanie@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -46,119 +46,78 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-After an FLR or an SBR, cxl_reset_done() walks the endpoint's decoders and
-asks __cxl_endpoint_decoder_reset_detected() whether any of them lost its
-committed state. That helper filters on CXL_DECODER_F_ENABLE and then
-samples the Committed bit in the HDM decoder control register at
-cxlhdm->regs.hdm_decoder.
+port->commit_end is the cursor that orders decoder commits. It is set to
+-1 when the port is allocated and then built up by
+devm_cxl_enumerate_decoders(): for each decoder found committed in
+hardware, init_hdm_decoder() checks that it follows the last one and
+assigns port->commit_end = cxld->id.
 
-The HDM decoder registers are not always where an enabled decoder's state
-lives. A memory device may describe its ranges through the CXL DVSEC range
-registers instead, and should_emulate_decoders() picks that path in two
-situations: when the component registers expose no HDM decoder capability
-at all, and when the capability exists but firmware left Mem_Enable set
-with the global HDM decoder enable bit clear.
-cxl_setup_hdm_decoder_from_dvsec() publishes the emulated decoders with
-CXL_DECODER_F_ENABLE and CXL_DECODER_F_LOCK set, so they pass the filter,
-and it leaves cxld->commit NULL because there is no register to commit to.
+Nothing lowers the cursor again when an enumeration attempt fails
+midway. The decoders themselves are registered with
+cxl_decoder_autoremove() against the port device, so they are released
+when their devres scope goes away, and their ids return to
+port->decoder_ida from cxl_decoder_release(). The other cursor,
+port->hdm_end, is unwound by cxl_dpa_release(). port->commit_end has no
+such counterpart - commit_reap() only runs when a decoder is reset - and
+the port object outlives the attempt because it belongs to the agent
+that called devm_cxl_add_port(), not to the port driver.
 
-In the first situation regs.hdm_decoder is NULL and the readl() oopses in
-the PCI reset completion path. In the second the pointer is valid but the
-registers are unused, so the Committed bit reads zero and the helper
-reports a reset that did not happen: cxl_reset_done() prints two dev_crit
-lines about an SBR wiping active decoders, taints the kernel, and strips
-CXL_DECODER_F_ENABLE and CXL_DECODER_F_LOCK from every endpoint decoder.
-Losing the lock flag is the more consequential half of that, because it is
-what keeps the emulated ranges from being treated as reprogrammable while
-the driver still cannot change the range registers at run time.
+For a switch port the retry is automatic and cannot succeed. Decoders
+are set up from cxl_port_add_dport() while port->nr_dports is still 0,
+inside a devres group that is released when
+devm_cxl_switch_port_decoders_setup() fails. That release destroys the
+decoders and returns their ids, but leaves the cursor advanced and
+leaves nr_dports at 0, so the next memdev that enumerates the same
+switch - devm_cxl_enumerate_ports() to find_or_add_dport() to
+add_dport() - runs the setup again with a stale committed count.
+init_hdm_decoder() now finds decoder0 out of order and returns -ENXIO.
+From then on every dport addition fails for a reason unrelated to the
+original failure, even once whatever caused that failure is gone, and no
+memdev below the port can attach. An endpoint port takes the same damage
+across a rebind, where devm_cxl_endpoint_decoders_setup() runs again.
 
-Skip the check when cxld->commit is NULL. Only
-cxl_setup_hdm_decoder_from_dvsec() leaves that callback unset, and
-init_hdm_decoder() installs cxl_decoder_commit() on every decoder that
-does come from the registers, so one test covers both emulation paths and
-no separate test for the NULL register pointer is needed. A range
-described by the DVSEC registers has no Committed bit for a reset to
-clear, so there is nothing here for the post-reset warning to observe.
+The failure paths that strand the cursor are all driven by device state:
+an interleave ways or granularity encoding the driver rejects, a
+committed configuration whose size does not divide evenly by the ways,
+or a failed DPA reservation on the DVSEC emulation path.
 
-Fixes: 934edcd436dc ("cxl: Add post-reset warning if reset results in loss of previously committed HDM decoders")
+Reset the cursor at the start of devm_cxl_enumerate_decoders() rather
+than unwinding it on each error path. Enumeration reconstructs the
+commit state from hardware and has no reason to inherit a value from a
+previous attempt, so one assignment covers the existing failure paths
+and any added later. This matches cxl_switch_port_probe(), which
+already resets port->nr_dports so that a second attempt starts from a
+known state. The write takes cxl_rwsem.region because that is the lock
+cxl_num_decoders_committed() asserts for reading the cursor.
+
+Fixes: 176baefb2eb5 ("cxl/hdm: Commit decoder state to hardware")
 Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
 ---
-This was patch 4/8 of the "cxl: Assorted fixes" series [1]. Per review
-feedback that series is not being reworked as a whole; the fixes are resent
-individually instead.
+Found by the Sashiko review bot while looking at "cxl/hdm: Fix out of
+bounds read of the decoder target list" [1]. This is independent of that
+patch - the two touch different functions in hdm.c and apply in either
+order - so it is sent on its own.
 
-v2 tested cxlhdm->regs.hdm_decoder for NULL. That test turns out to be
-subsumed by the commit callback test rather than complementary to it: on
-the endpoint path info is never NULL, since
-devm_cxl_endpoint_decoders_setup() passes the address of an on-stack struct
-to both devm_cxl_setup_hdm() and devm_cxl_enumerate_decoders(). A NULL
-regs.hdm_decoder can therefore only come from the "no component registers"
-early return in devm_cxl_setup_hdm(), which requires info->mem_enabled,
-and should_emulate_decoders() then emulates every decoder on the port.
-Keeping both tests would leave one that cannot be reached today, so only
-the commit test is here - say the word if you would rather have the NULL
-test back as a guard on that invariant.
+[1] https://lore.kernel.org/linux-cxl/20260812061017.56916-1-kanie@linux.alibaba.com/
 
-The Sashiko review bot raised two further pre-existing concerns on v2 that
-this patch does not address, since both are about the reset handler's
-synchronisation rather than about which registers it reads:
+ drivers/cxl/core/hdm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-- cxl_reset_done() holds only the memdev device lock, so nothing excludes
-  an unbind of the cxl_port driver from the endpoint port, which frees the
-  devm allocated cxl_hdm while dev_get_drvdata(&port->dev) keeps returning
-  it. An unbind that has completed is harmless: devres frees the decoders
-  before the cxl_hdm allocation that predates them, so the child walk finds
-  nothing to look at. What is left is the interleaving where the walk has
-  already taken its reference on a decoder, which keeps that device alive
-  past device_del(), and the unbind reaches the cxl_hdm free first. Narrow,
-  and the fix is not local: it means deciding how the PCI error handlers
-  should exclude the port driver's binding.
-
-- cxld->flags is updated with a plain read-modify-write in
-  cxl_endpoint_decoder_clear_reset_flags(), while cxl_decoder_commit() and
-  cxl_decoder_reset() update the same word under cxl_rwsem.region, which
-  __commit() and the region reset paths hold across those calls. Having the
-  reset handler take that rwsem too looks like the natural fix, but it
-  already holds the memdev device lock at that point, so the lock ordering
-  wants review first.
-
-Both look worth doing on their own; happy to follow up with separate
-patches if that is the preference.
-
-v1->v2:
-- rebase onto cxl/next
-- rewrite the commit message to describe the behaviour rather than narrate
-  the code change (Alison Schofield)
-
-v2->v3:
-- test cxld->commit instead of cxlhdm->regs.hdm_decoder, so that decoders
-  emulated from the DVSEC ranges are also skipped when the HDM decoder
-  registers exist but are globally disabled (Richard Cheng)
-- update the subject and the commit message for the widened scope
-
-[1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
-
- drivers/cxl/core/pci.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 9d807c1a002c..d8b07f86bab0 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -683,6 +683,13 @@ static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
- 	if ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)
- 		return 0;
+diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
+index 0c80b76a5f9b..c69ec539e6d8 100644
+--- a/drivers/cxl/core/hdm.c
++++ b/drivers/cxl/core/hdm.c
+@@ -1163,6 +1163,10 @@ static int devm_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
  
-+	/*
-+	 * Decoders emulated from the DVSEC range registers have no commit
-+	 * callback and no HDM decoder registers to consult.
-+	 */
-+	if (!cxld->commit)
-+		return 0;
+ 	cxl_settle_decoders(cxlhdm);
+ 
++	/* The commit cursor is rebuilt from hardware below */
++	scoped_guard(rwsem_write, &cxl_rwsem.region)
++		port->commit_end = -1;
 +
- 	cxlhdm = dev_get_drvdata(&port->dev);
- 	hdm = cxlhdm->regs.hdm_decoder;
- 	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+ 	for (i = 0; i < cxlhdm->decoder_count; i++) {
+ 		int rc, target_count = cxlhdm->target_count;
+ 		struct cxl_decoder *cxld;
 
 base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
 -- 
