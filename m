@@ -1,273 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from CY7PR03CU001.outbound.protection.outlook.com (mail-westcentralusazon11010046.outbound.protection.outlook.com [40.93.198.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B744357D12;
-	Wed, 12 Aug 2026 07:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786519008; cv=none; b=hh9T3pEtAh5OO4Z5Hqb/XMOksHhRujOEVTuPLK3CoHI80fAENJRXcIhYyRhe6h/06f3V0S3wtbnbPoxteNl8GON8fa5OkVKW8CmR8fWgCmca1ZD/83mtsX+LdQ+p+nkNUNU+yjS813qseWO7hNRTB60iecNxwSC+kaFvrDkagkI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786519008; c=relaxed/simple;
-	bh=e75onvjPBRb2hJYGf0/2rSsAMR/+0pFYOGit7CfKW14=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=il3I7RNzFyo+8EfLAAUDQpC5q14sOm/XrkG154XLIxl5H6eGP4XcKIBIjACQX74lVF+TCPtUL93PgkUR1tYYlkAo5vhNuqC+xIP27g0cs6q0nsF1AQYLHB2p1+EJ8aVWnVi0NObMlPDmMwOoHZxWIVMkavmtY5sEjEOSyzZANb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jfUvDiAV; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B7A31E106
+	for <linux-cxl@vger.kernel.org>; Wed, 12 Aug 2026 07:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786520298; cv=fail; b=QBQ/FUcF84KEuvV6UrYUfwth9NYn2LEpZSvGZLGwsm+XH29rF3IfTubEBKTrrFMLY9pEOplZpIEvJ2hg9G32Gx+FkmYTsxTzbjIwGnrfvfGx5oGGbdMZZRfwz9N44UpjJoV6Ijac1zXG78YtNmejWcBoYzSprL/WIU0fGoRFvp4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786520298; c=relaxed/simple;
+	bh=3sXK5YiiwoC2fjQhyk0oSlKA0XpDvRBr2Ncmp1IoILk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=vERXJuoe8EnV+rsTkwe8/h1Fp9WhCd9SImZF9WHTFNbxU/5GjE7Q0KR6gY947p0xUTawE2/TUdhTy3nlilR6mNWtIlsmAzvUlQ04mnuIkUnaHeD5AOC9tccRtDs9XxS8e1BHQF07QAhQUW9XEt9uKPzF6tZ66InVr0XqC+jUd5A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=cLT5YAUN; arc=fail smtp.client-ip=40.93.198.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jfUvDiAV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C16061F000E9;
-	Wed, 12 Aug 2026 07:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786519006;
-	bh=YtcFPckNRhnB0NSBekrVdrI1nx3c9jQI/qZ671uj+E4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jfUvDiAVnm1uecPldZ04arCCOPdU6I/PZxFMo0pClK4MQsDI4iKIE5C5K9KMFNDlu
-	 6xaw2tAerpjM5G6w9HoKl74wKXEdir3hoXDpCZPGxXtLK7UHqUEuPyM8bTiePZZMUu
-	 0hks3MSHUKBu4gWTi6AIg6xePZgJTSZ7SG2/p8Dji9VI+wS75+WAikdMOc4BFFNoEf
-	 tp+nzk2CCBcqsu5yRqKqJfE6VV8WeRbkj26YTBKK0OxDH4wnIMsRRJlsRkpw4aZ2Oz
-	 6Ljd4L2kdI3h70rt1q1eQHSwharzCvN/2qJd6IXblE9VDP+0f84AFvQXKxpBB5MtjI
-	 il/H9ZX9iGbIA==
-Date: Wed, 12 Aug 2026 08:16:23 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: akpm@linux-foundation.org, gourry@gourry.net, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, 
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com, 
-	byungchul@sk.com, ying.huang@linux.alibaba.com, apopple@nvidia.com, 
-	david@kernel.org, liam@infradead.org, vbabka@kernel.org, rppt@kernel.org, 
-	surenb@google.com, mhocko@suse.com, dave@stgolabs.net, jic23@kernel.org, 
-	dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com, 
-	ira.weiny@intel.com, harry@kernel.org, kernel_team@skhynix.com, honggyu.kim@sk.com, 
-	yunjeong.mun@sk.com
-Subject: Re: [PATCH 0/4] mm/mempolicy: introduce package-aware weighted
- interleave
-Message-ID: <anwcRyfzs5lklpzk@lucifer>
-References: <20260806080936.421-1-rakie.kim@sk.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="cLT5YAUN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FKQmq/Gmzx6a34F7wqXaEwmt3+PSGQjXj927uGPTTbFyK3hZPlrGcubuvdxfE56FIo+ooCwX61q/pyKubdDOwjPY57IibltrkMaztDYvo3bpaDk2nbToJJ47VlhF0lbNKVDDl+2Xncf8wyevCxx/aPeQnEczNerpwebJnssjCKY+CLuj4MykLYdsYuMFI49U6HJ2EgFdSHtHqRXZuIE0dFg6t2l6VImYvLeXcw3F8d/6Kghfs+VpeMykuOMe+RWYpjZR8SN3HaA2xxSDyi368EOcrq7RHLVreYuQFvQ+n0nnsL55YPgAaZ/yqDfno5yzxXMjDlR9J50DQpcptdkkQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jr+biP+TltbFLaFb7Ec78s+BmytIyE9532HwrBRYuyY=;
+ b=cTF5z7lGpZzWkl5h2BjoBanmtzDVtAWw/HYjSWzjhVIdDStLJVCynXlPnhFKUq8fE1cytrsDg/ERQBOa+1MyKHRjl+wgrpcst74NjwLe5vei6OGB95XXfZQv34eLekwi8isNKuyAqGhzRQaYevsfGjX6J+5TIZK/rYR17xQN6GSEjFn4ajopohiiWZmurdSFtJjFLyYhtZyY2dgWk+6mNG57vavFo81CaTdYtFbRwAlPF4eQTbfsS0i5hw+DzB+D8cte3zbDv8nJEt7Y7iW9CrzyzPN7jIdeTxDwedPwt3e6UIQuEAbjEmPALgETEjKVFrkQiOIhpO4Etegh7k155g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jr+biP+TltbFLaFb7Ec78s+BmytIyE9532HwrBRYuyY=;
+ b=cLT5YAUN0E8VwmFJFtc4SJqM0rwdIQnL6LM0dtGscmfIdkZfyCvA3nDdjNMW1bDQ4X/qe2fy4VhFkBXnCf2NhSynDMYt2WpckSa6fe63zOCOM1La+3Eiu0ry9cozODWKspE5ClVv1Erb0HGCbhXUMCFfA1PTKlv+M/mczLaUUzcbb6HHYaS03xQZJlOBWTcy6ziIQcjuCR0bvCwxmDt5zILfhGdqWDsJNQJIyYAZH6d+6MXsQo33FMy3E2bLvbexdNUMj++/+3YaF+imW0wnA6LCglal8E4cpJZ5IgfuGt5CHKpvcG7iwqgdTMxVZ7h+eCWoYUq4I2UvV/Q4hSX7Rw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com (2603:10b6:207:47::27)
+ by DS7PR12MB6117.namprd12.prod.outlook.com (2603:10b6:8:9b::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.292.25; Wed, 12 Aug 2026 07:38:12 +0000
+Received: from BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8]) by BL0PR12MB2370.namprd12.prod.outlook.com
+ ([fe80::86cf:c3ec:2cf5:74c8%5]) with mapi id 15.21.0292.024; Wed, 12 Aug 2026
+ 07:38:12 +0000
+Date: Wed, 12 Aug 2026 15:38:05 +0800
+From: Richard Cheng <icheng@nvidia.com>
+To: Guixin Liu <kanie@linux.alibaba.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, 
+	Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>, 
+	Alison Schofield <alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>, 
+	linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2] cxl/pci: Fix NULL pointer dereference in reset
+ detection
+Message-ID: <anwiQwy1bR-0peFJ@MWDK4CY14F>
+References: <20260812061027.57037-1-kanie@linux.alibaba.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260812061027.57037-1-kanie@linux.alibaba.com>
+X-ClientProxiedBy: SI2PR04CA0004.apcprd04.prod.outlook.com
+ (2603:1096:4:197::22) To BL0PR12MB2370.namprd12.prod.outlook.com
+ (2603:10b6:207:47::27)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260806080936.421-1-rakie.kim@sk.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2370:EE_|DS7PR12MB6117:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9a7b8ecf-3af2-4056-34bf-08def844a9cc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|366016|7416014|1800799024|376014|18002099003|22082099003|56012099006|10067099003|5023799004|11063799006|6133799003;
+X-Microsoft-Antispam-Message-Info:
+	yUutXQbiU7FdP8TaPe2BvRnFDiAE5ouKV3Y+JEyjjwXWs/VuLRwDaXqrz6PFJEGSen6yQe1N+/9KXONSGIDo176MApBC94Q17W9ywglB6cvQzBUKhDpUhTvZI8ON7KbgiygTy3WIzwkMhmKQC9UHIriat23Kis4hMgohaRW9Ytr6sYi32CnR3gzec5KjNux06uVlmfIMRW5Lt9kvgQb+4XLmMaroNiem5TpLc6VsoP5p79Jn7Ym0mZb9lbAW2Kc1qImFkSAZnHpUI1ngUYHCHm4GkeELzfUsr0XlpMj0ryrNTWUwJgalbl0A6D0qm8hTmXCCxB2qFMTb/LyW9P4fBHHJr8VkIufpiF5PJox0G0c+loAQyJ7BVDXVJxDzbPHL4TFcix71VJnyi/WqeBdzF/VfnLdMBM4EK+g7OMt8c0KCj8ObXzTO9l4xNhksPR0bYjCvHcCuHp/gSJ+IlwK6Y93yr+alB8P1p5QhzDmgV6aOnKmL2PiFotvAqEYOMK51utfAstXDujrFM8WmQ+uq83nNXmNEoUmKQXKCgA6t2l8Soxpmkrc6ui20YBJXpKKIbRQ8pnUyxHweMslBIDxtkJ7RnAVycsYZgVVQVWlGHH3DK0NEiwVQWHt8J0pm4dAMVQhkk0UUXYQaPXObHMK1/G76nAdNWri/iiY+JgqkaXU=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2370.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(7416014)(1800799024)(376014)(18002099003)(22082099003)(56012099006)(10067099003)(5023799004)(11063799006)(6133799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?6tvH5FC9Nkl4LlLtR/jW+sj6fLU9lgt5MGpFS/v1UGNsOqYgw4HXRF9u7+fC?=
+ =?us-ascii?Q?btUG7IzYtkNJ+EaxY4EYQ2WZPQM25ZUR2B4vKSDPWFswmQgZO0cjCCes0i1J?=
+ =?us-ascii?Q?O7gbpxecr6VqW9Rk+cR9XAikqlCPTiTd4UBQTJzUtp6JfOxsxnFZ9bPUGf5J?=
+ =?us-ascii?Q?zm9beEPU+UeVM18Qmhf9eO0qqhRvOfH1ZCqr6lAUJp/74GYP0ba6ObMMjivs?=
+ =?us-ascii?Q?QCDOqoNOMXSkBbwQ0wj3OVcywl5Tb+6jCe6SuWZqZ05VEuI2/2nPnorwOYWK?=
+ =?us-ascii?Q?9Fg2ljACTcyN+S66pEE6OklzRVRgbSNtMtyMAv5ZJyI3xyU/VYmxbBFhm+wk?=
+ =?us-ascii?Q?CASCCD2SvIo7oiOAME6nSVDtzA5wk0Lsn+B+EFoOV6bgPJVRMkISoBp4ysT1?=
+ =?us-ascii?Q?UhONXT7G/9Hn19B4o6vFA+ptJ+P5EYX7pKsIjyFykOy6sCR2MAWcM28Zx1ap?=
+ =?us-ascii?Q?Bp7OLDL8W6ds7XqHQMNxZE+oJLheHwS3hMmIODtYaRRuYHXon7dcVEKdMY5U?=
+ =?us-ascii?Q?r36hvdygKQtWrPWxiW97L5lNzHXiVphL+W98i0hIGzU1aPJdyiZCL0ZHZQh1?=
+ =?us-ascii?Q?saxqJ1gVQJyZsOebvXELnzgb9jYuThSwB4Suar/7qCJlfsFwlZXEyplaszWD?=
+ =?us-ascii?Q?13TCFXghSpc+4tFgHGOzHOQjsQGXkvw7y+YZ/T9wQ0ShdVynpdTQMdfTs6LZ?=
+ =?us-ascii?Q?w3OijAsUJiz+M4jznjm0NsbljJtRIUACAckFjlaKwbsIOPZpxHzR/tIQ9Tqa?=
+ =?us-ascii?Q?4Z95HUZMMA7R3zGPmW/9GTpjgDQMy15IzqWL15w3z/GmF4Xk0Vz4CMhHyzb/?=
+ =?us-ascii?Q?3+t92Qfjmhih1bV8oPjijlE7cO605WuoFt4U/poLDtyI89SEwUuyUCNmh5nT?=
+ =?us-ascii?Q?acci2BlYlyei/MCjjJGN5xPVEB2hOZ6N5fYDPA5KhL8fPpgN2eo3uEjHDQCc?=
+ =?us-ascii?Q?uLgvXPc9ctc2bRzQhnFj9gJszWO6DrNC8zRuIEVlzxCLTHt4rg3tKvZNCnLC?=
+ =?us-ascii?Q?witrPzJ0VC9rMYg/cJfojq/+MPIquGY6BZ9cVcGeBmfMoc7L506hRcsWl+hR?=
+ =?us-ascii?Q?TYu2FUA6AL25wqb6yp1AdYws+e3wgBmgHil+sOokAZkjRZSoJhshGryULLot?=
+ =?us-ascii?Q?I4B3tq0ybZLosQSfW/D1bBJD8iLCa6dmV4FbIfIkp5v1ItMWringB8X4tTO7?=
+ =?us-ascii?Q?2wHybba1l4ovLx9nb8Q7yuVynhQNU+Z5yRfhxOyWH/ylL5RqdFJkAuAMHFla?=
+ =?us-ascii?Q?/ACGezVcH7dOT5Y5w4DqHNQbUjhdidnhYIdkMu0RQEOiDVo1EZzWWs0aKvLu?=
+ =?us-ascii?Q?5HZRmIQIM9smPC5aEzpDabH58ZJsu6zQPQLi5FWTSuBEGqohtrOgUkfLG8E7?=
+ =?us-ascii?Q?qidwHKitWR8kmiDHxTEhKCkB5MlhG0cnGEylFrqXnf1JwSSIEnwvSvSLx8z4?=
+ =?us-ascii?Q?Dur66WlFj/TXHuRGVcb13yxUnw31HXDs1OY32eW4ujQPIMqzgynvB0+L3B5g?=
+ =?us-ascii?Q?2n0vjF2HtV1BuM0tsD46PXIewf2DztwrY63dla6QvIMVoqt8zyyDnbKOElB/?=
+ =?us-ascii?Q?KN76QaTZsZKOTLtbib/kyVZeULvHcCy7lIYiULGSfoB+agmmc7N69TSVpgrf?=
+ =?us-ascii?Q?42MSeV8bQvvrVljTjSOK+FNALyRNzz+Ecuk6iW2ajpOAihZ5P8trm80mO/U+?=
+ =?us-ascii?Q?Loeww82jf/94lm5f5e+VXPThn//HE8/g94xNhy9CZBzah/U78VdbnjwkaVcH?=
+ =?us-ascii?Q?Yk/kb2q7Mw=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a7b8ecf-3af2-4056-34bf-08def844a9cc
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2370.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2026 07:38:12.6739
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tlF7SP1neR80RyuWskhBaQkUXxHI2og2BCyl/ivTDj2pCWTOkDOY0fJVRuOFWeFx5TtuvjLpylS+ak6Htste0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6117
 
-On Thu, Aug 06, 2026 at 05:09:31PM +0900, Rakie Kim wrote:
-> Package-aware weighted interleave places a task's weighted-interleave
-> pages on the NUMA nodes of its local package, so that interleave traffic
-> does not have to cross the interconnect to another package. This keeps
-> each node's weight aligned with the bandwidth the task actually gets
-> from it, so effective bandwidth holds up on a system that has more than
-> one package. (A package is a CPU socket together with the memory
-> attached to it.)
->
-> Changes from RFC:
-> https://lore.kernel.org/all/20260316051258.246-1-rakie.kim@sk.com/
-> - Added an opt-in sysfs toggle (off by default) and a read-only sysfs
->   view of the package topology
-> - Added topology validation with a clean fallback to plain weighted
->   interleave on unsupported topologies
-> - Hardened the allocation, device-teardown, and node-hotplug paths
+On Wed, Aug 12, 2026 at 02:10:27PM +0800, Guixin Liu wrote:
+> __cxl_endpoint_decoder_reset_detected() samples the Committed bit of an
+> enabled endpoint decoder by reading the decoder control register at
+> cxlhdm->regs.hdm_decoder, without testing that pointer.
+> should_emulate_decoders(), the other consumer of the same field, does test
+> it, because the field is optional.
+> 
+> A memory device that exposes no component registers and describes its HDM
+> ranges through the CXL DVSEC range registers takes the early return in
+> devm_cxl_setup_hdm(), which leaves regs.hdm_decoder NULL and derives the
+> decoder count from the DVSEC ranges instead.
+> cxl_setup_hdm_decoder_from_dvsec() then publishes those emulated decoders
+> with CXL_DECODER_F_ENABLE set, and CXL_DECODER_F_ENABLE is the only filter
+> cxl_reset_done() applies when it walks the endpoint's decoders after an FLR
+> or an SBR. So on such a device every reset reaches the readl() with a NULL
+> base and oopses in the PCI reset completion path.
+> 
+> Report "no reset detected" when the endpoint has no HDM decoder registers,
+> as should_emulate_decoders() already does for the same condition. A range
+> described by the DVSEC registers has no Committed bit that a reset could
+> clear, so there is nothing for the post-reset warning to observe.
+> 
+> Fixes: 934edcd436dc ("cxl: Add post-reset warning if reset results in loss of previously committed HDM decoders")
+> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+> ---
+> This was patch 4/8 of the "cxl: Assorted fixes" series [1]. Per review
+> feedback that series is not being reworked as a whole; the fixes are resent
+> individually instead. Patches 1, 2 and 7 of the series are dropped, as those
+> issues are already fixed in cxl/next.
+> 
+> v1->v2:
+> - rebase onto cxl/next
+> - rewrite the commit message to describe the behaviour rather than narrate
+>   the code change (Alison Schofield)
+> 
+> [1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
+> 
+>  drivers/cxl/core/pci.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 9d807c1a002c..611175f29d24 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -685,6 +685,14 @@ static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
+>  
+>  	cxlhdm = dev_get_drvdata(&port->dev);
+>  	hdm = cxlhdm->regs.hdm_decoder;
+> +
+> +	/*
+> +	 * Devices that describe their HDM ranges with the DVSEC range
+> +	 * registers have no HDM decoder registers to consult.
+> +	 */
+> +	if (!hdm)
+> +		return 0;
+> +
 
-Please put change logs under the cover letter :) in mm we put the cover
-letter in the actual upstream commit so it's better to keep separate for
-reviewers.
+Hi Guixin,
 
-I see the RFC was from march and tied to an LSF session I think?
+I think we should cover the case for DVSEC-enulated decoder as well, where hdm is not NULL.
+That could happen when HDM registers exist but are globally disabled, so the driver uses DVSEC ranges instead.
 
-While I don't want to be too pedantic, I think you should only really
-un-RFC in a situation where you have a good sense that the relevant
-maintainers are happy with the _concept_.
+In that case it will still pass your "if (!hdm)" check and reset detection still reads the unused HDM COMMITTED bit.
 
-Looking at the RFC thread it's not clear that David was OK with this on the
-mm side, though I see you got some feedback from Jonathan on the CXL driver
-side.
+Maybe we should also check for "!cxld->commit" ?
 
-So I wonder whether next respin this should be re-RFC'd unless you get
-clear feedback that we want to go in this direction?
+Best regards,
+Richard Cheng.
 
->
-> Weighted interleave places pages on nodes in proportion to per-node
-> weights that are set from each node's bandwidth. Within one package the
-> weight given to a node matches the bandwidth a task sees from it. Across
-> packages it no longer does: a memory node's physical bandwidth is fixed,
-> but the bandwidth a task effectively sees depends on which package its
-> CPU is in, because memory reached from another package, over the
-> interconnect between them, is slower than the same memory reached within
-> the package. The weights are set once from device bandwidth and applied
-> the same way wherever the task runs, so a node in another package is
-> given a weight higher than the bandwidth it can deliver to that task.
-> The kernel has no package abstraction and does not record which package
-> a node belongs to, so it cannot tell which node pairs are separated by
-> the interconnect.
-
-Please please - break up huge paragraphs like this :)
-
-It's 2026 so I have to mention that if you've used AI to assist with
-writing it (which is fine) please do a pass over it manually to curb AI's
-tendency to be overly verbose + definitely try to break up paragraphs into
-smaller charts at least :)
-
->
->           node0             node1
->         +-------+         +-------+
->         | CPU 0 |---------| CPU 1 |
->         +-------+         +-------+
->         | DRAM0 |         | DRAM1 |
->         +---+---+         +---+---+
->             |                 |
->         +---+---+         +---+---+
->         | CXL 0 |         | CXL 1 |
->         +-------+         +-------+
->           node2             node3
-
-...though I _love_ ASCII diagrams so this is great ;)
-
->
-> The numbers below are illustrative single-stream bandwidths (GB/s).
-> Local DRAM sustains 300 and local CXL 150; any path that crosses to
-> another package, over the interconnect, is capped at 100, so a node in
-> another package delivers 100 whether it is DRAM or CXL. Note that local
-> CXL (150) is still faster than any node in another package (100). The
-> effective bandwidth each CPU sees is therefore:
->
->               node0  node1  node2  node3
-> from CPU 0:    300    100    150    100
-> from CPU 1:    100    300    100    150
->
-> Since a single per-node weight cannot encode the interconnect penalty,
-> a reasonable set of global weights is taken from local device bandwidth
-> (local DRAM : local CXL = 300 : 150 = 2 : 1): node0=2 node1=2 node2=1
-> node3=1.
-
-Also great that you provide the receipts on actual observed real-world
-numbers that's great.
-
-NUMA isn't my area so I can't comment here on the technical details but
-thanks for providing this :)
-
-
->
-> Applied the same way to every source, these weights give the map:
->
->               node0  node1  node2  node3
-> global:         2      2      1      1
->
-> A task on CPU 0 gives node1 - remote DRAM, effective 100 - the same
-> weight 2 as its own local node0 at 300. Worse, node1 is weighted above
-> node2, the task's local CXL at effective 150, even though node2 is the
-> faster of the two. The flat weights rank a slower interconnect-bound
-> node above a faster local one, which is exactly backwards.
->
-> This series makes weighted interleave package-aware. When it is on,
-> weighted interleave prefers the task's current package: while the
-> package's nodes have room, the task's pages are spread across them by
-> weight, so allocations stay off the interconnect. The rest of the
-> policy nodemask is used when the local package cannot serve the request
-> - when a node in it is under pressure and the page allocator falls back
-> along the zonelist, or when the policy nodemask happens to exclude every
-> node of the current package, in which case the package spanned by the
-> policy's own nodes is used instead. The nodes considered are always
-> within the policy nodemask, which mempolicy already narrows to the
-> task's cpuset, so cpusets and the task nodemask stay in control.
->
->               node0  node1  node2  node3
-> from CPU 0:     2      0      1      0
-> from CPU 1:     0      2      0      1
->
-> A task on CPU 0 now places pages on node0 (weight 2) and node2
-> (weight 1) at 2:1, which matches their effective bandwidth of 300:150;
-> a task on CPU 1 places on node1 and node3 the same way. Placement
-> follows the bandwidth each task actually sees, NUMA locality is
-> preserved, and interleave traffic stays off the interconnect.
->
-> To make this possible the kernel needs a notion of which nodes share a
-> package. The NUMA distance model offers only relative latencies and no
-> structural grouping, which is especially limiting for CXL memory nodes
-> that come online without an explicit package association.
->
-> The series adds a package-aware topology layer that groups CPU and
-> memory-only nodes into a "memory package", built from the physical
-> package ids firmware reports and, for a memory-only node, an initiator
-> CPU node or SLIT distances. A package can contain more than one CPU node
-> or more than one memory-only node, so the layer maps a package to a set
-> of nodes rather than to a single node or a single CXL device.
->
-> The feature is off by default and opt-in through a sysfs toggle. The
-> package topology itself is exposed read-only under
-> /sys/devices/system/package/; there is deliberately no writable
-> override, since a machine whose firmware describes its topology
-> incorrectly should be fixed in firmware. On a topology that does not
-> have the symmetric shape the placement relies on, enabling is refused
-> and any active mode degrades cleanly to the original flat behavior.
->
-> Measured results:
->
-> System Configuration:
-> - Processor: Dual-Socket Intel Xeon 6980P (Granite Rapids)
->
-> 1) Throughput (System Bandwidth)
->    - DRAM Only: 966 GB/s
->    - Weighted Interleave: 903 GB/s (7% decrease compared to DRAM Only)
->    - Package-Aware Weighted Interleave: 1329 GB/s (1.33 TB/s)
->      (38% increase compared to DRAM Only,
->       47% increase compared to Weighted Interleave)
->
-> 2) Loaded Latency (Under High Bandwidth)
->    - DRAM Only: 544 ns
->    - Weighted Interleave: 545 ns
->    - Package-Aware Weighted Interleave: 436 ns
->      (20% reduction compared to both)
->
-> A small CXL driver change registers a CXL memory node into its package
-> as the node comes online, using the initiator the driver resolves for
-> the region; this is where the package layer gets the CPU-side
-> association that plain NUMA distance does not carry.
->
-> The memory_package layer offers a broader interface for grouping and
-> querying package topology - usable by memory tiering as well - and
-> package-aware weighted interleave uses the subset it needs.
->
-> [PATCH 1/4] mm/numa: introduce nearest_nodes_nodemask()
->   Add a NUMA helper that returns every node sharing the minimum distance
->   from a source node.
->
-> [PATCH 2/4] mm/memory-tiers: package-aware topology management
->   Group NUMA nodes into memory packages from firmware topology data,
->   expose the grouping read-only under /sys/devices/system/package/, and
->   validate the symmetric shape that package-aware placement relies on.
->
-> [PATCH 3/4] mm/memory-tiers: register CXL nodes to packages
->   Bind a CXL memory node to a package using an initiator CPU node.
->
-> [PATCH 4/4] mm/mempolicy: package-aware weighted interleave
->   Prefer the current package for weighted interleave node selection,
->   behind an opt-in package_mode sysfs toggle that is off by default.
->
-> Rakie Kim (4):
->   mm/numa: introduce nearest_nodes_nodemask()
->   mm/memory-tiers: introduce package-aware topology management for NUMA
->     nodes
->   mm/memory-tiers: register CXL nodes to memory packages via initiator
->   mm/mempolicy: enhance weighted interleave with package-aware locality
->
->  .../ABI/testing/sysfs-devices-system-package  |   35 +
->  ...fs-kernel-mm-mempolicy-weighted-interleave |   17 +
->  drivers/cxl/core/region.c                     |   54 +
->  drivers/cxl/cxl.h                             |    1 +
->  drivers/dax/kmem.c                            |    3 +
->  include/linux/memory-tiers.h                  |  113 ++
->  include/linux/numa.h                          |   11 +
->  mm/memory-tiers.c                             | 1009 +++++++++++++++++
->  mm/mempolicy.c                                |  200 +++-
->  9 files changed, 1439 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-devices-system-package
->
->
-> base-commit: 8cd9520d35a6c38db6567e97dd93b1f11f185dc6
-> --
-> 2.25.1
->
-
---
-Cheers, Lorenzo
+>  	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+>  
+>  	return !FIELD_GET(CXL_HDM_DECODER0_CTRL_COMMITTED, ctrl);
+> 
+> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
+> -- 
+> 2.43.7
+> 
+> 
