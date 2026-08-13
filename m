@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44EE2351C2D
-	for <linux-cxl@vger.kernel.org>; Thu, 13 Aug 2026 03:57:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C912E2749DC
+	for <linux-cxl@vger.kernel.org>; Thu, 13 Aug 2026 03:58:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786593423; cv=none; b=Hea0zs11osbZPs4EIY6wFdE42AkAA+2Y1lkditgLOlMGR5T5LtzlON6UeujSBy/XNhMaGRKxytgj5jaDpJUJWU/RS+SSH6mmrphOI+gcoA8wdw1sW1cHlmo4tSpmejtcP3hlGMnfs4DenmJrons8LiYSaQ85n0SvBdtnRZgfaU8=
+	t=1786593514; cv=none; b=GJ3yOl8KdNIbxjI1REsYygdFkcwA3AhGhiV7Cie3DlC8IF7wGkhQ76kCxTNJufZJ6GJuBeiq7F6YJVfh8UZ8LNXOEos4k9UUzmivQjnwVvQvtAbIpm8gtowUgIAgvTTyO4SP+XNZUAqqbLgFRYs519DmhgldBf4DbgFJgs81Cgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786593423; c=relaxed/simple;
-	bh=z5ml4xKA+6sG5LAhKtr3a39R35GyuMZp1YdCbEsXHBM=;
+	s=arc-20240116; t=1786593514; c=relaxed/simple;
+	bh=X/oB4e2z48vIXc+l68eac0W5fdeluoOQPRtT9saBoTg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Jg0gloXZ1E2+e6nsWRvq0HTNL8DmMQPJaP32HuTGAIviNPZr0TH9fgos2hrqnafMoLenysCZP3yxlN5Ot9w2UMCNB6+EQO7frioS09GH9eVUV7afrrRZW9eBV8Fm+oo4iff66EebwhrhNpTkiuGNdYplS0bXVmPgQcdwcH3igs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nk0g74tM; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=uowV6UxS9cRBSAriQFvvpLSCTR9+ZJ1zaJLu7tIQhkKW3SiK32XwxjJQ2NMQtTAmQqw3DUQlZFQlfkFzV2JVmqUOVv4BxmRQ10QXo3UHEcY2TRpJCKwsEaj3YKSP6gP3MA9aQ57fA7bsHFivQliLRswLAFogl5D/20uqWj3WfvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nzZOtiCA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nk0g74tM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B628E1F000E9;
-	Thu, 13 Aug 2026 03:57:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nzZOtiCA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41BC81F000E9;
+	Thu, 13 Aug 2026 03:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786593421;
-	bh=suw643gxUDxamm0drnLwtZKs4cAaM+/ZThnKNYpYUms=;
+	s=k20260515; t=1786593513;
+	bh=FTlfB/htbTMcRokdBo7kXEcBa53Cc1BmebEN326DSoM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nk0g74tMz9UF4F1RUY92N9uOZEMabOj2zRrbdUpQ2NN48BFyNOHVtbdalFS3o2PV2
-	 7UlHJrf7suXheKColqMre14yefGIFi8Rn4ghKgpcrLWJi5SE7p7ONtenX4MFMp6e6c
-	 3LJFii51but6QBE7xmBiwNjWx3cCYG+3dLQMaSLVE+o9p4UkO4QbEHgTjxUWFf/GDK
-	 A/6Ih44Z+cOSmjnWkDwhvsbIO8j5Q1uFhDquconHy+p6WIB3bVseiE4d7sx4540wm8
-	 JIE7qgc3DZfUIa2vDPjp5WS2ldwMU+Uk7XklqR5NieEcSfC7ZdR4QwvyWEb5ph9hU5
-	 ps6K1nYuqS4UA==
+	b=nzZOtiCAmIolQySZzBdr86RJ6svL5AmLoMV7gOf9i/a1BVD6hYWBtmwkSB3L2tTPI
+	 15jdwsQyGvTn0BiW/VBpCp99YM9KcIjlhgL/P4bT8Q6CCq8vXSMutGtzKQdsqqMvId
+	 EEn1fIWJDPclKXy7gDr7hDSo9+0E7FUAV8Z61e8SQGB1P/Ipp92NDovJHD5Eg+v5G4
+	 7J3dWG6sm0WV/r5ZgOuqgnIdkGVJrkUsekk79Wc3cTluY7Swqp+VbGsxqjn2f/RW3l
+	 G0/3X9i+6JkMlu4RZZyYK44KnNZ6cR14OSmGGnK/jDFiuhYKOTSDBGXVJBCGSjNo/R
+	 yViX/j9n4rl8Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 1/7] cxl/features: Reject feature offset that
- overflows 16-bit field
+Subject: Re: [PATCH v5 3/7] cxl/region: Don't leak tolerated RAM -EFAULT
+ from unmapped poison scan
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Richard Cheng" <icheng@nvidia.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <20260813034538.13189-2-icheng@nvidia.com>
+In-Reply-To: <20260813034538.13189-4-icheng@nvidia.com>
 References: <20260813034538.13189-1-icheng@nvidia.com>
- <20260813034538.13189-2-icheng@nvidia.com>
+ <20260813034538.13189-4-icheng@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 13 Aug 2026 03:57:01 +0000
-Message-Id: <20260813035701.B628E1F000E9@smtp.kernel.org>
+Date: Thu, 13 Aug 2026 03:58:32 +0000
+Message-Id: <20260813035833.41BC81F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -47,67 +47,71 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The bounds check designed to prevent 16-bit offset wrap-around i=
-s off by one, making the final byte of the feature space inaccessible.
+
+Pre-existing issues:
+- [High] This problem wasn't introduced by this patch, but the `cxl_get_poi=
+son_by_memdev()` function silently masks hardware errors from early partiti=
+ons due to a missing error check.
 --
 
---- Patch [1]: [PATCH v5 1/7] cxl/features: Reject feature offset that over=
-flows 16-bit field ---
-commit 48e82cdf4087a2ffbeb7023fda65d3ff4f9b9c6f
+--- Patch [3]: [PATCH v5 3/7] cxl/region: Don't leak tolerated RAM -EFAULT =
+from unmapped poison scan ---
+commit 4c4b3832747d23fff6bcb4486dc7105f329afd3d
 Author: Richard Cheng <icheng@nvidia.com>
+Subject: cxl/region: Don't leak tolerated RAM -EFAULT from unmapped poison =
+scan
 
-cxl/features: Reject feature offset that overflows 16-bit field
+This commit fixes an issue where a tolerated error from a RAM partition
+causes the unmapped poison scan to fail. It correctly resets the return
+code to 0 when ignoring the fault, matching the behavior of
+poison_by_decoder().
 
-This commit adds bounds checking to prevent 16-bit offset wrap-around in CXL
-feature commands. It also changes cxl_get_feature() to return ssize_t to
-properly report errors instead of conflating them with a zero-byte result.
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index b03f30c04d350..ddf12075b95c0 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -2930,8 +2930,10 @@ static int cxl_get_poison_unmapped(struct cxl_memd=
+ev *cxlmd,
+>  		if (!length)
+>  			continue;
+>  		rc =3D cxl_mem_get_poison(cxlmd, offset, length, NULL);
+> -		if (rc =3D=3D -EFAULT && cxlds->part[i].mode =3D=3D CXL_PARTMODE_RAM)
+> +		if (rc =3D=3D -EFAULT && cxlds->part[i].mode =3D=3D CXL_PARTMODE_RAM) {
+> +			rc =3D 0;
+>  			continue;
+> +		}
+>  		if (rc)
+>  			break;
+>  	}
 
-> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
-> index ba6d2a5acb74a..8d44ce8294978 100644
-> --- a/drivers/cxl/core/features.c
-> +++ b/drivers/cxl/core/features.c
-[ ... ]
-> @@ -235,7 +235,10 @@ size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox,=
- const uuid_t *feat_uuid,
->  		*return_code =3D CXL_MBOX_CMD_RC_INPUT;
-> =20
->  	if (!feat_out || !feat_out_size)
-> -		return 0;
-> +		return -EINVAL;
-> +
-> +	if (feat_out_size > U16_MAX - offset)
-> +		return -EINVAL;
+[Severity: High]
+This isn't a bug introduced by this patch, but while reviewing this error
+handling, I noticed a potential issue with similar logic in
+cxl_get_poison_by_memdev() in drivers/cxl/core/memdev.c.
 
-[Severity: Medium]
-Does this check contain an off-by-one error that rejects valid accesses to =
-the
-last byte of the feature space?
+Does the loop in cxl_get_poison_by_memdev() mask hardware errors from
+early partitions due to a missing error check?
 
-If a request targets the final byte of the 64KB feature space with
-offset =3D 65535 and feat_out_size =3D 1, this evaluates to 1 > 65535 - 655=
-35
-(1 > 0), which is true, incorrectly rejecting the single-byte transfer.
+drivers/cxl/core/memdev.c:cxl_get_poison_by_memdev() {
+        ...
+        for (int i =3D 0; i < cxlds->nr_partitions; i++) {
+                ...
+                rc =3D cxl_mem_get_poison(cxlmd, offset, length, NULL);
+                /*
+                 * Invalid Physical Address is not an error for
+                 * volatile addresses. Device support is optional.
+                 */
+                if (rc =3D=3D -EFAULT && cxlds->part[i].mode =3D=3D CXL_PAR=
+TMODE_RAM)
+                        rc =3D 0;
+        }
+        return rc;
+}
 
-> =20
->  	uuid_copy(&pi.uuid, feat_uuid);
->  	pi.selection =3D selection;
-[ ... ]
-> @@ -288,6 +291,9 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
->  	if (return_code)
->  		*return_code =3D CXL_MBOX_CMD_RC_INPUT;
-> =20
-> +	if (feat_data_size > U16_MAX - offset)
-> +		return -EINVAL;
-> +
-
-[Severity: Medium]
-Does this bounds check in cxl_set_feature() have the same off-by-one issue
-restricting access to the last byte of the feature space?
-
->  	struct cxl_mbox_set_feat_in *pi __free(kfree) =3D
->  			kzalloc(cxl_mbox->payload_size, GFP_KERNEL);
->  	if (!pi)
+If cxl_mem_get_poison() returns an error on an early partition, the loop
+continues without breaking. Could a success on a subsequent partition then
+overwrite rc with 0, masking the retrieval failure?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260813034538.1318=
-9-1-icheng@nvidia.com?part=3D1
+9-1-icheng@nvidia.com?part=3D3
