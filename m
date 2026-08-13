@@ -1,217 +1,164 @@
-Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010055.outbound.protection.outlook.com [52.101.61.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB63A3909B8;
-	Thu, 13 Aug 2026 09:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786614143; cv=fail; b=GNp9Yd6ZErWdIQMw131DZvKL9GHwGqOHXqE6MDZyhFuBOOCzelK7AML5V1fl70yank5trEzEIJ8raxwUHYW8dvjZCaANLUddjCmjyH/OxBwSRXvzSE6Nvuop8QDc8ML8kYvnNWBlXMi0ShKSl88Erh2V7r7ucEeSz6/KNdClWeI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786614143; c=relaxed/simple;
-	bh=y25IVD47qzk1Q7r+gU24x9WO89IZWdXPmHpd0stnTS0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uMq/ke9n1TmEeWQmdWlejJWGHL27TExJplJ1eHAfUaWY3xjt3X5BUErwPFZZzUUHQwYMHFexPU+/+2+SDe4ztFFwZ2iNEZzlfwUan/9XaqYbR9kNhXRFx7GYaEHGDjQQeM+52IJwp40vs366pn7q/B9ef3vE9DbXom2pvvVhmvg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=SqvhHAjz; arc=fail smtp.client-ip=52.101.61.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E210144781A;
+	Thu, 13 Aug 2026 10:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786615399; cv=none; b=jnB7w5Lupwy2qN8cg0R76uj0fnlPTyfFneTwCpLFYYJ37PSQo5Cp21wq69Gl1xQhJfNW7cz5ypglaMPS6PA4/jcUBUQl5SpFiCDnhtIA+EMjdJSfRB093rjC5OLr3hJkSNaswGwNhIs1fhZ7UbRZf8qUgbNecG0YNIBUuE+02uA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786615399; c=relaxed/simple;
+	bh=lm9OlZWNXyInh9V1Djr/dv9Shrrm9U9Xkj17oWbz9KY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s3gJgIha93Mpa0a7ozTJo4o0ZP4gNaZ83TaYakLEQ8Us6MPM9PFWnSolSk/xVxu4NcaONURizr/ADi68WWf/VNO1rOGtlVgs1kqkb+Lrdz67Nq5Ykr8oEuinOU1XbUiohEST7Mx/bjzwzxIL9dbS8YtGD8rXzDkr7KUPvQV4vfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SwhDCkGF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SqvhHAjz"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mtoz9lo0E0bMPfaaQAhSzFDQwFJj3ZS89f6hExBNFzLtKUmXmM2P3Mq4paHaAe9IYDs3aGPAWd48lj+bqTNKz3SWkEp+XOJ943syB6fCbLnv7els7AZ1CosVjIvpCFzzokLbT4Q/P6bGQIjbE1R1lNGH5yBjZCWc+gK669UTj5Jb30RHPmULgEQai+iPm6ae+rIvmKDA8TJ2gdoxOFz5GpiHlp4V+2AQ110iTZXPRWDEDhKmhJxA44y1KxQLnqrxEvb9sQoeWeb1V77nYID05wiIku+FxWuwv1LzchXfmgBuakofA17Bfh5NwKs6o02X9rf8EXtSIJ6ZxkFtohPh9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iq+m0PWDfvVC0TQBd4rkZ1QYOWM/lYTtaIlTTyCE/iQ=;
- b=UoD9NOkDSe4HoyTvzq8Q6zmYeSEJa2LCoNnFxjhJoO/AarwPDcAs+GRX1pUOEetkO4aZ104V/nUNMRKJrsmQJTY9EZG4jnLC6HQw3eyHLo8kvcQxkwEuxQaNUclUzEiTNj6MI1Lu4nYLRJlCuHKsBZeXQgJjM+ja3hvIHJ2zyjRJJsGAyxi7OTLaYbqccft+/YzNHRlMuHtVNDoKR65ROCDacXPpaenQM4EGvo03qhHwwoECwUUR2YZOl7LLlu0QH+res6pmsU3gDoT9Heh7EKpWmJMLbMGtJJwZd6TMGKq4S1j5qoa/Bo4vlEgl3fuD5tzz4v9P7zlplEWaCC8UTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=shazbot.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iq+m0PWDfvVC0TQBd4rkZ1QYOWM/lYTtaIlTTyCE/iQ=;
- b=SqvhHAjz5OCD4FOgWNaFo/9rfS5sisOkshJdx0k75wKPc8HEB4L7HFzU6QEC1OJaaXQh+S3F8cixKt6A6fnrcDpEbZYi1zgQM5IzN+OI1JCCD4/gWFZL7WgGh0n/oVP3BULfPg30uw3KCOyz/DR9+f9rfjIg0uvrqA0Tx8l7zTnNOLL9x/RQl4gAu8FmwNhthUaXc4vX2/xhZ4o9lD7Ou/eQsmhnh3NYjZOr6moZG4O3JWFEf0bGDWxTKFgT8z7IDXCu6xytJjI9PkXd4hSTGRUqeq2id0qwYnYkvVtdJBc4SSq0PDWd4NyPjHB+hWquVSZNqr31zQcKmBStAEjXuA==
-Received: from MW4PR03CA0296.namprd03.prod.outlook.com (2603:10b6:303:b5::31)
- by MN6PR12MB8565.namprd12.prod.outlook.com (2603:10b6:208:47d::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.14; Thu, 13 Aug
- 2026 09:40:52 +0000
-Received: from MWH0EPF000C6185.namprd02.prod.outlook.com
- (2603:10b6:303:b5:cafe::24) by MW4PR03CA0296.outlook.office365.com
- (2603:10b6:303:b5::31) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.315.14 via Frontend Transport; Thu,
- 13 Aug 2026 09:40:51 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- MWH0EPF000C6185.mail.protection.outlook.com (10.167.249.117) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.339.3 via Frontend Transport; Thu, 13 Aug 2026 09:40:51 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.46; Thu, 13 Aug
- 2026 02:40:31 -0700
-Received: from nvidia-4028GR-scsim.nvidia.com (10.126.230.37) by
- rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.20; Thu, 13 Aug 2026 02:40:22 -0700
-From: <mhonap@nvidia.com>
-To: <alex@shazbot.org>, <jgg@ziepe.ca>, <ankita@nvidia.com>,
-	<jic23@kernel.org>, <dave.jiang@intel.com>, <alejandro.lucero-palau@amd.com>,
-	<smadhavan@nvidia.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
-	<dave@stgolabs.net>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <iweiny@kernel.org>, <ming.li@zohomail.com>,
-	<yishaih@nvidia.com>, <skolothumtho@nvidia.com>, <kevin.tian@intel.com>,
-	<bhelgaas@google.com>, <dmatlack@google.com>, <kees@kernel.org>,
-	<gustavoars@kernel.org>
-CC: <cjia@nvidia.com>, <kjaju@nvidia.com>, <vsethi@nvidia.com>,
-	<zhiw@nvidia.com>, <mhonap@nvidia.com>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-	<linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>
-Subject: [PATCH v4 21/27] vfio/cxl: Describe the CXL device and decoder geometry to userspace
-Date: Thu, 13 Aug 2026 15:06:25 +0530
-Message-ID: <20260813093631.2288172-22-mhonap@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20260813093631.2288172-1-mhonap@nvidia.com>
-References: <20260813093631.2288172-1-mhonap@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SwhDCkGF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32C7B1F000E9;
+	Thu, 13 Aug 2026 10:03:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786615396;
+	bh=82KZrS7ujoal5yjqBJaa0XymEVl+P6knR3/hbb1bBPQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=SwhDCkGF/4OObov9oToTRSnK9CdT+QHzoXHGzJ3H65D1t+fk7zRxTeAh1eDVDjkqy
+	 zxYZJ10oHgJHDXQ+cCyRIrYkTqW8m+zmplqvCrJ7NFbcTxhXNyxsDlOJI4e5JUjJoz
+	 xPSYPNP4RkCjr9o1gPuH0Me0CzZtmikeaCg6M9BavlDqQ92hx27RaUpIM0OKVK5b/0
+	 xbqLefhXXTdX4JSeBn3v6SdNO1VEt1J6P5uirY6SYdM8Yzd6HKOeLZktM153r9dVXw
+	 +Z51kxm7bEk2pjwx0O2Ou9GcQqmTGVHmS+fhyqjJt2BCZI4m3NvCQGyzw+ZiwUcaYs
+	 5UbP759NP44yw==
+Message-ID: <8a391a81-73bd-40b3-bb00-6f6912070378@kernel.org>
+Date: Thu, 13 Aug 2026 12:03:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000C6185:EE_|MN6PR12MB8565:EE_
-X-MS-Office365-Filtering-Correlation-Id: 288d6048-6571-4997-ada4-08def91ef6a4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|7416014|376014|23010399003|82310400026|1800799024|56012099006|10067099003|6133799003|18002099003|22082099003|11063799006|921020;
-X-Microsoft-Antispam-Message-Info:
-	MRxJjrNi7QP/4w4X4Ktvyq3XnnZ8PhSNLXMBSVPB0UDq9zgKUfPLK6HcVw3JCeHssvnLL6edsn78z2jw9pzUbGkeSEiiJtdXFUQMEysUCimyMjlW8Z2ValtkVdmNFwoumnMhRdpv81pPacJ7pXDWIp4rSD7Og5lmI1fYohdgy8SBvkeq2Jzv2vRp8aD7Y//1xHJRLB/7eRIMgFmsj0ovC/6KCS/8DPuVxJ6m7ls7W6/EGP0sfJtDxrdMOuw7WM+nWs7GhN94dQQj/GlWf5Bx5wK2upQFiJt76EW6SnVGwFr3tSD4Lzrv0RK4AJp1M9VFR9DYWbnS9247T4L0DmwU/UP+GNHQ/PPw5zvlcU2lBLfkQeNfCAXXdlq51cZzLilWe2Ex/nl4cU7pjGbWbeTYcG6hSRf/ns5+atrfgL13mW5UnLWL8UmsWTyiuMT7jHaFUNTMXs2qJ/frnKpxt95qE29FAgrURmhsmrqn3TDplSkyYGujWxQR2QGEWsh51HWX0skXYtwbihHenkdSNUVU+C31tqNd3+qs8ktar2m6gfKJsxwCdWz6SQBqQdJ/oeIfAogmvePbgxZZHfrybcK71ec8SF4/yLc96OBQh1T92n20YqNSk1uW9G3v2a2hmCAI4Ez8/cyJD/9uTrwyPXAa57RccM7JgOJTVGZkZRKLm/cUBVqQYl4ZiMyrytpzMbVy9TNzs28ltSa/g3NQkJ2YdCeeXDZ9j12DgsMWME899bVfMpU7pJEpE+qYsg4Gh590
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700016)(7416014)(376014)(23010399003)(82310400026)(1800799024)(56012099006)(10067099003)(6133799003)(18002099003)(22082099003)(11063799006)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	iPu3nM4VuvfKCwdv9Q77a20fCThL1Xgqqyr1Zg0YjP/VTVhxwh3oQSfUK8N93XzkyTUSVKt5WX1OplvEk5dFqFjXOElFvxmEskrmKQJHKbGFjd9QcG+0wMiM6TOXnzZIWrYrzFzbwqG9//0gIyZ430c5xKTwTjna63aXQHxaOTqmdR9P4tecmf97kfjrqLDpwNU1YNako8DXvWMaa3LHe+bd7BcOCmvZMsj8u1O7urBhJlhUjouMk2r/kIdFzOMp5KlDAb4suWcEtJd1uIsLQPNSDZMmzKCx7EMTguBq22u7wsMFel2TwdwDN/N/VO309Wi7Sl0EdxNSA8v/w7gneG1AotxOpx1cpi3JvZs3A9B01em8KWgyhLRf1XIdpqfHESyRD860LKB4H6GQYPIBHoFSRVDvNc+u5coA+8kvLbyQG2TuremZbjO2ZWNK8Ny4
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Aug 2026 09:40:51.4093
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 288d6048-6571-4997-ada4-08def91ef6a4
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000C6185.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR12MB8565
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] mm: memory-failure: fix HWPoison flag race with
+ non-atomic page flag ops
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+ Naoya Horiguchi <nao.horiguchi@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Oscar Salvador
+ <osalvador@suse.de>, Andi Kleen <andi@firstfloor.org>,
+ Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>,
+ Rik van Riel <riel@redhat.com>, Vlastimil Babka <vbabka@kernel.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Brendan Jackman <jackmanb@google.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+ Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry@kernel.org>,
+ Hao Li <hao.li@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
+ Byungchul Park <byungchul@sk.com>, linux-mm@kvack.org,
+ linux-cxl@vger.kernel.org
+References: <cbab829a-3e65-4b4f-a2e2-704e88a611a0@kernel.org>
+ <f6d8354c-2f79-4a48-934c-cbeb335765e2@kernel.org>
+ <20260630174852-mutt-send-email-mst@kernel.org>
+ <2f884bfa-3cd5-4fba-8aa4-c2e68890ab64@kernel.org>
+ <20260701041112-mutt-send-email-mst@kernel.org>
+ <d2ce93d9-c3d8-4915-a511-d08eb2c1b374@kernel.org>
+ <20260701043024-mutt-send-email-mst@kernel.org>
+ <c03ec696-d635-4c7f-8c77-89a439d9135b@kernel.org>
+ <20260707155658-mutt-send-email-mst@kernel.org>
+ <6ec8f683-77c7-4ddd-830c-030a3d984715@kernel.org>
+ <20260708090739-mutt-send-email-mst@kernel.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <20260708090739-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Manish Honap <mhonap@nvidia.com>
+On 7/8/26 15:08, Michael S. Tsirkin wrote:
+> On Wed, Jul 08, 2026 at 02:03:21PM +0200, David Hildenbrand (Arm) wrote:
+>> On 7/7/26 22:27, Michael S. Tsirkin wrote:
+>>>
+>>> I spent a bit poking at it, and it's hairy.
+>>
+>> What I thought ...
+>>
+>>> The issue is that we have calls to both set and clear bits.
+>>> When we record them in a side side structure so they can be retried,
+>>> we have to carefully record both sets and clears and their order and make sure
+>>> they do not bypass each other. So if there's set already in the
+>>> structure, we need to take it out of structure and only then add a clear.
+>>>
+>>> It gets very hairy because we want to set from NMI.  So now we can have
+>>> clear in the data structure and set from NMI bypasses that. Now what?
+>>> And set from NMI can't be 100% safe anyway as we discussed ...  Kinda
+>>> reduced my motivation to try and make this reliable at all.
+>>
+>> Maybe we should just really keep it as broken as it currently is. It's not
+>> really worth our time fixing basic design flaws ... given that we didn't have
+>> any report about these races so far :/
+>>
+>> I mean, sure, if it's easy, ... but it sounds like getting more and more complex.
+>>
+>> -- 
+>> Cheers,
+>>
+>> David
+> 
+> Right. Either we do the RCU thing or let it be. But then I'm uninclined
+> to even bother with fixing other weird behaviour I see there.
 
-Advertise the assignment with a device-info flag so a VMM can tell a
-CXL Type-2 device apart from a plain vfio-pci one. On the trapped
-component region, add a capability carrying the BAR and offset of the
-HDM decoder registers so the VMM can place the window where the guest
-expects to find it.
+Yes, let's keep it as broken as it is for now, just not breaking it even more.
+We discovered other hwpoison oddities lately, and decided that there needs to be
+a high level discussion on a better design of hwpoion handling in general. It's
+really just slapped on.
 
-Signed-off-by: Manish Honap <mhonap@nvidia.com>
----
- drivers/vfio/pci/cxl/vfio_cxl_core.c | 16 ++++++++++++++++
- drivers/vfio/pci/vfio_pci_core.c     |  3 +++
- include/uapi/linux/vfio.h            | 18 ++++++++++++++++++
- 3 files changed, 37 insertions(+)
+The page->flag handling is only a temporary concern, in some memdesc future the
+problem will look differently, and likely easier to sort out..
 
-diff --git a/drivers/vfio/pci/cxl/vfio_cxl_core.c b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-index ec938813bd91..0fb5ed5d86b7 100644
---- a/drivers/vfio/pci/cxl/vfio_cxl_core.c
-+++ b/drivers/vfio/pci/cxl/vfio_cxl_core.c
-@@ -381,9 +381,25 @@ static ssize_t vfio_cxl_comp_rw(struct vfio_pci_core_device *vdev,
- 	return count;
- }
- 
-+static int vfio_cxl_comp_add_capability(struct vfio_pci_core_device *vdev,
-+					struct vfio_pci_region *region,
-+					struct vfio_info_cap *caps)
-+{
-+	struct cxl_hdm_info *hdm = vdev->pdev->hdm;
-+	struct vfio_region_info_cap_cxl_comp_regs cap = {
-+		.header.id = VFIO_REGION_INFO_CAP_CXL_COMP_REGS,
-+		.header.version = 1,
-+		.bar = hdm->hdm_bar,
-+		.offset = hdm->hdm_offset,
-+	};
-+
-+	return vfio_info_add_capability(caps, &cap.header, sizeof(cap));
-+}
-+
- static const struct vfio_pci_regops vfio_cxl_comp_regops = {
- 	.rw = vfio_cxl_comp_rw,
- 	.release = vfio_cxl_region_release,
-+	.add_capability = vfio_cxl_comp_add_capability,
- };
- 
- static void vfio_cxl_release_hpa(void *data)
-diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
-index 6f6ebcce86a1..77f8f39dd670 100644
---- a/drivers/vfio/pci/vfio_pci_core.c
-+++ b/drivers/vfio/pci/vfio_pci_core.c
-@@ -1192,6 +1192,9 @@ static int vfio_pci_ioctl_get_info(struct vfio_pci_core_device *vdev,
- 	if (vdev->reset_works)
- 		info.flags |= VFIO_DEVICE_FLAGS_RESET;
- 
-+	if (vdev->cxl_ops)
-+		info.flags |= VFIO_DEVICE_FLAGS_CXL;
-+
- 	info.num_regions = VFIO_PCI_NUM_REGIONS + vdev->num_regions;
- 	info.num_irqs = VFIO_PCI_NUM_IRQS;
- 
-diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-index d5b8106625bf..df88535ede5f 100644
---- a/include/uapi/linux/vfio.h
-+++ b/include/uapi/linux/vfio.h
-@@ -215,6 +215,7 @@ struct vfio_device_info {
- #define VFIO_DEVICE_FLAGS_FSL_MC (1 << 6)	/* vfio-fsl-mc device */
- #define VFIO_DEVICE_FLAGS_CAPS	(1 << 7)	/* Info supports caps */
- #define VFIO_DEVICE_FLAGS_CDX	(1 << 8)	/* vfio-cdx device */
-+#define VFIO_DEVICE_FLAGS_CXL	(1 << 9)	/* vfio-cxl device */
- 	__u32	num_regions;	/* Max region index + 1 */
- 	__u32	num_irqs;	/* Max IRQ index + 1 */
- 	__u32   cap_offset;	/* Offset within info struct of first cap */
-@@ -505,6 +506,23 @@ struct vfio_region_info_cap_nvlink2_lnkspd {
- 	__u32 __pad;
- };
- 
-+/*
-+ * Geometry of a CXL Type-2 device's HDM decoder registers, so a VMM can place
-+ * the trapped component register window where the guest expects it. The trapped
-+ * region spans the whole HDM decoder block (every decoder), not just decoder 0:
-+ * a VMM reads the decoder count and each decoder's committed base from the block
-+ * itself. Additional trapped component capabilities, such as CXL RAS, are
-+ * exposed as their own region subtypes rather than by extending this cap.
-+ */
-+#define VFIO_REGION_INFO_CAP_CXL_COMP_REGS	6
-+
-+struct vfio_region_info_cap_cxl_comp_regs {
-+	struct vfio_info_cap_header header;
-+	__u32 bar;
-+	__u32 __resv;	/* reserved, must be zero; versioning anchor for flags */
-+	__aligned_u64 offset;
-+};
-+
- /**
-  * VFIO_DEVICE_GET_IRQ_INFO - _IOWR(VFIO_TYPE, VFIO_BASE + 9,
-  *				    struct vfio_irq_info)
 -- 
-2.25.1
+Cheers,
 
+David
