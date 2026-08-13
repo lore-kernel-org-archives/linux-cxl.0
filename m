@@ -1,226 +1,354 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010003.outbound.protection.outlook.com [52.101.193.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C7C23909F;
-	Thu, 13 Aug 2026 13:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.3
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786629216; cv=fail; b=h4ESRIyr9HhKXf6TosA8wGhTvySwJ8d7e4tJE6hWydwCGeYA15bP3fHpuhkqH0PPKEysgYLfYr7E4FRa+MVT251a+eGitwAz6j+lYHv/xobYycuOgXwdFAuL4IrcRSi2kmMHEPGG46HFQOUreU8u5jEtA+JSVNu2032F7kOcUwU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786629216; c=relaxed/simple;
-	bh=F5izCJLVdVd5RqwkGWzgNx25o19zaspJqa0ThDQlchI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=OgcG/dTZZjqNxwLxlwXTxpUdsEJ1z2ch/xUCSS4QwzNPS8tpP7GjoUfeqvW6sEmhG/68GzjqpDteFbadA+Hbo5lAnS5TWz4Rc5pwkUtrG2Lrwroj8OSwC7DvgaMB5WEXv7b0qDb4PYW705blVaBI8spTIjm0bixxCPIELUtmkzQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jaHDyEDL; arc=fail smtp.client-ip=52.101.193.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57F730FC1C;
+	Thu, 13 Aug 2026 22:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786658919; cv=none; b=PHztLTtmLrPh86SFC/vtU5nH95k/N4q6dbty5SRKZFmTQlkrJIqAhQ1Xw5MaCbUeyzTGYhIVLSCWCuUFnjwUvm4mij7heLdn0j3UqBr8TxD//FebND9dndOU3tNPOdc1UkyonrW13lcWPmM0Yp4lsLt5cbDv6LBeXObiSwexd9c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786658919; c=relaxed/simple;
+	bh=rfDqCh0XTkwpFpeshfxTalwfJ53/zCN+FW8Bs0mc2+g=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=gZw3cJoQ4vKImpWqWkpFnSiHenXlDAYzZh1GFtZHGhUHPRisDjZyf01u1UAy8fibAUAr7Sg3qEN9T+KrwJS+wolDjs3N6vw8N6ha38mpJvtd8tZb4/dvXkYhVwqtwhVANCyhRr7Sz/IsmFpITkox9eO64D7hEN1X+l6A1vZotHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hQ1JUzdk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jaHDyEDL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=H2tjtt0sDfm1qKSV1TRgyyeq1xib0kAE9GjR1X2ZzBYyhlmsHx2TmTYWvIrW86GvbY59rn2Mv7vHyOxG9ICu2Nl2wESrYZDuYk9SrR3knghHyjeoth4LVXDAaC8mnUaxycBjLfbQWxHFI+Mha0mKEKJe5N8ZUg9Y+5/N6IFj6OfB8PfhsZ0yQZH+IfPU/QGD7+/e159xt7nNrIPOxWOv+xaj4Focm4xt77E8MS6Egzf3vQFRoC+LJHvuFFREJ7tiIYEp0TNyJgHbwnq8UtVwALCejYGLEh0CSwVKXUBo5Sza3qLGUZCWh9lmE1tnVqQ1kKte7uj06Yozr8eP4N5kUA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XnfOMcEcrRvNTDmw8FkR/grQbQp9wd6Cvd53bo41gb0=;
- b=gurSlH7fgSs9uIos66ZtwT53/SWi1mXw2PIkI0CvtPC2mGNsrYvtaH6rZbw37eobxwjxFcT+3z7KNvVoWGgFhifsPjfBLhCRGUzqbSad9dyU9grnAABCbXx46wCkkrnwKboH2YcZpYgFrc1mtVyQr5wQ+CNpKn+bW1rSF1wat0zJfb+36/WoxfrjhHHAzRi+d+bmvbRNBXwzunmMrcfsOphHqODLp7FJm9z795XlrWVZRmv44W5U38HON/2Dha88cxWsgMPbDB8Nen+pwHHdXqbzmZjGN0TL50vTDp0Dsvsdpyl0zvMLvz6N8ErQ6JMhjYMRALq5b9SMjK4CZ8KxLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XnfOMcEcrRvNTDmw8FkR/grQbQp9wd6Cvd53bo41gb0=;
- b=jaHDyEDLHGY/26Ti3Oi+wIXSzvcW9xU8o1YKrHpcq52HMiRotpkwAQaCrxC/MQ4KKm3x77+SNwfbLTNDozmYNW+qX1GO/pqp5nx5/Q9xQD7GS1/Zfppr8RgaucZttRTLD0ean1oN3J0ivcLtuQpmBIqY3qQT+hyaDvm9ipB/Lsw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16) by
- LV2PR12MB5847.namprd12.prod.outlook.com (2603:10b6:408:174::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.315.15; Thu, 13 Aug 2026 13:53:28 +0000
-Received: from DM4PR12MB6085.namprd12.prod.outlook.com
- ([fe80::9d84:7eb1:a785:bda1]) by DM4PR12MB6085.namprd12.prod.outlook.com
- ([fe80::9d84:7eb1:a785:bda1%6]) with mapi id 15.21.0315.012; Thu, 13 Aug 2026
- 13:53:28 +0000
-Date: Thu, 13 Aug 2026 15:53:23 +0200
-From: Robert Richter <rrichter@amd.com>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	djbw@kernel.org, iweiny@kernel.org, ming.li@zohomail.com,
-	gourry@gourry.net, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, newtonl@nvidia.com,
-	kristinc@nvidia.com, kaihengf@nvidia.com, kobak@nvidia.com
-Subject: Re: [PATCH v2] cxl/region: Add cxl_decoder_is_passthrough() helper
-Message-ID: <an3MU6_wgm1E6L-Q@rric.localdomain>
-References: <20260805065935.27837-1-icheng@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260805065935.27837-1-icheng@nvidia.com>
-X-ClientProxiedBy: CPCP307CA0006.DNKP307.PROD.OUTLOOK.COM (2603:10a6:380::8)
- To DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hQ1JUzdk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F58E1F000E9;
+	Thu, 13 Aug 2026 22:08:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786658917;
+	bh=i0S/3ESuepP5OdidFiY+t4UP7mQlCDqOEdqCxdeN3KE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=hQ1JUzdkd/pvs3Eju5udtKpUgMiJdxLWH8MRAaUwz6vIsQG82moCkRR08AhGZOYGY
+	 fTI9XpH87glFemtVg5BkXCuq7SUv1fB880pYH0OeyGp1uLJqkC62MYPglBQjJ9JqeX
+	 UM/s9tb4/F8x+HICsREY8ZDGh3Au0SwoW/LAyjm+/udwI6/EGOiZFzy0yNQNINYiOI
+	 p4IPcg/E/cWyCVYiZSu8riiIH4wU9rx+1+px1KMj2Hd/HjUBJI2EY9CiY8qaXvF9mm
+	 pJlnLoTby62xCykaCRRH2sGl95VsCtl6YeJNXuUgt+k1qWPVHRE6MBEIUeY0GU6pPB
+	 RFYPXL7tUAnPw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH V8 04/10] famfs_fuse: Create files with famfs fmaps
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "John Groves" <john@jagalactic.com>
+Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
+In-Reply-To: <0100019d063ff336-a7f1bca1-63b7-497c-93dc-69155efd8a68-000000@email.amazonses.com>
+References: <0100019d063ff336-a7f1bca1-63b7-497c-93dc-69155efd8a68-000000@email.amazonses.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 13 Aug 2026 22:08:33 +0000
+Message-Id: <20260813220837.3F58E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6085:EE_|LV2PR12MB5847:EE_
-X-MS-Office365-Filtering-Correlation-Id: 396075a4-b687-4d13-3d18-08def94240be
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|7416014|376014|1800799024|366016|6133799003|10067099003|11063799006|56012099006|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	SfnCOK8mn3riU+dnnBppmVfNPiHTnFOK789P9RwFK6/y1s1khK/gCRwoVwd172WGFSIRMjdkhUEhjtAoSHJrS/EeS8U1Znac68Om6t2BqOUrMbq8lUX78Vrx6NzCpSLX9RO6ZDsoqVgVATgZgQJFGG1P7rKoZKzvaLG9N3Heju22FR6qSXXXwj6wTc1ScIlu/GGfElfFKtU7iX3B5epOyrsdZ9FzmRh6it2drUeGhtdQmu/axSrezWOf7iuhAsMnyRKVVsPD4uFgqrbqzMvEYaaVyq46Iqe0b1stnAQEszWi8MOQxbzH7vADQbk+lbB44ZxBPy/keWbQra3FHvEsbkbmpElJAjkbobKob2U8/RRyGg92ogIhbX7caX+siYExlvV3M3Y4aM015IRY5xLhwiiPraRIwFx6AThveRCxfjTE8jGirq15+xFt1ba1PuJjy3hlufc5aR4m94A61RCTAyMM75FXnqHhTbSvWuC3b57/DXQYuZB/irN9MAa0+quK2E0IXa+DS2ikoGL2J901HGRPDnFbgC2+00sY9+tjtEAiPw88KCa94XfM55ex8hvs2R432+f7wHVb9Nbubzk/X8EC2bd4+kFOxXIc5v9LSKjAt3hCyPvs7nAFH8VdZgLG2MIpnkQMKgAf5i8XGf5Uu2Ht226cQLWDiMWnQbY8epo=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6085.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(1800799024)(366016)(6133799003)(10067099003)(11063799006)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?OLToinONOW9CNEni4Dauq1XcMX4XCIEjGBCCOVa3Lsf0NaIRgCj0yCl8wstM?=
- =?us-ascii?Q?6vAo5AJrLu/sv4jzT9f3Y0evsLlnAfbOx8jF3tDyV7Txn5f17KB24jYB2fIi?=
- =?us-ascii?Q?AdUNKTcW5RljrPuNLwy5irqU6tyTFwO8DWzsbMtIJ9PHNDbqf14eFGN2I42+?=
- =?us-ascii?Q?BOsmXUGMSg+tRWaZbqOX35I4u3OLKONQ9UoNeY+DpNYhcfHBwUSwkrK8oi7m?=
- =?us-ascii?Q?eJSh5xGQQIz1m3tB8QsqTlZT5VYUqUvSQzBPFPgUAEx8FowR2CthkQ4cPuJY?=
- =?us-ascii?Q?xH6Uir6OKGd6T3WT1NqF9pwcREn453RQDrgAbHQdB5I+eYnx5IUCIcZRFwgV?=
- =?us-ascii?Q?5856pSg3UzjFDYj2hLPLb80L5Tv/dRzbU8YOG28UI2mYQTC01ixBBkMxdPvN?=
- =?us-ascii?Q?pfMytaA1emk4lOMWfVMUq6qfVbxehD8pF4lBTc25frDq3pIZ0g9S7+QC+0jI?=
- =?us-ascii?Q?nRyak1m7lqPlPB6kML7GkwNbvZyYsmSbckfW+hugIU+LYyQT9FKBksmH/2Aa?=
- =?us-ascii?Q?w8VVdcMVQZPNxU+XkfdOlzLFyJIV+bCze1fTWRWM2vDdOgvOff1ZW+5RKGjT?=
- =?us-ascii?Q?j4YhFsl7OQ3Ejt9zhtu1lqtbcGOOCGfDG2X87hh9KRia7s+hSF6jLOB5uL5U?=
- =?us-ascii?Q?zdk6PIlpbDRf08xhp0mI//CS3tj1HldCA94ohLmFbG8GtNF1DBSIYAid8QRj?=
- =?us-ascii?Q?aBDf70MCaqTMCPSa46IBGOH+I8y/WVeVd1im/lz6q9/YQGuwZz5HS80SMLir?=
- =?us-ascii?Q?KB2JQMTmYXBOuFZhYAbXaRV2t6Vae5zI3Nu0GgI3jyzL5WdHx58f+HZXBmAG?=
- =?us-ascii?Q?aJNQudDuHAH73ylws6hzDm1Hnv4Z6Sdfr+lMwXcoi7Ib4RzFsmuzD6jisjcd?=
- =?us-ascii?Q?UN0VvtYsLoojdDlGt7kXYGfXveOdUzp+U6tgI/DesMa7d4/nW4hQM4bMBlTN?=
- =?us-ascii?Q?UPAHIoMeKRBhlL7hfm5/8zHzkSbGPOeWg3UAQC8vsujDT1wBPuiwzm31Rdi/?=
- =?us-ascii?Q?Q+YAC48GXK6xnKuWv+ySxwAfRBEaVLGHxBeFPJGHsZvboUSMk7WneuBMXltr?=
- =?us-ascii?Q?UBHWb75CRUawZt5aB0ZLufAn78koFMEHPNIj/+HifSM8Azvr+UXw4nEYoWeL?=
- =?us-ascii?Q?dG6ooRfLU+pJ1HVgEGpgRtE8NAHcauMQdQoIFWS40RfbUSEEHhIcC+MbuNZV?=
- =?us-ascii?Q?70BDYWwXYeG7RmZy5ypaXtVGzywhaYVMUNNHqnHkHgqtzP70a41r+269oETw?=
- =?us-ascii?Q?hy1WJIqHpSxGDUuiB5RCP384MlFW2FJQFv2KPPvArlbFMCoaItgUwp9m5IO9?=
- =?us-ascii?Q?dvWF0VZF1hBKgxx62u0QC8HbzuFzXvzeQ/wHtgNpZX1GNWDGtHsXpgsGEPiK?=
- =?us-ascii?Q?OSTHxbR+rMjTeNKaCVlER3k1mqT5qUsT3mstW26g4vUtudQrR78gMfSZ9ewP?=
- =?us-ascii?Q?cYONkFSxcva1HSqLez/pyfZZpIDQFWkEtbst1EhFp09HI7D7Bg4U5oh5koXw?=
- =?us-ascii?Q?yqq0hmyQsr4XnfAPEhH36HELlQy+fDZtBBEOc0PgTwjDccX9iPdzXceMu2ro?=
- =?us-ascii?Q?gdrunXHptEQqPi7Lw35S9VbVv9nMNT7gkU3zAnFcnywhxQTYQMeEB6pHwa9n?=
- =?us-ascii?Q?Cbuld8amRV5He1+fQXw9fzv0V0PBh7YACdcT3SrCUUNFVq3eftlzLdAW49Pl?=
- =?us-ascii?Q?NMqLJEIXPFR4Rca0PDSKkPMLyG7EqfP+dQVyzLqZ4YqGp4CO?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 396075a4-b687-4d13-3d18-08def94240be
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6085.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Aug 2026 13:53:28.5837
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vxkH+J2G6FevGevrMPA5iyJNbwuG0TEs8Xj2FliXWy8SiBh1mtyHA4bMauZ+u5p67/K5/aTvUF90+t/HMoCHVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5847
 
-On 05.08.26 14:59:34, Richard Cheng wrote:
-> commit_decoder() open-codes the passthrough test.
-> A NULL ->commit() plus a switch decoder with at most one target. The
-> call site is hard to read, and it suggests a NULL ->commit() alone
-> identifies a passthrough decoder. It does not.
-> DVSEC-emulated endpoint decoders also leave ->commit() NULL, and root
-> decoders never set it. A future caller testing ->commit() alone would
-> silently include them.
-> 
-> Move the test into cxl_decoder_is_passthrough() and document what each
-> condition rules out. The helper runs the same tests in the same order,
-> no functional change.
-> 
-> Signed-off-by: Richard Cheng <icheng@nvidia.com>
-> ---
-> Changelog:
-> 
-> v1 -> v2:
->     - Dropped the passthrough F_ENABLE restore patch. The bug was
->       already fixed.
->     - What remains is only the clarify helper function patch, so the
->       patch is retitled accordingly
-> 
-> v1:
-> https://lore.kernel.org/linux-cxl/20260727103743.63343-1-icheng@nvidia.com/
-> 
-> Best regards,
-> Richard Cheng.
-> ---
->  drivers/cxl/core/region.c | 28 ++++++++++++++++++++++------
->  1 file changed, 22 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 27e63e6dab7c..cd73684fbe97 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -293,17 +293,33 @@ static void cxl_region_decode_reset(struct cxl_region *cxlr, int count)
->  	clear_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags);
->  }
->  
-> -static int commit_decoder(struct cxl_decoder *cxld)
-> +/*
-> + * A single-dport host-bridge need not publish an HDM decoder capability
-> + * when passthrough decode can be assumed. The resulting decoder is a
-> + * software-only construct with no registers to program, so it carries no
-> + * ->commit() operation, see devm_cxl_add_passthrough_decoder().
-> + *
-> + * A NULL ->commit() alone does not identify one, it is also NULL for
-> + * DVSEC-emulated endpoint decoders. Test the decoder type and target
-> + * count as well.
-> + */
-> +static bool cxl_decoder_is_passthrough(struct cxl_decoder *cxld)
+Thank you for your contribution! Sashiko AI review found 8 potential issue(=
+s) to consider:
+- [High] Integer overflow and undefined behavior when calculating `dev_bitm=
+ap` with a 32-bit signed shift.
+- [High] Recursive `inode_lock()` deadlock on `O_TRUNC` file open.
+- [Medium] Data truncation of file size and mapping size on 32-bit architec=
+tures.
+- [Medium] Dynamic toggling of `S_DAX` flag introduces a data race and viol=
+ates VFS caching invariants.
+- [Low] Dangling pointer window in `famfs_meta_free` due to incorrect clean=
+up ordering.
+- [Low] Meaningless local `cmpxchg` race check acts as dead code.
+- [Low] Uninitialized variable accessed and printed in error message.
+- [Low] Implicit cast of untrusted UAPI enum to internal enum.
+--
 
-This is much noise for just checking if ->commit() is required in some
-cases and generate an error if not.
+--- Patch [4]: [PATCH V8 04/10] famfs_fuse: Create files with famfs fmaps -=
+--
+commit 588d2cb1a397d88983186c80e9fec874ef42a12e
+Author: John Groves <john@groves.net>
 
->  {
-> -	struct cxl_switch_decoder *cxlsd = NULL;
-> +	if (cxld->commit)
-> +		return false;
+famfs_fuse: Create files with famfs fmaps
 
-That duplicates the test and the code is never executed.
+This patch introduces the ability to allocate and initialize in-memory famfs
+file metadata mapped to DAX memory. It adds structures for resolving file
+maps and sets up the initialization path based on FUSE GET_FMAP responses.
 
-> +
-> +	if (!is_switch_decoder(&cxld->dev))
-> +		return false;
-> +
-> +	return to_cxl_switch_decoder(&cxld->dev)->nr_targets <= 1;
+> --- a/fs/fuse/famfs.c
+> +++ b/fs/fuse/famfs.c
 
-cxlsd->nr_targets is easier to read and explains that nr_targets is in
-struct cxl_switch_decoder, which wouln't be obious else. So the change
-does not improve readability and instead does multiple things in a
-single line.
+[ ... ]
 
-> +}
->  
-> +static int commit_decoder(struct cxl_decoder *cxld)
+> +static int
+> +famfs_fuse_meta_alloc(
+> +	void *fmap_buf,
+> +	size_t fmap_buf_size,
+> +	struct famfs_file_meta **metap)
 > +{
->  	if (cxld->commit)
->  		return cxld->commit(cxld);
->  
-> -	if (is_switch_decoder(&cxld->dev))
-> -		cxlsd = to_cxl_switch_decoder(&cxld->dev);
-> -
-> -	if (dev_WARN_ONCE(&cxld->dev, !cxlsd || cxlsd->nr_targets > 1,
-> +	if (dev_WARN_ONCE(&cxld->dev, !cxl_decoder_is_passthrough(cxld),
->  			  "->commit() is required\n"))
+> +	struct fuse_famfs_fmap_header *fmh;
 
-The original was pretty straight forward: if it is a switch decoder
-with multiple targets, raise an error. It looks like an assert here as
-!cxld->commit is only created in devm_cxl_add_passthrough_decoder()
-which sets the number of targets to one (not looking into test code
-here, but if that causes an issue, fix it there).
+[ ... ]
 
-So I don't see much sense in this patch.
+> +	meta->error =3D false;
+> +	meta->file_type =3D fmh->file_type;
+> +	meta->file_size =3D fmh->file_size;
 
-Thanks,
+[Severity: Medium]
+Does this truncate the file size on 32-bit architectures?
 
--Robert
+The FUSE protocol correctly provides this as a 64-bit value, but the
+famfs_file_meta structure declares file_size as a size_t. On 32-bit systems,
+size_t is a 32-bit unsigned integer.
 
->  		return -ENXIO;
->  	return 0;
-> 
-> base-commit: 212e015fc34712c849653cdb3179cd643c915015
-> -- 
-> 2.43.0
-> 
+Any file size larger than 4GB will be silently truncated when assigned here,
+which will later result in incorrect sizes passed to i_size_write().
+
+> +	meta->fm_extent_type =3D fmh->ext_type;
+
+[Severity: Low]
+Is it safe to directly assign this FUSE UAPI enum to the internal kernel
+enum?
+
+The code assigns a UAPI uint32_t (enum famfs_ext_type) directly to a
+kernel internal enum famfs_extent_type. While the integer values currently
+align identically, this bypasses type safety and will fail silently if the
+enumerated types ever diverge.
+
+> +
+> +	switch (fmh->ext_type) {
+> +	case FUSE_FAMFS_EXT_SIMPLE: {
+> +		struct fuse_famfs_simple_ext *se_in;
+
+[ ... ]
+
+> +		for (i =3D 0; i < fmh->nextents; i++) {
+> +			meta->se[i].dev_index  =3D se_in[i].se_devindex;
+> +			meta->se[i].ext_offset =3D se_in[i].se_offset;
+> +			meta->se[i].ext_len    =3D se_in[i].se_len;
+> +
+> +			/* Record bitmap of referenced daxdev indices */
+> +			meta->dev_bitmap |=3D (1 << meta->se[i].dev_index);
+
+[Severity: High]
+Can this shift operation invoke undefined behavior or corrupt the bitmap?
+
+The FUSE server provides a dev_index which is used to set a bit in a 64-bit
+bitmap. Because 1 is a signed 32-bit integer literal, a dev_index of 31
+results in a negative value that sign-extends to 0xFFFFFFFF80000000 when
+promoted to u64, incorrectly setting bits 32-63.
+
+If dev_index is 32 or greater, the shift invokes undefined behavior. Using
+1ULL would prevent this.
+
+> +
+> +			errs +=3D famfs_check_ext_alignment(&meta->se[i]);
+> +
+> +			extent_total +=3D meta->se[i].ext_len;
+> +		}
+> +		break;
+> +	}
+> +
+> +	case FUSE_FAMFS_EXT_INTERLEAVE: {
+
+[ ... ]
+
+> +		for (i =3D 0; i < niext; i++) {
+> +			u64 nstrips;
+> +			struct fuse_famfs_simple_ext *sie_in;
+> +
+> +			/* ie_in =3D one interleaved extent in fmap_buf */
+> +			ie_in =3D fmap_buf + next_offset;
+> +
+> +			/* Move past one interleaved extent header in fmap_buf */
+> +			next_offset +=3D sizeof(*ie_in);
+> +			if (next_offset > fmap_buf_size) {
+> +				pr_err("%s:%d: fmap_buf underflow offset/size %ld/%ld\n",
+> +				       __func__, __LINE__, next_offset,
+> +				       fmap_buf_size);
+> +				return -EINVAL;
+> +			}
+> +
+> +			if (!IS_ALIGNED(ie_in->ie_chunk_size, PMD_SIZE)) {
+> +				pr_err("%s: chunk_size %lld not PMD-aligned\n",
+> +				       __func__, meta->ie[i].fie_chunk_size);
+
+[Severity: Low]
+Does this error message print an uninitialized value?
+
+During the interleaved extent alignment checks, if ie_chunk_size is not
+PMD-aligned, the error message attempts to log meta->ie[i].fie_chunk_size.
+
+However, this field has not yet been assigned from the FUSE payload. The
+assignment happens several lines below this check, so this will print 0
+instead of the actual invalid chunk size.
+
+> +				return -EINVAL;
+> +			}
+
+[ ... ]
+
+> +			/* Inner loop is over strips */
+> +			for (j =3D 0; j < nstrips; j++) {
+> +				struct famfs_meta_simple_ext *strips_out;
+> +				u64 devindex =3D sie_in[j].se_devindex;
+> +				u64 offset   =3D sie_in[j].se_offset;
+> +				u64 len      =3D sie_in[j].se_len;
+> +
+> +				strips_out =3D meta->ie[i].ie_strips;
+> +				strips_out[j].dev_index  =3D devindex;
+> +				strips_out[j].ext_offset =3D offset;
+> +				strips_out[j].ext_len    =3D len;
+> +
+> +				/* Record bitmap of referenced daxdev indices */
+> +				meta->dev_bitmap |=3D (1 << devindex);
+
+[Severity: High]
+As above, can this shift operation invoke undefined behavior or corrupt the
+bitmap if devindex is 32 or greater?
+
+> +
+> +				extent_total +=3D len;
+> +				errs +=3D famfs_check_ext_alignment(&strips_out[j]);
+> +				size_remainder -=3D len;
+> +			}
+> +		}
+
+[ ... ]
+
+> +	if (cmpxchg(metap, NULL, meta) !=3D NULL) {
+> +		pr_debug("%s: fmap race detected\n", __func__);
+> +		return 0; /* fmap already installed */
+> +	}
+
+[Severity: Low]
+Does this cmpxchg check accomplish its intended race detection?
+
+The metap argument points to a purely local stack variable inside the caller
+famfs_file_init_dax(). Since this variable is completely local to the
+thread, the cmpxchg will always succeed.
+
+This makes the race detection dead code. The actual functional race check
+correctly occurs later via famfs_meta_set().
+
+> +	retain_and_null_ptr(meta);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * famfs_file_init_dax() - init famfs dax file metadata
+
+[ ... ]
+
+> +int
+> +famfs_file_init_dax(
+> +	struct fuse_mount *fm,
+> +	struct inode *inode,
+> +	void *fmap_buf,
+> +	size_t fmap_size)
+> +{
+> +	struct fuse_inode *fi =3D get_fuse_inode(inode);
+> +	struct famfs_file_meta *meta =3D NULL;
+> +	int rc;
+
+[ ... ]
+
+> +	rc =3D famfs_fuse_meta_alloc(fmap_buf, fmap_size, &meta);
+> +	if (rc)
+> +		goto errout;
+> +
+> +	/* Publish the famfs metadata on fi->famfs_meta */
+> +	inode_lock(inode);
+
+[Severity: High]
+Could this unconditional lock acquisition cause an A-A self-deadlock?
+
+When a file is opened with O_TRUNC and writeback caching is enabled, the
+fuse_open() path acquires the inode_lock to perform truncation.
+
+If the filesystem is mounted with famfs iomap support, the open path calls
+fuse_get_fmap(), which in turn calls famfs_file_init_dax().
+
+This function unconditionally calls inode_lock() again to install the
+metadata. Since the same thread already holds the lock, it will deadlock.
+
+> +
+> +	if (famfs_meta_set(fi, meta) =3D=3D NULL) {
+> +		i_size_write(inode, meta->file_size);
+> +		inode->i_flags |=3D S_DAX;
+
+[Severity: Medium]
+Is it safe to dynamically toggle the DAX flag on an active inode?
+
+This modifies the flags using a read-modify-write without the standard
+inode_set_flags() helper.
+
+More importantly, changing S_DAX after an inode has been instantiated
+breaks VFS invariants. If page cache pages were populated prior to this
+flag change, subsequent I/O will use DAX paths while stale page cache pages
+remain, potentially triggering VM_BUG_ON or silent data corruption.
+
+> +	} else {
+> +		pr_debug("%s: file already had metadata\n", __func__);
+> +		__famfs_meta_free(meta);
+> +		/* rc is 0 - the file is valid */
+> +	}
+> +
+> +	inode_unlock(inode);
+> +	return 0;
+
+[ ... ]
+
+> --- /dev/null
+> +++ b/fs/fuse/famfs_kfmap.h
+> @@ -0,0 +1,67 @@
+
+[ ... ]
+
+> +/*
+> + * Each famfs dax file has this hanging from its fuse_inode->famfs_meta
+> + */
+> +struct famfs_file_meta {
+> +	bool                   error;
+> +	enum famfs_file_type   file_type;
+> +	size_t                 file_size;
+
+[Severity: Medium]
+Should this be a u64 or loff_t?
+
+As mentioned earlier, declaring file_size as a size_t on 32-bit systems
+limits it to a 32-bit unsigned integer, causing truncation for files
+larger than 4GB.
+
+> +	enum famfs_extent_type fm_extent_type;
+> +	u64 dev_bitmap; /* bitmap of referenced daxdevs by index */
+
+[ ... ]
+
+> --- a/fs/fuse/fuse_i.h
+> +++ b/fs/fuse/fuse_i.h
+> @@ -1642,6 +1642,9 @@ extern void fuse_sysctl_unregister(void);
+>  /* famfs.c */
+> =20
+>  #if IS_ENABLED(CONFIG_FUSE_FAMFS_DAX)
+
+[ ... ]
+
+>  static inline void famfs_meta_free(struct fuse_inode *fi)
+>  {
+> -	famfs_meta_set(fi, NULL);
+> +	if (fi->famfs_meta !=3D NULL) {
+> +		__famfs_meta_free(fi->famfs_meta);
+> +		famfs_meta_set(fi, NULL);
+> +	}
+>  }
+
+[Severity: Low]
+Does this create a dangling pointer window?
+
+The metadata memory is freed via __famfs_meta_free() before the pointer
+is nullified by famfs_meta_set().
+
+While this occurs during inode eviction where concurrency is limited, it
+creates a brief use-after-free window and breaks the expected safety
+guarantees of a cleanup helper. Reversing the order would be safer.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260318203054.4344=
+.fuse@groves.net?part=3D4
