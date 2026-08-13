@@ -1,164 +1,226 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010003.outbound.protection.outlook.com [52.101.193.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E210144781A;
-	Thu, 13 Aug 2026 10:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786615399; cv=none; b=jnB7w5Lupwy2qN8cg0R76uj0fnlPTyfFneTwCpLFYYJ37PSQo5Cp21wq69Gl1xQhJfNW7cz5ypglaMPS6PA4/jcUBUQl5SpFiCDnhtIA+EMjdJSfRB093rjC5OLr3hJkSNaswGwNhIs1fhZ7UbRZf8qUgbNecG0YNIBUuE+02uA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786615399; c=relaxed/simple;
-	bh=lm9OlZWNXyInh9V1Djr/dv9Shrrm9U9Xkj17oWbz9KY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s3gJgIha93Mpa0a7ozTJo4o0ZP4gNaZ83TaYakLEQ8Us6MPM9PFWnSolSk/xVxu4NcaONURizr/ADi68WWf/VNO1rOGtlVgs1kqkb+Lrdz67Nq5Ykr8oEuinOU1XbUiohEST7Mx/bjzwzxIL9dbS8YtGD8rXzDkr7KUPvQV4vfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SwhDCkGF; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C7C23909F;
+	Thu, 13 Aug 2026 13:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.3
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786629216; cv=fail; b=h4ESRIyr9HhKXf6TosA8wGhTvySwJ8d7e4tJE6hWydwCGeYA15bP3fHpuhkqH0PPKEysgYLfYr7E4FRa+MVT251a+eGitwAz6j+lYHv/xobYycuOgXwdFAuL4IrcRSi2kmMHEPGG46HFQOUreU8u5jEtA+JSVNu2032F7kOcUwU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786629216; c=relaxed/simple;
+	bh=F5izCJLVdVd5RqwkGWzgNx25o19zaspJqa0ThDQlchI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=OgcG/dTZZjqNxwLxlwXTxpUdsEJ1z2ch/xUCSS4QwzNPS8tpP7GjoUfeqvW6sEmhG/68GzjqpDteFbadA+Hbo5lAnS5TWz4Rc5pwkUtrG2Lrwroj8OSwC7DvgaMB5WEXv7b0qDb4PYW705blVaBI8spTIjm0bixxCPIELUtmkzQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jaHDyEDL; arc=fail smtp.client-ip=52.101.193.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SwhDCkGF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32C7B1F000E9;
-	Thu, 13 Aug 2026 10:03:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786615396;
-	bh=82KZrS7ujoal5yjqBJaa0XymEVl+P6knR3/hbb1bBPQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=SwhDCkGF/4OObov9oToTRSnK9CdT+QHzoXHGzJ3H65D1t+fk7zRxTeAh1eDVDjkqy
-	 zxYZJ10oHgJHDXQ+cCyRIrYkTqW8m+zmplqvCrJ7NFbcTxhXNyxsDlOJI4e5JUjJoz
-	 xPSYPNP4RkCjr9o1gPuH0Me0CzZtmikeaCg6M9BavlDqQ92hx27RaUpIM0OKVK5b/0
-	 xbqLefhXXTdX4JSeBn3v6SdNO1VEt1J6P5uirY6SYdM8Yzd6HKOeLZktM153r9dVXw
-	 +Z51kxm7bEk2pjwx0O2Ou9GcQqmTGVHmS+fhyqjJt2BCZI4m3NvCQGyzw+ZiwUcaYs
-	 5UbP759NP44yw==
-Message-ID: <8a391a81-73bd-40b3-bb00-6f6912070378@kernel.org>
-Date: Thu, 13 Aug 2026 12:03:06 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jaHDyEDL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=H2tjtt0sDfm1qKSV1TRgyyeq1xib0kAE9GjR1X2ZzBYyhlmsHx2TmTYWvIrW86GvbY59rn2Mv7vHyOxG9ICu2Nl2wESrYZDuYk9SrR3knghHyjeoth4LVXDAaC8mnUaxycBjLfbQWxHFI+Mha0mKEKJe5N8ZUg9Y+5/N6IFj6OfB8PfhsZ0yQZH+IfPU/QGD7+/e159xt7nNrIPOxWOv+xaj4Focm4xt77E8MS6Egzf3vQFRoC+LJHvuFFREJ7tiIYEp0TNyJgHbwnq8UtVwALCejYGLEh0CSwVKXUBo5Sza3qLGUZCWh9lmE1tnVqQ1kKte7uj06Yozr8eP4N5kUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XnfOMcEcrRvNTDmw8FkR/grQbQp9wd6Cvd53bo41gb0=;
+ b=gurSlH7fgSs9uIos66ZtwT53/SWi1mXw2PIkI0CvtPC2mGNsrYvtaH6rZbw37eobxwjxFcT+3z7KNvVoWGgFhifsPjfBLhCRGUzqbSad9dyU9grnAABCbXx46wCkkrnwKboH2YcZpYgFrc1mtVyQr5wQ+CNpKn+bW1rSF1wat0zJfb+36/WoxfrjhHHAzRi+d+bmvbRNBXwzunmMrcfsOphHqODLp7FJm9z795XlrWVZRmv44W5U38HON/2Dha88cxWsgMPbDB8Nen+pwHHdXqbzmZjGN0TL50vTDp0Dsvsdpyl0zvMLvz6N8ErQ6JMhjYMRALq5b9SMjK4CZ8KxLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XnfOMcEcrRvNTDmw8FkR/grQbQp9wd6Cvd53bo41gb0=;
+ b=jaHDyEDLHGY/26Ti3Oi+wIXSzvcW9xU8o1YKrHpcq52HMiRotpkwAQaCrxC/MQ4KKm3x77+SNwfbLTNDozmYNW+qX1GO/pqp5nx5/Q9xQD7GS1/Zfppr8RgaucZttRTLD0ean1oN3J0ivcLtuQpmBIqY3qQT+hyaDvm9ipB/Lsw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16) by
+ LV2PR12MB5847.namprd12.prod.outlook.com (2603:10b6:408:174::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.315.15; Thu, 13 Aug 2026 13:53:28 +0000
+Received: from DM4PR12MB6085.namprd12.prod.outlook.com
+ ([fe80::9d84:7eb1:a785:bda1]) by DM4PR12MB6085.namprd12.prod.outlook.com
+ ([fe80::9d84:7eb1:a785:bda1%6]) with mapi id 15.21.0315.012; Thu, 13 Aug 2026
+ 13:53:28 +0000
+Date: Thu, 13 Aug 2026 15:53:23 +0200
+From: Robert Richter <rrichter@amd.com>
+To: Richard Cheng <icheng@nvidia.com>
+Cc: dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	djbw@kernel.org, iweiny@kernel.org, ming.li@zohomail.com,
+	gourry@gourry.net, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, newtonl@nvidia.com,
+	kristinc@nvidia.com, kaihengf@nvidia.com, kobak@nvidia.com
+Subject: Re: [PATCH v2] cxl/region: Add cxl_decoder_is_passthrough() helper
+Message-ID: <an3MU6_wgm1E6L-Q@rric.localdomain>
+References: <20260805065935.27837-1-icheng@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260805065935.27837-1-icheng@nvidia.com>
+X-ClientProxiedBy: CPCP307CA0006.DNKP307.PROD.OUTLOOK.COM (2603:10a6:380::8)
+ To DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] mm: memory-failure: fix HWPoison flag race with
- non-atomic page flag ops
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Andrew Morton <akpm@linux-foundation.org>, Oscar Salvador
- <osalvador@suse.de>, Andi Kleen <andi@firstfloor.org>,
- Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>,
- Rik van Riel <riel@redhat.com>, Vlastimil Babka <vbabka@kernel.org>,
- Lorenzo Stoakes <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Brendan Jackman <jackmanb@google.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
- Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry@kernel.org>,
- Hao Li <hao.li@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
- Byungchul Park <byungchul@sk.com>, linux-mm@kvack.org,
- linux-cxl@vger.kernel.org
-References: <cbab829a-3e65-4b4f-a2e2-704e88a611a0@kernel.org>
- <f6d8354c-2f79-4a48-934c-cbeb335765e2@kernel.org>
- <20260630174852-mutt-send-email-mst@kernel.org>
- <2f884bfa-3cd5-4fba-8aa4-c2e68890ab64@kernel.org>
- <20260701041112-mutt-send-email-mst@kernel.org>
- <d2ce93d9-c3d8-4915-a511-d08eb2c1b374@kernel.org>
- <20260701043024-mutt-send-email-mst@kernel.org>
- <c03ec696-d635-4c7f-8c77-89a439d9135b@kernel.org>
- <20260707155658-mutt-send-email-mst@kernel.org>
- <6ec8f683-77c7-4ddd-830c-030a3d984715@kernel.org>
- <20260708090739-mutt-send-email-mst@kernel.org>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <20260708090739-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6085:EE_|LV2PR12MB5847:EE_
+X-MS-Office365-Filtering-Correlation-Id: 396075a4-b687-4d13-3d18-08def94240be
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|7416014|376014|1800799024|366016|6133799003|10067099003|11063799006|56012099006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	SfnCOK8mn3riU+dnnBppmVfNPiHTnFOK789P9RwFK6/y1s1khK/gCRwoVwd172WGFSIRMjdkhUEhjtAoSHJrS/EeS8U1Znac68Om6t2BqOUrMbq8lUX78Vrx6NzCpSLX9RO6ZDsoqVgVATgZgQJFGG1P7rKoZKzvaLG9N3Heju22FR6qSXXXwj6wTc1ScIlu/GGfElfFKtU7iX3B5epOyrsdZ9FzmRh6it2drUeGhtdQmu/axSrezWOf7iuhAsMnyRKVVsPD4uFgqrbqzMvEYaaVyq46Iqe0b1stnAQEszWi8MOQxbzH7vADQbk+lbB44ZxBPy/keWbQra3FHvEsbkbmpElJAjkbobKob2U8/RRyGg92ogIhbX7caX+siYExlvV3M3Y4aM015IRY5xLhwiiPraRIwFx6AThveRCxfjTE8jGirq15+xFt1ba1PuJjy3hlufc5aR4m94A61RCTAyMM75FXnqHhTbSvWuC3b57/DXQYuZB/irN9MAa0+quK2E0IXa+DS2ikoGL2J901HGRPDnFbgC2+00sY9+tjtEAiPw88KCa94XfM55ex8hvs2R432+f7wHVb9Nbubzk/X8EC2bd4+kFOxXIc5v9LSKjAt3hCyPvs7nAFH8VdZgLG2MIpnkQMKgAf5i8XGf5Uu2Ht226cQLWDiMWnQbY8epo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6085.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(1800799024)(366016)(6133799003)(10067099003)(11063799006)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?OLToinONOW9CNEni4Dauq1XcMX4XCIEjGBCCOVa3Lsf0NaIRgCj0yCl8wstM?=
+ =?us-ascii?Q?6vAo5AJrLu/sv4jzT9f3Y0evsLlnAfbOx8jF3tDyV7Txn5f17KB24jYB2fIi?=
+ =?us-ascii?Q?AdUNKTcW5RljrPuNLwy5irqU6tyTFwO8DWzsbMtIJ9PHNDbqf14eFGN2I42+?=
+ =?us-ascii?Q?BOsmXUGMSg+tRWaZbqOX35I4u3OLKONQ9UoNeY+DpNYhcfHBwUSwkrK8oi7m?=
+ =?us-ascii?Q?eJSh5xGQQIz1m3tB8QsqTlZT5VYUqUvSQzBPFPgUAEx8FowR2CthkQ4cPuJY?=
+ =?us-ascii?Q?xH6Uir6OKGd6T3WT1NqF9pwcREn453RQDrgAbHQdB5I+eYnx5IUCIcZRFwgV?=
+ =?us-ascii?Q?5856pSg3UzjFDYj2hLPLb80L5Tv/dRzbU8YOG28UI2mYQTC01ixBBkMxdPvN?=
+ =?us-ascii?Q?pfMytaA1emk4lOMWfVMUq6qfVbxehD8pF4lBTc25frDq3pIZ0g9S7+QC+0jI?=
+ =?us-ascii?Q?nRyak1m7lqPlPB6kML7GkwNbvZyYsmSbckfW+hugIU+LYyQT9FKBksmH/2Aa?=
+ =?us-ascii?Q?w8VVdcMVQZPNxU+XkfdOlzLFyJIV+bCze1fTWRWM2vDdOgvOff1ZW+5RKGjT?=
+ =?us-ascii?Q?j4YhFsl7OQ3Ejt9zhtu1lqtbcGOOCGfDG2X87hh9KRia7s+hSF6jLOB5uL5U?=
+ =?us-ascii?Q?zdk6PIlpbDRf08xhp0mI//CS3tj1HldCA94ohLmFbG8GtNF1DBSIYAid8QRj?=
+ =?us-ascii?Q?aBDf70MCaqTMCPSa46IBGOH+I8y/WVeVd1im/lz6q9/YQGuwZz5HS80SMLir?=
+ =?us-ascii?Q?KB2JQMTmYXBOuFZhYAbXaRV2t6Vae5zI3Nu0GgI3jyzL5WdHx58f+HZXBmAG?=
+ =?us-ascii?Q?aJNQudDuHAH73ylws6hzDm1Hnv4Z6Sdfr+lMwXcoi7Ib4RzFsmuzD6jisjcd?=
+ =?us-ascii?Q?UN0VvtYsLoojdDlGt7kXYGfXveOdUzp+U6tgI/DesMa7d4/nW4hQM4bMBlTN?=
+ =?us-ascii?Q?UPAHIoMeKRBhlL7hfm5/8zHzkSbGPOeWg3UAQC8vsujDT1wBPuiwzm31Rdi/?=
+ =?us-ascii?Q?Q+YAC48GXK6xnKuWv+ySxwAfRBEaVLGHxBeFPJGHsZvboUSMk7WneuBMXltr?=
+ =?us-ascii?Q?UBHWb75CRUawZt5aB0ZLufAn78koFMEHPNIj/+HifSM8Azvr+UXw4nEYoWeL?=
+ =?us-ascii?Q?dG6ooRfLU+pJ1HVgEGpgRtE8NAHcauMQdQoIFWS40RfbUSEEHhIcC+MbuNZV?=
+ =?us-ascii?Q?70BDYWwXYeG7RmZy5ypaXtVGzywhaYVMUNNHqnHkHgqtzP70a41r+269oETw?=
+ =?us-ascii?Q?hy1WJIqHpSxGDUuiB5RCP384MlFW2FJQFv2KPPvArlbFMCoaItgUwp9m5IO9?=
+ =?us-ascii?Q?dvWF0VZF1hBKgxx62u0QC8HbzuFzXvzeQ/wHtgNpZX1GNWDGtHsXpgsGEPiK?=
+ =?us-ascii?Q?OSTHxbR+rMjTeNKaCVlER3k1mqT5qUsT3mstW26g4vUtudQrR78gMfSZ9ewP?=
+ =?us-ascii?Q?cYONkFSxcva1HSqLez/pyfZZpIDQFWkEtbst1EhFp09HI7D7Bg4U5oh5koXw?=
+ =?us-ascii?Q?yqq0hmyQsr4XnfAPEhH36HELlQy+fDZtBBEOc0PgTwjDccX9iPdzXceMu2ro?=
+ =?us-ascii?Q?gdrunXHptEQqPi7Lw35S9VbVv9nMNT7gkU3zAnFcnywhxQTYQMeEB6pHwa9n?=
+ =?us-ascii?Q?Cbuld8amRV5He1+fQXw9fzv0V0PBh7YACdcT3SrCUUNFVq3eftlzLdAW49Pl?=
+ =?us-ascii?Q?NMqLJEIXPFR4Rca0PDSKkPMLyG7EqfP+dQVyzLqZ4YqGp4CO?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 396075a4-b687-4d13-3d18-08def94240be
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6085.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Aug 2026 13:53:28.5837
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vxkH+J2G6FevGevrMPA5iyJNbwuG0TEs8Xj2FliXWy8SiBh1mtyHA4bMauZ+u5p67/K5/aTvUF90+t/HMoCHVA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5847
 
-On 7/8/26 15:08, Michael S. Tsirkin wrote:
-> On Wed, Jul 08, 2026 at 02:03:21PM +0200, David Hildenbrand (Arm) wrote:
->> On 7/7/26 22:27, Michael S. Tsirkin wrote:
->>>
->>> I spent a bit poking at it, and it's hairy.
->>
->> What I thought ...
->>
->>> The issue is that we have calls to both set and clear bits.
->>> When we record them in a side side structure so they can be retried,
->>> we have to carefully record both sets and clears and their order and make sure
->>> they do not bypass each other. So if there's set already in the
->>> structure, we need to take it out of structure and only then add a clear.
->>>
->>> It gets very hairy because we want to set from NMI.  So now we can have
->>> clear in the data structure and set from NMI bypasses that. Now what?
->>> And set from NMI can't be 100% safe anyway as we discussed ...  Kinda
->>> reduced my motivation to try and make this reliable at all.
->>
->> Maybe we should just really keep it as broken as it currently is. It's not
->> really worth our time fixing basic design flaws ... given that we didn't have
->> any report about these races so far :/
->>
->> I mean, sure, if it's easy, ... but it sounds like getting more and more complex.
->>
->> -- 
->> Cheers,
->>
->> David
+On 05.08.26 14:59:34, Richard Cheng wrote:
+> commit_decoder() open-codes the passthrough test.
+> A NULL ->commit() plus a switch decoder with at most one target. The
+> call site is hard to read, and it suggests a NULL ->commit() alone
+> identifies a passthrough decoder. It does not.
+> DVSEC-emulated endpoint decoders also leave ->commit() NULL, and root
+> decoders never set it. A future caller testing ->commit() alone would
+> silently include them.
 > 
-> Right. Either we do the RCU thing or let it be. But then I'm uninclined
-> to even bother with fixing other weird behaviour I see there.
+> Move the test into cxl_decoder_is_passthrough() and document what each
+> condition rules out. The helper runs the same tests in the same order,
+> no functional change.
+> 
+> Signed-off-by: Richard Cheng <icheng@nvidia.com>
+> ---
+> Changelog:
+> 
+> v1 -> v2:
+>     - Dropped the passthrough F_ENABLE restore patch. The bug was
+>       already fixed.
+>     - What remains is only the clarify helper function patch, so the
+>       patch is retitled accordingly
+> 
+> v1:
+> https://lore.kernel.org/linux-cxl/20260727103743.63343-1-icheng@nvidia.com/
+> 
+> Best regards,
+> Richard Cheng.
+> ---
+>  drivers/cxl/core/region.c | 28 ++++++++++++++++++++++------
+>  1 file changed, 22 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index 27e63e6dab7c..cd73684fbe97 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -293,17 +293,33 @@ static void cxl_region_decode_reset(struct cxl_region *cxlr, int count)
+>  	clear_bit(CXL_REGION_F_NEEDS_RESET, &cxlr->flags);
+>  }
+>  
+> -static int commit_decoder(struct cxl_decoder *cxld)
+> +/*
+> + * A single-dport host-bridge need not publish an HDM decoder capability
+> + * when passthrough decode can be assumed. The resulting decoder is a
+> + * software-only construct with no registers to program, so it carries no
+> + * ->commit() operation, see devm_cxl_add_passthrough_decoder().
+> + *
+> + * A NULL ->commit() alone does not identify one, it is also NULL for
+> + * DVSEC-emulated endpoint decoders. Test the decoder type and target
+> + * count as well.
+> + */
+> +static bool cxl_decoder_is_passthrough(struct cxl_decoder *cxld)
 
-Yes, let's keep it as broken as it is for now, just not breaking it even more.
-We discovered other hwpoison oddities lately, and decided that there needs to be
-a high level discussion on a better design of hwpoion handling in general. It's
-really just slapped on.
+This is much noise for just checking if ->commit() is required in some
+cases and generate an error if not.
 
-The page->flag handling is only a temporary concern, in some memdesc future the
-problem will look differently, and likely easier to sort out..
+>  {
+> -	struct cxl_switch_decoder *cxlsd = NULL;
+> +	if (cxld->commit)
+> +		return false;
 
--- 
-Cheers,
+That duplicates the test and the code is never executed.
 
-David
+> +
+> +	if (!is_switch_decoder(&cxld->dev))
+> +		return false;
+> +
+> +	return to_cxl_switch_decoder(&cxld->dev)->nr_targets <= 1;
+
+cxlsd->nr_targets is easier to read and explains that nr_targets is in
+struct cxl_switch_decoder, which wouln't be obious else. So the change
+does not improve readability and instead does multiple things in a
+single line.
+
+> +}
+>  
+> +static int commit_decoder(struct cxl_decoder *cxld)
+> +{
+>  	if (cxld->commit)
+>  		return cxld->commit(cxld);
+>  
+> -	if (is_switch_decoder(&cxld->dev))
+> -		cxlsd = to_cxl_switch_decoder(&cxld->dev);
+> -
+> -	if (dev_WARN_ONCE(&cxld->dev, !cxlsd || cxlsd->nr_targets > 1,
+> +	if (dev_WARN_ONCE(&cxld->dev, !cxl_decoder_is_passthrough(cxld),
+>  			  "->commit() is required\n"))
+
+The original was pretty straight forward: if it is a switch decoder
+with multiple targets, raise an error. It looks like an assert here as
+!cxld->commit is only created in devm_cxl_add_passthrough_decoder()
+which sets the number of targets to one (not looking into test code
+here, but if that causes an issue, fix it there).
+
+So I don't see much sense in this patch.
+
+Thanks,
+
+-Robert
+
+>  		return -ENXIO;
+>  	return 0;
+> 
+> base-commit: 212e015fc34712c849653cdb3179cd643c915015
+> -- 
+> 2.43.0
+> 
