@@ -1,129 +1,200 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A046846F48F
-	for <linux-cxl@vger.kernel.org>; Fri, 14 Aug 2026 16:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CD0395ADC
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Aug 2026 20:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786725115; cv=none; b=X5A0Tx4/CBth1bA15HiDtb1KLPqXjEozw/00sl1OQY+nw0mKpkSr05x+DksLJp8SGLcfYpu4qOB2OSmeOTNCBx34M5fuxAoZ7WNbjpJRDkKAu6W6wY2rQJSw3DQm0OotiqHq2GCEM3dNphlLOS+fgO4aXsj8P/6uEx7YU2526S8=
+	t=1786738601; cv=none; b=ZPvB1t+TgUJmeJLKIc5XF/kb+AJpCszSvbmUJa4glhvAljSP7aNgq0H+JugubAOC7P0W5vJXhtkHpLUjswKLdqfr7VAwPSSfL1eEeFCokaO31dMnglTu3dvm+Z3t/zd4yJ/QN/kAUvoYs2IXlkM9ktYjdz1GtcpJMHLXSUYt4G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786725115; c=relaxed/simple;
-	bh=8smnFvB7KLfX2fGBOg+b+nzNyrH1O5JY7J41dres3M8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ahcoxxo2FkJqYZO2Xtl6jgACrYl3ZYA906MpATEn+Vdep6BagBtB33FGlWMN+5bIs/1LxmkahcO6ApmUJuet14wyXERjK3Yhdxj+p11XKNmymvluODA0mvR5dEtoPLbUR6j9bQ/pVPQWpecisqAyLUK9I3T1l82dNaS8FkB41Ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gLgF1n+y; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786738601; c=relaxed/simple;
+	bh=hrNEUujtlwgp55tgVOQ65TaiYBA5wkhkwQF0qukjUv0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WzCbSl6iZB3EU2FrwjHQubKExCH/pFFsFHeoOFR0t1dbpkH+MRWd2z7IN2G6JM0wtQjIrQtCbVJZ1NdspGsShzzvd8Iy91++IXtynZavbm+Nj05tNhi7sOSRuXatXz5FjiA56q8bwaQXWx97wICDq+A5kcZxAZBFGKla4fYsAGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=inelM0p8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLgF1n+y"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-92e6391b114so97539985a.3
-        for <linux-cxl@vger.kernel.org>; Fri, 14 Aug 2026 09:31:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786725112; x=1787329912; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=qP3/xbCH+ItyubGsI4w69p0TyaaTEvp23aOndMgOaFY=;
-        b=gLgF1n+yZHdqsTkqXVuOfX+KCTgzT9T1yn28js701RDefBCW9FIZAbqNAXjHeALyPH
-         0XntnPvuYml+f4RlAWL0vPR8g9okwyqei8kmm7/DrMDsd5ia9dGvPEKoD4NgVHtSJy7n
-         4qWh3+u5dJ1Gd8OYeabUm05DzeHEc5qIhuuEg4U1gbEWoiR/MPFa2puhkQgda1LUaSmK
-         pbH6PaKh0054PwsdxL6JkwmHwivHZoOaqOROhO2HJYIKMdHM6CGqiycqOrcbi8wgZgqA
-         CG5DSkOu/ymmppY0G6hxE20f91gaX2KdSYGQ/Gu4nVOqeV3u+A/sI5adUcE6g4hSTm4b
-         xsqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786725112; x=1787329912;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=qP3/xbCH+ItyubGsI4w69p0TyaaTEvp23aOndMgOaFY=;
-        b=crWDWE5STQXSwkuhVqM2/wwkPEyAVfrq5j3GO2lx6A9I4tA9MDD+XgQ6GpOX9ZBjwa
-         eQlig7SHhdyitWqaCd3jOdo3V1BIHeaPO5MNFpHFkcsSKI7T+cAoJjDuhkFSLUz0d2Dw
-         nfMJIWaqrKC0zJKf54hyRd3F3WZt8b8z1jvCoUSDTDgOShUyVH5i9akf+yvuk1RNBmpe
-         7YbRS4S4pEd7/xvDQMT9tavLTs9hpOskQm2DphAKV6Q86oOhrKsxSqDnJ3xkFI0kRm/V
-         znvUBoxBmM+Tra2GktvKtcZ3t9FzcaQjTITpom5SSMmc3aaomoyjfI8fNtvC/ISfEZIX
-         el+g==
-X-Forwarded-Encrypted: i=1; AHgh+RoiWu4Wlv6mbT7dKAJqjsc4tCdXJQbld47np4K0/RJhaChHF0vsypOcEj4bnfuJpBngGEJGYBdjfDs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztmTcxcfmARv+x+IEiNsGJp6Puw4H7dfHmQrNuXdGAeWfYzl9A
-	5Opl3yBcjzjYEp+BZBobVeQKGx06vyy4GU8oQtICbLIfUD/tVgtydtN/
-X-Gm-Gg: AR+sD10kigXmB8wZ4TcEa3m8dcyi9Vahy030AHwWUy1ukex2xAosSjTXwD8AngDy6e+
-	tP+4UVOlRkMZ5z7wUG/r4SwFI1lrVYcD3j/Kg0YaCb1iewBiCUqnMNRCeLazbzv6R9+KSLgBZWx
-	LcG1Yqe+00ZY96e/2Q/mZ3tV5p9V1Sa8cHQ/bIP4EOmEiMh9XfK+GpYzTZLBPZh6LjQp7WN4CNW
-	9nZdo5McB44a02nFXz9MMc6SMBiplTusBycwCXNpQ/ya2sjwQ9rLHpiJPMl1XYy1PgQOhb1yWMp
-	H4r3Zj7n+fKvyzZvqdBNRfDe5VOkp5PK/gIH+nDofjP2G4L+mr9EmD0jnqyIThbANENVVfsDxRI
-	igWLK6S+yK06SnYeFvFOceIGFC0peYlYhRl0hIsTs2TtLPj+L2JDzh3mj+xElgPH+ttp9jrid5K
-	v3X51CxOQcm+48iwR24SEDKhTC0COanRbrbNE5LtI8I80XpES7XIFNwvE8EC4c4SL5V5DnKLJYc
-	s5AioHYDrK0QgDcCw==
-X-Received: by 2002:a05:622a:86:b0:51a:329:e802 with SMTP id d75a77b69052e-52d85525d9bmr77225441cf.41.1786725112400;
-        Fri, 14 Aug 2026 09:31:52 -0700 (PDT)
-Received: from i4-l-hqh5357-03.ad.psu.edu ([130.203.139.71])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90a921e4c3esm22570046d6.1.2026.08.14.09.31.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Aug 2026 09:31:52 -0700 (PDT)
-From: Shuangpeng Bai <shuangpeng.kernel@gmail.com>
-To: Kees Cook <kees@kernel.org>,
-	David Hildenbrand <david@kernel.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Shuangpeng Bai <shuangpeng.kernel@gmail.com>,
-	linux-mm@kvack.org,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [BUG] firmware: memmap: slab-use-after-free in firmware_map_add_hotplug
-Date: Fri, 14 Aug 2026 12:30:56 -0400
-Message-ID: <20260814163117.3390709-1-shuangpeng.kernel@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="inelM0p8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E25021F00A3A
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Aug 2026 20:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786738599;
+	bh=CFpoGw8i1dQwGv9id0aSNKTDEhoVoO76p9O5fgfRVms=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc;
+	b=inelM0p8cGFcxWQeqGhKcx8ukD87N/rxOvFgmSq73aP8uUL9Mn3gzupQ1DnjerMrQ
+	 AGxNOOpfmem8kjiVmsJ/sSl8NJM4RNj40EqvDJyMdsZqJapM8vTE7CVOia3Ou5ns24
+	 KOjtWuUIvqZwv1dMoSQCIstwVql7meNUziwdVYJIS9QQHWjYAnm+xZ+GQm4NKeLLKQ
+	 /eoEwpklfDwaHhf8eM0tOXlCm6gNVcW+ABbAyFhnFJLVG2cX5VNzFjYzho0SewIrL5
+	 8otbpExhE8213rYGuNJPhkF1JRiIqa/OyCPG6emqlfeVdvWSo+9TBUfGx+jFvl8XYd
+	 ptqcJ754bDTcA==
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5aeb24c0807so1082238e87.0
+        for <linux-cxl@vger.kernel.org>; Fri, 14 Aug 2026 13:16:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AHgh+RoU6v3vGWXq8Mhv8fxfuvcnTFTezfBSFNUFeA5L9K4UyfRtS1tiIN6PEWH1DPrql1vxKl5V3gTdJsM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1i16a0xmG5C5YPj5lTISiHKB26cFILBfvnxkcG8/kep19L6l1
+	yEHachZJVw8W6LgN9mk4dvCdqjHug9ZzDFc82Nf30GO2G3gWCh1g3Ck6OtbSw01PH/5O8nLhrTH
+	OYXUwec7S5fob0ZpWynTcmE2Gp0+Z8wc=
+X-Received: by 2002:a05:6512:6681:20b0:5b2:158e:9918 with SMTP id
+ 2adb3069b0e04-5b45916e5f6mr843457e87.19.1786738598358; Fri, 14 Aug 2026
+ 13:16:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260717161647.1493259-1-dave.jiang@intel.com>
+ <CAJZ5v0gLTkGLX_3PLBJYCfFS0_qFjHR+P4agvQQ-Usg4p5nUcA@mail.gmail.com> <983e48d0-b281-44dc-9ca6-4e1612319ce3@intel.com>
+In-Reply-To: <983e48d0-b281-44dc-9ca6-4e1612319ce3@intel.com>
+From: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>
+Date: Fri, 14 Aug 2026 22:16:13 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hSMLe-erYp7v+WiJi4_jgEwoNWowYKZ+i84P-KXvYNyQ@mail.gmail.com>
+X-Gm-Features: AUfX_mzN4EZG6yjV0P2n2KXtC_9eXXLZqCYHGC7LJFdeFbF0GreR0H3_0r66KAw
+Message-ID: <CAJZ5v0hSMLe-erYp7v+WiJi4_jgEwoNWowYKZ+i84P-KXvYNyQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] ACPI: APEI: GHES: Collection of fixes for issues
+ reported by sashiko
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: "Rafael J. Wysocki (Intel)" <rafael@kernel.org>, linux-acpi@vger.kernel.org, 
+	linux-cxl@vger.kernel.org, tony.luck@intel.com, bp@alien8.de, 
+	guohanjun@huawei.com, mchehab@kernel.org, xueshuai@linux.alibaba.com, 
+	terry.bowman@amd.com, Ben Cheatham <benjamin.cheatham@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Kernel Maintainers,
+On Tue, Jul 21, 2026 at 5:06=E2=80=AFPM Dave Jiang <dave.jiang@intel.com> w=
+rote:
+>
+>
+>
+> On 7/21/26 4:33 AM, Rafael J. Wysocki (Intel) wrote:
+> > On Fri, Jul 17, 2026 at 6:16=E2=80=AFPM Dave Jiang <dave.jiang@intel.co=
+m> wrote:
+> >>
+> >> A collection of fixes for pre-existing issues reported by sashiko-bot =
+while
+> >> reviewing patches.
+> >>
+> >> The v1 posting fixed a first batch of these issues, and v2 grew the se=
+t as
+> >> sashiko-bot's review surfaced more problems in the same CPER/extlog pa=
+ths.
+> >> sashiko-bot's review of v2 flagged yet more of the same class of bug i=
+n
+> >> neighbouring code, so v3 adds those as well: an out-of-range section l=
+ength
+> >> that defeats cper_estatus_check(), the same unvalidated AER buffer han=
+dling
+> >> in ghes_handle_aer() that was already fixed for extlog, and an unbound=
+ed
+> >> walk of the extlog record.
+> >>
+> >> 1/10:  Bound the CXL event record copy to the firmware section length.
+> >> 2/10:  Reject CPER records with an out-of-range error_data_length.
+> >> 3/10:  Validate the CXL protocol error section length before the RAS c=
+ap copy.
+> >> 4/10:  Avoid populating software AER metadata from the raw hardware bu=
+ffer.
+> >> 5/10:  Validate the PCIe error section length before payload access.
+> >> 6/10:  Fix the CONFIG_ACPI_APEI_PCIEAER guard typo in extlog.c.
+> >> 7/10:  Defer CXL protocol error handling to avoid a lock inversion.
+> >> 8/10:  Validate the memory error section length before payload access.
+> >> 9/10:  Bound the AER info copy and sanitize software metadata in ghes.=
+c.
+> >> 10/10: Validate the extlog record length before walking sections.
+> >>
+> >> Note patch 2 touches drivers/firmware/efi/cper.c; it closes the length
+> >> validation hole at the shared choke point that the per-section guards =
+in the
+> >> rest of the series rely on.
+> >>
+> >> sashiko-bot's review of v2 also flagged a few related issues that are =
+not
+> >> addressed here because they live in other subsystems.
+> >>
+> >>   - cxl_cper_print_prot_err() in drivers/firmware/efi/cper_cxl.c uses =
+the
+> >>     firmware-controlled dvsec_len without bounding it against the sect=
+ion
+> >>     length.
+> >>   - cxl_rch_get_aer_info() in drivers/cxl/core/ras_rch.c reads the RCH=
+ AER
+> >>     capability from MMIO into a struct aer_capability_regs without cle=
+aring
+> >>     the software-only header_len/flit fields, the same class of issue =
+as
+> >>     patches 4 and 9.
+> >>
+> >> v1: https://lore.kernel.org/linux-cxl/20260709162807.1957783-1-dave.ji=
+ang@intel.com/
+> >> v2: https://lore.kernel.org/linux-cxl/20260714231835.303081-1-dave.jia=
+ng@intel.com/
+> >>
+> >> Changes since v2
+> >> ----------------
+> >> - Dropped the standalone spin_lock_irqsave() change; it is a separate =
+issue
+> >>   being handled by Terry Bowman.
+> >> - New patch 2: reject a section whose error_data_length is out of rang=
+e in
+> >>   cper_estatus_check(), closing the signed-int overflow that let a cra=
+fted
+> >>   section bypass the check and defeat the per-caller size guards (sash=
+iko).
+> >> - New patch 9: apply the same AER buffer sanitization to ghes_handle_a=
+er()
+> >>   that patch 4 applies to extlog (sashiko).
+> >> - New patch 10: bound the extlog record and run cper_estatus_check() b=
+efore
+> >>   walking its sections, which extlog did not do (sashiko).
+> >> - Patch 8: move the memory error length check into ghes_do_proc() so t=
+he
+> >>   report chain and arch reporter are covered too, and bound against th=
+e
+> >>   older UEFI 2.1/2.2 layout rather than the full struct (sashiko).
+> >> - Reordered so the extlog PCIe path is hardened, and the CXL protocol =
+error
+> >>   handling is deferred to the workqueue, before the typo fix that acti=
+vates
+> >>   that code.
+> >>
+> >> Changes since v1
+> >> ----------------
+> >> - See the v2 posting for the full v1 -> v2 changelog.
+> >>
+> >>
+> >> Dave Jiang (10):
+> >>   ACPI: APEI: GHES: Bound CXL event record copy to the firmware sectio=
+n
+> >>     length
+> >>   efi/cper: Reject CPER records with an out-of-range error_data_length
+> >>   ACPI: APEI: GHES: Validate CXL protocol error section length before
+> >>     RAS cap copy
+> >>   ACPI: extlog: Avoid populating software AER metadata from raw hardwa=
+re
+> >>     buffer
+> >>   ACPI: extlog: Validate PCIe error section length before payload acce=
+ss
+> >>   ACPI: extlog: Defer CXL protocol error handling to avoid lock
+> >>     inversion
+> >>   ACPI: extlog: Fix CONFIG_ACPI_APEI_PCIEAER guard typo
+> >>   ACPI: APEI: GHES: Validate memory error section length before payloa=
+d
+> >>     access
+> >>   ACPI: APEI: GHES: Bound AER info copy and sanitize software metadata
+> >>   ACPI: extlog: Validate elog record length before walking sections
+> >>
+> >>  drivers/acpi/acpi_extlog.c       | 47 ++++++++++++-------------
+> >>  drivers/acpi/apei/ghes.c         | 59 +++++++++++++++++++++++++------=
+-
+> >>  drivers/acpi/apei/ghes_helpers.c | 21 +++++++++++-
+> >>  drivers/firmware/efi/cper.c      | 10 ++++++
+> >>  include/acpi/ghes.h              |  4 +++
+> >>  include/cxl/event.h              |  4 +--
+> >>  6 files changed, 106 insertions(+), 39 deletions(-)
+> >
+> > All of this looks reasonable to me, but it really is material for Tony
+> > to look at.
+>
+> Thanks Rafael. I've asked Tony to take a look. Looks like he's on vacatio=
+n so hopefully soon.
 
-I hit the following report while testing current upstream kernel:
-
-KASAN: slab-use-after-free in firmware_map_add_hotplug
-
-on commit: 3aa1dcaa4f6f5ae08936491e08bd456f331f2d40 (2026-08-13)
-
-The reproducer and .config files are here.
-https://gist.github.com/shuangpengbai/6d12f2eba2f06179a20ffcafe69fcc59
-
-I'm happy to test debug patches or provide additional information.
-
-Reported-by: Shuangpeng Bai <shuangpeng.kernel@gmail.com>
-
-[   68.640158][ T8381] BUG: KASAN: slab-use-after-free in firmware_map_add_hotplug (drivers/firmware/memmap.c:225 drivers/firmware/memmap.c:248 drivers/firmware/memmap.c:286)
-[   68.640950][ T8381] Read of size 8 at addr ffff88811a4b0800 by task sh/8381
-[   68.641868][ T8381]  dump_stack_lvl (lib/dump_stack.c:94 lib/dump_stack.c:120)
-[   68.641873][ T8381]  print_report (mm/kasan/report.c:378 mm/kasan/report.c:482)
-[   68.641886][ T8381]  kasan_report (mm/kasan/report.c:595)
-[   68.641894][ T8381]  firmware_map_add_hotplug (drivers/firmware/memmap.c:225 drivers/firmware/memmap.c:248 drivers/firmware/memmap.c:286)
-[   68.641903][ T8381]  add_memory_resource (mm/memory_hotplug.c:1571)
-[   68.641933][ T8381]  __add_memory (mm/memory_hotplug.c:1611)
-[   68.641936][ T8381]  probe_store (drivers/base/memory.c:582)
-[   68.641949][ T8381]  kernfs_fop_write_iter (fs/kernfs/file.c:345)
-[   68.641952][ T8381]  vfs_write (fs/read_write.c:595 fs/read_write.c:687)
-[   68.641973][ T8381]  ksys_write (fs/read_write.c:739)
-[   68.641986][ T8381]  do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94)
-[   68.641991][ T8381]  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
-
-[   68.669009][ T8381] Freed by task 8381 on cpu 0 at 68.618788s:
-[   68.669579][ T8381]  kasan_save_track (mm/kasan/common.c:57 mm/kasan/common.c:78)
-[   68.670025][ T8381]  kasan_save_free_info (mm/kasan/generic.c:584)
-[   68.670507][ T8381]  __kasan_slab_free (mm/kasan/common.c:253 mm/kasan/common.c:285)
-[   68.670960][ T8381]  kfree (include/linux/kasan.h:235 mm/slub.c:2677 mm/slub.c:6377 mm/slub.c:6692)
-[   68.671337][ T8381]  kobject_put (lib/kobject.c:689 lib/kobject.c:720 include/linux/kref.h:65 lib/kobject.c:737)
-[   68.671762][ T8381]  firmware_map_add_hotplug (drivers/firmware/memmap.c:192 drivers/firmware/memmap.c:306)
-[   68.672289][ T8381]  add_memory_resource (mm/memory_hotplug.c:1571)
-[   68.672772][ T8381]  __add_memory (mm/memory_hotplug.c:1611)
-[   68.673186][ T8381]  probe_store (drivers/base/memory.c:582)
-[   68.673595][ T8381]  kernfs_fop_write_iter (fs/kernfs/file.c:345)
-[   68.674099][ T8381]  vfs_write (fs/read_write.c:595 fs/read_write.c:687)
-[   68.674501][ T8381]  ksys_write (fs/read_write.c:739)
-[   68.674902][ T8381]  do_syscall_64 (arch/x86/entry/syscall_64.c:63 arch/x86/entry/syscall_64.c:94)
-[   68.675335][ T8381]  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:121)
-
-
-Best,
-Shuangpeng
+After Shuai Xue's review this is good to go from my perspective, but
+please address the review feedback.
