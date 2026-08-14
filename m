@@ -1,247 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D1F3E314A;
-	Thu, 13 Aug 2026 22:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40BE324DD17
+	for <linux-cxl@vger.kernel.org>; Fri, 14 Aug 2026 03:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786659690; cv=none; b=mxsRDKLsZse9OYgyLB62hqPjQWKlxhT/xgYF0JUMOyzX5+QShs9hU1SIJiy9LJY/dCwJLf/i0jDZTKrLbgKikOzEj+9ynwIIeC03QOAnGJnrR6UkPlOZcnU5c0nfLZRhWGdF6Xky3p42cWoDzoEZjP6yuioMDLajrKAfW+2Hj14=
+	t=1786676644; cv=none; b=MZX3fV2y4nhWWWJKmQXIsGx/5uvmDuwsfZcW7q2yf7onzCVO53EbF0YZ6UMgM5Ghxizdp5uWxXF9igflPPoFQytN3l9tlTgqAfFvymsNAjqna8OQharGoFl+5F+AzIO+xj+psuxNBHhK/SU8/EAIMdMiOH9hDTcAjHhFPXkhgho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786659690; c=relaxed/simple;
-	bh=cg5gTdCTYqvuADX/Ibhzt6HEUgkaMmQ6c+JRDI/AA9M=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=CJSjNqpeEmBF2emUC0sOB83rxTkEzxlQZIpov2DZtmRTJHSLX7ocHY9wJqY9lM9CA/z8zsJZuXIMcpZX46FNk/trGUn+jX44avcFA5Y1VW/1sNUa1QOU7uhLQEUjrfoRgCjwlMK2IwuM/QFHnBmFhJ5LTPMu/M1JC0w5R1Oc6sE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bmNl+iBa; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786676644; c=relaxed/simple;
+	bh=hzKf0SadYdcZ4Mpt6BKWkGVYJ8d4It5Yhy1T9EHjUvI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=kAfWATQ+m5RLsV09JqSA0eDHrrrlDp+MOInXcngwybbqYP7IhrpUJqsTvCRLA6UafWGEVQnkCmPU8dR/9fK/HWYEEsGt/Y9J1DyO6lFVFOF18fOXbXrRkELBtvbVef0CVkU7i8Kkt2rT0vL9X3ydUx9of6+nBJ/GRYUwcbCHazM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=myzBXODz; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bmNl+iBa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D19F1F000E9;
-	Thu, 13 Aug 2026 22:21:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786659688;
-	bh=qpbhhsEo7Vr+c9BGVnpg40QTo/EXkjJIEN8B5UJdaw8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bmNl+iBamXthOCgCg2vOiwzJ+aqklTLRa0IpMCNDd5x74LvPxzanu8OK9qtnwJRqP
-	 TbTYjcJoGAlIZgsBqKK2bXd1OLGzzaxXp86SiVf6dZMzVzv5Lr/weIAbX0mT443gh5
-	 24TM9mn1NDa8TfNlcmdstUIXNRI8HigReG7tJWazNP0Qi6v6jdeGnLX6yEouvUK02W
-	 LczWc6VUO94yJIGCO6qd6chL34vZ7chBrajZbVD4Y6u2CSWTCZjR2SGCqDTg6lJK9N
-	 s6c02hCkZjgPZFFWle8Q+onhvif97cA9oOdMCzzxWT2vBpJXfitEtqqTn4hYK/ogQV
-	 haCCVDQWidwiQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V8 05/10] famfs_fuse: GET_DAXDEV message and
- daxdev_table
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "John Groves" <john@jagalactic.com>
-Cc: nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org
-In-Reply-To: <0100019d06402f14-3a614309-878f-4837-be72-e36fd75d74f6-000000@email.amazonses.com>
-References: <0100019d06402f14-3a614309-878f-4837-be72-e36fd75d74f6-000000@email.amazonses.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 13 Aug 2026 22:21:27 +0000
-Message-Id: <20260813222128.5D19F1F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="myzBXODz"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1786676633; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=jDz9LEtGW3q8TP4trcW+pyFnntTzVvPtTA8IPSRhK44=;
+	b=myzBXODze8rYzUbv32GmrmZnjG3aqNAPZ8I7dZ+sPeVr9nI1GICwXUJoh/2DBoVR7Mc7yLyZXkMJKV7kn7mSBtLhkt0cTzwUNOLrqOz5wKbeLWbXFiHq3Bj81/rdSz93tQX8ms6LXO77+NmrJ36XkynARCV++Tq6lPr10pIzxE0=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam011083073210;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0X8vurCC_1786676631;
+Received: from 30.178.84.14(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X8vurCC_1786676631 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 14 Aug 2026 11:03:52 +0800
+Message-ID: <eceddb86-7f51-4257-a258-b9ecf1711458@linux.alibaba.com>
+Date: Fri, 14 Aug 2026 11:03:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] cxl/pci: Skip reset detection for DVSEC emulated
+ decoders
+From: Guixin Liu <kanie@linux.alibaba.com>
+To: Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron <jic23@kernel.org>,
+ Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>,
+ Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org
+References: <20260812082347.354371-1-kanie@linux.alibaba.com>
+In-Reply-To: <20260812082347.354371-1-kanie@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
-s) to consider:
-- [High] The FUSE server-provided string daxdev_out.name is not guaranteed =
-to be null-terminated, causing out-of-bounds reads.
-- [High] An untrusted device index from the FUSE payload is used in a bitwi=
-se shift without prior bounds checking, causing Undefined Behavior.
-- [High] The return value of famfs_update_daxdev_table() is ignored, allowi=
-ng file initialization to proceed with uninitialized DAX devices.
-- [Medium] FUSE_GET_DAXDEV ignores the defined input payload struct and inc=
-orrectly uses the nodeid field.
-- [Medium] Casting u64* to unsigned long* for for_each_set_bit() breaks on =
-32-bit big-endian systems.
-- [Medium] Unprotected plain read of fc->dax_devlist creates a data race wi=
-th its atomic initialization.
---
+Looks like this patch is omitted.
 
---- Patch [5]: [PATCH V8 05/10] famfs_fuse: GET_DAXDEV message and daxdev_t=
-able ---
-commit 5e7c03f2362ee3cfd1a9cae3fbaaaeb19bced93d
-Author: John Groves <john@groves.net>
+Best Regards,
+Guixin Liu
 
-famfs_fuse: GET_DAXDEV message and daxdev_table
 
-The new GET_DAXDEV message/response is added. The famfs_teardown() function=
-=20
-is added as a primary teardown function for famfs. The command is triggered=
-=20
-by the update_daxdev_table() call, if there are any daxdevs in the subject=
-=20
-fmap that are not represented in the daxdev_table yet.
-
-> diff --git a/fs/fuse/famfs.c b/fs/fuse/famfs.c
-> index ac52e54e2cb59..0e9415aa63397 100644
-> --- a/fs/fuse/famfs.c
-> +++ b/fs/fuse/famfs.c
-> @@ -21,6 +21,228 @@
-[ ... ]
-> +static int
-> +famfs_fuse_get_daxdev(struct fuse_mount *fm, const u64 index)
-> +{
-> +	struct fuse_daxdev_out daxdev_out =3D { 0 };
-> +	struct fuse_conn *fc =3D fm->fc;
-> +	struct famfs_daxdev *daxdev;
-> +	int rc;
+在 2026/8/12 16:23, Guixin Liu 写道:
+> After an FLR or an SBR, cxl_reset_done() walks the endpoint's decoders and
+> asks __cxl_endpoint_decoder_reset_detected() whether any of them lost its
+> committed state. That helper filters on CXL_DECODER_F_ENABLE and then
+> samples the Committed bit in the HDM decoder control register at
+> cxlhdm->regs.hdm_decoder.
+>
+> The HDM decoder registers are not always where an enabled decoder's state
+> lives. A memory device may describe its ranges through the CXL DVSEC range
+> registers instead, and should_emulate_decoders() picks that path in two
+> situations: when the component registers expose no HDM decoder capability
+> at all, and when the capability exists but firmware left Mem_Enable set
+> with the global HDM decoder enable bit clear.
+> cxl_setup_hdm_decoder_from_dvsec() publishes the emulated decoders with
+> CXL_DECODER_F_ENABLE and CXL_DECODER_F_LOCK set, so they pass the filter,
+> and it leaves cxld->commit NULL because there is no register to commit to.
+>
+> In the first situation regs.hdm_decoder is NULL and the readl() oopses in
+> the PCI reset completion path. In the second the pointer is valid but the
+> registers are unused, so the Committed bit reads zero and the helper
+> reports a reset that did not happen: cxl_reset_done() prints two dev_crit
+> lines about an SBR wiping active decoders, taints the kernel, and strips
+> CXL_DECODER_F_ENABLE and CXL_DECODER_F_LOCK from every endpoint decoder.
+> Losing the lock flag is the more consequential half of that, because it is
+> what keeps the emulated ranges from being treated as reprogrammable while
+> the driver still cannot change the range registers at run time.
+>
+> Skip the check when cxld->commit is NULL. Only
+> cxl_setup_hdm_decoder_from_dvsec() leaves that callback unset, and
+> init_hdm_decoder() installs cxl_decoder_commit() on every decoder that
+> does come from the registers, so one test covers both emulation paths and
+> no separate test for the NULL register pointer is needed. A range
+> described by the DVSEC registers has no Committed bit for a reset to
+> clear, so there is nothing here for the post-reset warning to observe.
+>
+> Fixes: 934edcd436dc ("cxl: Add post-reset warning if reset results in loss of previously committed HDM decoders")
+> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+> ---
+> This was patch 4/8 of the "cxl: Assorted fixes" series [1]. Per review
+> feedback that series is not being reworked as a whole; the fixes are resent
+> individually instead.
+>
+> v2 tested cxlhdm->regs.hdm_decoder for NULL. That test turns out to be
+> subsumed by the commit callback test rather than complementary to it: on
+> the endpoint path info is never NULL, since
+> devm_cxl_endpoint_decoders_setup() passes the address of an on-stack struct
+> to both devm_cxl_setup_hdm() and devm_cxl_enumerate_decoders(). A NULL
+> regs.hdm_decoder can therefore only come from the "no component registers"
+> early return in devm_cxl_setup_hdm(), which requires info->mem_enabled,
+> and should_emulate_decoders() then emulates every decoder on the port.
+> Keeping both tests would leave one that cannot be reached today, so only
+> the commit test is here - say the word if you would rather have the NULL
+> test back as a guard on that invariant.
+>
+> The Sashiko review bot raised two further pre-existing concerns on v2 that
+> this patch does not address, since both are about the reset handler's
+> synchronisation rather than about which registers it reads:
+>
+> - cxl_reset_done() holds only the memdev device lock, so nothing excludes
+>    an unbind of the cxl_port driver from the endpoint port, which frees the
+>    devm allocated cxl_hdm while dev_get_drvdata(&port->dev) keeps returning
+>    it. An unbind that has completed is harmless: devres frees the decoders
+>    before the cxl_hdm allocation that predates them, so the child walk finds
+>    nothing to look at. What is left is the interleaving where the walk has
+>    already taken its reference on a decoder, which keeps that device alive
+>    past device_del(), and the unbind reaches the cxl_hdm free first. Narrow,
+>    and the fix is not local: it means deciding how the PCI error handlers
+>    should exclude the port driver's binding.
+>
+> - cxld->flags is updated with a plain read-modify-write in
+>    cxl_endpoint_decoder_clear_reset_flags(), while cxl_decoder_commit() and
+>    cxl_decoder_reset() update the same word under cxl_rwsem.region, which
+>    __commit() and the region reset paths hold across those calls. Having the
+>    reset handler take that rwsem too looks like the natural fix, but it
+>    already holds the memdev device lock at that point, so the lock ordering
+>    wants review first.
+>
+> Both look worth doing on their own; happy to follow up with separate
+> patches if that is the preference.
+>
+> v1->v2:
+> - rebase onto cxl/next
+> - rewrite the commit message to describe the behaviour rather than narrate
+>    the code change (Alison Schofield)
+>
+> v2->v3:
+> - test cxld->commit instead of cxlhdm->regs.hdm_decoder, so that decoders
+>    emulated from the DVSEC ranges are also skipped when the HDM decoder
+>    registers exist but are globally disabled (Richard Cheng)
+> - update the subject and the commit message for the widened scope
+>
+> [1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
+>
+>   drivers/cxl/core/pci.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 9d807c1a002c..d8b07f86bab0 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -683,6 +683,13 @@ static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
+>   	if ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)
+>   		return 0;
+>   
+> +	/*
+> +	 * Decoders emulated from the DVSEC range registers have no commit
+> +	 * callback and no HDM decoder registers to consult.
+> +	 */
+> +	if (!cxld->commit)
+> +		return 0;
 > +
-> +	FUSE_ARGS(args);
-> +
-> +	/* Store the daxdev in our table */
-> +	if (index >=3D fc->dax_devlist->nslots) {
-> +		pr_err("%s: index(%lld) > nslots(%d)\n",
-> +		       __func__, index, fc->dax_devlist->nslots);
-> +		return -EINVAL;
-> +	}
-> +
-> +	args.opcode =3D FUSE_GET_DAXDEV;
-> +	args.nodeid =3D index;
-> +
-> +	args.in_numargs =3D 0;
+>   	cxlhdm = dev_get_drvdata(&port->dev);
+>   	hdm = cxlhdm->regs.hdm_decoder;
+>   	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+>
+> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
 
-[Severity: Medium]
-The UAPI defines struct fuse_get_daxdev_in with daxdev_num for the input
-payload. Does this implementation intentionally ignore that struct, set
-in_numargs =3D 0, and repurpose the nodeid field (which is normally for VFS
-inode numbers) to pass the device index instead? This appears to break the
-protocol format.
-
-> +
-> +	args.out_numargs =3D 1;
-> +	args.out_args[0].size =3D sizeof(daxdev_out);
-> +	args.out_args[0].value =3D &daxdev_out;
-> +
-> +	/* Send GET_DAXDEV command */
-> +	rc =3D fuse_simple_request(fm, &args);
-> +	if (rc) {
-[ ... ]
-> +		return rc;
-> +	}
-> +
-> +	scoped_guard(rwsem_write, &fc->famfs_devlist_sem) {
-> +		daxdev =3D &fc->dax_devlist->devlist[index];
-> +
-> +		/* Abort if daxdev is now valid (races are possible here) */
-> +		if (daxdev->valid) {
-> +			pr_debug("%s: daxdev already known\n", __func__);
-> +			return 0;
-> +		}
-> +
-> +		/* Verify dev is valid and can be opened and gets the devno */
-> +		rc =3D famfs_verify_daxdev(daxdev_out.name, &daxdev->devno);
-
-[Severity: High]
-Is the FUSE server-provided string daxdev_out.name guaranteed to be
-null-terminated?
-
-If a FUSE server sends a response where the 256-byte name field contains no
-null bytes, passing it to kern_path() (via famfs_verify_daxdev()) and
-kstrdup() could read past the end of the stack-allocated daxdev_out struct
-until a null byte is found, potentially causing an out-of-bounds memory rea=
-d.
-
-[ ... ]
-> +static int
-> +famfs_update_daxdev_table(
-> +	struct fuse_mount *fm,
-> +	const struct famfs_file_meta *meta)
-> +{
-> +	struct famfs_dax_devlist *local_devlist;
-> +	struct fuse_conn *fc =3D fm->fc;
-> +	int indices_to_fetch[MAX_DAXDEVS];
-> +	int n_to_fetch =3D 0;
-> +	int err;
-> +
-> +	/* First time through we will need to allocate the dax_devlist */
-> +	if (!fc->dax_devlist) {
-
-[Severity: Medium]
-Could this unprotected plain read of fc->dax_devlist race with the atomic
-cmpxchg() publication later in the function? Should this use READ_ONCE() to
-prevent compiler optimization issues or KCSAN warnings?
-
-> +		local_devlist =3D kcalloc(1, sizeof(*fc->dax_devlist), GFP_KERNEL);
-> +		if (!local_devlist)
-> +			return -ENOMEM;
-> +
-> +		local_devlist->nslots =3D MAX_DAXDEVS;
-> +
-> +		local_devlist->devlist =3D kcalloc(MAX_DAXDEVS,
-> +						 sizeof(struct famfs_daxdev),
-> +						 GFP_KERNEL);
-> +		if (!local_devlist->devlist) {
-> +			kfree(local_devlist);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		/* We don't need famfs_devlist_sem here because we use cmpxchg */
-> +		if (cmpxchg(&fc->dax_devlist, NULL, local_devlist) !=3D NULL) {
-> +			kfree(local_devlist->devlist);
-> +			kfree(local_devlist); /* another thread beat us to it */
-> +		}
-> +	}
-> +
-> +	/* Collect indices that need fetching while holding read lock */
-> +	scoped_guard(rwsem_read, &fc->famfs_devlist_sem) {
-> +		unsigned long i;
-> +
-> +		for_each_set_bit(i, (unsigned long *)&meta->dev_bitmap, MAX_DAXDEVS) {
-
-[Severity: Medium]
-Does casting a u64 * to unsigned long * here break on 32-bit big-endian
-systems?
-
-On those architectures, the loop might read the upper 32 bits (which are
-zero) instead of the lower 32 bits, resulting in a failure to fetch any DAX
-devices. Should meta->dev_bitmap use DECLARE_BITMAP to avoid endianness and
-size mismatch bugs?
-
-[ ... ]
-> @@ -329,6 +551,9 @@ famfs_file_init_dax(
->  	if (rc)
->  		goto errout;
-> =20
-> +	/* Make sure this fmap doesn't reference any unknown daxdevs */
-> +	famfs_update_daxdev_table(fm, meta);
-> +
-
-[Severity: High]
-The return value of famfs_update_daxdev_table() is an error code, but it is
-completely ignored here.
-
-If it fails (e.g., due to an ENOMEM allocation failure or if the daxdev fet=
-ch
-fails), file initialization proceeds with uninitialized DAX devices. Could
-this lead to invalid state and potential NULL pointer dereferences on
-subsequent accesses?
-
->  	/* Publish the famfs metadata on fi->famfs_meta */
->  	inode_lock(inode);
-
-[ ... ]
-
-While reviewing famfs_fuse_meta_alloc() in the same file:
-
-> 		for (i =3D 0; i < fmh->nextents; i++) {
-> 			meta->se[i].dev_index  =3D se_in[i].se_devindex;
-> 			meta->se[i].ext_offset =3D se_in[i].se_offset;
-> 			meta->se[i].ext_len    =3D se_in[i].se_len;
->=20
-> 			/* Record bitmap of referenced daxdev indices */
-> 			meta->dev_bitmap |=3D (1 << meta->se[i].dev_index);
-
-[Severity: High]
-Is it possible for the untrusted device index from the FUSE payload
-(se_devindex) to cause undefined behavior here?
-
-If a FUSE server provides an se_devindex >=3D 31, the expression
-1 << meta->se[i].dev_index shifts a 32-bit signed integer by an unvalidated
-amount before famfs_check_ext_alignment() validates the index.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260318203054.4344=
-.fuse@groves.net?part=3D5
