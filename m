@@ -1,139 +1,248 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B8643E9C4
-	for <linux-cxl@vger.kernel.org>; Mon, 17 Aug 2026 16:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0EF2379C40;
+	Mon, 17 Aug 2026 17:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786983598; cv=none; b=Dr/O2dPuq2m64rh7LYtJtIGRYlnMhP1xYAHlrJxX76WxDOT2XvAWLbmJ8yksh62nAUgYZZLJGuaFaRRVDq8KtIp5Aqr9rGn09txm1yNkjvIRUOt0QBX4dByuT0qax+1gERgKoNRJSklg7U538yQrJZotgvxRerz6REhKHPmnz6A=
+	t=1786989361; cv=none; b=TL9oDPnqEYT/VCxFRxlAl5fhRaaEWyfsCDs2rDXpB/YDbr39QgP1SmiP4IfvGgYkRqlb2tKM2oaeXVgQHHFvNAe0zAYaL4wVdLiH7yfJkJqVcLFJwN5g43MwrQ0Fu6eM8e3Era3akD7OfCjV+l0cOEWH9bYsU9+l8D8ix5LtrjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786983598; c=relaxed/simple;
-	bh=nz9452HQkCizulHzHgH6sPXgLsUkaADhbih6+tFp8A8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bPKmWZzOqm/wsTKmxVvKpDjBIc2qMAEGJHz8Mwv99UXpyi3ZsVoNDBwK9PZzGh73NP2fqf4p6Sk1iKHz48FOz1GjiXXNcz15OLW6b1kvqxkitaKiRrhQkanu0vbRxYd+7JsTyQKlKcEFwomXsvc4P7gN0FukPL7Cf3woJh0pLK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=fXvUSPwi; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1786989361; c=relaxed/simple;
+	bh=ybaS+/SE85/f1DWpiC5a+ti3mEyrrLTr9OmUU3qflTQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=auDqdMn+2624oYqIoCCjerJZr//DKeQci+IZ5J1+/MayCCY8meN2wL2IzMH36DsH7AQcxTi8qmUdzklMumoDhTLLXJpy0JcgOzoATuis3DbT0cb4SOG9oRN4lW+8wsB0Ksaw0jOIF9IP6z2u5YJvnZngWMnBTDoEjAO8u5IoEb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X/0WIMzb; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="fXvUSPwi"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-92e6a434cabso168947285a.1
-        for <linux-cxl@vger.kernel.org>; Mon, 17 Aug 2026 09:19:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1786983593; x=1787588393; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=g79rp1EAN8LS02s21Qd/CfSeDeEXT49xOteHy0W5fBY=;
-        b=fXvUSPwiiLw1YebLJTtdAJ+CWLPQde4QHB1KfV4EKsyE1eW9krRh3ShCiG6fL8P4E9
-         5PnrjumLCqIrPootoxDqEp0oYeXPOvoi97cv2s/o4MnVvfvwBKPy8ZGZBfGbskQxP1IB
-         t401JIexZfnsHMxTwe/wk7zKFgxf7NVazvwZ9R0fckExm3B1LrNnFG369shmOTrW3gU6
-         M3szJZ1jXobLbZqYLo9nmMm8+q8weSrs52c7CrpQHDsQShpnFyw/1IknqxyazhYNYEMd
-         nFaBMREejsORutE9LiOVytMx8E6/6cUuJMH0o5cD+Wj8gc0Cr9jM6vL100BblBazZiSG
-         RIRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786983593; x=1787588393;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=g79rp1EAN8LS02s21Qd/CfSeDeEXT49xOteHy0W5fBY=;
-        b=hP6lbsJZCLHeNSFH1WbZRMrbqopQqfQtoRyDn83HTgoQYlCb2IcogOVJ2J1aIWDl4K
-         4nZp/JCnN4AjpOYEE75aj5N1Xj6B0iV5Gcy3RDHjJPSCSmWxggc2NHpEe2VY3ZbBDpbH
-         8AQHYFpk+fsHW85SkC4558jxYYxCZiXzs5kFTYa9BabYlslJH4f++u7hi86lUSFaXkUu
-         2gsL2oAz9UIoLUZGwSqEJLA0Gbl+bDwpTtKav2EEpwrpLwUwhVHEzC4c4V0WNoZPeTLW
-         886bhDwzSa3yofIpbP9U7hdcMM0vBcambQBhnUbK2HCC0CNQABm+HA/i52y9AknbNCj2
-         Dfag==
-X-Forwarded-Encrypted: i=1; AHgh+RrmIl7dExW6yvf9awsRUgdM/8pILbOKsHMtx52wqWmHv5FLFbQRGwgb+7KifysBcq+a90Om73LK+Fo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaxUwIDRXIah9SPb5FX+8gfDhOW62BH0vB4uZmRXbgCNq3xFew
-	WuJMa1ODyzxQM8MGrwZdDBw1KZ+jPn1b8RK6vEC4R4/AZwEvNWHZCc5EXEF1HyhE7Tg=
-X-Gm-Gg: AR+sD10I6Tze/yP+ODhKTAgfCwNvK8dnBjoRYyeT2olEf1ERCY2Svb7o+3/sff4+sNB
-	S4DwD7Xk1XbL5yrJQhXKhCat6nQpXONdej+etZ7kGGWBbXgRIF0J0Nr2/glhebJr681ryMj1d70
-	1d0qHSGhqJylf30jESVgX9qBgM7X9HoETaWjHJkg/njA2JwmtIYMT69ToHzcIHktW6nsqQs2PHS
-	cUKvrTZ4a+Lk/LEbP4iHxbUbgenzqMq1fP8ZJ8icsXP8X5m8hrhBUHvOJDGmCM6FXK5KisUqNMA
-	fZ9wb5LIVhtJ0f2uFxaQBUOq1i9jfPG1m5uBLXQE1N9oJHsW1lo/7JTk9j6rjc5n6HQ/gw+sl8e
-	fjX/NZ62XidIw+3ICh2l/CKad7flF3R9PLXzymg4SdE6JVEGL5BRguOHXMXIDFJRfFERQKdc/Rx
-	Da9fPXyu35QYChnuyBGS9ybuUZw1pqVz34ENJ8sYreHbT3y6T9ICgIClf56BrIKOLXzY4EIX3Dv
-	hI5CyXWg4AXh0rzuoqhniVz+qYEjoD/DfK/c5WaBuN1
-X-Received: by 2002:a05:620a:5302:b0:936:ce17:dac3 with SMTP id af79cd13be357-936d238d066mr2289883285a.40.1786983593483;
-        Mon, 17 Aug 2026 09:19:53 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-937033ce78csm80835485a.31.2026.08.17.09.19.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2026 09:19:53 -0700 (PDT)
-Date: Mon, 17 Aug 2026 12:19:51 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev, 
-	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com, 
-	byungchul@sk.com, ying.huang@linux.alibaba.com, apopple@nvidia.com, 
-	david@kernel.org, ljs@kernel.org, liam@infradead.org, vbabka@kernel.org, 
-	rppt@kernel.org, surenb@google.com, mhocko@suse.com, dave@stgolabs.net, 
-	jic23@kernel.org, dave.jiang@intel.com, alison.schofield@intel.com, 
-	vishal.l.verma@intel.com, ira.weiny@intel.com, harry@kernel.org, kernel_team@skhynix.com, 
-	honggyu.kim@sk.com, yunjeong.mun@sk.com
-Subject: Re: [PATCH 0/4] mm/mempolicy: introduce package-aware weighted
- interleave
-Message-ID: <aoMv3OhqkBTzSfek@gourry-fedora-PF4VCD3F>
-References: <20260806080936.421-1-rakie.kim@sk.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X/0WIMzb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786989360; x=1818525360;
+  h=message-id:date:mime-version:from:subject:to:cc:
+   content-transfer-encoding;
+  bh=ybaS+/SE85/f1DWpiC5a+ti3mEyrrLTr9OmUU3qflTQ=;
+  b=X/0WIMzbQOGwQMPcY/4ZZf18szupPHDc6uhpOkmxm617RZtkiugJ6k8C
+   O5D03hnvllykPq51jjCecDWikCwPILepDwCA72PWET2R2H54ZViYeqcRZ
+   mQGfWn9jzeLTFFSAjS4ID2gX5bWxNRUKJFqMI/9ZxTtTnL/xgUzwsyWIa
+   Ld3trWUGXjG0LYr3cEfIqNtVdbvD9BeqmQuJ4dVNV+VAj9D06dXQmYNnq
+   3V1ptw/npE8g1mf6/XBbP5dvKxC3af6u+VDGYtpUTNPuQADdTaWs8W9qN
+   97JP9ZSRdEBPUMVTTCqlpkdd22zD0Nfqh0KOZGaIr8YBxqyUm6+DNIiRd
+   Q==;
+X-CSE-ConnectionGUID: dZhZKSQVQUKDcc4fN9KH7w==
+X-CSE-MsgGUID: OSYVZ+y4Tzaxl0jk6soO8Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11878"; a="87326456"
+X-IronPort-AV: E=Sophos;i="6.25,229,1779174000"; 
+   d="scan'208";a="87326456"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2026 10:56:00 -0700
+X-CSE-ConnectionGUID: vgshiJFSSwieKAVaF4FuVw==
+X-CSE-MsgGUID: 5SIrfonHQeOQLKFhshypxw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,229,1779174000"; 
+   d="scan'208";a="268472023"
+Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.111.160]) ([10.125.111.160])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2026 10:55:58 -0700
+Message-ID: <fc9dcf76-4825-4152-9f5d-072270bf3b87@intel.com>
+Date: Mon, 17 Aug 2026 10:55:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260806080936.421-1-rakie.kim@sk.com>
+User-Agent: Mozilla Thunderbird
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+Subject: [GIT PULL] Compute Express Link (CXL) changes for 7.3
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Jonathan Cameron <jic23@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Aug 06, 2026 at 05:09:31PM +0900, Rakie Kim wrote:
-> 
-> To make this possible the kernel needs a notion of which nodes share a
-> package. The NUMA distance model offers only relative latencies and no
-> structural grouping, which is especially limiting for CXL memory nodes
-> that come online without an explicit package association.
-> 
+Hi Linus, please pull from:
 
-The original attempt to handle cross-socket interleave tried to deal
-with this with a matrix for weights, but this was deemed too invasive.
+git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-for-7.3
 
-This brings back that matrix, but not for per-node weights - we're
-basically just adding an addition weighting to filter on.
+...to receive a series of changes for CXL. The changes include the remaining patches to complete the basic support for CXL type2 (accelerators) drivers by the CXL core. A set of unit testing support to catch regressions for the CXL core type2 exported functions has also been added. The actual CXL type 2 driver support for the AMD Solarflare NIC driver has been picked up by net-dev.
 
-I have some concerns with the now additional filtering mechanism
-introdced into the allocation stack, but fundamentally I think this is 
-a *better* solution than a straight weight-matrix.
+A set of preparatory patches has been picked up from the CXL port error handling series in order to reduce the number of patches in that series for review. The rest of that series is getting close to be merged but was not ready for the 7.3 merge window.
 
-I will need to chew on this for a bit.  It seems there's non-trivial
-sashiko bug reports here to address anyway.
+There are also a number of misc patches and a large number of bug fixes against pre-existing issues flagged by sashiko reviews as contributors post new patches on the mailing list. We will continue to work through the sashiko raised issues as they show up.
 
-> The series adds a package-aware topology layer that groups CPU and
-> memory-only nodes into a "memory package", built from the physical
-> package ids firmware reports and, for a memory-only node, an initiator
-> CPU node or SLIT distances. A package can contain more than one CPU node
-> or more than one memory-only node, so the layer maps a package to a set
-> of nodes rather than to a single node or a single CXL device.
-> 
+These have all appeared in -next for a week or more with no reported issues.
 
-When worded this way, "Package" sounds completely arbitrary and not a
-useful distinction.  This really just sounds like an extention for the
-existing fallback lists to take interconnects into account.
+---
 
-I wonder if abstract distance either:
-  1) already gives you what you want (the secondary weight)
-  2) can be twiddled in BIOS to give you what you want.
+The following changes since commit 1590cf0329716306e948a8fc29f1d3ee87d3989f:
 
-> The feature is off by default and opt-in through a sysfs toggle. The
-> package topology itself is exposed read-only under
-> /sys/devices/system/package/; there is deliberately no writable
-> override, since a machine whose firmware describes its topology
-> incorrectly should be fixed in firmware. On a topology that does not
-> have the symmetric shape the placement relies on, enabling is refused
-> and any active mode degrades cleanly to the original flat behavior.
+  Linux 7.2-rc4 (2026-07-19 13:54:41 -0700)
 
-The way this is written it sounds to me like this should just be the
-default weighted interleave behavior.  We already know weighted
-interleave does not jive well with multi-socket systems - this just
-fixes that (in a more general sense, Socket => Package).
+are available in the Git repository at:
 
-~Gregory
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git tags/cxl-for-7.3
+
+for you to fetch changes up to 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07:
+
+  Merge branch 'for-7.3/cxl-misc' into cxl-for-next (2026-08-06 10:14:29 -0700)
+
+----------------------------------------------------------------
+CXL for v7.3
+
+CXL core type2 support:
+cxl: Support dpa without a mailbox
+cxl: Support Type2 cxl regs mapping
+
+CXL test type2 support:
+cxl/test: Rework cxl_type2_mem_init() to use cxl_mock_platform_device_add()
+cxl/test: Add cxl_test accelerator driver
+cxl/test: Fixup hdm init for auto region to support type2
+cxl/test: Propagate -ENOMEM on platform_device_alloc() failures
+cxl/test: Add hierarchy enumeration support for type2 device
+cxl/test: Refactor platform device enumerations
+cxl/test: Add type2 support for mock CFMWS0
+cxl/test: Add test for module parameters
+
+CXL port error handling support prep patches:
+cxl: Rename find_cxl_port() to find_cxl_port_by_dport()
+cxl: Tighten CPER kfifo registration API and symbol visibility
+acpi/apei/ghes: Use raw_spinlock_t for CXL CPER work locks
+cxl/ras: Fix cxl_rch_get_aer_severity() wrong severity register
+cxl/ras: Fix cxl_rch_get_aer_info() out-of-bounds AER register read
+
+CXL misc patches:
+cxl/Documentation: Spell out globbed sysfs attribute names
+cxl/test: Assign one mock memdev a full-width serial number
+cxl/core: Format the memdev serial number as unsigned in TP_printk
+cxl/pmem: Format the nvdimm serial number as unsigned decimal
+cxl: Use %pe to print error pointers
+cxl: Deny Features commands on the RAW mailbox path
+
+CXL fixes:
+cxl/region: Use __free(put_device) in find_pos_and_ways()
+cxl/region: Fix use-after-free in find_pos_and_ways() error path
+cxl/features: Clamp Get Feature output size to the remaining buffer
+cxl/features: Reject Set Features output buffer smaller than the header
+cxl/features: Reject Get Feature count larger than the output buffer
+cxl/port: Restart port enumeration when a sibling adds the dport first
+cxl/features: Serialize multi-part Get/Set Feature transfers
+cxl/pci: Honor -EPROBE_DEFER from component register setup
+cxl/mbox: Break poison list loop on an empty payload
+cxl/memdev: Fix firmware upload exact-fit handling
+cxl/features: bound fwctl command payload to the input buffer
+cxl/mce: Make the MCE notifier per-region
+cxl/pci: Remove incorrect mbox.valid check in cxl_pci_type3_init_mailbox()
+cxl: docs/linux/dax-driver - fix typos
+cxl: fix mailbox return code description typo
+cxl/mbox: Clamp mailbox output allocation to the payload size
+
+----------------------------------------------------------------
+Alejandro Lucero (2):
+      cxl: Support Type2 cxl regs mapping
+      cxl: Support dpa without a mailbox
+
+Alison Schofield (7):
+      cxl/port: Restart port enumeration when a sibling adds the dport first
+      cxl/region: Fix use-after-free in find_pos_and_ways() error path
+      cxl/region: Use __free(put_device) in find_pos_and_ways()
+      cxl/pmem: Format the nvdimm serial number as unsigned decimal
+      cxl/core: Format the memdev serial number as unsigned in TP_printk
+      cxl/test: Assign one mock memdev a full-width serial number
+      cxl/Documentation: Spell out globbed sysfs attribute names
+
+Dan Williams (2):
+      cxl: Tighten CPER kfifo registration API and symbol visibility
+      cxl: Rename find_cxl_port() to find_cxl_port_by_dport()
+
+Dave Jiang (21):
+      cxl/mce: Make the MCE notifier per-region
+      cxl/test: Add test for module parameters
+      cxl/test: Add type2 support for mock CFMWS0
+      cxl/test: Refactor platform device enumerations
+      cxl/test: Add hierarchy enumeration support for type2 device
+      cxl/test: Propagate -ENOMEM on platform_device_alloc() failures
+      cxl/test: Fixup hdm init for auto region to support type2
+      cxl/test: Add cxl_test accelerator driver
+      cxl/mbox: Break poison list loop on an empty payload
+      cxl/pci: Honor -EPROBE_DEFER from component register setup
+      cxl/features: Serialize multi-part Get/Set Feature transfers
+      cxl: Deny Features commands on the RAW mailbox path
+      Merge branch 'for-7.3/cxl-type2-support' into cxl-for-next
+      Merge branch 'for-7.3/cxl-type2-test' into cxl-for-next
+      Merge branch 'for-7.3/cxl-misc' into cxl-for-next
+      Merge branch 'for-7.3/cxl-fixes' into cxl-for-next
+      Merge branch 'for-7.3/cxl-fixes' into cxl-for-next
+      Merge branch 'for-7.3/cxl-misc' into cxl-for-next
+      Merge branch 'for-7.3/cxl-misc' into cxl-for-next
+      Merge branch 'for-7.3/cxl-port-err-prep' into cxl-for-next
+      Merge branch 'for-7.3/cxl-misc' into cxl-for-next
+
+Guzebing (1):
+      cxl/memdev: Fix firmware upload exact-fit handling
+
+Li Ming (1):
+      cxl/test: Rework cxl_type2_mem_init() to use cxl_mock_platform_device_add()
+
+Richard Cheng (4):
+      cxl/mbox: Clamp mailbox output allocation to the payload size
+      cxl/features: Reject Get Feature count larger than the output buffer
+      cxl/features: Reject Set Features output buffer smaller than the header
+      cxl/features: Clamp Get Feature output size to the remaining buffer
+
+Shaikh Kamaluddin (1):
+      cxl: Use %pe to print error pointers
+
+Terry Bowman (3):
+      cxl/ras: Fix cxl_rch_get_aer_info() out-of-bounds AER register read
+      cxl/ras: Fix cxl_rch_get_aer_severity() wrong severity register
+      acpi/apei/ghes: Use raw_spinlock_t for CXL CPER work locks
+
+Wei Hou (1):
+      cxl/pci: Remove incorrect mbox.valid check in cxl_pci_type3_init_mailbox()
+
+Yousef Alhouseen (1):
+      cxl: fix mailbox return code description typo
+
+Zenghui Yu (1):
+      cxl: docs/linux/dax-driver - fix typos
+
+Zhenhao Wan (1):
+      cxl/features: bound fwctl command payload to the input buffer
+
+ Documentation/ABI/testing/sysfs-bus-cxl           |  15 +-
+ Documentation/ABI/testing/sysfs-bus-nvdimm        |   3 +-
+ Documentation/driver-api/cxl/linux/dax-driver.rst |   4 +-
+ drivers/acpi/apei/ghes.c                          |  66 +-
+ drivers/cxl/core/core.h                           |   9 +-
+ drivers/cxl/core/features.c                       |  23 +-
+ drivers/cxl/core/mbox.c                           |  78 +-
+ drivers/cxl/core/mce.c                            |  27 +-
+ drivers/cxl/core/memdev.c                         |  69 +-
+ drivers/cxl/core/pci.c                            |   1 +
+ drivers/cxl/core/pmem.c                           |  10 +-
+ drivers/cxl/core/port.c                           |  44 +-
+ drivers/cxl/core/ras.c                            |   7 +-
+ drivers/cxl/core/ras_rch.c                        |  27 +-
+ drivers/cxl/core/region.c                         |  61 +-
+ drivers/cxl/core/regs.c                           |   1 +
+ drivers/cxl/core/trace.h                          |  10 +-
+ drivers/cxl/cxl.h                                 |  11 +-
+ drivers/cxl/cxlmem.h                              |   4 +-
+ drivers/cxl/cxlpci.h                              |  12 -
+ drivers/cxl/pci.c                                 |  15 +-
+ drivers/cxl/pmem.c                                |   2 +-
+ include/cxl/cxl.h                                 |   2 +
+ include/cxl/event.h                               |  21 +-
+ include/cxl/mailbox.h                             |   2 +
+ include/cxl/pci.h                                 |  22 +
+ tools/testing/cxl/test/Kbuild                     |   2 +
+ tools/testing/cxl/test/accel.c                    |  66 ++
+ tools/testing/cxl/test/cxl.c                      | 835 ++++++++++++++++------
+ tools/testing/cxl/test/hmem_test.c                |   3 +-
+ tools/testing/cxl/test/mem.c                      |  15 +-
+ tools/testing/cxl/test/mock.h                     |   2 +
+ 32 files changed, 1022 insertions(+), 447 deletions(-)
+ create mode 100644 include/cxl/pci.h
+ create mode 100644 tools/testing/cxl/test/accel.c
