@@ -1,138 +1,143 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB1C1A9F91
-	for <linux-cxl@vger.kernel.org>; Mon, 17 Aug 2026 00:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72AC63246F4
+	for <linux-cxl@vger.kernel.org>; Mon, 17 Aug 2026 04:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786927770; cv=none; b=G7dE63q3VUn9sGf68yhfLekrHgo1L26XIaXPR2uBNy1ZtRYuykjh7CcZJMrKZ4cWk2mP1Yp8zslJGeyUx9UvoQIs+EGAQ29nzXQqGJ6qNPyt5uSpLW0icBpxKpdtzbwwG2EQ/SQWAT8U5cmwnctcIRAKjkA2ZipmAQWsTNPNQX0=
+	t=1786942351; cv=none; b=psdQWzsMxUL+RDSFbx1CdsdSvSNFzKQ2RrvFQ2Z8S3+nSuI0qvfHi+5ZYMuNTPtv+spcU3NF5xs3BBUXDMhLBNj1Ov9LpOHT5NT+ZV5PeA0Q3PlgXFHM7b7f4jXpB3S4SyCxoKJdsufs2Bsi4F1RK56Wcwcnh8R7rDKeEJUgU5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786927770; c=relaxed/simple;
-	bh=Q2AJHfOQlhxmo4d6xkSdfftND9W8OwOWU4sIuscydGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m0r/7J4YdWqgAIhT89XfDBAzzTK9M4mQi8++ntNZt+8vbY2pAETeFMB9Prt2+lN1bU1vZPFyiuH16J+IrtfgoLqfnPa26zv5IiimmQkaokD9S6pzAOX+h/Ur/ViWjij1gGhVfOvS5F93MCfOHGBwtJARk7eWBgcb2LH3s89+9Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=ckMtfNP/; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1786942351; c=relaxed/simple;
+	bh=GJRSgVBGJeat3wAEG8z33jEB2lg7XxYymKLeUaKrn1U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=k2PhFraMuXSI2n1Nkxire+A/ebvfCSWCxEUS4ds/gL3CaIsnidvrvpxwGQaBDAitivSCRi8Fp8+UQpOywZbnjxQNN3YML74rTaJBtWL+uqTl7zDZ6wvwX1CFo9YF7LgVKc9asb9lN1CGsQbrx11cH1E36koWIplw7OAQNc+rIc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hk5TnM7v; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="ckMtfNP/"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-51c8e2e39easo28118541cf.0
-        for <linux-cxl@vger.kernel.org>; Sun, 16 Aug 2026 17:49:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hk5TnM7v"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-448b69cfc6dso1989599fac.3
+        for <linux-cxl@vger.kernel.org>; Sun, 16 Aug 2026 21:52:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1786927768; x=1787532568; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=FcQdr0dRPL3xWk5ZJ+WEqnlvhAK6C+Y9UAGkoGf2Ky8=;
-        b=ckMtfNP/26mDYWEYvnUuKZj+OlJs4rtBqOCTkvgUC2mso3L1qBV4UevATxAcuXcr59
-         t3iNEjatomJQrmfd0qmVsl3BjaW6RqJLwsIjj72/eWYrRlfTWeZnYquwPe7qoSJdQ3uw
-         g88uZqv47V0VT2fcXb9InChXDCkM8CDWy83shOxcv+0xTEFY14jjWUHpeLQyJn/Eu1+C
-         4ygQiiuxj/3pUiyIOY1sjivSzmhc0YEFbIZMcRYKoMzp9C0LbmrFDK4Fu4Uo2z3EnsYd
-         hX7wjASGY+5NqmkbdDYqrOgM1h4IrDlgQi9GwqxPZvEyT20eWdaV+AZ8i2avJDfhnijE
-         oOMQ==
+        d=gmail.com; s=20251104; t=1786942348; x=1787547148; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=lXCFBr15COi95qp1EsFgIG/0N/CfzI8VoEXN2Vn844Q=;
+        b=hk5TnM7vJi48bgkZp8C8UGtaIg3aAhfbYnpJd8t1LK/UFAS3+hgue1LH0iPkopwDbl
+         8iT9qXI2n8G5tA6QsfI61DfcnSs7Wm9DpQO0ae6YVeXXzM6WVGVXBT3VKg0V/WFN5jc+
+         ANY6C8QLO8/j8r6D+PllAxVccNZ+jPB9NF0UfCnnT7fOYRHnjgDj9fBEuKHPsn1XQgE+
+         pamdrcdumW1yvp2/EeLWloYQS0Aa99a64Hykk8xWadtTl4ie/XGQr250kYnW9qBM+nHD
+         7x282a5FlCHpCRXisRit/B7XyB5EQdBrAK8ZGT+lwt8k9pSav9ti5WZtbaUYcLmNf7Vd
+         Yivw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786927768; x=1787532568;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=FcQdr0dRPL3xWk5ZJ+WEqnlvhAK6C+Y9UAGkoGf2Ky8=;
-        b=UtTrqqDCQQB4LjlNkWaEWS8AlYmT4SvZ4fkqu3HDY1K2qRTo9a31q9w6ADO8QlhAGu
-         yipoWOVb75dU5Xes/bq0GD4rk6EDV4J1ldIi1hW4V3yYXf3gR172YnNDxu30QH+z0DNB
-         uCJQoMzDwrA0hJ6TOBlh61n7iQmNIFCyrgoe/09Hfhh7E5gKnQmcICEAw3dIix9XFn6X
-         BdruXpEBvad3eOw0NiRpKt/o2a9dT2oqTK1azlG5hVdegrsjx7a0fHZS8RBzwAJ5Xqmo
-         lHqed060KULiU6y8vdlQ37OS0mRujAPPkux0CrX/8Gsp/a8TLhIlO/yMaSvap4MIK1/b
-         JWaA==
-X-Forwarded-Encrypted: i=1; AHgh+RpdU+2+GFdYDcWsvqGjF1QT55Bv8irrXEkBL0kMyR1XT9K/5HISn1io28XgqVXutnOL6E019nkGCYY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxqj1hl5vsBD9zCbaNqY7TvST0KKE8zeN8PA2ZZ1eFAKJlpj28R
-	nuIJGVKGQ9K0yTGI0APrDy9GhqAQIl8fGo2aCC/cUrmm/N66+HPREoAv5JhhYpHyUsQ=
-X-Gm-Gg: AR+sD11i5HTKkoQ6IxS6R9CTk5Fz+pAUFzivzBGgZwnL9a2xfDQmlIngGFxIrBd/7Oz
-	KLPYlywQdzpVqBYTlQ0HK7kQwGInRgHWTnLnOvYfzdFmwvebbFccJ6T13D9KDpTjzRKTcoJjcBs
-	JoQRROIty5JyJrgu0eDV/oUX/6DH4XcwzFJhWflYK1u1S81rQas7lnRrsr/6hHfoYcHahptIWqS
-	LxUbeQ8fsXtTyMHbbOHD5gHF0TWTiuwin2JTr/4Rb/EDo3v/dChz92HKgtEChJdB3dx7F9Ibioa
-	Jc/8WPU79s1BeeLNU1tmBxPoliTfZkNcVSmyfX128meAoCizf7VpLK83vbCM3dl/7cGj+VDa3qE
-	o0p4o74liVbrKajotjkvJ0vu0lZNFU/h1emqAPokOb/GUtAF9E2L/5UxZqYm4Ulfu5Gf9E8rtF3
-	3Zzd01jCmLQ3o/hazh2IzFELv+RptgDkc+sTOFle5hHXuYB+yS8sBQZzJiG4R90kAW9DxylpazN
-	VxY1rEPYO3FHJEAA7GxfuenPS1XL94ydk3CQDetrcmt
-X-Received: by 2002:a05:622a:2b4b:b0:52d:a151:10f5 with SMTP id d75a77b69052e-52da15111admr97787241cf.22.1786927767788;
-        Sun, 16 Aug 2026 17:49:27 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-60-52.washdc.fios.verizon.net. [173.79.60.52])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-52db62764f2sm1152051cf.30.2026.08.16.17.49.25
+        d=1e100.net; s=20251104; t=1786942348; x=1787547148;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=lXCFBr15COi95qp1EsFgIG/0N/CfzI8VoEXN2Vn844Q=;
+        b=kS6rQSJJfG2JU2KCmdYh/NxUCZnRp54EII5Csxozfj7kxiyMeo54HfePxlEQO8olYS
+         Mdb5yxasYVw/oDsogyEDgZQtBL8s9VLrFs56hZAhOUq7cmkP0dp2uVfC68Vpc1YGlzvi
+         fzk4A7d32DM/2FXJgB0iGqH71WbPPwGFc0VgNH34Jev2oyPRME63qouU4JJhcYQI66NE
+         JNsMsiVB46/tRQC8GkqzWOeHtsl1R5u7C3TgtfoNGRwTq+XLfxVMS6DbES7wcYmU1Aqd
+         ym26OEdVYKecOX8BMF/OcjP8m46BNu9iIQuGs8WNy68o3km59UuSdElvuERLdLml8hMu
+         7b/g==
+X-Forwarded-Encrypted: i=1; AHgh+Rr6DCpIl1z741pQFw6cX4CudtKm2fnOShjcGCPbdkpXsah9REHR+Fc6AE+a65n4cOhAwd4iGi7P1Ew=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMt4xppd38Utxal4ev7hqIS9haRmQvGUs8CZ+jl+mQtfq2P8x9
+	XTIffwKWoV6t/pZhENmFURV5nxW80Ee+lCUlIYov7abJzG7LO+co/qxQ
+X-Gm-Gg: AR+sD13vo8pgBfOhLsi2gqdExoMIy0ETg+uFqQAgTyeckX2ar7DF60nVh4VL8eXfAh0
+	Cb+8KFM9cYJyFOSyMUZUeGvvjKqDcXqMYbG5VmYCBUqKM/IlW/LrQr/XaWHAvftNlfupzgAoLqK
+	WCtpEL+TU6XIaOh/L42NdmAOhxH4paM8P+2jhB57pwpvkuHaknklD2pLZacz9P/w6v63myJvfwT
+	dJMulcz7YP+CNWD4zPgN7X24g2NPDyAQC3HqhbocQG3RfLQ7MqCRslEknnw1W1Lxq+6iOtMxid9
+	HKIG9BRLQ7WATxeKb5BiOHilfGcU0biEkJmjZcczE0tF2vvxd3sUpwljEd4J4//WDT23Ua+YPUn
+	BmausZHGkrX6uVx6r2Jqos1/RgzUChHG7BPm+WSuYWuYtHw4D2SK/EkP0Gf5Rpz7nUdJVhJAFVr
+	lQPSfpUPCA64CeAgAjHbnUqbZ7Xir8FIhoPGI5WYT5B3k4mVidV0Rs7RXVTsGJDVY+BstNANyxZ
+	9PNXZ8zGSpBPOvI1lxkqUlWAVmcRzbENQ==
+X-Received: by 2002:a05:6871:680c:b0:448:c6ce:9617 with SMTP id 586e51a60fabf-45e91ce96b6mr18797832fac.5.1786942348251;
+        Sun, 16 Aug 2026 21:52:28 -0700 (PDT)
+Received: from localhost ([2a03:2880:10ff:a::])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-45f22aea368sm300381fac.5.2026.08.16.21.52.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2026 17:49:27 -0700 (PDT)
-Date: Sun, 16 Aug 2026 20:49:24 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Qiqi Li <liqiqi23@huawei.com>
-Cc: linux-mm@kvack.org, Zhigang.Luo@amd.com, arun.george@samsung.com, 
-	balbirs@nvidia.com, brendan.jackman@linux.dev, yuzenghui@huawei.com, 
-	apopple@nvidia.com, alucerop@amd.com, matthew.brost@intel.com, 
-	akpm@linux-foundation.org, david@kernel.org, ljs@kernel.org, liam@infradead.org, 
-	vbabka@kernel.org, rppt@kernel.org, surenb@google.com, mhocko@suse.com, 
-	corbet@lwn.net, skhan@linuxfoundation.org, gregkh@linuxfoundation.org, 
-	rafael@kernel.org, dakr@kernel.org, djbw@kernel.org, vishal.l.verma@intel.com, 
-	dave.jiang@intel.com, alison.schofield@intel.com, osandov@osandov.com, 
-	jannh@google.com, pfalcato@suse.de, jackmanb@google.com, hannes@cmpxchg.org, 
-	ziy@nvidia.com, pbonzini@redhat.com, osalvador@suse.de, joshua.hahnjy@gmail.com, 
-	rakie.kim@sk.com, byungchul@sk.com, ying.huang@linux.alibaba.com, 
-	kasong@tencent.com, qi.zheng@linux.dev, shakeel.butt@linux.dev, baohua@kernel.org, 
-	axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, yury.norov@gmail.com, 
-	linux@rasmusvillemoes.dk, longman@redhat.com, ridong.chen@linux.dev, tj@kernel.org, 
-	mkoutny@suse.com, sj@kernel.org, jgg@ziepe.ca, jhubbard@nvidia.com, 
-	peterx@redhat.com, baolin.wang@linux.alibaba.com, npache@redhat.com, 
-	ryan.roberts@arm.com, dev.jain@arm.com, lance.yang@linux.dev, usama.arif@linux.dev, 
-	xu.xin16@zte.com.cn, chengming.zhou@linux.dev, roman.gushchin@linux.dev, 
-	muchun.song@linux.dev, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	driver-core@lists.linux.dev, nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org, 
-	linux-debuggers@vger.kernel.org, linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org, 
-	cgroups@vger.kernel.org, damon@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	kernel-team@meta.com
-Subject: Re: [PATCH v5 25/36] mm/memory_hotplug: support N_MEMORY_PRIVATE
- node hotplug
-Message-ID: <aoJaaYp30LnKLj1w@gourry-fedora-PF4VCD3F>
-References: <20260720193431.3841992-1-gourry@gourry.net>
- <20260720193431.3841992-26-gourry@gourry.net>
- <6840c720-8cb7-46bb-a652-040c130a4427@huawei.com>
+        Sun, 16 Aug 2026 21:52:27 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: Rakie Kim <rakie.kim@sk.com>,
+	akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	byungchul@sk.com,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	david@kernel.org,
+	ljs@kernel.org,
+	liam@infradead.org,
+	vbabka@kernel.org,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	dave@stgolabs.net,
+	jic23@kernel.org,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	harry@kernel.org,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com
+Subject: Re: [PATCH 0/4] mm/mempolicy: introduce package-aware weighted interleave
+Date: Sun, 16 Aug 2026 21:52:24 -0700
+Message-ID: <20260817045225.1807518-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <aoJY53BJztPQYumw@gourry-fedora-PF4VCD3F>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6840c720-8cb7-46bb-a652-040c130a4427@huawei.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Aug 06, 2026 at 11:30:08AM +0800, Qiqi Li wrote:
-> Hi Gregory,
-> 
-> On 7/21/2026 3:34 AM, Gregory Price wrote:
-> 
-> > Add add_private_memory_driver_managed() to let modules hotplug
-> > memory onto an N_MEMORY_PRIVATE node they control.
-> 
-> I am trying to understand how the nid passed to
-> add_private_memory_driver_managed() is expected to be provisioned.
-> 
-> From what I can see, both node_private_register() and
-> __add_memory_resource() require the nid to already be present in
-> node_possible_map. My understanding is therefore that this patch
-> supports hotplugging private memory onto an existing possible node,
-> rather than creating a new possible node ID at runtime.
-> 
-> For example, in the use case I am looking at, the device's private
-> node is not described by firmware. Would its nid need to be reserved
-> during early NUMA initialization, or is there another mechanism that
-> I may have missed?
-> 
+On Sun, 16 Aug 2026 20:46:16 -0400 Gregory Price <gourry@gourry.net> wrote:
 
-It would need to be reserved, and you could use numa emulation but
-that's clunky.  I have an RFC for exactly this issue - though i haven't
-pushed it further yet.
-
-https://lore.kernel.org/all/20260610014517.253609-1-gourry@gourry.net/
-
-> Also, could you please Cc me on future revisions of this series?
-> I would appreciate it and would be happy to follow the work:)
+> On Thu, Aug 13, 2026 at 03:23:48PM +0900, Rakie Kim wrote:
+> > On Wed, 12 Aug 2026 22:37:06 -0400 Gregory Price <gourry@gourry.net> wrote:
+> > 
+> > The cpuset.mems = 0,2 you describe is the node set of package 0, so
+> > the tasks in that cgroup use node0 and node2 wherever they run.
+> > 
 > 
-> Thanks,
-> Qiqi
+> I think you are over-complicating the explanation and that's making it
+> hard for folks to reason about this.
+> 
+> My best understanding here is for multi-socket systems, weighted
+> interleave as-designed is inherently sub-optimal for scaled workloads
+> that utilize multi-socket ("package") memory resources (DRAM, CXL...)
+
+I was thinking about this and I think Gregory is right here.
+
+I wonder how much of the framing around this series can be preserved /
+simplified if we just say "prevent tasks from allocating memory
+cross-socket".
+
+I also wonder if instead of limiting this to weighted interleave,
+this can sit on top of other mpols and just nodemasks against
+cross-socket nodes.
+
+> I think there is also an assumption that total memory utilization is
+> less than the total capacity - otherwise some of the assumptions here
+> break, but that comes with the general weighted interleave story.
+> 
+> I'm getting back from vacation, I will take a closer look this week.
+
+I am also out on vacation this week : -)
+I'll take a closer look along with the code next week as well.
+
+Thanks, Rakie and Gregory!
+Joshua
