@@ -1,302 +1,386 @@
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010027.outbound.protection.outlook.com [52.101.56.27])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3248365A1D
-	for <linux-cxl@vger.kernel.org>; Tue, 18 Aug 2026 10:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787047288; cv=fail; b=OzH1rpq7zqPQAiTNuztCmFne71Qkv/ZjgHhZab9gDl0UIitFaT7yskMaILtRC8FUJyWx654YxnndtZ3tpQ5nYyRGatMdQBzdJuMUUVgBU0+11JMTsbKIPiCaj6iJSxT6RPiPGdt06yno1veL6GCgspXBWmD3bI6RDoSTb5sUaAg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787047288; c=relaxed/simple;
-	bh=XhEE+tzqStckSeI+ZG0yFp9OhCMqApSiDsTSiMfMSkA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=JwCmGq3/5SVjVGI76arZ1HkA0rtT7vOJD1uhPVNR/jCKualam5ynciJiA7fwVDQPZZyVYRBseuULh6fWF2QK5rxz4j8J0kXA9QaPOULewLtPkQgrd6Akkduod0P9IVauQ3COJtmmhK5TWPFJ3iCw5FBqBlA6oq8qglbmjEAK+Ko=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OwzvdKpB; arc=fail smtp.client-ip=52.101.56.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057593A75B8
+	for <linux-cxl@vger.kernel.org>; Tue, 18 Aug 2026 11:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787051859; cv=none; b=W7FVeQtNpepMF2uSHdtdT80bsLkTDuqRdZrw4VU6YRw1QQ/gQ+iPHBtt/0Ads5jSR/KbnH0yGEtJhm5OJyhCY+vFN73NBcWGxI0m2zOJEDX5OXDXWoL5H//2DQ9WwkNLwzQoAUDVaw9IFa0v0P1kKlz7xc34JYHjaI0gPliPut8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787051859; c=relaxed/simple;
+	bh=kkDsnTyWfv1u+mGY4BN2EV0C8BxZN84pizHSkLa2WqU=;
+	h=From:Date:Subject:MIME-Version:Message-Id:References:In-Reply-To:
+	 To:Cc:Content-Type; b=LR77h8LYhTPpxSy1PAnLja1DUMpvNflXKPD8rEanAm72Zx4HiXV2TUA5icz7kXo0gmrEv+NetCtp9axMXjjTwrMxinKVi5gpPcG4gfdD+Nv83qwOFMO7AXoOazEuEKpteP3Nv7pAT/E2Wr/EA1W8d/FXjtjApQXmMVsjH+u2Mz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bEPLMan0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OwzvdKpB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=t/laE/LJmhMzU8nKQ6iLP7SQ8rDpOGKnfPyODu0mr6WdoxwJD6ArTxoWxRE667W3YUy3R4zqE9Itl+78POlLVfIvFhiMlaPGfe3zs+P4mFOknQVzFQVAjXWITDoIuIkVlju/AjD62OqI+sIYDgEWsL4jgU2fKtxXgfCRlofDqcU5KI1hz8F2NdIpUxa6gzUdo1hXNDWRW47qDK3w5gBzTgxodVDzGlNXoKaJjogKPwLNBjLlaOl41FghiSLav6nZmaU9jXAq2Q7Kq1Gb1jcFf5BBNFsCHxGohNzP/b7gQFavY3mwVbdahFkyo4+bA5Ido0V9Irx7Hkn+Q52MuPz2mg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uFGjMNIGr+V5u7Dbe05XUheSVZ03SZ7NZeu0yUKnIpY=;
- b=JdonZAMOzd05RoXFYOf5zGguJ7Q2DjKvvLWiiOgyENc2IZyHoojQdeB3iNnz1O68T5TphRyO4yDhcQ3FjAX2auzFaJsYE3c9ohY5anvE2C0BnC6708Ht0C+rMTdgQvNKHu/WNlnD/MV1LS3slSRHz7P1OajnG8csmTVbnGsnfRW3uc+TtBIlxmCB5VItMAkYUEhvQAMPqBKtPHHxI047v9s+ybCKV6jo7YQoLlWxSE/mjTgbZnbSTnbNy/QThNroUkSBHsw53MQ34O6XLnWMHy2nYjlB27jIoy4TGhYkL0zKERONGkM/URgBGT+dFHa+R2POi2B2S7CcudPV/RUWAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uFGjMNIGr+V5u7Dbe05XUheSVZ03SZ7NZeu0yUKnIpY=;
- b=OwzvdKpBu4gSdJT+KU9aiEiludFJ5uNYA0ciRaZLLUQ92lVbTuQ5oP9VAM0orD7+HIrMGvAkDuQuGvyWvaeT8h495l5TSiVsA/19KsGAud8A8A2RuD9d/kytoBZiwLKqFbIydwym00K77e1Jpq16ND4JsI6mIVsfzkRT3NJJ3Mc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from SJ1PR12MB6074.namprd12.prod.outlook.com (2603:10b6:a03:45f::14)
- by DS0PR12MB8248.namprd12.prod.outlook.com (2603:10b6:8:f3::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.8; Tue, 18 Aug
- 2026 10:01:17 +0000
-Received: from SJ1PR12MB6074.namprd12.prod.outlook.com
- ([fe80::3dee:b690:a008:1bf5]) by SJ1PR12MB6074.namprd12.prod.outlook.com
- ([fe80::3dee:b690:a008:1bf5%4]) with mapi id 15.21.0339.007; Tue, 18 Aug 2026
- 10:01:17 +0000
-Date: Tue, 18 Aug 2026 12:01:11 +0200
-From: Robert Richter <rrichter@amd.com>
-To: Alison Schofield <alison.schofield@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
-	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v3 3/9] cxl/region: Derive port granularity from selector
- bits
-Message-ID: <aoQtZwK7_cvtl4fR@rric.localdomain>
-References: <cover.1785444498.git.alison.schofield@intel.com>
- <efef416440a89a44dfddb13ef390285a98c69cd4.1785444498.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <efef416440a89a44dfddb13ef390285a98c69cd4.1785444498.git.alison.schofield@intel.com>
-X-ClientProxiedBy: CPCP307CA0006.DNKP307.PROD.OUTLOOK.COM (2603:10a6:380::8)
- To DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bEPLMan0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1787051856;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k7sLgcKy46Y8uZwm/mabjfqolsaFuLha8cI618N0WKg=;
+	b=bEPLMan0nwQrw0IvaYmDV2clZXSD6u+1Q3DxvJpPh8nL3BnsTsP1Enp3Ucd3ZEsmcReclY
+	qsDk20F5K3NJ2DT4yg+Z7F8BPuuIQeOpgvUNHV2dlmMSmUB4btUlaVyOcOjFI1kb8oDOSL
+	VyPrK8IvlpWCy2zrFtECvzr+BDKbyF8=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-104-PFydJzvqO2Kquw0fUJmyfw-1; Tue,
+ 18 Aug 2026 07:17:29 -0400
+X-MC-Unique: PFydJzvqO2Kquw0fUJmyfw-1
+X-Mimecast-MFC-AGG-ID: PFydJzvqO2Kquw0fUJmyfw_1787051846
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 60EB31955F39;
+	Tue, 18 Aug 2026 11:17:26 +0000 (UTC)
+Received: from localhost (headnet05.pony-001.prod.iad2.dc.redhat.com [10.2.32.117])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 942EB1800347;
+	Tue, 18 Aug 2026 11:17:09 +0000 (UTC)
+From: =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>
+Date: Tue, 18 Aug 2026 15:10:43 +0400
+Subject: [PATCH v3 16/74] qom: convert struct properties to QAPI-aware
+ registration
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PR12MB6074:EE_|DS0PR12MB8248:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9e86d9e3-f43e-4fb1-75b7-08defd0fa497
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|23010399003|376014|56012099006|10067099003|6133799003|22082099003|18002099003|4143699003|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	J/wh9sg0a1E9lpy/ubop0QAkb8oqgIj8HTH/0UL+4eB1btgw6eT8C7LVyKE/NtzeZD0mUslAv/N/8IYdW9PsVD9O8Bx7clRgthlmqdz5ullYvupOKTQDpWkLVEkP5fwfZEkX3P+Vxy0LTqZCuLA1WGS3wOepmkftFLJoXhfnighoq0yYgonFRvDvAWy/fEwzAbN+zHvivVKcChJBYSlWFCLkk7vvf6YnF52TapZ+9M2Y8+gs/xk9YTFtL1FFJbH06JGWvLDpWvviFCco2n1EW52VIJ/ewkXCmM2GH3Y9Ew1gndEZp5R5FCCM4G+VREmhA3fq1K1mDJ5CDnDZmnA6Ub9dq3+yw39antOZCCxey8VevK909wbr/cTLYTEcUcaJHqkep3I54ajPe3t32XfcDDsRcntXhxuxfs273JLCYuzjCOYnw0vyiuVcO1vUMrKqRHxMo9cfM8axwOO1emT41y59F9JaDZcEX38qHslsVfy0FAjG52c/zkslT7br3D+ySVH85u1rUPH8iBw7furv9cLaJ2Mjx7FLNZBIti4TuQk87zerplPJLBWphCYFPivay1Ai+r4Mp28ha7/lYVIg8WS32dP14SGpHWvUqL9xCYzbyZ8uZ92762c9Q3eATg9xeqApoCXMe1xOV9/aB2LQ6KT7JZLHvJdhkM81GPsuFTE=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR12MB6074.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(23010399003)(376014)(56012099006)(10067099003)(6133799003)(22082099003)(18002099003)(4143699003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ybRaxRqm68JNBC6NbZi37K8OYb+nV25y3CHkoYjU+xuhN+NXOEL/2tetJsTK?=
- =?us-ascii?Q?rf+XijSnz4pBhosjdmoKyY4Ea3PMwcFOX7AExFXbpNsGw7tm/PY+1Wwd5mBx?=
- =?us-ascii?Q?p8ioy8ms/wkh4xoFFYi2d3DzEWAa4mrEDDZhhVf8sfHxq4oPL7reRjimjSLJ?=
- =?us-ascii?Q?2KgQ78Ahnnr1oMMDM8b5sO6DpZwkRCNTPXo4RKLkuClMbmNkVdfGgrtR7m24?=
- =?us-ascii?Q?ehJdxGcrrELbM6y8w4Sud+Wkq4YEIIFhRyw6fCWsgZvbE7N7Kv8IpYrVIVSC?=
- =?us-ascii?Q?fLfA+I+C5C5d78GSoYKAoA3b0QQTbSSY6qx8aEoHTXaTw+X6yCU7rAkEh1ul?=
- =?us-ascii?Q?2bcdhXHIc+8XJdN0l12fm2JcqsVQ+/3iHT2mMwOW4WmgC45yCWKG88+p+1lg?=
- =?us-ascii?Q?Nmz8u/57JT6PsF4TuXLtPvzTcGKSvc1B/P2/zQeTYfCslDtwaecW1PLOe+nM?=
- =?us-ascii?Q?YDnvz5LcUcfzP6y9NVgy1dWQnJgTj2ZiGOLK0YWnUrayceHZpkResgCe2blu?=
- =?us-ascii?Q?S/pKL2/q5EeRUdbhAEpS62ynkWJ30/+teJWuOFInzyh9Bi/cvsC9u+ko9QEz?=
- =?us-ascii?Q?QzfxB2xoukmhgGMGX3JuSAxcbZ+crL/hjtr+pxdThT8i8vtkb4ynXEC9X9zM?=
- =?us-ascii?Q?iq1bnqyO6Z1KZf12ixjOnsY/XKGOfjLkIBcJWsE00G5OOdT/xjd+KEgocmMq?=
- =?us-ascii?Q?CfA4DUrUvmx88nmFORiqavoKS75b8hku/Ujj7g2c56MBhfuHBB4iu+712hU0?=
- =?us-ascii?Q?k9MEiiTf2C7GjAjYHqAYkC0PnBLNOPX6qUkiEsY8uHwX58VpwDV38+A0+5Hs?=
- =?us-ascii?Q?ScqjZjHBBN/UAYWFwq6DyB624CwkhTyWo8cULdsi1tQ1vd9h/Wc9WEzZP2do?=
- =?us-ascii?Q?HdNLJ9yjT8b5GQYlrFuAwosL+bExJ00rejCsdYWHsdonCLuCY2Twe9M4XS4R?=
- =?us-ascii?Q?SqmSaVy7ATbOx92S4iP3dZHMu2wch3MyErfWVPeJ+aYNyRKJF3c5fINksTKo?=
- =?us-ascii?Q?CCVXvz405iK5y5y4xwJXNdGKH0/E33RPF9QhyxGZA55vDdTxrNNa4N2xj/3l?=
- =?us-ascii?Q?iGk+szN4qJbhmGZdRp9BAZkJz/g+T4EztLRyZP5lK83KIIgZ/Ev6ihneEjPq?=
- =?us-ascii?Q?zyHde/TMyqjEqDGlUdEofok32sREcbsiHI2KBXvB/k7ypG2RQkiItO2Go9XA?=
- =?us-ascii?Q?AgUrkwXUW0uV1Qz1uMkbLY0qe7aK79ygP3mOp8oPUvvCFCSj9oe5vjr5o3jS?=
- =?us-ascii?Q?Xsp4K7uyFizRp4qOZOGcmsTT7WwJT9xCLNsKSOR/aPdRo0xp6IXxSzMrCMzM?=
- =?us-ascii?Q?0R4L0Ow723+7SeM4QVwJi7DqkRxSAZwsN4QQGZBTxn3soswCvZRscg0CtsPj?=
- =?us-ascii?Q?bZxJboNZl/T4NBYgt4P7QeuJEu8pYxChU1xd4CaqX8SPrzlwToLKyZ5fy6dJ?=
- =?us-ascii?Q?5rC4XonPFA/ppL94W7rMEeI5+7lr1m5/tLI7v+I0HsFHMI9NIYLWD8MUf/yt?=
- =?us-ascii?Q?bgBbOXExOiozDaa7CYLZeGlQFjT/hbnmUY+0kMWwHpNDwxdcemS5YEenVEB1?=
- =?us-ascii?Q?FvY/HOMUEvH3801DOutQNfhXif3bLpUTvY3L/HZnJ0NAUFCIJ9xS+Zwlv1L3?=
- =?us-ascii?Q?rU9jk46Q+WLgsZUefIXDSlpOT9hnh1h6gYJaBA9BXluwM29xqniWnldHEql8?=
- =?us-ascii?Q?rkW1jSW+w4MRDZi7aMhIeRXEDQfmDk7r/VxhRal+/WHngJ+g?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e86d9e3-f43e-4fb1-75b7-08defd0fa497
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6085.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2026 10:01:16.9962
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: q0lswa0aWVOlm1ZXRs5fRPjhDr9B7zp9AKMEsSCljxc17A/DvAp8VupSVGR4XOUymzKWot+w75Ft3G+pf5gBPg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8248
+Message-Id: <20260818-qom-qapi-v3-16-24b8bbbe3d86@redhat.com>
+References: <20260818-qom-qapi-v3-0-24b8bbbe3d86@redhat.com>
+In-Reply-To: <20260818-qom-qapi-v3-0-24b8bbbe3d86@redhat.com>
+To: qemu-devel@nongnu.org
+Cc: Markus Armbruster <armbru@redhat.com>, 
+ Paolo Bonzini <pbonzini@redhat.com>, 
+ =?utf-8?q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>, 
+ =?utf-8?q?Marc-Andr=C3=A9_Lureau?= <marcandre.lureau@redhat.com>, 
+ Michael Roth <michael.roth@amd.com>, 
+ Pierrick Bouvier <pierrick.bouvier@oss.qualcomm.com>, 
+ =?utf-8?q?Philippe_Mathieu-Daud=C3=A9?= <philmd@mailo.com>, 
+ Alberto Garcia <berto@igalia.com>, Kevin Wolf <kwolf@redhat.com>, 
+ Hanna Reitz <hreitz@redhat.com>, Zhao Liu <zhao1.liu@intel.com>, 
+ Jonathan Cameron <jic23@kernel.org>, 
+ Elena Ufimtseva <elena.ufimtseva@oracle.com>, 
+ Jagannathan Raman <jag.raman@oracle.com>, 
+ John Levon <john.levon@nutanix.com>, 
+ Thanos Makatos <thanos.makatos@nutanix.com>, 
+ =?utf-8?q?C=C3=A9dric_Le_Goater?= <clg@redhat.com>, 
+ Marcelo Tosatti <mtosatti@redhat.com>, Cornelia Huck <cohuck@redhat.com>, 
+ Eric Farman <farman@linux.ibm.com>, Matthew Rosato <mjrosato@linux.ibm.com>, 
+ Richard Henderson <richard.henderson@linaro.org>, 
+ Ilya Leoshkevich <iii@linux.ibm.com>, David Hildenbrand <david@kernel.org>, 
+ qemu-block@nongnu.org, linux-cxl@vger.kernel.org, kvm@vger.kernel.org, 
+ qemu-s390x@nongnu.org
+X-Developer-Signature: v=1; a=openpgp-sha256; l=12033;
+ i=marcandre.lureau@redhat.com; h=from:subject:message-id;
+ bh=kkDsnTyWfv1u+mGY4BN2EV0C8BxZN84pizHSkLa2WqU=;
+ b=owEBbQKS/ZANAwAKAdro4Ql1lpzlAcsmYgBqhD24aTxEXASPhT+Osx3ZXljnXs+K5N+lIjrFO
+ JZnhfyDCXGJAjMEAAEKAB0WIQSHqb2TP4fGBtJ29i3a6OEJdZac5QUCaoQ9uAAKCRDa6OEJdZac
+ 5fj2D/wOz5pK10GoilZo307skGZSzhYILjrPVsLZlvKfm8i8P4yGV6PUhHEENfTDD0riQcDbsAN
+ 6zIJF6vTg8VubfY6yJMdrAvBv6YDePkxKGOJKLywVobZjXGUx39WoSh0NeLBktQ29h8ajtJaZE/
+ pE9tLF1LyY22iCvSwLhJ207gi2Mz9JONpJGnvSr+ZPdK7NxRw4pW8FSgvINKDhs42QYKmjt40DS
+ iActFKKIHRwKqkcTGgTLmwhCasljLgs5ouAgEYaCPkWEDsHAyIXGwLR2DoM870FjZbgMXRv0zQQ
+ iOyCmtQ6+Hc92Cvyqwlmn28X2JmwT3zfCpi1oiVvn7AsxrXO/BrUajqgmeiCGt6l1D0zEi+Wd/6
+ 2fLXS5bIwwHy6IuYhwU1JG8W6oxQKFozLdHM5e9B7G5fzMk1CXEKC9HjSMFBj1xG6slzlhCxtO4
+ 8CYw5I+kAdYacQBVaGs67lD2kHSgPsQe/w4nP6RYKiKNQ4WuNnT8f7sAsRM93HHuRz9mA5hiB2/
+ uQXyX/u5zrnduhg3kBkkj+fQVZRL+rz5RboMiPb/p6ODyLuCLEL+KXIzCWNzb8lRskQQUkmJBzS
+ GaPXlail/PBUxFkYwyDtdhPbPmdHhN0cP7UdamvLuLKKpWHLvrzKZdteSywzJVlL0TulwsVgItA
+ 9urkE1e0xoDnBgQ==
+X-Developer-Key: i=marcandre.lureau@redhat.com; a=openpgp;
+ fpr=87A9BD933F87C606D276F62DDAE8E10975969CE5
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-MFC-PROC-ID: nbIEwSVULHIcIR4KXdmLLwo9siP_2EbuwBhS7RRh77c_1787051846
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 30.07.26 15:20:23, Alison Schofield wrote:
-> A user-created region currently derives each port decoder granularity
-> from the parent granularity and ways. That recurrence assumes the
-> selector bits follow the existing same-granularity ordering and cannot
-> derive the decoder settings for a mixed-granularity region.
-> 
-> Add cxl_region_is_mixed_gran() as the common predicate for regions
-> whose granularity is finer than an interleaving root decoder.
-> 
-> Update derive_port_granularity() to choose each port decoder's
-> granularity from the selector bits not already used by its ancestors.
-> For auto regions, compare the firmware-programmed granularity with the
-> derived value and reject a mismatch.
+Convert all callers of object_property_add() and
+object_class_property_add() that register struct-typed properties with
+QAPI visitor-based getters/setters to use object_property_add_qapi() and
+object_class_property_add_qapi() instead.
 
-The only requirement I see here is that firmware programmed selector
-bits must be within the endpoint's bit mask (which matches the
-region's total ways and gran configuration). The selector and
-granularity of a single decoder within the chain may vary, as long as
-it is within the total selector and does not overlap with other
-decoders. It is not possible to calculate a single correct granularity
-value for auto-mode. And in user-mode there are muliple setups and
-values possible too, unless there are strict assignment rules given
-that only allow a single subset.
+This replaces the manual string type name with a reference to the
+generated QAPITypeInfo constant, enabling QMP introspection to report
+accurate QAPI type information for struct properties. Existing
+getters/setters are preserved unchanged.
 
-> 
-> Originally-by: Robert Richter <rrichter@amd.com>
-> Signed-off-by: Alison Schofield <alison.schofield@intel.com>
-> ---
->  drivers/cxl/core/region.c | 90 ++++++++++++++++++++++++++++++++++-----
->  1 file changed, 79 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index b0061f03892a..871dedd37cc8 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -1552,32 +1552,94 @@ static bool region_selectors_fit(struct cxl_port *port,
->  	return true;
->  }
->  
-> +/**
-> + * cxl_region_is_mixed_gran() - Test for a mixed-granularity region
-> + * @cxlr: region
-> + *
-> + * A region is mixed-granularity when an interleaving root decoder uses a
-> + * larger granularity than the region.
-> + *
-> + * Return: true for a mixed-granularity region.
-> + */
-> +static inline bool cxl_region_is_mixed_gran(struct cxl_region *cxlr)
-> +{
-> +	struct cxl_decoder *cxld = &cxlr->cxlrd->cxlsd.cxld;
-> +
-> +	return cxld->interleave_ways > 1 &&
-> +	       cxld->interleave_granularity > cxlr->params.interleave_granularity;
-> +}
-> +
->  /**
->   * derive_port_granularity() - Calculate the granularity for a port decoder
-> + * @port: port being configured
->   * @cxlr: region under construction
-> + * @accum: selectors used by the ancestor decoders
->   * @fanout: product of the ancestor switch ways
-> - * @ig: filled with the port decoder granularity
-> + * @iw: port decoder interleave ways
-> + * @ig: filled with the derived granularity
->   *
-> - * Preserve the existing parent-granularity times parent-ways recurrence in
-> - * terms of the region granularity and the fan-out above this port.
-> + * Select the decoder granularity from the region selector bits not already
-> + * used by its ancestors. Same-granularity regions allocate the lowest
-> + * available selector bits first. Mixed-granularity regions allocate the
-> + * highest available selector bits first so decoder granularities decrease
-> + * from the root toward the endpoints.
->   *
-> - * Return: 0 on success.
-> + * A passthrough decoder uses no selector bits and retains the granularity
-> + * implied by the ancestor fan-out.
-> + *
-> + * Return: 0 on success, -ENXIO when no valid selector remains.
->   */
-> -static int derive_port_granularity(struct cxl_region *cxlr, int fanout,
-> -				   int *ig)
-> +static int derive_port_granularity(struct cxl_port *port,
-> +				   struct cxl_region *cxlr, u64 accum,
-> +				   int fanout, int iw, int *ig)
+The cxl-fmw property type is corrected from "CXLFixedMemoryWindow"
+(not a real QAPI type) to "CXLFixedMemoryWindowOptions".
 
-This function interface gets really out of control now. You need 5
-args to calc the granularity and return 2 values? Something is wrong
-here.
+Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
+---
+ authz/list.c              |  2 +-
+ block/throttle-groups.c   |  5 +++--
+ chardev/char-socket.c     |  3 ++-
+ hw/core/machine.c         | 11 +++++++----
+ hw/cxl/cxl-host.c         |  4 +++-
+ hw/remote/vfio-user-obj.c |  5 +++--
+ hw/vfio-user/pci.c        |  5 +++--
+ target/i386/cpu.c         | 11 ++++++++---
+ target/i386/kvm/tdx.c     |  4 +++-
+ target/s390x/cpu-system.c |  4 +++-
+ 10 files changed, 36 insertions(+), 18 deletions(-)
 
-I guess we need to change the approach here. Maybe split target setup
-for auto- and user-mode. We must simplify the code, I think that is
-possible.
+diff --git a/authz/list.c b/authz/list.c
+index 363b2ee12c98..ed3d346004c2 100644
+--- a/authz/list.c
++++ b/authz/list.c
+@@ -128,7 +128,7 @@ qauthz_list_class_init(ObjectClass *oc, const void *data)
+         .set = qauthz_list_prop_set_policy,
+     ));
+ 
+-    object_class_property_add(oc, "rules", "QAuthZListRule",
++    object_class_property_add_qapi(oc, "rules", &QAuthZListRule_type_info,
+                               qauthz_list_prop_get_rules,
+                               qauthz_list_prop_set_rules,
+                               NULL, NULL);
+diff --git a/block/throttle-groups.c b/block/throttle-groups.c
+index 805e47270c7e..a9d3aea3b54e 100644
+--- a/block/throttle-groups.c
++++ b/block/throttle-groups.c
+@@ -31,6 +31,7 @@
+ #include "qemu/thread.h"
+ #include "system/qtest.h"
+ #include "qapi/error.h"
++#include "qapi/qapi-type-infos-block-core.h"
+ #include "qapi/qapi-visit-block-core.h"
+ #include "qom/object.h"
+ #include "qom/object_interfaces.h"
+@@ -991,8 +992,8 @@ static void throttle_group_obj_class_init(ObjectClass *klass,
+     }
+ 
+     /* ThrottleLimits */
+-    object_class_property_add(klass,
+-                              "limits", "ThrottleLimits",
++    object_class_property_add_qapi(klass,
++                              "limits", &ThrottleLimits_type_info,
+                               throttle_group_get_limits,
+                               throttle_group_set_limits,
+                               NULL, NULL);
+diff --git a/chardev/char-socket.c b/chardev/char-socket.c
+index b629575fcf80..99173d9f3e6e 100644
+--- a/chardev/char-socket.c
++++ b/chardev/char-socket.c
+@@ -31,6 +31,7 @@
+ #include "qemu/option.h"
+ #include "qapi/error.h"
+ #include "qapi/clone-visitor.h"
++#include "qapi/qapi-type-infos-sockets.h"
+ #include "qapi/qapi-visit-sockets.h"
+ #include "qemu/yank.h"
+ #include "trace.h"
+@@ -1573,7 +1574,7 @@ static void char_socket_class_init(ObjectClass *oc, const void *data)
+     cc->chr_listener_cleanup = tcp_chr_listener_cleanup;
+     cc->chr_get_filename = tcp_chr_get_filename;
+ 
+-    object_class_property_add(oc, "addr", "SocketAddress",
++    object_class_property_add_qapi(oc, "addr", &SocketAddress_type_info,
+                               char_socket_get_addr, NULL,
+                               NULL, NULL);
+ 
+diff --git a/hw/core/machine.c b/hw/core/machine.c
+index e617f7804d4e..cd9636dde6e6 100644
+--- a/hw/core/machine.c
++++ b/hw/core/machine.c
+@@ -18,6 +18,7 @@
+ #include "hw/core/loader.h"
+ #include "qemu/error-report.h"
+ #include "qapi/error.h"
++#include "qapi/qapi-type-infos-machine.h"
+ #include "qapi/qapi-visit-machine.h"
+ #include "qapi/qapi-commands-machine.h"
+ #include "qemu/madvise.h"
+@@ -1114,19 +1115,20 @@ static void machine_class_init(ObjectClass *oc, const void *data)
+     object_class_property_set_description(oc, "dumpdtb",
+         "Dump current dtb to a file and quit");
+ 
+-    object_class_property_add(oc, "boot", "BootConfiguration",
++    object_class_property_add_qapi(oc, "boot", &BootConfiguration_type_info,
+         machine_get_boot, machine_set_boot,
+         NULL, NULL);
+     object_class_property_set_description(oc, "boot",
+         "Boot configuration");
+ 
+-    object_class_property_add(oc, "smp", "SMPConfiguration",
++    object_class_property_add_qapi(oc, "smp", &SMPConfiguration_type_info,
+         machine_get_smp, machine_set_smp,
+         NULL, NULL);
+     object_class_property_set_description(oc, "smp",
+         "CPU topology");
+ 
+-    object_class_property_add(oc, "smp-cache", "SmpCachePropertiesWrapper",
++    object_class_property_add_qapi(oc, "smp-cache",
++        &SmpCachePropertiesWrapper_type_info,
+         machine_get_smp_cache, machine_set_smp_cache, NULL, NULL);
+     object_class_property_set_description(oc, "smp-cache",
+         "Cache properties list for SMP machine");
+@@ -1208,7 +1210,8 @@ static void machine_class_init(ObjectClass *oc, const void *data)
+                                           "Set RAM backend"
+                                           "Valid value is ID of hostmem based backend");
+ 
+-    object_class_property_add(oc, "memory", "MemorySizeConfiguration",
++    object_class_property_add_qapi(oc, "memory",
++        &MemorySizeConfiguration_type_info,
+         machine_get_mem, machine_set_mem,
+         NULL, NULL);
+     object_class_property_set_description(oc, "memory",
+diff --git a/hw/cxl/cxl-host.c b/hw/cxl/cxl-host.c
+index eba13c9e7cba..7592c4ac6c7b 100644
+--- a/hw/cxl/cxl-host.c
++++ b/hw/cxl/cxl-host.c
+@@ -13,6 +13,7 @@
+ #include "system/qtest.h"
+ #include "hw/core/boards.h"
+ 
++#include "qapi/qapi-type-infos-machine.h"
+ #include "qapi/qapi-visit-machine.h"
+ #include "hw/cxl/cxl.h"
+ #include "hw/cxl/cxl_host.h"
+@@ -570,7 +571,8 @@ void cxl_machine_init(Object *obj, CXLState *state)
+                                     "Set on/off to enable/disable "
+                                     "CXL instantiation");
+ 
+-    object_property_add(obj, "cxl-fmw", "CXLFixedMemoryWindow",
++    object_property_add_qapi(obj, "cxl-fmw",
++                        &CXLFixedMemoryWindowOptions_type_info,
+                         machine_get_cfmw, machine_set_cfmw,
+                         NULL, state);
+     object_property_set_description(obj, "cxl-fmw",
+diff --git a/hw/remote/vfio-user-obj.c b/hw/remote/vfio-user-obj.c
+index a0498d218faf..7e6819f670b5 100644
+--- a/hw/remote/vfio-user-obj.c
++++ b/hw/remote/vfio-user-obj.c
+@@ -47,6 +47,7 @@
+ #include "hw/core/boards.h"
+ #include "hw/remote/machine.h"
+ #include "qapi/error.h"
++#include "qapi/qapi-type-infos-sockets.h"
+ #include "qapi/qapi-visit-sockets.h"
+ #include "qapi/qapi-events-misc.h"
+ #include "qemu/notify.h"
+@@ -931,8 +932,8 @@ static void vfu_object_class_init(ObjectClass *klass, const void *data)
+ 
+     k->nr_devs = 0;
+ 
+-    object_class_property_add(klass, "socket", "SocketAddress", NULL,
+-                              vfu_object_set_socket, NULL, NULL);
++    object_class_property_add_qapi(klass, "socket", &SocketAddress_type_info,
++                              NULL, vfu_object_set_socket, NULL, NULL);
+     object_class_property_set_description(klass, "socket",
+                                           "SocketAddress "
+                                           "(ex: type=unix,path=/tmp/sock). "
+diff --git a/hw/vfio-user/pci.c b/hw/vfio-user/pci.c
+index e7573d4a9f08..246bd5a90925 100644
+--- a/hw/vfio-user/pci.c
++++ b/hw/vfio-user/pci.c
+@@ -8,6 +8,7 @@
+ 
+ #include "qemu/osdep.h"
+ #include <sys/ioctl.h>
++#include "qapi/qapi-type-infos-sockets.h"
+ #include "qapi-visit-sockets.h"
+ #include "qemu/error-report.h"
+ 
+@@ -466,8 +467,8 @@ static void vfio_user_pci_class_init(ObjectClass *klass, const void *data)
+     device_class_set_legacy_reset(dc, vfio_user_pci_reset);
+     device_class_set_props(dc, vfio_user_pci_properties);
+ 
+-    object_class_property_add(klass, "socket", "SocketAddress", NULL,
+-                              vfio_user_pci_set_socket, NULL, NULL);
++    object_class_property_add_qapi(klass, "socket", &SocketAddress_type_info,
++                              NULL, vfio_user_pci_set_socket, NULL, NULL);
+     object_class_property_set_description(klass, "socket",
+                                           "SocketAddress (UNIX sockets only)");
+ 
+diff --git a/target/i386/cpu.c b/target/i386/cpu.c
+index e5ffb10d1565..3b30ded0cc02 100644
+--- a/target/i386/cpu.c
++++ b/target/i386/cpu.c
+@@ -35,6 +35,8 @@
+ #include "sev.h"
+ #include "qapi/error.h"
+ #include "qemu/error-report.h"
++#include "qapi/qapi-type-infos-machine.h"
++#include "qapi/qapi-type-infos-run-state.h"
+ #include "qapi/qapi-visit-machine.h"
+ #include "standard-headers/asm-x86/kvm_para.h"
+ #include "hw/core/qdev-properties.h"
+@@ -10514,10 +10516,12 @@ static void x86_cpu_initfn(Object *obj)
+ 
+     x86_cpu_init_default_topo(cpu);
+ 
+-    object_property_add(obj, "feature-words", "X86CPUFeatureWordInfo",
++    object_property_add_qapi(obj, "feature-words",
++                        &X86CPUFeatureWordInfo_type_info,
+                         x86_cpu_get_feature_words,
+                         NULL, NULL, (void *)env->features);
+-    object_property_add(obj, "filtered-features", "X86CPUFeatureWordInfo",
++    object_property_add_qapi(obj, "filtered-features",
++                        &X86CPUFeatureWordInfo_type_info,
+                         x86_cpu_get_feature_words,
+                         NULL, NULL, (void *)cpu->filtered_features);
+ 
+@@ -10977,7 +10981,8 @@ static void x86_cpu_common_class_init(ObjectClass *oc, const void *data)
+                               NULL, NULL);
+ 
+ #if !defined(CONFIG_USER_ONLY)
+-    object_class_property_add(oc, "crash-information", "GuestPanicInformation",
++    object_class_property_add_qapi(oc, "crash-information",
++                              &GuestPanicInformation_type_info,
+                               x86_cpu_get_crash_info_qom, NULL, NULL, NULL);
+ #endif
+ 
+diff --git a/target/i386/kvm/tdx.c b/target/i386/kvm/tdx.c
+index 8294dbde3aa8..81c5ba3a1b54 100644
+--- a/target/i386/kvm/tdx.c
++++ b/target/i386/kvm/tdx.c
+@@ -14,6 +14,7 @@
+ #include "qemu/base64.h"
+ #include "qemu/mmap-alloc.h"
+ #include "qapi/error.h"
++#include "qapi/qapi-type-infos-sockets.h"
+ #include "qapi/qapi-visit-sockets.h"
+ #include "qom/object_interfaces.h"
+ #include "crypto/hash.h"
+@@ -1586,7 +1587,8 @@ static void tdx_guest_init(Object *obj)
+                             tdx_guest_get_mrownerconfig,
+                             tdx_guest_set_mrownerconfig);
+ 
+-    object_property_add(obj, "quote-generation-socket", "SocketAddress",
++    object_property_add_qapi(obj, "quote-generation-socket",
++                            &SocketAddress_type_info,
+                             tdx_guest_get_qgs,
+                             tdx_guest_set_qgs,
+                             NULL, NULL);
+diff --git a/target/s390x/cpu-system.c b/target/s390x/cpu-system.c
+index cc9685221ae8..4c2a91d0ff51 100644
+--- a/target/s390x/cpu-system.c
++++ b/target/s390x/cpu-system.c
+@@ -30,6 +30,7 @@
+ #include "system/reset.h"
+ #include "qemu/timer.h"
+ #include "trace.h"
++#include "qapi/qapi-type-infos-run-state.h"
+ #include "qapi/qapi-visit-run-state.h"
+ #include "system/hw_accel.h"
+ 
+@@ -130,7 +131,8 @@ void s390_cpu_system_init(Object *obj)
+     S390CPU *cpu = S390_CPU(obj);
+ 
+     cs->start_powered_off = true;
+-    object_property_add(obj, "crash-information", "GuestPanicInformation",
++    object_property_add_qapi(obj, "crash-information",
++                        &GuestPanicInformation_type_info,
+                         s390_cpu_get_crash_info_qom, NULL, NULL, NULL);
+     cpu->env.tod_timer =
+         timer_new_ns(QEMU_CLOCK_VIRTUAL, s390x_tod_timer, cpu);
 
-Will take a look.
+-- 
+2.55.0.543.g5ebe2ebe4ea8
 
--Robert
-
->  {
->  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
->  	int root_iw = cxlrd->cxlsd.cxld.interleave_ways;
->  	struct cxl_region_params *p = &cxlr->params;
-> +	u64 selector;
->  	int sel_distance;
->  
-> -	sel_distance = is_power_of_2(root_iw) ? root_iw : root_iw / 3;
-> -	sel_distance *= fanout;
-> -	*ig = p->interleave_granularity * sel_distance;
-> +	selector = get_selector(p->interleave_ways,
-> +				p->interleave_granularity) & ~accum;
-> +
-> +	if (iw == 1) {
-> +		sel_distance = is_power_of_2(root_iw) ? root_iw : root_iw / 3;
-> +		sel_distance *= fanout;
-> +		*ig = p->interleave_granularity * sel_distance;
-> +	} else if (selector && cxl_region_is_mixed_gran(cxlr)) {
-> +		*ig = (1ULL << fls64(selector)) / iw;
-> +	} else if (selector) {
-> +		*ig = 1ULL << __ffs64(selector);
-> +	} else {
-> +		dev_dbg(&cxlr->dev,
-> +			"%s:%s: no selector bits available for iw %d\n",
-> +			dev_name(port->uport_dev), dev_name(&port->dev), iw);
-> +		return -ENXIO;
-> +	}
-> +
-> +	if (iw > 1 && (~selector & get_selector(iw, *ig))) {
-> +		dev_dbg(&cxlr->dev,
-> +			"%s:%s: derived selector %#llx exceeds remaining %#llx (iw %d ig %d)\n",
-> +			dev_name(port->uport_dev), dev_name(&port->dev),
-> +			get_selector(iw, *ig), selector, iw, *ig);
-> +		return -ENXIO;
-> +	}
->  
->  	return 0;
->  }
->  
-> +/**
-> + * cxl_port_setup_targets() - Validate and program a port decoder
-> + * @port: port being configured
-> + * @cxlr: region under construction
-> + * @cxled: endpoint decoder being attached
-> + *
-> + * Validate the decoder's selector placement and derive its interleave
-> + * geometry. User-created regions program the derived values; auto regions
-> + * validate the firmware-programmed values.
-> + *
-> + * Return: 0 on success, negative errno on invalid interleave geometry.
-> + */
->  static int cxl_port_setup_targets(struct cxl_port *port,
->  				  struct cxl_region *cxlr,
->  				  struct cxl_endpoint_decoder *cxled)
-> @@ -1635,7 +1697,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  		goto add_target;
->  	}
->  
-> -	rc = derive_port_granularity(cxlr, fanout, &ig);
-> +	rc = derive_port_granularity(port, cxlr, accum, fanout, iw, &ig);
->  	if (rc)
->  		return rc;
->  
-> @@ -1650,8 +1712,14 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  	}
->  
->  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
-> +		if (iw > 1 && cxld->interleave_granularity != ig) {
-> +			dev_dbg(&cxlr->dev,
-> +				"%s:%s: firmware ig %d != derived ig %d (iw %d)\n",
-> +				dev_name(port->uport_dev), dev_name(&port->dev),
-> +				cxld->interleave_granularity, ig, iw);
-> +			return -ENXIO;
-> +		}
->  		if (cxld->interleave_ways != iw ||
-> -		    (iw > 1 && cxld->interleave_granularity != ig) ||
->  		    !spa_maps_hpa(p, &cxld->hpa_range) ||
->  		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
->  			dev_err(&cxlr->dev,
-> -- 
-> 2.37.3
-> 
