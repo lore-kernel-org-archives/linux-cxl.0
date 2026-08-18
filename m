@@ -1,72 +1,86 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FC02749DA
-	for <linux-cxl@vger.kernel.org>; Tue, 18 Aug 2026 16:06:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA5C47DFBF
+	for <linux-cxl@vger.kernel.org>; Tue, 18 Aug 2026 16:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787069169; cv=none; b=H7GZVmVxD2W8cHudufs5TBwAeFUQy99LvLItAxycivVC/qZhKipOYEWPL1J0nyiYRxK/m9I9an3hiu8peRxt3I85nT6M2PrtbFaRkhTNnZdkiX7ll8NoRkl51o57UknaSrTV5bzuc9HhbCPKqGiQQYb1Ncv/NmVfQCbbKPXlbYs=
+	t=1787071145; cv=none; b=aJt8m8cVN9HvOO9hTdwEauc0kN9TCMyXRtYcBKy+TYNIc/T6YIoaL3sSbG3YZ2dvoqcqGOVtypDG9749u2OlTWAY8DSTPk/d56h729u1iQM0tPkfIjE7m9ZhSJEp+XChR7e+cZq0tSoFK4hkvfoq3rbmU9xECOMM03ZEW9X1eYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787069169; c=relaxed/simple;
-	bh=7TQXP7JmIuRCp5MShFNQPu2lPjUu0k0Cj6nFPyZYgyM=;
+	s=arc-20240116; t=1787071145; c=relaxed/simple;
+	bh=TsR46cSHQgz2Zgsma7mN06Ro1YbFr636P8/r8jpq84s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=azW7XQ+QsrKlFAOHp8E5XycXD2D7bQkTHZMkB8Hab/VoQ2c9BwquMYEgmhzEoB2D2uKiHZbAC+rgYzb/gZhJAmMAQNE/8xAb2zd/TLDVJMgOQ45QUAimQxxGUL7/gI47hrWURXTCWg3WqU0rzY2G5fAhaA1gxFmXSB43revlE5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ScJdQLzh; arc=none smtp.client-ip=209.85.216.45
+	 Content-Type:Content-Disposition:In-Reply-To; b=AnxoguIXNAiv5rOJal94llHW+gR5+pbJ1ALEP06rAMCSF6k2wMCwZ8RRNqiOjI8hcFIw79ZqsczzjNjHCd/Vwv04YprXIBsGjZYidcaZx4a4S62k3RwUF9RPKpmPrfy9aZSsOZxw0+f/3wCTQF59TpwV0A8LiQ/uNIHolkz9AXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SsVoklqF; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ScJdQLzh"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3856d6fbcb3so113589a91.2
-        for <linux-cxl@vger.kernel.org>; Tue, 18 Aug 2026 09:06:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsVoklqF"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2d01663d816so379265ad.1
+        for <linux-cxl@vger.kernel.org>; Tue, 18 Aug 2026 09:39:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787069168; x=1787673968; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1787071143; x=1787675943; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=aavrVeK6vCQCADq15/6bmdV2okv94iEyViF9ADLcajE=;
-        b=ScJdQLzhs2lDGViQLLrdSbEN27inoxQMLwUQIroV+NURUgUiu60KAektL0HUqKM6vg
-         JugzYljG8Ip0XwXARfZUbG+EHsNQOuiaVtBMnF4t/rwMYfBPZZ0pXaa5Uo/szADDNFZ+
-         FhPwriphPaIusW4CctrCwTk9o1GdZxjLAgep78rgzWe7RlmdkCajKEDRX+yPizHn0o4I
-         nUSIzq9oOisPBehkFkXmN+WHMdCv2eU/YXLr6qSb/56TbnuzR7APZ688UT70jS6QOR5Y
-         9Q/SRBHkZIb3s6pJK9v6vEdw8r0sjrbY13JvBFnjU+mCFmzhsrzZJmF9VWVOKA7ewzQ7
-         g2lA==
+        bh=2Xc9Fg91W0BzvZreR9FqH5KVpjDfvs/DVtIyV1caxdw=;
+        b=SsVoklqFdx3+mToRXTVhTKlyHIZJ1UqA31DH1ZP1zq0qwHyM68rNJT0Sxibq7evIsJ
+         zmD1W1OnNntR/6g3ZU62SLx5j1q/VQcrMYECk+dqodpQLDmoskM+5SvkFUzXulFC6AEs
+         d66dFuLdC8FL3nAAxAv+qqfrs7zY7L65Am0lcylu0REQrMv/3F2RRW/Vmf8TSfECuZA0
+         IHE9wkxiRVEvZYjOAlKyCS0OegCev9JIVMTE1ux8e7uiOz8J/OHVtPbl91rysuBx63HP
+         vUTt3Zv8gJtfUXPeZccqe07Y/KmMJ0cxcTYXoGDp0Z1UBB6HWP1qTg42SDC1ZzRsRreg
+         7/aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787069168; x=1787673968;
+        d=1e100.net; s=20251104; t=1787071143; x=1787675943;
         h=in-reply-to:content-disposition:content-type:mime-version
          :references:message-id:subject:cc:to:from:date:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=aavrVeK6vCQCADq15/6bmdV2okv94iEyViF9ADLcajE=;
-        b=XBTTXuyHuAGo6VTekoAliyT0Qv/My9bfR0PyVHLvdyc+QdwmzqJkfbeSjNFrU+IL5e
-         uD0YVwid3iwoUgZ/G42DBDuGh1SuuFOTFI4DFqyu/nHYqFobOn8yoqrN35lP2C0due2a
-         1DNo2Ika9TbPcy0Kx41nYfKFLwTeFhWsb8H5WZnSBbVtuhWmtABW4m9aHgsWV8XQAqTX
-         YsvVmZcdgu/dAmhldn+7+1BG4flA5aB4HRR0l7KEBZ9sMzgDJQ6h8HW7GGkNm4HgCEJd
-         bFRolXM2NK+6Ox/d+F04F/DNV1NjnQaaWlDa6BYcijXdtbHZu3jPvdKjA7R//yoz44zl
-         NQ8Q==
-X-Forwarded-Encrypted: i=1; AHgh+RqwQONFpB2WVBV0fKuiavslYXpaCVkECAgmy1jC+crBHRjsu5F/M+wE6DOstwISdyTKjBtFkm1YtDA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCXrpWK8C8Y4z/ifJ0gEus40lGWXHUUW45BGg1aiTsa7rYTjgG
-	BkS7Qpjr7o+Y7+DrdxrDtXuHm8GVXph+akVtH6WTSFe34Ire15JSsjM6Or41RCqf
-X-Gm-Gg: AR+sD10dJuxKmR8x2moS9vHhaftpGnrhjJ2NHpLrjmWrUvj7n918CDQTNRQN1BiZVXL
-	NHSQgB0DhjUERltgwyPOe3akEevdGIwM2SOKHwRPs3ljX4abuDUSrwvEekcCs3k2XX/0k8BUy0N
-	7uinWixOzQX5Ay/0xj9W/lugI+DLbT8EDsHEFchYUNTDNkL+wSjv3AjBQkSVG7ClRiCUmaSnUPC
-	zZnDrc6PBAGZgBZ2/z+OYn7+gjQ36x3peDpn0w6go5SslrEgCvn4ibftoJNMJUZbIrw0luHtyKF
-	01pFEcjs0YN7H6ElGx+Hehcn0AqReT1tJWqVUaBKI3RLTDR9QUSnHPfodk5LiEHNa/KbPWRfza1
-	8NVBkJuxodIhoaIfYBzZBRw/2tYMdtDbvvmJIQiB2xIBzWET2V8dwOTRYbE/8mvGTreYpGTbXk5
-	tbo2Bg44hjAJKxsVOPaQbblXYvFLc3/CwTI16mpHUtdu0pM/4xfF952AofvMYekps=
-X-Received: by 2002:a17:90b:2891:b0:38e:7168:281 with SMTP id 98e67ed59e1d1-3933b916f3fmr36753097a91.10.1787069167382;
-        Tue, 18 Aug 2026 09:06:07 -0700 (PDT)
+        bh=2Xc9Fg91W0BzvZreR9FqH5KVpjDfvs/DVtIyV1caxdw=;
+        b=URDHpGTqT56NMWG1a0SWT+N4gHa2aUIgsuuYP54+MJ3e61/vmgO1hQ5i0A38YJRv8T
+         cb4SKbqvUbOAZ7UKK/DX3HZHY3tiLQ5tRWlzTFeIuAV6MT3+eLyF7Wlic0UmtKIiCdOE
+         rxX6InLcyFDK3p5Y7QUx5JLioDm5X/Absb8JxFovL2D54lknNXiAfBn+sonYSNp3kEZR
+         cAgGEeu7twB/rNyWbgGC3MUJ76GcchCuZ2cNotFLwnHe6gIJW13yTJhyf9+cbqEsQL/5
+         7VmYi9pvoazjjY67qirUjrIF8RymkyLqlP721KtO4WGCZv5tn5PzsAXxVydeRrrrwZOh
+         Pucw==
+X-Forwarded-Encrypted: i=1; AHgh+Rrye9swnn6YsEYFZYmZTs2+hO9bWc3eJ7xgefEP5QJpUEg3J1YHopd26C4MrkSg0kGq29Lk/ZwpjwA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtFf+pQObEkMB4OXrJlYBkK6I2Dw/BNOJOExJPsZLQkCiDCLG+
+	zfb4+NjNl49LwP74AIx4ai62PdUI30JINLo9y8dX9Yeg/hzJajyvV7zr
+X-Gm-Gg: AR+sD11lcFaUu7ZFJ/mK8CL9BKBR/Vi+74sUofn4Ezu4LfROJdClnNWlucDTQUMP+t+
+	qi+XvfaBID9My24yltr1T1TuGOeCowtSVSrCs5GqRcsY2mIWEMQKnUh7u22tAKSlopZ465UHtfs
+	LCoOk3Mmoswv5wXk7BeghJkDvxdhz6tjzujLzoC2pEv6lr3LEkrV4dYDuBZlkVFvCJeMnS6W7dN
+	Lbm7SW3Vj9SoXWXJA2H39uLgF/Qr+S7NmSviCZFYmT8SHGTRV12vuCXKYyG9WOXVPxG0diFjQwQ
+	VnhGoRUKmu58moNl0B+r6BT1nDfCyUO8RF9RmXcVNBlYA9s2Kk/JPKrNzy6yDGJpbsUDFUTzYmC
+	1vco+8iFZtf9BpSFr+p/Bsg1bQTrf5g9SkMnQWHyqshkGA8LrfGJcdaXNgsLa6ulAviE75lsGaC
+	OcM0p30816Z5r5RfrhAWOKCYdcPB336ZKDawM8q+93QI5pMA/CSYgtZ+SeVdHwKnc=
+X-Received: by 2002:a05:6a20:6a1e:b0:3c3:7cd0:fc27 with SMTP id adf61e73a8af0-3cc719fe4a1mr42645756637.3.1787071142465;
+        Tue, 18 Aug 2026 09:39:02 -0700 (PDT)
 Received: from localhost ([118.34.230.2])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3954d38bd51sm6533222a91.12.2026.08.18.09.06.06
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cc13c00d77fsm2350456a12.21.2026.08.18.09.39.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2026 09:06:06 -0700 (PDT)
-Date: Tue, 18 Aug 2026 21:36:05 +0530
+        Tue, 18 Aug 2026 09:39:01 -0700 (PDT)
+Date: Tue, 18 Aug 2026 22:09:00 +0530
 From: shaikh kamaluddin <shaikhkamal2012@gmail.com>
-To: Davidlohr Bueso <dave@stgolabs.net>
-Cc: dave.jiang@intel.com, djbw@kernel.org, jic23@kernel.org,
-	alison.schofield@intel.com, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH] cxl/test: Map mock device nodes to an online node
-Message-ID: <aoSC7U7QSuCFzzGH@acer-nitro-anv15-41>
-References: <20260723180630.1302871-1-dave@stgolabs.net>
+To: Alison Schofield <alison.schofield@intel.com>
+Cc: "Cheatham, Benjamin" <benjamin.cheatham@amd.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dan Williams <djbw@kernel.org>, Ira Weiny <iweiny@kernel.org>,
+	Li Ming <ming.li@zohomail.com>, tony.luck@intel.com, bp@alien8.de,
+	linux-cxl@vger.kernel.org, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	x86@kernel.org
+Subject: Re: [PATCH] cxl/mce: Only act on uncorrected memory errors
+Message-ID: <aoSKpEQpbkrJmdD2@acer-nitro-anv15-41>
+References: <20260810183013.47085-1-shaikhkamal2012@gmail.com>
+ <8cef03f0-ab19-42b7-ad04-a1e98e2270ec@amd.com>
+ <anyYev89TB1jHAXe@acer-nitro-anv15-41>
+ <e0f20e5c-91af-4f9d-b1fb-b00eaef76f58@amd.com>
+ <anz2yiHLrDFhkxuv@aschofie-mobl2.lan>
+ <aoL2QSTlDoAQhWhv@acer-nitro-anv15-41>
+ <aoOVcQHklDi2_lhL@aschofie-mobl2.lan>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -75,99 +89,285 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260723180630.1302871-1-dave@stgolabs.net>
+In-Reply-To: <aoOVcQHklDi2_lhL@aschofie-mobl2.lan>
 
-On Thu, Jul 23, 2026 at 11:06:30AM -0700, Davidlohr Bueso wrote:
-> cxl_mem_init() assigns alternating NUMA nodes to the mock memdevs
-> to model multi-node topologies. On a single-node host node 1 has
-> no pgdat, and the first node-aware allocation in an odd device's
-> probe faults on a NULL zonelist:
+On Mon, Aug 17, 2026 at 04:12:49PM -0700, Alison Schofield wrote:
+> On Mon, Aug 17, 2026 at 05:23:37PM +0530, shaikh kamaluddin wrote:
+> > On Wed, Aug 12, 2026 at 03:42:18PM -0700, Alison Schofield wrote:
+> > > On Wed, Aug 12, 2026 at 11:19:40AM -0500, Cheatham, Benjamin wrote:
+> > > > On 8/12/2026 10:59 AM, shaikh kamaluddin wrote:
+> > > > > [You don't often get email from shaikhkamal2012@gmail.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+> > > > > 
+> > > > > On Mon, Aug 10, 2026 at 02:00:18PM -0500, Cheatham, Benjamin wrote:
+> > > > >> On 8/10/2026 1:30 PM, Shaikh Kamaluddin wrote:
+> > > > >>> [You don't often get email from shaikhkamal2012@gmail.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+> > > > >>>
+> > > > >>> cxl_handle_mce() offlines the aliased page of an ELC region on any
+> > > > >>> record with a usable address; it does not check MCI_STATUS_UC or
+> > > > >>> filter non-memory errors. uc_decode_notifier(), the equivalent
+> > > > >>> handler for plain memory on the same chain at the same priority,
+> > > > >>> filters on mce->severity and leaves corrected errors untouched.
+> > > > >>> cxl_handle_mce() has no such gate, so a corrected error - which
+> > > > >>> the generic handler ignores - still causes the alias to be
+> > > > >>> permanently retired via memory_failure().
+> > > > >>>
+> > > > >>> Corrected errors do reach the chain: machine_check_poll() logs
+> > > > >>> them via the same mce_gen_pool_process() path that feeds
+> > > > >>> x86_mce_decoder_chain, and cxl_extended_linear_cache_resize()
+> > > > >>> extends p->res to cover the DRAM half of the ELC pair, so a
+> > > > >>> routine DRAM CE carries an address inside the region resource.
+> > > > >>>
+> > > > >>> Filter the record as nfit_handle_mce() does. Commit fc08a4703a41
+> > > > >>> ("acpi, nfit: Fix the memory error check in nfit_handle_mce()") and
+> > > > >>> commit 5d96c9342c23 ("acpi/nfit, x86/mce: Handle only uncorrectable
+> > > > >>> machine checks") established this filter for an equivalent handler
+> > > > >>> on the same notifier chain; the consequence here is more severe, as
+> > > > >>> the CXL handler calls memory_failure() rather than recording a bad
+> > > > >>> block.
+> > > > >>>
+> > > > >>> mce_is_correctable() is used instead of copying
+> > > > >>> uc_decode_notifier()'s AO/DEFERRED test because the alias must
+> > > > >>> still be offlined on MCE_AR_SEVERITY, where kill_me_maybe() owns
+> > > > >>> the reported page but nothing owns the alias.
+> > > > >>>
+> > > > >>> Fixes: 516e5bd0b6bf ("cxl: Add mce notifier to emit aliased address for extended linear cache")
+> > > > >>>
+> > > > >>> Signed-off-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+> > > > >>> ---
+> > > > >>
+> > > > >> This looks good to me, so:
+> > > > >> Reviewed-by: Ben Cheatham <benjamin.cheatham@amd.com>
+> > > > >>
+> > > > > Thanks for review!
+> > > > >> If you have the time, could you also share a script that does the below testing on the list? It may
+> > > > >> be possible to integrate into the CXL testing suite (see https://github.com/pmem/ndctl.git), though
+> > > > >> the QEMU usage may throw a wrench in that. Even if it's not possible, having the tests out there
+> > > > >> for people to run would help with any future breakage.
+> > > > > Happy to share it. One question on where it'd fit best: ndctl
+> > > > > (github.com/pmem/ndctl.git) as you mentioned, or drivers/cxl's own
+> > > > > tools/testing/cxl/ in-tree? I'm open to either, or proposing it in
+> > > > > both if that's useful - happy to follow your lead on which is the
+> > > > > better home for it.
+> > > > > 
+> > > > 
+> > > > If looks like there's already some mock functions for extended linear cache in tools/testing/cxl, so
+> > > > I'd recommending trying to put it there to begin with. It may require updates to ndctl after the fact
+> > > > to run the test(s) as well. If that looks too involved then sending the script out to the list standalone
+> > > > should be fine. I don't know if anyone will pick it up, but it'll be searchable on lore if anyone wants
+> > > > to test this.
+> > > 
+> > > 
+> > > This sounded interesting! I gave it a try with cxl_test and mce-inject,
+> > > and it looks like this can be tested without the QEMU CXL topology or the
+> > > forced cache_size hack.
+> > > 
+> > > I built with CONFIG_X86_MCE_INJECT=m and loaded cxl_test with its
+> > > existing ELC support:
+> > > 
+> > > # modprobe cxl_test extended_linear_cache=1
+> > > # cxl list -R
+> > > [
+> > >   {
+> > >     "region":"region0",
+> > >     "resource":70300293136384,
+> > >     "size":1073741824,
+> > >     "extended_linear_cache_size":536870912,
+> > >     "type":"ram",
+> > >     "interleave_ways":2,
+> > >     "interleave_granularity":4096,
+> > >     "decode_state":"commit",
+> > >     "locked":false
+> > >   }
+> > > ]
+> > > 
+> > > Using 0x3ff010010000 as the injected SPA, I first injected the
+> > > corrected error from your example. On the patched kernel there was no
+> > > CXL offlining message, as expected.
+> > > 
+> > > I then changed only the status to the uncorrectable case:
+> > > 
+> > > # cd /sys/kernel/debug/mce-inject
+> > > # echo sw > flags
+> > > # echo 0xbc00000000000080 > status
+> > > # echo 0x80 > misc
+> > > # echo 0x3ff010010000 > addr
+> > > # echo 9 > bank
+> > > 
+> > > and got:
+> > > 
+> > > cxl_region region0: Offlining aliased SPA address0: 0x3ff030010000
+> > > Memory failure: 0x3ff030010: memory outside kernel control
+> > > mce: [Hardware Error]: CPU 0: Machine Check: 0 Bank 9: bc00000000000080
+> > > mce: [Hardware Error]: TSC 23c5a5a9188 ADDR 3ff010010000 MISC 80
+> > > mce: [Hardware Error]: PROCESSOR 0:50657 TIME 1786573477 SOCKET 0 APIC 0 microcode 5003302
+> > > 
+> > > So the cxl_test ELC plus mce-inject looks sufficient to exercise the
+> > > path: the CE is ignored with the patch, while the UC reaches the alias
+> > > offlining path and computes the expected alias.
+> > > 
+> > > The "memory outside kernel control" is because I did not put the
+> > > aliased memory into system RAM for this quick test.
+> > > 
+> > > This would be a test case addition for the the cxl-elc.sh unit test.
+> > > It seems like a tiny, close-the-barn-door-after-the-horse-got-out,
+> > > kind of test case, but maybe not?  Maybe it opens the door to more
+> > > things can do we mce-inject elsewhere?
+> > > 
+> > > I'll leave that to Shaikh if they want to add the new test case.
+> > > 
+> > > -- Alison
+> > 
+> > 
+> > Hi Alison,
+> > 
+> > Thanks for trying this. This is very helpful.
+> > 
+> > I had initially started with the same cxl_test + mce-inject approach before moving to the vng/QEMU CXL Type-3 setup.
+> > 
+> > On the current cxl/next tree, I was first blocked while building tools/testing/cxl with LLVM/ld.lld. modpost was failing on wrapped CXL symbols, for example:
+> > 
+> > .export_symbol section references '__wrap_devm_cxl_add_rch_dport',
+> > but it does not seem to be an export symbol
+> > 
+> > .export_symbol section references '__wrap_devm_cxl_add_dport_by_dev',
+> > but it does not seem to be an export symbol
+> > 
+> > .export_symbol section references '__wrap_cxl_await_media_ready',
+> > but it does not seem to be an export symbol
+> > 
+> > There were similar failures for some of the decoder/CDAT wrappers.
+> > 
+> > This appears to be the same issue addressed by the patch currently under review:
+> > 
+> > [PATCH] tools/testing/cxl: Don't wrap cxl_core's own exported symbols
+> > 
+> > https://lore.kernel.org/linux-cxl/20260721084009.38100-1-icheng@nvidia.com/
+> > 
+> > The patch avoids globally wrapping the CXL core symbols that are also defined/exported by cxl_core, and instead applies those wrappers only to the modules that need them.
 > 
->   Oops: general protection fault, probably for non-canonical address 0xdffffc00000006e3
->   KASAN: probably user-memory-access in range [0x0000000000003718-0x000000000000371f]
->   Workqueue: async async_run_entry_fn
->   RIP: __alloc_frozen_pages_noprof+0x288
->    new_slab
->    ___slab_alloc
->    __kmalloc_node_track_caller_noprof
->    devm_kmalloc
->    cxl_mock_mem_probe
+> Hi Shaikh,
 > 
-> Map the requested node to an online one, as dax_hmem already does
-> for its target node.
+> I applied the patch to the base commit included in the patch:
+> >> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
 > 
-> Fixes: cf1f6877b088 ("cxl/memdev: Add numa_node attribute")
-> Fixes: e41c8452b9b2 ("tools/testing/cxl: Add a single-port host-bridge regression config")
-> Fixes: c9435dbee119 ("tools/testing/cxl: Add an RCH topology")
-> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-> ---
-> Found while regression testing unrelated work.
+> I don't use LLVM toolchain, but I do see Richards patch you refer to.
+> We'll need to get that queued for 7.4.
 > 
->  tools/testing/cxl/test/cxl.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > With that patch applied, tools/testing/cxl builds successfully for me. However, I still hit a runtime crash when loading the ELC setup:
+> > 
+> > # modprobe cxl_test extended_linear_cache=1
+> > 
+> > BUG: unable to handle page fault for address: 0000000000003358
+> > #PF: supervisor read access in kernel mode
+> > RIP: __alloc_frozen_pages_noprof+0x12e/0x320
+> > CR2: 0000000000003358
+> > Workqueue: async async_run_entry_fn
 > 
-> diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-> index ef92dd35e030..5156516a82d2 100644
-> --- a/tools/testing/cxl/test/cxl.c
-> +++ b/tools/testing/cxl/test/cxl.c
-> @@ -1748,7 +1748,7 @@ static int cxl_mem_init(void)
->  		if (!pdev)
->  			goto err_mem;
->  		pdev->dev.parent = &dport->dev;
-> -		set_dev_node(&pdev->dev, i % 2);
-> +		set_dev_node(&pdev->dev, numa_map_to_online_node(i % 2));
->  
->  		rc = cxl_mock_platform_device_add(pdev, &cxl_mem[i]);
->  		if (rc)
-> @@ -1763,7 +1763,7 @@ static int cxl_mem_init(void)
->  		if (!pdev)
->  			goto err_single;
->  		pdev->dev.parent = &dport->dev;
-> -		set_dev_node(&pdev->dev, i % 2);
-> +		set_dev_node(&pdev->dev, numa_map_to_online_node(i % 2));
->  
->  		rc = cxl_mock_platform_device_add(pdev, &cxl_mem_single[i]);
->  		if (rc)
-> @@ -1779,7 +1779,7 @@ static int cxl_mem_init(void)
->  		if (!pdev)
->  			goto err_rcd;
->  		pdev->dev.parent = &rch->dev;
-> -		set_dev_node(&pdev->dev, i % 2);
-> +		set_dev_node(&pdev->dev, numa_map_to_online_node(i % 2));
->  
->  		rc = cxl_mock_platform_device_add(pdev, &cxl_rcd[i]);
->  		if (rc)
-> -- 
-> 2.39.5
+> 
+> So there must be something different about your cxl-test address 
+> space. I have 
+> region resource: 0x3ff010000000
+> region size:     0x40000000
+> ELC size:        0x20000000
+> 
+> You cannot even load w elc = 1 !
+> 
+> Does "modprobe cxl_test" work for you?
+> If yes, how far can you get? Does cxl-topology.sh work for you?
+> I wouldn't have you try the whole suite since you are telling me
+> cxl-elc.sh  already fails.
+> 
+> Maybe we need to look at where cxl test is loaded for you and why
+> the ELC address shennanigans fail in your environment.
+> 
+> Let me know what you see. 
 >
 
-Hi Davidlohr,
+Hi Alison,
 
-I was hitting the same repeated crash while running `modprobe cxl_test` on a single-node virtme-ng guest.
+I found the cause of the `cxl_test` runtime crash.
 
-For reference, the guest had only NUMA node 0 available and online:
+My virtme-ng guest has only NUMA node 0 available and online:
 
-# cat /sys/devices/system/node/possible 0  # cat /sys/devices/system/node/online 0
+# cat /sys/devices/system/node/possible
+0
 
-The crash followed the same path:
-
-__alloc_frozen_pages_noprof  new_slab  ___slab_alloc  __kmalloc_node_track_caller_noprof  devm_kmalloc  cxl_mock_mem_probe
-
-I found this patch while looking through the linux-cxl archives and applied the same `numa_map_to_online_node()` fix to my current cxl/next tree.
-
-The code has changed since this patch was posted. The original patch updates three sites in `cxl_mem_init()`, while current cxl/next has those corresponding sites under `cxl_type3_mem_init()`, along with a separate `cxl_type2_mem_init()` path.
-
-After applying the equivalent changes to the three `set_dev_node()` calls in `cxl_type3_mem_init()`, the repeated crash is resolved and `modprobe cxl_test` succeeds.
-
-I also noticed that `cxl_type2_mem_init()` now has:
+# cat /sys/devices/system/node/online
+0
 
 
-set_dev_node(&pdev->dev, i % 2);
+The crash I was seeing matches the issue fixed by Davidlohr's patch:
+https://lore.kernel.org/linux-cxl/aoOmo-DZudbSOV3N@aschofie-mobl2.lan/T/#m60009c527f2017c031dad319366418578fcab1fd
+
+`cxl/test: Map mock device nodes to an online node`
+
+The test code has changed since that patch was posted. The original patch updates the three `set_dev_node()` 
+sites in `cxl_mem_init()`, while in current cxl/next the corresponding paths are under `cxl_type3_mem_init()`.
+
+I applied the equivalent change there:
+
+set_dev_node(&pdev->dev, numa_map_to_online_node(i % 2)); to all three Type-3 memdev paths.
+With that applied, the repeated crash is gone and this now succeeds:
+
+# modprobe cxl_test extended_linear_cache=1
+
+I can also get a committed test region:
+
+# cxl list -R
+[
+  {
+    "region":"region1",
+    "resource":1031060586496,
+    "size":1073741824,
+    "type":"ram",
+    "interleave_ways":2,
+    "interleave_granularity":4096,
+    "decode_state":"commit"
+  }
+]
 
 
-`NR_CXL_TYPE2_ACCEL` is currently 1, so this does not trigger the offline-node case today, but perhaps it would be worth using `numa_map_to_online_node()` there as well for consistency and future expansion.
+So the earlier failure was not related to the ELC address-space layout itself; it was the mock memdev 
+being assigned to NUMA node 1 on my single-node guest.
 
-Tested-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
+I also noticed current cxl/next has a new `set_dev_node(&pdev->dev, i % 2)` in `cxl_type2_mem_init()`. 
+`NR_CXL_TYPE2_ACCEL` is currently 1, so it does not hit this problem today, but I mentioned it on 
+Davidlohr's patch thread as a possible consistency/future-proofing update.
+
+I have not yet checked why my `cxl list -R` output does not show `extended_linear_cache_size` like yours. 
+I will look at that separately now that `cxl_test` loads cleanly.
 
 Thanks,
 Shaikh
+
+> Thanks,
+> Alison
+> 
+> 
+> 
+> > 
+> > So the build issue and this runtime crash appear to be separate problems. The runtime failure is what led me to use the vng/QEMU CXL Type-3 setup for validating the MCE change, where I was able to exercise both the CE and UC cases.
+> > 
+> > Since you were able to run:
+> > 
+> > modprobe cxl_test extended_linear_cache=1
+> >         +
+> > mce-inject
+> > 
+> > successfully, could you please share the kernel configuration and any patches you have on top of cxl/next? That would help me compare the working setup with mine and identify what I am still missing on the cxl_test side.
+> > 
+> > Your result also confirms that, once I get this setup stable, extending the existing cxl-elc.sh test looks like the right direction for regression coverage. My plan would be to derive the SPA and expected alias dynamically from the ELC region, inject a CE and verify that the alias-offlining path is not reached, then inject a UC and verify that the expected aliased SPA is still offlined.
+> > 
+> > This is a small regression test for the current issue, but exercising mce-inject through the CXL test infrastructure may also provide useful coverage for other CXL RAS/MCE paths in the future.
+> > 
+> > For the current patch validation, I still think the vng/QEMU Type-3 setup is useful as an end-to-end test since it can exercise the actual CXL region and system-RAM memory_failure() path, while cxl_test + mce-inject looks better suited for the lightweight automated regression test.
+> > 
+> > Thanks,
+> > Shaikh
+> > 
+> > 
+> > > 
+> > > > 
+> > > > Thanks,
+> > > > Ben
