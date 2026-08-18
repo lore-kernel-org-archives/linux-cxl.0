@@ -1,47 +1,46 @@
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azon11010009.outbound.protection.outlook.com [52.101.201.9])
+Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11013038.outbound.protection.outlook.com [40.93.201.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FF0420471
-	for <linux-cxl@vger.kernel.org>; Tue, 18 Aug 2026 08:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.201.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B173385D6E
+	for <linux-cxl@vger.kernel.org>; Tue, 18 Aug 2026 09:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.38
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787041246; cv=fail; b=Oksy0M1iu/H7q39JVZowdxjHK195p3ailtxj3kbKX6yGbb0TjYPl/mcUXiLn9VtqXe3G59cuSVt2ja2p1BvfumvjQIb6f+VWmXd3k6RAR2ck6BWJGXsLUwpc2YqZ2f9bRrLXXqKIfrLoivP61aA1L3L6V+lE8AL1zxyTLI2sKWA=
+	t=1787044408; cv=fail; b=KZt00D5zrvC1BM4zHTFDUR5nKpy1Z4RLa9wXHj49OoBqU2eHYilQ2gmBjDtsPpK3ft+WIxw1fL3aMhKpM8HqogrbjGYErRnPMMlrZa3XcQQ4dKJDx/+/ydY6aQYNBge7sF4ZuBSOnHrJvATiVTV9mkGqJUJPMyCjJPkRhH1BOwY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787041246; c=relaxed/simple;
-	bh=ZvSirqkbtB6Bb+QpW8xwkOwE07MymHotg0m+tc3bRbg=;
+	s=arc-20240116; t=1787044408; c=relaxed/simple;
+	bh=v9pukeAzjmWL7inEllB776QwMmuxzT1q5MzvKbJBc6A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=NITl6uvqQ3zxVKZSSbaUPX7qHrD1Jak5cEUnmRS5Y/71omhZjZLoNflfn+p6Hpr+ENqbugV+Z0G9vR5aHMR5SI6SDcI5uyF/nDO9ELWMRenIOIU2XXxZRD8aSXn2I8FAzdSvHJx6j3Uql9lZzkoK3jmKIsB17M8YWlX+rB71cqI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=25KtwaeT; arc=fail smtp.client-ip=52.101.201.9
+	 Content-Disposition:In-Reply-To:MIME-Version; b=pFO+0TqVABZLJjD1QXLCnww2iKIsU3GXTuXdVHJkglmLcblOGuzmj1dr1+G6ks+RKeYMEBTe4JwwobyXipd/WB0dMAajs/S7m+f5vp95Q3NcxediZWxyuagyoDhAcQQNU+9M36r9nuHLbMxidNYyavH9DuTIHOtX6xkzEIdx4d4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1waCwbjI; arc=fail smtp.client-ip=40.93.201.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="25KtwaeT"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1waCwbjI"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Gbspix7QmHlmnt4Y4/n6jE4j2E5V/cqVAjHi+GNMKPAIhqg8ptBTv2MH2kAakexNechoV12UA+VwafNCkaap/OPn90ZhUm9HKwbp/4PxlXEfkwaZpxOzpcZQwcaE/fPPocCuveAdrabv44vk/5nqJrcD2+JfrpEi1iuNQVxIUsneq4C8oqrAMlo20jdapZE5Xo30L1EqJj+kwWuzU+PSRZSjqln6Il9sQC5sxBtEap4CrY7GbfvskbFp56bv6784NLVo/Mai2g1ssChsvpmeCEq6oSwqQ9B5fbXzphRqWb5UJapJ30IuMl6ad45LptXsQL6RnwmxnoOJvpq5Lksj1A==
+ b=rXDYD9EGDhqSb+pT1dABIPY2jA7uIp14MRGF0N9FLIhfq6p/xEFeuyNaTZ7VM4gkXBI2Hvf6PRpWJG43+dANHkSmDI/6SeWlajih1GzA9wxlRTA9yToqCQU9du1mAnrMNq0tVuJ/MTNFjqSlQ1FSP9j++c1WE1pnsmMfGUY9zZPKLSmH/rPr3g8FP/WluhwQ0yUVR+adg+OfUoIfGfm5T5zqczddEWiRPH/iSEdYjADHRudCT4KYkAp/fycVtxGkRODuT8WL6E79As7R0ulnykRzg+Mx52ksaqdBvvRFlxA6TU34jAIPianaSaKt6gjiXWUIwMF/H8LQF2MI4y4tAQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uZZfq2apkzne/lxTOfiQN3gwPNJMoU7hwZwJjEkTI1U=;
- b=TM9tkDojJMAc9flTRAqlJus3wSjZ4oRJYd18xzcF06JyeweLZSS5GtOPcUEODRN0F78yQPCvMOA6z8y8D3/7BUTd13CYTSIk6wlFT74ulPuTnTmwUep62YiwH8lAeL+hc+EV0i0brp0+dlyPb8MjV3wH+g4K7e4UbLPSgqq/ZG7uBEyGECG7EkFyNtvAht/ykhEjNvHG+a+CPXQclO8ClchIyO/yIpT/b/Q0NDB3LNLinqcGfWSMHNN4NZKfnEu5qgawO917SelCTHRpm5PQc3VTf96y1uB6lvaRR6DGZkheE1ydkahi5XWdXcjvHI9fgxFQbKB9MTlO3QsYntj40Q==
+ bh=cG3uFrlh/DSKFkKgJnsRyLPFh9XDbK99spVIZo8V4jY=;
+ b=t2QNkju3u9GNzrZPQt9OdjnvYHnT33bRsk5/6ZwVEXmNqhwqvnHJ/zVO5xluZO6VP0krIO3Fw0uHWvz7BJ0MMUI4grg7bzzsSJm93jt2qdHUMoGSe6NNXvqt1+1SYm524Wrq5Ur7J3PVSehEJqimfbVKnp5JwYseUr2pQ+v2981b/S3KzObFqw1fuVUUdUQpgmeAYwpKo5v/wiChAgSegXOrdB3o59DvCAvpzVUWdVWQxEWB0gl4x1YvtRuMfIwOPsKib2ZUOhxQkNeioctclF8nuWFIVNyo2VRwI2XSi5G1ss0F3YmuxuR/8DkbTaEOGOil1SN46rIrB0kUUkFsZA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uZZfq2apkzne/lxTOfiQN3gwPNJMoU7hwZwJjEkTI1U=;
- b=25KtwaeTk/mdLs9Yj++9TMJrgJdxwjyvnHLhmtT1PNGKhCgYh+EaSRqoH6Hno0SqaFd96VHrR7lI/FIzKXxcvOwRQyjXXXQEfBm2cJovzmxpAvIl5EUsAgKI2TlUw7O8S1eq7yDpOA1B2vuAKZo3nV6DhcZBA/3cgLsNSlKdXl0=
+ bh=cG3uFrlh/DSKFkKgJnsRyLPFh9XDbK99spVIZo8V4jY=;
+ b=1waCwbjIRiQH+H+rk3ZQJ5vv7L0PaI254kNVVPfGmmTkWenOUT3j7ZS1m6iHe04qduw54JNiclfoFX7htyZ4PIvRwKNPTPXt/OzSYm56abhNikd8xfhdyvDGyW3llkd9D6nuOwltzZp5HuhfRBnpopOF4yF38fUztvQ6ROPohZE=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16) by
- SJ2PR12MB8009.namprd12.prod.outlook.com (2603:10b6:a03:4c7::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.17; Tue, 18 Aug
- 2026 08:20:40 +0000
+ SA1PR12MB7269.namprd12.prod.outlook.com (2603:10b6:806:2be::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.315.17; Tue, 18 Aug 2026 09:13:22 +0000
 Received: from DM4PR12MB6085.namprd12.prod.outlook.com
  ([fe80::9d84:7eb1:a785:bda1]) by DM4PR12MB6085.namprd12.prod.outlook.com
  ([fe80::9d84:7eb1:a785:bda1%6]) with mapi id 15.21.0315.016; Tue, 18 Aug 2026
- 08:20:40 +0000
-Date: Tue, 18 Aug 2026 10:20:34 +0200
+ 09:13:22 +0000
+Date: Tue, 18 Aug 2026 11:13:18 +0200
 From: Robert Richter <rrichter@amd.com>
 To: Alison Schofield <alison.schofield@intel.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>,
@@ -50,15 +49,16 @@ Cc: Davidlohr Bueso <dave@stgolabs.net>,
 	Vishal Verma <vishal.l.verma@intel.com>,
 	Ira Weiny <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
 	linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v3 1/9] cxl/region: Factor port target calculations
-Message-ID: <aoQV0mEURRUwZJmh@rric.localdomain>
+Subject: Re: [PATCH v3 2/9] cxl/region: Validate interleave selector bits
+Message-ID: <aoQiLpojRvgfZA7I@rric.localdomain>
 References: <cover.1785444498.git.alison.schofield@intel.com>
- <3fe2719ce4e5ab79d842107c575d326c5658b9a6.1785444498.git.alison.schofield@intel.com>
+ <67cfafacefffabb7db34f9d261ba47c0edc7dc67.1785444498.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3fe2719ce4e5ab79d842107c575d326c5658b9a6.1785444498.git.alison.schofield@intel.com>
-X-ClientProxiedBy: CPCP307CA0006.DNKP307.PROD.OUTLOOK.COM (2603:10a6:380::8)
- To DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16)
+In-Reply-To: <67cfafacefffabb7db34f9d261ba47c0edc7dc67.1785444498.git.alison.schofield@intel.com>
+X-ClientProxiedBy: BE1P281CA0155.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:67::12) To DM4PR12MB6085.namprd12.prod.outlook.com
+ (2603:10b6:8:b3::16)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -66,377 +66,287 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6085:EE_|SJ2PR12MB8009:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6928f9af-5799-4c1d-7a71-08defd0196b7
+X-MS-TrafficTypeDiagnostic: DM4PR12MB6085:EE_|SA1PR12MB7269:EE_
+X-MS-Office365-Filtering-Correlation-Id: 49d265cc-ab7f-4e93-a098-08defd08f37e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|23010399003|1800799024|376014|56012099006|10067099003|6133799003|4143699003|11063799006|18002099003|22082099003;
+	BCL:0;ARA:13230040|366016|23010399003|376014|1800799024|10067099003|56012099006|6133799003|22082099003|18002099003|4143699003|11063799006;
 X-Microsoft-Antispam-Message-Info:
-	HexEOfGvDitTqTUYpHYRZbxDsW0cnHgweyMaB1bTGl5vTVzc404dJb1soH8a74FTf9KvQpvWIf6DYxJNoN1HWDvu3IJYmiCbJE2DJGnuhVUttWQoIDPFsG0xAFiUE6PzCu6U1k7O1ciVqRlhs2s1pm3ZV2WaAIUAYfoW8bP3LXp63Q7I74kkO74WFbO15lTDQI6mYwq6vmfSOwWI3MOiYG6uEICfI9wVzw1BR25kSbxGv3dpdtMMawAdSEi7SReIvrauyFJxc/slQtWvlCeRGMgsge6GzU9Dz4a9w6rTtHaeV1ZmhUGwxnZcEy2cExwKzj/xxLEwSgbOETEM0A3sGlJrgHrh132X686aD3MA7jUKiBhM/t3Yo+83LtVZrU1Cdy459CyuK0tg9OK6zBDFd33Ms3Ubk+f3nj0UijyZrW/N/oxsTvtOrqANNKSnaalKwJXlnR4RfBu3gh5DIjb+6QvhlbNTOvIyNgmA2lXLJzJ9QtjIXLuLNg91GR+yqlKUaiS6K0I5k+oGWORnFJECV/okzo1WTa5sFUs+LX6IPA1R1nCQ5y0Q6t47jTWaHCw3bVHwdZWz4G35XVYJJ6iyAAfGKOCAnLH5oDA3O+sBVGx8wVbI5yDBHR/jw/l2GGCPhbpVNE/MLIAd/77ngLzClxYtFO+l+QYqps7qutcW31M=
+	Obc0sNE7mpvzlV19wFaY9uux9FbGKSVC/7qXK1/uOjNwyveGeukSIm9aKWIf+1hLZSOYaEJ0z8ZBdAFBzP1Wb0QatgHSI2yEZh/Xcoy+eniamZXIeOAiVkf8WkmU2pRxRkDWidCXE3/BYYmUYJzxhjGhSyQ+ywW6Ai6e23TWQODqj4J7Btzd+aieYbEI2mwdSwExB6r2TloppqHK9VFNYedhk9cWFvuVssfFIzY7OeceqZcpm1LdoKMf13wLK4fULicXVX9umMsr72DmK6e2okY0zTGSlK+jW9IIpVBYe0SxL6ym/yVAo3lm+kkkygflkeEQ+rIgNNSuJ9TT3nWjLusQFCCFIZsW8JsOxDgDiaCqZCGik/vK1txbMAoGvRJDZxqdo1yyhfZ9S5z2sv95XWOiMxHLjm2PQnMXx41l5fbGgIbDaHHA63ZIjwo4r2qFgQhIMOmWIWRiNgCKUd/HmjRc9uqR1ekL/wrtE8GUKjo448vz60e1pSP3vYIevWxT4LxoUceQSeyt5TIUPn0C6rob5HJuDsH0qynCWF2RBbcbmrmt3BMOvhY5AjNNnsSSxInWZXQ1NazkT3Y+K8tL4XSCm+dNbzXUm3KBrewirgxMM8khEvi3rx6jykqnNWdRnptK+/986dqesBIncF+Hjk6UcoWrrJVnr2cUsCwRMNg=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6085.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(376014)(56012099006)(10067099003)(6133799003)(4143699003)(11063799006)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6085.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(376014)(1800799024)(10067099003)(56012099006)(6133799003)(22082099003)(18002099003)(4143699003)(11063799006);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?2qZ/FMQbgSHp9mjg1de5WxWAJg6TUtnaajA+ZzKtKYD1Y8BveHJ6nS0zJFsi?=
- =?us-ascii?Q?mH1PMu9qEdenGowDzLZR+ulKqNttzYe3yGVX5LrF8TIb/DKxopSwjFekbcDx?=
- =?us-ascii?Q?t5oKEfm2O5dRH0ovHLmHFQu+jOfRsVXS8quMkR3jNaLDmtT/PkelGsjrYUQX?=
- =?us-ascii?Q?iAE24rMrx2z/5hsU8pm1hCoA7DVBOrvZA9sdwVelelbVhCQ4JHuQR7F/n90W?=
- =?us-ascii?Q?mjekyJiBVrYWXvhSiMSen/DUZwNrCzd8vmEPa7NJRqq8oaYRuQLGWfnx1eDR?=
- =?us-ascii?Q?T6V3/x3B07LnDro1hf7J5w6q18epEj8PSRkcF3LCyoZWmGPdUqxpQR/yC5k9?=
- =?us-ascii?Q?dfGRtJVkaldppBTxMmlWsyARdqYzEmqi9r4Tc0caFVYEJXzR64fPSbKS6Brz?=
- =?us-ascii?Q?iz5bSWj1lnD02aADez4WIV62nkpMz5mIDIOlgju8DFzNUqa43djeOejEHbfX?=
- =?us-ascii?Q?QRqcx04tOU3r3bHLN3F51vnjirclDeGGK8MqHzmu7TIuk1fBcXEp3HSyLYoY?=
- =?us-ascii?Q?pf7dzJvTqznixg8NrW82q+xR+PSWH8YEQXz0xQM+q45Ekk9o0v+LbHDOJbyW?=
- =?us-ascii?Q?A3s0+6Y0pKg01g3GHyqw8S1P5Tkrr8IPG5cq9OJ0dH/nJnZkoVT+MN23cHFe?=
- =?us-ascii?Q?K7I80Zoyeo3SAzciFs6tV1WfCdJHPsGNjNIbHXxXEKjAdih6y26gZZTQDPFj?=
- =?us-ascii?Q?IZux8Wk7ODcYpJwKjfD1TX7BTXQUNEprT7eRGz9dOijV17UhQpd24LaKEqkF?=
- =?us-ascii?Q?rOEfXOoQEcTLKtChoM4SGgK1o/ca4T6jEppiC/WPasZLc43+a2Lc9Sil3D30?=
- =?us-ascii?Q?ejT33ew044V56I5gLTk3Hn1zv4kiOplptZLjLXia+mhoVhgHqBefFFMUvsJh?=
- =?us-ascii?Q?4OO1xP/iGWzqGEEdByEqrNOijb2nNjuuW6ALoz2qFns3iV0xrcFqXUsUcygy?=
- =?us-ascii?Q?XOMz87wDHjn6w+55MQs+m6aHpz9jaLISlM9wAon6iIvTNgl+fflNoVYJUJo3?=
- =?us-ascii?Q?nq24aAr+yoFH8NvXzggNyKsSkLZcGpYgHoqeSgAfDCXCfbrmI4YzRa/HG3qt?=
- =?us-ascii?Q?mWM+sMLFjzvoAYHc131Pm2jV4YrALI5LXqC7I7reuRQS76mTHLCikUlPgJEF?=
- =?us-ascii?Q?891HgvsiGghKGj8VllAucb2f5DVhkaHyjjL1Cden0JqpsIjwiA2LbSyP0tCH?=
- =?us-ascii?Q?wsGj1t7ku9g4naCJ0nmRJaegdvLjYBZno2ndKr5+2edcd+Ih4RYt84QVT200?=
- =?us-ascii?Q?K0CpswrjqQZD9ZWUJNMgoLIY3lJVLxS+EtjACg5KyxQ7Xyn1ptN5GvvA34OF?=
- =?us-ascii?Q?UBENC+NM1kCWdy61boa4bt9mKMUS1uW/9LLmHoPhod5lBzNidy82mmB55DPk?=
- =?us-ascii?Q?wNQ0I53lUUpml6+IZc3NIbILwABxNS0ToyL71CxcnCAehF10pkHkxnSGngU/?=
- =?us-ascii?Q?RbkRuIqPfVEzScsaneUn5UzlPkgXp5Yy703uyAE/kIxUpP3erXJqo7G7X8wa?=
- =?us-ascii?Q?hPJmg/Ki6GJMzeh5k3vvqAZtOJGXV7QVEWLHnFlccZc4FZvv60JXSNt2tG7y?=
- =?us-ascii?Q?+PtSDThdTjqf43lxT3C6x7TMn3MyIfYjIye9wv0uXXMq+yv6kKqZAMUyql73?=
- =?us-ascii?Q?YItH5/yTYvkRykvHOLExSo985fJTspr13TCpSE33vqP5pooFXmPtzzdCKzVI?=
- =?us-ascii?Q?hITIAg1HWAcHc4quBToZz3smEmG9XjRXsY2UCkbmtnjTrrmhnywZ2QWQsUJ0?=
- =?us-ascii?Q?51Knk+XNmA=3D=3D?=
+	=?us-ascii?Q?uqLNu+3umyu+8duZiFsBMo6VVDM64H7ln/bGhSpBAx1EkhEr8iY0zu4B6/pE?=
+ =?us-ascii?Q?8Yn14WYzOFSfGtecHBNOxev2npnZSpPQ+3wUN1jq1aOy07ARayegUcL+AQCO?=
+ =?us-ascii?Q?n8z5+RpKIk73hSJKbEA9csoZWHgFf+mpgMU8cwCDh2+7zJtdhRTyR6LCt/nm?=
+ =?us-ascii?Q?TNW9r7g40gMa9O7l2MUansDCG8zNOctZ8iFKR5xZP1/WbIWH3JlPnHEcA2Hs?=
+ =?us-ascii?Q?HlyKmIdEz5Bey4ptgZ47Pjm4jhPNq1GmmJsV/a96HxiGzGb4/J/eQFJwnB7Z?=
+ =?us-ascii?Q?4VgH+OV/pum+ZYQJUIhzvn4084KAozeV+VSIruj3LL1S1opXxN0VVINHuQYr?=
+ =?us-ascii?Q?VzPMCOdyORgOvuS0xXbk2UOGOsPzM4lLKXmw1yzXcL5uZtFH646TgCs3wyYv?=
+ =?us-ascii?Q?XrwA/XgaWIpqOpIhjEwbRbIHvFL+kN4KW2ZOFwkNfHZbeV+cbZhdjKPzBrPt?=
+ =?us-ascii?Q?8lY0LFzp/BBjiJ/gwlUIxN1AHc6wuQBEFDUndlT9De4g46spFQgZpes6qWPy?=
+ =?us-ascii?Q?LP+E1t41CUKBoHq0j+t+41uF4QN6RfxsVbB7nSZCbNMAFY4ve1wK0RHf9erJ?=
+ =?us-ascii?Q?nKp41t7WO76fDRculismJGH/8Vap3hYCTldeE0teKngEZhgGKof8jeLiWSEc?=
+ =?us-ascii?Q?LTJ/8FBJZIeiyN4zkcSGOV+ZWddhrwR9jwVWaVc/tH1OWj1yfYcwaM4Pcv3d?=
+ =?us-ascii?Q?G8ZimvlXHaR43sbG1dg6h3w8ZYzubD/V+2W21YIgwrfDLFX9Ox9IgkbxOPqe?=
+ =?us-ascii?Q?jDXmIskfibNmrIfV6EztDkCO3iseyKMwWnS1P3ngxYT9YgsiQ0BOvlZhLfc7?=
+ =?us-ascii?Q?xu82Td6xZu8Mlln6SkW2lHWExSgePpVs7k1XgAwcRqe4hXnNzqBeT26KDszT?=
+ =?us-ascii?Q?nkgti8mTw0m1Iyonv9NNWSgOHYWveB8nFq+D2ldDWSJAJ/OI4KljGhCs9IKz?=
+ =?us-ascii?Q?fd6WJcoifXm7SVyMsqKMIC9D8ImDj5QTv7NkYlVg2UODrIcyEL5dmbhV1kuF?=
+ =?us-ascii?Q?puT0p3vdpydvwg7PSlKG+US0IvF5MX10eaxGXgAflp+l8ZJ3ADxRFaCx3ISt?=
+ =?us-ascii?Q?HNe45AFdX1LFG/xN9Xdu9V/Sa+KHqdbtt+GrwyBRmgdJtTaYqAgrhuyIjfCJ?=
+ =?us-ascii?Q?hs9SPLKd11z992+OhGk4shn/ELIhMC8tY4Cu6igS3Xs8jJd3kNN7SHaWaJiW?=
+ =?us-ascii?Q?6ePZxWHLAl1xRKtqeviXOmy307W+WDJS+m7rNAWzDHwtV2/5P9VZaCecfbH/?=
+ =?us-ascii?Q?N1640g0MuPQyhkb5403DA+l1wHohcSOWS0m2YFHm0cdO70lb+Z00CAKOSPgC?=
+ =?us-ascii?Q?7lwQU4HYPgkQI4AiWido60VpsK88Me0TW4iyaOxzq9J9yejryg6mfLpTjJAC?=
+ =?us-ascii?Q?j0rkdLABX9pH428SGx+Fehb9d62M6Gpiz4PH/E9c0De3z9CrinlZFN7n/7CQ?=
+ =?us-ascii?Q?USq42Y2GwGmOZmtV2QcrXQUM2sb9v4xqFCZe5xY1Im5s7mlnwboprU6Pt6+b?=
+ =?us-ascii?Q?slDT8QXBVY8cE5hRu66ptPtbLPwawIZjJXk0DdM6847iuiNTG1VwkhKYZ5Mh?=
+ =?us-ascii?Q?C146DgIFVmS/mDgCHRyiOWvTFIW8+x/HYg7FZm5BwppR3bESBn/w05UyubIH?=
+ =?us-ascii?Q?UHy9PkVKNMng2OWpAs6LvedrUvgAFedySk6BKtHbDR77yn9koNoRgJgllYsl?=
+ =?us-ascii?Q?nb9dkUS+R434xY/vkZyEi0vJJ8BBx8LG62hEhqOGtyd+VHIZp+xcVy+0QAeg?=
+ =?us-ascii?Q?f7tSjIksgA=3D=3D?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6928f9af-5799-4c1d-7a71-08defd0196b7
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49d265cc-ab7f-4e93-a098-08defd08f37e
 X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6085.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2026 08:20:39.9935
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2026 09:13:22.1372
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Py5YfEa81sL1lM2q+lRVPqFq3w6th8HvPU/LqKhks8NsulvIfcoLdc5wpHeILMIrLIKJtw3i+wqZuBHsqkzp6A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8009
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5DTxWyUC7SHq/M5Kl9BU5rjvmNpMcEo6XEi0hremGsLakGpVpgMfgMQX2J9zTIPO0dxoZioLBORcizo1VSMaAQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7269
 
-On 30.07.26 15:20:21, Alison Schofield wrote:
-> cxl_port_setup_targets() calculates the interleave fan-out above a
-> port, the port decoder granularity, and the distance between
-> endpoints routed through the same downstream port.
+On 30.07.26 15:20:22, Alison Schofield wrote:
+> Each decoder level in an interleave uses a field of host physical
+> address (HPA) bits, called a selector, to choose which of its
+> downstream targets a given address routes to. In a multi-level
+> interleave the selectors of the root, the switches, and the endpoints
+> must occupy distinct address bits so that every level makes an
+> independent routing decision.
 > 
-> Factor those calculations into helpers so the target setup path can
-> be extended. Validation of parent decoder values is dropped since
-> those values are validated where they are set, before this port's
-> setup runs. A configuration that is invalid in more than one way may
-> report a different error first.
+> The existing setup does not check the selectors directly. It instead
+> requires each level's granularity to equal the parent granularity
+> multiplied by the parent ways, which only holds for a subset of the
+> legal selector layouts. Layouts that place non-overlapping selectors
+> in a different order, as mixed-granularity regions do, are rejected
+> even though they are valid.
 > 
-> Suggested-by: Originally-by: Robert Richter <rrichter@amd.com>
+> Add selector-bit accounting to cxl_port_setup_targets(). Accumulate
+> the selector of each level from the root toward the current port,
+> reject any selector that overlaps a bit already claimed by another
+> level, and reject an accumulated selector that does not fit within
+> the region selector. The root decoder's selector is walked alongside
+> the switch levels rather than tracked separately.
+> 
+> This patch adds selector validation but does not yet enable the
+> mixed-granularity layouts. A temporary gate rejects region granularity
+> finer than the root granularity until the position arithmetic is
+> updated.
+> 
+> Originally-by: Robert Richter <rrichter@amd.com>
 > Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 > ---
->  drivers/cxl/core/region.c | 197 +++++++++++++++++++-------------------
-
-Please split patch and move out changes in error handling, see also
-below.
-
->  1 file changed, 96 insertions(+), 101 deletions(-)
+>  drivers/cxl/core/region.c | 103 +++++++++++++++++++++++++++++++++++---
+>  1 file changed, 96 insertions(+), 7 deletions(-)
 > 
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 1e211542b6b6..1082db7b2cca 100644
+> index 1082db7b2cca..b0061f03892a 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
-> @@ -1350,6 +1350,19 @@ static void cxl_port_detach_region(struct cxl_port *port,
->  		free_region_ref(cxl_rr);
+> @@ -1448,33 +1448,110 @@ static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
 >  }
 >  
-> +/**
-> + * check_last_peer() - Verify the previous endpoint routed to this dport
-> + * @cxled: endpoint decoder being placed
-> + * @ep: this endpoint's entry for the port
-> + * @cxl_rr: region reference for the port
-> + * @distance: distance to the previous endpoint routed to this dport
+>  /**
+> - * get_parent_fanout() - Calculate the switch fan-out above a port
+> + * get_selector() - Build the HPA selector mask for an interleave
+> + * @ways: interleave ways
+> + * @gran: interleave granularity in bytes
 > + *
-> + * Endpoints routed through the same dport recur at @distance intervals in
-> + * region-position order. Verify that the endpoint at ``pos - distance`` used
-> + * the same dport.
+> + * Power-of-2 interleaves select targets with contiguous HPA bits beginning
+> + * at @gran. For 6-way and 12-way interleaves, only the power-of-2 factor
+> + * contributes selector bits. A 3-way interleave contributes no selector
+> + * bits.
 > + *
-> + * Return: 0 on success, -ENXIO on a routing mismatch.
+> + * Return: the HPA selector mask, or 0 when no selector bits are used.
 > + */
->  static int check_last_peer(struct cxl_endpoint_decoder *cxled,
->  			   struct cxl_ep *ep, struct cxl_region_ref *cxl_rr,
->  			   int distance)
-> @@ -1434,60 +1447,106 @@ static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
+> +static inline u64 get_selector(int ways, int gran)
+> +{
+> +	if (!is_power_of_2(ways))
+> +		ways /= 3;
+> +
+> +	if (!is_power_of_2(ways) || !is_power_of_2(gran))
+> +		return 0;
+> +
+> +	return (u64)(ways - 1) * gran;
+> +}
+> +
+> +/**
+> + * get_parent_selectors() - Collect selectors and fan-out above a port
+>   * @parent_port: first ancestor port
+>   * @cxlr: region under construction
+> + * @cxlrd: region root decoder
+> + * @accum: filled with the selectors claimed by the ancestors
+>   * @fanout: filled with the product of the ancestor switch ways
+>   *
+> - * Walk from @parent_port to the root and multiply the interleave ways of
+> - * each switch decoder. Root decoder ways are not included.
+> + * Start with the root decoder selector and walk the ancestor switch
+> + * decoders. Reject selectors that overlap. Passthrough decoders contribute
+> + * neither selector bits nor fan-out.
+>   *
+> - * Return: 0 on success.
+> + * Root decoder ways are not included in @fanout.
+> + *
+> + * Return: 0 on success, -ENXIO on selector overlap.
+>   */
+
+See my comment on comments in the previous patch. It should not be
+documented.
+
+> -static int get_parent_fanout(struct cxl_port *parent_port,
+> -			     struct cxl_region *cxlr, int *fanout)
+> +static int get_parent_selectors(struct cxl_port *parent_port,
+> +				struct cxl_region *cxlr,
+> +				struct cxl_root_decoder *cxlrd, u64 *accum,
+> +				int *fanout)
+>  {
+> +	u64 selector = get_selector(cxlrd->cxlsd.cxld.interleave_ways,
+> +				    cxlrd->cxlsd.cxld.interleave_granularity);
+>  	int distance = 1;
+>  	struct cxl_port *iter;
+>  
+>  	for (iter = parent_port; !is_cxl_root(iter);
+>  	     iter = to_cxl_port(iter->dev.parent)) {
+>  		struct cxl_region_ref *cxl_rr_iter = cxl_rr_load(iter, cxlr);
+> +		struct cxl_decoder *cxld_iter = cxl_rr_iter->decoder;
+> +		u64 cxld_sel;
+>  
+> +		if (cxld_iter->interleave_ways == 1)
+> +			continue;
+> +
+> +		cxld_sel = get_selector(cxld_iter->interleave_ways,
+> +					cxld_iter->interleave_granularity);
+> +
+> +		if (cxld_sel & selector) {
+> +			dev_dbg(&cxlr->dev,
+> +				"%s:%s: overlapping selectors: %#llx:%#llx\n",
+> +				dev_name(iter->uport_dev),
+> +				dev_name(&iter->dev), cxld_sel, selector);
+> +			return -ENXIO;
+> +		}
+> +
+> +		selector |= cxld_sel;
+>  		distance *= cxl_rr_iter->nr_targets;
+>  	}
+>  
+> +	*accum = selector;
+>  	*fanout = distance;
 >  	return 0;
 >  }
 >  
 > +/**
-> + * get_parent_fanout() - Calculate the switch fan-out above a port
-> + * @parent_port: first ancestor port
+> + * region_selectors_fit() - Check ancestor selectors against the region
+> + * @port: port being configured
 > + * @cxlr: region under construction
-> + * @fanout: filled with the product of the ancestor switch ways
+> + * @accum: selectors used by the ancestor decoders
 > + *
-> + * Walk from @parent_port to the root and multiply the interleave ways of
-> + * each switch decoder. Root decoder ways are not included.
-> + *
-> + * Return: 0 on success.
+> + * Return: true when every accumulated selector bit is present in the region
+> + * selector.
 > + */
+> +static bool region_selectors_fit(struct cxl_port *port,
+> +				 struct cxl_region *cxlr, u64 accum)
 
-I don't think that static functions should be documented. They do not
-describe an interface, are short and also called only once. Instead,
-the function's purpose should be understandable from reading the code
-with small comments only where really helpful.
+Better have this inline in the code, this functions does not help
+much.
 
-> +static int get_parent_fanout(struct cxl_port *parent_port,
-> +			     struct cxl_region *cxlr, int *fanout)
 > +{
-> +	int distance = 1;
-> +	struct cxl_port *iter;
-> +
-> +	for (iter = parent_port; !is_cxl_root(iter);
-> +	     iter = to_cxl_port(iter->dev.parent)) {
-> +		struct cxl_region_ref *cxl_rr_iter = cxl_rr_load(iter, cxlr);
-> +
-> +		distance *= cxl_rr_iter->nr_targets;
-> +	}
-> +
-> +	*fanout = distance;
-> +	return 0;
-> +}
-> +
-> +/**
-> + * derive_port_granularity() - Calculate the granularity for a port decoder
-> + * @cxlr: region under construction
-> + * @fanout: product of the ancestor switch ways
-> + * @ig: filled with the port decoder granularity
-> + *
-> + * Preserve the existing parent-granularity times parent-ways recurrence in
-> + * terms of the region granularity and the fan-out above this port.
-> + *
-> + * Return: 0 on success.
-> + */
-> +static int derive_port_granularity(struct cxl_region *cxlr, int fanout,
-> +				   int *ig)
-> +{
-> +	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
-> +	int root_iw = cxlrd->cxlsd.cxld.interleave_ways;
 > +	struct cxl_region_params *p = &cxlr->params;
-> +	int sel_distance;
+> +	u64 cxlr_sel = get_selector(p->interleave_ways,
+> +				    p->interleave_granularity);
 > +
-> +	sel_distance = is_power_of_2(root_iw) ? root_iw : root_iw / 3;
-> +	sel_distance *= fanout;
-> +	*ig = p->interleave_granularity * sel_distance;
-> +
-> +	return 0;
-
-Always succeeds. Should directly return ig.
-
-> +}
-
-I will review both functions again after reading the rest of the
-series.
-
-> +
->  static int cxl_port_setup_targets(struct cxl_port *port,
->  				  struct cxl_region *cxlr,
->  				  struct cxl_endpoint_decoder *cxled)
->  {
->  	struct cxl_root_decoder *cxlrd = cxlr->cxlrd;
-> -	int parent_iw, parent_ig, ig, iw, rc, pos = cxled->pos;
-> +	int root_iw = cxlrd->cxlsd.cxld.interleave_ways;
->  	struct cxl_port *parent_port = to_cxl_port(port->dev.parent);
->  	struct cxl_region_ref *cxl_rr = cxl_rr_load(port, cxlr);
->  	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
->  	struct cxl_ep *ep = cxl_ep_load(port, cxlmd);
->  	struct cxl_region_params *p = &cxlr->params;
->  	struct cxl_decoder *cxld = cxl_rr->decoder;
-> -	struct cxl_switch_decoder *cxlsd;
-> -	struct cxl_port *iter = port;
-> -	u16 eig, peig;
-> -	u8 eiw, peiw;
-> +	struct cxl_switch_decoder *cxlsd = to_cxl_switch_decoder(&cxld->dev);
-> +	int ig, iw = cxl_rr->nr_targets;
-
-The changes around here should be a separate patch only containing
-error handling changes and other related reworks.
-
-> +	int fanout, rc;
-> +	int pos = cxled->pos;
-> +	u16 eig;
-> +	u8 eiw;
->  
->  	/*
->  	 * While root level decoders support x3, x6, x12, switch level
->  	 * decoders only support powers of 2 up to x16.
->  	 */
-> -	if (!is_power_of_2(cxl_rr->nr_targets)) {
-> +	if (!is_power_of_2(iw)) {
->  		dev_dbg(&cxlr->dev, "%s:%s: invalid target count %d\n",
-> -			dev_name(port->uport_dev), dev_name(&port->dev),
-> -			cxl_rr->nr_targets);
-> +			dev_name(port->uport_dev), dev_name(&port->dev), iw);
->  		return -EINVAL;
->  	}
->  
-> -	cxlsd = to_cxl_switch_decoder(&cxld->dev);
-> +	if (iw > 8 || iw > cxlsd->nr_targets) {
+> +	if ((cxlr_sel & accum) != accum) {
 > +		dev_dbg(&cxlr->dev,
-> +			"%s:%s:%s: ways: %d overflows targets: %d\n",
+> +			"%s:%s: invalid selectors: cxlr %#llx accum %#llx\n",
 > +			dev_name(port->uport_dev), dev_name(&port->dev),
-> +			dev_name(&cxld->dev), iw, cxlsd->nr_targets);
-> +		return -ENXIO;
+> +			cxlr_sel, accum);
+> +		return false;
 > +	}
-
-Split patch: Moving of this check and other changes above should be in
-a separate patch.
-
 > +
-> +	rc = get_parent_fanout(parent_port, cxlr, &fanout);
-
-I am not a "fan" of that term. :-) IMO, target_count or target_total
-would fit better here.
-
-> +	if (rc)
-> +		return rc;
+> +	return true;
+> +}
 > +
->  	if (cxl_rr->nr_targets_set) {
+>  /**
+>   * derive_port_granularity() - Calculate the granularity for a port decoder
+>   * @cxlr: region under construction
+> @@ -1517,6 +1594,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+>  	int ig, iw = cxl_rr->nr_targets;
+>  	int fanout, rc;
+>  	int pos = cxled->pos;
+> +	u64 accum;
 
-The check can be dropped now as it is done with the for loop already.
+rename: "total_sel", "parent_sel", ...?
 
-> -		int i, distance = 1;
-> -		struct cxl_region_ref *cxl_rr_iter;
-> -
-> -		/*
-> -		 * The "distance" between peer downstream ports represents which
-> -		 * endpoint positions in the region interleave a given port can
-> -		 * host.
-> -		 *
-> -		 * For example, at the root of a hierarchy the distance is
-> -		 * always 1 as every index targets a different host-bridge. At
-> -		 * each subsequent switch level those ports map every Nth region
-> -		 * position where N is the width of the switch == distance.
-> -		 */
-> -		do {
-> -			cxl_rr_iter = cxl_rr_load(iter, cxlr);
-> -			distance *= cxl_rr_iter->nr_targets;
-> -			iter = to_cxl_port(iter->dev.parent);
-> -		} while (!is_cxl_root(iter));
-> -		distance *= cxlrd->cxlsd.cxld.interleave_ways;
-> -
-> -		for (i = 0; i < cxl_rr->nr_targets_set; i++)
-> +		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
->  			if (ep->dport == cxlsd->target[i]) {
->  				rc = check_last_peer(cxled, ep, cxl_rr,
-> -						     distance);
-> +						     root_iw * fanout * iw);
->  				if (rc)
->  					return rc;
->  				goto out_target_set;
-> @@ -1495,84 +1554,20 @@ static int cxl_port_setup_targets(struct cxl_port *port,
->  		goto add_target;
+>  	u16 eig;
+>  	u8 eiw;
+>  
+> @@ -1538,10 +1616,13 @@ static int cxl_port_setup_targets(struct cxl_port *port,
+>  		return -ENXIO;
 >  	}
 >  
-> -	if (is_cxl_root(parent_port)) {
-> -		/*
-> -		 * Root decoder IG is always set to value in CFMWS which
-> -		 * may be different than this region's IG.  We can use the
-> -		 * region's IG here since interleave_granularity_store()
-> -		 * does not allow interleaved host-bridges with
-> -		 * root IG != region IG.
-> -		 */
-> -		parent_ig = p->interleave_granularity;
-> -		parent_iw = cxlrd->cxlsd.cxld.interleave_ways;
-> -		/*
-> -		 * For purposes of address bit routing, use power-of-2 math for
-> -		 * switch ports.
-> -		 */
-> -		if (!is_power_of_2(parent_iw))
-> -			parent_iw /= 3;
-> -	} else {
-> -		struct cxl_region_ref *parent_rr;
-> -		struct cxl_decoder *parent_cxld;
-> -
-> -		parent_rr = cxl_rr_load(parent_port, cxlr);
-> -		parent_cxld = parent_rr->decoder;
-> -		parent_ig = parent_cxld->interleave_granularity;
-> -		parent_iw = parent_cxld->interleave_ways;
-> -	}
-> -
-> -	rc = granularity_to_eig(parent_ig, &peig);
-> -	if (rc) {
-> -		dev_dbg(&cxlr->dev, "%s:%s: invalid parent granularity: %d\n",
-> -			dev_name(parent_port->uport_dev),
-> -			dev_name(&parent_port->dev), parent_ig);
-> -		return rc;
-> -	}
-> -
-> -	rc = ways_to_eiw(parent_iw, &peiw);
-> -	if (rc) {
-> -		dev_dbg(&cxlr->dev, "%s:%s: invalid parent interleave: %d\n",
-> -			dev_name(parent_port->uport_dev),
-> -			dev_name(&parent_port->dev), parent_iw);
-> +	rc = derive_port_granularity(cxlr, fanout, &ig);
+> -	rc = get_parent_fanout(parent_port, cxlr, &fanout);
+> +	rc = get_parent_selectors(parent_port, cxlr, cxlrd, &accum, &fanout);
 
-I still think, the granularity should be determined just by
-calculating the bit position of the ways bit within the HPA. But let's
-see next patches.
+An easy and straight for loop could be a good alternative.
 
-> +	if (rc)
+fanout can be dropped from the function interface. Weight of the
+selector can be used instead.
+
+>  	if (rc)
 >  		return rc;
-> -	}
 >  
-> -	iw = cxl_rr->nr_targets;
->  	rc = ways_to_eiw(iw, &eiw);
-> -	if (rc) {
-> -		dev_dbg(&cxlr->dev, "%s:%s: invalid port interleave: %d\n",
-> -			dev_name(port->uport_dev), dev_name(&port->dev), iw);
-> -		return rc;
-> -	}
-> -
-> -	/*
-> -	 * Interleave granularity is a multiple of @parent_port granularity.
-> -	 * Multiplier is the parent port interleave ways.
-> -	 */
-> -	rc = granularity_to_eig(parent_ig * parent_iw, &eig);
-> +	if (!rc)
-> +		rc = granularity_to_eig(ig, &eig);
+> +	if (!region_selectors_fit(port, cxlr, accum))
+> +		return -ENXIO;
+> +
 
-Same here, separate the combination of those two checks in a separate
-patch.
+Without a helper it is actually better readable:
 
-With a patch split the actual change will be much better readable.
+	cxlr_sel = ...;
+	total_sel = ...;
 
-Thanks,
+	if ((cxlr_sel & total_sel) != total_sel) {
+		...
+
+So, only use helpers if really needed. And, assign values directly.
+
+>  	if (cxl_rr->nr_targets_set) {
+>  		for (int i = 0; i < cxl_rr->nr_targets_set; i++)
+>  			if (ep->dport == cxlsd->target[i]) {
+> @@ -2087,6 +2168,14 @@ static int cxl_region_attach(struct cxl_region *cxlr,
+>  		return -ENXIO;
+>  	}
+>  
+> +	/*
+> +	 * Mixed-granularity position calculation is added by the next patch.
+> +	 * Reject it until then so this intermediate state remains bisectable.
+> +	 */
+> +	if (cxlrd->cxlsd.cxld.interleave_granularity >
+> +	    p->interleave_granularity)
+> +		return -ENXIO;
+> +
+
+That change did not remove anything that would make existing code
+break, right? It just adds selector calculation. I don't see a need
+for this additional check.
 
 -Robert
 
->  	if (rc) {
->  		dev_dbg(&cxlr->dev,
-> -			"%s: invalid granularity calculation (%d * %d)\n",
-> -			dev_name(&parent_port->dev), parent_ig, parent_iw);
-> +			"%s:%s: derived ig %d not a valid granularity (iw %d)\n",
-> +			dev_name(port->uport_dev), dev_name(&port->dev), ig, iw);
->  		return rc;
->  	}
->  
-> -	rc = eig_to_granularity(eig, &ig);
-> -	if (rc) {
-> -		dev_dbg(&cxlr->dev, "%s:%s: invalid interleave: %d\n",
-> -			dev_name(port->uport_dev), dev_name(&port->dev),
-> -			256 << eig);
-> -		return rc;
-> -	}
-> -
-> -	if (iw > 8 || iw > cxlsd->nr_targets) {
-> -		dev_dbg(&cxlr->dev,
-> -			"%s:%s:%s: ways: %d overflows targets: %d\n",
-> -			dev_name(port->uport_dev), dev_name(&port->dev),
-> -			dev_name(&cxld->dev), iw, cxlsd->nr_targets);
-> -		return -ENXIO;
-> -	}
-> -
->  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
->  		if (cxld->interleave_ways != iw ||
->  		    (iw > 1 && cxld->interleave_granularity != ig) ||
+>  	if (p->nr_targets >= p->interleave_ways) {
+>  		dev_dbg(&cxlr->dev, "region already has %d endpoints\n",
+>  			p->nr_targets);
 > -- 
 > 2.37.3
 > 
