@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BB437A833;
-	Tue, 18 Aug 2026 22:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E1F227BB9;
+	Tue, 18 Aug 2026 23:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787093016; cv=none; b=IumlwbHpOwhKdcbZ/fzuKlThJRKRQO0ik6fHtIpZf2UFiXdBA97NBCFSrlzqKqAMFkdqpmJt4HygJkfmuQuheAnsbGbVpr4vvruH1HK5fmRyoAMGzHPWHbZoybRYorf0wIxPBLGMJbTXq2xFlpWiTyVZ9AyEMLQRgtwxYnJcpas=
+	t=1787097122; cv=none; b=Tqvs4q70kB2S34ULOuGZw6GzZBRa0mYrsOkyyjRaDG5wCuqfZQIqYzSr7ojErekhsW0OAst8CSLaVR0DvjG6U99w0mggcKdSf8N2ysI5Mr9qVXTCPgp9moOtWWCj3MTR5cbX40dSYiQ5ppzU+DUWGNyzcUfko1U/zGl/BRrEyKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787093016; c=relaxed/simple;
-	bh=YnwdgxHIxA9ySANDIZUzSkvLUXLT162QA9EzxhCH0NU=;
+	s=arc-20240116; t=1787097122; c=relaxed/simple;
+	bh=L990xuR/6vaRQh3yoOojeocPtioHO71nxgXks9/gB4M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lhbMJc7JNka7MTrf0lghKpcE9+NSqv1HYaudVFBCzhnsIcHltwfh6ZcDmD15PFIReZY1YXZ2X9VPn6C2v5f5ZYVsm+RbXaU6JkYHUqaPUIqlQzZdfGX+DmXguypFZiuCZqaA4Zesm9ivIUesTVLCLrwZ6ALoe4mMs7HHJJuwGs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cq2c2Ppe; arc=none smtp.client-ip=198.175.65.21
+	 In-Reply-To:Content-Type; b=sbKSx14f7yn5dtVgQPDMkf550buQJjoaUxou7rq/yUkb1qTIJj+5XS/Hr6V19R4jX2tS02noLEdCZcu0eqxSnlAlTtZnnOuYtARp+Wk7TWXX7Sll9NyW3hm/U/PZayjJ16jIVB9dVh7SyQilpdFz75wxdiO6J4WgG343WmIMLMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RleUt1hl; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cq2c2Ppe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RleUt1hl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787093014; x=1818629014;
+  t=1787097121; x=1818633121;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=YnwdgxHIxA9ySANDIZUzSkvLUXLT162QA9EzxhCH0NU=;
-  b=Cq2c2Ppef/g1Gj+hpTkAAfzz5xfEyS8+FDONNrHMkp595f2zfOLB2SCk
-   IrDFIwDyFxtisLUKao60ZhimKZFzhGdHyr3S95h2x3wzGrvb1Hj6d8qOz
-   B3XkD8g6ntQ1ScCMXpB7WzrX4manIMA3qErZLDFfKYOjdLoPGBOZqPhkj
-   xstZWcN6j5uhpN16Qy03T74MTqycGAhScmjd504fEgJwlc+PTVnuDRkLW
-   xXFxqe0XzsPwPB8XSHmwp69+5Zc5UGAutY2AWaqVm1JHkal0n85y5P6Wz
-   OlhdgKT4zUwoEixEjw7wNF3AQBAjU+xZWsUImdW29cvtA9cO6eEVdxOb4
+  bh=L990xuR/6vaRQh3yoOojeocPtioHO71nxgXks9/gB4M=;
+  b=RleUt1hlEyNPoXOv+6Uh4uIBlMySnu1PMzopQuzgxMeanjXz9g6TrIU6
+   NIYL/uhysmHEdQ3Y9f2Q9S2Uw8+WZsZZ8Ziwyx1oVQSy6W31swnuDY97e
+   gKPs9/OlwjvG0kUP03fNxQdOdDHPnT3IzXxE+URBTcmlzuT7Lh9Ek/F5B
+   RqEHpY+J+IuxQZZ8ETFYn9gpJZnuJs6r2yW23xaEWfZ2ZWbqfOiBM3pyf
+   RDLihPd5hqsps6x92aFo6ZQbpXhrXGoBF14tvAf0nNS39YU5d1KNoMKyZ
+   YbUnRkrfegLJoukCF3rA9Yr7phmcx3IQ/jn2mRMXCjTdXmyoM5eYaUl55
    Q==;
-X-CSE-ConnectionGUID: 6EEh17ZrT1CmdBcZoT3TfQ==
-X-CSE-MsgGUID: X1cRp162RrmfyczgSqchyw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11879"; a="87452430"
+X-CSE-ConnectionGUID: 1E60y40GSHuDvRM17MXyfA==
+X-CSE-MsgGUID: z+QScdsfTUqkt2LWfL614A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11879"; a="113145190"
 X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="87452430"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 15:43:34 -0700
-X-CSE-ConnectionGUID: VbPJq+WITKm8+RbVy6SkYw==
-X-CSE-MsgGUID: h8D5HBEKQfSLx2POoSGnTg==
+   d="scan'208";a="113145190"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 16:52:00 -0700
+X-CSE-ConnectionGUID: ix78zv/qToiXtcyu8+KZjg==
+X-CSE-MsgGUID: mHBW4kBOQduqOqA1pKQ/2g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="290178793"
+   d="scan'208";a="267340353"
 Received: from sghuge-mobl2.amr.corp.intel.com (HELO [10.125.111.209]) ([10.125.111.209])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 15:43:31 -0700
-Message-ID: <c01709c9-4c3b-4ced-9635-72947807c301@intel.com>
-Date: Tue, 18 Aug 2026 15:43:29 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2026 16:51:57 -0700
+Message-ID: <b0741acd-327d-43ce-94d8-8f06730e2430@intel.com>
+Date: Tue, 18 Aug 2026 16:51:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -52,99 +52,87 @@ List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] cxl/core: Skip non-CXL capabilities in MCAP
-To: penn <engguopeng@buaa.edu.cn>, linux-cxl@vger.kernel.org
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- bhelgaas@google.com, dave@stgolabs.net, jic23@kernel.org,
- alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
- djbw@kernel.org, johnny.li@montage-tech.com, peng.guo@montage-tech.com,
- jingzhong.yang@montage-tech.com
-References: <20260817075854.17207-1-engguopeng@buaa.edu.cn>
- <20260817075854.17207-3-engguopeng@buaa.edu.cn>
+Subject: Re: [PATCH v5 7/7] cxl/fwctl: Propagate feature RPC delivery errors
+To: Richard Cheng <icheng@nvidia.com>, dave@stgolabs.net, jic23@kernel.org,
+ alison.schofield@intel.com, vishal.l.verma@intel.com
+Cc: iweiny@kernel.org, ming.li@zohomail.com, gourry@gourry.net,
+ rrichter@amd.com, linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kees@kernel.org, newtonl@nvidia.com, kristinc@nvidia.com,
+ kaihengf@nvidia.com, kobak@nvidia.com
+References: <20260813034538.13189-1-icheng@nvidia.com>
+ <20260813034538.13189-8-icheng@nvidia.com>
 From: Dave Jiang <dave.jiang@intel.com>
 Content-Language: en-US
-In-Reply-To: <20260817075854.17207-3-engguopeng@buaa.edu.cn>
+In-Reply-To: <20260813034538.13189-8-icheng@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
-On 8/17/26 12:58 AM, penn wrote:
-> From: Penn <engguopeng@buaa.edu.cn>
+On 8/12/26 8:45 PM, Richard Cheng wrote:
+> FWCTL_RPC requires delivery failures to be returned as ioctl errors,
+> while device errors are reported in the output. Get and Set Feature
+> instead converted all failures into normal responses, sometimes with a
+> SUCCESS device status.
 > 
-> When MMPT is enabled, a CXL device may expose CXL-defined capabilities
-> and PCIe Management Message Passthrough (MMPT) capabilities in the same
-> MMIO Capabilities Register Block (MCAP).
+> Initialize the return code to SUCCESS. When the helper fails without a
+> device error code, return its errno. Continue reporting actual device
+> errors through rpc_out->retval.
 > 
-> The CXL capability parser currently identifies entries using only the
-> capability ID. Since capability IDs are scoped by Vendor ID, a
-> PCI-SIG-defined capability may have the same ID as a CXL-defined
-> capability. This causes non-CXL entries, including MMPT and MMIO Mailbox,
-> to be interpreted as CXL register blocks.
+> Fixes: 5908f3ed6dc2 ("cxl: Add support to handle user feature commands for get feature")
+> Fixes: eb5dfcb9e36d ("cxl: Add support to handle user feature commands for set feature")
+> Signed-off-by: Richard Cheng <icheng@nvidia.com>
+> ---
+>  drivers/cxl/core/features.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> The MMPT register block may be interpreted as a CXL mailbox. This
-> causes mailbox initialization to fail with:
-> 
->     cxl_pci 0000:3b:00.0: Mailbox is too small (64b)
-> 
-> Check the MCAP Vendor ID before interpreting an entry as a CXL-defined
-> capability. Skip capabilities with a non-zero Vendor ID other than
-> PCI_VENDOR_ID_CXL.
-> 
-> In legacy CXL capability headers, the field now used for the MCAP
-> Vendor ID was reserved and reads as zero. Continue to accept zero to
-> preserve compatibility with those devices.
-> 
-> The fix has been tested on CXL 1.1 and CXL 3.0 devices. On the
-> MMPT-enabled device, it prevents both Mailbox and Status capabilities
-> from being misidentified.
-> 
-> Fixes: 8adaf747c9f0 ("cxl/mem: Find device capabilities")
-> Suggested-by: Johnny <johnny.li@montage-tech.com>
-> Signed-off-by: Penn <engguopeng@buaa.edu.cn>
+> diff --git a/drivers/cxl/core/features.c b/drivers/cxl/core/features.c
+> index 8d44ce829497..30e00faaf3a9 100644
+> --- a/drivers/cxl/core/features.c
+> +++ b/drivers/cxl/core/features.c
+> @@ -232,7 +232,7 @@ ssize_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+>  	int rc;
+>  
+>  	if (return_code)
+> -		*return_code = CXL_MBOX_CMD_RC_INPUT;
+> +		*return_code = CXL_MBOX_CMD_RC_SUCCESS;
 
-After addressing Lukas's comment,
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+With "success" set here, should we drop setting of *return_code at the end of function since it's no longer necessary?
 
-Given that you are utilizing the new PCIe MMIO MBOX feature, have you considered migrate the CXL MBOX block parsing code to a PCI lib and shared between PCI and CXL? I did attempted something [1] like that a while back but never upstreamed the code due to no hardware to test on.
- 
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=pci-mbox
+>  
+>  	if (!feat_out || !feat_out_size)
+>  		return -EINVAL;
+> @@ -289,7 +289,7 @@ int cxl_set_feature(struct cxl_mailbox *cxl_mbox,
+>  	size_t hdr_size;
+>  
+>  	if (return_code)
+> -		*return_code = CXL_MBOX_CMD_RC_INPUT;
+> +		*return_code = CXL_MBOX_CMD_RC_SUCCESS;
+
+I think similar for this function as the previous comment?
 
 DJ
 
-> ---
-> Changes in v2:
-> - Accept a zero Vendor ID for compatibility with legacy CXL capability
->   headers.
-> - Move the u16 declaration above the u32 declaration to follow the
->   reverse Christmas tree convention.
-> - Document testing on CXL 1.1 and CXL 3.0 devices.
-> 
->  drivers/cxl/core/regs.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 93710cf4f0a6..c7c14089f2c6 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -133,8 +133,18 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
 >  
->  	for (cap = 1; cap <= cap_count; cap++) {
->  		struct cxl_reg_map *rmap;
-> +		u16 cap_id, vendor_id;
->  		u32 offset, length;
-> -		u16 cap_id;
-> +
-> +		vendor_id = FIELD_GET(PCI_MCAP_HDR_VENDOR_ID,
-> +				      readl(base + PCI_MCAP_HDR_BASE(cap) +
-> +					    PCI_MCAP_HDR_REG_4));
-> +		/*
-> +		 * The Vendor ID field is reserved and reads as zero in legacy
-> +		 * CXL capability headers. See CXL r3.2, Table 8-44.
-> +		 */
-> +		if (vendor_id && vendor_id != PCI_VENDOR_ID_CXL)
-> +			continue;
->  
->  		cap_id = FIELD_GET(CXLDEV_CAP_HDR_CAP_ID_MASK,
->  				   readl(base + cap * 0x10));
+>  	if (feat_data_size > U16_MAX - offset)
+>  		return -EINVAL;
+> @@ -492,6 +492,9 @@ static void *cxlctl_get_feature(struct cxl_features_state *cxlfs,
+>  	data_size = cxl_get_feature(cxl_mbox, &feat_in->uuid,
+>  				    feat_in->selection, rpc_out->payload,
+>  				    count, offset, &return_code);
+> +	if (data_size < 0 &&
+> +	    return_code == CXL_MBOX_CMD_RC_SUCCESS)
+> +		return ERR_PTR(data_size);
+>  	*out_len = sizeof(struct fwctl_rpc_cxl_out);
+>  	if (data_size <= 0) {
+>  		rpc_out->size = 0;
+> @@ -544,6 +547,8 @@ static void *cxlctl_set_feature(struct cxl_features_state *cxlfs,
+>  	rc = cxl_set_feature(cxl_mbox, &feat_in->uuid,
+>  			     feat_in->version, feat_in->feat_data,
+>  			     data_size, flags, offset, &return_code);
+> +	if (rc && return_code == CXL_MBOX_CMD_RC_SUCCESS)
+> +		return ERR_PTR(rc);
+>  	*out_len = sizeof(*rpc_out);
+>  	if (rc) {
+>  		rpc_out->retval = return_code;
 
