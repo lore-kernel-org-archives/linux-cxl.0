@@ -1,159 +1,172 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB16634404B
-	for <linux-cxl@vger.kernel.org>; Wed, 19 Aug 2026 14:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B1F476CE1;
+	Wed, 19 Aug 2026 15:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787151232; cv=none; b=Y0ek3kThqOrLnYeqfcGDqBLpHbHbX9cbqINyc03ugYKSR1/GW1Dr6oUTSsZR4hUwiOtwuB2wFWs0Bm6iPHIeQTdt+U8Qr0xfD4KItuJoLIewewxmnW0Zz+jR5MFdOHKnpR8lbpYU5+jjUzz6x7MR42EWWy5xn0VMBOG3nf58c7I=
+	t=1787152150; cv=none; b=u8TlOM6tsMSq10tmrGt7k7mC1GikyNFC6RxD7U6oxM987C5lnmy+yvXmMh81vkb1Tu3slzHFm9oyZ6D4oA5ZCtXzaiSCcfe3a3aJJkgRCKcU37PEe5VP7h72VbnoVFPDVZgv5b/55i5V3VhyTMax0PrasJ/x47DmZQ7jht4k7Ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787151232; c=relaxed/simple;
-	bh=2Clwq0xEVl/D3F5PUetuKq2yD9SbLjCrf62+DTeKkvs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r182dHrloUhPIEOud7KDJWETmOxnElKNfFDMr9s8n3LHY+M0OelhJ78pWp32zkreHrRvqkdhUwfTLtQx84Erfk5TxBW4G0T1AQdZB3QyfaV5as/BSdxmcF/jwaz5EW/tCC7YYtD+Y4Ryvm5Pl/ORuT7GYIZ9t9SpyIEIOvIfQQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZWGIZtGV; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1787152150; c=relaxed/simple;
+	bh=lalFD5+POchhha3WSUXofQmK2QXuXQGw0zKdep9m4+U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q6ilIQgvKpAtdbAS8UUmjSJ9l1jTmEavwlP3lsztr+h9CHxJvIPE1T++Pw9cHM+pQBLFXrWjanjx3JyPirfMIf1jIr21FsdtLO7wUhMyp/VpEwyLo86EGGsmWttEzNJpK0UtyBrgwXGHweWY8kIShURiYRFMJcndcxq/IOImZNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HrqdMjJ8; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWGIZtGV"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3811f512167so1669980a91.3
-        for <linux-cxl@vger.kernel.org>; Wed, 19 Aug 2026 07:53:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787151230; x=1787756030; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=bxSCVWHULZ047P0gCjavIGFCaLe7BBqipIjyXjDKflw=;
-        b=ZWGIZtGVzgAgdSQlfcdCepMa5pnETsj1ceGQ4JHoQqrbyY8LHEp/C/DACAf/5oB+M6
-         6mgRozbiK2ZbXjAcgA24Fb/2/aytoMgOvb7CIAY1ZhthIYBTgmDE5cqio26sxa8NJuSf
-         lmLeQTnQv9dsHHYs71/Y9CLTkk0OPths8JdoKdu/D3z8VsQZdczpNsCSP0j+BbXQ1Klc
-         Qe+kHFlZSsayLtQbtEyqGW+wvmKbFLlpZK4RGBt+cXpWs65uliFzs2RYk+at9oGu5hNZ
-         smOtFnw4vt4Lzh8bSCgpMhVqH/BihtN0EmssSuAUo3LMxoc+dZi/Z7oWRhZlYr797G7N
-         Bpbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787151230; x=1787756030;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=bxSCVWHULZ047P0gCjavIGFCaLe7BBqipIjyXjDKflw=;
-        b=SpkbhCBCeyQiSvulSLtGElhLV52eoiPwfKHnL5eqo8mRKT2fWDdErV16aET2n4u5QY
-         5rBnlmsMIwgDDxnEbgU+6l9MCSB7eW0VQJfhR/b5cNcDW7obF5a/WcuB1thZmzdewU5H
-         9sB06vBlsVq3rIu6F28wUEWG5gEWKTFpG0GpyS4G15X7RWMu8C9WSYhmG5YR8LrM3RGG
-         RR9hu4DBKqHWKftsV/Vmv0Q4yG+Izno0pYg6sl5QWIDxYnp61QfoBwBDYkKjDMueeHng
-         VZI5K1nixqLhM84dEpzV0PBPKDfcPuiolCb411Pi3gAfKRimjW6B+LTkgN7y23MkLcmN
-         LUhg==
-X-Forwarded-Encrypted: i=1; AHgh+RpFdCW6NhZOyKEFMukppTB8+JsinVi/xUBuswyKumCrc+hvzFhK6kY9AyTXTf28FPzB70tN52kpDvc=@vger.kernel.org
-X-Gm-Message-State: AFuF++mMnIAiLEcgjwxccagTMJelxh6l8vjpNzkxPte7qBpT2o3Xh/8N
-	heQey4hZLpR+A+ps22HN9N/6OXJXWentBhCLWzGJ8wAW8+beQs3NbMqD
-X-Gm-Gg: AR+sD10G0u8IflBEZnsd1KYRnL3cCS3eVl3rtW3nB14Ugg8+hWVcgm1ltXTjfBEtlPs
-	XDiyy964kcs2BHeQuL9b0FT0YnwyqnTNT1kfou5ZcZTpe1Tz2P2slQvq2E2AGM/N6arX7ousWCA
-	0LrsbNckxBKqXS42yfYwSY6wqJ0s48xyDxUL5f8UBr7xDXaLK1B72gmJsqxErT4drr5ViVRLJbW
-	ZLJTsBfYbLSXsK2DKMcomU2155Jd+T2ZvTUl4pJkwfQhtUI6xum5V/7LTWSZm4TqpUd1P9iBN3U
-	4pH4HJrTz9206M0SOsWiz1msSQMRzK6aZKaDlgug57LlPJ1fHQoOFZTrP07ICcj+7fXXs0Mu50c
-	3ZKMnzX9FKGwstJxmggyJtF3o/lijf8CWZIcU2aA/oBAyYOGDacSnHqMcd9+1oo5QteTpSNqpEk
-	ghYzMDSSFZb3z27PPlchd0lOk7dtUGUDq6+jaxn73bnMpZO3hRA1ypEz3GEGHscYY=
-X-Received: by 2002:a17:90b:1f82:b0:38e:2524:724f with SMTP id 98e67ed59e1d1-3958108a4c6mr9971843a91.12.1787151229865;
-        Wed, 19 Aug 2026 07:53:49 -0700 (PDT)
-Received: from localhost ([118.34.230.2])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3957f85cdddsm966811a91.3.2026.08.19.07.53.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2026 07:53:49 -0700 (PDT)
-Date: Wed, 19 Aug 2026 20:23:47 +0530
-From: shaikh kamaluddin <shaikhkamal2012@gmail.com>
-To: Richard Cheng <icheng@nvidia.com>
-Cc: dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	djbw@kernel.org, danwilliams@nvidia.com, iweiny@kernel.org,
-	ming.li@zohomail.com, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org, newtonl@nvidia.com,
-	kristinc@nvidia.com, kaihengf@nvidia.com, kobak@nvidia.com
-Subject: Re: [PATCH] tools/testing/cxl: Don't wrap cxl_core's own exported
- symbols
-Message-ID: <aoXDe6OM1oWwVyK8@acer-nitro-anv15-41>
-References: <20260721084009.38100-1-icheng@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HrqdMjJ8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787152147; x=1818688147;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=lalFD5+POchhha3WSUXofQmK2QXuXQGw0zKdep9m4+U=;
+  b=HrqdMjJ8tyop6g7Liy5oAPOnr8hAY929a1MY4GH6YmQ9cymOSDqCEH/b
+   PxkTHM1ATSWaZKdNvMREIGvmCuqSzFvxCd7tqGqilGCLi0MJ7ukZ7OMBC
+   s1ttxeRmo5M03Hr9ps+lk4tOCpj9zBcPhgRWEeTRQE48Se18g6iz5Rzf/
+   Zy0QO2MpN/hBR8LD9zbnZUYE7x0+qFzGJ7xB6Q5pjtclZWrJ0CPZ4+jFJ
+   3CglD+HqIzTQ0OIBFNoFZhbKSuZxxdP5HbWQtjBZ92CS0DvQsMiSsbK41
+   FPobA9DZoVwCRTqYN+EZ00uA3Zork2zZq8N0hBz7zBCmjNlwGh6xCShmq
+   A==;
+X-CSE-ConnectionGUID: vkKMI91fTLiMHzLz9TMhNg==
+X-CSE-MsgGUID: LYijS0LnRWG5ubv0TH53zQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11880"; a="105205342"
+X-IronPort-AV: E=Sophos;i="6.25,231,1779174000"; 
+   d="scan'208";a="105205342"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2026 08:09:05 -0700
+X-CSE-ConnectionGUID: rcEbby03RDaj6gpO6Hq1YA==
+X-CSE-MsgGUID: aQM9aroEQj2b6KbKdk/i9g==
+X-ExtLoop1: 1
+Received: from aschende-mobl.amr.corp.intel.com (HELO [10.125.108.13]) ([10.125.108.13])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2026 08:09:02 -0700
+Message-ID: <7a8f49cf-2254-47c5-a4d2-c4f9387358db@intel.com>
+Date: Wed, 19 Aug 2026 08:09:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260721084009.38100-1-icheng@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] cxl/core: Skip non-CXL capabilities in MCAP
+To: engguopeng@buaa.edu.cn
+Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bhelgaas@google.com, dave@stgolabs.net,
+ jic23@kernel.org, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, djbw@kernel.org, johnny.li@montage-tech.com,
+ peng.guo@montage-tech.com, jingzhong.yang@montage-tech.com
+References: <20260817075854.17207-1-engguopeng@buaa.edu.cn>
+ <20260817075854.17207-3-engguopeng@buaa.edu.cn>
+ <c01709c9-4c3b-4ced-9635-72947807c301@intel.com>
+ <56e8d5aa.4be5.1a017a28956.Coremail.engguopeng@buaa.edu.cn>
+From: Dave Jiang <dave.jiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <56e8d5aa.4be5.1a017a28956.Coremail.engguopeng@buaa.edu.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 21, 2026 at 04:40:09PM +0800, Richard Cheng wrote:
-> Building cxl_test with LLVM=1 (ld.lld) fails in modpost:
+
+
+On 8/18/26 6:28 PM, engguopeng@buaa.edu.cn wrote:
 > 
-> """
->   cxl_core: .export_symbol section references '__wrap_...', but it
->   does not seem to be an export symbol
-> """
+>> On 8/17/26 12:58 AM, penn wrote:
+>>> From: Penn <engguopeng@buaa.edu.cn>
+>>>
+>>> When MMPT is enabled, a CXL device may expose CXL-defined capabilities
+>>> and PCIe Management Message Passthrough (MMPT) capabilities in the same
+>>> MMIO Capabilities Register Block (MCAP).
+>>>
+>>> The CXL capability parser currently identifies entries using only the
+>>> capability ID. Since capability IDs are scoped by Vendor ID, a
+>>> PCI-SIG-defined capability may have the same ID as a CXL-defined
+>>> capability. This causes non-CXL entries, including MMPT and MMIO Mailbox,
+>>> to be interpreted as CXL register blocks.
+>>>
+>>> The MMPT register block may be interpreted as a CXL mailbox. This
+>>> causes mailbox initialization to fail with:
+>>>
+>>>     cxl_pci 0000:3b:00.0: Mailbox is too small (64b)
+>>>
+>>> Check the MCAP Vendor ID before interpreting an entry as a CXL-defined
+>>> capability. Skip capabilities with a non-zero Vendor ID other than
+>>> PCI_VENDOR_ID_CXL.
+>>>
+>>> In legacy CXL capability headers, the field now used for the MCAP
+>>> Vendor ID was reserved and reads as zero. Continue to accept zero to
+>>> preserve compatibility with those devices.
+>>>
+>>> The fix has been tested on CXL 1.1 and CXL 3.0 devices. On the
+>>> MMPT-enabled device, it prevents both Mailbox and Status capabilities
+>>> from being misidentified.
+>>>
+>>> Fixes: 8adaf747c9f0 ("cxl/mem: Find device capabilities")
+>>> Suggested-by: Johnny <johnny.li@montage-tech.com>
+>>> Signed-off-by: Penn <engguopeng@buaa.edu.cn>
+>>
+>> After addressing Lukas's comment,
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>>
+>> Given that you are utilizing the new PCIe MMIO MBOX feature, have you considered migrate the CXL MBOX block parsing code to a PCI lib and shared between PCI and CXL? I did attempted something [1] like that a while back but never upstreamed the code due to no hardware to test on.
+>>  
+>> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/djiang/linux.git/log/?h=pci-mbox
+>>
+>> DJ
 > 
-> cxl_test --wraps 6 symbols that cxl_core both defines and exports.
-> GNU ld only wraps undefined references, but ld.lld also redirects
-> references to defined symbols, so cxl_core's own EXPORT_SYMBOL entries
-> get rewritten to __wrap_* and modpost rejects them.
+> Thanks for the review. Lukas's comment has already been addressed in v2,
+> but I missed his Reviewed-by tag. When applying, please also include:
 > 
-> cxl_core never calls these symbols, so wrap them only in the caller
-> modules via LDFLAGS_<module>.o instead of the global ldflags-y.
+> Reviewed-by: Lukas Wunner <lukas@wunner.de>
 > 
-> Signed-off-by: Richard Cheng <icheng@nvidia.com>
-> ---
->  tools/testing/cxl/Kbuild | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
+> I will add it if another revision is needed.
 > 
-> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-> index 2be1df80fcc9..e49ce644b4b1 100644
-> --- a/tools/testing/cxl/Kbuild
-> +++ b/tools/testing/cxl/Kbuild
-> @@ -4,16 +4,20 @@ ldflags-y += --wrap=is_acpi_device_node
->  ldflags-y += --wrap=acpi_evaluate_integer
->  ldflags-y += --wrap=acpi_pci_find_root
->  ldflags-y += --wrap=nvdimm_bus_register
-> -ldflags-y += --wrap=cxl_await_media_ready
-> -ldflags-y += --wrap=devm_cxl_add_rch_dport
-> -ldflags-y += --wrap=cxl_endpoint_parse_cdat
-> -ldflags-y += --wrap=devm_cxl_endpoint_decoders_setup
->  ldflags-y += --wrap=hmat_get_extended_linear_cache_size
-> -ldflags-y += --wrap=devm_cxl_add_dport_by_dev
-> -ldflags-y += --wrap=devm_cxl_switch_port_decoders_setup
->  ldflags-y += --wrap=walk_hmem_resources
->  ldflags-y += --wrap=region_intersects
->  ldflags-y += --wrap=region_intersects_soft_reserve
-> +wrap_cxl_core := --wrap=cxl_await_media_ready
-> +wrap_cxl_core += --wrap=devm_cxl_add_rch_dport
-> +wrap_cxl_core += --wrap=devm_cxl_add_dport_by_dev
-> +wrap_cxl_core += --wrap=devm_cxl_switch_port_decoders_setup
-> +wrap_cxl_core += --wrap=devm_cxl_endpoint_decoders_setup
-> +wrap_cxl_core += --wrap=cxl_endpoint_parse_cdat
-> +LDFLAGS_cxl_acpi.o += $(wrap_cxl_core)
-> +LDFLAGS_cxl_pmem.o += $(wrap_cxl_core)
-> +LDFLAGS_cxl_port.o += $(wrap_cxl_core)
-> +LDFLAGS_cxl_mem.o  += $(wrap_cxl_core)
->  
->  DRIVERS := ../../../drivers
->  DAX_HMEM_SRC := $(DRIVERS)/dax/hmem
-> -- 
-> 2.43.0
->
+> In addition, I will look into moving the CXL mailbox block parsing code to a common
+> PCI library so that it can be shared with the PCIe MMIO mailbox support.
+> 
+> Since that would be a broader refactoring, I would prefer to keep this
+> patch focused on fixing the Vendor ID validation issue and handle the
+> common parsing code in a separate follow-up patch or series. I will also
+> test the follow-up changes on real CXL hardware with MMPT support.
 
-Hi Richard,
+Sounds reasonable. Do you have MMPT support submitted to upstream for the PCI subsystem yet? I'm curious because there are certainly security concerns of an opaque pipe from device that the kernel has no visibility to. There will certainly be security pushback on the enabling from the kernel community without some protocol in place to ensure the data being tunneled will not result in malicious actions.
 
-I was hitting the same tools/testing/cxl build failure on current cxl/next.
-modpost was failing on wrapped CXL symbols, for example:
+DJ 
 
-.export_symbol section references '__wrap_devm_cxl_add_rch_dport',
-but it does not seem to be an export symbol
+> 
+>>> ---
+>>> Changes in v2:
+>>> - Accept a zero Vendor ID for compatibility with legacy CXL capability
+>>>   headers.
+>>> - Move the u16 declaration above the u32 declaration to follow the
+>>>   reverse Christmas tree convention.
+>>> - Document testing on CXL 1.1 and CXL 3.0 devices.
+>>>
+>>>  drivers/cxl/core/regs.c | 12 +++++++++++-
+>>>  1 file changed, 11 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
+>>> index 93710cf4f0a6..c7c14089f2c6 100644
+>>> --- a/drivers/cxl/core/regs.c
+>>> +++ b/drivers/cxl/core/regs.c
+>>> @@ -133,8 +133,18 @@ void cxl_probe_device_regs(struct device *dev, void __iomem *base,
+>>>  
+>>>  	for (cap = 1; cap <= cap_count; cap++) {
+>>>  		struct cxl_reg_map *rmap;
+>>> +		u16 cap_id, vendor_id;
+>>>  		u32 offset, length;
+>>> -		u16 cap_id;
+>>> +
+>>> +		vendor_id = FIELD_GET(PCI_MCAP_HDR_VENDOR_ID,
+>>> +				      readl(base + PCI_MCAP_HDR_BASE(cap) +
+>>> +					    PCI_MCAP_HDR_REG_4));
+>>> +		/*
+>>> +		 * The Vendor ID field is reserved and reads as zero in legacy
+>>> +		 * CXL capability headers. See CXL r3.2, Table 8-44.
+>>> +		 */
+>>> +		if (vendor_id && vendor_id != PCI_VENDOR_ID_CXL)
+>>> +			continue;
+>>>  
+>>>  		cap_id = FIELD_GET(CXLDEV_CAP_HDR_CAP_ID_MASK,
+>>>  				   readl(base + cap * 0x10));
 
-.export_symbol section references '__wrap_devm_cxl_add_dport_by_dev',
-but it does not seem to be an export symbol
-
-.export_symbol section references '__wrap_cxl_await_media_ready',
-but it does not seem to be an export symbol
-
-I found this patch while investigating the failure and applied it to my tree. 
-With the patch applied, the wrapped-symbol build issue is resolved and tools/testing/cxl 
-builds successfully for me.
-
-Tested-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
