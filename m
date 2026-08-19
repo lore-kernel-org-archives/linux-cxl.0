@@ -1,131 +1,141 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [207.46.229.174])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E64D17BEBF;
-	Wed, 19 Aug 2026 01:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.46.229.174
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C91403D1712;
+	Wed, 19 Aug 2026 08:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787102949; cv=none; b=ammO4Dw0hVwLlAPKkYVqHZLLJTjnn5fQ/7aI1FndZL7qN/tD95KKXBQf6FhWa3dtGfNZoUQ2RTFIEIQRLMMIfvG3agN0T9A3Qjj/hep3SvwF8LAFMMW+7xXhrYOkeCQfLZ+O3ksz2q/2UFEMAdkGlsAhFzlW18nkghIZ90+f77k=
+	t=1787127121; cv=none; b=OQC+5CMFJArjlWMdiPKhImQTrSJghLid1jTGogQMDbeSSgJnHRAOE9rGPcP92320Ozsu3fYqLW1T7xGtpy+Ivm3YYoe6/2uUsmftkjbNHq5sTk+ODE2AOOQLsDF/8v2Je/vNGgZvDA21VciQ39DKVmKiexSkkfSdMOjxB5hNyMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787102949; c=relaxed/simple;
-	bh=FN1IjfPxnj8wCE/bFzHRmr2dr9I4mzao3aIU1IrQ8Q4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=owzM1QEjOF9SnccQkgluuQ+d/3KN50+chkAZKSn0WLN5JavsZADuDp7P1bULTZsx3VG4aTKylILpqEeRloH0W4Y5RekZ7CAwQDsKQCt/QgCoSeFrkosEKr3+00VAeCy32Pa62NOlvA6Ouh7fLaZcUacDybCFaYhv9a3pMzqAggU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn; spf=pass smtp.mailfrom=buaa.edu.cn; dkim=fail (0-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b=W7wuD2DI reason="key not found in DNS"; arc=none smtp.client-ip=207.46.229.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=buaa.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buaa.edu.cn
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=buaa.edu.cn header.i=@buaa.edu.cn header.b="W7wuD2DI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=buaa.edu.cn; s=buaa; h=Received:Date:From:To:Cc:Subject:
-	In-Reply-To:References:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Message-ID; bh=HdjOb/MSPMkWBUNrHoEo2xw/qXBxtaijq1At
-	cbqdv8k=; b=W7wuD2DIAtoWHGlaGpuBwlt19GX0ObqCCl/PkW/2JrOl4hm6BkhW
-	imE37rkkOyvu4tudS+vdi73EBCuraConfXM5uKOIlSWa7qtPfwh1tLQdaGQjyYqa
-	bkXADXBw2AnHXtYYJo0ZKLmw84CV7z1afUA3If5Gd497VG5ti7BIN1w=
-Received: from engguopeng$buaa.edu.cn ( [180.167.85.126] ) by
- ajax-webmail-coremail-app1 (Coremail) ; Wed, 19 Aug 2026 09:28:43 +0800
- (GMT+08:00)
-Date: Wed, 19 Aug 2026 09:28:43 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: engguopeng@buaa.edu.cn
-To: "Dave Jiang" <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bhelgaas@google.com, dave@stgolabs.net,
-	jic23@kernel.org, alison.schofield@intel.com,
-	vishal.l.verma@intel.com, ira.weiny@intel.com, djbw@kernel.org,
-	johnny.li@montage-tech.com, peng.guo@montage-tech.com,
-	jingzhong.yang@montage-tech.com
-Subject: Re: Re: [PATCH v2 2/2] cxl/core: Skip non-CXL capabilities in MCAP
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2023.4-cmXT5 build
- 20240305(0ac2fdd1) Copyright (c) 2002-2026 www.mailtech.cn
- mispb-63b7ebb9-fa87-40c1-9aec-818ec5a006d9-buaa.edu.cn
-In-Reply-To: <c01709c9-4c3b-4ced-9635-72947807c301@intel.com>
-References: <20260817075854.17207-1-engguopeng@buaa.edu.cn>
- <20260817075854.17207-3-engguopeng@buaa.edu.cn>
- <c01709c9-4c3b-4ced-9635-72947807c301@intel.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1787127121; c=relaxed/simple;
+	bh=Jd1pko6eiJbpj7o09dHg1sf9K02NWy6eV6X/CDEzJBA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AjFgOFw4HBiUa6QTeVZz+f6ELeE6m0FItBbZDrDGO2QKooXX3x6eJKIxm+HNL2ooIbMH41/UUmLvui73KZr3rujRhNpWeDzf0D9TTnyqDs9/HFICoJVXE3qLeBCmMh6qb5Cs6yKbyYlZyt2NIrRm+MdftyZL4q5Jj070j20GcYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-c2dff70000001609-f3-6a856537501a
+From: Rakie Kim <rakie.kim@sk.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	ziy@nvidia.com,
+	matthew.brost@intel.com,
+	joshua.hahnjy@gmail.com,
+	byungchul@sk.com,
+	ying.huang@linux.alibaba.com,
+	apopple@nvidia.com,
+	david@kernel.org,
+	ljs@kernel.org,
+	liam@infradead.org,
+	vbabka@kernel.org,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	dave@stgolabs.net,
+	jic23@kernel.org,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	harry@kernel.org,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	Rakie Kim <rakie.kim@sk.com>
+Subject: Re: [PATCH 0/4] mm/mempolicy: introduce package-aware weighted interleave
+Date: Wed, 19 Aug 2026 17:11:30 +0900
+Message-ID: <20260819081133.1924-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.52.0.windows.1
+In-Reply-To: <aoRbDEn1sQ7b22dy@gourry-fedora-PF4VCD3F>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <56e8d5aa.4be5.1a017a28956.Coremail.engguopeng@buaa.edu.cn>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:OCz+CgCnRlPLBoVq7tKTAA--.10498W
-X-CM-SenderInfo: d2isijirrujqpexdthxhgxhubq/1tbiAgMEAGqETdkf6wABsK
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDIsWRmVeSWpSXmKPExsXC9ZZnoa5FamuWwYZZ7BZz1q9hs7j7+AKb
+	xa4bIRYnbjayWay+uYbR4vnWX4wWP+8eZ7e4fmslo8X+p89ZLB40rWKyOL51HrvFulOH2CzO
+	zzrFYnF51xw2i3tr/rNavHnsZvGtT9rifp+Dxcoff1gtjqzfzmQx+dICNouOl/dZLG5NOMZk
+	sXpNhsXso/fYHSQ9ds66y+6xYFOpR3fbZXaPzSu0PBbvecnksWlVJ5vHpk+T2D1OzPjN4rHz
+	oaXHi80zGT16m9+xeUydXe+xfstVFo/Pm+QC+KK4bFJSczLLUov07RK4MjZeectaMF+oYvW5
+	LewNjBf5uhg5OSQETCTmzHnJCmMffb6EsYuRg4NNQEni2N4YEFNEQFWi7Yo7SAWzwDZWiVsX
+	NUFsYYEgia7pzxlBbBagkh1HvrOB2LxAU65tO8AEMVFTYt3GWywgNqeAmcSv7WfBNgkJ8Ei8
+	2rCfEaJeUOLkzCcsEPPlJZq3zmbuYuQC6v3ILvGkBaJIQkBS4uCKGywTGPlnIemZhaRnASPT
+	KkahzLyy3MTMHBO9jMq8zAq95PzcTYzAOF1W+yd6B+OnC8GHGAU4GJV4eCPsW7OEWBPLiitz
+	DzFKcDArifB+nNyUJcSbklhZlVqUH19UmpNafIhRmoNFSZzX6Ft5ipBAemJJanZqakFqEUyW
+	iYNTqoFxaearFzEnNcxdr2zm+3XCyt9W9ow3T7XjhtqVTROX1nr81/zFGLnYpT3/o1jp0w4b
+	ycuiZqoWqzZkqV6MWTEpgW2SBPcukS1c1fM7cxPZP56NK/t5vSml0q98mkm7lssroQjHP/e+
+	sC06G8nCYKF/yUSmUL5trn7t++chz/V3MC2axRw931qJpTgj0VCLuag4EQBOzVVHzwIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYQCG+c7OOTsuZ6cleVBYNIjQ0GaYfYLIqGgfUiCRBGXqyEObzimb
+	t4mZl5KyEptK6iwNo9QtzXmdWcbyTlmmaS68pOW0NCtD8wLlkMB/Dzwvz5+X4gie4q6UQhXH
+	qlUypYjk4bzCfSGeh9mrkeKbpoOwpMZIwtGptyRs+XAa9uXrSdg9kk5Cw4gRQFvDKoAro11c
+	OGytBHBx+hsHtn2x4XAiowqDXQ33uPDl3R4CVvdaSPimuBeHAy0lJBwz/iXg3NRxuJTjBsdz
+	JLDyzzoBLUM2ArbXNGEw710ZCa/NjuPQmtuJQYNRDtcaK0io7xjjSoTIXDzKRWWmeHQja4CL
+	6io8UHnrLIZMVddJZPql46LuwjUcmT/5oZm6IoBuZX4n0dJHhMpnfmCoQH8Z1dS/x9GiSRhE
+	n+X5R7BKRQKrPhAQzpPXDs4TsaWCJENfPTcN9DtlAweKoX2YDtsDkA0oiqRFTOezEDs603uZ
+	rEGpfcGhGwnG2u9u5530KSb7jg3YGd+YNLcvk3bmb1SGGl9gm0V3prrWitvZgfZlVpteE3YW
+	0I7M1ydtYHO/g+kp+oxv9nczmQ16Ti5wLN6iireoMoBVAWeFKiFaplAe8tJEybUqRZLXhZho
+	E9i49OGl9dvN4PeA1AJoCogc+SjoSqSAkCVotNEWwFAckTP/Z15GpIAfIdMms+qYMHW8ktVY
+	gBuFi1z4gWfYcAF9URbHRrFsLKv+bzHKwTUNhMrLdRqnyoLhk5IJS98jzA8jyuLwFPHj+7Te
+	NzMgbpQKW/ROPCc1Z0yWSqxu00IKCRZSp+pX5nUT7QXnj2xTzQUbdnXvSZ3s3G9ayU9O8dQO
+	+YuPDnpLF5YDXfiixHQfN+Erj+lgTWpu+/ZWszjEeXZ5rMLzufZYS2voCZ0I18hl3h4ctUb2
+	D0WG0FzOAgAA
+X-CFilter-Loop: Reflected
 
-Cj4gT24gOC8xNy8yNiAxMjo1OCBBTSwgcGVubiB3cm90ZToKPiA+IEZyb206IFBlbm4gPGVuZ2d1
-b3BlbmdAYnVhYS5lZHUuY24+Cj4gPiAKPiA+IFdoZW4gTU1QVCBpcyBlbmFibGVkLCBhIENYTCBk
-ZXZpY2UgbWF5IGV4cG9zZSBDWEwtZGVmaW5lZCBjYXBhYmlsaXRpZXMKPiA+IGFuZCBQQ0llIE1h
-bmFnZW1lbnQgTWVzc2FnZSBQYXNzdGhyb3VnaCAoTU1QVCkgY2FwYWJpbGl0aWVzIGluIHRoZSBz
-YW1lCj4gPiBNTUlPIENhcGFiaWxpdGllcyBSZWdpc3RlciBCbG9jayAoTUNBUCkuCj4gPiAKPiA+
-IFRoZSBDWEwgY2FwYWJpbGl0eSBwYXJzZXIgY3VycmVudGx5IGlkZW50aWZpZXMgZW50cmllcyB1
-c2luZyBvbmx5IHRoZQo+ID4gY2FwYWJpbGl0eSBJRC4gU2luY2UgY2FwYWJpbGl0eSBJRHMgYXJl
-IHNjb3BlZCBieSBWZW5kb3IgSUQsIGEKPiA+IFBDSS1TSUctZGVmaW5lZCBjYXBhYmlsaXR5IG1h
-eSBoYXZlIHRoZSBzYW1lIElEIGFzIGEgQ1hMLWRlZmluZWQKPiA+IGNhcGFiaWxpdHkuIFRoaXMg
-Y2F1c2VzIG5vbi1DWEwgZW50cmllcywgaW5jbHVkaW5nIE1NUFQgYW5kIE1NSU8gTWFpbGJveCwK
-PiA+IHRvIGJlIGludGVycHJldGVkIGFzIENYTCByZWdpc3RlciBibG9ja3MuCj4gPiAKPiA+IFRo
-ZSBNTVBUIHJlZ2lzdGVyIGJsb2NrIG1heSBiZSBpbnRlcnByZXRlZCBhcyBhIENYTCBtYWlsYm94
-LiBUaGlzCj4gPiBjYXVzZXMgbWFpbGJveCBpbml0aWFsaXphdGlvbiB0byBmYWlsIHdpdGg6Cj4g
-PiAKPiA+ICAgICBjeGxfcGNpIDAwMDA6M2I6MDAuMDogTWFpbGJveCBpcyB0b28gc21hbGwgKDY0
-YikKPiA+IAo+ID4gQ2hlY2sgdGhlIE1DQVAgVmVuZG9yIElEIGJlZm9yZSBpbnRlcnByZXRpbmcg
-YW4gZW50cnkgYXMgYSBDWEwtZGVmaW5lZAo+ID4gY2FwYWJpbGl0eS4gU2tpcCBjYXBhYmlsaXRp
-ZXMgd2l0aCBhIG5vbi16ZXJvIFZlbmRvciBJRCBvdGhlciB0aGFuCj4gPiBQQ0lfVkVORE9SX0lE
-X0NYTC4KPiA+IAo+ID4gSW4gbGVnYWN5IENYTCBjYXBhYmlsaXR5IGhlYWRlcnMsIHRoZSBmaWVs
-ZCBub3cgdXNlZCBmb3IgdGhlIE1DQVAKPiA+IFZlbmRvciBJRCB3YXMgcmVzZXJ2ZWQgYW5kIHJl
-YWRzIGFzIHplcm8uIENvbnRpbnVlIHRvIGFjY2VwdCB6ZXJvIHRvCj4gPiBwcmVzZXJ2ZSBjb21w
-YXRpYmlsaXR5IHdpdGggdGhvc2UgZGV2aWNlcy4KPiA+IAo+ID4gVGhlIGZpeCBoYXMgYmVlbiB0
-ZXN0ZWQgb24gQ1hMIDEuMSBhbmQgQ1hMIDMuMCBkZXZpY2VzLiBPbiB0aGUKPiA+IE1NUFQtZW5h
-YmxlZCBkZXZpY2UsIGl0IHByZXZlbnRzIGJvdGggTWFpbGJveCBhbmQgU3RhdHVzIGNhcGFiaWxp
-dGllcwo+ID4gZnJvbSBiZWluZyBtaXNpZGVudGlmaWVkLgo+ID4gCj4gPiBGaXhlczogOGFkYWY3
-NDdjOWYwICgiY3hsL21lbTogRmluZCBkZXZpY2UgY2FwYWJpbGl0aWVzIikKPiA+IFN1Z2dlc3Rl
-ZC1ieTogSm9obm55IDxqb2hubnkubGlAbW9udGFnZS10ZWNoLmNvbT4KPiA+IFNpZ25lZC1vZmYt
-Ynk6IFBlbm4gPGVuZ2d1b3BlbmdAYnVhYS5lZHUuY24+Cj4gCj4gQWZ0ZXIgYWRkcmVzc2luZyBM
-dWthcydzIGNvbW1lbnQsCj4gUmV2aWV3ZWQtYnk6IERhdmUgSmlhbmcgPGRhdmUuamlhbmdAaW50
-ZWwuY29tPgo+IAo+IEdpdmVuIHRoYXQgeW91IGFyZSB1dGlsaXppbmcgdGhlIG5ldyBQQ0llIE1N
-SU8gTUJPWCBmZWF0dXJlLCBoYXZlIHlvdSBjb25zaWRlcmVkIG1pZ3JhdGUgdGhlIENYTCBNQk9Y
-IGJsb2NrIHBhcnNpbmcgY29kZSB0byBhIFBDSSBsaWIgYW5kIHNoYXJlZCBiZXR3ZWVuIFBDSSBh
-bmQgQ1hMPyBJIGRpZCBhdHRlbXB0ZWQgc29tZXRoaW5nIFsxXSBsaWtlIHRoYXQgYSB3aGlsZSBi
-YWNrIGJ1dCBuZXZlciB1cHN0cmVhbWVkIHRoZSBjb2RlIGR1ZSB0byBubyBoYXJkd2FyZSB0byB0
-ZXN0IG9uLgo+ICAKPiBbMV06IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9r
-ZXJuZWwvZ2l0L2RqaWFuZy9saW51eC5naXQvbG9nLz9oPXBjaS1tYm94Cj4gCj4gREoKClRoYW5r
-cyBmb3IgdGhlIHJldmlldy4gTHVrYXMncyBjb21tZW50IGhhcyBhbHJlYWR5IGJlZW4gYWRkcmVz
-c2VkIGluIHYyLApidXQgSSBtaXNzZWQgaGlzIFJldmlld2VkLWJ5IHRhZy4gV2hlbiBhcHBseWlu
-ZywgcGxlYXNlIGFsc28gaW5jbHVkZToKClJldmlld2VkLWJ5OiBMdWthcyBXdW5uZXIgPGx1a2Fz
-QHd1bm5lci5kZT4KCkkgd2lsbCBhZGQgaXQgaWYgYW5vdGhlciByZXZpc2lvbiBpcyBuZWVkZWQu
-CgpJbiBhZGRpdGlvbiwgSSB3aWxsIGxvb2sgaW50byBtb3ZpbmcgdGhlIENYTCBtYWlsYm94IGJs
-b2NrIHBhcnNpbmcgY29kZSB0byBhIGNvbW1vbgpQQ0kgbGlicmFyeSBzbyB0aGF0IGl0IGNhbiBi
-ZSBzaGFyZWQgd2l0aCB0aGUgUENJZSBNTUlPIG1haWxib3ggc3VwcG9ydC4KClNpbmNlIHRoYXQg
-d291bGQgYmUgYSBicm9hZGVyIHJlZmFjdG9yaW5nLCBJIHdvdWxkIHByZWZlciB0byBrZWVwIHRo
-aXMKcGF0Y2ggZm9jdXNlZCBvbiBmaXhpbmcgdGhlIFZlbmRvciBJRCB2YWxpZGF0aW9uIGlzc3Vl
-IGFuZCBoYW5kbGUgdGhlCmNvbW1vbiBwYXJzaW5nIGNvZGUgaW4gYSBzZXBhcmF0ZSBmb2xsb3ct
-dXAgcGF0Y2ggb3Igc2VyaWVzLiBJIHdpbGwgYWxzbwp0ZXN0IHRoZSBmb2xsb3ctdXAgY2hhbmdl
-cyBvbiByZWFsIENYTCBoYXJkd2FyZSB3aXRoIE1NUFQgc3VwcG9ydC4KCj4gPiAtLS0KPiA+IENo
-YW5nZXMgaW4gdjI6Cj4gPiAtIEFjY2VwdCBhIHplcm8gVmVuZG9yIElEIGZvciBjb21wYXRpYmls
-aXR5IHdpdGggbGVnYWN5IENYTCBjYXBhYmlsaXR5Cj4gPiAgIGhlYWRlcnMuCj4gPiAtIE1vdmUg
-dGhlIHUxNiBkZWNsYXJhdGlvbiBhYm92ZSB0aGUgdTMyIGRlY2xhcmF0aW9uIHRvIGZvbGxvdyB0
-aGUKPiA+ICAgcmV2ZXJzZSBDaHJpc3RtYXMgdHJlZSBjb252ZW50aW9uLgo+ID4gLSBEb2N1bWVu
-dCB0ZXN0aW5nIG9uIENYTCAxLjEgYW5kIENYTCAzLjAgZGV2aWNlcy4KPiA+IAo+ID4gIGRyaXZl
-cnMvY3hsL2NvcmUvcmVncy5jIHwgMTIgKysrKysrKysrKystCj4gPiAgMSBmaWxlIGNoYW5nZWQs
-IDExIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvY3hsL2NvcmUvcmVncy5jIGIvZHJpdmVycy9jeGwvY29yZS9yZWdzLmMKPiA+IGluZGV4
-IDkzNzEwY2Y0ZjBhNi4uYzdjMTQwODlmMmM2IDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9jeGwv
-Y29yZS9yZWdzLmMKPiA+ICsrKyBiL2RyaXZlcnMvY3hsL2NvcmUvcmVncy5jCj4gPiBAQCAtMTMz
-LDggKzEzMywxOCBAQCB2b2lkIGN4bF9wcm9iZV9kZXZpY2VfcmVncyhzdHJ1Y3QgZGV2aWNlICpk
-ZXYsIHZvaWQgX19pb21lbSAqYmFzZSwKPiA+ICAKPiA+ICAJZm9yIChjYXAgPSAxOyBjYXAgPD0g
-Y2FwX2NvdW50OyBjYXArKykgewo+ID4gIAkJc3RydWN0IGN4bF9yZWdfbWFwICpybWFwOwo+ID4g
-KwkJdTE2IGNhcF9pZCwgdmVuZG9yX2lkOwo+ID4gIAkJdTMyIG9mZnNldCwgbGVuZ3RoOwo+ID4g
-LQkJdTE2IGNhcF9pZDsKPiA+ICsKPiA+ICsJCXZlbmRvcl9pZCA9IEZJRUxEX0dFVChQQ0lfTUNB
-UF9IRFJfVkVORE9SX0lELAo+ID4gKwkJCQkgICAgICByZWFkbChiYXNlICsgUENJX01DQVBfSERS
-X0JBU0UoY2FwKSArCj4gPiArCQkJCQkgICAgUENJX01DQVBfSERSX1JFR180KSk7Cj4gPiArCQkv
-Kgo+ID4gKwkJICogVGhlIFZlbmRvciBJRCBmaWVsZCBpcyByZXNlcnZlZCBhbmQgcmVhZHMgYXMg
-emVybyBpbiBsZWdhY3kKPiA+ICsJCSAqIENYTCBjYXBhYmlsaXR5IGhlYWRlcnMuIFNlZSBDWEwg
-cjMuMiwgVGFibGUgOC00NC4KPiA+ICsJCSAqLwo+ID4gKwkJaWYgKHZlbmRvcl9pZCAmJiB2ZW5k
-b3JfaWQgIT0gUENJX1ZFTkRPUl9JRF9DWEwpCj4gPiArCQkJY29udGludWU7Cj4gPiAgCj4gPiAg
-CQljYXBfaWQgPSBGSUVMRF9HRVQoQ1hMREVWX0NBUF9IRFJfQ0FQX0lEX01BU0ssCj4gPiAgCQkJ
-CSAgIHJlYWRsKGJhc2UgKyBjYXAgKiAweDEwKSk7Cg==
+On Tue, 18 Aug 2026 09:30:36 -0400 Gregory Price <gourry@gourry.net> wrote:
+
+> Not concerned about the performance, concerned about how complicated the
+> mempolicy - cgroup - zonelist - page_alloc interaction already is, and
+> then adding another filtering mechanism on top.
+>
+> Today we have:
+>
+> 1) cpuset constrains mempolicy (nodemask remaps)
+> 2) cpuset constrains zonelist walks
+> 3) mempolicy nodemask constrains zonelist walks
+> 4) memory-tiers.c nodemask constrains zonelist walks for demotion
+> 5) zonelist membership constrains allocation access
+> 6) a bunch of corner conditions that violate 1-3 for the sake of forward
+>    progress
+>
+> now we're adding:
+>
+> 7) memory-tiers.c nodemask constrains mempolicy nodemask
+>    except when it doesn't, because fallbacks occurred hard enough
+>
+> It's already un-intuitive how and when memory lands on certain nodes.
+>
+> To be clear, I'm not saying this idea is bad - either as-is or in some
+> other form - just that adding another nodemask filtering path is making
+> it harder and harder to understand what lands where.
+
+I understand what you are concerned about, and I share the concern.
+
+I tried to keep the addition minimal and to make it act only in the
+intended situation: the filter runs in weighted interleave node
+selection, only while the toggle is on. It does not change cpusets,
+the zonelist, or the allocator fallback. Still, it is true that this
+adds one more filtering layer to the constraints you listed.
+
+I will try to organize this part so that it is as easy to follow as
+possible, and reinforce the documentation as well. I am not sure that
+will be enough, though - it needs more thought.
+
+> Mostly starting to wonder if we're reaching the point where the page
+> allocator needs to take something a little more descriptive than a
+> nodemask to dictate placement.
+
+This is something I think about a lot as well. Many users simply let
+the policy use all nodes, and in the situation this series targets,
+that is exactly what costs performance. To fix it, the kernel needs
+more information than a nodemask carries. But as you pointed out,
+adding that information also adds complexity. This is my concern as
+well, and I think how to handle it needs a discussion.
+
+Thanks again for your time and review.
+
+Rakie Kim
