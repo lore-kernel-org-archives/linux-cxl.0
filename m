@@ -1,141 +1,159 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C91403D1712;
-	Wed, 19 Aug 2026 08:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB16634404B
+	for <linux-cxl@vger.kernel.org>; Wed, 19 Aug 2026 14:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787127121; cv=none; b=OQC+5CMFJArjlWMdiPKhImQTrSJghLid1jTGogQMDbeSSgJnHRAOE9rGPcP92320Ozsu3fYqLW1T7xGtpy+Ivm3YYoe6/2uUsmftkjbNHq5sTk+ODE2AOOQLsDF/8v2Je/vNGgZvDA21VciQ39DKVmKiexSkkfSdMOjxB5hNyMo=
+	t=1787151232; cv=none; b=Y0ek3kThqOrLnYeqfcGDqBLpHbHbX9cbqINyc03ugYKSR1/GW1Dr6oUTSsZR4hUwiOtwuB2wFWs0Bm6iPHIeQTdt+U8Qr0xfD4KItuJoLIewewxmnW0Zz+jR5MFdOHKnpR8lbpYU5+jjUzz6x7MR42EWWy5xn0VMBOG3nf58c7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787127121; c=relaxed/simple;
-	bh=Jd1pko6eiJbpj7o09dHg1sf9K02NWy6eV6X/CDEzJBA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AjFgOFw4HBiUa6QTeVZz+f6ELeE6m0FItBbZDrDGO2QKooXX3x6eJKIxm+HNL2ooIbMH41/UUmLvui73KZr3rujRhNpWeDzf0D9TTnyqDs9/HFICoJVXE3qLeBCmMh6qb5Cs6yKbyYlZyt2NIrRm+MdftyZL4q5Jj070j20GcYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-c2dff70000001609-f3-6a856537501a
-From: Rakie Kim <rakie.kim@sk.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	byungchul@sk.com,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	david@kernel.org,
-	ljs@kernel.org,
-	liam@infradead.org,
-	vbabka@kernel.org,
-	rppt@kernel.org,
-	surenb@google.com,
-	mhocko@suse.com,
-	dave@stgolabs.net,
-	jic23@kernel.org,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	harry@kernel.org,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	Rakie Kim <rakie.kim@sk.com>
-Subject: Re: [PATCH 0/4] mm/mempolicy: introduce package-aware weighted interleave
-Date: Wed, 19 Aug 2026 17:11:30 +0900
-Message-ID: <20260819081133.1924-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.52.0.windows.1
-In-Reply-To: <aoRbDEn1sQ7b22dy@gourry-fedora-PF4VCD3F>
-References: 
+	s=arc-20240116; t=1787151232; c=relaxed/simple;
+	bh=2Clwq0xEVl/D3F5PUetuKq2yD9SbLjCrf62+DTeKkvs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r182dHrloUhPIEOud7KDJWETmOxnElKNfFDMr9s8n3LHY+M0OelhJ78pWp32zkreHrRvqkdhUwfTLtQx84Erfk5TxBW4G0T1AQdZB3QyfaV5as/BSdxmcF/jwaz5EW/tCC7YYtD+Y4Ryvm5Pl/ORuT7GYIZ9t9SpyIEIOvIfQQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZWGIZtGV; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWGIZtGV"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3811f512167so1669980a91.3
+        for <linux-cxl@vger.kernel.org>; Wed, 19 Aug 2026 07:53:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787151230; x=1787756030; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=bxSCVWHULZ047P0gCjavIGFCaLe7BBqipIjyXjDKflw=;
+        b=ZWGIZtGVzgAgdSQlfcdCepMa5pnETsj1ceGQ4JHoQqrbyY8LHEp/C/DACAf/5oB+M6
+         6mgRozbiK2ZbXjAcgA24Fb/2/aytoMgOvb7CIAY1ZhthIYBTgmDE5cqio26sxa8NJuSf
+         lmLeQTnQv9dsHHYs71/Y9CLTkk0OPths8JdoKdu/D3z8VsQZdczpNsCSP0j+BbXQ1Klc
+         Qe+kHFlZSsayLtQbtEyqGW+wvmKbFLlpZK4RGBt+cXpWs65uliFzs2RYk+at9oGu5hNZ
+         smOtFnw4vt4Lzh8bSCgpMhVqH/BihtN0EmssSuAUo3LMxoc+dZi/Z7oWRhZlYr797G7N
+         Bpbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787151230; x=1787756030;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=bxSCVWHULZ047P0gCjavIGFCaLe7BBqipIjyXjDKflw=;
+        b=SpkbhCBCeyQiSvulSLtGElhLV52eoiPwfKHnL5eqo8mRKT2fWDdErV16aET2n4u5QY
+         5rBnlmsMIwgDDxnEbgU+6l9MCSB7eW0VQJfhR/b5cNcDW7obF5a/WcuB1thZmzdewU5H
+         9sB06vBlsVq3rIu6F28wUEWG5gEWKTFpG0GpyS4G15X7RWMu8C9WSYhmG5YR8LrM3RGG
+         RR9hu4DBKqHWKftsV/Vmv0Q4yG+Izno0pYg6sl5QWIDxYnp61QfoBwBDYkKjDMueeHng
+         VZI5K1nixqLhM84dEpzV0PBPKDfcPuiolCb411Pi3gAfKRimjW6B+LTkgN7y23MkLcmN
+         LUhg==
+X-Forwarded-Encrypted: i=1; AHgh+RpFdCW6NhZOyKEFMukppTB8+JsinVi/xUBuswyKumCrc+hvzFhK6kY9AyTXTf28FPzB70tN52kpDvc=@vger.kernel.org
+X-Gm-Message-State: AFuF++mMnIAiLEcgjwxccagTMJelxh6l8vjpNzkxPte7qBpT2o3Xh/8N
+	heQey4hZLpR+A+ps22HN9N/6OXJXWentBhCLWzGJ8wAW8+beQs3NbMqD
+X-Gm-Gg: AR+sD10G0u8IflBEZnsd1KYRnL3cCS3eVl3rtW3nB14Ugg8+hWVcgm1ltXTjfBEtlPs
+	XDiyy964kcs2BHeQuL9b0FT0YnwyqnTNT1kfou5ZcZTpe1Tz2P2slQvq2E2AGM/N6arX7ousWCA
+	0LrsbNckxBKqXS42yfYwSY6wqJ0s48xyDxUL5f8UBr7xDXaLK1B72gmJsqxErT4drr5ViVRLJbW
+	ZLJTsBfYbLSXsK2DKMcomU2155Jd+T2ZvTUl4pJkwfQhtUI6xum5V/7LTWSZm4TqpUd1P9iBN3U
+	4pH4HJrTz9206M0SOsWiz1msSQMRzK6aZKaDlgug57LlPJ1fHQoOFZTrP07ICcj+7fXXs0Mu50c
+	3ZKMnzX9FKGwstJxmggyJtF3o/lijf8CWZIcU2aA/oBAyYOGDacSnHqMcd9+1oo5QteTpSNqpEk
+	ghYzMDSSFZb3z27PPlchd0lOk7dtUGUDq6+jaxn73bnMpZO3hRA1ypEz3GEGHscYY=
+X-Received: by 2002:a17:90b:1f82:b0:38e:2524:724f with SMTP id 98e67ed59e1d1-3958108a4c6mr9971843a91.12.1787151229865;
+        Wed, 19 Aug 2026 07:53:49 -0700 (PDT)
+Received: from localhost ([118.34.230.2])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3957f85cdddsm966811a91.3.2026.08.19.07.53.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2026 07:53:49 -0700 (PDT)
+Date: Wed, 19 Aug 2026 20:23:47 +0530
+From: shaikh kamaluddin <shaikhkamal2012@gmail.com>
+To: Richard Cheng <icheng@nvidia.com>
+Cc: dave@stgolabs.net, jic23@kernel.org, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	djbw@kernel.org, danwilliams@nvidia.com, iweiny@kernel.org,
+	ming.li@zohomail.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, newtonl@nvidia.com,
+	kristinc@nvidia.com, kaihengf@nvidia.com, kobak@nvidia.com
+Subject: Re: [PATCH] tools/testing/cxl: Don't wrap cxl_core's own exported
+ symbols
+Message-ID: <aoXDe6OM1oWwVyK8@acer-nitro-anv15-41>
+References: <20260721084009.38100-1-icheng@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDIsWRmVeSWpSXmKPExsXC9ZZnoa5FamuWwYZZ7BZz1q9hs7j7+AKb
-	xa4bIRYnbjayWay+uYbR4vnWX4wWP+8eZ7e4fmslo8X+p89ZLB40rWKyOL51HrvFulOH2CzO
-	zzrFYnF51xw2i3tr/rNavHnsZvGtT9rifp+Dxcoff1gtjqzfzmQx+dICNouOl/dZLG5NOMZk
-	sXpNhsXso/fYHSQ9ds66y+6xYFOpR3fbZXaPzSu0PBbvecnksWlVJ5vHpk+T2D1OzPjN4rHz
-	oaXHi80zGT16m9+xeUydXe+xfstVFo/Pm+QC+KK4bFJSczLLUov07RK4MjZeectaMF+oYvW5
-	LewNjBf5uhg5OSQETCTmzHnJCmMffb6EsYuRg4NNQEni2N4YEFNEQFWi7Yo7SAWzwDZWiVsX
-	NUFsYYEgia7pzxlBbBagkh1HvrOB2LxAU65tO8AEMVFTYt3GWywgNqeAmcSv7WfBNgkJ8Ei8
-	2rCfEaJeUOLkzCcsEPPlJZq3zmbuYuQC6v3ILvGkBaJIQkBS4uCKGywTGPlnIemZhaRnASPT
-	KkahzLyy3MTMHBO9jMq8zAq95PzcTYzAOF1W+yd6B+OnC8GHGAU4GJV4eCPsW7OEWBPLiitz
-	DzFKcDArifB+nNyUJcSbklhZlVqUH19UmpNafIhRmoNFSZzX6Ft5ipBAemJJanZqakFqEUyW
-	iYNTqoFxaearFzEnNcxdr2zm+3XCyt9W9ow3T7XjhtqVTROX1nr81/zFGLnYpT3/o1jp0w4b
-	ycuiZqoWqzZkqV6MWTEpgW2SBPcukS1c1fM7cxPZP56NK/t5vSml0q98mkm7lssroQjHP/e+
-	sC06G8nCYKF/yUSmUL5trn7t++chz/V3MC2axRw931qJpTgj0VCLuag4EQBOzVVHzwIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYQCG+c7OOTsuZ6cleVBYNIjQ0GaYfYLIqGgfUiCRBGXqyEObzimb
-	t4mZl5KyEptK6iwNo9QtzXmdWcbyTlmmaS68pOW0NCtD8wLlkMB/Dzwvz5+X4gie4q6UQhXH
-	qlUypYjk4bzCfSGeh9mrkeKbpoOwpMZIwtGptyRs+XAa9uXrSdg9kk5Cw4gRQFvDKoAro11c
-	OGytBHBx+hsHtn2x4XAiowqDXQ33uPDl3R4CVvdaSPimuBeHAy0lJBwz/iXg3NRxuJTjBsdz
-	JLDyzzoBLUM2ArbXNGEw710ZCa/NjuPQmtuJQYNRDtcaK0io7xjjSoTIXDzKRWWmeHQja4CL
-	6io8UHnrLIZMVddJZPql46LuwjUcmT/5oZm6IoBuZX4n0dJHhMpnfmCoQH8Z1dS/x9GiSRhE
-	n+X5R7BKRQKrPhAQzpPXDs4TsaWCJENfPTcN9DtlAweKoX2YDtsDkA0oiqRFTOezEDs603uZ
-	rEGpfcGhGwnG2u9u5530KSb7jg3YGd+YNLcvk3bmb1SGGl9gm0V3prrWitvZgfZlVpteE3YW
-	0I7M1ydtYHO/g+kp+oxv9nczmQ16Ti5wLN6iireoMoBVAWeFKiFaplAe8tJEybUqRZLXhZho
-	E9i49OGl9dvN4PeA1AJoCogc+SjoSqSAkCVotNEWwFAckTP/Z15GpIAfIdMms+qYMHW8ktVY
-	gBuFi1z4gWfYcAF9URbHRrFsLKv+bzHKwTUNhMrLdRqnyoLhk5IJS98jzA8jyuLwFPHj+7Te
-	NzMgbpQKW/ROPCc1Z0yWSqxu00IKCRZSp+pX5nUT7QXnj2xTzQUbdnXvSZ3s3G9ayU9O8dQO
-	+YuPDnpLF5YDXfiixHQfN+Erj+lgTWpu+/ZWszjEeXZ5rMLzufZYS2voCZ0I18hl3h4ctUb2
-	D0WG0FzOAgAA
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260721084009.38100-1-icheng@nvidia.com>
 
-On Tue, 18 Aug 2026 09:30:36 -0400 Gregory Price <gourry@gourry.net> wrote:
-
-> Not concerned about the performance, concerned about how complicated the
-> mempolicy - cgroup - zonelist - page_alloc interaction already is, and
-> then adding another filtering mechanism on top.
+On Tue, Jul 21, 2026 at 04:40:09PM +0800, Richard Cheng wrote:
+> Building cxl_test with LLVM=1 (ld.lld) fails in modpost:
+> 
+> """
+>   cxl_core: .export_symbol section references '__wrap_...', but it
+>   does not seem to be an export symbol
+> """
+> 
+> cxl_test --wraps 6 symbols that cxl_core both defines and exports.
+> GNU ld only wraps undefined references, but ld.lld also redirects
+> references to defined symbols, so cxl_core's own EXPORT_SYMBOL entries
+> get rewritten to __wrap_* and modpost rejects them.
+> 
+> cxl_core never calls these symbols, so wrap them only in the caller
+> modules via LDFLAGS_<module>.o instead of the global ldflags-y.
+> 
+> Signed-off-by: Richard Cheng <icheng@nvidia.com>
+> ---
+>  tools/testing/cxl/Kbuild | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
+> index 2be1df80fcc9..e49ce644b4b1 100644
+> --- a/tools/testing/cxl/Kbuild
+> +++ b/tools/testing/cxl/Kbuild
+> @@ -4,16 +4,20 @@ ldflags-y += --wrap=is_acpi_device_node
+>  ldflags-y += --wrap=acpi_evaluate_integer
+>  ldflags-y += --wrap=acpi_pci_find_root
+>  ldflags-y += --wrap=nvdimm_bus_register
+> -ldflags-y += --wrap=cxl_await_media_ready
+> -ldflags-y += --wrap=devm_cxl_add_rch_dport
+> -ldflags-y += --wrap=cxl_endpoint_parse_cdat
+> -ldflags-y += --wrap=devm_cxl_endpoint_decoders_setup
+>  ldflags-y += --wrap=hmat_get_extended_linear_cache_size
+> -ldflags-y += --wrap=devm_cxl_add_dport_by_dev
+> -ldflags-y += --wrap=devm_cxl_switch_port_decoders_setup
+>  ldflags-y += --wrap=walk_hmem_resources
+>  ldflags-y += --wrap=region_intersects
+>  ldflags-y += --wrap=region_intersects_soft_reserve
+> +wrap_cxl_core := --wrap=cxl_await_media_ready
+> +wrap_cxl_core += --wrap=devm_cxl_add_rch_dport
+> +wrap_cxl_core += --wrap=devm_cxl_add_dport_by_dev
+> +wrap_cxl_core += --wrap=devm_cxl_switch_port_decoders_setup
+> +wrap_cxl_core += --wrap=devm_cxl_endpoint_decoders_setup
+> +wrap_cxl_core += --wrap=cxl_endpoint_parse_cdat
+> +LDFLAGS_cxl_acpi.o += $(wrap_cxl_core)
+> +LDFLAGS_cxl_pmem.o += $(wrap_cxl_core)
+> +LDFLAGS_cxl_port.o += $(wrap_cxl_core)
+> +LDFLAGS_cxl_mem.o  += $(wrap_cxl_core)
+>  
+>  DRIVERS := ../../../drivers
+>  DAX_HMEM_SRC := $(DRIVERS)/dax/hmem
+> -- 
+> 2.43.0
 >
-> Today we have:
->
-> 1) cpuset constrains mempolicy (nodemask remaps)
-> 2) cpuset constrains zonelist walks
-> 3) mempolicy nodemask constrains zonelist walks
-> 4) memory-tiers.c nodemask constrains zonelist walks for demotion
-> 5) zonelist membership constrains allocation access
-> 6) a bunch of corner conditions that violate 1-3 for the sake of forward
->    progress
->
-> now we're adding:
->
-> 7) memory-tiers.c nodemask constrains mempolicy nodemask
->    except when it doesn't, because fallbacks occurred hard enough
->
-> It's already un-intuitive how and when memory lands on certain nodes.
->
-> To be clear, I'm not saying this idea is bad - either as-is or in some
-> other form - just that adding another nodemask filtering path is making
-> it harder and harder to understand what lands where.
 
-I understand what you are concerned about, and I share the concern.
+Hi Richard,
 
-I tried to keep the addition minimal and to make it act only in the
-intended situation: the filter runs in weighted interleave node
-selection, only while the toggle is on. It does not change cpusets,
-the zonelist, or the allocator fallback. Still, it is true that this
-adds one more filtering layer to the constraints you listed.
+I was hitting the same tools/testing/cxl build failure on current cxl/next.
+modpost was failing on wrapped CXL symbols, for example:
 
-I will try to organize this part so that it is as easy to follow as
-possible, and reinforce the documentation as well. I am not sure that
-will be enough, though - it needs more thought.
+.export_symbol section references '__wrap_devm_cxl_add_rch_dport',
+but it does not seem to be an export symbol
 
-> Mostly starting to wonder if we're reaching the point where the page
-> allocator needs to take something a little more descriptive than a
-> nodemask to dictate placement.
+.export_symbol section references '__wrap_devm_cxl_add_dport_by_dev',
+but it does not seem to be an export symbol
 
-This is something I think about a lot as well. Many users simply let
-the policy use all nodes, and in the situation this series targets,
-that is exactly what costs performance. To fix it, the kernel needs
-more information than a nodemask carries. But as you pointed out,
-adding that information also adds complexity. This is my concern as
-well, and I think how to handle it needs a discussion.
+.export_symbol section references '__wrap_cxl_await_media_ready',
+but it does not seem to be an export symbol
 
-Thanks again for your time and review.
+I found this patch while investigating the failure and applied it to my tree. 
+With the patch applied, the wrapped-symbol build issue is resolved and tools/testing/cxl 
+builds successfully for me.
 
-Rakie Kim
+Tested-by: Shaikh Kamaluddin <shaikhkamal2012@gmail.com>
