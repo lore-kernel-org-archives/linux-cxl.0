@@ -1,48 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35D3399CED
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Aug 2026 23:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210972222D0
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Aug 2026 23:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787268697; cv=none; b=t9feuxpq+iIMNys4RFsKmgaX3E0uwdYzEg9WxsQmPOFQg2dV8CDxWPUaTT4flfAwOyaK8HjgeYifcky/dc6oGa1kfxmWWCOmR3UTecSnx5KgRlKQ1zIuzMvUtwlFh1kh8n215jJrrRYQItqR13ealzyAq/zVb6t851sQl2h7ifc=
+	t=1787268698; cv=none; b=leGUiJA5B48d4NrPHTfEaa97hxGuAo2gMIQ8Rvk6LIvEgxEY8/whUtd1CIF45WSfqTEI9t+E/ugcbY6DdvJFnY5nc+ULDMJ6mchDDYxwobrvT/5GUnk690nnyjG/VWIhD25ffIxid42FV35LmYJFvbkYRr6mX5APIWhg/Z3AYLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787268697; c=relaxed/simple;
-	bh=8wD8rQ4Ufx6ZS51bNF/l1PO493Us3nebcU5pVC7k6eE=;
+	s=arc-20240116; t=1787268698; c=relaxed/simple;
+	bh=8s4qQ4UtosRwAt/MopDG1vdgIDgNA2MOTik6Xi3M0Iw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ryV7Iccw+Dz0jpDk+JSXQrGBXIvtC96MGN8UFdQF50X7jHOwWqw6D1U16Vp8eTVWKbqj34z7549yEuOwA0M2u/b5w1MrvjGWwwUrXP5WuvZ4YPxFmTWZ5nVhA7TEfNtfsLd9gqTo4O5YdbATzANwtDneovSyUnQ09CI7+1gixCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fmjb1zcj; arc=none smtp.client-ip=192.198.163.9
+	 MIME-Version; b=BHhOccJuREb8aTt40KuLjD0XuYPiwyodPxUM1Y8vnS2Hb8c78v56//VcGDyw6oheNI6jS4ZW13pzLjZC5ILcgBatYawWTPbyFAuOCgHMcTr18jeea4VNqXP2b8ilaW746+lsL3m2Zlaq4nWvDYA6y1xSYQJNAgo2RvClxhilJPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ja+/uBxy; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fmjb1zcj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ja+/uBxy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787268694; x=1818804694;
+  t=1787268697; x=1818804697;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=8wD8rQ4Ufx6ZS51bNF/l1PO493Us3nebcU5pVC7k6eE=;
-  b=Fmjb1zcjZ9RJj59DSL+hYJf9eJ8tAWOwKbS4z7+/pLD5lUfFW8tOmemR
-   pxXKwOey0CqRqctCPh3E+H1WCSA+o5KIABMXoq8E0VbJ5vT0N7H/GrNML
-   6DsoW4EWvt3igvZmTdHWOdrymsRif7MpYDoBYsjpIxa/zlONsAa2ejXb3
-   hDfBNWNQMa9Iu/GXyEpRY9hG89Xl77IE8S6oR66Uxy2DJcqxR17G0zxM4
-   hKwfSdSH3qB0WEThyGPYiXbvU3zBW9vxlMuIjQ+VPmxAaGPQcSOklcBmp
-   NQlvLGUoPcsLikBYt9seZoN+1WQQqLB3mpVckWSdEYRuifr8xF/3mUtac
-   w==;
-X-CSE-ConnectionGUID: PqwgzgBpTjuhBFP8vFXtIw==
-X-CSE-MsgGUID: ij2ZfxrETzK7HepZwXiAxg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11881"; a="98483445"
+  bh=8s4qQ4UtosRwAt/MopDG1vdgIDgNA2MOTik6Xi3M0Iw=;
+  b=ja+/uBxydwZHf/Daq8nooa5bVQsB2OioXKO/jLPOAw4TLmwlmnU0M1fJ
+   jj0efLtbUTnkQ/UudrmQTVhIw2oZYa33S7wckXkrrMrNHHFuNhXk57Yro
+   D0GrN0zpQzr8vNqq34EXKMe8m7joxUeUd0cztVT35WUNxIDBZL7A+VVAj
+   rWfz68E+fZP7NM3IoZKEr1GRQOTN71tDWmDdUbomj9MQhlkIx6pV8QU7W
+   4wqMafQu82jlh6LPt2RpfTCmYgf8EaMGEpTz6DjmOgVG/ZK4pTsqYbYnv
+   87wras1DZM5MKWBAgGM/PVyAfA3G9ezTbRhmfOsOC3MrwLZA2OHKrayBw
+   A==;
+X-CSE-ConnectionGUID: OGO1vTXaTpO+YsN6ILvvxg==
+X-CSE-MsgGUID: tbB5VJhUSta7c4WHWdqrZQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11881"; a="113355383"
 X-IronPort-AV: E=Sophos;i="6.25,234,1779174000"; 
-   d="scan'208";a="98483445"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 16:31:34 -0700
-X-CSE-ConnectionGUID: Wp7D6TlESeKwQYD/d/Yayg==
-X-CSE-MsgGUID: 5bCJds2iTUuGF3Oj5/hRdA==
+   d="scan'208";a="113355383"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 16:31:36 -0700
+X-CSE-ConnectionGUID: eHMTsuHxRBGBOtigqlrrmw==
+X-CSE-MsgGUID: 21Iuc1ITTbWRRc2ratDznw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,234,1779174000"; 
-   d="scan'208";a="261906014"
+   d="scan'208";a="296097803"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.108])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 16:31:34 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 16:31:36 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -53,9 +53,9 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Li Ming <ming.li@zohomail.com>,
 	Robert Richter <rrichter@amd.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v4 5/6] cxl/test: Add a topology to test mixed-granularity regions
-Date: Thu, 20 Aug 2026 16:31:23 -0700
-Message-ID: <dcba06f559a891950910348418b415aa614f399f.1787255388.git.alison.schofield@intel.com>
+Subject: [PATCH v4 6/6] Documentation/cxl: Describe mixed-granularity regions
+Date: Thu, 20 Aug 2026 16:31:24 -0700
+Message-ID: <3ad2df22dacea3cbd58a3ca2732003e120605277.1787255388.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1787255388.git.alison.schofield@intel.com>
 References: <cover.1787255388.git.alison.schofield@intel.com>
@@ -67,765 +67,181 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a cxl_test topology for mixed-granularity region testing.
+Mixed-granularity region support introduces interleave relationships
+that are not obvious from the existing CXL documentation. This is
+particularly true for the 3-, 6-, and 12-way configurations and for
+understanding which configurations permitted by the CXL Specification
+are supported by Linux.
 
-modprobe cxl_test mixed_gran_regions=1 creates three host bridges,
-each with a passthrough host-bridge port above two switch levels
-and four endpoints, for twelve endpoints total.
+Document the mixed-granularity model and Linux's coarse-to-fine
+restriction. Include the relevant configurations from CXL 4.0 Section
+9.13.1.1 and annotate their Linux support status.
 
-Two CFMWS windows are added:
-1) A 2-way window at 4K gran over two host bridges, that hosts 8-way
-regions at 1K.
-2) A 3-way window at 512 gran over three host bridges, that hosts
-6-way regions at 256.
+This intentionally repeats information from the CXL Specification.
+The specification remains authoritative, but showing the Linux support
+policy alongside the legal configurations ensures readers do not
+mistake an unsupported Linux setup for a configuration unsupported by
+the CXL Specification.
 
-Both windows also host the same-granularity regions their ways allow.
-
-Register every mock device through cxl_mock_platform_device_add() so
-the mock array is populated before platform_device_add(), matching the
-ordering the rest of cxl_test relies on to avoid the endpoint-probe
-race in commit d90f236f8b9e ("cxl/test: Update mock dev array before
-calling platform_device_add()").
-
-NULL-check the legacy topology arrays, which are left empty when
-mixed_gran_regions=1 selects the new topology.
-
-The default and existing special module params are unaffected.
-
+Assisted-by: Claude:Opus-5
 Signed-off-by: Alison Schofield <alison.schofield@intel.com>
 ---
- tools/testing/cxl/test/cxl.c | 496 ++++++++++++++++++++++++++++++++---
- 1 file changed, 458 insertions(+), 38 deletions(-)
+ .../driver-api/cxl/linux/cxl-driver.rst       | 135 ++++++++++++++++++
+ 1 file changed, 135 insertions(+)
 
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index ef92dd35e030..0ec9b402e1af 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -17,6 +17,7 @@
- static int interleave_arithmetic;
- static bool extended_linear_cache;
- static bool fail_autoassemble;
-+static bool mixed_gran_regions;
+diff --git a/Documentation/driver-api/cxl/linux/cxl-driver.rst b/Documentation/driver-api/cxl/linux/cxl-driver.rst
+index dd6dd17dc536..4e56c18294ef 100644
+--- a/Documentation/driver-api/cxl/linux/cxl-driver.rst
++++ b/Documentation/driver-api/cxl/linux/cxl-driver.rst
+@@ -602,6 +602,11 @@ derived from their upstream port connections. In `Cross-Link First` interleave
+ configurations, the :code:`interleave_granularity` of a decoder is equal to
+ :code:`parent_interleave_granularity * parent_interleave_ways`.
  
- #define FAKE_QTG_ID	42
++When the region granularity is finer than the granularity of an interleaving
++root decoder, the relation inverts: the :code:`interleave_granularity` of a
++decoder is equal to :code:`parent_interleave_granularity / interleave_ways`.
++See `Mixed Granularity`_.
++
+ At Endpoint
+ ~~~~~~~~~~~
+ `Endpoint Decoders` are programmed similar to Host Bridge and Switch decoders,
+@@ -619,6 +624,136 @@ from HPA to DPA.  This is why they must be aware of the entire interleave set.
+ Linux does not support unbalanced interleave configurations.  As a result, all
+ endpoints in an interleave set must have the same ways and granularity.
  
-@@ -26,7 +27,26 @@ static bool fail_autoassemble;
- #define NR_CXL_ROOT_PORTS 2
- #define NR_CXL_SWITCH_PORTS 2
- #define NR_CXL_PORT_DECODERS 8
--#define NR_BRIDGES (NR_CXL_HOST_BRIDGES + NR_CXL_SINGLE_HOST + NR_CXL_RCH)
++Mixed Granularity
++~~~~~~~~~~~~~~~~~
++Every decoder advances one target every multiple of its own granularity, and
++the decoders below it subdivide the span their parent assigns to a single
++target.  Linux supports two orderings of granularity down the hierarchy.
 +
-+/*
-+ * mixed_gran_regions=1: three host bridges, two switch levels, and
-+ * twelve endpoints for power-of-2 and 3-way-family region layouts.
-+ */
-+#define NR_CXL_MIX_GRAN_HB 3
-+#define NR_CXL_MIX_GRAN_ROOT_PORTS NR_CXL_MIX_GRAN_HB	/* 1 per HB */
-+#define NR_CXL_MIX_GRAN_L1_DPORTS  (NR_CXL_MIX_GRAN_HB * 2)
-+#define NR_CXL_MIX_GRAN_L2_SWITCHES NR_CXL_MIX_GRAN_L1_DPORTS
-+#define NR_CXL_MIX_GRAN_L2_DPORTS  (NR_CXL_MIX_GRAN_L2_SWITCHES * 2)
++The `Cross-Link First` example above shows the first ordering, where the region
++granularity equals the granularity of the root decoder and granularity coarsens
++toward the endpoints.  In the second ordering the region granularity is finer
++than the root decoder's and granularity refines toward the endpoints, reaching
++the region granularity at the innermost interleaving decoder.  A region using
++that ordering is a *mixed-granularity* region.  A mixed-granularity region
++requires an interleaving root decoder.
 +
-+#define NR_DEFAULT_BRIDGES \
-+	(NR_CXL_HOST_BRIDGES + NR_CXL_SINGLE_HOST + NR_CXL_RCH)
-+#define NR_BRIDGES (NR_DEFAULT_BRIDGES + NR_CXL_MIX_GRAN_HB)
++Linux supports only monotonic granularity hierarchies, either coarsening or
++refining from the root toward the endpoints.  The CXL Specification does not
++require a monotonic ordering, see `Mod3 Interleave Configurations`_.
 +
-+/* CHBS index ranges within mock_cedt.chbs[] */
-+#define CHBS_DEFAULT_START 0
-+#define CHBS_DEFAULT_END (NR_DEFAULT_BRIDGES - 1)
-+#define CHBS_MIX_GRAN_START NR_DEFAULT_BRIDGES
-+#define CHBS_MIX_GRAN_END (NR_BRIDGES - 1)
- 
- #define MOCK_AUTO_REGION_SIZE_DEFAULT SZ_512M
- static int mock_auto_region_size = MOCK_AUTO_REGION_SIZE_DEFAULT;
-@@ -52,6 +72,14 @@ struct platform_device *cxl_mem_single[NR_MEM_SINGLE];
- static struct platform_device *cxl_rch[NR_CXL_RCH];
- static struct platform_device *cxl_rcd[NR_CXL_RCH];
- 
-+static struct platform_device *cxl_mix_gran_hb[NR_CXL_MIX_GRAN_HB];
-+static struct platform_device *cxl_mix_gran_root_port[NR_CXL_MIX_GRAN_ROOT_PORTS];
-+static struct platform_device *cxl_mix_gran_l1_uport[NR_CXL_MIX_GRAN_ROOT_PORTS];
-+static struct platform_device *cxl_mix_gran_l1_dport[NR_CXL_MIX_GRAN_L1_DPORTS];
-+static struct platform_device *cxl_mix_gran_l2_uport[NR_CXL_MIX_GRAN_L2_SWITCHES];
-+static struct platform_device *cxl_mix_gran_l2_dport[NR_CXL_MIX_GRAN_L2_DPORTS];
-+static struct platform_device *cxl_mem_mix_gran[NR_CXL_MIX_GRAN_L2_DPORTS];
++For an 8-way mixed-granularity region below a 2-way interleaving root decoder
++at 4096, where each host bridge routes through two levels of switch, Linux
++programs::
 +
- /*
-  * Decoder registry
-  *
-@@ -115,6 +143,19 @@ static struct acpi_device host_bridge[NR_BRIDGES] = {
- 		.handle = &host_bridge[3],
- 		.pnp.unique_id = "3",
- 	},
-+	/* Dedicated mixed-granularity topology */
-+	[4] = {
-+		.handle = &host_bridge[4],
-+		.pnp.unique_id = "4",
-+	},
-+	[5] = {
-+		.handle = &host_bridge[5],
-+		.pnp.unique_id = "5",
-+	},
-+	[6] = {
-+		.handle = &host_bridge[6],
-+		.pnp.unique_id = "6",
-+	},
- };
- 
- static bool is_mock_dev(struct device *dev)
-@@ -122,15 +163,18 @@ static bool is_mock_dev(struct device *dev)
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(cxl_mem); i++)
--		if (dev == &cxl_mem[i]->dev)
-+		if (cxl_mem[i] && dev == &cxl_mem[i]->dev)
- 			return true;
- 	for (i = 0; i < ARRAY_SIZE(cxl_mem_single); i++)
--		if (dev == &cxl_mem_single[i]->dev)
-+		if (cxl_mem_single[i] && dev == &cxl_mem_single[i]->dev)
- 			return true;
- 	for (i = 0; i < ARRAY_SIZE(cxl_rcd); i++)
--		if (dev == &cxl_rcd[i]->dev)
-+		if (cxl_rcd[i] && dev == &cxl_rcd[i]->dev)
- 			return true;
--	if (dev == &cxl_acpi->dev)
-+	for (i = 0; i < ARRAY_SIZE(cxl_mem_mix_gran); i++)
-+		if (cxl_mem_mix_gran[i] && dev == &cxl_mem_mix_gran[i]->dev)
-+			return true;
-+	if (cxl_acpi && dev == &cxl_acpi->dev)
- 		return true;
- 	return false;
- }
-@@ -188,6 +232,14 @@ static struct {
- 		struct acpi_cedt_cfmws cfmws;
- 		u32 target[3];
- 	} cfmws8;
-+	struct {
-+		struct acpi_cedt_cfmws cfmws;
-+		u32 target[2];
-+	} cfmws9;
-+	struct {
-+		struct acpi_cedt_cfmws cfmws;
-+		u32 target[3];
-+	} cfmws10;
- 	struct {
- 		struct acpi_cedt_cxims cxims;
- 		u64 xormap_list[2];
-@@ -232,6 +284,31 @@ static struct {
- 		.uid = 3,
- 		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL11,
- 	},
-+	/* Dedicated mixed-granularity topology */
-+	.chbs[4] = {
-+		.header = {
-+			.type = ACPI_CEDT_TYPE_CHBS,
-+			.length = sizeof(mock_cedt.chbs[0]),
-+		},
-+		.uid = 4,
-+		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
-+	},
-+	.chbs[5] = {
-+		.header = {
-+			.type = ACPI_CEDT_TYPE_CHBS,
-+			.length = sizeof(mock_cedt.chbs[0]),
-+		},
-+		.uid = 5,
-+		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
-+	},
-+	.chbs[6] = {
-+		.header = {
-+			.type = ACPI_CEDT_TYPE_CHBS,
-+			.length = sizeof(mock_cedt.chbs[0]),
-+		},
-+		.uid = 6,
-+		.cxl_version = ACPI_CEDT_CHBS_VERSION_CXL20,
-+	},
- 	.cfmws0 = {
- 		.cfmws = {
- 			.header = {
-@@ -371,6 +448,36 @@ static struct {
- 		},
- 		.target = { 0, 1, 2, },
- 	},
-+	.cfmws9 = {
-+		.cfmws = {
-+			.header = {
-+				.type = ACPI_CEDT_TYPE_CFMWS,
-+				.length = sizeof(mock_cedt.cfmws9),
-+			},
-+			.interleave_ways = 1,
-+			.granularity = 4,
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-+					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-+			.qtg_id = FAKE_QTG_ID,
-+			.window_size = SZ_512M * 4UL,
-+		},
-+		.target = { 4, 5, },
-+	},
-+	.cfmws10 = {
-+		.cfmws = {
-+			.header = {
-+				.type = ACPI_CEDT_TYPE_CFMWS,
-+				.length = sizeof(mock_cedt.cfmws10),
-+			},
-+			.interleave_ways = 8,
-+			.granularity = 1,
-+			.restrictions = ACPI_CEDT_CFMWS_RESTRICT_HOSTONLYMEM |
-+					ACPI_CEDT_CFMWS_RESTRICT_PMEM,
-+			.qtg_id = FAKE_QTG_ID,
-+			.window_size = SZ_512M * 6UL,
-+		},
-+		.target = { 4, 5, 6, },
-+	},
- 	.cxims0 = {
- 		.cxims = {
- 			.header = {
-@@ -395,6 +502,9 @@ struct acpi_cedt_cfmws *mock_cfmws[] = {
- 	[6] = &mock_cedt.cfmws6.cfmws,
- 	[7] = &mock_cedt.cfmws7.cfmws,
- 	[8] = &mock_cedt.cfmws8.cfmws,
-+	/* Dedicated mixed-granularity topology */
-+	[9] = &mock_cedt.cfmws9.cfmws,
-+	[10] = &mock_cedt.cfmws10.cfmws,
- };
- 
- static int cfmws_start;
-@@ -403,6 +513,8 @@ static int cfmws_end;
- #define CFMWS_MOD_ARRAY_END   5
- #define CFMWS_XOR_ARRAY_START 6
- #define CFMWS_XOR_ARRAY_END   8
-+#define CFMWS_MIX_GRAN_ARRAY_START 9
-+#define CFMWS_MIX_GRAN_ARRAY_END   10
- 
- struct acpi_cedt_cxims *mock_cxims[1] = {
- 	[0] = &mock_cedt.cxims0.cxims,
-@@ -479,9 +591,18 @@ static void cfmws_elc_update(struct acpi_cedt_cfmws *window, int index)
- static int populate_cedt(void)
- {
- 	struct cxl_mock_res *res;
-+	int chbs_lo, chbs_hi;
- 	int i;
- 
--	for (i = 0; i < ARRAY_SIZE(mock_cedt.chbs); i++) {
-+	if (mixed_gran_regions) {
-+		chbs_lo = CHBS_MIX_GRAN_START;
-+		chbs_hi = CHBS_MIX_GRAN_END;
-+	} else {
-+		chbs_lo = CHBS_DEFAULT_START;
-+		chbs_hi = CHBS_DEFAULT_END;
-+	}
++  Level             Ways    Granularity
++  -----             ----    -----------
++  Root                 2         4096
++  Host bridge          1         4096
++  Upper switch         2         2048
++  Lower switch         2         1024
++  Endpoint             8         1024
 +
-+	for (i = chbs_lo; i <= chbs_hi; i++) {
- 		struct acpi_cedt_chbs *chbs = &mock_cedt.chbs[i];
- 		resource_size_t size;
- 
-@@ -538,12 +659,23 @@ static int mock_acpi_table_parse_cedt(enum acpi_cedt_type id,
- 	if (!is_mock_port(dev) && !is_mock_dev(dev))
- 		return acpi_table_parse_cedt(id, handler_arg, arg);
- 
--	if (id == ACPI_CEDT_TYPE_CHBS)
--		for (i = 0; i < ARRAY_SIZE(mock_cedt.chbs); i++) {
-+	if (id == ACPI_CEDT_TYPE_CHBS) {
-+		int chbs_lo, chbs_hi;
++Each decoder contributes to an endpoint's region position in proportion to its
++granularity::
 +
-+		if (mixed_gran_regions) {
-+			chbs_lo = CHBS_MIX_GRAN_START;
-+			chbs_hi = CHBS_MIX_GRAN_END;
-+		} else {
-+			chbs_lo = CHBS_DEFAULT_START;
-+			chbs_hi = CHBS_DEFAULT_END;
-+		}
++  position += target_position *
++              decoder_granularity / region_granularity
 +
-+		for (i = chbs_lo; i <= chbs_hi; i++) {
- 			h = (union acpi_subtable_headers *)&mock_cedt.chbs[i];
- 			end = (unsigned long)&mock_cedt.chbs[i + 1];
- 			handler_arg(h, arg, end);
- 		}
-+	}
- 
- 	if (id == ACPI_CEDT_TYPE_CFMWS)
- 		for (i = cfmws_start; i <= cfmws_end; i++) {
-@@ -567,13 +699,16 @@ static bool is_mock_bridge(struct device *dev)
- 	int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(cxl_host_bridge); i++)
--		if (dev == &cxl_host_bridge[i]->dev)
-+		if (cxl_host_bridge[i] && dev == &cxl_host_bridge[i]->dev)
- 			return true;
- 	for (i = 0; i < ARRAY_SIZE(cxl_hb_single); i++)
--		if (dev == &cxl_hb_single[i]->dev)
-+		if (cxl_hb_single[i] && dev == &cxl_hb_single[i]->dev)
- 			return true;
- 	for (i = 0; i < ARRAY_SIZE(cxl_rch); i++)
--		if (dev == &cxl_rch[i]->dev)
-+		if (cxl_rch[i] && dev == &cxl_rch[i]->dev)
-+			return true;
-+	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_hb); i++)
-+		if (cxl_mix_gran_hb[i] && dev == &cxl_mix_gran_hb[i]->dev)
- 			return true;
- 
- 	return false;
-@@ -587,27 +722,52 @@ static bool is_mock_port(struct device *dev)
- 		return true;
- 
- 	for (i = 0; i < ARRAY_SIZE(cxl_root_port); i++)
--		if (dev == &cxl_root_port[i]->dev)
-+		if (cxl_root_port[i] && dev == &cxl_root_port[i]->dev)
- 			return true;
- 
- 	for (i = 0; i < ARRAY_SIZE(cxl_switch_uport); i++)
--		if (dev == &cxl_switch_uport[i]->dev)
-+		if (cxl_switch_uport[i] && dev == &cxl_switch_uport[i]->dev)
- 			return true;
- 
- 	for (i = 0; i < ARRAY_SIZE(cxl_switch_dport); i++)
--		if (dev == &cxl_switch_dport[i]->dev)
-+		if (cxl_switch_dport[i] && dev == &cxl_switch_dport[i]->dev)
- 			return true;
- 
- 	for (i = 0; i < ARRAY_SIZE(cxl_root_single); i++)
--		if (dev == &cxl_root_single[i]->dev)
-+		if (cxl_root_single[i] && dev == &cxl_root_single[i]->dev)
- 			return true;
- 
- 	for (i = 0; i < ARRAY_SIZE(cxl_swu_single); i++)
--		if (dev == &cxl_swu_single[i]->dev)
-+		if (cxl_swu_single[i] && dev == &cxl_swu_single[i]->dev)
- 			return true;
- 
- 	for (i = 0; i < ARRAY_SIZE(cxl_swd_single); i++)
--		if (dev == &cxl_swd_single[i]->dev)
-+		if (cxl_swd_single[i] && dev == &cxl_swd_single[i]->dev)
-+			return true;
++The root above selects a host bridge every 4096 bytes, so it advances one
++target every four region positions, while the lower switch advances one target
++every position.  When the region granularity equals the root granularity, the
++root advances one target per region position and each level's weight is the
++number of ways below it.
 +
-+	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_root_port); i++)
-+		if (cxl_mix_gran_root_port[i] &&
-+		    dev == &cxl_mix_gran_root_port[i]->dev)
-+			return true;
++The ways and granularity of a mixed-granularity region must describe the same
++interleave span as the root decoder::
 +
-+	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_l1_uport); i++)
-+		if (cxl_mix_gran_l1_uport[i] &&
-+		    dev == &cxl_mix_gran_l1_uport[i]->dev)
-+			return true;
++  root_ways * root_granularity == region_ways * region_granularity
 +
-+	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_l1_dport); i++)
-+		if (cxl_mix_gran_l1_dport[i] &&
-+		    dev == &cxl_mix_gran_l1_dport[i]->dev)
-+			return true;
++A region that does not describe that span either leaves part of the range
++unclaimed or reaches beyond it, and Linux rejects it.  A same-granularity
++region below a power-of-two root decoder spans a multiple of the root's range
++rather than one target's share of it, and is not subject to this relationship.
 +
-+	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_l2_uport); i++)
-+		if (cxl_mix_gran_l2_uport[i] &&
-+		    dev == &cxl_mix_gran_l2_uport[i]->dev)
-+			return true;
++Mod3 Interleave Configurations
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++A 3-way, 6-way, or 12-way interleave, known as a Mod3 interleave, selects its
++target with a factor-of-three selection rather than from binary interleave
++selector bits alone.  CXL 4.0 Section 9.13.1.1 defines the 3-way selection as
++the address above the decoder granularity taken modulo 3.  A 6-way selection
++claims one binary HPA bit at the decoder granularity and takes the modulo 3 of
++the address above that bit, and a 12-way selection claims two.
 +
-+	for (i = 0; i < ARRAY_SIZE(cxl_mix_gran_l2_dport); i++)
-+		if (cxl_mix_gran_l2_dport[i] &&
-+		    dev == &cxl_mix_gran_l2_dport[i]->dev)
- 			return true;
- 
- 	if (is_cxl_memdev(dev))
-@@ -678,7 +838,15 @@ static struct acpi_pci_root mock_pci_root[ARRAY_SIZE(mock_pci_bus)] = {
- 	[3] = {
- 		.bus = &mock_pci_bus[3],
- 	},
--
-+	[4] = {
-+		.bus = &mock_pci_bus[4],
-+	},
-+	[5] = {
-+		.bus = &mock_pci_bus[5],
-+	},
-+	[6] = {
-+		.bus = &mock_pci_bus[6],
-+	},
- };
- 
- static bool is_mock_bus(struct pci_bus *bus)
-@@ -1099,7 +1267,8 @@ static bool mock_init_hdm_decoder(struct cxl_decoder *cxld)
- 		/* check is endpoint is attach to host-bridge0 */
- 		port = cxled_to_port(cxled);
- 		do {
--			if (port->uport_dev == &cxl_host_bridge[0]->dev) {
-+			if (cxl_host_bridge[0] &&
-+			    port->uport_dev == &cxl_host_bridge[0]->dev) {
- 				hb0 = true;
- 				break;
- 			}
-@@ -1242,6 +1411,8 @@ static int mock_cxl_enumerate_decoders(struct cxl_hdm *cxlhdm,
- 
- 	if (is_cxl_endpoint(port))
- 		target_count = 0;
-+	else if (mixed_gran_regions && is_cxl_root(parent_port))
-+		target_count = NR_CXL_MIX_GRAN_ROOT_PORTS / NR_CXL_MIX_GRAN_HB;
- 	else if (is_cxl_root(parent_port))
- 		target_count = NR_CXL_ROOT_PORTS;
- 	else
-@@ -1341,6 +1512,27 @@ static int get_port_array(struct cxl_port *port,
- 	struct platform_device **array;
- 	int array_size;
- 
-+	if (mixed_gran_regions) {
-+		if (port->depth == 1) {
-+			array_size = ARRAY_SIZE(cxl_mix_gran_root_port);
-+			array = cxl_mix_gran_root_port;
-+		} else if (port->depth == 2) {
-+			array_size = ARRAY_SIZE(cxl_mix_gran_l1_dport);
-+			array = cxl_mix_gran_l1_dport;
-+		} else if (port->depth == 3) {
-+			array_size = ARRAY_SIZE(cxl_mix_gran_l2_dport);
-+			array = cxl_mix_gran_l2_dport;
-+		} else {
-+			dev_WARN_ONCE(&port->dev, 1, "unexpected depth %d\n",
-+				      port->depth);
-+			return -ENXIO;
-+		}
++The factor-of-three selection is not an additional binary selector bit, so a
++Mod3 interleave distributes across the hierarchy as::
 +
-+		*port_array = array;
-+		*port_array_size = array_size;
-+		return 0;
-+	}
++  3  = 3
++  6  = 3 * 2
++  12 = 3 * 4
 +
- 	if (port->depth == 1) {
- 		if (is_multi_bridge(port->uport_dev)) {
- 			array_size = ARRAY_SIZE(cxl_root_port);
-@@ -1724,10 +1916,182 @@ static void cxl_single_topo_exit(void)
- 	}
- }
- 
-+#define MIX_GRAN_RP_ID_BASE	(NR_MULTI_ROOT + NR_CXL_SINGLE_HOST)
-+#define MIX_GRAN_L1U_ID_BASE	MIX_GRAN_RP_ID_BASE
-+#define MIX_GRAN_L1D_ID_BASE	(NR_MEM_MULTI + NR_MEM_SINGLE)
-+#define MIX_GRAN_L2U_ID_BASE	MIX_GRAN_L1D_ID_BASE
-+#define MIX_GRAN_L2D_ID_BASE	\
-+	(MIX_GRAN_L1D_ID_BASE + NR_CXL_MIX_GRAN_L1_DPORTS)
-+#define MIX_GRAN_MEM_ID_BASE	(NR_MEM_MULTI + NR_MEM_SINGLE + NR_CXL_RCH)
++The cross-host bridge selection carries the factor of three, and the remaining
++x2 or x4 is binary interleave selection below it.  A 6-way region at IGB across
++three host bridges is therefore::
 +
-+static void cxl_mix_gran_topo_exit(void)
-+{
-+	int i;
++  Device-level region:   6-way @ IGB
++  Cross-host bridge:     3-way @ 2*IGB
++  Below the root:        2-way @ IGB
 +
-+	for (i = NR_CXL_MIX_GRAN_L2_DPORTS - 1; i >= 0; i--) {
-+		platform_device_unregister(cxl_mix_gran_l2_dport[i]);
-+		cxl_mix_gran_l2_dport[i] = NULL;
-+	}
-+	for (i = NR_CXL_MIX_GRAN_L2_SWITCHES - 1; i >= 0; i--) {
-+		platform_device_unregister(cxl_mix_gran_l2_uport[i]);
-+		cxl_mix_gran_l2_uport[i] = NULL;
-+	}
-+	for (i = NR_CXL_MIX_GRAN_L1_DPORTS - 1; i >= 0; i--) {
-+		platform_device_unregister(cxl_mix_gran_l1_dport[i]);
-+		cxl_mix_gran_l1_dport[i] = NULL;
-+	}
-+	for (i = NR_CXL_MIX_GRAN_ROOT_PORTS - 1; i >= 0; i--) {
-+		platform_device_unregister(cxl_mix_gran_l1_uport[i]);
-+		cxl_mix_gran_l1_uport[i] = NULL;
-+	}
-+	for (i = NR_CXL_MIX_GRAN_ROOT_PORTS - 1; i >= 0; i--) {
-+		platform_device_unregister(cxl_mix_gran_root_port[i]);
-+		cxl_mix_gran_root_port[i] = NULL;
-+	}
-+	for (i = NR_CXL_MIX_GRAN_HB - 1; i >= 0; i--) {
-+		struct platform_device *pdev = cxl_mix_gran_hb[i];
++where both levels describe the same interleave span::
 +
-+		if (!pdev)
-+			continue;
-+		sysfs_remove_link(&pdev->dev.kobj, "physical_node");
-+		platform_device_unregister(pdev);
-+		cxl_mix_gran_hb[i] = NULL;
-+	}
-+}
++  3 * (2 * IGB) == 6 * IGB
 +
-+static __init int cxl_mix_gran_topo_init(void)
-+{
-+	int i, rc;
++The CXL Specification defines the legal Mod3 compositions and is normative.
++CXL 4.0 Section 9.13.1.1, "Legal Interleaving Configurations: 12-way, 6-way,
++and 3-way", Tables 9-6, 9-7, and 9-8 list them for a 12-way, 6-way, and 3-way
++device-level interleave at IGB.  Those tables are summarized below, annotated
++with the subset Linux supports.
 +
-+	for (i = 0; i < NR_CXL_MIX_GRAN_HB; i++) {
-+		struct acpi_device *adev = &host_bridge[NR_DEFAULT_BRIDGES + i];
-+		struct platform_device *pdev;
++CXL 4.0 Table 9-8, 3-way device-level interleave at IGB::
 +
-+		pdev = platform_device_alloc("cxl_host_bridge",
-+					     NR_DEFAULT_BRIDGES + i);
-+		if (!pdev) {
-+			rc = -ENOMEM;
-+			goto err;
-+		}
++  Row  Cross-host bridge  Host bridge    Switch         Linux
++  ---  -----------------  -----------    ------         -----
++   1   3-way @ IGB        none           none           supported
 +
-+		mock_companion(adev, &pdev->dev);
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_mix_gran_hb[i]);
-+		if (rc)
-+			goto err;
++CXL 4.0 Table 9-7, 6-way device-level interleave at IGB::
 +
-+		mock_pci_bus[NR_DEFAULT_BRIDGES + i].bridge = &pdev->dev;
-+		rc = sysfs_create_link(&pdev->dev.kobj, &pdev->dev.kobj,
-+				       "physical_node");
-+		if (rc)
-+			goto err;
-+	}
++  Row  Cross-host bridge  Host bridge    Switch         Linux
++  ---  -----------------  -----------    ------         -----
++   1   6-way @ IGB        none           none           supported
++   2   3-way @ 2*IGB      2-way @ IGB    none           supported
++   3   3-way @ 2*IGB      none           2-way @ IGB    supported
 +
-+	/* 1 root port per host bridge */
-+	for (i = 0; i < NR_CXL_MIX_GRAN_ROOT_PORTS; i++) {
-+		struct platform_device *bridge = cxl_mix_gran_hb[i];
-+		struct platform_device *pdev;
++CXL 4.0 Table 9-6, 12-way device-level interleave at IGB::
 +
-+		pdev = platform_device_alloc("cxl_root_port",
-+					     MIX_GRAN_RP_ID_BASE + i);
-+		if (!pdev) {
-+			rc = -ENOMEM;
-+			goto err;
-+		}
-+		pdev->dev.parent = &bridge->dev;
++  Row  Cross-host bridge  Host bridge    Switch         Linux
++  ---  -----------------  -----------    ------         -----
++   1   12-way @ IGB       none           none           supported
++   2   6-way @ 2*IGB      2-way @ IGB    none           supported
++   3   6-way @ 2*IGB      none           2-way @ IGB    supported
++   4   3-way @ 4*IGB      4-way @ IGB    none           supported
++   5   3-way @ 4*IGB      none           4-way @ IGB    supported
++   6   3-way @ 4*IGB      2-way @ IGB    2-way @ 2*IGB  unsupported
++   7   3-way @ 4*IGB      2-way @ 2*IGB  2-way @ IGB    supported
 +
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_mix_gran_root_port[i]);
-+		if (rc)
-+			goto err;
-+	}
++Table 9-6 row 6 is legal per the CXL Specification and unsupported by Linux.
++Walking it from the root toward the endpoints, granularity goes::
 +
-+	/* L1 switch uport under each root port */
-+	for (i = 0; i < NR_CXL_MIX_GRAN_ROOT_PORTS; i++) {
-+		struct platform_device *pdev;
++  4*IGB -> IGB -> 2*IGB
 +
-+		pdev = platform_device_alloc("cxl_switch_uport",
-+					     MIX_GRAN_L1U_ID_BASE + i);
-+		if (!pdev) {
-+			rc = -ENOMEM;
-+			goto err;
-+		}
-+		pdev->dev.parent = &cxl_mix_gran_root_port[i]->dev;
++which refines and then coarsens.  Row 7 interleaves the same 12 endpoints at
++the same granularity with those two levels exchanged::
 +
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_mix_gran_l1_uport[i]);
-+		if (rc)
-+			goto err;
-+	}
++  4*IGB -> 2*IGB -> IGB
 +
-+	/* 2 L1 dports per L1 switch */
-+	for (i = 0; i < NR_CXL_MIX_GRAN_L1_DPORTS; i++) {
-+		struct platform_device *uport =
-+			cxl_mix_gran_l1_uport[i / NR_CXL_SWITCH_PORTS];
-+		struct platform_device *pdev;
++which is monotonic.  Linux programs row 7 for a user region and assembles an
++auto region whose decoders are programmed that way.  An auto region matching
++row 6 is not assembled.
 +
-+		pdev = platform_device_alloc("cxl_switch_dport",
-+					     MIX_GRAN_L1D_ID_BASE + i);
-+		if (!pdev) {
-+			rc = -ENOMEM;
-+			goto err;
-+		}
-+		pdev->dev.parent = &uport->dev;
++Leaving row 6 unsupported does not prevent a 12-way device-level interleave.
++The specification defines six other legal compositions, all monotonic and
++supported by Linux.
 +
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_mix_gran_l1_dport[i]);
-+		if (rc)
-+			goto err;
-+	}
-+
-+	/* L2 switch uport under each L1 dport */
-+	for (i = 0; i < NR_CXL_MIX_GRAN_L2_SWITCHES; i++) {
-+		struct platform_device *pdev;
-+
-+		pdev = platform_device_alloc("cxl_switch_uport",
-+					     MIX_GRAN_L2U_ID_BASE + i);
-+		if (!pdev) {
-+			rc = -ENOMEM;
-+			goto err;
-+		}
-+		pdev->dev.parent = &cxl_mix_gran_l1_dport[i]->dev;
-+
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_mix_gran_l2_uport[i]);
-+		if (rc)
-+			goto err;
-+	}
-+
-+	/* 2 L2 dports per L2 switch */
-+	for (i = 0; i < NR_CXL_MIX_GRAN_L2_DPORTS; i++) {
-+		struct platform_device *uport =
-+			cxl_mix_gran_l2_uport[i / NR_CXL_SWITCH_PORTS];
-+		struct platform_device *pdev;
-+
-+		pdev = platform_device_alloc("cxl_switch_dport",
-+					     MIX_GRAN_L2D_ID_BASE + i);
-+		if (!pdev) {
-+			rc = -ENOMEM;
-+			goto err;
-+		}
-+		pdev->dev.parent = &uport->dev;
-+
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_mix_gran_l2_dport[i]);
-+		if (rc)
-+			goto err;
-+	}
-+
-+	return 0;
-+err:
-+	cxl_mix_gran_topo_exit();
-+	return rc;
-+}
-+
- static void cxl_mem_exit(void)
- {
- 	int i;
- 
-+	if (mixed_gran_regions) {
-+		for (i = NR_CXL_MIX_GRAN_L2_DPORTS - 1; i >= 0; i--)
-+			platform_device_unregister(cxl_mem_mix_gran[i]);
-+		return;
-+	}
-+
- 	for (i = ARRAY_SIZE(cxl_rcd) - 1; i >= 0; i--)
- 		platform_device_unregister(cxl_rcd[i]);
- 	for (i = ARRAY_SIZE(cxl_mem_single) - 1; i >= 0; i--)
-@@ -1736,10 +2100,42 @@ static void cxl_mem_exit(void)
- 		platform_device_unregister(cxl_mem[i]);
- }
- 
-+static int cxl_mem_mix_gran_init(void)
-+{
-+	int i, rc;
-+
-+	for (i = 0; i < NR_CXL_MIX_GRAN_L2_DPORTS; i++) {
-+		struct platform_device *dport = cxl_mix_gran_l2_dport[i];
-+		struct platform_device *pdev;
-+
-+		pdev = platform_device_alloc("cxl_mem",
-+					     MIX_GRAN_MEM_ID_BASE + i);
-+		if (!pdev) {
-+			rc = -ENOMEM;
-+			goto err;
-+		}
-+		pdev->dev.parent = &dport->dev;
-+		set_dev_node(&pdev->dev, i % 2);
-+
-+		rc = cxl_mock_platform_device_add(pdev, &cxl_mem_mix_gran[i]);
-+		if (rc)
-+			goto err;
-+	}
-+
-+	return 0;
-+err:
-+	for (i = NR_CXL_MIX_GRAN_L2_DPORTS - 1; i >= 0; i--)
-+		platform_device_unregister(cxl_mem_mix_gran[i]);
-+	return rc;
-+}
-+
- static int cxl_mem_init(void)
- {
- 	int i, rc;
- 
-+	if (mixed_gran_regions)
-+		return cxl_mem_mix_gran_init();
-+
- 	for (i = 0; i < ARRAY_SIZE(cxl_mem); i++) {
- 		struct platform_device *dport = cxl_switch_dport[i];
- 		struct platform_device *pdev;
-@@ -1860,7 +2256,10 @@ static __init int cxl_test_init(void)
- 	if (rc)
- 		goto err_gen_pool_add;
- 
--	if (interleave_arithmetic == 1) {
-+	if (mixed_gran_regions) {
-+		cfmws_start = CFMWS_MIX_GRAN_ARRAY_START;
-+		cfmws_end = CFMWS_MIX_GRAN_ARRAY_END;
-+	} else if (interleave_arithmetic == 1) {
- 		cfmws_start = CFMWS_XOR_ARRAY_START;
- 		cfmws_end = CFMWS_XOR_ARRAY_END;
- 	} else {
-@@ -1872,6 +2271,13 @@ static __init int cxl_test_init(void)
- 	if (rc)
- 		goto err_populate;
- 
-+	if (mixed_gran_regions) {
-+		rc = cxl_mix_gran_topo_init();
-+		if (rc)
-+			goto err_populate;
-+		goto topo_done;
-+	}
-+
- 	for (i = 0; i < ARRAY_SIZE(cxl_host_bridge); i++) {
- 		struct acpi_device *adev = &host_bridge[i];
- 		struct platform_device *pdev;
-@@ -1945,9 +2351,12 @@ static __init int cxl_test_init(void)
- 	if (rc)
- 		goto err_single;
- 
-+topo_done:
- 	cxl_acpi = platform_device_alloc("cxl_acpi", 0);
--	if (!cxl_acpi)
--		goto err_rch;
-+	if (!cxl_acpi) {
-+		rc = -ENOMEM;
-+		goto err_topo;
-+	}
- 
- 	mock_companion(&acpi0017_mock, &cxl_acpi->dev);
- 	acpi0017_mock.dev.bus = &platform_bus_type;
-@@ -1955,7 +2364,7 @@ static __init int cxl_test_init(void)
- 
- 	rc = cxl_mock_platform_device_add(cxl_acpi, NULL);
- 	if (rc)
--		goto err_rch;
-+		goto err_topo;
- 
- 	rc = cxl_mem_init();
- 	if (rc)
-@@ -1971,7 +2380,11 @@ static __init int cxl_test_init(void)
- 	cxl_mem_exit();
- err_root:
- 	platform_device_unregister(cxl_acpi);
--err_rch:
-+err_topo:
-+	if (mixed_gran_regions) {
-+		cxl_mix_gran_topo_exit();
-+		goto err_populate;
-+	}
- 	cxl_rch_topo_exit();
- err_single:
- 	cxl_single_topo_exit();
-@@ -2020,21 +2433,25 @@ static __exit void cxl_test_exit(void)
- 	hmem_test_exit();
- 	cxl_mem_exit();
- 	platform_device_unregister(cxl_acpi);
--	cxl_rch_topo_exit();
--	cxl_single_topo_exit();
--	for (i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--)
--		platform_device_unregister(cxl_switch_dport[i]);
--	for (i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--)
--		platform_device_unregister(cxl_switch_uport[i]);
--	for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--)
--		platform_device_unregister(cxl_root_port[i]);
--	for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
--		struct platform_device *pdev = cxl_host_bridge[i];
-+	if (mixed_gran_regions) {
-+		cxl_mix_gran_topo_exit();
-+	} else {
-+		cxl_rch_topo_exit();
-+		cxl_single_topo_exit();
-+		for (i = ARRAY_SIZE(cxl_switch_dport) - 1; i >= 0; i--)
-+			platform_device_unregister(cxl_switch_dport[i]);
-+		for (i = ARRAY_SIZE(cxl_switch_uport) - 1; i >= 0; i--)
-+			platform_device_unregister(cxl_switch_uport[i]);
-+		for (i = ARRAY_SIZE(cxl_root_port) - 1; i >= 0; i--)
-+			platform_device_unregister(cxl_root_port[i]);
-+		for (i = ARRAY_SIZE(cxl_host_bridge) - 1; i >= 0; i--) {
-+			struct platform_device *pdev = cxl_host_bridge[i];
- 
--		if (!pdev)
--			continue;
--		sysfs_remove_link(&pdev->dev.kobj, "physical_node");
--		platform_device_unregister(cxl_host_bridge[i]);
-+			if (!pdev)
-+				continue;
-+			sysfs_remove_link(&pdev->dev.kobj, "physical_node");
-+			platform_device_unregister(cxl_host_bridge[i]);
-+		}
- 	}
- 	depopulate_all_mock_resources();
- 	gen_pool_destroy(cxl_mock_pool);
-@@ -2049,6 +2466,9 @@ module_param(extended_linear_cache, bool, 0444);
- MODULE_PARM_DESC(extended_linear_cache, "Enable extended linear cache support");
- module_param(fail_autoassemble, bool, 0444);
- MODULE_PARM_DESC(fail_autoassemble, "Simulate missing member of an auto-region");
-+module_param(mixed_gran_regions, bool, 0444);
-+MODULE_PARM_DESC(mixed_gran_regions,
-+		 "Topology supporting mixed granularity regions");
- module_init(cxl_test_init);
- module_exit(cxl_test_exit);
- MODULE_LICENSE("GPL v2");
+ Example Configurations
+ ======================
+ .. toctree::
 -- 
 2.37.3
 
