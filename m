@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98E92E92BA
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Aug 2026 23:43:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECC62E92BA
+	for <linux-cxl@vger.kernel.org>; Thu, 20 Aug 2026 23:43:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787269391; cv=none; b=OBzY9g3R1vsZaOlxr1S0hlqy7UW5RS5eWLdPmuYYBKUUnsQFLXc/UVfM4xz95J4gCtsc1uFUxQF6kdp8GJR0vIvEkcW0IUEcSoILKq3A2JVB4217AGqxN9r5pcAOcXttpgeCrJMbLeCQB0zFD9LYsTlTmD54RJDRa+8uxgDgzxw=
+	t=1787269401; cv=none; b=tlDWDr6So3/r3/D0I8iHFX7MyfyAiKOQm/ahKI/328d7Oaq5Sy1DW1yRHg6M7wnGQS+dqJDGTo6NIK6IjEaPDVF4q4ihG9nGPTG8LTJvG704q8rDoYySW28rVNGimiMmfgTWfP+NxDpN/+QfYWjwpcScZlakleneLCz5EdIEAwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787269391; c=relaxed/simple;
-	bh=nW49dkt/ZaBWGM71MoD4+UmOR3mR1JHJG9pFbyDru/M=;
+	s=arc-20240116; t=1787269401; c=relaxed/simple;
+	bh=u4hC2+QqwWeOnD82o55IGPAcY1aw6rgeYdvkPdyxNrQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Reeulo92jfsmzShSXQQ3D/4X3NBFrvFIIiZGXDXHCWG/ThSWb5UC8fHeLwbbVgPoMtPkEwHkioQdKyMeuIVlhmEubrQI5ulhRblUNeTTaS5XXr+cEMQo4QOUAaF5gG0joTkg5I8VcTCVfF87yU1HxQO3jQA7fkQr54750G39oxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nd4bE4Me; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=RAJHW944Dw4QIq2hXea3JJHDlykk8j7I1ciMcRZSCFyAr0+KeQO/q/UbI6fMmc2EecAmwPJtkEcckJd/9NMz0l6Mi4dJXsL5/o+oNTt/RR9cYyTUg0EAJhU3qGNYVuWSU82hUIvn0iuKLIHZ5lf3INWDUW9xH5ZgmyRkNCRfe1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZxQQd2D; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nd4bE4Me"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6507D1F000E9;
-	Thu, 20 Aug 2026 23:43:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZxQQd2D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18C561F000E9;
+	Thu, 20 Aug 2026 23:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787269389;
-	bh=121gIWoIAnw5Zk9+AF1hFrSX6Cm4f2iSnEcxGEiiXmk=;
+	s=k20260515; t=1787269400;
+	bh=p6gw9+Sduxi1QGcJz4scw9QrgcnJuJktU6/O9iNg1X0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Nd4bE4MeGFHn64IqjPC6gqfJMZI5POjJmNAIOmRHhcyHmlixY84JLlqYXh/dpHTok
-	 1qYTgPXe7uNTzKeIB0TQNqESYBmY9FYwrP3Qfxko+cz23IEObo9rBQvgKS4EXXzbfS
-	 fl5g3BokruPn/DPZQ2aQVEm6ywMPYKxiDLYuqRXV6xeihjir2NF/QngL7Ufnb8VZcW
-	 nVyY1jLo0tJeYTUY0m06VqR4vkNK9f0MKoVf2FbQCmfLBkqae0atQawuaou0eilW8S
-	 uxMewPP0AMBrk/Gan4BtiM/1J66IQFwKVEKZ/NCs2G16x7/iv9wn276U99T3AU0Ii6
-	 fqjj80DGyyeMQ==
+	b=EZxQQd2Di6vNqVpkNvVn/Iv4TNvYkgZo5yQ/hJtHBJisJDas1IJMakZxLdnI7mar9
+	 /T9/DbdIffbfRYGOQecIsiUnUK4G3UmUXNcXpLo4e3JQlC2MuR46C6CqCHH25uDldg
+	 T4akxcpQAtJrqqrjvOqXyW6mv9ROBTnY2qgZ0TjTpMkQVVaCGuOqjsVjZagc/xaC12
+	 +SkR7qzCTmoatBbN7S32Xdcl9FyD1EQ9mBYgV2Y0j6e8GdPXgJchsPFsgZpA4CQ9wZ
+	 KfYoqBPE8MQAtwoSp4m7+60dXiglX8vSj/MqWxO6++Cs0lurE6OJbuniuNBTH42QJ+
+	 j31ZlWrUePGww==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 2/6] cxl/region: Generalize endpoint position mapping
+Subject: Re: [PATCH v4 3/6] cxl/region: Support mixed-granularity auto
+ regions
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Alison Schofield" <alison.schofield@intel.com>
 Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <1c9218cf46a96937964e217c9172648a322d86c7.1787255388.git.alison.schofield@intel.com>
+In-Reply-To: <465a9a3e68144a41af45ca1cdfa642e7af553c4e.1787255388.git.alison.schofield@intel.com>
 References: <cover.1787255388.git.alison.schofield@intel.com>
- <1c9218cf46a96937964e217c9172648a322d86c7.1787255388.git.alison.schofield@intel.com>
+ <465a9a3e68144a41af45ca1cdfa642e7af553c4e.1787255388.git.alison.schofield@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 20 Aug 2026 23:43:08 +0000
-Message-Id: <20260820234309.6507D1F000E9@smtp.kernel.org>
+Date: Thu, 20 Aug 2026 23:43:19 +0000
+Message-Id: <20260820234320.18C561F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -46,64 +47,90 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Use-After-Free read of device structure in find_pos_and_gran error=
- path.
+- [High] Incorrect distance calculation for non-mixed-granularity regions w=
+ith non-power-of-2 root interleaves causes a NULL pointer dereference.
 --
 
---- Patch [2]: [PATCH v4 2/6] cxl/region: Generalize endpoint position mapp=
-ing ---
-commit 74f53df9f58a0339cb5f29038f2e514904e34cf5
+--- Patch [3]: [PATCH v4 3/6] cxl/region: Support mixed-granularity auto re=
+gions ---
+commit 13bc48fe2efef1744b5bbf29c756bd07f400ebe3
 Author: Alison Schofield <alison.schofield@intel.com>
 
-cxl/region: Generalize endpoint position mapping
+cxl/region: Support mixed-granularity auto regions
 
-This commit alters the endpoint position calculation to support
-mixed-granularity regions. It weights each decoder's contribution by its
-relative granularity instead of assuming a uniform granularity across the
-interleave hierarchy.
+The CXL driver currently assumes the interleaving root has the same
+granularity as the region, with each successive interleaving level
+becoming coarser toward the endpoints. This patch allows the CXL driver
+to assemble an auto region where the root granularity is coarser than
+the region granularity.
 
 > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 3b640c9ba5a08..4f367feaf6c84 100644
+> index 4f367feaf6c84..637d1b60a570b 100644
 > --- a/drivers/cxl/core/region.c
 > +++ b/drivers/cxl/core/region.c
 [ ... ]
-> @@ -1929,9 +1934,10 @@ static int find_pos_and_ways(struct cxl_port *port=
-, struct range *range,
->  		return rc;
+> @@ -1463,26 +1472,21 @@ static int cxl_port_setup_targets(struct cxl_port=
+ *port,
 >  	}
->  	cxlsd =3D to_cxl_switch_decoder(dev);
-> -	*ways =3D cxlsd->cxld.interleave_ways;
-> +	ways =3D cxlsd->cxld.interleave_ways;
-> +	*gran =3D cxlsd->cxld.interleave_granularity;
 > =20
-> -	for (int i =3D 0; i < *ways; i++) {
-> +	for (int i =3D 0; i < ways; i++) {
->  		if (cxlsd->target[i] =3D=3D port->parent_dport) {
->  			*pos =3D i;
->  			rc =3D 0;
+>  	cxlsd =3D to_cxl_switch_decoder(&cxld->dev);
+> +	iw =3D cxl_rr->nr_targets;
+> +
+>  	if (cxl_rr->nr_targets_set) {
+> -		int i, distance =3D 1;
+> -		struct cxl_region_ref *cxl_rr_iter;
+> +		int i, distance;
+> =20
+>  		/*
+> -		 * The "distance" between peer downstream ports represents which
+> -		 * endpoint positions in the region interleave a given port can
+> -		 * host.
+> -		 *
+> -		 * For example, at the root of a hierarchy the distance is
+> -		 * always 1 as every index targets a different host-bridge. At
+> -		 * each subsequent switch level those ports map every Nth region
+> -		 * position where N is the width of the switch =3D=3D distance.
+> +		 * @distance is the spacing between region positions sharing
+> +		 * this dport. Mixed-granularity regions place those positions
+> +		 * contiguously.
+>  		 */
+> -		do {
+> -			cxl_rr_iter =3D cxl_rr_load(iter, cxlr);
+> -			distance *=3D cxl_rr_iter->nr_targets;
+> -			iter =3D to_cxl_port(iter->dev.parent);
+> -		} while (!is_cxl_root(iter));
+> -		distance *=3D cxlrd->cxlsd.cxld.interleave_ways;
+> +		if (cxl_region_is_mixed_gran(cxlr))
+> +			distance =3D 1;
+> +		else
+> +			distance =3D cxld->interleave_granularity * iw /
+> +				   p->interleave_granularity;
 
 [Severity: High]
-This is a pre-existing issue, but could the error handling path just after
-this loop trigger a use-after-free?
+Does this mathematical distance calculation correctly handle non-power-of-2
+root interleaves?
 
-Looking at find_pos_and_gran(), if the loop completes without finding a
-match, rc remains -ENXIO. Immediately after the loop, put_device(dev) is
-called, and then dev_err() formats an error message using cxlsd:
+When configuring a CXL region with a non-power-of-2 root interleave (like
+3-way or 6-way) and multiple endpoints sharing a downstream port, this
+formula seems to calculate a distance 3 times smaller than the true
+topological stride. This appears to happen because parent_iw is divided
+by 3 for address routing, which scales down cxld->interleave_granularity.
 
-	put_device(dev);
+If the distance is undersized, check_last_peer() will check an endpoint on
+a completely different host bridge:
 
-	if (rc)
-		dev_err(port->uport_dev,
-			"failed to find %s:%s in target list of %s\n",
-			dev_name(&port->dev),
-			dev_name(port->parent_dport->dport_dev),
-			dev_name(&cxlsd->cxld.dev));
+drivers/cxl/core/region.c:check_last_peer() {
+        ...
+        cxled_peer =3D p->targets[pos - distance];
+        cxlmd_peer =3D cxled_to_memdev(cxled_peer);
+        ep_peer =3D cxl_ep_load(port, cxlmd_peer);
+        if (ep->dport !=3D ep_peer->dport) {
+        ...
+}
 
-Since cxlsd is derived from dev, does calling put_device() before dev_err()
-release the structure prematurely and cause a read of freed memory?
+Since cxl_ep_load() returns NULL when selecting a peer on a different host
+bridge, will ep_peer->dport trigger a NULL pointer dereference here?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1787255388.gi=
-t.alison.schofield@intel.com?part=3D2
+t.alison.schofield@intel.com?part=3D3
