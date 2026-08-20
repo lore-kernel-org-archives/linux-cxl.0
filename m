@@ -1,48 +1,45 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4267E379C24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0E138F258
 	for <linux-cxl@vger.kernel.org>; Thu, 20 Aug 2026 23:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787268693; cv=none; b=coMDPPgbCi1KEreo6/bct8HIs/U+IU0aMWC/Ij6TzeAKibpXFbWAFXY7vrGv1KuiluMkkXMYs5buu4LMoBcU7JPdQVjDF4pD0Dew0s1MRpUOW10tAP2SibjbdY1wW4rFKx18EwJPaNuDBb2omMDlZc2pKnLtJqcuyrNQJuJVwmU=
+	t=1787268694; cv=none; b=ZKQwMqWcA6CblHj0L/2jo9ao/mozwhi1gJxJwYZvXqeKAOWoxnXQZ6ddS2R+nFNAq6u5iFIhPs3JGc/pibVTlEsItHtBRVOj9XwAtOmrf79syaZuBiwTCEzKp1PrmxTJhg22hIrrPnyQXMPN0rAPHqIOIHCc3D8KeGkBYSuv1F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787268693; c=relaxed/simple;
-	bh=XvWJl9jWd6mL0f/5ErF05vim6VDHelrN1ebeFCe7ZKI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ina6+T0SmvUT9Mmtl+phit7k+ZBerbyhYXT6TaZ/ElmOMxCLLNRGOUq4k6gNBlvf6H5CkA+JsDL9/AxW8YXGGa0oIag8TqJ3qsDO+PC9CqL558ULDLwuUOJCNfiwXSf0JV3idGTRsXbjFDvCfxadS39eEo9/li+bbu9TCF6Yqq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f38MW975; arc=none smtp.client-ip=192.198.163.9
+	s=arc-20240116; t=1787268694; c=relaxed/simple;
+	bh=wcUIpuSM6w4jm4byDkTovpd/ro03QkRTYMxTtZBzNXI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=akrWJqOGxFFcfv7Dg9BwI8Z97qjmQYfbYICuT9pIIXpcobY9c7CyIom03PI9pgZE15yoW2Q1kJayvGzu1o6J5vkEZKEphP5ubsoGD1juXP2Q9njZY7zTTPipP2SbXazhoUHYvZoMu8LRBW8WkuxWaRGPkpyvhsWMjsk6ZaIBw4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j+No2vgI; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f38MW975"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j+No2vgI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787268692; x=1818804692;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=XvWJl9jWd6mL0f/5ErF05vim6VDHelrN1ebeFCe7ZKI=;
-  b=f38MW975ApQPqHG8lRWc1kwIYb+2AQp6LBw0X03WWuiHvuo/7EmLsNTW
-   F5iVTuW7gu+qEN1iIbdwyv20uLRE8tC/Av7XC1O4wTTWq1eJWyDWnNu7Q
-   XL5u3p9LwqTNZU5iewTgsW7N6yF7l3LO+WvPOl9UPCJOoFPbVb0XU1Noi
-   Jr+51k+GZdc0wLW5BcpNKId1QEGye9aW/PF+HvgKd+7wT7i0fwwz9+zG/
-   AkMQ5O7OqQn96QCf7/GcIHxvwJ3fLUzWs+dbM+ckdBrA9uoyD8OA86yop
-   1VBlljMluKl87S+2lC2rxGo4susq9k9OjYuooHr22e1NjXy8blIVsjnxr
-   Q==;
-X-CSE-ConnectionGUID: Li583L9pRumgf+bRYH3I3A==
-X-CSE-MsgGUID: wJU1HCiURiCxizIbI2psJw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11881"; a="98483425"
+  t=1787268693; x=1818804693;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wcUIpuSM6w4jm4byDkTovpd/ro03QkRTYMxTtZBzNXI=;
+  b=j+No2vgIWzMUYSbFKJFkaMKPSk5h2j82MWqmU2r6jEnLXkMkUJDoM2xZ
+   pIVCGPHlgTKVqitUBLLPid7c3JZUs+qFRN3/32I2l1pfYtsMfCGIakmkY
+   9Y3Taem9Ch0ss9Rj4r4lHwQ1+upxtpwagZfUyYNJ1dNKoTiINZazwrkiN
+   g8RTcNki+3bKt1cnP1K0Byaugcv1OMo7aWrYUNE/72ox8g60qP6PmVNA7
+   lr+R39AMxFqF9YhgihHJFg/3Z69jl2C3WJoFOZr+SlqQ52rySc3ff5KtS
+   gP66uoAXd5IG1HMOhcdE1LbHd3vGONfsj/S/Xa8rqzjVD+rMS+N+5ji9O
+   g==;
+X-CSE-ConnectionGUID: x4tOlCFfRCuJfzzF/ibiOQ==
+X-CSE-MsgGUID: LBbRaAECRqaVnTk7CdeMCw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11881"; a="98973039"
 X-IronPort-AV: E=Sophos;i="6.25,234,1779174000"; 
-   d="scan'208";a="98483425"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 16:31:32 -0700
-X-CSE-ConnectionGUID: t2/FMzN8S/SZeSdX4XS3MA==
-X-CSE-MsgGUID: jH4zLigCQui/6VwGzG+tHA==
+   d="scan'208";a="98973039"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 16:31:29 -0700
+X-CSE-ConnectionGUID: ubiCSGZXTqOWDrzIUlse7A==
+X-CSE-MsgGUID: 6fTtb0tiSBOQUJXoYMi0aw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,234,1779174000"; 
-   d="scan'208";a="261905999"
 Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.108])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 16:31:31 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 16:31:28 -0700
 From: Alison Schofield <alison.schofield@intel.com>
 To: Davidlohr Bueso <dave@stgolabs.net>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -53,12 +50,10 @@ To: Davidlohr Bueso <dave@stgolabs.net>,
 	Li Ming <ming.li@zohomail.com>,
 	Robert Richter <rrichter@amd.com>
 Cc: linux-cxl@vger.kernel.org
-Subject: [PATCH v4 3/6] cxl/region: Support mixed-granularity auto regions
-Date: Thu, 20 Aug 2026 16:31:21 -0700
-Message-ID: <465a9a3e68144a41af45ca1cdfa642e7af553c4e.1787255388.git.alison.schofield@intel.com>
+Subject: [PATCH v4 0/6] cxl: Support mixed-granularity region interleaves
+Date: Thu, 20 Aug 2026 16:31:18 -0700
+Message-ID: <cover.1787255388.git.alison.schofield@intel.com>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1787255388.git.alison.schofield@intel.com>
-References: <cover.1787255388.git.alison.schofield@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
@@ -67,223 +62,131 @@ List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The CXL Specification permits a region's interleave granularity to
-differ between levels of the decoder hierarchy. For an auto region,
-the CXL driver reconstructs that hierarchy from the decoder
-configuration programmed by platform firmware.
 
-The CXL driver currently assumes the interleaving root has the same
-granularity as the region, with each successive interleaving level
-becoming coarser toward the endpoints. This prevents the driver from
-assembling an auto region where the root granularity is coarser than
-the region granularity.
+RobertR: I've dropped the Originally-by tags since the implementation no
+longer carries the selector-bit approach from your original patch. If
+you think Patch 3 still warrants an authorship tag based on the origin
+of the auto-region work, let me know.
 
-Support mixed-granularity auto regions in the CXL driver, restricted
-to coarse-to-fine layouts. Derive each interleaving decoder's
-granularity from its parent:
+Changes in v4:
+- Rework port decoder setup around parent granularity and target count,
+  dropping the selector-walk and selector-derived granularity machinery
+  from v3 (RobertR)
+- Replace the mixed-granularity-specific endpoint position handling with
+  one weighted position calculation for existing and mixed-gran regions
+- Derive mixed-gran port decoder settings directly from the parent interleave
+  geometry
+- Promote the user-region position self-test from dev_dbg() to dev_warn()
+- Update the documentation patch
+- Update the cover letter summary and series structure
+Link to v3:
+https://lore.kernel.org/linux-cxl/cover.1785444498.git.alison.schofield@intel.com/
 
-        child_ig = parent_ig / child_iw
+Changes in v3:
+- Reduce scope to coarse-to-fine ordering (RichardC, Sashiko)
+- Reject out-of-order layouts (RichardC, Sashiko)
+- P1: Factor the selector walk and per-port checks into helpers (RobertR)
+  That pre-work is the new Patch 1/8 and the Series Structure section of
+  this cover letter describe same below.
+- P3: Derive granularity from the highest available selector span (RobertR)
+- P3: Validate auto-programmed granularity against the derived value
+- P4: Rename root_pos_stride() to root_positions_per_target() (RobertR)
+- P4: Drop the "stride" terminology throughout (RobertR)
+- The complex Patch 4 of v2 is split into patches 4-6 in v3.
+  Also noted in the Series Structure section of cover letter below.
+- P9: Move the peer-distance walk and per-function walkthroughs from the doc
+  into in-code comments and kernel-doc (RobertR)
+- Drop Reviewed-by tags
+Link to v2:
+https://lore.kernel.org/linux-cxl/cover.1781199122.git.alison.schofield@intel.com/
 
-The topology determines each decoder's interleave ways, so the parent
-granularity and child ways determine the child granularity. Use that
-relationship to validate the decoder geometry while assembling an auto
-region.
+Changes in v2:
+- Patch 1,2: Defer the unused selector var store to keep P1 bisectable (Sashiko)
+- Patch 1: Make divide by 3 in get_selctor() work on 32-bit builds) (lkp)
+- Patch 4: Use local vars in cxl_region_attach() for readability (DaveJ)
+- Patch 5: Add NULL checks on unused mock arrays (Sashiko)
+- Resolved errant err_rch unwind with rc7 merge (DaveJ)
+- Rebase onto 7.1-rc7
+- Update commit logs in 1,2,5 to align w changes in v2
+Link to v1:
+https://lore.kernel.org/all/cover.1780095671.git.alison.schofield@intel.com/
 
-Require the root and region to describe the same interleave span:
 
-        root_iw * root_ig == region_iw * region_ig
+Begin Cover Letter:
 
-The same span relationship covers the CXL Specification's Mod3
-configurations. For example, a 6-way region at IGB across three host
-bridges uses a 3-way root interleave at 2 * IGB and a 2-way interleave
-at IGB below it, as described in CXL 4.0 Section 9.13.1.1.
+A CXL region may interleave across multiple decoder levels: root,
+optional switches, and endpoint. The driver has historically required
+equal region and root decoder granularities. That blocks legal
+mixed-granularity arrangements permitted by CXL 4.0 Section 9.13.1 and
+makes some 6-way and 12-way configurations defined in Section 9.13.1.1
+(Tables 9-6, 9-7, and 9-8) impossible to create.
 
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- drivers/cxl/core/region.c | 114 ++++++++++++++++++++++++--------------
- 1 file changed, 73 insertions(+), 41 deletions(-)
+Two prior proposals addressed parts of this gap:
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 4f367feaf6c8..637d1b60a570 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1434,6 +1434,16 @@ static int check_interleave_cap(struct cxl_decoder *cxld, int iw, int ig)
- 	return 0;
- }
- 
-+/* Mixed granularity has a region IG finer than the interleaving root IG */
-+static bool cxl_region_is_mixed_gran(struct cxl_region *cxlr)
-+{
-+	struct cxl_decoder *cxld = &cxlr->cxlrd->cxlsd.cxld;
-+
-+	return cxld->interleave_ways > 1 &&
-+	       cxld->interleave_granularity >
-+		       cxlr->params.interleave_granularity;
-+}
-+
- static int cxl_port_setup_targets(struct cxl_port *port,
- 				  struct cxl_region *cxlr,
- 				  struct cxl_endpoint_decoder *cxled)
-@@ -1447,7 +1457,6 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 	struct cxl_region_params *p = &cxlr->params;
- 	struct cxl_decoder *cxld = cxl_rr->decoder;
- 	struct cxl_switch_decoder *cxlsd;
--	struct cxl_port *iter = port;
- 	u16 eig, peig;
- 	u8 eiw, peiw;
- 
-@@ -1463,26 +1472,21 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 	}
- 
- 	cxlsd = to_cxl_switch_decoder(&cxld->dev);
-+	iw = cxl_rr->nr_targets;
-+
- 	if (cxl_rr->nr_targets_set) {
--		int i, distance = 1;
--		struct cxl_region_ref *cxl_rr_iter;
-+		int i, distance;
- 
- 		/*
--		 * The "distance" between peer downstream ports represents which
--		 * endpoint positions in the region interleave a given port can
--		 * host.
--		 *
--		 * For example, at the root of a hierarchy the distance is
--		 * always 1 as every index targets a different host-bridge. At
--		 * each subsequent switch level those ports map every Nth region
--		 * position where N is the width of the switch == distance.
-+		 * @distance is the spacing between region positions sharing
-+		 * this dport. Mixed-granularity regions place those positions
-+		 * contiguously.
- 		 */
--		do {
--			cxl_rr_iter = cxl_rr_load(iter, cxlr);
--			distance *= cxl_rr_iter->nr_targets;
--			iter = to_cxl_port(iter->dev.parent);
--		} while (!is_cxl_root(iter));
--		distance *= cxlrd->cxlsd.cxld.interleave_ways;
-+		if (cxl_region_is_mixed_gran(cxlr))
-+			distance = 1;
-+		else
-+			distance = cxld->interleave_granularity * iw /
-+				   p->interleave_granularity;
- 
- 		for (i = 0; i < cxl_rr->nr_targets_set; i++)
- 			if (ep->dport == cxlsd->target[i]) {
-@@ -1496,15 +1500,15 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 	}
- 
- 	if (is_cxl_root(parent_port)) {
--		/*
--		 * Root decoder IG is always set to value in CFMWS which
--		 * may be different than this region's IG.  We can use the
--		 * region's IG here since interleave_granularity_store()
--		 * does not allow interleaved host-bridges with
--		 * root IG != region IG.
--		 */
--		parent_ig = p->interleave_granularity;
- 		parent_iw = cxlrd->cxlsd.cxld.interleave_ways;
-+		/*
-+		 * A non-interleaving root does not contribute to the region
-+		 * interleave.
-+		 */
-+		if (parent_iw > 1)
-+			parent_ig = cxlrd->cxlsd.cxld.interleave_granularity;
-+		else
-+			parent_ig = p->interleave_granularity;
- 		/*
- 		 * For purposes of address bit routing, use power-of-2 math for
- 		 * switch ports.
-@@ -1537,7 +1541,6 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 		return rc;
- 	}
- 
--	iw = cxl_rr->nr_targets;
- 	rc = ways_to_eiw(iw, &eiw);
- 	if (rc) {
- 		dev_dbg(&cxlr->dev, "%s:%s: invalid port interleave: %d\n",
-@@ -1545,23 +1548,15 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 		return rc;
- 	}
- 
--	/*
--	 * Interleave granularity is a multiple of @parent_port granularity.
--	 * Multiplier is the parent port interleave ways.
--	 */
--	rc = granularity_to_eig(parent_ig * parent_iw, &eig);
--	if (rc) {
--		dev_dbg(&cxlr->dev,
--			"%s: invalid granularity calculation (%d * %d)\n",
--			dev_name(&parent_port->dev), parent_ig, parent_iw);
--		return rc;
--	}
-+	if (cxl_region_is_mixed_gran(cxlr))
-+		ig = parent_ig / iw;
-+	else
-+		ig = parent_ig * parent_iw;
- 
--	rc = eig_to_granularity(eig, &ig);
-+	rc = granularity_to_eig(ig, &eig);
- 	if (rc) {
--		dev_dbg(&cxlr->dev, "%s:%s: invalid interleave: %d\n",
--			dev_name(port->uport_dev), dev_name(&port->dev),
--			256 << eig);
-+		dev_dbg(&cxlr->dev, "%s:%s: invalid granularity: %d\n",
-+			dev_name(port->uport_dev), dev_name(&port->dev), ig);
- 		return rc;
- 	}
- 
-@@ -2058,6 +2053,39 @@ static int cxl_region_sort_targets(struct cxl_region *cxlr)
- 	return rc;
- }
- 
-+static int cxl_region_validate_interleave(struct cxl_region *cxlr)
-+{
-+	struct cxl_decoder *cxld = &cxlr->cxlrd->cxlsd.cxld;
-+	struct cxl_region_params *p = &cxlr->params;
-+	int root_iw = cxld->interleave_ways;
-+	int root_ig = cxld->interleave_granularity;
-+
-+	if (root_iw == 1)
-+		return 0;
-+
-+	if (p->interleave_granularity > root_ig) {
-+		dev_dbg(&cxlr->dev,
-+			"granularity %d exceeds root decoder granularity %d\n",
-+			p->interleave_granularity, root_ig);
-+		return -ENXIO;
-+	}
-+
-+	/* Same-gran power-of-two regions may span multiple root targets */
-+	if (is_power_of_2(root_iw) && p->interleave_granularity == root_ig)
-+		return 0;
-+
-+	/* Mixed-gran regions must span exactly one root interleave */
-+	if (root_iw * root_ig != p->interleave_ways * p->interleave_granularity) {
-+		dev_dbg(&cxlr->dev,
-+			"%d ways at %d does not span root decoder %d ways at %d\n",
-+			p->interleave_ways, p->interleave_granularity, root_iw,
-+			root_ig);
-+		return -ENXIO;
-+	}
-+
-+	return 0;
-+}
-+
- static int cxl_region_attach(struct cxl_region *cxlr,
- 			     struct cxl_endpoint_decoder *cxled, int pos)
- {
-@@ -2100,6 +2128,10 @@ static int cxl_region_attach(struct cxl_region *cxlr,
- 		return -ENXIO;
- 	}
- 
-+	rc = cxl_region_validate_interleave(cxlr);
-+	if (rc)
-+		return rc;
-+
- 	if (p->nr_targets >= p->interleave_ways) {
- 		dev_dbg(&cxlr->dev, "region already has %d endpoints\n",
- 			p->nr_targets);
+AlisonS introduced position arithmetic and sysfs gating for auto and
+user-created regions to support the 6- and 12-way interleave
+configurations without a same-granularity alternative:
+https://lore.kernel.org/all/20250306232239.2609017-1-alison.schofield@intel.com/
+
+RobertR introduced an HPA selector-bit model for auto regions that
+allows multi-level power-of-two interleaves regardless of granularity
+ordering:
+https://lore.kernel.org/all/20251028094754.72816-1-rrichter@amd.com/
+
+This series adds support for CXL regions where interleave granularity
+differs between levels of the decoder hierarchy. The support applies to
+both firmware-programmed auto regions and user-created regions.
+
+Linux supports mixed-granularity configurations that are monotonic from
+the interleaving root toward the endpoints. Granularity may remain the
+same or become finer at each interleaving level. Configurations that
+refine and then become coarser are permitted by the CXL Specification
+but are not supported by Linux.
+
+This support includes all power-of-two interleaves, as well as the
+3-, 6-, and 12-way interleave configurations described by CXL 4.0
+Section 9.13.1.1.
+
+
+Series structure - reworked in v4
+---------------------------------
+Patch 1 promotes the existing user-region endpoint position self-test to
+a visible diagnostic.
+
+Patch 2 generalizes endpoint position calculation to account for
+granularity changes between decoder levels.
+
+Patch 3 enables mixed-granularity auto regions and validates their
+coarse-to-fine decoder geometry.
+
+Patch 4 enables mixed-granularity user regions by relaxing the existing
+root/region granularity restriction.
+
+Patch 5 adds cxl_test topology and coverage for mixed-granularity regions.
+
+Patch 6 documents the mixed-granularity model and Linux support policy.
+
+
+A companion NDCTL patchset that allows mixed-gran 'cxl create-region'
+and adds the unit test is posted here:
+https://lore.kernel.org/all/fa5c109f08824180f58341ebd9055545a2ff3142.1780099216.git.alison.schofield@intel.com/
+
+
+Alison Schofield (6):
+  cxl/region: Warn on user region position mismatch
+  cxl/region: Generalize endpoint position mapping
+  cxl/region: Support mixed-granularity auto regions
+  cxl/region: Support mixed-granularity user created regions
+  cxl/test: Add a topology to test mixed-granularity regions
+  Documentation/cxl: Describe mixed-granularity regions
+
+ .../driver-api/cxl/linux/cxl-driver.rst       | 135 +++++
+ drivers/cxl/core/region.c                     | 193 ++++---
+ tools/testing/cxl/test/cxl.c                  | 496 ++++++++++++++++--
+ 3 files changed, 706 insertions(+), 118 deletions(-)
+
+
+base-commit: db2ddb87143519e20a95aa36c60b36107b736a58
 -- 
 2.37.3
 
