@@ -1,45 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3256199FB0
-	for <linux-cxl@vger.kernel.org>; Fri, 21 Aug 2026 22:37:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A5D41A55D;
+	Fri, 21 Aug 2026 22:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787351840; cv=none; b=W+QOEGOOpnRJfUVguyBAH2AseEQmapY4KN4nS0qzG1AI7BJ3nsfzeML/0fzswP/t6QfyEb/VPsKjtqNR4+QZf31h0icJGDKyowU5FgRY4gwC0DxHvKivja1yyJ56dpr99Zk+Hkf54/Cc6M07QZoqZFxIdF/hWiIHOtcXhTNG250=
+	t=1787352770; cv=none; b=Vg3H33/nHOTkk0sbIl/YJtKCTEAT4fe/TxgA/q6BLquW6lgJco3bFd3ysyjZtCkl7H25Y7vS0ZqkYBqJd2HWoMnd6bVoU8L79EekgoUFKz37VbwBERwZIdQ36i0Ij/vyqGd2j75ZskLLD1Wfe3YSpA7LOlev6Q+/YefQEs7PYio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787351840; c=relaxed/simple;
-	bh=HOWCs9Kh1nwN9hGcJEtDASQDXG+0AMIA1EZioJFE01g=;
+	s=arc-20240116; t=1787352770; c=relaxed/simple;
+	bh=lG8mPdBhWiq/eC41/suvMuaAb6VbSdXSz4lBncf/cPM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UZTQkwzCNZwPbfgdQTmHG3rb5iSUx6dQTsOA0fl0cfS5XUfan/s+UPUI/IQwzN0Z/dex3iTqS2dlmX4hS4y4o5WsfV4x99ZjlmMb1Xfg7ZNCqHmNzhI807TjOyJX7uFH/zB2bHij8KKprEh6j6SV3vxMYZ03JpjMCDu1LhiL65w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j2szDHWL; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=Io1rPViCPjGNum/eU/0PN4UACt0rB96VYhljV9uf3xItfo2QjL06atAWTp4GDOZinrB85EKutHUTCV7XEPDjznGnsudCE8LMB+eQJgdUAtwzNw9c6tuj1vCHHWFZmtuiLGMJU0wUIZZRP8NkEXpP3w0v9rntBsKz+zJXei/5CRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IMVs7/Bt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j2szDHWL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDA991F000E9;
-	Fri, 21 Aug 2026 22:37:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IMVs7/Bt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 638DE1F000E9;
+	Fri, 21 Aug 2026 22:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787351839;
-	bh=AjxOqaaKTZuUzeffhliIsQXqyUZYGGdIf8bpAmKghM4=;
+	s=k20260515; t=1787352769;
+	bh=uw3aIO7dfPZMuTtz/Y4xO/nSlzEQ/JOZRqZRSRn6Rew=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=j2szDHWLvH4QVTs/NSezPKkvLdHO55H3eO8MBvViWT8dWabrNs4Li9ZErDL1LD+m4
-	 U/yW3x+xFj7F4KTb6d4VMpWWRofXeXJTKAGy+7pPMfgMlx0GPwNqZxCjlNZgwmetTN
-	 x/xdIaKLtd5lV8El6mr8U9rZvmbE43cz7mtKO02d3Eh7lFrEajFlvstwR/mAY0WxID
-	 R7TNWw8NmPwHoSZ18RwowVAOpKuNflNqfJEhrLygo6+Nl89uTgqCK1coa1fnLLrbAH
-	 TjqQw90AvZ9UPcf49dJmFT7nhHJsx3engECL6mWwHytSZpr8/ekeccevccyMlvLUls
-	 iB4lYCrUlpAVw==
-Date: Fri, 21 Aug 2026 23:37:14 +0100
+	b=IMVs7/BtFhANCEDGTU0i4iV9K/SI6q2/IqtRBA1E+ecjiQvwSDvfWjJS87b6A4xja
+	 6bgyZnB3MXpKRdtCtDvLsYizMzOMup/5XD6QuFX4TzK+Q0R/v71KJUPOpAcCqYrPjy
+	 ajIjvkW9KIderpnriAYRCULTq+xtN1sxHw2FG5Z6AAlabnygi5Q3r59A7qyL4qbQ9p
+	 dJYG/bfyu3U2GO0vnAw8fKdoctM1WFAWe65H8lOinzE1p4OezuYM5zr7OxsEyQwaWX
+	 RWo3AFPVDbsYsj+pya5XM3SIgF493PXggggRcth1Sl79lL9RIJjjvS3zPnwKy3m+o7
+	 fZBOjDz02sEOQ==
+Date: Fri, 21 Aug 2026 23:52:40 +0100
 From: Jonathan Cameron <jic23@kernel.org>
-To: Guixin Liu <kanie@linux.alibaba.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>, Vishal Verma
- <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Ira Weiny
- <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
- linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v4] cxl/pci: Skip reset detection for DVSEC emulated
- decoders
-Message-ID: <20260821233714.54f67d0a@jic23-huawei>
-In-Reply-To: <20260821233305.32d77d60@jic23-huawei>
-References: <20260821021029.2550584-1-kanie@linux.alibaba.com>
-	<20260821233305.32d77d60@jic23-huawei>
+To: <mhonap@nvidia.com>
+Cc: <alex@shazbot.org>, <jgg@ziepe.ca>, <ankita@nvidia.com>,
+ <dave.jiang@intel.com>, <alejandro.lucero-palau@amd.com>,
+ <smadhavan@nvidia.com>, <corbet@lwn.net>, <skhan@linuxfoundation.org>,
+ <dave@stgolabs.net>, <alison.schofield@intel.com>,
+ <vishal.l.verma@intel.com>, <iweiny@kernel.org>, <ming.li@zohomail.com>,
+ <yishaih@nvidia.com>, <skolothumtho@nvidia.com>, <kevin.tian@intel.com>,
+ <bhelgaas@google.com>, <dmatlack@google.com>, <kees@kernel.org>,
+ <gustavoars@kernel.org>, <cjia@nvidia.com>, <kjaju@nvidia.com>,
+ <vsethi@nvidia.com>, <zhiw@nvidia.com>, <linux-doc@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+ <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH v4 01/27] cxl: Fix resource.c include path and export
+ cxl_restore_hdm_after_pci_reset
+Message-ID: <20260821235240.7926351d@jic23-huawei>
+In-Reply-To: <20260813093631.2288172-2-mhonap@nvidia.com>
+References: <20260813093631.2288172-1-mhonap@nvidia.com>
+	<20260813093631.2288172-2-mhonap@nvidia.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
@@ -50,122 +57,48 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 21 Aug 2026 23:33:05 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+On Thu, 13 Aug 2026 15:06:05 +0530
+<mhonap@nvidia.com> wrote:
 
-> On Fri, 21 Aug 2026 10:10:29 +0800
-> Guixin Liu <kanie@linux.alibaba.com> wrote:
+> From: Manish Honap <mhonap@nvidia.com>
 > 
-> > After an FLR or SBR, __cxl_endpoint_decoder_reset_detected() samples the
-> > Committed bit at cxlhdm->regs.hdm_decoder for every decoder that has
-> > CXL_DECODER_F_ENABLE set. Decoders emulated from the CXL DVSEC range
-> > registers carry that flag too, but their state does not live in the HDM
-> > decoder registers. When the component registers expose no HDM decoder
-> > capability, regs.hdm_decoder is NULL and the readl() oopses in the reset
-> > completion path. When the capability is present but firmware left
-> > Mem_Enable set with the global HDM decoder enable clear, the Committed bit
-> > reads zero and cxl_reset_done() reports a reset that never happened: it
-> > taints the kernel and strips CXL_DECODER_F_ENABLE and CXL_DECODER_F_LOCK
-> > from every endpoint decoder, even though the driver still cannot reprogram
-> > the DVSEC ranges.
-> > 
-> > Skip the check when cxld->commit is NULL. Only
-> > cxl_setup_hdm_decoder_from_dvsec() leaves that callback unset, so that one
-> > test covers both emulation paths, and a DVSEC-described range has no
-> > Committed bit for a reset to clear.
-> >   
-> This is still a lot of text to read - I'll have stab an what I think would be sufficient.
-> Take this perhaps as inspiration, not a precise suggestion!
-Ah I see this was the cut down text Dave suggested.
-That's fine (though I think he could have gone further!)
+> The vfio-cxl Type-2 driver restores the endpoint HDM decoder after a
+> D3hot->D0 soft reset by calling cxl_restore_hdm_after_pci_reset(), so
+> export it to the CXL namespace. While here, correct the resource.c
+> include of the CXL PCI definitions from <cxlpci.h> to <cxl/pci.h>.
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-
-I think it is still worth thinking about the question on what it means
-to try and recover below.  Though looking at how this is used, it
-is just to complain that something crazy happened - so maybe none of this 
-matters!
+Why?  + if this makes sense (I haven't checked) please make that
+a separate patch (for now) + make sure to call it out in review of
+Srirangan Madhavan series where this file comes from and which hasn't
+merged yet. I think it is in patch 5.
 
 Jonathan
 
-
 > 
-> When HDM decoders are emulated from DVSEC range registers either (a) there are
-> no HDM decoder registers present or (b) the DVSEC registers were in use at driver
-> load.
+> Signed-off-by: Manish Honap <mhonap@nvidia.com>
+> ---
+>  drivers/cxl/core/resource.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> After FLR or SBR, __cxl_endpoint_decoder_reset_detected() checks the HDM
-> decoder committed bit for any previously committed decoders. This includes
-> emulated decoders: (a) results in a NULL pointer dereference, (b) in a false
-> detection of reset when they are present and not in use as the committed bit
-> was never set.
-> 
-> Use absence of cxld->commit to elide the reset check for emulated decoders.
-> 
-> > Fixes: 934edcd436dc ("cxl: Add post-reset warning if reset results in loss of previously committed HDM decoders")
-> > Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>  
-> 
-> This does make me wonder if we should be doing something similar to check
-> the dvsec based decoding reset.  The memory_base_high should reset to 0
-> for example.
-> 
-> Can we actually do anything with such devices?  Not sure we can today.
-> That is not a reason to crash however so this fix still makes sense.
-> 
-> Jonathan
-> 
-> > ---
-> > This was patch 4/8 of the "cxl: Assorted fixes" series [1], resent
-> > individually per review feedback.
-> >   
-> 
-> > The two synchronisation concerns the review bot raised on v2 - the missing
-> > exclusion against a cxl_port unbind freeing the devm allocated cxl_hdm, and
-> > the plain read-modify-write of cxld->flags in
-> > cxl_endpoint_decoder_clear_reset_flags() while the region paths update the
-> > same word under cxl_rwsem.region - are still untouched here. Both are
-> > about the reset handler's locking rather than about which registers it
-> > reads, and neither fix is local; happy to follow up with separate patches.
-> > 
-> > v1->v2:
-> > - rebase onto cxl/next
-> > - rewrite the commit message to describe the behaviour rather than narrate
-> >   the code change (Alison Schofield)
-> > 
-> > v2->v3:
-> > - test cxld->commit instead of cxlhdm->regs.hdm_decoder, so that decoders
-> >   emulated from the DVSEC ranges are also skipped when the HDM decoder
-> >   registers exist but are globally disabled (Richard Cheng)
-> > - update the subject and the commit message for the widened scope
-> > 
-> > v3->v4:
-> > - shorten the commit message (Dave Jiang)
-> > 
-> > [1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
-> > 
-> >  drivers/cxl/core/pci.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> > 
-> > diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> > index 9d807c1a002c..d8b07f86bab0 100644
-> > --- a/drivers/cxl/core/pci.c
-> > +++ b/drivers/cxl/core/pci.c
-> > @@ -683,6 +683,13 @@ static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
-> >  	if ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)
-> >  		return 0;
-> >  
-> > +	/*
-> > +	 * Decoders emulated from the DVSEC range registers have no commit
-> > +	 * callback and no HDM decoder registers to consult.
-> > +	 */
-> > +	if (!cxld->commit)
-> > +		return 0;
-> > +
-> >  	cxlhdm = dev_get_drvdata(&port->dev);
-> >  	hdm = cxlhdm->regs.hdm_decoder;
-> >  	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
-> > 
-> > base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07  
-> 
-> 
+> diff --git a/drivers/cxl/core/resource.c b/drivers/cxl/core/resource.c
+> index daa5e7fa2509..492ffe8e3576 100644
+> --- a/drivers/cxl/core/resource.c
+> +++ b/drivers/cxl/core/resource.c
+> @@ -16,7 +16,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/slab.h>
+>  
+> -#include <cxlpci.h>
+> +#include <cxl/pci.h>
+>  
+>  #include "cxl.h"
+>  #include "core.h"
+> @@ -850,6 +850,7 @@ int cxl_restore_hdm_after_pci_reset(struct pci_dev *pdev)
+>  
+>  	return cxl_reset_save_restored_state(pdev, command);
+>  }
+> +EXPORT_SYMBOL_NS_GPL(cxl_restore_hdm_after_pci_reset, "CXL");
+>  
+>  static void cxl_hdm_range_context_init(struct cxl_hdm_range_context *ctx)
+>  {
 
