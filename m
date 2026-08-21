@@ -1,29 +1,30 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07EF42F707
-	for <linux-cxl@vger.kernel.org>; Fri, 21 Aug 2026 08:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A603CC9EA
+	for <linux-cxl@vger.kernel.org>; Fri, 21 Aug 2026 08:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787300408; cv=none; b=JFn0MwUlwzdyvq9BO3UVmi71aG72RWKb0JWXEMksaC77mgDlFgw5oms+TtCvIeBGcOGB6uMW1Y6cMXWnuU8X4QaMWLRhNMgcFc9cXkm8/BZu3gShLH/g1adALU6QUHJ2E11o5lh+jn5p0H2MvQIJZnrBfp/saJ9RmZqfWZr5Y4A=
+	t=1787300410; cv=none; b=vDEUZQcQKqGyvl/pxlaer+4X9U22wd/2hOg19A8qTEDKiYoYCBHSPTRBARtTH6m5V1h2NNCp+ThaeN4n5MFWIL40kYFV1Q7BZrAViTBqUS7isgXzWh86EhzXLqpgW64R7Pc40Z+6ehgwiBrq3jz4Pcok/x72MmdNy/fxzmOcH4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787300408; c=relaxed/simple;
-	bh=rgqYeKG6qDFzJysHF3LvHx7T5Dw2zrb0q7x/+9Vt53c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E/A621XcQisrHgfFQOnQgP7wFVar1SQq06QgedoHcU8XWgHY9lfriIbbt+cs9t6SjfsWWk8C39kkjIHdpei4N/I/SBkwGUvMQ1BH7kGl0vFcNLXatfWRGAKSkDWnIJCyffQ1zNvZHR5YwEsV3YK55w+if0cQ7SxV2BAiJi42nso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=HbDFBAJs; arc=none smtp.client-ip=115.124.30.110
+	s=arc-20240116; t=1787300410; c=relaxed/simple;
+	bh=o4RWljMG3t2tO+EtJIjpY+NwWYoZN2XUGbt8fzB8wcU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JPJzfE93F6zzPK2iYEWCAIsJh9a37k6RhQWN2f7c4pzfUISq2jz8iQOAXt+f2rt7axG5CJnircA7UWdTrZ9puAZE0jNxKEuJxdjXVZHIb71xKiVWsq0CRFLWf3Yn3cn6m40jOLfeaIsBTBM41qTUO9S3w5JNE/dVy5ht8lN7atA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=RoYrn103; arc=none smtp.client-ip=115.124.30.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="HbDFBAJs"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="RoYrn103"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1787300403; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=JOHSi15pOqvQZ9pIgZNI4quDEW61C01YE1WLujwvVNE=;
-	b=HbDFBAJsdvjQgab2EcUd0g1a3HOaYgfqSwFPDUeGZTA2aCA9iECV8eNXyiQJPOzgu0A+9mryv1KpfI8afAgpXHpSQ3ruE6U0ylNUQvS4HwJwTdQpeEwwf98jnYsyCGKWanDXMJMdpczdrQGX/o2chzb7r0bTcwGW8Vu8Njg2S8M=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R231e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045133197;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X9LmLrc_1787300396;
-Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X9LmLrc_1787300396 cluster:ay36)
+	t=1787300405; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=PAihpO6EyZnd/ojCMpA8hnP9BuA2Ld83ERB9dbyhRYY=;
+	b=RoYrn1039Dqpi8l3lBrD2PkjLQVoftK3t9Bl4XhHquu8iDRttiAVxBYChz9mQrBdKhHCdX5Q0oj5E+gwEP+JdM5TI2vsnr54pj8M0HTEq2TOUczPsdjoLGTSTjCyst1X4yQibc7TZSXGJGKv7y7uwvVS61mFYyYILNSXTt3sFt8=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0X9LmLts_1787300403;
+Received: from DESKTOP-S9E58SO.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0X9LmLts_1787300403 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 21 Aug 2026 16:20:01 +0800
+          Fri, 21 Aug 2026 16:20:03 +0800
 From: Chen Pei <cp0613@linux.alibaba.com>
 To: palmer@dabbelt.com,
 	alistair.francis@wdc.com,
@@ -43,119 +44,110 @@ Cc: pbonzini@redhat.com,
 	guoren@kernel.org,
 	qemu-riscv@nongnu.org,
 	qemu-devel@nongnu.org,
-	linux-cxl@vger.kernel.org
-Subject: [PATCH 0/4] hw/riscv/virt: Add CXL support to the RISC-V virt machine
-Date: Fri, 21 Aug 2026 16:19:50 +0800
-Message-ID: <20260821081954.1171-1-cp0613@linux.alibaba.com>
+	linux-cxl@vger.kernel.org,
+	Sunil V L <sunilvl@oss.qualcomm.com>
+Subject: [PATCH 2/4] hw/riscv/virt-acpi-build: Add _DEP to ACPI0017 for CXL host bridge dependency
+Date: Fri, 21 Aug 2026 16:19:52 +0800
+Message-ID: <20260821081954.1171-3-cp0613@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260821081954.1171-1-cp0613@linux.alibaba.com>
+References: <20260821081954.1171-1-cp0613@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This series adds CXL support to the RISC-V virt machine, following the
-approach used by the ARM virt machine: CXL host bridges (pxb-cxl) are
-described as ACPI0016 devices, an ACPI0017 (CXLM) device is added to the
-DSDT, and a CEDT table is built.  A bios-tables test is added to pin down
-the generated ACPI tables.
+On RISC-V QEMU virt platform with CXL enabled, the probe ordering
+of acpi_pci_root (ACPI0016) and cxl_acpi (ACPI0017) is not
+guaranteed. If cxl_acpi probes before acpi_pci_root has attached
+the CXL host bridges, the CXL port topology will be incomplete
+because to_cxl_host_bridge() silently skips devices whose PCI root
+is not yet ready.
 
-Prerequisite
-------------
-The v2 posting depended on Alireza Sanaee's v8 series [1] (the
-performant non-interleaved CFMW lookup path).  That series has since
-been merged upstream, so this version has no outstanding prerequisite
-and applies directly on current upstream master.
+Add a _DEP object to the ACPI0017 device in the DSDT, declaring
+its dependency on the ACPI0016 CXL host bridge devices. This tells
+the OS to defer ACPI0017 enumeration until all ACPI0016 devices
+have been attached by acpi_pci_root.
 
-Changes since v2
-----------------
-  - hw/riscv/virt: The MMIO-window patch no longer touches the common
-    gpex code (Igor).  The gpex_cfg.cxl_mmio32 field and the is_cxl
-    static _CRS branch are dropped; the ACPI0016 _CRS now comes from the
-    generic build_crs() path.  Since EDK2 does not enumerate the pxb-cxl
-    expander bridge, riscv simulates the firmware PCI initialization
-    (reserved window + depth-first bridge bus numbers) and re-applies it
-    via a reset handler.
-  - hw/riscv/virt: Drops the machine-global window/bus-range synthesis
-    that did not scale past one pxb-cxl (Junjie).  The series targets a
-    single CXL host bridge for now, documented in the commit message and
-    a TODO.
-  - hw/riscv/virt: CXL host register region and FMW setup folded into a
-    single cxl_host_state_init() helper; redundant braces removed in
-    create_fdt_pcie() (Daniel).
-  - hw/riscv/virt-acpi-build: the _DEP commit message documents the
-    kernel-compatibility behaviour (Alistair).
-  - Carried review tags: Sunil V L's Reviewed-by on the _DEP patch and
-    Alistair Francis's Acked-by on the test.
+This requires a corresponding kernel change to call
+acpi_dev_clear_dependencies() in acpi_pci_root_add().
 
-Changes since v1
----------------
-  - hw/riscv/virt: PCIBus *bus renamed to PCIBus *pci_bus (Jonathan).
-  - hw/riscv/virt: Dropped outer if (s->pci_bus) guard around
-    cxl_hook_up_pxb_registers(); the function already handles a NULL
-    bus internally (Jonathan).
-  - hw/riscv/virt-acpi-build: All s->bus references updated to
-    s->pci_bus; iasl -d decompiled DSDT fragment added to commit
-    message.
-  - hw/riscv/virt,gpex: Commit message expanded with PCI-to-PCI Bridge
-    Spec §3.2.5.8/9/10 citations (Jonathan).
-  - Original patch 4 ("Map committed HDM decoder ranges as RAM for
-    direct DMA") dropped; superseded by Alireza Sanaee's v8 series [1],
-    which is now merged upstream and thus no longer a prerequisite.
-  - New patch 4: RISC-V ACPI bios-tables test for CXL, with golden AML
-    files generated and included.
+Note on kernel compatibility: this is a "new QEMU feature requires a
+sufficiently new kernel" situation.  Kernels that process _DEP but
+lack the acpi_dev_clear_dependencies() call will leave the CXLM device
+deferred, so CXL memory is unusable there; kernels old enough to ignore
+_DEP entirely behave exactly as before this change.  In neither case is
+existing (non-CXL) PCIe affected.
 
-[1] https://lore.kernel.org/qemu-devel/20260318171918.146-1-alireza.sanaee@huawei.com/
+The resulting DSDT fragment (iasl -d output) for a single CXL host
+bridge at bus 0x01 looks like:
 
-Test
-----
-Built riscv64-softmmu and ran the new bios-tables test together with the
-existing riscv64 ACPI tests; all pass.  Also booted an RVA22 kernel with
-pxb-cxl + cxl-rp + cxl-type3 + a CFMW: the root port and Type3 device
-enumerate (0000:0c:00.0 / 0000:0d:00.0) and 'cxl list' reports the
-memdev (4 GiB) and the CFMWS root decoder.
+  Device (CXLM)
+  {
+      Name (_HID, "ACPI0017")
+      Name (_DEP, Package (0x01)
+      {
+          \_SB.PC01
+      })
+      Method (_STA, 0, NotSerialized)
+      {
+          Return (0x0B)
+      }
+      ...
+  }
 
-QEMU invocation (CXL-relevant options shown):
+Reviewed-by: Sunil V L <sunilvl@oss.qualcomm.com>
+Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+---
+ hw/riscv/virt-acpi-build.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-    qemu-system-riscv64 \
-        -M virt,aia=aplic-imsic,acpi=on,cxl=on \
-        -cpu rv64 -smp 2 -m 4G,maxmem=8G,slots=8 \
-        -object memory-backend-ram,id=vmem0,share=on,size=4G \
-        -device pxb-cxl,bus_nr=12,bus=pcie.0,id=cxl.1 \
-        -device cxl-rp,port=0,bus=cxl.1,id=rp0,chassis=0,slot=2 \
-        -device cxl-type3,bus=rp0,volatile-memdev=vmem0,id=cxl-vmem0 \
-        -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G \
-        ...
-
-Verification (total system memory grows by 4 GiB after onlining):
-
-    # cxl list
-    # cxl enable-memdev mem0
-    # cxl create-region -m -t ram -d decoder0.0 -w 1 mem0 -s 4G
-    # daxctl online-memory dax0.0
-    # free -h
-
-Chen Pei (4):
-  hw/riscv/virt: Add CXL support to the RISC-V virt machine
-  hw/riscv/virt-acpi-build: Add _DEP to ACPI0017 for CXL host bridge
-    dependency
-  hw/riscv/virt: Provide a 32-bit MMIO window for CXL host bridges
-  tests/qtest: Add RISC-V ACPI bios tables test for CXL
-
- hw/riscv/Kconfig                      |   2 +
- hw/riscv/virt-acpi-build.c            |  52 +++++++
- hw/riscv/virt.c                       | 191 +++++++++++++++++++++++++-
- include/hw/riscv/virt.h               |   3 +
- tests/data/acpi/riscv64/virt/CEDT.cxl | Bin 0 -> 108 bytes
- tests/data/acpi/riscv64/virt/DSDT.cxl | Bin 0 -> 6212 bytes
- tests/qtest/bios-tables-test.c        |  54 ++++++++
- 7 files changed, 301 insertions(+), 1 deletion(-)
- create mode 100644 tests/data/acpi/riscv64/virt/CEDT.cxl
- create mode 100644 tests/data/acpi/riscv64/virt/DSDT.cxl
-
+diff --git a/hw/riscv/virt-acpi-build.c b/hw/riscv/virt-acpi-build.c
+index 3188cdc5bf..56292f04a7 100644
+--- a/hw/riscv/virt-acpi-build.c
++++ b/hw/riscv/virt-acpi-build.c
+@@ -521,6 +521,38 @@ static void build_dsdt(GArray *table_data,
+     if (s->cxl_devices_state.is_enabled) {
+         Aml *cxl_dev = aml_device("CXLM");
+         aml_append(cxl_dev, aml_name_decl("_HID", aml_string("ACPI0017")));
++
++        /*
++         * Declare a _DEP on every ACPI0016 CXL host bridge so the OS
++         * defers ACPI0017 enumeration until acpi_pci_root has attached
++         * the CXL host bridges. Without this, cxl_acpi may probe before
++         * to_cxl_host_bridge() can resolve the PCI root and the CXL
++         * port topology comes up empty.
++         */
++        if (s->pci_bus) {
++            PCIBus *bus;
++            uint32_t num_cxl_hbs = 0;
++
++            QLIST_FOREACH(bus, &s->pci_bus->child, sibling) {
++                if (pci_bus_is_root(bus) && pci_bus_is_cxl(bus)) {
++                    num_cxl_hbs++;
++                }
++            }
++
++            if (num_cxl_hbs > 0) {
++                Aml *dep_pkg = aml_package(num_cxl_hbs);
++
++                QLIST_FOREACH(bus, &s->pci_bus->child, sibling) {
++                    if (pci_bus_is_root(bus) && pci_bus_is_cxl(bus)) {
++                        aml_append(dep_pkg,
++                                   aml_name("\\_SB.PC%.02X",
++                                            pci_bus_num(bus)));
++                    }
++                }
++                aml_append(cxl_dev, aml_name_decl("_DEP", dep_pkg));
++            }
++        }
++
+         Aml *method = aml_method("_STA", 0, AML_NOTSERIALIZED);
+         aml_append(method, aml_return(aml_int(0x0B)));
+         aml_append(cxl_dev, method);
 -- 
 2.50.1
 
