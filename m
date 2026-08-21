@@ -1,231 +1,220 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7060240860D
-	for <linux-cxl@vger.kernel.org>; Fri, 21 Aug 2026 19:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22352FFDFC
+	for <linux-cxl@vger.kernel.org>; Fri, 21 Aug 2026 20:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787341181; cv=pass; b=R+LchzWNjU12QboFTEJFRVbrTT/s6cKuSHamgJHn2S1IkAO9lfweoXAiSDYCc5NA+9ZbQ0qFMYxz+qedFW3AuMWyyE7hIbvkWE7fn7d52iR8QynlcNPPkqJduP20CEEQ+ZPxypMXuwJiCzh/lnMe/KHV7w39cxejQs3mdcZ81Gs=
+	t=1787343372; cv=fail; b=bmDD0QNCsmUpbuADKBNB0gbXUL1JQ0r8o6x/Y3s/GUN5I+qr6Vuo4DQ36Fh+vUiy3AKlQsXdjQR51hwCKT/2ESU4o7uPQty+5rItbgmfYoaqWYW37LyL1/UKFT8niHfosRdholjB7emX6+TDUruPnBf4m3V957clWZKwgJGCdOA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787341181; c=relaxed/simple;
-	bh=2QaAsriM6IS3lTgDPUOF48nwqc8aTC29sa5P2y66CZ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KvFO/YyjcvD1ReQcRJqU+eP5mwBZ14D1nt+GhIOTVYLUoLXrzhKxSS0bTr3NfYOT+MSMwRLHcvgxdmF9qo/SsOtIgVWJicfIk/bF57iOi0hnuPB1H/sJEzRRuYVpveh/sUEKXc0WV9YTAneo8Ah3opuWQpzc1VdGZfjFzdblkvY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=ntRi3l6f; arc=pass smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+	s=arc-20240116; t=1787343372; c=relaxed/simple;
+	bh=VA4pWE36bmdcxQq2c3LWM7wHllEbk9PTx+RQ3SIC/Ig=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=iEX8IyG7vzKNeH2RpyFh52DBBc9OZNKMXWHjNzz5I3aWXXRmjPJYiWeXSJlBOSVbzQq0C/OQNcouQ1VdxVG9gUf6eJ1duwnKm0FqB6+CSvxTuaPcwHDdFG29ek34DnN+B92JP2TkwGGTarBMxJy0S0kj3LoBdyg9iSL8ASly8P4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JZacup+O; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="ntRi3l6f"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-529a1ee0e62so9575181cf.2
-        for <linux-cxl@vger.kernel.org>; Fri, 21 Aug 2026 12:39:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787341178; cv=none;
-        d=google.com; s=arc-20260327;
-        b=PTkTzKnS+tUcV3BXYsBdhxMOm7Ik/lz6QNmxf2zHYvFwO7DhoEDqaJpOvXf8sHQ1qX
-         dQ4ULZqpuATFSOdyecS/YZCv7UF8m0p+PeGQDP7Ly3JvuugmcBvOX1OHaKcH2TCBt45x
-         anJkmCuYwA71F1RyPJo3XyO7rQtCwEVDb0nQhlR1Dj6Ti/QVbFtTnkyq+bXFn7UFyhPF
-         33WiX7BFO/OEwwH+/8psYDYWJSf8AXWKuOJMszSkzLlRtCxrK26iRf6X3riDu7H924EO
-         Y7TAdN28ips6lvDrb2jyfd4tk2k8BNkzkXspQefYpJaDP9Ubqk4/eUDMyN9OkSjHVKv+
-         iKvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:dkim-signature;
-        bh=KUV4QsUdOhj/C4gedxjcRezZM90WK5l233fM+QINPEo=;
-        fh=1LFFOKfsyWrCN+vsji16nRudA3DJBke7bWQZRjq2zVI=;
-        b=FA9av3zbFc+OJwAw612RdAgnM/2wFJHlm4TSOgGhHEexax2op8co2KYmjbr5o6wN+0
-         b4aULwymNCGIW7hRr2qCTIkwKfr2xpjhUJL9OsxU27PZZDV6IJAHxNa1LcodJwnytEJM
-         i8iTT3GEjRd7JJChiZo8gRotBNfHN1z6HDSvujRU7VZBwYecHb2D5wlrHVYyYowOvYgB
-         2sTronc+grRH/uQwWCwraOctRTixm4nfRTav8GttyXZC6Ib8Eq8RF0m5/eLaL/5cH1oU
-         NS0EiZwBiHMxDW7gqK/FrPQVcmdm7ta09646MLpNqGOZG1pWrkXl9/CMEc5Fh00Jp9sC
-         Nv3Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1787341178; x=1787945978; darn=vger.kernel.org;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=KUV4QsUdOhj/C4gedxjcRezZM90WK5l233fM+QINPEo=;
-        b=ntRi3l6fuSV9/6tG2fuYlr7KOGFjHLWC/IgW2qf4q3GpWubqv3EwQ7RyHdfc8ip+bC
-         BDtWmCiJmttrako1jPZQNWy5Jaqm4OO197ZG2Rd93WJZYtJjQ7TA9wN/jYOZEeWm9gF0
-         Ic5xTwX5EPosMMv4rEDJxzTHyYNoRBavvuNXc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787341178; x=1787945978;
-        h=content-type:cc:to:subject:message-id:date:from:in-reply-to
-         :references:mime-version:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=KUV4QsUdOhj/C4gedxjcRezZM90WK5l233fM+QINPEo=;
-        b=CYDQ1bjT2aTL6/TCI/+IE6a6ry1eb9inhtBVHshWPT657/1k7mKtK4Kx02QsXhy6Ab
-         XtD9TDGfVo27wMhULpWwMPlyrx4A++RHK3LfLW35TDQKXX+53k2lY2KGh9MRNye1e2jn
-         vPhXz8lDXFsz4KHIzK3/fFAzPMQkrYSdjKbdOsjmNE3wnD3E3zsLmpOFKnlq0Bisgnnx
-         V1hoQFIqg7oqyyXKtcAHD5v6cQT7kMCaHqhDaW8MGg2N3EBwFBEpGYVrh+ygqtyFHUdz
-         pJW6dMX8IcbbLgAnXibwQjYBpJsg3hEGfPmOg+nUb6FEasfl5IOh4Z5ZD0lTvi+7eWEY
-         s6pA==
-X-Forwarded-Encrypted: i=1; AHgh+Ro20818hqaRl++TXr7HuJ6IlwBTlomPPflnfou9myzJdfsXbEPC29xn2+tLhEw1xvMBQB7dJlGe+Zs=@vger.kernel.org
-X-Gm-Message-State: AFuF++mUqhhx01kW4W+rc/9/G/rwrPULNJYYhvOpiof1+5WX+yeQQL8A
-	8T/XeoUc3ajMUgHPF1BmVbdxR8zxajwRdbzWWKZMapgZnFJ67VV35WJd5bc7GhbfEiTwgZtR440
-	ft8GJ4CUR/maFmWm4+5gXa1htjfdrikuVVLiwxcEJjA==
-X-Gm-Gg: AR+sD134D+FyD+6CMHRDZwxSPG7YVHuiClOQSlcbUQ3BUYB4SmUZEKJNyC2CtXfm6ct
-	ZiNWa+NGuGSnozv9vm8T7nNmi4V+SuNc5YLQNJSmi1LlwF0WSVLH2LONSbvMma20kC011gRT74I
-	gK3yruPuRvruHw7NxF0BO5qwyDyCCYrn7dVRGtn6J++YVCY3rvFbxzuUiwEKZNWC94kuK13CI+Y
-	7M/9ZOFMnWSbtW83UrnWqKuTE1en2n5F0C8EhONGdF0JK+iHkTM51ghe2tu2Ceab0HoImUrqV48
-	KSnSPe2GG7mNJkR6Fr79Ahrht6sLJeeUNlaWC7Y39NiT2+VmHZjjielRer+eEc8q+jh9PQZ7ESH
-	1AYM59Lnk7PFJAXmknAlxHPDYiP4kqeRO
-X-Received: by 2002:a05:622a:1f8a:b0:51c:1532:ae93 with SMTP id
- d75a77b69052e-52df5a32867mr88198341cf.26.1787341177980; Fri, 21 Aug 2026
- 12:39:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JZacup+O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787343371; x=1818879371;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=VA4pWE36bmdcxQq2c3LWM7wHllEbk9PTx+RQ3SIC/Ig=;
+  b=JZacup+OzBSEru5b6DwM/w473EMsMxg8NEQ6unUfbDMVH4bdInOExPyi
+   jGDcZg4T9daalpK3MyPJ9ib6JP1cgGfKnq/1x/bf8g3ls1gmI749gtXOp
+   /vAhYnqmqzrfVmLXRgkYIeV/Q4T6cQQgMIIbOpMmRJrBacJQX1JX1auIF
+   D9f006qxhuULr+C53RKRlyMTlXSpooc4CPZkAF3Zqt/NEr9V11CZpaRrH
+   Lyf19LYPRnZTU7bMCe2pwi4fQjr2YbTGJvx8fx7usweK6vmWbYF4nUWpJ
+   AIdSkCar3YvFZNAodsKfCipkKjwU7XUfltE3uubeyDgNMwkWtXrJxnlJV
+   A==;
+X-CSE-ConnectionGUID: psgwkhxpQdOSeD8bRIVOlA==
+X-CSE-MsgGUID: Y3//0Tn5StCCkSo45QUjUA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11882"; a="99054907"
+X-IronPort-AV: E=Sophos;i="6.25,235,1779174000"; 
+   d="scan'208";a="99054907"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2026 13:16:10 -0700
+X-CSE-ConnectionGUID: SsPeoiZAS9GDiCNySiA62A==
+X-CSE-MsgGUID: uLUmn6cVQfSYPWscUf+TtQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,235,1779174000"; 
+   d="scan'208";a="289972971"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2026 13:16:10 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Fri, 21 Aug 2026 13:16:09 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45 via Frontend Transport; Fri, 21 Aug 2026 13:16:09 -0700
+Received: from PH8PR06CU001.outbound.protection.outlook.com (40.107.209.34) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Fri, 21 Aug 2026 13:16:09 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aTu/XItxfHxbg5Brajy0RDn/zPBN+AsFu7zfX8SCMJs/gT4/qr86i22DdHkri2a+rfAmV/rB6kIBw9p4bJgVWAH16NANcwgeBfZc5KNITkF9NOsu8JLDM5+WLrn1jnO8X+vfY9AomNjvJgapqLRzRXMD/4DKQIPXQsKhcdfjPx1oFSKVAwak2kbCWCydfio4fOcdYUQIusMCul+8HWW5ph5EGoTVUNXeEn28lMGDz97u+9UZ+zkzL2RJUC3QcFzTJkl1ucIzI1lEckuQNQA/HnwxvRS53qLyACaHoyJYWc2PYQdXF6Zxhxf7/MRE4lm1uEDggV66aSXVn75wHZMQNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uuiqpmwGkhSAqDhubRmw0h2V88kPZJnjkzV5lyjKUoQ=;
+ b=IaLOUhqxkdQ9HZLBAuSqyPyrjDdlOy47cOmonXj3TqYf73iYvtcteIexvzcJBZS8YYMCv9u7Ixxkp9ZP9sXJ4RxMbJCFkmLT/QTlGEV3v/Otr2oLu2nKRzbzeeu4AQKqy7R/ulyid5RQGR3z8agHqOAT0WQNqX4Wvhi3/BZBkzEq5Iswxm+MFJlv8PdkUf+LSPk2PzbijwZmHqxNLtspfcJ7DtC5km+6Djc6n7CWMWNXX+kXeCXg5BacmitZWuCYDdhWlCmCdSPMK7nDN88Wj+Zd3mdMi9nFOBXEraXOZBOdMomyOeDrcnisxbcFEPL6TynsIJ6IFkvTs6EHL11BXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com (2603:10b6:f:fc02::9)
+ by SAWPR11MB9736.namprd11.prod.outlook.com (2603:10b6:806:4cb::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.10; Fri, 21 Aug
+ 2026 20:16:08 +0000
+Received: from DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::e721:90d7:9214:2d53]) by DS4PPF0BAC23327.namprd11.prod.outlook.com
+ ([fe80::e721:90d7:9214:2d53%6]) with mapi id 15.21.0339.010; Fri, 21 Aug 2026
+ 20:16:07 +0000
+Date: Fri, 21 Aug 2026 13:16:04 -0700
+From: Alison Schofield <alison.schofield@intel.com>
+To: <sashiko-reviews@lists.linux.dev>
+CC: <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v4 2/6] cxl/region: Generalize endpoint position mapping
+Message-ID: <aoiyBPLkSZpaip9m@aschofie-mobl2.lan>
+References: <cover.1787255388.git.alison.schofield@intel.com>
+ <1c9218cf46a96937964e217c9172648a322d86c7.1787255388.git.alison.schofield@intel.com>
+ <20260820234309.6507D1F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260820234309.6507D1F000E9@smtp.kernel.org>
+X-ClientProxiedBy: SJ0PR03CA0078.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::23) To DS4PPF0BAC23327.namprd11.prod.outlook.com
+ (2603:10b6:f:fc02::9)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0100019fc572ca94-ec363dd7-3a77-484b-b4b7-f2503a0931a6-000000@email.amazonses.com>
- <20260803022828.75776-1-john@jagalactic.com> <0100019fc5739e5d-bc002300-eede-4c40-9ca8-a277b754496e-000000@email.amazonses.com>
- <20260806043712.GB3560084@frogsfrogsfrogs> <CAJfpegtW4bFn=oNfTipCxhiExaqSXnhXeBd6Uq15FpepqCJaPQ@mail.gmail.com>
- <20260811-baugebiet-hofiert-fanden-3354f4a5e820@brauner> <ab642f3a-e377-4292-b2ff-bc970f5384e8@kernel.org>
-In-Reply-To: <ab642f3a-e377-4292-b2ff-bc970f5384e8@kernel.org>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Fri, 21 Aug 2026 21:39:26 +0200
-X-Gm-Features: AcwNN1V5lCcm6_l8LY5VakD6tTocDvE06I1hYgFmfavubxTv285rgBmrPN7M8XY
-Message-ID: <CAJfpegsC-D0AJij3E=dbKzZCH0nijE7+rpPut-EnRd3r0uCMtg@mail.gmail.com>
-Subject: Re: [PATCH V12 02/12] famfs: Module operations, fs_context, and mount
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>, 
-	John Groves <john@jagalactic.com>, John Groves <John@groves.net>, Dan Williams <djbw@kernel.org>, 
-	Bernd Schubert <bschubert@ddn.com>, Alison Schofield <alison.schofield@intel.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, Jake Edge <jake@lwn.net>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Randy Dunlap <rdunlap@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Stefan Hajnoczi <shajnocz@redhat.com>, 
-	Joanne Koong <joannelkoong@gmail.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Chen Linxuan <chenlinxuan@uniontech.com>, 
-	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>, 
-	Sean Christopherson <seanjc@google.com>, Shivank Garg <shivankg@amd.com>, 
-	Ackerley Tng <ackerleytng@google.com>, Gregory Price <gourry@gourry.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Ira Weiny <iweiny@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Haren Myneni <haren@linux.ibm.com>, Pratyush Yadav <pratyush@kernel.org>, 
-	Giovanni Cabiddu <giovanni.cabiddu@intel.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	Ethan Nelson-Moore <enelsonmoore@gmail.com>, Gabriel Whigham <gabewhigham@gmail.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>, 
-	"venkataravis@micron.com" <venkataravis@micron.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>, 
-	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
-	"fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS4PPF0BAC23327:EE_|SAWPR11MB9736:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1c1e3396-fe05-4e40-29c6-08deffc108aa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|23010399003|10067099003|56012099006|11063799006|4143699003|6133799003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: lyl/cjxnD4yPoxlPOVZtDs8IlOJAfP/aAuHH95zH8JmC7VfLE0zt5X2nQZvYt6FFD0AaMDg8zs9mTAeSs+nN7BjHyxbUwLMa6kG+qymOGXaVpCvN/SSSwSXOm/V1lyVCHtYRe/Ife+UV4Ca0ACLi9IkqULT0OlHZKuPP7BFtXs6AyuzC7KGvk95kJUGaH+UwxHnngVIwEQkceazAMppLuuLNYKyYIL4KlgEgWR6nNuYoO8Uh8jxax7P5xV3Je/igNFqEQcovUJw9QXCjK6bTCEeD/3f8dLkUaQjzbVjAW1Y1UBAnXAuR99pQGMnmHwJ3xdjnX98OtCRrawFTyWgcyMvx3P+OwykJr30+XI1AbmGFMRMWzPJAbQWWP3PiBlJBmnxNHsWqWUTf4kwjRGNvCpdzp14S36M7283Uc6kSNGXTKHsSntpMl+blMDqTQzLox9MNYS7kROw7XHqL15qPZODsB8oICGELwmdV8pUVAJZr3DqHacTjX8GSsfjJO82OrHb9D1C0aGCKlgO1uC12VwEXWGCpsohed7Pq6v291bH1SQNKaa0wqVssRz30OQtbKjbjHByNCw15gpPf3k7iE9LJt9CxryflTrgyK4OdwzE=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF0BAC23327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(23010399003)(10067099003)(56012099006)(11063799006)(4143699003)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?WcPayu+gFvyemPqX1WGRps4RNVD/4KqMz77WHEQ+ZQvQMK2vmYqohIT0Os?=
+ =?iso-8859-1?Q?dU0ef/Ui2vU9+3q3xYbJRWds5Hlj5xtBw5i5hnEuCooZWZ81nybKpOs9Tv?=
+ =?iso-8859-1?Q?Hqqg7JOa8GaDKbi34nE58kmmVH3EPpzo/5vHk0+yc8tVe3gVAORR3l0v3i?=
+ =?iso-8859-1?Q?T8MsNTYbW5iU9ex40E+6b8tNAmiNA6WhA9wFkks9xbTQL6gMCdiwYJs49/?=
+ =?iso-8859-1?Q?EGzU7F7lYzSruZMil67J8MxshJdP5v8yKdYcZQdr/7HdaIm+RHTBpjU34H?=
+ =?iso-8859-1?Q?kENUVCsVpdXXiPkI4SmCj0pAseCov0yZPJsVNY8u2uu6KZt4N7TBAetMMJ?=
+ =?iso-8859-1?Q?apbtezcHjoE+4PoUeyqP8WzwEiGilBAde4Yz4st4HTfEO3xd7wtDiMfWmP?=
+ =?iso-8859-1?Q?wv122i2sQ/+L8aROoqJRgK4sobOQ+a9mb39xcS0mlQ8Cp6mbKGFRJT2L58?=
+ =?iso-8859-1?Q?ZIsIJw2DFlCpVW586CelSOsMxM+pIc4Fi3tWJe3Cahe7y5VCaRr10iYRTE?=
+ =?iso-8859-1?Q?TwdhTLaqAtB6PZQd7WhqkZV0loXHoRx9A5el5H0FuhtRB4oUlB930bahS2?=
+ =?iso-8859-1?Q?TDoYAYxgILCm3B9CXcyRex1I+wicG42PjTp104yf57C/SjFlHAy5HB5/o7?=
+ =?iso-8859-1?Q?Kj3+Ey0dZfozz4rZqOhxCfWGgxu3jEotzhhNWmvgChvnn9fkvxX3OGo5tJ?=
+ =?iso-8859-1?Q?9+rUY6J17Wcdv+Uf+Lm+o6nc52WsHrzCw3h8S7x7ug0dOlPe+//D/XC3fP?=
+ =?iso-8859-1?Q?gxc/e0icd+GKNxm0e+9OAYF9xUgNsdnhIoCjtpNcFa5bmi33KzREaVn/0X?=
+ =?iso-8859-1?Q?Ek+SHaEdh1jaEgNNHy69ZvNNgmizv8xN3TOI7oz5Pm+aPXp+GB5x3v3lMX?=
+ =?iso-8859-1?Q?TnlMQXmyRK0+eP1ntm3vrfyt6otQpbLuW1N4bOcE5+557GP2x6EGiHXask?=
+ =?iso-8859-1?Q?QHbwYXl6jRDymSQYJ9ZRI/5kTaFhwefl2X2q/FDbhqhD30b60/S/dD5CKm?=
+ =?iso-8859-1?Q?EKVzZe9/Wp/bFhskK8MEgi9efe6Vdzsa2uAVhQT5UpFsfZub4bMh/iEKuO?=
+ =?iso-8859-1?Q?DBihUjUEHDkhKchoLzbA5LKqZ3RZkpAK895b/5Xbja6QVWVdhZ95+jiCTl?=
+ =?iso-8859-1?Q?xH3o6tinhvFtPAzX01IhUMmHS7Nf20RZiP1EL9/G4hW7IBO+u2BayI6pum?=
+ =?iso-8859-1?Q?0IENj8YOkaLewSERG4XRaM1oMTZdAWlLwCbG3SDNd3PtnLPP5jZVIk+wns?=
+ =?iso-8859-1?Q?VyumaHYbFvMnbo69LEuX18U4/cFvWGfVAYnXkqOQoz9QsUdvUgKuUt8lXM?=
+ =?iso-8859-1?Q?sjuKNDKMCeyCqfFZRvL7dCj4Wv6dlVJqos+3nRxqNLzsFzurQFqVWB4EU0?=
+ =?iso-8859-1?Q?axLpQP1Ftkj0LnD7zV2I4bXLipXqJypagU/uPkQUAZxhbS9LXsQ3unepJk?=
+ =?iso-8859-1?Q?6YuVctL2HltNEjqTnD85vls75NN1G5p1QUm6XuKcpBSFgN2teRvH3e1Nnb?=
+ =?iso-8859-1?Q?3eL8AhVBAQzx/kzYynlp4Ud2AzyCb2DnkidEmjBM9QryBmL/glGcoTgHNd?=
+ =?iso-8859-1?Q?RBU8v27P4pCwlXcNNkbSpE+yFHC6yLlzWUAPXlOiQG/uefHp0jb1A+BG/S?=
+ =?iso-8859-1?Q?bR6NCCXGKnnKFh2k/btGB8iqej1DBZhD28/c4+SCBx26ltd2QPdhV7Cxlr?=
+ =?iso-8859-1?Q?9DPCUyQPA0wgD8Tmj/8k+OAcXP5AYL7FHef8v/Xx/i01hEvy7RGzwCqrMc?=
+ =?iso-8859-1?Q?2Ud3SqfsTdDm4z2Sue3uQ75sk8Fr4C5e7EXEnqZ1uMHGFs3onBwd2sWhpu?=
+ =?iso-8859-1?Q?SJnew5+AACcJZnxkHiZtyKEQsftwAcE=3D?=
+X-Exchange-RoutingPolicyChecked: cuxGKJKIitgZamQDjv6y8H4iiPcPNNXXnz4BVbpuBlPgAdlKHvb8XO0cckhMD8EJNc1iZdhGrkXwu6Sgqnk0ohknK1zm1YpRkef9k824Ki7DttcfHx9PE8iKdYhve0ENW2Rby+CAAaLRlgcWPDNBum+kicNe93hPZhoUT1L7a9K+0yHghj4yZU7zD7ey5BdcmIztlhanPGixpU/Zt0hcugMR4RPdhsD+/y11CffruwxJjz7OAhyVk4PAoBwSYmklQdQwbix5lgl/r67RLiAfX0BsZ1HAqT3H5hnRkCkxRyP5plyI7S3y+snj0Nvz5mghUXXMmbc9nT7VddWqbnvlFA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c1e3396-fe05-4e40-29c6-08deffc108aa
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF0BAC23327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2026 20:16:07.5717
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gf0mTRscBU5CplUR+mRo2BUpBd01pm3h1AsadewcKUrCFvV1HrRa61Oix+rItwsxJqIOOSv7ilwmT2oD6lO9g/aVw6/q4l9MzEJdAzkZVJ0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SAWPR11MB9736
+X-OriginatorOrg: intel.com
 
-On Fri, 21 Aug 2026 at 13:40, David Hildenbrand (Arm) <david@kernel.org> wrote:
+On Thu, Aug 20, 2026 at 11:43:08PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> 
+> Pre-existing issues:
+> - [High] Use-After-Free read of device structure in find_pos_and_gran error path.
+> --
 
-> (a) Whether a fuse-based approach is feasible.
->
->     Are there any major blockers remaining?
+The fix for this issue is in the 7.3 CXL Pull Request.
+I expect the next version of this patchset will be based on 7.3-rc1 so
+this complaint will go away.
 
-No.
+https://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/commit/?h=next&id=15da704b732332cc1e8f121f624e5e6c05124c5d
 
-> (b) Whether a fuse-based approach is inefficient.
->
->     Are there scenarios remaining where performance or metadata overhead would
->     be bad without an easy way to improve the situation?
 
-Lookups can be cached, extent mappings can also be cached.   After the
-inode is in cache and the mapping is set up zero requests are needed
-for open/mmap/read/write/close.
-
-> (c) Whether a fuse-based approach is a bad conceptual fit.
->
->     Will fuse have to carry a lot of famfs special sauce that cannot
->     really be used elsewhere / generalized?
-
-None.
-
-But "can" and "will" are not the same.  The striping code might not be
-very useful outside of famfs.
-
-> (d) Whether a fuse-based approach is too invasive.
->
->     Will fuse extensions to support famfs actually make it harder to maintain or
->     slower on some paths?
-
-No.
-
-> (e) Whether a fuse-based approach will make famfs harder to extend.
->
->     Is there known follow-up work that will be hard/impossible to model in fuse?
-
-It would actually make famfs much easier to extend, since the
-directory structure, metadata, etc. is now controllable within the
-userspace server.
-
-> (f) Whether a fuse-based approach will reduce maintenance effor
->
->     Will maintaining fuse extensions possibly be harder than maintaining
->     standalone famfs?
-
-Testing is a key point.  Famfs needs special hardware or emulation, so
-it's not straightforward to test.  This could be solved by adding a
-"dummy" mode to famfs server that exercises the same fuse API, but
-instead of special hardware would just use plain memory.
-
-> (g) Whether a fuse-based approach would make famfs more complex.
->
->     Will the shift to user space result in a significantly more complicated
->     overall solution that must be maintained?
-
-The server would be somewhat more complex, since it's now implementing
-things like pathname lookup, etc.  But the other stuff (managing file
-maps) should be very similar.
-
-> (h) Who would help drive the fuse approach?
->
->     Fuse people seem to be willing to help, but I expect that there must be a
->     close cooperation with John to make this fly. I don't expect that John
->     himself can easily (or understandably wants to :) ) do the heavy fuse
->     lifting.
-
-Yes, this is where previous efforts seem to have gone off the rails.
-So I agree to take responsibility for implementing the kernel side and
-help with the server side on the condition that John has trust in
-this.   I'm not promising -7.4, but can at least try.
-
-Without John's trust I'm not taking this on.
-
-> (i) Who would maintain any famfs fuse extensions and own any bugs?
->
->     famfs will possibly depend on fuse extensions that might initially only be
->     used by famfs. Would the fuse maintainers just naturally deal with that?
-
-I can take responsibility for the fuse kernel bits.
-
-> (j) Whether a fuse-based approach has an end in sight.
->
->     famfs goes back .... quite a long time. It would be nice to close that
->     chapter :)
->
->     Is there an end in sight, or could we end up in the same situation in 6m/1y/
->     ...
->
->     IOW, is there a way to agree on an MVP that won't require a lot of further
->     re-planning and changes to a fuse-based design?
-
-I already sent patches to implement the dax dev mapping, and the
-striping.  We've discussed adding support for fixed backing ID, which
-was something that John asked for.  The only missing piece was adding
-a protocol extension to set up  simple extent mappings, which already
-existed in the famfs_fuse patch, just needed to be renamed and unused
-fields changed to "spare".
-
-We (Amir, Joanne, me) explained to John how this is exactly what's
-needed to make famfs work.  We've not seen an acceptance of that yet.
-
-From my PoV this would be extra work, but in the longer term would
-expect to be less overall maintenance work and fuse would gain some
-useful features in the process.
-
-Thanks,
-Miklos
+> 
+> --- Patch [2]: [PATCH v4 2/6] cxl/region: Generalize endpoint position mapping ---
+> commit 74f53df9f58a0339cb5f29038f2e514904e34cf5
+> Author: Alison Schofield <alison.schofield@intel.com>
+> 
+> cxl/region: Generalize endpoint position mapping
+> 
+> This commit alters the endpoint position calculation to support
+> mixed-granularity regions. It weights each decoder's contribution by its
+> relative granularity instead of assuming a uniform granularity across the
+> interleave hierarchy.
+> 
+> > diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> > index 3b640c9ba5a08..4f367feaf6c84 100644
+> > --- a/drivers/cxl/core/region.c
+> > +++ b/drivers/cxl/core/region.c
+> [ ... ]
+> > @@ -1929,9 +1934,10 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+> >  		return rc;
+> >  	}
+> >  	cxlsd = to_cxl_switch_decoder(dev);
+> > -	*ways = cxlsd->cxld.interleave_ways;
+> > +	ways = cxlsd->cxld.interleave_ways;
+> > +	*gran = cxlsd->cxld.interleave_granularity;
+> >  
+> > -	for (int i = 0; i < *ways; i++) {
+> > +	for (int i = 0; i < ways; i++) {
+> >  		if (cxlsd->target[i] == port->parent_dport) {
+> >  			*pos = i;
+> >  			rc = 0;
+> 
+> [Severity: High]
+> This is a pre-existing issue, but could the error handling path just after
+> this loop trigger a use-after-free?
+> 
+> Looking at find_pos_and_gran(), if the loop completes without finding a
+> match, rc remains -ENXIO. Immediately after the loop, put_device(dev) is
+> called, and then dev_err() formats an error message using cxlsd:
+> 
+> 	put_device(dev);
+> 
+> 	if (rc)
+> 		dev_err(port->uport_dev,
+> 			"failed to find %s:%s in target list of %s\n",
+> 			dev_name(&port->dev),
+> 			dev_name(port->parent_dport->dport_dev),
+> 			dev_name(&cxlsd->cxld.dev));
+> 
+> Since cxlsd is derived from dev, does calling put_device() before dev_err()
+> release the structure prematurely and cause a read of freed memory?
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/cover.1787255388.git.alison.schofield@intel.com?part=2
