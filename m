@@ -1,136 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECC62E92BA
-	for <linux-cxl@vger.kernel.org>; Thu, 20 Aug 2026 23:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65970282F1E
+	for <linux-cxl@vger.kernel.org>; Fri, 21 Aug 2026 02:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787269401; cv=none; b=tlDWDr6So3/r3/D0I8iHFX7MyfyAiKOQm/ahKI/328d7Oaq5Sy1DW1yRHg6M7wnGQS+dqJDGTo6NIK6IjEaPDVF4q4ihG9nGPTG8LTJvG704q8rDoYySW28rVNGimiMmfgTWfP+NxDpN/+QfYWjwpcScZlakleneLCz5EdIEAwQ=
+	t=1787277906; cv=none; b=Gw8mMZXXsa5E0LEWm4+FgndKEyjMe10jGXG8g2O1Hw4f59BAc5K7F9CpfsFqHxQVRX23OzoMyicu2Nt98i6n9hJih+sSxeguMS7JpKXZYDFQlmNjSLj8RNNKxYg9Lvz8EO4HdoSPIxfVq6z9p7cv+Ja6S2lxzUMnyMGo9KgO3KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787269401; c=relaxed/simple;
-	bh=u4hC2+QqwWeOnD82o55IGPAcY1aw6rgeYdvkPdyxNrQ=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=RAJHW944Dw4QIq2hXea3JJHDlykk8j7I1ciMcRZSCFyAr0+KeQO/q/UbI6fMmc2EecAmwPJtkEcckJd/9NMz0l6Mi4dJXsL5/o+oNTt/RR9cYyTUg0EAJhU3qGNYVuWSU82hUIvn0iuKLIHZ5lf3INWDUW9xH5ZgmyRkNCRfe1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZxQQd2D; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787277906; c=relaxed/simple;
+	bh=0jDaNaeXl7nkjE+CqSs/0EO3A29KJqZd3biaTDoMkag=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nOIt56TkLCVrddN5yC+Psmhxckj885q9VfwaTiPfHW4C83ORRdVkZ6OnBjQ+NYjw0qypnghlJnbxQoEnbdP2IGJBR/RZt3QdFng1PaBfz75IEzR26OqPj/0UN7nbAo+7bRs/bl+CHzQciFXKuEpAkLROM7/e8rkrmJGEh16vfmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=oeWsKvgO; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZxQQd2D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18C561F000E9;
-	Thu, 20 Aug 2026 23:43:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787269400;
-	bh=p6gw9+Sduxi1QGcJz4scw9QrgcnJuJktU6/O9iNg1X0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EZxQQd2Di6vNqVpkNvVn/Iv4TNvYkgZo5yQ/hJtHBJisJDas1IJMakZxLdnI7mar9
-	 /T9/DbdIffbfRYGOQecIsiUnUK4G3UmUXNcXpLo4e3JQlC2MuR46C6CqCHH25uDldg
-	 T4akxcpQAtJrqqrjvOqXyW6mv9ROBTnY2qgZ0TjTpMkQVVaCGuOqjsVjZagc/xaC12
-	 +SkR7qzCTmoatBbN7S32Xdcl9FyD1EQ9mBYgV2Y0j6e8GdPXgJchsPFsgZpA4CQ9wZ
-	 KfYoqBPE8MQAtwoSp4m7+60dXiglX8vSj/MqWxO6++Cs0lurE6OJbuniuNBTH42QJ+
-	 j31ZlWrUePGww==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 3/6] cxl/region: Support mixed-granularity auto
- regions
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Alison Schofield" <alison.schofield@intel.com>
-Cc: linux-cxl@vger.kernel.org
-In-Reply-To: <465a9a3e68144a41af45ca1cdfa642e7af553c4e.1787255388.git.alison.schofield@intel.com>
-References: <cover.1787255388.git.alison.schofield@intel.com>
- <465a9a3e68144a41af45ca1cdfa642e7af553c4e.1787255388.git.alison.schofield@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 20 Aug 2026 23:43:19 +0000
-Message-Id: <20260820234320.18C561F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="oeWsKvgO"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1787277899; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=YkmNDBdwdVM4+eU5DjF0skMaktrgLPif0tB6W3qLnVs=;
+	b=oeWsKvgOaniELQDK8omSJ0s19Hy5Go5Bzh9+qK68SwC4uVlpM+VeeJ2BwHkNlkhDDI5V257qHFN1unHwhBGxpfxCPwJlJczKbQqqSK6oTa9QOkDEaodey+cXsBmFSUg4Utcy0VMFpbUJBqEdB6i8m44MMLCg4eWR2SCeJm2Qsxc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=kanie@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0X9Kk8Al_1787277897;
+Received: from 30.178.84.62(mailfrom:kanie@linux.alibaba.com fp:SMTPD_---0X9Kk8Al_1787277897 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 21 Aug 2026 10:04:59 +0800
+Message-ID: <cb97eff1-3c2c-434d-97b9-cdf813f69f7c@linux.alibaba.com>
+Date: Fri, 21 Aug 2026 10:04:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] cxl/pci: Skip reset detection for DVSEC emulated
+ decoders
+To: Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Jonathan Cameron <jic23@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Li Ming <ming.li@zohomail.com>
+Cc: linux-cxl@vger.kernel.org
+References: <20260812082347.354371-1-kanie@linux.alibaba.com>
+ <7d1c81ba-b8ed-48d6-bc3b-4ebe7c8d88cf@intel.com>
+From: Guixin Liu <kanie@linux.alibaba.com>
+In-Reply-To: <7d1c81ba-b8ed-48d6-bc3b-4ebe7c8d88cf@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Incorrect distance calculation for non-mixed-granularity regions w=
-ith non-power-of-2 root interleaves causes a NULL pointer dereference.
---
 
---- Patch [3]: [PATCH v4 3/6] cxl/region: Support mixed-granularity auto re=
-gions ---
-commit 13bc48fe2efef1744b5bbf29c756bd07f400ebe3
-Author: Alison Schofield <alison.schofield@intel.com>
 
-cxl/region: Support mixed-granularity auto regions
+在 2026/8/21 00:00, Dave Jiang 写道:
+>
+> On 8/12/26 1:23 AM, Guixin Liu wrote:
+>> After an FLR or an SBR, cxl_reset_done() walks the endpoint's decoders and
+>> asks __cxl_endpoint_decoder_reset_detected() whether any of them lost its
+>> committed state. That helper filters on CXL_DECODER_F_ENABLE and then
+>> samples the Committed bit in the HDM decoder control register at
+>> cxlhdm->regs.hdm_decoder.
+>>
+>> The HDM decoder registers are not always where an enabled decoder's state
+>> lives. A memory device may describe its ranges through the CXL DVSEC range
+>> registers instead, and should_emulate_decoders() picks that path in two
+>> situations: when the component registers expose no HDM decoder capability
+>> at all, and when the capability exists but firmware left Mem_Enable set
+>> with the global HDM decoder enable bit clear.
+>> cxl_setup_hdm_decoder_from_dvsec() publishes the emulated decoders with
+>> CXL_DECODER_F_ENABLE and CXL_DECODER_F_LOCK set, so they pass the filter,
+>> and it leaves cxld->commit NULL because there is no register to commit to.
+>>
+>> In the first situation regs.hdm_decoder is NULL and the readl() oopses in
+>> the PCI reset completion path. In the second the pointer is valid but the
+>> registers are unused, so the Committed bit reads zero and the helper
+>> reports a reset that did not happen: cxl_reset_done() prints two dev_crit
+>> lines about an SBR wiping active decoders, taints the kernel, and strips
+>> CXL_DECODER_F_ENABLE and CXL_DECODER_F_LOCK from every endpoint decoder.
+>> Losing the lock flag is the more consequential half of that, because it is
+>> what keeps the emulated ranges from being treated as reprogrammable while
+>> the driver still cannot change the range registers at run time.
+>>
+>> Skip the check when cxld->commit is NULL. Only
+>> cxl_setup_hdm_decoder_from_dvsec() leaves that callback unset, and
+>> init_hdm_decoder() installs cxl_decoder_commit() on every decoder that
+>> does come from the registers, so one test covers both emulation paths and
+>> no separate test for the NULL register pointer is needed. A range
+>> described by the DVSEC registers has no Committed bit for a reset to
+>> clear, so there is nothing here for the post-reset warning to observe.
+> This is a really long commit log for the code change. Does this look better to you?
+>
+>      After an FLR or SBR, __cxl_endpoint_decoder_reset_detected() samples the
+>      committed bit at cxlhdm->regs.hdm_decoder for every decoder that has
+>      CXL_DECODER_F_ENABLE set. Decoders emulated from the CXL DVSEC range
+>      registers carry that flag too, but their state does not live in the HDM
+>      decoder registers. When the component registers expose no HDM decoder
+>      capability, regs.hdm_decoder is NULL and the readl() oopses in the reset
+>      completion path. When the capability exists but is unused, the committed
+"When the capability exists but is unused ",  I think this keep
+"firmware left Mem_Enable set with the global HDM decoder enable bit clear"
+would be better.
 
-The CXL driver currently assumes the interleaving root has the same
-granularity as the region, with each successive interleaving level
-becoming coarser toward the endpoints. This patch allows the CXL driver
-to assemble an auto region where the root granularity is coarser than
-the region granularity.
+Others looks good to me, thanks, I will send a v4 patch.
 
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 4f367feaf6c84..637d1b60a570b 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-[ ... ]
-> @@ -1463,26 +1472,21 @@ static int cxl_port_setup_targets(struct cxl_port=
- *port,
->  	}
-> =20
->  	cxlsd =3D to_cxl_switch_decoder(&cxld->dev);
-> +	iw =3D cxl_rr->nr_targets;
-> +
->  	if (cxl_rr->nr_targets_set) {
-> -		int i, distance =3D 1;
-> -		struct cxl_region_ref *cxl_rr_iter;
-> +		int i, distance;
-> =20
->  		/*
-> -		 * The "distance" between peer downstream ports represents which
-> -		 * endpoint positions in the region interleave a given port can
-> -		 * host.
-> -		 *
-> -		 * For example, at the root of a hierarchy the distance is
-> -		 * always 1 as every index targets a different host-bridge. At
-> -		 * each subsequent switch level those ports map every Nth region
-> -		 * position where N is the width of the switch =3D=3D distance.
-> +		 * @distance is the spacing between region positions sharing
-> +		 * this dport. Mixed-granularity regions place those positions
-> +		 * contiguously.
->  		 */
-> -		do {
-> -			cxl_rr_iter =3D cxl_rr_load(iter, cxlr);
-> -			distance *=3D cxl_rr_iter->nr_targets;
-> -			iter =3D to_cxl_port(iter->dev.parent);
-> -		} while (!is_cxl_root(iter));
-> -		distance *=3D cxlrd->cxlsd.cxld.interleave_ways;
-> +		if (cxl_region_is_mixed_gran(cxlr))
-> +			distance =3D 1;
-> +		else
-> +			distance =3D cxld->interleave_granularity * iw /
-> +				   p->interleave_granularity;
+Best Regards,
+Guixin Liu
+>      bit reads zero and cxl_reset_done() reports a reset that never happened:
+>      it taints the kernel and strips CXL_DECODER_F_ENABLE and
+>      CXL_DECODER_F_LOCK from every endpoint decoder, even though the driver
+>      still cannot reprogram the DVSEC ranges.
+>
+>      Skip the check when cxld->commit is NULL. Only
+>      cxl_setup_hdm_decoder_from_dvsec() leaves that callback unset, so the one
+>      test covers both emulation paths, and a DVSEC-described range has no
+>      committed bit for a reset to clear.
+>
+> DJ
+>
+>> Fixes: 934edcd436dc ("cxl: Add post-reset warning if reset results in loss of previously committed HDM decoders")
+>> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+>> ---
+>> This was patch 4/8 of the "cxl: Assorted fixes" series [1]. Per review
+>> feedback that series is not being reworked as a whole; the fixes are resent
+>> individually instead.
+>>
+>> v2 tested cxlhdm->regs.hdm_decoder for NULL. That test turns out to be
+>> subsumed by the commit callback test rather than complementary to it: on
+>> the endpoint path info is never NULL, since
+>> devm_cxl_endpoint_decoders_setup() passes the address of an on-stack struct
+>> to both devm_cxl_setup_hdm() and devm_cxl_enumerate_decoders(). A NULL
+>> regs.hdm_decoder can therefore only come from the "no component registers"
+>> early return in devm_cxl_setup_hdm(), which requires info->mem_enabled,
+>> and should_emulate_decoders() then emulates every decoder on the port.
+>> Keeping both tests would leave one that cannot be reached today, so only
+>> the commit test is here - say the word if you would rather have the NULL
+>> test back as a guard on that invariant.
+>>
+>> The Sashiko review bot raised two further pre-existing concerns on v2 that
+>> this patch does not address, since both are about the reset handler's
+>> synchronisation rather than about which registers it reads:
+>>
+>> - cxl_reset_done() holds only the memdev device lock, so nothing excludes
+>>    an unbind of the cxl_port driver from the endpoint port, which frees the
+>>    devm allocated cxl_hdm while dev_get_drvdata(&port->dev) keeps returning
+>>    it. An unbind that has completed is harmless: devres frees the decoders
+>>    before the cxl_hdm allocation that predates them, so the child walk finds
+>>    nothing to look at. What is left is the interleaving where the walk has
+>>    already taken its reference on a decoder, which keeps that device alive
+>>    past device_del(), and the unbind reaches the cxl_hdm free first. Narrow,
+>>    and the fix is not local: it means deciding how the PCI error handlers
+>>    should exclude the port driver's binding.
+>>
+>> - cxld->flags is updated with a plain read-modify-write in
+>>    cxl_endpoint_decoder_clear_reset_flags(), while cxl_decoder_commit() and
+>>    cxl_decoder_reset() update the same word under cxl_rwsem.region, which
+>>    __commit() and the region reset paths hold across those calls. Having the
+>>    reset handler take that rwsem too looks like the natural fix, but it
+>>    already holds the memdev device lock at that point, so the lock ordering
+>>    wants review first.
+>>
+>> Both look worth doing on their own; happy to follow up with separate
+>> patches if that is the preference.
+>>
+>> v1->v2:
+>> - rebase onto cxl/next
+>> - rewrite the commit message to describe the behaviour rather than narrate
+>>    the code change (Alison Schofield)
+>>
+>> v2->v3:
+>> - test cxld->commit instead of cxlhdm->regs.hdm_decoder, so that decoders
+>>    emulated from the DVSEC ranges are also skipped when the HDM decoder
+>>    registers exist but are globally disabled (Richard Cheng)
+>> - update the subject and the commit message for the widened scope
+>>
+>> [1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
+>>
+>>   drivers/cxl/core/pci.c | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+>> index 9d807c1a002c..d8b07f86bab0 100644
+>> --- a/drivers/cxl/core/pci.c
+>> +++ b/drivers/cxl/core/pci.c
+>> @@ -683,6 +683,13 @@ static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
+>>   	if ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)
+>>   		return 0;
+>>   
+>> +	/*
+>> +	 * Decoders emulated from the DVSEC range registers have no commit
+>> +	 * callback and no HDM decoder registers to consult.
+>> +	 */
+>> +	if (!cxld->commit)
+>> +		return 0;
+>> +
+>>   	cxlhdm = dev_get_drvdata(&port->dev);
+>>   	hdm = cxlhdm->regs.hdm_decoder;
+>>   	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+>>
+>> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
 
-[Severity: High]
-Does this mathematical distance calculation correctly handle non-power-of-2
-root interleaves?
-
-When configuring a CXL region with a non-power-of-2 root interleave (like
-3-way or 6-way) and multiple endpoints sharing a downstream port, this
-formula seems to calculate a distance 3 times smaller than the true
-topological stride. This appears to happen because parent_iw is divided
-by 3 for address routing, which scales down cxld->interleave_granularity.
-
-If the distance is undersized, check_last_peer() will check an endpoint on
-a completely different host bridge:
-
-drivers/cxl/core/region.c:check_last_peer() {
-        ...
-        cxled_peer =3D p->targets[pos - distance];
-        cxlmd_peer =3D cxled_to_memdev(cxled_peer);
-        ep_peer =3D cxl_ep_load(port, cxlmd_peer);
-        if (ep->dport !=3D ep_peer->dport) {
-        ...
-}
-
-Since cxl_ep_load() returns NULL when selecting a peer on a different host
-bridge, will ep_peer->dport trigger a NULL pointer dereference here?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1787255388.gi=
-t.alison.schofield@intel.com?part=3D3
