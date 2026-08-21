@@ -1,111 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC0D3DDB03
-	for <linux-cxl@vger.kernel.org>; Fri, 21 Aug 2026 22:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC47199FB0
+	for <linux-cxl@vger.kernel.org>; Fri, 21 Aug 2026 22:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787351132; cv=none; b=MU5QMK87mpZFCxckWAwKxZxkT+fuEY7ZjFyJvl6CSaBXvlJdErWoekAs7lG6S6vlHlwIbiR38oSDzrJGnJExpn1ux4+T5N0S4CJWD3Kn0QG2vNJIvnMREBlFmElMGUoinSNSM61YPDRiP9+sK7NEPwT3x2vCf9OztEt8uj+GRiM=
+	t=1787351593; cv=none; b=VonvJIZBgOxTsSfZ7XRe2wa8d/9txkWGDeLo+MqheDr5GOZqsTycZwlupS+4ofuRXf8wswry0Fu0ZBHEq6R7fKWbFyOUYiWmrtUaqymj4sI/aLZsBQiU7XAkHkxMfQyQK4Zma/RbYsXTK4DFsbkb1V8pgqLe/mVn9LAQ8F3CRB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787351132; c=relaxed/simple;
-	bh=vdCB8xGfwwzyw0wgolx5VFNTwR9IIILKyntejxe0m54=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k0h4DC+OGOrEX5GwuavZkVTLPLeR9tRfZu0WZQAmh3lHkfIzr1mAMWuRZYZ6SjbDzpnrGVnli8/7eJIuRG6aze61qCh00/YPXQ/7pSsVRxQ2Fg+c1qeDJ1UUOX/yBAIydP5oXTF0j7kZY2ocVjhrw9GHh9W5wgz2M96wV7+8fF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kUzDK71n; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1787351593; c=relaxed/simple;
+	bh=z52v7mcApiyybcrXRoRzZfyVcd+b3yNo9eVk03mBHWc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nyZKxYmUk1gVlGs9ENkw3hruND5ls83TH4Etx9NlZoXbTpXy7grH+dt7c8TVD3Kb/ryw0Tpo5fumC4lQWRZr7IbdulU6zv6I3JX68JX57Ka4szhZMqCizOGFU3KbhDTJhPlwDCcSDU1fHeX+zR4rHVA9wi7DUVvWrWVaNceFhK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zrebur1Y; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kUzDK71n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787351130; x=1818887130;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vdCB8xGfwwzyw0wgolx5VFNTwR9IIILKyntejxe0m54=;
-  b=kUzDK71n1iDXvNKRju3elWPLWgVZZ7jaspmVrTd5jDLCt0IXpdjYAvT9
-   z3DZdTW5toHb65ww9V639sJWSQrr69sw1P0ncC0jHGPAxwZ65vsKYL+Lr
-   yqJ1kSlM6GkGQ+FFIRBepRhkYn81LqUuG7FnP1VH8r+fhvymGI4p7FzY0
-   FFFOAix7E13u/LcyccwxiJMMi1QwQppSAaFXF8SGkG5BDCmkJcvmX6O7n
-   xCYNR3UpzWoZ/wTv2dPLAHfnVQMTCKC8eZhpXDaUg24l85XRteccGvGs/
-   gKf8YfZu/gpgdoCJd8tnCigymz6xsHfuRv71Y2Lb7P73DLh1Pc63L1luu
-   w==;
-X-CSE-ConnectionGUID: zuQNISm1SK26MPWP453aIQ==
-X-CSE-MsgGUID: iRQJKsqeRXa6LCItbfxshQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11882"; a="88032178"
-X-IronPort-AV: E=Sophos;i="6.25,235,1779174000"; 
-   d="scan'208";a="88032178"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2026 15:25:30 -0700
-X-CSE-ConnectionGUID: mtTUOh0IQ/WoaDW0to2Arw==
-X-CSE-MsgGUID: 6DIfjQlGR12s2aXYQO3TXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,235,1779174000"; 
-   d="scan'208";a="271679176"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO localhost) ([10.124.221.211])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2026 15:25:29 -0700
-From: Alison Schofield <alison.schofield@intel.com>
-To: Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Li Ming <ming.li@zohomail.com>
-Cc: linux-cxl@vger.kernel.org,
-	sashiko-bot@kernel.org
-Subject: [PATCH] cxl/region: Guard against a missing peer mapping
-Date: Fri, 21 Aug 2026 15:25:14 -0700
-Message-ID: <20260821222515.2675707-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zrebur1Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26EAB1F000E9;
+	Fri, 21 Aug 2026 22:33:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787351591;
+	bh=RAkGoRL+C49/Pvylfhhz6/vglk/CBae1lCRt++fcDik=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=Zrebur1YUw87kKuO/o3Bfmm6RIW1yBVDOyaXi+oY9hOHctg6G7+WSe63Q7dqoWjXk
+	 Q1/WrLAPdiCaf3c7PQjGpUhMv6n8pvutqpVkRQh3pf1lJB26Auwkyx5+KFxjPt8Gv0
+	 RAOxJE/1UhvmKDuBcuc5Pp/u5LY72btXLnemUKpjcjd/ulSGMCM3OTKtcikf/UBveU
+	 KAZEYj8KzBnRhsXBw1nqHFTtYImXqVSyCkO+I04DX1S9P630ciiWY4NUNa5nmCreaz
+	 6cdDolVz1ss0T+kCsBoXZQKGwMYfPtf6AOoVPalnjxiIDi7esjhTLhOZVr0hCNONlp
+	 xvWKuOx9zsyJg==
+Date: Fri, 21 Aug 2026 23:33:05 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Guixin Liu <kanie@linux.alibaba.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>, Dave Jiang <dave.jiang@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>, Vishal Verma
+ <vishal.l.verma@intel.com>, Dan Williams <djbw@kernel.org>, Ira Weiny
+ <iweiny@kernel.org>, Li Ming <ming.li@zohomail.com>,
+ linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v4] cxl/pci: Skip reset detection for DVSEC emulated
+ decoders
+Message-ID: <20260821233305.32d77d60@jic23-huawei>
+In-Reply-To: <20260821021029.2550584-1-kanie@linux.alibaba.com>
+References: <20260821021029.2550584-1-kanie@linux.alibaba.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-When two endpoints share a dport, both must be mapped by the port.
+On Fri, 21 Aug 2026 10:10:29 +0800
+Guixin Liu <kanie@linux.alibaba.com> wrote:
 
-sashiko-bot reports that a missing peer mapping could result in a NULL
-pointer dereference during region creation.
+> After an FLR or SBR, __cxl_endpoint_decoder_reset_detected() samples the
+> Committed bit at cxlhdm->regs.hdm_decoder for every decoder that has
+> CXL_DECODER_F_ENABLE set. Decoders emulated from the CXL DVSEC range
+> registers carry that flag too, but their state does not live in the HDM
+> decoder registers. When the component registers expose no HDM decoder
+> capability, regs.hdm_decoder is NULL and the readl() oopses in the reset
+> completion path. When the capability is present but firmware left
+> Mem_Enable set with the global HDM decoder enable clear, the Committed bit
+> reads zero and cxl_reset_done() reports a reset that never happened: it
+> taints the kernel and strips CXL_DECODER_F_ENABLE and CXL_DECODER_F_LOCK
+> from every endpoint decoder, even though the driver still cannot reprogram
+> the DVSEC ranges.
+> 
+> Skip the check when cxld->commit is NULL. Only
+> cxl_setup_hdm_decoder_from_dvsec() leaves that callback unset, so that one
+> test covers both emulation paths, and a DVSEC-described range has no
+> Committed bit for a reset to clear.
+> 
+This is still a lot of text to read - I'll have stab an what I think would be sufficient.
+Take this perhaps as inspiration, not a precise suggestion!
 
-No caller can reach this today. Guard it anyway so a future violation
-of the mapping requirement fails region creation rather than causing
-an oops.
+When HDM decoders are emulated from DVSEC range registers either (a) there are
+no HDM decoder registers present or (b) the DVSEC registers were in use at driver
+load.
 
-Reported-by: sashiko-bot@kernel.org
-Link: https://sashiko.dev/#/patchset/cover.1787255388.git.alison.schofield%40intel.com?part=3
-Assisted-by: Claude:claude-opus-5
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- drivers/cxl/core/region.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+After FLR or SBR, __cxl_endpoint_decoder_reset_detected() checks the HDM
+decoder committed bit for any previously committed decoders. This includes
+emulated decoders: (a) results in a NULL pointer dereference, (b) in a false
+detection of reset when they are present and not in use as the committed bit
+was never set.
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 27e63e6dab7c..75b8092e6dc2 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -1367,7 +1367,8 @@ static int check_last_peer(struct cxl_endpoint_decoder *cxled,
- 	/*
- 	 * If this position wants to share a dport with the last endpoint mapped
- 	 * then that endpoint, at index 'position - distance', must also be
--	 * mapped by this dport.
-+	 * mapped by this dport. An endpoint that this port does not map at all
-+	 * fails that requirement.
- 	 */
- 	if (pos < distance) {
- 		dev_dbg(&cxlr->dev, "%s:%s: cannot host %s:%s at %d\n",
-@@ -1378,7 +1379,7 @@ static int check_last_peer(struct cxl_endpoint_decoder *cxled,
- 	cxled_peer = p->targets[pos - distance];
- 	cxlmd_peer = cxled_to_memdev(cxled_peer);
- 	ep_peer = cxl_ep_load(port, cxlmd_peer);
--	if (ep->dport != ep_peer->dport) {
-+	if (!ep_peer || ep->dport != ep_peer->dport) {
- 		dev_dbg(&cxlr->dev,
- 			"%s:%s: %s:%s pos %d mismatched peer %s:%s\n",
- 			dev_name(port->uport_dev), dev_name(&port->dev),
+Use absence of cxld->commit to elide the reset check for emulated decoders.
 
-base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
--- 
-2.37.3
+> Fixes: 934edcd436dc ("cxl: Add post-reset warning if reset results in loss of previously committed HDM decoders")
+> Signed-off-by: Guixin Liu <kanie@linux.alibaba.com>
+
+This does make me wonder if we should be doing something similar to check
+the dvsec based decoding reset.  The memory_base_high should reset to 0
+for example.
+
+Can we actually do anything with such devices?  Not sure we can today.
+That is not a reason to crash however so this fix still makes sense.
+
+Jonathan
+
+> ---
+> This was patch 4/8 of the "cxl: Assorted fixes" series [1], resent
+> individually per review feedback.
+> 
+
+> The two synchronisation concerns the review bot raised on v2 - the missing
+> exclusion against a cxl_port unbind freeing the devm allocated cxl_hdm, and
+> the plain read-modify-write of cxld->flags in
+> cxl_endpoint_decoder_clear_reset_flags() while the region paths update the
+> same word under cxl_rwsem.region - are still untouched here. Both are
+> about the reset handler's locking rather than about which registers it
+> reads, and neither fix is local; happy to follow up with separate patches.
+> 
+> v1->v2:
+> - rebase onto cxl/next
+> - rewrite the commit message to describe the behaviour rather than narrate
+>   the code change (Alison Schofield)
+> 
+> v2->v3:
+> - test cxld->commit instead of cxlhdm->regs.hdm_decoder, so that decoders
+>   emulated from the DVSEC ranges are also skipped when the HDM decoder
+>   registers exist but are globally disabled (Richard Cheng)
+> - update the subject and the commit message for the widened scope
+> 
+> v3->v4:
+> - shorten the commit message (Dave Jiang)
+> 
+> [1] https://lore.kernel.org/linux-cxl/20260811113608.2815625-1-kanie@linux.alibaba.com/
+> 
+>  drivers/cxl/core/pci.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 9d807c1a002c..d8b07f86bab0 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -683,6 +683,13 @@ static int __cxl_endpoint_decoder_reset_detected(struct device *dev, void *data)
+>  	if ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)
+>  		return 0;
+>  
+> +	/*
+> +	 * Decoders emulated from the DVSEC range registers have no commit
+> +	 * callback and no HDM decoder registers to consult.
+> +	 */
+> +	if (!cxld->commit)
+> +		return 0;
+> +
+>  	cxlhdm = dev_get_drvdata(&port->dev);
+>  	hdm = cxlhdm->regs.hdm_decoder;
+>  	ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(cxld->id));
+> 
+> base-commit: 7098e9cd98a05c0c5de2fae0c2465f9d966fdd07
 
