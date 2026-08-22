@@ -1,201 +1,281 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCF3386576;
-	Sat, 22 Aug 2026 08:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796993D5C0C
+	for <linux-cxl@vger.kernel.org>; Sat, 22 Aug 2026 14:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787387026; cv=none; b=mhQRUZMqc0ViFMC14OWmJAXUXC8lqH9ez93BXnmC9pdBTG6BBn7LKootv5UjtsveZJcyniC2p7sQVVAz8ouZP8st1Tkr3GMaNKd8to6itarjU/EO666Sg0KLZseb3cHCnBNRmgqw674Ghw42N6gKj3Vl0qaOlb/9k3Hr0MKAB2U=
+	t=1787409835; cv=none; b=Fyt2GpJPoXhX6d3N2hepBAEB5r+ZsX2HjksDSRKQZqKcekkzLm+4zbJF0c44Xg67smQo6lTy7/saapWT7OPdoLWDAzXqSp0v5blRylZJM5ppve7/5Q/PxRQKl44fTfeOhGq3Ut8O85zfx02JL2CywXK+pLk2jDZqQnlWLCC7QUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787387026; c=relaxed/simple;
-	bh=mKX771uc3lutMQpZFJQnhdt7GyWKMRqSH02u/uA/bLk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QgbwXoQNVzoTliKS+JPZE1r6rytneytzW4h4IMdeG1YwpX5BRpbNIR7o7y8WzFzLeIoRR0xygT6E/LURrYETnnfdqpYMya0j4YyaVRoGP22iCVTVGPnTTO2uk8+B5TOn0W79kDY4iEZOOf6BSnNXYKrYEgVdQwkqwKtu/ig7SkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bzSa0KwD; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1787409835; c=relaxed/simple;
+	bh=25RblJjqRx8yONZpteM1v7Yw0KCeVTNMQIQZHomxM+o=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=hsr2OUpWxyJimJZbMR+ulMFfGmtBSJOeNm9eeHbV+4p4VBdy84hwlceHKOegq2FL1AL/+dM91TSRYHlVpteA4IfNuST2quJS1Lt5LHNqIC1+RXy4uGMn8HGOoYBb952Kni0GvgnAlxXF6jnzO5Jdmqh+UygWpA3VK2IsxPqxhro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ObG7pdgm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bzSa0KwD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787387022; x=1818923022;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=mKX771uc3lutMQpZFJQnhdt7GyWKMRqSH02u/uA/bLk=;
-  b=bzSa0KwDi1DBgMaq4thWtU5swOsHWuXZbFAC+TaVl3PKByxIcl/6UoZZ
-   Ik7jl1HUZdcYJwqEl1+PSjgDIncqjyyy+lf5V8PWcDLJOdEHeUGUbhuUz
-   Foi9Ex5sLZTII0bjnNTpOhGbxGndQNX8pskuWIKLcfUFNbZtjWu5xWQoO
-   FcjRLeMaBJGImmh3w5czrFE9aTorUnyVbM8x6qOHCVln2D1QtIvJ8zbPC
-   69bOhTi0UtsIT3dAfIeCcd7rWrRBpvZqYxCQD9P3+snx8LNusY4RdFZ6j
-   2qAsdhmY5xkvMdVNSaxRcpOOH6DN8O1SBSWR/LzpgH9WzibxYnaAzXLs8
-   g==;
-X-CSE-ConnectionGUID: p6fEkXQ1RrW54SOZ3w9TqA==
-X-CSE-MsgGUID: T8aGbqAJTBCsquNHPr1dvQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11882"; a="91796496"
-X-IronPort-AV: E=Sophos;i="6.25,236,1779174000"; 
-   d="scan'208";a="91796496"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2026 01:23:37 -0700
-X-CSE-ConnectionGUID: /YgIAr4mQsGKCSsoRiV6zA==
-X-CSE-MsgGUID: VVsAZtviQCa29IMg3EZXjQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,236,1779174000"; 
-   d="scan'208";a="265242919"
-Received: from junjie-desk-dev.bj.intel.com ([10.238.152.71])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2026 01:23:30 -0700
-From: Junjie Cao <junjie.cao@intel.com>
-To: Terry Bowman <terry.bowman@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Dan Williams <djbw@kernel.org>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Ira Weiny <iweiny@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Robert Richter <rrichter@amd.com>,
-	linux-acpi@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Alejandro Lucero <alucerop@amd.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ben Cheatham <Benjamin.Cheatham@amd.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Breno Leitao <leitao@debian.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Gregory Price <gourry@gourry.net>,
-	Hanjun Guo <guohanjun@huawei.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Kees Cook <kees@kernel.org>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Li Ming <ming.li@zohomail.com>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	"Oliver O'Halloran" <oohall@gmail.com>,
-	Richard Cheng <icheng@nvidia.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>
-Subject: Re: [RFC] cxl: Device protocol AER injection
-Date: Sat, 22 Aug 2026 16:23:25 +0800
-Message-ID: <20260822082325.301100-1-junjie.cao@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260717225700.3543801-1-terry.bowman@amd.com>
-References: <20260717225700.3543801-1-terry.bowman@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ObG7pdgm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20D4A1F00A3A;
+	Sat, 22 Aug 2026 14:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787409834;
+	bh=q1R/asDOoQo8xP+3W+lGMUScHFgK/f2Y6GQ46vZ2NhQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ObG7pdgmbsU7Yk6n+8HEamQc4VRht7sByVsmMKuRXCH4ofGZ/GiVLh/LecQ3J6KeH
+	 0bS1G3yXo6vuqZtk2T7UdRmwzX4sM4+J+HeDIXcwogA0Yi72EdSSNwC0kiJ+RxhKBK
+	 jaTuxrs4GDIhXsc55EX+3x35WDCzwwT2M+ScRtzwXRTgsVuNzRDjlQG+Ci4kdPQSNv
+	 uhTEWbFSUQUGqw9yDoO6aj1/UB5WvFGKPNHQzXfAhgV2jLrXwzvWDlZMFOW8B/v0zM
+	 ae2D6adPRV8345rflIHaGZVZazX5TVB6Xuj84Bsy88Cu2qLJrOaAMa34qW0Z53Ox9W
+	 uiSlSfOgm1Owg==
+From: sashiko-bot@kernel.org
+Subject: Re: [RFC 2/2] sfc: add multipf support
+Reply-To: sashiko-reviews@lists.linux.dev
+To: alejandro.lucero-palau@amd.com
+Cc: linux-cxl@vger.kernel.org
+In-Reply-To: <20260821155134.260053-3-alejandro.lucero-palau@amd.com>
+References: <20260821155134.260053-1-alejandro.lucero-palau@amd.com>
+ <20260821155134.260053-3-alejandro.lucero-palau@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 22 Aug 2026 14:43:53 +0000
+Message-Id: <20260822144354.20D4A1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi Terry,
+Thank you for your contribution! Sashiko AI review found 8 potential issue(=
+s) to consider:
+- [High] The variable `pf0_pci_dev` is used uninitialized as the starting p=
+ointer for the `pci_get_device()` search, leading to memory corruption or c=
+rashes.
+- [High] The return value of `cxl_map()` is checked using inverted logic, t=
+reating success as failure (causing a Use-After-Free) and failure as succes=
+s (silently bypassing initialization failure).
+- [High] The `struct pci_dev` reference acquired by `get_pf0_pci_device()` =
+is never released, resulting in a persistent object leak.
+- [High] Memory is dynamically allocated for the undefined or incorrect typ=
+e `struct cxl` instead of `struct efx_cxl`.
+- [High] The PF0 device matching logic compares `pci_dev->slot`, which can =
+be NULL, potentially associating unrelated physical devices.
+- [Medium] Missing teardown of `cxl_get_pf0_memdev()` on error paths in `ef=
+x_cxl_init()`.
+- [Medium] The manually allocated `struct efx_cxl` for non-PF0 devices is p=
+ermanently leaked on driver teardown.
+- [Medium] An early return in the `efx_cxl_exit()` non-PF0 path permanently=
+ leaks the I/O memory mapping.
+--
 
-On Fri, 17 Jul 2026 17:57:00 -0500, Terry Bowman wrote:
-> This patch is intended to provide a method of testing the recently
-> submitted cxl series "cxl: Enable CXL PCIe Port Protocol Error
-> handling and logging"
+--- Patch [2]: [RFC 2/2] sfc: add multipf support ---
+commit e798dff2eb0bc8eafa5e5bca36069e0989d743a9
+Author: Alejandro Lucero <alucerop@amd.com>
 
-Ran this on 7.2-rc3 with v18, under QEMU with a switch topology so all
-four port classes are present.  v19 wasn't out yet when I ran it; the
-findings below are in the RFC's own code and don't move with the delta.
-It works -- one CE per class with a different RAS status bit each time,
-attribution correct in all four:
+sfc: add multipf support
 
-  RP  ras=0x1  port=port1 dport=0000:0c:00.0  'Cache Data ECC Error'
-  USP ras=0x2  port=port2 dport=              'Memory Data ECC Error'
-  DSP ras=0x4  port=port2 dport=0000:0e:00.0  'CRC Threshold Hit'
-  EP  ras=0x8  memdev=mem1 port=endpoint4     'Retry Threshold'
+Use CXL core accelerator API for registering non-PF0 PFs to the memdev
+linked to the PF0, along with its complementary unregister. Adapt the
+ioremap call per PF to be an offset based on the PF function index and
+a hardcoded per PF CXL.mem slot size.
 
-A UCE panics via cxl_pci_error_detected() as the series intends, and six
-malformed inputs are rejected.  Only VH here, so I can't say anything
-about whether the RCH branch is right.
+> diff --git a/drivers/net/ethernet/sfc/efx_cxl.c b/drivers/net/ethernet/sf=
+c/efx_cxl.c
+> index 348d7404cd7aa..e45c8dd1969c2 100644
+> --- a/drivers/net/ethernet/sfc/efx_cxl.c
+> +++ b/drivers/net/ethernet/sfc/efx_cxl.c
+> @@ -13,6 +13,48 @@
+>  #include "efx_cxl.h"
+> =20
+>  #define EFX_CTPIO_BUFFER_SIZE	SZ_256M
+> +#define EFX_CTPIO_BUFFER_PER_PF_SIZE	SZ_8M
+> +
+> +#define X4_PF_DEVICE_ID 0x0c03
+> +
+> +static struct pci_dev *get_pf0_pci_device(struct pci_dev *pfx)
+> +{
+> +	struct pci_dev *pf0_pci_dev;
+> +
+> +	while ((pf0_pci_dev =3D pci_get_device(PCI_VENDOR_ID_SOLARFLARE,
+> +					     X4_PF_DEVICE_ID, pf0_pci_dev))
+> +					     !=3D NULL) {
 
-Tested-by: Junjie Cao <junjie.cao@intel.com>
+[Severity: High]
+Since pf0_pci_dev is an uninitialized stack variable on the first iteration,
+will pci_get_device() attempt to drop a reference on a wild pointer via its
+internal pci_dev_put() call?
 
-> +	depends on PCIEAER_INJECT
+> +		/* With multiple X4 installed check against pci_slot as well. */
+> +		if (pf0_pci_dev->slot =3D=3D pfx->slot &&
 
-Beyond Jonathan's question about asking at all -- a bool depending on a
-tristate means kconfig will give you PCIEAER_INJECT=m with CXL_BUS=y
-and this =y.  olddefconfig produces that from a defconfig and it
-doesn't link:
+[Severity: High]
+Could the slot pointers be NULL on systems where PCI slots are not described
+by firmware?
 
-  ld: ras.c: undefined reference to `aer_inject'
+If so, a NULL =3D=3D NULL comparison could inadvertently match the first PF=
+0 of
+any X4 card in the system, even if it is a completely different physical
+adapter. Does this require checking bus or domain topology instead?
 
-Deriving it from the combination rather than asking would take the
-broken config with the question.
+> +		    PCI_FUNC(pf0_pci_dev->devfn) =3D=3D 0)
+> +			break;
+> +	}
+> +	return pf0_pci_dev;
+> +}
 
-> +	cxl_aer_einj.aer_registers[aer_offset] = aer_status;
+[ ... ]
 
-Only reference to aer_registers[] in the tree.  aer_inject() builds
-its own AER config space and the RCH path skips
-cxl_rch_get_aer_info(), so nothing reads it.  Is it still needed, or
-can it go with the core/ras_einj.c move?
+> @@ -20,9 +62,48 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  	struct pci_dev *pci_dev =3D efx->pci_dev;
+>  	struct range cxl_pio_range;
+>  	struct efx_cxl *cxl;
+> +	u8 devfn;
+>  	u16 dvsec;
+>  	int rc;
+> =20
+> +	if (efx->type->is_vf)
+> +		return 0;
+> +
+> +	/* are we PF0? */
+> +	devfn =3D PCI_FUNC(pci_dev->devfn);
+> +	if (devfn !=3D 0) {
+> +		struct pci_dev *pf0_pci_dev;
+> +		struct cxl_memdev *cxlmd;
+> +
+> +		pf0_pci_dev =3D get_pf0_pci_device(pci_dev);
 
-> +	cxl_aer_einj.dev = NULL;
+[Severity: High]
+Are we leaking the pf0_pci_dev reference here?
 
-Clears the pointer but not the reference.  Every non-RCH arm takes a
-pci_dev_get() below; to_einj_ras_base() on a match and
-cxl_ras_exit() drop it.  Both need .dev to still point there.  So an
-arm not consumed before the next write is orphaned.
+The pci_get_device() function increments the reference count of the returned
+PCI device. Is there a missing pci_dev_put(pf0_pci_dev) after this function
+is done using it?
 
-Thirty back-to-back injections gave 26 trace events, with aer_inject
-run 30 times and the kfifo-add-failed, port-not-found, port-unbound,
-dport-not-found and RAS-not-mapped counts all zero (kfifo is 128 deep,
-so no overflow).  Four arms were never disarmed.  I can't tell whether
-the AER core folded them into one pass or the next write replaced .dev
-first, and either way the reference goes.  I couldn't make it fire on
-demand -- unbinding cxl_port fails the arm-time lookup instead -- so
-it's a race, but it's the one a test loop hits.
+> +
+> +		/* This should not happen! */
+> +		if (!pf0_pci_dev)
+> +			return 0;
+> +
+> +		/* Is the PF0 device configured with and using CXL? */
+> +		if (!pcie_is_cxl(pf0_pci_dev))
+> +			return 0;
+> +
+> +		cxlmd =3D cxl_get_pf0_memdev(&pf0_pci_dev->dev, &pci_dev->dev,
+> +					   devfn, &cxl_pio_range);
+> +
+> +		if (IS_ERR(cxlmd))
+> +			return -EPROBE_DEFER;
+> +
+> +		cxl =3D kzalloc_obj(struct cxl);
 
-Behind it the handshake has no single owner: the mutex is writer-only,
-while to_einj_ras_base() mutates the same fields and drops a reference
-without it.  Both consumers are live: the CE runs consume arms from
-the kfifo work, and the UCE backtrace has cxl_pci_error_detected()
-doing it from the AER IRQ thread.  A disarm helper
-owning the reference would cover this and the asymmetry Jonathan
-raised about putting a reference it didn't get.
+[Severity: High]
+Is the struct type passed to kzalloc_obj() correct?
 
-> +	cxl_aer_einj.is_rch = (nargs == 5 && strcmp(topology, "RCH") == 0);
+It looks like this allocates memory for 'struct cxl' instead of the intended
+'struct efx_cxl'. Will this lead to heap out-of-bounds writes when fields l=
+ike
+cxl->cxlmd or cxl->ctpio_cxl are accessed?
 
-RCH on a VH device is accepted:
+> +		if (!cxl)
+> +			return -ENOMEM;
 
-  # echo "0000:0c:00.0 CE 0 0x80 RCH" > .../aer_einj_inject   -> 0
+[Severity: Medium]
+If this allocation fails, does the code leak the sibling entry created earl=
+ier
+by cxl_get_pf0_memdev()?
 
-aer_inject() fires and AER logs it, but no CXL trace event appears --
-the RCH branch can't match a VH dport.  Reproduces every time.  So a
-typo gets you a real AER error with the CXL path silently skipped,
-which reads as "the handler didn't fire".  is_cxl_restricted(pdev),
-already used further down the file, would make it -EINVAL.
+Should there be a call to cxl_put_pf0_memdev() before returning?
 
-> Also worth discussing is the commandline takes multiple parameters for
-> a single sysfs file
+> +
+> +		cxl->cxlmd =3D cxlmd;
+> +
+> +		if (!cxl_map(probe_data, cxl, (u64)devfn, cxl_pio_range)) {
 
-One file also suits the state handling above better.  Several files
-spread one request over several writes with no commit point.
+[Severity: High]
+Is the return check for cxl_map() inverted here?
 
-> How do we incorporate this with the existing CXL EINJ functionality
+Looking at cxl_map(), it returns 0 on success. If cxl_map() succeeds, the
+condition (!0) evaluates to true.
 
-core/ras_einj.c sounds right, and the Kconfig above is another reason
-for both in one place.  Worth a line in the ABI doc that ACPI EINJ is
-a real injection but Root Port only while this covers every class with
-software registers -- that's what decides which one a test wants.
+Does this mean the success path incorrectly triggers error handling, which
+calls kfree(cxl) while leaving a dangling pointer in probe_data->cxl,
+causing a use-after-free?
 
-Last thing, off this patch: with the registers a kernel-side array this
-can't exercise the MMIO readback, the offsets against a real capability
-block, or the header log.  QEMU has RAS on root and switch ports but
-injects only on endpoints, so it can't cover the classes today either.
-I'm looking at adding port-level injection there as a second path
-through the real reads.
+> +			kfree(cxl);
+> +			return -ENOMEM;
+> +		}
+> +		return 0;
+> +	}
 
-Many thanks,
-Junjie
+[ ... ]
+
+> @@ -80,25 +161,38 @@ int efx_cxl_init(struct efx_probe_data *probe_data)
+>  		return PTR_ERR(cxl->cxlmd);
+>  	}
+> =20
+> -	cxl->ctpio_cxl =3D ioremap_wc(cxl_pio_range.start,
+> -				    range_len(&cxl_pio_range));
+> -	if (!cxl->ctpio_cxl) {
+> +	if (!cxl_map(probe_data, cxl, 0, cxl_pio_range)) {
+
+[Severity: High]
+Does this have the same inverted return logic as the non-PF0 case?
+
+If cxl_map() returns 0 on success, will this evaluate to true on success,
+incorrectly logging an error and returning -ENOMEM?
+
+>  		pci_err(pci_dev, "CXL ioremap region (%pra) failed\n",
+>  			&cxl_pio_range);
+>  		return -ENOMEM;
+>  	}
+> =20
+> -	probe_data->cxl_pio_initialised =3D true;
+> -	probe_data->cxl =3D cxl;
+> -
+>  	return 0;
+>  }
+> =20
+>  void efx_cxl_exit(struct efx_probe_data *probe_data)
+>  {
+> +	struct efx_nic *efx =3D &probe_data->efx;
+> +	struct pci_dev *pci_dev =3D efx->pci_dev;
+> +	u8 devfn;
+> +
+>  	if (!probe_data->cxl)
+>  		return;
+> =20
+> +	/* are we PF0? */
+> +	devfn =3D PCI_FUNC(pci_dev->devfn);
+> +	if (devfn !=3D 0) {
+> +		struct pci_dev *pf0_pci_dev;
+> +
+> +		pf0_pci_dev =3D get_pf0_pci_device(pci_dev);
+> +
+> +		/* This should not happen! */
+> +		if (!pf0_pci_dev)
+> +			return;
+
+[Severity: Medium]
+If this early return is taken, does it bypass the trailing iounmap() call
+and permanently leak the CXL PIO mapping?
+
+> +
+> +		cxl_put_pf0_memdev(&pf0_pci_dev->dev, &pci_dev->dev, devfn);
+
+[Severity: High]
+Does get_pf0_pci_device() leak another reference to the PCI device here,
+similar to the init path?
+
+> +	}
+> +
+>  	iounmap(probe_data->cxl->ctpio_cxl);
+
+[Severity: Medium]
+For non-PF0 devices, probe_data->cxl is allocated dynamically using
+kzalloc_obj() during initialization. Is there a missing kfree(probe_data->c=
+xl)
+in this teardown path?
+
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260821155134.2600=
+53-1-alejandro.lucero-palau@amd.com?part=3D2
