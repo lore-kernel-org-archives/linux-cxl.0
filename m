@@ -1,665 +1,373 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27F511E7C18;
-	Fri, 21 Aug 2026 23:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C8E13FEE;
+	Sat, 22 Aug 2026 00:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787355214; cv=none; b=hwVpTHGpAucm7zjU/x5GU73DRkpIbJOnRI5BCWJXqzk9bFjH75vpjs3eBGrsO3lcv2BLf8w4+8AXFKELT2bd/NWT7XSz5nTp15+bUm+A8EW5D+f5Ips3wqUY1ECy9pqP4YZpyJPIM5tWDrg3qJCtT0k/HdbYsM74zi1xzH4Fv0o=
+	t=1787357251; cv=none; b=mYoqHdiiw7JS2AAsF1GpfgHbY9BwdPvnaW1+gAY2pNMWkVrJgLI5wQxGsKYIJ/DA0ga78WNc8AU2Cq+aMPbbYEZh+gPxPF53/R+vqULBi9BBMAdA7NbeJZ31hzU8zOhXe7QO9VxOuLqNIv2Uh6wceRjSK6H1xwA5MVPEEw5RY+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787355214; c=relaxed/simple;
-	bh=yPVzlxBhZ0lL7gTCENbZi91sysSxRdJtOEmGyTtGrMM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aao2H2ZVyuFSmBBIYkoB3G2tlSZae2mIkv85R9Gm72URmqwP18OQZMps6MJ0YcbgT/m/yCaz61fKAYq8JjKL8e1WFUtmf8NPek8sJOfOx2Cp0DvU5JbJb+7V2l74kelJHMkGhenVaCWnZXHFPVFTxD0jyy0hgWb24q69Zgb+B7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L0GD0Z9f; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1787357251; c=relaxed/simple;
+	bh=tARrK2DyAjg3NpJ5/1Hr+stvyBIcOV2BYYBJgq3ZyU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=doV/gloD4cTzKwcM44eNq/cnwPVyCDzTEKy9RqDYfN1Lpw9tGeZYgTzVtLJnZYdr+NWYCc8l+O+oU3PJv/i4yzNrMntHcyANHT1xBTOiiSygRVd0WT2DlqLb47BJPKaxoP1YfTuyjbNKV3Rt9Wmm4yjKYDuspkZnZzGlvzqE0Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1xPJdYN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L0GD0Z9f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787355211; x=1818891211;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=yPVzlxBhZ0lL7gTCENbZi91sysSxRdJtOEmGyTtGrMM=;
-  b=L0GD0Z9fFDIqs+rl62BqnGlJ6J7uccCvTdld8v+AFbYp+m56IwWIurnK
-   EHFGRrvDZSCFA3yfpcEFeXcRxSSA7SB+CVeM7kvMkzFizeEaFhgHIS/fg
-   XIxXmpoBFAi2jJUR/g4M/qRyDet5TaeLZx6IKhhMaxbSE6pErmHOlP+7U
-   gGSylfIUvomwqejmiWxj+yoREPNnkSg2YjGvNIKFZig5dQAybYETz9jpe
-   K+bgX0xYXyR34RgA2k6iA/HWtysIgFXWivJKtLJtr4bZpDCrYlrt0KyWy
-   0iBIy+eul/Ra6nv20eTfctNvtfAN4MdqT0k6OHHxbg5xGPe0KwCwyPOZy
-   g==;
-X-CSE-ConnectionGUID: 9O5OIikBQ+GevC/XhguJlw==
-X-CSE-MsgGUID: f+MOWpglRJmY93jTUnsa4Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11882"; a="91582833"
-X-IronPort-AV: E=Sophos;i="6.25,236,1779174000"; 
-   d="scan'208";a="91582833"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2026 16:33:31 -0700
-X-CSE-ConnectionGUID: ejCM3dmSTwOkav4r0aDSMA==
-X-CSE-MsgGUID: Iix9TPFhSMSJpeyTnytE/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,236,1779174000"; 
-   d="scan'208";a="267053248"
-Received: from rchatre-mobl4.amr.corp.intel.com (HELO [10.125.108.117]) ([10.125.108.117])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2026 16:33:30 -0700
-Message-ID: <1c648e0d-eb07-4006-91ec-9f092fd7c8ec@intel.com>
-Date: Fri, 21 Aug 2026 16:33:28 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1xPJdYN"
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 3208E1F000E9;
+	Sat, 22 Aug 2026 00:07:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787357249;
+	bh=3BJuQNK6b1/o0xfdnlOz6xEmEgheAyv0QX/nmO/VtWk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=i1xPJdYNAtBMqUrSS1MT75ReVHUXjvcZKAHptIbd3zNc/2Kv6aOZlm5b/mwirRS7Z
+	 EhxniYEq++3Havju3fM1x9V/RNCh6VwW+WlyXZ3glAWjoZhFjUepvLeRtk1af7yWOY
+	 +61n/+SE6CaTpPXMvZyAkR/UDM+EuARNtBmFBnyC8xSF3ziNbw44PmFHvKsqUnI02E
+	 Awhcq+pnudJ3CY/QIuXNrGLfVaTwF1uxH6m5pNtOFEwid2cjx2dMPhek96Zh6GRN0o
+	 HSuXsAD/tU34adQZeAQ2D/FZf8MHA6fqdEAd0GjC9Mvid6dcL5qYAkHyzMg7acIlmo
+	 EH0Ntse3Fa/RQ==
+Date: Fri, 21 Aug 2026 17:07:28 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Groves <john@jagalactic.com>
+Cc: John Groves <John@groves.net>, Miklos Szeredi <miklos@szeredi.hu>,
+	Dan Williams <djbw@kernel.org>, Bernd Schubert <bschubert@ddn.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
+	Jake Edge <jake@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	David Hildenbrand <david@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Chen Linxuan <chenlinxuan@uniontech.com>,
+	James Morse <james.morse@arm.com>, Fuad Tabba <tabba@google.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Shivank Garg <shivankg@amd.com>,
+	Ackerley Tng <ackerleytng@google.com>,
+	Gregory Price <gourry@gourry.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ira Weiny <iweiny@kernel.org>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Haren Myneni <haren@linux.ibm.com>,
+	Pratyush Yadav <pratyush@kernel.org>,
+	Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Ethan Nelson-Moore <enelsonmoore@gmail.com>,
+	Gabriel Whigham <gabewhigham@gmail.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>,
+	"venkataravis@micron.com" <venkataravis@micron.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"fuse-devel@lists.linux.dev" <fuse-devel@lists.linux.dev>
+Subject: Re: [PATCH v13 10/12] famfs: Add runtime operation-permission (opts)
+ framework
+Message-ID: <20260822000728.GB6047@frogsfrogsfrogs>
+References: <0100019fed5850ec-2bdfb17a-3086-44ea-8fdd-777d3ce12a33-000000@email.amazonses.com>
+ <20260810202539.96378-1-john@jagalactic.com>
+ <0100019fed5a5210-a09f1bdb-c705-44fc-8108-a7e7995a7af0-000000@email.amazonses.com>
 Precedence: bulk
 X-Mailing-List: linux-cxl@vger.kernel.org
 List-Id: <linux-cxl.vger.kernel.org>
 List-Subscribe: <mailto:linux-cxl+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-cxl+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 05/12] cxl: Cache endpoint decoder settings during PCI
- enumeration
-To: Srirangan Madhavan <smadhavan@nvidia.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Jonathan Cameron <jic23@kernel.org>, Vishal Verma
- <vishal.l.verma@intel.com>, linux-cxl@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Alex Williamson <alex.williamson@redhat.com>, vsethi@nvidia.com,
- alwilliamson@nvidia.com,
- Sai Yashwanth Reddy Kancherla <skancherla@nvidia.com>,
- Vishal Aslot <vaslot@nvidia.com>, Manish Honap <mhonap@nvidia.com>,
- Jiandi An <jan@nvidia.com>, Richard Cheng <icheng@nvidia.com>,
- linux-tegra@vger.kernel.org
-References: <20260804192958.1823952-1-smadhavan@nvidia.com>
- <20260804192958.1823952-6-smadhavan@nvidia.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <20260804192958.1823952-6-smadhavan@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0100019fed5a5210-a09f1bdb-c705-44fc-8108-a7e7995a7af0-000000@email.amazonses.com>
 
+On Mon, Aug 10, 2026 at 08:25:47PM +0000, John Groves wrote:
+> From: John Groves <john@groves.net>
+> 
+> famfs denies most namespace, attribute and data operations by default
+> because the userspace log, not the kernel, is authoritative for a famfs
+> instance. Earlier commits already guard each such operation with a
+> famfs_opt_enabled(fsi, FAMFS_OPT_x) check backed by a permissive stub. This
+> commit defines the permission bitmap and makes those checks live.
+> 
+> Add:
+>  - FAMFS_OPT_* (uapi): a u64 permission bitmap, one bit per gated operation
+>    (create, mkdir, mknod, symlink, link, unlink, rmdir, rename, the four
+>    setattr components, data write, and MAP_CREATE), plus FAMFS_OPT_ALL. The
+>    FAMFS_OPT_XATTR bit is reserved - famfs has no xattr ops yet.
+>  - fsi->opts: a per-mount atomic64 bitmap initialized to FAMFS_OPT_DEFAULT,
+>    which sets famfs's default policy: create, mkdir, chmod, chown, utimes,
+>    write and MAP_CREATE are permitted; unlink of mapped files, link,
+>    symlink, mknod, rmdir, rename and truncate are denied.
+>  - the real famfs_opt_enabled() (replacing the stub), so every planted gate
+>    now consults fsi->opts.
+>  - FAMFSIOC_{GET,SET,CLEAR}_OPTS: read the bitmap, or enable/disable the
+>    bits set in a caller-supplied mask, returning the resulting bitmap.
+>    SET/CLEAR require CAP_SYS_ADMIN and reject unknown bits with -EINVAL;
+>    the bitmap is updated with atomic RMW so the checks stay lockless.
 
+In a shared cxlmem environment, a program that wants to allocate some
+cxlmem contacts the master node and the master creates a path, maps some
+memory to the path, and writes a transaction to the log, right?
 
-On 8/4/26 12:29 PM, Srirangan Madhavan wrote:
-> Populate pci_dev->hdm for CXL.mem functions from pci_bus_add_device(),
-> after final PCI fixups and state save but before driver binding. This
-> gives driver-free reset paths an early HDM snapshot while avoiding the
-> pre-resource-assignment window in PCI capability initialization.
-> 
-> Use the CXL Register Locator BAR Indicator to find the component register
-> BAR, reject unassigned, disabled, or zero memory BAR resources before
-> temporarily enabling Memory Space, and restore the original PCI_COMMAND
-> value before returning.
-> 
-> CXL core reuses and refreshes the same cache as decoders are committed or
-> reset, and retries cache setup during CXL HDM enumeration if the PCI
-> bus-add attempt did not publish a cache. Move the register helpers into
-> the built-in CONFIG_CXL_HDM set so the early cache path is available
-> without cxl_core, and keep the cxl-test mock core from building a
-> duplicate regs.o.
-> 
-> Signed-off-by: Srirangan Madhavan <smadhavan@nvidia.com>
+Then, each node reads the new addition to the log and (maybe) creates a
+corresponding in-core path on the famfs mount, opens the file, and calls
+MAP_CREATE to upload the file-to-memory mappings.  After that,
+unprivileged client programs can use the file abstraction to map the cxl
+memory, right?
+
+It looks like file creation requires (a) the sysadmin to have set the
+FAMFS_OPS_CREATE flag and (b) to have CAP_SYS_ADMIN.  This prevents
+unprivileged programs from creating new files that point to arbitrary
+(and possibly already in use) chunks of memory, right?
+
+But what prevents a malicious program that is /not/ the famfs client
+software but has CAP_SYS_ADMIN from doing that?
+
+The one place where I think fuse-famfs has an edge over the kernel
+version is that fuse-famfs both reads the metadata log and presents the
+directory tree to the kernel, so it can reject creat/mknod/mkdir
+requests coming from the kernel.
+
+--D
+
+> Signed-off-by: John Groves <john@groves.net>
 > ---
->  drivers/cxl/core/Makefile   |   3 +-
->  drivers/cxl/core/hdm.c      |  13 +-
->  drivers/cxl/core/regs.c     |   4 +
->  drivers/cxl/core/resource.c | 313 ++++++++++++++++++++++++++++++++++++
->  drivers/pci/bus.c           |   2 +
->  drivers/pci/probe.c         |   2 +
->  include/cxl/cxl.h           |  26 +++
->  tools/testing/cxl/Kbuild    |   1 -
->  8 files changed, 360 insertions(+), 4 deletions(-)
+>  fs/famfs/famfs_file.c            | 59 ++++++++++++++++++++++++++++++++
+>  fs/famfs/famfs_inode.c           |  1 +
+>  fs/famfs/famfs_internal.h        | 30 +++++++++++++---
+>  include/uapi/linux/famfs_ioctl.h | 45 ++++++++++++++++++++++++
+>  4 files changed, 131 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
-> index 0df4178bbbaa..e22f05d83c39 100644
-> --- a/drivers/cxl/core/Makefile
-> +++ b/drivers/cxl/core/Makefile
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_CXL_BUS) += cxl_core.o
-> -obj-$(CONFIG_CXL_HDM) += resource.o
-> +obj-$(CONFIG_CXL_HDM) += regs.o resource.o
->  obj-$(CONFIG_CXL_SUSPEND) += suspend.o
->  
->  ccflags-y += -I$(srctree)/drivers/cxl
-> @@ -8,7 +8,6 @@ CFLAGS_trace.o = -DTRACE_INCLUDE_PATH=. -I$(src)
->  
->  cxl_core-y := port.o
->  cxl_core-y += pmem.o
-> -cxl_core-y += regs.o
->  cxl_core-y += memdev.o
->  cxl_core-y += mbox.o
->  cxl_core-y += pci.o
-> diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-> index ec988e7b7c0c..b47701fc5315 100644
-> --- a/drivers/cxl/core/hdm.c
-> +++ b/drivers/cxl/core/hdm.c
-> @@ -112,10 +112,17 @@ static int cxl_pci_setup_hdm_info(struct cxl_hdm *cxlhdm)
->  	struct pci_dev *pdev __free(pci_dev_put) =
->  		cxl_port_get_uport_pci_dev(cxlhdm->port);
->  	bool present;
-> +	int rc;
->  
->  	if (!pdev)
->  		return 0;
->  
-> +	rc = cxl_pci_hdm_info_match(pdev, cxlhdm->decoder_count, &present);
-> +	if (rc || present)
-> +		return rc;
-> +
-> +	pci_cxl_hdm_init(pdev);
-> +
->  	return cxl_pci_hdm_info_match(pdev, cxlhdm->decoder_count, &present);
+> diff --git a/fs/famfs/famfs_file.c b/fs/famfs/famfs_file.c
+> index 6f71805a297c..e7fa7324c374 100644
+> --- a/fs/famfs/famfs_file.c
+> +++ b/fs/famfs/famfs_file.c
+> @@ -359,6 +359,53 @@ famfs_daxdev_open(struct file *file, void __user *arg)
+>  	return rc;
 >  }
 >  
-> @@ -180,6 +187,10 @@ static void cxl_hdm_info_set_decoder(struct cxl_hdm *cxlhdm,
->  	if (!info || cxld->id >= info->decoder_count)
->  		return;
->  
-> +	if (cxlhdm->regs.hdm_decoder)
-> +		info->global_ctrl = readl(cxlhdm->regs.hdm_decoder +
-> +					  CXL_HDM_DECODER_CTRL_OFFSET);
-> +
->  	if (cxld->flags & CXL_DECODER_F_ENABLE)
->  		cxl_decoder_snapshot(cxld, &info->settings[cxld->id]);
->  	else
-> @@ -1002,11 +1013,11 @@ static int init_hdm_decoder(struct cxl_port *port, struct cxl_decoder *cxld,
->  {
->  	struct cxl_endpoint_decoder *cxled = NULL;
->  	u64 size, base, skip, dpa_size, lo, hi;
-> +	struct cxl_decoder_settings settings;
->  	bool committed;
->  	u32 remainder;
->  	int i, rc;
->  	u32 ctrl, tl_low, tl_high;
-> -	struct cxl_decoder_settings settings;
-
-This adjustment should be moved to the patch where settings was initially introduced
->  
->  	if (should_emulate_decoders(info))
->  		return cxl_setup_hdm_decoder_from_dvsec(port, cxld, dpa_base,
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 93710cf4f0a6..040b0304f63c 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -199,6 +199,7 @@ void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
->  
->  	return ret_val;
->  }
-> +EXPORT_SYMBOL_NS_GPL(devm_cxl_iomap_block, "CXL");
->  
->  int cxl_map_component_regs(const struct cxl_register_map *map,
->  			   struct cxl_component_regs *regs,
-> @@ -517,6 +518,7 @@ u16 cxl_rcrb_to_aer(struct device *dev, resource_size_t rcrb)
->  
->  	return offset;
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_rcrb_to_aer, "CXL");
->  
->  static resource_size_t cxl_rcrb_to_linkcap(struct device *dev, struct cxl_dport *dport)
->  {
-> @@ -633,6 +635,7 @@ resource_size_t __rcrb_to_component(struct device *dev, struct cxl_rcrb_info *ri
->  
->  	return component_reg_phys;
->  }
-> +EXPORT_SYMBOL_NS_GPL(__rcrb_to_component, "CXL");
->  
->  resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
->  					   struct cxl_dport *dport)
-> @@ -641,3 +644,4 @@ resource_size_t cxl_rcd_component_reg_phys(struct device *dev,
->  		return CXL_RESOURCE_NONE;
->  	return __rcrb_to_component(dev, &dport->rcrb, CXL_RCRB_UPSTREAM);
->  }
-> +EXPORT_SYMBOL_NS_GPL(cxl_rcd_component_reg_phys, "CXL");
-> diff --git a/drivers/cxl/core/resource.c b/drivers/cxl/core/resource.c
-> index 97cb136cb2ae..7f5946d3f2c4 100644
-> --- a/drivers/cxl/core/resource.c
-> +++ b/drivers/cxl/core/resource.c
-> @@ -2,9 +2,16 @@
->  /* Copyright (c) 2026 NVIDIA Corporation & Affiliates */
->  #include <linux/delay.h>
->  #include <linux/bug.h>
-> +#include <linux/bitfield.h>
->  #include <linux/errno.h>
->  #include <linux/export.h>
-> +#include <linux/io.h>
-> +#include <linux/ioport.h>
->  #include <linux/kernel.h>
-> +#include <linux/pci.h>
-> +#include <linux/slab.h>
-> +
-> +#include <cxlpci.h>
->  
->  #include "cxl.h"
->  #include "core.h"
-> @@ -170,3 +177,309 @@ int cxl_hdm_decode_decoder(struct cxl_decoder_settings *settings, int id,
->  				  &settings->interleave_granularity);
->  }
->  EXPORT_SYMBOL_FOR_MODULES(cxl_hdm_decode_decoder, "cxl_core");
-> +
-> +struct cxl_hdm_decoder_state {
-> +	u32 ctrl;
-> +	u32 base_low;
-> +	u32 base_high;
-> +	u32 size_low;
-> +	u32 size_high;
-> +	u32 target_low;
-> +	u32 target_high;
-> +};
-> +
-> +static void cxl_pci_hdm_info_free(struct cxl_hdm_info *info)
+> +/**
+> + * famfs_get_opts() - FAMFSIOC_GET_OPTS: return the permission bitmap
+> + */
+> +static long
+> +famfs_get_opts(struct famfs_fs_info *fsi, void __user *arg)
 > +{
-> +	if (!info)
-> +		return;
+> +	struct famfs_ioc_opts o = { .opts = atomic64_read(&fsi->opts) };
 > +
-> +	kfree(info->decoder_state);
-> +	kfree(info);
+> +	if (copy_to_user(arg, &o, sizeof(o)))
+> +		return -EFAULT;
+> +
+> +	return 0;
 > +}
 > +
-> +void pci_cxl_hdm_release(struct pci_dev *pdev)
+> +/*
+> + * famfs_modify_opts() - FAMFSIOC_SET_OPTS / FAMFSIOC_CLEAR_OPTS
+> + * @set: true to enable (OR in) the requested bits, false to disable (mask out)
+> + *
+> + * The caller supplies a mask of FAMFS_OPT_* bits; the resulting bitmap is
+> + * returned. Requires CAP_SYS_ADMIN since it changes mount-wide policy.
+> + */
+> +static long
+> +famfs_modify_opts(
+> +	struct famfs_fs_info *fsi,
+> +	void __user *arg,
+> +	bool set)
 > +{
-> +	struct cxl_hdm_info *info;
+> +	struct famfs_ioc_opts o;
 > +
-> +	scoped_guard(rwsem_write, &cxl_rwsem.dpa) {
-> +		info = pdev->hdm;
-> +		pdev->hdm = NULL;
-> +	}
-> +
-> +	cxl_pci_hdm_info_free(info);
-> +}
-> +
-> +static bool cxl_pci_bar_usable(struct pci_dev *pdev, int bar)
-> +{
-> +	struct resource *res = &pdev->resource[bar];
-> +
-> +	if (!pci_resource_len(pdev, bar))
-> +		return false;
-> +	if (res->flags & (IORESOURCE_UNSET | IORESOURCE_DISABLED))
-> +		return false;
-> +	if (resource_type(res) != IORESOURCE_MEM)
-> +		return false;
-> +	if (!res->start || !res->end)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +static int cxl_pci_hdm_find_bar(struct pci_dev *pdev, resource_size_t hdm_start,
-> +				resource_size_t hdm_size, int *bar,
-> +				resource_size_t *offset)
-> +{
-> +	resource_size_t hdm_end;
-> +
-> +	if (!hdm_size)
+> +	if (!capable(CAP_SYS_ADMIN))
+> +		return -EPERM;
+> +	if (copy_from_user(&o, arg, sizeof(o)))
+> +		return -EFAULT;
+> +	if (o.opts & ~FAMFS_OPT_ALL)
 > +		return -EINVAL;
 > +
-> +	hdm_end = hdm_start + hdm_size - 1;
-> +	if (hdm_end < hdm_start)
-> +		return -EINVAL;
+> +	if (set)
+> +		o.opts = atomic64_fetch_or(o.opts, &fsi->opts) | o.opts;
+> +	else
+> +		o.opts = atomic64_fetch_and(~o.opts, &fsi->opts) & ~o.opts;
 > +
-> +	for (int i = 0; i < PCI_STD_NUM_BARS; i++) {
-> +		struct resource *res = &pdev->resource[i];
-> +
-> +		if (!cxl_pci_bar_usable(pdev, i))
-> +			continue;
-> +		if (hdm_start < res->start || hdm_end > res->end)
-> +			continue;
-> +
-> +		if (bar)
-> +			*bar = i;
-> +		if (offset)
-> +			*offset = hdm_start - res->start;
-> +		return 0;
-> +	}
-> +
-> +	return -ENODEV;
-> +}
-> +
-> +static void __iomem *cxl_pci_hdm_map(struct pci_dev *pdev,
-> +				     struct cxl_register_map *map,
-> +				     struct cxl_hdm_info *info)
-> +{
-> +	struct cxl_reg_map *hdm_map = &map->component_map.hdm_decoder;
-> +	resource_size_t hdm_start;
-> +	void __iomem *hdm;
-> +	int rc;
-> +
-> +	hdm_start = map->resource + hdm_map->offset;
-> +	info->hdm_size = hdm_map->size;
-> +
-> +	rc = cxl_pci_hdm_find_bar(pdev, hdm_start, info->hdm_size,
-> +				  &info->hdm_bar, &info->hdm_offset);
-> +	if (rc)
-> +		return ERR_PTR(rc);
-> +
-> +	hdm = ioremap(hdm_start, info->hdm_size);
-> +	if (!hdm) {
-> +		pci_err(pdev, "failed to map CXL HDM decoder registers\n");
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	return hdm;
-> +}
-> +
-> +static void cxl_pci_hdm_read_decoder_state(struct cxl_hdm_decoder_state *state,
-> +					   void __iomem *hdm, int id)
-> +{
-> +	state->ctrl = readl(hdm + CXL_HDM_DECODER0_CTRL_OFFSET(id));
-> +	state->base_low = readl(hdm + CXL_HDM_DECODER0_BASE_LOW_OFFSET(id));
-> +	state->base_high = readl(hdm + CXL_HDM_DECODER0_BASE_HIGH_OFFSET(id));
-> +	state->size_low = readl(hdm + CXL_HDM_DECODER0_SIZE_LOW_OFFSET(id));
-> +	state->size_high = readl(hdm + CXL_HDM_DECODER0_SIZE_HIGH_OFFSET(id));
-> +	state->target_low = readl(hdm + CXL_HDM_DECODER0_TL_LOW(id));
-> +	state->target_high = readl(hdm + CXL_HDM_DECODER0_TL_HIGH(id));
-> +}
-> +
-> +static int cxl_pci_hdm_read_decoder(struct pci_dev *pdev,
-> +				    struct cxl_hdm_decoder_state *state,
-> +				    struct cxl_decoder_settings *settings,
-> +				    void __iomem *hdm, int id)
-> +{
-> +	u64 target_or_skip, base, size;
-> +	int rc;
-> +
-> +	cxl_pci_hdm_read_decoder_state(state, hdm, id);
-> +
-> +	base = ((u64)state->base_high << 32) | state->base_low;
-> +	size = ((u64)state->size_high << 32) | state->size_low;
-> +	target_or_skip = ((u64)state->target_high << 32) | state->target_low;
-> +
-> +	rc = cxl_hdm_decode_decoder(settings, id, state->ctrl, base, size,
-> +				    target_or_skip, NULL);
-> +	if (rc) {
-> +		pci_err(pdev, "CXL HDM decoder %d has invalid configuration: %d\n",
-> +			id, rc);
-> +		return rc;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int cxl_pci_hdm_capable(struct pci_dev *pdev)
-
-Function should return a bool.
-
-cxl_pci_mem_capable() would be clearer on what this function is checking. Although do you want to check the hdm_count as well? That would make the original function name make sense.
-
-Also a helper that returns the DVSEC offset and the cap word can be shared with cxl_dvsec_rr_decode() and cxl_reset_dvsec().
-
-
-> +{
-> +	u16 cap;
-> +	int dvsec;
-> +	int rc;
-> +
-> +	dvsec = pci_find_dvsec_capability(pdev, PCI_VENDOR_ID_CXL,
-> +					  PCI_DVSEC_CXL_DEVICE);
-> +	if (!dvsec)
-> +		return -ENOTTY;
-> +
-> +	rc = pci_read_config_word(pdev, dvsec + PCI_DVSEC_CXL_CAP, &cap);
-> +	if (rc)
-> +		return pcibios_err_to_errno(rc);
-> +
-> +	if (!(cap & PCI_DVSEC_CXL_MEM_CAPABLE))
-> +		return -ENOTTY;
+> +	if (copy_to_user(arg, &o, sizeof(o)))
+> +		return -EFAULT;
 > +
 > +	return 0;
 > +}
-> +
-> +static int cxl_pci_hdm_read_info(struct pci_dev *pdev,
-> +				 struct cxl_register_map *map,
-> +				 struct cxl_hdm_info *info)
-> +{
-> +	struct cxl_decoder_settings *settings;
-> +	void __iomem *hdm;
-> +	int decoder_count;
-> +	int rc;
-> +
-> +	rc = cxl_setup_regs(map);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (!map->component_map.hdm_decoder.valid)
-> +		return -ENODEV;
-> +
-> +	hdm = cxl_pci_hdm_map(pdev, map, info);
-
-I think you can setup a custom __free() for the hdm so you don't need to have the gotos.
-
-> +	if (IS_ERR(hdm))
-> +		return PTR_ERR(hdm);
-> +
-> +	decoder_count = cxl_hdm_decoder_count(readl(hdm +
-> +						    CXL_HDM_DECODER_CAP_OFFSET));
-> +	if (decoder_count < 0) {
-> +		rc = decoder_count;
-> +		goto out_unmap;
-> +	}
-> +
-> +	if (decoder_count > CXL_HDM_DECODER_MAX_COUNT) {
-
-There's no need to check this. The register cannot decoder larger than a value of 32. So this scenario would never happen. Maybe
-	if (decoder_count > ARRAY_SIZE(info->settings))
-
-DJ
-
-
-> +		rc = -ENXIO;
-> +		goto out_unmap;
-> +	}
-> +
-> +	info->decoder_count = decoder_count;
-> +	info->global_ctrl = readl(hdm + CXL_HDM_DECODER_CTRL_OFFSET);
-> +	info->decoder_state = kcalloc(decoder_count,
-> +				      sizeof(*info->decoder_state),
-> +				      GFP_KERNEL);
-> +	if (!info->decoder_state) {
-> +		rc = -ENOMEM;
-> +		goto out_unmap;
-> +	}
-> +
-> +	settings = info->settings;
-> +	for (int i = 0; i < info->decoder_count; i++) {
-> +		rc = cxl_pci_hdm_read_decoder(pdev, &info->decoder_state[i],
-> +					      &settings[i], hdm, i);
-> +		if (rc)
-> +			goto out_unmap;
-> +	}
-> +
-> +	rc = 0;
-> +out_unmap:
-> +	iounmap(hdm);
-> +	return rc;
-> +}
-> +
-> +static int __pci_cxl_hdm_init(struct pci_dev *pdev)
-> +{
-> +	struct cxl_register_map map = { 0 };
-> +	struct cxl_hdm_info *info;
-> +	bool restore_command;
-> +	u16 command;
-> +	int rc;
-> +
-> +	down_read(&cxl_rwsem.dpa);
-> +	if (pdev->hdm) {
-> +		up_read(&cxl_rwsem.dpa);
-> +		return 0;
-> +	}
-> +	up_read(&cxl_rwsem.dpa);
-> +
-> +	rc = cxl_pci_hdm_capable(pdev);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = cxl_find_regblock(pdev, CXL_REGLOC_RBI_COMPONENT, &map);
-> +	if (rc)
-> +		return rc;
-> +
-> +	rc = cxl_pci_hdm_find_bar(pdev, map.resource, map.max_size, NULL, NULL);
-> +	if (rc)
-> +		return rc;
-> +
-> +	info = kzalloc_obj(*info, GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	rc = pci_read_config_word(pdev, PCI_COMMAND, &command);
-> +	if (rc) {
-> +		rc = pcibios_err_to_errno(rc);
-> +		goto out_free_info;
-> +	}
-> +
-> +	restore_command = !(command & PCI_COMMAND_MEMORY);
-> +	if (restore_command) {
-> +		rc = pci_write_config_word(pdev, PCI_COMMAND,
-> +					   command | PCI_COMMAND_MEMORY);
-> +		if (rc) {
-> +			rc = pcibios_err_to_errno(rc);
-> +			goto out_free_info;
-> +		}
-> +	}
-> +
-> +	rc = cxl_pci_hdm_read_info(pdev, &map, info);
-> +
-> +	if (restore_command) {
-> +		int rc2 = pci_write_config_word(pdev, PCI_COMMAND, command);
-> +
-> +		if (rc2) {
-> +			rc2 = pcibios_err_to_errno(rc2);
-> +			pci_err(pdev,
-> +				"failed to restore PCI_COMMAND after CXL HDM cache init: %d\n",
-> +				rc2);
-> +			if (!rc)
-> +				rc = rc2;
-> +		}
-> +	}
-> +
-> +	if (rc)
-> +		goto out_free_info;
-> +
-> +	down_write(&cxl_rwsem.dpa);
-> +	if (!pdev->hdm) {
-> +		pdev->hdm = info;
-> +		info = NULL;
-> +	}
-> +	up_write(&cxl_rwsem.dpa);
-> +
-> +	cxl_pci_hdm_info_free(info);
-> +	return 0;
-> +
-> +out_free_info:
-> +	cxl_pci_hdm_info_free(info);
-> +	return rc;
-> +}
-> +
-> +void pci_cxl_hdm_init(struct pci_dev *pdev)
-> +{
-> +	int rc;
-> +
-> +	rc = __pci_cxl_hdm_init(pdev);
-> +	if (rc && rc != -ENOTTY && rc != -ENODEV)
-> +		pci_dbg(pdev, "CXL HDM cache init failed: %d\n", rc);
-> +}
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 655ed53436d3..5fd7bae8e786 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -18,6 +18,7 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/proc_fs.h>
->  #include <linux/slab.h>
-> +#include <cxl/cxl.h>
->  
->  #include "pci.h"
->  
-> @@ -359,6 +360,7 @@ void pci_bus_add_device(struct pci_dev *dev)
->  
->  	/* Save config space for error recoverability */
->  	pci_save_state(dev);
-> +	pci_cxl_hdm_init(dev);
->  
->  	/*
->  	 * Enable runtime PM, which potentially allows the device to
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index dd0abbc63e18..0bed5638d6da 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -24,6 +24,7 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/bitfield.h>
->  #include <trace/events/pci.h>
-> +#include <cxl/cxl.h>
->  #include "pci.h"
->  
->  static struct resource busn_resource = {
-> @@ -2484,6 +2485,7 @@ static void pci_release_dev(struct device *dev)
->  	struct pci_dev *pci_dev;
->  
->  	pci_dev = to_pci_dev(dev);
-> +	pci_cxl_hdm_release(pci_dev);
->  	pci_release_capabilities(pci_dev);
->  	pci_release_of_node(pci_dev);
->  	pcibios_release_device(pci_dev);
-> diff --git a/include/cxl/cxl.h b/include/cxl/cxl.h
-> index 703285966946..a1fe8949f3f7 100644
-> --- a/include/cxl/cxl.h
-> +++ b/include/cxl/cxl.h
-> @@ -26,6 +26,7 @@ enum cxl_devtype {
->  };
->  
->  struct cxl_region;
-> +struct pci_dev;
->  
->  enum cxl_decoder_type {
->  	CXL_DECODER_DEVMEM = 2,
-> @@ -135,16 +136,41 @@ struct cxl_regs {
->  
->  #define CXL_HDM_DECODER_MAX_COUNT 32
->  
-> +struct cxl_hdm_decoder_state;
 > +
 >  /**
->   * struct cxl_hdm_info - PCI device HDM decoder programming cache
->   * @decoder_count: number of decoder settings entries
-> + * @hdm_bar: BAR containing the HDM decoder registers
-> + * @hdm_offset: HDM decoder register offset relative to @hdm_bar
-> + * @hdm_size: HDM decoder register resource size
-> + * @global_ctrl: cached HDM decoder global control register
-> + * @decoder_state: cached raw per-decoder register state
->   * @settings: cached per-decoder programming state
+>   * famfs_file_ioctl() - Top-level famfs file ioctl handler
+>   * @file: the file
+> @@ -380,6 +427,18 @@ famfs_file_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>  		rc = 0;
+>  		break;
+>  
+> +	case FAMFSIOC_GET_OPTS:
+> +		rc = famfs_get_opts(fsi, (void __user *)arg);
+> +		break;
+> +
+> +	case FAMFSIOC_SET_OPTS:
+> +		rc = famfs_modify_opts(fsi, (void __user *)arg, true);
+> +		break;
+> +
+> +	case FAMFSIOC_CLEAR_OPTS:
+> +		rc = famfs_modify_opts(fsi, (void __user *)arg, false);
+> +		break;
+> +
+>  	case FAMFSIOC_DAXDEV_OPEN:
+>  		rc = famfs_daxdev_open(file, (void __user *)arg);
+>  		break;
+> diff --git a/fs/famfs/famfs_inode.c b/fs/famfs/famfs_inode.c
+> index 98c877a6009e..2f1938adbfbc 100644
+> --- a/fs/famfs/famfs_inode.c
+> +++ b/fs/famfs/famfs_inode.c
+> @@ -769,6 +769,7 @@ famfs_init_fs_context(struct fs_context *fc)
+>  		return -ENOMEM;
+>  
+>  	init_rwsem(&fsi->devlist_sem);
+> +	atomic64_set(&fsi->opts, FAMFS_OPT_DEFAULT);
+>  	fsi->mount_opts.mode = FAMFS_DEFAULT_MODE;
+>  	fc->s_fs_info        = fsi;
+>  	fc->ops              = &famfs_context_ops;
+> diff --git a/fs/famfs/famfs_internal.h b/fs/famfs/famfs_internal.h
+> index f17380d24f6d..5e043b5a0ddd 100644
+> --- a/fs/famfs/famfs_internal.h
+> +++ b/fs/famfs/famfs_internal.h
+> @@ -12,11 +12,24 @@
+>  #define FAMFS_INTERNAL_H
+>  
+>  #include <linux/rwsem.h>
+> +#include <linux/atomic.h>
+>  #include <linux/bits.h>
+>  #include <linux/build_bug.h>
+>  
+>  #include <linux/famfs_ioctl.h>
+>  
+> +/*
+> + * Default operation-permission bitmap (see FAMFS_OPT_* in the uapi header).
+> + * This preserves famfs's historical behavior: file/dir creation, the fmap
+> + * ioctl, data writes, and the non-resize setattr components are permitted;
+> + * unlink of mapped files, link, symlink, mknod, rmdir, rename and truncate
+> + * are denied until enabled via FAMFSIOC_SET_OPTS.
+> + */
+> +#define FAMFS_OPT_DEFAULT	(FAMFS_OPT_CREATE | FAMFS_OPT_MKDIR | \
+> +				 FAMFS_OPT_CHMOD | FAMFS_OPT_CHOWN | \
+> +				 FAMFS_OPT_UTIMES | FAMFS_OPT_WRITE | \
+> +				 FAMFS_OPT_MAP_CREATE)
+> +
+>  extern const struct file_operations famfs_file_operations;
+>  
+>  /*
+> @@ -104,6 +117,8 @@ struct famfs_dax_devlist {
+>   * @famfs_fs_info
+>   *
+>   * @mount_opts:  The mount options
+> + * @opts:        Operation-permission bitmap (FAMFS_OPT_*), adjusted at runtime
+> + *               via the FAMFSIOC_{GET,SET,CLEAR}_OPTS ioctls
+>   * @deverror:    True if the dax device has called our notify_failure entry
+>   *               point, or if other "shutdown" conditions exist
+>   * @dax_devlist: Table of backing daxdevs (slot 0 is the mount primary)
+> @@ -111,16 +126,23 @@ struct famfs_dax_devlist {
 >   */
->  struct cxl_hdm_info {
->  	int decoder_count;
-> +	int hdm_bar;
-> +	resource_size_t hdm_offset;
-> +	resource_size_t hdm_size;
-> +	u32 global_ctrl;
-> +	struct cxl_hdm_decoder_state *decoder_state;
->  	struct cxl_decoder_settings settings[CXL_HDM_DECODER_MAX_COUNT];
+>  struct famfs_fs_info {
+>  	struct famfs_mount_opts   mount_opts;
+> +	atomic64_t                opts;
+>  	bool                      deverror;
+>  	struct famfs_dax_devlist *dax_devlist;
+>  	struct rw_semaphore       devlist_sem;
 >  };
 >  
-> +#ifdef CONFIG_CXL_HDM
-> +void pci_cxl_hdm_init(struct pci_dev *pdev);
-> +void pci_cxl_hdm_release(struct pci_dev *pdev);
-> +#else
-> +static inline void pci_cxl_hdm_init(struct pci_dev *pdev)
+> -/* This stub will be replaced in a later commit
+> - * Note: the opt parameter is intentionally unused, and will be used by
+> - * the replacement function when that commit lands
+> +/*
+> + * famfs_opt_enabled() - is operation permission @opt enabled for this mount?
+> + *
+> + * @opt is a single FAMFS_OPT_* bit; returns true if that operation is
+> + * permitted. The bitmap is read locklessly (updated via atomic RMW by the
+> + * FAMFSIOC_{SET,CLEAR}_OPTS ioctls).
+>   */
+> -#define famfs_opt_enabled(fsi, opt) (fsi != 0)
+> +static inline bool famfs_opt_enabled(struct famfs_fs_info *fsi, u64 opt)
 > +{
+> +	return !!(atomic64_read(&fsi->opts) & opt);
 > +}
-> +
-> +static inline void pci_cxl_hdm_release(struct pci_dev *pdev)
-> +{
-> +}
-> +#endif
-> +
->  struct cxl_reg_map {
->  	bool valid;
->  	int id;
-> diff --git a/tools/testing/cxl/Kbuild b/tools/testing/cxl/Kbuild
-> index 6c09932587ce..2eb61812a8e7 100644
-> --- a/tools/testing/cxl/Kbuild
-> +++ b/tools/testing/cxl/Kbuild
-> @@ -55,7 +55,6 @@ obj-m += cxl_core.o
 >  
->  cxl_core-y := $(CXL_CORE_SRC)/port.o
->  cxl_core-y += $(CXL_CORE_SRC)/pmem.o
-> -cxl_core-y += $(CXL_CORE_SRC)/regs.o
->  cxl_core-y += $(CXL_CORE_SRC)/memdev.o
->  cxl_core-y += $(CXL_CORE_SRC)/mbox.o
->  cxl_core-y += $(CXL_CORE_SRC)/pci.o
-
+>  int famfs_lookup_daxdev(const char *pathname, dev_t *devno);
+>  int famfs_devlist_alloc(struct famfs_fs_info *fsi);
+> diff --git a/include/uapi/linux/famfs_ioctl.h b/include/uapi/linux/famfs_ioctl.h
+> index 751d8b033c2e..efe6ef263975 100644
+> --- a/include/uapi/linux/famfs_ioctl.h
+> +++ b/include/uapi/linux/famfs_ioctl.h
+> @@ -100,6 +100,48 @@ struct famfs_ioc_daxdev {
+>  	__u32 flags;
+>  };
+>  
+> +/*
+> + * Mount-wide operation permissions, queried and modified via the
+> + * FAMFSIOC_{GET,SET,CLEAR}_OPTS ioctls. A set bit means the operation is
+> + * permitted; a clear bit means it is rejected with -EPERM. famfs denies most
+> + * of these by default because the userspace log, not the kernel, is
+> + * authoritative for a famfs instance.
+> + */
+> +#define FAMFS_OPT_CREATE	(1ULL << 0)  /* create a regular file        */
+> +#define FAMFS_OPT_MKDIR		(1ULL << 1)  /* mkdir                        */
+> +#define FAMFS_OPT_MKNOD		(1ULL << 2)  /* mknod a special file         */
+> +#define FAMFS_OPT_SYMLINK	(1ULL << 3)  /* create a symlink             */
+> +#define FAMFS_OPT_LINK		(1ULL << 4)  /* hard link                    */
+> +#define FAMFS_OPT_UNLINK	(1ULL << 5)  /* unlink a mapped file         */
+> +#define FAMFS_OPT_RMDIR		(1ULL << 6)  /* rmdir                        */
+> +#define FAMFS_OPT_RENAME	(1ULL << 7)  /* rename                       */
+> +#define FAMFS_OPT_CHMOD		(1ULL << 8)  /* setattr ATTR_MODE            */
+> +#define FAMFS_OPT_CHOWN		(1ULL << 9)  /* setattr ATTR_UID / ATTR_GID  */
+> +#define FAMFS_OPT_TRUNCATE	(1ULL << 10) /* setattr ATTR_SIZE (resize)   */
+> +#define FAMFS_OPT_UTIMES	(1ULL << 11) /* setattr ATTR_ATIME/ATTR_MTIME*/
+> +#define FAMFS_OPT_WRITE		(1ULL << 12) /* write file data              */
+> +#define FAMFS_OPT_XATTR		(1ULL << 13) /* set/remove xattrs (reserved) */
+> +#define FAMFS_OPT_MAP_CREATE	(1ULL << 14) /* attach an fmap (MAP_CREATE)  */
+> +
+> +#define FAMFS_OPT_ALL		(FAMFS_OPT_CREATE | FAMFS_OPT_MKDIR | \
+> +				 FAMFS_OPT_MKNOD | FAMFS_OPT_SYMLINK | \
+> +				 FAMFS_OPT_LINK | FAMFS_OPT_UNLINK | \
+> +				 FAMFS_OPT_RMDIR | FAMFS_OPT_RENAME | \
+> +				 FAMFS_OPT_CHMOD | FAMFS_OPT_CHOWN | \
+> +				 FAMFS_OPT_TRUNCATE | FAMFS_OPT_UTIMES | \
+> +				 FAMFS_OPT_WRITE | FAMFS_OPT_XATTR | \
+> +				 FAMFS_OPT_MAP_CREATE)
+> +
+> +/**
+> + * struct famfs_ioc_opts - operation-permission bitmap
+> + * @opts: for GET, the current bitmap is returned here. For SET/CLEAR, the
+> + *        caller-supplied mask of bits to enable/disable on input, and the
+> + *        resulting bitmap on return.
+> + */
+> +struct famfs_ioc_opts {
+> +	__u64 opts;
+> +};
+> +
+>  #define FAMFSIOC_MAGIC 'u'
+>  
+>  /* famfs file ioctl opcodes */
+> @@ -111,5 +153,8 @@ struct famfs_ioc_daxdev {
+>   */
+>  #define FAMFSIOC_MAP_CREATE    _IOW(FAMFSIOC_MAGIC,  0x51, struct famfs_ioc_fmap_header)
+>  #define FAMFSIOC_DAXDEV_OPEN   _IOW(FAMFSIOC_MAGIC,  0x52, struct famfs_ioc_daxdev)
+> +#define FAMFSIOC_GET_OPTS      _IOR(FAMFSIOC_MAGIC,  0x53, struct famfs_ioc_opts)
+> +#define FAMFSIOC_SET_OPTS      _IOWR(FAMFSIOC_MAGIC, 0x54, struct famfs_ioc_opts)
+> +#define FAMFSIOC_CLEAR_OPTS    _IOWR(FAMFSIOC_MAGIC, 0x55, struct famfs_ioc_opts)
+>  
+>  #endif /* FAMFS_IOCTL_H */
+> -- 
+> 2.53.0
+> 
+> 
+> 
